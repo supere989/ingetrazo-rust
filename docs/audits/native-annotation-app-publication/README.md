@@ -1,0 +1,3 @@
+Actual llvmpipe Vulkan application publication controls
+
+Source c874260c and execution-time binary SHA are in result.json. The application uses actual IngeTrazoApp.update_ui/render_viewport and mutates dimensions after UI collection. First addition produces viewport pixels; last deletion returns the exact prior empty viewport and zero cached annotation bytes. Real index admission denial preserves the complete prior window image and pending new managed texture; retry shows that image as exact opaque red. No full source font/AA/MSAA policy parity is claimed. The original arrow control remains a strict 217-pixel failure. Both application and owned Xvfb cleanup completed within five seconds.

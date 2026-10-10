@@ -111,6 +111,8 @@
       "image_sha256": "b29a734a050318be31c5f8cd9891a3773184c79d51f65aeb90d98244267df464"
     }
   ],
-  "passed": true,
-  "scope": "Actual IngeTrazoApp update_ui/render_viewport mid-UI add/delete/refusal/retry with new managed texture; source pixel/font/MSAA parity remains open"
+  "scope": "Actual IngeTrazoApp update_ui/render_viewport mid-UI add/delete/refusal/retry with new managed texture; source pixel/font/MSAA parity remains open",
+  "whole_procedure_passed": false,
+  "gpu_phase_checks_passed": true,
+  "cleanup_failure": "Diagnostic server owner variable shadowed by x coordinate; finite owned server cleanup retained separately."
 }

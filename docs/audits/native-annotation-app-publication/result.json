@@ -1,0 +1,140 @@
+{
+  "source_sha": "c874260c39578db2bf61336e36f4f2618508d752",
+  "binary_sha256": "b0205e9697b5527cd4f31f70457bbb7d81413df44c8d8f7879926f2702a54dc6",
+  "rows": [
+    {
+      "name": "add",
+      "state": {
+        "nonce": 1,
+        "submitted_serial": 24,
+        "held_refusal": false,
+        "dimensions": 1,
+        "screen_size": [
+          1000.0,
+          700.0
+        ],
+        "viewport": [
+          50.0,
+          60.0,
+          992.0,
+          669.6375122070312
+        ],
+        "cached_bytes": 100080,
+        "pending_textures": 0
+      },
+      "image_sha256": "ca4b071784700ee728675da6aa07434ce903de56889d34f0a5d08d7c7cc1d0a4"
+    },
+    {
+      "name": "delete",
+      "state": {
+        "nonce": 2,
+        "submitted_serial": 40,
+        "held_refusal": false,
+        "dimensions": 0,
+        "screen_size": [
+          1000.0,
+          700.0
+        ],
+        "viewport": [
+          50.0,
+          60.0,
+          992.0,
+          669.6375122070312
+        ],
+        "cached_bytes": 0,
+        "pending_textures": 0
+      },
+      "image_sha256": "bb7aef2584d01d5dddc159fde5abf39b522f42f201209107316a813d41a7ce35"
+    },
+    {
+      "name": "add",
+      "state": {
+        "nonce": 3,
+        "submitted_serial": 47,
+        "held_refusal": false,
+        "dimensions": 1,
+        "screen_size": [
+          1000.0,
+          700.0
+        ],
+        "viewport": [
+          50.0,
+          60.0,
+          992.0,
+          669.6375122070312
+        ],
+        "cached_bytes": 100080,
+        "pending_textures": 0
+      },
+      "image_sha256": "ca4b071784700ee728675da6aa07434ce903de56889d34f0a5d08d7c7cc1d0a4"
+    },
+    {
+      "name": "refuse",
+      "state": {
+        "nonce": 4,
+        "submitted_serial": 48,
+        "held_refusal": true,
+        "dimensions": 1,
+        "screen_size": [
+          1000.0,
+          700.0
+        ],
+        "viewport": [
+          50.0,
+          60.0,
+          992.0,
+          669.6375122070312
+        ],
+        "cached_bytes": 100080,
+        "pending_textures": 1
+      },
+      "image_sha256": "ca4b071784700ee728675da6aa07434ce903de56889d34f0a5d08d7c7cc1d0a4"
+    },
+    {
+      "name": "retry",
+      "state": {
+        "nonce": 5,
+        "submitted_serial": 53,
+        "held_refusal": false,
+        "dimensions": 1,
+        "screen_size": [
+          1000.0,
+          700.0
+        ],
+        "viewport": [
+          50.0,
+          60.0,
+          992.0,
+          669.6375122070312
+        ],
+        "cached_bytes": 165312,
+        "pending_textures": 0
+      },
+      "image_sha256": "f0f141e5462208a46d7d6809a0f6b22bcf71c93995e02bd3f220ecd87b2b593e"
+    },
+    {
+      "name": "delete",
+      "state": {
+        "nonce": 6,
+        "submitted_serial": 69,
+        "held_refusal": false,
+        "dimensions": 0,
+        "screen_size": [
+          1000.0,
+          700.0
+        ],
+        "viewport": [
+          50.0,
+          60.0,
+          992.0,
+          669.6375122070312
+        ],
+        "cached_bytes": 0,
+        "pending_textures": 0
+      },
+      "image_sha256": "b29a734a050318be31c5f8cd9891a3773184c79d51f65aeb90d98244267df464"
+    }
+  ],
+  "passed": true,
+  "scope": "Actual IngeTrazoApp update_ui/render_viewport mid-UI add/delete/refusal/retry with new managed texture; source pixel/font/MSAA parity remains open"
+}
