@@ -13,3 +13,27 @@ fn existing_solid_cap_push_and_recess_preserve_single_closed_boundary() {
 }
 #[test]
 fn invalid_face_does_not_mutate_document() {let mut s=Scene::new();s.mesh=cube();let before=serde_json::to_value(&s).unwrap();assert!(PushPullTool::extrude_face(&mut s,99,1.).is_err());assert_eq!(serde_json::to_value(&s).unwrap(),before);}
+#[test]
+fn standalone_holed_profile_creates_caps_and_inner_walls() {
+    for distance in [1.,-1.] {
+        let mut scene=Scene::new();
+        let outer=[[0.,0.,0.],[4.,0.,0.],[4.,4.,0.],[0.,4.,0.]].map(|p|scene.mesh.add_vertex(DVec3::from_array(p)));
+        let inner=[[1.,1.,0.],[3.,1.,0.],[3.,3.,0.],[1.,3.,0.]].map(|p|scene.mesh.add_vertex(DVec3::from_array(p)));
+        scene.mesh.add_face(outer.to_vec(),vec![inner.to_vec()]).unwrap();
+        PushPullTool::extrude_face(&mut scene,0,distance).unwrap();
+        // Surface integral over polygon rings; subtract hole contributions independently.
+        let mut signed=0.;let mut edges=std::collections::HashMap::new();
+        for face in &scene.mesh.faces {
+            let ring_volume=|ring:&Vec<usize>| {let a=scene.mesh.vertices[ring[0]].position;(1..ring.len()-1).map(|i|a.dot(scene.mesh.vertices[ring[i]].position.cross(scene.mesh.vertices[ring[i+1]].position))/6.).sum::<f64>()};
+            let outer=ring_volume(&face.vertices);signed+=outer;
+            for hole in &face.holes {signed-=outer.signum()*ring_volume(hole).abs();}
+            for ring in std::iter::once(&face.vertices).chain(face.holes.iter()) {for i in 0..ring.len(){let a=ring[i];let b=ring[(i+1)%ring.len()];*edges.entry((a.min(b),a.max(b))).or_insert(0)+=1;}}
+        }
+        assert!((signed.abs()-12.).abs()<1e-8,"holed extrusion expected volume 12, got {}",signed.abs());
+        assert!(edges.values().all(|&count|count==2),"hole boundary must have inner walls and closed caps");
+    }
+}
+#[test]
+fn nonfinite_distance_is_rejected_atomically() {
+    for distance in [f64::NAN,f64::INFINITY,f64::NEG_INFINITY] {let mut scene=Scene::new();scene.mesh=cube();let before=serde_json::to_value(&scene).unwrap();assert!(PushPullTool::extrude_face(&mut scene,1,distance).is_err());assert_eq!(serde_json::to_value(&scene).unwrap(),before);}
+}
