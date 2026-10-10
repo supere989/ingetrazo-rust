@@ -20,6 +20,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         requested_extent: Option<winit::dpi::PhysicalSize<u32>>,
         resize_requested: bool,
         diagnostics_at: std::time::Instant,
+        owned_window_path: Option<std::path::PathBuf>,
     }
     impl ApplicationHandler for Probe {
         fn resumed(&mut self, ev: &ActiveEventLoop) {
@@ -115,6 +116,26 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 if self.diagnostics_at.elapsed() >= std::time::Duration::from_secs(1) {
                     if let Some(gpu) = self.gpu.as_ref() {
                         eprintln!("WSI observation: {}", gpu.diagnostics());
+                        if let Some(path) = self.owned_window_path.as_ref() {
+                            let snapshot = (|| -> Result<(), String> {
+                                let id = gpu.native_window_id()?;
+                                let (submitted, retired, pending) = gpu.counters();
+                                let (displayed, skipped) = gpu.presentation_counters();
+                                let body = format!(
+                                    "{{\"window_id\":{id},\"submitted\":{submitted},\"retired\":{retired},\"pending\":{pending},\"displayed\":{displayed},\"skipped\":{skipped},\"completed_inflight\":{}}}",
+                                    gpu.completed_inflight_for_probe()
+                                );
+                                let temp = path.with_extension("tmp");
+                                std::fs::write(&temp, body).map_err(|e| e.to_string())?;
+                                std::fs::rename(&temp, path).map_err(|e| e.to_string())?;
+                                Ok(())
+                            })();
+                            if let Err(error) = snapshot {
+                                self.error = Some(error);
+                                ev.exit();
+                                return;
+                            }
+                        }
                     }
                     self.diagnostics_at = std::time::Instant::now();
                 }
@@ -192,6 +213,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         requested_extent: None,
         resize_requested: false,
         diagnostics_at: std::time::Instant::now(),
+        owned_window_path: std::env::args().find_map(|a| {
+            a.strip_prefix("--owned-window-id=")
+                .map(std::path::PathBuf::from)
+        }),
     };
     event.run_app(&mut probe)?;
     if let Some(e) = probe.error {

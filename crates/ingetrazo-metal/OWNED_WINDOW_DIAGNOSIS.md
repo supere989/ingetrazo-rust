@@ -1,0 +1,9 @@
+# Own-window presentation diagnosis
+
+Actual AppKit backing transition still failed ARM run83dacef9: twelve submitted, nine terminal zero-time skips, no displayed callbacks; correct800x600 geometry. Intel in the same run passed twelve retirements and exact requested resize with ten positive callbacks. No automatic owner retirement or success is inferred from GPU completion or a screenshot.
+
+Build presentation_probe on actual macOS, then run python3 scripts/check-metal-owned-window.py PATH_TO_BINARY FRESH_OUTPUT --source-revision EXACT_SHA. The helper first executes the actual screencapture -h CLI with a two-second bound and requires own-window/shadow controls. It launches only the own bounded15-second presentation probe, which atomically publishes its own NSWindow.windowNumber and actual GPU completion counters. The helper has no arbitrary window-ID argument and never invokes desktop capture. It waits for actual completed GPU work, then captures only that ID via screencapture -x -o -l<ID> PNG, with a two-second bound.
+
+Permission or unsupported refusals, partial timeout output, commands, binarySHA and exitstatus are retained. The PNG parser requires bounded, CRC-valid, fully inflated noninterlaced8-bit RGB/RGBA; empty/black/white/swapped-color/truncated fixtures are negative controls (--self-test). Four constant interior samples compare to the encoded native clearRGB20,51,89. The report separates visible_clear from presentation_passed. Even a visible-color capture cannot replace actual positive presentation callbacks or authorize drawable retirement; the helper returnsfailure unless both existingWSI and capture pass. Color-management differences remain literaldiagnostic failures, without tolerance changes.
+
+Mac native execution is pending; source parsing/selftests and dualtargetcompilation are not presentation proof. The owned-window helper is an engineering observation, not physicalMac/fullapplicationinput acceptance.

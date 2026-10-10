@@ -313,6 +313,37 @@ impl MetalPresentation {
     ) -> Result<bool, String> {
         objc2::rc::autoreleasepool(|_| self.present_inner([0.06, 0.06, 0.06, 1.], Some(paint)))
     }
+    /// Own AppKit window identity for bounded engineering capture only. Never
+    /// returns a desktop/global window ID or accesses another application's view.
+    pub fn native_window_id(&self) -> Result<u32, String> {
+        MainThreadMarker::new().ok_or("Native window identity requires main thread")?;
+        let RawWindowHandle::AppKit(handle) = self
+            .owners
+            ._window
+            .window_handle()
+            .map_err(|e| e.to_string())?
+            .as_raw()
+        else {
+            return Err("Not an AppKit window".into());
+        };
+        let view = unsafe { handle.ns_view.cast::<NSView>().as_ref() };
+        let native = view
+            .window()
+            .ok_or("Own content view is not attached to window")?;
+        let id =
+            u32::try_from(native.windowNumber()).map_err(|_| "Own NSWindow ID out of domain")?;
+        if id == 0 {
+            return Err("Own NSWindow ID zero refused".into());
+        }
+        Ok(id)
+    }
+    pub fn completed_inflight_for_probe(&self) -> usize {
+        self.owners
+            .frames
+            .iter()
+            .filter(|f| f.command.status() == MTLCommandBufferStatus::Completed)
+            .count()
+    }
     /// Read-only native diagnostics. Completed is never substituted for displayed.
     pub fn diagnostics(&self) -> String {
         let frames: Vec<_> = self
