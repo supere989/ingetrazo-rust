@@ -14,11 +14,10 @@
     }
   ],
   "pending": [
-    "native pipeline and budget/fence preparation",
-    "actual alpha pixel oracle",
-    "callback-mesh same-texture restoration",
-    "clipping and viewport controls",
-    "warm geometry upload accounting"
+    "composer shape adapter integration",
+    "expanded authored RGBA/coverage precision",
+    "full shape AA parity",
+    "native Metal consumer"
   ],
   "canonical_promotion": false,
   "combined_regression": "isolatedtargetfullworkspacepassed;sharedtargetfailedimportretained",
@@ -27,5 +26,11 @@
     430,
     0,
     2
-  ]
+  ],
+  "latest_world_workspace_counts": [
+    430,
+    0,
+    2
+  ],
+  "hardware": "5mandatorycontrols/10ownedclientcaptures/NVIDIAdeviceanddimensionsstrictPASS"
 }
