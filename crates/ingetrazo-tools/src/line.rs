@@ -3,7 +3,7 @@
 
 use glam::DVec3;
 use ingetrazo_core::scene::Scene;
-use ingetrazo_core::topology::find_smallest_cycle_through;
+
 
 use crate::base::{Tool, ToolContext, ToolType};
 
@@ -14,6 +14,7 @@ pub struct LineTool {
     pub hover_point: Option<DVec3>,
     pub chain_first_point: Option<DVec3>,
     pub chain_vertices: Vec<DVec3>,
+    error: Option<String>,
 }
 
 impl LineTool {
@@ -28,23 +29,14 @@ impl LineTool {
         self.chain_vertices.clear();
     }
 
-    fn commit_segment(&mut self, next_point: DVec3, scene: &mut Scene) {
-        let Some(start) = self.start_point else { return };
+    fn commit_segment(&mut self, next_point: DVec3, scene: &mut Scene) -> Result<(),String> {
+        let Some(start) = self.start_point else { return Ok(()) };
         if (next_point - start).length() < 1e-9 {
-            return;
+            return Ok(());
         }
 
-        let v0 = scene.mesh.add_vertex(start);
-        let v1 = scene.mesh.add_vertex(next_point);
-
-        // Check cycle before adding the edge
-        let cycle = find_smallest_cycle_through(&scene.mesh, v0, v1, 64);
-        scene.mesh.add_edge(v0, v1);
-
-        if let Some(cycle_loop) = cycle {
-            scene.mesh.add_face(cycle_loop, vec![]);
-        }
-
+        let candidate=ingetrazo_core::drafting::add_segments(&scene.mesh,&[(start,next_point)],None,None)?;
+        scene.mesh=candidate;
         // Check if closing polygon at start of current chain
         let closed_chain = self
             .chain_first_point
@@ -58,10 +50,12 @@ impl LineTool {
         }
 
         scene.bump_version();
+        self.error=None;Ok(())
     }
 }
 
 impl Tool for LineTool {
+    fn error_message(&self)->Option<&str>{self.error.as_deref()}
     fn tool_type(&self) -> ToolType {
         ToolType::Line
     }
@@ -104,7 +98,7 @@ impl Tool for LineTool {
             self.chain_first_point = Some(ctx.world);
             self.chain_vertices = vec![ctx.world];
         } else {
-            self.commit_segment(ctx.world, scene);
+            if let Err(error)=self.commit_segment(ctx.world,scene){self.error=Some(error);}
         }
     }
 
@@ -128,7 +122,7 @@ impl Tool for LineTool {
             let dy: f64 = parts[1].trim().parse().map_err(|e| format!("Invalid dy: {e}"))?;
             let dz: f64 = parts[2].trim().parse().map_err(|e| format!("Invalid dz: {e}"))?;
             let target = start + DVec3::new(dx, dy, dz);
-            self.commit_segment(target, scene);
+            self.commit_segment(target, scene)?;
             self.hover_point = Some(target);
             return Ok(());
         }
@@ -145,7 +139,7 @@ impl Tool for LineTool {
         }
         let dir = delta.normalize();
         let target = start + dir * length;
-        self.commit_segment(target, scene);
+        self.commit_segment(target, scene)?;
         self.hover_point = Some(target);
         Ok(())
     }

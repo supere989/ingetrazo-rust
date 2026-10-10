@@ -95,6 +95,7 @@ mod tests {
         let mut line_tool = line::LineTool::default();
 
         let ctx0 = ToolContext {
+            screen: None,
             world: DVec3::new(0.0, 0.0, 0.0),
             ray: Ray::new(DVec3::new(0.0, 0.0, 10.0), -DVec3::Z),
             shift_held: false,
@@ -104,6 +105,7 @@ mod tests {
         line_tool.on_click(&mut scene, &ctx0);
 
         let ctx1 = ToolContext {
+            screen: None,
             world: DVec3::new(5.0, 0.0, 0.0),
             ray: Ray::new(DVec3::new(5.0, 0.0, 10.0), -DVec3::Z),
             shift_held: false,
@@ -122,6 +124,7 @@ mod tests {
         let mut rect_tool = rectangle::RectangleTool::default();
 
         let ctx0 = ToolContext {
+            screen: None,
             world: DVec3::new(0.0, 0.0, 0.0),
             ray: Ray::new(DVec3::new(0.0, 0.0, 10.0), -DVec3::Z),
             shift_held: false,
@@ -131,6 +134,7 @@ mod tests {
         rect_tool.on_click(&mut scene, &ctx0);
 
         let ctx1 = ToolContext {
+            screen: None,
             world: DVec3::new(4.0, 3.0, 0.0),
             ray: Ray::new(DVec3::new(4.0, 3.0, 10.0), -DVec3::Z),
             shift_held: false,

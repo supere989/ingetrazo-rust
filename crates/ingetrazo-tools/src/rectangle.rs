@@ -14,6 +14,7 @@ pub struct RectangleTool {
     pub hover_point: Option<DVec3>,
     pub plane_normal: DVec3,
     pub from_center: bool,
+    error: Option<String>,
 }
 
 impl Default for RectangleTool {
@@ -23,6 +24,7 @@ impl Default for RectangleTool {
             hover_point: None,
             plane_normal: DVec3::Z, // Default XY ground plane
             from_center: false,
+            error: None,
         }
     }
 }
@@ -83,19 +85,16 @@ impl RectangleTool {
         }
     }
 
-    fn commit_corners(&mut self, corners: [DVec3; 4], scene: &mut Scene) {
-        let v0 = scene.mesh.add_vertex(corners[0]);
-        let v1 = scene.mesh.add_vertex(corners[1]);
-        let v2 = scene.mesh.add_vertex(corners[2]);
-        let v3 = scene.mesh.add_vertex(corners[3]);
-
-        scene.mesh.add_face(vec![v0, v1, v2, v3], vec![]);
-        scene.bump_version();
-        self.reset();
+    fn commit_corners(&mut self,corners:[DVec3;4],scene:&mut Scene)->Result<(),String>{
+        let segments=(0..4).map(|i|(corners[i],corners[(i+1)%4])).collect::<Vec<_>>();
+        scene.mesh=ingetrazo_core::drafting::add_segments(&scene.mesh,&segments,Some(&corners),None)?;
+        scene.bump_version();self.reset();self.error=None;Ok(())
     }
+
 }
 
 impl Tool for RectangleTool {
+    fn error_message(&self)->Option<&str>{self.error.as_deref()}
     fn tool_type(&self) -> ToolType {
         ToolType::Rectangle
     }
@@ -142,7 +141,7 @@ impl Tool for RectangleTool {
         } else {
             let start = self.start_point.unwrap();
             if let Some(corners) = self.compute_corners(start, ctx.world) {
-                self.commit_corners(corners, scene);
+                if let Err(error)=self.commit_corners(corners,scene){self.error=Some(error);}
             }
         }
     }
@@ -185,7 +184,7 @@ impl Tool for RectangleTool {
 
         let far = start + u * (w * sign_u) + v * (h * sign_v);
         if let Some(corners) = self.compute_corners(start, far) {
-            self.commit_corners(corners, scene);
+            self.commit_corners(corners, scene)?;
             Ok(())
         } else {
             Err("Failed to generate rectangle corners".into())
@@ -198,6 +197,14 @@ mod tests {
     use super::*;
     use ingetrazo_core::math::Ray;
 
+    #[test]fn rectangle_band_splits_closed_body_and_remains_pushable(){
+        use crate::pushpull::PushPullTool;
+        let mut scene=Scene::new();let points=[DVec3::ZERO,DVec3::new(4.,0.,0.),DVec3::new(4.,3.,0.),DVec3::new(0.,3.,0.)];let ids=points.map(|p|scene.mesh.add_vertex(p));scene.mesh.add_face(ids.to_vec(),vec![]);PushPullTool::extrude_face(&mut scene,0,2.).unwrap();
+        let mut tool=RectangleTool::new();tool.commit_corners([DVec3::new(1.,0.,2.),DVec3::new(2.,0.,2.),DVec3::new(2.,3.,2.),DVec3::new(1.,3.,2.)],&mut scene).unwrap();
+        assert!(scene.mesh.is_manifold_solid());let mut areas=scene.mesh.faces.iter().enumerate().filter(|(_,f)|f.vertices.iter().all(|&v|(scene.mesh.vertices[v].position.z-2.).abs()<1e-9)).map(|(i,_)|scene.mesh.face_area(i)).collect::<Vec<_>>();areas.sort_by(|a,b|a.total_cmp(b));assert_eq!(areas,vec![3.,3.,6.]);
+        let band=scene.mesh.faces.iter().enumerate().find(|(i,f)|f.vertices.iter().all(|&v|(scene.mesh.vertices[v].position.z-2.).abs()<1e-9)&&scene.mesh.face_area(*i)<3.01&&f.vertices.iter().all(|&v|scene.mesh.vertices[v].position.x>=1.-1e-9&&scene.mesh.vertices[v].position.x<=2.+1e-9)).unwrap().0;
+        PushPullTool::extrude_face(&mut scene,band,-0.5).unwrap();assert!(scene.mesh.is_manifold_solid());assert!((scene.mesh.volume().unwrap()-22.5).abs()<1e-8);
+    }
     #[test]
     fn test_rectangle_tool_two_clicks() {
         let mut tool = RectangleTool::new();

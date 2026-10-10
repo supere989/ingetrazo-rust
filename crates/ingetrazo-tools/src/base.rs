@@ -38,6 +38,8 @@ pub enum ToolType {
 #[derive(Debug, Clone)]
 pub struct ToolContext {
     pub world: DVec3,
+    /// Logical viewport pixels; absent for headless world-coordinate callers.
+    pub screen: Option<glam::DVec2>,
     pub ray: Ray,
     pub shift_held: bool,
     pub ctrl_held: bool,
@@ -48,6 +50,7 @@ impl ToolContext {
     pub fn new(world: DVec3, ray: Ray) -> Self {
         Self {
             world,
+            screen: None,
             ray,
             shift_held: false,
             ctrl_held: false,
@@ -64,6 +67,7 @@ impl ToolContext {
     ) -> Self {
         Self {
             world,
+            screen: None,
             ray,
             shift_held,
             ctrl_held,

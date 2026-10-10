@@ -119,6 +119,11 @@ mod tests {
         )
     }
 
+    #[test]fn freehand_preview_cancel_release_has_one_reversible_commit(){
+        let mut app=app();app.scene=Scene::new();app.active_tool=create_tool(ToolType::Freehand);app.active_tool_type=ToolType::Freehand;
+        let ctx=ToolContext::new(DVec3::ZERO,Ray::new(DVec3::Z,-DVec3::Z));app.dispatch_tool_click(&ctx);app.active_tool.on_move(&mut app.scene,&ToolContext::new(DVec3::X,ctx.ray));app.active_tool.on_cancel(&mut app.scene);assert!(app.scene.mesh.edges.is_empty());assert!(app.undo_stack.is_empty());
+        app.dispatch_tool_click(&ctx);for p in [DVec3::X,DVec3::X+DVec3::Y,DVec3::Y,DVec3::ZERO]{app.active_tool.on_move(&mut app.scene,&ToolContext::new(p,ctx.ray));}assert!(app.scene.mesh.edges.is_empty());app.dispatch_tool_release(&ctx,100.);assert_eq!(app.undo_stack.len(),1);assert_eq!(app.scene.mesh.faces.len(),1);let after=app.scene.mesh.clone();app.undo();assert!(app.scene.mesh.edges.is_empty());app.redo();assert_eq!(app.scene.mesh,after);
+    }
     #[test]
     fn fillet_sizing_preview_and_invalid_radius_do_not_create_history() {
         let mut app=app();ingetrazo_tools::pushpull::PushPullTool::extrude_face(&mut app.scene,0,1.).unwrap();

@@ -124,7 +124,7 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
             let snap_res = app
                 .snap_engine
                 .snap(&cursor_ray, &app.scene, start_pt, None);
-            if snap_res.kind != ingetrazo_core::snap::SnapKind::None {
+            if app.active_tool_type!=ToolType::Freehand && snap_res.kind != ingetrazo_core::snap::SnapKind::None {
                 cursor_world_pos = snap_res.point;
                 active_snap_glyph = SnapGlyph::from_snap_result(&snap_res, start_pt);
 
@@ -145,6 +145,7 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
             }
 
             let tool_ctx = ToolContext {
+                screen: Some(glam::DVec2::new(rel_x,rel_y)),
                 world: cursor_world_pos,
                 ray: cursor_ray,
                 shift_held: shift_down,
@@ -158,8 +159,8 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
                     app.commit_paste_preview();
                 }
             } else {
-                let follow_me = app.active_tool_type == ToolType::FollowMe;
-                if follow_me && pointer.button_pressed(egui::PointerButton::Primary) {
+                let follow_me = matches!(app.active_tool_type,ToolType::FollowMe|ToolType::Freehand);
+                if follow_me && !alt_down && pointer.button_pressed(egui::PointerButton::Primary) {
                     ui.ctx().data_mut(|data| {
                         data.insert_temp(response.id.with("followme_press"), mouse_pos)
                     });
@@ -181,7 +182,7 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
     }
     // Observe release beyond the viewport, without committing a tool during paste.
     if app.paste_preview.is_none()
-        && app.active_tool_type == ToolType::FollowMe
+        && matches!(app.active_tool_type,ToolType::FollowMe|ToolType::Freehand)
         && pointer.button_released(egui::PointerButton::Primary)
     {
         let origin = ui

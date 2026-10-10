@@ -63,6 +63,8 @@ pub fn simplify_rdp(pts: &[DVec3], tolerance: f64) -> Vec<DVec3> {
 pub struct FreehandTool {
     points: Vec<DVec3>,
     drawing: bool,
+    screen: Vec<glam::DVec2>,
+    error: Option<String>,
     tolerance: f64,
 }
 
@@ -71,12 +73,16 @@ impl Default for FreehandTool {
         Self {
             points: Vec::new(),
             drawing: false,
+            screen: vec![],
+            error: None,
             tolerance: 0.05,
         }
     }
 }
 
 impl Tool for FreehandTool {
+    fn error_message(&self)->Option<&str>{self.error.as_deref()}
+    fn on_release(&mut self,scene:&mut Scene,_ctx:&ToolContext,_distance:f64){if self.drawing{self.commit(scene);}}
     fn tool_type(&self) -> ToolType {
         ToolType::Freehand
     }
@@ -92,8 +98,8 @@ impl Tool for FreehandTool {
     fn on_click(&mut self, scene: &mut Scene, ctx: &ToolContext) {
         if !self.drawing {
             self.drawing = true;
-            self.points.clear();
-            self.points.push(ctx.world);
+            self.points.clear();self.screen.clear();self.error=None;
+            self.points.push(ctx.world);if let Some(p)=ctx.screen{self.screen.push(p);}
         } else {
             // Commit drawing on second click / release
             self.commit(scene);
@@ -102,19 +108,20 @@ impl Tool for FreehandTool {
 
     fn on_move(&mut self, _scene: &mut Scene, ctx: &ToolContext) {
         if self.drawing {
-            if let Some(&last) = self.points.last() {
-                if (ctx.world - last).length() > 0.02 {
-                    self.points.push(ctx.world);
-                }
+            if let Some(&last)=self.points.last(){
+                let sample=match (ctx.screen,self.screen.last()){(Some(p),Some(q))=>p.distance(*q)>=3.,_=>ctx.world.distance(last)>0.02};
+                if sample{self.points.push(ctx.world);if let Some(p)=ctx.screen{self.screen.push(p);}}
             }
+
         }
     }
 
     fn on_cancel(&mut self, _scene: &mut Scene) {
-        self.points.clear();
+        self.points.clear();self.screen.clear();
         self.drawing = false;
     }
 
+    fn rubber_band_lines(&self)->Vec<(DVec3,DVec3)>{self.points.windows(2).map(|p|(p[0],p[1])).collect()}
     fn rubber_band(&self) -> Option<(DVec3, DVec3)> {
         if self.points.len() >= 2 {
             let last = self.points[self.points.len() - 1];
@@ -127,55 +134,34 @@ impl Tool for FreehandTool {
 }
 
 impl FreehandTool {
-    pub fn commit(&mut self, scene: &mut Scene) {
-        if self.points.len() < 2 {
-            self.points.clear();
-            self.drawing = false;
-            return;
-        }
-
-        let simplified = simplify_rdp(&self.points, self.tolerance);
-        if simplified.len() < 2 {
-            self.points.clear();
-            self.drawing = false;
-            return;
-        }
-
-        let start = simplified[0];
-        let end = *simplified.last().unwrap();
-        let is_closed = (end - start).length() < 0.2 && simplified.len() >= 3;
-
-        let mut vert_ids = Vec::with_capacity(simplified.len());
-        for &pt in &simplified {
-            vert_ids.push(scene.mesh.add_vertex(pt));
-        }
-
-        if is_closed {
-            // Weld start and end
-            let first_id = vert_ids[0];
-            if let Some(last_id) = vert_ids.last_mut() {
-                *last_id = first_id;
-            }
-            vert_ids.pop(); // Remove duplicate last vertex for add_face
-            if vert_ids.len() >= 3 {
-                scene.mesh.add_face(vert_ids, vec![]);
-            }
-        } else {
-            for i in 0..(vert_ids.len() - 1) {
-                scene.mesh.add_edge(vert_ids[i], vert_ids[i + 1]);
-            }
-        }
-
-        scene.bump_version();
-        self.points.clear();
-        self.drawing = false;
+    pub fn commit(&mut self,scene:&mut Scene){
+        let result=self.prepare_commit(scene);self.points.clear();self.screen.clear();self.drawing=false;self.error=result.err();
     }
+    fn prepare_commit(&self,scene:&mut Scene)->Result<(),String>{
+        if self.points.len()<3{return Ok(());}
+        let screen_space=self.screen.len()==self.points.len();
+        let mut pts=if screen_space {
+            let projected=self.screen.iter().map(|p|DVec3::new(p.x,p.y,0.)).collect::<Vec<_>>();let mut keep=vec![false;projected.len()];keep[0]=true;keep[projected.len()-1]=true;rdp_recursive(&projected,1.6,&mut keep,0,projected.len()-1);self.points.iter().zip(keep).filter_map(|(&p,k)|k.then_some(p)).collect::<Vec<_>>()
+        }else{simplify_rdp(&self.points,self.tolerance)};
+        let closed=if screen_space {self.screen[0].distance(*self.screen.last().unwrap())<=10.}else{self.points[0].distance(*self.points.last().unwrap())<0.2};
+        if closed&&pts.len()>=3 {let p=pts[0];*pts.last_mut().unwrap()=p;}
+        if pts.len()<2{return Ok(());}
+        let segments=pts.windows(2).map(|p|(p[0],p[1])).collect::<Vec<_>>();let curve=scene.mesh.edges.iter().filter_map(|e|e.curve_id).max().unwrap_or(0).checked_add(1).ok_or("Curve identity overflow")?;
+        let candidate=ingetrazo_core::drafting::add_segments(&scene.mesh,&segments,None,Some(curve))?;scene.mesh=candidate;scene.bump_version();Ok(())
+    }
+
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
 
+    #[test]fn release_commits_one_curve_after_immutable_screen_preview(){
+        use crate::base::ToolContext;use ingetrazo_core::math::Ray;
+        let mut tool=FreehandTool::default();let mut scene=Scene::new();let points=[DVec3::ZERO,DVec3::X,DVec3::X+DVec3::Y,DVec3::Y,DVec3::ZERO];let screen=[(0.,0.),(100.,0.),(100.,100.),(0.,100.),(0.,0.)];
+        for (i,&p) in points.iter().enumerate(){let mut ctx=ToolContext::new(p,Ray::new(DVec3::Z,-DVec3::Z));ctx.screen=Some(glam::DVec2::new(screen[i].0,screen[i].1));if i==0{tool.on_click(&mut scene,&ctx);}else{tool.on_move(&mut scene,&ctx);}assert!(scene.mesh.edges.is_empty());}
+        let ctx=ToolContext::new(DVec3::ZERO,Ray::new(DVec3::Z,-DVec3::Z));tool.on_release(&mut scene,&ctx,100.);assert_eq!(scene.mesh.faces.len(),1);assert_eq!(scene.mesh.edges.len(),4);assert!(scene.mesh.edges.iter().all(|e|e.curve_id==scene.mesh.edges[0].curve_id&&e.curve_id.is_some()));let before=scene.clone();tool.on_release(&mut scene,&ctx,100.);assert_eq!(scene,before);
+    }
     #[test]
     fn test_rdp_simplification() {
         let pts = vec![
