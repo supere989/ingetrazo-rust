@@ -54,6 +54,12 @@ jobs:
         run: |
           QT_QPA_PLATFORM=offscreen python scripts/check-python-snap-eye-boundary.py
           QT_QPA_PLATFORM=offscreen python scripts/check-python-snap-heldout-depth.py
+      - name: Actual original and native center hint and Move UI controls
+        run: |
+          for mode in curve tiny malformed; do
+            INGETRAZO_CENTER_MODE="$mode" INGETRAZO_CENTER_RUN_SUFFIX=-ci python scripts/check-native-center-tracking.py
+            INGETRAZO_CENTER_MODE="$mode" INGETRAZO_CENTER_RUN_SUFFIX=-ci INGETRAZO_CENTER_ORIGINAL=1 python scripts/check-native-center-tracking.py
+          done
       - name: Rendered software OpenGL drawing reference gestures
         run: python scripts/check-rendered-drawing-reference.py
       - name: Rendered software OpenGL temporary Shift inference gestures
@@ -162,6 +168,9 @@ jobs:
             docs/audits/native-composer-ci/*.png
             docs/audits/native-composer-ci/native.log
             docs/audits/native-composer-ci/result.json
+            docs/audits/center-tracking-*-ci-evidence.json
+            docs/audits/center-tracking-*-ci/*.png
+            docs/audits/center-tracking-*-ci/runtime.log
             docs/audits/python-screen-snap-evidence.json
             docs/audits/python-perspective-screen-evidence.json
             docs/audits/python-snap-eye-boundary-evidence.json

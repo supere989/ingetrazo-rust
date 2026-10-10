@@ -1,0 +1,14 @@
+{
+  "source": "e9c656e",
+  "workspace_tests_passed": 392,
+  "workspace_tests_ignored": 2,
+  "actual_ui_reports": [
+    "docs/audits/center-tracking-native-curve-ci-evidence.json",
+    "docs/audits/center-tracking-native-malformed-ci-evidence.json",
+    "docs/audits/center-tracking-native-tiny-ci-evidence.json",
+    "docs/audits/center-tracking-original-curve-ci-evidence.json",
+    "docs/audits/center-tracking-original-malformed-ci-evidence.json",
+    "docs/audits/center-tracking-original-tiny-ci-evidence.json"
+  ],
+  "scope": "Original Qt and native ash actual XTEST gestures under isolated virtual display/software GPU; hardware presentation and broader Move parity remain open"
+}
