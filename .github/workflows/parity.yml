@@ -308,6 +308,19 @@ jobs:
         run: python scripts/check-rendered-composer-ink.py .
       - name: Original Line Rectangle Freehand drafting semantics
         run: python scripts/check-python-drafting.py
+      - name: Original image Move and context lifetime semantics
+        run: |
+          mkdir -p docs/audits/image-tools-ci
+          python scripts/probe-python-image-move.py docs/audits/image-tools-ci/move-original.json
+          python scripts/probe-python-selection-remove.py docs/audits/image-tools-ci/modifiers-original.json
+          cargo run --locked -p ingetrazo-gui --example image_move_tool > docs/audits/image-tools-ci/move-native.json
+          cargo run --locked -p ingetrazo-gui --example selection_remove > docs/audits/image-tools-ci/modifiers-native.json
+          python scripts/check-image-move-tools.py docs/audits/image-tools-ci/move-original.json docs/audits/image-tools-ci/move-native.json docs/audits/image-tools-ci/modifiers-original.json docs/audits/image-tools-ci/modifiers-native.json
+          python scripts/probe-python-image-move-context.py docs/audits/image-tools-ci/context-original.json
+          python scripts/probe-python-image-tool-roots.py docs/audits/image-tools-ci/roots-original.json
+          cargo run --locked -p ingetrazo-gui --example image_move_context > docs/audits/image-tools-ci/context-native.json
+          cargo run --locked -p ingetrazo-gui --example image_tool_roots > docs/audits/image-tools-ci/roots-native.json
+          python scripts/check-image-move-context.py docs/audits/image-tools-ci/context-original.json docs/audits/image-tools-ci/context-native.json docs/audits/image-tools-ci/roots-original.json docs/audits/image-tools-ci/roots-native.json docs/audits/image-move-context/literal-old.json docs/audits/image-move-context/roots-literal-old.json
       - name: Original map metadata codec and actual source reopens
         run: |
           mkdir -p docs/audits/map-codec-ci
@@ -388,6 +401,7 @@ jobs:
             docs/audits/font-resolver-ci/
             docs/audits/paragraph-ci/
             docs/audits/map-codec-ci/
+            docs/audits/image-tools-ci/
             docs/audits/image-plane-ci/
             docs/audits/document-presentation-ci/
             docs/audits/*semantic-evidence.*

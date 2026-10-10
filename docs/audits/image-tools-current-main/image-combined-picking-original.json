@@ -1,0 +1,451 @@
+{
+  "provenance": {
+    "rust_commit": "04db692c22acb2993ab66ed5aad4e413a99fe593",
+    "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+    "checker_python": "3.13.13",
+    "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
+  },
+  "cases": {
+    "bare": {
+      "selected_before_click": [],
+      "inference": "Scan",
+      "selectable": "Scan",
+      "locked_context": null,
+      "pick": "Scan",
+      "workplane": {
+        "normal": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "constant": 0.0
+      },
+      "selected": [
+        "Scan"
+      ]
+    },
+    "transparent_zero": {
+      "selected_before_click": [],
+      "inference": "Scan",
+      "selectable": "Scan",
+      "locked_context": null,
+      "pick": "Scan",
+      "workplane": {
+        "normal": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "constant": 0.0
+      },
+      "selected": [
+        "Scan"
+      ]
+    },
+    "missing_texture": {
+      "selected_before_click": [],
+      "inference": "Scan",
+      "selectable": "Scan",
+      "locked_context": null,
+      "pick": "Scan",
+      "workplane": {
+        "normal": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "constant": 0.0
+      },
+      "selected": [
+        "Scan"
+      ]
+    },
+    "own_locked": {
+      "selected_before_click": [],
+      "inference": "Scan",
+      "selectable": null,
+      "locked_context": "Scan",
+      "pick": null,
+      "workplane": {
+        "normal": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "constant": 0.0
+      },
+      "selected": []
+    },
+    "layer_locked": {
+      "selected_before_click": [],
+      "inference": "Scan",
+      "selectable": null,
+      "locked_context": null,
+      "pick": null,
+      "workplane": {
+        "normal": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "constant": 0.0
+      },
+      "selected": []
+    },
+    "layer_hidden": {
+      "selected_before_click": [],
+      "inference": null,
+      "selectable": null,
+      "locked_context": null,
+      "pick": null,
+      "selected": []
+    },
+    "locked_and_layer_hidden": {
+      "selected_before_click": [],
+      "inference": null,
+      "selectable": null,
+      "locked_context": null,
+      "pick": null,
+      "selected": []
+    },
+    "unknown_layer": {
+      "selected_before_click": [],
+      "inference": "Scan",
+      "selectable": "Scan",
+      "locked_context": null,
+      "pick": "Scan",
+      "workplane": {
+        "normal": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "constant": 0.0
+      },
+      "selected": [
+        "Scan"
+      ]
+    },
+    "default_hidden": {
+      "selected_before_click": [],
+      "inference": null,
+      "selectable": null,
+      "locked_context": null,
+      "pick": null,
+      "selected": []
+    },
+    "tie_last": {
+      "selected_before_click": [],
+      "inference": "Later",
+      "selectable": "Later",
+      "locked_context": null,
+      "pick": "Later",
+      "workplane": {
+        "normal": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "constant": 0.0
+      },
+      "selected": [
+        "Later"
+      ]
+    },
+    "nearest_not_last": {
+      "selected_before_click": [],
+      "inference": "Near",
+      "selectable": "Near",
+      "locked_context": null,
+      "pick": "Near",
+      "workplane": {
+        "normal": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "constant": 2.0
+      },
+      "selected": [
+        "Near"
+      ]
+    },
+    "outside": {
+      "selected_before_click": [],
+      "inference": null,
+      "selectable": null,
+      "locked_context": null,
+      "pick": null,
+      "selected": []
+    },
+    "edge_inclusive": {
+      "selected_before_click": [],
+      "inference": "Scan",
+      "selectable": "Scan",
+      "locked_context": null,
+      "pick": "Scan",
+      "workplane": {
+        "normal": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "constant": 0.0
+      },
+      "selected": [
+        "Scan"
+      ]
+    },
+    "parallel": {
+      "selected_before_click": [],
+      "inference": null,
+      "selectable": null,
+      "locked_context": null,
+      "pick": null,
+      "selected": []
+    },
+    "behind": {
+      "selected_before_click": [],
+      "inference": null,
+      "selectable": null,
+      "locked_context": null,
+      "pick": null,
+      "selected": []
+    },
+    "back_side": {
+      "selected_before_click": [],
+      "inference": "Scan",
+      "selectable": "Scan",
+      "locked_context": null,
+      "pick": "Scan",
+      "workplane": {
+        "normal": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "constant": 0.0
+      },
+      "selected": [
+        "Scan"
+      ]
+    },
+    "vertical": {
+      "selected_before_click": [],
+      "inference": "Scan",
+      "selectable": "Scan",
+      "locked_context": null,
+      "pick": "Scan",
+      "workplane": {
+        "normal": [
+          0.0,
+          -1.0,
+          0.0
+        ],
+        "constant": 0.0
+      },
+      "selected": [
+        "Scan"
+      ]
+    },
+    "sheared_source_projection": {
+      "selected_before_click": [],
+      "inference": null,
+      "selectable": null,
+      "locked_context": null,
+      "pick": null,
+      "selected": []
+    },
+    "degenerate_source": {
+      "selected_before_click": [],
+      "inference": "Scan",
+      "selectable": "Scan",
+      "locked_context": null,
+      "pick": "Scan",
+      "workplane": {
+        "normal": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "constant": 0.0
+      },
+      "selected": [
+        "Scan"
+      ]
+    },
+    "geometry_wins": {
+      "selected_before_click": [],
+      "inference": "Scan",
+      "selectable": "Scan",
+      "locked_context": null,
+      "pick": "Face",
+      "workplane": {
+        "normal": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "constant": 0.0
+      },
+      "selected": [
+        "Face"
+      ]
+    },
+    "shift_toggle": {
+      "selected_before_click": [
+        "Scan"
+      ],
+      "inference": "Scan",
+      "selectable": "Scan",
+      "locked_context": null,
+      "pick": "Scan",
+      "workplane": {
+        "normal": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "constant": 0.0
+      },
+      "selected": []
+    },
+    "ctrl_add": {
+      "selected_before_click": [
+        "Two"
+      ],
+      "inference": "One",
+      "selectable": "One",
+      "locked_context": null,
+      "pick": "One",
+      "workplane": {
+        "normal": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "constant": 1.0
+      },
+      "selected": [
+        "One",
+        "Two"
+      ]
+    },
+    "shift_ctrl_remove": {
+      "selected_before_click": [],
+      "inference": "Scan",
+      "selectable": "Scan",
+      "locked_context": null,
+      "pick": "Scan",
+      "workplane": {
+        "normal": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "constant": 0.0
+      },
+      "selected": []
+    },
+    "shift_ctrl_existing_remove": {
+      "selected_before_click": [
+        "Scan"
+      ],
+      "inference": "Scan",
+      "selectable": "Scan",
+      "locked_context": null,
+      "pick": "Scan",
+      "workplane": {
+        "normal": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "constant": 0.0
+      },
+      "selected": []
+    },
+    "default_alias_is_unknown": {
+      "selected_before_click": [],
+      "inference": "Scan",
+      "selectable": "Scan",
+      "locked_context": null,
+      "pick": "Scan",
+      "workplane": {
+        "normal": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "constant": 0.0
+      },
+      "selected": [
+        "Scan"
+      ]
+    },
+    "empty_alias_is_unknown": {
+      "selected_before_click": [],
+      "inference": "Scan",
+      "selectable": "Scan",
+      "locked_context": null,
+      "pick": "Scan",
+      "workplane": {
+        "normal": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "constant": 0.0
+      },
+      "selected": [
+        "Scan"
+      ]
+    },
+    "panel_hidden_prune": {
+      "selected_before_click": [
+        "Scan"
+      ],
+      "inference": null,
+      "selectable": null,
+      "locked_context": null,
+      "pick": null,
+      "selected": []
+    },
+    "panel_locked_prune": {
+      "selected_before_click": [
+        "Scan"
+      ],
+      "inference": "Scan",
+      "selectable": null,
+      "locked_context": null,
+      "pick": null,
+      "workplane": {
+        "normal": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "constant": 0.0
+      },
+      "selected": []
+    },
+    "panel_default_locked_prune": {
+      "selected_before_click": [
+        "Scan"
+      ],
+      "inference": "Scan",
+      "selectable": null,
+      "locked_context": null,
+      "pick": null,
+      "workplane": {
+        "normal": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "constant": 0.0
+      },
+      "selected": []
+    }
+  }
+}

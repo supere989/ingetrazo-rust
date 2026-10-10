@@ -383,3 +383,5 @@ Isolated production paragraph rootreview3664b32d:559workspacePASS/twoignored; fr
 Canonical paragraph resource stage0009bc41:559PASS/twoignored; rebuilt canonical native fixture93exact wholepages and31exact reader-text cases against independently fresh pinned original corpus; validPDF negatives reject. [Canonical evidence](audits/paper-paragraph-canonical/README.md). ComposerTextUI, platform font providers, broader Unicode/fullP29/all37rows/five release gates remainOPEN; cloud acceptance pending.
 
 Geographic codec combined currentmain:559PASS/twoignored; fresh23source/native states exact and23actual original reopens exact, four strict negatives reject. [Evidence](audits/geographic-expanded-codec/README.md). CI freshloader/reopen gate added; arbitraryprecision/nonfinite/providerfetch/cache/UI/GPU/all37rows/fivereleasegatesOPEN.
+
+Reviewed image tools currentmain04db692c:566PASS/twoignored;29picking/nineMove/sixgeometrymodifiers/65contextstates/twoheldtoolmetadata controls exact. [Evidence](audits/image-tools-current-main/README.md). Mixedgeometry/image context remapping, directGPUdraw/physicalpointer/Rotate/Scale/full37rows/fivereleasegatesOPEN.
