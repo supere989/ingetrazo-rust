@@ -28,12 +28,18 @@ pub struct TextGlyph {
     pub position_px: [f64; 2],
 }
 #[derive(Clone, Debug)]
+pub struct TextDecoration {
+    pub line_px: [f64; 4],
+    pub width_px: f64,
+}
+#[derive(Clone, Debug)]
 pub struct TextDraw {
     pub font: std::rc::Rc<crate::paper_font::CachedFont>,
     /// Millimetres per source pixel100 layout unit.
     pub scale_mm: f64,
     pub italic: bool,
     pub glyphs: Vec<TextGlyph>,
+    pub decorations: Vec<TextDecoration>,
 }
 #[derive(Clone, Debug)]
 pub struct Draw {
@@ -286,6 +292,32 @@ fn encode_policy(pages: &[Page], original_qt: bool) -> Result<Vec<u8>, String> {
                 if path_commands > MAX_COMMANDS {
                     return Err("PDF aggregate command budget exceeded".into());
                 }
+                path_commands = path_commands
+                    .checked_add(
+                        text.decorations
+                            .len()
+                            .checked_mul(2)
+                            .ok_or("PDF decoration count overflow")?,
+                    )
+                    .ok_or("PDF decoration count overflow")?;
+                if path_commands > MAX_COMMANDS {
+                    return Err("PDF aggregate command budget exceeded".into());
+                }
+                for d in &text.decorations {
+                    if !d.width_px.is_finite() || d.width_px <= 0. || d.width_px > 10_000. {
+                        return Err("Invalid physical PDF decoration width".into());
+                    }
+                    for (i, v) in d.line_px.iter().enumerate() {
+                        if !v.is_finite()
+                            || v.abs() > 1_000_000.
+                            || (*v * text.scale_mm + draw.origin_mm[i % 2]).abs()
+                                + d.width_px * text.scale_mm / 2.
+                                > 1_000_000.
+                        {
+                            return Err("Invalid physical PDF decoration position".into());
+                        }
+                    }
+                }
                 let key = text.font.key();
                 let index = if let Some(index) = font_indices.get(&key).copied() {
                     let old: &std::rc::Rc<crate::paper_font::CachedFont> = &font_inputs[index].0;
@@ -521,7 +553,23 @@ fn encode_policy(pages: &[Page], original_qt: bool) -> Result<Vec<u8>, String> {
                     .unwrap();
                     previous = desired;
                 }
-                content.extend_from_slice(b"ET\nQ\n");
+                content.extend_from_slice(b"ET\n");
+                for d in &text.decorations {
+                    writeln!(
+                        content,
+                        "{} {} {} RG\n{} w 0 J 2 j [] 0 d\n{} {} m\n{} {} l\nS",
+                        number(c[0] as f64),
+                        number(c[1] as f64),
+                        number(c[2] as f64),
+                        number(d.width_px),
+                        number(d.line_px[0]),
+                        number(d.line_px[1]),
+                        number(d.line_px[2]),
+                        number(d.line_px[3])
+                    )
+                    .unwrap();
+                }
+                content.extend_from_slice(b"Q\n");
                 continue;
             }
             let flatten = draw.flatten_transform && original_qt;
