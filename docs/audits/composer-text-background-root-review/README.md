@@ -1,0 +1,3 @@
+Independent root review of native Text backgrounds
+
+Reviewed source: e07194cc; checker correction: f9e5eb2f. Fresh pinned Python source produced nine background PDFs. The compiled production composer export controller produced nine native PDFs with unchanged scene, identical warm bytes/resources, and preserved destination on invalid style. All 27 whole-page comparisons at 72/144/300 DPI are exact. Same-size parse-valid shifted-background PDF mutations change 45/145/720 pixels respectively and are rejected. Retained observation and digest records identify the fresh inputs. This does not prove dynamic fields, non-Linux font providers, Text editing, or full P29.
