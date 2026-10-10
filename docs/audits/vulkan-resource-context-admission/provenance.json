@@ -1,0 +1,9 @@
+{
+  "source_revision": "3f4061fe265a5de693b2173b67917d9a3c0ac35d",
+  "base_revision": "fe22117cd1322e0c3e5bcc770fb4e28de187386c",
+  "binary_sha256": "08ae7e6ffd056112fc6d904da7e9a06ebbef5bbe0fa1308888db5f774842e809",
+  "command": "/tmp/ingetrazo-center-ui-independent-target/debug/examples/native_vulkan_resource_ownership_probe --software-fixture",
+  "external_timeout_seconds": 30,
+  "exit_code": 0,
+  "scope": "two real llvmpipe contexts; corrected admission only; no invalid foreign handles executed on old source"
+}
