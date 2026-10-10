@@ -18,9 +18,16 @@ fn main() {
         let item = TextItem {
             id: uuid::Uuid::new_v4(),
             pos: (20., 30.),
-            text: call["text"].as_str().unwrap().into(),
+            text: call["text"]
+                .as_str()
+                .or_else(|| case["authored_text"].as_str())
+                .unwrap()
+                .into(),
             font_size_pt: 14.,
-            bold: call["font"]["bold"].as_bool().unwrap(),
+            bold: call["font"]["bold"]
+                .as_bool()
+                .or_else(|| props["bold"].as_bool())
+                .unwrap_or(false),
         };
         sheet.native_items.insert(item.id, props.clone());
         sheet.items.push(SheetItem::Text(item));

@@ -457,19 +457,78 @@ mod grid_tests {
 }
 
 /// Source free-text painter, including archive-side presentation fields absent from the minimal model.
-pub(super) fn text_draws(sheet:&ingetrazo_core::composition::Sheet,item:&ingetrazo_core::composition::TextItem,painter:&mut ingetrazo_formats::paper_text_painter::Painter)->Result<Vec<ingetrazo_formats::sheet_pdf::Draw>,String>{
-    use ingetrazo_formats::{paper_text_layout::Alignment,paper_text_painter::TextStyle};
-    let native=sheet.native_items.get(&item.id);
-    let string=|key:&str,default:&str| native.and_then(|v|v.get(key)).and_then(|v|v.as_str()).unwrap_or(default).to_owned();
-    let flag=|key:&str|native.and_then(|v|v.get(key)).and_then(|v|v.as_bool()).unwrap_or(false);
-    let background=string("bg_color","");
-    if !background.is_empty(){return Err("PDF text background painter remains unavailable".into());}
+pub(super) fn text_draws(
+    sheet: &ingetrazo_core::composition::Sheet,
+    item: &ingetrazo_core::composition::TextItem,
+    painter: &mut ingetrazo_formats::paper_text_painter::Painter,
+) -> Result<Vec<ingetrazo_formats::sheet_pdf::Draw>, String> {
+    use ingetrazo_formats::{paper_text_layout::Alignment, paper_text_painter::TextStyle};
+    let native = sheet.native_items.get(&item.id);
+    let string = |key: &str, default: &str| {
+        native
+            .and_then(|v| v.get(key))
+            .and_then(|v| v.as_str())
+            .unwrap_or(default)
+            .to_owned()
+    };
+    let flag = |key: &str| {
+        native
+            .and_then(|v| v.get(key))
+            .and_then(|v| v.as_bool())
+            .unwrap_or(false)
+    };
+    let background = string("bg_color", "");
     // Known dynamic source fields must never be silently exported as stale literals.
-    for field in ["proyecto","autor","lamina","nombre","escala","escena","fecha","archivo","hoja","total"] {
-        if item.text.to_ascii_lowercase().contains(&format!("{{{field}}}")){return Err("PDF dynamic text field context remains unavailable".into());}
+    for field in [
+        "proyecto", "autor", "lamina", "nombre", "escala", "escena", "fecha", "archivo", "hoja",
+        "total",
+    ] {
+        if item
+            .text
+            .to_ascii_lowercase()
+            .contains(&format!("{{{field}}}"))
+        {
+            return Err("PDF dynamic text field context remains unavailable".into());
+        }
     }
-    let family=string("family","Sans Serif");let color=string("color","#1e242c");let align=string("align","left");
-    let color=ingetrazo_core::sheet_color::parse_sheet_color(&color)?.map(|v|f32::from(v)/255.);
-    let width=native.and_then(|v|v.get("w_mm")).and_then(|v|v.as_f64()).unwrap_or(80.);
-    painter.draw(&TextStyle{text:&item.text,origin_mm:[item.pos.0,item.pos.1],width_mm:width,size_pt:item.font_size_pt,family:&family,bold:item.bold,italic:flag("italic"),underline:flag("underline"),alignment:match align.as_str(){"center"=>Alignment::Center,"right"=>Alignment::Right,_=>Alignment::Left},color})
+    let family = string("family", "Sans Serif");
+    let color = string("color", "#1e242c");
+    let align = string("align", "left");
+    let color =
+        ingetrazo_core::sheet_color::parse_sheet_color(&color)?.map(|v| f32::from(v) / 255.);
+    let width = native
+        .and_then(|v| v.get("w_mm"))
+        .and_then(|v| v.as_f64())
+        .unwrap_or(80.);
+    let style = TextStyle {
+        text: &item.text,
+        origin_mm: [item.pos.0, item.pos.1],
+        width_mm: width,
+        size_pt: item.font_size_pt,
+        family: &family,
+        bold: item.bold,
+        italic: flag("italic"),
+        underline: flag("underline"),
+        alignment: match align.as_str() {
+            "center" => Alignment::Center,
+            "right" => Alignment::Right,
+            _ => Alignment::Left,
+        },
+        color,
+    };
+    if background.is_empty() {
+        painter.draw(&style)
+    } else {
+        let mut fill = ingetrazo_core::sheet_color::parse_sheet_color(&background)?
+            .map(|v| f32::from(v) / 255.);
+        let opacity = native
+            .and_then(|v| v.get("bg_opacity"))
+            .and_then(|v| v.as_f64())
+            .unwrap_or(1.);
+        if !opacity.is_finite() {
+            return Err("Invalid paper text background opacity".into());
+        }
+        fill[3] = ((opacity.clamp(0., 1.) * 65535.).round() / 65535.) as f32;
+        painter.draw_with_background(&style, fill)
+    }
 }

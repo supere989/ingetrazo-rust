@@ -34,6 +34,7 @@ fn admit_font(
 }
 #[derive(Debug, Clone)]
 pub struct FontRun {
+    pub rtl: bool,
     pub font: Rc<CachedFont>,
     pub logical_bytes: Range<usize>,
     pub glyphs: Vec<Glyph>,
@@ -150,6 +151,7 @@ fn shape_line_with_level(
                 result.ascent_26_6 = result.ascent_26_6.max(font.ascent_26_6());
                 result.descent_26_6 = result.descent_26_6.max(font.descent_26_6());
                 result.runs.push(FontRun {
+                    rtl,
                     font,
                     logical_bytes: range,
                     glyphs,
