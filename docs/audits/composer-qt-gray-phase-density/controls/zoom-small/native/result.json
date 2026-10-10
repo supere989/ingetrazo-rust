@@ -1,0 +1,81 @@
+{
+  "mandatory_cases": 9,
+  "inventory_negative_controls": 3,
+  "passed": false,
+  "cases": [
+    {
+      "name": "rect",
+      "different_pixels": 360,
+      "passed": false,
+      "gpu_uploads": 1,
+      "gpu_cached_bytes": 14832,
+      "warm_zero_uploads": true
+    },
+    {
+      "name": "rounded",
+      "different_pixels": 368,
+      "passed": false,
+      "gpu_uploads": 2,
+      "gpu_cached_bytes": 34416,
+      "warm_zero_uploads": true
+    },
+    {
+      "name": "ellipse",
+      "different_pixels": 412,
+      "passed": false,
+      "gpu_uploads": 3,
+      "gpu_cached_bytes": 49752,
+      "warm_zero_uploads": true
+    },
+    {
+      "name": "polygon-clamped",
+      "different_pixels": 405,
+      "passed": false,
+      "gpu_uploads": 4,
+      "gpu_cached_bytes": 50832,
+      "warm_zero_uploads": true
+    },
+    {
+      "name": "line-inverted",
+      "different_pixels": 204,
+      "passed": false,
+      "gpu_uploads": 5,
+      "gpu_cached_bytes": 14544,
+      "warm_zero_uploads": true
+    },
+    {
+      "name": "arrow",
+      "different_pixels": 220,
+      "passed": false,
+      "gpu_uploads": 6,
+      "gpu_cached_bytes": 16344,
+      "warm_zero_uploads": true
+    },
+    {
+      "name": "terrain-ticks",
+      "different_pixels": 341,
+      "passed": false,
+      "gpu_uploads": 7,
+      "gpu_cached_bytes": 25632,
+      "warm_zero_uploads": true
+    },
+    {
+      "name": "terrain-hatch-inverted",
+      "different_pixels": 832,
+      "passed": false,
+      "gpu_uploads": 8,
+      "gpu_cached_bytes": 59688,
+      "warm_zero_uploads": true
+    },
+    {
+      "name": "terrain-band",
+      "different_pixels": 204,
+      "passed": false,
+      "gpu_uploads": 9,
+      "gpu_cached_bytes": 38232,
+      "warm_zero_uploads": true
+    }
+  ],
+  "binary_sha256": "2a06c383939404e411a7d8ad82f4f26a6c8212bd5ce6c4ffc7bfdfa670358746",
+  "boundary": "Actual ash software Vulkan local physical shape renderer vs actual original QPainter PNG; strict pixels, no tolerance or full-sheet/export claim"
+}

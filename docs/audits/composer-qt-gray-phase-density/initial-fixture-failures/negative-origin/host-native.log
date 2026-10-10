@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/tmp/ingetrazo-composer-byte-span-independent/scripts/check-native-sheet-shape-pixels.py", line 18, in <module>
+    assert p.poll()is None
+           ^^^^^^^^^^^^^^^
+AssertionError

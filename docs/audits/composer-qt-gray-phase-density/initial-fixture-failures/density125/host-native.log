@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/tmp/ingetrazo-composer-byte-span-independent/scripts/check-native-sheet-shape-pixels.py", line 25, in <module>
+    assert metrics['uploads']==phase+1,"Unexpected repeated/cold geometry uploads"
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Unexpected repeated/cold geometry uploads

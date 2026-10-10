@@ -13,7 +13,7 @@ with (out/"native.log").open("w")as log:
  p=subprocess.Popen([str(binary)],env=env,stdout=log,stderr=log)
  try:
   for phase,row in enumerate(rows):
-   (out/"phase").write_text(str(phase));deadline=time.monotonic()+30
+   (out/"phase.next").write_text(str(phase));os.replace(out/"phase.next",out/"phase");deadline=time.monotonic()+30
    while True:
     assert p.poll()is None
     try:state=json.loads((out/"state.json").read_text())
@@ -22,7 +22,7 @@ with (out/"native.log").open("w")as log:
     assert time.monotonic()<deadline;time.sleep(.05)
    time.sleep(.25);capture=out/(row["name"]+".png");subprocess.run(["import","-display",display,"-window","root",str(capture)],check=True)
    metrics=json.loads((out/"state.json").read_text());assert metrics.get("phase")==phase and metrics.get("direct"),"Actual direct CAD path not observed"
-   assert metrics['uploads']==phase+1,"Unexpected repeated/cold geometry uploads"
+   startup_density_upload=int(float(os.environ.get('INGETRAZO_SHAPE_PPP','1'))!=1);assert metrics['uploads']==phase+1+startup_density_upload,"Unexpected repeated/cold geometry uploads"
    before=metrics['uploads'];time.sleep(.15);warm=json.loads((out/"state.json").read_text());assert warm['uploads']==before and warm['cache_hits']>metrics['cache_hits'],"Warm geometry reused incorrectly"
    a=QImage(str(source/(row["name"]+".png"))).convertToFormat(QImage.Format.Format_RGBA8888);b=QImage(str(capture)).copy(0,0,600,500).convertToFormat(QImage.Format.Format_RGBA8888);assert not a.isNull()and not b.isNull()and a.size()==b.size()
    aa,bb=bytes(a.constBits()),bytes(b.constBits());changed=sum(aa[i:i+4]!=bb[i:i+4]for i in range(0,len(aa),4));cases.append({"name":row["name"],"different_pixels":changed,"passed":changed==0,"gpu_uploads":warm["uploads"],"gpu_cached_bytes":warm["cached_bytes"],"warm_zero_uploads":True})
