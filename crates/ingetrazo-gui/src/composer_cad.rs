@@ -33,6 +33,7 @@ fn build_mapped(ctx:&egui::Context,shape:&SheetShape,zoom:f32,pixels_per_point:f
  let palette=crate::composer::precise_shape_palette(&commands)?;
  let mut vertices=Vec::new();let mut indices=Vec::new();let mut batches=Vec::new();let mut mapping=Vec::new();
  for (command_index,(command,(stroke_color,fill_color))) in commands.into_iter().zip(palette).enumerate(){
+  let closed_curve=source_closed_curve(&command.path);
   let straight_outline=match &command.path {
    ShapePath::RoundedRect{size,radius} if *radius==0.=>Some(vec![DVec2::ZERO,DVec2::new(size.x,0.),*size,DVec2::new(0.,size.y)]),
    ShapePath::Polygon(points) if convex_outline(points)=>Some(points.clone()),
@@ -63,13 +64,15 @@ fn build_mapped(ctx:&egui::Context,shape:&SheetShape,zoom:f32,pixels_per_point:f
    // Exact convex outlines and source round caps. Other curves, clipped
    // strokes/nonconvex and cosmetic strokes remain on the prior tessellator.
    let eligible_outline=straight_outline.as_ref().filter(|points|fill||(width>0.&&f64::from(width)<minimum_edge(points)));
-   if eligible_outline.is_some()||(!fill&&width>0.&&exact_line.is_some()) {
+   if eligible_outline.is_some()||(closed_curve.is_some()&&(fill||width>0.))||(!fill&&width>0.&&exact_line.is_some()) {
     let radius=command.stroke.as_ref().map(|(_,w)|*w).unwrap_or(0.)/2.;
     let spans=if let Some(points)=eligible_outline{
     let outlines=if fill{vec![points.clone()]}else{convex_bevel_outline(points,radius)?};
     let mut contours=outlines.into_iter().map(|outline|outline.into_iter().map(|p|[p.x*f64::from(density),p.y*f64::from(density)]).collect::<Vec<_>>()).collect::<Vec<_>>();
     for contour in &mut contours{for point in contour{point[0]+=phase.x;point[1]+=phase.y;}}
     ingetrazo_render::qt_gray::rasterize(&contours,250_000,100_000)?
+    }else if let Some(path)=&closed_curve{
+     let paths=if fill{vec![path.clone()]}else{source_curve_stroke(path,radius)?};ingetrazo_render::qt_gray::rasterize_transformed_paths(&paths,f64::from(density),[phase.x,phase.y],250_000,100_000)?
     }else{
      let(a,b)=exact_line.unwrap();let Some(path)=round_cap_outline(a,b,radius)else{continue;};
      let spans=ingetrazo_render::qt_gray::rasterize_transformed_paths(&[path],f64::from(density),[phase.x,phase.y],250_000,100_000)?;
@@ -114,7 +117,47 @@ fn build_mapped(ctx:&egui::Context,shape:&SheetShape,zoom:f32,pixels_per_point:f
  }
  let geometry=Geometry::new(vertices,indices)?;geometry.validate_batches(&batches)?;Ok((geometry,batches.into(),mapping))
 }
-pub fn round_cap_outline(a:DVec2,b:DVec2,radius:f64)->Option<ingetrazo_render::qt_gray::PathContour>{
+pub type Cubic=[DVec2;4];
+fn cubic_split(q:Cubic)->(Cubic,Cubic){let ab=(q[0]+q[1])*0.5;let bc=(q[1]+q[2])*0.5;let cd=(q[2]+q[3])*0.5;let abc=(ab+bc)*0.5;let bcd=(bc+cd)*0.5;let m=(abc+bcd)*0.5;([q[0],ab,abc,m],[m,bcd,cd,q[3]])}
+fn cubic_point(q:Cubic,t:f64)->DVec2{let mt=1.-t;let a=q[0]*mt+q[1]*t;let b=q[1]*mt+q[2]*t;let c=q[2]*mt+q[3]*t;let a=a*mt+b*t;let b=b*mt+c*t;a*mt+b*t}
+// Source QBezier::shift/good_offset, GPL-3.0-only, Qt Company 2016.
+// Convex quarter arcs only; degenerate/tiny/reversing offsets refuse admission.
+fn shifted_cubic(q:Cubic,offset:f64)->Result<Vec<Cubic>,String>{
+ let mut stack=vec![(q,0usize)];let mut out=Vec::new();
+ while let Some((q,depth))=stack.pop(){
+  let mut normals=[DVec2::ZERO;3];for i in 0..3{let d=q[i+1]-q[i];let length=d.length();if length<=1e-12{return Err("Degenerate source curve offset".into());}normals[i]=DVec2::new(d.y,-d.x)/length;}
+  let mut shifted=q;shifted[0]+=normals[0]*offset;shifted[3]+=normals[2]*offset;
+  for i in 1..3{let r=1.+normals[i-1].x*normals[i].x+normals[i-1].y*normals[i].y;if r.abs()<=1e-12{return Err("Reversing source curve offset".into());}shifted[i]+=(offset/r)*(normals[i-1]+normals[i]);}
+  let mut split=false;for t in [0.25,0.5,0.75]{let a=cubic_point(q,t);let b=cubic_point(shifted,t);let d=(a-b).length_squared();if (d-offset*offset).abs()>0.25*offset*offset{split=true;break;}
+   let mt=1.-t;let aa=mt*mt;let bb=t*mt;let cc=t*t;let n=DVec2::new((q[1].y-q[0].y)*aa+(q[2].y-q[1].y)*bb+(q[3].y-q[2].y)*cc,-(q[1].x-q[0].x)*aa-(q[2].x-q[1].x)*bb-(q[3].x-q[2].x)*cc);let length=n.x.abs()+n.y.abs();if length!=0.&& (n.x*(a.y-b.y)-n.y*(a.x-b.x)).abs()/length>0.25*offset{split=true;break;}}
+  if split{if depth>=8||out.len()+stack.len()>=15{return Err("Source curve offset subdivision admission exceeded".into());}let(a,b)=cubic_split(q);stack.push((b,depth+1));stack.push((a,depth+1));}else{out.push(shifted);}
+ }Ok(out)
+}
+pub fn source_closed_curve(path:&ShapePath)->Option<ingetrazo_render::qt_gray::PathContour>{
+ use ingetrazo_render::qt_gray::{PathContour,Segment};let k=0.5522847498;let pt=|p:DVec2|[p.x,p.y];
+ match path{
+ ShapePath::Ellipse{size}=>{let c=*size*0.5;let rx=c.x;let ry=c.y;Some(PathContour{start:pt(c+DVec2::new(rx,0.)),segments:vec![
+ Segment::Cubic{control1:pt(c+DVec2::new(rx,ry*k)),control2:pt(c+DVec2::new(rx*k,ry)),to:pt(c+DVec2::new(0.,ry))},
+ Segment::Cubic{control1:pt(c+DVec2::new(-rx*k,ry)),control2:pt(c+DVec2::new(-rx,ry*k)),to:pt(c-DVec2::new(rx,0.))},
+ Segment::Cubic{control1:pt(c+DVec2::new(-rx,-ry*k)),control2:pt(c+DVec2::new(-rx*k,-ry)),to:pt(c-DVec2::new(0.,ry))},
+ Segment::Cubic{control1:pt(c+DVec2::new(rx*k,-ry)),control2:pt(c+DVec2::new(rx,-ry*k)),to:pt(c+DVec2::new(rx,0.))}]})},
+ ShapePath::RoundedRect{size,radius}if *radius>0.=>{let r=*radius;let w=size.x;let h=size.y;Some(PathContour{start:[0.,r],segments:vec![
+ Segment::Cubic{control1:[0.,r-r*k],control2:[r-r*k,0.],to:[r,0.]},Segment::Line([w-r,0.]),
+ Segment::Cubic{control1:[w-r+r*k,0.],control2:[w,r-r*k],to:[w,r]},Segment::Line([w,h-r]),
+ Segment::Cubic{control1:[w,h-r+r*k],control2:[w-r+r*k,h],to:[w-r,h]},Segment::Line([r,h]),
+ Segment::Cubic{control1:[r-r*k,h],control2:[0.,h-r+r*k],to:[0.,h-r]},Segment::Line([0.,r])]})},_=>None
+ }
+}
+pub fn source_curve_stroke(path:&ingetrazo_render::qt_gray::PathContour,r:f64)->Result<Vec<ingetrazo_render::qt_gray::PathContour>,String>{
+ if !r.is_finite()||r<=0.||path.segments.is_empty(){return Err("Invalid source closed curve stroke admission".into());}
+ use ingetrazo_render::qt_gray::{PathContour,Segment};let point=|p:[f64;2]|DVec2::new(p[0],p[1]);let pt=|p:DVec2|[p.x,p.y];let mut edges=Vec::new();let mut current=point(path.start);
+ for s in &path.segments{let edge=match s{Segment::Line(to)=>{let to=point(*to);let d=to-current;if d.length()<=1e-12{current=to;continue;}let n=DVec2::new(d.y,-d.x)/d.length();vec![[current+n*r,current+n*r,to+n*r,to+n*r]]},Segment::Cubic{control1,control2,to}=>shifted_cubic([current,point(*control1),point(*control2),point(*to)],r)?};current=match s{Segment::Line(to)|Segment::Cubic{to,..}=>point(*to)};edges.extend(edge);}
+ let contour=|edges:Vec<Cubic>|{let mut segments=Vec::new();let mut current=edges[0][0];let start=pt(current);for q in edges{if current!=q[0]{segments.push(Segment::Line(pt(q[0])));}if q[0]==q[1]&&q[2]==q[3]{segments.push(Segment::Line(pt(q[3])));}else{segments.push(Segment::Cubic{control1:pt(q[1]),control2:pt(q[2]),to:pt(q[3])});}current=q[3];}PathContour{start,segments}};
+ let outer=contour(edges);let mut reversed=path.clone();let mut original=Vec::new();let mut current=point(path.start);for s in &path.segments{let q=match s{Segment::Line(to)=>[current,current,point(*to),point(*to)],Segment::Cubic{control1,control2,to}=>[current,point(*control1),point(*control2),point(*to)]};current=q[3];original.push(q);}original.reverse();reversed.start=pt(original[0][3]);reversed.segments=original.iter().map(|q|if q[0]==q[1]&&q[2]==q[3]{Segment::Line(pt(q[0]))}else{Segment::Cubic{control1:pt(q[2]),control2:pt(q[1]),to:pt(q[0])}}).collect();
+ // Inner offsets are shifted along the reversed path's outward normal.
+ let mut edges=Vec::new();let mut current=point(reversed.start);for s in &reversed.segments{match s{Segment::Line(to)=>{let to=point(*to);let d=to-current;if d.length()<=1e-12{current=to;continue;}let n=DVec2::new(d.y,-d.x)/d.length();edges.push([current+n*r,current+n*r,to+n*r,to+n*r]);current=to;},Segment::Cubic{control1,control2,to}=>{edges.extend(shifted_cubic([current,point(*control1),point(*control2),point(*to)],r)?);current=point(*to);}}}Ok(vec![outer,contour(edges)])
+}
+fn round_cap_outline(a:DVec2,b:DVec2,radius:f64)->Option<ingetrazo_render::qt_gray::PathContour>{
  use ingetrazo_render::qt_gray::{PathContour,Segment};let d=b-a;let length=d.length();if length<=1e-12||radius<=0.{return None;}
  let u=d/length*radius;let n=DVec2::new(u.y,-u.x);let k=0.5522847498;
  let point=|p:DVec2|[p.x,p.y];
@@ -190,6 +233,12 @@ impl NativeComposer{
 }
 #[cfg(test)]mod tests{
  use super::*;
+ #[test]fn closed_curve_offsets_refuse_degenerate_and_keep_warm_cache(){
+  let path=source_closed_curve(&ShapePath::Ellipse{size:DVec2::new(40.,25.)}).unwrap();assert_eq!(source_curve_stroke(&path,0.175).unwrap().len(),2);assert!(source_curve_stroke(&path,f64::NAN).is_err());assert!(source_curve_stroke(&path,0.).is_err());
+  assert!(shifted_cubic([DVec2::ZERO;4],1.).is_err());
+  let ctx=egui::Context::default();let _=ctx.run(Default::default(),|_|{});let mut cache=Cache::default();let mut shape=SheetShape::default();shape.kind="elipse".into();
+  let(g,b)=cache.prepare_at(&ctx,&shape,8.,1.,egui::pos2(50.25,50.25)).unwrap();let(g2,b2)=cache.prepare_at(&ctx,&shape,8.,1.,egui::pos2(50.25,50.25)).unwrap();assert!(Arc::ptr_eq(&g,&g2)&&Arc::ptr_eq(&b,&b2));
+ }
  #[test]fn round_caps_cache_actual_origin_and_refuse_degenerate(){
   assert!(round_cap_outline(DVec2::ZERO,DVec2::ZERO,1.).is_none());
   let ctx=egui::Context::default();let _=ctx.run(Default::default(),|_|{});let mut cache=Cache::default();let mut shape=SheetShape::default();shape.kind="linea".into();
