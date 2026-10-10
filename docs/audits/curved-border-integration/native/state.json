@@ -1,0 +1,1 @@
+{"index":3,"name":"production-carry-dash","origin":[417.25,253.5],"zoom":1.5,"ppp":1.0,"page":[297.0,210.0],"margin":10.0,"border":{"on":true,"mm":1.2,"color":"#000000","radius_mm":5.0,"style":"dashed"},"cold_builds":[2,4],"gpu":{"uploads":6,"cache_hits":414,"cached_bytes":458928,"draws":1050},"serial":210,"status":"","next":[76.5,11.0],"close":[172.5,11.0]}

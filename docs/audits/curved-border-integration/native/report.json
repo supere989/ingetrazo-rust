@@ -1,0 +1,731 @@
+{
+  "binary_sha256": "c0654d23840256d9e1eea5e50d2dde994daa7b4f85a9c09350535d6694fee376",
+  "source_stack_sha256": "208ec25ae0eb99bbe1664cf568d0b1e98c2850e9b6079b5e6914f91a7ff54f43",
+  "scope": "Actual production render_sheet_composer page/shadow/margin/border with empty authored items, actual XTEST recipe changes; original operative QGraphicsScene stack plus actual border painter",
+  "cases": [
+    {
+      "name": "production-curved-dash",
+      "changed": 0,
+      "first": [],
+      "roi": [
+        297,
+        168,
+        988,
+        659
+      ],
+      "state": {
+        "index": 0,
+        "name": "production-curved-dash",
+        "origin": [
+          298.45001220703125,
+          169.5
+        ],
+        "zoom": 2.299999952316284,
+        "ppp": 1.0,
+        "page": [
+          297.0,
+          210.0
+        ],
+        "margin": 10.0,
+        "border": {
+          "on": true,
+          "mm": 0.6,
+          "color": "#000000",
+          "radius_mm": 3.0,
+          "style": "dashed"
+        },
+        "cold_builds": [
+          1,
+          1
+        ],
+        "gpu": {
+          "uploads": 2,
+          "cache_hits": 12,
+          "cached_bytes": 740592,
+          "draws": 35
+        },
+        "serial": 7,
+        "status": "",
+        "next": [
+          76.5,
+          11.0
+        ],
+        "close": [
+          172.5,
+          11.0
+        ]
+      },
+      "warm": [
+        {
+          "index": 0,
+          "name": "production-curved-dash",
+          "origin": [
+            298.45001220703125,
+            169.5
+          ],
+          "zoom": 2.299999952316284,
+          "ppp": 1.0,
+          "page": [
+            297.0,
+            210.0
+          ],
+          "margin": 10.0,
+          "border": {
+            "on": true,
+            "mm": 0.6,
+            "color": "#000000",
+            "radius_mm": 3.0,
+            "style": "dashed"
+          },
+          "cold_builds": [
+            1,
+            1
+          ],
+          "gpu": {
+            "uploads": 2,
+            "cache_hits": 40,
+            "cached_bytes": 740592,
+            "draws": 105
+          },
+          "serial": 21,
+          "status": "",
+          "next": [
+            76.5,
+            11.0
+          ],
+          "close": [
+            172.5,
+            11.0
+          ]
+        },
+        {
+          "index": 0,
+          "name": "production-curved-dash",
+          "origin": [
+            298.45001220703125,
+            169.5
+          ],
+          "zoom": 2.299999952316284,
+          "ppp": 1.0,
+          "page": [
+            297.0,
+            210.0
+          ],
+          "margin": 10.0,
+          "border": {
+            "on": true,
+            "mm": 0.6,
+            "color": "#000000",
+            "radius_mm": 3.0,
+            "style": "dashed"
+          },
+          "cold_builds": [
+            1,
+            1
+          ],
+          "gpu": {
+            "uploads": 2,
+            "cache_hits": 46,
+            "cached_bytes": 740592,
+            "draws": 120
+          },
+          "serial": 24,
+          "status": "",
+          "next": [
+            76.5,
+            11.0
+          ],
+          "close": [
+            172.5,
+            11.0
+          ]
+        },
+        {
+          "index": 0,
+          "name": "production-curved-dash",
+          "origin": [
+            298.45001220703125,
+            169.5
+          ],
+          "zoom": 2.299999952316284,
+          "ppp": 1.0,
+          "page": [
+            297.0,
+            210.0
+          ],
+          "margin": 10.0,
+          "border": {
+            "on": true,
+            "mm": 0.6,
+            "color": "#000000",
+            "radius_mm": 3.0,
+            "style": "dashed"
+          },
+          "cold_builds": [
+            1,
+            1
+          ],
+          "gpu": {
+            "uploads": 2,
+            "cache_hits": 52,
+            "cached_bytes": 740592,
+            "draws": 135
+          },
+          "serial": 27,
+          "status": "",
+          "next": [
+            76.5,
+            11.0
+          ],
+          "close": [
+            172.5,
+            11.0
+          ]
+        }
+      ]
+    },
+    {
+      "name": "production-clamped-dash",
+      "changed": 0,
+      "first": [],
+      "roi": [
+        416,
+        252,
+        867,
+        573
+      ],
+      "state": {
+        "index": 1,
+        "name": "production-clamped-dash",
+        "origin": [
+          417.25,
+          253.5
+        ],
+        "zoom": 1.5,
+        "ppp": 1.0,
+        "page": [
+          297.0,
+          210.0
+        ],
+        "margin": 10.0,
+        "border": {
+          "on": true,
+          "mm": 0.8,
+          "color": "#000000",
+          "radius_mm": 100.0,
+          "style": "dashed"
+        },
+        "cold_builds": [
+          2,
+          2
+        ],
+        "gpu": {
+          "uploads": 4,
+          "cache_hits": 122,
+          "cached_bytes": 471672,
+          "draws": 315
+        },
+        "serial": 63,
+        "status": "",
+        "next": [
+          76.5,
+          11.0
+        ],
+        "close": [
+          172.5,
+          11.0
+        ]
+      },
+      "warm": [
+        {
+          "index": 1,
+          "name": "production-clamped-dash",
+          "origin": [
+            417.25,
+            253.5
+          ],
+          "zoom": 1.5,
+          "ppp": 1.0,
+          "page": [
+            297.0,
+            210.0
+          ],
+          "margin": 10.0,
+          "border": {
+            "on": true,
+            "mm": 0.8,
+            "color": "#000000",
+            "radius_mm": 100.0,
+            "style": "dashed"
+          },
+          "cold_builds": [
+            2,
+            2
+          ],
+          "gpu": {
+            "uploads": 4,
+            "cache_hits": 144,
+            "cached_bytes": 471672,
+            "draws": 370
+          },
+          "serial": 74,
+          "status": "",
+          "next": [
+            76.5,
+            11.0
+          ],
+          "close": [
+            172.5,
+            11.0
+          ]
+        },
+        {
+          "index": 1,
+          "name": "production-clamped-dash",
+          "origin": [
+            417.25,
+            253.5
+          ],
+          "zoom": 1.5,
+          "ppp": 1.0,
+          "page": [
+            297.0,
+            210.0
+          ],
+          "margin": 10.0,
+          "border": {
+            "on": true,
+            "mm": 0.8,
+            "color": "#000000",
+            "radius_mm": 100.0,
+            "style": "dashed"
+          },
+          "cold_builds": [
+            2,
+            2
+          ],
+          "gpu": {
+            "uploads": 4,
+            "cache_hits": 152,
+            "cached_bytes": 471672,
+            "draws": 390
+          },
+          "serial": 78,
+          "status": "",
+          "next": [
+            76.5,
+            11.0
+          ],
+          "close": [
+            172.5,
+            11.0
+          ]
+        },
+        {
+          "index": 1,
+          "name": "production-clamped-dash",
+          "origin": [
+            417.25,
+            253.5
+          ],
+          "zoom": 1.5,
+          "ppp": 1.0,
+          "page": [
+            297.0,
+            210.0
+          ],
+          "margin": 10.0,
+          "border": {
+            "on": true,
+            "mm": 0.8,
+            "color": "#000000",
+            "radius_mm": 100.0,
+            "style": "dashed"
+          },
+          "cold_builds": [
+            2,
+            2
+          ],
+          "gpu": {
+            "uploads": 4,
+            "cache_hits": 158,
+            "cached_bytes": 471672,
+            "draws": 405
+          },
+          "serial": 81,
+          "status": "",
+          "next": [
+            76.5,
+            11.0
+          ],
+          "close": [
+            172.5,
+            11.0
+          ]
+        }
+      ]
+    },
+    {
+      "name": "production-thin-curved-dash",
+      "changed": 0,
+      "first": [],
+      "roi": [
+        416,
+        252,
+        867,
+        573
+      ],
+      "state": {
+        "index": 2,
+        "name": "production-thin-curved-dash",
+        "origin": [
+          417.25,
+          253.5
+        ],
+        "zoom": 1.5,
+        "ppp": 1.0,
+        "page": [
+          297.0,
+          210.0
+        ],
+        "margin": 10.0,
+        "border": {
+          "on": true,
+          "mm": 0.2,
+          "color": "#000000",
+          "radius_mm": 3.0,
+          "style": "dashed"
+        },
+        "cold_builds": [
+          2,
+          3
+        ],
+        "gpu": {
+          "uploads": 5,
+          "cache_hits": 227,
+          "cached_bytes": 359496,
+          "draws": 580
+        },
+        "serial": 116,
+        "status": "",
+        "next": [
+          76.5,
+          11.0
+        ],
+        "close": [
+          172.5,
+          11.0
+        ]
+      },
+      "warm": [
+        {
+          "index": 2,
+          "name": "production-thin-curved-dash",
+          "origin": [
+            417.25,
+            253.5
+          ],
+          "zoom": 1.5,
+          "ppp": 1.0,
+          "page": [
+            297.0,
+            210.0
+          ],
+          "margin": 10.0,
+          "border": {
+            "on": true,
+            "mm": 0.2,
+            "color": "#000000",
+            "radius_mm": 3.0,
+            "style": "dashed"
+          },
+          "cold_builds": [
+            2,
+            3
+          ],
+          "gpu": {
+            "uploads": 5,
+            "cache_hits": 251,
+            "cached_bytes": 359496,
+            "draws": 640
+          },
+          "serial": 128,
+          "status": "",
+          "next": [
+            76.5,
+            11.0
+          ],
+          "close": [
+            172.5,
+            11.0
+          ]
+        },
+        {
+          "index": 2,
+          "name": "production-thin-curved-dash",
+          "origin": [
+            417.25,
+            253.5
+          ],
+          "zoom": 1.5,
+          "ppp": 1.0,
+          "page": [
+            297.0,
+            210.0
+          ],
+          "margin": 10.0,
+          "border": {
+            "on": true,
+            "mm": 0.2,
+            "color": "#000000",
+            "radius_mm": 3.0,
+            "style": "dashed"
+          },
+          "cold_builds": [
+            2,
+            3
+          ],
+          "gpu": {
+            "uploads": 5,
+            "cache_hits": 257,
+            "cached_bytes": 359496,
+            "draws": 655
+          },
+          "serial": 131,
+          "status": "",
+          "next": [
+            76.5,
+            11.0
+          ],
+          "close": [
+            172.5,
+            11.0
+          ]
+        },
+        {
+          "index": 2,
+          "name": "production-thin-curved-dash",
+          "origin": [
+            417.25,
+            253.5
+          ],
+          "zoom": 1.5,
+          "ppp": 1.0,
+          "page": [
+            297.0,
+            210.0
+          ],
+          "margin": 10.0,
+          "border": {
+            "on": true,
+            "mm": 0.2,
+            "color": "#000000",
+            "radius_mm": 3.0,
+            "style": "dashed"
+          },
+          "cold_builds": [
+            2,
+            3
+          ],
+          "gpu": {
+            "uploads": 5,
+            "cache_hits": 265,
+            "cached_bytes": 359496,
+            "draws": 675
+          },
+          "serial": 135,
+          "status": "",
+          "next": [
+            76.5,
+            11.0
+          ],
+          "close": [
+            172.5,
+            11.0
+          ]
+        }
+      ]
+    },
+    {
+      "name": "production-carry-dash",
+      "changed": 0,
+      "first": [],
+      "roi": [
+        416,
+        252,
+        867,
+        573
+      ],
+      "state": {
+        "index": 3,
+        "name": "production-carry-dash",
+        "origin": [
+          417.25,
+          253.5
+        ],
+        "zoom": 1.5,
+        "ppp": 1.0,
+        "page": [
+          297.0,
+          210.0
+        ],
+        "margin": 10.0,
+        "border": {
+          "on": true,
+          "mm": 1.2,
+          "color": "#000000",
+          "radius_mm": 5.0,
+          "style": "dashed"
+        },
+        "cold_builds": [
+          2,
+          4
+        ],
+        "gpu": {
+          "uploads": 6,
+          "cache_hits": 332,
+          "cached_bytes": 458928,
+          "draws": 845
+        },
+        "serial": 169,
+        "status": "",
+        "next": [
+          76.5,
+          11.0
+        ],
+        "close": [
+          172.5,
+          11.0
+        ]
+      },
+      "warm": [
+        {
+          "index": 3,
+          "name": "production-carry-dash",
+          "origin": [
+            417.25,
+            253.5
+          ],
+          "zoom": 1.5,
+          "ppp": 1.0,
+          "page": [
+            297.0,
+            210.0
+          ],
+          "margin": 10.0,
+          "border": {
+            "on": true,
+            "mm": 1.2,
+            "color": "#000000",
+            "radius_mm": 5.0,
+            "style": "dashed"
+          },
+          "cold_builds": [
+            2,
+            4
+          ],
+          "gpu": {
+            "uploads": 6,
+            "cache_hits": 356,
+            "cached_bytes": 458928,
+            "draws": 905
+          },
+          "serial": 181,
+          "status": "",
+          "next": [
+            76.5,
+            11.0
+          ],
+          "close": [
+            172.5,
+            11.0
+          ]
+        },
+        {
+          "index": 3,
+          "name": "production-carry-dash",
+          "origin": [
+            417.25,
+            253.5
+          ],
+          "zoom": 1.5,
+          "ppp": 1.0,
+          "page": [
+            297.0,
+            210.0
+          ],
+          "margin": 10.0,
+          "border": {
+            "on": true,
+            "mm": 1.2,
+            "color": "#000000",
+            "radius_mm": 5.0,
+            "style": "dashed"
+          },
+          "cold_builds": [
+            2,
+            4
+          ],
+          "gpu": {
+            "uploads": 6,
+            "cache_hits": 362,
+            "cached_bytes": 458928,
+            "draws": 920
+          },
+          "serial": 184,
+          "status": "",
+          "next": [
+            76.5,
+            11.0
+          ],
+          "close": [
+            172.5,
+            11.0
+          ]
+        },
+        {
+          "index": 3,
+          "name": "production-carry-dash",
+          "origin": [
+            417.25,
+            253.5
+          ],
+          "zoom": 1.5,
+          "ppp": 1.0,
+          "page": [
+            297.0,
+            210.0
+          ],
+          "margin": 10.0,
+          "border": {
+            "on": true,
+            "mm": 1.2,
+            "color": "#000000",
+            "radius_mm": 5.0,
+            "style": "dashed"
+          },
+          "cold_builds": [
+            2,
+            4
+          ],
+          "gpu": {
+            "uploads": 6,
+            "cache_hits": 370,
+            "cached_bytes": 458928,
+            "draws": 940
+          },
+          "serial": 188,
+          "status": "",
+          "next": [
+            76.5,
+            11.0
+          ],
+          "close": [
+            172.5,
+            11.0
+          ]
+        }
+      ]
+    }
+  ]
+}
