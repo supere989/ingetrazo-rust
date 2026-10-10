@@ -1,0 +1,14 @@
+{
+  "result": "openskp",
+  "groups": 1,
+  "image_null": true,
+  "material": {
+    "name": "Tile",
+    "texture": {
+      "path": "/home/dev/.local/share/IngeTrazo/textures/skp/ingetrazo-skp-truncated-texture-2568e1cc32/tile.png",
+      "sw": 0.254,
+      "sh": 0.508
+    },
+    "opacity": 0.75
+  }
+}

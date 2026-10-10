@@ -1,0 +1,117 @@
+[
+  {
+    "file": "SU_File-comparison.json.gz",
+    "raw_sha256": "8c5f56f7011a16a55d90e7e5efbd408b3bf17cc682a44132a0ed07f0039af427",
+    "stored_sha256": "3dc99f76d8c1771ecf842475f05cf907363df0f0bb1f3838ba55124032da9a87"
+  },
+  {
+    "file": "hole-paint-layer-comparison.json.gz",
+    "raw_sha256": "108b69ecb8e40a9d1ac1f5cc1e1f87f08c4281db7f688d94ebf78ffb0637dc21",
+    "stored_sha256": "d1a53c15b1704204e08a6f5ed9a92233c7ec2bfc0777953438e4107a44cdca9f"
+  },
+  {
+    "file": "inherited-paint-comparison.json.gz",
+    "raw_sha256": "f2d27bbf42f4dcf949975ee2289f028e9cdb06bdafb1b2ed026ccc61a48fdf24",
+    "stored_sha256": "3390e0dad57e7b2fb2949f9799a2607c970110158e11783a6ca35780604ebe9a"
+  },
+  {
+    "file": "nested-equal-paint-protos-comparison.json.gz",
+    "raw_sha256": "9317d2ad9fc9568a48cc799c150dab2b6c677514f315b90b4a2bb994af487d7b",
+    "stored_sha256": "1391ead54552c1703fe2d61e2b70a5174695b7c3fb224acc20070ac5379338fe"
+  },
+  {
+    "file": "nested-fractional-transform-comparison.json.gz",
+    "raw_sha256": "ce40fea04d7ef285d73920330ebbab3ff83b827a2bde21c767bfc08fdb07f09f",
+    "stored_sha256": "15a27ca15fa3821f7f1d126137581be5ffd16da6c810b0b4a0054045730e7ff0"
+  },
+  {
+    "file": "nested-inherited-paint-comparison.json.gz",
+    "raw_sha256": "7b69e57d6a0a0de382f3e6b4c16ceee7486542a708b07f8d6f1d72e9ec9c5300",
+    "stored_sha256": "deb35d05424a7da0a17dd18db5c7a2604c274b8838873798cc4dbbcc9a3d90c2"
+  },
+  {
+    "file": "nested-proto-in-proto-comparison.json.gz",
+    "raw_sha256": "558ed781772df8af3c1de3f16558eda39db76a1bcabb33cb089843b2fe01ca0a",
+    "stored_sha256": "5b67e9c4f6607cf1639318eab6268d2c92470f121394ccf8d69db4ec0989f6a5"
+  },
+  {
+    "file": "nested-reflected-scaled-comparison.json.gz",
+    "raw_sha256": "e6f4b4be33e12a89ae9a1e99ad94b60a66638b929d80c90a24434959a55c124c",
+    "stored_sha256": "6d4c432f5d582676f24e76860de9ef646e6d1dd5b12523184837f141bd4dcc1f"
+  },
+  {
+    "file": "nested-shared-child-comparison.json.gz",
+    "raw_sha256": "b4b1b3884a6af10b87ac75765c1a05d0835e0edf0ce1518056061f0c08f7fcd5",
+    "stored_sha256": "dedffdbb8cb48428a40067b1b6747d46448a1de0fdde580eb4c761bac615aa93"
+  },
+  {
+    "file": "nested-shared-parent-comparison.json.gz",
+    "raw_sha256": "970ca7a1f5c9ceae55f03859f25db2e0940c02de347ef998c0eb65943f160a93",
+    "stored_sha256": "a71df06b6960adf4d706cf6808af82e4c6a71bae6265e9d7bf39137c70c2c264"
+  },
+  {
+    "file": "nested-single-container-comparison.json.gz",
+    "raw_sha256": "3ec5d4d62e6b51e803e993754535e451b0cb768440c8a88d385981af22ac0d7c",
+    "stored_sha256": "3b72146a9f030fec17c4b2b5224bed7729bc0bdb9b11af96eab5135bba67bae4"
+  },
+  {
+    "file": "nested-tagged-flat-comparison.json.gz",
+    "raw_sha256": "9309518ccd2fe5fd3fbe38fb9093ca14848fb18ea2ec61288804fa1df76f162a",
+    "stored_sha256": "2d91b833b56c4f4b8bd026f50266e50029946bf6edacba10a8e4364ff00a4278"
+  },
+  {
+    "file": "nested-tagged-shared-comparison.json.gz",
+    "raw_sha256": "6e8cddbc3fed59beee0f2fafef9f52439dc9687ca6bbb78d254e58c17c9c2841",
+    "stored_sha256": "3f418c7a4d095ed1a98ffd8cdd1d157d7938723716e9e4db98189f4a10eb5adb"
+  },
+  {
+    "file": "shared-eight-comparison.json.gz",
+    "raw_sha256": "5419216a5c806562cd76a430b4a79869a6be6c7b96f0d363f3ad402a7fc8254f",
+    "stored_sha256": "66ed424806d57fb25b92a32994abaf5d717763c56b4f8aa8d051b2478b4ac96f"
+  },
+  {
+    "file": "single-definition-comparison.json.gz",
+    "raw_sha256": "ed3ff9103bb54706b5b7f25a99a084adb59cacb62072147775ccdd86b060c781",
+    "stored_sha256": "fbdbdc241e7f0f4ac10c2d298510c314033e011ad119d83b350408f9799012cd"
+  },
+  {
+    "file": "small-two-flat-comparison.json.gz",
+    "raw_sha256": "ba7be991f085997b1abc20f23d1653701b2574e807bf7bb48b2f171475b406cb",
+    "stored_sha256": "be565aaee37af23f768d3ee2427a8e6b250df3f6ebfb22e4f8deef45110ddd4d"
+  },
+  {
+    "file": "texture-default-hole-comparison.json.gz",
+    "raw_sha256": "b6a074c9080038d9482c737bf85a4e7c369a039e4fa14c5b1e92ffe802252f96",
+    "stored_sha256": "86bb32a499ffec660afd2756d1497ad8f97127b9bd7661471d76112c9841264a"
+  },
+  {
+    "file": "texture-default-size-comparison.json.gz",
+    "raw_sha256": "93716421b52f3241cc70a4a8be2ff916506ec7777f5deb292c8ba492844b1a8e",
+    "stored_sha256": "4fca1f82a10b7282a9336e7eeab600ec1c51398013d626cd89b08f126ccdb894"
+  },
+  {
+    "file": "texture-downward-basis-comparison.json.gz",
+    "raw_sha256": "443b3252a393a3cc4e50f2ea1b0d51b9ed7e01a5f51dd8639f1249b2c656c4f7",
+    "stored_sha256": "8bf1aff8dc980bef56f72d5452559a5757d8be4731d85fc9b53a33d8d3e2fb73"
+  },
+  {
+    "file": "texture-nested-transform-comparison.json.gz",
+    "raw_sha256": "da5dd9fe327d8bb3028af6e73a649f2d586ea39a622cf03e903ee78f1a06b665",
+    "stored_sha256": "2ff3ba453aed73d1b3807bc063e15deda1883f156053cfffa2e7704978f968ae"
+  },
+  {
+    "file": "texture-sentinel-size-comparison.json.gz",
+    "raw_sha256": "22c77f26bfcb8d7e41931150496d3201db36eb038caeee884b3be8f91f9cb516",
+    "stored_sha256": "e23130bd6b238280d70fb6c031288740ad28aac5011612195ae47ca03bc4c112"
+  },
+  {
+    "file": "texture-shared-local-comparison.json.gz",
+    "raw_sha256": "cb575a400ab538cee533f6d55bc35a50cc470e675b4ee4b7ad28a31f7db920f2",
+    "stored_sha256": "2206e27628119a02971a1ebf2b5cef1f3a9b9026646fac59503399d156f1de46"
+  },
+  {
+    "file": "texture-sibling-fallback-comparison.json.gz",
+    "raw_sha256": "f5b6b5772f903df045590d3456d843cf02cff309afa8019d13202dc293bfedbe",
+    "stored_sha256": "93b82ad5f9ade95cffea356dc05b5924242b47b6dc6897848b00c4efe6fbe465"
+  }
+]
