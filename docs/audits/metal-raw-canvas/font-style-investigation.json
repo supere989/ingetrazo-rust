@@ -1,0 +1,7 @@
+{
+  "status": "Hypothesis pending native per-case diagnostics; do not weaken admission",
+  "local_source": "ttf-parser0.25.1 Face::is_bold returns false when OS/2 is absent; Face::is_italic also consults italic angle.",
+  "primary_reference": "https://learn.microsoft.com/en-us/typography/opentype/spec/recom#style-bits",
+  "reference_scope": "OpenType recommendation describes legacy Windows fallback to head.macStyle when OS/2 absent. It is not proof of actual CoreText/Qt selection.",
+  "next": "Inspect selected physical Times name/path, OS/2 presence and reported flags. Compare actual Qt file identity before choosing a file-style fallback."
+}
