@@ -1,0 +1,13 @@
+{
+  "source": "685c6ab5e49ba656c80646d211684ce8e6030f72",
+  "run": 38062586306,
+  "job": 114243688966,
+  "job_name": "Native Metal framework link (macos-15)",
+  "artifact": 11673633116,
+  "qt_window_color_space": "Apple Virtual colorspace",
+  "metal_window_color_space": "Apple Virtual colorspace",
+  "metal_layer_color_space": "kCGColorSpaceSRGB",
+  "both_layer_contents_format": "RGBA8",
+  "presentation_passed": false,
+  "physical_mac_claim": false
+}

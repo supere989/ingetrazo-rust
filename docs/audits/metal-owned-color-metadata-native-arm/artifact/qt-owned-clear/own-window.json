@@ -1,0 +1,20 @@
+{
+  "passed": false,
+  "presentation_claim": false,
+  "physical_mac_claim": false,
+  "native_window_color_space": "Apple Virtual colorspace",
+  "native_view_layer_class": "QContainerLayer",
+  "native_view_layer_contents_format": "RGBA8",
+  "qt": "6.12.0",
+  "owned_nswindow_id": 32,
+  "owned_nsview_class": "NSKVONotifying_QNSView",
+  "actual_QPainter": true,
+  "paint_events": 3,
+  "raw_source_rgba": [
+    20,
+    51,
+    89,
+    255
+  ],
+  "raw_source_sha256": "24af2d358196b706bd889e2458001783d2d0d8134d40e4bb48db1c295325e28a"
+}

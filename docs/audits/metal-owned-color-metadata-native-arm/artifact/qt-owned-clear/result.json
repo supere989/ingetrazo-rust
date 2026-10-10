@@ -1,0 +1,83 @@
+{
+  "passed": true,
+  "presentation_claim": false,
+  "physical_mac_claim": false,
+  "native_window_color_space": "Apple Virtual colorspace",
+  "native_view_layer_class": "QContainerLayer",
+  "native_view_layer_contents_format": "RGBA8",
+  "qt": "6.12.0",
+  "owned_nswindow_id": 32,
+  "owned_nsview_class": "NSKVONotifying_QNSView",
+  "actual_QPainter": true,
+  "paint_events": 3,
+  "raw_source_rgba": [
+    20,
+    51,
+    89,
+    255
+  ],
+  "raw_source_sha256": "24af2d358196b706bd889e2458001783d2d0d8134d40e4bb48db1c295325e28a",
+  "capture_command": [
+    "/usr/sbin/screencapture",
+    "-x",
+    "-l",
+    "32",
+    "docs/audits/metal-native-link-ci/qt-owned-clear/own-window.png"
+  ],
+  "capture_status": 0,
+  "capture": {
+    "width": 912,
+    "height": 740,
+    "points": [
+      [
+        456,
+        370
+      ],
+      [
+        228,
+        370
+      ],
+      [
+        684,
+        370
+      ],
+      [
+        456,
+        555
+      ]
+    ],
+    "rgb": [
+      [
+        20,
+        51,
+        89
+      ],
+      [
+        20,
+        51,
+        89
+      ],
+      [
+        20,
+        51,
+        89
+      ],
+      [
+        20,
+        51,
+        89
+      ]
+    ],
+    "visible_clear": true
+  },
+  "png_sha256": "0e4f175dd122cb018b47b25c582fe3037c97349bf3e24cda1c27dd17314dde99",
+  "png_color_metadata": [
+    {
+      "chunk": "iCCP",
+      "bytes": 2715,
+      "sha256": "46bcd15d2a4f5231bbeae396e2ae323b27f60ba4c3595bf870972cf0b4b6132d"
+    }
+  ],
+  "capture_matches_raw_source_bytes": true,
+  "elapsed_seconds": 1.4759584590000259
+}
