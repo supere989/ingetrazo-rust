@@ -551,7 +551,7 @@ fn build_group_buffers(
     // Original _instanced_eligible uses a prototype-local cache: transparent/back
     // content stays consolidated. Counts/ranges already built above answer that
     // question without another face traversal or a per-frame placement copy.
-    let source_placement=group.native_document.get("proto").is_some()||group.component_definition.is_some()||(group.native_document.is_null()&&!group.children.is_empty());
+    let source_placement=source_group_has_placement(group);
     let local_transparent=transparent.indices.len()!=local_start.1;
     let local_back=opaque.source_back_override_count+transparent.source_back_override_count!=local_start.3;
     let instanced=source_placement&&!group.billboard&&!local_transparent&&!local_back&&!source_instancing_disabled();
@@ -1405,3 +1405,26 @@ fn record_source_back_paint(buffer:&mut MeshRenderBuffer,first:usize,order:usize
  if let Some(c)=color {let color=[0,1,2].map(|i|(c[i].as_f64().unwrap_or(0.)as f32*shade).clamp(0.,1.));buffer.source_back_paints.push(crate::buffer::SourceBackPaint{first,count,order,color,opacity});}
 }
 fn source_instancing_disabled()->bool {static DISABLED:std::sync::OnceLock<bool>=std::sync::OnceLock::new();*DISABLED.get_or_init(||std::env::var("INGETRAZO_NO_INSTANCING").as_deref()==Ok("1"))}
+
+// Original formats.igz._group_from applies xform only to a numeric proto
+// reference. Legacy inline groups remain classic even if a component flag is
+// present. Group.adopt promotes containers with children to placements.
+fn source_group_has_placement(group:&ingetrazo_core::groups::Group)->bool {
+ if group.native_document.is_object() {
+  group.native_document.get("proto").and_then(|p|p.as_u64()).is_some()
+   &&group.native_document.get("xform").is_some_and(|x|x.is_array())
+   || !group.children.is_empty()
+ } else {group.component_definition.is_some()||!group.children.is_empty()}
+}
+#[cfg(test)]mod source_placement_regression {
+ use super::*;
+ use ingetrazo_core::groups::Group;
+ #[test]fn classic_legacy_and_component_flags_do_not_imply_instancing(){
+  let mut g=Group::new("legacy");
+  g.native_document=serde_json::json!({"component":true,"proto":null,"xform":DMat4::IDENTITY.to_cols_array()});assert!(!source_group_has_placement(&g));
+  g.native_document=serde_json::json!({"component":true,"edges":[],"faces":[]});assert!(!source_group_has_placement(&g));
+  g.native_document=serde_json::json!({"proto":0});assert!(!source_group_has_placement(&g));
+  g.native_document=serde_json::json!({"proto":0,"xform":DMat4::IDENTITY.to_cols_array(),"component":false});assert!(source_group_has_placement(&g));
+  g.native_document=serde_json::json!({"faces":[]});g.children.push(Group::new("nested"));assert!(source_group_has_placement(&g));
+ }
+}
