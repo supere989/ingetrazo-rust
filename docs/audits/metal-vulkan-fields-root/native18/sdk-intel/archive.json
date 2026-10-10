@@ -1,0 +1,28 @@
+{
+  "artifact_id": 11675947770,
+  "sha256": "dd8b52c715a60a6ee0971ef060518a75ca79fe66694983e36c457a72d6305995",
+  "zip_crc_verified": true,
+  "files": [
+    "metal-native-link-ci/binary.txt",
+    "metal-native-link-ci/cad-drop.log",
+    "metal-native-link-ci/compute/alpha-0.rgba",
+    "metal-native-link-ci/build.log",
+    "metal-native-link-ci/compute/alpha-1.rgba",
+    "metal-native-link-ci/compute/alpha-127.rgba",
+    "metal-native-link-ci/compute/alpha-128.rgba",
+    "metal-native-link-ci/compute/alpha-254.rgba",
+    "metal-native-link-ci/compute/alpha-255.rgba",
+    "metal-native-link-ci/compute-render.log",
+    "metal-native-link-ci/device-and-allocation.log",
+    "metal-native-link-ci/fetch-render.log",
+    "metal-native-link-ci/frameworks.txt",
+    "metal-native-link-ci/gpu-submission.log",
+    "metal-native-link-ci/negative-build.log",
+    "metal-native-link-ci/negative-compute/alpha-0.rgba",
+    "metal-native-link-ci/negative-compute.log",
+    "paper-font-native-ci/font-resource.log",
+    "paper-font-native-ci/tests.log",
+    "metal-combined-gui-ci/build.log",
+    "metal-combined-gui-ci/check.log"
+  ]
+}
