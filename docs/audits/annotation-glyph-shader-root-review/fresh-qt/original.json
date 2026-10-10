@@ -1,0 +1,803 @@
+{
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "qt": "6.12.0",
+  "cases": [
+    {
+      "name": "glyph-light",
+      "operations": [
+        {
+          "kind": "polygon",
+          "pen": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "width": 0,
+          "brush": [
+            240,
+            243,
+            246,
+            255
+          ],
+          "points": [
+            [
+              -1000,
+              -1000
+            ],
+            [
+              4000,
+              -1000
+            ],
+            [
+              -1000,
+              4000
+            ]
+          ]
+        },
+        {
+          "kind": "text",
+          "pen": [
+            1,
+            7,
+            19,
+            0
+          ],
+          "width": 1,
+          "font": [
+            "Sans Serif",
+            11,
+            true
+          ],
+          "position": [
+            25,
+            60
+          ],
+          "text": "Mg"
+        },
+        {
+          "kind": "text",
+          "pen": [
+            1,
+            7,
+            19,
+            1
+          ],
+          "width": 1,
+          "font": [
+            "Sans Serif",
+            11,
+            true
+          ],
+          "position": [
+            125,
+            60
+          ],
+          "text": "Mg"
+        },
+        {
+          "kind": "text",
+          "pen": [
+            1,
+            7,
+            19,
+            127
+          ],
+          "width": 1,
+          "font": [
+            "Sans Serif",
+            11,
+            true
+          ],
+          "position": [
+            225,
+            60
+          ],
+          "text": "Mg"
+        },
+        {
+          "kind": "text",
+          "pen": [
+            1,
+            7,
+            19,
+            128
+          ],
+          "width": 1,
+          "font": [
+            "Sans Serif",
+            11,
+            true
+          ],
+          "position": [
+            325,
+            60
+          ],
+          "text": "Mg"
+        },
+        {
+          "kind": "text",
+          "pen": [
+            1,
+            7,
+            19,
+            230
+          ],
+          "width": 1,
+          "font": [
+            "Sans Serif",
+            11,
+            true
+          ],
+          "position": [
+            425,
+            60
+          ],
+          "text": "Mg"
+        },
+        {
+          "kind": "text",
+          "pen": [
+            1,
+            7,
+            19,
+            255
+          ],
+          "width": 1,
+          "font": [
+            "Sans Serif",
+            11,
+            true
+          ],
+          "position": [
+            525,
+            60
+          ],
+          "text": "Mg"
+        },
+        {
+          "kind": "text",
+          "pen": [
+            37,
+            93,
+            157,
+            0
+          ],
+          "width": 1,
+          "font": [
+            "Sans Serif",
+            11,
+            true
+          ],
+          "position": [
+            25,
+            160
+          ],
+          "text": "Mg"
+        },
+        {
+          "kind": "text",
+          "pen": [
+            37,
+            93,
+            157,
+            1
+          ],
+          "width": 1,
+          "font": [
+            "Sans Serif",
+            11,
+            true
+          ],
+          "position": [
+            125,
+            160
+          ],
+          "text": "Mg"
+        },
+        {
+          "kind": "text",
+          "pen": [
+            37,
+            93,
+            157,
+            127
+          ],
+          "width": 1,
+          "font": [
+            "Sans Serif",
+            11,
+            true
+          ],
+          "position": [
+            225,
+            160
+          ],
+          "text": "Mg"
+        },
+        {
+          "kind": "text",
+          "pen": [
+            37,
+            93,
+            157,
+            128
+          ],
+          "width": 1,
+          "font": [
+            "Sans Serif",
+            11,
+            true
+          ],
+          "position": [
+            325,
+            160
+          ],
+          "text": "Mg"
+        },
+        {
+          "kind": "text",
+          "pen": [
+            37,
+            93,
+            157,
+            230
+          ],
+          "width": 1,
+          "font": [
+            "Sans Serif",
+            11,
+            true
+          ],
+          "position": [
+            425,
+            160
+          ],
+          "text": "Mg"
+        },
+        {
+          "kind": "text",
+          "pen": [
+            37,
+            93,
+            157,
+            255
+          ],
+          "width": 1,
+          "font": [
+            "Sans Serif",
+            11,
+            true
+          ],
+          "position": [
+            525,
+            160
+          ],
+          "text": "Mg"
+        },
+        {
+          "kind": "text",
+          "pen": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "width": 1,
+          "font": [
+            "Sans Serif",
+            11,
+            true
+          ],
+          "position": [
+            25,
+            260
+          ],
+          "text": "Mg"
+        },
+        {
+          "kind": "text",
+          "pen": [
+            255,
+            255,
+            255,
+            1
+          ],
+          "width": 1,
+          "font": [
+            "Sans Serif",
+            11,
+            true
+          ],
+          "position": [
+            125,
+            260
+          ],
+          "text": "Mg"
+        },
+        {
+          "kind": "text",
+          "pen": [
+            255,
+            255,
+            255,
+            127
+          ],
+          "width": 1,
+          "font": [
+            "Sans Serif",
+            11,
+            true
+          ],
+          "position": [
+            225,
+            260
+          ],
+          "text": "Mg"
+        },
+        {
+          "kind": "text",
+          "pen": [
+            255,
+            255,
+            255,
+            128
+          ],
+          "width": 1,
+          "font": [
+            "Sans Serif",
+            11,
+            true
+          ],
+          "position": [
+            325,
+            260
+          ],
+          "text": "Mg"
+        },
+        {
+          "kind": "text",
+          "pen": [
+            255,
+            255,
+            255,
+            230
+          ],
+          "width": 1,
+          "font": [
+            "Sans Serif",
+            11,
+            true
+          ],
+          "position": [
+            425,
+            260
+          ],
+          "text": "Mg"
+        },
+        {
+          "kind": "text",
+          "pen": [
+            255,
+            255,
+            255,
+            255
+          ],
+          "width": 1,
+          "font": [
+            "Sans Serif",
+            11,
+            true
+          ],
+          "position": [
+            525,
+            260
+          ],
+          "text": "Mg"
+        }
+      ],
+      "pixels_sha256": "ba9f5a6e62cec906bfde01b418e93379ecab4a77596f9657ad399296a0a5e235",
+      "image_sha256": "c1aed2d7541a62f1b1558a0754333504cde2a30d54fca10677bc523787c8eaac",
+      "qrga64_different_pixels": 0
+    },
+    {
+      "name": "glyph-dark",
+      "operations": [
+        {
+          "kind": "polygon",
+          "pen": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "width": 0,
+          "brush": [
+            17,
+            43,
+            91,
+            255
+          ],
+          "points": [
+            [
+              -1000,
+              -1000
+            ],
+            [
+              4000,
+              -1000
+            ],
+            [
+              -1000,
+              4000
+            ]
+          ]
+        },
+        {
+          "kind": "text",
+          "pen": [
+            1,
+            7,
+            19,
+            0
+          ],
+          "width": 1,
+          "font": [
+            "Sans Serif",
+            11,
+            true
+          ],
+          "position": [
+            25,
+            60
+          ],
+          "text": "Mg"
+        },
+        {
+          "kind": "text",
+          "pen": [
+            1,
+            7,
+            19,
+            1
+          ],
+          "width": 1,
+          "font": [
+            "Sans Serif",
+            11,
+            true
+          ],
+          "position": [
+            125,
+            60
+          ],
+          "text": "Mg"
+        },
+        {
+          "kind": "text",
+          "pen": [
+            1,
+            7,
+            19,
+            127
+          ],
+          "width": 1,
+          "font": [
+            "Sans Serif",
+            11,
+            true
+          ],
+          "position": [
+            225,
+            60
+          ],
+          "text": "Mg"
+        },
+        {
+          "kind": "text",
+          "pen": [
+            1,
+            7,
+            19,
+            128
+          ],
+          "width": 1,
+          "font": [
+            "Sans Serif",
+            11,
+            true
+          ],
+          "position": [
+            325,
+            60
+          ],
+          "text": "Mg"
+        },
+        {
+          "kind": "text",
+          "pen": [
+            1,
+            7,
+            19,
+            230
+          ],
+          "width": 1,
+          "font": [
+            "Sans Serif",
+            11,
+            true
+          ],
+          "position": [
+            425,
+            60
+          ],
+          "text": "Mg"
+        },
+        {
+          "kind": "text",
+          "pen": [
+            1,
+            7,
+            19,
+            255
+          ],
+          "width": 1,
+          "font": [
+            "Sans Serif",
+            11,
+            true
+          ],
+          "position": [
+            525,
+            60
+          ],
+          "text": "Mg"
+        },
+        {
+          "kind": "text",
+          "pen": [
+            37,
+            93,
+            157,
+            0
+          ],
+          "width": 1,
+          "font": [
+            "Sans Serif",
+            11,
+            true
+          ],
+          "position": [
+            25,
+            160
+          ],
+          "text": "Mg"
+        },
+        {
+          "kind": "text",
+          "pen": [
+            37,
+            93,
+            157,
+            1
+          ],
+          "width": 1,
+          "font": [
+            "Sans Serif",
+            11,
+            true
+          ],
+          "position": [
+            125,
+            160
+          ],
+          "text": "Mg"
+        },
+        {
+          "kind": "text",
+          "pen": [
+            37,
+            93,
+            157,
+            127
+          ],
+          "width": 1,
+          "font": [
+            "Sans Serif",
+            11,
+            true
+          ],
+          "position": [
+            225,
+            160
+          ],
+          "text": "Mg"
+        },
+        {
+          "kind": "text",
+          "pen": [
+            37,
+            93,
+            157,
+            128
+          ],
+          "width": 1,
+          "font": [
+            "Sans Serif",
+            11,
+            true
+          ],
+          "position": [
+            325,
+            160
+          ],
+          "text": "Mg"
+        },
+        {
+          "kind": "text",
+          "pen": [
+            37,
+            93,
+            157,
+            230
+          ],
+          "width": 1,
+          "font": [
+            "Sans Serif",
+            11,
+            true
+          ],
+          "position": [
+            425,
+            160
+          ],
+          "text": "Mg"
+        },
+        {
+          "kind": "text",
+          "pen": [
+            37,
+            93,
+            157,
+            255
+          ],
+          "width": 1,
+          "font": [
+            "Sans Serif",
+            11,
+            true
+          ],
+          "position": [
+            525,
+            160
+          ],
+          "text": "Mg"
+        },
+        {
+          "kind": "text",
+          "pen": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "width": 1,
+          "font": [
+            "Sans Serif",
+            11,
+            true
+          ],
+          "position": [
+            25,
+            260
+          ],
+          "text": "Mg"
+        },
+        {
+          "kind": "text",
+          "pen": [
+            255,
+            255,
+            255,
+            1
+          ],
+          "width": 1,
+          "font": [
+            "Sans Serif",
+            11,
+            true
+          ],
+          "position": [
+            125,
+            260
+          ],
+          "text": "Mg"
+        },
+        {
+          "kind": "text",
+          "pen": [
+            255,
+            255,
+            255,
+            127
+          ],
+          "width": 1,
+          "font": [
+            "Sans Serif",
+            11,
+            true
+          ],
+          "position": [
+            225,
+            260
+          ],
+          "text": "Mg"
+        },
+        {
+          "kind": "text",
+          "pen": [
+            255,
+            255,
+            255,
+            128
+          ],
+          "width": 1,
+          "font": [
+            "Sans Serif",
+            11,
+            true
+          ],
+          "position": [
+            325,
+            260
+          ],
+          "text": "Mg"
+        },
+        {
+          "kind": "text",
+          "pen": [
+            255,
+            255,
+            255,
+            230
+          ],
+          "width": 1,
+          "font": [
+            "Sans Serif",
+            11,
+            true
+          ],
+          "position": [
+            425,
+            260
+          ],
+          "text": "Mg"
+        },
+        {
+          "kind": "text",
+          "pen": [
+            255,
+            255,
+            255,
+            255
+          ],
+          "width": 1,
+          "font": [
+            "Sans Serif",
+            11,
+            true
+          ],
+          "position": [
+            525,
+            260
+          ],
+          "text": "Mg"
+        }
+      ],
+      "pixels_sha256": "fdc6543aa98eccfbfc8076197b6e29c59b12b9a3df40b1e3f60575a13bd95fb8",
+      "image_sha256": "623c464df839233fe4cea025697e0e58066e52e26218fb0ac21fda41f1a29d6b",
+      "qrga64_different_pixels": 0
+    }
+  ],
+  "scope": "Actual Qt6.12 RGBA8888 generic glyph composition on opaque colored targets; other target formats/platforms remain required"
+}

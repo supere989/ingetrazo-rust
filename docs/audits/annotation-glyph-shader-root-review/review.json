@@ -8,5 +8,14 @@
     "required_premultiplied_alpha16": 59110
   },
   "requested_correction": "Preserve alpha after RGB premultiplication and verify zero/partial/full source alpha with original Qt controls.",
-  "integration": "Not integrated; worker notified before acceptance."
+  "integration": "Not integrated; worker notified before acceptance.",
+  "corrected_source": "a92906f0ff4d67ec37fd47eb4f9f8cb4a155f751",
+  "followup": {
+    "alpha_preserved": true,
+    "opaque_full_coverage_avoids_destination_read": true,
+    "raw_color_batch_consistency_admitted": true,
+    "fresh_root_qt_controls": 36,
+    "different_pixels": 0,
+    "scope": "Actual Qt reference and integer equation comparison only; merged GPU validation pending."
+  }
 }
