@@ -15,6 +15,8 @@ pub struct ComponentEditSession {
     leaf_share_back: Option<glam::DMat4>,
     mesh_baseline: ingetrazo_core::mesh::Mesh,
     groups_baseline: Vec<ingetrazo_core::groups::Group>,
+    mesh_share_baseline: std::collections::HashMap<uuid::Uuid,ingetrazo_core::mesh::Mesh>,
+    definitions_baseline: std::collections::HashMap<uuid::Uuid,ComponentDefinition>,
     dimension_baseline: Vec<ingetrazo_core::dimensions::Dimension>,
     section_baseline: Vec<ingetrazo_core::section::SectionPlane>,
 }
@@ -86,6 +88,7 @@ impl IngeTrazoApp {
             container_bake:if !group.children.is_empty() && self.scene.dimension_frame*group.transform!=glam::DMat4::IDENTITY {Some(self.scene.dimension_frame*group.transform)} else {None},
             leaf_share_back:if group.children.is_empty() {Some(world_frame.inverse())} else {None},
             mesh_baseline:world_mesh.clone(),groups_baseline:world_children.clone(),
+            mesh_share_baseline:self.scene.mesh_shares.clone(),definitions_baseline:self.scene.component_definitions.clone(),
             dimension_baseline:vec![],section_baseline:vec![],
         };
         let drawing_frame=if group.component_definition.is_some() || group.transform!=glam::DMat4::IDENTITY || group.axes_matrix().is_some() || group.native_document.get("xform").is_some_and(|value|value.is_array()) {
@@ -128,8 +131,8 @@ impl IngeTrazoApp {
         };
         let changed=session.mesh_baseline!=self.scene.mesh || session.groups_baseline!=self.scene.groups
             || candidate.materials!=self.scene.materials || candidate.layers!=self.scene.layers
-            || candidate.component_definitions!=self.scene.component_definitions
-            || candidate.mesh_shares!=self.scene.mesh_shares
+            || session.definitions_baseline!=self.scene.component_definitions
+            || session.mesh_share_baseline!=self.scene.mesh_shares
             || self.scene.dimensions!=session.dimension_baseline || self.scene.section_planes!=session.section_baseline
             || self.scene.show_section_cuts!=candidate.show_section_cuts||self.scene.show_section_planes!=candidate.show_section_planes||self.scene.show_section_fill!=candidate.show_section_fill;
         if changed || session.container_axes.is_some() || session.container_bake.is_some() || session.private_container_mesh.is_some() {
@@ -204,6 +207,30 @@ impl IngeTrazoApp {
         }
         candidate.clear_selection();
         let session=self.component_edit_stack.pop().unwrap();
+        if !changed {
+            if let Some(parent)=self.component_edit_stack.last_mut() {
+                // A child entry bake is outside the original command History.
+                // Retire only its representation delta from the parent's edit
+                // baseline. Never hide a parent command already changing that
+                // child, or an independently authored prototype/definition.
+                if let (Some(before),Some(after),Some(baseline))=(
+                    session.original_scene.groups.iter().find(|g|g.id==session.group_id),
+                    candidate.groups.iter().find(|g|g.id==session.group_id),
+                    parent.groups_baseline.iter_mut().find(|g|g.id==session.group_id)) {
+                    if baseline==before {*baseline=after.clone();}
+                }
+                for (token,mesh) in &candidate.mesh_shares {
+                    if parent.mesh_share_baseline.get(token)==session.original_scene.mesh_shares.get(token) {
+                        parent.mesh_share_baseline.insert(*token,mesh.clone());
+                    }
+                }
+                for (id,definition) in &candidate.component_definitions {
+                    if parent.definitions_baseline.get(id)==session.original_scene.component_definitions.get(id) {
+                        parent.definitions_baseline.insert(*id,definition.clone());
+                    }
+                }
+            }
+        }
         self.scene=candidate;self.bump_model_revision();self.camera=session.original_camera;
         self.undo_stack=session.original_undo;self.redo_stack=session.original_redo;
         if changed {self.undo_stack.push(session.original_scene);self.redo_stack.clear();}

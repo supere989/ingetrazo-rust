@@ -184,3 +184,24 @@ fn original_world_edit_move_scalar_vector_and_leaf_shareback_are_source_exact() 
   assert_eq!(app.camera,camera);assert_eq!(app.undo_stack.len(),1);let after=app.scene.clone();app.undo();assert_eq!(app.scene,before);app.redo();assert_eq!(app.scene,after);
  }
 }
+
+#[test]
+fn nested_no_edit_bakes_do_not_add_history_or_mask_prior_parent_commands() {
+ let source:serde_json::Value=serde_json::from_str(include_str!("../../../docs/audits/component-nested-noedit-source.json")).unwrap();
+ for row in source["cases"].as_array().unwrap() {
+  let mut app=IngeTrazoApp::new();app.scene=ingetrazo_core::scene::Scene::new();let mut child_mesh=Mesh::new();let ids=[DVec3::ZERO,DVec3::X,DVec3::Y].map(|p|child_mesh.add_vertex(p));child_mesh.add_face(ids.to_vec(),vec![]).unwrap();
+  let mut child=Group::with_mesh("inner",child_mesh);child.transform=DMat4::from_translation(DVec3::new(2.,1.,0.))*DMat4::from_rotation_y(17f64.to_radians());if row["inner_container"]==true {child.children.push(Group::new("grandchild"));}
+  let mut outer=Group::new("outer");outer.transform=DMat4::from_translation(DVec3::new(2.,-1.,4.))*DMat4::from_rotation_z(23f64.to_radians())*DMat4::from_scale(DVec3::new(-2.,3.,1.));outer.children.push(child);app.scene.groups.push(outer);app.scene.make_component(app.scene.groups[0].id).unwrap();let mut sibling=app.scene.groups[0].children[0].duplicate_instance();sibling.transform=DMat4::from_translation(DVec3::X*8.)*sibling.transform;app.scene.groups[0].children.push(sibling);
+  app.scene.select(SelectionItem::Group(0));let before=app.scene.clone();app.begin_component_edit();
+  match row["parent_command"].as_str().unwrap() {
+   "face"=>{app.set_tool(ingetrazo_tools::base::ToolType::Line);for point in [DVec3::X*20.,DVec3::X*21.,DVec3::new(20.,1.,0.),DVec3::X*20.] {app.dispatch_tool_click(&context(point));}},
+   "move"=>{app.scene.select(SelectionItem::Group(0));app.set_tool(ingetrazo_tools::base::ToolType::Move);app.dispatch_tool_click(&context(DVec3::ZERO));app.dispatch_tool_vcb("1;0;0").unwrap();},
+   _=>{},
+  }
+  app.scene.clear_selection();app.scene.select(SelectionItem::Group(0));app.begin_component_edit();app.finish_component_edit();app.finish_component_edit();assert!(app.component_edit_stack.is_empty());
+  assert_eq!(app.undo_stack.len(),row["history_after_outer"].as_u64().unwrap() as usize,"{row}");assert_eq!(app.scene.groups[0].mesh.faces.len(),row["parent_faces"].as_u64().unwrap()as usize);
+  let selected=&app.scene.groups[0].children[0];let sibling=&app.scene.groups[0].children[1];assert_eq!(selected.mesh_share==sibling.mesh_share,row["selected_shared_with_sibling"].as_bool().unwrap());
+  for (group,key) in [(selected,"selected_matrix"),(sibling,"sibling_matrix")] {for (a,b) in group.transform.to_cols_array().iter().zip(row[key].as_array().unwrap()) {assert!((*a-b.as_f64().unwrap()).abs()<4e-6);}}
+  if row["authored_parent"]==true {let after=app.scene.clone();app.undo();assert_eq!(app.scene,before);app.redo();assert_eq!(app.scene,after);}
+ }
+}
