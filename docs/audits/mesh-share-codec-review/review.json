@@ -1,5 +1,5 @@
 {
-  "status": "held_pending_original_reopen",
+  "status": "held_pending_full_workspace_and_finish",
   "formats_tests": "pass",
   "native_preservation": {
     "passed": 16,
@@ -17,9 +17,9 @@
     "second-tests.log"
   ],
   "remaining": [
-    "fresh original Python load and object identity checks",
     "full workspace regression",
     "component Finish integration validation"
   ],
-  "canonical_promotion": false
+  "canonical_promotion": false,
+  "original_python_reopen": "passed actual Mesh object identity, flags, geometry, UIDs, and Make Unique detachment"
 }

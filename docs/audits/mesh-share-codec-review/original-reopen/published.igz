@@ -1,0 +1,202 @@
+{
+  "igz_format": 1,
+  "app_version": "0.3.15",
+  "scene": {
+    "edges": [],
+    "faces": [],
+    "groups": [
+      {
+        "component": true,
+        "name": "component",
+        "proto": 2,
+        "uid": "placement-component",
+        "vendor_placement": 0,
+        "xform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "component": false,
+        "name": "plain",
+        "proto": 2,
+        "uid": "placement-plain",
+        "vendor_placement": 1,
+        "xform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "component": false,
+        "name": "independent",
+        "proto": 1,
+        "uid": "placement-independent",
+        "vendor_placement": 2,
+        "xform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1
+        ]
+      }
+    ],
+    "protos": [
+      {
+        "edges": [],
+        "faces": [
+          {
+            "vendor_face": 31,
+            "vertices": [
+              [
+                0,
+                0,
+                0
+              ],
+              [
+                1,
+                0,
+                0
+              ],
+              [
+                0,
+                1,
+                0
+              ]
+            ]
+          }
+        ],
+        "vendor_mesh": 42
+      },
+      {
+        "edges": [],
+        "faces": [
+          {
+            "vendor_face": 31,
+            "vertices": [
+              [
+                0,
+                0,
+                0
+              ],
+              [
+                1,
+                0,
+                0
+              ],
+              [
+                0,
+                1,
+                0
+              ]
+            ]
+          }
+        ],
+        "vendor_mesh": 42
+      },
+      {
+        "edges": [
+          {
+            "a": [
+              0.0,
+              0.0,
+              7.0
+            ],
+            "b": [
+              1.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "a": [
+              1.0,
+              0.0,
+              0.0
+            ],
+            "b": [
+              0.0,
+              1.0,
+              0.0
+            ]
+          },
+          {
+            "a": [
+              0.0,
+              1.0,
+              0.0
+            ],
+            "b": [
+              0.0,
+              0.0,
+              7.0
+            ]
+          }
+        ],
+        "faces": [
+          {
+            "vendor_face": 31,
+            "vertices": [
+              [
+                0.0,
+                0.0,
+                7.0
+              ],
+              [
+                1.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                1.0,
+                0.0
+              ]
+            ]
+          }
+        ],
+        "vendor_mesh": 42
+      }
+    ]
+  }
+}
