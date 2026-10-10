@@ -120,5 +120,12 @@
     "subsampling-inputs/7x9-2x2-progressive0.jpg": "1c20ba14ad4670a70f3d7d053224623db1105f023cf6ce2fb6e86b33531884ae",
     "subsampling-inputs/7x9-2x2-progressive1.jpg": "0ab1da7954376e8908a8585913bee950fc738ccd8398988584b18a5809db3594",
     "subsampling-old-row-boundary-failure.json": "8269fe637f7a31a090c0946adf49414e2e6f2a7a48e1273fd8cfe161c6c9e115"
+  },
+  "protocol_execution_hashes_authoritative": true,
+  "target_loan_note": "Root rebuilt source_texture_decode_protocol during exclusive target loan. Result JSON execution-time binary SHA is authoritative; any packaging-time target SHA is not a source pin for that overwritten protocol. Asset example remained untouched.",
+  "execution_binary_sha256": {
+    "qt-writer-32.json": "b52d40644049e3d8b91b459ef64366064f7ae5242ac21d63bf5ebdc36d2de031",
+    "subsampling-64.json": "12be001ed0d6887038167b3d1e21218eca5e4593f0376c6cce467e93e6ebdbc4",
+    "admission-png-11.json": "12be001ed0d6887038167b3d1e21218eca5e4593f0376c6cce467e93e6ebdbc4"
   }
 }
