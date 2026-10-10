@@ -1,0 +1,50 @@
+{
+  "passed": true,
+  "source_revision": "8f4319c",
+  "source_helper_revision": "d9837ac",
+  "cases": [
+    {
+      "backend": "native",
+      "moved_center": [
+        2.9962495075927937,
+        3.0,
+        1.0
+      ],
+      "reacquired_center": [
+        2.9962494373321533,
+        3.0,
+        1.0
+      ],
+      "deleted_center_kind": "None",
+      "actual_move_delta": [
+        0.9962495075927937,
+        0.0,
+        0.0
+      ],
+      "executable_sha256": "afe213118f7cb333875a89ef7f0e89622722486f822bb2815f1b0a00c1aa0546"
+    },
+    {
+      "backend": "original",
+      "moved_center": [
+        3.003628730773926,
+        3.0,
+        1.0
+      ],
+      "reacquired_center": [
+        3.0036284923553467,
+        3.0,
+        1.0
+      ],
+      "deleted_center_kind": "None",
+      "actual_move_delta": [
+        1.0036288499832153,
+        0.0,
+        0.0
+      ],
+      "executable_sha256": "ffcafe125404d8cccdd033b3c1563bf34ffad63875079656261065123b8fd37c"
+    }
+  ],
+  "explanation": "Original source updates hover on pointer events: moving away/back after tool switch generates actual new events instead of warping to the same rim pixel. After delete an actual away/back updates hover. Original and native complete reacquisition/deletion with exacttwo history entries.",
+  "historical_timeout": "c811135 retained original no-motion reacquisition timeout; corrected harness does not modify production reference",
+  "scope": "Bounded XTEST center lifecycle, Vulkan llvmpipe and original Qt/OpenGL; broader Move self-exclusion/OnFace/nested contexts pending."
+}
