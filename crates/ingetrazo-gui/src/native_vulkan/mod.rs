@@ -1394,5 +1394,6 @@ fn cad_attachment_usage(supported:vk::ImageUsageFlags,integer:bool)->Result<vk::
  #[test]fn unsupported_input_is_explicit_refusal(){let color=vk::ImageUsageFlags::COLOR_ATTACHMENT;assert_eq!(cad_attachment_usage(color,false).unwrap(),color);assert!(cad_attachment_usage(color,true).unwrap_err().contains("INPUT_ATTACHMENT"));assert_eq!(cad_attachment_usage(color|vk::ImageUsageFlags::INPUT_ATTACHMENT,true).unwrap(),color|vk::ImageUsageFlags::INPUT_ATTACHMENT);assert!(cad_attachment_usage(vk::ImageUsageFlags::INPUT_ATTACHMENT,true).is_err());}
 }
 pub mod textures;
+mod texture_average;
 
 pub mod reference_images;

@@ -1,0 +1,11 @@
+# Native Shaded texture means
+
+The Shaded-with-textures-disabled mode preserves source texture run geometry and order. A separate sampler-free fragment pipeline takes mean RGB and shade as separate float uniforms, matching pinned Viewport._texture_avg_color and the shaded run loop. No sampled GPU image, sampler, or surface image descriptor is created for a mean draw. Reference image planes retain their independent sampled path.
+
+Cold immutable assets are hashed by the existing asset identity path and decoded by the scoped source decoder. The sixteen source-equivalent 4×4 pixels are averaged in f64 and narrowed once for the color uniform. The decoded image is discarded after computing the mean. Unchanged revision/mode frames traverse neither assets nor means and perform no decode, hash, or geometry/image upload.
+
+Mean candidates and their active identity set are admitted before GPU publication. Candidate discard preserves the previous mean map. Publication capacity is reserved during preparation; mean publication is infallible and follows existing GPU resource publication. Existing sampled/reference publication and resource retirement error paths are not newly guaranteed to roll back every partial GPU-cache mutation; that broader transaction/lifetime gate remains required.
+
+World.configure_texture_average accepts configurable decoder limits and a peak entry count. The entry policy counts simultaneously retained old plus newly prepared distinct means, rather than claiming an active-only or exact allocator byte budget. Defaults match the scoped decoder and admit 65536 peak entries; large/streamed source texture scope remains required. External average-file reads are bounded by the actual configured encoded cap plus one byte. Sampled image decoder policy remains unchanged.
+
+Stats report average_decodes, average_hits and average_entries through World.texture_stats. These count cold CPU work and mean entries, not Vulkan allocations. Pixel, style switching, malformed replacement preservation and actual GPU acceptance must be retained separately; this source stage does not close real-model rendering parity. Additional Qt image formats, invalid/missing image fallback policy, native ARM inverse-alpha equivalence, and annotations remain open.
