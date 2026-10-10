@@ -1,0 +1,200 @@
+warning: function `visit_meshes` is never used
+   --> /tmp/ingetrazo-ai-interpreter/crates/ingetrazo-core/src/screen_pick.rs:120:15
+    |
+120 | pub(crate) fn visit_meshes(scene: &Scene, mut visit: impl FnMut(&Mesh, DMat4, bool)) {
+    |               ^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-core` (lib) generated 1 warning
+   Compiling ingetrazo-ai-interpreter-proof v0.1.0 (/tmp/ingetrazo-ai-interpreter/tools/ai-interpreter-proof)
+warning: unused variable: `edge_total`
+  --> src/bin/../owner.rs:43:7
+   |
+43 |   let edge_total=base_edges.checked_add(j.added_edges.len()).ok_or("Edge extent overflow")?;
+   |       ^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_edge_total`
+   |
+   = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+warning[E0133]: call to unsafe function `std::alloc::GlobalAlloc::alloc` is unsafe and requires unsafe block
+ --> src/bin/index_scaling.rs:7:212
+  |
+7 | ...d);MAX.fetch_max(l.size(),Ordering::Relaxed);System.alloc(l)}unsafe fn dealloc(&self,p:*mut u8,l:Layout){System.dealloc(p,l)}unsaf...
+  |                                                 ^^^^^^^^^^^^^^^ call to unsafe function
+  |
+  = note: consult the function's documentation for information on how to avoid undefined behavior
+note: an unsafe function restricts its caller, but its body is safe by default
+ --> src/bin/index_scaling.rs:7:48
+  |
+7 | struct Count;unsafe impl GlobalAlloc for Count{unsafe fn alloc(&self,l:Layout)->*mut u8{CALLS.fetch_add(1,Ordering::Relaxed);BYTES.fe...
+  |                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/unsafe-op-in-unsafe-fn.html>
+  = note: `#[warn(unsafe_op_in_unsafe_fn)]` (part of `#[warn(rust_2024_compatibility)]`) on by default
+
+warning[E0133]: call to unsafe function `std::alloc::GlobalAlloc::dealloc` is unsafe and requires unsafe block
+ --> src/bin/index_scaling.rs:7:272
+  |
+7 | ...nsafe fn dealloc(&self,p:*mut u8,l:Layout){System.dealloc(p,l)}unsafe fn realloc(&self,p:*mut u8,l:Layout,n:usize)->*mut u8{CALLS....
+  |                                               ^^^^^^^^^^^^^^^^^^^ call to unsafe function
+  |
+  = note: consult the function's documentation for information on how to avoid undefined behavior
+note: an unsafe function restricts its caller, but its body is safe by default
+ --> src/bin/index_scaling.rs:7:228
+  |
+7 | ....size(),Ordering::Relaxed);System.alloc(l)}unsafe fn dealloc(&self,p:*mut u8,l:Layout){System.dealloc(p,l)}unsafe fn realloc(&self...
+  |                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/unsafe-op-in-unsafe-fn.html>
+
+warning[E0133]: call to unsafe function `std::alloc::GlobalAlloc::realloc` is unsafe and requires unsafe block
+ --> src/bin/index_scaling.rs:7:462
+  |
+7 | ...laxed);MAX.fetch_max(n,Ordering::Relaxed);System.realloc(p,l,n)}}#[global_allocator]static ALLOC:Count=Count;
+  |                                              ^^^^^^^^^^^^^^^^^^^^^ call to unsafe function
+  |
+  = note: consult the function's documentation for information on how to avoid undefined behavior
+note: an unsafe function restricts its caller, but its body is safe by default
+ --> src/bin/index_scaling.rs:7:292
+  |
+7 | ...t u8,l:Layout){System.dealloc(p,l)}unsafe fn realloc(&self,p:*mut u8,l:Layout,n:usize)->*mut u8{CALLS.fetch_add(1,Ordering::Relaxe...
+  |                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/unsafe-op-in-unsafe-fn.html>
+
+warning: field `cold_edge_rows` is never read
+ --> src/bin/../owner_registry.rs:7:78
+  |
+7 | #[derive(Clone,Copy,Debug)]pub struct Metrics{pub cold_vertex_rows:usize,pub cold_edge_rows:usize,pub lookup_calls:usize,pub publicat...
+  |                                       ------- field in this struct           ^^^^^^^^^^^^^^
+  |
+  = note: `Metrics` has derived impls for the traits `Debug` and `Clone`, but these are intentionally ignored during dead code analysis
+  = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: methods `invalidate` and `identity` are never used
+  --> src/bin/../owner_registry.rs:23:9
+   |
+12 | impl Registry{
+   | ------------- methods in this implementation
+...
+23 |  pub fn invalidate(&self){self.0.borrow_mut().valid=false;}
+   |         ^^^^^^^^^^
+24 |  pub fn metrics(&self)->Metrics{self.0.borrow().metrics}
+25 |  pub fn identity(&self)->usize{Rc::as_ptr(&self.0)as usize}
+   |         ^^^^^^^^
+
+warning: method `lookup_calls` is never used
+  --> src/bin/../owner_registry.rs:50:18
+   |
+50 | impl View{pub fn lookup_calls(&self)->usize{self.inner.borrow().metrics.lookup_calls}
+   | ---------        ^^^^^^^^^^^^
+   | |
+   | method in this implementation
+
+warning: struct `Snapshot` is never constructed
+ --> src/bin/../owner_budget.rs:4:47
+  |
+4 | #[derive(Clone,Debug,PartialEq,Eq)]pub struct Snapshot{pub history:usize,pub staging:usize,pub preparation:usize,pub registry:usize,p...
+  |                                               ^^^^^^^^
+
+warning: method `total` is never used
+ --> src/bin/../owner_budget.rs:5:22
+  |
+5 | impl Snapshot{pub fn total(&self)->usize{self.history+self.staging+self.preparation+self.registry}}
+  | -------------        ^^^^^
+  | |
+  | method in this implementation
+
+warning: methods `set_limit` and `snapshot` are never used
+  --> src/bin/../owner_budget.rs:11:9
+   |
+ 9 | impl OwnerBudget{
+   | ---------------- methods in this implementation
+10 |  pub fn new(limit:Option<usize>)->Self{Self(Rc::new(RefCell::new(State{bytes:[0;4],peak:0,limit})))}
+11 |  pub fn set_limit(&self,limit:Option<usize>){self.0.borrow_mut().limit=limit;}
+   |         ^^^^^^^^^
+12 |  pub fn snapshot(&self)->Snapshot{let s=self.0.borrow();Snapshot{history:s.bytes[0],staging:s.bytes[1],preparation:s.bytes[2],regist...
+   |         ^^^^^^^^
+
+warning: associated items `begin`, `try_begin`, `publish`, and `publish_owned` are never used
+  --> src/bin/../journal.rs:23:9
+   |
+22 | impl MeshJournal {
+   | ---------------- associated items in this implementation
+23 |  pub fn begin(mesh:&Mesh,version:u64)->Self{Self::try_begin(mesh,version).expect("legacy proof journal preparation")}
+   |         ^^^^^
+24 |  pub fn try_begin(mesh:&Mesh,version:u64)->Result<Self,String>{
+   |         ^^^^^^^^^
+...
+66 |  pub fn publish(self,mesh:&mut Mesh,version:u64)->Result<bool,String>{Ok(self.publish_owned(mesh,version)?.is_some())}
+   |         ^^^^^^^
+67 |  pub fn publish_owned(self,mesh:&mut Mesh,version:u64)->Result<Option<AppendUndo>,String>{
+   |         ^^^^^^^^^^^^^
+
+warning: struct `AppendUndo` is never constructed
+   --> src/bin/../journal.rs:105:12
+    |
+105 | pub struct AppendUndo{
+    |            ^^^^^^^^^^
+
+warning: methods `base_matches`, `undo`, and `redo` are never used
+   --> src/bin/../journal.rs:110:5
+    |
+109 | impl AppendUndo{
+    | --------------- methods in this implementation
+110 |  fn base_matches(&self,m:&Mesh)->bool{m.vertices.len()>=self.base_vertices&&m.vertices[..self.base_vertices].iter().zip(&self.base_...
+    |     ^^^^^^^^^^^^
+111 |  pub fn undo(&mut self,m:&mut Mesh)->Result<(),String>{
+    |         ^^^^
+...
+122 |  pub fn redo(&mut self,m:&mut Mesh)->Result<(),String>{
+    |         ^^^^
+
+warning: method `registry_lookup_calls` is never used
+ --> src/bin/../owner.rs:8:25
+  |
+8 | impl Transaction{pub fn registry_lookup_calls(&self)->usize{self.journal.registry.as_ref().unwrap().lookup_calls()} pub fn add_edge(&...
+  | ----------------        ^^^^^^^^^^^^^^^^^^^^^
+  | |
+  | method in this implementation
+
+warning: field `charge` is never read
+  --> src/bin/../owner.rs:15:131
+   |
+15 | ...ct Delta{before:Uuid,after:Uuid,base_vertices:usize,base_edges:usize,vertices:Vec<MeshVertex>,edges:Vec<MeshEdge>,bytes:usize,charge:Le...
+   |       ----- field in this struct                                                                                                 ^^^^^^
+
+warning: multiple methods are never used
+  --> src/bin/../owner.rs:21:9
+   |
+17 | impl JournalOwner{
+   | ----------------- methods in this implementation
+...
+21 |  pub fn registry_identity(&self)->usize{self.registry.identity()}
+   |         ^^^^^^^^^^^^^^^^^
+22 |  pub fn budget(&self)->OwnerBudget{self.budget.clone()}
+   |         ^^^^^^
+23 |  pub fn mesh(&self)->&Mesh{&self.mesh}
+24 |  pub fn history_counts(&self)->(usize,usize){(self.undo.len(),self.redo.len())}
+   |         ^^^^^^^^^^^^^^
+25 |  pub fn retained_baseline_entries(&self)->usize{0}
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^
+26 |  /// Engineering/host admission quota, not a simulated allocator error.
+27 |  pub fn set_index_entry_limit(&mut self,limit:Option<usize>){self.index_entry_limit=limit;}
+   |         ^^^^^^^^^^^^^^^^^^^^^
+28 |  /// Retained delta payload admission, excluding VM, scratch and history Vec slack.
+29 |  pub fn set_history_byte_limit(&mut self,limit:Option<usize>){self.history_byte_limit=limit;}
+   |         ^^^^^^^^^^^^^^^^^^^^^^
+30 |  pub fn history_payload_bytes(&self)->(usize,usize){(self.undo_bytes,self.redo_bytes)}
+   |         ^^^^^^^^^^^^^^^^^^^^^
+31 |  pub fn set_append_limits(&mut self,vertices:Option<usize>,edges:Option<usize>){self.append_vertex_limit=vertices;self.append_edge_l...
+   |         ^^^^^^^^^^^^^^^^^
+32 |  pub fn begin(&self)->Transaction{self.try_begin().expect("legacy proof owner preparation")}
+   |         ^^^^^
+33 |  pub fn try_begin(&self)->Result<Transaction,String>{let charge=self.budget.reserve(Kind::Staging,staging_bound(0,0,0,0)?)?;let mut ...
+34 |  fn index(&self,positions:&[DVec3])->Result<PreparedSpatialIndex,String>{if self.index_entry_limit.is_some_and(|n|positions.len()>n)...
+   |     ^^^^^
+35 |  pub fn replace(&mut self,mut mesh:Mesh)->Result<(),String>{let next_version=self.version.checked_add(1).ok_or("Owner revision overf...
+   |         ^^^^^^^
+
+For more information about this error, try `rustc --explain E0133`.
+warning: `ingetrazo-ai-interpreter-proof` (bin "index_scaling") generated 16 warnings (run `cargo fix --bin "index_scaling" -p ingetrazo-ai-interpreter-proof` to apply 4 suggestions)
+    Finished `dev` profile [unoptimized] target(s) in 0.25s
+     Running `/tmp/ingetrazo-ai-registry-target/debug/index_scaling`

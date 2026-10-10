@@ -1,0 +1,1 @@
+Initial index_scaling run exited 101 at src/bin/index_scaling.rs:8:720: assertion failed: max < 16384. No completed JSON was emitted. Registry positions used try_reserve_exact per append, discovered during investigation; corrected to amortized reserve and initial capacity expansion recorded separately.
