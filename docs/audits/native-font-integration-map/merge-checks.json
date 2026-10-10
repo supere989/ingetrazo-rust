@@ -1,0 +1,23 @@
+{
+  "full_reviewed_payload_check_exit": 2,
+  "scope": "Includes unmodified vendored HarfBuzz provenance and retained historical logs; whitespace failures are retained, not normalized.",
+  "diagnostic_lines": 4904,
+  "samples": [
+    "docs/audits/coretext-canvas-bold-argb/scalar.log:6: new blank line at EOF.",
+    "docs/audits/coretext-native-identity/identity-tests.log:9: new blank line at EOF.",
+    "docs/audits/coretext-native-identity/root-tests.log:9: new blank line at EOF.",
+    "docs/audits/coretext-native-identity/virtual-font-metadata-check.log:630: new blank line at EOF.",
+    "docs/audits/coretext-native-phase-policy/scalar.log:6: new blank line at EOF.",
+    "docs/audits/coretext-synthesis/scalar-tests.log:6: new blank line at EOF.",
+    "docs/audits/metal-raw-canvas/cancelled-upload-check/tests.log:369: new blank line at EOF.",
+    "docs/audits/metal-raw-canvas/font-name-focused.log:294: new blank line at EOF.",
+    "vendor/harfbuzz-sys/harfbuzz/NEWS:3433: new blank line at EOF.",
+    "vendor/harfbuzz-sys/harfbuzz/TESTING.md:47: new blank line at EOF.",
+    "vendor/harfbuzz-sys/harfbuzz/replace-enum-strings.cmake:1: trailing whitespace.",
+    "+# CMake script to replace items"
+  ],
+  "focused_owned_source_and_resolution_check_exit": 0,
+  "builds": false,
+  "runtime_tests": false,
+  "merge_commit": "cd5d099b"
+}
