@@ -4,7 +4,7 @@ Initial audit and latest milestone: 2026-10-09 (America/Los_Angeles). Baseline R
 
 ## Outcome and evidence
 
-Current local drafting checkpoint `fedcce4` passes **351 Rust tests** and a fresh **22/22 exact original/native drafting comparison**, with three negative controls. Retained input/output corpus includes holed and angled planes, sequential chords, distant-hole locality, paint metadata, wires and curve membership. Rectangle Down square locking and persistent Ctrl center mode are integrated. Full pixel hover/snapping and rendered workflows remain open. These local changes have no new public CI result.
+Current published checkpoint `1a08f58` includes **366 passing local Rust tests**, fresh **22/22 exact original/native drafting comparisons** and **26 original/native HLR endpoint/class comparisons** with retained negative controls. [Cloud CI](https://github.com/supere989/ingetrazo-rust/actions/runs/38021635660) is currently running; workspace tests, persistent worker controls, native Vulkan lifecycle and allocation rollback have passed, while remaining original-runtime gates are pending. Native Vulkan evidence uses software llvmpipe and does not prove hardware throughput or macOS Metal. Production composer caching and direct opaque GPU world rendering are review candidates, not yet published integration. Full pixel snapping, broader geometry, interactive workflows and all platform gates remain open.
 
 The Rust workspace is a substantial implementation, not a parity-complete replacement. **Full feature parity is not verified.** Earlier conversational estimates of 40–60% remaining are superseded by this evidence-based inventory; feature rows have unequal effort and should not be converted into an overall percentage.
 
@@ -14,7 +14,7 @@ See [first swarm milestone](audits/SWARM_MILESTONE_01.md), [current document acc
 
 The initial baseline had 108 passing tests and lossy saves in all four original examples. Retained [initial evidence](audits/parity-evidence.json) and [baseline failures](audits/SEMANTIC_ACCEPTANCE.md) are historical, not current verdicts.
 
-Scope still excludes full interactive acceptance, arbitrary geometry equivalence, external IFC/PDF validation, live Blender, all claimed OS packages and representative performance budgets. The virtual-display startup is not workstation GPU or desktop workflow proof. Original documents were never overwritten. No full feature row is promoted to Verified by bounded fixtures alone.
+Evidence does not yet prove full interactive acceptance, arbitrary geometry equivalence, external IFC/PDF validation, live Blender, all claimed OS packages or representative performance budgets; all remain in scope. The virtual-display startup is not workstation GPU or desktop workflow proof. Original documents were never overwritten. No full feature row is promoted to Verified by bounded fixtures alone.
 
 ## Status and priorities
 
@@ -144,6 +144,6 @@ Production composer candidate `469769e` owns persistent standaloneworkers and a 
 
 Independent Vulkan sampler evidence48e1864 passes16nearest/partial-update pixel checks and2negative controls on7700b7f; the preceding failure remains retained. Directworld GPU depth/cache stage remains in progress; actualMetal/RT and broader hardware parity remain open.
 
-CI now builds/packages the minimal render worker, exercises persistent shared-buffer/deadline controls, and adds actual ash Vulkan startup/resizes/clean-close plus image-admission/staging-denial rollback on Ubuntu virtual-display software Vulkan. New cloud results remain pending; software Vulkan CI does not satisfy actual discrete GPU, ray tracing or native Metal/platform acceptance. Original Python submodule remains frozen/clean at6be29fe.
+CI builds the minimal render worker; packaging includes it. CI exercises persistent shared-buffer/deadline controls, and adds actual ash Vulkan startup/resizes/clean-close plus image-admission/staging-denial rollback on Ubuntu virtual-display software Vulkan. New cloud results remain pending; software Vulkan CI does not satisfy actual discrete GPU, ray tracing or native Metal/platform acceptance. Original Python submodule remains frozen/clean at6be29fe.
 
 Composer review followup80453f6 routes layer visibility checkbox changes through actual-change view revision updates, fixing stale cached ink/nativegeometry. Focused production controller verifies hiding defaultlayer recomputesemptyink withsamepersistentPIDs and noopvisibility preservesrevision; independent wider/rendered acceptance pending.
