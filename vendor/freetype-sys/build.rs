@@ -25,9 +25,10 @@ fn main() {
 
     // From libpng/png.h:
     // "If pnglibconf.h is missing, you can copy scripts/pnglibconf.h.prebuilt to pnglibconf.h"
+    let generated_headers = std::path::PathBuf::from(env::var_os("OUT_DIR").unwrap());
     std::fs::copy(
         "libpng/scripts/pnglibconf.h.prebuilt",
-        "libpng/pnglibconf.h",
+        generated_headers.join("pnglibconf.h"),
     )
     .unwrap();
 
@@ -37,6 +38,7 @@ fn main() {
         .warnings(false)
         .include(".")
         .include("freetype2/include")
+        .include(&generated_headers)
         .include("libpng")
         .define("FT2_BUILD_LIBRARY", None)
         .define("FT_CONFIG_OPTION_USE_PNG", None);
@@ -95,7 +97,7 @@ fn main() {
     println!("cargo:rustc-link-lib=z");
 
     let mut build = cc::Build::new();
-    build.include("libpng");
+    build.include(&generated_headers).include("libpng");
     // libz-sys publishes its actual include directory for both system and
     // bundled builds. The upstream relative submodule path is absent in the crate.
     if let Some(include) = env::var_os("DEP_Z_INCLUDE") {
