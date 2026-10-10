@@ -1579,3 +1579,288 @@ mod mixed_append_tests {
         assert!(owner.redo().unwrap());
     }
 }
+
+/// Exclusive pure membership permutation, preserving native record identities.
+/// Full insertion/deletion/replacement graph ownership is a separate obligation.
+pub struct PreparedMembership<'a> {
+    owner: &'a mut JournalOwner,
+    vertex_swaps: Vec<(usize, usize)>,
+    face_swaps: Vec<(usize, usize)>,
+    vertex_map: Vec<usize>,
+    face_map: Vec<usize>,
+    positions: Vec<DVec3>,
+    loops: Vec<(Vec<usize>, Vec<Vec<usize>>)>,
+    spatial: PreparedSpatialIndex,
+    registry: crate::owner_registry::PermutationChange,
+    after: Uuid,
+    next: u64,
+    _preparation: Lease,
+}
+fn prepare_order(
+    order: &[usize],
+    extent: usize,
+) -> Result<(Vec<usize>, Vec<(usize, usize)>), String> {
+    if order.len() != extent {
+        return Err("Membership permutation extent mismatch".into());
+    }
+    let mut inverse = Vec::new();
+    inverse
+        .try_reserve_exact(extent)
+        .map_err(|_| "Membership inverse refused")?;
+    inverse.resize(extent, usize::MAX);
+    for (new, &old) in order.iter().enumerate() {
+        if old >= extent || inverse[old] != usize::MAX {
+            return Err("Membership requires identity bijection".into());
+        }
+        inverse[old] = new;
+    }
+    let mut current = Vec::new();
+    current
+        .try_reserve_exact(extent)
+        .map_err(|_| "Membership current order refused")?;
+    current.extend(0..extent);
+    let mut location = Vec::new();
+    location
+        .try_reserve_exact(extent)
+        .map_err(|_| "Membership object location refused")?;
+    location.extend(0..extent);
+    let mut swaps = Vec::new();
+    swaps
+        .try_reserve_exact(extent)
+        .map_err(|_| "Membership swaps refused")?;
+    for (id, &old) in order.iter().enumerate() {
+        let at = location[old];
+        if at != id {
+            let other = current[id];
+            current.swap(id, at);
+            location[old] = id;
+            location[other] = at;
+            swaps.push((id, at));
+        }
+    }
+    Ok((inverse, swaps))
+}
+impl JournalOwner {
+    pub fn prepare_membership_as(
+        &mut self,
+        vertices: &[usize],
+        faces: &[usize],
+        positions: Vec<DVec3>,
+        loops: Vec<(Vec<usize>, Vec<Vec<usize>>)>,
+        after: Uuid,
+    ) -> Result<PreparedMembership<'_>, String> {
+        if positions.len() != self.mesh.vertices.len() || loops.len() != self.mesh.faces.len() {
+            return Err("Membership field extent mismatch".into());
+        }
+        let next = self
+            .version
+            .checked_add(1)
+            .ok_or("Membership owner revision overflow")?;
+        let bytes = preparation_bound(positions.len(), self.mesh.edges.len())?
+            .checked_add(sized(add(positions.len(), loops.len())?, 128)?)
+            .ok_or("Membership preparation overflow")?;
+        let preparation = self.budget.reserve(Kind::Preparation, bytes)?;
+        let (vertex_map, vertex_swaps) = prepare_order(vertices, self.mesh.vertices.len())?;
+        let (face_map, face_swaps) = prepare_order(faces, self.mesh.faces.len())?;
+        for edge in &self.mesh.edges {
+            if edge.v0 >= vertex_map.len()
+                || edge.v1 >= vertex_map.len()
+                || edge.faces.iter().any(|&id| id >= face_map.len())
+            {
+                return Err("Membership native reference outside graph".into());
+            }
+        }
+        for (outer, holes) in &loops {
+            if outer
+                .iter()
+                .chain(holes.iter().flatten())
+                .any(|&id| id >= positions.len())
+            {
+                return Err("Membership loop reference outside graph".into());
+            }
+        }
+        let spatial = self.index(&positions)?;
+        let registry = self.registry.prepare_permutation(&vertex_map, &positions)?;
+        Ok(PreparedMembership {
+            owner: self,
+            vertex_swaps,
+            face_swaps,
+            vertex_map,
+            face_map,
+            positions,
+            loops,
+            spatial,
+            registry,
+            after,
+            next,
+            _preparation: preparation,
+        })
+    }
+}
+impl PreparedMembership<'_> {
+    pub fn apply(self) {
+        let Self {
+            owner,
+            vertex_swaps,
+            face_swaps,
+            vertex_map,
+            face_map,
+            positions,
+            loops,
+            spatial,
+            registry,
+            after,
+            next,
+            _preparation,
+        } = self;
+        for (a, b) in vertex_swaps {
+            owner.mesh.vertices.swap(a, b);
+        }
+        for (a, b) in face_swaps {
+            owner.mesh.faces.swap(a, b);
+        }
+        for (v, p) in owner.mesh.vertices.iter_mut().zip(positions) {
+            v.position = p;
+        }
+        for (f, (outer, holes)) in owner.mesh.faces.iter_mut().zip(loops) {
+            f.vertices = outer;
+            f.holes = holes;
+        }
+        for edge in &mut owner.mesh.edges {
+            edge.v0 = vertex_map[edge.v0];
+            edge.v1 = vertex_map[edge.v1];
+            for id in &mut edge.faces {
+                *id = face_map[*id];
+            }
+        }
+        owner
+            .mesh
+            .install_prepared_spatial_index(spatial)
+            .expect("Exclusive prepared membership positions");
+        registry.apply(after, next);
+        owner.state = after;
+        owner.version = next;
+    }
+}
+#[cfg(test)]
+mod membership_tests {
+    use super::*;
+    #[test]
+    fn permutation_metadata_and_incidence_publish_only_after_admission() {
+        let mut mesh = Mesh::new();
+        for p in [DVec3::ZERO, DVec3::X, DVec3::Y, DVec3::Z] {
+            mesh.add_vertex(p);
+        }
+        mesh.add_face(vec![0, 1, 2], vec![]).unwrap();
+        mesh.add_face(vec![1, 2, 3], vec![]).unwrap();
+        mesh.faces[0]
+            .attrs
+            .insert("vendor".into(), serde_json::json!([1, 2, 3]));
+        mesh.faces[1]
+            .attrs
+            .insert("vendor".into(), serde_json::json!([4, 5, 6]));
+        let first = mesh.faces[0].attrs["vendor"].as_array().unwrap().as_ptr();
+        let second = mesh.faces[1].attrs["vendor"].as_array().unwrap().as_ptr();
+        let budget = OwnerBudget::new(None);
+        let mut owner = JournalOwner::new_with_budget(mesh, budget.clone()).unwrap();
+        let before = budget.snapshot().total();
+        let ticket = owner
+            .prepare_membership_as(
+                &[3, 2, 1, 0],
+                &[1, 0],
+                vec![DVec3::Z, DVec3::Y, DVec3::X, DVec3::ZERO],
+                vec![(vec![2, 1, 0], vec![]), (vec![3, 2, 1], vec![])],
+                Uuid::new_v4(),
+            )
+            .unwrap();
+        let held = budget.snapshot().total();
+        assert!(held > before);
+        budget.set_limit(Some(held));
+        assert!(budget.reserve(Kind::Preparation, 1).is_err());
+        drop(ticket);
+        budget.set_limit(None);
+        assert_eq!(budget.snapshot().total(), before);
+        assert_eq!(
+            owner.mesh.faces[0].attrs["vendor"]
+                .as_array()
+                .unwrap()
+                .as_ptr(),
+            first
+        );
+        owner
+            .prepare_membership_as(
+                &[3, 2, 1, 0],
+                &[1, 0],
+                vec![DVec3::Z, DVec3::Y, DVec3::X, DVec3::ZERO],
+                vec![(vec![2, 1, 0], vec![]), (vec![3, 2, 1], vec![])],
+                Uuid::new_v4(),
+            )
+            .unwrap()
+            .apply();
+        assert_eq!(
+            owner.mesh.faces[0].attrs["vendor"]
+                .as_array()
+                .unwrap()
+                .as_ptr(),
+            second
+        );
+        assert_eq!(
+            owner.mesh.faces[1].attrs["vendor"]
+                .as_array()
+                .unwrap()
+                .as_ptr(),
+            first
+        );
+        assert_eq!((owner.mesh.edges[0].v0, owner.mesh.edges[0].v1), (3, 2));
+        assert_eq!(owner.mesh.edges[0].faces, vec![1]);
+        assert_eq!(owner.mesh.edges[1].faces, vec![1, 0]);
+        assert_eq!(budget.snapshot().total(), before);
+    }
+
+    #[test]
+    fn pure_order_moves_records_and_registry_without_coordinate_matching() {
+        let mut m = Mesh::new();
+        m.add_vertex(DVec3::ZERO);
+        m.add_vertex(DVec3::X);
+        let mut owner = JournalOwner::new(m).unwrap();
+        let uids = owner
+            .mesh
+            .vertices
+            .iter()
+            .map(|v| v.uid)
+            .collect::<Vec<_>>();
+        let state = owner.state;
+        let stale = owner.try_begin().unwrap();
+        owner
+            .prepare_membership_as(
+                &[1, 0],
+                &[],
+                vec![DVec3::X, DVec3::ZERO],
+                vec![],
+                Uuid::new_v4(),
+            )
+            .unwrap()
+            .apply();
+        assert_eq!(owner.mesh.vertices[0].uid, uids[1]);
+        assert_eq!(
+            owner
+                .registry
+                .view()
+                .vertex(&crate::journal::SourceKey::new(DVec3::ZERO)),
+            Some(1)
+        );
+        assert!(owner.prepare(stale).is_err());
+        owner
+            .prepare_membership_as(&[1, 0], &[], vec![DVec3::ZERO, DVec3::X], vec![], state)
+            .unwrap()
+            .apply();
+        assert_eq!(owner.mesh.vertices[0].uid, uids[0]);
+        assert_eq!(
+            owner
+                .registry
+                .view()
+                .vertex(&crate::journal::SourceKey::new(DVec3::ZERO)),
+            Some(0)
+        );
+    }
+}

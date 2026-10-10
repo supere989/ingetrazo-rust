@@ -1,0 +1,10 @@
+warning: `ingetrazo-ai-interpreter-proof` (bin "registry_begin" test) generated 15 warnings (run `cargo fix --bin "registry_begin" -p ingetrazo-ai-interpreter-proof --tests` to apply 4 suggestions)
+    Finished `test` profile [unoptimized] target(s) in 0.38s
+     Running unittests src/bin/registry_begin.rs (/tmp/ingetrazo-ai-registry-target/debug/deps/registry_begin-c50dddfe1fde8cec)
+
+running 2 tests
+test owner::membership_tests::pure_order_moves_records_and_registry_without_coordinate_matching ... ok
+test owner::membership_tests::permutation_metadata_and_incidence_publish_only_after_admission ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 27 filtered out; finished in 0.00s
+

@@ -1,0 +1,577 @@
+{
+  "states": [
+    {
+      "name": "initial",
+      "vertices": [
+        0,
+        1,
+        2
+      ],
+      "positions": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "faces": [
+        [
+          0,
+          1,
+          2
+        ]
+      ],
+      "edge_endpoints": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "registry_zero_is_held": true,
+      "held_in_membership": true,
+      "held_in_loop": true,
+      "persistent_lists": [
+        true,
+        true,
+        true
+      ],
+      "held_position_original": true,
+      "held_incidence_original": true,
+      "edge_radial_original": true,
+      "undo": 1,
+      "redo": 0
+    },
+    {
+      "name": "reordered",
+      "vertices": [
+        2,
+        1,
+        0
+      ],
+      "positions": [
+        [
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "faces": [
+        [
+          0,
+          1,
+          2
+        ]
+      ],
+      "edge_endpoints": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "registry_zero_is_held": true,
+      "held_in_membership": true,
+      "held_in_loop": true,
+      "persistent_lists": [
+        true,
+        true,
+        true
+      ],
+      "held_position_original": true,
+      "held_incidence_original": true,
+      "edge_radial_original": true,
+      "undo": 2,
+      "redo": 0
+    },
+    {
+      "name": "reorder-undone",
+      "vertices": [
+        0,
+        1,
+        2
+      ],
+      "positions": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "faces": [
+        [
+          0,
+          1,
+          2
+        ]
+      ],
+      "edge_endpoints": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "registry_zero_is_held": true,
+      "held_in_membership": true,
+      "held_in_loop": true,
+      "persistent_lists": [
+        true,
+        true,
+        true
+      ],
+      "held_position_original": false,
+      "held_incidence_original": false,
+      "edge_radial_original": false,
+      "undo": 1,
+      "redo": 1
+    },
+    {
+      "name": "reorder-redone",
+      "vertices": [
+        2,
+        1,
+        0
+      ],
+      "positions": [
+        [
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "faces": [
+        [
+          0,
+          1,
+          2
+        ]
+      ],
+      "edge_endpoints": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "registry_zero_is_held": true,
+      "held_in_membership": true,
+      "held_in_loop": true,
+      "persistent_lists": [
+        true,
+        true,
+        true
+      ],
+      "held_position_original": false,
+      "held_incidence_original": false,
+      "edge_radial_original": false,
+      "undo": 2,
+      "redo": 0
+    },
+    {
+      "name": "removed",
+      "vertices": [
+        2,
+        1
+      ],
+      "positions": [
+        [
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "faces": [
+        [
+          0,
+          1,
+          2
+        ]
+      ],
+      "edge_endpoints": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "registry_zero_is_held": true,
+      "held_in_membership": false,
+      "held_in_loop": true,
+      "persistent_lists": [
+        true,
+        true,
+        true
+      ],
+      "held_position_original": false,
+      "held_incidence_original": false,
+      "edge_radial_original": false,
+      "undo": 3,
+      "redo": 0
+    },
+    {
+      "name": "remove-undone",
+      "vertices": [
+        2,
+        1,
+        0
+      ],
+      "positions": [
+        [
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "faces": [
+        [
+          0,
+          1,
+          2
+        ]
+      ],
+      "edge_endpoints": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "registry_zero_is_held": true,
+      "held_in_membership": true,
+      "held_in_loop": true,
+      "persistent_lists": [
+        true,
+        true,
+        true
+      ],
+      "held_position_original": false,
+      "held_incidence_original": false,
+      "edge_radial_original": false,
+      "undo": 2,
+      "redo": 1
+    },
+    {
+      "name": "remove-redone",
+      "vertices": [
+        2,
+        1
+      ],
+      "positions": [
+        [
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "faces": [
+        [
+          0,
+          1,
+          2
+        ]
+      ],
+      "edge_endpoints": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "registry_zero_is_held": true,
+      "held_in_membership": false,
+      "held_in_loop": true,
+      "persistent_lists": [
+        true,
+        true,
+        true
+      ],
+      "held_position_original": false,
+      "held_incidence_original": false,
+      "edge_radial_original": false,
+      "undo": 3,
+      "redo": 0
+    },
+    {
+      "name": "reinserted",
+      "vertices": [
+        2,
+        1,
+        0
+      ],
+      "positions": [
+        [
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "faces": [
+        [
+          0,
+          1,
+          2
+        ]
+      ],
+      "edge_endpoints": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "registry_zero_is_held": true,
+      "held_in_membership": true,
+      "held_in_loop": true,
+      "persistent_lists": [
+        true,
+        true,
+        true
+      ],
+      "held_position_original": false,
+      "held_incidence_original": false,
+      "edge_radial_original": false,
+      "undo": 4,
+      "redo": 0
+    },
+    {
+      "name": "reinsert-undone",
+      "vertices": [
+        2,
+        1
+      ],
+      "positions": [
+        [
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "faces": [
+        [
+          0,
+          1,
+          2
+        ]
+      ],
+      "edge_endpoints": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "registry_zero_is_held": true,
+      "held_in_membership": false,
+      "held_in_loop": true,
+      "persistent_lists": [
+        true,
+        true,
+        true
+      ],
+      "held_position_original": false,
+      "held_incidence_original": false,
+      "edge_radial_original": false,
+      "undo": 3,
+      "redo": 1
+    },
+    {
+      "name": "reinsert-redone",
+      "vertices": [
+        2,
+        1,
+        0
+      ],
+      "positions": [
+        [
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "faces": [
+        [
+          0,
+          1,
+          2
+        ]
+      ],
+      "edge_endpoints": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "registry_zero_is_held": true,
+      "held_in_membership": true,
+      "held_in_loop": true,
+      "persistent_lists": [
+        true,
+        true,
+        true
+      ],
+      "held_position_original": false,
+      "held_incidence_original": false,
+      "edge_radial_original": false,
+      "undo": 4,
+      "redo": 0
+    }
+  ],
+  "native_acceptance": false
+}

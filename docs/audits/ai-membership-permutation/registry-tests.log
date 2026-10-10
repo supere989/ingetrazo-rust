@@ -1,0 +1,9 @@
+warning: `ingetrazo-ai-interpreter-proof` (bin "registry_begin" test) generated 15 warnings (run `cargo fix --bin "registry_begin" -p ingetrazo-ai-interpreter-proof --tests` to apply 4 suggestions)
+    Finished `test` profile [unoptimized] target(s) in 0.36s
+     Running unittests src/bin/registry_begin.rs (/tmp/ingetrazo-ai-registry-target/debug/deps/registry_begin-c50dddfe1fde8cec)
+
+running 1 test
+test owner_registry::permutation_tests::permutation_preserves_keys_and_endpoint_identity_before_and_after_admission ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 27 filtered out; finished in 0.00s
+

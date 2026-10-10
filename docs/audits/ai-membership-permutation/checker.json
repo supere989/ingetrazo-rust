@@ -1,0 +1,1 @@
+{"source_states_matched": 6, "negative_controls": ["registry_identity", "position", "append", "loop", "held_vertex", "wrapper", "shared", "undo", "redo", "quota", "chronological", "charge", "execution_error", "production"], "production_enabled": false, "full_scripting_acceptance": false}

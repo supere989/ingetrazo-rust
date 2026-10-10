@@ -988,3 +988,17 @@ impl FaceOwner {
         self.owner.prepare_fields_as(positions, loops, after)
     }
 }
+
+impl FaceOwner {
+    pub fn prepare_membership_as(
+        &mut self,
+        vertices: &[usize],
+        faces: &[usize],
+        positions: Vec<DVec3>,
+        loops: Vec<(Vec<usize>, Vec<Vec<usize>>)>,
+        after: uuid::Uuid,
+    ) -> Result<crate::owner::PreparedMembership<'_>, String> {
+        self.owner
+            .prepare_membership_as(vertices, faces, positions, loops, after)
+    }
+}

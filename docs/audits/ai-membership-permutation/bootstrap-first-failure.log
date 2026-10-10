@@ -1,0 +1,10 @@
+1490 |     pub fn observe(&self, name: &str) -> serde_json::Value {
+     |            ^^^^^^^
+
+warning: `ingetrazo-ai-interpreter-proof` (bin "vm_membership_permutation") generated 24 warnings (run `cargo fix --bin "vm_membership_permutation" -p ingetrazo-ai-interpreter-proof` to apply 1 suggestion)
+    Finished `dev` profile [unoptimized] target(s) in 22.04s
+     Running `/tmp/ingetrazo-ai-registry-target/debug/vm_membership_permutation`
+
+thread 'main' (1307622) panicked at src/bin/../vm_mesh.rs:1164:43:
+called `Result::unwrap()` on an `Err` value: "Existing projection requires root baseline"
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

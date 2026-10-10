@@ -478,6 +478,59 @@ pub mod editable_mesh {
         }
     }
 }
+struct IdentityOrder {
+    order: Vec<usize>,
+    changed: bool,
+    _charge: Lease,
+}
+fn identity_order(
+    target: &[rustpython_vm::PyObjectRef],
+    current: &[rustpython_vm::PyObjectRef],
+    budget: &OwnerBudget,
+) -> Result<IdentityOrder, String> {
+    use rustpython_vm::AsObject;
+    if target.len() != current.len() {
+        return Err("Identity permutation requires unchanged membership extent".into());
+    }
+    let bytes = target
+        .len()
+        .checked_mul(128)
+        .ok_or("Identity permutation preparation overflow")?;
+    let charge = budget.reserve(Kind::Preparation, bytes)?;
+    let mut ids = HashMap::new();
+    ids.try_reserve(current.len())
+        .map_err(|_| "Identity permutation object map refused")?;
+    for (id, obj) in current.iter().enumerate() {
+        if ids.insert(obj.get_id(), id).is_some() {
+            return Err("Identity permutation repeated current object".into());
+        }
+    }
+    let mut seen = Vec::new();
+    seen.try_reserve_exact(current.len())
+        .map_err(|_| "Identity permutation validation refused")?;
+    seen.resize(current.len(), false);
+    let mut order = Vec::new();
+    order
+        .try_reserve_exact(target.len())
+        .map_err(|_| "Identity permutation order refused")?;
+    let mut changed = false;
+    for (new, obj) in target.iter().enumerate() {
+        let old = *ids
+            .get(&obj.get_id())
+            .ok_or("Identity permutation replaces an existing object")?;
+        if seen[old] {
+            return Err("Identity permutation repeats target object".into());
+        }
+        seen[old] = true;
+        changed |= old != new;
+        order.push(old);
+    }
+    Ok(IdentityOrder {
+        order,
+        changed,
+        _charge: charge,
+    })
+}
 struct Projection {
     positions: Vec<glam::DVec3>,
     loops: Vec<(Vec<usize>, Vec<Vec<usize>>)>,
@@ -488,12 +541,20 @@ impl Projection {
         mesh: &PyRef<editable_mesh::Mesh>,
         budget: &OwnerBudget,
     ) -> Result<Option<Self>, String> {
-        Self::prepare_prefix(mesh, budget, false)
+        Self::prepare_inner(mesh, budget, false, false)
     }
     fn prepare_prefix(
         mesh: &PyRef<editable_mesh::Mesh>,
         budget: &OwnerBudget,
         append: bool,
+    ) -> Result<Option<Self>, String> {
+        Self::prepare_inner(mesh, budget, append, false)
+    }
+    fn prepare_inner(
+        mesh: &PyRef<editable_mesh::Mesh>,
+        budget: &OwnerBudget,
+        append: bool,
+        force: bool,
     ) -> Result<Option<Self>, String> {
         use rustpython_vm::AsObject;
         let owner = mesh.owner.read();
@@ -592,7 +653,7 @@ impl Projection {
                 outer != native.faces[id].vertices || prepared_holes != native.faces[id].holes;
             loops.push((outer, prepared_holes));
         }
-        if changed {
+        if changed || force {
             Ok(Some(Self {
                 positions,
                 loops,
@@ -772,6 +833,9 @@ impl<'a> RootRestore<'a> {
         })
     }
     fn validate_live(&self, append: bool) -> Result<bool, String> {
+        self.validate_live_membership(append, false)
+    }
+    fn validate_live_membership(&self, append: bool, permutation: bool) -> Result<bool, String> {
         use rustpython_vm::AsObject;
         let vertices = self.mesh.vertices.borrow_vec();
         let faces = self.mesh.faces.borrow_vec();
@@ -782,14 +846,18 @@ impl<'a> RootRestore<'a> {
         {
             return Err("Existing field publication membership extent unsupported".into());
         }
-        if vertices.iter().zip(&self.vertices).any(|(a, b)| !a.is(b))
-            || faces.iter().zip(&self.faces).any(|(a, b)| !a.is(b))
-        {
+        let reordered = vertices.iter().zip(&self.vertices).any(|(a, b)| !a.is(b))
+            || faces.iter().zip(&self.faces).any(|(a, b)| !a.is(b));
+        if reordered && permutation && !append {
+            let budget = self.mesh.owner.read().budget();
+            let _vertices = identity_order(&vertices, &self.vertices, &budget)?;
+            let _faces = identity_order(&faces, &self.faces, &budget)?;
+        } else if reordered {
             return Err(
                 "Existing field publication requires exact Vertex/Face identity order".into(),
             );
         }
-        let mut changed = false;
+        let mut changed = reordered;
         for record in &self.positions {
             changed |= record.vertex.position.read().coordinates() != record.position.coordinates();
         }
@@ -1232,7 +1300,8 @@ impl Controller {
                         entry.validate_created()?;
                     }
                     if let Some(before) = &baseline {
-                        let changed = before.validate_live(!entries.is_empty())?;
+                        let changed = before
+                            .validate_live_membership(!entries.is_empty(), entries.is_empty())?;
                         let _ = changed;
                     }
                     if self.history_enabled {
@@ -1271,12 +1340,50 @@ impl Controller {
                             let mesh = value
                                 .downcast::<editable_mesh::Mesh>()
                                 .map_err(|_| "Root binding requires Mesh")?;
-                            if let Some(projection) = Projection::prepare(&mesh, &self.budget)? {
-                                let mut owner = mesh.owner.write();
-                                owner
-                                    .prepare_fields(projection.positions, projection.loops)?
-                                    .apply();
-                                return Ok(true);
+                            if let Some(before) = baseline.as_ref() {
+                                if !rustpython_vm::AsObject::is(&mesh, &before.mesh) {
+                                    return Err(
+                                        "Root binding replacement projection not yet supported"
+                                            .into(),
+                                    );
+                                }
+                                let vertex_order = identity_order(
+                                    &mesh.vertices.borrow_vec(),
+                                    &before.vertices,
+                                    &self.budget,
+                                )?;
+                                let face_order = identity_order(
+                                    &mesh.faces.borrow_vec(),
+                                    &before.faces,
+                                    &self.budget,
+                                )?;
+                                let reordered = vertex_order.changed || face_order.changed;
+                                if let Some(projection) = Projection::prepare_inner(
+                                    &mesh,
+                                    &self.budget,
+                                    false,
+                                    reordered,
+                                )? {
+                                    let mut owner = mesh.owner.write();
+                                    if reordered {
+                                        owner
+                                            .prepare_membership_as(
+                                                &vertex_order.order,
+                                                &face_order.order,
+                                                projection.positions,
+                                                projection.loops,
+                                                uuid::Uuid::new_v4(),
+                                            )?
+                                            .apply();
+                                    } else {
+                                        owner
+                                            .prepare_fields(projection.positions, projection.loops)?
+                                            .apply();
+                                    }
+                                    return Ok(true);
+                                }
+                            } else if Projection::prepare(&mesh, &self.budget)?.is_some() {
+                                return Err("Existing projection requires root baseline".into());
                             }
                         }
                     }
@@ -1426,12 +1533,29 @@ impl Controller {
                 Some(target.geometry(&self.budget)?)
             };
             if let Some(p) = projection {
-                target
-                    .mesh
-                    .owner
-                    .write()
-                    .prepare_fields_as(p.positions, p.loops, target.native_state)?
-                    .apply();
+                let vertex_order = identity_order(
+                    &target.vertices,
+                    &target.mesh.vertices.borrow_vec(),
+                    &self.budget,
+                )?;
+                let face_order =
+                    identity_order(&target.faces, &target.mesh.faces.borrow_vec(), &self.budget)?;
+                let mut owner = target.mesh.owner.write();
+                if vertex_order.changed || face_order.changed {
+                    owner
+                        .prepare_membership_as(
+                            &vertex_order.order,
+                            &face_order.order,
+                            p.positions,
+                            p.loops,
+                            target.native_state,
+                        )?
+                        .apply();
+                } else {
+                    owner
+                        .prepare_fields_as(p.positions, p.loops, target.native_state)?
+                        .apply();
+                }
             } else {
                 let changed = if redo {
                     target.mesh.owner.write().redo()?

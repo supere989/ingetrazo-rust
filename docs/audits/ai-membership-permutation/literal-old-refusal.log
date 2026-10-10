@@ -1,0 +1,10 @@
+1471 |     pub fn observe(&self, name: &str) -> serde_json::Value {
+     |            ^^^^^^^
+
+warning: `ingetrazo-ai-interpreter-proof` (bin "vm_membership_permutation") generated 31 warnings (run `cargo fix --bin "vm_membership_permutation" -p ingetrazo-ai-interpreter-proof` to apply 1 suggestion)
+    Finished `dev` profile [unoptimized] target(s) in 21.94s
+     Running `/tmp/ingetrazo-ai-registry-target/debug/vm_membership_permutation`
+
+thread 'main' (1311409) panicked at src/bin/../vm_mesh.rs:1468:13:
+Existing field publication requires exact Vertex/Face identity order
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
