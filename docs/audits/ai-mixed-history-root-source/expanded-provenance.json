@@ -1,0 +1,6 @@
+{
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "script_sha256": "a80b57322442cc6b097bbd182a15f287e89fed9228c23284f716f8557dfd6744",
+  "reason_for_replay": "Frozen candidate adds original mixed execution-error/Redo preservation control absent from earlier source script.",
+  "six_prior_states_unchanged": true
+}

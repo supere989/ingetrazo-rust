@@ -1,0 +1,14 @@
+{
+  "source": "73c6e9f0",
+  "fresh_native_build_execution": true,
+  "exit_code": 0,
+  "binary_sha256": "6f3afbe657c5886749dc99c409fc6a86a86a529dbfaa2c1b14855adfcfeebbcd",
+  "scope": "Existing raw position/loop plus welded append and history; production disabled",
+  "remaining": [
+    "Existing loops referencing newly appended vertices",
+    "Membership deletion/reorder/replacement",
+    "Arbitrary callback atomicity",
+    "Efficient VM history journal and resource bounds",
+    "Production integration"
+  ]
+}

@@ -1,0 +1,15 @@
+[2026-10-10T23:07:41] command SnapshotImport failed and was rolled back:
+Traceback (most recent call last):
+  File "/work/ingetrazo/core/history.py", line 171, in execute
+    cmd.do(self.scene)
+    ~~~~~~^^^^^^^^^^^^
+  File "/work/ingetrazo/core/history.py", line 2666, in do
+    self.mutate(scene)
+    ~~~~~~~~~~~^^^^^^^
+  File "/work/ingetrazo/core/ai.py", line 366, in mutate
+    exec(compile(code, "<ai>", "exec"), scope)
+    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<ai>", line 3, in <module>
+ValueError: mixed rollback
+
+
