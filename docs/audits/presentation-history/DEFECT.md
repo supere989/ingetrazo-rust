@@ -1,0 +1,9 @@
+# Source presentation commands versus ordinary model History
+
+Native base6cb1139; Python pin6be29fe437a7cd992d4e079f71720821b25216b9. Fresh actual ScenesPanel add/update calls, Viewport begin/end, MoveGeoPathNodeCommand and SetGeoPathSurfaceCommand versus native app context lifecycle and add/update_saved_view. Native path mutations use save_undo_state boundary equivalent to those two command snapshots; this is an app-method proof, not rendered toolbar/key proof. Terrain visibility and sheet-name mutations model their direct source/global storage; terrain toggle original views/main_window.py3846, rebuild3900; sheet composer independent history already covered separately.
+
+Exact entries and Finish states match. Folded mesh-shareback3states match. Ordinary source has2commands; Rust has4 because saved-view add/update each saves model history. First nativeUndo changes savedviewdistance33→20, unhides terrain and leaves flat path, while source undoes surface and retains view33/hidden terrain. Second nativeUndo removes view and still leaves flat path, while source undoes moved node. Sheetname stays correct in both.
+
+No approved divergence. Existing native deletionUndo unit expectation is source-incompatible. No blanket saved_views/terrain exclusion: original SnapshotImport owns appended savedviews, while SetNorth owns its previous terrain pointer. Presentation UI mutates identity-held objects outside commandHistory; typed command ownership or identity-aware nonhistory snapshot reconciliation must preserve importUndo and terrain owner lifetimes. Runtime IDs must not alter original IGZ schema. Model-only History should not create saved-view action entries, and nonhistory action must not discard a legitimate Redo branch. Source command-specific import/delete/redo object resurrection is a required negative control before implementation.
+
+This remains an open parity defect. No complete P15/history/Metal claim.
