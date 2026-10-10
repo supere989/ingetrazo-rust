@@ -4,7 +4,7 @@
     0,
     2
   ],
-  "status": "held_pending_hard_edge_hardware_rollback",
+  "status": "pending_final_integration_regression",
   "excluded": "unfinished CAD2D callback contract/pipeline",
   "included": [
     "encoded UI composition and source raster origin",
@@ -16,9 +16,9 @@
   "limitations": [
     "generic UI alpha22/24 residual",
     "sectionIso/hollow/seam original pixel residuals",
-    "hardedge allocation failure hardware proof pending",
     "Metal implementation/hardware pending",
     "full styles/textures/performance parity pending"
   ],
-  "canonical_promotion": false
+  "canonical_promotion": false,
+  "hard_edge_hardware_rollback": "actualRTX retained3f9caf4: warm100zeroedgeuploads;600bytecandidateallocatedbeforebudgetdenial;old576byte48endpoint/image/ledgerrestored;finalledger0"
 }
