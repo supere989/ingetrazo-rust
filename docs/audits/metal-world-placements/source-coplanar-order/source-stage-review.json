@@ -1,0 +1,14 @@
+{
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "actual_source": "QOpenGLWidget production _draw_instanced_faces; two coplanar differently oriented faces; positive late tint100ROI pixels yellow; operative _NO_BACK_TINT negative100ROI pixels green",
+  "source_helpers": "viewport.py2855ordinary draw then2932front-cull default-back draw atLEQUAL; basic.frag vertex colors ignore front facing",
+  "correction": "native instanced ordinary whole mesh pass first then front-cull default-back spans; removes per-span fragment substitution and reduces ordinary draw count",
+  "negative_control": "Native fourteen-frame fixture now includes coplanar positive + actual missing-back span negative; native execution pending",
+  "initial_failure": "Viewport minimum size prevented requested400x400; retained failure, explicitly set minimum0 before resize; source geometry and paint unchanged",
+  "checks": "Apple metadata example PASS, focused native runtime still pending",
+  "remaining": [
+    "source global prototype grouping versus adjacent compatible runs",
+    "source MSAA/offset/raster edges/fullscene integration",
+    "native14frame SDK/GPU comparison"
+  ]
+}

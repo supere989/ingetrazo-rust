@@ -735,14 +735,12 @@ fn encode_placement_mesh(
     policy: Policy,
 ) {
     // Source _instanced_eligible excludes explicit back override/alpha content.
-    // Default backs are decided in the face fragment, preserving placement draw
-    // order rather than adding a later consolidated back pass per instance.
+    // Draw order follows the source ordinary pass then default-back pass.
     encoder.setCullMode(MTLCullMode::None);
     unsafe {
         encoder.setVertexBuffer_offset_atIndex(Some(&mesh.vertices.raw), 0, 0);
         encoder.setVertexBuffer_offset_atIndex(Some(&matrices.raw), first_instance * 64, 1);
     }
-    let mut first = 0;
     let ordinary = PaintUniform {
         front: policy.front,
         back: policy.back,
@@ -753,27 +751,23 @@ fn encode_placement_mesh(
         },
         padding: [0; 3],
     };
-    let default = PaintUniform {
-        mode: 4,
-        ..ordinary
-    };
-    if policy.mode != Mode::Material {
-        bind_paint(encoder, &ordinary);
-        draw_instances(encoder, mesh, 0, mesh.count, instances);
-        return;
-    }
-    for &(back_first, count) in &mesh.plan.default_back {
-        if back_first > first {
-            bind_paint(encoder, &ordinary);
-            draw_instances(encoder, mesh, first, back_first - first, instances);
+    bind_paint(encoder, &ordinary);
+    draw_instances(encoder, mesh, 0, mesh.count, instances);
+    if policy.mode == Mode::Material {
+        // Literal source _draw_instanced_faces: all ordinary faces first,
+        // then default backs with front culling and LEQUAL. A coplanar front
+        // authored after a back must not erase this later default-back pass.
+        encoder.setCullMode(MTLCullMode::Front);
+        let back = PaintUniform {
+            front: policy.back,
+            mode: 3,
+            ..ordinary
+        };
+        bind_paint(encoder, &back);
+        for &(first, count) in &mesh.plan.default_back {
+            draw_instances(encoder, mesh, first, count, instances);
         }
-        bind_paint(encoder, &default);
-        draw_instances(encoder, mesh, back_first, count, instances);
-        first = back_first + count;
-    }
-    if first < mesh.count {
-        bind_paint(encoder, &ordinary);
-        draw_instances(encoder, mesh, first, mesh.count - first, instances);
+        encoder.setCullMode(MTLCullMode::None);
     }
 }
 

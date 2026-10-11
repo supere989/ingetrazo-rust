@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/tmp/ingetrazo-metal-world/scripts/reference-metal-placement-order.py", line 34, in <module>
+    im=vp.grabFramebuffer();assert im.size().width()==400 and im.size().height()==400
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError
