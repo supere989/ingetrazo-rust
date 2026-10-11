@@ -1,0 +1,57 @@
+{
+  "run": 38162764055,
+  "source": "9302b810df84e44477b8a39de381bcecb469fb37",
+  "artifact_id": 11711092455,
+  "zip_sha256": "94762d055dbdc6b2158833d6234b082c197b246640ec3c324e147fdd8d06ba79",
+  "authenticated_source_members": 74,
+  "reference_closed_mismatch_pixels": 292,
+  "candidate_closed_mismatch_pixels": 480000,
+  "reference_candidate_changed_pixels": 480000,
+  "reference_sha256": "6a3c34c071c82b9f73e39a633345f98a631a1430779b291fea61b51f83c7b1ea",
+  "candidate_sha256": "124617c1f65e92d3bc895fbd869e4bb16a30754b198f59e6e973949b9aaa1b01",
+  "runtime_failure": "Warm pixels changed: closed",
+  "failed_warm_bytes_available": false,
+  "defaults": {
+    "passed": true,
+    "extent": [
+      64,
+      64
+    ],
+    "samples": 4,
+    "default_style": true,
+    "section_clipping_without_fill": true,
+    "section_pixel_contrast": true,
+    "section_restore_exact": true,
+    "section_extra_geometry_uploads": 0,
+    "warm_extra_profile_uploads": 0,
+    "warm_extra_geometry_uploads": 0,
+    "camera_extra_base_uploads": 0,
+    "unchanged_selection_camera_extra_profile_uploads": 0,
+    "profile_builds": 3,
+    "profile_uploads": 1,
+    "profile_upload_bytes": 24,
+    "unsupported_grid_refusal": "Metal Scene adapter needs soft/back-edge/grid passes",
+    "ledger_committed": 0,
+    "ledger_reserved": 0
+  },
+  "billboards": {
+    "passed": true,
+    "extent": [
+      800,
+      600
+    ],
+    "dimensions_omitted_for_stage_probe": 4,
+    "billboard_uploads": 1,
+    "warm_extra_billboard_uploads": 0,
+    "camera_extra_ordinary_uploads": 0,
+    "camera_extra_image_uploads": 0,
+    "hide_contrast_restore_exact": true,
+    "quota_refusal": "Metal viewport paused: GPU allocation 120 exceeds global application budget 0",
+    "shared_ordinary_billboard_image_owners": 1,
+    "shared_image_uploads": 1,
+    "ledger_committed": 0,
+    "ledger_reserved": 0
+  },
+  "document_refusal": "Native Metal viewport route: Metal default sample positions cannot admit measured source annotation resolve\nMetal default sample positions cannot admit measured source annotation resolve",
+  "scope": "Ineligible Intel retains native resolve; cold equality observed, actual warm pixel stability failed before ten-case report. No unsupported annotation acceptance."
+}
