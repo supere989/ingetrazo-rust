@@ -1,0 +1,9 @@
+{
+  "verified_hashes": 16,
+  "geometry_union_difference": 455,
+  "whole_frame_difference": 1738,
+  "source_mask": 641,
+  "native_mask": 914,
+  "mask_xor": 273,
+  "strict_result": "FAIL"
+}
