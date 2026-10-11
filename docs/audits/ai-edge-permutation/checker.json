@@ -1,0 +1,1 @@
+{"exact_full_states": 30, "actual_native_allocation_refusals": 12, "negative_controls_rejected": ["missing-state", "edge-order", "incidence-remap", "radial-remap", "registry-fed-append", "pose", "loop", "redo", "bool-id", "no-refusal", "lost-rollback"], "production_enabled": false}

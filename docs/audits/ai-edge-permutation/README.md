@@ -1,0 +1,9 @@
+# Combined graph order prerequisite
+
+Production scripting remains disabled. Frozen original 6be29fe437a7cd992d4e079f71720821b25216b9; native source 40639097. Actual pinned Python and real RustPython controller replay agree on all 30 full graph/history states: edge reorder, combined vertex/edge/face reorder, simultaneous raw pose/loop edits, repeated Undo/Redo and shared-edge append after reordered history. Native packed endpoints/incidence/radial/loops and source registry-fed subsequent append are compared, not merely VM wrappers.
+
+Run `python3 scripts/check-ai-edge-permutation.py ORIGINAL NATIVE ALLOCATION`. Eleven mutations are rejected by the same validators. The native allocation fixture exercises twelve actual null native reservations before publication; state/history/charge remain unchanged. BigInt clones and VM heap failures are explicitly excluded. Owner focused test covers prepare-discard, quota refusal, invalid bijections, metadata allocation identity, stale transaction/view refusal and mapped registry IDs. Its corrected exact filter runs one test; the initial zero-test setup failure is retained.
+
+A prepared ticket exclusively borrows its owner, so safe Rust cannot perform competing mutation while it is held. This is not a fabricated runtime stale-ticket check. Older transactions/views are tested after publication. No full allocator peak bound, sparse-history optimization, deletion/replacement, mixed append plus arbitrary graph reorder, endpoint mutation projection, or full callback parity is claimed. Full identity-owned graph scope remains required.
+
+Target: /tmp/ingetrazo-ai-registry-target, DEBUG=0, incremental=0, -j2. Named bins vm_edge_permutation and edge_order_failure. Focused test `cargo test --manifest-path tools/ai-interpreter-proof/Cargo.toml --bin owner owner::graph_order_tests::graph_order_preserves_registry_identity_and_refuses_before_mutation -- --exact`.
