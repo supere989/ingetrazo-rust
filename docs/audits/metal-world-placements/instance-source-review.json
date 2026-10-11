@@ -1,0 +1,27 @@
+{
+  "scope": "Source implementation and focused compile only; native instance GPU execution pending",
+  "source_parent": "c09be67a",
+  "focused_tests": {
+    "world_placement": 4,
+    "failed": 0
+  },
+  "apple_metadata_check": "cargo check --locked -p ingetrazo-metal --example native_world_placements --target aarch64-apple-darwin -j2 PASS; no native shader/runtime claim",
+  "implementation": {
+    "geometry": "immutable prototype GPU buffer reuse",
+    "poses": "exclusive idle target retains shared native matrix buffer; only64bytes per current instance copied without packed temporary",
+    "grouping": "adjacent equal prototype and winding only; preserves ordering, no sort",
+    "ownership": "Prepared retains target/buffer through completion; no edits to pinned slots",
+    "refusal": "candidate buffer/storage admission before target publication; owner/finite pose validation unchanged"
+  },
+  "bounds": "native budget ledger covers actual matrix GPU allocations; CPU pose capacities separately counted; allocator/shared owners excluded",
+  "remaining": [
+    "actual10frame GPU acceptance",
+    "host packet adapter and viewport activation",
+    "textures/alpha/sections/images/edges/MSAA/shadow/annotation policies",
+    "physical presentation/performance acceptance"
+  ],
+  "logs": {
+    "metal-world-instance-focused.log": "000d5a46567dbbc29cdf9d496b40992c4225ad1927233e4e9c0517d6d2835487",
+    "metal-world-instance-apple.log": "df2fe2380a42ecdd11726105a786e2244ec552c8f8fb05eef37f743f3a2eeb2b"
+  }
+}

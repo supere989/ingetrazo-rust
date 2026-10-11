@@ -92,6 +92,19 @@ fn run() -> Result<(), String> {
         save("shared-prototype-reflected", &read(first)?)?;
         assert_eq!(world.stats.geometry_uploads, 1);
         assert_eq!(world.stats.target_allocations, 1);
+        let coalesced = world
+            .prepare_placements(
+                &metal,
+                packet.clone(),
+                &[pose(-0.4, false), pose(0.4, false)],
+                (64, 64),
+                [0., 0., 1., 1.],
+                style,
+                |_| panic!("Coalesced prototype collected"),
+            )?
+            .ok_or("Coalesced target unavailable")?;
+        assert_eq!(coalesced.instance_run_count(), 1);
+        save("coalesced-two-instances", &read(coalesced)?)?;
         let before = world.stats;
         for (name, x) in [
             ("warm-left", -0.5),
@@ -112,6 +125,15 @@ fn run() -> Result<(), String> {
             save(name, &read(f)?)?;
         }
         let after = world.stats;
+        assert_eq!(before.instance_buffer_allocations, 1);
+        assert_eq!(
+            before.instance_buffer_allocations,
+            after.instance_buffer_allocations
+        );
+        assert_eq!(
+            after.instance_matrix_upload_bytes - before.instance_matrix_upload_bytes,
+            3 * 128
+        );
         assert_eq!(before.geometry_uploads, after.geometry_uploads);
         assert_eq!(before.target_allocations, after.target_allocations);
         assert_eq!(
@@ -233,7 +255,7 @@ fn run() -> Result<(), String> {
         assert_eq!(reserved, 0);
         drop(budget);
         let device = metal.info.name.replace('\\', "\\\\").replace('"', "\\\"");
-        std::fs::write(out.join("report.json"),format!("{{\"passed\":true,\"device\":\"{device}\",\"geometry_uploads_before_warm\":{},\"geometry_uploads_after_warm\":{},\"targets_before_warm\":{},\"targets_after_warm\":{},\"pose_bytes_before_warm\":{},\"pose_bytes_after_warm\":{},\"cache_bytes_before_warm\":{},\"cache_bytes_after_warm\":{},\"final_uploads\":2,\"ledger_committed\":{committed},\"ledger_reserved\":{reserved},\"wrong_owner_refused\":true,\"invalid_pose_refused\":true}}\n",before.geometry_uploads,after.geometry_uploads,before.target_allocations,after.target_allocations,before.pose_storage_payload_bytes,after.pose_storage_payload_bytes,before.placement_cache_payload_bytes,after.placement_cache_payload_bytes)).map_err(|e|e.to_string())?;
+        std::fs::write(out.join("report.json"),format!("{{\"passed\":true,\"device\":\"{device}\",\"geometry_uploads_before_warm\":{},\"geometry_uploads_after_warm\":{},\"targets_before_warm\":{},\"targets_after_warm\":{},\"pose_bytes_before_warm\":{},\"pose_bytes_after_warm\":{},\"cache_bytes_before_warm\":{},\"cache_bytes_after_warm\":{},\"instance_buffers_before_warm\":{},\"instance_buffers_after_warm\":{},\"warm_matrix_upload_bytes\":{},\"coalesced_instances\":2,\"coalesced_runs\":1,\"final_uploads\":2,\"ledger_committed\":{committed},\"ledger_reserved\":{reserved},\"wrong_owner_refused\":true,\"invalid_pose_refused\":true}}\n",before.geometry_uploads,after.geometry_uploads,before.target_allocations,after.target_allocations,before.pose_storage_payload_bytes,after.pose_storage_payload_bytes,before.placement_cache_payload_bytes,after.placement_cache_payload_bytes,before.instance_buffer_allocations,after.instance_buffer_allocations,after.instance_matrix_upload_bytes-before.instance_matrix_upload_bytes)).map_err(|e|e.to_string())?;
         Ok(())
     })
 }

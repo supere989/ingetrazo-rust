@@ -59,6 +59,7 @@ struct Target {
     depth: Image,
     extent: (u32, u32),
     poses: Vec<PlacementPose>,
+    instance_matrices: Option<Buffer>,
 }
 struct Mesh {
     vertices: Buffer,
@@ -83,6 +84,8 @@ pub struct Stats {
     pub target_allocations: u64,
     pub prepared: u64,
     pub warm_geometry_hits: u64,
+    pub instance_buffer_allocations: u64,
+    pub instance_matrix_upload_bytes: u64,
     /// Current World cache paint-plan capacities only. Prior Prepared frames may
     /// independently retain older plans; excludes allocator/shared/GPU owners.
     pub policy_retained_payload_bytes: usize,
@@ -217,6 +220,7 @@ impl World {
                 )?,
                 extent,
                 poses: Vec::new(),
+                instance_matrices: None,
             })
         };
         let owner = self
@@ -414,6 +418,7 @@ impl World {
                 )?,
                 extent,
                 poses: Vec::new(),
+                instance_matrices: None,
             }))
         } else {
             None
@@ -424,6 +429,20 @@ impl World {
             new_target.as_mut().unwrap()
         };
         let unique = Arc::get_mut(target).ok_or("Metal placement idle target ownership changed")?;
+        let matrix_bytes = poses
+            .len()
+            .checked_mul(64)
+            .ok_or("Metal instance matrix extent overflow")?;
+        let candidate_matrices = if matrix_bytes > 0
+            && unique
+                .instance_matrices
+                .as_ref()
+                .is_none_or(|b| b.length() < matrix_bytes)
+        {
+            Some(metal.buffer(matrix_bytes, true)?)
+        } else {
+            None
+        };
         // Grow an unpublished candidate, so refused allocation/admission leaves
         // the idle target and its accounted capacity unchanged.
         if poses.len() > unique.poses.capacity() {
@@ -444,6 +463,23 @@ impl World {
             unique.poses.clear();
             unique.poses.extend_from_slice(poses);
         }
+        let allocated_matrices = candidate_matrices.is_some();
+        if let Some(buffer) = candidate_matrices {
+            unique.instance_matrices = Some(buffer);
+        }
+        if let Some(buffer) = &mut unique.instance_matrices {
+            // Exclusive idle target ownership: no submitted sampler or encoder
+            // can observe writes. No temporary packed matrix allocation.
+            for (i, pose) in poses.iter().enumerate() {
+                unsafe {
+                    std::ptr::copy_nonoverlapping(
+                        pose.mvp.as_ptr().cast::<u8>(),
+                        buffer.raw.contents().as_ptr().cast::<u8>().add(i * 64),
+                        64,
+                    );
+                }
+            }
+        }
         let target = target.clone();
         if new_target.is_some() {
             self.targets.push(target.clone());
@@ -453,6 +489,8 @@ impl World {
             .owner
             .clone()
             .unwrap_or_else(|| Arc::new(Owner::new(metal)));
+        self.stats.instance_buffer_allocations += u64::from(allocated_matrices);
+        self.stats.instance_matrix_upload_bytes += matrix_bytes as u64;
         self.stats.geometry_uploads += uploaded;
         self.stats.prepared += 1;
         if uploaded == 0 {
@@ -503,6 +541,23 @@ impl World {
     }
 }
 impl Prepared {
+    /// Admitted contiguous instanced draw groups, observed by diagnostics only.
+    pub fn instance_run_count(&self) -> usize {
+        let Some(p) = &self.placements else {
+            return 0;
+        };
+        let mut first = 0;
+        let mut count = 0;
+        while first < self.target.poses.len() {
+            first = super::world_placement::compatible_run_end(
+                &p.packet.bindings,
+                &self.target.poses,
+                first,
+            );
+            count += 1;
+        }
+        count
+    }
     pub fn validate_owner(&self, metal: &NativeMetal) -> Result<(), String> {
         self.owner.validate(metal)
     }
@@ -555,15 +610,31 @@ impl Prepared {
         encoder.setCullMode(MTLCullMode::None);
         encoder.setFrontFacingWinding(MTLWinding::CounterClockwise);
         if let Some(placements) = &self.placements {
-            for (pose, prototype) in self.target.poses.iter().zip(&placements.packet.bindings) {
-                encoder.setFrontFacingWinding(if pose.reflected {
+            let mut first = 0;
+            while first < self.target.poses.len() {
+                let prototype = placements.packet.bindings[first];
+                let reflected = self.target.poses[first].reflected;
+                let end = super::world_placement::compatible_run_end(
+                    &placements.packet.bindings,
+                    &self.target.poses,
+                    first,
+                );
+                encoder.setFrontFacingWinding(if reflected {
                     MTLWinding::Clockwise
                 } else {
                     MTLWinding::CounterClockwise
                 });
-                if let Some(mesh) = &placements.meshes[*prototype as usize] {
-                    encode_placement_mesh(&encoder, mesh, &pose.mvp, self.policy);
+                if let Some(mesh) = &placements.meshes[prototype as usize] {
+                    encode_placement_mesh(
+                        &encoder,
+                        mesh,
+                        self.target.instance_matrices.as_ref().unwrap(),
+                        first,
+                        end - first,
+                        self.policy,
+                    );
                 }
+                first = end;
             }
         } else if let Some(mesh) = &self.mesh {
             encode_mesh(&encoder, mesh, &self.mvp, self.policy);
@@ -623,44 +694,51 @@ fn encode_mesh(
 fn encode_placement_mesh(
     encoder: &ProtocolObject<dyn MTLRenderCommandEncoder>,
     mesh: &Mesh,
-    mvp: &[[f32; 4]; 4],
+    matrices: &Buffer,
+    first_instance: usize,
+    instances: usize,
     policy: Policy,
 ) {
     // Source _instanced_eligible excludes explicit back override/alpha content.
     // Default backs are decided in the face fragment, preserving placement draw
     // order rather than adding a later consolidated back pass per instance.
-    if policy.mode != Mode::Material {
-        encode_mesh(encoder, mesh, mvp, policy);
-        return;
-    }
     encoder.setCullMode(MTLCullMode::None);
     unsafe {
         encoder.setVertexBuffer_offset_atIndex(Some(&mesh.vertices.raw), 0, 0);
-        encoder.setVertexBytes_length_atIndex(std::ptr::NonNull::from(mvp).cast(), 64, 1);
+        encoder.setVertexBuffer_offset_atIndex(Some(&matrices.raw), first_instance * 64, 1);
     }
     let mut first = 0;
     let ordinary = PaintUniform {
         front: policy.front,
         back: policy.back,
-        mode: 0,
+        mode: match policy.mode {
+            Mode::Material => 0,
+            Mode::HiddenLine => 1,
+            Mode::Monochrome => 2,
+        },
         padding: [0; 3],
     };
     let default = PaintUniform {
         mode: 4,
         ..ordinary
     };
+    if policy.mode != Mode::Material {
+        bind_paint(encoder, &ordinary);
+        draw_instances(encoder, mesh, 0, mesh.count, instances);
+        return;
+    }
     for &(back_first, count) in &mesh.plan.default_back {
         if back_first > first {
             bind_paint(encoder, &ordinary);
-            draw(encoder, mesh, first, back_first - first);
+            draw_instances(encoder, mesh, first, back_first - first, instances);
         }
         bind_paint(encoder, &default);
-        draw(encoder, mesh, back_first, count);
+        draw_instances(encoder, mesh, back_first, count, instances);
         first = back_first + count;
     }
     if first < mesh.count {
         bind_paint(encoder, &ordinary);
-        draw(encoder, mesh, first, mesh.count - first);
+        draw_instances(encoder, mesh, first, mesh.count - first, instances);
     }
 }
 
@@ -910,5 +988,25 @@ fn draw(
             &mesh.indices.raw,
             first * 4,
         );
+    }
+}
+
+fn draw_instances(
+    encoder: &ProtocolObject<dyn MTLRenderCommandEncoder>,
+    mesh: &Mesh,
+    first: usize,
+    count: usize,
+    instances: usize,
+) {
+    unsafe {
+        encoder
+            .drawIndexedPrimitives_indexCount_indexType_indexBuffer_indexBufferOffset_instanceCount(
+                MTLPrimitiveType::Triangle,
+                count,
+                MTLIndexType::UInt32,
+                &mesh.indices.raw,
+                first * 4,
+                instances,
+            );
     }
 }
