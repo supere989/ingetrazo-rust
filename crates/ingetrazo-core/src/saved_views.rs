@@ -175,3 +175,12 @@ fn group_identities(groups: &[crate::groups::Group]) -> Vec<(String, usize, bool
     visit(groups, &mut 0, &mut std::collections::HashMap::new(), &mut result);
     result
 }
+
+/// HideCommand owns explicit placement objects, including unchanged targets.
+/// Redo invokes do again and captures their then-current previous flags.
+#[derive(Debug, Clone, PartialEq)]
+pub struct GroupVisibilityCommand {
+    pub targets: Vec<(uuid::Uuid, bool)>,
+    pub hidden: bool,
+    pub undo: bool,
+}

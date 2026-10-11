@@ -11,7 +11,7 @@ impl IngeTrazoApp {
         fn rows(groups:&[Group],cache:&mut std::collections::HashMap<Uuid,ingetrazo_core::parts::PartSummary>){for g in groups{cache.insert(g.id,ingetrazo_core::parts::part_summary(g));rows(&g.children,cache);}}
         self.parts_cache.rows.clear();rows(&self.scene.groups,&mut self.parts_cache.rows);self.parts_cache.key=Some(key);
     }
-    pub fn all_outliner_parts_visible(&mut self,visible:bool){if self.scene.groups.iter().all(|g|g.hidden==!visible){return;}self.save_undo_state();for group in &mut self.scene.groups{group.hidden=!visible;}self.scene.bump_version();}
+    pub fn all_outliner_parts_visible(&mut self,visible:bool){if self.scene.groups.iter().all(|g|g.hidden==!visible){return;}let targets=self.scene.groups.iter().filter(|g|!visible||g.hidden).map(|g|g.history_id).collect();self.save_undo_state();self.own_group_visibility(targets,!visible);for group in &mut self.scene.groups{group.hidden=!visible;}self.scene.bump_version();}
     pub fn outliner_cut_list(&self)->String{
         let selected=self.scene.selection.iter().filter_map(|s|if let SelectionItem::Group(i)=s{self.scene.groups.get(*i)}else{None}).collect::<Vec<_>>();
         let groups=if selected.len()==1&&!selected[0].children.is_empty(){&selected[0].children}else{&self.scene.groups};let rows=groups.iter().map(ingetrazo_core::parts::part_summary).filter(|r|self.parts_options.include_surfaces||!ingetrazo_core::parts::is_surface(r.size)).collect::<Vec<_>>();
@@ -29,7 +29,7 @@ impl IngeTrazoApp {
     }
     pub fn set_outliner_visibility(&mut self,id:Uuid,visible:bool){
         let Some(path)=path(&self.scene.groups,id)else{return;};let mut groups=&self.scene.groups;let mut current=None;for i in path{let g=&groups[i];current=Some(g.hidden);groups=&g.children;}if current==Some(!visible){return;}
-        self.save_undo_state();group_mut(&mut self.scene.groups,id).unwrap().hidden=!visible;self.scene.bump_version();
+        let identity=group_mut(&mut self.scene.groups,id).unwrap().history_id;self.save_undo_state();self.own_group_visibility(vec![identity],!visible);group_mut(&mut self.scene.groups,id).unwrap().hidden=!visible;self.scene.bump_version();
     }
     pub fn rename_outliner_group(&mut self,id:Uuid,name:String){
         if name.trim().is_empty(){return;}let Some(g)=group_mut(&mut self.scene.groups,id)else{return;};if g.name==name{return;}

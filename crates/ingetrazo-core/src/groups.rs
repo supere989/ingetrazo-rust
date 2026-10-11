@@ -37,6 +37,10 @@ pub struct Group {
     pub native_baseline: serde_json::Value,
 
     pub id: Uuid,
+    /// Placement-object identity for native command ownership. Authored UIDs
+    /// can repeat; snapshots retain this token, new placement copies do not.
+    #[serde(skip, default = "Uuid::new_v4")]
+    pub history_id: Uuid,
     pub name: String,
     pub mesh: Mesh,
     pub transform: DMat4,
@@ -58,6 +62,7 @@ impl Group {
             native_document: serde_json::Value::Null,
             native_baseline: serde_json::Value::Null,
             id: Uuid::new_v4(),
+            history_id: Uuid::new_v4(),
             name: name.into(),
             mesh: Mesh::new(),
             transform: DMat4::IDENTITY,
@@ -78,6 +83,7 @@ impl Group {
             native_document: serde_json::Value::Null,
             native_baseline: serde_json::Value::Null,
             id: Uuid::new_v4(),
+            history_id: Uuid::new_v4(),
             name: name.into(),
             mesh,
             transform: DMat4::IDENTITY,
@@ -111,6 +117,7 @@ impl Group {
         fn reset(group:&mut Group) {
             group.definition_member=group.definition_member.or(Some(group.id));
             group.id=Uuid::new_v4();
+            group.history_id=Uuid::new_v4();
             for child in &mut group.children { reset(child); }
         }
         reset(&mut copy);

@@ -68,6 +68,8 @@ pub struct Scene {
     #[serde(skip)]
     pub history_views: crate::saved_views::ViewHistory,
     #[serde(skip)]
+    pub history_group_visibility: Option<crate::saved_views::GroupVisibilityCommand>,
+    #[serde(skip)]
     pub history_terrain:crate::georef::TerrainHistory,
     #[serde(skip)]
     pub history_layers:crate::layers::LayerHistory,
@@ -134,7 +136,7 @@ impl Scene {
             dimension_frame:glam::DMat4::IDENTITY,
             drawing_frame:None,
             history_context:vec![],
-            display_style:Default::default(),shadows:Default::default(),history_shareback:None,history_bim:None,history_python:None,history_views:Default::default(),history_terrain:Default::default(),history_layers:Default::default(),
+            display_style:Default::default(),shadows:Default::default(),history_shareback:None,history_bim:None,history_python:None,history_views:Default::default(),history_group_visibility:None,history_terrain:Default::default(),history_layers:Default::default(),
             component_definitions: HashMap::new(),
             mesh_shares: HashMap::new(),
             native_document: serde_json::Value::Null,

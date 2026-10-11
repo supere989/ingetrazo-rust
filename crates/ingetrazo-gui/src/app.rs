@@ -493,8 +493,9 @@ impl IngeTrazoApp {
                     Err(error)=>{self.undo_stack.push(prev);self.status_message=error;false},
                 };
             }
-            let mut inverse=crate::history_terrain::inverse_snapshot(&mut self.scene);inverse.history_views.0=crate::history_views::restore(&self.scene,&mut prev);inverse.history_layers.0=crate::history_layers::restore(&self.scene,&mut prev);crate::history_terrain::restore(&mut self.scene,&mut prev,&mut inverse);inverse.history_images.0=crate::image_plane_actions::restore(&self.scene,&mut prev);self.redo_stack.push(inverse);
+            let mut inverse=crate::history_terrain::inverse_snapshot(&mut self.scene);inverse.history_views.0=crate::history_views::restore(&self.scene,&mut prev);inverse.history_group_visibility=crate::history_visibility::restore(&self.scene,&mut prev);inverse.history_layers.0=crate::history_layers::restore(&self.scene,&mut prev);crate::history_terrain::restore(&mut self.scene,&mut prev,&mut inverse);inverse.history_images.0=crate::image_plane_actions::restore(&self.scene,&mut prev);self.redo_stack.push(inverse);
             // Model history cannot replace later independent composer edits.
+            prev.camera=self.camera.clone();
             prev.sheets=self.scene.sheets.clone();prev.active_sheet_index=self.scene.active_sheet_index;
             // Source map capture is a runtime panel publication; model commands
             // do not own it. Transfer the current capture through older history.
@@ -535,7 +536,8 @@ impl IngeTrazoApp {
                     Err(error)=>{self.redo_stack.push(next);self.status_message=error;false},
                 };
             }
-            let mut inverse=crate::history_terrain::inverse_snapshot(&mut self.scene);inverse.history_views.0=crate::history_views::restore(&self.scene,&mut next);inverse.history_layers.0=crate::history_layers::restore(&self.scene,&mut next);crate::history_terrain::restore(&mut self.scene,&mut next,&mut inverse);inverse.history_images.0=crate::image_plane_actions::restore(&self.scene,&mut next);self.undo_stack.push(inverse);
+            let mut inverse=crate::history_terrain::inverse_snapshot(&mut self.scene);inverse.history_views.0=crate::history_views::restore(&self.scene,&mut next);inverse.history_group_visibility=crate::history_visibility::restore(&self.scene,&mut next);inverse.history_layers.0=crate::history_layers::restore(&self.scene,&mut next);crate::history_terrain::restore(&mut self.scene,&mut next,&mut inverse);inverse.history_images.0=crate::image_plane_actions::restore(&self.scene,&mut next);self.undo_stack.push(inverse);
+            next.camera=self.camera.clone();
             next.sheets=self.scene.sheets.clone();next.active_sheet_index=self.scene.active_sheet_index;
             next.tile_layer=self.scene.tile_layer.take();
             crate::document_presentation::preserve(&self.scene,&mut next);
@@ -702,7 +704,12 @@ impl IngeTrazoApp {
     }
 
     pub fn hide_selection(&mut self) {
+        let groups = self.scene.selection.iter().filter_map(|item| match item {
+            SelectionItem::Group(index) => self.scene.groups.get(*index).map(|g|g.history_id),
+            _ => None,
+        }).collect();
         self.save_undo_state();
+        self.own_group_visibility(groups, true);
         let mut count = 0;
         for item in &self.scene.selection {
             match item {
@@ -733,18 +740,20 @@ impl IngeTrazoApp {
     }
 
     pub fn unhide_all(&mut self) {
+        fn hidden(groups: &[ingetrazo_core::groups::Group], ids: &mut Vec<uuid::Uuid>) {
+            for group in groups { if group.hidden {ids.push(group.history_id);} hidden(&group.children,ids); }
+        }
+        fn unhide(groups: &mut [ingetrazo_core::groups::Group]) {
+            for group in groups {group.hidden=false;unhide(&mut group.children);}
+        }
+        let mut groups=Vec::new();hidden(&self.scene.groups,&mut groups);
         self.save_undo_state();
-        for f in &mut self.scene.mesh.faces {
-            f.attrs.remove("hidden");
-        }
-        for e in &mut self.scene.mesh.edges {
-            e.hidden = false;
-        }
-        for g in &mut self.scene.groups {
-            g.hidden = false;
-        }
+        self.own_group_visibility(groups, false);
+        for f in &mut self.scene.mesh.faces { f.attrs.remove("hidden"); }
+        for e in &mut self.scene.mesh.edges {e.hidden=false;}
+        unhide(&mut self.scene.groups);
         self.scene.bump_version();
-        self.status_message = ingetrazo_core::i18n::tr("Unhid all objects");
+        self.status_message=ingetrazo_core::i18n::tr("Unhid all objects");
     }
 
     pub fn apply_material_to_selection(&mut self, mat_name: &str) {

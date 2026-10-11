@@ -70,7 +70,7 @@ fn prepare_finish(finishing_scene: &Scene, stack: &[ComponentEditSession], undo:
                 if entry.history_context==target {
                     *entry=match component_candidate(session,entry) {Ok((mut scene,_))=>{
                         scene.selection=session.original_scene.selection.clone();scene.selection_order=session.original_scene.selection_order.clone();
-                        scene.version=session.original_scene.version;scene.view_version=session.original_scene.view_version;scene.history_shareback=entry.history_shareback;scene.history_bim=entry.history_bim.clone();scene.history_views.0=entry.history_views.0.clone();scene.history_terrain=entry.history_terrain.clone();scene.history_layers=entry.history_layers.clone();scene.history_images=entry.history_images.clone();scene
+                        scene.version=session.original_scene.version;scene.view_version=session.original_scene.view_version;scene.history_shareback=entry.history_shareback;scene.history_bim=entry.history_bim.clone();scene.history_views.0=entry.history_views.0.clone();scene.history_group_visibility=entry.history_group_visibility.clone();scene.history_terrain=entry.history_terrain.clone();scene.history_layers=entry.history_layers.clone();scene.history_images=entry.history_images.clone();scene
                     },Err(error)=>return Err(error)};
                 }
             }
