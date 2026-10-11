@@ -78,7 +78,7 @@ impl Packet{
   let mut out=TextureBuffers::default();out.try_reserve(self.runs.len()).map_err(|_|"Billboard material identity admission")?;
   for(index,run)in self.runs.iter().enumerate(){
    let solid=run.path.is_none();let key=run.path.clone().unwrap_or_else(||format!("@billboard-color-{index}"));let order=out.take_order();let buffer=out.entry(key).or_default();
-   if buffer.source_billboard_color.is_some()&&buffer.source_billboard_color!=Some(run.color){return Err("Billboard solid color identity admission".into());}
+   if (buffer.source_billboard_receiver&&buffer.source_billboard_color.is_some()!=solid)||(buffer.source_billboard_color.is_some()&&buffer.source_billboard_color!=Some(run.color)){return Err("Billboard solid color identity admission".into());}
    if solid{buffer.source_billboard_color=Some(run.color);}
    let mut quad=[([0.;3],[0.;2]);6];let mesh_positions;
    let positions=match run.facing{
@@ -94,4 +94,11 @@ impl Packet{
 }
 pub(super) fn key(scene:&Scene,camera:&OrbitCamera,epoch:u64)->Result<([u64;3],[u32;7]),String>{
  let snapshot=crate::navigation_ray::camera_snapshot(camera).ok_or("Billboard camera admission")?;let target=camera.target.as_vec3().to_array();Ok(([scene.version,scene.view_version,epoch],[u32::from(camera.perspective),snapshot.eye[0].to_bits(),snapshot.eye[1].to_bits(),snapshot.eye[2].to_bits(),target[0].to_bits(),target[1].to_bits(),target[2].to_bits()]))
+}
+
+#[cfg(test)]mod tests{
+ use super::*;
+ fn scene()->Scene{let mut s=Scene::new();let mut mesh=ingetrazo_core::mesh::Mesh::new();let ids=[DVec3::new(-1.,0.,0.),DVec3::new(1.,0.,0.),DVec3::new(1.,0.,3.),DVec3::new(-1.,0.,3.)].map(|p|mesh.add_vertex(p));let face=mesh.add_face(ids.to_vec(),vec![]).unwrap();mesh.faces[face].attrs.insert("texture".into(),serde_json::json!({"embed":"sprite.png","sw":2.,"sh":2.}));let mut group=Group::with_mesh("sprite",mesh);group.billboard=true;s.groups.push(group);s}
+ #[test]fn cached_ortho_packet_uses_view_direction_not_anchor_direction(){let scene=scene();let packet=Packet::build(&scene).unwrap();let mut a=OrbitCamera::default();a.distance=8.;a.yaw=0.;a.pitch=0.;a.perspective=false;a.target=DVec3::ZERO;let first=packet.textures(&a).unwrap();let mut b=a.clone();b.target=DVec3::new(32.,16.,0.);let second=packet.textures(&b).unwrap();assert_eq!(first["sprite.png"].vertices,second["sprite.png"].vertices);a.perspective=true;b.perspective=true;assert_ne!(packet.textures(&a).unwrap()["sprite.png"].vertices,packet.textures(&b).unwrap()["sprite.png"].vertices);}
+ #[test]fn malformed_placement_and_camera_refuse_before_any_gpu_publication(){let mut scene=scene();scene.groups[0].transform=DMat4::from_translation(DVec3::splat(f64::MAX));assert!(Packet::build(&scene).is_err());let packet=Packet::build(&self::scene()).unwrap();let mut camera=OrbitCamera::default();camera.yaw=f64::NAN;assert!(packet.textures(&camera).is_err());}
 }

@@ -56,7 +56,8 @@ extras=[('billboard-bitmap',1.,True,'textures',False,False),('billboard-mesh',1.
 heldout=bool(os.environ.get('INGETRAZO_BILLBOARD_HELDOUT'))
 cases=extras[:2] if not heldout else [(n,1.,t,'textures',False,False) for n,t in [
  ('billboard-bitmap-perspective',True),('billboard-bitmap-oblique',True),('billboard-bitmap-nested-reflection',True),
- ('billboard-mesh-solid-perspective',False),('billboard-mesh-uv-transform',True),('billboard-mesh-mixed-order',True),('billboard-bitmap-missing','missing')]]
+ ('billboard-mesh-solid-perspective',False),('billboard-mesh-uv-transform',True),('billboard-mesh-mixed-order',True),('billboard-bitmap-missing','missing'),('billboard-bitmap-hardcutout',True)]]
+if os.environ.get("INGETRAZO_BILLBOARD_CASE"):cases=[c for c in cases if c[0]==os.environ["INGETRAZO_BILLBOARD_CASE"]]
 for name,alpha,textured,mode,section,offscreen in cases:
  scene=Scene();scene.shadows.enabled=True;scene.shadows.darkness=.55
  height=4. if offscreen else 1.5
@@ -70,6 +71,8 @@ for name,alpha,textured,mode,section,offscreen in cases:
  mesh=Mesh() if offscreen or billboard else scene.mesh
  face=mesh.add_face([QVector3D(*v)for v in vertices]);face.attrs.update(color=(.9,.3,.15),opacity=alpha)
  if textured:face.attrs['texture']={'path':str(out/('missing.png' if textured=='missing' else 'cutout.png')),'sw':2.,'sh':2.}
+ if 'hardcutout' in name:
+  hard=Image.new('RGBA',(32,32),(255,255,255,0));hard.paste((255,255,255,255),(8,8,24,24));hard.save(out/'hardcutout.png');face.attrs['texture']['path']=str(out/'hardcutout.png')
  if offscreen or billboard:
   group=Group(mesh,'offscreen-caster');group.xform=QMatrix4x4();group.billboard=('mesh' if 'billboard-mesh' in name else True) if billboard else False;scene.groups.append(group)
  if heldout and billboard:

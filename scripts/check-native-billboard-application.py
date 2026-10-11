@@ -6,7 +6,8 @@ import argparse
 from owned_process_cleanup import stop_owned_helper
 parser=argparse.ArgumentParser();parser.add_argument("binary");parser.add_argument("output");parser.add_argument("--input",required=True);parser.add_argument("--source",required=True);args=parser.parse_args();assert len(args.source)==40 and all(c in "0123456789abcdef" for c in args.source)
 out=Path(args.output);out.mkdir(parents=True,exist_ok=True)
-xvfb=subprocess.Popen(["Xvfb","-displayfd","1","-screen","0","1400x1000x24"],stdout=subprocess.PIPE,stderr=subprocess.DEVNULL,text=True)
+xvfb_log=(out/"xvfb.log").open("w")
+xvfb=subprocess.Popen(["Xvfb","-displayfd","1","-screen","0","1400x1000x24"],stdout=subprocess.PIPE,stderr=xvfb_log,text=True)
 assert select.select([xvfb.stdout],[],[],5)[0],"Owned Xvfb startup timeout"
 display=":"+xvfb.stdout.readline().strip();control=out/"control";control.mkdir(exist_ok=True)
 env=dict(os.environ,DISPLAY=display,XDG_CONFIG_HOME=str(out/"config"),INGETRAZO_BILLBOARD_CONTROL_DIR=str(control))
@@ -23,7 +24,14 @@ class XEvent(C.Union):
  _fields_=[("client",ClientMessage),("pad",C.c_long*24)]
 lib.XInternAtom.argtypes=[C.c_void_p,C.c_char_p,C.c_int];lib.XInternAtom.restype=C.c_ulong
 lib.XSendEvent.argtypes=[C.c_void_p,C.c_ulong,C.c_int,C.c_long,C.POINTER(XEvent)]
-d=lib.XOpenDisplay(display.encode())
+d=None;deadline=time.monotonic()+5
+while time.monotonic()<deadline and d is None:
+ if xvfb.poll()is not None:break
+ d=lib.XOpenDisplay(display.encode())
+ if not d:time.sleep(.02)
+if not d:
+ stop_owned_helper(xvfb,out/"xvfb-cleanup.json",timeout=5);xvfb_log.close();raise RuntimeError("Owned Xvfb connection readiness failed")
+
 
 from PySide6.QtGui import QImage,QColor,QPainter
 from PySide6.QtCore import qVersion
@@ -41,9 +49,9 @@ def state():
  try:return json.loads((control/"state.json").read_text())
  except FileNotFoundError:return None
 def read_image(path):
- image=QImage(str(path));assert not image.isNull() and image.width()==1000 and image.height()==700,"Missing/unreadable/wrong-extent PNG"
+ image=QImage(str(path));expected=state()["screen_size"];assert not image.isNull() and [image.width(),image.height()]==expected,"Missing/unreadable/wrong-extent owned PNG"
  image=image.convertToFormat(QImage.Format_RGBA8888)
- return np.frombuffer(image.constBits(),np.uint8).reshape(700,image.bytesPerLine())[:,:1000*4].reshape(700,1000,4).copy()
+ return np.frombuffer(image.constBits(),np.uint8).reshape(image.height(),image.bytesPerLine())[:,:image.width()*4].reshape(image.height(),image.width(),4).copy()
 rows=[];p=None
 try:
  with(out/"runtime.log").open("w")as log:
@@ -92,13 +100,20 @@ try:
   assert image_work(state()["observation"]["world"])==image_work(before_refusal)
   retry=action(6,"retry");assert not state()["held"]and np.any(roi(retry)!=base_roi),"Retry failed receiver publication"
   restored=action(7,"original");assert np.array_equal(roi(restored),base_roi),"Final receiver restore changed pixels"
+  before_resize=state()["observation"]["world"];lib.XResizeWindow(d,window,900,650);lib.XFlush(d)
+  first_resize=wait(lambda:(v if(v:=state())and v["screen_size"]==[900.0,650.0]else None))
+  resized=wait(lambda:(v if(v:=state())and v["screen_size"]==[900.0,650.0]and v["observation"]["completed_present_serial"]>first_resize["observation"]["submitted_serial"]else None))
+  resized_image=take("resize");assert np.any(resized_image[:,:,:3]),"Resized application black"
+  after_resize=resized["observation"]["world"];assert image_work(after_resize)==image_work(before_resize)and after_resize["base_builds"]==before_resize["base_builds"]and after_resize["vertex_uploads"]==before_resize["vertex_uploads"],"Resize rebuilt immutable receiver/image data"
+  rows.append(dict(name="resize",state=resized,image_sha256=hashlib.sha256((out/"resize.png").read_bytes()).hexdigest()))
   request=control/"request.tmp";request.write_text(json.dumps(dict(nonce=8,action="close")));request.rename(control/"request.json")
   event=XEvent();event.client.type=33;event.client.send_event=1;event.client.display=d;event.client.window=window;event.client.message_type=lib.XInternAtom(d,b"WM_PROTOCOLS",0);event.client.format=32;event.client.data.l[0]=lib.XInternAtom(d,b"WM_DELETE_WINDOW",0);assert lib.XSendEvent(d,window,0,0,C.byref(event));lib.XFlush(d);assert p.wait(timeout=5)==0
  log=(out/"runtime.log").read_text();assert "committed_bytes=0"in log
- report=dict(source_sha=args.source,binary_sha256=hashlib.sha256(Path(args.binary).read_bytes()).hexdigest(),rows=rows,passed=True,scope="Actual IngeTrazoApp/render_viewport camera/hide/restore/budget-refusal/retry, owned submitted/present acknowledgment and image cache reuse; direct source image proof separately retained")
+ report=dict(source_sha=args.source,binary_sha256=hashlib.sha256(Path(args.binary).read_bytes()).hexdigest(),rows=rows,passed=True,checker_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),scope="Actual IngeTrazoApp/render_viewport camera/hide/restore/budget-refusal/retry, owned submitted/present acknowledgment and image cache reuse; direct source image proof separately retained")
  (out/"result.json").write_text(json.dumps(report,indent=2)+"\n");print("PASS actual billboard application camera/hide/restore/refusal/retry")
 except BaseException as error:
  (out/"failure.json").write_text(json.dumps(dict(source_sha=args.source,error=repr(error),rows=rows,last_state=state()),indent=2)+"\n");raise
 finally:
  if p is not None:stop_owned_helper(p,out/"app-cleanup.json",timeout=5)
- lib.XCloseDisplay(d);stop_owned_helper(xvfb,out/"xvfb-cleanup.json",timeout=5)
+ if d:lib.XCloseDisplay(d)
+ stop_owned_helper(xvfb,out/"xvfb-cleanup.json",timeout=5);xvfb_log.close()

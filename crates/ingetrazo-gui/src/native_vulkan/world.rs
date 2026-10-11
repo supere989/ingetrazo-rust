@@ -268,7 +268,8 @@ impl World {
   let previous=(self.mvp,self.clip,self.clip_enabled,self.eye,self.width_factor,self.edge_color,self.background,self.style_mode,self.style_front,self.style_back,self.show_edges);
   let key=billboards::key(scene,camera,epoch)?;
   let packet=if self.billboard_key.is_none_or(|old|old.0!=key.0){Some(billboards::Packet::build(scene)?)}else{None};
-  let receivers=if self.billboard_key!=Some(key){Some(packet.as_ref().or(self.billboard_packet.as_ref()).ok_or("Billboard base packet absent")?.textures(camera)?)}else{None};
+  let receiver_enabled=matches!(style.visual_style,ingetrazo_render::style::VisualStyle::ShadedWithTextures|ingetrazo_render::style::VisualStyle::XRay);
+  let receivers=if self.billboard_key!=Some(key){Some(if receiver_enabled{packet.as_ref().or(self.billboard_packet.as_ref()).ok_or("Billboard base packet absent")?.textures(camera)?}else{Default::default()})}else{None};
   let result=self.prepare_scene(context,scene,camera,style,fence,completed_serial,epoch,shadow_extra,receivers.as_ref());
   if result.is_ok(){if let Some(packet)=packet{self.billboard_builds+=1;self.billboard_packet=Some(packet);}self.billboard_key=Some(key);}
   if result.is_err(){(self.mvp,self.clip,self.clip_enabled,self.eye,self.width_factor,self.edge_color,self.background,self.style_mode,self.style_front,self.style_back,self.show_edges)=previous;}
@@ -370,7 +371,7 @@ impl World {
    }
    if !unsafe{context.device.get_fence_status(fence)}.map_err(|e|e.to_string())?{return Err("Contour cache replacement requires a completed draw fence".into());}
    if cap_changed{next_cap=Some(self.upload_cap(context,cap)?);}
-   let receiver_packet;let receiver_buffers=match receivers{Some(r)=>r,None=>{receiver_packet=self.billboard_packet.as_ref().ok_or("Billboard base packet absent")?.textures(camera)?;&receiver_packet}};
+   let receiver_packet;let receiver_buffers=match receivers{Some(r)=>r,None=>{receiver_packet=if matches!(style.visual_style,ingetrazo_render::style::VisualStyle::ShadedWithTextures|ingetrazo_render::style::VisualStyle::XRay){self.billboard_packet.as_ref().ok_or("Billboard base packet absent")?.textures(camera)?}else{Default::default()};&receiver_packet}};
    if shadow_extra.len()>2{return Err("Shadow packet partition admission".into());}
    let empty=ingetrazo_render::buffer::TextureBuffers::default();let extras=[shadow_extra.first().copied().unwrap_or(&empty),shadow_extra.get(1).copied().unwrap_or(&empty),receiver_buffers];
    let candidate=self.textures.as_mut().unwrap().prepare_shadow_mode(context,&mut self.resources,&texture_buffers,&scene.embedded_textures,scene,fence,completed_serial,limit,texture_average,self.shadow_geometry,&extras)?;
