@@ -1,0 +1,220 @@
+{
+  "runtime_commit": "0e1d475b",
+  "checker_commit": "be845e39",
+  "source_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "archive": "records.zip",
+  "archive_sha256": "04aab94a6f4644678591cd42bde0edd60f7f176908ab017e51cf4479b6db18fe",
+  "entries": [
+    {
+      "path": "arc-half-native.igz",
+      "bytes": 9653,
+      "sha256": "05cb7b358f29b0bbbb504b8a4cde9f9007c3a78af86196cd258a45bc4c484fe9"
+    },
+    {
+      "path": "arc-ocs-native.igz",
+      "bytes": 9707,
+      "sha256": "87a72eaddcdd1def889b84ea643a83da8dda0bcbd1de0d72ae1fecb07d2164f9"
+    },
+    {
+      "path": "arc-wrap-native.igz",
+      "bytes": 6297,
+      "sha256": "bfe9522dfef23c7f3cb8cbf2d0c59c35bbaf0b014b2a8614656568eeb3808eab"
+    },
+    {
+      "path": "circle-large-native.igz",
+      "bytes": 76908,
+      "sha256": "6215739c9b4285f52a7242fa87d7d98ccae605396471c65949780613018c7f54"
+    },
+    {
+      "path": "circle-native.igz",
+      "bytes": 12964,
+      "sha256": "f236111c6f1f392f3e72cbe4ad687316c60f68beb7ac3683aacf354d6a25fe1d"
+    },
+    {
+      "path": "ellipse-full-native.igz",
+      "bytes": 18834,
+      "sha256": "9148a9bb1cd3816d88c500e231991e73f0ce0c5307f5cc44455f48f3bc871cfe"
+    },
+    {
+      "path": "ellipse-partial-native.igz",
+      "bytes": 10290,
+      "sha256": "f8ec892d7911c754168f1e4a41afd49c92f27b7bc6d90f0cfa036840f8e19aa1"
+    },
+    {
+      "path": "ellipse-tilted-native.igz",
+      "bytes": 16518,
+      "sha256": "bfcb881141368b57eed806ba7e3e7e994de53857dbaf5436bd88e20d0b0a5699"
+    },
+    {
+      "path": "legacy-bulge-ocs-native.igz",
+      "bytes": 11984,
+      "sha256": "eb6def3d09836b08d8d2a97464cce7a3d3b3c5fba1598dd437303b4a467d7ddc"
+    },
+    {
+      "path": "logs/dxf-curves-build.log",
+      "bytes": 21211,
+      "sha256": "9df6b41f9997a73628024d3c4a3bc3e310404a1d82ce986a22777832ba67a6b0"
+    },
+    {
+      "path": "logs/dxf-curves-check-final.log",
+      "bytes": 123,
+      "sha256": "6da01c6b84a6960307319c7dd8882301ff4239c87f286e9f7bf7c85fd6766eff"
+    },
+    {
+      "path": "logs/dxf-curves-check.log",
+      "bytes": 123,
+      "sha256": "a9b6d38e698b5bfb53d3187ea75abaf6a4eba2bc711fcb79fc89708dd5404c0e"
+    },
+    {
+      "path": "logs/dxf-curves-native.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "logs/dxf-curves-reopens-final.log",
+      "bytes": 32,
+      "sha256": "154dad2e32dd166d6a6160d2d2a08a0af79030366d83ea23deea066ae33bfca3"
+    },
+    {
+      "path": "logs/dxf-curves-reopens.log",
+      "bytes": 32,
+      "sha256": "154dad2e32dd166d6a6160d2d2a08a0af79030366d83ea23deea066ae33bfca3"
+    },
+    {
+      "path": "logs/dxf-curves-source.log",
+      "bytes": 685,
+      "sha256": "a7a6bb9aae6915042d4d8b79675b3434f73bf67ae82c58de8f306c6663c1c171"
+    },
+    {
+      "path": "logs/dxf-curves-straight-check.log",
+      "bytes": 121,
+      "sha256": "4bfa9006a7f6afa161705e8ade2095fc6a25c21dc4cc3f1f44219db4781949ba"
+    },
+    {
+      "path": "logs/dxf-curves-straight-native.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "logs/dxf-curves-straight-reopens.log",
+      "bytes": 31,
+      "sha256": "da86a87a94e59e2cafdc81a62146beb0b1849f1877acc89a6238a498db8795dc"
+    },
+    {
+      "path": "logs/dxf-curves-test.log",
+      "bytes": 13966,
+      "sha256": "8bb6e300e4f08adff23fd19f8630c060b5274b20eee350832142689fe745f4cf"
+    },
+    {
+      "path": "lw-negative-closed-native.igz",
+      "bytes": 10774,
+      "sha256": "e6727832b62b091af6a289f2af117e3f61a06eef2c392676b40c121bcf0f6309"
+    },
+    {
+      "path": "lw-positive-native.igz",
+      "bytes": 8788,
+      "sha256": "ad414aab5fe6e50d88bf58a871fdc3e8564fe03f3a4c507f2203568f33d08a36"
+    },
+    {
+      "path": "lw-small-bulge-native.igz",
+      "bytes": 4464,
+      "sha256": "ba4638f8e7ff5f30450b8bc65d2e2a3174894760c8227043f2f13bc04b2739c8"
+    },
+    {
+      "path": "malformed.dxf",
+      "bytes": 15896,
+      "sha256": "59ba32eb161f4a042b7288956023ace2c6bb1cb28f66e8d74298879ef30be5f7"
+    },
+    {
+      "path": "native-dxf-curves.json",
+      "bytes": 1596442,
+      "sha256": "965a230893f8f827131697067c5f4d1bd93a97bb74dab69bd64022866c6f8c1c"
+    },
+    {
+      "path": "native-dxf-guards.json",
+      "bytes": 173,
+      "sha256": "89b49795723ba45284deb4df57e8b8215d0ff1f7499fdefc74bef312c67cd6ac"
+    },
+    {
+      "path": "reopens-dxf-curves.json",
+      "bytes": 1140600,
+      "sha256": "4065eedff0c2fd1d2a17db0751ea0c42b3e6233e03133d5b5459f0a24a3c4527"
+    },
+    {
+      "path": "straight-affected/native-dxf-entities.json",
+      "bytes": 428431,
+      "sha256": "22e20e901b8e7e590533bb1d7f9ace1e398819f4f93c8ccdf8ae4fb34a5bc1d0"
+    },
+    {
+      "path": "straight-affected/native-dxf-guards.json",
+      "bytes": 173,
+      "sha256": "89b49795723ba45284deb4df57e8b8215d0ff1f7499fdefc74bef312c67cd6ac"
+    },
+    {
+      "path": "straight-affected/reopens-dxf-entities.json",
+      "bytes": 218547,
+      "sha256": "e45cfa9925e7ca00e26f4b2aca67be9faddefbea5d23e9f31f484d2d9a3348e9"
+    }
+  ],
+  "binary": {
+    "path": "/tmp/ingetrazo-ai-registry-target/debug/examples/context_document_lifecycle",
+    "bytes": 65180184,
+    "sha256": "2eec0f70c24ab641bbc3dfd8aa8b697e8427b24afaa531f0f86726035424e788"
+  },
+  "sources": [
+    {
+      "path": "crates/ingetrazo-formats/src/dxf.rs",
+      "sha256": "e7bd8ea828f7897d1a2ef16f03e2848aaf04055037be286f976e617be5808927"
+    },
+    {
+      "path": "crates/ingetrazo-formats/src/dxf_curves.rs",
+      "sha256": "4c191063dc1f1de4d2b7c9e393fd1b36f82cc03aba2dc61f9d569d0c72f39c00"
+    },
+    {
+      "path": "crates/ingetrazo-gui/examples/context_document_lifecycle.rs",
+      "sha256": "c0a61212ba1a42ed350f01384ac8c6c29edb54b945a6aa338c0021873d4e5cd1"
+    },
+    {
+      "path": "crates/ingetrazo-gui/examples/context_document_lifecycle/dxf_entities.rs",
+      "sha256": "d0eaa3ece9d0354595cc814c21ac278b9215f0e28932fc07e35ef4d93d3ea4e8"
+    },
+    {
+      "path": "scripts/reference-dxf-curves.py",
+      "sha256": "bf3b96f397378f3e900fb3bbe19d76bc2ef4de20f74ad841ef37ea59cdb14799"
+    },
+    {
+      "path": "scripts/reference-dxf-curves-reopens.py",
+      "sha256": "fa6e6be9ee11e916757140688ff62b99b23e8af2480242f6d899b6e9d2a5c721"
+    },
+    {
+      "path": "scripts/check-dxf-source-curves.py",
+      "sha256": "b2efd1405f1bf1d53160fa1e85308e2c1649d85408f7d7ab307b385d38bb6a69"
+    },
+    {
+      "path": "scripts/check-dxf-curves.py",
+      "sha256": "52fde8f6131f9c99bfe39f5328256f67ea97a3bcb1f487b2a6d78ce598c5b01b"
+    },
+    {
+      "path": "docs/audits/dxf-curves/source-paths.json",
+      "sha256": "378c0e296ad78235c38460b0c66ab5c5ec8a229e61c587dd1ff417098599d880"
+    }
+  ],
+  "result": {
+    "cases": 12,
+    "states": 84,
+    "actual_original_reopens": 12,
+    "negative_controls": 36,
+    "native_ownership_guards": 3,
+    "focused_tests": 2,
+    "straight_affected_states": 56,
+    "straight_actual_original_reopens": 8,
+    "build_seconds": 7.1,
+    "test_build_seconds": 5.51
+  },
+  "replay": {
+    "native": "context_document_lifecycle INPUT --dxf-curves",
+    "reader": "QT_QPA_PLATFORM=offscreen /tmp/ingetrazo-parity-python/bin/python scripts/reference-dxf-curves-reopens.py INPUT",
+    "checker": "python3 scripts/check-dxf-source-curves.py INPUT"
+  },
+  "scope": "Source Qt authoredpoint equality, no tolerance; noGPU/generalDXFclaim. SPLINE/INSERT/MINSERT/facestitch remainopen."
+}
