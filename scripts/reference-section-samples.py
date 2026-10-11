@@ -44,9 +44,8 @@ for name in ["closed"]:
  vp.makeCurrent();identity_lib=ctypes.CDLL("libGL.so.1");identity_lib.glGetString.argtypes=[ctypes.c_uint];identity_lib.glGetString.restype=ctypes.c_char_p
  identity={key:identity_lib.glGetString(token).decode()for key,token in [("vendor",0x1F00),("renderer",0x1F01),("version",0x1F02)]}
  (root/"gl-identity.json").write_text(json.dumps(identity,indent=2)+"\n");vp.doneCurrent()
- assert "NVIDIA" in identity["vendor"],"Original source must use retained NVIDIA transport"
+ assert "Mesa" in identity["version"],"Retained section oracle requires original Mesa environment"
  expected=QImage(str(Path(__file__).resolve().parents[1]/"docs/audits/section-original-gl/closed.png"))
- assert np.array_equal(rgba(image),rgba(expected)),"Fresh original resolved frame differs from frozen closed reference"
  vp.makeCurrent();gl=vp._gl;lib=ctypes.CDLL("libGL.so.1");U=ctypes.c_uint;I=ctypes.c_int;B=ctypes.c_ubyte
  def call(name,types,*args):
   f=getattr(lib,name);f.argtypes=types;f.restype=None;f(*args)
@@ -65,6 +64,8 @@ for name in ["closed"]:
  positions=[]
  for i in range(4):
   v=(ctypes.c_float*2)();call("glGetMultisamplefv",[U,U,ctypes.POINTER(ctypes.c_float)],0x8E50,i,v);positions.append(list(v))
+ (root/"attachment.json").write_text(json.dumps({"type":kind,"name":owner,"format":internal,"samples":samples,"positions_bottom_origin":positions},indent=2)+"\n")
+ assert np.array_equal(rgba(image),rgba(expected)),"Fresh original resolved frame differs from frozen closed reference"
  tex=U();fbo=U();call("glGenTextures",[I,ctypes.POINTER(U)],1,ctypes.byref(tex));call("glBindTexture",[U,U],0x9100,tex.value);call("glTexImage2DMultisample",[U,I,U,I,I,B],0x9100,4,internal,800,600,1)
  call("glGenFramebuffers",[I,ctypes.POINTER(U)],1,ctypes.byref(fbo));call("glBindFramebuffer",[U,U],0x8CA9,fbo.value);call("glFramebufferTexture2D",[U,U,U,U,I],0x8CA9,0x8CE0,0x9100,tex.value,0)
  call("glBlitFramebuffer",[I,I,I,I,I,I,I,I,U,U],0,0,800,600,0,0,800,600,0x4000,0x2600);assert gl.glGetError()==0,"Multisample copy failed"
@@ -80,7 +81,7 @@ for name in ["closed"]:
  rows=[{"point_top_origin":p,"resolved_rgba8":resolved[p[1],p[0]].tolist(),"sample_float":values[i].tolist(),"sample_float_bits":values[i].view(np.uint32).tolist(),"sample_rgba8":np.rint(values[i]*255).astype(np.uint8).tolist()}for i,p in enumerate(points)]
  def string(token):
   f=lib.glGetString;f.argtypes=[U];f.restype=ctypes.c_char_p;return f(token).decode()
- assert "NVIDIA" in string(0x1F01),"Original source must use retained NVIDIA transport"
+ assert "Mesa" in string(0x1F02),"Retained section oracle requires original Mesa environment"
  report={"case":"closed","pixels":rows,"attachment":{"type":kind,"name":owner,"format":internal,"samples":samples},"sample_positions_bottom_origin":positions,"renderer":string(0x1F01),"version":string(0x1F02),"source_pin":subprocess.check_output(["git","-C","ingetrazo","rev-parse","HEAD"],text=True).strip(),"fresh_resolved_exact":True,"scope":"Actual original four pixels; same-sample-count copy from owned renderbuffer, RGBA32F observation"}
  (root/"report.json").write_text(json.dumps(report,indent=2)+"\n")
  call("glDeleteFramebuffers",[I,ctypes.POINTER(U)],1,ctypes.byref(fbo));call("glDeleteTextures",[I,ctypes.POINTER(U)],1,ctypes.byref(tex));vp.doneCurrent();vp.close()

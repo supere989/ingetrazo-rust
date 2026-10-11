@@ -1,0 +1,58 @@
+{
+  "members": {
+    "configured-unidentified/closed.png": {
+      "sha256": "5b8c6c6cb9bac657809ff4f71e3a39dd63169547f0cf11f2b229e64a28271150",
+      "bytes": 2987
+    },
+    "configured-unidentified/original.log": {
+      "sha256": "ec259a399240556fbbb864c6d96da157d4c8cefcd2c3866b3f70ddb660f47a9f",
+      "bytes": 466
+    },
+    "configured-unidentified/transport.json": {
+      "sha256": "20abf44314a0da8d8fd82f78c4af6234ba9f9053332b25016baf6795cdbd1534",
+      "bytes": 2370
+    },
+    "mesa.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "mesa/attachment.json": {
+      "sha256": "ffc096e54075b55b34a519779f76539addcb54bb24cd8a90a000cb25cf5301e8",
+      "bytes": 255
+    },
+    "mesa/closed.png": {
+      "sha256": "e7f530222073ba086a69553f51a5411f57443f75fd2a0bef99173c6b5d2556b2",
+      "bytes": 2998
+    },
+    "mesa/gl-identity.json": {
+      "sha256": "4bddbd12c9bbfd3737f020cb3800477faeb104b748547a8298d0a095d18bb878",
+      "bytes": 137
+    },
+    "mesa/report.json": {
+      "sha256": "eb90753d5b5b000a089313e17ee16a2b16e15181db764b13b5fb3e597e9069fb",
+      "bytes": 6467
+    },
+    "metadata.log": {
+      "sha256": "aed8f85461ecf49a0a560f0b328f4e0af9acb727932d6791ece9594950565a64",
+      "bytes": 22238
+    },
+    "source/crates/ingetrazo-gui/examples/native_metal_section_samples.rs": {
+      "sha256": "d16e1ebb8369b58db9c29e6173cadba2255fd82f0243b17b9551a4143fa5f5d3",
+      "bytes": 8400
+    },
+    "source/crates/ingetrazo-metal/src/world.rs": {
+      "sha256": "eea2c12fd12479fac09c1a3d68b7778abc94f46cdd851919748f3e896b25a1b8",
+      "bytes": 103908
+    },
+    "source/scripts/reference-section-samples.py": {
+      "sha256": "094100515034bcc9a02715efc8d868fa702d6dbae380d4e99b266b9995791c3e",
+      "bytes": 7992
+    }
+  },
+  "archive_sha256": "0d97d34af31736f99215b4f710fe05ae87d0f7a8da4e78cb8f43b682a02af7c1",
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "metadata_scope": "Rust Apple metadata only; no SDK/MSL/native execution",
+  "source_scope": "Canonical Mesa/Xvfb whole closed frame exact; four pixels by four samples",
+  "native_samples": "Pending actual Metal execution",
+  "configured_unidentified": "Private CDI attempt stopped before identity measurement/sample extraction; not classified as transport failure"
+}
