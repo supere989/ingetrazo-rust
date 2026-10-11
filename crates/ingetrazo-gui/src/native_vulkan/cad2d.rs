@@ -62,6 +62,7 @@ struct Pipeline {
     annotations: bool,
     visibility: Option<(vk::Buffer,u32,Arc<()>)>,
     pipeline: vk::Pipeline,
+    lcd_pipeline:vk::Pipeline,
     layout: vk::PipelineLayout,
     integer:bool,
     descriptor_layout:vk::DescriptorSetLayout,
@@ -97,10 +98,11 @@ impl DescriptorOwnerWeakForProbe {
     pub fn strong_count(&self)->usize{self.0.strong_count()}
 }
 pub(crate) struct PreparedRenderPass {
-    device:Device,pipeline:vk::Pipeline,pool:vk::DescriptorPool,sets:Vec<vk::DescriptorSet>,
+    device:Device,pipeline:vk::Pipeline,lcd_pipeline:vk::Pipeline,pool:vk::DescriptorPool,sets:Vec<vk::DescriptorSet>,
 }
 impl Drop for PreparedRenderPass{fn drop(&mut self){unsafe{
     if self.pipeline!=vk::Pipeline::null(){self.device.destroy_pipeline(self.pipeline,None)}
+    if self.lcd_pipeline!=vk::Pipeline::null(){self.device.destroy_pipeline(self.lcd_pipeline,None)}
     if self.pool!=vk::DescriptorPool::null(){self.device.destroy_descriptor_pool(self.pool,None)}
 }}}
 struct NativePaint {
@@ -254,7 +256,7 @@ fn record_ready<'a>(info:&egui::PaintCallbackInfo,device:&Device,command:vk::Com
                 bytemuck::cast_slice(&push),
             );
         }
-        let mut bound=None;
+        let mut bound=None;let mut bound_pipeline=p.pipeline;
         for r in ready { unsafe {
             let mut ordered_cursor=0;
             if bound!=Some((r.vertex,r.index)) {device.cmd_bind_vertex_buffers(command,0,&[r.vertex],&[0]);device.cmd_bind_index_buffer(command,r.index,0,vk::IndexType::UINT32);bound=Some((r.vertex,r.index));counters.binds.fetch_add(1,Ordering::Relaxed);}
@@ -264,6 +266,11 @@ fn record_ready<'a>(info:&egui::PaintCallbackInfo,device:&Device,command:vk::Com
                     let gate=r.gates.as_ref().and_then(|g|g.get(batch_index)).copied().ok_or_else(||egui_ash_renderer::RendererError::Init("Annotation draw gate absent".into()))?;
                     let ids=gate_ids(gate.gate,count).map_err(egui_ash_renderer::RendererError::Init)?;
                     device.cmd_push_constants(command,p.layout,vk::ShaderStageFlags::VERTEX|vk::ShaderStageFlags::FRAGMENT,24,bytemuck::cast_slice(&ids));
+                    let lcd=matches!(gate.composition,crate::annotation_overlay_geometry::Composition::GlyphLcd(_));
+                    let selected=if lcd{p.lcd_pipeline}else{p.pipeline};
+                    if selected==vk::Pipeline::null(){return Err(egui_ash_renderer::RendererError::Init("Annotation LCD pipeline not prepared".into()));}
+                    if selected!=bound_pipeline{device.cmd_bind_pipeline(command,vk::PipelineBindPoint::GRAPHICS,selected);bound_pipeline=selected;}
+                    if lcd{device.cmd_set_blend_constants(command,&gate.straight_rgba.map(|v|f32::from(v)/255.));}
                     let operator=match gate.composition{crate::annotation_overlay_geometry::Composition::SpanByte=>0u32,crate::annotation_overlay_geometry::Composition::GlyphRgba64Opaque=>1u32,crate::annotation_overlay_geometry::Composition::GlyphLcd(mask)=>2u32|(u32::from(mask[0])<<8)|(u32::from(mask[1])<<16)|(u32::from(mask[2])<<24)};
                     device.cmd_push_constants(command,p.layout,vk::ShaderStageFlags::VERTEX|vk::ShaderStageFlags::FRAGMENT,48,bytemuck::bytes_of(&operator));
                 }
@@ -423,7 +430,7 @@ unsafe{context.device.create_descriptor_set_layout(&vk::DescriptorSetLayoutCreat
         let layout = match unsafe {
             context.device.create_pipeline_layout(&vk::PipelineLayoutCreateInfo::default().push_constant_ranges(&ranges).set_layouts(&set_layouts),None)
         }{Ok(v)=>v,Err(e)=>{if integer{unsafe{context.device.destroy_descriptor_set_layout(descriptor_layout,None)}}if e==vk::Result::ERROR_DEVICE_LOST{context.lifetime.quarantine();}return Err(e.to_string())}};
-        let pipeline = match make_pipeline(&context.device, pass, layout,integer,annotations) {
+        let pipeline = match make_pipeline(&context.device, pass, layout,integer,annotations,false) {
             Ok(p) => p,
             Err(e) => {
                 unsafe { context.device.destroy_pipeline_layout(layout, None);if integer{context.device.destroy_descriptor_set_layout(descriptor_layout,None)} };
@@ -431,14 +438,15 @@ unsafe{context.device.create_descriptor_set_layout(&vk::DescriptorSetLayoutCreat
                 return Err(e.to_string());
             }
         };
-        let (descriptor_pool,descriptor_sets)=if integer{match make_inputs(&context.device,descriptor_layout,views,annotations){Ok(v)=>v,Err(e)=>{unsafe{context.device.destroy_pipeline(pipeline,None);context.device.destroy_pipeline_layout(layout,None);context.device.destroy_descriptor_set_layout(descriptor_layout,None)}if e.device_lost(){context.lifetime.quarantine();}return Err(e.to_string())}}}else{(vk::DescriptorPool::null(),Vec::new())};
+        let lcd_pipeline=if annotations{match make_pipeline(&context.device,pass,layout,true,true,true){Ok(p)=>p,Err(e)=>{unsafe{context.device.destroy_pipeline(pipeline,None);context.device.destroy_pipeline_layout(layout,None);context.device.destroy_descriptor_set_layout(descriptor_layout,None)}if e.device_lost(){context.lifetime.quarantine();}return Err(e.to_string());}}}else{vk::Pipeline::null()};
+        let (descriptor_pool,descriptor_sets)=if integer{match make_inputs(&context.device,descriptor_layout,views,annotations){Ok(v)=>v,Err(e)=>{unsafe{context.device.destroy_pipeline(pipeline,None);if lcd_pipeline!=vk::Pipeline::null(){context.device.destroy_pipeline(lcd_pipeline,None)}context.device.destroy_pipeline_layout(layout,None);context.device.destroy_descriptor_set_layout(descriptor_layout,None)}if e.device_lost(){context.lifetime.quarantine();}return Err(e.to_string())}}}else{(vk::DescriptorPool::null(),Vec::new())};
         Ok(Self {
             device: context.device.clone(),
             lifetime:context.lifetime.clone(),
             budget: budget.clone(),
             pressure_after_vertex: false,
             rolled_back_buffers: 0,
-            pipeline: Arc::new(Mutex::new(Pipeline { annotations,visibility:None,pipeline, layout,integer,descriptor_layout,descriptor_pool,descriptor_sets,active_set:None })),
+            pipeline: Arc::new(Mutex::new(Pipeline { annotations,visibility:None,pipeline,lcd_pipeline, layout,integer,descriptor_layout,descriptor_pool,descriptor_sets,active_set:None })),
             resources: Resources::new(context, budget),
             arena:Default::default(),
             annotation_buffers:None,annotation_owner:None,annotation_admission:None,
@@ -594,16 +602,18 @@ unsafe{context.device.create_descriptor_set_layout(&vk::DescriptorSetLayoutCreat
     pub(crate) fn prepare_render_pass(&self,pass:vk::RenderPass,views:&[vk::ImageView])->Result<PreparedRenderPass,super::resize::PrepareError>{
         self.resources.check_submission()?;
         let p=self.pipeline.lock().map_err(|_|super::resize::PrepareError::Other("CAD2D pipeline poisoned".into()))?;
-        let replacement=make_pipeline(&self.device,pass,p.layout,p.integer,p.annotations)?;
-        let mut prepared=PreparedRenderPass{device:self.device.clone(),pipeline:replacement,pool:vk::DescriptorPool::null(),sets:Vec::new()};
+        let replacement=make_pipeline(&self.device,pass,p.layout,p.integer,p.annotations,false)?;
+        let mut prepared=PreparedRenderPass{device:self.device.clone(),pipeline:replacement,lcd_pipeline:vk::Pipeline::null(),pool:vk::DescriptorPool::null(),sets:Vec::new()};
+        if p.annotations{prepared.lcd_pipeline=make_pipeline(&self.device,pass,p.layout,true,true,true)?;}
         if p.integer{let inputs=make_inputs(&self.device,p.descriptor_layout,views,p.annotations)?;prepared.pool=inputs.0;prepared.sets=inputs.1;}
         Ok(prepared)
     }
     fn publish_render_pass(device:&Device,p:&mut Pipeline,mut prepared:PreparedRenderPass){
         let previous=std::mem::replace(&mut p.pipeline,std::mem::replace(&mut prepared.pipeline,vk::Pipeline::null()));
+        let previous_lcd=std::mem::replace(&mut p.lcd_pipeline,std::mem::replace(&mut prepared.lcd_pipeline,vk::Pipeline::null()));
         let previous_pool=std::mem::replace(&mut p.descriptor_pool,std::mem::replace(&mut prepared.pool,vk::DescriptorPool::null()));
         p.descriptor_sets=std::mem::take(&mut prepared.sets);p.active_set=None;p.visibility=None;
-        unsafe{device.destroy_pipeline(previous,None);if previous_pool!=vk::DescriptorPool::null(){device.destroy_descriptor_pool(previous_pool,None)}};
+        unsafe{device.destroy_pipeline(previous,None);if previous_lcd!=vk::Pipeline::null(){device.destroy_pipeline(previous_lcd,None)}if previous_pool!=vk::DescriptorPool::null(){device.destroy_descriptor_pool(previous_pool,None)}};
     }
     pub(crate) fn commit_render_pass(&mut self,prepared:PreparedRenderPass)->Result<(),String>{
         let mut p=self.pipeline.lock().map_err(|_|"CAD2D pipeline poisoned")?;
@@ -932,11 +942,12 @@ impl Drop for Renderer {
         let mut p = self.pipeline.lock().unwrap();
         unsafe {
             self.device.destroy_pipeline(p.pipeline, None);
+            if p.lcd_pipeline!=vk::Pipeline::null(){self.device.destroy_pipeline(p.lcd_pipeline,None);}
             self.device.destroy_pipeline_layout(p.layout, None);
             if p.descriptor_pool!=vk::DescriptorPool::null(){self.device.destroy_descriptor_pool(p.descriptor_pool,None)}
             if p.descriptor_layout!=vk::DescriptorSetLayout::null(){self.device.destroy_descriptor_set_layout(p.descriptor_layout,None)}
         }
-        p.pipeline = vk::Pipeline::null();
+        p.pipeline = vk::Pipeline::null();p.lcd_pipeline=vk::Pipeline::null();
         p.layout = vk::PipelineLayout::null();
     }
 }
@@ -946,6 +957,7 @@ fn make_pipeline(
     layout: vk::PipelineLayout,
     integer:bool,
     annotations:bool,
+    lcd:bool,
 ) -> Result<vk::Pipeline, super::resize::PrepareError> {
     let mut modules = Vec::new();
     let result = (|| {
@@ -1009,17 +1021,17 @@ fn make_pipeline(
         let samples = vk::PipelineMultisampleStateCreateInfo::default()
             .rasterization_samples(vk::SampleCountFlags::TYPE_1);
         let attachments = [vk::PipelineColorBlendAttachmentState::default()
-            .blend_enable(!integer)
-            .src_color_blend_factor(vk::BlendFactor::ONE)
-            .dst_color_blend_factor(vk::BlendFactor::ONE_MINUS_SRC_ALPHA)
+            .blend_enable(!integer||lcd)
+            .src_color_blend_factor(if lcd{vk::BlendFactor::CONSTANT_COLOR}else{vk::BlendFactor::ONE})
+            .dst_color_blend_factor(if lcd{vk::BlendFactor::ONE_MINUS_SRC_COLOR}else{vk::BlendFactor::ONE_MINUS_SRC_ALPHA})
             .color_blend_op(vk::BlendOp::ADD)
             .src_alpha_blend_factor(vk::BlendFactor::ONE)
             .dst_alpha_blend_factor(vk::BlendFactor::ONE_MINUS_SRC_ALPHA)
             .alpha_blend_op(vk::BlendOp::ADD)
-            .color_write_mask(vk::ColorComponentFlags::RGBA)];
+            .color_write_mask(if lcd{vk::ColorComponentFlags::R|vk::ColorComponentFlags::G|vk::ColorComponentFlags::B}else{vk::ColorComponentFlags::RGBA})];
         let blend = vk::PipelineColorBlendStateCreateInfo::default().attachments(&attachments);
         let dynamic = vk::PipelineDynamicStateCreateInfo::default()
-            .dynamic_states(&[vk::DynamicState::VIEWPORT, vk::DynamicState::SCISSOR]);
+            .dynamic_states(&[vk::DynamicState::VIEWPORT, vk::DynamicState::SCISSOR,vk::DynamicState::BLEND_CONSTANTS]);
         match unsafe {
             device.create_graphics_pipelines(
                 vk::PipelineCache::null(),
