@@ -1,0 +1,26 @@
+{
+  "source_commit": "42c2f7de37ff9d02c36db74e48ac98e2e7c8a92e",
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "files": {
+    "crates/ingetrazo-core/src/composition.rs": "05a946a82d4c3285d8093bd778d9d644b03d01064f3e39897d5c78135ff7dc0c",
+    "crates/ingetrazo-gui/src/composer.rs": "e5e565eb992be83f8e328aa188e6c902b16d2fbb8d22cf3cbd733579faf76ea2",
+    "crates/ingetrazo-gui/src/composer_pointer.rs": "87aefa701de1522edba95e1760f43e7f7a12eb3d89777469de458c8aaba59dbb",
+    "crates/ingetrazo-gui/examples/composer_pointer_workflows.rs": "12782141d433c9d30cbdaa4c7359ff01cb5091906e8d7bf2658f5150073291f3",
+    "scripts/reference-composer-pointer.py": "9efa55ca9f0e4156453dad0bd14a60d70b9c6ca03bf3b9300e670ac95463029f",
+    "scripts/reference-composer-pointer-diagnose.py": "08f16ae297b4800718cd0d95c219e2fa9513ec45c0c91e27ec51fd6afefa6521",
+    "scripts/check-composer-pointer.py": "aa98762c0dcf493217628fa5566c005a88157879407c1c2b93814fce6f987ca6"
+  },
+  "binary": {
+    "path": "/tmp/ingetrazo-skp-native-target/debug/examples/composer_pointer_workflows",
+    "bytes": 64016016,
+    "sha256": "d75b7b6a5bb04b32acf03c0aa0377a00aeecc8394b2d1513bb0efd2cbe096f2b"
+  },
+  "rejected_prior_archive": {
+    "path": "docs/audits/composer-transactions/failed-pointer-fixture.zip",
+    "sha256": "86fca5759b8eb16044b165a33fe5b8386653bce84bb7631fe1590c244c0faa59"
+  },
+  "source_archive_sha256": "63852c80d2a1ba3a12baa75f4f97e374e36fca3a3c7646e3b157320688ecaa97",
+  "accepted_output": "accepted-final/native.json",
+  "tests": "cargo test -p ingetrazo-gui --lib composer:: :34passed/0failed/313filtered",
+  "scope": "Source QtTest item press/move/release and ComposerHistory, native full App egui pointer/history plus native-only boundary/foreground/consumed-release/two-gesture-packet guards. No rendering, resize, multiitem or complete P04 promotion."
+}
