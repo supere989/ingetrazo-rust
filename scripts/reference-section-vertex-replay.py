@@ -47,6 +47,7 @@ getuniform=api('glGetUniformfv',None,[U,I,ctypes.POINTER(ctypes.c_float)])
 getuniformi=api('glGetUniformiv',None,[U,I,ctypes.POINTER(I)])
 location=api('glGetUniformLocation',I,[U,ctypes.c_char_p])
 getattri=api('glGetVertexAttribiv',None,[U,U,ctypes.POINTER(I)])
+getattrf=api('glGetVertexAttribfv',None,[U,U,ctypes.POINTER(ctypes.c_float)])
 getbuffer=api('glGetBufferSubData',None,[U,ctypes.c_ssize_t,ctypes.c_ssize_t,P])
 bindbuffer=api('glBindBuffer',None,[U,U]);use=api('glUseProgram',None,[U]);bindbase=api('glBindBufferBase',None,[U,U,U])
 vp.makeCurrent()
@@ -75,6 +76,11 @@ class Proxy:
    for name,n in [('u_mvp',16),('u_clip_plane',4)]:
     values=(ctypes.c_float*n)();loc=location(original,name.encode());assert loc>=0;getuniform(original,loc,values);uniforms[name]=np.array(values,np.float32)
    enabled=I();getuniformi(original,location(original,b'u_clip_enable'),ctypes.byref(enabled));assert enabled.value==1
+   model=[];model_enabled=[]
+   for attribute in range(3,7):
+    values=(ctypes.c_float*4)();flag=I();getattrf(attribute,0x8626,values);getattri(attribute,0x8622,ctypes.byref(flag));model.append(np.array(values,np.float32).view(np.uint32).tolist());model_enabled.append(flag.value)
+   assert model_enabled==[0,0,0,0],model_enabled
+   assert model==np.eye(4,dtype=np.float32).view(np.uint32).tolist(),model
    use(program.programId())
    api('glUniformMatrix4fv',None,[I,I,ctypes.c_ubyte,ctypes.POINTER(ctypes.c_float)])(location(program.programId(),b'u_mvp'),1,0,uniforms['u_mvp'].ctypes.data_as(ctypes.POINTER(ctypes.c_float)))
    api('glUniform4fv',None,[I,I,ctypes.POINTER(ctypes.c_float)])(location(program.programId(),b'u_clip_plane'),1,uniforms['u_clip_plane'].ctypes.data_as(ctypes.POINTER(ctypes.c_float)))
@@ -82,7 +88,7 @@ class Proxy:
    bindbuffer(0x8C8E,buffer.value);api('glBufferData',None,[U,ctypes.c_ssize_t,P,U])(0x8C8E,records.nbytes,None,0x88E9);bindbase(0x8C8E,0,buffer.value)
    api('glEnable',None,[U])(0x8C89);api('glBeginTransformFeedback',None,[U])(4);oldgl.glDrawArrays(mode,first,count);api('glEndTransformFeedback',None,[])();api('glDisable',None,[U])(0x8C89)
    api('glFinish',None,[])();getbuffer(0x8C8E,0,records.nbytes,records.ctypes.data);assert error()==0 and np.isfinite(records).all()
-   captured.append({'upload_bits':upload.view(np.uint32).tolist(),'camera_bits':uniforms['u_mvp'].view(np.uint32).tolist(),'section_plane_bits':uniforms['u_clip_plane'].view(np.uint32).tolist(),'clip_enable':enabled.value,'outputs_bits':records.view(np.uint32).tolist(),'varyings':layout,'shader_sha256':shaderbytes,'separately_linked_original_glsl':True,'production_instruction_identity_claim':False})
+   captured.append({'upload_bits':upload.view(np.uint32).tolist(),'camera_bits':uniforms['u_mvp'].view(np.uint32).tolist(),'section_plane_bits':uniforms['u_clip_plane'].view(np.uint32).tolist(),'clip_enable':enabled.value,'generic_model_attribute_bits':model,'model_attribute_arrays_enabled':model_enabled,'outputs_bits':records.view(np.uint32).tolist(),'varyings':layout,'shader_sha256':shaderbytes,'separately_linked_original_glsl':True,'production_instruction_identity_claim':False})
    bindbase(0x8C8E,0,tf);bindbuffer(0x8892,array);use(original)
   return oldgl.glDrawArrays(mode,first,count)
 vp._gl=Proxy()
