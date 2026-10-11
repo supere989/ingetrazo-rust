@@ -1,0 +1,32 @@
+[
+  {
+    "path": "README.md",
+    "bytes": 1417,
+    "sha256": "2d3828485d986e51758df41fbbeb57dcede979f72e114f3cb8493a2af7c404a5"
+  },
+  {
+    "path": "assets.zip",
+    "bytes": 3470066,
+    "sha256": "f1a657f7d733763042fabddaa1dfa4b3e1c7c9804f5e34f567440b21330163e6"
+  },
+  {
+    "path": "comparison.json",
+    "bytes": 5594,
+    "sha256": "b54bb5d6eff8341cb3eb605556bd406488a3025cb73e4e167615efa9b9835bfb"
+  },
+  {
+    "path": "kernels.zip",
+    "bytes": 31164,
+    "sha256": "7f75aa890aacf55dc7bac4911d77a9f6e0ae2b0d545f1533de9a61e4d021c6d4"
+  },
+  {
+    "path": "provenance.json",
+    "bytes": 777,
+    "sha256": "08da56d64f65dccb34c2ebbdb82497a24cf214ce45a295f88a806442abb035f3"
+  },
+  {
+    "path": "ramps.zip",
+    "bytes": 353885,
+    "sha256": "6603bfc1a62a6ff5558ad7e9773be57788a07c0979c8f6e7b4f5f24d36955964"
+  }
+]

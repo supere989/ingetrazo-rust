@@ -1,0 +1,6 @@
+{
+  "base": "9420920b",
+  "texture_cache_sha256": "4ad5001dcc766abc5ce27c370ea12c47b25e6c08337406ae3f7d2d6e168cde75",
+  "diagnostic_binary_sha256": "f926dc0ab7cfdcb6ecd232bec335f0c8d8d9efd2529d540262bfd46ea155375e",
+  "diagnostic_only_change": "native_texture_decode_protocol accepts one literal image file as well as the existing PNG corpus"
+}

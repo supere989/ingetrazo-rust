@@ -1,0 +1,20 @@
+{
+  "annotations-on": {
+    "different_pixels": 1066,
+    "max_channel_error": 37
+  },
+  "annotations-off": {
+    "different_pixels": 1113,
+    "max_channel_error": 37
+  },
+  "annotations-restored": {
+    "different_pixels": 1066,
+    "max_channel_error": 37
+  },
+  "overlay_union": {
+    "pixels": 3830,
+    "different_pixels": 0,
+    "mask_xor": 0
+  },
+  "native_restore_exact": true
+}

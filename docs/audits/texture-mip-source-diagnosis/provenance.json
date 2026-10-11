@@ -1,0 +1,11 @@
+{
+  "native_runtime": "f5b00b765587b0be5a89f5c4d926b2fbf76c2013",
+  "original_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "binary_sha256": "f1acb139c21d0fb68e025876f2d6d2c0a1daf547d76454be7bf8fe0aa49d13f9",
+  "files": {
+    "crates/ingetrazo-gui/examples/native_vulkan_texture_mips.rs": "c7b16137e67d743bbb8bb984fe54955797ae839039513c98211e1df82db72728",
+    "scripts/reference-native-texture-mips.py": "4d1a3024e42cea313b7c86b456503c96759d18b9c44726bd5ff3fcc4f661f34f",
+    "crates/ingetrazo-gui/src/native_vulkan/resources/image_upload.rs": "e0454fc5882216bbbdbca61eda5ace2c93a8f5a359e24d8f0f2f28e3c5f31f5d"
+  },
+  "note": "Source script later widened accepted input names to PNG or JPEG for ramp/impulse observations; texture creation and readback are unchanged."
+}

@@ -244,7 +244,7 @@ pub fn decode_png_jpeg(encoded: &[u8], max_decoded_bytes: u64) -> Result<Decoded
         // QImage uses the integer slow IDCT/fancy chroma path. Use the same
         // source-compatible decoder as shaded means: image's default JPEG
         // decoder produces different texels, before any GPU filtering occurs.
-        // The encoded slice is already owned/admitted by the caller. Bound
+        // The caller already owns the encoded slice. Bound
         // JPEG coefficient/output/scratch work before pixel allocation.
         let decoded=ingetrazo_render::source_texture_decode::decode(encoded,
             ingetrazo_render::source_texture_decode::Limits {

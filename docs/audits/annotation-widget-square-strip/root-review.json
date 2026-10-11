@@ -1,0 +1,78 @@
+{
+  "verified_manifest_files": 78,
+  "independently_decoded_images": [
+    {
+      "name": "cosmetic-zero",
+      "different_pixels": 0,
+      "max_channel_error": 0
+    },
+    {
+      "name": "degenerate",
+      "different_pixels": 0,
+      "max_channel_error": 0
+    },
+    {
+      "name": "fractional",
+      "different_pixels": 0,
+      "max_channel_error": 0
+    },
+    {
+      "name": "horizontal-square",
+      "different_pixels": 0,
+      "max_channel_error": 0
+    },
+    {
+      "name": "narrow",
+      "different_pixels": 0,
+      "max_channel_error": 0
+    },
+    {
+      "name": "negative-origin",
+      "different_pixels": 0,
+      "max_channel_error": 0
+    },
+    {
+      "name": "reversed",
+      "different_pixels": 0,
+      "max_channel_error": 0
+    },
+    {
+      "name": "shallow-clipped",
+      "different_pixels": 0,
+      "max_channel_error": 0
+    },
+    {
+      "name": "short",
+      "different_pixels": 0,
+      "max_channel_error": 0
+    },
+    {
+      "name": "steep",
+      "different_pixels": 0,
+      "max_channel_error": 0
+    },
+    {
+      "name": "triangle-boundary",
+      "different_pixels": 60,
+      "max_channel_error": 238
+    },
+    {
+      "name": "triangle-clockwise",
+      "different_pixels": 0,
+      "max_channel_error": 0
+    },
+    {
+      "name": "triangle-reversed",
+      "different_pixels": 0,
+      "max_channel_error": 0
+    },
+    {
+      "name": "vertical-square",
+      "different_pixels": 0,
+      "max_channel_error": 0
+    }
+  ],
+  "production_runtime": "36360cf285a5d93556a73eb51b72fea9738d8b0a",
+  "strict_pass": false,
+  "remaining": "Horizontal triangle ownership; narrow square strip corrected"
+}

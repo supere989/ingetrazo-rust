@@ -1,0 +1,254 @@
+{
+  "cases": [
+    {
+      "asset": "legacy-dib-22.jpg",
+      "levels": [
+        {
+          "level": 0,
+          "different_pixels": 0,
+          "max_channel_error": 0,
+          "bytes": 1440000
+        },
+        {
+          "level": 1,
+          "different_pixels": 0,
+          "max_channel_error": 0,
+          "bytes": 360000
+        },
+        {
+          "level": 2,
+          "different_pixels": 0,
+          "max_channel_error": 0,
+          "bytes": 90000
+        },
+        {
+          "level": 3,
+          "different_pixels": 0,
+          "max_channel_error": 0,
+          "bytes": 22500
+        },
+        {
+          "level": 4,
+          "different_pixels": 764,
+          "max_channel_error": 9,
+          "bytes": 5476
+        },
+        {
+          "level": 5,
+          "different_pixels": 205,
+          "max_channel_error": 9,
+          "bytes": 1296
+        },
+        {
+          "level": 6,
+          "different_pixels": 39,
+          "max_channel_error": 2,
+          "bytes": 324
+        },
+        {
+          "level": 7,
+          "different_pixels": 9,
+          "max_channel_error": 3,
+          "bytes": 64
+        },
+        {
+          "level": 8,
+          "different_pixels": 2,
+          "max_channel_error": 1,
+          "bytes": 16
+        },
+        {
+          "level": 9,
+          "different_pixels": 1,
+          "max_channel_error": 1,
+          "bytes": 4
+        }
+      ]
+    },
+    {
+      "asset": "legacy-dib-24.jpg",
+      "levels": [
+        {
+          "level": 0,
+          "different_pixels": 0,
+          "max_channel_error": 0,
+          "bytes": 784996
+        },
+        {
+          "level": 1,
+          "different_pixels": 18251,
+          "max_channel_error": 7,
+          "bytes": 195364
+        },
+        {
+          "level": 2,
+          "different_pixels": 7657,
+          "max_channel_error": 10,
+          "bytes": 48400
+        },
+        {
+          "level": 3,
+          "different_pixels": 1499,
+          "max_channel_error": 4,
+          "bytes": 12100
+        },
+        {
+          "level": 4,
+          "different_pixels": 508,
+          "max_channel_error": 7,
+          "bytes": 2916
+        },
+        {
+          "level": 5,
+          "different_pixels": 140,
+          "max_channel_error": 8,
+          "bytes": 676
+        },
+        {
+          "level": 6,
+          "different_pixels": 32,
+          "max_channel_error": 5,
+          "bytes": 144
+        },
+        {
+          "level": 7,
+          "different_pixels": 6,
+          "max_channel_error": 2,
+          "bytes": 36
+        },
+        {
+          "level": 8,
+          "different_pixels": 1,
+          "max_channel_error": 1,
+          "bytes": 4
+        }
+      ]
+    },
+    {
+      "asset": "legacy-dib-28.jpg",
+      "levels": [
+        {
+          "level": 0,
+          "different_pixels": 0,
+          "max_channel_error": 0,
+          "bytes": 90600
+        },
+        {
+          "level": 1,
+          "different_pixels": 4169,
+          "max_channel_error": 70,
+          "bytes": 22500
+        },
+        {
+          "level": 2,
+          "different_pixels": 1050,
+          "max_channel_error": 72,
+          "bytes": 5476
+        },
+        {
+          "level": 3,
+          "different_pixels": 281,
+          "max_channel_error": 48,
+          "bytes": 1296
+        },
+        {
+          "level": 4,
+          "different_pixels": 75,
+          "max_channel_error": 41,
+          "bytes": 324
+        },
+        {
+          "level": 5,
+          "different_pixels": 16,
+          "max_channel_error": 13,
+          "bytes": 64
+        },
+        {
+          "level": 6,
+          "different_pixels": 4,
+          "max_channel_error": 5,
+          "bytes": 16
+        },
+        {
+          "level": 7,
+          "different_pixels": 1,
+          "max_channel_error": 3,
+          "bytes": 4
+        }
+      ]
+    },
+    {
+      "asset": "legacy-dib-31.jpg",
+      "levels": [
+        {
+          "level": 0,
+          "different_pixels": 0,
+          "max_channel_error": 0,
+          "bytes": 6369792
+        },
+        {
+          "level": 1,
+          "different_pixels": 0,
+          "max_channel_error": 0,
+          "bytes": 1592448
+        },
+        {
+          "level": 2,
+          "different_pixels": 0,
+          "max_channel_error": 0,
+          "bytes": 398112
+        },
+        {
+          "level": 3,
+          "different_pixels": 0,
+          "max_channel_error": 0,
+          "bytes": 99528
+        },
+        {
+          "level": 4,
+          "different_pixels": 3132,
+          "max_channel_error": 16,
+          "bytes": 24708
+        },
+        {
+          "level": 5,
+          "different_pixels": 1298,
+          "max_channel_error": 39,
+          "bytes": 6020
+        },
+        {
+          "level": 6,
+          "different_pixels": 344,
+          "max_channel_error": 58,
+          "bytes": 1428
+        },
+        {
+          "level": 7,
+          "different_pixels": 80,
+          "max_channel_error": 57,
+          "bytes": 320
+        },
+        {
+          "level": 8,
+          "different_pixels": 18,
+          "max_channel_error": 11,
+          "bytes": 80
+        },
+        {
+          "level": 9,
+          "different_pixels": 4,
+          "max_channel_error": 2,
+          "bytes": 16
+        },
+        {
+          "level": 10,
+          "different_pixels": 0,
+          "max_channel_error": 0,
+          "bytes": 4
+        }
+      ]
+    }
+  ],
+  "ledger_final": 0,
+  "scope": "production GPU mip upload/generation readback compared with actual pinned original; no screen pixel claim"
+}

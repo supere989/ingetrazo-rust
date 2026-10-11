@@ -1,0 +1,72 @@
+[
+  {
+    "path": "README.md",
+    "bytes": 1226,
+    "sha256": "cf3fc54a0b7f07133a0abc916a4301c42b2efb66f574435ee1d0382cb2af7dc5"
+  },
+  {
+    "path": "after-build.log",
+    "bytes": 15451,
+    "sha256": "bf88c765a23de648cda8274aad234b0f3c12964c2ae31c8e5f87cb14179c64f0"
+  },
+  {
+    "path": "after-fixtures.zip",
+    "bytes": 63185,
+    "sha256": "c3809454731ea6683180fb13cafae8dd4933d229496e166a1653c1553056370c"
+  },
+  {
+    "path": "after-results.json",
+    "bytes": 17554,
+    "sha256": "949f6607015b1683d314f465c247254c531ecd0d710471eb6a1637b02af56516"
+  },
+  {
+    "path": "after.log",
+    "bytes": 3,
+    "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+  },
+  {
+    "path": "assets-fixtures.zip",
+    "bytes": 1195674,
+    "sha256": "4b0b0bafad7c839b9fea1ca080e132a5edeb464fd8a58d0a184534b9c4ab9b3d"
+  },
+  {
+    "path": "assets-results.json",
+    "bytes": 1561,
+    "sha256": "ca78f5f10912b2651b175cd6ac580aff62a9c74f8562f1c5e8ed86f71d870770"
+  },
+  {
+    "path": "before-build.log",
+    "bytes": 15451,
+    "sha256": "d80e05edca58c87812eda7e62508eb96d7c88934e28efbca3aa94c2e0d0ab185"
+  },
+  {
+    "path": "before-fixtures.zip",
+    "bytes": 63167,
+    "sha256": "43b67d8a6ae2d8633e849da8196e8cd019ce263c6a7d82d7bb94c35dd71f5c03"
+  },
+  {
+    "path": "before-results.json",
+    "bytes": 17606,
+    "sha256": "7ae64510aa3ddf9b937d2873f6ae1170441fd0455439451370db94b9e0f4279c"
+  },
+  {
+    "path": "before-source-sha256.json",
+    "bytes": 345,
+    "sha256": "faa7fc901c8e95f7099907547d3639ae82de4cc2d788fc7a3d2c4432d6f48a9a"
+  },
+  {
+    "path": "before.log",
+    "bytes": 803,
+    "sha256": "9b474f083924eadac4b7d8ec50ef62543a282786abe6391706c2b15b2b4b8558"
+  },
+  {
+    "path": "widget-capture.zip",
+    "bytes": 95946,
+    "sha256": "7546d8d2abce38f4f3d497614338e13b722d29317ff5d4b5f92b36ba95e22dcd"
+  },
+  {
+    "path": "widget-review.json",
+    "bytes": 388,
+    "sha256": "6a5285380a3e9c44b09ece960841c3816675ca43fd602d6ffce67c214351098d"
+  }
+]

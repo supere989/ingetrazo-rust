@@ -1,0 +1,42 @@
+[
+  {
+    "asset": "legacy-dib-28.jpg",
+    "encoded_sha256": "8b6d153fc3566d1cc34ba8b454b84909e619a6103ce0fa51ee19cc69b2310909",
+    "width": 150,
+    "height": 151,
+    "returncode": 0,
+    "exact": true,
+    "expected_sha256": "ff92561f195d744e446eb672519b8061ce530d735891e6b2c5d54f89be8b4482",
+    "native_sha256": "ff92561f195d744e446eb672519b8061ce530d735891e6b2c5d54f89be8b4482"
+  },
+  {
+    "asset": "legacy-dib-22.jpg",
+    "encoded_sha256": "6a127aee3d0397c60395069697dfc895c2b3a0fe78d647cf68bdde2051b42885",
+    "width": 600,
+    "height": 600,
+    "returncode": 0,
+    "exact": true,
+    "expected_sha256": "092208e246830654dfe44860baa16eb43089db0110ca80e68dda7912ec2ced08",
+    "native_sha256": "092208e246830654dfe44860baa16eb43089db0110ca80e68dda7912ec2ced08"
+  },
+  {
+    "asset": "legacy-dib-31.jpg",
+    "encoded_sha256": "b8062e3fb513e6666d4614f5cf2e261c5150b9f9fdea8c0a445dd129878117c3",
+    "width": 1392,
+    "height": 1144,
+    "returncode": 0,
+    "exact": true,
+    "expected_sha256": "1d733d0cb3dc45de931e9fee2e5fa725cf61445adb6d3b3aac89981fa3926755",
+    "native_sha256": "1d733d0cb3dc45de931e9fee2e5fa725cf61445adb6d3b3aac89981fa3926755"
+  },
+  {
+    "asset": "legacy-dib-24.jpg",
+    "encoded_sha256": "a1d9f7e770c578ca8a4112dd4ff22e5ca216cf76e67cc8245a1aa1bbbe6b298c",
+    "width": 443,
+    "height": 443,
+    "returncode": 0,
+    "exact": true,
+    "expected_sha256": "63ef0c9d6a39376aa5bb2784924d719244c815473e9216f656ca9cf5bc95edfe",
+    "native_sha256": "63ef0c9d6a39376aa5bb2784924d719244c815473e9216f656ca9cf5bc95edfe"
+  }
+]

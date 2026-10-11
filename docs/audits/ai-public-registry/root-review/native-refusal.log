@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "<ai>", line 2, in <module>
+ValueError: restore
+Traceback (most recent call last):
+  File "<ai>", line 1, in <module>
+ValueError: Public registry weld requires identity-owned staging

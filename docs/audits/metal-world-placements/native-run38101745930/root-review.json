@@ -1,0 +1,25 @@
+{
+  "independent_review": [
+    {
+      "platform": "arm",
+      "source": "969cbda536f47578f71e2b2316659c959ac79528",
+      "source_files_verified": 13,
+      "zip_sha256": "fd8afa6bf647d5a92ec8a927ef23cbea631fe7aec0f7860aacdb2933fb5da1b4",
+      "runtime": {
+        "exit_code": 0,
+        "outer_timeout": false
+      }
+    },
+    {
+      "platform": "intel",
+      "source": "969cbda536f47578f71e2b2316659c959ac79528",
+      "source_files_verified": 13,
+      "zip_sha256": "9c3d99be4371e2051b3c43942aa1c1adac3d5efc47d5acc336fe27d755ab6dc4",
+      "runtime": {
+        "exit_code": 1,
+        "outer_timeout": false
+      }
+    }
+  ],
+  "scope": "Frozen source files and literal source-scoped checker; later partial matrix writes are not covered"
+}
