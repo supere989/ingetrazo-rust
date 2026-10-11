@@ -1,0 +1,11 @@
+{
+  "source": "28d224caa637432db5d4d7cd8a801f64c92902d4",
+  "run": 38130610640,
+  "job": 114443968074,
+  "artifact": 11698243990,
+  "artifact_sha256": "f768dfbdc68bc6b68f934756618242cc3f231b9ebe6277c2b7ca42064a69d53a",
+  "verified_source_blobs": 38,
+  "runtime_failure": "Resolved single-sample RGBA8 target heap estimate0/0; MSAA estimate fallback already passed.",
+  "correction": "Finite exclusive standalone admission now applies to any zero/zero texture query, not just multisample; nonzero actualSize must fit reserved ticket; unchanged four-sample policy, no palette/tolerance change.",
+  "remaining": "No actual execution of this correction yet; strict ARM MSAA resolve gate remains open."
+}
