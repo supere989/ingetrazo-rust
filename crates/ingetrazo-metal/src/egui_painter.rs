@@ -863,6 +863,7 @@ impl EguiPainter {
     pub fn install_world_texture(&mut self,metal:&NativeMetal,id:TextureId,frame:Arc<crate::world::Prepared>)->Result<(),String>{
         frame.validate_owner(metal)?;
         if !matches!(id,TextureId::User(_))||self.textures.contains_key(&id){return Err("World texture requires an unoccupied native User ID".into());}
+        if let Some((old,texture))=&self.world_texture{if *old==id&&Arc::ptr_eq(&texture.frame,&frame){return Ok(());}}
         let sampler=if let Some((old,texture))=&self.world_texture{if *old!=id{return Err("Only one native world texture identity is admitted".into());}texture.sampler.clone()}else{make_sampler(metal,egui::TextureOptions::LINEAR)?};
         self.world_texture=Some((id,Arc::new(WorldTexture{frame,sampler})));Ok(())
     }
