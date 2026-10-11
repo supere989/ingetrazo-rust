@@ -1,0 +1,24 @@
+{
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "mapping": {
+    "default_back": "views/viewport.py1698..1741 later FRONT-culled unpainted opaque back tint",
+    "opaque_back_override": "views/viewport.py5148..5178 _bucket_back_face and _shaded_color3350; existing shared packet contains shaded f32 colors",
+    "source_order": "SourceBackPaint.order stable sorting retains later source override draw order",
+    "hidden_line": "base opaque face style color; no back tint",
+    "monochrome": "per-fragment front/back style color"
+  },
+  "focused_tests": "world_policy four tests PASS",
+  "apple_check": "cargo check --lib --target aarch64-apple-darwin metadata PASS; native shader SDK/pixels unverified",
+  "remaining": [
+    "native winding/back-override pixel controls",
+    "polygon offset/edges/MSAA",
+    "alpha/textures/sections/images/shadows/annotations",
+    "source local prototype collector and per-placement caching",
+    "host activation"
+  ],
+  "scope": "opaque paint-plan and native encode implementation only; not full viewport parity",
+  "log_hashes": {
+    "metal-world-policy-check.log": "a27936b5995ce2215f5614ed04bed5f29b49ba90ced6eccf3cec06abbee3a346",
+    "metal-world-policy-apple-check.log": "54a13a48e88cdb861b0f262a7d132b9b234f5e35629ed5bfefa5ba7f989707be"
+  }
+}

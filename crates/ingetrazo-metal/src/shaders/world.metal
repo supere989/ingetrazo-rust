@@ -7,4 +7,9 @@ vertex Out world_vertex(uint id [[vertex_id]],const device Vertex* v [[buffer(0)
  // OrbitCamera uses OpenGL clip depth; Metal raster depth is [0,w].
  o.position.z=(o.position.z+o.position.w)*0.5; o.color=float4(v[id].color); return o;
 }
-fragment float4 world_fragment(Out in [[stage_in]]) { return in.color; }
+struct Paint {float4 front;float4 back;uint mode;uint padding0;uint padding1;uint padding2;};
+fragment float4 world_fragment(Out in [[stage_in]],bool front [[front_facing]],constant Paint& paint [[buffer(0)]]) {
+ if(paint.mode==1||paint.mode==3)return paint.front;
+ if(paint.mode==2)return front?paint.front:paint.back;
+ return in.color;
+}

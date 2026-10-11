@@ -1,6 +1,7 @@
 //! Direct native world-space surface rendering. No CPU projection or submission.
 //! Prepared frames retain buffers and color/depth targets through GPU completion.
 //! This first opaque stage deliberately rejects paint policies not implemented here.
+use crate::world_policy::{Mode, Plan, Policy};
 use crate::{Buffer, NativeMetal};
 use ingetrazo_core::gpu_memory::MemoryBudget;
 use ingetrazo_render::buffer::MeshRenderBuffer;
@@ -61,6 +62,7 @@ struct Mesh {
     vertices: Buffer,
     indices: Buffer,
     count: usize,
+    plan: Plan,
 }
 struct Pipeline {
     color: Retained<ProtocolObject<dyn MTLRenderPipelineState>>,
@@ -90,6 +92,15 @@ pub struct Prepared {
     target: Arc<Target>,
     mvp: [[f32; 4]; 4],
     clear: [f64; 4],
+    policy: Policy,
+}
+#[repr(C)]
+#[derive(Clone, Copy, bytemuck::Pod, bytemuck::Zeroable)]
+struct PaintUniform {
+    front: [f32; 4],
+    back: [f32; 4],
+    mode: u32,
+    padding: [u32; 3],
 }
 impl World {
     /// `collect` runs only on a changed immutable geometry identity. Pose always validates.
@@ -107,6 +118,22 @@ impl World {
     where
         F: FnOnce() -> Result<MeshRenderBuffer, String>,
     {
+        self.prepare_with_policy(metal, key, mvp, extent, clear, Policy::default(), collect)
+    }
+    pub fn prepare_with_policy<F>(
+        &mut self,
+        metal: &NativeMetal,
+        key: u64,
+        mvp: [[f32; 4]; 4],
+        extent: (u32, u32),
+        clear: [f64; 4],
+        policy: Policy,
+        collect: F,
+    ) -> Result<Option<Arc<Prepared>>, String>
+    where
+        F: FnOnce() -> Result<MeshRenderBuffer, String>,
+    {
+        policy.validate()?;
         // Owner refusal precedes any cache retirement, collection or resource work.
         if let Some(owner) = &self.owner {
             owner.validate(metal)?;
@@ -133,7 +160,7 @@ impl World {
             self.mesh.clone()
         } else {
             let data = collect()?;
-            super::world_admission::opaque(&data)?;
+            let plan = super::world_admission::opaque(&data)?;
             if data.indices.is_empty() {
                 None
             } else {
@@ -141,6 +168,7 @@ impl World {
                     vertices: upload(metal, bytemuck::cast_slice(&data.vertices))?,
                     indices: upload(metal, bytemuck::cast_slice(&data.indices))?,
                     count: data.indices.len(),
+                    plan,
                 }))
             }
         };
@@ -195,6 +223,7 @@ impl World {
             target,
             mvp,
             clear,
+            policy,
         })))
     }
     pub fn clear_idle(&mut self) {
@@ -254,6 +283,7 @@ impl Prepared {
             &self.pipeline.depth_disabled
         }));
         encoder.setCullMode(MTLCullMode::None);
+        encoder.setFrontFacingWinding(MTLWinding::CounterClockwise);
         if let Some(mesh) = &self.mesh {
             unsafe {
                 encoder.setVertexBuffer_offset_atIndex(Some(&mesh.vertices.raw), 0, 0);
@@ -262,13 +292,40 @@ impl Prepared {
                     64,
                     1,
                 );
-                encoder.drawIndexedPrimitives_indexCount_indexType_indexBuffer_indexBufferOffset(
-                    MTLPrimitiveType::Triangle,
-                    mesh.count,
-                    MTLIndexType::UInt32,
-                    &mesh.indices.raw,
-                    0,
-                );
+            }
+            let mode = match self.policy.mode {
+                Mode::Material => 0,
+                Mode::HiddenLine => 1,
+                Mode::Monochrome => 2,
+            };
+            let uniform = PaintUniform {
+                front: self.policy.front,
+                back: self.policy.back,
+                mode,
+                padding: [0; 3],
+            };
+            bind_paint(&encoder, &uniform);
+            draw(&encoder, mesh, 0, mesh.count);
+            if self.policy.mode == Mode::Material {
+                encoder.setCullMode(MTLCullMode::Front);
+                let default = PaintUniform {
+                    front: self.policy.back,
+                    mode: 3,
+                    ..uniform
+                };
+                bind_paint(&encoder, &default);
+                for &(first, count) in &mesh.plan.default_back {
+                    draw(&encoder, mesh, first, count);
+                }
+                for paint in &mesh.plan.overrides {
+                    let override_paint = PaintUniform {
+                        front: paint.color,
+                        mode: 3,
+                        ..uniform
+                    };
+                    bind_paint(&encoder, &override_paint);
+                    draw(&encoder, mesh, paint.first, paint.count);
+                }
             }
         }
         encoder.endEncoding();
@@ -488,5 +545,31 @@ impl Drop for Diagnostic {
                 .store(true, std::sync::atomic::Ordering::Release);
             eprintln!("World diagnostic owner quarantined: completion unknown");
         }
+    }
+}
+
+fn bind_paint(encoder: &ProtocolObject<dyn MTLRenderCommandEncoder>, paint: &PaintUniform) {
+    unsafe {
+        encoder.setFragmentBytes_length_atIndex(
+            std::ptr::NonNull::from(paint).cast(),
+            std::mem::size_of::<PaintUniform>(),
+            0,
+        );
+    }
+}
+fn draw(
+    encoder: &ProtocolObject<dyn MTLRenderCommandEncoder>,
+    mesh: &Mesh,
+    first: usize,
+    count: usize,
+) {
+    unsafe {
+        encoder.drawIndexedPrimitives_indexCount_indexType_indexBuffer_indexBufferOffset(
+            MTLPrimitiveType::Triangle,
+            count,
+            MTLIndexType::UInt32,
+            &mesh.indices.raw,
+            first * 4,
+        );
     }
 }
