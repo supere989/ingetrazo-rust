@@ -1,0 +1,27 @@
+{
+  "proof": "84edb8b1",
+  "runtime_checker": "2e97391c",
+  "archive_members": 133,
+  "raw_bytes": 1752230,
+  "current_binary_sha256": "8ba893e5ac2750fdddef0b014c4958370eec026f429f6213e2df034027e0beef",
+  "source_git_bindings_authenticated": true,
+  "observations": {
+    "cases": 15,
+    "states": 75,
+    "reader_pairs": 15,
+    "owned_assets": 15,
+    "malformed_sidecars": 2,
+    "negative_controls": 11,
+    "uv_controls": 8
+  },
+  "review_findings_corrected": [
+    "syntax-invalid UV skips wholeface beforeasset assignment",
+    "numeric overflow remains planar fallback",
+    "UnicodeNd/interiorunderscores resolve realindices",
+    "single resultJSON",
+    "finalper-source/checkerGit binding"
+  ],
+  "ownership_review": "Cold usedasset bytes deduped; private candidate and every checkpoint resource owner prepared before publication. Externalfile removal, nestedCancel and rootUndo/Redo guards retained. Legacy format policy and nativef64 rows unchanged.",
+  "scope": "Finite original Kd/map_Kd subset and controller/codec ownership; fusion/orientation/smoothing/linkedcopy and GPU/fullP22 remain explicitly open. Lexical runtime bound to Python3.13.13 Unicode15.1 default4300digits.",
+  "verdict": "accepted without runtime/source rerun"
+}
