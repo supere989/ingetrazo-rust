@@ -1077,7 +1077,7 @@ impl crate::world::World {
             Arc::new(packet)
         }else{adapter.billboard_topology.as_ref().unwrap().1.clone()};
         let billboard_changed=billboard_topology_changed||adapter.billboards.as_ref().is_none_or(|old|old.0!=billboard_key);
-        let billboard_frame=if billboard_changed{Arc::new(super::world_billboard::Prepared::prepare(metal,scene,&billboard_topology,camera,eye.as_vec3(),billboard_key,adapter.billboards.as_ref().map(|p|p.1.as_ref()),!billboard_topology_changed)?)}else{adapter.billboards.as_ref().unwrap().1.clone()};
+        let billboard_frame=if billboard_changed{Arc::new(super::world_billboard::Prepared::prepare(metal,scene,&billboard_topology,camera,eye.as_vec3(),billboard_key,adapter.billboards.as_ref().map(|p|p.1.as_ref()),!billboard_topology_changed,self.sampled_assets())?)}else{adapter.billboards.as_ref().unwrap().1.clone()};
         let candidate_billboard_bytes=billboard_topology.retained_bytes()+billboard_frame.retained_bytes();
         if adapter.retained_payload_bytes().saturating_sub(adapter.billboard_payload_bytes()).checked_add(candidate_billboard_bytes).is_none_or(|n|n>MAX_BYTES*3){return Err("Metal adapter billboard storage exceeds24MiB".into());}
         let sample_positions=if !scene.dimensions.is_empty(){super::annotation::source_sample_policy(metal,self.configured_sample_count())?.1}else if self.configured_sample_count()==4{self.annotation_positions}else{None};
@@ -1099,6 +1099,7 @@ impl crate::world::World {
             },
             active_preview.filter(|p|p.sweep.kind==ingetrazo_render::face_sweep::Kind::Overlay).map(|p|p.preview_key),
             fill_candidate.as_ref().map(|p|p.1.clone()),
+            billboard_frame.assets(),
             |key| {
                 if let Some(p)=active_preview {
                     if *key==p.preview_key {return Ok(match p.sweep.kind {

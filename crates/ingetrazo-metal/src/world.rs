@@ -199,6 +199,13 @@ struct PaintUniform {
 }
 #[repr(C)]struct TexturePaint{opacity:f32,shade:f32,hard_cutout:u32,height:u32,mean:[f32;4]}
 impl World {
+    pub(crate) fn sampled_assets(&self)->&[Arc<super::world_texture::Asset>]{&self.texture_assets}
+    /// Diagnostic metadata only: counts billboard references that share the exact
+    /// immutable image owner with the accepted ordinary World inventory.
+    pub fn shared_billboard_texture_owners(&self,frame:&Prepared)->usize{
+        frame.billboards.as_ref().map_or(0,|billboards|billboards.assets().iter()
+            .filter(|(_,asset)|self.texture_assets.iter().any(|ordinary|Arc::ptr_eq(asset,ordinary))).count())
+    }
     pub(crate) fn configured_sample_count(&self)->usize{self.samples.max(1)}
     pub(crate) fn pin_bases(&self, keys:[Option<PrototypeKey>;2])->BasePins {
         BasePins(keys.map(|key|key.and_then(|key| {
@@ -271,7 +278,7 @@ impl World {
             return Ok(None);
         }
         self.targets
-            .retain(|t| Arc::strong_count(t) > 1 || (t.extent == extent && t.samples==self.samples.max(1)));
+            .retain(|t| Arc::strong_count(t) > 1 || (t.extent == extent && t.samples==self.samples.max(1) && !t.fill_enabled));
         let cached = self
             .targets
             .iter()
@@ -408,7 +415,7 @@ impl World {
     /// Camera-only frames bind one uniform without rewriting instance storage.
     pub fn prepare_placements_with_camera<F>(&mut self,metal:&NativeMetal,packet:Arc<PlacementPacket>,poses:&[PlacementPose],camera:[[f32;4];4],extent:(u32,u32),clear:[f64;4],policy:Policy,mut collect:F)->Result<Option<Arc<Prepared>>,String>
     where F:FnMut(&PrototypeKey)->Result<MeshRenderBuffer,String>{
-        self.prepare_collections_with_camera(metal,packet,poses,camera,extent,clear,policy,None,|key|Ok(Collection::Opaque(collect(key)?)),|_|Err("Unexpected sampled material in opaque consumer".into()))
+        self.prepare_collections_with_camera(metal,packet,poses,camera,extent,clear,policy,None,&[],|key|Ok(Collection::Opaque(collect(key)?)),|_|Err("Unexpected sampled material in opaque consumer".into()))
     }
     pub fn prepare_material_placements_with_camera<'a,F,G>(&mut self,metal:&NativeMetal,packet:Arc<PlacementPacket>,poses:&[PlacementPose],camera:[[f32;4];4],extent:(u32,u32),clear:[f64;4],policy:Policy,collect:F,resolve:G)->Result<Option<Arc<Prepared>>,String>
     where F:FnMut(&PrototypeKey)->Result<ingetrazo_render::pipeline::SceneRenderData,String>,G:FnMut(&str)->Result<std::borrow::Cow<'a,[u8]>,String>{
@@ -416,11 +423,11 @@ impl World {
     }
     pub fn prepare_material_placements_with_overlay<'a,F,G>(&mut self,metal:&NativeMetal,packet:Arc<PlacementPacket>,poses:&[PlacementPose],camera:[[f32;4];4],extent:(u32,u32),clear:[f64;4],policy:Policy,overlay:Option<PrototypeKey>,collect:F,resolve:G)->Result<Option<Arc<Prepared>>,String>
     where F:FnMut(&PrototypeKey)->Result<ingetrazo_render::pipeline::SceneRenderData,String>,G:FnMut(&str)->Result<std::borrow::Cow<'a,[u8]>,String>{
-        self.prepare_material_placements_with_section(metal,packet,poses,camera,extent,clear,policy,overlay,None,collect,resolve)
+        self.prepare_material_placements_with_section(metal,packet,poses,camera,extent,clear,policy,overlay,None,&[],collect,resolve)
     }
-    pub(crate) fn prepare_material_placements_with_section<'a,F,G>(&mut self,metal:&NativeMetal,packet:Arc<PlacementPacket>,poses:&[PlacementPose],camera:[[f32;4];4],extent:(u32,u32),clear:[f64;4],policy:Policy,overlay:Option<PrototypeKey>,fill:Option<Arc<crate::world_section::Fill>>,mut collect:F,resolve:G)->Result<Option<Arc<Prepared>>,String>
+    pub(crate) fn prepare_material_placements_with_section<'a,F,G>(&mut self,metal:&NativeMetal,packet:Arc<PlacementPacket>,poses:&[PlacementPose],camera:[[f32;4];4],extent:(u32,u32),clear:[f64;4],policy:Policy,overlay:Option<PrototypeKey>,fill:Option<Arc<crate::world_section::Fill>>,shared_assets:&[(String,Arc<super::world_texture::Asset>)],mut collect:F,resolve:G)->Result<Option<Arc<Prepared>>,String>
     where F:FnMut(&PrototypeKey)->Result<ingetrazo_render::pipeline::SceneRenderData,String>,G:FnMut(&str)->Result<std::borrow::Cow<'a,[u8]>,String>{
-        self.prepare_collections_with_camera(metal,packet,poses,camera,extent,clear,policy,fill,|key|{let data=collect(key)?;if overlay!=Some(*key) && matches!(policy.mode,Mode::HiddenLine|Mode::Monochrome){
+        self.prepare_collections_with_camera(metal,packet,poses,camera,extent,clear,policy,fill,shared_assets,|key|{let data=collect(key)?;if overlay!=Some(*key) && matches!(policy.mode,Mode::HiddenLine|Mode::Monochrome){
             if !data.transparent_mesh.indices.is_empty()||!data.textured_meshes.is_empty()||!data.opaque_mesh.source_front_cull.is_empty(){return Err("Metal plan style mixed-material policy requires subsequent stage".into());}
             Ok(Collection::Opaque(data.opaque_mesh))
         }else{Ok(Collection::Surfaces(data))}},resolve)
@@ -435,6 +442,7 @@ impl World {
         clear: [f64; 4],
         policy: Policy,
         fill:Option<Arc<crate::world_section::Fill>>,
+        shared_assets:&[(String,Arc<super::world_texture::Asset>)],
         mut collect: F,
         mut resolve:G,
     ) -> Result<Option<Arc<Prepared>>, String>
@@ -456,7 +464,7 @@ impl World {
             return Ok(None);
         }
         self.targets
-            .retain(|t| Arc::strong_count(t) > 1 || (t.extent == extent && t.samples==self.samples.max(1)));
+            .retain(|t| Arc::strong_count(t) > 1 || (t.extent == extent && t.samples==self.samples.max(1) && t.fill_enabled==fill.is_some()));
         let idle = self
             .targets
             .iter()
@@ -465,6 +473,7 @@ impl World {
             return Ok(None);
         }
         let mut candidate_assets=Vec::<Arc<super::world_texture::Asset>>::new();
+        let mut candidate_texture_uploads=0u64;
         let mut uploaded = 0;
         let placements = if let Some(old) = self
             .placements
@@ -526,7 +535,7 @@ impl World {
                     prior
                 } else {
                     let collection=collect(key)?;
-                    let mesh=build_material_mesh(metal,collection,&mut resolve,&self.texture_assets,&mut candidate_assets)?;
+                    let mesh=build_material_mesh(metal,collection,&mut resolve,&self.texture_assets,&mut candidate_assets,shared_assets,&mut candidate_texture_uploads)?;
                     if let Some(m)=&mesh{retained=retained.checked_add(std::mem::size_of::<Mesh>()+m.plan.retained_payload_bytes-std::mem::size_of::<Plan>()+m.materials.as_ref().map_or(0,|s|s.retained_payload_bytes)).filter(|n|*n<=CACHE_BYTES).ok_or("Metal retained material cache exceeds64MiB")?;uploaded+=1;}
                     mesh
 
@@ -701,7 +710,7 @@ impl World {
             .map(|o| o.retained_payload_bytes)
             .sum();
         self.stats.geometry_uploads += uploaded;
-        self.stats.texture_uploads+=candidate_assets.len()as u64;
+        self.stats.texture_uploads+=candidate_texture_uploads;
         self.stats.material_order_builds+=u64::from(material_changed);
         self.stats.material_order_payload_bytes=self.targets.iter().filter_map(|t|t.material_draws.as_ref()).map(|p|p.retained_payload_bytes).sum();
         self.stats.prepared += 1;
@@ -722,7 +731,7 @@ impl World {
             .map(|t| t.poses.capacity() * std::mem::size_of::<PlacementPose>())
             .sum();
         if let Some(entries)=candidate_lookup{self.texture_assets=entries;}
-        if uploaded>0{self.texture_assets.extend(candidate_assets.iter().cloned());}
+        self.texture_assets.extend(candidate_assets.iter().cloned());
         self.stats.texture_identity_payload_bytes=self.texture_assets.capacity()*std::mem::size_of::<Arc<super::world_texture::Asset>>();
         self.owner = Some(owner.clone());
         self.mesh = None;
@@ -1086,7 +1095,7 @@ fn material_draws(placements:&PlacementMeshes,order:&super::world_placement::Ord
     records.sort_unstable_by_key(|r|r.0);let mut operations=Vec::new();operations.try_reserve_exact(records.len()).map_err(|_|"Metal retained material operations allocation refused")?;operations.extend(records.into_iter().map(|r|r.1));let retained_payload_bytes=operations.capacity().checked_mul(std::mem::size_of::<MaterialDraw>()).and_then(|n|n.checked_add(std::mem::size_of::<MaterialDraws>())).ok_or("Metal material operation capacity overflow")?;if retained_payload_bytes>CAP{return Err("Metal retained material operations exceeds8MiB".into());}Ok(MaterialDraws{guard,operations,retained_payload_bytes})
 }
 
-fn build_material_mesh<'a,G>(metal:&NativeMetal,collection:Collection,resolve:&mut G,published:&[Arc<super::world_texture::Asset>],candidates:&mut Vec<Arc<super::world_texture::Asset>>)->Result<Option<Arc<Mesh>>,String>
+fn build_material_mesh<'a,G>(metal:&NativeMetal,collection:Collection,resolve:&mut G,published:&[Arc<super::world_texture::Asset>],candidates:&mut Vec<Arc<super::world_texture::Asset>>,shared:&[(String,Arc<super::world_texture::Asset>)],uploads:&mut u64)->Result<Option<Arc<Mesh>>,String>
 where G:FnMut(&str)->Result<std::borrow::Cow<'a,[u8]>,String>{
     let (data,materials)=match collection {
         Collection::Opaque(data)=>(data,None),
@@ -1102,7 +1111,7 @@ where G:FnMut(&str)->Result<std::borrow::Cow<'a,[u8]>,String>{
             for texture in packet.textures {
                 let encoded=resolve(&texture.path)?;let id=super::world_texture::identity(&encoded)?;
                 let asset=candidates.iter().find(|a|a.id==id).cloned().or_else(||published.iter().find(|a|a.id==id).cloned());
-                let asset=if let Some(asset)=asset{asset}else{if candidates.len()+published.len()>=4096{return Err("Metal retained sampled asset identities exceed4096".into());}candidates.try_reserve(1).map_err(|_|"Metal sampled asset publication allocation refused")?;let asset=super::world_texture::upload(metal,id,&encoded,published,candidates)?;candidates.push(asset.clone());asset};
+                let asset=if let Some(asset)=asset{asset}else{if candidates.len()+published.len()>=4096{return Err("Metal retained sampled asset identities exceed4096".into());}candidates.try_reserve(1).map_err(|_|"Metal sampled asset publication allocation refused")?;let asset=if let Some((_,asset))=shared.iter().find(|(_,a)|a.id==id){asset.clone()}else{let asset=super::world_texture::upload(metal,id,&encoded,published,candidates)?;*uploads+=1;asset};candidates.push(asset.clone());asset};
                 textures.push(SampledMesh{vertices:upload(metal,texture.geometry.upload_bytes())?,asset,draws:texture.geometry.draws});
             }
             let retained_payload_bytes=std::mem::size_of::<Materials>()+packet.runs.capacity()*std::mem::size_of::<super::world_surface::Run>()+opaque_runs.capacity()*std::mem::size_of::<(usize,usize,bool)>()+textures.capacity()*std::mem::size_of::<SampledMesh>()+textures.iter().map(|t|t.draws.capacity()*std::mem::size_of::<ingetrazo_render::native_textures::Draw>()).sum::<usize>();

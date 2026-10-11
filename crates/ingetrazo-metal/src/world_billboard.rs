@@ -43,7 +43,7 @@ impl Key {
 impl Prepared {
  pub fn validate_owner(&self,metal:&NativeMetal)->Result<(),String>{self.owner.validate(metal)}
  pub fn retained_bytes(&self)->usize{std::mem::size_of::<Self>()+self.buffers.capacity()*std::mem::size_of::<BufferOwner>()+self.draws.capacity()*std::mem::size_of::<Draw>()+self.assets.capacity()*std::mem::size_of::<(String,Arc<Asset>)>()+self.assets.iter().map(|a|a.0.capacity()).sum::<usize>()}
- pub fn prepare(metal:&NativeMetal,scene:&Scene,packet:&Packet,camera:&OrbitCamera,eye:glam::Vec3,key:Key,previous:Option<&Self>,reuse_images:bool)->Result<Self,String>{
+ pub fn prepare(metal:&NativeMetal,scene:&Scene,packet:&Packet,camera:&OrbitCamera,eye:glam::Vec3,key:Key,previous:Option<&Self>,reuse_images:bool,world_assets:&[Arc<Asset>])->Result<Self,String>{
   if let Some(previous)=previous{previous.validate_owner(metal)?;}
   let mut out=Self{owner:super::world::Owner::new(metal),pipeline:None,buffers:Vec::new(),draws:Vec::new(),assets:Vec::new(),uploads:0,texture_uploads:0,bytes:0};
   if !key.enabled||packet.runs.is_empty(){
@@ -63,10 +63,10 @@ impl Prepared {
    out.bytes=out.bytes.checked_add(geometry.upload_bytes().len()).filter(|n|*n<=MAX_BYTES).ok_or("Metal billboard geometry exceeds256MiB")?;
    let asset=if buffer.source_billboard_color.is_some(){None}else{
     let old=previous.and_then(|p|p.assets.iter().find(|a|a.0==path).map(|a|a.1.clone()));
-    let asset=if reuse_images&&old.is_some(){old.unwrap()}else{
+    let asset=if reuse_images&&old.is_some(){let old=old.unwrap();world_assets.iter().find(|a|a.id==old.id).cloned().unwrap_or(old)}else{
      let bytes=super::world_scene::sampled_asset(scene,&path)?;let id=world_texture::identity(&bytes)?;
-     if let Some(old)=old.filter(|a|a.id==id){old}else if let Some((_,asset))=out.assets.iter().find(|a|a.1.id==id){asset.clone()}else{
-      let mut published=Vec::new();if let Some(previous)=previous{published.try_reserve_exact(previous.assets.len()).map_err(|_|"Metal billboard asset lookup admission")?;published.extend(previous.assets.iter().map(|a|a.1.clone()));}
+     if let Some(asset)=world_assets.iter().find(|a|a.id==id){asset.clone()}else if let Some(old)=old.filter(|a|a.id==id){old}else if let Some((_,asset))=out.assets.iter().find(|a|a.1.id==id){asset.clone()}else{
+      let mut published=Vec::new();published.try_reserve_exact(world_assets.len()+previous.map_or(0,|p|p.assets.len())).map_err(|_|"Metal billboard asset lookup admission")?;published.extend(world_assets.iter().cloned());if let Some(previous)=previous{published.try_reserve_exact(previous.assets.len()).map_err(|_|"Metal billboard asset lookup admission")?;published.extend(previous.assets.iter().map(|a|a.1.clone()));}
       if let Some(asset)=published.iter().find(|a|a.id==id){asset.clone()}else{
        let mut candidates=Vec::new();candidates.try_reserve_exact(out.assets.len()).map_err(|_|"Metal billboard asset lookup admission")?;candidates.extend(out.assets.iter().map(|a|a.1.clone()));
        out.texture_uploads+=1;world_texture::upload(metal,id,&bytes,&published,&candidates)?
@@ -82,6 +82,7 @@ impl Prepared {
   if !out.draws.is_empty(){out.pipeline=Some(if let Some(p)=previous.and_then(|p|p.pipeline.as_ref()).filter(|p|p.samples==key.samples&&p.stencil==key.stencil){p.clone()}else{Arc::new(Pipeline::new(metal,key.samples,key.stencil)?)});}
   if out.retained_bytes()>8*1024*1024{return Err("Metal billboard metadata exceeds8MiB".into());}Ok(out)
  }
+ pub(crate) fn assets(&self)->&[(String,Arc<Asset>)]{&self.assets}
  pub fn encode(&self,encoder:&ProtocolObject<dyn MTLRenderCommandEncoder>,camera:&[[f32;4];4],section:&super::world_section::Section,height:u32,depth_enabled:bool){
   let Some(pipeline)=&self.pipeline else{return;};
   let identity=glam::Mat4::IDENTITY.to_cols_array_2d();
