@@ -1,0 +1,146 @@
+{
+  "runtime_commit": "45fb8132e7b96911c1dcc070123cd2a0a365e5b0",
+  "original_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "source_scope": "Literal original MainWindow recent methods plus actual Qt QMenu/QSettings; native actual App and egui ingress",
+  "entries": [
+    {
+      "path": "build-correction.log",
+      "bytes": 20145,
+      "sha256": "5220a7b6e63e1ad825ac107e9d8d2241b226398fcb3db27cd2e22c4ce95934f3"
+    },
+    {
+      "path": "build-final.log",
+      "bytes": 20131,
+      "sha256": "5b0e4f654981c335812e3fe28d9a7331f1a966f12f96a624621ddbf682b7e966"
+    },
+    {
+      "path": "build.log",
+      "bytes": 15863,
+      "sha256": "b2eb4d0f864057572f5fa98ce6ec6bfb2b9445b7b000cbd5965feb610a9db56e"
+    },
+    {
+      "path": "check-final.log",
+      "bytes": 126,
+      "sha256": "36737eb96bb02a52760be49005681fe211a6092ff7630055380d7ebafb52d80e"
+    },
+    {
+      "path": "native-final.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "native-recent.json",
+      "bytes": 1504,
+      "sha256": "0e042f2160e9c34478e2228191c64d8c9582c985e60c4e988e26d488eaad70cf"
+    },
+    {
+      "path": "native.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "original-recent.json",
+      "bytes": 4116,
+      "sha256": "5d852a9c280021a64056c49b4e99ce1362886b21286cea76a83495b88c13cf38"
+    },
+    {
+      "path": "source.log",
+      "bytes": 32,
+      "sha256": "d3537986a7181049ec42d09c4bcd333a7eda4f97d943f79bfd66efd7d77070bd"
+    },
+    {
+      "path": "ui-test-cache.log",
+      "bytes": 20060,
+      "sha256": "145631b7c450d956412207263ca9aef19de3a77fe7b01c37f80fdeddf0a47f3a"
+    },
+    {
+      "path": "ui-test-correction.log",
+      "bytes": 20149,
+      "sha256": "1519501da8aad366ad7122e4d576bd88d6c3c604a0e640627f6a528bdf279c17"
+    },
+    {
+      "path": "ui-test-diagnostic.log",
+      "bytes": 20176,
+      "sha256": "ddb3a525d42677629bf3c72cd871d4514b34e01b507b571c479126e98f1c3613"
+    },
+    {
+      "path": "ui-test-final.log",
+      "bytes": 20440,
+      "sha256": "4e21f788ca4138442202821c2c56f0b501481d32004c75fb4f20591b3eaf907b"
+    },
+    {
+      "path": "ui-test-protected.log",
+      "bytes": 19516,
+      "sha256": "6ffeefdc275dd06eb987c50f19861fcd59359aeea45d9105c1e9fd0e3811c3d9"
+    },
+    {
+      "path": "ui-test-rootstate.log",
+      "bytes": 20483,
+      "sha256": "64f94a0a5344975f5044e6464fadf93826fbb30084e38c119f2d0a7fd51fb9da"
+    },
+    {
+      "path": "ui-test-settle.log",
+      "bytes": 20079,
+      "sha256": "3b3f5bd8ba7a89ab0724816b1fbc892357bb6e3d3b6905e617725d543a681ee3"
+    },
+    {
+      "path": "ui-test.log",
+      "bytes": 20072,
+      "sha256": "2f46acb57f1fa76ba7ce35192847d8b079cf71220093d6e5ec0146c57b52f538"
+    }
+  ],
+  "sources": [
+    {
+      "path": "crates/ingetrazo-gui/src/app.rs",
+      "sha256": "354b6873e86b2bd2e9f24f7c2e8d6853d03aa9689a46acae0b90d18d4a626a07"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/menu.rs",
+      "sha256": "6053d6083cde5cdbbdb3a0fad025062adfb4572e2da7d4f9e9d8d13b278acf25"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/document_session.rs",
+      "sha256": "abcd165979237174d5756db8cecf2d7c841c65f8bad7e8893edbf8c9a68096b6"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/navigation.rs",
+      "sha256": "47c05feff94426ff3fdb45577c0aef283d942b51f3d8de8bf4d4c3ba6bcb19a6"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/recent_files.rs",
+      "sha256": "1ddfc7816ebf2762b8303e880376794d46844d1b9989029a53874e6c9cc85223"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/lib.rs",
+      "sha256": "f3bd407a0067c5dd99229f390623902bd534de43d32e509dc4eacc2ac96433f7"
+    },
+    {
+      "path": "crates/ingetrazo-gui/examples/context_document_lifecycle.rs",
+      "sha256": "63d035a92c5b5bb6158d8b8631cc8637de28b7f8c176e85bbf1f2b08234e06c9"
+    },
+    {
+      "path": "scripts/reference-open-recent.py",
+      "sha256": "3ec9ac5fbdab5f1490150bc8ffcdc4a2013746550dc52885e4fdf4cbf6237056"
+    },
+    {
+      "path": "scripts/check-open-recent.py",
+      "sha256": "c56a2a3c86f38570e3ec486b82be652629496320f3024a9d1866404fe1b0cd91"
+    }
+  ],
+  "original_sources": [
+    {
+      "path": "views/main_window.py",
+      "sha256": "ea02be3e439c80731d0f5b5fde3d92d9b3f62e8ad10cd44ad305c3261b7786fa"
+    }
+  ],
+  "binaries": [
+    {
+      "path": "/tmp/ingetrazo-ai-registry-target/debug/examples/context_document_lifecycle",
+      "sha256": "c9d1d336284a21a98f03265274fd264683c948934c4f2fc03092b7cd149b15b1"
+    },
+    {
+      "path": "/tmp/ingetrazo-ai-registry-target/debug/deps/ingetrazo_gui-134b3c2a4f97972a",
+      "sha256": "b6ebf37be016d275ee79880c5c0d74c963edb015cd9d5b567065cc3b0b1881ed"
+    }
+  ]
+}
