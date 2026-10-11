@@ -1,0 +1,70 @@
+{
+  "criterion": "Interactive workflows on arbitrary planes; VCB input, cancel/repeat and inference match baseline.",
+  "audit_runtime": "503ee320 (parent integrated runtime); owner evidence313c287c/03372cf1",
+  "verdict": "Incomplete: one required Freehand original-handler comparison remains",
+  "clauses": [
+    {
+      "clause": "Interactive workflows and arbitrary planes",
+      "evidence": [
+        "docs/audits/shape-drafting/records.zip:source.json,source-addendum.json,source-remaining.json and native-plane-policy*.json",
+        "docs/audits/component-rectangle-axes-source.json",
+        "docs/audits/rectangle-context-root-review/result.json",
+        "docs/audits/line-sweep-integration/evidence.zip",
+        "docs/audits/drafting-accepted-corpus.json"
+      ],
+      "assessment": "66 new shape workflows include oblique/vertical/axis/reference planes, nested axes and all4Arc modes;7nativeegui activation recipes. Existing22shared model cases include nonprincipal/holed Line/Rectangle/Freehand construction, and9raw Line histories. Freehand actual sampling and arbitrary-plane handler baseline remain unproved."
+    },
+    {
+      "clause": "VCB input",
+      "evidence": [
+        "docs/audits/shape-drafting/records.zip:source.json,source-addendum.json,check-plane-policy*.json",
+        "docs/audits/component-rectangle-axes-source.json",
+        "docs/audits/context-document-lifecycle/README.md",
+        "docs/audits/preferences-units-integration/README.md"
+      ],
+      "assessment": "Radius, rounded/suffixed segments, Arc bulge/radius/angle, RotRectangle base/width/angle and source-supported refusal states compare; existingLine/Rectangle continuation and unit routing evidence retained. Freehand source exposes no tool-specific VCB, so do not invent a missing numeric mode."
+    },
+    {
+      "clause": "Cancel/repeat and history",
+      "evidence": [
+        "docs/audits/shape-drafting/records.zip:all3source/nativecohorts",
+        "docs/audits/line-sweep-integration/README.md",
+        "docs/audits/line-orphan-history/README.md",
+        "docs/audits/context-document-lifecycle/README.md",
+        "docs/audits/drafting-rendered/evidence.json"
+      ],
+      "assessment": "New shapes compare Cancel/restart/repeat, Undo/Redo, hotArc retype and correctly delivered corner repeat. Line compound/bare9complete histories and pendingLine/Rectangle history controls retained. Freehand rendered native release/Undo/Redo observation is not an original-handler Cancel/repeat comparison."
+    },
+    {
+      "clause": "Inference match baseline",
+      "evidence": [
+        "docs/audits/shape-drafting/records.zip:reference-edge,off-plane,diagonal,tangent,semicircle,curve-continuation,corner,protractor,snaprecipes",
+        "docs/audits/component-snap-axes-source.json",
+        "docs/audits/component-snap-root-review/README.md",
+        "docs/audits/python-screen-snap-evidence.json",
+        "docs/audits/python-snap-heldout-depth-evidence.json",
+        "docs/audits/python-snap-eye-boundary-evidence.json"
+      ],
+      "assessment": "Actual newshape handler inference states and35context locks/Shift/magnetic controls plus boundedpixel/depthsnaprecords provide finite semantic evidence. Freehand deliberately uses_snap=False in original; missing proof is sampling/plane handler behavior, not a newmagnet requirement. Broad guides/full3D inference/locale remains P07."
+    }
+  ],
+  "required_missing": [
+    {
+      "tool": "Freehand",
+      "contract": "Actual original press/hover/release over3px sampling threshold,1.6px screen-spaceRDP and10pxclosedseam, arbitrarydrawingplane, shortstroke no-op, Cancel/repeat and Undo/Redo, compared with real nativeApp/egui ingress.",
+      "existing_insufficient": [
+        "docs/audits/drafting-accepted-corpus.json:freehand-closed/freehand-open-chord/angled-holed-freehand-chord are commit_arc construction, not FreehandTool handlers",
+        "docs/audits/drafting-rendered/evidence.json:one native rendered closedstroke with Undo/Redo, explicitly no original rendered comparison",
+        "crates/ingetrazo-tools/src/freehand.rs:release_commits_one_curve_after_immutable_screen_preview is native-only"
+      ],
+      "source": "/work/ingetrazo/tools/freehand.py:_MIN_SAMPLE_PX,_SIMPLIFY_PX,_CLOSE_PX,on_click,on_hover,on_release,on_cancel",
+      "next_action": "Capture only missing pinned original handler sessions once; use accepted model payloads; extend native actualApp/egui release/cancel/history consumer and repair only demonstrated mismatches."
+    }
+  ],
+  "separate_scope": [
+    "Desktop and whole-frame overlay/render parity is not added to this finite semantic criterion.",
+    "P07 broaderguideintersections,pixeltolerance/locale/fullinference criterion remains separate.",
+    "Five-decimal geometric canonicalization does not assert rawUUID/pointer identity."
+  ],
+  "execution": "Read-only retained proof/static source audit; no build,test,sourcecapture,trackeredit orpromotion."
+}
