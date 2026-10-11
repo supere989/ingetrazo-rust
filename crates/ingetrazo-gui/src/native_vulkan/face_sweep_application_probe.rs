@@ -3,7 +3,7 @@ use super::{App,System,run_app};
 use std::{path::PathBuf,error::Error,io::Read};
 use glam::DVec3;
 use ingetrazo_tools::base::{ToolContext,ToolType};
-struct Probe{app:crate::IngeTrazoApp,nonce:u64,refuse:bool,dir:PathBuf,anchor:DVec3,normal:DVec3,face:usize}
+struct Probe{app:crate::IngeTrazoApp,nonce:u64,refuse:bool,distance:Option<f64>,dir:PathBuf,anchor:DVec3,normal:DVec3,face:usize}
 fn vec(value:&serde_json::Value)->DVec3{DVec3::new(value[0].as_f64().unwrap(),value[1].as_f64().unwrap(),value[2].as_f64().unwrap())}
 impl App for Probe{
  fn title()->&'static str{"IngeTrazo actual FaceSweep workflow"}
@@ -17,7 +17,7 @@ impl App for Probe{
   app.camera.target=vec(&row["camera"]["target"]);app.camera.distance=row["camera"]["distance"].as_f64().unwrap();app.camera.yaw=row["camera"]["yaw"].as_f64().unwrap();app.camera.pitch=row["camera"]["pitch"].as_f64().unwrap();app.camera.perspective=false;
   app.style.visual_style=ingetrazo_render::style::VisualStyle::ShadedWithTextures;app.style.show_textures=true;app.style.background_color=[1.;4];app.style.show_sky=false;app.style.show_edges=true;app.style.show_profiles=false;
   app.mark_document_clean();
-  Self{app,nonce:0,refuse:false,dir:PathBuf::from(std::env::var_os("INGETRAZO_SWEEP_CONTROL").expect("Sweep control")),anchor:vec(&row["anchor"]),normal:vec(&row["normal"]),face:row["face"].as_u64().unwrap()as usize}
+  Self{app,nonce:0,refuse:false,distance:None,dir:PathBuf::from(std::env::var_os("INGETRAZO_SWEEP_CONTROL").expect("Sweep control")),anchor:vec(&row["anchor"]),normal:vec(&row["normal"]),face:row["face"].as_u64().unwrap()as usize}
  }
  fn build_ui(&mut self,ctx:&egui::Context){
   self.app.update_ui(ctx);ctx.request_repaint_after(std::time::Duration::from_millis(16));
@@ -26,17 +26,25 @@ impl App for Probe{
    let row:serde_json::Value=serde_json::from_slice(&bytes).unwrap();let nonce=row["nonce"].as_u64().unwrap();
    if nonce>self.nonce{
     match row["action"].as_str().unwrap(){
-     "acquire"=>{self.app.set_tool(ToolType::PushPull);let eye=self.app.camera.eye();let context=ToolContext::new(self.anchor,ingetrazo_core::math::Ray::new(eye,(self.anchor-eye).normalize()));self.app.dispatch_tool_click(&context);let preview=self.app.active_tool.face_sweep_preview().expect("Actual Tool acquisition");assert_eq!(preview.face,self.face);assert_eq!(preview.normal,self.normal);},
-     "drag"|"refuse"=>{let distance=row["distance"].as_f64().unwrap();assert!(distance.is_finite());let point=self.anchor+self.normal*distance;let eye=self.app.camera.eye();let context=ToolContext::new(point,ingetrazo_core::math::Ray::new(eye,(point-eye).normalize()));self.app.active_tool.on_move(&mut self.app.scene,&context);self.refuse=row["action"]=="refuse";},
+     "acquire"=>{self.app.set_tool(ToolType::PushPull);let eye=self.app.camera.eye();let context=ToolContext::new(self.anchor,ingetrazo_core::math::Ray::new(eye,(self.anchor-eye).normalize()));self.app.dispatch_tool_click(&context);let preview=self.app.active_tool.face_sweep_preview().expect("Actual Tool acquisition");assert_eq!(preview.face,self.face);assert_eq!(preview.normal,self.normal);self.distance=Some(0.);},
+     "drag"|"refuse"=>{let distance=row["distance"].as_f64().unwrap();assert!(distance.is_finite());let point=self.anchor+self.normal*distance;let eye=self.app.camera.eye();let context=ToolContext::new(point,ingetrazo_core::math::Ray::new(eye,(point-eye).normalize()));self.app.active_tool.on_move(&mut self.app.scene,&context);self.refuse=row["action"]=="refuse";self.distance=Some(distance);},
      "retry"=>self.refuse=false,
-     "cancel"=>{self.refuse=false;self.app.active_tool.on_cancel(&mut self.app.scene);self.app.vcb_text.clear();},
-     "commit"=>{self.app.dispatch_tool_vcb(row["text"].as_str().unwrap()).unwrap();self.app.vcb_text.clear();},
+     "cancel"=>{self.distance=None;self.refuse=false;self.app.active_tool.on_cancel(&mut self.app.scene);self.app.vcb_text.clear();},
+     "commit"=>{self.distance=None;self.app.dispatch_tool_vcb(row["text"].as_str().unwrap()).unwrap();self.app.vcb_text.clear();},
      "undo"=>self.app.undo(),
      "typed"=>{self.app.vcb_text=row["text"].as_str().unwrap().into();},
      "save"=>self.app.save_to_path(&self.dir.join("saved.igz")),
      _=>panic!("Unknown sweep operation"),
     }self.nonce=nonce;
    }
+  }
+  // This engineering protocol supplies an explicit persistent motion sample
+  // through the production Tool handler; it does not claim hardware input.
+  // Otherwise the owned X server's unrelated stationary cursor changes the
+  // selected sample during each UI pass before presentation acknowledgment.
+  if let Some(distance)=self.distance{
+   let point=self.anchor+self.normal*distance;let eye=self.app.camera.eye();
+   self.app.active_tool.on_move(&mut self.app.scene,&ToolContext::new(point,ingetrazo_core::math::Ray::new(eye,(point-eye).normalize())));
   }
  }
  fn prepare_gpu(&mut self,system:&mut System,resize:bool){

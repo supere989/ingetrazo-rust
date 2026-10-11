@@ -6,6 +6,8 @@ import argparse
 from owned_process_cleanup import stop_owned_helper
 parser=argparse.ArgumentParser();parser.add_argument("binary");parser.add_argument("output");parser.add_argument("--source-dir",required=True);parser.add_argument("--case",default="ordinary-prism");parser.add_argument("--source",required=True);args=parser.parse_args();assert len(args.source)==40 and all(c in "0123456789abcdef" for c in args.source)
 out=Path(args.output);out.mkdir(parents=True,exist_ok=True)
+source_rows=json.loads((Path(args.source_dir)/"original.json").read_text())["cases"];recipe=next(row for row in source_rows if row["name"]==args.case)
+expected_distance=sum((recipe["anchor"][j]+recipe["normal"][j]*.6-recipe["anchor"][j])*recipe["normal"][j] for j in range(3))
 xvfb=subprocess.Popen(["Xvfb","-displayfd","1","-screen","0","1400x1000x24"],stdout=subprocess.PIPE,stderr=subprocess.DEVNULL,text=True)
 import atexit
 atexit.register(lambda:stop_owned_helper(xvfb,out/"xvfb-setup-cleanup.json",timeout=5) if xvfb.poll() is None else None)
@@ -85,7 +87,7 @@ try:
     value=wait(lambda:(v if(v:=state())and v["nonce"]==nonce and not v["prepare_error"] and v["completed_present_serial"]>first["submitted_serial"] else None))
    image=take(str(nonce)+"-"+name);rows.append(dict(name=name,state=state(),image_sha256=hashlib.sha256((out/(str(nonce)+"-"+name+".png")).read_bytes()).hexdigest()));return image
   acquired=action(1,"acquire");assert state()["label"] is not None and state()["label"]["distance"]==0 and np.any(roi(acquired)!=base_roi)
-  shown=action(2,"drag",distance=.6);assert state()["label"]["distance"]==.6 and state()["world"]["preview_bytes"]>0 and np.any(roi(shown)!=roi(acquired))
+  shown=action(2,"drag",distance=.6);assert state()["label"]["distance"]==abs(expected_distance) and state()["world"]["preview_bytes"]>0 and np.any(roi(shown)!=roi(acquired))
   warm=dict(state()["world"]);serial=state()["submitted_serial"];wait(lambda:state()["completed_present_serial"]>serial+3)
   for key in ["base_uploads","preview_uploads","texture_builds","texture_uploads","sampled_entries"]:assert state()["world"][key]==warm[key],f"Warm work changed {key}"
   offset=action(3,"drag",distance=.9);assert state()["world"]["base_uploads"]==warm["base_uploads"] and state()["world"]["preview_uploads"]==warm["preview_uploads"]+1
