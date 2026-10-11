@@ -25,6 +25,9 @@ pub struct ComponentEditSession {
 }
 
 impl ComponentEditSession {
+    /// Read-only parked owner for document-global consumers while an edit is active.
+    pub fn parked_scene(&self)->&Scene {&self.original_scene}
+    pub fn edited_group_id(&self)->uuid::Uuid {self.group_id}
     fn finish_copy(&self) -> Self {
         Self {
             original_scene:self.original_scene.clone(),cancel_scene:Scene::new(),original_camera:self.original_camera.clone(),

@@ -126,7 +126,11 @@ fn click(a: &mut IngeTrazoApp, ctx: &egui::Context, label: &str) {
         );
     }
 }
+#[path="context_document_lifecycle/nested_import.rs"]
+mod nested_import;
 fn main() {
+    if std::env::args().any(|a|a=="--nested-import"){nested_import::run();return;}
+
     if std::env::args().any(|a| a == "--import-preferences") {
         import_preferences_acceptance();
         return;
