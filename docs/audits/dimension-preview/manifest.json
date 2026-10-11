@@ -1,0 +1,214 @@
+{
+  "runtime_commit": "f81fc7aaee9d283e3d3f87fc0b932438114d05dd",
+  "original_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "entries": [
+    {
+      "path": "aligned-input.igz",
+      "bytes": 325,
+      "sha256": "fa9c2cb30d4f8afe1b3ec1c99587362006d5da0d620cfb3d0663a617138b1f20"
+    },
+    {
+      "path": "aligned-native.igz",
+      "bytes": 853,
+      "sha256": "385b1ab1392a4897623466f610ca0f7676dd4976441e78c916a29ebf3b057308"
+    },
+    {
+      "path": "aligned-original.igz",
+      "bytes": 606,
+      "sha256": "7deab175ad2796298b5e90156a5c9ced3f81e06b96e4c7ca0bc74aa5ad10332d"
+    },
+    {
+      "path": "axial-x-input.igz",
+      "bytes": 389,
+      "sha256": "0013154aa281fe2da53b243af7c3064987781b74edcb5c39a7174b8f41e8adaf"
+    },
+    {
+      "path": "axial-x-native.igz",
+      "bytes": 914,
+      "sha256": "974a121f04d749ab11240a9619958bad052916625aedbb486196babc739d625e"
+    },
+    {
+      "path": "axial-x-original.igz",
+      "bytes": 667,
+      "sha256": "b5b14a799c25990423f18ad51c6b2417de58b15ec86100a14701d357e0adb787"
+    },
+    {
+      "path": "axial-y-input.igz",
+      "bytes": 397,
+      "sha256": "fbfb2737079451947725621820e148f266d45bab510545ba82ab2f93be687bbc"
+    },
+    {
+      "path": "axial-y-native.igz",
+      "bytes": 922,
+      "sha256": "43fb598b8bb4bc2d7febbccc0cc6f172c6945f8d2eb3f42a3a48bc8060c5b600"
+    },
+    {
+      "path": "axial-y-original.igz",
+      "bytes": 675,
+      "sha256": "37b29f6b6e824c277244ebe5e7fdec2c5df4875573316f309a2cfdf1fe473736"
+    },
+    {
+      "path": "build-correction.log",
+      "bytes": 20245,
+      "sha256": "53f89704deb3bf651ab10cde43344daa1f05ddf3ac5c598638dbc101e5309220"
+    },
+    {
+      "path": "build.log",
+      "bytes": 20549,
+      "sha256": "f8aaf9922b27941039efa5c4ed653b001a0580ef16e6f8a6bc18e85aa6d53079"
+    },
+    {
+      "path": "check-correction.log",
+      "bytes": 53,
+      "sha256": "9ea9430b7d447a047255c61b72b975c392f23cd99d87eb321755d36e5410fb0e"
+    },
+    {
+      "path": "check.log",
+      "bytes": 1403,
+      "sha256": "390144a7e0ef85b8fa49126f0bae3c2eed8c36c31be7dd21f31898852b3f8181"
+    },
+    {
+      "path": "final-check.log",
+      "bytes": 88,
+      "sha256": "dbf4115b94f1aed28b0930ce19caf99c2b6c3770d3cfeae6cde2b5876922947e"
+    },
+    {
+      "path": "front-z-input.igz",
+      "bytes": 325,
+      "sha256": "fa9c2cb30d4f8afe1b3ec1c99587362006d5da0d620cfb3d0663a617138b1f20"
+    },
+    {
+      "path": "front-z-native.igz",
+      "bytes": 897,
+      "sha256": "96c5f56fdd945269f787300042ab19c78554cf1469cd542ed80b2419887d21ad"
+    },
+    {
+      "path": "front-z-original.igz",
+      "bytes": 614,
+      "sha256": "75f24bda0beb1e44c2711016209907d6e5e7ac973d3e00523fb0268b0d4bb5c5"
+    },
+    {
+      "path": "initial-check.log",
+      "bytes": 1403,
+      "sha256": "390144a7e0ef85b8fa49126f0bae3c2eed8c36c31be7dd21f31898852b3f8181"
+    },
+    {
+      "path": "initial-native.json",
+      "bytes": 31065,
+      "sha256": "b9c5c3a286c713aead9f42ff40223c9896b3be2efc66c3e77dd39cd768b5f89f"
+    },
+    {
+      "path": "nested-input.igz",
+      "bytes": 1309,
+      "sha256": "886f589b215bf376431426556f2af5411f67dc7730a629a6ce5b5985e1010bdb"
+    },
+    {
+      "path": "nested-native.igz",
+      "bytes": 1710,
+      "sha256": "b1f0839b622a693ca364ffd46a4d2ffa768ecfb5f536d1e75edccf1eddd8e25f"
+    },
+    {
+      "path": "nested-original.igz",
+      "bytes": 1642,
+      "sha256": "095f4a4d2e47ccde347ea346c648e3db8913c7497ec3a46003209403c228646f"
+    },
+    {
+      "path": "owner-test.log",
+      "bytes": 942,
+      "sha256": "c3fd37c90e41955674b04d67fb22f2d9a46cfdfdca08aee99f8cb0971a10b3aa"
+    },
+    {
+      "path": "preview-native.json",
+      "bytes": 30955,
+      "sha256": "ba1ada9d46b5a0aabcfc56c321a98895e81252dec80659f1d308979236ef2707"
+    },
+    {
+      "path": "preview-original.json",
+      "bytes": 30955,
+      "sha256": "ba1ada9d46b5a0aabcfc56c321a98895e81252dec80659f1d308979236ef2707"
+    },
+    {
+      "path": "preview-reopens.json",
+      "bytes": 3912,
+      "sha256": "85465f375168e41a96cd0c19aa718fdba3f92d91b707de5f35251006d7b21b35"
+    },
+    {
+      "path": "reopen-correction.log",
+      "bytes": 39,
+      "sha256": "9963e89c6d2e5d7e656f8c2031130f8218047341e65ff41e83f9ee758f0be069"
+    },
+    {
+      "path": "reopen.log",
+      "bytes": 485,
+      "sha256": "20ec5f92f45ab8881ccb14c0b049de6af046a34150787d0dfca312522b30ae1c"
+    },
+    {
+      "path": "runtime-correction.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "runtime.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "side-x-input.igz",
+      "bytes": 391,
+      "sha256": "c7bde122aa97eaf3594f15e555218f1d83596ad57f5a21d001344119a98a7917"
+    },
+    {
+      "path": "side-x-native.igz",
+      "bytes": 950,
+      "sha256": "713b41b4fdda205f7a3016e400b026d3d19d20a9b8d827a43909b5990b5d4a33"
+    },
+    {
+      "path": "side-x-original.igz",
+      "bytes": 682,
+      "sha256": "5655153e67bfe357f4cd950b7b52a14ebd4829779b321162255bd4007fbb7e0b"
+    },
+    {
+      "path": "source.log",
+      "bytes": 309,
+      "sha256": "4d95ed146cd9ea93454713085a87a0f5c941131658c355603f108c2a0e28442f"
+    }
+  ],
+  "sources": [
+    {
+      "path": "crates/ingetrazo-tools/src/base.rs",
+      "sha256": "320025f3d1ebf870a36d73380f3c65f82f5a81473e7fd9f05597eb1f560a3434"
+    },
+    {
+      "path": "crates/ingetrazo-tools/src/dimension.rs",
+      "sha256": "5acd9261ce2d5081321afa09088edd0b93198086f822e0fbc6255cdfaec3e794"
+    },
+    {
+      "path": "crates/ingetrazo-tools/src/dimension/preview.rs",
+      "sha256": "c420a93e1c791fa2ec7a568b42906bc9c3efd81577d76b3abfc17000e6cb70ed"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/tool_history.rs",
+      "sha256": "bbe4c58b83f9b5203e6ec552c53fd2935c0d8f12d5c6354a3a342f232c17438c"
+    },
+    {
+      "path": "crates/ingetrazo-gui/examples/dimension_anchor_acceptance_fixture.rs",
+      "sha256": "7345ebbf15a955571615844c7f3ba675cae5bbd0ba389e27145a22abf9745550"
+    },
+    {
+      "path": "scripts/check-dimension-preview.py",
+      "sha256": "db8bbd949d1f24caa5d03dde1f68a7eba979c47f0c54ec343f45ea7213b54f60"
+    },
+    {
+      "path": "scripts/reference-dimension-preview.py",
+      "sha256": "3406f56ceaa83a5b5e73253ac0b5cd5d828fddf505c245373fd2a1dafe337169"
+    },
+    {
+      "path": "scripts/reopen-dimension-preview.py",
+      "sha256": "92c4717e44818ecc4f61c19a647ce17107015579a50ebda4a54a7737fd4dac71"
+    }
+  ],
+  "binary": {
+    "path": "/tmp/ingetrazo-ai-registry-target/debug/examples/dimension_anchor_acceptance_fixture",
+    "sha256": "fc3b5da7ca3cf1e4da1dd191857d70d21b1386b64833239058331e1201bbf49e"
+  }
+}
