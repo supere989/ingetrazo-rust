@@ -127,6 +127,10 @@ fn click(a: &mut IngeTrazoApp, ctx: &egui::Context, label: &str) {
     }
 }
 fn main() {
+    if std::env::args().any(|a| a == "--recent") {
+        recent_acceptance();
+        return;
+    }
     let out = std::path::PathBuf::from(std::env::args().nth(1).unwrap());
     let mut rows = vec![];
     for case in [
@@ -248,6 +252,82 @@ fn main() {
     std::fs::write(
         out.join("native-pending.json"),
         serde_json::to_vec_pretty(&json!({"rows":pending})).unwrap(),
+    )
+    .unwrap();
+}
+
+fn recent_acceptance() {
+    let root = std::path::PathBuf::from(std::env::args().nth(1).unwrap());
+    let store = root.join("native-settings");
+    let mut a = IngeTrazoApp::new();
+    a.set_language("en");
+    a.attach_session_store(ingetrazo_gui::session_state::SessionStore::isolated(&store));
+    a.clear_recent_files();
+    let mut rows = Vec::new();
+    let record = |a: &IngeTrazoApp, phase: &str| json!({"phase":phase,"recent":a.recent_files.iter().map(|p|p.file_name().unwrap().to_str().unwrap()).collect::<Vec<_>>()});
+    for i in 0..12 {
+        a.save_to_path(&root.join(format!("doc-{i}.igz")));
+    }
+    assert!(a
+        .recent_files
+        .iter()
+        .all(|p| p.is_absolute() && std::fs::canonicalize(p).unwrap() == *p));
+    rows.push(record(&a, "cap"));
+    a.open_recent_document(&root.join("./doc-5.igz"));
+    rows.push(record(&a, "alias"));
+    let obj = root.join("model.obj");
+    std::fs::write(&obj, "v 0 0 0\nv 1 0 0\nv 0 1 0\nf 1 2 3\n").unwrap();
+    a.open_document(&obj);
+    assert_eq!(a.current_file.as_ref(), Some(&obj));
+    rows.push(record(&a, "import"));
+    rows.push(record(&a, "none"));
+    // Missing stale entry is checked before active-context finish or dirty prompt.
+    let mut group = Group::new("working");
+    group.name = "working".into();
+    group.mesh.add_vertex(DVec3::X);
+    let id = a.scene.groups.len();
+    a.scene.groups.push(group);
+    a.scene.select(SelectionItem::Group(id));
+    a.begin_component_edit();
+    assert_eq!(a.component_edit_stack.len(), 1);
+    a.scene.mesh.add_vertex(DVec3::Y);
+    a.save_undo_state();
+    let before = a.scene.clone();
+    let depth = a.component_edit_stack.len();
+    let history = (a.undo_stack.len(), a.redo_stack.len());
+    std::fs::remove_file(root.join("doc-5.igz")).unwrap();
+    a.open_recent_document(&root.join("doc-5.igz"));
+    assert_eq!(a.scene, before);
+    assert_eq!(a.component_edit_stack.len(), depth);
+    assert_eq!((a.undo_stack.len(), a.redo_stack.len()), history);
+    assert!(!a.document_session.confirm_unsaved);
+    assert!(a.document_session.recent_missing.is_some());
+    rows.push(record(&a, "missing-filter-retains"));
+    a.open_recent_document(&root.join("doc-11.igz"));
+    assert!(a.component_edit_stack.is_empty());
+    assert!(a.document_session.confirm_unsaved);
+    let completed = a.scene.clone();
+    a.cancel_document_action();
+    assert_eq!(a.scene, completed);
+    a.open_recent_document(&root.join("doc-11.igz"));
+    a.discard_document_action();
+    assert_eq!(a.current_file.as_ref(), Some(&root.join("doc-11.igz")));
+    assert!(a.undo_stack.is_empty());
+    let before = a.scene.clone();
+    let history = (a.undo_stack.len(), a.redo_stack.len());
+    a.clear_recent_files();
+    assert_eq!(a.scene, before);
+    assert_eq!((a.undo_stack.len(), a.redo_stack.len()), history);
+    rows.push(record(&a, "clear"));
+    let mut restarted = IngeTrazoApp::new();
+    restarted.attach_session_store(ingetrazo_gui::session_state::SessionStore::isolated(&store));
+    assert!(restarted.recent_files.is_empty());
+    std::fs::write(
+        root.join("native-recent.json"),
+        serde_json::to_vec_pretty(
+            &json!({"rows":rows,"restart":restarted.recent_files,"app_preservation":true}),
+        )
+        .unwrap(),
     )
     .unwrap();
 }

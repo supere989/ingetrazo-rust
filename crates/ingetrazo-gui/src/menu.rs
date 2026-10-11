@@ -180,7 +180,10 @@ pub fn render_menu_bar(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
 
         // Inspect the actual menu state after interaction, including outside
         // dismissal and Escape. Adjacent-frame reopen must rescan the files.
-        if file_menu.inner.is_none() || egui::menu::BarState::load(ui.ctx(), ui.id()).is_none() {
+        // egui 0.30's top-level inner is None while the menu remains
+        // open; its root identity is the authoritative live owner.
+        if !egui::menu::BarState::load(ui.ctx(), ui.id()).as_ref()
+            .is_some_and(|root| root.id == file_menu.response.id) {
             app.document_session.recent_menu.frame = None;
         }
 
@@ -847,7 +850,7 @@ pub fn render_menu_bar(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
 
 /// Actual Open Recent content, also usable by embedded menu hosts.
 pub fn recent_files_menu(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
-    let frame = ui.ctx().cumulative_frame_nr();
+    let frame = ui.ctx().cumulative_pass_nr();
     let cache = &mut app.document_session.recent_menu;
     if !cache.frame.is_some_and(|last| last == frame || last.checked_add(1) == Some(frame)) {
         // Source checks files once when this menu opens, not every paint.
