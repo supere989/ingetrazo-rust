@@ -1,0 +1,1545 @@
+{
+  "states": [
+    {
+      "name": "initial",
+      "positions": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "edges": [
+        {
+          "v0": 0,
+          "v1": 1,
+          "faces": [
+            0
+          ]
+        },
+        {
+          "v0": 1,
+          "v1": 2,
+          "faces": [
+            0
+          ]
+        },
+        {
+          "v0": 2,
+          "v1": 0,
+          "faces": [
+            0
+          ]
+        }
+      ],
+      "faces": [
+        {
+          "vertices": [
+            0,
+            1,
+            2
+          ],
+          "holes": [],
+          "attrs": {
+            "color": [
+              0.2,
+              0.4,
+              0.8
+            ],
+            "layer": "Imported",
+            "vendor": {
+              "unit": [
+                1,
+                2
+              ],
+              "name": "kept"
+            }
+          },
+          "layer": "Imported"
+        }
+      ],
+      "layers": [
+        "Layer 0"
+      ],
+      "undo": 0,
+      "redo": 0,
+      "identity_checked": false
+    },
+    {
+      "name": "paint",
+      "positions": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "edges": [
+        {
+          "v0": 0,
+          "v1": 1,
+          "faces": [
+            0
+          ]
+        },
+        {
+          "v0": 1,
+          "v1": 2,
+          "faces": [
+            0
+          ]
+        },
+        {
+          "v0": 2,
+          "v1": 0,
+          "faces": [
+            0
+          ]
+        }
+      ],
+      "faces": [
+        {
+          "vertices": [
+            0,
+            1,
+            2
+          ],
+          "holes": [],
+          "attrs": {
+            "color": [
+              0.2,
+              0.4,
+              0.8
+            ],
+            "layer": "Imported",
+            "vendor": {
+              "unit": [
+                1,
+                2
+              ],
+              "name": "kept"
+            },
+            "mat": "Paint"
+          },
+          "layer": "Imported"
+        }
+      ],
+      "layers": [
+        "Layer 0"
+      ],
+      "undo": 1,
+      "redo": 0,
+      "identity_checked": true
+    },
+    {
+      "name": "pose",
+      "positions": [
+        [
+          0.0,
+          0.0,
+          2.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "edges": [
+        {
+          "v0": 0,
+          "v1": 1,
+          "faces": [
+            0
+          ]
+        },
+        {
+          "v0": 1,
+          "v1": 2,
+          "faces": [
+            0
+          ]
+        },
+        {
+          "v0": 2,
+          "v1": 0,
+          "faces": [
+            0
+          ]
+        }
+      ],
+      "faces": [
+        {
+          "vertices": [
+            0,
+            1,
+            2
+          ],
+          "holes": [],
+          "attrs": {
+            "color": [
+              0.2,
+              0.4,
+              0.8
+            ],
+            "layer": "Imported",
+            "vendor": {
+              "unit": [
+                1,
+                2
+              ],
+              "name": "kept"
+            },
+            "mat": "Paint"
+          },
+          "layer": "Imported"
+        }
+      ],
+      "layers": [
+        "Layer 0"
+      ],
+      "undo": 2,
+      "redo": 0,
+      "identity_checked": true
+    },
+    {
+      "name": "mixed-append",
+      "positions": [
+        [
+          0.0,
+          0.0,
+          2.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          3.0,
+          0.0,
+          0.0
+        ],
+        [
+          4.0,
+          0.0,
+          0.0
+        ],
+        [
+          3.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "edges": [
+        {
+          "v0": 0,
+          "v1": 1,
+          "faces": [
+            0
+          ]
+        },
+        {
+          "v0": 1,
+          "v1": 2,
+          "faces": [
+            0
+          ]
+        },
+        {
+          "v0": 2,
+          "v1": 0,
+          "faces": [
+            0
+          ]
+        },
+        {
+          "v0": 3,
+          "v1": 4,
+          "faces": [
+            1
+          ]
+        },
+        {
+          "v0": 4,
+          "v1": 5,
+          "faces": [
+            1
+          ]
+        },
+        {
+          "v0": 5,
+          "v1": 3,
+          "faces": [
+            1
+          ]
+        }
+      ],
+      "faces": [
+        {
+          "vertices": [
+            0,
+            1,
+            2
+          ],
+          "holes": [],
+          "attrs": {
+            "color": [
+              0.2,
+              0.4,
+              0.8
+            ],
+            "layer": "Imported",
+            "vendor": {
+              "unit": [
+                1,
+                2
+              ],
+              "name": "kept"
+            },
+            "mat": "Mixed"
+          },
+          "layer": "Imported"
+        },
+        {
+          "vertices": [
+            3,
+            4,
+            5
+          ],
+          "holes": [],
+          "attrs": {
+            "layer": "Extra",
+            "vendor": {
+              "keep": [
+                3,
+                4
+              ]
+            }
+          },
+          "layer": "Extra"
+        }
+      ],
+      "layers": [
+        "Layer 0"
+      ],
+      "undo": 3,
+      "redo": 0,
+      "identity_checked": true
+    },
+    {
+      "name": "undo-append",
+      "positions": [
+        [
+          0.0,
+          0.0,
+          2.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "edges": [
+        {
+          "v0": 0,
+          "v1": 1,
+          "faces": [
+            0
+          ]
+        },
+        {
+          "v0": 1,
+          "v1": 2,
+          "faces": [
+            0
+          ]
+        },
+        {
+          "v0": 2,
+          "v1": 0,
+          "faces": [
+            0
+          ]
+        }
+      ],
+      "faces": [
+        {
+          "vertices": [
+            0,
+            1,
+            2
+          ],
+          "holes": [],
+          "attrs": {
+            "color": [
+              0.2,
+              0.4,
+              0.8
+            ],
+            "layer": "Imported",
+            "vendor": {
+              "unit": [
+                1,
+                2
+              ],
+              "name": "kept"
+            },
+            "mat": "Paint"
+          },
+          "layer": "Imported"
+        }
+      ],
+      "layers": [
+        "Layer 0"
+      ],
+      "undo": 2,
+      "redo": 1,
+      "identity_checked": true
+    },
+    {
+      "name": "redo-append",
+      "positions": [
+        [
+          0.0,
+          0.0,
+          2.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          3.0,
+          0.0,
+          0.0
+        ],
+        [
+          4.0,
+          0.0,
+          0.0
+        ],
+        [
+          3.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "edges": [
+        {
+          "v0": 0,
+          "v1": 1,
+          "faces": [
+            0
+          ]
+        },
+        {
+          "v0": 1,
+          "v1": 2,
+          "faces": [
+            0
+          ]
+        },
+        {
+          "v0": 2,
+          "v1": 0,
+          "faces": [
+            0
+          ]
+        },
+        {
+          "v0": 3,
+          "v1": 4,
+          "faces": [
+            1
+          ]
+        },
+        {
+          "v0": 4,
+          "v1": 5,
+          "faces": [
+            1
+          ]
+        },
+        {
+          "v0": 5,
+          "v1": 3,
+          "faces": [
+            1
+          ]
+        }
+      ],
+      "faces": [
+        {
+          "vertices": [
+            0,
+            1,
+            2
+          ],
+          "holes": [],
+          "attrs": {
+            "color": [
+              0.2,
+              0.4,
+              0.8
+            ],
+            "layer": "Imported",
+            "vendor": {
+              "unit": [
+                1,
+                2
+              ],
+              "name": "kept"
+            },
+            "mat": "Mixed"
+          },
+          "layer": "Imported"
+        },
+        {
+          "vertices": [
+            3,
+            4,
+            5
+          ],
+          "holes": [],
+          "attrs": {
+            "layer": "Extra",
+            "vendor": {
+              "keep": [
+                3,
+                4
+              ]
+            }
+          },
+          "layer": "Extra"
+        }
+      ],
+      "layers": [
+        "Layer 0"
+      ],
+      "undo": 3,
+      "redo": 0,
+      "identity_checked": true
+    },
+    {
+      "name": "delete-old",
+      "positions": [
+        [
+          0.0,
+          0.0,
+          2.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          3.0,
+          0.0,
+          0.0
+        ],
+        [
+          4.0,
+          0.0,
+          0.0
+        ],
+        [
+          3.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "edges": [
+        {
+          "v0": 0,
+          "v1": 1,
+          "faces": []
+        },
+        {
+          "v0": 1,
+          "v1": 2,
+          "faces": []
+        },
+        {
+          "v0": 2,
+          "v1": 0,
+          "faces": []
+        },
+        {
+          "v0": 3,
+          "v1": 4,
+          "faces": [
+            0
+          ]
+        },
+        {
+          "v0": 4,
+          "v1": 5,
+          "faces": [
+            0
+          ]
+        },
+        {
+          "v0": 5,
+          "v1": 3,
+          "faces": [
+            0
+          ]
+        }
+      ],
+      "faces": [
+        {
+          "vertices": [
+            3,
+            4,
+            5
+          ],
+          "holes": [],
+          "attrs": {
+            "layer": "Extra",
+            "vendor": {
+              "keep": [
+                3,
+                4
+              ]
+            }
+          },
+          "layer": "Extra"
+        }
+      ],
+      "layers": [
+        "Layer 0"
+      ],
+      "undo": 4,
+      "redo": 0,
+      "identity_checked": true
+    },
+    {
+      "name": "undo-delete",
+      "positions": [
+        [
+          0.0,
+          0.0,
+          2.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          3.0,
+          0.0,
+          0.0
+        ],
+        [
+          4.0,
+          0.0,
+          0.0
+        ],
+        [
+          3.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "edges": [
+        {
+          "v0": 0,
+          "v1": 1,
+          "faces": [
+            0
+          ]
+        },
+        {
+          "v0": 1,
+          "v1": 2,
+          "faces": [
+            0
+          ]
+        },
+        {
+          "v0": 2,
+          "v1": 0,
+          "faces": [
+            0
+          ]
+        },
+        {
+          "v0": 3,
+          "v1": 4,
+          "faces": [
+            1
+          ]
+        },
+        {
+          "v0": 4,
+          "v1": 5,
+          "faces": [
+            1
+          ]
+        },
+        {
+          "v0": 5,
+          "v1": 3,
+          "faces": [
+            1
+          ]
+        }
+      ],
+      "faces": [
+        {
+          "vertices": [
+            0,
+            1,
+            2
+          ],
+          "holes": [],
+          "attrs": {
+            "color": [
+              0.2,
+              0.4,
+              0.8
+            ],
+            "layer": "Imported",
+            "vendor": {
+              "unit": [
+                1,
+                2
+              ],
+              "name": "kept"
+            },
+            "mat": "Mixed"
+          },
+          "layer": "Imported"
+        },
+        {
+          "vertices": [
+            3,
+            4,
+            5
+          ],
+          "holes": [],
+          "attrs": {
+            "layer": "Extra",
+            "vendor": {
+              "keep": [
+                3,
+                4
+              ]
+            }
+          },
+          "layer": "Extra"
+        }
+      ],
+      "layers": [
+        "Layer 0"
+      ],
+      "undo": 3,
+      "redo": 1,
+      "identity_checked": true
+    },
+    {
+      "name": "noop-redo-preserved",
+      "positions": [
+        [
+          0.0,
+          0.0,
+          2.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          3.0,
+          0.0,
+          0.0
+        ],
+        [
+          4.0,
+          0.0,
+          0.0
+        ],
+        [
+          3.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "edges": [
+        {
+          "v0": 0,
+          "v1": 1,
+          "faces": [
+            0
+          ]
+        },
+        {
+          "v0": 1,
+          "v1": 2,
+          "faces": [
+            0
+          ]
+        },
+        {
+          "v0": 2,
+          "v1": 0,
+          "faces": [
+            0
+          ]
+        },
+        {
+          "v0": 3,
+          "v1": 4,
+          "faces": [
+            1
+          ]
+        },
+        {
+          "v0": 4,
+          "v1": 5,
+          "faces": [
+            1
+          ]
+        },
+        {
+          "v0": 5,
+          "v1": 3,
+          "faces": [
+            1
+          ]
+        }
+      ],
+      "faces": [
+        {
+          "vertices": [
+            0,
+            1,
+            2
+          ],
+          "holes": [],
+          "attrs": {
+            "color": [
+              0.2,
+              0.4,
+              0.8
+            ],
+            "layer": "Imported",
+            "vendor": {
+              "unit": [
+                1,
+                2
+              ],
+              "name": "kept"
+            },
+            "mat": "Mixed"
+          },
+          "layer": "Imported"
+        },
+        {
+          "vertices": [
+            3,
+            4,
+            5
+          ],
+          "holes": [],
+          "attrs": {
+            "layer": "Extra",
+            "vendor": {
+              "keep": [
+                3,
+                4
+              ]
+            }
+          },
+          "layer": "Extra"
+        }
+      ],
+      "layers": [
+        "Layer 0"
+      ],
+      "undo": 3,
+      "redo": 1,
+      "identity_checked": true
+    },
+    {
+      "name": "redo-delete",
+      "positions": [
+        [
+          0.0,
+          0.0,
+          2.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          3.0,
+          0.0,
+          0.0
+        ],
+        [
+          4.0,
+          0.0,
+          0.0
+        ],
+        [
+          3.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "edges": [
+        {
+          "v0": 0,
+          "v1": 1,
+          "faces": []
+        },
+        {
+          "v0": 1,
+          "v1": 2,
+          "faces": []
+        },
+        {
+          "v0": 2,
+          "v1": 0,
+          "faces": []
+        },
+        {
+          "v0": 3,
+          "v1": 4,
+          "faces": [
+            0
+          ]
+        },
+        {
+          "v0": 4,
+          "v1": 5,
+          "faces": [
+            0
+          ]
+        },
+        {
+          "v0": 5,
+          "v1": 3,
+          "faces": [
+            0
+          ]
+        }
+      ],
+      "faces": [
+        {
+          "vertices": [
+            3,
+            4,
+            5
+          ],
+          "holes": [],
+          "attrs": {
+            "layer": "Extra",
+            "vendor": {
+              "keep": [
+                3,
+                4
+              ]
+            }
+          },
+          "layer": "Extra"
+        }
+      ],
+      "layers": [
+        "Layer 0"
+      ],
+      "undo": 4,
+      "redo": 0,
+      "identity_checked": true
+    },
+    {
+      "name": "undo-delete-again",
+      "positions": [
+        [
+          0.0,
+          0.0,
+          2.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          3.0,
+          0.0,
+          0.0
+        ],
+        [
+          4.0,
+          0.0,
+          0.0
+        ],
+        [
+          3.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "edges": [
+        {
+          "v0": 0,
+          "v1": 1,
+          "faces": [
+            0
+          ]
+        },
+        {
+          "v0": 1,
+          "v1": 2,
+          "faces": [
+            0
+          ]
+        },
+        {
+          "v0": 2,
+          "v1": 0,
+          "faces": [
+            0
+          ]
+        },
+        {
+          "v0": 3,
+          "v1": 4,
+          "faces": [
+            1
+          ]
+        },
+        {
+          "v0": 4,
+          "v1": 5,
+          "faces": [
+            1
+          ]
+        },
+        {
+          "v0": 5,
+          "v1": 3,
+          "faces": [
+            1
+          ]
+        }
+      ],
+      "faces": [
+        {
+          "vertices": [
+            0,
+            1,
+            2
+          ],
+          "holes": [],
+          "attrs": {
+            "color": [
+              0.2,
+              0.4,
+              0.8
+            ],
+            "layer": "Imported",
+            "vendor": {
+              "unit": [
+                1,
+                2
+              ],
+              "name": "kept"
+            },
+            "mat": "Mixed"
+          },
+          "layer": "Imported"
+        },
+        {
+          "vertices": [
+            3,
+            4,
+            5
+          ],
+          "holes": [],
+          "attrs": {
+            "layer": "Extra",
+            "vendor": {
+              "keep": [
+                3,
+                4
+              ]
+            }
+          },
+          "layer": "Extra"
+        }
+      ],
+      "layers": [
+        "Layer 0"
+      ],
+      "undo": 3,
+      "redo": 1,
+      "identity_checked": true
+    },
+    {
+      "name": "branch",
+      "positions": [
+        [
+          -1.0,
+          0.0,
+          2.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          3.0,
+          0.0,
+          0.0
+        ],
+        [
+          4.0,
+          0.0,
+          0.0
+        ],
+        [
+          3.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "edges": [
+        {
+          "v0": 0,
+          "v1": 1,
+          "faces": [
+            0
+          ]
+        },
+        {
+          "v0": 1,
+          "v1": 2,
+          "faces": [
+            0
+          ]
+        },
+        {
+          "v0": 2,
+          "v1": 0,
+          "faces": [
+            0
+          ]
+        },
+        {
+          "v0": 3,
+          "v1": 4,
+          "faces": [
+            1
+          ]
+        },
+        {
+          "v0": 4,
+          "v1": 5,
+          "faces": [
+            1
+          ]
+        },
+        {
+          "v0": 5,
+          "v1": 3,
+          "faces": [
+            1
+          ]
+        }
+      ],
+      "faces": [
+        {
+          "vertices": [
+            0,
+            1,
+            2
+          ],
+          "holes": [],
+          "attrs": {
+            "color": [
+              0.2,
+              0.4,
+              0.8
+            ],
+            "layer": "Imported",
+            "vendor": {
+              "unit": [
+                1,
+                2
+              ],
+              "name": "kept"
+            },
+            "mat": "Branch"
+          },
+          "layer": "Imported"
+        },
+        {
+          "vertices": [
+            3,
+            4,
+            5
+          ],
+          "holes": [],
+          "attrs": {
+            "layer": "Extra",
+            "vendor": {
+              "keep": [
+                3,
+                4
+              ]
+            }
+          },
+          "layer": "Extra"
+        }
+      ],
+      "layers": [
+        "Layer 0"
+      ],
+      "undo": 4,
+      "redo": 0,
+      "identity_checked": true
+    },
+    {
+      "name": "undo-branch",
+      "positions": [
+        [
+          0.0,
+          0.0,
+          2.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          3.0,
+          0.0,
+          0.0
+        ],
+        [
+          4.0,
+          0.0,
+          0.0
+        ],
+        [
+          3.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "edges": [
+        {
+          "v0": 0,
+          "v1": 1,
+          "faces": [
+            0
+          ]
+        },
+        {
+          "v0": 1,
+          "v1": 2,
+          "faces": [
+            0
+          ]
+        },
+        {
+          "v0": 2,
+          "v1": 0,
+          "faces": [
+            0
+          ]
+        },
+        {
+          "v0": 3,
+          "v1": 4,
+          "faces": [
+            1
+          ]
+        },
+        {
+          "v0": 4,
+          "v1": 5,
+          "faces": [
+            1
+          ]
+        },
+        {
+          "v0": 5,
+          "v1": 3,
+          "faces": [
+            1
+          ]
+        }
+      ],
+      "faces": [
+        {
+          "vertices": [
+            0,
+            1,
+            2
+          ],
+          "holes": [],
+          "attrs": {
+            "color": [
+              0.2,
+              0.4,
+              0.8
+            ],
+            "layer": "Imported",
+            "vendor": {
+              "unit": [
+                1,
+                2
+              ],
+              "name": "kept"
+            },
+            "mat": "Mixed"
+          },
+          "layer": "Imported"
+        },
+        {
+          "vertices": [
+            3,
+            4,
+            5
+          ],
+          "holes": [],
+          "attrs": {
+            "layer": "Extra",
+            "vendor": {
+              "keep": [
+                3,
+                4
+              ]
+            }
+          },
+          "layer": "Extra"
+        }
+      ],
+      "layers": [
+        "Layer 0"
+      ],
+      "undo": 3,
+      "redo": 1,
+      "identity_checked": true
+    },
+    {
+      "name": "redo-branch",
+      "positions": [
+        [
+          -1.0,
+          0.0,
+          2.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          3.0,
+          0.0,
+          0.0
+        ],
+        [
+          4.0,
+          0.0,
+          0.0
+        ],
+        [
+          3.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "edges": [
+        {
+          "v0": 0,
+          "v1": 1,
+          "faces": [
+            0
+          ]
+        },
+        {
+          "v0": 1,
+          "v1": 2,
+          "faces": [
+            0
+          ]
+        },
+        {
+          "v0": 2,
+          "v1": 0,
+          "faces": [
+            0
+          ]
+        },
+        {
+          "v0": 3,
+          "v1": 4,
+          "faces": [
+            1
+          ]
+        },
+        {
+          "v0": 4,
+          "v1": 5,
+          "faces": [
+            1
+          ]
+        },
+        {
+          "v0": 5,
+          "v1": 3,
+          "faces": [
+            1
+          ]
+        }
+      ],
+      "faces": [
+        {
+          "vertices": [
+            0,
+            1,
+            2
+          ],
+          "holes": [],
+          "attrs": {
+            "color": [
+              0.2,
+              0.4,
+              0.8
+            ],
+            "layer": "Imported",
+            "vendor": {
+              "unit": [
+                1,
+                2
+              ],
+              "name": "kept"
+            },
+            "mat": "Branch"
+          },
+          "layer": "Imported"
+        },
+        {
+          "vertices": [
+            3,
+            4,
+            5
+          ],
+          "holes": [],
+          "attrs": {
+            "layer": "Extra",
+            "vendor": {
+              "keep": [
+                3,
+                4
+              ]
+            }
+          },
+          "layer": "Extra"
+        }
+      ],
+      "layers": [
+        "Layer 0"
+      ],
+      "undo": 4,
+      "redo": 0,
+      "identity_checked": true
+    }
+  ]
+}

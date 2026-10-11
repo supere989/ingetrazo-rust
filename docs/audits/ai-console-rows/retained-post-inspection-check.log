@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/tmp/ingetrazo-ai-interpreter/scripts/check-ai-console-rows.py", line 20, in <module>
+    source=json.loads(Path(sys.argv[1]).read_text());native=json.loads(Path(sys.argv[2]).read_text());validate(source,native)
+                                                                                                      ~~~~~~~~^^^^^^^^^^^^^^^
+  File "/tmp/ingetrazo-ai-interpreter/scripts/check-ai-console-rows.py", line 9, in validate
+    assert native['native_exports']==0 and native['row_publications']==5
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

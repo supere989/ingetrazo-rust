@@ -47,6 +47,7 @@ pub struct PreparedFaces<'a> {
     command: Command,
     _preparation: Lease,
     _radial_charge: Lease,
+    native_existing: Option<Vec<(HashMap<String, serde_json::Value>, Option<String>)>>,
 }
 impl PreparedFaces<'_> {
     pub fn with_existing_fields(
@@ -55,6 +56,16 @@ impl PreparedFaces<'_> {
         loops: Vec<(Vec<usize>, Vec<Vec<usize>>)>,
     ) -> Result<Self, String> {
         self.edge = self.edge.with_existing_fields(positions, loops)?;
+        Ok(self)
+    }
+    pub(crate) fn with_native_existing(
+        mut self,
+        fields: Vec<(HashMap<String, serde_json::Value>, Option<String>)>,
+    ) -> Result<Self, String> {
+        if fields.len() != self.command.base_faces {
+            return Err("Prepared native Face prefix mismatch".into());
+        }
+        self.native_existing = Some(fields);
         Ok(self)
     }
     pub fn apply(self) {
@@ -68,9 +79,17 @@ impl PreparedFaces<'_> {
             mut command,
             _preparation,
             _radial_charge,
+            native_existing,
         } = self;
         let owner = edge.apply();
         let (storage, edges) = owner.face_storage();
+        if let Some(fields) = native_existing {
+            assert_eq!(fields.len(), storage.len());
+            for (face, (attrs, layer)) in storage.iter_mut().zip(fields) {
+                face.attrs = attrs;
+                face.layer = layer;
+            }
+        }
         for (eid, ids) in &radial {
             if *eid < command.base_edges {
                 edges[*eid].faces.extend(ids);
@@ -276,6 +295,7 @@ impl FaceOwner {
             },
             _preparation: prep,
             _radial_charge,
+            native_existing: None,
         }))
     }
     pub fn undo(&mut self) -> Result<bool, String> {
@@ -368,6 +388,19 @@ impl FaceOwner {
         self.undo.push(command);
         drop(prep);
         Ok(true)
+    }
+}
+impl FaceOwner {
+    pub(crate) fn install_native_face_fields(
+        &mut self,
+        fields: Vec<(HashMap<String, serde_json::Value>, Option<String>)>,
+    ) {
+        let (faces, _) = self.owner.face_storage();
+        assert_eq!(faces.len(), fields.len());
+        for (face, (attrs, layer)) in faces.iter_mut().zip(fields) {
+            face.attrs = attrs;
+            face.layer = layer;
+        }
     }
 }
 impl FaceTransaction {

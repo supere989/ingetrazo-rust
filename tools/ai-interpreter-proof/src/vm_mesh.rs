@@ -2580,6 +2580,17 @@ impl Controller {
                             projections.push(Projection::prepare_kind(&entry.mesh,&self.budget,true,false,false,Some(&references))?);
                         }else{projections.push(Projection::prepare_prefix(&entry.mesh,&self.budget,true)?);}
                     }
+                    // Existing raw Face attrs must join append geometry in the
+                    // same prepared command, not be repaired by a later no-op.
+                    let mut native_rows = Vec::new();
+                    native_rows.try_reserve_exact(entries.len())
+                        .map_err(|_| "Mixed native field tickets refused")?;
+                    for entry in &entries {
+                        let rows = face_fields::prepare_prefix(
+                            &entry.mesh, entry.faces, &self.budget, vm,
+                        )?;
+                        native_rows.push(Some(rows));
+                    }
                     let mut locks = Vec::new();
                     locks
                         .try_reserve_exact(entries.len())
@@ -2591,8 +2602,8 @@ impl Controller {
                     prepared
                         .try_reserve_exact(entries.len())
                         .map_err(|_| "Publication tickets refused")?;
-                    for ((owner, transaction), projection) in
-                        locks.iter_mut().zip(transactions).zip(projections)
+                    for (((owner, transaction), projection), rows) in locks.iter_mut()
+                        .zip(transactions).zip(projections).zip(&mut native_rows)
                     {
                         let ticket = owner.prepare(transaction)?;
                         let ticket = match (ticket, projection) {
@@ -2604,6 +2615,13 @@ impl Controller {
                                 return Err("Mixed publication missing append ticket".into())
                             }
                         };
+                        let ticket = if let Some(ticket) = ticket {
+                            let fields = std::mem::take(&mut rows.as_mut().unwrap().fields);
+                            Some(ticket.with_native_existing(fields)?)
+                        } else {
+                            *rows = None;
+                            None
+                        };
                         prepared.push(ticket);
                         self.last_prepared += 1;
                         if self.pressure_after == Some(self.last_prepared) {
@@ -2612,6 +2630,13 @@ impl Controller {
                     }
                     for ticket in prepared.into_iter().flatten() {
                         ticket.apply();
+                    }
+                    drop(locks);
+                    for (entry, rows) in entries.iter().zip(native_rows) {
+                        if let Some(rows) = rows {
+                            let old = { entry.mesh.native_field_charge.write().replace(rows.charge) };
+                            drop(old);
+                        }
                     }
                     Ok::<_, String>(!entries.is_empty())
                 })();
@@ -2706,6 +2731,11 @@ impl Controller {
         let result = self.interpreter.enter(|vm| {
             seed_packed_uids(&target.mesh)?;
             let restore = target.thaw(vm, &self.budget)?;
+            let native_rows = if command.append {
+                Some(face_fields::prepare_snapshot(&target.fields, &self.budget, vm)?)
+            } else {
+                None
+            };
             let projection = if command.append || command.packed_edges {
                 None
             } else {
@@ -2772,6 +2802,14 @@ impl Controller {
                         return Err("Native append history missing".into());
                     }
                 }
+            }
+            if let Some(rows) = native_rows {
+                {
+                    let mut owner = target.mesh.owner.write();
+                    owner.install_native_face_fields(rows.fields);
+                }
+                let old = { target.mesh.native_field_charge.write().replace(rows.charge) };
+                drop(old);
             }
             restore.restore();
             vm.host_budget_reset_after_discard();
@@ -2843,6 +2881,13 @@ impl Controller {
                 .map_err(|_| "Native Mesh binding replaced")?;
             let version = mesh.owner.read().revision();
             Ok(version)
+        })
+    }
+    pub fn native_mesh_publication(&self, target:&ingetrazo_core::mesh::Mesh) -> Result<crate::native_publication::NativePublication,String> {
+        self.interpreter.enter(|vm| {
+            let mesh=self.scope.globals.get_item("mesh",vm).map_err(|_|"Missing native mesh binding")?.downcast::<editable_mesh::Mesh>().map_err(|_|"Native Mesh binding replaced")?;
+            let owner=mesh.owner.read();
+            crate::native_publication::NativePublication::between(target,owner.mesh(),&self.budget)
         })
     }
     /// Cold export receipt stays admitted until the application publishes/discards it.

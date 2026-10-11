@@ -1,0 +1,86 @@
+[
+  {
+    "name": "initial",
+    "code": "",
+    "history": null,
+    "check": ""
+  },
+  {
+    "name": "paint",
+    "code": "held=mesh.faces[0]; held_vertex=held.loop[0]; token=5; held.attrs['mat']='Paint'",
+    "history": null,
+    "check": "assert held is mesh.faces[0]; assert held_vertex is held.loop[0]; assert token==5"
+  },
+  {
+    "name": "pose",
+    "code": "held_vertex.position.setZ(2)",
+    "history": null,
+    "check": "assert held is mesh.faces[0]; assert held_vertex is held.loop[0]"
+  },
+  {
+    "name": "mixed-append",
+    "code": "added=mesh.add_face([QVector3D(3,0,0),QVector3D(4,0,0),QVector3D(3,1,0)]); added.attrs['layer']='Extra'; added.attrs['vendor']={'keep':[3,4]}; held.attrs['mat']='Mixed'; token+=1",
+    "history": null,
+    "check": "assert held is mesh.faces[0]; assert added is mesh.faces[1]; assert token==6"
+  },
+  {
+    "name": "undo-append",
+    "code": "",
+    "history": false,
+    "check": "assert held is mesh.faces[0]; assert added not in mesh.faces; assert token==6"
+  },
+  {
+    "name": "redo-append",
+    "code": "",
+    "history": true,
+    "check": "assert held is mesh.faces[0]; assert added is mesh.faces[1]; assert token==6"
+  },
+  {
+    "name": "delete-old",
+    "code": "mesh.remove_face(held)",
+    "history": null,
+    "check": "assert held not in mesh.faces; assert added is mesh.faces[0]"
+  },
+  {
+    "name": "undo-delete",
+    "code": "",
+    "history": false,
+    "check": "assert held is mesh.faces[0]; assert added is mesh.faces[1]"
+  },
+  {
+    "name": "noop-redo-preserved",
+    "code": "inspection=token; assert held is mesh.faces[0]",
+    "history": null,
+    "check": "assert inspection==6; assert held is mesh.faces[0]"
+  },
+  {
+    "name": "redo-delete",
+    "code": "",
+    "history": true,
+    "check": "assert held not in mesh.faces; assert added is mesh.faces[0]"
+  },
+  {
+    "name": "undo-delete-again",
+    "code": "",
+    "history": false,
+    "check": "assert held is mesh.faces[0]; assert added is mesh.faces[1]"
+  },
+  {
+    "name": "branch",
+    "code": "held.attrs['mat']='Branch'; held_vertex.position.setX(-1)",
+    "history": null,
+    "check": "assert held is mesh.faces[0]; assert token==6"
+  },
+  {
+    "name": "undo-branch",
+    "code": "",
+    "history": false,
+    "check": "assert held is mesh.faces[0]; assert token==6"
+  },
+  {
+    "name": "redo-branch",
+    "code": "",
+    "history": true,
+    "check": "assert held is mesh.faces[0]; assert token==6"
+  }
+]

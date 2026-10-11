@@ -120,6 +120,11 @@ pub struct Mesh {
 pub struct PreparedSpatialDelta { base:usize, positions:Vec<DVec3>, changes:Vec<(PointKey,Option<VertexId>,VertexId)> }
 impl PreparedSpatialDelta {pub fn retained_bytes(&self)->usize{self.positions.capacity()*std::mem::size_of::<DVec3>()+self.changes.capacity()*std::mem::size_of::<(PointKey,Option<VertexId>,VertexId)>()}}
 pub struct PreparedSpatialIndex { positions:Vec<DVec3>, index:HashMap<PointKey,VertexId> }
+impl PreparedSpatialIndex {
+    /// Immutable ordered positions used to validate virtual changed-row publication
+    /// before any live mesh write. Borrowing this slice performs no allocation.
+    pub fn positions(&self)->&[DVec3]{&self.positions}
+}
 
 impl Default for Mesh {
     fn default() -> Self {

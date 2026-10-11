@@ -9,3 +9,5 @@ mod source_holes;
 mod vm_groups;
 pub mod vm_mesh;
 pub use vm_mesh::Controller;
+
+pub mod native_publication;

@@ -53,3 +53,13 @@ required-features = ["engineering-python"]
 name="engineering_console_history_fixture"
 path="examples/engineering_console_history_fixture.rs"
 required-features=["engineering-python"]
+
+[[example]]
+name="engineering_console_publication_failure"
+path="examples/engineering_console_publication_failure.rs"
+required-features=["engineering-python"]
+
+[[example]]
+name="engineering_console_rows_fixture"
+path="examples/engineering_console_rows_fixture.rs"
+required-features=["engineering-python"]

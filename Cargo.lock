@@ -1776,6 +1776,7 @@ dependencies = [
  "rustpython-ruff_source_file",
  "rustpython-ruff_text_size",
  "rustpython-vm",
+ "serde",
  "serde_json",
  "uuid",
 ]

@@ -6,7 +6,8 @@ def validate(source,native):
  assert [s['name']for s in source['states']]==names
  assert [s['name']for s in native['states']]==names
  assert native['states']==source['states']
- assert native['metrics']==dict(native_exports=3,vm_history_steps=7,final_owner_charge=0)
+ assert native['metrics']==(dict(native_exports=0,row_publications=3,vm_history_steps=7,final_owner_charge=0) if rows else dict(native_exports=3,vm_history_steps=7,final_owner_charge=0))
+rows="--rows" in sys.argv[3:]
 source=json.loads(Path(sys.argv[1]).read_text());native=json.loads(Path(sys.argv[2]).read_text());validate(source,native)
 mutations=[]
 for label,key,value in [('position','positions',[[99,0,0],[1,0,0],[0,1,0]]),('attrs','attrs',[{'mat':'Wrong'}]),('undo','undo',99),('redo','redo',99),('identity','identity_checked',False)]:

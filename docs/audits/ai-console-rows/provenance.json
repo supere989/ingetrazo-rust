@@ -1,0 +1,46 @@
+{
+  "base": "0cf2eb34d50e84b56875e928cbdb03cc0d42c33f",
+  "original_revision": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "source_sha256": {
+    "Cargo.lock": "9534a36e4e5af7b4e4dc44dc5907eb8c8a8540f49ea0b67cf0fb930ac041e333",
+    "crates/ingetrazo-core/src/mesh.rs": "f15636cd694c30c1bae24b50b909a14749dff724838862ed18e7f337ec5c4b49",
+    "crates/ingetrazo-gui/Cargo.toml": "4a46c88fa379d38277c71e028d1d02b96b8461547603ce684f7be72bb98ea482",
+    "crates/ingetrazo-gui/examples/engineering_console_history_fixture.rs": "da7bd5254fb99f09823ece5aa82c8daa9be61be232aee0e1cf3eae9dd3fb625a",
+    "crates/ingetrazo-gui/src/app.rs": "f886cb4a4a95e051c431f61aa097b310a9d706e9b141a2828367d5fea538e0dc",
+    "crates/ingetrazo-gui/src/engineering_python.rs": "0135844ff8cd678c814b842de99723c5c6fe92764d4b265003e457f150cf149a",
+    "scripts/check-ai-console-history.py": "9ae80a56d50144642db814f225f6dab32b45a8ebcb6a4d229f7894bde60522ce",
+    "tools/ai-interpreter-proof/Cargo.toml": "fbfc3fd1e5fb0cf91bacb692ecac6b61864eba158579f6dd618ad74af36a7578",
+    "tools/ai-interpreter-proof/src/face_owner.rs": "06e1b3496389f832ebaeeca306ac7ba674032b9c1be795c4ef35b80e062befd7",
+    "tools/ai-interpreter-proof/src/lib.rs": "13fd1e7ca2ac5027f3108f70bfbb422bff99013fbcb32492de68c49eb4a46bc0",
+    "tools/ai-interpreter-proof/src/vm_face_fields.rs": "8f0884f6e6674535e53fa0b611cab6dab1baf8c636e05c2adf04cc07a1c60ccc",
+    "tools/ai-interpreter-proof/src/vm_mesh.rs": "fab7102bab37320e189635f154754fae7f6cecc54adcb63251e05e307582e953",
+    "tools/ai-interpreter-proof/src/native_publication.rs": "b81897d835b29ae2f01d6ba96943a0ad63a7f66e6dd754aa5453a5a3dc8c0439",
+    "crates/ingetrazo-gui/examples/engineering_console_rows_fixture.rs": "a698490f05799c73563b4aa8e5a38206efcd1c32598db63a37ff541c656d0a84",
+    "crates/ingetrazo-gui/examples/engineering_console_publication_failure.rs": "73e11fc0a8816716b183351a06ca63091559f4b696a79b5ebbd802471dc945a7",
+    "scripts/reference-ai-console-rows.py": "31b36ad697fd1d66f5f7a7ecf92e6d7e134e581b94865c40892e25593beb0f4e",
+    "scripts/check-ai-console-rows.py": "156f3168848251fd4aebd09e3dafe159ca96e1868ba1f055c8c4ab38c26d32fa"
+  },
+  "binary_sha256": {
+    "engineering_console_rows_fixture": "562cb2eba4c5c0c5731ea9a9296c69816b468045623298c0cc1703e27015fc9e",
+    "engineering_console_publication_failure": "442b30cfa6519e8f4da6e7a414116581de21bc333ac1ad66dfb8acfe40288415",
+    "engineering_console_history_fixture": "355ddc2aabd9246045b3f02409b783f9d2cede4656d75c5607669fe47bf5f0d6"
+  },
+  "build_environment": {
+    "CARGO_TARGET_DIR": "/tmp/ingetrazo-ai-registry-target",
+    "CARGO_PROFILE_DEV_DEBUG": "0",
+    "CARGO_PROFILE_TEST_DEBUG": "0",
+    "CARGO_INCREMENTAL": "0"
+  },
+  "focused_tests": 8,
+  "source_states": 14,
+  "rows_publications": 5,
+  "native_exports": 0,
+  "vm_history_steps": 7,
+  "comparison_mutations": 17,
+  "refusal_mutations": 9,
+  "prior_history_states": 11,
+  "prior_history_mutations": 11,
+  "real_allocator_refusals": 1,
+  "final_owner_charge": 0,
+  "retired_scope_document_history": true
+}

@@ -229,3 +229,84 @@ pub(super) fn needs_projection(
     }
     Ok(false)
 }
+
+/// Prepares typed fields before any append/history owner write. The lease stays
+/// alive until the maps are installed and transferred to their live Mesh owner.
+pub(super) struct NativeRows {
+    pub fields: Vec<(HashMap<String, Value>, Option<String>)>,
+    pub charge: Lease,
+}
+pub(super) fn prepare_prefix(
+    mesh: &rustpython_vm::PyRef<super::editable_mesh::Mesh>,
+    count: usize,
+    budget: &OwnerBudget,
+    vm: &VirtualMachine,
+) -> Result<NativeRows, String> {
+    let bytes = count
+        .checked_mul(
+            std::mem::size_of::<PyObjectRef>() * 2
+                + std::mem::size_of::<(HashMap<String, Value>, Option<String>)>(),
+        )
+        .ok_or("Native Face prefix extent overflow")?;
+    let charge = budget.reserve(Kind::Preparation, bytes)?;
+    let mut references = Vec::new();
+    references
+        .try_reserve_exact(count)
+        .map_err(|_| "Native Face prefix references refused")?;
+    {
+        let faces = mesh.faces.borrow_vec();
+        if faces.len() < count {
+            return Err("Native Face prefix missing".into());
+        }
+        references.extend(faces[..count].iter().cloned());
+    }
+    let mut attrs = Vec::new();
+    attrs
+        .try_reserve_exact(count)
+        .map_err(|_| "Native Face attrs references refused")?;
+    for v in &references {
+        let face = v
+            .downcast_ref::<super::editable_mesh::Face>()
+            .ok_or("Native Face prefix identity mismatch")?;
+        attrs.push(face.attrs.read().clone());
+    }
+    prepare_attrs(attrs, budget, vm, charge)
+}
+pub(super) fn prepare_snapshot(
+    fields: &[super::FaceRestore],
+    budget: &OwnerBudget,
+    vm: &VirtualMachine,
+) -> Result<NativeRows, String> {
+    let bytes = fields
+        .len()
+        .checked_mul(
+            std::mem::size_of::<PyObjectRef>() * 2
+                + std::mem::size_of::<(HashMap<String, Value>, Option<String>)>(),
+        )
+        .ok_or("Native history fields extent overflow")?;
+    let charge = budget.reserve(Kind::Preparation, bytes)?;
+    let mut attrs = Vec::new();
+    attrs
+        .try_reserve_exact(fields.len())
+        .map_err(|_| "Native history field references refused")?;
+    attrs.extend(fields.iter().map(|f| f.attrs.clone()));
+    prepare_attrs(attrs, budget, vm, charge)
+}
+fn prepare_attrs(
+    attrs: Vec<PyObjectRef>,
+    budget: &OwnerBudget,
+    vm: &VirtualMachine,
+    mut charge: Lease,
+) -> Result<NativeRows, String> {
+    let mut fields = Vec::new();
+    fields
+        .try_reserve_exact(attrs.len())
+        .map_err(|_| "Native field rows refused")?;
+    for attrs in attrs {
+        let prepared = prepare(&attrs, budget, vm)?;
+        charge.merge(prepared.charge)?;
+        fields.push((prepared.attrs, prepared.layer));
+    }
+    charge.reclassify(Kind::History)?;
+    Ok(NativeRows { fields, charge })
+}

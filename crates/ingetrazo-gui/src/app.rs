@@ -371,7 +371,26 @@ impl IngeTrazoApp {
         self.bump_model_revision();
         self.finish_composer_edit();
         self.scene.camera = self.camera.clone();
-        self.undo_stack.push(self.scene.clone());
+        self.push_prepared_undo_snapshot(self.scene.clone());
+    }
+
+    /// Existing model history ownership, with its before-state prepared by an
+    /// application consumer before native publication. Callers reserve a slot.
+    #[cfg(feature = "engineering-python")]
+    pub(crate) fn save_prepared_undo_state(&mut self, mut before: Scene) {
+        self.sync_document_presentation();
+        self.seal_view_history();
+        self.seal_terrain_history();
+        self.seal_layer_history();
+        self.seal_image_history();
+        self.bump_model_revision();
+        self.finish_composer_edit();
+        before.camera = self.camera.clone();
+        crate::document_presentation::preserve(&self.scene, &mut before);
+        self.push_prepared_undo_snapshot(before);
+    }
+    fn push_prepared_undo_snapshot(&mut self, before: Scene) {
+        self.undo_stack.push(before);
         let mut reclaim_images = !self.redo_stack.is_empty();
         self.redo_stack.clear();
         if self.undo_stack.len() > self.document_session.preferences.undo_steps {

@@ -1,6 +1,9 @@
 //! Opt-in UI-thread engineering consumer; full Scene scripting remains incomplete.
 //! Hydrates only once; external document changes refuse instead of discarding scope.
-use ingetrazo_ai_interpreter_proof::Controller;
+use ingetrazo_ai_interpreter_proof::{
+    native_publication::{NativePublication, PublicationMetrics},
+    Controller,
+};
 #[derive(Default)]
 pub(crate) struct Engine {
     controller: Option<Controller>,
@@ -9,6 +12,9 @@ pub(crate) struct Engine {
     command_depth: Option<usize>,
     exports: usize,
     history_steps: usize,
+    row_publications: usize,
+    last_publication: Option<PublicationMetrics>,
+    before_publication_probe: Option<fn()>,
     #[cfg(test)]
     export_pressure: bool,
 }
@@ -18,16 +24,7 @@ impl Engine {
         mesh: &ingetrazo_core::mesh::Mesh,
         revision: u64,
         code: &str,
-    ) -> Result<
-        (
-            bool,
-            Option<(
-                ingetrazo_core::mesh::Mesh,
-                ingetrazo_ai_interpreter_proof::owner_budget::Lease,
-            )>,
-        ),
-        String,
-    > {
+    ) -> Result<(bool, Option<NativePublication>), String> {
         if self.revision.is_some_and(|r| r != revision) {
             return Err("Engineering Python scope needs external document/history synchronization; session retained".into());
         }
@@ -61,19 +58,16 @@ impl Engine {
                 ));
             }
         };
-        // Temporary cold export. A prepared changed-row document journal must replace
-        // this copy before production acceptance; no per-command scope hydration.
+        // Callback-free changed rows only; existing application history still
+        // retains one full before-Scene snapshot. No per-command hydration/export.
         let native = if native_changed {
             #[cfg(test)]
             if self.export_pressure {
                 let budget = controller.budget();
                 budget.set_limit(Some(budget.snapshot().total()));
             }
-            match controller.native_mesh_snapshot_admitted() {
-                Ok(native) => {
-                    self.exports += 1;
-                    Some(native)
-                }
+            match controller.native_mesh_publication(mesh) {
+                Ok(native) => Some(native),
                 Err(error) => {
                     self.controller.take();
                     self.revision = None;
@@ -150,6 +144,22 @@ impl crate::IngeTrazoApp {
         })
     }
     #[doc(hidden)]
+    pub fn engineering_python_publication_observation(
+        &self,
+    ) -> (usize, Option<PublicationMetrics>) {
+        (
+            self.engineering_python.row_publications,
+            self.engineering_python.last_publication,
+        )
+    }
+    /// Cold engineering failure-injection boundary, never exposed to scripts.
+    /// The one-shot hook runs after the before-state is prepared, before the
+    /// exclusive target ticket reserves application capacity. Default is absent.
+    #[doc(hidden)]
+    pub fn engineering_python_publication_probe(&mut self, hook: Option<fn()>) {
+        self.engineering_python.before_publication_probe = hook;
+    }
+    #[doc(hidden)]
     pub fn engineering_python_budget(
         &self,
     ) -> Option<ingetrazo_ai_interpreter_proof::owner_budget::OwnerBudget> {
@@ -199,18 +209,39 @@ impl crate::IngeTrazoApp {
         {
             Ok((changed, native)) => {
                 let published = native.is_some();
-                if let Some((mesh, export_charge)) = native {
-                    if changed {
-                        self.save_undo_state();
+                if let Some(publication) = native {
+                    // One existing application Undo snapshot; no final full-Mesh export.
+                    let before = changed.then(|| self.scene.clone());
+                    if let Some(probe) = self.engineering_python.before_publication_probe.take() {
+                        probe();
+                    }
+                    let prepared = match publication.prepare(&mut self.scene.mesh) {
+                        Ok(prepared) => prepared,
+                        Err(error) => {
+                            self.engineering_python.controller.take();
+                            self.engineering_python.revision = None;
+                            self.status_message = format!(
+                                "Native publication refused; interpreter scope retired: {error}"
+                            );
+                            self.console_logs.push(format!(
+                                "Engineering Python refused: {}",
+                                self.status_message
+                            ));
+                            return;
+                        }
+                    };
+                    let metrics = prepared.publish();
+                    self.engineering_python.row_publications += 1;
+                    self.engineering_python.last_publication = Some(metrics);
+                    if let Some(before) = before {
+                        self.save_prepared_undo_state(before);
                         self.undo_stack.last_mut().unwrap().history_python =
                             self.engineering_python.command_marker();
                     } else {
                         self.bump_model_revision();
                     }
-                    self.scene.mesh = mesh;
                     self.scene.bump_version();
                     self.engineering_python.published(self.model_revision);
-                    drop(export_charge);
                 }
                 self.console_logs.push(
                     if published && changed {
@@ -237,6 +268,118 @@ impl crate::IngeTrazoApp {
 #[cfg(test)]
 mod tests {
     use super::Engine;
+    #[test]
+    fn changed_row_prepare_refuses_stale_unchanged_coordinate_before_writes() {
+        let mut target = ingetrazo_core::mesh::Mesh::new();
+        target.add_vertex(glam::DVec3::ZERO);
+        target.add_vertex(glam::DVec3::X);
+        let mut controller = ingetrazo_ai_interpreter_proof::Controller::new();
+        controller.import_native_mesh(&target).unwrap();
+        controller.enable_history();
+        controller
+            .execute("mesh.vertices[0].position.setZ(2)")
+            .unwrap();
+        let budget = controller.budget();
+        let charged = budget.snapshot().total();
+        let publication = controller.native_mesh_publication(&target).unwrap();
+        assert!(budget.snapshot().total() > charged);
+        target.vertices[1].position = glam::DVec3::Y;
+        let before = target.clone();
+        assert!(publication.prepare(&mut target).is_err());
+        assert_eq!(target, before);
+        assert_eq!(budget.snapshot().total(), charged);
+    }
+    #[test]
+    fn changed_row_topology_and_unrelated_document_state_share_one_command() {
+        let mut app = crate::IngeTrazoApp::new();
+        let ids = [glam::DVec3::ZERO, glam::DVec3::X, glam::DVec3::Y]
+            .into_iter()
+            .map(|p| app.scene.mesh.add_vertex(p))
+            .collect();
+        app.scene.mesh.add_face(ids, vec![]).unwrap();
+        let layers = app.scene.layers.clone();
+        let images = app.scene.image_planes.clone();
+        let style = app.scene.display_style.clone();
+        app.engineering_python_enabled = true;
+        app.run_script("held=mesh.faces[0]; added=mesh.add_face([QVector3D(3,0,0),QVector3D(4,0,0),QVector3D(3,1,0)]); held.attrs['mat']='First'");
+        assert_eq!(app.scene.mesh.faces.len(), 2);
+        assert_eq!(app.scene.mesh.faces[0].attrs["mat"], "First");
+        assert_eq!(app.undo_stack.len(), 1);
+        assert_eq!(app.scene.layers, layers);
+        assert_eq!(app.scene.image_planes, images);
+        assert_eq!(app.scene.display_style, style);
+        let before = app.scene.mesh.clone();
+        app.run_script("mesh.remove_face(held)");
+        assert_eq!(app.scene.mesh.faces.len(), 1);
+        assert_eq!(app.undo_stack.len(), 2);
+        app.undo();
+        assert_eq!(app.scene.mesh, before);
+        app.run_script("assert held is mesh.faces[0]; assert added is mesh.faces[1]");
+        assert!(!app.console_logs.last().unwrap().contains("refused"));
+        app.redo();
+        assert_eq!(app.scene.mesh.faces.len(), 1);
+        app.run_script("assert held not in mesh.faces; assert added is mesh.faces[0]");
+        assert!(!app.console_logs.last().unwrap().contains("refused"));
+    }
+    #[test]
+    fn changed_row_consumer_keeps_unchanged_payload_and_index_correct() {
+        let mut app = crate::IngeTrazoApp::new();
+        for x in 0..128 {
+            let x = x as f64 * 3.;
+            let ids = [
+                glam::DVec3::new(x, 0., 0.),
+                glam::DVec3::new(x + 1., 0., 0.),
+                glam::DVec3::new(x, 1., 0.),
+            ]
+            .into_iter()
+            .map(|p| app.scene.mesh.add_vertex(p))
+            .collect();
+            app.scene.mesh.add_face(ids, vec![]).unwrap();
+        }
+        app.scene.mesh.faces.last_mut().unwrap().attrs.insert(
+            "vendor".into(),
+            serde_json::json!({"note":"unchanged payload"}),
+        );
+        let pointer = app.scene.mesh.faces.last().unwrap().attrs["vendor"]["note"]
+            .as_str()
+            .unwrap()
+            .as_ptr();
+        app.engineering_python_enabled = true;
+        app.run_script("held=mesh.faces[0]; held.attrs['mat']='First'");
+        let m = app.engineering_python.last_publication.unwrap();
+        assert_eq!(
+            (m.vertex_rows, m.edge_rows, m.face_rows, m.index_vertices),
+            (0, 0, 1, 0)
+        );
+        assert_eq!(
+            app.scene.mesh.faces.last().unwrap().attrs["vendor"]["note"]
+                .as_str()
+                .unwrap()
+                .as_ptr(),
+            pointer
+        );
+        assert_eq!(app.engineering_python.exports, 0);
+        assert_eq!(app.undo_stack.len(), 1);
+        app.run_script("held.loop[0].position.setZ(2)");
+        let m = app.engineering_python.last_publication.unwrap();
+        assert_eq!(
+            (m.vertex_rows, m.edge_rows, m.face_rows, m.index_vertices),
+            (1, 0, 0, 384)
+        );
+        assert_eq!(app.scene.mesh.add_vertex(glam::DVec3::new(0., 0., 2.)), 0);
+        assert_eq!(
+            app.scene.mesh.faces.last().unwrap().attrs["vendor"]["note"]
+                .as_str()
+                .unwrap()
+                .as_ptr(),
+            pointer
+        );
+        assert_eq!(app.undo_stack.len(), 2);
+        app.undo();
+        app.redo();
+        app.run_script("assert held is mesh.faces[0]; assert held.loop[0].position.z()==2");
+        assert!(!app.console_logs.last().unwrap().contains("refused"));
+    }
     #[test]
     fn refused_vm_history_preserves_visible_command_and_retry() {
         let mut app = crate::IngeTrazoApp::new();

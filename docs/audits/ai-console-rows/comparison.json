@@ -1,0 +1,33 @@
+{
+  "states": 14,
+  "rejected": [
+    "positions",
+    "edges",
+    "faces",
+    "layers",
+    "undo",
+    "redo",
+    "identity_checked",
+    "native_exports",
+    "row_publications",
+    "vm_history_steps",
+    "final_owner_charge",
+    "vertex_rows",
+    "edge_rows",
+    "face_rows",
+    "index_vertices",
+    "missing-state",
+    "state-order"
+  ],
+  "refusal_rejected": [
+    "real_allocator_refusals",
+    "scene_unchanged",
+    "undo_redo_preserved",
+    "revision_unchanged",
+    "refused_scope_charge",
+    "retired_scope_document_history",
+    "retry_one_command",
+    "retry_alias_undo_redo",
+    "final_owner_charge"
+  ]
+}

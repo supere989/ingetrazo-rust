@@ -46,10 +46,12 @@ fn main() {
     }
     let observation = app.engineering_python_history_observation().unwrap();
     assert_eq!(observation.0, (2, 0));
-    assert_eq!(observation.1, 3);
+    assert_eq!(observation.1, 0);
+    let row_publications = app.engineering_python_publication_observation().0;
+    assert_eq!(row_publications, 3);
     assert_eq!(observation.2, 7);
     let budget = app.engineering_python_budget().unwrap();
     drop(app);
     assert_eq!(budget.snapshot().total(), 0);
-    println!("{}",serde_json::to_string_pretty(&serde_json::json!({"states":states,"metrics":{"native_exports":observation.1,"vm_history_steps":observation.2,"final_owner_charge":budget.snapshot().total()}})).unwrap());
+    println!("{}",serde_json::to_string_pretty(&serde_json::json!({"states":states,"metrics":{"native_exports":observation.1,"row_publications":row_publications,"vm_history_steps":observation.2,"final_owner_charge":budget.snapshot().total()}})).unwrap());
 }
