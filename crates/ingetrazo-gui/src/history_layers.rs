@@ -186,7 +186,7 @@ impl IngeTrazoApp {
         }
         self.seal_layer_history();
         self.scene.layers.push(Layer::new(name));
-        self.scene.bump_view_version();
+        self.scene.bump_view_version();self.bump_render_layers_revision();
         true
     }
     pub fn set_layer_locked(&mut self, index: usize, locked: bool) -> bool {
@@ -205,7 +205,7 @@ impl IngeTrazoApp {
         if !layer.visible || layer.locked {
             self.prune_layer_selection(&layer.name);
         }
-        self.scene.bump_view_version();
+        self.scene.bump_view_version();self.bump_render_layers_revision();
         true
     }
     pub(crate) fn change_layer_visibility(&mut self, index: usize, visible: bool) -> bool {
@@ -224,7 +224,7 @@ impl IngeTrazoApp {
         if !layer.visible || layer.locked {
             self.prune_layer_selection(&layer.name);
         }
-        self.scene.bump_view_version();
+        self.scene.bump_view_version();self.bump_render_layers_revision();
         true
     }
     pub fn rename_layer(&mut self, index: usize, name: String) -> bool {
@@ -267,7 +267,7 @@ impl IngeTrazoApp {
         if !layer.visible || layer.locked {
             self.prune_layer_selection(&layer.name);
         }
-        self.scene.bump_view_version();
+        self.scene.bump_view_version();self.bump_render_layers_revision();
         true
     }
     pub fn assign_selection_to_named_layer(&mut self, name: &str) -> usize {
@@ -355,7 +355,7 @@ impl IngeTrazoApp {
         self.active_layer_idx = self
             .active_layer_idx
             .min(self.scene.layers.len().saturating_sub(1));
-        self.scene.bump_view_version();
+        self.scene.bump_view_version();self.bump_render_layers_revision();
         true
     }
 }

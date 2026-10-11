@@ -116,6 +116,7 @@ pub struct IngeTrazoApp {
     pub composer_compute:crate::composer_compute::ComposerCompute,
     pub model_revision:u64,
     pub native_geometry_revision:u64,
+    pub native_render_revisions:ingetrazo_render::scene_revision::RenderRevisions,
     pub blender_state: crate::blender::BlenderRenderState,
     pub show_render_dialog: bool,
 }
@@ -215,7 +216,7 @@ impl IngeTrazoApp {
             texture_opacity: 1.0,
             terrain_contour_interval: 1.0,
             composer_state: crate::composer::ComposerState::default(),
-            composer_compute:Default::default(),model_revision:0,native_geometry_revision:0,
+            composer_compute:Default::default(),model_revision:0,native_geometry_revision:0,native_render_revisions:Default::default(),
             blender_state: crate::blender::BlenderRenderState::default(),
             show_render_dialog: false,
         };
@@ -372,7 +373,26 @@ impl IngeTrazoApp {
     pub fn set_layer_visibility(&mut self,index:usize,visible:bool)->bool{
         self.change_layer_visibility(index,visible)
     }
-    pub(crate) fn bump_model_revision(&mut self){self.navigation.cancel();self.native_geometry_revision=self.native_geometry_revision.wrapping_add(1);self.bump_image_presentation_revision();}
+    pub(crate) fn bump_model_revision(&mut self){self.native_render_revisions.model_replaced();self.navigation.cancel();self.native_geometry_revision=self.native_geometry_revision.wrapping_add(1);self.bump_image_presentation_revision();}
+    /// Trusted group-only preview: Vulkan still uses flattened geometry and must
+    /// receive its existing invalidation. Metal static prototypes stay retained.
+    pub(crate) fn bump_placement_revision(&mut self){
+        self.native_render_revisions.placement_changed();
+        self.navigation.cancel();
+        self.native_geometry_revision=self.native_geometry_revision.wrapping_add(1);
+        self.bump_image_presentation_revision();
+    }
+    pub(crate) fn bump_render_style_revision(&mut self){
+        self.native_render_revisions.style_changed();
+        self.native_geometry_revision=self.native_geometry_revision.wrapping_add(1);
+        // Presentation is outside source modeling history; do not retire Move array commands.
+        self.composer_compute.invalidate();
+    }
+    pub(crate) fn bump_render_layers_revision(&mut self){
+        self.native_render_revisions.layers_changed();
+        self.native_geometry_revision=self.native_geometry_revision.wrapping_add(1);
+        self.bump_image_presentation_revision();
+    }
     pub(crate) fn bump_image_presentation_revision(&mut self){self.model_revision=self.model_revision.wrapping_add(1);self.composer_compute.invalidate();}
     pub fn undo(&mut self) {self.undo_outcome();}
     pub(crate) fn undo_outcome(&mut self)->bool {
