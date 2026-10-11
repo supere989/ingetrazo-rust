@@ -1,0 +1,5 @@
+{
+  "scope": "source-only replay of frozen actual native captures; real window input observed; prior camera mutation failure retained; no proof all prior failures share cause",
+  "provenance_note": "fixed-camera-mutation transport observed transient c534e8fd before amendment to1757d1ff removing accidentally staged submodule symlink; relevant script bytes unchanged",
+  "native_reference_commit": "60f67db5"
+}

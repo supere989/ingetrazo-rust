@@ -1,0 +1,533 @@
+{
+  "timestamp": 196412.311316049,
+  "viewport_logical": [
+    800,
+    600
+  ],
+  "framebuffer": [
+    800,
+    600
+  ],
+  "dpr": 1.0,
+  "input_events": [
+    {
+      "timestamp": 196407.976578282,
+      "type": 14,
+      "camera_yaw": 0.4886921905584123,
+      "camera_pitch": 0.4188790204786391,
+      "size": [
+        800,
+        600
+      ]
+    },
+    {
+      "timestamp": 196411.541789033,
+      "type": 5,
+      "camera_yaw": 0.4886921905584123,
+      "camera_pitch": 0.4188790204786391,
+      "position": [
+        22.0,
+        442.0
+      ],
+      "buttons": 0,
+      "modifiers": 0
+    },
+    {
+      "timestamp": 196411.552699859,
+      "type": 5,
+      "camera_yaw": 0.4886921905584123,
+      "camera_pitch": 0.4188790204786391,
+      "position": [
+        70.0,
+        428.0
+      ],
+      "buttons": 0,
+      "modifiers": 0
+    },
+    {
+      "timestamp": 196411.562851542,
+      "type": 5,
+      "camera_yaw": 0.4886921905584123,
+      "camera_pitch": 0.4188790204786391,
+      "position": [
+        126.0,
+        410.0
+      ],
+      "buttons": 0,
+      "modifiers": 0
+    },
+    {
+      "timestamp": 196411.572974903,
+      "type": 5,
+      "camera_yaw": 0.4886921905584123,
+      "camera_pitch": 0.4188790204786391,
+      "position": [
+        200.0,
+        382.0
+      ],
+      "buttons": 0,
+      "modifiers": 0
+    },
+    {
+      "timestamp": 196411.583097712,
+      "type": 5,
+      "camera_yaw": 0.4886921905584123,
+      "camera_pitch": 0.4188790204786391,
+      "position": [
+        262.0,
+        356.0
+      ],
+      "buttons": 0,
+      "modifiers": 0
+    },
+    {
+      "timestamp": 196411.593251188,
+      "type": 5,
+      "camera_yaw": 0.4886921905584123,
+      "camera_pitch": 0.4188790204786391,
+      "position": [
+        316.0,
+        334.0
+      ],
+      "buttons": 0,
+      "modifiers": 0
+    },
+    {
+      "timestamp": 196411.603390819,
+      "type": 5,
+      "camera_yaw": 0.4886921905584123,
+      "camera_pitch": 0.4188790204786391,
+      "position": [
+        356.0,
+        316.0
+      ],
+      "buttons": 0,
+      "modifiers": 0
+    },
+    {
+      "timestamp": 196411.613532133,
+      "type": 5,
+      "camera_yaw": 0.4886921905584123,
+      "camera_pitch": 0.4188790204786391,
+      "position": [
+        384.0,
+        305.0
+      ],
+      "buttons": 0,
+      "modifiers": 0
+    },
+    {
+      "timestamp": 196411.623663679,
+      "type": 5,
+      "camera_yaw": 0.4886921905584123,
+      "camera_pitch": 0.4188790204786391,
+      "position": [
+        415.0,
+        291.0
+      ],
+      "buttons": 0,
+      "modifiers": 0
+    },
+    {
+      "timestamp": 196411.633819309,
+      "type": 5,
+      "camera_yaw": 0.4886921905584123,
+      "camera_pitch": 0.4188790204786391,
+      "position": [
+        429.0,
+        286.0
+      ],
+      "buttons": 0,
+      "modifiers": 0
+    },
+    {
+      "timestamp": 196411.643982334,
+      "type": 5,
+      "camera_yaw": 0.4886921905584123,
+      "camera_pitch": 0.4188790204786391,
+      "position": [
+        435.0,
+        285.0
+      ],
+      "buttons": 0,
+      "modifiers": 0
+    },
+    {
+      "timestamp": 196411.654128487,
+      "type": 5,
+      "camera_yaw": 0.4886921905584123,
+      "camera_pitch": 0.4188790204786391,
+      "position": [
+        439.0,
+        284.0
+      ],
+      "buttons": 0,
+      "modifiers": 0
+    },
+    {
+      "timestamp": 196411.664252849,
+      "type": 5,
+      "camera_yaw": 0.4886921905584123,
+      "camera_pitch": 0.4188790204786391,
+      "position": [
+        445.0,
+        283.0
+      ],
+      "buttons": 0,
+      "modifiers": 0
+    },
+    {
+      "timestamp": 196411.674362553,
+      "type": 5,
+      "camera_yaw": 0.4886921905584123,
+      "camera_pitch": 0.4188790204786391,
+      "position": [
+        449.0,
+        282.0
+      ],
+      "buttons": 0,
+      "modifiers": 0
+    },
+    {
+      "timestamp": 196411.684464573,
+      "type": 5,
+      "camera_yaw": 0.4886921905584123,
+      "camera_pitch": 0.4188790204786391,
+      "position": [
+        456.0,
+        278.0
+      ],
+      "buttons": 0,
+      "modifiers": 0
+    },
+    {
+      "timestamp": 196411.694562856,
+      "type": 5,
+      "camera_yaw": 0.4886921905584123,
+      "camera_pitch": 0.4188790204786391,
+      "position": [
+        471.0,
+        267.0
+      ],
+      "buttons": 0,
+      "modifiers": 0
+    },
+    {
+      "timestamp": 196411.70466215,
+      "type": 5,
+      "camera_yaw": 0.4886921905584123,
+      "camera_pitch": 0.4188790204786391,
+      "position": [
+        503.0,
+        247.0
+      ],
+      "buttons": 0,
+      "modifiers": 0
+    },
+    {
+      "timestamp": 196411.714767646,
+      "type": 5,
+      "camera_yaw": 0.4886921905584123,
+      "camera_pitch": 0.4188790204786391,
+      "position": [
+        535.0,
+        227.0
+      ],
+      "buttons": 0,
+      "modifiers": 0
+    },
+    {
+      "timestamp": 196411.724874475,
+      "type": 5,
+      "camera_yaw": 0.4886921905584123,
+      "camera_pitch": 0.4188790204786391,
+      "position": [
+        567.0,
+        207.0
+      ],
+      "buttons": 0,
+      "modifiers": 0
+    },
+    {
+      "timestamp": 196411.73497908,
+      "type": 5,
+      "camera_yaw": 0.4886921905584123,
+      "camera_pitch": 0.4188790204786391,
+      "position": [
+        597.0,
+        187.0
+      ],
+      "buttons": 0,
+      "modifiers": 0
+    },
+    {
+      "timestamp": 196411.745108311,
+      "type": 5,
+      "camera_yaw": 0.4886921905584123,
+      "camera_pitch": 0.4188790204786391,
+      "position": [
+        627.0,
+        171.0
+      ],
+      "buttons": 0,
+      "modifiers": 0
+    },
+    {
+      "timestamp": 196411.75525199,
+      "type": 5,
+      "camera_yaw": 0.4886921905584123,
+      "camera_pitch": 0.4188790204786391,
+      "position": [
+        651.0,
+        157.0
+      ],
+      "buttons": 0,
+      "modifiers": 0
+    },
+    {
+      "timestamp": 196411.765383695,
+      "type": 5,
+      "camera_yaw": 0.4886921905584123,
+      "camera_pitch": 0.4188790204786391,
+      "position": [
+        672.0,
+        148.0
+      ],
+      "buttons": 0,
+      "modifiers": 0
+    },
+    {
+      "timestamp": 196411.775523717,
+      "type": 5,
+      "camera_yaw": 0.4886921905584123,
+      "camera_pitch": 0.4188790204786391,
+      "position": [
+        687.0,
+        139.0
+      ],
+      "buttons": 0,
+      "modifiers": 0
+    },
+    {
+      "timestamp": 196411.78563824,
+      "type": 5,
+      "camera_yaw": 0.4886921905584123,
+      "camera_pitch": 0.4188790204786391,
+      "position": [
+        692.0,
+        136.0
+      ],
+      "buttons": 0,
+      "modifiers": 0
+    },
+    {
+      "timestamp": 196411.795787689,
+      "type": 5,
+      "camera_yaw": 0.4886921905584123,
+      "camera_pitch": 0.4188790204786391,
+      "position": [
+        697.0,
+        134.0
+      ],
+      "buttons": 0,
+      "modifiers": 0
+    },
+    {
+      "timestamp": 196411.826088228,
+      "type": 5,
+      "camera_yaw": 0.4886921905584123,
+      "camera_pitch": 0.4188790204786391,
+      "position": [
+        698.0,
+        132.0
+      ],
+      "buttons": 0,
+      "modifiers": 0
+    },
+    {
+      "timestamp": 196411.836284135,
+      "type": 5,
+      "camera_yaw": 0.4886921905584123,
+      "camera_pitch": 0.4188790204786391,
+      "position": [
+        701.0,
+        126.0
+      ],
+      "buttons": 0,
+      "modifiers": 0
+    },
+    {
+      "timestamp": 196411.846504548,
+      "type": 5,
+      "camera_yaw": 0.4886921905584123,
+      "camera_pitch": 0.4188790204786391,
+      "position": [
+        706.0,
+        114.0
+      ],
+      "buttons": 0,
+      "modifiers": 0
+    },
+    {
+      "timestamp": 196411.856857441,
+      "type": 5,
+      "camera_yaw": 0.4886921905584123,
+      "camera_pitch": 0.4188790204786391,
+      "position": [
+        718.0,
+        99.0
+      ],
+      "buttons": 0,
+      "modifiers": 0
+    },
+    {
+      "timestamp": 196411.867261782,
+      "type": 5,
+      "camera_yaw": 0.4886921905584123,
+      "camera_pitch": 0.4188790204786391,
+      "position": [
+        728.0,
+        87.0
+      ],
+      "buttons": 0,
+      "modifiers": 0
+    },
+    {
+      "timestamp": 196411.877541467,
+      "type": 5,
+      "camera_yaw": 0.4886921905584123,
+      "camera_pitch": 0.4188790204786391,
+      "position": [
+        744.0,
+        74.0
+      ],
+      "buttons": 0,
+      "modifiers": 0
+    },
+    {
+      "timestamp": 196411.88790497,
+      "type": 5,
+      "camera_yaw": 0.4886921905584123,
+      "camera_pitch": 0.4188790204786391,
+      "position": [
+        760.0,
+        65.0
+      ],
+      "buttons": 0,
+      "modifiers": 0
+    },
+    {
+      "timestamp": 196411.898057004,
+      "type": 5,
+      "camera_yaw": 0.4886921905584123,
+      "camera_pitch": 0.4188790204786391,
+      "position": [
+        779.0,
+        53.0
+      ],
+      "buttons": 0,
+      "modifiers": 0
+    },
+    {
+      "timestamp": 196411.90824158,
+      "type": 5,
+      "camera_yaw": 0.4886921905584123,
+      "camera_pitch": 0.4188790204786391,
+      "position": [
+        788.0,
+        49.0
+      ],
+      "buttons": 0,
+      "modifiers": 0
+    },
+    {
+      "timestamp": 196411.918417529,
+      "type": 5,
+      "camera_yaw": 0.4886921905584123,
+      "camera_pitch": 0.4188790204786391,
+      "position": [
+        791.0,
+        46.0
+      ],
+      "buttons": 0,
+      "modifiers": 0
+    },
+    {
+      "timestamp": 196411.928592066,
+      "type": 5,
+      "camera_yaw": 0.4886921905584123,
+      "camera_pitch": 0.4188790204786391,
+      "position": [
+        793.0,
+        44.0
+      ],
+      "buttons": 0,
+      "modifiers": 0
+    },
+    {
+      "timestamp": 196412.039432952,
+      "type": 5,
+      "camera_yaw": 0.4886921905584123,
+      "camera_pitch": 0.4188790204786391,
+      "position": [
+        794.0,
+        43.0
+      ],
+      "buttons": 0,
+      "modifiers": 0
+    },
+    {
+      "timestamp": 196412.049624741,
+      "type": 5,
+      "camera_yaw": 0.4886921905584123,
+      "camera_pitch": 0.4188790204786391,
+      "position": [
+        798.0,
+        41.0
+      ],
+      "buttons": 0,
+      "modifiers": 0
+    },
+    {
+      "timestamp": 196412.059773519,
+      "type": 5,
+      "camera_yaw": 0.4886921905584123,
+      "camera_pitch": 0.4188790204786391,
+      "position": [
+        799.0,
+        41.0
+      ],
+      "buttons": 0,
+      "modifiers": 0
+    }
+  ],
+  "camera": {
+    "target": [
+      5.813098430633545,
+      2.8220772743225098,
+      1.5564720630645752
+    ],
+    "distance": 43.65325497694099,
+    "yaw": 0.4886921905584123,
+    "pitch": 0.4188790204786391,
+    "up": [
+      0.0,
+      0.0,
+      1.0
+    ],
+    "fov_deg": 45.0,
+    "aspect": 1.3333333333333333,
+    "znear": 0.1,
+    "zfar": 10000.0,
+    "perspective": false,
+    "two_point": false
+  },
+  "gl": {
+    "vendor": "NVIDIA Corporation",
+    "renderer": "NVIDIA GeForce RTX 5090/PCIe/SSE2",
+    "version": "3.3.0 NVIDIA 615.71.09",
+    "software": false,
+    "platform": "xcb",
+    "fallback": ""
+  }
+}

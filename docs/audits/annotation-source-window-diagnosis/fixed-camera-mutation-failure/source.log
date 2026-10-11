@@ -1,0 +1,12 @@
+Traceback (most recent call last):
+  File "/tmp/ingetrazo-skp-native-import/scripts/reference-skp-application-annotations.py", line 42, in <module>
+    take('annotations-on');dimensions,labels=scene.dimensions,scene.text_labels;scene.dimensions=[];scene.text_labels=[];take('annotations-off');scene.dimensions=dimensions;scene.text_labels=labels;take('annotations-restored')
+    ~~~~^^^^^^^^^^^^^^^^^^
+  File "/tmp/ingetrazo-skp-native-import/scripts/reference-skp-application-annotations.py", line 37, in take
+    for field,diff in differences.items():assert not diff,(name,field,diff)
+                                                 ^^^^^^^^
+AssertionError: ('annotations-on', 'matrix', [{'index': 0, 'expected': -0.01947285234928131, 'actual': -0.02098938450217247}, {'index': 1, 'expected': -0.019861280918121338, 'actual': -0.02076084353029728}, {'index': 2, 'expected': -8.066127338679507e-05, 'actual': -7.76537272031419e-05}, {'index': 4, 'expected': 0.03662310913205147, 'actual': 0.035775553435087204}, {'index': 5, 'expected': -0.010560429655015469, 'actual': -0.012180309742689133}, {'index': 6, 'expected': -4.288836134946905e-05, 'actual': -4.555915802484378e-05}, {'index': 9, 'expected': 0.05052300915122032, 'actual': 0.04979151859879494}, {'index': 10, 'expected': -4.0673661715118214e-05, 'actual': -4.352310497779399e-05}, {'index': 12, 'expected': 0.009844404645264149, 'actual': 0.021051855757832527}, {'index': 13, 'expected': 0.06662017852067947, 'actual': 0.07755956798791885}, {'index': 14, 'expected': 0.005018559284508228, 'actual': 0.0050130486488342285}])
+QOpenGLTexturePrivate::destroy() called without a current context.
+Texture has not been destroyed
+QOpenGLTexturePrivate::destroy() called without a current context.
+Texture has not been destroyed

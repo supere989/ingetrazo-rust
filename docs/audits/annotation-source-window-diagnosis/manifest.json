@@ -1,0 +1,20 @@
+{
+  "scope.json": "19261a5a2d4e531dd0d4c603a04de6a4694b7777ce82ab96a6e209e6a0b6a4b6",
+  "fixed-camera-mutation-failure/transport.json": "06f3cd0b8c2344313f2f5fa86dc81f9e43158f57ebfc96cea0d34822a1059000",
+  "fixed-camera-mutation-failure/source.log": "b209766258a86f88c83f609115edf31f6a4911a548abed30a0d93cddd56c3109",
+  "input-observed-positive/transport.json": "778f5de5234e6d7647d89c1ba03e9f57d726c31942eba7cc35067be0b5607f3d",
+  "input-observed-positive/source.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "input-observed-positive/original/annotations-off-phase.json": "854a2407d27377748c738c8f49ee3f20260f8e4914a4759ba1769753941beb9c",
+  "input-observed-positive/original/annotations-off-readiness.json": "75a1d7bc6b3eba6eba6acab8709d0a66e9898273b89133ee7dfbf890720ce588",
+  "input-observed-positive/original/annotations-off.png": "046a1843da079fc1b53e506f13e6b7285627e7a1c32b0f42d0f03a6c95a584cf",
+  "input-observed-positive/original/annotations-on-phase.json": "0c1107134199480a03ea5a3cb92dab824609887cb74351e484d79df3057fc447",
+  "input-observed-positive/original/annotations-on-readiness.json": "2ccbfb685fb513554c697be4b5f3eb410fc27687f2341ff692f1634a8c4164e7",
+  "input-observed-positive/original/annotations-on.png": "1c9f1de7473722b33ad0340f9c8dfb373bee79bb5f53dc2eadbf27337c952c08",
+  "input-observed-positive/original/annotations-restored-phase.json": "44ce15240af97110cc16dddf43cb011e4e1e10a03e4beb87830f61fb1e6cb1b3",
+  "input-observed-positive/original/annotations-restored-readiness.json": "7b0a79edc0c35fb7928dfb3e7e29b593f6c27f187162f9a96885cf777cc121df",
+  "input-observed-positive/original/annotations-restored.png": "1c9f1de7473722b33ad0340f9c8dfb373bee79bb5f53dc2eadbf27337c952c08",
+  "input-observed-positive/original/source.json": "2a5b0cb4972bb5d47bd32aa97118764cb4f41aaf0d1885241f94865c79692c6b",
+  "fixed-camera-mutation-failure/original/annotations-on-phase.json": "03d1e5788ea756014f3cf5183ba82198ef599128818188cbf67a8126ee83d614",
+  "fixed-camera-mutation-failure/original/annotations-on-readiness.json": "3b10386ed103af62336ff8fea2508e326c2041cf55d94d3fdeee6e66659bb316",
+  "fixed-camera-mutation-failure/original/annotations-on.png": "40109bf0c99de5c63c24459b6476e018133923f08043d119e8466d9897ad0c1e"
+}
