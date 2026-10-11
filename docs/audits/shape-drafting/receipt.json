@@ -1,0 +1,32 @@
+{
+  "archive_sha256": "3f220d49fd94c65316e96a5075510b2bc81b03b3d4e71cc08bb07b588e13412e",
+  "archive_bytes": 442113,
+  "members": 56,
+  "runtime_commit": "313c287caf2f9482a40b3b01662953a5915aa463",
+  "binaries": {
+    "/tmp/ingetrazo-native-font-merge-target/debug/examples/shape_drafting_workflows": "37f63cb6327315c588cf1c9ab8ece494ee0444dbd8c02f376241542991255458",
+    "/tmp/ingetrazo-native-font-merge-target/debug/examples/drafting_acceptance_fixture": "3fdf6d935830eb9b3e9591d80c86adc5ca88f20cab072aba868eaaccb76ab414"
+  },
+  "results": {
+    "base_cases": 53,
+    "base_phases": 376,
+    "addendum_cases": 7,
+    "addendum_phases": 61,
+    "remaining_cases": 6,
+    "remaining_phases": 51,
+    "all_matching": 488,
+    "egui_activations": 7,
+    "negative_controls": [
+      17,
+      17,
+      16
+    ],
+    "affected_drafting_cases": 22,
+    "focused_tests": {
+      "source_admission": 1,
+      "circle": 2,
+      "arc": 2
+    }
+  },
+  "all_members_authenticated": true
+}
