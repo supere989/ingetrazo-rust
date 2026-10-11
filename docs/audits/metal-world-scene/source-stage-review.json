@@ -1,0 +1,56 @@
+{
+  "source": "bbafe672",
+  "source_hashes": {
+    "crates/ingetrazo-metal/src/world_scene.rs": "b87c07bc853cb70da3c2c119f4c7bee35b9e7e6a08ec3442fa1ded6420b65b04",
+    "crates/ingetrazo-render/src/pipeline.rs": "33ac32c05ebe1ed6e9a6e2ff03986da0927b78e20ee38cd83ae758a5b985d783",
+    "crates/ingetrazo-metal/examples/native_world_scene.rs": "38f8b3000e27a8d52342a914484a22d64f4b823fce374775912b0d65cc845154",
+    "scripts/check-metal-world-scene.py": "ff598c000e465fcac45dd0ab7d32cf23d4e36fd6dbbf6092cdaab28d0292adbd",
+    "scripts/reference-metal-scene-catalog.py": "eb3e01e25d78bb5123f45de7d5320b374fff12741f664f9f05ac3e069f15f97d",
+    "docs/audits/metal-world-scene/source-catalog.json": "82d8ec99014e3f8f190352075156229d95ed79fc2b1aae893177e32087b368f7"
+  },
+  "original_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "source_map": {
+    "Catalog traversal": "Viewport._expand_placements/core.group.iter_placements; root owner effective_material",
+    "Signature": "core.materials.material_sig; numeric signedzero equality; opaquevendor omitted",
+    "instance draw ordering": "Viewport._gather_instanced; preexisting admitted first-bucket Order",
+    "local collector": "Viewport._proto_base_chunk; source ownmesh only"
+  },
+  "checks": [
+    {
+      "command": "cargo test -p ingetrazo-metal --lib world_scene -j2",
+      "result": "4 passed;0 failed;19 filtered"
+    },
+    {
+      "command": "cargo test -p ingetrazo-metal --lib catalog_metadata_and_depth -j2",
+      "result": "1 passed;0 failed;23 filtered"
+    },
+    {
+      "command": "QT_QPA_PLATFORM=offscreen /tmp/ingetrazo-parity-python/bin/python scripts/reference-metal-scene-catalog.py docs/audits/metal-world-scene/source-catalog.json",
+      "result": "PASS; actualsource metadata only, noGL/GUI pixel claim"
+    },
+    {
+      "command": "cargo check -p ingetrazo-metal --example native_world_scene --target aarch64-apple-darwin -j2",
+      "result": "PASS; metadata only; noAppleSDKlink/runtime"
+    }
+  ],
+  "initial_failures": [
+    {
+      "failure": "same material signature test restored opacity1 instead of removing it; source signature distinguishes None from1",
+      "resolution": "fixed test recipe, productionsignature preserved literal distinction"
+    },
+    {
+      "failure": "Apple-only clear argument f32array passed into f64API",
+      "resolution": "explicit f64map at entry"
+    },
+    {
+      "failure": "native example Mesh.add_face Optionindexed",
+      "resolution": "checked validtriangle faceOption"
+    }
+  ],
+  "ownership_scope": "Catalog/coldtemporary Vecpayload8MiB preflight; exact retained Vec capacities counted; originalScene, allocator metadata, shared renderer and native GPUledger separate. Current accepted models publish only after nativeprepare accepted; scratch may refresh on refusal. Two CPU modelVec capacities seeded cold. Geometry domains explicit caller contract, hostnotactivated.",
+  "runtime_pending": [
+    "four actualGPU frames through borrowedScene instance consumer",
+    "host domainnotifications/presentation",
+    "full loose/classic geometry, edges/profiles, textured/alpha materials, sections/images/shadows/annotations/MSAA"
+  ]
+}
