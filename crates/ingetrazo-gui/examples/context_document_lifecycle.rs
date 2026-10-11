@@ -1,3 +1,5 @@
+#[path = "context_document_lifecycle/appearance.rs"]
+mod appearance;
 use glam::{DMat4, DVec3};
 use ingetrazo_core::{
     groups::Group,
@@ -127,6 +129,10 @@ fn click(a: &mut IngeTrazoApp, ctx: &egui::Context, label: &str) {
     }
 }
 fn main() {
+    if std::env::args().any(|a| a == "--appearance") {
+        appearance::run();
+        return;
+    }
     if std::env::args().any(|a| a == "--import-preferences") {
         import_preferences_acceptance();
         return;

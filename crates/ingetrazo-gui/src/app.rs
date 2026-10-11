@@ -984,6 +984,7 @@ impl IngeTrazoApp {
 impl IngeTrazoApp {
     /// Backend-independent application UI and document lifecycle.
     pub fn update_ui(&mut self, ctx: &egui::Context) {
+        crate::appearance_preferences::apply(&self.document_session.preferences,ctx);
         let recent_warning_owns_input = self.document_session.recent_missing.is_some();
         let preferences_owns_input = self.show_preferences_dialog;
         let import_owns_input=self.document_session.unit_import.is_some();
@@ -1112,7 +1113,7 @@ impl IngeTrazoApp {
 
         // 4. Left CAD Tool Palette
         egui::SidePanel::left("cad_palette")
-            .exact_width(42.0)
+            .exact_width(crate::appearance_preferences::current_toolbar_size(ctx)+20.0)
             .resizable(false)
             .show(ctx, |ui| {
                 ui.set_enabled(!import_owns_input&&self.document_session.unit_import.is_none()&&!preferences_owns_input&&!self.show_preferences_dialog&&!recent_warning_owns_input&&self.document_session.recent_missing.is_none()&&self.annotation_editor.is_none()&&self.text3d_dialog.is_none()&&!self.show_material_edit_dialog);

@@ -7,11 +7,11 @@
 //! at 48x48 resolution with theme-matching ink and signature IngeTrazo orange accents (#f37329).
 //! All icons are compiled directly into the binary with zero external asset dependencies.
 
-use std::collections::HashMap;
 use egui::{ColorImage, Context, TextureHandle, TextureOptions};
+use std::collections::HashMap;
 
 pub struct IconManager {
-    cache: HashMap<&'static str, TextureHandle>,
+    cache: HashMap<(&'static str, bool), TextureHandle>,
 }
 
 impl Default for IconManager {
@@ -27,24 +27,30 @@ impl IconManager {
         }
     }
 
+    pub fn cached_icons(&self) -> usize {
+        self.cache.len()
+    }
+
     pub fn get(&mut self, ctx: &Context, name: &'static str) -> Option<&TextureHandle> {
-        if !self.cache.contains_key(name) {
-            if let Some(bytes) = get_icon_bytes(name) {
+        let dark = ctx.style().visuals.dark_mode;
+        let key = (name, dark);
+        if !self.cache.contains_key(&key) {
+            if let Some(bytes) = get_themed_icon_bytes(name, dark) {
                 if let Ok(img) = image::load_from_memory(bytes) {
                     let rgba = img.to_rgba8();
                     let size = [rgba.width() as usize, rgba.height() as usize];
                     let pixels = rgba.into_raw();
                     let color_image = ColorImage::from_rgba_unmultiplied(size, &pixels);
                     let handle = ctx.load_texture(
-                        format!("icon_{name}"),
+                        format!("icon_{name}_{dark}"),
                         color_image,
                         TextureOptions::LINEAR,
                     );
-                    self.cache.insert(name, handle);
+                    self.cache.insert(key, handle);
                 }
             }
         }
-        self.cache.get(name)
+        self.cache.get(&key)
     }
 }
 
@@ -109,6 +115,76 @@ pub fn get_icon_bytes(name: &str) -> Option<&'static [u8]> {
     }
 }
 
+pub fn get_themed_icon_bytes(name: &str, dark: bool) -> Option<&'static [u8]> {
+    if dark {
+        return get_icon_bytes(name);
+    }
+    match name {
+        "save" => Some(include_bytes!("../resources/icons/light/save.png")),
+        "undo" => Some(include_bytes!("../resources/icons/light/undo.png")),
+        "redo" => Some(include_bytes!("../resources/icons/light/redo.png")),
+        "eraser" => Some(include_bytes!("../resources/icons/light/eraser.png")),
+        "paint" => Some(include_bytes!("../resources/icons/light/paint.png")),
+        "eyedropper" => Some(include_bytes!("../resources/icons/light/eyedropper.png")),
+        "pushpull" => Some(include_bytes!("../resources/icons/light/pushpull.png")),
+        "move" => Some(include_bytes!("../resources/icons/light/move.png")),
+        "rotate" => Some(include_bytes!("../resources/icons/light/rotate.png")),
+        "scale" => Some(include_bytes!("../resources/icons/light/scale.png")),
+        "flip" => Some(include_bytes!("../resources/icons/light/flip.png")),
+        "followme" => Some(include_bytes!("../resources/icons/light/followme.png")),
+        "offset" => Some(include_bytes!("../resources/icons/light/offset.png")),
+        "fillet" => Some(include_bytes!("../resources/icons/light/fillet.png")),
+        "orbit" => Some(include_bytes!("../resources/icons/light/orbit.png")),
+        "pan" => Some(include_bytes!("../resources/icons/light/pan.png")),
+        "zoom" => Some(include_bytes!("../resources/icons/light/zoom.png")),
+        "zoom_window" => Some(include_bytes!("../resources/icons/light/zoom_window.png")),
+        "zoom_extents" => Some(include_bytes!("../resources/icons/light/zoom_extents.png")),
+        "zoom_selection" => Some(include_bytes!(
+            "../resources/icons/light/zoom_selection.png"
+        )),
+        "section_planes" => Some(include_bytes!(
+            "../resources/icons/light/section_planes.png"
+        )),
+        "section_cuts" => Some(include_bytes!("../resources/icons/light/section_cuts.png")),
+        "section_fill" => Some(include_bytes!("../resources/icons/light/section_fill.png")),
+        "view_iso" => Some(include_bytes!("../resources/icons/light/view_iso.png")),
+        "view_top" => Some(include_bytes!("../resources/icons/light/view_top.png")),
+        "view_front" => Some(include_bytes!("../resources/icons/light/view_front.png")),
+        "view_right" => Some(include_bytes!("../resources/icons/light/view_right.png")),
+        "view_left" => Some(include_bytes!("../resources/icons/light/view_left.png")),
+        "view_back" => Some(include_bytes!("../resources/icons/light/view_back.png")),
+        "view_bottom" => Some(include_bytes!("../resources/icons/light/view_bottom.png")),
+        "styles" => Some(include_bytes!("../resources/icons/light/styles.png")),
+        "shadows" => Some(include_bytes!("../resources/icons/light/shadows.png")),
+        "select" => Some(include_bytes!("../resources/icons/light/select.png")),
+        "line" => Some(include_bytes!("../resources/icons/light/line.png")),
+        "freehand" => Some(include_bytes!("../resources/icons/light/freehand.png")),
+        "rectangle" => Some(include_bytes!("../resources/icons/light/rectangle.png")),
+        "rotated_rect" => Some(include_bytes!("../resources/icons/light/rotated_rect.png")),
+        "circle" => Some(include_bytes!("../resources/icons/light/circle.png")),
+        "polygon" => Some(include_bytes!("../resources/icons/light/polygon.png")),
+        "arc" => Some(include_bytes!("../resources/icons/light/arc.png")),
+        "arc3" => Some(include_bytes!("../resources/icons/light/arc3.png")),
+        "center_arc" => Some(include_bytes!("../resources/icons/light/center_arc.png")),
+        "pie" => Some(include_bytes!("../resources/icons/light/pie.png")),
+        "tape" => Some(include_bytes!("../resources/icons/light/tape.png")),
+        "protractor" => Some(include_bytes!("../resources/icons/light/protractor.png")),
+        "dimension" => Some(include_bytes!("../resources/icons/light/dimension.png")),
+        "text" => Some(include_bytes!("../resources/icons/light/text.png")),
+        "text3d" => Some(include_bytes!("../resources/icons/light/text3d.png")),
+        "geopath" => Some(include_bytes!("../resources/icons/light/geopath.png")),
+        "section" => Some(include_bytes!("../resources/icons/light/section.png")),
+        "position_camera" => Some(include_bytes!(
+            "../resources/icons/light/position_camera.png"
+        )),
+        "walk" => Some(include_bytes!("../resources/icons/light/walk.png")),
+        "look_around" => Some(include_bytes!("../resources/icons/light/look_around.png")),
+        "first_person" => Some(include_bytes!("../resources/icons/light/first_person.png")),
+        "outer_shell" => Some(include_bytes!("../resources/icons/light/outer_shell.png")),
+        _ => None,
+    }
+}
+
 pub fn render_icon_button(
     ui: &mut egui::Ui,
     icon: Option<&TextureHandle>,
@@ -116,13 +192,14 @@ pub fn render_icon_button(
     selected: bool,
     tooltip: &str,
 ) -> egui::Response {
-    let size = egui::vec2(22.0, 22.0);
-    let (rect, resp) = ui.allocate_exact_size(egui::vec2(26.0, 26.0), egui::Sense::click());
+    let px = crate::appearance_preferences::current_toolbar_size(ui.ctx());
+    let size = egui::vec2(px, px);
+    let (rect, resp) = ui.allocate_exact_size(size + egui::vec2(4., 4.), egui::Sense::click());
     if resp.hovered() || selected {
         let bg = if selected {
-            egui::Color32::from_rgb(0, 120, 215)
+            ui.visuals().selection.bg_fill
         } else {
-            egui::Color32::from_rgb(60, 65, 75)
+            ui.visuals().widgets.hovered.bg_fill
         };
         ui.painter().rect_filled(rect, 3.0, bg);
     }
@@ -140,7 +217,7 @@ pub fn render_icon_button(
             egui::Align2::CENTER_CENTER,
             fallback_text,
             egui::FontId::proportional(12.0),
-            egui::Color32::WHITE,
+            ui.visuals().text_color(),
         );
     }
     resp.on_hover_text(tooltip)
