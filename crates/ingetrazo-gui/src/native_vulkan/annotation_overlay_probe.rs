@@ -114,7 +114,7 @@ impl App for Probe{
 }
 pub fn run()->Result<(),Box<dyn Error>>{if std::env::var_os("INGETRAZO_ANNOTATION_APP_CONTROL").is_some(){run_app::<ApplicationProbe>(None)}else{run_app::<Probe>(None)}}
 
-struct ApplicationProbe{app:crate::IngeTrazoApp,nonce:u64,held:bool,pressure:bool,texture:Option<egui::TextureHandle>,saved_annotations:Option<(Vec<ingetrazo_core::dimensions::Dimension>,Vec<ingetrazo_core::textlabel::TextLabel>)>}
+struct ApplicationProbe{app:crate::IngeTrazoApp,viewport_only:bool,nonce:u64,held:bool,pressure:bool,texture:Option<egui::TextureHandle>,saved_annotations:Option<(Vec<ingetrazo_core::dimensions::Dimension>,Vec<ingetrazo_core::textlabel::TextLabel>)>}
 impl App for ApplicationProbe{
  fn title()->&'static str{"IngeTrazo actual application annotation probe"}
  fn new(_: &mut System,_:Option<std::path::PathBuf>)->Self{
@@ -129,10 +129,11 @@ impl App for ApplicationProbe{
    app.style.show_textures=false;app.style.background_color=[1.;4];app.style.show_sky=false;app.style.show_profiles=false;
    app.mark_document_clean();
   }
-  Self{app,nonce:0,held:false,pressure:false,texture:None,saved_annotations:None}
+  Self{app,viewport_only:std::env::var_os("INGETRAZO_ANNOTATION_VIEWPORT_ONLY").is_some(),nonce:0,held:false,pressure:false,texture:None,saved_annotations:None}
  }
  fn build_ui(&mut self,ctx:&Context){
-  self.app.update_ui(ctx);ctx.request_repaint_after(std::time::Duration::from_millis(16));
+  if self.viewport_only{egui::CentralPanel::default().frame(egui::Frame::NONE).show(ctx,|ui|crate::viewport::render_viewport(&mut self.app,ui));}else{self.app.update_ui(ctx);}
+  ctx.request_repaint_after(std::time::Duration::from_millis(16));
   // Mutate AFTER production render_viewport has collected the old membership.
   let dir=std::path::PathBuf::from(std::env::var_os("INGETRAZO_ANNOTATION_CONTROL_DIR").unwrap());
   if let Ok(file)=std::fs::File::open(dir.join("request.json")){use std::io::Read;let mut bytes=Vec::new();file.take(257).read_to_end(&mut bytes).unwrap();assert!(bytes.len()<=256);let row:serde_json::Value=serde_json::from_slice(&bytes).unwrap();let nonce=row["nonce"].as_u64().unwrap();if nonce>self.nonce{
@@ -155,7 +156,7 @@ impl App for ApplicationProbe{
    App::prepare_gpu(&mut self.app,system,resize);
    if self.pressure{assert!(system.annotation_prepare_error.is_some(),"Actual app pressure unexpectedly published");self.pressure=false;self.held=true;}
   }
-  let row=serde_json::json!({"nonce":self.nonce,"submitted_serial":system.draw_serial,"completed_present_serial":system.completed_present_serial_for_probe,"held_refusal":self.held,"dimensions":self.app.scene.dimensions.len(),"leaders":self.app.scene.text_labels.len(),"camera":self.app.camera,"camera_snapshot":crate::navigation_ray::camera_snapshot(&self.app.camera).map(|s|serde_json::json!({"matrix":s.matrix.concat(),"inverse":s.inverse().map(|m|m.concat()),"eye":s.eye,"forward":s.forward})),"screen_size":[system.egui_ctx.screen_rect().width(),system.egui_ctx.screen_rect().height()],"viewport":self.app.native_gpu_viewport_rect.map(|r|[r.min.x,r.min.y,r.max.x,r.max.y]),"cached_bytes":system.annotation_cad.as_ref().map_or(0,|r|r.stats().cached_bytes),"pending_textures":system.pending_texture_updates.len(),"annotation_prepare_error":system.annotation_prepare_error,"annotation_ready":system.annotation_ready_shape.is_some()});
+  let row=serde_json::json!({"viewport_only":self.viewport_only,"nonce":self.nonce,"submitted_serial":system.draw_serial,"completed_present_serial":system.completed_present_serial_for_probe,"held_refusal":self.held,"dimensions":self.app.scene.dimensions.len(),"leaders":self.app.scene.text_labels.len(),"camera":self.app.camera,"camera_snapshot":crate::navigation_ray::camera_snapshot(&self.app.camera).map(|s|serde_json::json!({"matrix":s.matrix.concat(),"inverse":s.inverse().map(|m|m.concat()),"eye":s.eye,"forward":s.forward})),"screen_size":[system.egui_ctx.screen_rect().width(),system.egui_ctx.screen_rect().height()],"viewport":self.app.native_gpu_viewport_rect.map(|r|[r.min.x,r.min.y,r.max.x,r.max.y]),"cached_bytes":system.annotation_cad.as_ref().map_or(0,|r|r.stats().cached_bytes),"pending_textures":system.pending_texture_updates.len(),"annotation_prepare_error":system.annotation_prepare_error,"annotation_ready":system.annotation_ready_shape.is_some()});
   let dir=std::path::PathBuf::from(std::env::var_os("INGETRAZO_ANNOTATION_CONTROL_DIR").unwrap());let temp=dir.join("state.tmp");std::fs::write(&temp,serde_json::to_vec(&row).unwrap()).unwrap();std::fs::rename(temp,dir.join("state.json")).unwrap();
  }
  fn gpu_error(&mut self,error:&str){eprintln!("Actual annotation app refusal: {error}");}

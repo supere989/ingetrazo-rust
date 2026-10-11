@@ -54,7 +54,7 @@ def capture_owned(w,width=800,height=600):
 import hashlib
 binary,camera,scene,out=map(Path,sys.argv[1:5]);out.mkdir(parents=True,exist_ok=False)
 control=out/'control';control.mkdir();old=clients();records=[]
-env=dict(os.environ,INGETRAZO_CAD2D_INTEGER_BLEND='1',INGETRAZO_ANNOTATION_APP_CONTROL='1',INGETRAZO_ANNOTATION_DEPTH_SAMPLE='0',INGETRAZO_ANNOTATION_CONTROL_DIR=str(control),INGETRAZO_ANNOTATION_APP_SCENE=str(scene),INGETRAZO_ANNOTATION_APP_CAMERA=str(camera))
+env=dict(os.environ,INGETRAZO_CAD2D_INTEGER_BLEND='1',INGETRAZO_ANNOTATION_APP_CONTROL='1',INGETRAZO_ANNOTATION_DEPTH_SAMPLE='0',INGETRAZO_ANNOTATION_CONTROL_DIR=str(control),INGETRAZO_ANNOTATION_APP_SCENE=str(scene),INGETRAZO_ANNOTATION_APP_CAMERA=str(camera),INGETRAZO_ANNOTATION_VIEWPORT_ONLY='1')
 def state():
  try:return json.loads((control/'state.json').read_text())
  except FileNotFoundError:return None
@@ -63,7 +63,7 @@ with(out/'runtime.log').open('w')as stream:
  try:
   def owned():
    assert child.poll()is None,'Actual app exited before capture'
-   hits=[w for w in clients()-old if prop(w,'_NET_WM_NAME')==b'IngeTrazo actual application annotation probe' and prop(w,'_NET_WM_PID')==[child.pid]]
+   hits=[w for w in clients()-old if prop(w,'_NET_WM_PID')==[child.pid]]
    assert len(hits)<=1;return hits[0]if hits else None
   w=wait(owned);x.XMapRaised(d,w);x.XFlush(d)
   first=wait(lambda:state()if state()and state()['viewport']else None)
@@ -73,7 +73,8 @@ with(out/'runtime.log').open('w')as stream:
    if [vw,vh]==[800.,600.]:break
    width,height=row['screen_size'];before=row['submitted_serial'];nw=int(width+800-vw);nh=int(height+600-vh)
    x.XResizeWindow(d,w,nw,nh);x.XFlush(d)
-   wait(lambda:state()['screen_size']==[float(nw),float(nh)]and state()['submitted_serial']>before+2)
+   resized=wait(lambda:state()if state()['screen_size']==[float(nw),float(nh)]else None)
+   wait(lambda:state()['completed_present_serial']>resized['submitted_serial'])
   row=state();rect=row['viewport'];assert rect[2]-rect[0]==800 and rect[3]-rect[1]==600
   assert all(v==int(v)for v in rect),'Fractional ROI must not be rounded away'
   assert row['annotation_prepare_error']is None,'Preparation refusal cannot masquerade as readiness'
