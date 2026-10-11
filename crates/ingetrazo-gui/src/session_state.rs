@@ -30,6 +30,16 @@ impl Default for Preferences {
         recent_files:vec![],extra:BTreeMap::new()}}
 }
 impl Preferences {
+    pub fn new_document_units(&self)->serde_json::Value {
+        let fallback=||serde_json::json!({"length":"m","precision":2});
+        let Some(v)=self.extra.get("units/new_document").and_then(|v|v.as_str()).and_then(|s|serde_json::from_str::<serde_json::Value>(s).ok()) else{return fallback();};
+        let Some(code)=v["length"].as_str().filter(|s|ingetrazo_core::units::MODEL_UNIT_CODES.contains(s)) else{return fallback();};
+        let precision=match v.get("precision") {
+            None=>Some(2),Some(serde_json::Value::Bool(b))=>Some(i64::from(*b)),
+            Some(serde_json::Value::String(s))=>s.trim().parse::<i64>().ok(),
+            Some(n)=>n.as_i64().or_else(||n.as_f64().filter(|f|f.is_finite()&&*f>=i64::MIN as f64&&*f<i64::MAX as f64).map(|f|f as i64))};
+        precision.map(|precision|serde_json::json!({"length":code,"precision":precision})).unwrap_or_else(fallback)
+    }
     pub fn clamp(&mut self) {
         if !self.walk_eye_height.is_finite() || !(0.05..=100.).contains(&self.walk_eye_height) { self.walk_eye_height=1.68; }
         if !(1..=100).contains(&self.look_sensitivity) { self.look_sensitivity=25; }

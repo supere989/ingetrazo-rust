@@ -50,11 +50,9 @@ pub(crate) fn build_plan(app:&crate::IngeTrazoApp,rect:egui::Rect,matrix:&[f32;1
 
 }
 pub(crate) fn label_units(scene:&ingetrazo_core::scene::Scene)->Result<(&'static str,i32),String>{
- use ingetrazo_core::units::LengthUnit;
- let fallback=match scene.unit{LengthUnit::Meters=>"m",LengthUnit::Centimeters=>"cm",LengthUnit::Millimeters=>"mm",LengthUnit::Inches=>"in",LengthUnit::Feet=>"ft"};
- let unit=match scene.native_document["units"]["length"].as_str().unwrap_or(fallback){
+ let unit=match ingetrazo_core::units::model_unit(scene){
   "m"=>"m","cm"=>"cm","mm"=>"mm","in"=>"in","ft"=>"ft","ft-in"=>"ft-in","in-frac"=>"in-frac","ft-in-frac"=>"ft-in-frac",_=>return Err("Unknown tool label unit".into())};
- let precision=scene.native_document["units"]["precision"].as_i64().unwrap_or(2);
+ let precision=ingetrazo_core::units::model_precision(scene);
  Ok((unit,i32::try_from(precision).map_err(|_|"Tool label precision overflow")?))
 }
 

@@ -127,6 +127,10 @@ fn click(a: &mut IngeTrazoApp, ctx: &egui::Context, label: &str) {
     }
 }
 fn main() {
+    if std::env::args().any(|a| a == "--units") {
+        units_acceptance();
+        return;
+    }
     if std::env::args().any(|a| a == "--preferences") {
         preferences_acceptance();
         return;
@@ -421,6 +425,101 @@ fn preferences_acceptance() {
     rows.push(record(&restarted, "restart-cancel", 0));
     std::fs::write(
         root.join("native-preferences.json"),
+        serde_json::to_vec_pretty(&json!({"rows":rows})).unwrap(),
+    )
+    .unwrap();
+}
+
+fn units_acceptance() {
+    let root = std::path::PathBuf::from(std::env::args().nth(1).unwrap());
+    let store = root.join("native-unit-settings");
+    let mut a = IngeTrazoApp::new();
+    a.attach_session_store(ingetrazo_gui::session_state::SessionStore::isolated(&store));
+    a.open_document(&root.join("input.igz"));
+    assert!(!a.document_session.confirm_unsaved);
+    // A raw unknown unit key survives no-op, but explicit Apply replaces the pair,
+    // including an away-and-back change equal to the imported baseline.
+    let mut vendor =
+        serde_json::from_slice::<Value>(&std::fs::read(root.join("input.igz")).unwrap()).unwrap();
+    vendor["scene"]["units"]["vendor"] = json!("original-unknown");
+    std::fs::write(
+        root.join("vendor-input.igz"),
+        serde_json::to_vec(&vendor).unwrap(),
+    )
+    .unwrap();
+    let mut v = IngeTrazoApp::new();
+    v.open_document(&root.join("vendor-input.igz"));
+    v.save_to_path(&root.join("vendor-noop-native.igz"));
+    v.apply_model_units(json!({"length":"cm","precision":6}));
+    v.apply_model_units(json!({"length":"ft-in","precision":4}));
+    v.save_to_path(&root.join("away-back-native.igz"));
+    let mut rows = Vec::new();
+    let record = |a: &mut IngeTrazoApp, phase: &str| {
+        a.begin_preferences();
+        let checkbox = a
+            .document_session
+            .preferences_draft
+            .as_ref()
+            .unwrap()
+            .units_for_new;
+        a.cancel_preferences();
+        json!({"phase":phase,"units":{"length":ingetrazo_core::units::model_unit(&a.scene),"precision":ingetrazo_core::units::model_precision(&a.scene)},"style":{"units":a.scene.dimension_style()["units"],"decimals":a.scene.dimension_style()["decimals"],"vendor":a.scene.dimension_style()["vendor"]},"default":a.document_session.preferences.new_document_units(),"checkbox":checkbox,"undo":a.undo_stack.len()})
+    };
+    let choose = |a: &mut IngeTrazoApp, code: &str, precision: i64, new: bool| {
+        a.begin_preferences();
+        let d = a.document_session.preferences_draft.as_mut().unwrap();
+        d.unit_code = code.into();
+        d.precision = precision;
+        d.units_for_new = new;
+    };
+    rows.push(record(&mut a, "loaded-composite"));
+    let before = a.scene.clone();
+    let version = a.scene.version;
+    choose(&mut a, "m", 0, true);
+    a.cancel_preferences();
+    assert_eq!(a.scene, before);
+    rows.push(record(&mut a, "cancel"));
+    choose(&mut a, "ft-in", 4, false);
+    a.accept_preferences();
+    assert_eq!(a.scene.version, version);
+    rows.push(record(&mut a, "unchanged"));
+    for (i, code) in ingetrazo_core::units::MODEL_UNIT_CODES.iter().enumerate() {
+        let version = a.scene.version;
+        choose(&mut a, code, (i % 7) as i64, i == 7);
+        a.accept_preferences();
+        assert_eq!(a.scene.version, version + 1);
+        rows.push(record(&mut a, &format!("apply-{code}")));
+        a.save_to_path(&root.join(format!("{code}-native.igz")));
+        assert!(root.join(format!("{code}-native.igz")).exists());
+    }
+    let mut a = IngeTrazoApp::new();
+    a.attach_session_store(ingetrazo_gui::session_state::SessionStore::isolated(&store));
+    rows.push(record(&mut a, "restart-new"));
+    assert!(!a.document_dirty());
+    a.open_document(&root.join("input.igz"));
+    rows.push(record(&mut a, "open-retains-document"));
+    choose(&mut a, "cm", 6, false);
+    a.accept_preferences();
+    rows.push(record(&mut a, "unchecked-default"));
+    a.document_session
+        .preferences
+        .extra
+        .insert("units/new_document".into(), json!("{invalid"));
+    a.persist_preferences();
+    let mut a = IngeTrazoApp::new();
+    a.attach_session_store(ingetrazo_gui::session_state::SessionStore::isolated(&store));
+    rows.push(record(&mut a, "malformed-new"));
+    assert!(!a.document_dirty());
+    // Real New uses the persisted pair without dirtying; Open ignores that pair.
+    a.document_session.preferences.extra.insert(
+        "units/new_document".into(),
+        json!("{\"length\":\"in-frac\",\"precision\":3}"),
+    );
+    a.new_document();
+    assert_eq!(ingetrazo_core::units::model_unit(&a.scene), "in-frac");
+    assert!(!a.document_dirty());
+    std::fs::write(
+        root.join("native-units.json"),
         serde_json::to_vec_pretty(&json!({"rows":rows})).unwrap(),
     )
     .unwrap();

@@ -28,6 +28,7 @@ fn adopted(scene: &Scene) -> Option<[f64; 3]> {
 pub(crate) fn preserve(current: &Scene, target: &mut Scene) {
     // Active BIM classification belongs to the runtime tray, not model history.
     target.active_ifc=current.active_ifc.clone();
+    target.unit=current.unit;target.model_units_override=current.model_units_override.clone();
     target.dimension_style_override=current.dimension_style_override.clone();
     // Raw styles are presentation ownership, independent of model Undo.
     if target.native_document.is_object()&&current.native_document.get("dimension_style").is_some(){target.native_document["dimension_style"]=current.native_document["dimension_style"].clone();}

@@ -62,7 +62,7 @@ pub fn parse_length(text: &str, default_unit: LengthUnit) -> Result<f64, String>
 /// Document units retain composite imperial modes in the original payload.
 /// A modeled unit change takes precedence over the loaded five-unit projection.
 pub fn model_unit(scene: &crate::scene::Scene) -> &str {
-    let raw=scene.native_document["units"]["length"].as_str();
+    let raw=scene.model_units()["length"].as_str();
     let projected=match raw {Some("cm")=>LengthUnit::Centimeters,Some("mm")=>LengthUnit::Millimeters,Some("in")=>LengthUnit::Inches,Some("ft")=>LengthUnit::Feet,_=>LengthUnit::Meters};
     if scene.unit==projected {
         if let Some(code @ ("m"|"cm"|"mm"|"in"|"ft"|"ft-in"|"in-frac"|"ft-in-frac"))=raw {return code;}
@@ -72,8 +72,8 @@ pub fn model_unit(scene: &crate::scene::Scene) -> &str {
 pub const MODEL_UNIT_CODES: [&str;8]=["m","cm","mm","in","ft","ft-in","in-frac","ft-in-frac"];
 /// Authored document precision; display formatters clamp it separately.
 pub fn model_precision(scene:&crate::scene::Scene)->i64 {
-    if scene.native_document["units"]["length"].as_str().is_some_and(|u|MODEL_UNIT_CODES.contains(&u)) {
-        scene.native_document["units"]["precision"].as_i64().unwrap_or(2)
+    if scene.model_units()["length"].as_str().is_some_and(|u|MODEL_UNIT_CODES.contains(&u)) {
+        scene.model_units()["precision"].as_i64().unwrap_or(2)
     }else{2}
 }
 pub fn model_scale(scene: &crate::scene::Scene)->f64 {

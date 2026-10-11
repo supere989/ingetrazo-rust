@@ -30,7 +30,7 @@ fn same_model(a:&Scene,b:&Scene)->bool {
     a.layers==b.layers &&
     a.materials==b.materials &&
     a.saved_views==b.saved_views &&
-    a.unit==b.unit &&
+    a.unit==b.unit && ingetrazo_core::units::model_unit(a)==ingetrazo_core::units::model_unit(b) && ingetrazo_core::units::model_precision(a)==ingetrazo_core::units::model_precision(b) &&
     a.embedded_textures==b.embedded_textures &&
     a.text_labels==b.text_labels &&
     a.section_planes==b.section_planes &&
@@ -58,15 +58,15 @@ impl IngeTrazoApp {
         if let Some(lang)=p.language.clone() {self.set_language(&lang);}
         let p=&self.document_session.preferences;
         self.navigation.eye_height=p.walk_eye_height;
-        self.scene.unit=p.new_document_unit;self.recent_files=p.recent_files.clone();self.document_session.recent_menu.frame=None;self.style.line_width=p.line_width;self.style.profile_width=p.profile_width;
+        let chosen=p.new_document_units();self.recent_files=p.recent_files.clone();self.document_session.recent_menu.frame=None;self.style.line_width=p.line_width;self.style.profile_width=p.profile_width;
         self.style.visual_style=match p.visual_style.as_str(){"wireframe"=>VisualStyle::Wireframe,"hidden"=>VisualStyle::HiddenLine,"mono"=>VisualStyle::Monochrome,"xray"=>VisualStyle::XRay,_=>VisualStyle::ShadedWithTextures};
         if let Some(rgb)=p.extra.get("section_fill_color").and_then(|v|v.as_array()).filter(|v|v.len()==3){for(i,value)in rgb.iter().enumerate(){if let Some(value)=value.as_f64().filter(|value|value.is_finite()){self.style.section_fill_color[i]=value.clamp(0.,1.)as f32;}}}
         self.shadows_enabled=p.shadows;self.show_toolbar=p.show_toolbar;self.show_tray=p.show_tray;
         match store.recovery_candidates(false) {Ok(candidates)=>{self.document_session.show_recovery=!candidates.is_empty();self.document_session.recovery=candidates;},Err(e)=>self.status_message=e}
-        self.document_session.store=Some(store);self.mark_document_clean();
+        self.document_session.store=Some(store);self.initialize_document_units(chosen);self.mark_document_clean();
     }
     pub fn persist_preferences(&mut self) {
-        let p=&mut self.document_session.preferences;p.language=Some(self.language.clone());p.new_document_unit=self.scene.unit;
+        let p=&mut self.document_session.preferences;p.language=Some(self.language.clone());
         p.recent_files=self.recent_files.clone();p.line_width=self.style.line_width;p.profile_width=self.style.profile_width;
         p.visual_style=match self.style.visual_style{VisualStyle::Wireframe=>"wireframe",VisualStyle::HiddenLine=>"hidden",VisualStyle::Monochrome=>"mono",VisualStyle::XRay=>"xray",_=>"shaded"}.into();
         p.extra.insert("section_fill_color".into(),serde_json::json!(&self.style.section_fill_color[..3]));

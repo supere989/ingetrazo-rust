@@ -1,24 +1,75 @@
 //! Cold preferences draft. Cancel never publishes runtime or durable settings.
 use crate::{session_state::Preferences, IngeTrazoApp};
-use ingetrazo_core::{i18n::tr, units::LengthUnit};
+use ingetrazo_core::i18n::tr;
 use ingetrazo_render::style::VisualStyle;
 
 pub struct Draft {
     pub preferences: Preferences,
-    pub unit: LengthUnit,
+    pub unit_code: String,
+    pub precision: i64,
+    pub units_for_new: bool,
     pub visual_style: VisualStyle,
     pub profile_width: f32,
     pub line_width: f32,
     pub shadows: bool,
 }
 impl IngeTrazoApp {
+    /// Explicit source Apply replaces the validated unit pair, never geometry.
+    pub fn apply_model_units(&mut self, chosen: serde_json::Value) {
+        let Some(code) = chosen["length"]
+            .as_str()
+            .filter(|c| ingetrazo_core::units::MODEL_UNIT_CODES.contains(c))
+        else {
+            return;
+        };
+        let precision = chosen["precision"].as_i64().unwrap_or(2);
+        if code == ingetrazo_core::units::model_unit(&self.scene)
+            && precision == ingetrazo_core::units::model_precision(&self.scene)
+        {
+            return;
+        }
+        self.scene.unit = match code {
+            "cm" => ingetrazo_core::units::LengthUnit::Centimeters,
+            "mm" => ingetrazo_core::units::LengthUnit::Millimeters,
+            "in" => ingetrazo_core::units::LengthUnit::Inches,
+            "ft" => ingetrazo_core::units::LengthUnit::Feet,
+            _ => ingetrazo_core::units::LengthUnit::Meters,
+        };
+        self.scene.model_units_override =
+            Some(serde_json::json!({"length":code,"precision":precision}));
+        if self.scene.dimension_style().is_null()
+            && self.scene.native_document.get("dimension_style").is_none()
+        {
+            self.scene.dimension_style_override = Some(
+                serde_json::json!({"decimals":2,"units":"m","font_size":9,"color":[45,55,75],"norma":"iso","base_step_mm":8.0,"ends":"arrow"}),
+            );
+        }
+        if self.scene.dimension_style().is_object() {
+            let mut style = self.scene.dimension_style().clone();
+            style["units"] = serde_json::json!(code);
+            style["decimals"] = serde_json::json!(precision);
+            self.scene.dimension_style_override = Some(style);
+        }
+        self.scene.bump_version();
+    }
+    pub(crate) fn initialize_document_units(&mut self, chosen: serde_json::Value) {
+        let version = self.scene.version;
+        self.scene.dimension_style_override = Some(
+            serde_json::json!({"decimals":2,"units":"m","font_size":9,"color":[45,55,75],"norma":"iso","base_step_mm":8.0,"ends":"arrow"}),
+        );
+        self.apply_model_units(chosen);
+        self.scene.version = version;
+    }
     pub fn begin_preferences(&mut self) {
         if self.document_session.preferences_draft.is_none() {
             let mut preferences = self.document_session.preferences.clone();
             preferences.language = Some(self.language.clone());
             self.document_session.preferences_draft = Some(Draft {
                 preferences,
-                unit: self.scene.unit,
+                unit_code: ingetrazo_core::units::model_unit(&self.scene).into(),
+                precision: ingetrazo_core::units::model_precision(&self.scene).clamp(0, 6),
+                units_for_new: self.document_session.preferences.new_document_units()
+                    == serde_json::json!({"length":ingetrazo_core::units::model_unit(&self.scene),"precision":ingetrazo_core::units::model_precision(&self.scene)}),
                 visual_style: self.style.visual_style,
                 profile_width: self.style.profile_width,
                 line_width: self.style.line_width,
@@ -40,7 +91,15 @@ impl IngeTrazoApp {
         if let Some(language) = self.document_session.preferences.language.clone() {
             self.set_language(&language);
         }
-        self.scene.unit = draft.unit;
+        let chosen =
+            serde_json::json!({"length":draft.unit_code,"precision":draft.precision.clamp(0,6)});
+        self.apply_model_units(chosen.clone());
+        if draft.units_for_new {
+            self.document_session.preferences.extra.insert(
+                "units/new_document".into(),
+                serde_json::json!(chosen.to_string()),
+            );
+        }
         self.style.visual_style = draft.visual_style;
         self.style.profile_width = draft.profile_width;
         self.style.line_width = draft.line_width;
@@ -124,20 +183,18 @@ pub fn render(app: &mut IngeTrazoApp, ctx: &egui::Context) {
                     .insert(key.into(), serde_json::json!(value));
             }
         }
+        ui.separator();
+        ui.label("Units of this document");
+        egui::ComboBox::from_id_salt("pref_units_combo")
+            .selected_text(unit_label(&draft.unit_code))
+            .show_ui(ui, |ui| {
+                for code in ingetrazo_core::units::MODEL_UNIT_CODES {
+                    ui.selectable_value(&mut draft.unit_code, code.to_owned(), unit_label(code));
+                }
+            });
+        ui.add(egui::Slider::new(&mut draft.precision, 0..=6).text("Decimals"));
+        ui.checkbox(&mut draft.units_for_new, "Also use for new documents");
         ui.collapsing("Model display", |ui| {
-            egui::ComboBox::from_id_salt("pref_units_combo")
-                .selected_text(format!("{:?}", draft.unit))
-                .show_ui(ui, |ui| {
-                    for (unit, name) in [
-                        (LengthUnit::Meters, "Meters (m)"),
-                        (LengthUnit::Centimeters, "Centimeters (cm)"),
-                        (LengthUnit::Millimeters, "Millimeters (mm)"),
-                        (LengthUnit::Feet, "Feet (ft)"),
-                        (LengthUnit::Inches, "Inches (in)"),
-                    ] {
-                        ui.selectable_value(&mut draft.unit, unit, name);
-                    }
-                });
             egui::ComboBox::from_id_salt("pref_style_combo")
                 .selected_text(format!("{:?}", draft.visual_style))
                 .show_ui(ui, |ui| {
@@ -228,6 +285,86 @@ mod tests {
             ));
         }
         out.unwrap()
+    }
+    #[test]
+    fn units_modal_preserves_composite_then_explicit_metres_and_default() {
+        let root = std::env::temp_dir().join(format!("units-ui-{}", uuid::Uuid::new_v4()));
+        let mut a = IngeTrazoApp::new();
+        a.set_language("en");
+        a.attach_session_store(crate::session_state::SessionStore::isolated(&root));
+        a.apply_model_units(serde_json::json!({"length":"ft-in-frac","precision":4}));
+        a.mark_document_clean();
+        let before = a.scene.clone();
+        let ctx = egui::Context::default();
+        let mut time = 0.;
+        a.begin_preferences();
+        frame(&mut a, &ctx, time, vec![]);
+        time += 0.1;
+        let out = frame(&mut a, &ctx, time, vec![]);
+        assert_eq!(
+            a.document_session
+                .preferences_draft
+                .as_ref()
+                .unwrap()
+                .unit_code,
+            "ft-in-frac"
+        );
+        click(&mut a, &ctx, &mut time, text(&out, "Cancel"));
+        assert_eq!(a.scene, before);
+        a.begin_preferences();
+        time += 0.1;
+        frame(&mut a, &ctx, time, vec![]);
+        time += 0.1;
+        let out = frame(&mut a, &ctx, time, vec![]);
+        click(
+            &mut a,
+            &ctx,
+            &mut time,
+            text(&out, "Fractional feet and inches"),
+        );
+        time += 0.1;
+        let out = frame(&mut a, &ctx, time, vec![]);
+        click(&mut a, &ctx, &mut time, text(&out, "Metres (m)"));
+        time += 0.1;
+        let out = frame(&mut a, &ctx, time, vec![]);
+        click(
+            &mut a,
+            &ctx,
+            &mut time,
+            text(&out, "Also use for new documents"),
+        );
+        time += 0.1;
+        let out = frame(&mut a, &ctx, time, vec![]);
+        click(&mut a, &ctx, &mut time, text(&out, "OK"));
+        assert_eq!(ingetrazo_core::units::model_unit(&a.scene), "m");
+        assert_eq!(ingetrazo_core::units::model_precision(&a.scene), 4);
+        assert_eq!(a.scene.dimension_style()["units"], "m");
+        assert_eq!(a.scene.dimension_style()["decimals"], 4);
+        assert!(a.document_dirty());
+        assert!(a.undo_stack.is_empty());
+        // Source SnapshotCompound excludes live unit/style properties.
+        a.save_undo_state();
+        a.scene.mesh.add_vertex(glam::DVec3::new(1., 2., 3.));
+        a.begin_preferences();
+        {
+            let d = a.document_session.preferences_draft.as_mut().unwrap();
+            d.unit_code = "cm".into();
+            d.precision = 6;
+            d.units_for_new = false;
+        }
+        a.accept_preferences();
+        a.undo();
+        assert!(a.scene.mesh.vertices.is_empty());
+        assert_eq!(ingetrazo_core::units::model_unit(&a.scene), "cm");
+        assert_eq!(ingetrazo_core::units::model_precision(&a.scene), 6);
+        a.redo();
+        assert_eq!(a.scene.mesh.vertices.len(), 1);
+        assert_eq!(a.scene.dimension_style()["decimals"], 6);
+        let mut restart = IngeTrazoApp::new();
+        restart.attach_session_store(crate::session_state::SessionStore::isolated(&root));
+        assert_eq!(ingetrazo_core::units::model_precision(&restart.scene), 4);
+        assert!(!restart.document_dirty());
+        std::fs::remove_dir_all(root).unwrap();
     }
     #[test]
     fn actual_modal_cancel_ok_escape_and_warm_draft_ownership() {
@@ -366,5 +503,19 @@ mod tests {
         p.clamp();
         assert_eq!(p.undo_steps, 5000);
         std::fs::remove_dir_all(root).unwrap();
+    }
+}
+
+fn unit_label(code: &str) -> &str {
+    match code {
+        "m" => "Metres (m)",
+        "cm" => "Centimetres (cm)",
+        "mm" => "Millimetres (mm)",
+        "in" => "Decimal inches (in)",
+        "ft" => "Decimal feet (ft)",
+        "ft-in" => "Feet and inches",
+        "in-frac" => "Fractional inches",
+        "ft-in-frac" => "Fractional feet and inches",
+        _ => code,
     }
 }

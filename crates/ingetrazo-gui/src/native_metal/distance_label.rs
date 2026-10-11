@@ -191,9 +191,9 @@ impl Labels {
         let bypass=matches!(app.style.visual_style,ingetrazo_render::style::VisualStyle::XRay|ingetrazo_render::style::VisualStyle::Wireframe);
         // Immutable admission fastpath precedes metadata/String clones and plan work.
         if let Some(ready)=&self.current{if let Key::Document(old)=&ready.0{
-            if old.hover==app.active_tool.annotation_hover_target(&app.scene)&&old.revision==app.native_geometry_revision&&old.scene_version==app.scene.version&&old.view==app.scene.view_version&&old.selected==app.selected_dimension&&old.matrix==camera.matrix&&old.rect==[rect.min.x,rect.min.y,rect.max.x,rect.max.y]&&old.density==density&&old.style==*app.scene.dimension_style()&&old.units==app.scene.native_document["units"]&&old.bypass==bypass&&old.distance==app.active_tool.distance_label().map(|(d,p)|(d,p.to_array()))&&old.typed==app.vcb_text{return Ok(Candidate{ready:Some(ready.clone())});}
+            if old.hover==app.active_tool.annotation_hover_target(&app.scene)&&old.revision==app.native_geometry_revision&&old.scene_version==app.scene.version&&old.view==app.scene.view_version&&old.selected==app.selected_dimension&&old.matrix==camera.matrix&&old.rect==[rect.min.x,rect.min.y,rect.max.x,rect.max.y]&&old.density==density&&old.style==*app.scene.dimension_style()&&old.units==*app.scene.model_units()&&old.bypass==bypass&&old.distance==app.active_tool.distance_label().map(|(d,p)|(d,p.to_array()))&&old.typed==app.vcb_text{return Ok(Candidate{ready:Some(ready.clone())});}
         }}
-        let key=Key::Document(DocumentKey{hover:app.active_tool.annotation_hover_target(&app.scene),revision:app.native_geometry_revision,scene_version:app.scene.version,view:app.scene.view_version,selected:app.selected_dimension,matrix:camera.matrix,rect:[rect.min.x,rect.min.y,rect.max.x,rect.max.y],density,style:app.scene.dimension_style().clone(),units:app.scene.native_document["units"].clone(),bypass,distance:app.active_tool.distance_label().map(|(d,p)|(d,p.to_array())),typed:app.vcb_text.clone()});
+        let key=Key::Document(DocumentKey{hover:app.active_tool.annotation_hover_target(&app.scene),revision:app.native_geometry_revision,scene_version:app.scene.version,view:app.scene.view_version,selected:app.selected_dimension,matrix:camera.matrix,rect:[rect.min.x,rect.min.y,rect.max.x,rect.max.y],density,style:app.scene.dimension_style().clone(),units:app.scene.model_units().clone(),bypass,distance:app.active_tool.distance_label().map(|(d,p)|(d,p.to_array())),typed:app.vcb_text.clone()});
         if let Some(ready)=&self.current{if ready.0==key{return Ok(Candidate{ready:Some(ready.clone())});}}
         let inverse=camera.inverse().ok_or("Metal document annotation inverse admission")?;
         let matrix=std::array::from_fn(|i|camera.matrix[i/4][i%4]);
@@ -260,38 +260,11 @@ fn shape(
     })
 }
 fn units(scene: &ingetrazo_core::scene::Scene) -> Result<(&'static str, i32), String> {
-    use ingetrazo_core::units::LengthUnit;
-    let fallback = match scene.unit {
-        LengthUnit::Meters => "m",
-        LengthUnit::Centimeters => "cm",
-        LengthUnit::Millimeters => "mm",
-        LengthUnit::Inches => "in",
-        LengthUnit::Feet => "ft",
-    };
-    let unit = match scene.native_document["units"]["length"]
-        .as_str()
-        .unwrap_or(fallback)
-    {
-        "m" => "m",
-        "cm" => "cm",
-        "mm" => "mm",
-        "in" => "in",
-        "ft" => "ft",
-        "ft-in" => "ft-in",
-        "in-frac" => "in-frac",
-        "ft-in-frac" => "ft-in-frac",
-        _ => return Err("Unknown tool label unit".into()),
-    };
-    Ok((
-        unit,
-        i32::try_from(
-            scene.native_document["units"]["precision"]
-                .as_i64()
-                .unwrap_or(2),
-        )
-        .map_err(|_| "Tool precision overflow")?,
-    ))
+    let unit = match ingetrazo_core::units::model_unit(scene) {
+        "m"=>"m","cm"=>"cm","mm"=>"mm","in"=>"in","ft"=>"ft","ft-in"=>"ft-in","in-frac"=>"in-frac","ft-in-frac"=>"ft-in-frac",_=>return Err("Unknown tool label unit".into())};
+    Ok((unit,i32::try_from(ingetrazo_core::units::model_precision(scene)).map_err(|_|"Tool precision overflow")?))
 }
+
 fn typed_text(buffer: &str, unit: &str) -> String {
     let text = buffer.trim();
     let bare = !text.is_empty()

@@ -665,12 +665,8 @@ fn scene_model(scene: &Scene) -> serde_json::Value {
     doc["image_planes"]=serde_json::json!(scene.image_planes.iter().map(|p|image_plane_to_json(scene,p)).collect::<Vec<_>>());
     doc["guides"] = serde_json::json!(scene.guides.iter().map(|g|overlay(&g.native_document,&g.native_baseline,guide_model(g))).collect::<Vec<_>>());
     doc["text_labels"] = serde_json::json!(scene.text_labels.iter().map(|label| overlay(&label.native_document,&label.native_baseline,serde_json::to_value(label).expect("TextLabel model serialization"))).collect::<Vec<_>>());
-    let unit = match scene.unit {
-        LengthUnit::Meters => "m", LengthUnit::Centimeters => "cm",
-        LengthUnit::Millimeters => "mm", LengthUnit::Inches => "in", LengthUnit::Feet => "ft"
-    };
     doc["plugin_data"] = scene.plugin_data.clone();
-    doc["units"] = serde_json::json!({"length":unit,"precision":2});
+    doc["units"] = serde_json::json!({"length":ingetrazo_core::units::model_unit(scene),"precision":ingetrazo_core::units::model_precision(scene)});
 
     doc["saved_views"] = serde_json::json!(scene.saved_views.iter().map(|v|
         overlay(&v.native_document,&v.native_baseline,view_model(v))).collect::<Vec<_>>());
@@ -701,6 +697,7 @@ fn scene_model(scene: &Scene) -> serde_json::Value {
 pub fn scene_to_igz_document(scene: &Scene) -> serde_json::Value {
     let current = scene_model(scene);
     let mut doc = overlay(&scene.native_document, &scene.native_baseline, current.clone());
+    if scene.model_units_override.is_some() {doc["units"]=current["units"].clone();}
     if let Some(style)=&scene.dimension_style_override {doc["dimension_style"]=style.clone();}
     if scene.native_baseline.get("hidden_view")!=current.get("hidden_view") {
         let mut shown=doc.get("hidden_view").and_then(|v|v.as_object()).cloned().unwrap_or_default();

@@ -305,7 +305,7 @@ impl IngeTrazoApp {
         self.composer_state=Default::default();
         self.clipboard_document=uuid::Uuid::new_v4();self.clipboard_mesh_share_imports.clear();
         self.camera = self.scene.camera.clone();
-        self.scene.unit=self.document_session.preferences.new_document_unit;
+        self.initialize_document_units(self.document_session.preferences.new_document_units());
         self.undo_stack.clear();self.redo_stack.clear();
         self.current_file = None;
         self.mark_document_clean();

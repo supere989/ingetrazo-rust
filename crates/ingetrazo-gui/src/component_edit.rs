@@ -334,6 +334,7 @@ pub(crate) fn component_candidate(session:&ComponentEditSession,scene:&Scene)->R
             candidate.refresh_dimensions();
         }
         candidate.image_planes=scene.image_planes.clone();candidate.image_objects=scene.image_objects.clone();if image_global_only{candidate.layers=scene.layers.clone();candidate.embedded_textures=scene.embedded_textures.clone();}
+        candidate.unit=scene.unit;candidate.model_units_override=scene.model_units_override.clone();
         candidate.dimension_style_override=scene.dimension_style_override.clone();
         candidate.display_style=scene.display_style.clone();candidate.shadows=scene.shadows.clone();
         candidate.show_hidden_objects=scene.show_hidden_objects;candidate.show_hidden_geometry=scene.show_hidden_geometry;
@@ -564,6 +565,7 @@ impl IngeTrazoApp {
         // Original begin_group_edit swaps mesh and placements only; these are
         // document-global entities in the same world frame.
         edit.tile_layer=self.scene.tile_layer.clone();
+        edit.unit=self.scene.unit;edit.model_units_override=Some(self.scene.model_units().clone());
         edit.dimension_style_override=(!self.scene.dimension_style().is_null()).then(||self.scene.dimension_style().clone());
         edit.display_style=self.scene.display_style.clone();edit.shadows=self.scene.shadows.clone();
         edit.show_hidden_objects=self.scene.show_hidden_objects;edit.show_hidden_geometry=self.scene.show_hidden_geometry;

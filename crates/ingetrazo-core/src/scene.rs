@@ -65,6 +65,7 @@ pub struct Scene {
     #[serde(skip)] pub history_annotation_edit:bool,
     /// Source AddTextLabel command target, independent of selection snapshots.
     #[serde(skip)] pub history_annotation_create:Option<u64>,
+    #[serde(skip)] pub model_units_override:Option<serde_json::Value>,
     #[serde(skip)] pub dimension_style_override:Option<serde_json::Value>,
     #[serde(skip)]
     pub history_shareback: Option<uuid::Uuid>,
@@ -141,6 +142,7 @@ impl Default for Scene {
 impl Scene {
     /// Explicit live style edits overlay original raw metadata without changing
     /// fresh/imported document provenance.
+    pub fn model_units(&self)->&serde_json::Value {self.model_units_override.as_ref().unwrap_or(&self.native_document["units"])}
     pub fn dimension_style(&self)->&serde_json::Value {
         self.dimension_style_override.as_ref().unwrap_or(&self.native_document["dimension_style"])
     }
@@ -155,7 +157,7 @@ impl Scene {
             dimension_frame:glam::DMat4::IDENTITY,
             drawing_frame:None,
             history_context:vec![],
-            display_style:Default::default(),shadows:Default::default(),history_annotation_delete:false,history_annotation_move:false,history_annotation_edit:false,history_annotation_create:None,dimension_style_override:None,history_shareback:None,history_axes:None,history_bim:None,history_material:None,history_python:None,history_views:Default::default(),history_group_visibility:None,history_terrain:Default::default(),history_layers:Default::default(),
+            display_style:Default::default(),shadows:Default::default(),history_annotation_delete:false,history_annotation_move:false,history_annotation_edit:false,history_annotation_create:None,dimension_style_override:None,model_units_override:None,history_shareback:None,history_axes:None,history_bim:None,history_material:None,history_python:None,history_views:Default::default(),history_group_visibility:None,history_terrain:Default::default(),history_layers:Default::default(),
             component_definitions: HashMap::new(),
             mesh_shares: HashMap::new(),
             native_document: serde_json::Value::Null,
