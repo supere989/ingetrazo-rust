@@ -9,3 +9,5 @@ All 13 inward-limit/preview/status decisions and 12 final oriented inventories m
 The first endpoint checker used system Python without PySide6. Its failure is retained; only that checker reran in the existing Qt environment. No Rust test, binary build or source capture repeated. `execute.py` now selects that environment directly.
 
 `acceptance.json` hashes every retained file in `evidence.zip`, including failures, binary/input hashes, test roster and all fresh outputs. `stages.json` records commands and timings. Every archive byte was checked before terminal temporary output cleanup; active targets and canonical reference inputs remain. No row or release gate is promoted to complete by this batch.
+
+Published review commit `55d76ef28dd06eeff768eca7d271e6c6e9345c6e` passed all five semantic/framework/cross-compile jobs in run38130384176 and both actual ordered compute jobs in run38130384235. Linux completed at2026-10-11T10:13:12Z. Exact job identities are retained in [published-ci.json](published-ci.json). This does not close the separate strict Metal ghost pixel gate or prove later source changes.
