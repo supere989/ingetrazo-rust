@@ -1,0 +1,226 @@
+{
+  "source_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "archive": "source-records.zip",
+  "archive_sha256": "0eee5acfe8af6d63b8d17e9fe4e19838e7fafb5686e3ee325673dc1c2f0d4523",
+  "entries": [
+    {
+      "path": "attempts/source-seed-import/stderr.log",
+      "bytes": 466,
+      "sha256": "5de5328ef970760a83e32091a27a56fa51b837e5d1230bbe09046a085c93784d"
+    },
+    {
+      "path": "closed-cube-leaf-input.igz",
+      "bytes": 3552,
+      "sha256": "ce5e824f8c01870397403f36055576568b54a82c97139e39d7ea1f8490ad554a"
+    },
+    {
+      "path": "closed-cube-leaf-original.igz",
+      "bytes": 9368,
+      "sha256": "1509a6c6592829ec8b7d9b27a8625cc56ca1ea2f7a4fc0ea7427a2c09b03482d"
+    },
+    {
+      "path": "closed-cube-leaf.obj",
+      "bytes": 160,
+      "sha256": "aa532d0026940b248edc321fead5a4b35bf75d211cb606b0591674ded0b17dd4"
+    },
+    {
+      "path": "closed-cube-root-input.igz",
+      "bytes": 325,
+      "sha256": "fa9c2cb30d4f8afe1b3ec1c99587362006d5da0d620cfb3d0663a617138b1f20"
+    },
+    {
+      "path": "closed-cube-root-original.igz",
+      "bytes": 4293,
+      "sha256": "25a6695cc33d04ba05742cb1862d2d36ea78cba8ed00e08cad5d486a47abd049"
+    },
+    {
+      "path": "closed-cube-root.obj",
+      "bytes": 160,
+      "sha256": "aa532d0026940b248edc321fead5a4b35bf75d211cb606b0591674ded0b17dd4"
+    },
+    {
+      "path": "explicit-smooth-root-input.igz",
+      "bytes": 325,
+      "sha256": "fa9c2cb30d4f8afe1b3ec1c99587362006d5da0d620cfb3d0663a617138b1f20"
+    },
+    {
+      "path": "explicit-smooth-root-original.igz",
+      "bytes": 2233,
+      "sha256": "eff5daaeebd3ca33bdcc368dfb0473622fc1a17f6600fd3fe7ecb8e64239b8b1"
+    },
+    {
+      "path": "explicit-smooth-root.obj",
+      "bytes": 106,
+      "sha256": "43132b5d30aaee63fac7d7c6e808e4bafb5629021c2d6a30cda89ebbbd4c098c"
+    },
+    {
+      "path": "fusion-paint.mtl",
+      "bytes": 53,
+      "sha256": "f32dc9d528d2573d666795572554f1ba4ddb00f9ee608c88658769275a727c9e"
+    },
+    {
+      "path": "hard-root-input.igz",
+      "bytes": 325,
+      "sha256": "fa9c2cb30d4f8afe1b3ec1c99587362006d5da0d620cfb3d0663a617138b1f20"
+    },
+    {
+      "path": "hard-root-original.igz",
+      "bytes": 2211,
+      "sha256": "4ee47738592f8a88d0fc540f36e606840bace6205c5a0651c264920d3ac13d90"
+    },
+    {
+      "path": "hard-root.obj",
+      "bytes": 102,
+      "sha256": "88906dcba2a77d372a29bf77c7d6d38bf80865718e9cd7e177cd91feba4a78b6"
+    },
+    {
+      "path": "large-reference-grid-input.igz",
+      "bytes": 325,
+      "sha256": "fa9c2cb30d4f8afe1b3ec1c99587362006d5da0d620cfb3d0663a617138b1f20"
+    },
+    {
+      "path": "large-reference-grid-original.igz",
+      "bytes": 19250,
+      "sha256": "443841832de9e8dc2914f47c63870489e85b8cbba607e239eaedc6f7336cdd45"
+    },
+    {
+      "path": "large-reference-grid.obj",
+      "bytes": 7817,
+      "sha256": "f30d2fbb7a874b719ab9a88a0883a7533790f9780c33c22248d7016a094654ee"
+    },
+    {
+      "path": "logs/obj-fusion-source-addendum.log",
+      "bytes": 27,
+      "sha256": "7ee7e4b7409cf5bdbac0d1f1130a9df048ecca4a72c4f10ce4f6ff0228e3fe85"
+    },
+    {
+      "path": "logs/obj-fusion-source-addendum.stderr",
+      "bytes": 147,
+      "sha256": "c0cf3de7adfde67e063969f6c3dfce3bc40a7a3694cb8d645ebf5409bed17591"
+    },
+    {
+      "path": "logs/obj-fusion-source-final.log",
+      "bytes": 27,
+      "sha256": "a0ecc72b5a4ca33e258a18ce4b581fa2355f2a3177a3dfba255cc0d7e0299c84"
+    },
+    {
+      "path": "logs/obj-fusion-source-final.stderr",
+      "bytes": 441,
+      "sha256": "f626409abad9adab33d3ffae98e7c5ec99a9f124944e50cc35bfb65799c780f8"
+    },
+    {
+      "path": "original-obj-fusion.json",
+      "bytes": 648836,
+      "sha256": "30189a4fb780c5e6e950ff6e867f8ff09bd45c3267e8392df0d9aca65a31d74d"
+    },
+    {
+      "path": "reference-annulus-input.igz",
+      "bytes": 325,
+      "sha256": "fa9c2cb30d4f8afe1b3ec1c99587362006d5da0d620cfb3d0663a617138b1f20"
+    },
+    {
+      "path": "reference-annulus-original.igz",
+      "bytes": 5515,
+      "sha256": "0210b9e85911ef92239e58d3a32dd525e305432937721343aa035363dfd3031d"
+    },
+    {
+      "path": "reference-annulus.obj",
+      "bytes": 178,
+      "sha256": "d7db8f3a14cb8d0902b9a9bf62f34bd94cc5df86da8ba26062170a071949cd68"
+    },
+    {
+      "path": "reference-auto-smooth-input.igz",
+      "bytes": 325,
+      "sha256": "fa9c2cb30d4f8afe1b3ec1c99587362006d5da0d620cfb3d0663a617138b1f20"
+    },
+    {
+      "path": "reference-auto-smooth-original.igz",
+      "bytes": 5297,
+      "sha256": "7f70a3beea790d91d1f5561b62312c507a8d8bd8d987075270f7b9a01e9c294a"
+    },
+    {
+      "path": "reference-auto-smooth.obj",
+      "bytes": 121,
+      "sha256": "868bf25a1a38a39fcd87c40f2a708c8f47b8a4d92b86fad16e1bf675ab16ec23"
+    },
+    {
+      "path": "reference-duplicates-input.igz",
+      "bytes": 325,
+      "sha256": "fa9c2cb30d4f8afe1b3ec1c99587362006d5da0d620cfb3d0663a617138b1f20"
+    },
+    {
+      "path": "reference-duplicates-original.igz",
+      "bytes": 4214,
+      "sha256": "2e794d5da86f0b5e8947d7a7e91854c5f285f14d668408d65d83590c667db49f"
+    },
+    {
+      "path": "reference-duplicates.obj",
+      "bytes": 105,
+      "sha256": "70f607aa7cab342c11e878b8f14112897133ef7f1134274384a53e343a78490e"
+    },
+    {
+      "path": "reference-irregular-input.igz",
+      "bytes": 325,
+      "sha256": "fa9c2cb30d4f8afe1b3ec1c99587362006d5da0d620cfb3d0663a617138b1f20"
+    },
+    {
+      "path": "reference-irregular-original.igz",
+      "bytes": 5434,
+      "sha256": "5bab6ef415577a09899bb3e9b6997addbef46f169a83469bdd90805515ef865f"
+    },
+    {
+      "path": "reference-irregular.obj",
+      "bytes": 117,
+      "sha256": "5c3747d2fc43dd871a71b67f718b2d13d354706fff2d1f652b26a20d43800e9a"
+    },
+    {
+      "path": "reference-paint-boundary-input.igz",
+      "bytes": 325,
+      "sha256": "fa9c2cb30d4f8afe1b3ec1c99587362006d5da0d620cfb3d0663a617138b1f20"
+    },
+    {
+      "path": "reference-paint-boundary-original.igz",
+      "bytes": 5036,
+      "sha256": "01ced3b518da12198b40c71b3375aacc977573652ce3fb2a220d6ec2fce52997"
+    },
+    {
+      "path": "reference-paint-boundary.obj",
+      "bytes": 144,
+      "sha256": "a411c46bad7305363b0ed4ec3a41715d704a391072bea0b31ed73174427c6f3c"
+    },
+    {
+      "path": "reference-patch-input.igz",
+      "bytes": 325,
+      "sha256": "fa9c2cb30d4f8afe1b3ec1c99587362006d5da0d620cfb3d0663a617138b1f20"
+    },
+    {
+      "path": "reference-patch-original.igz",
+      "bytes": 4209,
+      "sha256": "8e9e7012fbf6dcf7ddd8008d03e556d837b45abc22867f51833e0446cac40af3"
+    },
+    {
+      "path": "reference-patch.obj",
+      "bytes": 97,
+      "sha256": "fe69f6c1a5cb8c3f710873e32058dbb31e8eb535bbb5ef98acee4e0c703ba610"
+    },
+    {
+      "path": "reference-smooth-input.igz",
+      "bytes": 325,
+      "sha256": "fa9c2cb30d4f8afe1b3ec1c99587362006d5da0d620cfb3d0663a617138b1f20"
+    },
+    {
+      "path": "reference-smooth-original.igz",
+      "bytes": 5356,
+      "sha256": "cf9bd680a1d4baa88fcbfc01b000cf8956dd2e8efeb32f4a61ed44c5c4b65dd6"
+    },
+    {
+      "path": "reference-smooth.obj",
+      "bytes": 151,
+      "sha256": "783c7410697134a0227f3541975ba9b52ce0be0ea3eac378cf4301cabbf8620c"
+    }
+  ],
+  "helper_sha256": "19f3f564be902ad09beab33880fd0e3e8a6085f1cf37e0a31ad091dba8205719",
+  "cases": 12,
+  "states": 60,
+  "scope": "Only missing finite OBJ geometry controller cases; actual SnapshotImport/Viewport/history/save, no GPU claim. Previously accepted MTL/nested source corpus reused."
+}

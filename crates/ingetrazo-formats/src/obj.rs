@@ -10,6 +10,8 @@ use std::path::Path;
 use ingetrazo_core::scene::Scene;
 #[path = "obj_material.rs"]
 mod source_material;
+#[path = "obj_geometry.rs"]
+mod obj_geometry;
 
 #[derive(thiserror::Error, Debug)]
 pub enum ObjError {
@@ -167,7 +169,8 @@ impl ObjPlan {
                 for index in indices {
                     Self::emit_entity(&mut self.entities[*index], &mut child.mesh)?;
                 }
-                container.children.push(child);
+                obj_geometry::reference(&mut child.mesh).map_err(|e|ObjError::Parse(0,e))?;
+                if !child.mesh.faces.is_empty() { container.children.push(child); }
             }
             source_group_kind(&mut container, true);
             scene.groups.push(container);
@@ -176,15 +179,19 @@ impl ObjPlan {
             for entity in self.entities.iter_mut().filter(|e| e.face) {
                 Self::emit_entity(entity, &mut mesh)?;
             }
+            obj_geometry::reference(&mut mesh).map_err(|e|ObjError::Parse(0,e))?;
             let name = ingetrazo_core::groups::next_source_group_name()
                 .map_err(|e| ObjError::Parse(0, e.into()))?;
             let mut group = ingetrazo_core::groups::Group::with_mesh(name, mesh);
             source_group_kind(&mut group, false);
             scene.groups.push(group);
         } else {
+            let first_new=scene.mesh.faces.len();
+            let seed=self.entities.iter().filter(|e|e.face).flat_map(|e|e.points.iter().copied()).collect::<Vec<_>>();
             for entity in self.entities.iter_mut().filter(|e| e.face) {
                 Self::emit_entity(entity, &mut scene.mesh)?;
             }
+            obj_geometry::editable(&mut scene.mesh,first_new,&seed).map_err(|e|ObjError::Parse(0,e))?;
         }
         scene.bump_version();
         Ok(())
@@ -321,6 +328,7 @@ fn parse_obj_options(
     let mut current_recipe = None;
     let mut asset_paths = std::collections::HashMap::new();
     let mut file_uv = Vec::<glam::DVec2>::new();
+    let mut smooth = 0_u64;
 
     for (line_num, line_res) in buf_reader.lines().enumerate() {
         let line = line_res?;
@@ -427,6 +435,9 @@ fn parse_obj_options(
                     plan.declarations.push(Some(name));
                     container = Some(index);
                 }
+            }
+            "s" if source_policy => {
+                smooth = parts.next().filter(|s|s.bytes().all(|b|b.is_ascii_digit())).and_then(|s|s.parse().ok()).unwrap_or(0);
             }
             "usemtl" => {
                 if source_policy {
@@ -543,6 +554,7 @@ fn parse_obj_options(
                         &mut asset_paths,
                     )?;
                 }
+                if source_policy && cmd == "f" && smooth != 0 { attrs.insert("_s".into(), serde_json::Value::from(smooth)); }
                 if !source_policy && cmd == "f" && attrs.contains_key("texture") {
                     if uvs.iter().all(Option::is_some) {
                         let e1 = points[1] - points[0];

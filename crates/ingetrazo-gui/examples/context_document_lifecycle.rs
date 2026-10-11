@@ -132,7 +132,10 @@ fn click(a: &mut IngeTrazoApp, ctx: &egui::Context, label: &str) {
 mod nested_import;
 #[path="context_document_lifecycle/obj_mtl.rs"]
 mod obj_mtl;
+#[path="context_document_lifecycle/obj_fusion.rs"]
+mod obj_fusion;
 fn main() {
+    if std::env::args().any(|a|a=="--obj-fusion") {obj_fusion::run();return;}
     if std::env::args().any(|a|a=="--obj-mtl") {obj_mtl::run();return;}
     if std::env::args().any(|a|a=="--nested-import"){nested_import::run();return;}
 

@@ -1,5 +1,5 @@
 use super::*;
-fn normalized(mut value: Value, app: &IngeTrazoApp) -> Value {
+pub(super) fn normalized(mut value: Value, app: &IngeTrazoApp) -> Value {
     value["units"] = json!({"length":ingetrazo_core::units::model_unit(&app.scene),"precision":ingetrazo_core::units::model_precision(&app.scene)});
     fn walk(v: &mut Value, assets: &std::collections::HashMap<String, Vec<u8>>) {
         if let Some(object) = v.as_object_mut() {
