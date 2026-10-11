@@ -1,0 +1,6 @@
+{
+  "full_image_differing_pixels": 0,
+  "difference_bounds": null,
+  "viewport_differing_pixels": 0,
+  "interpretation": "Independent decoded image comparison; no inference about presentation timing or depth cause."
+}
