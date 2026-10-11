@@ -18,6 +18,7 @@ if candidate:
  d=j["positive_depth_domain"]
  assert j["warm_opt_in_refused"] is True
  assert d["enabled"] and d["all_original_and_cap_and_active_contour_clip_z_nonnegative"] and d["all_w_exactly1"] and d["x_y_w_unchanged"]
+ assert d["all_active_clip_z_at_most_w"] is True and d["conservative_active_clip_z_bounds"]==[0,1] and d["fallback_excluded_from_active_domain"] is True
  assert d["cap_vertices"]==6 and d["viewport_depth_range"]==[0.5,1.0]
  assert j["resource"]["positive_depth_viewport_probe"] is True
 assert j["resource"]["completed"] is True and j["resource"]["readback"]["shared"] is True

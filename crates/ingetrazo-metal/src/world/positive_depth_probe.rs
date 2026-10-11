@@ -17,7 +17,7 @@ fn point(camera:Mat4,p:Vec3,position_error:f64)->Result<f32,String>{
     // alternative FMA/association and bounded CPU/GPU contour arithmetic.
     let error=32.*f32::EPSILON as f64*terms.iter().map(|v|v.abs()).sum::<f64>()
         +position_error*row[..3].iter().map(|v|v.abs()as f64).sum::<f64>();
-    if !q.is_finite() || q.w!=1. || q.z<0. || ideal-error<0.{return Err(format!("Positive depth clip domain refusal: clip={q:?}, lower_bound={}",ideal-error));}
+    if !q.is_finite() || q.w!=1. || q.z<0. || q.z>q.w || ideal-error<0. || ideal+error>1.{return Err(format!("Positive depth clip domain refusal: clip={q:?}, lower_bound={}, upper_bound={}",ideal-error,ideal+error));}
     Ok(q.z)
 }
 pub(super) fn validate(frame:&Prepared)->Result<serde_json::Value,String>{
@@ -62,5 +62,5 @@ pub(super) fn validate(frame:&Prepared)->Result<serde_json::Value,String>{
         let position_error=128.*f32::EPSILON as f64*magnitude;
         for q in quad{min_z=min_z.min(point(camera,q,position_error)?);}active+=1;
     }
-    Ok(serde_json::json!({"enabled":true,"all_original_and_cap_and_active_contour_clip_z_nonnegative":true,"all_w_exactly1":true,"x_y_w_unchanged":true,"min_unremapped_clip_z":min_z,"original_vertices":original_vertices,"cap_vertices":6,"active_contour_vertices":active*6,"clipped_contour_fallback_vertices":fallback*6,"fallback_clip_position":[2,2,2,1],"viewport_depth_range":[0.5,1.0],"guard_scope":"Literal immutable Shared streams and conservative active contour quad exclusion margin; no CPU geometry rendered"}))
+    Ok(serde_json::json!({"enabled":true,"all_original_and_cap_and_active_contour_clip_z_nonnegative":true,"all_active_clip_z_at_most_w":true,"conservative_active_clip_z_bounds":[0,1],"fallback_excluded_from_active_domain":true,"all_w_exactly1":true,"x_y_w_unchanged":true,"min_unremapped_clip_z":min_z,"original_vertices":original_vertices,"cap_vertices":6,"active_contour_vertices":active*6,"clipped_contour_fallback_vertices":fallback*6,"fallback_clip_position":[2,2,2,1],"viewport_depth_range":[0.5,1.0],"guard_scope":"Literal immutable Shared streams and conservative active contour quad exclusion margin; no CPU geometry rendered"}))
 }
