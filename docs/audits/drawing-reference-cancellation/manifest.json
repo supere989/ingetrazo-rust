@@ -1,0 +1,231 @@
+{
+  "archive_sha256": "13924c3dd65365ede6a463864762a32844d188534455b52ded477c92e2ee707f",
+  "runtime_revision": "f48c6778e07537d76ef4784e99fc3738082d78bd",
+  "records": [
+    {
+      "path": "binary-bindings.json",
+      "bytes": 533,
+      "sha256": "530e50adec3b1b4a42678d5a84b23b4dede5523fb094fe9ae6e0f73a3bd7eb4d"
+    },
+    {
+      "path": "cache/rectangle/mesa_shader_cache/43/7f6ffed39550942f47bb59d25437d5e657fcd5",
+      "bytes": 413,
+      "sha256": "f7e1790d0bf2dd34efe466029d8bf4443aa538e93335251c190263d03521c418"
+    },
+    {
+      "path": "cache/rectangle/mesa_shader_cache/5c/a1092752fa6df49a87491d6d818b29823541bc",
+      "bytes": 589,
+      "sha256": "62fcef29a65d614ebfcd091f6dba4ff00f45c8c7043d47f1e390d0c4a8050210"
+    },
+    {
+      "path": "cache/rectangle/mesa_shader_cache/7b/1cdb83dfa5cec73c311274e93594a9b3248633",
+      "bytes": 2007,
+      "sha256": "4e366ad42740bf7b156773ecec6701cd43d9612662d75bd802db72d31f66e3f0"
+    },
+    {
+      "path": "cache/rectangle/mesa_shader_cache/90/566821644cd711630e0c06789ab433b80e73db",
+      "bytes": 4575,
+      "sha256": "5be1780a27bead08e425cace0efbd548692b818a16e02096be0d0fbd3862602d"
+    },
+    {
+      "path": "cache/rectangle/mesa_shader_cache/99/f8e03eef8eb2d12b581ef6ec31e2aeb1adadfd",
+      "bytes": 436,
+      "sha256": "45cceba04cbdccd8c20313d22dbd614d9d4218d08e19070681709c5f2e2fd930"
+    },
+    {
+      "path": "cache/rectangle/mesa_shader_cache/d3/23dba30c7558d3f3ee3fff9116c495984e8691",
+      "bytes": 1229,
+      "sha256": "8582584f2ec818e781b97a09147cadb7c5d867a79ad27a731c28b9002f80060d"
+    },
+    {
+      "path": "cache/rectangle/mesa_shader_cache/d5/861e42fd8fc4b554bb5527644ba7ea33033bf2",
+      "bytes": 579,
+      "sha256": "da496574c335a2d350065d733b095731738ea7c8c7e8c328f88fdc1413e60c08"
+    },
+    {
+      "path": "cache/rectangle/mesa_shader_cache/f7/d199bddc41f99bb0326ea47fb1ebb282f479e3",
+      "bytes": 589,
+      "sha256": "384431073710b9887d24ae47e76ec0d8f616d064f64413948009c165a12bb5ee"
+    },
+    {
+      "path": "cache/rectangle/mesa_shader_cache/fb/44c72c62e630ec899ea2b95081e66b75632d74",
+      "bytes": 588,
+      "sha256": "579851340b71097dbfb16df651f664227c0cafa279943d37ce00938be36455ae"
+    },
+    {
+      "path": "cache/rectangle/mesa_shader_cache/index",
+      "bytes": 1310728,
+      "sha256": "59d5e29c7250d4786245f6e99fc10b2144dd75388c4f4a78b4d7b004a60c2a9c"
+    },
+    {
+      "path": "cache/rectangle/mesa_shader_cache/marker",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "cache/shift/mesa_shader_cache/43/7f6ffed39550942f47bb59d25437d5e657fcd5",
+      "bytes": 413,
+      "sha256": "f7e1790d0bf2dd34efe466029d8bf4443aa538e93335251c190263d03521c418"
+    },
+    {
+      "path": "cache/shift/mesa_shader_cache/5c/a1092752fa6df49a87491d6d818b29823541bc",
+      "bytes": 589,
+      "sha256": "62fcef29a65d614ebfcd091f6dba4ff00f45c8c7043d47f1e390d0c4a8050210"
+    },
+    {
+      "path": "cache/shift/mesa_shader_cache/7b/1cdb83dfa5cec73c311274e93594a9b3248633",
+      "bytes": 2007,
+      "sha256": "4e366ad42740bf7b156773ecec6701cd43d9612662d75bd802db72d31f66e3f0"
+    },
+    {
+      "path": "cache/shift/mesa_shader_cache/90/566821644cd711630e0c06789ab433b80e73db",
+      "bytes": 4575,
+      "sha256": "5be1780a27bead08e425cace0efbd548692b818a16e02096be0d0fbd3862602d"
+    },
+    {
+      "path": "cache/shift/mesa_shader_cache/99/f8e03eef8eb2d12b581ef6ec31e2aeb1adadfd",
+      "bytes": 436,
+      "sha256": "45cceba04cbdccd8c20313d22dbd614d9d4218d08e19070681709c5f2e2fd930"
+    },
+    {
+      "path": "cache/shift/mesa_shader_cache/d3/23dba30c7558d3f3ee3fff9116c495984e8691",
+      "bytes": 1229,
+      "sha256": "8582584f2ec818e781b97a09147cadb7c5d867a79ad27a731c28b9002f80060d"
+    },
+    {
+      "path": "cache/shift/mesa_shader_cache/d5/861e42fd8fc4b554bb5527644ba7ea33033bf2",
+      "bytes": 579,
+      "sha256": "da496574c335a2d350065d733b095731738ea7c8c7e8c328f88fdc1413e60c08"
+    },
+    {
+      "path": "cache/shift/mesa_shader_cache/f7/d199bddc41f99bb0326ea47fb1ebb282f479e3",
+      "bytes": 589,
+      "sha256": "384431073710b9887d24ae47e76ec0d8f616d064f64413948009c165a12bb5ee"
+    },
+    {
+      "path": "cache/shift/mesa_shader_cache/fb/44c72c62e630ec899ea2b95081e66b75632d74",
+      "bytes": 588,
+      "sha256": "579851340b71097dbfb16df651f664227c0cafa279943d37ce00938be36455ae"
+    },
+    {
+      "path": "cache/shift/mesa_shader_cache/index",
+      "bytes": 1310728,
+      "sha256": "59d5e29c7250d4786245f6e99fc10b2144dd75388c4f4a78b4d7b004a60c2a9c"
+    },
+    {
+      "path": "cache/shift/mesa_shader_cache/marker",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "provenance.json",
+      "bytes": 1797,
+      "sha256": "6122dbcd4a9c8913195a05303ea22dd3ab3a7dd8231ad903aba13f1cff5e05e5"
+    },
+    {
+      "path": "rectangle/before.png",
+      "bytes": 23865,
+      "sha256": "8899087c61a632b7bad56a098a7eb6c777e5d5ffffe162b135bd7f2eb2729b65"
+    },
+    {
+      "path": "rectangle/cancelled.png",
+      "bytes": 23871,
+      "sha256": "b679dea8b5796c94440797b85cdeea51f985215128ba8bfc921b240c34836ccd"
+    },
+    {
+      "path": "rectangle/capture.txt",
+      "bytes": 9,
+      "sha256": "cc962289af2873dd6dad32931554372a7d2d2de5bd5859c8265eb58b5197a88e"
+    },
+    {
+      "path": "rectangle/committed.igz",
+      "bytes": 5600,
+      "sha256": "a1ec877eb067ff7a4ca0b7bb9c3c134f18902d8dcea4d6f527c281e8efc64d71"
+    },
+    {
+      "path": "rectangle/committed.png",
+      "bytes": 29697,
+      "sha256": "cff92caa19c35ca2e28ef6dc40d7308788784535b3de6007729078283f6ff544"
+    },
+    {
+      "path": "rectangle/preview.png",
+      "bytes": 28765,
+      "sha256": "99fd6b7a7ecc2771b4efa492682585b272d5f085dee6b32fd29687fddccd2b22"
+    },
+    {
+      "path": "rectangle/runtime.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "rectangle/state.json",
+      "bytes": 1069,
+      "sha256": "edcfb4db2d1f9805970f04abbb426ac37c8df6d0cd768486bd1925ef272ae93a"
+    },
+    {
+      "path": "rectangle-report.json",
+      "bytes": 6920,
+      "sha256": "d4c87777d7882ceccad194bb59d529ab8cbd2e4b1664f5f5964ec547171ad6e6"
+    },
+    {
+      "path": "rectangle-timing.json",
+      "bytes": 91,
+      "sha256": "7964d5d297aaa728ed5485f3aef020515024ecedf4f1d1e8ad4b16effa1fd9b6"
+    },
+    {
+      "path": "rectangle.log",
+      "bytes": 6920,
+      "sha256": "d4c87777d7882ceccad194bb59d529ab8cbd2e4b1664f5f5964ec547171ad6e6"
+    },
+    {
+      "path": "shift/before.png",
+      "bytes": 20485,
+      "sha256": "9e06c65f6d7158a9b586cf76a6991b884d23ea6d31708478aadbae0f73495aec"
+    },
+    {
+      "path": "shift/cancelled.png",
+      "bytes": 20485,
+      "sha256": "9e06c65f6d7158a9b586cf76a6991b884d23ea6d31708478aadbae0f73495aec"
+    },
+    {
+      "path": "shift/capture.txt",
+      "bytes": 9,
+      "sha256": "8b47045eb7b8ca42aa967f33ee1d014ba89f8d1ac207426b482d34b5c0d90935"
+    },
+    {
+      "path": "shift/locked.png",
+      "bytes": 23696,
+      "sha256": "e17038963403ab5807b3783f74525af762b8776e80670c22000e5f762afeef98"
+    },
+    {
+      "path": "shift/released.png",
+      "bytes": 23315,
+      "sha256": "4bd8299772f87276a0df651632889753df9999b6dfcd2727c3107c3b7bb74e10"
+    },
+    {
+      "path": "shift/runtime.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "shift/state.json",
+      "bytes": 226,
+      "sha256": "9785347fab8e33d5a04c3c5e8188ac00319ff9129fa8b63bff3e1f2c0828ab2f"
+    },
+    {
+      "path": "shift-report.json",
+      "bytes": 3475,
+      "sha256": "7b120c49c1428a8abf20545d472767f552944d2b488c763d606dbbc68f886b70"
+    },
+    {
+      "path": "shift-timing.json",
+      "bytes": 93,
+      "sha256": "e38514c638e597cdc9cd5232015b24af2430458c8f542aeb4db7b3889207691e"
+    },
+    {
+      "path": "shift.log",
+      "bytes": 26,
+      "sha256": "dd0393e46448dfd695bea0669d8a50285dd624001d8c8cf09a2fe81af69b4330"
+    }
+  ]
+}
