@@ -51,7 +51,7 @@ def operations(name):
   vp._occluded_on_screen=lambda point:False
   target=QImage(800,600,QImage.Format_ARGB32_Premultiplied);target.fill(0);painter=Recorder(target);vp._draw_dimensions(painter);vp._draw_text_labels(painter);visible_ops=painter.ops;painter.end()
  finally:vp._occluded_on_screen=original_occlusion
- (out/(name+'-operations.json')).write_text(json.dumps(dict(scope='post-capture original bound methods; actual retained-depth decisions and separate all-visible layout diagnostic; accepted framebuffer unchanged',actual_operations=actual_ops,all_visible_operations=visible_ops,font_metrics=metrics,visibility_queries=queries,style=scene.dimension_style,dimensions=[d.to_dict()for d in scene.dimensions],leaders=[d.to_dict()for d in scene.text_labels]),indent=2)+'\n')
+ (out/(name+'-operations.json')).write_text(json.dumps(dict(scope='post-capture original bound methods; actual retained-depth decisions and separate all-visible layout diagnostic; accepted framebuffer unchanged',actual_operations=actual_ops,all_visible_operations=visible_ops,font_metrics=metrics,visibility_queries=queries,style=scene.dimension_style,dimensions=[dict(a=list(d.a.toTuple()),b=list(d.b.toTuple()),offset=list(d.offset.toTuple()),axis=d.axis,text=d.text,hidden=getattr(d,'hidden',False))for d in scene.dimensions],leaders=[d.to_dict()for d in scene.text_labels]),indent=2)+'\n')
 initial_navigation={key:repr(getattr(vp,key,None))for key in['_last_pos','_look_drag','nav_mode','_pan_mode','_orbit_pivot']};vp.show();rows=[]
 def take(name):
  before=getattr(vp,'_depth_snap',None);started=time.monotonic();vp.update();deadline=started+4
