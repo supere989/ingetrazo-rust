@@ -119,6 +119,8 @@ pub trait Tool: Send + Sync {
     fn pending_model_preview(&self)->bool{false}
     fn scale_box_state(&self)->Option<ScaleBoxState>{None}
     fn uses_snap(&self)->bool{true}
+    /// Session-local Fillet defaults survive switching to another tool.
+    fn fillet_parameters(&self)->Option<(f64,usize)>{None}
     fn note_snap_result(&mut self,_result:&ingetrazo_core::snap::SnapResult){}
     fn note_shift_state(&mut self,_held:bool){}
 

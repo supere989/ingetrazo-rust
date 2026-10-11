@@ -94,7 +94,7 @@ impl IngeTrazoApp {
             self.scene=before;self.bump_model_revision();self.status_message=format!("Tool error: {error}");return Err(error);
         }
 
-        if before.mesh != self.scene.mesh {
+        if before.mesh != self.scene.mesh && self.active_tool_type!=ingetrazo_tools::base::ToolType::Fillet {
             if let Err(error)=ingetrazo_core::heal::refresh_interior(&mut self.scene.mesh) {
                 self.scene=before;self.bump_model_revision();
                 self.status_message=format!("Tool error: {error}");
@@ -106,6 +106,8 @@ impl IngeTrazoApp {
         let transient_changed=before.version!=self.scene.version;
         let committed=changed_model(&before,&self.scene) || bare_edge.is_some();
         if committed {
+            // Source Fillet SnapshotMutation owns mesh only; undo does not restore selection.
+            if self.active_tool_type==ingetrazo_tools::base::ToolType::Fillet { before.selection=self.scene.selection.clone(); }
             if let Some((a,b))=bare_edge {
                 before.history_group_visibility=Some(ingetrazo_core::saved_views::GroupVisibilityCommand { targets:Vec::new(),hidden:false,undo:true,retain_mesh_flags:true,snapshot_after:None });
                 // Reuse the admitted history snapshot. Copy only the welded

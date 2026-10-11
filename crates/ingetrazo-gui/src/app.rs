@@ -56,6 +56,7 @@ pub struct IngeTrazoApp {
     pub camera: OrbitCamera,
     pub navigation: crate::navigation::Navigation,
     pub active_tool_type: ToolType,
+    fillet_parameters:(f64,usize),
     pub active_tool: Box<dyn Tool>,
     pub style: StyleConfig,
     pub snap_engine: SnapEngine,
@@ -167,6 +168,7 @@ impl IngeTrazoApp {
             camera,
             navigation: Default::default(),
             active_tool_type: ToolType::Select,
+            fillet_parameters:(0.1,8),
             active_tool: create_tool(ToolType::Select),
             style: StyleConfig::default_shaded(),
             snap_engine: SnapEngine::default(),
@@ -262,6 +264,7 @@ impl IngeTrazoApp {
     }
 
     pub fn set_tool(&mut self, tool_type: ToolType) {
+        if let Some(parameters)=self.active_tool.fillet_parameters(){self.fillet_parameters=parameters;}
         self.cancel_blender_pick();
         self.navigation.cancel(); self.navigation.mode=None;
         self.paste_preview=None;
@@ -269,7 +272,7 @@ impl IngeTrazoApp {
         if self.scene.version!=version{self.bump_model_revision();}else if self.scene.image_planes.publication_revision()!=images{self.bump_image_presentation_revision();}
         self.snap_engine.reset_operation_state();
         self.active_tool_type = tool_type;
-        self.active_tool = create_tool(tool_type);
+        self.active_tool = if tool_type==ToolType::Fillet{Box::new(ingetrazo_tools::fillet::FilletTool::with_parameters(self.fillet_parameters.0,self.fillet_parameters.1))}else{create_tool(tool_type)};
         self.active_tool.on_activate(&mut self.scene);
         self.status_message.clear();
         self.vcb_text.clear();

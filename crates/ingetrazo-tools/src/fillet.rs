@@ -85,6 +85,7 @@ fn add_polygon(
         .ok_or("Fillet would collapse a face")?;
     mesh.faces[id].attrs = source.attrs.clone();
     mesh.faces[id].layer = source.layer.clone();
+    mesh.faces[id].interior = source.interior;
     Ok(())
 }
 
@@ -177,9 +178,6 @@ fn shared_source(mesh: &Mesh, round: &Round) -> MeshFace {
                 source.attrs.insert(key.into(), value.clone());
             }
         }
-    }
-    if mesh.faces[round.f1].layer == mesh.faces[round.f2].layer {
-        source.layer = mesh.faces[round.f1].layer.clone();
     }
     source
 }
@@ -294,6 +292,29 @@ fn corner_patch(
     Ok((triangles, soft))
 }
 
+fn validate_edge_components(mesh:&Mesh,edges:&[usize])->Result<(),String>{
+    let mut seeds=Vec::new();
+    for &id in edges {let edge=mesh.edges.get(id).ok_or("Invalid fillet edge")?;seeds.extend(edge.faces.iter().copied());}
+    validate_face_components(mesh,&seeds)
+}
+fn validate_face_components(mesh:&Mesh,seeds:&[usize])->Result<(),String>{
+    let mut seen=std::collections::HashSet::new();
+    for &seed in seeds {
+        if seen.contains(&seed){continue;}
+        let mut stack=vec![seed];let mut shell=Mesh::new();
+        while let Some(id)=stack.pop(){if !seen.insert(id){continue;}let face=mesh.faces.get(id).ok_or("Invalid fillet face")?;
+            let ring=face.vertices.iter().map(|&v|mesh.vertices[v].position).collect::<Vec<_>>();
+            let holes=face.holes.iter().map(|h|h.iter().map(|&v|mesh.vertices[v].position).collect::<Vec<_>>()).collect::<Vec<_>>();
+            add_polygon(&mut shell,&ring,&holes,face)?;
+            // Interior is authored display metadata; validate the complete shell topology.
+            shell.faces.last_mut().unwrap().interior=false;
+            for ring in std::iter::once(&face.vertices).chain(&face.holes){for i in 0..ring.len(){let edge=mesh.find_edge(ring[i],ring[(i+1)%ring.len()]).ok_or("Missing fillet boundary edge")?;stack.extend(mesh.edges[edge].faces.iter().copied().filter(|f|!seen.contains(f)));}}
+        }
+        ingetrazo_core::solids::validate_solid_mesh(&shell)?;
+    }
+    Ok(())
+}
+
 /// Round selected solid edges in one atomic plan. One edge receives arc caps;
 /// two selected edges meeting at a vertex share an exact miter section; three
 /// share a spherical corner patch. Unsupported/skewed joints leave the document
@@ -304,7 +325,7 @@ pub fn fillet_edges(
     radius: f64,
     segments: usize,
 ) -> Result<(), String> {
-    prepare_fillet(scene, edges, radius, segments, true)
+    prepare_fillet(scene, edges, radius, segments, true).map(|_|())
 }
 
 fn prepare_fillet(
@@ -313,7 +334,7 @@ fn prepare_fillet(
     radius: f64,
     segments: usize,
     validate: bool,
-) -> Result<(), String> {
+) -> Result<Vec<Vec<DVec3>>, String> {
     if !radius.is_finite() || radius <= 0.0 {
         return Err("Radius must be finite and positive".into());
     }
@@ -324,23 +345,12 @@ fn prepare_fillet(
         return Err("Select at least one solid edge to round".into());
     }
     let mesh = &scene.mesh;
-    if validate {
-        ingetrazo_core::solids::validate_solid_mesh(mesh)?;
-    } else if mesh.vertices.iter().any(|v| !v.position.is_finite())
-        || mesh.faces.iter().any(|f| {
-            f.vertices
-                .iter()
-                .chain(f.holes.iter().flatten())
-                .any(|&v| v >= mesh.vertices.len())
-        })
-        || mesh.edges.iter().any(|e| {
-            e.v0 >= mesh.vertices.len()
-                || e.v1 >= mesh.vertices.len()
-                || e.faces.iter().any(|&f| f >= mesh.faces.len())
-        })
-    {
-        return Err("Invalid mesh references for fillet preview".into());
+    if mesh.vertices.iter().any(|v| !v.position.is_finite())
+        || mesh.faces.iter().any(|f|f.vertices.iter().chain(f.holes.iter().flatten()).any(|&v|v>=mesh.vertices.len()))
+        || mesh.edges.iter().any(|e|e.v0>=mesh.vertices.len()||e.v1>=mesh.vertices.len()||e.faces.iter().any(|&f|f>=mesh.faces.len())) {
+        return Err("Invalid mesh references for fillet".into());
     }
+    if validate {validate_edge_components(mesh,edges)?;}
     let mut unique = std::collections::HashSet::new();
     let mut rounds = Vec::new();
     let mut at_vertex = std::collections::BTreeMap::<usize, Vec<usize>>::new();
@@ -588,15 +598,23 @@ fn prepare_fillet(
                     rounds[id].joined.insert(vertex, true);
                 }
                 let (triangles, seams) = corner_patch(&rounds, group, &sections, radius, segments)?;
-                let source = shared_source(mesh, &rounds[group[0]]);
+                let source = shared_source(mesh, &rounds[0]);
                 patches.push((triangles, source));
                 soft.extend(seams);
             }
             _ => return Err("More than three selected fillet edges meet at a vertex".into()),
         }
     }
-    let mut result = Mesh::new();
+    // Source apply_fillet preserves all old vertices (including orphans),
+    // untouched faces/edges and free wires at rounded endpoints. Only faced
+    // edges losing a rounded endpoint are retired; new subedges are fresh.
+    let touched=mesh.faces.iter().enumerate().filter(|(_,face)|face.vertices.iter().chain(face.holes.iter().flatten()).any(|v|at_vertex.contains_key(v))).map(|(id,_)|id).collect::<std::collections::HashSet<_>>();
+    let mut result = mesh.clone();
+    result.faces=mesh.faces.iter().enumerate().filter(|(id,_)|!touched.contains(id)).map(|(_,f)|f.clone()).collect();
+    result.edges.retain(|e|e.faces.is_empty() || !(at_vertex.contains_key(&e.v0)||at_vertex.contains_key(&e.v1)));
+    result.rebuild_incidence();
     for (fid, face) in mesh.faces.iter().enumerate() {
+        if !touched.contains(&fid){continue;}
         let rebuild = |ring: &Vec<usize>| -> Result<Vec<DVec3>, String> {
             let mut points = Vec::new();
             for i in 0..ring.len() {
@@ -654,7 +672,7 @@ fn prepare_fillet(
             return Err("Fillet endpoint cuts cross".into());
         }
         let center = (a[0] + b[0]) * 0.5 - round.w1 * round.tangent + round.center_offset;
-        let source = shared_source(mesh, round);
+        let source = shared_source(mesh, &rounds[0]);
         for i in 0..segments {
             add_polygon(
                 &mut result,
@@ -683,47 +701,14 @@ fn prepare_fillet(
         }
     }
     if !validate {
-        ingetrazo_core::heal::refresh_interior(&mut result)?;
-    scene.mesh = result;
-        return Ok(());
+        scene.mesh = result;
+        return Ok(curves);
     }
-    ingetrazo_core::solids::validate_solid_mesh(&result)?;
-    let positions: HashMap<_, _> = result
-        .vertices
-        .iter()
-        .enumerate()
-        .map(|(id, v)| (PointKey::from_vec3(v.position), id))
-        .collect();
-    for original in &mesh.edges {
-        if original.attrs.is_empty()
-            && !original.soft
-            && original.curve_id.is_none()
-            && original.layer.is_none()
-            && !original.hidden
-        {
-            continue;
-        }
-        let a = mesh.vertices[original.v0].position;
-        let b = mesh.vertices[original.v1].position;
-        let d = b - a;
-        let length = d.length_squared();
-        if length < 1e-20 {
-            continue;
-        }
-        for edge in &mut result.edges {
-            let on = |p: DVec3| {
-                let t = (p - a).dot(d) / length;
-                (-1e-9..=1. + 1e-9).contains(&t) && (p - (a + t * d)).length() < 1e-8
-            };
-            if on(result.vertices[edge.v0].position) && on(result.vertices[edge.v1].position) {
-                edge.attrs = original.attrs.clone();
-                edge.soft = original.soft;
-                edge.curve_id = original.curve_id;
-                edge.layer = original.layer.clone();
-                edge.hidden = original.hidden;
-            }
-        }
-    }
+    // Every selected shell remains closed; unrelated open faces/wires are
+    // document entities, not a reason to reject this local solid operation.
+    let rebuilt_start=mesh.faces.len()-touched.len();
+    validate_face_components(&result,&(rebuilt_start..result.faces.len()).collect::<Vec<_>>())?;
+    let positions: HashMap<_, _> = result.vertices.iter().enumerate().map(|(id,v)|(PointKey::from_vec3(v.position),id)).collect();
     for (a, b) in soft {
         let a = positions[&PointKey::from_vec3(a)];
         let b = positions[&PointKey::from_vec3(b)];
@@ -739,7 +724,7 @@ fn prepare_fillet(
         .unwrap_or(0)
         .checked_add(1)
         .ok_or("Curve identifiers exhausted")?;
-    for section in curves {
+    for section in &curves {
         for i in 0..segments {
             let a = positions[&PointKey::from_vec3(section[i])];
             let b = positions[&PointKey::from_vec3(section[i + 1])];
@@ -750,12 +735,11 @@ fn prepare_fillet(
         }
         curve = curve.checked_add(1).ok_or("Curve identifiers exhausted")?;
     }
-    result.preserve_vertex_uids_from(mesh);
-    ingetrazo_core::heal::refresh_interior(&mut result)?;
+    // Old vertices were retained verbatim; only new vertices receive new UIDs.
     scene.mesh = result;
     scene.clear_selection();
     scene.bump_version();
-    Ok(())
+    Ok(curves)
 }
 
 /// Convenience wrapper for a single selected edge.
@@ -776,6 +760,7 @@ pub struct FilletTool {
     hover_edge: Option<usize>,
     hover_point: Option<DVec3>,
     preview: Option<Mesh>,
+    preview_lines:Vec<(DVec3,DVec3)>,
     preview_key: Option<(Vec<usize>, u64, usize, u64)>,
     label_point: Option<DVec3>,
     pub last_error: Option<String>,
@@ -790,6 +775,7 @@ impl Default for FilletTool {
             hover_edge: None,
             hover_point: None,
             preview: None,
+            preview_lines:Vec::new(),
             preview_key: None,
             label_point: None,
             last_error: None,
@@ -797,6 +783,7 @@ impl Default for FilletTool {
     }
 }
 impl FilletTool {
+    pub fn with_parameters(radius:f64,segments:usize)->Self{Self{radius,segments,..Self::default()}}
     fn selection(scene: &Scene) -> Vec<usize> {
         let mut ids: Vec<_> = scene
             .selection
@@ -818,6 +805,7 @@ impl FilletTool {
         self.hover_edge = None;
         self.hover_point = None;
         self.preview = None;
+        self.preview_lines.clear();
         self.preview_key = None;
         self.label_point = None;
         self.last_error = None;
@@ -839,6 +827,7 @@ impl FilletTool {
         }
         self.preview_key = Some(key);
         self.preview = None;
+        self.preview_lines.clear();
         self.label_point = edges
             .first()
             .and_then(|&id| scene.mesh.edges.get(id))
@@ -851,7 +840,8 @@ impl FilletTool {
         let mut temporary = Scene::new();
         temporary.mesh = scene.mesh.clone();
         match prepare_fillet(&mut temporary, &edges, self.radius, self.segments, false) {
-            Ok(()) => {
+            Ok(curves) => {
+                self.preview_lines=curves.iter().flat_map(|ring|ring.windows(2).map(|pair|(pair[0],pair[1]))).collect();
                 let mut preview = Mesh::new();
                 for face in temporary.mesh.faces.iter().skip(scene.mesh.faces.len()) {
                     let points: Vec<_> = face
@@ -882,7 +872,7 @@ impl FilletTool {
         if self.edges.is_empty() {
             return Ok(());
         }
-        fillet_edges(scene, &self.edges, self.radius, self.segments)?;
+        if let Err(error)=fillet_edges(scene, &self.edges, self.radius, self.segments){self.replan(scene);return Err(error);}
         self.reset();
         Ok(())
     }
@@ -902,8 +892,10 @@ impl Tool for FilletTool {
     fn tool_type(&self) -> ToolType {
         ToolType::Fillet
     }
+    fn fillet_parameters(&self)->Option<(f64,usize)>{Some((self.radius,self.segments))}
+    fn uses_snap(&self)->bool{false}
     fn name(&self) -> &'static str {
-        "Fillet"
+        "Fillet 3D"
     }
     fn description(&self) -> &'static str {
         "Click an edge, size the radius with the cursor, then click to round."
@@ -1004,9 +996,7 @@ impl Tool for FilletTool {
             )
         })
     }
-    fn rubber_band(&self) -> Option<(DVec3, DVec3)> {
-        self.hover_point.map(|h| (h, h + DVec3::X * self.radius))
-    }
+    fn rubber_band_lines(&self)->Vec<(DVec3,DVec3)>{self.preview_lines.clone()}
 }
 
 #[cfg(test)]
@@ -1059,7 +1049,7 @@ mod tests {
                 kept += 1;
             }
         }
-        assert_eq!(kept, 6);
+        assert_eq!(kept, 8); // Source remove_edge retains orphan endpoint vertices.
     }
 
     #[test]
