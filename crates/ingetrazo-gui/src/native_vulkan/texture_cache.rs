@@ -386,7 +386,7 @@ mod publication_admission_tests{
  use super::*;
  #[test]fn missing_cached_identity_refuses_before_mutation_and_empty_retry_succeeds(){
   let mut cache=TextureCache::default();
-  let candidate=PreparedTexture{id:AssetId([17;32]),image:None,view:vk::ImageView::null(),sampler:vk::Sampler::null(),hard_cutout:false};
+  let candidate=PreparedTexture{id:AssetId([17;32]),image:None,view:vk::ImageView::null(),sampler:vk::Sampler::null(),hard_cutout:false,pending:None};
   assert!(cache.preflight_publication(std::iter::once(&candidate)).is_err());assert!(cache.images.is_empty());
   cache.preflight_publication(std::iter::empty()).unwrap();assert!(cache.images.is_empty());
  }
