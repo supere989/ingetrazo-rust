@@ -443,7 +443,7 @@ impl TextureImage {
             return Err("Texture bytes differ from block dimensions".into());
         }
         let mut usage = vk::ImageUsageFlags::SAMPLED | vk::ImageUsageFlags::TRANSFER_DST;
-        if mips || diagnostic_readback {
+        if levels > 1 || diagnostic_readback {
             usage |= vk::ImageUsageFlags::TRANSFER_SRC;
         }
         let format = match block_format { ingetrazo_render::texture_layout::Format::Rgba8=>vk::Format::R8G8B8A8_UNORM, ingetrazo_render::texture_layout::Format::Bc7=>vk::Format::BC7_UNORM_BLOCK, _=>return Err("Unsupported sampled texture format".into()) };
@@ -482,7 +482,7 @@ impl TextureImage {
         ) {
             return Err("Texture requires actual linear sampling support".into());
         }
-        if mips&&!features.contains(vk::FormatFeatureFlags::BLIT_SRC|vk::FormatFeatureFlags::BLIT_DST|vk::FormatFeatureFlags::SAMPLED_IMAGE_FILTER_LINEAR){return Err("Device format does not support linear GPU mip generation".into());}
+        if levels>1&&!features.contains(vk::FormatFeatureFlags::BLIT_SRC|vk::FormatFeatureFlags::BLIT_DST|vk::FormatFeatureFlags::SAMPLED_IMAGE_FILTER_LINEAR){return Err("Device format does not support linear GPU mip generation".into());}
         let device = context.device.clone();
         let budget = resources.budget.clone();
         let image = unsafe {

@@ -177,7 +177,8 @@ impl TextureCache {
     }
     pub(crate) fn complete_many<'a>(&mut self,context:&VulkanContext,resources:&mut Resources,candidates:impl Iterator<Item=&'a mut PreparedTexture>)->Result<(),String>{
         let mut admitted=Vec::new();
-        for candidate in candidates{admitted.try_reserve(1).map_err(|_|"Image batch candidate admission")?;admitted.push(candidate);}
+        for candidate in candidates{if candidate.pending.is_some(){admitted.try_reserve(1).map_err(|_|"Image batch candidate admission")?;admitted.push(candidate);}}
+        if admitted.is_empty(){return Ok(());}
         let mut candidates=admitted;
         let mut inputs=Vec::new();inputs.try_reserve_exact(candidates.len()).map_err(|_|"Image batch input admission")?;
         for c in &candidates{if let Some(data)=&c.pending{inputs.push((c.image.as_ref().expect("pending image owner"),data.as_slice()));}}
