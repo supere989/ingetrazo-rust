@@ -1,0 +1,12 @@
+{
+  "runtime_source": "1df258189ad55d79e68334cd773b92d2354f663a",
+  "independent_root_replay": {
+    "exact_whole_images": 28,
+    "warm_uploads_unchanged": true,
+    "final_ledger_zero": true,
+    "scope": "Actual strict RTX 28-image batched marker prototype and allocation refusal/resize lifecycle. Non-default. GPU throughput and tighter conservative triangle coverage still open."
+  },
+  "analytic_previous_files_verified_before_compaction": 165,
+  "current_source_key_scope": "Later source-key correction is separate from these 28 GPU images; fresh actual-GPU replacement control pending intake.",
+  "production_enabled": false
+}

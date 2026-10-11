@@ -38,6 +38,10 @@ impl Probe{
   if path.exists(){let bytes=std::fs::read(&path).map_err(|e|e.to_string())?;if bytes.len()>256{return Err("Annotation control request admission".into());}request=Some(serde_json::from_slice::<serde_json::Value>(&bytes).map_err(|e|e.to_string())?);}
   if let Some(request)=request{let nonce=request["nonce"].as_u64().ok_or("Annotation control nonce")?;if nonce>self.control_nonce{
    match request["action"].as_str().ok_or("Annotation control action")?{
+    "stencil-refuse"=>{
+     let stencil=system.swapchain.stencil.as_ref().ok_or("Stencil attachment absent")?;
+     stencil.verify_candidate_refusal(&system.vulkan_context,system.swapchain.extent)?;
+    },
     "refuse"=>{
      let before=system.memory_budget.ledger.lock().map_err(|_|"GPU ledger poisoned")?.total_committed();
      let old=system.annotation_cad.as_ref().ok_or("Annotation renderer absent")?.stats();
@@ -69,7 +73,7 @@ impl Probe{
    };self.control_nonce=nonce;
   }}
   let stats=system.annotation_cad.as_ref().ok_or("Annotation renderer absent")?.stats();
-  let row=serde_json::json!({"pose_translation":self.pose.translation,"pixels_per_point":system.egui_ctx.pixels_per_point(),"nonce":self.control_nonce,"submitted_serial":system.draw_serial,"completed_present_serial":system.completed_present_serial_for_probe,"cleared":self.cleared,"held_refusal":self.hold,"geometry_uploads":stats.uploads,"cached_bytes":stats.cached_bytes,"rollback_buffers":stats.rolled_back_buffers,"query_uploads":system.world.as_ref().map_or(0,|world|world.annotation_query_uploads_for_probe()),"committed_bytes":system.memory_budget.ledger.lock().unwrap().total_committed()});
+  let row=serde_json::json!({"extent":[system.swapchain.extent.width,system.swapchain.extent.height],"pose_translation":self.pose.translation,"pixels_per_point":system.egui_ctx.pixels_per_point(),"nonce":self.control_nonce,"submitted_serial":system.draw_serial,"completed_present_serial":system.completed_present_serial_for_probe,"cleared":self.cleared,"held_refusal":self.hold,"geometry_uploads":stats.uploads,"cached_bytes":stats.cached_bytes,"rollback_buffers":stats.rolled_back_buffers,"query_uploads":system.world.as_ref().map_or(0,|world|world.annotation_query_uploads_for_probe()),"committed_bytes":system.memory_budget.ledger.lock().unwrap().total_committed()});
   let temporary=dir.join("state.tmp");std::fs::write(&temporary,serde_json::to_vec(&row).map_err(|e|e.to_string())?).map_err(|e|e.to_string())?;std::fs::rename(temporary,dir.join("state.json")).map_err(|e|e.to_string())?;Ok(())
  }
 }

@@ -72,7 +72,7 @@ impl SourceSpans {
 /// because admission requires every participating batch to write opaque pixels
 /// without destination access. Coverage layers retain the ordinary span proof.
 #[derive(Debug)]
-pub struct AnnotationLayers {grid:SourceSpans,direct:Arc<[std::ops::Range<u32>]>}
+pub struct AnnotationLayers {grid:SourceSpans,direct:Arc<[std::ops::Range<u32>]>,union_quads:Arc<[std::ops::Range<u32>]>}
 impl AnnotationLayers {
  pub fn ppp(&self)->f32{self.grid.ppp()}
  pub fn translation(&self,pose:Pose,ppp:f32)->Result<[i32;2],String>{self.grid.translation(pose,ppp)}
@@ -85,6 +85,8 @@ impl AnnotationLayers {
 }
 #[derive(Debug)]
 pub enum AnnotationLayer {
+ /// One admitted axis-aligned quad: the fragment operator evaluates source coverage once.
+ UnionQuad{range:std::ops::Range<u32>},
  Spans {range:std::ops::Range<u32>,rows:Vec<SourceSpan>},
  Opaque {range:std::ops::Range<u32>},
 }
@@ -121,13 +123,17 @@ impl Geometry {
  pub fn annotation_layers(&self)->Option<&Arc<AnnotationLayers>>{self.annotation_layers.as_ref()}
  pub fn new_with_annotation_layers(vertices:Vec<Vertex>,indices:Vec<u32>,layers:Vec<AnnotationLayer>,ppp:f32)->Result<Arc<Self>,String>{
   if layers.len()>100_000||!ppp.is_finite()||ppp<=0.{return Err("Annotation layer count/density admission exceeded".into());}
-  let mut g=Self::new(vertices,indices)?;let mut end=0;let mut direct=Vec::new();let mut ranges=Vec::new();
+  let mut g=Self::new(vertices,indices)?;let mut end=0;let mut direct=Vec::new();let mut ranges=Vec::new();let mut union_quads=Vec::new();
+  union_quads.try_reserve(layers.len()).map_err(|_|"Annotation union metadata allocation failed")?;
   direct.try_reserve(layers.len()).map_err(|_|"Annotation direct metadata allocation failed")?;
   ranges.try_reserve(layers.len()).map_err(|_|"Annotation ordered metadata allocation failed")?;
   for layer in layers{
-   let range=match &layer{AnnotationLayer::Spans{range,..}|AnnotationLayer::Opaque{range}=>range};
+   let range=match &layer{AnnotationLayer::Spans{range,..}|AnnotationLayer::Opaque{range}|AnnotationLayer::UnionQuad{range}=>range};
    if range.start!=end||range.end<=range.start||range.end%3!=0||range.end as usize>g.indices.len(){return Err("Annotation layers do not partition geometry".into());}end=range.end;
    match &layer{
+    AnnotationLayer::UnionQuad{..}=>{
+     verify_single_union_quad(&g,range)?;union_quads.push(range.clone());direct.push(range.clone());
+    }
     AnnotationLayer::Opaque{..}=>{
      if g.indices[range.start as usize..range.end as usize].iter().any(|&i|g.vertices[i as usize].coverage!=1.){return Err("Direct annotation coverage must be opaque".into());}
      direct.push(range.clone());
@@ -141,7 +147,7 @@ impl Geometry {
   }
   if end as usize!=g.indices.len(){return Err("Annotation layers do not cover geometry".into());}
   let grid=SourceSpans{rows:Arc::from([]),zoom:1.,ppp,phase:[0.;2]};
-  let inner=Arc::get_mut(&mut g).unwrap();inner.ordered_draws=Some(ranges.into());inner.annotation_layers=Some(Arc::new(AnnotationLayers{grid,direct:direct.into()}));Ok(g)
+  let inner=Arc::get_mut(&mut g).unwrap();inner.ordered_draws=Some(ranges.into());inner.annotation_layers=Some(Arc::new(AnnotationLayers{grid,direct:direct.into(),union_quads:union_quads.into()}));Ok(g)
  }
  pub fn new_with_source_spans(vertices:Vec<Vertex>,indices:Vec<u32>,ranges:Vec<std::ops::Range<u32>>,spans:Vec<SourceSpan>,zoom:f32,ppp:f32,phase:[f64;2])->Result<Arc<Self>,String>{
   let mut geometry=Self::new_with_ordered_draws(vertices,indices,ranges)?;
@@ -170,12 +176,18 @@ impl Geometry {
  pub fn validate_batches(&self,batches:&[Batch])->Result<(),String>{if self.premultiplied_palette.as_ref().is_some_and(|colors|colors.len()!=batches.len()){return Err("CAD2D exact palette batch count mismatch".into());}for (batch_index,b) in batches.iter().enumerate(){b.color.validate()?;if b.first%3!=0||b.count%3!=0||b.first.checked_add(b.count).is_none_or(|end|end as usize>self.indices.len()){return Err("CAD2D batch index bounds invalid".into());}
  if self.annotation_layers.as_ref().is_some_and(|layers|layers.overlaps_direct(b.first,b.count)){
   let alpha=self.premultiplied_palette.as_ref().map_or(b.color.0[3]==1.,|p|p[batch_index].bytes()[3]==255);
-  if !alpha{return Err("Direct annotation batch must be opaque".into());}
+  if !alpha&&!{let ranges=&self.annotation_layers.as_ref().unwrap().union_quads;let i=ranges.partition_point(|r|r.end<=b.first);ranges.get(i).is_some_and(|r|r.start==b.first&&r.end==b.first+b.count)}{return Err("Direct annotation batch must be opaque or one admitted union quad".into());}
  }
  }Ok(())}
 }
 #[cfg(test)]mod tests {
  use super::*;
+ #[test]fn alpha_union_quad_rejects_intradraw_overlap(){
+  let v=[[0.,0.],[10.,0.],[0.,10.],[10.,10.]].map(|position|Vertex{position,coverage:1.}).to_vec();
+  let good=Geometry::new_with_annotation_layers(v.clone(),vec![0,1,2,2,1,3],vec![AnnotationLayer::UnionQuad{range:0..6}],1.).unwrap();
+  let b=Batch{first:0,count:6,color:EncodedRgba::from_bytes([37,93,157,128],1.).unwrap()};assert!(good.validate_batches(&[b]).is_ok());
+  assert!(Geometry::new_with_annotation_layers(v,vec![0,1,2,0,1,2],vec![AnnotationLayer::UnionQuad{range:0..6}],1.).is_err());
+ }
  #[test]fn opaque_admission(){let v=Vertex{position:[0.,0.],coverage:1.};let g=Geometry::new(vec![v;3],vec![0,1,2]).unwrap();let mut b=Batch{first:0,count:3,color:EncodedRgba([0.1,0.2,0.3,1.])};assert!(g.is_opaque(&[b]));b.color.0[3]=0.999999;assert!(!g.is_opaque(&[b]));b.color.0[3]=1.;assert!(!Geometry::new(vec![Vertex{coverage:0.999999,..v};3],vec![0,1,2]).unwrap().is_opaque(&[b]));}
  #[test]fn original_bytes_survive_without_linear_premultiplication_loss(){let rgba=EncodedRgba::from_bytes([37,94,156,128],1.).unwrap();assert_eq!(rgba.0,[37./255.,94./255.,156./255.,128./255.]);assert!(EncodedRgba::from_bytes([0,0,0,128],f32::NAN).is_err());}
  #[test]fn qt_premultiply_matches_exact_div255_for_all_channel_alpha_pairs(){
@@ -189,6 +201,13 @@ impl Geometry {
  #[test]fn partition_is_contiguous_bounded_and_complete(){let v=Vertex{position:[0.,0.],coverage:1.};let vertices=vec![v;3];let indices=vec![0,1,2,0,1,2];let g=Geometry::new_with_ordered_draws(vertices.clone(),indices.clone(),vec![0..3,3..6]).unwrap();assert_eq!(&*g.ordered_draws().unwrap(),&[0..3,3..6]);for ranges in [vec![0..3],vec![0..6,3..6],vec![3..6],vec![0..4,4..6],vec![0..0,0..6]]{assert!(Geometry::new_with_ordered_draws(vertices.clone(),indices.clone(),ranges).is_err());}}
 }
 
+fn verify_single_union_quad(g:&Geometry,range:&std::ops::Range<u32>)->Result<(),String>{
+ let indices=&g.indices[range.start as usize..range.end as usize];
+ if indices.len()!=6||indices[2]!=indices[3]||indices[1]!=indices[4]{return Err("Union quad topology invalid".into());}
+ let v=[indices[0],indices[1],indices[2],indices[5]].map(|i|g.vertices[i as usize]);
+ let p=v.map(|v|v.position);
+ if v.iter().any(|v|v.coverage!=1.)||p[0][0]!=p[2][0]||p[1][0]!=p[3][0]||p[0][1]!=p[1][1]||p[2][1]!=p[3][1]||p[0][0]>=p[1][0]||p[0][1]>=p[2][1]{return Err("Union quad must be one nonoverlapping rectangle".into());}Ok(())
+}
 fn verify_disjoint_span_draws(g:&Geometry,ranges:&[std::ops::Range<u32>])->Result<(),String>{
  use std::collections::BTreeMap;
  if g.indices.len()>600_000{return Err("CAD2D span proof exceeds100000 quad admission".into());}

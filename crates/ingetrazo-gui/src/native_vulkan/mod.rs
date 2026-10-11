@@ -11,6 +11,7 @@ pub mod texture_cache;
 mod queues;
 pub mod lifetime;
 pub mod budget;
+mod annotation_stencil;
 // Adapted from egui-ash-renderer 0.7.0 example (MIT, Adrien Bennadji).
 
 
@@ -234,9 +235,11 @@ impl System {
         };
 
         startup.command=Some(command_buffer);control.created(resize::Kind::CommandBuffer,1);control.checkpoint(resize::Stage::StartupCommand)?;
+        let memory_budget=std::sync::Arc::new(budget::VulkanBudget::new(&vulkan_context.instance,vulkan_context.physical_device)?);
+        memory_budget.bind_lifetime(vulkan_context.lifetime.clone());
         let mut retired=false;
         let integer=std::env::var_os("INGETRAZO_CAD2D_INTEGER_BLEND").is_some();
-        let mut pending_swapchain=Swapchain::build(&vulkan_context,integer,vk::SwapchainKHR::null(),&mut retired,None,control)?;
+        let mut pending_swapchain=Swapchain::build(&vulkan_context,memory_budget.clone(),std::env::var_os("INGETRAZO_ANNOTATION_STENCIL_PROBE").is_some(),integer,vk::SwapchainKHR::null(),&mut retired,None,control)?;
         control.checkpoint(resize::Stage::StartupSwapchain)?;
         let swapchain=pending_swapchain.value.as_ref().unwrap();
 
@@ -272,8 +275,7 @@ impl System {
             None,
         );
 
-        let memory_budget=std::sync::Arc::new(budget::VulkanBudget::new(&vulkan_context.instance,vulkan_context.physical_device)?);
-        memory_budget.bind_lifetime(vulkan_context.lifetime.clone());
+
         let renderer = Renderer::with_memory_observer(
             &vulkan_context.instance,
             vulkan_context.physical_device,
@@ -421,7 +423,7 @@ impl System {
     /// Capability refusal precedes any renderer allocation.
     pub(crate) fn annotation_factory(&mut self)->Result<cad2d::Factory,String>{
         if !self.swapchain.integer_cad{return Err("Native annotations require admitted integer CAD input-attachment pass".into());}
-        if self.annotation_cad.is_none(){self.annotation_cad=Some(cad2d::Renderer::new_annotations(&self.vulkan_context,self.memory_budget.clone(),self.swapchain.render_pass,&self.swapchain.image_views)?);}
+        if self.annotation_cad.is_none(){self.annotation_cad=Some(cad2d::Renderer::new_annotations(&self.vulkan_context,self.memory_budget.clone(),self.swapchain.render_pass,&self.swapchain.image_views,self.swapchain.stencil_enabled)?);}
         Ok(self.annotation_cad.as_ref().unwrap().factory())
     }
     pub(crate) fn prepare_annotation_overlay(&mut self,handle:&cad2d::Handle,
@@ -916,6 +918,7 @@ struct Swapchain {
     render_pass: vk::RenderPass,
     framebuffers: Vec<vk::Framebuffer>,
     integer_cad:bool,
+    stencil_enabled:bool,stencil:Option<annotation_stencil::Target>,budget:std::sync::Arc<budget::VulkanBudget>,
 }
 
 struct UnpublishedSwapchain{device:Device,value:Option<Swapchain>,control:resize::Control}
@@ -926,18 +929,19 @@ impl Drop for UnpublishedSwapchain{fn drop(&mut self){if let Some(value)=&mut se
 }}}
 
 impl Swapchain {
-    fn build(context:&VulkanContext,integer:bool,old:vk::SwapchainKHR,retired:&mut bool,format:Option<vk::Format>,control:&resize::Control)->Result<UnpublishedSwapchain,Box<dyn Error>>{
-        let mut pending=create_vulkan_swapchain(context,integer,old,retired,format,control)?;
+    fn build(context:&VulkanContext,budget:std::sync::Arc<budget::VulkanBudget>,stencil_enabled:bool,integer:bool,old:vk::SwapchainKHR,retired:&mut bool,format:Option<vk::Format>,control:&resize::Control)->Result<UnpublishedSwapchain,Box<dyn Error>>{
+        let mut pending=create_vulkan_swapchain(context,budget.clone(),stencil_enabled,integer,old,retired,format,control)?;
         let value=pending.value.as_mut().unwrap();
-        value.render_pass=create_vulkan_render_pass(&context.device,value.format,integer)?;
+        if stencil_enabled{value.stencil=Some(annotation_stencil::Target::new(context,budget,value.extent)?);}
+        value.render_pass=create_vulkan_render_pass(&context.device,value.format,integer,value.stencil.as_ref().map(|s|s.format))?;
         control.created(resize::Kind::RenderPass,1);control.checkpoint(resize::Stage::RenderPass)?;
-        value.framebuffers=create_vulkan_framebuffers(&context.device,value.render_pass,value.extent,&value.image_views,control)?;
+        value.framebuffers=create_vulkan_framebuffers(&context.device,value.render_pass,value.extent,&value.image_views,value.stencil.as_ref().map(|s|s.view),control)?;
         Ok(pending)
     }
     fn prepare_replacement(&mut self,context:&VulkanContext,control:&resize::Control)->Result<UnpublishedSwapchain,Box<dyn Error>>{
         // Vulkan retires oldSwapchain at creation, including failed creation.
         let old=if self.retired{vk::SwapchainKHR::null()}else{self.khr};
-        Self::build(context,self.integer_cad,old,&mut self.retired,Some(self.format),control)
+        Self::build(context,self.budget.clone(),self.stencil_enabled,self.integer_cad,old,&mut self.retired,Some(self.format),control)
     }
 
     fn destroy(&mut self, device: &Device) {
@@ -945,7 +949,7 @@ impl Swapchain {
             self.framebuffers
                 .iter()
                 .for_each(|fb| device.destroy_framebuffer(*fb, None));
-            self.framebuffers.clear();
+            self.framebuffers.clear();self.stencil=None;
             if self.render_pass!=vk::RenderPass::null(){device.destroy_render_pass(self.render_pass, None);}
             self.image_views
                 .iter()
@@ -1149,6 +1153,7 @@ fn create_vulkan_device_and_graphics_and_present_qs(
 
 fn create_vulkan_swapchain(
     vulkan_context: &VulkanContext,
+    budget:std::sync::Arc<budget::VulkanBudget>,stencil_enabled:bool,
     integer_cad:bool,old:vk::SwapchainKHR,retired:&mut bool,expected_format:Option<vk::Format>,control:&resize::Control,
 ) -> Result<UnpublishedSwapchain, Box<dyn Error>> {
     log::debug!("Creating vulkan swapchain");
@@ -1253,7 +1258,7 @@ fn create_vulkan_swapchain(
     let mut pending=UnpublishedSwapchain{device:vulkan_context.device.clone(),control:control.clone(),value:Some(Swapchain{
         loader:swapchain,khr:swapchain_khr,extent,format:format.format,
         srgb:matches!(format.format,vk::Format::R8G8B8A8_SRGB|vk::Format::B8G8R8A8_SRGB),retired:false,
-        integer_cad,images:Vec::new(),image_views:Vec::new(),render_pass:vk::RenderPass::null(),framebuffers:Vec::new(),
+        integer_cad,stencil_enabled,stencil:None,budget,images:Vec::new(),image_views:Vec::new(),render_pass:vk::RenderPass::null(),framebuffers:Vec::new(),
     })};
     control.created(resize::Kind::Swapchain,1);
     let value=pending.value.as_mut().unwrap();
@@ -1270,10 +1275,10 @@ fn create_vulkan_swapchain(
 fn create_vulkan_render_pass(
     device: &Device,
     format: vk::Format,
-    integer_cad:bool,
+    integer_cad:bool,stencil_format:Option<vk::Format>,
 ) -> Result<vk::RenderPass, Box<dyn Error>> {
     log::debug!("Creating vulkan render pass");
-    let attachment_descs = [vk::AttachmentDescription::default()
+    let mut attachment_descs = vec![vk::AttachmentDescription::default()
         .format(format)
         .samples(vk::SampleCountFlags::TYPE_1)
         .load_op(vk::AttachmentLoadOp::CLEAR)
@@ -1281,15 +1286,19 @@ fn create_vulkan_render_pass(
         .initial_layout(vk::ImageLayout::UNDEFINED)
         .final_layout(vk::ImageLayout::PRESENT_SRC_KHR)];
 
+    if let Some(format)=stencil_format{attachment_descs.push(vk::AttachmentDescription::default().format(format).samples(vk::SampleCountFlags::TYPE_1).load_op(vk::AttachmentLoadOp::DONT_CARE).store_op(vk::AttachmentStoreOp::DONT_CARE).stencil_load_op(vk::AttachmentLoadOp::CLEAR).stencil_store_op(vk::AttachmentStoreOp::DONT_CARE).initial_layout(vk::ImageLayout::UNDEFINED).final_layout(vk::ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL));}
+    let stencil_ref=vk::AttachmentReference::default().attachment(1).layout(vk::ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
     let attachment_layout=if integer_cad{vk::ImageLayout::GENERAL}else{vk::ImageLayout::COLOR_ATTACHMENT_OPTIMAL};
     let color_attachment_refs = [vk::AttachmentReference::default()
         .attachment(0)
         .layout(attachment_layout)];
     let input_attachment_refs=if integer_cad{color_attachment_refs.to_vec()}else{Vec::new()};
 
-    let subpass_descs = [vk::SubpassDescription::default()
+    let mut subpass = vk::SubpassDescription::default()
         .pipeline_bind_point(vk::PipelineBindPoint::GRAPHICS)
-        .color_attachments(&color_attachment_refs).input_attachments(&input_attachment_refs)];
+        .color_attachments(&color_attachment_refs).input_attachments(&input_attachment_refs);
+    if stencil_format.is_some(){subpass=subpass.depth_stencil_attachment(&stencil_ref);}
+    let subpass_descs=[subpass];
 
     let mut subpass_deps = vec![vk::SubpassDependency::default()
         .src_subpass(vk::SUBPASS_EXTERNAL)
@@ -1301,7 +1310,12 @@ fn create_vulkan_render_pass(
             vk::AccessFlags::COLOR_ATTACHMENT_READ | vk::AccessFlags::COLOR_ATTACHMENT_WRITE,
         )];
 
+    if stencil_format.is_some(){
+        subpass_deps[0].dst_stage_mask|=vk::PipelineStageFlags::EARLY_FRAGMENT_TESTS|vk::PipelineStageFlags::LATE_FRAGMENT_TESTS;
+        subpass_deps[0].dst_access_mask|=vk::AccessFlags::DEPTH_STENCIL_ATTACHMENT_READ|vk::AccessFlags::DEPTH_STENCIL_ATTACHMENT_WRITE;
+    }
     if integer_cad{subpass_deps.push(vk::SubpassDependency::default().src_subpass(0).dst_subpass(0).src_stage_mask(vk::PipelineStageFlags::COLOR_ATTACHMENT_OUTPUT).dst_stage_mask(vk::PipelineStageFlags::FRAGMENT_SHADER).src_access_mask(vk::AccessFlags::COLOR_ATTACHMENT_WRITE).dst_access_mask(vk::AccessFlags::INPUT_ATTACHMENT_READ).dependency_flags(vk::DependencyFlags::BY_REGION));}
+    if stencil_format.is_some(){subpass_deps.push(vk::SubpassDependency::default().src_subpass(0).dst_subpass(0).src_stage_mask(vk::PipelineStageFlags::EARLY_FRAGMENT_TESTS|vk::PipelineStageFlags::LATE_FRAGMENT_TESTS).dst_stage_mask(vk::PipelineStageFlags::EARLY_FRAGMENT_TESTS|vk::PipelineStageFlags::LATE_FRAGMENT_TESTS).src_access_mask(vk::AccessFlags::DEPTH_STENCIL_ATTACHMENT_WRITE).dst_access_mask(vk::AccessFlags::DEPTH_STENCIL_ATTACHMENT_READ|vk::AccessFlags::DEPTH_STENCIL_ATTACHMENT_WRITE).dependency_flags(vk::DependencyFlags::BY_REGION));}
     let render_pass_info = vk::RenderPassCreateInfo::default()
         .attachments(&attachment_descs)
         .subpasses(&subpass_descs)
@@ -1314,12 +1328,12 @@ fn create_vulkan_framebuffers(
     device: &Device,
     render_pass: vk::RenderPass,
     extent: vk::Extent2D,
-    image_views: &[vk::ImageView],control:&resize::Control,
+    image_views: &[vk::ImageView],stencil_view:Option<vk::ImageView>,control:&resize::Control,
 ) -> Result<Vec<vk::Framebuffer>, Box<dyn Error>> {
     log::debug!("Creating vulkan framebuffers");
     let mut framebuffers=Vec::new();
     for view in image_views{
-        let attachments=[*view];
+        let mut attachments=vec![*view];if let Some(stencil)=stencil_view{attachments.push(stencil);}
         let info=vk::FramebufferCreateInfo::default().render_pass(render_pass).attachments(&attachments).width(extent.width).height(extent.height).layers(1);
         match unsafe{device.create_framebuffer(&info,None)}{
             Ok(framebuffer)=>{framebuffers.push(framebuffer);control.created(resize::Kind::Framebuffer,1);
@@ -1361,7 +1375,7 @@ fn record_command_buffers(
             color: vk::ClearColorValue {
                 float32: [0.007, 0.007, 0.007, 1.0],
             },
-        }]);
+        },vk::ClearValue{depth_stencil:vk::ClearDepthStencilValue{depth:1.,stencil:0}}]);
 
     unsafe {
         device.cmd_begin_render_pass(

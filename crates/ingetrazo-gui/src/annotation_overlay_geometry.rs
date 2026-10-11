@@ -8,7 +8,7 @@ use ingetrazo_render::{annotations::{Plan,Primitive,Gate},cad2d::{Geometry,Verte
 use ingetrazo_formats::{annotation_font, paper_font_resolver::Request};
 /// Source operator selected before palette premultiplication; immutable with its batch.
 #[derive(Clone,Copy,Debug,PartialEq,Eq)]
-pub enum Composition { SpanByte, GlyphRgba64Opaque, GlyphLcd([u8;3]), WidgetTriangle([u32;6]) }
+pub enum Composition { SpanByte, GlyphRgba64Opaque, GlyphLcd([u8;3]), WidgetTriangle([u32;6]), WidgetLineUnion{strip:[u32;16],bounds:[u32;4]}, WidgetStencilTriangle{triangle:[u32;6],bounds:[u32;4]}, WidgetStencilComposite{bounds:[u32;4]} }
 #[derive(Clone,Copy,Debug,PartialEq)]
 pub struct Draw {pub gate:Gate,pub composition:Composition,pub straight_rgba:[u8;4]}
 impl Draw {pub fn span(gate:Gate)->Self{Self{gate,composition:Composition::SpanByte,straight_rgba:[0;4]}}}
@@ -16,9 +16,9 @@ pub struct Mesh {pub geometry:Arc<Geometry>,pub batches:Arc<[Batch]>,pub gates:A
 #[derive(Clone,Copy)]pub struct Limits {pub cells:usize,pub spans:usize,pub geometry_bytes:usize,pub glyphs:usize,pub glyph_bytes:usize}
 #[derive(Clone,Copy,PartialEq,Eq,Hash)]struct GlyphKey{font:ingetrazo_formats::paper_font::FontKey,pixels:u32,glyph:u32,density:u64,phase:[u8;2],lcd:bool}
 #[derive(Clone,Copy,PartialEq,Eq)]enum GlyphPlacement{Raster,OpenGl}
-pub struct Cache {analytic_boundary:bool,glyph_order:VecDeque<GlyphKey>,glyphs:HashMap<GlyphKey,Arc<ingetrazo_formats::paper_text::RasterGlyph>>,glyph_bytes:usize,glyph_builds:u64,fonts:annotation_font::Cache,current:Option<(Arc<Plan>,u64,u64,[i32;4],GlyphPlacement,Arc<Mesh>)>,builds:u64,limits:Limits}
+pub struct Cache {analytic_boundary:bool,alpha_union:bool,stencil_union:bool,glyph_order:VecDeque<GlyphKey>,glyphs:HashMap<GlyphKey,Arc<ingetrazo_formats::paper_text::RasterGlyph>>,glyph_bytes:usize,glyph_builds:u64,fonts:annotation_font::Cache,current:Option<(Arc<Plan>,u64,u64,[i32;4],GlyphPlacement,Arc<Mesh>)>,builds:u64,limits:Limits}
 impl Cache {
- pub fn new(fonts:annotation_font::Limits,limits:Limits)->Result<Self,String>{if limits.cells==0||limits.spans==0||limits.geometry_bytes==0||limits.glyphs==0||limits.glyph_bytes==0{return Err("Annotation geometry budget must be positive".into());}Ok(Self{analytic_boundary:true,glyph_order:VecDeque::new(),glyphs:HashMap::new(),glyph_bytes:0,glyph_builds:0,fonts:annotation_font::Cache::new(fonts)?,current:None,builds:0,limits})}
+ pub fn new(fonts:annotation_font::Limits,limits:Limits)->Result<Self,String>{if limits.cells==0||limits.spans==0||limits.geometry_bytes==0||limits.glyphs==0||limits.glyph_bytes==0{return Err("Annotation geometry budget must be positive".into());}Ok(Self{analytic_boundary:true,alpha_union:std::env::var_os("INGETRAZO_ANNOTATION_ALPHA_UNION_PROBE").is_some(),stencil_union:std::env::var_os("INGETRAZO_ANNOTATION_STENCIL_PROBE").is_some(),glyph_order:VecDeque::new(),glyphs:HashMap::new(),glyph_bytes:0,glyph_builds:0,fonts:annotation_font::Cache::new(fonts)?,current:None,builds:0,limits})}
  pub(crate) fn enable_analytic_boundary_for_probe(&mut self){self.analytic_boundary=true;self.current=None;}
  pub fn glyph_stats(&self)->(usize,usize,u64){(self.glyphs.len(),self.glyph_bytes,self.glyph_builds)}
  pub fn stats(&self)->(u64,(usize,usize,u64)){(self.builds,self.fonts.stats())}
@@ -95,7 +95,22 @@ impl Cache {
   for operation in &plan.operations {
    match &operation.primitive {
     Primitive::Line{a,b,width,color}=>{
+     if placement==GlyphPlacement::OpenGl&&self.stencil_union&&color[3]!=255{
+      if let Some(v)=widget_primitives::square_cap_line(*a,*b,*width)?{let extra=if *width==0.{0.5/density}else{width/2.};let bounds=[(a[0].min(b[0])-extra)as f32,(a[1].min(b[1])-extra)as f32,(a[0].max(b[0])+extra)as f32,(a[1].max(b[1])+extra)as f32];writer.stencil_union(&v,false,bounds,*color,operation.gate)?;}continue;
+     }
      if placement==GlyphPlacement::OpenGl&&color[3]==255{if let Some(v)=widget_primitives::square_cap_line(*a,*b,*width)?{writer.direct(&v,&[0,1,2,2,1,3,2,3,4,4,3,5,4,5,6,6,5,7],*color,operation.gate)?;}continue;}
+     if placement==GlyphPlacement::OpenGl&&self.alpha_union{
+      if let Some(v)=widget_primitives::square_cap_line(*a,*b,*width)?{
+       // Qt's nonopaque strip is stencilled, then composited through this
+       // original qreal path-control rectangle. Square corners outside it
+       // intentionally do not paint, unlike the opaque strip path.
+       let extra=if *width==0.{0.5/density}else{width/2.};
+       let min=[(a[0].min(b[0])-extra)as f32,(a[1].min(b[1])-extra)as f32];
+       let max=[(a[0].max(b[0])+extra)as f32,(a[1].max(b[1])+extra)as f32];
+       writer.direct_quad(&[[min[0],min[1]],[max[0],min[1]],[min[0],max[1]],[max[0],max[1]]],*color,operation.gate)?;
+       writer.gates.last_mut().unwrap().composition=Composition::WidgetLineUnion{strip:std::array::from_fn(|i|v[i/2][i%2].to_bits()),bounds:[min[0].to_bits(),min[1].to_bits(),max[0].to_bits(),max[1].to_bits()]};
+      }continue;
+     }
      let path=PathContour{start:*a,segments:vec![Segment::Line(*b)]};
      let spans=if width*density<=1.{let path=transform_path(&path,density);ingetrazo_render::qt_cosmetic::rasterize_path(&path,false,width*density,self.limits.spans)?}
       else{ingetrazo_render::qt_line::rasterize(a.map(|v|v*density),b.map(|v|v*density),width*density,clip,self.limits.cells,self.limits.spans)?};
@@ -112,6 +127,12 @@ impl Cache {
        writer.gates.last_mut().unwrap().composition=Composition::WidgetTriangle([v[0][0].to_bits(),v[0][1].to_bits(),v[1][0].to_bits(),v[1][1].to_bits(),v[2][0].to_bits(),v[2][1].to_bits()]);
       }else{writer.direct(&v,&[0,1,2],*color,operation.gate)?;}continue;}let contour=points.map(|p|[p[0]*density,p[1]*density]);writer.layer(qt_gray::rasterize(&[contour.to_vec()],self.limits.cells,self.limits.spans)?,*color,operation.gate)?;}
     Primitive::Ellipse{center,radius,width,color}=>{
+     if placement==GlyphPlacement::OpenGl&&self.stencil_union{
+      let fill=widget_primitives::ellipse_fill(*center,*radius,density)?;
+      let bounds=[(center[0]-radius[0])as f32,(center[1]-radius[1])as f32,(center[0]+radius[0])as f32,(center[1]+radius[1])as f32];
+      writer.stencil_union(&fill,true,bounds,*color,operation.gate)?;
+      if *width>0.{let strip=widget_primitives::ellipse_stroke(*center,*radius,*width,density)?;let extra=width/2.;let b=[(center[0]-radius[0]-extra)as f32,(center[1]-radius[1]-extra)as f32,(center[0]+radius[0]+extra)as f32,(center[1]+radius[1]+extra)as f32];writer.stencil_union(&strip,false,b,*color,operation.gate)?;}continue;
+     }
      let size=DVec2::from_array(*radius)*2.;let mut path=crate::composer_cad::source_closed_curve(&ingetrazo_core::sheet_shape::ShapePath::Ellipse{size}).ok_or("Annotation ellipse path absent")?;
      translate_path(&mut path,[center[0]-radius[0],center[1]-radius[1]]);
      writer.layer(qt_gray::rasterize_transformed_paths(&[path.clone()],density,[0.;2],self.limits.cells,self.limits.spans)?,*color,operation.gate)?;
@@ -203,8 +224,29 @@ fn transform_path(path:&PathContour,density:f64)->PathContour{
 struct Writer {density:f64,limits:Limits,vertices:Vec<Vertex>,indices:Vec<u32>,rows:Vec<SourceSpan>,ranges:Vec<std::ops::Range<u32>>,direct_ranges:Vec<std::ops::Range<u32>>,batches:Vec<Batch>,gates:Vec<Draw>}
 impl Writer {
  fn new(density:f64,limits:Limits)->Self{Self{density,limits,vertices:Vec::new(),indices:Vec::new(),rows:Vec::new(),ranges:Vec::new(),direct_ranges:Vec::new(),batches:Vec::new(),gates:Vec::new()}}
- fn direct(&mut self,vertices:&[[f32;2]],indices:&[u32],color:[u8;4],gate:Gate)->Result<(),String>{
-  if color[3]!=255||vertices.iter().flatten().any(|v|!v.is_finite())||indices.iter().any(|&i|i as usize>=vertices.len()){return Err("Direct annotation primitive admission failed".into());}
+ fn stencil_union(&mut self,vertices:&[[f32;2]],fan:bool,bounds:[f32;4],color:[u8;4],gate:Gate)->Result<(),String>{
+  if vertices.len()<3||color[3]==0{return Ok(());}
+  let pad=(0.5/self.density)as f32;let first_marker=self.batches.len();
+  for i in 0..vertices.len()-2{
+   let triangle=if fan{[vertices[0],vertices[i+1],vertices[i+2]]}else{[vertices[i],vertices[i+1],vertices[i+2]]};
+   // Source strip joins deliberately duplicate vertices. These triangles
+   // remain degenerate under every admitted affine pose, so no GPU marker
+   // geometry, palette record, push or draw is needed for them.
+   if triangle[0]==triangle[1]||triangle[1]==triangle[2]||triangle[0]==triangle[2]{continue;}
+   let min=std::array::from_fn::<_,2,_>(|axis|triangle.iter().map(|p|p[axis]).fold(f32::INFINITY,f32::min)-pad);
+   let max=std::array::from_fn::<_,2,_>(|axis|triangle.iter().map(|p|p[axis]).fold(f32::NEG_INFINITY,f32::max)+pad);
+   let mark=[color[0],color[1],color[2],255];
+   self.direct_quad(&[[min[0],min[1]],[max[0],min[1]],[min[0],max[1]],[max[0],max[1]]],mark,gate)?;
+   self.gates.last_mut().unwrap().composition=Composition::WidgetStencilTriangle{triangle:std::array::from_fn(|i|triangle[i/2][i%2].to_bits()),bounds:bounds.map(f32::to_bits)};
+  }
+  if self.batches.len()==first_marker{return Ok(());}
+  self.direct_quad(&[[bounds[0]-pad,bounds[1]-pad],[bounds[2]+pad,bounds[1]-pad],[bounds[0]-pad,bounds[3]+pad],[bounds[2]+pad,bounds[3]+pad]],color,gate)?;
+  self.gates.last_mut().unwrap().composition=Composition::WidgetStencilComposite{bounds:bounds.map(f32::to_bits)};Ok(())
+ }
+ fn direct_quad(&mut self,vertices:&[[f32;2];4],color:[u8;4],gate:Gate)->Result<(),String>{self.direct_inner(vertices,&[0,1,2,2,1,3],color,gate,true)}
+ fn direct(&mut self,vertices:&[[f32;2]],indices:&[u32],color:[u8;4],gate:Gate)->Result<(),String>{self.direct_inner(vertices,indices,color,gate,false)}
+ fn direct_inner(&mut self,vertices:&[[f32;2]],indices:&[u32],color:[u8;4],gate:Gate,union:bool)->Result<(),String>{
+  if (!union&&color[3]!=255)||vertices.iter().flatten().any(|v|!v.is_finite())||indices.iter().any(|&i|i as usize>=vertices.len()){return Err("Direct annotation primitive admission failed".into());}
   let vc=self.vertices.len().checked_add(vertices.len()).ok_or("Annotation vertex overflow")?;
   let ic=self.indices.len().checked_add(indices.len()).ok_or("Annotation index overflow")?;
   if vc>u32::MAX as usize||ic>u32::MAX as usize{return Err("Annotation index domain exceeded".into());}
@@ -261,8 +303,8 @@ impl Writer {
    use ingetrazo_render::cad2d::AnnotationLayer;
    let mut layers=Vec::new();layers.try_reserve(self.ranges.len()).map_err(|_|"Annotation layer allocation failed")?;
    let mut rows=self.rows.into_iter();let mut direct=self.direct_ranges.into_iter().peekable();
-   for range in self.ranges{
-    if direct.peek()==Some(&range){direct.next();layers.push(AnnotationLayer::Opaque{range});}
+   for (layer_index,range) in self.ranges.into_iter().enumerate(){
+    if direct.peek()==Some(&range){direct.next();layers.push(if matches!(self.gates[layer_index].composition,Composition::WidgetLineUnion{..}|Composition::WidgetStencilComposite{..}){AnnotationLayer::UnionQuad{range}}else{AnnotationLayer::Opaque{range}});}
     else{let n=(range.end-range.start)as usize/6;let mut part=Vec::new();part.try_reserve(n).map_err(|_|"Annotation source layer allocation failed")?;part.extend(rows.by_ref().take(n));if part.len()!=n{return Err("Annotation source rows absent".into());}layers.push(AnnotationLayer::Spans{range,rows:part});}
    }
    if rows.next().is_some()||direct.next().is_some(){return Err("Annotation layer inventory mismatch".into());}
@@ -282,6 +324,32 @@ mod tests {
   Operation{primitive:Primitive::Text{position:[45.,35.],text:"A".into(),size_pt:11,color:[243,115,41,255]},gate:Gate::Always},
  ]})}
  fn cache()->Cache{Cache::new(annotation_font::Limits{faces:16,retained_font_bytes:32*1024*1024},Limits{cells:250_000,spans:100_000,geometry_bytes:8*1024*1024,glyphs:4096,glyph_bytes:16*1024*1024}).unwrap()}
+ #[test]fn stencil_duplicate_vertices_do_not_allocate_or_leave_unmatched_composite(){
+  let limits=cache().limits;let mut writer=Writer::new(1.,limits);
+  writer.stencil_union(&[[1.,1.];4],false,[0.,0.,10.,10.],[37,93,157,128],Gate::Always).unwrap();
+  assert!(writer.vertices.is_empty()&&writer.indices.is_empty()&&writer.gates.is_empty());
+  writer.stencil_union(&[[1.,1.],[1.,1.],[2.,1.],[2.,2.]],false,[0.,0.,10.,10.],[37,93,157,128],Gate::Always).unwrap();
+  assert_eq!(writer.gates.len(),2);
+  assert!(matches!(writer.gates[0].composition,Composition::WidgetStencilTriangle{..}));
+  assert!(matches!(writer.gates[1].composition,Composition::WidgetStencilComposite{..}));
+ }
+ #[test]fn stencil_curve_layers_preserve_two_composites_and_warm_owner(){
+  let mut cache=cache();cache.stencil_union=true;
+  let plan=Arc::new(Plan{queries:vec![],operations:vec![Operation{primitive:Primitive::Ellipse{center:[80.125,80.375],radius:[37.125,9.875],width:3.125,color:[37,93,157,128]},gate:Gate::Always}]});
+  let first=cache.prepare_widget_clipped(plan.clone(),1.,96.,[0,0,640,400]).unwrap();assert_eq!(first.gates.iter().filter(|g|matches!(g.composition,Composition::WidgetStencilComposite{..})).count(),2);
+  assert!(first.geometry.validate_batches(&first.batches).is_ok());assert!(!first.geometry.is_opaque(&first.batches));
+  assert!(Arc::ptr_eq(&first,&cache.prepare_widget_clipped(plan.clone(),1.,96.,[0,0,640,400]).unwrap()));
+  assert!(!Arc::ptr_eq(&first,&cache.prepare_widget_clipped(plan,1.25,96.,[0,0,640,400]).unwrap()));
+ }
+ #[test]fn alpha_union_retains_one_quad_per_operation_and_warm_identity(){
+  let mut cache=cache();cache.alpha_union=true;
+  let plan=Arc::new(Plan{queries:vec![],operations:[0,1,127,128,230].into_iter().map(|alpha|Operation{primitive:Primitive::Line{a:[20.25,20.5],b:[180.75,80.25],width:3.125,color:[37,93,157,alpha]},gate:Gate::Always}).collect()});
+  let mesh=cache.prepare_widget_clipped(plan.clone(),1.,96.,[0,0,640,400]).unwrap();
+  assert_eq!(mesh.geometry.vertices().len(),20);assert_eq!(mesh.geometry.indices().len(),30);
+  assert!(mesh.gates.iter().all(|g|matches!(g.composition,Composition::WidgetLineUnion{..})));
+  assert!(mesh.geometry.validate_batches(&mesh.batches).is_ok());
+  assert!(Arc::ptr_eq(&mesh,&cache.prepare_widget_clipped(plan,1.,96.,[0,0,640,400]).unwrap()));
+ }
  #[test]fn immutable_plan_warm_reuses_geometry_and_density_change_invalidates(){
   let mut cache=cache();let plan=plan();let first=cache.prepare(plan.clone(),1.,96.).unwrap();let counts=cache.stats();let glyph_counts=cache.glyph_stats();
   assert!(!first.geometry.source_spans().unwrap().rows().is_empty());

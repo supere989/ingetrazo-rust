@@ -2,7 +2,7 @@
 layout(location=0) in float edge_coverage;
 layout(location=0) out vec4 output_color;
 layout(input_attachment_index=0,set=0,binding=0) uniform subpassInput destination;
-layout(push_constant) uniform Push {vec2 scale;vec2 translation;vec2 screen;uvec2 gates;vec4 rgba;uint composition;float ax;float ay;float bx;float by;float cx;float cy;} push;
+layout(push_constant) uniform Push {vec2 scale;vec2 translation;vec2 screen;uvec2 gates;vec4 rgba;uint composition;float ax;float ay;float bx;float by;float cx;float cy;float dx;float dy;float ex;float ey;float fx;float fy;float gx;float gy;float hx;float hy;} push;
 uvec4 byte_mul(uvec4 pixel,uint coverage){uvec4 t=pixel*coverage;return (t+(t>>8u)+128u)>>8u;}
 layout(set=0,binding=1,std430) readonly buffer Visibility {uint hidden[];};
 // Qt6.12 QRgba64 multiplyAlpha65535: exact integer intermediates, no float blend.
@@ -19,8 +19,37 @@ bool source_edge(ivec2 a,ivec2 b,ivec2 sample_point){
  ivec2 d=b-a;uvec2 edge=edge64(a,b,sample_point);
  return positive64(edge)||(all(equal(edge,uvec2(0)))&&(d.y<0||(d.y==0&&d.x<0)));
 }
+bool source_triangle(ivec2 a,ivec2 b,ivec2 c,ivec2 p){
+ uvec2 area=edge64(a,b,c);if(all(equal(area,uvec2(0))))return false;
+ if(!positive64(area)){ivec2 tmp=b;b=c;c=tmp;}
+ return source_edge(a,b,p)&&source_edge(b,c,p)&&source_edge(c,a,p);
+}
+bool source_rectangle(vec2 lo,vec2 hi,ivec2 p){
+ ivec2 a=ivec2(roundEven(lo*256.0));ivec2 d=ivec2(roundEven(hi*256.0));ivec2 b=ivec2(d.x,a.y);ivec2 c=ivec2(a.x,d.y);
+ return source_triangle(a,b,c,p)||source_triangle(c,b,d,p);
+}
 void main(){
  if((push.gates.x!=0xffffffffu&&hidden[push.gates.x]!=0u)||(push.gates.y!=0xffffffffu&&hidden[push.gates.y]!=0u)){discard;}
+ if(push.composition==5u){
+  ivec2 p=ivec2(floor(gl_FragCoord.xy))*256+ivec2(128);
+  if(!source_rectangle(vec2(push.dx,push.dy),vec2(push.ex,push.ey),p)||!source_triangle(ivec2(roundEven(vec2(push.ax,push.ay)*256.0)),ivec2(roundEven(vec2(push.bx,push.by)*256.0)),ivec2(roundEven(vec2(push.cx,push.cy)*256.0)),p))discard;
+  output_color=vec4(0.);return;
+ }
+ if(push.composition==6u){
+  ivec2 p=ivec2(floor(gl_FragCoord.xy))*256+ivec2(128);
+  if(!source_rectangle(vec2(push.ax,push.ay),vec2(push.bx,push.by),p))discard;
+  output_color=vec4(push.rgba.rgb*push.rgba.a,push.rgba.a);return;
+ }
+ if(push.composition==4u){
+  vec2 vertices[8]=vec2[8](vec2(push.ax,push.ay),vec2(push.bx,push.by),vec2(push.cx,push.cy),vec2(push.dx,push.dy),vec2(push.ex,push.ey),vec2(push.fx,push.fy),vec2(push.gx,push.gy),vec2(push.hx,push.hy));
+  ivec2 p=ivec2(floor(gl_FragCoord.xy))*256+ivec2(128);
+  bool covered=false;
+  for(int i=0;i<6;i++){covered=covered||source_triangle(ivec2(roundEven(vertices[i]*256.0)),ivec2(roundEven(vertices[i+1]*256.0)),ivec2(roundEven(vertices[i+2]*256.0)),p);}
+  if(!covered)discard;
+  // Qt solid brush premultiplies before standard fixed-function SourceOver.
+  // One source operation owns this fragment even where stroker triangles overlap.
+  output_color=vec4(push.rgba.rgb*push.rgba.a,push.rgba.a);return;
+ }
  if(push.composition==3u){
   ivec2 a=ivec2(roundEven(vec2(push.ax,push.ay)*256.0));
   ivec2 b=ivec2(roundEven(vec2(push.bx,push.by)*256.0));

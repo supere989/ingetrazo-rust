@@ -42,6 +42,8 @@ struct Ready {
     index: vk::Buffer,
     first_index:u32,
     base_vertex:i32,
+    marker_offset:Option<u64>,
+    marker_groups:Option<Arc<[std::ops::Range<usize>]>>,
     batches: Arc<[Batch]>,
     premultiplied: Arc<[[f32;4]]>,
     pose: Pose,
@@ -62,7 +64,7 @@ struct Pipeline {
     annotations: bool,
     visibility: Option<(vk::Buffer,u32,Arc<()>)>,
     pipeline: vk::Pipeline,
-    lcd_pipeline:vk::Pipeline,
+    lcd_pipeline:vk::Pipeline,widget_pipeline:vk::Pipeline,stencil_mark:vk::Pipeline,stencil_composite:vk::Pipeline,
     layout: vk::PipelineLayout,
     integer:bool,
     descriptor_layout:vk::DescriptorSetLayout,
@@ -98,11 +100,14 @@ impl DescriptorOwnerWeakForProbe {
     pub fn strong_count(&self)->usize{self.0.strong_count()}
 }
 pub(crate) struct PreparedRenderPass {
-    device:Device,pipeline:vk::Pipeline,lcd_pipeline:vk::Pipeline,pool:vk::DescriptorPool,sets:Vec<vk::DescriptorSet>,
+    device:Device,pipeline:vk::Pipeline,lcd_pipeline:vk::Pipeline,widget_pipeline:vk::Pipeline,stencil_mark:vk::Pipeline,stencil_composite:vk::Pipeline,pool:vk::DescriptorPool,sets:Vec<vk::DescriptorSet>,
 }
 impl Drop for PreparedRenderPass{fn drop(&mut self){unsafe{
     if self.pipeline!=vk::Pipeline::null(){self.device.destroy_pipeline(self.pipeline,None)}
     if self.lcd_pipeline!=vk::Pipeline::null(){self.device.destroy_pipeline(self.lcd_pipeline,None)}
+    if self.widget_pipeline!=vk::Pipeline::null(){self.device.destroy_pipeline(self.widget_pipeline,None)}
+    if self.stencil_mark!=vk::Pipeline::null(){self.device.destroy_pipeline(self.stencil_mark,None)}
+    if self.stencil_composite!=vk::Pipeline::null(){self.device.destroy_pipeline(self.stencil_composite,None)}
     if self.pool!=vk::DescriptorPool::null(){self.device.destroy_descriptor_pool(self.pool,None)}
 }}}
 struct NativePaint {
@@ -135,6 +140,9 @@ impl Handle {
         if self.callback.0.as_any().is::<AnnotationPaint>(){bytes+=std::mem::size_of::<AnnotationPaint>();}
         bytes=bytes.checked_add(state.premultiplied.len().checked_mul(std::mem::size_of::<[f32;4]>()).ok_or("CAD palette byte overflow")?).ok_or("CAD retained byte overflow")?;
         if let Some(ready)=&state.ready{if !Arc::ptr_eq(&ready.premultiplied,&state.premultiplied){bytes=bytes.checked_add(ready.premultiplied.len().checked_mul(std::mem::size_of::<[f32;4]>()).ok_or("CAD old palette byte overflow")?).ok_or("CAD retained byte overflow")?;}}
+        if let Some(groups)=state.ready.as_ref().and_then(|r|r.marker_groups.as_ref()){
+            bytes=bytes.checked_add(groups.len().checked_mul(std::mem::size_of::<std::ops::Range<usize>>()).ok_or("CAD marker group byte overflow")?).ok_or("CAD retained byte overflow")?;
+        }
         Ok(bytes)
     }
     pub(crate) fn update_annotation(&self,geometry:Arc<Geometry>,batches:Arc<[Batch]>,pose:Pose,gates:Arc<[crate::annotation_overlay_geometry::Draw]>)->Result<(),String>{
@@ -257,23 +265,56 @@ fn record_ready<'a>(info:&egui::PaintCallbackInfo,device:&Device,command:vk::Com
                 bytemuck::cast_slice(&push),
             );
         }
-        let mut bound=None;let mut bound_pipeline=p.pipeline;
+        let mut bound=None;let mut bound_pipeline=p.pipeline;let mut stencil_composed=false;
         for r in ready { unsafe {
-            let mut ordered_cursor=0;
+            let mut ordered_cursor=0;let mut batch_index=0;let mut marker_cursor=0;
             if bound!=Some((r.vertex,r.index)) {device.cmd_bind_vertex_buffers(command,0,&[r.vertex],&[0]);device.cmd_bind_index_buffer(command,r.index,0,vk::IndexType::UINT32);bound=Some((r.vertex,r.index));counters.binds.fetch_add(1,Ordering::Relaxed);}
-            for (batch_index,(batch,rgba)) in r.batches.iter().zip(r.premultiplied.iter()).enumerate().filter(|(_, (b,_))| b.count > 0) {
+            while batch_index<r.batches.len(){
+                let batch=&r.batches[batch_index];let rgba=&r.premultiplied[batch_index];
+                if batch.count==0{batch_index+=1;continue;}
+                let group=r.marker_groups.as_ref().and_then(|g|g.get(marker_cursor)).filter(|g|g.start==batch_index);
+                let marker=group.is_some();let next_batch=group.map_or(batch_index+1,|g|g.end);
+                let last=r.batches[next_batch-1];let draw_count=last.first+last.count-batch.first;
+                if marker{
+                    marker_cursor+=1;
+                    let offset=r.marker_offset.ok_or_else(||egui_ash_renderer::RendererError::Init("Stencil immutable vertex records absent".into()))?;
+                    device.cmd_bind_vertex_buffers(command,1,&[r.vertex],&[offset]);
+                }
                 if p.annotations{
                     let count=p.visibility.as_ref().map(|v|v.1).ok_or_else(||egui_ash_renderer::RendererError::Init("Annotation visibility not prepared".into()))?;
                     let gate=r.gates.as_ref().and_then(|g|g.get(batch_index)).copied().ok_or_else(||egui_ash_renderer::RendererError::Init("Annotation draw gate absent".into()))?;
                     let ids=gate_ids(gate.gate,count).map_err(egui_ash_renderer::RendererError::Init)?;
                     device.cmd_push_constants(command,p.layout,vk::ShaderStageFlags::VERTEX|vk::ShaderStageFlags::FRAGMENT,24,bytemuck::cast_slice(&ids));
                     let lcd=matches!(gate.composition,crate::annotation_overlay_geometry::Composition::GlyphLcd(_));
-                    let selected=if lcd{p.lcd_pipeline}else{p.pipeline};
+                    let union=matches!(gate.composition,crate::annotation_overlay_geometry::Composition::WidgetLineUnion{..});
+                    // A prior composite zeros covered stencil samples. The next
+                    // operation must observe that clear before replacing them.
+                    if matches!(gate.composition,crate::annotation_overlay_geometry::Composition::WidgetStencilTriangle{..})&&stencil_composed{
+                        let barrier=vk::MemoryBarrier::default().src_access_mask(vk::AccessFlags::DEPTH_STENCIL_ATTACHMENT_WRITE).dst_access_mask(vk::AccessFlags::DEPTH_STENCIL_ATTACHMENT_READ|vk::AccessFlags::DEPTH_STENCIL_ATTACHMENT_WRITE);
+                        device.cmd_pipeline_barrier(command,vk::PipelineStageFlags::EARLY_FRAGMENT_TESTS|vk::PipelineStageFlags::LATE_FRAGMENT_TESTS,vk::PipelineStageFlags::EARLY_FRAGMENT_TESTS|vk::PipelineStageFlags::LATE_FRAGMENT_TESTS,vk::DependencyFlags::BY_REGION,&[barrier],&[],&[]);
+                        stencil_composed=false;
+                    }
+                    if matches!(gate.composition,crate::annotation_overlay_geometry::Composition::WidgetStencilComposite{..}){stencil_composed=true;}
+                    let selected=match gate.composition{crate::annotation_overlay_geometry::Composition::WidgetStencilTriangle{..}=>p.stencil_mark,crate::annotation_overlay_geometry::Composition::WidgetStencilComposite{..}=>p.stencil_composite,_=>if lcd{p.lcd_pipeline}else if union{p.widget_pipeline}else{p.pipeline}};
                     if selected==vk::Pipeline::null(){return Err(egui_ash_renderer::RendererError::Init("Annotation LCD pipeline not prepared".into()));}
                     if selected!=bound_pipeline{device.cmd_bind_pipeline(command,vk::PipelineBindPoint::GRAPHICS,selected);bound_pipeline=selected;}
                     if lcd{device.cmd_set_blend_constants(command,&gate.straight_rgba.map(|v|f32::from(v)/255.));}
-                    let operator=match gate.composition{crate::annotation_overlay_geometry::Composition::SpanByte=>0u32,crate::annotation_overlay_geometry::Composition::WidgetTriangle(_)=>3u32,crate::annotation_overlay_geometry::Composition::GlyphRgba64Opaque=>1u32,crate::annotation_overlay_geometry::Composition::GlyphLcd(mask)=>2u32|(u32::from(mask[0])<<8)|(u32::from(mask[1])<<16)|(u32::from(mask[2])<<24)};
+                    let operator=match gate.composition{crate::annotation_overlay_geometry::Composition::SpanByte=>0u32,crate::annotation_overlay_geometry::Composition::WidgetTriangle(_)=>3u32,crate::annotation_overlay_geometry::Composition::WidgetStencilTriangle{..}=>5u32,crate::annotation_overlay_geometry::Composition::WidgetStencilComposite{..}=>6u32,crate::annotation_overlay_geometry::Composition::WidgetLineUnion{..}=>4u32,crate::annotation_overlay_geometry::Composition::GlyphRgba64Opaque=>1u32,crate::annotation_overlay_geometry::Composition::GlyphLcd(mask)=>2u32|(u32::from(mask[0])<<8)|(u32::from(mask[1])<<16)|(u32::from(mask[2])<<24)};
                     device.cmd_push_constants(command,p.layout,vk::ShaderStageFlags::VERTEX|vk::ShaderStageFlags::FRAGMENT,48,bytemuck::bytes_of(&operator));
+                    match gate.composition{
+                     crate::annotation_overlay_geometry::Composition::WidgetStencilTriangle{..}=>{
+                      device.cmd_push_constants(command,p.layout,vk::ShaderStageFlags::VERTEX|vk::ShaderStageFlags::FRAGMENT,52,bytemuck::bytes_of(&scale));
+                     },crate::annotation_overlay_geometry::Composition::WidgetStencilComposite{bounds}=>{
+                      let points=widget_source_points(bounds,pose,scale).map_err(egui_ash_renderer::RendererError::Init)?;
+                      device.cmd_push_constants(command,p.layout,vk::ShaderStageFlags::VERTEX|vk::ShaderStageFlags::FRAGMENT,52,bytemuck::cast_slice(&points));
+                      let barrier=vk::MemoryBarrier::default().src_access_mask(vk::AccessFlags::DEPTH_STENCIL_ATTACHMENT_WRITE).dst_access_mask(vk::AccessFlags::DEPTH_STENCIL_ATTACHMENT_READ|vk::AccessFlags::DEPTH_STENCIL_ATTACHMENT_WRITE);
+                      device.cmd_pipeline_barrier(command,vk::PipelineStageFlags::EARLY_FRAGMENT_TESTS|vk::PipelineStageFlags::LATE_FRAGMENT_TESTS,vk::PipelineStageFlags::EARLY_FRAGMENT_TESTS|vk::PipelineStageFlags::LATE_FRAGMENT_TESTS,vk::DependencyFlags::BY_REGION,&[barrier],&[],&[]);
+                     },_=>{}
+                    }
+                    if let crate::annotation_overlay_geometry::Composition::WidgetLineUnion{strip:bits,..}=gate.composition{
+                        let points=widget_source_points(bits,pose,scale).map_err(egui_ash_renderer::RendererError::Init)?;
+                        device.cmd_push_constants(command,p.layout,vk::ShaderStageFlags::VERTEX|vk::ShaderStageFlags::FRAGMENT,52,bytemuck::cast_slice(&points));
+                    }
                     if let crate::annotation_overlay_geometry::Composition::WidgetTriangle(bits)=gate.composition{
                         let points=widget_triangle_points(bits,pose,scale).map_err(egui_ash_renderer::RendererError::Init)?;
                         device.cmd_push_constants(command,p.layout,vk::ShaderStageFlags::VERTEX|vk::ShaderStageFlags::FRAGMENT,52,bytemuck::cast_slice(&points));
@@ -286,14 +327,16 @@ fn record_ready<'a>(info:&egui::PaintCallbackInfo,device:&Device,command:vk::Com
                     32,
                     bytemuck::cast_slice(&if p.annotations && r.gates.as_ref().unwrap()[batch_index].composition!=crate::annotation_overlay_geometry::Composition::SpanByte{r.gates.as_ref().unwrap()[batch_index].straight_rgba.map(|v|f32::from(v)/255.)}else{*rgba}),
                 );
-                if p.integer&&!r.opaque{
+                if p.integer&&!r.opaque&&!marker{
                     let ranges=r.ordered_draws.as_ref().ok_or_else(||egui_ash_renderer::RendererError::Init("CAD2D disjoint draw metadata absent".into()))?;
                     ordered_intersections(batch.first..batch.first+batch.count,ranges,&mut ordered_cursor,|range,starts_layer|{
-                        if starts_layer{let barrier=[vk::MemoryBarrier::default().src_access_mask(vk::AccessFlags::COLOR_ATTACHMENT_WRITE).dst_access_mask(vk::AccessFlags::INPUT_ATTACHMENT_READ)];
+                        let reads_input=!p.annotations||matches!(r.gates.as_ref().unwrap()[batch_index].composition,crate::annotation_overlay_geometry::Composition::SpanByte|crate::annotation_overlay_geometry::Composition::GlyphRgba64Opaque);
+                        if starts_layer&&reads_input{let barrier=[vk::MemoryBarrier::default().src_access_mask(vk::AccessFlags::COLOR_ATTACHMENT_WRITE).dst_access_mask(vk::AccessFlags::INPUT_ATTACHMENT_READ)];
                         device.cmd_pipeline_barrier(command,vk::PipelineStageFlags::COLOR_ATTACHMENT_OUTPUT,vk::PipelineStageFlags::FRAGMENT_SHADER,vk::DependencyFlags::BY_REGION,&barrier,&[],&[]);}
                         device.cmd_draw_indexed(command,range.end-range.start,1,r.first_index+range.start,r.base_vertex,0);counters.draws.fetch_add(1,Ordering::Relaxed);
                     });
-                }else{device.cmd_draw_indexed(command, batch.count, 1, r.first_index+batch.first, r.base_vertex, 0);counters.draws.fetch_add(1, Ordering::Relaxed);}
+                }else{device.cmd_draw_indexed(command, draw_count, 1, r.first_index+batch.first, r.base_vertex, 0);counters.draws.fetch_add(1, Ordering::Relaxed);}
+                batch_index=next_batch;
             }
         }        }
         Ok(())
@@ -326,9 +369,38 @@ fn admit_gates(gates:Option<&[crate::annotation_overlay_geometry::Draw]>,batches
  for draw in gates{gate_ids(draw.gate,count)?;}
  Ok(())
 }
+/// Each immutable stencil operation must terminate before another operator.
+/// Matching bounds and visibility ensure every marked sample is consumed once.
+fn admit_stencil_sequence(draws:&[crate::annotation_overlay_geometry::Draw])->Result<(),String>{
+ use crate::annotation_overlay_geometry::Composition;
+ let mut pending:Option<(ingetrazo_render::annotations::Gate,[u32;4])>=None;
+ for draw in draws{
+  match draw.composition{
+   Composition::WidgetStencilTriangle{bounds,..}=>{
+    let identity=(draw.gate,bounds);
+    if pending.is_some_and(|old|old!=identity){return Err("Stencil markers change bounds or visibility before composition".into());}
+    pending=Some(identity);
+   },
+   Composition::WidgetStencilComposite{bounds}=>{
+    if pending.take()!=Some((draw.gate,bounds)){return Err("Stencil composite lacks matching source markers".into());}
+   },
+   _=>if pending.is_some(){return Err("Stencil operation interrupted before composition".into());}
+  }
+ }
+ if pending.is_some(){return Err("Stencil markers lack terminal composition".into());}
+ Ok(())
+}
 fn admit_draw_colors(draws:&[crate::annotation_overlay_geometry::Draw],batches:&[Batch])->Result<(),String>{
  if draws.len()!=batches.len(){return Err("Annotation material/batch inventory mismatch".into());}
+ admit_stencil_sequence(draws)?;
  for (draw,batch) in draws.iter().zip(batches){
+  if let crate::annotation_overlay_geometry::Composition::WidgetLineUnion{strip:bits,bounds}=draw.composition{
+   if bits.iter().chain(bounds.iter()).any(|v|!f32::from_bits(*v).is_finite()||f32::from_bits(*v).abs()>1_000_000.){return Err("Widget union immutable metadata invalid".into());}
+  }
+  match draw.composition{
+   crate::annotation_overlay_geometry::Composition::WidgetStencilTriangle{triangle,bounds}=>{if draw.straight_rgba[3]!=255||triangle.iter().chain(bounds.iter()).any(|v|!f32::from_bits(*v).is_finite()||f32::from_bits(*v).abs()>1_000_000.){return Err("Stencil triangle source admission invalid".into());}},
+   crate::annotation_overlay_geometry::Composition::WidgetStencilComposite{bounds}=>{let b=bounds.map(f32::from_bits);if b.iter().any(|v|!v.is_finite()||v.abs()>1_000_000.)||b[0]>=b[2]||b[1]>=b[3]{return Err("Stencil composite source bounds invalid".into());}},_=>{}
+  }
   if let crate::annotation_overlay_geometry::Composition::WidgetTriangle(bits)=draw.composition{
    if draw.straight_rgba[3]!=255||bits.iter().any(|v|!f32::from_bits(*v).is_finite()){return Err("Widget triangle immutable metadata invalid".into());}
   }
@@ -344,22 +416,97 @@ fn admit_draw_colors(draws:&[crate::annotation_overlay_geometry::Draw],batches:&
 /// pose proof then bounds every affine intermediate before GPU publication.
 fn admit_widget_triangles(geometry:&Geometry,draws:&[crate::annotation_overlay_geometry::Draw],batches:&[Batch])->Result<(),String>{
  for(draw,batch)in draws.iter().zip(batches){
-  let crate::annotation_overlay_geometry::Composition::WidgetTriangle(bits)=draw.composition else{continue};
+  let bits:&[u32]=match &draw.composition{crate::annotation_overlay_geometry::Composition::WidgetStencilTriangle{triangle,..}=>triangle,crate::annotation_overlay_geometry::Composition::WidgetStencilComposite{bounds}=>bounds,crate::annotation_overlay_geometry::Composition::WidgetTriangle(bits)=>bits,crate::annotation_overlay_geometry::Composition::WidgetLineUnion{strip:bits,..}=>bits,_=>continue};
   if batch.count!=6||!geometry.annotation_layers().is_some_and(|l|l.overlaps_direct(batch.first,batch.count)){return Err("Widget triangle must own one opaque conservative quad".into());}
   let end=batch.first.checked_add(6).ok_or("Widget triangle index overflow")?;
   let indices=geometry.indices().get(batch.first as usize..end as usize).ok_or("Widget triangle indices absent")?;
   if indices[2]!=indices[3]||indices[1]!=indices[4]{return Err("Widget triangle conservative quad topology invalid".into());}
   let vertices=geometry.vertices();let points=[vertices[indices[0]as usize].position,vertices[indices[1]as usize].position,vertices[indices[2]as usize].position,vertices[indices[5]as usize].position];
   if points[0][0]!=points[2][0]||points[1][0]!=points[3][0]||points[0][1]!=points[1][1]||points[2][1]!=points[3][1]||points[0][0]>=points[1][0]||points[0][1]>=points[2][1]{return Err("Widget triangle conservative rectangle invalid".into());}
+  if let crate::annotation_overlay_geometry::Composition::WidgetLineUnion{bounds,..}=draw.composition{
+   let b=bounds.map(f32::from_bits);
+   if points[0]!=[b[0],b[1]]||points[3]!=[b[2],b[3]]{return Err("Widget union geometry differs from source composite bounds".into());}
+   continue;
+  }
+  if matches!(draw.composition,crate::annotation_overlay_geometry::Composition::WidgetStencilTriangle{..}){
+   let pad=(0.5/f64::from(geometry.annotation_layers().unwrap().ppp()))as f32;
+   let expected_min=std::array::from_fn(|axis|bits.iter().skip(axis).step_by(2).copied().map(f32::from_bits).fold(f32::INFINITY,f32::min)-pad);
+   let expected_max=std::array::from_fn(|axis|bits.iter().skip(axis).step_by(2).copied().map(f32::from_bits).fold(f32::NEG_INFINITY,f32::max)+pad);
+   if points[0]!=expected_min||points[3]!=expected_max{return Err("Stencil triangle conservative rectangle differs from source metadata".into());}continue;
+  }
   for point in bits.chunks_exact(2){for axis in 0..2{let value=f32::from_bits(point[axis]);if !value.is_finite()||value<points[0][axis]||value>points[3][axis]{return Err("Widget triangle point outside admitted geometry".into());}}}
-  let original=bits.map(f32::from_bits);let pad=(0.5/f64::from(geometry.annotation_layers().unwrap().ppp()))as f32;
-  let expected_min=[original[0].min(original[2]).min(original[4])-pad,original[1].min(original[3]).min(original[5])-pad];
-  let expected_max=[original[0].max(original[2]).max(original[4])+pad,original[1].max(original[3]).max(original[5])+pad];
+  let original=bits;let pad=(0.5/f64::from(geometry.annotation_layers().unwrap().ppp()))as f32;
+  let expected_min=std::array::from_fn(|axis|original.iter().skip(axis).step_by(2).copied().map(f32::from_bits).fold(f32::INFINITY,f32::min)-pad);
+  let expected_max=std::array::from_fn(|axis|original.iter().skip(axis).step_by(2).copied().map(f32::from_bits).fold(f32::NEG_INFINITY,f32::max)+pad);
   if points[0]!=expected_min||points[3]!=expected_max{return Err("Widget triangle conservative expansion differs from source metadata".into());}
  }
  Ok(())
 }
-fn widget_triangle_points(bits:[u32;6],pose:Pose,density:f32)->Result<[f32;6],String>{
+/// Binding 0 retains the ordinary 12-byte vertex ABI. Binding 1 reads an
+/// immutable 40-byte source record tail from the SAME budgeted vertex buffer.
+/// This permits one marker draw per operation without per-draw metadata uploads.
+/// Source record identity, independently of visibility or palette metadata.
+fn same_stencil_batch_layout(a:&Arc<[Batch]>,b:&Arc<[Batch]>)->bool{
+ Arc::ptr_eq(a,b)||(a.len()==b.len()&&a.iter().zip(b.iter()).all(|(a,b)|a.first==b.first&&a.count==b.count))
+}
+fn same_stencil_records(a:&Arc<[crate::annotation_overlay_geometry::Draw]>,b:&Arc<[crate::annotation_overlay_geometry::Draw]>)->bool{
+ use crate::annotation_overlay_geometry::Composition;
+ if Arc::ptr_eq(a,b){return true;}
+ a.len()==b.len()&&a.iter().zip(b.iter()).all(|(a,b)|match(a.composition,b.composition){
+  (Composition::WidgetStencilTriangle{triangle:a,bounds:ab},Composition::WidgetStencilTriangle{triangle:b,bounds:bb})=>a==b&&ab==bb,
+  (Composition::WidgetStencilTriangle{..},_)|(_,Composition::WidgetStencilTriangle{..})=>false,
+  _=>true,
+ })
+}
+fn stencil_marker_groups(draws:&[crate::annotation_overlay_geometry::Draw],batches:&[Batch])->Result<Arc<[std::ops::Range<usize>]>,String>{
+ use crate::annotation_overlay_geometry::Composition;
+ if draws.len()!=batches.len(){return Err("Stencil marker batch inventory mismatch".into());}
+ let mut groups=Vec::new();let mut i=0;
+ while i<draws.len(){
+  let Composition::WidgetStencilTriangle{bounds,..}=draws[i].composition else{i+=1;continue;};
+  let begin=i;let first=draws[i];let mut end=batches[i].first.checked_add(batches[i].count).ok_or("Stencil marker batch overflow")?;i+=1;
+  while i<draws.len(){
+   if !matches!(draws[i].composition,Composition::WidgetStencilTriangle{bounds:other,..}if other==bounds)||draws[i].gate!=first.gate||batches[i].first!=end{break;}
+   end=end.checked_add(batches[i].count).ok_or("Stencil marker group overflow")?;i+=1;
+  }
+  groups.try_reserve(1).map_err(|_|"Stencil marker group admission failed")?;groups.push(begin..i);
+ }
+ Ok(groups.into())
+}
+fn packed_stencil_vertices(geometry:&Geometry,draws:&[crate::annotation_overlay_geometry::Draw],batches:&[Batch])->Result<Vec<u8>,String>{
+ use crate::annotation_overlay_geometry::Composition;
+ let count=geometry.vertices().len();
+ let bytes=count.checked_mul(52).ok_or("Stencil vertex metadata size overflow")?;
+ let prefix=count.checked_mul(12).ok_or("Stencil vertex prefix overflow")?;
+ let mut out=Vec::new();out.try_reserve_exact(bytes).map_err(|_|"Stencil packed vertex admission failed")?;
+ out.extend_from_slice(bytemuck::cast_slice(geometry.vertices()));out.resize(bytes,0);
+ let mut assigned=Vec::<bool>::new();assigned.try_reserve_exact(count).map_err(|_|"Stencil source owner admission failed")?;assigned.resize(count,false);
+ for(draw,batch)in draws.iter().zip(batches){if let Composition::WidgetStencilTriangle{triangle,bounds}=draw.composition{
+  let record: [f32;10]=std::array::from_fn(|i|f32::from_bits(if i<6{triangle[i]}else{bounds[i-6]}));let record=bytemuck::bytes_of(&record);
+  let end=batch.first.checked_add(batch.count).ok_or("Stencil marker index overflow")?;
+  let indices=geometry.indices().get(batch.first as usize..end as usize).ok_or("Stencil marker index range invalid")?;
+  for &index in indices{let index=index as usize;if index>=count{return Err("Stencil marker vertex index invalid".into());}
+   let start=prefix+index*40;let old=&mut out[start..start+40];
+   if assigned[index]&&old!=record{return Err("Stencil markers alias one vertex with different source records".into());}
+   old.copy_from_slice(record);assigned[index]=true;
+  }
+ }}
+ Ok(out)
+}
+fn widget_union_source_bounds(draws:&[crate::annotation_overlay_geometry::Draw])->Option<[[f32;2];2]>{
+ let mut bounds=[[f32::INFINITY;2],[f32::NEG_INFINITY;2]];let mut any=false;
+ let mut include=|points:&[u32]|{any=true;for point in points.chunks_exact(2){for axis in 0..2{let p=f32::from_bits(point[axis]);bounds[0][axis]=bounds[0][axis].min(p);bounds[1][axis]=bounds[1][axis].max(p);}}};
+ for draw in draws{match draw.composition{
+  crate::annotation_overlay_geometry::Composition::WidgetLineUnion{strip,bounds}=>{include(&strip);include(&bounds);},
+  crate::annotation_overlay_geometry::Composition::WidgetStencilTriangle{triangle,bounds}=>{include(&triangle);include(&bounds);},
+  crate::annotation_overlay_geometry::Composition::WidgetStencilComposite{bounds}=>include(&bounds),_=>{}
+ }}any.then_some(bounds)
+}
+fn validate_widget_bounds_pose(bounds:[[f32;2];2],pose:Pose,density:f32)->Result<(),String>{
+ for point in bounds{for axis in 0..2{let product=point[axis]*pose.scale[axis];let translated=product+pose.translation[axis];let physical=translated*density;if !product.is_finite()||!translated.is_finite()||!physical.is_finite()||physical.abs()>1_000_000.{return Err("Widget union pose exceeds admitted source arithmetic domain".into());}}}Ok(())
+}
+fn widget_triangle_points(bits:[u32;6],pose:Pose,density:f32)->Result<[f32;6],String>{widget_source_points(bits,pose,density)}
+fn widget_source_points<const N:usize>(bits:[u32;N],pose:Pose,density:f32)->Result<[f32;N],String>{
  let mut points=bits.map(f32::from_bits);
  for point in points.chunks_exact_mut(2){for axis in 0..2{
   let product=point[axis]*pose.scale[axis];let translated=product+pose.translation[axis];let physical=translated*density;
@@ -378,7 +525,7 @@ impl VulkanPaint for AnnotationPaint{
  }
 }
 struct AnnotationAdmission {
- geometry:Arc<Geometry>,batches:Arc<[Batch]>,gates:Arc<[crate::annotation_overlay_geometry::Draw]>,count:u32,opaque:bool,
+ geometry:Arc<Geometry>,batches:Arc<[Batch]>,gates:Arc<[crate::annotation_overlay_geometry::Draw]>,count:u32,opaque:bool,source_bounds:Option<[[f32;2];2]>,marker_groups:Arc<[std::ops::Range<usize>]>,
 }
 impl AnnotationAdmission{
  fn matches(&self,state:&State,count:u32)->bool{
@@ -402,7 +549,7 @@ impl Factory{
  pub fn retained_cpu_bytes_bound(&self,palette_len:usize)->Result<usize,String>{
   let annotations=self.pipeline.lock().map_err(|_|"CAD2D pipeline poisoned")?.annotations;
   (std::mem::size_of::<NativePaint>()+std::mem::size_of::<VulkanPaintCallback>()+if annotations{std::mem::size_of::<AnnotationPaint>()}else{0})
-   .checked_add(palette_len.checked_mul(std::mem::size_of::<[f32;4]>()).ok_or("CAD palette byte overflow")?).ok_or_else(||"CAD retained byte overflow".into())
+   .checked_add(palette_len.checked_mul(std::mem::size_of::<[f32;4]>()+if annotations{std::mem::size_of::<std::ops::Range<usize>>()}else{0}).ok_or("CAD palette byte overflow")?).ok_or_else(||"CAD retained byte overflow".into())
  }
  pub fn handle(&self,geometry:Arc<Geometry>,batches:Arc<[Batch]>,pose:Pose)->Result<Handle,String>{
   geometry.validate_batches(&batches)?;pose.validate()?;
@@ -430,6 +577,7 @@ pub struct Renderer {
     resources: Resources,
     arena:arena::Gpu,
     annotation_buffers:Option<(u64,Cached)>,
+    annotation_marker_source:Option<(Arc<[crate::annotation_overlay_geometry::Draw]>,Arc<[Batch]>)>,
     annotation_owner:Option<std::sync::Weak<NativePaint>>,
     annotation_admission:Option<AnnotationAdmission>,
     cache: HashMap<u64, Cached>,
@@ -449,12 +597,12 @@ impl Renderer {
         views:&[vk::ImageView],
         integer:bool,
     ) -> Result<Self, String> {
-        Self::new_mode(context,budget,pass,views,integer,false)
+        Self::new_mode(context,budget,pass,views,integer,false,false)
     }
-    pub(crate) fn new_annotations(context:&VulkanContext,budget:Arc<VulkanBudget>,pass:vk::RenderPass,views:&[vk::ImageView])->Result<Self,String>{
-        Self::new_mode(context,budget,pass,views,true,true)
+    pub(crate) fn new_annotations(context:&VulkanContext,budget:Arc<VulkanBudget>,pass:vk::RenderPass,views:&[vk::ImageView],stencil:bool)->Result<Self,String>{
+        Self::new_mode(context,budget,pass,views,true,true,stencil)
     }
-    fn new_mode(context:&VulkanContext,budget:Arc<VulkanBudget>,pass:vk::RenderPass,views:&[vk::ImageView],integer:bool,annotations:bool)->Result<Self,String>{
+    fn new_mode(context:&VulkanContext,budget:Arc<VulkanBudget>,pass:vk::RenderPass,views:&[vk::ImageView],integer:bool,annotations:bool,stencil:bool)->Result<Self,String>{
         let descriptor_layout=if integer{let mut bindings=vec![vk::DescriptorSetLayoutBinding::default().binding(0).descriptor_type(vk::DescriptorType::INPUT_ATTACHMENT).descriptor_count(1).stage_flags(vk::ShaderStageFlags::FRAGMENT)];
         if annotations{bindings.push(vk::DescriptorSetLayoutBinding::default().binding(1).descriptor_type(vk::DescriptorType::STORAGE_BUFFER).descriptor_count(1).stage_flags(vk::ShaderStageFlags::FRAGMENT));}
 unsafe{context.device.create_descriptor_set_layout(&vk::DescriptorSetLayoutCreateInfo::default().bindings(&bindings),None)}.map_err(|e|{if e==vk::Result::ERROR_DEVICE_LOST{context.lifetime.quarantine();}e.to_string()})?}else{vk::DescriptorSetLayout::null()};
@@ -462,7 +610,7 @@ unsafe{context.device.create_descriptor_set_layout(&vk::DescriptorSetLayoutCreat
         let ranges = [vk::PushConstantRange {
             stage_flags: vk::ShaderStageFlags::VERTEX | vk::ShaderStageFlags::FRAGMENT,
             offset: 0,
-            size: if annotations{76}else{48},
+            size: if annotations{116}else{48},
         }];
         let layout = match unsafe {
             context.device.create_pipeline_layout(&vk::PipelineLayoutCreateInfo::default().push_constant_ranges(&ranges).set_layouts(&set_layouts),None)
@@ -476,17 +624,19 @@ unsafe{context.device.create_descriptor_set_layout(&vk::DescriptorSetLayoutCreat
             }
         };
         let lcd_pipeline=if annotations{match make_pipeline(&context.device,pass,layout,true,true,true){Ok(p)=>p,Err(e)=>{unsafe{context.device.destroy_pipeline(pipeline,None);context.device.destroy_pipeline_layout(layout,None);context.device.destroy_descriptor_set_layout(descriptor_layout,None)}if e.device_lost(){context.lifetime.quarantine();}return Err(e.to_string());}}}else{vk::Pipeline::null()};
-        let (descriptor_pool,descriptor_sets)=if integer{match make_inputs(&context.device,descriptor_layout,views,annotations){Ok(v)=>v,Err(e)=>{unsafe{context.device.destroy_pipeline(pipeline,None);if lcd_pipeline!=vk::Pipeline::null(){context.device.destroy_pipeline(lcd_pipeline,None)}context.device.destroy_pipeline_layout(layout,None);context.device.destroy_descriptor_set_layout(descriptor_layout,None)}if e.device_lost(){context.lifetime.quarantine();}return Err(e.to_string())}}}else{(vk::DescriptorPool::null(),Vec::new())};
+        let widget_pipeline=if annotations{match make_pipeline(&context.device,pass,layout,false,true,false){Ok(p)=>p,Err(e)=>{unsafe{context.device.destroy_pipeline(pipeline,None);context.device.destroy_pipeline(lcd_pipeline,None);context.device.destroy_pipeline_layout(layout,None);context.device.destroy_descriptor_set_layout(descriptor_layout,None)}if e.device_lost(){context.lifetime.quarantine();}return Err(e.to_string());}}}else{vk::Pipeline::null()};
+        let (stencil_mark,stencil_composite)=if annotations&&stencil{match make_stencil_pair(&context.device,pass,layout){Ok(p)=>p,Err(e)=>{unsafe{context.device.destroy_pipeline(pipeline,None);context.device.destroy_pipeline(lcd_pipeline,None);context.device.destroy_pipeline(widget_pipeline,None);context.device.destroy_pipeline_layout(layout,None);context.device.destroy_descriptor_set_layout(descriptor_layout,None)}if e.device_lost(){context.lifetime.quarantine();}return Err(e.to_string());}}}else{(vk::Pipeline::null(),vk::Pipeline::null())};
+        let (descriptor_pool,descriptor_sets)=if integer{match make_inputs(&context.device,descriptor_layout,views,annotations){Ok(v)=>v,Err(e)=>{unsafe{context.device.destroy_pipeline(pipeline,None);if lcd_pipeline!=vk::Pipeline::null(){context.device.destroy_pipeline(lcd_pipeline,None)}if widget_pipeline!=vk::Pipeline::null(){context.device.destroy_pipeline(widget_pipeline,None)}if stencil_mark!=vk::Pipeline::null(){context.device.destroy_pipeline(stencil_mark,None);context.device.destroy_pipeline(stencil_composite,None)}context.device.destroy_pipeline_layout(layout,None);context.device.destroy_descriptor_set_layout(descriptor_layout,None)}if e.device_lost(){context.lifetime.quarantine();}return Err(e.to_string())}}}else{(vk::DescriptorPool::null(),Vec::new())};
         Ok(Self {
             device: context.device.clone(),
             lifetime:context.lifetime.clone(),
             budget: budget.clone(),
             pressure_after_vertex: false,
             rolled_back_buffers: 0,
-            pipeline: Arc::new(Mutex::new(Pipeline { annotations,visibility:None,pipeline,lcd_pipeline, layout,integer,descriptor_layout,descriptor_pool,descriptor_sets,active_set:None })),
+            pipeline: Arc::new(Mutex::new(Pipeline { annotations,visibility:None,pipeline,lcd_pipeline,widget_pipeline,stencil_mark,stencil_composite, layout,integer,descriptor_layout,descriptor_pool,descriptor_sets,active_set:None })),
             resources: Resources::new(context, budget),
             arena:Default::default(),
-            annotation_buffers:None,annotation_owner:None,annotation_admission:None,
+            annotation_buffers:None,annotation_marker_source:None,annotation_owner:None,annotation_admission:None,
             cache: HashMap::new(),
             active: HashSet::new(),
             pending: HashMap::new(),
@@ -524,13 +674,16 @@ unsafe{context.device.create_descriptor_set_layout(&vk::DescriptorSetLayoutCreat
         state.geometry.validate_ordered_pose(state.pose,pixels_per_point)?;
         if let Some(layers)=state.geometry.annotation_layers(){layers.translation(state.pose,pixels_per_point)?;}else{state.geometry.source_spans().ok_or("Annotation immutable spans absent")?.translation(state.pose,pixels_per_point)?;}
         let already_admitted=self.annotation_admission.as_ref().is_some_and(|key|key.matches(&state,count));
+        if !already_admitted&&state.gates.as_ref().unwrap().iter().any(|g|matches!(g.composition,crate::annotation_overlay_geometry::Composition::WidgetStencilTriangle{..}|crate::annotation_overlay_geometry::Composition::WidgetStencilComposite{..}))&&pipeline.stencil_mark==vk::Pipeline::null(){return Err("Annotation stencil source operator requires admitted attachment".into());}
+        let source_bounds=if already_admitted{self.annotation_admission.as_ref().unwrap().source_bounds}else{widget_union_source_bounds(state.gates.as_deref().ok_or("Annotation source gates absent")?)};
+        if let Some(bounds)=source_bounds{validate_widget_bounds_pose(bounds,state.pose,pixels_per_point)?;}
         let opaque=if already_admitted{self.annotation_admission.as_ref().unwrap().opaque}else{
             state.geometry.validate_batches(&state.batches)?;
             admit_gates(state.gates.as_deref(),state.batches.len(),count)?;
             if let Some(layers)=state.geometry.annotation_layers(){
                 for (batch,draw) in state.batches.iter().zip(state.gates.as_ref().unwrap().iter()){
                     if layers.overlaps_direct(batch.first,batch.count)
-                      &&!matches!(draw.composition,crate::annotation_overlay_geometry::Composition::SpanByte|crate::annotation_overlay_geometry::Composition::WidgetTriangle(_)){return Err("Direct annotation operator must write opaque source".into());}
+                      &&!matches!(draw.composition,crate::annotation_overlay_geometry::Composition::SpanByte|crate::annotation_overlay_geometry::Composition::WidgetTriangle(_)|crate::annotation_overlay_geometry::Composition::WidgetLineUnion{..}|crate::annotation_overlay_geometry::Composition::WidgetStencilTriangle{..}|crate::annotation_overlay_geometry::Composition::WidgetStencilComposite{..}){return Err("Direct annotation operator must write opaque source".into());}
                 }
             }
             let opaque=state.geometry.is_opaque(&state.batches)&&state.gates.as_ref().is_none_or(|gates|gates.iter().all(|g|!matches!(g.composition,crate::annotation_overlay_geometry::Composition::GlyphLcd(mask) if mask!=[255;3])));
@@ -546,13 +699,17 @@ unsafe{context.device.create_descriptor_set_layout(&vk::DescriptorSetLayoutCreat
             opaque
         };
         let admitted=AnnotationAdmission{geometry:state.geometry.clone(),batches:state.batches.clone(),
-            gates:state.gates.clone().expect("admitted annotation gates"),count,opaque};
+            gates:state.gates.clone().expect("admitted annotation gates"),count,opaque,source_bounds,marker_groups:if already_admitted{self.annotation_admission.as_ref().unwrap().marker_groups.clone()}else{stencil_marker_groups(state.gates.as_deref().unwrap(),&state.batches)?}};
         let id=state.geometry.id();
-        let warm=self.annotation_buffers.as_ref().is_some_and(|(old,_)|*old==id);
+        let warm=self.annotation_buffers.as_ref().is_some_and(|(old,_)|*old==id)
+            &&(pipeline.stencil_mark==vk::Pipeline::null()||self.annotation_marker_source.as_ref().is_some_and(|(old,batches)|same_stencil_records(old,state.gates.as_ref().unwrap())&&same_stencil_batch_layout(batches,&state.batches)));
         let mut fresh=None;
         let admission=(||{
             if !warm&&!state.geometry.indices().is_empty(){
-                let vertex=self.resources.upload(context,bytemuck::cast_slice(state.geometry.vertices()),vk::BufferUsageFlags::VERTEX_BUFFER,false)?;
+                let packed=if pipeline.stencil_mark!=vk::Pipeline::null(){Some(packed_stencil_vertices(&state.geometry,state.gates.as_deref().unwrap(),&state.batches)?)}else{None};
+                let vertex_bytes=packed.as_deref().unwrap_or_else(||bytemuck::cast_slice(state.geometry.vertices()));
+                let actual_bytes=vertex_bytes.len().checked_add(state.geometry.indices().len()*4).ok_or("Stencil cached size overflow")?;
+                let vertex=self.resources.upload(context,vertex_bytes,vk::BufferUsageFlags::VERTEX_BUFFER,false)?;
                 let restore=if self.pressure_after_vertex{
                     self.pressure_after_vertex=false;
                     let mut ledger=self.budget.ledger.lock().unwrap();let previous=ledger.total_limit;
@@ -562,7 +719,7 @@ unsafe{context.device.create_descriptor_set_layout(&vk::DescriptorSetLayoutCreat
                 let index=self.resources.upload(context,bytemuck::cast_slice(state.geometry.indices()),vk::BufferUsageFlags::INDEX_BUFFER,false);
                 drop(restore);
                 let index=match index{Ok(index)=>index,Err(error)=>{self.resources.retire(vertex)?;self.rolled_back_buffers+=1;return Err(error);}};
-                fresh=Some(Cached{vertex,index,bytes:state.geometry.logical_bytes()});
+                fresh=Some(Cached{vertex,index,bytes:actual_bytes as u64});
             }
             let candidate=if warm{self.annotation_buffers.as_ref().map(|(_,buffers)|buffers)}else{fresh.as_ref()};
             let old_ids=if warm{None}else{self.annotation_buffers.as_ref().map(|(_,buffers)|[buffers.vertex,buffers.index])};
@@ -574,7 +731,7 @@ unsafe{context.device.create_descriptor_set_layout(&vk::DescriptorSetLayoutCreat
                 let vertex=self.resources.buffer(buffers.vertex).ok_or("Annotation vertex owner missing")?;
                 let index=self.resources.buffer(buffers.index).ok_or("Annotation index owner missing")?;
                 self.resources.mark_used(buffers.vertex,next)?;self.resources.mark_used(buffers.index,next)?;
-                Some(Ready{gates:state.gates.clone(),id,vertex,index,first_index:0,base_vertex:0,
+                Some(Ready{gates:state.gates.clone(),id,vertex,index,first_index:0,base_vertex:0,marker_offset:(pipeline.stencil_mark!=vk::Pipeline::null()).then_some((state.geometry.vertices().len()*12)as u64),marker_groups:Some(admitted.marker_groups.clone()),
                     batches:state.batches.clone(),premultiplied:state.premultiplied.clone(),pose:state.pose,
                     ordered_draws:state.geometry.ordered_draws(),opaque})
             }else{None};
@@ -601,6 +758,7 @@ unsafe{context.device.create_descriptor_set_layout(&vk::DescriptorSetLayoutCreat
             if let Some((_,buffers))=&self.annotation_buffers{self.uploads+=1;self.upload_bytes+=buffers.bytes;}
         }else{self.cache_hits+=1;}
         if let Some(old)=old_state.as_mut(){old.ready=None;}
+        self.annotation_marker_source=if pipeline.stencil_mark!=vk::Pipeline::null(){Some((state.gates.as_ref().unwrap().clone(),state.batches.clone()))}else{None};
         state.ready=ready;self.annotation_owner=Some(Arc::downgrade(&handle.inner));self.annotation_admission=Some(admitted);
         Ok(())
     }
@@ -618,7 +776,7 @@ unsafe{context.device.create_descriptor_set_layout(&vk::DescriptorSetLayoutCreat
         if let Some(queries)=queries{queries.commit();}
         pipeline.visibility=None;
         if let Some(state)=state.as_mut(){state.ready=None;}
-        self.resources.retire_completed(proof);self.annotation_buffers=None;
+        self.resources.retire_completed(proof);self.annotation_buffers=None;self.annotation_marker_source=None;
         self.annotation_owner=None;self.annotation_admission=None;Ok(())
     }
     pub(crate) fn bind_annotation_visibility(&mut self,context:&VulkanContext,buffer:vk::Buffer,count:u32,identity:&Arc<()>,fence:vk::Fence,completed:u64)->Result<(),String>{
@@ -646,17 +804,21 @@ unsafe{context.device.create_descriptor_set_layout(&vk::DescriptorSetLayoutCreat
         self.resources.check_submission()?;
         let p=self.pipeline.lock().map_err(|_|super::resize::PrepareError::Other("CAD2D pipeline poisoned".into()))?;
         let replacement=make_pipeline(&self.device,pass,p.layout,p.integer,p.annotations,false)?;
-        let mut prepared=PreparedRenderPass{device:self.device.clone(),pipeline:replacement,lcd_pipeline:vk::Pipeline::null(),pool:vk::DescriptorPool::null(),sets:Vec::new()};
-        if p.annotations{prepared.lcd_pipeline=make_pipeline(&self.device,pass,p.layout,true,true,true)?;}
+        let mut prepared=PreparedRenderPass{device:self.device.clone(),pipeline:replacement,lcd_pipeline:vk::Pipeline::null(),widget_pipeline:vk::Pipeline::null(),stencil_mark:vk::Pipeline::null(),stencil_composite:vk::Pipeline::null(),pool:vk::DescriptorPool::null(),sets:Vec::new()};
+        if p.annotations{prepared.lcd_pipeline=make_pipeline(&self.device,pass,p.layout,true,true,true)?;prepared.widget_pipeline=make_pipeline(&self.device,pass,p.layout,false,true,false)?;}
+        if p.stencil_mark!=vk::Pipeline::null(){let(mark,composite)=make_stencil_pair(&self.device,pass,p.layout)?;prepared.stencil_mark=mark;prepared.stencil_composite=composite;}
         if p.integer{let inputs=make_inputs(&self.device,p.descriptor_layout,views,p.annotations)?;prepared.pool=inputs.0;prepared.sets=inputs.1;}
         Ok(prepared)
     }
     fn publish_render_pass(device:&Device,p:&mut Pipeline,mut prepared:PreparedRenderPass){
         let previous=std::mem::replace(&mut p.pipeline,std::mem::replace(&mut prepared.pipeline,vk::Pipeline::null()));
+        let previous_mark=std::mem::replace(&mut p.stencil_mark,std::mem::replace(&mut prepared.stencil_mark,vk::Pipeline::null()));
+        let previous_composite=std::mem::replace(&mut p.stencil_composite,std::mem::replace(&mut prepared.stencil_composite,vk::Pipeline::null()));
+        let previous_widget=std::mem::replace(&mut p.widget_pipeline,std::mem::replace(&mut prepared.widget_pipeline,vk::Pipeline::null()));
         let previous_lcd=std::mem::replace(&mut p.lcd_pipeline,std::mem::replace(&mut prepared.lcd_pipeline,vk::Pipeline::null()));
         let previous_pool=std::mem::replace(&mut p.descriptor_pool,std::mem::replace(&mut prepared.pool,vk::DescriptorPool::null()));
         p.descriptor_sets=std::mem::take(&mut prepared.sets);p.active_set=None;p.visibility=None;
-        unsafe{device.destroy_pipeline(previous,None);if previous_lcd!=vk::Pipeline::null(){device.destroy_pipeline(previous_lcd,None)}if previous_pool!=vk::DescriptorPool::null(){device.destroy_descriptor_pool(previous_pool,None)}};
+        unsafe{device.destroy_pipeline(previous,None);if previous_mark!=vk::Pipeline::null(){device.destroy_pipeline(previous_mark,None);device.destroy_pipeline(previous_composite,None)}if previous_widget!=vk::Pipeline::null(){device.destroy_pipeline(previous_widget,None)}if previous_lcd!=vk::Pipeline::null(){device.destroy_pipeline(previous_lcd,None)}if previous_pool!=vk::DescriptorPool::null(){device.destroy_descriptor_pool(previous_pool,None)}};
     }
     pub(crate) fn commit_render_pass(&mut self,prepared:PreparedRenderPass)->Result<(),String>{
         let mut p=self.pipeline.lock().map_err(|_|"CAD2D pipeline poisoned")?;
@@ -830,7 +992,7 @@ unsafe{context.device.create_descriptor_set_layout(&vk::DescriptorSetLayoutCreat
                     id,
                     vertex: self.resources.buffer(c.vertex).unwrap(),
                     index: self.resources.buffer(c.index).unwrap(),
-                    first_index:0,base_vertex:0,
+                    first_index:0,base_vertex:0,marker_offset:None,marker_groups:None,
                     batches: s.batches.clone(),
                     premultiplied:s.premultiplied.clone(),
                     pose: s.pose,
@@ -986,11 +1148,13 @@ impl Drop for Renderer {
         unsafe {
             self.device.destroy_pipeline(p.pipeline, None);
             if p.lcd_pipeline!=vk::Pipeline::null(){self.device.destroy_pipeline(p.lcd_pipeline,None);}
+            if p.widget_pipeline!=vk::Pipeline::null(){self.device.destroy_pipeline(p.widget_pipeline,None);}
+            if p.stencil_mark!=vk::Pipeline::null(){self.device.destroy_pipeline(p.stencil_mark,None);self.device.destroy_pipeline(p.stencil_composite,None);}
             self.device.destroy_pipeline_layout(p.layout, None);
             if p.descriptor_pool!=vk::DescriptorPool::null(){self.device.destroy_descriptor_pool(p.descriptor_pool,None)}
             if p.descriptor_layout!=vk::DescriptorSetLayout::null(){self.device.destroy_descriptor_set_layout(p.descriptor_layout,None)}
         }
-        p.pipeline = vk::Pipeline::null();p.lcd_pipeline=vk::Pipeline::null();
+        p.pipeline = vk::Pipeline::null();p.lcd_pipeline=vk::Pipeline::null();p.widget_pipeline=vk::Pipeline::null();p.stencil_mark=vk::Pipeline::null();p.stencil_composite=vk::Pipeline::null();
         p.layout = vk::PipelineLayout::null();
     }
 }
@@ -1001,12 +1165,25 @@ fn make_pipeline(
     integer:bool,
     annotations:bool,
     lcd:bool,
+) -> Result<vk::Pipeline, super::resize::PrepareError> {make_pipeline_mode(device,pass,layout,integer,annotations,lcd,0)}
+fn make_stencil_pair(device:&Device,pass:vk::RenderPass,layout:vk::PipelineLayout)->Result<(vk::Pipeline,vk::Pipeline),super::resize::PrepareError>{
+ let mark=make_pipeline_mode(device,pass,layout,true,true,false,1)?;
+ match make_pipeline_mode(device,pass,layout,false,true,false,2){Ok(composite)=>Ok((mark,composite)),Err(e)=>{unsafe{device.destroy_pipeline(mark,None)};Err(e)}}
+}
+fn make_pipeline_mode(
+    device: &Device,
+    pass: vk::RenderPass,
+    layout: vk::PipelineLayout,
+    integer:bool,
+    annotations:bool,
+    lcd:bool,
+    stencil_mode:u32,
 ) -> Result<vk::Pipeline, super::resize::PrepareError> {
     let mut modules = Vec::new();
     let result = (|| {
         for bytes in [
-            include_bytes!("shaders/cad2d.vert.spv").as_slice(),
-            if annotations{include_bytes!("shaders/annotation_overlay.frag.spv").as_slice()}else if integer{include_bytes!("shaders/cad2d_integer.frag.spv").as_slice()}else{include_bytes!("shaders/cad2d.frag.spv").as_slice()},
+            if stencil_mode==1{include_bytes!("shaders/annotation_stencil.vert.spv").as_slice()}else{include_bytes!("shaders/cad2d.vert.spv").as_slice()},
+            if stencil_mode==1{include_bytes!("shaders/annotation_stencil.frag.spv").as_slice()}else if annotations{include_bytes!("shaders/annotation_overlay.frag.spv").as_slice()}else if integer{include_bytes!("shaders/cad2d_integer.frag.spv").as_slice()}else{include_bytes!("shaders/cad2d.frag.spv").as_slice()},
         ] {
             let code =
                 ash::util::read_spv(&mut std::io::Cursor::new(bytes)).map_err(|e| e.to_string())?;
@@ -1030,12 +1207,12 @@ fn make_pipeline(
                 .module(modules[1])
                 .name(c"main"),
         ];
-        let bindings = [vk::VertexInputBindingDescription {
+        let mut bindings = vec![vk::VertexInputBindingDescription {
             binding: 0,
             stride: 12,
             input_rate: vk::VertexInputRate::VERTEX,
         }];
-        let attrs = [
+        let mut attrs = vec![
             vk::VertexInputAttributeDescription {
                 location: 0,
                 binding: 0,
@@ -1049,6 +1226,12 @@ fn make_pipeline(
                 offset: 8,
             },
         ];
+        if stencil_mode==1{
+            bindings.push(vk::VertexInputBindingDescription{binding:1,stride:40,input_rate:vk::VertexInputRate::VERTEX});
+            for(location,format,offset)in [(2,vk::Format::R32G32B32A32_SFLOAT,0),(3,vk::Format::R32G32_SFLOAT,16),(4,vk::Format::R32G32B32A32_SFLOAT,24)]{
+                attrs.push(vk::VertexInputAttributeDescription{location,binding:1,format,offset});
+            }
+        }
         let input = vk::PipelineVertexInputStateCreateInfo::default()
             .vertex_binding_descriptions(&bindings)
             .vertex_attribute_descriptions(&attrs);
@@ -1072,6 +1255,10 @@ fn make_pipeline(
             .dst_alpha_blend_factor(vk::BlendFactor::ONE_MINUS_SRC_ALPHA)
             .alpha_blend_op(vk::BlendOp::ADD)
             .color_write_mask(if lcd{vk::ColorComponentFlags::R|vk::ColorComponentFlags::G|vk::ColorComponentFlags::B}else{vk::ColorComponentFlags::RGBA})];
+        let mut attachments=attachments;
+        if stencil_mode==1{attachments[0]=attachments[0].blend_enable(false).color_write_mask(vk::ColorComponentFlags::empty());}
+        let state=vk::StencilOpState::default().compare_op(if stencil_mode==1{vk::CompareOp::ALWAYS}else{vk::CompareOp::EQUAL}).fail_op(vk::StencilOp::KEEP).depth_fail_op(vk::StencilOp::KEEP).pass_op(if stencil_mode==1{vk::StencilOp::REPLACE}else{vk::StencilOp::ZERO}).compare_mask(1).write_mask(1).reference(1);
+        let depth_stencil=vk::PipelineDepthStencilStateCreateInfo::default().depth_test_enable(false).depth_write_enable(false).stencil_test_enable(stencil_mode!=0).front(state).back(state);
         let blend = vk::PipelineColorBlendStateCreateInfo::default().attachments(&attachments);
         let dynamic = vk::PipelineDynamicStateCreateInfo::default()
             .dynamic_states(&[vk::DynamicState::VIEWPORT, vk::DynamicState::SCISSOR,vk::DynamicState::BLEND_CONSTANTS]);
@@ -1085,7 +1272,7 @@ fn make_pipeline(
                     .viewport_state(&viewport)
                     .rasterization_state(&raster)
                     .multisample_state(&samples)
-                    .color_blend_state(&blend)
+                    .color_blend_state(&blend).depth_stencil_state(&depth_stencil)
                     .dynamic_state(&dynamic)
                     .layout(layout)
                     .render_pass(pass)],
@@ -1121,6 +1308,59 @@ fn make_inputs(device:&Device,layout:vk::DescriptorSetLayout,views:&[vk::ImageVi
 mod annotation_gate_tests {
  use super::*;
  use ingetrazo_render::annotations::Gate;
+ #[test]fn same_geometry_changed_triangle_does_not_reuse_stale_packed_records(){
+  use crate::annotation_overlay_geometry::{Draw,Composition};
+  use ingetrazo_render::cad2d::{Vertex,AnnotationLayer,EncodedRgba};
+  let triangle=[0f32.to_bits(),0f32.to_bits(),2f32.to_bits(),0f32.to_bits(),0f32.to_bits(),2f32.to_bits()];
+  let bounds=[0f32.to_bits(),0f32.to_bits(),2f32.to_bits(),2f32.to_bits()];
+  let original=Draw{gate:Gate::Always,composition:Composition::WidgetStencilTriangle{triangle,bounds},straight_rgba:[0,0,0,255]};
+  let composite=Draw{gate:Gate::Always,composition:Composition::WidgetStencilComposite{bounds},straight_rgba:[37,93,157,128]};
+  let a:Arc<[Draw]>=Arc::from([original,composite]);assert!(same_stencil_records(&a,&a));
+  let b:Arc<[Draw]>=Arc::from([Draw{gate:Gate::Point(1),straight_rgba:[37,93,157,255],..original},Draw{gate:Gate::Point(1),..composite}]);assert!(same_stencil_records(&a,&b));
+  let changed=[0f32.to_bits(),0f32.to_bits(),2f32.to_bits(),0f32.to_bits(),2f32.to_bits(),2f32.to_bits()];
+  let c:Arc<[Draw]>=Arc::from([Draw{composition:Composition::WidgetStencilTriangle{triangle:changed,bounds},..original},composite]);assert!(!same_stencil_records(&a,&c));
+  let quad=[[-0.5,-0.5],[2.5,-0.5],[-0.5,2.5],[2.5,2.5]];
+  let vertices=quad.into_iter().chain(quad).map(|position|Vertex{position,coverage:1.}).collect();
+  let geometry=Geometry::new_with_annotation_layers(vertices,vec![0,1,2,2,1,3,4,5,6,6,5,7],vec![AnnotationLayer::Opaque{range:0..6},AnnotationLayer::UnionQuad{range:6..12}],1.).unwrap();
+  let marker=Batch{first:0,count:6,color:EncodedRgba::from_bytes([0,0,0,255],1.).unwrap()};
+  let composite_batch=Batch{first:6,count:6,color:EncodedRgba::from_bytes(composite.straight_rgba,1.).unwrap()};
+  let batches:Arc<[Batch]>=Arc::from([marker,composite_batch]);
+  for draws in [&a,&c]{
+   geometry.validate_batches(&batches).unwrap();admit_draw_colors(draws,&batches).unwrap();admit_widget_triangles(&geometry,draws,&batches).unwrap();admit_gates(Some(draws),batches.len(),2).unwrap();
+  }
+  assert_ne!(packed_stencil_vertices(&geometry,&a,&batches).unwrap(),packed_stencil_vertices(&geometry,&c,&batches).unwrap());
+  let recolored:Arc<[Batch]>=Arc::from([Batch{color:EncodedRgba::from_bytes([37,93,157,255],1.).unwrap(),..marker},composite_batch]);
+  assert!(same_stencil_batch_layout(&batches,&recolored));admit_draw_colors(&b,&recolored).unwrap();
+  let remapped:Arc<[Batch]>=Arc::from([Batch{count:3,..marker},composite_batch]);assert!(!same_stencil_batch_layout(&batches,&remapped));
+ }
+ #[test]fn packed_stencil_records_retain_vertex_abi_and_reject_alias(){
+  use crate::annotation_overlay_geometry::{Draw,Composition};
+  use ingetrazo_render::cad2d::{Vertex,EncodedRgba};
+  let vertices=vec![Vertex{position:[0.,0.],coverage:1.},Vertex{position:[2.,0.],coverage:1.},Vertex{position:[0.,2.],coverage:1.},Vertex{position:[2.,2.],coverage:1.}];
+  let geometry=Geometry::new(vertices.clone(),vec![0,1,2,2,1,3,0,1,2,2,1,3]).unwrap();
+  let batch=Batch{first:0,count:6,color:EncodedRgba::from_bytes([0,0,0,255],1.).unwrap()};
+  let triangle=[0f32.to_bits(),0f32.to_bits(),2f32.to_bits(),0f32.to_bits(),0f32.to_bits(),2f32.to_bits()];
+  let bounds=[0f32.to_bits(),0f32.to_bits(),2f32.to_bits(),2f32.to_bits()];
+  let draw=Draw{gate:Gate::Always,composition:Composition::WidgetStencilTriangle{triangle,bounds},straight_rgba:[0,0,0,255]};
+  let packed=packed_stencil_vertices(&geometry,&[draw],&[batch]).unwrap();
+  assert_eq!(packed.len(),vertices.len()*52);
+  assert_eq!(&packed[..vertices.len()*12],bytemuck::cast_slice::<Vertex,u8>(&vertices));
+  let mut changed=draw;if let Composition::WidgetStencilTriangle{triangle,..}=&mut changed.composition{triangle[0]=1f32.to_bits();}
+  assert!(packed_stencil_vertices(&geometry,&[draw,changed],&[batch,Batch{first:6,..batch}]).is_err());
+ }
+ #[test]fn stencil_sequence_rejects_unconsumed_or_mismatched_markers(){
+  use crate::annotation_overlay_geometry::{Draw,Composition};
+  let bounds=[0f32.to_bits(),0f32.to_bits(),10f32.to_bits(),10f32.to_bits()];
+  let marker=Draw{gate:Gate::Point(0),composition:Composition::WidgetStencilTriangle{triangle:[0;6],bounds},straight_rgba:[0,0,0,255]};
+  let composite=Draw{gate:marker.gate,composition:Composition::WidgetStencilComposite{bounds},straight_rgba:[37,93,157,128]};
+  assert!(admit_stencil_sequence(&[marker,marker,composite,marker,composite]).is_ok());
+  assert!(admit_stencil_sequence(&[marker]).is_err());
+  assert!(admit_stencil_sequence(&[composite]).is_err());
+  assert!(admit_stencil_sequence(&[marker,Draw::span(Gate::Always),composite]).is_err());
+  assert!(admit_stencil_sequence(&[marker,Draw{gate:Gate::Always,..composite}]).is_err());
+  let mut different=composite;if let Composition::WidgetStencilComposite{bounds}= &mut different.composition{bounds[2]=11f32.to_bits();}
+  assert!(admit_stencil_sequence(&[marker,different]).is_err());
+ }
  #[test]fn palette_splits_draw_intersections_without_reordering_or_extra_layer_barriers(){
   let ranges=[0..18,18..30,30..42];let batches=[0..6,6..24,24..42];let mut cursor=0;let mut calls=Vec::new();
   for batch in batches{ordered_intersections(batch,&ranges,&mut cursor,|range,barrier|calls.push((range,barrier)));}
@@ -1136,6 +1376,13 @@ mod annotation_gate_tests {
    assert!(admit_draw_colors(&[draw],&[batch]).is_ok());
    draw.straight_rgba[3]^=1;assert!(admit_draw_colors(&[draw],&[batch]).is_err());
   }
+ }
+ #[test]fn union_metadata_points_outside_composite_still_require_pose_admission(){
+  use crate::annotation_overlay_geometry::{Draw,Composition};
+  let strip=[1000f32.to_bits();16];let draw=Draw{gate:Gate::Always,composition:Composition::WidgetLineUnion{strip,bounds:[0f32.to_bits(),0f32.to_bits(),1f32.to_bits(),1f32.to_bits()]},straight_rgba:[37,93,157,128]};
+  let bounds=widget_union_source_bounds(&[draw]).unwrap();assert!(validate_widget_bounds_pose(bounds,Pose::default(),1.).is_ok());
+  assert!(validate_widget_bounds_pose(bounds,Pose{translation:[999_500.,0.],..Pose::default()},1.).is_err());
+  assert!(validate_widget_bounds_pose(bounds,Pose{scale:[f32::MAX;2],translation:[-f32::MAX;2]},1.).is_err());
  }
  #[test]fn widget_triangle_metadata_pose_and_density_admission(){
   use crate::annotation_overlay_geometry::{Draw,Composition};

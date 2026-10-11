@@ -1,0 +1,30 @@
+{
+  "runtime_source": "0a6760974cacca7c3dade991bb92758dc09f54ea",
+  "artifacts": {
+    "arm": {
+      "archive_sha256": "2076c5bf0f84fcfa356b2cd30e2690b71ded769b5935aec3af18c732e6d31ca5",
+      "source_files_verified": 30
+    },
+    "intel": {
+      "archive_sha256": "640fce26bed4074e883483b0cbfc101bc0b3dee7baa19c54f68b8a4afe3e926a",
+      "source_files_verified": 30
+    }
+  },
+  "pipeline_sha256": "d35f13369ca1d90183ce9c66a5771296340d663945fe10299e71dfb5e5650110",
+  "source_png_samples_independently_decoded": true,
+  "positive": {
+    "passed": true,
+    "source_cases": 9,
+    "native_cases": 10,
+    "pixels": 250,
+    "scope": "Actual native app sampled classic own-mesh world shading/baked reflection/face-vs-group layer routing, no whole-image/OS gesture/presentation claim"
+  },
+  "negatives": {
+    "blank": "rejected",
+    "stale-pose": "rejected",
+    "stale-paint": "rejected",
+    "stale-reflection": "rejected",
+    "stale-group-layer": "rejected"
+  },
+  "scope": "Independent frozen source/artifact and decoded-image review; not a new SDK run or full-image/OS gesture claim. Intel native query refusal remains open."
+}
