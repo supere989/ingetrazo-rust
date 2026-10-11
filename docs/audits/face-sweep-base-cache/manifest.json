@@ -1,0 +1,326 @@
+{
+  "source": "a27e0bd350342d7a1ea2556dd56d42e8f09bce50",
+  "archive_sha256": "f3f533f7e781e738b4a23a3195ed02340dc295977a604b93b0018a0942a82c13",
+  "records": {
+    "ordinary/1-acquire.png": {
+      "bytes": 50606,
+      "sha256": "7064231e28339db3897f7658140f96f9be75f20d31b11530cc546dbd25759ae5"
+    },
+    "ordinary/10-retry.png": {
+      "bytes": 54427,
+      "sha256": "999cd25fd10da2e9903a2596d697dfdaeba389fd67a9a5c56a5e3a82525e9efe"
+    },
+    "ordinary/11-cancel.png": {
+      "bytes": 52094,
+      "sha256": "8e17ef8a0272f393f73b48347c569251c0141bc6718204503058c9ae2aba6422"
+    },
+    "ordinary/12-acquire.png": {
+      "bytes": 50606,
+      "sha256": "7064231e28339db3897f7658140f96f9be75f20d31b11530cc546dbd25759ae5"
+    },
+    "ordinary/13-drag.png": {
+      "bytes": 50929,
+      "sha256": "b23ae17864a50687bc2e52ac4031970aee2d333074791bdd7fc20af6a0211300"
+    },
+    "ordinary/14-commit.png": {
+      "bytes": 49828,
+      "sha256": "935da0e823801f6ff156a39cb137a2f7b63cabcfbfad93d760eb516586c05792"
+    },
+    "ordinary/15-undo.png": {
+      "bytes": 47438,
+      "sha256": "b46975a90ae6d67ef4699e7c2057d107a4b62865d7caba76a4c7be2639eed9c8"
+    },
+    "ordinary/16-save.png": {
+      "bytes": 49060,
+      "sha256": "79b98938aa1d295800ad1e5e76ebd2c41c4cd878175805359f626d2fdb74947d"
+    },
+    "ordinary/2-drag.png": {
+      "bytes": 50929,
+      "sha256": "b23ae17864a50687bc2e52ac4031970aee2d333074791bdd7fc20af6a0211300"
+    },
+    "ordinary/3-drag.png": {
+      "bytes": 50320,
+      "sha256": "5989acfb34f126fc8e0fdbac8f2861335db3221e4f59e82b0212906e053c3dc2"
+    },
+    "ordinary/4-refuse.png": {
+      "bytes": 50320,
+      "sha256": "5989acfb34f126fc8e0fdbac8f2861335db3221e4f59e82b0212906e053c3dc2"
+    },
+    "ordinary/5-retry.png": {
+      "bytes": 52016,
+      "sha256": "1fcfa28756a0db48b178ce647fcc06b77eaddf10760aeccac2264fb70324cecc"
+    },
+    "ordinary/6-typed.png": {
+      "bytes": 52359,
+      "sha256": "332c3db9ac3582dff20085cb7ceea7972d976a993cfa0ffd754727e66b64eade"
+    },
+    "ordinary/7-refuse-font.png": {
+      "bytes": 52359,
+      "sha256": "332c3db9ac3582dff20085cb7ceea7972d976a993cfa0ffd754727e66b64eade"
+    },
+    "ordinary/8-retry.png": {
+      "bytes": 52712,
+      "sha256": "e7d51cd2499571357c9e5dfbafefcda896b85ad0dfcd218676b5c1348acc176d"
+    },
+    "ordinary/9-refuse-cad.png": {
+      "bytes": 52712,
+      "sha256": "e7d51cd2499571357c9e5dfbafefcda896b85ad0dfcd218676b5c1348acc176d"
+    },
+    "ordinary/app-cleanup.json": {
+      "bytes": 87,
+      "sha256": "002b2ad4378af24a2bf8ea97cf7dcaab0240aa0e2923218dec01245f4e59b3e4"
+    },
+    "ordinary/baseline.png": {
+      "bytes": 50958,
+      "sha256": "c83359a7e7110f78659b07531b76ad667a88037860f63c0358a28d280ad2d105"
+    },
+    "ordinary/config/ingetrazo-rust/settings.json": {
+      "bytes": 502,
+      "sha256": "ca55b6b4f868e973db8d97218596ac3d5023368779a0875c9004d8d6904f8486"
+    },
+    "ordinary/control/request.json": {
+      "bytes": 31,
+      "sha256": "7b20885c1addedc418179dc80ba2b7982b51421d85c69d687949895d1b4fc32d"
+    },
+    "ordinary/control/saved.igz": {
+      "bytes": 6440,
+      "sha256": "684ff53be9bf425f1dc838781871fec1f799e1359dd91056f13d223f2e3cd386"
+    },
+    "ordinary/control/state.json": {
+      "bytes": 539,
+      "sha256": "020a95a17d44a2f143c204f6a4c84fed29d6b1478a8c344d75f85d42c510b402"
+    },
+    "ordinary/nvidia.json": {
+      "bytes": 105,
+      "sha256": "559298238b82b7ef5db83f2674d7a3fe416158735a56302121b7f2e2d5c1f053"
+    },
+    "ordinary/resize-restored.png": {
+      "bytes": 52094,
+      "sha256": "8e17ef8a0272f393f73b48347c569251c0141bc6718204503058c9ae2aba6422"
+    },
+    "ordinary/result.json": {
+      "bytes": 32806,
+      "sha256": "dbac487e3e2e2b87062091119bf59baf0ca23711e879231d910cb98dba18242f"
+    },
+    "ordinary/runtime.log": {
+      "bytes": 34106,
+      "sha256": "5125b5e6e13896a6de45005af1cae6261c8027277e2e872e335a840dc52f96a9"
+    },
+    "ordinary/transport.json": {
+      "bytes": 2873,
+      "sha256": "6ad1482e26156100f72f4fdcb02a3d380b659796fb472c22287fac1b277154d9"
+    },
+    "ordinary/transport.log": {
+      "bytes": 43,
+      "sha256": "0edeadb29bda5d91af73ead0657d44bb358958f12535c0fc19512882fb6168b6"
+    },
+    "ordinary/xvfb-cleanup.json": {
+      "bytes": 87,
+      "sha256": "ac3db790fb10744c5adcca88c62d290edc9c581201a89b7d5ecef1828bf1398e"
+    },
+    "textured/1-acquire.png": {
+      "bytes": 40055,
+      "sha256": "d7d81dd6ba291ba961bc9d2310a3357121973acef9318e74b6f14b0a74653c32"
+    },
+    "textured/10-retry.png": {
+      "bytes": 58121,
+      "sha256": "93b1ffb4891171ccdec669637d191384da489740d892d89c0e1e0bcb6588476b"
+    },
+    "textured/11-cancel.png": {
+      "bytes": 41533,
+      "sha256": "56c1cc5f4a6b6c10dcb71af92cdc3ec4445729a2b1f831d67db309fbffc5c41f"
+    },
+    "textured/12-acquire.png": {
+      "bytes": 40055,
+      "sha256": "d7d81dd6ba291ba961bc9d2310a3357121973acef9318e74b6f14b0a74653c32"
+    },
+    "textured/13-drag.png": {
+      "bytes": 47264,
+      "sha256": "1c13ce71d26f38956b5c1a353754dea6629a8fed5b5ce316a1f420568951df61"
+    },
+    "textured/14-commit.png": {
+      "bytes": 48252,
+      "sha256": "c53190cc34157e0c0ff7b129051f6e2e78484dd2a39ef007535ef1f0b845c970"
+    },
+    "textured/15-undo.png": {
+      "bytes": 36985,
+      "sha256": "d9480a987633d6f6d9e232aa9fd556f01848c8499014644e8c6dee19fc6a1b7a"
+    },
+    "textured/16-save.png": {
+      "bytes": 38528,
+      "sha256": "c77c68f98d1288eca5427a991606f49d9a60509571d58e3e5d593137305fcb4a"
+    },
+    "textured/2-drag.png": {
+      "bytes": 47264,
+      "sha256": "1c13ce71d26f38956b5c1a353754dea6629a8fed5b5ce316a1f420568951df61"
+    },
+    "textured/3-drag.png": {
+      "bytes": 50500,
+      "sha256": "75237df0899c8a40012983012e4883aef7078fb7c1d952d2e1c186f969191ef2"
+    },
+    "textured/4-refuse.png": {
+      "bytes": 50500,
+      "sha256": "75237df0899c8a40012983012e4883aef7078fb7c1d952d2e1c186f969191ef2"
+    },
+    "textured/5-retry.png": {
+      "bytes": 56035,
+      "sha256": "8beb502674fad89c9076e23bd4ead6cdad74c62374d1aad9a3dff43707c14d5f"
+    },
+    "textured/6-typed.png": {
+      "bytes": 56491,
+      "sha256": "1b3047baf1068a1ca37eadee219b2fbf6e8bd3dd9483532b946aeacecfa7a045"
+    },
+    "textured/7-refuse-font.png": {
+      "bytes": 56491,
+      "sha256": "1b3047baf1068a1ca37eadee219b2fbf6e8bd3dd9483532b946aeacecfa7a045"
+    },
+    "textured/8-retry.png": {
+      "bytes": 56313,
+      "sha256": "380280167722471293b1c08d65264fa6fa6b9bc1f195c68ea281a0122c2cb417"
+    },
+    "textured/9-refuse-cad.png": {
+      "bytes": 56313,
+      "sha256": "380280167722471293b1c08d65264fa6fa6b9bc1f195c68ea281a0122c2cb417"
+    },
+    "textured/app-cleanup.json": {
+      "bytes": 87,
+      "sha256": "002b2ad4378af24a2bf8ea97cf7dcaab0240aa0e2923218dec01245f4e59b3e4"
+    },
+    "textured/baseline.png": {
+      "bytes": 40350,
+      "sha256": "c78e49bb679c1ac87fce1696f610dd73ec1ec91121ebb2ec2c8ce19fb9dc672b"
+    },
+    "textured/config/ingetrazo-rust/settings.json": {
+      "bytes": 515,
+      "sha256": "58890098f83b5446c2f978e3f8263ba2672d8f9efda4d7988afc4a17b5c91d00"
+    },
+    "textured/control/request.json": {
+      "bytes": 31,
+      "sha256": "7b20885c1addedc418179dc80ba2b7982b51421d85c69d687949895d1b4fc32d"
+    },
+    "textured/control/saved.igz": {
+      "bytes": 1004,
+      "sha256": "e8058153b872124ccd89ff66ee770edb9ec10ddd7fc40104241703923ed7b298"
+    },
+    "textured/control/state.json": {
+      "bytes": 539,
+      "sha256": "4285257919afd9e4925521966ef43f2780c4e8d1ee20c568b183ed73a2edaacf"
+    },
+    "textured/nvidia.json": {
+      "bytes": 105,
+      "sha256": "559298238b82b7ef5db83f2674d7a3fe416158735a56302121b7f2e2d5c1f053"
+    },
+    "textured/resize-restored.png": {
+      "bytes": 41533,
+      "sha256": "56c1cc5f4a6b6c10dcb71af92cdc3ec4445729a2b1f831d67db309fbffc5c41f"
+    },
+    "textured/result.json": {
+      "bytes": 32666,
+      "sha256": "0cd623d7454c6ee3c86122a3a630c5abcac3bd505f0efdd151fded1b59246cfc"
+    },
+    "textured/runtime.log": {
+      "bytes": 36481,
+      "sha256": "f5f855eaacdc0d0d493c74474e924547571bb15c7ae958b834c24dec8e9f24eb"
+    },
+    "textured/transport.json": {
+      "bytes": 2928,
+      "sha256": "66694e3928374cccec8c73ade618c36656d26154dade80a44f42c6ae3043d99a"
+    },
+    "textured/transport.log": {
+      "bytes": 43,
+      "sha256": "0edeadb29bda5d91af73ead0657d44bb358958f12535c0fc19512882fb6168b6"
+    },
+    "textured/xvfb-cleanup.json": {
+      "bytes": 87,
+      "sha256": "ac3db790fb10744c5adcca88c62d290edc9c581201a89b7d5ecef1828bf1398e"
+    },
+    "source-textured/1-acquire.png": {
+      "bytes": 11373,
+      "sha256": "fb6767c47b43de6a3e288507442be22fdb700c27b28a2368d128ccc51cdb8c86"
+    },
+    "source-textured/2-drag.png": {
+      "bytes": 21255,
+      "sha256": "36e3ea72e1578ba101653fb0e2377a448b27ce27b7b17676d668710568521467"
+    },
+    "source-textured/3-drag.png": {
+      "bytes": 25181,
+      "sha256": "2351d256a96c7af881a06c22c309ba2925604b1541d706a1387b606aff7c767c"
+    },
+    "source-textured/4-drag.png": {
+      "bytes": 11373,
+      "sha256": "fb6767c47b43de6a3e288507442be22fdb700c27b28a2368d128ccc51cdb8c86"
+    },
+    "source-textured/5-cancel.png": {
+      "bytes": 10137,
+      "sha256": "d2fbae884b4893a7555dba886a125373994930bd7474ab18bab2ef54bb26103a"
+    },
+    "source-textured/6-save.png": {
+      "bytes": 10137,
+      "sha256": "d2fbae884b4893a7555dba886a125373994930bd7474ab18bab2ef54bb26103a"
+    },
+    "source-textured/app-cleanup.json": {
+      "bytes": 87,
+      "sha256": "002b2ad4378af24a2bf8ea97cf7dcaab0240aa0e2923218dec01245f4e59b3e4"
+    },
+    "source-textured/baseline.png": {
+      "bytes": 10137,
+      "sha256": "d2fbae884b4893a7555dba886a125373994930bd7474ab18bab2ef54bb26103a"
+    },
+    "source-textured/config/ingetrazo-rust/settings.json": {
+      "bytes": 515,
+      "sha256": "58890098f83b5446c2f978e3f8263ba2672d8f9efda4d7988afc4a17b5c91d00"
+    },
+    "source-textured/control/request.json": {
+      "bytes": 30,
+      "sha256": "69b2f69a4d991dade11c8a7ca92e9790b04e36c6d57c5c8141cf2310ce17e3ae"
+    },
+    "source-textured/control/saved.igz": {
+      "bytes": 1004,
+      "sha256": "e8058153b872124ccd89ff66ee770edb9ec10ddd7fc40104241703923ed7b298"
+    },
+    "source-textured/control/state.json": {
+      "bytes": 520,
+      "sha256": "359bdde11318a9e78b296ea385da89e199ff008f4df579a382ca43f5f14f99be"
+    },
+    "source-textured/nvidia.json": {
+      "bytes": 105,
+      "sha256": "559298238b82b7ef5db83f2674d7a3fe416158735a56302121b7f2e2d5c1f053"
+    },
+    "source-textured/result.json": {
+      "bytes": 11956,
+      "sha256": "93fd1ff407f2cc1a3f738663247bffa94ce10c39b25d1d9d7af42e592368d848"
+    },
+    "source-textured/runtime.log": {
+      "bytes": 2939,
+      "sha256": "21686c9f0f49be989c97fc111b3a35a72b54be9ef44382f1f2c390534882ca91"
+    },
+    "source-textured/source-comparison.json": {
+      "bytes": 912,
+      "sha256": "f8bf52934b556c44396df7d9de14211c84c3d5872ba051f5fab28e931ba26082"
+    },
+    "source-textured/transport.json": {
+      "bytes": 2959,
+      "sha256": "bc99b363f5ca5360657d3e8ee323fec5f9054cc72b3b2de8067231b408e3d20c"
+    },
+    "source-textured/transport.log": {
+      "bytes": 43,
+      "sha256": "0edeadb29bda5d91af73ead0657d44bb358958f12535c0fc19512882fb6168b6"
+    },
+    "source-textured/xvfb-cleanup.json": {
+      "bytes": 87,
+      "sha256": "ac3db790fb10744c5adcca88c62d290edc9c581201a89b7d5ecef1828bf1398e"
+    },
+    "transport/run-face-sweep-app-cache-1.py": {
+      "bytes": 2565,
+      "sha256": "8bcc6a92391caeba23b5d55d2b2c5b8e0850ea4684393c2eee829a72bbd9dffd"
+    },
+    "transport/run-face-sweep-app-cache-texture.py": {
+      "bytes": 2610,
+      "sha256": "022f78854dc46ea64165d4506e4a8b3a3a1d5818ba2e532657a87f3a4170ec32"
+    },
+    "transport/run-face-sweep-app-cache-texture-source.py": {
+      "bytes": 2635,
+      "sha256": "2f92119752a26f9e6fafdda4dbcdcc965e34e7bdf2444ec777d0946effcf8fe9"
+    }
+  }
+}
