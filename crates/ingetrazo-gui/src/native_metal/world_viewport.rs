@@ -25,6 +25,18 @@ impl Viewport {
             unsupported: None,
         }
     }
+    pub(crate) fn catalog_builds(&self) -> u64 {
+        self.adapter.catalog_builds
+    }
+    pub(crate) fn model_refreshes(&self) -> u64 {
+        self.adapter.accepted_model_refreshes
+    }
+    pub(crate) fn matrix_bytes(&self) -> u64 {
+        self.world.stats.instance_matrix_upload_bytes
+    }
+    pub(crate) fn geometry_uploads(&self) -> u64 {
+        self.world.stats.geometry_uploads
+    }
     fn prepare(&mut self, app: &IngeTrazoApp, extent: (u32, u32)) -> Result<bool, String> {
         let RenderRevisions {
             static_domains,
