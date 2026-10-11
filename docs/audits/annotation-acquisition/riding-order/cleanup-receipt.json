@@ -1,0 +1,41 @@
+{
+  "archive_sha256": "d153057c9849b186577c47a51d6e1cca45ee1122308805802d48ae00b37b6621",
+  "entries_verified": 6,
+  "files_removed": 6,
+  "released_bytes": 67460,
+  "removed": [
+    {
+      "name": "original.json",
+      "bytes": 33708,
+      "sha256": "79fdb0eea0e916de9eecad06e14861405c5043af633aae2e7216525dcb421d22"
+    },
+    {
+      "name": "input.igz",
+      "bytes": 2512,
+      "sha256": "c9ce01d930fff89d9af94b5580093f6f82626b75d6ce690482e32fd787d4a87b"
+    },
+    {
+      "name": "threshold-first-failure.json",
+      "bytes": 27049,
+      "sha256": "508a032a9c750eb71a71579e13b7edf77025b3fe226ec6b057fd608190005772"
+    },
+    {
+      "name": "source-first-failure.log",
+      "bytes": 1224,
+      "sha256": "28153b68963a8ea28b9bb94d000b53230112d3329d96126b46cebf510ebeaab1"
+    },
+    {
+      "name": "riding-source.log",
+      "bytes": 98,
+      "sha256": "85c6cf6bf1f858b3a75272df711ca9ab0fbf9a55a30725e60b754acc709d79a9"
+    },
+    {
+      "name": "riding-input.igz",
+      "bytes": 2869,
+      "sha256": "431d7f5eb852fa88d8b988822070001009ccaaffe9af898f31564bc7c3d7f0fb"
+    }
+  ],
+  "retained_unique": [],
+  "source_worktree_target_preserved": true,
+  "builds_or_captures": 0
+}
