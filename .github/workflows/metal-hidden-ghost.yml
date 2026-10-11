@@ -31,7 +31,7 @@ jobs:
         run: |
           mkdir -p metal-ghost-evidence
           git rev-parse HEAD > metal-ghost-evidence/revision.txt
-          git ls-files crates/ingetrazo-formats/src/annotation_font.rs crates/ingetrazo-formats/src/paper_font.rs crates/ingetrazo-formats/src/paper_text.rs crates/ingetrazo-formats/src/paper_coretext_glyph.rs scripts/reference-macos-annotation-glyphs.py scripts/check-macos-annotation-glyphs.py scripts/check-metal-material-policy.py scripts/check-metal-fragment-alpha.py crates/ingetrazo-render/src crates/ingetrazo-tools/src crates/ingetrazo-core/src crates/ingetrazo-gui/src/tool_history.rs crates/ingetrazo-gui/src/navigation_ray.rs crates/ingetrazo-metal/src crates/ingetrazo-gui/src/native_metal crates/ingetrazo-gui/src/native_metal.rs scripts/check-metal-face-sweep.py scripts/check-metal-hidden-ghost.py scripts/check-metal-world-classic.py scripts/check-metal-world-material.py crates/ingetrazo-gui/examples/native_metal_face_sweep.rs crates/ingetrazo-gui/examples/native_metal_hidden_ghost.rs crates/ingetrazo-gui/examples/native_metal_world_classic.rs crates/ingetrazo-gui/examples/native_metal_world_material.rs | xargs shasum -a 256 > metal-ghost-evidence/source.sha256
+          git ls-files crates/ingetrazo-formats/src/annotation_font.rs crates/ingetrazo-formats/src/paper_font.rs crates/ingetrazo-formats/src/paper_text.rs crates/ingetrazo-formats/src/paper_coretext_glyph.rs scripts/reference-macos-annotation-glyphs.py scripts/check-macos-annotation-glyphs.py scripts/check-metal-material-policy.py scripts/check-metal-fragment-alpha.py scripts/reuse-macos-annotation-glyphs.py crates/ingetrazo-render/src crates/ingetrazo-tools/src crates/ingetrazo-core/src crates/ingetrazo-gui/src/tool_history.rs crates/ingetrazo-gui/src/navigation_ray.rs crates/ingetrazo-metal/src crates/ingetrazo-gui/src/native_metal crates/ingetrazo-gui/src/native_metal.rs scripts/check-metal-face-sweep.py scripts/check-metal-hidden-ghost.py scripts/check-metal-world-classic.py scripts/check-metal-world-material.py crates/ingetrazo-gui/examples/native_metal_face_sweep.rs crates/ingetrazo-gui/examples/native_metal_hidden_ghost.rs crates/ingetrazo-gui/examples/native_metal_world_classic.rs crates/ingetrazo-gui/examples/native_metal_world_material.rs | xargs shasum -a 256 > metal-ghost-evidence/source.sha256
           python3 scripts/check-metal-fragment-alpha.py > metal-ghost-evidence/fragment-alpha-source-check.json
           python3 scripts/check-metal-hidden-ghost.py docs/audits/hidden-ghost-workflow "$RUNNER_TEMP/metal-ghost-input" --unpack
           python3 scripts/check-metal-face-sweep.py docs/audits/face-sweep-label-source "$RUNNER_TEMP/metal-sweep-input" --unpack
@@ -39,18 +39,10 @@ jobs:
         run: |
           cargo build --locked -p ingetrazo-gui --example native_metal_hidden_ghost --example native_metal_world_classic --example native_metal_world_material --example native_metal_face_sweep -j2 > metal-ghost-evidence/build.log 2>&1
           shasum -a 256 target/debug/examples/native_metal_hidden_ghost target/debug/examples/native_metal_world_classic target/debug/examples/native_metal_world_material target/debug/examples/native_metal_face_sweep > metal-ghost-evidence/binary.sha256
-      - name: Bounded actual macOS Qt sized glyph reference
+      - name: Reuse unchanged per-runner actual Qt glyph evidence
         continue-on-error: true
         run: |
-          python3 - <<'PYTHON'
-          import os,subprocess,sys
-          from pathlib import Path
-          venv=Path(os.environ['RUNNER_TEMP'])/'metal-glyph-qt-venv'
-          with open('metal-ghost-evidence/qt-glyph-reference.log','w') as log:
-              subprocess.run([sys.executable,'-m','venv',str(venv)],stdout=log,stderr=subprocess.STDOUT,timeout=30,check=True)
-              subprocess.run([str(venv/'bin/python'),'-m','pip','install','PySide6==6.12.0'],stdout=log,stderr=subprocess.STDOUT,timeout=180,check=True)
-              subprocess.run([str(venv/'bin/python'),'scripts/reference-macos-annotation-glyphs.py','metal-ghost-evidence/qt-glyphs'],stdout=log,stderr=subprocess.STDOUT,timeout=60,check=True)
-          PYTHON
+          python3 scripts/reuse-macos-annotation-glyphs.py metal-ghost-evidence/qt-glyphs > metal-ghost-evidence/qt-glyph-reference.log 2>&1
       - name: Execute only ghost and affected retained material/classic consumers
         run: |
           python3 - <<'PYTHON'

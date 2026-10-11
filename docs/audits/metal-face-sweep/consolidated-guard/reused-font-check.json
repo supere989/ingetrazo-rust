@@ -1,0 +1,2 @@
+{"arch": "arm", "artifact_sha256": "9ba322be3499e3a3bdb1abc41db75b1c0fae1702cac8871e917cf1e85ace6a68", "records": 5, "platform": "macOS-15.7.9-arm64-arm-64bit-Mach-O", "scope": "retained byte/hash validation only"}
+{"arch": "intel", "artifact_sha256": "9dfdaa93c6574fe92d3dc1080083a679c6de46b2500e1b0d88289d5ebf1b1bff", "records": 5, "platform": "macOS-15.7.9-x86_64-i386-64bit-Mach-O", "scope": "retained byte/hash validation only"}
