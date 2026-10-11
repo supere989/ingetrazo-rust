@@ -1,0 +1,256 @@
+{
+  "runtime_commit": "4ddc4c4201e48cd61f0da9934f06fcc1b1e11c42",
+  "original_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "source": [
+    {
+      "path": "crates/ingetrazo-core/src/scene.rs",
+      "sha256": "ce174b7b5947af9f87a0ba4f97df38698f380bf938b5ce7f985f3b0e82270532"
+    },
+    {
+      "path": "crates/ingetrazo-formats/src/igz.rs",
+      "sha256": "26988e43a38562a897e5e67ef57ef78dc229fd314cec1c4ee0f4ec0799d03247"
+    },
+    {
+      "path": "crates/ingetrazo-gui/examples/annotation_edit_style_fixture.rs",
+      "sha256": "6a4ded5a9202463e56f173e593c51ef6f19ec120a1f28bac21af70eef3507070"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/annotation_editor.rs",
+      "sha256": "21cd16bd0beb56ca69544e0e99343270f4b62d67f842f912c59c3885641118bc"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/annotation_pick.rs",
+      "sha256": "55e2ac28e964c40d9d648213967a55f714356fe2b7ab8db9766d5e6c9085ea8c"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/annotation_plan.rs",
+      "sha256": "992a32926d7fff722a794f55b2426f85a63a843e89ab490567ab21639cb584cb"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/app.rs",
+      "sha256": "fc1e2ff4be07c7ef4f1a72d93e0aaa19c10a3e54b6ab93051e07820d1c2e7337"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/component_edit.rs",
+      "sha256": "c04a8a1dec8cde33ceeccb27f7e13ef6719c46f7a4443cf7328fdd597c2acbad"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/dimension_actions.rs",
+      "sha256": "ce5fbb8f4f3193629b797c95db60e88d968ed9e4f1f302763a844fe8612de6f9"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/dimension_style.rs",
+      "sha256": "3af224fcff5740697c9ed10c6e5689b3f462e4f041634f633f64ff94c7cd79eb"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/document_presentation.rs",
+      "sha256": "0e7e1a2bffe694948662cb43b1b96a023e5ab5e3d58e7d23c35d432bb6ac3fc7"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/document_session.rs",
+      "sha256": "aeeee393d5a94ccbb5595bc69fd6cf3357de3c2bd43f9d8e378ab089a7aa663c"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/lib.rs",
+      "sha256": "0b0fa9a11a5d2e1777c76c918f4d48311940f9df6c04dc35d9a5903230cfda33"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/native_metal/distance_label.rs",
+      "sha256": "ca11573686f8f3ccfdd77b98f0567dc0c9c8ef0d11386c81a3feb97ce301d0c6"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/native_vulkan/annotation_viewport.rs",
+      "sha256": "95a52fc313f5bb387865a919ec68461ffb1f01c0acc37caff34a86e0523b9fe0"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/tool_history.rs",
+      "sha256": "4270070fda2d72c4c46e1dca22617a99e2b91bb8975795fcf508028eca881d4d"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/toolbar.rs",
+      "sha256": "1b248e9ecc723fb45e2a2f65019f7930cb6405834dcdefd3fa6ec910fba75911"
+    },
+    {
+      "path": "crates/ingetrazo-tools/src/base.rs",
+      "sha256": "75aa658c70d511e00b79d79a5dec8b781310e28f9ce289789db20ffddb58b9c9"
+    },
+    {
+      "path": "crates/ingetrazo-tools/src/select.rs",
+      "sha256": "f60179597456e992e2b49e906de72dba44cb3f541091e40a8668f6d1ab5eea9e"
+    },
+    {
+      "path": "docs/design/ANNOTATION_EDIT_STYLE.md",
+      "sha256": "b750198e6c755fa946d0c5cdca7dcff7d2b4679bc8d83d5c775051e47c763751"
+    },
+    {
+      "path": "scripts/check-annotation-edit-style.py",
+      "sha256": "f5604082dd12ec71844765b3c72a6191b74ea395d67a120a16ace0813fbe1aa7"
+    },
+    {
+      "path": "scripts/reference-annotation-edit-style.py",
+      "sha256": "46e93b7421fb7999547b03b5baf4fc93f42579aaf7c782c2028bdd24a53e44a0"
+    },
+    {
+      "path": "scripts/reopen-annotation-edit-style.py",
+      "sha256": "1cafffc0768c7acd13aa00ee8719da6acddb9a34b2c5b8500d814373a9958b9d"
+    }
+  ],
+  "original_source": [
+    {
+      "path": "tools/select.py",
+      "sha256": "baa33a660666cbc78a25ca291e0b40a4b2bd88755393ebce08295e1de6327916"
+    },
+    {
+      "path": "core/history.py",
+      "sha256": "2eb66a1d557099b51383988a7819145289fc4ce2c37fc7de3a92ed35b5830559"
+    },
+    {
+      "path": "views/tray.py",
+      "sha256": "717b597ee7c0d1747ce77931f5f6027a5b35b2bae97a0e4b393eb0973c1ab00b"
+    },
+    {
+      "path": "views/viewport.py",
+      "sha256": "1fb62f55b8f559deb3676924ee69a9a444397faa28c49651111cea44e420c724"
+    },
+    {
+      "path": "core/scene.py",
+      "sha256": "9dfcd32f1ff5b1445180eafd8df36eafb92fa08ed3597bb90eac09554899d2e0"
+    },
+    {
+      "path": "core/units.py",
+      "sha256": "5885b9f52b2394c21bb5421af482cf40c6273818fd70e2a85b5670c10914b1ea"
+    }
+  ],
+  "binary": {
+    "path": "/tmp/ingetrazo-ai-registry-target/debug/examples/annotation_edit_style_fixture",
+    "sha256": "51e0cad9ee4287f961dd8e1dcdbcea1ccb29a761023483d1de7e5820e10cb38b"
+  },
+  "entries": [
+    {
+      "path": "check.json",
+      "bytes": 97,
+      "sha256": "222c3c68c26cc6a990c0d85f3d4746369e5b59bf692bdb53457a863987254fbe"
+    },
+    {
+      "path": "corrected-build.log",
+      "bytes": 20144,
+      "sha256": "22dc03095392e33e743aa2db05e8c76a7bbc87b681af3f061ed36c85bbbecc6f"
+    },
+    {
+      "path": "dimension-nested.igz",
+      "bytes": 3256,
+      "sha256": "5ab860e97df0624c35fa82433b303fa1b717135fc430da8b9fa5995b9e01dfc0"
+    },
+    {
+      "path": "dimension-root.igz",
+      "bytes": 2988,
+      "sha256": "b8dc626e8fb64f893b26b1ce09c4ea6179017f6a6fc733ddc1a11acdadeecf28"
+    },
+    {
+      "path": "failed-nested-style.json",
+      "bytes": 27354,
+      "sha256": "c1c1fb623b03df2938735350fbecaea0fb8b6156f55e86843b5d94b3d116f2ce"
+    },
+    {
+      "path": "final-focused.log",
+      "bytes": 19491,
+      "sha256": "d56bed91bad6ec3dcf0e4c5d7d14bb77ddd404bcc3f8f809b44b4bbc8210a8f7"
+    },
+    {
+      "path": "final-named-build.log",
+      "bytes": 20144,
+      "sha256": "b64bbaeb48c161b4b522ea92b457304c83840a04bdf30dc6b4235e1e6a6935b4"
+    },
+    {
+      "path": "final-native.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "focused-build.log",
+      "bytes": 20347,
+      "sha256": "1fd7345025956a51095b33d15db8ee88f47081d606e931b01638608ca03f8378"
+    },
+    {
+      "path": "input.igz",
+      "bytes": 2512,
+      "sha256": "c9ce01d930fff89d9af94b5580093f6f82626b75d6ce690482e32fd787d4a87b"
+    },
+    {
+      "path": "label-nested.igz",
+      "bytes": 3258,
+      "sha256": "607588068068ace04b10a9fc4cc562b30a2d92fe3bf23a9bfb697df40fc18785"
+    },
+    {
+      "path": "label-root.igz",
+      "bytes": 2990,
+      "sha256": "a706444f0f8ff79d404fbc613f6f65a6e5af629f54dda60e6fb57e0adb653c42"
+    },
+    {
+      "path": "named-build.log",
+      "bytes": 20144,
+      "sha256": "9fa534dd680ca86ebcb3eb33995d65dae38a8afb73dbe55db52ac3e576b3fb46"
+    },
+    {
+      "path": "native-dimension-nested.igz",
+      "bytes": 2634,
+      "sha256": "3d51d668909d0662820e62eca9843c882e4c94ec9b16930c2216c793874354d2"
+    },
+    {
+      "path": "native-dimension-root.igz",
+      "bytes": 2849,
+      "sha256": "57b35500086f3ef35d0229cd3cd9031629bffeab39026176f82ba0d65f6bbdae"
+    },
+    {
+      "path": "native-label-nested.igz",
+      "bytes": 2636,
+      "sha256": "2751908e1edb165f890527b7fe4e5a88a087663da587dcb6a28c6d5665325d8d"
+    },
+    {
+      "path": "native-label-root.igz",
+      "bytes": 2851,
+      "sha256": "089b01ca3e173036baa72013d4738287430089dff135275f7a1e9446633e03a3"
+    },
+    {
+      "path": "native.json",
+      "bytes": 31842,
+      "sha256": "b66379974cf981577d92eae464a5672cfa4826b957d9122dd41e449a86ffbe7b"
+    },
+    {
+      "path": "native.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "original.json",
+      "bytes": 31842,
+      "sha256": "b66379974cf981577d92eae464a5672cfa4826b957d9122dd41e449a86ffbe7b"
+    },
+    {
+      "path": "reopen.json",
+      "bytes": 8183,
+      "sha256": "174c4fd2c168ba6f2a611d112cb12ba7c1250bacbd321a4dad68495290f5152f"
+    },
+    {
+      "path": "reopen.log",
+      "bytes": 392,
+      "sha256": "8f90d232282fcb43ed4ac28d874df7b140873b5c61d309f9c5556fadd3907b1f"
+    },
+    {
+      "path": "source-first-failure.log",
+      "bytes": 317,
+      "sha256": "c499b7d56c248f3ad08e40b4cc71bb4d9495eff18e6589456438568985b072a6"
+    },
+    {
+      "path": "source-label-priority.json",
+      "bytes": 31120,
+      "sha256": "3c4096312e7d88b88df6c5d7bb689fa8af07ef5a967669249543ca20f1137828"
+    },
+    {
+      "path": "source.log",
+      "bytes": 196,
+      "sha256": "d3bbbeebd80e95e20503e0db8304e9bb4915b0f6bdff4b55b0adb531dec35eb8"
+    }
+  ],
+  "archive_sha256": "f61cb46019e559d3c4cf8edcd8359d3d37628e4094edfac11a89c03ed88c32e3"
+}
