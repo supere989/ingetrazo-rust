@@ -56,13 +56,17 @@ kernel void source_resolve_compute(texture2d_ms<float,access::read> input [[text
 struct ResolveColor{float4 value [[color(0)]];};
 kernel void source_resolve_tile(imageblock<ResolveColor> block,ushort2 p [[thread_position_in_threadgroup]]){
  ushort count=block.get_num_colors(p);
- if(count==1)return;
- float4 samples[4];
+ if(count<=1)return;
+ float4 samples[4]={float4(0),float4(0),float4(0),float4(0)};
+ ushort covered=0;
  for(ushort color=0;color<count;color++){
   float4 value=block.read(p,color,imageblock_data_rate::color).value;
-  ushort mask=block.get_color_coverage_mask(p,color);
+  ushort mask=block.get_color_coverage_mask(p,color)&ushort(0xF);
+  if(covered&mask)return;
+  covered|=mask;
   for(ushort slot=0;slot<4;slot++)if(mask&(1u<<slot))samples[slot]=value;
  }
+ if(covered!=ushort(0xF))return;
  block.write(ResolveColor{ordered_resolve(samples[0],samples[1],samples[2],samples[3])},p,ushort(0xF));
 }
 

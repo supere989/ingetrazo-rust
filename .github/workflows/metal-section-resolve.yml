@@ -1,0 +1,56 @@
+name: Native Metal diagnostic ordered section resolve
+on:
+  push:
+    branches: [review/metal-section-resolve]
+  workflow_dispatch:
+concurrency:
+  group: metal-section-resolve-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  app-consumer:
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        runner: [macos-15, macos-15-intel]
+    env:
+      CARGO_PROFILE_DEV_DEBUG: 0
+      CARGO_PROFILE_TEST_DEBUG: 0
+      CARGO_INCREMENTAL: 0
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Reuse compiled Cargo dependencies
+        uses: Swatinem/rust-cache@49a0bdc70d2e1b713ca9e2869b211fcce03d3c1c # v2
+        with:
+          cache-bin: "false"
+          cache-workspace-crates: "false"
+          cache-on-failure: "true"
+          save-if: ${{ github.event_name != 'pull_request' }}
+      - name: Build only the ten-recipe diagnostic resolve consumer
+        run: |
+          mkdir -p section-resolve-evidence
+          git rev-parse HEAD > section-resolve-evidence/revision.txt
+          git ls-files crates/ingetrazo-gui/src/native_metal crates/ingetrazo-gui/src/native_metal.rs crates/ingetrazo-gui/src/viewport.rs crates/ingetrazo-metal/src crates/ingetrazo-gui/examples/native_metal_section_resolve.rs scripts/check-metal-section-resolve.py scripts/check-metal-section-fill.py scripts/check-section-resolve-arithmetic.py docs/audits/section-original-gl | xargs shasum -a 256 > section-resolve-evidence/source.sha256
+          python3 scripts/check-section-resolve-arithmetic.py > section-resolve-evidence/arithmetic.log 2>&1
+          cargo build --locked -p ingetrazo-gui --example native_metal_section_resolve -j2 > section-resolve-evidence/build.log 2>&1
+          shasum -a 256 target/debug/examples/native_metal_section_resolve > section-resolve-evidence/binary.sha256
+      - name: Compare untouched and candidate resolve through the actual World encoder
+        run: |
+          python3 - <<'PYTHON'
+          import subprocess
+          with open('section-resolve-evidence/runtime.log','w') as log:
+              subprocess.run(['target/debug/examples/native_metal_section_resolve','section-resolve-evidence/native'],stdout=log,stderr=subprocess.STDOUT,timeout=120,check=True)
+          PYTHON
+      - name: Record strict full RGBA source comparisons for both paths
+        if: ${{ !cancelled() }}
+        run: python3 scripts/check-metal-section-resolve.py section-resolve-evidence/native --output section-resolve-evidence/comparison.json > section-resolve-evidence/checker.log 2>&1
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: section-resolve-${{ matrix.runner }}
+          path: section-resolve-evidence/
+          if-no-files-found: error
