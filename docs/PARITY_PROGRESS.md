@@ -19,6 +19,8 @@ Independent latest ARM evidence: [all nine GPU Canvas images exact; presentation
 
 ## Dated implementation and verification evidence
 
+Metal world foundation review (2026-10-11 UTC): direct opaque/depth rendering and retained GPU texture ingress are frozen in isolated commits `2ebe7fb6` / `9a000858`. Root review identified missing owner binding across cached geometry/pipelines/targets; integration is held for an explicit mismatch guard and retained refusal control. [Review finding](audits/metal-world-root-review/foundation-review.json). Apple cross-compilation does not establish native shader/GPU execution or full viewport parity.
+
 Real Chapel annotation layout diagnosis (2026-10-11 UTC): independent root verification checks all retained artifact hashes and matches all 1,352 ordered primitive fields represented by the native plan, plus all 1,404 ordered world query coordinates. Original depth decisions hide zero queries. [Independent review](audits/annotation-real-operations-iso/root-review.json). Native GPU visibility, actual QWidget font/raster behavior and the retained 609-pixel annotation-mask discrepancy remain OPEN; matching layout alone is not rendered parity.
 
 Combined review CI complete (2026-10-11 UTC): source `f44cbd86` passes all five configured jobs, including Linux original/native semantic workflows and both Apple SDK jobs. [Complete retained job evidence](audits/review-f44-ci-completion.json). Later camera, readiness and scripting changes retain separately scoped checks; strict rendering/platform/release acceptance remains OPEN.

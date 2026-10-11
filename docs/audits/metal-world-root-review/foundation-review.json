@@ -1,0 +1,24 @@
+{
+  "reviewed_commits": [
+    "2ebe7fb6727c8e62a1d8a8ccf4cc8a5c24f598d5",
+    "9a0008582276315b0c58292fcb4c6655d8271eea"
+  ],
+  "status": "integration held pending ownership correction",
+  "finding": {
+    "severity": "correctness",
+    "location": "crates/ingetrazo-metal/src/world.rs World::prepare and Prepared::submit_diagnostic",
+    "description": "World cache identity includes geometry key and extent but does not bind the originating NativeMetal owner. A later prepare with another owner may reuse buffers, pipeline and targets from the previous owner. UI texture device validation alone cannot prove matching mesh, pipeline and budget ownership.",
+    "required": "Reject owner mismatch before collection or cache mutation; reject diagnostic submission through another owner; retain a wrong-owner refusal control proving previous frame remains intact."
+  },
+  "reviewed_positive_properties": [
+    "Complete Prepared owner retained through UI sampling",
+    "World encoding precedes UI sampling in the same command buffer",
+    "Target pool bounded to three retained targets",
+    "Native texture size queried before budget admission"
+  ],
+  "remaining": [
+    "Actual native SDK shader compilation and GPU execution",
+    "Full source paint policies and production viewport integration",
+    "Physical Mac and ARM presentation acceptance"
+  ]
+}
