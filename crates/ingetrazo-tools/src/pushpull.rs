@@ -63,15 +63,7 @@ impl PushPullTool {
     /// Original open-shell surface majority. Closed volumes and globally
     /// coplanar drawings keep their authored face normal.
     pub fn acquisition_normal(mesh:&ingetrazo_core::mesh::Mesh,id:usize)->DVec3 {
-        // Source Face.normal: double Newell accumulation over Qt-stored
-        // positions, then float32 area normal and Qt scaled length/division.
-        // This is an authored tool direction boundary, never a document cast.
-        let positions=mesh.faces[id].vertices.iter().map(|&v|mesh.vertices[v].position.as_vec3().as_dvec3()).collect::<Vec<_>>();
-        let raw=ingetrazo_core::math::newell_vector(&positions).as_vec3();
-        let maximum=raw.abs().max_element();
-        let scaled=if maximum>0.{glam::Vec3::new(raw.x/maximum,raw.y/maximum,raw.z/maximum)}else{raw};
-        let length=maximum*(scaled.x*scaled.x+scaled.y*scaled.y+scaled.z*scaled.z).sqrt();
-        let n=if length<1e-9{DVec3::Z}else{glam::Vec3::new(raw.x/length,raw.y/length,raw.z/length).as_dvec3()};
+        let n=Self::source_face_normal(mesh,id);
         let flat=mesh.faces.first().is_none_or(|first| {
             let n0=mesh.face_normal(0);let p=mesh.vertices[first.vertices[0]].position;
             mesh.faces.iter().enumerate().all(|(i,f)|mesh.face_normal(i).dot(n0).abs()>0.999 && (mesh.vertices[f.vertices[0]].position-p).dot(n0).abs()<1e-3)
@@ -84,6 +76,50 @@ impl PushPullTool {
             for &other in &e.faces {if other==id{continue;}let d=mesh.face_normal(other).dot(n);if d.abs()>0.999{if d>0.{agree+=1}else{disagree+=1}}}
         }}
         if disagree>agree{-n}else{n}
+    }
+
+    fn source_face_normal(mesh:&ingetrazo_core::mesh::Mesh,id:usize)->DVec3 {
+        // Source Face.normal: double Newell accumulation over Qt-stored
+        // positions, then float32 area normal and Qt scaled length/division.
+        // This is an authored tool direction boundary, never a document cast.
+        let positions=mesh.faces[id].vertices.iter().map(|&v|mesh.vertices[v].position.as_vec3().as_dvec3()).collect::<Vec<_>>();
+        let raw=ingetrazo_core::math::newell_vector(&positions).as_vec3();
+        let maximum=raw.abs().max_element();
+        let scaled=if maximum>0.{glam::Vec3::new(raw.x/maximum,raw.y/maximum,raw.z/maximum)}else{raw};
+        let length=maximum*(scaled.x*scaled.x+scaled.y*scaled.y+scaled.z*scaled.z).sqrt();
+        let n=if length<1e-9{DVec3::Z}else{glam::Vec3::new(raw.x/length,raw.y/length,raw.z/length).as_dvec3()};
+        n
+    }
+
+    // Source run_stitch phase 2: only valence-two stations whose two
+    // edges border exactly the same faces can disappear. Keep unrelated
+    // authored geometry outside this operation's bounds and loose-wire junctions.
+    fn collapse_redundant_sweep_vertices(mesh:&mut ingetrazo_core::mesh::Mesh,seeds:impl Iterator<Item=DVec3>) {
+        let mut low=DVec3::splat(f64::INFINITY);let mut high=DVec3::splat(f64::NEG_INFINITY);
+        for p in seeds {low=low.min(p);high=high.max(p);}
+        if !low.is_finite(){return;}
+        mesh.rebuild_incidence();
+        loop {
+            let found=mesh.vertices.iter().enumerate().find_map(|(id,v)|{
+                if v.edges.len()!=2 || v.position.cmplt(low-DVec3::splat(1e-4)).any() || v.position.cmpgt(high+DVec3::splat(1e-4)).any(){return None;}
+                let (e0,e1)=(&mesh.edges[v.edges[0]],&mesh.edges[v.edges[1]]);
+                if e0.faces.is_empty() || e0.faces!=e1.faces{return None;}
+                let a=if e0.v0==id{e0.v1}else{e0.v0};let b=if e1.v0==id{e1.v1}else{e1.v0};
+                let d0=v.position.as_vec3()-mesh.vertices[a].position.as_vec3();let d1=mesh.vertices[b].position.as_vec3()-v.position.as_vec3();
+                if d0.length()<1e-4||d1.length()<1e-4||d0.normalize().dot(d1.normalize())<0.999{return None;}
+                Some((id,a,b,v.edges.clone()))
+            });
+            let Some((id,a,b,mut edges))=found else{break;};
+            for face in &mut mesh.faces {face.vertices.retain(|&v|v!=id);for h in &mut face.holes{h.retain(|&v|v!=id);}}
+            edges.sort_unstable();for edge in edges.into_iter().rev(){mesh.edges.remove(edge);}
+            mesh.rebuild_incidence();
+            mesh.add_edge(a,b);
+            mesh.vertices.remove(id);
+            for face in &mut mesh.faces {for v in face.vertices.iter_mut().chain(face.holes.iter_mut().flatten()){if *v>id{*v-=1;}}}
+            for e in &mut mesh.edges {if e.v0>id{e.v0-=1;}if e.v1>id{e.v1-=1;}}
+            mesh.rebuild_incidence();
+        }
+        mesh.rebuild_spatial_index();
     }
 
     const MIN_EXTRUDE:f64=2e-4;
@@ -375,7 +411,7 @@ impl PushPullTool {
         // QVector3D multiplies and adds in float32 on the operative source
         // authoring path. Restrict that compatibility boundary to generated
         // and moved extrusion vertices; untouched document geometry stays f64.
-        let translation=(normal.as_vec3()*(distance as f32)).as_dvec3();
+        let translation=(Self::source_face_normal(mesh,face_id).as_vec3()*(distance as f32)).as_dvec3();
         if !translation.is_finite(){return Err("Push/Pull distance exceeds the supported authoring range".into());}
         // Source _paint_of: side walls own paint in their own planes, while
         // the cap remains the full metadata continuation of the base.
@@ -805,6 +841,7 @@ impl PushPullTool {
                 candidate.add_vertex(vertex.position);
             }
         }
+        Self::collapse_redundant_sweep_vertices(&mut candidate, rings.iter().flatten().chain(shifted.iter().flatten()).copied());
         candidate.preserve_vertex_uids_from(mesh);
         if let Some(survivors)=&collapsed_vertex_survivors {for vertex in &mut candidate.vertices {if let Some(&id)=survivors.get(&ingetrazo_core::math::PointKey::from_vec3(vertex.position)){vertex.uid=mesh.vertices[id].uid;}}}
         // Unchanged authored hole loops retain their source winding. The
@@ -1354,6 +1391,22 @@ mod tests {
     fn scoped_authoring_rounding_retains_unrelated_f64_vertices_and_atomic_tag_refusal(){
         let mut scene=make_test_square_scene();let point=DVec3::new(100.,0.,1.+2_f64.powi(-40));scene.mesh.add_vertex(point);PushPullTool::extrude_face(&mut scene,0,0.6).unwrap();assert!(scene.mesh.vertices.iter().any(|v|v.position==point));
         let mut scene=make_test_square_scene();scene.mesh.faces[0].attrs.insert("ifc".into(),serde_json::json!("opaque imported tag"));let before=scene.clone();assert!(PushPullTool::extrude_face(&mut scene,0,1.).is_err());assert_eq!(scene,before);
+    }
+
+    #[test]
+    fn source_collinear_cleanup_preserves_junctions_unrelated_records_and_face_identity(){
+        use ingetrazo_core::mesh::Mesh;
+        let mut m=Mesh::new();
+        let pts=[DVec3::ZERO,DVec3::X,DVec3::X*2.,DVec3::new(2.,1.,0.),DVec3::Y];
+        let ring=pts.into_iter().map(|p|m.add_vertex(p)).collect();let f=m.add_face(ring,vec![]).unwrap();
+        m.faces[f].attrs.insert("vendor".into(),serde_json::json!(17));let identity=m.faces[f].history_id;
+        let unrelated=m.add_vertex(DVec3::new(100.,0.,1.+2_f64.powi(-40)));let uid=m.vertices[unrelated].uid;
+        let mut junction=m.clone();let station=1;let branch=junction.add_vertex(DVec3::new(1.,-1.,0.));let edge=junction.add_edge(station,branch).unwrap();junction.edges[edge].attrs.insert("wire".into(),serde_json::json!(true));let wire=junction.edges[edge].history_id;
+        PushPullTool::collapse_redundant_sweep_vertices(&mut junction,pts.into_iter());
+        assert_eq!(junction.faces[0].vertices.len(),5);assert!(junction.edges.iter().any(|e|e.history_id==wire&&e.attrs.contains_key("wire")));
+        PushPullTool::collapse_redundant_sweep_vertices(&mut m,pts.into_iter());
+        assert_eq!(m.faces[0].vertices.len(),4);assert_eq!(m.faces[0].history_id,identity);assert_eq!(m.faces[0].attrs["vendor"],17);
+        assert!(m.vertices.iter().any(|v|v.uid==uid&&v.position.z==1.+2_f64.powi(-40)));assert_eq!(m.edges.len(),4);
     }
 
 }
