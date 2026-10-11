@@ -1,0 +1,8 @@
+{
+  "passed": false,
+  "scope": "Actual NVIDIA full application viewport source fixed-function LCD candidate78c35858",
+  "on_and_restored": 1713,
+  "off": 1297,
+  "mask_xor": 195,
+  "remaining": "Primitive-family isolation required; source geometry/glyph residuals remain strict gaps"
+}
