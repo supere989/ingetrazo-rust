@@ -1,7 +1,7 @@
 {
   "source_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
   "archive": "source-records.zip",
-  "archive_sha256": "0104c00f6b9b3f71000fbf00dc2e59fceaed7d294ce141c644331dea8d2dd258",
+  "archive_sha256": "22c8088637b4cdfd757466524e0a5d17e526a7518646c46009ddd67c90ac33de",
   "entries": [
     {
       "path": "bad-color.mtl",
@@ -209,6 +209,11 @@
       "sha256": "5ddff1b5a14e845cd4944da782f1236aad2e4caf3e326d3059c12fb71cba7994"
     },
     {
+      "path": "original-uv-syntax.json",
+      "bytes": 282,
+      "sha256": "84e16cd1e739e99976de9b04079db50adc45e6ab9af9f80fed0836819a05a697"
+    },
+    {
       "path": "paint with spaces.png",
       "bytes": 98,
       "sha256": "4a5b34eb9bdb4c647e7609a80b1dfc1ac9ea7136ad181b799d50215efed071ca"
@@ -322,6 +327,36 @@
       "path": "unknown-material-root.obj",
       "bytes": 117,
       "sha256": "d209e34677ffc9c52fd23b383adf65f04a94e4d8697afdb044e506ef6f89e752"
+    },
+    {
+      "path": "uv-source.log",
+      "bytes": 214,
+      "sha256": "65d6f9884688819b2ccd0678ffb0e652707a6c367bbc1f6e2777f31d00a98ddb"
+    },
+    {
+      "path": "uv-source.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "uv-syntax-missing.obj",
+      "bytes": 76,
+      "sha256": "2606582a97703835a7ee8ff115152426011980ed149a5e1a2594923387b1eaed"
+    },
+    {
+      "path": "uv-syntax-noninteger.obj",
+      "bytes": 80,
+      "sha256": "0f04bebbb7ea07c6d2790561d29c4c6b23fdee40a2ae67e28da4204a4732d61b"
+    },
+    {
+      "path": "uv-syntax-out-of-range.obj",
+      "bytes": 78,
+      "sha256": "5aecdf92d011add1193587d42d2556bccce2ffcc7238c274da0d7623dc075e46"
+    },
+    {
+      "path": "uv-syntax.mtl",
+      "bytes": 40,
+      "sha256": "446cd43c879a197d48c570197675d3f2dde91ab3e9bec2f187520ae776af3840"
     },
     {
       "path": "windows-options-leaf-input.igz",

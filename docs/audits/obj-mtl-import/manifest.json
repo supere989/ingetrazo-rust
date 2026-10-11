@@ -1,8 +1,8 @@
 {
-  "runtime_commit": "0ed5d58c326f550552b3c481bbeb2981b43db6e4",
+  "runtime_commit": "050b79437e5d2fb0eb99a56e911fd4bacce655a0",
   "source_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
   "archive": "records.zip",
-  "archive_sha256": "9b37622e05c8e6af6e7f9811908794fc9a21a76f12ee3b39b668641d8869c13e",
+  "archive_sha256": "a62e302a386fdc5bc1548152b06bb2d978379798c2d7dbf14aa69acdcc6e2a16",
   "entries": [
     {
       "path": "attempts/initial-raw-unit-observer/check.log",
@@ -25,14 +25,19 @@
       "sha256": "1d5c0aafd3e4bb636e8d5729cfe8b655ae197b111b17815a0f9ce4c1c176cc90"
     },
     {
+      "path": "attempts/uv-syntax-fixture-import/build.log",
+      "bytes": 20624,
+      "sha256": "1a8d2b6581dd15f9da5e5355bfd8dfea4204ab14cde610254f93966902e8e7d9"
+    },
+    {
       "path": "cancel-resource-native.igz",
       "bytes": 1405,
-      "sha256": "31f66e9e7a9213a63dd44ab0730b07681818ff46df4ec4d0ab4ef7e69ae12b63"
+      "sha256": "54deafa2ac629ab95f0a3d759373bfac3fcd1dfbd441131092109ef8fa51e1dc"
     },
     {
       "path": "color-leaf-native.igz",
       "bytes": 6356,
-      "sha256": "d4ae4ea28388f92415dfa44ebd4bf3d13a7a1045e1dfaa5ab8642429428bb732"
+      "sha256": "c10f006eda146571fefe05f9989a5ea3c979ed559ef9e86d0517bacaef33bc3b"
     },
     {
       "path": "color-root-native.igz",
@@ -100,9 +105,34 @@
       "sha256": "e69f1921cb9d894db020e7a5615e8aea9a6b5fad4cf20a759ece988032394506"
     },
     {
+      "path": "logs/obj-uv-build.log",
+      "bytes": 20624,
+      "sha256": "1a8d2b6581dd15f9da5e5355bfd8dfea4204ab14cde610254f93966902e8e7d9"
+    },
+    {
+      "path": "logs/obj-uv-check.log",
+      "bytes": 207,
+      "sha256": "d97606f85169a4d2bc778cacc1c6ace1de7248e8f43a565fc1a1f7a26f1aefb2"
+    },
+    {
+      "path": "logs/obj-uv-native.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "logs/obj-uv-reopens.log",
+      "bytes": 32,
+      "sha256": "a5e1e162626aa4e3aba5a5edca86b1c05c67dbab076a21835caf987d54b50895"
+    },
+    {
+      "path": "logs/obj-uv-repair-build.log",
+      "bytes": 20123,
+      "sha256": "63294c37109173a73c09ff05e0e5bc37860935e59cad7751d13a8fb143471269"
+    },
+    {
       "path": "missing-map-root-native.igz",
       "bytes": 1402,
-      "sha256": "0a178a5803db8166b452a6bbbf5149fce8099f6df669c767b1f4cb208bcccdce"
+      "sha256": "a35f6d788ed9a8487354dd2abea55beea805021f3b0d590204bd3d3c428116bb"
     },
     {
       "path": "missing-sidecar-root-native.igz",
@@ -111,13 +141,13 @@
     },
     {
       "path": "multipart-leaf-native.igz",
-      "bytes": 1414,
-      "sha256": "e652452eea1be1e5f5d754f56a49dfda84315abb85dc657870c6ae583eac5671"
+      "bytes": 1415,
+      "sha256": "ffbcf41d880c2a10c30fefa58bfc5f612c1637b6823f887e52cf167cc4aa9cc2"
     },
     {
       "path": "multipart-root-native.igz",
       "bytes": 1120,
-      "sha256": "2dab8689474d95db283ff4333cb314c937b057a028cbf5ee74a16c0783705b78"
+      "sha256": "d4556bfb3b6fde2b6785d4ab37cc482575eea8c9849eada6c8f9ce6dec57a83d"
     },
     {
       "path": "native-asset-controls.json",
@@ -127,12 +157,17 @@
     {
       "path": "native-obj-mtl.json",
       "bytes": 360336,
-      "sha256": "2efc9b2d061ee46e9008b6e3cbb654d606c83508e2678855d6fa47e0e7d585aa"
+      "sha256": "6b7289ba5c69ed5046f1c2fdebcbb27be85d82aa6ce20a6f6c6b4ac4c1c918d3"
+    },
+    {
+      "path": "native-uv-syntax.json",
+      "bytes": 281,
+      "sha256": "4e02ded54454976c889a041a8f381318916380c880310c32c9d3fd5b3e8a7be3"
     },
     {
       "path": "negative-uv-root-native.igz",
       "bytes": 751,
-      "sha256": "80e1e424599f90a65f86b54d6e39b00fd7e3283f54ad84d445c211a635367762"
+      "sha256": "6def93bd7f0a5382c12d068c9a40e5214ba096156be281083aad766736522c7e"
     },
     {
       "path": "partial-uv-root-native.igz",
@@ -142,7 +177,7 @@
     {
       "path": "quoted-planar-root-native.igz",
       "bytes": 732,
-      "sha256": "7ccbc1f33e07d43223d9470679ad550585b07a0542434d97391c0edc388ae30b"
+      "sha256": "c046407a2d0829c6b414add347738f58e593153c6a94180e5db6626bb1d0b3dd"
     },
     {
       "path": "reopens-obj-mtl.json",
@@ -166,13 +201,13 @@
     },
     {
       "path": "windows-options-leaf-native.igz",
-      "bytes": 1203,
-      "sha256": "0d93beb1bb5614eeacf59dfc993379ff1d70559978a9059716563457794acff8"
+      "bytes": 1206,
+      "sha256": "82f0ab648b955c155d65c7efb2084de03f10172eeea2113c6ab6f63605e2f455"
     },
     {
       "path": "windows-options-root-native.igz",
       "bytes": 751,
-      "sha256": "6def93bd7f0a5382c12d068c9a40e5214ba096156be281083aad766736522c7e"
+      "sha256": "80e1e424599f90a65f86b54d6e39b00fd7e3283f54ad84d445c211a635367762"
     }
   ],
   "sources": [
@@ -193,8 +228,8 @@
     },
     {
       "path": "crates/ingetrazo-formats/src/obj.rs",
-      "bytes": 38271,
-      "sha256": "bc53e7cd4428d00c0eb222e6713c70c801e5fc2d723c2f87ab78f244ddd7c4ef"
+      "bytes": 38726,
+      "sha256": "81d1b91c3270a8e53da9297e63e89cc0746f0f0cca8735e9025e28a399019f89"
     },
     {
       "path": "crates/ingetrazo-formats/src/obj_material.rs",
@@ -218,8 +253,8 @@
     },
     {
       "path": "crates/ingetrazo-gui/examples/context_document_lifecycle/obj_mtl.rs",
-      "bytes": 8977,
-      "sha256": "7afeb91f3db0421f1a8eb8b37e91c0d23320fc5df4681d257dbb14c87ef6c955"
+      "bytes": 10082,
+      "sha256": "ec0e6eff27b0fa5a3aa7c82fc603bc07d97ef8bfda3ba466cf2263e202d3d3c9"
     },
     {
       "path": "crates/ingetrazo-gui/src/import_units.rs",
@@ -228,8 +263,8 @@
     },
     {
       "path": "scripts/check-obj-mtl-import.py",
-      "bytes": 3222,
-      "sha256": "fc04eb14d65e641a6856f4acb6447f0a68732e52b555cf3a7d2d19e22b887388"
+      "bytes": 3615,
+      "sha256": "1c92db127b8abb823cce20e2182499c29cd83e0bbdb6a8a2067bcc46933cebc1"
     },
     {
       "path": "scripts/reference-obj-mtl-import.py",
@@ -240,12 +275,17 @@
       "path": "scripts/reference-obj-mtl-reopens.py",
       "bytes": 1797,
       "sha256": "0fb6833f2674e563ed41cbf5c26dc3e03800241e2ac14fcd3b6a214216d6c707"
+    },
+    {
+      "path": "scripts/reference-obj-uv-syntax.py",
+      "bytes": 1047,
+      "sha256": "c2f43c366b2c8a71326e1e59c66513b6e4f48c6c6d23204cad747014c8f7d04a"
     }
   ],
   "binary": {
     "path": "/tmp/ingetrazo-ai-registry-target/debug/examples/context_document_lifecycle",
-    "bytes": 63785776,
-    "sha256": "683b018683221758e45ff20c548377e3ff8c25b97b9e0b2305ef6ff888428873"
+    "bytes": 63865896,
+    "sha256": "237e94c66f2752a11178584ad9517b33e2311c25f6dd010f0d0e6e60b3859bb4"
   },
   "results": {
     "cases": 15,
@@ -254,7 +294,8 @@
     "asset_ownership_controls": 15,
     "actual_original_reopens": 15,
     "negative_controls": 11,
-    "passed": true
+    "passed": true,
+    "uv_syntax_controls": 3
   },
   "scope": "numeric int/float representation equivalence only; no GPU or full P22 claim; native malformed controls independently assert refusal/state preservation, source exception class label is descriptive metadata"
 }
