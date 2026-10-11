@@ -1,0 +1,14 @@
+{
+  "source_commit": "36023b0ecdebdd403b575f75ad970b7a0b1d2081",
+  "artifact_id": 11688310346,
+  "zip_sha256": "d0ef7f14f7e9e8eaadb4e455874e4cde0079519c6f0020e45e0421178653ffc6",
+  "SDK_build": "PASS",
+  "runtime": {
+    "exit_code": 1,
+    "outer_timeout": false
+  },
+  "runtime_log": "World native texture size query unavailable: requested_bytes=16384, queried_size=0, queried_align=0, extent=64x64, format=MTLPixelFormat(70), storage=MTLStorageMode(2), hazard=MTLHazardTrackingMode(2), usage=MTLTextureUsage(5), device=Apple Paravirtual device, default_query=0/0, untracked_query=0/0, family_apple2=false, family_mac2=false, family_common3=false, low_power=false, headless=false\n",
+  "source_sha256_inventory": "all entries verified against frozen git source",
+  "frames": 0,
+  "classification": "Pre-frame allocation-size-query refusal. No bound relaxation/no pixel or placement runtime claim on this device. Same unsupported virtual descriptor behavior retained separately from successful ARM cache controls."
+}
