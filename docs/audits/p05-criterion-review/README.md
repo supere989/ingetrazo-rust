@@ -1,0 +1,13 @@
+# Independent finite P05 review
+
+Unchanged criterion: “Port degenerate, holes, non-manifold and large-scene cases; compare outputs/invariants against Python.” Read-only source/evidence review; no new builds, tests or captures. **P05 remains Implemented**, pending the two bounded production comparisons below. Representative GPU performance remains a separate release gate.
+
+| Named scope | Existing evidence | Disposition |
+|---|---|---|
+| Non-manifold topology and larger cases | [Original 20-case kernel corpus](../p05-mesh-kernel/README.md), [boundary incidence correction](../p05-boundary-incidence/README.md) | The corrected runtime `19c58161` matches 20 complete raw cases/44 states, including two/three-face radial splitting, holes, painted existing subedges, eight bulk recipes and the 1,200-quad grid. Thirteen controls reject. The observer authenticated six archive members against raw files and the SHA-bound archive. This closes the nine historical sliver differences, not the entire row. |
+| Degenerate construction | [Standalone source-degenerate interpreter proof](../ai-degenerate-faces/README.md), [root records](../ai-degenerate-root/) | Twenty-seven actual original/standalone native states cover empty/one/two/repeated/welded-close outer rings and empty/one/two-point holes. That interpreter kernel is distinct from production `ingetrazo_core::mesh::Mesh`; production `add_face` still refuses outer length below three. |
+| Triangulation | `crates/ingetrazo-core/src/triangulate.rs`; retained Text3D, Scale/PushPull and import evidence | Production has convex fan and earcutr hole paths with native unit controls. Those and end-to-end geometry recipes do not supply a direct literal Python comparison of the missing concave, holed and degenerate triangulation output/invariants. |
+
+Minimum remaining work: compare production face construction and incidence for the already retained empty/one/two-point outer and short-hole recipes, preserving the actual source acceptance/refusal law. Separately compare a bounded source triangulation corpus covering concavity, a hole and degenerate input. This is a concrete criterion gap, not an unbounded pathological/performance requirement.
+
+Do not infer IGZ reader acceptance from source construction: the pinned bulk reader can itself refuse some degenerate records. Any load/save/reopen control must first establish the actual source reader outcome, then compare preservation or atomic refusal accordingly. No invented requirement that every source-authored degenerate face must successfully reopen is imposed. No new criterion text or status promotion is made.
