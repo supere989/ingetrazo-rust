@@ -106,6 +106,7 @@ struct Pipeline {
 }
 #[derive(Default, Debug, Clone, Copy)]
 pub struct Stats {
+    pub source_resolve_pipeline_builds:u64,
     pub section_contour_pipeline_builds:u64,
     pub billboard_builds:u64,
     pub billboard_uploads:u64,
@@ -155,7 +156,7 @@ pub struct Stats {
 }
 #[derive(Default)]
 pub struct World {
-    samples: usize,
+    resolve_prototype:Option<Arc<super::world_resolve::Pipeline>>,    samples: usize,
     diagnostic_samples: bool,
     pub(crate) ghosts: Option<Arc<super::world_ghost::Ghosts>>,
     owner: Option<Arc<Owner>>,
@@ -172,7 +173,7 @@ pub struct World {
     pub stats: Stats,
 }
 pub struct Prepared {
-    diagnostic_samples: bool,
+    resolve_prototype:Option<Arc<super::world_resolve::Pipeline>>,    diagnostic_samples: bool,
     pub(crate) billboards:Option<Arc<super::world_billboard::Prepared>>,
     pub(crate) section: Section,
     pub(crate) contour:Option<Arc<super::world_contour::Pipeline>>,
@@ -205,6 +206,14 @@ struct PaintUniform {
 }
 #[repr(C)]struct TexturePaint{opacity:f32,shade:f32,hard_cutout:u32,height:u32,mean:[f32;4]}
 impl World {
+    /// Cold diagnostic configuration only. Does not alter the production default.
+    pub fn enable_source_resolve_prototype(&mut self,metal:&NativeMetal)->Result<(),String>{
+        if !self.targets.is_empty(){return Err("Source resolve prototype requires no existing targets".into());}
+        self.validate_context_owner(metal)?;
+        if self.samples.max(1)!=4{return Err("Source resolve prototype requires configured four samples".into());}
+        let pipeline=super::world_resolve::Pipeline::new(metal)?;
+        self.owner=Some(pipeline.owner.clone());self.resolve_prototype=Some(pipeline);self.stats.source_resolve_pipeline_builds+=1;Ok(())
+    }
     /// Probe-only cold opt-in. Ordinary targets retain their original usage/store policy.
     pub fn enable_sample_observation(&mut self)->Result<(),String>{
         if !self.targets.is_empty() {return Err("Sample observation must be enabled before any World target exists".into());}
@@ -245,6 +254,7 @@ impl World {
     /// Cold sample policy; old Prepared owners retain their matching targets/pipelines.
     pub fn set_sample_count(&mut self,metal:&NativeMetal,samples:usize)->Result<(),String>{
         self.validate_context_owner(metal)?;
+        if self.resolve_prototype.is_some()&&samples!=4{return Err("Source resolve prototype is four-sample only".into());}
         if self.samples.max(1)==samples{return Ok(());}
         if !matches!(samples,1|4)||!metal.device.supportsTextureSampleCount(samples){return Err("Metal world sample count unsupported".into());}
         if self.samples.max(1)!=samples{self.samples=samples;self.pipeline=None;self.section_pipeline=None;}
@@ -333,12 +343,12 @@ impl World {
             Arc::new(Target {
                 samples:self.samples.max(1),
                 fill_enabled:false,
-                multisample:if self.samples.max(1)>1{Some(image_samples(metal,extent,MTLPixelFormat::RGBA8Unorm,MTLTextureUsage::RenderTarget | if self.diagnostic_samples {MTLTextureUsage::ShaderRead}else{MTLTextureUsage::empty()},4,self.samples.max(1))?)}else{None},
+                multisample:if self.samples.max(1)>1{Some(image_samples(metal,extent,MTLPixelFormat::RGBA8Unorm,MTLTextureUsage::RenderTarget | if self.diagnostic_samples||self.resolve_prototype.as_ref().is_some_and(|r|r.is_compute()) {MTLTextureUsage::ShaderRead}else{MTLTextureUsage::empty()},4,self.samples.max(1))?)}else{None},
                 color: image(
                     metal,
                     extent,
                     MTLPixelFormat::RGBA8Unorm,
-                    MTLTextureUsage::RenderTarget | MTLTextureUsage::ShaderRead,
+                    MTLTextureUsage::RenderTarget | MTLTextureUsage::ShaderRead | if self.resolve_prototype.as_ref().is_some_and(|r|r.is_compute()){MTLTextureUsage::ShaderWrite}else{MTLTextureUsage::empty()},
                     4,
                 )?,
                 depth: image_samples(metal,extent,MTLPixelFormat::Depth32Float,MTLTextureUsage::RenderTarget|MTLTextureUsage::ShaderRead,4,self.samples.max(1))?,
@@ -384,6 +394,7 @@ impl World {
         self.stats.prepared += 1;
         Ok(Some(Arc::new(Prepared {
             diagnostic_samples:self.diagnostic_samples,
+            resolve_prototype:self.resolve_prototype.clone(),
             section: Section::OFF,
             contour:None,contour_eye_width:[0.;4],
             fill:None,
@@ -577,12 +588,12 @@ impl World {
             Some(Arc::new(Target {
                 samples:self.samples.max(1),
                 fill_enabled:fill.is_some(),
-                multisample:if self.samples.max(1)>1{Some(image_samples(metal,extent,MTLPixelFormat::RGBA8Unorm,MTLTextureUsage::RenderTarget | if self.diagnostic_samples {MTLTextureUsage::ShaderRead}else{MTLTextureUsage::empty()},4,self.samples.max(1))?)}else{None},
+                multisample:if self.samples.max(1)>1{Some(image_samples(metal,extent,MTLPixelFormat::RGBA8Unorm,MTLTextureUsage::RenderTarget | if self.diagnostic_samples||self.resolve_prototype.as_ref().is_some_and(|r|r.is_compute()) {MTLTextureUsage::ShaderRead}else{MTLTextureUsage::empty()},4,self.samples.max(1))?)}else{None},
                 color: image(
                     metal,
                     extent,
                     MTLPixelFormat::RGBA8Unorm,
-                    MTLTextureUsage::RenderTarget | MTLTextureUsage::ShaderRead,
+                    MTLTextureUsage::RenderTarget | MTLTextureUsage::ShaderRead | if self.resolve_prototype.as_ref().is_some_and(|r|r.is_compute()){MTLTextureUsage::ShaderWrite}else{MTLTextureUsage::empty()},
                     4,
                 )?,
                 depth: image_samples(metal,extent,if fill.is_some(){MTLPixelFormat::Depth32Float_Stencil8}else{MTLPixelFormat::Depth32Float},MTLTextureUsage::RenderTarget|MTLTextureUsage::ShaderRead,if fill.is_some(){8}else{4},self.samples.max(1))?,
@@ -758,6 +769,7 @@ impl World {
         if fill.is_some(){self.section_pipeline=Some(pipeline.clone());}else{self.pipeline=Some(pipeline.clone());}
         Ok(Some(Arc::new(Prepared {
             diagnostic_samples:self.diagnostic_samples,
+            resolve_prototype:self.resolve_prototype.clone(),
             section: Section::OFF,
             contour:None,contour_eye_width:[0.;4],
             fill,
@@ -973,9 +985,10 @@ impl Prepared {
         if let Some(mut positions)=self.source_sample_positions{unsafe{pass.setSamplePositions_count(positions.as_mut_ptr(),4);}}
         let color = unsafe { pass.colorAttachments().objectAtIndexedSubscript(0) };
         color.setTexture(Some(self.target.multisample.as_ref().map_or(&*self.target.color.raw,|i|&*i.raw)));
-        if self.target.multisample.is_some(){color.setResolveTexture(Some(&self.target.color.raw));}
+        if self.target.multisample.is_some()&&!self.resolve_prototype.as_ref().is_some_and(|r|r.is_compute()){color.setResolveTexture(Some(&self.target.color.raw));}
         color.setLoadAction(MTLLoadAction::Clear);
-        color.setStoreAction(if self.target.multisample.is_some(){if self.diagnostic_samples {MTLStoreAction::StoreAndMultisampleResolve}else{MTLStoreAction::MultisampleResolve}}else{MTLStoreAction::Store});
+        if let Some(resolve)=&self.resolve_prototype {resolve.configure(&pass);}
+        color.setStoreAction(if self.resolve_prototype.as_ref().is_some_and(|r|r.is_compute()){MTLStoreAction::Store}else if self.target.multisample.is_some(){if self.diagnostic_samples {MTLStoreAction::StoreAndMultisampleResolve}else{MTLStoreAction::MultisampleResolve}}else{MTLStoreAction::Store});
         color.setClearColor(MTLClearColor {
             red: self.clear[0],
             green: self.clear[1],
@@ -1045,7 +1058,9 @@ impl Prepared {
         if self.target.material_draws.is_none(){self.encode_fill(&encoder)?;self.encode_aux(&encoder,depth_enabled,false);}
         self.encode_contours(&encoder)?;
         self.encode_aux(&encoder,depth_enabled,true);
+        if let Some(resolve)=&self.resolve_prototype {resolve.tile(&encoder);}
         encoder.endEncoding();
+        if let Some(resolve)=&self.resolve_prototype {resolve.compute(command,&self.target.multisample.as_ref().ok_or("Resolve prototype requires multisample target")?.raw,&self.target.color.raw)?;}
         Ok(())
     }
 }
@@ -1386,6 +1401,9 @@ impl Prepared {
         metal: &NativeMetal,
     ) -> Result<Diagnostic, String> {
         self.submit_diagnostic_inner(metal, false, false, None)
+    }
+    pub fn source_resolve_diagnostic(&self)->serde_json::Value{
+        self.resolve_prototype.as_ref().map_or(serde_json::json!({"path":"untouched-native-reference"}),|r|r.diagnostic(self.extent()))
     }
     /// Four fixed diagnostic pixels, in Metal top-origin coordinates. No resolve replacement.
     pub fn submit_sample_diagnostic(self:&Arc<Self>,metal:&NativeMetal,points:[[u32;2];4])->Result<Diagnostic,String>{
