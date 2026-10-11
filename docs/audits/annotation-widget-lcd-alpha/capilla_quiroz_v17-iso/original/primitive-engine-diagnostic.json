@@ -1,0 +1,90 @@
+{
+  "scope": "post-acceptance source-only layer filtering for target-engine attribution; original bound methods unchanged, not parity oracle",
+  "engine_rows": [
+    {
+      "kind": "geometry",
+      "engine": 13,
+      "device_dpi": [
+        96,
+        96
+      ],
+      "multisample_enabled": true,
+      "samples": 0,
+      "sample_buffers": 0
+    },
+    {
+      "kind": "geometry",
+      "engine": 13,
+      "device_dpi": [
+        96,
+        96
+      ],
+      "multisample_enabled": true,
+      "samples": 0,
+      "sample_buffers": 0
+    },
+    {
+      "kind": "glyph",
+      "engine": 13,
+      "device_dpi": [
+        96,
+        96
+      ],
+      "multisample_enabled": true,
+      "samples": 0,
+      "sample_buffers": 0
+    },
+    {
+      "kind": "glyph",
+      "engine": 13,
+      "device_dpi": [
+        96,
+        96
+      ],
+      "multisample_enabled": true,
+      "samples": 0,
+      "sample_buffers": 0
+    },
+    {
+      "kind": "glyph-neutral",
+      "engine": 13,
+      "device_dpi": [
+        96,
+        96
+      ],
+      "multisample_enabled": true,
+      "samples": 0,
+      "sample_buffers": 0
+    },
+    {
+      "kind": "glyph-neutral",
+      "engine": 13,
+      "device_dpi": [
+        96,
+        96
+      ],
+      "multisample_enabled": true,
+      "samples": 0,
+      "sample_buffers": 0
+    }
+  ],
+  "surface_requested": {
+    "alpha": -1,
+    "samples": 4,
+    "depth": 24,
+    "stencil": 8
+  },
+  "surface_realized": {
+    "alpha": 0,
+    "samples": 0,
+    "depth": 24,
+    "stencil": 8
+  },
+  "font_requested": {
+    "family": "Sans Serif",
+    "hinting": 0,
+    "strategy": 1,
+    "dimension_point_size": 9,
+    "bold": true
+  }
+}

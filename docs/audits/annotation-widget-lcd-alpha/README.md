@@ -1,0 +1,3 @@
+Actual original solid LCD controls alpha0/127/230/255 on white and colored backgrounds are retained. Float emulation derived from observed full-alpha mask FAILS partial-alpha controls (50 and21 pixels, max1); no tolerance adjustment. Source SubPixelMaskPass1 emits src.a*mask and actual GL CONSTANT_COLOR/ONE_MINUS_SRC_COLOR performs composition. Next candidate uses corresponding Vulkan fixed-function state in a dedicated persistent annotation subpipeline within the same pass, no target/copy/readback. RGB-only attachment writes preserve source alpha-less surface semantics.
+
+Current alpha-factor float candidate full-model on/restored FAIL2278 pixels, mask XOR196; off1297 unchanged. These remain nonacceptance.

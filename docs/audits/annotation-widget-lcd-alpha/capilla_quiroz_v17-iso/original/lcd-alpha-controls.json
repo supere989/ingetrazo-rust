@@ -1,0 +1,146 @@
+[
+  {
+    "file": "lcd-alpha-0-0.png",
+    "straight": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "background": [
+      255,
+      255,
+      255
+    ],
+    "roi": [
+      0,
+      0,
+      250,
+      90
+    ],
+    "font_family": "Sans Serif",
+    "font_point_size": 12,
+    "bold": true,
+    "scope": "actual source widget authored solid glyph operator control; no reference image modifications"
+  },
+  {
+    "file": "lcd-alpha-127-0.png",
+    "straight": [
+      0,
+      0,
+      0,
+      127
+    ],
+    "background": [
+      255,
+      255,
+      255
+    ],
+    "roi": [
+      0,
+      0,
+      250,
+      90
+    ],
+    "font_family": "Sans Serif",
+    "font_point_size": 12,
+    "bold": true,
+    "scope": "actual source widget authored solid glyph operator control; no reference image modifications"
+  },
+  {
+    "file": "lcd-alpha-255-0.png",
+    "straight": [
+      0,
+      0,
+      0,
+      255
+    ],
+    "background": [
+      255,
+      255,
+      255
+    ],
+    "roi": [
+      0,
+      0,
+      250,
+      90
+    ],
+    "font_family": "Sans Serif",
+    "font_point_size": 12,
+    "bold": true,
+    "scope": "actual source widget authored solid glyph operator control; no reference image modifications"
+  },
+  {
+    "file": "lcd-alpha-0-45.png",
+    "straight": [
+      45,
+      55,
+      75,
+      0
+    ],
+    "background": [
+      17,
+      89,
+      203
+    ],
+    "roi": [
+      0,
+      0,
+      250,
+      90
+    ],
+    "font_family": "Sans Serif",
+    "font_point_size": 12,
+    "bold": true,
+    "scope": "actual source widget authored solid glyph operator control; no reference image modifications"
+  },
+  {
+    "file": "lcd-alpha-230-45.png",
+    "straight": [
+      45,
+      55,
+      75,
+      230
+    ],
+    "background": [
+      17,
+      89,
+      203
+    ],
+    "roi": [
+      0,
+      0,
+      250,
+      90
+    ],
+    "font_family": "Sans Serif",
+    "font_point_size": 12,
+    "bold": true,
+    "scope": "actual source widget authored solid glyph operator control; no reference image modifications"
+  },
+  {
+    "file": "lcd-alpha-255-45.png",
+    "straight": [
+      45,
+      55,
+      75,
+      255
+    ],
+    "background": [
+      17,
+      89,
+      203
+    ],
+    "roi": [
+      0,
+      0,
+      250,
+      90
+    ],
+    "font_family": "Sans Serif",
+    "font_point_size": 12,
+    "bold": true,
+    "scope": "actual source widget authored solid glyph operator control; no reference image modifications"
+  }
+]
