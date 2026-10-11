@@ -12,7 +12,7 @@ pub(crate) fn pose(mvp: [[f32; 4]; 4], extent: (u32, u32), clear: [f64; 4]) -> R
     }
     Ok(())
 }
-pub(crate) fn opaque(data: &MeshRenderBuffer) -> Result<(), String> {
+pub(crate) fn opaque(data: &MeshRenderBuffer) -> Result<super::world_policy::Plan, String> {
     let bytes = data
         .vertices
         .len()
@@ -47,15 +47,10 @@ pub(crate) fn opaque(data: &MeshRenderBuffer) -> Result<(), String> {
     }) {
         return Err("Metal world opaque vertex invalid".into());
     }
-    if !data.source_opacity_runs.is_empty()
-        || !data.source_front_cull.is_empty()
-        || !data.source_default_back.is_empty()
-        || !data.source_back_paints.is_empty()
-        || !data.source_texture_runs.is_empty()
-    {
+    if !data.source_opacity_runs.is_empty() || !data.source_texture_runs.is_empty() {
         return Err("Metal world source paint policies require subsequent viewport stage".into());
     }
-    Ok(())
+    super::world_policy::Plan::from_packet(data)
 }
 #[cfg(test)]
 mod tests {
@@ -95,7 +90,7 @@ mod tests {
         p.vertices[0].color[3] = 0.5;
         assert!(opaque(&p).is_err());
         let mut p = packet();
-        p.source_default_back.push((0, 3));
+        p.source_default_back.push((0, 4));
         assert!(opaque(&p).is_err());
     }
     #[test]
