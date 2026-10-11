@@ -215,7 +215,7 @@ fn main() {
             let anchor = point(&ctx, &json!([14., 58.]));
             let overlay = egui::Id::new("composer-pointer-foreground");
             let mut overlay_owned = false;
-            let mut overlay_details=vec![];
+            let mut overlay_details = vec![];
             let mut overlay_clicked = false;
             for (i, events) in [
                 vec![],
@@ -340,8 +340,43 @@ fn main() {
                     == history_before_loss + 1;
             frame(&ctx, &mut a, 5.4, vec![key(egui::Key::Z, true)]);
             let lost_capture_undo = a.scene.sheets[0].items[0].rect() == outside_position;
+            let count_before_packet = a.composer_state.sheet_history[&a.scene.sheets[0].id]
+                .0
+                .len();
+            let p1 = point(&ctx, &json!([-6., 50.]));
+            let m1 = point(&ctx, &json!([-2., 52.]));
+            let p2 = point(&ctx, &json!([4., 52.]));
+            let m2 = point(&ctx, &json!([10., 55.]));
+            let button = |pos, pressed| egui::Event::PointerButton {
+                pos,
+                button: egui::PointerButton::Primary,
+                pressed,
+                modifiers: Default::default(),
+            };
+            frame(
+                &ctx,
+                &mut a,
+                5.5,
+                vec![
+                    button(p1, true),
+                    egui::Event::PointerMoved(m1),
+                    button(m1, false),
+                    button(p2, true),
+                    egui::Event::PointerMoved(m2),
+                    button(m2, false),
+                ],
+            );
+            let two_packet_histories = a.composer_state.sheet_history[&a.scene.sheets[0].id]
+                .0
+                .len()
+                == count_before_packet + 2;
+            let two_packet_final = a.scene.sheets[0].items[0].rect();
+            frame(&ctx, &mut a, 5.6, vec![key(egui::Key::Z, true)]);
+            let two_packet_first = a.scene.sheets[0].items[0].rect();
+            frame(&ctx, &mut a, 5.7, vec![key(egui::Key::Z, true)]);
+            let two_packet_before = a.scene.sheets[0].items[0].rect();
             let r = a.scene.sheets[0].items[0].rect();
-            json!({"blank_press_kept_selection":blank_press_kept_selection,"blank_release_cleared_selection":blank_release_cleared_selection,"outside_paper_acquired":outside_paper_acquired,"outside_paper_position":[r.x,r.y],"foreground_layer_owned_press":overlay_owned,"foreground_preserved_item":overlay_preserved,"lost_capture_finished":lost_capture_finished,"lost_capture_undo":lost_capture_undo})
+            json!({"blank_press_kept_selection":blank_press_kept_selection,"blank_release_cleared_selection":blank_release_cleared_selection,"outside_paper_acquired":outside_paper_acquired,"outside_paper_position":[r.x,r.y],"foreground_layer_owned_press":overlay_owned,"foreground_preserved_item":overlay_preserved,"lost_capture_finished":lost_capture_finished,"lost_capture_undo":lost_capture_undo,"two_packet_histories":two_packet_histories,"two_packet_final":[two_packet_final.x,two_packet_final.y],"two_packet_first":[two_packet_first.x,two_packet_first.y],"two_packet_before":[two_packet_before.x,two_packet_before.y]})
         } else {
             Value::Null
         };

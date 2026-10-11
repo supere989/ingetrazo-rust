@@ -27,8 +27,8 @@ def check(source,native):
     assert type(f['z'])in(int,float)and math.isfinite(f['z'])
    if a['state']!=v:errors.append({'case':n['name'],'phase':a['phase'],'source':a['state'],'native':v})
    count+=1
- assert native["cases"][0]["boundary_controls"]=={"blank_press_kept_selection":True,"blank_release_cleared_selection":True,"outside_paper_acquired":True,"outside_paper_position":[-16.,43.],"foreground_layer_owned_press":True,"foreground_preserved_item":True,"lost_capture_finished":True,"lost_capture_undo":True}
- assert all(type(v)is bool for k,v in native["cases"][0]["boundary_controls"].items()if k!="outside_paper_position")
+ assert native["cases"][0]["boundary_controls"]=={"blank_press_kept_selection":True,"blank_release_cleared_selection":True,"outside_paper_acquired":True,"outside_paper_position":[-16.,43.],"foreground_layer_owned_press":True,"foreground_preserved_item":True,"lost_capture_finished":True,"lost_capture_undo":True,"two_packet_histories":True,"two_packet_final":[-6.,48.],"two_packet_first":[-12.,45.],"two_packet_before":[-16.,43.]}
+ assert all(type(v)is bool for k,v in native["cases"][0]["boundary_controls"].items()if k not in["outside_paper_position","two_packet_final","two_packet_first","two_packet_before"])
  assert count==89
  return count,errors
 if __name__=='__main__':
@@ -42,6 +42,8 @@ if __name__=='__main__':
   reject('foreground-took-underlying-item',lambda d:d['cases'][0]['boundary_controls'].__setitem__('foreground_preserved_item',False))
   reject('lost-capture-not-undoable',lambda d:d['cases'][0]['boundary_controls'].__setitem__('lost_capture_undo',False))
   reject('outside-paper-position-drift',lambda d:d['cases'][0]['boundary_controls'].__setitem__('outside_paper_position',[-15.,43.]))
+  reject('coalesced-packet-transactions',lambda d:d['cases'][0]['boundary_controls'].__setitem__('two_packet_histories',False))
+  reject('missing-intermediate-packet-undo',lambda d:d['cases'][0]['boundary_controls'].__setitem__('two_packet_first',[-16.,43.]))
   reject('truncated-roster',lambda d:d['cases'].pop())
   reject('unselected-drag-inert',lambda d:d['cases'][0]['states'][2]['state']['frames'][0]['rect'].__setitem__(0,40.))
   reject('press-origin-drift',lambda d:d['cases'][0]['states'][3]['state']['frames'][0]['rect'].__setitem__(0,69.))

@@ -200,7 +200,8 @@ pub(super) fn input(
                     pressed: false,
                     ..
                 } => {
-                    if app.composer_state.dragging_item_idx.is_none() && clicked {
+                    let acquired = app.composer_state.dragging_item_idx.is_some();
+                    if !acquired && clicked {
                         app.scene.sheets[sheet_idx].selected_item = None;
                     }
                     if let Some(index) = app.composer_state.dragging_item_idx {
@@ -212,7 +213,14 @@ pub(super) fn input(
                             app.scene.sheets[sheet_idx].selected_item = Some(index);
                         }
                     }
-                    clear(app);
+                    // Release is the transaction boundary even when another
+                    // press follows in this same event packet. Unrelated
+                    // property-editor releases do not finish their draft.
+                    if acquired {
+                        app.finish_composer_edit();
+                    } else {
+                        clear(app);
+                    }
                 }
                 egui::Event::Key {
                     key: egui::Key::Escape,
