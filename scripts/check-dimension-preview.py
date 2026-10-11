@@ -27,6 +27,9 @@ def typed(a,b):
  else:assert a==b,(a,b)
 def validate(x):typed(source,x)
 validate(native)
+try:validate(json.loads((p/'initial-native.json').read_text()))
+except AssertionError:pass
+else:raise AssertionError('accepted initial nested normalization failure')
 for i in range(60):
  bad=copy.deepcopy(native);bad['states'][i]['lines']=['wrong']
  try:validate(bad)
@@ -37,4 +40,4 @@ for case in cases:
  try:validate(bad)
  except AssertionError:pass
  else:raise AssertionError('accepted live value mutation')
-print(json.dumps(dict(states=60,negatives=66,typed_exact=True)))
+print(json.dumps(dict(states=60,negatives=66,typed_exact=True,retained_failure_rejected=True)))
