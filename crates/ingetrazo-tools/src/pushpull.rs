@@ -59,8 +59,24 @@ impl PushPullTool {
         (0..mesh.faces.len()).filter(|&id|id!=face_id&&mesh.face_normal(id).dot(normal).abs()>0.999).filter_map(|id| {
             let distance=(origin-mesh.vertices[mesh.faces[id].vertices[0]].position).dot(normal);
             if distance<=1e-6{return None;}
+            // Original loop_inside_face excludes a strictly contained
+            // through-hole target even if it is an unrelated wider sheet.
+            let (u,w)=ingetrazo_core::math::plane_basis(normal);
+            let project=|p:DVec3|glam::DVec2::new(p.dot(u),p.dot(w));
+            let outer=mesh.faces[id].vertices.iter().map(|&v|project(mesh.vertices[v].position)).collect::<Vec<_>>();
+            let strictly_inside=|p:glam::DVec2| {
+                let mut inside=false;
+                for i in 0..outer.len() {
+                    let a=outer[i];let b=outer[(i+1)%outer.len()];let d=b-a;let rel=p-a;
+                    let cross=d.x*rel.y-d.y*rel.x;let dot=rel.dot(d);
+                    if cross.abs()<=1e-7&&dot>=-1e-7&&dot<=d.length_squared()+1e-7{return false;}
+                    if (a.y>p.y)!=(b.y>p.y)&&p.x<a.x+(b.x-a.x)*(p.y-a.y)/(b.y-a.y){inside=!inside;}
+                }
+                inside
+            };
+            if face.vertices.iter().all(|&v|strictly_inside(project(mesh.vertices[v].position-normal*distance))){return None;}
             let triangles=mesh.triangulate_face(id);
-            face.vertices.iter().all(|&v| {
+            face.vertices.iter().chain(face.holes.iter().flatten()).all(|&v| {
                 let ray=ingetrazo_core::math::Ray::new(mesh.vertices[v].position,-normal);
                 triangles.iter().any(|&(a,b,c)|ingetrazo_core::math::ray_triangle_intersect(&ray,a,b,c).is_some_and(|(t,_)|(t-distance).abs()<1e-6))
             }).then_some(distance)
