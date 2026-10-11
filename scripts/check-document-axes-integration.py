@@ -58,8 +58,8 @@ def _archive(name, manifest_name, selected, destination, preserve_paths=False, a
         assert set(selected) <= set(z.namelist()), name
     return hashlib.sha256(raw).hexdigest()
 
-def archive(name, manifest_name, selected, destination, preserve_paths=False, archive_name="records.zip"):
-    key = "archive:"+name
+def archive(name, manifest_name, selected, destination, preserve_paths=False, archive_name="records.zip", stage_name=None):
+    key = "archive:"+(stage_name or name)
     archive_dependencies.setdefault(destination.name, []).append(key)
     return stages.stage(key, [], lambda: _archive(name, manifest_name, selected, destination, preserve_paths, archive_name))
 
@@ -200,6 +200,16 @@ ip = archive("import-preferences", "manifest.json", ["original-import-preference
 run([binaries/(consumers[20]+suffix), import_preferences, "--import-preferences"], "import-preferences/runtime.log")
 run([sys.executable, repo/"scripts/check-import-preferences.py", import_preferences], "import-preferences/acceptance.json", requires=["import-preferences/runtime.log"])
 
+nested_import = out/"nested-import"
+nested_cases = [context+"-"+asset for context in ["root", "container", "leaf"] for asset in ["ambiguous", "named", "parts", "header", "zero"]]
+ni = archive("nested-import", "source-manifest.json", ["original-nested-import.json", "ambiguous.obj", "named.obj", "parts.obj", "header.dxf", "zero.dxf"]+[case+ending for case in nested_cases for ending in ["-input.igz", "-original.igz"]], nested_import, archive_name="source-records.zip", stage_name="nested-import-source")
+nt = archive("nested-import", "threshold-source-manifest.json", ["original-threshold.json"]+["threshold-"+count+ending for count in ["400", "401"] for ending in ["-input.igz", ".obj"]], nested_import, archive_name="threshold-source-records.zip", stage_name="nested-import-threshold")
+nn = archive("nested-import", "naming-source-manifest.json", ["original-naming.json", "naming-input.igz", "naming-large.obj"], nested_import, archive_name="naming-source-records.zip", stage_name="nested-import-naming")
+nf = archive("nested-import", "manifest.json", ["attempts/initial-f64-shareback/native-nested-import.json"], nested_import, preserve_paths=True, stage_name="nested-import-retained-failure")
+run([binaries/(consumers[20]+suffix), nested_import, "--nested-import"], "nested-import/runtime.log")
+run([sys.executable, repo/"scripts/reference-nested-import-reopens.py", nested_import], "nested-import/reopen.log", requires=["nested-import/runtime.log"])
+run([sys.executable, repo/"scripts/check-nested-import.py", nested_import], "nested-import/acceptance.json", requires=["nested-import/runtime.log", "nested-import/reopen.log"])
+
 appearance = out/"appearance-preferences"
 ap = archive("appearance-preferences", "manifest.json", ["original-appearance.json", "source-icons.json"], appearance)
 run([binaries/(consumers[20]+suffix), appearance, "--appearance"], "appearance-preferences/runtime.log")
@@ -210,7 +220,7 @@ def summarize():
     assert [(x["fixture"],x["phase"]) for x in rows] == [(f,p) for f in ["retained","nested-leaves"] for p in ["edited","undo","redo"]]
     assert all(x["saved"] and x["clean"] for x in rows)
     result = {"revision":subprocess.check_output(["git","rev-parse","HEAD"],cwd=repo,text=True).strip(),
-              "source_pin":pin,"binary_sha256":identities,"source_archives":{"axes":a,"documents":d,"fillet":f,"pushpull_finite":p,"paste_save":ps,"box_selection":bs,"materials":mr,"cursor":cn,"annotations":ad,"annotation_hover_delete":ahd,"zoom_extents":ze,"annotation_move":am,"annotation_acquisition":aa,"mesh_kernel":mk,"annotation_edit_style":ae,"annotation_text_create":at,"finite_kernel":mf,"finite_kernel_initial":mfa,"annotation_hover":ah,"dimension_anchor_admission":da,"dimension_preview":dp,"open_recent":rr,"general_preferences":gp,"units_preferences":up,"vcb_measurements":vm,"import_preferences":ip,"appearance_preferences":ap},
+              "source_pin":pin,"binary_sha256":identities,"source_archives":{"axes":a,"documents":d,"fillet":f,"pushpull_finite":p,"paste_save":ps,"box_selection":bs,"materials":mr,"cursor":cn,"annotations":ad,"annotation_hover_delete":ahd,"zoom_extents":ze,"annotation_move":am,"annotation_acquisition":aa,"mesh_kernel":mk,"annotation_edit_style":ae,"annotation_text_create":at,"finite_kernel":mf,"finite_kernel_initial":mfa,"annotation_hover":ah,"dimension_anchor_admission":da,"dimension_preview":dp,"open_recent":rr,"general_preferences":gp,"units_preferences":up,"vcb_measurements":vm,"import_preferences":ip,"appearance_preferences":ap,"nested_import":ni,"nested_import_threshold":nt,"nested_import_naming":nn,"nested_import_retained_failure":nf},
               "axes":json.loads((axes/"check.json").read_text()),"documents":{"actual_app_saves":len(rows),"exact_original_reopens":6,"leaf_record_types":15,"negative_controls":5},
               "fillet":json.loads((fillet/"check.json").read_text()),"fillet_volume":json.loads((fillet/"volume.json").read_text()),"pushpull":json.loads((out/"pushpull-comparison.json").read_text()),
               "pushpull_finite":json.loads((finite/"comparison.json").read_text()),
@@ -239,6 +249,7 @@ def summarize():
               "vcb_measurements":json.loads((measurements/"acceptance.json").read_text()),
               "import_preferences":json.loads((import_preferences/"acceptance.json").read_text()),
               "appearance_preferences":json.loads((appearance/"acceptance.json").read_text()),
+              "nested_import":json.loads((nested_import/"acceptance.json").read_text()),
               "fresh_source_acquisitions":0,"result":"pass"}
     return result
 

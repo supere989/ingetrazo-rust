@@ -15,7 +15,8 @@ def strict(a,b,path='root'):
 source=json.loads((root/'original-nested-import.json').read_text());native=json.loads((root/'native-nested-import.json').read_text());assert len(source['cases'])==15 and len(source['states'])==105
 strict(source,native)
 threshold=json.loads((root/'original-threshold.json').read_text());strict(threshold,json.loads((root/'native-threshold.json').read_text()));assert len(threshold['states'])==8
-strict(json.loads((root/'original-naming.json').read_text()),json.loads((root/'native-naming.json').read_text()))
+naming=json.loads((root/'original-naming.json').read_text());assert len(naming['states'])==5 and len(naming['piece_names'])==6
+strict(naming,json.loads((root/'native-naming.json').read_text()))
 guards=json.loads((root/'guards.json').read_text());assert set(guards)=={'malformed_import_preserves_document_history_context','unit_cancel_preserves_document','root_import_survives_both_cancel_checkpoints','root_command_undo_redo_after_cancel','live_layer_preserved','automatic_name_exhaustion_preserves_document_history'} and all(v is True for v in guards.values())
 mutations=[]
 for index,key in [(0,'depth'),(1,'undo'),(2,'redo'),(5,'undo')]:

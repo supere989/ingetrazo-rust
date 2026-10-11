@@ -1,0 +1,22 @@
+{
+  "owner_revision": "6621ae35",
+  "integration_revision": "1b558f8382eaf8683843e3d562be4b3f6fb6badb",
+  "crates_tree": "d340d1adde0cc12f91fc8c2ef5237be40b9b2289",
+  "cargo_lock_blob": "243a1c3f1fbb095dac57943f44540417d187ed00",
+  "runtime_identity": "exact owner and integration crates trees and Cargo.lock; no root Rust rebuild or native replay",
+  "independent_review": "independent-review.json",
+  "runner_validation": {
+    "method": "isolated actual archive helper and nested registration execution; no native execution",
+    "authenticated_archives": 4,
+    "selected_files": 45,
+    "distinct_archive_stage_keys": 4,
+    "dependencies_per_command": [
+      4,
+      5,
+      6
+    ],
+    "stale_positive_outputs_extracted": false
+  },
+  "checker_validation": "explicit five naming states and six piece-name inventory; retained final owner observations pass; no source recapture",
+  "broader_ci": "pending one combined publication"
+}
