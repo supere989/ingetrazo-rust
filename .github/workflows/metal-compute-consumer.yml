@@ -1,7 +1,7 @@
 name: Isolated native Metal ordered compute consumer
 on:
   push:
-    branches-ignore: [review/metal-raw-canvas]
+    branches-ignore: [review/metal-raw-canvas, review/metal-world-app]
     paths:
       - '.github/workflows/metal-compute-consumer.yml'
       - '.cargo/**'

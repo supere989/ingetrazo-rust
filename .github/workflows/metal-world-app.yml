@@ -1,5 +1,7 @@
 name: Native Metal application viewport consumer
 on:
+  push:
+    branches: [review/metal-world-app]
   workflow_dispatch:
 concurrency:
   group: metal-world-app-${{ github.ref }}
