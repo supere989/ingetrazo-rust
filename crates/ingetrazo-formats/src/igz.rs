@@ -23,6 +23,8 @@ use ingetrazo_core::mesh::Mesh;
 use ingetrazo_core::scene::Scene;
 use ingetrazo_core::units::LengthUnit;
 
+mod assets;
+
 pub const ZIP_MAGIC: &[u8] = b"PK\x03\x04";
 
 #[derive(thiserror::Error, Debug)]
@@ -63,7 +65,7 @@ fn mesh_to_json(mesh: &Mesh) -> serde_json::Value {
             obj["layer"] = serde_json::Value::String(l.clone());
         }
         for (key, value) in &e.attrs {
-            if !["a", "b", "soft", "hidden", "layer"].contains(&key.as_str()) {
+            if !["a", "b", "soft", "hidden"].contains(&key.as_str()) && !(key == "layer" && e.layer.is_some()) {
                 obj[key] = value.clone();
             }
         }
@@ -95,7 +97,7 @@ fn mesh_to_json(mesh: &Mesh) -> serde_json::Value {
             obj["layer"] = serde_json::Value::String(l.clone());
         }
         for (k, v) in &f.attrs {
-            obj[k] = v.clone();
+            if k != "layer" || f.layer.is_none() { obj[k] = v.clone(); }
         }
         faces_json.push(obj);
     }
@@ -127,7 +129,7 @@ fn json_to_mesh(val: &serde_json::Value) -> Mesh {
                     if let Some(edge_id) = mesh.add_edge(va, vb) {
                         if let Some(obj) = e.as_object() {
                             for (key,value) in obj {
-                                if !["a","b","soft","hidden","layer"].contains(&key.as_str()) {
+                                if !["a","b","soft","hidden"].contains(&key.as_str()) && !(key == "layer" && value.is_string()) {
                                     mesh.edges[edge_id].attrs.insert(key.clone(),value.clone());
                                 }
                             }
@@ -196,7 +198,7 @@ fn json_to_mesh(val: &serde_json::Value) -> Mesh {
                         }
                         if let Some(obj) = f.as_object() {
                             for (k, v) in obj {
-                                if k != "vertices" && k != "holes" && k != "layer" {
+                                if k != "vertices" && k != "holes" && !(k == "layer" && v.is_string()) {
                                     mesh.faces[face_id].attrs.insert(k.clone(), v.clone());
                                 }
                             }
@@ -278,6 +280,10 @@ fn group_model(g: &Group) -> serde_json::Value {
 fn group_to_json(g: &Group, protos: &mut Vec<serde_json::Value>, shared: &mut std::collections::HashMap<(uuid::Uuid,bool),usize>, mesh_shares: &std::collections::HashMap<uuid::Uuid,Mesh>) -> serde_json::Value {
     let model = group_model(g);
     let mut obj = overlay(&g.native_document, &g.native_baseline, model.clone());
+    // Legacy documents predate names/UIDs. Once the group list is published,
+    // retain the identities assigned on load, rather than regenerate on reopen.
+    if obj.get("name").and_then(|v|v.as_str()).is_none_or(str::is_empty) { obj["name"] = model["name"].clone(); }
+    if obj.get("uid").and_then(|v|v.as_str()).is_none_or(str::is_empty) { obj["uid"] = model["uid"].clone(); }
     // Rust meshes are independent copies. Editing an imported instance makes a
     // new definition; never mutate a retained prototype used by other instances.
     let geometry_changed = ["edges", "faces"].iter()
@@ -760,50 +766,34 @@ pub fn save_igz_format1(scene: &Scene, path: &Path) -> Result<(), IgzError> {
 
 pub fn save_igz_format2(scene: &Scene, path: &Path) -> Result<(), IgzError> {
     validate_native_save(scene)?;
+    let mut doc = scene_to_igz_document(scene);
+    let assets = assets::pack(scene, &mut doc)?;
+    write_archive(doc, assets, path)
+}
+
+fn write_archive(
+    document: serde_json::Value,
+    assets: std::collections::BTreeMap<String, std::borrow::Cow<'_, [u8]>>,
+    path: &Path,
+) -> Result<(), IgzError> {
+    let envelope = IgzEnvelope {
+        igz_format: 2,
+        app_version: "0.3.15".to_string(),
+        scene: document,
+    };
+    // Serialize before opening the destination; callers of this low-level API
+    // also retain their existing file when preparation fails.
+    let json_bytes = serde_json::to_vec_pretty(&envelope)?;
     let file = File::create(path)?;
     let mut zip = ZipWriter::new(file);
     let options = SimpleFileOptions::default()
         .compression_method(zip::CompressionMethod::Deflated);
-
-    let mut modified_scene = scene.clone();
-    let mut written = std::collections::HashSet::new();
-    for (name, bytes) in &scene.embedded_textures {
+    for (name, bytes) in assets {
         zip.start_file(name, options)?;
-        zip.write_all(bytes)?;
-        written.insert(name.clone());
+        zip.write_all(&bytes)?;
     }
-    for (_mat_name, mat) in &mut modified_scene.materials {
-        if let Some(tex_path) = &mat.texture_path {
-            let p = Path::new(tex_path);
-            if p.exists() {
-                if let Ok(data) = std::fs::read(p) {
-                    let filename = p.file_name().unwrap_or_default().to_string_lossy();
-                    let base_name=format!("textures/{filename}");
-                    let mut entry_name=base_name.clone();
-                    let mut suffix=1;
-                    while written.contains(&entry_name) {
-                        entry_name=format!("{base_name}.{suffix}");
-                        suffix+=1;
-                    }
-                    written.insert(entry_name.clone());
-                    zip.start_file(&entry_name,options)?;
-                    zip.write_all(&data)?;
-                    mat.texture_embed=Some(entry_name.clone());
-                    mat.texture_path=Some(entry_name);
-                }
-            }
-        }
-    }
-
-    let envelope = IgzEnvelope {
-        igz_format: 2,
-        app_version: "0.3.15".to_string(),
-        scene: scene_to_igz_document(&modified_scene),
-    };
-    let json_bytes = serde_json::to_vec_pretty(&envelope)?;
     zip.start_file("document.json", options)?;
     zip.write_all(&json_bytes)?;
-
     zip.finish()?;
     Ok(())
 }
@@ -813,10 +803,18 @@ pub fn save_igz(scene: &Scene, path: &Path) -> Result<(), IgzError> {
     // atomically. Failed JSON/asset/ZIP writes never truncate the original.
     let parent=path.parent().filter(|p|!p.as_os_str().is_empty()).unwrap_or_else(||Path::new("."));
     let temp=parent.join(format!(".ingetrazo-save-{}.tmp",uuid::Uuid::new_v4()));
-    let has_texture=scene.materials.values().any(|m|m.texture_path.is_some());
-    let result=if has_texture || !scene.embedded_textures.is_empty() {
-        save_igz_format2(scene,&temp)
-    } else {save_igz_format1(scene,&temp)};
+    validate_native_save(scene)?;
+    let mut document = scene_to_igz_document(scene);
+    let assets = assets::pack(scene, &mut document)?;
+    let result = if !assets.is_empty() {
+        write_archive(document, assets, &temp)
+    } else {
+        let envelope = IgzEnvelope { igz_format: 1, app_version: "0.3.15".into(), scene: document };
+        serde_json::to_vec_pretty(&envelope).map_err(IgzError::from).and_then(|bytes| {
+            File::create(&temp)?.write_all(&bytes)?;
+            Ok(())
+        })
+    };
     if let Err(err)=result {
         let _=std::fs::remove_file(&temp);
         return Err(err);
@@ -896,10 +894,19 @@ pub fn load_igz(path: &Path) -> Result<Scene, IgzError> {
 
     let proto_ids:Vec<_>=proto_meshes.iter().map(|_|uuid::Uuid::new_v4()).collect();
     scene.mesh_shares = proto_ids.iter().copied().zip(proto_meshes.iter().cloned()).collect();
-    fn read_group(v: &serde_json::Value, protos: &[Mesh], proto_ids:&[uuid::Uuid], depth:usize) -> Result<Group, IgzError> {
+    fn read_group(v: &serde_json::Value, protos: &[Mesh], proto_ids:&[uuid::Uuid], depth:usize, unnamed: &mut usize) -> Result<Group, IgzError> {
         if depth>64 {return Err(IgzError::InvalidDocument("group nesting limit exceeded".into()));}
-        let mut g = Group::new(v.get("name").and_then(|v| v.as_str()).unwrap_or("Group"));
-        if let Some(id)=v.get("uid").and_then(|v|v.as_str()).and_then(|s|uuid::Uuid::parse_str(s).ok()) {g.id=id;}
+        let name = v.get("name").and_then(|v|v.as_str()).filter(|s|!s.is_empty()).map(str::to_owned).unwrap_or_else(|| {
+            let name = format!("Group {}", *unnamed);
+            *unnamed += 1;
+            name
+        });
+        let mut g = Group::new(name);
+        if let Some(id)=v.get("uid").and_then(|v|v.as_str()).filter(|s|!s.is_empty()) {
+            // Original UIDs are commonly 16 hex characters, not UUID32. Keep
+            // their preserved on-disk string and a deterministic runtime key.
+            g.id=uuid::Uuid::parse_str(id).unwrap_or_else(|_|uuid::Uuid::new_v5(&uuid::Uuid::NAMESPACE_URL,id.as_bytes()));
+        }
         if v.get("component").and_then(|v|v.as_bool())==Some(true) {
             if let Some(idx)=v.get("proto").and_then(|v|v.as_u64()) {
                 g.component_definition=proto_ids.get(idx as usize).copied();
@@ -923,7 +930,7 @@ pub fn load_igz(path: &Path) -> Result<Scene, IgzError> {
         g.hidden = v.get("hidden").and_then(|v| v.as_bool()).unwrap_or(false);
         g.billboard = v.get("billboard").map(|v| v == true || v == "mesh").unwrap_or(false);
         if let Some(children) = v.get("children").and_then(|v| v.as_array()) {
-            g.children = children.iter().map(|v| read_group(v, protos, proto_ids, depth+1)).collect::<Result<_,_>>()?;
+            g.children = children.iter().map(|v| read_group(v, protos, proto_ids, depth+1, unnamed)).collect::<Result<_,_>>()?;
         }
         g.mesh.rebuild_spatial_index();
         g.native_document = v.clone();
@@ -931,7 +938,8 @@ pub fn load_igz(path: &Path) -> Result<Scene, IgzError> {
         Ok(g)
     }
     if let Some(groups_arr) = s_val.get("groups").and_then(|g| g.as_array()) {
-        scene.groups = groups_arr.iter().map(|v| read_group(v, &proto_meshes, &proto_ids, 0)).collect::<Result<_,_>>()?;
+        let mut unnamed = 1;
+        scene.groups = groups_arr.iter().map(|v| read_group(v, &proto_meshes, &proto_ids, 0, &mut unnamed)).collect::<Result<_,_>>()?;
     }
 
     fn register_definitions(groups:&[Group],defs:&mut std::collections::HashMap<uuid::Uuid,ingetrazo_core::components::ComponentDefinition>) {
