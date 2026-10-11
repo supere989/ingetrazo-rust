@@ -32,3 +32,5 @@ python3 scripts/check-pushpull-inward-limits.py docs/audits/pushpull-inward-limi
 ```
 
 Source regeneration uses the two reference scripts with the pinned original; the reused_limit_controls key is copied from the previously frozen endpoint source.json, not recaptured. Hashes identify the current scripts, runtime, binary and captured inputs/outputs. No original Python installation was modified, no broad suite/tracker edit/push occurred. Target and final outputs remain for root replay until released.
+
+Final identity followup `a1b44be8` preserves the original remove/add ownership of partially punched mother faces: replacement faces receive fresh runtime tokens; protected survivor faces retain theirs. Both focused identity controls pass. The final inward app binary was rebuilt after this token-only seam.

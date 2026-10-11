@@ -1,11 +1,14 @@
 {
   "base": "0d762417",
   "runtime": "e7ac63de",
-  "identity_seam": "210740b6",
+  "identity_seam": [
+    "210740b6",
+    "a1b44be8"
+  ],
   "skip_schema_prerequisite": "b72fa139",
   "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
   "source_sha256": {
-    "crates/ingetrazo-tools/src/pushpull.rs": "0f60e525b6ba5decadd55bbf7c629676f31db921d54701cfc0b15dc1d73edd15",
+    "crates/ingetrazo-tools/src/pushpull.rs": "f1aadadf46bb7db8d1d4f3578142dfd26c8ea32f063cdbb8d45df100ef12bcbb",
     "crates/ingetrazo-tools/src/pushpull/inward_limit.rs": "01a5ab706d4aeb49cf1d376ab666969a758b3a597f28f3a3ea7fa1851157ff51",
     "crates/ingetrazo-tools/src/base.rs": "db694ebb18dc24a4fe184f966dd290b2cc7007d200e310a187d5c79e2b621ff9",
     "crates/ingetrazo-gui/src/tool_history.rs": "b17a84928a381ba5e5d8c7a033ecd7c43475e9c63089b9f7a01c4e5dd0683ce5",
@@ -16,20 +19,20 @@
   },
   "reused_source_sha256": "67232c772e2e9c9734738e3e75a4d6f60e03d78abd75b0313073f427dbbe1bea",
   "binary_sha256": {
-    "pushpull_inward_limits": "2fe25d94de3f4d69f9810634f85420d339a274587df19c0c0372cd08c77c5ff3",
+    "pushpull_inward_limits": "d1927c969614adab8bb8bb47d56b8940ec50f6999c47fd485c60c8801d0e13bd",
     "pushpull_endpoints_app": "6cfc43322f39ff58da45965829235fae3c67b1f519ffcacb6bb98eb594337f65",
     "pushpull_gate2_fixture": "6e7c77a12f50430175e1e14d647ecb651ff4a704e1213becc1a6a730368dbb48"
   },
   "artifacts_sha256": {
-    "README.md": "9803b0a5582063bcc0007ab56e2ae8d6a79583524268f2d57e18ae51976f4bb1",
+    "README.md": "e5b466361a37c06b5151ad10e25923f2f017b382209490e1d8451e6025faa158",
     "app.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-    "build.log": "c84d04a13d2f36d831d5f0ff26fe2943ce7d9b32af4b09c708c11b2e1e8a6051",
+    "build.log": "e6640071a25ec1a7a3ff3c13867282936a6749e91070d707e7503f929bd112c4",
     "comparison.json": "dc8f2971bfddf803423b1f31f42c9e4be30c1fe999d2b348d99f03ae9ac51c42",
     "endpoint-app.json": "acf76b888f19c360a0e179f089fb2e6e7bd76f8ef2bd12762035acbd5beff823",
     "endpoint-check.log": "127626162da4b9a89a51415e9d47cb94428e9c5ef2b008dde60d816822dc6505",
     "endpoint-comparison.json": "127626162da4b9a89a51415e9d47cb94428e9c5ef2b008dde60d816822dc6505",
     "endpoint-native.json": "5dd9520f169d72acc3867c11d2bc2ae6ad2545bfe6d8171ca9ba3f7ecd4b4fc7",
-    "identity-tests.log": "26dddfe07e5c62524b2db3010232ec5bc4cb24619b0df0097d4ee645fb6757b0",
+    "identity-tests.log": "6eb08b58f48fb083be72a1e15154f950343d2550164086fa1f8245ea44f4db9c",
     "native.json": "f0daf26a4f834741ebfba474c4a834284b66693aa9d727f73b1b0c690e53e343",
     "remaining-native.json": "5df02df1ea01292e6cd14bd3c77c61654d4f27379cd82e3df77e67662ffef076",
     "source-vcb.json": "7f294dba67669a6e20868d5befddd6dad0cc6362348e83674f67b92b575500cd",
@@ -47,5 +50,9 @@
     "focused_unit_tests": 11,
     "token_identity_test": 1
   },
-  "active_handles": []
+  "active_handles": [],
+  "runtime_chain": [
+    "e7ac63de",
+    "a1b44be8"
+  ]
 }

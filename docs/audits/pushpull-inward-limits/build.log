@@ -229,6 +229,8 @@ warning: function `scene_from_xml` is never used
     |               ^^^^^^^^^^^^^^
 
 warning: `ingetrazo-formats` (lib) generated 3 warnings
+   Compiling ingetrazo-tools v0.3.15 (/tmp/ingetrazo-pushpull-partition-collapse/crates/ingetrazo-tools)
+   Compiling ingetrazo-gui v0.3.15 (/tmp/ingetrazo-pushpull-partition-collapse/crates/ingetrazo-gui)
 warning: method `paint` is never used
   --> crates/ingetrazo-gui/src/composer_text_canvas.rs:85:9
    |
@@ -330,5 +332,4 @@ warning: methods `glyph_stats`, `stats`, and `prepare` are never used
    |         ^^^^^^^
 
 warning: `ingetrazo-gui` (lib) generated 12 warnings
-   Compiling ingetrazo-gui v0.3.15 (/tmp/ingetrazo-pushpull-partition-collapse/crates/ingetrazo-gui)
-    Finished `dev` profile [unoptimized] target(s) in 0.43s
+    Finished `dev` profile [unoptimized] target(s) in 4.56s
