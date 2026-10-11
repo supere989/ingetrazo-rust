@@ -8,6 +8,7 @@ mod annotation_visibility;
 pub mod annotation_viewport;
 pub mod annotation_overlay_probe;
 pub mod hidden_ghost_application_probe;
+pub mod face_sweep_application_probe;
 mod annotation_visibility_gpu;
 pub mod resources;
 pub mod texture_cache;
@@ -414,6 +415,10 @@ impl System {
     }
 
     /// Read-only engineering observation; adds no waits or production uploads.
+    pub fn face_sweep_observation_for_probe(&self)->serde_json::Value{
+        let world=self.world.as_ref().map(|world|{let (uploads,bytes,texture)=world.face_sweep_stats_for_probe();serde_json::json!({"base_uploads":world.uploads,"preview_uploads":uploads,"preview_bytes":bytes,"texture_builds":texture.builds,"texture_uploads":texture.uploads,"sampled_entries":texture.sampled_entries})});
+        serde_json::json!({"submitted_serial":self.draw_serial,"completed_present_serial":self.completed_present_serial_for_probe,"prepare_error":self.annotation_prepare_error,"committed_bytes":self.memory_budget.ledger.lock().unwrap().total_committed(),"world":world})
+    }
     pub fn hidden_ghost_observation_for_probe(&self)->serde_json::Value{serde_json::json!({"submitted_serial":self.draw_serial,"completed_present_serial":self.completed_present_serial_for_probe,"prepare_error":self.annotation_prepare_error,"world":self.world.as_ref().map(|w|w.hidden_ghost_observation_for_probe())})}
     pub fn billboard_observation_for_probe(&self)->serde_json::Value{serde_json::json!({"submitted_serial":self.draw_serial,"completed_present_serial":self.completed_present_serial_for_probe,"prepare_error":self.annotation_prepare_error,"world":self.world.as_ref().map(|w|w.billboard_stats_for_probe())})}
     pub fn solar_stats_for_probe(&self)->Option<(u64,u64,bool)>{self.world.as_ref().map(|world|world.shadow_stats_for_probe())}
