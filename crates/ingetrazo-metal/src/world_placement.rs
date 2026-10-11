@@ -81,8 +81,10 @@ impl Packet {
         self.retained_payload_bytes
     }
 }
-#[derive(Clone, Copy, Debug)]
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Pose {
+    /// Stable model matrix in prepare_placements_with_camera. Historical field
+    /// name is retained for the combined-matrix compatibility entry.
     pub mvp: [[f32; 4]; 4],
     /// Original instancing switches winding for reflected placements; it does
     /// not rebuild or upload a reversed copy of the static local prototype.

@@ -265,11 +265,33 @@ impl World {
     /// Unchanged packet Arc skips cold key/sort/collection; every pose validates.
     /// `collect` must return local source-placement coordinates with effective
     /// inherited paint, style and layer identity already represented in the key.
+    /// Compatibility entry for already combined matrices. Production callers
+    /// use prepare_placements_with_camera with stable model poses instead.
     pub fn prepare_placements<F>(
         &mut self,
         metal: &NativeMetal,
         packet: Arc<PlacementPacket>,
         poses: &[PlacementPose],
+        extent: (u32, u32),
+        clear: [f64; 4],
+        policy: Policy,
+        collect: F,
+    ) -> Result<Option<Arc<Prepared>>, String>
+    where
+        F: FnMut(&PrototypeKey) -> Result<MeshRenderBuffer, String>,
+    {
+        self.prepare_placements_with_camera(
+            metal, packet, poses, IDENTITY, extent, clear, policy, collect,
+        )
+    }
+    /// Stable model matrices are retained separately from the global camera.
+    /// Camera-only frames bind one uniform without rewriting instance storage.
+    pub fn prepare_placements_with_camera<F>(
+        &mut self,
+        metal: &NativeMetal,
+        packet: Arc<PlacementPacket>,
+        poses: &[PlacementPose],
+        camera: [[f32; 4]; 4],
         extent: (u32, u32),
         clear: [f64; 4],
         policy: Policy,
@@ -282,7 +304,7 @@ impl World {
             owner.validate(metal)?;
         }
         policy.validate()?;
-        super::world_admission::pose([[0.; 4]; 4], extent, clear)?;
+        super::world_admission::pose(camera, extent, clear)?;
         super::world_placement::validate_poses(&packet, poses)?;
         if metal.poisoned.load(std::sync::atomic::Ordering::Acquire) {
             return Err("Metal world admission poisoned".into());
@@ -429,6 +451,7 @@ impl World {
             new_target.as_mut().unwrap()
         };
         let unique = Arc::get_mut(target).ok_or("Metal placement idle target ownership changed")?;
+        let poses_changed = unique.poses.as_slice() != poses;
         let matrix_bytes = poses
             .len()
             .checked_mul(64)
@@ -467,16 +490,18 @@ impl World {
         if let Some(buffer) = candidate_matrices {
             unique.instance_matrices = Some(buffer);
         }
-        if let Some(buffer) = &mut unique.instance_matrices {
-            // Exclusive idle target ownership: no submitted sampler or encoder
-            // can observe writes. No temporary packed matrix allocation.
-            for (i, pose) in poses.iter().enumerate() {
-                unsafe {
-                    std::ptr::copy_nonoverlapping(
-                        pose.mvp.as_ptr().cast::<u8>(),
-                        buffer.raw.contents().as_ptr().cast::<u8>().add(i * 64),
-                        64,
-                    );
+        if poses_changed {
+            if let Some(buffer) = &mut unique.instance_matrices {
+                // Exclusive idle target ownership: no submitted sampler or encoder
+                // can observe writes. No temporary packed matrix allocation.
+                for (i, pose) in poses.iter().enumerate() {
+                    unsafe {
+                        std::ptr::copy_nonoverlapping(
+                            pose.mvp.as_ptr().cast::<u8>(),
+                            buffer.raw.contents().as_ptr().cast::<u8>().add(i * 64),
+                            64,
+                        );
+                    }
                 }
             }
         }
@@ -490,7 +515,9 @@ impl World {
             .clone()
             .unwrap_or_else(|| Arc::new(Owner::new(metal)));
         self.stats.instance_buffer_allocations += u64::from(allocated_matrices);
-        self.stats.instance_matrix_upload_bytes += matrix_bytes as u64;
+        if poses_changed {
+            self.stats.instance_matrix_upload_bytes += matrix_bytes as u64;
+        }
         self.stats.geometry_uploads += uploaded;
         self.stats.prepared += 1;
         if uploaded == 0 {
@@ -520,7 +547,7 @@ impl World {
             mesh: None,
             pipeline,
             target,
-            mvp: [[0.; 4]; 4],
+            mvp: camera,
             clear,
             policy,
         })))
@@ -609,6 +636,14 @@ impl Prepared {
         }));
         encoder.setCullMode(MTLCullMode::None);
         encoder.setFrontFacingWinding(MTLWinding::CounterClockwise);
+        let camera = if self.placements.is_some() {
+            &self.mvp
+        } else {
+            &IDENTITY
+        };
+        unsafe {
+            encoder.setVertexBytes_length_atIndex(std::ptr::NonNull::from(camera).cast(), 64, 2);
+        }
         if let Some(placements) = &self.placements {
             let mut first = 0;
             while first < self.target.poses.len() {
@@ -1010,3 +1045,10 @@ fn draw_instances(
             );
     }
 }
+
+const IDENTITY: [[f32; 4]; 4] = [
+    [1., 0., 0., 0.],
+    [0., 1., 0., 0.],
+    [0., 0., 1., 0.],
+    [0., 0., 0., 1.],
+];

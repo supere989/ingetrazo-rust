@@ -1,0 +1,18 @@
+{
+  "scope": "Source and Apple metadata check; native12frame execution pending",
+  "parent": "aecd32e0",
+  "changes": [
+    "device-address model matrix buffer, preserving single matrix setVertexBytes compatibility",
+    "prepare_placements_with_camera global64byte uniform and retained stable model poses",
+    "unchanged idle model pose equality skips instance buffer writes",
+    "native12frame fixture: coalesced pair, nonzero offset2 second pair, camera-only exactshift and zero instance uploads"
+  ],
+  "compatibility": "Original prepare_placements retains combined-matrix entry through identity camera. Pose.mvp historical field is documented as model in production with_camera API. No host activation.",
+  "checks": "Apple metadata example PASS; native shader/SDK/runtime pending",
+  "remaining": [
+    "source coplanar overlap/default-back split draw ordering",
+    "host stable model adapter and actual camera gesture",
+    "fullmaterials/textures/alpha/sections/images/edges/MSAA/shadows/annotations",
+    "physical presentation and measured fullpath performance"
+  ]
+}

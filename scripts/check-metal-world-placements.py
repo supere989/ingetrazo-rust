@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Exact native placement interiors/backgrounds; not raster-edge/UI acceptance."""
 import json,pathlib,sys
-NAMES=("coalesced-two-instances","shared-prototype-reflected","warm-left","warm-center","warm-right","winding-disabled-negative","old-retained-green","new-revision-red","binding-only-reuse","refusal-preserved")
+NAMES=("camera-only-no-instance-upload","nonzero-offset-two-runs","coalesced-two-instances","shared-prototype-reflected","warm-left","warm-center","warm-right","winding-disabled-negative","old-retained-green","new-revision-red","binding-only-reuse","refusal-preserved")
 def validate(pixels,name,positive_override=False):
  assert len(pixels)==64*64*4
  left={"warm-left":-.5,"warm-right":-.3}.get(name,-.4)
@@ -9,6 +9,8 @@ def validate(pixels,name,positive_override=False):
  red=name in ("new-revision-red","binding-only-reuse","refusal-preserved")
  copies=[(left,(255,0,0,255) if red else (0,255,0,255))]
  if not single:copies.append((.4,(255,255,0,255) if name=="winding-disabled-negative" and not positive_override else ((255,0,0,255) if red else (0,255,0,255))))
+ if name=="camera-only-no-instance-upload":copies=[(-.4,(0,255,0,255)),(.3,(0,255,0,255))]
+ if name=="nonzero-offset-two-runs":copies=[(x,(0,255,0,255)) for x in (-.6,-.2,.2,.6)]
  inside=outside=0
  for y in range(64):
   for x in range(64):
@@ -24,6 +26,7 @@ def main(root):
  assert report['geometry_uploads_before_warm']==report['geometry_uploads_after_warm']==1
  assert report['instance_buffers_before_warm']==report['instance_buffers_after_warm']==1
  assert report['warm_matrix_upload_bytes']==384
+ assert report['camera_only_instance_upload_bytes']==0 and report['offset_runs']==2
  assert report['coalesced_instances']==2 and report['coalesced_runs']==1
  assert report['targets_before_warm']==report['targets_after_warm']==1
  assert report['pose_bytes_before_warm']==report['pose_bytes_after_warm']>0

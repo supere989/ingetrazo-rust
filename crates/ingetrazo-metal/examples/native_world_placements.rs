@@ -125,6 +125,61 @@ fn run() -> Result<(), String> {
             save(name, &read(f)?)?;
         }
         let after = world.stats;
+        let unchanged = world
+            .prepare_placements(
+                &metal,
+                packet.clone(),
+                &[pose(-0.3, false), pose(0.4, true)],
+                (64, 64),
+                [0., 0., 1., 1.],
+                style,
+                |_| panic!("Unchanged prototype collected"),
+            )?
+            .ok_or("Unchanged frame unavailable")?;
+        assert_eq!(
+            world.stats.instance_matrix_upload_bytes,
+            after.instance_matrix_upload_bytes
+        );
+        drop(unchanged);
+        let mut camera = identity;
+        camera[3][0] = -0.1;
+        let camera_only = world
+            .prepare_placements_with_camera(
+                &metal,
+                packet.clone(),
+                &[pose(-0.3, false), pose(0.4, true)],
+                camera,
+                (64, 64),
+                [0., 0., 1., 1.],
+                style,
+                |_| panic!("Camera-only prototype collected"),
+            )?
+            .ok_or("Camera frame unavailable")?;
+        assert_eq!(
+            world.stats.instance_matrix_upload_bytes,
+            after.instance_matrix_upload_bytes
+        );
+        save("camera-only-no-instance-upload", &read(camera_only)?)?;
+        let offset_packet = Packet::new(vec![key], vec![0, 0, 0, 0])?;
+        let offset = world
+            .prepare_placements(
+                &metal,
+                offset_packet,
+                &[
+                    pose(-0.6, false),
+                    pose(-0.2, false),
+                    pose(0.2, true),
+                    pose(0.6, true),
+                ],
+                (64, 64),
+                [0., 0., 1., 1.],
+                style,
+                |_| panic!("Offset run collected"),
+            )?
+            .ok_or("Offset instance run unavailable")?;
+        assert_eq!(offset.instance_run_count(), 2);
+        save("nonzero-offset-two-runs", &read(offset)?)?;
+
         assert_eq!(before.instance_buffer_allocations, 1);
         assert_eq!(
             before.instance_buffer_allocations,
@@ -255,7 +310,7 @@ fn run() -> Result<(), String> {
         assert_eq!(reserved, 0);
         drop(budget);
         let device = metal.info.name.replace('\\', "\\\\").replace('"', "\\\"");
-        std::fs::write(out.join("report.json"),format!("{{\"passed\":true,\"device\":\"{device}\",\"geometry_uploads_before_warm\":{},\"geometry_uploads_after_warm\":{},\"targets_before_warm\":{},\"targets_after_warm\":{},\"pose_bytes_before_warm\":{},\"pose_bytes_after_warm\":{},\"cache_bytes_before_warm\":{},\"cache_bytes_after_warm\":{},\"instance_buffers_before_warm\":{},\"instance_buffers_after_warm\":{},\"warm_matrix_upload_bytes\":{},\"coalesced_instances\":2,\"coalesced_runs\":1,\"final_uploads\":2,\"ledger_committed\":{committed},\"ledger_reserved\":{reserved},\"wrong_owner_refused\":true,\"invalid_pose_refused\":true}}\n",before.geometry_uploads,after.geometry_uploads,before.target_allocations,after.target_allocations,before.pose_storage_payload_bytes,after.pose_storage_payload_bytes,before.placement_cache_payload_bytes,after.placement_cache_payload_bytes,before.instance_buffer_allocations,after.instance_buffer_allocations,after.instance_matrix_upload_bytes-before.instance_matrix_upload_bytes)).map_err(|e|e.to_string())?;
+        std::fs::write(out.join("report.json"),format!("{{\"passed\":true,\"device\":\"{device}\",\"geometry_uploads_before_warm\":{},\"geometry_uploads_after_warm\":{},\"targets_before_warm\":{},\"targets_after_warm\":{},\"pose_bytes_before_warm\":{},\"pose_bytes_after_warm\":{},\"cache_bytes_before_warm\":{},\"cache_bytes_after_warm\":{},\"instance_buffers_before_warm\":{},\"instance_buffers_after_warm\":{},\"warm_matrix_upload_bytes\":{},\"camera_only_instance_upload_bytes\":0,\"offset_runs\":2,\"coalesced_instances\":2,\"coalesced_runs\":1,\"final_uploads\":2,\"ledger_committed\":{committed},\"ledger_reserved\":{reserved},\"wrong_owner_refused\":true,\"invalid_pose_refused\":true}}\n",before.geometry_uploads,after.geometry_uploads,before.target_allocations,after.target_allocations,before.pose_storage_payload_bytes,after.pose_storage_payload_bytes,before.placement_cache_payload_bytes,after.placement_cache_payload_bytes,before.instance_buffer_allocations,after.instance_buffer_allocations,after.instance_matrix_upload_bytes-before.instance_matrix_upload_bytes)).map_err(|e|e.to_string())?;
         Ok(())
     })
 }
