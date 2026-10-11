@@ -49,3 +49,10 @@ zero distance, including its label. The native diagnostic now uses that same
 actual tool hover rather than switching to Select. Actual tool cancellation
 is distinct from these source frame names. Strict pixels remain OPEN pending
 the corrected consumer's Apple execution; no reference or tolerance changed.
+
+Actual Tool cancellation is now a distinct assertion after each source roster:
+set_tool(Select), cached base geometry upload counters unchanged, preview and
+label slots empty, and completed old label Weak owner released. This assertion
+has no source-frame pixel comparison (source cancel means zero-offset acquisition).
+The strict checker requires its result and rejects false cancellation metadata.
+It awaits actual Apple execution together with the font correction.
