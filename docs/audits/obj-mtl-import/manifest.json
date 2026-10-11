@@ -1,0 +1,416 @@
+{
+  "runtime_commit": "2e97391c45d5a006f1a9d1df6e20dc25df5922f9",
+  "source_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "archive": "records.zip",
+  "archive_sha256": "aa8fa344052a9f505de94e10b1f2f3c7e0054887ec6dca878b3c2fd3426cd9fe",
+  "entries": [
+    {
+      "path": "attempts/initial-raw-unit-observer/check.log",
+      "bytes": 1541,
+      "sha256": "6ae83b655826705dfed35ae3537fa52beeccb1fe4f105784bcabd9e030b9adc0"
+    },
+    {
+      "path": "attempts/initial-raw-unit-observer/native-obj-mtl.json",
+      "bytes": 356916,
+      "sha256": "bae4e68334567a9bdc6ae6d2ff44bf586195d2ba320c14df5d7ecb17b87470c8"
+    },
+    {
+      "path": "attempts/initial-raw-unit-observer/reopens-obj-mtl.json",
+      "bytes": 179721,
+      "sha256": "172a70dce91fbf564583eea8651852f651bd27f735a7e3af1c44c2dd60b39574"
+    },
+    {
+      "path": "attempts/initial-save-api-compile/build.log",
+      "bytes": 22804,
+      "sha256": "1d5c0aafd3e4bb636e8d5729cfe8b655ae197b111b17815a0f9ce4c1c176cc90"
+    },
+    {
+      "path": "attempts/uv-syntax-fixture-import/build.log",
+      "bytes": 20624,
+      "sha256": "1a8d2b6581dd15f9da5e5355bfd8dfea4204ab14cde610254f93966902e8e7d9"
+    },
+    {
+      "path": "cancel-resource-native.igz",
+      "bytes": 1404,
+      "sha256": "fea5b2554bffb6aabb5e2e9847b2b3691aaa1fb7bb3abe7d7a963afca7db0be5"
+    },
+    {
+      "path": "color-leaf-native.igz",
+      "bytes": 6356,
+      "sha256": "c10f006eda146571fefe05f9989a5ea3c979ed559ef9e86d0517bacaef33bc3b"
+    },
+    {
+      "path": "color-root-native.igz",
+      "bytes": 1402,
+      "sha256": "a35f6d788ed9a8487354dd2abea55beea805021f3b0d590204bd3d3c428116bb"
+    },
+    {
+      "path": "cream-root-native.igz",
+      "bytes": 1306,
+      "sha256": "ac64139b96e097c3cb37660efc9e3ac8a3bd61c561b03f03083b21b2635b441b"
+    },
+    {
+      "path": "invalid-image-root-native.igz",
+      "bytes": 682,
+      "sha256": "ecbff33773199841f923cd3667351a00ff022d18f2192261a2cd21cb854d0773"
+    },
+    {
+      "path": "logs/obj-mtl-build.log",
+      "bytes": 22804,
+      "sha256": "1d5c0aafd3e4bb636e8d5729cfe8b655ae197b111b17815a0f9ce4c1c176cc90"
+    },
+    {
+      "path": "logs/obj-mtl-final-build.log",
+      "bytes": 20123,
+      "sha256": "c84d5f44eb6eca7b8a40d1228449b00526c464907e3e3a6c28c6fbbf60721d37"
+    },
+    {
+      "path": "logs/obj-mtl-final-check.log",
+      "bytes": 165,
+      "sha256": "161d30cbe3b480134033f575d004b278ac2c6f89965725e3983770b9b6cc1688"
+    },
+    {
+      "path": "logs/obj-mtl-final-reopens.log",
+      "bytes": 32,
+      "sha256": "a5e1e162626aa4e3aba5a5edca86b1c05c67dbab076a21835caf987d54b50895"
+    },
+    {
+      "path": "logs/obj-mtl-format-test.log",
+      "bytes": 38349,
+      "sha256": "9ac33614388cd9a5f22d6aad4c59f01ffa7378522ddf7c7c99165830258bf8b2"
+    },
+    {
+      "path": "logs/obj-mtl-observer-build.log",
+      "bytes": 20123,
+      "sha256": "bff835076016e90374f1eb86813489c068d08b868f40d5a6286ec1cfb429fbec"
+    },
+    {
+      "path": "logs/obj-mtl-old-import-check.log",
+      "bytes": 71,
+      "sha256": "2d5ed92a35a863b2b6683e80863ce07c5d32a212a34ff94be11e02dbecb647d6"
+    },
+    {
+      "path": "logs/obj-mtl-old-nested-check.log",
+      "bytes": 255,
+      "sha256": "3691256c6146a2c1d549850afa49edd144d1dcf8e3c713df3ae1af7d817d2a5f"
+    },
+    {
+      "path": "logs/obj-mtl-repair-build.log",
+      "bytes": 20123,
+      "sha256": "1fcdd17d640d7ce420e712458b2a3b55e68e12762403bc4ac81075be81d676f7"
+    },
+    {
+      "path": "logs/obj-mtl-ui-test.log",
+      "bytes": 19517,
+      "sha256": "e69f1921cb9d894db020e7a5615e8aea9a6b5fad4cf20a759ece988032394506"
+    },
+    {
+      "path": "logs/obj-uv-build.log",
+      "bytes": 20624,
+      "sha256": "1a8d2b6581dd15f9da5e5355bfd8dfea4204ab14cde610254f93966902e8e7d9"
+    },
+    {
+      "path": "logs/obj-uv-check.log",
+      "bytes": 207,
+      "sha256": "d97606f85169a4d2bc778cacc1c6ace1de7248e8f43a565fc1a1f7a26f1aefb2"
+    },
+    {
+      "path": "logs/obj-uv-lexical-build.log",
+      "bytes": 20219,
+      "sha256": "57b980f5bf740ef7dfdc1cb663f901a4852960589d3adf72ce85fccdf5fc408f"
+    },
+    {
+      "path": "logs/obj-uv-lexical-check.log",
+      "bytes": 190,
+      "sha256": "2b92ea567127f533861dfe4594a03544b0d701b65faadfa5300e4f29915e0b59"
+    },
+    {
+      "path": "logs/obj-uv-lexical-native.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "logs/obj-uv-lexical-reopens.log",
+      "bytes": 32,
+      "sha256": "a5e1e162626aa4e3aba5a5edca86b1c05c67dbab076a21835caf987d54b50895"
+    },
+    {
+      "path": "logs/obj-uv-native.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "logs/obj-uv-reopens.log",
+      "bytes": 32,
+      "sha256": "a5e1e162626aa4e3aba5a5edca86b1c05c67dbab076a21835caf987d54b50895"
+    },
+    {
+      "path": "logs/obj-uv-repair-build.log",
+      "bytes": 20123,
+      "sha256": "63294c37109173a73c09ff05e0e5bc37860935e59cad7751d13a8fb143471269"
+    },
+    {
+      "path": "logs/obj-uv-single-json-check.log",
+      "bytes": 190,
+      "sha256": "b3e602b4a3ee3e8dda594ebea6278adee59b9b9517a99e6471b1a3682db20abc"
+    },
+    {
+      "path": "missing-map-root-native.igz",
+      "bytes": 1402,
+      "sha256": "0a178a5803db8166b452a6bbbf5149fce8099f6df669c767b1f4cb208bcccdce"
+    },
+    {
+      "path": "missing-sidecar-root-native.igz",
+      "bytes": 1306,
+      "sha256": "ac64139b96e097c3cb37660efc9e3ac8a3bd61c561b03f03083b21b2635b441b"
+    },
+    {
+      "path": "multipart-leaf-native.igz",
+      "bytes": 1418,
+      "sha256": "e3f1099dd32b6b362bf2b979022bcbd8820611435a71b095f3296f0f124dc6ac"
+    },
+    {
+      "path": "multipart-root-native.igz",
+      "bytes": 1126,
+      "sha256": "b3d0cd930fcc134ed08a8be55c24892dd58ce403b673b124ee0e5a1d0857c2ac"
+    },
+    {
+      "path": "native-asset-controls.json",
+      "bytes": 947,
+      "sha256": "14ee7d19181b70e4da94684ea4e858b94c28022908ad8ceb4f12283f9aa788a7"
+    },
+    {
+      "path": "native-obj-mtl.json",
+      "bytes": 360336,
+      "sha256": "ca0eb3dfcad6140b386ccbf425b716d715b3f4109a06282950736660391346ef"
+    },
+    {
+      "path": "native-uv-syntax.json",
+      "bytes": 745,
+      "sha256": "b020540e8efbfda879af168ab0f101a620902baab283e235ee23d977dba7ff64"
+    },
+    {
+      "path": "negative-uv-root-native.igz",
+      "bytes": 751,
+      "sha256": "6def93bd7f0a5382c12d068c9a40e5214ba096156be281083aad766736522c7e"
+    },
+    {
+      "path": "partial-uv-root-native.igz",
+      "bytes": 732,
+      "sha256": "7ccbc1f33e07d43223d9470679ad550585b07a0542434d97391c0edc388ae30b"
+    },
+    {
+      "path": "quoted-planar-root-native.igz",
+      "bytes": 732,
+      "sha256": "7ccbc1f33e07d43223d9470679ad550585b07a0542434d97391c0edc388ae30b"
+    },
+    {
+      "path": "reopens-obj-mtl.json",
+      "bytes": 179721,
+      "sha256": "172a70dce91fbf564583eea8651852f651bd27f735a7e3af1c44c2dd60b39574"
+    },
+    {
+      "path": "reset-library-root-native.igz",
+      "bytes": 1402,
+      "sha256": "a35f6d788ed9a8487354dd2abea55beea805021f3b0d590204bd3d3c428116bb"
+    },
+    {
+      "path": "resource-lifetime-controls.json",
+      "bytes": 141,
+      "sha256": "0af3efff998e1f963b780210cd7156bb5fb0bbdeacdda978e58a4d1284cdaf5b"
+    },
+    {
+      "path": "unknown-material-root-native.igz",
+      "bytes": 1306,
+      "sha256": "ac64139b96e097c3cb37660efc9e3ac8a3bd61c561b03f03083b21b2635b441b"
+    },
+    {
+      "path": "windows-options-leaf-native.igz",
+      "bytes": 1203,
+      "sha256": "0d93beb1bb5614eeacf59dfc993379ff1d70559978a9059716563457794acff8"
+    },
+    {
+      "path": "windows-options-root-native.igz",
+      "bytes": 751,
+      "sha256": "80e1e424599f90a65f86b54d6e39b00fd7e3283f54ad84d445c211a635367762"
+    }
+  ],
+  "sources": [
+    {
+      "path": "Cargo.lock",
+      "bytes": 139919,
+      "sha256": "78e71fbc665418f7508a52274bf60aee0a30729fbf3e29e65829b32e503c1d39",
+      "commit": "2e97391c45d5a006f1a9d1df6e20dc25df5922f9"
+    },
+    {
+      "path": "crates/ingetrazo-formats/src/igz.rs",
+      "bytes": 70553,
+      "sha256": "5d0e1e8c711101da85cf5e3190a45fc18ec4043f0fbfcb28b05c0b4b8a0c7165",
+      "commit": "2e97391c45d5a006f1a9d1df6e20dc25df5922f9"
+    },
+    {
+      "path": "crates/ingetrazo-formats/src/igz/assets.rs",
+      "bytes": 8879,
+      "sha256": "e137e8393f08a3b10347b32a3665644f0100918abd9e6d80afcb1d8130ff197b",
+      "commit": "2e97391c45d5a006f1a9d1df6e20dc25df5922f9"
+    },
+    {
+      "path": "crates/ingetrazo-formats/src/obj.rs",
+      "bytes": 40934,
+      "sha256": "7d335bd3227b07d191837eafd772cb7b10aceb7d6f99de94f268b8fadd795ad5",
+      "commit": "2e97391c45d5a006f1a9d1df6e20dc25df5922f9"
+    },
+    {
+      "path": "crates/ingetrazo-formats/src/obj_material.rs",
+      "bytes": 7680,
+      "sha256": "262472dd31467f5a8c4cd8045e50ac5e7d4bf6ae3ae8f0f0c6b3f68ba1851491",
+      "commit": "2e97391c45d5a006f1a9d1df6e20dc25df5922f9"
+    },
+    {
+      "path": "crates/ingetrazo-gui/Cargo.toml",
+      "bytes": 2681,
+      "sha256": "68d23e2247dea79d38ca50731562afb0501d7bb2b34a316d550cb0b6de1142c6",
+      "commit": "2e97391c45d5a006f1a9d1df6e20dc25df5922f9"
+    },
+    {
+      "path": "crates/ingetrazo-gui/examples/context_document_lifecycle.rs",
+      "bytes": 27168,
+      "sha256": "5d0b5cbda92457f2c7ab77a936f0fa6e8ed71c74d0214e1a7bff8c6e4dc81752",
+      "commit": "2e97391c45d5a006f1a9d1df6e20dc25df5922f9"
+    },
+    {
+      "path": "crates/ingetrazo-gui/examples/context_document_lifecycle/nested_import.rs",
+      "bytes": 13176,
+      "sha256": "7969f734ac4fc6a0d9c89ae1257e9f08b46d92173cb31acbb9905743ef4ac705",
+      "commit": "2e97391c45d5a006f1a9d1df6e20dc25df5922f9"
+    },
+    {
+      "path": "crates/ingetrazo-gui/examples/context_document_lifecycle/obj_mtl.rs",
+      "bytes": 10082,
+      "sha256": "ec0e6eff27b0fa5a3aa7c82fc603bc07d97ef8bfda3ba466cf2263e202d3d3c9",
+      "commit": "2e97391c45d5a006f1a9d1df6e20dc25df5922f9"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/import_units.rs",
+      "bytes": 21456,
+      "sha256": "03ee7ee2497a5cde95bf97859776e6c85a5b15698899e90611cc160501e21a0e",
+      "commit": "2e97391c45d5a006f1a9d1df6e20dc25df5922f9"
+    },
+    {
+      "path": "scripts/check-obj-mtl-import.py",
+      "bytes": 3737,
+      "sha256": "7cfea4916a2d7a90befe84e270178250242ae49f8d1433416edcc756d73975b4",
+      "commit": "2e97391c45d5a006f1a9d1df6e20dc25df5922f9"
+    },
+    {
+      "path": "scripts/reference-obj-mtl-import.py",
+      "bytes": 5653,
+      "sha256": "6642dc0f07fe0fe964e3af5eadaa0d15823d225436d7f7893bee6eda8000f0a6",
+      "commit": "2e97391c45d5a006f1a9d1df6e20dc25df5922f9"
+    },
+    {
+      "path": "scripts/reference-obj-mtl-reopens.py",
+      "bytes": 1797,
+      "sha256": "0fb6833f2674e563ed41cbf5c26dc3e03800241e2ac14fcd3b6a214216d6c707",
+      "commit": "2e97391c45d5a006f1a9d1df6e20dc25df5922f9"
+    },
+    {
+      "path": "scripts/reference-obj-uv-syntax.py",
+      "bytes": 1182,
+      "sha256": "1cdb55e68e6f8525cd14a1794672dbb624ab0081def5fd3ac9a23059c279568f",
+      "commit": "2e97391c45d5a006f1a9d1df6e20dc25df5922f9"
+    }
+  ],
+  "binary": {
+    "path": "/tmp/ingetrazo-ai-registry-target/debug/examples/context_document_lifecycle",
+    "bytes": 63880168,
+    "sha256": "8ba893e5ac2750fdddef0b014c4958370eec026f429f6213e2df034027e0beef"
+  },
+  "results": {
+    "cases": 15,
+    "states": 75,
+    "malformed_sidecar_controls": 2,
+    "asset_ownership_controls": 15,
+    "actual_original_reopens": 15,
+    "negative_controls": 11,
+    "passed": true,
+    "uv_syntax_controls": 8
+  },
+  "scope": "numeric int/float representation equivalence only; no GPU or full P22 claim; native malformed controls independently assert refusal/state preservation, source exception class label is descriptive metadata",
+  "checker_commit": "2e97391c45d5a006f1a9d1df6e20dc25df5922f9",
+  "uv_lexical_runtime": {
+    "python": "3.13.13 | packaged by conda-forge | (main, Apr  8 2026, 02:00:33) [GCC 14.3.0]",
+    "unicode_version": "15.1.0",
+    "int_max_str_digits": 4300,
+    "decimal_zero_blocks": [
+      48,
+      1632,
+      1776,
+      1984,
+      2406,
+      2534,
+      2662,
+      2790,
+      2918,
+      3046,
+      3174,
+      3302,
+      3430,
+      3558,
+      3664,
+      3792,
+      3872,
+      4160,
+      4240,
+      6112,
+      6160,
+      6470,
+      6608,
+      6784,
+      6800,
+      6992,
+      7088,
+      7232,
+      7248,
+      42528,
+      43216,
+      43264,
+      43472,
+      43504,
+      43600,
+      44016,
+      65296,
+      66720,
+      68912,
+      69734,
+      69872,
+      69942,
+      70096,
+      70384,
+      70736,
+      70864,
+      71248,
+      71360,
+      71472,
+      71904,
+      72016,
+      72784,
+      73040,
+      73120,
+      73552,
+      92768,
+      92864,
+      93008,
+      120782,
+      120792,
+      120802,
+      120812,
+      120822,
+      123200,
+      123632,
+      124144,
+      125264,
+      130032
+    ]
+  }
+}

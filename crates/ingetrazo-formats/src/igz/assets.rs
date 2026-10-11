@@ -8,7 +8,7 @@ use std::{
     path::Path,
 };
 
-fn file_name(name: &str) -> String {
+pub(super) fn file_name(name: &str) -> String {
     let mut safe: String = name
         .chars()
         .filter(|c| c.is_alphanumeric() || " ._-".contains(*c))
