@@ -1,0 +1,11 @@
+{
+  "source": "f1c11293b85c1ada5db540eba8e432baa1601f9a",
+  "git_object_sha256": {
+    ".github/workflows/parity.yml": "efcf0c3ba68984619aa9a662ae6251ec0e4f025879620046916afdbcb00c373e",
+    ".github/workflows/metal-compute-consumer.yml": "bce24078146f16afab7cd9998386a03a0aa2b69c0a6954bfc517b009c452efb9",
+    "scripts/check-document-axes-integration.py": "3797902adbf7d6c7f27074cf0f28b3856daa9dd8fb216e393f3c1cd05b8285f4",
+    "crates/ingetrazo-gui/examples/shareback_annotation_fixture.rs": "987dfdc65adadf4915784f9bdfcab70aa09f4905e33fa752ff58c3b54c9cc706"
+  },
+  "original_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "binding": "Actual GitHub run head plus literal joint21 binary digest/source archive receipt; no inference of portable GPU parity"
+}
