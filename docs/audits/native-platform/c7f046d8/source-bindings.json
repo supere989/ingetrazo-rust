@@ -1,0 +1,25 @@
+{
+  "commit": "c7f046d87325e47c7345123f74ecd20d8521073f",
+  "files": {
+    ".github/workflows/parity.yml": {
+      "bytes": 52807,
+      "sha256": "b83ea6ff0e6d8e98986178a3b79b9a0a01518d9b831791570b6ab7da2d9df622"
+    },
+    ".github/workflows/metal-compute-consumer.yml": {
+      "bytes": 4532,
+      "sha256": "bce24078146f16afab7cd9998386a03a0aa2b69c0a6954bfc517b009c452efb9"
+    },
+    "scripts/check-document-axes-integration.py": {
+      "bytes": 23462,
+      "sha256": "3f530765bfe7de9e13d4de7804f81afa37fab34e08bc2f981f581cf2183d6aaa"
+    },
+    "crates/ingetrazo-formats/src/igz.rs": {
+      "bytes": 70134,
+      "sha256": "3dfdd6ed5d8e9a52a77cf3491309a454490deb95791331e12d81667b2040a290"
+    },
+    "crates/ingetrazo-gui/src/import_units.rs": {
+      "bytes": 15810,
+      "sha256": "2acb628b925be33182b4359c3de423a0f6dcb5c3614ee8c37c39d286047cd9d1"
+    }
+  }
+}

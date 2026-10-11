@@ -1,0 +1,23 @@
+{
+  "runtime_commit": "792010fb",
+  "proof_commit": "e5b11025",
+  "archive_sha256": "d4469bdfc01bf7df20b6d9f7f330fd1f277918b35601f6f03f03cdb314918243",
+  "authenticated_members": 343,
+  "raw_bytes": 1311423,
+  "raw_bytes_equal_terminal_copy": true,
+  "runtime_git_bindings": 10,
+  "original_git_bindings": 5,
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "binary_sha256": "41356f4937fd68e88cceb9fcb53fc764ceca6f5bfdafac59492755bfdd1eb2a6",
+  "binary_matches_current_file": true,
+  "strict_inventory": {
+    "typed_states": 11,
+    "decoded_rgba_png_assets": 110,
+    "state_mutations": 6,
+    "asset_byte_mutations": 110,
+    "native_controls": 5
+  },
+  "actual_owner_ui_log": "appearance_preferences::tests::actual_appearance_choices_cancel_restart_and_composer_cache:1 PASS,345 filtered; observed only",
+  "scope": "Controller/actual egui/asset proof; source simulated OS follower and native RawInput, not desktop live-theme or whole application layout/pixels. Composer shared size/control geometry and Text icon connected; all toolbar tools/layout excluded.",
+  "review": "accepted; no builds, tests, checker execution, captures or runtime edits by independent reviewer"
+}
