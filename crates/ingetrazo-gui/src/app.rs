@@ -1597,7 +1597,7 @@ mod tests {
 mod document_camera_tests {
     use super::*;
     #[test]
-    fn visible_camera_is_saved_restored_and_reset_for_new_document() {
+    fn visible_camera_is_saved_retained_through_geometry_history_and_reset_for_new_document() {
         let path = std::env::temp_dir().join(format!("camera-{}.igz", uuid::Uuid::new_v4()));
         let mut app = IngeTrazoApp::new();
         app.camera.target = DVec3::new(3.0,4.0,5.0);
@@ -1610,12 +1610,18 @@ mod document_camera_tests {
         assert_eq!(reopened.camera.distance, 42.0);
         assert_eq!(reopened.camera.yaw, 0.6);
         assert!(!reopened.camera.perspective);
+        let before_mesh = app.scene.mesh.clone();
         app.save_undo_state();
         app.scene.mesh.add_vertex(DVec3::X);
+        let after_mesh = app.scene.mesh.clone();
         app.camera.target=DVec3::new(8.,9.,10.);
         app.undo();
-        assert_eq!(app.camera.target,DVec3::new(3.,4.,5.));
+        assert_eq!(app.scene.mesh, before_mesh);
+        // Original geometry history does not own later live camera motion.
+        // The independent saved-view history fixture covers this source law.
+        assert_eq!(app.camera.target,DVec3::new(8.,9.,10.));
         app.redo();
+        assert_eq!(app.scene.mesh, after_mesh);
         assert_eq!(app.camera.target,DVec3::new(8.,9.,10.));
         // Original views/main_window.py clears history at a document boundary.
         app.new_document();
