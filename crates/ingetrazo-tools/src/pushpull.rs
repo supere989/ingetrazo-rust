@@ -646,6 +646,7 @@ impl PushPullTool {
             };
             if let Some(id) = id {
                 candidate.edges[id].attrs = edge.attrs.clone();
+                if untouched {candidate.edges[id].history_id=edge.history_id;}
                 candidate.edges[id].soft = untouched&&edge.soft;
                 candidate.edges[id].curve_id = untouched.then_some(edge.curve_id).flatten();
                 candidate.edges[id].layer = untouched.then(||edge.layer.clone()).flatten();
