@@ -11,6 +11,34 @@ use std::{
     mem::ManuallyDrop,
     sync::{Arc, Mutex},
 };
+/// Retain native identities as well as comparing them: address reuse after a
+/// context drop cannot make a new context alias this renderer's cache.
+struct Owner {
+    device: Retained<ProtocolObject<dyn MTLDevice>>,
+    queue: Retained<ProtocolObject<dyn MTLCommandQueue>>,
+    budget: Arc<Mutex<MemoryBudget>>,
+    poison: Arc<std::sync::atomic::AtomicBool>,
+}
+impl Owner {
+    fn new(metal: &NativeMetal) -> Self {
+        Self {
+            device: metal.device.clone(),
+            queue: metal.queue.clone(),
+            budget: metal.budget.clone(),
+            poison: metal.poisoned.clone(),
+        }
+    }
+    fn validate(&self, metal: &NativeMetal) -> Result<(), String> {
+        if !std::ptr::eq(&*self.device, &*metal.device)
+            || !std::ptr::eq(&*self.queue, &*metal.queue)
+            || !Arc::ptr_eq(&self.budget, &metal.budget)
+            || !Arc::ptr_eq(&self.poison, &metal.poisoned)
+        {
+            return Err("Metal world native owner mismatch".into());
+        }
+        Ok(())
+    }
+}
 struct Image {
     raw: ManuallyDrop<Retained<ProtocolObject<dyn MTLTexture>>>,
     budget: Arc<Mutex<MemoryBudget>>,
@@ -47,6 +75,7 @@ pub struct Stats {
 }
 #[derive(Default)]
 pub struct World {
+    owner: Option<Arc<Owner>>,
     mesh: Option<Arc<Mesh>>,
     key: Option<u64>,
     pipeline: Option<Arc<Pipeline>>,
@@ -54,6 +83,7 @@ pub struct World {
     pub stats: Stats,
 }
 pub struct Prepared {
+    owner: Arc<Owner>,
     mesh: Option<Arc<Mesh>>,
     pipeline: Arc<Pipeline>,
     target: Arc<Target>,
@@ -76,6 +106,10 @@ impl World {
     where
         F: FnOnce() -> Result<MeshRenderBuffer, String>,
     {
+        // Owner refusal precedes any cache retirement, collection or resource work.
+        if let Some(owner) = &self.owner {
+            owner.validate(metal)?;
+        }
         super::world_admission::pose(mvp, extent, clear)?;
         if metal.poisoned.load(std::sync::atomic::Ordering::Acquire) {
             return Err("Metal world admission poisoned".into());
@@ -136,6 +170,10 @@ impl World {
                 extent,
             })
         };
+        let owner = self
+            .owner
+            .clone()
+            .unwrap_or_else(|| Arc::new(Owner::new(metal)));
         // Publish only after all fallible resource admission succeeds.
         if allocated {
             self.targets.push(target.clone());
@@ -144,11 +182,13 @@ impl World {
         if self.key != Some(key) {
             self.stats.geometry_uploads += u64::from(mesh.is_some());
         }
+        self.owner = Some(owner.clone());
         self.key = Some(key);
         self.mesh = mesh.clone();
         self.pipeline = Some(pipeline.clone());
         self.stats.prepared += 1;
         Ok(Some(Arc::new(Prepared {
+            owner,
             mesh,
             pipeline,
             target,
@@ -163,6 +203,9 @@ impl World {
     }
 }
 impl Prepared {
+    pub fn validate_owner(&self, metal: &NativeMetal) -> Result<(), String> {
+        self.owner.validate(metal)
+    }
     pub fn texture(&self) -> &ProtocolObject<dyn MTLTexture> {
         &self.target.color.raw
     }
@@ -178,6 +221,9 @@ impl Prepared {
         command: &ProtocolObject<dyn MTLCommandBuffer>,
         depth_enabled: bool,
     ) -> Result<(), String> {
+        if !std::ptr::eq(&*command.commandQueue(), &*self.owner.queue) {
+            return Err("Metal world command queue mismatch".into());
+        }
         let pass = MTLRenderPassDescriptor::new();
         let color = unsafe { pass.colorAttachments().objectAtIndexedSubscript(0) };
         color.setTexture(Some(&self.target.color.raw));
@@ -353,6 +399,7 @@ impl Prepared {
         metal: &NativeMetal,
         depth_enabled: bool,
     ) -> Result<Diagnostic, String> {
+        self.owner.validate(metal)?;
         let (w, h) = self.extent();
         if w > 4096 || h > 4096 {
             return Err("World diagnostic extent exceeds4096".into());
