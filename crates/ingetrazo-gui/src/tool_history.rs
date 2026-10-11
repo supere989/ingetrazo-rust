@@ -158,12 +158,14 @@ impl IngeTrazoApp {
         if self.active_tool.completed(){self.set_tool(ingetrazo_tools::base::ToolType::Select);}
     }
     pub fn dispatch_tool_move(&mut self,context:&ToolContext){
+        if self.active_tool_type==ingetrazo_tools::base::ToolType::Dimension {self.active_tool.note_camera_forward((self.camera.target.as_vec3()-self.camera.eye().as_vec3()).as_dvec3());}
         let placement_before=self.active_tool.placement_only_preview();let version=self.scene.version;let images=self.scene.image_planes.publication_revision();self.active_tool.on_move(&mut self.scene,context);
         if self.scene.version!=version{if placement_before||self.active_tool.placement_only_preview(){self.bump_placement_revision();}else{self.bump_model_revision();}}else if self.scene.image_planes.publication_revision()!=images{self.bump_image_presentation_revision();}
         if self.active_tool.error_message().is_none(){if let Some(status)=self.active_tool.take_status_message(){self.status_message=status;}}
     }
 
     pub fn dispatch_tool_click(&mut self, context: &ToolContext) {
+        if self.active_tool_type==ingetrazo_tools::base::ToolType::Dimension {self.active_tool.note_camera_forward((self.camera.target.as_vec3()-self.camera.eye().as_vec3()).as_dvec3());}
         // Text acquisition and its dialog are transient; only OK owns a model snapshot.
         if self.active_tool_type == ingetrazo_tools::base::ToolType::Text {
             if self.annotation_editor.is_some() { return; }

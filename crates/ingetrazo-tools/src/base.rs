@@ -273,6 +273,8 @@ pub trait Tool: Send + Sync {
     fn preview_mesh(&self) -> Option<&Mesh> {
         None
     }
+    /// Camera-facing direction for source annotation frontal-plane placement.
+    fn note_camera_forward(&mut self,_forward:DVec3){}
     fn value_label(&self) -> Option<(String, DVec3)> {
         None
     }

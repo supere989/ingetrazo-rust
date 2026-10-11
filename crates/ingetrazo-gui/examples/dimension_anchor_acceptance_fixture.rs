@@ -9,6 +9,10 @@ fn points(app: &IngeTrazoApp, a: DVec3, b: DVec3) {
 }
 fn main() {
     let dir = std::path::PathBuf::from(std::env::args().nth(1).unwrap());
+    if std::env::args().nth(2).as_deref() == Some("--preview") {
+        dimension_preview(&dir);
+        return;
+    }
     if std::env::args().nth(2).as_deref() == Some("--admission") {
         admission(&dir);
         return;
@@ -255,6 +259,112 @@ fn admission(dir: &std::path::Path) {
     }
     std::fs::write(
         dir.join("admission-native.json"),
+        serde_json::to_vec_pretty(&json!({"cases":source["cases"],"states":rows})).unwrap(),
+    )
+    .unwrap();
+}
+
+fn dimension_preview(dir: &std::path::Path) {
+    use ingetrazo_tools::base::{ToolContext, ToolType};
+    use serde_json::{json, Value};
+    let source: Value =
+        serde_json::from_slice(&std::fs::read(dir.join("preview-original.json")).unwrap()).unwrap();
+    let mut rows = Vec::new();
+    for c in source["cases"].as_array().unwrap() {
+        let case = c["case"].as_str().unwrap();
+        let mut app = IngeTrazoApp::new();
+        app.system_clipboard = None;
+        app.scene =
+            ingetrazo_formats::igz::load_igz(&dir.join(format!("{case}-input.igz"))).unwrap();
+        if case == "nested" {
+            app.scene.select(SelectionItem::Group(0));
+            app.begin_component_edit();
+            app.scene.select(SelectionItem::Group(0));
+            app.begin_component_edit();
+        }
+        app.camera.target = DVec3::ZERO;
+        app.camera.distance = 20.;
+        app.camera.yaw = c["yaw"].as_f64().unwrap();
+        app.camera.pitch = c["pitch"].as_f64().unwrap();
+        app.camera.perspective = false;
+        app.camera.aspect = 800. / 600.;
+        app.set_tool(ToolType::Dimension);
+        let context = |name: &str| {
+            let p = &c[name];
+            ToolContext::new(
+                DVec3::new(
+                    p[0].as_f64().unwrap(),
+                    p[1].as_f64().unwrap(),
+                    p[2].as_f64().unwrap(),
+                ),
+                ingetrazo_core::math::Ray::new(DVec3::new(50., 50., 50.), -DVec3::Z),
+            )
+        };
+        let record = |app: &IngeTrazoApp, phase: &str| {
+            let label = app.active_tool.distance_label().map(|(_, p)| {
+                let plan = ingetrazo_gui::annotation_plan_for_probe(
+                    app,
+                    egui::Rect::from_min_size(egui::Pos2::ZERO, egui::vec2(800., 600.)),
+                )
+                .unwrap();
+                let texts: Vec<_> = plan
+                    .operations
+                    .iter()
+                    .filter_map(|o| {
+                        if let ingetrazo_render::annotations::Primitive::Text {
+                            text, color, ..
+                        } = &o.primitive
+                        {
+                            if *color == [15, 20, 27, 255] {
+                                Some(text.to_string())
+                            } else {
+                                None
+                            }
+                        } else {
+                            None
+                        }
+                    })
+                    .collect();
+                assert_eq!(texts.len(), 1);
+                json!({"text":texts[0],"point":p.to_array()})
+            });
+            json!({"case":case,"phase":phase,"label":label,"lines":app.active_tool.rubber_band_lines().iter().map(|(a,b)|[a.to_array(),b.to_array()]).collect::<Vec<_>>(),"dimensions":app.scene.dimensions.iter().map(|d|json!({"a":d.start.to_array(),"b":d.end.to_array(),"offset":d.offset.to_array(),"axis":d.axis})).collect::<Vec<_>>(),"undo":app.undo_stack.len(),"redo":app.redo_stack.len()})
+        };
+        app.dispatch_tool_move(&context("a"));
+        rows.push(record(&app, "before"));
+        app.dispatch_tool_click(&context("a"));
+        rows.push(record(&app, "first"));
+        app.dispatch_tool_move(&context("b"));
+        rows.push(record(&app, "span"));
+        app.dispatch_tool_click(&context("b"));
+        rows.push(record(&app, "second"));
+        app.dispatch_tool_move(&context("cursor"));
+        rows.push(record(&app, "preview"));
+        app.dispatch_tool_move(&context("cursor"));
+        rows.push(record(&app, "same"));
+        app.dispatch_tool_cancel();
+        rows.push(record(&app, "cancel"));
+        app.dispatch_tool_move(&context("a"));
+        app.dispatch_tool_click(&context("a"));
+        app.dispatch_tool_move(&context("b"));
+        app.dispatch_tool_click(&context("b"));
+        app.dispatch_tool_move(&context("cursor"));
+        app.dispatch_tool_click(&context("cursor"));
+        rows.push(record(&app, "commit"));
+        app.undo();
+        rows.push(record(&app, "undo"));
+        app.redo();
+        rows.push(record(&app, "redo"));
+        if case == "nested" {
+            while !app.component_edit_stack.is_empty() {
+                app.finish_component_edit();
+            }
+        }
+        app.save_to_path(&dir.join(format!("{case}-native.igz")));
+        assert!(dir.join(format!("{case}-native.igz")).exists());
+    }
+    std::fs::write(
+        dir.join("preview-native.json"),
         serde_json::to_vec_pretty(&json!({"cases":source["cases"],"states":rows})).unwrap(),
     )
     .unwrap();
