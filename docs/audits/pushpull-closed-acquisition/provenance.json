@@ -1,0 +1,29 @@
+{
+  "runtime_commit": "d1d126f591b5e478bb524709ad28c915ce546e56",
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "source_sha256": {
+    "crates/ingetrazo-core/src/heal.rs": "4ecb02fc3324937d0bf8be8aeb0e4e69a5f5517e68532afb2639bff8cced7ab9",
+    "crates/ingetrazo-tools/src/pushpull.rs": "e4263f4ac800f0b5dfb45a97aa1f4e75e34e18d3d9acddf6adaec7b81c164532",
+    "crates/ingetrazo-tools/src/pushpull/open_rebuild.rs": "97a75067115ba06d86b85cadb0ec28d6ede41b7309ab9e4a6aea263a5e4dd84f",
+    "crates/ingetrazo-tools/src/base.rs": "5a8e61964c60db946cabbee6389b1a810bc220fe64a86ed5c22420ae4fb66b6a",
+    "crates/ingetrazo-gui/src/tool_history.rs": "069ed891f11ec442e815846da3d8cfcb7527c5f92a793fb331c2aa8833c72b87",
+    "crates/ingetrazo-gui/examples/pushpull_closed_acquisition.rs": "a030c9672c1069c4139623a0e7fc582a461b0b69b24371f70bf68339b895a5b8",
+    "scripts/reference-pushpull-closed-acquisition.py": "b5f6d1a0ecdefc6738b489c4a488e8600de8099bc8e842a71e463513f023a3d0",
+    "scripts/check-pushpull-closed-acquisition.py": "f56ec04f371aace0d14f16974b47ec209cb7ea64418b54e82eeac65d595095a0"
+  },
+  "native_binary_sha256": "92f44bb1cc33d84ecdf7fa1166b47a8fbdbb05ac14bbf0927b4a402eb688ca92",
+  "python_binary_sha256": "efe2fd6232dce3f2db8d76d694b830b16ee8736a2debbf74dc667be48304323f",
+  "build_policy": "Reused target; jobs2; debug0; incremental0; named examples and one affected identity test only",
+  "scopes": {
+    "source": "Real pinned Qt tool on_click/on_cancel/_commit and source History, no source code modifications",
+    "native": "Actual IngeTrazoApp dispatch Click/Move/VCB/Cancel/Undo/Redo; no OS gesture or rendered preview claim",
+    "comparison": "Exact oriented cyclic face/holes/attrs/interior inventories; no quantization/tolerance",
+    "top_out": "Unproved: both new causal probes commit their full request in original",
+    "remaining": [
+      "annulus-flush-neighbour: source6/native19",
+      "partition-cap-inward: source6/native11",
+      "native visible sweep suppression belongs to renderer owners",
+      "full guide/ray-based acquisition/gesture and arbitrary oblique orientation robustness remain open"
+    ]
+  }
+}

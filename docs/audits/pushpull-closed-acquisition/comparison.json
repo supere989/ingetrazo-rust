@@ -1,0 +1,41 @@
+{
+  "acquisition_cases": 5,
+  "exact_closed_acquisition_model_cases": 3,
+  "exact_app_cancel_undo_redo_cases": 3,
+  "negative_controls": [
+    "empty",
+    "duplicate",
+    "wrong_normal",
+    "wrong_acquisition",
+    "cancel_reverts",
+    "lost_back_paint",
+    "missing_wall",
+    "inward_commit",
+    "wrong_undo",
+    "lost_redo",
+    "extra_history",
+    "lost_invalidation"
+  ],
+  "remaining": [
+    {
+      "name": "annulus-flush-neighbour",
+      "source_faces": 6,
+      "native_faces": 19,
+      "exact_fields": false,
+      "source_distance": 0.5,
+      "source_top_out": false,
+      "source_status": null
+    },
+    {
+      "name": "partition-cap-inward",
+      "source_faces": 6,
+      "native_faces": 11,
+      "exact_fields": false,
+      "source_distance": -4,
+      "source_top_out": false,
+      "source_status": null
+    }
+  ],
+  "non_ctrl_accepted_top_out_proved": false,
+  "scope": "Actual source entry/commit versus native app dispatch/VCB; oriented face/holes/attributes/interior inventories, no renderer or OS gesture claim"
+}
