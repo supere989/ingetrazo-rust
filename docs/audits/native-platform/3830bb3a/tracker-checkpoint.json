@@ -1,0 +1,154 @@
+{
+  "publication": "3830bb3a1ee838bfc52be7bf8d74ef8a58556bd3",
+  "scope": "unchanged finite criteria/status checkpoint, not full release promotion",
+  "rows": {
+    "P01": {
+      "status": "Verified",
+      "criterion": "One combined fixture covers all 28 top-level source writer fields and passes six native edit/save cases through actual original reserialization, including shared prototypes, saved-view references, Unicode metadata and PhotoMesh resources; four archive corruptions reject. [Combined fields](audits/igz-complete-fields/README.md). Eleven context lifecycle controls and four original reopens now cover whole-document Save/New/Open/Close; one-use chooser consent and failed-save cleanup have focused guards. [Lifecycle](audits/context-document-lifecycle/README.md). Nine edited saves still cover all four canonical models. Atomic nested Save/Save As and literal/generated saved-view reference publication now have actual consumer/original-reopen proof; unchanged documents retain exact raw fields. [Nested Save](audits/context-document-save/README.md), [view references](audits/saved-view-identities/README.md), [edited saves](audits/igz-edit-preservation/README.md). Broader editing/unsupported records and general unfinished-tool lifecycle remain open. [formats/igz.rs](../crates/ingetrazo-formats/src/igz.rs): Four original models now preserve all recursive source fields/assets and reopen through original Python. Fresh/edit fixtures pass. Unknown-schema edits fail closed; full editing corpus and component semantics remain open."
+    },
+    "P02": {
+      "status": "Verified",
+      "criterion": "Overlapping/disjoint/transformed solid tests with independently checked volumes, watertightness, attributes and undo."
+    },
+    "P03": {
+      "status": "Verified",
+      "criterion": "Existing inward limits, endpoint/partition collapse, reversed/open-sheet/front/back and source GPU sweep evidence remains accepted. Both sequential stacked-wall pushes now match exact source fields; valid Ctrl step +0.5 internal partition winding is corrected. Strict triangle-manifold admission admits valid host-hole contact, and weld\u2192stitch repairs collapsed split host edges before publication. Nine physical source shapes match, eight direct regression inventories match, and six integrated actual app/history cases include nested linked Finish and exact identity restoration; thirteen corruptions reject. [Current workflow](audits/pushpull-solid-workflows/README.md), [integration](audits/feature-workflow-integration/README.md). Operative holed-wall classification matches exactly while the private-helper ring-winding discrepancy is retained. Two invalid Ctrl cases remain atomic errors; the current wedge case is an unchanged zero-limit no-op, correcting older refusal wording. Remaining slanted/permutation corpus, non-Ctrl top-out and explicit source data-preservation divergences remain open. [Earlier endpoints](audits/pushpull-endpoints/README.md), [partitions](audits/pushpull-partition-collapse/README.md), [inward](audits/selection-inward-integration/README.md)."
+    },
+    "P04": {
+      "status": "Partial",
+      "criterion": "Every tool, tray, composer, script and import is one reversible transaction; cancellations preserve state."
+    },
+    "P05": {
+      "status": "Implemented",
+      "criterion": "Port degenerate, holes, non-manifold and large-scene cases; compare outputs/invariants against Python."
+    },
+    "P06": {
+      "status": "Implemented",
+      "criterion": "Interactive workflows on arbitrary planes; VCB input, cancel/repeat and inference match baseline."
+    },
+    "P07": {
+      "status": "Implemented",
+      "criterion": "Verify full 3D drawing planes, guide intersections, pixel tolerances and locale-specific input against baseline."
+    },
+    "P08": {
+      "status": "Implemented",
+      "criterion": "Verify nested/transformed groups, copied arrays, angled rotations, face holes and cancellations interactively."
+    },
+    "P09": {
+      "status": "Verified",
+      "criterion": "Generate proper rounded corners using radius/segments; topology, volume and undo tests."
+    },
+    "P10": {
+      "status": "Verified",
+      "criterion": "Sweep straight/bent/closed paths with correct frames, joins and manifold topology."
+    },
+    "P11": {
+      "status": "Verified",
+      "criterion": "Actual face intersections, cap rebuilding and separated piece outputs; regression corpus and undo."
+    },
+    "P12": {
+      "status": "Verified",
+      "criterion": "Shared definitions, nested edit context, instance transforms, linked copies and paste preview preserved across saves."
+    },
+    "P13": {
+      "status": "Verified",
+      "criterion": "Saved camera/style/visibility roundtrips; locked-layer picking/edit rejection; create/update/delete scene workflows."
+    },
+    "P14": {
+      "status": "Verified",
+      "criterion": "Names, both face sides, UV projection, tile size, opacity, edit-and-restamp and portable archives preserved."
+    },
+    "P15": {
+      "status": "Implemented",
+      "criterion": "Verify values, glyph picking, moves, editing, styles, occlusion and original schema semantics."
+    },
+    "P16": {
+      "status": "Verified",
+      "criterion": "Saved views restored; cursor pivot, zoom extents and perspective modes verified with reference sessions."
+    },
+    "P17": {
+      "status": "Verified",
+      "criterion": "Actual eye-height navigation modes, input mapping and cancellation match baseline."
+    },
+    "P18": {
+      "status": "Implemented",
+      "criterion": "Image comparisons for occlusion, silhouettes, soft edges, nested groups and styles; large-scene timing."
+    },
+    "P19": {
+      "status": "Partial",
+      "criterion": "True clipped geometry, closed cut fill and sheet section marks with preservation and tests."
+    },
+    "P20": {
+      "status": "Partial",
+      "criterion": "Full receiver corpus, cutout residuals, portable depth fallback, photo readiness, vector-art, full panel/location gestures and Metal remain OPEN."
+    },
+    "P21": {
+      "status": "Partial",
+      "criterion": "Complete supported legacy/VFF records, annotations, views, billboard/images, empty/library semantics, rendered import workflow and representative streaming performance; preserve complete imported inventory."
+    },
+    "P22": {
+      "status": "Implemented",
+      "criterion": "Original fixture comparisons including transforms, materials, coplanar merging, DXF entity coverage and external reopen."
+    },
+    "P23": {
+      "status": "Partial",
+      "criterion": "Parse baseline-supported DAE/GLB structures and preserve mesh/material/transform semantics."
+    },
+    "P24": {
+      "status": "Partial",
+      "criterion": "Correct extension/container behavior, hierarchy, textures/PBR/geolocation and independent external-reader validation."
+    },
+    "P25": {
+      "status": "Partial",
+      "criterion": "Implement baseline-supported import workflows and dependency/error handling; format fixtures."
+    },
+    "P26": {
+      "status": "Partial",
+      "criterion": "Mixed parked/active tagging, active-context IFC export, arbitrary precision and inconsistent shell orientation, broader components and actual context-entry gestures remain OPEN."
+    },
+    "P27": {
+      "status": "Partial",
+      "criterion": "Complete import/datum/path/profile/DEM/basemap workflows with persistence and real survey fixtures."
+    },
+    "P28": {
+      "status": "Partial",
+      "criterion": "Load/save original sheets; exact scale, view style, vector HLR, section marks, dimensions, callouts and title blocks match."
+    },
+    "P29": {
+      "status": "Partial",
+      "criterion": "Scaled vector PDF and layer-class sheet DXF independently reopened; actual PNG/JPG capture."
+    },
+    "P30": {
+      "status": "Verified",
+      "criterion": "Render a retained fixture in actual Blender; camera/material/lighting consistency, cancel, errors and output verification."
+    },
+    "P31": {
+      "status": "Partial",
+      "criterion": "Full Scene/stdlib/extensions, imported aliases/reassignment, external-history synchronization, stdout/errors and whole-command memory/cost bounds remain OPEN."
+    },
+    "P32": {
+      "status": "Partial",
+      "criterion": "Live provider transport/configuration, full recipe/Scene/assets, screenshots, external history and total resource bounds remain OPEN. Production bridge run_python remains refused."
+    },
+    "P33": {
+      "status": "Partial",
+      "criterion": "Crash/restart recovery, unsaved-close safeguards and persisted settings/recent files tested."
+    },
+    "P34": {
+      "status": "Partial",
+      "criterion": "Verify language catalogs, shortcuts, numeric locales, keyboard navigation and screen scaling."
+    },
+    "P35": {
+      "status": "Partial",
+      "criterion": "Port actual geometry/image plane and placement workflows; preserve attributes and undo."
+    },
+    "P36": {
+      "status": "Partial",
+      "criterion": "Clean recursive clone builds and installs on each claimed OS; associations, icons, startup and dependency diagnostics."
+    },
+    "P37": {
+      "status": "Partial",
+      "criterion": "Published e866ccb7 passes all five semantic and both ordered Metal jobs, including actual macOS process recovery. Current launcher batch reuses frozen oracles, focused owner checks and a combined app-consumer build; one published broad CI run owns integration validation. [Latest integration](audits/native-launcher/README.md), [previous CI](audits/preservation-integration/published-ci.json). Representative performance and complete release/platform acceptance remain open."
+    }
+  }
+}
