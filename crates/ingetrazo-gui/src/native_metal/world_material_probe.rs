@@ -54,6 +54,21 @@ pub(crate) fn run(root: PathBuf) -> Result<(), String> {
                 .iter()
                 .cloned(),
         );
+    let dual: serde_json::Value = serde_json::from_str(include_str!(
+        "../../../../docs/audits/metal-world-scene/material-dual-source/source.json"
+    ))
+    .map_err(|e| e.to_string())?;
+    recipe["cases"]
+        .as_array_mut()
+        .ok_or("Recipe cases missing")?
+        .insert(6, dual["cases"][0].clone());
+    app.scene.embedded_textures.insert(
+        "alternate".into(),
+        include_bytes!(
+            "../../../../docs/audits/metal-world-scene/material-dual-source/alternate.png"
+        )
+        .to_vec(),
+    );
     const ASSET: &[u8] =
         include_bytes!("../../../../docs/audits/metal-world-scene/material-source/quadrants.png");
     app.scene
@@ -122,7 +137,12 @@ pub(crate) fn run(root: PathBuf) -> Result<(), String> {
             ingetrazo_render::pipeline::project_point(DVec3::new(0., -0.2, 0.), &matrix, rect)
                 .ok_or("Old observation outside projection")?
                 .0;
-        observations.push(serde_json::json!({"name":name,"native":app.native_gpu_viewport_enabled,"frame_present":viewport.frame.is_some(),"route_reason":viewport.last_route_reason,"selection_count":app.scene.selection.len(),"rect":[rect.min.x,rect.min.y,rect.width(),rect.height()],"red_pixel":[red.x,red.y],"old_pixel":[old.x,old.y],"catalog_builds":viewport.catalog_builds(),"model_refreshes":viewport.model_refreshes(),"matrix_bytes":viewport.matrix_bytes(),"geometry_uploads":viewport.geometry_uploads(),"texture_uploads":viewport.texture_uploads(),"material_order_builds":viewport.material_order_builds()}));
+        let extra_pixel =
+            ingetrazo_render::pipeline::project_point(DVec3::new(1.5, -0.2, 0.), &matrix, rect)
+                .ok_or("Extra observation outside projection")?
+                .0;
+        let heaps = viewport.sampled_heaps()?;
+        observations.push(serde_json::json!({"name":name,"native":app.native_gpu_viewport_enabled,"frame_present":viewport.frame.is_some(),"route_reason":viewport.last_route_reason,"selection_count":app.scene.selection.len(),"rect":[rect.min.x,rect.min.y,rect.width(),rect.height()],"red_pixel":[red.x,red.y],"old_pixel":[old.x,old.y],"extra_pixel":[extra_pixel.x,extra_pixel.y],"sampled_heaps":heaps,"catalog_builds":viewport.catalog_builds(),"model_refreshes":viewport.model_refreshes(),"matrix_bytes":viewport.matrix_bytes(),"geometry_uploads":viewport.geometry_uploads(),"texture_uploads":viewport.texture_uploads(),"material_order_builds":viewport.material_order_builds()}));
         std::fs::write(
             root.join("observations.json"),
             serde_json::to_vec_pretty(&observations).map_err(|e| e.to_string())?,
@@ -151,6 +171,24 @@ pub(crate) fn run(root: PathBuf) -> Result<(), String> {
                 value["path"] = serde_json::json!("quadrants");
             }
             mesh.faces[face].attrs.insert(key.clone(), value);
+        }
+        if let Some(extra) = case["extra_attrs"].as_object() {
+            let points = [
+                DVec3::new(0.9, -0.6, 0.),
+                DVec3::new(2.1, -0.6, 0.),
+                DVec3::new(1.5, 0.6, 0.),
+            ];
+            let vertices = points.into_iter().map(|p| mesh.add_vertex(p)).collect();
+            let second = mesh
+                .add_face(vertices, vec![])
+                .ok_or("Extra triangle invalid")?;
+            for (key, value) in extra {
+                let mut value = value.clone();
+                if key == "texture" {
+                    value["path"] = serde_json::json!("alternate");
+                }
+                mesh.faces[second].attrs.insert(key.clone(), value);
+            }
         }
         app.scene.groups.clear();
         if name.starts_with("group-") {
