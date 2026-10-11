@@ -1414,7 +1414,7 @@ impl App for crate::IngeTrazoApp {
             // Layout can change independently of OS resize; the current rect
             // is authoritative. World.resize returns the cached texture in O(1)
             // if extent is unchanged, with no allocation/upload/copy.
-            let scale=system.egui_ctx.pixels_per_point();let extent=vk::Extent2D{width:(rect.width()*scale).ceil().max(1.0) as u32,height:(rect.height()*scale).ceil().max(1.0) as u32};self.native_gpu_viewport_texture=Some(world.resize(&system.vulkan_context,&mut system.renderer,extent)?);
+            let scale=system.egui_ctx.pixels_per_point();let [width,height]=crate::viewport_extent::scene_extent([rect.width() as f64,rect.height() as f64],scale as f64)?;let extent=vk::Extent2D{width,height};self.native_gpu_viewport_texture=Some(world.resize(&system.vulkan_context,&mut system.renderer,extent)?);
             world.set_display_scale(system.egui_ctx.pixels_per_point());
             world.set_scene(&system.vulkan_context,&self.scene,&self.camera,&self.style,system.fence,system.draw_serial,self.native_geometry_revision)
         })();

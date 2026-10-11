@@ -24,6 +24,7 @@ pub mod toolbar;
 mod tool_history;
 pub mod tray;
 pub mod viewport;
+mod viewport_extent;
 pub mod pointer_modifiers;
 
 pub use app::IngeTrazoApp;

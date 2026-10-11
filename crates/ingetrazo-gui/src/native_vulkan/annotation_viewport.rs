@@ -27,7 +27,7 @@ impl ViewportAnnotations{
   self.empty=None;
   let clip=[(rect.min.x*density).floor()as i32,(rect.min.y*density).floor()as i32,(rect.max.x*density).ceil()as i32,(rect.max.y*density).ceil()as i32];
   let mesh=self.cache.prepare_widget_clipped(plan.clone(),density,96.,clip)?;
-  let extent=[(rect.width()*density).ceil().max(1.)as u32,(rect.height()*density).ceil().max(1.)as u32];
+  let extent=crate::viewport_extent::scene_extent([rect.width() as f64,rect.height() as f64],density as f64)?;
   let eye=snapshot.eye;let forward=snapshot.forward;
   let mut queries=Vec::new();queries.try_reserve_exact(plan.queries.len().max(1)).map_err(|_|"Annotation query CPU admission failed")?;
   for &point in &plan.queries{let mut query=prepare_query(&matrix,point,eye,forward,extent)?;if bypass_depth{query.active=0;}queries.push(query);}

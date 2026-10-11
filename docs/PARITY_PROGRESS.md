@@ -21,6 +21,8 @@ Latest independent rendering diagnosis: [real layout](audits/annotation-real-ope
 
 ## Dated implementation and verification evidence
 
+Source scene extent rounding corrected (2026-10-11 UTC): Vulkan world allocation and annotation depth queries now share Python `_fb_size` ties-to-even rounding using double-precision multiplication. One focused test covers all nine retained actual Qt logical-size/DPR cases plus invalid inputs ([test log](audits/viewport-extent-merged-root/test.log)). Camera logical extent and Qt backing-store/blit policy remain separate; actual fractional-DPI rendered and pointer parity are still OPEN.
+
 Expanded native Metal protocol reviewed (2026-10-11 UTC): isolated source `f260c73a` adds authored front/back colors, back override, hidden-line/monochrome, reflected winding and metadata-refusal frame preservation to a literal 18-frame gate. Root verifies all 18 blank controls reject and admission remains unchanged ([protocol review](audits/metal-world-root-review/material-protocol-review.json)). One changed-source ARM/Intel run is authorized; execution remains pending. This remains sampled packet-level acceptance, not full source viewport parity.
 
 Actual isolated glyph acceptance (2026-10-11 UTC): root independently verifies artifact hashes and decodes the actual original widget and native glyph-only images. All 3,351 changed glyph pixels match exactly, masks match with XOR zero; the full diagnostic frame still differs at 1,295 model pixels ([independent review](audits/annotation-widget-glyph-exact/root-review.json)). This isolates this scene glyph family only. Combined geometry annotations, model baseline, other cameras/fonts/DPI and complete viewport acceptance remain OPEN.
