@@ -976,50 +976,7 @@ impl IngeTrazoApp {
         }
     }
 
-    pub fn zoom_extents(&mut self) {
-        let mut min = DVec3::splat(f64::INFINITY);
-        let mut max = DVec3::splat(f64::NEG_INFINITY);
-
-        for v in &self.scene.mesh.vertices {
-            min = min.min(v.position);
-            max = max.max(v.position);
-        }
-
-        fn collect_group_bounds(g: &ingetrazo_core::groups::Group, parent_t: glam::DMat4, min: &mut DVec3, max: &mut DVec3) {
-            let t = parent_t * g.transform;
-            for v in &g.mesh.vertices {
-                let wp = t.transform_point3(v.position);
-                *min = min.min(wp);
-                *max = max.max(wp);
-            }
-            for child in &g.children {
-                collect_group_bounds(child, t, min, max);
-            }
-        }
-
-        for g in &self.scene.groups {
-            collect_group_bounds(g, glam::DMat4::IDENTITY, &mut min, &mut max);
-        }
-
-        for dim in &self.scene.dimensions {
-            min = min.min(dim.start);
-            min = min.min(dim.end);
-            min = min.min(dim.start + dim.offset);
-            min = min.min(dim.end + dim.offset);
-            max = max.max(dim.start);
-            max = max.max(dim.end);
-            max = max.max(dim.start + dim.offset);
-            max = max.max(dim.end + dim.offset);
-        }
-
-        if !min.x.is_finite() || !max.x.is_finite() {
-            self.camera.target = DVec3::ZERO;
-            self.camera.distance = 20.0;
-            return;
-        }
-
-        self.camera.fit_box(min, max, 1.35);
-    }
+    pub fn zoom_extents(&mut self) { self.source_zoom_extents(); }
 }
 
 impl IngeTrazoApp {
