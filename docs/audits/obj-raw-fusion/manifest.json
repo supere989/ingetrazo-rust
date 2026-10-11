@@ -1,0 +1,255 @@
+{
+  "runtime_commit": "736ab5c0",
+  "checker_commit": "e320a894f3b32dd197c854cd9589ddd5bd9b4b38",
+  "source_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "archive": "records.zip",
+  "archive_sha256": "318aa203fd254d33c766fc67e9340afe7c59af2a921815b5caa932af933863b3",
+  "entries": [
+    {
+      "path": "affected/fusion/native-fusion-controls.json",
+      "bytes": 86,
+      "sha256": "8ca93cfa3de67d8fcf8204e58172ad465a53e8eb8a066147c687a870aec4eca6"
+    },
+    {
+      "path": "affected/fusion/native-obj-fusion.json",
+      "bytes": 648835,
+      "sha256": "f4af7d65f34a10976dc2e3be3467251f737dae30e8a01ec8b6e269d7716f6af6"
+    },
+    {
+      "path": "affected/fusion/reopens-obj-fusion.json",
+      "bytes": 409834,
+      "sha256": "80c6599745f0b629983f5f08b9e868b46add9db6767dfad91be368c0d487c617"
+    },
+    {
+      "path": "affected/mtl/native-asset-controls.json",
+      "bytes": 947,
+      "sha256": "14ee7d19181b70e4da94684ea4e858b94c28022908ad8ceb4f12283f9aa788a7"
+    },
+    {
+      "path": "affected/mtl/native-obj-mtl.json",
+      "bytes": 360336,
+      "sha256": "78fbe95a2b94d8382c511fcd9076b22f92304aa89f840a61f04048858d639123"
+    },
+    {
+      "path": "affected/mtl/native-uv-syntax.json",
+      "bytes": 745,
+      "sha256": "b020540e8efbfda879af168ab0f101a620902baab283e235ee23d977dba7ff64"
+    },
+    {
+      "path": "affected/mtl/reopens-obj-mtl.json",
+      "bytes": 179721,
+      "sha256": "172a70dce91fbf564583eea8651852f651bd27f735a7e3af1c44c2dd60b39574"
+    },
+    {
+      "path": "affected/nested/native-naming.json",
+      "bytes": 1177,
+      "sha256": "5023751678d72463623884ff65244e8d5fbabe5fd79a5174e13570a638d396f1"
+    },
+    {
+      "path": "affected/nested/native-nested-import.json",
+      "bytes": 882301,
+      "sha256": "4070174501e60cd3cbb01f3c053e29a667c2170e28d1217970c51cb83409f618"
+    },
+    {
+      "path": "affected/nested/native-threshold.json",
+      "bytes": 2120,
+      "sha256": "98e2ff4436b5fe506c456c418117b8d473583813d995df843288f5070be7d31f"
+    },
+    {
+      "path": "affected/nested/reopens.json",
+      "bytes": 469910,
+      "sha256": "7e92f32ec6f6131d3d4b3628b665c7fe9bc51cfdd3d98195086930a15eb86570"
+    },
+    {
+      "path": "attempts/preliminary-mesh/failure-summary.json",
+      "bytes": 1115,
+      "sha256": "534cb358fc4601619ff4a9d2004e8bbefd07f64234af5ff439d6427048f08f9c"
+    },
+    {
+      "path": "attempts/preliminary-mesh/native-obj-fusion.json",
+      "bytes": 84577,
+      "sha256": "323ca54d374d60b353c91cf7b47346d486e88a9f18d450e28d27714905180f31"
+    },
+    {
+      "path": "attempts/preliminary-mesh/run.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "attempts/serialization-order-check.log",
+      "bytes": 2814,
+      "sha256": "781688c804ccdb2aa4920ca0b9ca463ec0e385ac01cce48f6505e58e7a5e22e7"
+    },
+    {
+      "path": "cross-cell-near-weld-native.igz",
+      "bytes": 5584,
+      "sha256": "e797b629f1c12337e618bc12cda0bea71504e73ea2b363c50c8c62e4aa2ddf6f"
+    },
+    {
+      "path": "logs/obj-raw-admission-source.log",
+      "bytes": 64,
+      "sha256": "2edb82bb05f4626b0d935252c3af60674d64e43a50fad7fa5ffcc1eba0a04575"
+    },
+    {
+      "path": "logs/obj-raw-admission-test.log",
+      "bytes": 13457,
+      "sha256": "b9b68b5fdd8ec2b0111fa2ed1cc1d065cc768edc735edd8af241597042bd3ff1"
+    },
+    {
+      "path": "logs/obj-raw-affected-fusion-check.log",
+      "bytes": 181,
+      "sha256": "eaa8733513f5e36ba552b804a260faad96e5e19c3717e0a88c522f8a19ec1167"
+    },
+    {
+      "path": "logs/obj-raw-affected-fusion-reopens.log",
+      "bytes": 32,
+      "sha256": "154dad2e32dd166d6a6160d2d2a08a0af79030366d83ea23deea066ae33bfca3"
+    },
+    {
+      "path": "logs/obj-raw-affected-fusion-strict.log",
+      "bytes": 2123,
+      "sha256": "e79bc4be1ad3f807ae54df56991885201a79ebe57346773914c19440e617f9f3"
+    },
+    {
+      "path": "logs/obj-raw-affected-fusion.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "logs/obj-raw-affected-mtl-check.log",
+      "bytes": 190,
+      "sha256": "2b92ea567127f533861dfe4594a03544b0d701b65faadfa5300e4f29915e0b59"
+    },
+    {
+      "path": "logs/obj-raw-affected-mtl-reopens.log",
+      "bytes": 32,
+      "sha256": "a5e1e162626aa4e3aba5a5edca86b1c05c67dbab076a21835caf987d54b50895"
+    },
+    {
+      "path": "logs/obj-raw-affected-mtl.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "logs/obj-raw-affected-nested-check.log",
+      "bytes": 255,
+      "sha256": "3691256c6146a2c1d549850afa49edd144d1dcf8e3c713df3ae1af7d817d2a5f"
+    },
+    {
+      "path": "logs/obj-raw-affected-nested-reopens.log",
+      "bytes": 32,
+      "sha256": "a5e1e162626aa4e3aba5a5edca86b1c05c67dbab076a21835caf987d54b50895"
+    },
+    {
+      "path": "logs/obj-raw-affected-nested.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "logs/obj-raw-build.log",
+      "bytes": 21410,
+      "sha256": "1e8dd40de8339e434a9a00a101b4a75a5aaace6d3f1e80fecd3c0af8ba473fd6"
+    },
+    {
+      "path": "logs/obj-raw-check-final.log",
+      "bytes": 140,
+      "sha256": "3847485356828ed43ad11cb41bbd3d065afa7fc5e6eb0b8ab77fa7d5dd5b07d2"
+    },
+    {
+      "path": "logs/obj-raw-check.log",
+      "bytes": 2814,
+      "sha256": "781688c804ccdb2aa4920ca0b9ca463ec0e385ac01cce48f6505e58e7a5e22e7"
+    },
+    {
+      "path": "logs/obj-raw-local-clean.log",
+      "bytes": 38,
+      "sha256": "d236db7ab004bf432a31acd0bc6487d31fada5ac51199fbe2ab1b8d926c094b1"
+    },
+    {
+      "path": "logs/obj-raw-native.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "logs/obj-raw-reopens.log",
+      "bytes": 31,
+      "sha256": "4f4a1bcec483abb883d931683827dfd4934e0a1ce42412fc498a1883a3ca0c3b"
+    },
+    {
+      "path": "logs/obj-raw-source-final.log",
+      "bytes": 64,
+      "sha256": "2edb82bb05f4626b0d935252c3af60674d64e43a50fad7fa5ffcc1eba0a04575"
+    },
+    {
+      "path": "logs/obj-raw-source.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "native-obj-raw-fusion.json",
+      "bytes": 88297,
+      "sha256": "2c07553e10324d5b4fafe9d671b962372801e439936815fb6d2e4e681c2e8b67"
+    },
+    {
+      "path": "reopens-obj-raw-fusion.json",
+      "bytes": 55774,
+      "sha256": "1b202367fbdd320b39b0aaa4fd9cf952912540a3fb9ad08c199fd11a5699151a"
+    },
+    {
+      "path": "same-cell-far-weld-native.igz",
+      "bytes": 5121,
+      "sha256": "6a3d9e5c0a364eca0adcf4f12621dad1ca11120c09753ec3b791872e8005583c"
+    },
+    {
+      "path": "textured-duplicate-winning-coordinate-native.igz",
+      "bytes": 1083,
+      "sha256": "713a7968f95cfa745ebf40357142084816aa30ac66130b1e910df002690976b2"
+    }
+  ],
+  "binary": {
+    "path": "/tmp/ingetrazo-ai-registry-target/debug/examples/context_document_lifecycle",
+    "bytes": 65000632,
+    "sha256": "7c9d163897fbd852b57bea6b4aa7d058fa8775d1a93bf1e185464330321a72dd"
+  },
+  "sources": [
+    {
+      "path": "crates/ingetrazo-formats/src/obj.rs",
+      "sha256": "1ebcc850c2acfb619e851ff44cc0f11f11bed0677a154bffaf29638b608dd736"
+    },
+    {
+      "path": "crates/ingetrazo-formats/src/obj_geometry.rs",
+      "sha256": "2d8e95c402c61bd978203f547af32a03f8566782c5f3c05ff59c5f792a68baf3"
+    },
+    {
+      "path": "crates/ingetrazo-gui/examples/context_document_lifecycle.rs",
+      "sha256": "bc545f1dea086d773aad4169b64894de9ccc440a6f7bf3eb72d4ec36e4f84766"
+    },
+    {
+      "path": "crates/ingetrazo-gui/examples/context_document_lifecycle/obj_fusion.rs",
+      "sha256": "37fe61aa81ec6ae06c53d0682d12dd2b57fa63b5b0d7de9993b9fa6e279e78e7"
+    },
+    {
+      "path": "scripts/check-obj-raw-fusion.py",
+      "sha256": "9c9196e33f92d811c0c6392559573b236411fb8d090f5ee05ecbd927e3890f17"
+    },
+    {
+      "path": "scripts/reference-obj-raw-fusion-reopens.py",
+      "sha256": "f22b834893465500bfbd08793355649ff0f36263930409bd04e61cd3ea62ea67"
+    }
+  ],
+  "result": {
+    "raw_states": 15,
+    "raw_original_reopens": 3,
+    "source_helper_fault_controls": 3,
+    "raw_mutations": 7,
+    "preliminary_mesh_failure_rejected": true,
+    "fusion_deterministic_states": 55,
+    "unresolved_winding_leaves": 16,
+    "mtl_states": 75,
+    "nested_states": 105,
+    "build_seconds": 17.63,
+    "focused_test_build_seconds": 5.78,
+    "focused_tests": 1
+  },
+  "scope": "P22 remains Implemented; injected fallback separately from natural import; existing winding whitelist unchanged; no GPU/total resource bound claim"
+}
