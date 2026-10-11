@@ -30,5 +30,4 @@ assert collapsed[-1]['dimensions'][0]==post_cancel['dimensions'][0]
 # Label Cancel accumulates source f32 drift, so compare the retained source
 # Cancel offsets instead of incorrectly requiring the initial offsets.
 assert collapsed[-1]['labels']==post_cancel['labels'], 'collapsed refusal lost labels'
-print(json.dumps({'mandatory_boundaries':2,'oblique_annotation_observations':len(oblique)}))
-print(json.dumps({'states' :len(b['states']),'negative_controls':len(b['states']),'exact':True}))
+print(json.dumps({'mandatory_boundaries':2,'oblique_annotation_observations':len(oblique),'states':len(b['states']),'negative_controls':len(b['states']),'exact':True}))
