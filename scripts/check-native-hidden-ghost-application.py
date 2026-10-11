@@ -96,17 +96,21 @@ try:
   old_uploads=state()["world"]["uploads"];old_counts=state()["world"]["counts"]
   refused=action(10,"refuse",True);assert state()["world"]["uploads"]==old_uploads and state()["world"]["counts"]==old_counts and np.array_equal(refused,updated)
   retry=action(11,"retry");assert state()["objects"] and np.array_equal(roi(retry),roi(shown))
-  action(12,"save");assert not state()["dirty"]
-  geometry_base=action(13,"geometry-load");assert not state()["geometry"] and not state()["dirty"]
-  geometry_on=action(14,"geometry-on");assert state()["geometry"] and state()["dirty"] and np.any(roi(geometry_on)!=roi(geometry_base))
-  geometry_off=action(15,"geometry-off");assert not state()["geometry"] and np.array_equal(roi(geometry_off),roi(geometry_base))
-  geometry_restore=action(16,"geometry-on");assert np.array_equal(roi(geometry_restore),roi(geometry_on))
+  action(12,"select-group");assert state()["selection_count"]==1
+  normal=action(13,"unhide-selected");assert state()["group_hidden"] is False and state()["world"]["counts"]==[0,0,0] and np.any(roi(normal)!=roi(shown))
+  action(14,"undo");assert state()["objects"] and state()["group_hidden"] is True
+  restored=action(15,"clear-selection");assert np.array_equal(roi(restored),roi(shown))
+  action(16,"save");assert not state()["dirty"]
+  geometry_base=action(17,"geometry-load");assert not state()["geometry"] and not state()["dirty"]
+  geometry_on=action(18,"geometry-on");assert state()["geometry"] and state()["dirty"] and np.any(roi(geometry_on)!=roi(geometry_base))
+  geometry_off=action(19,"geometry-off");assert not state()["geometry"] and np.array_equal(roi(geometry_off),roi(geometry_base))
+  geometry_restore=action(20,"geometry-on");assert np.array_equal(roi(geometry_restore),roi(geometry_on))
   before=state()["submitted_serial"];lib.XResizeWindow(d,window,900,650);lib.XFlush(d)
   wait(lambda:state()["screen_size"]==[900.0,650.0] and state()["completed_present_serial"]>before)
   before=state()["submitted_serial"];lib.XResizeWindow(d,window,1000,700);lib.XFlush(d)
   wait(lambda:state()["screen_size"]==[1000.0,700.0] and state()["completed_present_serial"]>before)
   assert np.array_equal(roi(take("resize-restored")),roi(geometry_on)),"Resize did not restore the same admitted ghost viewport"
-  action(17,"save");assert not state()["dirty"]
+  action(21,"save");assert not state()["dirty"]
   event=XEvent();event.client.type=33;event.client.send_event=1;event.client.display=d;event.client.window=window;event.client.message_type=lib.XInternAtom(d,b"WM_PROTOCOLS",0);event.client.format=32;event.client.data.l[0]=lib.XInternAtom(d,b"WM_DELETE_WINDOW",0);assert lib.XSendEvent(d,window,0,0,C.byref(event));lib.XFlush(d);assert p.wait(timeout=5)==0
  log=(out/"runtime.log").read_text();assert "committed_bytes=0"in log
  report=dict(source_sha=args.source,binary_sha256=hashlib.sha256(Path(args.binary).read_bytes()).hexdigest(),rows=rows,passed=True,scope="Actual IngeTrazoApp ghost setter, Objects and Geometry, saved-view capture/update/recall/save, partial-upload admission refusal/retry, warm frame and resize; control invokes production methods, not mouse event proof")
