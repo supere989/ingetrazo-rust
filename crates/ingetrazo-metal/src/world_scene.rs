@@ -5,7 +5,12 @@ use crate::world_placement::{Packet, Pose, PrototypeKey};
 use glam::DMat4;
 use ingetrazo_core::{camera::OrbitCamera, groups::Group, scene::Scene};
 use ingetrazo_render::{
-    buffer::MeshRenderBuffer, pipeline::{build_inherited_placement_prototype_surfaces,build_loose_world_surfaces}, StyleConfig,
+    buffer::MeshRenderBuffer,
+    pipeline::{
+        build_classic_own_surfaces, build_inherited_placement_prototype_surfaces,
+        build_loose_world_surfaces,
+    },
+    StyleConfig,
 };
 use std::sync::Arc;
 /// Exact missing-stage classifications. Allocation/invalid data/device errors
@@ -31,6 +36,7 @@ pub use ingetrazo_render::scene_revision::Revisions;
 #[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord)]
 struct Signature {
     loose: bool,
+    classic_world: Option<[u64; 16]>,
     identity: u128,
     color: Option<[u64; 3]>,
     opacity: Option<u64>,
@@ -65,8 +71,9 @@ fn paint(g: &Group) -> Option<&serde_json::Value> {
 }
 fn signature(g: &Group, root: &Group) -> Result<Signature, String> {
     let p = paint(g).or_else(|| paint(root));
-    let mut s = Signature {
+        let mut s = Signature {
         loose: false,
+        classic_world: None,
         identity: g.mesh_share.unwrap_or(g.id).as_u128(),
         color: None,
         opacity: None,
@@ -191,8 +198,9 @@ impl Catalog {
             root: usize,
             owner: &Group,
             depth: usize,
-            path: &mut [(usize, u128); MAX_DEPTH],
+                        path: &mut [(usize, u128); MAX_DEPTH],
             inherited: bool,
+            parent_world: DMat4,
             slots: &mut Vec<Slot>,
             candidates: &mut Vec<(Signature, usize)>,
         ) -> Result<(), String> {
@@ -200,17 +208,16 @@ impl Catalog {
                 path[depth] = (if depth == 0 { root } else { i }, g.id.as_u128());
                 if g.hidden || !scene.is_layer_visible(g.layer.as_deref()) {
                     continue;
-                }
+                                }
                 let placed = inherited || own_placement(g);
+                let world = parent_world * g.transform;
+                if !world.is_finite() {
+                    return Err("Metal placement composed matrix invalid".into());
+                }
                 if g.billboard {
                     return Err("Metal placement billboard requires camera-facing stage".into());
                 }
                 if !g.mesh.faces.is_empty() {
-                    if !placed {
-                        return Err(
-                            "Metal classic group requires consolidated world shading stage".into(),
-                        );
-                    }
                     let mut p = Vec::new();
                     p.try_reserve_exact(depth + 1)
                         .map_err(|_| "Placement path allocation refused")?;
@@ -219,9 +226,18 @@ impl Catalog {
                     slots.push(Slot {
                         path: p,
                         id: g.id.as_u128(),
-                        root,
+                                                root,
                     });
-                    candidates.push((signature(g, owner)?, index));
+                    let mut sig = signature(g, owner)?;
+                    if !placed {
+                        sig.classic_world =
+                            Some(
+                                world
+                                    .to_cols_array()
+                                    .map(|v| if v == 0. { 0 } else { v.to_bits() }),
+                            );
+                    }
+                    candidates.push((sig, index));
                 } else if !g.mesh.edges.is_empty() {
                     return Err("Metal placement wire requires native edge stage".into());
                 }
@@ -232,8 +248,9 @@ impl Catalog {
                         root,
                         owner,
                         depth + 1,
-                        path,
+                                                path,
                         placed,
+                        world,
                         slots,
                         candidates,
                     )?;
@@ -243,7 +260,11 @@ impl Catalog {
         }
         if loose {
             slots.push(Slot{path:Vec::new(),id:0,root:usize::MAX});
-            candidates.push((Signature{loose:true,identity:0,color:None,opacity:None,mat:None},0));
+            candidates.push((                Signature {
+                    loose: true,
+                    classic_world: None,
+                    identity: 0,
+                    color: None,opacity:None,mat:None},0));
         }
         for (i, g) in scene.groups.iter().enumerate() {
             path[0] = (i, g.id.as_u128());
@@ -256,8 +277,9 @@ impl Catalog {
                 i,
                 g,
                 0,
-                &mut path,
+                                &mut path,
                 false,
+                DMat4::IDENTITY,
                 &mut slots,
                 &mut candidates,
             )?;
@@ -393,20 +415,56 @@ impl Catalog {
             output.clear();
             self.fill_models(scene, output);
         }
-        Ok(())
+                Ok(())
+    }
+    fn classic_models_changed(&self, scene: &Scene) -> Result<bool, String> {
+        // Every binding must be checked: a nonrepresentative shared classic
+        // may move while the prototype's representative remains unchanged.
+        for (index, slot) in self.slots.iter().enumerate() {
+            let p = &self.prototypes[self.packet.bindings[index] as usize];
+            if let Some(old) = p.signature.classic_world {
+                let _ = resolve(scene, slot)?;
+                let mut world = DMat4::IDENTITY;
+                let mut gs = &scene.groups;
+                for &(i, _) in &slot.path {
+                    let g = &gs[i];
+                    world *= g.transform;
+                    gs = &g.children;
+                }
+                if !world.is_finite() {
+                    return Err("Metal placement composed matrix invalid".into());
+                }
+                if world
+                    .to_cols_array()
+                    .map(|v| if v == 0. { 0 } else { v.to_bits() })
+                    != old
+                {
+                    return Ok(true);
+                }
+            }
+        }
+        Ok(false)
     }
     fn fill_models(&self, scene: &Scene, out: &mut Vec<Pose>) {
-        for s in &self.slots {
+        for (slot_index, s) in self.slots.iter().enumerate() {
+            let classic = self.prototypes[self.packet.bindings[slot_index] as usize]
+                .signature
+                .classic_world
+                .is_some();
             let mut m = DMat4::IDENTITY;
             let mut gs = &scene.groups;
             for &(i, _) in &s.path {
                 let g = &gs[i];
                 m *= g.transform;
                 gs = &g.children;
-            }
+                        }
             out.push(Pose {
-                mvp: m.as_mat4().to_cols_array_2d(),
-                reflected: m.determinant() < 0.,
+                mvp: if classic {
+                    DMat4::IDENTITY.as_mat4().to_cols_array_2d()
+                } else {
+                    m.as_mat4().to_cols_array_2d()
+                },
+                reflected: !classic && m.determinant() < 0.,
             });
         }
     }
@@ -431,8 +489,16 @@ impl Catalog {
         let g = resolve(scene, s)?;
         let owner = scene
             .groups
-            .get(s.root)
+                        .get(s.root)
             .ok_or("Metal placement owner stale")?;
+        if let Some(bits) = p.signature.classic_world {
+            let world = DMat4::from_cols_array(&bits.map(f64::from_bits));
+            let data = build_classic_own_surfaces(g, paint(owner), world, scene, camera, style)?;
+            if !data.transparent_mesh.indices.is_empty() || !data.textured_meshes.is_empty() {
+                return Err("Metal Scene placement needs texture/alpha/billboard stage".into());
+            }
+            return Ok(data.opaque_mesh);
+        }
         let data = build_inherited_placement_prototype_surfaces(
             g,
             paint(owner),
@@ -614,7 +680,123 @@ mod tests {
         scene.groups = vec![nested];
         assert!(Catalog::new(&scene, revisions(), Some(&cat))
             .unwrap_err()
-            .contains("128"));
+                        .contains("128"));
+    }
+    #[test]
+    fn classic_world_shading_and_pose_changes_match_shared_world_collector() {
+        let mut scene = Scene::new();
+        let mut root = Group::with_mesh("classic root", mesh());
+        root.transform = DMat4::from_rotation_y(-1.2);
+        let mut child = Group::with_mesh("classic child", mesh());
+        child.transform =
+            DMat4::from_rotation_y(-1.2) * DMat4::from_translation(glam::DVec3::new(3., 0., 0.));
+        scene.groups = vec![root, child];
+        let catalog = Catalog::new(&scene, revisions(), None).unwrap();
+        assert_eq!(catalog.slots.len(), 2);
+        let camera = OrbitCamera::default();
+        let style = style();
+        let reference = ingetrazo_render::pipeline::build_world_surfaces(&scene, &camera, &style);
+        let mut records = Vec::new();
+        for p in &catalog.prototypes {
+            let data = catalog.collect(&p.key, &scene, &camera, &style).unwrap();
+            assert_eq!(data.indices.len(), 3);
+            records.extend(data.vertices.into_iter().map(|v| {
+                (
+                    v.position.map(f32::to_bits),
+                    v.normal.map(f32::to_bits),
+                    v.color.map(f32::to_bits),
+                )
+            }));
+        }
+        let mut expected = reference
+            .opaque_mesh
+            .vertices
+            .into_iter()
+            .map(|v| {
+                (
+                    v.position.map(f32::to_bits),
+                    v.normal.map(f32::to_bits),
+                    v.color.map(f32::to_bits),
+                )
+            })
+            .collect::<Vec<_>>();
+        records.sort_unstable();
+        expected.sort_unstable();
+        assert_eq!(records, expected);
+        let mut models = Vec::new();
+        catalog
+            .refresh_models(&scene, revisions(), &mut models)
+            .unwrap();
+        assert!(models
+            .iter()
+            .all(|p| p.mvp == DMat4::IDENTITY.as_mat4().to_cols_array_2d() && !p.reflected));
+        assert!(!catalog.classic_models_changed(&scene).unwrap());
+        scene.groups[0].transform =
+            DMat4::from_scale(glam::DVec3::new(-1., 1., 1.)) * DMat4::from_rotation_y(0.3);
+        assert!(catalog.classic_models_changed(&scene).unwrap());
+        let rebuilt = Catalog::new(&scene, revisions(), Some(&catalog)).unwrap();
+        assert_eq!(
+            rebuilt
+                .prototypes
+                .iter()
+                .filter(|p| !catalog.prototypes.iter().any(|old| old.key == p.key))
+                .count(),
+            1
+        );
+        scene.groups[0].transform = DMat4::from_cols_array(&[f64::NAN; 16]);
+        assert!(catalog.classic_models_changed(&scene).is_err());
+    }
+
+    #[test]
+    fn classic_face_layer_is_ignored_but_group_layer_and_reflected_winding_are_retained() {
+        let mut scene = Scene::new();
+        let mut group = Group::with_mesh("classic", mesh());
+        group.mesh.faces[0].layer = Some("hidden".into());
+        group.transform = DMat4::from_scale(glam::DVec3::new(-1., 1., 1.));
+        let mut layer = ingetrazo_core::layers::Layer::new("hidden");
+        layer.visible = false;
+        scene.layers.push(layer);
+        scene.groups.push(group);
+        let cat = Catalog::new(&scene, revisions(), None).unwrap();
+        let data = cat
+            .collect(
+                &cat.prototypes[0].key,
+                &scene,
+                &OrbitCamera::default(),
+                &style(),
+            )
+            .unwrap();
+        assert_eq!(data.indices.len(), 3);
+        let points = data
+            .indices
+            .iter()
+            .map(|&i| glam::Vec3::from_array(data.vertices[i as usize].position))
+            .collect::<Vec<_>>();
+        assert!((points[1] - points[0]).cross(points[2] - points[0]).z < 0.);
+        scene.groups[0].layer = Some("hidden".into());
+        let hidden = Catalog::new(&scene, revisions(), Some(&cat)).unwrap();
+        assert_eq!(hidden.packet.placement_count(), 0);
+        assert_eq!(cat.packet.placement_count(), 1);
+    }
+
+    #[test]
+    fn nonrepresentative_classic_pose_invalidates_shared_world_geometry() {
+        let mut scene = Scene::new();
+        let mut first = Group::with_mesh("first", mesh());
+        first.mesh_share = Some(first.id);
+        let mut second = Group::with_mesh("second", first.mesh.clone());
+        second.mesh_share = first.mesh_share;
+        scene.groups = vec![first, second];
+        let catalog = Catalog::new(&scene, revisions(), None).unwrap();
+        assert_eq!(catalog.packet.prototype_count(), 1);
+        scene.groups[1].transform = DMat4::from_translation(glam::DVec3::new(3., 0., 0.));
+        assert!(catalog.classic_models_changed(&scene).unwrap());
+        let rebuilt = Catalog::new(&scene, revisions(), Some(&catalog)).unwrap();
+        assert_eq!(rebuilt.packet.prototype_count(), 2);
+        assert!(rebuilt
+            .prototypes
+            .iter()
+            .any(|p| p.key == catalog.prototypes[0].key));
     }
 }
 
@@ -698,12 +880,16 @@ impl crate::world::World {
             VisualStyle::ShadedWithTextures => Mode::Material,
             VisualStyle::HiddenLine => Mode::HiddenLine,
             VisualStyle::Monochrome => Mode::Monochrome,
-            _ => return Err("Metal Scene adapter wireframe/XRay passes not implemented".into()),
+                        _ => return Err("Metal Scene adapter wireframe/XRay passes not implemented".into()),
         };
-        let cold = adapter
-            .catalog
-            .as_ref()
-            .is_none_or(|c| c.revisions != revisions);
+        let pose_changed =
+            pose_revision.is_none() || adapter.accepted_pose_revision != pose_revision;
+        let cold = match adapter.catalog.as_ref() {
+            None => true,
+            Some(c) => {
+                c.revisions != revisions || (pose_changed && c.classic_models_changed(scene)?)
+            }
+        };
         let candidate = if cold {
             Some(Catalog::new(scene, revisions, adapter.catalog.as_ref())?)
         } else {
