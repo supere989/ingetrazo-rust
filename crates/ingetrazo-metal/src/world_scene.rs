@@ -882,6 +882,10 @@ impl Adapter {
     fn needs_model_refresh(&self,cold:bool,revision:Option<u64>)->bool {
         cold || revision.is_none() || self.accepted_pose_revision != revision
     }
+    fn section_fill_payload_bytes(&self)->usize{
+        #[cfg(target_os="macos")] {self.fill.as_ref().map_or(0,|_|std::mem::size_of::<super::world_section::Fill>()+std::mem::size_of::<super::world::Owner>())}
+        #[cfg(not(target_os="macos"))] {0}
+    }
     fn profile_payload_bytes(&self)->usize {
         #[cfg(target_os="macos")] {self.profiles.as_ref().map_or(0,|p|p.2.capacity()*std::mem::size_of::<usize>()+p.3.retained_bytes()+p.7.capacity()*std::mem::size_of::<(usize,usize)>())+self.profile_selection_scratch.capacity()*std::mem::size_of::<(usize,usize)>()}
         #[cfg(not(target_os="macos"))] {0}
@@ -895,7 +899,7 @@ impl Adapter {
             .as_ref()
             .map_or(0, Catalog::retained_payload_bytes)
             + (self.current.capacity() + self.scratch.capacity()) * std::mem::size_of::<Pose>()
-            + self.profile_payload_bytes() + self.billboard_payload_bytes()
+            + self.profile_payload_bytes() + self.billboard_payload_bytes() + self.section_fill_payload_bytes()
     }
 }
 
@@ -1077,6 +1081,7 @@ impl crate::world::World {
         let candidate_billboard_bytes=billboard_topology.retained_bytes()+billboard_frame.retained_bytes();
         if adapter.retained_payload_bytes().saturating_sub(adapter.billboard_payload_bytes()).checked_add(candidate_billboard_bytes).is_none_or(|n|n>MAX_BYTES*3){return Err("Metal adapter billboard storage exceeds24MiB".into());}
         let sample_positions=if !scene.dimensions.is_empty(){super::annotation::source_sample_policy(metal,self.configured_sample_count())?.1}else if self.configured_sample_count()==4{self.annotation_positions}else{None};
+        if let Some((_,fill))=&adapter.fill{fill.validate(metal)?;}
         let fill_key=super::world_section::FillKey::from_scene(scene,style,revisions,pose_revision);
         let fill_changed=fill_key.is_some_and(|key|pose_revision.is_none()||adapter.fill.as_ref().is_none_or(|p|p.0!=key));
         let fill_candidate=if let Some(key)=fill_key{Some((key,if let Some((old,fill))=&adapter.fill{if *old==key && pose_revision.is_some(){fill.clone()}else{Arc::new(super::world_section::Fill::prepare(metal,scene,style.section_fill_color)?)}}else{Arc::new(super::world_section::Fill::prepare(metal,scene,style.section_fill_color)?)}))}else{None};

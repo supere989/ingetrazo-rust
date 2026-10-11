@@ -445,6 +445,7 @@ impl World {
         if let Some(owner) = &self.owner {
             owner.validate(metal)?;
         }
+        if let Some(fill)=&fill{fill.validate(metal)?;}
         policy.validate()?;
         super::world_admission::pose(camera, extent, clear)?;
         super::world_placement::validate_poses(&packet, poses)?;

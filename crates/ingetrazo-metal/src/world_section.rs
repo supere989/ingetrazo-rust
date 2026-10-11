@@ -33,6 +33,7 @@ impl Section {
 /// Cached six-vertex source plane, not a reconstructed polygon cap.
 #[cfg(target_os = "macos")]
 pub(crate) struct Fill {
+    owner:std::sync::Arc<crate::world::Owner>,
     pub vertices: crate::Buffer,
     pub color: [f32; 4],
 }
@@ -79,6 +80,7 @@ impl FillKey {
 }
 #[cfg(target_os = "macos")]
 impl Fill {
+    pub(crate) fn validate(&self,metal:&crate::NativeMetal)->Result<(),String>{self.owner.validate(metal)}
     pub(crate) fn prepare(
         metal: &crate::NativeMetal,
         scene: &ingetrazo_core::scene::Scene,
@@ -96,6 +98,7 @@ impl Fill {
             uv: [0.; 2],
         });
         Ok(Self {
+            owner:std::sync::Arc::new(crate::world::Owner::new(metal)),
             vertices: crate::world::upload(metal, bytemuck::cast_slice(&vertices))?,
             color,
         })
