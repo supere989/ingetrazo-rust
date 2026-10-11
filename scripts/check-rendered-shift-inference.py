@@ -55,7 +55,7 @@ def main():
    def key(symbol):
     code=x.XKeysymToKeycode(d,symbol);event(2,code,None,1);event(3,code,None,2)
    capture("before");click(initial["click"]);move(initial["cue"])
-   cue=wait(lambda:state() if len(state()["preview"])==1 else None)
+   cue=wait(lambda:state() if state()["pending_anchor"] is not None and len(state()["preview"])==1 else None)
    shift=x.XKeysymToKeycode(d,0xffe1)
    event(2,shift,None,1);move(initial["wander"])
    locked=wait(lambda:state() if abs(state()["preview"][0][1][1]-3)<.03 else None)
@@ -67,7 +67,7 @@ def main():
    arrow=wait(lambda:state() if state()["axis"]=="x" else None)
    event(2,shift,None,1);event(3,shift,None,2)
    preserved=state();assert preserved["axis"]=="x" and abs(preserved["preview"][0][1][1]-3)<.03
-   key(0xff1b);cancelled=wait(lambda:state() if not state()["preview"] else None)
+   key(0xff1b);cancelled=wait(lambda:state() if state()["pending_anchor"] is None and state()["drawing_plane"] is None and not state()["preview"] else None)
    assert cancelled["edges"]==0 and cancelled["undo"]==0 and cancelled["axis"] is None
    capture("cancelled")
    for name in ("before","locked","released","cancelled"):

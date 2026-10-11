@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Actual native pointer/key events through a rendered production viewport."""
-import ctypes as C,ctypes.util,json,os,subprocess,tempfile,time,select,struct,zlib
+import argparse,ctypes as C,ctypes.util,json,os,subprocess,tempfile,time,select,struct,zlib,copy
 from pathlib import Path
 from acceptance_context import context
 from png_capture import valid_png
@@ -13,9 +13,23 @@ def wait(fn,seconds=20):
   except (OSError,ValueError):pass
   time.sleep(.05)
  raise AssertionError("Timed out awaiting rendered event/state")
+def assert_cancelled_rectangle(observed,initial):
+ assert observed["pending_anchor"] is None and observed["drawing_plane"] is None,"Rectangle acquisition/plane remains armed"
+ assert all(observed[k]==initial[k] for k in ("faces","edges","undo","vertices")),"Escape changed geometry/history"
+ # Literal source reset keeps hover and therefore the four-edge idle cursor.
+ cursor=observed["preview"];assert len(cursor)==4,"Expected source idle Rectangle cursor"
+ assert all(line[1]==cursor[(i+1)%4][0] for i,line in enumerate(cursor)),"Cursor loop is not closed"
+
 def main():
- subprocess.run(["cargo","build","--locked","-p","ingetrazo-gui","--example","drawing_reference_render_fixture"],check=True)
- directory=Path("docs/audits/drawing-reference-render");directory.mkdir(exist_ok=True)
+ parser=argparse.ArgumentParser(description=__doc__);parser.add_argument("--prebuilt-dir",type=Path,help="Explicit freshly built native example directory; no Cargo invocation")
+ args=parser.parse_args()
+ if args.prebuilt_dir is None:
+  subprocess.run(["cargo","build","--locked","-j2","-p","ingetrazo-gui","--example","drawing_reference_render_fixture"],check=True)
+  binary=Path(os.environ.get("CARGO_TARGET_DIR","target"))/"debug/examples/drawing_reference_render_fixture"
+ else:binary=args.prebuilt_dir/"drawing_reference_render_fixture"
+ assert binary.is_file(),"Missing explicitly selected example binary"
+ binary=binary.resolve()
+ directory=Path(os.environ.get("INGETRAZO_RENDER_AUDIT_DIR","docs/audits/drawing-reference-render"));directory.mkdir(exist_ok=True)
  for p in directory.iterdir():
   if p.name in ("state.json","capture.txt","before.png","preview.png","cancelled.png","committed.png","committed.igz"):p.unlink()
  with tempfile.TemporaryDirectory(prefix="ingetrazo-reference-x11-") as t:
@@ -24,7 +38,7 @@ def main():
   try:
    assert select.select([server.stdout],[],[],10)[0];display=server.stdout.readline().strip();assert display.isdigit()
    env=os.environ.copy();env["DISPLAY"]=":"+display;env["XDG_RUNTIME_DIR"]=t;env["LIBGL_ALWAYS_SOFTWARE"]="1";env.pop("WAYLAND_DISPLAY",None)
-   log=open(directory/"runtime.log","w");app=subprocess.Popen([str((Path(os.environ.get("CARGO_TARGET_DIR","target"))/"debug/examples/drawing_reference_render_fixture").resolve()),str(directory.resolve())],env=env,stdout=log,stderr=log)
+   log=open(directory/"runtime.log","w");app=subprocess.Popen([str(binary),str(directory.resolve())],env=env,stdout=log,stderr=log)
    state=lambda:json.loads((directory/"state.json").read_text())
    initial=wait(lambda:state() if state()["faces"]==0 else None)
    x=C.CDLL(ctypes.util.find_library("X11"));x.XOpenDisplay.argtypes=[C.c_char_p];x.XOpenDisplay.restype=C.c_void_p;d=x.XOpenDisplay(env["DISPLAY"].encode());assert d
@@ -53,13 +67,22 @@ def main():
    def key(symbol):
     code=x.XKeysymToKeycode(d,symbol);event(2,code,None,1);event(3,code,None,2)
    capture("before");move(initial["click"]);key(0xff54);click(initial["click"]);move(initial["move"])
-   preview=wait(lambda:state() if len(state()["preview"])>=4 else None);assert preview["faces"]==0 and preview["edges"]==1 and preview["undo"]==0
+   preview=wait(lambda:state() if state()["pending_anchor"] is not None and len(state()["preview"])>=4 else None);assert preview["faces"]==0 and preview["edges"]==1 and preview["undo"]==0
    origin,normal=initial["origin"],initial["normal"]
    dot=lambda a,b:sum(x*y for x,y in zip(a,b))
    error=max(abs(dot([p[i]-origin[i]for i in range(3)],normal))for line in preview["preview"]for p in line);assert error<1e-6,error
-   capture("preview");key(0xff1b);wait(lambda:not state()["preview"]);assert state()["faces"]==0 and state()["edges"]==1 and state()["undo"]==0;capture("cancelled")
-   move(initial["click"]);key(0xff54);click(initial["click"]);move(initial["move"]);wait(lambda:len(state()["preview"])>=4);click(initial["move"])
-   committed=wait(lambda:state() if state()["faces"]==1 else None);assert committed["undo"]==1;assert abs(committed["face_areas"][0]-1.8)<.06,committed
+   capture("preview");key(0xff1b)
+   cancelled=wait(lambda:state() if state()["pending_anchor"] is None and state()["drawing_plane"] is None else None)
+   assert_cancelled_rectangle(cancelled,initial)
+   negatives=[]
+   for name,mutate in [("unfinished-acquisition",lambda x:x.update(pending_anchor=preview["pending_anchor"])),("unfinished-plane",lambda x:x.update(drawing_plane=preview["drawing_plane"])),("changed-mesh",lambda x:x["vertices"][0].__setitem__(0,x["vertices"][0][0]+1)),("changed-history",lambda x:x.update(undo=x["undo"]+1)),("missing-idle-cursor",lambda x:x.update(preview=[]))]:
+    wrong=copy.deepcopy(cancelled);mutate(wrong)
+    try:assert_cancelled_rectangle(wrong,initial)
+    except AssertionError:negatives.append(name)
+    else:raise AssertionError("Cancelled Rectangle corruption accepted: "+name)
+   capture("cancelled")
+   move(initial["click"]);key(0xff54);click(initial["click"]);move(initial["move"]);wait(lambda:state()["pending_anchor"] is not None and len(state()["preview"])>=4);click(initial["move"])
+   committed=wait(lambda:state() if state()["faces"]==1 else None);assert committed["pending_anchor"] is None and committed["drawing_plane"] is None;assert committed["undo"]==1;assert abs(committed["face_areas"][0]-1.8)<.06,committed
    alignment=abs(dot(committed["face_normals"][0],normal));assert alignment>0.999999,alignment
    capture("committed")
    def pixels(path):
@@ -85,8 +108,8 @@ def main():
    before,preview_image=pixels(directory/"before.png"),pixels(directory/"preview.png")
    changed=sum(a!=b for a,b in zip(before,preview_image));assert changed>100,"preview must materially render"
    committed_image=pixels(directory/"committed.png");changed_commit=sum(a!=b for a,b in zip(before,committed_image));assert changed_commit>100
-   report={"provenance":context(),"passed":True,"native_events":"XTEST pointer/button/Down/Escape events on isolated Xvfb","preview_changed_pixels":changed,"committed_changed_pixels":changed_commit,"preview_plane_error":error,"committed_normal_alignment":alignment,"initial":initial,"preview":preview,"committed":committed,"scope":"Actual production render_viewport Rectangle Down-before-first-click on nonprincipal edge; pixel midpoint snapping; moving coplanar preview; Escape leaves mesh/undo unchanged; second click authors one face and one undo. Bounded engineering proof using existing software-GL test backend, not Vulkan/native GPU parity or full app menu/keyboard proof."}
-   Path("docs/audits/drawing-reference-render-evidence.json").write_text(json.dumps(report,indent=2)+"\n");print(json.dumps(report,indent=2))
+   report={"provenance":context(),"passed":True,"native_events":"XTEST pointer/button/Down/Escape events on isolated Xvfb","preview_changed_pixels":changed,"committed_changed_pixels":changed_commit,"preview_plane_error":error,"committed_normal_alignment":alignment,"initial":initial,"preview":preview,"cancelled":cancelled,"cancellation_negatives":negatives,"committed":committed,"scope":"Actual production render_viewport Rectangle Down-before-first-click on nonprincipal edge; pixel midpoint snapping; moving coplanar preview; Escape leaves mesh/undo unchanged; second click authors one face and one undo. Bounded engineering proof using existing software-GL test backend, not Vulkan/native GPU parity or full app menu/keyboard proof."}
+   Path(os.environ.get("INGETRAZO_RENDER_AUDIT_REPORT","docs/audits/drawing-reference-render-evidence.json")).write_text(json.dumps(report,indent=2)+"\n");print(json.dumps(report,indent=2))
   finally:
    if app:app.terminate();app.wait(timeout=5)
    server.terminate();server.communicate(timeout=5)

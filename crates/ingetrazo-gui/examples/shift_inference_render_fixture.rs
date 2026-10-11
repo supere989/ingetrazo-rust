@@ -13,7 +13,7 @@ impl eframe::App for Harness {
         egui::CentralPanel::default().show(ctx,|ui|{let rect=ui.available_rect_before_wrap();render_viewport(&mut self.app,ui);
  let matrix=self.app.camera.projection_matrix()*self.app.camera.view_matrix();let project=|p:DVec3|{let c=matrix*p.extend(1.);let n=c.truncate()/c.w;[rect.left() as f64+(n.x+1.)*0.5*rect.width()as f64,rect.top()as f64+(1.-n.y)*0.5*rect.height()as f64]};
  let origin=DVec3::new(2.,3.,0.);
- let rows=serde_json::json!({"faces":self.app.scene.mesh.faces.len(),"edges":self.app.scene.mesh.edges.len(),"undo":self.app.undo_stack.len(),"preview":self.app.active_tool.rubber_band_lines().iter().map(|(a,b)|[a.to_array(),b.to_array()]).collect::<Vec<_>>(),"click":project(origin),"cue":project(DVec3::new(4.,3.03,0.)),"wander":project(DVec3::new(4.,4.,0.)),"axis":self.app.snap_engine.locked_axis});
+ let rows=serde_json::json!({"faces":self.app.scene.mesh.faces.len(),"edges":self.app.scene.mesh.edges.len(),"undo":self.app.undo_stack.len(),"pending_anchor":self.app.active_tool.snap_anchor().map(|p|p.to_array()),"drawing_plane":self.app.active_tool.drawing_plane().map(|(p,n)|[p.to_array(),n.to_array()]),"preview":self.app.active_tool.rubber_band_lines().iter().map(|(a,b)|[a.to_array(),b.to_array()]).collect::<Vec<_>>(),"click":project(origin),"cue":project(DVec3::new(4.,3.03,0.)),"wander":project(DVec3::new(4.,4.,0.)),"axis":self.app.snap_engine.locked_axis});
  if self.app.scene.mesh.faces.len()==1&&!self.dir.join("committed.igz").exists(){ingetrazo_formats::igz::save_igz(&self.app.scene,&self.dir.join("committed.igz")).unwrap();}
  let pending=self.dir.join("state.tmp");
  std::fs::write(&pending,serde_json::to_vec(&rows).unwrap()).unwrap();
