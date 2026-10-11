@@ -204,6 +204,7 @@ fn render_inspector_panels(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
         .show(ui, |ui| {
             ui.horizontal(|ui| {
                 ui.label(format!("{}: {}", tr("Active:"), app.active_material));
+                if ui.button(tr("Edit material")).clicked() { app.open_material_editor(ui.ctx()); }
                 if ui.button(tr("Edit texture")).clicked() {
                     app.show_texture_edit_dialog = true;
                 }
@@ -214,22 +215,7 @@ fn render_inspector_panels(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
 
             egui::Grid::new("mats_in_model").spacing([4.0, 4.0]).show(ui, |ui| {
                 if app.scene.materials.is_empty() {
-                    let default_mats = [
-                        ("metal_dark", egui::Color32::from_rgb(55, 60, 65)),
-                        ("Beech", egui::Color32::from_rgb(200, 150, 100)),
-                        ("concrete_smooth", egui::Color32::from_rgb(180, 180, 175)),
-                        ("White Wall", egui::Color32::from_rgb(240, 240, 235)),
-                    ];
-                    for (i, (name, col)) in default_mats.iter().enumerate() {
-                        let (sw_rect, resp) = ui.allocate_exact_size(egui::vec2(30.0, 24.0), egui::Sense::click());
-                        ui.painter().rect_filled(sw_rect, 2.0, *col);
-                        if resp.on_hover_text(*name).clicked() {
-                            app.apply_material_to_selection(name);
-                        }
-                        if (i + 1) % 4 == 0 {
-                            ui.end_row();
-                        }
-                    }
+                    ui.label(tr("No materials painted yet"));
                 } else {
                     let mut count = 0;
                     let mat_keys: Vec<String> = app.scene.materials.keys().cloned().collect();
@@ -264,7 +250,7 @@ fn render_inspector_panels(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
                             egui::Stroke::new(1.0, egui::Color32::from_rgb(100, 105, 115)),
                         );
                         if resp.on_hover_text(&name).clicked() {
-                            app.apply_material_to_selection(&name);
+                            app.activate_named_material(&name);
                         }
                         count += 1;
                         if count % 4 == 0 {
@@ -339,7 +325,7 @@ fn render_inspector_panels(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
                                 ui.painter().rect_stroke(rect, 2.0, egui::Stroke::new(1.0, egui::Color32::from_rgb(90, 95, 105)));
                                 if resp.on_hover_text(sw_name).clicked() {
                                     app.scene.materials.insert(sw_name.to_string(), Material::new(sw_name, rgba));
-                                    app.apply_material_to_selection(sw_name);
+                                    app.activate_named_material(sw_name);
                                 }
                             }
                         });

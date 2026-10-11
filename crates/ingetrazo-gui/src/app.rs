@@ -107,6 +107,7 @@ pub struct IngeTrazoApp {
     #[cfg(feature="engineering-python")]
     pub(crate) engineering_python:crate::engineering_python::Engine,
     pub show_texture_edit_dialog: bool,
+    pub(crate) show_material_edit_dialog:bool,
     pub command_search_query: String,
     pub console_input: String,
     pub ai_session: ingetrazo_core::ai::Session,
@@ -217,7 +218,7 @@ impl IngeTrazoApp {
             engineering_python_enabled:false,
             #[cfg(feature="engineering-python")]
             engineering_python:Default::default(),
-            show_texture_edit_dialog: false,
+            show_texture_edit_dialog: false,show_material_edit_dialog:false,
             command_search_query: String::new(),
             console_input: String::new(),
             ai_session: Default::default(),
@@ -279,7 +280,7 @@ impl IngeTrazoApp {
         if self.scene.version!=version{self.bump_model_revision();}else if self.scene.image_planes.publication_revision()!=images{self.bump_image_presentation_revision();}
         self.snap_engine.reset_operation_state();
         self.active_tool_type = tool_type;
-        self.active_tool = if tool_type==ToolType::Fillet{Box::new(ingetrazo_tools::fillet::FilletTool::with_parameters(self.fillet_parameters.0,self.fillet_parameters.1))}else{create_tool(tool_type)};
+        self.active_tool = if tool_type==ToolType::Fillet{Box::new(ingetrazo_tools::fillet::FilletTool::with_parameters(self.fillet_parameters.0,self.fillet_parameters.1))}else if tool_type==ToolType::Paint{let color=self.scene.materials.get(&self.active_material).map(|m|m.color).unwrap_or([0.8,0.8,0.8,1.]);Box::new(ingetrazo_tools::paint::PaintTool::with_material(self.active_material.clone(),color))}else{create_tool(tool_type)};
         self.active_tool.on_activate(&mut self.scene);
         self.status_message.clear();
         self.vcb_text.clear();
@@ -489,6 +490,7 @@ impl IngeTrazoApp {
         if self.scene.active_sheet_index.is_some(){self.undo_composer_edit();return false;}
         self.finish_composer_edit();
         if self.active_tool.prepare_undo(!self.undo_stack.is_empty()){return false;}
+        if let Some(changed)=self.material_history_step(false){return changed;}
         if let Some(changed)=self.bim_metadata_history_step(false){return changed;}
         if self.refuse_component_history_step(false){return false;}
         self.seal_view_history();self.seal_terrain_history();self.seal_layer_history();self.seal_image_history();
@@ -541,6 +543,7 @@ impl IngeTrazoApp {
         self.sync_document_presentation();
         if self.scene.active_sheet_index.is_some(){self.redo_composer_edit();return false;}
         self.finish_composer_edit();
+        if let Some(changed)=self.material_history_step(true){return changed;}
         if let Some(changed)=self.bim_metadata_history_step(true){return changed;}
         if self.refuse_component_history_step(true){return false;}
         let version=self.scene.version;self.active_tool.end_transient_before_history(&mut self.scene);
@@ -739,25 +742,19 @@ impl IngeTrazoApp {
         }
     }
 
-    pub fn apply_material_to_selection(&mut self, mat_name: &str) {
-        self.save_undo_state();
-        self.active_material = mat_name.to_string();
-        let mut count = 0;
-        for item in &self.scene.selection {
-            if let SelectionItem::Face(f_id) = item {
-                if *f_id < self.scene.mesh.faces.len() {
-                    self.scene.mesh.faces[*f_id].attrs.insert("mat".to_string(), serde_json::Value::String(mat_name.to_string()));
-                    self.scene.mesh.faces[*f_id].attrs.insert("material".to_string(), serde_json::Value::String(mat_name.to_string()));
-                    count += 1;
-                }
-            }
-        }
-        self.scene.bump_version();
-        if count > 0 {
-            self.status_message = format!("Applied '{mat_name}' to {count} face(s)");
-        } else {
-            self.status_message = format!("Active material set to '{mat_name}'");
-        }
+    pub fn activate_named_material(&mut self,mat_name:&str){self.active_material=mat_name.into();self.set_tool(ToolType::Paint);self.status_message=format!("Active material: {mat_name}");}
+    pub fn apply_material_to_selection(&mut self,mat_name:&str){
+        let result=(||->Result<usize,String>{
+            let material=self.scene.materials.get(mat_name).ok_or("Select an in-model material")?.clone();let stamp=material.face_recipe();
+            let mut candidate=self.scene.clone();let mut count=0;
+            for selected in &self.scene.selection{match selected{
+                SelectionItem::Face(i)=>{let f=candidate.mesh.faces.get_mut(*i).ok_or("Material face no longer resolves")?;for key in ["mat","color","texture","opacity"]{if let Some(v)=stamp.get(key){f.attrs.insert(key.into(),v.clone());}else{f.attrs.remove(key);}}count+=1;},
+                SelectionItem::Group(i)=>{let group=candidate.groups.get_mut(*i).ok_or("Material group no longer resolves")?;if !group.native_document.is_object(){if group.native_document.is_null(){group.native_document=serde_json::json!({});}else{return Err("Material group metadata is not an object".into());}}group.native_document["material"]=stamp.clone();count+=1;},
+                _=>return Err("Select faces or groups in the active context to paint".into()),
+            }}
+            if count==0||candidate==self.scene{return Ok(0);}
+            self.undo_stack.try_reserve(1).map_err(|_|"Material history allocation refused")?;self.save_undo_state();candidate.bump_version();self.scene=candidate;self.bump_render_paint_revision();Ok(count)
+        })();match result{Ok(count)=>{self.active_material=mat_name.into();self.status_message=format!("Applied {mat_name} to {count} targets");},Err(error)=>self.status_message=error}
     }
 
     pub fn purge_unused_layers(&mut self) {
@@ -1058,7 +1055,7 @@ impl IngeTrazoApp {
         self.blender_state.poll_events(ctx);
         self.tick_blender_follow(ctx);
 
-        if self.text3d_dialog.is_none() {
+        if self.text3d_dialog.is_none()&&!self.show_material_edit_dialog {
         // A complete Ctrl chord can arrive in one frame; the final modifier
         // snapshot is then released. Use the key event's captured modifiers.
         let (undo_pressed,redo_pressed)=ctx.input(|i|i.events.iter().fold((false,false),|mut flags,event|{
@@ -1131,21 +1128,21 @@ impl IngeTrazoApp {
 
         // 1. Menu Bar Panel
         egui::TopBottomPanel::top("menu_bar").show(ctx, |ui| {
-            ui.set_enabled(self.text3d_dialog.is_none());
+            ui.set_enabled(self.text3d_dialog.is_none()&&!self.show_material_edit_dialog);
             render_menu_bar(self, ui);
         });
 
         // 2. Toolbar Panel
         if self.show_toolbar {
             egui::TopBottomPanel::top("toolbar").show(ctx, |ui| {
-                ui.set_enabled(self.text3d_dialog.is_none());
+                ui.set_enabled(self.text3d_dialog.is_none()&&!self.show_material_edit_dialog);
             render_top_toolbar(self, ui);
             });
         }
 
         // 3. Status Bar Panel
         egui::TopBottomPanel::bottom("status_bar").show(ctx, |ui| {
-            ui.set_enabled(self.text3d_dialog.is_none());
+            ui.set_enabled(self.text3d_dialog.is_none()&&!self.show_material_edit_dialog);
             render_status_bar(self, ui);
         });
 
@@ -1154,7 +1151,7 @@ impl IngeTrazoApp {
             .exact_width(42.0)
             .resizable(false)
             .show(ctx, |ui| {
-                ui.set_enabled(self.text3d_dialog.is_none());
+                ui.set_enabled(self.text3d_dialog.is_none()&&!self.show_material_edit_dialog);
             render_left_cad_palette(self, ui);
             });
 
@@ -1165,14 +1162,14 @@ impl IngeTrazoApp {
                 .min_width(200.0)
                 .max_width(400.0)
                 .show(ctx, |ui| {
-                    ui.set_enabled(self.text3d_dialog.is_none());
+                    ui.set_enabled(self.text3d_dialog.is_none()&&!self.show_material_edit_dialog);
             render_side_tray(self, ui);
                 });
         }
 
         // 6. Central 3D Viewport or 2D Sheet Composer Canvas
         egui::CentralPanel::default().show(ctx, |ui| {
-            ui.set_enabled(self.text3d_dialog.is_none());
+            ui.set_enabled(self.text3d_dialog.is_none()&&!self.show_material_edit_dialog);
             if let Some(sheet_idx) = self.scene.active_sheet_index {
                 crate::composer::render_sheet_composer(self, ui, sheet_idx);
             } else {

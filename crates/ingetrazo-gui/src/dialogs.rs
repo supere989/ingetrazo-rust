@@ -89,6 +89,7 @@ pub fn pick_save_file(title: &str, default_name: &str, filter: &str) -> Option<P
 }
 
 pub fn render_dialogs(app: &mut IngeTrazoApp, ctx: &egui::Context) {
+    app.render_material_editor(ctx);
     // 1. About Dialog
     if app.show_about_dialog {
         egui::Window::new(tr("About IngeTrazo"))
@@ -460,37 +461,16 @@ pub fn render_dialogs(app: &mut IngeTrazoApp, ctx: &egui::Context) {
                     ui.add(egui::Slider::new(&mut app.texture_rot_deg, 0.0..=360.0));
                     ui.end_row();
 
-                    ui.label(tr("Opacity:"));
-                    ui.add(egui::Slider::new(&mut app.texture_opacity, 0.05..=1.0));
-                    ui.end_row();
+
                 });
 
                 ui.separator();
                 ui.horizontal(|ui| {
                     if ui.button(tr("Apply to Selection")).clicked() {
-                        for item in &app.scene.selection {
-                            if let ingetrazo_core::scene::SelectionItem::Face(f_id) = item {
-                                if *f_id < app.scene.mesh.faces.len() {
-                                    let mut tex_val = serde_json::json!({
-                                        "sw": app.texture_scale_u,
-                                        "sh": app.texture_scale_v,
-                                        "rot": app.texture_rot_deg,
-                                    });
-                                    if let Some(mat) = app.scene.materials.get(&app.active_material) {
-                                        if let Some(embed) = &mat.texture_embed {
-                                            tex_val["embed"] = serde_json::Value::String(embed.clone());
-                                        } else if let Some(path) = &mat.texture_path {
-                                            tex_val["path"] = serde_json::Value::String(path.clone());
-                                        }
-                                    }
-                                    app.scene.mesh.faces[*f_id].attrs.insert("texture".to_string(), tex_val);
-                                    app.scene.mesh.faces[*f_id].attrs.insert("opacity".to_string(), serde_json::json!(app.texture_opacity));
-                                }
-                            }
+                        match app.edit_selected_texture_mapping(app.texture_scale_u as f64,app.texture_scale_v as f64,app.texture_rot_deg as f64){
+                            Ok(_)=>app.show_texture_edit_dialog=false,
+                            Err(error)=>app.status_message=error,
                         }
-                        app.scene.bump_version();
-                        app.status_message = tr("Applied texture mapping to selection");
-                        app.show_texture_edit_dialog = false;
                     }
                     if ui.button(tr("Close")).clicked() {
                         app.show_texture_edit_dialog = false;

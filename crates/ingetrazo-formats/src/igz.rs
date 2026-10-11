@@ -354,13 +354,7 @@ fn group_to_json(g: &Group, protos: &mut Vec<serde_json::Value>, shared: &mut st
     obj
 }
 
-fn material_model(mat: &Material) -> serde_json::Value {
-    serde_json::json!({
-        "name": mat.name, "color": mat.color, "opacity": mat.opacity,
-        "roughness": mat.roughness,
-        "texture": {"path": mat.texture_path, "embed": mat.texture_embed}
-    })
-}
+fn material_model(mat: &Material) -> serde_json::Value { mat.archive_model() }
 
 fn point_model(point: &ingetrazo_core::georef::GeoPoint) -> serde_json::Value {
     serde_json::json!({"position":point.position,"name":point.name,"desc":point.desc})

@@ -66,6 +66,7 @@ pub struct Scene {
     /// Direct BIM metadata target patches, carried only by history snapshots.
     #[serde(skip)]
     pub history_bim:Option<crate::bim::MetadataHistory>,
+    #[serde(skip)]pub history_material:Option<crate::materials::RestampHistory>,
     /// Opt-in interpreter command owner and VM stack depth; history snapshots only.
     #[serde(skip)]
     pub history_python: Option<(uuid::Uuid, usize)>,
@@ -142,7 +143,7 @@ impl Scene {
             dimension_frame:glam::DMat4::IDENTITY,
             drawing_frame:None,
             history_context:vec![],
-            display_style:Default::default(),shadows:Default::default(),history_shareback:None,history_axes:None,history_bim:None,history_python:None,history_views:Default::default(),history_group_visibility:None,history_terrain:Default::default(),history_layers:Default::default(),
+            display_style:Default::default(),shadows:Default::default(),history_shareback:None,history_axes:None,history_bim:None,history_material:None,history_python:None,history_views:Default::default(),history_group_visibility:None,history_terrain:Default::default(),history_layers:Default::default(),
             component_definitions: HashMap::new(),
             mesh_shares: HashMap::new(),
             native_document: serde_json::Value::Null,

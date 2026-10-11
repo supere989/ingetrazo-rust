@@ -7,6 +7,7 @@
 //! Includes menu bar, toolbar, status bar with VCB, inspector side tray,
 //! and interactive 3D viewport canvas.
 
+mod material_controller;
 pub mod app;
 #[cfg(feature="engineering-python")]
 mod engineering_python;

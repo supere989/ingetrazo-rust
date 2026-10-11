@@ -51,15 +51,9 @@ impl PaintTool {
             );
         }
 
+        let stamp=scene.materials[&self.active_material].face_recipe();
         let face = &mut scene.mesh.faces[face_id];
-        face.attrs.insert(
-            "material".to_string(),
-            serde_json::Value::String(self.active_material.clone()),
-        );
-        face.attrs.insert(
-            "color".to_string(),
-            serde_json::to_value(self.active_color).unwrap(),
-        );
+        for key in ["mat","color","texture","opacity"] {if let Some(value)=stamp.get(key){face.attrs.insert(key.into(),value.clone());}else{face.attrs.remove(key);}}
 
         scene.bump_version();
     }
@@ -71,7 +65,7 @@ impl PaintTool {
         }
 
         let face = &scene.mesh.faces[face_id];
-        if let Some(serde_json::Value::String(mat_name)) = face.attrs.get("material") {
+        if let Some(serde_json::Value::String(mat_name)) = face.attrs.get("mat").or_else(||face.attrs.get("material")) {
             self.active_material = mat_name.clone();
             if let Some(mat) = scene.materials.get(mat_name) {
                 self.active_color = mat.color;
@@ -161,7 +155,7 @@ mod tests {
         tool.on_click(&mut scene, &ctx);
 
         assert!(scene.materials.contains_key("Brick"));
-        let face_mat = scene.mesh.faces[f0].attrs.get("material").unwrap().as_str().unwrap();
+        let face_mat = scene.mesh.faces[f0].attrs.get("mat").unwrap().as_str().unwrap();
         assert_eq!(face_mat, "Brick");
 
         // Now change tool material, then use eyedropper to sample f0

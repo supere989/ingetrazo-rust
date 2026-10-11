@@ -75,7 +75,7 @@ impl Navigation {
 fn movement_key(key:egui::Key)->Option<usize>{match key{egui::Key::W=>Some(0),egui::Key::S=>Some(1),egui::Key::D=>Some(2),egui::Key::A=>Some(3),egui::Key::E=>Some(4),egui::Key::Q=>Some(5),_=>None}}
 impl crate::IngeTrazoApp {
  pub fn navigation_suspended(&self)->bool{
-  self.text3d_dialog.is_some()||self.scene.active_sheet_index.is_some()||self.section_name_prompt.is_some()||self.show_open_dialog||self.show_save_dialog||self.show_preferences_dialog||self.show_command_search||self.show_geographic_import_dialog||self.show_texture_edit_dialog||self.show_render_dialog
+  self.text3d_dialog.is_some()||self.scene.active_sheet_index.is_some()||self.section_name_prompt.is_some()||self.show_open_dialog||self.show_save_dialog||self.show_preferences_dialog||self.show_command_search||self.show_geographic_import_dialog||self.show_texture_edit_dialog||self.show_material_edit_dialog||self.show_render_dialog
  }
  pub fn navigation_claims_key(&self,key:egui::Key,modifiers:egui::Modifiers)->bool{!self.navigation_suspended()&&self.navigation.claims_key(key,modifiers)}
 
