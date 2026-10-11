@@ -1,0 +1,10 @@
+{
+  "head_sha": "3195c7b6516f79c66abc583c08c05efd2515e955",
+  "sources": {
+    ".github/workflows/parity.yml": "2378d9db8cf973d3c62b06d4f4616e3c313f9bce1d597582cdfd9d102c1df21a",
+    ".github/workflows/metal-compute-consumer.yml": "bce24078146f16afab7cd9998386a03a0aa2b69c0a6954bfc517b009c452efb9",
+    "scripts/composer_vector_fixtures.py": "7c6b220622a8b9de409cb861ec24832f239e34cec3b5d349df2fff6ca9356b88",
+    "scripts/check-document-axes-integration.py": "48baeb32969192f46e69c08768495c170000e05a14626cb599fd2b15a92656df",
+    "scripts/check-nested-import.py": "bee1464e1f8b8cd4f655de52350f6ea8ef2d920dd78bb53733609e2f125ccd7e"
+  }
+}
