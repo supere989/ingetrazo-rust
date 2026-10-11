@@ -19,6 +19,8 @@ Independent latest ARM evidence: [all nine GPU Canvas images exact; presentation
 
 ## Dated implementation and verification evidence
 
+Combined review CI complete (2026-10-11 UTC): source `f44cbd86` passes all five configured jobs, including Linux original/native semantic workflows and both Apple SDK jobs. [Complete retained job evidence](audits/review-f44-ci-completion.json). Later camera, readiness and scripting changes retain separately scoped checks; strict rendering/platform/release acceptance remains OPEN.
+
 Matched-camera full-scene annotation residual (2026-10-11 UTC): independently decoded Chapel asymmetric images differ from original Python by 3,868 pixels with annotations and 963 without. Source/native annotation masks differ at 494 pixels; both restore their own images exactly. [Root comparison](audits/annotation-source-window-diagnosis/root-image-review.json). This is an actual rendering/depth/overlay gap after camera admission, not a capture-readiness failure. Strict full-scene parity remains OPEN.
 
 Intel literal SDK acceptance (2026-10-11 UTC): independent verification confirms both direct-AppKit Rust and Objective-C controls pass, including four SDK callbacks with positive timestamps, matching drawable identities and completed GPU commands. [Root review](audits/metalkit-presenter-control/native-run38097341614/intel-root-review.json). ARM remains failed. Native Metal 3D viewport implementation is now the next production workstream; existing CAD/Canvas evidence does not cover the missing full world renderer.
