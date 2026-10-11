@@ -41,6 +41,10 @@ for name in ["closed"]:
  def rgba(im):
   im=im.convertToFormat(QImage.Format_RGBA8888)
   return np.frombuffer(im.constBits(),np.uint8).reshape(im.height(),im.bytesPerLine())[:,:im.width()*4].reshape(im.height(),im.width(),4).copy()
+ vp.makeCurrent();identity_lib=ctypes.CDLL("libGL.so.1");identity_lib.glGetString.argtypes=[ctypes.c_uint];identity_lib.glGetString.restype=ctypes.c_char_p
+ identity={key:identity_lib.glGetString(token).decode()for key,token in [("vendor",0x1F00),("renderer",0x1F01),("version",0x1F02)]}
+ (root/"gl-identity.json").write_text(json.dumps(identity,indent=2)+"\n");vp.doneCurrent()
+ assert "NVIDIA" in identity["vendor"],"Original source must use retained NVIDIA transport"
  expected=QImage(str(Path(__file__).resolve().parents[1]/"docs/audits/section-original-gl/closed.png"))
  assert np.array_equal(rgba(image),rgba(expected)),"Fresh original resolved frame differs from frozen closed reference"
  vp.makeCurrent();gl=vp._gl;lib=ctypes.CDLL("libGL.so.1");U=ctypes.c_uint;I=ctypes.c_int;B=ctypes.c_ubyte
