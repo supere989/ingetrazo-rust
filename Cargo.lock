@@ -1872,6 +1872,7 @@ dependencies = [
  "libm",
  "log",
  "pdf-writer",
+ "png 0.18.1",
  "roxmltree",
  "serde",
  "serde_json",
