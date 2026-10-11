@@ -1,0 +1,58 @@
+{
+  "arm": {
+    "source_members_authenticated": 68,
+    "closed_reference_equals_prior86": true,
+    "candidate_counts": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      134,
+      152,
+      134,
+      0
+    ],
+    "newly_wrong": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  "intel": {
+    "source_members_authenticated": 68,
+    "closed_reference_equals_prior86": true,
+    "candidate_counts": [
+      292,
+      292,
+      292,
+      8,
+      292,
+      0,
+      1003,
+      1076,
+      1003,
+      2
+    ],
+    "newly_wrong": [
+      142,
+      142,
+      142,
+      0,
+      142,
+      0,
+      0,
+      0,
+      0,
+      0
+    ]
+  }
+}
