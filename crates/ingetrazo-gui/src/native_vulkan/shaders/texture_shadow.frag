@@ -1,4 +1,5 @@
 #version 450
+layout(constant_id=0)const bool pre_raster_clip=false;
 layout(set=0,binding=0)uniform sampler2D source_texture;
 layout(location=0)in vec2 tex_uv;
 layout(location=1)in vec3 world_position;
@@ -62,7 +63,7 @@ vec3 shadow_surface(vec3 rgb){
  return rgb*mix(shadow.parameters.x,1.,clamp(ndl*1.5,0.,1.)*lit);
 }
 
-void main(){if((p.clip_enabled&1u)!=0u&&dot(p.plane,vec4(world_position,1.))>0.)discard;
+void main(){if(!pre_raster_clip&&(p.clip_enabled&1u)!=0u&&dot(p.plane,vec4(world_position,1.))>0.)discard;
  if((p.clip_enabled&2u)!=0u){color=vec4(0.);return;} vec4 texel=texture(source_texture,tex_uv);
  if(p.opacity>.999&&texel.a<.5){if((p.cutout_height&1u)!=0u)discard;int x=int(gl_FragCoord.x)%4;int y=int(float(p.cutout_height>>1u)-gl_FragCoord.y)%4;if(texel.a<BAYER[y*4+x])discard;color=vec4(texel.rgb*p.shade,1.);}else color=vec4(texel.rgb*p.shade,texel.a*p.opacity);
 color.rgb=shadow_surface(color.rgb);}

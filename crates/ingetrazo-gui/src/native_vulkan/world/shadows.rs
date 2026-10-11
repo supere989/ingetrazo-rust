@@ -408,6 +408,7 @@ impl Casters {
             false,
             clip_distance,
             &owner.lifetime,
+            context.source_depth_clip_enabled,
         )?;
         owner.transparent = caster_pipeline(
             &owner.device,
@@ -417,6 +418,7 @@ impl Casters {
             false,
             clip_distance,
             &owner.lifetime,
+            context.source_depth_clip_enabled,
         )?;
         owner.fallback = caster_pipeline(
             &owner.device,
@@ -426,6 +428,7 @@ impl Casters {
             false,
             clip_distance,
             &owner.lifetime,
+            context.source_depth_clip_enabled,
         )?;
         owner.textured = caster_pipeline(
             &owner.device,
@@ -435,6 +438,7 @@ impl Casters {
             true,
             clip_distance,
             &owner.lifetime,
+            context.source_depth_clip_enabled,
         )?;
         Ok(owner)
     }
@@ -447,6 +451,7 @@ fn caster_pipeline(
     textured: bool,
     clip_distance: bool,
     lifetime: &Lifetime,
+    source_depth: bool,
 ) -> Result<vk::Pipeline, String> {
     let vertex = ash::util::read_spv(&mut std::io::Cursor::new(if clip_distance {
         if textured {
@@ -481,15 +486,18 @@ fn caster_pipeline(
             return Err(device_error(lifetime, e));
         }
     };
+    let source_value=u32::from(source_depth);let entries=[vk::SpecializationMapEntry{constant_id:0,offset:0,size:4}];
+    let specialization=vk::SpecializationInfo::default().map_entries(&entries).data(bytemuck::bytes_of(&source_value));
+    let clip_value=u32::from(clip_distance);let clip_specialization=vk::SpecializationInfo::default().map_entries(&entries).data(bytemuck::bytes_of(&clip_value));
     let stages = [
         vk::PipelineShaderStageCreateInfo::default()
             .stage(vk::ShaderStageFlags::VERTEX)
             .module(vertex)
-            .name(c"main"),
+            .name(c"main").specialization_info(&specialization),
         vk::PipelineShaderStageCreateInfo::default()
             .stage(vk::ShaderStageFlags::FRAGMENT)
             .module(fragment)
-            .name(c"main"),
+            .name(c"main").specialization_info(&clip_specialization),
     ];
     let binding = [vk::VertexInputBindingDescription {
         binding: 0,
@@ -515,9 +523,9 @@ fn caster_pipeline(
         .vertex_attribute_descriptions(if textured { &attrs } else { &attrs[..1] });
     let assembly = vk::PipelineInputAssemblyStateCreateInfo::default()
         .topology(vk::PrimitiveTopology::TRIANGLE_LIST);
-    let viewport = vk::PipelineViewportStateCreateInfo::default()
-        .viewport_count(1)
-        .scissor_count(1);
+    let mut depth_control=vk::PipelineViewportDepthClipControlCreateInfoEXT::default().negative_one_to_one(source_depth);
+    let mut viewport=vk::PipelineViewportStateCreateInfo::default().viewport_count(1).scissor_count(1);
+    if source_depth{viewport=viewport.push_next(&mut depth_control);}
     let raster = vk::PipelineRasterizationStateCreateInfo::default()
         .polygon_mode(vk::PolygonMode::FILL)
         .line_width(1.)
@@ -771,35 +779,38 @@ impl Owner {
             )
         }
         .map_err(|e| device_error(&owner.lifetime, e))?[0];
-        owner.surface = super::make_pipeline_source(
+        owner.surface = super::make_pipeline_source_depth(
             &owner.device,
             render_pass,
             owner.layout,
             super::WorldPass::Surface,
             samples,
-            false,
+            clip_distance,
             None,
             true,
+            context.source_depth_clip_enabled,
         )?;
-        owner.transparent = super::make_pipeline_source(
+        owner.transparent = super::make_pipeline_source_depth(
             &owner.device,
             render_pass,
             owner.layout,
             super::WorldPass::Transparent,
             samples,
-            false,
+            clip_distance,
             None,
             true,
+            context.source_depth_clip_enabled,
         )?;
-        owner.ground_pipeline = super::make_pipeline_source(
+        owner.ground_pipeline = super::make_pipeline_source_depth(
             &owner.device,
             render_pass,
             owner.layout,
             super::WorldPass::ShadowGround,
             samples,
-            false,
+            clip_distance,
             None,
             true,
+            context.source_depth_clip_enabled,
         )?;
         for (i, pass) in [
             super::WorldPass::FrontSurface,
@@ -816,7 +827,7 @@ impl Owner {
         .into_iter()
         .enumerate()
         {
-            owner.paint[i] = super::make_pipeline_source(
+            owner.paint[i] = super::make_pipeline_source_depth(
                 &owner.device,
                 render_pass,
                 owner.layout,
@@ -825,6 +836,7 @@ impl Owner {
                 clip_distance,
                 None,
                 true,
+                context.source_depth_clip_enabled,
             )?;
         }
         for i in 0..16 {
@@ -834,6 +846,8 @@ impl Owner {
                 owner.layout,
                 samples,
                 i,
+                context.source_depth_clip_enabled,
+                clip_distance,
             )?;
         }
         Ok(owner)

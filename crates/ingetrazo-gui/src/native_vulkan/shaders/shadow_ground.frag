@@ -1,4 +1,5 @@
 #version 450
+layout(constant_id=0)const bool pre_raster_clip=false;
 layout(location=1)in vec3 world_position;
 layout(location=0)out vec4 output_color;
 // Source viewport/basic.frag shadow_light, kept in source operation order.
@@ -59,4 +60,4 @@ vec3 shadow_surface(vec3 rgb){
 }
 
 layout(push_constant)uniform Clip{layout(offset=64)vec4 plane;layout(offset=80)uint enabled;}clip;
-void main(){if(clip.enabled!=0u&&dot(vec4(world_position,1.),clip.plane)>0.)discard;output_color=vec4(0.,0.,0.,(1.-shadow.parameters.x)*(1.-shadow_light()));}
+void main(){if(!pre_raster_clip&&clip.enabled!=0u&&dot(vec4(world_position,1.),clip.plane)>0.)discard;output_color=vec4(0.,0.,0.,(1.-shadow.parameters.x)*(1.-shadow_light()));}

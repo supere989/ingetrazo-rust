@@ -110,7 +110,7 @@ impl ReferenceImages {
         }
         .map_err(|e| e.to_string())?;
         for i in 0..2 {
-            r.pipelines[i] = pipeline(&r.device, pass, r.layout, samples, i)?;
+            r.pipelines[i] = pipeline(&r.device, pass, r.layout, samples, i, context.source_depth_clip_enabled)?;
         }
         Ok(r)
     }
@@ -311,6 +311,7 @@ fn pipeline(
     layout: vk::PipelineLayout,
     samples: vk::SampleCountFlags,
     index: usize,
+    source_depth: bool,
 ) -> Result<vk::Pipeline, String> {
     let load = |bytes: &[u8]| {
         ash::util::read_spv(&mut std::io::Cursor::new(bytes)).map_err(|e| e.to_string())
@@ -369,8 +370,8 @@ fn pipeline(
         .alpha_blend_op(vk::BlendOp::ADD)
         .color_write_mask(vk::ColorComponentFlags::RGBA)];
     let blend = vk::PipelineColorBlendStateCreateInfo::default().attachments(&colors);
-    let dynamic = vk::PipelineDynamicStateCreateInfo::default()
-        .dynamic_states(&[vk::DynamicState::VIEWPORT, vk::DynamicState::SCISSOR]);
+    let mut states=vec![vk::DynamicState::VIEWPORT,vk::DynamicState::SCISSOR];if source_depth{states.push(vk::DynamicState::DEPTH_CLIP_NEGATIVE_ONE_TO_ONE_EXT);}
+    let dynamic=vk::PipelineDynamicStateCreateInfo::default().dynamic_states(&states);
     let result = unsafe {
         device.create_graphics_pipelines(
             vk::PipelineCache::null(),

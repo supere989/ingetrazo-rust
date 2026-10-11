@@ -39,18 +39,22 @@ impl VulkanContext {
    candidates.sort_by_key(|(rank,index,_,_,_)|(*rank,*index));
    let (_,_,physical,graphics,name)=candidates.pop().ok_or("No headless adapter matches strict vendor/type/name request; software fallback refused")?;
    let extensions=unsafe {instance.enumerate_device_extension_properties(physical)?};
-   let enabled=if extensions.iter().any(|e|unsafe {CStr::from_ptr(e.extension_name.as_ptr())}==ash::ext::memory_budget::NAME){vec![ash::ext::memory_budget::NAME.as_ptr()]}else{vec![]};
+   let mut enabled=if extensions.iter().any(|e|unsafe {CStr::from_ptr(e.extension_name.as_ptr())}==ash::ext::memory_budget::NAME){vec![ash::ext::memory_budget::NAME.as_ptr()]}else{vec![]};
+   let (source_depth_clip_enabled,mut source_clip,mut source_dynamic)=super::source_depth::negotiate(&instance,physical,&extensions);
+   if source_depth_clip_enabled{enabled.extend([ash::ext::depth_clip_control::NAME.as_ptr(),ash::ext::extended_dynamic_state3::NAME.as_ptr()]);}
    let priorities=[1.];let queues=[vk::DeviceQueueCreateInfo::default().queue_family_index(graphics).queue_priorities(&priorities)];
    let available=unsafe{instance.get_physical_device_features(physical)};let texture_bc_enabled=enable_bc&&available.texture_compression_bc!=0;let features=vk::PhysicalDeviceFeatures::default().shader_clip_distance(available.shader_clip_distance!=0).texture_compression_bc(texture_bc_enabled);
-   let device=unsafe {instance.create_device(physical,&vk::DeviceCreateInfo::default().queue_create_infos(&queues).enabled_extension_names(&enabled).enabled_features(&features),None)?};
+   let mut info=vk::DeviceCreateInfo::default().queue_create_infos(&queues).enabled_extension_names(&enabled).enabled_features(&features);
+   if source_depth_clip_enabled{info=info.push_next(&mut source_clip).push_next(&mut source_dynamic);}
+   let device=unsafe {instance.create_device(physical,&info,None)?};
    let pool=match unsafe {device.create_command_pool(&vk::CommandPoolCreateInfo::default().queue_family_index(graphics).flags(vk::CommandPoolCreateFlags::RESET_COMMAND_BUFFER),None)} {Ok(pool)=>pool,Err(e)=>{unsafe {device.destroy_device(None)};return Err(Box::<dyn Error>::from(e));}};
    let queue=unsafe {device.get_device_queue(graphics,0)};
    eprintln!("Selected headless adapter {name}; strict request {:?}; no surface/present requirement",request);
-   Ok((physical,graphics,device,pool,queue,texture_bc_enabled))
+   Ok((physical,graphics,device,pool,queue,texture_bc_enabled,source_depth_clip_enabled))
   })();
-  let (physical,graphics,device,pool,queue,texture_bc_enabled)=match result {Ok(values)=>values,Err(e)=>{unsafe {instance.destroy_instance(None)};return Err(e);}};
+  let (physical,graphics,device,pool,queue,texture_bc_enabled,source_depth_clip_enabled)=match result {Ok(values)=>values,Err(e)=>{unsafe {instance.destroy_instance(None)};return Err(e);}};
   let debug_utils=debug_utils::Instance::new(&entry,&instance);let surface=surface::Instance::new(&entry,&instance);
-  Ok(Self{startup_audit:Default::default(),lifetime:std::sync::Arc::new(super::lifetime::Lifetime::new(device.clone(),queue)),_entry:Some(entry),instance,debug_utils,debug_utils_messenger:vk::DebugUtilsMessengerEXT::null(),surface,surface_khr:vk::SurfaceKHR::null(),physical_device:physical,graphics_q_index:graphics,present_q_index:graphics,device,graphics_queue:queue,present_queue:queue,command_pool:pool,present_fences_enabled:false,texture_bc_enabled,transfer_timeout_ns:5_000_000_000,diagnostic_fail_fast:true})
+  Ok(Self{startup_audit:Default::default(),lifetime:std::sync::Arc::new(super::lifetime::Lifetime::new(device.clone(),queue)),_entry:Some(entry),instance,debug_utils,debug_utils_messenger:vk::DebugUtilsMessengerEXT::null(),surface,surface_khr:vk::SurfaceKHR::null(),physical_device:physical,graphics_q_index:graphics,present_q_index:graphics,device,graphics_queue:queue,present_queue:queue,command_pool:pool,present_fences_enabled:false,texture_bc_enabled,source_depth_clip_enabled,transfer_timeout_ns:5_000_000_000,diagnostic_fail_fast:true})
  }
 }
 #[cfg(test)]mod tests {
