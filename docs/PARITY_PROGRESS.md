@@ -19,6 +19,8 @@ Latest independent rendering diagnosis: [real layout](audits/annotation-real-ope
 
 ## Dated implementation and verification evidence
 
+ARM world artifact correction (2026-10-11 UTC): root verifies the ZIP digest and every retained source hash. Contrary to the initial failure interpretation, both positive draw-order GPU frames exist and pass the strict interior/background oracle. The next depth-disabled negative frame is absent; execution fails before full report publication. [Independent artifact review](audits/metal-world-root-review/arm-artifact-review.json). Precise command error, negative control, warm reuse and ownership acceptance remain pending; the full fixture still FAILS.
+
 First native world runtime observation (2026-10-11 UTC): ARM source `4a1a0395` builds successfully against the Apple SDK but fails actual runtime and pixel checking; failure artifacts upload successfully. Intel remains in its existing SDK build at this observation. [Direct job/log evidence](audits/metal-world-root-review/native-run-first-observation.json). Failure diagnosis is required before any retry; native world acceptance remains OPEN.
 
 Qt primitive-family diagnosis (2026-10-11 UTC): independently decoded source-only filtered captures differ between actual widget and raster targets at 455 geometry pixels and 3,344 glyph pixels. [Root review](audits/annotation-widget-primitive-engine/root-review.json). Both primitive families need actual widget rendering treatment; these filtered diagnostics do not replace complete-frame acceptance.

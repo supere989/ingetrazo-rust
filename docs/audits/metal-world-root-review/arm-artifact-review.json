@@ -1,0 +1,23 @@
+{
+  "run_id": 38098691387,
+  "source": "4a1a0395900bdb9e19003ef40a9abd4403d7ec61",
+  "zip_sha256": "2e81ff205f16c0ee5485e44385960a9ecd52b4a6738d8952db04134830341ba4",
+  "source_hashes_verified": true,
+  "retained_positive_frames": {
+    "far-then-near": {
+      "interior_pixels": 1152,
+      "background_pixels": 2584
+    },
+    "near-then-far": {
+      "interior_pixels": 1152,
+      "background_pixels": 2584
+    }
+  },
+  "runtime_result": {
+    "exit_code": 1,
+    "outer_timeout": false
+  },
+  "missing_next_frame": "depth-disabled-negative",
+  "correction": "Two actual positive draw-order frames exist and pass interior/background oracle; failure is after these, not first draw. Precise Metal error remains unreported.",
+  "full_fixture_acceptance": false
+}
