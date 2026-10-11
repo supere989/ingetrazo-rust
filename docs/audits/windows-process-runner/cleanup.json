@@ -1,0 +1,285 @@
+{
+  "authorization": "Root confirmed merged checks and released terminal duplicates; no active owned consumer",
+  "verified_archives": [
+    {
+      "path": "/tmp/ingetrazo-solid-boolean-workflow/docs/audits/solid-boolean-workflow/records.zip",
+      "sha256": "0567214c205b7b27ebb3cea7971286ee43000910cee85c35c07700c4630ba285",
+      "records": 4
+    },
+    {
+      "path": "/tmp/ingetrazo-solid-boolean-workflow/docs/audits/solid-boolean-workflow/disjoint-records.zip",
+      "sha256": "da94e2da6d6b849cfc4d56a6c8b9049d07cc2a3876104c9b99bbc683ab5b7390",
+      "records": 3
+    },
+    {
+      "path": "/tmp/ingetrazo-native-viewport-textures/docs/audits/native-viewport-textures/records.zip",
+      "sha256": "c5120f87c79159417acc5f6c60c0cbd04047c03de6f7b191d17a46f50dd9b700",
+      "records": 3
+    },
+    {
+      "path": "/tmp/ingetrazo-windows-process-acceptance/docs/audits/windows-process-runner/records.zip",
+      "sha256": "e4d82fc5caa3f58584a0c6b9eec2871b166535b6eb8d9a7085556c6eb307e861",
+      "records": 30
+    }
+  ],
+  "released_bytes": 21390124,
+  "released": [
+    {
+      "path": "/tmp/solid-boolean-result.json",
+      "bytes": 10707,
+      "files": [
+        {
+          "relative": ".",
+          "bytes": 10707,
+          "sha256": "af8adc8afc4721c37d388e7af4e61ca98e2eaf13aeb81c95e6bd53238cb2c2dd"
+        }
+      ]
+    },
+    {
+      "path": "/tmp/solid-boolean-build.log",
+      "bytes": 19564,
+      "files": [
+        {
+          "relative": ".",
+          "bytes": 19564,
+          "sha256": "950b4e04c43fb38dd14fa789f4d45089ab0280f767b54d1b4e44121772c15c6d"
+        }
+      ]
+    },
+    {
+      "path": "/tmp/solid-boolean-runtime.log",
+      "bytes": 0,
+      "files": [
+        {
+          "relative": ".",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    {
+      "path": "/tmp/solid-disjoint-original.json",
+      "bytes": 1257,
+      "files": [
+        {
+          "relative": ".",
+          "bytes": 1257,
+          "sha256": "1935a75818a26ae66d5671843c0a1fdcd3e4157cf03d545d4afb97d8afa1a2dc"
+        }
+      ]
+    },
+    {
+      "path": "/tmp/solid-disjoint-original.log",
+      "bytes": 0,
+      "files": [
+        {
+          "relative": ".",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    {
+      "path": "/tmp/native-viewport-textures-test.log",
+      "bytes": 18735,
+      "files": [
+        {
+          "relative": ".",
+          "bytes": 18735,
+          "sha256": "181fa08059afe372eebeeb9fc9dd66ecd581bfb0adfb4dc9b33ee79efce8d5df"
+        }
+      ]
+    },
+    {
+      "path": "/tmp/native-viewport-textures-setup-failure.log",
+      "bytes": 2305,
+      "files": [
+        {
+          "relative": ".",
+          "bytes": 2305,
+          "sha256": "8baba3df958d2a59069e74a4dd48fcbe9069c809225172be015f60f9151f7d98"
+        }
+      ]
+    },
+    {
+      "path": "/tmp/windows-runner-linux-regression",
+      "bytes": 21139,
+      "files": [
+        {
+          "relative": "init-0.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "relative": "init-0.stdout",
+          "bytes": 21,
+          "sha256": "96bc5a97b369b9499bac54e9856eba39025aadf08890e07ad62bd8e4e08235b1"
+        },
+        {
+          "relative": "original-after.igz",
+          "bytes": 2595,
+          "sha256": "ddc519bdcc8b3a40d3c18e15ae638eb147cf254e17d2a22f609787d8100d74dd"
+        },
+        {
+          "relative": "original-before.igz",
+          "bytes": 2595,
+          "sha256": "ddc519bdcc8b3a40d3c18e15ae638eb147cf254e17d2a22f609787d8100d74dd"
+        },
+        {
+          "relative": "recover-6.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "relative": "recover-6.stdout",
+          "bytes": 899,
+          "sha256": "a7ef1f89bd3a57f89e309e9a155d33e1c7d107ff2303956de6d399eb7ab64e3c"
+        },
+        {
+          "relative": "recovered.igz",
+          "bytes": 2595,
+          "sha256": "8de878386b45967031237efcc6611f43a2c3c1a2281390dab67aac22c526e87b"
+        },
+        {
+          "relative": "result.json",
+          "bytes": 3127,
+          "sha256": "3e5181658da9c9480bf698bda361d51a632a3b7805195135ae77253ecf040120"
+        },
+        {
+          "relative": "scan-0.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "relative": "scan-0.stdout",
+          "bytes": 73,
+          "sha256": "d3106a9596eef4e79424a91b1178819952bfc81d49b9eed16e4b029ba9c34baf"
+        },
+        {
+          "relative": "scan-1.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "relative": "scan-1.stdout",
+          "bytes": 73,
+          "sha256": "12b24cc8af031e0ed56d9d34bdc3a9cc211e7092bf65f0e9d4abff5af56943fe"
+        },
+        {
+          "relative": "scan-2.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "relative": "scan-2.stdout",
+          "bytes": 73,
+          "sha256": "2a4df8c766fc8bf2b15a2a462145979d47c6096901943865198ead2b6fcdf02d"
+        },
+        {
+          "relative": "scan-3.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "relative": "scan-3.stdout",
+          "bytes": 72,
+          "sha256": "6eab433aa53bbd5af40de35b242f9b4d6ed1ed280ee064ce048194410a5af0aa"
+        },
+        {
+          "relative": "scan-4.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "relative": "scan-4.stdout",
+          "bytes": 72,
+          "sha256": "702b3b418abac0904e9779c03571ff3f1854f4cd299fae6a73b9dd9637b0f389"
+        },
+        {
+          "relative": "scan-5.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "relative": "scan-5.stdout",
+          "bytes": 212,
+          "sha256": "9fdc075a94c8d26e6253df8bdb23a9c849332597483d9dfe715f1add712d6a3c"
+        },
+        {
+          "relative": "state/config/settings.json",
+          "bytes": 631,
+          "sha256": "0c3ec1918a1fe31fd77a04422c3975da4943522bbbc3f01ccd0daf263c0e7d72"
+        },
+        {
+          "relative": "state/data/autosave/.owner-eb139508-95f4-41ae-a342-c48ce5ca15c7.lock",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "relative": "state/data/autosave/discarded/retired-1791724844654-db162f48-e566-4dd8-87f4-860b4c509ca1.igz",
+          "bytes": 2595,
+          "sha256": "8de878386b45967031237efcc6611f43a2c3c1a2281390dab67aac22c526e87b"
+        },
+        {
+          "relative": "state/data/autosave/discarded/retired-1791724844654-db162f48-e566-4dd8-87f4-860b4c509ca1.json",
+          "bytes": 316,
+          "sha256": "36a0c48f0abb568d4d713f7dbe4f8dc55fd1adc00f96ded30aa1852fc528d4da"
+        },
+        {
+          "relative": "state/original.igz",
+          "bytes": 2595,
+          "sha256": "ddc519bdcc8b3a40d3c18e15ae638eb147cf254e17d2a22f609787d8100d74dd"
+        },
+        {
+          "relative": "state/recovered.igz",
+          "bytes": 2595,
+          "sha256": "8de878386b45967031237efcc6611f43a2c3c1a2281390dab67aac22c526e87b"
+        },
+        {
+          "relative": "writer.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    {
+      "path": "/tmp/windows-runner-linux.log",
+      "bytes": 60,
+      "files": [
+        {
+          "relative": ".",
+          "bytes": 60,
+          "sha256": "e52fcecce73f5c56dfc265bc9c8439aaec954997895dbc1845b0a0ef5c5418c8"
+        }
+      ]
+    },
+    {
+      "path": "/tmp/windows-runner-linux-check.json",
+      "bytes": 125,
+      "files": [
+        {
+          "relative": ".",
+          "bytes": 125,
+          "sha256": "a60d4b124415d925b4c4d1fd10ad2ba66f7980770847e8a931985512f64a38e0"
+        }
+      ]
+    },
+    {
+      "path": "/tmp/solid-boolean-frozen",
+      "bytes": 21316232,
+      "files": [
+        {
+          "relative": ".",
+          "bytes": 21316232,
+          "sha256": "0c40479e789522511d049338647704e08da5851902347fbe729a53526d26c37b"
+        }
+      ]
+    }
+  ],
+  "preserved": [
+    "all source worktrees",
+    "canonical archives/manifests",
+    "/tmp/ingetrazo-skp-native-target and every reusable target binary"
+  ],
+  "tests_builds_captures": false
+}
