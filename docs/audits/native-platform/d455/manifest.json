@@ -1,0 +1,83 @@
+[
+  {
+    "file": "d455-arm.zip",
+    "bytes": 22838,
+    "sha256": "083d124a809b52123c0e76b8247afcef68b09c1a29693375379594f1c8b63656",
+    "members": [
+      {
+        "path": "paper-font-native-ci/font-resource.log",
+        "bytes": 20045,
+        "sha256": "67028f18ff5486e03e7d5b532b3ffab37d1d2d3984a8d6360e52e72a61a0d2ee"
+      },
+      {
+        "path": "paper-font-native-ci/tests.log",
+        "bytes": 26261,
+        "sha256": "72b79449776c950ea4fe9e4de34df16408add4f672f398478e1dbd170e8cd5e9"
+      },
+      {
+        "path": "metal-combined-gui-ci/build.log",
+        "bytes": 72782,
+        "sha256": "e378b497f5f9793a5f6c1e362d3af4094ba5d75d8febb9ba0cf497f109f2742f"
+      },
+      {
+        "path": "metal-combined-gui-ci/check.log",
+        "bytes": 76593,
+        "sha256": "7db0a91c14cdc29d07ee55b63e14dfdc1bf917e82ca85aa2c4e08d1e1fb0bbf9"
+      },
+      {
+        "path": "metal-combined-gui-ci/defaults/startup.rgba",
+        "bytes": 16384,
+        "sha256": "b5b4a41a6621393a22fba108714b7a33c9cdbc9c58fc6aa36088059ea2149ca7"
+      }
+    ]
+  },
+  {
+    "file": "d455-intel.zip",
+    "bytes": 22881,
+    "sha256": "623974b435e446cd3f8db71ac142d100c6648b8277ef19e09977e2a35b064952",
+    "members": [
+      {
+        "path": "paper-font-native-ci/font-resource.log",
+        "bytes": 20046,
+        "sha256": "ec48e31ab0c244ef4535dbe4c52700e4bca32c7878b46c70cb68836d0294f7b0"
+      },
+      {
+        "path": "paper-font-native-ci/tests.log",
+        "bytes": 26261,
+        "sha256": "4e8e498e523169cddd007c92f525d506586a52681288a49f39817c205d3c5079"
+      },
+      {
+        "path": "metal-combined-gui-ci/build.log",
+        "bytes": 72782,
+        "sha256": "391182e2dbbdf1a710d70b8a5c3734dacc864e5f3779d3f91c91a80233b28092"
+      },
+      {
+        "path": "metal-combined-gui-ci/check.log",
+        "bytes": 76593,
+        "sha256": "2e473b7ccec90e9244ea5aea32c6bc00f217ed3dea015dddee08dbf014cd574f"
+      },
+      {
+        "path": "metal-combined-gui-ci/defaults/startup.rgba",
+        "bytes": 16384,
+        "sha256": "da26ce1d4c22dd4d893635953027326a4e915f07dfa5896ce47055c3c6785019"
+      }
+    ]
+  },
+  {
+    "file": "job-logs.zip",
+    "bytes": 23244,
+    "sha256": "25c30add86fddaa17e23447f48e976ca6fb58d9dd4af17989b851903a7788234",
+    "members": [
+      {
+        "path": "d455-arm.log",
+        "bytes": 48319,
+        "sha256": "2fd801243fdbe6eb4b2b83f852231a03afdb26dee379ec90a41cb3c1b1314188"
+      },
+      {
+        "path": "d455-intel.log",
+        "bytes": 50043,
+        "sha256": "4abf7e5b5b3a8b52b1e8ee0b5abc46f71d20ddd5de070def95903729d482d682"
+      }
+    ]
+  }
+]

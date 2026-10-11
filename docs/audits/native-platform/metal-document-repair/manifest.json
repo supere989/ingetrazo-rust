@@ -1,0 +1,143 @@
+[
+  {
+    "file": "repair-arm.zip",
+    "bytes": 30185,
+    "sha256": "9be98d5be422588869da4c947d2b634179d633cbb7eabebd1ff930ce7c16050a",
+    "members": [
+      {
+        "path": "paper-font-native-ci/font-resource.log",
+        "bytes": 20045,
+        "sha256": "c9d1e86944d14ac6c338ba7870f50a566e884c13af08101004df32bac2cc1338"
+      },
+      {
+        "path": "paper-font-native-ci/tests.log",
+        "bytes": 33050,
+        "sha256": "6fd498026aa1b8e7df4371abafcf026fa1dd7c22199e85c2abfce19ac876e13f"
+      },
+      {
+        "path": "metal-combined-gui-ci/build.log",
+        "bytes": 78553,
+        "sha256": "41e3f427fe756d52db999afb58b118eb8bc53300d1391819eecc4441e342828a"
+      },
+      {
+        "path": "metal-combined-gui-ci/check.log",
+        "bytes": 90913,
+        "sha256": "71cef139439c8617306387b459d978e5020e8ee1ea9e521fdd843dd9f232d4bc"
+      },
+      {
+        "path": "metal-combined-gui-ci/defaults/default.rgba",
+        "bytes": 16384,
+        "sha256": "7247178b35aa77a8ec13494f3cf8e19718e69fc821c1fd407641e3dcf45175ce"
+      },
+      {
+        "path": "metal-combined-gui-ci/defaults/camera.rgba",
+        "bytes": 16384,
+        "sha256": "58fbdabec67cf3229288b74586af230b9e095e11915f5e9428a53338d1edafe9"
+      },
+      {
+        "path": "metal-combined-gui-ci/defaults/profiles-off.rgba",
+        "bytes": 16384,
+        "sha256": "7247178b35aa77a8ec13494f3cf8e19718e69fc821c1fd407641e3dcf45175ce"
+      },
+      {
+        "path": "metal-combined-gui-ci/defaults/report.json",
+        "bytes": 660,
+        "sha256": "e0909742f37c4a9bf98e17f17ec983e25476f05e429e988ac43e851ebeec7cdf"
+      },
+      {
+        "path": "metal-combined-gui-ci/defaults/section.rgba",
+        "bytes": 16384,
+        "sha256": "4721eacfa47ef30c627f859721c68844cc90f6534dc8eef5ff4af997d0180c94"
+      },
+      {
+        "path": "metal-combined-gui-ci/defaults/soft-edited.rgba",
+        "bytes": 16384,
+        "sha256": "58fbdabec67cf3229288b74586af230b9e095e11915f5e9428a53338d1edafe9"
+      },
+      {
+        "path": "metal-combined-gui-ci/defaults/startup.rgba",
+        "bytes": 16384,
+        "sha256": "b5b4a41a6621393a22fba108714b7a33c9cdbc9c58fc6aa36088059ea2149ca7"
+      }
+    ]
+  },
+  {
+    "file": "repair-intel.zip",
+    "bytes": 30289,
+    "sha256": "ad3c7e6475b126142a62292f51c48c65a04cddc1c2a9ce0784e65ce3990b59e4",
+    "members": [
+      {
+        "path": "paper-font-native-ci/tests.log",
+        "bytes": 33050,
+        "sha256": "6fe3627cc1ba25cf5b28156f795c66f09b56d98debb5dd312c84bcdea41cff07"
+      },
+      {
+        "path": "paper-font-native-ci/font-resource.log",
+        "bytes": 20046,
+        "sha256": "e4550123d9817215515c2d0cde9f97913f293eec5c785b0ddb45082c12715368"
+      },
+      {
+        "path": "metal-combined-gui-ci/build.log",
+        "bytes": 78598,
+        "sha256": "18e918365bb99964b3db785ad390399cbcffb502b6f891eb655fe41b47e4610d"
+      },
+      {
+        "path": "metal-combined-gui-ci/check.log",
+        "bytes": 91003,
+        "sha256": "050641db550d80d6c7f3d365642747ce224dcfad9742de406757cc9108976502"
+      },
+      {
+        "path": "metal-combined-gui-ci/defaults/camera.rgba",
+        "bytes": 16384,
+        "sha256": "7de348a0cc857a0a58f237f3a376d220caa643743fc2e19f053bf9a5122d0620"
+      },
+      {
+        "path": "metal-combined-gui-ci/defaults/default.rgba",
+        "bytes": 16384,
+        "sha256": "a7d25bf8c4c403c83ba48b0564ef7a75d3fffacc8cd3097832183dd14010f078"
+      },
+      {
+        "path": "metal-combined-gui-ci/defaults/profiles-off.rgba",
+        "bytes": 16384,
+        "sha256": "a7d25bf8c4c403c83ba48b0564ef7a75d3fffacc8cd3097832183dd14010f078"
+      },
+      {
+        "path": "metal-combined-gui-ci/defaults/report.json",
+        "bytes": 660,
+        "sha256": "e0909742f37c4a9bf98e17f17ec983e25476f05e429e988ac43e851ebeec7cdf"
+      },
+      {
+        "path": "metal-combined-gui-ci/defaults/section.rgba",
+        "bytes": 16384,
+        "sha256": "f2f06dca16a6dea68071e7dd4edde5012f9ed34da83d93cf1c0b09d729ecda39"
+      },
+      {
+        "path": "metal-combined-gui-ci/defaults/soft-edited.rgba",
+        "bytes": 16384,
+        "sha256": "7de348a0cc857a0a58f237f3a376d220caa643743fc2e19f053bf9a5122d0620"
+      },
+      {
+        "path": "metal-combined-gui-ci/defaults/startup.rgba",
+        "bytes": 16384,
+        "sha256": "da26ce1d4c22dd4d893635953027326a4e915f07dfa5896ce47055c3c6785019"
+      }
+    ]
+  },
+  {
+    "file": "job-logs.zip",
+    "bytes": 24434,
+    "sha256": "7e9613641c4ae07ec31671c782e15fd7f31c52eb38f21c949092862c050b51d5",
+    "members": [
+      {
+        "path": "repair-arm.log",
+        "bytes": 51728,
+        "sha256": "054842e52b8f82b6fea0aa62334368320d520c12d23a50757314b13ab19bfb64"
+      },
+      {
+        "path": "repair-intel.log",
+        "bytes": 53798,
+        "sha256": "190a49fbfefe370ec20b0d7c41bde47aed5996f65a5b43db5ecafa091a25a08a"
+      }
+    ]
+  }
+]
