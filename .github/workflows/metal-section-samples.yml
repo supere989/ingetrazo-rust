@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
 concurrency:
   group: metal-section-samples-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: false
 jobs:
   app-consumer:
     runs-on: ${{ matrix.runner }}
@@ -28,6 +28,7 @@ jobs:
         with:
           cache-bin: "false"
           cache-workspace-crates: "false"
+          cache-on-failure: "true"
           save-if: ${{ github.event_name != 'pull_request' }}
       - name: Build only the four-pixel diagnostic
         run: |
