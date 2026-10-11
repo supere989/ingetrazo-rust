@@ -1,0 +1,16 @@
+{
+  "raw_directory": "/tmp/ingetrazo-material-cursor-delete-integration",
+  "archive": "records.zip",
+  "archive_sha256": "348e38e256e4aaa167cc219edb2bfb0df93de11d38a8a7676d4cd281412bcac0",
+  "verified_records": 140,
+  "released_files": 143,
+  "released_bytes": 5088477,
+  "preserved": [
+    "all worktrees",
+    "all reusable targets",
+    "original source",
+    "private GPU driver bundle"
+  ],
+  "reason": "Terminal integration replay; all evidence authenticated against canonical archive; task-owned state is disposable.",
+  "auxiliary_spec_download_bytes": 14564497
+}

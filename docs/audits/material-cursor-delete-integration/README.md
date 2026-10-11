@@ -13,3 +13,5 @@ The seven previously accepted application consumers also pass after this batch c
 The [prior platform run](../native-platform/ddda/README.md) passes complete Linux and native Windows acceptance. Both actual Apple SDK GUI builds pass, then fail the new Metal clip declaration at runtime; root scalar-field repair is included here. Actual corrected ARM/Intel GPU validation remains pending. Optional Blender remains separate from the direct native Vulkan/Metal viewport.
 
 `records.zip` contains all named replay inputs, generated documents, exact comparisons, logs and build record; `manifest.json` authenticates every member. `acceptance.json` records executable identities and precise finite limitations. Source worktrees and reusable owner targets are retained; terminal duplicate raw proof/state is purged only after byte verification.
+
+Published review runtime `d455a704`: [full platform acceptance](https://github.com/supere989/ingetrazo-rust/actions/runs/38152508611) and [ordered Metal compute](https://github.com/supere989/ingetrazo-rust/actions/runs/38152508555) are running. Main and the pinned Python source are unchanged.
