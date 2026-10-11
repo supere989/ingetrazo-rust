@@ -240,6 +240,22 @@ pub fn decode_png_jpeg(encoded: &[u8], max_decoded_bytes: u64) -> Result<Decoded
     if dimensions.0 == 0 || dimensions.1 == 0 || bytes > max_decoded_bytes {
         return Err("Decoded texture exceeds admission budget; streaming required".into());
     }
+    if format == image::ImageFormat::Jpeg {
+        // QImage uses the integer slow IDCT/fancy chroma path. Use the same
+        // source-compatible decoder as shaded means: image's default JPEG
+        // decoder produces different texels, before any GPU filtering occurs.
+        // The encoded slice is already owned/admitted by the caller. Bound
+        // JPEG coefficient/output/scratch work before pixel allocation.
+        let decoded=ingetrazo_render::source_texture_decode::decode(encoded,
+            ingetrazo_render::source_texture_decode::Limits {
+                encoded_bytes:encoded.len(),decoded_work_bytes:max_decoded_bytes,
+                ..Default::default()
+            })?;
+        return Ok(DecodedTexture {
+            extent:vk::Extent2D{width:decoded.width,height:decoded.height},
+            rgba:decoded.rgba,hard_cutout:false,
+        });
+    }
     let mut reader = image::ImageReader::with_format(Cursor::new(encoded), format);
     let mut limits = image::Limits::default();
     limits.max_alloc = Some(max_decoded_bytes);

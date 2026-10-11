@@ -9,6 +9,13 @@ pub fn main() -> Result<(), Box<dyn std::error::Error>> {
     }
     let input = std::path::Path::new(&args[0]);
     let output = std::path::Path::new(&args[1]);
+    if input.is_file() {
+        let encoded=std::fs::read(input)?;
+        let decoded=decode_png_jpeg(&encoded,256*1024*1024)?;
+        std::fs::write(output,&decoded.rgba)?;
+        println!("{} {} {}",decoded.extent.width,decoded.extent.height,decoded.rgba.len());
+        return Ok(());
+    }
     std::fs::create_dir_all(output)?;
     let original: serde_json::Value =
         serde_json::from_slice(&std::fs::read(input.join("original.json"))?)?;
