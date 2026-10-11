@@ -1,0 +1,7 @@
+{
+  "archive_sha256": "009c2fb660a618360666101c2d705d0e9c3f29ff9558e7096374541c32eae8f2",
+  "deleted_files": 364,
+  "deleted_bytes": 11071249,
+  "retained": [],
+  "method": "canonical archive authenticated then each owned raw file byte-compared before unlink; target caches and source/worktrees untouched"
+}

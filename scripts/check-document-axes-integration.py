@@ -23,7 +23,7 @@ archive_dependencies = {}
 pin = "6be29fe437a7cd992d4e079f71720821b25216b9"
 assert subprocess.check_output(["git", "-C", str(repo/"ingetrazo"), "rev-parse", "HEAD"], text=True).strip() == pin
 suffix = ".exe" if os.name == "nt" else ""
-consumers = ["change_axes_fixture", "document_preservation_workflow", "pushpull_solid_workflows", "fillet_scoped", "pushpull_finite_workflows", "paste_save_workflow", "box_selection_fixture", "material_restamp_workflow", "material_tray_egui", "cursor_navigation_workflow", "annotation_delete_fixture", "zoom_extents_workflow", "annotation_move_fixture", "annotation_acquisition_fixture", "mesh_kernel_acceptance", "annotation_edit_style_fixture", "annotation_text_create_fixture", "mesh_finite_kernel_fixture", "annotation_hover_fixture", "dimension_anchor_acceptance_fixture", "context_document_lifecycle", "line_command_history_fixture"]
+consumers = ["change_axes_fixture", "document_preservation_workflow", "pushpull_solid_workflows", "fillet_scoped", "pushpull_finite_workflows", "paste_save_workflow", "box_selection_fixture", "material_restamp_workflow", "material_tray_egui", "cursor_navigation_workflow", "annotation_delete_fixture", "zoom_extents_workflow", "annotation_move_fixture", "annotation_acquisition_fixture", "mesh_kernel_acceptance", "annotation_edit_style_fixture", "annotation_text_create_fixture", "mesh_finite_kernel_fixture", "annotation_hover_fixture", "dimension_anchor_acceptance_fixture", "context_document_lifecycle", "line_command_history_fixture", "shape_drafting_workflows"]
 identities = {name: stages.stage("binary:"+name, [], lambda name=name: hashlib.sha256((binaries/(name+suffix)).read_bytes()).hexdigest()) for name in consumers}
 env = dict(os.environ, QT_QPA_PLATFORM="offscreen", INGETRAZO_STATE_DIR=str(out/"state"),
            XDG_CONFIG_HOME=str(out/"config"), XDG_DATA_HOME=str(out/"data"), XDG_CACHE_HOME=str(out/"cache"))
@@ -215,12 +215,27 @@ ap = archive("appearance-preferences", "manifest.json", ["original-appearance.js
 run([binaries/(consumers[20]+suffix), appearance, "--appearance"], "appearance-preferences/runtime.log")
 run([sys.executable, repo/"scripts/check-appearance-preferences.py", appearance], "appearance-preferences/acceptance.json", requires=["appearance-preferences/runtime.log"])
 
+shape = out/"shape-drafting"
+shape_sources = ["source.json", "source-addendum.json", "source-remaining.json"]
+sd = archive("shape-drafting", "manifest.json", shape_sources, shape)
+def combine_shape_sources():
+    cohorts = [json.loads((shape/name).read_text())["cases"] for name in shape_sources]
+    assert [len(cases) for cases in cohorts] == [53, 7, 6], "shape source cohort inventory"
+    cases = [case for cohort in cohorts for case in cohort]
+    assert len({case["recipe"]["name"] for case in cases}) == len(cases), "duplicate shape recipe"
+    assert sum(len(case["states"]) for case in cases) == 488, "shape phase inventory"
+    (shape/"combined-source.json").write_text(json.dumps({"cases":cases}, indent=2)+"\n")
+    return {"cases":len(cases), "phases":488, "original_cohorts":shape_sources}
+stages.stage("shape-drafting/combined-source.json", archive_dependencies[shape.name], combine_shape_sources)
+run([binaries/(consumers[22]+suffix), shape/"combined-source.json", shape/"native.json"], "shape-drafting/runtime.log", requires=["shape-drafting/combined-source.json"])
+run([sys.executable, repo/"scripts/check-shape-drafting.py", shape/"combined-source.json", shape/"native.json", shape/"acceptance.json"], "shape-drafting/checker.log", requires=["shape-drafting/runtime.log", "shape-drafting/combined-source.json"])
+
 def summarize():
     rows = json.loads((doc/"native.json").read_text())["rows"]
     assert [(x["fixture"],x["phase"]) for x in rows] == [(f,p) for f in ["retained","nested-leaves"] for p in ["edited","undo","redo"]]
     assert all(x["saved"] and x["clean"] for x in rows)
     result = {"revision":subprocess.check_output(["git","rev-parse","HEAD"],cwd=repo,text=True).strip(),
-              "source_pin":pin,"binary_sha256":identities,"source_archives":{"axes":a,"documents":d,"fillet":f,"pushpull_finite":p,"paste_save":ps,"box_selection":bs,"materials":mr,"cursor":cn,"annotations":ad,"annotation_hover_delete":ahd,"zoom_extents":ze,"annotation_move":am,"annotation_acquisition":aa,"mesh_kernel":mk,"annotation_edit_style":ae,"annotation_text_create":at,"finite_kernel":mf,"finite_kernel_initial":mfa,"annotation_hover":ah,"dimension_anchor_admission":da,"dimension_preview":dp,"open_recent":rr,"general_preferences":gp,"units_preferences":up,"vcb_measurements":vm,"import_preferences":ip,"appearance_preferences":ap,"nested_import":ni,"nested_import_threshold":nt,"nested_import_naming":nn,"nested_import_retained_failure":nf},
+              "source_pin":pin,"binary_sha256":identities,"source_archives":{"axes":a,"documents":d,"fillet":f,"pushpull_finite":p,"paste_save":ps,"box_selection":bs,"materials":mr,"cursor":cn,"annotations":ad,"annotation_hover_delete":ahd,"zoom_extents":ze,"annotation_move":am,"annotation_acquisition":aa,"mesh_kernel":mk,"annotation_edit_style":ae,"annotation_text_create":at,"finite_kernel":mf,"finite_kernel_initial":mfa,"annotation_hover":ah,"dimension_anchor_admission":da,"dimension_preview":dp,"open_recent":rr,"general_preferences":gp,"units_preferences":up,"vcb_measurements":vm,"import_preferences":ip,"appearance_preferences":ap,"nested_import":ni,"nested_import_threshold":nt,"nested_import_naming":nn,"nested_import_retained_failure":nf,"shape_drafting":sd},
               "axes":json.loads((axes/"check.json").read_text()),"documents":{"actual_app_saves":len(rows),"exact_original_reopens":6,"leaf_record_types":15,"negative_controls":5},
               "fillet":json.loads((fillet/"check.json").read_text()),"fillet_volume":json.loads((fillet/"volume.json").read_text()),"pushpull":json.loads((out/"pushpull-comparison.json").read_text()),
               "pushpull_finite":json.loads((finite/"comparison.json").read_text()),
@@ -250,6 +265,7 @@ def summarize():
               "import_preferences":json.loads((import_preferences/"acceptance.json").read_text()),
               "appearance_preferences":json.loads((appearance/"acceptance.json").read_text()),
               "nested_import":json.loads((nested_import/"acceptance.json").read_text()),
+              "shape_drafting":json.loads((shape/"acceptance.json").read_text()),
               "fresh_source_acquisitions":0,"result":"pass"}
     return result
 
