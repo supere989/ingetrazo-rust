@@ -1,0 +1,8 @@
+{
+  "owned_terminal_path": "/tmp/p05-boundary-incidence-proof",
+  "files_removed": 6,
+  "bytes_removed": 3043715,
+  "archive_sha256": "742c711be206671fdacc22d570deeee3d7a471b3884ffa7a42c26c5cf38feaed",
+  "authentication": "Independent review plus final exact ZIP/member/manifest/raw byte comparison before removal",
+  "targets_removed": 0
+}
