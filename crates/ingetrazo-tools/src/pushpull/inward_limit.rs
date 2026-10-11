@@ -6,7 +6,9 @@ pub(super) fn compute(
     mesh: &ingetrazo_core::mesh::Mesh,
     face_id: usize,
     anchor: DVec3,
-) -> Option<f64> {
+) -> Option<f64> { compute_with_normal(mesh,face_id,anchor,None) }
+
+pub(super) fn compute_with_normal(mesh:&ingetrazo_core::mesh::Mesh,face_id:usize,anchor:DVec3,normal:Option<DVec3>)->Option<f64> {
     use glam::{DVec2, Vec3};
     fn divide(v: Vec3, d: f32) -> Vec3 {
         Vec3::new(v.x / d, v.y / d, v.z / d)
@@ -201,7 +203,7 @@ pub(super) fn compute(
             normalized(if l < 1e-9 { Vec3::Z } else { divide(n, l) })
         })
         .collect::<Vec<_>>();
-    let n = normals[face_id];
+    let n = normal.map_or(normals[face_id],|n|n.as_vec3());
     let direction = -n;
     let anchor = anchor.as_vec3();
     let (u, w) = basis(n);

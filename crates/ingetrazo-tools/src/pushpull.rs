@@ -20,6 +20,8 @@ pub struct PushPullTool {
     pub keep_base: bool,
     pub error: Option<String>,
     inward_limit:Option<f64>,
+    acquired_normal:Option<DVec3>,
+    sweep_identity:Option<(u64,u64,bool,bool,DVec3)>,
     limit_status:Option<String>,
 }
 
@@ -41,6 +43,24 @@ impl PushPullTool {
             Ok(face)=>{self.hovered_face=face;face},
             Err(())=>{self.hovered_face=None;self.error=Some("That face belongs to a group — double-click to open it first, then Push/Pull inside".into());None}
         }
+    }
+
+    /// Original open-shell surface majority. Closed volumes and globally
+    /// coplanar drawings keep their authored face normal.
+    pub fn acquisition_normal(mesh:&ingetrazo_core::mesh::Mesh,id:usize)->DVec3 {
+        let n=mesh.face_normal(id);
+        let flat=mesh.faces.first().is_none_or(|first| {
+            let n0=mesh.face_normal(0);let p=mesh.vertices[first.vertices[0]].position;
+            mesh.faces.iter().enumerate().all(|(i,f)|mesh.face_normal(i).dot(n0).abs()>0.999 && (mesh.vertices[f.vertices[0]].position-p).dot(n0).abs()<1e-3)
+        });
+        if mesh.is_manifold_solid()||flat{return n;}
+        let rim=mesh.faces[id].vertices.iter().copied().collect::<std::collections::HashSet<_>>();
+        let(mut agree,mut disagree)=(0,0);
+        for &v in &mesh.faces[id].vertices {for &eid in &mesh.vertices[v].edges {
+            let e=&mesh.edges[eid];if !rim.contains(&e.v0)||!rim.contains(&e.v1){continue;}
+            for &other in &e.faces {if other==id{continue;}let d=mesh.face_normal(other).dot(n);if d.abs()>0.999{if d>0.{agree+=1}else{disagree+=1}}}
+        }}
+        if disagree>agree{-n}else{n}
     }
 
     const MIN_EXTRUDE:f64=2e-4;
@@ -69,7 +89,8 @@ impl PushPullTool {
         let clamped=if distance<0. {limit.map_or(distance,|limit|distance.max(-limit))}else{distance};
         if clamped!=distance {self.limit_status=Some(format!("Push limited to {:.2} m — deeper would leave the solid",-clamped));}
         let distance=clamped;
-        match Self::extrude_face_prepared(scene,face,distance,keep,false){
+        let sign=if self.acquired_normal.is_some_and(|n|n.dot(scene.mesh.face_normal(face))<0.){-1.}else{1.};
+        match Self::extrude_face_prepared(scene,face,distance*sign,keep,false){
             Ok(())=>Ok(distance),
             Err(error) if error.starts_with("Ctrl copy would leave an invalid solid:")
                 || error.starts_with("Push/Pull cap translation would leave an invalid solid:")
@@ -77,10 +98,10 @@ impl PushPullTool {
                 || error == "Push/Pull would remove the whole solid" =>{
                 let before=scene.mesh.clone();let selection=scene.selection.clone();let order=scene.selection_order.clone();let (version,view_version)=(scene.version,scene.view_version);let(mut low,mut high)=(0.,1.);let mut best=None;
                 for _ in 0..6 {let mid=(low+high)*0.5;let d=distance*mid;
-                    if d.abs()>=Self::MIN_EXTRUDE&&Self::extrude_face_prepared(scene,face,d,keep,false).is_ok(){best=Some(d);low=mid;}else{high=mid;}
+                    if d.abs()>=Self::MIN_EXTRUDE&&Self::extrude_face_prepared(scene,face,d*sign,keep,false).is_ok(){best=Some(d);low=mid;}else{high=mid;}
                     scene.mesh=before.clone();scene.selection=selection.clone();scene.selection_order=order.clone();scene.version=version;scene.view_version=view_version;
                 }
-                let Some(d)=best else{return Err(error);};Self::extrude_face_prepared(scene,face,d,keep,false)?;
+                let Some(d)=best else{return Err(error);};Self::extrude_face_prepared(scene,face,d*sign,keep,false)?;
                 self.limit_status=Some(format!("Push stopped at {:.2} m: going further would break the solid",d.abs()));Ok(d)
             },
             Err(error)=>Err(error),
@@ -164,6 +185,8 @@ impl PushPullTool {
         self.selected_face = None;
         self.start_point = None;
         self.inward_limit=None;
+        self.acquired_normal=None;
+        self.sweep_identity=None;
         self.extrusion_distance = 0.0;
         self.is_dragging = false;
         self.keep_base = false;
@@ -607,6 +630,11 @@ impl PushPullTool {
             }
             result
         };
+        // Original run_stitch refines the supporting open surface at the
+        // consumed face rim before publication (including hole rims).
+        if !was_solid {
+            candidate=ingetrazo_core::planar::stitch_boundaries(&candidate)?;
+        }
         if was_solid && !keep_base && !prism_cap {
             let mut rims=vec![];
             for (base,cap) in rings.iter().zip(&shifted){for i in 0..base.len(){let j=(i+1)%base.len();rims.push((base[i],base[j]));rims.push((cap[i],cap[j]));rims.push((base[i],cap[i]));}}
@@ -807,6 +835,11 @@ impl Tool for PushPullTool {
         self.limit_status=None;
     }
 
+    fn face_sweep_preview(&self)->Option<crate::base::FaceSweepPreview>{
+        let(face_identity,mesh_revision,attached,prism_cap,anchor)=self.sweep_identity?;
+        Some(crate::base::FaceSweepPreview{face:self.selected_face?,face_identity,mesh_revision,anchor,normal:self.acquired_normal?,offset:(self.acquired_normal?.as_vec3()*(self.extrusion_distance as f32)).as_dvec3(),attached,prism_cap,keep_base:self.keep_base})
+    }
+
     fn status_message(&self)->Option<&str>{self.limit_status.as_deref()}
     fn take_status_message(&mut self)->Option<String>{self.limit_status.take()}
     fn error_message(&self) -> Option<&str> {
@@ -817,7 +850,7 @@ impl Tool for PushPullTool {
         if !self.is_dragging {
             self.hovered_face = Self::eligible_face_at(scene,ctx).ok().flatten();
         } else if let (Some(face_id), Some(start)) = (self.selected_face, self.start_point) {
-            let normal = scene.mesh.face_normal(face_id);
+            let normal = self.acquired_normal.unwrap_or_else(||scene.mesh.face_normal(face_id));
             let raw=(ctx.world-start).dot(normal);
             self.extrusion_distance=if raw<0. {self.inward_limit.map_or(raw,|limit|raw.max(-limit))}else{raw};
             if self.extrusion_distance!=raw {self.limit_status=Some(format!("Push limited to {:.2} m — deeper would leave the solid",-self.extrusion_distance));}
@@ -832,7 +865,15 @@ impl Tool for PushPullTool {
             if let Some(face_id) = face_pick {
                 self.limit_status=None;
                 self.selected_face = Some(face_id);
-                self.inward_limit=Self::inward_limit(&scene.mesh,face_id,ctx.world);
+                let normal=Self::acquisition_normal(&scene.mesh,face_id);
+                self.acquired_normal=Some(normal);
+                let f=&scene.mesh.faces[face_id];
+                let attached=std::iter::once(&f.vertices).chain(&f.holes).all(|ring|(0..ring.len()).all(|i|scene.mesh.find_edge(ring[i],ring[(i+1)%ring.len()]).is_some_and(|e|scene.mesh.edges[e].faces.iter().any(|&other|other!=face_id))));
+                let prism=attached && std::iter::once(&f.vertices).chain(&f.holes).all(|ring|(0..ring.len()).all(|i|scene.mesh.find_edge(ring[i],ring[(i+1)%ring.len()]).is_some_and(|e|scene.mesh.edges[e].faces.iter().filter(|&&other|other!=face_id).all(|&other|scene.mesh.face_normal(other).dot(normal).abs()<0.001))));
+                let anchor=(f.vertices.iter().map(|&v|scene.mesh.vertices[v].position.as_vec3().as_dvec3()).sum::<DVec3>()/f.vertices.len()as f64).as_vec3().as_dvec3();
+                self.sweep_identity=Some((f.history_id,scene.version,attached,prism,anchor));
+
+                self.inward_limit=inward_limit::compute_with_normal(&scene.mesh,face_id,ctx.world,Some(normal));
                 self.start_point = Some(ctx.world);
                 self.is_dragging = true;
                 self.extrusion_distance = 0.0;
