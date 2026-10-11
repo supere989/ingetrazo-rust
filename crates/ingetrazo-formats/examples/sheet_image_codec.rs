@@ -6,12 +6,16 @@ fn main()->Result<(),Box<dyn std::error::Error>>{
     let original:serde_json::Value=serde_json::from_slice(&std::fs::read(source.join("source.json"))?)?;
     let mut rows=Vec::new();
     for row in original["images"].as_array().unwrap(){
+        if args.get(2).is_some_and(|selected| row["case"].as_str()!=Some(selected.as_str())) {continue;}
         let paper=match row["paper"].as_str().unwrap(){"A4"=>[210.,297.],"A3"=>[297.,420.],_=>unreachable!()};
         let page=if row["landscape"].as_bool().unwrap(){[paper[1],paper[0]]}else{paper};
         let metrics=Metrics::new(page,row["dpi"].as_u64().unwrap()as u16)?;
-        let file=row["image"]["file"].as_str().unwrap();let pixels=image::open(source.join(file))?.to_rgba8();
+        let file=row["image"]["file"].as_str().unwrap();
+        // Encode the same first-generation painter pixels, never recompress the source JPEG.
+        let input=if row["case"]=="shapes-jpeg" {"shapes.png"} else {file};
+        let pixels=image::open(source.join(input))?.to_rgba8();
         save_rgba(&out.join(file),metrics,pixels.as_raw())?;
-        rows.push(serde_json::json!({"case":row["case"],"metrics":metrics,"file":file}));
+        rows.push(serde_json::json!({"case":row["case"],"metrics":metrics,"file":file,"input":input}));
     }
     let paths=[("chosen",Format::Png),("chosen-jpeg",Format::Jpeg),("upper.JPG",Format::Png),(".png",Format::Jpeg)].map(|(path,format)|{let(p,f)=resolve_path(std::path::Path::new(path),format);serde_json::json!({"input":path,"path":p,"format":f})});
     let sentinel=out.join("preserve.png");std::fs::write(&sentinel,b"destination sentinel")?;
