@@ -7,6 +7,13 @@ pub fn build_hard_edges(scene:&Scene)->HardEdges {
  let mut output=HardEdges::default();append(&scene.mesh,DMat4::IDENTITY,scene,&mut output);
  for group in &scene.groups{walk(group,DMat4::IDENTITY,scene,&mut output);}output
 }
+/// Active loose mesh exclusions preserve ordinary nested placement ordering.
+pub fn build_hard_edges_suppressed(scene:&Scene,suppressed:&[usize])->HardEdges{
+ let mut output=HardEdges::default();
+ for (id,edge) in scene.mesh.edges.iter().enumerate(){if suppressed.binary_search(&id).is_ok()||edge.soft||edge.hidden||!scene.is_layer_visible(edge.layer.as_deref().or_else(||edge.attrs.get("layer").and_then(|v|v.as_str()))){continue;}
+  if let(Some(a),Some(b))=(scene.mesh.vertices.get(edge.v0),scene.mesh.vertices.get(edge.v1)){output.positions.extend([a.position.as_vec3().to_array(),b.position.as_vec3().to_array()]);}}
+ for group in &scene.groups{walk(group,DMat4::IDENTITY,scene,&mut output);}output
+}
 fn walk(group:&Group,parent:DMat4,scene:&Scene,out:&mut HardEdges){
  if group.hidden||!scene.is_layer_visible(group.layer.as_deref()){return;}
  let world=parent*group.transform;append(&group.mesh,world,scene,out);for child in &group.children{walk(child,world,scene,out);}

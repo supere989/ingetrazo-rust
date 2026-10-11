@@ -164,3 +164,5 @@ pub mod scene_revision;
 pub mod block_compression;
 
 pub mod hidden_ghosts;
+
+pub mod face_sweep;
