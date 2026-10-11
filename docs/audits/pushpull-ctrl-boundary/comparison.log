@@ -1,0 +1,19 @@
+{
+  "passed": true,
+  "scope": "One corrected valid Ctrl boundary; three live original invalid boundaries retained, not literal-parity closure",
+  "ctrl_step_volume": 40.5,
+  "spatial_difference": 0.0,
+  "oriented_inventory_equal": false,
+  "interior_winding_ignored_inventory_equal": true,
+  "negative_controls": [
+    "removed_boundary",
+    "reversed_boundary",
+    "metadata",
+    "interior_marker"
+  ],
+  "remaining_original_invalid": [
+    "ctrl-roof-0.2",
+    "ctrl-step-0.5",
+    "wedge0--0.4"
+  ]
+}

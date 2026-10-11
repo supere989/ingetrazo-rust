@@ -1,0 +1,55 @@
+{
+  "passed": true,
+  "cases": [
+    {
+      "case": "outside-closed-placement",
+      "atomic": true
+    },
+    {
+      "case": "nested-preview-cancel",
+      "depth": 2,
+      "undo": 0,
+      "mesh_exact": true
+    },
+    {
+      "case": "nested-ctrl-release",
+      "same_as_normal": true,
+      "undo": 1
+    },
+    {
+      "case": "nested-shared-finish-history",
+      "undo": 1,
+      "linked_meshes_exact": true,
+      "preview_inert": true,
+      "invalid_vcb_atomic": true,
+      "unit_suffix": "1000mm"
+    },
+    {
+      "case": "nested-ctrl-step-valid-partition",
+      "faces": 14,
+      "interior": 2,
+      "unit_suffix": "500mm",
+      "preview_cancel_exact": true,
+      "local_history_exact": true,
+      "linked_finish_exact": true,
+      "document_history_exact": true
+    },
+    {
+      "case": "ctrl-roof-0.2",
+      "source_invalid_boundary": true,
+      "active_context_atomic": true,
+      "undo_redo_unchanged": true,
+      "visible_error": true,
+      "cancel_exact": true
+    },
+    {
+      "case": "ctrl-step-0.5",
+      "source_invalid_boundary": true,
+      "active_context_atomic": true,
+      "undo_redo_unchanged": true,
+      "visible_error": true,
+      "cancel_exact": true
+    }
+  ],
+  "scope": "Real IngeTrazoApp transactional pointer-context/VCB handlers and component Finish/Undo/Redo; no rendered gesture claim"
+}

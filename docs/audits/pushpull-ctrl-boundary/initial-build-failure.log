@@ -1,0 +1,38 @@
+   Compiling ingetrazo-core v0.3.15 (/tmp/ingetrazo-pushpull-ctrl/crates/ingetrazo-core)
+error: couldn't read `crates/ingetrazo-core/src/../../../ingetrazo/i18n/es.json`: No such file or directory (os error 2)
+  --> crates/ingetrazo-core/src/i18n.rs:34:17
+   |
+34 |         "es" => include_str!("../../../ingetrazo/i18n/es.json"),
+   |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: couldn't read `crates/ingetrazo-core/src/../../../ingetrazo/i18n/pt-BR.json`: No such file or directory (os error 2)
+  --> crates/ingetrazo-core/src/i18n.rs:35:20
+   |
+35 |         "pt-BR" => include_str!("../../../ingetrazo/i18n/pt-BR.json"),
+   |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: couldn't read `crates/ingetrazo-core/src/../../../ingetrazo/i18n/it.json`: No such file or directory (os error 2)
+  --> crates/ingetrazo-core/src/i18n.rs:36:17
+   |
+36 |         "it" => include_str!("../../../ingetrazo/i18n/it.json"),
+   |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: couldn't read `crates/ingetrazo-core/src/../../../ingetrazo/i18n/id.json`: No such file or directory (os error 2)
+  --> crates/ingetrazo-core/src/i18n.rs:37:17
+   |
+37 |         "id" => include_str!("../../../ingetrazo/i18n/id.json"),
+   |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: couldn't read `crates/ingetrazo-core/src/../../../ingetrazo/i18n/zh-CN.json`: No such file or directory (os error 2)
+  --> crates/ingetrazo-core/src/i18n.rs:38:20
+   |
+38 |         "zh-CN" => include_str!("../../../ingetrazo/i18n/zh-CN.json"),
+   |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: couldn't read `crates/ingetrazo-core/src/../../../ingetrazo/resources/blender/render_scene.py`: No such file or directory (os error 2)
+   --> crates/ingetrazo-core/src/render_blender.rs:635:5
+    |
+635 |     include_str!("../../../ingetrazo/resources/blender/render_scene.py");
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: could not compile `ingetrazo-core` (lib) due to 6 previous errors

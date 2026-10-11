@@ -1,0 +1,19 @@
+{
+  "base": "98a86ea790e34a6b6ccb1d8e9e99f939b41b6814",
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "source_sha256": {
+    "crates/ingetrazo-tools/src/pushpull.rs": "51992aeb3f1e249c10e2d37028d6b1e7292e35acdb040e4bec298b82a4788e0b",
+    "crates/ingetrazo-gui/examples/pushpull_gate2_app_fixture.rs": "18e81ee34fda796c9d52b3db74f524aa2ba9ba558c43eba27e14c93639dc4cf6",
+    "scripts/reference-pushpull-live.py": "67ff2cf09d16e5bd6ac22ce44431f4d115e7bad94c22ed90dd813cad56fdab63",
+    "scripts/check-pushpull-live-boundary.py": "326186e1f21c0bda45bab19355a0334e65fa80d5ea866255c2d20c3bc97f5a5a",
+    "docs/audits/pushpull-gate2/source.json": "56af51be87742f0b164de1734b3289a007ea38bf0c35de48f4599dbe9377abad"
+  },
+  "binary_sha256": {
+    "pushpull_gate2_fixture": "6780d66c3e02573d09cad7876b70dc9fd68dcf969216c407c9e99330e0ee0749",
+    "pushpull_gate2_app_fixture": "3be9fa741b74dec71f36bf760503f2d9bada4323170580a7d22e376347c26374"
+  },
+  "module_tests": 10,
+  "app_cases": 7,
+  "no_os_gesture_claim": true,
+  "source_invalid_cases_are_unresolved_literal_parity": true
+}
