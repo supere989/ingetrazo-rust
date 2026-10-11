@@ -1,0 +1,108 @@
+{
+  "source": "f260c73ac0362d71e27ea723e4c36b4ea5c47cf9",
+  "run": 38099978920,
+  "jobs": [
+    {
+      "id": 114353725653,
+      "name": "world-depth (macos-15)",
+      "status": "completed",
+      "conclusion": "success",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run dtolnay/rust-toolchain@stable",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Build focused native world fixture against Apple SDK",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Execute actual offscreen world and UI sampling under outer deadline",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Independently check literal frame inventory and GPU interior samples",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/upload-artifact@v4",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "id": 114353725775,
+      "name": "world-depth (macos-15-intel)",
+      "status": "in_progress",
+      "conclusion": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run dtolnay/rust-toolchain@stable",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Build focused native world fixture against Apple SDK",
+          "status": "in_progress",
+          "conclusion": null
+        },
+        {
+          "name": "Execute actual offscreen world and UI sampling under outer deadline",
+          "status": "pending",
+          "conclusion": null
+        },
+        {
+          "name": "Independently check literal frame inventory and GPU interior samples",
+          "status": "pending",
+          "conclusion": null
+        },
+        {
+          "name": "Run actions/upload-artifact@v4",
+          "status": "pending",
+          "conclusion": null
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "status": "pending",
+          "conclusion": null
+        }
+      ]
+    }
+  ],
+  "boundary": "ARM job passes; independent raw artifact review pending. Intel still building. Full viewport acceptance remains open."
+}
