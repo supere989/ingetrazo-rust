@@ -1,0 +1,24 @@
+{
+  "annotations-on": {
+    "changed_pixels": 3868,
+    "max_channel_delta": 210
+  },
+  "annotations-off": {
+    "changed_pixels": 963,
+    "max_channel_delta": 36
+  },
+  "annotations-restored": {
+    "changed_pixels": 3868,
+    "max_channel_delta": 210
+  },
+  "annotation_change_masks": {
+    "source_pixels": 3138,
+    "native_pixels": 3054,
+    "xor_pixels": 494,
+    "intersection_pixels": 2849
+  },
+  "restore": {
+    "original": 0,
+    "native": 0
+  }
+}
