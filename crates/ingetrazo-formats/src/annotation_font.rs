@@ -10,10 +10,33 @@ use std::{collections::HashMap, rc::Rc, sync::Arc};
 pub struct Face {
     key: FontKey,
     pixels: u32,
+    physical_path: std::path::PathBuf,
+    physical_index: u32,
     font: PaperFont,
     #[cfg(target_os="macos")] native: Option<Rc<crate::paper_coretext_glyph::NativeFont>>,
 }
 impl Face {
+    /// Cold diagnostics only: actual byte/native owner identity and sized metrics.
+    pub fn diagnostic(&self)->Result<serde_json::Value,String>{
+        let bytes=self.font.shared_bytes();
+        let face=ttf_parser::Face::parse(bytes,self.key.face_index)
+            .map_err(|_|"Annotation diagnostic byte face unavailable")?;
+        let name=|id|face.names().into_iter().filter(|n|n.name_id==id && n.name.len()<=1024)
+            .find_map(|n|n.to_string()).filter(|s|s.len()<=1024).unwrap_or_default();
+        let mut family=name(ttf_parser::name_id::FAMILY);
+        let mut postscript=name(ttf_parser::name_id::POST_SCRIPT_NAME);
+        #[cfg(target_os="macos")] if let Some(native)=&self.native {
+            [family,postscript]=native.names()?;
+        }
+        #[cfg(target_os="macos")] let backend=if self.native.is_some(){"CoreText"}else{"FreeType"};
+        #[cfg(not(target_os="macos"))] let backend="FreeType";
+        Ok(serde_json::json!({"backend":backend,"policy":format!("{:?}",self.key.policy),"physical_path":self.physical_path,"physical_index":self.physical_index,
+            "byte_face_index":self.key.face_index,"encoded_bytes":bytes.len(),
+            "family":family,"postscript":postscript,"style":name(ttf_parser::name_id::SUBFAMILY),
+            "pixels":self.pixels,"ascent_26_6":self.font.ascent_26_6,
+            "descent_26_6":self.font.descent_26_6,"leading_26_6":self.font.leading_26_6,
+            "native_font_heap_bounded":false}))
+    }
     pub fn pixels(&self) -> u32 {
         self.pixels
     }
@@ -131,6 +154,8 @@ impl Cache {
         let face = Rc::new(Face {
             key: key.0,
             pixels,
+            physical_path: matched.path,
+            physical_index: matched.index,
             font,
             #[cfg(target_os="macos")] native,
         });
@@ -192,6 +217,15 @@ mod tests {
             matched.index, Some(matched.policy), 13).is_err());
         assert!(sized_font(&matched, 13).is_ok());
         assert_eq!(matched.index, 37);
+        let mut cache=Cache::new(Limits{faces:4,retained_font_bytes:32*1024*1024}).unwrap();
+        let face=cache.resolve(Request{family:"DejaVu Sans".into(),bold:true,
+            italic:false,required_chars:vec![]},13).unwrap();
+        let identity=face.diagnostic().unwrap();
+        assert!(!identity["physical_path"].as_str().unwrap().is_empty());
+        assert!(!identity["family"].as_str().unwrap().is_empty());
+        assert_eq!(identity["byte_face_index"],0);
+        assert_eq!(identity["pixels"],13);
+        assert!(identity["ascent_26_6"].as_i64().unwrap()>0);
     }
     #[test]
     fn actual_annotation_metrics_and_warm_face_ownership() {

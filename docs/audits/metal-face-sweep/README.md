@@ -85,3 +85,24 @@ bytes per admitted pixel. The named Apple consumer now checks real glyphs at
 13/17px, nonempty gray/RGB coverage and warm immutable owner reuse before the
 GPU roster. Focused ARM Rust check passes; actual Apple execution of this
 follow-up is pending, as are strict cross-platform glyph/pixel semantics.
+
+## Resolved font and platform attribution
+
+The actual native-font.json records physical path/TTC index separately from
+byte-owner index, resolved CoreText family/PostScript name, SFNT style, native
+backend/policy and pixel-sized 1/64 metrics. This is cold diagnostic work only.
+The Apple workflow also runs a bounded pinned Qt6.12 RGB32 glyph reference at
+13/17px for the source bare-QFont default and the explicit Sans Serif request,
+with actual QFontInfo/QRawFont identities, table hashes, metrics and four tiny
+images. A supplementary checker reports native/Qt family and metrics; it does
+not grant a pixel waiver. The frozen Linux DejaVu Sans Bold full frames remain
+strictly compared. Font fallback/hinting and shader errors must be attributed
+separately. No font/palette has been fitted to a screenshot.
+
+The Qt venv lives under RUNNER_TEMP and is excluded from artifacts. Its
+installation and reference commands have finite deadlines; a failed optional
+reference is logged and never suppresses native consumers or strict checks.
+Actual glyph comparison/hardware execution still awaits the next Apple run.
+Focused byte-owner/diagnostic host test passes; ARM named Rust consumer check
+passes; Python AST and workflow YAML validate. Native font/table/CG allocations
+remain outside the logical encoded-byte budget, as stated above.

@@ -54,6 +54,8 @@ struct Element {
 #[link(name = "CoreFoundation", kind = "framework")]
 unsafe extern "C" {
     fn CFRelease(p: Ref);
+    fn CFStringGetLength(p: Ref) -> isize;
+    fn CFStringGetCString(p: Ref, buffer: *mut i8, bytes: isize, encoding: u32) -> u8;
     fn CFDataGetLength(p: Ref) -> isize;
     fn CFDataGetBytePtr(p: Ref) -> *const u8;
     fn CFDictionaryGetCount(p: Ref) -> isize;
@@ -63,6 +65,8 @@ unsafe extern "C" {
 #[link(name = "CoreText", kind = "framework")]
 unsafe extern "C" {
     fn CTFontCopyTable(f: Ref, tag: u32, options: u32) -> Ref;
+    fn CTFontCopyFamilyName(f: Ref) -> Ref;
+    fn CTFontCopyPostScriptName(f: Ref) -> Ref;
     fn CTFontCreateCopyWithAttributes(f: Ref, size: f64, matrix: *const Matrix, attributes: Ref) -> Ref;
     fn CTFontCopyVariation(f: Ref) -> Ref;
     fn CTFontGetMatrix(f: Ref) -> Matrix;
@@ -196,6 +200,21 @@ pub(crate) struct NativeFont {
     pub instance_identity: Vec<u8>,
 }
 impl NativeFont {
+    pub(crate) fn names(&self)->Result<[String;2],String>{
+        fn text(raw:Ref)->Result<String,String>{
+            let name=Owned::new(raw)?;
+            let length=unsafe{CFStringGetLength(name.0)};
+            if !(1..=256).contains(&length){return Err("Native font name outside admission".into());}
+            let mut bytes=[0i8;1025];
+            if unsafe{CFStringGetCString(name.0,bytes.as_mut_ptr(),bytes.len()as isize,0x08000100)}==0 {
+                return Err("Native font name conversion failed".into());
+            }
+            unsafe{std::ffi::CStr::from_ptr(bytes.as_ptr())}.to_str()
+                .map(str::to_owned).map_err(|_|"Native font name UTF8 unavailable".into())
+        }
+        Ok([text(unsafe{CTFontCopyFamilyName(self.owner.0)})?,
+            text(unsafe{CTFontCopyPostScriptName(self.owner.0)})?])
+    }
     pub(crate) fn at_pixel_size(&self, pixels: u32) -> Result<Rc<Self>, String> {
         if pixels == 0 || pixels > 4096 { return Err("Native font pixel size outside admission".into()); }
         let owner = Owned::new(unsafe { CTFontCreateCopyWithAttributes(self.owner.0,
