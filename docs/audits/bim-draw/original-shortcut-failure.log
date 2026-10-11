@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "/tmp/ingetrazo-bim-draw/scripts/check-bim-draw-ui.py", line 62, in <module>
+    key("z",True);wait(lambda:len(state()["faces"])==1);assert state()["active"];record("undo");key("z",True,True);wait(lambda:len(state()["faces"])==2);record("redo")
+                                                                                                                   ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/ingetrazo-bim-draw/scripts/check-bim-draw-ui.py", line 15, in wait
+    raise AssertionError("BIM UI observation deadline")
+AssertionError: BIM UI observation deadline

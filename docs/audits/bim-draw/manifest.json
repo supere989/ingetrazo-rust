@@ -1,0 +1,32 @@
+{
+  "source_commit": "3501a8b74d0dd1c821f35ae7cedea1e49b820b52",
+  "original_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "recorded_utc": "2026-10-11T05:16:06.341604+00:00",
+  "source_sha256": {
+    "crates/ingetrazo-core/src/bim.rs": "f5925ec044828cacdbdb62de209c99aa23ac21403f935d04bfffe66be8bb1ea9",
+    "crates/ingetrazo-core/src/drafting.rs": "fa8b6fe3db56c1baf9fa764a651909cd3b481cdddd8d7f2a7b3d3b0e6365d949",
+    "crates/ingetrazo-core/src/scene.rs": "e6ee714c04c8dacb8797ebd8ef30bb0825d5552a46029b84dc13054784bb94a5",
+    "crates/ingetrazo-gui/src/app.rs": "c8065fa2dc4738371c68e3ca826e6b0eb17a253d2f7ca9fa4af0ab1d97889177",
+    "crates/ingetrazo-gui/src/bim_controller.rs": "e961e9fb07a1d94f9d81672780cde9cf3fa8446ac191c4c585d2a01644918e99",
+    "crates/ingetrazo-gui/src/document_presentation.rs": "4c2f3300febb2572e13236405d84541bdc60858cebaf498227a9f9fd6cafe252",
+    "crates/ingetrazo-gui/src/tool_history.rs": "e2a7a56805aa507d612a0ac565e7b749d742b748647d8428c71822e4d6b1792d",
+    "crates/ingetrazo-gui/src/tray.rs": "8cfb7fbfc8611e700e2ce036c96b495f333c4ee8557343b086f60b49986c4718",
+    "crates/ingetrazo-tools/src/arc.rs": "b7ad8f53f86d94e72f582e4e49aef520b4db4322428da47373b6d5a3dea25add",
+    "crates/ingetrazo-tools/src/base.rs": "c92fc942af9f64e3aa114061d39e6400873ce5eb0db606fb8678edc3bc74b6c0",
+    "crates/ingetrazo-tools/src/circle.rs": "d4acd654bd79e4237535ce7942f531fdebcbc2dd5b5781862e97c7ea7ebc4648",
+    "crates/ingetrazo-tools/src/freehand.rs": "7ce967088011d68d35d7995dda2994d0d183c1905d74464d9d1375c0e9b1d4f7",
+    "crates/ingetrazo-tools/src/line.rs": "9ea11dca1d0d99464ca0a117ecccfdcaac3faa362c7c16b4f01ec739e0530c63",
+    "crates/ingetrazo-tools/src/polygon.rs": "b908ab07b2a03f4bad998e1d7edd00b4052c3291735389c59eb2b4aa1ce7b6a4",
+    "crates/ingetrazo-tools/src/rectangle.rs": "c0c4657672c1a9083212d388778f6febb673503dfc36711078fe4c3e92ae569d",
+    "crates/ingetrazo-core/examples/bim_draw_acceptance_fixture.rs": "d5b6780ba72f71be8451311f1ac058b683ed186f46355fbdddc26504b516dee9",
+    "crates/ingetrazo-gui/examples/bim_draw_ui_fixture.rs": "6eb6c84b1d53bfd83572ca8b797abf92570c3942b45f77886ae103695f532532",
+    "scripts/check-python-bim-draw.py": "b0d8833ecf2787aa84104d6f5675e8b4fb1503ee8beac9d7844c0ba06c6b6f59",
+    "scripts/check-bim-draw-ui.py": "f40e0734577057052e5f4fbd4ec4965da3043c9f83abc1da4391890643c4d7d2",
+    "scripts/check-bim-draw-ui-reports.py": "4555b38c84064661de08d3002aaf726b1fb37c19efb62fd0980ce888c2105756",
+    "scripts/bim-draw-original-ui.py": "be0d779295a80b0d245753f6a57369fb52e7579d025dd4c069f44980c449b940"
+  },
+  "binaries": {
+    "bim_draw_acceptance_fixture": "c53a8aca911af3350887f3e05c270331995b2ae605da51a1661f14d8f967e76f",
+    "bim_draw_ui_fixture": "24ebd7499e7442e00b3c5924557fd0c852954b4e4462ba9c6805a538f3ee17ed"
+  }
+}

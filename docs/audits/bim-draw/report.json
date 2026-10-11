@@ -1,0 +1,173 @@
+{
+  "bim_contract_passed": true,
+  "full_attributes_passed": false,
+  "cases": [
+    {
+      "case": "painted-line-chord",
+      "match": true,
+      "bim_match": true,
+      "source_faces": 2,
+      "native_faces": 2
+    },
+    {
+      "case": "line-bowtie",
+      "match": true,
+      "bim_match": true,
+      "source_faces": 2,
+      "native_faces": 2
+    },
+    {
+      "case": "rectangle-band",
+      "match": true,
+      "bim_match": true,
+      "source_faces": 3,
+      "native_faces": 3
+    },
+    {
+      "case": "rectangle-overlap",
+      "match": true,
+      "bim_match": true,
+      "source_faces": 3,
+      "native_faces": 3
+    },
+    {
+      "case": "freehand-closed",
+      "match": true,
+      "bim_match": true,
+      "source_faces": 1,
+      "native_faces": 1
+    },
+    {
+      "case": "freehand-open-chord",
+      "match": true,
+      "bim_match": true,
+      "source_faces": 2,
+      "native_faces": 2
+    },
+    {
+      "case": "old-curve-global-rebuild",
+      "match": true,
+      "bim_match": true,
+      "source_faces": 1,
+      "native_faces": 1
+    },
+    {
+      "case": "holed-line-chord",
+      "match": true,
+      "bim_match": true,
+      "source_faces": 4,
+      "native_faces": 4
+    },
+    {
+      "case": "holed-rectangle-band",
+      "match": true,
+      "bim_match": true,
+      "source_faces": 4,
+      "native_faces": 4
+    },
+    {
+      "case": "holed-freehand-chord",
+      "match": true,
+      "bim_match": true,
+      "source_faces": 4,
+      "native_faces": 4
+    },
+    {
+      "case": "holed-outside-void-chord",
+      "match": true,
+      "bim_match": true,
+      "source_faces": 3,
+      "native_faces": 3
+    },
+    {
+      "case": "two-hole-chord-locality",
+      "match": true,
+      "bim_match": true,
+      "source_faces": 4,
+      "native_faces": 4
+    },
+    {
+      "case": "holed-sequential-chords",
+      "match": true,
+      "bim_match": true,
+      "source_faces": 5,
+      "native_faces": 5
+    },
+    {
+      "case": "old-curve-holed-chord",
+      "match": true,
+      "bim_match": true,
+      "source_faces": 4,
+      "native_faces": 4
+    },
+    {
+      "case": "inherited-chord",
+      "match": true,
+      "bim_match": true,
+      "source_faces": 2,
+      "native_faces": 2
+    },
+    {
+      "case": "two-traces",
+      "match": true,
+      "bim_match": true,
+      "source_faces": 2,
+      "native_faces": 2
+    },
+    {
+      "case": "inactive-traces",
+      "match": true,
+      "bim_match": true,
+      "source_faces": 2,
+      "native_faces": 2
+    },
+    {
+      "case": "nonflat-freehand-closed",
+      "match": true,
+      "bim_match": true,
+      "source_faces": 1,
+      "native_faces": 1
+    },
+    {
+      "case": "nonflat-freehand-chord",
+      "match": false,
+      "bim_match": true,
+      "source_faces": 2,
+      "native_faces": 2
+    },
+    {
+      "case": "line-closing-cycle",
+      "match": true,
+      "bim_match": true,
+      "source_faces": 1,
+      "native_faces": 1
+    },
+    {
+      "case": "contained-authored-footprint",
+      "match": true,
+      "bim_match": true,
+      "source_faces": 2,
+      "native_faces": 2
+    },
+    {
+      "case": "contained-tagged-mother",
+      "match": true,
+      "bim_match": true,
+      "source_faces": 2,
+      "native_faces": 2
+    }
+  ],
+  "negative_controls": [
+    "drop-authored-tag",
+    "retag-neighbor",
+    "collapse-trace-identity"
+  ],
+  "source": {
+    "rust_commit": "3501a8b74d0dd1c821f35ae7cedea1e49b820b52",
+    "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+    "checker_python": "3.13.13",
+    "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
+  },
+  "binary_sha256": "c53a8aca911af3350887f3e05c270331995b2ae605da51a1661f14d8f967e76f",
+  "scope": "Exact oriented authored rings/holes and all attributes under original active tagging command. Runtime app history and actual UI delivery have separate evidence."
+}

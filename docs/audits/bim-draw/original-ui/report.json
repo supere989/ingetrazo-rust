@@ -1,0 +1,909 @@
+{
+  "passed": true,
+  "binary_sha256": "efe2fd6232dce3f2db8d76d694b830b16ee8736a2debbf74dc667be48304323f",
+  "states": [
+    {
+      "label": "initial",
+      "state": {
+        "name_point": [
+          1040,
+          108
+        ],
+        "edit_menu": [
+          56,
+          9
+        ],
+        "redo_point": null,
+        "window_id": 4194311,
+        "toggle": [
+          780,
+          164
+        ],
+        "active": false,
+        "tag": null,
+        "faces": [],
+        "undo": 0,
+        "redo": 0,
+        "tool": "Select",
+        "viewport": [
+          40,
+          58,
+          715,
+          711
+        ],
+        "points": [
+          [
+            226,
+            499
+          ],
+          [
+            398,
+            414
+          ],
+          [
+            483,
+            328
+          ],
+          [
+            655,
+            242
+          ]
+        ],
+        "status": "IngeTrazo is drawing with the software renderer (llvmpipe (LLVM 20.1.2, 256 bits)): the viewport will be slow. Update the graphics driver, or assign IngeTrazo to the high-performance GPU in Windows graphics settings."
+      }
+    },
+    {
+      "label": "active",
+      "state": {
+        "name_point": [
+          1040,
+          108
+        ],
+        "edit_menu": [
+          56,
+          9
+        ],
+        "redo_point": null,
+        "window_id": 4194311,
+        "toggle": [
+          780,
+          164
+        ],
+        "active": true,
+        "tag": {
+          "class": "IfcWall",
+          "name": "Wall"
+        },
+        "faces": [],
+        "undo": 0,
+        "redo": 0,
+        "tool": "Select",
+        "viewport": [
+          40,
+          58,
+          715,
+          711
+        ],
+        "points": [
+          [
+            226,
+            499
+          ],
+          [
+            398,
+            414
+          ],
+          [
+            483,
+            328
+          ],
+          [
+            655,
+            242
+          ]
+        ],
+        "status": "Drawing as Wall (IfcWall) \u2014 new geometry assumes this tag"
+      }
+    },
+    {
+      "label": "first",
+      "state": {
+        "name_point": [
+          1040,
+          108
+        ],
+        "edit_menu": [
+          56,
+          9
+        ],
+        "redo_point": null,
+        "window_id": 4194311,
+        "toggle": [
+          780,
+          164
+        ],
+        "active": true,
+        "tag": {
+          "class": "IfcWall",
+          "name": "Wall"
+        },
+        "faces": [
+          {
+            "vertices": [
+              [
+                -1.9982454776763916,
+                -0.9962098598480225,
+                0.0
+              ],
+              [
+                0.0,
+                -0.9962098598480225,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                -1.9982454776763916,
+                0.0,
+                0.0
+              ]
+            ],
+            "attrs": {
+              "ifc": {
+                "class": "IfcWall",
+                "name": "Wall",
+                "id": 1
+              }
+            }
+          }
+        ],
+        "undo": 1,
+        "redo": 0,
+        "tool": "Rectangle",
+        "viewport": [
+          40,
+          58,
+          715,
+          711
+        ],
+        "points": [
+          [
+            226,
+            499
+          ],
+          [
+            398,
+            414
+          ],
+          [
+            483,
+            328
+          ],
+          [
+            655,
+            242
+          ]
+        ],
+        "status": "Drawing as Wall (IfcWall) \u2014 new geometry assumes this tag"
+      }
+    },
+    {
+      "label": "rearmed",
+      "state": {
+        "name_point": [
+          1040,
+          108
+        ],
+        "edit_menu": [
+          56,
+          9
+        ],
+        "redo_point": null,
+        "window_id": 4194311,
+        "toggle": [
+          780,
+          164
+        ],
+        "active": true,
+        "tag": {
+          "class": "IfcWall",
+          "name": "next"
+        },
+        "faces": [
+          {
+            "vertices": [
+              [
+                -1.9982454776763916,
+                -0.9962098598480225,
+                0.0
+              ],
+              [
+                0.0,
+                -0.9962098598480225,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                -1.9982454776763916,
+                0.0,
+                0.0
+              ]
+            ],
+            "attrs": {
+              "ifc": {
+                "class": "IfcWall",
+                "name": "Wall",
+                "id": 1
+              }
+            }
+          }
+        ],
+        "undo": 1,
+        "redo": 0,
+        "tool": "Rectangle",
+        "viewport": [
+          40,
+          58,
+          715,
+          711
+        ],
+        "points": [
+          [
+            226,
+            499
+          ],
+          [
+            398,
+            414
+          ],
+          [
+            483,
+            328
+          ],
+          [
+            655,
+            242
+          ]
+        ],
+        "status": "Drawing as next (IfcWall) \u2014 new geometry assumes this tag"
+      }
+    },
+    {
+      "label": "second",
+      "state": {
+        "name_point": [
+          1040,
+          108
+        ],
+        "edit_menu": [
+          56,
+          9
+        ],
+        "redo_point": null,
+        "window_id": 4194311,
+        "toggle": [
+          780,
+          164
+        ],
+        "active": true,
+        "tag": {
+          "class": "IfcWall",
+          "name": "next"
+        },
+        "faces": [
+          {
+            "vertices": [
+              [
+                -1.9982454776763916,
+                -0.9962098598480225,
+                0.0
+              ],
+              [
+                0.0,
+                -0.9962098598480225,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                -1.9982454776763916,
+                0.0,
+                0.0
+              ]
+            ],
+            "attrs": {
+              "ifc": {
+                "class": "IfcWall",
+                "name": "Wall",
+                "id": 1
+              }
+            }
+          },
+          {
+            "vertices": [
+              [
+                0.9962098002433777,
+                0.9962098598480225,
+                0.0
+              ],
+              [
+                3.0002808570861816,
+                0.9962098598480225,
+                0.0
+              ],
+              [
+                3.0002808570861816,
+                1.9982454776763916,
+                0.0
+              ],
+              [
+                0.9962098002433777,
+                1.9982454776763916,
+                0.0
+              ]
+            ],
+            "attrs": {
+              "ifc": {
+                "class": "IfcWall",
+                "name": "next",
+                "id": 2
+              }
+            }
+          }
+        ],
+        "undo": 2,
+        "redo": 0,
+        "tool": "Rectangle",
+        "viewport": [
+          40,
+          58,
+          715,
+          711
+        ],
+        "points": [
+          [
+            226,
+            499
+          ],
+          [
+            398,
+            414
+          ],
+          [
+            483,
+            328
+          ],
+          [
+            655,
+            242
+          ]
+        ],
+        "status": "Drawing as next (IfcWall) \u2014 new geometry assumes this tag"
+      }
+    },
+    {
+      "label": "undo",
+      "state": {
+        "name_point": [
+          1040,
+          108
+        ],
+        "edit_menu": [
+          56,
+          9
+        ],
+        "redo_point": null,
+        "window_id": 4194311,
+        "toggle": [
+          780,
+          164
+        ],
+        "active": true,
+        "tag": {
+          "class": "IfcWall",
+          "name": "next"
+        },
+        "faces": [
+          {
+            "vertices": [
+              [
+                -1.9982454776763916,
+                -0.9962098598480225,
+                0.0
+              ],
+              [
+                0.0,
+                -0.9962098598480225,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                -1.9982454776763916,
+                0.0,
+                0.0
+              ]
+            ],
+            "attrs": {
+              "ifc": {
+                "class": "IfcWall",
+                "name": "Wall",
+                "id": 1
+              }
+            }
+          }
+        ],
+        "undo": 1,
+        "redo": 1,
+        "tool": "Rectangle",
+        "viewport": [
+          40,
+          58,
+          715,
+          711
+        ],
+        "points": [
+          [
+            226,
+            499
+          ],
+          [
+            398,
+            414
+          ],
+          [
+            483,
+            328
+          ],
+          [
+            655,
+            242
+          ]
+        ],
+        "status": "Rectangle from the centre"
+      }
+    },
+    {
+      "label": "redo",
+      "state": {
+        "name_point": [
+          1040,
+          108
+        ],
+        "edit_menu": [
+          56,
+          9
+        ],
+        "redo_point": null,
+        "window_id": 4194311,
+        "toggle": [
+          780,
+          164
+        ],
+        "active": true,
+        "tag": {
+          "class": "IfcWall",
+          "name": "next"
+        },
+        "faces": [
+          {
+            "vertices": [
+              [
+                -1.9982454776763916,
+                -0.9962098598480225,
+                0.0
+              ],
+              [
+                0.0,
+                -0.9962098598480225,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                -1.9982454776763916,
+                0.0,
+                0.0
+              ]
+            ],
+            "attrs": {
+              "ifc": {
+                "class": "IfcWall",
+                "name": "Wall",
+                "id": 1
+              }
+            }
+          },
+          {
+            "vertices": [
+              [
+                0.9962098002433777,
+                0.9962098598480225,
+                0.0
+              ],
+              [
+                3.0002808570861816,
+                0.9962098598480225,
+                0.0
+              ],
+              [
+                3.0002808570861816,
+                1.9982454776763916,
+                0.0
+              ],
+              [
+                0.9962098002433777,
+                1.9982454776763916,
+                0.0
+              ]
+            ],
+            "attrs": {
+              "ifc": {
+                "class": "IfcWall",
+                "name": "next",
+                "id": 2
+              }
+            }
+          }
+        ],
+        "undo": 2,
+        "redo": 0,
+        "tool": "Rectangle",
+        "viewport": [
+          40,
+          58,
+          715,
+          711
+        ],
+        "points": [
+          [
+            226,
+            499
+          ],
+          [
+            398,
+            414
+          ],
+          [
+            483,
+            328
+          ],
+          [
+            655,
+            242
+          ]
+        ],
+        "status": "Click faces to paint them with the chosen material."
+      }
+    },
+    {
+      "label": "off",
+      "state": {
+        "name_point": [
+          1040,
+          108
+        ],
+        "edit_menu": [
+          56,
+          9
+        ],
+        "redo_point": null,
+        "window_id": 4194311,
+        "toggle": [
+          780,
+          164
+        ],
+        "active": false,
+        "tag": null,
+        "faces": [
+          {
+            "vertices": [
+              [
+                -1.9982454776763916,
+                -0.9962098598480225,
+                0.0
+              ],
+              [
+                0.0,
+                -0.9962098598480225,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                -1.9982454776763916,
+                0.0,
+                0.0
+              ]
+            ],
+            "attrs": {
+              "ifc": {
+                "class": "IfcWall",
+                "name": "Wall",
+                "id": 1
+              }
+            }
+          },
+          {
+            "vertices": [
+              [
+                0.9962098002433777,
+                0.9962098598480225,
+                0.0
+              ],
+              [
+                3.0002808570861816,
+                0.9962098598480225,
+                0.0
+              ],
+              [
+                3.0002808570861816,
+                1.9982454776763916,
+                0.0
+              ],
+              [
+                0.9962098002433777,
+                1.9982454776763916,
+                0.0
+              ]
+            ],
+            "attrs": {
+              "ifc": {
+                "class": "IfcWall",
+                "name": "next",
+                "id": 2
+              }
+            }
+          }
+        ],
+        "undo": 2,
+        "redo": 0,
+        "tool": "Rectangle",
+        "viewport": [
+          40,
+          58,
+          715,
+          711
+        ],
+        "points": [
+          [
+            226,
+            499
+          ],
+          [
+            398,
+            414
+          ],
+          [
+            483,
+            328
+          ],
+          [
+            655,
+            242
+          ]
+        ],
+        "status": "Rectangle \u2014 Click the first corner. Arrows pick the plane; Ctrl = centre."
+      }
+    },
+    {
+      "label": "off-undo",
+      "state": {
+        "name_point": [
+          1040,
+          108
+        ],
+        "edit_menu": [
+          56,
+          9
+        ],
+        "redo_point": null,
+        "window_id": 4194311,
+        "toggle": [
+          780,
+          164
+        ],
+        "active": false,
+        "tag": null,
+        "faces": [
+          {
+            "vertices": [
+              [
+                -1.9982454776763916,
+                -0.9962098598480225,
+                0.0
+              ],
+              [
+                0.0,
+                -0.9962098598480225,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                -1.9982454776763916,
+                0.0,
+                0.0
+              ]
+            ],
+            "attrs": {
+              "ifc": {
+                "class": "IfcWall",
+                "name": "Wall",
+                "id": 1
+              }
+            }
+          }
+        ],
+        "undo": 1,
+        "redo": 1,
+        "tool": "Rectangle",
+        "viewport": [
+          40,
+          58,
+          715,
+          711
+        ],
+        "points": [
+          [
+            226,
+            499
+          ],
+          [
+            398,
+            414
+          ],
+          [
+            483,
+            328
+          ],
+          [
+            655,
+            242
+          ]
+        ],
+        "status": "Rectangle \u2014 Click the first corner. Arrows pick the plane; Ctrl = centre."
+      }
+    },
+    {
+      "label": "off-redo",
+      "state": {
+        "name_point": [
+          1040,
+          108
+        ],
+        "edit_menu": [
+          56,
+          9
+        ],
+        "redo_point": null,
+        "window_id": 4194311,
+        "toggle": [
+          780,
+          164
+        ],
+        "active": false,
+        "tag": null,
+        "faces": [
+          {
+            "vertices": [
+              [
+                -1.9982454776763916,
+                -0.9962098598480225,
+                0.0
+              ],
+              [
+                0.0,
+                -0.9962098598480225,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                -1.9982454776763916,
+                0.0,
+                0.0
+              ]
+            ],
+            "attrs": {
+              "ifc": {
+                "class": "IfcWall",
+                "name": "Wall",
+                "id": 1
+              }
+            }
+          },
+          {
+            "vertices": [
+              [
+                0.9962098002433777,
+                0.9962098598480225,
+                0.0
+              ],
+              [
+                3.0002808570861816,
+                0.9962098598480225,
+                0.0
+              ],
+              [
+                3.0002808570861816,
+                1.9982454776763916,
+                0.0
+              ],
+              [
+                0.9962098002433777,
+                1.9982454776763916,
+                0.0
+              ]
+            ],
+            "attrs": {
+              "ifc": {
+                "class": "IfcWall",
+                "name": "next",
+                "id": 2
+              }
+            }
+          }
+        ],
+        "undo": 2,
+        "redo": 0,
+        "tool": "Rectangle",
+        "viewport": [
+          40,
+          58,
+          715,
+          711
+        ],
+        "points": [
+          [
+            226,
+            499
+          ],
+          [
+            398,
+            414
+          ],
+          [
+            483,
+            328
+          ],
+          [
+            655,
+            242
+          ]
+        ],
+        "status": "Click faces to paint them with the chosen material."
+      }
+    }
+  ],
+  "original": true,
+  "original_source": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "scope": "Actual original MainWindow widget/History delivery",
+  "fixture_sha256": "be0d779295a80b0d245753f6a57369fb52e7579d025dd4c069f44980c449b940",
+  "native_candidate_source_commit": "3501a8b74d0dd1c821f35ae7cedea1e49b820b52"
+}

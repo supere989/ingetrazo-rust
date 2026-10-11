@@ -1,0 +1,7 @@
+{
+  "initial_analytic_expected": 2.0,
+  "native_actual": 1.9999999999999998,
+  "actual_original_collect_objects": 1.9999999999999998,
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "status": "Incorrect analytic exact assertion corrected to actual source result; no production volume change or tolerance introduced."
+}
