@@ -4,7 +4,7 @@ import ctypes as C, os, subprocess, time, json, hashlib, select
 from pathlib import Path
 import argparse
 from owned_process_cleanup import stop_owned_helper
-parser=argparse.ArgumentParser();parser.add_argument("binary");parser.add_argument("output");parser.add_argument("--source-dir",required=True);parser.add_argument("--case",default="ordinary-prism");parser.add_argument("--source",required=True);parser.add_argument("--source-frames",action="store_true");args=parser.parse_args();assert len(args.source)==40 and all(c in "0123456789abcdef" for c in args.source)
+parser=argparse.ArgumentParser();parser.add_argument("binary");parser.add_argument("output");parser.add_argument("--source-dir",required=True);parser.add_argument("--case",default="ordinary-prism");parser.add_argument("--source",required=True);parser.add_argument("--source-frames",action="store_true");parser.add_argument("--source-phases",default="base,preview,offset,cancel");args=parser.parse_args();assert len(args.source)==40 and all(c in "0123456789abcdef" for c in args.source)
 out=Path(args.output);out.mkdir(parents=True,exist_ok=True)
 source_rows=json.loads((Path(args.source_dir)/"original.json").read_text())["cases"];recipe=next(row for row in source_rows if row["name"]==args.case)
 expected_distance=sum((recipe["anchor"][j]+recipe["normal"][j]*.6-recipe["anchor"][j])*recipe["normal"][j] for j in range(3))
@@ -89,20 +89,24 @@ try:
     value=wait(lambda:(v if(v:=state())and v["nonce"]==nonce and not v["prepare_error"] and v["completed_present_serial"]>first["submitted_serial"] else None))
    image=take(str(nonce)+"-"+name);rows.append(dict(name=name,state=state(),image_sha256=hashlib.sha256((out/(str(nonce)+"-"+name+".png")).read_bytes()).hexdigest()));return image
   if args.source_frames:
-   frames={"base":base}
-   action(1,"acquire")
-   frames["preview"]=action(2,"drag",distance=recipe["frames"][1]["distance"])
-   frames["offset"]=action(3,"drag",distance=recipe["frames"][2]["distance"])
-   frames["cancel"]=action(4,"cancel")
+   phases=set(args.source_phases.split(","));assert phases and phases<={"base","preview","offset","cancel"}
+   # The frozen original observer never cancels acquisition: its base/cancel
+   # phases set extrusion=0 while the length label remains active. Actual
+   # cancellation is tested independently in the full application workflow.
+   frames={"base":action(1,"acquire")}
+   if "preview" in phases:frames["preview"]=action(2,"drag",distance=recipe["frames"][1]["distance"])
+   if "offset" in phases:frames["offset"]=action(3,"drag",distance=recipe["frames"][2]["distance"])
+   if "cancel" in phases:frames["cancel"]=action(4,"drag",distance=0.)
    comparisons=[]
    for reference in recipe["frames"]:
+    if reference["phase"] not in phases:continue
     source_path=Path(args.source_dir)/reference["file"]
     assert hashlib.sha256(source_path.read_bytes()).hexdigest()==reference["sha256"],"Frozen source frame changed"
     source=read_image(source_path);native=frames[reference["phase"]]
     delta=np.abs(source.astype(np.int16)-native.astype(np.int16));mask=np.any(delta!=0,axis=2)
     comparisons.append(dict(phase=reference["phase"],source_sha256=reference["sha256"],different_pixels=int(mask.sum()),maximum=int(delta.max()),exact=not bool(mask.any())))
    (out/"source-comparison.json").write_text(json.dumps(dict(case=args.case,extent=size,comparisons=comparisons,passed=all(c["exact"]for c in comparisons)),indent=2)+"\n")
-   action(5,"save")
+   action(5,"cancel");action(6,"save")
   else:
    acquired=action(1,"acquire");assert state()["label"] is not None and state()["label"]["distance"]==0 and np.any(roi(acquired)!=base_roi)
    shown=action(2,"drag",distance=.6);assert state()["label"]["distance"]==abs(expected_distance) and state()["world"]["preview_bytes"]>0 and np.any(roi(shown)!=roi(acquired))
