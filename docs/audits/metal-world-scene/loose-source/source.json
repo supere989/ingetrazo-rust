@@ -1,0 +1,105 @@
+{
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "passed": true,
+  "cases": [
+    {
+      "name": "loose-initial",
+      "rgba": [
+        247,
+        0,
+        0,
+        255
+      ],
+      "pixel": [
+        400,
+        318
+      ],
+      "png_sha256": "afa1aafa777500f2508431a429b40facf19d652f464825906a4ff12c62ca37f1"
+    },
+    {
+      "name": "loose-warm",
+      "rgba": [
+        247,
+        0,
+        0,
+        255
+      ],
+      "pixel": [
+        400,
+        318
+      ],
+      "png_sha256": "afa1aafa777500f2508431a429b40facf19d652f464825906a4ff12c62ca37f1"
+    },
+    {
+      "name": "loose-geometry",
+      "rgba": [
+        247,
+        0,
+        0,
+        255
+      ],
+      "pixel": [
+        472,
+        318
+      ],
+      "png_sha256": "514f7b7f03df36f6fb64852fc2dfbfe07f27054a2df5ea3f0c5b10b62b79931d"
+    },
+    {
+      "name": "loose-paint",
+      "rgba": [
+        247,
+        247,
+        0,
+        255
+      ],
+      "pixel": [
+        472,
+        318
+      ],
+      "png_sha256": "8bbb3edef6b28e7b72ae499c3d489dcea0181c67194d6b6061d21362beed1289"
+    },
+    {
+      "name": "loose-layer-hidden",
+      "rgba": [
+        0,
+        0,
+        255,
+        255
+      ],
+      "pixel": [
+        472,
+        318
+      ],
+      "png_sha256": "4b5f0b3e34e2b3f2574b07bc1155a14b334edb24c39c73eeb2777392d22b6d41"
+    },
+    {
+      "name": "loose-layer-restored",
+      "rgba": [
+        247,
+        247,
+        0,
+        255
+      ],
+      "pixel": [
+        472,
+        318
+      ],
+      "png_sha256": "8bbb3edef6b28e7b72ae499c3d489dcea0181c67194d6b6061d21362beed1289"
+    },
+    {
+      "name": "loose-topology-removed",
+      "rgba": [
+        0,
+        0,
+        255,
+        255
+      ],
+      "pixel": [
+        472,
+        318
+      ],
+      "png_sha256": "4b5f0b3e34e2b3f2574b07bc1155a14b334edb24c39c73eeb2777392d22b6d41"
+    }
+  ],
+  "scope": "Actual frozen Qt viewport OpenGL/MSAA interior RGBA; source constructor/mesh edits and explicit version notification, no delivered user gesture or whole-item alignment claim"
+}

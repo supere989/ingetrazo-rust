@@ -16,6 +16,8 @@ use winit::{
 mod lifecycle_probe;
 pub(crate) mod world_viewport;
 mod world_app_probe;
+mod world_loose_probe;
+pub fn run_world_loose_probe(root:PathBuf)->Result<(),String>{world_loose_probe::run(root)}
 pub fn run_world_offscreen_probe(root:PathBuf)->Result<(),String>{world_app_probe::run(root)}
 /// Engineering probe through actual own-window Cocoa events, not physical input.
 pub fn run_document_probe(root: PathBuf, choice: &str) -> Result<(), Box<dyn std::error::Error>> {
