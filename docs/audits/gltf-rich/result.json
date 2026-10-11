@@ -1,0 +1,71 @@
+{
+  "cases": {
+    "default": {
+      "strict_triangle_collection_equal": true,
+      "primitives": 1,
+      "materials": 1,
+      "images": 0,
+      "triangles": 2
+    },
+    "pbr-colors": {
+      "strict_triangle_collection_equal": true,
+      "primitives": 6,
+      "materials": 6,
+      "images": 0,
+      "triangles": 12
+    },
+    "textures-alpha": {
+      "strict_triangle_collection_equal": true,
+      "primitives": 4,
+      "materials": 4,
+      "images": 2,
+      "triangles": 8
+    },
+    "nested-reflected": {
+      "strict_triangle_collection_equal": true,
+      "primitives": 1,
+      "materials": 1,
+      "images": 1,
+      "triangles": 2
+    },
+    "visibility": {
+      "strict_triangle_collection_equal": true,
+      "primitives": 2,
+      "materials": 2,
+      "images": 0,
+      "triangles": 4
+    },
+    "hole": {
+      "strict_triangle_collection_equal": false,
+      "primitives": 1,
+      "materials": 1,
+      "images": 0,
+      "triangles": 8
+    },
+    "slanted": {
+      "strict_triangle_collection_equal": true,
+      "primitives": 1,
+      "materials": 1,
+      "images": 1,
+      "triangles": 2
+    },
+    "affine-nested": {
+      "strict_triangle_collection_equal": true,
+      "primitives": 1,
+      "materials": 1,
+      "images": 1,
+      "triangles": 2
+    },
+    "empty": {
+      "strict_triangle_collection_equal": true,
+      "primitives": 0,
+      "materials": 0,
+      "images": 0,
+      "triangles": 0
+    }
+  },
+  "exact_decoded_surfaces": 9,
+  "identical_triangle_collections": 8,
+  "rejected_mutations": 7,
+  "focused_tests": 5
+}
