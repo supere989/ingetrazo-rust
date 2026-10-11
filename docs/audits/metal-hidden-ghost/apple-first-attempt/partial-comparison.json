@@ -1,0 +1,20 @@
+[
+  {
+    "case": "face-off",
+    "bytes": 1920000,
+    "differing_pixels": 0,
+    "maximum_channel_delta": 0
+  },
+  {
+    "case": "face-on",
+    "bytes": 1920000,
+    "differing_pixels": 0,
+    "maximum_channel_delta": 0
+  },
+  {
+    "case": "edge-off",
+    "bytes": 1920000,
+    "differing_pixels": 0,
+    "maximum_channel_delta": 0
+  }
+]

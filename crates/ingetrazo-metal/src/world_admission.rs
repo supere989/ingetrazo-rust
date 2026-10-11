@@ -102,3 +102,39 @@ mod tests {
         assert!(pose([[0.; 4]; 4], (16385, 600), [1.; 4]).is_err());
     }
 }
+
+/// Cold standalone allocation admission when a device cannot estimate MSAA heap layout.
+/// Reserves all available logical capacity, never guesses a texture byte multiplier.
+pub(crate) fn standalone_capacity(b: &ingetrazo_core::gpu_memory::MemoryBudget) -> Result<u64, String> {
+    let h = b.heaps.first().ok_or("Metal memory heap missing")?;
+    let own = h.committed.checked_add(h.reserved).ok_or("Metal heap accounting overflow")?;
+    let mut available = h.limit.saturating_sub(own);
+    if let Some(live) = h.live_budget {
+        available = available.min(live.saturating_sub(h.live_usage.saturating_sub(h.committed)).saturating_sub(own));
+    }
+    if let Some(limit) = b.total_limit {
+        let total = b.heaps.iter().try_fold(0u64, |n,h| n.checked_add(h.committed)?.checked_add(h.reserved)).ok_or("Metal total accounting overflow")?;
+        available = available.min(limit.saturating_sub(total));
+    }
+    Ok(available)
+}
+#[cfg(test)]
+mod standalone_tests {
+    use super::*;
+    #[test]
+    fn respects_reservations_global_and_external_usage() {
+        let mut b=ingetrazo_core::gpu_memory::MemoryBudget::new([(1000,900)]);
+        let t=b.reserve(0,100).unwrap();b.commit(t,1).unwrap();
+        let pending=b.reserve(0,200).unwrap();
+        assert_eq!(standalone_capacity(&b).unwrap(),600);
+        b.total_limit=Some(500);assert_eq!(standalone_capacity(&b).unwrap(),200);
+        b.update_live(0,450,200).unwrap();assert_eq!(standalone_capacity(&b).unwrap(),50);
+        b.cancel(pending).unwrap();assert_eq!(standalone_capacity(&b).unwrap(),250);
+        let all=standalone_capacity(&b).unwrap();
+        let ticket=b.reserve(0,all).unwrap();
+        assert!(b.reserve(0,1).is_err());
+        b.cancel(ticket).unwrap();
+        assert_eq!(standalone_capacity(&b).unwrap(),all);
+        b.total_limit=Some(100);assert_eq!(standalone_capacity(&b).unwrap(),0);
+    }
+}

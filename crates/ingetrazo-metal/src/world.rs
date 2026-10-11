@@ -1062,14 +1062,24 @@ fn image_samples(metal:&NativeMetal,extent:(u32,u32),format:MTLPixelFormat,usage
     // larger allocation by silently increasing the ticket after allocation.
     let native = metal.device.heapTextureSizeAndAlignWithDescriptor(&d);
     let admitted = u64::try_from(native.size).map_err(|_| "World native texture size overflow")?;
-    if admitted < requested || native.align == 0 {
-        return Err(format!("World native texture size query unavailable: requested_bytes={requested}, queried_size={}, queried_align={}, extent={}x{}, format={format:?}, storage={:?}, hazard={:?}, usage={usage:?}, device={}", native.size, native.align, extent.0, extent.1, d.storageMode(), d.hazardTrackingMode(), metal.device.name()));
-    }
-    let ticket = metal
-        .budget
-        .lock()
-        .map_err(|_| "Metal budget poisoned")?
-        .reserve(0, admitted)?;
+    let (admitted, ticket) = {
+        let mut budget = metal.budget.lock().map_err(|_| "Metal budget poisoned")?;
+        let admitted = if native.size == 0 && native.align == 0 && samples > 1 {
+            // Heap estimates can be unavailable for a standalone MSAA target.
+            // Temporarily exclude all other logical admissions; actual allocatedSize
+            // must fit this ticket before publication. This is not an allocator bound.
+            super::world_admission::standalone_capacity(&budget)?
+        } else {
+            if admitted < requested || native.align == 0 {
+                return Err("World native texture size query invalid".into());
+            }
+            admitted
+        };
+        if admitted < requested {
+            return Err("World MSAA target exceeds available allocation admission".into());
+        }
+        (admitted, budget.reserve(0, admitted)?)
+    };
     let Some(raw) = metal.device.newTextureWithDescriptor(&d) else {
         metal
             .budget
@@ -1081,9 +1091,9 @@ fn image_samples(metal:&NativeMetal,extent:(u32,u32),format:MTLPixelFormat,usage
     let handle = (&*raw as *const ProtocolObject<dyn MTLTexture>).cast::<()>() as usize as u64;
     let actual = MTLResource::allocatedSize(&*raw) as u64;
     let mut budget = metal.budget.lock().map_err(|_| "Metal budget poisoned")?;
-    if actual > admitted {
+    if actual == 0 || actual > admitted {
         budget.cancel(ticket)?;
-        return Err("World standalone texture exceeds preallocation native estimate".into());
+        return Err("World standalone texture has unusable size or exceeds admission ticket".into());
     }
     if admitted != actual {
         budget.cancel(ticket)?;
