@@ -108,6 +108,11 @@ pub trait Tool: Send + Sync {
         None
     }
 
+    /// Informational source tool status, separate from a refused operation.
+    fn status_message(&self) -> Option<&str> { None }
+    /// Consume one informational event after an actual tool call.
+    fn take_status_message(&mut self)->Option<String>{None}
+
     fn tool_type(&self) -> ToolType;
     fn name(&self) -> &'static str;
     fn shortcut(&self) -> Option<&'static str> {

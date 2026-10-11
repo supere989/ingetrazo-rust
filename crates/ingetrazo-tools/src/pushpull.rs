@@ -6,6 +6,8 @@ use ingetrazo_core::scene::Scene;
 
 use crate::base::{Tool, ToolContext, ToolType};
 
+mod inward_limit;
+
 /// Interactive Push/Pull tool for extruding faces into solids and recessing geometry.
 #[derive(Debug, Default, Clone)]
 pub struct PushPullTool {
@@ -18,6 +20,7 @@ pub struct PushPullTool {
     pub keep_base: bool,
     pub error: Option<String>,
     inward_limit:Option<f64>,
+    limit_status:Option<String>,
 }
 
 impl PushPullTool {
@@ -41,55 +44,44 @@ impl PushPullTool {
     }
 
     const MIN_EXTRUDE:f64=2e-4;
-    // Clean prism caps have a parallel supporting cap. Its boundary contact
-    // is a blocker, unlike a strictly contained through-hole mouth.
-    fn cap_limit(mesh:&ingetrazo_core::mesh::Mesh,face_id:usize)->Option<f64> {
-        let face=mesh.faces.get(face_id)?;let normal=mesh.face_normal(face_id);
-        let clean=std::iter::once(&face.vertices).chain(&face.holes).all(|ring|(0..ring.len()).all(|i| {
-            let edge=mesh.find_edge(ring[i],ring[(i+1)%ring.len()]).and_then(|id|mesh.edges.get(id));
-            edge.is_some_and(|e|e.faces.len()==2&&e.faces.iter().copied().filter(|&id|id!=face_id).all(|id| {
-                let other=&mesh.faces[id];mesh.face_normal(id).dot(normal).abs()<0.001&&(0..other.vertices.len()).any(|i| {
-                    let d=mesh.vertices[other.vertices[(i+1)%other.vertices.len()]].position-mesh.vertices[other.vertices[i]].position;
-                    d.length()>1e-9&&d.normalize().dot(normal).abs()>0.999
-                })
-            }))
-        }));
-        if !clean{return None;}
-        let origin=mesh.vertices[face.vertices[0]].position;
-        let mut supports=Vec::<(f64,Vec<(DVec3,DVec3,DVec3)>)>::new();
-        for id in (0..mesh.faces.len()).filter(|&id|id!=face_id&&mesh.face_normal(id).dot(normal).abs()>0.999) {
-            let distance=(origin-mesh.vertices[mesh.faces[id].vertices[0]].position).dot(normal);
-            if distance<=1e-6{continue;}
-            // Original loop_inside_face excludes a strictly contained
-            // through-hole target even if it is an unrelated wider sheet.
-            let (u,w)=ingetrazo_core::math::plane_basis(normal);
-            let project=|p:DVec3|glam::DVec2::new(p.dot(u),p.dot(w));
-            let outer=mesh.faces[id].vertices.iter().map(|&v|project(mesh.vertices[v].position)).collect::<Vec<_>>();
-            let strictly_inside=|p:glam::DVec2| {
-                let mut inside=false;
-                for i in 0..outer.len() {
-                    let a=outer[i];let b=outer[(i+1)%outer.len()];let d=b-a;let rel=p-a;
-                    let cross=d.x*rel.y-d.y*rel.x;let dot=rel.dot(d);
-                    if cross.abs()<=1e-7&&dot>=-1e-7&&dot<=d.length_squared()+1e-7{return false;}
-                    if (a.y>p.y)!=(b.y>p.y)&&p.x<a.x+(b.x-a.x)*(p.y-a.y)/(b.y-a.y){inside=!inside;}
-                }
-                inside
-            };
-            if face.vertices.iter().all(|&v|strictly_inside(project(mesh.vertices[v].position-normal*distance))){continue;}
-            let triangles=mesh.triangulate_face(id);
-            if let Some((_,existing))=supports.iter_mut().find(|(depth,_)|(*depth-distance).abs()<1e-6){existing.extend(triangles);}else{supports.push((distance,triangles));}
-        }
-        // A subdivided backing plane supports the cap jointly, not one
-        // partition at a time. Keep candidate containment/holes policy above.
-        supports.into_iter().filter_map(|(distance,triangles)| {
-            face.vertices.iter().chain(face.holes.iter().flatten()).all(|&v| {
-                let ray=ingetrazo_core::math::Ray::new(mesh.vertices[v].position,-normal);
-                triangles.iter().any(|&(a,b,c)|ingetrazo_core::math::ray_triangle_intersect(&ray,a,b,c).is_some_and(|(t,_)|(t-distance).abs()<1e-6))
-            }).then_some(distance)
-        }).min_by(f64::total_cmp)
+    /// Original attached-face inward limit: parallel overlap blockers,
+    /// immediate lateral exit, then sampled nonparallel boundary crossings.
+    /// Qt arithmetic is confined to this source-authored decision boundary;
+    /// the document positions remain f64.
+    pub fn inward_limit(mesh:&ingetrazo_core::mesh::Mesh,face_id:usize,anchor:DVec3)->Option<f64> {
+        inward_limit::compute(mesh,face_id,anchor)
     }
-    fn limited_distance(mesh:&ingetrazo_core::mesh::Mesh,face:usize,d:f64,keep:bool)->f64 {
-        if !keep&&d<0. {Self::cap_limit(mesh,face).map_or(d,|limit|d.max(-limit))}else{d}
+
+    fn cap_limit(mesh:&ingetrazo_core::mesh::Mesh,face_id:usize)->Option<f64>{
+        let face=mesh.faces.get(face_id)?;
+        let anchor=(face.vertices.iter().map(|&v|mesh.vertices[v].position.as_vec3().as_dvec3()).sum::<DVec3>()/face.vertices.len()as f64).as_vec3();
+        Self::inward_limit(mesh,face_id,anchor.as_dvec3())
+    }
+    fn limited_distance(mesh:&ingetrazo_core::mesh::Mesh,face:usize,d:f64,_keep:bool)->f64 {
+        if d<0. {Self::cap_limit(mesh,face).map_or(d,|limit|d.max(-limit))}else{d}
+    }
+
+    // Source _mutate_or_top_out: only a closed-solid admission refusal
+    // triggers the six cold commit trials. Each primitive is atomic; probes
+    // restore their admitted model and never publish history/preview changes.
+    fn commit_distance(&mut self,scene:&mut Scene,face:usize,distance:f64,keep:bool)->Result<f64,String>{
+        let limit=if self.selected_face==Some(face){self.inward_limit}else{Self::cap_limit(&scene.mesh,face)};
+        let clamped=if distance<0. {limit.map_or(distance,|limit|distance.max(-limit))}else{distance};
+        if clamped!=distance {self.limit_status=Some(format!("Push limited to {:.2} m — deeper would leave the solid",-clamped));}
+        let distance=clamped;
+        match Self::extrude_face_prepared(scene,face,distance,keep,false){
+            Ok(())=>Ok(distance),
+            Err(error) if error.starts_with("Ctrl copy would leave an invalid solid:")=>{
+                let before=scene.mesh.clone();let selection=scene.selection.clone();let order=scene.selection_order.clone();let (version,view_version)=(scene.version,scene.view_version);let(mut low,mut high)=(0.,1.);let mut best=None;
+                for _ in 0..6 {let mid=(low+high)*0.5;let d=distance*mid;
+                    if d.abs()>=Self::MIN_EXTRUDE&&Self::extrude_face_prepared(scene,face,d,keep,false).is_ok(){best=Some(d);low=mid;}else{high=mid;}
+                    scene.mesh=before.clone();scene.selection=selection.clone();scene.selection_order=order.clone();scene.version=version;scene.view_version=view_version;
+                }
+                let Some(d)=best else{return Err(error);};Self::extrude_face_prepared(scene,face,d,keep,false)?;
+                self.limit_status=Some(format!("Push stopped at {:.2} m: going further would break the solid",d.abs()));Ok(d)
+            },
+            Err(error)=>Err(error),
+        }
     }
 
     // Source run_stitch/dedupe_faces + flat heal: retain subdivision
@@ -173,7 +165,9 @@ impl PushPullTool {
         self.is_dragging = false;
         self.keep_base = false;
         self.error = None;
+        self.limit_status=None;
     }
+    fn reset_after_commit(&mut self){let status=self.limit_status.take();self.reset();self.limit_status=status;}
 
     /// Prepare the whole extrusion before changing the scene. A free face
     /// becomes a closed prism; a bordered surface loses its old base. Closed
@@ -189,6 +183,9 @@ impl PushPullTool {
         distance: f64,
         keep_base: bool,
     ) -> Result<(), String> {
+        Self::extrude_face_prepared(scene,face_id,distance,keep_base,true)
+    }
+    fn extrude_face_prepared(scene:&mut Scene,face_id:usize,distance:f64,keep_base:bool,compute_limit:bool)->Result<(),String>{
         use ingetrazo_core::{
             math::newell_vector,
             mesh::{Mesh, MeshFace},
@@ -227,7 +224,8 @@ impl PushPullTool {
         if distance.abs() < Self::MIN_EXTRUDE {
             return Ok(());
         }
-        let distance=Self::limited_distance(mesh,face_id,distance,keep_base);
+        let distance=if compute_limit {Self::limited_distance(mesh,face_id,distance,keep_base)}else{distance};
+        if distance.abs()<Self::MIN_EXTRUDE {return Ok(());}
         let normal = mesh.face_normal(face_id);
         let origin = mesh.vertices[face.vertices[0]].position;
         if face
@@ -694,6 +692,13 @@ impl PushPullTool {
         }
         // No partial mutation or version bump escapes a failed preparation.
         if collapsed_positions.is_none(){ingetrazo_core::heal::refresh_interior(&mut candidate)?;}
+        if keep_base&&distance<0. {
+            // Source marks the new inward slab as interior before orienting;
+            // its authored cap retains the original face winding.
+            let cap_origin=origin+translation;
+            let reverse=(0..candidate.faces.len()).filter(|&id|candidate.faces[id].interior&&candidate.face_normal(id).dot(normal)<0.&&candidate.faces[id].vertices.iter().all(|&v|(candidate.vertices[v].position-cap_origin).dot(normal).abs()<1e-6)).collect::<Vec<_>>();
+            for id in reverse {candidate.faces[id].vertices.reverse();for hole in &mut candidate.faces[id].holes {hole.reverse();}}
+        }
         if keep_base && was_solid {
             let seed = candidate
                 .faces
@@ -785,8 +790,11 @@ impl Tool for PushPullTool {
 
     fn on_cancel(&mut self, _scene: &mut Scene) {
         self.reset();
+        self.limit_status=None;
     }
 
+    fn status_message(&self)->Option<&str>{self.limit_status.as_deref()}
+    fn take_status_message(&mut self)->Option<String>{self.limit_status.take()}
     fn error_message(&self) -> Option<&str> {
         self.error.as_deref()
     }
@@ -797,7 +805,8 @@ impl Tool for PushPullTool {
         } else if let (Some(face_id), Some(start)) = (self.selected_face, self.start_point) {
             let normal = scene.mesh.face_normal(face_id);
             let raw=(ctx.world-start).dot(normal);
-            self.extrusion_distance=if !self.keep_base&&raw<0. {self.inward_limit.map_or(raw,|limit|raw.max(-limit))}else{raw};
+            self.extrusion_distance=if raw<0. {self.inward_limit.map_or(raw,|limit|raw.max(-limit))}else{raw};
+            if self.extrusion_distance!=raw {self.limit_status=Some(format!("Push limited to {:.2} m — deeper would leave the solid",-self.extrusion_distance));}
         }
     }
 
@@ -807,8 +816,9 @@ impl Tool for PushPullTool {
             let face_pick = self.acquire_face(scene,ctx);
 
             if let Some(face_id) = face_pick {
+                self.limit_status=None;
                 self.selected_face = Some(face_id);
-                self.inward_limit=Self::cap_limit(&scene.mesh,face_id);
+                self.inward_limit=Self::inward_limit(&scene.mesh,face_id,ctx.world);
                 self.start_point = Some(ctx.world);
                 self.is_dragging = true;
                 self.extrusion_distance = 0.0;
@@ -816,10 +826,10 @@ impl Tool for PushPullTool {
         } else if let Some(face_id) = self.selected_face {
             let dist = self.extrusion_distance;
             if dist.abs()<Self::MIN_EXTRUDE{return;}
-            match Self::extrude_face_with_options(scene, face_id, dist, self.keep_base) {
-                Ok(()) => {
-                    self.last_distance = Some(dist);
-                    self.reset();
+            match self.commit_distance(scene, face_id, dist, self.keep_base) {
+                Ok(actual) => {
+                    self.last_distance = Some(actual);
+                    self.reset_after_commit();
                 }
                 Err(error) => self.error = Some(error),
             }
@@ -832,8 +842,8 @@ impl Tool for PushPullTool {
         if let Some(last_d) = self.last_distance {
 
             if let Some(face_id) = face_pick {
-                match Self::extrude_face_with_options(scene, face_id, last_d, ctx.ctrl_held) {
-                    Ok(()) => self.reset(),
+                match self.commit_distance(scene, face_id, last_d, ctx.ctrl_held) {
+                    Ok(actual) => {self.last_distance=Some(actual);self.reset_after_commit();},
                     Err(error) => self.error = Some(error),
                 }
                 return;
@@ -843,30 +853,17 @@ impl Tool for PushPullTool {
     }
 
     fn on_vcb_input(&mut self, scene: &mut Scene, text: &str) -> Result<(), String> {
-        let requested=ingetrazo_core::units::parse_length(text,ingetrazo_core::units::LengthUnit::Meters)?;
+        let value=ingetrazo_core::units::parse_length(text,ingetrazo_core::units::LengthUnit::Meters)?;
+        let requested=if self.extrusion_distance<0. {-value}else{value};
         if requested.abs()<Self::MIN_EXTRUDE {return Err("Push/Pull distance is below the minimum extrusion".into());}
-        let dist=self.selected_face.or(self.hovered_face).map_or(requested,|id|Self::limited_distance(&scene.mesh,id,requested,self.keep_base));
+        let dist=if requested<0.&&self.selected_face.is_some(){self.inward_limit.map_or(requested,|limit|requested.max(-limit))}else{self.selected_face.or(self.hovered_face).map_or(requested,|id|Self::limited_distance(&scene.mesh,id,requested,self.keep_base))};
 
-        if let Some(face_id) = self.selected_face {
-            if let Err(error) =
-                Self::extrude_face_with_options(scene, face_id, dist, self.keep_base)
-            {
-                self.error = Some(error.clone());
-                return Err(error);
+        if dist!=requested {self.limit_status=Some(format!("Push limited to {:.2} m — deeper would leave the solid",-dist));}
+        if let Some(face_id)=self.selected_face.or(self.hovered_face){
+            match self.commit_distance(scene,face_id,dist,self.keep_base){
+                Ok(actual)=>{self.last_distance=Some(actual);self.reset_after_commit();Ok(())},
+                Err(error)=>{self.error=Some(error.clone());Err(error)}
             }
-            self.last_distance = Some(dist);
-            self.reset();
-            Ok(())
-        } else if let Some(face_id) = self.hovered_face {
-            if let Err(error) =
-                Self::extrude_face_with_options(scene, face_id, dist, self.keep_base)
-            {
-                self.error = Some(error.clone());
-                return Err(error);
-            }
-            self.last_distance = Some(dist);
-            self.reset();
-            Ok(())
         } else {
             Err("No face selected for Push/Pull".into())
         }
