@@ -1,0 +1,17 @@
+{
+  "source_commit": "8f32467f254660bf0b6bb809b2e81f07598c7d24",
+  "artifact_id": 11690983834,
+  "artifact_sha256": "268e8fecac79bc76c9659b83fac8eff8ec5711d67666da3bda146e285f85b93f",
+  "verified_source_files": 37,
+  "binary_sha256": "f3ae85980b6dcb7e1e815f9c316c0fcf80660ea2db80441c531add1c406ccc6f",
+  "native_acceptance": false,
+  "frames": 0,
+  "refusal": {
+    "passed": false,
+    "phase": "opaque-front",
+    "frame_present": false,
+    "route_reason": "Metal viewport paused: World native texture size query unavailable: requested_bytes=2646880, queried_size=0, queried_align=0, extent=932x710, format=MTLPixelFormat(70), storage=MTLStorageMode(2), hazard=MTLHazardTrackingMode(2), usage=MTLTextureUsage(5), device=Apple Paravirtual device",
+    "scope": "Actual shared UI route refusal; no native frame acceptance"
+  },
+  "scope": "Actual first-frame refusal; no guessed fallback or allocation budget relaxation."
+}
