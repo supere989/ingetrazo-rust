@@ -65,6 +65,7 @@ pub struct IngeTrazoApp {
     pub show_tray: bool,
     pub shadows_enabled: bool,
     pub show_about_dialog: bool,
+    pub text3d_dialog: Option<crate::text3d::Dialog>,
     pub show_simplify_dialog: bool,
     pub simplify_angle: f64,
     pub show_open_dialog: bool,
@@ -175,6 +176,7 @@ impl IngeTrazoApp {
             show_tray: true,
             shadows_enabled: false,
             show_about_dialog: false,
+            text3d_dialog: None,
             show_simplify_dialog: false,
             simplify_angle: 1.0,
             show_open_dialog: false,
@@ -1017,6 +1019,7 @@ impl IngeTrazoApp {
         self.blender_state.poll_events(ctx);
         self.tick_blender_follow(ctx);
 
+        if self.text3d_dialog.is_none() {
         // A complete Ctrl chord can arrive in one frame; the final modifier
         // snapshot is then released. Use the key event's captured modifiers.
         let (undo_pressed,redo_pressed)=ctx.input(|i|i.events.iter().fold((false,false),|mut flags,event|{
@@ -1084,22 +1087,26 @@ impl IngeTrazoApp {
             }
         }
 
+        } // 3D Text dialog owns keyboard input
         self.show_simplification_dialog(ctx);
 
         // 1. Menu Bar Panel
         egui::TopBottomPanel::top("menu_bar").show(ctx, |ui| {
+            ui.set_enabled(self.text3d_dialog.is_none());
             render_menu_bar(self, ui);
         });
 
         // 2. Toolbar Panel
         if self.show_toolbar {
             egui::TopBottomPanel::top("toolbar").show(ctx, |ui| {
-                render_top_toolbar(self, ui);
+                ui.set_enabled(self.text3d_dialog.is_none());
+            render_top_toolbar(self, ui);
             });
         }
 
         // 3. Status Bar Panel
         egui::TopBottomPanel::bottom("status_bar").show(ctx, |ui| {
+            ui.set_enabled(self.text3d_dialog.is_none());
             render_status_bar(self, ui);
         });
 
@@ -1108,7 +1115,8 @@ impl IngeTrazoApp {
             .exact_width(42.0)
             .resizable(false)
             .show(ctx, |ui| {
-                render_left_cad_palette(self, ui);
+                ui.set_enabled(self.text3d_dialog.is_none());
+            render_left_cad_palette(self, ui);
             });
 
         // 5. Side Tray Panel
@@ -1118,12 +1126,14 @@ impl IngeTrazoApp {
                 .min_width(200.0)
                 .max_width(400.0)
                 .show(ctx, |ui| {
-                    render_side_tray(self, ui);
+                    ui.set_enabled(self.text3d_dialog.is_none());
+            render_side_tray(self, ui);
                 });
         }
 
         // 6. Central 3D Viewport or 2D Sheet Composer Canvas
         egui::CentralPanel::default().show(ctx, |ui| {
+            ui.set_enabled(self.text3d_dialog.is_none());
             if let Some(sheet_idx) = self.scene.active_sheet_index {
                 crate::composer::render_sheet_composer(self, ui, sheet_idx);
             } else {
@@ -1134,6 +1144,7 @@ impl IngeTrazoApp {
 
         // 7. Modal Dialogs
         render_dialogs(self, ctx);
+        crate::text3d::render_dialog(self, ctx);
         crate::section_actions::render_section_name_prompt(self,ctx);
         crate::blender::render_blender_dialog(self, ctx);
         self.sync_document_presentation();

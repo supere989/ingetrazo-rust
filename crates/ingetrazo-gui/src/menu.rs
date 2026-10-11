@@ -685,7 +685,7 @@ pub fn render_menu_bar(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
             ui.separator();
 
             if ui.button(tr("3D Text…")).clicked() {
-                app.status_message = tr("3D Text dialog");
+                app.open_insert_text3d();
                 ui.close_menu();
             }
 

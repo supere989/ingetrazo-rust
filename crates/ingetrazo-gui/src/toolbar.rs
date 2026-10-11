@@ -318,7 +318,7 @@ pub fn render_left_cad_palette(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
 
         let ic_3dtext = app.icons.get(ui.ctx(), "text3d").cloned();
         if render_icon_button(ui, ic_3dtext.as_ref(), "3D", false, &tr("3D Text…")).clicked() {
-            app.status_message = tr("3D Text — place 3D extruded text geometry");
+            app.open_insert_text3d();
         }
 
         let ic_geopath = app.icons.get(ui.ctx(), "geopath").cloned();

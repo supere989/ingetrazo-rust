@@ -171,7 +171,14 @@ impl IngeTrazoApp {
         if self.active_tool.error_message().is_some(){
             self.scene=before;self.active_tool.restore_current_preview_model(&mut self.scene);self.bump_model_revision();return;
         }
-        if self.record_tool_commit(before).is_ok()&&self.scene.section_planes.len()>plane_count{self.queue_section_name_prompt();}
+        if self.record_tool_commit(before).is_ok() {
+            if self.scene.section_planes.len()>plane_count { self.queue_section_name_prompt(); }
+            if self.active_tool.completed() {
+                let status = self.status_message.clone();
+                self.set_tool(ingetrazo_tools::base::ToolType::Select);
+                self.status_message = status;
+            }
+        }
     }
 
     pub fn dispatch_tool_release(&mut self, context: &ToolContext, drag_distance: f64) {

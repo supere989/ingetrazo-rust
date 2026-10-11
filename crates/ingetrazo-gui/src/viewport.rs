@@ -33,6 +33,7 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
     let alt_down = ui.input(|i| i.modifiers.alt);
     let ctrl_down = ui.input(|i| i.modifiers.command || i.modifiers.ctrl);
     // Modifier release must retire the temporary lock even outside the canvas.
+    if app.text3d_dialog.is_none() {
     app.snap_engine.sync_drawing_frame(app.scene.drawing_frame);
     if app.active_tool_type == ToolType::Scale {
         app.snap_engine.update_shift_state(false, None);
@@ -40,14 +41,16 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
     } else { app.snap_engine.update_shift_state(shift_down,app.active_tool.snap_anchor()); }
     app.dispatch_tool_control_state(ui.input(|i| i.modifiers.ctrl));
 
+    }
+
     // Zoom on wheel
-    if scroll_delta != 0.0 && response.hovered() {
+    if app.text3d_dialog.is_none() && scroll_delta != 0.0 && response.hovered() {
         let zoom_factor = if scroll_delta > 0.0 { 1.15 } else { 0.85 };
         app.camera.zoom(zoom_factor);
     }
 
     // Drag navigation
-    if response.dragged() {
+    if app.text3d_dialog.is_none() && response.dragged() {
         let drag_delta = response.drag_delta();
         let is_middle = pointer.middle_down();
         let is_alt_left =
@@ -71,6 +74,7 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
     let mut active_center_hint = None;
     let mut navigation_preview_stroke=egui::Stroke::new(2.,egui::Color32::from_rgba_unmultiplied(242,115,41,217));
 
+    if app.text3d_dialog.is_none() {
     if app.navigation.mode.is_some() {
         if let Some(result)=crate::navigation::input(app,ui,rect,&response){
             active_snap_glyph=SnapGlyph::from_snap_result(&result,None);
@@ -292,6 +296,7 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
     }
 
     } // ordinary geometry tool input
+    } // modal input ownership
 
     // 3. Render 3D Scene
     // Decode and upload embedded textures into egui texture manager
@@ -470,7 +475,7 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
         }
     }
 
-    if app.navigation.mode!=Some(crate::navigation::Mode::FirstPerson){response.context_menu(|ui|{if app.scene.selection.iter().any(|item|matches!(item,ingetrazo_core::scene::SelectionItem::SectionPlane(_))){crate::section_actions::render_section_controls(app,ui);}});}
+    if app.navigation.mode!=Some(crate::navigation::Mode::FirstPerson){response.context_menu(|ui|{if app.selected_text3d().is_some() && ui.button("Edit 3D Text…").clicked(){app.open_edit_text3d();ui.close_menu();}if app.scene.selection.iter().any(|item|matches!(item,ingetrazo_core::scene::SelectionItem::SectionPlane(_))){crate::section_actions::render_section_controls(app,ui);}});}
 
     // 5. Render Section Planes (cutting frames and symbol tags)
     if app.scene.show_section_planes {

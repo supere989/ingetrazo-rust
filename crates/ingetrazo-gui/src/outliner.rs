@@ -36,7 +36,7 @@ impl IngeTrazoApp {
         self.save_undo_state();group_mut(&mut self.scene.groups,id).unwrap().name=name;self.scene.bump_version();
     }
 }
-#[derive(Clone)]enum Action{Select(Uuid,bool),Edit(Uuid),Visibility(Uuid,bool),Rename(Uuid,String),Unique(Uuid),Explode(Uuid)}
+#[derive(Clone)]enum Action{Select(Uuid,bool),Edit(Uuid),EditText(Uuid),Visibility(Uuid,bool),Rename(Uuid,String),Unique(Uuid),Explode(Uuid)}
 pub fn render_outliner(app:&mut IngeTrazoApp,ui:&mut egui::Ui){
     app.refresh_parts_cache();
     fn rows(groups:&[Group],selected:&std::collections::HashSet<SelectionItem>,root:bool,cache:&std::collections::HashMap<Uuid,ingetrazo_core::parts::PartSummary>,ui:&mut egui::Ui,actions:&mut Vec<Action>){
@@ -49,6 +49,7 @@ pub fn render_outliner(app:&mut IngeTrazoApp,ui:&mut egui::Ui){
                 if response.clicked(){actions.push(Action::Select(group.id,ui.input(|i|i.modifiers.ctrl||i.modifiers.command||i.modifiers.shift)));}
                 if response.double_clicked(){actions.push(Action::Edit(group.id));}
                 response.context_menu(|ui|{
+                    if ingetrazo_formats::text3d::params(group).is_some() && ui.button("Edit 3D Text…").clicked(){actions.push(Action::EditText(group.id));ui.close_menu();}
                     if ui.button("Edit group").clicked(){actions.push(Action::Edit(group.id));ui.close_menu();}
                     if ui.button("Rename").clicked(){actions.push(Action::Rename(group.id,group.name.clone()));ui.close_menu();}
                     if ui.button(if group.hidden{"Show"}else{"Hide"}).clicked(){actions.push(Action::Visibility(group.id,group.hidden));ui.close_menu();}
@@ -69,6 +70,7 @@ pub fn render_outliner(app:&mut IngeTrazoApp,ui:&mut egui::Ui){
         for action in actions{match action{
             Action::Select(id,extend)=>{app.select_outliner_group(id,extend);},Action::Visibility(id,visible)=>app.set_outliner_visibility(id,visible),
             Action::Rename(id,name)=>app.outliner_rename=Some((id,name)),
+            Action::EditText(id)=>{if app.select_outliner_group(id,false){app.open_edit_text3d();}},
             Action::Edit(id)=>{if app.select_outliner_group(id,false){app.begin_component_edit();}},
             Action::Unique(id)=>{if app.select_outliner_group(id,false){app.make_component_unique();}},
             Action::Explode(id)=>{if app.select_outliner_group(id,false){app.explode_group();}},

@@ -239,3 +239,5 @@ mod paper_coretext_glyph;
 
 #[cfg(any(target_os="macos",test))]
 mod paper_font_sfnt;
+
+pub mod text3d;
