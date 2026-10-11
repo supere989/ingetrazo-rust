@@ -14,6 +14,7 @@ use winit::{
 };
 
 mod lifecycle_probe;
+pub(crate) mod world_viewport;
 /// Engineering probe through actual own-window Cocoa events, not physical input.
 pub fn run_document_probe(root: PathBuf, choice: &str) -> Result<(), Box<dyn std::error::Error>> {
     let probe = lifecycle_probe::Probe::new(root, choice)?;
@@ -180,6 +181,8 @@ impl Host {
             // complete GPU owner publication; image clones only retain Arc bytes.
             for (id, _) in &images { crate::paper_raw_texture::acknowledge(&self.ctx, *id)?; }
             state.pending_textures.set.clear();
+            world_viewport::install(&mut state.painter,state.gpu.metal(),&state.app)?;
+
             let paint =
                 state
                     .painter
@@ -242,6 +245,7 @@ impl ApplicationHandler for Host {
                 Some(4096),
             );
             let mut app = IngeTrazoApp::new();
+            if std::env::var_os("INGETRAZO_METAL_WORLD").is_some(){app.native_metal_world=Some(world_viewport::Viewport::new(gpu.shared_metal()));}
             if precise_cad {
                 app.native_composer.factory=Some(crate::composer_backend::Factory::MetalProducer(ingetrazo_render::cad_callback::Factory::default()));
             }

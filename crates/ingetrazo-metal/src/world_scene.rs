@@ -8,6 +8,23 @@ use ingetrazo_render::{
     buffer::MeshRenderBuffer, pipeline::build_inherited_placement_prototype_surfaces, StyleConfig,
 };
 use std::sync::Arc;
+/// Exact missing-stage classifications. Allocation/invalid data/device errors
+/// are refusals and must never silently select a fallback renderer.
+pub fn unsupported_stage(error:&str)->bool {
+    matches!(error,
+        "Metal placement-only adapter needs consolidated loose geometry stage" |
+        "Metal classic group requires consolidated world shading stage" |
+        "Metal placement wire requires native edge stage" |
+        "Metal placement billboard requires camera-facing stage" |
+        "Metal placement material texture requires native texture stage" |
+        "Metal placement translucent material requires alpha stage" |
+        "Metal Scene placement needs texture/alpha/billboard stage" |
+        "Metal Scene adapter needs native edge/profile/sky/grid passes" |
+        "Metal Scene adapter needs section/shadow/image/annotation passes" |
+        "Metal Scene adapter wireframe/XRay passes not implemented" |
+        "Metal Scene adapter needs selection/guide overlays" |
+        "Metal Scene adapter needs geographic/terrain passes")
+}
 const MAX_BYTES: usize = 8 * 1024 * 1024;
 const MAX_DEPTH: usize = 128;
 pub use ingetrazo_render::scene_revision::Revisions;
@@ -600,6 +617,7 @@ pub struct Adapter {
     pub(crate) current: Vec<Pose>,
     pub(crate) scratch: Vec<Pose>,
     pub catalog_builds: u64,
+    pub accepted_model_refreshes: u64,
     accepted_pose_revision: Option<u64>,
 }
 impl Adapter {
@@ -659,6 +677,12 @@ impl crate::world::World {
         {
             return Err("Metal Scene adapter needs section/shadow/image/annotation passes".into());
         }
+        if scene.terrain.is_some()||!scene.geo_points.is_empty()||!scene.geo_paths.is_empty(){
+            return Err("Metal Scene adapter needs geographic/terrain passes".into());
+        }
+        if !scene.selection.is_empty() || !scene.guides.is_empty(){
+            return Err("Metal Scene adapter needs selection/guide overlays".into());
+        }
         use crate::world_policy::{Mode, Policy};
         use ingetrazo_render::VisualStyle;
         let mode = match style.visual_style {
@@ -717,7 +741,7 @@ impl crate::world::World {
             if let Some(poses) = candidate_current.take() {
                 adapter.current = poses;
             }
-            if refresh { std::mem::swap(&mut adapter.current, &mut adapter.scratch); }
+            if refresh { std::mem::swap(&mut adapter.current, &mut adapter.scratch); adapter.accepted_model_refreshes+=1; }
             adapter.accepted_pose_revision = pose_revision;
         }
         Ok(frame)
@@ -736,5 +760,13 @@ impl crate::world::World {
         assert!(adapter.needs_model_refresh(false,None));
         // A refused candidate must not publish its proposed epoch.
         assert_eq!(adapter.accepted_pose_revision,Some(0));
+    }
+}
+
+#[cfg(test)] mod route_classification_tests {
+    use super::*;
+    #[test] fn missing_stage_is_distinct_from_invalid_data_and_native_refusal(){
+        for reason in ["Metal placement-only adapter needs consolidated loose geometry stage","Metal placement translucent material requires alpha stage","Metal Scene adapter needs selection/guide overlays","Metal Scene adapter needs geographic/terrain passes"]{assert!(unsupported_stage(reason));}
+        for reason in ["Metal container color invalid","Metal scene catalog cold metadata exceeds8MiB","World native texture size query unavailable","Placement path allocation refused","Metal placement composed matrix invalid"]{assert!(!unsupported_stage(reason));}
     }
 }

@@ -43,6 +43,8 @@ pub struct IngeTrazoApp {
     /// Runtime-only native GPU viewport state; never serialized into the document.
     pub native_composer:crate::composer_cad::NativeComposer,
     pub image_outlines:crate::image_outlines::ImageOutlineCache,
+    #[cfg(target_os="macos")]
+    pub(crate) native_metal_world:Option<crate::native_metal::world_viewport::Viewport>,
     pub native_gpu_viewport_enabled: bool,
     pub native_gpu_viewport_rect: Option<egui::Rect>,
     pub native_gpu_viewport_texture: Option<egui::TextureId>,
@@ -151,6 +153,7 @@ impl IngeTrazoApp {
 
         let mut app = Self {
             document_session: crate::document_session::DocumentSession::default(),
+            #[cfg(target_os="macos")] native_metal_world:None,
             native_composer:Default::default(),image_outlines:Default::default(),native_gpu_viewport_enabled:false,native_gpu_viewport_rect:None,native_gpu_viewport_texture:None,native_gpu_annotation_shape:None,
             component_edit_stack: Vec::new(),
             scene,
@@ -380,6 +383,16 @@ impl IngeTrazoApp {
         self.native_render_revisions.placement_changed();
         self.navigation.cancel();
         self.native_geometry_revision=self.native_geometry_revision.wrapping_add(1);
+        self.bump_image_presentation_revision();
+    }
+    pub(crate) fn bump_render_paint_revision(&mut self){
+        self.native_render_revisions.paint_changed();
+        self.navigation.cancel();self.native_geometry_revision=self.native_geometry_revision.wrapping_add(1);
+        self.bump_image_presentation_revision();
+    }
+    pub(crate) fn bump_render_geometry_revision(&mut self){
+        self.native_render_revisions.geometry_changed();
+        self.navigation.cancel();self.native_geometry_revision=self.native_geometry_revision.wrapping_add(1);
         self.bump_image_presentation_revision();
     }
     pub(crate) fn bump_render_style_revision(&mut self){

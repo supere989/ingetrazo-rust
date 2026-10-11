@@ -54,7 +54,7 @@ struct Owners {
     // Keep winit/AppKit window/view/delegate lifetime through quarantined work.
     _window: std::sync::Arc<Window>,
     // Device and persistent queue outlive all drawable/command owners.
-    metal: NativeMetal,
+    metal: std::sync::Arc<NativeMetal>,
 }
 /// Retains the attached winit Window, including when GPU ownership is quarantined.
 /// Unknown GPU OR presentation completion quarantines the complete owner.
@@ -131,7 +131,7 @@ impl MetalPresentation {
                 canvases:crate::compute_canvas::Pool::default(),
                 layer,
                 _window: window.clone(),
-                metal,
+                metal: std::sync::Arc::new(metal),
             }),
             submitted: 0,
             retired: 0,
@@ -323,6 +323,8 @@ impl MetalPresentation {
         }
         Ok(self.extent.0 > 0 && self.extent.1 > 0 && self.owners.frames.len() < 3)
     }
+    /// Shares the exact device/queue/budget owner with an in-process viewport.
+    pub fn shared_metal(&self) -> std::sync::Arc<NativeMetal> { self.owners.metal.clone() }
     pub fn metal(&self) -> &NativeMetal {
         &self.owners.metal
     }
