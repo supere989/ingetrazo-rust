@@ -1,0 +1,95 @@
+[
+  {
+    "seed": 0,
+    "python": "3.13.13 | packaged by conda-forge | (main, Apr  8 2026, 02:00:33) [GCC 14.3.0]",
+    "hash_info": "sys.hash_info(width=64, modulus=2305843009213693951, inf=314159, nan=0, imag=1000003, algorithm='siphash13', hash_bits=64, seed_bits=128, cutoff=0)",
+    "rows": [
+      {
+        "text": "",
+        "hash": 0
+      },
+      {
+        "text": "missing.png",
+        "hash": -2940763646680517105
+      },
+      {
+        "text": "café.png",
+        "hash": -5829166456343048708
+      },
+      {
+        "text": "纹理.png",
+        "hash": 3687386164670898502
+      },
+      {
+        "text": "🌳.png",
+        "hash": -4652729079769715164
+      },
+      {
+        "text": "paint%20blue.png",
+        "hash": 5098287358917054694
+      }
+    ]
+  },
+  {
+    "seed": 37,
+    "python": "3.13.13 | packaged by conda-forge | (main, Apr  8 2026, 02:00:33) [GCC 14.3.0]",
+    "hash_info": "sys.hash_info(width=64, modulus=2305843009213693951, inf=314159, nan=0, imag=1000003, algorithm='siphash13', hash_bits=64, seed_bits=128, cutoff=0)",
+    "rows": [
+      {
+        "text": "",
+        "hash": 0
+      },
+      {
+        "text": "missing.png",
+        "hash": 1748734481394963040
+      },
+      {
+        "text": "café.png",
+        "hash": 8570924652067627300
+      },
+      {
+        "text": "纹理.png",
+        "hash": 2071768816816495266
+      },
+      {
+        "text": "🌳.png",
+        "hash": -7326545905561783612
+      },
+      {
+        "text": "paint%20blue.png",
+        "hash": -9188329425835243569
+      }
+    ]
+  },
+  {
+    "seed": 4294967295,
+    "python": "3.13.13 | packaged by conda-forge | (main, Apr  8 2026, 02:00:33) [GCC 14.3.0]",
+    "hash_info": "sys.hash_info(width=64, modulus=2305843009213693951, inf=314159, nan=0, imag=1000003, algorithm='siphash13', hash_bits=64, seed_bits=128, cutoff=0)",
+    "rows": [
+      {
+        "text": "",
+        "hash": 0
+      },
+      {
+        "text": "missing.png",
+        "hash": -1309265344806457984
+      },
+      {
+        "text": "café.png",
+        "hash": -8893967556279761143
+      },
+      {
+        "text": "纹理.png",
+        "hash": -7571620245193258401
+      },
+      {
+        "text": "🌳.png",
+        "hash": 5130985635957440072
+      },
+      {
+        "text": "paint%20blue.png",
+        "hash": -8960469786830435773
+      }
+    ]
+  }
+]

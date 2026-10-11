@@ -294,40 +294,37 @@ fn geometry(mesh: Node<'_, '_>) -> Result<Vec<Polygon>> {
 }
 
 /// Resolve an authored local image URI without fetching remote resources.
-fn image_bytes(image: Node<'_, '_>, base: &std::path::Path) -> Result<(String, Vec<u8>)> {
+fn image_path(image: Node<'_, '_>, base: &std::path::Path) -> Result<std::path::PathBuf> {
     let reference = child(image, "init_from")
         .and_then(|n| n.text())
         .map(str::trim)
         .filter(|s| !s.is_empty())
         .ok_or_else(|| invalid("missing image URI"))?;
-    if reference.contains("://") || reference.starts_with("data:") {
-        return Err(invalid("COLLADA image must reference a local file"));
-    }
+    // urllib.parse.unquote preserves malformed percent sequences and replaces
+    // invalid UTF-8. These are local paths; no URI is fetched over the network.
     let input = reference.as_bytes();
-    let mut bytes = Vec::new();
+    let mut bytes = Vec::with_capacity(input.len());
     let mut i = 0;
     while i < input.len() {
-        if input[i] == b'%' {
-            if i + 2 >= input.len() {
-                return Err(invalid("truncated image URI escape"));
+        if input[i] == b'%' && i + 2 < input.len() && input[i + 1..i + 3].iter().all(u8::is_ascii_hexdigit) {
+            if let Ok(hex) = std::str::from_utf8(&input[i + 1..i + 3]) {
+                if let Ok(byte) = u8::from_str_radix(hex, 16) {
+                    bytes.push(byte); i += 3; continue;
+                }
             }
-            let hex = std::str::from_utf8(&input[i + 1..i + 3])
-                .map_err(|_| invalid("invalid image URI escape"))?;
-            bytes.push(
-                u8::from_str_radix(hex, 16).map_err(|_| invalid("invalid image URI escape"))?,
-            );
-            i += 3;
-        } else {
-            bytes.push(input[i]);
-            i += 1;
         }
+        bytes.push(input[i]); i += 1;
     }
-    let decoded = String::from_utf8(bytes).map_err(|_| invalid("image URI is not UTF-8"))?;
-    if decoded.contains('\0') {
-        return Err(invalid("image URI contains NUL"));
-    }
-    let path = base.join(decoded);
-    let bytes = std::fs::read(&path)?;
+    let decoded = String::from_utf8_lossy(&bytes);
+    if decoded.contains('\0') { return Err(invalid("image URI contains NUL")); }
+    Ok(base.join(decoded.as_ref()))
+}
+#[cfg(test)]
+fn image_bytes(image: Node<'_, '_>, base: &std::path::Path) -> Result<(String, Vec<u8>)> {
+    read_image_bytes(&image_path(image, base)?)
+}
+fn read_image_bytes(path: &std::path::Path) -> Result<(String, Vec<u8>)> {
+    let bytes = std::fs::read(path)?;
     let extension = path
         .extension()
         .and_then(|s| s.to_str())
@@ -432,80 +429,80 @@ fn representative_image_color(bytes: &[u8]) -> Option<[f64; 3]> {
         sums.map(|sum| ((sum + alpha / 2) / alpha.max(1)) as f64 / 255.)
     })
 }
-#[derive(Default)]
+mod source_color;
+#[derive(Clone, Default)]
 struct DaeMaterial {
     color: Option<[f64; 3]>,
     image: Option<String>,
+}
+#[derive(Default)]
+struct MaterialResources {
+    images: HashMap<String, DaeMaterial>,
+    files: HashMap<std::path::PathBuf, DaeMaterial>,
+    assets: HashMap<String, Vec<u8>>,
+    used: std::collections::HashSet<String>,
+}
+impl MaterialResources {
+    fn image(&mut self, image: Node<'_, '_>, base: Option<&std::path::Path>) -> DaeMaterial {
+        let reference = child(image, "init_from").and_then(|n| n.text()).unwrap_or("").trim();
+        if let Some(found) = self.images.get(reference) { return found.clone(); }
+        let mut material = DaeMaterial::default();
+        if let Some(path) = base.and_then(|base| image_path(image, base).ok()).and_then(|p| p.canonicalize().ok()) {
+            if let Some(cached) = self.files.get(&path) {
+                material = cached.clone();
+            } else {
+                if let Ok((key, bytes)) = read_image_bytes(&path) {
+                    material.color = representative_image_color(&bytes);
+                    material.image = Some(key.clone());
+                    self.assets.insert(key, bytes);
+                }
+                // Cache raw decoded color before the reference-specific missing tint.
+                self.files.insert(path, material.clone());
+            }
+        }
+        if material.color.is_none() { material.color = source_color::missing_image_color(reference); }
+        self.images.insert(reference.to_owned(), material.clone());
+        material
+    }
 }
 fn material_colors<'a, 'i>(
     instance: Node<'a, 'i>,
     ids: &HashMap<&'i str, Node<'a, 'i>>,
     base: Option<&std::path::Path>,
-    assets: &mut HashMap<String, Vec<u8>>,
+    resources: &mut MaterialResources,
 ) -> Result<HashMap<String, DaeMaterial>> {
     let mut colors = HashMap::new();
-    for binding in instance
-        .descendants()
-        .filter(|n| n.is_element() && n.tag_name().name() == "instance_material")
-    {
-        let material = binding
-            .attribute("target")
-            .and_then(|s| ids.get(s.trim_start_matches('#')))
-            .ok_or_else(|| invalid("unresolved material binding"))?;
-        let effect = child(*material, "instance_effect")
-            .and_then(|n| n.attribute("url"))
-            .and_then(|s| ids.get(s.trim_start_matches('#')))
-            .ok_or_else(|| invalid("unresolved material effect"))?;
-        for shader in effect.descendants().filter(|n| {
-            n.is_element()
-                && matches!(
-                    n.tag_name().name(),
-                    "lambert" | "phong" | "blinn" | "constant"
-                )
-        }) {
-            let Some(diffuse) = child(shader, "diffuse") else {
-                continue;
-            };
-            if let Some(texture) = child(diffuse, "texture") {
-                let image = diffuse_image(*effect, texture, ids)?;
-                let base =
-                    base.ok_or_else(|| invalid("textured COLLADA requires document directory"))?;
-                let (key, bytes) = image_bytes(image, base)?;
-                let symbol = binding
-                    .attribute("symbol")
-                    .ok_or_else(|| invalid("missing material symbol"))?;
-                let fallback = representative_image_color(&bytes);
-                assets.insert(key.clone(), bytes);
-                colors.insert(
-                    symbol.to_owned(),
-                    DaeMaterial {
-                        color: fallback,
-                        image: Some(key),
-                    },
-                );
-                break;
-            }
-            if let Some(color) = child(diffuse, "color") {
-                let values = numbers(color)?;
-                if values.len() < 3 {
-                    return Err(invalid("diffuse color requiresRGB"));
+    for binding in instance.descendants().filter(|n| n.is_element() && n.tag_name().name() == "instance_material") {
+        // Optional paint never makes otherwise valid geometry disappear.
+        let Some(symbol) = binding.attribute("symbol") else { continue; };
+        let Some(material) = binding.attribute("target").and_then(|s| ids.get(s.trim_start_matches('#'))) else { continue; };
+        let Some(effect) = child(*material, "instance_effect").and_then(|n| n.attribute("url")).and_then(|s| ids.get(s.trim_start_matches('#'))) else { continue; };
+        // Source precedence is shader kind, then document order within that kind.
+        'shader: for kind in ["lambert", "phong", "blinn", "constant"] {
+            for shader in effect.descendants().filter(|n| n.is_element() && n.tag_name().name() == kind) {
+                let Some(diffuse) = child(shader, "diffuse") else { continue; };
+                if let Some(color) = child(diffuse, "color") {
+                    let values = numbers(color)?;
+                    if values.len() >= 3 {
+                        colors.insert(symbol.to_owned(), DaeMaterial { color: Some([values[0], values[1], values[2]]), image: None });
+                        break 'shader;
+                    }
                 }
-                let symbol = binding
-                    .attribute("symbol")
-                    .ok_or_else(|| invalid("missing material symbol"))?;
-                colors.insert(
-                    symbol.to_owned(),
-                    DaeMaterial {
-                        color: Some([values[0], values[1], values[2]]),
-                        image: None,
-                    },
-                );
-                break;
+                if let Some(texture) = child(diffuse, "texture") {
+                    if let Ok(image) = diffuse_image(*effect, texture, ids) {
+                        let material = resources.image(image, base);
+                        if material.color.is_some() || material.image.is_some() {
+                            colors.insert(symbol.to_owned(), material);
+                        }
+                        break 'shader;
+                    }
+                }
             }
         }
     }
     Ok(colors)
 }
+
 fn transform(node: Node<'_, '_>) -> Result<glam::DMat4> {
     use glam::DMat4;
     let mut m = DMat4::IDENTITY;
@@ -799,6 +796,7 @@ pub(crate) fn scene_from_xml_at(
     };
     let world = axis * DMat4::from_scale(DVec3::splat(unit));
     let mut scene = Scene::new();
+    let mut resources = MaterialResources::default();
     if let Some(geo) = asset
         .and_then(|n| child(n, "coverage"))
         .and_then(|n| child(n, "geographic_location"))
@@ -820,6 +818,7 @@ pub(crate) fn scene_from_xml_at(
         world: DMat4,
         name: &str,
         colors: &HashMap<String, DaeMaterial>,
+        used: &mut std::collections::HashSet<String>,
     ) -> Result<Group> {
         let mut mesh = Mesh::new();
         for polygon in geometry(node)? {
@@ -853,6 +852,7 @@ pub(crate) fn scene_from_xml_at(
                 }
                 if let (Some(image), Some(uv)) = (&material.image, &polygon.uv) {
                     let map = affine_uv(&points, uv)?;
+                    if !used.contains(image) { used.insert(image.clone()); }
                     let gu = DVec3::new(map[0], map[1], map[2]).length();
                     let gv = DVec3::new(map[4], map[5], map[6]).length();
                     mesh.faces[id].attrs.insert("texture".into(),serde_json::json!({"embed":image,"uvw":map,"sw":if gu>1e-9{1./gu}else{1.},"sh":if gv>1e-9{1./gv}else{1.}}));
@@ -901,6 +901,7 @@ pub(crate) fn scene_from_xml_at(
         base: Option<&std::path::Path>,
         basis: DMat4,
         instances: &mut Vec<ReferenceInstance>,
+        resources: &mut MaterialResources,
     ) -> Result<()> {
         if stack.len() >= 64 || stack.contains(&node.id()) {
             return Err(invalid("cyclic or excessive node hierarchy"));
@@ -913,7 +914,7 @@ pub(crate) fn scene_from_xml_at(
             .unwrap_or("COLLADA part");
         for el in node.children().filter(|n| n.is_element()) {
             match el.tag_name().name() {
-                "node" => walk(el, world, ids, stack, scene, base, basis, instances)?,
+                "node" => walk(el, world, ids, stack, scene, base, basis, instances, resources)?,
                 "instance_node" => {
                     let target = el
                         .attribute("url")
@@ -921,7 +922,7 @@ pub(crate) fn scene_from_xml_at(
                         .and_then(|s| ids.get(&s[1..]))
                         .ok_or_else(|| invalid("unresolved instance_node"))?;
                     let start = scene.groups.len();
-                    walk(*target, world, ids, stack, scene, base, basis, instances)?;
+                    walk(*target, world, ids, stack, scene, base, basis, instances, resources)?;
                     instances.push(ReferenceInstance {
                         start,
                         end: scene.groups.len(),
@@ -942,8 +943,8 @@ pub(crate) fn scene_from_xml_at(
                         .ok_or_else(|| invalid("unresolved geometry"))?;
                     let mesh =
                         child(*target, "mesh").ok_or_else(|| invalid("geometry has no mesh"))?;
-                    let colors = material_colors(el, ids, base, &mut scene.embedded_textures)?;
-                    let group = mesh_group(mesh, world, name, &colors)?;
+                    let colors = material_colors(el, ids, base, resources)?;
+                    let group = mesh_group(mesh, world, name, &colors, &mut resources.used)?;
                     if !group.mesh.faces.is_empty() {
                         scene.groups.push(group);
                     }
@@ -979,6 +980,7 @@ pub(crate) fn scene_from_xml_at(
                         .attribute("name")
                         .unwrap_or("COLLADA geometry"),
                     &HashMap::new(),
+                    &mut resources.used,
                 )?;
                 if !group.mesh.faces.is_empty() {
                     scene.groups.push(group);
@@ -996,6 +998,7 @@ pub(crate) fn scene_from_xml_at(
                 base,
                 world,
                 &mut instances,
+                &mut resources,
             )?;
         }
     }
@@ -1029,7 +1032,6 @@ pub(crate) fn scene_from_xml_at(
                         .find(|n| n.id() == instance.key)
                         .ok_or_else(|| invalid("missing reference prototype"))?;
                     let mut local = Scene::default();
-                    local.embedded_textures = scene.embedded_textures.clone();
                     walk(
                         target,
                         world,
@@ -1039,8 +1041,8 @@ pub(crate) fn scene_from_xml_at(
                         base,
                         world,
                         &mut vec![],
+                        &mut resources,
                     )?;
-                    scene.embedded_textures.extend(local.embedded_textures);
                     let mesh = combine_meshes(&local.groups)?;
                     prototypes.insert(instance.key, (uuid::Uuid::new_v4(), mesh));
                 }
@@ -1065,6 +1067,10 @@ pub(crate) fn scene_from_xml_at(
             );
         }
     }
+    // Representative colors need decoded bytes only while importing. Keep
+    // document ownership only for resources actually referenced by geometry.
+    resources.assets.retain(|key, _| resources.used.contains(key));
+    scene.embedded_textures = resources.assets;
     scene.bump_version();
     Ok(scene)
 }
@@ -1097,7 +1103,9 @@ mod tests {
             .collect();
         let point = DVec3::new(0.08, -0.30, 0.20);
         assert!((DVec3::new(m[0], m[1], m[2]).dot(point) + m[3] - 1.).abs() < 1e-10);
-        assert!(scene_from_xml(&xml).is_err());
+        let missing = scene_from_xml(&xml).unwrap();
+        assert!(missing.embedded_textures.is_empty());
+        assert!(missing.groups[0].mesh.faces[0].attrs.contains_key("color"));
         std::fs::remove_dir_all(folder).unwrap();
     }
     #[test]
@@ -1150,7 +1158,8 @@ mod tests {
             serde_json::json!([0.2, 0.4, 0.8])
         );
         assert_eq!(scene.groups[0].mesh.faces[0].attrs["back"], true);
-        assert!(scene_from_xml(&xml.replace("target=\"#blue\"", "target=\"#missing\"")).is_err());
+        let missing = scene_from_xml(&xml.replace("target=\"#blue\"", "target=\"#missing\"")).unwrap();
+        assert!(missing.groups[0].mesh.faces[0].attrs.is_empty());
     }
     #[test]
     fn truncated_indices_accessors_and_node_cycles_fail_without_partial_scene() {
