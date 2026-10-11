@@ -1,0 +1,107 @@
+{
+  "scope": "Actual original resize policy only; no image parity claim",
+  "rows": [
+    {
+      "logical": [
+        942,
+        610
+      ],
+      "dpr": 1.0,
+      "fb_size": [
+        942,
+        610
+      ],
+      "grab": [
+        942,
+        610
+      ],
+      "aspect": 1.544262295081967,
+      "resize_records": [
+        {
+          "callback": [
+            942,
+            610
+          ],
+          "logical": [
+            942,
+            610
+          ],
+          "dpr": 1.0,
+          "aspect": 1.544262295081967,
+          "scene_fbo": [
+            942,
+            610
+          ]
+        }
+      ]
+    },
+    {
+      "logical": [
+        943,
+        611
+      ],
+      "dpr": 1.0,
+      "fb_size": [
+        943,
+        611
+      ],
+      "grab": [
+        943,
+        611
+      ],
+      "aspect": 1.5433715220949265,
+      "resize_records": [
+        {
+          "callback": [
+            943,
+            611
+          ],
+          "logical": [
+            943,
+            611
+          ],
+          "dpr": 1.0,
+          "aspect": 1.5433715220949265,
+          "scene_fbo": [
+            943,
+            611
+          ]
+        }
+      ]
+    },
+    {
+      "logical": [
+        801,
+        601
+      ],
+      "dpr": 1.0,
+      "fb_size": [
+        801,
+        601
+      ],
+      "grab": [
+        801,
+        601
+      ],
+      "aspect": 1.3327787021630615,
+      "resize_records": [
+        {
+          "callback": [
+            801,
+            601
+          ],
+          "logical": [
+            801,
+            601
+          ],
+          "dpr": 1.0,
+          "aspect": 1.3327787021630615,
+          "scene_fbo": [
+            801,
+            601
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "actual_cases": 9,
+  "scales": [
+    1,
+    1.25,
+    1.5
+  ],
+  "resizeGL_units": "logical in measured Qt6.12 runtime, contradicting source comment",
+  "camera_aspect": "logical width/height",
+  "fb_size_vs_grab_mismatches": 2,
+  "required": "Preserve source logical camera policy and separately model physical framebuffer/query rounding; do not blindly set camera aspect from physical extent",
+  "scope": "Actual original Qt widget only; no native parity acceptance"
+}

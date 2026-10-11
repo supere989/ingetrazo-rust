@@ -1,0 +1,107 @@
+{
+  "scope": "Actual original resize policy only; no image parity claim",
+  "rows": [
+    {
+      "logical": [
+        942,
+        610
+      ],
+      "dpr": 1.25,
+      "fb_size": [
+        1178,
+        762
+      ],
+      "grab": [
+        1178,
+        763
+      ],
+      "aspect": 1.544262295081967,
+      "resize_records": [
+        {
+          "callback": [
+            942,
+            610
+          ],
+          "logical": [
+            942,
+            610
+          ],
+          "dpr": 1.25,
+          "aspect": 1.544262295081967,
+          "scene_fbo": [
+            942,
+            610
+          ]
+        }
+      ]
+    },
+    {
+      "logical": [
+        943,
+        611
+      ],
+      "dpr": 1.25,
+      "fb_size": [
+        1179,
+        764
+      ],
+      "grab": [
+        1179,
+        764
+      ],
+      "aspect": 1.5433715220949265,
+      "resize_records": [
+        {
+          "callback": [
+            943,
+            611
+          ],
+          "logical": [
+            943,
+            611
+          ],
+          "dpr": 1.25,
+          "aspect": 1.5433715220949265,
+          "scene_fbo": [
+            943,
+            611
+          ]
+        }
+      ]
+    },
+    {
+      "logical": [
+        801,
+        601
+      ],
+      "dpr": 1.25,
+      "fb_size": [
+        1001,
+        751
+      ],
+      "grab": [
+        1001,
+        751
+      ],
+      "aspect": 1.3327787021630615,
+      "resize_records": [
+        {
+          "callback": [
+            801,
+            601
+          ],
+          "logical": [
+            801,
+            601
+          ],
+          "dpr": 1.25,
+          "aspect": 1.3327787021630615,
+          "scene_fbo": [
+            801,
+            601
+          ]
+        }
+      ]
+    }
+  ]
+}
