@@ -867,6 +867,7 @@ pub struct Adapter {
     pub(crate) catalog: Option<Catalog>,
     pub(crate) current: Vec<Pose>,
     pub(crate) scratch: Vec<Pose>,
+    #[cfg(target_os="macos")] fill:Option<(super::world_section::FillKey,Arc<super::world_section::Fill>)>,
     pub catalog_builds: u64,
     pub accepted_model_refreshes: u64,
     accepted_pose_revision: Option<u64>,
@@ -951,9 +952,6 @@ impl crate::world::World {
         self.validate_context_owner(metal)?;
         if (style.show_edges && (style.show_soft_edges||style.back_edges_hidden)) || style.show_grid {
             return Err("Metal Scene adapter needs soft/back-edge/grid passes".into());
-        }
-        if scene.show_section_cuts && scene.section_planes.iter().any(|p|p.active) && scene.show_section_fill {
-            return Err("Metal Scene adapter needs section fill pass".into());
         }
         if scene.shadows.enabled
             || !scene.image_planes.is_empty()
@@ -1079,7 +1077,10 @@ impl crate::world::World {
         let candidate_billboard_bytes=billboard_topology.retained_bytes()+billboard_frame.retained_bytes();
         if adapter.retained_payload_bytes().saturating_sub(adapter.billboard_payload_bytes()).checked_add(candidate_billboard_bytes).is_none_or(|n|n>MAX_BYTES*3){return Err("Metal adapter billboard storage exceeds24MiB".into());}
         let sample_positions=if !scene.dimensions.is_empty(){super::annotation::source_sample_policy(metal,self.configured_sample_count())?.1}else if self.configured_sample_count()==4{self.annotation_positions}else{None};
-        let mut frame = self.prepare_material_placements_with_overlay(
+        let fill_key=super::world_section::FillKey::from_scene(scene,style,revisions,pose_revision);
+        let fill_changed=fill_key.is_some_and(|key|pose_revision.is_none()||adapter.fill.as_ref().is_none_or(|p|p.0!=key));
+        let fill_candidate=if let Some(key)=fill_key{Some((key,if let Some((old,fill))=&adapter.fill{if *old==key && pose_revision.is_some(){fill.clone()}else{Arc::new(super::world_section::Fill::prepare(metal,scene,style.section_fill_color)?)}}else{Arc::new(super::world_section::Fill::prepare(metal,scene,style.section_fill_color)?)}))}else{None};
+        let mut frame = self.prepare_material_placements_with_section(
             metal,
             packet,
             if active_preview.is_some(){&adapter.preview_poses}else{base_models},
@@ -1092,6 +1093,7 @@ impl crate::world::World {
                 back: style.back_color,
             },
             active_preview.filter(|p|p.sweep.kind==ingetrazo_render::face_sweep::Kind::Overlay).map(|p|p.preview_key),
+            fill_candidate.as_ref().map(|p|p.1.clone()),
             |key| {
                 if let Some(p)=active_preview {
                     if *key==p.preview_key {return Ok(match p.sweep.kind {
@@ -1113,6 +1115,8 @@ impl crate::world::World {
             prepared.profiles=profiles;
             prepared.background=background;
             prepared.section=section;
+            if fill_changed{self.stats.section_fill_uploads+=1;self.stats.section_fill_upload_bytes+=(6*std::mem::size_of::<ingetrazo_render::buffer::Vertex>())as u64;}
+            adapter.fill=fill_candidate;
             prepared.source_sample_positions=sample_positions;
             self.annotation_positions=sample_positions;
             if let Some(candidate)=profile_candidate{self.stats.profile_builds+=u64::from(profile_cold);self.stats.profile_uploads+=u64::from(profile_upload_changed&&candidate.5.buffer.is_some());if profile_upload_changed{self.stats.profile_upload_bytes+=candidate.5.bytes as u64;}if let Some(old)=adapter.profiles.replace(candidate){adapter.profile_selection_scratch=old.7;}}

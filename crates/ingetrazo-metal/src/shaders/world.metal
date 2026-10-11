@@ -67,3 +67,9 @@ fragment float4 world_background_fragment(Out in [[stage_in]]) {return in.color;
 
 // Face-me mesh solid runs retain the literal source color, without face lighting.
 fragment float4 world_billboard_color(TextureOut in [[stage_in]],constant float4& color [[buffer(0)]]) {return color;}
+// Source section mask is geometry-only, including textured vertex records.
+// Existing visible-surface depth already includes source texture cutout policy.
+vertex Out world_texture_mask_vertex(uint id [[vertex_id]],uint instance [[instance_id]],const device TextureVertex* v [[buffer(0)]],const device float4x4* model [[buffer(1)]],constant float4x4& camera [[buffer(2)]],constant Section& section [[buffer(3)]]) {
+ Out o;float4 world=model[instance]*float4(v[id].position,1.);o.clip=section_distance(world,section);o.position=camera*world;o.position.z=(o.position.z+o.position.w)*.5;o.color=float4(1.);return o;
+}
+fragment float4 world_mask_fragment(Out in [[stage_in]]) {return float4(0.);}

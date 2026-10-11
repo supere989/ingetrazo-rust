@@ -29,3 +29,215 @@ impl Section {
   scene.show_section_cuts=true;scene.section_planes[1].point.x=f64::INFINITY;assert!(Section::from_scene(&scene).is_err());
  }
 }
+
+/// Cached six-vertex source plane, not a reconstructed polygon cap.
+#[cfg(target_os = "macos")]
+pub(crate) struct Fill {
+    pub vertices: crate::Buffer,
+    pub color: [f32; 4],
+}
+#[derive(Clone, Copy, PartialEq, Eq)]
+pub(crate) struct FillKey {
+    revisions: ingetrazo_render::scene_revision::Revisions,
+    pose: Option<u64>,
+    plane: [u32; 6],
+    color: [u32; 4],
+}
+impl FillKey {
+    pub(crate) fn from_scene(
+        scene: &ingetrazo_core::scene::Scene,
+        style: &ingetrazo_render::style::StyleConfig,
+        revisions: ingetrazo_render::scene_revision::Revisions,
+        pose: Option<u64>,
+    ) -> Option<Self> {
+        if !scene.show_section_cuts
+            || !scene.show_section_fill
+            || matches!(
+                style.visual_style,
+                ingetrazo_render::VisualStyle::Wireframe | ingetrazo_render::VisualStyle::XRay
+            )
+        {
+            return None;
+        }
+        let p = scene.section_planes.iter().find(|p| p.active)?;
+        let o = p.point.as_vec3();
+        let n = p.normal.as_vec3();
+        Some(Self {
+            revisions,
+            pose,
+            plane: [
+                o.x.to_bits(),
+                o.y.to_bits(),
+                o.z.to_bits(),
+                n.x.to_bits(),
+                n.y.to_bits(),
+                n.z.to_bits(),
+            ],
+            color: style.section_fill_color.map(f32::to_bits),
+        })
+    }
+}
+#[cfg(target_os = "macos")]
+impl Fill {
+    pub(crate) fn prepare(
+        metal: &crate::NativeMetal,
+        scene: &ingetrazo_core::scene::Scene,
+        color: [f32; 4],
+    ) -> Result<Self, String> {
+        let corners = frame(scene)?;
+        if !color.iter().all(|v| v.is_finite()) {
+            return Err("Metal section fill color finite admission".into());
+        }
+        let color = [color[0], color[1], color[2], 1.];
+        let vertices = [0, 1, 2, 0, 2, 3].map(|i| ingetrazo_render::buffer::Vertex {
+            position: corners[i].to_array(),
+            normal: [0.; 3],
+            color,
+            uv: [0.; 2],
+        });
+        Ok(Self {
+            vertices: crate::world::upload(metal, bytemuck::cast_slice(&vertices))?,
+            color,
+        })
+    }
+}
+fn dot(a: glam::Vec3, b: glam::Vec3) -> f32 {
+    a.x * b.x + a.y * b.y + a.z * b.z
+}
+fn normalize(p: glam::Vec3) -> glam::Vec3 {
+    let length = ((p.x as f64).powi(2) + (p.y as f64).powi(2) + (p.z as f64).powi(2)).sqrt();
+    (p.as_dvec3() / length).as_vec3()
+}
+/// Literal viewport.section_plane_frame, including Qt vector operation boundaries.
+fn frame(scene: &ingetrazo_core::scene::Scene) -> Result<[glam::Vec3; 4], String> {
+    use glam::{DVec3, Mat4, Vec3};
+    let p = scene
+        .section_planes
+        .iter()
+        .find(|p| p.active)
+        .ok_or("Metal section fill has no active plane")?;
+    let origin = p.point.as_vec3();
+    let n = normalize(p.normal.as_vec3());
+    let mut u = Vec3::X - n * dot(Vec3::X, n);
+    if u.length() < 0.1 {
+        u = Vec3::Y - n * dot(Vec3::Y, n);
+    }
+    let u = normalize(u);
+    let v = normalize(n.cross(u));
+    let mut bounds = None;
+    fn absorb(b: &mut Option<(DVec3, DVec3)>, p: DVec3) -> Result<(), String> {
+        if !p.is_finite() || !p.as_vec3().is_finite() {
+            return Err("Metal section bounds nonfinite".into());
+        }
+        *b = Some(b.map_or((p, p), |(lo, hi)| (lo.min(p), hi.max(p))));
+        Ok(())
+    }
+    for e in &scene.mesh.edges {
+        if scene.is_layer_visible(e.layer.as_deref()) {
+            for id in [e.v0, e.v1] {
+                absorb(
+                    &mut bounds,
+                    scene
+                        .mesh
+                        .vertices
+                        .get(id)
+                        .ok_or("Metal section edge index invalid")?
+                        .position,
+                )?;
+            }
+        }
+    }
+    for (id, f) in scene.mesh.faces.iter().enumerate() {
+        if scene.mesh_face_visible(&scene.mesh, id) {
+            for &id in &f.vertices {
+                absorb(
+                    &mut bounds,
+                    scene
+                        .mesh
+                        .vertices
+                        .get(id)
+                        .ok_or("Metal section face index invalid")?
+                        .position,
+                )?;
+            }
+        }
+    }
+    fn groups(
+        scene: &ingetrazo_core::scene::Scene,
+        g: &ingetrazo_core::groups::Group,
+        parent: Mat4,
+        b: &mut Option<(DVec3, DVec3)>,
+        depth: usize,
+    ) -> Result<(), String> {
+        if depth > 128 {
+            return Err("Metal section bounds nesting admission".into());
+        }
+        let m = parent * g.transform.as_mat4();
+        if !m.is_finite() {
+            return Err("Metal section placement nonfinite".into());
+        }
+        if !g.hidden && !g.billboard && scene.is_layer_visible(g.layer.as_deref()) {
+            let a = m.to_cols_array_2d();
+            for v in &g.mesh.vertices {
+                let p = v.position.as_vec3().as_dvec3();
+                absorb(
+                    b,
+                    DVec3::from_array(std::array::from_fn(|r| {
+                        a[0][r] as f64 * p.x
+                            + a[1][r] as f64 * p.y
+                            + a[2][r] as f64 * p.z
+                            + a[3][r] as f64
+                    })),
+                )?;
+            }
+        }
+        for child in &g.children {
+            groups(scene, child, m, b, depth + 1)?;
+        }
+        Ok(())
+    }
+    for g in &scene.groups {
+        if !g.hidden && !g.billboard && scene.is_layer_visible(g.layer.as_deref()) {
+            groups(scene, g, Mat4::IDENTITY, &mut bounds, 0)?;
+        }
+    }
+    let (mut cu, mut cv, mut hu, mut hv) = (0., 0., 1.5, 1.5);
+    if let Some((lo, hi)) = bounds {
+        let lo = lo.as_vec3();
+        let hi = hi.as_vec3();
+        let (mut lu, mut ru, mut lv, mut rv) = (
+            f32::INFINITY,
+            f32::NEG_INFINITY,
+            f32::INFINITY,
+            f32::NEG_INFINITY,
+        );
+        for x in [lo.x, hi.x] {
+            for y in [lo.y, hi.y] {
+                for z in [lo.z, hi.z] {
+                    let q = Vec3::new(x, y, z) - origin;
+                    let a = dot(q, u);
+                    let b = dot(q, v);
+                    lu = lu.min(a);
+                    ru = ru.max(a);
+                    lv = lv.min(b);
+                    rv = rv.max(b);
+                }
+            }
+        }
+        cu = ((lu as f64 + ru as f64) * 0.5) as f32;
+        cv = ((lv as f64 + rv as f64) * 0.5) as f32;
+        hu = ((ru as f64 - lu as f64) * 0.56 + 0.2) as f32;
+        hv = ((rv as f64 - lv as f64) * 0.56 + 0.2) as f32;
+    }
+    let c = origin + u * cu + v * cv;
+    let result = [
+        c - u * hu - v * hv,
+        c + u * hu - v * hv,
+        c + u * hu + v * hv,
+        c - u * hu + v * hv,
+    ];
+    if !result.iter().all(|p| p.is_finite()) {
+        return Err("Metal section frame nonfinite".into());
+    }
+    Ok(result)
+}
