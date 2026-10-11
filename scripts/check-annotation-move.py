@@ -20,6 +20,15 @@ for native in oblique:
  source=next(x for x in old_a if x['case']=='nested' and x['phase']==native['phase'])
  assert native['labels']==source['labels'] and native['dimensions'][0]==source['dimensions'][0], 'oblique annotation divergence'
  assert native['vertices']==oblique[0]['vertices'], 'oblique native geometry precision lost'
-collapsed=boundaries[1]['observations'];assert collapsed[-1]['vertices']==collapsed[0]['vertices'];assert collapsed[-1]['undo']==collapsed[0]['undo'];assert boundaries[1]['geometry_preserved']
+collapsed=boundaries[1]['observations'];assert [x['phase'] for x in collapsed]==['before','preview','commit']
+assert collapsed[-1]['vertices']==collapsed[0]['vertices'];assert collapsed[-1]['undo']==collapsed[0]['undo'];assert boundaries[1]['geometry_preserved']
+# Selected free dimension endpoints are integral; this fixture's integral
+# preview/Cancel delta restores them exactly, as the source mixed control shows.
+post_cancel=next(x for x in old_a if x['case']=='mixed' and x['phase']=='cancel')
+assert collapsed[-1]['dimensions']==collapsed[0]['dimensions'], 'collapsed refusal lost dimensions'
+assert collapsed[-1]['dimensions'][0]==post_cancel['dimensions'][0]
+# Label Cancel accumulates source f32 drift, so compare the retained source
+# Cancel offsets instead of incorrectly requiring the initial offsets.
+assert collapsed[-1]['labels']==post_cancel['labels'], 'collapsed refusal lost labels'
 print(json.dumps({'mandatory_boundaries':2,'oblique_annotation_observations':len(oblique)}))
 print(json.dumps({'states' :len(b['states']),'negative_controls':len(b['states']),'exact':True}))
