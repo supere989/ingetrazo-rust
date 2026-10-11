@@ -47,15 +47,22 @@
     }
   ],
   "app_cases": 4,
-  "module_tests": 9,
+  "module_tests": 10,
   "scope": "Actual original PushPull command geometry plus production app transactional handlers; no rendered pointer claim; shape oracle not full metadata equality",
   "sha256": {
     "docs/audits/pushpull-gate2/source.json": "56af51be87742f0b164de1734b3289a007ea38bf0c35de48f4599dbe9377abad",
     "scripts/reference-pushpull-gate2.py": "9a429651b3c8a13ef3555e0737e2208275440b936c4dafb8ae4f5e26e40f3eb2",
-    "scripts/check-pushpull-gate2.py": "68806be30450bba54d05316d5b9dabb6f07b455d16a4fcf5f6e09feba894bffe"
+    "scripts/check-pushpull-gate2.py": "8b782bace72bb7063a9030e2937fb1f2e8efb377620edc63b504872c38fa6108"
   },
   "binary_sha256": {
     "pushpull_gate2_fixture": "65fe5088c7f4109b32ded513445683151790dc5b0ac6cb98d4653952fee3c8c1",
     "pushpull_gate2_app_fixture": "549bb4645649f7d261c71ab137b99dfd0c2fc52be0f0a16e4dfa6a6bd1ed4a43"
-  }
+  },
+  "followup": "Single nearest-face acquisition and stale-hover layer refusal; compiled module test only. App binary hashes above describe preceding frozen source 1b11424c.",
+  "checker_controls": [
+    "orientation reversal",
+    "metadata corruption",
+    "removed face"
+  ],
+  "painted_metadata": "Both painted cases match position/oriented-ring/hole/attrs/interior inventories at unchanged five-decimal coordinate inventory; closed spatial threshold remains 1e-6."
 }

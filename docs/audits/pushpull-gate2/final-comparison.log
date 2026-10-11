@@ -1,5 +1,6 @@
 [
   {
+    "oriented_metadata_inventory_equal": true,
     "name": "roof0.3",
     "pass": true,
     "source_closed": true,
@@ -10,6 +11,7 @@
     "source_status": null
   },
   {
+    "oriented_metadata_inventory_equal": true,
     "name": "roof-0.2",
     "pass": true,
     "source_closed": true,
@@ -20,6 +22,7 @@
     "source_status": null
   },
   {
+    "oriented_metadata_inventory_equal": true,
     "name": "gable-extend",
     "pass": true,
     "source_closed": true,
@@ -30,6 +33,7 @@
     "source_status": null
   },
   {
+    "oriented_metadata_inventory_equal": false,
     "name": "slanted-pocket",
     "pass": true,
     "source_closed": true,
@@ -40,6 +44,7 @@
     "source_status": null
   },
   {
+    "oriented_metadata_inventory_equal": true,
     "name": "wedge0-0.6",
     "pass": true,
     "source_closed": true,
@@ -50,6 +55,7 @@
     "source_status": null
   },
   {
+    "oriented_metadata_inventory_equal": false,
     "name": "wedge0--0.4",
     "pass": false,
     "source_closed": true,
@@ -60,6 +66,7 @@
     "source_status": null
   },
   {
+    "oriented_metadata_inventory_equal": false,
     "name": "wedge1-0.6",
     "pass": true,
     "source_closed": true,
@@ -70,6 +77,7 @@
     "source_status": null
   },
   {
+    "oriented_metadata_inventory_equal": true,
     "name": "wedge1--0.4",
     "pass": true,
     "source_closed": true,
@@ -80,6 +88,7 @@
     "source_status": null
   },
   {
+    "oriented_metadata_inventory_equal": true,
     "name": "wedge2-0.6",
     "pass": true,
     "source_closed": true,
@@ -90,6 +99,7 @@
     "source_status": null
   },
   {
+    "oriented_metadata_inventory_equal": true,
     "name": "wedge2--0.4",
     "pass": true,
     "source_closed": true,
@@ -100,6 +110,7 @@
     "source_status": null
   },
   {
+    "oriented_metadata_inventory_equal": true,
     "name": "wedge3-0.6",
     "pass": true,
     "source_closed": true,
@@ -110,6 +121,7 @@
     "source_status": null
   },
   {
+    "oriented_metadata_inventory_equal": true,
     "name": "wedge3--0.4",
     "pass": true,
     "source_closed": true,
@@ -120,6 +132,7 @@
     "source_status": null
   },
   {
+    "oriented_metadata_inventory_equal": true,
     "name": "step0.5",
     "pass": true,
     "source_closed": true,
@@ -130,6 +143,7 @@
     "source_status": null
   },
   {
+    "oriented_metadata_inventory_equal": true,
     "name": "step1.0",
     "pass": true,
     "source_closed": true,
@@ -140,6 +154,7 @@
     "source_status": null
   },
   {
+    "oriented_metadata_inventory_equal": true,
     "name": "step1.5",
     "pass": true,
     "source_closed": true,
@@ -150,6 +165,7 @@
     "source_status": null
   },
   {
+    "oriented_metadata_inventory_equal": true,
     "name": "step-0.5",
     "pass": true,
     "source_closed": true,
@@ -160,6 +176,7 @@
     "source_status": null
   },
   {
+    "oriented_metadata_inventory_equal": true,
     "name": "open-pocket1.0",
     "pass": true,
     "source_closed": false,
@@ -170,6 +187,7 @@
     "source_status": null
   },
   {
+    "oriented_metadata_inventory_equal": true,
     "name": "open-pocket-1.0",
     "pass": true,
     "source_closed": false,
@@ -180,6 +198,7 @@
     "source_status": null
   },
   {
+    "oriented_metadata_inventory_equal": true,
     "name": "painted-free-ctrlFalse",
     "pass": true,
     "source_closed": true,
@@ -190,6 +209,7 @@
     "source_status": null
   },
   {
+    "oriented_metadata_inventory_equal": true,
     "name": "painted-free-ctrlTrue",
     "pass": true,
     "source_closed": true,
@@ -200,6 +220,7 @@
     "source_status": null
   },
   {
+    "oriented_metadata_inventory_equal": true,
     "name": "ctrl-roof0.3",
     "pass": true,
     "source_closed": true,
@@ -210,6 +231,7 @@
     "source_status": null
   },
   {
+    "oriented_metadata_inventory_equal": false,
     "name": "ctrl-roof-0.2",
     "pass": false,
     "source_closed": true,
@@ -220,6 +242,7 @@
     "source_status": null
   },
   {
+    "oriented_metadata_inventory_equal": false,
     "name": "ctrl-step0.5",
     "pass": false,
     "source_closed": true,
@@ -230,6 +253,7 @@
     "source_status": null
   },
   {
+    "oriented_metadata_inventory_equal": false,
     "name": "ctrl-step-0.5",
     "pass": false,
     "source_closed": true,
@@ -240,6 +264,7 @@
     "source_status": null
   },
   {
+    "oriented_metadata_inventory_equal": true,
     "name": "ctrl-holed-free1.0",
     "pass": true,
     "source_closed": true,
@@ -250,6 +275,7 @@
     "source_status": null
   },
   {
+    "oriented_metadata_inventory_equal": true,
     "name": "ctrl-holed-free-1.0",
     "pass": true,
     "source_closed": true,

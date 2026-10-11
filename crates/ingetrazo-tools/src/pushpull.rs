@@ -32,8 +32,11 @@ impl PushPullTool {
         let loose=crate::base::pick_scene_face(scene,&ctx.ray);
         if group.is_some_and(|(_,depth)|loose.is_none_or(|(_,t,_)|depth<t)){Err(())}else{Ok(loose.map(|(id,_,_)|id))}
     }
-    fn refuse_closed_placement(&mut self,scene:&Scene,ctx:&ToolContext)->bool {
-        if Self::eligible_face_at(scene,ctx).is_err(){self.hovered_face=None;self.error=Some("That face belongs to a group — double-click to open it first, then Push/Pull inside".into());true}else{false}
+    fn acquire_face(&mut self,scene:&Scene,ctx:&ToolContext)->Option<usize> {
+        match Self::eligible_face_at(scene,ctx) {
+            Ok(face)=>{self.hovered_face=face;face},
+            Err(())=>{self.hovered_face=None;self.error=Some("That face belongs to a group — double-click to open it first, then Push/Pull inside".into());None}
+        }
     }
 
     pub fn reset(&mut self) {
@@ -562,8 +565,7 @@ impl Tool for PushPullTool {
     fn on_click(&mut self, scene: &mut Scene, ctx: &ToolContext) {
         self.keep_base = ctx.ctrl_held;
         if !self.is_dragging {
-            if self.refuse_closed_placement(scene,ctx){return;}
-            let face_pick = Self::eligible_face_at(scene,ctx).ok().flatten();
+            let face_pick = self.acquire_face(scene,ctx);
 
             if let Some(face_id) = face_pick {
                 self.selected_face = Some(face_id);
@@ -584,9 +586,9 @@ impl Tool for PushPullTool {
     }
 
     fn on_double_click(&mut self, scene: &mut Scene, ctx: &ToolContext) {
-        if self.refuse_closed_placement(scene,ctx){return;}
+        let face_pick = self.acquire_face(scene,ctx);
+        if face_pick.is_none(){return;}
         if let Some(last_d) = self.last_distance {
-            let face_pick = Self::eligible_face_at(scene,ctx).ok().flatten();
 
             if let Some(face_id) = face_pick {
                 match Self::extrude_face_with_options(scene, face_id, last_d, ctx.ctrl_held) {
@@ -641,6 +643,19 @@ mod tests {
         let v3 = scene.mesh.add_vertex(DVec3::new(0.0, 1.0, 0.0));
         scene.mesh.add_face(vec![v0, v1, v2, v3], vec![]);
         scene
+    }
+
+    #[test]
+    fn stale_hover_cannot_start_after_layer_lock() {
+        let mut scene=Scene::new();
+        let vertices=[DVec3::ZERO,DVec3::X,DVec3::X+DVec3::Y,DVec3::Y].map(|p|scene.mesh.add_vertex(p));
+        let id=scene.mesh.add_face(vertices.to_vec(),vec![]).unwrap();
+        scene.mesh.faces[id].layer=Some("Walls".into());
+        scene.layers.push(ingetrazo_core::layers::Layer::new("Walls"));
+        let ctx=ToolContext::new(DVec3::new(0.5,0.5,0.),ingetrazo_core::math::Ray::new(DVec3::new(0.5,0.5,2.),-DVec3::Z));
+        let mut tool=PushPullTool::new();tool.on_move(&mut scene,&ctx);assert_eq!(tool.hovered_face,Some(id));
+        scene.layers.last_mut().unwrap().locked=true;let before=scene.clone();tool.on_click(&mut scene,&ctx);
+        assert!(!tool.is_dragging);assert_eq!(tool.hovered_face,None);assert_eq!(scene,before);
     }
 
     #[test]
