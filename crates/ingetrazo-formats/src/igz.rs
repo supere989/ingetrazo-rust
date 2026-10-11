@@ -695,16 +695,34 @@ pub fn scene_to_igz_document(scene: &Scene) -> serde_json::Value {
     let current = scene_model(scene);
     let mut doc = overlay(&scene.native_document, &scene.native_baseline, current.clone());
     if scene.native_baseline.get("image_planes")!=current.get("image_planes"){doc["image_planes"]=current["image_planes"].clone();}
-    // Capturing a view can publish a generated ID without changing geometry.
-    fn missing_uid(groups: &[Group]) -> bool {
-        groups.iter().any(|g| g.native_document.get("uid").and_then(serde_json::Value::as_str).map_or(true, str::is_empty) || missing_uid(&g.children))
-    }
-    if scene.native_baseline.get("groups") != current.get("groups")
-        || (!scene.saved_views.is_empty() && missing_uid(&scene.groups)) {
+    if scene.native_baseline.get("groups") != current.get("groups") {
         let mut protos = doc.get("protos").and_then(|v| v.as_array()).cloned().unwrap_or_default();
         let mut shared=std::collections::HashMap::new();
         doc["groups"] = serde_json::json!(scene.groups.iter().map(|g| group_to_json(g, &mut protos, &mut shared, &scene.mesh_shares)).collect::<Vec<_>>());
         if !protos.is_empty() { doc["protos"] = serde_json::json!(protos); }
+    } else {
+        // A view can reference a generated identity without a geometry edit.
+        // Publish only those identities in the retained raw tree: unrelated
+        // UID-less groups and every other authored field remain untouched.
+        let references = scene.saved_views.iter()
+            .filter_map(|view| view.hidden_objects.as_ref())
+            .flatten().map(String::as_str).collect::<std::collections::HashSet<_>>();
+        fn publish_references(raw: &mut serde_json::Value, groups: &[Group], references: &std::collections::HashSet<&str>) {
+            if let Some(items) = raw.as_array_mut() {
+                for (item, group) in items.iter_mut().zip(groups) {
+                    if item.get("uid").and_then(serde_json::Value::as_str).is_none_or(str::is_empty) {
+                        let identity = group.native_uid();
+                        if references.contains(identity.as_str()) { item["uid"] = serde_json::Value::String(identity); }
+                    }
+                    if let Some(children) = item.get_mut("children") {
+                        publish_references(children, &group.children, references);
+                    }
+                }
+            }
+        }
+        if !references.is_empty() {
+            if let Some(groups) = doc.get_mut("groups") { publish_references(groups, &scene.groups, &references); }
+        }
     }
     doc
 }

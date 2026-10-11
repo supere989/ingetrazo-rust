@@ -63,11 +63,10 @@
             "hidden": false,
             "vendor_group": {
               "keep": 7
-            },
-            "uid": "9bf54769312b464b84f0f8e1e90ebc7f"
+            }
           }
         ],
-        "uid": "7ca48152e01f40a7aef6b9d25dd0c8e4"
+        "uid": "b4bf5dcc20bb43f5809ab6a1ba84fdfe"
       }
     ],
     "saved_views": [
@@ -86,7 +85,7 @@
         "hidden_layers": [],
         "two_point": false,
         "hidden_objects": [
-          "7ca48152e01f40a7aef6b9d25dd0c8e4"
+          "b4bf5dcc20bb43f5809ab6a1ba84fdfe"
         ],
         "style": {
           "name": "Default",

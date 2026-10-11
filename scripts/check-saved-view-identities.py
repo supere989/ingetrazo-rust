@@ -21,7 +21,11 @@ def recall(path,expected):
  s=Scene();igz.load_into(s,path);flip(s.groups);s.saved_views[-1].apply(s,OrbitCamera())
  if mask(s.groups)!=expected:raise AssertionError(str(path))
  return s
-d=Path(sys.argv[1]);expected=json.loads((d/"original.json").read_text());observed=json.loads((d/"native.json").read_text());validate(expected,observed)
+d=Path(sys.argv[1])
+# Only the referenced parent receives an ID on this unchanged legacy tree.
+captured=json.loads((d/"legacy-captured-native.igz").read_text())["scene"]["groups"][0]
+assert captured["uid"] and "uid" not in captured["children"][0]
+expected=json.loads((d/"original.json").read_text());observed=json.loads((d/"native.json").read_text());validate(expected,observed)
 for name,data in expected.items():
  recall(d/(name+"-captured-native.igz"),data["apply_mask"] if name!="duplicate" else [False,True,False])
  s=recall(d/(name+"-native.igz"),[False,False,True] if name=="duplicate" else data["updated_mask"])

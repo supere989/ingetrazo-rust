@@ -4,17 +4,18 @@
   "source_sha256": {
     "crates/ingetrazo-core/src/groups.rs": "65c50c59715a191252c70ab2938589d37a64029db598e1584e100c735e10c599",
     "crates/ingetrazo-core/src/saved_views.rs": "34a2987ba3a51050dc4b2fce1100eeb066358d4ee02bdc1b237d375133480fbc",
-    "crates/ingetrazo-formats/src/igz.rs": "9991687362b7ba64586f6f3930dea497aab7ec46089b94a2558fba4cc7790b93",
+    "crates/ingetrazo-formats/src/igz.rs": "204f24b8b8dfe77ce284563be24173bbcc40f7dfaed9e06d6d19e2096dcb7885",
     "crates/ingetrazo-gui/examples/saved_view_identity_fixture.rs": "3890d26fdef11e320218017c0ac4ba4f8e8c9262b7abdfbd4326fd110c0d29f4",
     "scripts/reference-saved-view-identities.py": "fec6121c5d3172c57358708c558c374966ca9320972bf9c2f7d74766450ceff5",
-    "scripts/check-saved-view-identities.py": "02490db366f2171eb6460972c96903ec6d1a0c70c3cc49b363cc7bf780c27d51"
+    "scripts/check-saved-view-identities.py": "eca6d1e984df01ffe9361d851a33a0c95c7f21bc45fac232e7b535709be71796"
   },
   "binary": "/tmp/ingetrazo-ai-registry-target/debug/examples/saved_view_identity_fixture",
-  "binary_sha256": "dddba3078f860adce7b93f599260bb68b7bf8474aa9e15ddc848427942d73f5b",
+  "binary_sha256": "b836202020fbdeb0c095b601a1d571740a1c3b1d6386902aaba2d8141d7b7710",
   "results": {
     "source_cases": 4,
     "actual_python_recalls": 8,
-    "negative_controls": 6
+    "negative_controls": 6,
+    "native_preservation_tests": 17
   },
   "retained_sha256": {
     "original.json": "f404d3d5192ac76ecde7b18a750b488b5e9e4682b67fa6571b79992e621cf2e1",
@@ -23,15 +24,15 @@
     "literal-native.igz": "3489ea05a7671a0ea79b10aa8a243a594d3f2817cd1194ed4743dccefb9cc031",
     "literal-captured-native.igz": "bb868a9a4518fa11e1c43dd3831f989282759875cfcd2ea53877e6c028e644a2",
     "legacy.igz": "825cd42a48aaae1eb8de01134118e42144258b299c75c491e431e07095516feb",
-    "legacy-native.igz": "3134d5a2aa430f07e214bba66e7035606812a00d0d5b94107280fcac10e5fea6",
-    "legacy-captured-native.igz": "09fb35de2ee3332c83c558288e04072e9374fb56e6dbcbf72fcba914ac708f66",
+    "legacy-native.igz": "985a895f3ce3cdd4a195b418a19bf47f2fd57e0b7f44a861308d8428a684e10d",
+    "legacy-captured-native.igz": "c98cfc0cfa46a2e2aaffabbc6932279cbcc11b84739a4890792ab2900273a5a1",
     "duplicate.igz": "d446c3038ef3d7dcf6d0b7041692c8effe07ee217205492d1479aff2c09bec6f",
     "duplicate-native.igz": "3c3e475cfaf7d6330aa6bddf793d48375322d1cd89fb059243ff1607f51a5686",
     "duplicate-captured-native.igz": "7f7dc558160212a4ffeb3ac0a3646f2256b96e08eb8ac3f314ae0fd864c27cb4",
     "generated.igz": "9366bef9d8da5b7a51f64081eabbe50444c4f8cc84590d4a6526c1274520e78b",
     "generated-native.igz": "a148245fed9851b4658bbbb874b214c8f04539a673a82f5606e93884e8831844",
     "generated-captured-native.igz": "0e367e1a22da303998c1771c63b2799b6699d4018156091eb9898252d586dbd7",
-    "legacy-old-missing-uid.igz": "fef4dcac5dcd47b94e908c46e292fc227204cdd36edca57a70b37ec62bc849c6",
+    "legacy-old-missing-uid.igz": "559dac9771b82d02f51c1483559b5f425d6cf0a060d13f80948eaa2a6d7506a4",
     "literal-old-rewritten-uid.igz": "f4545633bded56c64dc9f0e09c4b0d1475e4979c42c914af0b80490592b5e701"
   }
 }
