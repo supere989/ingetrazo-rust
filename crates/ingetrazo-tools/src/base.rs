@@ -542,7 +542,7 @@ mod group_visibility_tests {
     use super::*;
     use ingetrazo_core::{groups::Group, layers::Layer, mesh::Mesh};
     #[test]
-    fn hidden_or_attr_layer_faces_do_not_leave_pickable_group_boundaries() {
+    fn hidden_faces_and_placement_layers_control_closed_group_picks() {
         let mut mesh = Mesh::new();
         let ids = [DVec3::ZERO, DVec3::X, DVec3::Y].map(|p| mesh.add_vertex(p));
         mesh.add_face(ids.to_vec(), vec![]);
@@ -561,7 +561,12 @@ mod group_visibility_tests {
         let mut layer = Layer::new("Hidden");
         layer.visible = false;
         scene.layers.push(layer);
+        // The actual source picker ignores internal tags until context entry;
+        // see the group-face-named and group-named original viewport controls.
+        assert!(pick_scene_group(&scene, &boundary, 0.1).is_some());
+        scene.groups[0].layer = Some("Hidden".into());
         assert!(pick_scene_group(&scene, &boundary, 0.1).is_none());
+        scene.groups[0].layer = None;
         let a = scene.groups[0].mesh.add_vertex(DVec3::new(2., 0., 0.));
         let b = scene.groups[0].mesh.add_vertex(DVec3::new(3., 0., 0.));
         scene.groups[0].mesh.add_edge(a, b);
