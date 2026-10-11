@@ -165,9 +165,10 @@ fn main() {
     a.dispatch_tool_click(&context);
     let moved = ToolContext::new(point + DVec3::X * 2., context.ray);
     a.dispatch_tool_move(&moved);
-    assert!(a.active_tool.pending_model_preview());
+    assert!(a.active_tool.placement_preview().is_some());
     let mut preview_base = a.scene.clone();
     a.active_tool.restore_transient_model(&mut preview_base);
+    assert_ne!(a.scene.groups[0].transform, preview_base.groups[0].transform);
     edited.text = "AB".into();
     let undo = a.undo_stack.len();
     a.edit_text3d(id, &edited).unwrap();
