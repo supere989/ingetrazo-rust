@@ -1,6 +1,6 @@
 # 67546fe7 native platform observation
 
-Exact published source67546fe7f13e7e9fbf26377defc07b3e8356a368; fullrun38157504419, ordered38157504396. Native Mac jobs terminal failure, both crosschecks/Windows/ordered jobs pass. Linux status is in full-run.json (still active when this checkpoint was retained). No large Linux semantic ZIP duplicated.
+Exact published source67546fe7f13e7e9fbf26377defc07b3e8356a368; fullrun38157504419, ordered38157504396. Native Mac jobs terminal failure, both crosschecks/Windows/ordered jobs pass. Linux is terminal SUCCESS; full run terminal FAILURE from the two native Mac jobs. Exact terminal job snapshot is in full-run.json. No large Linux semantic ZIP duplicated.
 
 Both Apple SDK/MSL builds, defaults and billboard stages pass. Billboard shared image ownership/upload1, unchanged/camera image uploads0, hide restore exact, quota refusal and finalledger0. ARM document annotations and actual CLI native submission pass; Intel strict NVIDIA sample-policy refusal blocks those stages. Both CGL accelerated pixel-format setups refuse before depth measurements. Devices are Apple Paravirtual, not physical shippingGPU proof.
 
