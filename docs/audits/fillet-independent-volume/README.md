@@ -17,3 +17,5 @@ python3 scripts/check-fillet-independent-volume.py docs/audits report.json
 ```
 
 This closes the independently checked numeric-volume gap for these retained P09 cases. Full-criterion disposition belongs to combined review with the existing radius/segment/topology/history proofs.
+
+The checker also accepts a third positional argument for a freshly generated native `fillet_scoped` JSON. The integrated workflow runner passes its existing consumer output here and retains the candidate SHA256. Source references and the analytic formula remain unchanged; no additional Rust build or application execution is required. The retained report/provenance describe the original frozen checker above.

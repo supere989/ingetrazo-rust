@@ -14,18 +14,19 @@ env=dict(os.environ,XDG_CONFIG_HOME=str(out/"config"),XDG_DATA_HOME=str(out/"dat
 for key in ("INGETRAZO_NATIVE_METAL","INGETRAZO_METAL_WORLD","INGETRAZO_METAL_CAD_CALLBACKS"): env.pop(key,None)
 document_hash=hashlib.sha256(document.read_bytes()).hexdigest()
 marker="Graphics backend: native Metal; first GPU world frame submitted"
+refusals=("painting paused:","viewport paused:","compatibility path:")
 with (out/"runtime.log").open("w") as log:
  process=subprocess.Popen([str(binary),str(document)],env=env,stdout=log,stderr=log)
  try:
   deadline=time.monotonic()+45
   while time.monotonic()<deadline and process.poll() is None:
    runtime=(out/"runtime.log").read_text()
-   if marker in runtime: break
+   if marker in runtime or any(s in runtime for s in refusals): break
    time.sleep(.1)
   assert process.poll() is None,"Launcher exited: "+(out/"runtime.log").read_text()
   runtime=(out/"runtime.log").read_text()
   assert marker in runtime and document.name in runtime,runtime
-  assert not any(s in runtime for s in ("painting paused:","viewport paused:","compatibility path:")),runtime
+  assert not any(s in runtime for s in refusals),runtime
  finally:
   if process.poll() is None:
    process.terminate()

@@ -84,6 +84,8 @@ def analytic(radius,segments,length,box_volume):
   return Decimal.from_float(box_volume)-Decimal.from_float(length)*Decimal.from_float(radius)**2*(1-Decimal(segments)*s/2)
 def main():
  root=Path(sys.argv[1]);s=load(root,'fillet-nested-history','source.json');n=load(root,'fillet-nested-history','native.json');fixed=load(root,'fillet-oblique','source-fixed.json');fn=load(root,'fillet-oblique','native.json')
+ candidate = Path(sys.argv[3]) if len(sys.argv)>3 else None
+ if candidate is not None: n=json.loads(candidate.read_bytes())
  assert s['source_pin']==fixed['source_pin']==PIN
  assert [c['name']for c in s['cases']]==[c['name']for c in n['cases']]==REQUIRED
  reference={c['name']:c['after']for c in s['cases']};models={c['name']:c for c in s['cases']}
@@ -112,5 +114,6 @@ def main():
   except AssertionError:negatives.append(name)
   else:raise AssertionError('accepted '+name)
  report={'passed':True,'source_pin':PIN,'method':'Exact rational oriented polygon boundary determinant; Qt binary32 rounding-cell interval propagation, no fitted volume percentage. Analytic discrete quarter-circle corner checked against binary64 rounding-cell interval.','cases':rows,'analytic':{'case':'endpoint-free-wire','radius':.2,'segments':8,'edge_length':edge_length,'box_dimensions':dimensions,'formula':'abc-L*r^2*(1-N*sin(pi/(2*N))/2)','expected_volume':float(expected),'native_binary64_volume_interval':[float(v)for v in native_interval]},'negative_controls':negatives,'scope':'Six retained closed fillet bodies, two corrected oblique/turned production models. Open neighbor faces excluded explicitly; no new geometry, app run or full P09 claim.'}
+ if candidate is not None: report['fresh_native_sha256']=hashlib.sha256(candidate.read_bytes()).hexdigest()
  Path(sys.argv[2]).write_text(json.dumps(report,indent=2)+'\n');print(json.dumps(report,indent=2))
 if __name__=='__main__':main()
