@@ -56,8 +56,8 @@ extras=[('billboard-bitmap',1.,True,'textures',False,False),('billboard-mesh',1.
 heldout=bool(os.environ.get('INGETRAZO_BILLBOARD_HELDOUT'))
 cases=extras[:2] if not heldout else [(n,1.,t,'textures',False,False) for n,t in [
  ('billboard-bitmap-perspective',True),('billboard-bitmap-oblique',True),('billboard-bitmap-nested-reflection',True),
- ('billboard-mesh-solid-perspective',False),('billboard-mesh-uv-transform',True),('billboard-mesh-mixed-order',True),('billboard-bitmap-missing','missing'),('billboard-bitmap-hardcutout',True)]]
-if os.environ.get("INGETRAZO_BILLBOARD_CASE"):cases=[c for c in cases if c[0]==os.environ["INGETRAZO_BILLBOARD_CASE"]]
+ ('billboard-mesh-solid-perspective',False),('billboard-mesh-uv-transform',True),('billboard-mesh-mixed-order',True),('billboard-bitmap-missing','missing'),('billboard-bitmap-hardcutout',True),('billboard-mesh-placement-order',True),('billboard-bitmap-empty-parent',True)]]
+if os.environ.get("INGETRAZO_BILLBOARD_CASE"):cases=[c for c in cases if c[0] in os.environ["INGETRAZO_BILLBOARD_CASE"].split(",")]
 for name,alpha,textured,mode,section,offscreen in cases:
  scene=Scene();scene.shadows.enabled=True;scene.shadows.darkness=.55
  height=4. if offscreen else 1.5
@@ -87,6 +87,21 @@ for name,alpha,textured,mode,section,offscreen in cases:
    colorface.attrs['color']=(.15,.45,.75)
    later=mesh.add_face([QVector3D(-.5,-.06,.6),QVector3D(.5,-.06,.6),QVector3D(.5,-.06,2.4),QVector3D(-.5,-.06,2.4)])
    later.attrs['texture']={**face.attrs['texture']}
+ if name=='billboard-bitmap-empty-parent':
+  parent=Group(Mesh(),'empty-billboard-parent');parent.billboard=True;parent.xform=QMatrix4x4();parent.xform.translate(.35,.25,0.);parent.children=[group];scene.groups=[parent]
+ if name=='billboard-mesh-placement-order':
+  # Two equal-depth placements share the immutable image. Each has a distinct
+  # solid region, so merging all texture draws ahead of both color draws is
+  # observably different from original per-placement texture/color ordering.
+  image=Image.new('RGBA',(32,32),(255,255,255,255));image.save(out/'order.png')
+  face.attrs['texture']['path']=str(out/'order.png')
+  def solid(m,x0,x1,color):
+   f=m.add_face([QVector3D(x0,0,.4),QVector3D(x1,0,.4),QVector3D(x1,0,2.6),QVector3D(x0,0,2.6)])
+   f.attrs['color']=color
+  solid(mesh,-.9,-.1,(.1,.35,.8))
+  second=Mesh();f=second.add_face([QVector3D(*v) for v in vertices]);f.attrs['texture']={**face.attrs['texture']}
+  solid(second,.1,.9,(.8,.15,.1))
+  placement=Group(second,'second-shared-image');placement.xform=QMatrix4x4();placement.billboard='mesh';scene.groups.append(placement)
  if section:scene.section_planes.append(SectionPlane(QVector3D(0,0,0),QVector3D(1,0,0),active=True));scene.show_section_planes=False
  if name=='ground-terrain':
   from georef.terrain import TerrainObject

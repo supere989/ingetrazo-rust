@@ -36,7 +36,7 @@ impl Packet {
   fn visit(g:&Group,parent:DMat4,scene:&Scene,runs:&mut Vec<Run>)->Result<(),String>{
    if g.hidden||!scene.is_layer_visible(g.layer.as_deref()){return Ok(());}
    let world=parent*g.transform;
-   if g.billboard {
+   if g.billboard { (|| -> Result<(),String> {
     let m=world.as_mat4().to_cols_array();let mut vertices=Vec::new();vertices.try_reserve_exact(g.mesh.vertices.len()).map_err(|_|"Billboard vertex admission")?;
     for v in &g.mesh.vertices{vertices.push(placed(v.position,&m)?);}
     if vertices.is_empty(){return Ok(());}
@@ -62,8 +62,8 @@ impl Packet {
      }
      local_runs.sort_by_key(|r|r.path.is_none());runs.try_reserve(local_runs.len()).map_err(|_|"Billboard run admission")?;runs.extend(local_runs);
     }
-    return Ok(());
-   }
+    Ok(())
+   })()?; }
    for c in &g.children{visit(c,world,scene,runs)?;}Ok(())
   }
   for g in &scene.groups{visit(g,DMat4::IDENTITY,scene,&mut runs)?;}
@@ -100,5 +100,21 @@ pub(super) fn key(scene:&Scene,camera:&OrbitCamera,epoch:u64)->Result<([u64;3],[
  use super::*;
  fn scene()->Scene{let mut s=Scene::new();let mut mesh=ingetrazo_core::mesh::Mesh::new();let ids=[DVec3::new(-1.,0.,0.),DVec3::new(1.,0.,0.),DVec3::new(1.,0.,3.),DVec3::new(-1.,0.,3.)].map(|p|mesh.add_vertex(p));let face=mesh.add_face(ids.to_vec(),vec![]).unwrap();mesh.faces[face].attrs.insert("texture".into(),serde_json::json!({"embed":"sprite.png","sw":2.,"sh":2.}));let mut group=Group::with_mesh("sprite",mesh);group.billboard=true;s.groups.push(group);s}
  #[test]fn cached_ortho_packet_uses_view_direction_not_anchor_direction(){let scene=scene();let packet=Packet::build(&scene).unwrap();let mut a=OrbitCamera::default();a.distance=8.;a.yaw=0.;a.pitch=0.;a.perspective=false;a.target=DVec3::ZERO;let first=packet.textures(&a).unwrap();let mut b=a.clone();b.target=DVec3::new(32.,16.,0.);let second=packet.textures(&b).unwrap();assert_eq!(first["sprite.png"].vertices,second["sprite.png"].vertices);a.perspective=true;b.perspective=true;assert_ne!(packet.textures(&a).unwrap()["sprite.png"].vertices,packet.textures(&b).unwrap()["sprite.png"].vertices);}
+ #[test]fn empty_billboard_parent_keeps_nested_receiver(){let mut s=scene();let child=s.groups.remove(0);let mut parent=Group::with_mesh("empty parent",ingetrazo_core::mesh::Mesh::new());parent.billboard=true;parent.transform=DMat4::from_translation(DVec3::new(2.,3.,0.));parent.children.push(child);s.groups.push(parent);let packet=Packet::build(&s).unwrap();assert_eq!(packet.runs.len(),1);match packet.runs[0].facing{Facing::Quad{anchor,..}=>assert_eq!(anchor,Vec3::new(2.,3.,0.)),_=>panic!("bitmap child")};}
+ #[test]fn shared_image_storage_keeps_placement_texture_color_order(){
+  let facing=Facing::Mesh{anchor:DVec3::ZERO,normal:[0.,-1.]};
+  let positions=vec![([0.,0.,0.],[0.,0.]),([1.,0.,0.],[1.,0.]),([0.,0.,1.],[0.,1.])];
+  let packet=Packet{runs:vec![
+   Run{facing,path:Some("same.png".into()),color:[1.;3],positions:positions.clone()},
+   Run{facing,path:None,color:[0.1,0.3,0.8],positions:positions.clone()},
+   Run{facing,path:Some("same.png".into()),color:[1.;3],positions:positions.clone()},
+   Run{facing,path:None,color:[0.8,0.1,0.1],positions} ]};
+  let buffers=packet.textures(&OrbitCamera::default()).unwrap();
+  assert_eq!(buffers.len(),3,"one image storage with two distinct solid colors");
+  let image=&buffers["same.png"];assert_eq!(image.source_texture_runs.len(),2);
+  assert_eq!(image.source_texture_runs.iter().map(|r|(r.order,r.first,r.count)).collect::<Vec<_>>(),vec![(0,0,3),(2,3,3)]);
+  assert_eq!(buffers["@billboard-color-1"].source_texture_runs[0].order,1);
+  assert_eq!(buffers["@billboard-color-3"].source_texture_runs[0].order,3);
+ }
  #[test]fn malformed_placement_and_camera_refuse_before_any_gpu_publication(){let mut scene=scene();scene.groups[0].transform=DMat4::from_translation(DVec3::splat(f64::MAX));assert!(Packet::build(&scene).is_err());let packet=Packet::build(&self::scene()).unwrap();let mut camera=OrbitCamera::default();camera.yaw=f64::NAN;assert!(packet.textures(&camera).is_err());}
 }
