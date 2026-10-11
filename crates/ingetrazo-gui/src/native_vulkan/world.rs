@@ -290,7 +290,8 @@ impl World {
  /// Engineering entry point into the identical source-sweep scene transaction.
  pub fn set_face_sweep_scene_for_probe(&mut self,context:&VulkanContext,scene:&ingetrazo_core::scene::Scene,camera:&ingetrazo_core::camera::OrbitCamera,style:&ingetrazo_render::style::StyleConfig,descriptor:Option<ingetrazo_tools::base::FaceSweepPreview>,publication:u64,fence:vk::Fence,completed:u64)->Result<(),String>{
   let staged=self.prepare_face_sweep(context,scene,camera,style,descriptor,publication,fence,completed)?;
-  if let Err(error)=self.set_scene(context,scene,camera,style,fence,completed,publication){self.abort_face_sweep(staged,fence,completed)?;return Err(error);}
+  let scene_result=if descriptor.is_some(){self.set_scene_with_source_camera(context,scene,camera,style,fence,completed,publication)}else{self.set_scene(context,scene,camera,style,fence,completed,publication)};
+  if let Err(error)=scene_result{self.abort_face_sweep(staged,fence,completed)?;return Err(error);}
   self.publish_face_sweep(staged,scene,completed);Ok(())
  }
  pub fn face_sweep_image_stats_for_probe(&self)->serde_json::Value { let base=self.textures.as_ref().unwrap().cache_stats();let preview=self.sweep.as_ref().map(|s|s.image_stats());serde_json::json!({"base_hashes":base.hashes,"base_decodes":base.decodes,"base_image_uploads":base.uploads,"preview":preview,"inactive_base":self.cached_base.is_some()}) }
@@ -330,13 +331,23 @@ impl World {
  }
  /// Prepare shadow bindings privately, then publish them only after the complete
  /// existing geometry/texture transaction has passed its fence admission.
+ /// Source-authored preview surfaces share the original Qt camera and GL
+ /// depth domain. Keep the ordinary f64 camera path independent.
+ fn source_camera_projection(&self,camera:&ingetrazo_core::camera::OrbitCamera)->Result<([f32;16],[f32;16]),String>{
+  let snapshot=crate::navigation_ray::camera_snapshot(camera).ok_or("Source viewport camera arithmetic admission")?;
+  let matrix:[f32;16]=std::array::from_fn(|i|snapshot.matrix[i/4][i%4]);
+  // Portable fallback rounds the Z row before vertex multiplication; its
+  // precision remains separately observable from native GL depth control.
+  let mvp=if self.source_depth_dispatch.is_none(){super::source_depth::portable_matrix(matrix)?}else{matrix};
+  Ok((matrix,mvp))
+ }
+ pub(super) fn set_scene_with_source_camera(&mut self,context:&VulkanContext,scene:&ingetrazo_core::scene::Scene,camera:&ingetrazo_core::camera::OrbitCamera,style:&ingetrazo_render::style::StyleConfig,fence:vk::Fence,completed:u64,epoch:u64)->Result<(),String>{
+  let (matrix,mvp)=self.source_camera_projection(camera)?;
+  self.set_scene(context,scene,camera,style,fence,completed,epoch)?;
+  self.mvp=mvp;self.source_gl_camera=self.source_depth_dispatch.is_some();self.source_camera_matrix=Some(matrix);Ok(())
+ }
  pub fn set_scene_with_sun(&mut self,context:&VulkanContext,scene:&ingetrazo_core::scene::Scene,camera:&ingetrazo_core::camera::OrbitCamera,style:&ingetrazo_render::style::StyleConfig,fence:vk::Fence,completed:u64,epoch:u64,sun:Option<[f64;3]>,darkness:f32,ground:bool)->Result<(),String>{
-  let snapshot=crate::navigation_ray::camera_snapshot(camera).ok_or("Solar receiver camera arithmetic admission")?;
-  let source_camera_matrix:[f32;16]=std::array::from_fn(|i|snapshot.matrix[i/4][i%4]);
-  let mut source_mvp=source_camera_matrix;
-  // Portable equivalent of GL viewport depth mapping. Its additional f32
-  // vertex-matrix rounding is reported independently from native clip control.
-  if self.source_depth_dispatch.is_none(){source_mvp=super::source_depth::portable_matrix(source_mvp)?;}
+  let (source_camera_matrix,source_mvp)=self.source_camera_projection(camera)?;
   let sun=sun.filter(|_|!matches!(style.visual_style,ingetrazo_render::style::VisualStyle::Wireframe|ingetrazo_render::style::VisualStyle::XRay));
   let bounds=if self.shadow_bounds.as_ref().is_some_and(|(revision,_)|*revision==(scene.version,epoch)){self.shadow_bounds.unwrap().1}else{shadows::scene_bounds(scene)};
   let active=sun.is_some()&&bounds.is_some();
