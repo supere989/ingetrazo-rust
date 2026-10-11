@@ -336,6 +336,12 @@ pub fn build_world_surfaces_suppressed(scene:&Scene,camera:&OrbitCamera,style:&S
  }data
 }
 /// Ordinary style/material collection for a bounded prism replacement packet.
+/// Loose root surfaces only; groups retain their independently cached placement owners.
+pub fn build_loose_world_surfaces_suppressed(scene:&Scene,style:&StyleConfig,suppressed:&[usize])->SceneRenderData {
+ let mut data=SceneRenderData::default();
+ if style.visual_style!=VisualStyle::Wireframe {build_mesh_buffers_filtered(&scene.mesh,scene,style,&mut data.opaque_mesh,&mut data.transparent_mesh,&mut data.textured_meshes,true,suppressed,false);}
+ data
+}
 pub fn build_borrowed_mesh_world_surfaces(mesh:&Mesh,scene:&Scene,style:&StyleConfig)->SceneRenderData{let mut data=SceneRenderData::default();if style.visual_style!=VisualStyle::Wireframe{build_mesh_buffers(mesh,scene,style,&mut data.opaque_mesh,&mut data.transparent_mesh,&mut data.textured_meshes,true);}data}
 /// Tool-authored bounded mesh borrows scene materials/assets; no Scene clone.
 pub fn build_preview_mesh_surfaces(mesh:&Mesh,scene:&Scene)->SceneRenderData {
@@ -513,8 +519,11 @@ fn build_mesh_buffers_filtered(
 
                 buffer.push_triangle(v0, v1, v2);
             }
-            record_source_texture(buffer,first,&face.attrs,shade,source_final_opacity,order);
-            if native_texture_sides {append_source_back_texture(textured_meshes,&face.attrs,norm,shade,face_order,&tris,DMat4::IDENTITY,false,false);}
+            if preview {
+                let count=buffer.indices.len()-first;
+                if count>0 {buffer.source_texture_runs.push(crate::buffer::SourceTextureRun{back_side:false,order,first,count,shade,opacity:1.,front_cull:false});}
+            } else {record_source_texture(buffer,first,&face.attrs,shade,source_final_opacity,order);}
+            if !preview && native_texture_sides {append_source_back_texture(textured_meshes,&face.attrs,norm,shade,face_order,&tris,DMat4::IDENTITY,false,false);}
         } else {
             let base_color = if preview{face.attrs.get("color").and_then(|v|v.as_array()).filter(|v|v.len()>=3).map(|v|[v[0].as_f64().unwrap_or(0.96) as f32,v[1].as_f64().unwrap_or(0.95) as f32,v[2].as_f64().unwrap_or(0.925) as f32,1.]).unwrap_or(style.front_color)}else{get_face_base_color(&face.attrs, scene, style)};
             let shaded_color = if native_texture_sides && tex_val.is_none() && !is_xray && source_final_opacity>=0.999 && !matches!(style.visual_style,VisualStyle::HiddenLine|VisualStyle::Monochrome) {
@@ -1692,6 +1701,21 @@ fn record_source_texture(buffer:&mut MeshRenderBuffer,first:usize,attrs:&std::co
   mesh.faces[id].attrs.insert("texture".into(),serde_json::json!({"path":"source.png","uvw":[2.,0.,0.,0.25,0.,3.,0.,0.5]}));
   mesh.faces[id].attrs.insert("opacity".into(),serde_json::json!(opacity));
   if back{mesh.faces[id].attrs.insert("back".into(),serde_json::json!({"color":[0.,0.,1.],"opacity":0.5}));}mesh
+ }
+ #[test]fn preview_texture_uses_front_on_both_sides_without_authored_back_overlay(){
+  let mut scene=Scene::new();scene.mesh=textured_mesh(0.5,true);
+  scene.mesh.faces[0].attrs.insert("back".into(),serde_json::json!({"color":[0.,0.,1.],"texture":{"path":"back.png"},"opacity":0.25}));
+  let preview=build_preview_mesh_surfaces(&scene.mesh,&scene);
+  assert_eq!(preview.textured_meshes.len(),1);
+  let front=&preview.textured_meshes["source.png"];
+  assert_eq!(front.source_texture_runs.len(),1);
+  let run=&front.source_texture_runs[0];assert!(!run.back_side&&!run.front_cull);assert_eq!(run.opacity,1.);
+  assert!(front.source_back_paints.is_empty()&&front.source_front_cull.is_empty()&&front.source_default_back.is_empty());
+  let mut style=StyleConfig::default();style.show_textures=true;style.visual_style=VisualStyle::ShadedWithTextures;
+  let ordinary=build_borrowed_mesh_world_surfaces(&scene.mesh,&scene,&style);
+  assert!(ordinary.textured_meshes.contains_key("back.png"));
+  assert_eq!(ordinary.textured_meshes["back.png"].source_texture_runs[0].opacity,0.25);
+  assert!(ordinary.textured_meshes["source.png"].source_texture_runs[0].front_cull);
  }
  #[test]fn prototype_uv_remains_local_after_reflected_scaled_translated_placement(){
   let mut scene=Scene::new();let mut group=Group::with_mesh("placed",textured_mesh(1.,false));group.native_document=serde_json::json!({"proto":0,"xform":[1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1]});
