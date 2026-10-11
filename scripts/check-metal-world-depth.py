@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 """Strict sampled interior/background GPU oracle; not a whole-image edge oracle."""
 import json,math,pathlib,sys
-NAMES=("far-then-near","near-then-far","depth-disabled-negative","warm-0","warm-1","warm-2","owner-refusal-preserved","map-free-old-green","map-free-new-red")
+NAMES=("far-then-near","near-then-far","depth-disabled-negative","warm-0","warm-1","warm-2","owner-refusal-preserved","map-free-old-green","map-free-new-red","material-front","material-default-back","material-override-back","hidden-line-front","hidden-line-back","monochrome-front","monochrome-back","reflected-authored-front","policy-refusal-preserved")
 def validate_pixels(pixels,name,normal_override=False):
     assert len(pixels)==64*64*4,(name,"raw extent")
-    expected=(0,255,0,255) if normal_override or name not in ("depth-disabled-negative","map-free-new-red") else (255,0,0,255)
+    material={"material-front":(255,0,0,255),"material-default-back":(255,255,0,255),"material-override-back":(0,255,0,255),"hidden-line-front":(255,0,255,255),"hidden-line-back":(255,0,255,255),"monochrome-front":(255,0,255,255),"monochrome-back":(255,255,0,255),"reflected-authored-front":(255,0,0,255),"policy-refusal-preserved":(255,0,0,255)}
+    expected=material.get(name, (0,255,0,255) if normal_override or name not in ("depth-disabled-negative","map-free-new-red") else (255,0,0,255))
     interior=outside=0
     for y in range(64):
         for x in range(64):
@@ -20,6 +21,7 @@ def validate_pixels(pixels,name,normal_override=False):
 def main(root):
     root=pathlib.Path(root);report=json.loads((root/"report.json").read_text())
     assert report["passed"] is True and report["wrong_owner_refused"] is True and report["invalid_pose_refused"] is True
+    assert report["policy_metadata_refused"] is True
     assert report["frames"]==list(NAMES),report["frames"]
     assert report["width"]==report["height"]==64 and report["pixel_encoding"]=="RGBA8Unorm opaque"
     assert report["geometry_uploads_before_warm"]==report["geometry_uploads_after_warm"]==2
@@ -32,5 +34,9 @@ def main(root):
         try:validate_pixels(pixels,"far-then-near",True)
         except AssertionError:controls[name]="rejected"
         else:raise AssertionError(f"{name} negative passed")
-    print(json.dumps({"scope":"actual opaque/depth and retained UI sampling, strict interior/background samples; edge/MSAA/material/presentation not claimed","passed":True,"frames":results,"negative_controls":controls},indent=2))
+    for label,pixels,expected_name in (("back-as-front",frames["material-default-back"],"material-front"),("override-as-default",frames["material-override-back"],"material-default-back")):
+        try:validate_pixels(pixels,expected_name)
+        except AssertionError:controls[label]="rejected"
+        else:raise AssertionError(label)
+    print(json.dumps({"scope":"actual opaque/depth, source face paint-policy winding and retained UI sampling; strict interior/background samples; edges/MSAA/textures/alpha/presentation/fullviewport not claimed","passed":True,"frames":results,"negative_controls":controls},indent=2))
 if __name__=="__main__":main(sys.argv[1])

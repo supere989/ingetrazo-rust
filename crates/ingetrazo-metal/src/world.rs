@@ -404,7 +404,14 @@ fn image(
     let native = metal.device.heapTextureSizeAndAlignWithDescriptor(&d);
     let admitted = u64::try_from(native.size).map_err(|_| "World native texture size overflow")?;
     if admitted < requested || native.align == 0 {
-        return Err(format!("World native texture size query unavailable: requested_bytes={requested}, queried_size={}, queried_align={}, extent={}x{}, format={format:?}, storage={:?}, hazard={:?}, usage={usage:?}, device={}", native.size, native.align, extent.0, extent.1, d.storageMode(), d.hazardTrackingMode(), metal.device.name()));
+        // Observation only: never use a different descriptor's query to
+        // admit this resource. The original tracked descriptor is restored.
+        d.setHazardTrackingMode(MTLHazardTrackingMode::Default);
+        let default_query=metal.device.heapTextureSizeAndAlignWithDescriptor(&d);
+        d.setHazardTrackingMode(MTLHazardTrackingMode::Untracked);
+        let untracked_query=metal.device.heapTextureSizeAndAlignWithDescriptor(&d);
+        d.setHazardTrackingMode(MTLHazardTrackingMode::Tracked);
+        return Err(format!("World native texture size query unavailable: requested_bytes={requested}, queried_size={}, queried_align={}, extent={}x{}, format={format:?}, storage={:?}, hazard={:?}, usage={usage:?}, device={}, default_query={}/{}, untracked_query={}/{}, family_apple2={}, family_mac2={}, family_common3={}, low_power={}, headless={}",native.size,native.align,extent.0,extent.1,d.storageMode(),d.hazardTrackingMode(),metal.device.name(),default_query.size,default_query.align,untracked_query.size,untracked_query.align,metal.device.supportsFamily(MTLGPUFamily::Apple2),metal.device.supportsFamily(MTLGPUFamily::Mac2),metal.device.supportsFamily(MTLGPUFamily::Common3),metal.device.isLowPower(),metal.device.isHeadless()));
     }
     let ticket = metal
         .budget

@@ -197,6 +197,51 @@ fn run() -> Result<(), String> {
             );
         }
         drop(painter);
+        // Source face policy: authored CCW front, reversed rear; reflected
+        // placement corner swap keeps authored front, as original tp32 does.
+        use ingetrazo_metal::world_policy::{Mode,Policy};
+        use ingetrazo_render::buffer::SourceBackPaint;
+        let style=Policy{mode:Mode::Material,front:[1.,0.,1.,1.],back:[1.,1.,0.,1.]};
+        let policy_packet=|rear:bool,override_back:bool| {
+            let mut p=packet(false);p.vertices.truncate(3);
+            for v in &mut p.vertices {v.position[2]=0.;v.color=[1.,0.,0.,1.];}
+            p.indices=if rear {vec![0,2,1]} else {vec![0,1,2]};
+            p.source_default_back=vec![(0,3)];
+            if override_back {p.source_back_paints.push(SourceBackPaint {first:0,count:3,order:0,color:[0.,1.,0.],opacity:1.});}
+            p
+        };
+        for (name,mode,rear,override_back,reflected,expected) in [
+            ("material-front",Mode::Material,false,false,false,[255,0,0,255]),
+            ("material-default-back",Mode::Material,true,false,false,[255,255,0,255]),
+            ("material-override-back",Mode::Material,true,true,false,[0,255,0,255]),
+            ("hidden-line-front",Mode::HiddenLine,false,false,false,[255,0,255,255]),
+            ("hidden-line-back",Mode::HiddenLine,true,false,false,[255,0,255,255]),
+            ("monochrome-front",Mode::Monochrome,false,false,false,[255,0,255,255]),
+            ("monochrome-back",Mode::Monochrome,true,false,false,[255,255,0,255]),
+            ("reflected-authored-front",Mode::Material,false,false,true,[255,0,0,255]),
+        ] {
+            let mut pose=identity;if reflected {pose[0][0]=-1.;}
+            let f=world.prepare_with_policy(&metal,10+name.bytes().map(u64::from).sum::<u64>(),pose,(64,64),[0.,0.,1.,1.],Policy{mode,..style},||{
+                let mut p=policy_packet(rear,override_back);
+                if reflected {p.indices.swap(1,2);}
+                Ok(p)
+            })?.ok_or("Material target unavailable")?;
+            let pixels=f.submit_diagnostic(&metal)?.readback(std::time::Duration::from_secs(5))?;
+            save(name,&pixels)?;assert_eq!(&pixels[(32*64+32)*4..(32*64+32)*4+4],&expected);
+        }
+        let preserved=world.prepare_with_policy(&metal,90,identity,(64,64),[0.,0.,1.,1.],style,||Ok(policy_packet(false,false)))?.ok_or("Preserved material target unavailable")?;
+        let before_refusal=world.stats;
+        let refused=world.prepare_with_policy(&metal,91,identity,(64,64),[0.,0.,1.,1.],style,||{
+            let mut p=policy_packet(false,false);
+            p.source_back_paints=vec![SourceBackPaint {first:0,count:3,order:0,color:[0.,1.,0.],opacity:1.};200_000];Ok(p)
+        });
+        assert!(matches!(refused,Err(ref e) if e.contains("metadata exceeds8MiB")));
+        assert_eq!(world.stats.geometry_uploads,before_refusal.geometry_uploads);
+        assert_eq!(world.stats.prepared,before_refusal.prepared);
+        let pixels=preserved.submit_diagnostic(&metal)?.readback(std::time::Duration::from_secs(5))?;
+        save("policy-refusal-preserved",&pixels)?;assert_eq!(&pixels[(32*64+32)*4..(32*64+32)*4+4],&[255,0,0,255]);
+        drop(preserved);
+        world.clear_idle();assert_eq!(world.stats.policy_retained_payload_bytes,0);
         drop(world);
         drop(foreign);
         let budget = metal.budget.lock().map_err(|_| "GPU ledger poisoned")?;
@@ -218,7 +263,7 @@ fn run() -> Result<(), String> {
             .collect::<Vec<_>>()
             .join(",");
         let device = metal.info.name.replace('\\', "\\\\").replace('"', "\\\"");
-        std::fs::write(output.join("report.json"),format!("{{\"passed\":true,\"device\":\"{device}\",\"width\":64,\"height\":64,\"pixel_encoding\":\"RGBA8Unorm opaque\",\"frames\":[{names}],\"geometry_uploads_before_warm\":{uploads},\"targets_before_warm\":{targets},\"geometry_uploads_after_warm\":{uploads_after_warm},\"targets_after_warm\":{targets_after_warm},\"ledger_committed_after_drop\":{ledger_committed_after_drop},\"ledger_reserved_after_drop\":{ledger_reserved_after_drop},\"wrong_owner_refused\":true,\"invalid_pose_refused\":true}}\n")).map_err(|e|e.to_string())?;
+        std::fs::write(output.join("report.json"),format!("{{\"passed\":true,\"device\":\"{device}\",\"width\":64,\"height\":64,\"pixel_encoding\":\"RGBA8Unorm opaque\",\"frames\":[{names}],\"geometry_uploads_before_warm\":{uploads},\"targets_before_warm\":{targets},\"geometry_uploads_after_warm\":{uploads_after_warm},\"targets_after_warm\":{targets_after_warm},\"ledger_committed_after_drop\":{ledger_committed_after_drop},\"ledger_reserved_after_drop\":{ledger_reserved_after_drop},\"wrong_owner_refused\":true,\"invalid_pose_refused\":true,\"policy_metadata_refused\":true}}\n")).map_err(|e|e.to_string())?;
         println!("Native Metal world opaque/depth: two draw orders, clear, three warm frames and invalid pose PASS; device={}; uploads={uploads}; targets={targets}",metal.info.name);
         Ok(())
     })

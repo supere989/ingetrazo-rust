@@ -25,7 +25,7 @@ jobs:
           git rev-parse HEAD > metal-world-evidence/revision.txt
           sw_vers > metal-world-evidence/os.txt
           xcrun --show-sdk-path > metal-world-evidence/sdk.txt
-          shasum -a 256 crates/ingetrazo-metal/src/world.rs crates/ingetrazo-metal/src/world_admission.rs crates/ingetrazo-metal/src/shaders/world.metal crates/ingetrazo-metal/src/egui_painter.rs crates/ingetrazo-metal/src/presentation.rs crates/ingetrazo-metal/examples/native_world_depth.rs scripts/check-metal-world-depth.py > metal-world-evidence/source.sha256
+          shasum -a 256 crates/ingetrazo-metal/src/world.rs crates/ingetrazo-metal/src/world_admission.rs crates/ingetrazo-metal/src/world_policy.rs crates/ingetrazo-metal/src/shaders/world.metal crates/ingetrazo-metal/src/egui_painter.rs crates/ingetrazo-metal/src/presentation.rs crates/ingetrazo-metal/examples/native_world_depth.rs scripts/check-metal-world-depth.py > metal-world-evidence/source.sha256
           cargo build --locked -p ingetrazo-metal --example native_world_depth -j2 > metal-world-evidence/build.log 2>&1
           shasum -a 256 target/debug/examples/native_world_depth > metal-world-evidence/binary.sha256
       - name: Execute actual offscreen world and UI sampling under outer deadline

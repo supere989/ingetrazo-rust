@@ -1,0 +1,26 @@
+{
+  "original_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "source_paths": {
+    "authored_front_and_reflection": "viewport.py _instanced_eligible2315 mirrored placements retain authored front through winding/corner policy; shared packet already reorders reflected corners",
+    "default_back": "viewport.py1698..1741 later FRONT-cull LEQUAL pass; _set_back_face_color3323",
+    "opaque_override": "viewport.py1745..1778 and _bucket_back_face5148; later FRONT-cull override wins",
+    "plan_styles": "viewport.py1698 source monochrome tints every back, hidden-line none"
+  },
+  "inventory": "existing9 opaque/depth/owner/UI frames plus9 material/front/back/hidden/mono/reflected/refusal frames; literal18 required, no tolerance change",
+  "native_check": "Apple Rust metadata --lib --example native_world_depth PASS; native SDK/shader/GPU output pending",
+  "checker_controls": "all18 literal cases reject blank; expected new source colors are admitted packet/style bytes, not full Scene/source viewport capture",
+  "admission": "unchanged Intel tracked query refusal; Default/Untracked heap query and feature families only observed on original refusal; no mismatched-descriptor fallback",
+  "unsupported_route_review": {
+    "heap_size_api": "https://developer.apple.com/documentation/metal/resource-creation",
+    "buffer_linear_texture": "https://developer.apple.com/documentation/metal/mtlbuffer/maketexture(descriptor:offset:bytesperrow:)",
+    "finding": "buffer-backed textures only ordinary/packed color formats and conditional renderTarget support; cannot replace native color+depth pass. No supported private-depth upper bound established for zero heap query. No guessed reservation added."
+  },
+  "remaining": [
+    "actual native18 frame acceptance",
+    "authoritative Intel zero heap query cause and supported allocation route",
+    "per-placement native cache consumer",
+    "full material alpha/texture/sections/edge/MSAA/image/shadow/annotation host integration",
+    "positive actualwindow presentation"
+  ],
+  "log_sha256": "83fcf11e98a7c738a7db7a292b258f7f4e3b26f8c73df9c1f98cb85aaad53bd2"
+}
