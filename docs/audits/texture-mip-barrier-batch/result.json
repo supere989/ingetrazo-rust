@@ -1,0 +1,30 @@
+{
+  "verdict": "PASS",
+  "raw_levels_equal": 38,
+  "world_frames_exact": 2,
+  "final_single_levels": 38,
+  "barrier_commands": [
+    72,
+    38
+  ],
+  "odd_mip_source_residuals": [
+    [
+      1020,
+      9
+    ],
+    [
+      28094,
+      10
+    ],
+    [
+      5596,
+      72
+    ],
+    [
+      4876,
+      58
+    ]
+  ],
+  "negative_controls": 2,
+  "scope": "barrier reduction; odd mip source parity remains FAIL; no timing claim"
+}
