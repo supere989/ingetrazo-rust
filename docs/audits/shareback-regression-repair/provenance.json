@@ -1,0 +1,36 @@
+{
+  "base": "bf85b4c41c6f6fcc6128a53db3db36318936ec12",
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "files": {
+    "crates/ingetrazo-core/src/change_axes.rs": "d15928a4b0d03774a6e00045edb715af85499142f31bffe614515cd21e8abe6f",
+    "crates/ingetrazo-core/src/containers.rs": "837b763ebec0511966c2220f2508479edc5963d8b2015b6812893930e9750af0",
+    "crates/ingetrazo-gui/src/component_edit.rs": "93dca34c68dff9ae49e7ea33b48a86045c603e6d06d668a754eacb68c98c42a2",
+    "scripts/check-fillet-nested-history.py": "106445815402b330548fbb18a70856d92e031a2ff9d56fcf894b390022a1fa67",
+    "scripts/check-change-axes.py": "47e5083dd3f2f150cc7dc98995b6e6b4b80948d565c129932868266cbac100da"
+  },
+  "binaries": {
+    "fillet_scoped": "97ea07ff2dcbd64a22078c2083224b78a8e6d49a1ffaa569409de8deeb674de5",
+    "change_axes_fixture": "dc85d430a2696e6fb4a6cc793af14cb2e39a88abff4a5c6468726252ea271c0f"
+  },
+  "records": {
+    "bim-before.log": "7538d6da5a7401079d7a8f9f4b6ef179e028241409d1e1ce6e380827647e331f",
+    "bim-after.log": "ae53be7b26b4baa8771151f7186cafbec4b7def0643eb01340a315c909feeaca",
+    "dim-after.log": "261a4813a0646f81f369f0b8bd41f6d614735ffa945dd369b88f136ef0fdc8bc",
+    "refusal-after.log": "052d7e04d57a27088a5d979b96b15a9e15706d84054b29fb3edb20773ff4da0c",
+    "core-after.log": "d9233cf6acb763492cf322186b9793158601160e521d2f2fca8dad3aa8cb7380",
+    "anchors-after.log": "ec7044b89cdfc4c36a07a66eefd35984a2e37ffadafbd65a0304d85794f943c9",
+    "named-build.log": "ae6ab0818092f1570de0775190dd358375a0860aba5f57c4b605abc5f245a0dd",
+    "fillet-run.log": "39df69fc0443eb5881f2caea0b5d6be9b1d8b69c283bcba083ffc2a5aba7fe61",
+    "fillet-check.log": "d1f4832cf973b36bad57bbe08153e7d0438d8165dc62fafb43e184008cede64b",
+    "axes-check.log": "f25be830fb2b46f3df276fa41e153bdcc89984af6ddd79ded80dd1066e433b97",
+    "fillet-native.json": "6a330c26a4ddc5c254424de5084cbb7d606a9f26c2178375a4642a13472873a7",
+    "axes-native.json": "9c6a164fd2af69aa5ff16d15c6a650973719dd59a26dece5ba9a470759932211"
+  },
+  "archive_sha256": "92cddf1fb519ae4554c21292f8010412ec6cfb8b337ad59801acac044fa2575a",
+  "focused_tests": 5,
+  "source_app_states": {
+    "fillet": 28,
+    "axes": 33
+  },
+  "original_inputs": "Unchanged canonical records.zip in fillet-nested-history and change-axes; no recapture"
+}

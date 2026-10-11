@@ -69,21 +69,41 @@ fn instance(g: &Group) -> bool {
 }
 
 pub(crate) fn transformed(src: &crate::mesh::Mesh, m: DMat4) -> Result<crate::mesh::Mesh, String> {
+    transformed_policy(src, m, true, false)
+}
+pub(crate) fn transformed_policy(
+    src: &crate::mesh::Mesh,
+    m: DMat4,
+    qt_precision: bool,
+    preserve_ids: bool,
+) -> Result<crate::mesh::Mesh, String> {
     use crate::mesh::{Mesh, MeshVertex};
-    if src
-        .edges
-        .iter()
-        .any(|e| e.v0 >= src.vertices.len() || e.v1 >= src.vertices.len())
-        || src.faces.iter().any(|f| {
-            f.vertices
-                .iter()
-                .chain(f.holes.iter().flatten())
-                .any(|&i| i >= src.vertices.len())
-        })
-    {
+    if src.edges.iter().any(|e| {
+        e.v0 >= src.vertices.len()
+            || e.v1 >= src.vertices.len()
+            || e.faces.iter().any(|&id| id >= src.faces.len())
+    }) || src.faces.iter().any(|f| {
+        f.vertices
+            .iter()
+            .chain(f.holes.iter().flatten())
+            .any(|&i| i >= src.vertices.len())
+    }) {
         return Err("Axes geometry has invalid vertex references".into());
     }
-    let inv = inverse(m)?;
+    if src.vertices.iter().any(|v| !v.position.is_finite()) {
+        return Err("Geometry contains nonfinite vertices".into());
+    }
+    let inv = if qt_precision {
+        inverse(m)?
+    } else {
+        if !m.is_finite() || m.determinant().abs() < 1e-12 {
+            return Err("Geometry transform invalid".into());
+        }
+        m.inverse()
+    };
+    if !inv.is_finite() {
+        return Err("Geometry inverse overflow".into());
+    }
     let bulk = src
         .edges
         .len()
@@ -91,7 +111,9 @@ pub(crate) fn transformed(src: &crate::mesh::Mesh, m: DMat4) -> Result<crate::me
         .saturating_add(src.faces.len().saturating_mul(4))
         >= 1024;
     let mapped = |p: DVec3| {
-        if bulk {
+        if !qt_precision {
+            m.transform_point3(p)
+        } else if bulk {
             m.transform_point3(p).as_vec3().as_dvec3()
         } else {
             map(m, p)
@@ -113,6 +135,7 @@ pub(crate) fn transformed(src: &crate::mesh::Mesh, m: DMat4) -> Result<crate::me
         mesh: &mut Mesh,
         registry: &mut std::collections::HashMap<[u64; 3], usize>,
         p: DVec3,
+        uid: Option<Uuid>,
     ) -> Result<usize, String> {
         if !p.is_finite() {
             return Err("Axes geometry overflow".into());
@@ -147,7 +170,11 @@ pub(crate) fn transformed(src: &crate::mesh::Mesh, m: DMat4) -> Result<crate::me
             }
         }
         let i = mesh.vertices.len();
-        mesh.vertices.push(MeshVertex::new(p));
+        let mut v = MeshVertex::new(p);
+        if let Some(uid) = uid {
+            v.uid = uid;
+        }
+        mesh.vertices.push(v);
         registry.insert(k, i);
         Ok(i)
     }
@@ -159,11 +186,13 @@ pub(crate) fn transformed(src: &crate::mesh::Mesh, m: DMat4) -> Result<crate::me
                 &mut mesh,
                 &mut registry,
                 mapped(src.vertices[e.v0].position),
+                preserve_ids.then_some(src.vertices[e.v0].uid),
             )?;
             let b = vertex(
                 &mut mesh,
                 &mut registry,
                 mapped(src.vertices[e.v1].position),
+                preserve_ids.then_some(src.vertices[e.v1].uid),
             )?;
             mesh.add_edge(a, b);
         }
@@ -172,19 +201,37 @@ pub(crate) fn transformed(src: &crate::mesh::Mesh, m: DMat4) -> Result<crate::me
         let ring = face
             .vertices
             .iter()
-            .map(|&i| vertex(&mut mesh, &mut registry, mapped(src.vertices[i].position)))
+            .map(|&i| {
+                vertex(
+                    &mut mesh,
+                    &mut registry,
+                    mapped(src.vertices[i].position),
+                    preserve_ids.then_some(src.vertices[i].uid),
+                )
+            })
             .collect::<Result<Vec<_>, _>>()?;
         let holes = face
             .holes
             .iter()
             .map(|h| {
                 h.iter()
-                    .map(|&i| vertex(&mut mesh, &mut registry, mapped(src.vertices[i].position)))
+                    .map(|&i| {
+                        vertex(
+                            &mut mesh,
+                            &mut registry,
+                            mapped(src.vertices[i].position),
+                            preserve_ids.then_some(src.vertices[i].uid),
+                        )
+                    })
                     .collect::<Result<Vec<_>, _>>()
             })
             .collect::<Result<Vec<_>, _>>()?;
         if let Some(id) = mesh.add_face(ring, holes) {
             mesh.faces[id].layer = face.layer.clone();
+            if preserve_ids {
+                mesh.faces[id].history_id = face.history_id;
+                mesh.faces[id].interior = face.interior;
+            }
             let attrs = &mut mesh.faces[id].attrs;
             *attrs = face.attrs.clone();
             if let Some(texture) = attrs.get_mut("texture").and_then(|v| v.as_object_mut()) {
@@ -216,22 +263,48 @@ pub(crate) fn transformed(src: &crate::mesh::Mesh, m: DMat4) -> Result<crate::me
                     }
                 }
             }
+        } else if preserve_ids {
+            return Err("Native face collapsed during shareback".into());
         }
     }
+    let mut edge_sources = std::collections::HashMap::<usize, &crate::mesh::MeshEdge>::new();
     for e in &src.edges {
         let a = vertex(
             &mut mesh,
             &mut registry,
             mapped(src.vertices[e.v0].position),
+            preserve_ids.then_some(src.vertices[e.v0].uid),
         )?;
         let b = vertex(
             &mut mesh,
             &mut registry,
             mapped(src.vertices[e.v1].position),
+            preserve_ids.then_some(src.vertices[e.v1].uid),
         )?;
         if let Some(id) = mesh.add_edge(a, b) {
-            mesh.edges[id].soft = e.soft;
-            mesh.edges[id].curve_id = e.curve_id;
+            if preserve_ids {
+                if let Some(old) = edge_sources.insert(id, e) {
+                    if old.attrs != e.attrs
+                        || old.soft != e.soft
+                        || old.curve_id != e.curve_id
+                        || old.layer != e.layer
+                        || old.hidden != e.hidden
+                    {
+                        return Err("Reconstructed edges have incompatible native metadata".into());
+                    }
+                } else {
+                    let faces = std::mem::take(&mut mesh.edges[id].faces);
+                    mesh.edges[id] = e.clone();
+                    mesh.edges[id].v0 = a;
+                    mesh.edges[id].v1 = b;
+                    mesh.edges[id].faces = faces;
+                }
+            } else {
+                mesh.edges[id].soft = e.soft;
+                mesh.edges[id].curve_id = e.curve_id;
+            }
+        } else if preserve_ids {
+            return Err("Native edge collapsed during shareback".into());
         }
     }
     mesh.rebuild_spatial_index();
