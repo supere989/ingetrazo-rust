@@ -43,7 +43,7 @@ impl Packet {
    packet.suppressed_edges.sort_unstable();packet.suppressed_edges.dedup();
    let bytes=affected.iter().try_fold(0usize,|n,&id|n.checked_add(face_bytes(&scene.mesh,id).ok()?)).ok_or("Sweep incident CPU admission overflow")?;admit(bytes)?;
    for id in affected{copy_face(&scene.mesh,id,&moving,sweep.offset,&mut packet.mesh,true)?;packet.suppressed.push(id);}
-   for &id in &packet.suppressed_edges{let e=&scene.mesh.edges[id];if e.soft||e.hidden{continue;}for v in [e.v0,e.v1]{let p=scene.mesh.vertices[v].position;packet.lines.push(if moving.contains(&v){moved(p,sweep.offset)?}else{p}.as_vec3().to_array());}}
+   for &id in &packet.suppressed_edges{let e=&scene.mesh.edges[id];if e.soft||e.hidden||!scene.is_layer_visible(e.layer.as_deref().or_else(||e.attrs.get("layer").and_then(|v|v.as_str()))){continue;}for v in [e.v0,e.v1]{let p=scene.mesh.vertices[v].position;packet.lines.push(if moving.contains(&v){moved(p,sweep.offset)?}else{p}.as_vec3().to_array());}}
   }else{
    copy_face(&scene.mesh,sweep.face,&moving,sweep.offset,&mut packet.mesh,false)?;
    let mut paint=face.attrs.iter().filter(|(k,_)|matches!(k.as_str(),"color"|"mat"|"texture"|"opacity")).map(|(k,v)|(k.clone(),v.clone())).collect::<std::collections::HashMap<_,_>>();
@@ -67,6 +67,14 @@ impl Packet {
  fn fixture()->(Scene,Input){let mut s=Scene::new();let v=[DVec3::ZERO,DVec3::X,DVec3::new(1.,1.,0.),DVec3::Y].map(|p|s.mesh.add_vertex(p));let f=s.mesh.add_face(v.to_vec(),vec![]).unwrap();let i=Input{face:f,face_identity:s.mesh.faces[f].history_id,mesh_revision:s.version,anchor:DVec3::new(0.5,0.5,0.),normal:DVec3::Z,offset:DVec3::new(0.,0.,-0.25),attached:true,prism_cap:false,keep_base:false};(s,i)}
  #[test]fn immutable_sweep_cap_walls_and_identity_admission(){let(s,i)=fixture();let before=serde_json::to_vec(&s.mesh).unwrap();let p=Packet::build(&s,i,DVec3::new(0.,0.,5.)).unwrap();assert_eq!(p.mesh.faces.len(),5);assert_eq!(p.lines.len(),16);assert_eq!(p.suppressed,vec![0]);assert_eq!(before,serde_json::to_vec(&s.mesh).unwrap());let mut bad=i;bad.face_identity+=1;assert!(Packet::build(&s,bad,DVec3::Z).is_err());bad=i;bad.mesh_revision+=1;assert!(Packet::build(&s,bad,DVec3::Z).is_err());bad=i;bad.offset=DVec3::splat(f64::MAX);assert!(Packet::build(&s,bad,DVec3::Z).is_err());assert!(admit(MAX_PACKET_CPU_BYTES+1).is_err());}
  #[test]fn camera_membership_and_copy_controls(){let(s,i)=fixture();let front=i.key(1,DVec3::Z);let back=i.key(1,-DVec3::Z);assert_ne!(front,back);assert_eq!(front,i.key(1,DVec3::new(5.,5.,5.)));assert_ne!(front,i.key(2,DVec3::Z));let mut copy=i;copy.keep_base=true;assert!(Packet::build(&s,copy,DVec3::Z).unwrap().suppressed.is_empty());copy.offset=DVec3::ZERO;let p=Packet::build(&s,copy,DVec3::Z).unwrap();assert!(p.mesh.faces.is_empty()&&p.lines.is_empty());}
+ #[test]fn prism_lines_keep_ordinary_edge_layer_visibility(){
+  let(mut scene,mut input)=fixture();input.prism_cap=true;
+  let visible=Packet::build(&scene,input,DVec3::Z).unwrap();assert!(!visible.lines.is_empty());
+  let mut layer=ingetrazo_core::layers::Layer::new("Hidden");layer.visible=false;scene.layers.push(layer);
+  for edge in &mut scene.mesh.edges {edge.attrs.insert("layer".into(),serde_json::json!("Hidden"));}
+  assert!(Packet::build(&scene,input,DVec3::Z).unwrap().lines.is_empty());
+  input.prism_cap=false;assert!(!Packet::build(&scene,input,DVec3::Z).unwrap().lines.is_empty(),"Overlay rubber-band ignores ordinary edge layers");
+ }
  #[test]fn prism_partition_flags_and_repeated_paint_admission(){let(mut scene,mut input)=fixture();scene.mesh.faces[0].interior=true;input.prism_cap=true;let p=Packet::build(&scene,input,DVec3::Z).unwrap();assert!(p.mesh.faces[0].interior);input.prism_cap=false;let p=Packet::build(&scene,input,DVec3::Z).unwrap();assert!(!p.mesh.faces[0].interior);scene.mesh.faces[0].attrs.insert("texture".into(),serde_json::json!({"path":"x".repeat(9*1024*1024)}));assert!(Packet::build(&scene,input,DVec3::Z).err().unwrap().contains("budget"));}
 
 }
