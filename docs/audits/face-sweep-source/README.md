@@ -1,0 +1,3 @@
+Actual pinned original Viewport and PushPullTool rendering on NVIDIA RTX 5090, six fixtures × base/preview/offset/cancel. The four source recipes, textured front/authored-back contrast and ordinary prism are retained in records.zip with original IGZs, PNGs, literal cameras/styles/normal/anchor, in-pass sample counts and transport. All 24 frames used four samples. The owned input-transparent seat was stopped after terminal capture.
+
+This is the shared source oracle, not native consumer acceptance. The actual camera suppression values are recorded rather than inferred from the earlier stub-camera geometry protocol. Native whole-image and application controls remain required.

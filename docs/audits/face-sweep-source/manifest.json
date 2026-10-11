@@ -1,0 +1,180 @@
+{
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "archive_sha256": "806bd8df238627913ceae801a11de66db5e18f2bf9d7a3f11255cbb3fc0686e3",
+  "entries": [
+    {
+      "path": "back-recess-base.png",
+      "bytes": 3224,
+      "sha256": "39ee9001669a104a64a4fcf65404181837388a1ff2364a47e314c38c6a3c2918"
+    },
+    {
+      "path": "back-recess-cancel.png",
+      "bytes": 3224,
+      "sha256": "39ee9001669a104a64a4fcf65404181837388a1ff2364a47e314c38c6a3c2918"
+    },
+    {
+      "path": "back-recess-offset.png",
+      "bytes": 3363,
+      "sha256": "a1b117e5d7251f99a600a9542f79e79e1a3ea0e050aea6c6b1c14476df517467"
+    },
+    {
+      "path": "back-recess-preview.png",
+      "bytes": 3381,
+      "sha256": "9b6789c6ce6eda87726b5b91225911f3abfbb430b4776a41075d2c76fa521d31"
+    },
+    {
+      "path": "back-recess.igz",
+      "bytes": 3417,
+      "sha256": "79123ea660b6def5750f919a38b2719ea490ca6b389d4ca625fc3318cea6e22e"
+    },
+    {
+      "path": "front-recess-base.png",
+      "bytes": 3147,
+      "sha256": "71993ae7530639a4bc012391507b21f2da8be377ae26a62e35c066d03c2f0d31"
+    },
+    {
+      "path": "front-recess-cancel.png",
+      "bytes": 3147,
+      "sha256": "71993ae7530639a4bc012391507b21f2da8be377ae26a62e35c066d03c2f0d31"
+    },
+    {
+      "path": "front-recess-offset.png",
+      "bytes": 3363,
+      "sha256": "ad74aa8dbf8dd7cdf99218a6e51ec2098f3c8dd7c6b4b40a3ef5c90ba443580d"
+    },
+    {
+      "path": "front-recess-preview.png",
+      "bytes": 3376,
+      "sha256": "d707005c5980dd82f7fe31f4895e13846adf6a0a947291f4ee5060ae8ca760c6"
+    },
+    {
+      "path": "front-recess.igz",
+      "bytes": 3417,
+      "sha256": "79123ea660b6def5750f919a38b2719ea490ca6b389d4ca625fc3318cea6e22e"
+    },
+    {
+      "path": "front-texture-back-override-base.png",
+      "bytes": 10293,
+      "sha256": "35cbc05f3e27874d6eb73f04576f740d269b86235e9f3cdee8056df8593db5cf"
+    },
+    {
+      "path": "front-texture-back-override-cancel.png",
+      "bytes": 10293,
+      "sha256": "35cbc05f3e27874d6eb73f04576f740d269b86235e9f3cdee8056df8593db5cf"
+    },
+    {
+      "path": "front-texture-back-override-offset.png",
+      "bytes": 24547,
+      "sha256": "2607cc86430981e84c80cf8568d17f8de45adb8c632db5d997374453e2744a14"
+    },
+    {
+      "path": "front-texture-back-override-preview.png",
+      "bytes": 20222,
+      "sha256": "5263daf55959ce8115fc29cbf07c8eff8828003da90ebd924f7709cae7a05fbd"
+    },
+    {
+      "path": "front-texture-back-override.igz",
+      "bytes": 932,
+      "sha256": "b47fa0469f027aab5c619996f53c85ca8d822576e10b5806f9ba8ba161aa6cd5"
+    },
+    {
+      "path": "lone-sheet-base.png",
+      "bytes": 3053,
+      "sha256": "6276bec53207e0b408306ed601fbc8869bac95b21e8d23f124b28c1d9028b2b3"
+    },
+    {
+      "path": "lone-sheet-cancel.png",
+      "bytes": 3053,
+      "sha256": "6276bec53207e0b408306ed601fbc8869bac95b21e8d23f124b28c1d9028b2b3"
+    },
+    {
+      "path": "lone-sheet-offset.png",
+      "bytes": 3146,
+      "sha256": "4b646e7456db9dc049cdb0a5162f92d120cdb0fca45127a15341d6b59aaba861"
+    },
+    {
+      "path": "lone-sheet-preview.png",
+      "bytes": 3117,
+      "sha256": "42e75de5159c72f6903a28d9184658b1553941c6f98aea368d1c37d96bf8d3fe"
+    },
+    {
+      "path": "lone-sheet.igz",
+      "bytes": 2052,
+      "sha256": "938312ad1393bdfe5a650804e0431b81111b63ae990ae505409345ede781be9c"
+    },
+    {
+      "path": "ordinary-prism-base.png",
+      "bytes": 10951,
+      "sha256": "b4be5295bc02c207af33b25133b5efbbb43eed8a919afdca3a0e614b8442ff46"
+    },
+    {
+      "path": "ordinary-prism-cancel.png",
+      "bytes": 10951,
+      "sha256": "b4be5295bc02c207af33b25133b5efbbb43eed8a919afdca3a0e614b8442ff46"
+    },
+    {
+      "path": "ordinary-prism-offset.png",
+      "bytes": 10562,
+      "sha256": "98f8f751c523d118478328eaecd7fafedbe4347a3f51863e44a4b8efc3aa977b"
+    },
+    {
+      "path": "ordinary-prism-preview.png",
+      "bytes": 10858,
+      "sha256": "3cd199d48ed8e2971046675e98bd96331909edb96b89346d01e480f846ed537f"
+    },
+    {
+      "path": "ordinary-prism.igz",
+      "bytes": 6238,
+      "sha256": "dd666894b1c4399dc0036e53d75e08bfad94fd4d5ae64e86eda76a7365a87769"
+    },
+    {
+      "path": "original.json",
+      "bytes": 28035,
+      "sha256": "8213b5f56d056586aa7bc22461775df19dbcd702c3f5a61c9c0168f364769f81"
+    },
+    {
+      "path": "original.log",
+      "bytes": 72,
+      "sha256": "e7864e01ce1d4df4fc9776e0a26a41fe33e1286a8cd20548869ba3c55ef261fe"
+    },
+    {
+      "path": "preview-checker.png",
+      "bytes": 117,
+      "sha256": "2601893f2d01a79c99cbb9920536d9c0552ec975f6cc61bdc5b5e34884eb929f"
+    },
+    {
+      "path": "reversed-door-base.png",
+      "bytes": 3216,
+      "sha256": "e5c68211d956aca71a9722bf9ec1da76814c0673b437d018a23a8d2d0b3a15c6"
+    },
+    {
+      "path": "reversed-door-cancel.png",
+      "bytes": 3216,
+      "sha256": "e5c68211d956aca71a9722bf9ec1da76814c0673b437d018a23a8d2d0b3a15c6"
+    },
+    {
+      "path": "reversed-door-offset.png",
+      "bytes": 3380,
+      "sha256": "8d5cd95952ee9447230808fa1a319aba6f88cd430f19109da7a29bbf40a7d8bf"
+    },
+    {
+      "path": "reversed-door-preview.png",
+      "bytes": 3415,
+      "sha256": "51a57112bd920c8f90adec0f49a429dd7c1456e3d2d27b67b48a394997960e38"
+    },
+    {
+      "path": "reversed-door.igz",
+      "bytes": 4446,
+      "sha256": "359115643cdc4481b63607be1cdef5f0b34604c9b32e3c55b10966e551828a86"
+    },
+    {
+      "path": "transport.json",
+      "bytes": 2514,
+      "sha256": "4768445dc58bee85fe125d8323eaa7d4b81729d1954e9f826e547c2fb1a822be"
+    }
+  ],
+  "helper_sha256": "da95e87762c50ae63d0cdddc56b20a254382eb8797d36f0ce7d4fffde2b04b68",
+  "transport_sha256": "96db839fe8f9fba80d6835162dd401bc4ab6073b393464a32d7e8a3e2c43a00f",
+  "recipe_sha256": "402edd6f64504cb55ce7c2e75ac861277fe1f8380518a6213ebf9e34407d3f26",
+  "scope": "Actual Qt native NVIDIA preview rendering, six cases/four phases, MSAA4 observed at preview pass. Native Vulkan/Metal and real app acceptance pending."
+}
