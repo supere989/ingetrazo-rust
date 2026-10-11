@@ -44,6 +44,7 @@ pub mod world_placement;
 pub mod world_scene;
 
 pub mod world_surface;
+mod world_face_guard;
 
 #[cfg(target_os="macos")]
 mod world_texture;

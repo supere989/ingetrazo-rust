@@ -71,7 +71,7 @@ struct Target {
 }
 enum Collection {Opaque(MeshRenderBuffer),Surfaces(ingetrazo_render::pipeline::SceneRenderData)}
 struct SampledMesh {vertices:Buffer,asset:Arc<super::world_texture::Asset>,draws:Vec<ingetrazo_render::native_textures::Draw>}
-struct Materials {instanced:bool,colored_vertices:Option<Buffer>,colored_indices:Option<Buffer>,runs:Vec<super::world_surface::Run>,textures:Vec<SampledMesh>,opaque_runs:Vec<(usize,usize,bool)>,retained_payload_bytes:usize}
+struct Materials {instanced:bool,consolidated:bool,colored_vertices:Option<Buffer>,colored_indices:Option<Buffer>,runs:Vec<super::world_surface::Run>,textures:Vec<SampledMesh>,opaque_runs:Vec<(usize,usize,bool)>,retained_payload_bytes:usize}
 struct Mesh {
     vertices: Option<Buffer>,
     indices: Option<Buffer>,
@@ -89,7 +89,7 @@ struct PlacementMeshes {
 }
 #[derive(Clone,Copy)]enum MaterialKind {Legacy,Opaque{first:usize,count:usize,cull:bool},DefaultBack,Color(usize),Texture{bucket:usize,draw:usize}}
 #[derive(Clone,Copy)]struct MaterialDraw{opacity:f32,prototype:usize,packed:usize,instances:usize,reflected:bool,kind:MaterialKind}
-struct MaterialDraws{operations:Vec<MaterialDraw>,retained_payload_bytes:usize}
+struct MaterialDraws{guard:super::world_face_guard::FaceGuard<PrototypeKey>,operations:Vec<MaterialDraw>,retained_payload_bytes:usize}
 struct MaterialPipeline {colored_alpha:Retained<ProtocolObject<dyn MTLRenderPipelineState>>,textured:Retained<ProtocolObject<dyn MTLRenderPipelineState>>,textured_alpha:Retained<ProtocolObject<dyn MTLRenderPipelineState>>,depth:Retained<ProtocolObject<dyn MTLDepthStencilState>>}
 struct Pipeline {
     lines: Retained<ProtocolObject<dyn MTLRenderPipelineState>>,
@@ -771,6 +771,8 @@ impl Prepared {
         for op in &draws.operations {
             let overlay=self.overlay.is_some_and(|key|placements.packet.prototypes[op.prototype]==key);
             if overlay!=overlay_pass {continue;}
+            // Original fvcol draw is inside the global _faces_count>0 block.
+            if !overlay && matches!(op.kind,MaterialKind::Opaque{cull:true,..}) && !draws.guard.open(self.overlay) {continue;}
             let mesh=placements.meshes[op.prototype].as_ref().ok_or("Metal admitted material prototype unavailable")?;
             encoder.setFrontFacingWinding(if op.reflected{MTLWinding::Clockwise}else{MTLWinding::CounterClockwise});
             let depth=if depth_enabled{&self.pipeline.depth}else{&self.pipeline.depth_disabled};
@@ -1003,16 +1005,17 @@ fn material_draws(placements:&PlacementMeshes,order:&super::world_placement::Ord
     let mut count=0usize;for &prototype in &placements.packet.bindings{if let Some(mesh)=&placements.meshes[prototype as usize]{let n=mesh.materials.as_ref().map_or(1,|m|m.opaque_runs.len()+1+m.runs.len()+m.textures.iter().map(|t|t.draws.len()).sum::<usize>());count=count.checked_add(n).ok_or("Metal material operation count overflow")?;}}
     let record_size=std::mem::size_of::<((u8,i32,bool,usize,usize),MaterialDraw)>();let bound=count.checked_mul(record_size+std::mem::size_of::<MaterialDraw>()+256).and_then(|n|order.indices.len().checked_mul(8).and_then(|m|n.checked_add(m))).filter(|n|*n<=CAP).ok_or("Metal material order admission exceeds8MiB")?;let _=bound;
     let mut reverse=Vec::new();reverse.try_reserve_exact(order.indices.len()).map_err(|_|"Metal material reverse order allocation refused")?;reverse.resize(order.indices.len(),0);for(packed,&original)in order.indices.iter().enumerate(){reverse[original]=packed;}
+    let mut guard=super::world_face_guard::FaceGuard::new();
     let mut records=Vec::new();records.try_reserve_exact(count).map_err(|_|"Metal material order allocation refused")?;
     let mut buckets=std::collections::HashMap::<(super::world_texture::Identity,u32,i32,bool,bool,u8),usize>::new();buckets.try_reserve(count).map_err(|_|"Metal sampled order bucket allocation refused")?;
-    for(original,&prototype)in placements.packet.bindings.iter().enumerate(){let Some(mesh)=&placements.meshes[prototype as usize]else{continue};let Some(material)=&mesh.materials else{continue};if material.instanced{continue;}let base=MaterialDraw{opacity:1.,prototype:prototype as usize,packed:reverse[original],instances:1,reflected:poses[original].reflected,kind:MaterialKind::DefaultBack};
+    for(original,&prototype)in placements.packet.bindings.iter().enumerate(){let Some(mesh)=&placements.meshes[prototype as usize]else{continue};let Some(material)=&mesh.materials else{continue};if material.instanced{continue;}if material.consolidated{guard.add(placements.packet.prototypes[prototype as usize]);}let base=MaterialDraw{opacity:1.,prototype:prototype as usize,packed:reverse[original],instances:1,reflected:poses[original].reflected,kind:MaterialKind::DefaultBack};
         for &(first,count,cull)in &material.opaque_runs{records.push(((0,0,false,original,first),MaterialDraw{kind:MaterialKind::Opaque{first,count,cull},..base}));}
         if !mesh.plan.default_back.is_empty(){records.push(((2,0,false,original,0),base));}
         for(index,run)in material.runs.iter().enumerate(){let phase=match run.phase{super::world_surface::Phase::OpaqueBack=>4,super::world_surface::Phase::DefaultBack=>2,super::world_surface::Phase::TransparentFront=>6,super::world_surface::Phase::TransparentBack=>7};records.push(((phase,(run.opacity*1000.).round()as i32,run.front_only,original,index),MaterialDraw{kind:MaterialKind::Color(index),..base}));}
         for(bucket,texture)in material.textures.iter().enumerate(){for(draw,d)in texture.draws.iter().enumerate(){let source=&d.source;let opaque=source.opacity>=0.999;let phase=match(opaque,source.back_side){(true,false)=>1,(true,true)=>5,(false,false)=>8,(false,true)=>9};let alpha=if opaque{1000}else{(format!("{:.3}",source.opacity).parse::<f64>().map_err(|_|"Metal texture opacity rounding refused")?*1000.).round()as i32};let key=(texture.asset.id,source.shade.to_bits(),alpha,source.front_cull,source.back_side,phase);let next=buckets.len();let first=*buckets.entry(key).or_insert(next);records.push(((phase,alpha,source.front_cull,first,original),MaterialDraw{opacity:alpha as f32/1000.,kind:MaterialKind::Texture{bucket,draw},..base}));}}
     }
     for (index,run)in order.runs.iter().enumerate(){let Some(mesh)=&placements.meshes[run.prototype as usize]else{continue};if mesh.materials.as_ref().is_none_or(|m|m.instanced){records.push(((3,0,false,index,0),MaterialDraw{opacity:1.,prototype:run.prototype as usize,packed:run.first,instances:run.count,reflected:run.reflected,kind:MaterialKind::Legacy}));}}
-    records.sort_unstable_by_key(|r|r.0);let mut operations=Vec::new();operations.try_reserve_exact(records.len()).map_err(|_|"Metal retained material operations allocation refused")?;operations.extend(records.into_iter().map(|r|r.1));let retained_payload_bytes=operations.capacity().checked_mul(std::mem::size_of::<MaterialDraw>()).and_then(|n|n.checked_add(std::mem::size_of::<MaterialDraws>())).ok_or("Metal material operation capacity overflow")?;if retained_payload_bytes>CAP{return Err("Metal retained material operations exceeds8MiB".into());}Ok(MaterialDraws{operations,retained_payload_bytes})
+    records.sort_unstable_by_key(|r|r.0);let mut operations=Vec::new();operations.try_reserve_exact(records.len()).map_err(|_|"Metal retained material operations allocation refused")?;operations.extend(records.into_iter().map(|r|r.1));let retained_payload_bytes=operations.capacity().checked_mul(std::mem::size_of::<MaterialDraw>()).and_then(|n|n.checked_add(std::mem::size_of::<MaterialDraws>())).ok_or("Metal material operation capacity overflow")?;if retained_payload_bytes>CAP{return Err("Metal retained material operations exceeds8MiB".into());}Ok(MaterialDraws{guard,operations,retained_payload_bytes})
 }
 
 fn build_material_mesh<'a,G>(metal:&NativeMetal,collection:Collection,resolve:&mut G,published:&[Arc<super::world_texture::Asset>],candidates:&mut Vec<Arc<super::world_texture::Asset>>)->Result<Option<Arc<Mesh>>,String>
@@ -1036,8 +1039,9 @@ where G:FnMut(&str)->Result<std::borrow::Cow<'a,[u8]>,String>{
             }
             let retained_payload_bytes=std::mem::size_of::<Materials>()+packet.runs.capacity()*std::mem::size_of::<super::world_surface::Run>()+opaque_runs.capacity()*std::mem::size_of::<(usize,usize,bool)>()+textures.capacity()*std::mem::size_of::<SampledMesh>()+textures.iter().map(|t|t.draws.capacity()*std::mem::size_of::<ingetrazo_render::native_textures::Draw>()).sum::<usize>();
             if retained_payload_bytes>8*1024*1024{return Err("Metal retained material runs exceed8MiB".into());}
+            let consolidated=opaque.source_consolidated_opaque_count>0;
             let instanced=opaque.source_consolidated_opaque_count==0&&packet.runs.is_empty()&&textures.is_empty();
-            (opaque,Some(Materials{instanced,colored_vertices,colored_indices,runs:packet.runs,textures,opaque_runs,retained_payload_bytes}))
+            (opaque,Some(Materials{instanced,consolidated,colored_vertices,colored_indices,runs:packet.runs,textures,opaque_runs,retained_payload_bytes}))
         }
     };
     let plan=super::world_admission::opaque(&data)?;
@@ -1223,7 +1227,7 @@ impl Prepared {
         for op in &draws.operations {
             let mesh=placements.meshes[op.prototype].as_ref().ok_or("Diagnostic mesh absent")?;
             let row=match op.kind {
-                MaterialKind::Opaque{first,count,cull}=>serde_json::json!({"kind":"opaque","first":first,"count":count,"cull":if cull{"back"}else{"none"},"depth_write":true,"bias":[1,1]}),
+                MaterialKind::Opaque{first,count,cull}=>serde_json::json!({"kind":"opaque","first":first,"count":count,"cull":if cull{"back"}else{"none"},"depth_write":true,"bias":[1,1],"submitted":!cull||self.overlay==Some(placements.packet.prototypes[op.prototype])||draws.guard.open(self.overlay)}),
                 MaterialKind::Color(index)=>{let material=mesh.materials.as_ref().ok_or("Diagnostic materials absent")?;let run=&material.runs[index];let first_color=diagnostic_first_color(material.colored_vertices.as_ref().ok_or("Diagnostic color buffer absent")?,material.colored_indices.as_ref().ok_or("Diagnostic index buffer absent")?,run.first)?;let alpha=matches!(run.phase,super::world_surface::Phase::TransparentFront|super::world_surface::Phase::TransparentBack);serde_json::json!({"kind":"color","phase":format!("{:?}",run.phase),"first_color":first_color,"first":run.first,"count":run.count,"opacity":run.opacity,"cull":if run.cull_front{"front"}else if run.front_only{"back"}else{"none"},"depth_write":!alpha,"bias":if alpha||run.phase==super::world_surface::Phase::DefaultBack{[1,1]}else{[0,0]}})},
                 MaterialKind::DefaultBack=>serde_json::json!({"kind":"default_back","cull":"front","depth_write":true,"bias":[1,1]}),
                 MaterialKind::Legacy=>serde_json::json!({"kind":"legacy"}),
