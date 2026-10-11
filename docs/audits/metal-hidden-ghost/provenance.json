@@ -1,0 +1,71 @@
+{
+  "base": "e2b0188a",
+  "shared_abi_original_commit": "cdfcd3cf",
+  "shared_abi_local_commit": "7c60087f",
+  "original_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "original_archive_sha256": "ebc1415e255246e0428c1568d3b4d06c5600909a72b9a4f80702972de6708878",
+  "source_files": [
+    {
+      "path": ".github/workflows/metal-hidden-ghost.yml",
+      "sha256": "18445a205a05d3cfb19ce54e30e743c259903fd689f1694faa1b254ede288436"
+    },
+    {
+      "path": "crates/ingetrazo-gui/examples/native_metal_hidden_ghost.rs",
+      "sha256": "17bc483ee1e8310f070d46a1c5d7dd47a0da6d2668f594265b524642db4874b8"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/native_metal.rs",
+      "sha256": "b5f0794ec7cbbda690c4e1dd1ae0af9f359f053a043a4be0c7b07ad4ea3fe2ff"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/native_metal/world_ghost_probe.rs",
+      "sha256": "bb2b300f0f8de8229e4590d7f0016515ae6f3ad45457ca0f75d3defd429607f6"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/native_metal/world_viewport.rs",
+      "sha256": "d64ec7ed928d0246c0112343ab6317144dce201e203cf2ddd62f592b7e4035e0"
+    },
+    {
+      "path": "crates/ingetrazo-metal/src/lib.rs",
+      "sha256": "074e7de28d60d210c36615b78b6b7e2604c6cc8f03d5ef9f5398d31793cdc941"
+    },
+    {
+      "path": "crates/ingetrazo-metal/src/shaders/world.metal",
+      "sha256": "3d928a63dd34f6b3d420da93dedfa923128257e7c6f3e4674d19e690e6e2f9c5"
+    },
+    {
+      "path": "crates/ingetrazo-metal/src/world.rs",
+      "sha256": "42616e441e5a02c5f12e973d5bb234c6c957a42b2b570b974344a1c7e066c69a"
+    },
+    {
+      "path": "crates/ingetrazo-metal/src/world_ghost.rs",
+      "sha256": "4671d7c0ba9f8ee42c09c459ef18d2b9d084435801e5f1d03e6502603ee3ff5c"
+    },
+    {
+      "path": "crates/ingetrazo-metal/src/world_scene.rs",
+      "sha256": "9ecc35c7b5a94b55299cd96f4f739a8563885ae0fe680a033c7c240bcecb7237"
+    },
+    {
+      "path": "scripts/check-metal-hidden-ghost.py",
+      "sha256": "5bb9c8188695824372cf405fcd7af16aca9c8f936e1b650d574068837ea0a980"
+    },
+    {
+      "path": "crates/ingetrazo-render/src/hidden_ghosts.rs",
+      "sha256": "5a40bd2bc76d771606b429fd8342ec64cde63a75af9d3d48153ec910031e5273"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/navigation_ray.rs",
+      "sha256": "553d8cd4fbbf7f6d6b7b17b2546fbe73f16a8af44973ec5746c98a47a6499cd5"
+    }
+  ],
+  "focused_log_sha256": "9d955259b31286191d9192092731505c97095e0cc4e7870b6096e77437a2cd08",
+  "host_tests_passed": 2,
+  "metal_target_checks": [
+    "aarch64-apple-darwin",
+    "x86_64-apple-darwin"
+  ],
+  "actual_apple_execution": false,
+  "gui_crosscheck": "libz-sys compiler setup failure before GUI",
+  "scope": "candidate runtime/app/CI; strict GPU acceptance pending",
+  "runtime_commit": "a9aa7fac0217eeb183e4cec3401f39935257c524"
+}
