@@ -25,17 +25,17 @@ identities = {name: hashlib.sha256((binaries/(name+suffix)).read_bytes()).hexdig
 env = dict(os.environ, QT_QPA_PLATFORM="offscreen", INGETRAZO_STATE_DIR=str(out/"state"),
            XDG_CONFIG_HOME=str(out/"config"), XDG_DATA_HOME=str(out/"data"), XDG_CACHE_HOME=str(out/"cache"))
 
-def archive(name, manifest_name, selected, destination, preserve_paths=False):
+def archive(name, manifest_name, selected, destination, preserve_paths=False, archive_name="records.zip"):
     folder = repo/"docs/audits"/name
     manifest = json.loads((folder/manifest_name).read_text())
     records = manifest.get("records", manifest.get("entries"))
     assert records is not None, name
-    raw = (folder/"records.zip").read_bytes()
+    raw = (folder/archive_name).read_bytes()
     digest = hashlib.sha256(raw).hexdigest()
     if "archive_sha256" in manifest:
         assert digest == manifest["archive_sha256"], name
     destination.mkdir(parents=True, exist_ok=True)
-    with zipfile.ZipFile(folder/"records.zip") as z:
+    with zipfile.ZipFile(folder/archive_name) as z:
         assert set(z.namelist()) == set(records), name
         for key, expected in records.items():
             blob = z.read(key)
@@ -114,7 +114,7 @@ am = archive("annotation-move", "manifest.json", ["input.igz", "move-input.igz",
 run([binaries/(consumers[12]+suffix), move], "annotation-move/runtime.log")
 run([sys.executable, repo/"scripts/check-annotation-move.py", move], "annotation-move/acceptance.json")
 acquisition = out/"annotation-acquisition"
-aa = archive("annotation-acquisition", "manifest.json", ["input.igz", "original.json", "threshold-first-failure.json", "source-first-failure.log"], acquisition)
+aa = archive("annotation-acquisition/riding-order", "manifest.json", ["input.igz", "riding-input.igz", "original.json", "threshold-first-failure.json", "source-first-failure.log"], acquisition, archive_name="source-records.zip")
 run([binaries/(consumers[13]+suffix), acquisition], "annotation-acquisition/runtime.log")
 run([sys.executable, repo/"scripts/check-annotation-acquisition.py", acquisition], "annotation-acquisition/acceptance.json")
 rows = json.loads((doc/"native.json").read_text())["rows"]

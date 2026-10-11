@@ -16,10 +16,13 @@ pub(crate) fn run(input:PathBuf,output:PathBuf)->Result<(),String>{
  let groups=app.scene.groups.clone();fn hide(gs:&mut[ingetrazo_core::groups::Group]){for g in gs{if g.billboard{g.hidden=true;}hide(&mut g.children);}}
  hide(&mut app.scene.groups);app.bump_model_revision();let hidden=capture(&mut app,&mut painter,true)?;assert_ne!(hidden,full,"Visible billboard produced no pixels");app.scene.groups=groups;app.bump_model_revision();assert_eq!(capture(&mut app,&mut painter,true)?,full);
  // Camera-only allocation refusal must preserve the accepted frame and ledger.
- let before=metal.budget.lock().map_err(|_|"Budget poisoned")?.heaps.iter().map(|h|h.committed).sum::<u64>();let limit={let mut b=metal.budget.lock().map_err(|_|"Budget poisoned")?;let old=b.total_limit;b.total_limit=Some(0);old};app.camera.yaw+=0.1;
+ let ledger=||->Result<(u64,u64),String>{let b=metal.budget.lock().map_err(|_|"Budget poisoned")?;Ok((b.heaps.iter().map(|h|h.committed).sum(),b.heaps.iter().map(|h|h.reserved).sum()))};let before=ledger()?;let limit={let mut b=metal.budget.lock().map_err(|_|"Budget poisoned")?;let old=b.total_limit;b.total_limit=Some(0);old};app.camera.yaw+=0.1;
  let rect=egui::Rect::from_min_size(egui::Pos2::ZERO,egui::vec2(800.,600.));let refusal=world_viewport::route(&mut app,rect,1.).ok_or("Billboard quota unexpectedly admitted")?;
- assert_eq!(metal.budget.lock().map_err(|_|"Budget poisoned")?.heaps.iter().map(|h|h.committed).sum::<u64>(),before);assert_eq!(capture(&mut app,&mut painter,false)?,full);
- metal.budget.lock().map_err(|_|"Budget poisoned")?.total_limit=limit;app.camera.yaw=yaw;assert_eq!(capture(&mut app,&mut painter,true)?,full);
+ assert_eq!(ledger()?,before);
+ // Diagnostic readback has its own allocation; restore its budget after checking
+ // refusal accounting, while retaining the rejected camera and accepted frame.
+ metal.budget.lock().map_err(|_|"Budget poisoned")?.total_limit=limit;
+ assert_eq!(capture(&mut app,&mut painter,false)?,full);app.camera.yaw=yaw;assert_eq!(capture(&mut app,&mut painter,true)?,full);
  for(name,bytes)in[("baseline",full),("turned",turned),("hidden",hidden)]{std::fs::write(output.join(format!("{name}.rgba")),bytes).map_err(|e|e.to_string())?;}
  // A single cold image used by ordinary and billboard geometry has one native owner.
  let mut scene=ingetrazo_core::scene::Scene::new();let mut encoded=std::io::Cursor::new(Vec::new());image::DynamicImage::ImageRgba8(image::RgbaImage::from_pixel(2,2,image::Rgba([16,230,92,255]))).write_to(&mut encoded,image::ImageFormat::Png).map_err(|e|e.to_string())?;
