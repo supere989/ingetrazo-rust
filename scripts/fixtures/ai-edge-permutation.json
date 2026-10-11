@@ -1,0 +1,14 @@
+[
+  {
+    "name": "edge-only",
+    "recipe": "m.edges.reverse()"
+  },
+  {
+    "name": "combined-orders",
+    "recipe": "m.vertices.reverse()\nm.edges[:]=m.edges[2:]+m.edges[:2]\nm.faces.reverse()"
+  },
+  {
+    "name": "combined-pose-loop",
+    "recipe": "m.edges.reverse()\nm.vertices[0].position.setZ(2)\nf0.loop.reverse()"
+  }
+]

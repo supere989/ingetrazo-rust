@@ -1583,6 +1583,8 @@ mod mixed_append_tests {
 /// Exclusive pure membership permutation, preserving native record identities.
 /// Full insertion/deletion/replacement graph ownership is a separate obligation.
 pub struct PreparedMembership<'a> {
+    edge_swaps: Vec<(usize,usize)>,
+    edge_map: Option<Vec<usize>>,
     owner: &'a mut JournalOwner,
     vertex_swaps: Vec<(usize, usize)>,
     face_swaps: Vec<(usize, usize)>,
@@ -1649,6 +1651,12 @@ impl JournalOwner {
         loops: Vec<(Vec<usize>, Vec<Vec<usize>>)>,
         after: Uuid,
     ) -> Result<PreparedMembership<'_>, String> {
+        self.prepare_graph_order_inner(vertices,None,faces,positions,loops,after)
+    }
+    pub fn prepare_graph_order_as(&mut self,vertices:&[usize],edges:&[usize],faces:&[usize],positions:Vec<DVec3>,loops:Vec<(Vec<usize>,Vec<Vec<usize>>)>,after:Uuid)->Result<PreparedMembership<'_>,String>{
+        self.prepare_graph_order_inner(vertices,Some(edges),faces,positions,loops,after)
+    }
+    fn prepare_graph_order_inner(&mut self,vertices:&[usize],edges:Option<&[usize]>,faces:&[usize],positions:Vec<DVec3>,loops:Vec<(Vec<usize>,Vec<Vec<usize>>)>,after:Uuid)->Result<PreparedMembership<'_>,String>{
         if positions.len() != self.mesh.vertices.len() || loops.len() != self.mesh.faces.len() {
             return Err("Membership field extent mismatch".into());
         }
@@ -1659,7 +1667,9 @@ impl JournalOwner {
         let bytes = preparation_bound(positions.len(), self.mesh.edges.len())?
             .checked_add(sized(add(positions.len(), loops.len())?, 128)?)
             .ok_or("Membership preparation overflow")?;
+        let bytes=bytes.checked_add(if edges.is_some(){self.mesh.edges.len().checked_mul(5*std::mem::size_of::<usize>()).ok_or("Edge membership preparation overflow")?}else{0}).ok_or("Graph membership preparation overflow")?;
         let preparation = self.budget.reserve(Kind::Preparation, bytes)?;
+        let (edge_map,edge_swaps)=match edges{Some(order)=>{let(map,swaps)=prepare_order(order,self.mesh.edges.len())?;(Some(map),swaps)},None=>(None,Vec::new())};
         let (vertex_map, vertex_swaps) = prepare_order(vertices, self.mesh.vertices.len())?;
         let (face_map, face_swaps) = prepare_order(faces, self.mesh.faces.len())?;
         for edge in &self.mesh.edges {
@@ -1679,9 +1689,11 @@ impl JournalOwner {
                 return Err("Membership loop reference outside graph".into());
             }
         }
+        if let Some(map)=&edge_map {if self.mesh.vertices.iter().any(|v|v.edges.iter().any(|&id|id>=map.len())){return Err("Membership native incidence outside graph".into());}}
         let spatial = self.index(&positions)?;
-        let registry = self.registry.prepare_permutation(&vertex_map, &positions)?;
+        let registry = self.registry.prepare_graph_permutation(&vertex_map,edge_map.as_deref(), &positions)?;
         Ok(PreparedMembership {
+            edge_swaps,edge_map,
             owner: self,
             vertex_swaps,
             face_swaps,
@@ -1700,6 +1712,7 @@ impl JournalOwner {
 impl PreparedMembership<'_> {
     pub fn apply(self) {
         let Self {
+            edge_swaps,edge_map,
             owner,
             vertex_swaps,
             face_swaps,
@@ -1713,9 +1726,11 @@ impl PreparedMembership<'_> {
             next,
             _preparation,
         } = self;
+        for (a,b) in edge_swaps {owner.mesh.edges.swap(a,b);}
         for (a, b) in vertex_swaps {
             owner.mesh.vertices.swap(a, b);
         }
+        if let Some(map)=edge_map {for v in &mut owner.mesh.vertices{for id in &mut v.edges{*id=map[*id];}}}
         for (a, b) in face_swaps {
             owner.mesh.faces.swap(a, b);
         }
@@ -1863,4 +1878,30 @@ mod membership_tests {
             Some(0)
         );
     }
+}
+
+#[cfg(test)]mod graph_order_tests{
+ use super::*;
+ #[test]fn graph_order_preserves_registry_identity_and_refuses_before_mutation(){
+  let mut mesh=Mesh::new();for p in [DVec3::ZERO,DVec3::X,DVec3::Y,DVec3::Z]{mesh.add_vertex(p);}
+  mesh.add_face(vec![0,1,2],vec![]).unwrap();mesh.add_face(vec![1,0,3],vec![]).unwrap();
+  mesh.edges[0].attrs.insert("opaque".into(),serde_json::json!(["vendor",7]));
+  let payload=mesh.edges[0].attrs["opaque"].as_array().unwrap().as_ptr();
+  let budget=OwnerBudget::new(None);let mut owner=JournalOwner::new_with_budget(mesh,budget.clone()).unwrap();
+  let before=owner.mesh().clone();let before_version=owner.version;let history=owner.history_counts();let charge=budget.snapshot().total();
+  let view=owner.registry.view();let stale=owner.try_begin().unwrap();
+  let positions=vec![DVec3::Z,DVec3::Y,DVec3::X,DVec3::ZERO];let loops=vec![(vec![2,3,0],vec![]),(vec![3,2,1],vec![])];
+  let ticket=owner.prepare_graph_order_as(&[3,2,1,0],&[4,3,2,1,0],&[1,0],positions.clone(),loops.clone(),Uuid::new_v4()).unwrap();drop(ticket);
+  assert_eq!(owner.mesh(),&before);assert_eq!(owner.version,before_version);assert_eq!(owner.history_counts(),history);assert!(view.check().is_ok());
+  let with_stale=budget.snapshot().total();budget.set_limit(Some(with_stale));
+  assert!(owner.prepare_graph_order_as(&[3,2,1,0],&[4,3,2,1,0],&[1,0],positions.clone(),loops.clone(),Uuid::new_v4()).is_err());budget.set_limit(None);
+  for invalid in [&[4,3,2,1,1][..],&[5,3,2,1,0][..],&[4,3,2,1][..]]{
+   assert!(owner.prepare_graph_order_as(&[3,2,1,0],invalid,&[1,0],positions.clone(),loops.clone(),Uuid::new_v4()).is_err());
+   assert_eq!(owner.mesh(),&before);assert_eq!(owner.version,before_version);assert_eq!(owner.history_counts(),history);assert_eq!(budget.snapshot().total(),with_stale);assert!(view.check().is_ok());
+  }
+  owner.prepare_graph_order_as(&[3,2,1,0],&[4,3,2,1,0],&[1,0],positions,loops,Uuid::new_v4()).unwrap().apply();
+  assert!(view.check().is_err());assert_eq!(owner.mesh().edges[4].attrs["opaque"].as_array().unwrap().as_ptr(),payload);
+  let current=owner.mesh().clone();assert!(owner.commit(stale).is_err());assert_eq!(owner.mesh(),&current);assert_eq!(owner.history_counts(),history);assert_eq!(budget.snapshot().total(),charge);
+  let view=owner.registry.view();assert_eq!(view.vertex(&crate::journal::SourceKey::new(DVec3::ZERO)),Some(3));assert_eq!(view.edge(&(2,3)),Some((4,3,2)));
+ }
 }

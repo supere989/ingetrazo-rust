@@ -1254,7 +1254,7 @@ impl<'a> RootRestore<'a> {
             );
         }
         let mut changed = reordered;
-        self.graph.validate_membership(&self.mesh,append)?;
+        if permutation && !append {changed |= self.graph.changed_order(&self.mesh,&self.mesh.owner.read().budget())?.changed;}else{self.graph.validate_membership(&self.mesh,append)?;}
 
         for record in &self.positions {
             changed |= record.vertex.position.read().coordinates() != record.position.coordinates();
@@ -1771,7 +1771,8 @@ impl Controller {
                                     &before.faces,
                                     &self.budget,
                                 )?;
-                                let reordered = vertex_order.changed || face_order.changed;
+                                let edge_order=before.graph.changed_order(&mesh,&self.budget)?;
+                                let reordered = vertex_order.changed || face_order.changed || edge_order.changed;
                                 if let Some(projection) = Projection::prepare_inner(
                                     &mesh,
                                     &self.budget,
@@ -1781,8 +1782,9 @@ impl Controller {
                                     let mut owner = mesh.owner.write();
                                     if reordered {
                                         owner
-                                            .prepare_membership_as(
+                                            .prepare_graph_order_as(
                                                 &vertex_order.order,
+                                                &edge_order.order,
                                                 &face_order.order,
                                                 projection.positions,
                                                 projection.loops,
@@ -1955,11 +1957,13 @@ impl Controller {
                 )?;
                 let face_order =
                     identity_order(&target.faces, &target.mesh.faces.borrow_vec(), &self.budget)?;
+                let edge_order=target.graph.restore_order(&target.mesh,&self.budget)?;
                 let mut owner = target.mesh.owner.write();
-                if vertex_order.changed || face_order.changed {
+                if vertex_order.changed || face_order.changed || edge_order.changed {
                     owner
-                        .prepare_membership_as(
+                        .prepare_graph_order_as(
                             &vertex_order.order,
+                            &edge_order.order,
                             &face_order.order,
                             p.positions,
                             p.loops,
@@ -2016,6 +2020,18 @@ impl Controller {
        let mesh=self.scope.globals.get_item("m",vm).unwrap().downcast::<editable_mesh::Mesh>().unwrap();let f=self.scope.globals.get_item("held",vm).unwrap().downcast::<editable_mesh::Face>().unwrap();let v=self.scope.globals.get_item("v",vm).unwrap().downcast::<editable_mesh::Vertex>().unwrap();let oldloop=self.scope.globals.get_item("oldloop",vm).unwrap();let oldattrs=self.scope.globals.get_item("oldattrs",vm).unwrap();let oldposition=self.scope.globals.get_item("oldposition",vm).unwrap().downcast::<crate::vm_groups::native_groups::QVector3D>().unwrap();let shared=self.scope.globals.get_item("shared",vm).unwrap();let attrs=f.attrs.read().clone().downcast::<rustpython_vm::builtins::PyDict>().unwrap();let value=attrs.get_item("shared",vm).unwrap();let strings=value.downcast_ref::<rustpython_vm::builtins::PyList>().unwrap().borrow_vec().iter().map(|x|x.downcast_ref::<rustpython_vm::builtins::PyStr>().unwrap().as_utf8().unwrap().as_str().to_owned()).collect::<Vec<_>>();let owner=mesh.owner.read();let native=owner.mesh();let faces=mesh.faces.borrow_vec();let vertices=mesh.vertices.borrow_vec();
        serde_json::json!({"name":name,"positions":native.vertices.iter().map(|v|v.position.to_array()).collect::<Vec<_>>(),"faces":native.faces.iter().map(|f|f.vertices.clone()).collect::<Vec<_>>(),"face_live":faces.iter().any(|x|x.is(&f)),"vertex_live":vertices.iter().any(|x|x.is(&v)),"loop_original":f.r#loop.read().is(&oldloop),"position_original":v.position.read().is(&oldposition),"attrs_original":f.attrs.read().is(&oldattrs),"shared_value":strings,"shared_identity":value.is(&shared),"held_position":oldposition.coordinates(),"undo":self.undo.len(),"redo":self.redo.len()})
       })
+    }
+    pub fn observe_packed_graph(&self,name:&str)->serde_json::Value {
+        let mut result=self.observe_mesh_incidence(name);
+        self.interpreter.enter(|vm| {
+            let mesh=self.scope.globals.get_item("m",vm).unwrap().downcast::<editable_mesh::Mesh>().unwrap();
+            let owner=mesh.owner.read();let native=owner.mesh();
+            result["native_endpoints"]=serde_json::json!(native.edges.iter().map(|e|[e.v0,e.v1]).collect::<Vec<_>>());
+            result["native_incidence"]=serde_json::json!(native.vertices.iter().map(|v|{let mut ids=v.edges.clone();ids.sort();ids}).collect::<Vec<_>>());
+            result["native_positions"]=serde_json::json!(native.vertices.iter().map(|v|v.position.to_array()).collect::<Vec<_>>());
+            result["native_faces"]=serde_json::json!(native.faces.iter().map(|f|serde_json::json!({"loop":f.vertices,"holes":f.holes})).collect::<Vec<_>>());
+        });
+        result
     }
     pub fn observe_mesh_incidence(&self,name:&str)->serde_json::Value {
         self.interpreter.enter(|vm| {

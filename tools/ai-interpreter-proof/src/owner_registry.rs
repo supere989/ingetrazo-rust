@@ -142,15 +142,24 @@ mod mixed_tests {
 pub struct PermutationChange { inner:Rc<RefCell<State>>, document:Uuid,state:Uuid,version:u64,positions:Vec<DVec3>,vertices:HashMap<SourceKey,usize>,edges:HashMap<(usize,usize),(usize,usize,usize)>,rows:usize,_preparation:Lease }
 impl Registry {
  pub fn prepare_permutation(&self,old_to_new:&[usize],positions:&[DVec3])->Result<PermutationChange,String>{
+  self.prepare_graph_permutation(old_to_new,None,positions)
+ }
+ pub fn prepare_graph_permutation(&self,old_to_new:&[usize],edge_order:Option<&[usize]>,positions:&[DVec3])->Result<PermutationChange,String>{
   let s=self.0.borrow();if old_to_new.len()!=s.positions.len()||positions.len()!=s.positions.len(){return Err("Registry permutation extent mismatch".into());}
-  let charge=s.budget.reserve(Kind::Preparation,registry_bytes(s.positions.len(),s.edge_extent)?)?;
+  let bytes=registry_bytes(s.positions.len(),s.edge_extent)?.checked_add(if edge_order.is_some(){s.edge_extent}else{0}).ok_or("Registry graph permutation extent overflow")?;
+  let charge=s.budget.reserve(Kind::Preparation,bytes)?;
+  if let Some(order)=edge_order {
+   if order.len()!=s.edge_extent{return Err("Registry Edge permutation extent mismatch".into());}
+   let mut seen=Vec::new();seen.try_reserve_exact(order.len()).map_err(|_|"Registry Edge permutation validation refused")?;seen.resize(order.len(),false);
+   for &id in order{if id>=seen.len()||seen[id]{return Err("Registry Edge permutation requires bijection".into());}seen[id]=true;}
+  }
   let mut seen=Vec::new();seen.try_reserve_exact(old_to_new.len()).map_err(|_|"Registry permutation validation refused")?;seen.resize(old_to_new.len(),false);
   for &id in old_to_new{if id>=seen.len()||seen[id]{return Err("Registry permutation requires bijection".into());}seen[id]=true;}
   let mut prepared=Vec::new();prepared.try_reserve_exact(positions.len()).map_err(|_|"Registry permutation positions refused")?;prepared.extend_from_slice(positions);
   let mut vertices=HashMap::new();vertices.try_reserve(s.vertices.len()).map_err(|_|"Registry permutation key slots refused")?;
   for (key,&id) in &s.vertices{let target=*old_to_new.get(id).ok_or("Registry vertex outside membership")?;vertices.insert(key.clone(),target);}
   let mut edges=HashMap::new();edges.try_reserve(s.edges.len()).map_err(|_|"Registry permutation edge slots refused")?;
-  for &(id,a,b) in s.edges.values(){let a=*old_to_new.get(a).ok_or("Registry edge endpoint outside membership")?;let b=*old_to_new.get(b).ok_or("Registry edge endpoint outside membership")?;if edges.insert(ordered(a,b),(id,a,b)).is_some(){return Err("Registry permutation edge ownership collision".into());}}
+  for &(id,a,b) in s.edges.values(){let id=match edge_order{Some(map)=>*map.get(id).ok_or("Registry Edge id outside membership")?,None=>id};let a=*old_to_new.get(a).ok_or("Registry edge endpoint outside membership")?;let b=*old_to_new.get(b).ok_or("Registry edge endpoint outside membership")?;if edges.insert(ordered(a,b),(id,a,b)).is_some(){return Err("Registry permutation edge ownership collision".into());}}
   let rows=vertices.len().checked_add(edges.len()).ok_or("Registry permutation publication rows overflow")?;
   Ok(PermutationChange{inner:self.0.clone(),document:s.document,state:s.state,version:s.version,positions:prepared,vertices,edges,rows,_preparation:charge})
  }

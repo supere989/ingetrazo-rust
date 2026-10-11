@@ -65,6 +65,9 @@ fn references(list: &PyListRef) -> Result<Vec<PyObjectRef>, String> {
 }
 
 impl GraphState {
+    pub(super) fn changed_order(&self,mesh:&PyRef<Mesh>,budget:&OwnerBudget)->Result<super::IdentityOrder,String>{super::identity_order(&mesh.edges.borrow_vec(),&self.members,budget)}
+    pub(super) fn restore_order(&self,mesh:&PyRef<Mesh>,budget:&OwnerBudget)->Result<super::IdentityOrder,String>{super::identity_order(&self.members,&mesh.edges.borrow_vec(),budget)}
+
     fn empty() -> Self {
         Self {
             members: vec![],
