@@ -10,4 +10,4 @@ Two focused tests pass: bounded curve/flat geometry plus aggregate/prefix/coordi
 
 Scope remains open: platform-native CoreText outline differences, Windows font provider, variable/synthetic styles, mixed-family fallback, multiline/contextual/complex-script breadth, actual application3DText rendering/UI/history. Missing styles/fallback/variable fonts refuse before publishing. Existing paper/annotation raster/shaping APIs unchanged. No generic font or cross-platform parity claim.
 
-Final and prior comparison binaries and terminal raw outputs remain in /tmp until parent archive review/release; reusable target/worktree preserved. No broad suite or GPU acquisition was run.
+Parent independently authenticated the archives and authorized cleanup. Archive-covered final/prior binaries, terminal captures and source copies were released; cleanup.json records exact paths/bytes/inventory digests. Reusable target/worktrees and shared615 CDI bundle remain. No broad suite or GPU acquisition was run.

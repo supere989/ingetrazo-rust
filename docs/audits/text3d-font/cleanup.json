@@ -1,0 +1,206 @@
+{
+  "canonical_archives": {
+    "portable": "b092629c5f95a88b567cd4c37bd09711d9442b4df51b11655aa6ed48ee2bcd84",
+    "text3d": "6609675314c309595bc9b968d54293c968054ec351aa449331a879ae8fb3471f"
+  },
+  "released": [
+    {
+      "surface": "host",
+      "path": "/tmp/portable-changed-consumers",
+      "bytes": 2432676,
+      "files": 67,
+      "inventory_sha256": "ed3ea392ae9c20410bb55968445ec24b4c8a1799bb2d8728785a0ddec41eea27"
+    },
+    {
+      "surface": "host",
+      "path": "/tmp/portable-consumer-input",
+      "bytes": 1138738,
+      "files": 103,
+      "inventory_sha256": "0e7e3fb5b925d1b253ba76d3720f53704be8b810ed4afa91cdebf31666b5fb5c"
+    },
+    {
+      "surface": "host",
+      "path": "/tmp/portable-consumer-proof",
+      "bytes": 542620,
+      "files": 2,
+      "inventory_sha256": "6a81f7f1c2626200665e9e87add529b5eb4ae0a287b9a547748aabb5f1d998db"
+    },
+    {
+      "surface": "host",
+      "path": "/tmp/portable-image-preexisting",
+      "bytes": 1568264,
+      "files": 18,
+      "inventory_sha256": "33a66905afb4d1c282355418ac2f986c25efe011aaeb7d53d9cca2ce44b1e2b3"
+    },
+    {
+      "surface": "host",
+      "path": "/tmp/portable-shadow-frozen",
+      "bytes": 15553016,
+      "files": 1,
+      "inventory_sha256": "efc6b7b9c88630bbc729556d7f4b074ab9a33a03a9e4b381918b817d6ab24a5d"
+    },
+    {
+      "surface": "host",
+      "path": "/tmp/portable-image-frozen",
+      "bytes": 15435800,
+      "files": 1,
+      "inventory_sha256": "3a83d9cec28b266b34bb21b5d1bbdd55024b56e2d9edc9abb3d1f846f8bbd2b7"
+    },
+    {
+      "surface": "host",
+      "path": "/tmp/portable-ghost-frozen",
+      "bytes": 15408080,
+      "files": 1,
+      "inventory_sha256": "7a246f22ce7ea784b0b5160946703ca93bb2dc46f5e3dd6202b8224b790fbac2"
+    },
+    {
+      "surface": "host",
+      "path": "/tmp/run-portable-changed-consumers.py",
+      "bytes": 3726,
+      "files": 1,
+      "inventory_sha256": "d19b0972fa7db12246a862938ea941412f9b6ccbffa7dea5768f2c64c0757ee1"
+    },
+    {
+      "surface": "ingetrazo-publish",
+      "path": "/tmp/portable-consumer-input",
+      "bytes": 1138738,
+      "files": 103,
+      "inventory_sha256": "0e7e3fb5b925d1b253ba76d3720f53704be8b810ed4afa91cdebf31666b5fb5c"
+    },
+    {
+      "surface": "ingetrazo-publish",
+      "path": "/tmp/text3d-build-final.log",
+      "bytes": 12469,
+      "files": 1,
+      "inventory_sha256": "1f71b5de8fda0567b85d47ea1f99350fa8a2be31bdf1b52092e88cf6f5cce95b"
+    },
+    {
+      "surface": "ingetrazo-publish",
+      "path": "/tmp/text3d-build-restore.log",
+      "bytes": 12469,
+      "files": 1,
+      "inventory_sha256": "54cce6e65d64da42e5ee701af0094db76f778228836ef6fc4107caef4ab6140c"
+    },
+    {
+      "surface": "ingetrazo-publish",
+      "path": "/tmp/text3d-build.log",
+      "bytes": 12851,
+      "files": 1,
+      "inventory_sha256": "acbd70d8a44ef81cce6b7bc046db554ba0cb22ade0d62e201ad856ea361cbacd"
+    },
+    {
+      "surface": "ingetrazo-publish",
+      "path": "/tmp/text3d-build2.log",
+      "bytes": 12469,
+      "files": 1,
+      "inventory_sha256": "778aa357befd3654e2eaa1187f7439814055106325cb97de0fc5dcc83f51dbcd"
+    },
+    {
+      "surface": "ingetrazo-publish",
+      "path": "/tmp/text3d-build3.log",
+      "bytes": 12469,
+      "files": 1,
+      "inventory_sha256": "0399618d21ff54e0172b3c5729189ac47bfcc6d57f363464b2d2c7c8f3d0a67b"
+    },
+    {
+      "surface": "ingetrazo-publish",
+      "path": "/tmp/text3d-check.log",
+      "bytes": 18882,
+      "files": 1,
+      "inventory_sha256": "4f554adffe8ce865636a3e1cd7d87606f09fe1bf692693e4549093213d549335"
+    },
+    {
+      "surface": "ingetrazo-publish",
+      "path": "/tmp/text3d-check2.log",
+      "bytes": 11850,
+      "files": 1,
+      "inventory_sha256": "296894991c842a0de436e7d269ca447495b163d8812f48f5a6a35b6ea97ec745"
+    },
+    {
+      "surface": "ingetrazo-publish",
+      "path": "/tmp/text3d-negative-build.log",
+      "bytes": 12469,
+      "files": 1,
+      "inventory_sha256": "5d861dfec49bb95862fda078b867f589db6208e45a5e19396fa9c38b971e7ca4"
+    },
+    {
+      "surface": "ingetrazo-publish",
+      "path": "/tmp/text3d-tests-final.log",
+      "bytes": 12836,
+      "files": 1,
+      "inventory_sha256": "1261a24a93e48b459b4f0bc2dfabc8c55971d08e11da8bad1fc122f32f1b4405"
+    },
+    {
+      "surface": "ingetrazo-publish",
+      "path": "/tmp/text3d-tests.log",
+      "bytes": 12836,
+      "files": 1,
+      "inventory_sha256": "baf0e33796339a8386b40d82dcba656a364cad6488c330eb0ebd958ac132b990"
+    },
+    {
+      "surface": "ingetrazo-publish",
+      "path": "/tmp/text3d-native-final.json",
+      "bytes": 302761,
+      "files": 1,
+      "inventory_sha256": "9b7a4b0382b4bc3cb802d7384dececd08e508156e2664d3168e550e4c3e44d09"
+    },
+    {
+      "surface": "ingetrazo-publish",
+      "path": "/tmp/text3d-native-negative.json",
+      "bytes": 230915,
+      "files": 1,
+      "inventory_sha256": "4221c16eb1c0f7902b877dda250418acb68a2b2f9467060959a235672315091c"
+    },
+    {
+      "surface": "ingetrazo-publish",
+      "path": "/tmp/text3d-native.json",
+      "bytes": 302761,
+      "files": 1,
+      "inventory_sha256": "cb25eb41cd82bd1c523f992ffdf9ecbca837563d0b9c87d826c71baddd342c90"
+    },
+    {
+      "surface": "ingetrazo-publish",
+      "path": "/tmp/text3d-original.json",
+      "bytes": 371443,
+      "files": 1,
+      "inventory_sha256": "bd880db02c556d482f574ac1c0e0b6e5d9f44ca5b6f93c10281be967ef0599d4"
+    },
+    {
+      "surface": "ingetrazo-publish",
+      "path": "/tmp/text3d-font-frozen",
+      "bytes": 9080352,
+      "files": 1,
+      "inventory_sha256": "dc7767b51746f8da2ebcb64112131ed008660333e3cf9b5a0b6e5aa38b00de97"
+    },
+    {
+      "surface": "ingetrazo-publish",
+      "path": "/tmp/text3d-font-final-frozen",
+      "bytes": 9083144,
+      "files": 1,
+      "inventory_sha256": "e567648279aafb04b19e65856eb12973280ad6540f1a9109e4d54f8e3228e46e"
+    },
+    {
+      "surface": "ingetrazo-publish",
+      "path": "/tmp/text3d-font-restoration.rs",
+      "bytes": 20949,
+      "files": 1,
+      "inventory_sha256": "3861c5ab963ff85603a80c1ab4addd7ea732123c61bb5e671eb88c09c6694f2d"
+    },
+    {
+      "surface": "ingetrazo-publish",
+      "path": "/tmp/text3d-qt-source",
+      "bytes": 263910,
+      "files": 5,
+      "inventory_sha256": "0bd3b734ac86098314321f6ac86aaa7794868e6341c36687a2b55007477f4d79"
+    }
+  ],
+  "total_released_bytes": 73009493,
+  "preserved": [
+    "/tmp/ingetrazo-text3d-font",
+    "/tmp/ingetrazo-hidden-ghost",
+    "/tmp/ingetrazo-skp-native-target",
+    "/tmp/ingetrazo-nvidia-61571",
+    "canonical archives and original oracle"
+  ],
+  "authorization": "Parent release after independent authentication; no builds/captures performed"
+}
