@@ -315,8 +315,13 @@ impl Writer {
    use ingetrazo_render::cad2d::AnnotationLayer;
    let mut layers=Vec::new();layers.try_reserve(self.ranges.len()).map_err(|_|"Annotation layer allocation failed")?;
    let mut rows=self.rows.into_iter();let mut direct=self.direct_ranges.into_iter().peekable();
-   for (layer_index,range) in self.ranges.into_iter().enumerate(){
-    if direct.peek()==Some(&range){direct.next();layers.push(if matches!(self.gates[layer_index].composition,Composition::WidgetLineUnion{..}|Composition::WidgetStencilComposite{..}){AnnotationLayer::UnionQuad{range}}else{AnnotationLayer::Opaque{range}});}
+   let mut batch_index=0;
+   for range in self.ranges{
+    while self.batches.get(batch_index).is_some_and(|b|b.first+b.count<=range.start){batch_index+=1;}
+    if direct.peek()==Some(&range){
+     let batch=self.batches.get(batch_index).ok_or("Annotation direct palette absent")?;
+     if batch.first!=range.start||batch.first+batch.count!=range.end{return Err("Annotation direct range differs from its palette batch".into());}
+     direct.next();layers.push(if matches!(self.gates[batch_index].composition,Composition::WidgetLineUnion{..}|Composition::WidgetStencilComposite{..}){AnnotationLayer::UnionQuad{range}}else{AnnotationLayer::Opaque{range}});}
     else{let n=(range.end-range.start)as usize/6;let mut part=Vec::new();part.try_reserve(n).map_err(|_|"Annotation source layer allocation failed")?;part.extend(rows.by_ref().take(n));if part.len()!=n{return Err("Annotation source rows absent".into());}layers.push(AnnotationLayer::Spans{range,rows:part});}
    }
    if rows.next().is_some()||direct.next().is_some(){return Err("Annotation layer inventory mismatch".into());}
@@ -336,6 +341,14 @@ mod tests {
   Operation{primitive:Primitive::Text{position:[45.,35.],text:"A".into(),size_pt:11,color:[243,115,41,255]},gate:Gate::Always},
  ]})}
  fn cache()->Cache{Cache::new(annotation_font::Limits{faces:16,retained_font_bytes:32*1024*1024},Limits{cells:250_000,spans:100_000,geometry_bytes:8*1024*1024,glyphs:4096,glyph_bytes:16*1024*1024}).unwrap()}
+ #[test]fn mixed_lcd_runs_keep_later_translucent_composite_classification(){
+  let mut w=Writer::new(1.,cache().limits);
+  for x in 0..3{w.layer_with_composition(vec![Span{x,y:0,len:1,coverage:255}],[0,0,0,255],Gate::Always,Composition::GlyphLcd([128;3])).unwrap();}
+  w.ranges.truncate(0);w.ranges.push(0..18);
+  w.stencil_union(&[[10.,10.],[20.,10.],[10.,20.]],true,[10.,10.,20.,20.],[37,93,157,128],Gate::Always).unwrap();
+  let mesh=w.finish().unwrap();mesh.geometry.validate_batches(&mesh.batches).unwrap();
+  assert!(matches!(mesh.gates.last().unwrap().composition,Composition::WidgetStencilComposite{..}));
+ }
  #[test]fn stencil_duplicate_vertices_do_not_allocate_or_leave_unmatched_composite(){
   let limits=cache().limits;let mut writer=Writer::new(1.,limits);
   writer.stencil_union(&[[1.,1.];4],false,[0.,0.,10.,10.],[37,93,157,128],Gate::Always).unwrap();
