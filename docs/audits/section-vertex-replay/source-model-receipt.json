@@ -1,0 +1,46 @@
+{
+  "archive_sha256": "08ceb200be83cb4e2099ab51a211f248818c94b01818a05d4e81c7a6bd16012c",
+  "first_capture_preserved": "source.zip",
+  "prior_fields_and_all60_tf_outputs_identical": true,
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "actual_generic_model_attribute_bits": [
+    [
+      1065353216,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      1065353216,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      1065353216,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      1065353216
+    ]
+  ],
+  "attribute_arrays_enabled": [
+    0,
+    0,
+    0,
+    0
+  ],
+  "literal_identity_model_bits_verified": true,
+  "ordinary_and_observed_fullframe_exact": true,
+  "gl_identity": {
+    "vendor": "Mesa",
+    "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+    "version": "4.5 (Core Profile) Mesa 25.2.8-0ubuntu0.24.04.4"
+  },
+  "native_build_or_execution": false
+}
