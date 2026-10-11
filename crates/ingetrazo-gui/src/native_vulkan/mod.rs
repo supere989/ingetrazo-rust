@@ -244,7 +244,11 @@ impl System {
         let memory_budget=std::sync::Arc::new(budget::VulkanBudget::new(&vulkan_context.instance,vulkan_context.physical_device)?);
         memory_budget.bind_lifetime(vulkan_context.lifetime.clone());
         let mut retired=false;
-        let integer=std::env::var_os("INGETRAZO_CAD2D_INTEGER_BLEND").is_some();
+        // Native World includes source-exact floating tool labels. Select the
+        // required attachment/pipeline once at startup, retaining the existing
+        // explicit unsupported-usage refusal and resize selection.
+        let integer=std::env::var_os("INGETRAZO_CAD2D_INTEGER_BLEND").is_some()
+            ||std::env::var_os("INGETRAZO_VULKAN_WORLD").is_some();
         let mut pending_swapchain=Swapchain::build(&vulkan_context,memory_budget.clone(),annotation_stencil::selected()?,integer,vk::SwapchainKHR::null(),&mut retired,None,control)?;
         control.checkpoint(resize::Stage::StartupSwapchain)?;
         let swapchain=pending_swapchain.value.as_ref().unwrap();
@@ -1452,7 +1456,10 @@ impl App for crate::IngeTrazoApp {
         app
     }
     fn prepare_gpu(&mut self,system:&mut System,_resize:bool) {
-        self.native_gpu_annotation_shape=system.annotation_sample.map(|_|annotation_slot());
+        // Collect a stable slot before UI/tool dispatch. A tool can acquire or
+        // cancel during ctx.run; resolving this slot after post-UI preparation
+        // preserves current-frame membership without capturing an old handle.
+        self.native_gpu_annotation_shape=self.native_gpu_viewport_enabled.then(annotation_slot);
         if !self.native_gpu_viewport_enabled||self.scene.active_sheet_index.is_some(){
             if !_resize&&system.annotation_cad.is_some(){let result=system.clear_annotation_overlay();system.annotation_prepare_error=result.as_ref().err().cloned();match result{Ok(())=>system.annotation_ready_shape=None,Err(error)=>self.gpu_error(&error)}}
             return;
@@ -1481,11 +1488,11 @@ impl App for crate::IngeTrazoApp {
             // Refuse submission of the entire candidate frame on World failure.
             system.annotation_prepare_error=Some(error.clone());self.gpu_error(&error);return;
         }
-        system.annotation_prepare_error=None;
         // The first pass publishes only World layout required to collect UI.
         // Marking mesh/query buffers for the next serial here would prevent a
         // same-frame deletion from retiring them at the completed prior fence.
         if _resize{return;}
+        system.annotation_prepare_error=None;
         if system.annotation_sample.is_some()||self.active_tool.distance_label().is_some()||system.annotation_ready_shape.is_some(){
             // Floating tool text is always visible and never samples depth.
             // Its publication must not depend on the independently admitted
