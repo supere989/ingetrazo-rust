@@ -1,0 +1,11 @@
+# 9ee304c6 terminal platform observation
+
+Exact published SHA `9ee304c62baf55a9feedbc83c398988f43f9ab04`. One full run38165264110 FAILED only known native Mac stages; one ordered run38165264108 PASSED both runners. Observer performed no build, capture, dispatch or restart. Separate Intel-cold38164613793 belongs to geometry and is not this evidence.
+
+Linux compilation/workspace/example coverage and every semantic step PASSED. Corrected radial identity test no longer blocks. Existing joint build executed all19 named consumers. Extracted `ci/joint-result.json` is the literal complete JSON line from authenticated terminal Linux log: finite consumer history27/source-reader9/native-written original-reopens9 exact, finite invariants pass; strict_exact remains false at oblique normal, with three ordered-triangle/normal differences retained and pixel_parity_claim false. Hover42 typed exact states/217 rejecting mutations/mandatory weak40 rejection pass. No source recapture was performed by observer. Windows native CLI/recovery and both Apple cross-compiles passed.
+
+Both native Apple SDK/MSL/default/background/profile and billboard probes passed. ARM document dimensions and actual pergola CLI native World/no-opt-in passed. ARM section7/10 exact; ISO134/152/134 mismatches, all cap XOR0. Intel strict section remains292/434/292/576/292/4/1433/1506/1433/436 with ISO cap XOR51; document annotations and actual CLI refuse unchanged measured-source sample policy. Both accelerated CGL witness setup refusals remain; no Apple GL resolve law measured. Device is Apple Paravirtual; this is not physical device qualification.
+
+Ordered consumers both report7 actual Qt whole images, missing-UI/source-order/phase negatives, partial-budget rollback and final ledger0. Actual startup marker claims submission only, not whole-document pixels or clean close. All global release gates remain open.
+
+Canonical ZIP contains all bounded native/Windows/ordered artifact members, authoritative terminal run JSON, Linux/Intel logs and extracted joint result; manifest authenticates every member and original downloaded ZIP digest. Giant Linux semantic ZIP was deliberately not downloaded. Archive bytes independently checked after packing. Source/targets/private GPU bundle untouched; no tracker or runtime edit.
