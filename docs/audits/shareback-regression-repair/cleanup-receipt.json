@@ -1,0 +1,395 @@
+{
+  "verified": [
+    {
+      "path": "/tmp/shareback-repair-proof/fillet/source.json",
+      "bytes": 282266,
+      "sha256": "8eff9f683b07ad4103f5f5d38b34dc108288b7937c83534a849b4a93d7376263",
+      "retained": {
+        "archive": "/tmp/ingetrazo-fillet-nested-history/docs/audits/fillet-nested-history/records.zip",
+        "entry": "source.json"
+      }
+    },
+    {
+      "path": "/tmp/shareback-repair-proof/fillet/source-app.json",
+      "bytes": 268505,
+      "sha256": "3f975fa3fba86a1278534723e92c78f6cb7acfb46a000bda42790dd4b0971ce8",
+      "retained": {
+        "archive": "/tmp/ingetrazo-fillet-nested-history/docs/audits/fillet-nested-history/records.zip",
+        "entry": "source-app.json"
+      }
+    },
+    {
+      "path": "/tmp/shareback-repair-proof/fillet/native.json",
+      "bytes": 542243,
+      "sha256": "82f1466a7a41d01507a23ba3d2ea17a4575a73864d22f310296663053ecfa432",
+      "retained": {
+        "archive": "/tmp/ingetrazo-shareback-regression-repair/docs/audits/shareback-regression-repair/followup-records.zip",
+        "entry": "fillet-native.json"
+      }
+    },
+    {
+      "path": "/tmp/shareback-repair-proof/fillet/old-native.json",
+      "bytes": 542942,
+      "sha256": "647ead956b519103798e4876aac5098176b6b0409e09fca15b6f9bafe968e69a",
+      "retained": {
+        "archive": "/tmp/ingetrazo-fillet-nested-history/docs/audits/fillet-nested-history/records.zip",
+        "entry": "old-native.json"
+      }
+    },
+    {
+      "path": "/tmp/shareback-repair-proof/axes/classic.input.igz",
+      "bytes": 2125,
+      "sha256": "57850fdf92a8f65f1a71b003005f1946bb1f3e6076deadc933799ca015ecedb6",
+      "retained": {
+        "archive": "/tmp/ingetrazo-change-axes/docs/audits/change-axes/records.zip",
+        "entry": "classic.input.igz"
+      }
+    },
+    {
+      "path": "/tmp/shareback-repair-proof/axes/classic.source.igz",
+      "bytes": 2395,
+      "sha256": "c36e4e826914b266260d6785d99083649d2c7c3405cd08ba97ef544a27c84e0b",
+      "retained": {
+        "archive": "/tmp/ingetrazo-change-axes/docs/audits/change-axes/records.zip",
+        "entry": "classic.source.igz"
+      }
+    },
+    {
+      "path": "/tmp/shareback-repair-proof/axes/context.input.igz",
+      "bytes": 3477,
+      "sha256": "f14e56bae1bf6c044560ae98a120dded3212505bafaa6ba07d5737c407d0779d",
+      "retained": {
+        "archive": "/tmp/ingetrazo-change-axes/docs/audits/change-axes/records.zip",
+        "entry": "context.input.igz"
+      }
+    },
+    {
+      "path": "/tmp/shareback-repair-proof/axes/context.source.igz",
+      "bytes": 3763,
+      "sha256": "92de26e33e62cc0e67a1752d521144b1b816dcc846f87428f92375c4d6763760",
+      "retained": {
+        "archive": "/tmp/ingetrazo-change-axes/docs/audits/change-axes/records.zip",
+        "entry": "context.source.igz"
+      }
+    },
+    {
+      "path": "/tmp/shareback-repair-proof/axes/native.json",
+      "bytes": 101776,
+      "sha256": "9c6a164fd2af69aa5ff16d15c6a650973719dd59a26dece5ba9a470759932211",
+      "retained": {
+        "archive": "/tmp/ingetrazo-shareback-regression-repair/docs/audits/shareback-regression-repair/records.zip",
+        "entry": "axes-native.json"
+      }
+    },
+    {
+      "path": "/tmp/shareback-repair-proof/axes/nested.input.igz",
+      "bytes": 5604,
+      "sha256": "ebd5a1a7fd73910f8e0b72545df73986c29f78de6ede2a7c5c8bf4125d915899",
+      "retained": {
+        "archive": "/tmp/ingetrazo-change-axes/docs/audits/change-axes/records.zip",
+        "entry": "nested.input.igz"
+      }
+    },
+    {
+      "path": "/tmp/shareback-repair-proof/axes/nested.source.igz",
+      "bytes": 5616,
+      "sha256": "f4a3ba3b3a39fb4ff40f8b73719dc6f541470f6c9dbd4d9610b22213457da18b",
+      "retained": {
+        "archive": "/tmp/ingetrazo-change-axes/docs/audits/change-axes/records.zip",
+        "entry": "nested.source.igz"
+      }
+    },
+    {
+      "path": "/tmp/shareback-repair-proof/axes/oblique.input.igz",
+      "bytes": 2875,
+      "sha256": "f77e18c64e4f08cee167d8507d55c0a690b128c8d74596cdf07687f6632220b2",
+      "retained": {
+        "archive": "/tmp/ingetrazo-change-axes/docs/audits/change-axes/records.zip",
+        "entry": "oblique.input.igz"
+      }
+    },
+    {
+      "path": "/tmp/shareback-repair-proof/axes/oblique.source.igz",
+      "bytes": 3883,
+      "sha256": "da43975380d813ef8a9edbf0e7c950dbd051c80b51c77cab7ec1e0e44ce24611",
+      "retained": {
+        "archive": "/tmp/ingetrazo-change-axes/docs/audits/change-axes/records.zip",
+        "entry": "oblique.source.igz"
+      }
+    },
+    {
+      "path": "/tmp/shareback-repair-proof/axes/original.json",
+      "bytes": 101779,
+      "sha256": "011e1f864cc4acce2b60d74aaa8bc1fa2a8baae8e006606bfb76d4b8cbb04aa7",
+      "retained": {
+        "archive": "/tmp/ingetrazo-change-axes/docs/audits/change-axes/records.zip",
+        "entry": "original.json"
+      }
+    },
+    {
+      "path": "/tmp/shareback-repair-proof/axes/reopened.json",
+      "bytes": 5474,
+      "sha256": "3a3d7c8a645271d21c722d8412b92234ee094310b7d63cc21d5e1b3f2bca12f8",
+      "retained": {
+        "archive": "/tmp/ingetrazo-change-axes/docs/audits/change-axes/records.zip",
+        "entry": "reopened.json"
+      }
+    },
+    {
+      "path": "/tmp/shareback-repair-proof/axes/shared.input.igz",
+      "bytes": 2875,
+      "sha256": "f77e18c64e4f08cee167d8507d55c0a690b128c8d74596cdf07687f6632220b2",
+      "retained": {
+        "archive": "/tmp/ingetrazo-change-axes/docs/audits/change-axes/records.zip",
+        "entry": "oblique.input.igz"
+      }
+    },
+    {
+      "path": "/tmp/shareback-repair-proof/axes/shared.source.igz",
+      "bytes": 2885,
+      "sha256": "2190a97cb8c829f5cad772ad3a2a1e352fa58c28315854c4ac0f76390015dbc6",
+      "retained": {
+        "archive": "/tmp/ingetrazo-change-axes/docs/audits/change-axes/records.zip",
+        "entry": "shared.source.igz"
+      }
+    },
+    {
+      "path": "/tmp/shareback-repair-proof/axes/classic.native.igz",
+      "bytes": 2396,
+      "sha256": "4ad37c03305ff5795a30cb8b5c4b4ed895db62bd57aa3b76304100accec1930a",
+      "retained": {
+        "archive": "/tmp/ingetrazo-change-axes/docs/audits/change-axes/records.zip",
+        "entry": "classic.native.igz"
+      }
+    },
+    {
+      "path": "/tmp/shareback-repair-proof/axes/shared.native.igz",
+      "bytes": 4516,
+      "sha256": "adcabda38b5d12bd74310e6ef0615026552dc2b21b9c7e0780d13ccb6faec25b",
+      "retained": {
+        "archive": "/tmp/ingetrazo-change-axes/docs/audits/change-axes/records.zip",
+        "entry": "shared.native.igz"
+      }
+    },
+    {
+      "path": "/tmp/shareback-repair-proof/axes/nested.native.igz",
+      "bytes": 7247,
+      "sha256": "acb385c0ff45378b011b5f4bd1918c477d11e043f7eb4b8f0730a60e939d02e1",
+      "retained": {
+        "archive": "/tmp/ingetrazo-change-axes/docs/audits/change-axes/records.zip",
+        "entry": "nested.native.igz"
+      }
+    },
+    {
+      "path": "/tmp/shareback-repair-proof/axes/oblique.native.igz",
+      "bytes": 5514,
+      "sha256": "4d9381e9eb3af13af44c711979104278cec695257e6bddf75009d0bdd221b927",
+      "retained": {
+        "archive": "/tmp/ingetrazo-change-axes/docs/audits/change-axes/records.zip",
+        "entry": "oblique.native.igz"
+      }
+    },
+    {
+      "path": "/tmp/shareback-repair-proof/axes/context.native.igz",
+      "bytes": 5395,
+      "sha256": "a86ec128ed2c89526f92d2418e2e9f94e1f391d8ae65a5b403b5c07824521cfd",
+      "retained": {
+        "archive": "/tmp/ingetrazo-change-axes/docs/audits/change-axes/records.zip",
+        "entry": "context.native.igz"
+      }
+    },
+    {
+      "path": "/tmp/fillet-nested-proof/source.json",
+      "bytes": 282266,
+      "sha256": "8eff9f683b07ad4103f5f5d38b34dc108288b7937c83534a849b4a93d7376263",
+      "retained": {
+        "archive": "/tmp/ingetrazo-fillet-nested-history/docs/audits/fillet-nested-history/records.zip",
+        "entry": "source.json"
+      }
+    },
+    {
+      "path": "/tmp/fillet-nested-proof/source-app.json",
+      "bytes": 268505,
+      "sha256": "3f975fa3fba86a1278534723e92c78f6cb7acfb46a000bda42790dd4b0971ce8",
+      "retained": {
+        "archive": "/tmp/ingetrazo-fillet-nested-history/docs/audits/fillet-nested-history/records.zip",
+        "entry": "source-app.json"
+      }
+    },
+    {
+      "path": "/tmp/fillet-nested-proof/native.json",
+      "bytes": 542360,
+      "sha256": "337f89dd874bc08451d0e403dcf157316d9e3d02add240594a2945354bdc59ca",
+      "retained": {
+        "archive": "/tmp/ingetrazo-fillet-nested-history/docs/audits/fillet-nested-history/records.zip",
+        "entry": "native.json"
+      }
+    },
+    {
+      "path": "/tmp/fillet-nested-proof/old-native.json",
+      "bytes": 542942,
+      "sha256": "647ead956b519103798e4876aac5098176b6b0409e09fca15b6f9bafe968e69a",
+      "retained": {
+        "archive": "/tmp/ingetrazo-fillet-nested-history/docs/audits/fillet-nested-history/records.zip",
+        "entry": "old-native.json"
+      }
+    },
+    {
+      "path": "/tmp/shareback-bim-before.log",
+      "bytes": 22056,
+      "sha256": "7538d6da5a7401079d7a8f9f4b6ef179e028241409d1e1ce6e380827647e331f",
+      "retained": {
+        "archive": "/tmp/ingetrazo-shareback-regression-repair/docs/audits/shareback-regression-repair/records.zip",
+        "entry": "bim-before.log"
+      }
+    },
+    {
+      "path": "/tmp/shareback-bim-after.log",
+      "bytes": 18397,
+      "sha256": "ae53be7b26b4baa8771151f7186cafbec4b7def0643eb01340a315c909feeaca",
+      "retained": {
+        "archive": "/tmp/ingetrazo-shareback-regression-repair/docs/audits/shareback-regression-repair/records.zip",
+        "entry": "bim-after.log"
+      }
+    },
+    {
+      "path": "/tmp/shareback-dim-after.log",
+      "bytes": 17879,
+      "sha256": "261a4813a0646f81f369f0b8bd41f6d614735ffa945dd369b88f136ef0fdc8bc",
+      "retained": {
+        "archive": "/tmp/ingetrazo-shareback-regression-repair/docs/audits/shareback-regression-repair/records.zip",
+        "entry": "dim-after.log"
+      }
+    },
+    {
+      "path": "/tmp/shareback-refusal-after.log",
+      "bytes": 19023,
+      "sha256": "052d7e04d57a27088a5d979b96b15a9e15706d84054b29fb3edb20773ff4da0c",
+      "retained": {
+        "archive": "/tmp/ingetrazo-shareback-regression-repair/docs/audits/shareback-regression-repair/records.zip",
+        "entry": "refusal-after.log"
+      }
+    },
+    {
+      "path": "/tmp/shareback-core-after.log",
+      "bytes": 887,
+      "sha256": "d9233cf6acb763492cf322186b9793158601160e521d2f2fca8dad3aa8cb7380",
+      "retained": {
+        "archive": "/tmp/ingetrazo-shareback-regression-repair/docs/audits/shareback-regression-repair/records.zip",
+        "entry": "core-after.log"
+      }
+    },
+    {
+      "path": "/tmp/shareback-anchors-after.log",
+      "bytes": 18409,
+      "sha256": "ec7044b89cdfc4c36a07a66eefd35984a2e37ffadafbd65a0304d85794f943c9",
+      "retained": {
+        "archive": "/tmp/ingetrazo-shareback-regression-repair/docs/audits/shareback-regression-repair/records.zip",
+        "entry": "anchors-after.log"
+      }
+    },
+    {
+      "path": "/tmp/shareback-named-build.log",
+      "bytes": 18705,
+      "sha256": "ae6ab0818092f1570de0775190dd358375a0860aba5f57c4b605abc5f245a0dd",
+      "retained": {
+        "archive": "/tmp/ingetrazo-shareback-regression-repair/docs/audits/shareback-regression-repair/records.zip",
+        "entry": "named-build.log"
+      }
+    },
+    {
+      "path": "/tmp/shareback-fillet-run.log",
+      "bytes": 152,
+      "sha256": "39df69fc0443eb5881f2caea0b5d6be9b1d8b69c283bcba083ffc2a5aba7fe61",
+      "retained": {
+        "archive": "/tmp/ingetrazo-shareback-regression-repair/docs/audits/shareback-regression-repair/records.zip",
+        "entry": "fillet-run.log"
+      }
+    },
+    {
+      "path": "/tmp/shareback-fillet-check.log",
+      "bytes": 81,
+      "sha256": "d1f4832cf973b36bad57bbe08153e7d0438d8165dc62fafb43e184008cede64b",
+      "retained": {
+        "archive": "/tmp/ingetrazo-shareback-regression-repair/docs/audits/shareback-regression-repair/records.zip",
+        "entry": "fillet-check.log"
+      }
+    },
+    {
+      "path": "/tmp/shareback-axes-check.log",
+      "bytes": 140,
+      "sha256": "f25be830fb2b46f3df276fa41e153bdcc89984af6ddd79ded80dd1066e433b97",
+      "retained": {
+        "archive": "/tmp/ingetrazo-shareback-regression-repair/docs/audits/shareback-regression-repair/records.zip",
+        "entry": "axes-check.log"
+      }
+    },
+    {
+      "path": "/tmp/shareback-followup-core.log",
+      "bytes": 887,
+      "sha256": "d9233cf6acb763492cf322186b9793158601160e521d2f2fca8dad3aa8cb7380",
+      "retained": {
+        "archive": "/tmp/ingetrazo-shareback-regression-repair/docs/audits/shareback-regression-repair/records.zip",
+        "entry": "core-after.log"
+      }
+    },
+    {
+      "path": "/tmp/shareback-followup-build.log",
+      "bytes": 19129,
+      "sha256": "3811f2d93e50a2af0cb24699acc6de60e7d47cb4fa3b3d7436a890124f84c45e",
+      "retained": {
+        "archive": "/tmp/ingetrazo-shareback-regression-repair/docs/audits/shareback-regression-repair/followup-records.zip",
+        "entry": "logs/build.log"
+      }
+    },
+    {
+      "path": "/tmp/shareback-followup-bim.log",
+      "bytes": 18397,
+      "sha256": "d6cf7739d373a462e1b5974f07a9c6f910a7714a483b54963d83cb27b108de21",
+      "retained": {
+        "archive": "/tmp/ingetrazo-shareback-regression-repair/docs/audits/shareback-regression-repair/followup-records.zip",
+        "entry": "logs/bim.log"
+      }
+    },
+    {
+      "path": "/tmp/shareback-followup-dim.log",
+      "bytes": 17879,
+      "sha256": "261a4813a0646f81f369f0b8bd41f6d614735ffa945dd369b88f136ef0fdc8bc",
+      "retained": {
+        "archive": "/tmp/ingetrazo-shareback-regression-repair/docs/audits/shareback-regression-repair/records.zip",
+        "entry": "dim-after.log"
+      }
+    },
+    {
+      "path": "/tmp/shareback-followup-refusal.log",
+      "bytes": 19023,
+      "sha256": "d63a5a7758730802ef44af279e92726a51154c0a898f575e4a2cdded5d4a0cf4",
+      "retained": {
+        "archive": "/tmp/ingetrazo-shareback-regression-repair/docs/audits/shareback-regression-repair/followup-records.zip",
+        "entry": "logs/refusal.log"
+      }
+    },
+    {
+      "path": "/tmp/shareback-followup-build-final.log",
+      "bytes": 18705,
+      "sha256": "a268100c55690495f92cee5c901518592e78bc27180a270f37dacbe40ff5caed",
+      "retained": {
+        "archive": "/tmp/ingetrazo-shareback-regression-repair/docs/audits/shareback-regression-repair/followup-records.zip",
+        "entry": "logs/build-final.log"
+      }
+    }
+  ],
+  "released_bytes": 3751373,
+  "preserved": [
+    "worktrees",
+    "/tmp/ingetrazo-ai-registry-target"
+  ],
+  "previously_absent": [
+    "/tmp/ingetrazo-change-axes-proof"
+  ],
+  "outside_authorized_batch_not_touched": {
+    "historical_shareback_logs": 38,
+    "reason": "Older unrelated shareback/root logs are outside this cleanup batch; ownership and canonical archives were not established."
+  },
+  "unreleased_owned_batch": []
+}
