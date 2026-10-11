@@ -1,0 +1,123 @@
+{
+  "archive": "codec-records.zip",
+  "archive_sha256": "c9593d2e845606ce3ca58cadc8788ec5ea5ab5a0b48a31ded706fe4b0bc3ac2e",
+  "commit": "f32661a7dff447e0be665503fb8051dab821482e",
+  "entries": [
+    {
+      "path": "build.json",
+      "bytes": 670,
+      "sha256": "f13de041e4f3d7f5c1cfb6ac12284b5991cbac8bd74361b9d774239f4928572e"
+    },
+    {
+      "path": "codec-build.log",
+      "bytes": 13339,
+      "sha256": "f41ca74f98801f9fbc11bfeb1f624c491310ca2371c949b783168930bbd4370f"
+    },
+    {
+      "path": "codec.json",
+      "bytes": 282,
+      "sha256": "b804102d71058f82989181dcdebe630ae7f7fa53edaaebe68054b2e673c95a18"
+    },
+    {
+      "path": "codec.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "first-generation/build.log",
+      "bytes": 12956,
+      "sha256": "276d41a809b570656e1acd4398b8a8e2eef99a43ec3de5db400b933ea4e7d5d5"
+    },
+    {
+      "path": "first-generation/check.json",
+      "bytes": 496,
+      "sha256": "a94924887e0ea895acf1455dd809cea9602a87cca608009ebdf347eef8cc61c9"
+    },
+    {
+      "path": "first-generation/native/native.json",
+      "bytes": 827,
+      "sha256": "e50a086063d78d1a37daee4ce8e629c85e091de82d378ed631295f6c64df1c9c"
+    },
+    {
+      "path": "first-generation/native/preserve.png",
+      "bytes": 20,
+      "sha256": "f6d322e962168f1aa0f69887fe429c6e90fa22961dad4099fe9a89c9cadba86c"
+    },
+    {
+      "path": "first-generation/native/shapes-jpeg.jpeg",
+      "bytes": 68143,
+      "sha256": "b43a46e37c53b6dd215d4e4bb9e3070cd3da5e73c927024b1cdbed5c09a026af"
+    },
+    {
+      "path": "first-generation/receipt.json",
+      "bytes": 692,
+      "sha256": "bbc921ec2273c90c2762d55efa3aef509b6642aa368b6bfb5f7ada09493ab60f"
+    },
+    {
+      "path": "first-generation/runtime.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "initial-check.json",
+      "bytes": 1192,
+      "sha256": "5c21964be70ec766fc172ffe32fd4b8405740c3757305750d9786e74e28da8b9"
+    },
+    {
+      "path": "local-clean.log",
+      "bytes": 38,
+      "sha256": "53810c6ffc91d0413399a734bb51bfea421e5ad6b589de1265c86a9aecdf0e80"
+    },
+    {
+      "path": "native/blank-a3.jpg",
+      "bytes": 28267,
+      "sha256": "a1558f7d74355f4dd8c485ea031797162f2190435ef3ed6fecc33b1c28f7c1d6"
+    },
+    {
+      "path": "native/blank-landscape.PNG",
+      "bytes": 14870,
+      "sha256": "58271c0d0f46a74cc8b5a8884706317671a7f04997e6b3935ee12de59220b349"
+    },
+    {
+      "path": "native/blank-portrait.png",
+      "bytes": 1950,
+      "sha256": "86b93815a391309a42781e531ae6b2bb7898b668266023cd9f1b236be4bff577"
+    },
+    {
+      "path": "native/native.json",
+      "bytes": 2071,
+      "sha256": "5e0ad777be840028c33b7b5dc0832b421e12b4825dd3161f540afc12c0fd9694"
+    },
+    {
+      "path": "native/preserve.png",
+      "bytes": 20,
+      "sha256": "f6d322e962168f1aa0f69887fe429c6e90fa22961dad4099fe9a89c9cadba86c"
+    },
+    {
+      "path": "native/shapes-jpeg.jpeg",
+      "bytes": 68051,
+      "sha256": "d94da7a51fe95a5d1da66f0740c1bae5b7b40e3f40aa6af0b5c0cff3bcfe5cd0"
+    },
+    {
+      "path": "native/shapes-portrait.png",
+      "bytes": 17041,
+      "sha256": "ecc70e81f28771f7d3d5e112e41757a93bbcabe2d188b9bff9b187dd27185010"
+    },
+    {
+      "path": "native/shapes.png",
+      "bytes": 17392,
+      "sha256": "471f5616c56c50145e922d6766f1365e4ae33ac207a3c5db170905205692b482"
+    },
+    {
+      "path": "native/text.png",
+      "bytes": 9967,
+      "sha256": "7d9976f2a7073017a3fbe1498568b8147c5ecd0bace222b78ff827076b939f17"
+    }
+  ],
+  "bindings": {
+    "crates/ingetrazo-formats/src/sheet_image.rs": "6899362951fe10284920f57639d0082f60e470eadad7d6c314437a34b43cfa07",
+    "crates/ingetrazo-formats/examples/sheet_image_codec.rs": "6438c86b25bba14ddd2d7eea86a7c9dafe757c695a388a0750d608970bb90efe",
+    "Cargo.lock": "20ba10e6320533128c4ceb3e2d4059d5d3d04b6cafc3ae36c19286ffdf62d84f"
+  },
+  "scope": "Encoding only, from frozen source pixels; native page renderer and GUI remain pending."
+}
