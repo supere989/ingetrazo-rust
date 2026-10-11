@@ -1,0 +1,48 @@
+{
+  "source_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "archive": "naming-source-records.zip",
+  "archive_sha256": "a40954d81b5c35c1b4ab0805b064f5a71ee5719b5e026c66ad67d8f6cac9be7a",
+  "entries": [
+    {
+      "path": "attempts/initial-reader-helper/input.igz",
+      "bytes": 1445,
+      "sha256": "ea70156cbdfba859b384168e4dff46b70c0afaf2518529882684ca8cdffa50f9"
+    },
+    {
+      "path": "attempts/initial-reader-helper/source.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "attempts/initial-reader-helper/source.stderr",
+      "bytes": 315,
+      "sha256": "520d0a30ce050a1065154f1d3d63dd4215cdda4976a13b9c2f38c2a5a0f6f9c6"
+    },
+    {
+      "path": "naming-input.igz",
+      "bytes": 1445,
+      "sha256": "d1c3fd727029b12c52ad77566cda4a56b96ed45d577f376221d8bcdff70b56da"
+    },
+    {
+      "path": "naming-large.obj",
+      "bytes": 17830,
+      "sha256": "1f469ecc070d1e419cd47769bbda9f2f8593430a58fd62ff7b2834752149a03a"
+    },
+    {
+      "path": "original-naming.json",
+      "bytes": 1178,
+      "sha256": "38253750db6f16343a629e14bfd49dd11a6012a972395eddf1fb87e7a41df225"
+    },
+    {
+      "path": "source.log",
+      "bytes": 90,
+      "sha256": "69e1632dce1ff99e96d1b32636600d950dcee34578be1ae48397f6d35b2c93b3"
+    },
+    {
+      "path": "source.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "helper_sha256": "4e9fcea3f716ac5c5f6958bfbf328af98bcdce28f86c7426dfa56539c486dc45"
+}

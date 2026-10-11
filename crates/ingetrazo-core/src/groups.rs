@@ -9,6 +9,21 @@ use uuid::Uuid;
 
 use crate::mesh::Mesh;
 
+// Shared source automatic-name owner: loaded names reserve the same counter.
+static SOURCE_GROUP_NAME: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(1);
+pub fn next_source_group_name()->Result<String,&'static str> {
+    SOURCE_GROUP_NAME.fetch_update(std::sync::atomic::Ordering::Relaxed,std::sync::atomic::Ordering::Relaxed,|n|n.checked_add(1)).map(|n|format!("Group {n}")).map_err(|_|"Automatic group name counter exhausted; document unchanged")
+}
+pub fn reserve_source_group_names(groups:&[Group]) {
+    fn maximum(groups:&[Group])->u64 {
+        groups.iter().map(|group|{
+            let own=group.name.strip_prefix("Group ").filter(|s|!s.is_empty()&&s.chars().all(|c|c.is_ascii_digit())).and_then(|s|s.parse::<u64>().ok()).unwrap_or(0);
+            own.max(maximum(&group.children))
+        }).max().unwrap_or(0)
+    }
+    SOURCE_GROUP_NAME.fetch_max(maximum(groups).saturating_add(1),std::sync::atomic::Ordering::Relaxed);
+}
+
 /// Keep source spellings distinct; only canonical native UUID32 is its own key.
 pub fn source_uid_key(id: &str) -> Uuid {
     match Uuid::parse_str(id) {

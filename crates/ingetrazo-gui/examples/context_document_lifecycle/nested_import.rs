@@ -175,6 +175,82 @@ pub fn run() {
         serde_json::to_vec_pretty(&json!({"states":thresholds})).unwrap(),
     )
     .unwrap();
+    let mut naming = IngeTrazoApp::new();
+    naming.system_clipboard = None;
+    naming.attach_session_store(ingetrazo_gui::session_state::SessionStore::isolated(
+        &root.join("settings-naming"),
+    ));
+    naming.open_document(&root.join("naming-input.igz"));
+    naming.current_file = None;
+    let mut name_rows = Vec::new();
+    let mut capture = |app: &IngeTrazoApp, phase: &str| {
+        name_rows.push(json!({"phase":phase,"names":app.scene.groups.iter().map(|g|&g.name).collect::<Vec<_>>(),"undo":app.undo_stack.len(),"redo":app.redo_stack.len()}));
+    };
+    capture(&naming, "before");
+    for phase in ["first", "second"] {
+        naming
+            .begin_unit_import(&root.join("naming-large.obj"))
+            .unwrap();
+        naming.document_session.unit_import.as_mut().unwrap().code = "m".into();
+        naming.accept_unit_import().unwrap();
+        capture(&naming, phase);
+    }
+    naming.undo();
+    capture(&naming, "undo");
+    naming.redo();
+    capture(&naming, "redo");
+    let original_names: Value =
+        serde_json::from_slice(&std::fs::read(root.join("original-naming.json")).unwrap()).unwrap();
+    let mut piece_names = Vec::new();
+    for (index, control) in original_names["piece_names"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .enumerate()
+    {
+        let authored = control["authored"].as_str().unwrap();
+        let path = root.join(format!("piece-name-{index}.obj"));
+        std::fs::write(&path,format!("v 0 0 0\nv 1 0 0\nv 0 1 0\nv 10 0 0\nv 11 0 0\nv 10 1 0\ng {authored}\nf 1 2 3\ng sentinel\nf 4 5 6\n")).unwrap();
+        let mut app = IngeTrazoApp::new();
+        app.system_clipboard = None;
+        app.attach_session_store(ingetrazo_gui::session_state::SessionStore::isolated(
+            &root.join(format!("settings-piece-{index}")),
+        ));
+        app.begin_unit_import(&path).unwrap();
+        app.document_session.unit_import.as_mut().unwrap().code = "m".into();
+        app.accept_unit_import().unwrap();
+        piece_names
+            .push(json!({"authored":authored,"result":app.scene.groups[0].children[0].name}));
+    }
+    std::fs::write(
+        root.join("native-naming.json"),
+        serde_json::to_vec_pretty(&json!({"states":name_rows,"piece_names":piece_names})).unwrap(),
+    )
+    .unwrap();
+    // Exhaustion is a refusal, never a wrapping reuse of an automatic name.
+    ingetrazo_core::groups::reserve_source_group_names(&[ingetrazo_core::groups::Group::new(
+        format!("Group {}", u64::MAX),
+    )]);
+    let before = source_scene(&naming);
+    let history = (naming.undo_stack.len(), naming.redo_stack.len());
+    let version = naming.scene.version;
+    naming
+        .begin_unit_import(&root.join("naming-large.obj"))
+        .unwrap();
+    naming.document_session.unit_import.as_mut().unwrap().code = "m".into();
+    let error = naming.accept_unit_import().unwrap_err();
+    assert!(error.contains("exhausted"));
+    assert_eq!(source_scene(&naming), before);
+    assert_eq!((naming.undo_stack.len(), naming.redo_stack.len()), history);
+    assert_eq!(naming.scene.version, version);
+    let mut guards: Value =
+        serde_json::from_slice(&std::fs::read(root.join("guards.json")).unwrap()).unwrap();
+    guards["automatic_name_exhaustion_preserves_document_history"] = json!(true);
+    std::fs::write(
+        root.join("guards.json"),
+        serde_json::to_vec_pretty(&guards).unwrap(),
+    )
+    .unwrap();
     std::fs::write(
         root.join("native-nested-import.json"),
         serde_json::to_vec_pretty(&json!({"cases":original["cases"],"states":rows})).unwrap(),

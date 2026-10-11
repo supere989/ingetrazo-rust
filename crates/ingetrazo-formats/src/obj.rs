@@ -153,18 +153,17 @@ impl ObjPlan {
                 }
                 container.children.push(child);
             }
+            source_group_kind(&mut container, true);
             scene.groups.push(container);
         } else if self.face_count > 400 {
-            static DEFAULT_IMPORT_GROUP: std::sync::atomic::AtomicU64 =
-                std::sync::atomic::AtomicU64::new(1);
-            let name = format!(
-                "Group {}",
-                DEFAULT_IMPORT_GROUP.fetch_add(1, std::sync::atomic::Ordering::Relaxed)
-            );
-            let mut group = ingetrazo_core::groups::Group::new(name);
+            let mut mesh = ingetrazo_core::mesh::Mesh::new();
             for entity in self.entities.iter_mut().filter(|e| e.face) {
-                Self::emit_entity(entity, &mut group.mesh)?;
+                Self::emit_entity(entity, &mut mesh)?;
             }
+            let name = ingetrazo_core::groups::next_source_group_name()
+                .map_err(|e| ObjError::Parse(0, e.into()))?;
+            let mut group = ingetrazo_core::groups::Group::with_mesh(name, mesh);
+            source_group_kind(&mut group, false);
             scene.groups.push(group);
         } else {
             for entity in self.entities.iter_mut().filter(|e| e.face) {
@@ -175,21 +174,19 @@ impl ObjPlan {
         Ok(())
     }
 }
+pub(crate) fn source_group_kind(group: &mut ingetrazo_core::groups::Group, placed: bool) {
+    let identity = serde_json::json!(glam::DMat4::IDENTITY.to_cols_array());
+    group.native_document = serde_json::json!({"component":true,"xform":if placed {identity.clone()}else{serde_json::Value::Null}});
+    group.native_baseline = serde_json::json!({"component":false,"xform":if placed {serde_json::Value::Null}else{identity}});
+}
 fn source_piece_name(piece: &(String, String), number: usize) -> String {
     let name = if piece.1.is_empty() {
         &piece.0
     } else {
         &piece.1
     };
-    let name = name.trim();
-    if name.is_empty() {
-        return format!("Part {number}");
-    }
-    if !name.chars().any(char::is_alphabetic) {
-        return format!("Part {name}");
-    }
+    let mut name = name.trim().to_owned();
     // Blender suffix cleanup is kept in this naming layer, not in owner identity.
-    let mut name = name.to_owned();
     if let Some((head, tail)) = name.rsplit_once('_') {
         let word = tail.split('.').next().unwrap_or("");
         let suffix = tail.strip_prefix(word).unwrap_or("");
@@ -204,6 +201,7 @@ fn source_piece_name(piece: &(String, String), number: usize) -> String {
             name = head.to_owned();
         }
     }
+    let fallback = name.clone();
     loop {
         let Some((head, tail)) = name.rsplit_once('.') else {
             break;
@@ -214,9 +212,15 @@ fn source_piece_name(piece: &(String, String), number: usize) -> String {
         name = head.to_owned();
     }
     if name.trim().is_empty() {
-        piece.1.clone()
+        name = fallback;
+    }
+    let name = name.trim();
+    if name.is_empty() {
+        format!("Part {number}")
+    } else if !name.chars().any(char::is_alphabetic) {
+        format!("Part {name}")
     } else {
-        name.trim().to_owned()
+        name.to_owned()
     }
 }
 pub fn parse_obj_with_units(

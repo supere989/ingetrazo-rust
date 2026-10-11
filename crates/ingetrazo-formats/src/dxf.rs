@@ -95,6 +95,7 @@ impl DxfPlan {
         entity: &DxfEntity,
         mesh: &mut ingetrazo_core::mesh::Mesh,
         next_curve: &mut Option<usize>,
+        source_policy: bool,
     ) -> Result<(), DxfError> {
         let ids = entity
             .points
@@ -105,7 +106,9 @@ impl DxfPlan {
             let id = mesh
                 .add_face(ids, vec![])
                 .ok_or_else(|| DxfError::Parse("Invalid DXF face".into()))?;
-            mesh.faces[id].layer = Some(entity.layer.clone());
+            if !source_policy {
+                mesh.faces[id].layer = Some(entity.layer.clone());
+            }
         } else {
             let curve = if entity.curved {
                 let next = next_curve.get_or_insert_with(|| {
@@ -123,7 +126,9 @@ impl DxfPlan {
             };
             for pair in ids.windows(2) {
                 if let Some(id) = mesh.add_edge(pair[0], pair[1]) {
-                    mesh.edges[id].layer = Some(entity.layer.clone());
+                    if !source_policy {
+                        mesh.edges[id].layer = Some(entity.layer.clone());
+                    }
                     if entity.curved {
                         mesh.edges[id].curve_id = curve;
                     }
@@ -159,6 +164,7 @@ impl DxfPlan {
                 entity,
                 mesh,
                 curves.entry(entity.layer.clone()).or_insert(None),
+                false,
             )?;
         }
         Ok(())
@@ -185,8 +191,9 @@ impl DxfPlan {
             }
             let mut next_curve = Some(0);
             for entity in &entities {
-                Self::emit_entity(entity, &mut group.mesh, &mut next_curve)?;
+                Self::emit_entity(entity, &mut group.mesh, &mut next_curve, true)?;
             }
+            crate::obj::source_group_kind(&mut group, false);
             scene.groups.push(group);
         }
         scene.bump_version();
