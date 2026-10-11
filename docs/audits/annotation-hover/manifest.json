@@ -1,0 +1,50 @@
+{
+  "runtime_commit": "08f32aff94570f2d76b597a2d0278a0658924d43",
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "entries": {
+    "acquisition.json": "79fdb0eea0e916de9eecad06e14861405c5043af633aae2e7216525dcb421d22",
+    "build.log": "9cecddf4e15cce0fa728fbfd81ba1b207e338afbb235ecc6a05edbf177c7f513",
+    "final-build.log": "cc3d3db7f968f2d12130771d81ec2f0d9d0d7524a106d38e4ae600c13556a995",
+    "final-runtime.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "first-build-fixture-signature.log": "fa7593c58aa3f26ac76f7b1bcc2a89280d6cee167cf424b00c9d2a06d8d01f2a",
+    "first-hover-glyph-overlap.json": "f5c35dc426a394fa5431f21e6e50e2a36ca25923bb0661be8b62f100f410e422",
+    "first-hover-unbound-cursor.json": "5a6d457a922ea2b35d5f69d545407a34ba55c153bec16125aac1096b3f56374a",
+    "first40-native-weak.json": "3ef43811f8ff63778c46cadb406df8709fbb2440dd110344fc2f9c927f9e330c",
+    "first40-source.json": "3ef43811f8ff63778c46cadb406df8709fbb2440dd110344fc2f9c927f9e330c",
+    "input.igz": "c9ce01d930fff89d9af94b5580093f6f82626b75d6ce690482e32fd787d4a87b",
+    "native-hover.json": "501db4388fcbbec498dda413c7ba570afac1db3bd710444d748310a317804ae4",
+    "original-hover.json": "bd4b3480d1c0e6e93067e14f1b36b609d34fcef43b9fb046aaff7d84706c425c",
+    "owner-test.log": "a54319f27b60931bc49390c9597f579683c3d2361c7912a8d9a1c3abad9f4068",
+    "results.json": "7c81f090bd2d36d21fe4901d12bfbeb6168f98375e56efc5beb02edb3311d3d2",
+    "runtime.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "source-helper-first.py": "65ff6a6d71a490013f2bd8cb3116b82d051f859ab68b4618b65ece57a2e45714",
+    "source-ink.log": "85c6cf6bf1f858b3a75272df711ca9ab0fbf9a55a30725e60b754acc709d79a9",
+    "source.log": "8f90d232282fcb43ed4ac28d874df7b140873b5c61d309f9c5556fadd3907b1f"
+  },
+  "source_files": {
+    "crates/ingetrazo-gui/examples/annotation_hover_fixture.rs": "e6acc2efc78a196840ea4b8ae6b3ac34e38ba53f2ad52454c8c9881656649c39",
+    "crates/ingetrazo-gui/src/annotation_plan.rs": "cc15cbf13edc23df52f1814be2199bd786dfdd37273931b7d097015eff08d75c",
+    "crates/ingetrazo-gui/src/lib.rs": "7596d85e128fdda491081401b36d5134ad533f6df6741211d898c9b830383b19",
+    "crates/ingetrazo-gui/src/native_metal/distance_label.rs": "b4557deac40cccbf6eadb014d3ec603d917130a97d168c6c6522a110c961fc55",
+    "crates/ingetrazo-gui/src/native_vulkan/annotation_viewport.rs": "5f7d7bbbd4142cfc79a686d581daede3b8e569c9cf1f86117f0829fed6a5df95",
+    "crates/ingetrazo-gui/src/viewport.rs": "99f4a7a7aa2d84e782ee2bd97851242955f5cb0a882c42caf416e11b98e33e91",
+    "crates/ingetrazo-tools/src/base.rs": "91f703b88546db68a2065ae5b804cccedf1abfb560efb7cec6ab6068a59d5efa",
+    "crates/ingetrazo-tools/src/select.rs": "acf376713d4cc7dfe39c3e2c79a521204311c9dd48699b0a0beb9c1e7f133a70",
+    "scripts/check-annotation-hover.py": "235ef55ad005a822eedc4a6991199d8cd34ff09edcb766bfc2b8c123d5d8bbb9",
+    "scripts/reference-annotation-hover.py": "0a62a19df03501436dd12cdb7f1f240771d8262b9d81bd008625d8550f50977f"
+  },
+  "binary": {
+    "path": "/tmp/ingetrazo-ai-registry-target/debug/examples/annotation_hover_fixture",
+    "sha256": "1ecba902f4bab93a748e98e258db96f8ef368d0e6c34776563ece85c55e3f5fb"
+  },
+  "archive_sha256": "0934b6d79130d996d6c2ac96dd7205472340a91f1b112d78b82074d9d16add4d",
+  "results": {
+    "exact_states": 42,
+    "rejected_mutations": 217,
+    "rejected_retained_weak_candidate": 1,
+    "source_new_states": 12,
+    "retained_source_states": 30,
+    "scope": "actual App/cache picks + target-specific CPU native plan; no GPU cache reuse or pixel claim"
+  },
+  "archive_byte_verified": true
+}

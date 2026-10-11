@@ -1,0 +1,13 @@
+# Select annotation hover
+
+Frozen runtime 08f32aff. Focused acceptance: **42 exact typed states**, **217 rejected mutations**, and the mandatory retained weak40 candidate rejected. The owner/context/modal/leave test passes (1 test, 340 filtered). Corrected named build took 5.86s; no GPU or broad suite was run.
+
+`manifest.json` authenticates every member of `records.zip`, runtime sources and the frozen named binary. Every archive member was byte-compared to its retained raw file. Replay extracts the archive, runs `annotation_hover_fixture <directory>`, then `python3 scripts/check-annotation-hover.py <directory>`. Preserve `first40-native-weak.json`: the checker requires it. Initial cursor setup and compiler failures remain archived.
+
+Unchanged original pin: 6be29fe437a7cd992d4e079f71720821b25216b9. Original tools/select.py226–293,420–422 share glyph→group/visible-edge→dimension→leader priority. viewport.py5852 compares identity, 7104/7145 use selected **OR** identical hover orange [243,115,41], leaveEvent11409 and tool/context retirement clear hover. Select Cancel is the inherited no-op; modal input freezes hover until actual departure/retirement.
+
+Eight cases cover glyph, dimension, leader, edge/group priority, hidden/locked layers and nested context. Thirty accepted original controls are reused; only twelve selected/default-color/empty-click controls were newly acquired. The source helper declares the retained controls’ per-target inks from the pinned draw predicate. Native observations inspect each actual target’s real CPU plan operations, including authored [11,22,33], selected OR hover and actual selection clearing. Strict recursive JSON comparison rejects bool/int/float aliases and wrong-target orange. Offscreen original Viewport/SelectTool and native App/cache dispatch are operative controls, not physical device ingress or GL pixels.
+
+Hover is transient typed identity state: cached index/token fast path, complete borrowed context-chain validation, no Scene clone/history/dirty write per move. Same-owner hover/context does not rescan membership; shifted records fall back to identity. Both native platform keys include hover and selection view_version. Existing key equality/early-return establishes the unchanged-owner cache path by source review; **actual warm GPU cache reuse was not measured**. Actual modal/leave/stale/recreation controls pass.
+
+Remaining scope: empty-selection Select Delete hover fallback (select.py639–654), full P15, CPU fallback hover rendering, new glyph/occlusion pixels and broader transforms are not claimed. Raw files remain under /tmp/ingetrazo-annotation-hover-proof until root releases them; target/worktree remain intact. Root owns the 19th joint CI consumer wiring.
