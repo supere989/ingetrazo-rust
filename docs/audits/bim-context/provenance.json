@@ -1,0 +1,27 @@
+{
+  "base": "352805d2",
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "source_sha256": {
+    "crates/ingetrazo-core/src/bim.rs": "8742f7ee12b2ee52582a06510716f209fe184fc3947024d6c78f9090cf400896",
+    "crates/ingetrazo-core/src/drafting.rs": "384025e0e5f408ff38c1ec471e577d668135be3d16ea09cd1c12df8a0cb96b19",
+    "crates/ingetrazo-core/src/scene.rs": "937fd494734a17457e97a858d3cd22172ce513798656ee88db4e66f771d73017",
+    "crates/ingetrazo-gui/src/bim_controller.rs": "bcea1392a7a84dc5cf0d1108cbbb6403f6a6f49bb868d3caa62415ac563003fb",
+    "crates/ingetrazo-gui/src/component_edit.rs": "c570ac3ba86f182b386dd080c8805cd8ec9ff81ea169544050f349f02e80ccda",
+    "crates/ingetrazo-gui/src/tool_history.rs": "ff70e1edfb34c9fba6a5fc011a34e8d998cde44f54c7418c5497dff06a878349",
+    "crates/ingetrazo-formats/src/ifc.rs": "aa000b5a9eb810c2071927d9062aa386336a782b95bed86c17a02f5b763d9c0e",
+    "crates/ingetrazo-gui/examples/bim_context_acceptance_fixture.rs": "bb131cb9aadae2097f480e4a0c0a71c5366dde35f0bf1a80a69c58c90b6b08a7",
+    "crates/ingetrazo-gui/examples/bim_context_ui_fixture.rs": "46933a48ea3971ff8d63861001ec2aa5c8828ea6fadfff6013fb753b15127ea6",
+    "scripts/reference-bim-context.py": "9605fa6624095b2c3eac603ea5c6c87de990f3d019bff388e6b604c0b241e0e1",
+    "scripts/check-bim-context.py": "17d6509c220eb7d28d4563e358b7e392fc971457492d0429abdcd615c361918b",
+    "scripts/check-bim-context-ui.py": "e22d017e31bdc378b8ff2dbd0a0384505fca385bd527dff75217f539d9e71d8d",
+    "scripts/check-bim-context-ui-reports.py": "6d5b62e0607f87858d49a7586bbc7f41b97275042c63cdbd2b2941dcc3ab7cae",
+    "scripts/bim-context-original-ui.py": "6ff295edff3ac5066e480404984ff479f0b83348ae1aaca0c7ae0a663c7663f7"
+  },
+  "binary_sha256": {
+    "/tmp/ingetrazo-metal-world-target/debug/examples/bim_context_acceptance_fixture": "0e2515fd77087e003531641d5f736de2616d6bf810359ef807024a88d9b19a0c",
+    "/tmp/ingetrazo-metal-world-target/debug/examples/bim_context_ui_fixture": "ff23faac71a14e0dce625b10bd2e2102b2ea83af7ce1eba1a935d262759fd6e9",
+    "/tmp/ingetrazo-metal-world-target/debug/examples/bim_draw_acceptance_fixture": "ffb364510d4ab13d77ebdf7ec9a3e64c3ee6c859e741c66925ee7a6f1e3e5438",
+    "/tmp/ingetrazo-metal-world-target/debug/deps/ingetrazo_gui-f6cf17d01dedd432": "a567f97fe0380c5b13e4a40f7f4506bb81a86e7a584cd4a969cbdbae23da64e4"
+  },
+  "scope": "UI binaries were frozen before final Cancel activation hook and IFC-only history binding correction; unchanged UI/command evidence reused. Final ten app tests compile latest source and exercise the latter binding correction. No broad suite or renderer pixel claim."
+}

@@ -1,0 +1,31 @@
+{
+  "passed": true,
+  "cases": [
+    "classic-empty-root",
+    "classic-root-id40",
+    "placed-leaf-root-id40",
+    "nested-transformed-root-id40",
+    "linked-leaf-root-id40",
+    "tagged-mother-root-id40",
+    "tagged-group-root-id40"
+  ],
+  "phases": [
+    "entered",
+    "first",
+    "second",
+    "undo",
+    "redo",
+    "finished"
+  ],
+  "exact_phases": 42,
+  "negative_controls": [
+    "empty",
+    "renamed-recipe",
+    "tag-id",
+    "opaque-attrs",
+    "parked-root",
+    "quantity",
+    "placement"
+  ],
+  "scope": "Exact oriented rings, holes, all face attrs, root loose/groups, takeoff and CSV for seven pinned source recipes. Identity matrix representation normalized; no numeric tolerance. Pointer context entry, active-context IFC export and general parked entity tools remain open."
+}

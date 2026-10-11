@@ -1,0 +1,6538 @@
+{
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "recipes": [
+    {
+      "case": "classic-empty-root",
+      "phases": [
+        {
+          "phase": "entered",
+          "active": [],
+          "loose": [],
+          "groups": [
+            {
+              "name": "target",
+              "faces": [],
+              "children": [],
+              "transform": null
+            }
+          ],
+          "rows": [],
+          "csv": "class,name,metrado,unit,area_m2,volume_m3\n"
+        },
+        {
+          "phase": "first",
+          "active": [
+            {
+              "vertices": [
+                [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  2.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  2.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  1.0,
+                  0.0
+                ]
+              ],
+              "holes": [],
+              "attrs": {
+                "ifc": {
+                  "class": "IfcWall",
+                  "name": "context",
+                  "id": 1
+                }
+              }
+            }
+          ],
+          "loose": [],
+          "groups": [
+            {
+              "name": "target",
+              "faces": [
+                {
+                  "vertices": [
+                    [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    [
+                      2.0,
+                      0.0,
+                      0.0
+                    ],
+                    [
+                      2.0,
+                      1.0,
+                      0.0
+                    ],
+                    [
+                      0.0,
+                      1.0,
+                      0.0
+                    ]
+                  ],
+                  "holes": [],
+                  "attrs": {
+                    "ifc": {
+                      "class": "IfcWall",
+                      "name": "context",
+                      "id": 1
+                    }
+                  }
+                }
+              ],
+              "children": [],
+              "transform": null
+            }
+          ],
+          "rows": [],
+          "csv": "class,name,metrado,unit,area_m2,volume_m3\n"
+        },
+        {
+          "phase": "second",
+          "active": [
+            {
+              "vertices": [
+                [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  2.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  2.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  1.0,
+                  0.0
+                ]
+              ],
+              "holes": [],
+              "attrs": {
+                "ifc": {
+                  "class": "IfcWall",
+                  "name": "context",
+                  "id": 1
+                }
+              }
+            },
+            {
+              "vertices": [
+                [
+                  0.0,
+                  5.0,
+                  0.0
+                ],
+                [
+                  2.0,
+                  5.0,
+                  0.0
+                ],
+                [
+                  2.0,
+                  6.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  6.0,
+                  0.0
+                ]
+              ],
+              "holes": [],
+              "attrs": {
+                "ifc": {
+                  "class": "IfcWall",
+                  "name": "context",
+                  "id": 1
+                }
+              }
+            }
+          ],
+          "loose": [],
+          "groups": [
+            {
+              "name": "target",
+              "faces": [
+                {
+                  "vertices": [
+                    [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    [
+                      2.0,
+                      0.0,
+                      0.0
+                    ],
+                    [
+                      2.0,
+                      1.0,
+                      0.0
+                    ],
+                    [
+                      0.0,
+                      1.0,
+                      0.0
+                    ]
+                  ],
+                  "holes": [],
+                  "attrs": {
+                    "ifc": {
+                      "class": "IfcWall",
+                      "name": "context",
+                      "id": 1
+                    }
+                  }
+                },
+                {
+                  "vertices": [
+                    [
+                      0.0,
+                      5.0,
+                      0.0
+                    ],
+                    [
+                      2.0,
+                      5.0,
+                      0.0
+                    ],
+                    [
+                      2.0,
+                      6.0,
+                      0.0
+                    ],
+                    [
+                      0.0,
+                      6.0,
+                      0.0
+                    ]
+                  ],
+                  "holes": [],
+                  "attrs": {
+                    "ifc": {
+                      "class": "IfcWall",
+                      "name": "context",
+                      "id": 1
+                    }
+                  }
+                }
+              ],
+              "children": [],
+              "transform": null
+            }
+          ],
+          "rows": [],
+          "csv": "class,name,metrado,unit,area_m2,volume_m3\n"
+        },
+        {
+          "phase": "undo",
+          "active": [
+            {
+              "vertices": [
+                [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  2.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  2.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  1.0,
+                  0.0
+                ]
+              ],
+              "holes": [],
+              "attrs": {
+                "ifc": {
+                  "class": "IfcWall",
+                  "name": "context",
+                  "id": 1
+                }
+              }
+            }
+          ],
+          "loose": [],
+          "groups": [
+            {
+              "name": "target",
+              "faces": [
+                {
+                  "vertices": [
+                    [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    [
+                      2.0,
+                      0.0,
+                      0.0
+                    ],
+                    [
+                      2.0,
+                      1.0,
+                      0.0
+                    ],
+                    [
+                      0.0,
+                      1.0,
+                      0.0
+                    ]
+                  ],
+                  "holes": [],
+                  "attrs": {
+                    "ifc": {
+                      "class": "IfcWall",
+                      "name": "context",
+                      "id": 1
+                    }
+                  }
+                }
+              ],
+              "children": [],
+              "transform": null
+            }
+          ],
+          "rows": [],
+          "csv": "class,name,metrado,unit,area_m2,volume_m3\n"
+        },
+        {
+          "phase": "redo",
+          "active": [
+            {
+              "vertices": [
+                [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  2.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  2.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  1.0,
+                  0.0
+                ]
+              ],
+              "holes": [],
+              "attrs": {
+                "ifc": {
+                  "class": "IfcWall",
+                  "name": "context",
+                  "id": 1
+                }
+              }
+            },
+            {
+              "vertices": [
+                [
+                  0.0,
+                  5.0,
+                  0.0
+                ],
+                [
+                  2.0,
+                  5.0,
+                  0.0
+                ],
+                [
+                  2.0,
+                  6.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  6.0,
+                  0.0
+                ]
+              ],
+              "holes": [],
+              "attrs": {
+                "ifc": {
+                  "class": "IfcWall",
+                  "name": "context",
+                  "id": 1
+                }
+              }
+            }
+          ],
+          "loose": [],
+          "groups": [
+            {
+              "name": "target",
+              "faces": [
+                {
+                  "vertices": [
+                    [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    [
+                      2.0,
+                      0.0,
+                      0.0
+                    ],
+                    [
+                      2.0,
+                      1.0,
+                      0.0
+                    ],
+                    [
+                      0.0,
+                      1.0,
+                      0.0
+                    ]
+                  ],
+                  "holes": [],
+                  "attrs": {
+                    "ifc": {
+                      "class": "IfcWall",
+                      "name": "context",
+                      "id": 1
+                    }
+                  }
+                },
+                {
+                  "vertices": [
+                    [
+                      0.0,
+                      5.0,
+                      0.0
+                    ],
+                    [
+                      2.0,
+                      5.0,
+                      0.0
+                    ],
+                    [
+                      2.0,
+                      6.0,
+                      0.0
+                    ],
+                    [
+                      0.0,
+                      6.0,
+                      0.0
+                    ]
+                  ],
+                  "holes": [],
+                  "attrs": {
+                    "ifc": {
+                      "class": "IfcWall",
+                      "name": "context",
+                      "id": 1
+                    }
+                  }
+                }
+              ],
+              "children": [],
+              "transform": null
+            }
+          ],
+          "rows": [],
+          "csv": "class,name,metrado,unit,area_m2,volume_m3\n"
+        },
+        {
+          "phase": "finished",
+          "active": [],
+          "loose": [],
+          "groups": [
+            {
+              "name": "target",
+              "faces": [
+                {
+                  "vertices": [
+                    [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    [
+                      2.0,
+                      0.0,
+                      0.0
+                    ],
+                    [
+                      2.0,
+                      1.0,
+                      0.0
+                    ],
+                    [
+                      0.0,
+                      1.0,
+                      0.0
+                    ]
+                  ],
+                  "holes": [],
+                  "attrs": {
+                    "ifc": {
+                      "class": "IfcWall",
+                      "name": "context",
+                      "id": 1
+                    }
+                  }
+                },
+                {
+                  "vertices": [
+                    [
+                      0.0,
+                      5.0,
+                      0.0
+                    ],
+                    [
+                      2.0,
+                      5.0,
+                      0.0
+                    ],
+                    [
+                      2.0,
+                      6.0,
+                      0.0
+                    ],
+                    [
+                      0.0,
+                      6.0,
+                      0.0
+                    ]
+                  ],
+                  "holes": [],
+                  "attrs": {
+                    "ifc": {
+                      "class": "IfcWall",
+                      "name": "context",
+                      "id": 1
+                    }
+                  }
+                }
+              ],
+              "children": [],
+              "transform": null
+            }
+          ],
+          "rows": [],
+          "csv": "class,name,metrado,unit,area_m2,volume_m3\n"
+        }
+      ]
+    },
+    {
+      "case": "classic-root-id40",
+      "phases": [
+        {
+          "phase": "entered",
+          "active": [],
+          "loose": [
+            {
+              "vertices": [
+                [
+                  20.0,
+                  20.0,
+                  0.0
+                ],
+                [
+                  22.0,
+                  20.0,
+                  0.0
+                ],
+                [
+                  22.0,
+                  21.0,
+                  0.0
+                ],
+                [
+                  20.0,
+                  21.0,
+                  0.0
+                ]
+              ],
+              "holes": [],
+              "attrs": {
+                "ifc": {
+                  "id": 40,
+                  "class": "IfcSlab",
+                  "name": "root"
+                }
+              }
+            }
+          ],
+          "groups": [
+            {
+              "name": "target",
+              "faces": [],
+              "children": [],
+              "transform": null
+            }
+          ],
+          "rows": [
+            {
+              "class": "IfcSlab",
+              "name": "root",
+              "area": 2.0,
+              "volume": null,
+              "key": "faces"
+            }
+          ],
+          "csv": "class,name,metrado,unit,area_m2,volume_m3\nIfcSlab,\"root\",2.0000,m2,2.0000,\n"
+        },
+        {
+          "phase": "first",
+          "active": [
+            {
+              "vertices": [
+                [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  2.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  2.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  1.0,
+                  0.0
+                ]
+              ],
+              "holes": [],
+              "attrs": {
+                "ifc": {
+                  "class": "IfcWall",
+                  "name": "context",
+                  "id": 41
+                }
+              }
+            }
+          ],
+          "loose": [
+            {
+              "vertices": [
+                [
+                  20.0,
+                  20.0,
+                  0.0
+                ],
+                [
+                  22.0,
+                  20.0,
+                  0.0
+                ],
+                [
+                  22.0,
+                  21.0,
+                  0.0
+                ],
+                [
+                  20.0,
+                  21.0,
+                  0.0
+                ]
+              ],
+              "holes": [],
+              "attrs": {
+                "ifc": {
+                  "id": 40,
+                  "class": "IfcSlab",
+                  "name": "root"
+                }
+              }
+            }
+          ],
+          "groups": [
+            {
+              "name": "target",
+              "faces": [
+                {
+                  "vertices": [
+                    [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    [
+                      2.0,
+                      0.0,
+                      0.0
+                    ],
+                    [
+                      2.0,
+                      1.0,
+                      0.0
+                    ],
+                    [
+                      0.0,
+                      1.0,
+                      0.0
+                    ]
+                  ],
+                  "holes": [],
+                  "attrs": {
+                    "ifc": {
+                      "class": "IfcWall",
+                      "name": "context",
+                      "id": 41
+                    }
+                  }
+                }
+              ],
+              "children": [],
+              "transform": null
+            }
+          ],
+          "rows": [
+            {
+              "class": "IfcSlab",
+              "name": "root",
+              "area": 2.0,
+              "volume": null,
+              "key": "faces"
+            }
+          ],
+          "csv": "class,name,metrado,unit,area_m2,volume_m3\nIfcSlab,\"root\",2.0000,m2,2.0000,\n"
+        },
+        {
+          "phase": "second",
+          "active": [
+            {
+              "vertices": [
+                [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  2.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  2.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  1.0,
+                  0.0
+                ]
+              ],
+              "holes": [],
+              "attrs": {
+                "ifc": {
+                  "class": "IfcWall",
+                  "name": "context",
+                  "id": 41
+                }
+              }
+            },
+            {
+              "vertices": [
+                [
+                  0.0,
+                  5.0,
+                  0.0
+                ],
+                [
+                  2.0,
+                  5.0,
+                  0.0
+                ],
+                [
+                  2.0,
+                  6.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  6.0,
+                  0.0
+                ]
+              ],
+              "holes": [],
+              "attrs": {
+                "ifc": {
+                  "class": "IfcWall",
+                  "name": "context",
+                  "id": 41
+                }
+              }
+            }
+          ],
+          "loose": [
+            {
+              "vertices": [
+                [
+                  20.0,
+                  20.0,
+                  0.0
+                ],
+                [
+                  22.0,
+                  20.0,
+                  0.0
+                ],
+                [
+                  22.0,
+                  21.0,
+                  0.0
+                ],
+                [
+                  20.0,
+                  21.0,
+                  0.0
+                ]
+              ],
+              "holes": [],
+              "attrs": {
+                "ifc": {
+                  "id": 40,
+                  "class": "IfcSlab",
+                  "name": "root"
+                }
+              }
+            }
+          ],
+          "groups": [
+            {
+              "name": "target",
+              "faces": [
+                {
+                  "vertices": [
+                    [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    [
+                      2.0,
+                      0.0,
+                      0.0
+                    ],
+                    [
+                      2.0,
+                      1.0,
+                      0.0
+                    ],
+                    [
+                      0.0,
+                      1.0,
+                      0.0
+                    ]
+                  ],
+                  "holes": [],
+                  "attrs": {
+                    "ifc": {
+                      "class": "IfcWall",
+                      "name": "context",
+                      "id": 41
+                    }
+                  }
+                },
+                {
+                  "vertices": [
+                    [
+                      0.0,
+                      5.0,
+                      0.0
+                    ],
+                    [
+                      2.0,
+                      5.0,
+                      0.0
+                    ],
+                    [
+                      2.0,
+                      6.0,
+                      0.0
+                    ],
+                    [
+                      0.0,
+                      6.0,
+                      0.0
+                    ]
+                  ],
+                  "holes": [],
+                  "attrs": {
+                    "ifc": {
+                      "class": "IfcWall",
+                      "name": "context",
+                      "id": 41
+                    }
+                  }
+                }
+              ],
+              "children": [],
+              "transform": null
+            }
+          ],
+          "rows": [
+            {
+              "class": "IfcSlab",
+              "name": "root",
+              "area": 2.0,
+              "volume": null,
+              "key": "faces"
+            }
+          ],
+          "csv": "class,name,metrado,unit,area_m2,volume_m3\nIfcSlab,\"root\",2.0000,m2,2.0000,\n"
+        },
+        {
+          "phase": "undo",
+          "active": [
+            {
+              "vertices": [
+                [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  2.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  2.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  1.0,
+                  0.0
+                ]
+              ],
+              "holes": [],
+              "attrs": {
+                "ifc": {
+                  "class": "IfcWall",
+                  "name": "context",
+                  "id": 41
+                }
+              }
+            }
+          ],
+          "loose": [
+            {
+              "vertices": [
+                [
+                  20.0,
+                  20.0,
+                  0.0
+                ],
+                [
+                  22.0,
+                  20.0,
+                  0.0
+                ],
+                [
+                  22.0,
+                  21.0,
+                  0.0
+                ],
+                [
+                  20.0,
+                  21.0,
+                  0.0
+                ]
+              ],
+              "holes": [],
+              "attrs": {
+                "ifc": {
+                  "id": 40,
+                  "class": "IfcSlab",
+                  "name": "root"
+                }
+              }
+            }
+          ],
+          "groups": [
+            {
+              "name": "target",
+              "faces": [
+                {
+                  "vertices": [
+                    [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    [
+                      2.0,
+                      0.0,
+                      0.0
+                    ],
+                    [
+                      2.0,
+                      1.0,
+                      0.0
+                    ],
+                    [
+                      0.0,
+                      1.0,
+                      0.0
+                    ]
+                  ],
+                  "holes": [],
+                  "attrs": {
+                    "ifc": {
+                      "class": "IfcWall",
+                      "name": "context",
+                      "id": 41
+                    }
+                  }
+                }
+              ],
+              "children": [],
+              "transform": null
+            }
+          ],
+          "rows": [
+            {
+              "class": "IfcSlab",
+              "name": "root",
+              "area": 2.0,
+              "volume": null,
+              "key": "faces"
+            }
+          ],
+          "csv": "class,name,metrado,unit,area_m2,volume_m3\nIfcSlab,\"root\",2.0000,m2,2.0000,\n"
+        },
+        {
+          "phase": "redo",
+          "active": [
+            {
+              "vertices": [
+                [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  2.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  2.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  1.0,
+                  0.0
+                ]
+              ],
+              "holes": [],
+              "attrs": {
+                "ifc": {
+                  "class": "IfcWall",
+                  "name": "context",
+                  "id": 41
+                }
+              }
+            },
+            {
+              "vertices": [
+                [
+                  0.0,
+                  5.0,
+                  0.0
+                ],
+                [
+                  2.0,
+                  5.0,
+                  0.0
+                ],
+                [
+                  2.0,
+                  6.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  6.0,
+                  0.0
+                ]
+              ],
+              "holes": [],
+              "attrs": {
+                "ifc": {
+                  "class": "IfcWall",
+                  "name": "context",
+                  "id": 41
+                }
+              }
+            }
+          ],
+          "loose": [
+            {
+              "vertices": [
+                [
+                  20.0,
+                  20.0,
+                  0.0
+                ],
+                [
+                  22.0,
+                  20.0,
+                  0.0
+                ],
+                [
+                  22.0,
+                  21.0,
+                  0.0
+                ],
+                [
+                  20.0,
+                  21.0,
+                  0.0
+                ]
+              ],
+              "holes": [],
+              "attrs": {
+                "ifc": {
+                  "id": 40,
+                  "class": "IfcSlab",
+                  "name": "root"
+                }
+              }
+            }
+          ],
+          "groups": [
+            {
+              "name": "target",
+              "faces": [
+                {
+                  "vertices": [
+                    [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    [
+                      2.0,
+                      0.0,
+                      0.0
+                    ],
+                    [
+                      2.0,
+                      1.0,
+                      0.0
+                    ],
+                    [
+                      0.0,
+                      1.0,
+                      0.0
+                    ]
+                  ],
+                  "holes": [],
+                  "attrs": {
+                    "ifc": {
+                      "class": "IfcWall",
+                      "name": "context",
+                      "id": 41
+                    }
+                  }
+                },
+                {
+                  "vertices": [
+                    [
+                      0.0,
+                      5.0,
+                      0.0
+                    ],
+                    [
+                      2.0,
+                      5.0,
+                      0.0
+                    ],
+                    [
+                      2.0,
+                      6.0,
+                      0.0
+                    ],
+                    [
+                      0.0,
+                      6.0,
+                      0.0
+                    ]
+                  ],
+                  "holes": [],
+                  "attrs": {
+                    "ifc": {
+                      "class": "IfcWall",
+                      "name": "context",
+                      "id": 41
+                    }
+                  }
+                }
+              ],
+              "children": [],
+              "transform": null
+            }
+          ],
+          "rows": [
+            {
+              "class": "IfcSlab",
+              "name": "root",
+              "area": 2.0,
+              "volume": null,
+              "key": "faces"
+            }
+          ],
+          "csv": "class,name,metrado,unit,area_m2,volume_m3\nIfcSlab,\"root\",2.0000,m2,2.0000,\n"
+        },
+        {
+          "phase": "finished",
+          "active": [
+            {
+              "vertices": [
+                [
+                  20.0,
+                  20.0,
+                  0.0
+                ],
+                [
+                  22.0,
+                  20.0,
+                  0.0
+                ],
+                [
+                  22.0,
+                  21.0,
+                  0.0
+                ],
+                [
+                  20.0,
+                  21.0,
+                  0.0
+                ]
+              ],
+              "holes": [],
+              "attrs": {
+                "ifc": {
+                  "id": 40,
+                  "class": "IfcSlab",
+                  "name": "root"
+                }
+              }
+            }
+          ],
+          "loose": [
+            {
+              "vertices": [
+                [
+                  20.0,
+                  20.0,
+                  0.0
+                ],
+                [
+                  22.0,
+                  20.0,
+                  0.0
+                ],
+                [
+                  22.0,
+                  21.0,
+                  0.0
+                ],
+                [
+                  20.0,
+                  21.0,
+                  0.0
+                ]
+              ],
+              "holes": [],
+              "attrs": {
+                "ifc": {
+                  "id": 40,
+                  "class": "IfcSlab",
+                  "name": "root"
+                }
+              }
+            }
+          ],
+          "groups": [
+            {
+              "name": "target",
+              "faces": [
+                {
+                  "vertices": [
+                    [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    [
+                      2.0,
+                      0.0,
+                      0.0
+                    ],
+                    [
+                      2.0,
+                      1.0,
+                      0.0
+                    ],
+                    [
+                      0.0,
+                      1.0,
+                      0.0
+                    ]
+                  ],
+                  "holes": [],
+                  "attrs": {
+                    "ifc": {
+                      "class": "IfcWall",
+                      "name": "context",
+                      "id": 41
+                    }
+                  }
+                },
+                {
+                  "vertices": [
+                    [
+                      0.0,
+                      5.0,
+                      0.0
+                    ],
+                    [
+                      2.0,
+                      5.0,
+                      0.0
+                    ],
+                    [
+                      2.0,
+                      6.0,
+                      0.0
+                    ],
+                    [
+                      0.0,
+                      6.0,
+                      0.0
+                    ]
+                  ],
+                  "holes": [],
+                  "attrs": {
+                    "ifc": {
+                      "class": "IfcWall",
+                      "name": "context",
+                      "id": 41
+                    }
+                  }
+                }
+              ],
+              "children": [],
+              "transform": null
+            }
+          ],
+          "rows": [
+            {
+              "class": "IfcSlab",
+              "name": "root",
+              "area": 2.0,
+              "volume": null,
+              "key": "faces"
+            }
+          ],
+          "csv": "class,name,metrado,unit,area_m2,volume_m3\nIfcSlab,\"root\",2.0000,m2,2.0000,\n"
+        }
+      ]
+    },
+    {
+      "case": "placed-leaf-root-id40",
+      "phases": [
+        {
+          "phase": "entered",
+          "active": [],
+          "loose": [
+            {
+              "vertices": [
+                [
+                  20.0,
+                  20.0,
+                  0.0
+                ],
+                [
+                  22.0,
+                  20.0,
+                  0.0
+                ],
+                [
+                  22.0,
+                  21.0,
+                  0.0
+                ],
+                [
+                  20.0,
+                  21.0,
+                  0.0
+                ]
+              ],
+              "holes": [],
+              "attrs": {
+                "ifc": {
+                  "id": 40,
+                  "class": "IfcSlab",
+                  "name": "root"
+                }
+              }
+            }
+          ],
+          "groups": [
+            {
+              "name": "target",
+              "faces": [],
+              "children": [],
+              "transform": null
+            }
+          ],
+          "rows": [
+            {
+              "class": "IfcSlab",
+              "name": "root",
+              "area": 2.0,
+              "volume": null,
+              "key": "faces"
+            }
+          ],
+          "csv": "class,name,metrado,unit,area_m2,volume_m3\nIfcSlab,\"root\",2.0000,m2,2.0000,\n"
+        },
+        {
+          "phase": "first",
+          "active": [
+            {
+              "vertices": [
+                [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  2.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  2.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  1.0,
+                  0.0
+                ]
+              ],
+              "holes": [],
+              "attrs": {
+                "ifc": {
+                  "class": "IfcWall",
+                  "name": "context",
+                  "id": 41
+                }
+              }
+            }
+          ],
+          "loose": [
+            {
+              "vertices": [
+                [
+                  20.0,
+                  20.0,
+                  0.0
+                ],
+                [
+                  22.0,
+                  20.0,
+                  0.0
+                ],
+                [
+                  22.0,
+                  21.0,
+                  0.0
+                ],
+                [
+                  20.0,
+                  21.0,
+                  0.0
+                ]
+              ],
+              "holes": [],
+              "attrs": {
+                "ifc": {
+                  "id": 40,
+                  "class": "IfcSlab",
+                  "name": "root"
+                }
+              }
+            }
+          ],
+          "groups": [
+            {
+              "name": "target",
+              "faces": [
+                {
+                  "vertices": [
+                    [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    [
+                      2.0,
+                      0.0,
+                      0.0
+                    ],
+                    [
+                      2.0,
+                      1.0,
+                      0.0
+                    ],
+                    [
+                      0.0,
+                      1.0,
+                      0.0
+                    ]
+                  ],
+                  "holes": [],
+                  "attrs": {
+                    "ifc": {
+                      "class": "IfcWall",
+                      "name": "context",
+                      "id": 41
+                    }
+                  }
+                }
+              ],
+              "children": [],
+              "transform": null
+            }
+          ],
+          "rows": [
+            {
+              "class": "IfcSlab",
+              "name": "root",
+              "area": 2.0,
+              "volume": null,
+              "key": "faces"
+            }
+          ],
+          "csv": "class,name,metrado,unit,area_m2,volume_m3\nIfcSlab,\"root\",2.0000,m2,2.0000,\n"
+        },
+        {
+          "phase": "second",
+          "active": [
+            {
+              "vertices": [
+                [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  2.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  2.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  1.0,
+                  0.0
+                ]
+              ],
+              "holes": [],
+              "attrs": {
+                "ifc": {
+                  "class": "IfcWall",
+                  "name": "context",
+                  "id": 41
+                }
+              }
+            },
+            {
+              "vertices": [
+                [
+                  0.0,
+                  5.0,
+                  0.0
+                ],
+                [
+                  2.0,
+                  5.0,
+                  0.0
+                ],
+                [
+                  2.0,
+                  6.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  6.0,
+                  0.0
+                ]
+              ],
+              "holes": [],
+              "attrs": {
+                "ifc": {
+                  "class": "IfcWall",
+                  "name": "context",
+                  "id": 41
+                }
+              }
+            }
+          ],
+          "loose": [
+            {
+              "vertices": [
+                [
+                  20.0,
+                  20.0,
+                  0.0
+                ],
+                [
+                  22.0,
+                  20.0,
+                  0.0
+                ],
+                [
+                  22.0,
+                  21.0,
+                  0.0
+                ],
+                [
+                  20.0,
+                  21.0,
+                  0.0
+                ]
+              ],
+              "holes": [],
+              "attrs": {
+                "ifc": {
+                  "id": 40,
+                  "class": "IfcSlab",
+                  "name": "root"
+                }
+              }
+            }
+          ],
+          "groups": [
+            {
+              "name": "target",
+              "faces": [
+                {
+                  "vertices": [
+                    [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    [
+                      2.0,
+                      0.0,
+                      0.0
+                    ],
+                    [
+                      2.0,
+                      1.0,
+                      0.0
+                    ],
+                    [
+                      0.0,
+                      1.0,
+                      0.0
+                    ]
+                  ],
+                  "holes": [],
+                  "attrs": {
+                    "ifc": {
+                      "class": "IfcWall",
+                      "name": "context",
+                      "id": 41
+                    }
+                  }
+                },
+                {
+                  "vertices": [
+                    [
+                      0.0,
+                      5.0,
+                      0.0
+                    ],
+                    [
+                      2.0,
+                      5.0,
+                      0.0
+                    ],
+                    [
+                      2.0,
+                      6.0,
+                      0.0
+                    ],
+                    [
+                      0.0,
+                      6.0,
+                      0.0
+                    ]
+                  ],
+                  "holes": [],
+                  "attrs": {
+                    "ifc": {
+                      "class": "IfcWall",
+                      "name": "context",
+                      "id": 41
+                    }
+                  }
+                }
+              ],
+              "children": [],
+              "transform": null
+            }
+          ],
+          "rows": [
+            {
+              "class": "IfcSlab",
+              "name": "root",
+              "area": 2.0,
+              "volume": null,
+              "key": "faces"
+            }
+          ],
+          "csv": "class,name,metrado,unit,area_m2,volume_m3\nIfcSlab,\"root\",2.0000,m2,2.0000,\n"
+        },
+        {
+          "phase": "undo",
+          "active": [
+            {
+              "vertices": [
+                [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  2.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  2.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  1.0,
+                  0.0
+                ]
+              ],
+              "holes": [],
+              "attrs": {
+                "ifc": {
+                  "class": "IfcWall",
+                  "name": "context",
+                  "id": 41
+                }
+              }
+            }
+          ],
+          "loose": [
+            {
+              "vertices": [
+                [
+                  20.0,
+                  20.0,
+                  0.0
+                ],
+                [
+                  22.0,
+                  20.0,
+                  0.0
+                ],
+                [
+                  22.0,
+                  21.0,
+                  0.0
+                ],
+                [
+                  20.0,
+                  21.0,
+                  0.0
+                ]
+              ],
+              "holes": [],
+              "attrs": {
+                "ifc": {
+                  "id": 40,
+                  "class": "IfcSlab",
+                  "name": "root"
+                }
+              }
+            }
+          ],
+          "groups": [
+            {
+              "name": "target",
+              "faces": [
+                {
+                  "vertices": [
+                    [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    [
+                      2.0,
+                      0.0,
+                      0.0
+                    ],
+                    [
+                      2.0,
+                      1.0,
+                      0.0
+                    ],
+                    [
+                      0.0,
+                      1.0,
+                      0.0
+                    ]
+                  ],
+                  "holes": [],
+                  "attrs": {
+                    "ifc": {
+                      "class": "IfcWall",
+                      "name": "context",
+                      "id": 41
+                    }
+                  }
+                }
+              ],
+              "children": [],
+              "transform": null
+            }
+          ],
+          "rows": [
+            {
+              "class": "IfcSlab",
+              "name": "root",
+              "area": 2.0,
+              "volume": null,
+              "key": "faces"
+            }
+          ],
+          "csv": "class,name,metrado,unit,area_m2,volume_m3\nIfcSlab,\"root\",2.0000,m2,2.0000,\n"
+        },
+        {
+          "phase": "redo",
+          "active": [
+            {
+              "vertices": [
+                [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  2.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  2.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  1.0,
+                  0.0
+                ]
+              ],
+              "holes": [],
+              "attrs": {
+                "ifc": {
+                  "class": "IfcWall",
+                  "name": "context",
+                  "id": 41
+                }
+              }
+            },
+            {
+              "vertices": [
+                [
+                  0.0,
+                  5.0,
+                  0.0
+                ],
+                [
+                  2.0,
+                  5.0,
+                  0.0
+                ],
+                [
+                  2.0,
+                  6.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  6.0,
+                  0.0
+                ]
+              ],
+              "holes": [],
+              "attrs": {
+                "ifc": {
+                  "class": "IfcWall",
+                  "name": "context",
+                  "id": 41
+                }
+              }
+            }
+          ],
+          "loose": [
+            {
+              "vertices": [
+                [
+                  20.0,
+                  20.0,
+                  0.0
+                ],
+                [
+                  22.0,
+                  20.0,
+                  0.0
+                ],
+                [
+                  22.0,
+                  21.0,
+                  0.0
+                ],
+                [
+                  20.0,
+                  21.0,
+                  0.0
+                ]
+              ],
+              "holes": [],
+              "attrs": {
+                "ifc": {
+                  "id": 40,
+                  "class": "IfcSlab",
+                  "name": "root"
+                }
+              }
+            }
+          ],
+          "groups": [
+            {
+              "name": "target",
+              "faces": [
+                {
+                  "vertices": [
+                    [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    [
+                      2.0,
+                      0.0,
+                      0.0
+                    ],
+                    [
+                      2.0,
+                      1.0,
+                      0.0
+                    ],
+                    [
+                      0.0,
+                      1.0,
+                      0.0
+                    ]
+                  ],
+                  "holes": [],
+                  "attrs": {
+                    "ifc": {
+                      "class": "IfcWall",
+                      "name": "context",
+                      "id": 41
+                    }
+                  }
+                },
+                {
+                  "vertices": [
+                    [
+                      0.0,
+                      5.0,
+                      0.0
+                    ],
+                    [
+                      2.0,
+                      5.0,
+                      0.0
+                    ],
+                    [
+                      2.0,
+                      6.0,
+                      0.0
+                    ],
+                    [
+                      0.0,
+                      6.0,
+                      0.0
+                    ]
+                  ],
+                  "holes": [],
+                  "attrs": {
+                    "ifc": {
+                      "class": "IfcWall",
+                      "name": "context",
+                      "id": 41
+                    }
+                  }
+                }
+              ],
+              "children": [],
+              "transform": null
+            }
+          ],
+          "rows": [
+            {
+              "class": "IfcSlab",
+              "name": "root",
+              "area": 2.0,
+              "volume": null,
+              "key": "faces"
+            }
+          ],
+          "csv": "class,name,metrado,unit,area_m2,volume_m3\nIfcSlab,\"root\",2.0000,m2,2.0000,\n"
+        },
+        {
+          "phase": "finished",
+          "active": [
+            {
+              "vertices": [
+                [
+                  20.0,
+                  20.0,
+                  0.0
+                ],
+                [
+                  22.0,
+                  20.0,
+                  0.0
+                ],
+                [
+                  22.0,
+                  21.0,
+                  0.0
+                ],
+                [
+                  20.0,
+                  21.0,
+                  0.0
+                ]
+              ],
+              "holes": [],
+              "attrs": {
+                "ifc": {
+                  "id": 40,
+                  "class": "IfcSlab",
+                  "name": "root"
+                }
+              }
+            }
+          ],
+          "loose": [
+            {
+              "vertices": [
+                [
+                  20.0,
+                  20.0,
+                  0.0
+                ],
+                [
+                  22.0,
+                  20.0,
+                  0.0
+                ],
+                [
+                  22.0,
+                  21.0,
+                  0.0
+                ],
+                [
+                  20.0,
+                  21.0,
+                  0.0
+                ]
+              ],
+              "holes": [],
+              "attrs": {
+                "ifc": {
+                  "id": 40,
+                  "class": "IfcSlab",
+                  "name": "root"
+                }
+              }
+            }
+          ],
+          "groups": [
+            {
+              "name": "target",
+              "faces": [
+                {
+                  "vertices": [
+                    [
+                      -4.0,
+                      -5.0,
+                      0.0
+                    ],
+                    [
+                      -2.0,
+                      -5.0,
+                      0.0
+                    ],
+                    [
+                      -2.0,
+                      -4.0,
+                      0.0
+                    ],
+                    [
+                      -4.0,
+                      -4.0,
+                      0.0
+                    ]
+                  ],
+                  "holes": [],
+                  "attrs": {
+                    "ifc": {
+                      "class": "IfcWall",
+                      "name": "context",
+                      "id": 41
+                    }
+                  }
+                },
+                {
+                  "vertices": [
+                    [
+                      -4.0,
+                      0.0,
+                      0.0
+                    ],
+                    [
+                      -2.0,
+                      0.0,
+                      0.0
+                    ],
+                    [
+                      -2.0,
+                      1.0,
+                      0.0
+                    ],
+                    [
+                      -4.0,
+                      1.0,
+                      0.0
+                    ]
+                  ],
+                  "holes": [],
+                  "attrs": {
+                    "ifc": {
+                      "class": "IfcWall",
+                      "name": "context",
+                      "id": 41
+                    }
+                  }
+                }
+              ],
+              "children": [],
+              "transform": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                4.0,
+                5.0,
+                0.0,
+                1.0
+              ]
+            }
+          ],
+          "rows": [
+            {
+              "class": "IfcSlab",
+              "name": "root",
+              "area": 2.0,
+              "volume": null,
+              "key": "faces"
+            }
+          ],
+          "csv": "class,name,metrado,unit,area_m2,volume_m3\nIfcSlab,\"root\",2.0000,m2,2.0000,\n"
+        }
+      ]
+    },
+    {
+      "case": "nested-transformed-root-id40",
+      "phases": [
+        {
+          "phase": "entered",
+          "active": [],
+          "loose": [
+            {
+              "vertices": [
+                [
+                  20.0,
+                  20.0,
+                  0.0
+                ],
+                [
+                  22.0,
+                  20.0,
+                  0.0
+                ],
+                [
+                  22.0,
+                  21.0,
+                  0.0
+                ],
+                [
+                  20.0,
+                  21.0,
+                  0.0
+                ]
+              ],
+              "holes": [],
+              "attrs": {
+                "ifc": {
+                  "id": 40,
+                  "class": "IfcSlab",
+                  "name": "root"
+                }
+              }
+            }
+          ],
+          "groups": [
+            {
+              "name": "parent",
+              "faces": [],
+              "children": [
+                {
+                  "name": "target",
+                  "faces": [],
+                  "children": [],
+                  "transform": null
+                }
+              ],
+              "transform": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            }
+          ],
+          "rows": [
+            {
+              "class": "IfcSlab",
+              "name": "root",
+              "area": 2.0,
+              "volume": null,
+              "key": "faces"
+            }
+          ],
+          "csv": "class,name,metrado,unit,area_m2,volume_m3\nIfcSlab,\"root\",2.0000,m2,2.0000,\n"
+        },
+        {
+          "phase": "first",
+          "active": [
+            {
+              "vertices": [
+                [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  2.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  2.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  1.0,
+                  0.0
+                ]
+              ],
+              "holes": [],
+              "attrs": {
+                "ifc": {
+                  "class": "IfcWall",
+                  "name": "context",
+                  "id": 41
+                }
+              }
+            }
+          ],
+          "loose": [
+            {
+              "vertices": [
+                [
+                  20.0,
+                  20.0,
+                  0.0
+                ],
+                [
+                  22.0,
+                  20.0,
+                  0.0
+                ],
+                [
+                  22.0,
+                  21.0,
+                  0.0
+                ],
+                [
+                  20.0,
+                  21.0,
+                  0.0
+                ]
+              ],
+              "holes": [],
+              "attrs": {
+                "ifc": {
+                  "id": 40,
+                  "class": "IfcSlab",
+                  "name": "root"
+                }
+              }
+            }
+          ],
+          "groups": [
+            {
+              "name": "parent",
+              "faces": [],
+              "children": [
+                {
+                  "name": "target",
+                  "faces": [
+                    {
+                      "vertices": [
+                        [
+                          0.0,
+                          0.0,
+                          0.0
+                        ],
+                        [
+                          2.0,
+                          0.0,
+                          0.0
+                        ],
+                        [
+                          2.0,
+                          1.0,
+                          0.0
+                        ],
+                        [
+                          0.0,
+                          1.0,
+                          0.0
+                        ]
+                      ],
+                      "holes": [],
+                      "attrs": {
+                        "ifc": {
+                          "class": "IfcWall",
+                          "name": "context",
+                          "id": 41
+                        }
+                      }
+                    }
+                  ],
+                  "children": [],
+                  "transform": null
+                }
+              ],
+              "transform": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            }
+          ],
+          "rows": [
+            {
+              "class": "IfcSlab",
+              "name": "root",
+              "area": 2.0,
+              "volume": null,
+              "key": "faces"
+            }
+          ],
+          "csv": "class,name,metrado,unit,area_m2,volume_m3\nIfcSlab,\"root\",2.0000,m2,2.0000,\n"
+        },
+        {
+          "phase": "second",
+          "active": [
+            {
+              "vertices": [
+                [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  2.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  2.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  1.0,
+                  0.0
+                ]
+              ],
+              "holes": [],
+              "attrs": {
+                "ifc": {
+                  "class": "IfcWall",
+                  "name": "context",
+                  "id": 41
+                }
+              }
+            },
+            {
+              "vertices": [
+                [
+                  0.0,
+                  5.0,
+                  0.0
+                ],
+                [
+                  2.0,
+                  5.0,
+                  0.0
+                ],
+                [
+                  2.0,
+                  6.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  6.0,
+                  0.0
+                ]
+              ],
+              "holes": [],
+              "attrs": {
+                "ifc": {
+                  "class": "IfcWall",
+                  "name": "context",
+                  "id": 41
+                }
+              }
+            }
+          ],
+          "loose": [
+            {
+              "vertices": [
+                [
+                  20.0,
+                  20.0,
+                  0.0
+                ],
+                [
+                  22.0,
+                  20.0,
+                  0.0
+                ],
+                [
+                  22.0,
+                  21.0,
+                  0.0
+                ],
+                [
+                  20.0,
+                  21.0,
+                  0.0
+                ]
+              ],
+              "holes": [],
+              "attrs": {
+                "ifc": {
+                  "id": 40,
+                  "class": "IfcSlab",
+                  "name": "root"
+                }
+              }
+            }
+          ],
+          "groups": [
+            {
+              "name": "parent",
+              "faces": [],
+              "children": [
+                {
+                  "name": "target",
+                  "faces": [
+                    {
+                      "vertices": [
+                        [
+                          0.0,
+                          0.0,
+                          0.0
+                        ],
+                        [
+                          2.0,
+                          0.0,
+                          0.0
+                        ],
+                        [
+                          2.0,
+                          1.0,
+                          0.0
+                        ],
+                        [
+                          0.0,
+                          1.0,
+                          0.0
+                        ]
+                      ],
+                      "holes": [],
+                      "attrs": {
+                        "ifc": {
+                          "class": "IfcWall",
+                          "name": "context",
+                          "id": 41
+                        }
+                      }
+                    },
+                    {
+                      "vertices": [
+                        [
+                          0.0,
+                          5.0,
+                          0.0
+                        ],
+                        [
+                          2.0,
+                          5.0,
+                          0.0
+                        ],
+                        [
+                          2.0,
+                          6.0,
+                          0.0
+                        ],
+                        [
+                          0.0,
+                          6.0,
+                          0.0
+                        ]
+                      ],
+                      "holes": [],
+                      "attrs": {
+                        "ifc": {
+                          "class": "IfcWall",
+                          "name": "context",
+                          "id": 41
+                        }
+                      }
+                    }
+                  ],
+                  "children": [],
+                  "transform": null
+                }
+              ],
+              "transform": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            }
+          ],
+          "rows": [
+            {
+              "class": "IfcSlab",
+              "name": "root",
+              "area": 2.0,
+              "volume": null,
+              "key": "faces"
+            }
+          ],
+          "csv": "class,name,metrado,unit,area_m2,volume_m3\nIfcSlab,\"root\",2.0000,m2,2.0000,\n"
+        },
+        {
+          "phase": "undo",
+          "active": [
+            {
+              "vertices": [
+                [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  2.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  2.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  1.0,
+                  0.0
+                ]
+              ],
+              "holes": [],
+              "attrs": {
+                "ifc": {
+                  "class": "IfcWall",
+                  "name": "context",
+                  "id": 41
+                }
+              }
+            }
+          ],
+          "loose": [
+            {
+              "vertices": [
+                [
+                  20.0,
+                  20.0,
+                  0.0
+                ],
+                [
+                  22.0,
+                  20.0,
+                  0.0
+                ],
+                [
+                  22.0,
+                  21.0,
+                  0.0
+                ],
+                [
+                  20.0,
+                  21.0,
+                  0.0
+                ]
+              ],
+              "holes": [],
+              "attrs": {
+                "ifc": {
+                  "id": 40,
+                  "class": "IfcSlab",
+                  "name": "root"
+                }
+              }
+            }
+          ],
+          "groups": [
+            {
+              "name": "parent",
+              "faces": [],
+              "children": [
+                {
+                  "name": "target",
+                  "faces": [
+                    {
+                      "vertices": [
+                        [
+                          0.0,
+                          0.0,
+                          0.0
+                        ],
+                        [
+                          2.0,
+                          0.0,
+                          0.0
+                        ],
+                        [
+                          2.0,
+                          1.0,
+                          0.0
+                        ],
+                        [
+                          0.0,
+                          1.0,
+                          0.0
+                        ]
+                      ],
+                      "holes": [],
+                      "attrs": {
+                        "ifc": {
+                          "class": "IfcWall",
+                          "name": "context",
+                          "id": 41
+                        }
+                      }
+                    }
+                  ],
+                  "children": [],
+                  "transform": null
+                }
+              ],
+              "transform": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            }
+          ],
+          "rows": [
+            {
+              "class": "IfcSlab",
+              "name": "root",
+              "area": 2.0,
+              "volume": null,
+              "key": "faces"
+            }
+          ],
+          "csv": "class,name,metrado,unit,area_m2,volume_m3\nIfcSlab,\"root\",2.0000,m2,2.0000,\n"
+        },
+        {
+          "phase": "redo",
+          "active": [
+            {
+              "vertices": [
+                [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  2.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  2.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  1.0,
+                  0.0
+                ]
+              ],
+              "holes": [],
+              "attrs": {
+                "ifc": {
+                  "class": "IfcWall",
+                  "name": "context",
+                  "id": 41
+                }
+              }
+            },
+            {
+              "vertices": [
+                [
+                  0.0,
+                  5.0,
+                  0.0
+                ],
+                [
+                  2.0,
+                  5.0,
+                  0.0
+                ],
+                [
+                  2.0,
+                  6.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  6.0,
+                  0.0
+                ]
+              ],
+              "holes": [],
+              "attrs": {
+                "ifc": {
+                  "class": "IfcWall",
+                  "name": "context",
+                  "id": 41
+                }
+              }
+            }
+          ],
+          "loose": [
+            {
+              "vertices": [
+                [
+                  20.0,
+                  20.0,
+                  0.0
+                ],
+                [
+                  22.0,
+                  20.0,
+                  0.0
+                ],
+                [
+                  22.0,
+                  21.0,
+                  0.0
+                ],
+                [
+                  20.0,
+                  21.0,
+                  0.0
+                ]
+              ],
+              "holes": [],
+              "attrs": {
+                "ifc": {
+                  "id": 40,
+                  "class": "IfcSlab",
+                  "name": "root"
+                }
+              }
+            }
+          ],
+          "groups": [
+            {
+              "name": "parent",
+              "faces": [],
+              "children": [
+                {
+                  "name": "target",
+                  "faces": [
+                    {
+                      "vertices": [
+                        [
+                          0.0,
+                          0.0,
+                          0.0
+                        ],
+                        [
+                          2.0,
+                          0.0,
+                          0.0
+                        ],
+                        [
+                          2.0,
+                          1.0,
+                          0.0
+                        ],
+                        [
+                          0.0,
+                          1.0,
+                          0.0
+                        ]
+                      ],
+                      "holes": [],
+                      "attrs": {
+                        "ifc": {
+                          "class": "IfcWall",
+                          "name": "context",
+                          "id": 41
+                        }
+                      }
+                    },
+                    {
+                      "vertices": [
+                        [
+                          0.0,
+                          5.0,
+                          0.0
+                        ],
+                        [
+                          2.0,
+                          5.0,
+                          0.0
+                        ],
+                        [
+                          2.0,
+                          6.0,
+                          0.0
+                        ],
+                        [
+                          0.0,
+                          6.0,
+                          0.0
+                        ]
+                      ],
+                      "holes": [],
+                      "attrs": {
+                        "ifc": {
+                          "class": "IfcWall",
+                          "name": "context",
+                          "id": 41
+                        }
+                      }
+                    }
+                  ],
+                  "children": [],
+                  "transform": null
+                }
+              ],
+              "transform": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            }
+          ],
+          "rows": [
+            {
+              "class": "IfcSlab",
+              "name": "root",
+              "area": 2.0,
+              "volume": null,
+              "key": "faces"
+            }
+          ],
+          "csv": "class,name,metrado,unit,area_m2,volume_m3\nIfcSlab,\"root\",2.0000,m2,2.0000,\n"
+        },
+        {
+          "phase": "finished",
+          "active": [
+            {
+              "vertices": [
+                [
+                  20.0,
+                  20.0,
+                  0.0
+                ],
+                [
+                  22.0,
+                  20.0,
+                  0.0
+                ],
+                [
+                  22.0,
+                  21.0,
+                  0.0
+                ],
+                [
+                  20.0,
+                  21.0,
+                  0.0
+                ]
+              ],
+              "holes": [],
+              "attrs": {
+                "ifc": {
+                  "id": 40,
+                  "class": "IfcSlab",
+                  "name": "root"
+                }
+              }
+            }
+          ],
+          "loose": [
+            {
+              "vertices": [
+                [
+                  20.0,
+                  20.0,
+                  0.0
+                ],
+                [
+                  22.0,
+                  20.0,
+                  0.0
+                ],
+                [
+                  22.0,
+                  21.0,
+                  0.0
+                ],
+                [
+                  20.0,
+                  21.0,
+                  0.0
+                ]
+              ],
+              "holes": [],
+              "attrs": {
+                "ifc": {
+                  "id": 40,
+                  "class": "IfcSlab",
+                  "name": "root"
+                }
+              }
+            }
+          ],
+          "groups": [
+            {
+              "name": "parent",
+              "faces": [],
+              "children": [
+                {
+                  "name": "target",
+                  "faces": [
+                    {
+                      "vertices": [
+                        [
+                          -6.0,
+                          -5.0,
+                          0.0
+                        ],
+                        [
+                          -4.0,
+                          -5.0,
+                          0.0
+                        ],
+                        [
+                          -4.0,
+                          -4.0,
+                          0.0
+                        ],
+                        [
+                          -6.0,
+                          -4.0,
+                          0.0
+                        ]
+                      ],
+                      "holes": [],
+                      "attrs": {
+                        "ifc": {
+                          "class": "IfcWall",
+                          "name": "context",
+                          "id": 41
+                        }
+                      }
+                    },
+                    {
+                      "vertices": [
+                        [
+                          -6.0,
+                          0.0,
+                          0.0
+                        ],
+                        [
+                          -4.0,
+                          0.0,
+                          0.0
+                        ],
+                        [
+                          -4.0,
+                          1.0,
+                          0.0
+                        ],
+                        [
+                          -6.0,
+                          1.0,
+                          0.0
+                        ]
+                      ],
+                      "holes": [],
+                      "attrs": {
+                        "ifc": {
+                          "class": "IfcWall",
+                          "name": "context",
+                          "id": 41
+                        }
+                      }
+                    }
+                  ],
+                  "children": [],
+                  "transform": [
+                    1.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    6.0,
+                    5.0,
+                    0.0,
+                    1.0
+                  ]
+                }
+              ],
+              "transform": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            }
+          ],
+          "rows": [
+            {
+              "class": "IfcSlab",
+              "name": "root",
+              "area": 2.0,
+              "volume": null,
+              "key": "faces"
+            }
+          ],
+          "csv": "class,name,metrado,unit,area_m2,volume_m3\nIfcSlab,\"root\",2.0000,m2,2.0000,\n"
+        }
+      ]
+    },
+    {
+      "case": "linked-leaf-root-id40",
+      "phases": [
+        {
+          "phase": "entered",
+          "active": [],
+          "loose": [
+            {
+              "vertices": [
+                [
+                  20.0,
+                  20.0,
+                  0.0
+                ],
+                [
+                  22.0,
+                  20.0,
+                  0.0
+                ],
+                [
+                  22.0,
+                  21.0,
+                  0.0
+                ],
+                [
+                  20.0,
+                  21.0,
+                  0.0
+                ]
+              ],
+              "holes": [],
+              "attrs": {
+                "ifc": {
+                  "id": 40,
+                  "class": "IfcSlab",
+                  "name": "root"
+                }
+              }
+            }
+          ],
+          "groups": [
+            {
+              "name": "target",
+              "faces": [],
+              "children": [],
+              "transform": null
+            },
+            {
+              "name": "target",
+              "faces": [],
+              "children": [],
+              "transform": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                4.0,
+                5.0,
+                0.0,
+                1.0
+              ]
+            }
+          ],
+          "rows": [
+            {
+              "class": "IfcSlab",
+              "name": "root",
+              "area": 2.0,
+              "volume": null,
+              "key": "faces"
+            }
+          ],
+          "csv": "class,name,metrado,unit,area_m2,volume_m3\nIfcSlab,\"root\",2.0000,m2,2.0000,\n"
+        },
+        {
+          "phase": "first",
+          "active": [
+            {
+              "vertices": [
+                [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  2.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  2.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  1.0,
+                  0.0
+                ]
+              ],
+              "holes": [],
+              "attrs": {
+                "ifc": {
+                  "class": "IfcWall",
+                  "name": "context",
+                  "id": 41
+                }
+              }
+            }
+          ],
+          "loose": [
+            {
+              "vertices": [
+                [
+                  20.0,
+                  20.0,
+                  0.0
+                ],
+                [
+                  22.0,
+                  20.0,
+                  0.0
+                ],
+                [
+                  22.0,
+                  21.0,
+                  0.0
+                ],
+                [
+                  20.0,
+                  21.0,
+                  0.0
+                ]
+              ],
+              "holes": [],
+              "attrs": {
+                "ifc": {
+                  "id": 40,
+                  "class": "IfcSlab",
+                  "name": "root"
+                }
+              }
+            }
+          ],
+          "groups": [
+            {
+              "name": "target",
+              "faces": [
+                {
+                  "vertices": [
+                    [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    [
+                      2.0,
+                      0.0,
+                      0.0
+                    ],
+                    [
+                      2.0,
+                      1.0,
+                      0.0
+                    ],
+                    [
+                      0.0,
+                      1.0,
+                      0.0
+                    ]
+                  ],
+                  "holes": [],
+                  "attrs": {
+                    "ifc": {
+                      "class": "IfcWall",
+                      "name": "context",
+                      "id": 41
+                    }
+                  }
+                }
+              ],
+              "children": [],
+              "transform": null
+            },
+            {
+              "name": "target",
+              "faces": [],
+              "children": [],
+              "transform": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                4.0,
+                5.0,
+                0.0,
+                1.0
+              ]
+            }
+          ],
+          "rows": [
+            {
+              "class": "IfcSlab",
+              "name": "root",
+              "area": 2.0,
+              "volume": null,
+              "key": "faces"
+            }
+          ],
+          "csv": "class,name,metrado,unit,area_m2,volume_m3\nIfcSlab,\"root\",2.0000,m2,2.0000,\n"
+        },
+        {
+          "phase": "second",
+          "active": [
+            {
+              "vertices": [
+                [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  2.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  2.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  1.0,
+                  0.0
+                ]
+              ],
+              "holes": [],
+              "attrs": {
+                "ifc": {
+                  "class": "IfcWall",
+                  "name": "context",
+                  "id": 41
+                }
+              }
+            },
+            {
+              "vertices": [
+                [
+                  0.0,
+                  5.0,
+                  0.0
+                ],
+                [
+                  2.0,
+                  5.0,
+                  0.0
+                ],
+                [
+                  2.0,
+                  6.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  6.0,
+                  0.0
+                ]
+              ],
+              "holes": [],
+              "attrs": {
+                "ifc": {
+                  "class": "IfcWall",
+                  "name": "context",
+                  "id": 41
+                }
+              }
+            }
+          ],
+          "loose": [
+            {
+              "vertices": [
+                [
+                  20.0,
+                  20.0,
+                  0.0
+                ],
+                [
+                  22.0,
+                  20.0,
+                  0.0
+                ],
+                [
+                  22.0,
+                  21.0,
+                  0.0
+                ],
+                [
+                  20.0,
+                  21.0,
+                  0.0
+                ]
+              ],
+              "holes": [],
+              "attrs": {
+                "ifc": {
+                  "id": 40,
+                  "class": "IfcSlab",
+                  "name": "root"
+                }
+              }
+            }
+          ],
+          "groups": [
+            {
+              "name": "target",
+              "faces": [
+                {
+                  "vertices": [
+                    [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    [
+                      2.0,
+                      0.0,
+                      0.0
+                    ],
+                    [
+                      2.0,
+                      1.0,
+                      0.0
+                    ],
+                    [
+                      0.0,
+                      1.0,
+                      0.0
+                    ]
+                  ],
+                  "holes": [],
+                  "attrs": {
+                    "ifc": {
+                      "class": "IfcWall",
+                      "name": "context",
+                      "id": 41
+                    }
+                  }
+                },
+                {
+                  "vertices": [
+                    [
+                      0.0,
+                      5.0,
+                      0.0
+                    ],
+                    [
+                      2.0,
+                      5.0,
+                      0.0
+                    ],
+                    [
+                      2.0,
+                      6.0,
+                      0.0
+                    ],
+                    [
+                      0.0,
+                      6.0,
+                      0.0
+                    ]
+                  ],
+                  "holes": [],
+                  "attrs": {
+                    "ifc": {
+                      "class": "IfcWall",
+                      "name": "context",
+                      "id": 41
+                    }
+                  }
+                }
+              ],
+              "children": [],
+              "transform": null
+            },
+            {
+              "name": "target",
+              "faces": [],
+              "children": [],
+              "transform": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                4.0,
+                5.0,
+                0.0,
+                1.0
+              ]
+            }
+          ],
+          "rows": [
+            {
+              "class": "IfcSlab",
+              "name": "root",
+              "area": 2.0,
+              "volume": null,
+              "key": "faces"
+            }
+          ],
+          "csv": "class,name,metrado,unit,area_m2,volume_m3\nIfcSlab,\"root\",2.0000,m2,2.0000,\n"
+        },
+        {
+          "phase": "undo",
+          "active": [
+            {
+              "vertices": [
+                [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  2.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  2.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  1.0,
+                  0.0
+                ]
+              ],
+              "holes": [],
+              "attrs": {
+                "ifc": {
+                  "class": "IfcWall",
+                  "name": "context",
+                  "id": 41
+                }
+              }
+            }
+          ],
+          "loose": [
+            {
+              "vertices": [
+                [
+                  20.0,
+                  20.0,
+                  0.0
+                ],
+                [
+                  22.0,
+                  20.0,
+                  0.0
+                ],
+                [
+                  22.0,
+                  21.0,
+                  0.0
+                ],
+                [
+                  20.0,
+                  21.0,
+                  0.0
+                ]
+              ],
+              "holes": [],
+              "attrs": {
+                "ifc": {
+                  "id": 40,
+                  "class": "IfcSlab",
+                  "name": "root"
+                }
+              }
+            }
+          ],
+          "groups": [
+            {
+              "name": "target",
+              "faces": [
+                {
+                  "vertices": [
+                    [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    [
+                      2.0,
+                      0.0,
+                      0.0
+                    ],
+                    [
+                      2.0,
+                      1.0,
+                      0.0
+                    ],
+                    [
+                      0.0,
+                      1.0,
+                      0.0
+                    ]
+                  ],
+                  "holes": [],
+                  "attrs": {
+                    "ifc": {
+                      "class": "IfcWall",
+                      "name": "context",
+                      "id": 41
+                    }
+                  }
+                }
+              ],
+              "children": [],
+              "transform": null
+            },
+            {
+              "name": "target",
+              "faces": [],
+              "children": [],
+              "transform": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                4.0,
+                5.0,
+                0.0,
+                1.0
+              ]
+            }
+          ],
+          "rows": [
+            {
+              "class": "IfcSlab",
+              "name": "root",
+              "area": 2.0,
+              "volume": null,
+              "key": "faces"
+            }
+          ],
+          "csv": "class,name,metrado,unit,area_m2,volume_m3\nIfcSlab,\"root\",2.0000,m2,2.0000,\n"
+        },
+        {
+          "phase": "redo",
+          "active": [
+            {
+              "vertices": [
+                [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  2.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  2.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  1.0,
+                  0.0
+                ]
+              ],
+              "holes": [],
+              "attrs": {
+                "ifc": {
+                  "class": "IfcWall",
+                  "name": "context",
+                  "id": 41
+                }
+              }
+            },
+            {
+              "vertices": [
+                [
+                  0.0,
+                  5.0,
+                  0.0
+                ],
+                [
+                  2.0,
+                  5.0,
+                  0.0
+                ],
+                [
+                  2.0,
+                  6.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  6.0,
+                  0.0
+                ]
+              ],
+              "holes": [],
+              "attrs": {
+                "ifc": {
+                  "class": "IfcWall",
+                  "name": "context",
+                  "id": 41
+                }
+              }
+            }
+          ],
+          "loose": [
+            {
+              "vertices": [
+                [
+                  20.0,
+                  20.0,
+                  0.0
+                ],
+                [
+                  22.0,
+                  20.0,
+                  0.0
+                ],
+                [
+                  22.0,
+                  21.0,
+                  0.0
+                ],
+                [
+                  20.0,
+                  21.0,
+                  0.0
+                ]
+              ],
+              "holes": [],
+              "attrs": {
+                "ifc": {
+                  "id": 40,
+                  "class": "IfcSlab",
+                  "name": "root"
+                }
+              }
+            }
+          ],
+          "groups": [
+            {
+              "name": "target",
+              "faces": [
+                {
+                  "vertices": [
+                    [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    [
+                      2.0,
+                      0.0,
+                      0.0
+                    ],
+                    [
+                      2.0,
+                      1.0,
+                      0.0
+                    ],
+                    [
+                      0.0,
+                      1.0,
+                      0.0
+                    ]
+                  ],
+                  "holes": [],
+                  "attrs": {
+                    "ifc": {
+                      "class": "IfcWall",
+                      "name": "context",
+                      "id": 41
+                    }
+                  }
+                },
+                {
+                  "vertices": [
+                    [
+                      0.0,
+                      5.0,
+                      0.0
+                    ],
+                    [
+                      2.0,
+                      5.0,
+                      0.0
+                    ],
+                    [
+                      2.0,
+                      6.0,
+                      0.0
+                    ],
+                    [
+                      0.0,
+                      6.0,
+                      0.0
+                    ]
+                  ],
+                  "holes": [],
+                  "attrs": {
+                    "ifc": {
+                      "class": "IfcWall",
+                      "name": "context",
+                      "id": 41
+                    }
+                  }
+                }
+              ],
+              "children": [],
+              "transform": null
+            },
+            {
+              "name": "target",
+              "faces": [],
+              "children": [],
+              "transform": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                4.0,
+                5.0,
+                0.0,
+                1.0
+              ]
+            }
+          ],
+          "rows": [
+            {
+              "class": "IfcSlab",
+              "name": "root",
+              "area": 2.0,
+              "volume": null,
+              "key": "faces"
+            }
+          ],
+          "csv": "class,name,metrado,unit,area_m2,volume_m3\nIfcSlab,\"root\",2.0000,m2,2.0000,\n"
+        },
+        {
+          "phase": "finished",
+          "active": [
+            {
+              "vertices": [
+                [
+                  20.0,
+                  20.0,
+                  0.0
+                ],
+                [
+                  22.0,
+                  20.0,
+                  0.0
+                ],
+                [
+                  22.0,
+                  21.0,
+                  0.0
+                ],
+                [
+                  20.0,
+                  21.0,
+                  0.0
+                ]
+              ],
+              "holes": [],
+              "attrs": {
+                "ifc": {
+                  "id": 40,
+                  "class": "IfcSlab",
+                  "name": "root"
+                }
+              }
+            }
+          ],
+          "loose": [
+            {
+              "vertices": [
+                [
+                  20.0,
+                  20.0,
+                  0.0
+                ],
+                [
+                  22.0,
+                  20.0,
+                  0.0
+                ],
+                [
+                  22.0,
+                  21.0,
+                  0.0
+                ],
+                [
+                  20.0,
+                  21.0,
+                  0.0
+                ]
+              ],
+              "holes": [],
+              "attrs": {
+                "ifc": {
+                  "id": 40,
+                  "class": "IfcSlab",
+                  "name": "root"
+                }
+              }
+            }
+          ],
+          "groups": [
+            {
+              "name": "target",
+              "faces": [
+                {
+                  "vertices": [
+                    [
+                      -4.0,
+                      -5.0,
+                      0.0
+                    ],
+                    [
+                      -2.0,
+                      -5.0,
+                      0.0
+                    ],
+                    [
+                      -2.0,
+                      -4.0,
+                      0.0
+                    ],
+                    [
+                      -4.0,
+                      -4.0,
+                      0.0
+                    ]
+                  ],
+                  "holes": [],
+                  "attrs": {
+                    "ifc": {
+                      "class": "IfcWall",
+                      "name": "context",
+                      "id": 41
+                    }
+                  }
+                },
+                {
+                  "vertices": [
+                    [
+                      -4.0,
+                      0.0,
+                      0.0
+                    ],
+                    [
+                      -2.0,
+                      0.0,
+                      0.0
+                    ],
+                    [
+                      -2.0,
+                      1.0,
+                      0.0
+                    ],
+                    [
+                      -4.0,
+                      1.0,
+                      0.0
+                    ]
+                  ],
+                  "holes": [],
+                  "attrs": {
+                    "ifc": {
+                      "class": "IfcWall",
+                      "name": "context",
+                      "id": 41
+                    }
+                  }
+                }
+              ],
+              "children": [],
+              "transform": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                4.0,
+                5.0,
+                0.0,
+                1.0
+              ]
+            },
+            {
+              "name": "target",
+              "faces": [
+                {
+                  "vertices": [
+                    [
+                      -4.0,
+                      -5.0,
+                      0.0
+                    ],
+                    [
+                      -2.0,
+                      -5.0,
+                      0.0
+                    ],
+                    [
+                      -2.0,
+                      -4.0,
+                      0.0
+                    ],
+                    [
+                      -4.0,
+                      -4.0,
+                      0.0
+                    ]
+                  ],
+                  "holes": [],
+                  "attrs": {
+                    "ifc": {
+                      "class": "IfcWall",
+                      "name": "context",
+                      "id": 41
+                    }
+                  }
+                },
+                {
+                  "vertices": [
+                    [
+                      -4.0,
+                      0.0,
+                      0.0
+                    ],
+                    [
+                      -2.0,
+                      0.0,
+                      0.0
+                    ],
+                    [
+                      -2.0,
+                      1.0,
+                      0.0
+                    ],
+                    [
+                      -4.0,
+                      1.0,
+                      0.0
+                    ]
+                  ],
+                  "holes": [],
+                  "attrs": {
+                    "ifc": {
+                      "class": "IfcWall",
+                      "name": "context",
+                      "id": 41
+                    }
+                  }
+                }
+              ],
+              "children": [],
+              "transform": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                4.0,
+                5.0,
+                0.0,
+                1.0
+              ]
+            }
+          ],
+          "rows": [
+            {
+              "class": "IfcSlab",
+              "name": "root",
+              "area": 2.0,
+              "volume": null,
+              "key": "faces"
+            }
+          ],
+          "csv": "class,name,metrado,unit,area_m2,volume_m3\nIfcSlab,\"root\",2.0000,m2,2.0000,\n"
+        }
+      ]
+    },
+    {
+      "case": "tagged-mother-root-id40",
+      "phases": [
+        {
+          "phase": "entered",
+          "active": [
+            {
+              "vertices": [
+                [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  4.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  4.0,
+                  4.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  4.0,
+                  0.0
+                ]
+              ],
+              "holes": [],
+              "attrs": {
+                "color": [
+                  1,
+                  0,
+                  0
+                ],
+                "vendor": 71,
+                "ifc": {
+                  "id": 99,
+                  "class": "IfcSlab",
+                  "name": "mother"
+                }
+              }
+            }
+          ],
+          "loose": [
+            {
+              "vertices": [
+                [
+                  20.0,
+                  20.0,
+                  0.0
+                ],
+                [
+                  22.0,
+                  20.0,
+                  0.0
+                ],
+                [
+                  22.0,
+                  21.0,
+                  0.0
+                ],
+                [
+                  20.0,
+                  21.0,
+                  0.0
+                ]
+              ],
+              "holes": [],
+              "attrs": {
+                "ifc": {
+                  "id": 40,
+                  "class": "IfcSlab",
+                  "name": "root"
+                }
+              }
+            }
+          ],
+          "groups": [
+            {
+              "name": "target",
+              "faces": [
+                {
+                  "vertices": [
+                    [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    [
+                      4.0,
+                      0.0,
+                      0.0
+                    ],
+                    [
+                      4.0,
+                      4.0,
+                      0.0
+                    ],
+                    [
+                      0.0,
+                      4.0,
+                      0.0
+                    ]
+                  ],
+                  "holes": [],
+                  "attrs": {
+                    "color": [
+                      1,
+                      0,
+                      0
+                    ],
+                    "vendor": 71,
+                    "ifc": {
+                      "id": 99,
+                      "class": "IfcSlab",
+                      "name": "mother"
+                    }
+                  }
+                }
+              ],
+              "children": [],
+              "transform": null
+            }
+          ],
+          "rows": [
+            {
+              "class": "IfcSlab",
+              "name": "root",
+              "area": 2.0,
+              "volume": null,
+              "key": "faces"
+            }
+          ],
+          "csv": "class,name,metrado,unit,area_m2,volume_m3\nIfcSlab,\"root\",2.0000,m2,2.0000,\n"
+        },
+        {
+          "phase": "first",
+          "active": [
+            {
+              "vertices": [
+                [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  2.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  2.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  1.0,
+                  0.0
+                ]
+              ],
+              "holes": [],
+              "attrs": {
+                "color": [
+                  1,
+                  0,
+                  0
+                ],
+                "ifc": {
+                  "class": "IfcWall",
+                  "name": "context",
+                  "id": 41
+                }
+              }
+            },
+            {
+              "vertices": [
+                [
+                  4.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  4.0,
+                  4.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  4.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  2.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  2.0,
+                  0.0,
+                  0.0
+                ]
+              ],
+              "holes": [],
+              "attrs": {
+                "color": [
+                  1,
+                  0,
+                  0
+                ],
+                "vendor": 71,
+                "ifc": {
+                  "id": 99,
+                  "class": "IfcSlab",
+                  "name": "mother"
+                }
+              }
+            }
+          ],
+          "loose": [
+            {
+              "vertices": [
+                [
+                  20.0,
+                  20.0,
+                  0.0
+                ],
+                [
+                  22.0,
+                  20.0,
+                  0.0
+                ],
+                [
+                  22.0,
+                  21.0,
+                  0.0
+                ],
+                [
+                  20.0,
+                  21.0,
+                  0.0
+                ]
+              ],
+              "holes": [],
+              "attrs": {
+                "ifc": {
+                  "id": 40,
+                  "class": "IfcSlab",
+                  "name": "root"
+                }
+              }
+            }
+          ],
+          "groups": [
+            {
+              "name": "target",
+              "faces": [
+                {
+                  "vertices": [
+                    [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    [
+                      2.0,
+                      0.0,
+                      0.0
+                    ],
+                    [
+                      2.0,
+                      1.0,
+                      0.0
+                    ],
+                    [
+                      0.0,
+                      1.0,
+                      0.0
+                    ]
+                  ],
+                  "holes": [],
+                  "attrs": {
+                    "color": [
+                      1,
+                      0,
+                      0
+                    ],
+                    "ifc": {
+                      "class": "IfcWall",
+                      "name": "context",
+                      "id": 41
+                    }
+                  }
+                },
+                {
+                  "vertices": [
+                    [
+                      4.0,
+                      0.0,
+                      0.0
+                    ],
+                    [
+                      4.0,
+                      4.0,
+                      0.0
+                    ],
+                    [
+                      0.0,
+                      4.0,
+                      0.0
+                    ],
+                    [
+                      0.0,
+                      1.0,
+                      0.0
+                    ],
+                    [
+                      2.0,
+                      1.0,
+                      0.0
+                    ],
+                    [
+                      2.0,
+                      0.0,
+                      0.0
+                    ]
+                  ],
+                  "holes": [],
+                  "attrs": {
+                    "color": [
+                      1,
+                      0,
+                      0
+                    ],
+                    "vendor": 71,
+                    "ifc": {
+                      "id": 99,
+                      "class": "IfcSlab",
+                      "name": "mother"
+                    }
+                  }
+                }
+              ],
+              "children": [],
+              "transform": null
+            }
+          ],
+          "rows": [
+            {
+              "class": "IfcSlab",
+              "name": "root",
+              "area": 2.0,
+              "volume": null,
+              "key": "faces"
+            }
+          ],
+          "csv": "class,name,metrado,unit,area_m2,volume_m3\nIfcSlab,\"root\",2.0000,m2,2.0000,\n"
+        },
+        {
+          "phase": "second",
+          "active": [
+            {
+              "vertices": [
+                [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  2.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  2.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  1.0,
+                  0.0
+                ]
+              ],
+              "holes": [],
+              "attrs": {
+                "color": [
+                  1,
+                  0,
+                  0
+                ],
+                "ifc": {
+                  "class": "IfcWall",
+                  "name": "context",
+                  "id": 41
+                }
+              }
+            },
+            {
+              "vertices": [
+                [
+                  0.0,
+                  5.0,
+                  0.0
+                ],
+                [
+                  2.0,
+                  5.0,
+                  0.0
+                ],
+                [
+                  2.0,
+                  6.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  6.0,
+                  0.0
+                ]
+              ],
+              "holes": [],
+              "attrs": {
+                "ifc": {
+                  "class": "IfcWall",
+                  "name": "context",
+                  "id": 41
+                }
+              }
+            },
+            {
+              "vertices": [
+                [
+                  4.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  4.0,
+                  4.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  4.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  2.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  2.0,
+                  0.0,
+                  0.0
+                ]
+              ],
+              "holes": [],
+              "attrs": {
+                "color": [
+                  1,
+                  0,
+                  0
+                ],
+                "vendor": 71,
+                "ifc": {
+                  "id": 99,
+                  "class": "IfcSlab",
+                  "name": "mother"
+                }
+              }
+            }
+          ],
+          "loose": [
+            {
+              "vertices": [
+                [
+                  20.0,
+                  20.0,
+                  0.0
+                ],
+                [
+                  22.0,
+                  20.0,
+                  0.0
+                ],
+                [
+                  22.0,
+                  21.0,
+                  0.0
+                ],
+                [
+                  20.0,
+                  21.0,
+                  0.0
+                ]
+              ],
+              "holes": [],
+              "attrs": {
+                "ifc": {
+                  "id": 40,
+                  "class": "IfcSlab",
+                  "name": "root"
+                }
+              }
+            }
+          ],
+          "groups": [
+            {
+              "name": "target",
+              "faces": [
+                {
+                  "vertices": [
+                    [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    [
+                      2.0,
+                      0.0,
+                      0.0
+                    ],
+                    [
+                      2.0,
+                      1.0,
+                      0.0
+                    ],
+                    [
+                      0.0,
+                      1.0,
+                      0.0
+                    ]
+                  ],
+                  "holes": [],
+                  "attrs": {
+                    "color": [
+                      1,
+                      0,
+                      0
+                    ],
+                    "ifc": {
+                      "class": "IfcWall",
+                      "name": "context",
+                      "id": 41
+                    }
+                  }
+                },
+                {
+                  "vertices": [
+                    [
+                      0.0,
+                      5.0,
+                      0.0
+                    ],
+                    [
+                      2.0,
+                      5.0,
+                      0.0
+                    ],
+                    [
+                      2.0,
+                      6.0,
+                      0.0
+                    ],
+                    [
+                      0.0,
+                      6.0,
+                      0.0
+                    ]
+                  ],
+                  "holes": [],
+                  "attrs": {
+                    "ifc": {
+                      "class": "IfcWall",
+                      "name": "context",
+                      "id": 41
+                    }
+                  }
+                },
+                {
+                  "vertices": [
+                    [
+                      4.0,
+                      0.0,
+                      0.0
+                    ],
+                    [
+                      4.0,
+                      4.0,
+                      0.0
+                    ],
+                    [
+                      0.0,
+                      4.0,
+                      0.0
+                    ],
+                    [
+                      0.0,
+                      1.0,
+                      0.0
+                    ],
+                    [
+                      2.0,
+                      1.0,
+                      0.0
+                    ],
+                    [
+                      2.0,
+                      0.0,
+                      0.0
+                    ]
+                  ],
+                  "holes": [],
+                  "attrs": {
+                    "color": [
+                      1,
+                      0,
+                      0
+                    ],
+                    "vendor": 71,
+                    "ifc": {
+                      "id": 99,
+                      "class": "IfcSlab",
+                      "name": "mother"
+                    }
+                  }
+                }
+              ],
+              "children": [],
+              "transform": null
+            }
+          ],
+          "rows": [
+            {
+              "class": "IfcSlab",
+              "name": "root",
+              "area": 2.0,
+              "volume": null,
+              "key": "faces"
+            }
+          ],
+          "csv": "class,name,metrado,unit,area_m2,volume_m3\nIfcSlab,\"root\",2.0000,m2,2.0000,\n"
+        },
+        {
+          "phase": "undo",
+          "active": [
+            {
+              "vertices": [
+                [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  2.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  2.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  1.0,
+                  0.0
+                ]
+              ],
+              "holes": [],
+              "attrs": {
+                "color": [
+                  1,
+                  0,
+                  0
+                ],
+                "ifc": {
+                  "class": "IfcWall",
+                  "name": "context",
+                  "id": 41
+                }
+              }
+            },
+            {
+              "vertices": [
+                [
+                  4.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  4.0,
+                  4.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  4.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  2.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  2.0,
+                  0.0,
+                  0.0
+                ]
+              ],
+              "holes": [],
+              "attrs": {
+                "color": [
+                  1,
+                  0,
+                  0
+                ],
+                "vendor": 71,
+                "ifc": {
+                  "id": 99,
+                  "class": "IfcSlab",
+                  "name": "mother"
+                }
+              }
+            }
+          ],
+          "loose": [
+            {
+              "vertices": [
+                [
+                  20.0,
+                  20.0,
+                  0.0
+                ],
+                [
+                  22.0,
+                  20.0,
+                  0.0
+                ],
+                [
+                  22.0,
+                  21.0,
+                  0.0
+                ],
+                [
+                  20.0,
+                  21.0,
+                  0.0
+                ]
+              ],
+              "holes": [],
+              "attrs": {
+                "ifc": {
+                  "id": 40,
+                  "class": "IfcSlab",
+                  "name": "root"
+                }
+              }
+            }
+          ],
+          "groups": [
+            {
+              "name": "target",
+              "faces": [
+                {
+                  "vertices": [
+                    [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    [
+                      2.0,
+                      0.0,
+                      0.0
+                    ],
+                    [
+                      2.0,
+                      1.0,
+                      0.0
+                    ],
+                    [
+                      0.0,
+                      1.0,
+                      0.0
+                    ]
+                  ],
+                  "holes": [],
+                  "attrs": {
+                    "color": [
+                      1,
+                      0,
+                      0
+                    ],
+                    "ifc": {
+                      "class": "IfcWall",
+                      "name": "context",
+                      "id": 41
+                    }
+                  }
+                },
+                {
+                  "vertices": [
+                    [
+                      4.0,
+                      0.0,
+                      0.0
+                    ],
+                    [
+                      4.0,
+                      4.0,
+                      0.0
+                    ],
+                    [
+                      0.0,
+                      4.0,
+                      0.0
+                    ],
+                    [
+                      0.0,
+                      1.0,
+                      0.0
+                    ],
+                    [
+                      2.0,
+                      1.0,
+                      0.0
+                    ],
+                    [
+                      2.0,
+                      0.0,
+                      0.0
+                    ]
+                  ],
+                  "holes": [],
+                  "attrs": {
+                    "color": [
+                      1,
+                      0,
+                      0
+                    ],
+                    "vendor": 71,
+                    "ifc": {
+                      "id": 99,
+                      "class": "IfcSlab",
+                      "name": "mother"
+                    }
+                  }
+                }
+              ],
+              "children": [],
+              "transform": null
+            }
+          ],
+          "rows": [
+            {
+              "class": "IfcSlab",
+              "name": "root",
+              "area": 2.0,
+              "volume": null,
+              "key": "faces"
+            }
+          ],
+          "csv": "class,name,metrado,unit,area_m2,volume_m3\nIfcSlab,\"root\",2.0000,m2,2.0000,\n"
+        },
+        {
+          "phase": "redo",
+          "active": [
+            {
+              "vertices": [
+                [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  2.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  2.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  1.0,
+                  0.0
+                ]
+              ],
+              "holes": [],
+              "attrs": {
+                "color": [
+                  1,
+                  0,
+                  0
+                ],
+                "ifc": {
+                  "class": "IfcWall",
+                  "name": "context",
+                  "id": 41
+                }
+              }
+            },
+            {
+              "vertices": [
+                [
+                  0.0,
+                  5.0,
+                  0.0
+                ],
+                [
+                  2.0,
+                  5.0,
+                  0.0
+                ],
+                [
+                  2.0,
+                  6.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  6.0,
+                  0.0
+                ]
+              ],
+              "holes": [],
+              "attrs": {
+                "ifc": {
+                  "class": "IfcWall",
+                  "name": "context",
+                  "id": 41
+                }
+              }
+            },
+            {
+              "vertices": [
+                [
+                  4.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  4.0,
+                  4.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  4.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  2.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  2.0,
+                  0.0,
+                  0.0
+                ]
+              ],
+              "holes": [],
+              "attrs": {
+                "color": [
+                  1,
+                  0,
+                  0
+                ],
+                "vendor": 71,
+                "ifc": {
+                  "id": 99,
+                  "class": "IfcSlab",
+                  "name": "mother"
+                }
+              }
+            }
+          ],
+          "loose": [
+            {
+              "vertices": [
+                [
+                  20.0,
+                  20.0,
+                  0.0
+                ],
+                [
+                  22.0,
+                  20.0,
+                  0.0
+                ],
+                [
+                  22.0,
+                  21.0,
+                  0.0
+                ],
+                [
+                  20.0,
+                  21.0,
+                  0.0
+                ]
+              ],
+              "holes": [],
+              "attrs": {
+                "ifc": {
+                  "id": 40,
+                  "class": "IfcSlab",
+                  "name": "root"
+                }
+              }
+            }
+          ],
+          "groups": [
+            {
+              "name": "target",
+              "faces": [
+                {
+                  "vertices": [
+                    [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    [
+                      2.0,
+                      0.0,
+                      0.0
+                    ],
+                    [
+                      2.0,
+                      1.0,
+                      0.0
+                    ],
+                    [
+                      0.0,
+                      1.0,
+                      0.0
+                    ]
+                  ],
+                  "holes": [],
+                  "attrs": {
+                    "color": [
+                      1,
+                      0,
+                      0
+                    ],
+                    "ifc": {
+                      "class": "IfcWall",
+                      "name": "context",
+                      "id": 41
+                    }
+                  }
+                },
+                {
+                  "vertices": [
+                    [
+                      0.0,
+                      5.0,
+                      0.0
+                    ],
+                    [
+                      2.0,
+                      5.0,
+                      0.0
+                    ],
+                    [
+                      2.0,
+                      6.0,
+                      0.0
+                    ],
+                    [
+                      0.0,
+                      6.0,
+                      0.0
+                    ]
+                  ],
+                  "holes": [],
+                  "attrs": {
+                    "ifc": {
+                      "class": "IfcWall",
+                      "name": "context",
+                      "id": 41
+                    }
+                  }
+                },
+                {
+                  "vertices": [
+                    [
+                      4.0,
+                      0.0,
+                      0.0
+                    ],
+                    [
+                      4.0,
+                      4.0,
+                      0.0
+                    ],
+                    [
+                      0.0,
+                      4.0,
+                      0.0
+                    ],
+                    [
+                      0.0,
+                      1.0,
+                      0.0
+                    ],
+                    [
+                      2.0,
+                      1.0,
+                      0.0
+                    ],
+                    [
+                      2.0,
+                      0.0,
+                      0.0
+                    ]
+                  ],
+                  "holes": [],
+                  "attrs": {
+                    "color": [
+                      1,
+                      0,
+                      0
+                    ],
+                    "vendor": 71,
+                    "ifc": {
+                      "id": 99,
+                      "class": "IfcSlab",
+                      "name": "mother"
+                    }
+                  }
+                }
+              ],
+              "children": [],
+              "transform": null
+            }
+          ],
+          "rows": [
+            {
+              "class": "IfcSlab",
+              "name": "root",
+              "area": 2.0,
+              "volume": null,
+              "key": "faces"
+            }
+          ],
+          "csv": "class,name,metrado,unit,area_m2,volume_m3\nIfcSlab,\"root\",2.0000,m2,2.0000,\n"
+        },
+        {
+          "phase": "finished",
+          "active": [
+            {
+              "vertices": [
+                [
+                  20.0,
+                  20.0,
+                  0.0
+                ],
+                [
+                  22.0,
+                  20.0,
+                  0.0
+                ],
+                [
+                  22.0,
+                  21.0,
+                  0.0
+                ],
+                [
+                  20.0,
+                  21.0,
+                  0.0
+                ]
+              ],
+              "holes": [],
+              "attrs": {
+                "ifc": {
+                  "id": 40,
+                  "class": "IfcSlab",
+                  "name": "root"
+                }
+              }
+            }
+          ],
+          "loose": [
+            {
+              "vertices": [
+                [
+                  20.0,
+                  20.0,
+                  0.0
+                ],
+                [
+                  22.0,
+                  20.0,
+                  0.0
+                ],
+                [
+                  22.0,
+                  21.0,
+                  0.0
+                ],
+                [
+                  20.0,
+                  21.0,
+                  0.0
+                ]
+              ],
+              "holes": [],
+              "attrs": {
+                "ifc": {
+                  "id": 40,
+                  "class": "IfcSlab",
+                  "name": "root"
+                }
+              }
+            }
+          ],
+          "groups": [
+            {
+              "name": "target",
+              "faces": [
+                {
+                  "vertices": [
+                    [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    [
+                      2.0,
+                      0.0,
+                      0.0
+                    ],
+                    [
+                      2.0,
+                      1.0,
+                      0.0
+                    ],
+                    [
+                      0.0,
+                      1.0,
+                      0.0
+                    ]
+                  ],
+                  "holes": [],
+                  "attrs": {
+                    "color": [
+                      1,
+                      0,
+                      0
+                    ],
+                    "ifc": {
+                      "class": "IfcWall",
+                      "name": "context",
+                      "id": 41
+                    }
+                  }
+                },
+                {
+                  "vertices": [
+                    [
+                      0.0,
+                      5.0,
+                      0.0
+                    ],
+                    [
+                      2.0,
+                      5.0,
+                      0.0
+                    ],
+                    [
+                      2.0,
+                      6.0,
+                      0.0
+                    ],
+                    [
+                      0.0,
+                      6.0,
+                      0.0
+                    ]
+                  ],
+                  "holes": [],
+                  "attrs": {
+                    "ifc": {
+                      "class": "IfcWall",
+                      "name": "context",
+                      "id": 41
+                    }
+                  }
+                },
+                {
+                  "vertices": [
+                    [
+                      4.0,
+                      0.0,
+                      0.0
+                    ],
+                    [
+                      4.0,
+                      4.0,
+                      0.0
+                    ],
+                    [
+                      0.0,
+                      4.0,
+                      0.0
+                    ],
+                    [
+                      0.0,
+                      1.0,
+                      0.0
+                    ],
+                    [
+                      2.0,
+                      1.0,
+                      0.0
+                    ],
+                    [
+                      2.0,
+                      0.0,
+                      0.0
+                    ]
+                  ],
+                  "holes": [],
+                  "attrs": {
+                    "color": [
+                      1,
+                      0,
+                      0
+                    ],
+                    "vendor": 71,
+                    "ifc": {
+                      "id": 99,
+                      "class": "IfcSlab",
+                      "name": "mother"
+                    }
+                  }
+                }
+              ],
+              "children": [],
+              "transform": null
+            }
+          ],
+          "rows": [
+            {
+              "class": "IfcSlab",
+              "name": "root",
+              "area": 2.0,
+              "volume": null,
+              "key": "faces"
+            }
+          ],
+          "csv": "class,name,metrado,unit,area_m2,volume_m3\nIfcSlab,\"root\",2.0000,m2,2.0000,\n"
+        }
+      ]
+    },
+    {
+      "case": "tagged-group-root-id40",
+      "phases": [
+        {
+          "phase": "entered",
+          "active": [],
+          "loose": [
+            {
+              "vertices": [
+                [
+                  20.0,
+                  20.0,
+                  0.0
+                ],
+                [
+                  22.0,
+                  20.0,
+                  0.0
+                ],
+                [
+                  22.0,
+                  21.0,
+                  0.0
+                ],
+                [
+                  20.0,
+                  21.0,
+                  0.0
+                ]
+              ],
+              "holes": [],
+              "attrs": {
+                "ifc": {
+                  "id": 40,
+                  "class": "IfcSlab",
+                  "name": "root"
+                }
+              }
+            }
+          ],
+          "groups": [
+            {
+              "name": "target",
+              "faces": [],
+              "children": [],
+              "transform": null
+            }
+          ],
+          "rows": [
+            {
+              "class": "IfcSlab",
+              "name": "root",
+              "area": 2.0,
+              "volume": null,
+              "key": "faces"
+            },
+            {
+              "class": "IfcSlab",
+              "name": "target slab",
+              "area": 0,
+              "volume": null,
+              "key": "group"
+            }
+          ],
+          "csv": "class,name,metrado,unit,area_m2,volume_m3\nIfcSlab,\"root\",2.0000,m2,2.0000,\nIfcSlab,\"target slab\",,m2,0.0000,\n"
+        },
+        {
+          "phase": "first",
+          "active": [
+            {
+              "vertices": [
+                [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  2.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  2.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  1.0,
+                  0.0
+                ]
+              ],
+              "holes": [],
+              "attrs": {
+                "ifc": {
+                  "class": "IfcWall",
+                  "name": "context",
+                  "id": 41
+                }
+              }
+            }
+          ],
+          "loose": [
+            {
+              "vertices": [
+                [
+                  20.0,
+                  20.0,
+                  0.0
+                ],
+                [
+                  22.0,
+                  20.0,
+                  0.0
+                ],
+                [
+                  22.0,
+                  21.0,
+                  0.0
+                ],
+                [
+                  20.0,
+                  21.0,
+                  0.0
+                ]
+              ],
+              "holes": [],
+              "attrs": {
+                "ifc": {
+                  "id": 40,
+                  "class": "IfcSlab",
+                  "name": "root"
+                }
+              }
+            }
+          ],
+          "groups": [
+            {
+              "name": "target",
+              "faces": [
+                {
+                  "vertices": [
+                    [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    [
+                      2.0,
+                      0.0,
+                      0.0
+                    ],
+                    [
+                      2.0,
+                      1.0,
+                      0.0
+                    ],
+                    [
+                      0.0,
+                      1.0,
+                      0.0
+                    ]
+                  ],
+                  "holes": [],
+                  "attrs": {
+                    "ifc": {
+                      "class": "IfcWall",
+                      "name": "context",
+                      "id": 41
+                    }
+                  }
+                }
+              ],
+              "children": [],
+              "transform": null
+            }
+          ],
+          "rows": [
+            {
+              "class": "IfcSlab",
+              "name": "root",
+              "area": 2.0,
+              "volume": null,
+              "key": "faces"
+            },
+            {
+              "class": "IfcSlab",
+              "name": "target slab",
+              "area": 2.0,
+              "volume": null,
+              "key": "group"
+            }
+          ],
+          "csv": "class,name,metrado,unit,area_m2,volume_m3\nIfcSlab,\"root\",2.0000,m2,2.0000,\nIfcSlab,\"target slab\",2.0000,m2,2.0000,\n"
+        },
+        {
+          "phase": "second",
+          "active": [
+            {
+              "vertices": [
+                [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  2.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  2.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  1.0,
+                  0.0
+                ]
+              ],
+              "holes": [],
+              "attrs": {
+                "ifc": {
+                  "class": "IfcWall",
+                  "name": "context",
+                  "id": 41
+                }
+              }
+            },
+            {
+              "vertices": [
+                [
+                  0.0,
+                  5.0,
+                  0.0
+                ],
+                [
+                  2.0,
+                  5.0,
+                  0.0
+                ],
+                [
+                  2.0,
+                  6.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  6.0,
+                  0.0
+                ]
+              ],
+              "holes": [],
+              "attrs": {
+                "ifc": {
+                  "class": "IfcWall",
+                  "name": "context",
+                  "id": 41
+                }
+              }
+            }
+          ],
+          "loose": [
+            {
+              "vertices": [
+                [
+                  20.0,
+                  20.0,
+                  0.0
+                ],
+                [
+                  22.0,
+                  20.0,
+                  0.0
+                ],
+                [
+                  22.0,
+                  21.0,
+                  0.0
+                ],
+                [
+                  20.0,
+                  21.0,
+                  0.0
+                ]
+              ],
+              "holes": [],
+              "attrs": {
+                "ifc": {
+                  "id": 40,
+                  "class": "IfcSlab",
+                  "name": "root"
+                }
+              }
+            }
+          ],
+          "groups": [
+            {
+              "name": "target",
+              "faces": [
+                {
+                  "vertices": [
+                    [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    [
+                      2.0,
+                      0.0,
+                      0.0
+                    ],
+                    [
+                      2.0,
+                      1.0,
+                      0.0
+                    ],
+                    [
+                      0.0,
+                      1.0,
+                      0.0
+                    ]
+                  ],
+                  "holes": [],
+                  "attrs": {
+                    "ifc": {
+                      "class": "IfcWall",
+                      "name": "context",
+                      "id": 41
+                    }
+                  }
+                },
+                {
+                  "vertices": [
+                    [
+                      0.0,
+                      5.0,
+                      0.0
+                    ],
+                    [
+                      2.0,
+                      5.0,
+                      0.0
+                    ],
+                    [
+                      2.0,
+                      6.0,
+                      0.0
+                    ],
+                    [
+                      0.0,
+                      6.0,
+                      0.0
+                    ]
+                  ],
+                  "holes": [],
+                  "attrs": {
+                    "ifc": {
+                      "class": "IfcWall",
+                      "name": "context",
+                      "id": 41
+                    }
+                  }
+                }
+              ],
+              "children": [],
+              "transform": null
+            }
+          ],
+          "rows": [
+            {
+              "class": "IfcSlab",
+              "name": "root",
+              "area": 2.0,
+              "volume": null,
+              "key": "faces"
+            },
+            {
+              "class": "IfcSlab",
+              "name": "target slab",
+              "area": 4.0,
+              "volume": null,
+              "key": "group"
+            }
+          ],
+          "csv": "class,name,metrado,unit,area_m2,volume_m3\nIfcSlab,\"root\",2.0000,m2,2.0000,\nIfcSlab,\"target slab\",2.0000,m2,4.0000,\n"
+        },
+        {
+          "phase": "undo",
+          "active": [
+            {
+              "vertices": [
+                [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  2.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  2.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  1.0,
+                  0.0
+                ]
+              ],
+              "holes": [],
+              "attrs": {
+                "ifc": {
+                  "class": "IfcWall",
+                  "name": "context",
+                  "id": 41
+                }
+              }
+            }
+          ],
+          "loose": [
+            {
+              "vertices": [
+                [
+                  20.0,
+                  20.0,
+                  0.0
+                ],
+                [
+                  22.0,
+                  20.0,
+                  0.0
+                ],
+                [
+                  22.0,
+                  21.0,
+                  0.0
+                ],
+                [
+                  20.0,
+                  21.0,
+                  0.0
+                ]
+              ],
+              "holes": [],
+              "attrs": {
+                "ifc": {
+                  "id": 40,
+                  "class": "IfcSlab",
+                  "name": "root"
+                }
+              }
+            }
+          ],
+          "groups": [
+            {
+              "name": "target",
+              "faces": [
+                {
+                  "vertices": [
+                    [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    [
+                      2.0,
+                      0.0,
+                      0.0
+                    ],
+                    [
+                      2.0,
+                      1.0,
+                      0.0
+                    ],
+                    [
+                      0.0,
+                      1.0,
+                      0.0
+                    ]
+                  ],
+                  "holes": [],
+                  "attrs": {
+                    "ifc": {
+                      "class": "IfcWall",
+                      "name": "context",
+                      "id": 41
+                    }
+                  }
+                }
+              ],
+              "children": [],
+              "transform": null
+            }
+          ],
+          "rows": [
+            {
+              "class": "IfcSlab",
+              "name": "root",
+              "area": 2.0,
+              "volume": null,
+              "key": "faces"
+            },
+            {
+              "class": "IfcSlab",
+              "name": "target slab",
+              "area": 2.0,
+              "volume": null,
+              "key": "group"
+            }
+          ],
+          "csv": "class,name,metrado,unit,area_m2,volume_m3\nIfcSlab,\"root\",2.0000,m2,2.0000,\nIfcSlab,\"target slab\",2.0000,m2,2.0000,\n"
+        },
+        {
+          "phase": "redo",
+          "active": [
+            {
+              "vertices": [
+                [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  2.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  2.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  1.0,
+                  0.0
+                ]
+              ],
+              "holes": [],
+              "attrs": {
+                "ifc": {
+                  "class": "IfcWall",
+                  "name": "context",
+                  "id": 41
+                }
+              }
+            },
+            {
+              "vertices": [
+                [
+                  0.0,
+                  5.0,
+                  0.0
+                ],
+                [
+                  2.0,
+                  5.0,
+                  0.0
+                ],
+                [
+                  2.0,
+                  6.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  6.0,
+                  0.0
+                ]
+              ],
+              "holes": [],
+              "attrs": {
+                "ifc": {
+                  "class": "IfcWall",
+                  "name": "context",
+                  "id": 41
+                }
+              }
+            }
+          ],
+          "loose": [
+            {
+              "vertices": [
+                [
+                  20.0,
+                  20.0,
+                  0.0
+                ],
+                [
+                  22.0,
+                  20.0,
+                  0.0
+                ],
+                [
+                  22.0,
+                  21.0,
+                  0.0
+                ],
+                [
+                  20.0,
+                  21.0,
+                  0.0
+                ]
+              ],
+              "holes": [],
+              "attrs": {
+                "ifc": {
+                  "id": 40,
+                  "class": "IfcSlab",
+                  "name": "root"
+                }
+              }
+            }
+          ],
+          "groups": [
+            {
+              "name": "target",
+              "faces": [
+                {
+                  "vertices": [
+                    [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    [
+                      2.0,
+                      0.0,
+                      0.0
+                    ],
+                    [
+                      2.0,
+                      1.0,
+                      0.0
+                    ],
+                    [
+                      0.0,
+                      1.0,
+                      0.0
+                    ]
+                  ],
+                  "holes": [],
+                  "attrs": {
+                    "ifc": {
+                      "class": "IfcWall",
+                      "name": "context",
+                      "id": 41
+                    }
+                  }
+                },
+                {
+                  "vertices": [
+                    [
+                      0.0,
+                      5.0,
+                      0.0
+                    ],
+                    [
+                      2.0,
+                      5.0,
+                      0.0
+                    ],
+                    [
+                      2.0,
+                      6.0,
+                      0.0
+                    ],
+                    [
+                      0.0,
+                      6.0,
+                      0.0
+                    ]
+                  ],
+                  "holes": [],
+                  "attrs": {
+                    "ifc": {
+                      "class": "IfcWall",
+                      "name": "context",
+                      "id": 41
+                    }
+                  }
+                }
+              ],
+              "children": [],
+              "transform": null
+            }
+          ],
+          "rows": [
+            {
+              "class": "IfcSlab",
+              "name": "root",
+              "area": 2.0,
+              "volume": null,
+              "key": "faces"
+            },
+            {
+              "class": "IfcSlab",
+              "name": "target slab",
+              "area": 4.0,
+              "volume": null,
+              "key": "group"
+            }
+          ],
+          "csv": "class,name,metrado,unit,area_m2,volume_m3\nIfcSlab,\"root\",2.0000,m2,2.0000,\nIfcSlab,\"target slab\",2.0000,m2,4.0000,\n"
+        },
+        {
+          "phase": "finished",
+          "active": [
+            {
+              "vertices": [
+                [
+                  20.0,
+                  20.0,
+                  0.0
+                ],
+                [
+                  22.0,
+                  20.0,
+                  0.0
+                ],
+                [
+                  22.0,
+                  21.0,
+                  0.0
+                ],
+                [
+                  20.0,
+                  21.0,
+                  0.0
+                ]
+              ],
+              "holes": [],
+              "attrs": {
+                "ifc": {
+                  "id": 40,
+                  "class": "IfcSlab",
+                  "name": "root"
+                }
+              }
+            }
+          ],
+          "loose": [
+            {
+              "vertices": [
+                [
+                  20.0,
+                  20.0,
+                  0.0
+                ],
+                [
+                  22.0,
+                  20.0,
+                  0.0
+                ],
+                [
+                  22.0,
+                  21.0,
+                  0.0
+                ],
+                [
+                  20.0,
+                  21.0,
+                  0.0
+                ]
+              ],
+              "holes": [],
+              "attrs": {
+                "ifc": {
+                  "id": 40,
+                  "class": "IfcSlab",
+                  "name": "root"
+                }
+              }
+            }
+          ],
+          "groups": [
+            {
+              "name": "target",
+              "faces": [
+                {
+                  "vertices": [
+                    [
+                      0.0,
+                      0.0,
+                      0.0
+                    ],
+                    [
+                      2.0,
+                      0.0,
+                      0.0
+                    ],
+                    [
+                      2.0,
+                      1.0,
+                      0.0
+                    ],
+                    [
+                      0.0,
+                      1.0,
+                      0.0
+                    ]
+                  ],
+                  "holes": [],
+                  "attrs": {
+                    "ifc": {
+                      "class": "IfcWall",
+                      "name": "context",
+                      "id": 41
+                    }
+                  }
+                },
+                {
+                  "vertices": [
+                    [
+                      0.0,
+                      5.0,
+                      0.0
+                    ],
+                    [
+                      2.0,
+                      5.0,
+                      0.0
+                    ],
+                    [
+                      2.0,
+                      6.0,
+                      0.0
+                    ],
+                    [
+                      0.0,
+                      6.0,
+                      0.0
+                    ]
+                  ],
+                  "holes": [],
+                  "attrs": {
+                    "ifc": {
+                      "class": "IfcWall",
+                      "name": "context",
+                      "id": 41
+                    }
+                  }
+                }
+              ],
+              "children": [],
+              "transform": null
+            }
+          ],
+          "rows": [
+            {
+              "class": "IfcSlab",
+              "name": "root",
+              "area": 2.0,
+              "volume": null,
+              "key": "faces"
+            },
+            {
+              "class": "IfcSlab",
+              "name": "target slab",
+              "area": 4.0,
+              "volume": null,
+              "key": "group"
+            }
+          ],
+          "csv": "class,name,metrado,unit,area_m2,volume_m3\nIfcSlab,\"root\",2.0000,m2,2.0000,\nIfcSlab,\"target slab\",2.0000,m2,4.0000,\n"
+        }
+      ]
+    }
+  ]
+}

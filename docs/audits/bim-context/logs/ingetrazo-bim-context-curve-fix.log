@@ -1,0 +1,18 @@
+   Compiling ingetrazo-core v0.3.15 (/tmp/ingetrazo-bim-context/crates/ingetrazo-core)
+warning: function `visit_meshes` is never used
+   --> crates/ingetrazo-core/src/screen_pick.rs:120:15
+    |
+120 | pub(crate) fn visit_meshes(scene: &Scene, mut visit: impl FnMut(&Mesh, DMat4, bool)) {
+    |               ^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-core` (lib test) generated 1 warning
+    Finished `test` profile [unoptimized] target(s) in 2.74s
+     Running unittests src/lib.rs (/tmp/ingetrazo-metal-world-target/debug/deps/ingetrazo_core-98de54c650a913c7)
+
+running 1 test
+test drafting::segmented_curve_metadata_tests::nonflat_segmented_chord_authors_paint_only_region ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 185 filtered out; finished in 0.00s
+

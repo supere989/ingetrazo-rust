@@ -1,0 +1,326 @@
+[
+  {
+    "case": "classic-empty-root",
+    "phase": "entered",
+    "active": true,
+    "loose": true,
+    "groups": true,
+    "rows": true,
+    "csv": true
+  },
+  {
+    "case": "classic-empty-root",
+    "phase": "first",
+    "active": true,
+    "loose": true,
+    "groups": true,
+    "rows": true,
+    "csv": true
+  },
+  {
+    "case": "classic-empty-root",
+    "phase": "second",
+    "active": true,
+    "loose": true,
+    "groups": true,
+    "rows": true,
+    "csv": true
+  },
+  {
+    "case": "classic-empty-root",
+    "phase": "undo",
+    "active": true,
+    "loose": true,
+    "groups": true,
+    "rows": true,
+    "csv": true
+  },
+  {
+    "case": "classic-empty-root",
+    "phase": "redo",
+    "active": true,
+    "loose": true,
+    "groups": true,
+    "rows": true,
+    "csv": true
+  },
+  {
+    "case": "classic-empty-root",
+    "phase": "finished",
+    "active": true,
+    "loose": true,
+    "groups": true,
+    "rows": true,
+    "csv": true
+  },
+  {
+    "case": "classic-root-id40",
+    "phase": "entered",
+    "active": true,
+    "loose": true,
+    "groups": true,
+    "rows": true,
+    "csv": true
+  },
+  {
+    "case": "classic-root-id40",
+    "phase": "first",
+    "active": true,
+    "loose": true,
+    "groups": true,
+    "rows": true,
+    "csv": true
+  },
+  {
+    "case": "classic-root-id40",
+    "phase": "second",
+    "active": true,
+    "loose": true,
+    "groups": true,
+    "rows": true,
+    "csv": true
+  },
+  {
+    "case": "classic-root-id40",
+    "phase": "undo",
+    "active": true,
+    "loose": true,
+    "groups": true,
+    "rows": true,
+    "csv": true
+  },
+  {
+    "case": "classic-root-id40",
+    "phase": "redo",
+    "active": true,
+    "loose": true,
+    "groups": true,
+    "rows": true,
+    "csv": true
+  },
+  {
+    "case": "classic-root-id40",
+    "phase": "finished",
+    "active": true,
+    "loose": true,
+    "groups": true,
+    "rows": true,
+    "csv": true
+  },
+  {
+    "case": "placed-leaf-root-id40",
+    "phase": "entered",
+    "active": true,
+    "loose": true,
+    "groups": true,
+    "rows": true,
+    "csv": true
+  },
+  {
+    "case": "placed-leaf-root-id40",
+    "phase": "first",
+    "active": true,
+    "loose": true,
+    "groups": true,
+    "rows": true,
+    "csv": true
+  },
+  {
+    "case": "placed-leaf-root-id40",
+    "phase": "second",
+    "active": true,
+    "loose": true,
+    "groups": true,
+    "rows": true,
+    "csv": true
+  },
+  {
+    "case": "placed-leaf-root-id40",
+    "phase": "undo",
+    "active": true,
+    "loose": true,
+    "groups": true,
+    "rows": true,
+    "csv": true
+  },
+  {
+    "case": "placed-leaf-root-id40",
+    "phase": "redo",
+    "active": true,
+    "loose": true,
+    "groups": true,
+    "rows": true,
+    "csv": true
+  },
+  {
+    "case": "placed-leaf-root-id40",
+    "phase": "finished",
+    "active": true,
+    "loose": true,
+    "groups": true,
+    "rows": true,
+    "csv": true
+  },
+  {
+    "case": "nested-transformed-root-id40",
+    "phase": "entered",
+    "active": true,
+    "loose": true,
+    "groups": true,
+    "rows": true,
+    "csv": true
+  },
+  {
+    "case": "nested-transformed-root-id40",
+    "phase": "first",
+    "active": true,
+    "loose": true,
+    "groups": true,
+    "rows": true,
+    "csv": true
+  },
+  {
+    "case": "nested-transformed-root-id40",
+    "phase": "second",
+    "active": true,
+    "loose": true,
+    "groups": true,
+    "rows": true,
+    "csv": true
+  },
+  {
+    "case": "nested-transformed-root-id40",
+    "phase": "undo",
+    "active": true,
+    "loose": true,
+    "groups": true,
+    "rows": true,
+    "csv": true
+  },
+  {
+    "case": "nested-transformed-root-id40",
+    "phase": "redo",
+    "active": true,
+    "loose": true,
+    "groups": true,
+    "rows": true,
+    "csv": true
+  },
+  {
+    "case": "nested-transformed-root-id40",
+    "phase": "finished",
+    "active": true,
+    "loose": true,
+    "groups": true,
+    "rows": true,
+    "csv": true
+  },
+  {
+    "case": "linked-leaf-root-id40",
+    "phase": "entered",
+    "active": true,
+    "loose": true,
+    "groups": true,
+    "rows": true,
+    "csv": true
+  },
+  {
+    "case": "linked-leaf-root-id40",
+    "phase": "first",
+    "active": true,
+    "loose": true,
+    "groups": true,
+    "rows": true,
+    "csv": true
+  },
+  {
+    "case": "linked-leaf-root-id40",
+    "phase": "second",
+    "active": true,
+    "loose": true,
+    "groups": true,
+    "rows": true,
+    "csv": true
+  },
+  {
+    "case": "linked-leaf-root-id40",
+    "phase": "undo",
+    "active": true,
+    "loose": true,
+    "groups": true,
+    "rows": true,
+    "csv": true
+  },
+  {
+    "case": "linked-leaf-root-id40",
+    "phase": "redo",
+    "active": true,
+    "loose": true,
+    "groups": true,
+    "rows": true,
+    "csv": true
+  },
+  {
+    "case": "linked-leaf-root-id40",
+    "phase": "finished",
+    "active": true,
+    "loose": true,
+    "groups": true,
+    "rows": true,
+    "csv": true
+  },
+  {
+    "case": "tagged-mother-root-id40",
+    "phase": "entered",
+    "active": true,
+    "loose": true,
+    "groups": true,
+    "rows": true,
+    "csv": true
+  },
+  {
+    "case": "tagged-mother-root-id40",
+    "phase": "first",
+    "active": true,
+    "loose": true,
+    "groups": true,
+    "rows": true,
+    "csv": true
+  },
+  {
+    "case": "tagged-mother-root-id40",
+    "phase": "second",
+    "active": true,
+    "loose": true,
+    "groups": true,
+    "rows": true,
+    "csv": true
+  },
+  {
+    "case": "tagged-mother-root-id40",
+    "phase": "undo",
+    "active": true,
+    "loose": true,
+    "groups": true,
+    "rows": true,
+    "csv": true
+  },
+  {
+    "case": "tagged-mother-root-id40",
+    "phase": "redo",
+    "active": true,
+    "loose": true,
+    "groups": true,
+    "rows": true,
+    "csv": true
+  },
+  {
+    "case": "tagged-mother-root-id40",
+    "phase": "finished",
+    "active": true,
+    "loose": true,
+    "groups": true,
+    "rows": true,
+    "csv": true
+  }
+]

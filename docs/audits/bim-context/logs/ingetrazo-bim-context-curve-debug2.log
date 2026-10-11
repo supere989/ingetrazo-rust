@@ -1,0 +1,32 @@
+   Compiling ingetrazo-core v0.3.15 (/tmp/ingetrazo-bim-context/crates/ingetrazo-core)
+warning: function `visit_meshes` is never used
+   --> crates/ingetrazo-core/src/screen_pick.rs:120:15
+    |
+120 | pub(crate) fn visit_meshes(scene: &Scene, mut visit: impl FnMut(&Mesh, DMat4, bool)) {
+    |               ^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-core` (lib test) generated 1 warning
+    Finished `test` profile [unoptimized] target(s) in 2.73s
+     Running unittests src/lib.rs (/tmp/ingetrazo-metal-world-target/debug/deps/ingetrazo_core-98de54c650a913c7)
+
+running 1 test
+BIMDBG cycle [DVec3(2.0, 2.0, 0.0), DVec3(0.0, 2.0, 0.0), DVec3(0.0, 0.0, 0.0), DVec3(4.0, 0.0, 0.0), DVec3(4.0, 2.0, 0.0)]
+BIMDBG declarations [({"vendor": Number(71), "color": Array [Number(1), Number(0), Number(0)]}, [DVec3(4.0, 4.0, 0.0), DVec3(0.0, 4.0, 0.0), DVec3(0.0, 2.0, 0.0), DVec3(2.0, 2.0, 0.0), DVec3(4.0, 2.0, 0.0)]), ({"color": Array [Number(1), Number(0), Number(0)]}, [DVec3(2.0, 2.0, 0.0), DVec3(0.0, 2.0, 0.0), DVec3(0.0, 0.0, 0.0), DVec3(4.0, 0.0, 0.0), DVec3(4.0, 2.0, 0.0)])]
+BIMDBG probe DVec3(1.3333333333333333, 3.3333333333333335, 0.0) triangles [[(DVec3(4.0, 4.0, 0.0), DVec3(0.0, 4.0, 0.0), DVec3(0.0, 2.0, 0.0)), (DVec3(4.0, 4.0, 0.0), DVec3(0.0, 2.0, 0.0), DVec3(2.0, 2.0, 0.0)), (DVec3(4.0, 4.0, 0.0), DVec3(2.0, 2.0, 0.0), DVec3(4.0, 2.0, 0.0))], [(DVec3(2.0, 2.0, 0.0), DVec3(0.0, 2.0, 0.0), DVec3(0.0, 0.0, 0.0)), (DVec3(2.0, 2.0, 0.0), DVec3(0.0, 0.0, 0.0), DVec3(4.0, 0.0, 0.0)), (DVec3(2.0, 2.0, 0.0), DVec3(4.0, 0.0, 0.0), DVec3(4.0, 2.0, 0.0))]] covering Some({"vendor": Number(71), "color": Array [Number(1), Number(0), Number(0)]})
+BIMDBG probe DVec3(2.0, 2.0, 0.0) triangles [[(DVec3(4.0, 4.0, 0.0), DVec3(0.0, 4.0, 0.0), DVec3(0.0, 2.0, 0.0)), (DVec3(4.0, 4.0, 0.0), DVec3(0.0, 2.0, 0.0), DVec3(2.0, 2.0, 0.0)), (DVec3(4.0, 4.0, 0.0), DVec3(2.0, 2.0, 0.0), DVec3(4.0, 2.0, 0.0))], [(DVec3(2.0, 2.0, 0.0), DVec3(0.0, 2.0, 0.0), DVec3(0.0, 0.0, 0.0)), (DVec3(2.0, 2.0, 0.0), DVec3(0.0, 0.0, 0.0), DVec3(4.0, 0.0, 0.0)), (DVec3(2.0, 2.0, 0.0), DVec3(4.0, 0.0, 0.0), DVec3(4.0, 2.0, 0.0))]] covering Some({"vendor": Number(71), "color": Array [Number(1), Number(0), Number(0)]})
+
+thread 'drafting::segmented_curve_metadata_tests::nonflat_segmented_chord_authors_paint_only_region' (1565668) panicked at crates/ingetrazo-core/src/drafting.rs:1418:3:
+assertion failed: !lower.attrs.contains_key("vendor")
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test drafting::segmented_curve_metadata_tests::nonflat_segmented_chord_authors_paint_only_region ... FAILED
+
+failures:
+
+failures:
+    drafting::segmented_curve_metadata_tests::nonflat_segmented_chord_authors_paint_only_region
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 185 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `-p ingetrazo-core --lib`

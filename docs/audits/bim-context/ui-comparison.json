@@ -1,0 +1,24 @@
+{
+  "passed": true,
+  "phases": [
+    "initial",
+    "active",
+    "first",
+    "rearmed",
+    "second",
+    "undo",
+    "redo",
+    "off",
+    "off-undo",
+    "off-redo"
+  ],
+  "negative_controls": [
+    "empty",
+    "duplicate-phase",
+    "lost-tag",
+    "collapsed-ID",
+    "phantom-neighbor",
+    "mode-reverted"
+  ],
+  "scope": "IFC class/name/object IDs, face census, runtime activation and undo/redo stack counts. Different viewport sizes/pixel input quantization excluded from UI geometry equivalence; separate source command corpus compares exact oriented rings."
+}
