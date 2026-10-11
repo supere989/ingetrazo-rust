@@ -1,0 +1,35 @@
+{
+  "archive_sha256": "1b14ad8638f4e0122c7585629aac5843d9fd11a2ba472efe3c8a0566360135f5",
+  "files": [
+    {
+      "path": "focused.log",
+      "bytes": 14621,
+      "sha256": "952c22bee4d35c7da16736fa05e91be08a2c352ed3d56303c61a63c2e765224f"
+    },
+    {
+      "path": "solar-app-cache-fix-build.log",
+      "bytes": 15344,
+      "sha256": "6d61fda759e3e0cf09a0640405fa07d759cdec7d79cf638369ebd98f341d4113"
+    },
+    {
+      "path": "solar-application-build.log",
+      "bytes": 15344,
+      "sha256": "022713ef08591a58a3fcf83e7b16312ff15960f9025ade7129c59441f3e9ba27"
+    },
+    {
+      "path": "solar-bitmap-direction-build.log",
+      "bytes": 15344,
+      "sha256": "26898d9c2dc9943b9205c224ebf232e4d29190f004869e896dddac403cc586be"
+    },
+    {
+      "path": "solar-bitmap-embed-build.log",
+      "bytes": 15344,
+      "sha256": "d00fb9b5124e6cba2ba8c984d1106ab5a9ac7950ca60d6f3ee86a3b59ae94516"
+    },
+    {
+      "path": "solar-bitmap-frozen-build.log",
+      "bytes": 15344,
+      "sha256": "a151e531498e5069da61fdc4c378f7f1d5fa1be08244783813a0a4b6cbc22f70"
+    }
+  ]
+}
