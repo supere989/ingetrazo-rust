@@ -1,0 +1,1492 @@
+{
+  "policy": "Delete only owned regular files with exact authenticated canonical archive member bytes; retain unlisted files, failures and all caches/worktrees/targets.",
+  "archives": [
+    {
+      "archive": "docs/audits/nested-import/source-records.zip",
+      "archive_sha256": "d8aa868e528928d8aa686ca3e78724da36dfb6ad86f74b8502663556ca8b28b0",
+      "owned_root": "/tmp/ingetrazo-nested-import-proof",
+      "authenticated_members": [
+        {
+          "member": "ambiguous.obj",
+          "bytes": 32,
+          "sha256": "697b00ab13410c52a542d2e9c63711fcc04e9cbf6c0d3439a9b43cc812e6e713"
+        },
+        {
+          "member": "container-ambiguous-input.igz",
+          "bytes": 3552,
+          "sha256": "de62fd4cfd23df40d43e57c46cc5c03759f3999074659b6009f982921cf8fe76"
+        },
+        {
+          "member": "container-ambiguous-original.igz",
+          "bytes": 4903,
+          "sha256": "420b8125b5629db6de32671e47d5f0ec88e2b4cd07c72847f0add9e130fec648"
+        },
+        {
+          "member": "container-header-input.igz",
+          "bytes": 3552,
+          "sha256": "9b264a63426baf693341f021faa21086704aaf87abefa7a4111e00921790409e"
+        },
+        {
+          "member": "container-header-original.igz",
+          "bytes": 4178,
+          "sha256": "668a7840f1eda8eda57b838d52bd40fd2fa8ec3a71e00c27e129255d08b29f9f"
+        },
+        {
+          "member": "container-named-input.igz",
+          "bytes": 3552,
+          "sha256": "a4b0e7296c574d9bcf5c384b124c54ca2d783170085e3dd5285ecd8f2d205de5"
+        },
+        {
+          "member": "container-named-original.igz",
+          "bytes": 4903,
+          "sha256": "7d57fbe60b39d8307fd271c8de579a60cf26db897b1664922b10700db6db91d4"
+        },
+        {
+          "member": "container-parts-input.igz",
+          "bytes": 3552,
+          "sha256": "ea92169866ec459a663c7807ad8533d0cf00c5301b946cf41470ea01885af15b"
+        },
+        {
+          "member": "container-parts-original.igz",
+          "bytes": 7659,
+          "sha256": "57aa3579563d2007e6ef033a68ed582fa3061420142ab33e9b25ab06af60494f"
+        },
+        {
+          "member": "container-zero-input.igz",
+          "bytes": 3552,
+          "sha256": "53323e4bbe534118179e9f731b5443b2120c71f2376d7652d949a183a039efb7"
+        },
+        {
+          "member": "container-zero-original.igz",
+          "bytes": 4153,
+          "sha256": "e82c48044899c518780f59db0860178d1d77616c727fd9ee499048316965ae7f"
+        },
+        {
+          "member": "header.dxf",
+          "bytes": 128,
+          "sha256": "2fc67368d5c612051cf24d571782ca36874ac3ee56fbf6290de48e4d3d202c1a"
+        },
+        {
+          "member": "leaf-ambiguous-input.igz",
+          "bytes": 3552,
+          "sha256": "736c3a454e80c9828cd46b714cd97749218595bb6a378145f65c0a96df1de335"
+        },
+        {
+          "member": "leaf-ambiguous-original.igz",
+          "bytes": 4887,
+          "sha256": "61c4eb15540b6e4dafd6d531659e5f666ace0e81387abe8dbadc794e9317f247"
+        },
+        {
+          "member": "leaf-header-input.igz",
+          "bytes": 3552,
+          "sha256": "2f12bbc0410b78d10cd752e6f06dae3a234cbffb9fc815c7be2ab33c3ec02c20"
+        },
+        {
+          "member": "leaf-header-original.igz",
+          "bytes": 4178,
+          "sha256": "2229ad09e7bf541018bedf391a3e59033b1a223feabd9301cfed6a59b8f19a57"
+        },
+        {
+          "member": "leaf-named-input.igz",
+          "bytes": 3552,
+          "sha256": "e8bb195ee097a75c5004c735a9b391c92c7874736b0740dbd19e23e1545eea34"
+        },
+        {
+          "member": "leaf-named-original.igz",
+          "bytes": 4887,
+          "sha256": "d142a5a11db5e7ef5dbe505349a628973919a7d57fa24ce7008ccf9a1525ecfe"
+        },
+        {
+          "member": "leaf-parts-input.igz",
+          "bytes": 3552,
+          "sha256": "02560efa512945c430c14eb2b9d7819dafa7ef48e06c85d75d5a5db2b2e4adf2"
+        },
+        {
+          "member": "leaf-parts-original.igz",
+          "bytes": 7659,
+          "sha256": "515c245121b3c74198fcf6028ce8bb1bb60f8f2f46c53ccfc03c3b6654646943"
+        },
+        {
+          "member": "leaf-zero-input.igz",
+          "bytes": 3552,
+          "sha256": "43f3a500a59068e931cde23be17d4a9c6a7085d09cb7a268f2648267b2ff898f"
+        },
+        {
+          "member": "leaf-zero-original.igz",
+          "bytes": 4153,
+          "sha256": "55b18646cb289484b9b7d1da6f5b688a1fd29fe6caf3fb33575168678907120b"
+        },
+        {
+          "member": "named.obj",
+          "bytes": 40,
+          "sha256": "201319397b99e3fa95a1000b1b649570e8b056bca9488d1b7b6c980188a5e810"
+        },
+        {
+          "member": "original-nested-import.json",
+          "bytes": 882302,
+          "sha256": "5831bf6ae715897c07d41b145891420a25f4ec235aed48ce40ce228ae7281259"
+        },
+        {
+          "member": "parts.obj",
+          "bytes": 79,
+          "sha256": "f82b90938b92179b20ed3e5d08598913acc88de2a778bbed3140631a6ee2cf5c"
+        },
+        {
+          "member": "root-ambiguous-input.igz",
+          "bytes": 3552,
+          "sha256": "575a6679d5c26761d8f84264ba7e4cb5b67a2cbce48f70b8ee40751859155708"
+        },
+        {
+          "member": "root-ambiguous-original.igz",
+          "bytes": 4399,
+          "sha256": "94f8a63ba8e5dc65b034ff981dabe321cbd782427e0e735c4949b2684b523765"
+        },
+        {
+          "member": "root-header-input.igz",
+          "bytes": 3552,
+          "sha256": "cdfff85b1b96a05b40636fbad276da42de55fea7f05fe8e93d02aa3842146979"
+        },
+        {
+          "member": "root-header-original.igz",
+          "bytes": 3906,
+          "sha256": "68bda3482ebd80d368475a03e8d4f54f9d09990b2bbec9bb1f80e1a09098a8b1"
+        },
+        {
+          "member": "root-named-input.igz",
+          "bytes": 3552,
+          "sha256": "15b8b06ebb953e706c59c0900f6c829e6c711a0e93ac071770b2c62a00ed8445"
+        },
+        {
+          "member": "root-named-original.igz",
+          "bytes": 4399,
+          "sha256": "caa566bdde2bd8ac7fb97e4e3bba2042fb8ab528100f7c3243d2e035ab7689d5"
+        },
+        {
+          "member": "root-parts-input.igz",
+          "bytes": 3552,
+          "sha256": "2d2739719c2b237b9f7d1ef564d716469811af4303ff3314de1ec640705513d3"
+        },
+        {
+          "member": "root-parts-original.igz",
+          "bytes": 7387,
+          "sha256": "b121a05bcbd1cbba261fe45bcd7e799b8856f8f74f5a49159c8306df1aa80877"
+        },
+        {
+          "member": "root-zero-input.igz",
+          "bytes": 3552,
+          "sha256": "874b3476896d79159313fde3b47ffc18bfd1b104d25e530d8f953cb36ac61682"
+        },
+        {
+          "member": "root-zero-original.igz",
+          "bytes": 3881,
+          "sha256": "c5b41a190202f7660e0c2d7c86075a5e7d4f395133c4367f9a355ce81d8e8e36"
+        },
+        {
+          "member": "source.log",
+          "bytes": 193,
+          "sha256": "2738c4c206ea3884af56c14fcf36ea9233531c20608783abdcd6eae555623898"
+        },
+        {
+          "member": "source.stderr",
+          "bytes": 735,
+          "sha256": "ad5d9e1c2a687b6bf0fc5fd580776cc61b4350ff92d749b15bb2570392b45d8d"
+        },
+        {
+          "member": "zero.dxf",
+          "bytes": 125,
+          "sha256": "4d443d24c430b24f907a92df0b557f94ea3af61b8bcdf726e56ff72465cb3dfa"
+        }
+      ],
+      "deleted": [
+        {
+          "member": "ambiguous.obj",
+          "bytes": 32
+        },
+        {
+          "member": "container-ambiguous-input.igz",
+          "bytes": 3552
+        },
+        {
+          "member": "container-ambiguous-original.igz",
+          "bytes": 4903
+        },
+        {
+          "member": "container-header-input.igz",
+          "bytes": 3552
+        },
+        {
+          "member": "container-header-original.igz",
+          "bytes": 4178
+        },
+        {
+          "member": "container-named-input.igz",
+          "bytes": 3552
+        },
+        {
+          "member": "container-named-original.igz",
+          "bytes": 4903
+        },
+        {
+          "member": "container-parts-input.igz",
+          "bytes": 3552
+        },
+        {
+          "member": "container-parts-original.igz",
+          "bytes": 7659
+        },
+        {
+          "member": "container-zero-input.igz",
+          "bytes": 3552
+        },
+        {
+          "member": "container-zero-original.igz",
+          "bytes": 4153
+        },
+        {
+          "member": "header.dxf",
+          "bytes": 128
+        },
+        {
+          "member": "leaf-ambiguous-input.igz",
+          "bytes": 3552
+        },
+        {
+          "member": "leaf-ambiguous-original.igz",
+          "bytes": 4887
+        },
+        {
+          "member": "leaf-header-input.igz",
+          "bytes": 3552
+        },
+        {
+          "member": "leaf-header-original.igz",
+          "bytes": 4178
+        },
+        {
+          "member": "leaf-named-input.igz",
+          "bytes": 3552
+        },
+        {
+          "member": "leaf-named-original.igz",
+          "bytes": 4887
+        },
+        {
+          "member": "leaf-parts-input.igz",
+          "bytes": 3552
+        },
+        {
+          "member": "leaf-parts-original.igz",
+          "bytes": 7659
+        },
+        {
+          "member": "leaf-zero-input.igz",
+          "bytes": 3552
+        },
+        {
+          "member": "leaf-zero-original.igz",
+          "bytes": 4153
+        },
+        {
+          "member": "named.obj",
+          "bytes": 40
+        },
+        {
+          "member": "original-nested-import.json",
+          "bytes": 882302
+        },
+        {
+          "member": "parts.obj",
+          "bytes": 79
+        },
+        {
+          "member": "root-ambiguous-input.igz",
+          "bytes": 3552
+        },
+        {
+          "member": "root-ambiguous-original.igz",
+          "bytes": 4399
+        },
+        {
+          "member": "root-header-input.igz",
+          "bytes": 3552
+        },
+        {
+          "member": "root-header-original.igz",
+          "bytes": 3906
+        },
+        {
+          "member": "root-named-input.igz",
+          "bytes": 3552
+        },
+        {
+          "member": "root-named-original.igz",
+          "bytes": 4399
+        },
+        {
+          "member": "root-parts-input.igz",
+          "bytes": 3552
+        },
+        {
+          "member": "root-parts-original.igz",
+          "bytes": 7387
+        },
+        {
+          "member": "root-zero-input.igz",
+          "bytes": 3552
+        },
+        {
+          "member": "root-zero-original.igz",
+          "bytes": 3881
+        },
+        {
+          "member": "source.log",
+          "bytes": 193
+        },
+        {
+          "member": "source.stderr",
+          "bytes": 735
+        },
+        {
+          "member": "zero.dxf",
+          "bytes": 125
+        }
+      ],
+      "retained": []
+    },
+    {
+      "archive": "docs/audits/nested-import/records.zip",
+      "archive_sha256": "49b499cb60214f307aa71189c99d459177d327308ee79911bf62ddc6e6178aac",
+      "owned_root": "/tmp/ingetrazo-nested-import-native-proof",
+      "authenticated_members": [
+        {
+          "member": "affected-appearance.json",
+          "bytes": 5498,
+          "sha256": "ab912b7d73734decc79fdfd6642ad522c1a50edb1b6c5dc2c0a2f9a2c8a2c220"
+        },
+        {
+          "member": "affected-import.json",
+          "bytes": 12421,
+          "sha256": "8e2a46e6767fa8647eeb4bae4b6f2fa72f5e6706a11a87dcf1a799c7f87cfb89"
+        },
+        {
+          "member": "attempts/initial-f64-shareback/checker.log",
+          "bytes": 3282,
+          "sha256": "5d6c2e470de24feab24197ee2dc82f13f73fb28c226646b2f3418c9a5ad4e8da"
+        },
+        {
+          "member": "attempts/initial-f64-shareback/container-ambiguous-native.igz",
+          "bytes": 4964,
+          "sha256": "a5443f586a6b647b18b1af980a47f4cc02da126f5d9053fa5dc2f9c7e778793c"
+        },
+        {
+          "member": "attempts/initial-f64-shareback/container-header-native.igz",
+          "bytes": 4367,
+          "sha256": "8e432f9c9d200363b2c1452b086850ad9eda5d8f7d38a8571f2291955efb3cc5"
+        },
+        {
+          "member": "attempts/initial-f64-shareback/container-named-native.igz",
+          "bytes": 4964,
+          "sha256": "7ff29078a5598a63762a74fb78b82362c22f9ad6738c82fb151bbf534fd11561"
+        },
+        {
+          "member": "attempts/initial-f64-shareback/container-parts-native.igz",
+          "bytes": 8459,
+          "sha256": "559c672289caeb653f58ebbc46dc6e78f97af2ccbce9e37299863b80738ab181"
+        },
+        {
+          "member": "attempts/initial-f64-shareback/container-zero-native.igz",
+          "bytes": 4365,
+          "sha256": "0724a58e0bc25287f04730b44b591f0bda1467be884fd9829b412594853d3b8f"
+        },
+        {
+          "member": "attempts/initial-f64-shareback/guards.json",
+          "bytes": 306,
+          "sha256": "0f9e38f2a3ab0a399e5fbf8847ad1b65aca33a576910f0908a23fbca95dfb529"
+        },
+        {
+          "member": "attempts/initial-f64-shareback/invalid-native.obj",
+          "bytes": 10,
+          "sha256": "32656cf181dc7e7f286c10c9b7921b457b28a32cff14d615eb7e7a012e23ea54"
+        },
+        {
+          "member": "attempts/initial-f64-shareback/leaf-ambiguous-native.igz",
+          "bytes": 5931,
+          "sha256": "7072c45e428253e15eb73f28c3772358eea1eac812d7bba4bd630cba7a8a9c74"
+        },
+        {
+          "member": "attempts/initial-f64-shareback/leaf-header-native.igz",
+          "bytes": 4367,
+          "sha256": "c9f1674f1de12810373abdd7238c7abad03a0739d200506feb35f5d73415495c"
+        },
+        {
+          "member": "attempts/initial-f64-shareback/leaf-named-native.igz",
+          "bytes": 5931,
+          "sha256": "5d8dc2cec5ab08d81fbcd4cf3d33ec6de3161d4760660da0954f1fa4e8739554"
+        },
+        {
+          "member": "attempts/initial-f64-shareback/leaf-parts-native.igz",
+          "bytes": 8459,
+          "sha256": "001dcdf3df748aaea91509fe052e2605e4d950cc0c2b787822655b3d62f868b1"
+        },
+        {
+          "member": "attempts/initial-f64-shareback/leaf-zero-native.igz",
+          "bytes": 4365,
+          "sha256": "51c2797649869701d020d9c0513125e6809e7891b44c4811ac9a5ad4b555e81f"
+        },
+        {
+          "member": "attempts/initial-f64-shareback/native-naming.json",
+          "bytes": 1177,
+          "sha256": "5023751678d72463623884ff65244e8d5fbabe5fd79a5174e13570a638d396f1"
+        },
+        {
+          "member": "attempts/initial-f64-shareback/native-nested-import.json",
+          "bytes": 882301,
+          "sha256": "f988dad1806da107ef4add6b06ac2c57a0454cd4a64d8565dc3c59c9c1709982"
+        },
+        {
+          "member": "attempts/initial-f64-shareback/native-threshold.json",
+          "bytes": 2120,
+          "sha256": "98e2ff4436b5fe506c456c418117b8d473583813d995df843288f5070be7d31f"
+        },
+        {
+          "member": "attempts/initial-f64-shareback/reopens.json",
+          "bytes": 469910,
+          "sha256": "7e92f32ec6f6131d3d4b3628b665c7fe9bc51cfdd3d98195086930a15eb86570"
+        },
+        {
+          "member": "attempts/initial-f64-shareback/root-ambiguous-native.igz",
+          "bytes": 4400,
+          "sha256": "4bc4d89e6c224758b9589db75d55848788da3f10e1a898311ce7cb24f7cffa3b"
+        },
+        {
+          "member": "attempts/initial-f64-shareback/root-header-native.igz",
+          "bytes": 4093,
+          "sha256": "76e1ce4d3a131d9f147672f8b3bb7d4a4d665dbc120addf00d3ea3cf1e308ef8"
+        },
+        {
+          "member": "attempts/initial-f64-shareback/root-named-native.igz",
+          "bytes": 4400,
+          "sha256": "0cf6fffbaffe31c0e20c1a1de1d3a62bd33885710fb25000b61a3c370caaeb21"
+        },
+        {
+          "member": "attempts/initial-f64-shareback/root-parts-native.igz",
+          "bytes": 8185,
+          "sha256": "251b59526a65f2f1c5e8ee34661f268ed8cae83c78a620ff54593c3c2e6fd4da"
+        },
+        {
+          "member": "attempts/initial-f64-shareback/root-zero-native.igz",
+          "bytes": 4091,
+          "sha256": "8e06c583c8ebecb693562fd1f685396843529fe3ad705fea879d3a814b790fdf"
+        },
+        {
+          "member": "attempts/initial-reader-helper/input.igz",
+          "bytes": 1445,
+          "sha256": "ea70156cbdfba859b384168e4dff46b70c0afaf2518529882684ca8cdffa50f9"
+        },
+        {
+          "member": "attempts/initial-reader-helper/source.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "member": "attempts/initial-reader-helper/source.stderr",
+          "bytes": 315,
+          "sha256": "520d0a30ce050a1065154f1d3d63dd4215cdda4976a13b9c2f38c2a5a0f6f9c6"
+        },
+        {
+          "member": "attempts/initial-reopen-observer/run.log",
+          "bytes": 599,
+          "sha256": "d8981fa9afcb37b9aa461672450f68a6a4b11917f335efd868b0710711bff8df"
+        },
+        {
+          "member": "attempts/second-reopen-observer/run.log",
+          "bytes": 951,
+          "sha256": "03fc242dec9fe129f5547eb0b7354125b0bf329c33e2b20576482717c8d843bc"
+        },
+        {
+          "member": "container-ambiguous-native.igz",
+          "bytes": 4964,
+          "sha256": "a5443f586a6b647b18b1af980a47f4cc02da126f5d9053fa5dc2f9c7e778793c"
+        },
+        {
+          "member": "container-header-native.igz",
+          "bytes": 4367,
+          "sha256": "db109aed71402cedab9eb94a69ef8fcaf65b490211bd6316aef7204e5da6b516"
+        },
+        {
+          "member": "container-named-native.igz",
+          "bytes": 4964,
+          "sha256": "7ff29078a5598a63762a74fb78b82362c22f9ad6738c82fb151bbf534fd11561"
+        },
+        {
+          "member": "container-parts-native.igz",
+          "bytes": 8459,
+          "sha256": "dae5ad5d7960a72b54ddae4f81c73a79c9b0e5f19316c3a6166242930196b0dc"
+        },
+        {
+          "member": "container-zero-native.igz",
+          "bytes": 4365,
+          "sha256": "3aa005b9c4c88741cdf432af0e73829a26bebf84c95e6798570e9ad74813ec73"
+        },
+        {
+          "member": "guards.json",
+          "bytes": 306,
+          "sha256": "0f9e38f2a3ab0a399e5fbf8847ad1b65aca33a576910f0908a23fbca95dfb529"
+        },
+        {
+          "member": "leaf-ambiguous-native.igz",
+          "bytes": 5925,
+          "sha256": "28aadadb84c513348e2e91e72016ef0b47d7dc20ae631a64b2b99eb68577ab22"
+        },
+        {
+          "member": "leaf-header-native.igz",
+          "bytes": 4367,
+          "sha256": "a75be34211139d4cf676d57a4ac95393163de26d78980b962a4de1c14ee2caef"
+        },
+        {
+          "member": "leaf-named-native.igz",
+          "bytes": 5925,
+          "sha256": "0b5c6abb2918471b388ddcd5054bdb2458b46e4efc42cb48a60da44e99a12749"
+        },
+        {
+          "member": "leaf-parts-native.igz",
+          "bytes": 8459,
+          "sha256": "ae5b1ccb7e44ee9def3bf59cbf753a306201e9f8152f882acd2b925e7425a498"
+        },
+        {
+          "member": "leaf-zero-native.igz",
+          "bytes": 4365,
+          "sha256": "01d2543e16e6cdeb9185b032237af4770edfcc2fb502150fc57a84f0f887c32e"
+        },
+        {
+          "member": "logs/appearance-check.log",
+          "bytes": 159,
+          "sha256": "6cf50bcfa87036c8fa593e351042692b47f88e459d554573acf37af7501cd8db"
+        },
+        {
+          "member": "logs/appearance.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "member": "logs/build.log",
+          "bytes": 20585,
+          "sha256": "406497c8d079f8a5702311082eb21df77b51d4ee18ea15d7825d20604e22e6ce"
+        },
+        {
+          "member": "logs/check.log",
+          "bytes": 3282,
+          "sha256": "5d6c2e470de24feab24197ee2dc82f13f73fb28c226646b2f3418c9a5ad4e8da"
+        },
+        {
+          "member": "logs/final-check.log",
+          "bytes": 255,
+          "sha256": "3691256c6146a2c1d549850afa49edd144d1dcf8e3c713df3ae1af7d817d2a5f"
+        },
+        {
+          "member": "logs/final-native.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "member": "logs/final-reopens.log",
+          "bytes": 32,
+          "sha256": "a5e1e162626aa4e3aba5a5edca86b1c05c67dbab076a21835caf987d54b50895"
+        },
+        {
+          "member": "logs/format-test.log",
+          "bytes": 38347,
+          "sha256": "ad85d22ce81444d0b1fe25296a4d5223aa80439e0a23d48261795644d7c46d2e"
+        },
+        {
+          "member": "logs/native.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "member": "logs/observer-build.log",
+          "bytes": 20122,
+          "sha256": "edc0f71c6d2f3c0a3c0c53019348531962fb9b2b257b3ce69ddbd2fcb75bc3fe"
+        },
+        {
+          "member": "logs/old-import-check.log",
+          "bytes": 71,
+          "sha256": "2d5ed92a35a863b2b6683e80863ce07c5d32a212a34ff94be11e02dbecb647d6"
+        },
+        {
+          "member": "logs/old-import.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "member": "logs/reopens.log",
+          "bytes": 32,
+          "sha256": "a5e1e162626aa4e3aba5a5edca86b1c05c67dbab076a21835caf987d54b50895"
+        },
+        {
+          "member": "logs/repair-build.log",
+          "bytes": 20122,
+          "sha256": "327a7536b43f091d4c72977536c251bbd2eb8afff152293f6ccb3c72cde8c6d0"
+        },
+        {
+          "member": "logs/ui-test.log",
+          "bytes": 19516,
+          "sha256": "2f5d37627ef96bbb7305b762f633c3bac63b55e3a8c4652d6db20e54f53aa8ed"
+        },
+        {
+          "member": "native-naming.json",
+          "bytes": 1177,
+          "sha256": "5023751678d72463623884ff65244e8d5fbabe5fd79a5174e13570a638d396f1"
+        },
+        {
+          "member": "native-nested-import.json",
+          "bytes": 882301,
+          "sha256": "4070174501e60cd3cbb01f3c053e29a667c2170e28d1217970c51cb83409f618"
+        },
+        {
+          "member": "native-threshold.json",
+          "bytes": 2120,
+          "sha256": "98e2ff4436b5fe506c456c418117b8d473583813d995df843288f5070be7d31f"
+        },
+        {
+          "member": "reopens.json",
+          "bytes": 469910,
+          "sha256": "7e92f32ec6f6131d3d4b3628b665c7fe9bc51cfdd3d98195086930a15eb86570"
+        },
+        {
+          "member": "root-ambiguous-native.igz",
+          "bytes": 4400,
+          "sha256": "4bc4d89e6c224758b9589db75d55848788da3f10e1a898311ce7cb24f7cffa3b"
+        },
+        {
+          "member": "root-header-native.igz",
+          "bytes": 4093,
+          "sha256": "5626cd8eed611e51840b377df7b87ff21001ba11ce2f62675deff723579f5267"
+        },
+        {
+          "member": "root-named-native.igz",
+          "bytes": 4400,
+          "sha256": "0cf6fffbaffe31c0e20c1a1de1d3a62bd33885710fb25000b61a3c370caaeb21"
+        },
+        {
+          "member": "root-parts-native.igz",
+          "bytes": 8185,
+          "sha256": "72d464bfc30d69e4c9fea7516803f6a9395b4b299ce83883ce73474ff14c5ca9"
+        },
+        {
+          "member": "root-zero-native.igz",
+          "bytes": 4091,
+          "sha256": "bde723af56377ce79aa75001b849aeff2c970096527c2ce4980aaf0ddab51d63"
+        }
+      ],
+      "deleted": [
+        {
+          "member": "affected-appearance.json",
+          "bytes": 5498
+        },
+        {
+          "member": "affected-import.json",
+          "bytes": 12421
+        },
+        {
+          "member": "attempts/initial-f64-shareback/checker.log",
+          "bytes": 3282
+        },
+        {
+          "member": "attempts/initial-f64-shareback/container-ambiguous-native.igz",
+          "bytes": 4964
+        },
+        {
+          "member": "attempts/initial-f64-shareback/container-header-native.igz",
+          "bytes": 4367
+        },
+        {
+          "member": "attempts/initial-f64-shareback/container-named-native.igz",
+          "bytes": 4964
+        },
+        {
+          "member": "attempts/initial-f64-shareback/container-parts-native.igz",
+          "bytes": 8459
+        },
+        {
+          "member": "attempts/initial-f64-shareback/container-zero-native.igz",
+          "bytes": 4365
+        },
+        {
+          "member": "attempts/initial-f64-shareback/guards.json",
+          "bytes": 306
+        },
+        {
+          "member": "attempts/initial-f64-shareback/invalid-native.obj",
+          "bytes": 10
+        },
+        {
+          "member": "attempts/initial-f64-shareback/leaf-ambiguous-native.igz",
+          "bytes": 5931
+        },
+        {
+          "member": "attempts/initial-f64-shareback/leaf-header-native.igz",
+          "bytes": 4367
+        },
+        {
+          "member": "attempts/initial-f64-shareback/leaf-named-native.igz",
+          "bytes": 5931
+        },
+        {
+          "member": "attempts/initial-f64-shareback/leaf-parts-native.igz",
+          "bytes": 8459
+        },
+        {
+          "member": "attempts/initial-f64-shareback/leaf-zero-native.igz",
+          "bytes": 4365
+        },
+        {
+          "member": "attempts/initial-f64-shareback/native-naming.json",
+          "bytes": 1177
+        },
+        {
+          "member": "attempts/initial-f64-shareback/native-nested-import.json",
+          "bytes": 882301
+        },
+        {
+          "member": "attempts/initial-f64-shareback/native-threshold.json",
+          "bytes": 2120
+        },
+        {
+          "member": "attempts/initial-f64-shareback/reopens.json",
+          "bytes": 469910
+        },
+        {
+          "member": "attempts/initial-f64-shareback/root-ambiguous-native.igz",
+          "bytes": 4400
+        },
+        {
+          "member": "attempts/initial-f64-shareback/root-header-native.igz",
+          "bytes": 4093
+        },
+        {
+          "member": "attempts/initial-f64-shareback/root-named-native.igz",
+          "bytes": 4400
+        },
+        {
+          "member": "attempts/initial-f64-shareback/root-parts-native.igz",
+          "bytes": 8185
+        },
+        {
+          "member": "attempts/initial-f64-shareback/root-zero-native.igz",
+          "bytes": 4091
+        },
+        {
+          "member": "attempts/initial-reader-helper/input.igz",
+          "bytes": 1445
+        },
+        {
+          "member": "attempts/initial-reader-helper/source.log",
+          "bytes": 0
+        },
+        {
+          "member": "attempts/initial-reader-helper/source.stderr",
+          "bytes": 315
+        },
+        {
+          "member": "attempts/initial-reopen-observer/run.log",
+          "bytes": 599
+        },
+        {
+          "member": "attempts/second-reopen-observer/run.log",
+          "bytes": 951
+        },
+        {
+          "member": "container-ambiguous-native.igz",
+          "bytes": 4964
+        },
+        {
+          "member": "container-header-native.igz",
+          "bytes": 4367
+        },
+        {
+          "member": "container-named-native.igz",
+          "bytes": 4964
+        },
+        {
+          "member": "container-parts-native.igz",
+          "bytes": 8459
+        },
+        {
+          "member": "container-zero-native.igz",
+          "bytes": 4365
+        },
+        {
+          "member": "guards.json",
+          "bytes": 306
+        },
+        {
+          "member": "leaf-ambiguous-native.igz",
+          "bytes": 5925
+        },
+        {
+          "member": "leaf-header-native.igz",
+          "bytes": 4367
+        },
+        {
+          "member": "leaf-named-native.igz",
+          "bytes": 5925
+        },
+        {
+          "member": "leaf-parts-native.igz",
+          "bytes": 8459
+        },
+        {
+          "member": "leaf-zero-native.igz",
+          "bytes": 4365
+        },
+        {
+          "member": "logs/appearance-check.log",
+          "bytes": 159
+        },
+        {
+          "member": "logs/appearance.log",
+          "bytes": 0
+        },
+        {
+          "member": "logs/build.log",
+          "bytes": 20585
+        },
+        {
+          "member": "logs/check.log",
+          "bytes": 3282
+        },
+        {
+          "member": "logs/final-check.log",
+          "bytes": 255
+        },
+        {
+          "member": "logs/final-native.log",
+          "bytes": 0
+        },
+        {
+          "member": "logs/final-reopens.log",
+          "bytes": 32
+        },
+        {
+          "member": "logs/format-test.log",
+          "bytes": 38347
+        },
+        {
+          "member": "logs/native.log",
+          "bytes": 0
+        },
+        {
+          "member": "logs/observer-build.log",
+          "bytes": 20122
+        },
+        {
+          "member": "logs/old-import-check.log",
+          "bytes": 71
+        },
+        {
+          "member": "logs/old-import.log",
+          "bytes": 0
+        },
+        {
+          "member": "logs/reopens.log",
+          "bytes": 32
+        },
+        {
+          "member": "logs/repair-build.log",
+          "bytes": 20122
+        },
+        {
+          "member": "logs/ui-test.log",
+          "bytes": 19516
+        },
+        {
+          "member": "native-naming.json",
+          "bytes": 1177
+        },
+        {
+          "member": "native-nested-import.json",
+          "bytes": 882301
+        },
+        {
+          "member": "native-threshold.json",
+          "bytes": 2120
+        },
+        {
+          "member": "reopens.json",
+          "bytes": 469910
+        },
+        {
+          "member": "root-ambiguous-native.igz",
+          "bytes": 4400
+        },
+        {
+          "member": "root-header-native.igz",
+          "bytes": 4093
+        },
+        {
+          "member": "root-named-native.igz",
+          "bytes": 4400
+        },
+        {
+          "member": "root-parts-native.igz",
+          "bytes": 8185
+        },
+        {
+          "member": "root-zero-native.igz",
+          "bytes": 4091
+        }
+      ],
+      "retained": [
+        {
+          "path": "ambiguous.obj",
+          "bytes": 32,
+          "reason": "unlisted or not byte-identical; preserved"
+        },
+        {
+          "path": "container-ambiguous-input.igz",
+          "bytes": 3552,
+          "reason": "unlisted or not byte-identical; preserved"
+        },
+        {
+          "path": "container-ambiguous-original.igz",
+          "bytes": 4903,
+          "reason": "unlisted or not byte-identical; preserved"
+        },
+        {
+          "path": "container-header-input.igz",
+          "bytes": 3552,
+          "reason": "unlisted or not byte-identical; preserved"
+        },
+        {
+          "path": "container-header-original.igz",
+          "bytes": 4178,
+          "reason": "unlisted or not byte-identical; preserved"
+        },
+        {
+          "path": "container-named-input.igz",
+          "bytes": 3552,
+          "reason": "unlisted or not byte-identical; preserved"
+        },
+        {
+          "path": "container-named-original.igz",
+          "bytes": 4903,
+          "reason": "unlisted or not byte-identical; preserved"
+        },
+        {
+          "path": "container-parts-input.igz",
+          "bytes": 3552,
+          "reason": "unlisted or not byte-identical; preserved"
+        },
+        {
+          "path": "container-parts-original.igz",
+          "bytes": 7659,
+          "reason": "unlisted or not byte-identical; preserved"
+        },
+        {
+          "path": "container-zero-input.igz",
+          "bytes": 3552,
+          "reason": "unlisted or not byte-identical; preserved"
+        },
+        {
+          "path": "container-zero-original.igz",
+          "bytes": 4153,
+          "reason": "unlisted or not byte-identical; preserved"
+        },
+        {
+          "path": "header.dxf",
+          "bytes": 128,
+          "reason": "unlisted or not byte-identical; preserved"
+        },
+        {
+          "path": "invalid-native.obj",
+          "bytes": 10,
+          "reason": "unlisted or not byte-identical; preserved"
+        },
+        {
+          "path": "leaf-ambiguous-input.igz",
+          "bytes": 3552,
+          "reason": "unlisted or not byte-identical; preserved"
+        },
+        {
+          "path": "leaf-ambiguous-original.igz",
+          "bytes": 4887,
+          "reason": "unlisted or not byte-identical; preserved"
+        },
+        {
+          "path": "leaf-header-input.igz",
+          "bytes": 3552,
+          "reason": "unlisted or not byte-identical; preserved"
+        },
+        {
+          "path": "leaf-header-original.igz",
+          "bytes": 4178,
+          "reason": "unlisted or not byte-identical; preserved"
+        },
+        {
+          "path": "leaf-named-input.igz",
+          "bytes": 3552,
+          "reason": "unlisted or not byte-identical; preserved"
+        },
+        {
+          "path": "leaf-named-original.igz",
+          "bytes": 4887,
+          "reason": "unlisted or not byte-identical; preserved"
+        },
+        {
+          "path": "leaf-parts-input.igz",
+          "bytes": 3552,
+          "reason": "unlisted or not byte-identical; preserved"
+        },
+        {
+          "path": "leaf-parts-original.igz",
+          "bytes": 7659,
+          "reason": "unlisted or not byte-identical; preserved"
+        },
+        {
+          "path": "leaf-zero-input.igz",
+          "bytes": 3552,
+          "reason": "unlisted or not byte-identical; preserved"
+        },
+        {
+          "path": "leaf-zero-original.igz",
+          "bytes": 4153,
+          "reason": "unlisted or not byte-identical; preserved"
+        },
+        {
+          "path": "named.obj",
+          "bytes": 40,
+          "reason": "unlisted or not byte-identical; preserved"
+        },
+        {
+          "path": "naming-input.igz",
+          "bytes": 1445,
+          "reason": "unlisted or not byte-identical; preserved"
+        },
+        {
+          "path": "naming-large.obj",
+          "bytes": 17830,
+          "reason": "unlisted or not byte-identical; preserved"
+        },
+        {
+          "path": "original-naming.json",
+          "bytes": 1178,
+          "reason": "unlisted or not byte-identical; preserved"
+        },
+        {
+          "path": "original-nested-import.json",
+          "bytes": 882302,
+          "reason": "unlisted or not byte-identical; preserved"
+        },
+        {
+          "path": "original-threshold.json",
+          "bytes": 2121,
+          "reason": "unlisted or not byte-identical; preserved"
+        },
+        {
+          "path": "parts.obj",
+          "bytes": 79,
+          "reason": "unlisted or not byte-identical; preserved"
+        },
+        {
+          "path": "piece-name-0.obj",
+          "bytes": 91,
+          "reason": "unlisted or not byte-identical; preserved"
+        },
+        {
+          "path": "piece-name-1.obj",
+          "bytes": 98,
+          "reason": "unlisted or not byte-identical; preserved"
+        },
+        {
+          "path": "piece-name-2.obj",
+          "bytes": 81,
+          "reason": "unlisted or not byte-identical; preserved"
+        },
+        {
+          "path": "piece-name-3.obj",
+          "bytes": 85,
+          "reason": "unlisted or not byte-identical; preserved"
+        },
+        {
+          "path": "piece-name-4.obj",
+          "bytes": 87,
+          "reason": "unlisted or not byte-identical; preserved"
+        },
+        {
+          "path": "piece-name-5.obj",
+          "bytes": 109,
+          "reason": "unlisted or not byte-identical; preserved"
+        },
+        {
+          "path": "root-ambiguous-input.igz",
+          "bytes": 3552,
+          "reason": "unlisted or not byte-identical; preserved"
+        },
+        {
+          "path": "root-ambiguous-original.igz",
+          "bytes": 4399,
+          "reason": "unlisted or not byte-identical; preserved"
+        },
+        {
+          "path": "root-header-input.igz",
+          "bytes": 3552,
+          "reason": "unlisted or not byte-identical; preserved"
+        },
+        {
+          "path": "root-header-original.igz",
+          "bytes": 3906,
+          "reason": "unlisted or not byte-identical; preserved"
+        },
+        {
+          "path": "root-named-input.igz",
+          "bytes": 3552,
+          "reason": "unlisted or not byte-identical; preserved"
+        },
+        {
+          "path": "root-named-original.igz",
+          "bytes": 4399,
+          "reason": "unlisted or not byte-identical; preserved"
+        },
+        {
+          "path": "root-parts-input.igz",
+          "bytes": 3552,
+          "reason": "unlisted or not byte-identical; preserved"
+        },
+        {
+          "path": "root-parts-original.igz",
+          "bytes": 7387,
+          "reason": "unlisted or not byte-identical; preserved"
+        },
+        {
+          "path": "root-zero-input.igz",
+          "bytes": 3552,
+          "reason": "unlisted or not byte-identical; preserved"
+        },
+        {
+          "path": "root-zero-original.igz",
+          "bytes": 3881,
+          "reason": "unlisted or not byte-identical; preserved"
+        },
+        {
+          "path": "settings-container-ambiguous/config/settings.json",
+          "bytes": 624,
+          "reason": "unlisted or not byte-identical; preserved"
+        },
+        {
+          "path": "settings-container-header/config/settings.json",
+          "bytes": 618,
+          "reason": "unlisted or not byte-identical; preserved"
+        },
+        {
+          "path": "settings-container-named/config/settings.json",
+          "bytes": 616,
+          "reason": "unlisted or not byte-identical; preserved"
+        },
+        {
+          "path": "settings-container-parts/config/settings.json",
+          "bytes": 616,
+          "reason": "unlisted or not byte-identical; preserved"
+        },
+        {
+          "path": "settings-container-zero/config/settings.json",
+          "bytes": 614,
+          "reason": "unlisted or not byte-identical; preserved"
+        },
+        {
+          "path": "settings-guards/config/settings.json",
+          "bytes": 562,
+          "reason": "unlisted or not byte-identical; preserved"
+        },
+        {
+          "path": "settings-leaf-ambiguous/config/settings.json",
+          "bytes": 614,
+          "reason": "unlisted or not byte-identical; preserved"
+        },
+        {
+          "path": "settings-leaf-header/config/settings.json",
+          "bytes": 608,
+          "reason": "unlisted or not byte-identical; preserved"
+        },
+        {
+          "path": "settings-leaf-named/config/settings.json",
+          "bytes": 606,
+          "reason": "unlisted or not byte-identical; preserved"
+        },
+        {
+          "path": "settings-leaf-parts/config/settings.json",
+          "bytes": 606,
+          "reason": "unlisted or not byte-identical; preserved"
+        },
+        {
+          "path": "settings-leaf-zero/config/settings.json",
+          "bytes": 604,
+          "reason": "unlisted or not byte-identical; preserved"
+        },
+        {
+          "path": "settings-naming/config/settings.json",
+          "bytes": 530,
+          "reason": "unlisted or not byte-identical; preserved"
+        },
+        {
+          "path": "settings-piece-0/config/settings.json",
+          "bytes": 462,
+          "reason": "unlisted or not byte-identical; preserved"
+        },
+        {
+          "path": "settings-piece-1/config/settings.json",
+          "bytes": 462,
+          "reason": "unlisted or not byte-identical; preserved"
+        },
+        {
+          "path": "settings-piece-2/config/settings.json",
+          "bytes": 462,
+          "reason": "unlisted or not byte-identical; preserved"
+        },
+        {
+          "path": "settings-piece-3/config/settings.json",
+          "bytes": 462,
+          "reason": "unlisted or not byte-identical; preserved"
+        },
+        {
+          "path": "settings-piece-4/config/settings.json",
+          "bytes": 462,
+          "reason": "unlisted or not byte-identical; preserved"
+        },
+        {
+          "path": "settings-piece-5/config/settings.json",
+          "bytes": 462,
+          "reason": "unlisted or not byte-identical; preserved"
+        },
+        {
+          "path": "settings-root-ambiguous/config/settings.json",
+          "bytes": 614,
+          "reason": "unlisted or not byte-identical; preserved"
+        },
+        {
+          "path": "settings-root-header/config/settings.json",
+          "bytes": 608,
+          "reason": "unlisted or not byte-identical; preserved"
+        },
+        {
+          "path": "settings-root-named/config/settings.json",
+          "bytes": 606,
+          "reason": "unlisted or not byte-identical; preserved"
+        },
+        {
+          "path": "settings-root-parts/config/settings.json",
+          "bytes": 606,
+          "reason": "unlisted or not byte-identical; preserved"
+        },
+        {
+          "path": "settings-root-zero/config/settings.json",
+          "bytes": 604,
+          "reason": "unlisted or not byte-identical; preserved"
+        },
+        {
+          "path": "settings-threshold-400/config/settings.json",
+          "bytes": 537,
+          "reason": "unlisted or not byte-identical; preserved"
+        },
+        {
+          "path": "settings-threshold-401/config/settings.json",
+          "bytes": 537,
+          "reason": "unlisted or not byte-identical; preserved"
+        },
+        {
+          "path": "source.log",
+          "bytes": 90,
+          "reason": "unlisted or not byte-identical; preserved"
+        },
+        {
+          "path": "source.stderr",
+          "bytes": 0,
+          "reason": "unlisted or not byte-identical; preserved"
+        },
+        {
+          "path": "threshold-400-input.igz",
+          "bytes": 2194,
+          "reason": "unlisted or not byte-identical; preserved"
+        },
+        {
+          "path": "threshold-400.obj",
+          "bytes": 17780,
+          "reason": "unlisted or not byte-identical; preserved"
+        },
+        {
+          "path": "threshold-401-input.igz",
+          "bytes": 2194,
+          "reason": "unlisted or not byte-identical; preserved"
+        },
+        {
+          "path": "threshold-401.obj",
+          "bytes": 17830,
+          "reason": "unlisted or not byte-identical; preserved"
+        },
+        {
+          "path": "zero.dxf",
+          "bytes": 125,
+          "reason": "unlisted or not byte-identical; preserved"
+        }
+      ]
+    },
+    {
+      "archive": "docs/audits/nested-import/threshold-source-records.zip",
+      "archive_sha256": "88ae509808814979014d090a2dca57dcbae9e2888900e24e710cc6602a805099",
+      "owned_root": "/tmp/ingetrazo-nested-import-threshold-proof",
+      "authenticated_members": [
+        {
+          "member": "original-threshold.json",
+          "bytes": 2121,
+          "sha256": "41fbd3e6bb4bf3f52ff25c2e3ccd9ba14502f19cbdc7ba3b889c9e4d7fb60e45"
+        },
+        {
+          "member": "source.log",
+          "bytes": 84,
+          "sha256": "4be025eac992c5c7615475531bf249168cdeba65ce418309d1734137370f5ce3"
+        },
+        {
+          "member": "source.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "member": "threshold-400-input.igz",
+          "bytes": 2194,
+          "sha256": "676acb70d554ab177a74bcfc3ca85ad04bd2fa0db48d9d8eecca0e9f93e346f5"
+        },
+        {
+          "member": "threshold-400.obj",
+          "bytes": 17780,
+          "sha256": "0fdeb08616563464b0e6ff20e80622a9c5caae8e1ceeda276f33f53a6d0bfed9"
+        },
+        {
+          "member": "threshold-401-input.igz",
+          "bytes": 2194,
+          "sha256": "55beeecb49c5017d079d364123d5b730eb567c39b9b01082c4c13cbc967a9855"
+        },
+        {
+          "member": "threshold-401.obj",
+          "bytes": 17830,
+          "sha256": "1f469ecc070d1e419cd47769bbda9f2f8593430a58fd62ff7b2834752149a03a"
+        }
+      ],
+      "deleted": [
+        {
+          "member": "original-threshold.json",
+          "bytes": 2121
+        },
+        {
+          "member": "source.log",
+          "bytes": 84
+        },
+        {
+          "member": "source.stderr",
+          "bytes": 0
+        },
+        {
+          "member": "threshold-400-input.igz",
+          "bytes": 2194
+        },
+        {
+          "member": "threshold-400.obj",
+          "bytes": 17780
+        },
+        {
+          "member": "threshold-401-input.igz",
+          "bytes": 2194
+        },
+        {
+          "member": "threshold-401.obj",
+          "bytes": 17830
+        }
+      ],
+      "retained": []
+    },
+    {
+      "archive": "docs/audits/nested-import/naming-source-records.zip",
+      "archive_sha256": "a40954d81b5c35c1b4ab0805b064f5a71ee5719b5e026c66ad67d8f6cac9be7a",
+      "owned_root": "/tmp/ingetrazo-nested-import-naming-proof",
+      "authenticated_members": [
+        {
+          "member": "attempts/initial-reader-helper/input.igz",
+          "bytes": 1445,
+          "sha256": "ea70156cbdfba859b384168e4dff46b70c0afaf2518529882684ca8cdffa50f9"
+        },
+        {
+          "member": "attempts/initial-reader-helper/source.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "member": "attempts/initial-reader-helper/source.stderr",
+          "bytes": 315,
+          "sha256": "520d0a30ce050a1065154f1d3d63dd4215cdda4976a13b9c2f38c2a5a0f6f9c6"
+        },
+        {
+          "member": "naming-input.igz",
+          "bytes": 1445,
+          "sha256": "d1c3fd727029b12c52ad77566cda4a56b96ed45d577f376221d8bcdff70b56da"
+        },
+        {
+          "member": "naming-large.obj",
+          "bytes": 17830,
+          "sha256": "1f469ecc070d1e419cd47769bbda9f2f8593430a58fd62ff7b2834752149a03a"
+        },
+        {
+          "member": "original-naming.json",
+          "bytes": 1178,
+          "sha256": "38253750db6f16343a629e14bfd49dd11a6012a972395eddf1fb87e7a41df225"
+        },
+        {
+          "member": "source.log",
+          "bytes": 90,
+          "sha256": "69e1632dce1ff99e96d1b32636600d950dcee34578be1ae48397f6d35b2c93b3"
+        },
+        {
+          "member": "source.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "deleted": [
+        {
+          "member": "attempts/initial-reader-helper/input.igz",
+          "bytes": 1445
+        },
+        {
+          "member": "attempts/initial-reader-helper/source.log",
+          "bytes": 0
+        },
+        {
+          "member": "attempts/initial-reader-helper/source.stderr",
+          "bytes": 315
+        },
+        {
+          "member": "naming-input.igz",
+          "bytes": 1445
+        },
+        {
+          "member": "naming-large.obj",
+          "bytes": 17830
+        },
+        {
+          "member": "original-naming.json",
+          "bytes": 1178
+        },
+        {
+          "member": "source.log",
+          "bytes": 90
+        },
+        {
+          "member": "source.stderr",
+          "bytes": 0
+        }
+      ],
+      "retained": []
+    }
+  ],
+  "deleted_files": 117,
+  "released_bytes": 4098294,
+  "retained_files": 78
+}
