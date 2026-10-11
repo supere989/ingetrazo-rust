@@ -1,0 +1,546 @@
+{
+  "revision": "17931738606254e509d5999a359c1e6c9b0c65f9",
+  "run": 38138427433,
+  "job": 114467034988,
+  "artifact": 11701679150,
+  "artifact_sha256": "0e5fb3f67e581c51c02a1aa92fe42eb2cc97dbece953a4ddeb079c14034ccef7",
+  "runner_source_hashes_verified": 167,
+  "binary_hashes": [
+    "f4aa86dd7082e6d75ecb9317948f5e7e6f70bfb1575e067520c8d062b8fe6c77  target/debug/examples/native_metal_hidden_ghost",
+    "72ceb1d6121ef838d3d15734ed700607ee43c4cc763d8418463b3a91a2b0b877  target/debug/examples/native_metal_world_classic",
+    "a9421e0f13223f91fe20bcdee7bd28cc412213a79c2ea7319ad24e07966c1037  target/debug/examples/native_metal_world_material",
+    "e000bc47bbacdd6b3526df9953f800f65246a8db821def75536ed5d0de9592e0  target/debug/examples/native_metal_face_sweep"
+  ],
+  "sweep_runtime": "passed",
+  "strict_sweep": {
+    "functional_passed": true,
+    "strict_pixels_passed": false,
+    "frames": 24,
+    "negative_controls": 7,
+    "differences": [
+      {
+        "case": "reversed-door",
+        "phase": "base",
+        "different_pixels": 641,
+        "maximum_channel_error": 226
+      },
+      {
+        "case": "reversed-door",
+        "phase": "preview",
+        "different_pixels": 22393,
+        "maximum_channel_error": 209
+      },
+      {
+        "case": "reversed-door",
+        "phase": "offset",
+        "different_pixels": 21590,
+        "maximum_channel_error": 211
+      },
+      {
+        "case": "reversed-door",
+        "phase": "cancel",
+        "different_pixels": 641,
+        "maximum_channel_error": 226
+      },
+      {
+        "case": "lone-sheet",
+        "phase": "base",
+        "different_pixels": 468,
+        "maximum_channel_error": 215
+      },
+      {
+        "case": "lone-sheet",
+        "phase": "preview",
+        "different_pixels": 9825,
+        "maximum_channel_error": 215
+      },
+      {
+        "case": "lone-sheet",
+        "phase": "offset",
+        "different_pixels": 14069,
+        "maximum_channel_error": 211
+      },
+      {
+        "case": "lone-sheet",
+        "phase": "cancel",
+        "different_pixels": 468,
+        "maximum_channel_error": 215
+      },
+      {
+        "case": "front-recess",
+        "phase": "base",
+        "different_pixels": 465,
+        "maximum_channel_error": 223
+      },
+      {
+        "case": "front-recess",
+        "phase": "preview",
+        "different_pixels": 15882,
+        "maximum_channel_error": 209
+      },
+      {
+        "case": "front-recess",
+        "phase": "offset",
+        "different_pixels": 15890,
+        "maximum_channel_error": 210
+      },
+      {
+        "case": "front-recess",
+        "phase": "cancel",
+        "different_pixels": 465,
+        "maximum_channel_error": 223
+      },
+      {
+        "case": "back-recess",
+        "phase": "base",
+        "different_pixels": 15795,
+        "maximum_channel_error": 210
+      },
+      {
+        "case": "back-recess",
+        "phase": "preview",
+        "different_pixels": 15881,
+        "maximum_channel_error": 209
+      },
+      {
+        "case": "back-recess",
+        "phase": "offset",
+        "different_pixels": 15889,
+        "maximum_channel_error": 210
+      },
+      {
+        "case": "back-recess",
+        "phase": "cancel",
+        "different_pixels": 15795,
+        "maximum_channel_error": 210
+      },
+      {
+        "case": "front-texture-back-override",
+        "phase": "base",
+        "different_pixels": 3193,
+        "maximum_channel_error": 240
+      },
+      {
+        "case": "front-texture-back-override",
+        "phase": "preview",
+        "different_pixels": 6895,
+        "maximum_channel_error": 240
+      },
+      {
+        "case": "front-texture-back-override",
+        "phase": "offset",
+        "different_pixels": 8578,
+        "maximum_channel_error": 214
+      },
+      {
+        "case": "front-texture-back-override",
+        "phase": "cancel",
+        "different_pixels": 3193,
+        "maximum_channel_error": 240
+      },
+      {
+        "case": "ordinary-prism",
+        "phase": "base",
+        "different_pixels": 189214,
+        "maximum_channel_error": 227
+      },
+      {
+        "case": "ordinary-prism",
+        "phase": "preview",
+        "different_pixels": 212167,
+        "maximum_channel_error": 227
+      },
+      {
+        "case": "ordinary-prism",
+        "phase": "offset",
+        "different_pixels": 222602,
+        "maximum_channel_error": 232
+      },
+      {
+        "case": "ordinary-prism",
+        "phase": "cancel",
+        "different_pixels": 189214,
+        "maximum_channel_error": 227
+      }
+    ]
+  },
+  "policy": {
+    "diagnostic_passed": true,
+    "strict_pixel_gate_unchanged": true,
+    "negative_controls": [
+      "depth",
+      "samples",
+      "winding",
+      "cull",
+      "color"
+    ],
+    "cases": [
+      {
+        "name": "reversed-door",
+        "front_pixels": 70034,
+        "back_pixels": 23316,
+        "scope": "Actual shader front_facing with unchanged admitted cull/depth/bias; lines and MSAA boundaries are unclassified",
+        "policy": {
+          "depth_compare": "less_equal",
+          "sample_count": 4,
+          "operations": [
+            {
+              "prototype": 0,
+              "reflected": false,
+              "winding": "counterclockwise",
+              "draw": {
+                "kind": "opaque",
+                "first": 0,
+                "count": 36,
+                "cull": "none",
+                "depth_write": true,
+                "bias": [
+                  1,
+                  1
+                ]
+              }
+            },
+            {
+              "prototype": 0,
+              "reflected": false,
+              "winding": "counterclockwise",
+              "draw": {
+                "kind": "default_back",
+                "cull": "front",
+                "depth_write": true,
+                "bias": [
+                  1,
+                  1
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "lone-sheet",
+        "front_pixels": 7697,
+        "back_pixels": 0,
+        "scope": "Actual shader front_facing with unchanged admitted cull/depth/bias; lines and MSAA boundaries are unclassified",
+        "policy": {
+          "depth_compare": "less_equal",
+          "sample_count": 4,
+          "operations": [
+            {
+              "prototype": 0,
+              "reflected": false,
+              "winding": "counterclockwise",
+              "draw": {
+                "kind": "opaque",
+                "first": 0,
+                "count": 6,
+                "cull": "none",
+                "depth_write": true,
+                "bias": [
+                  1,
+                  1
+                ]
+              }
+            },
+            {
+              "prototype": 0,
+              "reflected": false,
+              "winding": "counterclockwise",
+              "draw": {
+                "kind": "default_back",
+                "cull": "front",
+                "depth_write": true,
+                "bias": [
+                  1,
+                  1
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "front-recess",
+        "front_pixels": 0,
+        "back_pixels": 140864,
+        "scope": "Actual shader front_facing with unchanged admitted cull/depth/bias; lines and MSAA boundaries are unclassified",
+        "policy": {
+          "depth_compare": "less_equal",
+          "sample_count": 4,
+          "operations": [
+            {
+              "prototype": 0,
+              "reflected": false,
+              "winding": "counterclockwise",
+              "draw": {
+                "kind": "opaque",
+                "first": 0,
+                "count": 24,
+                "cull": "none",
+                "depth_write": true,
+                "bias": [
+                  1,
+                  1
+                ]
+              }
+            },
+            {
+              "prototype": 0,
+              "reflected": false,
+              "winding": "counterclockwise",
+              "draw": {
+                "kind": "default_back",
+                "cull": "front",
+                "depth_write": true,
+                "bias": [
+                  1,
+                  1
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "back-recess",
+        "front_pixels": 140864,
+        "back_pixels": 0,
+        "scope": "Actual shader front_facing with unchanged admitted cull/depth/bias; lines and MSAA boundaries are unclassified",
+        "policy": {
+          "depth_compare": "less_equal",
+          "sample_count": 4,
+          "operations": [
+            {
+              "prototype": 0,
+              "reflected": false,
+              "winding": "counterclockwise",
+              "draw": {
+                "kind": "opaque",
+                "first": 0,
+                "count": 24,
+                "cull": "none",
+                "depth_write": true,
+                "bias": [
+                  1,
+                  1
+                ]
+              }
+            },
+            {
+              "prototype": 0,
+              "reflected": false,
+              "winding": "counterclockwise",
+              "draw": {
+                "kind": "default_back",
+                "cull": "front",
+                "depth_write": true,
+                "bias": [
+                  1,
+                  1
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "front-texture-back-override",
+        "front_pixels": 7697,
+        "back_pixels": 0,
+        "scope": "Actual shader front_facing with unchanged admitted cull/depth/bias; lines and MSAA boundaries are unclassified",
+        "policy": {
+          "depth_compare": "less_equal",
+          "sample_count": 4,
+          "operations": [
+            {
+              "prototype": 0,
+              "reflected": false,
+              "winding": "counterclockwise",
+              "draw": {
+                "kind": "texture",
+                "back_side": false,
+                "opacity": 1.0,
+                "cull": "none",
+                "depth_write": true,
+                "bias": [
+                  1,
+                  1
+                ]
+              }
+            },
+            {
+              "prototype": 0,
+              "reflected": false,
+              "winding": "counterclockwise",
+              "draw": {
+                "kind": "color",
+                "phase": "TransparentBack",
+                "first_color": [
+                  0.0,
+                  0.96875,
+                  0.0,
+                  0.25
+                ],
+                "first": 0,
+                "count": 6,
+                "opacity": 0.25,
+                "cull": "front",
+                "depth_write": false,
+                "bias": [
+                  1,
+                  1
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "ordinary-prism",
+        "front_pixels": 185946,
+        "back_pixels": 0,
+        "scope": "Actual shader front_facing with unchanged admitted cull/depth/bias; lines and MSAA boundaries are unclassified",
+        "policy": {
+          "depth_compare": "less_equal",
+          "sample_count": 4,
+          "operations": [
+            {
+              "prototype": 0,
+              "reflected": false,
+              "winding": "counterclockwise",
+              "draw": {
+                "kind": "opaque",
+                "first": 0,
+                "count": 6,
+                "cull": "back",
+                "depth_write": true,
+                "bias": [
+                  1,
+                  1
+                ]
+              }
+            },
+            {
+              "prototype": 0,
+              "reflected": false,
+              "winding": "counterclockwise",
+              "draw": {
+                "kind": "opaque",
+                "first": 6,
+                "count": 6,
+                "cull": "back",
+                "depth_write": true,
+                "bias": [
+                  1,
+                  1
+                ]
+              }
+            },
+            {
+              "prototype": 0,
+              "reflected": false,
+              "winding": "counterclockwise",
+              "draw": {
+                "kind": "opaque",
+                "first": 12,
+                "count": 6,
+                "cull": "back",
+                "depth_write": true,
+                "bias": [
+                  1,
+                  1
+                ]
+              }
+            },
+            {
+              "prototype": 0,
+              "reflected": false,
+              "winding": "counterclockwise",
+              "draw": {
+                "kind": "opaque",
+                "first": 18,
+                "count": 6,
+                "cull": "back",
+                "depth_write": true,
+                "bias": [
+                  1,
+                  1
+                ]
+              }
+            },
+            {
+              "prototype": 0,
+              "reflected": false,
+              "winding": "counterclockwise",
+              "draw": {
+                "kind": "opaque",
+                "first": 24,
+                "count": 6,
+                "cull": "back",
+                "depth_write": true,
+                "bias": [
+                  1,
+                  1
+                ]
+              }
+            },
+            {
+              "prototype": 0,
+              "reflected": false,
+              "winding": "counterclockwise",
+              "draw": {
+                "kind": "opaque",
+                "first": 30,
+                "count": 6,
+                "cull": "back",
+                "depth_write": true,
+                "bias": [
+                  1,
+                  1
+                ]
+              }
+            },
+            {
+              "prototype": 0,
+              "reflected": false,
+              "winding": "counterclockwise",
+              "draw": {
+                "kind": "color",
+                "phase": "TransparentBack",
+                "first_color": [
+                  0.78125,
+                  0.1875,
+                  0.09375,
+                  0.5
+                ],
+                "first": 0,
+                "count": 36,
+                "opacity": 0.5,
+                "cull": "front",
+                "depth_write": false,
+                "bias": [
+                  1,
+                  1
+                ]
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "classic": {
+    "passed": true,
+    "source_cases": 9,
+    "native_cases": 10,
+    "pixels": 250,
+    "scope": "Actual native app sampled classic own-mesh world shading/baked reflection/face-vs-group layer routing, no whole-image/OS gesture/presentation claim"
+  },
+  "material": {
+    "passed": true,
+    "source_cases": 25,
+    "native_cases": 75,
+    "pixels": 1950,
+    "scope": "Actual shared app update_ui/native Metal cached material sampled interiors; no full viewport, mip, edge, whole-image, user gesture or presentation parity claim"
+  }
+}
