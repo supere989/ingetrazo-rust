@@ -1,0 +1,335 @@
+[
+  {
+    "source_commit": "1ab860bb593907822ae2ec3bef512f347636aff0",
+    "name": "workspace-tests",
+    "command": [
+      "cargo",
+      "test",
+      "--workspace",
+      "--locked",
+      "--tests",
+      "-j2"
+    ],
+    "exit": 101,
+    "seconds": 33.394
+  },
+  {
+    "source_commit": "a96bb645120a3720c3c831d445f644d767e9d8ee",
+    "name": "line-test-correction",
+    "command": [
+      "cargo",
+      "test",
+      "--locked",
+      "-j2",
+      "-p",
+      "ingetrazo-gui",
+      "--test",
+      "component_global_history",
+      "line_chain_then_pending_point_take_priority_over_make_unique_ancestor",
+      "--",
+      "--exact"
+    ],
+    "exit": 0,
+    "seconds": 0.542
+  },
+  {
+    "source_commit": "a96bb645120a3720c3c831d445f644d767e9d8ee",
+    "name": "gui-unfinished",
+    "command": [
+      "cargo",
+      "test",
+      "--locked",
+      "-j2",
+      "-p",
+      "ingetrazo-gui",
+      "--test",
+      "composer_pdf_export",
+      "--test",
+      "move_component_arrays",
+      "--test",
+      "offset_controller_acceptance",
+      "--test",
+      "recovery_acceptance"
+    ],
+    "exit": 0,
+    "seconds": 0.334
+  },
+  {
+    "source_commit": "a96bb645120a3720c3c831d445f644d767e9d8ee",
+    "name": "remaining-package-tests",
+    "command": [
+      "cargo",
+      "test",
+      "--locked",
+      "-j2",
+      "-p",
+      "ingetrazo-metal",
+      "-p",
+      "ingetrazo-render",
+      "-p",
+      "ingetrazo-tools",
+      "--tests"
+    ],
+    "exit": 0,
+    "seconds": 6.825
+  },
+  {
+    "source_commit": "a96bb645120a3720c3c831d445f644d767e9d8ee",
+    "name": "doctests",
+    "command": [
+      "cargo",
+      "test",
+      "--workspace",
+      "--locked",
+      "--doc",
+      "-j2"
+    ],
+    "exit": 0,
+    "seconds": 0.969
+  },
+  {
+    "source_commit": "a96bb645120a3720c3c831d445f644d767e9d8ee",
+    "name": "examples-check",
+    "command": [
+      "cargo",
+      "check",
+      "--workspace",
+      "--locked",
+      "--examples",
+      "-j2"
+    ],
+    "exit": 0,
+    "seconds": 6.834
+  },
+  {
+    "source_commit": "a96bb645120a3720c3c831d445f644d767e9d8ee",
+    "name": "named-build",
+    "command": [
+      "cargo",
+      "build",
+      "--locked",
+      "-j2",
+      "-p",
+      "ingetrazo-gui",
+      "--example",
+      "context_document_lifecycle",
+      "--example",
+      "line_command_history_fixture",
+      "--example",
+      "pushpull_partition_collapse",
+      "--example",
+      "unhide_actions_fixture",
+      "--example",
+      "native_vulkan_texture_draw_probe",
+      "--example",
+      "native_vulkan_hidden_ghost_application_probe",
+      "--example",
+      "saved_view_history_fixture",
+      "--example",
+      "pushpull_endpoints_app",
+      "-p",
+      "ingetrazo-tools",
+      "--example",
+      "pushpull_gate2_fixture",
+      "-p",
+      "ingetrazo-formats",
+      "--example",
+      "component_acceptance_fixture",
+      "--example",
+      "component_editor_acceptance_fixture",
+      "--example",
+      "component_ci_world_bake_fixture"
+    ],
+    "exit": 0,
+    "seconds": 2.148
+  },
+  {
+    "source_commit": "a96bb645120a3720c3c831d445f644d767e9d8ee",
+    "name": "lifecycle-native",
+    "command": [
+      "/tmp/ingetrazo-native-font-merge-target/debug/examples/context_document_lifecycle",
+      "/tmp/ingetrazo-visibility-ghost-partition-integration/lifecycle"
+    ],
+    "exit": 0,
+    "seconds": 0.149
+  },
+  {
+    "source_commit": "a96bb645120a3720c3c831d445f644d767e9d8ee",
+    "name": "lifecycle-original-reopen",
+    "command": [
+      "/tmp/ingetrazo-parity-python/bin/python",
+      "scripts/reference-context-document-lifecycle.py",
+      "/tmp/ingetrazo-visibility-ghost-partition-integration/lifecycle",
+      "inspect"
+    ],
+    "exit": 0,
+    "seconds": 0.375
+  },
+  {
+    "source_commit": "a96bb645120a3720c3c831d445f644d767e9d8ee",
+    "name": "lifecycle-strict-check",
+    "command": [
+      "python3",
+      "scripts/check-context-document-lifecycle.py",
+      "/tmp/ingetrazo-visibility-ghost-partition-integration/lifecycle"
+    ],
+    "exit": 0,
+    "seconds": 0.063
+  },
+  {
+    "source_commit": "a96bb645120a3720c3c831d445f644d767e9d8ee",
+    "name": "line-native",
+    "command": [
+      "/tmp/ingetrazo-native-font-merge-target/debug/examples/line_command_history_fixture",
+      "/tmp/ingetrazo-visibility-ghost-partition-integration/line"
+    ],
+    "exit": 0,
+    "seconds": 0.006
+  },
+  {
+    "source_commit": "a96bb645120a3720c3c831d445f644d767e9d8ee",
+    "name": "line-check",
+    "command": [
+      "python3",
+      "scripts/check-line-command-history.py",
+      "/tmp/ingetrazo-visibility-ghost-partition-integration/line"
+    ],
+    "exit": 0,
+    "seconds": 0.016
+  },
+  {
+    "source_commit": "a96bb645120a3720c3c831d445f644d767e9d8ee",
+    "name": "partition-native",
+    "command": [
+      "/tmp/ingetrazo-native-font-merge-target/debug/examples/pushpull_partition_collapse",
+      "/tmp/ingetrazo-visibility-ghost-partition-integration/partition/source.json",
+      "/tmp/ingetrazo-visibility-ghost-partition-integration/partition/native.json"
+    ],
+    "exit": 0,
+    "seconds": 0.016
+  },
+  {
+    "source_commit": "a96bb645120a3720c3c831d445f644d767e9d8ee",
+    "name": "partition-check",
+    "command": [
+      "python3",
+      "scripts/check-pushpull-partition-collapse.py",
+      "/tmp/ingetrazo-visibility-ghost-partition-integration/partition/source.json",
+      "/tmp/ingetrazo-visibility-ghost-partition-integration/partition/native.json",
+      "/tmp/ingetrazo-visibility-ghost-partition-integration/partition/comparison.json"
+    ],
+    "exit": 0,
+    "seconds": 0.015
+  },
+  {
+    "source_commit": "a96bb645120a3720c3c831d445f644d767e9d8ee",
+    "name": "views-unique",
+    "command": [
+      "/tmp/ingetrazo-native-font-merge-target/debug/examples/saved_view_history_fixture",
+      "/tmp/ingetrazo-visibility-ghost-partition-integration/views/unique"
+    ],
+    "exit": 0,
+    "seconds": 0.01
+  },
+  {
+    "source_commit": "a96bb645120a3720c3c831d445f644d767e9d8ee",
+    "name": "views-duplicate",
+    "command": [
+      "/tmp/ingetrazo-native-font-merge-target/debug/examples/saved_view_history_fixture",
+      "/tmp/ingetrazo-visibility-ghost-partition-integration/views/duplicate"
+    ],
+    "exit": 0,
+    "seconds": 0.009
+  },
+  {
+    "source_commit": "a96bb645120a3720c3c831d445f644d767e9d8ee",
+    "name": "views-check",
+    "command": [
+      "python3",
+      "scripts/check-saved-view-history.py",
+      "/tmp/ingetrazo-visibility-ghost-partition-integration/views"
+    ],
+    "exit": 0,
+    "seconds": 0.017
+  },
+  {
+    "source_commit": "a96bb645120a3720c3c831d445f644d767e9d8ee",
+    "name": "unhide-native",
+    "command": [
+      "/tmp/ingetrazo-native-font-merge-target/debug/examples/unhide_actions_fixture",
+      "/tmp/ingetrazo-visibility-ghost-partition-integration/unhide/native.json",
+      "/tmp/ingetrazo-visibility-ghost-partition-integration/unhide/native-nested.json"
+    ],
+    "exit": 0,
+    "seconds": 0.005
+  },
+  {
+    "source_commit": "a96bb645120a3720c3c831d445f644d767e9d8ee",
+    "name": "unhide-check",
+    "command": [
+      "python3",
+      "scripts/check-unhide-actions.py",
+      "/tmp/ingetrazo-visibility-ghost-partition-integration/unhide"
+    ],
+    "exit": 0,
+    "seconds": 0.016
+  },
+  {
+    "source_commit": "a96bb645120a3720c3c831d445f644d767e9d8ee",
+    "name": "mip-readonly-check",
+    "command": [
+      "/tmp/ingetrazo-parity-python/bin/python",
+      "scripts/check-texture-mip-barrier-batch.py"
+    ],
+    "exit": 0,
+    "seconds": 0.23
+  },
+  {
+    "source_commit": "a96bb645120a3720c3c831d445f644d767e9d8ee",
+    "name": "endpoint-primitive",
+    "command": [
+      "/tmp/ingetrazo-native-font-merge-target/debug/examples/pushpull_gate2_fixture",
+      "/tmp/ingetrazo-visibility-ghost-partition-integration/endpoints/source.json",
+      "/tmp/ingetrazo-visibility-ghost-partition-integration/endpoints/native.json"
+    ],
+    "exit": 0,
+    "seconds": 0.013
+  },
+  {
+    "source_commit": "a96bb645120a3720c3c831d445f644d767e9d8ee",
+    "name": "endpoint-app",
+    "command": [
+      "/tmp/ingetrazo-native-font-merge-target/debug/examples/pushpull_endpoints_app",
+      "/tmp/ingetrazo-visibility-ghost-partition-integration/endpoints/source.json",
+      "/tmp/ingetrazo-visibility-ghost-partition-integration/endpoints/app.json"
+    ],
+    "exit": 0,
+    "seconds": 0.018
+  },
+  {
+    "source_commit": "a96bb645120a3720c3c831d445f644d767e9d8ee",
+    "name": "endpoint-check",
+    "command": [
+      "/tmp/ingetrazo-parity-python/bin/python",
+      "scripts/check-pushpull-endpoints.py",
+      "/tmp/ingetrazo-visibility-ghost-partition-integration/endpoints/source.json",
+      "/tmp/ingetrazo-visibility-ghost-partition-integration/endpoints/native.json",
+      "/tmp/ingetrazo-visibility-ghost-partition-integration/endpoints/comparison.json",
+      "/tmp/ingetrazo-visibility-ghost-partition-integration/endpoints/app.json"
+    ],
+    "exit": 0,
+    "seconds": 0.139
+  },
+  {
+    "source_commit": "a96bb645120a3720c3c831d445f644d767e9d8ee",
+    "name": "component-ci-check",
+    "command": [
+      "/tmp/ingetrazo-parity-python/bin/python",
+      "scripts/check-python-components.py",
+      "--prebuilt-dir",
+      "/tmp/ingetrazo-native-font-merge-target/debug/examples"
+    ],
+    "exit": 0,
+    "seconds": 0.412
+  }
+]
