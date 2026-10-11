@@ -421,7 +421,7 @@ impl System {
 
     /// Read-only engineering observation; adds no waits or production uploads.
     pub fn face_sweep_observation_for_probe(&self)->serde_json::Value{
-        let world=self.world.as_ref().map(|world|{let (uploads,bytes,texture)=world.face_sweep_stats_for_probe();serde_json::json!({"image_owners":world.face_sweep_image_stats_for_probe(),"base_uploads":world.uploads,"preview_uploads":uploads,"preview_bytes":bytes,"texture_builds":texture.builds,"texture_uploads":texture.uploads,"sampled_entries":texture.sampled_entries})});
+        let world=self.world.as_ref().map(|world|{let (uploads,bytes,texture)=world.face_sweep_stats_for_probe();serde_json::json!({"extent":world.target_extent_for_probe(),"image_owners":world.face_sweep_image_stats_for_probe(),"base_uploads":world.uploads,"preview_uploads":uploads,"preview_bytes":bytes,"texture_builds":texture.builds,"texture_uploads":texture.uploads,"sampled_entries":texture.sampled_entries})});
         serde_json::json!({"submitted_serial":self.draw_serial,"completed_present_serial":self.completed_present_serial_for_probe,"prepare_error":self.annotation_prepare_error,"committed_bytes":self.memory_budget.ledger.lock().unwrap().total_committed(),"world":world})
     }
     pub fn hidden_ghost_observation_for_probe(&self)->serde_json::Value{serde_json::json!({"submitted_serial":self.draw_serial,"completed_present_serial":self.completed_present_serial_for_probe,"prepare_error":self.annotation_prepare_error,"world":self.world.as_ref().map(|w|w.hidden_ghost_observation_for_probe())})}
@@ -1466,14 +1466,15 @@ impl App for crate::IngeTrazoApp {
             return;
         }
         let Some(rect)=self.native_gpu_viewport_rect else {return;};
+        let mut resize_transaction=None;
         let result:Result<(),String>=(|| {
             if system.world.is_none(){system.world=Some(world::World::new(&system.vulkan_context,system.memory_budget.clone())?);}
             let world=system.world.as_mut().unwrap();
             // Layout can change independently of OS resize; the current rect
             // is authoritative. World.resize returns the cached texture in O(1)
             // if extent is unchanged, with no allocation/upload/copy.
-            let scale=system.egui_ctx.pixels_per_point();let [width,height]=crate::viewport_extent::scene_extent([rect.width() as f64,rect.height() as f64],scale as f64)?;let extent=vk::Extent2D{width,height};self.native_gpu_viewport_texture=Some(world.resize(&system.vulkan_context,&mut system.renderer,extent)?);
-            world.set_display_scale(system.egui_ctx.pixels_per_point());
+            let scale=system.egui_ctx.pixels_per_point();let [width,height]=crate::viewport_extent::scene_extent([rect.width() as f64,rect.height() as f64],scale as f64)?;let extent=vk::Extent2D{width,height};if self.native_gpu_viewport_texture.is_none(){self.native_gpu_viewport_texture=Some(world.resize(&system.vulkan_context,&mut system.renderer,extent)?);}else if !_resize{resize_transaction=world.stage_resize(&system.vulkan_context,&mut system.renderer,extent)?;}
+            if !_resize{world.set_display_scale(system.egui_ctx.pixels_per_point());}
             // Pre-UI prepares layout only. Content ownership is coordinated
             // with the post-UI label candidate below.
             Ok(())
@@ -1525,6 +1526,7 @@ impl App for crate::IngeTrazoApp {
             system.annotation_prepare_error=result.as_ref().err().cloned();
             if let Err(error)=result{self.gpu_error(&error);}
         }
+        if let Err(error)=system.world.as_mut().unwrap().finish_resize(&mut system.renderer,resize_transaction,system.annotation_prepare_error.is_none()){system.annotation_prepare_error=Some(error.clone());self.gpu_error(&error);}
     }
     fn build_ui(&mut self,ctx:&Context) { self.update_ui(ctx); }
     fn gpu_error(&mut self,error:&str) {self.status_message=format!("GPU rendering paused: {error}");eprintln!("{}",self.status_message);}

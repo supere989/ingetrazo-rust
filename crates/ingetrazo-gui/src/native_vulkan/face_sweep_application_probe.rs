@@ -3,7 +3,7 @@ use super::{App,System,run_app};
 use std::{path::PathBuf,error::Error,io::Read};
 use glam::DVec3;
 use ingetrazo_tools::base::{ToolContext,ToolType};
-struct Probe{app:crate::IngeTrazoApp,nonce:u64,refuse:bool,font_refuse:bool,cad_refuse:bool,distance:Option<f64>,dir:PathBuf,anchor:DVec3,normal:DVec3,face:usize,owner_nonce:u64,old_owner:Option<std::sync::Weak<dyn std::any::Any+Send+Sync>>}
+struct Probe{app:crate::IngeTrazoApp,nonce:u64,refuse:bool,font_refuse:bool,cad_refuse:bool,distance:Option<f64>,dir:PathBuf,anchor:DVec3,normal:DVec3,face:usize,owner_nonce:u64,snapshot:bool,snapshot_nonce:u64,old_owner:Option<std::sync::Weak<dyn std::any::Any+Send+Sync>>}
 fn vec(value:&serde_json::Value)->DVec3{DVec3::new(value[0].as_f64().unwrap(),value[1].as_f64().unwrap(),value[2].as_f64().unwrap())}
 impl App for Probe{
  fn title()->&'static str{"IngeTrazo actual FaceSweep workflow"}
@@ -17,7 +17,7 @@ impl App for Probe{
   app.camera.target=vec(&row["camera"]["target"]);app.camera.distance=row["camera"]["distance"].as_f64().unwrap();app.camera.yaw=row["camera"]["yaw"].as_f64().unwrap();app.camera.pitch=row["camera"]["pitch"].as_f64().unwrap();app.camera.perspective=false;
   app.style.visual_style=ingetrazo_render::style::VisualStyle::ShadedWithTextures;app.style.show_textures=true;app.style.background_color=[1.;4];app.style.show_sky=false;app.style.show_edges=true;app.style.show_profiles=false;
   app.mark_document_clean();
-  Self{app,nonce:0,refuse:false,font_refuse:false,cad_refuse:false,distance:None,dir:PathBuf::from(std::env::var_os("INGETRAZO_SWEEP_CONTROL").expect("Sweep control")),anchor:vec(&row["anchor"]),normal:vec(&row["normal"]),face:row["face"].as_u64().unwrap()as usize,owner_nonce:0,old_owner:None}
+  Self{app,nonce:0,refuse:false,font_refuse:false,cad_refuse:false,distance:None,dir:PathBuf::from(std::env::var_os("INGETRAZO_SWEEP_CONTROL").expect("Sweep control")),anchor:vec(&row["anchor"]),normal:vec(&row["normal"]),face:row["face"].as_u64().unwrap()as usize,owner_nonce:0,snapshot:false,snapshot_nonce:0,old_owner:None}
  }
  fn build_ui(&mut self,ctx:&egui::Context){
   if std::env::var_os("INGETRAZO_SWEEP_SOURCE_FRAME").is_some(){
@@ -42,6 +42,7 @@ impl App for Probe{
      "retry"=>{self.refuse=false;self.font_refuse=false;self.cad_refuse=false;},
      "cancel"=>{self.distance=None;self.refuse=false;self.app.active_tool.on_cancel(&mut self.app.scene);self.app.vcb_text.clear();},
      "commit"=>{self.distance=None;self.app.dispatch_tool_vcb(row["text"].as_str().unwrap()).unwrap();self.app.vcb_text.clear();},
+     "snapshot"=>{self.snapshot=true;},
      "undo"=>self.app.undo(),
      "typed"=>{self.app.vcb_text=row["text"].as_str().unwrap().into();},
      "save"=>self.app.save_to_path(&self.dir.join("saved.igz")),
@@ -68,6 +69,10 @@ impl App for Probe{
   App::prepare_gpu(&mut self.app,system,resize);
   system.annotation_font_refusal_for_probe=false;
   system.memory_budget.ledger.lock().unwrap().total_limit=prior;
+  if !resize&&self.snapshot&&self.snapshot_nonce!=self.nonce{
+   let bytes=system.world.as_mut().unwrap().readback(&system.vulkan_context).expect("Retained target readback");
+   std::fs::write(self.dir.join(format!("target-{}.rgba",self.nonce)),bytes).unwrap();self.snapshot_nonce=self.nonce;self.snapshot=false;
+  }
   let label=self.app.active_tool.distance_label().map(|(distance,point)|serde_json::json!({"distance":distance,"point":point.to_array()}));
   let row=serde_json::json!({"nonce":self.nonce,"old_label_owner_alive":self.old_owner.as_ref().map(|owner|owner.strong_count()>0),"label":label,"dirty":self.app.document_dirty(),"screen_size":[system.egui_ctx.screen_rect().width(),system.egui_ctx.screen_rect().height()],"viewport":self.app.native_gpu_viewport_rect.map(|r|[r.min.x,r.min.y,r.max.x,r.max.y]),"gpu":system.face_sweep_observation_for_probe()});
   std::fs::write(self.dir.join("state.tmp"),serde_json::to_vec(&row).unwrap()).unwrap();std::fs::rename(self.dir.join("state.tmp"),self.dir.join("state.json")).unwrap();

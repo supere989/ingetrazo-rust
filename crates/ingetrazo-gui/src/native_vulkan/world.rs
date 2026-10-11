@@ -47,6 +47,7 @@ impl Image {
 }
 impl Drop for Image {fn drop(&mut self){unsafe {if let Some(view)=self.sampled_depth_view{self.device.destroy_image_view(view,None);}self.device.destroy_image_view(self.view,None);self.device.destroy_image(self.handle,None);self.device.free_memory(self.memory,None)};self.budget.freed(self.memory);}}
 struct Target {identity:Arc<()>,device:Device,pool:vk::DescriptorPool,_color:Image,_msaa:Option<Image>,_depth:Image,framebuffer:vk::Framebuffer,sampler:vk::Sampler,set:vk::DescriptorSet,extent:vk::Extent2D,texture:Option<egui::TextureId>}
+pub(crate) struct ResizeTransaction { previous:Option<Target>, display_scale:f32 }
 impl Drop for Target {fn drop(&mut self){unsafe {self.device.destroy_framebuffer(self.framebuffer,None);self.device.destroy_sampler(self.sampler,None);let _=self.device.free_descriptor_sets(self.pool,&[self.set]);}}}
 #[derive(Default,Clone,Copy,Debug)]pub struct ContourMetrics {pub additional_position_bytes:u64,pub batches:usize,pub cold_build_ms:f64,pub compact_preprocess_ms:f64,pub warm_cache_ms:f64,pub cache_hits:u64,pub failed_prepared_chunks:usize,pub rollbacks:u64,pub edge_buffer_uploads:u64,pub failed_prepared_edge_bytes:u64}
 #[derive(Clone,Copy)]struct ContourBatch {vertices:BufferId,indices:BufferId,triangles:u32,compact:bool,stride:u32,owned:bool}
@@ -163,6 +164,20 @@ impl World {
   let texture=if let Some(id)=self.target.as_ref().and_then(|t|t.texture){renderer.update_user_texture(id,target.set).map_err(|e|e.to_string())?;id}else{renderer.add_bottom_origin_encoded_opaque_texture(target.set)};target.texture=Some(texture);
   if let Some(old)=self.target.take(){drop(old);}
   self.target=Some(target);Ok(texture)
+ }
+ pub(crate) fn stage_resize(&mut self,context:&VulkanContext,renderer:&mut egui_ash_renderer::Renderer,extent:vk::Extent2D)->Result<Option<ResizeTransaction>,String>{
+  if self.target.as_ref().is_some_and(|t|t.extent==extent){return Ok(None);}
+  let mut candidate=self.create_target(context,extent)?;
+  let id=self.target.as_ref().and_then(|t|t.texture).ok_or("Transactional resize requires accepted UI target")?;
+  renderer.update_user_texture(id,candidate.set).map_err(|e|e.to_string())?;candidate.texture=Some(id);
+  let previous=self.target.replace(candidate);Ok(Some(ResizeTransaction{previous,display_scale:self.display_scale}))
+ }
+ pub(crate) fn finish_resize(&mut self,renderer:&mut egui_ash_renderer::Renderer,transaction:Option<ResizeTransaction>,accepted:bool)->Result<(),String>{
+  let Some(mut transaction)=transaction else{return Ok(());};
+  if accepted{return Ok(());}
+  let previous=transaction.previous.take().expect("retained accepted resize target");
+  renderer.update_user_texture(previous.texture.expect("accepted UI texture"),previous.set).map_err(|e|e.to_string())?;
+  self.target=Some(previous);self.display_scale=transaction.display_scale;Ok(())
  }
  /// Headless target uses the identical image/render pass/pipeline owner without egui registration.
  /// Caller must complete the previous draw fence before replacing this target.
@@ -294,6 +309,7 @@ impl World {
   if let Err(error)=scene_result{self.abort_face_sweep(staged,fence,completed)?;return Err(error);}
   self.publish_face_sweep(staged,scene,completed);Ok(())
  }
+ pub fn target_extent_for_probe(&self)->Option<[u32;2]>{self.target.as_ref().map(|t|[t.extent.width,t.extent.height])}
  pub fn face_sweep_image_stats_for_probe(&self)->serde_json::Value { let base=self.textures.as_ref().unwrap().cache_stats();let preview=self.sweep.as_ref().map(|s|s.image_stats());serde_json::json!({"base_hashes":base.hashes,"base_decodes":base.decodes,"base_image_uploads":base.uploads,"preview":preview,"inactive_base":self.cached_base.is_some()}) }
  pub fn face_sweep_stats_for_probe(&self)->(u64,u64,super::textures::Stats){self.sweep.as_ref().map(|owner|owner.stats()).unwrap_or_default()}
  pub(super) fn prepare_face_sweep(&mut self,context:&VulkanContext,scene:&ingetrazo_core::scene::Scene,camera:&ingetrazo_core::camera::OrbitCamera,style:&ingetrazo_render::style::StyleConfig,descriptor:Option<ingetrazo_tools::base::FaceSweepPreview>,epoch:u64,fence:vk::Fence,completed:u64)->Result<Option<face_sweep::Prepared>,String>{

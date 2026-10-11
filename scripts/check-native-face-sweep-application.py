@@ -4,7 +4,7 @@ import ctypes as C, os, subprocess, time, json, hashlib, select
 from pathlib import Path
 import argparse
 from owned_process_cleanup import stop_owned_helper
-parser=argparse.ArgumentParser();parser.add_argument("binary");parser.add_argument("output");parser.add_argument("--source-dir",required=True);parser.add_argument("--case",default="ordinary-prism");parser.add_argument("--source",required=True);parser.add_argument("--source-frames",action="store_true");parser.add_argument("--source-phases",default="base,preview,offset,cancel");args=parser.parse_args();assert len(args.source)==40 and all(c in "0123456789abcdef" for c in args.source)
+parser=argparse.ArgumentParser();parser.add_argument("binary");parser.add_argument("output");parser.add_argument("--source-dir",required=True);parser.add_argument("--case",default="ordinary-prism");parser.add_argument("--source",required=True);parser.add_argument("--source-frames",action="store_true");parser.add_argument("--resize-refusal",action="store_true");parser.add_argument("--source-phases",default="base,preview,offset,cancel");args=parser.parse_args();assert len(args.source)==40 and all(c in "0123456789abcdef" for c in args.source)
 out=Path(args.output);out.mkdir(parents=True,exist_ok=True)
 source_rows=json.loads((Path(args.source_dir)/"original.json").read_text())["cases"];recipe=next(row for row in source_rows if row["name"]==args.case)
 expected_distance=sum((recipe["anchor"][j]+recipe["normal"][j]*.6-recipe["anchor"][j])*recipe["normal"][j] for j in range(3))
@@ -88,7 +88,36 @@ try:
    else:
     value=wait(lambda:(v if(v:=state())and v["nonce"]==nonce and not v["prepare_error"] and v["completed_present_serial"]>first["submitted_serial"] else None))
    image=take(str(nonce)+"-"+name);rows.append(dict(name=name,state=state(),image_sha256=hashlib.sha256((out/(str(nonce)+"-"+name+".png")).read_bytes()).hexdigest()));return image
-  if args.source_frames:
+  if args.resize_refusal:
+   action(1,"acquire");action(2,"drag",distance=.6)
+   def resize_action(nonce,name,refusal=False,**extra):
+    request=control/"request.tmp";request.write_text(json.dumps(dict(nonce=nonce,action=name,**extra)));request.rename(control/"request.json")
+    first=wait(lambda:(v if(v:=state())and v["nonce"]==nonce else None))
+    value=wait(lambda:(v if(v:=state())and v["nonce"]==nonce and ((bool(v["prepare_error"])) if refusal else (not v["prepare_error"]and v["completed_present_serial"]>first["submitted_serial"])) else None))
+    rows.append(dict(name=name,state=value));return value
+   def target_snapshot(nonce,refusal=False):
+    v=resize_action(nonce,"snapshot",refusal)
+    path=control/f"target-{nonce}.rgba";wait(path.exists)
+    return path.read_bytes(),v
+   nonce=3;previous,accepted=target_snapshot(nonce)
+   for mode,extent in [("refuse-font",(900,650)),("refuse-cad",(950,675)),("refuse",(1000,700))]:
+    nonce+=1
+    extra={"distance":1.2}if mode=="refuse"else{"text":"123456789mm"}
+    resize_action(nonce,mode,True,**extra)
+    old=state();lib.XResizeWindow(d,window,*extent);lib.XFlush(d)
+    wait(lambda:state()["screen_size"]==list(map(float,extent))and state()["prepare_error"])
+    nonce+=1;retained,failed=target_snapshot(nonce,True)
+    assert retained==previous,"Resize refusal changed retained complete World RGBA"
+    assert failed["world"]["extent"]==accepted["world"]["extent"],"Refused resize replaced accepted target"
+    assert failed["committed_bytes"]==old["committed_bytes"],"Refused target left allocation charges"
+    assert failed["submitted_serial"]==old["submitted_serial"],"Refused resize submitted candidate"
+    if mode!="refuse":assert failed["old_label_owner_alive"],"Refused resize released accepted label owner"
+    nonce+=1;retry=resize_action(nonce,"retry")
+    assert retry["world"]["extent"]!=accepted["world"]["extent"]
+    nonce+=1;previous,accepted=target_snapshot(nonce)
+   nonce+=1;resize_action(nonce,"cancel")
+   nonce+=1;resize_action(nonce,"save")
+  elif args.source_frames:
    phases=set(args.source_phases.split(","));assert phases and phases<={"base","preview","offset","cancel"}
    # The frozen original observer never cancels acquisition: its base/cancel
    # phases set extrusion=0 while the length label remains active. Actual
