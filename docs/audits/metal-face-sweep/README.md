@@ -146,3 +146,9 @@ cold acceptance work, not a production performance improvement. The workflow
 now pins the four native font implementation files and both Qt helper scripts
 in the runner-produced source inventory as well. Actual Apple result for this
 addition is pending; no local crosscheck substitutes for it.
+
+## Actual ordinary/back diagnostic (17931738)
+
+Run38138427433 completed on ARM job114467035078 and Intel job114467034988. Both actual native builds, sweep runtime/lifetime/refusal checks, classic/material consumers and the six-case/five-negative policy diagnostic pass. Both strict full24-frame comparisons fail; exact source pixels remain unchanged. Raw runner artifacts and167 independently verified source hashes per runner are retained in `apple-policy-diagnostic/` with binary hashes and full difference inventories.
+
+The ordinary default-face correction reduces base-frame differences materially (ARM reversed-door2587, back-recess18267; Intel641/15795), while ordinary-prism remains189354/189214 pixels. Actual prism admission records six opaque back-culled draws and one transparent authored-back front-culled draw (opacity0.5, red uploaded RGBA). The actual front-facing mask contains186096 front-facing and zero back-facing prism pixels. Thus the back payload is retained and submitted; source/native face-side or coverage policy still requires diagnosis. This evidence does not justify flipping winding or fitting color. Native font identity/hinting and MSAA resolve rounding remain separately attributed strict boundaries. No additional CI retry is claimed or requested by this receipt.
