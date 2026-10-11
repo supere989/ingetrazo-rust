@@ -1,0 +1,20 @@
+{
+  "records": {
+    "README.md": {
+      "bytes": 2401,
+      "sha256": "9675c6644c068eef5a347b131836389d89504bdac60ba8832ccad1b541648c4d"
+    },
+    "apple-gui-metadata.log": {
+      "bytes": 20645,
+      "sha256": "40fe4615b2cdd49f5ea77e5983ae7bfe35ea19e9df291090e70da2a57e9309b5"
+    },
+    "clear-regression.log": {
+      "bytes": 3508,
+      "sha256": "b1fbb309e61fcea6c4b8d8c9d1ead679cc49fef2cf2101b837ddb4aa7e091a6d"
+    },
+    "metadata-result.json": {
+      "bytes": 187,
+      "sha256": "a39f246a646244bd36d4c4a1830822b66cc1858dd39b4ca52314bd06b3e27a22"
+    }
+  }
+}

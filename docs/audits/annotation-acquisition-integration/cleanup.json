@@ -1,0 +1,137 @@
+{
+  "authenticated_removed_files": 26,
+  "released_bytes": 894452,
+  "records": [
+    {
+      "file": "acquisition/acceptance.json",
+      "bytes": 102,
+      "sha256": "fd6ec7b3095c12517e255d1a25bf044c2fb9b2082ebc14c77d799bc35e28db64"
+    },
+    {
+      "file": "acquisition/acceptance.json.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "acquisition/input.igz",
+      "bytes": 2512,
+      "sha256": "c9ce01d930fff89d9af94b5580093f6f82626b75d6ce690482e32fd787d4a87b"
+    },
+    {
+      "file": "acquisition/native.json",
+      "bytes": 33736,
+      "sha256": "704fe31b6b76a6e7a55820d7a49e34913d429a27a5172e31c0a4284b3132c018"
+    },
+    {
+      "file": "acquisition/original.json",
+      "bytes": 33708,
+      "sha256": "79fdb0eea0e916de9eecad06e14861405c5043af633aae2e7216525dcb421d22"
+    },
+    {
+      "file": "acquisition/riding-input.igz",
+      "bytes": 2869,
+      "sha256": "431d7f5eb852fa88d8b988822070001009ccaaffe9af898f31564bc7c3d7f0fb"
+    },
+    {
+      "file": "acquisition/runtime.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "acquisition/runtime.log.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "acquisition/source-first-failure.log",
+      "bytes": 1224,
+      "sha256": "28153b68963a8ea28b9bb94d000b53230112d3329d96126b46cebf510ebeaab1"
+    },
+    {
+      "file": "acquisition/threshold-first-failure.json",
+      "bytes": 27049,
+      "sha256": "508a032a9c750eb71a71579e13b7edf77025b3fe226ec6b057fd608190005772"
+    },
+    {
+      "file": "build.log",
+      "bytes": 21069,
+      "sha256": "e6f01a31c9581e30733022da92062c2e2d0fa137672033a43ae20e1305fec0db"
+    },
+    {
+      "file": "execution.json",
+      "bytes": 1501,
+      "sha256": "3aa68894bde2a4d0d853a2c048fc23dda99d2abc94265a1bb8bfedd6a4badc80"
+    },
+    {
+      "file": "label-precision-test.log",
+      "bytes": 19216,
+      "sha256": "e4275f8cd9e717bc2602684506c2f7d5062b6514710bd687c07268dedd130f2d"
+    },
+    {
+      "file": "metal-clear-test.log",
+      "bytes": 3508,
+      "sha256": "b1fbb309e61fcea6c4b8d8c9d1ead679cc49fef2cf2101b837ddb4aa7e091a6d"
+    },
+    {
+      "file": "selected-move/acceptance.json",
+      "bytes": 120,
+      "sha256": "161b29807e5e1921430fdaa508b2173c454931ea94eb1d8e20813019436dcb9b"
+    },
+    {
+      "file": "selected-move/acceptance.json.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "selected-move/annotation-move-native-first-failure.json",
+      "bytes": 152255,
+      "sha256": "cac73e254e1d4e8fb62d909985f55b3e0194e784c8966c925a3208475775c37b"
+    },
+    {
+      "file": "selected-move/annotation-move-original-first-failure.json",
+      "bytes": 152197,
+      "sha256": "c0b4dd6294765e64c96ac56e10b264f8397d1c325a5071e23f308116444c0110"
+    },
+    {
+      "file": "selected-move/boundaries.json",
+      "bytes": 24246,
+      "sha256": "079d234d7ae06e26ab5ab7f8724b71415067495b9507296e5eac281d82b57334"
+    },
+    {
+      "file": "selected-move/input.igz",
+      "bytes": 7976,
+      "sha256": "cf0b59bec964e99937de58035198c16e7ddd4c380b056ffd68367cb71a206558"
+    },
+    {
+      "file": "selected-move/move-input.igz",
+      "bytes": 8029,
+      "sha256": "620a20ba727ff72b53431e09b0592b31038df49541688c4046b9c742adddf90a"
+    },
+    {
+      "file": "selected-move/native.json",
+      "bytes": 197552,
+      "sha256": "f9958261d391e353378edccd1323aeb93e95270c7a8eebc7374310b55ad2e727"
+    },
+    {
+      "file": "selected-move/one-riding-input.igz",
+      "bytes": 8031,
+      "sha256": "5e69af79f603af422278d7b658f6324dd21bc37eab25e3b3cd1691deb8f8c341"
+    },
+    {
+      "file": "selected-move/original.json",
+      "bytes": 197552,
+      "sha256": "f9958261d391e353378edccd1323aeb93e95270c7a8eebc7374310b55ad2e727"
+    },
+    {
+      "file": "selected-move/runtime.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "selected-move/runtime.log.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "preserved": "Source, worktrees, reusable build target, canonical captures and logs"
+}
