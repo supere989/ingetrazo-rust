@@ -1,0 +1,65 @@
+{
+  "scope": "First candidate lacked stable inferred names in legacy group publication; initial source fixture also had an unreset global auto-name counter, corrected to fresh cold-load controls. Random missing UIDs are not compared across runtimes.",
+  "observations": [
+    {
+      "case": "arco-yanque",
+      "initial_group_names": [
+        "Edited Group",
+        "Group 1",
+        "Group 2",
+        "Group 3"
+      ],
+      "corrected_source_group_names": [
+        "Edited Group 1",
+        "Group 2",
+        "Group 3",
+        "Group 4"
+      ]
+    },
+    {
+      "case": "banca-pergola-yanque",
+      "initial_group_names": [
+        "Edited Group",
+        "Group 30",
+        "Group 31",
+        "Group 32"
+      ],
+      "corrected_source_group_names": [
+        "Edited Group 1",
+        "Group 2",
+        "Group 3",
+        "Group 4"
+      ]
+    },
+    {
+      "case": "luminaria-solar-yanque",
+      "initial_group_names": [
+        "Edited Group",
+        "Group 38",
+        "Group 39",
+        "Group 40"
+      ],
+      "corrected_source_group_names": [
+        "Edited Group 1",
+        "Group 2",
+        "Group 3",
+        "Group 4"
+      ]
+    },
+    {
+      "case": "pileta-fuente-yanque",
+      "initial_group_names": [
+        "Edited Group",
+        "Group 97",
+        "Group 98",
+        "Group 99"
+      ],
+      "corrected_source_group_names": [
+        "Edited Group 1",
+        "Group 2",
+        "Group 3",
+        "Group 4"
+      ]
+    }
+  ]
+}

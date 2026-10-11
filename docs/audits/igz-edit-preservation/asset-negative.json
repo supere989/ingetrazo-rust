@@ -1,0 +1,7 @@
+{
+  "rejected": [
+    "actual_python_reopen_missing_base",
+    "actual_archive_missing_base"
+  ],
+  "removed_member": "textures/44ab769c673399ac-base.png"
+}

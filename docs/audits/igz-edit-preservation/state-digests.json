@@ -1,0 +1,74 @@
+{
+  "arco-yanque": {
+    "state_sha256": "3a82b8625aca269a7726ca5fd4735ee3bb746edd9e8c78e63160537a0ceb38a5",
+    "loose_edges": 5,
+    "loose_faces": 1,
+    "groups": 30,
+    "image_planes": 1,
+    "materials": 13
+  },
+  "banca-pergola-yanque": {
+    "state_sha256": "b961f1f64df99a607067d1087751c7bd00e4a3e647afb8f008efdf3856d80654",
+    "loose_edges": 6,
+    "loose_faces": 1,
+    "groups": 9,
+    "image_planes": 1,
+    "materials": 3
+  },
+  "luminaria-solar-yanque": {
+    "state_sha256": "5663fa1733e41229d57ad5560069979de4e0ed4c7e7f04e2f02c902ef1f33316",
+    "loose_edges": 5,
+    "loose_faces": 1,
+    "groups": 60,
+    "image_planes": 1,
+    "materials": 0
+  },
+  "pileta-fuente-yanque": {
+    "state_sha256": "16f73dc440cc0938bbd8b01d22e6895b3a48fb0bd19c74cf69d62e57e818992b",
+    "loose_edges": 5,
+    "loose_faces": 1,
+    "groups": 39,
+    "image_planes": 1,
+    "materials": 3
+  },
+  "nested-reflected": {
+    "state_sha256": "f6b29503999ddce634b707b0d5c573dbebe787860573e16ab7083d60ab0e989b",
+    "loose_edges": 5,
+    "loose_faces": 1,
+    "groups": 1,
+    "image_planes": 1,
+    "materials": 0
+  },
+  "textures-alpha": {
+    "state_sha256": "0d867f6c3280d1552a621084b108e1086c49a9d0aeaf5986dadadb394a06e9c4",
+    "loose_edges": 21,
+    "loose_faces": 5,
+    "groups": 0,
+    "image_planes": 1,
+    "materials": 0
+  },
+  "pbr-colors": {
+    "state_sha256": "5d9a7f29368d4caa67d39efcf4c382602580b134f6c448414e96c6c5d026d960",
+    "loose_edges": 29,
+    "loose_faces": 7,
+    "groups": 0,
+    "image_planes": 1,
+    "materials": 5
+  },
+  "fresh": {
+    "state_sha256": "07ef2b9cb22ad182d7c1f6044a6012177346de9168f3a95d5b5cd0cc775d6c26",
+    "loose_edges": 5,
+    "loose_faces": 1,
+    "groups": 0,
+    "image_planes": 1,
+    "materials": 0
+  },
+  "numeric-layers": {
+    "state_sha256": "f55f31552456f6e8d07231c5716d8eb1661607077fc2605582a1a166931c9ba8",
+    "loose_edges": 8,
+    "loose_faces": 2,
+    "groups": 0,
+    "image_planes": 1,
+    "materials": 0
+  }
+}

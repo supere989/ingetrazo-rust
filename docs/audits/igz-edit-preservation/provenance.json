@@ -1,0 +1,127 @@
+{
+  "runtime_commit": "78946ce1",
+  "base": "a9cd0eea",
+  "original_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "binary_path": "/tmp/ingetrazo-ai-registry-target/debug/examples/igz_edit_preservation",
+  "binary_sha256": "b7d0d096c774691e5561ab820df06c50c350ea92182282b6fdd52e20279c8f0b",
+  "source_sha256": {
+    "Cargo.lock": "59d8703f9f2bc898026450b58d7708315441e9b239b29cffd3490cf1bbfb4144",
+    "crates/ingetrazo-formats/Cargo.toml": "a86ff98846dd38bb82223dd7d6a76b903ecd14329fc7afa25a10f15a4910872e",
+    "crates/ingetrazo-formats/src/igz.rs": "e1ea35247e233fa178f55f30d96f9722f79a3c712736f590fc70afbf84a0ae0b",
+    "crates/ingetrazo-formats/src/igz/assets.rs": "6f6a6620c6b7fbf4360bd4017f651aa222dd1a17687db73fec77a4f37a111b68",
+    "crates/ingetrazo-formats/examples/igz_edit_preservation.rs": "ed7d3dc7463a9a67814287aa7197cad9367641635916d3468ce41e06c1e5a694",
+    "scripts/reference-igz-edit-preservation.py": "6bf71c5f4d4a887b56e53cb6ee61cef95c70ca45169e785b638cc4413ed40e1a",
+    "scripts/check-igz-edit-preservation.py": "5fc3a42d11d30bf4ca1cdd603d1ad5bb07babf8f563eb3733bae6374817fea00",
+    "crates/ingetrazo-core/src/scene.rs": "5d35a5a99057deb2ef670bb52602ec3dd4473c6f61299e0c2c40f3afd61fe343",
+    "crates/ingetrazo-core/src/groups.rs": "b32016081d67424f4f0a9ddbe530006a069d84b64b64f9d6092d44ff9812e667",
+    "crates/ingetrazo-core/src/mesh.rs": "f15636cd694c30c1bae24b50b909a14749dff724838862ed18e7f337ec5c4b49",
+    "crates/ingetrazo-core/src/image_plane.rs": "35f2a907809d5c6855969c55aff33c89dadfb5f8cc0f5a37dfc01c8d0c40fa6c",
+    "crates/ingetrazo-core/src/layers.rs": "e4b4fa9fed208e411a4b5a51a697e2d302f75568ea3fbfee02f211009cf0ebaf"
+  },
+  "original_sha256": {
+    "formats/igz.py": "f318d685830c49c2fede7fd5a238ac7a1469ee0b0226cf48cab3751e194a9576",
+    "core/mesh.py": "5f2c1625e6dd717db029ba39a9de337e75beec06bd0df28a592a8a34875ca22c",
+    "core/group.py": "9ba6a20eca241cb4969a545a3784fcff25566166606d5447a18780747d4f11c5",
+    "core/texture.py": "837c3f00c548df110dec5debfdb3759984d97bb652d6a0050d7e2ceb940407dc",
+    "core/image_plane.py": "8bc2f45f4a5898dbabeeb6b5add9fe74a8027780e2b97fc85a3c2e31925215e0",
+    "core/scene.py": "9dfcd32f1ff5b1445180eafd8df36eafb92fa08ed3597bb90eac09554899d2e0"
+  },
+  "inputs": {
+    "arco-yanque": {
+      "path": "/work/ingetrazo/examples/arco-yanque.igz",
+      "sha256": "a0b400068b1d39907bc798d30513bca6bab8d5d320a999090c3107654b59457a",
+      "authored_uids": [
+        "",
+        "1c2bcf3e5bc443ffbf326b31876b6ce2",
+        "a2a28fdb4c3c4ebdb74b281f26831e09",
+        "c3fff648f711427bb67d0698b52d3ccd",
+        "c9e9a9cea56046eebc8bc37eb3dd11a9",
+        "e2324a3d280047ce8ef395827d4a4e4f"
+      ]
+    },
+    "banca-pergola-yanque": {
+      "path": "/work/ingetrazo/examples/banca-pergola-yanque.igz",
+      "sha256": "24b814ee07c6bc0178e2ce4c4d739d54ff98457e1ae8fcacedf595d0c3988d6c",
+      "authored_uids": [
+        "",
+        "a2ebfca0f90740e88344a6cc2682ade5",
+        "ad39c91ee563437693f78ae04a6ce4b7",
+        "be21d63fc1d44b349b8334aa58034823",
+        "c93d690eef1a4eca856f338f0c211f32"
+      ]
+    },
+    "luminaria-solar-yanque": {
+      "path": "/work/ingetrazo/examples/luminaria-solar-yanque.igz",
+      "sha256": "8ea07abd9b79f06de82c18a1a856861f15b160237893d2a602bb528b5e4b1c58",
+      "authored_uids": [
+        "",
+        "10d311f59b9748e48f80c2ff53533bb7",
+        "10ec8bcfa6bd4b6ba9fdc04bb2ba1a34",
+        "64da73178069418b872e9e7da9be9f5e",
+        "84cb0b2e5e7846e7bafef2ebb6998c17"
+      ]
+    },
+    "pileta-fuente-yanque": {
+      "path": "/work/ingetrazo/examples/pileta-fuente-yanque.igz",
+      "sha256": "b09df79be7caa0dbfb5467588b28ddc84dd41ff5fa6843f0673ba8ead36a9bc1",
+      "authored_uids": [
+        "",
+        "16123f292899445ab70f8ff6dc7c1f41",
+        "4368148749084546b6c479df91c99ab5",
+        "75c0250b84a04577ba4a60973234d545"
+      ]
+    },
+    "nested-reflected": {
+      "path": "/tmp/ingetrazo-igz-edit-preservation/docs/audits/gltf-rich/original/nested-reflected.igz",
+      "sha256": "c2ae0a2656658b11983605404fe0be0c5bda17629b2f71297d4df023104a293e",
+      "authored_uids": [
+        "93a26df6b9234486",
+        "bbd069b7c52a4ca7"
+      ]
+    },
+    "textures-alpha": {
+      "path": "/tmp/ingetrazo-igz-edit-preservation/docs/audits/gltf-rich/original/textures-alpha.igz",
+      "sha256": "13a04fa6f81952dacf16be38118062ea240ac3a9a41fdc311938038a341c154f",
+      "authored_uids": []
+    },
+    "pbr-colors": {
+      "path": "/tmp/ingetrazo-igz-edit-preservation/docs/audits/gltf-rich/original/pbr-colors.igz",
+      "sha256": "3668fe52d5cec3cd168b0f0545e93388c5a395cde6e9f2006f6c2d5e906588f2",
+      "authored_uids": []
+    },
+    "fresh": {
+      "path": "/tmp/igz-edit-preservation-proof/fresh.igz",
+      "sha256": "fa9c2cb30d4f8afe1b3ec1c99587362006d5da0d620cfb3d0663a617138b1f20",
+      "authored_uids": []
+    },
+    "numeric-layers": {
+      "path": "/tmp/igz-edit-preservation-proof/numeric-layers.igz",
+      "sha256": "bf6f40cdea9259786a73982b374f1b3853b0486b47ab6636b4a66b80af7ec3c1",
+      "authored_uids": []
+    }
+  },
+  "native_archives_sha256": {
+    "arco-yanque": "f56eb466d8343bd2f1ce3daf85fb7fab2f1ccf347dda684acb4aba067f3121e7",
+    "banca-pergola-yanque": "a3164a00176e4f4872661b2477dbc6ab7db922b48305a563ba7fa7f20a1aec66",
+    "luminaria-solar-yanque": "6149f192ad8d06b1d49357bdab2fb084dc59751f65f6b3420e70af949345ceb6",
+    "pileta-fuente-yanque": "f2c25c26d9d8f74dcb20db1e9916c58c43fe2905aaebce9144910d4a58664d1b",
+    "nested-reflected": "cc81b9c0666990dd59974abe68e764ce38f2467222d681e5d595e9c7ca66c03d",
+    "textures-alpha": "346168e2742a733332467fb3693c9b3b467e5d088f71d81a0847d1b986445192",
+    "pbr-colors": "af257ce54c3babd364d3436e02e26131d22986de96cdbeedce318c26b63c6ed8",
+    "fresh": "b54d065b5e969ee35f7f82d774f5cf33da1df1b9c4c500a48f57dbcc23b9c979",
+    "numeric-layers": "2f9067889aa09ca279eaddc6fab8334e28e8e7e9c204972f01f2d817b9474593"
+  },
+  "build": "CARGO_TARGET_DIR=/tmp/ingetrazo-ai-registry-target CARGO_PROFILE_DEV_DEBUG=0 CARGO_INCREMENTAL=0 cargo build -j2 -p ingetrazo-formats --example igz_edit_preservation",
+  "focused_tests": "cargo test -j2 -p ingetrazo-formats --lib igz::assets::tests",
+  "artifact_sha256": {
+    "expected-after.json.gz": "ba858d8aa10957e65ba2c8119701057cb2ddd021a0a4e63a0c19fd96c25ff49f",
+    "state-digests.json": "7970b858bd2d60593a1c1b50d9ea517a7d587c46f0656dfc93653ae6aef3a059",
+    "acceptance.json": "7de3685792aff05a578987deca3d4acce46270925791c798c1c14881b0fd83a1",
+    "focused-tests.log": "5bd8e190c779ac4e478453abef32ffe9e3cb06332b27784294e36e2a703f531d",
+    "initial-failure.json": "9ee875e2d967ee62a6e3da9b14c7343b62d64fd83f964a834761d0b2ac3cd8d3",
+    "fresh.native.igz": "b54d065b5e969ee35f7f82d774f5cf33da1df1b9c4c500a48f57dbcc23b9c979",
+    "numeric-layers.native.igz": "2f9067889aa09ca279eaddc6fab8334e28e8e7e9c204972f01f2d817b9474593",
+    "nested-reflected.native.igz": "cc81b9c0666990dd59974abe68e764ce38f2467222d681e5d595e9c7ca66c03d",
+    "asset-negative.json": "8637c6504d128813d4ef09ad6bbf7f0127c7ba6a441b00b228e2939f3faa9d59"
+  }
+}
