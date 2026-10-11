@@ -9,7 +9,7 @@ fn main()->Result<(),Box<dyn std::error::Error>>{
  let mut scene=ingetrazo_formats::igz::load_igz(&root.join("batch.igz"))?;
  let mut camera=ingetrazo_core::camera::OrbitCamera::default();camera.set_standard_view(ingetrazo_core::camera::StandardView::Top);camera.target=glam::DVec3::ZERO;camera.distance=4.;camera.aspect=800./600.;camera.perspective=false;
  let mut style=ingetrazo_render::style::StyleConfig::default();style.visual_style=ingetrazo_render::style::VisualStyle::ShadedWithTextures;style.show_edges=false;style.show_profiles=false;style.show_sky=false;style.background_color=[1.,1.,1.,1.];
- let mut world=World::new_with_sample_count_for_probe(&context,budget.clone(),1)?;world.resize_offscreen(&context,vk::Extent2D{width:800,height:600})?;
+ let mut world=World::new(&context,budget.clone())?;world.resize_offscreen(&context,vk::Extent2D{width:800,height:600})?;
  let start=std::time::Instant::now();world.set_scene(&context,&scene,&camera,&style,fence,0,1)?;let cold_ms=start.elapsed().as_secs_f64()*1000.;let cold=world.resource_upload_stats_for_probe();let texture=world.texture_stats();assert_eq!(texture.1.uploads,5);assert_eq!(texture.1.bc7_uploads,1);assert_eq!(cold.image_upload_calls,5);assert_eq!(cold.image_mips_generated,5+6+8+7);assert!(cold.staging_peak<=8*1024*1024);
  let mut rows=Vec::new();let mut serial=0;
  for case in reference["cases"].as_array().ok_or("cases")?{

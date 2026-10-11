@@ -44,7 +44,7 @@ for distance in [4.,12.]:
  filters=[]
  for path in assets:
   tex=vp._get_texture(str(path));filters.append({'min':int(tex.minificationFilter().value),'mag':int(tex.magnificationFilter().value),'levels':tex.mipLevels(),'cutout':bool(getattr(tex,'_cutout',False))})
- rows.append({'case':name,'distance':distance,'points':points,'samples':samples,'filters':filters,'gl_info':vp.gl_info})
+ rows.append({'case':name,'distance':distance,'points':points,'samples':samples,'filters':filters,'scene_fbo_samples':vp._scene_fbo.format().samples(),'gl_info':vp.gl_info})
 save_scene(vp.scene,out/'batch.igz');vp.close();app.processEvents()
 report={'source_pin':'6be29fe437a7cd992d4e079f71720821b25216b9','cases':rows,'igz_sha256':hashlib.sha256((out/'batch.igz').read_bytes()).hexdigest(),'assets':[{'name':p.name,'sha256':hashlib.sha256(p.read_bytes()).hexdigest()} for p in assets]}
 (out/'original.json').write_text(json.dumps(report,indent=2)+'\n')
