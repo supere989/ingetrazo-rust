@@ -71,7 +71,10 @@ impl PushPullTool {
         let distance=clamped;
         match Self::extrude_face_prepared(scene,face,distance,keep,false){
             Ok(())=>Ok(distance),
-            Err(error) if error.starts_with("Ctrl copy would leave an invalid solid:")=>{
+            Err(error) if error.starts_with("Ctrl copy would leave an invalid solid:")
+                || error.starts_with("Push/Pull cap translation would leave an invalid solid:")
+                || error == "Push/Pull cap translation reached a topology collapse; use a smaller distance"
+                || error == "Push/Pull would remove the whole solid" =>{
                 let before=scene.mesh.clone();let selection=scene.selection.clone();let order=scene.selection_order.clone();let (version,view_version)=(scene.version,scene.view_version);let(mut low,mut high)=(0.,1.);let mut best=None;
                 for _ in 0..6 {let mid=(low+high)*0.5;let d=distance*mid;
                     if d.abs()>=Self::MIN_EXTRUDE&&Self::extrude_face_prepared(scene,face,d,keep,false).is_ok(){best=Some(d);low=mid;}else{high=mid;}
@@ -577,6 +580,7 @@ impl PushPullTool {
                     }
                 }
             } else {
+                let first = result.faces.len();
                 for original in &prism.faces {
                     let points: Vec<_> = original
                         .vertices
@@ -589,6 +593,16 @@ impl PushPullTool {
                         .map(|h| h.iter().map(|&v| prism.vertices[v].position).collect())
                         .collect();
                     add_polygon(&mut result, &points, &holes, original)?;
+                }
+                // Original free authoring keeps the translated cap and wall
+                // cycles for either sign. Its final orient pass flips these
+                // only when the complete target mesh is closed; a disconnected
+                // open sheet leaves the authored inward cycles intact.
+                if distance < 0.0 && !solid_report(&result).0 {
+                    for authored in &mut result.faces[first + 1..] {
+                        authored.vertices.reverse();
+                        for hole in &mut authored.holes { hole.reverse(); }
+                    }
                 }
             }
             result
