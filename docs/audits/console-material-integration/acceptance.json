@@ -1,0 +1,58 @@
+{
+  "source": "d8b7eff89886bf2f06e768a3af96dc836c7a736b",
+  "steps": [
+    {
+      "name": "workspace",
+      "command": [
+        "bash",
+        "scripts/check-rust-workspace.sh",
+        "-j2"
+      ],
+      "returncode": 101,
+      "elapsed_seconds": 27.308483091008384
+    },
+    {
+      "name": "examples-fixed",
+      "command": [
+        "cargo",
+        "check",
+        "--workspace",
+        "--locked",
+        "--examples",
+        "-j2"
+      ],
+      "returncode": 0,
+      "elapsed_seconds": 2.441967660008231
+    },
+    {
+      "name": "engineering",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "ingetrazo-gui",
+        "--features",
+        "engineering-python",
+        "--lib",
+        "engineering_python::",
+        "-j2"
+      ],
+      "returncode": 0,
+      "elapsed_seconds": 31.929170547024114
+    }
+  ],
+  "integration_source": "8be06a1f5b61379e367ee081be758195c8595c71",
+  "workspace_tests": {
+    "passed": 810,
+    "failed": 0,
+    "ignored": 2,
+    "targets": 35
+  },
+  "scoped_fix": "All runtime/tests/doc targets completed; default example check failed on missing engineering required-features metadata. Only Cargo example declarations changed; retain completed test results and rerun failed example coverage.",
+  "optional_console_tests": {
+    "passed": 10,
+    "failed": 0,
+    "ignored": 0
+  },
+  "passed": true
+}

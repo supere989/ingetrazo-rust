@@ -2,6 +2,23 @@
 
 Frozen from review source `8d2f37ce` on 2026-10-11 UTC. All original evidence, failures and source scopes remain below. Historical uses of "current", "pending" and "published" describe their recorded checkout, not today. See [the current canonical tracker](PARITY_PROGRESS.md).
 
+## Published 45ca1771 checkpoint (historical)
+
+The Rust workspace is a substantial implementation. Full Python parity is unverified: **10 Implemented / 27 Partial / 0 Verified across 37 areas; all five release gates remain OPEN**. Counts are not effort percentages.
+
+| Area | Current evidence | Remaining acceptance |
+| --- | --- | --- |
+| Publication | Main remains `c73fe993`. Integrated runtime `c6807387` passes the local checks below. Preceding published `aec2812c` passed all six Apple jobs; Linux exposed a stale allocation-probe baseline, corrected and locally verified here | Current-batch published CI; strict parity and release gates |
+| Vulkan model rendering | Retained `02e05a00` Chapel capture has 1,066 on/restored and 1,113 off differing pixels, maximum error 37. Sampled JPEG decoding is exact for 32 Qt cases and four real assets | Strict whole-model images. Isolated area-mip candidate still fails glass; 256 original dimension controls retain source phase evidence without a fitted correction |
+| Annotations | Source stencil is enabled by default on admitted Vulkan targets. Three actual app images, eight translucent triangle images and four timing images are exact; allocation-refusal/retry and retirement controls pass. The startup allocation probe now preserves the existing stencil's per-heap ownership | Timing excludes World. Broader depth/fonts/cameras/drivers/DPI and Metal remain open; prior full-model captures were not repeated |
+| Solar shadows | Clock matches 198 original states; panel settings and repaint preservation are integrated. Eight native NVIDIA original raster controls now retain on/off/restored frames, IGZs, packed maps, camera/light matrices and actual sampler. All source maps build once across off/on | Reference corpus is not native parity. Vulkan caster/receiver consumer remains isolated; Metal shadows, full panel gestures/visuals and location picker remain open |
+| Scripting | Optional actual console now publishes only changed native rows: 14 immediate original/native states, five publications, zero final Mesh exports, seven VM history steps; actual allocator refusal/history/retry pass. Eight merged optional tests and independent prior 11-state history replay pass | Default-off. Two O(base) comparisons, full app Undo snapshot and some all-Face preparation remain. Full Scene/groups, external history synchronization, complete VM semantics and total bounds remain open; production bridge run_python refuses |
+| Native Metal | Opt-in app viewport, loose scenes and classic groups remain integrated. Classic ARM review verifies 250 exact interior samples and prior app/loose proofs retain 175/225 samples. Full-material branch is under focused SDK acceptance | Latest isolated ARM solid/translucent samples are exact; sampled texture admission still refuses because actual standalone storage exceeds queried heap layout. Full materials/textures, physical Mac and broader workflows remain open; Intel native query limitation retained |
+| Combined validation and build cadence | Runtime `c6807387`: 801 passed / 0 failed / 2 ignored across 35 test/doc targets; enabled examples checked. Eight optional console tests pass. Actual Vulkan allocation refusal, two resizes and clean close pass on llvmpipe | One workspace run 74.723 seconds; optional command 179.803 seconds includes initial dependency compilation into stable integration cache. Agents own complete feature slices and focused acceptance; root reviews integration batches. All five release gates remain OPEN |
+
+Current evidence: [combined acceptance and root review](audits/console-rows-integration/README.md), [preceding published CI](audits/console-rows-integration/preceding-ci.json), [sparse console publication](audits/ai-console-rows/README.md), [original shadow raster corpus](audits/solar-shadow-source/README.md), [annotation activation](audits/annotation-stencil-production/root-review.json), [solar clock and panel](audits/solar-clock/README.md), [Metal classic review](audits/metal-world-scene/classic-run38106269557/root-review.json), [retained full-model checkpoint](audits/annotation-scene-history-integration/README.md), [build cadence](audits/build-cadence/README.md). Earlier checkpoints remain in [the historical log](PARITY_PROGRESS_HISTORY.md); their counts describe their original checkouts.
+
+
 # Rust parity progress tracker
 
 ## Current acceptance checkpoint
