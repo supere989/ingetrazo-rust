@@ -65,7 +65,7 @@ impl ScaleTool {
         let bounds = self.bounds.as_ref()?;
         if let (Some(viewport), Some(cursor)) = (&self.viewport, ctx.screen) {
             let mut best = None;
-            let mut distance = 10.;
+            let mut distance = 8.;
             for &grip in &bounds.grips {
                 if let Some(p) = viewport.project_for_snapping(bounds.position(grip)) {
                     let d = p.distance(cursor);

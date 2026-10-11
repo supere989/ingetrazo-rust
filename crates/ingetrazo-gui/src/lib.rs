@@ -186,3 +186,5 @@ mod history_edges;
 mod annotation_overlay_geometry;
 
 mod bim_history;
+
+pub mod scale_overlay;

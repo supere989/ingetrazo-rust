@@ -209,9 +209,44 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
                     ui.ctx().data_mut(|data| {
                         data.insert_temp(response.id.with("followme_press"), mouse_pos)
                     });
-                    app.dispatch_tool_click(&tool_ctx);
+                    if app.active_tool_type == ToolType::Scale {
+                        // Acquisition belongs to the press event, not the final
+                        // hover position after coalesced pointer motion.
+                        let press = ui.input(|input| input.events.iter().find_map(|event| match event {
+                            egui::Event::PointerButton { pos, button: egui::PointerButton::Primary, pressed: true, modifiers } => Some((*pos, *modifiers)),
+                            _ => None,
+                        }));
+                        if let Some((pos, modifiers)) = press {
+                            ui.ctx().data_mut(|data| data.insert_temp(response.id.with("followme_press"), pos));
+                            let mut press_ctx = tool_ctx.clone();
+                            press_ctx.screen = Some(glam::DVec2::new((pos.x-rect.min.x) as f64,(pos.y-rect.min.y) as f64));
+                            press_ctx.shift_held = modifiers.shift;
+                            press_ctx.ctrl_held = modifiers.ctrl || modifiers.command;
+                            press_ctx.alt_held = modifiers.alt;
+                            let screen = press_ctx.screen.unwrap();
+                            press_ctx.ray = app.camera.screen_to_ray(screen.x,screen.y,rect.width() as f64,rect.height() as f64);
+                            if pos != mouse_pos && app.active_tool.pending_model_preview() {
+                                let (point,normal)=cursor_work_plane(app,&press_ctx.ray);
+                                let candidate=Plane::new(point,normal).intersect_ray(&press_ctx.ray).filter(|t| *t>0.).map_or(point,|t|press_ctx.ray.at(t));
+                                let context=ingetrazo_core::snap_screen::ScreenSnapContext {viewport:ingetrazo_core::screen_pick::PixelViewport::new(&app.camera,rect.width() as f64,rect.height() as f64),cursor:screen,candidate,plane_normal:normal};
+                                let press_snap=app.snap_engine.snap_screen_with_policy(&press_ctx.ray,&app.scene,app.active_tool.snap_anchor(),app.active_tool.snap_close(),&context,&ingetrazo_core::snap_screen::ScreenSnapPolicy {exclusions:app.active_tool.snap_exclusions(),magnetic_axis_deg:app.active_tool.magnetic_axis_deg(),screen_axis_px:app.active_tool.screen_axis_px(),face_under_cursor:ingetrazo_core::screen_pick::hover_face(&app.scene,&press_ctx.ray).is_some()});
+                                press_ctx.world=press_snap.point;
+                                app.active_tool.note_snap_result(&press_snap);
+                            }
+                            app.dispatch_tool_click(&press_ctx);
+                            app.active_tool.note_snap_result(&snap_res);
+                        }
+                    } else {
+                        app.dispatch_tool_click(&tool_ctx);
+                    }
                 }
-                app.dispatch_tool_move(&tool_ctx);
+                let scale_motion = app.active_tool_type == ToolType::Scale && ui.input(|input| {
+                    let press = input.events.iter().rposition(|event| matches!(event, egui::Event::PointerButton { button: egui::PointerButton::Primary, pressed: true, .. }));
+                    input.events.iter().enumerate().any(|(index,event)| matches!(event,egui::Event::PointerMoved(_)) && press.is_none_or(|press| index > press))
+                });
+                if app.active_tool_type != ToolType::Scale || scale_motion {
+                    app.dispatch_tool_move(&tool_ctx);
+                }
                 if follow_me {
                     ui.ctx().data_mut(|data| {
                         data.insert_temp(response.id.with("followme_context"), tool_ctx.clone())
@@ -411,9 +446,9 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
     if let Some(state)=app.active_tool.scale_box_state() {
         let viewport=ingetrazo_core::screen_pick::PixelViewport::new(&app.camera,rect.width() as f64,rect.height() as f64);
         let project=|p|viewport.project_for_snapping(p).map(|p|rect.min+egui::vec2(p.x as f32,p.y as f32));
-        for (a,b) in state.segments {if let (Some(a),Some(b))=(project(a),project(b)){
+        for (a,b) in state.segments {if let Some((a,b))=crate::scale_overlay::clip_segment_front(viewport.matrix,a,b){if let (Some(a),Some(b))=(project(a),project(b)){
             painter.line_segment([a,b],egui::Stroke::new(1.,egui::Color32::from_rgb(214,174,0)));
-        }}
+        }}}
         for (p,active) in state.grips {if let Some(p)=project(p){
             let color=if active{egui::Color32::from_rgb(220,40,40)}else{egui::Color32::from_rgb(60,160,60)};
             let square=egui::Rect::from_center_size(p,egui::Vec2::splat(if active{10.}else{8.}));
