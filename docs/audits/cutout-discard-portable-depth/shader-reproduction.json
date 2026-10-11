@@ -1,0 +1,23 @@
+{
+  "tool": "shaderc=0.8.3; compile_into_spirv source kind fragment, entry main, options None",
+  "command": "ingetrazo-image-shader-compiler INPUT OUTPUT",
+  "tool_sha256": "61e575f778907c65950640430a81cd7218f3df68e1cfb6c3d3b2ea04615169fa",
+  "compiler_source_in_archive": "protocol/shader-compiler",
+  "rows": [
+    {
+      "source": "crates/ingetrazo-gui/src/native_vulkan/shaders/texture.frag",
+      "source_sha256": "92536fedaf26eb45f4711ea075117f5b1539a6f24f7615fed8e50cceeb7693fb",
+      "spirv_sha256": "29e6af54fad4c4aa614cf93fe87ae8e562ea04338a6c089f4d698a48106bf288"
+    },
+    {
+      "source": "crates/ingetrazo-gui/src/native_vulkan/shaders/texture_shadow.frag",
+      "source_sha256": "1e2356b811159c39be876d533bd48e741b8b230af1ed51faeb06fd11900bb1f3",
+      "spirv_sha256": "221b680cb42042bf7c469bff1e73de33bf393d7b360d68b30385c4c99794f3b7"
+    },
+    {
+      "source": "crates/ingetrazo-gui/src/native_vulkan/shaders/texture_shadow_terminate.frag",
+      "source_sha256": "5b1470e55e47cb21c4ca7bc57d09425fe145c1a028d8e9f4cba5bbeb0b205bc6",
+      "spirv_sha256": "bfe8ac2cb5d227c23ce76c0241eb7e9e333adefd1308ee16624558ca31efccf5"
+    }
+  ]
+}

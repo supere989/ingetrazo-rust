@@ -1,0 +1,366 @@
+[
+  {
+    "mode": "native",
+    "case": "cutout",
+    "phase": "on",
+    "pixels": 0,
+    "max": 0
+  },
+  {
+    "mode": "native",
+    "case": "cutout",
+    "phase": "off",
+    "pixels": 0,
+    "max": 0
+  },
+  {
+    "mode": "native",
+    "case": "cutout",
+    "phase": "restored",
+    "pixels": 0,
+    "max": 0
+  },
+  {
+    "mode": "native",
+    "case": "cutout",
+    "phase": "depth",
+    "pixels": 0,
+    "max": 0
+  },
+  {
+    "mode": "heldout",
+    "case": "cutout-perspective",
+    "phase": "on",
+    "pixels": 0,
+    "max": 0
+  },
+  {
+    "mode": "heldout",
+    "case": "cutout-perspective",
+    "phase": "off",
+    "pixels": 0,
+    "max": 0
+  },
+  {
+    "mode": "heldout",
+    "case": "cutout-perspective",
+    "phase": "restored",
+    "pixels": 0,
+    "max": 0
+  },
+  {
+    "mode": "heldout",
+    "case": "cutout-perspective",
+    "phase": "depth",
+    "pixels": 0,
+    "max": 0
+  },
+  {
+    "mode": "heldout",
+    "case": "cutout-quarter-alpha",
+    "phase": "on",
+    "pixels": 0,
+    "max": 0
+  },
+  {
+    "mode": "heldout",
+    "case": "cutout-quarter-alpha",
+    "phase": "off",
+    "pixels": 0,
+    "max": 0
+  },
+  {
+    "mode": "heldout",
+    "case": "cutout-quarter-alpha",
+    "phase": "restored",
+    "pixels": 0,
+    "max": 0
+  },
+  {
+    "mode": "heldout",
+    "case": "cutout-quarter-alpha",
+    "phase": "depth",
+    "pixels": 0,
+    "max": 0
+  },
+  {
+    "mode": "heldout",
+    "case": "cutout-threshold-alpha",
+    "phase": "on",
+    "pixels": 0,
+    "max": 0
+  },
+  {
+    "mode": "heldout",
+    "case": "cutout-threshold-alpha",
+    "phase": "off",
+    "pixels": 0,
+    "max": 0
+  },
+  {
+    "mode": "heldout",
+    "case": "cutout-threshold-alpha",
+    "phase": "restored",
+    "pixels": 0,
+    "max": 0
+  },
+  {
+    "mode": "heldout",
+    "case": "cutout-threshold-alpha",
+    "phase": "depth",
+    "pixels": 0,
+    "max": 0
+  },
+  {
+    "mode": "portable",
+    "case": "billboard-mesh-placement-order",
+    "phase": "on",
+    "pixels": 0,
+    "max": 0
+  },
+  {
+    "mode": "portable",
+    "case": "billboard-mesh-placement-order",
+    "phase": "off",
+    "pixels": 0,
+    "max": 0
+  },
+  {
+    "mode": "portable",
+    "case": "billboard-mesh-placement-order",
+    "phase": "restored",
+    "pixels": 0,
+    "max": 0
+  },
+  {
+    "mode": "portable",
+    "case": "billboard-mesh-placement-order",
+    "phase": "depth",
+    "pixels": 0,
+    "max": 0
+  },
+  {
+    "mode": "portable",
+    "case": "billboard-bitmap-empty-parent",
+    "phase": "on",
+    "pixels": 0,
+    "max": 0
+  },
+  {
+    "mode": "portable",
+    "case": "billboard-bitmap-empty-parent",
+    "phase": "off",
+    "pixels": 0,
+    "max": 0
+  },
+  {
+    "mode": "portable",
+    "case": "billboard-bitmap-empty-parent",
+    "phase": "restored",
+    "pixels": 0,
+    "max": 0
+  },
+  {
+    "mode": "portable",
+    "case": "billboard-bitmap-empty-parent",
+    "phase": "depth",
+    "pixels": 0,
+    "max": 0
+  },
+  {
+    "mode": "portable",
+    "case": "billboard-bitmap-nested-reflection",
+    "phase": "on",
+    "pixels": 0,
+    "max": 0
+  },
+  {
+    "mode": "portable",
+    "case": "billboard-bitmap-nested-reflection",
+    "phase": "off",
+    "pixels": 0,
+    "max": 0
+  },
+  {
+    "mode": "portable",
+    "case": "billboard-bitmap-nested-reflection",
+    "phase": "restored",
+    "pixels": 0,
+    "max": 0
+  },
+  {
+    "mode": "portable",
+    "case": "billboard-bitmap-nested-reflection",
+    "phase": "depth",
+    "pixels": 0,
+    "max": 0
+  },
+  {
+    "mode": "portable",
+    "case": "solid",
+    "phase": "on",
+    "pixels": 0,
+    "max": 0
+  },
+  {
+    "mode": "portable",
+    "case": "solid",
+    "phase": "off",
+    "pixels": 0,
+    "max": 0
+  },
+  {
+    "mode": "portable",
+    "case": "solid",
+    "phase": "restored",
+    "pixels": 0,
+    "max": 0
+  },
+  {
+    "mode": "portable",
+    "case": "solid",
+    "phase": "depth",
+    "pixels": 0,
+    "max": 0
+  },
+  {
+    "mode": "portable",
+    "case": "billboard-bitmap-hardcutout",
+    "phase": "on",
+    "pixels": 0,
+    "max": 0
+  },
+  {
+    "mode": "portable",
+    "case": "billboard-bitmap-hardcutout",
+    "phase": "off",
+    "pixels": 0,
+    "max": 0
+  },
+  {
+    "mode": "portable",
+    "case": "billboard-bitmap-hardcutout",
+    "phase": "restored",
+    "pixels": 0,
+    "max": 0
+  },
+  {
+    "mode": "portable",
+    "case": "billboard-bitmap-hardcutout",
+    "phase": "depth",
+    "pixels": 0,
+    "max": 0
+  },
+  {
+    "mode": "portable",
+    "case": "billboard-bitmap-perspective",
+    "phase": "on",
+    "pixels": 0,
+    "max": 0
+  },
+  {
+    "mode": "portable",
+    "case": "billboard-bitmap-perspective",
+    "phase": "off",
+    "pixels": 0,
+    "max": 0
+  },
+  {
+    "mode": "portable",
+    "case": "billboard-bitmap-perspective",
+    "phase": "restored",
+    "pixels": 0,
+    "max": 0
+  },
+  {
+    "mode": "portable",
+    "case": "billboard-bitmap-perspective",
+    "phase": "depth",
+    "pixels": 0,
+    "max": 0
+  },
+  {
+    "mode": "portable",
+    "case": "cutout",
+    "phase": "on",
+    "pixels": 0,
+    "max": 0
+  },
+  {
+    "mode": "portable",
+    "case": "cutout",
+    "phase": "off",
+    "pixels": 0,
+    "max": 0
+  },
+  {
+    "mode": "portable",
+    "case": "cutout",
+    "phase": "restored",
+    "pixels": 0,
+    "max": 0
+  },
+  {
+    "mode": "portable",
+    "case": "cutout",
+    "phase": "depth",
+    "pixels": 0,
+    "max": 0
+  },
+  {
+    "mode": "portable",
+    "case": "section",
+    "phase": "on",
+    "pixels": 0,
+    "max": 0
+  },
+  {
+    "mode": "portable",
+    "case": "section",
+    "phase": "off",
+    "pixels": 0,
+    "max": 0
+  },
+  {
+    "mode": "portable",
+    "case": "section",
+    "phase": "restored",
+    "pixels": 0,
+    "max": 0
+  },
+  {
+    "mode": "portable",
+    "case": "section",
+    "phase": "depth",
+    "pixels": 38486,
+    "max": 255
+  },
+  {
+    "mode": "legacy",
+    "case": "cutout",
+    "phase": "on",
+    "pixels": 286,
+    "max": 75
+  },
+  {
+    "mode": "legacy",
+    "case": "cutout",
+    "phase": "off",
+    "pixels": 0,
+    "max": 0
+  },
+  {
+    "mode": "legacy",
+    "case": "cutout",
+    "phase": "restored",
+    "pixels": 286,
+    "max": 75
+  },
+  {
+    "mode": "legacy",
+    "case": "cutout",
+    "phase": "depth",
+    "pixels": 0,
+    "max": 0
+  }
+]
