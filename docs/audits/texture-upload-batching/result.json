@@ -1,0 +1,90 @@
+{
+  "passed": true,
+  "comparisons": [
+    {
+      "case": "near",
+      "consumer": "native-final",
+      "pixels": 0,
+      "max_channel": 0
+    },
+    {
+      "case": "near",
+      "consumer": "native-prior-consumer",
+      "pixels": 0,
+      "max_channel": 0
+    },
+    {
+      "case": "near",
+      "consumer": "historical-single-sample",
+      "scope": "intentional sample-count mismatch retained",
+      "pixels": 1902,
+      "max_channel": 127
+    },
+    {
+      "case": "far",
+      "consumer": "native-final",
+      "pixels": 0,
+      "max_channel": 0
+    },
+    {
+      "case": "far",
+      "consumer": "native-prior-consumer",
+      "pixels": 0,
+      "max_channel": 0
+    },
+    {
+      "case": "far",
+      "consumer": "historical-single-sample",
+      "scope": "intentional sample-count mismatch retained",
+      "pixels": 573,
+      "max_channel": 82
+    }
+  ],
+  "source_samples_exact": 30,
+  "old_image_submissions": 5,
+  "new_image_submissions": 1,
+  "old_staging_bytes": 262144,
+  "new_staging_bytes": 315536,
+  "cold_wall_ms": {
+    "old": 7.36107,
+    "new": 13.463348,
+    "scope": "single comparable full World.set_scene measurement; not a throughput benchmark"
+  },
+  "large": {
+    "extent": [
+      2048,
+      2176
+    ],
+    "cold": {
+      "buffer_allocations": 1,
+      "allocation_bytes_total": 8388608,
+      "buffer_destructions": 0,
+      "upload_calls": 0,
+      "staging_allocations": 1,
+      "transfer_command_allocations": 1,
+      "transfer_fence_creations": 1,
+      "transfer_submissions": 3,
+      "bytes": 0,
+      "chunks": 3,
+      "staging_peak": 8388608,
+      "direct_mapped_bytes": 0,
+      "readback_bytes": 0,
+      "readback_staging_peak": 0,
+      "image_transfer_submissions": 3,
+      "image_upload_calls": 1,
+      "image_bytes": 17825792,
+      "image_mips_generated": 11,
+      "upload_staging_maps": 1,
+      "upload_staging_unmaps": 0
+    },
+    "sampled_allocation_bytes": 24424448,
+    "raw_bytes": 17825792,
+    "encoded_bytes": 91513,
+    "all_base_bytes_exact": true,
+    "warm_uploads": 0,
+    "actual_budget_refusal": "A error occured when using the allocator: GPU allocation 24424448 exceeds global application budget 32813056",
+    "completed_retirement": 1,
+    "ledger_final": 0
+  },
+  "scope": "actual direct production Vulkan World consumer; power-of-two mip/control images exact, known odd-size source-mip differences and broader streaming remain open"
+}
