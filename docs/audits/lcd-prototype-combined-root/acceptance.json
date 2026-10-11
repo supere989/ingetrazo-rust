@@ -1,0 +1,17 @@
+{
+  "source": "9c1c3251",
+  "command": "cargo test --workspace --locked -j2",
+  "environment": {
+    "CARGO_PROFILE_DEV_DEBUG": "0",
+    "CARGO_PROFILE_TEST_DEBUG": "0",
+    "CARGO_INCREMENTAL": "0"
+  },
+  "exit_code": 0,
+  "passed": 756,
+  "failed": 0,
+  "ignored": 2,
+  "log_sha256": "57673c5c8030e1ea228b89fda18a230fdf187327b833f806fdbdc170577bf981",
+  "shader_rebuild": "Exact byte match using retained shaderc compiler",
+  "shader_sha256": "9b1d6ef2665b837a6eaaefc5eb8fdfd1738074ace67259f8ebe72c2038f70eb8",
+  "boundary": "Workspace tests do not establish actual merged GPU scene or full Python parity."
+}
