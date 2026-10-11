@@ -85,6 +85,7 @@ impl Default for FreehandTool {
 }
 
 impl Tool for FreehandTool {
+    fn uses_snap(&self)->bool{false}
     fn error_message(&self)->Option<&str>{self.error.as_deref()}
     fn drawing_plane(&self)->Option<(DVec3,DVec3)>{self.work_plane}
     fn note_cursor_plane(&mut self,_point:DVec3,normal:DVec3){if !self.drawing{self.hover_normal=normal;}}
@@ -106,7 +107,7 @@ impl Tool for FreehandTool {
             self.work_plane=Some((ctx.world,crate::base::pick_scene_face(scene,&ctx.ray).map(|(i,_,_)|scene.mesh.face_normal(i)).unwrap_or(self.hover_normal)));
             self.drawing = true;
             self.points.clear();self.screen.clear();self.error=None;
-            self.points.push(ctx.world);if let Some(p)=ctx.screen{self.screen.push(p);}
+            self.points.push(ctx.world.as_vec3().as_dvec3());if let Some(p)=ctx.screen{self.screen.push(p);}
         } else {
             // Commit drawing on second click / release
             self.commit(scene);
@@ -117,7 +118,7 @@ impl Tool for FreehandTool {
         if self.drawing {
             if let Some(&last)=self.points.last(){
                 let sample=match (ctx.screen,self.screen.last()){(Some(p),Some(q))=>p.distance(*q)>=3.,_=>ctx.world.distance(last)>0.02};
-                if sample{self.points.push(ctx.world);if let Some(p)=ctx.screen{self.screen.push(p);}}
+                if sample{self.points.push(ctx.world.as_vec3().as_dvec3());if let Some(p)=ctx.screen{self.screen.push(p);}}
             }
 
         }

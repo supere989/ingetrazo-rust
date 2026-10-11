@@ -1,0 +1,179 @@
+[
+  {
+    "name": "sampling-below-exact-above",
+    "phases": [
+      "activated",
+      "0-press",
+      "1-move",
+      "2-move",
+      "3-move",
+      "4-move",
+      "5-move",
+      "6-release",
+      "7-undo",
+      "8-redo"
+    ]
+  },
+  {
+    "name": "rdp-1.599",
+    "phases": [
+      "activated",
+      "0-press",
+      "1-move",
+      "2-move",
+      "3-release",
+      "4-undo",
+      "5-redo"
+    ]
+  },
+  {
+    "name": "rdp-1.6",
+    "phases": [
+      "activated",
+      "0-press",
+      "1-move",
+      "2-move",
+      "3-release",
+      "4-undo",
+      "5-redo"
+    ]
+  },
+  {
+    "name": "rdp-1.601",
+    "phases": [
+      "activated",
+      "0-press",
+      "1-move",
+      "2-move",
+      "3-release",
+      "4-undo",
+      "5-redo"
+    ]
+  },
+  {
+    "name": "closure-9.999",
+    "phases": [
+      "activated",
+      "0-press",
+      "1-move",
+      "2-move",
+      "3-move",
+      "4-move",
+      "5-release",
+      "6-undo",
+      "7-redo"
+    ]
+  },
+  {
+    "name": "closure-10",
+    "phases": [
+      "activated",
+      "0-press",
+      "1-move",
+      "2-move",
+      "3-move",
+      "4-move",
+      "5-release",
+      "6-undo",
+      "7-redo"
+    ]
+  },
+  {
+    "name": "closure-10.001",
+    "phases": [
+      "activated",
+      "0-press",
+      "1-move",
+      "2-move",
+      "3-move",
+      "4-move",
+      "5-release",
+      "6-undo",
+      "7-redo"
+    ]
+  },
+  {
+    "name": "short-stroke-noop",
+    "phases": [
+      "activated",
+      "0-press",
+      "1-move",
+      "2-release",
+      "3-undo",
+      "4-redo"
+    ]
+  },
+  {
+    "name": "vertical-plane",
+    "phases": [
+      "activated",
+      "0-press",
+      "1-move",
+      "2-move",
+      "3-move",
+      "4-move",
+      "5-release",
+      "6-undo",
+      "7-redo"
+    ]
+  },
+  {
+    "name": "oblique-plane",
+    "phases": [
+      "activated",
+      "0-press",
+      "1-move",
+      "2-move",
+      "3-move",
+      "4-move",
+      "5-release",
+      "6-undo",
+      "7-redo"
+    ]
+  },
+  {
+    "name": "cancel-release-repeat",
+    "phases": [
+      "activated",
+      "0-press",
+      "1-move",
+      "2-move",
+      "3-move",
+      "4-move",
+      "5-release",
+      "6-press",
+      "7-move",
+      "8-cancel",
+      "9-release",
+      "10-press",
+      "11-move",
+      "12-move",
+      "13-release",
+      "14-undo",
+      "15-redo"
+    ]
+  },
+  {
+    "name": "cancel-active-repeat",
+    "phases": [
+      "activated",
+      "0-press",
+      "1-move",
+      "2-move",
+      "3-move",
+      "4-move",
+      "5-release",
+      "6-press",
+      "7-move",
+      "8-move",
+      "9-cancel",
+      "10-press",
+      "11-move",
+      "12-move",
+      "13-release",
+      "14-undo",
+      "15-redo",
+      "16-undo"
+    ]
+  }
+]

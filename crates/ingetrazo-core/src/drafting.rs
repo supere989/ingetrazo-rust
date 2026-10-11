@@ -743,7 +743,7 @@ fn resplit_curves(mesh: &mut Mesh) -> Result<(), String> {
     for (id, edges) in ids {
         let breaks = |v: usize| {
             let incident = &mesh.vertices[v].edges;
-            let degree = incident.iter().filter(|e| edges.contains(e)).count();
+            let degree = incident.iter().filter(|&&e| mesh.edges[e].curve_id==Some(id)).count();
             degree != 2 || incident.len() != degree
         };
         let mut seeds: Vec<_> = edges
@@ -1366,7 +1366,7 @@ pub fn add_segments_tagged_with_id(mesh:&Mesh,segments:&[(DVec3,DVec3)],explicit
         }
         out = planar::stitch_boundaries(&out)?;
     }
-    if flat_rebuild || scoped_curve_rebuild {
+    if flat_rebuild || scoped_curve_rebuild || source_flat.is_some() {
         resplit_curves(&mut out)?;
     }
     if source_flat.is_some()&&flat_rebuild{
