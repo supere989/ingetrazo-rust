@@ -4,7 +4,7 @@
 use super::*;
 use std::sync::Arc;
 use ingetrazo_render::annotations::{Plan,Primitive,Operation,Gate};
-struct Probe{plan:Arc<Plan>,cache:crate::annotation_overlay_geometry::Cache,handle:Option<cad2d::Handle>,failure:Option<String>,range_control:bool,byte_glyph_control:bool,queries:Arc<[annotation_visibility::Query]>,pending:Option<(cad2d::Handle,Arc<[annotation_visibility::Query]>)>,control_nonce:u64,cleared:bool,hold:bool}
+struct Probe{density:Option<f32>,handle_density:f32,plan:Arc<Plan>,cache:crate::annotation_overlay_geometry::Cache,handle:Option<cad2d::Handle>,failure:Option<String>,range_control:bool,byte_glyph_control:bool,widget_control:bool,queries:Arc<[annotation_visibility::Query]>,pending:Option<(cad2d::Handle,Arc<[annotation_visibility::Query]>)>,control_nonce:u64,cleared:bool,hold:bool}
 fn pair(value:&serde_json::Value)->Result<[f64;2],String>{let v=value.as_array().ok_or("Annotation point absent")?;if v.len()!=2{return Err("Annotation point inventory".into());}Ok([v[0].as_f64().ok_or("Annotation point x")?,v[1].as_f64().ok_or("Annotation point y")?])}
 fn color(value:&serde_json::Value)->Result<[u8;4],String>{let v=value.as_array().ok_or("Annotation color absent")?;if v.len()!=4{return Err("Annotation color inventory".into());}let mut result=[0;4];for(i,item)in v.iter().enumerate(){result[i]=u8::try_from(item.as_u64().ok_or("Annotation color byte")?).map_err(|_|"Annotation color range")?;}Ok(result)}
 fn source_plan(row:&serde_json::Value)->Result<Plan,String>{
@@ -69,7 +69,7 @@ impl Probe{
    };self.control_nonce=nonce;
   }}
   let stats=system.annotation_cad.as_ref().ok_or("Annotation renderer absent")?.stats();
-  let row=serde_json::json!({"nonce":self.control_nonce,"submitted_serial":system.draw_serial,"completed_present_serial":system.completed_present_serial_for_probe,"cleared":self.cleared,"held_refusal":self.hold,"geometry_uploads":stats.uploads,"cached_bytes":stats.cached_bytes,"rollback_buffers":stats.rolled_back_buffers,"query_uploads":system.world.as_ref().map_or(0,|world|world.annotation_query_uploads_for_probe()),"committed_bytes":system.memory_budget.ledger.lock().unwrap().total_committed()});
+  let row=serde_json::json!({"pixels_per_point":system.egui_ctx.pixels_per_point(),"nonce":self.control_nonce,"submitted_serial":system.draw_serial,"completed_present_serial":system.completed_present_serial_for_probe,"cleared":self.cleared,"held_refusal":self.hold,"geometry_uploads":stats.uploads,"cached_bytes":stats.cached_bytes,"rollback_buffers":stats.rolled_back_buffers,"query_uploads":system.world.as_ref().map_or(0,|world|world.annotation_query_uploads_for_probe()),"committed_bytes":system.memory_budget.ledger.lock().unwrap().total_committed()});
   let temporary=dir.join("state.tmp");std::fs::write(&temporary,serde_json::to_vec(&row).map_err(|e|e.to_string())?).map_err(|e|e.to_string())?;std::fs::rename(temporary,dir.join("state.json")).map_err(|e|e.to_string())?;Ok(())
  }
 }
@@ -91,25 +91,29 @@ impl App for Probe{
    system.world.as_mut().unwrap().set_scene(&system.vulkan_context,&ingetrazo_core::scene::Scene::new(),&ingetrazo_core::camera::OrbitCamera::default(),&ingetrazo_render::style::StyleConfig::default(),system.fence,system.draw_serial,1)?;
    Ok::<_,String>((plan,cache,range_control))
   })();
-  match result{Ok((plan,cache,range_control))=>Self{plan,cache,handle:None,failure:None,range_control,byte_glyph_control:std::env::var_os("INGETRAZO_ANNOTATION_GLYPH_BYTE_CONTROL").is_some(),queries:Arc::from([annotation_visibility::Query{pixel:[0;2],normalized:[0.;2],threshold:0.,active:0,_padding:[0;2]}]),pending:None,control_nonce:0,cleared:false,hold:false},Err(error)=>panic!("Annotation fixture admission: {error}")}
+  match result{Ok((plan,cache,range_control))=>Self{density:std::env::var("INGETRAZO_ANNOTATION_DENSITY_PROBE").ok().map(|s|{let d=s.parse::<f32>().expect("Annotation density probe finite number");assert!([1.,1.25,1.5,2.].contains(&d));d}),handle_density:0.,plan,cache,handle:None,failure:None,range_control,widget_control:std::env::var_os("INGETRAZO_ANNOTATION_WIDGET_CONTROL").is_some(),byte_glyph_control:std::env::var_os("INGETRAZO_ANNOTATION_GLYPH_BYTE_CONTROL").is_some(),queries:Arc::from([annotation_visibility::Query{pixel:[0;2],normalized:[0.;2],threshold:0.,active:0,_padding:[0;2]}]),pending:None,control_nonce:0,cleared:false,hold:false},Err(error)=>panic!("Annotation fixture admission: {error}")}
  }
- fn prepare_gpu(&mut self,system:&mut System,_:bool){
+ fn prepare_gpu(&mut self,system:&mut System,before_ui:bool){
+  if before_ui{return;}
   let result=(||{
    let factory=system.annotation_factory()?;
-   if self.range_control{self.control(system,&factory)?;}
+   if self.range_control||self.widget_control{self.control(system,&factory)?;}
    if self.hold{return Err("Annotation controlled replacement held after actual admission refusal".into());}
-   if self.cleared{system.clear_annotation_overlay()?;return Ok(());}
-   if self.plan.operations.is_empty(){system.clear_annotation_overlay()?;return Ok(());}
-   if self.handle.is_none(){let mesh=if self.range_control{range_mesh(system.egui_ctx.pixels_per_point(),false)?}else{self.cache.prepare_clipped(self.plan.clone(),system.egui_ctx.pixels_per_point(),96.,[0,0,640,400])?};let draws=if self.byte_glyph_control{mesh.gates.iter().copied().map(|mut draw|{draw.composition=crate::annotation_overlay_geometry::Composition::SpanByte;draw}).collect::<Vec<_>>().into()}else{mesh.gates.clone()};self.handle=Some(factory.annotation_handle(mesh.geometry.clone(),mesh.batches.clone(),ingetrazo_render::cad2d::Pose::default(),draws)?);}
+   if self.cleared{system.clear_annotation_overlay()?;system.annotation_ready_shape=None;return Ok(());}
+   if self.plan.operations.is_empty(){system.clear_annotation_overlay()?;system.annotation_ready_shape=None;return Ok(());}
+   let density=system.egui_ctx.pixels_per_point();if self.handle.is_some()&&self.handle_density!=density{self.handle=None;}
+   if self.handle.is_none(){self.handle_density=density;let mesh=if self.range_control{range_mesh(system.egui_ctx.pixels_per_point(),false)?}else if self.widget_control{self.cache.prepare_widget_clipped(self.plan.clone(),system.egui_ctx.pixels_per_point(),96.,[0,0,640,400])?}else{self.cache.prepare_clipped(self.plan.clone(),system.egui_ctx.pixels_per_point(),96.,[0,0,640,400])?};let draws=if self.byte_glyph_control{mesh.gates.iter().copied().map(|mut draw|{draw.composition=crate::annotation_overlay_geometry::Composition::SpanByte;draw}).collect::<Vec<_>>().into()}else{mesh.gates.clone()};self.handle=Some(factory.annotation_handle(mesh.geometry.clone(),mesh.batches.clone(),ingetrazo_render::cad2d::Pose::default(),draws)?);}
    system.prepare_annotation_overlay(self.handle.as_ref().unwrap(),self.queries.clone(),glam::Mat4::IDENTITY.to_cols_array(),[0.;3],[0.,0.,-1.],0)?;
+   system.annotation_ready_shape=Some(self.handle.as_ref().unwrap().shape(egui::Rect::NOTHING));
    Ok::<(),String>(())
   })();self.failure=result.as_ref().err().cloned();system.annotation_prepare_error=self.failure.clone();
   if let Err(error)=result{self.gpu_error(&error);}
  }
  fn build_ui(&mut self,ctx:&Context){
+  if let Some(density)=self.density{ctx.set_pixels_per_point(density);}
   if std::env::var_os("INGETRAZO_ANNOTATION_CONTROL_DIR").is_some(){ctx.request_repaint_after(std::time::Duration::from_millis(16));}
   let rect=ctx.screen_rect();let painter=ctx.layer_painter(egui::LayerId::background());painter.rect_filled(rect,0.,egui::Color32::WHITE);
-  if let Some(handle)=&self.handle{let canvas=egui::Rect::from_min_size(rect.min,egui::vec2(640.,400.));painter.with_clip_rect(canvas).add(handle.shape(canvas));}
+  let canvas=egui::Rect::from_min_size(rect.min,egui::vec2(640.,400.));if let egui::Shape::Callback(mut slot)=annotation_slot(){slot.rect=canvas;painter.with_clip_rect(canvas).add(egui::Shape::Callback(slot));}
  }
  fn gpu_error(&mut self,error:&str){eprintln!("Annotation fixture GPU refusal: {error}");}
 }

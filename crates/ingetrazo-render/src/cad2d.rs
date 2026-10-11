@@ -74,6 +74,7 @@ impl SourceSpans {
 #[derive(Debug)]
 pub struct AnnotationLayers {grid:SourceSpans,direct:Arc<[std::ops::Range<u32>]>}
 impl AnnotationLayers {
+ pub fn ppp(&self)->f32{self.grid.ppp()}
  pub fn translation(&self,pose:Pose,ppp:f32)->Result<[i32;2],String>{self.grid.translation(pose,ppp)}
  pub fn direct_ranges(&self)->&[std::ops::Range<u32>]{&self.direct}
  pub fn overlaps_direct(&self,first:u32,count:u32)->bool{
@@ -114,7 +115,7 @@ impl Geometry {
  /// are bounded to the same million-pixel domain as the rasterizer.
  pub fn validate_ordered_pose(&self,pose:Pose,ppp:f32)->Result<(),String>{
   pose.validate()?;if !ppp.is_finite()||ppp<=0.{return Err("Invalid CAD2D physical density".into());}
-  if self.ordered_draws.is_some(){for v in self.bounds{for axis in 0..2{let product=v[axis]*pose.scale[axis];let sum=product+pose.translation[axis];if !product.is_finite()||!sum.is_finite()||!(sum*2.).is_finite(){return Err("CAD2D pose overflows shader f32 intermediates".into());}let p=(f64::from(v[axis])*f64::from(pose.scale[axis])+f64::from(pose.translation[axis]))*f64::from(ppp);if !p.is_finite()||p.abs()>1_000_000.{return Err("CAD2D ordered pose exceeds bounded physical domain".into());}}}}Ok(())
+  if self.ordered_draws.is_some(){for v in self.bounds{for axis in 0..2{let product=v[axis]*pose.scale[axis];let sum=product+pose.translation[axis];let physical=sum*ppp;if !product.is_finite()||!sum.is_finite()||!(sum*2.).is_finite()||!physical.is_finite()||physical.abs()>1_000_000.{return Err("CAD2D pose overflows shader f32 intermediates".into());}let p=(f64::from(v[axis])*f64::from(pose.scale[axis])+f64::from(pose.translation[axis]))*f64::from(ppp);if !p.is_finite()||p.abs()>1_000_000.{return Err("CAD2D ordered pose exceeds bounded physical domain".into());}}}}Ok(())
  }
  pub fn source_spans(&self)->Option<&Arc<SourceSpans>>{self.source_spans.as_ref()}
  pub fn annotation_layers(&self)->Option<&Arc<AnnotationLayers>>{self.annotation_layers.as_ref()}

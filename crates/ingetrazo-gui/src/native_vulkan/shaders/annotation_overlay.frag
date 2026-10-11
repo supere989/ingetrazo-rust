@@ -8,19 +8,27 @@ layout(set=0,binding=1,std430) readonly buffer Visibility {uint hidden[];};
 // Qt6.12 QRgba64 multiplyAlpha65535: exact integer intermediates, no float blend.
 uvec4 mul16(uvec4 value,uint alpha){uvec4 t=value*alpha+32768u;return (t+(t>>16u))>>16u;}
 uvec4 store8(uvec4 value){uvec4 t=value+128u;return (t-(t>>8u))>>8u;}
-bool source_edge(vec2 a,vec2 b,vec2 sample_point){
- vec2 d=b-a;vec2 q=sample_point-a;
- precise float edge=d.x*q.y-d.y*q.x;
- return edge>0.0||(edge==0.0&&(d.y<0.0||(d.y==0.0&&d.x<0.0)));
+// Source NVIDIA GL_SUBPIXEL_BITS=8. Signed 32x32 products are retained
+// as two words, so edge tests do not lose integer ownership to float rounding
+// and no shaderInt64 capability is required.
+uvec2 product64(int a,int b){int hi;int lo;imulExtended(a,b,hi,lo);return uvec2(uint(lo),uint(hi));}
+uvec2 subtract64(uvec2 a,uvec2 b){return uvec2(a.x-b.x,a.y-b.y-uint(a.x<b.x));}
+uvec2 edge64(ivec2 a,ivec2 b,ivec2 p){ivec2 d=b-a;ivec2 q=p-a;return subtract64(product64(d.x,q.y),product64(d.y,q.x));}
+bool positive64(uvec2 v){return int(v.y)>0||(v.y==0u&&v.x!=0u);}
+bool source_edge(ivec2 a,ivec2 b,ivec2 sample_point){
+ ivec2 d=b-a;uvec2 edge=edge64(a,b,sample_point);
+ return positive64(edge)||(all(equal(edge,uvec2(0)))&&(d.y<0||(d.y==0&&d.x<0)));
 }
 void main(){
  if((push.gates.x!=0xffffffffu&&hidden[push.gates.x]!=0u)||(push.gates.y!=0xffffffffu&&hidden[push.gates.y]!=0u)){discard;}
  if(push.composition==3u){
-  vec2 a=vec2(push.ax,push.ay);vec2 b=vec2(push.bx,push.by);vec2 c=vec2(push.cx,push.cy);
-  vec2 ab=b-a;vec2 ac=c-a;precise float area=ab.x*ac.y-ab.y*ac.x;
-  if(area==0.0){discard;}
-  if(area<0.0){vec2 temporary=b;b=c;c=temporary;}
-  vec2 sample_point=floor(gl_FragCoord.xy)+vec2(0.5);
+  ivec2 a=ivec2(roundEven(vec2(push.ax,push.ay)*256.0));
+  ivec2 b=ivec2(roundEven(vec2(push.bx,push.by)*256.0));
+  ivec2 c=ivec2(roundEven(vec2(push.cx,push.cy)*256.0));
+  uvec2 area=edge64(a,b,c);
+  if(all(equal(area,uvec2(0)))){discard;}
+  if(!positive64(area)){ivec2 temporary=b;b=c;c=temporary;}
+  ivec2 sample_point=ivec2(floor(gl_FragCoord.xy))*256+ivec2(128);
   if(!source_edge(a,b,sample_point)||!source_edge(b,c,sample_point)||!source_edge(c,a,sample_point)){discard;}
   output_color=push.rgba;return;
  }

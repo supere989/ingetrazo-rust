@@ -141,6 +141,7 @@ impl Handle {
         geometry.validate_batches(&batches)?;pose.validate()?;
         if gates.len()!=batches.len(){return Err("Annotation gate/batch inventory mismatch".into());}
         admit_draw_colors(&gates,&batches)?;
+        admit_widget_triangles(&geometry,&gates,&batches)?;
         let palette=prepare_palette(&geometry,&batches)?;
         let mut state=self.inner.state.lock().map_err(|_|"Annotation state poisoned")?;
         state.geometry=geometry;state.batches=batches;state.premultiplied=palette;state.pose=pose;state.gates=Some(gates);Ok(())
@@ -274,8 +275,7 @@ fn record_ready<'a>(info:&egui::PaintCallbackInfo,device:&Device,command:vk::Com
                     let operator=match gate.composition{crate::annotation_overlay_geometry::Composition::SpanByte=>0u32,crate::annotation_overlay_geometry::Composition::WidgetTriangle(_)=>3u32,crate::annotation_overlay_geometry::Composition::GlyphRgba64Opaque=>1u32,crate::annotation_overlay_geometry::Composition::GlyphLcd(mask)=>2u32|(u32::from(mask[0])<<8)|(u32::from(mask[1])<<16)|(u32::from(mask[2])<<24)};
                     device.cmd_push_constants(command,p.layout,vk::ShaderStageFlags::VERTEX|vk::ShaderStageFlags::FRAGMENT,48,bytemuck::bytes_of(&operator));
                     if let crate::annotation_overlay_geometry::Composition::WidgetTriangle(bits)=gate.composition{
-                        let mut points=bits.map(f32::from_bits);
-                        for point in points.chunks_exact_mut(2){point[0]=(point[0]*pose.scale[0]+pose.translation[0])*scale;point[1]=(point[1]*pose.scale[1]+pose.translation[1])*scale;}
+                        let points=widget_triangle_points(bits,pose,scale).map_err(egui_ash_renderer::RendererError::Init)?;
                         device.cmd_push_constants(command,p.layout,vk::ShaderStageFlags::VERTEX|vk::ShaderStageFlags::FRAGMENT,52,bytemuck::cast_slice(&points));
                     }
                 }
@@ -339,6 +339,34 @@ fn admit_draw_colors(draws:&[crate::annotation_overlay_geometry::Draw],batches:&
  }
  Ok(())
 }
+/// Immutable coverage metadata must describe the admitted conservative quad.
+/// This cold proof ties original points to geometry bounds; the shared ordered
+/// pose proof then bounds every affine intermediate before GPU publication.
+fn admit_widget_triangles(geometry:&Geometry,draws:&[crate::annotation_overlay_geometry::Draw],batches:&[Batch])->Result<(),String>{
+ for(draw,batch)in draws.iter().zip(batches){
+  let crate::annotation_overlay_geometry::Composition::WidgetTriangle(bits)=draw.composition else{continue};
+  if batch.count!=6||!geometry.annotation_layers().is_some_and(|l|l.overlaps_direct(batch.first,batch.count)){return Err("Widget triangle must own one opaque conservative quad".into());}
+  let end=batch.first.checked_add(6).ok_or("Widget triangle index overflow")?;
+  let indices=geometry.indices().get(batch.first as usize..end as usize).ok_or("Widget triangle indices absent")?;
+  if indices[2]!=indices[3]||indices[1]!=indices[4]{return Err("Widget triangle conservative quad topology invalid".into());}
+  let vertices=geometry.vertices();let points=[vertices[indices[0]as usize].position,vertices[indices[1]as usize].position,vertices[indices[2]as usize].position,vertices[indices[5]as usize].position];
+  if points[0][0]!=points[2][0]||points[1][0]!=points[3][0]||points[0][1]!=points[1][1]||points[2][1]!=points[3][1]||points[0][0]>=points[1][0]||points[0][1]>=points[2][1]{return Err("Widget triangle conservative rectangle invalid".into());}
+  for point in bits.chunks_exact(2){for axis in 0..2{let value=f32::from_bits(point[axis]);if !value.is_finite()||value<points[0][axis]||value>points[3][axis]{return Err("Widget triangle point outside admitted geometry".into());}}}
+  let original=bits.map(f32::from_bits);let pad=(0.5/f64::from(geometry.annotation_layers().unwrap().ppp()))as f32;
+  let expected_min=[original[0].min(original[2]).min(original[4])-pad,original[1].min(original[3]).min(original[5])-pad];
+  let expected_max=[original[0].max(original[2]).max(original[4])+pad,original[1].max(original[3]).max(original[5])+pad];
+  if points[0]!=expected_min||points[3]!=expected_max{return Err("Widget triangle conservative expansion differs from source metadata".into());}
+ }
+ Ok(())
+}
+fn widget_triangle_points(bits:[u32;6],pose:Pose,density:f32)->Result<[f32;6],String>{
+ let mut points=bits.map(f32::from_bits);
+ for point in points.chunks_exact_mut(2){for axis in 0..2{
+  let product=point[axis]*pose.scale[axis];let translated=product+pose.translation[axis];let physical=translated*density;
+  if !product.is_finite()||!translated.is_finite()||!physical.is_finite()||physical.abs()>1_000_000.{return Err("Widget triangle physical arithmetic outside admitted domain".into());}
+  point[axis]=physical;
+ }}Ok(points)
+}
 fn prepare_palette(geometry:&Geometry,batches:&[Batch])->Result<Arc<[[f32;4]]>,String>{geometry.resolve_batch_colors(batches).map(Arc::from)}
 /// A distinct callback type prevents the ordinary CAD preparation cache from
 /// consuming or publishing annotation geometry.
@@ -385,6 +413,7 @@ impl Factory{
   if !self.pipeline.lock().map_err(|_|"CAD2D pipeline poisoned")?.annotations {return Err("Annotation factory requires gated pipeline".into());}
   if gates.len()!=batches.len(){return Err("Annotation gate/batch inventory mismatch".into());}
         admit_draw_colors(&gates,&batches)?;
+        admit_widget_triangles(&geometry,&gates,&batches)?;
   let mut handle=self.handle(geometry,batches,pose)?;
   handle.inner.state.lock().map_err(|_|"Annotation state poisoned")?.gates=Some(gates);
   handle.callback=Arc::new(VulkanPaintCallback(Arc::new(AnnotationPaint(handle.inner.clone()))));
@@ -1107,6 +1136,25 @@ mod annotation_gate_tests {
    assert!(admit_draw_colors(&[draw],&[batch]).is_ok());
    draw.straight_rgba[3]^=1;assert!(admit_draw_colors(&[draw],&[batch]).is_err());
   }
+ }
+ #[test]fn widget_triangle_metadata_pose_and_density_admission(){
+  use crate::annotation_overlay_geometry::{Draw,Composition};
+  use ingetrazo_render::cad2d::{AnnotationLayer,Vertex,EncodedRgba};
+  let original=[20.5f32,20.4999,80.5,20.4999,20.5,80.5];let bits=original.map(f32::to_bits);
+  let raw=[17,89,203,255];let batch=Batch{first:0,count:6,color:EncodedRgba::from_bytes(raw,1.).unwrap()};
+  let draw=Draw{gate:Gate::Always,composition:Composition::WidgetTriangle(bits),straight_rgba:raw};
+  let vertices=[[20.,19.9999],[81.,19.9999],[20.,81.],[81.,81.]].map(|position|Vertex{position,coverage:1.});
+  let g=Geometry::new_with_annotation_layers(vertices.to_vec(),vec![0,1,2,2,1,3],vec![AnnotationLayer::Opaque{range:0..6}],1.).unwrap();
+  assert!(admit_widget_triangles(&g,&[draw],&[batch]).is_ok());
+  let mut invalid=draw;invalid.composition=Composition::WidgetTriangle([f32::NAN.to_bits();6]);assert!(admit_draw_colors(&[invalid],&[batch]).is_err());
+  invalid=draw;let mut forged=bits;forged[0]=100f32.to_bits();invalid.composition=Composition::WidgetTriangle(forged);assert!(admit_widget_triangles(&g,&[invalid],&[batch]).is_err());
+  invalid=draw;invalid.straight_rgba[3]=230;assert!(admit_draw_colors(&[invalid],&[batch]).is_err());
+  let shifted=Pose{translation:[3.,-2.],..Pose::default()};assert_eq!(widget_triangle_points(bits,shifted,1.25).unwrap()[0],29.375);
+  assert!(g.annotation_layers().unwrap().translation(shifted,1.).is_ok());
+  assert!(g.annotation_layers().unwrap().translation(Pose{translation:[0.5,0.],..Pose::default()},1.).is_err());
+  assert!(g.annotation_layers().unwrap().translation(Pose::default(),1.25).is_err());
+  assert!(widget_triangle_points(bits,Pose{scale:[f32::MAX;2],translation:[-f32::MAX;2]},1.).is_err());
+  assert!(g.validate_ordered_pose(Pose::default(),f32::MAX).is_err());
  }
  #[test]fn gates_refuse_sentinel_and_inventory_before_gpu_admission(){
   assert_eq!(gate_ids(Gate::Always,0).unwrap(),[u32::MAX;2]);
