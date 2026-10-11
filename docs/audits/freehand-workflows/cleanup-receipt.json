@@ -1,0 +1,312 @@
+{
+  "authorization": "Parent explicitly authorized exact archived duplicate cleanup after combined integration2f2773f0; no tests/builds.",
+  "archives": {
+    "docs/audits/freehand-workflows/records.zip": {
+      "sha256": "9ca8d4691e876ab7ecd42e79196288d4046ce16fd21650dc745c9b41031cc0d4",
+      "bytes": 220316
+    }
+  },
+  "deleted_exact_duplicates": [
+    {
+      "path": "/tmp/ingetrazo-freehand-proof/build-corrected-literals.log",
+      "member": "build-corrected-literals.log",
+      "archive": "docs/audits/freehand-workflows/records.zip",
+      "sha256": "ecc2fd294bf1fc8bd18891041555ca2c140fe2b9cc80874053ab9626637d23e0",
+      "bytes": 20614
+    },
+    {
+      "path": "/tmp/ingetrazo-freehand-proof/build-final.log",
+      "member": "build-final.log",
+      "archive": "docs/audits/freehand-workflows/records.zip",
+      "sha256": "a9a08e69168a662e95626810eea561dcb04d3086dc396d9fc2fbd1c12c7268cc",
+      "bytes": 21003
+    },
+    {
+      "path": "/tmp/ingetrazo-freehand-proof/build-first.log",
+      "member": "build-first.log",
+      "archive": "docs/audits/freehand-workflows/records.zip",
+      "sha256": "160e921ab0fcc237269503bed8c2258d0030338678a60f608e4d8896fd8082a3",
+      "bytes": 23929
+    },
+    {
+      "path": "/tmp/ingetrazo-freehand-proof/build-rectangle-preview.log",
+      "member": "build-rectangle-preview.log",
+      "archive": "docs/audits/freehand-workflows/records.zip",
+      "sha256": "026139f531a121411726bfb23ddb36bbf2ad5737872cbe3a189b45fab06cd95d",
+      "bytes": 20710
+    },
+    {
+      "path": "/tmp/ingetrazo-freehand-proof/build-repeat-command.log",
+      "member": "build-repeat-command.log",
+      "archive": "docs/audits/freehand-workflows/records.zip",
+      "sha256": "3188cfcc91c83a5e5d0234c53b787dddeeb2bc8fd10904f7742a6338526fa879",
+      "bytes": 20614
+    },
+    {
+      "path": "/tmp/ingetrazo-freehand-proof/check-final.json",
+      "member": "check-final.json",
+      "archive": "docs/audits/freehand-workflows/records.zip",
+      "sha256": "7daf2a2be84f2bc5f7176df8aae6a1d343ccd70f92f02b7d4c9c3b258a1cd0f8",
+      "bytes": 1098
+    },
+    {
+      "path": "/tmp/ingetrazo-freehand-proof/check-first.json",
+      "member": "check-first.json",
+      "archive": "docs/audits/freehand-workflows/records.zip",
+      "sha256": "4673bd67a8b9e0ae87cbf3ad9f3752a0ccbef8342a4283709a77dd9f93a2587a",
+      "bytes": 1162
+    },
+    {
+      "path": "/tmp/ingetrazo-freehand-proof/check-repeat-command.json",
+      "member": "check-repeat-command.json",
+      "archive": "docs/audits/freehand-workflows/records.zip",
+      "sha256": "a2ca7eff66b069b827fe4ab0d1df30029e1bc57163f905970bb7b85c8d415150",
+      "bytes": 2064
+    },
+    {
+      "path": "/tmp/ingetrazo-freehand-proof/check-repeat-projection.json",
+      "member": "check-repeat-projection.json",
+      "archive": "docs/audits/freehand-workflows/records.zip",
+      "sha256": "0106a5eb82de3733cc3b169823813fc613f2a98a699b12eda5326cda9d0d7923",
+      "bytes": 1172
+    },
+    {
+      "path": "/tmp/ingetrazo-freehand-proof/drafting22-check.json",
+      "member": "drafting22-check.json",
+      "archive": "docs/audits/freehand-workflows/records.zip",
+      "sha256": "ae02ff3beec3fce323d67979b11ba27c6ad11d8d94698d9dc303bab2cc658f02",
+      "bytes": 1762
+    },
+    {
+      "path": "/tmp/ingetrazo-freehand-proof/drafting22-native.json",
+      "member": "drafting22-native.json",
+      "archive": "docs/audits/freehand-workflows/records.zip",
+      "sha256": "bce15bbcff5a9f5fa948147e406bad4d348302f9a6531ebfcabbbd5d42673d80",
+      "bytes": 27916
+    },
+    {
+      "path": "/tmp/ingetrazo-freehand-proof/local-handoff.log",
+      "member": "local-handoff.log",
+      "archive": "docs/audits/freehand-workflows/records.zip",
+      "sha256": "b4a57b733a4ee95dab9874cbdaac90f2b29f3c0b69144b844d8cf462875992d5",
+      "bytes": 38
+    },
+    {
+      "path": "/tmp/ingetrazo-freehand-proof/manifest.json",
+      "member": "manifest.json",
+      "archive": "docs/audits/freehand-workflows/records.zip",
+      "sha256": "40cac92803ea271f3ec08aa386db6714aae056e75208e8fd71950ac79ed03079",
+      "bytes": 4008
+    },
+    {
+      "path": "/tmp/ingetrazo-freehand-proof/native-final.json",
+      "member": "native-final.json",
+      "archive": "docs/audits/freehand-workflows/records.zip",
+      "sha256": "6435a354f81bdc4c38c79c1110ea0396dfa3805ccd9898818eb19468be0c2fa0",
+      "bytes": 183518
+    },
+    {
+      "path": "/tmp/ingetrazo-freehand-proof/native-first.json",
+      "member": "native-first.json",
+      "archive": "docs/audits/freehand-workflows/records.zip",
+      "sha256": "bea8a2ff72389580a1946b87bace3fb3dd07280443d86b0349166c4e54dbcb6d",
+      "bytes": 169338
+    },
+    {
+      "path": "/tmp/ingetrazo-freehand-proof/native-repeat-command.json",
+      "member": "native-repeat-command.json",
+      "archive": "docs/audits/freehand-workflows/records.zip",
+      "sha256": "0f8e4c90f8e89c6108ae789d827e95dd395b5ad8793ce6f45dee6ec7f0b6a2d3",
+      "bytes": 216067
+    },
+    {
+      "path": "/tmp/ingetrazo-freehand-proof/native-repeat-projection.json",
+      "member": "native-repeat-projection.json",
+      "archive": "docs/audits/freehand-workflows/records.zip",
+      "sha256": "a8abc297e3d7c2f5d2132e9f1c2732df44d0ee4a95ab34af924b860ca2937694",
+      "bytes": 221895
+    },
+    {
+      "path": "/tmp/ingetrazo-freehand-proof/provenance.json",
+      "member": "provenance.json",
+      "archive": "docs/audits/freehand-workflows/records.zip",
+      "sha256": "824fb484a31e11ffc282f4a57af2e89b2b32661241231a2167cc94d5f8f64924",
+      "bytes": 2122
+    },
+    {
+      "path": "/tmp/ingetrazo-freehand-proof/replay-final.log",
+      "member": "replay-final.log",
+      "archive": "docs/audits/freehand-workflows/records.zip",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "/tmp/ingetrazo-freehand-proof/replay-first.log",
+      "member": "replay-first.log",
+      "archive": "docs/audits/freehand-workflows/records.zip",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "/tmp/ingetrazo-freehand-proof/replay-repeat-command.log",
+      "member": "replay-repeat-command.log",
+      "archive": "docs/audits/freehand-workflows/records.zip",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "/tmp/ingetrazo-freehand-proof/replay-repeat-projection.log",
+      "member": "replay-repeat-projection.log",
+      "archive": "docs/audits/freehand-workflows/records.zip",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "/tmp/ingetrazo-freehand-proof/shape66-check.json",
+      "member": "shape66-check.json",
+      "archive": "docs/audits/freehand-workflows/records.zip",
+      "sha256": "f3e4584c96b4716e0a8c21e25d612c536872ae855cbc186474682a99b0eb39cb",
+      "bytes": 66513
+    },
+    {
+      "path": "/tmp/ingetrazo-freehand-proof/shape66-native.json",
+      "member": "shape66-native.json",
+      "archive": "docs/audits/freehand-workflows/records.zip",
+      "sha256": "b35b1d99fa614d2cd4f404eb5f512ac7eb236fd9e52a3c7248eb66bab2c1c7dc",
+      "bytes": 2149758
+    },
+    {
+      "path": "/tmp/ingetrazo-freehand-proof/shape66-replay.log",
+      "member": "shape66-replay.log",
+      "archive": "docs/audits/freehand-workflows/records.zip",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "/tmp/ingetrazo-freehand-proof/shape66-source-derived.json",
+      "member": "shape66-source-derived.json",
+      "archive": "docs/audits/freehand-workflows/records.zip",
+      "sha256": "e6f67eaa661956038f4881cee71a8d2c0f86c8ae4031c3e709e0620f63ada534",
+      "bytes": 2042636
+    },
+    {
+      "path": "/tmp/ingetrazo-freehand-proof/source-combined-first-projection.json",
+      "member": "source-combined-first-projection.json",
+      "archive": "docs/audits/freehand-workflows/records.zip",
+      "sha256": "51cadd0b62bedeaa8d4cafa8a3830211ca25abde22c21b03a434bc36ecd4e1d9",
+      "bytes": 198766
+    },
+    {
+      "path": "/tmp/ingetrazo-freehand-proof/source-combined.json",
+      "member": "source-combined.json",
+      "archive": "docs/audits/freehand-workflows/records.zip",
+      "sha256": "29451b8cb8adc344ce240df57d0e276c27fb301531e4bd1a55e20d788777103c",
+      "bytes": 198665
+    },
+    {
+      "path": "/tmp/ingetrazo-freehand-proof/source-corrected-import.log",
+      "member": "source-corrected-import.log",
+      "archive": "docs/audits/freehand-workflows/records.zip",
+      "sha256": "22731613b4c53e3add8bb7b8870e023b857e648e26929cb6c81a5979650e4368",
+      "bytes": 79
+    },
+    {
+      "path": "/tmp/ingetrazo-freehand-proof/source-repeat-command-projection-venv.log",
+      "member": "source-repeat-command-projection-venv.log",
+      "archive": "docs/audits/freehand-workflows/records.zip",
+      "sha256": "2d75c1d225bf0a5a96432ea7e547f4cfcdb7a45816a1c87ea2ff1be58240a155",
+      "bytes": 78
+    },
+    {
+      "path": "/tmp/ingetrazo-freehand-proof/source-repeat-command-projection.json",
+      "member": "source-repeat-command-projection.json",
+      "archive": "docs/audits/freehand-workflows/records.zip",
+      "sha256": "0562828226778cdc1b3d07420ff0ce63092fb5001783ec194e6a17f90071746c",
+      "bytes": 41489
+    },
+    {
+      "path": "/tmp/ingetrazo-freehand-proof/source-repeat-command-projection.json.partial",
+      "member": "source-repeat-command-projection.json.partial",
+      "archive": "docs/audits/freehand-workflows/records.zip",
+      "sha256": "143548577fe7ed32cad402925a157cc5e6781cee3e7496be16c19d5228033a5d",
+      "bytes": 40455
+    },
+    {
+      "path": "/tmp/ingetrazo-freehand-proof/source-repeat-command-projection.log",
+      "member": "source-repeat-command-projection.log",
+      "archive": "docs/audits/freehand-workflows/records.zip",
+      "sha256": "84b81ee2a7a75466037cf8afd902a26b8a963a8476be82e27f6dd6987c3cea3b",
+      "bytes": 233
+    },
+    {
+      "path": "/tmp/ingetrazo-freehand-proof/source-repeat-command-select-observer.log",
+      "member": "source-repeat-command-select-observer.log",
+      "archive": "docs/audits/freehand-workflows/records.zip",
+      "sha256": "2d75c1d225bf0a5a96432ea7e547f4cfcdb7a45816a1c87ea2ff1be58240a155",
+      "bytes": 78
+    },
+    {
+      "path": "/tmp/ingetrazo-freehand-proof/source-repeat-command.json",
+      "member": "source-repeat-command.json",
+      "archive": "docs/audits/freehand-workflows/records.zip",
+      "sha256": "dd0b3801c9cc03df5c4a5625a66e3ec2fa7bc8019e4e49922b32e042d8c29f60",
+      "bytes": 41609
+    },
+    {
+      "path": "/tmp/ingetrazo-freehand-proof/source-repeat-command.json.partial",
+      "member": "source-repeat-command.json.partial",
+      "archive": "docs/audits/freehand-workflows/records.zip",
+      "sha256": "0666538f4b5f7033eb42bdda2c244d4ee7ed96c3a868b8ef601d962c9f48ce6b",
+      "bytes": 40575
+    },
+    {
+      "path": "/tmp/ingetrazo-freehand-proof/source-repeat-command.log",
+      "member": "source-repeat-command.log",
+      "archive": "docs/audits/freehand-workflows/records.zip",
+      "sha256": "e42c1f17c17889dec41fdeb348bd02d2f356aa6350673ebab850677dc2fc3572",
+      "bytes": 2038
+    },
+    {
+      "path": "/tmp/ingetrazo-freehand-proof/source.json",
+      "member": "source.json",
+      "archive": "docs/audits/freehand-workflows/records.zip",
+      "sha256": "b3f86fcbd8c6b57162a7204a080c44fb25480440b72bec5a21c4cd3d41654bfd",
+      "bytes": 158011
+    },
+    {
+      "path": "/tmp/ingetrazo-freehand-proof/source.json.partial",
+      "member": "source.json.partial",
+      "archive": "docs/audits/freehand-workflows/records.zip",
+      "sha256": "83c12b5645bcd145d6e26ef20537784b563c4edc0f868a8990b3ba690255d09d",
+      "bytes": 157256
+    },
+    {
+      "path": "/tmp/ingetrazo-freehand-proof/source.log",
+      "member": "source.log",
+      "archive": "docs/audits/freehand-workflows/records.zip",
+      "sha256": "bb44b32b1171917b9fb72633233555f136e20bc08e0b86f285e821e51081b10a",
+      "bytes": 257
+    },
+    {
+      "path": "/tmp/ingetrazo-freehand-proof/tests-freehand.log",
+      "member": "tests-freehand.log",
+      "archive": "docs/audits/freehand-workflows/records.zip",
+      "sha256": "081966062d2b3d71b40965ec2fb27d5201afe933ad71af5601039cc179707805",
+      "bytes": 1479
+    },
+    {
+      "path": "/tmp/ingetrazo-freehand-proof/tests-rectangle.log",
+      "member": "tests-rectangle.log",
+      "archive": "docs/audits/freehand-workflows/records.zip",
+      "sha256": "66cb258470f6e776044e994df960efb7bd6346c89b86262cdab358c7d8158420",
+      "bytes": 2043
+    }
+  ],
+  "retained": [],
+  "removed_empty_directories": [
+    "/tmp/ingetrazo-freehand-proof"
+  ],
+  "deleted_files": 42,
+  "deleted_bytes": 6081048,
+  "excluded": "Target caches, worktrees, original source, Python environments, private GPU bundle and root-owned integrated proof."
+}
