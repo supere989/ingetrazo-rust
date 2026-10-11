@@ -861,6 +861,13 @@ impl Tool for PushPullTool {
         Some(crate::base::FaceSweepPreview{face:self.selected_face?,face_identity,mesh_revision,anchor,normal:self.acquired_normal?,offset:(self.acquired_normal?.as_vec3()*(self.extrusion_distance as f32)).as_dvec3(),attached,prism_cap,keep_base:self.keep_base})
     }
 
+    fn distance_label(&self)->Option<(f64,DVec3)> {
+        if !self.is_dragging {return None;}
+        let anchor=self.sweep_identity?.4;
+        let midpoint=(anchor.as_vec3()+self.acquired_normal?.as_vec3()*((self.extrusion_distance*0.5)as f32)).as_dvec3();
+        Some((self.extrusion_distance.abs(),midpoint))
+    }
+
     fn status_message(&self)->Option<&str>{self.limit_status.as_deref()}
     fn take_status_message(&mut self)->Option<String>{self.limit_status.take()}
     fn error_message(&self) -> Option<&str> {
