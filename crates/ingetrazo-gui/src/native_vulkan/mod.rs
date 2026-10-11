@@ -410,6 +410,7 @@ impl System {
         Ok(())
     }
 
+    pub fn solar_stats_for_probe(&self)->Option<(u64,u64,bool)>{self.world.as_ref().map(|world|world.shadow_stats_for_probe())}
     pub fn submitted_frames_for_probe(&self)->u64{self.draw_serial}
 
     /// Engineering observation only: never reset/destroy these borrowed handles.
