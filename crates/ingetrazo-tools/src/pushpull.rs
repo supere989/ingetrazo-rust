@@ -24,6 +24,18 @@ impl PushPullTool {
         Self::default()
     }
 
+    fn eligible_face_at(scene:&Scene,ctx:&ToolContext)->Result<Option<usize>,()> {
+        // Zero edge tolerance gives the source face-only closed-group policy.
+        // Placement layers decide closed-group eligibility; internal face tags
+        // acquire selectability only after actual context entry.
+        let group=crate::base::pick_scene_group(scene,&ctx.ray,0.);
+        let loose=crate::base::pick_scene_face(scene,&ctx.ray);
+        if group.is_some_and(|(_,depth)|loose.is_none_or(|(_,t,_)|depth<t)){Err(())}else{Ok(loose.map(|(id,_,_)|id))}
+    }
+    fn refuse_closed_placement(&mut self,scene:&Scene,ctx:&ToolContext)->bool {
+        if Self::eligible_face_at(scene,ctx).is_err(){self.hovered_face=None;self.error=Some("That face belongs to a group — double-click to open it first, then Push/Pull inside".into());true}else{false}
+    }
+
     pub fn reset(&mut self) {
         self.hovered_face = None;
         self.selected_face = None;
@@ -113,7 +125,22 @@ impl PushPullTool {
             }
             rings.push(positions);
         }
-        let translation = normal * distance;
+        // QVector3D multiplies and adds in float32 on the operative source
+        // authoring path. Restrict that compatibility boundary to generated
+        // and moved extrusion vertices; untouched document geometry stays f64.
+        let translation=(normal.as_vec3()*(distance as f32)).as_dvec3();
+        if !translation.is_finite(){return Err("Push/Pull distance exceeds the supported authoring range".into());}
+        // Source _paint_of: side walls own paint in their own planes, while
+        // the cap remains the full metadata continuation of the base.
+        let mut wall_source=face.clone();
+        wall_source.layer=None;
+        wall_source.attrs.retain(|key,_|matches!(key.as_str(),"color"|"mat"|"texture"|"opacity"|"ifc"));
+        if let Some(tag)=wall_source.attrs.get("ifc") {
+            let truth=match tag {serde_json::Value::Null=>false,serde_json::Value::Bool(b)=>*b,serde_json::Value::Number(n)=>n.as_f64()!=Some(0.),serde_json::Value::String(v)=>!v.is_empty(),serde_json::Value::Array(v)=>!v.is_empty(),serde_json::Value::Object(v)=>!v.is_empty()};
+            if !truth {wall_source.attrs.remove("ifc");} else if !tag.is_object(){return Err("Push/Pull cannot extend an unsupported non-object IFC tag; metadata left unchanged".into());}
+        }
+        if let Some(texture)=wall_source.attrs.get_mut("texture").and_then(|v|v.as_object_mut()) {texture.remove("uvw");texture.insert("planar".into(),serde_json::json!(true));}
+
         fn add_polygon(
             mesh: &mut Mesh,
             outer: &[DVec3],
@@ -150,7 +177,7 @@ impl PushPullTool {
         }
         let shifted: Vec<Vec<_>> = rings
             .iter()
-            .map(|r| r.iter().map(|&p| p + translation).collect())
+            .map(|r| r.iter().map(|&p|(p.as_vec3()+translation.as_vec3()).as_dvec3()).collect())
             .collect();
         let mut prism = Mesh::new();
         let mut bottom = rings.clone();
@@ -173,7 +200,7 @@ impl PushPullTool {
                 if distance < 0.0 {
                     wall.reverse();
                 }
-                add_polygon(&mut prism, &wall, &[], face)?;
+                add_polygon(&mut prism, &wall, &[], &wall_source)?;
             }
         }
         if !solid_report(&prism).0 {
@@ -228,7 +255,37 @@ impl PushPullTool {
             component.faces.last_mut().unwrap().interior = original.interior;
         }
         let was_solid = solid_report(&component).0;
-        let mut candidate = if keep_base && component_faces.len() > 1 {
+        // Original _classify_base admits a clean cap translation only when
+        // every rim edge backs onto a perpendicular wall swept along the push.
+        // Moving shared cap vertices extends those walls instead of creating
+        // provenance seams between a copied belt and the original wall.
+        let prism_cap = std::iter::once(&face.vertices).chain(&face.holes).all(|ring| {
+            (0..ring.len()).all(|i| {
+                let a=ring[i];let b=ring[(i+1)%ring.len()];
+                let neighbors=&adjacent[&(a.min(b),a.max(b))];
+                neighbors.len()==2 && neighbors.iter().copied().filter(|&id|id!=face_id).all(|id| {
+                    let other=&mesh.faces[id];
+                    mesh.face_normal(id).dot(normal).abs()<0.001 && (0..other.vertices.len()).any(|i| {
+                        let edge=mesh.vertices[other.vertices[(i+1)%other.vertices.len()]].position-mesh.vertices[other.vertices[i]].position;
+                        edge.length()>1e-9 && edge.normalize().dot(normal).abs()>0.999
+                    })
+                })
+            })
+        });
+        let mut candidate = if prism_cap && was_solid && !keep_base {
+            let mut result=mesh.clone();
+            let moving=face.vertices.iter().chain(face.holes.iter().flatten()).copied().collect::<std::collections::HashSet<_>>();
+            for &id in &moving {result.vertices[id].position=(result.vertices[id].position.as_vec3()+translation.as_vec3()).as_dvec3();}
+            result=ingetrazo_core::planar::stitch_boundaries(&result)?;
+            let ids=component_faces.iter().copied().collect::<Vec<_>>();
+            // Topology is unchanged before stitch; a collapse can consume
+            // faces, so validate the full changed component by geometry below.
+            if result.faces.len()==mesh.faces.len(){
+                let body=ingetrazo_core::pieces::copy_part(&result,&ingetrazo_core::pieces::Piece{faces:ids,edges:vec![]})?;
+                ingetrazo_core::solids::validate_solid_mesh(&body).map_err(|e|format!("Push/Pull cap translation would leave an invalid solid: {e}"))?;
+            }else{return Err("Push/Pull cap translation reached a topology collapse; use a smaller distance".into());}
+            result
+        } else if keep_base && component_faces.len() > 1 {
             if was_solid {
                 ingetrazo_core::solids::validate_solid_mesh(&component)?;
             }
@@ -336,7 +393,7 @@ impl PushPullTool {
                 for (base, cap) in rings.iter().zip(&shifted) {
                     for i in 0..base.len() {
                         let j = (i + 1) % base.len();
-                        add_polygon(&mut result, &[base[i], base[j], cap[j], cap[i]], &[], face)?;
+                        add_polygon(&mut result, &[base[i], base[j], cap[j], cap[i]], &[], &wall_source)?;
                     }
                 }
             } else {
@@ -356,6 +413,11 @@ impl PushPullTool {
             }
             result
         };
+        if was_solid && !keep_base && !prism_cap {
+            let mut rims=vec![];
+            for (base,cap) in rings.iter().zip(&shifted){for i in 0..base.len(){let j=(i+1)%base.len();rims.push((base[i],base[j]));rims.push((cap[i],cap[j]));rims.push((base[i],cap[i]));}}
+            candidate=ingetrazo_core::solids::dissolve_rim_seams(&candidate,&rims)?;
+        }
         // Reattach original wire edges and preserve metadata wherever an original
         // edge survives. This also covers the kernel-generated solid branch.
         for edge in &mesh.edges {
@@ -490,7 +552,7 @@ impl Tool for PushPullTool {
     fn on_move(&mut self, scene: &mut Scene, ctx: &ToolContext) {
         self.keep_base = ctx.ctrl_held;
         if !self.is_dragging {
-            self.hovered_face = crate::base::pick_scene_face(scene, &ctx.ray).map(|(id, _, _)| id);
+            self.hovered_face = Self::eligible_face_at(scene,ctx).ok().flatten();
         } else if let (Some(face_id), Some(start)) = (self.selected_face, self.start_point) {
             let normal = scene.mesh.face_normal(face_id);
             self.extrusion_distance = (ctx.world - start).dot(normal);
@@ -500,9 +562,8 @@ impl Tool for PushPullTool {
     fn on_click(&mut self, scene: &mut Scene, ctx: &ToolContext) {
         self.keep_base = ctx.ctrl_held;
         if !self.is_dragging {
-            let face_pick = self
-                .hovered_face
-                .or_else(|| crate::base::pick_scene_face(scene, &ctx.ray).map(|(id, _, _)| id));
+            if self.refuse_closed_placement(scene,ctx){return;}
+            let face_pick = Self::eligible_face_at(scene,ctx).ok().flatten();
 
             if let Some(face_id) = face_pick {
                 self.selected_face = Some(face_id);
@@ -523,10 +584,9 @@ impl Tool for PushPullTool {
     }
 
     fn on_double_click(&mut self, scene: &mut Scene, ctx: &ToolContext) {
+        if self.refuse_closed_placement(scene,ctx){return;}
         if let Some(last_d) = self.last_distance {
-            let face_pick = self
-                .hovered_face
-                .or_else(|| crate::base::pick_scene_face(scene, &ctx.ray).map(|(id, _, _)| id));
+            let face_pick = Self::eligible_face_at(scene,ctx).ok().flatten();
 
             if let Some(face_id) = face_pick {
                 match Self::extrude_face_with_options(scene, face_id, last_d, ctx.ctrl_held) {
@@ -540,10 +600,7 @@ impl Tool for PushPullTool {
     }
 
     fn on_vcb_input(&mut self, scene: &mut Scene, text: &str) -> Result<(), String> {
-        let dist: f64 = text
-            .trim()
-            .parse()
-            .map_err(|e| format!("Invalid distance: {e}"))?;
+        let dist=ingetrazo_core::units::parse_length(text,ingetrazo_core::units::LengthUnit::Meters)?;
 
         if let Some(face_id) = self.selected_face {
             if let Err(error) =
@@ -799,4 +856,19 @@ mod tests {
         assert!(PushPullTool::extrude_face(&mut scene, 0, 1.0).is_err());
         assert_eq!(scene, before);
     }
+    #[test]
+    fn source_wall_paint_drops_vendor_and_plane_map_but_caps_keep_them(){
+        let mut scene=make_test_square_scene();
+        scene.mesh.faces[0].layer=Some("Walls".into());
+        scene.mesh.faces[0].attrs=serde_json::from_value(serde_json::json!({"vendor":71,"color":[1,0,0],"texture":{"path":"wall.png","uvw":[1,0,0,0,0,1,0,0],"tile":2},"ifc":{"id":4,"class":"IfcSlab"}})).unwrap();
+        PushPullTool::extrude_face(&mut scene,0,1.).unwrap();
+        let caps=scene.mesh.faces.iter().filter(|f|f.attrs.contains_key("vendor")).count();assert_eq!(caps,2);
+        for id in 0..scene.mesh.faces.len(){let f=&scene.mesh.faces[id];if scene.mesh.face_normal(id).z.abs()<0.1{assert!(!f.attrs.contains_key("vendor"));assert!(f.layer.is_none());assert!(f.attrs["texture"].get("uvw").is_none());assert_eq!(f.attrs["texture"]["planar"],true);assert_eq!(f.attrs["ifc"]["id"],4);}}
+    }
+    #[test]
+    fn scoped_authoring_rounding_retains_unrelated_f64_vertices_and_atomic_tag_refusal(){
+        let mut scene=make_test_square_scene();let point=DVec3::new(100.,0.,1.+2_f64.powi(-40));scene.mesh.add_vertex(point);PushPullTool::extrude_face(&mut scene,0,0.6).unwrap();assert!(scene.mesh.vertices.iter().any(|v|v.position==point));
+        let mut scene=make_test_square_scene();scene.mesh.faces[0].attrs.insert("ifc".into(),serde_json::json!("opaque imported tag"));let before=scene.clone();assert!(PushPullTool::extrude_face(&mut scene,0,1.).is_err());assert_eq!(scene,before);
+    }
+
 }

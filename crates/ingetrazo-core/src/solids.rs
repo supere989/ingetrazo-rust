@@ -277,6 +277,39 @@ fn output(solid: &Manifold, sources: &Sources, outer_only: bool) -> Result<Mesh,
     Ok(result)
 }
 
+/// Dissolve only operation-authored coplanar rims, preserving authored seams
+/// elsewhere and refusing paint/opaque metadata ownership changes.
+pub fn dissolve_rim_seams(mesh:&Mesh,rims:&[(glam::DVec3,glam::DVec3)])->Result<Mesh,String>{
+    let mut parent=(0..mesh.faces.len()).collect::<Vec<_>>();
+    fn root(p:&mut [usize],mut i:usize)->usize{while p[i]!=i{p[i]=p[p[i]];i=p[i];}i}
+    let on=|p:glam::DVec3,a:glam::DVec3,b:glam::DVec3|{let edge=b-a;let l=edge.length_squared();if l<1e-18{return false;}let t=(p-a).dot(edge)/l;t>=-1e-7&&t<=1.+1e-7&&(p-(a+edge*t)).length()<1e-6};
+    for e in &mesh.edges{
+        if e.faces.len()!=2{continue;}let(a,b)=(e.faces[0],e.faces[1]);
+        let(f,g)=(&mesh.faces[a],&mesh.faces[b]);
+        if f.attrs!=g.attrs||f.layer!=g.layer||f.interior!=g.interior||!f.holes.is_empty()||!g.holes.is_empty(){continue;}
+        if mesh.face_normal(a).dot(mesh.face_normal(b))<1.-1e-9{continue;}
+        let(x,y)=(mesh.vertices[e.v0].position,mesh.vertices[e.v1].position);
+        if !rims.iter().any(|&(u,v)|on(x,u,v)&&on(y,u,v)){continue;}
+        let(a,b)=(root(&mut parent,a),root(&mut parent,b));parent[b]=a;
+    }
+    let groups=(0..parent.len()).map(|i|root(&mut parent,i)).collect::<Vec<_>>();
+    // Groups containing holes remain untouched: the triangle fusion routine
+    // deliberately owns only simple polygon boundaries.
+    let mut result=Mesh::new();
+    let mut simple=Mesh::new();let mut ids=vec![];
+    for (i,f)in mesh.faces.iter().enumerate(){
+        let target=if f.holes.is_empty(){&mut simple}else{&mut result};
+        let outer=f.vertices.iter().map(|&v|target.add_vertex(mesh.vertices[v].position)).collect();
+        let holes=f.holes.iter().map(|h|h.iter().map(|&v|target.add_vertex(mesh.vertices[v].position)).collect()).collect();
+        let id=target.add_face(outer,holes).ok_or("Invalid Push/Pull boundary")?;target.faces[id].attrs=f.attrs.clone();target.faces[id].layer=f.layer.clone();target.faces[id].interior=f.interior;
+        if f.holes.is_empty(){ids.push(groups[i]);}
+    }
+    let(fused,fused_sources)=fuse_source_faces(&simple,&ids)?;
+    for (f,&source) in fused.faces.iter().zip(&fused_sources){let ids=f.vertices.iter().map(|&v|result.add_vertex(fused.vertices[v].position)).collect();let holes=f.holes.iter().map(|h|h.iter().map(|&v|result.add_vertex(fused.vertices[v].position)).collect()).collect();let id=result.add_face(ids,holes).ok_or("Invalid Push/Pull fused boundary")?;result.faces[id].attrs=f.attrs.clone();result.faces[id].layer=f.layer.clone();result.faces[id].interior=mesh.faces[source].interior;}
+    crate::planar::preserve_edges(&mut result,mesh);
+    crate::planar::stitch_boundaries(&result)
+}
+
 /// Remove triangulation seams within each source face. Preserve every boundary
 /// subdivision vertex so adjoining source faces remain topologically conforming.
 fn fuse_source_faces(mesh: &Mesh, provenance: &[usize]) -> Result<(Mesh, Vec<usize>), String> {
@@ -314,6 +347,7 @@ fn fuse_source_faces(mesh: &Mesh, provenance: &[usize]) -> Result<(Mesh, Vec<usi
                 let id = result.add_face(ids, vec![]).ok_or("Invalid boolean face")?;
                 result.faces[id].attrs = mesh.faces[fid].attrs.clone();
                 result.faces[id].layer = mesh.faces[fid].layer.clone();
+                result.faces[id].interior=mesh.faces[fid].interior;
                 sources.push(source);
             }
             continue;
@@ -403,6 +437,7 @@ fn fuse_source_faces(mesh: &Mesh, provenance: &[usize]) -> Result<(Mesh, Vec<usi
                 .ok_or("Invalid fused boolean face")?;
             result.faces[id].attrs = mesh.faces[faces[0]].attrs.clone();
             result.faces[id].layer = mesh.faces[faces[0]].layer.clone();
+            result.faces[id].interior=mesh.faces[faces[0]].interior;
             sources.push(source);
         }
         if !holes.is_empty() {
