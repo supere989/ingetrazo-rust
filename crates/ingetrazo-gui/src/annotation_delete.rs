@@ -4,7 +4,47 @@
 use crate::IngeTrazoApp;
 use ingetrazo_core::scene::SelectionItem;
 impl IngeTrazoApp {
+    /// Source Select Delete gives real selection priority over transient hover.
+    pub fn delete_selection_or_annotation_hover(&mut self) {
+        if !self.scene.selection.is_empty() {
+            self.delete_selection();
+            return;
+        }
+        let target = self.active_tool.annotation_hover_target(&self.scene);
+        self.active_tool.clear_annotation_hover();
+        let item = match target {
+            Some(ingetrazo_tools::base::AnnotationEditTarget::Label(id)) => self
+                .scene
+                .text_labels
+                .iter()
+                .position(|t| t.history_id == id)
+                .map(SelectionItem::TextLabel),
+            Some(ingetrazo_tools::base::AnnotationEditTarget::Dimension(id)) => self
+                .scene
+                .dimensions
+                .iter()
+                .position(|d| d.id == id)
+                .map(SelectionItem::Dimension),
+            None => None,
+        };
+        if let Some(item) = item {
+            if let Err(error) = self.delete_annotation_targets(&[item]) {
+                self.status_message = error;
+            }
+        }
+    }
     pub(crate) fn delete_annotation_selection(&mut self) -> Result<(), String> {
+        let targets: Vec<_> = self.scene.selection.iter().cloned().collect();
+        self.delete_annotation_targets(&targets)
+    }
+
+    pub(crate) fn delete_annotation_targets(
+        &mut self,
+        targets: &[SelectionItem],
+    ) -> Result<(), String> {
+        if targets.is_empty() {
+            return Ok(());
+        }
         let scene = &self.scene;
         let mut guides = Vec::new();
         let mut dimensions = Vec::new();
@@ -13,7 +53,7 @@ impl IngeTrazoApp {
         let mut edges = Vec::new();
         let mut groups = Vec::new();
         let mut sections = Vec::new();
-        for target in &scene.selection {
+        for target in targets {
             let selectable = match *target {
                 SelectionItem::Guide(i) => {
                     scene.guides.get(i).ok_or("Guide no longer resolves")?;
