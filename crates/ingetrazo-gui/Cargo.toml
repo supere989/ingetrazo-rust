@@ -92,3 +92,6 @@ required-features = ["engineering-python"]
 [[example]]
 name = "engineering_console_nested_fixture"
 required-features = ["engineering-python"]
+
+[dev-dependencies]
+sha2 = "0.10"

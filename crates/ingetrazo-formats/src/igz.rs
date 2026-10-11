@@ -1281,3 +1281,9 @@ mod source_border_runtime_tests {
         assert_eq!(read_sheet(&sheet_to_json(&edited)).effective_source_border().color,"#1e242c");
     }
 }
+
+/// Shared original texture member naming for file-owned import plans.
+pub(crate) fn prepared_texture_member(bytes:&[u8],name:&str)->String {
+ let digest=sha1_smol::Sha1::from(bytes).digest().to_string();
+ format!("textures/{}-{}",&digest[..16],assets::file_name(name))
+}

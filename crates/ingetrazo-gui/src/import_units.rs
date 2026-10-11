@@ -250,10 +250,11 @@ impl IngeTrazoApp {
         // Parse exactly once before choosing/cloning a destination owner.
         let plan = if confirmed.kind == "obj" {
             Plan::Obj(
-                ingetrazo_formats::obj::parse_obj_with_units(
+                ingetrazo_formats::obj::parse_obj_import(
                     &mut reader,
                     &self.scene,
                     confirmed.factor,
+                    &confirmed.path,
                 )
                 .map_err(|e| e.to_string())?,
             )
@@ -275,6 +276,9 @@ impl IngeTrazoApp {
         };
         let mut candidate = owner.clone();
         candidate.layers = self.scene.layers.clone();
+        if parked {
+            candidate.embedded_textures = self.scene.embedded_textures.clone();
+        }
         let stem = confirmed
             .path
             .file_stem()
@@ -296,7 +300,11 @@ impl IngeTrazoApp {
                 .map_err(|_| "Import history allocation refused")?;
             self.save_undo_state();
             self.scene = candidate;
-            if !root {if let Some(session)=self.component_edit_stack.last_mut(){session.note_source_mesh_import();}}
+            if !root {
+                if let Some(session) = self.component_edit_stack.last_mut() {
+                    session.note_source_mesh_import();
+                }
+            }
             self.bump_model_revision();
         }
         self.status_message = format!("Imported {}", confirmed.path.display());
@@ -315,6 +323,7 @@ impl IngeTrazoApp {
         }
         let mut before = root.original_scene.clone();
         before.layers = self.scene.layers.clone();
+        before.embedded_textures = self.scene.embedded_textures.clone();
         before.history_layers.0 = Some(ingetrazo_core::layers::LayerDelta::between(
             &before.layers,
             &candidate.layers,
@@ -334,6 +343,8 @@ impl IngeTrazoApp {
             original_layers: Vec<ingetrazo_core::layers::Layer>,
             cancel_layers: Vec<ingetrazo_core::layers::Layer>,
             undo: Vec<ingetrazo_core::scene::Scene>,
+            original_assets: std::collections::HashMap<String, Vec<u8>>,
+            cancel_assets: std::collections::HashMap<String, Vec<u8>>,
         }
         let mut checkpoints = Vec::new();
         checkpoints
@@ -369,9 +380,12 @@ impl IngeTrazoApp {
                 original_layers: candidate.layers.clone(),
                 cancel_layers: candidate.layers.clone(),
                 undo: checkpoint_undo,
+                original_assets: candidate.embedded_textures.clone(),
+                cancel_assets: candidate.embedded_textures.clone(),
             });
         }
         let live_layers = candidate.layers.clone();
+        let live_assets = candidate.embedded_textures.clone();
         // No fallible parsing/emission/preparation remains beyond this point.
         self.component_edit_stack[0].original_scene = candidate;
         for (session, checkpoint) in self.component_edit_stack.iter_mut().zip(checkpoints) {
@@ -380,10 +394,13 @@ impl IngeTrazoApp {
             }
             session.original_scene.layers = checkpoint.original_layers;
             session.cancel_scene.layers = checkpoint.cancel_layers;
+            session.original_scene.embedded_textures = checkpoint.original_assets;
+            session.cancel_scene.embedded_textures = checkpoint.cancel_assets;
             session.original_undo = checkpoint.undo;
             session.original_redo.clear();
         }
         self.scene.layers = live_layers;
+        self.scene.embedded_textures = live_assets;
         self.push_prepared_undo_snapshot(before);
         self.bump_model_revision();
         Ok(())

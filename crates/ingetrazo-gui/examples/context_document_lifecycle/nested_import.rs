@@ -40,7 +40,7 @@ fn qt_observed_mesh(mesh: &Mesh, m: DMat4) -> Value {
     faces.sort_by_key(|f| f.to_string());
     json!({"points":points,"edges":edges,"faces":faces})
 }
-fn source_scene(app: &IngeTrazoApp) -> Value {
+pub(super) fn source_scene(app: &IngeTrazoApp) -> Value {
     let mut groups = app.component_edit_stack.first().map_or_else(
         || app.scene.groups.clone(),
         |s| s.parked_scene().groups.clone(),

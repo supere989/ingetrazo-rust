@@ -8,6 +8,8 @@ use std::io::{BufRead, BufReader, Read, Write};
 use std::path::Path;
 
 use ingetrazo_core::scene::Scene;
+#[path = "obj_material.rs"]
+mod source_material;
 
 #[derive(thiserror::Error, Debug)]
 pub enum ObjError {
@@ -76,7 +78,7 @@ fn prepare_obj_options(
     if !scale.is_finite() || scale <= 0. {
         return Err(ObjError::Parse(0, "Invalid import scale".into()));
     }
-    let plan = parse_obj_options(reader, scene, scale, source_points, false)?;
+    let plan = parse_obj_options(reader, scene, scale, source_points, false, None)?;
     let mut candidate = scene.clone();
     plan.emit_legacy(&mut candidate)?;
     candidate.bump_version();
@@ -89,6 +91,7 @@ pub struct ObjPlan {
     entities: Vec<ObjEntity>,
     pieces: Vec<((String, String), Vec<usize>)>,
     face_count: usize,
+    assets: std::collections::HashMap<String, Vec<u8>>,
 }
 struct ObjEntity {
     declaration: Option<usize>,
@@ -143,6 +146,19 @@ impl ObjPlan {
     }
     /// Source application grouping policy. Unscaled legacy format callers use emit_legacy.
     pub fn emit_source(mut self, scene: &mut Scene, stem: &str) -> Result<(), ObjError> {
+        for (key, bytes) in self.assets.drain() {
+            if scene
+                .embedded_textures
+                .get(&key)
+                .is_some_and(|old| old != &bytes)
+            {
+                return Err(ObjError::Parse(
+                    0,
+                    "Prepared texture conflicts with document asset".into(),
+                ));
+            }
+            scene.embedded_textures.entry(key).or_insert(bytes);
+        }
         if self.pieces.len() > 1 {
             let mut container = ingetrazo_core::groups::Group::new(stem);
             for (number, (piece, indices)) in self.pieces.iter().enumerate() {
@@ -231,7 +247,19 @@ pub fn parse_obj_with_units(
     if !scale.is_finite() || scale <= 0. {
         return Err(ObjError::Parse(0, "Invalid import scale".into()));
     }
-    parse_obj_options(reader, scene, scale, true, true)
+    parse_obj_options(reader, scene, scale, true, true, None)
+}
+/// Path-aware source Import; sidecars and used images are prepared before owner selection.
+pub fn parse_obj_import(
+    reader: &mut impl Read,
+    scene: &Scene,
+    scale: f64,
+    path: &Path,
+) -> Result<ObjPlan, ObjError> {
+    if !scale.is_finite() || scale <= 0. {
+        return Err(ObjError::Parse(0, "Invalid import scale".into()));
+    }
+    parse_obj_options(reader, scene, scale, true, true, Some(path))
 }
 fn parse_obj_options(
     reader: &mut impl Read,
@@ -239,6 +267,7 @@ fn parse_obj_options(
     scale: f64,
     source_points: bool,
     source_policy: bool,
+    source_path: Option<&Path>,
 ) -> Result<ObjPlan, ObjError> {
     let buf_reader = BufReader::new(reader);
     let mut file_verts: Vec<DVec3> = Vec::new();
@@ -248,11 +277,15 @@ fn parse_obj_options(
         entities: Vec::new(),
         pieces: Vec::new(),
         face_count: 0,
+        assets: std::collections::HashMap::new(),
     };
     let mut piece_indices = std::collections::BTreeMap::new();
     let mut object = String::new();
     let mut group = String::new();
     let mut material: Option<String> = None;
+    let mut source_recipes = std::collections::HashMap::new();
+    let mut current_recipe = None;
+    let mut asset_paths = std::collections::HashMap::new();
     let mut file_uv = Vec::<glam::DVec2>::new();
 
     for (line_num, line_res) in buf_reader.lines().enumerate() {
@@ -272,10 +305,23 @@ fn parse_obj_options(
             continue;
         }
         if source_policy && cmd == "mtllib" {
-            return Err(ObjError::Parse(
-                line_num + 1,
-                "OBJ material sidecar admission remains unsupported; document unchanged".into(),
-            ));
+            let path = source_path.ok_or_else(|| {
+                ObjError::Parse(
+                    line_num + 1,
+                    "Material sidecar requires an OBJ source path".into(),
+                )
+            })?;
+            let name = parts
+                .next()
+                .ok_or_else(|| ObjError::Parse(line_num + 1, "mtllib has no filename".into()))?;
+            if Path::new(name).components().count() != 1 || name == "." || name == ".." {
+                return Err(ObjError::Parse(
+                    line_num + 1,
+                    "MTL filename must be beside OBJ".into(),
+                ));
+            }
+            source_recipes = source_material::parse(&path.with_file_name(name))?;
+            continue;
         }
         match cmd {
             "v" => {
@@ -303,6 +349,22 @@ fn parse_obj_options(
                 file_verts.push(point);
             }
             "vt" => {
+                if source_policy {
+                    let values = parts.collect::<Vec<_>>();
+                    let parsed = values.first().and_then(|v| v.parse::<f64>().ok()).zip(
+                        if values.len() > 1 {
+                            values[1].parse::<f64>().ok()
+                        } else {
+                            Some(0.)
+                        },
+                    );
+                    let (u, v) = parsed.unwrap_or((0., 0.));
+                    if !u.is_finite() || !v.is_finite() {
+                        return Err(ObjError::Parse(line_num + 1, "Nonfinite texture UV".into()));
+                    }
+                    file_uv.push(glam::DVec2::new(u, v));
+                    continue;
+                }
                 let u = parts
                     .next()
                     .and_then(|s| s.parse::<f64>().ok())
@@ -333,7 +395,14 @@ fn parse_obj_options(
                 }
             }
             "usemtl" => {
-                material = Some(parts.collect::<Vec<_>>().join(" "));
+                if source_policy {
+                    let name = parts.next().ok_or_else(|| {
+                        ObjError::Parse(line_num + 1, "usemtl has no name".into())
+                    })?;
+                    current_recipe = source_recipes.get(name).cloned();
+                } else {
+                    material = Some(parts.collect::<Vec<_>>().join(" "));
+                }
             }
             "f" | "l" => {
                 let mut points = Vec::new();
@@ -387,7 +456,12 @@ fn parse_obj_options(
                                     )
                                 })
                         })
-                        .transpose()?;
+                        .transpose();
+                    let uv = if source_policy {
+                        uv.unwrap_or(None)
+                    } else {
+                        uv?
+                    };
                     uvs.push(uv);
                 }
                 if points.len() < if cmd == "f" { 3 } else { 2 } {
@@ -415,7 +489,16 @@ fn parse_obj_options(
                         attrs
                     })
                     .unwrap_or_default();
-                if cmd == "f" && attrs.contains_key("texture") {
+                if source_policy && cmd == "f" {
+                    attrs = source_material::attrs(
+                        current_recipe.as_ref(),
+                        &points,
+                        &uvs,
+                        &mut plan.assets,
+                        &mut asset_paths,
+                    )?;
+                }
+                if !source_policy && cmd == "f" && attrs.contains_key("texture") {
                     if uvs.iter().all(Option::is_some) {
                         let e1 = points[1] - points[0];
                         let e2 = points[2] - points[0];

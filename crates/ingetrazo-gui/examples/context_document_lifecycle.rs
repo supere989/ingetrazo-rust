@@ -130,7 +130,10 @@ fn click(a: &mut IngeTrazoApp, ctx: &egui::Context, label: &str) {
 }
 #[path="context_document_lifecycle/nested_import.rs"]
 mod nested_import;
+#[path="context_document_lifecycle/obj_mtl.rs"]
+mod obj_mtl;
 fn main() {
+    if std::env::args().any(|a|a=="--obj-mtl") {obj_mtl::run();return;}
     if std::env::args().any(|a|a=="--nested-import"){nested_import::run();return;}
 
     if std::env::args().any(|a| a == "--appearance") {
