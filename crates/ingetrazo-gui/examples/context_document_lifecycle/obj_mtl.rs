@@ -90,7 +90,7 @@ pub fn run() {
     for row in syntax.as_array().unwrap() {
         let name = row["case"].as_str().unwrap();
         let path = root.join(format!("uv-syntax-{name}.obj"));
-        let mut scene = ingetrazo_core::Scene::new();
+        let mut scene = ingetrazo_core::scene::Scene::new();
         let plan = ingetrazo_formats::obj::parse_obj_import(
             &mut std::fs::File::open(&path).unwrap(),
             &scene,
