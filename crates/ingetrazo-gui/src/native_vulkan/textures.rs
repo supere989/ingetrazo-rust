@@ -5,7 +5,7 @@ use ash::{vk,Device};
 use ingetrazo_render::{buffer::TextureBuffers,native_textures::Geometry};
 use std::collections::{HashMap,HashSet};
 #[derive(Clone,Copy,Debug,PartialEq,Eq)]pub enum Phase{Opaque,BackOpaque,TransparentFront,TransparentBack,Mask,Depth}
-#[derive(Clone,Debug)]struct Draw{buffer:BufferId,set:vk::DescriptorSet,asset:AssetId,first:u32,count:u32,opacity:f32,shade:f32,cutout:bool,back:bool,cull:bool,opaque:bool,path:String,order:usize,mean:Option<[f32;3]>,shadow_only:bool,missing:bool}
+#[derive(Clone,Debug)]struct Draw{buffer:BufferId,set:vk::DescriptorSet,asset:AssetId,first:u32,count:u32,opacity:f32,shade:f32,cutout:bool,back:bool,cull:bool,opaque:bool,path:String,order:usize,mean:Option<[f32;3]>,shadow_only:bool,missing:bool,bitmap:bool}
 struct Pool{device:Device,handle:vk::DescriptorPool}
 impl Drop for Pool{fn drop(&mut self){unsafe{self.device.destroy_descriptor_pool(self.handle,None)}}}
 pub(crate) struct Publication{retirement:super::resources::CompletedRetirement,active:HashSet<AssetId>}
@@ -25,16 +25,16 @@ impl Textures{
   self.prepare_mode(context,resources,buffers,assets,scene,fence,completed,storage_limit,false)
  }
  pub fn prepare_mode(&mut self,context:&VulkanContext,resources:&mut Resources,buffers:&TextureBuffers,assets:&HashMap<String,Vec<u8>>,scene:&ingetrazo_core::scene::Scene,fence:vk::Fence,completed:u64,storage_limit:u64,average:bool)->Result<Candidate,String>{
-  self.prepare_shadow_mode(context,resources,buffers,assets,scene,fence,completed,storage_limit,average,false,None)
+  self.prepare_shadow_mode(context,resources,buffers,assets,scene,fence,completed,storage_limit,average,false,&[])
  }
- pub(crate) fn prepare_shadow_mode(&mut self,context:&VulkanContext,resources:&mut Resources,buffers:&TextureBuffers,assets:&HashMap<String,Vec<u8>>,scene:&ingetrazo_core::scene::Scene,fence:vk::Fence,completed:u64,storage_limit:u64,average:bool,shadow:bool,extra:Option<&TextureBuffers>)->Result<Candidate,String>{
+ pub(crate) fn prepare_shadow_mode(&mut self,context:&VulkanContext,resources:&mut Resources,buffers:&TextureBuffers,assets:&HashMap<String,Vec<u8>>,scene:&ingetrazo_core::scene::Scene,fence:vk::Fence,completed:u64,storage_limit:u64,average:bool,shadow:bool,extra:&[&TextureBuffers])->Result<Candidate,String>{
   if !unsafe{context.device.get_fence_status(fence)}.map_err(|e|e.to_string())?{return Err("Texture replacement requires completed draw fence".into());}
   let mut candidate=Candidate{pool:None,buffers:vec![],draws:vec![],images:vec![],references:None,contours:vec![],averages:super::texture_average::Candidate::default(),average_active:HashSet::new()};
   let prepare=(||->Result<(),String>{
    {let _pressure=if self.probe_pressure{let mut ledger=self.budget.ledger.lock().unwrap();let previous=ledger.total_limit;ledger.total_limit=Some(ledger.total_committed());Some(PressureRestore{budget:self.budget.clone(),previous})}else{None};candidate.references=Some(self.references.prepare(context,resources,&mut self.cache,scene,fence).map_err(|e|format!("Reference image admission: {e}"))?);}
-   if buffers.is_empty()&&extra.is_none_or(|b|b.is_empty()){return Ok(());}
-   let count=u32::try_from(buffers.len().checked_add(extra.map_or(0,|b|b.len())).ok_or("Shadow descriptor count overflow")?).map_err(|_|"Too many texture descriptors")?;
-   let mut paths=buffers.iter().map(|(p,b)|(p,b,false)).chain(extra.into_iter().flat_map(|b|b.iter().map(|(p,b)|(p,b,true)))).collect::<Vec<_>>();paths.sort_by_key(|(_,b,_)|b.source_texture_runs.iter().map(|r|r.order).min().unwrap_or(usize::MAX));
+   if buffers.is_empty()&&extra.iter().all(|b|b.is_empty()){return Ok(());}
+   let count=u32::try_from(buffers.len().checked_add(extra.iter().try_fold(0usize,|n,b|n.checked_add(b.len())).ok_or("Shadow texture count overflow")?).ok_or("Shadow descriptor count overflow")?).map_err(|_|"Too many texture descriptors")?;
+   let mut paths=buffers.iter().map(|(p,b)|(p,b,false)).chain(extra.iter().flat_map(|b|b.iter().map(|(p,b)|(p,b,true)))).collect::<Vec<_>>();paths.sort_by_key(|(_,b,_)|b.source_texture_runs.iter().map(|r|r.order).min().unwrap_or(usize::MAX));
    let mut images=candidate.references.as_ref().unwrap().sampled().collect::<HashMap<AssetId,(vk::ImageView,vk::Sampler,bool)>>();
    for(path,buffer,shadow_only)in paths{
     let geometry=Geometry::prepare(buffer)?;if geometry.vertices.is_empty(){continue;}
@@ -65,7 +65,7 @@ impl Textures{
      if geometry.upload_bytes().len()as u64<=storage_limit{candidate.contours.push((vertex,geometry.front_vertices/3,5));}
      else {let triangles=storage_limit.min(8*1024*1024)/36;if triangles==0{return Err("Texture contour storage range cannot hold one triangle".into());}for chunk in geometry.vertices[..geometry.front_vertices as usize].chunks(triangles as usize*3){let positions=chunk.iter().map(|v|v.position).collect::<Vec<_>>();let id=resources.upload(context,bytemuck::cast_slice(&positions),vk::BufferUsageFlags::STORAGE_BUFFER,false)?;candidate.buffers.push(id);candidate.contours.push((id,(positions.len()/3)as u32,3));}}
     }
-    for draw in geometry.draws{let source=draw.source;let opaque=source.opacity>=0.999;let mean=if opaque&&!source.back_side{mean}else{None};let opacity=if opaque{1.}else{format!("{:.3}",source.opacity).parse::<f32>().map_err(|e|e.to_string())?};candidate.draws.push(Draw{buffer:vertex,set,asset:id,first:draw.first,count:draw.count,opacity,shade:source.shade,cutout:sampled.2,back:source.back_side,cull:source.front_cull,opaque,path:path.clone(),order:source.order,mean,shadow_only,missing});}
+    for draw in geometry.draws{let source=draw.source;let opaque=source.opacity>=0.999;let mean=if opaque&&!source.back_side{mean}else{None};let opacity=if opaque{1.}else{format!("{:.3}",source.opacity).parse::<f32>().map_err(|e|e.to_string())?};candidate.draws.push(Draw{buffer:vertex,set,asset:id,first:draw.first,count:draw.count,opacity,shade:source.shade,cutout:sampled.2,back:source.back_side,cull:source.front_cull,opaque,path:path.clone(),order:source.order,mean,shadow_only,missing,bitmap:buffer.source_shadow_bitmap});}
    }
    // Source front opaque first occurrence, then sorted back/transparent keys.
    candidate.average_active.try_reserve(candidate.draws.len()).map_err(|_|"Average active identity admission")?;
@@ -118,9 +118,9 @@ impl Textures{
   }Ok(())
  }
  /// Front-only source casters; receiver averaging never removes alpha cutout.
- pub(crate) fn preflight_shadow(&mut self,resources:&mut Resources,serial:u64)->Result<(),String>{for draw in self.draws.iter().filter(|d|!d.back&&d.opacity>=0.7){let id=*self.buffers.get(draw.buffer).ok_or("Shadow texture buffer identity")?;resources.mark_used(id,serial)?;if !draw.missing{self.cache.mark_used(draw.asset,serial)?;}}Ok(())}
- pub(crate) fn record_shadow(&mut self,resources:&mut Resources,command:vk::CommandBuffer,serial:u64,pipeline:vk::Pipeline,layout:vk::PipelineLayout,fallback:vk::Pipeline,plain_layout:vk::PipelineLayout,parameters:&[u8])->Result<(),String>{
-  for draw in self.draws.iter().filter(|d|!d.back&&d.opacity>=0.7){
+ pub(crate) fn preflight_shadow(&mut self,resources:&mut Resources,serial:u64,independent:bool)->Result<(),String>{for draw in self.draws.iter().filter(|d|!d.back&&d.opacity>=0.7&&(!independent||d.shadow_only)&&!(d.bitmap&&d.missing)){resources.mark_used(draw.buffer,serial)?;if !draw.missing{self.cache.mark_used(draw.asset,serial)?;}}Ok(())}
+ pub(crate) fn record_shadow(&mut self,resources:&mut Resources,command:vk::CommandBuffer,serial:u64,pipeline:vk::Pipeline,layout:vk::PipelineLayout,fallback:vk::Pipeline,plain_layout:vk::PipelineLayout,parameters:&[u8],independent:bool)->Result<(),String>{
+  for draw in self.draws.iter().filter(|d|!d.back&&d.opacity>=0.7&&(!independent||d.shadow_only)&&!(d.bitmap&&d.missing)){
    let buffer=resources.buffer(draw.buffer).ok_or("Shadow texture buffer retired")?;
    if draw.set==vk::DescriptorSet::null()&&!draw.missing{return Err("Shadow caster sampled alpha was not admitted".into());}
    resources.mark_used(draw.buffer,serial)?;
@@ -128,6 +128,23 @@ impl Textures{
    let(pipeline,layout)=if draw.missing{push[84..88].copy_from_slice(&0u32.to_ne_bytes());(fallback,plain_layout)}else{self.cache.mark_used(draw.asset,serial)?;(pipeline,layout)};
    unsafe{self.device.cmd_bind_pipeline(command,vk::PipelineBindPoint::GRAPHICS,pipeline);if !draw.missing{self.device.cmd_bind_descriptor_sets(command,vk::PipelineBindPoint::GRAPHICS,layout,0,&[draw.set],&[]);}self.device.cmd_bind_vertex_buffers(command,0,&[buffer],&[0]);self.device.cmd_push_constants(command,layout,vk::ShaderStageFlags::VERTEX|vk::ShaderStageFlags::FRAGMENT,0,&push);self.device.cmd_draw(command,draw.count,1,draw.first,0);}
   }Ok(())
+ }
+ /// Sun changes replace only sprite vertices; sampled images/descriptors and
+ /// ordinary scene buffers remain immutable and resident.
+ pub(crate) fn refresh_shadow_bitmaps(&mut self,context:&VulkanContext,resources:&mut Resources,sources:&TextureBuffers,fence:vk::Fence,completed:u64)->Result<(),String>{
+  struct Update{old:BufferId,new:BufferId,index:usize,draws:Vec<usize>,bytes:usize}
+  let mut updates:Vec<Update>=Vec::new();updates.try_reserve(sources.len()).map_err(|_|"Sprite replacement metadata admission")?;
+  let mut old=Vec::new();let mut next=Vec::new();old.try_reserve(sources.len()).map_err(|_|"Sprite old identity admission")?;next.try_reserve(sources.len()).map_err(|_|"Sprite next identity admission")?;
+  let result=(||->Result<(),String>{for(path,source)in sources{
+   if !source.source_shadow_bitmap{return Err("Sprite replacement source classification".into());}
+   let geometry=Geometry::prepare(source)?;let mut matching=Vec::new();matching.try_reserve_exact(geometry.draws.len()).map_err(|_|"Sprite draw identity admission")?;matching.extend(self.draws.iter().enumerate().filter(|(_,d)|d.bitmap&&d.path==*path).map(|(i,_)|i));if matching.len()!=geometry.draws.len()||matching.is_empty(){return Err("Sprite replacement run identity".into());}
+   let previous=self.draws[matching[0]].buffer;
+   for(&i,g)in matching.iter().zip(&geometry.draws){let d=&self.draws[i];if d.buffer!=previous||d.first!=g.first||d.count!=g.count||d.opacity!=1.||d.back||!d.shadow_only{return Err("Sprite replacement immutable layout".into());}}
+   let index=self.buffers.iter().position(|id|*id==previous).ok_or("Sprite buffer ownership")?;
+   let buffer=resources.upload(context,geometry.upload_bytes(),vk::BufferUsageFlags::VERTEX_BUFFER|vk::BufferUsageFlags::STORAGE_BUFFER,false)?;old.push(previous);next.push(buffer);updates.push(Update{old:previous,new:buffer,index,draws:matching,bytes:geometry.upload_bytes().len()});
+  }if self.draws.iter().any(|d|d.bitmap&&!sources.contains_key(&d.path)){return Err("Sprite replacement removes immutable identity".into());}Ok(())})();
+  let retirement=match result.and_then(|_|resources.publication_preflight(context,fence,completed,&old,&next)){Ok(proof)=>proof,Err(error)=>{for id in next{resources.retire(id)?;}resources.collect(fence,completed)?;return Err(error);}};
+  for update in updates{debug_assert_eq!(self.buffers[update.index],update.old);self.buffers[update.index]=update.new;for index in update.draws{self.draws[index].buffer=update.new;}self.stats.uploads+=1;self.stats.vertex_bytes+=update.bytes as u64;}resources.retire_completed(retirement);Ok(())
  }
  pub fn refresh_images(&mut self,context:&VulkanContext,resources:&mut Resources,scene:&ingetrazo_core::scene::Scene,fence:vk::Fence,completed:u64)->Result<(),String>{
   let key=(scene.image_planes.membership_epoch(),scene.view_version);

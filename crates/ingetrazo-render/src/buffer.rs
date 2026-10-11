@@ -77,6 +77,8 @@ pub struct SourceTextureRun {pub back_side:bool,pub order:usize,pub first:usize,
 /// Mesh render buffer storing indexed triangle data.
 #[derive(Clone, Debug, Default, PartialEq)]
 pub struct MeshRenderBuffer {
+    /// Private shadow-only sprite bucket: missing textures omit the silhouette.
+    pub source_shadow_bitmap: bool,
     /// CPU-only exact opacity change spans (index offset, source f64). Never uploaded.
     pub source_opacity_runs: Vec<(usize, f64)>,
     pub source_front_cull: Vec<(usize,usize)>,
@@ -93,6 +95,7 @@ pub struct MeshRenderBuffer {
 impl MeshRenderBuffer {
     pub fn new() -> Self {
         Self {
+            source_shadow_bitmap:false,
             source_opacity_runs: Vec::new(),
             source_texture_runs:Vec::new(),
             source_default_back:Vec::new(),source_front_cull:Vec::new(),source_back_paints:Vec::new(),source_consolidated_opaque_count:0,source_back_override_count:0,
@@ -103,6 +106,7 @@ impl MeshRenderBuffer {
 
     pub fn with_capacity(vert_cap: usize, ind_cap: usize) -> Self {
         Self {
+            source_shadow_bitmap:false,
             source_opacity_runs: Vec::new(),
             source_texture_runs:Vec::new(),
             source_default_back:Vec::new(),source_front_cull:Vec::new(),source_back_paints:Vec::new(),source_consolidated_opaque_count:0,source_back_override_count:0,

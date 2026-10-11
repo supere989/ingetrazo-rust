@@ -275,8 +275,7 @@ pub fn build_scene_render_data(
             &mut data.textured_meshes,
             true,
             false,
-            None,
-        );
+            None, false);
     }
 
     // 4. Dimensions
@@ -327,11 +326,15 @@ pub fn build_scene_render_data(
 
 /// World-space surfaces only: no CPU projection, painter sorting or HLR work.
 /// GPU backends reuse the same visibility, material and recursive transform logic.
-pub fn build_world_surfaces(scene:&Scene,camera:&OrbitCamera,style:&StyleConfig)->SceneRenderData {
+pub fn build_world_surfaces(scene:&Scene,camera:&OrbitCamera,style:&StyleConfig)->SceneRenderData {build_world_surfaces_policy(scene,camera,style,false)}
+/// Shadow casters retain ordinary source material policy but omit every face-me
+/// group; bitmap silhouettes are placed separately toward the sun.
+pub fn build_shadow_surfaces(scene:&Scene,camera:&OrbitCamera,style:&StyleConfig)->SceneRenderData {build_world_surfaces_policy(scene,camera,style,true)}
+fn build_world_surfaces_policy(scene:&Scene,camera:&OrbitCamera,style:&StyleConfig,shadow_casters:bool)->SceneRenderData {
     let mut data=SceneRenderData::default();
     if style.visual_style!=VisualStyle::Wireframe {
         build_mesh_buffers(&scene.mesh,scene,style,&mut data.opaque_mesh,&mut data.transparent_mesh,&mut data.textured_meshes,true);
-        for group in &scene.groups {build_group_buffers(group,source_group_paint(group),&DMat4::IDENTITY,scene,camera,style,&mut data.opaque_mesh,&mut data.transparent_mesh,&mut data.visible_edges,&mut data.billboards,&mut data.textured_meshes,false,true,None);}
+        for group in &scene.groups {build_group_buffers(group,source_group_paint(group),&DMat4::IDENTITY,scene,camera,style,&mut data.opaque_mesh,&mut data.transparent_mesh,&mut data.visible_edges,&mut data.billboards,&mut data.textured_meshes,false,true,None, shadow_casters);}
     }
     data
 }
@@ -376,8 +379,7 @@ pub fn build_classic_own_surfaces(
             &mut data.textured_meshes,
             false,
             true,
-            Some((world, false)),
-        );
+            Some((world, false)), false);
     }
     if !data.billboards.is_empty() {
         return Err("Billboard prototype requires camera-dependent placement stage".into());
@@ -416,7 +418,7 @@ pub fn build_inherited_placement_prototype_surfaces(
         build_group_buffers(group, inherited_paint, &DMat4::IDENTITY,
             scene, camera, style, &mut data.opaque_mesh, &mut data.transparent_mesh,
             &mut data.visible_edges, &mut data.billboards, &mut data.textured_meshes,
-            false, true, Some((DMat4::IDENTITY,true)));
+            false, true, Some((DMat4::IDENTITY,true)), false);
     }
     if !data.billboards.is_empty() {
         return Err("Billboard prototype requires camera-dependent placement stage".into());
@@ -534,6 +536,7 @@ fn build_group_buffers(
     include_edges: bool,
     native_texture_sides: bool,
     root_world_override: Option<(DMat4,bool)>,
+    shadow_casters: bool
 ) {
     if group.hidden || !scene.is_layer_visible(group.layer.as_deref()) {
         return;
@@ -545,6 +548,8 @@ fn build_group_buffers(
     let reflected = world_t.determinant() < 0.0 && root_world_override.map_or(true,|v|v.1);
     let source_placement = root_world_override.map_or_else(||source_group_has_placement(group),|v|v.1);
     let paint = source_group_paint(group).or(owner_paint);
+
+    if shadow_casters && group.billboard { return; }
 
     // Billboard / Face-Me cutout figures
     if group.billboard {
@@ -757,8 +762,7 @@ fn build_group_buffers(
             textured_meshes,
             include_edges,
             native_texture_sides,
-            None,
-        );
+            None, shadow_casters);
     }
     }
     // Original _group_chunk flattens the entire adopted subtree into the

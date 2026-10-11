@@ -295,29 +295,13 @@ pub(super) fn light_matrix(
         * 0.87
         * 1.25;
     let eye = center + glam::Vec3::from_array(direction.map(|v| v as f32)) * ((radius * 2.) as f32);
-    let normalize = |v: glam::Vec3| {
-        let m = v.abs().max_element();
-        let length = if m == 0. {
-            0.
-        } else {
-            let s = v / m;
-            m * (s.x * s.x + s.y * s.y + s.z * s.z).sqrt()
-        };
-        if (length - 1.).abs() <= 1e-5 {
-            v
-        } else if length.abs() <= 1e-5 {
-            glam::Vec3::ZERO
-        } else {
-            v / length
-        }
-    };
-    let forward = normalize(center - eye);
+    let forward = qt_normalized(center - eye);
     let up = if direction[2].abs() < 0.95 {
         glam::Vec3::Z
     } else {
         glam::Vec3::Y
     };
-    let side = normalize(forward.cross(up));
+    let side = qt_normalized(forward.cross(up));
     let up = side.cross(forward);
     let mut view = [[0.; 4]; 4];
     view[3][3] = 1.;
@@ -633,7 +617,9 @@ struct Key {
 fn rounded_bits(v: f64, precision: usize) -> u64 {
     format!("{v:.precision$}").parse::<f64>().unwrap().to_bits()
 }
+struct BitmapPacket {revision:[u64;3],direction:[f64;3],textures:ingetrazo_render::buffer::TextureBuffers}
 struct Packet {
+    full:bool,
     revision: [u64; 3],
     vertices: Option<crate::native_vulkan::resources::BufferId>,
     indices: Option<crate::native_vulkan::resources::BufferId>,
@@ -663,6 +649,8 @@ pub(super) struct Owner {
     pub paint: [vk::Pipeline; 10],
     pub texture_pipelines: [vk::Pipeline; 16],
     packet: Option<Packet>,
+    bitmap:Option<BitmapPacket>,
+    bitmap_generation:u64,
     input: Option<([u64; 3], [f64; 3], [f32; 3], [f32; 3], [f32; 4], u32, f32)>,
     uniform: Option<crate::native_vulkan::resources::BufferId>,
     pub ground: Option<crate::native_vulkan::resources::BufferId>,
@@ -679,6 +667,7 @@ type Input = ([u64; 3], [f64; 3], [f32; 3], [f32; 3], [f32; 4], u32, f32);
 pub(super) struct Prepared {
     next: [Option<crate::native_vulkan::resources::BufferId>; 5],
     packet: Option<Packet>,
+    bitmap:Option<BitmapPacket>,
     retirement: Option<crate::native_vulkan::resources::CompletedRetirement>,
     update: Option<(ReceiverParameters, [u32; 4], Key, Input)>,
 }
@@ -710,6 +699,8 @@ impl Owner {
             paint: [vk::Pipeline::null(); 10],
             texture_pipelines: [vk::Pipeline::null(); 16],
             packet: None,
+            bitmap:None,
+            bitmap_generation:0,
             input: None,
             uniform: None,
             ground: None,
@@ -860,6 +851,7 @@ impl Owner {
         fence: vk::Fence,
         completed: u64,
         scene: Option<&ingetrazo_core::scene::Scene>,
+        full:bool,
     ) -> Result<Prepared, String> {
         if !darkness.is_finite()
             || !(0.0..=1.0).contains(&darkness)
@@ -873,11 +865,13 @@ impl Owner {
         }
         let input = (revision, direction, lo, hi, clip, clip_enabled, darkness);
         let packet_needed =
-            scene.is_some() && self.packet.as_ref().is_none_or(|p| p.revision != revision);
-        if self.input == Some(input) && !packet_needed {
+            scene.is_some() && self.packet.as_ref().is_none_or(|p| p.revision != revision||p.full!=full);
+        let bitmap_needed=scene.is_some()&&self.bitmap.as_ref().is_none_or(|b|b.revision!=revision||(!b.textures.is_empty()&&b.direction!=direction));
+        if self.input == Some(input) && !packet_needed && !bitmap_needed {
             return Ok(Prepared {
                 next: [None; 5],
                 packet: None,
+                bitmap:None,
                 retirement: None,
                 update: None,
             });
@@ -914,6 +908,8 @@ impl Owner {
         let mut next = [None; 5];
         let mut count = 0;
         let mut packet = None;
+        let bitmap=if bitmap_needed{Some(BitmapPacket{revision,direction,textures:bitmap_textures(scene.unwrap(),direction)?})}else{None};
+        if bitmap.is_some(){self.bitmap_generation.checked_add(1).ok_or("Bitmap generation exhausted")?;}
         let prepare = (|| -> Result<(), String> {
             if self.parameters != Some(params) {
                 next[0] = Some(self.resources.upload(
@@ -956,11 +952,11 @@ impl Owner {
             if packet_needed {
                 let mut style = ingetrazo_render::style::StyleConfig::default();
                 style.show_textures = true;
-                let data = ingetrazo_render::pipeline::build_world_surfaces(
+                let data = if full{ingetrazo_render::pipeline::build_shadow_surfaces(
                     scene.unwrap(),
                     &ingetrazo_core::camera::OrbitCamera::default(),
                     &style,
-                );
+                )}else{ingetrazo_render::pipeline::SceneRenderData::default()};
                 if data
                     .opaque_mesh
                     .vertices
@@ -1016,6 +1012,7 @@ impl Owner {
                     old[2..].copy_from_slice(&previous.ids());
                 }
                 packet = Some(Packet {
+                    full,
                     revision,
                     vertices: next[2],
                     indices: next[3],
@@ -1064,6 +1061,7 @@ impl Owner {
         Ok(Prepared {
             next,
             packet,
+            bitmap,
             retirement: Some(retirement),
             update: Some((params, bounds, key, input)),
         })
@@ -1080,6 +1078,7 @@ impl Owner {
         self.resources.collect(fence, completed).map(|_| ())
     }
     pub fn commit(&mut self, prepared: Prepared) {
+        if let Some(bitmap)=prepared.bitmap{self.bitmap=Some(bitmap);self.bitmap_generation+=1;}
         let Some((params, bounds, key, input)) = prepared.update else {
             return;
         };
@@ -1126,6 +1125,8 @@ impl Owner {
         self.ground_bounds = Some(bounds);
         self.input = Some(input);
     }
+    pub fn staged_bitmap<'a>(&'a self,p:&'a Prepared)->Option<&'a ingetrazo_render::buffer::TextureBuffers>{p.bitmap.as_ref().or(self.bitmap.as_ref()).map(|b|&b.textures)}
+    pub fn staged_extra_revision(&self,p:&Prepared)->u64{self.bitmap_generation+u64::from(p.bitmap.is_some())}
     pub fn staged_textures<'a>(
         &'a self,
         prepared: &'a Prepared,
@@ -1365,3 +1366,43 @@ pub(super) fn scene_bounds(scene: &ingetrazo_core::scene::Scene) -> Option<([f32
         None
     }
 }
+
+/// Sprite caster geometry: source Qt float placement and sun-facing quad.
+fn bitmap_textures(scene:&ingetrazo_core::scene::Scene,direction:[f64;3])->Result<ingetrazo_render::buffer::TextureBuffers,String>{
+ use ingetrazo_render::buffer::{TextureBuffers,Vertex,SourceTextureRun};
+ let mut out=TextureBuffers::default();
+ fn visit(g:&ingetrazo_core::groups::Group,parent:glam::DMat4,scene:&ingetrazo_core::scene::Scene,sun:[f64;3],out:&mut TextureBuffers)->Result<(),String>{
+  let world=parent*g.transform;
+  if !g.hidden&&scene.is_layer_visible(g.layer.as_deref())&&g.billboard&&g.native_document.get("billboard").map_or(true,|v|v.as_bool()==Some(true)){
+   if let Some(path)=g.mesh.faces.iter().find_map(|f|f.attrs.get("texture").and_then(|t|t.get("path")).and_then(|p|p.as_str())).filter(|p|!p.is_empty()){
+    let mut lo=[f32::INFINITY;3];let mut hi=[f32::NEG_INFINITY;3];let m=world.as_mat4().to_cols_array();
+    for v in &g.mesh.vertices{let [x,y,z]=v.position.as_vec3().to_array();let w=((m[3]*x+m[7]*y)+m[11]*z)+m[15];let p: [f32;3]=std::array::from_fn(|r|{let n=((m[r]*x+m[4+r]*y)+m[8+r]*z)+m[12+r];if w==1.{n}else{n/w}});if !p.iter().all(|x|x.is_finite()){return Err("Sprite placement arithmetic admission".into());}for r in 0..3{lo[r]=lo[r].min(p[r]);hi[r]=hi[r].max(p[r]);}}
+    if !g.mesh.vertices.is_empty(){let width=(f64::from(hi[0])-f64::from(lo[0])).hypot(f64::from(hi[1])-f64::from(lo[1]));let height=f64::from(hi[2])-f64::from(lo[2]);if width>=1e-9&&height>=1e-9{
+     let anchor=glam::Vec3::new(((f64::from(lo[0])+f64::from(hi[0]))/2.)as f32,((f64::from(lo[1])+f64::from(hi[1]))/2.)as f32,lo[2]);let mut d=glam::Vec3::new(sun[0]as f32,sun[1]as f32,0.);let length=(d.x*d.x+d.y*d.y).sqrt();if length<1e-6{d=glam::Vec3::X;}d=qt_normalized(d);
+     let right=glam::Vec3::new(-d.y,d.x,0.);let c0=anchor-right*((width/2.)as f32);let c1=anchor+right*((width/2.)as f32);let up=glam::Vec3::Z*(height as f32);let corners=[c0,c1,c1+up,c0+up];if !corners.iter().all(|p|p.is_finite()){return Err("Sprite quad arithmetic admission".into());}
+     out.try_reserve(1).map_err(|_|"Sprite texture identity admission")?;let order=out.take_order();let buffer=out.entry(path.to_owned()).or_default();buffer.source_shadow_bitmap=true;buffer.vertices.try_reserve(6).map_err(|_|"Sprite vertex admission")?;buffer.indices.try_reserve(6).map_err(|_|"Sprite index admission")?;buffer.source_texture_runs.try_reserve(1).map_err(|_|"Sprite run admission")?;let first=buffer.indices.len();let uv=[[0.,0.],[1.,0.],[1.,1.],[0.,1.]];for i in [0,1,2,0,2,3]{let index:u32=buffer.vertices.len().try_into().map_err(|_|"Sprite vertex index overflow")?;buffer.vertices.push(Vertex{position:corners[i].to_array(),uv:uv[i],..Default::default()});buffer.indices.push(index);}buffer.source_texture_runs.push(SourceTextureRun{first,count:6,order,back_side:false,shade:1.,opacity:1.,front_cull:false});
+    }}
+   }
+  }
+  for c in &g.children{visit(c,world,scene,sun,out)?;}Ok(())
+ }
+ for g in &scene.groups{if !g.hidden&&scene.is_layer_visible(g.layer.as_deref()){visit(g,glam::DMat4::IDENTITY,scene,direction,&mut out)?;}}Ok(out)
+}
+pub(super) fn has_billboards(scene:&ingetrazo_core::scene::Scene)->bool{fn has(g:&ingetrazo_core::groups::Group)->bool{g.billboard||g.children.iter().any(has)}scene.groups.iter().any(has)}
+
+fn qt_normalized(v: glam::Vec3) -> glam::Vec3 {
+        let m = v.abs().max_element();
+        let length = if m == 0. {
+            0.
+        } else {
+            let s = v / m;
+            m * (s.x * s.x + s.y * s.y + s.z * s.z).sqrt()
+        };
+        if (length - 1.).abs() <= 1e-5 {
+            v
+        } else if length.abs() <= 1e-5 {
+            glam::Vec3::ZERO
+        } else {
+            v / length
+        }
+    }

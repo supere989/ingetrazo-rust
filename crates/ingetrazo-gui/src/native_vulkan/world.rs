@@ -92,8 +92,17 @@ impl Drop for Contours {fn drop(&mut self){unsafe{if self.pipeline!=vk::Pipeline
 #[derive(Clone,Copy,bytemuck::Pod,bytemuck::Zeroable)]
 #[repr(C)]struct ColoredVertex {position:[f32;3],color:[f32;3]}
 #[derive(Clone,Copy)]struct OpacityRun {first:u32,count:u32,opacity:f32,kind:u32}
-pub struct World {shadow:Option<shadows::Owner>,shadow_readback:bool,shadow_bounds:Option<(u64,Option<([f32;3],[f32;3])>)>,shadow_active:bool,shadow_independent:bool,shadow_ground_enabled:bool,shadow_geometry:bool,prepared_shadow_geometry:bool,annotation_visibility:Option<super::annotation_visibility_gpu::Evaluator>,annotation_depth_binding:Option<Arc<()>>,annotation_parameters:Option<super::annotation_visibility_gpu::Parameters>,textures:Option<super::textures::Textures>,texture_enabled:bool,texture_average:bool,has_texture_sources:bool,show_edges:bool,edge_vertices:Option<BufferId>,edge_count:u32,style_mode:ingetrazo_render::style::VisualStyle,style_front:[f32;4],style_back:[f32;4],default_back_runs:Vec<(u32,u32)>,consolidated_opaque_count:usize,paint_pipelines:[vk::Pipeline;10],ordinary_runs:Vec<(u32,u32,bool)>,transparent_vertices:Option<BufferId>,opacity_runs:Vec<OpacityRun>,transparent_pipeline:vk::Pipeline,probe_pressure_after:Option<usize>,contour_metrics:ContourMetrics,contours:Option<Contours>,contour_batches:Vec<ContourBatch>,background:[f32;4],eye:[f32;3],width_factor:f32,display_scale:f32,edge_color:[f32;4],device:Device,budget:Arc<VulkanBudget>,resources:Resources,render_pass:vk::RenderPass,pipeline:vk::Pipeline,mask_pipeline:vk::Pipeline,cap_pipeline:vk::Pipeline,layout:vk::PipelineLayout,descriptor_layout:vk::DescriptorSetLayout,pool:vk::DescriptorPool,depth_format:vk::Format,samples:vk::SampleCountFlags,target:Option<Target>,vertices:Option<BufferId>,indices:Option<BufferId>,count:u32,cap_vertices:Option<BufferId>,cap_signature:Option<([[f32;3];4],[f32;4])>,cap_key:Option<((u64,u64,u64),[f32;4],bool,[f32;4])>,revision:Option<(u64,u64,u64)>,mvp:[f32;16],clip:[f32;4],clip_enabled:u32,pub uploads:u64}
+pub struct World {shadow:Option<shadows::Owner>,shadow_readback:bool,shadow_bounds:Option<((u64,u64),Option<([f32;3],[f32;3])>)>,shadow_has_billboards:Option<((u64,u64),bool)>,shadow_extra_revision:u64,prepared_shadow_extra_revision:u64,shadow_active:bool,shadow_independent:bool,shadow_ground_enabled:bool,shadow_geometry:bool,prepared_shadow_geometry:bool,annotation_visibility:Option<super::annotation_visibility_gpu::Evaluator>,annotation_depth_binding:Option<Arc<()>>,annotation_parameters:Option<super::annotation_visibility_gpu::Parameters>,textures:Option<super::textures::Textures>,texture_enabled:bool,texture_average:bool,has_texture_sources:bool,show_edges:bool,edge_vertices:Option<BufferId>,edge_count:u32,style_mode:ingetrazo_render::style::VisualStyle,style_front:[f32;4],style_back:[f32;4],default_back_runs:Vec<(u32,u32)>,consolidated_opaque_count:usize,paint_pipelines:[vk::Pipeline;10],ordinary_runs:Vec<(u32,u32,bool)>,transparent_vertices:Option<BufferId>,opacity_runs:Vec<OpacityRun>,transparent_pipeline:vk::Pipeline,probe_pressure_after:Option<usize>,contour_metrics:ContourMetrics,contours:Option<Contours>,contour_batches:Vec<ContourBatch>,background:[f32;4],eye:[f32;3],width_factor:f32,display_scale:f32,edge_color:[f32;4],device:Device,budget:Arc<VulkanBudget>,resources:Resources,render_pass:vk::RenderPass,pipeline:vk::Pipeline,mask_pipeline:vk::Pipeline,cap_pipeline:vk::Pipeline,layout:vk::PipelineLayout,descriptor_layout:vk::DescriptorSetLayout,pool:vk::DescriptorPool,depth_format:vk::Format,samples:vk::SampleCountFlags,target:Option<Target>,vertices:Option<BufferId>,indices:Option<BufferId>,count:u32,cap_vertices:Option<BufferId>,cap_signature:Option<([[f32;3];4],[f32;4])>,cap_key:Option<((u64,u64,u64),[f32;4],bool,[f32;4])>,revision:Option<(u64,u64,u64)>,mvp:[f32;16],clip:[f32;4],clip_enabled:u32,pub uploads:u64}
 impl World {
+ /// Source ground catcher guards with native retained owners. A source photo
+ /// requires actual admitted photo renderer readiness, which is not available
+ /// in the current native Scene; metadata is deliberately not treated as it.
+ pub fn solar_ground_receiver_for_scene(scene:&ingetrazo_core::scene::Scene)->bool{
+  let map=scene.geo_datum.is_some()&&scene.tile_layer.as_ref().is_some_and(|m|m.visible);
+  let terrain=scene.terrain.as_ref().is_some_and(|t|t.visible);
+  !(map||terrain)
+ }
+ pub(crate) fn has_shadow_owner(&self)->bool{self.shadow.is_some()}
  pub fn set_shadow_readback_for_probe(&mut self)->Result<(),String>{if self.shadow.is_some(){return Err("Shadow readback flag must precede map allocation".into());}self.shadow_readback=true;Ok(())}
  pub fn shadow_readback_for_probe(&mut self,context:&VulkanContext,fence:vk::Fence,completed:u64)->Result<Vec<u8>,String>{self.shadow.as_mut().ok_or("Shadow owner absent")?.readback_for_probe(context,fence,completed)}
  pub fn shadow_map_matrix_for_probe(&self)->Option<[f32;16]>{self.shadow.as_ref().and_then(|s|s.light_matrix_for_probe())}
@@ -137,7 +146,7 @@ impl World {
   let sizes=[vk::DescriptorPoolSize{ty:vk::DescriptorType::COMBINED_IMAGE_SAMPLER,descriptor_count:4}];let pool=match unsafe {device.create_descriptor_pool(&vk::DescriptorPoolCreateInfo::default().flags(vk::DescriptorPoolCreateFlags::FREE_DESCRIPTOR_SET).max_sets(4).pool_sizes(&sizes),None)} {Ok(p)=>p,Err(e)=>{unsafe {device.destroy_descriptor_set_layout(descriptor_layout,None);device.destroy_pipeline(transparent_pipeline,None);device.destroy_pipeline(cap_pipeline,None);device.destroy_pipeline(mask_pipeline,None);device.destroy_pipeline(pipeline,None);device.destroy_pipeline_layout(layout,None);device.destroy_render_pass(render_pass,None);}return Err(e.to_string());}};
   let clip_distance=unsafe{context.instance.get_physical_device_features(context.physical_device)}.shader_clip_distance!=0&&std::env::var("INGETRAZO_FORCE_MANUAL_EDGE_CLIP").as_deref()!=Ok("1");
   eprintln!("Native world edge pre-raster clip: shaderClipDistance={clip_distance}; unsupported/forced fallback is direct GPU endpoint clipping");
-  let mut world=Self{shadow:None,shadow_readback:false,shadow_bounds:None,shadow_active:false,shadow_independent:false,shadow_ground_enabled:false,shadow_geometry:false,prepared_shadow_geometry:false,annotation_visibility:None,annotation_depth_binding:None,annotation_parameters:None,textures:None,texture_enabled:false,texture_average:false,has_texture_sources:false,show_edges:true,edge_vertices:None,edge_count:0,style_mode:ingetrazo_render::style::VisualStyle::ShadedWithTextures,style_front:[1.;4],style_back:[0.62,0.70,0.78,1.],default_back_runs:vec![],consolidated_opaque_count:0,paint_pipelines:[vk::Pipeline::null();10],ordinary_runs:Vec::new(),transparent_vertices:None,opacity_runs:Vec::new(),transparent_pipeline,probe_pressure_after:None,contour_metrics:ContourMetrics::default(),contours:None,contour_batches:Vec::new(),background:[0.90,0.91,0.92,1.],eye:[0.;3],width_factor:0.,display_scale:1.,edge_color:[0.;4],device,budget:budget.clone(),resources:Resources::new(context,budget),render_pass,pipeline,mask_pipeline,cap_pipeline,layout,descriptor_layout,pool,depth_format,samples,target:None,vertices:None,indices:None,count:0,cap_vertices:None,cap_signature:None,cap_key:None,revision:None,mvp:[0.0;16],clip:[0.;4],clip_enabled:0,uploads:0};world.contours=Some(Contours::new(context,render_pass,samples)?);world.textures=Some(super::textures::Textures::new(context,render_pass,samples,world.budget.clone())?);for (i,pass)in [WorldPass::FrontSurface,WorldPass::TransparentFront,WorldPass::TransparentBack,WorldPass::OpaqueBack,WorldPass::DefaultBack,WorldPass::XRaySurface,WorldPass::XRayFront,WorldPass::Edge,WorldPass::DepthOnly,WorldPass::HiddenEdge].into_iter().enumerate(){world.paint_pipelines[i]=make_pipeline(&world.device,render_pass,layout,pass,samples,clip_distance)?;}Ok(world)
+  let mut world=Self{shadow:None,shadow_readback:false,shadow_bounds:None,shadow_has_billboards:None,shadow_extra_revision:0,prepared_shadow_extra_revision:0,shadow_active:false,shadow_independent:false,shadow_ground_enabled:false,shadow_geometry:false,prepared_shadow_geometry:false,annotation_visibility:None,annotation_depth_binding:None,annotation_parameters:None,textures:None,texture_enabled:false,texture_average:false,has_texture_sources:false,show_edges:true,edge_vertices:None,edge_count:0,style_mode:ingetrazo_render::style::VisualStyle::ShadedWithTextures,style_front:[1.;4],style_back:[0.62,0.70,0.78,1.],default_back_runs:vec![],consolidated_opaque_count:0,paint_pipelines:[vk::Pipeline::null();10],ordinary_runs:Vec::new(),transparent_vertices:None,opacity_runs:Vec::new(),transparent_pipeline,probe_pressure_after:None,contour_metrics:ContourMetrics::default(),contours:None,contour_batches:Vec::new(),background:[0.90,0.91,0.92,1.],eye:[0.;3],width_factor:0.,display_scale:1.,edge_color:[0.;4],device,budget:budget.clone(),resources:Resources::new(context,budget),render_pass,pipeline,mask_pipeline,cap_pipeline,layout,descriptor_layout,pool,depth_format,samples,target:None,vertices:None,indices:None,count:0,cap_vertices:None,cap_signature:None,cap_key:None,revision:None,mvp:[0.0;16],clip:[0.;4],clip_enabled:0,uploads:0};world.contours=Some(Contours::new(context,render_pass,samples)?);world.textures=Some(super::textures::Textures::new(context,render_pass,samples,world.budget.clone())?);for (i,pass)in [WorldPass::FrontSurface,WorldPass::TransparentFront,WorldPass::TransparentBack,WorldPass::OpaqueBack,WorldPass::DefaultBack,WorldPass::XRaySurface,WorldPass::XRayFront,WorldPass::Edge,WorldPass::DepthOnly,WorldPass::HiddenEdge].into_iter().enumerate(){world.paint_pipelines[i]=make_pipeline(&world.device,render_pass,layout,pass,samples,clip_distance)?;}Ok(world)
  }
  /// Must be called after the previous UI/draw fence completes.
  pub fn resize(&mut self,context:&VulkanContext,renderer:&mut egui_ash_renderer::Renderer,extent:vk::Extent2D)->Result<egui::TextureId,String> {
@@ -252,9 +261,9 @@ impl World {
  pub fn contour_batch_count(&self)->usize{self.contour_batches.len()}
  pub fn set_display_scale(&mut self,scale:f32){self.display_scale=scale.max(0.01);}
  pub fn set_scene(&mut self,context:&VulkanContext,scene:&ingetrazo_core::scene::Scene,camera:&ingetrazo_core::camera::OrbitCamera,style:&ingetrazo_render::style::StyleConfig,fence:vk::Fence,completed_serial:u64,epoch:u64)->Result<(),String> {
-  self.set_scene_extra(context,scene,camera,style,fence,completed_serial,epoch,None)
+  self.set_scene_extra(context,scene,camera,style,fence,completed_serial,epoch,&[])
  }
- fn set_scene_extra(&mut self,context:&VulkanContext,scene:&ingetrazo_core::scene::Scene,camera:&ingetrazo_core::camera::OrbitCamera,style:&ingetrazo_render::style::StyleConfig,fence:vk::Fence,completed_serial:u64,epoch:u64,shadow_extra:Option<&ingetrazo_render::buffer::TextureBuffers>)->Result<(),String>{
+ fn set_scene_extra(&mut self,context:&VulkanContext,scene:&ingetrazo_core::scene::Scene,camera:&ingetrazo_core::camera::OrbitCamera,style:&ingetrazo_render::style::StyleConfig,fence:vk::Fence,completed_serial:u64,epoch:u64,shadow_extra:&[&ingetrazo_render::buffer::TextureBuffers])->Result<(),String>{
   let previous=(self.mvp,self.clip,self.clip_enabled,self.eye,self.width_factor,self.edge_color,self.background,self.style_mode,self.style_front,self.style_back,self.show_edges);
   let result=self.prepare_scene(context,scene,camera,style,fence,completed_serial,epoch,shadow_extra);
   if result.is_err(){(self.mvp,self.clip,self.clip_enabled,self.eye,self.width_factor,self.edge_color,self.background,self.style_mode,self.style_front,self.style_back,self.show_edges)=previous;}
@@ -266,20 +275,23 @@ impl World {
   let snapshot=crate::navigation_ray::camera_snapshot(camera).ok_or("Solar receiver camera arithmetic admission")?;
   let source_mvp=std::array::from_fn(|i|snapshot.matrix[i/4][i%4]);
   let sun=sun.filter(|_|!matches!(style.visual_style,ingetrazo_render::style::VisualStyle::Wireframe|ingetrazo_render::style::VisualStyle::XRay));
-  let bounds=if self.shadow_bounds.as_ref().is_some_and(|(revision,_)|*revision==scene.version){self.shadow_bounds.unwrap().1}else{shadows::scene_bounds(scene)};
+  let bounds=if self.shadow_bounds.as_ref().is_some_and(|(revision,_)|*revision==(scene.version,epoch)){self.shadow_bounds.unwrap().1}else{shadows::scene_bounds(scene)};
   let active=sun.is_some()&&bounds.is_some();
   if !active{let result=self.set_scene(context,scene,camera,style,fence,completed,epoch);if result.is_ok(){self.shadow_active=false;self.mvp=source_mvp;}return result;}
-  let independent=matches!(style.visual_style,ingetrazo_render::style::VisualStyle::HiddenLine|ingetrazo_render::style::VisualStyle::Monochrome);
+  let has_billboards=if let Some((key,value))=self.shadow_has_billboards.filter(|(key,_)|*key==(scene.version,epoch)){let _=key;value}else{shadows::has_billboards(scene)};
+  let independent=has_billboards||matches!(style.visual_style,ingetrazo_render::style::VisualStyle::HiddenLine|ingetrazo_render::style::VisualStyle::Monochrome);
   let previous_geometry=self.shadow_geometry;self.shadow_geometry=true;
   let mut owner=match self.shadow.take(){Some(owner)=>owner,None=>match shadows::Owner::new(context,self.budget.clone(),self.render_pass,self.samples,self.textures.as_ref().unwrap().asset_layout(),unsafe{context.instance.get_physical_device_features(context.physical_device)}.shader_clip_distance!=0,self.shadow_readback){Ok(owner)=>owner,Err(error)=>{self.shadow_geometry=previous_geometry;return Err(error);}}};
   let (lo,hi)=bounds.unwrap();let mut clip=[0.;4];let mut enabled=0;
   if scene.show_section_cuts{if let Some(p)=scene.section_planes.iter().find(|p|p.active){clip=[p.normal.x as f32,p.normal.y as f32,p.normal.z as f32,-p.normal.dot(p.point)as f32];enabled=1;}}
-  let staged=match owner.stage(context,sun.unwrap(),darkness,lo,hi,clip,enabled,[scene.version,0,epoch],fence,completed,independent.then_some(scene)){Ok(staged)=>staged,Err(error)=>{self.shadow=Some(owner);self.shadow_geometry=previous_geometry;return Err(error);}};
-  let result=self.set_scene_extra(context,scene,camera,style,fence,completed,epoch,if independent{owner.staged_textures(&staged)}else{None});
-  if let Err(error)=result{let cleanup=owner.abort(staged,fence,completed);self.shadow=Some(owner);self.shadow_geometry=previous_geometry;cleanup?;return Err(error);}
-  owner.commit(staged);self.mvp=source_mvp;self.shadow=Some(owner);self.shadow_active=true;self.shadow_independent=independent;self.shadow_ground_enabled=ground;self.shadow_bounds=Some((scene.version,bounds));Ok(())
+  let staged=match owner.stage(context,sun.unwrap(),darkness,lo,hi,clip,enabled,[scene.version,0,epoch],fence,completed,Some(scene),independent){Ok(staged)=>staged,Err(error)=>{self.shadow=Some(owner);self.shadow_geometry=previous_geometry;return Err(error);}};
+  let previous_extra=self.shadow_extra_revision;self.shadow_extra_revision=owner.staged_extra_revision(&staged);
+  let empty=ingetrazo_render::buffer::TextureBuffers::default();let extra=[owner.staged_textures(&staged).unwrap_or(&empty),owner.staged_bitmap(&staged).unwrap_or(&empty)];
+  let result=self.set_scene_extra(context,scene,camera,style,fence,completed,epoch,&extra);
+  if let Err(error)=result{self.shadow_extra_revision=previous_extra;let cleanup=owner.abort(staged,fence,completed);self.shadow=Some(owner);self.shadow_geometry=previous_geometry;cleanup?;return Err(error);}
+  owner.commit(staged);self.mvp=source_mvp;self.shadow=Some(owner);self.shadow_active=true;self.shadow_independent=independent;self.shadow_ground_enabled=ground;self.shadow_bounds=Some(((scene.version,epoch),bounds));self.shadow_has_billboards=Some(((scene.version,epoch),has_billboards));Ok(())
  }
- fn prepare_scene(&mut self,context:&VulkanContext,scene:&ingetrazo_core::scene::Scene,camera:&ingetrazo_core::camera::OrbitCamera,style:&ingetrazo_render::style::StyleConfig,fence:vk::Fence,completed_serial:u64,epoch:u64,shadow_extra:Option<&ingetrazo_render::buffer::TextureBuffers>)->Result<(),String> {
+ fn prepare_scene(&mut self,context:&VulkanContext,scene:&ingetrazo_core::scene::Scene,camera:&ingetrazo_core::camera::OrbitCamera,style:&ingetrazo_render::style::StyleConfig,fence:vk::Fence,completed_serial:u64,epoch:u64,shadow_extra:&[&ingetrazo_render::buffer::TextureBuffers])->Result<(),String> {
   let started=std::time::Instant::now();
   self.show_edges=style.show_edges;self.style_mode=style.visual_style;self.style_front=style.front_color;self.style_back=style.back_color;
   self.background=style.background_color;self.background[3]=1.;
@@ -299,7 +311,10 @@ impl World {
   let has_texture_sources=if self.revision==Some(revision){self.has_texture_sources}else{scene_has_textures(scene)};
   let texture_average=has_texture_sources&&!style.show_textures&&style.visual_style==ingetrazo_render::style::VisualStyle::ShadedWithTextures;
   let texture_enabled=texture_average||has_texture_sources&&(style.visual_style==ingetrazo_render::style::VisualStyle::XRay||(style.show_textures&&style.visual_style==ingetrazo_render::style::VisualStyle::ShadedWithTextures));
-  if self.revision==Some(revision)&&self.texture_enabled==texture_enabled&&self.texture_average==texture_average&&self.shadow_geometry==self.prepared_shadow_geometry{
+  if self.revision==Some(revision)&&self.texture_enabled==texture_enabled&&self.texture_average==texture_average&&self.shadow_geometry==self.prepared_shadow_geometry&&self.shadow_extra_revision!=self.prepared_shadow_extra_revision&&!cap_changed{
+   let sprites=shadow_extra.last().ok_or("Sprite replacement sources absent")?;self.textures.as_mut().unwrap().refresh_shadow_bitmaps(context,&mut self.resources,sprites,fence,completed_serial)?;self.prepared_shadow_extra_revision=self.shadow_extra_revision;return Ok(());
+  }
+  if self.revision==Some(revision)&&self.texture_enabled==texture_enabled&&self.texture_average==texture_average&&self.shadow_geometry==self.prepared_shadow_geometry&&self.shadow_extra_revision==self.prepared_shadow_extra_revision{
    let next_cap=if cap_changed{Some(self.upload_cap(context,cap)?)}else{None};
    let cap_retirement=if let Some(next)=next_cap{
     match self.resources.publication_preflight(context,fence,completed_serial,self.cap_vertices.as_slice(),next.as_slice()){
@@ -359,7 +374,7 @@ impl World {
   if !has_texture_sources{self.textures.as_mut().unwrap().discard_average_means();}
   if let Some(next)=next_cap{self.cap_vertices=next;self.cap_signature=cap;}self.cap_key=Some(cap_key);
   self.contour_metrics.additional_position_bytes=batches.iter().filter(|b|b.owned).map(|b|self.resources.logical_bytes(b.vertices).unwrap()).sum();self.contour_metrics.batches=batches.len();self.contour_metrics.compact_preprocess_ms=preprocessing;self.contour_metrics.cold_build_ms=started.elapsed().as_secs_f64()*1000.;self.contour_batches=batches;
-  self.edge_vertices=next_edges;self.edge_count=edge_count;self.transparent_vertices=next_transparent;self.opacity_runs=runs;self.ordinary_runs=ordinary_runs;self.default_back_runs=default_back_runs;self.consolidated_opaque_count=mesh.source_consolidated_opaque_count;self.vertices=vertices;self.indices=indices;self.count=count;self.revision=Some(revision);self.texture_enabled=texture_enabled;self.texture_average=texture_average;self.prepared_shadow_geometry=self.shadow_geometry;self.has_texture_sources=has_texture_sources;self.uploads+=1;Ok(())
+  self.edge_vertices=next_edges;self.edge_count=edge_count;self.transparent_vertices=next_transparent;self.opacity_runs=runs;self.ordinary_runs=ordinary_runs;self.default_back_runs=default_back_runs;self.consolidated_opaque_count=mesh.source_consolidated_opaque_count;self.vertices=vertices;self.indices=indices;self.count=count;self.revision=Some(revision);self.texture_enabled=texture_enabled;self.texture_average=texture_average;self.prepared_shadow_geometry=self.shadow_geometry;self.prepared_shadow_extra_revision=self.shadow_extra_revision;self.has_texture_sources=has_texture_sources;self.uploads+=1;Ok(())
  }
  fn upload_cap(&mut self,context:&VulkanContext,cap:Option<([[f32;3];4],[f32;4])>)->Result<Option<BufferId>,String>{
   if let Some((frame,color))=cap{let vertices=[0,1,2,0,2,3].map(|i|ingetrazo_render::buffer::Vertex::new(frame[i],[0.,0.,1.],color,[0.,0.]));Ok(Some(self.resources.upload(context,bytemuck::cast_slice(&vertices),vk::BufferUsageFlags::VERTEX_BUFFER,false)?))}else{Ok(None)}
@@ -390,7 +405,7 @@ impl World {
   if let(Some(v),Some(i))=(self.vertices,self.indices){self.resources.mark_used(v,serial)?;self.resources.mark_used(i,serial)?;}
   if let Some(v)=self.transparent_vertices{self.resources.mark_used(v,serial)?;}
   if self.shadow_independent{owner.preflight_packet(serial)?;}
-  self.textures.as_mut().unwrap().preflight_shadow(&mut self.resources,serial)?;
+  self.textures.as_mut().unwrap().preflight_shadow(&mut self.resources,serial,self.shadow_independent)?;
   owner.map.begin(command);
   unsafe{
    self.device.cmd_push_constants(command,owner.casters.plain_layout,vk::ShaderStageFlags::VERTEX|vk::ShaderStageFlags::FRAGMENT,0,bytemuck::bytes_of(&parameters));
@@ -399,7 +414,7 @@ impl World {
    else{owner.record_packet(command,serial)?;}
   }
   parameters.use_texture=1;
-  let result=self.textures.as_mut().unwrap().record_shadow(&mut self.resources,command,serial,owner.casters.textured,owner.casters.texture_layout,owner.casters.fallback,owner.casters.plain_layout,bytemuck::bytes_of(&parameters));
+  let result=self.textures.as_mut().unwrap().record_shadow(&mut self.resources,command,serial,owner.casters.textured,owner.casters.texture_layout,owner.casters.fallback,owner.casters.plain_layout,bytemuck::bytes_of(&parameters),self.shadow_independent);
   unsafe{self.device.cmd_end_render_pass(command);}
   result?;owner.dirty=false;owner.recorded_serial=serial;owner.renders+=1;Ok(())
  }

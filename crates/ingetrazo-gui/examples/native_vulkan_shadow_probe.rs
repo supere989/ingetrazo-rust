@@ -144,6 +144,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         *serial += 1;
         world.readback(&context)
     };
+    let ground = World::solar_ground_receiver_for_scene(&scene);
     world.set_scene_with_sun(
         &context,
         &scene,
@@ -154,7 +155,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         1,
         Some(sun),
         0.55,
-        true,
+        ground,
     )?;
     let on = render(&mut world, &mut serial)?;
     image::save_buffer(out.join("on.png"), &on, 800, 600, image::ColorType::Rgba8)?;
@@ -203,7 +204,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             1,
             Some(sun),
             0.55,
-            true,
+            ground,
         )?;
         assert_eq!(render(&mut world, &mut serial)?, on);
         assert_eq!(world.shadow_stats_for_probe(), cold);
@@ -222,7 +223,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             1,
             Some(sun),
             0.25,
-            true,
+            ground,
         )
         .unwrap_err();
     assert_eq!(world.shadow_stats_for_probe(), cold);
@@ -230,7 +231,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     budget.ledger.lock().unwrap().total_limit = Some(256 * 1024 * 1024);
     assert_eq!(render(&mut world, &mut serial)?, on);
     world.set_scene_with_sun(
-        &context, &scene, &camera, &style, fence, serial, 1, None, 0.55, true,
+        &context, &scene, &camera, &style, fence, serial, 1, None, 0.55, ground,
     )?;
     let off = render(&mut world, &mut serial)?;
     image::save_buffer(out.join("off.png"), &off, 800, 600, image::ColorType::Rgba8)?;
@@ -244,7 +245,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         1,
         Some(sun),
         0.55,
-        true,
+        ground,
     )?;
     let restored = render(&mut world, &mut serial)?;
     assert_eq!(restored, on);
@@ -267,7 +268,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     std::fs::write(
         out.join("result.json"),
         serde_json::to_vec_pretty(
-            &serde_json::json!({"source_commit":option_env!("INGETRAZO_BUILD_SOURCE"),"cold":cold,"uploads":uploads,"refusal":refusal,"ledger_zero":final_bytes==0,"map_size":2048,"source_reference_pending":reference.is_none(),"reference_case":reference.as_ref().map(|r|r["name"].clone()),"receiver_matrix":receiver_matrix,"light_matrix":light_matrix,"samples":if reference.is_some(){1}else{4}}),
+            &serde_json::json!({"source_commit":option_env!("INGETRAZO_BUILD_SOURCE"),"ground_receiver":ground,"cold":cold,"uploads":uploads,"refusal":refusal,"ledger_zero":final_bytes==0,"map_size":2048,"source_reference_pending":reference.is_none(),"reference_case":reference.as_ref().map(|r|r["name"].clone()),"receiver_matrix":receiver_matrix,"light_matrix":light_matrix,"samples":if reference.is_some(){1}else{4}}),
         )?,
     )?;
     Ok(())
