@@ -1,0 +1,19 @@
+{
+  "base": "e660013c",
+  "runtime": "ea2581d0ac5ad178229061860db0dc9c891a651e",
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "binary_sha256": "9059b21f2f2deae7887eda5ddbe46bb0f357d35b6784a0323b3a188c3e8e1fa2",
+  "source_hashes": {
+    "crates/ingetrazo-gui/src/viewport.rs": "1a11ef78211a2c8a6021cf190a1eb01491ba462d1d63f940f2187539afa726a1",
+    "crates/ingetrazo-gui/src/scale_overlay.rs": "04c53a3944b2ba5e9eb698f18c3740aa7fcde43e39166bf15a83114df0580a28",
+    "crates/ingetrazo-tools/src/scale_tool.rs": "f8055b5625d83205ee7df2bee3e7f4e27906174477cad71c5f960b10c4042635",
+    "crates/ingetrazo-gui/examples/scale_egui_input.rs": "eef84f23e1d602e0ae8e2867141c81bfe13934010e99c988f140d8f06c7348bd",
+    "scripts/check-scale-egui-input.py": "6f8644f9c4f23caebb281932dd8beceda6d71c71735de2bd697f789fdca3c160",
+    "scripts/reference-scale-eye-clip.py": "88e76d0b3ebcd993ac9e9bf96b75bac3905b8c0d4be68218234e9b2133ac1bca"
+  },
+  "original_hashes": {
+    "tools/scale.py": "6b696f01a44e4cb22c16f236151c79407a62f91667775aa6ae12d35f6095b564",
+    "views/viewport.py": "1fb62f55b8f559deb3676924ee69a9a444397faa28c49651111cea44e420c724"
+  },
+  "scope": "Actual app.update_ui RawInput; actual Qt clip method. No rendered/OS input claim."
+}

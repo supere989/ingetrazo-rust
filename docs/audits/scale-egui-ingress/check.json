@@ -1,0 +1,1 @@
+{"passed": true, "consumer_cases": 7, "exact_qt_clip_cases": 4, "rejected_mutations": 6, "scope": "actual egui RawInput, not OS/rendered capture"}
