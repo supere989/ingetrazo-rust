@@ -1,0 +1,31 @@
+{
+  "source_commit": "f8cf94b9",
+  "artifact_run": 38104819897,
+  "platform": "ARM",
+  "checker_sha256": "5e976faf4b5498c5754e05ed66c64ed4a8340113e57800f7f1ada8d97cd77e2e",
+  "positive_existing_rawframes": true,
+  "negative_controls": [
+    {
+      "mutation": "blank-initial",
+      "rejected": true,
+      "assertion": "initial"
+    },
+    {
+      "mutation": "stale-model-frame",
+      "rejected": true,
+      "assertion": "model"
+    },
+    {
+      "mutation": "missing-clear-press-route",
+      "rejected": true,
+      "assertion": ""
+    },
+    {
+      "mutation": "changed-warm-counter",
+      "rejected": true,
+      "assertion": "matrix_bytes"
+    }
+  ],
+  "upload_scope": "Moved-frame64-bytewrite; ringcatchup64bytesonselect-press explicitlyobserved512total, not globaltotal claim",
+  "scope": "Retained native11-frame artifacts replay only, no GPU rerun, physicalOSgestures/presentation/fullworld remainopen"
+}
