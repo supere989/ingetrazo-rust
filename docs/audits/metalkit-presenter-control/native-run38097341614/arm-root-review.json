@@ -1,0 +1,24 @@
+{
+  "run_id": 38097341614,
+  "artifact_sha256": "54d9cfdc0f862cae580396ad7e1bff7be2f56ac4c16bc79a205b1d1f47822f5d",
+  "source_and_report_hashes_verified": true,
+  "literal_sdk_binary_hash_verified": true,
+  "controls": {
+    "appkit_presenter_control": {
+      "submitted": 6,
+      "displayed": 0,
+      "skipped": 3,
+      "pending": 3,
+      "error": "AppKit strict positive presentation deadline"
+    },
+    "appkit_objc_presenter_control": {
+      "submitted": 42,
+      "displayed": 0,
+      "skipped": 39,
+      "pending": 3,
+      "error": "Objective-C strict positive presentation deadline"
+    }
+  },
+  "literal_sdk_callback_identity_and_zero_time_verified": true,
+  "conclusion": "Both native AppKit controls fail positive presentation; literal SDK callbacks execute with matching drawable identity and zero presentedTime. Rust-only cause is not supported. Root cause and physical Mac acceptance remain open."
+}
