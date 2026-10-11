@@ -1,0 +1,35 @@
+warning: function `visit_meshes` is never used
+   --> crates/ingetrazo-core/src/screen_pick.rs:120:15
+    |
+120 | pub(crate) fn visit_meshes(scene: &Scene, mut visit: impl FnMut(&Mesh, DMat4, bool)) {
+    |               ^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-core` (lib) generated 1 warning
+   Compiling ingetrazo-metal v0.3.15 (/tmp/ingetrazo-next-integration/crates/ingetrazo-metal)
+warning: field `count` is never read
+  --> crates/ingetrazo-metal/src/world_policy.rs:42:9
+   |
+40 | pub(crate) struct BackRun {
+   |                   ------- field in this struct
+41 |     pub first: usize,
+42 |     pub count: usize,
+   |         ^^^^^
+   |
+   = note: `BackRun` has derived impls for the traits `Clone` and `Debug`, but these are intentionally ignored during dead code analysis
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-metal` (lib test) generated 1 warning
+    Finished `test` profile [unoptimized] target(s) in 0.30s
+     Running unittests src/lib.rs (/tmp/ingetrazo-native-font-merge-target/debug/deps/ingetrazo_metal-3ce699f8d0522085)
+
+running 5 tests
+test world_policy::tests::malformed_and_alpha_back_policies_refuse ... ok
+test world_policy::tests::opaque_back_plan_preserves_default_ranges_and_source_order ... ok
+test world_policy::tests::style_changes_validate_without_geometry_work ... ok
+test world_policy::tests::source_round_ties_even_keeps_adjacent_half_grid_colors ... ok
+test world_policy::tests::metadata_admits_before_allocation_and_accounts_retained_capacity ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 7 filtered out; finished in 0.00s
+

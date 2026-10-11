@@ -1,0 +1,7 @@
+{
+  "source": "470451cb",
+  "command": "cargo test -p ingetrazo-metal --locked --lib world_policy -j2",
+  "result": "5 passed; 0 failed",
+  "log_sha256": "82cc456947ec8043a254c1806678c688c68fd325a91e65f3c5c577eaf5850ccb",
+  "scope": "Portable opaque paint ordering, quantization, refusal and metadata admission only. Native material and winding pixels remain open."
+}
