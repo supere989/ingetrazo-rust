@@ -405,6 +405,14 @@ fn parse_obj_options(
                 }
             }
             "f" | "l" => {
+                // Original f parsing skips the whole face on a noninteger UV
+                // token. Numeric out-of-range indices instead keep planar paint.
+                if source_policy && cmd == "f" && parts.clone().any(|token| {
+                    token.split('/').nth(1).filter(|raw| !raw.is_empty())
+                        .is_some_and(|raw| raw.parse::<isize>().is_err())
+                }) {
+                    continue;
+                }
                 let mut points = Vec::new();
                 let mut uvs = Vec::new();
                 for token in parts {

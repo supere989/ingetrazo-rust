@@ -83,6 +83,30 @@ pub fn run() {
     let original: Value =
         serde_json::from_slice(&std::fs::read(root.join("original-obj-mtl.json")).unwrap())
             .unwrap();
+    let syntax: Value =
+        serde_json::from_slice(&std::fs::read(root.join("original-uv-syntax.json")).unwrap())
+            .unwrap();
+    let mut syntax_rows = Vec::new();
+    for row in syntax.as_array().unwrap() {
+        let name = row["case"].as_str().unwrap();
+        let path = root.join(format!("uv-syntax-{name}.obj"));
+        let mut scene = ingetrazo_core::Scene::new();
+        let plan = ingetrazo_formats::obj::parse_obj_import(
+            &mut std::fs::File::open(&path).unwrap(),
+            &scene,
+            1.,
+            &path,
+        )
+        .unwrap();
+        plan.emit_source(&mut scene, "uv-syntax").unwrap();
+        syntax_rows.push(json!({"case":name,"faces":scene.mesh.faces.len(),"textured":scene.mesh.faces.iter().any(|f| f.attrs.contains_key("texture")),"affine":scene.mesh.faces.iter().any(|f| f.attrs.get("texture").and_then(|v|v.get("uvw")).is_some())}));
+    }
+    assert_eq!(syntax, json!(syntax_rows));
+    std::fs::write(
+        root.join("native-uv-syntax.json"),
+        serde_json::to_vec_pretty(&syntax_rows).unwrap(),
+    )
+    .unwrap();
     let mut rows = Vec::new();
     let mut guards = Vec::new();
     for case in original["cases"].as_array().unwrap() {
