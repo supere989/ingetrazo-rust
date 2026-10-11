@@ -249,7 +249,22 @@ pub fn orient_boundary_candidate(mesh: &mut Mesh) -> Result<(), String> {
 fn orient_closed_components(mesh: &mut Mesh) -> Result<(), String> {
     classify_components(mesh, true)
 }
+/// Source Push/Pull acquisition pass: classify only the picked edge-connected
+/// component. Vertex/edge rows and runtime entity identities are unchanged.
+pub fn orient_acquired_component(mesh: &mut Mesh, face: usize) -> Result<(), String> {
+    planar::validate_mesh(mesh)?;
+    if face >= mesh.faces.len() { return Err("Push/Pull acquisition face is no longer live".into()); }
+    let frame = Frame::new(&planar::rings(mesh, &mesh.faces[face])[0])?;
+    if mesh.faces.iter().all(|f| planar::rings(mesh, f).iter().flatten().all(|&p| frame.on_plane(p))) {
+        for f in &mut mesh.faces { f.interior = false; }
+        return Ok(());
+    }
+    classify_components_scoped(mesh, true, Some(face))
+}
 fn classify_components(mesh: &mut Mesh, flip_boundary: bool) -> Result<(), String> {
+    classify_components_scoped(mesh, flip_boundary, None)
+}
+fn classify_components_scoped(mesh: &mut Mesh, flip_boundary: bool, picked: Option<usize>) -> Result<(), String> {
     use glam::DVec3;
     use std::collections::{BTreeMap, VecDeque};
     let triangles: Vec<_> = (0..mesh.faces.len())
@@ -394,10 +409,11 @@ fn classify_components(mesh: &mut Mesh, flip_boundary: bool) -> Result<(), Strin
             2
         }
     };
+    let in_scope = |i: usize| picked.is_none_or(|p| component[i] == component[p]);
     let mut boundary = vec![true; mesh.faces.len()];
     for _ in 0..4 {
         let next: Vec<_> = (0..mesh.faces.len())
-            .map(|i| state(i, &boundary) != 2)
+            .map(|i| !in_scope(i) || state(i, &boundary) != 2)
             .collect();
         if next == boundary {
             break;
@@ -407,11 +423,25 @@ fn classify_components(mesh: &mut Mesh, flip_boundary: bool) -> Result<(), Strin
     let closed = incident.values().all(|faces| faces.len() >= 2)
         && mesh.edges.iter().all(|e| !e.faces.is_empty());
     for i in 0..mesh.faces.len() {
-        mesh.faces[i].interior = !boundary[i];
+        if in_scope(i) { mesh.faces[i].interior = !boundary[i]; }
     }
     if closed && flip_boundary {
         for i in 0..mesh.faces.len() {
-            if boundary[i] && state(i, &boundary) == 1 {
+            if in_scope(i) && boundary[i] && state(i, &boundary) == 1 {
+                // Acquisition uses source turn_face_over: independently painted
+                // backs pin paint to geometric sides; one-sided paint follows
+                // the corrected front. General orientation APIs stay unchanged.
+                if picked.is_some() {
+                    let attrs=&mut mesh.faces[i].attrs;
+                    if let Some(serde_json::Value::Object(back))=attrs.get("back").cloned() {
+                        let mut front=serde_json::Map::new();
+                        for key in ["color","mat","texture","opacity"] {
+                            if let Some(value)=attrs.remove(key){front.insert(key.into(),value);}
+                        }
+                        attrs.remove("back");attrs.extend(back);
+                        if !front.is_empty(){attrs.insert("back".into(),serde_json::Value::Object(front));}
+                    }
+                }
                 mesh.faces[i].vertices.reverse();
                 for hole in &mut mesh.faces[i].holes {
                     hole.reverse();

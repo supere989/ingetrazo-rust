@@ -59,3 +59,23 @@ fn affected_plane_rebuild_preserves_parked_objects_and_recreates_changed_floor()
     let wire=scene.mesh.edges.iter().find(|e|e.history_id==wire).unwrap();assert!(wire.soft);assert_eq!(wire.curve_id,Some(71));assert!(wire.faces.is_empty());
     assert_eq!(scene.mesh.faces.len(),9);
 }
+
+#[test]
+fn closed_acquisition_keeps_parked_component_identity_and_paint() {
+    let mut scene=Scene::new();
+    for x in [0.,10.] {
+        let ring=[DVec3::new(x,0.,0.),DVec3::new(x+2.,0.,0.),DVec3::new(x+2.,2.,0.),DVec3::new(x,2.,0.)].map(|p|scene.mesh.add_vertex(p));
+        let face=scene.mesh.add_face(ring.to_vec(),vec![]).unwrap();PushPullTool::extrude_face(&mut scene,face,3.).unwrap();
+    }
+    let caps=(0..scene.mesh.faces.len()).filter(|&i|scene.mesh.faces[i].vertices.iter().all(|&v|scene.mesh.vertices[v].position.z==3.)).collect::<Vec<_>>();
+    for &i in &caps{scene.mesh.faces[i].vertices.reverse();}
+    let selected=caps[0];let parked=caps[1];
+    scene.mesh.faces[selected].attrs=serde_json::from_value(serde_json::json!({"color":[1,0,0],"vendor":71,"back":{"color":[0,0,1]}})).unwrap();
+    let parked_face=scene.mesh.faces[parked].clone();let token=scene.mesh.faces[selected].history_id;
+    let vertices=scene.mesh.vertices.clone();let edges=scene.mesh.edges.clone();
+    ingetrazo_core::heal::orient_acquired_component(&mut scene.mesh,selected).unwrap();
+    assert_eq!(scene.mesh.faces[parked],parked_face);assert_eq!(scene.mesh.faces[parked].history_id,parked_face.history_id);
+    assert_eq!(scene.mesh.vertices,vertices);assert_eq!(scene.mesh.edges,edges);assert_eq!(scene.mesh.faces[selected].history_id,token);
+    assert_eq!(scene.mesh.face_normal(selected),DVec3::Z);
+    assert_eq!(scene.mesh.faces[selected].attrs["color"],serde_json::json!([0,0,1]));assert_eq!(scene.mesh.faces[selected].attrs["back"]["color"],serde_json::json!([1,0,0]));assert_eq!(scene.mesh.faces[selected].attrs["vendor"],71);
+}

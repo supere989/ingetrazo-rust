@@ -80,6 +80,11 @@ impl IngeTrazoApp {
     }
 
     fn record_tool_commit(&mut self, mut before: Scene) -> Result<(),String> {
+        for (id,face) in self.active_tool.take_history_acquisition_faces() {
+            if let Some(before_face)=before.mesh.faces.get_mut(id) {
+                if before_face.history_id==face.history_id { *before_face=face; }
+            }
+        }
         let bare_edge=self.active_tool.take_bare_edge_command();
         let owned=self.active_tool.take_authored_draw_faces();
         if let Err(error)=ingetrazo_core::bim::stamp_drawn_faces_with_id(&mut self.scene.mesh,&owned,self.scene.active_ifc.as_ref(),self.scene.bim_draw_id.as_ref()){

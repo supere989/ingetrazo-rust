@@ -24,6 +24,7 @@ pub struct PushPullTool {
     acquired_normal:Option<DVec3>,
     sweep_identity:Option<(u64,u64,bool,bool,DVec3)>,
     limit_status:Option<String>,
+    acquisition_history_faces:Vec<(usize,ingetrazo_core::mesh::MeshFace)>,
 }
 
 impl PushPullTool {
@@ -31,6 +32,19 @@ impl PushPullTool {
         Self::default()
     }
 
+    fn prepare_acquisition(&mut self,scene:&mut Scene,face:usize)->Result<(),String> {
+        // Cold source entry orientation is outside the extrusion command. Keep
+        // only changed face rows for the dispatcher's existing history snapshot.
+        let before=scene.mesh.faces.iter().map(|f|(f.vertices.clone(),f.holes.clone(),f.interior)).collect::<Vec<_>>();
+        ingetrazo_core::heal::orient_acquired_component(&mut scene.mesh,face)?;
+        for (id,f) in scene.mesh.faces.iter().enumerate() {
+            if f.vertices!=before[id].0 || f.holes!=before[id].1 || f.interior!=before[id].2 {
+                self.acquisition_history_faces.push((id,f.clone()));
+            }
+        }
+        if !self.acquisition_history_faces.is_empty(){scene.version=scene.version.wrapping_add(1);}
+        Ok(())
+    }
     fn eligible_face_at(scene:&Scene,ctx:&ToolContext)->Result<Option<usize>,()> {
         // Zero edge tolerance gives the source face-only closed-group policy.
         // Placement layers decide closed-group eligibility; internal face tags
@@ -49,7 +63,15 @@ impl PushPullTool {
     /// Original open-shell surface majority. Closed volumes and globally
     /// coplanar drawings keep their authored face normal.
     pub fn acquisition_normal(mesh:&ingetrazo_core::mesh::Mesh,id:usize)->DVec3 {
-        let n=mesh.face_normal(id);
+        // Source Face.normal: double Newell accumulation over Qt-stored
+        // positions, then float32 area normal and Qt scaled length/division.
+        // This is an authored tool direction boundary, never a document cast.
+        let positions=mesh.faces[id].vertices.iter().map(|&v|mesh.vertices[v].position.as_vec3().as_dvec3()).collect::<Vec<_>>();
+        let raw=ingetrazo_core::math::newell_vector(&positions).as_vec3();
+        let maximum=raw.abs().max_element();
+        let scaled=if maximum>0.{glam::Vec3::new(raw.x/maximum,raw.y/maximum,raw.z/maximum)}else{raw};
+        let length=maximum*(scaled.x*scaled.x+scaled.y*scaled.y+scaled.z*scaled.z).sqrt();
+        let n=if length<1e-9{DVec3::Z}else{glam::Vec3::new(raw.x/length,raw.y/length,raw.z/length).as_dvec3()};
         let flat=mesh.faces.first().is_none_or(|first| {
             let n0=mesh.face_normal(0);let p=mesh.vertices[first.vertices[0]].position;
             mesh.faces.iter().enumerate().all(|(i,f)|mesh.face_normal(i).dot(n0).abs()>0.999 && (mesh.vertices[f.vertices[0]].position-p).dot(n0).abs()<1e-3)
@@ -219,8 +241,9 @@ impl PushPullTool {
         self.keep_base = false;
         self.error = None;
         self.limit_status=None;
+        self.acquisition_history_faces.clear();
     }
-    fn reset_after_commit(&mut self){let status=self.limit_status.take();self.reset();self.limit_status=status;}
+    fn reset_after_commit(&mut self){let status=self.limit_status.take();let acquisition=std::mem::take(&mut self.acquisition_history_faces);self.reset();self.limit_status=status;self.acquisition_history_faces=acquisition;}
 
     /// Prepare the whole extrusion before changing the scene. A free face
     /// becomes a closed prism; a bordered surface loses its old base. Closed
@@ -675,6 +698,7 @@ impl PushPullTool {
             let mut rims=vec![];
             for (base,cap) in rings.iter().zip(&shifted){for i in 0..base.len(){let j=(i+1)%base.len();rims.push((base[i],base[j]));rims.push((cap[i],cap[j]));rims.push((base[i],cap[i]));}}
             candidate=ingetrazo_core::solids::dissolve_rim_seams(&candidate,&rims)?;
+            candidate=open_rebuild::rebuild(&candidate,mesh,&component_faces,distance<0.)?;
         }
         // Reattach original wire edges and preserve metadata wherever an original
         // edge survives. This also covers the kernel-generated solid branch.
@@ -866,9 +890,13 @@ impl Tool for PushPullTool {
         self.reset();
     }
 
+    fn take_history_acquisition_faces(&mut self)->Vec<(usize,ingetrazo_core::mesh::MeshFace)> {
+        std::mem::take(&mut self.acquisition_history_faces)
+    }
     fn on_cancel(&mut self, _scene: &mut Scene) {
         self.reset();
         self.limit_status=None;
+        self.acquisition_history_faces.clear();
     }
 
     fn face_sweep_preview(&self)->Option<crate::base::FaceSweepPreview>{
@@ -900,6 +928,9 @@ impl Tool for PushPullTool {
 
             if let Some(face_id) = face_pick {
                 self.limit_status=None;
+                if let Err(error)=self.prepare_acquisition(scene,face_id) {
+                    self.error=Some(error);return;
+                }
                 self.selected_face = Some(face_id);
                 let normal=Self::acquisition_normal(&scene.mesh,face_id);
                 self.acquired_normal=Some(normal);
@@ -933,6 +964,11 @@ impl Tool for PushPullTool {
         if let Some(last_d) = self.last_distance {
 
             if let Some(face_id) = face_pick {
+                if let Err(error)=self.prepare_acquisition(scene,face_id) {
+                    self.error=Some(error);return;
+                }
+                self.acquired_normal=Some(Self::acquisition_normal(&scene.mesh,face_id));
+                self.inward_limit=None;
                 match self.commit_distance(scene, face_id, last_d, ctx.ctrl_held) {
                     Ok(actual) => {self.last_distance=Some(actual);self.reset_after_commit();},
                     Err(error) => self.error = Some(error),

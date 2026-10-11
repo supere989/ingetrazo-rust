@@ -156,6 +156,9 @@ pub trait Tool: Send + Sync {
     fn prepare_undo(&mut self, _available: bool) -> bool { false }
     /// A successful retype replaces the immediately preceding tool transaction.
     fn take_history_replacement(&mut self)->bool{false}
+    /// Consume source entry-time orientation rows which precede the command
+    /// snapshot. Subsequent extrusion commits retain ordinary Undo ownership.
+    fn take_history_acquisition_faces(&mut self)->Vec<(usize,ingetrazo_core::mesh::MeshFace)>{vec![]}
     /// Application transaction identity, independent of restored Scene.version.
     fn note_history_revision(&mut self,_revision:u64,_committed:bool){}
     fn note_pick_viewport(&mut self,_viewport:ingetrazo_core::screen_pick::PixelViewport,_eye:DVec3,_model_revision:u64){}
