@@ -28,6 +28,7 @@ pub struct Stats {
 }
 #[derive(Default)]
 pub struct Painter {
+    glyph_admissions:crate::glyph_admission::Cache,
     pipeline: Option<Arc<Retained<ProtocolObject<dyn MTLComputePipelineState>>>>,
     plans: HashMap<u64, Arc<Plan>>,
     palettes: HashMap<(u64, usize, usize), Arc<Palette>>,
@@ -65,14 +66,7 @@ impl Painter {
         if !Self::supported(metal) {
             return Err("Exact Metal R32Uint read/write composition requires texture tier1".into());
         }
-        if let Some(glyphs) = &snapshot.glyphs {
-            if glyphs.len() != snapshot.batches.len() {
-                return Err("Metal glyph batch inventory mismatch".into());
-            }
-            for glyph in glyphs.iter() {
-                glyph.validate()?;
-            }
-        }
+        self.glyph_admissions.admit(&snapshot.batches,snapshot.glyphs.as_ref())?;
         snapshot
             .geometry
             .validate_ordered_pose(snapshot.pose, density)?;

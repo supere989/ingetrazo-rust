@@ -24,15 +24,7 @@ pub struct MetalCadStats {
     pub readback_submissions: u64,
     pub plan_uploads: u64,
 }
-#[repr(C)]
-#[derive(Clone, Copy, bytemuck::Pod, bytemuck::Zeroable)]
-struct Push {
-    scale: [f32; 2],
-    translation: [f32; 2],
-    screen: [f32; 2],
-    pad: [f32; 2],
-    rgba: [f32; 4],
-}
+use crate::cad_abi::DrawPush as Push;
 struct Texture {
     raw: ManuallyDrop<Retained<ProtocolObject<dyn MTLTexture>>>,
     budget: Arc<Mutex<MemoryBudget>>,
@@ -621,6 +613,7 @@ impl MetalCad2d {
                     screen: [self.inner.width as f32, self.inner.height as f32],
                     pad: [0.; 2],
                     rgba: self.inner.colors[index],
+                    glyph:[0;4],
                 };
                 unsafe {
                     encoder.setVertexBytes_length_atIndex(
