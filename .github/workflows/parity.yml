@@ -16,6 +16,44 @@ env:
   CARGO_PROFILE_TEST_DEBUG: 0
   CARGO_INCREMENTAL: 0
 jobs:
+  windows-native-process:
+    name: Native Windows compile and isolated recovery
+    runs-on: windows-2022
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Reuse compiled Cargo dependencies
+        uses: Swatinem/rust-cache@49a0bdc70d2e1b713ca9e2869b211fcce03d3c1c # v2
+        with:
+          cache-bin: "false"
+          cache-workspace-crates: "false"
+          save-if: ${{ github.event_name != 'pull_request' }}
+      - name: Build packaged CLI and recovery consumer together on MSVC
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force docs/audits/windows-native-ci | Out-Null
+          cargo build --locked -p ingetrazo-cli -p ingetrazo-gui --bin ingetrazo --example session_recovery_process --target x86_64-pc-windows-msvc -j2 > docs/audits/windows-native-ci/build.log 2>&1
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Execute packaged headless checks and isolated recovery
+        shell: pwsh
+        run: |
+          & target/x86_64-pc-windows-msvc/debug/ingetrazo.exe --check > docs/audits/windows-native-ci/self-check.log 2>&1
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          & target/x86_64-pc-windows-msvc/debug/ingetrazo.exe --version > docs/audits/windows-native-ci/version.log 2>&1
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python scripts/run-session-recovery-process.py target/x86_64-pc-windows-msvc/debug/examples/session_recovery_process.exe docs/audits/windows-native-ci/session-recovery > docs/audits/windows-native-ci/recovery-run.log 2>&1
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python scripts/check-session-recovery.py docs/audits/windows-native-ci/session-recovery/result.json > docs/audits/windows-native-ci/recovery-check.json 2> docs/audits/windows-native-ci/recovery-check.log
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Retain Windows compile and process evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: native-windows-process
+          path: docs/audits/windows-native-ci/
+          if-no-files-found: error
   metal-native-link:
     name: Native Metal framework link (${{ matrix.runner }})
     runs-on: ${{ matrix.runner }}
