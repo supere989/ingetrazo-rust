@@ -280,6 +280,12 @@ impl World {
     /// inherited paint, style and layer identity already represented in the key.
     /// Compatibility entry for already combined matrices. Production callers
     /// use prepare_placements_with_camera with stable model poses instead.
+    pub(crate) fn validate_context_owner(&self, metal: &NativeMetal) -> Result<(), String> {
+        if let Some(owner) = &self.owner {
+            owner.validate(metal)?;
+        }
+        Ok(())
+    }
     pub fn prepare_placements<F>(
         &mut self,
         metal: &NativeMetal,

@@ -1,0 +1,127 @@
+{
+  "passed": true,
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "scope": "Actual Viewport._placements/core.effective_material metadata; no GL/GPU/UI claim",
+  "rows": [
+    {
+      "name": "root",
+      "paint": {
+        "color": [
+          1,
+          0,
+          0
+        ]
+      },
+      "signature": [
+        [
+          1,
+          0,
+          0
+        ],
+        null,
+        null,
+        null
+      ],
+      "matrix_columns": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        2.0,
+        0.0,
+        1.0
+      ],
+      "same_mesh_as_root": true,
+      "owner": null
+    },
+    {
+      "name": "A",
+      "paint": {
+        "color": [
+          1,
+          0,
+          0
+        ]
+      },
+      "signature": [
+        [
+          1,
+          0,
+          0
+        ],
+        null,
+        null,
+        null
+      ],
+      "matrix_columns": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        2.0,
+        0.0,
+        1.0
+      ],
+      "same_mesh_as_root": true,
+      "owner": "root"
+    },
+    {
+      "name": "B",
+      "paint": {
+        "color": [
+          1,
+          0,
+          0
+        ]
+      },
+      "signature": [
+        [
+          1,
+          0,
+          0
+        ],
+        null,
+        null,
+        null
+      ],
+      "matrix_columns": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        4.0,
+        2.0,
+        0.0,
+        1.0
+      ],
+      "same_mesh_as_root": true,
+      "owner": "root"
+    }
+  ]
+}
