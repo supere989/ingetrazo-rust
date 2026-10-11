@@ -1,0 +1,40 @@
+{
+  "source": "48f5e9609f8ec0c8dc5dcc6129dd608d04832654",
+  "run": 38111151473,
+  "platform": "ARM",
+  "archive_sha256": "56f6a2ad0e2c08a5e24230c8da851971fb83e35f53103266db8c8d8a3422f888",
+  "verified_source_files": 47,
+  "binary_sha256": "a75d8c28db208dbe282252d876ef7eede5c27a742fa3b72112e680c4dd50ca62  target/debug/examples/native_metal_world_material",
+  "actual_frames": 75,
+  "exact_sample_pixels": 1950,
+  "heap_dual_observations": [
+    [
+      [
+        4194304,
+        4194304,
+        512
+      ]
+    ],
+    [
+      [
+        4194304,
+        4194304,
+        512
+      ]
+    ],
+    [
+      [
+        4194304,
+        4194304,
+        512
+      ]
+    ]
+  ],
+  "ledger": [
+    0,
+    0
+  ],
+  "checker_failed": "Traceback (most recent call last):\n  File \"/Users/runner/work/ingetrazo-rust/ingetrazo-rust/scripts/check-metal-world-material.py\", line 29, in <module>\n    if __name__=='__main__':print(json.dumps(check(pathlib.Path(sys.argv[1]),pathlib.Path(sys.argv[2])),indent=2))\n                                             ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/runner/work/ingetrazo-rust/ingetrazo-rust/scripts/check-metal-world-material.py\", line 27, in check\n    assert r['frames'][-1]['texture_uploads']==2,'unchanged immutable image must be reused across material recipes'\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: unchanged immutable image must be reused across material recipes\n",
+  "cause": "Weak-only asset cache expires across untextured scenes: uploads 1\u21922\u21923\u21924. Full checker remains failed; changed retained-cache implementation requires new native replay.",
+  "scope": "Sampled actual app consumer only, not full image/mips/presentation/source all-driver equivalence."
+}
