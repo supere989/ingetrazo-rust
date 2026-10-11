@@ -1,0 +1,11 @@
+{
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "initial_texture_source": "c2631446",
+  "final_texture_source": "febbdae70da7de0fc935ceee0f4af11c351f865f",
+  "final_texture_binary_sha256": "f5235508b4817d72e0f4df9257e15d4e8549e3cdafdb34d3df122e66f40ff334",
+  "source_script_sha256": "a2c454e780b7d5c256a6190ac613a4f2b73eb69d6b8daaf12f60f0d256b4927d",
+  "shader_source_sha256": "59c6b531846d2f888d8d4386aba5763bdbc3cbb07a41b58840c15e72088431f9",
+  "shader_spirv_sha256": "4b32e8e676233bb486b2f87b1444c77742b3f8283bea15c781bdddc48fa215f3",
+  "shader_compiler": "retained shaderc0.8.3 ingetrazo-image-shader-compiler; source GLSL rebuilt into committed SPIRV",
+  "scope": "Actual native NVIDIA six cases. Source exact opaque front average does not multiply shade; all back overrides and translucent fronts sample. Mixed asset owns one mean + one sampled image + one geometry upload; opaque-only owns no sampled image. Warm counters unchanged; ledger0 asserted per fixture. Full-image comparison separately retains FAIL."
+}

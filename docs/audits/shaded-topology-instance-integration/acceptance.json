@@ -1,0 +1,63 @@
+{
+  "workspace_source": "5e31b756",
+  "workspace_command": "cargo test --workspace --locked (jobs2,debug0,incrementaloff,reused target)",
+  "workspace": {
+    "passed": 766,
+    "failed": 0,
+    "ignored": 2
+  },
+  "texture_source": "febbdae70da7de0fc935ceee0f4af11c351f865f",
+  "texture_cases_exact": 6,
+  "texture_sample_vectors_exact": 30,
+  "texture_negative_controls": 6,
+  "full_chapel_iso": {
+    "annotations-on": {
+      "different_pixels": 1065,
+      "max_channel_error": 37
+    },
+    "annotations-off": {
+      "different_pixels": 1112,
+      "max_channel_error": 37
+    },
+    "annotations-restored": {
+      "different_pixels": 1065,
+      "max_channel_error": 37
+    },
+    "overlay_union": {
+      "pixels": 3830,
+      "different_pixels": 0,
+      "mask_xor": 0
+    },
+    "native_restore_exact": true
+  },
+  "script_edge_states_exact": 18,
+  "script_face_states_exact": 31,
+  "script_negative_controls": 27,
+  "script_execution": "Independent fresh pinned Python and frozen SHA-verified agent binaries; standalone tools not production",
+  "metal_native_source": "ebc676d1644445e9b2db34291c7c174899a740c5",
+  "metal_arm_frames_independently_verified": 14,
+  "metal_arm_camera_only_instance_upload_bytes": 0,
+  "metal_intel": "Pre-frame native size/alignment0/0; no pixel claim",
+  "metal_global_order_source": "cbc637b5",
+  "metal_global_order_runtime": "Dedicated changed3-frame acceptance pending; source grouping witness and merged unit tests pass",
+  "remaining": [
+    "Full-model/camera/DPI/material parity",
+    "Opaque exact raster boundaries and alpha/ellipse annotations",
+    "Full scripting objects/callbacks/VM bounds and production activation",
+    "Full Metal viewport/presentation/platform acceptance",
+    "All five release gates"
+  ],
+  "annotation_admission_source": "9488b2bb",
+  "annotation_admission_focused": {
+    "annotation-admission.log": [
+      6,
+      0,
+      0
+    ],
+    "annotation-gui-admission.log": [
+      4,
+      0,
+      0
+    ]
+  }
+}

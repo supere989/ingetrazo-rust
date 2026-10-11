@@ -1,0 +1,10 @@
+{
+  "frozen_source": "dd657f59",
+  "binary_sha256": "81c0d7997e75eb487d4384ba4c05fa05404c1e7cbe87e29f67584c23ed1f1cd1",
+  "source_fresh_sha256": "7d8a861fe3878af82fc064c07b3a1cd8226eca765f139b5e9e207f219ddc4b0a",
+  "native_fresh_sha256": "682cc0f0e8a6cf6bc6c49d20ce510205023dd7e26768af75d7e04a1c48b48ed5",
+  "existing_source_artifact_sha256": "7d8a861fe3878af82fc064c07b3a1cd8226eca765f139b5e9e207f219ddc4b0a",
+  "existing_native_artifact_sha256": "682cc0f0e8a6cf6bc6c49d20ce510205023dd7e26768af75d7e04a1c48b48ed5",
+  "execution": "fresh pinned Python + exact retained frozen binary, independent checker",
+  "production_enabled": false
+}

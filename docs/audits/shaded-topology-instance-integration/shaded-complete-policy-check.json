@@ -1,0 +1,13 @@
+{
+  "cases": {
+    "shaded-mixed-asset": true,
+    "shaded-opaque": true,
+    "shaded-opaque-back": true,
+    "shaded-trans-back": true,
+    "shaded-trans-front": true,
+    "shaded-trans-front-cull": true
+  },
+  "exact_sample_vectors": 30,
+  "pixel_mutation_controls": 6,
+  "scope": "Actual source shaded opacity front/back and mixed same-asset means/sampling. Samples only; full render parity remains separately checked."
+}

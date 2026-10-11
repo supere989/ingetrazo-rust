@@ -1,0 +1,29 @@
+{
+  "observed_utc": "2026-10-11T01:24:16.393626+00:00",
+  "source": "2063745484e11232d1175a4a6744a7cc991d6e10",
+  "run": 38099912446,
+  "all_jobs": "completed/success",
+  "jobs": [
+    {
+      "id": 114353523735,
+      "name": "Native Metal framework link (macos-15-intel)"
+    },
+    {
+      "id": 114353523859,
+      "name": "compilation-and-tests"
+    },
+    {
+      "id": 114353523877,
+      "name": "Native Metal compile (aarch64-apple-darwin)"
+    },
+    {
+      "id": 114353523921,
+      "name": "Native Metal framework link (macos-15)"
+    },
+    {
+      "id": 114353523924,
+      "name": "Native Metal compile (x86_64-apple-darwin)"
+    }
+  ],
+  "method": "authenticated GitHub jobs API; original observation retained without repoll"
+}
