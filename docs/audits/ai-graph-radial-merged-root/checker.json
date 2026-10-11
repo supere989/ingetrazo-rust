@@ -1,0 +1,1 @@
+{"exact_full_states": 21, "negative_controls_rejected": ["literal-old-dedup", "lost-state", "radial-multiplicity", "native-multiplicity", "self-edge-endpoint", "repeated-loop", "lost-redo", "bool-incidence"], "production_enabled": false}
