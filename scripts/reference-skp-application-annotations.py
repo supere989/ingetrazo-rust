@@ -21,7 +21,7 @@ for key,value in camera.items():
  if hasattr(vp.camera,key):setattr(vp.camera,key,QVector3D(*value)if key in['target','up']else value)
 vp.show();rows=[]
 def take(name):
- before=getattr(vp,'_depth_snap',None);vp.update();deadline=time.monotonic()+4
+ before=getattr(vp,'_depth_snap',None);started=time.monotonic();vp.update();deadline=started+4
  while time.monotonic()<deadline:
   app.processEvents();time.sleep(.01)
  assert vp.width()==800 and vp.height()==600
@@ -29,7 +29,11 @@ def take(name):
  image=vp.grabFramebuffer();assert image.width()==800 and image.height()==600 and not image.isNull();assert image.save(str(out/(name+'.png')))
  matrix=vp.camera.projection_matrix()*vp.camera.view_matrix();inv,ok=matrix.inverted();assert ok
  actual=dict(matrix=list(matrix.data()),inverse=list(inv.data()),eye=list(vp.camera.eye().toTuple()),forward=list(vp.camera.forward().toTuple()))
- for field,expected in state['camera_snapshot'].items():assert actual[field]==expected,(name,field)
+ actual_camera={key:(list(getattr(vp.camera,key).toTuple())if key in['target','up']else getattr(vp.camera,key))for key in camera if hasattr(vp.camera,key)}
+ differences={field:[dict(index=i,expected=a,actual=b)for i,(a,b)in enumerate(zip(expected,actual[field]))if a!=b]for field,expected in state['camera_snapshot'].items()}
+ phase=dict(name=name,started=started,captured=time.monotonic(),viewport_logical=[vp.width(),vp.height()],framebuffer=list(vp._fb_size()),dpr=vp.devicePixelRatioF(),camera_expected=camera,camera_actual=actual_camera,camera_snapshot_expected=state['camera_snapshot'],camera_snapshot_actual=actual,differences=differences,painted_view=getattr(vp,'_painted_view',None),source_depth_mvp=list(vp._depth_snap[1].data())if vp._depth_snap is not None else None,gl=dict(vp.gl_info))
+ (out/(name+'-phase.json')).write_text(json.dumps(phase,indent=2)+'\n')
+ for field,diff in differences.items():assert not diff,(name,field,diff)
  snap=vp._depth_snap
  if name!='annotations-off'and state['dimensions']+state['leaders']>0:assert snap is not None and snap[3:5]==(800,600)
  else:assert snap is None
