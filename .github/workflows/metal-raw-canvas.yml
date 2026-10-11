@@ -17,12 +17,19 @@ jobs:
         runner: [macos-15, macos-15-intel]
     env:
       CARGO_PROFILE_DEV_DEBUG: 0
+      CARGO_PROFILE_TEST_DEBUG: 0
       CARGO_INCREMENTAL: 0
     steps:
       - uses: actions/checkout@v4
         with:
           submodules: recursive
       - uses: dtolnay/rust-toolchain@stable
+      - name: Reuse compiled Cargo dependencies
+        uses: Swatinem/rust-cache@49a0bdc70d2e1b713ca9e2869b211fcce03d3c1c # v2
+        with:
+          cache-bin: "false"
+          cache-workspace-crates: "false"
+          save-if: ${{ github.event_name != 'pull_request' }}
       - name: Build and execute bounded native raw texture fixture
         run: |
           mkdir -p raw-metal-evidence
