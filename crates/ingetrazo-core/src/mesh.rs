@@ -418,7 +418,9 @@ impl Mesh {
     /// Add a face defined by an ordered loop of vertex IDs and optional holes.
     /// Also ensures all boundary and hole edges are added to the mesh.
     pub fn add_face(&mut self, loop_verts: Vec<VertexId>, holes: Vec<Vec<VertexId>>) -> Option<FaceId> {
-        if loop_verts.len() < 3 {
+        // Source Mesh retains empty and short rings. Validate IDs before linking
+        // any edge so invalid native API input remains an atomic refusal.
+        if loop_verts.iter().chain(holes.iter().flatten()).any(|&v| v >= self.vertices.len()) {
             return None;
         }
 

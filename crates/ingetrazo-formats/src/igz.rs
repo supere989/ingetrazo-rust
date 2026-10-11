@@ -184,23 +184,19 @@ fn json_to_mesh(val: &serde_json::Value) -> Mesh {
                                     }
                                 }
                             }
-                            if h_loop.len() >= 3 {
-                                holes_verts.push(h_loop);
-                            }
+                            holes_verts.push(h_loop);
                         }
                     }
                 }
 
-                if loop_verts.len() >= 3 {
-                    if let Some(face_id) = mesh.add_face(loop_verts, holes_verts) {
-                        if let Some(layer) = f.get("layer").and_then(|l| l.as_str()) {
-                            mesh.faces[face_id].layer = Some(layer.to_string());
-                        }
-                        if let Some(obj) = f.as_object() {
-                            for (k, v) in obj {
-                                if k != "vertices" && k != "holes" && !(k == "layer" && v.is_string()) {
-                                    mesh.faces[face_id].attrs.insert(k.clone(), v.clone());
-                                }
+                if let Some(face_id) = mesh.add_face(loop_verts, holes_verts) {
+                    if let Some(layer) = f.get("layer").and_then(|l| l.as_str()) {
+                        mesh.faces[face_id].layer = Some(layer.to_string());
+                    }
+                    if let Some(obj) = f.as_object() {
+                        for (k, v) in obj {
+                            if k != "vertices" && k != "holes" && !(k == "layer" && v.is_string()) {
+                                mesh.faces[face_id].attrs.insert(k.clone(), v.clone());
                             }
                         }
                     }

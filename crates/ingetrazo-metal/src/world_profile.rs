@@ -124,7 +124,7 @@ impl Profiles {
                     let f = mesh
                         .faces
                         .get(id)
-                        .filter(|f| f.vertices.len() >= 3)
+                        .filter(|f| key.is_some() || f.vertices.len() >= 3)
                         .ok_or("Metal profile face invalid")?;
                     // Group prototype chunks use actual Face.normal/centroid;
                     // loose silhouettes deliberately use first-three planes.
@@ -150,7 +150,7 @@ impl Profiles {
                         };
                         return Ok((
                             n.as_dvec3(),
-                            (center / (f.vertices.len() as f64)).as_vec3().to_array(),
+                            (if f.vertices.is_empty(){DVec3::ZERO}else{center / (f.vertices.len() as f64)}).as_vec3().to_array(),
                         ));
                     }
                     let t = [

@@ -61,8 +61,9 @@ pub fn triangulate(
     let (u_axis, v_axis) = plane_basis(n);
     let project = |p: DVec3| (p.dot(u_axis), p.dot(v_axis));
 
-    // Fast path: no holes and convex -> simple fan
-    if holes.is_empty() {
+    // Source ignores short hole rings for triangulation, while Mesh/IGZ retain
+    // their authored topology. They must not divert a convex face from its fan.
+    if holes.iter().all(|hole| hole.len() < 3) {
         let outer_2d: Vec<Point2> = outer.iter().map(|&p| project(p)).collect();
         if is_convex(&outer_2d) {
             let mut tris = Vec::with_capacity(outer.len() - 2);

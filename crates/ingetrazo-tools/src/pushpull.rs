@@ -33,6 +33,11 @@ impl PushPullTool {
     }
 
     fn prepare_acquisition(&mut self,scene:&mut Scene,face:usize)->Result<(),String> {
+        // The source flatness probe cannot index an empty sibling ring. Refuse
+        // before orientation/history changes rather than panic or discard it.
+        if scene.mesh.faces.iter().any(|f| f.vertices.is_empty()) {
+            return Err("Push/Pull cannot acquire a mesh containing an empty face".into());
+        }
         // Cold source entry orientation is outside the extrusion command. Keep
         // only changed face rows for the dispatcher's existing history snapshot.
         let before=scene.mesh.faces.iter().map(|f|(f.vertices.clone(),f.holes.clone(),f.interior)).collect::<Vec<_>>();
@@ -65,8 +70,9 @@ impl PushPullTool {
     pub fn acquisition_normal(mesh:&ingetrazo_core::mesh::Mesh,id:usize)->DVec3 {
         let n=Self::source_face_normal(mesh,id);
         let flat=mesh.faces.first().is_none_or(|first| {
-            let n0=mesh.face_normal(0);let p=mesh.vertices[first.vertices[0]].position;
-            mesh.faces.iter().enumerate().all(|(i,f)|mesh.face_normal(i).dot(n0).abs()>0.999 && (mesh.vertices[f.vertices[0]].position-p).dot(n0).abs()<1e-3)
+            let Some(&first_vertex)=first.vertices.first() else{return false;};
+            let n0=mesh.face_normal(0);let p=mesh.vertices[first_vertex].position;
+            mesh.faces.iter().enumerate().all(|(i,f)|f.vertices.first().is_some_and(|&v|mesh.face_normal(i).dot(n0).abs()>0.999 && (mesh.vertices[v].position-p).dot(n0).abs()<1e-3))
         });
         if mesh.is_manifold_solid()||flat{return n;}
         let rim=mesh.faces[id].vertices.iter().copied().collect::<std::collections::HashSet<_>>();
