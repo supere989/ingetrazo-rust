@@ -427,6 +427,10 @@ impl IngeTrazoApp {
         let version=self.scene.version;self.active_tool.end_transient_before_history(&mut self.scene);
         if self.scene.version!=version{self.bump_model_revision();}
         if let Some(changed)=self.component_history_step(false){return changed;}
+        #[cfg(feature="engineering-python")]
+        let python_step = match self.restore_engineering_python_history(false) {
+            Ok(step)=>step, Err(error)=>{self.status_message=error;return false;}
+        };
         if let Some(mut prev) = self.undo_stack.pop() {
             self.scene.camera = self.camera.clone();
             if prev.history_shareback.is_some() {
@@ -443,7 +447,11 @@ impl IngeTrazoApp {
             // do not own it. Transfer the current capture through older history.
             prev.tile_layer=self.scene.tile_layer.take();
             crate::document_presentation::preserve(&self.scene,&mut prev);
+            let python_marker=prev.history_python.take();
+            if let Some(inverse)=self.redo_stack.last_mut() {inverse.history_python=python_marker;}
             self.scene = prev;self.bump_model_revision();
+            #[cfg(feature="engineering-python")]
+            if python_step {self.engineering_python.published(self.model_revision);}
             self.camera = self.scene.camera.clone();
             self.status_message = "Undo".to_string();
             return true;
@@ -460,6 +468,10 @@ impl IngeTrazoApp {
         let version=self.scene.version;self.active_tool.end_transient_before_history(&mut self.scene);
         if self.scene.version!=version{self.bump_model_revision();}
         if let Some(changed)=self.component_history_step(true){return changed;}
+        #[cfg(feature="engineering-python")]
+        let python_step = match self.restore_engineering_python_history(true) {
+            Ok(step)=>step, Err(error)=>{self.status_message=error;return false;}
+        };
         if let Some(mut next) = self.redo_stack.pop() {
             self.scene.camera = self.camera.clone();
             if next.history_shareback.is_some() {
@@ -473,7 +485,11 @@ impl IngeTrazoApp {
             next.sheets=self.scene.sheets.clone();next.active_sheet_index=self.scene.active_sheet_index;
             next.tile_layer=self.scene.tile_layer.take();
             crate::document_presentation::preserve(&self.scene,&mut next);
+            let python_marker=next.history_python.take();
+            if let Some(inverse)=self.undo_stack.last_mut() {inverse.history_python=python_marker;}
             self.scene = next;self.bump_model_revision();
+            #[cfg(feature="engineering-python")]
+            if python_step {self.engineering_python.published(self.model_revision);}
             self.camera = self.scene.camera.clone();
             self.status_message = "Redo".to_string();
             return true;

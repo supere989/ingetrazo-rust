@@ -5,6 +5,10 @@ use ingetrazo_ai_interpreter_proof::Controller;
 pub(crate) struct Engine {
     controller: Option<Controller>,
     revision: Option<u64>,
+    session: Option<uuid::Uuid>,
+    command_depth: Option<usize>,
+    exports: usize,
+    history_steps: usize,
     #[cfg(test)]
     export_pressure: bool,
 }
@@ -31,6 +35,7 @@ impl Engine {
             let mut controller = Controller::new();
             controller.import_native_mesh(mesh)?;
             controller.enable_history();
+            self.session = Some(uuid::Uuid::new_v4());
             self.controller = Some(controller);
             self.revision = Some(revision);
         }
@@ -65,7 +70,10 @@ impl Engine {
                 budget.set_limit(Some(budget.snapshot().total()));
             }
             match controller.native_mesh_snapshot_admitted() {
-                Ok(native) => Some(native),
+                Ok(native) => {
+                    self.exports += 1;
+                    Some(native)
+                }
                 Err(error) => {
                     self.controller.take();
                     self.revision = None;
@@ -77,13 +85,70 @@ impl Engine {
         } else {
             None
         };
+        self.command_depth = if changed && native.is_some() {
+            Some(controller.history_counts().0)
+        } else {
+            None
+        };
         Ok((changed, native))
+    }
+    fn command_marker(&self) -> Option<(uuid::Uuid, usize)> {
+        Some((self.session?, self.command_depth?))
+    }
+    /// None means an unrelated/retired session owns this entry. Its VM remains
+    /// unsynchronized and cannot execute further scripts; normal app history works.
+    fn restore_owned(
+        &mut self,
+        marker: (uuid::Uuid, usize),
+        revision: u64,
+        redo: bool,
+    ) -> Option<Result<(), String>> {
+        if self.session != Some(marker.0) || self.revision != Some(revision) {
+            return None;
+        }
+        Some((|| {
+            let controller = self
+                .controller
+                .as_mut()
+                .ok_or("Interpreter session retired")?;
+            let depth = controller.history_counts().0;
+            let expected = if redo {
+                marker
+                    .1
+                    .checked_sub(1)
+                    .ok_or("Invalid interpreter history depth")?
+            } else {
+                marker.1
+            };
+            if depth != expected {
+                return Err("Interpreter/application chronological history mismatch".into());
+            }
+            if !(if redo {
+                controller.redo()?
+            } else {
+                controller.undo()?
+            }) {
+                return Err("Interpreter command missing".into());
+            }
+            self.history_steps += 1;
+            Ok(())
+        })())
     }
     pub fn published(&mut self, revision: u64) {
         self.revision = Some(revision);
     }
 }
 impl crate::IngeTrazoApp {
+    #[doc(hidden)]
+    pub fn engineering_python_history_observation(&self) -> Option<((usize, usize), usize, usize)> {
+        self.engineering_python.controller.as_ref().map(|c| {
+            (
+                c.history_counts(),
+                self.engineering_python.exports,
+                self.engineering_python.history_steps,
+            )
+        })
+    }
     #[doc(hidden)]
     pub fn engineering_python_budget(
         &self,
@@ -94,6 +159,34 @@ impl crate::IngeTrazoApp {
             .map(Controller::budget)
     }
 
+    pub(crate) fn restore_engineering_python_history(
+        &mut self,
+        redo: bool,
+    ) -> Result<bool, String> {
+        let marker = (if redo {
+            self.redo_stack.last()
+        } else {
+            self.undo_stack.last()
+        })
+        .and_then(|s| s.history_python);
+        let Some(marker) = marker else {
+            return Ok(false);
+        };
+        // Reserve the actual destination before stepping the persistent VM.
+        if redo {
+            self.undo_stack.try_reserve(1)
+        } else {
+            self.redo_stack.try_reserve(1)
+        }
+        .map_err(|_| "Interpreter application history capacity refused".to_string())?;
+        match self
+            .engineering_python
+            .restore_owned(marker, self.model_revision, redo)
+        {
+            Some(result) => result.map(|()| true),
+            None => Ok(false),
+        }
+    }
     pub(crate) fn run_engineering_python(&mut self, code: &str) {
         if self.undo_stack.try_reserve(1).is_err() {
             self.console_logs
@@ -109,6 +202,8 @@ impl crate::IngeTrazoApp {
                 if let Some((mesh, export_charge)) = native {
                     if changed {
                         self.save_undo_state();
+                        self.undo_stack.last_mut().unwrap().history_python =
+                            self.engineering_python.command_marker();
                     } else {
                         self.bump_model_revision();
                     }
@@ -142,6 +237,97 @@ impl crate::IngeTrazoApp {
 #[cfg(test)]
 mod tests {
     use super::Engine;
+    #[test]
+    fn refused_vm_history_preserves_visible_command_and_retry() {
+        let mut app = crate::IngeTrazoApp::new();
+        let ids = [glam::DVec3::ZERO, glam::DVec3::X, glam::DVec3::Y]
+            .into_iter()
+            .map(|p| app.scene.mesh.add_vertex(p))
+            .collect();
+        app.scene.mesh.add_face(ids, vec![]).unwrap();
+        app.engineering_python_enabled = true;
+        app.run_script("held=mesh.faces[0]; held.attrs['mat']='Edited'");
+        let mesh = app.scene.mesh.clone();
+        let marker = app.undo_stack.last().unwrap().history_python;
+        let budget = app.engineering_python_budget().unwrap();
+        let charged = budget.snapshot().total();
+        budget.set_limit(Some(charged));
+        app.undo();
+        assert_eq!(app.scene.mesh, mesh);
+        assert_eq!(app.undo_stack.len(), 1);
+        assert!(app.redo_stack.is_empty());
+        assert_eq!(app.undo_stack.last().unwrap().history_python, marker);
+        assert_eq!(budget.snapshot().total(), charged);
+        assert_eq!(
+            app.engineering_python
+                .controller
+                .as_ref()
+                .unwrap()
+                .history_counts(),
+            (1, 0)
+        );
+        budget.set_limit(None);
+        app.undo();
+        app.run_script("assert held is mesh.faces[0]; assert 'mat' not in held.attrs");
+        assert!(!app.console_logs.last().unwrap().contains("refused"));
+        let undone = app.scene.mesh.clone();
+        let charged = budget.snapshot().total();
+        budget.set_limit(Some(charged));
+        app.redo();
+        assert_eq!(app.scene.mesh, undone);
+        assert_eq!(app.undo_stack.len(), 0);
+        assert_eq!(app.redo_stack.len(), 1);
+        assert_eq!(budget.snapshot().total(), charged);
+        assert_eq!(
+            app.engineering_python
+                .controller
+                .as_ref()
+                .unwrap()
+                .history_counts(),
+            (0, 1)
+        );
+        budget.set_limit(None);
+        app.redo();
+        app.run_script("assert held is mesh.faces[0]; assert held.attrs['mat']=='Edited'");
+        assert!(!app.console_logs.last().unwrap().contains("refused"));
+    }
+    #[test]
+    fn application_undo_redo_retains_real_vm_aliases_and_globals() {
+        let mut app = crate::IngeTrazoApp::new();
+        let vertices = [glam::DVec3::ZERO, glam::DVec3::X, glam::DVec3::Y]
+            .into_iter()
+            .map(|p| app.scene.mesh.add_vertex(p))
+            .collect();
+        app.scene.mesh.add_face(vertices, vec![]).unwrap();
+        app.engineering_python_enabled = true;
+        app.run_script("held=mesh.faces[0]; held_vertex=held.loop[0]; token=41; held.attrs['mat']='First'; held_vertex.position.setZ(2)");
+        app.run_script("held.attrs['mat']='Second'; token+=1");
+        assert_eq!(app.undo_stack.len(), 2);
+        app.undo();
+        assert_eq!(app.scene.mesh.faces[0].attrs["mat"], "First");
+        app.run_script("assert token==42; assert held is mesh.faces[0]; assert held_vertex is held.loop[0]; assert held.attrs['mat']=='First'");
+        assert!(!app.console_logs.last().unwrap().contains("refused"));
+        assert_eq!(app.redo_stack.len(), 1);
+        app.redo();
+        app.run_script(
+            "assert token==42; assert held is mesh.faces[0]; assert held.attrs['mat']=='Second'",
+        );
+        assert!(!app.console_logs.last().unwrap().contains("refused"));
+        app.undo();
+        app.undo();
+        app.run_script("assert token==42; assert held is mesh.faces[0]; assert held_vertex.position.z()==0; assert 'mat' not in held.attrs");
+        assert!(!app.console_logs.last().unwrap().contains("refused"));
+        app.redo();
+        app.run_script("held.attrs['mat']='Branch'");
+        assert!(app.redo_stack.is_empty());
+        assert_eq!(app.scene.mesh.faces[0].attrs["mat"], "Branch");
+        app.undo();
+        app.redo();
+        app.run_script(
+            "assert held is mesh.faces[0]; assert held.attrs['mat']=='Branch'; assert token==42",
+        );
+        assert!(!app.console_logs.last().unwrap().contains("refused"));
+    }
     #[test]
     fn vm_only_mesh_creation_does_not_claim_document_commit() {
         let mut app = crate::IngeTrazoApp::new();

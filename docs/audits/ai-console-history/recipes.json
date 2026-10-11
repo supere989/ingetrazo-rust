@@ -1,0 +1,68 @@
+[
+  {
+    "name": "initial",
+    "code": "",
+    "history": null,
+    "check": ""
+  },
+  {
+    "name": "first",
+    "code": "held=mesh.faces[0]; held_vertex=held.loop[0]; token=41; held.attrs['mat']='First'; held_vertex.position.setZ(2)",
+    "history": null,
+    "check": "assert token==41; assert held is mesh.faces[0]; assert held_vertex is held.loop[0]"
+  },
+  {
+    "name": "second",
+    "code": "held.attrs['mat']='Second'; token+=1",
+    "history": null,
+    "check": "assert token==42; assert held is mesh.faces[0]; assert held_vertex is held.loop[0]"
+  },
+  {
+    "name": "undo-second",
+    "code": "",
+    "history": false,
+    "check": "assert token==42; assert held is mesh.faces[0]; assert held_vertex is held.loop[0]"
+  },
+  {
+    "name": "redo-second",
+    "code": "",
+    "history": true,
+    "check": "assert token==42; assert held is mesh.faces[0]; assert held_vertex is held.loop[0]"
+  },
+  {
+    "name": "undo-second-again",
+    "code": "",
+    "history": false,
+    "check": "assert token==42; assert held is mesh.faces[0]; assert held_vertex is held.loop[0]"
+  },
+  {
+    "name": "undo-first",
+    "code": "",
+    "history": false,
+    "check": "assert token==42; assert held is mesh.faces[0]; assert held_vertex is held.loop[0]"
+  },
+  {
+    "name": "redo-first",
+    "code": "",
+    "history": true,
+    "check": "assert token==42; assert held is mesh.faces[0]; assert held_vertex is held.loop[0]"
+  },
+  {
+    "name": "branch",
+    "code": "held.attrs['mat']='Branch'",
+    "history": null,
+    "check": "assert token==42; assert held is mesh.faces[0]; assert held_vertex is held.loop[0]"
+  },
+  {
+    "name": "undo-branch",
+    "code": "",
+    "history": false,
+    "check": "assert token==42; assert held is mesh.faces[0]; assert held_vertex is held.loop[0]"
+  },
+  {
+    "name": "redo-branch",
+    "code": "",
+    "history": true,
+    "check": "assert token==42; assert held is mesh.faces[0]; assert held_vertex is held.loop[0]"
+  }
+]

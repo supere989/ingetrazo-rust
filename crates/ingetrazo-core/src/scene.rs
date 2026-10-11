@@ -52,6 +52,9 @@ pub struct Scene {
     /// Command-specific prototype restore target, carried only by history snapshots.
     #[serde(skip)]
     pub history_shareback: Option<uuid::Uuid>,
+    /// Opt-in interpreter command owner and VM stack depth; history snapshots only.
+    #[serde(skip)]
+    pub history_python: Option<(uuid::Uuid, usize)>,
     #[serde(skip)]
     pub history_views: crate::saved_views::ViewHistory,
     #[serde(skip)]
@@ -117,7 +120,7 @@ impl Scene {
             dimension_frame:glam::DMat4::IDENTITY,
             drawing_frame:None,
             history_context:vec![],
-            display_style:Default::default(),shadows:Default::default(),history_shareback:None,history_views:Default::default(),history_terrain:Default::default(),history_layers:Default::default(),
+            display_style:Default::default(),shadows:Default::default(),history_shareback:None,history_python:None,history_views:Default::default(),history_terrain:Default::default(),history_layers:Default::default(),
             component_definitions: HashMap::new(),
             mesh_shares: HashMap::new(),
             native_document: serde_json::Value::Null,

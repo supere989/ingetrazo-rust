@@ -48,3 +48,8 @@ libc = "0.2"
 name = "engineering_console_scene_fixture"
 path = "examples/engineering_console_scene_fixture.rs"
 required-features = ["engineering-python"]
+
+[[example]]
+name="engineering_console_history_fixture"
+path="examples/engineering_console_history_fixture.rs"
+required-features=["engineering-python"]
