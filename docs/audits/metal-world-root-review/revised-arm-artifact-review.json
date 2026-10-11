@@ -1,0 +1,53 @@
+{
+  "source": "314eb6566b6694652361ab948a5d02f02cf71eb9",
+  "run_id": 38099162740,
+  "zip_sha256": "ee0f69e41d74322ef381ff3fb7b40467eaa69332dcea2cec55f0acb13b4aecc7",
+  "source_hashes_verified": true,
+  "frames": {
+    "far-then-near": {
+      "interior_pixels": 1152,
+      "background_pixels": 2584
+    },
+    "near-then-far": {
+      "interior_pixels": 1152,
+      "background_pixels": 2584
+    },
+    "depth-disabled-negative": {
+      "interior_pixels": 1152,
+      "background_pixels": 2584
+    },
+    "warm-0": {
+      "interior_pixels": 1152,
+      "background_pixels": 2584
+    },
+    "warm-1": {
+      "interior_pixels": 1152,
+      "background_pixels": 2584
+    },
+    "warm-2": {
+      "interior_pixels": 1152,
+      "background_pixels": 2584
+    },
+    "owner-refusal-preserved": {
+      "interior_pixels": 1152,
+      "background_pixels": 2584
+    },
+    "map-free-old-green": {
+      "interior_pixels": 1152,
+      "background_pixels": 2584
+    },
+    "map-free-new-red": {
+      "interior_pixels": 1152,
+      "background_pixels": 2584
+    }
+  },
+  "unchanged_warm_uploads": 2,
+  "unchanged_warm_targets": 1,
+  "final_ledger_committed_reserved": [
+    0,
+    0
+  ],
+  "wrong_owner_and_invalid_pose_refused": true,
+  "negative_controls_rejected": 2,
+  "scope": "Native ARM offscreen depth and retained UI sampling interior/background only; no triangle-edge, full-material, presentation or full viewport acceptance"
+}

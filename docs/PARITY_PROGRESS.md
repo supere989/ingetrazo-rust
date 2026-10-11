@@ -19,6 +19,8 @@ Latest independent rendering diagnosis: [real layout](audits/annotation-real-ope
 
 ## Dated implementation and verification evidence
 
+ARM native world artifact accepted within scope (2026-10-11 UTC): root independently verifies source/ZIP hashes and all nine actual frames at 1,152 interior plus 2,584 background pixels each. Blank and disabled-depth-as-positive controls reject. Warm uploads remain 2, targets remain 1, and final committed/reserved bytes are zero. [Independent review](audits/metal-world-root-review/revised-arm-artifact-review.json). This establishes bounded offscreen depth and retained UI texture ownership; full materials, triangle edges, presentation and complete viewport parity remain OPEN.
+
 Revised ARM world job passes (2026-10-11 UTC): direct job inspection confirms source `314eb656` passes native SDK build, GPU execution and the unchanged nine-frame checker in run 38099162740. Intel remains building at this observation. [Job observation](audits/metal-world-root-review/revised-run-observation.json). Independent artifact verification is pending; full materials, application activation and platform acceptance remain OPEN.
 
 Actual fractional-DPI extent correction (2026-10-11 UTC): nine original Qt viewport observations at DPR 1/1.25/1.5 show resizeGL receives logical dimensions, contrary to its source comment. Camera aspect follows logical dimensions; two cases show Python _fb_size rounding differs from actual captured framebuffer dimensions. [Retained measurements](audits/viewport-extent-original-root/review.json). Native extent policy must preserve these distinct observed quantities; the earlier proposal to force camera aspect to physical target ratio is not justified.
