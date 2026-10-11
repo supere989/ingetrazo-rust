@@ -3,7 +3,7 @@ pub mod resize;
 pub mod headless;
 pub mod world;
 mod annotation_visibility;
-mod annotation_viewport;
+pub mod annotation_viewport;
 pub mod annotation_overlay_probe;
 mod annotation_visibility_gpu;
 pub mod resources;
