@@ -1,0 +1,12 @@
+{
+  "run": 38104819897,
+  "source": "f8cf94b912498e6afdf543ac632e72725cdfe060",
+  "artifact_id": 11688779773,
+  "sha256": "5d6c9618c8e17b54f2b3c5aa72bbf5d9f5697e03c9c259229b0fc250da107e25",
+  "verified_source_files": 28,
+  "sdk": "PASS",
+  "runtime": "FAIL",
+  "actual_runtime_failure": "Moved-frame upload assertion0 !=64, beforefinalreport",
+  "observed_rendered_pause": "Initial1280x800 image literally shows Metal viewport paused: World native texture size query unavailable: requested_bytes=2646880 queried_size=0 queried_align=0 extent932x710 format70",
+  "scope": "Rendered error observation identifies queryrefusal; no native viewport/presentation acceptance and no admission relaxation"
+}

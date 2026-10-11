@@ -1,0 +1,6 @@
+
+thread 'main' (25608) panicked at crates/ingetrazo-gui/src/native_metal/world_app_probe.rs:122:5:
+assertion `left == right` failed
+  left: 0
+ right: 64
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
