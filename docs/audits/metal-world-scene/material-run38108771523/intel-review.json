@@ -1,0 +1,303 @@
+{
+  "source_commit": "c7bd526d22429f3f612644a00347f9c26f229f55",
+  "artifact_id": 11690852042,
+  "artifact_sha256": "4ed18c26c1006715127803392cae111b70e769e418c0af8b4cecfd050b9e011a",
+  "verified_source_files": 37,
+  "binary_sha256": "47a340ebc10ba0658210a5caa6d2751bd535687c9db8dae0c329e61098e6c276",
+  "runtime_completed": true,
+  "native_acceptance": false,
+  "frame_count": 48,
+  "checker_failure": "opaque-front pixel mismatch",
+  "all_counters_zero": true,
+  "sample_rgba": {
+    "opaque-front": [
+      210,
+      214,
+      212,
+      255
+    ],
+    "opaque-front-warm": [
+      210,
+      214,
+      212,
+      255
+    ],
+    "opaque-front-warm2": [
+      210,
+      214,
+      212,
+      255
+    ],
+    "opaque-default-back": [
+      210,
+      214,
+      212,
+      255
+    ],
+    "opaque-default-back-warm": [
+      210,
+      214,
+      212,
+      255
+    ],
+    "opaque-default-back-warm2": [
+      210,
+      214,
+      212,
+      255
+    ],
+    "opaque-painted-back": [
+      210,
+      214,
+      212,
+      255
+    ],
+    "opaque-painted-back-warm": [
+      210,
+      214,
+      212,
+      255
+    ],
+    "opaque-painted-back-warm2": [
+      210,
+      214,
+      212,
+      255
+    ],
+    "alpha-front": [
+      210,
+      214,
+      212,
+      255
+    ],
+    "alpha-front-warm": [
+      210,
+      214,
+      212,
+      255
+    ],
+    "alpha-front-warm2": [
+      210,
+      214,
+      212,
+      255
+    ],
+    "alpha-painted-back": [
+      210,
+      214,
+      212,
+      255
+    ],
+    "alpha-painted-back-warm": [
+      210,
+      214,
+      212,
+      255
+    ],
+    "alpha-painted-back-warm2": [
+      210,
+      214,
+      212,
+      255
+    ],
+    "texture-blue": [
+      210,
+      214,
+      212,
+      255
+    ],
+    "texture-blue-warm": [
+      210,
+      214,
+      212,
+      255
+    ],
+    "texture-blue-warm2": [
+      210,
+      214,
+      212,
+      255
+    ],
+    "texture-red": [
+      210,
+      214,
+      212,
+      255
+    ],
+    "texture-red-warm": [
+      210,
+      214,
+      212,
+      255
+    ],
+    "texture-red-warm2": [
+      210,
+      214,
+      212,
+      255
+    ],
+    "texture-repeat": [
+      210,
+      214,
+      212,
+      255
+    ],
+    "texture-repeat-warm": [
+      210,
+      214,
+      212,
+      255
+    ],
+    "texture-repeat-warm2": [
+      210,
+      214,
+      212,
+      255
+    ],
+    "texture-default-back": [
+      210,
+      214,
+      212,
+      255
+    ],
+    "texture-default-back-warm": [
+      210,
+      214,
+      212,
+      255
+    ],
+    "texture-default-back-warm2": [
+      210,
+      214,
+      212,
+      255
+    ],
+    "texture-alpha": [
+      210,
+      214,
+      212,
+      255
+    ],
+    "texture-alpha-warm": [
+      210,
+      214,
+      212,
+      255
+    ],
+    "texture-alpha-warm2": [
+      210,
+      214,
+      212,
+      255
+    ],
+    "texture-shaded": [
+      210,
+      214,
+      212,
+      255
+    ],
+    "texture-shaded-warm": [
+      210,
+      214,
+      212,
+      255
+    ],
+    "texture-shaded-warm2": [
+      210,
+      214,
+      212,
+      255
+    ],
+    "texture-shaded-back": [
+      210,
+      214,
+      212,
+      255
+    ],
+    "texture-shaded-back-warm": [
+      210,
+      214,
+      212,
+      255
+    ],
+    "texture-shaded-back-warm2": [
+      210,
+      214,
+      212,
+      255
+    ],
+    "group-color": [
+      210,
+      214,
+      212,
+      255
+    ],
+    "group-color-warm": [
+      210,
+      214,
+      212,
+      255
+    ],
+    "group-color-warm2": [
+      210,
+      214,
+      212,
+      255
+    ],
+    "group-texture": [
+      210,
+      214,
+      212,
+      255
+    ],
+    "group-texture-warm": [
+      210,
+      214,
+      212,
+      255
+    ],
+    "group-texture-warm2": [
+      210,
+      214,
+      212,
+      255
+    ],
+    "group-reflected-texture": [
+      210,
+      214,
+      212,
+      255
+    ],
+    "group-reflected-texture-warm": [
+      210,
+      214,
+      212,
+      255
+    ],
+    "group-reflected-texture-warm2": [
+      210,
+      214,
+      212,
+      255
+    ],
+    "group-alpha": [
+      210,
+      214,
+      212,
+      255
+    ],
+    "group-alpha-warm": [
+      210,
+      214,
+      212,
+      255
+    ],
+    "group-alpha-warm2": [
+      210,
+      214,
+      212,
+      255
+    ]
+  },
+  "conclusion": "Route enabled is not accepted frame presence. All native counters zero and sampled pixels are placeholder background. Exact refusal reason was not recorded by initial fixture; no inferred native allocation failure claimed. Revised fixture requires accepted frame and records route reason before paint."
+}
