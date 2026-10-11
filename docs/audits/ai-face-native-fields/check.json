@@ -1,0 +1,12 @@
+{
+  "states": 9,
+  "rejected": [
+    "color",
+    "layer",
+    "nested",
+    "history",
+    "missing",
+    "production"
+  ],
+  "scope": "typed Face attrs/layer projection, production disabled"
+}

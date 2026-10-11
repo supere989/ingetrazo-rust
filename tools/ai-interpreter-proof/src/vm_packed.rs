@@ -9,27 +9,32 @@ pub(super) struct Candidate{
  pub keys:Vec<(SourceKey,usize)>,
  assignments:Vec<(PyRef<Vertex>,uuid::Uuid)>,
  pub charge:Lease,
+ field_charge:Lease,
+ opaque_fields:usize,
 }
 impl Candidate{
- pub fn positions_changed(&self,live:&PyRef<Mesh>)->Result<bool,String>{
+ pub fn fields_changed(&self,live:&PyRef<Mesh>)->Result<bool,String>{
   let owner=live.owner.read();let native=owner.mesh();if native.vertices.len()!=self.mesh.vertices.len(){return Ok(true);}
+  if native.faces.len()!=self.mesh.faces.len()||native.faces.iter().zip(&self.mesh.faces).any(|(a,b)|a.attrs!=b.attrs||a.layer!=b.layer){return Ok(true);}
   let mut positions=HashMap::new();positions.try_reserve(native.vertices.len()).map_err(|_|"Packed comparison positions refused")?;
   for vertex in &native.vertices{if positions.insert(vertex.uid,vertex.position).is_some(){return Err("Repeated native packed UID".into());}}
   Ok(self.mesh.vertices.iter().any(|vertex|positions.get(&vertex.uid)!=Some(&vertex.position)))
  }
  pub fn apply_history(self,live:&PyRef<Mesh>,state:uuid::Uuid,redo:bool)->Result<(),String>{
-  let Self{mesh,keys,assignments,charge}=self;
+  let Self{mesh,keys,assignments,charge,mut field_charge,opaque_fields}=self;
+  field_charge.reclassify(Kind::History)?;
   let result={let mut owner=live.owner.write();owner.prepare_identity_history_replacement_as(mesh,keys,state,redo).map(|ticket|ticket.apply())};
-  let old=result?;for(vertex,uid)in assignments{vertex.packed_uid.set(Some(uid));}drop(old);drop(charge);Ok(())
+  let old=result?;for(vertex,uid)in assignments{vertex.packed_uid.set(Some(uid));}drop(old);let old_charge={live.native_field_charge.write().replace(field_charge)};live.opaque_native_fields.set(opaque_fields);drop(old_charge);drop(charge);Ok(())
  }
  pub fn apply(self,live:&PyRef<Mesh>,state:uuid::Uuid)->Result<(),String>{
-  let Self{mesh,keys,assignments,charge}=self;
+  let Self{mesh,keys,assignments,charge,mut field_charge,opaque_fields}=self;
+  field_charge.reclassify(Kind::History)?;
   let result={let mut owner=live.owner.write();owner.prepare_identity_replacement_as(mesh,keys,state).map(|ticket|ticket.apply())};
-  let old=result?;for(vertex,uid)in assignments{vertex.packed_uid.set(Some(uid));}drop(old);drop(charge);Ok(())
+  let old=result?;for(vertex,uid)in assignments{vertex.packed_uid.set(Some(uid));}drop(old);let old_charge={live.native_field_charge.write().replace(field_charge)};live.opaque_native_fields.set(opaque_fields);drop(old_charge);drop(charge);Ok(())
  }
 }
 pub(super) fn prepare(mesh:&PyRef<Mesh>,public:&[PyObjectRef],graph:&GraphState,positions:&[VertexRestore],faces:&[PyObjectRef],fields:&[FaceRestore],budget:&OwnerBudget,vm:&VirtualMachine)->Result<Candidate,String>{
- if faces.len()!=fields.len(){return Err("Packed Face snapshot extent mismatch".into());}
+ if faces.len()!=fields.len(){return Err("Packed Face snapshot extent mismatch".into());}let mut field_charge=budget.reserve(Kind::Preparation,0)?;let mut opaque_fields=0usize;
  let registry=graph.registry.as_ref().ok_or("Missing public registry snapshot")?;
  let mut bound=public.len().checked_add(graph.members.len().checked_mul(2).ok_or("Packed endpoint overflow")?).and_then(|n|n.checked_add(registry.__len__())).ok_or("Packed closure extent overflow")?;
  for field in fields{
@@ -75,7 +80,7 @@ pub(super) fn prepare(mesh:&PyRef<Mesh>,public:&[PyObjectRef],graph:&GraphState,
  for field in fields{
   let outer=ring(&field.outer)?;let holes=field.holes.borrow_vec();let mut rings=Vec::new();rings.try_reserve_exact(holes.len()).map_err(|_|"Packed hole slots refused")?;
   for hole in holes.iter(){rings.push(ring(&hole.clone().downcast::<PyList>().map_err(|_|"Packed hole requires list")?)?);}
-  let mut face=ingetrazo_core::mesh::MeshFace::new(outer);face.holes=rings;out.faces.push(face);
+  let mut face=ingetrazo_core::mesh::MeshFace::new(outer);face.holes=rings;let fields=super::face_fields::prepare(&field.attrs,budget,vm)?;face.attrs=fields.attrs;face.layer=fields.layer;opaque_fields=opaque_fields.checked_add(fields.opaque).ok_or("Opaque native Face count overflow")?;field_charge.merge(fields.charge)?;out.faces.push(face);
  }
  let mut counts=Vec::new();counts.try_reserve_exact(vertices.len()).map_err(|_|"Packed incidence counts refused")?;counts.resize(vertices.len(),0usize);
  for edge in &edges{counts[edge.v0]=counts[edge.v0].checked_add(1).ok_or("Packed incidence overflow")?;if edge.v1!=edge.v0{counts[edge.v1]=counts[edge.v1].checked_add(1).ok_or("Packed incidence overflow")?;}}
@@ -95,8 +100,8 @@ pub(super) fn prepare(mesh:&PyRef<Mesh>,public:&[PyObjectRef],graph:&GraphState,
   let id=*ids.get(&value.get_id()).ok_or("Native registry Vertex closure missing")?;
   keys.push((SourceKey(cells.try_into().map_err(|_|"Packed registry cell extent")?),id));
  }
- let native=mesh.owner.read();if native.mesh().faces.iter().any(|face|!face.attrs.is_empty()||face.layer.is_some()||face.interior){return Err("Native painted Face closure admission pending".into());}
- Ok(Candidate{mesh:out,keys,assignments,charge})
+ let native=mesh.owner.read();if native.mesh().faces.iter().any(|face|face.interior){return Err("Native painted Face closure admission pending".into());}
+ Ok(Candidate{mesh:out,keys,assignments,charge,field_charge,opaque_fields})
 }
 
 /// Cold command-owned ID table. No coordinate rebinding: every native UID must
@@ -104,8 +109,10 @@ pub(super) fn prepare(mesh:&PyRef<Mesh>,public:&[PyObjectRef],graph:&GraphState,
 pub(super) fn references(mesh:&PyRef<Mesh>,graph:&GraphState,budget:&OwnerBudget)->Result<(Vec<PyObjectRef>,Lease),String>{
  let count=mesh.owner.read().mesh().vertices.len();
  let charge=budget.reserve(Kind::Staging,count.checked_mul(256).ok_or("Packed reference table overflow")?)?;
+ let mut wanted=std::collections::HashSet::new();wanted.try_reserve(count).map_err(|_|"Packed native UID admission refused")?;
+ {let owner=mesh.owner.read();for vertex in &owner.mesh().vertices{if !wanted.insert(vertex.uid){return Err("Repeated native packed UID".into());}}}
  let mut by_uid:HashMap<uuid::Uuid,PyObjectRef>=HashMap::new();by_uid.try_reserve(count).map_err(|_|"Packed reference identities refused")?;
- let mut remember=|value:PyObjectRef|->Result<(),String>{if let Some(v)=value.downcast_ref::<Vertex>(){if let Some(uid)=v.packed_uid.get(){if let Some(old)=by_uid.get(&uid){if !AsObject::is(old,&value){return Err("Packed UID has multiple genuine owners".into());}}else{by_uid.insert(uid,value);}}}Ok(())};
+ let mut remember=|value:PyObjectRef|->Result<(),String>{if let Some(v)=value.downcast_ref::<Vertex>(){if let Some(uid)=v.packed_uid.get(){if !wanted.contains(&uid){return Ok(());}if let Some(old)=by_uid.get(&uid){if !AsObject::is(old,&value){return Err("Packed UID has multiple genuine owners".into());}}else{by_uid.insert(uid,value);}}}Ok(())};
  {let values=mesh.vertices.borrow_vec();for value in values.iter(){remember(value.clone())?;}}
  for value in &graph.members{let edge=value.downcast_ref::<super::editable_mesh::Edge>().ok_or("Packed graph requires Edge")?;let a={edge.v0.read().clone().ok_or("Cleared endpoint")?};let b={edge.v1.read().clone().ok_or("Cleared endpoint")?};remember(a.into())?;remember(b.into())?;}
  {let faces=mesh.faces.borrow_vec();for value in faces.iter(){let face=value.downcast_ref::<super::editable_mesh::Face>().ok_or("Packed Face identity")?;let outer=face.r#loop.read().clone();for value in outer.borrow_vec().iter(){remember(value.clone())?;}let holes=face.hole_loops.read().clone();for hole in holes.borrow_vec().iter(){let ring=hole.downcast_ref::<PyList>().ok_or("Packed hole requires list")?;for value in ring.borrow_vec().iter(){remember(value.clone())?;}}}}

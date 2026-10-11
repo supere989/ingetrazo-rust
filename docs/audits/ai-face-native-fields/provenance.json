@@ -1,0 +1,15 @@
+{
+  "source_python": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "native_binary_sha256": "730947e89d036310720656ea461e576c97b01e65ef48407779d5a631ccb9e020",
+  "source_hashes": {
+    "tools/ai-interpreter-proof/src/vm_mesh.rs": "75661ed358ffc2754e7ea1b7871f977c1b4ca9b5228ba661ae983824cd733ca5",
+    "tools/ai-interpreter-proof/src/vm_packed.rs": "25fee24929a6a271044af0a0b15f299f0b71874cdddb3f77063bcc037ec5e834",
+    "tools/ai-interpreter-proof/src/vm_face_fields.rs": "98b82d537006ff920e1dc4b180a9df87c6a4246c275316d9fee9b12a38eb4ec2",
+    "tools/ai-interpreter-proof/src/face_owner.rs": "68623fb10f9751d047051aefa192bf232800fe09956f8a1aa20fb228b608fa80",
+    "scripts/fixtures/ai-face-native-fields.json": "88ac6ef3d3b6a43defa0b8bbe1430c40bbbc9ab7e4502bac38cabf3386d0a119"
+  },
+  "native_command": "CARGO_TARGET_DIR=/tmp/ingetrazo-ai-registry-target CARGO_PROFILE_DEV_DEBUG=0 CARGO_INCREMENTAL=0 cargo run --manifest-path tools/ai-interpreter-proof/Cargo.toml --bin vm_face_native_fields -j2",
+  "quota_refusals": 6,
+  "final_charge": 0,
+  "production_enabled": false
+}

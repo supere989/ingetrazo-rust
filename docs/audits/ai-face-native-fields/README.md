@@ -1,0 +1,9 @@
+# Editable Face native field projection prerequisite
+
+Nine operative original/native states match: existing color/back/opacity/layer/nested vendor values, replacing the actual attrs dictionary, and painted appended faces, each through Undo/Redo. The same validator rejects six literal mutations. The native executable also exercises real logical-budget refusal before every Undo/Redo, preserving prior native fields/history/charge, then retries; teardown reaches zero charge.
+
+Typed built-in values are projected one way into native Face attrs/layer. Genuine Python objects remain the authoritative VM/history owners; tuples are converted only for the native consumer, never reconstructed into the VM. Replacing attrs releases the old reference outside its lock. Native replacement maps retain their admitted payload lease until replacement or Mesh teardown; appended maps use existing face-command payload leases. These are logical payload/work admissions, not an allocator-enforced VM heap cap.
+
+The packed reference preflight filters to actual native UIDs so unrelated detached references do not exceed the charged union table. Empty default attrs avoid map materialization. Nonempty attrs currently incur cold comparison and candidate projection; full-root packing remains a prerequisite cost, not the optimized production field-update architecture.
+
+Production execution remains disabled. Interior/source-live derived state, arbitrary non-JSON Python values, dynamic conversion/equality callbacks and mutation during them, imported Scene hydration, full native attributes and render semantics, topology membership combinations, VM/native total memory/deadlines and the production AI/console consumer remain required. Opaque values stay in genuine VM attrs but are omitted from this bounded native projection; this does not claim lossless document or universal paint parity. Face UID is not invented: native core Face has no UID field.

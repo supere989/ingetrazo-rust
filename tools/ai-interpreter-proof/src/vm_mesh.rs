@@ -592,6 +592,11 @@ pub mod editable_mesh {
         fn attrs(zelf: &Py<Self>) -> PyObjectRef {
             zelf.attrs.read().clone()
         }
+        #[pygetset(setter)]
+        fn set_attrs(zelf: &Py<Self>,value:PyObjectRef){
+            let old={std::mem::replace(&mut *zelf.attrs.write(),value)};
+            drop(old);
+        }
     }
     #[pyattr]
     #[pyclass(name = "Mesh", traverse)]
@@ -605,6 +610,10 @@ pub mod editable_mesh {
         pub(super) registry: rustpython_vm::builtins::PyDictRef,
         #[pytraverse(skip)]
         pub(super) managed: std::cell::Cell<bool>,
+        #[pytraverse(skip)]
+        pub(super) native_field_charge: PyRwLock<Option<Lease>>,
+        #[pytraverse(skip)]
+        pub(super) opaque_native_fields: std::cell::Cell<usize>,
     }
     impl std::fmt::Debug for Mesh {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -631,6 +640,8 @@ pub mod editable_mesh {
                 edges: vm.ctx.new_list(vec![]),
                 registry:vm.ctx.new_dict(),
                 managed: std::cell::Cell::new(false),
+                native_field_charge:PyRwLock::new(None),
+                opaque_native_fields:std::cell::Cell::new(0),
             })
         }
     }
@@ -1217,6 +1228,7 @@ fn seed_packed_uids(mesh:&PyRef<editable_mesh::Mesh>)->Result<(),String>{
     Ok(())
 }
 #[path="vm_packed.rs"]mod packed;
+#[path="vm_face_fields.rs"]mod face_fields;
 struct VertexRestore {
     vertex: PyRef<editable_mesh::Vertex>,
     position: PyRef<crate::vm_groups::native_groups::QVector3D>,
@@ -1870,8 +1882,14 @@ impl Controller {
                     .map_err(|_| "Publication entries refused")?;
                 entries.extend(stage.entries.drain().map(|(_, e)| e));
                 let publish = (|| {
-                    for entry in &entries {
+                    for entry in &mut entries {
                         entry.validate_created()?;
+                        for(i,face)in entry.faces_created.iter().enumerate(){
+                            let attrs=face.attrs.read().clone();
+                            let fields=face_fields::prepare(&attrs,&self.budget,vm)?;
+                            entry.transaction.as_mut().ok_or("Missing staged Face field owner")?.set_face_native_fields(entry.faces+i,fields.attrs,fields.layer)?;
+                            drop(fields.charge);
+                        }
                     }
                     if let Some(before) = &baseline {
                         for entry in &entries {if rustpython_vm::AsObject::is(&entry.mesh,&before.mesh)&&!before.graph.registry_append_live(&before.mesh,&entry.vertices_created){return Err("Modified public registry with append requires identity-owned lookup publication".into());}}
@@ -1910,6 +1928,7 @@ impl Controller {
                         }
                     }
                     if entries.is_empty() {
+                        if let Some(before)=baseline.as_ref(){history_packed_edges|=face_fields::needs_projection(&before.mesh,&self.budget,vm)?;}
                         if let Ok(value) = self.scope.globals.get_item("mesh", vm) {
                             let mesh = value
                                 .downcast::<editable_mesh::Mesh>()
@@ -1925,7 +1944,7 @@ impl Controller {
                                     let mut live=RootRestore::prepare(mesh.clone(),&self.budget,vm)?;live.armed=false;
                                     let candidate=packed::prepare(&mesh,&live.vertices,&live.graph,&live.positions,&live.faces,&live.face_fields,&self.budget,vm)?;
                                     if self.history_enabled&&!history_changed{
-                                        if candidate.positions_changed(&mesh)?{let state=mesh.owner.read().state_token();candidate.apply(&mesh,state)?;}
+                                        if candidate.fields_changed(&mesh)?{let state=mesh.owner.read().state_token();candidate.apply(&mesh,state)?;}
                                         return Ok(false);
                                     }
                                     candidate.apply(&mesh,uuid::Uuid::new_v4())?;
@@ -2190,6 +2209,9 @@ impl Controller {
     }
     pub fn observe(&self, name: &str) -> serde_json::Value {
         self.interpreter.enter(|vm|{use rustpython_vm::AsObject;let mesh=self.scope.globals.get_item("m",vm).unwrap().downcast::<editable_mesh::Mesh>().unwrap();let owner=mesh.owner.read();let m=owner.mesh();let held=self.scope.globals.get_item("held",vm).unwrap().downcast::<editable_mesh::Face>().unwrap();let old_loop=self.scope.globals.get_item("loop",vm).unwrap();let attrs=self.scope.globals.get_item("heldattrs",vm).unwrap();let position=self.scope.globals.get_item("heldposition",vm).unwrap();let live=mesh.faces.borrow_vec();let first=held.r#loop.read().borrow_vec()[0].clone().downcast::<editable_mesh::Vertex>().unwrap();serde_json::json!({"name":name,"mesh":{"vertices":m.vertices.iter().map(|v|v.position.to_array()).collect::<Vec<_>>(),"edges":m.edges.iter().map(|e|[e.v0,e.v1]).collect::<Vec<_>>(),"faces":m.faces.iter().map(|f|serde_json::json!({"vertices":f.vertices,"holes":f.holes})).collect::<Vec<_>>()},"persistent_faces":mesh.faces.is(&self.scope.globals.get_item("faces",vm).unwrap()),"persistent_vertices":mesh.vertices.is(&self.scope.globals.get_item("vertices",vm).unwrap()),"held_face_live":live.iter().any(|v|v.is(&held)),"face_loop_preserved":held.r#loop.read().is(&old_loop),"attrs_dict_preserved":held.attrs.read().is(&attrs),"vertex_position_preserved":first.position.read().is(&position)})})
+    }
+    pub fn observe_native_face_fields(&self,name:&str)->serde_json::Value{
+      self.interpreter.enter(|vm|{let mesh=self.scope.globals.get_item("m",vm).unwrap().downcast::<editable_mesh::Mesh>().unwrap();let owner=mesh.owner.read();serde_json::json!({"name":name,"faces":owner.mesh().faces.iter().map(|f|serde_json::json!({"attrs":f.attrs,"layer":f.layer})).collect::<Vec<_>>(),"undo":self.undo.len(),"redo":self.redo.len()})})
     }
     pub fn observe_history(&self, name: &str) -> serde_json::Value {
         self.interpreter.enter(|vm|{

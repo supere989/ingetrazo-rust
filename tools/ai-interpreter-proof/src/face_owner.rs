@@ -400,6 +400,9 @@ impl FaceTransaction {
         id: usize,
         attrs: HashMap<String, serde_json::Value>,
     ) -> Result<(), String> {
+        self.set_face_native_fields(id,attrs,None)
+    }
+    pub fn set_face_native_fields(&mut self,id:usize,attrs:HashMap<String,serde_json::Value>,layer:Option<String>)->Result<(),String>{
         let result = (|| {
             if self.failed {
                 return Err("Face transaction previously refused".into());
@@ -414,8 +417,8 @@ impl FaceTransaction {
                 .drafts
                 .get(offset)
                 .ok_or("Face attributes require a staged face")?;
-            let old = attribute_payload(&draft.face.attrs)?;
-            let new = attribute_payload(&attrs)?;
+            let old = attribute_payload(&draft.face.attrs)?.checked_add(draft.face.layer.as_ref().map_or(0,String::len)).ok_or("Old native layer payload overflow")?;
+            let new = attribute_payload(&attrs)?.checked_add(layer.as_ref().map_or(0,String::len)).ok_or("Native layer payload overflow")?;
             let bytes = self
                 .attribute_bytes
                 .checked_sub(old)
@@ -423,6 +426,7 @@ impl FaceTransaction {
                 .ok_or("Face attribute byte overflow")?;
             self.attribute_charge.resize(bytes)?;
             self.drafts[offset].face.attrs = attrs;
+            self.drafts[offset].face.layer = layer;
             self.attribute_bytes = bytes;
             Ok(())
         })();

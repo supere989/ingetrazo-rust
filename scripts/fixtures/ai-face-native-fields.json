@@ -1,0 +1,14 @@
+[
+  {
+    "name": "existing",
+    "code": "f.attrs.update({'color':(0.2,0.4,0.8),'layer':'Painted','opacity':0.5,'vendor':{'uv':[1,2,3],'enabled':True},'back':{'mat':'Back'}})"
+  },
+  {
+    "name": "replacement",
+    "code": "f.attrs={'texture':{'path':'odd.png','scale':(2,3)},'layer':'Other','mat':'Oak'}"
+  },
+  {
+    "name": "append",
+    "code": "g=m.add_face([QVector3D(0,0,1),QVector3D(1,0,1),QVector3D(0,1,1)])\ng.attrs.update({'color':(1,0,0),'layer':'Added','vendor':{'nested':['a',None,False]}})"
+  }
+]
