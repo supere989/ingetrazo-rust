@@ -1,0 +1,27 @@
+{
+  "source": "4a1a0395900bdb9e19003ef40a9abd4403d7ec61",
+  "artifact_id": 11686833917,
+  "zip_sha256": "2c44277599ef6ff8f7c71af721be1b8bd328cdcf5f558153db23d8b7831cb567",
+  "native_sdk_build": "PASS",
+  "inventory": [
+    "binary.sha256",
+    "build.log",
+    "os.txt",
+    "pixel-review.json",
+    "pixel-review.log",
+    "revision.txt",
+    "runtime-result.json",
+    "runtime.log",
+    "sdk.txt",
+    "source.sha256"
+  ],
+  "runtime": {
+    "exit_code": 1,
+    "outer_timeout": false
+  },
+  "runtime_log": "World native texture size query unavailable\n",
+  "recorded_binary_sha256": "55235b300afea30766e9ea4330febfa1e9282763d1ace2a18badfc5fe31662c7  target/debug/examples/native_world_depth",
+  "failure_phase": "pre-frame native texture-size query admission; no RGBA frames",
+  "required_full_nine_frame_gate": "FAIL",
+  "cause_boundary": "query values not retained; cannot distinguish zero size/alignment or smaller-than-logical query. Admission remains unchanged."
+}
