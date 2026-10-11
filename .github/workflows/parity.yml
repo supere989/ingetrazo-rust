@@ -3,8 +3,7 @@ on:
   push:
     branches-ignore: [review/metal-raw-canvas, review/metal-world-classic, review/metal-world-material, review/metal-hidden-ghost]
     paths-ignore:
-      - docs/PARITY_PROGRESS.md
-      - docs/PARITY_PROGRESS_HISTORY.md
+      - docs/**
   pull_request:
 # Finish push acceptance and save caches; retain only the latest queued push.
 # Pull-request updates still cancel superseded checks.
@@ -44,7 +43,11 @@ jobs:
         run: |
           mkdir -p docs/audits/metal-combined-gui-ci
           cargo check --locked -p ingetrazo-gui --all-targets > docs/audits/metal-combined-gui-ci/check.log 2>&1
-          cargo build --locked -p ingetrazo-gui --example native_metal --example native_metal_document_probe > docs/audits/metal-combined-gui-ci/build.log 2>&1
+          cargo build --locked -p ingetrazo-gui --example native_metal --example native_metal_document_probe --example session_recovery_process > docs/audits/metal-combined-gui-ci/build.log 2>&1
+      - name: Native isolated session lease crash and app recovery
+        run: |
+          python3 scripts/run-session-recovery-process.py target/debug/examples/session_recovery_process docs/audits/metal-combined-gui-ci/session-recovery
+          python3 scripts/check-session-recovery.py docs/audits/metal-combined-gui-ci/session-recovery/result.json > docs/audits/metal-combined-gui-ci/session-recovery-check.json
       - name: Native modifier ingress and missing-metadata refusal
         run: |
           cargo run --locked -p ingetrazo-gui --example walk_native_modifier_ingress > docs/audits/metal-combined-gui-ci/modifier-ingress.json 2> docs/audits/metal-combined-gui-ci/modifier-ingress.log
