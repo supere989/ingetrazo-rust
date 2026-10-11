@@ -1,0 +1,34 @@
+{
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "viewport_sha256": "1fb62f55b8f559deb3676924ee69a9a444397faa28c49651111cea44e420c724",
+  "literal_expression": "QVector4D(-n.x(), -n.y(), -n.z(), QVector3D.dotProduct(n, o))",
+  "plane": [
+    -1.0,
+    -0.0,
+    -0.0,
+    2.0
+  ],
+  "asymmetric_points": [
+    {
+      "point": [
+        0.5,
+        7,
+        -3
+      ],
+      "source_clip_distance": 1.5,
+      "kept": true,
+      "source_side": -1.5
+    },
+    {
+      "point": [
+        5,
+        7,
+        -3
+      ],
+      "source_clip_distance": -3.0,
+      "kept": false,
+      "source_side": 3.0
+    }
+  ],
+  "scope": "Actual original Qt uniform expression and point policy; no GPU pixel claim"
+}

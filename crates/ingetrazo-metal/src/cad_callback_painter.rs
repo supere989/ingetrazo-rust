@@ -21,6 +21,7 @@ pub struct Stats {
     pub bytes: u64,
 }
 pub struct Painter {
+    pipeline_annotation:bool,
     glyph_admissions:crate::glyph_admission::Cache,
     pipeline: Option<Arc<Retained<ProtocolObject<dyn MTLRenderPipelineState>>>>,
     geometry: HashMap<u64, Arc<Cached>>,
@@ -30,6 +31,7 @@ pub struct Painter {
 impl Default for Painter {
     fn default() -> Self {
         Self {
+            pipeline_annotation:false,
             glyph_admissions:crate::glyph_admission::Cache::default(),
             pipeline: None,
             geometry: HashMap::new(),
@@ -39,19 +41,24 @@ impl Default for Painter {
     }
 }
 pub struct Prepared {
+    pub(crate) annotation:Option<Arc<crate::annotation::Visibility>>,
     pipeline: Arc<Retained<ProtocolObject<dyn MTLRenderPipelineState>>>,
     geometry: Arc<Cached>,
     snapshot: Snapshot,
     colors: Arc<[[f32; 4]]>,
 }
 impl Painter {
-    pub(crate) fn reusing_pipeline(ready:&Prepared)->Self{let mut painter=Self::default();painter.pipeline=Some(ready.pipeline.clone());painter}
+    pub(crate) fn reusing_pipeline(ready:&Prepared)->Self{let mut painter=Self::default();painter.pipeline=Some(ready.pipeline.clone());painter.pipeline_annotation=ready.annotation.is_some();painter}
     pub fn prepare(
         &mut self,
         metal: &NativeMetal,
         snapshot: Snapshot,
         density: f32,
     ) -> Result<Arc<Prepared>, String> {
+        self.prepare_annotation(metal,snapshot,density,None)
+    }
+    pub(crate) fn prepare_annotation(&mut self,metal:&NativeMetal,snapshot:Snapshot,density:f32,annotation:Option<Arc<crate::annotation::Visibility>>)->Result<Arc<Prepared>,String>{
+        if self.pipeline_annotation!=annotation.is_some(){self.pipeline=None;}
         if !crate::cad2d::MetalCad2d::supported(metal) {
             return Err("Metal CAD callback exact Apple framebuffer-fetch unsupported; Intel/AMD span-compute presentation still required".into());
         }
@@ -102,7 +109,7 @@ impl Painter {
             let library = metal
                 .device
                 .newLibraryWithSource_options_error(
-                    &NSString::from_str(include_str!("shaders/cad2d.metal")),
+                    &NSString::from_str(&format!("{}{}",if annotation.is_some(){"#include <metal_stdlib>\nusing namespace metal;\n#define ANNOTATION 1\n"}else{"#include <metal_stdlib>\nusing namespace metal;\n"},format!("{}{}",include_str!("shaders/annotation_draw.metal"),include_str!("shaders/cad2d.metal")))),
                     Some(&options),
                 )
                 .map_err(|e| format!("Metal inline CAD shader: {e:?}"))?;
@@ -153,7 +160,7 @@ impl Painter {
             self.geometry.clear();
         }
         self.geometry.insert(id, geometry.clone());
-        self.pipeline = Some(pipeline.clone());
+        self.pipeline = Some(pipeline.clone());self.pipeline_annotation=annotation.is_some();
         if palette_changed {
             if self.palette.len() >= 64 {
                 self.palette.clear();
@@ -163,6 +170,7 @@ impl Painter {
                 .insert(palette_key, (snapshot.batches.clone(), colors.clone()));
         }
         Ok(Arc::new(Prepared {
+            annotation,
             pipeline,
             geometry,
             snapshot,
@@ -231,6 +239,7 @@ impl Prepared {
                     })
                     .unwrap_or([0; 4]),
             };
+            if let Some(annotation)=&self.annotation {unsafe{encoder.setFragmentBuffer_offset_atIndex(Some(&annotation.draws.raw),ordinal*std::mem::size_of::<crate::annotation::Draw>(),2);encoder.setFragmentBuffer_offset_atIndex(Some(&annotation.hidden.raw),0,3);}}
             unsafe {
                 encoder.setVertexBytes_length_atIndex(
                     std::ptr::NonNull::from(&push).cast(),

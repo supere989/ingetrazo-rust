@@ -176,12 +176,17 @@ pub struct NativeCallback { id:u64 }
 impl AdmittedCallback {
  pub fn token(&self)->Arc<NativeCallback>{self.token.clone()}
  pub fn uploaded_bytes(&self)->u64{self.uploaded_bytes}
+ pub fn annotation_visibility(&self)->Option<&crate::annotation::Visibility>{match &self.prepared{NativeCallbackKind::Cad(p)=>p.annotation.as_deref(),NativeCallbackKind::Compute(p)=>p.annotation.as_deref()}}
  pub fn prepare(owner:Arc<NativeMetal>,snapshot:ingetrazo_render::cad_callback::Snapshot,density:f32,previous:Option<&Self>)->Result<Arc<Self>,String>{
+  Self::prepare_annotation(owner,snapshot,density,previous,None)
+ }
+ pub fn prepare_annotation(owner:Arc<NativeMetal>,snapshot:ingetrazo_render::cad_callback::Snapshot,density:f32,previous:Option<&Self>,annotation:Option<Arc<crate::annotation::Visibility>>)->Result<Arc<Self>,String>{
+  if annotation.as_ref().is_some_and(|a|a.draws.length()!=snapshot.batches.len()*std::mem::size_of::<crate::annotation::Draw>()){return Err("Metal annotation batch metadata count mismatch".into());}
   if previous.is_some_and(|p|!Arc::ptr_eq(&p.owner.poisoned,&owner.poisoned)||!Arc::ptr_eq(&p.owner.budget,&owner.budget)){return Err("Foreign native callback pipeline owner".into())}
-  let (prepared,uploaded_bytes)=if crate::MetalCad2d::supported(&owner){let mut p=match previous.map(|p|&p.prepared){Some(NativeCallbackKind::Cad(ready))=>crate::cad_callback_painter::Painter::reusing_pipeline(ready),_=>crate::cad_callback_painter::Painter::default()};let ready=p.prepare(&owner,snapshot,density)?;(NativeCallbackKind::Cad(ready),p.stats.bytes)}else{let mut p=match previous.map(|p|&p.prepared){Some(NativeCallbackKind::Compute(ready))=>crate::cad_compute_painter::Painter::reusing_pipeline(ready),_=>crate::cad_compute_painter::Painter::default()};let ready=p.prepare(&owner,snapshot,density)?;(NativeCallbackKind::Compute(ready),p.stats.uploaded_bytes)};
+  let (prepared,uploaded_bytes)=if crate::MetalCad2d::supported(&owner){let mut p=match previous.map(|p|&p.prepared){Some(NativeCallbackKind::Cad(ready))=>crate::cad_callback_painter::Painter::reusing_pipeline(ready),_=>crate::cad_callback_painter::Painter::default()};let ready=p.prepare_annotation(&owner,snapshot,density,annotation.clone())?;(NativeCallbackKind::Cad(ready),p.stats.bytes)}else{let mut p=match previous.map(|p|&p.prepared){Some(NativeCallbackKind::Compute(ready))=>crate::cad_compute_painter::Painter::reusing_pipeline(ready),_=>crate::cad_compute_painter::Painter::default()};let ready=p.prepare_annotation(&owner,snapshot,density,annotation.clone())?;(NativeCallbackKind::Compute(ready),p.stats.uploaded_bytes)};
   static NEXT:std::sync::atomic::AtomicU64=std::sync::atomic::AtomicU64::new(1);
   let id=NEXT.fetch_update(std::sync::atomic::Ordering::Relaxed,std::sync::atomic::Ordering::Relaxed,|n|n.checked_add(1)).map_err(|_|"Native callback identity exhausted")?;
-  Ok(Arc::new(Self{token:Arc::new(NativeCallback{id}),owner,density,uploaded_bytes,prepared}))
+  Ok(Arc::new(Self{token:Arc::new(NativeCallback{id}),owner,density,uploaded_bytes:uploaded_bytes+annotation.as_ref().map_or(0,|a|a.uploaded_bytes),prepared}))
  }
 }
 enum PaintOrder { Mesh(usize), Cad(Arc<crate::cad_callback_painter::Prepared>, egui::Rect), Compute(Arc<crate::cad_compute_painter::Prepared>,egui::Rect) }
@@ -197,7 +202,7 @@ pub struct PreparedPaint {
 impl PreparedPaint {
     /// Encode world targets before any UI sampling in the same native command.
     /// The PreparedPaint owner retains the complete world frame through completion.
-    pub fn encode_world(&self,command:&ProtocolObject<dyn MTLCommandBuffer>)->Result<(),String>{if let Some(world)=&self.world{world.encode(command)?;}Ok(())}
+    pub fn encode_world(&self,command:&ProtocolObject<dyn MTLCommandBuffer>)->Result<(),String>{if let Some(world)=&self.world{world.encode(command)?;for item in &self.order {let annotation=match item {PaintOrder::Cad(p,_)=>p.annotation.as_ref(),PaintOrder::Compute(p,_)=>p.annotation.as_ref(),_=>None};if let Some(annotation)=annotation{annotation.encode(command,world)?;}}}else if self.order.iter().any(|item|match item{PaintOrder::Cad(p,_)=>p.annotation.is_some(),PaintOrder::Compute(p,_)=>p.annotation.is_some(),_=>false}){return Err("Metal document annotations require retained World depth".into());}Ok(())}
 
     pub(crate) fn encode(
         &self,

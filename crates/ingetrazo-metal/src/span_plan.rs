@@ -321,3 +321,53 @@ mod tests {
   assert!(compile(&g,&b).is_err());let plan=compile_source(&g,&b).unwrap();assert_eq!(plan.spans[0].rect,[3,3,5,4]);assert_eq!(plan.spans[0].coverage,43);assert_eq!(plan.spans[1].rect,[2,3,6,4]);assert_eq!(plan.references,[0,1]);
  }
 }
+
+#[repr(C)]#[derive(Clone,Copy,bytemuck::Pod,bytemuck::Zeroable)]
+pub(crate) struct AnnotationSpan {pub span:Span,pub triangle:[i32;6],pub analytic:u32,pub padding:u32}
+pub(crate) fn compile_annotation(geometry:&Geometry,batches:&[Batch],density:f32)->Result<(Vec<AnnotationSpan>,Vec<Tile>,Vec<u32>),String>{
+ geometry.validate_batches(batches)?;
+ let layers=geometry.annotation_layers().ok_or("Metal document annotation requires immutable mixed source metadata")?;
+ if batches.len()>4096||density!=layers.ppp(){return Err("Metal annotation batch/density admission".into());}
+ let mut spans=Vec::new();let mut plain=Vec::new();
+ for (palette,batch)in batches.iter().enumerate(){
+  if layers.overlaps_direct(batch.first,batch.count){
+   if batch.color.0[3]!=1. {return Err("Metal direct annotation must be opaque".into());}
+   for indices in geometry.indices()[batch.first as usize..(batch.first+batch.count)as usize].chunks_exact(3){
+    let mut points=[0f32;6];for i in 0..3{let v=geometry.vertices()[indices[i]as usize];points[2*i]=v.position[0]*density;points[2*i+1]=v.position[1]*density;}
+    if points.iter().any(|p|!p.is_finite()||p.abs()>1_000_000.){return Err("Metal annotation triangle arithmetic domain".into());}
+    let rect=[points[0].min(points[2]).min(points[4]).floor()as i32,points[1].min(points[3]).min(points[5]).floor()as i32,points[0].max(points[2]).max(points[4]).ceil()as i32,points[1].max(points[3]).max(points[5]).ceil()as i32];
+    if rect[0]>=rect[2]||rect[1]>=rect[3]{continue;}
+    spans.try_reserve(1).map_err(|_|"Metal annotation triangle allocation")?;
+    spans.push(AnnotationSpan{span:Span{rect,coverage:255,palette:palette as u32},triangle:points.map(|p|(p*256.).round_ties_even()as i32),analytic:1,padding:0});
+    if spans.len()>100_000{return Err("Metal annotation triangle capacity100000 exceeded".into());}
+   }
+  }else{
+   let end=batch.first+batch.count;let mut first=batch.first;
+   let mut layer=layers.span_layers().partition_point(|(range,_)|range.end<=first);
+   while first<end{
+    let(range,rows)=layers.span_layers().get(layer).ok_or("Metal annotation source row partition missing")?;
+    if range.start>first||range.end<=first{return Err("Metal annotation source row partition missing".into());}
+    let stop=range.end.min(end);
+    if (first-range.start)%6!=0||(stop-first)%6!=0{return Err("Metal annotation source row partition invalid".into());}
+    let row_first=(first-range.start)as usize/6;let row_end=row_first+(stop-first)as usize/6;
+    for row in &rows[row_first..row_end]{spans.try_reserve(1).map_err(|_|"Metal annotation span allocation")?;spans.push(AnnotationSpan{span:Span{rect:[row.x,row.y,row.x+row.len,row.y+1],coverage:u32::from(row.coverage),palette:palette as u32},triangle:[0;6],analytic:0,padding:0});}
+    first=stop;layer+=1;
+   }
+  }
+  if spans.len()>100_000{return Err("Metal annotation span capacity100000 exceeded".into());}
+ }
+ plain.try_reserve_exact(spans.len()).map_err(|_|"Metal annotation bins allocation")?;plain.extend(spans.iter().map(|s|s.span));let plan=bin(plain)?;Ok((spans,plan.tiles,plan.references))
+}
+
+#[cfg(test)] mod annotation_span_tests {
+ use super::*;
+ use ingetrazo_render::cad2d::{AnnotationLayer,SourceSpan,Vertex,EncodedRgba};
+ #[test] fn literal_rows_and_direct_triangles_keep_partition_and_refuse_density(){
+  let row=SourceSpan{x:7,y:11,len:3,coverage:173};let ppp=1.25;
+  let mut vertices=Vec::new();for [x,y]in [[7.,11.],[10.,11.],[10.,12.],[7.,12.]]{vertices.push(Vertex{position:[x/ppp,y/ppp],coverage:173./255.});}
+  vertices.extend([[20.,20.],[21.,20.],[20.,21.]].map(|position|Vertex{position,coverage:1.}));
+  let g=Geometry::new_with_annotation_layers(vertices,vec![0,1,2,0,2,3,4,5,6],vec![AnnotationLayer::Spans{range:0..6,rows:vec![row]},AnnotationLayer::Opaque{range:6..9}],ppp).unwrap();
+  let color=EncodedRgba::from_bytes([1,7,19,255],1.).unwrap();let batches=[Batch{first:0,count:6,color},Batch{first:6,count:3,color}];
+  let (spans,_,refs)=compile_annotation(&g,&batches,ppp).unwrap();assert_eq!(spans.len(),2);assert_eq!(spans[0].span.rect,[7,11,10,12]);assert_eq!(spans[0].span.coverage,173);assert_eq!(spans[0].analytic,0);assert_eq!(spans[1].triangle,[6400,6400,6720,6400,6400,6720]);assert_eq!(spans[1].analytic,1);assert!(!refs.is_empty());assert!(compile_annotation(&g,&batches,1.).is_err());
+ }
+}

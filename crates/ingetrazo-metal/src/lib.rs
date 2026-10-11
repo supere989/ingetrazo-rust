@@ -55,3 +55,8 @@ mod world_preview;
 
 mod world_background;
 mod world_profile;
+
+#[cfg(target_os="macos")]
+pub mod annotation;
+
+mod world_section;

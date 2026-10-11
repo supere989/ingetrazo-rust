@@ -13,7 +13,7 @@ fn vector(v: &serde_json::Value) -> Result<DVec3, String> {
         a[2].as_f64().ok_or("Vector z")?,
     ))
 }
-fn frame(
+pub(crate) fn frame(
     app: &mut IngeTrazoApp,
     metal: &NativeMetal,
     ctx: &egui::Context,

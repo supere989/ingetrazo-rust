@@ -4,6 +4,7 @@
 use crate::world_placement::{Packet as PlacementPacket, Pose as PlacementPose, PrototypeKey};
 use crate::world_policy::{Mode, Plan, Policy};
 use crate::{Buffer, NativeMetal};
+use crate::world_section::Section;
 use ingetrazo_core::gpu_memory::MemoryBudget;
 use ingetrazo_render::buffer::MeshRenderBuffer;
 use objc2::{rc::Retained, runtime::ProtocolObject};
@@ -144,6 +145,7 @@ pub struct Stats {
 }
 #[derive(Default)]
 pub struct World {
+    pub(crate) annotation_positions:Option<[MTLSamplePosition;4]>,
     samples: usize,
     pub(crate) ghosts: Option<Arc<super::world_ghost::Ghosts>>,
     owner: Option<Arc<Owner>>,
@@ -157,6 +159,8 @@ pub struct World {
     pub stats: Stats,
 }
 pub struct Prepared {
+    pub(crate) section: Section,
+    pub(crate) source_sample_positions:Option<[MTLSamplePosition;4]>,
     pub(crate) lines: [Option<Arc<super::world_preview::Lines>>;2],
     pub(crate) profiles: Option<Arc<super::world_preview::Lines>>,
     pub(crate) background: Option<super::world_background::Background>,
@@ -183,6 +187,7 @@ struct PaintUniform {
 }
 #[repr(C)]struct TexturePaint{opacity:f32,shade:f32,hard_cutout:u32,height:u32,mean:[f32;4]}
 impl World {
+    pub(crate) fn configured_sample_count(&self)->usize{self.samples.max(1)}
     pub(crate) fn pin_bases(&self, keys:[Option<PrototypeKey>;2])->BasePins {
         BasePins(keys.map(|key|key.and_then(|key| {
             let mesh=self.placements.as_ref().and_then(|p|p.key_index.binary_search_by_key(&key,|p|p.0).ok().map(|i|p.meshes[p.key_index[i].1].clone()))
@@ -300,7 +305,7 @@ impl World {
                     MTLTextureUsage::RenderTarget | MTLTextureUsage::ShaderRead,
                     4,
                 )?,
-                depth: image_samples(metal,extent,MTLPixelFormat::Depth32Float,MTLTextureUsage::RenderTarget,4,self.samples.max(1))?,
+                depth: image_samples(metal,extent,MTLPixelFormat::Depth32Float,MTLTextureUsage::RenderTarget|MTLTextureUsage::ShaderRead,4,self.samples.max(1))?,
                 extent,
                 poses: Vec::new(),
                 instance_matrices: None,
@@ -342,6 +347,8 @@ impl World {
         self.pipeline = Some(pipeline.clone());
         self.stats.prepared += 1;
         Ok(Some(Arc::new(Prepared {
+            section: Section::OFF,
+            source_sample_positions:None,
             placements: None,
             ghosts: None, ghost_edge: [0.;4], lines:[None,None],profiles:None,background:None,overlay:None,
             owner,
@@ -528,7 +535,7 @@ impl World {
                     MTLTextureUsage::RenderTarget | MTLTextureUsage::ShaderRead,
                     4,
                 )?,
-                depth: image_samples(metal,extent,MTLPixelFormat::Depth32Float,MTLTextureUsage::RenderTarget,4,self.samples.max(1))?,
+                depth: image_samples(metal,extent,MTLPixelFormat::Depth32Float,MTLTextureUsage::RenderTarget|MTLTextureUsage::ShaderRead,4,self.samples.max(1))?,
                 extent,
                 poses: Vec::new(),
                 instance_matrices: None,
@@ -700,6 +707,8 @@ impl World {
         self.placements = Some(placements.clone());
         self.pipeline = Some(pipeline.clone());
         Ok(Some(Arc::new(Prepared {
+            section: Section::OFF,
+            source_sample_positions:None,
             placements: Some(placements),
             ghosts: None, ghost_edge: [0.;4], lines:[None,None],profiles:None,background:None,overlay:None,
             owner,
@@ -750,6 +759,7 @@ impl World {
 impl Prepared {
     pub fn ghost_counts(&self)->[usize;3]{self.ghosts.as_ref().map_or([0;3],|g|g.counts)}
     pub fn sample_count(&self)->usize{self.target.samples}
+    pub(crate) fn depth_texture(&self)->&ProtocolObject<dyn MTLTexture>{&self.target.depth.raw}
     /// Admitted contiguous instanced draw groups, observed by diagnostics only.
     pub fn instance_run_count(&self) -> usize {
         if self.placements.is_none() {
@@ -778,6 +788,7 @@ impl Prepared {
         for op in &draws.operations {
             let overlay=self.overlay.is_some_and(|key|placements.packet.prototypes[op.prototype]==key);
             if overlay!=overlay_pass {continue;}
+            bind_section(encoder,if overlay {Section::OFF}else{self.section});
             // Original fvcol draw is inside the global _faces_count>0 block.
             if !overlay && matches!(op.kind,MaterialKind::Opaque{cull:true,..}) && !draws.guard.open(self.overlay) {continue;}
             let mesh=placements.meshes[op.prototype].as_ref().ok_or("Metal admitted material prototype unavailable")?;
@@ -797,6 +808,7 @@ impl Prepared {
         encoder.setDepthBias_slopeScale_clamp(0.,0.,0.);Ok(())
     }
     fn encode_aux(&self,encoder:&ProtocolObject<dyn MTLRenderCommandEncoder>,depth_enabled:bool,preview_only:bool){
+        bind_section(encoder,if preview_only {Section::OFF}else{self.section});
         for lines in self.lines[usize::from(preview_only)..usize::from(preview_only)+1].iter().flatten() {
             if let Some(buffer)=&lines.buffer {
                 encoder.setRenderPipelineState(&self.pipeline.lines);
@@ -812,6 +824,7 @@ impl Prepared {
             let uniform=super::world_ghost::Uniform{edge:self.ghost_edge,height:self.extent().1,mode:2,padding:[0;2]};
             unsafe{encoder.setVertexBytes_length_atIndex(std::ptr::NonNull::from(&self.mvp).cast(),64,2);encoder.setVertexBuffer_offset_atIndex(Some(&buffer.raw),0,0);encoder.setFragmentBytes_length_atIndex(std::ptr::NonNull::from(&uniform).cast(),32,0);encoder.drawPrimitives_vertexStart_vertexCount(MTLPrimitiveType::Line,0,lines.count);}
         }}
+        bind_section(encoder,Section::OFF);
         if let Some(ghosts)=&self.ghosts {
             encoder.setRenderPipelineState(&self.pipeline.ghost);
             encoder.setDepthStencilState(Some(if depth_enabled{&self.pipeline.depth}else{&self.pipeline.depth_disabled}));
@@ -846,6 +859,7 @@ impl Prepared {
             return Err("Metal world command queue mismatch".into());
         }
         let pass = MTLRenderPassDescriptor::new();
+        if let Some(mut positions)=self.source_sample_positions{unsafe{pass.setSamplePositions_count(positions.as_mut_ptr(),4);}}
         let color = unsafe { pass.colorAttachments().objectAtIndexedSubscript(0) };
         color.setTexture(Some(self.target.multisample.as_ref().map_or(&*self.target.color.raw,|i|&*i.raw)));
         if self.target.multisample.is_some(){color.setResolveTexture(Some(&self.target.color.raw));}
@@ -860,7 +874,7 @@ impl Prepared {
         let depth = pass.depthAttachment();
         depth.setTexture(Some(&self.target.depth.raw));
         depth.setLoadAction(MTLLoadAction::Clear);
-        depth.setStoreAction(MTLStoreAction::DontCare);
+        depth.setStoreAction(MTLStoreAction::Store);
         depth.setClearDepth(1.);
         let encoder = command
             .renderCommandEncoderWithDescriptor(&pass)
@@ -890,6 +904,7 @@ impl Prepared {
         unsafe {
             encoder.setVertexBytes_length_atIndex(std::ptr::NonNull::from(camera).cast(), 64, 2);
         }
+        bind_section(&encoder,self.section);
         if let Some(placements) = &self.placements {
             if let Some(draws)=&self.target.material_draws{
                 if let Err(error)=self.encode_material_draws(&encoder,placements,draws,depth_enabled,front_probe){encoder.endEncoding();return Err(error);}
@@ -1405,3 +1420,7 @@ const IDENTITY: [[f32; 4]; 4] = [
     [0., 0., 1., 0.],
     [0., 0., 0., 1.],
 ];
+
+fn bind_section(encoder:&ProtocolObject<dyn MTLRenderCommandEncoder>,section:Section){
+ unsafe {encoder.setVertexBytes_length_atIndex(std::ptr::NonNull::from(&section).cast(),std::mem::size_of::<Section>(),3);}
+}

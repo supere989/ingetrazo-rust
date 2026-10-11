@@ -28,6 +28,7 @@ pub struct Stats {
 }
 #[derive(Default)]
 pub struct Painter {
+    pipeline_annotation:bool,
     glyph_admissions:crate::glyph_admission::Cache,
     pipeline: Option<Arc<Retained<ProtocolObject<dyn MTLComputePipelineState>>>>,
     plans: HashMap<u64, Arc<Plan>>,
@@ -35,6 +36,7 @@ pub struct Painter {
     pub stats: Stats,
 }
 pub struct Prepared {
+    pub(crate) annotation:Option<Arc<crate::annotation::Visibility>>,
     pipeline: Arc<Retained<ProtocolObject<dyn MTLComputePipelineState>>>,
     plan: Arc<Plan>,
     palette: Arc<Palette>,
@@ -56,13 +58,17 @@ impl Painter {
             MTLReadWriteTextureTier::Tier1 | MTLReadWriteTextureTier::Tier2
         )
     }
-    pub(crate) fn reusing_pipeline(ready:&Prepared)->Self{let mut painter=Self::default();painter.pipeline=Some(ready.pipeline.clone());painter}
+    pub(crate) fn reusing_pipeline(ready:&Prepared)->Self{let mut painter=Self::default();painter.pipeline=Some(ready.pipeline.clone());painter.pipeline_annotation=ready.annotation.is_some();painter}
     pub fn prepare(
         &mut self,
         metal: &NativeMetal,
         snapshot: Snapshot,
         density: f32,
     ) -> Result<Arc<Prepared>, String> {
+        self.prepare_annotation(metal,snapshot,density,None)
+    }
+    pub(crate) fn prepare_annotation(&mut self,metal:&NativeMetal,snapshot:Snapshot,density:f32,annotation:Option<Arc<crate::annotation::Visibility>>)->Result<Arc<Prepared>,String>{
+        if self.pipeline_annotation!=annotation.is_some(){self.pipeline=None;self.plans.clear();}
         if !Self::supported(metal) {
             return Err("Exact Metal R32Uint read/write composition requires texture tier1".into());
         }
@@ -70,8 +76,7 @@ impl Painter {
         snapshot
             .geometry
             .validate_ordered_pose(snapshot.pose, density)?;
-        let source=snapshot.geometry.source_spans().ok_or("Exact Metal compute requires original source span metadata; arbitrary geometry remains unsupported")?;
-        let translation = source.translation(snapshot.pose, density)?;
+        let translation=if annotation.is_some(){snapshot.geometry.annotation_layers().ok_or("Metal annotation source metadata missing")?.translation(snapshot.pose,density)?}else{snapshot.geometry.source_spans().ok_or("Exact Metal compute requires original source span metadata; arbitrary geometry remains unsupported")?.translation(snapshot.pose,density)?};
         let id = snapshot.geometry.id();
         // Immutable Arc identity is the admitted layout signature. Replacing
         // batches is a cold admission even if its lengths happen to match.
@@ -85,23 +90,22 @@ impl Painter {
             plan
         } else {
             self.stats.deep_admissions += 1;
-            let p = crate::span_plan::compile_source(&snapshot.geometry, &snapshot.batches)?;
+            let own_bytes=|bytes:&[u8]|->Result<Vec<u8>,String>{let mut result=Vec::new();result.try_reserve_exact(bytes.len()).map_err(|_|"Metal span upload CPU allocation refused")?;result.extend_from_slice(bytes);Ok(result)};
+            let (span_bytes,tiles_data,references_data)=if annotation.is_some(){let(s,t,r)=crate::span_plan::compile_annotation(&snapshot.geometry,&snapshot.batches,density)?;(own_bytes(bytemuck::cast_slice(&s))?,t,r)}else{let p=crate::span_plan::compile_source(&snapshot.geometry,&snapshot.batches)?;(own_bytes(bytemuck::cast_slice(&p.spans))?,p.tiles,p.references)};
             let upload = |bytes: &[u8]| -> Result<Buffer, String> {
                 let mut b = metal.buffer(bytes.len(), true)?;
                 b.write(bytes)?;
                 Ok(b)
             };
-            let spans = upload(bytemuck::cast_slice(&p.spans))?;
-            let tiles = upload(bytemuck::cast_slice(&p.tiles))?;
-            let references = upload(bytemuck::cast_slice(&p.references))?;
-            plan_bytes = (p.spans.len() * std::mem::size_of::<crate::span_plan::Span>()
-                + p.tiles.len() * std::mem::size_of::<crate::span_plan::Tile>()
-                + p.references.len() * 4) as u64;
+            let spans = upload(&span_bytes)?;
+            let tiles = upload(bytemuck::cast_slice(&tiles_data))?;
+            let references = upload(bytemuck::cast_slice(&references_data))?;
+            plan_bytes = (span_bytes.len()+tiles_data.len()*std::mem::size_of::<crate::span_plan::Tile>()+references_data.len()*4)as u64;
             Arc::new(Plan {
                 spans,
                 tiles,
                 references,
-                tile_count: p.tiles.len() as u32,
+                tile_count: tiles_data.len() as u32,
                 batches: snapshot.batches.clone(),
             })
         };
@@ -164,7 +168,7 @@ impl Painter {
             let library = metal
                 .device
                 .newLibraryWithSource_options_error(
-                    &NSString::from_str(include_str!("shaders/cad2d_compose.metal")),
+                    &NSString::from_str(&format!("#include <metal_stdlib>\nusing namespace metal;\n{}{}{}",if annotation.is_some(){"#define ANNOTATION 1\n"}else{""},include_str!("shaders/annotation_draw.metal"),include_str!("shaders/cad2d_compose.metal"))),
                     Some(&options),
                 )
                 .map_err(|e| format!("Exact Metal canvas shader:{e:?}"))?;
@@ -191,12 +195,13 @@ impl Painter {
         }
         self.plans.insert(id, plan.clone());
         self.palettes.insert(key, palette.clone());
-        self.pipeline = Some(pipeline.clone());
+        self.pipeline = Some(pipeline.clone());self.pipeline_annotation=annotation.is_some();
         self.stats.plan_uploads += u64::from(plan_bytes != 0);
         self.stats.palette_uploads += u64::from(palette_bytes != 0);
         self.stats.uploaded_bytes += plan_bytes + palette_bytes;
         self.stats.warm_hits += u64::from(plan_bytes == 0 && palette_bytes == 0);
         Ok(Arc::new(Prepared {
+            annotation,
             pipeline,
             plan,
             palette,
@@ -253,6 +258,7 @@ impl Prepared {
                 std::mem::size_of::<Push>(),
                 4,
             );
+            if let Some(annotation)=&self.annotation{encoder.setBuffer_offset_atIndex(Some(&annotation.draws.raw),0,5);encoder.setBuffer_offset_atIndex(Some(&annotation.hidden.raw),0,6);}
             encoder.setTexture_atIndex(Some(canvas), 0);
             encoder.dispatchThreadgroups_threadsPerThreadgroup(
                 MTLSize {

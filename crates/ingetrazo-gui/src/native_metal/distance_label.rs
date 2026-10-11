@@ -7,7 +7,7 @@ use ingetrazo_render::{
 };
 use std::sync::Arc;
 #[derive(PartialEq)]
-struct Key {
+struct ToolKey {
     distance: f64,
     point: [f64; 3],
     matrix: [[f32; 4]; 4],
@@ -17,12 +17,15 @@ struct Key {
     precision: i32,
     typed: String,
 }
+#[derive(PartialEq)]
+struct DocumentKey {revision:u64,scene_version:u64,view:u64,selected:Option<usize>,matrix:[[f32;4];4],rect:[f32;4],density:f32,style:serde_json::Value,units:serde_json::Value,bypass:bool,distance:Option<(f64,[f64;3])>,typed:String}
+#[derive(PartialEq)]enum Key {Tool(ToolKey),Document(DocumentKey)}
 pub(crate) struct Candidate {
-    ready: Option<(Key, Arc<ingetrazo_metal::egui_painter::AdmittedCallback>)>,
+    ready: Option<Arc<(Key, Arc<ingetrazo_metal::egui_painter::AdmittedCallback>)>>,
 }
 impl Candidate {
     pub fn shape(&self, rect: egui::Rect) -> Option<egui::Shape> {
-        self.ready.as_ref().map(|(_, h)| shape(rect, h.clone()))
+        self.ready.as_ref().map(|ready| shape(rect, ready.1.clone()))
     }
 }
 pub(crate) struct Labels {
@@ -30,7 +33,7 @@ pub(crate) struct Labels {
     factory: Factory,
     native_builds: u64,
     uploaded_bytes: u64,
-    current: Option<(Key, Arc<ingetrazo_metal::egui_painter::AdmittedCallback>)>,
+    current: Option<Arc<(Key, Arc<ingetrazo_metal::egui_painter::AdmittedCallback>)>>,
 }
 impl Labels {
     pub fn new() -> Result<Self, String> {
@@ -61,6 +64,7 @@ impl Labels {
         density: f32,
         metal: Arc<ingetrazo_metal::NativeMetal>,
     ) -> Result<Candidate, String> {
+        if !app.scene.dimensions.is_empty()||!app.scene.text_labels.is_empty(){return self.prepare_document(app,rect,density,metal);}
         let Some((distance, point)) = app.active_tool.distance_label() else {
             return Ok(Candidate { ready: None });
         };
@@ -75,7 +79,7 @@ impl Labels {
         let camera = crate::navigation_ray::camera_snapshot(&app.camera)
             .ok_or("Metal label camera admission")?;
         let (unit, precision) = units(&app.scene)?;
-        let key = Key {
+        let key = Key::Tool(ToolKey {
             distance,
             point: point.to_array(),
             matrix: camera.matrix,
@@ -84,14 +88,8 @@ impl Labels {
             unit,
             precision,
             typed: app.vcb_text.clone(),
-        };
-        if let Some((old, handle)) = &self.current {
-            if *old == key {
-                return Ok(Candidate {
-                    ready: Some((key, handle.clone())),
-                });
-            }
-        }
+        });
+        if let Some(ready) = &self.current {if ready.0==key{return Ok(Candidate {ready:Some(ready.clone())});}}
         let v = point.as_vec3().extend(1.).to_array();
         let q: [f32; 4] = std::array::from_fn(|row| {
             camera.matrix[0][row] * v[0]
@@ -178,13 +176,51 @@ impl Labels {
             metal,
             producer.snapshot()?,
             density,
-            self.current.as_ref().map(|(_, ready)| ready.as_ref()),
+            self.current.as_ref().map(|ready| ready.1.as_ref()),
         )?;
         self.native_builds += 1;
         self.uploaded_bytes += handle.uploaded_bytes();
         Ok(Candidate {
-            ready: Some((key, handle)),
+            ready: Some(Arc::new((key, handle))),
         })
+    }
+    fn prepare_document(&mut self,app:&crate::IngeTrazoApp,rect:egui::Rect,density:f32,metal:Arc<ingetrazo_metal::NativeMetal>)->Result<Candidate,String>{
+        use ingetrazo_metal::annotation::{Draw,Parameters,Visibility};
+        if !density.is_finite()||density<=0.||!rect.is_finite()||rect.width()<=0.||rect.height()<=0.{return Err("Metal document annotation viewport admission".into());}
+        let camera=crate::navigation_ray::camera_snapshot(&app.camera).ok_or("Metal document annotation camera admission")?;
+        let bypass=matches!(app.style.visual_style,ingetrazo_render::style::VisualStyle::XRay|ingetrazo_render::style::VisualStyle::Wireframe);
+        // Immutable admission fastpath precedes metadata/String clones and plan work.
+        if let Some(ready)=&self.current{if let Key::Document(old)=&ready.0{
+            if old.revision==app.native_geometry_revision&&old.scene_version==app.scene.version&&old.view==app.scene.view_version&&old.selected==app.selected_dimension&&old.matrix==camera.matrix&&old.rect==[rect.min.x,rect.min.y,rect.max.x,rect.max.y]&&old.density==density&&old.style==app.scene.native_document["dimension_style"]&&old.units==app.scene.native_document["units"]&&old.bypass==bypass&&old.distance==app.active_tool.distance_label().map(|(d,p)|(d,p.to_array()))&&old.typed==app.vcb_text{return Ok(Candidate{ready:Some(ready.clone())});}
+        }}
+        let key=Key::Document(DocumentKey{revision:app.native_geometry_revision,scene_version:app.scene.version,view:app.scene.view_version,selected:app.selected_dimension,matrix:camera.matrix,rect:[rect.min.x,rect.min.y,rect.max.x,rect.max.y],density,style:app.scene.native_document["dimension_style"].clone(),units:app.scene.native_document["units"].clone(),bypass,distance:app.active_tool.distance_label().map(|(d,p)|(d,p.to_array())),typed:app.vcb_text.clone()});
+        if let Some(ready)=&self.current{if ready.0==key{return Ok(Candidate{ready:Some(ready.clone())});}}
+        let inverse=camera.inverse().ok_or("Metal document annotation inverse admission")?;
+        let matrix=std::array::from_fn(|i|camera.matrix[i/4][i%4]);
+        let plan=Arc::new(crate::annotation_plan::build_plan(app,rect,&matrix,&mut self.cache,true)?);
+        if plan.operations.is_empty(){return Ok(Candidate{ready:None});}
+        let extent=crate::viewport_extent::scene_extent([f64::from(rect.width()),f64::from(rect.height())],f64::from(density))?;
+        let mut queries=Vec::new();queries.try_reserve_exact(plan.queries.len().max(1)).map_err(|_|"Metal annotation CPU query admission")?;
+        for &point in &plan.queries{let mut q=ingetrazo_render::annotation_query::prepare_query(&matrix,point,camera.eye,camera.forward,extent)?;if bypass{q.active=0;}queries.push(q);}
+        let clip=[(rect.min.x*density).floor()as i32,(rect.min.y*density).floor()as i32,(rect.max.x*density).ceil()as i32,(rect.max.y*density).ceil()as i32];
+        let mesh=self.cache.prepare_widget_clipped(plan,density,96.,clip)?;
+        if mesh.batches.is_empty(){return Ok(Candidate{ready:None});}
+        let mut draws=Vec::new();let mut glyphs=Vec::new();draws.try_reserve_exact(mesh.gates.len()).map_err(|_|"Metal annotation draw admission")?;glyphs.try_reserve_exact(mesh.gates.len()).map_err(|_|"Metal annotation glyph admission")?;
+        for draw in mesh.gates.iter(){
+            let gates=match draw.gate{Gate::Always=>[u32::MAX;2],Gate::Point(a)=>[a,u32::MAX],Gate::Both(a,b)=>[a,b]};
+            let mut points=[0.;16];let (kind,composition)=match draw.composition{
+                Composition::SpanByte=>(0,0),Composition::GlyphRgba64Opaque=>(0,1),Composition::GlyphLcd(m)=>(0,2|(u32::from(m[0])<<8)|(u32::from(m[1])<<16)|(u32::from(m[2])<<24)),
+                Composition::WidgetTriangle(bits)=>{for(i,b)in bits.into_iter().enumerate(){points[i]=f32::from_bits(b)*density;}(1,0)},
+                _=>return Err("Metal document annotation source operator unsupported".into())
+            };
+            draws.push(Draw{gates,kind,padding:0,points});glyphs.push(GlyphOperator{composition,straight_rgba:draw.straight_rgba});
+        }
+        let (sample,_)=ingetrazo_metal::annotation::source_sample_policy(&metal,4)?;
+        let params=Parameters{inverse:std::array::from_fn(|i|inverse[i/4][i%4]),eye:[camera.eye[0],camera.eye[1],camera.eye[2],0.],forward:[camera.forward[0],camera.forward[1],camera.forward[2],0.],extent_count_sample:[extent[0],extent[1],queries.len()as u32,sample]};
+        let visibility=Visibility::prepare(&metal,&queries,&draws,params,self.current.as_ref().and_then(|ready|ready.1.annotation_visibility()))?;
+        let producer=self.factory.glyph_handle(mesh.geometry.clone(),mesh.batches.clone(),Pose::default(),glyphs.into())?;
+        let handle=ingetrazo_metal::egui_painter::AdmittedCallback::prepare_annotation(metal,producer.snapshot()?,density,self.current.as_ref().map(|ready|ready.1.as_ref()),Some(visibility))?;
+        self.native_builds+=1;self.uploaded_bytes+=handle.uploaded_bytes();Ok(Candidate{ready:Some(Arc::new((key,handle)))})
     }
     /// Cold engineering control: replace only the font preparation cache with a
     /// real too-small font admission. Accepted native owners stay untouched.
@@ -208,7 +244,7 @@ impl Labels {
         (self.native_builds, self.uploaded_bytes)
     }
     pub fn admitted(&self) -> Option<Arc<ingetrazo_metal::egui_painter::AdmittedCallback>> {
-        self.current.as_ref().map(|(_, h)| h.clone())
+        self.current.as_ref().map(|ready| ready.1.clone())
     }
     pub fn publish(&mut self, candidate: Candidate) {
         self.current = candidate.ready;

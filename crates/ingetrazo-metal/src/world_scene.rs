@@ -25,7 +25,8 @@ pub fn unsupported_stage(error:&str)->bool {
         "Metal placement translucent material requires alpha stage" |
         "Metal Scene placement needs texture/alpha/billboard stage" |
         "Metal Scene adapter needs soft/back-edge/grid passes" |
-        "Metal Scene adapter needs section/shadow/image/annotation passes" |
+        "Metal Scene adapter needs shadow/image/leader annotation passes" |
+        "Metal Scene adapter needs section fill pass" |
         "Metal Scene adapter wireframe/XRay passes not implemented" |
         "Metal Scene adapter needs selection/guide overlays" |
         "Metal Scene adapter needs geographic/terrain passes" |
@@ -947,13 +948,14 @@ impl crate::world::World {
         if (style.show_edges && (style.show_soft_edges||style.back_edges_hidden)) || style.show_grid {
             return Err("Metal Scene adapter needs soft/back-edge/grid passes".into());
         }
-        if scene.show_section_cuts && !scene.section_planes.is_empty()
-            || scene.shadows.enabled
+        if scene.show_section_cuts && scene.section_planes.iter().any(|p|p.active) && scene.show_section_fill {
+            return Err("Metal Scene adapter needs section fill pass".into());
+        }
+        if scene.shadows.enabled
             || !scene.image_planes.is_empty()
-            || !scene.dimensions.is_empty()
             || !scene.text_labels.is_empty()
         {
-            return Err("Metal Scene adapter needs section/shadow/image/annotation passes".into());
+            return Err("Metal Scene adapter needs shadow/image/leader annotation passes".into());
         }
         if scene.terrain.is_some()||!scene.geo_points.is_empty()||!scene.geo_paths.is_empty(){
             return Err("Metal Scene adapter needs geographic/terrain passes".into());
@@ -1059,6 +1061,8 @@ impl crate::world::World {
         let background=if style.show_sky {Some(super::world_background::Background::prepare(eye,camera.target,camera_matrix,style.sky_color,style.ground_color)?)}else{None};
         // Allocate the small cache membership list before GPU publication.
         let mut line_ids=Vec::new();if base_line_changed{line_ids.try_reserve_exact(suppressed.len()).map_err(|_|"Metal line membership allocation refused")?;line_ids.extend_from_slice(suppressed);}
+        let section=super::world_section::Section::from_scene(scene)?;
+        let sample_positions=if !scene.dimensions.is_empty(){super::annotation::source_sample_policy(metal,self.configured_sample_count())?.1}else if self.configured_sample_count()==4{self.annotation_positions}else{None};
         let mut frame = self.prepare_material_placements_with_overlay(
             metal,
             packet,
@@ -1089,6 +1093,9 @@ impl crate::world::World {
             prepared.lines=[base_lines.clone(),preview_lines.clone()];
             prepared.profiles=profiles;
             prepared.background=background;
+            prepared.section=section;
+            prepared.source_sample_positions=sample_positions;
+            self.annotation_positions=sample_positions;
             if let Some(candidate)=profile_candidate{self.stats.profile_builds+=u64::from(profile_cold);self.stats.profile_uploads+=u64::from(profile_upload_changed&&candidate.5.buffer.is_some());if profile_upload_changed{self.stats.profile_upload_bytes+=candidate.5.bytes as u64;}if let Some(old)=adapter.profiles.replace(candidate){adapter.profile_selection_scratch=old.7;}}
 
             prepared.overlay=active_preview.filter(|p|p.sweep.kind==ingetrazo_render::face_sweep::Kind::Overlay).map(|p|p.preview_key);

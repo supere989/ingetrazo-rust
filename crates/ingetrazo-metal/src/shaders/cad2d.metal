@@ -12,7 +12,14 @@ vertex Vary cad_vertex(uint id [[vertex_id]],const device Vertex* vertices [[buf
 uint4 mul16(uint4 c,uint a){uint4 t=c*a+32768;return (t+(t>>16))>>16;}
 uint4 store8(uint4 c){uint4 t=c+128;return (t-(t>>8))>>8;}
 uint4 byte_mul(uint4 pixel,uint coverage){uint4 t=pixel*coverage;return (t+(t>>8)+128)>>8;}
-fragment Framebuffer cad_fragment(Vary in [[stage_in]],Framebuffer previous,constant Push& p [[buffer(1)]]) {
+fragment Framebuffer cad_fragment(Vary in [[stage_in]],Framebuffer previous,constant Push& p [[buffer(1)]]
+#ifdef ANNOTATION
+,const device AnnotationDraw& annotation [[buffer(2)]],const device uint* hidden [[buffer(3)]]
+#endif
+) {
+#ifdef ANNOTATION
+ if(!annotation_visible(annotation,hidden,int2(floor(in.position.xy))))discard_fragment();
+#endif
  uint coverage=uint(floor(clamp(in.coverage,0.0f,1.0f)*255.0f+0.5f));
  uint4 source=byte_mul(uint4(floor(clamp(p.rgba,0.0f,1.0f)*255.0f+0.5f)),coverage);
  uint4 destination=uint4(floor(clamp(previous.rgba,0.0f,1.0f)*255.0f+0.5f));

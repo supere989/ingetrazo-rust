@@ -184,6 +184,7 @@ pub mod composer_border;
 mod history_edges;
 
 mod annotation_overlay_geometry;
+mod annotation_plan;
 
 mod bim_history;
 

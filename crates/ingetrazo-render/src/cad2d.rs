@@ -72,10 +72,11 @@ impl SourceSpans {
 /// because admission requires every participating batch to write opaque pixels
 /// without destination access. Coverage layers retain the ordinary span proof.
 #[derive(Debug)]
-pub struct AnnotationLayers {grid:SourceSpans,direct:Arc<[std::ops::Range<u32>]>,union_quads:Arc<[std::ops::Range<u32>]>}
+pub struct AnnotationLayers {span_layers:Arc<[(std::ops::Range<u32>,Arc<[SourceSpan]>)]>,grid:SourceSpans,direct:Arc<[std::ops::Range<u32>]>,union_quads:Arc<[std::ops::Range<u32>]>}
 impl AnnotationLayers {
  pub fn ppp(&self)->f32{self.grid.ppp()}
  pub fn translation(&self,pose:Pose,ppp:f32)->Result<[i32;2],String>{self.grid.translation(pose,ppp)}
+ pub fn span_layers(&self)->&[(std::ops::Range<u32>,Arc<[SourceSpan]>)]{&self.span_layers}
  pub fn direct_ranges(&self)->&[std::ops::Range<u32>]{&self.direct}
  pub fn overlaps_direct(&self,first:u32,count:u32)->bool{
   if count==0{return false;}
@@ -123,7 +124,8 @@ impl Geometry {
  pub fn annotation_layers(&self)->Option<&Arc<AnnotationLayers>>{self.annotation_layers.as_ref()}
  pub fn new_with_annotation_layers(vertices:Vec<Vertex>,indices:Vec<u32>,layers:Vec<AnnotationLayer>,ppp:f32)->Result<Arc<Self>,String>{
   if layers.len()>100_000||!ppp.is_finite()||ppp<=0.{return Err("Annotation layer count/density admission exceeded".into());}
-  let mut g=Self::new(vertices,indices)?;let mut end=0;let mut direct=Vec::new();let mut ranges=Vec::new();let mut union_quads=Vec::new();
+  let mut g=Self::new(vertices,indices)?;let mut end=0;let mut direct=Vec::new();let mut ranges=Vec::new();let mut union_quads=Vec::new();let mut span_layers=Vec::new();
+  span_layers.try_reserve_exact(layers.len()).map_err(|_|"Annotation span layer allocation failed")?;
   union_quads.try_reserve(layers.len()).map_err(|_|"Annotation union metadata allocation failed")?;
   direct.try_reserve(layers.len()).map_err(|_|"Annotation direct metadata allocation failed")?;
   ranges.try_reserve(layers.len()).map_err(|_|"Annotation ordered metadata allocation failed")?;
@@ -144,10 +146,11 @@ impl Geometry {
     }
    }
    ranges.push(range.clone());
+   if let AnnotationLayer::Spans{range,rows}=layer {span_layers.push((range,rows.into()));}
   }
   if end as usize!=g.indices.len(){return Err("Annotation layers do not cover geometry".into());}
   let grid=SourceSpans{rows:Arc::from([]),zoom:1.,ppp,phase:[0.;2]};
-  let inner=Arc::get_mut(&mut g).unwrap();inner.ordered_draws=Some(ranges.into());inner.annotation_layers=Some(Arc::new(AnnotationLayers{grid,direct:direct.into(),union_quads:union_quads.into()}));Ok(g)
+  let inner=Arc::get_mut(&mut g).unwrap();inner.ordered_draws=Some(ranges.into());inner.annotation_layers=Some(Arc::new(AnnotationLayers{span_layers:span_layers.into(),grid,direct:direct.into(),union_quads:union_quads.into()}));Ok(g)
  }
  pub fn new_with_source_spans(vertices:Vec<Vertex>,indices:Vec<u32>,ranges:Vec<std::ops::Range<u32>>,spans:Vec<SourceSpan>,zoom:f32,ppp:f32,phase:[f64;2])->Result<Arc<Self>,String>{
   let mut geometry=Self::new_with_ordered_draws(vertices,indices,ranges)?;
@@ -312,5 +315,16 @@ fn verify_disjoint_span_draws(g:&Geometry,ranges:&[std::ops::Range<u32>])->Resul
   let v=[[0.,0.],[2.,0.],[2.,1.],[0.,1.]].map(|position|Vertex{position,coverage:0.5}).to_vec();
   let i=vec![0,1,2,0,2,3];let row=SourceSpan{x:0,y:0,len:2,coverage:128};
   assert!(Geometry::new_with_annotation_layers(v,i,vec![AnnotationLayer::Spans{range:0..6,rows:vec![row]}],1.).is_err());
+ }
+}
+
+#[cfg(test)]mod annotation_source_owner_tests{
+ use super::*;
+ #[test]fn mixed_layers_retain_literal_rows_and_partition_identity(){
+  let row=SourceSpan{x:7,y:11,len:3,coverage:173};let ppp=1.25;
+  let mut vertices=Vec::new();for [x,y]in [[7.,11.],[10.,11.],[10.,12.],[7.,12.]]{vertices.push(Vertex{position:[x/ppp,y/ppp],coverage:173./255.});}
+  vertices.extend([[20.,20.],[21.,20.],[20.,21.]].map(|position|Vertex{position,coverage:1.}));
+  let g=Geometry::new_with_annotation_layers(vertices,vec![0,1,2,0,2,3,4,5,6],vec![AnnotationLayer::Spans{range:0..6,rows:vec![row]},AnnotationLayer::Opaque{range:6..9}],ppp).unwrap();
+  let layers=g.annotation_layers().unwrap();assert_eq!(layers.span_layers().len(),1);assert_eq!(layers.span_layers()[0].0,0..6);let actual=layers.span_layers()[0].1[0];assert_eq!((actual.x,actual.y,actual.len,actual.coverage),(7,11,3,173));assert_eq!(layers.direct_ranges(),&[6..9]);assert!(layers.translation(Pose::default(),ppp).is_ok());assert!(layers.translation(Pose::default(),1.).is_err());
  }
 }

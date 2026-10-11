@@ -414,3 +414,6 @@ pub fn run_world_ghost_probe(input:PathBuf,output:PathBuf)->Result<(),String>{wo
 
 mod world_sweep_probe;
 pub fn run_world_sweep_probe(input:PathBuf,output:PathBuf)->Result<(),String>{world_sweep_probe::run(input,output)}
+
+mod document_annotations_probe;
+pub fn run_document_annotations_probe(input:PathBuf,output:PathBuf)->Result<(),String>{document_annotations_probe::run(input,output)}

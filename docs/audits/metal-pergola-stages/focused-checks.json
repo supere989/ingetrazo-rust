@@ -1,0 +1,33 @@
+{
+  "metal_cpu_tests": 51,
+  "gui_annotation_cpu_tests": 36,
+  "arm_rust_interface": "PASS",
+  "intel_rust_interface": "PASS",
+  "native_apple_gpu": "NOT_EXECUTED",
+  "logs": {
+    "metal-pergola-metal-focused.log": {
+      "bytes": 6380,
+      "sha256": "975c611797ffef3624b7d419fd7d19b414d20ee16caa2e5f658fefcc1c428974"
+    },
+    "metal-pergola-gui-focused.log": {
+      "bytes": 23072,
+      "sha256": "d4d85783f2e4b0956f760549ad0255265aaaf77d99ab829e2bfbabfaab415a6a"
+    },
+    "metal-pergola-final-arm-typecheck.log": {
+      "bytes": 20084,
+      "sha256": "35169f9b7843ef6066c44f0525dfdbb676a83d58172f4b0c786e5e13e464fff4"
+    },
+    "metal-pergola-final-intel-typecheck.log": {
+      "bytes": 23804,
+      "sha256": "a774c317d58d8e1b326a2dc7df7adceb67dc0c9ec8ff76776774bb4dc84a66a9"
+    },
+    "metal-pergola-gui-check.log": {
+      "bytes": 8026,
+      "sha256": "0d3b4edd59f345ce13ae6e51a7db54c9e030fe21acc8f04c4203b43d6d8281a0"
+    },
+    "metal-pergola-gui-typecheck.log": {
+      "bytes": 3135,
+      "sha256": "967f57f27413ba5c61f410c78658e96ac2177032659147a607ba7ae9d20a84df"
+    }
+  }
+}

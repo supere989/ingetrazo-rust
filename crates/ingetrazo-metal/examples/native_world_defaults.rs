@@ -168,6 +168,19 @@ fn run() -> Result<(), String> {
             &style,
             DVec3::new(0., -2., 2.),
         )?)?;
+        // Clip is a source vertex-stage halfspace; changing only its plane must
+        // change pixels without rebuilding/uploading the accepted model.
+        scene.section_planes.push(ingetrazo_core::section::SectionPlane::new(DVec3::ZERO,DVec3::X,"cut","1"));
+        scene.show_section_cuts=true;
+        let section_stats=world.stats;
+        let clipped=read(prepare(&mut world,&mut adapter,&scene,rev,&style,DVec3::new(0.,-2.,2.))?)?;
+        assert_ne!(clipped,edited,"Active section did not change known model pixels");
+        assert_eq!(world.stats.geometry_uploads,section_stats.geometry_uploads);
+        let clipped_warm=read(prepare(&mut world,&mut adapter,&scene,rev,&style,DVec3::new(0.,-2.,2.))?)?;
+        assert_eq!(clipped,clipped_warm);
+        scene.show_section_cuts=false;
+        assert_eq!(read(prepare(&mut world,&mut adapter,&scene,rev,&style,DVec3::new(0.,-2.,2.))?)?,edited);
+        std::fs::write(out.join("section.rgba"),clipped).map_err(|e|e.to_string())?;
         let accepted = world.stats;
         let retained = prepare(
             &mut world,
@@ -205,7 +218,7 @@ fn run() -> Result<(), String> {
         let committed: u64 = budget.heaps.iter().map(|h| h.committed).sum();
         let reserved: u64 = budget.heaps.iter().map(|h| h.reserved).sum();
         assert_eq!((committed, reserved), (0, 0));
-        std::fs::write(out.join("report.json"),serde_json::to_vec_pretty(&serde_json::json!({"passed":true,"extent":[64,64],"samples":4,"default_style":true,"warm_extra_profile_uploads":0,"warm_extra_geometry_uploads":0,"camera_extra_base_uploads":0,"unchanged_selection_camera_extra_profile_uploads":0,"profile_builds":accepted.profile_builds,"profile_uploads":accepted.profile_uploads,"profile_upload_bytes":accepted.profile_upload_bytes,"unsupported_grid_refusal":error,"ledger_committed":committed,"ledger_reserved":reserved})).unwrap()).map_err(|e|e.to_string())?;
+        std::fs::write(out.join("report.json"),serde_json::to_vec_pretty(&serde_json::json!({"passed":true,"extent":[64,64],"samples":4,"default_style":true,"section_pixel_contrast":true,"section_restore_exact":true,"section_extra_geometry_uploads":0,"warm_extra_profile_uploads":0,"warm_extra_geometry_uploads":0,"camera_extra_base_uploads":0,"unchanged_selection_camera_extra_profile_uploads":0,"profile_builds":accepted.profile_builds,"profile_uploads":accepted.profile_uploads,"profile_upload_bytes":accepted.profile_upload_bytes,"unsupported_grid_refusal":error,"ledger_committed":committed,"ledger_reserved":reserved})).unwrap()).map_err(|e|e.to_string())?;
         Ok(())
     })
 }

@@ -262,6 +262,7 @@ impl Writer {
   let bytes=vc.checked_mul(std::mem::size_of::<Vertex>()).and_then(|n|ic.checked_mul(4).and_then(|i|n.checked_add(i)))
    .and_then(|n|self.rows.len().checked_mul(std::mem::size_of::<SourceSpan>()).and_then(|i|n.checked_add(i)))
    .and_then(|n|(self.ranges.len()+self.direct_ranges.len()+2).checked_mul(std::mem::size_of::<std::ops::Range<u32>>()).and_then(|i|n.checked_add(i)))
+   .and_then(|n|(self.ranges.len()+1).checked_mul(std::mem::size_of::<(std::ops::Range<u32>,Arc<[SourceSpan]>)>()).and_then(|i|n.checked_add(i)))
    .and_then(|n|(self.batches.len()+1).checked_mul(std::mem::size_of::<Batch>()+std::mem::size_of::<Draw>()).and_then(|i|n.checked_add(i)));
   if bytes.is_none_or(|n|n>self.limits.geometry_bytes){return Err("Annotation direct retained admission exceeded".into());}
   self.vertices.try_reserve(vertices.len()).map_err(|_|"Annotation direct vertices allocation failed")?;
@@ -285,6 +286,7 @@ impl Writer {
    (count.checked_mul(6),std::mem::size_of::<u32>()),
    (Some(count),std::mem::size_of::<SourceSpan>()),
    (self.ranges.len().checked_add(ranges.len()),std::mem::size_of::<std::ops::Range<u32>>()),
+   (self.ranges.len().checked_add(ranges.len()),std::mem::size_of::<(std::ops::Range<u32>,Arc<[SourceSpan]>)>()),
    (self.batches.len().checked_add(1),std::mem::size_of::<Batch>()),
    (self.gates.len().checked_add(1),std::mem::size_of::<Draw>()),
   ].into_iter().try_fold(0usize,|sum,(count,size)|count.and_then(|n|n.checked_mul(size)).and_then(|n|sum.checked_add(n)));
