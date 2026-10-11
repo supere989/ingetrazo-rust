@@ -381,3 +381,47 @@ fn source_order_allocates_runs_for_groups_and_rejects_invalid_poses() {
     assert!(Order::new(&packet, &poses).is_err());
     assert_eq!(order.runs[0].count, 1000);
 }
+
+/// Winding is draw state; compare only the matrix occupying the old packed slot.
+pub(crate) fn packed_matrix_changed(
+    old_order: Option<&Order>,
+    old_poses: &[Pose],
+    packed: usize,
+    next: &Pose,
+) -> bool {
+    old_order
+        .and_then(|o| o.indices.get(packed))
+        .and_then(|&i| old_poses.get(i))
+        .is_none_or(|old| old.mvp != next.mvp)
+}
+#[cfg(test)]
+#[test]
+fn packed_update_tracks_matrix_slots_through_reordering() {
+    let order = Order {
+        indices: vec![0, 2, 1],
+        runs: vec![],
+        retained_payload_bytes: 0,
+    };
+    let mut p = [Pose {
+        mvp: [[0.; 4]; 4],
+        reflected: false,
+    }; 3];
+    p[0].mvp[3][0] = 1.;
+    p[1].mvp[3][0] = 2.;
+    p[2].mvp[3][0] = 3.;
+    let mut moved = p[2];
+    moved.mvp[3][0] += 0.6;
+    let changed: Vec<_> = [p[0], moved, p[1]]
+        .iter()
+        .enumerate()
+        .filter(|(i, x)| packed_matrix_changed(Some(&order), &p, *i, x))
+        .map(|(i, _)| i)
+        .collect();
+    assert_eq!(changed, vec![1]);
+    assert!(packed_matrix_changed(Some(&order), &p, 1, &p[1]));
+    let mut mirror = p[2];
+    mirror.reflected = true;
+    assert!(!packed_matrix_changed(Some(&order), &p, 1, &mirror));
+    assert!(packed_matrix_changed(None, &p, 1, &p[2]));
+    assert!(packed_matrix_changed(Some(&order), &[], 1, &p[2]));
+}
