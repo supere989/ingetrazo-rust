@@ -5,7 +5,13 @@ edition.workspace = true
 authors.workspace = true
 license.workspace = true
 
+[features]
+default = []
+engineering-python = ["dep:ingetrazo-ai-interpreter-proof"]
+
 [dependencies]
+ingetrazo-ai-interpreter-proof = { path = "../../tools/ai-interpreter-proof", optional = true }
+
 ingetrazo-core = { path = "../ingetrazo-core" }
 ingetrazo-tools = { path = "../ingetrazo-tools" }
 ingetrazo-formats = { path = "../ingetrazo-formats" }
@@ -37,3 +43,8 @@ ingetrazo-metal = { path = "../ingetrazo-metal" }
 
 [target.'cfg(unix)'.dependencies]
 libc = "0.2"
+
+[[example]]
+name = "engineering_console_scene_fixture"
+path = "examples/engineering_console_scene_fixture.rs"
+required-features = ["engineering-python"]

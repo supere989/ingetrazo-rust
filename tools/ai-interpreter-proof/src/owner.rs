@@ -1,5 +1,5 @@
 //! Private append owner: state tokens replace per-command base snapshots.
-use crate::journal::{validate_base, MeshJournal};
+use crate::journal::{MeshJournal, validate_base};
 use crate::owner_budget::{Kind, Lease, OwnerBudget};
 use crate::owner_registry::Registry;
 use glam::DVec3;
@@ -371,6 +371,9 @@ impl JournalOwner {
     pub fn set_history_byte_limit(&mut self, limit: Option<usize>) {
         self.history_byte_limit = limit;
     }
+    pub(crate) fn revision(&self) -> u64 {
+        self.version
+    }
     pub fn history_payload_bytes(&self) -> (usize, usize) {
         (self.undo_bytes, self.redo_bytes)
     }
@@ -407,27 +410,111 @@ impl JournalOwner {
     /// admission. This does not implement source deletion/lookup by itself.
     /// Existing chronological append deltas remain parked until inverse restores
     /// their state token/packing. No public production scripting route uses it.
-    pub fn prepare_packed_replacement_as(&mut self,mesh:Mesh,state:Uuid)->Result<PreparedPackedReplacement<'_>,String>{self.prepare_packed_replacement_inner(mesh,state,false,None)}
-    pub fn prepare_edge_replacement_as(&mut self,mesh:Mesh,state:Uuid)->Result<PreparedPackedReplacement<'_>,String>{
-        if mesh.vertices.len()!=self.mesh.vertices.len()||mesh.vertices.iter().zip(&self.mesh.vertices).any(|(a,b)|a.uid!=b.uid){return Err("Edge replacement requires exact Vertex identity order".into());}
-        self.prepare_packed_replacement_inner(mesh,state,true,None)
+    pub fn prepare_packed_replacement_as(
+        &mut self,
+        mesh: Mesh,
+        state: Uuid,
+    ) -> Result<PreparedPackedReplacement<'_>, String> {
+        self.prepare_packed_replacement_inner(mesh, state, false, None)
     }
-    pub fn prepare_identity_history_replacement_as(&mut self,mesh:Mesh,keys:Vec<(crate::journal::SourceKey,usize)>,state:Uuid,redo:bool)->Result<PreparedPackedReplacement<'_>,String>{
-        let command=if redo{self.redo.last()}else{self.undo.last()}.ok_or("Packed history command missing")?;
-        if self.state!=if redo{command.before}else{command.after}||state!=if redo{command.after}else{command.before}{return Err("Packed history state mismatch".into());}
-        if redo{self.undo.try_reserve(1).map_err(|_|"Packed undo destination refused")?;}else{self.redo.try_reserve(1).map_err(|_|"Packed redo destination refused")?;}
-        let mut ticket=self.prepare_identity_replacement_as(mesh,keys,state)?;ticket.history=Some(redo);Ok(ticket)
+    pub fn prepare_edge_replacement_as(
+        &mut self,
+        mesh: Mesh,
+        state: Uuid,
+    ) -> Result<PreparedPackedReplacement<'_>, String> {
+        if mesh.vertices.len() != self.mesh.vertices.len()
+            || mesh
+                .vertices
+                .iter()
+                .zip(&self.mesh.vertices)
+                .any(|(a, b)| a.uid != b.uid)
+        {
+            return Err("Edge replacement requires exact Vertex identity order".into());
+        }
+        self.prepare_packed_replacement_inner(mesh, state, true, None)
     }
-    pub fn prepare_identity_replacement_as(&mut self,mesh:Mesh,keys:Vec<(crate::journal::SourceKey,usize)>,state:Uuid)->Result<PreparedPackedReplacement<'_>,String>{self.prepare_packed_replacement_inner(mesh,state,false,Some(keys))}
-    fn prepare_packed_replacement_inner(&mut self,mut mesh:Mesh,state:Uuid,keys:bool,owned_keys:Option<Vec<(crate::journal::SourceKey,usize)>>)->Result<PreparedPackedReplacement<'_>,String>{
-        let next_version=self.version.checked_add(1).ok_or("Owner revision overflow")?;
-        let preparation=self.budget.reserve(Kind::Preparation,preparation_bound(mesh.vertices.len(),mesh.edges.len())?)?;
+    pub fn prepare_identity_history_replacement_as(
+        &mut self,
+        mesh: Mesh,
+        keys: Vec<(crate::journal::SourceKey, usize)>,
+        state: Uuid,
+        redo: bool,
+    ) -> Result<PreparedPackedReplacement<'_>, String> {
+        let command = if redo {
+            self.redo.last()
+        } else {
+            self.undo.last()
+        }
+        .ok_or("Packed history command missing")?;
+        if self.state != if redo { command.before } else { command.after }
+            || state != if redo { command.after } else { command.before }
+        {
+            return Err("Packed history state mismatch".into());
+        }
+        if redo {
+            self.undo
+                .try_reserve(1)
+                .map_err(|_| "Packed undo destination refused")?;
+        } else {
+            self.redo
+                .try_reserve(1)
+                .map_err(|_| "Packed redo destination refused")?;
+        }
+        let mut ticket = self.prepare_identity_replacement_as(mesh, keys, state)?;
+        ticket.history = Some(redo);
+        Ok(ticket)
+    }
+    pub fn prepare_identity_replacement_as(
+        &mut self,
+        mesh: Mesh,
+        keys: Vec<(crate::journal::SourceKey, usize)>,
+        state: Uuid,
+    ) -> Result<PreparedPackedReplacement<'_>, String> {
+        self.prepare_packed_replacement_inner(mesh, state, false, Some(keys))
+    }
+    fn prepare_packed_replacement_inner(
+        &mut self,
+        mut mesh: Mesh,
+        state: Uuid,
+        keys: bool,
+        owned_keys: Option<Vec<(crate::journal::SourceKey, usize)>>,
+    ) -> Result<PreparedPackedReplacement<'_>, String> {
+        let next_version = self
+            .version
+            .checked_add(1)
+            .ok_or("Owner revision overflow")?;
+        let preparation = self.budget.reserve(
+            Kind::Preparation,
+            preparation_bound(mesh.vertices.len(), mesh.edges.len())?,
+        )?;
         validate_base(&mesh)?;
-        let positions=positions(&mesh.vertices,0)?;
-        let index=self.index(&positions)?;
-        mesh.install_prepared_spatial_index(index).map_err(str::to_owned)?;
-        let registry=if let Some(rows)=owned_keys{self.registry.identity_replacement(&mesh,rows,state,next_version)?}else if keys{self.registry.edge_replacement(&mesh,state,next_version)?}else{Registry::new(&mesh,self.budget.clone(),self.document,state,next_version)?};
-        Ok(PreparedPackedReplacement{owner:self,mesh,registry,state,next_version,_preparation:preparation,history:None})
+        let positions = positions(&mesh.vertices, 0)?;
+        let index = self.index(&positions)?;
+        mesh.install_prepared_spatial_index(index)
+            .map_err(str::to_owned)?;
+        let registry = if let Some(rows) = owned_keys {
+            self.registry
+                .identity_replacement(&mesh, rows, state, next_version)?
+        } else if keys {
+            self.registry.edge_replacement(&mesh, state, next_version)?
+        } else {
+            Registry::new(
+                &mesh,
+                self.budget.clone(),
+                self.document,
+                state,
+                next_version,
+            )?
+        };
+        Ok(PreparedPackedReplacement {
+            owner: self,
+            mesh,
+            registry,
+            state,
+            next_version,
+            _preparation: preparation,
+            history: None,
+        })
     }
     pub fn replace(&mut self, mut mesh: Mesh) -> Result<(), String> {
         let next_version = self
@@ -1070,10 +1157,11 @@ mod tests {
                 }
             }
             let calls = held.registry_lookup_calls();
-            assert!(held
-                .add_edge(DVec3::Y, DVec3::Z)
-                .unwrap_err()
-                .contains("Stale source registry"));
+            assert!(
+                held.add_edge(DVec3::Y, DVec3::Z)
+                    .unwrap_err()
+                    .contains("Stale source registry")
+            );
             assert_eq!(held.registry_lookup_calls(), calls);
         }
         let mut earlier = o.try_begin().unwrap();
@@ -1131,10 +1219,12 @@ mod tests {
         assert!(retained > 0);
         o.replace(Mesh::new()).unwrap();
         assert_eq!(budget.snapshot().registry, retained);
-        assert!(stale
-            .add_edge(DVec3::ZERO, DVec3::X)
-            .unwrap_err()
-            .contains("Stale source registry"));
+        assert!(
+            stale
+                .add_edge(DVec3::ZERO, DVec3::X)
+                .unwrap_err()
+                .contains("Stale source registry")
+        );
         assert!(o.commit(stale).is_err());
         drop(held);
         assert_eq!(budget.snapshot().registry, 0);
@@ -1196,10 +1286,11 @@ mod tests {
         let before = budget.snapshot();
         assert!(before.staging > 0);
         budget.set_limit(Some(before.total()));
-        assert!(a
-            .commit(candidate)
-            .unwrap_err()
-            .contains("Shared owner payload admission"));
+        assert!(
+            a.commit(candidate)
+                .unwrap_err()
+                .contains("Shared owner payload admission")
+        );
         assert_eq!(a.mesh(), &old_a);
         assert_eq!(b.mesh(), &old_b);
         assert_eq!(a.history_counts(), (0, 1));
@@ -1307,14 +1398,16 @@ mod tests {
         o.set_append_limits(Some(1), None);
         let mut t = o.try_begin().unwrap();
         assert!(t.add_edge(DVec3::ZERO, DVec3::X).is_err());
-        assert!(t
-            .add_edge(DVec3::Y, DVec3::Z)
-            .unwrap_err()
-            .contains("previously refused"));
-        assert!(o
-            .commit(t)
-            .unwrap_err()
-            .contains("staging admission failed"));
+        assert!(
+            t.add_edge(DVec3::Y, DVec3::Z)
+                .unwrap_err()
+                .contains("previously refused")
+        );
+        assert!(
+            o.commit(t)
+                .unwrap_err()
+                .contains("staging admission failed")
+        );
         assert!(o.mesh().vertices.is_empty());
         assert_eq!(o.history_counts(), (0, 0));
         o.set_append_limits(None, Some(0));
@@ -1610,7 +1703,7 @@ mod mixed_append_tests {
 /// Exclusive pure membership permutation, preserving native record identities.
 /// Full insertion/deletion/replacement graph ownership is a separate obligation.
 pub struct PreparedMembership<'a> {
-    edge_swaps: Vec<(usize,usize)>,
+    edge_swaps: Vec<(usize, usize)>,
     edge_map: Option<Vec<usize>>,
     owner: &'a mut JournalOwner,
     vertex_swaps: Vec<(usize, usize)>,
@@ -1678,12 +1771,28 @@ impl JournalOwner {
         loops: Vec<(Vec<usize>, Vec<Vec<usize>>)>,
         after: Uuid,
     ) -> Result<PreparedMembership<'_>, String> {
-        self.prepare_graph_order_inner(vertices,None,faces,positions,loops,after)
+        self.prepare_graph_order_inner(vertices, None, faces, positions, loops, after)
     }
-    pub fn prepare_graph_order_as(&mut self,vertices:&[usize],edges:&[usize],faces:&[usize],positions:Vec<DVec3>,loops:Vec<(Vec<usize>,Vec<Vec<usize>>)>,after:Uuid)->Result<PreparedMembership<'_>,String>{
-        self.prepare_graph_order_inner(vertices,Some(edges),faces,positions,loops,after)
+    pub fn prepare_graph_order_as(
+        &mut self,
+        vertices: &[usize],
+        edges: &[usize],
+        faces: &[usize],
+        positions: Vec<DVec3>,
+        loops: Vec<(Vec<usize>, Vec<Vec<usize>>)>,
+        after: Uuid,
+    ) -> Result<PreparedMembership<'_>, String> {
+        self.prepare_graph_order_inner(vertices, Some(edges), faces, positions, loops, after)
     }
-    fn prepare_graph_order_inner(&mut self,vertices:&[usize],edges:Option<&[usize]>,faces:&[usize],positions:Vec<DVec3>,loops:Vec<(Vec<usize>,Vec<Vec<usize>>)>,after:Uuid)->Result<PreparedMembership<'_>,String>{
+    fn prepare_graph_order_inner(
+        &mut self,
+        vertices: &[usize],
+        edges: Option<&[usize]>,
+        faces: &[usize],
+        positions: Vec<DVec3>,
+        loops: Vec<(Vec<usize>, Vec<Vec<usize>>)>,
+        after: Uuid,
+    ) -> Result<PreparedMembership<'_>, String> {
         if positions.len() != self.mesh.vertices.len() || loops.len() != self.mesh.faces.len() {
             return Err("Membership field extent mismatch".into());
         }
@@ -1694,9 +1803,25 @@ impl JournalOwner {
         let bytes = preparation_bound(positions.len(), self.mesh.edges.len())?
             .checked_add(sized(add(positions.len(), loops.len())?, 128)?)
             .ok_or("Membership preparation overflow")?;
-        let bytes=bytes.checked_add(if edges.is_some(){self.mesh.edges.len().checked_mul(5*std::mem::size_of::<usize>()).ok_or("Edge membership preparation overflow")?}else{0}).ok_or("Graph membership preparation overflow")?;
+        let bytes = bytes
+            .checked_add(if edges.is_some() {
+                self.mesh
+                    .edges
+                    .len()
+                    .checked_mul(5 * std::mem::size_of::<usize>())
+                    .ok_or("Edge membership preparation overflow")?
+            } else {
+                0
+            })
+            .ok_or("Graph membership preparation overflow")?;
         let preparation = self.budget.reserve(Kind::Preparation, bytes)?;
-        let (edge_map,edge_swaps)=match edges{Some(order)=>{let(map,swaps)=prepare_order(order,self.mesh.edges.len())?;(Some(map),swaps)},None=>(None,Vec::new())};
+        let (edge_map, edge_swaps) = match edges {
+            Some(order) => {
+                let (map, swaps) = prepare_order(order, self.mesh.edges.len())?;
+                (Some(map), swaps)
+            }
+            None => (None, Vec::new()),
+        };
         let (vertex_map, vertex_swaps) = prepare_order(vertices, self.mesh.vertices.len())?;
         let (face_map, face_swaps) = prepare_order(faces, self.mesh.faces.len())?;
         for edge in &self.mesh.edges {
@@ -1716,11 +1841,25 @@ impl JournalOwner {
                 return Err("Membership loop reference outside graph".into());
             }
         }
-        if let Some(map)=&edge_map {if self.mesh.vertices.iter().any(|v|v.edges.iter().any(|&id|id>=map.len())){return Err("Membership native incidence outside graph".into());}}
+        if let Some(map) = &edge_map {
+            if self
+                .mesh
+                .vertices
+                .iter()
+                .any(|v| v.edges.iter().any(|&id| id >= map.len()))
+            {
+                return Err("Membership native incidence outside graph".into());
+            }
+        }
         let spatial = self.index(&positions)?;
-        let registry = self.registry.prepare_graph_permutation(&vertex_map,edge_map.as_deref(), &positions)?;
+        let registry = self.registry.prepare_graph_permutation(
+            &vertex_map,
+            edge_map.as_deref(),
+            &positions,
+        )?;
         Ok(PreparedMembership {
-            edge_swaps,edge_map,
+            edge_swaps,
+            edge_map,
             owner: self,
             vertex_swaps,
             face_swaps,
@@ -1739,7 +1878,8 @@ impl JournalOwner {
 impl PreparedMembership<'_> {
     pub fn apply(self) {
         let Self {
-            edge_swaps,edge_map,
+            edge_swaps,
+            edge_map,
             owner,
             vertex_swaps,
             face_swaps,
@@ -1753,11 +1893,19 @@ impl PreparedMembership<'_> {
             next,
             _preparation,
         } = self;
-        for (a,b) in edge_swaps {owner.mesh.edges.swap(a,b);}
+        for (a, b) in edge_swaps {
+            owner.mesh.edges.swap(a, b);
+        }
         for (a, b) in vertex_swaps {
             owner.mesh.vertices.swap(a, b);
         }
-        if let Some(map)=edge_map {for v in &mut owner.mesh.vertices{for id in &mut v.edges{*id=map[*id];}}}
+        if let Some(map) = edge_map {
+            for v in &mut owner.mesh.vertices {
+                for id in &mut v.edges {
+                    *id = map[*id];
+                }
+            }
+        }
         for (a, b) in face_swaps {
             owner.mesh.faces.swap(a, b);
         }
@@ -1907,73 +2055,279 @@ mod membership_tests {
     }
 }
 
-#[cfg(test)]mod graph_order_tests{
- use super::*;
- #[test]fn graph_order_preserves_registry_identity_and_refuses_before_mutation(){
-  let mut mesh=Mesh::new();for p in [DVec3::ZERO,DVec3::X,DVec3::Y,DVec3::Z]{mesh.add_vertex(p);}
-  mesh.add_face(vec![0,1,2],vec![]).unwrap();mesh.add_face(vec![1,0,3],vec![]).unwrap();
-  mesh.edges[0].attrs.insert("opaque".into(),serde_json::json!(["vendor",7]));
-  let payload=mesh.edges[0].attrs["opaque"].as_array().unwrap().as_ptr();
-  let budget=OwnerBudget::new(None);let mut owner=JournalOwner::new_with_budget(mesh,budget.clone()).unwrap();
-  let before=owner.mesh().clone();let before_version=owner.version;let history=owner.history_counts();let charge=budget.snapshot().total();
-  let view=owner.registry.view();let stale=owner.try_begin().unwrap();
-  let positions=vec![DVec3::Z,DVec3::Y,DVec3::X,DVec3::ZERO];let loops=vec![(vec![2,3,0],vec![]),(vec![3,2,1],vec![])];
-  let ticket=owner.prepare_graph_order_as(&[3,2,1,0],&[4,3,2,1,0],&[1,0],positions.clone(),loops.clone(),Uuid::new_v4()).unwrap();drop(ticket);
-  assert_eq!(owner.mesh(),&before);assert_eq!(owner.version,before_version);assert_eq!(owner.history_counts(),history);assert!(view.check().is_ok());
-  let with_stale=budget.snapshot().total();budget.set_limit(Some(with_stale));
-  assert!(owner.prepare_graph_order_as(&[3,2,1,0],&[4,3,2,1,0],&[1,0],positions.clone(),loops.clone(),Uuid::new_v4()).is_err());budget.set_limit(None);
-  for invalid in [&[4,3,2,1,1][..],&[5,3,2,1,0][..],&[4,3,2,1][..]]{
-   assert!(owner.prepare_graph_order_as(&[3,2,1,0],invalid,&[1,0],positions.clone(),loops.clone(),Uuid::new_v4()).is_err());
-   assert_eq!(owner.mesh(),&before);assert_eq!(owner.version,before_version);assert_eq!(owner.history_counts(),history);assert_eq!(budget.snapshot().total(),with_stale);assert!(view.check().is_ok());
-  }
-  owner.prepare_graph_order_as(&[3,2,1,0],&[4,3,2,1,0],&[1,0],positions,loops,Uuid::new_v4()).unwrap().apply();
-  assert!(view.check().is_err());assert_eq!(owner.mesh().edges[4].attrs["opaque"].as_array().unwrap().as_ptr(),payload);
-  let current=owner.mesh().clone();assert!(owner.commit(stale).is_err());assert_eq!(owner.mesh(),&current);assert_eq!(owner.history_counts(),history);assert_eq!(budget.snapshot().total(),charge);
-  let view=owner.registry.view();assert_eq!(view.vertex(&crate::journal::SourceKey::new(DVec3::ZERO)),Some(3));assert_eq!(view.edge(&(2,3)),Some((4,3,2)));
- }
+#[cfg(test)]
+mod graph_order_tests {
+    use super::*;
+    #[test]
+    fn graph_order_preserves_registry_identity_and_refuses_before_mutation() {
+        let mut mesh = Mesh::new();
+        for p in [DVec3::ZERO, DVec3::X, DVec3::Y, DVec3::Z] {
+            mesh.add_vertex(p);
+        }
+        mesh.add_face(vec![0, 1, 2], vec![]).unwrap();
+        mesh.add_face(vec![1, 0, 3], vec![]).unwrap();
+        mesh.edges[0]
+            .attrs
+            .insert("opaque".into(), serde_json::json!(["vendor", 7]));
+        let payload = mesh.edges[0].attrs["opaque"].as_array().unwrap().as_ptr();
+        let budget = OwnerBudget::new(None);
+        let mut owner = JournalOwner::new_with_budget(mesh, budget.clone()).unwrap();
+        let before = owner.mesh().clone();
+        let before_version = owner.version;
+        let history = owner.history_counts();
+        let charge = budget.snapshot().total();
+        let view = owner.registry.view();
+        let stale = owner.try_begin().unwrap();
+        let positions = vec![DVec3::Z, DVec3::Y, DVec3::X, DVec3::ZERO];
+        let loops = vec![(vec![2, 3, 0], vec![]), (vec![3, 2, 1], vec![])];
+        let ticket = owner
+            .prepare_graph_order_as(
+                &[3, 2, 1, 0],
+                &[4, 3, 2, 1, 0],
+                &[1, 0],
+                positions.clone(),
+                loops.clone(),
+                Uuid::new_v4(),
+            )
+            .unwrap();
+        drop(ticket);
+        assert_eq!(owner.mesh(), &before);
+        assert_eq!(owner.version, before_version);
+        assert_eq!(owner.history_counts(), history);
+        assert!(view.check().is_ok());
+        let with_stale = budget.snapshot().total();
+        budget.set_limit(Some(with_stale));
+        assert!(
+            owner
+                .prepare_graph_order_as(
+                    &[3, 2, 1, 0],
+                    &[4, 3, 2, 1, 0],
+                    &[1, 0],
+                    positions.clone(),
+                    loops.clone(),
+                    Uuid::new_v4()
+                )
+                .is_err()
+        );
+        budget.set_limit(None);
+        for invalid in [
+            &[4, 3, 2, 1, 1][..],
+            &[5, 3, 2, 1, 0][..],
+            &[4, 3, 2, 1][..],
+        ] {
+            assert!(
+                owner
+                    .prepare_graph_order_as(
+                        &[3, 2, 1, 0],
+                        invalid,
+                        &[1, 0],
+                        positions.clone(),
+                        loops.clone(),
+                        Uuid::new_v4()
+                    )
+                    .is_err()
+            );
+            assert_eq!(owner.mesh(), &before);
+            assert_eq!(owner.version, before_version);
+            assert_eq!(owner.history_counts(), history);
+            assert_eq!(budget.snapshot().total(), with_stale);
+            assert!(view.check().is_ok());
+        }
+        owner
+            .prepare_graph_order_as(
+                &[3, 2, 1, 0],
+                &[4, 3, 2, 1, 0],
+                &[1, 0],
+                positions,
+                loops,
+                Uuid::new_v4(),
+            )
+            .unwrap()
+            .apply();
+        assert!(view.check().is_err());
+        assert_eq!(
+            owner.mesh().edges[4].attrs["opaque"]
+                .as_array()
+                .unwrap()
+                .as_ptr(),
+            payload
+        );
+        let current = owner.mesh().clone();
+        assert!(owner.commit(stale).is_err());
+        assert_eq!(owner.mesh(), &current);
+        assert_eq!(owner.history_counts(), history);
+        assert_eq!(budget.snapshot().total(), charge);
+        let view = owner.registry.view();
+        assert_eq!(
+            view.vertex(&crate::journal::SourceKey::new(DVec3::ZERO)),
+            Some(3)
+        );
+        assert_eq!(view.edge(&(2, 3)), Some((4, 3, 2)));
+    }
 }
 
 /// Exclusive prepared packed replacement: discard leaves semantic state,
 /// chronological history and source accelerator revision untouched.
-pub struct PreparedPackedReplacement<'a>{owner:&'a mut JournalOwner,mesh:Mesh,registry:Registry,state:Uuid,next_version:u64,_preparation:Lease,history:Option<bool>}
-impl PreparedPackedReplacement<'_>{
-    pub fn apply(self)->Mesh{
+pub struct PreparedPackedReplacement<'a> {
+    owner: &'a mut JournalOwner,
+    mesh: Mesh,
+    registry: Registry,
+    state: Uuid,
+    next_version: u64,
+    _preparation: Lease,
+    history: Option<bool>,
+}
+impl PreparedPackedReplacement<'_> {
+    pub fn apply(self) -> Mesh {
         self.owner.registry.invalidate();
-        let old_mesh=std::mem::replace(&mut self.owner.mesh,self.mesh);
-        let _old_registry=std::mem::replace(&mut self.owner.registry,self.registry);
-        self.owner.state=self.state;
-        self.owner.version=self.next_version;
-        if let Some(redo)=self.history{
-            if redo{let command=self.owner.redo.pop().expect("prepared redo command");self.owner.redo_bytes-=command.bytes;self.owner.undo_bytes+=command.bytes;self.owner.undo.push(command);}
-            else{let command=self.owner.undo.pop().expect("prepared undo command");self.owner.undo_bytes-=command.bytes;self.owner.redo_bytes+=command.bytes;self.owner.redo.push(command);}
+        let old_mesh = std::mem::replace(&mut self.owner.mesh, self.mesh);
+        let _old_registry = std::mem::replace(&mut self.owner.registry, self.registry);
+        self.owner.state = self.state;
+        self.owner.version = self.next_version;
+        if let Some(redo) = self.history {
+            if redo {
+                let command = self.owner.redo.pop().expect("prepared redo command");
+                self.owner.redo_bytes -= command.bytes;
+                self.owner.undo_bytes += command.bytes;
+                self.owner.undo.push(command);
+            } else {
+                let command = self.owner.undo.pop().expect("prepared undo command");
+                self.owner.undo_bytes -= command.bytes;
+                self.owner.redo_bytes += command.bytes;
+                self.owner.redo.push(command);
+            }
         }
         old_mesh
     }
 }
-#[cfg(test)]mod packed_replacement_tests{
- use super::*;
- fn initial()->Mesh{let mut m=Mesh::new();m.add_vertex(DVec3::ZERO);m.add_vertex(DVec3::X);m.add_edge(0,1);m}
- fn dropped_edge()->Mesh{let mut m=initial();m.edges.clear();for v in &mut m.vertices{v.edges.clear();}m}
- #[test]fn prepared_replacement_refusals_discard_and_chronological_inverse(){
-  let budget=OwnerBudget::new(None);let mut o=JournalOwner::new_with_budget(initial(),budget.clone()).unwrap();
-  let mut t=o.try_begin().unwrap();t.add_edge(DVec3::X,DVec3::Y).unwrap();assert!(o.commit(t).unwrap());
-  let mut t=o.try_begin().unwrap();t.add_edge(DVec3::Y,DVec3::Z).unwrap();assert!(o.commit(t).unwrap());assert!(o.undo().unwrap());
-  let before=o.mesh().clone();let oldstate=o.state_token();let oldhistory=o.history_counts();assert_eq!(oldhistory,(1,1));let view=o.registry.view();let stale=o.try_begin().unwrap();
-  let baseline=budget.snapshot().total();let target=Uuid::new_v4();
-  let ticket=o.prepare_packed_replacement_as(dropped_edge(),target).unwrap();assert!(budget.snapshot().total()>baseline);drop(ticket);assert_eq!(o.mesh(),&before);assert_eq!(o.history_counts(),oldhistory);assert_eq!(budget.snapshot().total(),baseline);assert!(view.check().is_ok());
-  budget.set_limit(Some(baseline));assert!(o.prepare_packed_replacement_as(dropped_edge(),target).is_err());budget.set_limit(None);assert_eq!(o.mesh(),&before);assert_eq!(o.history_counts(),oldhistory);assert_eq!(budget.snapshot().total(),baseline);
-  let mut invalid=dropped_edge();invalid.edges.push(MeshEdge::new(0,99));assert!(o.prepare_packed_replacement_as(invalid,target).is_err());assert_eq!(o.mesh(),&before);assert_eq!(o.history_counts(),oldhistory);assert_eq!(budget.snapshot().total(),baseline);
-  let parked=o.prepare_packed_replacement_as(dropped_edge(),target).unwrap().apply();assert_eq!(parked,before);assert!(view.check().is_err());assert!(o.commit(stale).is_err());assert_eq!(o.history_counts(),oldhistory);let installed=o.mesh().clone();let held_charge=budget.snapshot().total();let installed_state=o.state_token();assert!(o.undo().is_err());assert!(o.redo().is_err());assert_eq!(o.mesh(),&installed);assert_eq!(o.state_token(),installed_state);assert_eq!(o.history_counts(),oldhistory);assert_eq!(budget.snapshot().total(),held_charge);
-  let _removed=o.prepare_packed_replacement_as(parked,oldstate).unwrap().apply();assert_eq!(o.mesh(),&before);assert!(o.undo().unwrap());assert_eq!(o.mesh().edges.len(),1);assert!(o.redo().unwrap());assert_eq!(o.mesh(),&before);drop(o);assert!(budget.snapshot().registry>0);drop(view);assert_eq!(budget.snapshot().total(),0);
- }
+#[cfg(test)]
+mod packed_replacement_tests {
+    use super::*;
+    fn initial() -> Mesh {
+        let mut m = Mesh::new();
+        m.add_vertex(DVec3::ZERO);
+        m.add_vertex(DVec3::X);
+        m.add_edge(0, 1);
+        m
+    }
+    fn dropped_edge() -> Mesh {
+        let mut m = initial();
+        m.edges.clear();
+        for v in &mut m.vertices {
+            v.edges.clear();
+        }
+        m
+    }
+    #[test]
+    fn prepared_replacement_refusals_discard_and_chronological_inverse() {
+        let budget = OwnerBudget::new(None);
+        let mut o = JournalOwner::new_with_budget(initial(), budget.clone()).unwrap();
+        let mut t = o.try_begin().unwrap();
+        t.add_edge(DVec3::X, DVec3::Y).unwrap();
+        assert!(o.commit(t).unwrap());
+        let mut t = o.try_begin().unwrap();
+        t.add_edge(DVec3::Y, DVec3::Z).unwrap();
+        assert!(o.commit(t).unwrap());
+        assert!(o.undo().unwrap());
+        let before = o.mesh().clone();
+        let oldstate = o.state_token();
+        let oldhistory = o.history_counts();
+        assert_eq!(oldhistory, (1, 1));
+        let view = o.registry.view();
+        let stale = o.try_begin().unwrap();
+        let baseline = budget.snapshot().total();
+        let target = Uuid::new_v4();
+        let ticket = o
+            .prepare_packed_replacement_as(dropped_edge(), target)
+            .unwrap();
+        assert!(budget.snapshot().total() > baseline);
+        drop(ticket);
+        assert_eq!(o.mesh(), &before);
+        assert_eq!(o.history_counts(), oldhistory);
+        assert_eq!(budget.snapshot().total(), baseline);
+        assert!(view.check().is_ok());
+        budget.set_limit(Some(baseline));
+        assert!(
+            o.prepare_packed_replacement_as(dropped_edge(), target)
+                .is_err()
+        );
+        budget.set_limit(None);
+        assert_eq!(o.mesh(), &before);
+        assert_eq!(o.history_counts(), oldhistory);
+        assert_eq!(budget.snapshot().total(), baseline);
+        let mut invalid = dropped_edge();
+        invalid.edges.push(MeshEdge::new(0, 99));
+        assert!(o.prepare_packed_replacement_as(invalid, target).is_err());
+        assert_eq!(o.mesh(), &before);
+        assert_eq!(o.history_counts(), oldhistory);
+        assert_eq!(budget.snapshot().total(), baseline);
+        let parked = o
+            .prepare_packed_replacement_as(dropped_edge(), target)
+            .unwrap()
+            .apply();
+        assert_eq!(parked, before);
+        assert!(view.check().is_err());
+        assert!(o.commit(stale).is_err());
+        assert_eq!(o.history_counts(), oldhistory);
+        let installed = o.mesh().clone();
+        let held_charge = budget.snapshot().total();
+        let installed_state = o.state_token();
+        assert!(o.undo().is_err());
+        assert!(o.redo().is_err());
+        assert_eq!(o.mesh(), &installed);
+        assert_eq!(o.state_token(), installed_state);
+        assert_eq!(o.history_counts(), oldhistory);
+        assert_eq!(budget.snapshot().total(), held_charge);
+        let _removed = o
+            .prepare_packed_replacement_as(parked, oldstate)
+            .unwrap()
+            .apply();
+        assert_eq!(o.mesh(), &before);
+        assert!(o.undo().unwrap());
+        assert_eq!(o.mesh().edges.len(), 1);
+        assert!(o.redo().unwrap());
+        assert_eq!(o.mesh(), &before);
+        drop(o);
+        assert!(budget.snapshot().registry > 0);
+        drop(view);
+        assert_eq!(budget.snapshot().total(), 0);
+    }
 }
 
-#[cfg(test)]mod edge_replacement_keys_tests{
- use super::*;
- #[test]fn raw_pose_replacement_keeps_source_key_and_foreign_uid_refuses(){
-  let mut mesh=Mesh::new();mesh.add_vertex(DVec3::ZERO);mesh.add_vertex(DVec3::X);mesh.add_edge(0,1);let budget=OwnerBudget::new(None);let mut o=JournalOwner::new_with_budget(mesh,budget.clone()).unwrap();let state=Uuid::new_v4();let mut candidate=o.mesh().clone();candidate.vertices[0].position=DVec3::Y;
-  let old=o.prepare_edge_replacement_as(candidate,state).unwrap().apply();let view=o.registry.view();assert_eq!(view.vertex(&crate::journal::SourceKey::new(DVec3::ZERO)),Some(0));assert_eq!(view.vertex(&crate::journal::SourceKey::new(DVec3::Y)),None);
-  let mut foreign=o.mesh().clone();foreign.vertices[0].uid=Uuid::new_v4();let charge=budget.snapshot().total();assert!(o.prepare_edge_replacement_as(foreign,state).is_err());assert_eq!(budget.snapshot().total(),charge);assert_eq!(o.mesh().vertices[0].position,DVec3::Y);
-  o.prepare_edge_replacement_as(old,state).unwrap().apply();assert!(view.check().is_err());drop(view);drop(o);assert_eq!(budget.snapshot().total(),0);
- }
+#[cfg(test)]
+mod edge_replacement_keys_tests {
+    use super::*;
+    #[test]
+    fn raw_pose_replacement_keeps_source_key_and_foreign_uid_refuses() {
+        let mut mesh = Mesh::new();
+        mesh.add_vertex(DVec3::ZERO);
+        mesh.add_vertex(DVec3::X);
+        mesh.add_edge(0, 1);
+        let budget = OwnerBudget::new(None);
+        let mut o = JournalOwner::new_with_budget(mesh, budget.clone()).unwrap();
+        let state = Uuid::new_v4();
+        let mut candidate = o.mesh().clone();
+        candidate.vertices[0].position = DVec3::Y;
+        let old = o
+            .prepare_edge_replacement_as(candidate, state)
+            .unwrap()
+            .apply();
+        let view = o.registry.view();
+        assert_eq!(
+            view.vertex(&crate::journal::SourceKey::new(DVec3::ZERO)),
+            Some(0)
+        );
+        assert_eq!(view.vertex(&crate::journal::SourceKey::new(DVec3::Y)), None);
+        let mut foreign = o.mesh().clone();
+        foreign.vertices[0].uid = Uuid::new_v4();
+        let charge = budget.snapshot().total();
+        assert!(o.prepare_edge_replacement_as(foreign, state).is_err());
+        assert_eq!(budget.snapshot().total(), charge);
+        assert_eq!(o.mesh().vertices[0].position, DVec3::Y);
+        o.prepare_edge_replacement_as(old, state).unwrap().apply();
+        assert!(view.check().is_err());
+        drop(view);
+        drop(o);
+        assert_eq!(budget.snapshot().total(), 0);
+    }
 }

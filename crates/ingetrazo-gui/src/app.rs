@@ -99,6 +99,10 @@ pub struct IngeTrazoApp {
     pub show_command_search: bool,
     pub show_solid_inspector: bool,
     pub show_scripting_console: bool,
+    #[cfg(feature="engineering-python")]
+    pub engineering_python_enabled:bool,
+    #[cfg(feature="engineering-python")]
+    pub(crate) engineering_python:crate::engineering_python::Engine,
     pub show_texture_edit_dialog: bool,
     pub command_search_query: String,
     pub console_input: String,
@@ -203,6 +207,10 @@ impl IngeTrazoApp {
             show_command_search: false,
             show_solid_inspector: false,
             show_scripting_console: false,
+            #[cfg(feature="engineering-python")]
+            engineering_python_enabled:false,
+            #[cfg(feature="engineering-python")]
+            engineering_python:Default::default(),
             show_texture_edit_dialog: false,
             command_search_query: String::new(),
             console_input: String::new(),
@@ -803,6 +811,8 @@ impl IngeTrazoApp {
             return;
         }
         self.console_logs.push(format!(">>> {code}"));
+        #[cfg(feature="engineering-python")]
+        if self.engineering_python_enabled{self.run_engineering_python(code);return;}
         if code == "clear" || code == "cls" {
             self.console_logs.clear();
             return;

@@ -1,0 +1,11 @@
+{
+  "states": 4,
+  "rejected": [
+    "attrs",
+    "undo",
+    "id",
+    "missing",
+    "charge"
+  ],
+  "production_enabled": false
+}

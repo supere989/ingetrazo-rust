@@ -98,6 +98,9 @@ impl FaceOwner {
             redo: vec![],
         })
     }
+    pub(crate) fn revision(&self) -> u64 {
+        self.owner.revision()
+    }
     pub fn mesh(&self) -> &Mesh {
         self.owner.mesh()
     }
@@ -382,16 +385,25 @@ impl FaceTransaction {
     }
 
     // Immutable graph-adapter view of already-staged native identities.
-    pub(crate) fn lookup_position(&self,p:glam::DVec3)->Result<Option<usize>,String>{self.edge.journal.lookup_position(p)}
+    pub(crate) fn lookup_position(&self, p: glam::DVec3) -> Result<Option<usize>, String> {
+        self.edge.journal.lookup_position(p)
+    }
     // No endpoint coordinate lookup or Mesh clone is needed to build actual VM Edges.
     pub(crate) fn staged_face_edges(&self, id: usize) -> Result<&[usize], String> {
-        self.drafts.get(id.checked_sub(self.base_faces).ok_or("Face is not staged")?)
-            .map(|draft| draft.edges.as_slice()).ok_or("Missing staged face".into())
+        self.drafts
+            .get(
+                id.checked_sub(self.base_faces)
+                    .ok_or("Face is not staged")?,
+            )
+            .map(|draft| draft.edges.as_slice())
+            .ok_or("Missing staged face".into())
     }
     pub(crate) fn added_edge_endpoints(&self) -> &[(usize, usize)] {
         &self.edge.journal.added_edges
     }
-    pub(crate) fn base_edge_extent(&self) -> usize { self.base_edges }
+    pub(crate) fn base_edge_extent(&self) -> usize {
+        self.base_edges
+    }
 
     /// Takes an already-created native JSON map. Arbitrary VM objects/keys remain
     /// a separate required adapter; this API never recursively clones Value.
@@ -400,9 +412,14 @@ impl FaceTransaction {
         id: usize,
         attrs: HashMap<String, serde_json::Value>,
     ) -> Result<(), String> {
-        self.set_face_native_fields(id,attrs,None)
+        self.set_face_native_fields(id, attrs, None)
     }
-    pub fn set_face_native_fields(&mut self,id:usize,attrs:HashMap<String,serde_json::Value>,layer:Option<String>)->Result<(),String>{
+    pub fn set_face_native_fields(
+        &mut self,
+        id: usize,
+        attrs: HashMap<String, serde_json::Value>,
+        layer: Option<String>,
+    ) -> Result<(), String> {
         let result = (|| {
             if self.failed {
                 return Err("Face transaction previously refused".into());
@@ -417,8 +434,12 @@ impl FaceTransaction {
                 .drafts
                 .get(offset)
                 .ok_or("Face attributes require a staged face")?;
-            let old = attribute_payload(&draft.face.attrs)?.checked_add(draft.face.layer.as_ref().map_or(0,String::len)).ok_or("Old native layer payload overflow")?;
-            let new = attribute_payload(&attrs)?.checked_add(layer.as_ref().map_or(0,String::len)).ok_or("Native layer payload overflow")?;
+            let old = attribute_payload(&draft.face.attrs)?
+                .checked_add(draft.face.layer.as_ref().map_or(0, String::len))
+                .ok_or("Old native layer payload overflow")?;
+            let new = attribute_payload(&attrs)?
+                .checked_add(layer.as_ref().map_or(0, String::len))
+                .ok_or("Native layer payload overflow")?;
             let bytes = self
                 .attribute_bytes
                 .checked_sub(old)
@@ -571,7 +592,9 @@ fn face_bound(corners: usize, faces: usize) -> Result<usize, String> {
 }
 // Counts logical retained payload/capacity. Allocator headers, BTree node slack,
 // preexisting caller allocations and VM native memory are explicitly excluded.
-pub(crate) fn attribute_payload(attrs: &HashMap<String, serde_json::Value>) -> Result<usize, String> {
+pub(crate) fn attribute_payload(
+    attrs: &HashMap<String, serde_json::Value>,
+) -> Result<usize, String> {
     let mut n = attrs
         .capacity()
         .checked_mul(std::mem::size_of::<(String, serde_json::Value)>())
@@ -690,9 +713,11 @@ mod tests {
         assert_eq!(o.mesh().edges.len(), 3);
         assert_eq!(o.mesh().faces.len(), 2);
         assert!(o.mesh().edges.iter().all(|e| e.faces == vec![0, 1]));
-        assert!(stale
-            .add_face(&[DVec3::ZERO, DVec3::X, DVec3::Y], &[])
-            .is_err());
+        assert!(
+            stale
+                .add_face(&[DVec3::ZERO, DVec3::X, DVec3::Y], &[])
+                .is_err()
+        );
         assert!(o.commit(stale).is_err());
         let saved = o.mesh().clone();
         o.undo().unwrap();
@@ -755,13 +780,14 @@ mod tests {
         let mut earlier = o.begin().unwrap();
         let mut t = o.begin().unwrap();
         triangle(&mut t);
-        assert!(t
-            .add_face(
+        assert!(
+            t.add_face(
                 &[DVec3::ZERO, DVec3::X, DVec3::Y],
                 &[vec![], vec![DVec3::ZERO, DVec3::X, DVec3::Y]]
             )
             .unwrap_err()
-            .contains("requires three"));
+            .contains("requires three")
+        );
         assert!(o.commit(t).is_err());
         assert_eq!(o.history_counts(), (0, 1));
         assert!(o.mesh().vertices.is_empty());
@@ -788,10 +814,11 @@ mod tests {
         reloaded.redo().unwrap();
         assert_eq!(reloaded.mesh(), &saved);
         let mut edge = reloaded.owner.begin();
-        assert!(edge
-            .add_edge(DVec3::ZERO, DVec3::ZERO)
-            .unwrap_err()
-            .contains("degenerate edge"));
+        assert!(
+            edge.add_edge(DVec3::ZERO, DVec3::ZERO)
+                .unwrap_err()
+                .contains("degenerate edge")
+        );
         assert!(!reloaded.owner.commit(edge).unwrap());
     }
     #[test]
@@ -800,9 +827,10 @@ mod tests {
         let budget = o.budget();
         let mut t = o.begin().unwrap();
         triangle(&mut t);
-        assert!(t
-            .add_face(&[DVec3::ZERO, DVec3::NAN, DVec3::X], &[])
-            .is_err());
+        assert!(
+            t.add_face(&[DVec3::ZERO, DVec3::NAN, DVec3::X], &[])
+                .is_err()
+        );
         assert!(o.commit(t).is_err());
         assert!(o.mesh().faces.is_empty());
         assert!(o.mesh().vertices.is_empty());
@@ -896,10 +924,11 @@ mod tests {
         o.undo().unwrap();
         assert_eq!(ptr, payload_pointer(&o.redo[0].faces[0]));
         assert_eq!(o.budget().snapshot().history, charged);
-        assert!(held
-            .set_face_attributes(0, attrs())
-            .unwrap_err()
-            .contains("Stale"));
+        assert!(
+            held.set_face_attributes(0, attrs())
+                .unwrap_err()
+                .contains("Stale")
+        );
         o.redo().unwrap();
         assert_eq!(ptr, payload_pointer(&o.mesh().faces[0]));
         assert_eq!(o.budget().snapshot().history, charged);
@@ -918,10 +947,11 @@ mod tests {
         let budget = o.budget();
         let before = budget.snapshot();
         budget.set_limit(Some(before.total()));
-        assert!(t
-            .set_face_attributes(0, attrs())
-            .unwrap_err()
-            .contains("admission"));
+        assert!(
+            t.set_face_attributes(0, attrs())
+                .unwrap_err()
+                .contains("admission")
+        );
         assert!(o.commit(t).is_err());
         assert_eq!(o.history_counts(), (0, 1));
         assert!(o.mesh().faces.is_empty());
@@ -1020,31 +1050,125 @@ impl FaceOwner {
 }
 
 impl FaceOwner {
- pub fn prepare_graph_order_as(&mut self,vertices:&[usize],edges:&[usize],faces:&[usize],positions:Vec<DVec3>,loops:Vec<(Vec<usize>,Vec<Vec<usize>>)>,after:uuid::Uuid)->Result<crate::owner::PreparedMembership<'_>,String>{
-  self.owner.prepare_graph_order_as(vertices,edges,faces,positions,loops,after)
- }
+    pub fn prepare_graph_order_as(
+        &mut self,
+        vertices: &[usize],
+        edges: &[usize],
+        faces: &[usize],
+        positions: Vec<DVec3>,
+        loops: Vec<(Vec<usize>, Vec<Vec<usize>>)>,
+        after: uuid::Uuid,
+    ) -> Result<crate::owner::PreparedMembership<'_>, String> {
+        self.owner
+            .prepare_graph_order_as(vertices, edges, faces, positions, loops, after)
+    }
 }
 
 impl FaceOwner {
- pub fn prepare_identity_replacement_as(&mut self,mesh:Mesh,keys:Vec<(crate::journal::SourceKey,usize)>,state:uuid::Uuid)->Result<crate::owner::PreparedPackedReplacement<'_>,String>{self.owner.prepare_identity_replacement_as(mesh,keys,state)}
- pub fn prepare_packed_replacement_as(&mut self,mesh:Mesh,state:uuid::Uuid)->Result<crate::owner::PreparedPackedReplacement<'_>,String>{
-  self.owner.prepare_packed_replacement_as(mesh,state)
- }
+    pub fn prepare_identity_replacement_as(
+        &mut self,
+        mesh: Mesh,
+        keys: Vec<(crate::journal::SourceKey, usize)>,
+        state: uuid::Uuid,
+    ) -> Result<crate::owner::PreparedPackedReplacement<'_>, String> {
+        self.owner
+            .prepare_identity_replacement_as(mesh, keys, state)
+    }
+    pub fn prepare_packed_replacement_as(
+        &mut self,
+        mesh: Mesh,
+        state: uuid::Uuid,
+    ) -> Result<crate::owner::PreparedPackedReplacement<'_>, String> {
+        self.owner.prepare_packed_replacement_as(mesh, state)
+    }
 }
 
 impl FaceOwner {
- pub fn prepare_edge_replacement_as(&mut self,mesh:Mesh,state:uuid::Uuid)->Result<crate::owner::PreparedPackedReplacement<'_>,String>{self.owner.prepare_edge_replacement_as(mesh,state)}
+    pub fn prepare_edge_replacement_as(
+        &mut self,
+        mesh: Mesh,
+        state: uuid::Uuid,
+    ) -> Result<crate::owner::PreparedPackedReplacement<'_>, String> {
+        self.owner.prepare_edge_replacement_as(mesh, state)
+    }
 }
 
 /// All replacement/index/history destination admission precedes publication.
-pub struct PreparedPackedFaceHistory<'a>{edge:crate::owner::PreparedPackedReplacement<'a>,undo:&'a mut Vec<Command>,redo:&'a mut Vec<Command>,forward:bool}
-impl PreparedPackedFaceHistory<'_>{pub fn apply(self)->Mesh{let Self{edge,undo,redo,forward}=self;let mut old=edge.apply();if forward{let mut command=redo.pop().expect("prepared face redo");command.faces.clear();undo.push(command);}else{let mut command=undo.pop().expect("prepared face undo");command.faces.extend(old.faces.drain(command.base_faces..));redo.push(command);}old}}
-impl FaceOwner{
- pub fn prepare_identity_history_replacement_as(&mut self,mesh:Mesh,keys:Vec<(crate::journal::SourceKey,usize)>,state:uuid::Uuid,forward:bool)->Result<PreparedPackedFaceHistory<'_>,String>{
-  let command=if forward{self.redo.last()}else{self.undo.last()}.ok_or("Packed Face history missing")?;
-  let expected=if forward{command.base_faces.checked_add(command.face_count).ok_or("Packed Face extent overflow")?}else{command.base_faces};
-  if mesh.faces.len()!=expected{return Err("Packed Face target extent mismatch".into());}
-  if forward{if command.faces.len()!=command.face_count{return Err("Packed Face redo payload mismatch".into());}self.undo.try_reserve(1).map_err(|_|"Packed Face undo destination refused")?;}else{if !command.faces.is_empty()||command.faces.capacity()<command.face_count{return Err("Packed Face undo slots missing".into());}self.redo.try_reserve(1).map_err(|_|"Packed Face redo destination refused")?;}
-  let edge=self.owner.prepare_identity_history_replacement_as(mesh,keys,state,forward)?;Ok(PreparedPackedFaceHistory{edge,undo:&mut self.undo,redo:&mut self.redo,forward})
- }
+pub struct PreparedPackedFaceHistory<'a> {
+    edge: crate::owner::PreparedPackedReplacement<'a>,
+    undo: &'a mut Vec<Command>,
+    redo: &'a mut Vec<Command>,
+    forward: bool,
+}
+impl PreparedPackedFaceHistory<'_> {
+    pub fn apply(self) -> Mesh {
+        let Self {
+            edge,
+            undo,
+            redo,
+            forward,
+        } = self;
+        let mut old = edge.apply();
+        if forward {
+            let mut command = redo.pop().expect("prepared face redo");
+            command.faces.clear();
+            undo.push(command);
+        } else {
+            let mut command = undo.pop().expect("prepared face undo");
+            command.faces.extend(old.faces.drain(command.base_faces..));
+            redo.push(command);
+        }
+        old
+    }
+}
+impl FaceOwner {
+    pub fn prepare_identity_history_replacement_as(
+        &mut self,
+        mesh: Mesh,
+        keys: Vec<(crate::journal::SourceKey, usize)>,
+        state: uuid::Uuid,
+        forward: bool,
+    ) -> Result<PreparedPackedFaceHistory<'_>, String> {
+        let command = if forward {
+            self.redo.last()
+        } else {
+            self.undo.last()
+        }
+        .ok_or("Packed Face history missing")?;
+        let expected = if forward {
+            command
+                .base_faces
+                .checked_add(command.face_count)
+                .ok_or("Packed Face extent overflow")?
+        } else {
+            command.base_faces
+        };
+        if mesh.faces.len() != expected {
+            return Err("Packed Face target extent mismatch".into());
+        }
+        if forward {
+            if command.faces.len() != command.face_count {
+                return Err("Packed Face redo payload mismatch".into());
+            }
+            self.undo
+                .try_reserve(1)
+                .map_err(|_| "Packed Face undo destination refused")?;
+        } else {
+            if !command.faces.is_empty() || command.faces.capacity() < command.face_count {
+                return Err("Packed Face undo slots missing".into());
+            }
+            self.redo
+                .try_reserve(1)
+                .map_err(|_| "Packed Face redo destination refused")?;
+        }
+        let edge = self
+            .owner
+            .prepare_identity_history_replacement_as(mesh, keys, state, forward)?;
+        Ok(PreparedPackedFaceHistory {
+            edge,
+            undo: &mut self.undo,
+            redo: &mut self.redo,
+            forward,
+        })
+    }
 }

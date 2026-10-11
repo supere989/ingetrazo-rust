@@ -8,6 +8,8 @@
 //! and interactive 3D viewport canvas.
 
 pub mod app;
+#[cfg(feature="engineering-python")]
+mod engineering_python;
 mod ai_bridge;
 mod geographic_import;
 pub mod blender;

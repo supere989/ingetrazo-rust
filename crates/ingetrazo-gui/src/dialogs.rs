@@ -393,6 +393,8 @@ pub fn render_dialogs(app: &mut IngeTrazoApp, ctx: &egui::Context) {
             .default_size(egui::vec2(500.0, 360.0))
             .show(ctx, |ui| {
                 ui.label(egui::RichText::new("Native commands: add_cube, select_all, stats, clear").small().color(egui::Color32::from_rgb(160, 160, 170)));
+                #[cfg(feature="engineering-python")]
+                ui.checkbox(&mut app.engineering_python_enabled,"Engineering Python: current mesh only (full Scene scripting incomplete)");
                 ui.separator();
 
                 egui::ScrollArea::vertical().max_height(200.0).show(ui, |ui| {

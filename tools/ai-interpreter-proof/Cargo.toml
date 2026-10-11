@@ -15,6 +15,13 @@ glam = "0.29"
 num-bigint = "0.4"
 num-traits = "0.2"
 uuid = "1"
+# Exact compiler parser graph used by the reviewed VM proof; newer Ruff requires Rust 1.97.
+rustpython-ruff_python_ast = "=0.16.5"
+rustpython-ruff_python_parser = "=0.16.5"
+rustpython-ruff_python_trivia = "=0.16.5"
+rustpython-ruff_source_file = "=0.16.5"
+rustpython-ruff_text_size = "=0.16.5"
+
 [profile.dev]
 debug = 0
 incremental = false
