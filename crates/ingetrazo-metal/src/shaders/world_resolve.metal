@@ -1,4 +1,5 @@
-// Diagnostic prototype only. Source decode is a pinned binary32 table, not division.
+// Source-ordered tile resolve; compute is diagnostic-only.
+// Source decode is a pinned binary32 table, not division.
 #include <metal_stdlib>
 using namespace metal;
 constant uint source_unorm_bits[256]={

@@ -1,4 +1,5 @@
-//! Opt-in engineering resolve; ordinary production policy is unchanged.
+//! Source-ordered tile resolve for programmable Apple4 four-sample World.
+//! Compute resolve remains an explicit diagnostic-only path.
 use crate::{NativeMetal,world::Owner};
 use objc2::{rc::Retained,runtime::ProtocolObject};
 use objc2_foundation::NSString;
