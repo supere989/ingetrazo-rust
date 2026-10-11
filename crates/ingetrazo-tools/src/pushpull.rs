@@ -147,7 +147,7 @@ impl PushPullTool {
         }
         let snapshot=out.faces.clone();out.faces.clear();
         for (id,face) in snapshot.iter().enumerate(){if !removed[id]&&punch[id].is_empty(){out.faces.push(face.clone());}}
-        for (id,face) in snapshot.iter().enumerate(){if !removed[id]&&!punch[id].is_empty(){let mut face=face.clone();for &small in &punch[id]{face.holes.push(snapshot[small].vertices.clone());}out.faces.push(face);}}
+        for (id,face) in snapshot.iter().enumerate(){if !removed[id]&&!punch[id].is_empty(){let mut face=face.clone();face.history_id=ingetrazo_core::mesh::MeshFace::new(Vec::new()).history_id;for &small in &punch[id]{face.holes.push(snapshot[small].vertices.clone());}out.faces.push(face);}}
         Self::relink_surface(&out)
     }
     fn relink_surface(source:&ingetrazo_core::mesh::Mesh)->Result<ingetrazo_core::mesh::Mesh,String> {
