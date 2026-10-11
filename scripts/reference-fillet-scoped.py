@@ -3,7 +3,7 @@
 import json,sys,hashlib
 from pathlib import Path
 from PySide6.QtGui import QVector3D as V
-from core.mesh import Mesh,_key
+from core.mesh import Mesh
 from core.fillet import plan_fillet,apply_fillet
 from tests.test_fillet import box,edge_at
 PIN='6be29fe437a7cd992d4e079f71720821b25216b9'
@@ -19,16 +19,14 @@ for name in ['endpoint-free-wire','open-neighbor','paint-first-rim','oblique-cap
  m=box();radius=.2;segments=8
  if name=='oblique-cap':
   for v in m.vertices:
-   if v.position.x()==2:v.position.setX(2.5 if v.position.y()==0 else 2)
-  m._verts={_key(v.position):v for v in m.vertices}
+   if v.position.x()==2:m.place_vertex(v,V(2.5 if v.position.y()==0 else 2,v.position.y(),v.position.z()))
  if name=='concave':
   m=Mesh();foot=[V(0,0,0),V(2,0,0),V(2,1,0),V(1,1,0),V(1,2,0),V(0,2,0)];m.add_face(list(reversed(foot)));m.add_face([V(q.x(),q.y(),1)for q in foot]);
   for a,b in zip(foot,foot[1:]+foot[:1]):m.add_face([a,b,V(b.x(),b.y(),1),V(a.x(),a.y(),1)])
  if name=='turned-squashed':
   from PySide6.QtGui import QMatrix4x4
   matrix=QMatrix4x4();matrix.translate(3,-5,7);matrix.rotate(90,0,1,0);matrix.scale(2,3,.5)
-  for v in m.vertices:v.position=matrix.map(v.position)
-  m._verts={_key(v.position):v for v in m.vertices}
+  for v in list(m.vertices):m.place_vertex(v,matrix.map(v.position))
  # Capture explicit selected edge order, independent of source selection sets.
  if name=='concave':edges=[edge_at(m,(1,1,0),(1,1,1))]
  elif name=='turned-squashed':edges=list(m.edges);radius=.1;segments=4
