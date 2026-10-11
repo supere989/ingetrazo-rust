@@ -18,7 +18,9 @@ use std::{path::PathBuf,time::{Instant,Duration}};
  app.request_document_action(DocumentAction::Recover(records[0].clone()));assert!(app.current_file.is_none());assert!(app.document_dirty());assert_eq!(app.scene.mesh.vertices[0].position,DVec3::new(9.,8.,7.));
  let ctx=egui::Context::default();let mut input=egui::RawInput::default();input.viewports.get_mut(&egui::ViewportId::ROOT).unwrap().events.push(egui::ViewportEvent::Close);
  let out=ctx.run(input,|ctx|app.document_session_ui(ctx));assert!(out.viewport_output[&egui::ViewportId::ROOT].commands.iter().any(|c|matches!(c,egui::ViewportCommand::CancelClose)));
- app.save_to_path(&root.join("missing/failure.igz"));assert!(app.document_dirty());assert!(!app.document_session.close_allowed);assert!(app.document_session.confirm_unsaved);assert_eq!(std::fs::read(&source).unwrap(),original);
+ app.save_to_path(&root.join("missing/failure.igz"));assert!(app.document_dirty());assert!(!app.document_session.close_allowed);assert!(!app.document_session.confirm_unsaved);assert!(app.document_session.pending.is_none());assert_eq!(std::fs::read(&source).unwrap(),original);
+ // Original failed Save returns from the prompt; it must not leave Close armed.
+ let out=ctx.run(egui::RawInput::default(),|ctx|app.document_session_ui(ctx));assert!(!out.viewport_output[&egui::ViewportId::ROOT].commands.iter().any(|c|matches!(c,egui::ViewportCommand::Close)));
  app.cancel_document_action();assert_eq!(app.scene.mesh.vertices[0].position,DVec3::new(9.,8.,7.));app.request_document_action(DocumentAction::Close);app.discard_document_action();
  let out=ctx.run(egui::RawInput::default(),|ctx|app.document_session_ui(ctx));assert!(out.viewport_output[&egui::ViewportId::ROOT].commands.iter().any(|c|matches!(c,egui::ViewportCommand::Close)));std::fs::remove_dir_all(root).unwrap();
 }
