@@ -1,0 +1,251 @@
+{
+  "authorization": "Root release after independent canonical replay; all owner camera/Move handles terminal. No build/test/source capture.",
+  "archive": "records.zip",
+  "archive_sha256": "73f40475dad0f6fb8cff3ec5bc12be0e8b26a15904c91cb3830f1e6be7be685b",
+  "authenticated_records": 40,
+  "released_files": [
+    {
+      "path": "/tmp/ingetrazo-annotation-move-proof/input.igz",
+      "record": "input.igz",
+      "bytes": 7976,
+      "sha256": "cf0b59bec964e99937de58035198c16e7ddd4c380b056ffd68367cb71a206558"
+    },
+    {
+      "path": "/tmp/ingetrazo-annotation-move-proof/original.json",
+      "record": "original.json",
+      "bytes": 197552,
+      "sha256": "f9958261d391e353378edccd1323aeb93e95270c7a8eebc7374310b55ad2e727"
+    },
+    {
+      "path": "/tmp/ingetrazo-annotation-move-proof/native.json",
+      "record": "native.json",
+      "bytes": 197552,
+      "sha256": "f9958261d391e353378edccd1323aeb93e95270c7a8eebc7374310b55ad2e727"
+    },
+    {
+      "path": "/tmp/ingetrazo-annotation-move-proof/annotation-move-original-first-failure.json",
+      "record": "annotation-move-original-first-failure.json",
+      "bytes": 152197,
+      "sha256": "c0b4dd6294765e64c96ac56e10b264f8397d1c325a5071e23f308116444c0110"
+    },
+    {
+      "path": "/tmp/ingetrazo-annotation-move-proof/annotation-move-native-first-failure.json",
+      "record": "annotation-move-native-first-failure.json",
+      "bytes": 152255,
+      "sha256": "cac73e254e1d4e8fb62d909985f55b3e0194e784c8966c925a3208475775c37b"
+    },
+    {
+      "path": "/tmp/ingetrazo-annotation-move-proof/boundaries.json",
+      "record": "boundaries.json",
+      "bytes": 24246,
+      "sha256": "079d234d7ae06e26ab5ab7f8724b71415067495b9507296e5eac281d82b57334"
+    },
+    {
+      "path": "/tmp/ingetrazo-annotation-move-proof/one-riding-input.igz",
+      "record": "one-riding-input.igz",
+      "bytes": 8031,
+      "sha256": "5e69af79f603af422278d7b658f6324dd21bc37eab25e3b3cd1691deb8f8c341"
+    },
+    {
+      "path": "/tmp/ingetrazo-annotation-move-proof/move-input.igz",
+      "record": "move-input.igz",
+      "bytes": 8029,
+      "sha256": "620a20ba727ff72b53431e09b0592b31038df49541688c4046b9c742adddf90a"
+    },
+    {
+      "path": "/tmp/annotation-move-boundary-build.log",
+      "record": "logs/annotation-move-boundary-build.log",
+      "bytes": 19688,
+      "sha256": "5069e80d52b5352a55e5e3f7778d945eab8ab5627c264fb9d8a896a8282d5346"
+    },
+    {
+      "path": "/tmp/annotation-move-boundary-build2.log",
+      "record": "logs/annotation-move-boundary-build2.log",
+      "bytes": 20710,
+      "sha256": "090000a0047d7e14ae2b38f58eefc57b02f64585fe1666a73b106561c11aa1aa"
+    },
+    {
+      "path": "/tmp/annotation-move-boundary-native.log",
+      "record": "logs/annotation-move-boundary-native.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/tmp/annotation-move-build.log",
+      "record": "logs/annotation-move-build.log",
+      "bytes": 24509,
+      "sha256": "c5f317124ee32be2335df8b03cbc3f26dbb31dc497db54ce5153ecd0ee366d4f"
+    },
+    {
+      "path": "/tmp/annotation-move-build2.log",
+      "record": "logs/annotation-move-build2.log",
+      "bytes": 19688,
+      "sha256": "fc271810a0a196260fd672ce7315b5197ffb8447a4590b186babe73b1053675e"
+    },
+    {
+      "path": "/tmp/annotation-move-build3.log",
+      "record": "logs/annotation-move-build3.log",
+      "bytes": 20064,
+      "sha256": "d1bb8dc282ce8a6496b470cefd0a7a990a733219fe312bbfc098fa948f736572"
+    },
+    {
+      "path": "/tmp/annotation-move-build4.log",
+      "record": "logs/annotation-move-build4.log",
+      "bytes": 19688,
+      "sha256": "fc271810a0a196260fd672ce7315b5197ffb8447a4590b186babe73b1053675e"
+    },
+    {
+      "path": "/tmp/annotation-move-check-final.log",
+      "record": "logs/annotation-move-check-final.log",
+      "bytes": 121,
+      "sha256": "1a17548a585f9c1ac962d6387c13602fec5fce3ce7ed91d54f0f3834c43ed46d"
+    },
+    {
+      "path": "/tmp/annotation-move-check.log",
+      "record": "logs/annotation-move-check.log",
+      "bytes": 55,
+      "sha256": "9ab50ce4c9f4cdd0b1556af70e72c3fc1653611fe01baf09dd6c62fffa95298d"
+    },
+    {
+      "path": "/tmp/annotation-move-final-check.log",
+      "record": "logs/annotation-move-final-check.log",
+      "bytes": 121,
+      "sha256": "8d9638f02475891ddeb7dd73dc39752843a4c15c7c35c19910ba23dea8177ce4"
+    },
+    {
+      "path": "/tmp/annotation-move-final-commit-build.log",
+      "record": "logs/annotation-move-final-commit-build.log",
+      "bytes": 20268,
+      "sha256": "1691e3f17fa9e38aeb2359e16dd3f51f44e73b919f5ddc9fe01e624127f8ad69"
+    },
+    {
+      "path": "/tmp/annotation-move-final-native.log",
+      "record": "logs/annotation-move-final-native.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/tmp/annotation-move-final-tests.log",
+      "record": "logs/annotation-move-final-tests.log",
+      "bytes": 19047,
+      "sha256": "269f45fd26aba9a3a747965a35b6c805215a39085e86a2139bf2bd43561ea7ed"
+    },
+    {
+      "path": "/tmp/annotation-move-first-check.log",
+      "record": "logs/annotation-move-first-check.log",
+      "bytes": 20496,
+      "sha256": "a8e49f730e59ef771b5f48caaa0cf75cce23ee919356c888338fadf4a2656cfe"
+    },
+    {
+      "path": "/tmp/annotation-move-focused-tests-final.log",
+      "record": "logs/annotation-move-focused-tests-final.log",
+      "bytes": 19140,
+      "sha256": "ed5e70d1fd1c4bff6293d90aba36d071a72734e6693ccb6d5fcdcb18e53a01e9"
+    },
+    {
+      "path": "/tmp/annotation-move-focused-tests.log",
+      "record": "logs/annotation-move-focused-tests.log",
+      "bytes": 19632,
+      "sha256": "c5c5903cdd34aff6351a71dea8aa8d2cb1631ddad86707d2c8015d63664ca5e1"
+    },
+    {
+      "path": "/tmp/annotation-move-frozen-build.log",
+      "record": "logs/annotation-move-frozen-build.log",
+      "bytes": 20361,
+      "sha256": "a714c7414a190550ece9edd37766b82c7e2ef3f10d834c03374f18aa3fb565ec"
+    },
+    {
+      "path": "/tmp/annotation-move-frozen-check.log",
+      "record": "logs/annotation-move-frozen-check.log",
+      "bytes": 121,
+      "sha256": "8d9638f02475891ddeb7dd73dc39752843a4c15c7c35c19910ba23dea8177ce4"
+    },
+    {
+      "path": "/tmp/annotation-move-frozen-focused.log",
+      "record": "logs/annotation-move-frozen-focused.log",
+      "bytes": 19147,
+      "sha256": "6e08c44015faa66cc35084f590d00d68ee3067631ed693c0a4360c91f103f931"
+    },
+    {
+      "path": "/tmp/annotation-move-frozen-native.log",
+      "record": "logs/annotation-move-frozen-native.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/tmp/annotation-move-local-clean.log",
+      "record": "logs/annotation-move-local-clean.log",
+      "bytes": 38,
+      "sha256": "7806686485efa70989005027e772393ce83dac82a7500673757c77ba96142773"
+    },
+    {
+      "path": "/tmp/annotation-move-native.log",
+      "record": "logs/annotation-move-native.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/tmp/annotation-move-one-riding-build.log",
+      "record": "logs/annotation-move-one-riding-build.log",
+      "bytes": 20268,
+      "sha256": "bbfaa4fab4b3c993f9b774baaf2e6a7d0581d2bbbd5c3d0d0585f179a26ebf10"
+    },
+    {
+      "path": "/tmp/annotation-move-one-riding-fixed-build.log",
+      "record": "logs/annotation-move-one-riding-fixed-build.log",
+      "bytes": 20361,
+      "sha256": "7f83a9da31f523e9b62ed49579841324de45723703b19016d39c980266365801"
+    },
+    {
+      "path": "/tmp/annotation-move-parked-build.log",
+      "record": "logs/annotation-move-parked-build.log",
+      "bytes": 20710,
+      "sha256": "5c2246ad14f90435f4c60d1d4707acb6ca5c608a6bdd381ff5a6e1d61c7dc592"
+    },
+    {
+      "path": "/tmp/annotation-move-parked-check.log",
+      "record": "logs/annotation-move-parked-check.log",
+      "bytes": 121,
+      "sha256": "ef0321b6772c9c9a7e5e7899af23175e0d2a570276f782b34a85cd7d060d7d9c"
+    },
+    {
+      "path": "/tmp/annotation-move-parked-native.log",
+      "record": "logs/annotation-move-parked-native.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/tmp/annotation-move-source-copy-controller.log",
+      "record": "logs/annotation-move-source-copy-controller.log",
+      "bytes": 113,
+      "sha256": "dca150b4cedf6066fe9b9ce71ec4303778310dbc2878337e69253069f762a249"
+    },
+    {
+      "path": "/tmp/annotation-move-source-final.log",
+      "record": "logs/annotation-move-source-final.log",
+      "bytes": 456,
+      "sha256": "a8fa2a0e001258d1c855423a4af9185ebcef106442646e798f626a48186d2177"
+    },
+    {
+      "path": "/tmp/annotation-move-source-one-riding.log",
+      "record": "logs/annotation-move-source-one-riding.log",
+      "bytes": 113,
+      "sha256": "dca150b4cedf6066fe9b9ce71ec4303778310dbc2878337e69253069f762a249"
+    },
+    {
+      "path": "/tmp/annotation-move-source-parked.log",
+      "record": "logs/annotation-move-source-parked.log",
+      "bytes": 113,
+      "sha256": "8a063a02aa00b9b4cc9dc61e4d95d31eea90b4259c69f24a5d719177c07bb997"
+    },
+    {
+      "path": "/tmp/annotation-move-source.log",
+      "record": "logs/annotation-move-source.log",
+      "bytes": 456,
+      "sha256": "a8fa2a0e001258d1c855423a4af9185ebcef106442646e798f626a48186d2177"
+    }
+  ],
+  "released_bytes": 1073443,
+  "unmatched_preserved": [],
+  "preserved": "Source worktrees, reusable targets/binaries, canonical archives and private NVIDIA CDI bundle."
+}
