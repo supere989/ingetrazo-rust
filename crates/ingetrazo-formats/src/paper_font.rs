@@ -101,6 +101,8 @@ impl std::fmt::Debug for CachedFont {
     }
 }
 impl CachedFont {
+    #[cfg(target_os="macos")]
+    pub(crate) fn native_font(&self)->Option<&Rc<crate::paper_coretext_glyph::NativeFont>>{self.native.as_ref()}
     pub fn key(&self) -> FontKey {
         self.key
     }

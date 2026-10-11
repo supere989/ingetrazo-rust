@@ -1,0 +1,360 @@
+warning: function `visit_meshes` is never used
+   --> crates/ingetrazo-core/src/screen_pick.rs:120:15
+    |
+120 | pub(crate) fn visit_meshes(scene: &Scene, mut visit: impl FnMut(&Mesh, DMat4, bool)) {
+    |               ^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-core` (lib) generated 1 warning
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:132:5
+    |
+128 | #[derive(Debug, Hash, PartialEq, Eq)]
+    |                       --------- in this derive macro expansion
+...
+132 |     pub finalizer: FT_Generic_Finalizer,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+    = note: `#[warn(unpredictable_function_pointer_comparisons)]` on by default
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:804:5
+    |
+795 | #[derive(Debug, Hash, PartialEq, Eq)]
+    |                       --------- in this derive macro expansion
+...
+804 |     pub read: FT_Stream_IoFunc,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:805:5
+    |
+795 | #[derive(Debug, Hash, PartialEq, Eq)]
+    |                       --------- in this derive macro expansion
+...
+805 |     pub close: FT_Stream_CloseFunc,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:817:5
+    |
+813 | #[derive(Debug, Hash, PartialEq, Eq)]
+    |                       --------- in this derive macro expansion
+...
+817 |     pub alloc: FT_Alloc_Func,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:818:5
+    |
+813 | #[derive(Debug, Hash, PartialEq, Eq)]
+    |                       --------- in this derive macro expansion
+...
+818 |     pub free: FT_Free_Func,
+    |     ^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:819:5
+    |
+813 | #[derive(Debug, Hash, PartialEq, Eq)]
+    |                       --------- in this derive macro expansion
+...
+819 |     pub realloc: FT_Realloc_Func,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:881:5
+    |
+879 | #[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
+    |                                    --------- in this derive macro expansion
+880 | pub struct FT_Outline_Funcs {
+881 |     pub move_to: FT_Outline_MoveToFunc,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:882:5
+    |
+879 | #[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
+    |                                    --------- in this derive macro expansion
+...
+882 |     pub line_to: FT_Outline_LineToFunc,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:883:5
+    |
+879 | #[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
+    |                                    --------- in this derive macro expansion
+...
+883 |     pub conic_to: FT_Outline_ConicToFunc,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:884:5
+    |
+879 | #[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
+    |                                    --------- in this derive macro expansion
+...
+884 |     pub cubic_to: FT_Outline_CubicToFunc,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:896:5
+    |
+890 | #[derive(Debug, Hash, PartialEq, Eq)]
+    |                       --------- in this derive macro expansion
+...
+896 |     pub gray_spans: FT_SpanFunc,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:897:5
+    |
+890 | #[derive(Debug, Hash, PartialEq, Eq)]
+    |                       --------- in this derive macro expansion
+...
+897 |     pub black_spans: FT_SpanFunc,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:898:5
+    |
+890 | #[derive(Debug, Hash, PartialEq, Eq)]
+    |                       --------- in this derive macro expansion
+...
+898 |     pub bit_test: FT_Raster_BitTest_Func,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: function pointer comparisons do not produce meaningful results since their addresses are not guaranteed to be unique
+   --> vendor/freetype-sys/src/lib.rs:899:5
+    |
+890 | #[derive(Debug, Hash, PartialEq, Eq)]
+    |                       --------- in this derive macro expansion
+...
+899 |     pub bit_set: FT_Raster_BitSet_Func,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: the address of the same function can vary between different codegen units
+    = note: furthermore, different functions could have the same address after being merged together
+    = note: for more information visit <https://doc.rust-lang.org/nightly/core/ptr/fn.fn_addr_eq.html>
+
+warning: `freetype-sys` (lib) generated 14 warnings
+warning: unused imports: `CStr`, `c_char`, `c_void`, `ptr::NonNull`, and `sync::Arc`
+  --> crates/ingetrazo-formats/src/paper_font_resolver.rs:9:11
+   |
+ 9 |     ffi::{c_char, c_void, CStr, CString},
+   |           ^^^^^^  ^^^^^^  ^^^^
+10 |     path::PathBuf,
+11 |     ptr::NonNull,
+   |     ^^^^^^^^^^^^
+12 |     rc::Rc,
+13 |     sync::Arc,
+   |     ^^^^^^^^^
+   |
+   = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused variable: `family`
+   --> crates/ingetrazo-formats/src/paper_font_resolver.rs:268:13
+    |
+268 |         let family =
+    |             ^^^^^^ help: if this is intentional, prefix it with an underscore: `_family`
+    |
+    = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+warning: fields `0` and `1` are never read
+  --> crates/ingetrazo-formats/src/skp/legacy.rs:19:11
+   |
+19 |     Named(String, serde_json::Map<String, serde_json::Value>),
+   |     ----- ^^^^^^  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |     |
+   |     fields in this variant
+   |
+   = note: `Object` has a derived impl for the trait `Clone`, but this is intentionally ignored during dead code analysis
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+help: consider changing the fields to be of unit type to suppress this warning while preserving the field numbering, or remove the fields
+   |
+19 -     Named(String, serde_json::Map<String, serde_json::Value>),
+19 +     Named((), ()),
+   |
+
+warning: field `0` is never read
+  --> crates/ingetrazo-formats/src/skp/legacy.rs:25:11
+   |
+25 |     Curve(Option<[f64; 14]>),
+   |     ----- ^^^^^^^^^^^^^^^^^
+   |     |
+   |     field in this variant
+   |
+   = note: `Object` has a derived impl for the trait `Clone`, but this is intentionally ignored during dead code analysis
+help: consider changing the field to be of unit type to suppress this warning while preserving the field numbering, or remove the field
+   |
+25 -     Curve(Option<[f64; 14]>),
+25 +     Curve(()),
+   |
+
+warning: function `scene_from_xml` is never used
+   --> crates/ingetrazo-formats/src/dae_import.rs:757:15
+    |
+757 | pub(crate) fn scene_from_xml(xml: &str) -> Result<ingetrazo_core::scene::Scene> {
+    |               ^^^^^^^^^^^^^^
+
+warning: function `collection_index` is never used
+  --> crates/ingetrazo-formats/src/paper_font_sfnt.rs:33:15
+   |
+33 | pub(crate) fn collection_index(file: &mut (impl Read + Seek), name: &str) -> Result<u32, String> {
+   |               ^^^^^^^^^^^^^^^^
+
+warning: `ingetrazo-formats` (lib) generated 6 warnings (run `cargo fix --lib -p ingetrazo-formats` to apply 2 suggestions)
+warning: use of deprecated method `objc2_metal::MTLCompileOptions::setFastMathEnabled`: Use mathMode instead
+   --> crates/ingetrazo-metal/src/cad2d.rs:133:17
+    |
+133 |         options.setFastMathEnabled(false);
+    |                 ^^^^^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(deprecated)]` on by default
+
+warning: use of deprecated method `objc2_metal::MTLCompileOptions::setFastMathEnabled`: Use mathMode instead
+   --> crates/ingetrazo-metal/src/cad_callback_painter.rs:101:21
+    |
+101 |             options.setFastMathEnabled(false);
+    |                     ^^^^^^^^^^^^^^^^^^
+
+warning: use of deprecated method `objc2_metal::MTLCompileOptions::setFastMathEnabled`: Use mathMode instead
+   --> crates/ingetrazo-metal/src/cad_compute_painter.rs:163:21
+    |
+163 |             options.setFastMathEnabled(false);
+    |                     ^^^^^^^^^^^^^^^^^^
+
+warning: variable does not need to be mutable
+   --> crates/ingetrazo-metal/src/egui_painter.rs:639:13
+    |
+639 |         let mut staging = metal.buffer(staging_bytes, true)?;
+    |             ----^^^^^^^
+    |             |
+    |             help: remove this `mut`
+    |
+    = note: `#[warn(unused_mut)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-metal` (lib) generated 4 warnings (run `cargo fix --lib -p ingetrazo-metal` to apply 1 suggestion)
+    Checking ingetrazo-gui v0.3.15 (/tmp/ingetrazo-unhide-actions/crates/ingetrazo-gui)
+warning: unused variable: `palette_len`
+  --> crates/ingetrazo-gui/src/composer_backend.rs:31:43
+   |
+31 |     pub fn retained_cpu_bytes_bound(&self,palette_len:usize)->Result<usize,String>{match self{
+   |                                           ^^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_palette_len`
+   |
+   = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+warning: function `scene_direction` is never used
+ --> crates/ingetrazo-gui/src/solar_controls.rs:7:15
+  |
+7 | pub(crate) fn scene_direction(app: &IngeTrazoApp) -> Result<Option<[f64; 3]>, String> {
+  |               ^^^^^^^^^^^^^^^
+  |
+  = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: function `cancel` is never used
+  --> crates/ingetrazo-gui/src/paper_raw_texture.rs:30:14
+   |
+30 | pub(crate)fn cancel(ctx:&Context,ids:&[TextureId],sets:&mut std::collections::VecDeque<(TextureId,egui::epaint::ImageDelta)>)->Resul...
+   |              ^^^^^^
+
+warning: function `build` is never used
+   --> crates/ingetrazo-gui/src/composer_cad.rs:183:4
+    |
+183 | fn build(ctx:&egui::Context,shape:&SheetShape,zoom:f32,pixels_per_point:f32)->Result<(Arc<Geometry>,Arc<[Batch]>),String>{let(g,b,_...
+    |    ^^^^^
+
+warning: function `affine_inverse` is never used
+   --> crates/ingetrazo-gui/src/navigation_ray.rs:115:15
+    |
+115 | pub(crate) fn affine_inverse(matrix:[[f32;4];4])->Option<[[f32;4];4]>{inverse(matrix,true)}
+    |               ^^^^^^^^^^^^^^
+
+warning: associated function `span` is never used
+  --> crates/ingetrazo-gui/src/annotation_overlay_geometry.rs:14:19
+   |
+14 | impl Draw {pub fn span(gate:Gate)->Self{Self{gate,composition:Composition::SpanByte,straight_rgba:[0;4]}}}
+   | ---------         ^^^^
+   | |
+   | associated function in this implementation
+
+warning: multiple methods are never used
+  --> crates/ingetrazo-gui/src/annotation_overlay_geometry.rs:22:16
+   |
+20 | impl Cache {
+   | ---------- methods in this implementation
+21 |  pub fn new(fonts:annotation_font::Limits,limits:Limits)->Result<Self,String>{if limits.cells==0||limits.spans=...
+22 |  pub(crate) fn enable_analytic_boundary_for_probe(&mut self){self.analytic_boundary=true;self.current=None;}
+   |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+23 |  pub fn glyph_stats(&self)->(usize,usize,u64){(self.glyphs.len(),self.glyph_bytes,self.glyph_builds)}
+   |         ^^^^^^^^^^^
+24 |  pub fn stats(&self)->(u64,(usize,usize,u64)){(self.builds,self.fonts.stats())}
+   |         ^^^^^
+25 |  pub(crate) fn leader_metrics(&mut self,text:&str,point_size:i32,dpi:f64)->Result<(f64,f64),String>{
+   |                ^^^^^^^^^^^^^^
+...
+34 |  pub(crate) fn enable_source_stencil(&mut self){self.stencil_union=true;self.current=None;}
+   |                ^^^^^^^^^^^^^^^^^^^^^
+35 |  pub fn prepare(&mut self,plan:Arc<Plan>,density:f32,font_dpi:f64)->Result<Arc<Mesh>,String>{
+   |         ^^^^^^^
+...
+38 |  pub fn prepare_clipped(&mut self,plan:Arc<Plan>,density:f32,font_dpi:f64,clip:[i32;4])->Result<Arc<Mesh>,String>{
+   |         ^^^^^^^^^^^^^^^
+
+warning: `ingetrazo-gui` (lib) generated 7 warnings (run `cargo fix --lib -p ingetrazo-gui` to apply 1 suggestion)
+    Finished `dev` profile [unoptimized] target(s) in 1.24s
+warning: the following packages contain code that will be rejected by a future version of Rust: block v0.1.6
+note: to see what the problems were, use the option `--future-incompat-report`, or run `cargo report future-incompatibilities --id 1`

@@ -64,3 +64,24 @@ Both d74 Apple jobs are terminal failures with the same font admission error;
 160 source hashes per artifact independently match d74. Classic/material
 checkers pass on both; ghost runtime passes while strict pixels remain OPEN.
 Receipts and original downloaded artifacts are under apple-d74-failure.
+
+## Native sized CoreText glyph owner
+
+The corrected ARM run at 3ffebfa6 reaches `Paper font outline face failed`: its
+valid cached SFNT contains shaping/metric tables, deliberately no outlines.
+The new macOS annotation face retains CTFontCreateCopyWithAttributes at the
+actual admitted pixel size, shares physical metadata bytes, shapes using that
+owner's native advances/metrics, and rasterizes through CoreText/CoreGraphics.
+Gray coverage retains the existing native weighted inverted RGB rule; LCD
+coverage carries each inverted channel directly into the existing native CAD
+operator. No FreeType outline reconstruction or TTC copy is introduced.
+Existing paper pixel100 native shaping and grayscale behavior are preserved.
+
+Native allocations/driver tables remain outside the logical encoded-byte
+limits; face count and retained-byte admission still happen before creation
+and old faces retire only after successful preparation. Gray production does
+not allocate an unnecessary RGB coverage copy. LCD output is bounded to three
+bytes per admitted pixel. The named Apple consumer now checks real glyphs at
+13/17px, nonempty gray/RGB coverage and warm immutable owner reuse before the
+GPU roster. Focused ARM Rust check passes; actual Apple execution of this
+follow-up is pending, as are strict cross-platform glyph/pixel semantics.

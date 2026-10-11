@@ -74,6 +74,33 @@ pub(crate) fn run(input: PathBuf, output: PathBuf) -> Result<(), String> {
         &std::fs::read(input.join("original.json")).map_err(|e| e.to_string())?,
     )
     .map_err(|e| e.to_string())?;
+    // Exercise the actual sized CoreText owner before GPU cases; immutable
+    // metadata-only SFNTs must never be passed to FreeType for outlines.
+    let mut fonts = ingetrazo_formats::annotation_font::Cache::new(
+        ingetrazo_formats::annotation_font::Limits {faces:4,retained_font_bytes:32*1024*1024})?;
+    let request=ingetrazo_formats::paper_font_resolver::Request {
+        family:"Sans Serif".into(),bold:true,italic:false,required_chars:vec![]};
+    let mut font_rows=Vec::new();
+    for pixels in [13,17] {
+        let line=fonts.shape(&request,"8",pixels)?;
+        let run=line.runs.first().ok_or("Native sized font run")?;
+        let glyph=run.glyphs.first().ok_or("Native sized font glyph")?.id;
+        let gray=run.font.rasterize(glyph,1.,[0,0])?;
+        let rgb=run.font.rasterize_lcd(glyph,1.,[0,0])?;
+        if gray.coverage.len()!=gray.width*gray.height
+            || rgb.coverage.len()!=rgb.width*rgb.height*3
+            || !gray.coverage.iter().any(|&n|n>0)
+            || !rgb.coverage.iter().any(|&n|n>0) {return Err("Native sized font empty/invalid coverage".into());}
+        let stats=fonts.stats();let warm=fonts.shape(&request,"8",pixels)?;
+        if fonts.stats()!=stats || !std::rc::Rc::ptr_eq(&run.font,&warm.runs[0].font) {
+            return Err("Native sized font warm owner changed".into());
+        }
+        font_rows.push(serde_json::json!({"pixels":pixels,"advance":line.advance_26_6,
+            "gray_bytes":gray.coverage.len(),"rgb_bytes":rgb.coverage.len(),"warm_owner":true}));
+    }
+    std::fs::write(output.join("native-font.json"),serde_json::to_vec_pretty(&font_rows)
+        .map_err(|e|e.to_string())?).map_err(|e|e.to_string())?;
+    drop(fonts);
     let metal = Arc::new(NativeMetal::new()?);
     let mut results = Vec::new();
     for c in source["cases"].as_array().ok_or("Sweep cases")? {

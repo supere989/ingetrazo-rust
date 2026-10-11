@@ -63,6 +63,7 @@ unsafe extern "C" {
 #[link(name = "CoreText", kind = "framework")]
 unsafe extern "C" {
     fn CTFontCopyTable(f: Ref, tag: u32, options: u32) -> Ref;
+    fn CTFontCreateCopyWithAttributes(f: Ref, size: f64, matrix: *const Matrix, attributes: Ref) -> Ref;
     fn CTFontCopyVariation(f: Ref) -> Ref;
     fn CTFontGetMatrix(f: Ref) -> Matrix;
     fn CTFontGetGlyphCount(f: Ref) -> isize;
@@ -195,6 +196,16 @@ pub(crate) struct NativeFont {
     pub instance_identity: Vec<u8>,
 }
 impl NativeFont {
+    pub(crate) fn at_pixel_size(&self, pixels: u32) -> Result<Rc<Self>, String> {
+        if pixels == 0 || pixels > 4096 { return Err("Native font pixel size outside admission".into()); }
+        let owner = Owned::new(unsafe { CTFontCreateCopyWithAttributes(self.owner.0,
+            f64::from(pixels), std::ptr::null(), std::ptr::null()) })?;
+        // Native physical instance remains owned; immutable shaping tables are
+        // shared rather than reading/copying the original TTC at every size.
+        Ok(Rc::new(Self { raster_phase_counts: Cell::new([0;4]), owner,
+            bytes: self.bytes.clone(), count: self.count, traits: self.traits,
+            instance_identity: Vec::new() }))
+    }
     pub(crate) fn from_raw(p: Ref, traits: u32) -> Result<Rc<Self>, String> {
         Self::from_owned(Owned::new(p)?, traits)
     }
@@ -449,13 +460,20 @@ impl NativeFont {
         counts[style]=count;self.raster_phase_counts.set(counts);Ok(count)
     }
     pub(crate) fn raster(
-        &self,
-        id: u32,
-        scale: f64,
-        phase: [u8; 2],
-        shear: f64,
-        bold_offset: f64,
-    ) -> Result<crate::paper_text::RasterGlyph, String> {
+        &self, id:u32, scale:f64, phase:[u8;2], shear:f64, bold_offset:f64,
+    ) -> Result<crate::paper_text::RasterGlyph,String> {
+        let image = self.raster_coverage(id,scale,phase,shear,bold_offset,false)?;
+        Ok(crate::paper_text::RasterGlyph{left:image.left,top:image.top,
+            width:image.width,height:image.height,coverage:image.coverage})
+    }
+    pub(crate) fn raster_lcd(
+        &self,id:u32,scale:f64,phase:[u8;2],shear:f64,bold_offset:f64,
+    )->Result<crate::paper_text::RasterLcdGlyph,String>{
+        self.raster_coverage(id,scale,phase,shear,bold_offset,true)
+    }
+    fn raster_coverage(
+        &self,id:u32,scale:f64,phase:[u8;2],shear:f64,bold_offset:f64,lcd:bool,
+    )->Result<crate::paper_text::RasterLcdGlyph,String>{
         if !scale.is_finite()
             || scale <= 0.
             || scale > 32.
@@ -574,10 +592,14 @@ impl NativeFont {
         };
         let mut coverage = Vec::new();
         coverage
-            .try_reserve_exact(pixels)
+            .try_reserve_exact(pixels.checked_mul(if lcd {3}else{1}).ok_or("Native coverage overflow")?)
             .map_err(|_| "Native coverage allocation failed")?;
-        coverage.extend(rgba.chunks_exact(4).map(native_bgrx_coverage));
-        Ok(crate::paper_text::RasterGlyph {
+        if lcd {
+            for p in rgba.chunks_exact(4) {coverage.extend_from_slice(&[255-p[2],255-p[1],255-p[0]]);}
+        } else {
+            coverage.extend(rgba.chunks_exact(4).map(native_bgrx_coverage));
+        }
+        Ok(crate::paper_text::RasterLcdGlyph {
             left: x.floor() as i32,
             top: -y.floor() as i32,
             width,
