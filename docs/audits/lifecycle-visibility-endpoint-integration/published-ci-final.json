@@ -1,0 +1,78 @@
+{
+  "checked_utc": {
+    "current_time": "2026-10-11 09:03:04 UTC"
+  },
+  "runs": [
+    {
+      "id": 38125372518,
+      "name": "Rust and semantic acceptance",
+      "html_url": "https://github.com/supere989/ingetrazo-rust/actions/runs/38125372518",
+      "head_sha": "bd081cae8ffbf69e8a4deba77947819c1e40bf7d",
+      "status": "completed",
+      "conclusion": "success",
+      "run_started_at": "2026-10-11T08:35:59Z",
+      "updated_at": "2026-10-11T09:02:10Z"
+    },
+    {
+      "id": 38125372599,
+      "name": "Isolated native Metal ordered compute consumer",
+      "html_url": "https://github.com/supere989/ingetrazo-rust/actions/runs/38125372599",
+      "head_sha": "bd081cae8ffbf69e8a4deba77947819c1e40bf7d",
+      "status": "completed",
+      "conclusion": "success",
+      "run_started_at": "2026-10-11T08:35:59Z",
+      "updated_at": "2026-10-11T08:38:36Z"
+    }
+  ],
+  "metal_jobs": [
+    {
+      "id": 114428517674,
+      "name": "Actual ordered UI and CAD compute (macos-15-intel)",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/supere989/ingetrazo-rust/actions/runs/38125372599/job/114428517674",
+      "completed_at": "2026-10-11T08:38:36Z"
+    },
+    {
+      "id": 114428517842,
+      "name": "Actual ordered UI and CAD compute (macos-15)",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/supere989/ingetrazo-rust/actions/runs/38125372599/job/114428517842",
+      "completed_at": "2026-10-11T08:37:25Z"
+    }
+  ],
+  "semantic_jobs": [
+    {
+      "id": 114428517527,
+      "name": "Native Metal compile (x86_64-apple-darwin)",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 114428517643,
+      "name": "Native Metal framework link (macos-15)",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 114428517675,
+      "name": "compilation-and-tests",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 114428517693,
+      "name": "Native Metal compile (aarch64-apple-darwin)",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 114428517714,
+      "name": "Native Metal framework link (macos-15-intel)",
+      "status": "completed",
+      "conclusion": "success"
+    }
+  ],
+  "scope": "All seven jobs pass on the exact published bd081cae commit. New local Line/partition/Hide/ghost changes are not covered by this checkpoint; all release gates remain open."
+}
