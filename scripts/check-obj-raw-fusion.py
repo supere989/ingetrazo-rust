@@ -39,4 +39,8 @@ for c in mutations:
  try:strict(a,c)
  except AssertionError:pass
  else:raise AssertionError('raw loop mutation accepted')
-print(json.dumps({'cases':3,'states':15,'actual_original_reopens':3,'negative_controls':len(mutations),'passed':True}))
+initial=ordered_flags(json.loads((p/'attempts/preliminary-mesh/native-obj-fusion.json').read_text()))
+try:strict(a,initial)
+except AssertionError:pass
+else:raise AssertionError('preliminary Mesh regression accepted')
+print(json.dumps({'preliminary_mesh_failure_rejected':True,'cases':3,'states':15,'actual_original_reopens':3,'negative_controls':len(mutations),'passed':True}))
