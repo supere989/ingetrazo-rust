@@ -293,12 +293,35 @@ pub(crate) fn run(input: PathBuf, output: PathBuf) -> Result<(), String> {
             previous_stats = Some(stats);
             phases.push(serde_json::json!({"phase":phase,"geometry_uploads":stats.geometry_uploads,"preview_builds":stats.preview_builds,"preview_line_uploads":stats.preview_line_uploads,"base_line_uploads":stats.base_line_uploads,"label_native_builds_bytes":label_native,"label_uploads":label_uploads,"label_compute_uploads":label_compute}));
         }
+        // Source's phase named cancel is zero-offset acquisition. Exercise real
+        // native Tool cancellation separately, without comparing it to that image.
+        let cancelled_label = Arc::downgrade(&app.native_metal_world.as_ref()
+            .unwrap().label_owner().ok_or("No zero-offset label owner")?);
+        let before_cancel = app.native_metal_world.as_ref().unwrap().sweep_stats();
+        app.set_tool(ingetrazo_tools::ToolType::Select);
+        if let Some(reason) = world_viewport::route(&mut app,
+            egui::Rect::from_min_size(egui::Pos2::ZERO, egui::vec2(800., 600.)), 1.) {
+            return Err(format!("Actual Tool cancellation: {reason}"));
+        }
+        let after_cancel = app.native_metal_world.as_ref().unwrap().sweep_stats();
+        if app.active_tool.face_sweep_preview().is_some()
+            || app.active_tool.distance_label().is_some()
+            || app.native_gpu_annotation_shape.is_some()
+            || app.native_metal_world.as_ref().unwrap().label_owner().is_some()
+            || before_cancel.geometry_uploads != after_cancel.geometry_uploads
+            || before_cancel.base_line_uploads != after_cancel.base_line_uploads {
+            return Err("Actual Tool cancellation failed cached base/label retirement".into());
+        }
+        let _ = frame(&mut app, &metal, &ctx, &mut painter, true)?;
+        if cancelled_label.upgrade().is_some() {
+            return Err("Actual Tool cancellation retained completed label owner".into());
+        }
         if app.scene.mesh != mesh_before || app.undo_stack.len() != history_before {
             return Err("Preview mutated model/history".into());
         }
         drop(app);
         drop(painter);
-        results.push(serde_json::json!({"name":name,"phases":phases,"model_unchanged":true,"warm_uploads_zero":true,"pressure_old_pixels_charge_retry":refusal,"font_refusal_retained":true}));
+        results.push(serde_json::json!({"name":name,"phases":phases,"model_unchanged":true,"warm_uploads_zero":true,"pressure_old_pixels_charge_retry":refusal,"font_refusal_retained":true,"actual_tool_cancel":true}));
     }
     let ledger = metal
         .budget

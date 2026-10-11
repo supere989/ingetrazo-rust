@@ -7,7 +7,7 @@ def validate(source,native):
  assert [r['name'] for r in native['cases']]==[r['name'] for r in source['cases']]
  assert len(native['cases'])==6
  for row in native['cases']:
-  assert row['model_unchanged'] and row['warm_uploads_zero'] and row['pressure_old_pixels_charge_retry'] and row['font_refusal_retained']
+  assert row['model_unchanged'] and row['warm_uploads_zero'] and row['pressure_old_pixels_charge_retry'] and row['font_refusal_retained'] and row['actual_tool_cancel']
   assert [p['phase'] for p in row['phases']]==['base','preview','offset','cancel']
 def equal(a,b):assert len(a)==len(b)==800*600*4 and a==b,'Strict whole RGBA differs'
 def main():
@@ -28,7 +28,7 @@ def main():
   from PIL import Image
   import io
   native=json.loads((out/'results.json').read_text());validate(source,native)
-  mutations=[lambda r:r.update(samples=1),lambda r:r.update(ledger=1),lambda r:r['cases'].pop(),lambda r:r['cases'][0].update(warm_uploads_zero=False),lambda r:r['cases'][0].update(font_refusal_retained=False)]
+  mutations=[lambda r:r.update(samples=1),lambda r:r.update(ledger=1),lambda r:r['cases'].pop(),lambda r:r['cases'][0].update(warm_uploads_zero=False),lambda r:r['cases'][0].update(font_refusal_retained=False),lambda r:r['cases'][0].update(actual_tool_cancel=False)]
   for mutate in mutations:
    bad=copy.deepcopy(native);mutate(bad)
    try:validate(source,bad)
@@ -49,6 +49,6 @@ def main():
   try:equal(expected,altered)
   except AssertionError:pass
   else:raise AssertionError('Mutated pixel accepted')
-  print(json.dumps({'functional_passed':True,'strict_pixels_passed':not errors,'frames':24,'negative_controls':6,'differences':errors},indent=2))
+  print(json.dumps({'functional_passed':True,'strict_pixels_passed':not errors,'frames':24,'negative_controls':7,'differences':errors},indent=2))
   if errors:raise SystemExit(1)
 if __name__=='__main__':main()
