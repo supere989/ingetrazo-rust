@@ -45,6 +45,7 @@ impl IngeTrazoApp {
             self.status_message = "Unsupported BIM class".into();
             return;
         }
+        if self.tag_mixed_bim_targets(Some((class,name))).is_some(){return;}
         if self.edit_bim_context_selection(Some((class,name))).is_some(){return;}
         let faces: Vec<_> = self
             .scene
@@ -102,6 +103,7 @@ impl IngeTrazoApp {
         );
     }
     pub fn untag_selection_bim(&mut self) {
+        if self.tag_mixed_bim_targets(None).is_some(){return;}
         if self.edit_bim_context_selection(None).is_some(){return;}
         let faces: Vec<_> = self
             .scene
@@ -236,6 +238,23 @@ impl IngeTrazoApp {
                 for (face,vertices) in ids {self.scene.select(match &context {Some(context)=>SelectionItem::ContextFace{context:context.clone(),face,vertices},None=>SelectionItem::Face(face)});}
             }
         }
+    }
+    /// Original IFC menu leaves every open context before census/dialog.
+    /// A refused Finish stops the export without touching its destination.
+    pub fn prepare_bim_ifc_export(&mut self) -> Result<usize, String> {
+        while !self.component_edit_stack.is_empty() {
+            let depth=self.component_edit_stack.len();
+            self.finish_component_edit();
+            if self.component_edit_stack.len()>=depth {
+                return Err(format!("IFC export stopped: {}",self.status_message));
+            }
+        }
+        Ok(bim::collect_objects(&self.scene)?.len())
+    }
+    pub fn export_bim_ifc(&mut self,path:&std::path::Path)->Result<usize,String>{
+        if self.prepare_bim_ifc_export()?==0 {return Err("Nothing to export: tag geometry in the BIM panel first".into());}
+        let project=path.file_stem().and_then(|s|s.to_str()).unwrap_or("IngeTrazo Project");
+        ingetrazo_formats::ifc::save_ifc(&self.scene,path,project).map_err(|e|e.to_string())
     }
     pub fn export_bim_csv(&mut self, path: &std::path::Path) -> Result<usize, String> {
         self.refresh_bim_takeoff();
@@ -497,6 +516,66 @@ mod draw_tests {
         assert_eq!(a.scene.mesh,active);a.undo();assert_eq!(a.scene.mesh,active);
         assert_eq!(a.component_edit_stack[0].original_scene.groups[0].ifc_tag.as_ref().unwrap()["name"],"parent slab");
         a.redo();a.untag_selection_bim();assert!(a.component_edit_stack[0].original_scene.groups[0].ifc_tag.is_none());
+    }
+    #[test]
+    fn mixed_bim_tag_is_atomic_single_metadata_command_across_finish() {
+        use ingetrazo_core::{groups::Group,scene::SelectionItem};
+        let mut a=app();rect(&mut a,20.,20.);let mut group=Group::new("target");
+        let ids=[DVec3::ZERO,DVec3::X,DVec3::X+DVec3::Y,DVec3::Y].map(|p|group.mesh.add_vertex(p));group.mesh.add_face(ids.to_vec(),vec![]).unwrap();a.scene.groups.push(group);
+        a.scene.select(SelectionItem::Group(0));a.begin_component_edit();
+        a.select_bim_object(&ObjectKey::Faces(Some(1)));a.scene.select(SelectionItem::Face(0));
+        let root=a.component_edit_stack[0].original_scene.mesh.clone();let active=a.scene.mesh.clone();let count=a.undo_stack.len();
+        a.tag_selection_bim("IfcRoof","mixed");assert_eq!(a.undo_stack.len(),count+1);
+        assert_eq!(a.scene.mesh.faces[0].attrs["ifc"]["id"],2);
+        assert_eq!(a.component_edit_stack[0].original_scene.mesh.faces[0].attrs["ifc"]["id"],2);
+        a.undo();assert_eq!(a.scene.mesh,active);assert_eq!(a.component_edit_stack[0].original_scene.mesh,root);
+        a.redo();a.finish_component_edit();assert!(a.component_edit_stack.is_empty());
+        a.undo();assert_eq!(a.scene.mesh,root);assert!(a.scene.groups[0].mesh.faces[0].attrs.get("ifc").is_none());
+        a.redo();assert_eq!(a.scene.mesh.faces[0].attrs["ifc"]["name"],"mixed");assert_eq!(a.scene.groups[0].mesh.faces[0].attrs["ifc"]["name"],"mixed");
+    }
+    #[test]
+    fn mixed_metadata_nested_placed_leaf_fold_restores_geometry_and_root_tags() {
+        use ingetrazo_core::{groups::Group,scene::SelectionItem};
+        let mut a=app();rect(&mut a,20.,20.);let root=a.scene.mesh.clone();
+        let mut child=Group::new("child");let ids=[DVec3::ZERO,DVec3::X,DVec3::X+DVec3::Y,DVec3::Y].map(|p|child.mesh.add_vertex(p));child.mesh.add_face(ids.to_vec(),vec![]).unwrap();child.transform=glam::DMat4::from_translation(DVec3::new(2.,0.,0.));let child_before=child.mesh.clone();
+        let mut parent=Group::new("parent");parent.children.push(child);parent.transform=glam::DMat4::from_translation(DVec3::new(4.,5.,0.));a.scene.groups.push(parent);
+        a.scene.select(SelectionItem::Group(0));a.begin_component_edit();a.scene.select(SelectionItem::Group(0));a.begin_component_edit();rect(&mut a,0.,0.);
+        let seed=a.scene.mesh.faces.iter().position(|f|!f.attrs.contains_key("ifc")).unwrap();a.select_bim_object(&ObjectKey::Faces(Some(1)));a.scene.select(SelectionItem::Face(seed));a.tag_selection_bim("IfcRoof","mixed");
+        while !a.component_edit_stack.is_empty(){a.finish_component_edit();}
+        let finished=a.scene.clone();a.undo();assert_eq!(a.scene.mesh,root);assert_eq!(a.scene.groups[0].children[0].mesh,child_before);
+        a.redo();assert_eq!(a.scene.mesh,finished.mesh);assert_eq!(a.scene.groups,finished.groups);assert_eq!(a.scene.mesh_shares,finished.mesh_shares);
+    }
+    #[test]
+    fn mixed_metadata_untracked_attr_change_refuses_undo_without_publication() {
+        use ingetrazo_core::{groups::Group,scene::SelectionItem};
+        let mut a=app();rect(&mut a,20.,20.);a.scene.groups.push(Group::new("target"));a.scene.select(SelectionItem::Group(0));a.begin_component_edit();rect(&mut a,0.,0.);a.select_bim_object(&ObjectKey::Faces(Some(1)));a.scene.select(SelectionItem::Face(0));a.tag_selection_bim("IfcRoof","mixed");
+        a.scene.mesh.faces[0].attrs.get_mut("ifc").unwrap()["name"]="untracked".into();let active=a.scene.clone();let root=a.component_edit_stack[0].original_scene.clone();let undo=a.undo_stack.clone();let redo=a.redo_stack.clone();a.undo();assert_eq!(a.scene,active);assert_eq!(a.component_edit_stack[0].original_scene,root);assert_eq!(a.undo_stack,undo);assert_eq!(a.redo_stack,redo);assert!(a.status_message.contains("outside this command"));
+    }
+    #[test]
+    fn mixed_bim_stale_face_refuses_both_domains_and_history() {
+        use ingetrazo_core::{groups::Group,scene::SelectionItem};
+        let mut a=app();rect(&mut a,20.,20.);a.scene.groups.push(Group::new("target"));a.scene.select(SelectionItem::Group(0));a.begin_component_edit();rect(&mut a,0.,0.);a.select_bim_object(&ObjectKey::Faces(Some(1)));a.scene.select(SelectionItem::Face(0));
+        a.component_edit_stack[0].original_scene.mesh.vertices[0].uid=uuid::Uuid::new_v4();let active=a.scene.clone();let root=a.component_edit_stack[0].original_scene.clone();let undo=a.undo_stack.clone();let redo=a.redo_stack.clone();
+        a.tag_selection_bim("IfcWall","wrong");assert_eq!(a.scene,active);assert_eq!(a.component_edit_stack[0].original_scene,root);assert_eq!(a.undo_stack,undo);assert_eq!(a.redo_stack,redo);assert!(a.status_message.contains("no longer resolves"));
+    }
+    #[test]
+    fn ifc_export_finishes_all_nested_edits_before_census_and_writing() {
+        use ingetrazo_core::{groups::Group,scene::SelectionItem};
+        let mut a=app();rect(&mut a,20.,20.);
+        let root=a.scene.mesh.clone();let mut parent=Group::new("parent");parent.children.push(Group::new("child"));
+        a.scene.groups.push(parent);a.scene.select(SelectionItem::Group(0));a.begin_component_edit();a.scene.select(SelectionItem::Group(0));a.begin_component_edit();rect(&mut a,0.,0.);
+        assert_eq!(a.component_edit_stack.len(),2);
+        let path=std::env::temp_dir().join(format!("bim-context-ifc-{}.ifc",uuid::Uuid::new_v4()));
+        assert_eq!(a.export_bim_ifc(&path).unwrap(),1);
+        assert!(a.component_edit_stack.is_empty());assert_eq!(a.scene.mesh,root);
+        assert_eq!(a.scene.groups[0].children[0].mesh.faces.len(),1);
+        let bytes=std::fs::read_to_string(&path).unwrap();assert!(bytes.contains("IFCWALL"));std::fs::remove_file(path).unwrap();
+    }
+    #[test]
+    fn ifc_dialog_preparation_leaves_context_even_when_no_objects_or_cancelled() {
+        use ingetrazo_core::{groups::Group,scene::SelectionItem};
+        let mut a=IngeTrazoApp::new();a.scene.groups.push(Group::new("empty"));a.scene.select(SelectionItem::Group(0));a.begin_component_edit();
+        assert_eq!(a.prepare_bim_ifc_export().unwrap(),0);assert!(a.component_edit_stack.is_empty());assert!(a.undo_stack.is_empty());
     }
     #[test]
     fn active_mode_is_runtime_and_does_not_revert_with_model_history() {

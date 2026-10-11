@@ -111,6 +111,10 @@ impl RectangleTool {
 }
 
 impl Tool for RectangleTool {
+    // The original viewport leaves edits without replacing Rectangle. Its
+    // start/hover points, plane and captured axes are world-space values.
+    fn preserves_global_preview_on_context_exit(&self)->bool { true }
+
     fn error_message(&self)->Option<&str>{self.error.as_deref()}
     fn note_control_state(&mut self,held:bool){
         if held&&!self.control_down{self.from_center=!self.from_center;}

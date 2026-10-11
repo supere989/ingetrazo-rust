@@ -144,9 +144,14 @@ pub fn render_menu_bar(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
             // Export submenu
             ui.menu_button(tr("Export"), |ui| {
                 if ui.button(tr("IFC (BIM)…")).clicked() {
-                    app.show_save_dialog = true;
-                    app.dialog_path_input = "model.ifc".to_string();
                     ui.close_menu();
+                    match app.prepare_bim_ifc_export() {
+                        Ok(0)=>app.status_message=tr("Nothing to export: tag geometry in the BIM panel first"),
+                        Ok(_)=>if let Some(path)=crate::dialogs::pick_save_file(&tr("Export IFC"),"model.ifc","*.ifc|IFC4") {
+                            app.status_message=match app.export_bim_ifc(&path){Ok(n)=>format!("{n} IFC elements exported to {}",path.display()),Err(error)=>format!("Export IFC failed: {error}")};
+                        },
+                        Err(error)=>app.status_message=error,
+                    }
                 }
                 if ui.button(tr("glTF / GLB (3D, single file)…")).clicked() {
                     app.show_save_dialog = true;

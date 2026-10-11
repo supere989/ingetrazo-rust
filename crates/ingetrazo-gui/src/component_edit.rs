@@ -431,7 +431,11 @@ impl IngeTrazoApp {
         // as Finish, while retaining its individual global chronological slot.
         let target=self.scene.history_context.clone();
         let fold=session.fold_history && session.mesh_baseline!=finishing_scene.mesh;
-        let folded_snapshot=if fold {match shareback_snapshot(session,&candidate){Ok(scene)=>Some(scene),Err(error)=>{self.status_message=error;return;}}}else{None};
+        let folded_snapshot=if fold {match shareback_snapshot(session,&candidate){Ok(mut scene)=>{
+            let mut targets:Vec<ingetrazo_core::bim::MetadataTarget>=Vec::new();
+            for entry in self.undo_stack.iter().filter(|entry|entry.history_context.starts_with(&target)){if let Some(history)=&entry.history_bim{for patch in &history.targets{if let Some(old)=targets.iter_mut().find(|old|old.context==patch.context&&old.group==patch.group&&old.vertices==patch.vertices){old.expected=patch.expected.clone();}else{targets.push(patch.clone());}}}}
+            if !targets.is_empty(){scene.history_bim=Some(ingetrazo_core::bim::MetadataHistory{targets});}
+            Some(scene)},Err(error)=>{self.status_message=error;return;}}}else{None};
         let mut lifted_undo=self.undo_stack.clone();let mut lifted_redo=self.redo_stack.clone();
         if let Some(before)=lifted_undo.last_mut(){if before.history_images.0.is_none(){before.history_images.0=Some(ingetrazo_core::image_plane::ImageDelta::between(&before.image_planes,&finishing_scene.image_planes));}}
         if let Some(before)=lifted_undo.last_mut(){if before.history_terrain.0.is_none(){before.history_terrain.0=Some(ingetrazo_core::georef::TerrainHistory::seal(&before.terrain,&finishing_scene.terrain));}}
@@ -442,7 +446,7 @@ impl IngeTrazoApp {
                 if entry.history_context==target {
                     *entry=match component_candidate(session,entry) {Ok((mut scene,_))=>{
                         scene.selection=session.original_scene.selection.clone();scene.selection_order=session.original_scene.selection_order.clone();
-                        scene.version=session.original_scene.version;scene.view_version=session.original_scene.view_version;scene.history_shareback=entry.history_shareback;scene.history_views.0=entry.history_views.0.clone();scene.history_terrain=entry.history_terrain.clone();scene.history_layers=entry.history_layers.clone();scene.history_images=entry.history_images.clone();scene
+                        scene.version=session.original_scene.version;scene.view_version=session.original_scene.view_version;scene.history_shareback=entry.history_shareback;scene.history_bim=entry.history_bim.clone();scene.history_views.0=entry.history_views.0.clone();scene.history_terrain=entry.history_terrain.clone();scene.history_layers=entry.history_layers.clone();scene.history_images=entry.history_images.clone();scene
                     },Err(error)=>{self.status_message=error;return;}};
                 }
             }

@@ -338,6 +338,10 @@ impl IngeTrazoApp {
     }
 
     pub fn save_to_path(&mut self, path: &Path) {
+        if path.extension().and_then(|s|s.to_str()).is_some_and(|s|s.eq_ignore_ascii_case("ifc")) {
+            self.status_message=match self.export_bim_ifc(path){Ok(n)=>format!("{n} IFC elements exported to {}",path.display()),Err(error)=>format!("Export IFC failed: {error}")};
+            return;
+        }
         if !self.component_edit_stack.is_empty() {
             self.status_message = "Finish or cancel the component edit before saving the document".into();
             return;
@@ -444,6 +448,7 @@ impl IngeTrazoApp {
         if self.scene.active_sheet_index.is_some(){self.undo_composer_edit();return false;}
         self.finish_composer_edit();
         if self.active_tool.prepare_undo(!self.undo_stack.is_empty()){return false;}
+        if let Some(changed)=self.bim_metadata_history_step(false){return changed;}
         if self.refuse_component_history_step(false){return false;}
         self.seal_view_history();self.seal_terrain_history();self.seal_layer_history();self.seal_image_history();
         let version=self.scene.version;self.active_tool.end_transient_before_history(&mut self.scene);
@@ -486,6 +491,7 @@ impl IngeTrazoApp {
         self.sync_document_presentation();
         if self.scene.active_sheet_index.is_some(){self.redo_composer_edit();return false;}
         self.finish_composer_edit();
+        if let Some(changed)=self.bim_metadata_history_step(true){return changed;}
         if self.refuse_component_history_step(true){return false;}
         let version=self.scene.version;self.active_tool.end_transient_before_history(&mut self.scene);
         if self.scene.version!=version{self.bump_model_revision();}

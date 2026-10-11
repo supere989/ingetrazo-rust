@@ -694,3 +694,17 @@ mod drawn_truthiness_tests {
         assert_eq!(next_draw_object_id(&mesh).unwrap(), 2);
     }
 }
+
+/// Runtime-only direct BIM metadata command; stable targets survive edit lifting.
+/// Source performs these mutations outside History. Native retains its existing
+/// explicit Undo extension without replacing an unrelated mesh/context.
+#[derive(Debug,Clone,PartialEq)]
+pub struct MetadataHistory { pub targets:Vec<MetadataTarget> }
+#[derive(Debug,Clone,PartialEq)]
+pub struct MetadataTarget {
+    pub context:Vec<uuid::Uuid>,
+    pub group:Option<uuid::Uuid>,
+    pub vertices:Vec<uuid::Uuid>,
+    pub value:Option<serde_json::Value>,
+    pub expected:Option<serde_json::Value>,
+}
