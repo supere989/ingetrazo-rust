@@ -111,6 +111,8 @@ fn inverse(m: Matrix, affine: bool) -> Option<Matrix> {
     }
     Some(inv)
 }
+/// Qt affine inversion for cold placement UV remapping; no camera/ray policy change.
+pub(crate) fn affine_inverse(matrix:[[f32;4];4])->Option<[[f32;4];4]>{inverse(matrix,true)}
 fn map(m: &Matrix, p: Vec3) -> Vec3 {
     let mut out = [0.; 4];
     for r in 0..4 {

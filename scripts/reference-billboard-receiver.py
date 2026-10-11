@@ -53,7 +53,10 @@ cases=[
  ('hidden-line-cutout',1.,True,'hidden_line',False,False),('missing-texture',1.,'missing','textures',False,False),
  ('section',1.,False,'textures',True,False),('offscreen-instance',1.,False,'textures',False,True)]
 extras=[('billboard-bitmap',1.,True,'textures',False,False),('billboard-mesh',1.,True,'textures',False,False),('ground-terrain',1.,False,'textures',False,False),('ground-photo',1.,False,'textures',False,False),('ground-tiles',1.,False,'textures',False,False)]
-cases=extras[:2]
+heldout=bool(os.environ.get('INGETRAZO_BILLBOARD_HELDOUT'))
+cases=extras[:2] if not heldout else [(n,1.,t,'textures',False,False) for n,t in [
+ ('billboard-bitmap-perspective',True),('billboard-bitmap-oblique',True),('billboard-bitmap-nested-reflection',True),
+ ('billboard-mesh-solid-perspective',False),('billboard-mesh-uv-transform',True),('billboard-mesh-mixed-order',True),('billboard-bitmap-missing','missing')]]
 for name,alpha,textured,mode,section,offscreen in cases:
  scene=Scene();scene.shadows.enabled=True;scene.shadows.darkness=.55
  height=4. if offscreen else 1.5
@@ -68,7 +71,19 @@ for name,alpha,textured,mode,section,offscreen in cases:
  face=mesh.add_face([QVector3D(*v)for v in vertices]);face.attrs.update(color=(.9,.3,.15),opacity=alpha)
  if textured:face.attrs['texture']={'path':str(out/('missing.png' if textured=='missing' else 'cutout.png')),'sw':2.,'sh':2.}
  if offscreen or billboard:
-  group=Group(mesh,'offscreen-caster');group.xform=QMatrix4x4();group.billboard=('mesh' if name=='billboard-mesh' else True) if billboard else False;scene.groups.append(group)
+  group=Group(mesh,'offscreen-caster');group.xform=QMatrix4x4();group.billboard=('mesh' if 'billboard-mesh' in name else True) if billboard else False;scene.groups.append(group)
+ if heldout and billboard:
+  if 'nested-reflection' in name:
+   group.xform.translate(.25,-.5,0.);group.xform.scale(-.8,1.25,.75)
+   outer=Group(Mesh(),'outer');outer.xform=QMatrix4x4();outer.xform.translate(-.4,.25,0.);outer.children=[group];scene.groups=[outer]
+  if 'uv-transform' in name:
+   face.attrs['texture']['uvw']=[.5,0.,0.,.5,0.,0.,1/3,0.]
+   group.xform.translate(.35,-.4,.2);group.xform.rotate(17.,0.,0.,1.);group.xform.scale(.8,1.3,.75)
+  if 'mixed-order' in name:
+   colorface=mesh.add_face([QVector3D(-.7,-.03,.3),QVector3D(.7,-.03,.3),QVector3D(.7,-.03,2.7),QVector3D(-.7,-.03,2.7)])
+   colorface.attrs['color']=(.15,.45,.75)
+   later=mesh.add_face([QVector3D(-.5,-.06,.6),QVector3D(.5,-.06,.6),QVector3D(.5,-.06,2.4),QVector3D(-.5,-.06,2.4)])
+   later.attrs['texture']={**face.attrs['texture']}
  if section:scene.section_planes.append(SectionPlane(QVector3D(0,0,0),QVector3D(1,0,0),active=True));scene.show_section_planes=False
  if name=='ground-terrain':
   from georef.terrain import TerrainObject
@@ -87,7 +102,10 @@ for name,alpha,textured,mode,section,offscreen in cases:
  style=Style(face_mode=mode,sky=False,edges=False,profiles=False,background=(.85,.9,.95),section_fill=False);scene.styles=[style];scene.active_style_index=0
  target=[-height*sun[0]/sun[2],-height*sun[1]/sun[2],0.] if offscreen else [-1.2,-.6,0.]
  camera={'target':target,'distance':5. if offscreen else 10.,'yaw':-math.pi/2,'pitch':1.2,'perspective':False,'fov_deg':45.,'width':800,'height':600}
- vp=Oracle();vp.resize(800,600);vp.scene=scene;vp.style_override=style;vp.camera.target=QVector3D(*target);vp.camera.distance=camera['distance'];vp.camera.yaw=camera['yaw'];vp.camera.pitch=camera['pitch'];vp.camera.perspective=False;vp.camera.fov_deg=45.;vp.show();settle(vp)
+ if heldout:
+  if 'perspective' in name:camera.update(perspective=True,yaw=-1.05,pitch=.55,distance=8.)
+  elif 'oblique' in name:camera.update(yaw=-.7,pitch=.7)
+ vp=Oracle();vp.resize(800,600);vp.scene=scene;vp.style_override=style;vp.camera.target=QVector3D(*target);vp.camera.distance=camera['distance'];vp.camera.yaw=camera['yaw'];vp.camera.pitch=camera['pitch'];vp.camera.perspective=camera['perspective'];vp.camera.fov_deg=45.;vp.show();settle(vp)
  if name=='ground-photo':vp.upload_photo_mesh(scene.photo_mesh);settle(vp)
  vp.makeCurrent();metadata={key:gl.glGetString(val).decode()for key,val in [('vendor',0x1f00),('renderer',0x1f01),('version',0x1f02)]};assert 'NVIDIA' in metadata['vendor'],metadata
  samples=ctypes.c_int();gl.glGetIntegerv(0x80a9,ctypes.byref(samples));vp.doneCurrent()
@@ -104,7 +122,7 @@ for name,alpha,textured,mode,section,offscreen in cases:
  camera_visible=any(bool(v)and 0<=float(x)<800 and 0<=float(y)<600 for x,y,v in zip(px,py,visible))
  if offscreen:assert not camera_visible,{'px':px.tolist(),'py':py.tolist(),'visible':visible.tolist()}
  igz=out/(name+'.igz');save_scene(scene,igz)
- records.append({'name':name,'camera':camera,'style':style.to_dict(),'sun':sun,'bounds':[lo.toTuple(),hi.toTuple()],'light_vp_column_major':matrix(vp._shadow_vp),'camera_vp_column_major':matrix(vp.camera.projection_matrix()*vp.camera.view_matrix()),'opacity':alpha,'cutout':textured,'section':section,'offscreen_instance':offscreen,'caster_camera_visible':camera_visible,'sampler':sampler,'gl':metadata,'samples':vp.paint_samples,'receiver_samples':vp.receiver_samples,'receiver_draw_fbo':vp.receiver_draw_fbo,'scene_format_samples':vp._scene_fbo.format().samples(),'resolved_samples':samples.value,'draw_fbo':vp.paint_draw_fbo,'images':rows,'depth_image':depthpath.name,'depth_sha256':digest(depthpath),'igz':igz.name,'igz_sha256':digest(igz),'source_map_renders':vp.map_renders,'bounds_control_edge':billboard,'billboard_mode':('mesh' if name=='billboard-mesh' else True) if billboard else False,'ground_suppressed':{'terrain':vp._terrain_showing(),'photo':vp._photo_showing(),'tiles':vp._base_map_showing()}})
+ records.append({'name':name,'camera':camera,'style':style.to_dict(),'sun':sun,'bounds':[lo.toTuple(),hi.toTuple()],'light_vp_column_major':matrix(vp._shadow_vp),'camera_vp_column_major':matrix(vp.camera.projection_matrix()*vp.camera.view_matrix()),'opacity':alpha,'cutout':textured,'section':section,'offscreen_instance':offscreen,'caster_camera_visible':camera_visible,'sampler':sampler,'gl':metadata,'samples':vp.paint_samples,'receiver_samples':vp.receiver_samples,'receiver_draw_fbo':vp.receiver_draw_fbo,'scene_format_samples':vp._scene_fbo.format().samples(),'resolved_samples':samples.value,'draw_fbo':vp.paint_draw_fbo,'images':rows,'depth_image':depthpath.name,'depth_sha256':digest(depthpath),'igz':igz.name,'igz_sha256':digest(igz),'source_map_renders':vp.map_renders,'bounds_control_edge':billboard,'billboard_mode':('mesh' if 'billboard-mesh' in name else True) if billboard else False,'ground_suppressed':{'terrain':vp._terrain_showing(),'photo':vp._photo_showing(),'tiles':vp._base_map_showing()}})
  vp.close();vp.deleteLater();app.processEvents()
 report={'source_pin':pin,'qt':qVersion(),'scope':'Actual original viewport, controlled fixed normalized sun only; unmodified shadow caster/receiver/packed-depth passes. Original IGZ plus source on/off/restore frames and actual queried sampler. Full native parity is a separate acceptance.','cases':records,'source_files':{str(p.relative_to(source)):digest(p)for p in [source/'views/viewport.py',source/'resources/shaders/basic.vert',source/'resources/shaders/basic.frag',source/'resources/shaders/depth.vert',source/'resources/shaders/depth.frag']}}
 (out/'original.json').write_text(json.dumps(report,indent=2)+'\n');print(json.dumps({'cases':len(records),'renderers':sorted({r['gl']['renderer']for r in records}),'samplers':[r['sampler']for r in records],'map_renders':[r['source_map_renders']for r in records]}))

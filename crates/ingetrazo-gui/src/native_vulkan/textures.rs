@@ -4,26 +4,25 @@ use super::{resources::{BufferId,Resources},texture_cache::{AssetId,PreparedText
 use ash::{vk,Device};
 use ingetrazo_render::{buffer::TextureBuffers,native_textures::Geometry};
 use std::collections::{HashMap,HashSet};
-#[derive(Clone,Copy,Debug,PartialEq,Eq)]pub enum Phase{Opaque,BackOpaque,TransparentFront,TransparentBack,Mask,Depth}
-#[derive(Clone,Debug)]struct Draw{buffer:BufferId,set:vk::DescriptorSet,asset:AssetId,first:u32,count:u32,opacity:f32,shade:f32,cutout:bool,back:bool,cull:bool,opaque:bool,path:String,order:usize,mean:Option<[f32;3]>,shadow_only:bool,missing:bool,bitmap:bool}
+#[derive(Clone,Copy,Debug,PartialEq,Eq)]pub enum Phase{Opaque,BackOpaque,TransparentFront,TransparentBack,Mask,Depth,Billboard}
+#[derive(Clone,Debug)]struct Draw{buffer:BufferId,set:vk::DescriptorSet,asset:AssetId,first:u32,count:u32,opacity:f32,shade:f32,cutout:bool,back:bool,cull:bool,opaque:bool,path:String,order:usize,mean:Option<[f32;3]>,shadow_only:bool,billboard:bool,missing:bool,bitmap:bool}
 struct Pool{device:Device,handle:vk::DescriptorPool}
 impl Drop for Pool{fn drop(&mut self){unsafe{self.device.destroy_descriptor_pool(self.handle,None)}}}
 pub(crate) struct Publication{retirement:super::resources::CompletedRetirement,active:HashSet<AssetId>}
 pub struct Candidate{pool:Option<Pool>,buffers:Vec<BufferId>,draws:Vec<Draw>,images:Vec<PreparedTexture>,references:Option<super::reference_images::Candidate>,pub contours:Vec<(BufferId,u32,u32)>,averages:super::texture_average::Candidate,average_active:HashSet<AssetId>}
 #[derive(Default,Clone,Copy,Debug)]pub struct Stats{pub builds:u64,pub uploads:u64,pub vertex_bytes:u64,pub draws:u64,pub cache_hits:u64,pub rollbacks:u64,pub average_decodes:u64,pub average_hits:u64,pub average_entries:usize,pub sampled_entries:usize}
-pub struct Textures{billboard_receiver_only:bool,references:super::reference_images::ReferenceImages,image_key:Option<(u64,u64)>,probe_pressure:bool,budget:std::sync::Arc<super::budget::VulkanBudget>,device:Device,layout:vk::PipelineLayout,descriptor_layout:vk::DescriptorSetLayout,pipelines:[vk::Pipeline;16],averages:super::texture_average::Cache,pool:Option<Pool>,buffers:Vec<BufferId>,draws:Vec<Draw>,cache:TextureCache,pub stats:Stats}
+pub struct Textures{references:super::reference_images::ReferenceImages,image_key:Option<(u64,u64)>,probe_pressure:bool,budget:std::sync::Arc<super::budget::VulkanBudget>,device:Device,layout:vk::PipelineLayout,descriptor_layout:vk::DescriptorSetLayout,pipelines:[vk::Pipeline;16],averages:super::texture_average::Cache,pool:Option<Pool>,buffers:Vec<BufferId>,draws:Vec<Draw>,cache:TextureCache,pub stats:Stats}
 pub(crate) struct VertexUpdate{old:BufferId,new:BufferId,index:usize,draws:Vec<usize>,bytes:usize}
 pub(crate) struct VertexRefresh{updates:Vec<VertexUpdate>,retirement:super::resources::CompletedRetirement}
 impl Textures{
  pub(crate) fn asset_layout(&self)->vk::DescriptorSetLayout{self.descriptor_layout}
  pub fn new(context:&VulkanContext,render_pass:vk::RenderPass,samples:vk::SampleCountFlags,budget:std::sync::Arc<super::budget::VulkanBudget>)->Result<Self,String>{
-  let device=context.device.clone();let mut result=Self{billboard_receiver_only:false,references:super::reference_images::ReferenceImages::new(context,render_pass,samples)?,image_key:None,probe_pressure:false,budget,device,layout:vk::PipelineLayout::null(),descriptor_layout:vk::DescriptorSetLayout::null(),pipelines:[vk::Pipeline::null();16],averages:super::texture_average::Cache::new(ingetrazo_render::source_texture_decode::Limits::default(),65536),pool:None,buffers:vec![],draws:vec![],cache:TextureCache::default(),stats:Stats::default()};
+  let device=context.device.clone();let mut result=Self{references:super::reference_images::ReferenceImages::new(context,render_pass,samples)?,image_key:None,probe_pressure:false,budget,device,layout:vk::PipelineLayout::null(),descriptor_layout:vk::DescriptorSetLayout::null(),pipelines:[vk::Pipeline::null();16],averages:super::texture_average::Cache::new(ingetrazo_render::source_texture_decode::Limits::default(),65536),pool:None,buffers:vec![],draws:vec![],cache:TextureCache::default(),stats:Stats::default()};
   let bindings=[vk::DescriptorSetLayoutBinding::default().binding(0).descriptor_type(vk::DescriptorType::COMBINED_IMAGE_SAMPLER).descriptor_count(1).stage_flags(vk::ShaderStageFlags::FRAGMENT)];
   result.descriptor_layout=unsafe{result.device.create_descriptor_set_layout(&vk::DescriptorSetLayoutCreateInfo::default().bindings(&bindings),None)}.map_err(|e|e.to_string())?;
   result.layout=unsafe{result.device.create_pipeline_layout(&vk::PipelineLayoutCreateInfo::default().set_layouts(&[result.descriptor_layout]).push_constant_ranges(&[vk::PushConstantRange::default().stage_flags(vk::ShaderStageFlags::VERTEX|vk::ShaderStageFlags::FRAGMENT).offset(0).size(128)]),None)}.map_err(|e|e.to_string())?;
   for index in 0..16{result.pipelines[index]=pipeline(&result.device,render_pass,result.layout,samples,index)?;}Ok(result)
  }
- pub(crate) fn new_billboard(context:&VulkanContext,render_pass:vk::RenderPass,samples:vk::SampleCountFlags,budget:std::sync::Arc<super::budget::VulkanBudget>)->Result<Self,String>{let mut result=Self::new(context,render_pass,samples,budget)?;result.billboard_receiver_only=true;Ok(result)}
  pub fn prepare(&mut self,context:&VulkanContext,resources:&mut Resources,buffers:&TextureBuffers,assets:&HashMap<String,Vec<u8>>,scene:&ingetrazo_core::scene::Scene,fence:vk::Fence,completed:u64,storage_limit:u64)->Result<Candidate,String>{
   self.prepare_mode(context,resources,buffers,assets,scene,fence,completed,storage_limit,false)
  }
@@ -34,22 +33,23 @@ impl Textures{
   if !unsafe{context.device.get_fence_status(fence)}.map_err(|e|e.to_string())?{return Err("Texture replacement requires completed draw fence".into());}
   let mut candidate=Candidate{pool:None,buffers:vec![],draws:vec![],images:vec![],references:None,contours:vec![],averages:super::texture_average::Candidate::default(),average_active:HashSet::new()};
   let prepare=(||->Result<(),String>{
-   {let _pressure=if self.probe_pressure{let mut ledger=self.budget.ledger.lock().unwrap();let previous=ledger.total_limit;ledger.total_limit=Some(ledger.total_committed());Some(PressureRestore{budget:self.budget.clone(),previous})}else{None};candidate.references=Some(if self.billboard_receiver_only{super::reference_images::Candidate::empty()}else{self.references.prepare(context,resources,&mut self.cache,scene,fence).map_err(|e|format!("Reference image admission: {e}"))?});}
+   {let _pressure=if self.probe_pressure{let mut ledger=self.budget.ledger.lock().unwrap();let previous=ledger.total_limit;ledger.total_limit=Some(ledger.total_committed());Some(PressureRestore{budget:self.budget.clone(),previous})}else{None};candidate.references=Some(self.references.prepare(context,resources,&mut self.cache,scene,fence).map_err(|e|format!("Reference image admission: {e}"))?);}
    if buffers.is_empty()&&extra.iter().all(|b|b.is_empty()){return Ok(());}
    let count=u32::try_from(buffers.len().checked_add(extra.iter().try_fold(0usize,|n,b|n.checked_add(b.len())).ok_or("Shadow texture count overflow")?).ok_or("Shadow descriptor count overflow")?).map_err(|_|"Too many texture descriptors")?;
    let mut paths=buffers.iter().map(|(p,b)|(p,b,false)).chain(extra.iter().flat_map(|b|b.iter().map(|(p,b)|(p,b,true)))).collect::<Vec<_>>();paths.sort_by_key(|(_,b,_)|b.source_texture_runs.iter().map(|r|r.order).min().unwrap_or(usize::MAX));
    let mut images=candidate.references.as_ref().unwrap().sampled().collect::<HashMap<AssetId,(vk::ImageView,vk::Sampler,bool)>>();
-   for(path,buffer,shadow_only)in paths{
+   for(path,buffer,extra_only)in paths{
+    let billboard=buffer.source_billboard_receiver;let shadow_only=extra_only&&!billboard;
     let geometry=Geometry::prepare(buffer)?;if geometry.vertices.is_empty(){continue;}
     // viewport.py1612/1780: shaded opaque FRONTS use the Qt mean;
     // all back overrides and translucent fronts sample the original texture.
     // One asset can need both; retain one geometry upload and one sampled image.
-    let needs_mean=!self.billboard_receiver_only&&!shadow_only&&average&&geometry.draws.iter().any(|d|!d.source.back_side&&d.source.opacity>=0.999);
-    let needs_sampled=if self.billboard_receiver_only{buffer.source_billboard_color.is_none()}else{geometry.draws.iter().any(|d|!average||d.source.back_side||d.source.opacity<0.999||(shadow&&!d.source.back_side&&d.source.opacity>=0.7))};
+    let needs_mean=!billboard&&!shadow_only&&average&&geometry.draws.iter().any(|d|!d.source.back_side&&d.source.opacity>=0.999);
+    let needs_sampled=if billboard{buffer.source_billboard_color.is_none()}else{geometry.draws.iter().any(|d|!average||d.source.back_side||d.source.opacity<0.999||(shadow&&!d.source.back_side&&d.source.opacity>=0.7))};
     let file;let missing;
     let encoded=if buffer.source_billboard_color.is_some(){missing=false;&[][..]}else if let Some(bytes)=assets.get(path){missing=false;bytes.as_slice()}else{
-     let read=if needs_mean{read_average_file(path,self.averages.limits().encoded_bytes)}else{match std::fs::read(path){Ok(bytes)=>Ok(bytes),Err(error)if (shadow||self.billboard_receiver_only)&&error.kind()==std::io::ErrorKind::NotFound=>Ok(Vec::new()),Err(error)=>Err(format!("Texture {path}: {error}"))}};
-     file=read?;missing=(shadow||self.billboard_receiver_only)&&!needs_mean&&file.is_empty();file.as_slice()
+     let read=if needs_mean{read_average_file(path,self.averages.limits().encoded_bytes)}else{match std::fs::read(path){Ok(bytes)=>Ok(bytes),Err(error)if (shadow||billboard)&&error.kind()==std::io::ErrorKind::NotFound=>Ok(Vec::new()),Err(error)=>Err(format!("Texture {path}: {error}"))}};
+     file=read?;missing=(shadow||billboard)&&!needs_mean&&file.is_empty();file.as_slice()
     };
     let asset=self.cache.identify(encoded);let id=asset.id();
     let mean=if let Some(color)=buffer.source_billboard_color{Some(color)}else if needs_mean{Some(self.averages.prepare(&mut candidate.averages,id,encoded)?)}else{None};
@@ -64,11 +64,11 @@ impl Textures{
      (sampled,set)
     }else{((vk::ImageView::null(),vk::Sampler::null(),false),vk::DescriptorSet::null())};
     let vertex=resources.upload(context,geometry.upload_bytes(),vk::BufferUsageFlags::VERTEX_BUFFER|vk::BufferUsageFlags::STORAGE_BUFFER,false)?;candidate.buffers.push(vertex);self.stats.uploads+=1;self.stats.vertex_bytes+=geometry.upload_bytes().len()as u64;
-    if !self.billboard_receiver_only&&!shadow_only&&geometry.front_vertices>0 {
+    if !billboard&&!shadow_only&&geometry.front_vertices>0 {
      if geometry.upload_bytes().len()as u64<=storage_limit{candidate.contours.push((vertex,geometry.front_vertices/3,5));}
      else {let triangles=storage_limit.min(8*1024*1024)/36;if triangles==0{return Err("Texture contour storage range cannot hold one triangle".into());}for chunk in geometry.vertices[..geometry.front_vertices as usize].chunks(triangles as usize*3){let positions=chunk.iter().map(|v|v.position).collect::<Vec<_>>();let id=resources.upload(context,bytemuck::cast_slice(&positions),vk::BufferUsageFlags::STORAGE_BUFFER,false)?;candidate.buffers.push(id);candidate.contours.push((id,(positions.len()/3)as u32,3));}}
     }
-    for draw in geometry.draws{let source=draw.source;let opaque=source.opacity>=0.999;let mean=if opaque&&!source.back_side{mean}else{None};let opacity=if opaque{1.}else{format!("{:.3}",source.opacity).parse::<f32>().map_err(|e|e.to_string())?};candidate.draws.push(Draw{buffer:vertex,set,asset:id,first:draw.first,count:draw.count,opacity,shade:source.shade,cutout:self.billboard_receiver_only||sampled.2,back:source.back_side,cull:source.front_cull,opaque,path:path.clone(),order:source.order,mean,shadow_only,missing,bitmap:buffer.source_shadow_bitmap});}
+    for draw in geometry.draws{let source=draw.source;let opaque=source.opacity>=0.999;let mean=if opaque&&!source.back_side{mean}else{None};let opacity=if opaque{1.}else{format!("{:.3}",source.opacity).parse::<f32>().map_err(|e|e.to_string())?};candidate.draws.push(Draw{buffer:vertex,set,asset:id,first:draw.first,count:draw.count,opacity,shade:source.shade,cutout:billboard||sampled.2,back:source.back_side,cull:source.front_cull,opaque,path:path.clone(),order:source.order,mean,shadow_only,billboard,missing,bitmap:buffer.source_shadow_bitmap});}
    }
    // Source front opaque first occurrence, then sorted back/transparent keys.
    candidate.average_active.try_reserve(candidate.draws.len()).map_err(|_|"Average active identity admission")?;
@@ -109,7 +109,7 @@ impl Textures{
  }
  pub(crate) fn record_receiver(&mut self,resources:&mut Resources,command:vk::CommandBuffer,serial:u64,phase:Phase,mvp:&[f32;16],plane:&[f32;4],clip:u32,height:u32,xray:bool,shadow:Option<(vk::PipelineLayout,&[vk::Pipeline;16])>)->Result<(),String>{
   let (layout,pipelines)=shadow.unwrap_or((self.layout,&self.pipelines));
-  for draw in self.draws.iter().filter(|d|!d.shadow_only&&(!d.missing||matches!(phase,Phase::Mask|Phase::Depth))).filter(|d|match phase{Phase::Opaque=>d.opaque&&!d.back,Phase::BackOpaque=>d.opaque&&d.back,Phase::TransparentFront=>!d.opaque&&!d.back,Phase::TransparentBack=>!d.opaque&&d.back,Phase::Mask|Phase::Depth=>true}){
+  for draw in self.draws.iter().filter(|d|!d.shadow_only&&d.billboard==matches!(phase,Phase::Billboard)&&(!d.missing||matches!(phase,Phase::Mask|Phase::Depth))).filter(|d|match phase{Phase::Opaque=>d.opaque&&!d.back,Phase::BackOpaque=>d.opaque&&d.back,Phase::TransparentFront=>!d.opaque&&!d.back,Phase::TransparentBack=>!d.opaque&&d.back,Phase::Mask|Phase::Depth|Phase::Billboard=>true}){
    let buffer=resources.buffer(draw.buffer).ok_or("Cached texture buffer retired before draw")?;resources.mark_used(draw.buffer,serial)?;if draw.set!=vk::DescriptorSet::null(){self.cache.mark_used(draw.asset,serial)?;}
    // viewport.py1652: XRay affects opaque fronts only; back and translucent
    // texture phases retain their paint opacity. _xray_face_depth uses all
@@ -121,9 +121,9 @@ impl Textures{
   }Ok(())
  }
  /// Front-only source casters; receiver averaging never removes alpha cutout.
- pub(crate) fn preflight_shadow(&mut self,resources:&mut Resources,serial:u64,independent:bool)->Result<(),String>{for draw in self.draws.iter().filter(|d|!d.back&&d.opacity>=0.7&&(!independent||d.shadow_only)&&!(d.bitmap&&d.missing)){resources.mark_used(draw.buffer,serial)?;if !draw.missing{self.cache.mark_used(draw.asset,serial)?;}}Ok(())}
+ pub(crate) fn preflight_shadow(&mut self,resources:&mut Resources,serial:u64,independent:bool)->Result<(),String>{for draw in self.draws.iter().filter(|d|!d.billboard&&!d.back&&d.opacity>=0.7&&(!independent||d.shadow_only)&&!(d.bitmap&&d.missing)){resources.mark_used(draw.buffer,serial)?;if !draw.missing{self.cache.mark_used(draw.asset,serial)?;}}Ok(())}
  pub(crate) fn record_shadow(&mut self,resources:&mut Resources,command:vk::CommandBuffer,serial:u64,pipeline:vk::Pipeline,layout:vk::PipelineLayout,fallback:vk::Pipeline,plain_layout:vk::PipelineLayout,parameters:&[u8],independent:bool)->Result<(),String>{
-  for draw in self.draws.iter().filter(|d|!d.back&&d.opacity>=0.7&&(!independent||d.shadow_only)&&!(d.bitmap&&d.missing)){
+  for draw in self.draws.iter().filter(|d|!d.billboard&&!d.back&&d.opacity>=0.7&&(!independent||d.shadow_only)&&!(d.bitmap&&d.missing)){
    let buffer=resources.buffer(draw.buffer).ok_or("Shadow texture buffer retired")?;
    if draw.set==vk::DescriptorSet::null()&&!draw.missing{return Err("Shadow caster sampled alpha was not admitted".into());}
    resources.mark_used(draw.buffer,serial)?;
@@ -139,12 +139,12 @@ impl Textures{
   let mut old=Vec::new();let mut next=Vec::new();old.try_reserve(sources.len()).map_err(|_|"Sprite old identity admission")?;next.try_reserve(sources.len()).map_err(|_|"Sprite next identity admission")?;
   let result=(||->Result<(),String>{for(path,source)in sources{
    if shadow&&!source.source_shadow_bitmap{return Err("Sprite replacement source classification".into());}
-   let geometry=Geometry::prepare(source)?;let mut matching=Vec::new();matching.try_reserve_exact(geometry.draws.len()).map_err(|_|"Sprite draw identity admission")?;matching.extend(self.draws.iter().enumerate().filter(|(_,d)|d.shadow_only==shadow&&d.path==*path).map(|(i,_)|i));if matching.len()!=geometry.draws.len()||matching.is_empty(){return Err("Sprite replacement run identity".into());}
+   let geometry=Geometry::prepare(source)?;let mut matching=Vec::new();matching.try_reserve_exact(geometry.draws.len()).map_err(|_|"Sprite draw identity admission")?;matching.extend(self.draws.iter().enumerate().filter(|(_,d)|(if shadow{d.shadow_only&&d.bitmap}else{d.billboard})&&d.path==*path).map(|(i,_)|i));if matching.len()!=geometry.draws.len()||matching.is_empty(){return Err("Sprite replacement run identity".into());}
    let previous=self.draws[matching[0]].buffer;
-   for(&i,g)in matching.iter().zip(&geometry.draws){let d=&self.draws[i];if d.buffer!=previous||d.first!=g.first||d.count!=g.count||d.opacity!=1.||d.back||d.shadow_only!=shadow{return Err("Sprite replacement immutable layout".into());}}
+   for(&i,g)in matching.iter().zip(&geometry.draws){let d=&self.draws[i];if d.buffer!=previous||d.first!=g.first||d.count!=g.count||d.opacity!=1.||d.back||(if shadow{!d.shadow_only}else{!d.billboard}){return Err("Sprite replacement immutable layout".into());}}
    let index=self.buffers.iter().position(|id|*id==previous).ok_or("Sprite buffer ownership")?;
    let buffer=resources.upload(context,geometry.upload_bytes(),vk::BufferUsageFlags::VERTEX_BUFFER|vk::BufferUsageFlags::STORAGE_BUFFER,false)?;old.push(previous);next.push(buffer);updates.push(VertexUpdate{old:previous,new:buffer,index,draws:matching,bytes:geometry.upload_bytes().len()});
-  }if self.draws.iter().any(|d|d.shadow_only==shadow&&!sources.contains_key(&d.path)){return Err("Sprite replacement removes immutable identity".into());}Ok(())})();
+  }if self.draws.iter().any(|d|(if shadow{d.shadow_only&&d.bitmap}else{d.billboard})&&!sources.contains_key(&d.path)){return Err("Sprite replacement removes immutable identity".into());}Ok(())})();
   let retirement=match result.and_then(|_|resources.publication_preflight(context,fence,completed,&old,&next)){Ok(proof)=>proof,Err(error)=>{for id in next{resources.retire(id)?;}resources.collect(fence,completed)?;return Err(error);}};
   Ok(VertexRefresh{updates,retirement})
  }
