@@ -1,0 +1,38 @@
+{
+  "runtime_commit": "d405c1131c2c946a4ec5554fed476ca5360a2352",
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "entries": {
+    "build.log": "994c05b22b74265e957ccb44179907bb10ca58f776773c0bdaf25220f183b088",
+    "check.log": "ca1f9e78183e5fa0dcbc12016b183033a0ef80f7f070500a4473f59be1b6e073",
+    "delete-input.igz": "cf0b59bec964e99937de58035198c16e7ddd4c380b056ffd68367cb71a206558",
+    "hover-delete-native.json": "63400dd1e81c3968cd53487591b463750ea32815245059366f095333d883c891",
+    "hover-delete-original.json": "0a898261ef799b66a75ffaa47ac99ebe45bf57916fc94b021fd0684e109bce59",
+    "hover-input.igz": "c9ce01d930fff89d9af94b5580093f6f82626b75d6ce690482e32fd787d4a87b",
+    "native.json": "33a019edfab7ce871407df0251451aaf4fba0aa319bdcbeb72095cde0aa3c1d2",
+    "nested-annotations-native.igz": "d4614671d4170f290195721454839810ba9d231491445b3a240c8e75aff8ca60",
+    "nested-mixed-native.igz": "8cfbae69f1c793b07ae9559dd29476a973cd9dee58085ce649c54190cf1f090b",
+    "original-hover.json": "bd4b3480d1c0e6e93067e14f1b36b609d34fcef43b9fb046aaff7d84706c425c",
+    "original.json": "33a019edfab7ce871407df0251451aaf4fba0aa319bdcbeb72095cde0aa3c1d2",
+    "parked-native.igz": "d4614671d4170f290195721454839810ba9d231491445b3a240c8e75aff8ca60",
+    "root-native.igz": "584ce574f6cd7d2159a190d6ac11686f7edb97e46fe336d1af4b66e9c2201685",
+    "runtime.log": "95c4cca760b8ffe5cdb4bdf2f9359375c7ad7f2bf41014c150f4beb4fd566bed",
+    "source.log": "e08c6145f72bd43dffa03e85ed2b21904fb9a6b101689eada1a8560ae71ec8a3"
+  },
+  "source_files": {
+    "crates/ingetrazo-gui/examples/annotation_delete_fixture.rs": "bfa53be56c23dd1faeb942eb1e7e9e02206a85547e6d261d99e450bdfc7f2428",
+    "crates/ingetrazo-gui/src/annotation_delete.rs": "19d0b83cfecb1d141d66163949be59a2a697908724d6e8ba7a4f7f6bbd0e1aa2",
+    "crates/ingetrazo-gui/src/app.rs": "dd0b8c19b120a6e9eb8b11e468651215ae071416b5a7bb610bc5fecffc0532ac",
+    "scripts/check-annotation-delete.py": "53dd8f3396e048a1f8bbed8d23abd47ed941712bbad6ef4ef6b806fd4c482000",
+    "scripts/reference-annotation-hover-delete.py": "761f00948137e8d4e81cb31052ab88891ca93d2537dce3e17b107dbbba23b6de"
+  },
+  "original_files": {
+    "tools/select.py": "baa33a660666cbc78a25ca291e0b40a4b2bd88755393ebce08295e1de6327916",
+    "views/viewport.py": "1fb62f55b8f559deb3676924ee69a9a444397faa28c49651111cea44e420c724"
+  },
+  "binary": {
+    "path": "/tmp/ingetrazo-ai-registry-target/debug/examples/annotation_delete_fixture",
+    "sha256": "fed1cb8b4dd4612f509960cc793488d19c36a32564b962060792913350905049"
+  },
+  "archive_sha256": "8a2a7d431aa168a2f1d7aef390d3e52ec029c3c69d6435f50b44c8ea2af6b476",
+  "byte_verified": true
+}
