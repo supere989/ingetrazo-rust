@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Original reopen of Rust shared-definition updates and Make Unique isolation."""
-import json,os,sys,subprocess,tempfile
+import argparse,json,os,sys,subprocess,tempfile
 from pathlib import Path
 from acceptance_context import context
 os.environ.setdefault("QT_QPA_PLATFORM","offscreen")
@@ -10,14 +10,42 @@ from core.scene import Scene
 from formats import igz
 
 def main():
+    parser=argparse.ArgumentParser()
+    parser.add_argument("--prebuilt-dir",type=Path,help="Fresh native debug example executables built by the caller")
+    args=parser.parse_args()
+    if os.environ.get("CARGO_BUILD_TARGET") or os.environ.get("CARGO_PROFILE"):
+        parser.error("Component acceptance supports native debug executables only; unset CARGO_BUILD_TARGET/CARGO_PROFILE")
+    names=("component_acceptance_fixture","component_editor_acceptance_fixture","component_ci_world_bake_fixture")
+    if args.prebuilt_dir is None:
+        target=Path(os.environ.get("CARGO_TARGET_DIR","target")).resolve()
+        build=subprocess.run(["cargo","build","--locked","--message-format=json-render-diagnostics","-j2","--target-dir",str(target),"-p","ingetrazo-formats","-p","ingetrazo-gui",*[part for name in names for part in ("--example",name)]],check=True,stdout=subprocess.PIPE,text=True)
+        binary_dir=target/"debug"/"examples"
+        artifacts={name:set() for name in names}
+        for line in build.stdout.splitlines():
+            message=json.loads(line)
+            if message.get("reason")=="compiler-artifact" and message.get("executable") and "example" in message.get("target",{}).get("kind",[]):
+                name=message["target"]["name"]
+                if name in artifacts:artifacts[name].add(Path(message["executable"]).resolve())
+        suffix=".exe" if os.name=="nt" else ""
+        for name in names:
+            expected=(binary_dir/(name+suffix)).resolve()
+            if artifacts[name]!={expected}:
+                parser.error(f"Unsupported target configuration or missing Cargo artifact for {name}: {sorted(map(str,artifacts[name]))}; expected {expected}")
+    else:
+        binary_dir=args.prebuilt_dir.resolve()
+    suffix=".exe" if os.name=="nt" else ""
+    binaries={name:binary_dir/(name+suffix) for name in names}
+    for binary in binaries.values():
+        if not binary.is_file() or not os.access(binary,os.X_OK):
+            parser.error(f"Required prebuilt executable missing or not executable: {binary}")
     app=QApplication.instance() or QApplication([])
     subprocess.run([sys.executable,"scripts/probe-python-component-ci-bake.py"],check=True)
-    subprocess.run([sys.executable,"scripts/check-component-ci-world-bake.py"],check=True)
+    subprocess.run([sys.executable,"scripts/check-component-ci-world-bake.py","--prebuilt-dir",str(binary_dir)],check=True)
     with tempfile.TemporaryDirectory() as temp:
         directory=Path(temp);identity=[1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1]
         source={"igz_format":1,"app_version":"independent-original","scene":{"opaque_document":{"retain":[83,89]},"faces":[],"edges":[{"a":[-3,0,0],"b":[-2,0,0]}],"protos":[{"edges":[],"faces":[{"vertices":[[0,0,0],[1,0,0],[0,1,0]],"opaque_face":61}]}],"groups":[{"name":name,"uid":"persisted-"+name,"component":component,"proto":0,"xform":identity,"opaque_instance":value} for name,component,value in [("first",True,67),("second",True,71),("plain",False,73)]]}}
         (directory/"component-source.igz").write_text(json.dumps(source))
-        subprocess.run(["cargo","run","--locked","-p","ingetrazo-formats","--example","component_acceptance_fixture","--",temp],check=True)
+        subprocess.run([str(binaries["component_acceptance_fixture"]),temp],check=True)
         linked=Scene();igz.load_into(linked,directory/"linked.igz")
         assert linked.groups[0].mesh is linked.groups[1].mesh,"Linked instances lost actual shared native mesh"
         assert linked.groups[0].mesh is not linked.groups[2].mesh and not linked.groups[2].component
@@ -26,7 +54,7 @@ def main():
         assert not unique.groups[1].component
         assert unique.groups[0].mesh is not unique.groups[1].mesh,"Make Unique remained linked"
         assert [g.mesh.vertices[0].position.z() for g in unique.groups]==[3,2,0]
-        subprocess.run(["cargo","run","--locked","-p","ingetrazo-gui","--example","component_editor_acceptance_fixture","--",temp],check=True)
+        subprocess.run([str(binaries["component_editor_acceptance_fixture"]),temp],check=True)
         def reopen(name):
             scene=Scene();igz.load_into(scene,directory/(name+".igz"));return scene
         before=reopen("editor-before")

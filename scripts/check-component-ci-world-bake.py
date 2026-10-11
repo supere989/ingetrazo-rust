@@ -1,9 +1,31 @@
 #!/usr/bin/env python3
 """Independent frozen original/world-frame comparison and adversarial negatives."""
-import json,copy,subprocess,os,hashlib
+import argparse,json,copy,subprocess,os,hashlib
 from pathlib import Path
+parser=argparse.ArgumentParser()
+parser.add_argument("--prebuilt-dir",type=Path,help="Fresh native debug example executables built by the caller")
+args=parser.parse_args()
+if os.environ.get("CARGO_BUILD_TARGET") or os.environ.get("CARGO_PROFILE"):
+    parser.error("Component acceptance supports native debug executables only; unset CARGO_BUILD_TARGET/CARGO_PROFILE")
+if args.prebuilt_dir is None:
+    target=Path(os.environ.get("CARGO_TARGET_DIR","target")).resolve()
+    build=subprocess.run(["cargo","build","--locked","--message-format=json-render-diagnostics","-j2","--target-dir",str(target),"-p","ingetrazo-gui","--example","component_ci_world_bake_fixture"],check=True,stdout=subprocess.PIPE,text=True)
+    binary_dir=target/"debug"/"examples"
+    artifacts=set()
+    for line in build.stdout.splitlines():
+        message=json.loads(line)
+        if message.get("reason")=="compiler-artifact" and message.get("executable") and message.get("target",{}).get("name")=="component_ci_world_bake_fixture" and "example" in message["target"].get("kind",[]):
+            artifacts.add(Path(message["executable"]).resolve())
+    expected=(binary_dir/("component_ci_world_bake_fixture"+(".exe" if os.name=="nt" else ""))).resolve()
+    if artifacts!={expected}:
+        parser.error(f"Unsupported target configuration or missing Cargo artifact: {sorted(map(str,artifacts))}; expected {expected}")
+else:
+    binary_dir=args.prebuilt_dir.resolve()
+binary=binary_dir/("component_ci_world_bake_fixture"+(".exe" if os.name=="nt" else ""))
+if not binary.is_file() or not os.access(binary,os.X_OK):
+    parser.error(f"Required prebuilt executable missing or not executable: {binary}")
 d=Path("docs/audits/component-ci-world-bake")
-subprocess.run(["cargo","run","--locked","-p","ingetrazo-gui","--example","component_ci_world_bake_fixture","--",str(d)],check=True)
+subprocess.run([str(binary),str(d)],check=True)
 source=json.loads((d/"original.json").read_text())["cases"];native=json.loads((d/"native.json").read_text())
 def equal(a,b):
  if isinstance(a,(int,float))and not isinstance(a,bool):return a==b
