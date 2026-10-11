@@ -1,0 +1,81 @@
+{
+  "runtime_commit": "1f4bc75ec437694fe76f2b53b1b3a92fd534a2dc",
+  "entries": {
+    "0.test.log": {
+      "bytes": 187,
+      "sha256": "3ca39d353a9055db958695f6c134002c2c9bacea124ecf76e975ad6a5efdf74a"
+    },
+    "1.test.log": {
+      "bytes": 223,
+      "sha256": "aa8c01387488b4bd178457445f1147a33bdc4d66d9c6367cd6e077953f86317c"
+    },
+    "10.test.log": {
+      "bytes": 192,
+      "sha256": "02ce4b114e50e891ecf1c9b6602da6b3fe1132e2c50e3b061b32dd33e3702468"
+    },
+    "11.test.log": {
+      "bytes": 173,
+      "sha256": "00e859f3c61a01af990b3472f416d1e8c5e80a879533ab28f8e820a9cfcdb157"
+    },
+    "2.test.log": {
+      "bytes": 221,
+      "sha256": "d592659132dc4767ca35fb97f91a91624b205a37e7c0045a9bcc4dd09a593cbc"
+    },
+    "3.test.log": {
+      "bytes": 227,
+      "sha256": "3cc04a18bfa20b071ff98606db54c98d3752e752201f7a329b4f074236be18d3"
+    },
+    "4.test.log": {
+      "bytes": 213,
+      "sha256": "be91f8caf2e82f9c98dca0878e9095986f5652ba587024d8ade771f9781a12aa"
+    },
+    "5.test.log": {
+      "bytes": 236,
+      "sha256": "aa44016f19bb96e12882abb54590fd72b6f8a350c0654b2e756f37b302eabb38"
+    },
+    "6.test.log": {
+      "bytes": 202,
+      "sha256": "471f75d121ba9d7801ad21abdf61471bd8a3ff02faacea292b71c76eb8432a03"
+    },
+    "7.test.log": {
+      "bytes": 199,
+      "sha256": "7368c7d4f44be96488a6ed46c8492c1440a3c3d23c40c8f1da905006f88e86bc"
+    },
+    "8.test.log": {
+      "bytes": 195,
+      "sha256": "8b0afe79045aeab4127c51e25526b1fffcb30f26932529a0dbbe99fedf1ea836"
+    },
+    "9.test.log": {
+      "bytes": 200,
+      "sha256": "431b4246003c43949bbe496f0627f95f8e2132682fcb67f981e43ca9938cab39"
+    },
+    "build.json": {
+      "bytes": 382,
+      "sha256": "139802bfa08627600e5d5f94827ef4d06bd6a1b8d4b1eb79b089fb5196ad0bdf"
+    },
+    "build.jsonl": {
+      "bytes": 345603,
+      "sha256": "3fe60c345a5b8dc7654f6aa7efec6084b09aabfb6d318a14b4c62449eaa2ad69"
+    },
+    "build.log": {
+      "bytes": 245,
+      "sha256": "7bee85ee4fa8bf803af76db50245e6f3f907959f321166a349c9ed135db55602"
+    },
+    "grammar-controls.json": {
+      "bytes": 583,
+      "sha256": "8503401b6e63123aa27dc891e17a5f3edca3a6c8a589be7fba526c91560c7639"
+    },
+    "result.json": {
+      "bytes": 2888,
+      "sha256": "95aff55ed7a5de050dbf11932198e7206cc8df6a46b9356f209eb6a3d4d1d306"
+    }
+  },
+  "source_sha256": {
+    "crates/ingetrazo-gui/src/component_edit.rs": "578e02d8da257f5eea0ec63fb048513a2b477baf52fec526924dcfa3c2a97cde",
+    "crates/ingetrazo-gui/src/native_vulkan/annotation_viewport.rs": "5ecc3c5159de6689bb59a5b39ddd7c6c27dfc02b4866ac93b01dac2b147cf0b7",
+    "crates/ingetrazo-gui/tests/move_component_arrays.rs": "77282106cbf9728c72344dc0f8fb224777a11e6835416044a55e5e3e95d6101f",
+    "crates/ingetrazo-tools/src/rectangle.rs": "98c73b1746f2c85bb1ce9cd6fc64b4c7b65813c3fdf3f8502a1377ee7fbc457d"
+  },
+  "archive_sha256": "dd7ef9750a707c1bf4c59e9fda0eee985ce9da7b78210ce22f1b2d56af29df27",
+  "byte_verified": true
+}
