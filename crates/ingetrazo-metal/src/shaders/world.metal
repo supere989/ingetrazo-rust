@@ -10,6 +10,7 @@ vertex Out world_vertex(uint id [[vertex_id]],const device Vertex* v [[buffer(0)
 struct Paint {float4 front;float4 back;uint mode;uint padding0;uint padding1;uint padding2;};
 fragment float4 world_fragment(Out in [[stage_in]],bool front [[front_facing]],constant Paint& paint [[buffer(0)]]) {
  if(paint.mode==1||paint.mode==3)return paint.front;
+ if(paint.mode==4)return front?in.color:paint.back;
  if(paint.mode==2)return front?paint.front:paint.back;
  return in.color;
 }

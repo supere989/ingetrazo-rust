@@ -37,3 +37,5 @@ mod world_admission;
 pub mod world;
 
 pub mod world_policy;
+
+pub mod world_placement;

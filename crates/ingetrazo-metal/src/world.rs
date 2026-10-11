@@ -1,6 +1,7 @@
 //! Direct native world-space surface rendering. No CPU projection or submission.
 //! Prepared frames retain buffers and color/depth targets through GPU completion.
 //! This first opaque stage deliberately rejects paint policies not implemented here.
+use crate::world_placement::{Packet as PlacementPacket, Pose as PlacementPose, PrototypeKey};
 use crate::world_policy::{Mode, Plan, Policy};
 use crate::{Buffer, NativeMetal};
 use ingetrazo_core::gpu_memory::MemoryBudget;
@@ -57,12 +58,19 @@ struct Target {
     color: Image,
     depth: Image,
     extent: (u32, u32),
+    poses: Vec<PlacementPose>,
 }
 struct Mesh {
     vertices: Buffer,
     indices: Buffer,
     count: usize,
     plan: Plan,
+}
+struct PlacementMeshes {
+    packet: Arc<PlacementPacket>,
+    meshes: Vec<Option<Arc<Mesh>>>,
+    key_index: Vec<(PrototypeKey, usize)>,
+    retained_payload_bytes: usize,
 }
 struct Pipeline {
     color: Retained<ProtocolObject<dyn MTLRenderPipelineState>>,
@@ -78,17 +86,25 @@ pub struct Stats {
     /// Current World cache paint-plan capacities only. Prior Prepared frames may
     /// independently retain older plans; excludes allocator/shared/GPU owners.
     pub policy_retained_payload_bytes: usize,
+    /// Current cache records/plans only, excludes previous Prepared caches,
+    /// allocator headers, shared renderer, geometry GPU buffers and Scene.
+    pub placement_cache_payload_bytes: usize,
+    pub placement_descriptor_payload_bytes: usize,
+    /// Pose Vec capacities in all current World target slots (including pinned).
+    pub pose_storage_payload_bytes: usize,
 }
 #[derive(Default)]
 pub struct World {
     owner: Option<Arc<Owner>>,
     mesh: Option<Arc<Mesh>>,
     key: Option<u64>,
+    placements: Option<Arc<PlacementMeshes>>,
     pipeline: Option<Arc<Pipeline>>,
     targets: Vec<Arc<Target>>,
     pub stats: Stats,
 }
 pub struct Prepared {
+    placements: Option<Arc<PlacementMeshes>>,
     owner: Arc<Owner>,
     mesh: Option<Arc<Mesh>>,
     pipeline: Arc<Pipeline>,
@@ -200,6 +216,7 @@ impl World {
                     4,
                 )?,
                 extent,
+                poses: Vec::new(),
             })
         };
         let owner = self
@@ -216,11 +233,21 @@ impl World {
         }
         self.owner = Some(owner.clone());
         self.key = Some(key);
-        self.stats.policy_retained_payload_bytes = mesh.as_ref().map_or(0,|m|m.plan.retained_payload_bytes);
+        self.stats.policy_retained_payload_bytes =
+            mesh.as_ref().map_or(0, |m| m.plan.retained_payload_bytes);
         self.mesh = mesh.clone();
+        self.placements = None;
+        self.stats.placement_cache_payload_bytes = 0;
+        self.stats.placement_descriptor_payload_bytes = 0;
+        self.stats.pose_storage_payload_bytes = self
+            .targets
+            .iter()
+            .map(|t| t.poses.capacity() * std::mem::size_of::<PlacementPose>())
+            .sum();
         self.pipeline = Some(pipeline.clone());
         self.stats.prepared += 1;
         Ok(Some(Arc::new(Prepared {
+            placements: None,
             owner,
             mesh,
             pipeline,
@@ -230,10 +257,248 @@ impl World {
             policy,
         })))
     }
+    /// Source-eligible own-mesh prototypes plus independently posed bindings.
+    /// Unchanged packet Arc skips cold key/sort/collection; every pose validates.
+    /// `collect` must return local source-placement coordinates with effective
+    /// inherited paint, style and layer identity already represented in the key.
+    pub fn prepare_placements<F>(
+        &mut self,
+        metal: &NativeMetal,
+        packet: Arc<PlacementPacket>,
+        poses: &[PlacementPose],
+        extent: (u32, u32),
+        clear: [f64; 4],
+        policy: Policy,
+        mut collect: F,
+    ) -> Result<Option<Arc<Prepared>>, String>
+    where
+        F: FnMut(&PrototypeKey) -> Result<MeshRenderBuffer, String>,
+    {
+        if let Some(owner) = &self.owner {
+            owner.validate(metal)?;
+        }
+        policy.validate()?;
+        super::world_admission::pose([[0.; 4]; 4], extent, clear)?;
+        super::world_placement::validate_poses(&packet, poses)?;
+        if metal.poisoned.load(std::sync::atomic::Ordering::Acquire) {
+            return Err("Metal world admission poisoned".into());
+        }
+        if extent.0 == 0 || extent.1 == 0 {
+            return Ok(None);
+        }
+        self.targets
+            .retain(|t| Arc::strong_count(t) > 1 || t.extent == extent);
+        let idle = self
+            .targets
+            .iter()
+            .position(|t| t.extent == extent && Arc::strong_count(t) == 1);
+        if idle.is_none() && self.targets.len() >= 3 {
+            return Ok(None);
+        }
+        let mut uploaded = 0;
+        let placements = if let Some(old) = self
+            .placements
+            .as_ref()
+            .filter(|old| Arc::ptr_eq(&old.packet, &packet))
+        {
+            old.clone()
+        } else {
+            const CACHE_BYTES: usize = 64 * 1024 * 1024;
+            let list_preflight = packet
+                .prototypes
+                .len()
+                .checked_mul(
+                    std::mem::size_of::<Option<Arc<Mesh>>>()
+                        + std::mem::size_of::<(PrototypeKey, usize)>(),
+                )
+                .and_then(|n| n.checked_add(std::mem::size_of::<PlacementMeshes>()))
+                .filter(|n| *n <= CACHE_BYTES)
+                .ok_or("Metal prototype cache list admission exceeds64MiB")?;
+            let _ = list_preflight;
+            let mut meshes = Vec::new();
+            let mut key_index = Vec::new();
+            meshes
+                .try_reserve_exact(packet.prototypes.len())
+                .map_err(|_| "Metal prototype cache allocation refused")?;
+            key_index
+                .try_reserve_exact(packet.prototypes.len())
+                .map_err(|_| "Metal prototype lookup allocation refused")?;
+            let mut retained = meshes
+                .capacity()
+                .checked_mul(std::mem::size_of::<Option<Arc<Mesh>>>())
+                .and_then(|n| {
+                    key_index
+                        .capacity()
+                        .checked_mul(std::mem::size_of::<(PrototypeKey, usize)>())
+                        .and_then(|m| n.checked_add(m))
+                })
+                .and_then(|n| n.checked_add(std::mem::size_of::<PlacementMeshes>()))
+                .ok_or("Metal cache actual capacity overflow")?;
+            if retained > CACHE_BYTES {
+                return Err("Metal prototype cache metadata exceeds64MiB".into());
+            }
+            for (index, key) in packet.prototypes.iter().enumerate() {
+                let prior = self.placements.as_ref().and_then(|old| {
+                    old.key_index
+                        .binary_search_by_key(key, |p| p.0)
+                        .ok()
+                        .map(|i| old.meshes[old.key_index[i].1].clone())
+                });
+                let mesh = if let Some(prior) = prior {
+                    retained = retained
+                        .checked_add(prior.as_ref().map_or(0, |m| {
+                            std::mem::size_of::<Mesh>() + m.plan.retained_payload_bytes
+                                - std::mem::size_of::<Plan>()
+                        }))
+                        .filter(|n| *n <= CACHE_BYTES)
+                        .ok_or("Metal retained prototype plans exceed64MiB")?;
+                    prior
+                } else {
+                    let data = collect(key)?;
+                    let plan = super::world_admission::opaque(&data)?;
+                    if !data.indices.is_empty() {
+                        retained = retained
+                            .checked_add(
+                                std::mem::size_of::<Mesh>() + plan.retained_payload_bytes
+                                    - std::mem::size_of::<Plan>(),
+                            )
+                            .filter(|n| *n <= CACHE_BYTES)
+                            .ok_or("Metal retained prototype plans exceed64MiB")?;
+                    }
+                    if !plan.overrides.is_empty() {
+                        return Err("Metal source placement with back overrides requires consolidated stage".into());
+                    }
+                    if data.indices.is_empty() {
+                        None
+                    } else {
+                        uploaded += 1;
+                        Some(Arc::new(Mesh {
+                            vertices: upload(metal, bytemuck::cast_slice(&data.vertices))?,
+                            indices: upload(metal, bytemuck::cast_slice(&data.indices))?,
+                            count: data.indices.len(),
+                            plan,
+                        }))
+                    }
+                };
+                meshes.push(mesh);
+                key_index.push((*key, index));
+            }
+            key_index.sort_unstable_by_key(|p| p.0);
+            Arc::new(PlacementMeshes {
+                packet: packet.clone(),
+                meshes,
+                key_index,
+                retained_payload_bytes: retained,
+            })
+        };
+        let pipeline = if let Some(p) = &self.pipeline {
+            p.clone()
+        } else {
+            Arc::new(pipeline(metal)?)
+        };
+        let mut new_target = if idle.is_none() {
+            Some(Arc::new(Target {
+                color: image(
+                    metal,
+                    extent,
+                    MTLPixelFormat::RGBA8Unorm,
+                    MTLTextureUsage::RenderTarget | MTLTextureUsage::ShaderRead,
+                    4,
+                )?,
+                depth: image(
+                    metal,
+                    extent,
+                    MTLPixelFormat::Depth32Float,
+                    MTLTextureUsage::RenderTarget,
+                    4,
+                )?,
+                extent,
+                poses: Vec::new(),
+            }))
+        } else {
+            None
+        };
+        let target = if let Some(i) = idle {
+            &mut self.targets[i]
+        } else {
+            new_target.as_mut().unwrap()
+        };
+        let unique = Arc::get_mut(target).ok_or("Metal placement idle target ownership changed")?;
+        // Grow an unpublished candidate, so refused allocation/admission leaves
+        // the idle target and its accounted capacity unchanged.
+        if poses.len() > unique.poses.capacity() {
+            let mut candidate = Vec::new();
+            candidate
+                .try_reserve_exact(poses.len())
+                .map_err(|_| "Metal placement pose storage allocation refused")?;
+            if candidate
+                .capacity()
+                .checked_mul(std::mem::size_of::<PlacementPose>())
+                .is_none_or(|n| n > super::world_placement::MAX_POSE_BYTES)
+            {
+                return Err("Metal actual pose storage exceeds8MiB per target".into());
+            }
+            candidate.extend_from_slice(poses);
+            unique.poses = candidate;
+        } else {
+            unique.poses.clear();
+            unique.poses.extend_from_slice(poses);
+        }
+        let target = target.clone();
+        if new_target.is_some() {
+            self.targets.push(target.clone());
+            self.stats.target_allocations += 1;
+        }
+        let owner = self
+            .owner
+            .clone()
+            .unwrap_or_else(|| Arc::new(Owner::new(metal)));
+        self.stats.geometry_uploads += uploaded;
+        self.stats.prepared += 1;
+        if uploaded == 0 {
+            self.stats.warm_geometry_hits += 1;
+        }
+        self.stats.policy_retained_payload_bytes = placements
+            .meshes
+            .iter()
+            .filter_map(|m| m.as_ref())
+            .map(|m| m.plan.retained_payload_bytes)
+            .sum();
+        self.stats.placement_cache_payload_bytes = placements.retained_payload_bytes;
+        self.stats.placement_descriptor_payload_bytes = placements.packet.retained_payload_bytes();
+        self.stats.pose_storage_payload_bytes = self
+            .targets
+            .iter()
+            .map(|t| t.poses.capacity() * std::mem::size_of::<PlacementPose>())
+            .sum();
+        self.owner = Some(owner.clone());
+        self.mesh = None;
+        self.key = None;
+        self.placements = Some(placements.clone());
+        self.pipeline = Some(pipeline.clone());
+        Ok(Some(Arc::new(Prepared {
+            placements: Some(placements),
+            owner,
+            mesh: None,
+            pipeline,
+            target,
+            mvp: [[0.; 4]; 4],
+            clear,
+            policy,
+        })))
+    }
     pub fn clear_idle(&mut self) {
         self.targets.retain(|t| Arc::strong_count(t) > 1);
         self.mesh = None;
+        self.placements = None;
         self.stats.policy_retained_payload_bytes = 0;
+        self.stats.placement_cache_payload_bytes = 0;
+        self.stats.placement_descriptor_payload_bytes = 0;
+        self.stats.pose_storage_payload_bytes = self
+            .targets
+            .iter()
+            .map(|t| t.poses.capacity() * std::mem::size_of::<PlacementPose>())
+            .sum();
         self.key = None;
     }
 }
@@ -289,54 +554,116 @@ impl Prepared {
         }));
         encoder.setCullMode(MTLCullMode::None);
         encoder.setFrontFacingWinding(MTLWinding::CounterClockwise);
-        if let Some(mesh) = &self.mesh {
-            unsafe {
-                encoder.setVertexBuffer_offset_atIndex(Some(&mesh.vertices.raw), 0, 0);
-                encoder.setVertexBytes_length_atIndex(
-                    std::ptr::NonNull::from(&self.mvp).cast(),
-                    64,
-                    1,
-                );
-            }
-            let mode = match self.policy.mode {
-                Mode::Material => 0,
-                Mode::HiddenLine => 1,
-                Mode::Monochrome => 2,
-            };
-            let uniform = PaintUniform {
-                front: self.policy.front,
-                back: self.policy.back,
-                mode,
-                padding: [0; 3],
-            };
-            bind_paint(&encoder, &uniform);
-            draw(&encoder, mesh, 0, mesh.count);
-            if self.policy.mode == Mode::Material {
-                encoder.setCullMode(MTLCullMode::Front);
-                let default = PaintUniform {
-                    front: self.policy.back,
-                    mode: 3,
-                    ..uniform
-                };
-                bind_paint(&encoder, &default);
-                for &(first, count) in &mesh.plan.default_back {
-                    draw(&encoder, mesh, first, count);
-                }
-                for paint in &mesh.plan.overrides {
-                    let override_paint = PaintUniform {
-                        front: paint.color,
-                        mode: 3,
-                        ..uniform
-                    };
-                    bind_paint(&encoder, &override_paint);
-                    draw(&encoder, mesh, paint.first, paint.count);
+        if let Some(placements) = &self.placements {
+            for (pose, prototype) in self.target.poses.iter().zip(&placements.packet.bindings) {
+                encoder.setFrontFacingWinding(if pose.reflected {
+                    MTLWinding::Clockwise
+                } else {
+                    MTLWinding::CounterClockwise
+                });
+                if let Some(mesh) = &placements.meshes[*prototype as usize] {
+                    encode_placement_mesh(&encoder, mesh, &pose.mvp, self.policy);
                 }
             }
+        } else if let Some(mesh) = &self.mesh {
+            encode_mesh(&encoder, mesh, &self.mvp, self.policy);
         }
         encoder.endEncoding();
         Ok(())
     }
 }
+fn encode_mesh(
+    encoder: &ProtocolObject<dyn MTLRenderCommandEncoder>,
+    mesh: &Mesh,
+    mvp: &[[f32; 4]; 4],
+    policy: Policy,
+) {
+    encoder.setCullMode(MTLCullMode::None);
+
+    unsafe {
+        encoder.setVertexBuffer_offset_atIndex(Some(&mesh.vertices.raw), 0, 0);
+        encoder.setVertexBytes_length_atIndex(std::ptr::NonNull::from(mvp).cast(), 64, 1);
+    }
+    let mode = match policy.mode {
+        Mode::Material => 0,
+        Mode::HiddenLine => 1,
+        Mode::Monochrome => 2,
+    };
+    let uniform = PaintUniform {
+        front: policy.front,
+        back: policy.back,
+        mode,
+        padding: [0; 3],
+    };
+    bind_paint(encoder, &uniform);
+    draw(encoder, mesh, 0, mesh.count);
+    if policy.mode == Mode::Material {
+        encoder.setCullMode(MTLCullMode::Front);
+        let default = PaintUniform {
+            front: policy.back,
+            mode: 3,
+            ..uniform
+        };
+        bind_paint(encoder, &default);
+        for &(first, count) in &mesh.plan.default_back {
+            draw(encoder, mesh, first, count);
+        }
+        for paint in &mesh.plan.overrides {
+            let override_paint = PaintUniform {
+                front: paint.color,
+                mode: 3,
+                ..uniform
+            };
+            bind_paint(encoder, &override_paint);
+            draw(encoder, mesh, paint.first, paint.count);
+        }
+    }
+}
+
+fn encode_placement_mesh(
+    encoder: &ProtocolObject<dyn MTLRenderCommandEncoder>,
+    mesh: &Mesh,
+    mvp: &[[f32; 4]; 4],
+    policy: Policy,
+) {
+    // Source _instanced_eligible excludes explicit back override/alpha content.
+    // Default backs are decided in the face fragment, preserving placement draw
+    // order rather than adding a later consolidated back pass per instance.
+    if policy.mode != Mode::Material {
+        encode_mesh(encoder, mesh, mvp, policy);
+        return;
+    }
+    encoder.setCullMode(MTLCullMode::None);
+    unsafe {
+        encoder.setVertexBuffer_offset_atIndex(Some(&mesh.vertices.raw), 0, 0);
+        encoder.setVertexBytes_length_atIndex(std::ptr::NonNull::from(mvp).cast(), 64, 1);
+    }
+    let mut first = 0;
+    let ordinary = PaintUniform {
+        front: policy.front,
+        back: policy.back,
+        mode: 0,
+        padding: [0; 3],
+    };
+    let default = PaintUniform {
+        mode: 4,
+        ..ordinary
+    };
+    for &(back_first, count) in &mesh.plan.default_back {
+        if back_first > first {
+            bind_paint(encoder, &ordinary);
+            draw(encoder, mesh, first, back_first - first);
+        }
+        bind_paint(encoder, &default);
+        draw(encoder, mesh, back_first, count);
+        first = back_first + count;
+    }
+    if first < mesh.count {
+        bind_paint(encoder, &ordinary);
+        draw(encoder, mesh, first, mesh.count - first);
+    }
+}
+
 fn pipeline(metal: &NativeMetal) -> Result<Pipeline, String> {
     let lib = metal
         .device
