@@ -1,0 +1,10 @@
+{
+  "manifest_files_verified": 17,
+  "on_different_pixels": 4765,
+  "off_different_pixels": 1297,
+  "mask_xor_pixels": 460,
+  "native_restore_exact": true,
+  "visibility_hidden": 0,
+  "strict_parity": false,
+  "scope": "Retained floor-only source5716 runtime; later logical-before-DPR correction not covered by this capture"
+}

@@ -19,6 +19,8 @@ Latest independent rendering diagnosis: [real layout](audits/annotation-real-ope
 
 ## Dated implementation and verification evidence
 
+Floor-only actual viewport failure retained (2026-10-11 UTC): root verifies source `5716c95d` native captures still differ by 4,765 pixels with annotations and 1,297 without; annotation-mask XOR is 460 and restoration is exact. All 1,404 flags remain visible. [Independent review](audits/annotation-widget-floor-negative/root-review.json). Placement improves the earlier discrepancy but strict parity remains FAIL; later fractional-DPI arithmetic is not covered by this capture.
+
 Merged widget glyph placement (2026-10-11 UTC): source `67392d5a` passes both focused merged placement tests, including fractional density counterexamples and negative logical coordinates. Logical fixed-point conversion precedes density scaling; widget Y uses floor and raster-target default is preserved. [Merged checks](audits/annotation-widget-placement-merged-root/acceptance.json). This fixes placement arithmetic only; LCD coverage/composition and complete widget pixel parity remain OPEN.
 
 Neutral widget glyph diagnosis (2026-10-11 UTC): root independently verifies 3,044 unequal-RGB pixels among 3,158 changed neutral-glyph pixels over a white baseline, proving a per-channel coverage requirement. Actual paint samples/sample buffers are zero and realized surface alpha is zero; requested multisampling does not establish overlay MSAA. [Root evidence](audits/annotation-widget-neutral-policy/root-review.json). Scalar glyph coverage remains insufficient; full rendered acceptance stays OPEN.
