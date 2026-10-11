@@ -56,7 +56,7 @@ pub(crate) fn run(input: PathBuf, output: PathBuf) -> Result<(), String> {
         app.camera.target = glam::DVec3::ZERO;
         app.camera.aspect = 800. / 600.;
         app.native_metal_world = Some(world_viewport::Viewport::new(metal.clone()));
-        let rgba = capture(&mut app, &metal)?;
+        let rgba = capture(&mut app, &metal).map_err(|e| format!("{name} initial: {e}"))?;
         std::fs::write(output.join(format!("{name}.rgba")), &rgba).map_err(|e| e.to_string())?;
         let before = app.native_metal_world.as_ref().unwrap().ghost_metrics();
         let before_geometry = app.native_metal_world.as_ref().unwrap().geometry_uploads();
@@ -149,7 +149,7 @@ pub(crate) fn run(input: PathBuf, output: PathBuf) -> Result<(), String> {
             // Ghost source12 frames above retain their original edge-disabled style.
             app.style.line_width = 1.;
             app.style.show_edges = true;
-            let wire = capture(&mut app, &metal)?;
+            let wire = capture(&mut app, &metal).map_err(|e| format!("{name} ordinary width1 wire: {e}"))?;
             if wire.chunks_exact(4).all(|p| p == [255, 255, 255, 255]) {
                 return Err("Visible ordinary wire absent".into());
             }
