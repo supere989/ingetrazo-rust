@@ -1,0 +1,40 @@
+{
+  "base": "f90106ca",
+  "oracle": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "source": {
+    "path": "source.json",
+    "bytes": 12490,
+    "sha256": "ac42b9947d20282ca823a34a01e61c328051d6996d865d2affddd25d5c44b512"
+  },
+  "logs": [
+    {
+      "path": "focused.log",
+      "bytes": 5545,
+      "sha256": "6bef59af976749887a82a6d76e880cb79848caa3c3797e18f918eb9b5a5fba2e"
+    },
+    {
+      "path": "arm-all-targets.log",
+      "bytes": 1951,
+      "sha256": "464f5c4b31ece2647df887a29bdb9bb2bbecfde791f188dba7e4225452138fd7"
+    },
+    {
+      "path": "intel-all-targets.log",
+      "bytes": 1951,
+      "sha256": "d076a42321e748a187fa6d6557fc41d081b2d445e2860e2e2877c1c7d3b06a87"
+    },
+    {
+      "path": "gui-cross-setup-refusal.log",
+      "bytes": 11896,
+      "sha256": "22c72dde1addc7948302014efd72f2237c139b3bd75ca561d9f39d0c52279fc7"
+    }
+  ],
+  "archive_sha256": "2c3262832c282263642717613fbdf18ab503ed64ea165c23425f9b6857ca559c",
+  "acceptance": {
+    "focused_world_tests": 43,
+    "arm_metal_all_targets": "PASS",
+    "intel_metal_all_targets": "PASS",
+    "gui_cross": "unsupported local Apple C compiler for libz-sys",
+    "native_gpu": "PENDING root Apple CI",
+    "normal_launcher": "PENDING root Apple CI"
+  }
+}

@@ -93,6 +93,7 @@ struct MaterialDraws{guard:super::world_face_guard::FaceGuard<PrototypeKey>,oper
 struct MaterialPipeline {colored_alpha:Retained<ProtocolObject<dyn MTLRenderPipelineState>>,textured:Retained<ProtocolObject<dyn MTLRenderPipelineState>>,textured_alpha:Retained<ProtocolObject<dyn MTLRenderPipelineState>>,depth:Retained<ProtocolObject<dyn MTLDepthStencilState>>}
 struct Pipeline {
     lines: Retained<ProtocolObject<dyn MTLRenderPipelineState>>,
+    background: Retained<ProtocolObject<dyn MTLRenderPipelineState>>,
     ghost: Retained<ProtocolObject<dyn MTLRenderPipelineState>>,
     color: Retained<ProtocolObject<dyn MTLRenderPipelineState>>,
     depth: Retained<ProtocolObject<dyn MTLDepthStencilState>>,
@@ -104,6 +105,9 @@ pub struct Stats {
     /// Extra cached original/suppressed native buffers, excluding current placements and shared images.
     pub base_variant_gpu_bytes:u64,
     pub preview_builds:u64,
+    pub profile_builds:u64,
+    pub profile_uploads:u64,
+    pub profile_upload_bytes:u64,
     pub preview_line_uploads:u64,
     pub base_line_uploads:u64,
     pub preview_line_upload_bytes:u64,
@@ -154,6 +158,8 @@ pub struct World {
 }
 pub struct Prepared {
     pub(crate) lines: [Option<Arc<super::world_preview::Lines>>;2],
+    pub(crate) profiles: Option<Arc<super::world_preview::Lines>>,
+    pub(crate) background: Option<super::world_background::Background>,
     pub(crate) overlay: Option<PrototypeKey>,
     pub(crate) ghosts: Option<Arc<super::world_ghost::Ghosts>>,
     pub(crate) ghost_edge: [f32;4],
@@ -337,7 +343,7 @@ impl World {
         self.stats.prepared += 1;
         Ok(Some(Arc::new(Prepared {
             placements: None,
-            ghosts: None, ghost_edge: [0.;4], lines:[None,None],overlay:None,
+            ghosts: None, ghost_edge: [0.;4], lines:[None,None],profiles:None,background:None,overlay:None,
             owner,
             mesh,
             pipeline,
@@ -695,7 +701,7 @@ impl World {
         self.pipeline = Some(pipeline.clone());
         Ok(Some(Arc::new(Prepared {
             placements: Some(placements),
-            ghosts: None, ghost_edge: [0.;4], lines:[None,None],overlay:None,
+            ghosts: None, ghost_edge: [0.;4], lines:[None,None],profiles:None,background:None,overlay:None,
             owner,
             mesh: None,
             pipeline,
@@ -765,6 +771,7 @@ impl Prepared {
         self.encode_inner(command, true, false)
     }
     fn encode_material_draws(&self,encoder:&ProtocolObject<dyn MTLRenderCommandEncoder>,placements:&PlacementMeshes,draws:&MaterialDraws,depth_enabled:bool,front_probe:bool)->Result<(),String>{
+        if draws.operations.is_empty(){self.encode_aux(encoder,depth_enabled,false);return Ok(());}
         let pipelines=self.pipeline.material.as_ref().ok_or("Metal material pipelines unavailable")?;let matrices=self.target.instance_matrices.as_ref().ok_or("Metal material matrices unavailable")?;
         for overlay_pass in [false,true] {
             if overlay_pass {self.encode_aux(encoder,depth_enabled,false);}
@@ -800,6 +807,11 @@ impl Prepared {
             }
         }
         if !preview_only {
+        if let Some(lines)=&self.profiles {if let Some(buffer)=&lines.buffer {
+            encoder.setRenderPipelineState(&self.pipeline.lines);encoder.setDepthStencilState(Some(if depth_enabled{&self.pipeline.depth}else{&self.pipeline.depth_disabled}));encoder.setCullMode(MTLCullMode::None);encoder.setDepthBias_slopeScale_clamp(0.,0.,0.);
+            let uniform=super::world_ghost::Uniform{edge:self.ghost_edge,height:self.extent().1,mode:2,padding:[0;2]};
+            unsafe{encoder.setVertexBytes_length_atIndex(std::ptr::NonNull::from(&self.mvp).cast(),64,2);encoder.setVertexBuffer_offset_atIndex(Some(&buffer.raw),0,0);encoder.setFragmentBytes_length_atIndex(std::ptr::NonNull::from(&uniform).cast(),32,0);encoder.drawPrimitives_vertexStart_vertexCount(MTLPrimitiveType::Line,0,lines.count);}
+        }}
         if let Some(ghosts)=&self.ghosts {
             encoder.setRenderPipelineState(&self.pipeline.ghost);
             encoder.setDepthStencilState(Some(if depth_enabled{&self.pipeline.depth}else{&self.pipeline.depth_disabled}));
@@ -853,6 +865,12 @@ impl Prepared {
         let encoder = command
             .renderCommandEncoderWithDescriptor(&pass)
             .ok_or("Metal world encoder unavailable")?;
+        if let Some(background)=&self.background {
+            encoder.setRenderPipelineState(&self.pipeline.background);
+            encoder.setDepthStencilState(Some(&self.pipeline.depth_disabled));
+            encoder.setCullMode(MTLCullMode::None);
+            unsafe {encoder.setVertexBytes_length_atIndex(std::ptr::NonNull::from(background).cast(),96,0);encoder.drawPrimitives_vertexStart_vertexCount(MTLPrimitiveType::Triangle,0,12);if background.horizon>-1.&&background.horizon<1.{encoder.drawPrimitives_vertexStart_vertexCount(MTLPrimitiveType::Line,12,2);}}
+        }
         encoder.setRenderPipelineState(&self.pipeline.color);
         // A pipeline with a depth attachment still binds a valid native state.
         // The negative control disables comparison/writes explicitly rather than
@@ -1087,6 +1105,7 @@ fn pipeline(metal: &NativeMetal, rich:bool, samples:usize) -> Result<Pipeline, S
         Some(MaterialPipeline{colored_alpha:material_pipeline(metal,&lib,"world_vertex","world_fragment",true,samples)?,textured:material_pipeline(metal,&lib,"world_texture_vertex","world_texture_fragment",true,samples)?,textured_alpha:material_pipeline(metal,&lib,"world_texture_vertex","world_texture_fragment",true,samples)?,depth:metal.device.newDepthStencilStateWithDescriptor(&alpha).ok_or("Metal material depth state unavailable")?})
     }else{None};
     Ok(Pipeline {
+        background: material_pipeline(metal,&lib,"world_background_vertex","world_background_fragment",false,samples)?,
         lines: material_pipeline(metal,&lib,"world_line_vertex","world_ghost_fragment",false,samples)?,
         ghost: material_pipeline(metal,&lib,"world_ghost_vertex","world_ghost_fragment",false,samples)?,
         color,material,

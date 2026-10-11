@@ -50,6 +50,13 @@ impl Viewport {
         self.world.stats.geometry_uploads
     }
     pub(crate) fn ghost_metrics(&self)->(u64,u64,u64,u64,u64){(self.world.stats.ghost_builds,self.world.stats.ghost_uploads,self.world.stats.ghost_upload_bytes,self.world.stats.wire_uploads,self.world.stats.wire_upload_bytes)}
+    fn record_route_reason(&mut self,reason:Option<String>) {
+        if self.last_route_reason!=reason {
+            if let Some(reason)=&reason {eprintln!("Native Metal viewport route: {reason}");}
+            else if self.last_route_reason.is_some(){eprintln!("Native Metal viewport route: native World accepted");}
+            self.last_route_reason=reason;
+        }
+    }
     fn prepare(&mut self, app: &IngeTrazoApp, extent: (u32, u32)) -> Result<bool, String> {
         let RenderRevisions {
             static_domains,
@@ -63,7 +70,7 @@ impl Viewport {
             | ((app.style.show_grid as u16) << 3)
             | ((!app.scene.selection.is_empty() as u16) << 4)
             | ((app.scene.show_section_cuts as u16) << 5)
-            | ((app.style.visual_style as u16) << 6) | ((preview.is_some() as u16)<<10);
+            | ((app.style.visual_style as u16) << 6) | ((preview.is_some() as u16)<<10) | ((app.style.show_soft_edges as u16)<<11) | ((app.style.back_edges_hidden as u16)<<12);
         if let Some((revision, previous, reason)) = &self.unsupported {
             if *revision == static_domains && *previous == capability {
                 return Err(reason.clone());
@@ -115,7 +122,7 @@ pub(crate) fn route(app: &mut IngeTrazoApp, rect: egui::Rect, density: f32) -> O
         if viewport.labels.is_none(){viewport.labels=Some(super::distance_label::Labels::new()?);}
         viewport.labels.as_mut().unwrap().prepare(app,rect,density,viewport.metal.clone())
     })();
-    let candidate=match candidate{Ok(c)=>c,Err(error)=>{viewport.last_route_reason=Some(error.clone());app.native_metal_world=Some(viewport);return Some(error)}};
+    let candidate=match candidate{Ok(c)=>c,Err(error)=>{viewport.record_route_reason(Some(error.clone()));app.native_metal_world=Some(viewport);return Some(error)}};
     let result = crate::viewport_extent::scene_extent(
         [rect.width() as f64, rect.height() as f64],
         density as f64,
@@ -153,7 +160,7 @@ pub(crate) fn route(app: &mut IngeTrazoApp, rect: egui::Rect, density: f32) -> O
         app.native_gpu_annotation_shape=candidate.shape(rect);
         viewport.labels.as_mut().unwrap().publish(candidate);
     } else if !app.native_gpu_viewport_enabled { app.native_gpu_annotation_shape=None; }
-    viewport.last_route_reason = reason.clone();
+    viewport.record_route_reason(reason.clone());
     app.native_metal_world = Some(viewport);
     reason
 }

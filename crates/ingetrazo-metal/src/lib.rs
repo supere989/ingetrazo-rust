@@ -52,3 +52,6 @@ mod world_texture;
 mod world_ghost;
 
 mod world_preview;
+
+mod world_background;
+mod world_profile;

@@ -53,3 +53,12 @@ fragment float4 world_ghost_fragment(Out in [[stage_in]],constant GhostPaint& pa
 vertex Out world_line_vertex(uint id [[vertex_id]],const device packed_float3* v [[buffer(0)]],constant float4x4& camera [[buffer(2)]]) {
  Out o;o.position=camera*float4(v[id],1.);o.position.z=(o.position.z+o.position.w)*.5;o.color=float4(1.);return o;
 }
+
+struct Background {float4 colors[5];float horizon;float padding[3];};
+vertex Out world_background_vertex(uint id [[vertex_id]],constant Background& b [[buffer(0)]]) {
+ Out o;uint q=id%6;bool upper=id<6;float x=(q==0||q==3||q==5)?-1.:1.;
+ bool top=(q==2||q==4||q==5);float y=upper?(top?1.:b.horizon):(top?b.horizon:-1.);
+ if(id>=12){x=id==12?-1.:1.;y=b.horizon;}
+ o.position=float4(x,y,.5,1.);o.color=id>=12?b.colors[4]:(upper?(top?b.colors[1]:b.colors[0]):(top?b.colors[2]:b.colors[3]));return o;
+}
+fragment float4 world_background_fragment(Out in [[stage_in]]) {return in.color;}
