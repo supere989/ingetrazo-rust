@@ -1,0 +1,56 @@
+{
+  "verified_records_archive": "61ea1f3658ffa93eb3a8cf80768e5ee78ee02ece5516f2c168c7ba637c315439",
+  "removed": [
+    {
+      "path": "/tmp/material-restamp-check.log",
+      "sha256": "5acc6cc08e5fff201e08597b82e9a2940c6247c345409477d45da266b7f8ae58"
+    },
+    {
+      "path": "/tmp/material-restamp-tests.log",
+      "sha256": "a8eaf266f2493819c3ff60786973c4188640ba29cbbb173e92ceaf687f520065"
+    },
+    {
+      "path": "/tmp/material-restamp-tests-2.log",
+      "sha256": "cc429d445371401abe45835549a013a7f1102221bc7e5964c9ffcab07cb96302"
+    },
+    {
+      "path": "/tmp/material-restamp-consumer-build.log",
+      "sha256": "96c21e36c31593caad7882f55f8ec2bcbafcb69c4290cf3ba749bd267abe100b"
+    },
+    {
+      "path": "/tmp/material-restamp-consumer-build-2.log",
+      "sha256": "caa9364c7c85d6e38ad205a26be6a7e88e1f34d134c8246752962f8a05bcdbdb"
+    },
+    {
+      "path": "/tmp/material-restamp-consumer-build-3.log",
+      "sha256": "1b87f2951805c31a42402d1de20ee71772375992887d1c5b010a7fe9459cc592"
+    },
+    {
+      "path": "/tmp/material-restamp-consumer-build-4.log",
+      "sha256": "b1941724662684e10100eae6be1c33aebc231802731a7b33a8be9dc5cfa247fe"
+    },
+    {
+      "path": "/tmp/material-restamp-consumer-build-5.log",
+      "sha256": "c5160d4664fa78205c0b4d9b3681625409b969cab9007d38ac9d1a4085102b6c"
+    },
+    {
+      "path": "/tmp/material-restamp-final-build.log",
+      "sha256": "48b7728ce503d320ad8499f32aaa9540933030dad8c3f28bd21d45235f297ac2"
+    },
+    {
+      "path": "/tmp/material-restamp-mixed-tests.log",
+      "sha256": "195584b38ed86aea5ad00b1cb438bcdd73b37e13188dd256cf436e6754738f8e"
+    },
+    {
+      "path": "/tmp/material-restamp-mixed-tests-4.log",
+      "sha256": "820f2c182deeba4de6accc2d27a896595aec81fe64297041323a6ca17f73e715"
+    }
+  ],
+  "preserved": [
+    "/tmp/ingetrazo-material-edit-restamp",
+    "/tmp/ingetrazo-metal-world-target"
+  ],
+  "terminal_logs_sha256": "c7f4ec3a09270a5d1720a39e1f6195f9adf47d82f52a9e603fed8038d4c49f9d",
+  "canonical_member_duplicates_removed": 14,
+  "extra_reopen_duplicate_removed": true
+}
