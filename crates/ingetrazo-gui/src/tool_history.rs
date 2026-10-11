@@ -168,6 +168,14 @@ mod tests {
     }
 
     #[test]
+    fn layer_visibility_preserves_source_move_array_window(){
+        let mut app=app();app.add_layer("visible".into());app.set_tool(ToolType::Move);app.scene.select(SelectionItem::Face(0));
+        let mut first=context(0.);first.ctrl_held=true;app.dispatch_tool_click(&first);app.dispatch_tool_vcb("6;0;0").unwrap();
+        let revision=app.model_revision;let undo=app.undo_stack.len();app.change_layer_visibility(1,false);
+        assert_eq!(app.model_revision,revision,"layer presentation is outside modeling command history");
+        app.dispatch_tool_vcb("3x").unwrap();assert_eq!(app.undo_stack.len(),undo);assert_eq!(app.scene.mesh.faces.len(),4);
+    }
+    #[test]
     fn presentation_and_layer_callers_advance_only_their_static_domains(){
         let mut app=app();app.add_layer("visible".into());let initial=app.native_render_revisions;
         app.change_layer_visibility(1,false);assert_eq!(app.native_render_revisions.static_domains.geometry,initial.static_domains.geometry);
