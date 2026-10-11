@@ -23,7 +23,7 @@ archive_dependencies = {}
 pin = "6be29fe437a7cd992d4e079f71720821b25216b9"
 assert subprocess.check_output(["git", "-C", str(repo/"ingetrazo"), "rev-parse", "HEAD"], text=True).strip() == pin
 suffix = ".exe" if os.name == "nt" else ""
-consumers = ["change_axes_fixture", "document_preservation_workflow", "pushpull_solid_workflows", "fillet_scoped", "pushpull_finite_workflows", "paste_save_workflow", "box_selection_fixture", "material_restamp_workflow", "material_tray_egui", "cursor_navigation_workflow", "annotation_delete_fixture", "zoom_extents_workflow", "annotation_move_fixture", "annotation_acquisition_fixture", "mesh_kernel_acceptance", "annotation_edit_style_fixture", "annotation_text_create_fixture", "mesh_finite_kernel_fixture", "annotation_hover_fixture", "dimension_anchor_acceptance_fixture", "context_document_lifecycle", "line_command_history_fixture", "shape_drafting_workflows", "freehand_workflows", "p07_inference_workflows", "perspective_guide_workflows"]
+consumers = ["change_axes_fixture", "document_preservation_workflow", "pushpull_solid_workflows", "fillet_scoped", "pushpull_finite_workflows", "paste_save_workflow", "box_selection_fixture", "material_restamp_workflow", "material_tray_egui", "cursor_navigation_workflow", "annotation_delete_fixture", "zoom_extents_workflow", "annotation_move_fixture", "annotation_acquisition_fixture", "mesh_kernel_acceptance", "annotation_edit_style_fixture", "annotation_text_create_fixture", "mesh_finite_kernel_fixture", "annotation_hover_fixture", "dimension_anchor_acceptance_fixture", "context_document_lifecycle", "line_command_history_fixture", "shape_drafting_workflows", "freehand_workflows", "p07_inference_workflows", "perspective_guide_workflows", "p07_keyboard_workflows"]
 identities = {name: stages.stage("binary:"+name, [], lambda name=name: hashlib.sha256((binaries/(name+suffix)).read_bytes()).hexdigest()) for name in consumers}
 env = dict(os.environ, QT_QPA_PLATFORM="offscreen", INGETRAZO_STATE_DIR=str(out/"state"),
            XDG_CONFIG_HOME=str(out/"config"), XDG_DATA_HOME=str(out/"data"), XDG_CACHE_HOME=str(out/"cache"))
@@ -216,6 +216,14 @@ run([sys.executable, repo/"scripts/reference-obj-fusion-reopens.py", obj_fusion]
 # it does not promote P22 or silently accept the complete twelve-case corpus.
 run([sys.executable, repo/"scripts/check-obj-fusion.py", obj_fusion, "--deterministic"], "obj-fusion/acceptance.json", requires=["obj-fusion/runtime.log", "obj-fusion/reopen.log"])
 
+obj_raw = out/"obj-raw-fusion"
+raw_members = [row["path"] for row in json.loads((repo/"docs/audits/obj-raw-fusion/source-manifest.json").read_text())["entries"]]
+oraw = archive("obj-raw-fusion", "source-manifest.json", raw_members, obj_raw, preserve_paths=True, archive_name="source-records.zip", stage_name="obj-raw-source")
+oraw_failure = archive("obj-raw-fusion", "manifest.json", ["attempts/preliminary-mesh/native-obj-fusion.json"], obj_raw, preserve_paths=True, stage_name="obj-raw-retained-failure")
+run([binaries/(consumers[20]+suffix), obj_raw, "--obj-raw-fusion"], "obj-raw-fusion/runtime.log")
+run([sys.executable, repo/"scripts/reference-obj-raw-fusion-reopens.py", obj_raw], "obj-raw-fusion/reopen.log", requires=["obj-raw-fusion/runtime.log"])
+run([sys.executable, repo/"scripts/check-obj-raw-fusion.py", obj_raw], "obj-raw-fusion/acceptance.json", requires=["obj-raw-fusion/runtime.log", "obj-raw-fusion/reopen.log"])
+
 nested_import = out/"nested-import"
 nested_cases = [context+"-"+asset for context in ["root", "container", "leaf"] for asset in ["ambiguous", "named", "parts", "header", "zero"]]
 ni = archive("nested-import", "source-manifest.json", ["original-nested-import.json", "ambiguous.obj", "named.obj", "parts.obj", "header.dxf", "zero.dxf"]+[case+ending for case in nested_cases for ending in ["-input.igz", "-original.igz"]], nested_import, archive_name="source-records.zip", stage_name="nested-import-source")
@@ -262,12 +270,18 @@ run([binaries/(consumers[25]+suffix), perspective_guides/"source.json", perspect
 run([sys.executable, repo/"scripts/check-perspective-guides.py", perspective_guides/"source.json", perspective_guides/"native.json", perspective_guides/"acceptance.json"], "perspective-guides/checker.log", requires=["perspective-guides/runtime.log"])
 
 
+keyboard = out/"p07-keyboard"
+pk = archive("p07-keyboard", "source-manifest.json", ["source.json"], keyboard, archive_name="source-records.zip")
+run([binaries/(consumers[26]+suffix), keyboard/"source.json", keyboard/"native.json"], "p07-keyboard/runtime.log")
+run([sys.executable, repo/"scripts/check-p07-keyboard.py", keyboard/"source.json", keyboard/"native.json", keyboard/"acceptance.json"], "p07-keyboard/checker.log", requires=["p07-keyboard/runtime.log"])
+
+
 def summarize():
     rows = json.loads((doc/"native.json").read_text())["rows"]
     assert [(x["fixture"],x["phase"]) for x in rows] == [(f,p) for f in ["retained","nested-leaves"] for p in ["edited","undo","redo"]]
     assert all(x["saved"] and x["clean"] for x in rows)
     result = {"revision":subprocess.check_output(["git","rev-parse","HEAD"],cwd=repo,text=True).strip(),
-              "source_pin":pin,"binary_sha256":identities,"source_archives":{"axes":a,"documents":d,"fillet":f,"pushpull_finite":p,"paste_save":ps,"box_selection":bs,"materials":mr,"cursor":cn,"annotations":ad,"annotation_hover_delete":ahd,"zoom_extents":ze,"annotation_move":am,"annotation_acquisition":aa,"mesh_kernel":mk,"annotation_edit_style":ae,"annotation_text_create":at,"finite_kernel":mf,"finite_kernel_initial":mfa,"annotation_hover":ah,"dimension_anchor_admission":da,"dimension_preview":dp,"open_recent":rr,"general_preferences":gp,"units_preferences":up,"vcb_measurements":vm,"import_preferences":ip,"appearance_preferences":ap,"nested_import":ni,"nested_import_threshold":nt,"nested_import_naming":nn,"nested_import_retained_failure":nf,"shape_drafting":sd,"freehand_workflows":fh,"obj_mtl_import":om,"obj_fusion":of,"p07_inference":p07,"perspective_guides":pg},
+              "source_pin":pin,"binary_sha256":identities,"source_archives":{"axes":a,"documents":d,"fillet":f,"pushpull_finite":p,"paste_save":ps,"box_selection":bs,"materials":mr,"cursor":cn,"annotations":ad,"annotation_hover_delete":ahd,"zoom_extents":ze,"annotation_move":am,"annotation_acquisition":aa,"mesh_kernel":mk,"annotation_edit_style":ae,"annotation_text_create":at,"finite_kernel":mf,"finite_kernel_initial":mfa,"annotation_hover":ah,"dimension_anchor_admission":da,"dimension_preview":dp,"open_recent":rr,"general_preferences":gp,"units_preferences":up,"vcb_measurements":vm,"import_preferences":ip,"appearance_preferences":ap,"nested_import":ni,"nested_import_threshold":nt,"nested_import_naming":nn,"nested_import_retained_failure":nf,"shape_drafting":sd,"freehand_workflows":fh,"obj_mtl_import":om,"obj_fusion":of,"p07_inference":p07,"perspective_guides":pg,"p07_keyboard":pk,"obj_raw_fusion":oraw,"obj_raw_retained_failure":oraw_failure},
               "axes":json.loads((axes/"check.json").read_text()),"documents":{"actual_app_saves":len(rows),"exact_original_reopens":6,"leaf_record_types":15,"negative_controls":5},
               "fillet":json.loads((fillet/"check.json").read_text()),"fillet_volume":json.loads((fillet/"volume.json").read_text()),"pushpull":json.loads((out/"pushpull-comparison.json").read_text()),
               "pushpull_finite":json.loads((finite/"comparison.json").read_text()),
@@ -299,6 +313,8 @@ def summarize():
               "nested_import":json.loads((nested_import/"acceptance.json").read_text()),
               "obj_mtl_import":json.loads((obj_mtl/"acceptance.json").read_text()),
               "obj_fusion":json.loads((obj_fusion/"acceptance.json").read_text()),
+              "obj_raw_fusion":json.loads((obj_raw/"acceptance.json").read_text()),
+              "p07_keyboard":json.loads((keyboard/"acceptance.json").read_text()),
               "p07_inference":json.loads((inference/"acceptance.json").read_text()),
               "perspective_guides":json.loads((perspective_guides/"acceptance.json").read_text()),
               "shape_drafting":json.loads((shape/"acceptance.json").read_text()),
