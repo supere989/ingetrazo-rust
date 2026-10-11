@@ -406,6 +406,29 @@ impl crate::IngeTrazoApp {
 mod tests {
     use super::Engine;
     #[test]
+    fn native_double_placement_refuses_before_unrelated_publication() {
+        for x in [0.1, f64::from(f32::MAX) * 2.] {
+            let mut app = crate::IngeTrazoApp::new();
+            let mut group = ingetrazo_core::groups::Group::new("Native precision");
+            group.transform = glam::DMat4::from_translation(glam::DVec3::new(x, 0., 0.));
+            app.scene.groups.push(group);
+            let before = app.scene.clone();
+            app.engineering_python_enabled = true;
+            app.run_script("mesh.add_face([QVector3D(0,0,0),QVector3D(1,0,0),QVector3D(0,1,0)])");
+            assert!(
+                app.console_logs
+                    .last()
+                    .unwrap()
+                    .contains("cannot be represented exactly"),
+                "{:?}",
+                app.console_logs
+            );
+            assert_eq!(app.scene, before);
+            assert!(app.undo_stack.is_empty());
+            assert!(app.redo_stack.is_empty());
+        }
+    }
+    #[test]
     fn native_component_identity_hydration_and_refusal() {
         let mut app = crate::IngeTrazoApp::new();
         let group = ingetrazo_core::groups::Group::new("Native");

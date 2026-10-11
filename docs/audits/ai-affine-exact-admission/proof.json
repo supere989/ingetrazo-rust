@@ -1,0 +1,10 @@
+{
+  "base": "7580d1e5",
+  "source_sha256": {
+    "tools/ai-interpreter-proof/src/vm_scene.rs": "529cb85407371c581d924b4438ba31716e647b7d59ec3f1c273b38d5eac0e925",
+    "crates/ingetrazo-gui/src/engineering_python.rs": "46c6d6466bd131c751444d87fde3a8557f6fd9faa4e80daafedaa968554fc750"
+  },
+  "unit_binary_sha256": "2a392ac6b7ac71d615ba9173d6ecad9c078aaa4f1b9785983468f3babf5c6590",
+  "focused_tests": 1,
+  "actual_refused_native_values": 2
+}

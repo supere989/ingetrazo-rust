@@ -56,10 +56,21 @@ pub(super) mod console_scene {
         }
     }
     impl QMatrix4x4 {
-        pub(super) fn from_native(matrix: glam::DMat4) -> Self {
-            Self {
-                values: PyRwLock::new(matrix.to_cols_array().map(|v| v as f32)),
+        pub(super) fn from_native(matrix: glam::DMat4) -> Result<Self, String> {
+            let source = matrix.to_cols_array();
+            let values = source.map(|v| v as f32);
+            if source
+                .iter()
+                .zip(values)
+                .any(|(&source, value)| !source.is_finite() || f64::from(value) != source)
+            {
+                return Err(
+                    "Native Group placement cannot be represented exactly by QMatrix4x4".into(),
+                );
             }
+            Ok(Self {
+                values: PyRwLock::new(values),
+            })
         }
         pub(super) fn native(&self) -> Result<glam::DMat4, String> {
             let v = *self.values.read();
@@ -1047,7 +1058,7 @@ pub(super) fn import(
             fields
                 .set_item(
                     "xform",
-                    console_scene::QMatrix4x4::from_native(g.transform)
+                    console_scene::QMatrix4x4::from_native(g.transform)?
                         .into_ref(&vm.ctx)
                         .into(),
                     vm,
