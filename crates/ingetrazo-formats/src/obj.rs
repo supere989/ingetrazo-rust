@@ -76,21 +76,182 @@ fn prepare_obj_options(
     if !scale.is_finite() || scale <= 0. {
         return Err(ObjError::Parse(0, "Invalid import scale".into()));
     }
+    let plan = parse_obj_options(reader, scene, scale, source_points, false)?;
     let mut candidate = scene.clone();
-    import_obj_inner(reader, &mut candidate, scale, source_points)?;
+    plan.emit_legacy(&mut candidate)?;
     candidate.bump_version();
     Ok(candidate)
 }
 
-fn import_obj_inner(
+/// Parsed file-owned geometry; choosing an owner does not clone or mutate a Scene.
+pub struct ObjPlan {
+    declarations: Vec<Option<String>>,
+    entities: Vec<ObjEntity>,
+    pieces: Vec<((String, String), Vec<usize>)>,
+    face_count: usize,
+}
+struct ObjEntity {
+    declaration: Option<usize>,
+    points: Vec<DVec3>,
+    attrs: std::collections::HashMap<String, serde_json::Value>,
+    face: bool,
+    line: usize,
+}
+impl ObjPlan {
+    pub fn targets_document_root(&self) -> bool {
+        self.pieces.len() > 1 || self.face_count > 400
+    }
+    fn emit_entity(
+        entity: &mut ObjEntity,
+        mesh: &mut ingetrazo_core::mesh::Mesh,
+    ) -> Result<(), ObjError> {
+        let ids = entity
+            .points
+            .iter()
+            .map(|p| mesh.add_vertex(*p))
+            .collect::<Vec<_>>();
+        if entity.face {
+            let id = mesh
+                .add_face(ids, vec![])
+                .ok_or_else(|| ObjError::Parse(entity.line, "Degenerate face".into()))?;
+            mesh.faces[id].attrs = std::mem::take(&mut entity.attrs);
+        } else {
+            for pair in ids.windows(2) {
+                mesh.add_edge(pair[0], pair[1]);
+            }
+        }
+        Ok(())
+    }
+    fn emit_legacy(mut self, scene: &mut Scene) -> Result<(), ObjError> {
+        let start = scene.groups.len();
+        for name in &self.declarations {
+            if let Some(name) = name {
+                scene
+                    .groups
+                    .push(ingetrazo_core::groups::Group::new(name.clone()));
+            }
+        }
+        for entity in &mut self.entities {
+            let mesh = if let Some(index) = entity.declaration {
+                &mut scene.groups[start + index].mesh
+            } else {
+                &mut scene.mesh
+            };
+            Self::emit_entity(entity, mesh)?;
+        }
+        Ok(())
+    }
+    /// Source application grouping policy. Unscaled legacy format callers use emit_legacy.
+    pub fn emit_source(mut self, scene: &mut Scene, stem: &str) -> Result<(), ObjError> {
+        if self.pieces.len() > 1 {
+            let mut container = ingetrazo_core::groups::Group::new(stem);
+            for (number, (piece, indices)) in self.pieces.iter().enumerate() {
+                let name = source_piece_name(piece, number + 1);
+                let mut child = ingetrazo_core::groups::Group::new(name);
+                for index in indices {
+                    Self::emit_entity(&mut self.entities[*index], &mut child.mesh)?;
+                }
+                container.children.push(child);
+            }
+            source_group_kind(&mut container, true);
+            scene.groups.push(container);
+        } else if self.face_count > 400 {
+            let mut mesh = ingetrazo_core::mesh::Mesh::new();
+            for entity in self.entities.iter_mut().filter(|e| e.face) {
+                Self::emit_entity(entity, &mut mesh)?;
+            }
+            let name = ingetrazo_core::groups::next_source_group_name()
+                .map_err(|e| ObjError::Parse(0, e.into()))?;
+            let mut group = ingetrazo_core::groups::Group::with_mesh(name, mesh);
+            source_group_kind(&mut group, false);
+            scene.groups.push(group);
+        } else {
+            for entity in self.entities.iter_mut().filter(|e| e.face) {
+                Self::emit_entity(entity, &mut scene.mesh)?;
+            }
+        }
+        scene.bump_version();
+        Ok(())
+    }
+}
+pub(crate) fn source_group_kind(group: &mut ingetrazo_core::groups::Group, placed: bool) {
+    let identity = serde_json::json!(glam::DMat4::IDENTITY.to_cols_array());
+    group.native_document = serde_json::json!({"component":true,"xform":if placed {identity.clone()}else{serde_json::Value::Null}});
+    group.native_baseline = serde_json::json!({"component":false,"xform":if placed {serde_json::Value::Null}else{identity}});
+}
+fn source_piece_name(piece: &(String, String), number: usize) -> String {
+    let name = if piece.1.is_empty() {
+        &piece.0
+    } else {
+        &piece.1
+    };
+    let mut name = name.trim().to_owned();
+    // Blender suffix cleanup is kept in this naming layer, not in owner identity.
+    if let Some((head, tail)) = name.rsplit_once('_') {
+        let word = tail.split('.').next().unwrap_or("");
+        let suffix = tail.strip_prefix(word).unwrap_or("");
+        if !head.is_empty()
+            && word.chars().next().is_some_and(char::is_uppercase)
+            && word.chars().all(|c| c.is_ascii_alphabetic())
+            && (suffix.is_empty()
+                || suffix
+                    .strip_prefix('.')
+                    .is_some_and(|s| !s.is_empty() && s.chars().all(|c| c.is_ascii_digit())))
+        {
+            name = head.to_owned();
+        }
+    }
+    let fallback = name.clone();
+    loop {
+        let Some((head, tail)) = name.rsplit_once('.') else {
+            break;
+        };
+        if tail.len() != 3 || !tail.chars().all(|c| c.is_ascii_digit()) {
+            break;
+        }
+        name = head.to_owned();
+    }
+    if name.trim().is_empty() {
+        name = fallback;
+    }
+    let name = name.trim();
+    if name.is_empty() {
+        format!("Part {number}")
+    } else if !name.chars().any(char::is_alphabetic) {
+        format!("Part {name}")
+    } else {
+        name.to_owned()
+    }
+}
+pub fn parse_obj_with_units(
     reader: &mut impl Read,
-    scene: &mut Scene,
+    scene: &Scene,
+    scale: f64,
+) -> Result<ObjPlan, ObjError> {
+    if !scale.is_finite() || scale <= 0. {
+        return Err(ObjError::Parse(0, "Invalid import scale".into()));
+    }
+    parse_obj_options(reader, scene, scale, true, true)
+}
+fn parse_obj_options(
+    reader: &mut impl Read,
+    scene: &Scene,
     scale: f64,
     source_points: bool,
-) -> Result<(), ObjError> {
+    source_policy: bool,
+) -> Result<ObjPlan, ObjError> {
     let buf_reader = BufReader::new(reader);
     let mut file_verts: Vec<DVec3> = Vec::new();
     let mut container = None;
+    let mut plan = ObjPlan {
+        declarations: Vec::new(),
+        entities: Vec::new(),
+        pieces: Vec::new(),
+        face_count: 0,
+    };
+    let mut piece_indices = std::collections::BTreeMap::new();
+    let mut object = String::new();
+    let mut group = String::new();
     let mut material: Option<String> = None;
     let mut file_uv = Vec::<glam::DVec2>::new();
 
@@ -107,6 +268,15 @@ fn import_obj_inner(
             None => continue,
         };
 
+        if source_policy && cmd == "l" {
+            continue;
+        }
+        if source_policy && cmd == "mtllib" {
+            return Err(ObjError::Parse(
+                line_num + 1,
+                "OBJ material sidecar admission remains unsupported; document unchanged".into(),
+            ));
+        }
         match cmd {
             "v" => {
                 let x: f64 = parts
@@ -148,11 +318,17 @@ fn import_obj_inner(
             }
             "o" | "g" => {
                 let name = parts.collect::<Vec<_>>().join(" ");
+                if cmd == "o" {
+                    object = name.clone();
+                    group.clear();
+                } else {
+                    group = name.clone();
+                }
                 if name.is_empty() {
                     container = None;
                 } else {
-                    let index = scene.groups.len();
-                    scene.groups.push(ingetrazo_core::groups::Group::new(name));
+                    let index = plan.declarations.len();
+                    plan.declarations.push(Some(name));
                     container = Some(index);
                 }
             }
@@ -222,6 +398,7 @@ fn import_obj_inner(
                 }
                 let mut attrs = material
                     .as_ref()
+                    .filter(|_| !source_policy)
                     .map(|name| {
                         let mut attrs = std::collections::HashMap::new();
                         attrs.insert("mat".into(), serde_json::json!(name));
@@ -273,31 +450,29 @@ fn import_obj_inner(
                         attrs.insert("texture".into(), serde_json::Value::Null);
                     }
                 }
-                let mesh = if let Some(i) = container {
-                    &mut scene.groups[i].mesh
-                } else {
-                    &mut scene.mesh
-                };
-                let ids = points
-                    .into_iter()
-                    .map(|p| mesh.add_vertex(p))
-                    .collect::<Vec<_>>();
                 if cmd == "f" {
-                    let id = mesh
-                        .add_face(ids, vec![])
-                        .ok_or_else(|| ObjError::Parse(line_num + 1, "Degenerate face".into()))?;
-                    mesh.faces[id].attrs = attrs;
-                } else {
-                    for pair in ids.windows(2) {
-                        mesh.add_edge(pair[0], pair[1]);
-                    }
+                    let key = (object.clone(), group.clone());
+                    let piece = *piece_indices.entry(key.clone()).or_insert_with(|| {
+                        let index = plan.pieces.len();
+                        plan.pieces.push((key, Vec::new()));
+                        index
+                    });
+                    plan.pieces[piece].1.push(plan.entities.len());
+                    plan.face_count += 1;
                 }
+                plan.entities.push(ObjEntity {
+                    declaration: container,
+                    points,
+                    attrs,
+                    face: cmd == "f",
+                    line: line_num + 1,
+                });
             }
             _ => {}
         }
     }
 
-    Ok(())
+    Ok(plan)
 }
 
 /// Save OBJ with a material sidecar and self-contained texture assets.

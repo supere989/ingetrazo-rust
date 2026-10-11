@@ -192,9 +192,6 @@ fn dxf_suggestion(bytes: &[u8]) -> Result<Option<&'static str>, String> {
 }
 impl IngeTrazoApp {
     pub fn begin_unit_import(&mut self, path: &Path) -> Result<(), String> {
-        if !self.component_edit_stack.is_empty() {
-            return Err("Finish or cancel the component edit before importing".into());
-        }
         let kind = path
             .extension()
             .and_then(|s| s.to_str())
@@ -226,9 +223,6 @@ impl IngeTrazoApp {
         Ok(())
     }
     pub fn confirm_unit_import(&mut self) -> Result<Option<Confirmed>, String> {
-        if !self.component_edit_stack.is_empty() {
-            return Err("Finish or cancel the component edit before importing".into());
-        }
         let Some(dialog) = self.document_session.unit_import.as_ref() else {
             return Ok(None);
         };
@@ -248,32 +242,150 @@ impl IngeTrazoApp {
         }))
     }
     pub fn commit_unit_import(&mut self, confirmed: Confirmed) -> Result<(), String> {
-        if !self.component_edit_stack.is_empty() {
-            return Err("Finish or cancel the component edit before importing".into());
-        }
         let mut reader = std::io::Cursor::new(confirmed.bytes);
-        let candidate = if confirmed.kind == "obj" {
-            ingetrazo_formats::obj::prepare_obj_with_units(
-                &mut reader,
-                &self.scene,
-                confirmed.factor,
+        enum Plan {
+            Obj(ingetrazo_formats::obj::ObjPlan),
+            Dxf(ingetrazo_formats::dxf::DxfPlan),
+        }
+        // Parse exactly once before choosing/cloning a destination owner.
+        let plan = if confirmed.kind == "obj" {
+            Plan::Obj(
+                ingetrazo_formats::obj::parse_obj_with_units(
+                    &mut reader,
+                    &self.scene,
+                    confirmed.factor,
+                )
+                .map_err(|e| e.to_string())?,
             )
-            .map_err(|e| e.to_string())?
         } else {
-            ingetrazo_formats::dxf::prepare_dxf_with_units(
-                &mut reader,
-                &self.scene,
-                confirmed.factor,
+            Plan::Dxf(
+                ingetrazo_formats::dxf::parse_dxf_with_units(&mut reader, confirmed.factor)
+                    .map_err(|e| e.to_string())?,
             )
-            .map_err(|e| e.to_string())?
         };
+        let root = match &plan {
+            Plan::Obj(plan) => plan.targets_document_root(),
+            Plan::Dxf(_) => true,
+        };
+        let parked = root && !self.component_edit_stack.is_empty();
+        let owner = if parked {
+            &self.component_edit_stack[0].original_scene
+        } else {
+            &self.scene
+        };
+        let mut candidate = owner.clone();
+        candidate.layers = self.scene.layers.clone();
+        let stem = confirmed
+            .path
+            .file_stem()
+            .and_then(|s| s.to_str())
+            .unwrap_or("model");
+        match plan {
+            Plan::Obj(plan) => plan
+                .emit_source(&mut candidate, stem)
+                .map_err(|e| e.to_string())?,
+            Plan::Dxf(plan) => plan
+                .emit_source(&mut candidate, stem)
+                .map_err(|e| e.to_string())?,
+        }
+        if parked {
+            self.publish_root_import(candidate)?;
+        } else {
+            self.undo_stack
+                .try_reserve(1)
+                .map_err(|_| "Import history allocation refused")?;
+            self.save_undo_state();
+            self.scene = candidate;
+            if !root {if let Some(session)=self.component_edit_stack.last_mut(){session.note_source_mesh_import();}}
+            self.bump_model_revision();
+        }
+        self.status_message = format!("Imported {}", confirmed.path.display());
+        Ok(())
+    }
+    fn publish_root_import(
+        &mut self,
+        candidate: ingetrazo_core::scene::Scene,
+    ) -> Result<(), String> {
+        // Imported groups are document-global in the original; active Scene.groups
+        // is only the native local child view. Prepare every checkpoint first.
+        let root = &self.component_edit_stack[0];
+        let old_count = root.original_scene.groups.len();
+        if candidate.groups.len() < old_count {
+            return Err("Import did not append root groups".into());
+        }
+        let mut before = root.original_scene.clone();
+        before.layers = self.scene.layers.clone();
+        before.history_layers.0 = Some(ingetrazo_core::layers::LayerDelta::between(
+            &before.layers,
+            &candidate.layers,
+        ));
+        crate::document_presentation::preserve(&self.scene, &mut before);
         self.undo_stack
             .try_reserve(1)
             .map_err(|_| "Import history allocation refused")?;
-        self.save_undo_state();
-        self.scene = candidate;
+        let cap = self.document_session.preferences.undo_steps;
+        let evicted = if cap > 0 {
+            (self.undo_stack.len() + 1).saturating_sub(cap)
+        } else {
+            0
+        };
+        struct Checkpoint {
+            cancel_groups: Option<Vec<ingetrazo_core::groups::Group>>,
+            original_layers: Vec<ingetrazo_core::layers::Layer>,
+            cancel_layers: Vec<ingetrazo_core::layers::Layer>,
+            undo: Vec<ingetrazo_core::scene::Scene>,
+        }
+        let mut checkpoints = Vec::new();
+        checkpoints
+            .try_reserve(self.component_edit_stack.len())
+            .map_err(|_| "Import checkpoint allocation refused")?;
+        for (index, session) in self.component_edit_stack.iter().enumerate() {
+            let mut path = session.original_scene.history_context.clone();
+            path.push(session.group_id);
+            let mut checkpoint_undo = Vec::new();
+            checkpoint_undo
+                .try_reserve(self.undo_stack.len() + 1 - evicted)
+                .map_err(|_| "Import checkpoint history allocation refused")?;
+            checkpoint_undo.extend(
+                self.undo_stack
+                    .iter()
+                    .chain(std::iter::once(&before))
+                    .skip(evicted)
+                    .filter(|entry| !entry.history_context.starts_with(&path))
+                    .cloned(),
+            );
+            let cancel_groups = if index == 0 {
+                let mut groups = session.cancel_scene.groups.clone();
+                groups
+                    .try_reserve(candidate.groups.len() - old_count)
+                    .map_err(|_| "Import group allocation refused")?;
+                groups.extend(candidate.groups[old_count..].iter().cloned());
+                Some(groups)
+            } else {
+                None
+            };
+            checkpoints.push(Checkpoint {
+                cancel_groups,
+                original_layers: candidate.layers.clone(),
+                cancel_layers: candidate.layers.clone(),
+                undo: checkpoint_undo,
+            });
+        }
+        let live_layers = candidate.layers.clone();
+        // No fallible parsing/emission/preparation remains beyond this point.
+        self.component_edit_stack[0].original_scene = candidate;
+        for (session, checkpoint) in self.component_edit_stack.iter_mut().zip(checkpoints) {
+            if let Some(groups) = checkpoint.cancel_groups {
+                session.cancel_scene.groups = groups;
+            }
+            session.original_scene.layers = checkpoint.original_layers;
+            session.cancel_scene.layers = checkpoint.cancel_layers;
+            session.original_undo = checkpoint.undo;
+            session.original_redo.clear();
+        }
+        self.scene.layers = live_layers;
+        self.push_prepared_undo_snapshot(before);
         self.bump_model_revision();
-        self.status_message = format!("Imported {}", confirmed.path.display());
         Ok(())
     }
     pub fn accept_unit_import(&mut self) -> Result<(), String> {

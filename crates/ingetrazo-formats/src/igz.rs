@@ -917,6 +917,7 @@ pub fn load_igz(path: &Path) -> Result<Scene, IgzError> {
         for g in &mut scene.groups {
             g.mesh.rebuild_spatial_index();
         }
+        ingetrazo_core::groups::reserve_source_group_names(&scene.groups);
         return Ok(scene);
     }
 
@@ -1244,6 +1245,7 @@ pub fn load_igz(path: &Path) -> Result<Scene, IgzError> {
         g.mesh.rebuild_spatial_index();
     }
 
+    ingetrazo_core::groups::reserve_source_group_names(&scene.groups);
     Ok(scene)
 }
 

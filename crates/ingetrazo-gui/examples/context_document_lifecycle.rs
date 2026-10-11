@@ -128,7 +128,11 @@ fn click(a: &mut IngeTrazoApp, ctx: &egui::Context, label: &str) {
         );
     }
 }
+#[path="context_document_lifecycle/nested_import.rs"]
+mod nested_import;
 fn main() {
+    if std::env::args().any(|a|a=="--nested-import"){nested_import::run();return;}
+
     if std::env::args().any(|a| a == "--appearance") {
         appearance::run();
         return;
@@ -668,7 +672,8 @@ fn import_preferences_acceptance() {
     a.begin_component_edit();
     let before = a.scene.clone();
     let depth = a.undo_stack.len();
-    assert!(a.begin_unit_import(&root.join("ambiguous.obj")).is_err());
+    a.begin_unit_import(&root.join("ambiguous.obj")).unwrap();
+    a.cancel_unit_import();
     assert_eq!(a.scene, before);
     assert_eq!(a.undo_stack.len(), depth);
     assert_eq!(a.component_edit_stack.len(), 1);

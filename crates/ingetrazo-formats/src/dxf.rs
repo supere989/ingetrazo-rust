@@ -74,6 +74,140 @@ fn prepare_dxf_options(
     scale: f64,
     source_points: bool,
 ) -> Result<Scene, DxfError> {
+    let plan = parse_dxf_options(reader, scale, source_points)?;
+    let mut candidate = scene.clone();
+    plan.emit_legacy(&mut candidate)?;
+    candidate.bump_version();
+    Ok(candidate)
+}
+/// Parsed dimensional entities, independent of document ownership.
+pub struct DxfPlan {
+    entities: Vec<DxfEntity>,
+}
+struct DxfEntity {
+    layer: String,
+    points: Vec<DVec3>,
+    face: bool,
+    curved: bool,
+}
+impl DxfPlan {
+    fn emit_entity(
+        entity: &DxfEntity,
+        mesh: &mut ingetrazo_core::mesh::Mesh,
+        next_curve: &mut Option<usize>,
+        source_policy: bool,
+    ) -> Result<(), DxfError> {
+        let ids = entity
+            .points
+            .iter()
+            .map(|p| mesh.add_vertex(*p))
+            .collect::<Vec<_>>();
+        if entity.face {
+            let id = mesh
+                .add_face(ids, vec![])
+                .ok_or_else(|| DxfError::Parse("Invalid DXF face".into()))?;
+            if !source_policy {
+                mesh.faces[id].layer = Some(entity.layer.clone());
+            }
+        } else {
+            let curve = if entity.curved {
+                let next = next_curve.get_or_insert_with(|| {
+                    mesh.edges
+                        .iter()
+                        .filter_map(|e| e.curve_id)
+                        .max()
+                        .map_or(0, |i| i + 1)
+                });
+                let curve = *next;
+                *next += 1;
+                Some(curve)
+            } else {
+                None
+            };
+            for pair in ids.windows(2) {
+                if let Some(id) = mesh.add_edge(pair[0], pair[1]) {
+                    if !source_policy {
+                        mesh.edges[id].layer = Some(entity.layer.clone());
+                    }
+                    if entity.curved {
+                        mesh.edges[id].curve_id = curve;
+                    }
+                }
+            }
+        }
+        Ok(())
+    }
+    fn emit_legacy(self, scene: &mut Scene) -> Result<(), DxfError> {
+        let mut curves = std::collections::BTreeMap::<String, Option<usize>>::new();
+        for entity in &self.entities {
+            let mesh = if entity.layer == "0" {
+                &mut scene.mesh
+            } else {
+                if !scene.layers.iter().any(|l| l.name == entity.layer) {
+                    scene
+                        .layers
+                        .push(ingetrazo_core::layers::Layer::new(&entity.layer));
+                }
+                let index = if let Some(index) = scene.groups.iter().position(|g| {
+                    g.name == entity.layer && g.layer.as_deref() == Some(entity.layer.as_str())
+                }) {
+                    index
+                } else {
+                    let mut group = ingetrazo_core::groups::Group::new(&entity.layer);
+                    group.layer = Some(entity.layer.clone());
+                    scene.groups.push(group);
+                    scene.groups.len() - 1
+                };
+                &mut scene.groups[index].mesh
+            };
+            Self::emit_entity(
+                entity,
+                mesh,
+                curves.entry(entity.layer.clone()).or_insert(None),
+                false,
+            )?;
+        }
+        Ok(())
+    }
+    /// Every source DXF layer is a fresh document-root group, including layer zero.
+    pub fn emit_source(self, scene: &mut Scene, stem: &str) -> Result<(), DxfError> {
+        let mut layers = std::collections::BTreeMap::<String, Vec<DxfEntity>>::new();
+        for entity in self.entities {
+            layers.entry(entity.layer.clone()).or_default().push(entity);
+        }
+        if layers.is_empty() {
+            return Err(DxfError::Parse("No importable DXF geometry".into()));
+        }
+        for (layer, entities) in layers {
+            let mut group =
+                ingetrazo_core::groups::Group::new(if layer == "0" { stem } else { &layer });
+            if layer != "0" {
+                group.layer = Some(layer.clone());
+                if !scene.layers.iter().any(|l| l.name == layer) {
+                    scene
+                        .layers
+                        .push(ingetrazo_core::layers::Layer::new(&layer));
+                }
+            }
+            let mut next_curve = Some(0);
+            for entity in &entities {
+                Self::emit_entity(entity, &mut group.mesh, &mut next_curve, true)?;
+            }
+            crate::obj::source_group_kind(&mut group, false);
+            scene.groups.push(group);
+        }
+        scene.bump_version();
+        Ok(())
+    }
+}
+pub fn parse_dxf_with_units(reader: &mut impl Read, scale: f64) -> Result<DxfPlan, DxfError> {
+    parse_dxf_options(reader, scale, true)
+}
+fn parse_dxf_options(
+    reader: &mut impl Read,
+    scale: f64,
+    source_points: bool,
+) -> Result<DxfPlan, DxfError> {
     if !scale.is_finite() || scale <= 0. {
         return Err(DxfError::Parse("Invalid import scale".into()));
     }
@@ -95,7 +229,9 @@ fn prepare_dxf_options(
             ))
         })
         .collect::<Result<Vec<_>, DxfError>>()?;
-    let mut candidate = scene.clone();
+    let mut plan = DxfPlan {
+        entities: Vec::new(),
+    };
     let mut section = String::new();
     let mut i = 0;
     while i < pairs.len() {
@@ -316,56 +452,14 @@ fn prepare_dxf_options(
                 return Err(DxfError::Parse("Import coordinate overflow".into()));
             }
         }
-        let mesh = if layer == "0" {
-            &mut candidate.mesh
-        } else {
-            if !candidate.layers.iter().any(|l| l.name == layer) {
-                candidate
-                    .layers
-                    .push(ingetrazo_core::layers::Layer::new(layer));
-            }
-            let index = if let Some(i) = candidate
-                .groups
-                .iter()
-                .position(|g| g.name == layer && g.layer.as_deref() == Some(layer))
-            {
-                i
-            } else {
-                let mut group = ingetrazo_core::groups::Group::new(layer);
-                group.layer = Some(layer.into());
-                candidate.groups.push(group);
-                candidate.groups.len() - 1
-            };
-            &mut candidate.groups[index].mesh
-        };
-        let ids = points
-            .into_iter()
-            .map(|p| mesh.add_vertex(p))
-            .collect::<Vec<_>>();
-        if face {
-            let id = mesh
-                .add_face(ids, vec![])
-                .ok_or_else(|| DxfError::Parse("Invalid DXF face".into()))?;
-            mesh.faces[id].layer = Some(layer.into());
-        } else {
-            let curve = mesh
-                .edges
-                .iter()
-                .filter_map(|e| e.curve_id)
-                .max()
-                .map_or(0, |i| i + 1);
-            for pair in ids.windows(2) {
-                if let Some(id) = mesh.add_edge(pair[0], pair[1]) {
-                    mesh.edges[id].layer = Some(layer.into());
-                    if curved {
-                        mesh.edges[id].curve_id = Some(curve);
-                    }
-                }
-            }
-        }
+        plan.entities.push(DxfEntity {
+            layer: layer.into(),
+            points,
+            face,
+            curved,
+        });
     }
-    candidate.bump_version();
-    Ok(candidate)
+    Ok(plan)
 }
 
 #[cfg(test)]

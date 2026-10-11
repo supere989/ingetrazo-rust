@@ -1,0 +1,43 @@
+{
+  "source_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "archive": "threshold-source-records.zip",
+  "archive_sha256": "88ae509808814979014d090a2dca57dcbae9e2888900e24e710cc6602a805099",
+  "entries": [
+    {
+      "path": "original-threshold.json",
+      "bytes": 2121,
+      "sha256": "41fbd3e6bb4bf3f52ff25c2e3ccd9ba14502f19cbdc7ba3b889c9e4d7fb60e45"
+    },
+    {
+      "path": "source.log",
+      "bytes": 84,
+      "sha256": "4be025eac992c5c7615475531bf249168cdeba65ce418309d1734137370f5ce3"
+    },
+    {
+      "path": "source.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "threshold-400-input.igz",
+      "bytes": 2194,
+      "sha256": "676acb70d554ab177a74bcfc3ca85ad04bd2fa0db48d9d8eecca0e9f93e346f5"
+    },
+    {
+      "path": "threshold-400.obj",
+      "bytes": 17780,
+      "sha256": "0fdeb08616563464b0e6ff20e80622a9c5caae8e1ceeda276f33f53a6d0bfed9"
+    },
+    {
+      "path": "threshold-401-input.igz",
+      "bytes": 2194,
+      "sha256": "55beeecb49c5017d079d364123d5b730eb567c39b9b01082c4c13cbc967a9855"
+    },
+    {
+      "path": "threshold-401.obj",
+      "bytes": 17830,
+      "sha256": "1f469ecc070d1e419cd47769bbda9f2f8593430a58fd62ff7b2834752149a03a"
+    }
+  ],
+  "helper_sha256": "3b2e02251463fc8792891a0551b3953846f20aabfd3ac394ba1b93fad74ae7c6"
+}
