@@ -1,0 +1,6 @@
+{
+  "diagnostic_cli_source_argument": "37b81208b60e3e1d08438bdb178fe919d31c350e",
+  "source_argument_valid": false,
+  "scope": "The manually typed diagnostic source argument is invalid provenance. Executed binary SHA in retained result identifies actual bytes. It was built before e61 from 37b81208097c49a6033530e7dd007f79bacba8b6 plus then-uncommitted readonly state/baseline instrumentation. No frozen-revision acceptance is claimed for this diagnostic.",
+  "acknowledged_source": "e61bdd1df2a272f99d17b4f97d2c198bd82a7479"
+}
