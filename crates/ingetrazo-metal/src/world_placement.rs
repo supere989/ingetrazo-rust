@@ -152,6 +152,7 @@ mod tests {
 }
 
 /// Only adjacent equal prototype/winding instances coalesce; no depth-order sort.
+#[cfg(test)]
 pub(crate) fn compatible_run_end(bindings: &[u32], poses: &[Pose], first: usize) -> usize {
     let mut end = first + 1;
     while end < poses.len()
@@ -186,4 +187,197 @@ fn instance_runs_preserve_prototype_winding_and_original_order() {
         first = end;
     }
     assert_eq!(runs, vec![(0, 2), (2, 3), (3, 5), (5, 6)]);
+}
+
+/// Frozen source first-seen (prototype, mirrored) buckets; original placement
+/// order within each bucket. Only bindings/winding changes rebuild this plan.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub(crate) struct Run {
+    pub prototype: u32,
+    pub reflected: bool,
+    pub first: usize,
+    pub count: usize,
+}
+#[derive(Debug)]
+pub(crate) struct Order {
+    pub indices: Vec<usize>,
+    pub runs: Vec<Run>,
+    pub retained_payload_bytes: usize,
+}
+impl Order {
+    pub fn new(packet: &Packet, poses: &[Pose]) -> Result<Self, String> {
+        validate_poses(packet, poses)?;
+        #[derive(Clone, Copy)]
+        struct Record {
+            prototype: u32,
+            reflected: bool,
+            original: usize,
+            first: usize,
+        }
+        let n = poses.len();
+        let cold = n
+            .checked_mul(
+                std::mem::size_of::<Record>()
+                    + std::mem::size_of::<usize>()
+                    + std::mem::size_of::<Run>(),
+            )
+            .and_then(|v| {
+                v.checked_add(std::mem::size_of::<Self>() + std::mem::size_of::<Vec<Record>>())
+            })
+            .filter(|v| *v <= MAX_BYTES)
+            .ok_or("Metal prototype ordering exceeds8MiB cold admission")?;
+        let mut records = Vec::new();
+        records
+            .try_reserve_exact(n)
+            .map_err(|_| "Metal prototype ordering allocation refused")?;
+        let mut indices = Vec::new();
+        indices
+            .try_reserve_exact(n)
+            .map_err(|_| "Metal instance order allocation refused")?;
+        records.extend(packet.bindings.iter().zip(poses).enumerate().map(
+            |(i, (&prototype, p))| Record {
+                prototype,
+                reflected: p.reflected,
+                original: i,
+                first: i,
+            },
+        ));
+        records.sort_unstable_by_key(|r| (r.prototype, r.reflected, r.original));
+        let mut start = 0;
+        let mut groups = 0;
+        while start < n {
+            let mut end = start + 1;
+            while end < n
+                && records[end].prototype == records[start].prototype
+                && records[end].reflected == records[start].reflected
+            {
+                end += 1;
+            }
+            let first = records[start].original;
+            for r in &mut records[start..end] {
+                r.first = first;
+            }
+            groups += 1;
+            start = end;
+        }
+        let mut runs: Vec<Run> = Vec::new();
+        runs.try_reserve_exact(groups)
+            .map_err(|_| "Metal instance runs allocation refused")?;
+        let retained = indices
+            .capacity()
+            .checked_mul(std::mem::size_of::<usize>())
+            .and_then(|a| {
+                runs.capacity()
+                    .checked_mul(std::mem::size_of::<Run>())
+                    .and_then(|b| a.checked_add(b))
+            })
+            .and_then(|a| a.checked_add(std::mem::size_of::<Self>()))
+            .ok_or("Metal order capacity overflow")?;
+        let actual = records
+            .capacity()
+            .checked_mul(std::mem::size_of::<Record>())
+            .and_then(|a| a.checked_add(retained + std::mem::size_of::<Vec<Record>>()))
+            .ok_or("Metal cold order capacity overflow")?;
+        if actual > cold || actual > MAX_BYTES {
+            return Err("Metal actual order capacity exceeds cold admission".into());
+        }
+        records.sort_unstable_by_key(|r| (r.first, r.original));
+        for r in records {
+            indices.push(r.original);
+            if let Some(last) = runs.last_mut() {
+                if last.prototype == r.prototype && last.reflected == r.reflected {
+                    last.count += 1;
+                    continue;
+                }
+            }
+            runs.push(Run {
+                prototype: r.prototype,
+                reflected: r.reflected,
+                first: indices.len() - 1,
+                count: 1,
+            });
+        }
+        Ok(Self {
+            indices,
+            runs,
+            retained_payload_bytes: retained,
+        })
+    }
+}
+#[cfg(test)]
+#[test]
+fn source_global_order_preserves_first_bucket_and_original_members() {
+    let key = |identity| PrototypeKey {
+        identity,
+        geometry_revision: 1,
+        paint_revision: 1,
+        style_revision: 1,
+        layer_revision: 1,
+    };
+    let packet = Packet::new(vec![key(1), key(2)], vec![0, 1, 0, 0, 1, 0]).unwrap();
+    let pose = |reflected| Pose {
+        mvp: [[0.; 4]; 4],
+        reflected,
+    };
+    let poses = [
+        pose(false),
+        pose(false),
+        pose(false),
+        pose(true),
+        pose(false),
+        pose(true),
+    ];
+    let order = Order::new(&packet, &poses).unwrap();
+    assert_eq!(order.indices, vec![0, 2, 1, 4, 3, 5]);
+    assert_eq!(
+        order.runs,
+        vec![
+            Run {
+                prototype: 0,
+                reflected: false,
+                first: 0,
+                count: 2
+            },
+            Run {
+                prototype: 1,
+                reflected: false,
+                first: 2,
+                count: 2
+            },
+            Run {
+                prototype: 0,
+                reflected: true,
+                first: 4,
+                count: 2
+            }
+        ]
+    );
+    assert!(order.retained_payload_bytes > 0);
+}
+
+#[cfg(test)]
+#[test]
+fn source_order_allocates_runs_for_groups_and_rejects_invalid_poses() {
+    let key = PrototypeKey {
+        identity: 1,
+        geometry_revision: 1,
+        paint_revision: 1,
+        style_revision: 1,
+        layer_revision: 1,
+    };
+    let packet = Packet::new(vec![key], vec![0; 1000]).unwrap();
+    let mut poses = vec![
+        Pose {
+            mvp: [[0.; 4]; 4],
+            reflected: false
+        };
+        1000
+    ];
+    let order = Order::new(&packet, &poses).unwrap();
+    assert_eq!(order.runs.len(), 1);
+    assert_eq!(order.runs.capacity(), 1);
+    assert_eq!(order.indices.len(), 1000);
+    poses[500].mvp[0][0] = f32::NAN;
+    assert!(Order::new(&packet, &poses).is_err());
+    assert_eq!(order.runs[0].count, 1000);
 }

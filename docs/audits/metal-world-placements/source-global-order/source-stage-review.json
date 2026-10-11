@@ -1,0 +1,15 @@
+{
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "source_recipe_sha256": "1c438e71853fa72e0a53c373f7822b0df8497a92cf340e1232286341ba01a99f",
+  "source_helpers": "viewport.py2587_gather_instanced groups by(proto effectivepaint mirrored), dict insertion order;2855_draw_instanced_faces follows those buckets",
+  "actual_Qt": "A/B/A shared prototype ->A/A/B buckets ->100red247ROI pixels; _NO_INSTANCING actual source counterfactual ->100green247pixels",
+  "implementation": "cold bounded fallible ordering plan stable first-seen buckets and original member order, no geometry clone; cached across model translations/camera frames; GPU model buffers packed by retained indices only when models/order changes",
+  "admission": "8MiB cold preflight includes record sort temporary plus retained index/run Vec capacity and inline Order; run capacity uses actual bucket count; allocator/shared/GPU metadata separately scoped",
+  "focused_tests": "6PASS; actual native GPU3frame source-order fixture pending",
+  "warm_requirements": [
+    "zero geometry uploads for camera-only",
+    "zero ordering builds for stable bindings/mirroring",
+    "zero matrix upload/repacking for camera-only"
+  ],
+  "scope": "source order and immutable cache implementation; physical/native3frame acceptance/host/fullscene policies/performance still open"
+}
