@@ -62,27 +62,42 @@ struct Target {
     instance_matrices: Option<Buffer>,
     ordering_packet: Option<Arc<PlacementPacket>>,
     order: Option<super::world_placement::Order>,
+    material_draws:Option<Arc<MaterialDraws>>,
 }
+enum Collection {Opaque(MeshRenderBuffer),Surfaces(ingetrazo_render::pipeline::SceneRenderData)}
+struct SampledMesh {vertices:Buffer,asset:Arc<super::world_texture::Asset>,draws:Vec<ingetrazo_render::native_textures::Draw>}
+struct Materials {instanced:bool,colored_vertices:Option<Buffer>,colored_indices:Option<Buffer>,runs:Vec<super::world_surface::Run>,textures:Vec<SampledMesh>,opaque_runs:Vec<(usize,usize,bool)>,retained_payload_bytes:usize}
 struct Mesh {
-    vertices: Buffer,
-    indices: Buffer,
+    vertices: Option<Buffer>,
+    indices: Option<Buffer>,
     count: usize,
     plan: Plan,
+    materials:Option<Materials>,
 }
 struct PlacementMeshes {
+    has_materials:bool,
     packet: Arc<PlacementPacket>,
     meshes: Vec<Option<Arc<Mesh>>>,
     key_index: Vec<(PrototypeKey, usize)>,
     retained_payload_bytes: usize,
 }
+#[derive(Clone,Copy)]enum MaterialKind {Legacy,Opaque{first:usize,count:usize,cull:bool},DefaultBack,Color(usize),Texture{bucket:usize,draw:usize}}
+#[derive(Clone,Copy)]struct MaterialDraw{opacity:f32,prototype:usize,packed:usize,instances:usize,reflected:bool,kind:MaterialKind}
+struct MaterialDraws{operations:Vec<MaterialDraw>,retained_payload_bytes:usize}
+struct MaterialPipeline {colored_alpha:Retained<ProtocolObject<dyn MTLRenderPipelineState>>,textured:Retained<ProtocolObject<dyn MTLRenderPipelineState>>,textured_alpha:Retained<ProtocolObject<dyn MTLRenderPipelineState>>,depth:Retained<ProtocolObject<dyn MTLDepthStencilState>>}
 struct Pipeline {
     color: Retained<ProtocolObject<dyn MTLRenderPipelineState>>,
     depth: Retained<ProtocolObject<dyn MTLDepthStencilState>>,
     depth_disabled: Retained<ProtocolObject<dyn MTLDepthStencilState>>,
+    material:Option<MaterialPipeline>,
 }
 #[derive(Default, Debug, Clone, Copy)]
 pub struct Stats {
     pub geometry_uploads: u64,
+    pub texture_uploads:u64,
+    pub material_order_builds:u64,
+    /// Current target material operation capacities; detached Prepared owners separate.
+    pub material_order_payload_bytes:usize,
     pub target_allocations: u64,
     pub prepared: u64,
     pub warm_geometry_hits: u64,
@@ -109,6 +124,7 @@ pub struct World {
     placements: Option<Arc<PlacementMeshes>>,
     pipeline: Option<Arc<Pipeline>>,
     targets: Vec<Arc<Target>>,
+    texture_assets:Vec<std::sync::Weak<super::world_texture::Asset>>,
     pub stats: Stats,
 }
 pub struct Prepared {
@@ -129,6 +145,7 @@ struct PaintUniform {
     mode: u32,
     padding: [u32; 3],
 }
+#[repr(C)]struct TexturePaint{opacity:f32,shade:f32,hard_cutout:u32,height:u32,mean:[f32;4]}
 impl World {
     /// `collect` runs only on a changed immutable geometry identity. Pose always validates.
     /// Caller must change key on any geometry/material/visibility change; transform-only
@@ -192,17 +209,18 @@ impl World {
                 None
             } else {
                 Some(Arc::new(Mesh {
-                    vertices: upload(metal, bytemuck::cast_slice(&data.vertices))?,
-                    indices: upload(metal, bytemuck::cast_slice(&data.indices))?,
+                    vertices: Some(upload(metal, bytemuck::cast_slice(&data.vertices))?),
+                    indices: Some(upload(metal, bytemuck::cast_slice(&data.indices))?),
                     count: data.indices.len(),
                     plan,
+                materials:None,
                 }))
             }
         };
         let pipeline = if let Some(p) = &self.pipeline {
             p.clone()
         } else {
-            Arc::new(pipeline(metal)?)
+            Arc::new(pipeline(metal,false)?)
         };
         let allocated = cached.is_none();
         let target = if let Some(t) = cached {
@@ -227,7 +245,7 @@ impl World {
                 poses: Vec::new(),
                 instance_matrices: None,
                 ordering_packet: None,
-                order: None,
+                order: None,material_draws:None,
             })
         };
         let owner = self
@@ -305,7 +323,18 @@ impl World {
     }
     /// Stable model matrices are retained separately from the global camera.
     /// Camera-only frames bind one uniform without rewriting instance storage.
-    pub fn prepare_placements_with_camera<F>(
+    pub fn prepare_placements_with_camera<F>(&mut self,metal:&NativeMetal,packet:Arc<PlacementPacket>,poses:&[PlacementPose],camera:[[f32;4];4],extent:(u32,u32),clear:[f64;4],policy:Policy,mut collect:F)->Result<Option<Arc<Prepared>>,String>
+    where F:FnMut(&PrototypeKey)->Result<MeshRenderBuffer,String>{
+        self.prepare_collections_with_camera(metal,packet,poses,camera,extent,clear,policy,|key|Ok(Collection::Opaque(collect(key)?)),|_|Err("Unexpected sampled material in opaque consumer".into()))
+    }
+    pub fn prepare_material_placements_with_camera<'a,F,G>(&mut self,metal:&NativeMetal,packet:Arc<PlacementPacket>,poses:&[PlacementPose],camera:[[f32;4];4],extent:(u32,u32),clear:[f64;4],policy:Policy,mut collect:F,resolve:G)->Result<Option<Arc<Prepared>>,String>
+    where F:FnMut(&PrototypeKey)->Result<ingetrazo_render::pipeline::SceneRenderData,String>,G:FnMut(&str)->Result<std::borrow::Cow<'a,[u8]>,String>{
+        self.prepare_collections_with_camera(metal,packet,poses,camera,extent,clear,policy,|key|{let data=collect(key)?;if matches!(policy.mode,Mode::HiddenLine|Mode::Monochrome){
+            if !data.transparent_mesh.indices.is_empty()||!data.textured_meshes.is_empty()||!data.opaque_mesh.source_front_cull.is_empty(){return Err("Metal plan style mixed-material policy requires subsequent stage".into());}
+            Ok(Collection::Opaque(data.opaque_mesh))
+        }else{Ok(Collection::Surfaces(data))}},resolve)
+    }
+    fn prepare_collections_with_camera<'a,F,G>(
         &mut self,
         metal: &NativeMetal,
         packet: Arc<PlacementPacket>,
@@ -315,9 +344,11 @@ impl World {
         clear: [f64; 4],
         policy: Policy,
         mut collect: F,
+        mut resolve:G,
     ) -> Result<Option<Arc<Prepared>>, String>
     where
-        F: FnMut(&PrototypeKey) -> Result<MeshRenderBuffer, String>,
+        F: FnMut(&PrototypeKey) -> Result<Collection, String>,
+        G:FnMut(&str)->Result<std::borrow::Cow<'a,[u8]>,String>,
     {
         if let Some(owner) = &self.owner {
             owner.validate(metal)?;
@@ -340,6 +371,7 @@ impl World {
         if idle.is_none() && self.targets.len() >= 3 {
             return Ok(None);
         }
+        let mut candidate_assets=Vec::<Arc<super::world_texture::Asset>>::new();
         let mut uploaded = 0;
         let placements = if let Some(old) = self
             .placements
@@ -393,54 +425,32 @@ impl World {
                     retained = retained
                         .checked_add(prior.as_ref().map_or(0, |m| {
                             std::mem::size_of::<Mesh>() + m.plan.retained_payload_bytes
-                                - std::mem::size_of::<Plan>()
+                                - std::mem::size_of::<Plan>()+m.materials.as_ref().map_or(0,|s|s.retained_payload_bytes)
                         }))
                         .filter(|n| *n <= CACHE_BYTES)
                         .ok_or("Metal retained prototype plans exceed64MiB")?;
                     prior
                 } else {
-                    let data = collect(key)?;
-                    let plan = super::world_admission::opaque(&data)?;
-                    if !data.indices.is_empty() {
-                        retained = retained
-                            .checked_add(
-                                std::mem::size_of::<Mesh>() + plan.retained_payload_bytes
-                                    - std::mem::size_of::<Plan>(),
-                            )
-                            .filter(|n| *n <= CACHE_BYTES)
-                            .ok_or("Metal retained prototype plans exceed64MiB")?;
-                    }
-                    if !plan.overrides.is_empty() {
-                        return Err("Metal source placement with back overrides requires consolidated stage".into());
-                    }
-                    if data.indices.is_empty() {
-                        None
-                    } else {
-                        uploaded += 1;
-                        Some(Arc::new(Mesh {
-                            vertices: upload(metal, bytemuck::cast_slice(&data.vertices))?,
-                            indices: upload(metal, bytemuck::cast_slice(&data.indices))?,
-                            count: data.indices.len(),
-                            plan,
-                        }))
-                    }
+                    let collection=collect(key)?;
+                    let mesh=build_material_mesh(metal,collection,&mut resolve,&self.texture_assets,&mut candidate_assets)?;
+                    if let Some(m)=&mesh{retained=retained.checked_add(std::mem::size_of::<Mesh>()+m.plan.retained_payload_bytes-std::mem::size_of::<Plan>()+m.materials.as_ref().map_or(0,|s|s.retained_payload_bytes)).filter(|n|*n<=CACHE_BYTES).ok_or("Metal retained material cache exceeds64MiB")?;uploaded+=1;}
+                    mesh
+
                 };
                 meshes.push(mesh);
                 key_index.push((*key, index));
             }
             key_index.sort_unstable_by_key(|p| p.0);
+            let has_materials=meshes.iter().filter_map(|m|m.as_ref()).any(|m|m.materials.is_some());
             Arc::new(PlacementMeshes {
-                packet: packet.clone(),
+                has_materials,packet: packet.clone(),
                 meshes,
                 key_index,
                 retained_payload_bytes: retained,
             })
         };
-        let pipeline = if let Some(p) = &self.pipeline {
-            p.clone()
-        } else {
-            Arc::new(pipeline(metal)?)
-        };
+        let needs_materials=placements.has_materials;
+        let pipeline=if let Some(p)=&self.pipeline{if !needs_materials||p.material.is_some(){p.clone()}else{Arc::new(pipeline(metal,true)? )}}else{Arc::new(pipeline(metal,needs_materials)?)};
         let mut new_target = if idle.is_none() {
             Some(Arc::new(Target {
                 color: image(
@@ -461,7 +471,7 @@ impl World {
                 poses: Vec::new(),
                 instance_matrices: None,
                 ordering_packet: None,
-                order: None,
+                order: None,material_draws:None,
             }))
         } else {
             None
@@ -523,6 +533,11 @@ impl World {
         } else {
             None
         };
+        if candidate_assets.len()+self.texture_assets.iter().filter(|a|a.strong_count()>0).count()>4096{return Err("Metal sampled identity publication admission exceeded".into());}
+        self.texture_assets.try_reserve_exact(candidate_assets.len()).map_err(|_|"Metal texture lookup publication allocation refused")?;
+        let material_draws=if needs_materials && (order_changed||unique.material_draws.is_none()){
+            Some(Arc::new(material_draws(&placements,candidate_order.as_ref().or(unique.order.as_ref()).unwrap(),poses)?))
+        }else{None};
         let allocated_matrices = candidate_matrices.is_some();
         let order = candidate_order.as_ref().or(unique.order.as_ref()).unwrap();
         let buffer = candidate_matrices
@@ -562,6 +577,8 @@ impl World {
         if let Some(order) = candidate_order {
             unique.order = Some(order);
         }
+        if let Some(draws)=material_draws{unique.material_draws=Some(draws);}
+        if !needs_materials{unique.material_draws=None;}
         unique.ordering_packet = Some(placements.packet.clone());
         if let Some(buffer) = candidate_matrices {
             unique.instance_matrices = Some(buffer);
@@ -585,6 +602,9 @@ impl World {
             .map(|o| o.retained_payload_bytes)
             .sum();
         self.stats.geometry_uploads += uploaded;
+        self.stats.texture_uploads+=candidate_assets.len()as u64;
+        self.stats.material_order_builds+=u64::from(needs_materials&&order_changed);
+        self.stats.material_order_payload_bytes=self.targets.iter().filter_map(|t|t.material_draws.as_ref()).map(|p|p.retained_payload_bytes).sum();
         self.stats.prepared += 1;
         if uploaded == 0 {
             self.stats.warm_geometry_hits += 1;
@@ -602,6 +622,7 @@ impl World {
             .iter()
             .map(|t| t.poses.capacity() * std::mem::size_of::<PlacementPose>())
             .sum();
+        if uploaded>0{self.texture_assets.retain(|a|a.strong_count()>0);self.texture_assets.extend(candidate_assets.iter().map(Arc::downgrade));}
         self.owner = Some(owner.clone());
         self.mesh = None;
         self.key = None;
@@ -623,6 +644,7 @@ impl World {
         self.mesh = None;
         self.placements = None;
         self.stats.policy_retained_payload_bytes = 0;
+        self.stats.material_order_payload_bytes=self.targets.iter().filter_map(|t|t.material_draws.as_ref()).map(|p|p.retained_payload_bytes).sum();
         self.stats.placement_cache_payload_bytes = 0;
         self.stats.placement_descriptor_payload_bytes = 0;
         self.stats.pose_storage_payload_bytes = self
@@ -653,6 +675,24 @@ impl Prepared {
     /// Encode before the UI samples texture(), retaining this Prepared until completion.
     pub fn encode(&self, command: &ProtocolObject<dyn MTLCommandBuffer>) -> Result<(), String> {
         self.encode_inner(command, true)
+    }
+    fn encode_material_draws(&self,encoder:&ProtocolObject<dyn MTLRenderCommandEncoder>,placements:&PlacementMeshes,draws:&MaterialDraws,depth_enabled:bool)->Result<(),String>{
+        let pipelines=self.pipeline.material.as_ref().ok_or("Metal material pipelines unavailable")?;let matrices=self.target.instance_matrices.as_ref().ok_or("Metal material matrices unavailable")?;
+        for op in &draws.operations {
+            let mesh=placements.meshes[op.prototype].as_ref().ok_or("Metal admitted material prototype unavailable")?;
+            encoder.setFrontFacingWinding(if op.reflected{MTLWinding::Clockwise}else{MTLWinding::CounterClockwise});
+            let depth=if depth_enabled{&self.pipeline.depth}else{&self.pipeline.depth_disabled};
+            encoder.setDepthStencilState(Some(depth));encoder.setRenderPipelineState(&self.pipeline.color);
+            let paint=PaintUniform{front:self.policy.front,back:self.policy.back,mode:match self.policy.mode{Mode::Material|Mode::MaterialAverage=>0,Mode::HiddenLine=>1,Mode::Monochrome=>2},padding:[0;3]};
+            match op.kind {
+                MaterialKind::Legacy=>{encoder.setDepthBias_slopeScale_clamp(1.,1.,0.);encode_placement_mesh(encoder,mesh,matrices,op.packed,op.instances,self.policy);},
+                MaterialKind::Opaque{first,count,cull}=>{encoder.setDepthBias_slopeScale_clamp(1.,1.,0.);encoder.setCullMode(if cull{MTLCullMode::Back}else{MTLCullMode::None});unsafe{encoder.setVertexBuffer_offset_atIndex(Some(&mesh.vertices.as_ref().unwrap().raw),0,0);encoder.setVertexBuffer_offset_atIndex(Some(&matrices.raw),op.packed*64,1);}bind_paint(encoder,&paint);draw_instances(encoder,mesh,first,count,1);},
+                MaterialKind::DefaultBack=>{if !matches!(self.policy.mode,Mode::Material|Mode::MaterialAverage){continue;}encoder.setDepthBias_slopeScale_clamp(1.,1.,0.);encoder.setCullMode(MTLCullMode::Front);unsafe{encoder.setVertexBuffer_offset_atIndex(Some(&mesh.vertices.as_ref().unwrap().raw),0,0);encoder.setVertexBuffer_offset_atIndex(Some(&matrices.raw),op.packed*64,1);}bind_paint(encoder,&PaintUniform{front:self.policy.back,mode:3,..paint});for &(first,count)in &mesh.plan.default_back{draw_instances(encoder,mesh,first,count,1);}},
+                MaterialKind::Color(index)=>{let material=mesh.materials.as_ref().unwrap();let run=material.runs[index];let default=run.phase==super::world_surface::Phase::DefaultBack;let alpha=matches!(run.phase,super::world_surface::Phase::TransparentFront|super::world_surface::Phase::TransparentBack);encoder.setDepthBias_slopeScale_clamp(if alpha||default{1.}else{0.},if alpha||default{1.}else{0.},0.);encoder.setRenderPipelineState(if alpha{&pipelines.colored_alpha}else{&self.pipeline.color});encoder.setDepthStencilState(Some(if !depth_enabled{&self.pipeline.depth_disabled}else if alpha{&pipelines.depth}else{&self.pipeline.depth}));encoder.setCullMode(if run.cull_front{MTLCullMode::Front}else if run.front_only{MTLCullMode::Back}else{MTLCullMode::None});unsafe{encoder.setVertexBuffer_offset_atIndex(Some(&material.colored_vertices.as_ref().unwrap().raw),0,0);encoder.setVertexBuffer_offset_atIndex(Some(&matrices.raw),op.packed*64,1);}bind_paint(encoder,&PaintUniform{front:if default{self.policy.back}else{paint.front},mode:if default{3}else{0},..paint});unsafe{encoder.drawIndexedPrimitives_indexCount_indexType_indexBuffer_indexBufferOffset_instanceCount(MTLPrimitiveType::Triangle,run.count,MTLIndexType::UInt32,&material.colored_indices.as_ref().unwrap().raw,run.first*4,1);}},
+                MaterialKind::Texture{bucket,draw}=>{let texture=&mesh.materials.as_ref().unwrap().textures[bucket];let draw=&texture.draws[draw];let source=&draw.source;let alpha=source.opacity<0.999;encoder.setDepthBias_slopeScale_clamp(if !source.back_side||alpha{1.}else{0.},if !source.back_side||alpha{1.}else{0.},0.);encoder.setRenderPipelineState(if alpha{&pipelines.textured_alpha}else{&pipelines.textured});encoder.setDepthStencilState(Some(if !depth_enabled{&self.pipeline.depth_disabled}else if alpha{&pipelines.depth}else{&self.pipeline.depth}));encoder.setCullMode(if source.back_side{MTLCullMode::Front}else if source.front_cull{MTLCullMode::Back}else{MTLCullMode::None});let opacity=op.opacity;let uniform=TexturePaint{opacity,shade:source.shade,hard_cutout:u32::from(texture.asset.cutout),height:self.extent().1,mean:[texture.asset.mean[0],texture.asset.mean[1],texture.asset.mean[2],if self.policy.mode==Mode::MaterialAverage{1.}else{0.}]};unsafe{encoder.setVertexBuffer_offset_atIndex(Some(&texture.vertices.raw),0,0);encoder.setVertexBuffer_offset_atIndex(Some(&matrices.raw),op.packed*64,1);encoder.setFragmentTexture_atIndex(Some(&texture.asset.image),0);encoder.setFragmentSamplerState_atIndex(Some(&texture.asset.sampler),0);encoder.setFragmentBytes_length_atIndex(std::ptr::NonNull::from(&uniform).cast(),std::mem::size_of::<TexturePaint>(),0);encoder.drawPrimitives_vertexStart_vertexCount_instanceCount(MTLPrimitiveType::Triangle,draw.first as usize,draw.count as usize,1);}},
+            }
+        }
+        encoder.setDepthBias_slopeScale_clamp(0.,0.,0.);Ok(())
     }
     fn encode_inner(
         &self,
@@ -701,6 +741,9 @@ impl Prepared {
             encoder.setVertexBytes_length_atIndex(std::ptr::NonNull::from(camera).cast(), 64, 2);
         }
         if let Some(placements) = &self.placements {
+            if let Some(draws)=&self.target.material_draws{
+                self.encode_material_draws(&encoder,placements,draws,depth_enabled)?;
+            }else{
             for run in &self.target.order.as_ref().unwrap().runs {
                 encoder.setFrontFacingWinding(if run.reflected {
                     MTLWinding::Clockwise
@@ -718,6 +761,7 @@ impl Prepared {
                     );
                 }
             }
+            }
         } else if let Some(mesh) = &self.mesh {
             encode_mesh(&encoder, mesh, &self.mvp, self.policy);
         }
@@ -731,14 +775,15 @@ fn encode_mesh(
     mvp: &[[f32; 4]; 4],
     policy: Policy,
 ) {
+    if mesh.count==0{return;}
     encoder.setCullMode(MTLCullMode::None);
 
     unsafe {
-        encoder.setVertexBuffer_offset_atIndex(Some(&mesh.vertices.raw), 0, 0);
+        encoder.setVertexBuffer_offset_atIndex(Some(&mesh.vertices.as_ref().unwrap().raw), 0, 0);
         encoder.setVertexBytes_length_atIndex(std::ptr::NonNull::from(mvp).cast(), 64, 1);
     }
     let mode = match policy.mode {
-        Mode::Material => 0,
+        Mode::Material | Mode::MaterialAverage => 0,
         Mode::HiddenLine => 1,
         Mode::Monochrome => 2,
     };
@@ -750,7 +795,7 @@ fn encode_mesh(
     };
     bind_paint(encoder, &uniform);
     draw(encoder, mesh, 0, mesh.count);
-    if policy.mode == Mode::Material {
+    if matches!(policy.mode,Mode::Material|Mode::MaterialAverage) {
         encoder.setCullMode(MTLCullMode::Front);
         let default = PaintUniform {
             front: policy.back,
@@ -783,16 +828,17 @@ fn encode_placement_mesh(
 ) {
     // Source _instanced_eligible excludes explicit back override/alpha content.
     // Draw order follows the source ordinary pass then default-back pass.
+    if mesh.count==0{return;}
     encoder.setCullMode(MTLCullMode::None);
     unsafe {
-        encoder.setVertexBuffer_offset_atIndex(Some(&mesh.vertices.raw), 0, 0);
+        encoder.setVertexBuffer_offset_atIndex(Some(&mesh.vertices.as_ref().unwrap().raw), 0, 0);
         encoder.setVertexBuffer_offset_atIndex(Some(&matrices.raw), first_instance * 64, 1);
     }
     let ordinary = PaintUniform {
         front: policy.front,
         back: policy.back,
         mode: match policy.mode {
-            Mode::Material => 0,
+            Mode::Material | Mode::MaterialAverage => 0,
             Mode::HiddenLine => 1,
             Mode::Monochrome => 2,
         },
@@ -800,7 +846,7 @@ fn encode_placement_mesh(
     };
     bind_paint(encoder, &ordinary);
     draw_instances(encoder, mesh, 0, mesh.count, instances);
-    if policy.mode == Mode::Material {
+    if matches!(policy.mode,Mode::Material|Mode::MaterialAverage) {
         // Literal source _draw_instanced_faces: all ordinary faces first,
         // then default backs with front culling and LEQUAL. A coplanar front
         // authored after a back must not erase this later default-back pass.
@@ -818,7 +864,57 @@ fn encode_placement_mesh(
     }
 }
 
-fn pipeline(metal: &NativeMetal) -> Result<Pipeline, String> {
+fn material_draws(placements:&PlacementMeshes,order:&super::world_placement::Order,poses:&[PlacementPose])->Result<MaterialDraws,String>{
+    const CAP:usize=8*1024*1024;
+    let mut count=0usize;for &prototype in &placements.packet.bindings{if let Some(mesh)=&placements.meshes[prototype as usize]{let n=mesh.materials.as_ref().map_or(1,|m|m.opaque_runs.len()+1+m.runs.len()+m.textures.iter().map(|t|t.draws.len()).sum::<usize>());count=count.checked_add(n).ok_or("Metal material operation count overflow")?;}}
+    let record_size=std::mem::size_of::<((u8,i32,bool,usize,usize),MaterialDraw)>();let bound=count.checked_mul(record_size+std::mem::size_of::<MaterialDraw>()+256).and_then(|n|order.indices.len().checked_mul(8).and_then(|m|n.checked_add(m))).filter(|n|*n<=CAP).ok_or("Metal material order admission exceeds8MiB")?;let _=bound;
+    let mut reverse=Vec::new();reverse.try_reserve_exact(order.indices.len()).map_err(|_|"Metal material reverse order allocation refused")?;reverse.resize(order.indices.len(),0);for(packed,&original)in order.indices.iter().enumerate(){reverse[original]=packed;}
+    let mut records=Vec::new();records.try_reserve_exact(count).map_err(|_|"Metal material order allocation refused")?;
+    let mut buckets=std::collections::HashMap::<(super::world_texture::Identity,u32,i32,bool,bool,u8),usize>::new();buckets.try_reserve(count).map_err(|_|"Metal sampled order bucket allocation refused")?;
+    for(original,&prototype)in placements.packet.bindings.iter().enumerate(){let Some(mesh)=&placements.meshes[prototype as usize]else{continue};let Some(material)=&mesh.materials else{continue};if material.instanced{continue;}let base=MaterialDraw{opacity:1.,prototype:prototype as usize,packed:reverse[original],instances:1,reflected:poses[original].reflected,kind:MaterialKind::DefaultBack};
+        for &(first,count,cull)in &material.opaque_runs{records.push(((0,0,false,original,first),MaterialDraw{kind:MaterialKind::Opaque{first,count,cull},..base}));}
+        if !mesh.plan.default_back.is_empty(){records.push(((2,0,false,original,0),base));}
+        for(index,run)in material.runs.iter().enumerate(){let phase=match run.phase{super::world_surface::Phase::OpaqueBack=>4,super::world_surface::Phase::DefaultBack=>2,super::world_surface::Phase::TransparentFront=>6,super::world_surface::Phase::TransparentBack=>7};records.push(((phase,(run.opacity*1000.).round()as i32,run.front_only,original,index),MaterialDraw{kind:MaterialKind::Color(index),..base}));}
+        for(bucket,texture)in material.textures.iter().enumerate(){for(draw,d)in texture.draws.iter().enumerate(){let source=&d.source;let opaque=source.opacity>=0.999;let phase=match(opaque,source.back_side){(true,false)=>1,(true,true)=>5,(false,false)=>8,(false,true)=>9};let alpha=if opaque{1000}else{(format!("{:.3}",source.opacity).parse::<f64>().map_err(|_|"Metal texture opacity rounding refused")?*1000.).round()as i32};let key=(texture.asset.id,source.shade.to_bits(),alpha,source.front_cull,source.back_side,phase);let next=buckets.len();let first=*buckets.entry(key).or_insert(next);records.push(((phase,alpha,source.front_cull,first,original),MaterialDraw{opacity:alpha as f32/1000.,kind:MaterialKind::Texture{bucket,draw},..base}));}}
+    }
+    for (index,run)in order.runs.iter().enumerate(){let Some(mesh)=&placements.meshes[run.prototype as usize]else{continue};if mesh.materials.as_ref().is_none_or(|m|m.instanced){records.push(((3,0,false,index,0),MaterialDraw{opacity:1.,prototype:run.prototype as usize,packed:run.first,instances:run.count,reflected:run.reflected,kind:MaterialKind::Legacy}));}}
+    records.sort_unstable_by_key(|r|r.0);let mut operations=Vec::new();operations.try_reserve_exact(records.len()).map_err(|_|"Metal retained material operations allocation refused")?;operations.extend(records.into_iter().map(|r|r.1));let retained_payload_bytes=operations.capacity().checked_mul(std::mem::size_of::<MaterialDraw>()).and_then(|n|n.checked_add(std::mem::size_of::<MaterialDraws>())).ok_or("Metal material operation capacity overflow")?;if retained_payload_bytes>CAP{return Err("Metal retained material operations exceeds8MiB".into());}Ok(MaterialDraws{operations,retained_payload_bytes})
+}
+
+fn build_material_mesh<'a,G>(metal:&NativeMetal,collection:Collection,resolve:&mut G,published:&[std::sync::Weak<super::world_texture::Asset>],candidates:&mut Vec<Arc<super::world_texture::Asset>>)->Result<Option<Arc<Mesh>>,String>
+where G:FnMut(&str)->Result<std::borrow::Cow<'a,[u8]>,String>{
+    let (data,materials)=match collection {
+        Collection::Opaque(data)=>(data,None),
+        Collection::Surfaces(data)=>{
+            let packet=super::world_surface::Packet::prepare(data)?;
+            let mut opaque=packet.opaque;let mut opaque_runs=Vec::new();opaque_runs.try_reserve_exact(opaque.source_front_cull.len()*2+1).map_err(|_|"Metal opaque source run allocation refused")?;let mut first=0;
+            for &(start,count)in &opaque.source_front_cull{if start>first{opaque_runs.push((first,start-first,false));}opaque_runs.push((start,count,true));first=start+count;}if first<opaque.indices.len(){opaque_runs.push((first,opaque.indices.len()-first,false));}
+            // Back overrides are drawn by the separately ordered material pass.
+            opaque.source_back_paints.clear();opaque.source_front_cull.clear();opaque.source_opacity_runs.clear();for v in &mut opaque.vertices{v.color[3]=1.;}
+            let colored_vertices=if packet.colored.indices.is_empty(){None}else{Some(upload(metal,bytemuck::cast_slice(&packet.colored.vertices))?)};
+            let colored_indices=if packet.colored.indices.is_empty(){None}else{Some(upload(metal,bytemuck::cast_slice(&packet.colored.indices))?)};
+            let mut textures=Vec::new();textures.try_reserve_exact(packet.textures.len()).map_err(|_|"Metal sampled mesh allocation refused")?;
+            for texture in packet.textures {
+                let encoded=resolve(&texture.path)?;let id=super::world_texture::identity(&encoded)?;
+                let asset=candidates.iter().find(|a|a.id==id).cloned().or_else(||published.iter().filter_map(std::sync::Weak::upgrade).find(|a|a.id==id));
+                let asset=if let Some(asset)=asset{asset}else{if candidates.len()+published.iter().filter(|a|a.strong_count()>0).count()>=4096{return Err("Metal retained sampled asset identities exceed4096".into());}candidates.try_reserve(1).map_err(|_|"Metal sampled asset publication allocation refused")?;let asset=super::world_texture::upload(metal,id,&encoded)?;candidates.push(asset.clone());asset};
+                textures.push(SampledMesh{vertices:upload(metal,texture.geometry.upload_bytes())?,asset,draws:texture.geometry.draws});
+            }
+            let retained_payload_bytes=std::mem::size_of::<Materials>()+packet.runs.capacity()*std::mem::size_of::<super::world_surface::Run>()+opaque_runs.capacity()*std::mem::size_of::<(usize,usize,bool)>()+textures.capacity()*std::mem::size_of::<SampledMesh>()+textures.iter().map(|t|t.draws.capacity()*std::mem::size_of::<ingetrazo_render::native_textures::Draw>()).sum::<usize>();
+            if retained_payload_bytes>8*1024*1024{return Err("Metal retained material runs exceed8MiB".into());}
+            let instanced=opaque.source_consolidated_opaque_count==0&&packet.runs.is_empty()&&textures.is_empty();
+            (opaque,Some(Materials{instanced,colored_vertices,colored_indices,runs:packet.runs,textures,opaque_runs,retained_payload_bytes}))
+        }
+    };
+    let plan=super::world_admission::opaque(&data)?;
+    let has_materials=materials.as_ref().is_some_and(|m|m.colored_indices.is_some()||!m.textures.is_empty());
+    if data.indices.is_empty()&&!has_materials{return Ok(None);}
+    let vertices=if data.indices.is_empty(){None}else{Some(upload(metal,bytemuck::cast_slice(&data.vertices))?)};
+    let indices=if data.indices.is_empty(){None}else{Some(upload(metal,bytemuck::cast_slice(&data.indices))?)};
+    Ok(Some(Arc::new(Mesh{vertices,indices,count:data.indices.len(),plan,materials})))
+}
+
+fn pipeline(metal: &NativeMetal, rich:bool) -> Result<Pipeline, String> {
     let lib = metal
         .device
         .newLibraryWithSource_options_error(
@@ -848,8 +944,12 @@ fn pipeline(metal: &NativeMetal) -> Result<Pipeline, String> {
     let disabled = MTLDepthStencilDescriptor::new();
     disabled.setDepthCompareFunction(MTLCompareFunction::Always);
     disabled.setDepthWriteEnabled(false);
+    let material=if rich{
+        let alpha=MTLDepthStencilDescriptor::new();alpha.setDepthCompareFunction(MTLCompareFunction::LessEqual);alpha.setDepthWriteEnabled(false);
+        Some(MaterialPipeline{colored_alpha:material_pipeline(metal,&lib,"world_vertex","world_fragment",true)?,textured:material_pipeline(metal,&lib,"world_texture_vertex","world_texture_fragment",true)?,textured_alpha:material_pipeline(metal,&lib,"world_texture_vertex","world_texture_fragment",true)?,depth:metal.device.newDepthStencilStateWithDescriptor(&alpha).ok_or("Metal material depth state unavailable")?})
+    }else{None};
     Ok(Pipeline {
-        color,
+        color,material,
         depth_disabled: metal
             .device
             .newDepthStencilStateWithDescriptor(&disabled)
@@ -859,6 +959,11 @@ fn pipeline(metal: &NativeMetal) -> Result<Pipeline, String> {
             .newDepthStencilStateWithDescriptor(&depth)
             .ok_or("World depth state missing")?,
     })
+}
+fn material_pipeline(metal:&NativeMetal,lib:&ProtocolObject<dyn MTLLibrary>,vertex:&str,fragment:&str,alpha:bool)->Result<Retained<ProtocolObject<dyn MTLRenderPipelineState>>,String>{
+ let vertex=lib.newFunctionWithName(&NSString::from_str(vertex)).ok_or("Metal material vertex function missing")?;let fragment=lib.newFunctionWithName(&NSString::from_str(fragment)).ok_or("Metal material fragment function missing")?;let d=MTLRenderPipelineDescriptor::new();d.setVertexFunction(Some(&vertex));d.setFragmentFunction(Some(&fragment));d.setDepthAttachmentPixelFormat(MTLPixelFormat::Depth32Float);let color=unsafe{d.colorAttachments().objectAtIndexedSubscript(0)};color.setPixelFormat(MTLPixelFormat::RGBA8Unorm);color.setBlendingEnabled(alpha);
+ if alpha{color.setSourceRGBBlendFactor(MTLBlendFactor::SourceAlpha);color.setDestinationRGBBlendFactor(MTLBlendFactor::OneMinusSourceAlpha);color.setRgbBlendOperation(MTLBlendOperation::Add);color.setSourceAlphaBlendFactor(MTLBlendFactor::Zero);color.setDestinationAlphaBlendFactor(MTLBlendFactor::One);color.setAlphaBlendOperation(MTLBlendOperation::Add);}
+ metal.device.newRenderPipelineStateWithDescriptor_error(&d).map_err(|e|format!("Metal material pipeline:{e:?}"))
 }
 fn image(
     metal: &NativeMetal,
@@ -1054,7 +1159,7 @@ fn draw(
             MTLPrimitiveType::Triangle,
             count,
             MTLIndexType::UInt32,
-            &mesh.indices.raw,
+            &mesh.indices.as_ref().unwrap().raw,
             first * 4,
         );
     }
@@ -1073,7 +1178,7 @@ fn draw_instances(
                 MTLPrimitiveType::Triangle,
                 count,
                 MTLIndexType::UInt32,
-                &mesh.indices.raw,
+                &mesh.indices.as_ref().unwrap().raw,
                 first * 4,
                 instances,
             );

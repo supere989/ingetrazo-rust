@@ -40,3 +40,8 @@ pub mod world_policy;
 
 pub mod world_placement;
 pub mod world_scene;
+
+pub mod world_surface;
+
+#[cfg(target_os="macos")]
+mod world_texture;

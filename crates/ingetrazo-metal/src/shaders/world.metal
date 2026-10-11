@@ -14,3 +14,19 @@ fragment float4 world_fragment(Out in [[stage_in]],bool front [[front_facing]],c
  if(paint.mode==2)return front?paint.front:paint.back;
  return in.color;
 }
+
+// Source basic.frag sampled policy: bottom-up UV asset rows, linear repeat,
+// trilinear mips unless sparse alpha selects source hard-cutout mode.
+struct TextureVertex {packed_float3 position;packed_float2 uv;};
+struct TextureOut {float4 position [[position]];float2 uv;};
+vertex TextureOut world_texture_vertex(uint id [[vertex_id]],uint instance [[instance_id]],const device TextureVertex* v [[buffer(0)]],const device float4x4* model [[buffer(1)]],constant float4x4& camera [[buffer(2)]]) {
+ TextureOut o;o.position=camera*model[instance]*float4(v[id].position,1.);o.position.z=(o.position.z+o.position.w)*.5;o.uv=float2(v[id].uv);return o;
+}
+struct TexturePaint {float opacity;float shade;uint hard_cutout;uint height;float4 mean;};
+constant float source_bayer[16]={0.5/16.,8.5/16.,2.5/16.,10.5/16.,12.5/16.,4.5/16.,14.5/16.,6.5/16.,3.5/16.,11.5/16.,1.5/16.,9.5/16.,15.5/16.,7.5/16.,13.5/16.,5.5/16.};
+fragment float4 world_texture_fragment(TextureOut in [[stage_in]],texture2d<float> image [[texture(0)]],sampler filter [[sampler(0)]],constant TexturePaint& paint [[buffer(0)]]) {
+ if(paint.mean.w!=0.)return float4(paint.mean.rgb,paint.opacity);
+ float4 texel=image.sample(filter,in.uv);
+ if(paint.opacity>.999&&texel.a<.5){if(paint.hard_cutout!=0)discard_fragment();uint x=uint(in.position.x)%4;uint y=uint(float(paint.height)-in.position.y)%4;if(texel.a<source_bayer[y*4+x])discard_fragment();return float4(texel.rgb*paint.shade,1.);}
+ return float4(texel.rgb*paint.shade,texel.a*paint.opacity);
+}
