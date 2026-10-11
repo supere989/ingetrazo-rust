@@ -1,0 +1,19 @@
+{
+  "on": {
+    "pixels": 2278,
+    "max": 195
+  },
+  "off": {
+    "pixels": 1297,
+    "max": 27
+  },
+  "restored": {
+    "pixels": 2278,
+    "max": 195
+  },
+  "mask": {
+    "source": 3830,
+    "native": 4026,
+    "xor": 196
+  }
+}
