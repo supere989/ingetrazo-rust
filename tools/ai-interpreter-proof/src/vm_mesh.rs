@@ -226,7 +226,7 @@ pub mod editable_mesh {
         }
     }
     impl Vertex {
-        fn track(self) -> Self {
+        pub(super) fn track(self) -> Self {
             LIVE_VERTICES.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
             self
         }
@@ -1229,6 +1229,7 @@ fn seed_packed_uids(mesh:&PyRef<editable_mesh::Mesh>)->Result<(),String>{
 }
 #[path="vm_packed.rs"]mod packed;
 #[path="vm_face_fields.rs"]mod face_fields;
+#[path="vm_hydrate.rs"]mod hydrate;
 struct VertexRestore {
     vertex: PyRef<editable_mesh::Vertex>,
     position: PyRef<crate::vm_groups::native_groups::QVector3D>,
@@ -2209,6 +2210,15 @@ impl Controller {
     }
     pub fn observe(&self, name: &str) -> serde_json::Value {
         self.interpreter.enter(|vm|{use rustpython_vm::AsObject;let mesh=self.scope.globals.get_item("m",vm).unwrap().downcast::<editable_mesh::Mesh>().unwrap();let owner=mesh.owner.read();let m=owner.mesh();let held=self.scope.globals.get_item("held",vm).unwrap().downcast::<editable_mesh::Face>().unwrap();let old_loop=self.scope.globals.get_item("loop",vm).unwrap();let attrs=self.scope.globals.get_item("heldattrs",vm).unwrap();let position=self.scope.globals.get_item("heldposition",vm).unwrap();let live=mesh.faces.borrow_vec();let first=held.r#loop.read().borrow_vec()[0].clone().downcast::<editable_mesh::Vertex>().unwrap();serde_json::json!({"name":name,"mesh":{"vertices":m.vertices.iter().map(|v|v.position.to_array()).collect::<Vec<_>>(),"edges":m.edges.iter().map(|e|[e.v0,e.v1]).collect::<Vec<_>>(),"faces":m.faces.iter().map(|f|serde_json::json!({"vertices":f.vertices,"holes":f.holes})).collect::<Vec<_>>()},"persistent_faces":mesh.faces.is(&self.scope.globals.get_item("faces",vm).unwrap()),"persistent_vertices":mesh.vertices.is(&self.scope.globals.get_item("vertices",vm).unwrap()),"held_face_live":live.iter().any(|v|v.is(&held)),"face_loop_preserved":held.r#loop.read().is(&old_loop),"attrs_dict_preserved":held.attrs.read().is(&attrs),"vertex_position_preserved":first.position.read().is(&position)})})
+    }
+    /// Engineering cold import boundary. No source code runs while wrappers are built.
+    pub fn import_native_mesh(&mut self,mesh:&ingetrazo_core::mesh::Mesh)->Result<(),String>{
+      if !self.undo.is_empty()||!self.redo.is_empty(){return Err("Native import requires fresh controller history".into());}
+      let wrapped=self.interpreter.enter(|vm|hydrate::prepare(mesh.clone(),&self.budget,vm))?;
+      self.interpreter.enter(|vm|{let _scope_charge=self.budget.reserve(Kind::Preparation,self.scope.globals.__len__().checked_add(2).and_then(|n|n.checked_mul(256)).ok_or("Native scope extent overflow")?)?;let prepared=rustpython_vm::PyPayload::into_ref(self.scope.globals.copy(),&vm.ctx);prepared.set_item("mesh",wrapped.clone().into(),vm).map_err(|_|"Native mesh scope publication refused".to_owned())?;prepared.set_item("m",wrapped.into(),vm).map_err(|_|"Native mesh alias publication refused".to_owned())?;self.scope.globals.swap_prepared_contents(&prepared);drop(prepared);Ok(())})
+    }
+    pub fn native_mesh_snapshot(&self)->Result<ingetrazo_core::mesh::Mesh,String>{
+      self.interpreter.enter(|vm|{let mesh=self.scope.globals.get_item("mesh",vm).map_err(|_|"Missing native mesh binding")?.downcast::<editable_mesh::Mesh>().map_err(|_|"Native Mesh binding replaced")?;let result=mesh.owner.read().mesh().clone();Ok(result)})
     }
     pub fn observe_native_face_fields(&self,name:&str)->serde_json::Value{
       self.interpreter.enter(|vm|{let mesh=self.scope.globals.get_item("m",vm).unwrap().downcast::<editable_mesh::Mesh>().unwrap();let owner=mesh.owner.read();serde_json::json!({"name":name,"faces":owner.mesh().faces.iter().map(|f|serde_json::json!({"attrs":f.attrs,"layer":f.layer})).collect::<Vec<_>>(),"undo":self.undo.len(),"redo":self.redo.len()})})

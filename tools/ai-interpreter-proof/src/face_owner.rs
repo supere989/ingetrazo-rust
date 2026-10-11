@@ -571,7 +571,7 @@ fn face_bound(corners: usize, faces: usize) -> Result<usize, String> {
 }
 // Counts logical retained payload/capacity. Allocator headers, BTree node slack,
 // preexisting caller allocations and VM native memory are explicitly excluded.
-fn attribute_payload(attrs: &HashMap<String, serde_json::Value>) -> Result<usize, String> {
+pub(crate) fn attribute_payload(attrs: &HashMap<String, serde_json::Value>) -> Result<usize, String> {
     let mut n = attrs
         .capacity()
         .checked_mul(std::mem::size_of::<(String, serde_json::Value)>())
