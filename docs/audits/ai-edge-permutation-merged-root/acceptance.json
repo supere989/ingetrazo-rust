@@ -1,0 +1,16 @@
+{
+  "source": "16e68a81",
+  "fresh_original_native": true,
+  "exact_graph_history_states": 30,
+  "actual_native_allocation_refusals": 12,
+  "checker_negative_controls": 11,
+  "focused_owner_tests": 1,
+  "production_enabled": false,
+  "remaining": [
+    "Deletion/replacement",
+    "Mixed append plus arbitrary reorder",
+    "Endpoint mutation projection",
+    "Full callback parity",
+    "Total allocator bounds and sparse history"
+  ]
+}

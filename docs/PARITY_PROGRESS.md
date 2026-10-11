@@ -19,6 +19,8 @@ Latest independent rendering diagnosis: [real layout](audits/annotation-real-ope
 
 ## Dated implementation and verification evidence
 
+Merged combined graph ordering (2026-10-11 UTC): fresh original and merged Rust match 30 full graph/history states, including combined vertex/edge/face order, pose/loop edits and shared-edge append after chronological Undo/Redo. Twelve actual native allocation refusals preserve state/history/charges; eleven checker negatives reject and the exact owner test runs one PASS. [Independent merged evidence](audits/ai-edge-permutation-merged-root/acceptance.json). General deletion/replacement, mixed append/reorder, endpoint projection and production execution remain OPEN.
+
 ARM native world artifact accepted within scope (2026-10-11 UTC): root independently verifies source/ZIP hashes and all nine actual frames at 1,152 interior plus 2,584 background pixels each. Blank and disabled-depth-as-positive controls reject. Warm uploads remain 2, targets remain 1, and final committed/reserved bytes are zero. [Independent review](audits/metal-world-root-review/revised-arm-artifact-review.json). This establishes bounded offscreen depth and retained UI texture ownership; full materials, triangle edges, presentation and complete viewport parity remain OPEN.
 
 Revised ARM world job passes (2026-10-11 UTC): direct job inspection confirms source `314eb656` passes native SDK build, GPU execution and the unchanged nine-frame checker in run 38099162740. Intel remains building at this observation. [Job observation](audits/metal-world-root-review/revised-run-observation.json). Independent artifact verification is pending; full materials, application activation and platform acceptance remain OPEN.
