@@ -1,0 +1,337 @@
+{
+  "source_commit": "829b2b1f2e8e8e935ef140e6d96a39919c6f8254",
+  "run": 38170467715,
+  "job": 114561824432,
+  "conclusion": "success",
+  "artifact": 11714127435,
+  "artifact_sha256": "154ef7b5e84e1b22624e1d7e1f90df79809154f0bddf5e320dabfbf3512e57b7",
+  "source_manifest_files_authenticated": 153,
+  "checker_replay_pass": true,
+  "normal_frame_sha256": "9fabf645e1f3518902a2cfebbbae600663d48e8caf3980391d44a12313e88e55",
+  "candidate_frame_sha256": "522efc1334938179ec1b29ce9f645add3f9876c2b6bc599660f225aa51245518",
+  "normal_source_mismatch_pixels": 134,
+  "candidate_source_mismatch_pixels": 133,
+  "normal_candidate_changed_pixels": 11,
+  "became_exact": 6,
+  "became_wrong": 5,
+  "changed_pixels": [
+    {
+      "point": [
+        298,
+        312
+      ],
+      "normal": [
+        195,
+        131,
+        192,
+        255
+      ],
+      "candidate": [
+        175,
+        175,
+        171,
+        255
+      ],
+      "source": [
+        195,
+        131,
+        192,
+        255
+      ],
+      "normal_exact": true,
+      "candidate_exact": false
+    },
+    {
+      "point": [
+        298,
+        315
+      ],
+      "normal": [
+        195,
+        131,
+        192,
+        255
+      ],
+      "candidate": [
+        175,
+        175,
+        171,
+        255
+      ],
+      "source": [
+        195,
+        131,
+        192,
+        255
+      ],
+      "normal_exact": true,
+      "candidate_exact": false
+    },
+    {
+      "point": [
+        298,
+        318
+      ],
+      "normal": [
+        195,
+        131,
+        192,
+        255
+      ],
+      "candidate": [
+        175,
+        175,
+        171,
+        255
+      ],
+      "source": [
+        195,
+        131,
+        192,
+        255
+      ],
+      "normal_exact": true,
+      "candidate_exact": false
+    },
+    {
+      "point": [
+        298,
+        321
+      ],
+      "normal": [
+        195,
+        131,
+        192,
+        255
+      ],
+      "candidate": [
+        175,
+        175,
+        171,
+        255
+      ],
+      "source": [
+        195,
+        131,
+        192,
+        255
+      ],
+      "normal_exact": true,
+      "candidate_exact": false
+    },
+    {
+      "point": [
+        298,
+        324
+      ],
+      "normal": [
+        195,
+        131,
+        192,
+        255
+      ],
+      "candidate": [
+        175,
+        175,
+        171,
+        255
+      ],
+      "source": [
+        195,
+        131,
+        192,
+        255
+      ],
+      "normal_exact": true,
+      "candidate_exact": false
+    },
+    {
+      "point": [
+        297,
+        331
+      ],
+      "normal": [
+        198,
+        204,
+        210,
+        255
+      ],
+      "candidate": [
+        203,
+        204,
+        203,
+        255
+      ],
+      "source": [
+        203,
+        204,
+        203,
+        255
+      ],
+      "normal_exact": false,
+      "candidate_exact": true
+    },
+    {
+      "point": [
+        297,
+        334
+      ],
+      "normal": [
+        198,
+        204,
+        210,
+        255
+      ],
+      "candidate": [
+        203,
+        204,
+        203,
+        255
+      ],
+      "source": [
+        203,
+        204,
+        203,
+        255
+      ],
+      "normal_exact": false,
+      "candidate_exact": true
+    },
+    {
+      "point": [
+        297,
+        337
+      ],
+      "normal": [
+        198,
+        204,
+        210,
+        255
+      ],
+      "candidate": [
+        203,
+        204,
+        203,
+        255
+      ],
+      "source": [
+        203,
+        204,
+        203,
+        255
+      ],
+      "normal_exact": false,
+      "candidate_exact": true
+    },
+    {
+      "point": [
+        297,
+        340
+      ],
+      "normal": [
+        198,
+        204,
+        210,
+        255
+      ],
+      "candidate": [
+        203,
+        204,
+        203,
+        255
+      ],
+      "source": [
+        203,
+        204,
+        203,
+        255
+      ],
+      "normal_exact": false,
+      "candidate_exact": true
+    },
+    {
+      "point": [
+        297,
+        343
+      ],
+      "normal": [
+        198,
+        204,
+        210,
+        255
+      ],
+      "candidate": [
+        203,
+        204,
+        203,
+        255
+      ],
+      "source": [
+        203,
+        204,
+        203,
+        255
+      ],
+      "normal_exact": false,
+      "candidate_exact": true
+    },
+    {
+      "point": [
+        297,
+        352
+      ],
+      "normal": [
+        198,
+        204,
+        210,
+        255
+      ],
+      "candidate": [
+        203,
+        204,
+        203,
+        255
+      ],
+      "source": [
+        203,
+        204,
+        203,
+        255
+      ],
+      "normal_exact": false,
+      "candidate_exact": true
+    }
+  ],
+  "all5_three_point_stage_colors_identical": true,
+  "all4_three_point_prefix_depth_bits_identical": true,
+  "domain": {
+    "enabled": true,
+    "all_original_and_cap_and_active_contour_clip_z_nonnegative": true,
+    "all_active_clip_z_at_most_w": true,
+    "conservative_active_clip_z_bounds": [
+      0,
+      1
+    ],
+    "fallback_excluded_from_active_domain": true,
+    "all_w_exactly1": true,
+    "x_y_w_unchanged": true,
+    "min_unremapped_clip_z": 0.00040691939648240805,
+    "original_vertices": 60,
+    "cap_vertices": 6,
+    "active_contour_vertices": 48,
+    "clipped_contour_fallback_vertices": 72,
+    "fallback_clip_position": [
+      2,
+      2,
+      2,
+      1
+    ],
+    "viewport_depth_range": [
+      0.5,
+      1.0
+    ],
+    "guard_scope": "Literal immutable Shared streams and conservative active contour quad exclusion margin; no CPU geometry rendered"
+  },
+  "inference": "Positive-z viewport timing alters a small set of pixels but does not change any observed opaque contender, default-back, mask, cap or contour sample/depth at the three selected points. This bounded test does not support promotion as the observed ownership repair. D24/D32 bias/quantization and native clipping/interpolation remain separate unresolved mechanisms.",
+  "release_parity_claim": false
+}

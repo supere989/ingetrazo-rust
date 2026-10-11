@@ -1,0 +1,14 @@
+# Preferences, units and typed measurements integration
+
+The CLI and three existing consumers built together once at `0d547258` in **10.40 seconds**. Affected replay completed in **1.77 seconds**, using authenticated frozen source inputs with **zero new source captures**. Both commands passed on their first execution.
+
+- General Preferences: eight exact typed states and nine rejected mutations; draft Cancel, durable OK, unlimited model Undo, deferred capacity pruning and independent composer history. The separately authenticated owner tests cover actual modal input and composer history.
+- Document units: fifteen exact typed states and ten rejected mutations; all eight modes, precision, Cancel, independent New defaults, restart and Open. Eight real native saves pass raw unit comparison and full original-reader units/style reopening. Unknown unit keys survive no-op saves and are replaced by explicit Apply, including away-and-back changes. Actual owner UI proof covers composite-to-Metres selection and live units/style across geometry Undo/Redo.
+- Typed measurements: 1,168 source numeric rows match types and float bits; eight mutations reject. Fifteen actual App workflows compare bare document units with explicit physical controls through commit, Undo and Redo. These controls do not claim newly captured whole-tool original geometry or complete keyboard ingress.
+- Affected retained consumers: Open Recent six phases/seven negatives, Dimension preview sixty states/sixty-six negatives/six original reopens, and live Dimension anchors thirty-five states/thirty-nine negatives/five reopens/two follow checks. Retained preview and inverse failures still reject.
+
+Explicit unit preferences remain outside model history, survive context transitions and feed save/readout caches. Fresh documents retain fresh provenance; defaults do not follow whichever document was most recently opened. Numeric input uses the shared direct parser only on submission. No renderer path is added.
+
+The CI runner reuses the existing lifecycle consumer for both preference modes and adds the existing Line consumer for measurements: twenty-two binaries in one combined build. Owner UI tests are not rerun locally; the next published workspace job owns them. The [previous completed broad batch](../native-platform/f1c11293/README.md) passed Linux, Windows and both cross jobs; native Mac gates remain open. Full P06/P07/P33 and all release gates remain open.
+
+The archive includes all frozen inputs, native saved documents, exact build/replay logs, replay script, source/binary identities and result receipt. Every archived byte was compared with the terminal raw output. Manifest source files were checked against build-head Git objects. [General owner proof](../general-preferences/README.md), [Units owner proof](../units-preferences/README.md), [measurement proof](../vcb-measurements/README.md).

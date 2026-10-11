@@ -1,0 +1,19 @@
+# Positive-z timing diagnostic (not production policy)
+
+Extends the existing three-point stage binary. Normal mode retains the authenticated entire 134-residual frame; `--positive-depth-viewport` changes only the shader z-remap timing and the native viewport depth interval to [0.5,1]. The ordinary and observed candidate frames must agree byte for byte. All five stage color slices and four independent terminal-prefix depths remain retained; prefix depths are attributable only after exact in-pass color equality.
+
+The cold opt-in refuses admitted geometry, targets or pipelines. Before encoding, admission reads immutable Shared mesh/model/cap records and conservatively bounds every active generated contour quad. It requires literal identity model, affine w=1 camera, nonnegative original clip z and unchanged x/y/w. Unsupported additional streams refuse. CPU calculations admit the domain only; no CPU geometry is rendered. The normal shader source and viewport remain unchanged. The candidate omits the five world z remaps and the contour z remap, including ordinary/default-back/mask/cap writers. Bias, depth format, resolve and draw order remain unchanged.
+
+Rationale and pinned Mesa primary-source links: `../section-iso-stages/next-discriminator.md`. No claim that candidate timing is a general GL-to-Metal mapping: negative GL z is explicitly outside admission. Initial opaque ownership and cap ambiguity must be measured, not inferred from a fitted offset.
+
+One named aarch64 Rust metadata check passed in 2.06s (metadata.log), using the reused target and links build-script overrides for z/freetype/harfbuzz. This is not SDK linking or MSL compilation. Subsequent changes were report JSON fields/checker/workflow only. Embedded workflow Python and checker AST parse; diff whitespace clean. No new source capture or native GPU run.
+
+Proposed ARM-only workflow: `.github/workflows/metal-section-depth-order.yml`, exact branch `review/metal-section-depth-order`. One named build, normal and candidate processes separately bounded to45s, authenticated source/archive/frame before execution, non-cancelling concurrency, cache-on-failure and always-upload. Both broad workflows explicitly ignore that exact branch. Publication remains held for root review.
+
+Post-metadata root review correction: active submitted clip z must be in [0,w], w=1. Both scalar-f32 q.z and conservative ideal±error bounds are checked; receipt/checker require both bounds. Literal fallback [2,2,2,1] remains intentionally outside the frustum and is excluded from active-vertex admission. No shader/pipeline change or repeated metadata build.
+
+## Terminal native observation
+
+Approved source829b2b1f published exactly once. ARM run38170467715/job114561824432 succeeded, including actual SDK/MSL compilation, both normal/candidate executions and both strict attribution checkers. Artifact11714127435 is retained as arm.zip with SHA256154ef7b5e84e1b22624e1d7e1f90df79809154f0bddf5e320dabfbf3512e57b7. All153 source manifest members matched the frozen commit. Main remainedc73fe993; full-SHA inventory showed only the dedicated workflow.
+
+Normal whole-frame SHA remains9fabf645e1f3518902a2cfebbbae600663d48e8caf3980391d44a12313e88e55. Candidate changes11pixels:6become exact,5become wrong; strict source mismatches134→133. All five three-point stage color bit slices and all four corresponding terminal-prefix depth bit arrays are identical between normal and candidate. The bad opaque contender/default-back takeover and missing cap mixture remain unchanged. This timing candidate is not promoted. Independent checker replays passed from an automatically removed private extraction; full bounded bytes/logs/reports/provenance remain in arm.zip, numeric disposition in review.json, API terminal receipt in run-receipt.json. No source recapture or retry occurred; production routing remains unchanged.

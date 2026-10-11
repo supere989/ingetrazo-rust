@@ -158,5 +158,6 @@
   "test_binary": {
     "path": "/tmp/ingetrazo-ai-registry-target/debug/deps/ingetrazo_gui-134b3c2a4f97972a",
     "sha256": "378b1349a2893fe03cf04b3bc3c48ddab00595af51c5f45489a939608f37748c"
-  }
+  },
+  "archive_sha256": "efb2c4098c9885bbd259fe9e861a54050dfa1df498ad90e183b3fb085925763c"
 }

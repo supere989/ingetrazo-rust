@@ -1,0 +1,104 @@
+{
+  "scope": "Ideal affine evaluation from exact recorded f32 camera values, NOT emulation of either hardware rasterizer or bias/quantization",
+  "rows": [
+    {
+      "point": [
+        297,
+        329
+      ],
+      "sample3_top_position": [
+        297.625,
+        329.125
+      ],
+      "planes": [
+        {
+          "plane": "x0",
+          "world_f64_affine": [
+            0.0,
+            0.0005019186701718812,
+            1.2676241508130803
+          ],
+          "unbiased_depth_f64": 0.5002558247714683,
+          "unbiased_rounded_f32_bits": 1056968900
+        },
+        {
+          "plane": "y0",
+          "world_f64_affine": [
+            0.0005019186701718812,
+            0.0,
+            1.2680339656676858
+          ],
+          "unbiased_depth_f64": 0.5002557837899801,
+          "unbiased_rounded_f32_bits": 1056968899
+        }
+      ],
+      "x0_minus_y0_depth_ulps": 0.6875552795827389
+    },
+    {
+      "point": [
+        297,
+        328
+      ],
+      "sample3_top_position": [
+        297.625,
+        328.125
+      ],
+      "planes": [
+        {
+          "plane": "x0",
+          "world_f64_affine": [
+            0.0,
+            0.0005019186701718812,
+            1.2755956938588706
+          ],
+          "unbiased_depth_f64": 0.5002556254828973,
+          "unbiased_rounded_f32_bits": 1056968897
+        },
+        {
+          "plane": "y0",
+          "world_f64_affine": [
+            0.0005019186701718812,
+            0.0,
+            1.276005508713476
+          ],
+          "unbiased_depth_f64": 0.5002555845014091,
+          "unbiased_rounded_f32_bits": 1056968896
+        }
+      ],
+      "x0_minus_y0_depth_ulps": 0.6875552795827389
+    },
+    {
+      "point": [
+        298,
+        303
+      ],
+      "sample3_top_position": [
+        298.625,
+        303.125
+      ],
+      "planes": [
+        {
+          "plane": "x0",
+          "world_f64_affine": [
+            0.0,
+            0.010265026828561818,
+            1.4708984980168431
+          ],
+          "unbiased_depth_f64": 0.5002510418458445,
+          "unbiased_rounded_f32_bits": 1056968820
+        },
+        {
+          "plane": "y0",
+          "world_f64_affine": [
+            0.010265026828561818,
+            0.0,
+            1.4792798568450094
+          ],
+          "unbiased_depth_f64": 0.5002502037099062,
+          "unbiased_rounded_f32_bits": 1056968806
+        }
+      ],
+      "x0_minus_y0_depth_ulps": 14.061587672680616
+    }
+  ]
+}

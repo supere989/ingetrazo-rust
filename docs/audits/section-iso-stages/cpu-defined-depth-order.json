@@ -1,0 +1,70 @@
+{
+  "scope": "Explicit scalarf32 sequence, no FMA; not captured hardware VS/clipping values",
+  "numpy_version": "2.5.3",
+  "all_original_vertices_clip_z_nonnegative_w1": true,
+  "rows": [
+    {
+      "edge": [
+        [
+          0,
+          0,
+          1
+        ],
+        [
+          1,
+          0,
+          2
+        ]
+      ],
+      "clip_z_endpoint_bits": [
+        973709352,
+        970518092
+      ],
+      "interpolate_then_remap_bits": 1056968545,
+      "remap_then_interpolate_bits": 1056968546,
+      "delta_ulps": 1
+    },
+    {
+      "edge": [
+        [
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          0,
+          2
+        ]
+      ],
+      "clip_z_endpoint_bits": [
+        973709352,
+        972622188
+      ],
+      "interpolate_then_remap_bits": 1056968802,
+      "remap_then_interpolate_bits": 1056968802,
+      "delta_ulps": 0
+    },
+    {
+      "edge": [
+        [
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          2
+        ]
+      ],
+      "clip_z_endpoint_bits": [
+        974761399,
+        972622188
+      ],
+      "interpolate_then_remap_bits": 1056969059,
+      "remap_then_interpolate_bits": 1056969060,
+      "delta_ulps": 1
+    }
+  ]
+}
