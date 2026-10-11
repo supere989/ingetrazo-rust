@@ -553,7 +553,7 @@ impl World {
    }
    if self.texture_enabled{for phase in [super::textures::Phase::TransparentFront,super::textures::Phase::TransparentBack]{self.textures.as_mut().unwrap().record_receiver(&mut self.resources,command,serial,phase,&self.mvp,&self.clip,self.clip_enabled,target.extent.height,xray,self.shadow.as_ref().filter(|_|self.shadow_active).map(|s|(s.layout,&s.texture_pipelines)))?;}}
    if matches!(self.style_mode,ingetrazo_render::style::VisualStyle::ShadedWithTextures|ingetrazo_render::style::VisualStyle::XRay){self.textures.as_mut().unwrap().record(&mut self.resources,command,serial,super::textures::Phase::Billboard,&self.mvp,&self.clip,self.clip_enabled,target.extent.height,false)?;}
-   if let Some(sweep)=self.sweep.as_mut(){sweep.draw_faces(command,serial,self.pipeline,self.layout,&self.mvp,target.extent.height,&paint,self.transparent_pipeline,self.style_mode,&self.clip,self.clip_enabled,&[self.style_front,self.style_back])?;}
+   if let Some(sweep)=self.sweep.as_mut(){sweep.draw_faces(command,serial,self.pipeline,self.layout,&self.mvp,target.extent.height,&paint,self.transparent_pipeline,self.style_mode,&self.clip,self.clip_enabled,&[self.style_front,self.style_back],self.consolidated_opaque_count>0)?;}
    // Hidden ghosts are separate, source depth-tested/depth-writing and unclipped.
    for i in 0..3{if let Some(buffer)=self.ghost_buffers[i]{
     self.device.cmd_bind_pipeline(command,vk::PipelineBindPoint::GRAPHICS,self.ghost_pipelines[usize::from(i==2)]);

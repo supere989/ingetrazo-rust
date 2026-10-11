@@ -25,6 +25,7 @@ pub(super) struct Owner {
     ordinary_runs: Vec<(u32, u32, bool)>,
     default_back: Vec<(u32, u32)>,
     paint_runs: Vec<OpacityRun>,
+    consolidated_opaque_count:usize,
     solid_count: u32,
     line_count: u32,
     key: Option<(Input, u64, bool)>,
@@ -54,6 +55,7 @@ pub(crate) struct Prepared {
     ordinary_runs: Vec<(u32, u32, bool)>,
     default_back: Vec<(u32, u32)>,
     paint_runs: Vec<OpacityRun>,
+    consolidated_opaque_count:usize,
     solid_count: u32,
     line_count: u32,
     bytes: u64,
@@ -77,6 +79,7 @@ impl Owner {
             ordinary_runs: Vec::new(),
             default_back: Vec::new(),
             paint_runs: Vec::new(),
+            consolidated_opaque_count:0,
             solid_count: 0,
             line_count: 0,
             key: None,
@@ -160,6 +163,7 @@ impl Owner {
             &data.opaque_mesh,
             &data.textured_meshes,
         )?;
+        let consolidated_opaque_count=data.opaque_mesh.source_consolidated_opaque_count;
         let solid_count = u32::try_from(data.opaque_mesh.vertices.len())
             .map_err(|_| "Sweep solid draw overflow")?;
         let line_count = u32::try_from(packet.as_ref().map_or(0, |p| p.lines.len()))
@@ -280,6 +284,7 @@ impl Owner {
                 ordinary_runs,
                 default_back,
                 paint_runs,
+                consolidated_opaque_count,
                 solid_count,
                 line_count,
                 bytes,
@@ -335,6 +340,7 @@ impl Owner {
         self.ordinary_runs = p.ordinary_runs;
         self.default_back = p.default_back;
         self.paint_runs = p.paint_runs;
+        self.consolidated_opaque_count=p.consolidated_opaque_count;
         self.solid_count = p.solid_count;
         self.line_count = p.line_count;
         self.bytes = p.bytes;
@@ -374,6 +380,7 @@ impl Owner {
         clip: &[f32; 4],
         clip_enabled: u32,
         colors: &[[f32; 4]; 2],
+        base_ordinary:bool,
     ) -> Result<(), String> {
         if self.packet.as_ref().is_some_and(|p| p.kind == Kind::Prism) {
             use ingetrazo_render::style::VisualStyle;
@@ -434,6 +441,7 @@ impl Owner {
                             &[0],
                         );
                         for &(first, count, cull) in &self.ordinary_runs {
+                        if cull&&!(base_ordinary||self.consolidated_opaque_count>0){continue;}
                             self.device.cmd_bind_pipeline(
                                 command,
                                 vk::PipelineBindPoint::GRAPHICS,

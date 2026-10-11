@@ -78,7 +78,8 @@ mod platform {
         }[0];
         let mut rows = Vec::new();
         let mut serial = 0u64;
-        for case in original["cases"].as_array().unwrap() {
+        let selected=args.windows(2).find(|a|a[0]=="--case").map(|a|a[1].as_str());
+        for case in original["cases"].as_array().unwrap().iter().filter(|case|selected.is_none_or(|name|case["name"].as_str()==Some(name))) {
             let name = case["name"].as_str().unwrap();
             let scene =
                 ingetrazo_formats::igz::load_igz(&root.join(case["igz"].as_str().unwrap()))?;
