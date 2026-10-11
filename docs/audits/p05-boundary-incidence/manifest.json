@@ -1,0 +1,31 @@
+{
+  "runtime_commit": "19c58161224877300c262c0b3b6fae3f56c6ef15",
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "archive_sha256": "742c711be206671fdacc22d570deeee3d7a471b3884ffa7a42c26c5cf38feaed",
+  "records": {
+    "acceptance.json": {
+      "bytes": 4666,
+      "sha256": "272cfd95349ddf61bd98cdc7cdf6b982bb623006cb24bcdab540c2e54d4bfe1c"
+    },
+    "build.log": {
+      "bytes": 526,
+      "sha256": "fe149e97be418df4cd1abf50ddd932355928acf91a9774b03925a6800351bc2d"
+    },
+    "execution.json": {
+      "bytes": 1247,
+      "sha256": "981ce02b61bf8f1d9744e5ebb4642b10fb8d4e8d8ac6f99a5f88b82faea25c0e"
+    },
+    "input.json": {
+      "bytes": 655166,
+      "sha256": "9ccd0bf151f8d36f272ea5202a9cea02a39248f1a985bd2817d1c4f6909e5226"
+    },
+    "native.json": {
+      "bytes": 1193546,
+      "sha256": "05e1f20bdafe3d40a0b9dd70d946f8eb1487c54127c58143853635f14460c9fb"
+    },
+    "source.json": {
+      "bytes": 1188564,
+      "sha256": "8c26125981209062f0f133abb02ed1032479e2a1f180305a9d5d8ead56c58e56"
+    }
+  }
+}
