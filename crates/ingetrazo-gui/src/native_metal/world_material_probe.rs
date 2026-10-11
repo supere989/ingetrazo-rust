@@ -40,6 +40,20 @@ pub(crate) fn run(root: PathBuf) -> Result<(), String> {
                 .iter()
                 .cloned(),
         );
+    let alpha: serde_json::Value = serde_json::from_str(include_str!(
+        "../../../../docs/audits/metal-world-scene/material-alpha-source/source.json"
+    ))
+    .map_err(|e| e.to_string())?;
+    recipe["cases"]
+        .as_array_mut()
+        .ok_or("Recipe cases missing")?
+        .extend(
+            alpha["cases"]
+                .as_array()
+                .ok_or("Alpha cases missing")?
+                .iter()
+                .cloned(),
+        );
     const ASSET: &[u8] =
         include_bytes!("../../../../docs/audits/metal-world-scene/material-source/quadrants.png");
     app.scene
@@ -77,8 +91,15 @@ pub(crate) fn run(root: PathBuf) -> Result<(), String> {
         let viewport = app.native_metal_world.as_ref().ok_or("Bridge retired")?;
         if viewport.frame.is_none() || viewport.last_route_reason.is_some() {
             let rejection = serde_json::json!({"passed":false,"phase":name,"frame_present":viewport.frame.is_some(),"route_reason":viewport.last_route_reason,"scope":"Actual shared UI route refusal; no native frame acceptance"});
-            std::fs::write(root.join("refusal.json"),serde_json::to_vec_pretty(&rejection).map_err(|e|e.to_string())?).map_err(|e|e.to_string())?;
-            return Err(format!("Material frame {name} was not accepted: {:?}", viewport.last_route_reason));
+            std::fs::write(
+                root.join("refusal.json"),
+                serde_json::to_vec_pretty(&rejection).map_err(|e| e.to_string())?,
+            )
+            .map_err(|e| e.to_string())?;
+            return Err(format!(
+                "Material frame {name} was not accepted: {:?}",
+                viewport.last_route_reason
+            ));
         }
         painter.update_textures(&metal, &output.textures_delta)?;
         world_viewport::install(&mut painter, &metal, app)?;

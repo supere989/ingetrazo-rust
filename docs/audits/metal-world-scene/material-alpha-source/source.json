@@ -1,0 +1,160 @@
+{
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "passed": true,
+  "asset_sha256": "35134a675168fb80c354d042036bd3e7e5ceb4cd4a6f7e898f9328fde1ce1601",
+  "cases": [
+    {
+      "name": "alpha-0.1",
+      "rgba": [
+        25,
+        0,
+        229,
+        255
+      ],
+      "pixel": [
+        400,
+        318
+      ],
+      "png_sha256": "4bb7cc9727bdaecef9d2a8aa3ac2088639f6b9cbcef11712d6186d4c8f40ef72",
+      "reverse": false,
+      "mode": "textures",
+      "attrs": {
+        "color": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "opacity": 0.1
+      }
+    },
+    {
+      "name": "alpha-0.25",
+      "rgba": [
+        62,
+        0,
+        191,
+        255
+      ],
+      "pixel": [
+        400,
+        318
+      ],
+      "png_sha256": "dc2b6e12b26332d62f67eacc93ccf90b90bc8cf109abb06a8728253a66d3739e",
+      "reverse": false,
+      "mode": "textures",
+      "attrs": {
+        "color": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "opacity": 0.25
+      }
+    },
+    {
+      "name": "alpha-0.3",
+      "rgba": [
+        74,
+        0,
+        179,
+        255
+      ],
+      "pixel": [
+        400,
+        318
+      ],
+      "png_sha256": "32ce9cb8eaa774f4ac340afbc3b88270edb96812a76fd54ad206a1145d841fd9",
+      "reverse": false,
+      "mode": "textures",
+      "attrs": {
+        "color": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "opacity": 0.3
+      }
+    },
+    {
+      "name": "alpha-0.5",
+      "rgba": [
+        124,
+        0,
+        127,
+        255
+      ],
+      "pixel": [
+        400,
+        318
+      ],
+      "png_sha256": "bc5dc82b3e357642e804b3769eff0170e101c780d46083859fe6bf37e2c9dc23",
+      "reverse": false,
+      "mode": "textures",
+      "attrs": {
+        "color": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "opacity": 0.5
+      }
+    },
+    {
+      "name": "alpha-0.7",
+      "rgba": [
+        172,
+        0,
+        77,
+        255
+      ],
+      "pixel": [
+        400,
+        318
+      ],
+      "png_sha256": "acb556842e07899a93ba657e6883a602c1271cdfe6baca120acc9c39a0bf91a2",
+      "reverse": false,
+      "mode": "textures",
+      "attrs": {
+        "color": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "opacity": 0.7
+      }
+    },
+    {
+      "name": "alpha-0.9",
+      "rgba": [
+        223,
+        0,
+        25,
+        255
+      ],
+      "pixel": [
+        400,
+        318
+      ],
+      "png_sha256": "da05ee7ff1f106e5bf6bba1214e884493bfc8dec23a208ef1cd23688cfca15b6",
+      "reverse": false,
+      "mode": "textures",
+      "attrs": {
+        "color": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "opacity": 0.9
+      }
+    }
+  ],
+  "scope": "Actual frozen Qt GL_SRC_ALPHA/ONE_MINUS_SRC_ALPHA opaque blue background alpha factor controls; driver specific byte observations, no cross-driver generalization",
+  "context": {
+    "red_bits": 8,
+    "green_bits": 8,
+    "blue_bits": 8,
+    "alpha_bits": 0,
+    "samples": 0
+  },
+  "shader_sha256": "dbc25d2462913ed1dca727e50af194b2fd81534a20ed91e225e14e66f9c93112"
+}

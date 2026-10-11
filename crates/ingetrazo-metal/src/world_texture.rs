@@ -81,6 +81,18 @@ pub fn upload(metal: &NativeMetal, id: Identity, encoded: &[u8]) -> Result<Arc<A
     } else {
         usize::BITS - (w.max(h) as usize).leading_zeros()
     };
+    // Existing native texture upload path uses256-byte row alignment for Mac
+    // buffer->texture blits. Reserve the full padded staging domain before copy.
+    let stride = row
+        .checked_add(255)
+        .ok_or("Metal sampled row alignment overflow")?
+        & !255;
+    let staging_bytes = stride
+        .checked_mul(h)
+        .ok_or("Metal sampled staging extent overflow")?;
+    if staging_bytes > 64 * 1024 * 1024 {
+        return Err("Metal sampled staging admission exceeds64MiB".into());
+    }
     let d = MTLTextureDescriptor::new();
     d.setTextureType(MTLTextureType::Type2D);
     unsafe {
@@ -91,11 +103,10 @@ pub fn upload(metal: &NativeMetal, id: Identity, encoded: &[u8]) -> Result<Arc<A
     d.setPixelFormat(MTLPixelFormat::RGBA8Unorm);
     d.setUsage(MTLTextureUsage::ShaderRead);
     d.setHazardTrackingMode(MTLHazardTrackingMode::Tracked);
-    d.setStorageMode(if metal.info.unified_memory {
-        MTLStorageMode::Shared
-    } else {
-        MTLStorageMode::Managed
-    });
+    // Native GPU-private layout, matching the admitted world target policy.
+    // Shared standalone textures are not sized by the heap-layout query.
+    // One cold staging blit uploads the immutable image; warm frames reuse it.
+    d.setStorageMode(MTLStorageMode::Private);
     let native = metal.device.heapTextureSizeAndAlignWithDescriptor(&d);
     let mut minimum = 0usize;
     for level in 0..levels as usize {
@@ -133,7 +144,7 @@ pub fn upload(metal: &NativeMetal, id: Identity, encoded: &[u8]) -> Result<Arc<A
             .lock()
             .map_err(|_| "Metal texture budget poisoned")?
             .cancel(ticket)?;
-        return Err("Metal sampled allocation exceeded native preallocation admission".into());
+        return Err(format!("Metal sampled allocation exceeded native preallocation admission: requested_bytes={minimum}, queried_size={}, queried_align={}, allocated_size={actual}, extent={w}x{h}, levels={levels}, format={:?}, storage={:?}, usage={:?}, device={}",native.size,native.align,d.pixelFormat(),d.storageMode(),d.usage(),metal.device.name()));
     }
     {
         let mut b = metal
@@ -180,26 +191,6 @@ pub fn upload(metal: &NativeMetal, id: Identity, encoded: &[u8]) -> Result<Arc<A
         .device
         .newSamplerStateWithDescriptor(&sd)
         .ok_or("Metal sampled sampler allocation failed")?;
-    unsafe {
-        guard
-            .raw
-            .as_ref()
-            .unwrap()
-            .replaceRegion_mipmapLevel_withBytes_bytesPerRow(
-                MTLRegion {
-                    origin: MTLOrigin { x: 0, y: 0, z: 0 },
-                    size: MTLSize {
-                        width: w,
-                        height: h,
-                        depth: 1,
-                    },
-                },
-                0,
-                std::ptr::NonNull::new(decoded.rgba.as_ptr().cast_mut().cast())
-                    .ok_or("Metal decoded pixels empty")?,
-                row,
-            );
-    }
     let asset = Arc::new(Asset {
         id,
         image: ManuallyDrop::new(guard.raw.take().unwrap()),
@@ -210,33 +201,50 @@ pub fn upload(metal: &NativeMetal, id: Identity, encoded: &[u8]) -> Result<Arc<A
         handle,
     });
     drop(guard);
-    if levels > 1 {
-        let command = metal
-            .queue
-            .commandBuffer()
-            .ok_or("Metal texture mip command unavailable")?;
-        let blit = command
-            .blitCommandEncoder()
-            .ok_or("Metal texture mip encoder unavailable")?;
-        blit.generateMipmapsForTexture(&asset.image);
-        blit.endEncoding();
-        command.commit();
-        let start = std::time::Instant::now();
-        while command.status() != MTLCommandBufferStatus::Completed {
-            if command.status() == MTLCommandBufferStatus::Error
-                || start.elapsed() > std::time::Duration::from_secs(5)
-            {
-                metal
-                    .poisoned
-                    .store(true, std::sync::atomic::Ordering::Release);
-                std::mem::forget(asset);
-                std::mem::forget(command);
-                return Err(
-                    "Metal texture mip completion unknown; native owners quarantined".into(),
-                );
-            }
-            std::thread::sleep(std::time::Duration::from_millis(1));
+    let staging = metal.buffer(staging_bytes, true)?;
+    unsafe {
+        let dst = std::slice::from_raw_parts_mut(
+            staging.raw.contents().as_ptr().cast::<u8>(),
+            staging_bytes,
+        );
+        dst.fill(0);
+        for y in 0..h {
+            dst[y * stride..y * stride + row]
+                .copy_from_slice(&decoded.rgba[y * row..(y + 1) * row]);
         }
+    }
+    let command = metal
+        .queue
+        .commandBuffer()
+        .ok_or("Metal sampled upload command unavailable")?;
+    let blit = command
+        .blitCommandEncoder()
+        .ok_or("Metal sampled upload encoder unavailable")?;
+    unsafe {
+        blit.copyFromBuffer_sourceOffset_sourceBytesPerRow_sourceBytesPerImage_sourceSize_toTexture_destinationSlice_destinationLevel_destinationOrigin(&staging.raw,0,stride,staging_bytes,MTLSize{width:w,height:h,depth:1},&asset.image,0,0,MTLOrigin{x:0,y:0,z:0});
+    }
+    if levels > 1 {
+        blit.generateMipmapsForTexture(&asset.image);
+    }
+    blit.endEncoding();
+    command.commit();
+    let start = std::time::Instant::now();
+    while command.status() != MTLCommandBufferStatus::Completed {
+        if command.status() == MTLCommandBufferStatus::Error
+            || start.elapsed() > std::time::Duration::from_secs(5)
+        {
+            metal
+                .poisoned
+                .store(true, std::sync::atomic::Ordering::Release);
+            std::mem::forget(asset);
+            std::mem::forget(command);
+            std::mem::forget(staging);
+            return Err(
+                "Metal sampled upload completion unknown; image/staging/command owners quarantined"
+                    .into(),
+            );
+        }
+        std::thread::sleep(std::time::Duration::from_millis(1));
     }
     Ok(asset)
 }

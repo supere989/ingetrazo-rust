@@ -1,0 +1,146 @@
+{
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "source_shader_sha256": "dbc25d2462913ed1dca727e50af194b2fd81534a20ed91e225e14e66f9c93112",
+  "cases": [
+    {
+      "name": "alpha-0.1",
+      "source": [
+        25,
+        0,
+        229,
+        255
+      ],
+      "float32_factor_byte": 26,
+      "encoded_factor_prediction": [
+        25,
+        0,
+        229,
+        255
+      ],
+      "unencoded_factor_prediction": [
+        25,
+        0,
+        230,
+        255
+      ],
+      "unencoded_rejected": true
+    },
+    {
+      "name": "alpha-0.25",
+      "source": [
+        62,
+        0,
+        191,
+        255
+      ],
+      "float32_factor_byte": 64,
+      "encoded_factor_prediction": [
+        62,
+        0,
+        191,
+        255
+      ],
+      "unencoded_factor_prediction": [
+        62,
+        0,
+        191,
+        255
+      ],
+      "unencoded_rejected": false
+    },
+    {
+      "name": "alpha-0.3",
+      "source": [
+        74,
+        0,
+        179,
+        255
+      ],
+      "float32_factor_byte": 76,
+      "encoded_factor_prediction": [
+        74,
+        0,
+        179,
+        255
+      ],
+      "unencoded_factor_prediction": [
+        74,
+        0,
+        178,
+        255
+      ],
+      "unencoded_rejected": true
+    },
+    {
+      "name": "alpha-0.5",
+      "source": [
+        124,
+        0,
+        127,
+        255
+      ],
+      "float32_factor_byte": 128,
+      "encoded_factor_prediction": [
+        124,
+        0,
+        127,
+        255
+      ],
+      "unencoded_factor_prediction": [
+        124,
+        0,
+        128,
+        255
+      ],
+      "unencoded_rejected": true
+    },
+    {
+      "name": "alpha-0.7",
+      "source": [
+        172,
+        0,
+        77,
+        255
+      ],
+      "float32_factor_byte": 178,
+      "encoded_factor_prediction": [
+        172,
+        0,
+        77,
+        255
+      ],
+      "unencoded_factor_prediction": [
+        173,
+        0,
+        76,
+        255
+      ],
+      "unencoded_rejected": true
+    },
+    {
+      "name": "alpha-0.9",
+      "source": [
+        223,
+        0,
+        25,
+        255
+      ],
+      "float32_factor_byte": 230,
+      "encoded_factor_prediction": [
+        223,
+        0,
+        25,
+        255
+      ],
+      "unencoded_factor_prediction": [
+        222,
+        0,
+        26,
+        255
+      ],
+      "unencoded_rejected": true
+    }
+  ],
+  "scope": "Actual Mesa original widget observations plus scalar causal model. Encoding prediction agrees6/6; unencoded negative differs. Actual native corrected shader acceptance remains pending, no cross-driver guarantee.",
+  "allocation_policy": "Private immutable sampled layout + one cold shared staging blit; strict native query/actual refusal retained. This changes real native storage/layout without guessing a memory ceiling."
+}
