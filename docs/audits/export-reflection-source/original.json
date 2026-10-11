@@ -1,0 +1,105 @@
+{
+  "asset": {
+    "version": "2.0",
+    "generator": "IngeTrazo",
+    "extras": {
+      "generator": "IngeTrazo"
+    }
+  },
+  "materials": [
+    {
+      "name": "mat0",
+      "doubleSided": true,
+      "pbrMetallicRoughness": {
+        "metallicFactor": 0.0,
+        "roughnessFactor": 0.9,
+        "baseColorFactor": [
+          0.96,
+          0.95,
+          0.925,
+          1.0
+        ]
+      },
+      "extras": {
+        "ingetrazo_finish": "matte"
+      }
+    }
+  ],
+  "images": [],
+  "textures": [],
+  "samplers": [],
+  "extensionsUsed": [],
+  "nodes": [
+    {
+      "mesh": 0,
+      "name": "IngeTrazo"
+    }
+  ],
+  "scenes": [
+    {
+      "nodes": [
+        0
+      ]
+    }
+  ],
+  "scene": 0,
+  "primitives": [
+    {
+      "material": 0,
+      "attributes": [
+        "NORMAL",
+        "POSITION"
+      ],
+      "triangles": [
+        [
+          [
+            [
+              0.0,
+              -1.0,
+              -0.0
+            ],
+            [
+              11.0,
+              34.0,
+              -23.0
+            ]
+          ],
+          [
+            [
+              0.0,
+              -1.0,
+              -0.0
+            ],
+            [
+              12.0,
+              34.0,
+              -24.0
+            ]
+          ],
+          [
+            [
+              0.0,
+              -1.0,
+              -0.0
+            ],
+            [
+              12.0,
+              34.0,
+              -23.0
+            ]
+          ]
+        ]
+      ],
+      "min": [
+        11.0,
+        34.0,
+        -24.0
+      ],
+      "max": [
+        12.0,
+        34.0,
+        -23.0
+      ]
+    }
+  ]
+}
