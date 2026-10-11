@@ -95,7 +95,7 @@ pub(crate) fn run(input: PathBuf, output: PathBuf) -> Result<(), String> {
         if fonts.stats()!=stats || !std::rc::Rc::ptr_eq(&run.font,&warm.runs[0].font) {
             return Err("Native sized font warm owner changed".into());
         }
-        font_rows.push(serde_json::json!({"pixels":pixels,"advance":line.advance_26_6,
+        font_rows.push(serde_json::json!({"pixels":pixels,"resolved_font":run.font.diagnostic()?,"advance":line.advance_26_6,
             "gray_bytes":gray.coverage.len(),"rgb_bytes":rgb.coverage.len(),"warm_owner":true}));
     }
     std::fs::write(output.join("native-font.json"),serde_json::to_vec_pretty(&font_rows)

@@ -38,6 +38,18 @@ jobs:
         run: |
           cargo build --locked -p ingetrazo-gui --example native_metal_hidden_ghost --example native_metal_world_classic --example native_metal_world_material --example native_metal_face_sweep -j2 > metal-ghost-evidence/build.log 2>&1
           shasum -a 256 target/debug/examples/native_metal_hidden_ghost target/debug/examples/native_metal_world_classic target/debug/examples/native_metal_world_material target/debug/examples/native_metal_face_sweep > metal-ghost-evidence/binary.sha256
+      - name: Bounded actual macOS Qt sized glyph reference
+        continue-on-error: true
+        run: |
+          python3 - <<'PYTHON'
+          import os,subprocess,sys
+          from pathlib import Path
+          venv=Path(os.environ['RUNNER_TEMP'])/'metal-glyph-qt-venv'
+          with open('metal-ghost-evidence/qt-glyph-reference.log','w') as log:
+              subprocess.run([sys.executable,'-m','venv',str(venv)],stdout=log,stderr=subprocess.STDOUT,timeout=30,check=True)
+              subprocess.run([str(venv/'bin/python'),'-m','pip','install','PySide6==6.12.0'],stdout=log,stderr=subprocess.STDOUT,timeout=180,check=True)
+              subprocess.run([str(venv/'bin/python'),'scripts/reference-macos-annotation-glyphs.py','metal-ghost-evidence/qt-glyphs'],stdout=log,stderr=subprocess.STDOUT,timeout=60,check=True)
+          PYTHON
       - name: Execute only ghost and affected retained material/classic consumers
         run: |
           python3 - <<'PYTHON'
@@ -61,7 +73,7 @@ jobs:
           "$RUNNER_TEMP/metal-ghost-check-venv/bin/pip" install pillow
           "$RUNNER_TEMP/metal-ghost-check-venv/bin/python" - <<'PYTHON'
           import subprocess,sys
-          jobs=[('sweep','scripts/check-metal-face-sweep.py','docs/audits/face-sweep-label-source','metal-ghost-evidence/sweep'),('ghost','scripts/check-metal-hidden-ghost.py','docs/audits/hidden-ghost-workflow','metal-ghost-evidence/native'),('classic','scripts/check-metal-world-classic.py','docs/audits/metal-world-scene/classic-source','metal-ghost-evidence/classic'),('material','scripts/check-metal-world-material.py','docs/audits/metal-world-scene/material-source','metal-ghost-evidence/material')]
+          jobs=[('sweep','scripts/check-metal-face-sweep.py','docs/audits/face-sweep-label-source','metal-ghost-evidence/sweep'),('ghost','scripts/check-metal-hidden-ghost.py','docs/audits/hidden-ghost-workflow','metal-ghost-evidence/native'),('classic','scripts/check-metal-world-classic.py','docs/audits/metal-world-scene/classic-source','metal-ghost-evidence/classic'),('material','scripts/check-metal-world-material.py','docs/audits/metal-world-scene/material-source','metal-ghost-evidence/material'),('font-attribution','scripts/check-macos-annotation-glyphs.py','metal-ghost-evidence/qt-glyphs','metal-ghost-evidence/sweep')]
           failed=False
           for name,checker,source,native in jobs:
               with open('metal-ghost-evidence/'+name+'-checker.log','w') as log:
@@ -81,7 +93,7 @@ jobs:
           import shutil,zipfile
           root=Path('metal-ghost-evidence')
           root.mkdir(exist_ok=True)
-          directories=[root/name for name in ['native','classic','material','sweep'] if (root/name).exists()]
+          directories=[root/name for name in ['native','classic','material','sweep','qt-glyphs'] if (root/name).exists()]
           files=[p for directory in directories for p in sorted(directory.rglob('*')) if p.is_file()]
           archive=root/'native-captures.zip'
           with zipfile.ZipFile(archive,'w',zipfile.ZIP_DEFLATED) as z:
