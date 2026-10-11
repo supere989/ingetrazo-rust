@@ -16,3 +16,5 @@ cargo check --locked -p ingetrazo-gui --target x86_64-apple-darwin --config 'tar
 ```
 
 These build-script link declarations permit metadata checking without local Apple C SDK; this is not linking/MSL/GPU acceptance. No GPU run or publication performed. Dedicated Intel-only push workflow is staged for root review. Exact branch exclusions prevent broad parity/compute triggers. Native SDK build and runtime artifacts will authenticate source and binary SHA256; the outer runtime timeout is90 seconds. Missing reports fail inventory, differing/blank pixels stay visible without a parity claim.
+
+Root prereview also replaced Debug-string assertions with comparisons against actual Metal enum constants: objc2-metal0.3.2 derives newtype Debug (`MTLCommandBufferStatus(4)` and `MTLStorageMode(0)`), not the assumed names. The original numeric/debug observations remain retained beside explicit completion/shared booleans. No GPU run was spent discovering this checker mismatch.

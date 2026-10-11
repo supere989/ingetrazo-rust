@@ -60,8 +60,8 @@ jobs:
                       assert (root/f'{cell}-{i}.rgba').stat().st_size==1920000
                       row=json.loads((root/f'{cell}-{i}.json').read_text())
                       assert row['cell']==cell and row['iteration']==i
-                      assert row['submission']['status']=='Completed'
-                      assert row['submission']['readback']['storage']=='Shared'
+                      assert row['submission']['completed'] is True
+                      assert row['submission']['readback']['shared'] is True
                       assert row['submission']['resolve_route']['path']==('compute' if route=='compute' else 'untouched-native-reference')
           print('Complete diagnostic inventory; pixel differences remain observations')
           PYTHON
