@@ -1646,6 +1646,7 @@ fn record_source_texture(buffer:&mut MeshRenderBuffer,first:usize,attrs:&std::co
  // when a translucent back override exists; culling applies only glass fronts.
  record_source_back_paint(buffer,first,order,attrs,shade);
  if opacity>=0.999&&buffer.source_front_cull.last().is_some_and(|r|r.0==first){buffer.source_front_cull.pop();}
+ record_default_back(buffer,first,attrs,opacity);
  let front_cull=opacity<0.999&&buffer.source_front_cull.last().is_some_and(|r|r.0==first);
  if let Some(last)=buffer.source_texture_runs.last_mut(){if !last.back_side&&last.first+last.count==first&&last.shade==shade&&last.opacity==opacity&&last.front_cull==front_cull{last.count+=count;return;}}
  buffer.source_texture_runs.push(crate::buffer::SourceTextureRun{back_side:false,order,first,count,shade,opacity,front_cull});

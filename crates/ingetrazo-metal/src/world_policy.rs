@@ -3,6 +3,8 @@ use ingetrazo_render::buffer::MeshRenderBuffer;
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Mode {
     Material,
+    /// Source shaded mode: cached Qt-compatible texture mean, no image alpha.
+    MaterialAverage,
     HiddenLine,
     Monochrome,
 }

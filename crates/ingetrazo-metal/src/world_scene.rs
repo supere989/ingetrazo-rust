@@ -28,7 +28,8 @@ pub fn unsupported_stage(error:&str)->bool {
         "Metal Scene adapter needs section/shadow/image/annotation passes" |
         "Metal Scene adapter wireframe/XRay passes not implemented" |
         "Metal Scene adapter needs selection/guide overlays" |
-        "Metal Scene adapter needs geographic/terrain passes")
+        "Metal Scene adapter needs geographic/terrain passes" |
+        "Metal plan style mixed-material policy requires subsequent stage")
 }
 const MAX_BYTES: usize = 8 * 1024 * 1024;
 const MAX_DEPTH: usize = 128;
@@ -41,6 +42,7 @@ struct Signature {
     color: Option<[u64; 3]>,
     opacity: Option<u64>,
     mat: Option<String>,
+    texture: Option<String>,
 }
 #[derive(Debug)]
 struct Slot {
@@ -69,6 +71,17 @@ fn paint(g: &Group) -> Option<&serde_json::Value> {
         .get("material")
         .filter(|v| v.as_object().is_some_and(|o| !o.is_empty()))
 }
+fn texture_identity_bound(value:&serde_json::Value,depth:usize)->Result<usize,String>{
+    if depth>16{return Err("Metal texture identity nesting exceeds16".into());}
+    let bytes=match value {
+        serde_json::Value::Null|serde_json::Value::Bool(_)=>5,
+        serde_json::Value::Number(_)=>64,
+        serde_json::Value::String(v)=>v.len().checked_mul(6).and_then(|n|n.checked_add(2)).ok_or("Texture identity size overflow")?,
+        serde_json::Value::Array(v)=>{let mut n=2usize;for x in v{n=n.checked_add(texture_identity_bound(x,depth+1)?+1).filter(|n|*n<=4096).ok_or("Metal texture identity exceeds4096 bytes")?;}n},
+        serde_json::Value::Object(v)=>{let mut n=2usize;for(k,x)in v{n=n.checked_add(k.len().checked_mul(6).ok_or("Texture key size overflow")?+4).and_then(|n|n.checked_add(texture_identity_bound(x,depth+1).ok()?)).filter(|n|*n<=4096).ok_or("Metal texture identity exceeds4096 bytes")?;}n}
+    };
+    if bytes>4096{return Err("Metal texture identity exceeds4096 bytes".into());}Ok(bytes)
+}
 fn signature(g: &Group, root: &Group) -> Result<Signature, String> {
     let p = paint(g).or_else(|| paint(root));
         let mut s = Signature {
@@ -78,10 +91,14 @@ fn signature(g: &Group, root: &Group) -> Result<Signature, String> {
         color: None,
         opacity: None,
         mat: None,
+        texture: None,
     };
     if let Some(p) = p {
-        if p.get("texture").is_some_and(|t| !t.is_null()) {
-            return Err("Metal placement material texture requires native texture stage".into());
+        if let Some(t)=p.get("texture").filter(|t|!t.is_null()) {
+            texture_identity_bound(t,0)?;
+            let encoded=serde_json::to_string(t).map_err(|_|"Metal texture identity serialization refused")?;
+            if encoded.len()>4096 {return Err("Metal texture identity exceeds4096 bytes".into());}
+            s.texture=Some(encoded);
         }
         if let Some(c) = p.get("color").filter(|v| !v.is_null()) {
             let a = c
@@ -101,8 +118,8 @@ fn signature(g: &Group, root: &Group) -> Result<Signature, String> {
         if let Some(o) = p.get("opacity").filter(|v| !v.is_null()) {
             let n = o
                 .as_f64()
-                .filter(|n| n.is_finite() && *n >= 0.999 && *n <= 1.)
-                .ok_or("Metal placement translucent material requires alpha stage")?;
+                .filter(|n| n.is_finite() && *n >= 0. && *n <= 1.)
+                .ok_or("Metal placement material opacity invalid")?;
             s.opacity = Some(if n == 0. { 0 } else { n.to_bits() });
         }
         if let Some(m) = p.get("mat").filter(|v| !v.is_null()) {
@@ -119,6 +136,12 @@ fn signature(g: &Group, root: &Group) -> Result<Signature, String> {
         }
     }
     Ok(s)
+}
+#[cfg(target_os="macos")]
+fn sampled_asset<'a>(scene:&'a Scene,path:&str)->Result<std::borrow::Cow<'a,[u8]>,String>{
+    if let Some(bytes)=scene.embedded_textures.get(path){if bytes.len()>16*1024*1024{return Err("Metal embedded texture exceeds16MiB".into());}return Ok(std::borrow::Cow::Borrowed(bytes));}
+    use std::io::Read;let file=std::fs::File::open(path).map_err(|e|format!("Metal texture resource {path}: {e}"))?;if file.metadata().map_err(|e|e.to_string())?.len()>16*1024*1024{return Err("Metal file texture exceeds16MiB".into());}
+    let mut bytes=Vec::new();file.take(16*1024*1024+1).read_to_end(&mut bytes).map_err(|e|e.to_string())?;if bytes.len()>16*1024*1024{return Err("Metal file texture grew beyond16MiB".into());}Ok(std::borrow::Cow::Owned(bytes))
 }
 fn own_placement(g: &Group) -> bool {
     if g.native_document.is_object() {
@@ -176,7 +199,7 @@ impl Catalog {
                     + std::mem::size_of::<Prototype>()
                     + std::mem::size_of::<(Signature, usize)>()
                     + MAX_DEPTH * std::mem::size_of::<(usize, u128)>()
-                    + 1024
+                    + 1024 + 4096
                     + std::mem::size_of::<PrototypeKey>() * 2
                     + std::mem::size_of::<(PrototypeKey, usize)>()
                     + 4,
@@ -264,7 +287,7 @@ impl Catalog {
                     loose: true,
                     classic_world: None,
                     identity: 0,
-                    color: None,opacity:None,mat:None},0));
+                    color: None,opacity:None,mat:None,texture:None},0));
         }
         for (i, g) in scene.groups.iter().enumerate() {
             path[0] = (i, g.id.as_u128());
@@ -347,7 +370,7 @@ impl Catalog {
             + prototypes.capacity() * std::mem::size_of::<Prototype>()
             + prototypes
                 .iter()
-                .map(|p| p.signature.mat.as_ref().map_or(0, String::capacity))
+                .map(|p| p.signature.mat.as_ref().map_or(0, String::capacity)+p.signature.texture.as_ref().map_or(0,String::capacity))
                 .sum::<usize>()
             + packet.retained_payload_bytes();
         if retained_bytes > MAX_BYTES || bound > MAX_BYTES {
@@ -468,13 +491,26 @@ impl Catalog {
             });
         }
     }
-    pub fn collect(
+    pub fn collect(&self,key:&PrototypeKey,scene:&Scene,camera:&OrbitCamera,style:&StyleConfig)->Result<MeshRenderBuffer,String>{
+        let data=self.collect_surfaces(key,scene,camera,style)?;
+        if !data.transparent_mesh.indices.is_empty() || !data.textured_meshes.is_empty() || !data.billboards.is_empty() {
+            return Err("Metal Scene placement needs texture/alpha/billboard stage".into());
+        }
+        Ok(data.opaque_mesh)
+    }
+    pub fn collect_surfaces(
         &self,
         key: &PrototypeKey,
         scene: &Scene,
         camera: &OrbitCamera,
         style: &StyleConfig,
-    ) -> Result<MeshRenderBuffer, String> {
+    ) -> Result<ingetrazo_render::pipeline::SceneRenderData, String> {
+        // The source shaded mode retains texture geometry but replaces sampling
+        // with its cached 4x4 Qt image mean. The general render API stays unchanged.
+        let textured_style;
+        let style=if style.visual_style==ingetrazo_render::VisualStyle::ShadedWithTextures && !style.show_textures {
+            textured_style={let mut value=style.clone();value.show_textures=true;value}; &textured_style
+        }else{style};
         let lookup = self
             .key_index
             .binary_search_by_key(key, |v| v.0)
@@ -483,8 +519,7 @@ impl Catalog {
         let s = &self.slots[p.representative];
         if s.path.is_empty(){
             let data=build_loose_world_surfaces(scene,style);
-            if !data.transparent_mesh.indices.is_empty()||!data.textured_meshes.is_empty(){return Err("Metal Scene placement needs texture/alpha/billboard stage".into());}
-            return Ok(data.opaque_mesh);
+            return Ok(data);
         }
         let g = resolve(scene, s)?;
         let owner = scene
@@ -494,10 +529,7 @@ impl Catalog {
         if let Some(bits) = p.signature.classic_world {
             let world = DMat4::from_cols_array(&bits.map(f64::from_bits));
             let data = build_classic_own_surfaces(g, paint(owner), world, scene, camera, style)?;
-            if !data.transparent_mesh.indices.is_empty() || !data.textured_meshes.is_empty() {
-                return Err("Metal Scene placement needs texture/alpha/billboard stage".into());
-            }
-            return Ok(data.opaque_mesh);
+            return Ok(data);
         }
         let data = build_inherited_placement_prototype_surfaces(
             g,
@@ -507,13 +539,10 @@ impl Catalog {
             style,
             true,
         )?;
-        if !data.transparent_mesh.indices.is_empty()
-            || !data.textured_meshes.is_empty()
-            || !data.billboards.is_empty()
-        {
+        if !data.billboards.is_empty() {
             return Err("Metal Scene placement needs texture/alpha/billboard stage".into());
         }
-        Ok(data.opaque_mesh)
+        Ok(data)
     }
 }
 
@@ -619,7 +648,13 @@ mod tests {
         let cat = Catalog::new(&scene, revisions(), None).unwrap();
         assert_eq!(cat.packet.prototype_count(), 2);
         scene.groups[1].native_document["material"]["opacity"] = serde_json::json!(0.5);
-        assert!(Catalog::new(&scene, revisions(), Some(&cat)).is_err());
+        let alpha=Catalog::new(&scene,revisions(),Some(&cat)).unwrap();
+        let key=alpha.prototypes.iter().find(|p|p.signature.opacity==Some(0.5f64.to_bits())).unwrap().key;
+        let rich=alpha.collect_surfaces(&key,&scene,&OrbitCamera::default(),&style()).unwrap();
+        assert!(!rich.transparent_mesh.indices.is_empty());
+        assert!(alpha.collect(&key,&scene,&OrbitCamera::default(),&style()).is_err());
+        scene.groups[1].native_document["material"]["opacity"]=serde_json::json!(1.5);
+        assert!(Catalog::new(&scene,revisions(),Some(&cat)).is_err());
         assert_eq!(cat.packet.prototype_count(), 2);
         scene.groups[1].native_document["material"]
             .as_object_mut()
@@ -877,7 +912,7 @@ impl crate::world::World {
         use crate::world_policy::{Mode, Policy};
         use ingetrazo_render::VisualStyle;
         let mode = match style.visual_style {
-            VisualStyle::ShadedWithTextures => Mode::Material,
+            VisualStyle::ShadedWithTextures => if style.show_textures{Mode::Material}else{Mode::MaterialAverage},
             VisualStyle::HiddenLine => Mode::HiddenLine,
             VisualStyle::Monochrome => Mode::Monochrome,
                         _ => return Err("Metal Scene adapter wireframe/XRay passes not implemented".into()),
@@ -914,7 +949,7 @@ impl crate::world::World {
         if adapter.retained_payload_bytes() > MAX_BYTES * 3 {
             return Err("Metal adapter retained CPU storage exceeds24MiB".into());
         }
-        let frame = self.prepare_placements_with_camera(
+        let frame = self.prepare_material_placements_with_camera(
             metal,
             catalog.packet.clone(),
             if refresh { &adapter.scratch } else { &adapter.current },
@@ -926,7 +961,8 @@ impl crate::world::World {
                 front: style.front_color,
                 back: style.back_color,
             },
-            |key| catalog.collect(key, scene, camera, style),
+            |key| catalog.collect_surfaces(key, scene, camera, style),
+            |path|sampled_asset(scene,path),
         )?;
         if frame.is_some() {
             if let Some(c) = candidate {
