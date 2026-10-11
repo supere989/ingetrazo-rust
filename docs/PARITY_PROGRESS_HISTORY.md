@@ -794,4 +794,3 @@ The Rust workspace is a substantial implementation. Full Python parity is unveri
 | Annotations and full models | Prior stencil/JPEG controls remain scoped; Chapel retains 1,066/1,113 differing pixels, maximum error37 | No new full-model equivalence claim; remaining pixel/font/camera/DPI/platform work |
 
 Current evidence: [combined acceptance](audits/render-workflow-integration/README.md), [BIM actual workflows](audits/bim-workflow/README.md), [GLB export](audits/gltf-rich/README.md), [cutout and portable depth](audits/cutout-discard-portable-depth/README.md), [Blender document/follow consumer](audits/blender-document-follow/README.md). Prior checkpoints and failures remain in [the historical log](PARITY_PROGRESS_HISTORY.md).
-
