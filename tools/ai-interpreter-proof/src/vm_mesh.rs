@@ -671,6 +671,36 @@ pub mod editable_mesh {
             })
         }
         #[pymethod]
+        fn remove_face(zelf:&Py<Self>,face:PyRef<Face>,vm:&VirtualMachine)->PyResult<()> {
+            vm.host_budget_tick()?;
+            STAGED.with(|cell|{
+                let mut slot=cell.try_borrow_mut().map_err(|_|{vm.host_budget_abort();vm.new_value_error("Reentrant Mesh mutation refused")})?;
+                let stage=slot.as_mut().ok_or_else(||vm.new_value_error("Mesh mutation requires active transaction"))?;
+                if stage.failed{return Err(vm.new_value_error("Transaction previously refused"));}
+                let operation=(||{
+                    let holes=face.hole_loops.read().clone();let count=holes.borrow_vec().len().checked_add(1).ok_or_else(||vm.new_value_error("Face ring extent overflow"))?;
+                    let _charge=stage.budget.reserve(Kind::Preparation,count.checked_mul(std::mem::size_of::<PyListRef>()).ok_or_else(||vm.new_value_error("Face ring byte overflow"))?).map_err(|e|vm.new_value_error(e))?;
+                    let mut rings=Vec::new();rings.try_reserve_exact(count).map_err(|_|vm.new_value_error("Face ring preparation refused"))?;rings.push(face.r#loop.read().clone());
+                    {let holes=holes.borrow_vec();for ring in holes.iter(){rings.push(ring.clone().downcast::<rustpython_vm::builtins::PyList>().map_err(|_|vm.new_type_error("Face hole requires list"))?);}}
+                    for ring in rings{
+                        let n=ring.borrow_vec().len();
+                        for i in 0..n{
+                            // Fresh indexing per iteration and no list guard across source callbacks.
+                            let(a,b)={let values=ring.borrow_vec();(values.get(i).cloned().ok_or_else(||vm.new_index_error("Face ring changed"))?,values.get((i+1)%n).cloned().ok_or_else(||vm.new_index_error("Face ring changed"))?)};
+                            let a=a.downcast::<Vertex>().map_err(|_|vm.new_type_error("Face loop requires Vertex"))?;let b=b.downcast::<Vertex>().map_err(|_|vm.new_type_error("Face loop requires Vertex"))?;
+                            let edge=Self::find_edge(zelf,a,b,vm)?;
+                            if !edge.is(&vm.ctx.none()){
+                                let radial=edge.get_attr("faces",vm)?;
+                                if radial.get_attr("__contains__",vm)?.call((face.clone(),),vm)?.try_to_bool(vm)?{radial.get_attr("remove",vm)?.call((face.clone(),),vm)?;}
+                            }
+                        }
+                    }
+                    let faces:PyObjectRef=zelf.faces.clone().into();if faces.get_attr("__contains__",vm)?.call((face.clone(),),vm)?.try_to_bool(vm)?{faces.get_attr("remove",vm)?.call((face.clone(),),vm)?;}
+                    Ok(())
+                })();if operation.is_err(){stage.failed=true;}operation
+            })
+        }
+        #[pymethod]
         fn add_face(
             zelf: &Py<Self>,
             outer: PyObjectRef,
@@ -948,6 +978,14 @@ fn identity_order(
         _charge: charge,
     })
 }
+fn requires_identity_replacement(current:&[rustpython_vm::PyObjectRef],previous:&[rustpython_vm::PyObjectRef],budget:&OwnerBudget)->Result<bool,String>{
+ use rustpython_vm::AsObject;if current.len()!=previous.len(){return Ok(true);}
+ let _charge=budget.reserve(Kind::Preparation,previous.len().checked_mul(64).ok_or("Membership extent overflow")?)?;
+ let mut ids=std::collections::HashSet::new();ids.try_reserve(previous.len()).map_err(|_|"Membership classification refused")?;
+ for value in previous{if !ids.insert(value.get_id()){return Err("Repeated prior membership unsupported".into());}}
+ for value in current{if !ids.remove(&value.get_id()){return Ok(true);}}
+ Ok(false)
+}
 struct Projection {
     positions: Vec<glam::DVec3>,
     loops: Vec<(Vec<usize>, Vec<Vec<usize>>)>,
@@ -967,11 +1005,14 @@ impl Projection {
     ) -> Result<Option<Self>, String> {
         Self::prepare_inner(mesh, budget, append, false)
     }
-    fn prepare_inner(
+    fn prepare_inner(mesh:&PyRef<editable_mesh::Mesh>,budget:&OwnerBudget,append:bool,force:bool)->Result<Option<Self>,String>{Self::prepare_kind(mesh,budget,append,force,false)}
+    fn prepare_topology(mesh:&PyRef<editable_mesh::Mesh>,budget:&OwnerBudget)->Result<Self,String>{Self::prepare_kind(mesh,budget,false,true,true)?.ok_or("Topology projection missing".into())}
+    fn prepare_kind(
         mesh: &PyRef<editable_mesh::Mesh>,
         budget: &OwnerBudget,
         append: bool,
         force: bool,
+        topology:bool,
     ) -> Result<Option<Self>, String> {
         use rustpython_vm::AsObject;
         let owner = mesh.owner.read();
@@ -979,9 +1020,9 @@ impl Projection {
         let vertices = mesh.vertices.borrow_vec();
         let faces = mesh.faces.borrow_vec();
         if (!append
-            && (vertices.len() != native.vertices.len() || faces.len() != native.faces.len()))
+            && (vertices.len() != native.vertices.len() || (!topology&&faces.len() != native.faces.len())))
             || vertices.len() < native.vertices.len()
-            || faces.len() < native.faces.len()
+            || (!topology&&faces.len() < native.faces.len())
         {
             return Err("Existing field projection requires unchanged membership".into());
         }
@@ -1019,7 +1060,7 @@ impl Projection {
             .try_reserve_exact(faces.len())
             .map_err(|_| "Projection face slots refused")?;
         let mut bytes = slots;
-        for (id, value) in faces.iter().take(native.faces.len()).enumerate() {
+        for (id, value) in faces.iter().take(if topology{faces.len()}else{native.faces.len()}).enumerate() {
             let f = value
                 .downcast_ref::<editable_mesh::Face>()
                 .ok_or("Projection face requires Face")?;
@@ -1066,8 +1107,7 @@ impl Projection {
                     .unwrap()
                     .borrow_vec())?);
             }
-            changed |=
-                outer != native.faces[id].vertices || prepared_holes != native.faces[id].holes;
+            changed |= native.faces.get(id).map_or(true,|face|outer!=face.vertices||prepared_holes!=face.holes);
             loops.push((outer, prepared_holes));
         }
         if changed || force {
@@ -1088,14 +1128,14 @@ impl Projection {
 fn packed_edge_candidate(mesh:&PyRef<editable_mesh::Mesh>,graph:&GraphState,vertices:&[rustpython_vm::PyObjectRef],faces:&[rustpython_vm::PyObjectRef],p:Projection,budget:&OwnerBudget,vm:&rustpython_vm::VirtualMachine)->Result<(ingetrazo_core::mesh::Mesh,Lease),String>{
     let (edges,mut charge)=graph.packed_edges(vertices,faces,budget,vm)?;
     let owner=mesh.owner.read();let old=owner.mesh();
-    if old.vertices.len()!=p.positions.len()||old.faces.len()!=p.loops.len(){return Err("Packed Vertex/Face replacement pending".into());}
-    if old.faces.iter().any(|f|!f.attrs.is_empty()||f.layer.is_some()){return Err("Native painted Face replacement admission pending".into());}
-    let bytes=old.vertices.len().checked_mul(std::mem::size_of::<ingetrazo_core::mesh::MeshVertex>()+std::mem::size_of::<usize>()).and_then(|n|old.faces.len().checked_mul(std::mem::size_of::<ingetrazo_core::mesh::MeshFace>()).and_then(|m|n.checked_add(m))).ok_or("Packed candidate extent overflow")?;
+    if old.vertices.len()!=p.positions.len(){return Err("Packed Vertex replacement pending".into());}
+    if old.faces.iter().any(|f|!f.attrs.is_empty()||f.layer.is_some()||f.interior){return Err("Native painted Face replacement admission pending".into());}
+    let bytes=old.vertices.len().checked_mul(std::mem::size_of::<ingetrazo_core::mesh::MeshVertex>()+std::mem::size_of::<usize>()).and_then(|n|p.loops.len().checked_mul(std::mem::size_of::<ingetrazo_core::mesh::MeshFace>()).and_then(|m|n.checked_add(m))).ok_or("Packed candidate extent overflow")?;
     charge.resize(charge.bytes().checked_add(bytes).ok_or("Packed candidate extent overflow")?)?;
     let mut out=ingetrazo_core::mesh::Mesh::new();out.vertices.try_reserve_exact(p.positions.len()).map_err(|_|"Packed Vertex allocation refused")?;
     for (id,position) in p.positions.into_iter().enumerate(){out.vertices.push(ingetrazo_core::mesh::MeshVertex{uid:old.vertices[id].uid,position,edges:Vec::new()});}
     out.faces.try_reserve_exact(p.loops.len()).map_err(|_|"Packed Face allocation refused")?;
-    for (id,(outer,holes)) in p.loops.into_iter().enumerate(){let mut face=ingetrazo_core::mesh::MeshFace::new(outer);face.holes=holes;face.interior=old.faces[id].interior;out.faces.push(face);}
+    for (outer,holes) in p.loops{let mut face=ingetrazo_core::mesh::MeshFace::new(outer);face.holes=holes;out.faces.push(face);}
     // Reserve all adjacency capacities before filling; each self-edge occurs once.
     let mut counts=Vec::new();counts.try_reserve_exact(out.vertices.len()).map_err(|_|"Packed incidence count refused")?;counts.resize(out.vertices.len(),0usize);
     for e in &edges{counts[e.v0]=counts[e.v0].checked_add(1).ok_or("Packed incidence overflow")?;if e.v1!=e.v0{counts[e.v1]=counts[e.v1].checked_add(1).ok_or("Packed incidence overflow")?;}}
@@ -1768,11 +1808,12 @@ impl Controller {
                         entry.validate_created()?;
                     }
                     if let Some(before) = &baseline {
-                        history_packed_edges=entries.is_empty()&&before.graph.requires_replacement(&before.mesh,&self.budget)?;
+                        history_packed_edges=entries.is_empty()&&(before.graph.requires_replacement(&before.mesh,&self.budget)?||requires_identity_replacement(&before.mesh.faces.borrow_vec(),&before.faces,&self.budget)?);
                         if history_packed_edges {
                             use rustpython_vm::AsObject;
                             let vertices=before.mesh.vertices.borrow_vec();let faces=before.mesh.faces.borrow_vec();
-                            if vertices.len()!=before.vertices.len()||faces.len()!=before.faces.len()||vertices.iter().zip(&before.vertices).any(|(a,b)|!a.is(b))||faces.iter().zip(&before.faces).any(|(a,b)|!a.is(b)){return Err("Combined Vertex/Face membership replacement pending".into());}
+                            if vertices.len()!=before.vertices.len()||vertices.iter().zip(&before.vertices).any(|(a,b)|!a.is(b)){return Err("Combined Vertex membership replacement pending".into());}
+                            let _=faces;
                         }else{let _=before.validate_live_membership(!entries.is_empty(),entries.is_empty())?;}
                     }
                     if self.history_enabled {
@@ -1820,7 +1861,7 @@ impl Controller {
                                 }
                                 if history_packed_edges {
                                     let mut live=RootRestore::prepare(mesh.clone(),&self.budget,vm)?;live.armed=false;
-                                    let projection=Projection::prepare_inner(&mesh,&self.budget,false,true)?.ok_or("Packed projection missing")?;
+                                    let projection=Projection::prepare_topology(&mesh,&self.budget)?;
                                     let (candidate,_lease)=packed_edge_candidate(&mesh,&live.graph,&live.vertices,&live.faces,projection,&self.budget,vm)?;
                                     let _old=mesh.owner.write().prepare_edge_replacement_as(candidate,uuid::Uuid::new_v4())?.apply();
                                     return Ok(true);
@@ -2090,6 +2131,9 @@ impl Controller {
        let mesh=self.scope.globals.get_item("m",vm).unwrap().downcast::<editable_mesh::Mesh>().unwrap();let f=self.scope.globals.get_item("held",vm).unwrap().downcast::<editable_mesh::Face>().unwrap();let v=self.scope.globals.get_item("v",vm).unwrap().downcast::<editable_mesh::Vertex>().unwrap();let oldloop=self.scope.globals.get_item("oldloop",vm).unwrap();let oldattrs=self.scope.globals.get_item("oldattrs",vm).unwrap();let oldposition=self.scope.globals.get_item("oldposition",vm).unwrap().downcast::<crate::vm_groups::native_groups::QVector3D>().unwrap();let shared=self.scope.globals.get_item("shared",vm).unwrap();let attrs=f.attrs.read().clone().downcast::<rustpython_vm::builtins::PyDict>().unwrap();let value=attrs.get_item("shared",vm).unwrap();let strings=value.downcast_ref::<rustpython_vm::builtins::PyList>().unwrap().borrow_vec().iter().map(|x|x.downcast_ref::<rustpython_vm::builtins::PyStr>().unwrap().as_utf8().unwrap().as_str().to_owned()).collect::<Vec<_>>();let owner=mesh.owner.read();let native=owner.mesh();let faces=mesh.faces.borrow_vec();let vertices=mesh.vertices.borrow_vec();
        serde_json::json!({"name":name,"positions":native.vertices.iter().map(|v|v.position.to_array()).collect::<Vec<_>>(),"faces":native.faces.iter().map(|f|f.vertices.clone()).collect::<Vec<_>>(),"face_live":faces.iter().any(|x|x.is(&f)),"vertex_live":vertices.iter().any(|x|x.is(&v)),"loop_original":f.r#loop.read().is(&oldloop),"position_original":v.position.read().is(&oldposition),"attrs_original":f.attrs.read().is(&oldattrs),"shared_value":strings,"shared_identity":value.is(&shared),"held_position":oldposition.coordinates(),"undo":self.undo.len(),"redo":self.redo.len()})
       })
+    }
+    pub fn observe_face_deletion(&self,name:&str)->serde_json::Value{
+      let mut result=self.observe_edge_replacement(name);self.interpreter.enter(|vm|{use rustpython_vm::AsObject;let mesh=self.scope.globals.get_item("m",vm).unwrap().downcast::<editable_mesh::Mesh>().unwrap();let held=self.scope.globals.get_item("f",vm).unwrap().downcast::<editable_mesh::Face>().unwrap();result["held_face_live"]=serde_json::json!(mesh.faces.borrow_vec().iter().any(|v|v.is(&held)));let vertices=mesh.vertices.borrow_vec();result["held_face_loop"]=serde_json::json!(held.r#loop.read().borrow_vec().iter().map(|v|vertices.iter().position(|x|x.is(v))).collect::<Vec<_>>());});result
     }
     pub fn observe_edge_replacement(&self,name:&str)->serde_json::Value{
         let mut result=self.observe_packed_graph(name);

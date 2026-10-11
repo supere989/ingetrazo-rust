@@ -1,0 +1,1 @@
+{"exact_states": 31, "rejected_mutations": ["radial", "native_radial", "faces", "native_faces", "held_face_live", "held_face_loop", "held_edge_incidence", "native_incidence", "undo", "redo", "production_enabled", "final_charge", "quota_refusal_preserves_graph_history_and_charge", "source inventory"], "production_enabled": false}

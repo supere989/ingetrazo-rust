@@ -1,0 +1,47 @@
+[
+  {
+    "name": "primitive-face-remove",
+    "setup": "",
+    "recipe": "m.remove_face(f)"
+  },
+  {
+    "name": "repeated-remove",
+    "setup": "",
+    "recipe": "m.remove_face(f)\nm.remove_face(f)"
+  },
+  {
+    "name": "shared-face-remove",
+    "setup": "g=m.add_face([QVector3D(1,0,0),QVector3D(),QVector3D(1,-1,0)])",
+    "recipe": "m.remove_face(f)"
+  },
+  {
+    "name": "face-and-edge-remove",
+    "setup": "",
+    "recipe": "m.remove_face(f)\nm.remove_edge(e)"
+  },
+  {
+    "name": "remove-reinsert-face",
+    "setup": "",
+    "recipe": "m.remove_face(f)\nm.faces.append(f)\nfor edge in oldedges:\n    edge.faces.append(f)"
+  },
+  {
+    "name": "pose-and-face-remove",
+    "setup": "",
+    "recipe": "v0.position.setX(5)\nm.remove_face(f)"
+  },
+  {
+    "name": "empty-face-remove",
+    "setup": "g=m.add_face([],[])",
+    "recipe": "m.remove_face(g)"
+  },
+  {
+    "name": "multiplicity-remove",
+    "setup": "g=m.add_face([QVector3D(),QVector3D(1,0,0),QVector3D(),QVector3D(1,0,0)],[])",
+    "recipe": "m.remove_face(g)"
+  },
+  {
+    "name": "two-equal-holes-remove",
+    "setup": "g=m.add_face([QVector3D(),QVector3D(1,0,0),QVector3D(0,1,0)],[[QVector3D(),QVector3D(1,0,0),QVector3D(0,1,0)],[QVector3D(),QVector3D(1,0,0),QVector3D(0,1,0)]])",
+    "recipe": "m.remove_face(g)"
+  }
+]
