@@ -46,5 +46,5 @@ def main(root):
   try:validate(pixels,name,override)
   except AssertionError:pass
   else:raise AssertionError(label)
- print(json.dumps({'passed':True,'frames':results,'negatives':'blank/winding-disabled-as-positive/new-as-old rejected','scope':'actual cached local prototypes, per-binding matrices/winding, warm retained capacities and old-frame/refusal ownership; interior/background only; adjacent instance grouping observed; fullScene/UI/presentation and performance not claimed'},indent=2))
+ print(json.dumps({'passed':True,'frames':results,'negatives':'blank/winding-disabled-as-positive/new-as-old/missing-late-back rejected','scope':'actual cached local prototypes, per-binding matrices/winding, warm retained capacities and old-frame/refusal ownership; interior/background only; adjacent instance grouping observed; fullScene/UI/presentation and performance not claimed'},indent=2))
 if __name__=='__main__':main(sys.argv[1])
