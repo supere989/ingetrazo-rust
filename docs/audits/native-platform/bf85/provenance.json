@@ -1,0 +1,21 @@
+{
+  "revision": "bf85b4c41c6f6fcc6128a53db3db36318936ec12",
+  "run": 38145999057,
+  "artifacts": [
+    {
+      "id": 11705036505,
+      "name": "native-metal-link-macos-15",
+      "bytes": 24833,
+      "sha256": "e9d3874eb8948f03b7a4a67017cf276caee02a7736fdc21f9974324be0304532",
+      "file": "native-metal-link-macos-15.zip"
+    },
+    {
+      "id": 11705007098,
+      "name": "native-metal-link-macos-15-intel",
+      "bytes": 24819,
+      "sha256": "fae6ea5bf16148021d5363e82bb2b230362c02b280098de20e1f4192f17e5baf",
+      "file": "native-metal-link-macos-15-intel.zip"
+    }
+  ],
+  "scope": "Unmodified GitHub artifacts, byte-verified against Actions REST SHA256 digests. Both defaults GPU controls passed; both complete pergola launcher consumers failed."
+}

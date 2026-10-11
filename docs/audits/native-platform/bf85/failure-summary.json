@@ -1,0 +1,39 @@
+{
+  "revision": "bf85b4c41c6f6fcc6128a53db3db36318936ec12",
+  "run_url": "https://github.com/supere989/ingetrazo-rust/actions/runs/38145999057",
+  "linux_failures": [
+    {
+      "test": "mixed_bim_tag_is_atomic_single_metadata_command_across_finish",
+      "location": "2026-10-11T14:11:11.9339142Z thread 'bim_controller::draw_tests::mixed_bim_tag_is_atomic_single_metadata_command_across_finish' (5769) panicked at crates/ingetrazo-gui/src/bim_controller.rs:533:18:",
+      "assertion": "2026-10-11T14:11:11.9340338Z assertion `left == right` failed"
+    },
+    {
+      "test": "axial_and_aligned_measurements_keep_world_frame_in_rotated_scaled_context",
+      "location": "2026-10-11T14:11:11.9357089Z thread 'component_edit::tests::axial_and_aligned_measurements_keep_world_frame_in_rotated_scaled_context' (5802) panicked at crates/ingetrazo-gui/src/component_edit.rs:633:173:",
+      "assertion": "2026-10-11T14:11:11.9358021Z assertion failed: (app.scene.dimensions[0].length() - expected.length()).abs() < 1e-10"
+    },
+    {
+      "test": "refused_finish_preserves_live_tool_preview_and_revision",
+      "location": "2026-10-11T14:11:11.9499630Z thread 'refused_finish_preserves_live_tool_preview_and_revision' (6069) panicked at crates/ingetrazo-gui/tests/component_global_history.rs:47:9:",
+      "assertion": "2026-10-11T14:11:11.9500737Z assertion `left == right` failed"
+    }
+  ],
+  "bim_difference": {
+    "actual": {
+      "class": "IfcRoof",
+      "name": "mixed",
+      "id": 2
+    },
+    "expected": {
+      "class": "IfcWall",
+      "name": "Muros N1",
+      "id": 1
+    }
+  },
+  "disposition": "Three protected component-edit regressions require focused repair; broad Linux suite failed before later semantic/GPU workflows.",
+  "known_apple_blockers": [
+    "one active section cut without fill",
+    "four dimensions"
+  ],
+  "apple_default_probe": "passed on macos-15 ARM GPU; original-document launcher failed at section/shadow/image/annotation gate"
+}
