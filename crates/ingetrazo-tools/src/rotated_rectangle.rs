@@ -124,7 +124,7 @@ impl RotatedRectangleTool {
             return qt::q(c.world);
         }
         let n = self.edge();
-        let denominator = qt::dot(c.ray.direction, n);
+        let denominator = qt::dot(c.ray.dir, n);
         if denominator.abs() < 0.02 {
             return qt::q(c.world);
         }
@@ -132,7 +132,7 @@ impl RotatedRectangleTool {
         if t <= 0. {
             return qt::q(c.world);
         }
-        qt::add(c.ray.origin, qt::mul(c.ray.direction, t))
+        qt::add(c.ray.origin, qt::mul(c.ray.dir, t))
     }
     fn corners(&self, width: f64, angle: f64) -> Option<[DVec3; 4]> {
         let dir = self.width_dir(angle);
@@ -443,7 +443,7 @@ impl Tool for RotatedRectangleTool {
         self.commit(corners, s)
     }
     fn preview_color(&self) -> Option<[f32; 3]> {
-        self.plane.lock_color()
+        None
     }
     fn rubber_band_lines(&self) -> Vec<(DVec3, DVec3)> {
         let (Some(start), Some(hover)) = (self.first_corner, self.hover_point) else {

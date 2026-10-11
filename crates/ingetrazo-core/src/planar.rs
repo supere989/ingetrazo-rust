@@ -285,6 +285,13 @@ pub(crate) fn add_face(
     Ok(id)
 }
 pub(crate) fn preserve_edges(mesh: &mut Mesh, original: &Mesh) {
+    preserve_edges_policy(mesh,original,false);
+}
+pub(crate) fn preserve_source_edges(mesh: &mut Mesh, original: &Mesh) {
+    preserve_edges_policy(mesh,original,true);
+}
+fn preserve_edges_policy(mesh: &mut Mesh, original: &Mesh, source:bool) {
+    let mut assigned=if source{vec![false;mesh.edges.len()]}else{vec![]};
     for edge in &original.edges {
         let a = original.vertices[edge.v0].position;
         let b = original.vertices[edge.v1].position;
@@ -310,14 +317,18 @@ pub(crate) fn preserve_edges(mesh: &mut Mesh, original: &Mesh) {
                 mesh.add_edge(a, b);
             }
         }
-        for e in &mut mesh.edges {
+        if source{assigned.resize(mesh.edges.len(),false);}
+        for (index,e) in mesh.edges.iter_mut().enumerate() {
+            if source&&assigned[index]{continue;}
             let p = mesh.vertices[e.v0].position;
             let q = mesh.vertices[e.v1].position;
             let on = |p: DVec3| {
+                if source{return crate::drafting::source_on_segment(p,a,b);}
                 let t = (p - a).dot(d) / length;
                 t >= -TOL && t <= 1. + TOL && (p - a - d * t).length() < 1e-6
             };
             if on(p) && on(q) {
+                if source{assigned[index]=true;}
                 e.attrs = edge.attrs.clone();
                 e.soft = edge.soft;
                 e.curve_id = edge.curve_id;
@@ -351,16 +362,29 @@ pub fn sweep_plane_cells(mesh:&Mesh,origin:DVec3,normal:DVec3)->Result<Vec<Plana
 
 /// Rebuild all coplanar regions on one selected plane, retaining other planes.
 pub fn rebuild_faces(mesh: &Mesh, selected: &[usize]) -> Result<Mesh, String> {
-    rebuild_faces_policy(mesh, selected, true)
+    rebuild_faces_policy(mesh, selected, true, None)
 }
 /// Authoring closes newly bounded cells, including cells inside old holes.
 /// Rebuild/heal and simplification retain their declared-void policy.
 pub(crate) fn rebuild_drawing_faces(mesh: &Mesh) -> Result<Mesh, String> {
-    rebuild_faces_policy(mesh, &[], false)
+    rebuild_faces_policy(mesh, &[], false, None)
 }
-fn rebuild_faces_policy(mesh: &Mesh, selected: &[usize], preserve_voids: bool) -> Result<Mesh, String> {
+/// The source authoring predicate already admitted this exact-f32 plane.
+/// Carry it to the arrangement rather than choose another narrow triangle.
+pub(crate) fn rebuild_source_drawing_faces(mesh:&Mesh,origin:DVec3,normal:DVec3,u:DVec3,v:DVec3)->Result<Mesh,String>{
+ rebuild_faces_policy(mesh,&[],false,Some(Frame{origin,normal,u,v}))
+}
+
+fn rebuild_faces_policy(
+    mesh: &Mesh,
+    selected: &[usize],
+    preserve_voids: bool,
+    source_frame: Option<Frame>,
+) -> Result<Mesh, String> {
     validate_mesh(mesh)?;
-    let frame = if mesh.faces.is_empty() {
+    let frame = if let Some(frame) = source_frame {
+        frame
+    } else if mesh.faces.is_empty() {
         if mesh.vertices.len() < 3 || mesh.edges.len() < 3 {
             return Ok(mesh.clone());
         }
@@ -394,37 +418,48 @@ fn rebuild_faces_policy(mesh: &Mesh, selected: &[usize], preserve_voids: bool) -
         let first = selected.first().copied().unwrap_or(0);
         Frame::new(&rings(mesh, mesh.faces.get(first).ok_or("Invalid selected face")?)[0])?
     };
+    let on_plane = |p: DVec3| {
+        if source_frame.is_some() {
+            let d = (p - frame.origin).as_vec3();
+            let n = frame.normal.as_vec3();
+            ((n.x * d.x + n.y * d.y) + n.z * d.z).abs() <= 1e-4
+        } else {
+            frame.on_plane(p)
+        }
+    };
+    let project=|p:DVec3| if source_frame.is_some(){let d=p.as_vec3()-frame.origin.as_vec3();let u=frame.u.as_vec3();let v=frame.v.as_vec3();DVec2::new(((d.x*u.x+d.y*u.y)+d.z*u.z) as f64,((d.x*v.x+d.y*v.y)+d.z*v.z) as f64)}else{frame.project(p)};
+    let unproject=|p:DVec2| if source_frame.is_some(){(frame.origin.as_vec3()+frame.u.as_vec3()*(p.x as f32)+frame.v.as_vec3()*(p.y as f32)).as_dvec3()}else{frame.unproject(p)};
     if selected.iter().any(|&id| {
         mesh.faces
             .get(id)
-            .map(|f| rings(mesh, f).iter().flatten().any(|&p| !frame.on_plane(p)))
+            .map(|f| rings(mesh, f).iter().flatten().any(|&p| !on_plane(p)))
             .unwrap_or(true)
     }) {
         return Err("Select faces on one plane".into());
     }
-    if selected.is_empty() && mesh.vertices.iter().any(|v| !frame.on_plane(v.position)) {
+    if selected.is_empty() && mesh.vertices.iter().any(|v| !on_plane(v.position)) {
         return Err("Select faces on one plane to rebuild a 3D model".into());
     }
     let affected: Vec<_> = mesh
         .faces
         .iter()
         .enumerate()
-        .filter(|(_, f)| rings(mesh, f).iter().flatten().all(|&p| frame.on_plane(p)))
+        .filter(|(_, f)| rings(mesh, f).iter().flatten().all(|&p| on_plane(p)))
         .map(|(i, _)| i)
         .collect();
     let mut segments = vec![];
     for &i in &affected {
         for r in rings(mesh, &mesh.faces[i]) {
             for j in 0..r.len() {
-                segments.push((frame.project(r[j]), frame.project(r[(j + 1) % r.len()])));
+                segments.push((project(r[j]), project(r[(j + 1) % r.len()])));
             }
         }
     }
     for e in &mesh.edges {
         let a = mesh.vertices[e.v0].position;
         let b = mesh.vertices[e.v1].position;
-        if frame.on_plane(a) && frame.on_plane(b) {
-            segments.push((frame.project(a), frame.project(b)));
+        if on_plane(a) && on_plane(b) {
+            segments.push((project(a), project(b)));
         }
     }
     let cells = arrange_2d(&segments)?;
@@ -433,7 +468,7 @@ fn rebuild_faces_policy(mesh: &Mesh, selected: &[usize], preserve_voids: bool) -
         .map(|&i| {
             rings(mesh, &mesh.faces[i])
                 .iter()
-                .map(|r| r.iter().map(|&p| frame.project(p)).collect())
+                .map(|r| r.iter().map(|&p| project(p)).collect())
                 .collect()
         })
         .collect();
@@ -448,7 +483,8 @@ fn rebuild_faces_policy(mesh: &Mesh, selected: &[usize], preserve_voids: bool) -
         let source_index = source_rings.iter().position(|r| inside_rings(p, r));
         // Preserve declared voids; otherwise a bounded loose-wire region is
         // precisely the missing face this command is intended to reconstruct.
-        if preserve_voids && source_index.is_none()
+        if preserve_voids
+            && source_index.is_none()
             && source_rings
                 .iter()
                 .any(|rings| rings.iter().skip(1).any(|hole| inside_ring(p, hole)))
@@ -461,12 +497,12 @@ fn rebuild_faces_policy(mesh: &Mesh, selected: &[usize], preserve_voids: bool) -
             .unwrap_or(&default_source);
         let mut loops = vec![outer
             .iter()
-            .map(|&p| frame.unproject(p))
+            .map(|&p| unproject(p))
             .collect::<Vec<_>>()];
         loops.extend(
             holes
                 .iter()
-                .map(|r| r.iter().map(|&p| frame.unproject(p)).collect()),
+                .map(|r| r.iter().map(|&p| unproject(p)).collect()),
         );
         if source_index
             .map(|i| mesh.face_normal(affected[i]).dot(frame.normal) < 0.)

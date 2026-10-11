@@ -11,6 +11,7 @@ pub struct CircleTool {
     pub hover_point: Option<DVec3>,
     pub plane_normal: DVec3,
     pub segments: usize,
+    preview_color: Option<[f32; 3]>,
     plane: ShapePlane,
     error: Option<String>,
 }
@@ -21,6 +22,7 @@ impl Default for CircleTool {
             hover_point: None,
             plane_normal: DVec3::Z,
             segments: 24,
+            preview_color: None,
             plane: Default::default(),
             error: None,
         }
@@ -43,6 +45,7 @@ impl CircleTool {
         t
     }
     pub fn reset(&mut self) {
+        self.preview_color = None;
         self.start_point = None;
         self.plane.reset();
         self.error = None;
@@ -185,6 +188,7 @@ impl Tool for CircleTool {
         self.reset();
     }
     fn on_move(&mut self, s: &mut Scene, c: &ToolContext) {
+        self.preview_color = self.plane.lock_color();
         self.plane.axes = s.drawing_axes();
         self.hover_point = Some(qt::q(c.world));
     }
@@ -248,7 +252,7 @@ impl Tool for CircleTool {
         self.commit_points(pts, s)
     }
     fn preview_color(&self) -> Option<[f32; 3]> {
-        self.plane.lock_color()
+        self.preview_color
     }
     fn rubber_band_lines(&self) -> Vec<(DVec3, DVec3)> {
         if self.start_point.is_none() {

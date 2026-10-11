@@ -28,7 +28,7 @@ fn state(a: &IngeTrazoApp) -> Value {
     let mut curves = std::collections::HashMap::new();
     let mut next = 0usize;
     let edges=m.edges.iter().map(|e|{let curve=e.curve_id.map(|id|*curves.entry(id).or_insert_with(||{let n=next;next+=1;n}));json!({"vertices":[e.v0,e.v1],"soft":e.soft,"hidden":e.hidden,"layer":e.layer,"curve":curve})}).collect::<Vec<_>>();
-    json!({"vertices":m.vertices.iter().map(|v|v.position.to_array()).collect::<Vec<_>>(),"edges":edges,"faces":m.faces.iter().map(|f|json!({"vertices":f.vertices,"holes":f.holes,"attrs":f.attrs,"interior":f.interior})).collect::<Vec<_>>(),"preview":a.active_tool.rubber_band_lines().iter().map(|(x,y)|[x.to_array(),y.to_array()]).collect::<Vec<_>>(),"preview_color":a.active_tool.preview_color().map(|c|[c[0],c[1],c[2],1.]),"caption":a.active_tool.vcb_label(),"history":[a.undo_stack.len(),a.redo_stack.len()],"last_error":a.active_tool.error_message()})
+    json!({"vertices":m.vertices.iter().map(|v|v.position.to_array()).collect::<Vec<_>>(),"edges":edges,"faces":m.faces.iter().map(|f|json!({"vertices":f.vertices,"holes":f.holes,"attrs":f.attrs,"interior":f.interior})).collect::<Vec<_>>(),"preview":a.active_tool.rubber_band_lines().iter().map(|(x,y)|[x.to_array(),y.to_array()]).collect::<Vec<_>>(),"preview_color":a.active_tool.preview_color().map(|c|[c[0],c[1],c[2],1.]),"caption":if a.active_tool.vcb_label().is_empty(){None}else{Some(a.active_tool.vcb_label())},"history":[a.undo_stack.len(),a.redo_stack.len()],"last_error":a.active_tool.error_message()})
 }
 fn egui_ingress() -> Vec<Value> {
     fn frame(ctx: &egui::Context, a: &mut IngeTrazoApp, t: f64, events: Vec<egui::Event>) {
@@ -228,6 +228,21 @@ fn main() {
                     a.scene.groups.push(g);
                     a.scene.select(SelectionItem::Group(0));
                     a.begin_component_edit();
+                    // Original controlled recipe keeps its acquired handler; native
+                    // App context entry intentionally selects Select. Reactivate the
+                    // requested shape inside the admitted context, explicitly.
+                    match recipe["tool"].as_str().unwrap() {
+                        "circle" => a.set_tool(ToolType::Circle),
+                        "polygon" => a.set_tool(ToolType::Polygon),
+                        "rotated_rect" => a.set_tool(ToolType::RotatedRectangle),
+                        "arc" => a.activate_arc(ArcMode::TwoPoint),
+                        "arc3" => a.activate_arc(ArcMode::ThreePoint),
+                        "center_arc" => a.activate_arc(ArcMode::Center),
+                        _ => a.activate_arc(ArcMode::Pie),
+                    }
+                    a.active_tool
+                        .note_pick_viewport(viewport, DVec3::Z * 10., a.model_revision);
+                    a.active_tool.note_cursor_plane(DVec3::ZERO, DVec3::Z);
                 }
                 "key" => {
                     let axes = a.scene.drawing_axes();

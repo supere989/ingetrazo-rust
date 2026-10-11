@@ -51,6 +51,7 @@ pub(crate) struct ShapePlane {
     pub axes: DrawingAxes,
     pub viewport: Option<PixelViewport>,
     pub hover: Option<(DVec3, DVec3)>,
+    cursor_plane: Option<(DVec3, DVec3)>,
     pub captured: Option<(DVec3, DVec3)>,
     lock: Option<DVec3>,
     reference: Option<ReferenceKind>,
@@ -61,6 +62,7 @@ impl Default for ShapePlane {
             axes: Default::default(),
             viewport: None,
             hover: None,
+            cursor_plane: None,
             captured: None,
             lock: None,
             reference: None,
@@ -77,6 +79,7 @@ impl ShapePlane {
     pub fn note(&mut self, p: DVec3, n: DVec3) {
         if p.is_finite() && n.is_finite() && length(n) > 1e-9 {
             self.hover = Some((q(p), q(n)));
+            self.cursor_plane = self.hover;
         }
     }
     pub fn lock_axis(&mut self, n: DVec3) -> bool {
@@ -172,7 +175,9 @@ impl ShapePlane {
         None
     }
     pub fn cursor_ring(&self, p: DVec3, n: usize) -> Vec<(DVec3, DVec3)> {
-        let normal = self.lock.unwrap_or(self.own().1);
+        let normal = self
+            .lock
+            .unwrap_or(self.cursor_plane.unwrap_or(self.own()).1);
         let (u, v) = self.axes_for(normal);
         let Some(scale) = self.world_per_pixel(p, u) else {
             return vec![];

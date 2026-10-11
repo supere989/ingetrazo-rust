@@ -32,6 +32,7 @@ pub struct ArcTool {
     pub hover_point: Option<DVec3>,
     pub plane_normal: DVec3,
     pub segments: usize,
+    preview_color: Option<[f32; 3]>,
     radius_trim: bool,
     plane: ShapePlane,
     error: Option<String>,
@@ -55,6 +56,7 @@ impl Default for ArcTool {
             hover_point: None,
             plane_normal: DVec3::Z,
             segments: 16,
+            preview_color: None,
             radius_trim: false,
             plane: Default::default(),
             error: None,
@@ -140,6 +142,7 @@ impl ArcTool {
         t
     }
     pub fn reset(&mut self) {
+        self.preview_color = None;
         self.radius_trim = false;
         self.start_point = None;
         self.second_point = None;
@@ -267,6 +270,30 @@ impl ArcTool {
             return None;
         }
         Some(l / 2. * (a / 2.).tan())
+    }
+    fn computed_preview_color(&self) -> Option<[f32; 3]> {
+        if self.mode == ArcMode::TwoPoint && self.start_point.is_some() {
+            if self.second_point.is_none() && self.start_edge.is_some() {
+                return Some(if self.equidistant.is_some() {
+                    ingetrazo_core::snap::COLOR_REFERENCE
+                } else {
+                    ingetrazo_core::snap::COLOR_MIDPOINT
+                });
+            }
+            if let Some(h) = self.snapped_bulge {
+                let tangent = self
+                    .start_point
+                    .zip(self.second_point)
+                    .and_then(|(s, e)| self.tangent.and_then(|t| self.tangent_bulge(s, e, t)))
+                    .is_some_and(|t| t == h);
+                return Some(if tangent && self.fillet.is_some() {
+                    ingetrazo_core::snap::COLOR_REFERENCE
+                } else {
+                    ingetrazo_core::snap::COLOR_MIDPOINT
+                });
+            }
+        }
+        self.plane.lock_color()
     }
     fn curve_tangent_in(mesh: &Mesh, p: DVec3) -> Option<DVec3> {
         for edge in &mesh.edges {
@@ -822,6 +849,7 @@ impl Tool for ArcTool {
         } else if self.mode == ArcMode::TwoPoint && self.second_point.is_some() {
             self.snap_bulge(c.world);
         }
+        self.preview_color = self.computed_preview_color();
     }
     fn on_click(&mut self, s: &mut Scene, c: &ToolContext) {
         if let Err(e) = self.click_result(s, c) {
@@ -1021,28 +1049,7 @@ impl Tool for ArcTool {
         }
     }
     fn preview_color(&self) -> Option<[f32; 3]> {
-        if self.mode == ArcMode::TwoPoint && self.start_point.is_some() {
-            if self.second_point.is_none() && self.start_edge.is_some() {
-                return Some(if self.equidistant.is_some() {
-                    ingetrazo_core::snap::COLOR_REFERENCE
-                } else {
-                    ingetrazo_core::snap::COLOR_MIDPOINT
-                });
-            }
-            if let Some(h) = self.snapped_bulge {
-                let tangent = self
-                    .start_point
-                    .zip(self.second_point)
-                    .and_then(|(s, e)| self.tangent.and_then(|t| self.tangent_bulge(s, e, t)))
-                    .is_some_and(|t| t == h);
-                return Some(if tangent && self.fillet.is_some() {
-                    ingetrazo_core::snap::COLOR_REFERENCE
-                } else {
-                    ingetrazo_core::snap::COLOR_MIDPOINT
-                });
-            }
-        }
-        self.plane.lock_color()
+        self.preview_color
     }
     fn rubber_band_lines(&self) -> Vec<(DVec3, DVec3)> {
         let (Some(start), Some(p)) = (self.start_point, self.hover_point) else {
