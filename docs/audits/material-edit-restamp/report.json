@@ -1,0 +1,14 @@
+{
+  "exact_source_states": 23,
+  "explicit_source_integrity_divergences": 2,
+  "tray_phases": 5,
+  "original_archive_reopens": 5,
+  "rejected_controls": [
+    "empty",
+    "color-drift",
+    "lost-back",
+    "lost-opaque",
+    "retained-old-texture",
+    "missing-phase"
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "runtime_commit": "c6582673",
+  "consumer_commit": "1da9482e",
+  "archive_sha256": "61ea1f3658ffa93eb3a8cf80768e5ee78ee02ece5516f2c168c7ba637c315439",
+  "files": {
+    "source.json": "9dfd2f9a1ca6a9f5ee2879986a6c7e8d7b004b976ee18df64c85f0c324dfd5ed",
+    "native.json": "f37912e310fa2578a0df9728383b8585f53bae521cf0fb4aaf9afe57f25f4124",
+    "tray.json": "bba8885bd7981c258e82fe136403c81a399a4c86210f038be79ca1346fcb2f6e",
+    "reopened.json": "cc1cbc4d26b58c3e8928f9987dcc257c6eb8710245eb18994884328e5f3a5991",
+    "archives/root.igz": "256050f0f2ea4b934dc7eb2e6e4454fffb790d4dd754b649494d9bb323105249",
+    "archives/classic.igz": "7d96cfc7a9880524ced7168fa2ca37d93d8a72a0bb76815cb43b9bce13c4650d",
+    "archives/placed.igz": "b37ba1533927b5ff97c8350994b58340cf49bd5b543b9ef72b5f6e420ccf11d2",
+    "archives/nested.igz": "00dd6edb683a97bfe835d4a833dd858f87c1dcc2be9cab695dc7743d72fc928f",
+    "archives/tray.igz": "744df1b5f56fdc5a37a9b5fe0b81a826f7e4fc61dd4045094f058fe9d7aef4b3",
+    "logs/material-restamp-mixed-tests-2.log": "b7e130e895ba0c7ae6ce16d21e07aed21b2c2c053c2b85fe0d0eee07676220a5",
+    "logs/material-restamp-mixed-tests-3.log": "84210674e3ea3c05befd8da01596a1e689e99b5d7ebffeac30411ec6d7e52ccf",
+    "logs/material-restamp-mixed-tests-5.log": "f07763369a5ff49968c30110b6fd96cda7c30ca7fd47e990c6e85b4f04cb864d",
+    "logs/material-restamp-final-tests.log": "a8bf4d314af1c9913b9844fc5022c7b4cd0b6761d86fd08697a5721449227a7c",
+    "logs/material-restamp-mixed-build.log": "63e63c4410caf13c48adcca89f2077ebdfef448f98ebf8822058d954e6e0b384"
+  },
+  "binaries": {
+    "material_restamp_workflow": "1bc2f312523b3a8d0378c1bc1c3226234bad014af3670432f332ab5fb367d12a",
+    "material_tray_egui": "176ec0e422c8ba293abd4b6b5377d0883b37acab8d273f1961e9dddb204d41a1"
+  }
+}
