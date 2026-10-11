@@ -12,7 +12,7 @@ pub(crate) struct Publication{retirement:super::resources::CompletedRetirement,a
 pub struct Candidate{pool:Option<Pool>,buffers:Vec<BufferId>,draws:Vec<Draw>,images:Vec<PreparedTexture>,references:Option<super::reference_images::Candidate>,pub contours:Vec<(BufferId,u32,u32)>,averages:super::texture_average::Candidate,average_active:HashSet<AssetId>}
 #[derive(Default,Clone,Copy,Debug)]pub struct Stats{pub builds:u64,pub uploads:u64,pub vertex_bytes:u64,pub draws:u64,pub cache_hits:u64,pub rollbacks:u64,pub average_decodes:u64,pub average_hits:u64,pub average_entries:usize,pub sampled_entries:usize}
 pub struct Textures{references:super::reference_images::ReferenceImages,image_key:Option<(u64,u64)>,probe_pressure:bool,budget:std::sync::Arc<super::budget::VulkanBudget>,device:Device,layout:vk::PipelineLayout,descriptor_layout:vk::DescriptorSetLayout,pipelines:[vk::Pipeline;16],billboard_pipelines:[vk::Pipeline;2],averages:super::texture_average::Cache,pool:Option<Pool>,buffers:Vec<BufferId>,draws:Vec<Draw>,cache:TextureCache,pub stats:Stats}
-pub(crate) struct VertexUpdate{old:BufferId,new:BufferId,index:usize,draws:Vec<usize>,bytes:usize}
+pub(crate) struct VertexUpdate{old:BufferId,new:BufferId,index:usize,draws:Vec<usize>,shades:Option<Vec<f32>>,bytes:usize}
 pub(crate) struct VertexRefresh{updates:Vec<VertexUpdate>,retirement:super::resources::CompletedRetirement}
 impl Textures{
  pub(crate) fn asset_layout(&self)->vk::DescriptorSetLayout{self.descriptor_layout}
@@ -33,10 +33,17 @@ impl Textures{
   self.prepare_shadow_mode(context,resources,buffers,assets,scene,fence,completed,storage_limit,average,false,&[])
  }
  pub(crate) fn prepare_shadow_mode(&mut self,context:&VulkanContext,resources:&mut Resources,buffers:&TextureBuffers,assets:&HashMap<String,Vec<u8>>,scene:&ingetrazo_core::scene::Scene,fence:vk::Fence,completed:u64,storage_limit:u64,average:bool,shadow:bool,extra:&[&TextureBuffers])->Result<Candidate,String>{
+  self.prepare_with_references(context,resources,buffers,assets,scene,fence,completed,storage_limit,average,shadow,extra,true)
+ }
+ pub(crate) fn prepare_preview(&mut self,context:&VulkanContext,resources:&mut Resources,buffers:&TextureBuffers,scene:&ingetrazo_core::scene::Scene,fence:vk::Fence,completed:u64,average:bool)->Result<Candidate,String>{
+  let storage_limit=unsafe{context.instance.get_physical_device_properties(context.physical_device)}.limits.max_storage_buffer_range as u64;
+  self.prepare_with_references(context,resources,buffers,&scene.embedded_textures,scene,fence,completed,storage_limit,average,false,&[],false)
+ }
+ pub(crate) fn prepare_with_references(&mut self,context:&VulkanContext,resources:&mut Resources,buffers:&TextureBuffers,assets:&HashMap<String,Vec<u8>>,scene:&ingetrazo_core::scene::Scene,fence:vk::Fence,completed:u64,storage_limit:u64,average:bool,shadow:bool,extra:&[&TextureBuffers],include_references:bool)->Result<Candidate,String>{
   if !unsafe{context.device.get_fence_status(fence)}.map_err(|e|e.to_string())?{return Err("Texture replacement requires completed draw fence".into());}
   let mut candidate=Candidate{pool:None,buffers:vec![],draws:vec![],images:vec![],references:None,contours:vec![],averages:super::texture_average::Candidate::default(),average_active:HashSet::new()};
   let prepare=(||->Result<(),String>{
-   {let _pressure=if self.probe_pressure{let mut ledger=self.budget.ledger.lock().unwrap();let previous=ledger.total_limit;ledger.total_limit=Some(ledger.total_committed());Some(PressureRestore{budget:self.budget.clone(),previous})}else{None};candidate.references=Some(self.references.prepare(context,resources,&mut self.cache,scene,fence).map_err(|e|format!("Reference image admission: {e}"))?);}
+   {let _pressure=if self.probe_pressure{let mut ledger=self.budget.ledger.lock().unwrap();let previous=ledger.total_limit;ledger.total_limit=Some(ledger.total_committed());Some(PressureRestore{budget:self.budget.clone(),previous})}else{None};candidate.references=Some(if include_references{self.references.prepare(context,resources,&mut self.cache,scene,fence).map_err(|e|format!("Reference image admission: {e}"))?}else{super::reference_images::Candidate::empty()});}
    if buffers.is_empty()&&extra.iter().all(|b|b.is_empty()){return Ok(());}
    let count=u32::try_from(buffers.len().checked_add(extra.iter().try_fold(0usize,|n,b|n.checked_add(b.len())).ok_or("Shadow texture count overflow")?).ok_or("Shadow descriptor count overflow")?).map_err(|_|"Too many texture descriptors")?;
    let mut paths=buffers.iter().map(|(p,b)|(p,b,false)).chain(extra.iter().flat_map(|b|b.iter().map(|(p,b)|(p,b,true)))).collect::<Vec<_>>();paths.sort_by_key(|(_,b,_)|b.source_texture_runs.iter().map(|r|r.order).min().unwrap_or(usize::MAX));
@@ -173,13 +180,35 @@ impl Textures{
    let previous=self.draws[matching[0]].buffer;
    for(&i,g)in matching.iter().zip(&geometry.draws){let d=&self.draws[i];if d.buffer!=previous||d.first!=g.first||d.count!=g.count||d.opacity!=1.||d.back||(if shadow{!d.shadow_only}else{!d.billboard}){return Err("Sprite replacement immutable layout".into());}}
    let index=self.buffers.iter().position(|id|*id==previous).ok_or("Sprite buffer ownership")?;
-   let buffer=resources.upload(context,geometry.upload_bytes(),vk::BufferUsageFlags::VERTEX_BUFFER|vk::BufferUsageFlags::STORAGE_BUFFER,false)?;old.push(previous);next.push(buffer);updates.push(VertexUpdate{old:previous,new:buffer,index,draws:matching,bytes:geometry.upload_bytes().len()});
+   let buffer=resources.upload(context,geometry.upload_bytes(),vk::BufferUsageFlags::VERTEX_BUFFER|vk::BufferUsageFlags::STORAGE_BUFFER,false)?;old.push(previous);next.push(buffer);updates.push(VertexUpdate{old:previous,new:buffer,index,draws:matching,shades:None,bytes:geometry.upload_bytes().len()});
   }if self.draws.iter().any(|d|(if shadow{d.shadow_only&&d.bitmap}else{d.billboard})&&!sources.contains_key(&d.path)){return Err("Sprite replacement removes immutable identity".into());}Ok(())})();
   let retirement=match result.and_then(|_|resources.publication_preflight(context,fence,completed,&old,&next)){Ok(proof)=>proof,Err(error)=>{for id in next{resources.retire(id)?;}resources.collect(fence,completed)?;return Err(error);}};
   Ok(VertexRefresh{updates,retirement})
  }
+ /// Offset-only lightweight previews retain immutable images, descriptors and
+ /// asset identity. All draw/layout validation precedes any GPU allocation.
+ pub(crate) fn prepare_preview_vertex_refresh(&mut self,context:&VulkanContext,resources:&mut Resources,sources:&TextureBuffers,fence:vk::Fence,completed:u64)->Result<VertexRefresh,String>{
+  let mut plans=Vec::new();plans.try_reserve(sources.len()).map_err(|_|"Preview refresh plans admission")?;
+  for(path,source)in sources{
+   let geometry=Geometry::prepare(source)?;
+   let mut matching=Vec::new();matching.try_reserve_exact(geometry.draws.len()).map_err(|_|"Preview refresh draw admission")?;
+   matching.extend(self.draws.iter().enumerate().filter(|(_,d)|!d.shadow_only&&!d.billboard&&d.path==*path).map(|(i,_)|i));
+   if matching.len()!=geometry.draws.len()||matching.is_empty(){return Err("Preview refresh immutable run membership".into());}
+   let previous=self.draws[matching[0]].buffer;
+   let mut shades=Vec::new();shades.try_reserve_exact(matching.len()).map_err(|_|"Preview refresh shade admission")?;
+   for(&i,g)in matching.iter().zip(&geometry.draws){let d=&self.draws[i];if d.buffer!=previous||d.first!=g.first||d.count!=g.count||d.opacity!=1.||d.back||d.cull||g.source.opacity!=1.||g.source.back_side||g.source.front_cull{return Err("Preview refresh immutable layout".into());}shades.push(g.source.shade);}
+   let index=self.buffers.iter().position(|id|*id==previous).ok_or("Preview refresh buffer ownership")?;
+   plans.push((previous,index,matching,shades,geometry));
+  }
+  if self.draws.iter().any(|d|d.shadow_only||d.billboard||!sources.contains_key(&d.path)){return Err("Preview refresh removes immutable texture".into());}
+  let mut updates=Vec::new();let mut old=Vec::new();let mut next=Vec::new();
+  updates.try_reserve_exact(plans.len()).map_err(|_|"Preview refresh update admission")?;old.try_reserve_exact(plans.len()).map_err(|_|"Preview refresh old admission")?;next.try_reserve_exact(plans.len()).map_err(|_|"Preview refresh next admission")?;
+  let result=(||{for(previous,index,matching,shades,geometry)in plans{let buffer=resources.upload(context,geometry.upload_bytes(),vk::BufferUsageFlags::VERTEX_BUFFER|vk::BufferUsageFlags::STORAGE_BUFFER,false)?;old.push(previous);next.push(buffer);updates.push(VertexUpdate{old:previous,new:buffer,index,draws:matching,shades:Some(shades),bytes:geometry.upload_bytes().len()});}resources.publication_preflight(context,fence,completed,&old,&next)})();
+  let retirement=match result{Ok(proof)=>proof,Err(error)=>{for id in next{resources.retire(id)?;}resources.collect(fence,completed)?;return Err(error);}};
+  Ok(VertexRefresh{updates,retirement})
+ }
  pub(crate) fn publish_vertex_refresh(&mut self,resources:&mut Resources,candidate:VertexRefresh){
-  for update in candidate.updates{debug_assert_eq!(self.buffers[update.index],update.old);self.buffers[update.index]=update.new;for index in update.draws{self.draws[index].buffer=update.new;}self.stats.uploads+=1;self.stats.vertex_bytes+=update.bytes as u64;}resources.retire_completed(candidate.retirement);
+  for update in candidate.updates{debug_assert_eq!(self.buffers[update.index],update.old);self.buffers[update.index]=update.new;for (slot,index) in update.draws.into_iter().enumerate(){self.draws[index].buffer=update.new;if let Some(shades)=&update.shades{self.draws[index].shade=shades[slot];}}self.stats.uploads+=1;self.stats.vertex_bytes+=update.bytes as u64;}resources.retire_completed(candidate.retirement);
  }
  pub(crate) fn abort_vertex_refresh(&mut self,resources:&mut Resources,candidate:VertexRefresh,fence:vk::Fence,completed:u64)->Result<(),String>{for update in candidate.updates{resources.retire(update.new)?;}resources.collect(fence,completed)?;Ok(())}
  pub(crate) fn refresh_shadow_bitmaps(&mut self,context:&VulkanContext,resources:&mut Resources,sources:&TextureBuffers,fence:vk::Fence,completed:u64)->Result<(),String>{let candidate=self.prepare_vertex_refresh(context,resources,sources,fence,completed,true)?;self.publish_vertex_refresh(resources,candidate);Ok(())}

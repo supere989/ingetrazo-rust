@@ -1462,10 +1462,14 @@ impl App for crate::IngeTrazoApp {
             let scale=system.egui_ctx.pixels_per_point();let [width,height]=crate::viewport_extent::scene_extent([rect.width() as f64,rect.height() as f64],scale as f64)?;let extent=vk::Extent2D{width,height};self.native_gpu_viewport_texture=Some(world.resize(&system.vulkan_context,&mut system.renderer,extent)?);
             world.set_display_scale(system.egui_ctx.pixels_per_point());
             let sun=crate::solar_controls::scene_direction(self).unwrap_or(None);
+            let sweep=world.prepare_face_sweep(&system.vulkan_context,&self.scene,&self.camera,&self.style,self.active_tool.face_sweep_preview(),self.model_revision,system.fence,system.draw_serial)?;
+            let scene_result=
             if sun.is_some()||world.has_shadow_owner(){
                 let ground=world::World::solar_ground_receiver_for_scene(&self.scene);
                 world.set_scene_with_sun(&system.vulkan_context,&self.scene,&self.camera,&self.style,system.fence,system.draw_serial,self.native_geometry_revision,sun,self.scene.shadows.darkness as f32,ground)
-            }else{world.set_scene(&system.vulkan_context,&self.scene,&self.camera,&self.style,system.fence,system.draw_serial,self.native_geometry_revision)}
+            }else{world.set_scene(&system.vulkan_context,&self.scene,&self.camera,&self.style,system.fence,system.draw_serial,self.native_geometry_revision)};
+            if let Err(error)=scene_result{world.abort_face_sweep(sweep,system.fence,system.draw_serial)?;return Err(error);}
+            world.publish_face_sweep(sweep,&self.scene,system.draw_serial);Ok(())
         })();
         if let Err(error)=result {
             // The collected overlay may still reference the prior target/scene.
