@@ -1,0 +1,74 @@
+{
+  "compiled_runtime": "ca69dbf4ad7a34ad7c84edd2a2522297266e5505",
+  "build": {
+    "revision": "ca69dbf4ad7a34ad7c84edd2a2522297266e5505",
+    "seconds": 6.340180874976795,
+    "exit_code": 0,
+    "command": [
+      "cargo",
+      "build",
+      "--locked",
+      "-p",
+      "ingetrazo-cli",
+      "-p",
+      "ingetrazo-gui",
+      "--bin",
+      "ingetrazo",
+      "--example",
+      "zoom_extents_workflow",
+      "--example",
+      "cursor_navigation_workflow",
+      "-j2"
+    ]
+  },
+  "zoom": {
+    "reference_sessions_exact": 12,
+    "camera_states_exact": 24,
+    "mode_transition_states_exact": 4,
+    "atomic_refusals": 3,
+    "model_history_unchanged": 12,
+    "rejected_controls": [
+      "empty-corpus",
+      "missing-case",
+      "duplicate-case",
+      "target",
+      "distance",
+      "mode",
+      "history",
+      "missing-refusal",
+      "resumed-two-point",
+      "hidden-wire-omitted",
+      "hidden-face-omitted"
+    ]
+  },
+  "cursor": {
+    "core_exact": 7,
+    "source_sessions_exact": 6,
+    "event_states_exact": 18,
+    "strict_negatives_rejected": 6
+  },
+  "fresh_source_acquisitions": 0,
+  "binaries": {
+    "ingetrazo": "c9d5731bc5288ced57af7923fc630e2f7c7deaad3ee3be0405e49c478146a53f",
+    "zoom_extents_workflow": "d79bc4d66ef5cfbfaae4ac2d844952d2b54233cec609116bf0a3114268ac4e3a",
+    "cursor_navigation_workflow": "452bd1e3b8602e1a0cf6b1d547a05ab57e91ce0a573e6947dd1b121d1ce41b56"
+  },
+  "criterion": "Saved views restored; cursor pivot, zoom extents and perspective modes verified with reference sessions.",
+  "disposition": "P16 Verified after independent source/archive review and focused integrated replay; no broader OS/GPU claim",
+  "evidence_map": {
+    "saved_views": [
+      "../saved-view-history/README.md",
+      "../saved-view-identities/README.md"
+    ],
+    "cursor_pivot": [
+      "../cursor-pivot-navigation/README.md"
+    ],
+    "zoom_extents": [
+      "../zoom-extents/README.md"
+    ],
+    "projection_modes": [
+      "../zoom-extents/README.md",
+      "../annotation-real-camera-snapshot/README.md"
+    ]
+  }
+}

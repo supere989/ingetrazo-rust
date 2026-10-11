@@ -48,5 +48,99 @@
     "a017a70e",
     "96aebc63"
   ],
-  "capture_reuse": "First ten source case objects and IGZ bytes verified unchanged; only hidden-wire/hidden-face and projection transition newly captured."
+  "capture_reuse": "First ten source case objects and IGZ bytes verified unchanged; only hidden-wire/hidden-face and projection transition newly captured.",
+  "records": {
+    "capture/parallel.igz": {
+      "sha256": "1a31324e8f4e9dfc2041c6e423409bfe5cd538511995cdcce718460d160ce67e",
+      "bytes": 1317
+    },
+    "capture/perspective.igz": {
+      "sha256": "1a31324e8f4e9dfc2041c6e423409bfe5cd538511995cdcce718460d160ce67e",
+      "bytes": 1317
+    },
+    "capture/two-point.igz": {
+      "sha256": "1a31324e8f4e9dfc2041c6e423409bfe5cd538511995cdcce718460d160ce67e",
+      "bytes": 1317
+    },
+    "capture/portrait.igz": {
+      "sha256": "1a31324e8f4e9dfc2041c6e423409bfe5cd538511995cdcce718460d160ce67e",
+      "bytes": 1317
+    },
+    "capture/hidden-nested.igz": {
+      "sha256": "f59953fb16a4227a6b2327e57933a278b93e12cca02a24d3f88c8fdc88d9742f",
+      "bytes": 4453
+    },
+    "capture/empty.igz": {
+      "sha256": "fa9c2cb30d4f8afe1b3ec1c99587362006d5da0d620cfb3d0663a617138b1f20",
+      "bytes": 325
+    },
+    "capture/orphan.igz": {
+      "sha256": "fa9c2cb30d4f8afe1b3ec1c99587362006d5da0d620cfb3d0663a617138b1f20",
+      "bytes": 325
+    },
+    "capture/figure-only.igz": {
+      "sha256": "369c4d15299ace9edd83c31e838dd9ead08766280396bfea97e1d77bd717b6bd",
+      "bytes": 2135
+    },
+    "capture/survey-only.igz": {
+      "sha256": "48c2d9effe0d65b0013811bc544d8b7f1befb1d543f4096fb7d0c67e65c548f2",
+      "bytes": 1107
+    },
+    "capture/survey-hidden.igz": {
+      "sha256": "cbe42f478857f0f07f2cc8f9b263afa539db2cace0cf1c797ce5880d6bc6f83a",
+      "bytes": 1107
+    },
+    "capture/source.json": {
+      "sha256": "511eec8bb832458eee6277c2fc39b35f8abf162dd97076a225c9d2db7a4f53a8",
+      "bytes": 12814
+    },
+    "capture/native.json": {
+      "sha256": "6f226e1877b5883e7c3b863e3cfb040c3664f07983dd9e3d52a3e8e28f633f1e",
+      "bytes": 8710
+    },
+    "capture/hidden-wire.igz": {
+      "sha256": "c1435f55f299ba0439a09e43a0bb3c0b30e484454f8b32d47cce0cbb2da62cc3",
+      "bytes": 1501
+    },
+    "capture/hidden-face.igz": {
+      "sha256": "4b4a39e7fb54bfa882a4f2f1d936dad0eb80f7a9d1d688c1bba834967a9327f7",
+      "bytes": 2337
+    },
+    "logs/zoom-extents-build.log": {
+      "sha256": "b66238982372605bc136924d51dc9ee3ad19c7829d4b06a4222dfc361cb7629b",
+      "bytes": 32492
+    },
+    "logs/zoom-extents-build-2.log": {
+      "sha256": "27b76d392d5b7f0658c7021240c41380cb419cc86f52fcafa7cb05e8a8407964",
+      "bytes": 19685
+    },
+    "logs/zoom-extents-build-final.log": {
+      "sha256": "7a0eb9824a1c3ff377c313d34915fc62dc7afdcf54cacd796f4805b8204e5c61",
+      "bytes": 19685
+    },
+    "logs/zoom-extents-edge-build.log": {
+      "sha256": "51f8e76ef85a803e36011bd732c4b2bb3292e96995388b7aaa89668a13eead98",
+      "bytes": 19685
+    },
+    "logs/zoom-extents-mode-build.log": {
+      "sha256": "3375476946aef1acea9628f3b3d43dfb9cf49b5ccbd46045391ce78f2780bb31",
+      "bytes": 20107
+    },
+    "logs/zoom-extents-mode-build2.log": {
+      "sha256": "01c9ea6319f8345c5585df089c1620e27915dfe77c362629ccc5633e07584c33",
+      "bytes": 20107
+    },
+    "logs/zoom-extents-mode-build3.log": {
+      "sha256": "01c9ea6319f8345c5585df089c1620e27915dfe77c362629ccc5633e07584c33",
+      "bytes": 20107
+    },
+    "logs/menu-hit-failure-summary.txt": {
+      "sha256": "b2ca4ee41f1f7112a326484469363d5e8f0b81668e9379f6ec6348bf12e2d342",
+      "bytes": 265
+    },
+    "logs/zoom-extents-mode-build4.log": {
+      "sha256": "aa60a844eb72448f7f48a955cce8cc18ef64230bc8e4d8e97bad80cd53c490a8",
+      "bytes": 20380
+    }
+  }
 }
