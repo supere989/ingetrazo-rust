@@ -9,6 +9,9 @@ use ingetrazo_gui::native_vulkan::{
 use std::sync::Arc;
 pub fn main() -> Result<(), Box<dyn std::error::Error>> {
     let args = std::env::args().collect::<Vec<_>>();
+    let source_camera=args.iter().any(|a|a=="--source-camera");
+    macro_rules! prepare_scene {($world:expr,$($argument:expr),*)=>{if source_camera{$world.set_scene_with_source_camera_for_probe($($argument),*)}else{$world.set_scene($($argument),*)}}}
+
     let root = std::path::PathBuf::from(&args[1]);
     let out = std::path::PathBuf::from(&args[2]);
     std::fs::create_dir_all(&out)?;
@@ -44,6 +47,9 @@ pub fn main() -> Result<(), Box<dyn std::error::Error>> {
     let mut rows = Vec::new();
     for case in original["cases"].as_array().unwrap() {
         let name = case["case"].as_str().unwrap();
+        let selected=args.windows(2).filter(|pair|pair[0]=="--case").map(|pair|pair[1].as_str()).collect::<Vec<_>>();
+        if !selected.is_empty()&&!selected.contains(&name){continue;}
+
         let mut scene = ingetrazo_formats::igz::load_igz(&root.join(format!("{name}.igz")))?;
         let mut camera = ingetrazo_core::camera::OrbitCamera::default();
         camera.set_standard_view(if case["camera_view"].as_str()==Some("iso"){ingetrazo_core::camera::StandardView::Iso}else{ingetrazo_core::camera::StandardView::Top});
@@ -69,15 +75,15 @@ pub fn main() -> Result<(), Box<dyn std::error::Error>> {
                 height: 600,
             },
         )?;
-        world.set_scene(&context, &scene, &camera, &style, fence, 0, 1)?;
-        world.set_scene(&context, &scene, &camera, &style, fence, 0, 1)?;
+        prepare_scene!(world,&context, &scene, &camera, &style, fence, 0, 1)?;
+        prepare_scene!(world,&context, &scene, &camera, &style, fence, 0, 1)?;
         assert_eq!(world.uploads, 1);
         let mut warm_pose_metrics=serde_json::Value::Null;
         if !scene.image_planes.is_empty(){
             let frame=[scene.image_planes[0].origin,scene.image_planes[0].u,scene.image_planes[0].v];
             let uploads=world.texture_stats().1.uploads;let geometry=world.uploads;let hashes=world.texture_stats().1.hashes;let decodes=world.texture_stats().1.decodes;
-            for i in 1..11{scene.image_planes.pose_mut(0).unwrap().set_origin(frame[0]+DVec3::X*(i as f64/10.));world.set_scene(&context,&scene,&camera,&style,fence,0,1)?;}
-            scene.image_planes.pose_mut(0).unwrap().set_frame(frame);world.set_scene(&context,&scene,&camera,&style,fence,0,1)?;
+            for i in 1..11{scene.image_planes.pose_mut(0).unwrap().set_origin(frame[0]+DVec3::X*(i as f64/10.));prepare_scene!(world,&context,&scene,&camera,&style,fence,0,1)?;}
+            scene.image_planes.pose_mut(0).unwrap().set_frame(frame);prepare_scene!(world,&context,&scene,&camera,&style,fence,0,1)?;
             assert_eq!(world.uploads,geometry,"pose-only image update rebuilt geometry");assert_eq!(world.texture_stats().1.uploads,uploads,"pose-only image update uploaded image");warm_pose_metrics=serde_json::json!({"pose_updates":11,"geometry_uploads":world.uploads-geometry,"image_uploads":world.texture_stats().1.uploads-uploads,"hashes":world.texture_stats().1.hashes-hashes,"decodes":world.texture_stats().1.decodes-decodes});
         }
 
@@ -85,10 +91,10 @@ pub fn main() -> Result<(), Box<dyn std::error::Error>> {
             let committed=budget.ledger.lock().unwrap().total_committed();
             for mode in [ingetrazo_render::style::VisualStyle::Wireframe,ingetrazo_render::style::VisualStyle::XRay,ingetrazo_render::style::VisualStyle::HiddenLine,ingetrazo_render::style::VisualStyle::Monochrome] {
                 let mut changed=style.clone();changed.visual_style=mode;changed.front_color=[0.3,0.2,0.1,1.];changed.back_color=[0.1,0.2,0.3,1.];
-                world.set_scene(&context,&scene,&camera,&changed,fence,0,1)?;
+                prepare_scene!(world,&context,&scene,&camera,&changed,fence,0,1)?;
                 assert_eq!(world.uploads,1,"style-only change must reuse cached geometry");if !scene.show_section_cuts {assert_eq!(budget.ledger.lock().unwrap().total_committed(),committed);} // Cap visibility has separate legitimate allocation.
             }
-            world.set_scene(&context,&scene,&camera,&style,fence,0,1)?;
+            prepare_scene!(world,&context,&scene,&camera,&style,fence,0,1)?;
         }
         unsafe {
             context
@@ -118,31 +124,31 @@ pub fn main() -> Result<(), Box<dyn std::error::Error>> {
             image::ColorType::Rgba8,
         )?;
         let before=world.texture_stats();let warm=(before.0.uploads,before.1.hashes,before.1.decodes,before.1.uploads);
-        world.set_scene(&context,&scene,&camera,&style,fence,1,1)?;
+        prepare_scene!(world,&context,&scene,&camera,&style,fence,1,1)?;
         let after=world.texture_stats();assert_eq!(warm,(after.0.uploads,after.1.hashes,after.1.decodes,after.1.uploads),"Warm scene reuses actual sampled images and geometry");
         if name=="image-quadrants" {
             // Original XRay samples existing opaque texture runs, even when
             // show_textures is false. Presentation must not rehash/reupload.
             let world_uploads=world.uploads;
             let mut xray=style.clone();xray.visual_style=ingetrazo_render::style::VisualStyle::XRay;xray.show_textures=false;
-            world.set_scene(&context,&scene,&camera,&xray,fence,1,1)?;
+            prepare_scene!(world,&context,&scene,&camera,&xray,fence,1,1)?;
             let stats=world.texture_stats();assert_eq!(warm,(stats.0.uploads,stats.1.hashes,stats.1.decodes,stats.1.uploads));assert_eq!(world.uploads,world_uploads);
-            world.set_scene(&context,&scene,&camera,&style,fence,1,1)?;
+            prepare_scene!(world,&context,&scene,&camera,&style,fence,1,1)?;
             let old=budget.ledger.lock().unwrap().total_committed();
             for bytes in scene.embedded_textures.values_mut(){bytes.push(0);}
             scene.version+=1;
             unsafe{context.device.reset_fences(&[fence])?;}
-            let refused=world.set_scene(&context,&scene,&camera,&style,fence,1,1).expect_err("Incomplete draw fence must refuse resource replacement");assert!(refused.contains("completed draw fence"));assert_eq!(budget.ledger.lock().unwrap().total_committed(),old);assert_eq!(world.texture_stats().1.hashes,warm.1,"Fence refusal precedes decode/hash/upload");
+            let refused=prepare_scene!(world,&context,&scene,&camera,&style,fence,1,1).expect_err("Incomplete draw fence must refuse resource replacement");assert!(refused.contains("completed draw fence"));assert_eq!(budget.ledger.lock().unwrap().total_committed(),old);assert_eq!(world.texture_stats().1.hashes,warm.1,"Fence refusal precedes decode/hash/upload");
             unsafe{context.device.queue_submit(context.graphics_queue,&[vk::SubmitInfo::default()],fence)?;}context.wait_transfer(fence)?;
             world.set_texture_pressure_for_probe(true);
-            let error=world.set_scene(&context,&scene,&camera,&style,fence,1,1).expect_err("Real allocation pressure must refuse replacement");
+            let error=prepare_scene!(world,&context,&scene,&camera,&style,fence,1,1).expect_err("Real allocation pressure must refuse replacement");
             world.set_texture_pressure_for_probe(false);assert!(error.contains("Reference image admission"),"Pressure must reach actual image admission: {error}");
             assert_eq!(budget.ledger.lock().unwrap().total_committed(),old,"Failed replacement must preserve old cached allocation ledger");
             unsafe {context.device.reset_command_buffer(commands[0],vk::CommandBufferResetFlags::empty())?;context.device.begin_command_buffer(commands[0],&vk::CommandBufferBeginInfo::default())?;}
             world.record(commands[0],2)?;
             unsafe {context.device.end_command_buffer(commands[0])?;context.device.reset_fences(&[fence])?;context.device.queue_submit(context.graphics_queue,&[vk::SubmitInfo::default().command_buffers(&commands)],fence)?;}
             context.wait_transfer(fence)?;let restored=world.readback(&context)?;assert!(restored==image,"Actual sampled draw after failed image replacement must preserve every old pixel");
-            world.set_scene(&context,&scene,&camera,&style,fence,2,1)?;assert_eq!(world.texture_stats().1.retired,1,"Old image retires only after its sampled draw fence completes");
+            prepare_scene!(world,&context,&scene,&camera,&style,fence,2,1)?;assert_eq!(world.texture_stats().1.retired,1,"Old image retires only after its sampled draw fence completes");
             eprintln!("Texture replacement pressure refused: {error}; old sampled image and ledger preserved; replacement retry and fenced image retirement passed");
         }
         let samples=case["points"].as_array().unwrap().iter().map(|p|{let x=p[0].as_u64().unwrap()as usize;let y=p[1].as_u64().unwrap()as usize;let i=(y*800+x)*4;image[i..i+4].to_vec()}).collect::<Vec<_>>();

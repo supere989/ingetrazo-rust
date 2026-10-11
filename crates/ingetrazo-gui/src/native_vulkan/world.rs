@@ -358,6 +358,8 @@ impl World {
   let mvp=matrix;
   Ok((matrix,mvp))
  }
+ /// Engineering consumer route for paired native/portable source-camera captures.
+ pub fn set_scene_with_source_camera_for_probe(&mut self,context:&VulkanContext,scene:&ingetrazo_core::scene::Scene,camera:&ingetrazo_core::camera::OrbitCamera,style:&ingetrazo_render::style::StyleConfig,fence:vk::Fence,completed:u64,epoch:u64)->Result<(),String>{self.set_scene_with_source_camera(context,scene,camera,style,fence,completed,epoch)}
  pub(super) fn set_scene_with_source_camera(&mut self,context:&VulkanContext,scene:&ingetrazo_core::scene::Scene,camera:&ingetrazo_core::camera::OrbitCamera,style:&ingetrazo_render::style::StyleConfig,fence:vk::Fence,completed:u64,epoch:u64)->Result<(),String>{
   let (matrix,mvp)=self.source_camera_projection(camera)?;
   self.set_scene(context,scene,camera,style,fence,completed,epoch)?;
