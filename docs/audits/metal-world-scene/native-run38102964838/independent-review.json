@@ -1,0 +1,25 @@
+{
+  "source": "afb3755b435811939772f06e187c58f8c5123367",
+  "run": 38102964838,
+  "arm": {
+    "sdk": "PASS",
+    "four_frames": "PASS",
+    "interior_pixels": 475,
+    "camera_upload_bytes": 0,
+    "changed_model_upload_bytes": 64,
+    "catalog_builds": 1,
+    "geometry_uploads": 2,
+    "draw_order_builds": 1,
+    "warm_cpu_payload_bytes": 1556,
+    "ledger": [
+      0,
+      0
+    ]
+  },
+  "intel": {
+    "sdk": "PASS",
+    "runtime": "REFUSED before first frame",
+    "cause": "World native texture size query unavailable: requested_bytes=16384, queried_size=0, queried_align=0, extent=64x64, format=MTLPixelFormat(70), storage=MTLStorageMode(2), hazard=MTLHazardTrackingMode(2), usage=MTLTextureUsage(5), device=Apple Paravirtual device, default_query=0/0, untracked_query=0/0, family_apple2=false, family_mac2=false, family_common3=false, low_power=false, headless=false"
+  },
+  "scope": "Borrowed Scene adapter/offscreen opaque source grouping and accepted pose buffer. No app host/full viewport/presentation acceptance. Intel allocation bound refusal preserved; no retry."
+}
