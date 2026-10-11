@@ -9,6 +9,10 @@ fn points(app: &IngeTrazoApp, a: DVec3, b: DVec3) {
 }
 fn main() {
     let dir = std::path::PathBuf::from(std::env::args().nth(1).unwrap());
+    if std::env::args().nth(2).as_deref() == Some("--admission") {
+        admission(&dir);
+        return;
+    }
     let mut app = IngeTrazoApp::new();
     app.scene = ingetrazo_formats::igz::load_igz(&dir.join("source.igz")).unwrap();
     let vertex = app
@@ -98,10 +102,16 @@ fn main() {
     save(&app, &dir, "context");
     let after = app.scene.clone();
     app.undo();
-    assert_eq!(app.scene.groups,before.groups);assert_eq!(app.scene.mesh_shares,before.mesh_shares);
-    assert_eq!(app.scene.dimensions.len(),2);assert_eq!(app.scene.dimensions[1].end,DVec3::new(14.,20.,30.));assert!(app.scene.dimensions[1].anchor_b.is_none());
+    assert_eq!(app.scene.groups, before.groups);
+    assert_eq!(app.scene.mesh_shares, before.mesh_shares);
+    assert_eq!(app.scene.dimensions.len(), 2);
+    assert_eq!(app.scene.dimensions[1].end, DVec3::new(14., 20., 30.));
+    assert!(app.scene.dimensions[1].anchor_b.is_none());
     app.redo();
-    assert_eq!(app.scene.groups,after.groups);assert_eq!(app.scene.mesh_shares,after.mesh_shares);assert_eq!(app.scene.dimensions[1].end,DVec3::new(14.,20.,30.));assert!(app.scene.dimensions[1].anchor_b.is_none());
+    assert_eq!(app.scene.groups, after.groups);
+    assert_eq!(app.scene.mesh_shares, after.mesh_shares);
+    assert_eq!(app.scene.dimensions[1].end, DVec3::new(14., 20., 30.));
+    assert!(app.scene.dimensions[1].anchor_b.is_none());
     assert!(!app.edit_dimension(0, None, Some("invalid".into()), None));
     let before = app.scene.clone();
     assert!(app.edit_dimension(
@@ -183,4 +193,69 @@ fn main() {
         DVec3::new(111., 222., 333.),
         DVec3::new(112., 222., 333.),
     );
+}
+
+fn admission(dir: &std::path::Path) {
+    use ingetrazo_tools::base::{ToolContext, ToolType};
+    use serde_json::{json, Value};
+    let source: Value =
+        serde_json::from_slice(&std::fs::read(dir.join("admission-original.json")).unwrap())
+            .unwrap();
+    let mut rows = Vec::new();
+    for c in source["cases"].as_array().unwrap() {
+        let case = c["case"].as_str().unwrap();
+        let mut a = IngeTrazoApp::new();
+        a.system_clipboard = None;
+        a.scene = ingetrazo_formats::igz::load_igz(&dir.join(format!("{case}-input.igz"))).unwrap();
+        let record = |a: &mut IngeTrazoApp, phase: &str| {
+            a.scene.refresh_dimensions();
+            json!({"case":case,"phase":phase,"dimensions":a.scene.dimensions.iter().map(|d|json!({"a":d.start.to_array(),"b":d.end.to_array(),"offset":d.offset.to_array(),"axis":d.axis,"anchored":[d.anchor_a.is_some(),d.anchor_b.is_some()]})).collect::<Vec<_>>(),"selection":a.scene.selection.len(),"undo":a.undo_stack.len(),"redo":a.redo_stack.len()})
+        };
+        rows.push(record(&mut a, "before"));
+        a.set_tool(ToolType::Dimension);
+        for p in c["clicks"].as_array().unwrap() {
+            let p = DVec3::new(
+                p[0].as_f64().unwrap(),
+                p[1].as_f64().unwrap(),
+                p[2].as_f64().unwrap(),
+            );
+            a.dispatch_tool_click(&ToolContext::new(
+                p,
+                ingetrazo_core::math::Ray::new(DVec3::new(50., 50., 50.), -DVec3::Z),
+            ));
+        }
+        rows.push(record(&mut a, "create"));
+        a.undo();
+        rows.push(record(&mut a, "create-undo"));
+        a.redo();
+        rows.push(record(&mut a, "create-redo"));
+        a.scene.select(if case == "near" || case == "outside" {
+            SelectionItem::Edge(0)
+        } else {
+            SelectionItem::Group(0)
+        });
+        a.set_tool(ToolType::Move);
+        a.dispatch_tool_click(&ToolContext::new(
+            DVec3::ZERO,
+            ingetrazo_core::math::Ray::new(DVec3::new(50., 50., 50.), -DVec3::Z),
+        ));
+        let m = ToolContext::new(
+            DVec3::new(1., 2., 0.),
+            ingetrazo_core::math::Ray::new(DVec3::new(50., 50., 50.), -DVec3::Z),
+        );
+        a.dispatch_tool_move(&m);
+        a.dispatch_tool_click(&m);
+        rows.push(record(&mut a, "move"));
+        a.undo();
+        rows.push(record(&mut a, "undo"));
+        a.redo();
+        rows.push(record(&mut a, "redo"));
+        a.save_to_path(&dir.join(format!("{case}-native.igz")));
+        assert!(dir.join(format!("{case}-native.igz")).exists());
+    }
+    std::fs::write(
+        dir.join("admission-native.json"),
+        serde_json::to_vec_pretty(&json!({"cases":source["cases"],"states":rows})).unwrap(),
+    )
+    .unwrap();
 }
