@@ -134,13 +134,9 @@ pub fn main() -> Result<(), Box<dyn std::error::Error>> {
                 "real chapel textures must exercise cold source-average decoding"
             );
         }
-        if scene.image_planes.len() == 0 {
-            assert_eq!(
-                (cold.2, cold.3),
-                (0, 0),
-                "shaded surface means must not decode/upload sampled GPU images"
-            );
-        }
+        // Shaded opaque surfaces use means; translucent surfaces still sample.
+        // The focused shaded-translucent corpus asserts both cache paths and
+        // their coexistence for a shared asset. No all-shaded/no-images assumption.
         for _ in 0..3 {
             world.set_scene(&context, &scene, &camera, &style, fence, 0, 1)?;
             assert_eq!(world.uploads, 1);
