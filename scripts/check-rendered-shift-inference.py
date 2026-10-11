@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Actual native pointer/key events through a rendered production viewport."""
-import ctypes as C,ctypes.util,json,os,subprocess,tempfile,time,select,struct,zlib
+import argparse,ctypes as C,ctypes.util,json,os,subprocess,tempfile,time,select,struct,zlib
 from pathlib import Path
 from acceptance_context import context
 def wait(fn,seconds=20):
@@ -16,7 +16,14 @@ def wait(fn,seconds=20):
 from png_capture import valid_png
 
 def main():
- subprocess.run(["cargo","build","--locked","-p","ingetrazo-gui","--example","shift_inference_render_fixture"],check=True)
+ parser=argparse.ArgumentParser(description=__doc__);parser.add_argument("--prebuilt-dir",type=Path,help="Explicit freshly built native example directory; no Cargo invocation")
+ args=parser.parse_args()
+ if args.prebuilt_dir is None:
+  subprocess.run(["cargo","build","--locked","-j2","-p","ingetrazo-gui","--example","shift_inference_render_fixture"],check=True)
+  binary=Path(os.environ.get("CARGO_TARGET_DIR","target"))/"debug/examples/shift_inference_render_fixture"
+ else:binary=args.prebuilt_dir/"shift_inference_render_fixture"
+ assert binary.is_file(),"Missing explicitly selected example binary"
+ binary=binary.resolve()
  directory=Path(os.environ.get("INGETRAZO_RENDER_AUDIT_DIR","docs/audits/shift-inference-render"));directory.mkdir(exist_ok=True)
  for p in directory.iterdir():
   if p.name in ("state.json","capture.txt","before.png","locked.png","released.png","cancelled.png","committed.png","committed.igz"):p.unlink()
@@ -26,7 +33,7 @@ def main():
   try:
    assert select.select([server.stdout],[],[],10)[0];display=server.stdout.readline().strip();assert display.isdigit()
    env=os.environ.copy();env["DISPLAY"]=":"+display;env["XDG_RUNTIME_DIR"]=t;env["LIBGL_ALWAYS_SOFTWARE"]="1";env.pop("WAYLAND_DISPLAY",None)
-   log=open(directory/"runtime.log","w");app=subprocess.Popen(["target/debug/examples/shift_inference_render_fixture",str(directory.resolve())],env=env,stdout=log,stderr=log)
+   log=open(directory/"runtime.log","w");app=subprocess.Popen([str(binary),str(directory.resolve())],env=env,stdout=log,stderr=log)
    state=lambda:json.loads((directory/"state.json").read_text())
    initial=wait(lambda:state() if state()["faces"]==0 else None)
    x=C.CDLL(ctypes.util.find_library("X11"));x.XOpenDisplay.argtypes=[C.c_char_p];x.XOpenDisplay.restype=C.c_void_p;d=x.XOpenDisplay(env["DISPLAY"].encode());assert d
