@@ -1,0 +1,304 @@
+{
+  "revision": "b2db5db23ec0d6b8ec418cfa6340132e443aa5cd",
+  "run": 38136765563,
+  "job": 114462115565,
+  "artifact": 11701251684,
+  "artifact_sha256": "0629cc8b92e165f3d9b645140840cbbd82c9618e7d553e7b85ba1b98ded0d96d",
+  "runner_source_hashes_verified": 160,
+  "additional_git_blob_hashes_not_runner_inventory": {
+    "crates/ingetrazo-formats/src/annotation_font.rs": "1378178a5d30ce6543e89f101c590e97f708370e868500975f067a60746c802e",
+    "crates/ingetrazo-formats/src/paper_font.rs": "23b63aae0dc1ff53ca728c6e2138406a0f5591b6d09fd084bc6c6a376f36d6f3",
+    "crates/ingetrazo-formats/src/paper_text.rs": "470daa53463838293cb5a2616cbe628c8840d82e679544482c1cdd919e38b702",
+    "crates/ingetrazo-formats/src/paper_coretext_glyph.rs": "fdf660fd1684697241ec11eb34116c53b5f2f3c3f1b37fec5c33dd236d47ecad",
+    "scripts/reference-macos-annotation-glyphs.py": "9930aaf75e04b1a94b5ed264b145d2e656e548e423bea2917564851fbcf8b2a8",
+    "scripts/check-macos-annotation-glyphs.py": "9935aa045e06e61de1509d8149d8077f7602d38fbc88d79424ef3cee4e7b0713"
+  },
+  "binary_hashes": [
+    "879ab5d84dc352b6a736bbb2732333369ccc628a93bc1e61ae5534ad5c1f625d  target/debug/examples/native_metal_hidden_ghost",
+    "7bed4c27f9abc6cf6c50d3b8cdd681573866fe0fc3587d89f0c4085420dd9dfd  target/debug/examples/native_metal_world_classic",
+    "8459d0900ff0a38233adcdebbf2b39c3a14d4202c83cfca396506df8217e589c  target/debug/examples/native_metal_world_material",
+    "364a236ae0847c9b5a05bbf23c32ac7f857eed97bffb775c8afcabd7950bdfd7  target/debug/examples/native_metal_face_sweep"
+  ],
+  "sweep_runtime": "passed",
+  "strict_sweep": {
+    "functional_passed": true,
+    "strict_pixels_passed": false,
+    "frames": 24,
+    "negative_controls": 7,
+    "differences": [
+      {
+        "case": "reversed-door",
+        "phase": "base",
+        "different_pixels": 71908,
+        "maximum_channel_error": 226
+      },
+      {
+        "case": "reversed-door",
+        "phase": "preview",
+        "different_pixels": 93795,
+        "maximum_channel_error": 209
+      },
+      {
+        "case": "reversed-door",
+        "phase": "offset",
+        "different_pixels": 93126,
+        "maximum_channel_error": 211
+      },
+      {
+        "case": "reversed-door",
+        "phase": "cancel",
+        "different_pixels": 71908,
+        "maximum_channel_error": 226
+      },
+      {
+        "case": "lone-sheet",
+        "phase": "base",
+        "different_pixels": 468,
+        "maximum_channel_error": 215
+      },
+      {
+        "case": "lone-sheet",
+        "phase": "preview",
+        "different_pixels": 9825,
+        "maximum_channel_error": 215
+      },
+      {
+        "case": "lone-sheet",
+        "phase": "offset",
+        "different_pixels": 14069,
+        "maximum_channel_error": 211
+      },
+      {
+        "case": "lone-sheet",
+        "phase": "cancel",
+        "different_pixels": 468,
+        "maximum_channel_error": 215
+      },
+      {
+        "case": "front-recess",
+        "phase": "base",
+        "different_pixels": 465,
+        "maximum_channel_error": 223
+      },
+      {
+        "case": "front-recess",
+        "phase": "preview",
+        "different_pixels": 15882,
+        "maximum_channel_error": 209
+      },
+      {
+        "case": "front-recess",
+        "phase": "offset",
+        "different_pixels": 15890,
+        "maximum_channel_error": 210
+      },
+      {
+        "case": "front-recess",
+        "phase": "cancel",
+        "different_pixels": 465,
+        "maximum_channel_error": 223
+      },
+      {
+        "case": "back-recess",
+        "phase": "base",
+        "different_pixels": 142628,
+        "maximum_channel_error": 210
+      },
+      {
+        "case": "back-recess",
+        "phase": "preview",
+        "different_pixels": 142714,
+        "maximum_channel_error": 209
+      },
+      {
+        "case": "back-recess",
+        "phase": "offset",
+        "different_pixels": 142722,
+        "maximum_channel_error": 210
+      },
+      {
+        "case": "back-recess",
+        "phase": "cancel",
+        "different_pixels": 142628,
+        "maximum_channel_error": 210
+      },
+      {
+        "case": "front-texture-back-override",
+        "phase": "base",
+        "different_pixels": 3193,
+        "maximum_channel_error": 240
+      },
+      {
+        "case": "front-texture-back-override",
+        "phase": "preview",
+        "different_pixels": 6895,
+        "maximum_channel_error": 240
+      },
+      {
+        "case": "front-texture-back-override",
+        "phase": "offset",
+        "different_pixels": 8578,
+        "maximum_channel_error": 214
+      },
+      {
+        "case": "front-texture-back-override",
+        "phase": "cancel",
+        "different_pixels": 3193,
+        "maximum_channel_error": 240
+      },
+      {
+        "case": "ordinary-prism",
+        "phase": "base",
+        "different_pixels": 189214,
+        "maximum_channel_error": 227
+      },
+      {
+        "case": "ordinary-prism",
+        "phase": "preview",
+        "different_pixels": 212167,
+        "maximum_channel_error": 227
+      },
+      {
+        "case": "ordinary-prism",
+        "phase": "offset",
+        "different_pixels": 222602,
+        "maximum_channel_error": 232
+      },
+      {
+        "case": "ordinary-prism",
+        "phase": "cancel",
+        "different_pixels": 189214,
+        "maximum_channel_error": 227
+      }
+    ]
+  },
+  "font_attribution": {
+    "scope": "Platform identity/metric attribution only; Linux NVIDIA full-frame strict comparison unchanged",
+    "rows": [
+      {
+        "pixels": 13,
+        "qt_requested": "default",
+        "native_identity": {
+          "backend": "CoreText",
+          "policy": "FtPolicy { hinting: None, force_auto_hint: false }",
+          "physical_path": "/System/Library/Fonts/Helvetica.ttc",
+          "physical_index": 1,
+          "byte_face_index": 0,
+          "encoded_bytes": 53148,
+          "family": "Helvetica",
+          "postscript": "Helvetica-Bold",
+          "style": "Negreta",
+          "pixels": 13,
+          "ascent_26_6": 640,
+          "descent_26_6": 191,
+          "leading_26_6": 0,
+          "native_font_heap_bounded": false
+        },
+        "qt_family": ".AppleSystemUIFont",
+        "qt_style": "Bold",
+        "family_equal": false,
+        "advance_native_26_6": 462,
+        "advance_qt": 9.109375,
+        "ascent_qt": 12.5625,
+        "descent_qt": 2.734375
+      },
+      {
+        "pixels": 13,
+        "qt_requested": "Sans Serif",
+        "native_identity": {
+          "backend": "CoreText",
+          "policy": "FtPolicy { hinting: None, force_auto_hint: false }",
+          "physical_path": "/System/Library/Fonts/Helvetica.ttc",
+          "physical_index": 1,
+          "byte_face_index": 0,
+          "encoded_bytes": 53148,
+          "family": "Helvetica",
+          "postscript": "Helvetica-Bold",
+          "style": "Negreta",
+          "pixels": 13,
+          "ascent_26_6": 640,
+          "descent_26_6": 191,
+          "leading_26_6": 0,
+          "native_font_heap_bounded": false
+        },
+        "qt_family": ".AppleSystemUIFont",
+        "qt_style": "Bold",
+        "family_equal": false,
+        "advance_native_26_6": 462,
+        "advance_qt": 9.109375,
+        "ascent_qt": 12.5625,
+        "descent_qt": 2.734375
+      },
+      {
+        "pixels": 17,
+        "qt_requested": "default",
+        "native_identity": {
+          "backend": "CoreText",
+          "policy": "FtPolicy { hinting: None, force_auto_hint: false }",
+          "physical_path": "/System/Library/Fonts/Helvetica.ttc",
+          "physical_index": 1,
+          "byte_face_index": 0,
+          "encoded_bytes": 53148,
+          "family": "Helvetica",
+          "postscript": "Helvetica-Bold",
+          "style": "Negreta",
+          "pixels": 17,
+          "ascent_26_6": 837,
+          "descent_26_6": 250,
+          "leading_26_6": 0,
+          "native_font_heap_bounded": false
+        },
+        "qt_family": ".AppleSystemUIFont",
+        "qt_style": "Bold",
+        "family_equal": false,
+        "advance_native_26_6": 605,
+        "advance_qt": 11.28125,
+        "ascent_qt": 16.421875,
+        "descent_qt": 3.578125
+      },
+      {
+        "pixels": 17,
+        "qt_requested": "Sans Serif",
+        "native_identity": {
+          "backend": "CoreText",
+          "policy": "FtPolicy { hinting: None, force_auto_hint: false }",
+          "physical_path": "/System/Library/Fonts/Helvetica.ttc",
+          "physical_index": 1,
+          "byte_face_index": 0,
+          "encoded_bytes": 53148,
+          "family": "Helvetica",
+          "postscript": "Helvetica-Bold",
+          "style": "Negreta",
+          "pixels": 17,
+          "ascent_26_6": 837,
+          "descent_26_6": 250,
+          "leading_26_6": 0,
+          "native_font_heap_bounded": false
+        },
+        "qt_family": ".AppleSystemUIFont",
+        "qt_style": "Bold",
+        "family_equal": false,
+        "advance_native_26_6": 605,
+        "advance_qt": 11.28125,
+        "ascent_qt": 16.421875,
+        "descent_qt": 3.578125
+      }
+    ]
+  },
+  "classic": {
+    "passed": true,
+    "source_cases": 9,
+    "native_cases": 10,
+    "pixels": 250,
+    "scope": "Actual native app sampled classic own-mesh world shading/baked reflection/face-vs-group layer routing, no whole-image/OS gesture/presentation claim"
+  },
+  "material": {
+    "passed": true,
+    "source_cases": 25,
+    "native_cases": 75,
+    "pixels": 1950,
+    "scope": "Actual shared app update_ui/native Metal cached material sampled interiors; no full viewport, mip, edge, whole-image, user gesture or presentation parity claim"
+  },
+  "ghost_runtime": "passed",
+  "ghost_strict": "failed"
+}
