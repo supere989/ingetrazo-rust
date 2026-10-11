@@ -1,0 +1,12 @@
+{
+  "head_sha": "80b838f8892641f4e754bd83dfc59425a0f235d5",
+  "sources": {
+    ".github/workflows/parity.yml": "afb30c2aaaabef466e83dba71eb1c7f9a1c8fc5ff3e2cfc46ea59b7b78756b9d",
+    ".github/workflows/metal-compute-consumer.yml": "bce24078146f16afab7cd9998386a03a0aa2b69c0a6954bfc517b009c452efb9",
+    "scripts/paper_source_receipt.py": "06bbc6beaef515f6d4bc51b64a756c959e670e3fb3459f06111426ed36a5c637",
+    "scripts/check-composer-vector-view-pdf.py": "78be0c80cb9c10b85e84bcb7e418d9ef4c74b90125d112d4792797ab2ac43c64",
+    "scripts/check-document-axes-integration.py": "52cb83894ea7072c4797706fa93777cf23f63768273d563a0b849fa4caeeb0e3",
+    "scripts/check-rendered-drawing-reference.py": "5e015adefde1e33d249484dc4ea7adf8201f8bf2a1df7dd062b68ff0df758dcc",
+    "crates/ingetrazo-gui/examples/drawing_reference_render_fixture.rs": "d5514b138994694ae89783f4b2f4b2bd4977400922525691acf83a2da8a7d969"
+  }
+}
