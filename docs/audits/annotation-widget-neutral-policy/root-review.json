@@ -1,0 +1,9 @@
+{
+  "manifest_files_verified": 35,
+  "neutral_glyph_changed_pixels_on_white": 3158,
+  "unequal_rgb_pixels_on_white": 3044,
+  "actual_surface_alpha": 0,
+  "actual_paint_samples": 0,
+  "conclusion": "Neutral foreground over white produces unequal channels, requiring per-channel glyph coverage; scalar A8 cannot reproduce these pixels",
+  "scope": "Source-only diagnostic; A32 private glyph format remains an inference"
+}
