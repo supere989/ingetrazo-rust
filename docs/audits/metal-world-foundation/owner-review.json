@@ -1,0 +1,13 @@
+{
+  "scope": "Native context binding source and Apple-target Rust metadata, not native GPU runtime",
+  "result": "cargo check -p ingetrazo-metal --lib --example native_world_depth --target aarch64-apple-darwin -j2 PASS",
+  "binding": [
+    "retained device identity",
+    "retained command queue identity",
+    "retained memory budget Arc identity",
+    "retained poisoned-admission Arc identity"
+  ],
+  "refusal": "World prepare owner guard before cache retirement, collector or allocation; Prepared diagnostic/texture ingress checks same owner; encode requires same command queue before creating native encoder",
+  "fixture": "foreign NativeMetal refusal preserves counters then original GPU frame green reuse; actual native GPU execution pending",
+  "remaining": "full source paint policies, placement cache, production activation and native GPU acceptance"
+}

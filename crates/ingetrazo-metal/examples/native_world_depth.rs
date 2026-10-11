@@ -93,6 +93,34 @@ fn run() -> Result<(), String> {
                 "bad pose collected"
             ))
             .is_err());
+        let foreign = NativeMetal::new()?;
+        let before = world.stats;
+        assert!(world
+            .prepare(
+                &foreign,
+                1,
+                identity,
+                (64, 64),
+                [0., 0., 1., 1.],
+                || panic!("wrong owner must not collect")
+            )
+            .is_err());
+        assert_eq!(world.stats.prepared, before.prepared);
+        assert_eq!(world.stats.target_allocations, before.target_allocations);
+        let frame = world
+            .prepare(&metal, 1, identity, (64, 64), [0., 0., 1., 1.], || {
+                panic!("wrong owner refusal must preserve old geometry")
+            })?
+            .ok_or("Preserved owner target unavailable")?;
+        assert!(frame.submit_diagnostic(&foreign).is_err());
+        let pixels = frame
+            .submit_diagnostic(&metal)?
+            .readback(std::time::Duration::from_secs(5))?;
+        assert_eq!(
+            &pixels[(32 * 64 + 32) * 4..(32 * 64 + 32) * 4 + 4],
+            &[0, 255, 0, 255]
+        );
+        drop(frame);
         // Production UI sampling path owns the whole old frame even after replacing
         // and freeing its texture map entry. No CPU image upload is involved.
         let mut painter = ingetrazo_metal::egui_painter::EguiPainter::new(&metal)?;
