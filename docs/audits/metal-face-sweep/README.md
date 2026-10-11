@@ -106,3 +106,22 @@ Actual glyph comparison/hardware execution still awaits the next Apple run.
 Focused byte-owner/diagnostic host test passes; ARM named Rust consumer check
 passes; Python AST and workflow YAML validate. Native font/table/CG allocations
 remain outside the logical encoded-byte budget, as stated above.
+
+## Terminal sized-font Apple acceptance
+
+Both ARM and Intel runs at b2db5db23ec0d6b8ec418cfa6340132e443aa5cd
+complete native shader/build and functional sweep lifecycle controls, including
+old-frame retention on font/CAD refusal, retry, real Tool cancellation and final
+zero GPU charge. Classic and material sampled controls pass on both. All 24
+strict full sweep frames fail on both; exact pixels remain OPEN. Intel receipt
+and original artifact join ARM under apple-b2-native-sized. Each receipt pins
+160 runner-produced source hashes and explicitly separates six supplementary
+Git blob hashes from that runner inventory.
+
+Native CoreText resolves Helvetica-Bold whereas actual macOS Qt6.12 default
+and Sans Serif resolve .AppleSystemUIFont Bold, with different metrics. This
+is a measured platform/font boundary, not a pixel waiver. Large ordinary-world
+interior differences also remain: the source ordinary-prism back overlay is
+red while native interiors are blue, and source cream default back surfaces
+appear gray natively. These are separate material-policy defects under audit.
+No colors, thresholds or frozen source frames were changed.
