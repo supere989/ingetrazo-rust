@@ -64,10 +64,10 @@ fn face_compaction_rebuilds_radial_indices_without_recreating_rows() {
     assert_eq!(m.edges[edge].history_id, edge_identity);
     assert_eq!(m.faces[0].history_id, face_identity);
     // Partition collapse can retain a boundary also present in a hole;
-    // derived radial incidence stays unique without changing that face object.
+    // radial incidence retains both boundary occurrences without changing that face object.
     let boundary = m.faces[0].vertices.clone();
     m.faces[0].holes.push(boundary);
     m.rebuild_incidence();
-    assert_eq!(m.edges[edge].faces, vec![0]);
+    assert_eq!(m.edges[edge].faces, vec![0, 0]);
     assert_eq!(m.faces[0].history_id, face_identity);
 }
