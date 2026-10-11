@@ -1,0 +1,29 @@
+{
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "source_script_sha256": "ff5e8f299762eeef73f73760a576e66fba52a5d72efc7d26b06582f6df6dab3e",
+  "operative_source": [
+    "views/viewport.py opaque front texture mean pass 1623-1650",
+    "views/viewport.py opaque back texture sample pass 1743-1777",
+    "views/viewport.py transparent texture sample passes 1809-1845",
+    "resources/shaders/basic.frag use_texture branch vs nontexture u_color 140-174"
+  ],
+  "actual_source_cases": 2,
+  "actual_source_rgba": {
+    "shaded-transparent-texture": [
+      124,
+      0,
+      127,
+      255
+    ],
+    "shaded-back-texture": [
+      247,
+      0,
+      0,
+      255
+    ]
+  },
+  "production_change": "Mean selection is limited to opaque front runs; back overrides and glass remain sampled.",
+  "focused_policy_test": "PASS; boundary0.999, glass, back, ordinary textured mode controls",
+  "native_proof": "Pending; frozen active run38108771523 does not include these held-outs. No new workflow pushed.",
+  "remaining": "Exact native execution required; no full shaded-material/mip claim."
+}

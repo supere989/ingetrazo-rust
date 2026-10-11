@@ -1,0 +1,86 @@
+{
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "passed": true,
+  "asset_sha256": "35134a675168fb80c354d042036bd3e7e5ceb4cd4a6f7e898f9328fde1ce1601",
+  "cases": [
+    {
+      "name": "shaded-transparent-texture",
+      "rgba": [
+        124,
+        0,
+        127,
+        255
+      ],
+      "pixel": [
+        400,
+        318
+      ],
+      "png_sha256": "bc5dc82b3e357642e804b3769eff0170e101c780d46083859fe6bf37e2c9dc23",
+      "reverse": false,
+      "mode": "shaded",
+      "attrs": {
+        "texture": {
+          "path": "docs/audits/metal-world-scene/material-shaded-side-source/quadrants.png",
+          "uvw": [
+            0.0,
+            0.0,
+            0.0,
+            0.25,
+            0.0,
+            0.0,
+            0.0,
+            0.75
+          ]
+        },
+        "opacity": 0.5
+      }
+    },
+    {
+      "name": "shaded-back-texture",
+      "rgba": [
+        247,
+        0,
+        0,
+        255
+      ],
+      "pixel": [
+        400,
+        318
+      ],
+      "png_sha256": "afa1aafa777500f2508431a429b40facf19d652f464825906a4ff12c62ca37f1",
+      "reverse": true,
+      "mode": "shaded",
+      "attrs": {
+        "texture": {
+          "path": "docs/audits/metal-world-scene/material-shaded-side-source/quadrants.png",
+          "uvw": [
+            0.0,
+            0.0,
+            0.0,
+            0.25,
+            0.0,
+            0.0,
+            0.0,
+            0.25
+          ]
+        },
+        "back": {
+          "texture": {
+            "path": "docs/audits/metal-world-scene/material-shaded-side-source/quadrants.png",
+            "uvw": [
+              0.0,
+              0.0,
+              0.0,
+              0.25,
+              0.0,
+              0.0,
+              0.0,
+              0.75
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "scope": "Actual frozen Qt OpenGL viewport sampled interior RGBA, authored constant/repeat UV covectors, color/alpha/front/back/texture mean; no whole image or mip parity claim"
+}
