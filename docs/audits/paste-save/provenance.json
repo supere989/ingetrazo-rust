@@ -1,0 +1,93 @@
+{
+  "runtime": "795bffaca3982d40a8ad0633ea16557e2d2f336b",
+  "original": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "input_reused": "docs/audits/context-document-save/fixtures-and-logs.zip:fixtures/input.igz",
+  "records": [
+    {
+      "path": "input.igz",
+      "bytes": 3713,
+      "sha256": "46881377594d29355932883f2b452d9193ed3950f9ecc8d9bd89c18757c53c93"
+    },
+    {
+      "path": "original.json",
+      "bytes": 53054,
+      "sha256": "6872d7caeb95aeee4febd43a6175e94f279eb9c8ac699d01e845018649549b26"
+    },
+    {
+      "path": "native.json",
+      "bytes": 53116,
+      "sha256": "fd56f2d3ab670af0490fb4a985fce71e99d7c707e6e184449b9871cea4610f37"
+    },
+    {
+      "path": "reopened.json",
+      "bytes": 4804,
+      "sha256": "b2f5601b71fb98d3e325c9ec04cc84d6184042f1320562e1f564b5eabc0cac52"
+    },
+    {
+      "path": "source.log",
+      "bytes": 381,
+      "sha256": "c98d5631cc3d9dfac15f056cf7e4d6e7dd1c55ed02303633c2c1c3c957c27104"
+    },
+    {
+      "path": "native.log",
+      "bytes": 38,
+      "sha256": "368097dd876b31dcae94aee949c5e1facbde04830fb7212f125e0e33b5af2d14"
+    },
+    {
+      "path": "build.log",
+      "bytes": 19456,
+      "sha256": "688f2b2a17306dc850b04d1f96f41080b2feb298eb7c2c181a94bd7ee5dec7e3"
+    },
+    {
+      "path": "reopen.log",
+      "bytes": 49,
+      "sha256": "9148e145e58b87c50fd49ce7410b6e547365bef08a9b8c91d92465a27f1fa848"
+    },
+    {
+      "path": "save-continue.native.igz",
+      "bytes": 5020,
+      "sha256": "010c899d1a75458bffdadea68f15ee213f25475388fc01c4835ca13c4c78bece"
+    },
+    {
+      "path": "save-continue.original.igz",
+      "bytes": 4238,
+      "sha256": "092032ed4d83c435f2d7eb4f03d89610fd2e1ceeab73a361c98775695267aa2f"
+    },
+    {
+      "path": "save-cancel.native.igz",
+      "bytes": 5020,
+      "sha256": "010c899d1a75458bffdadea68f15ee213f25475388fc01c4835ca13c4c78bece"
+    },
+    {
+      "path": "save-cancel.original.igz",
+      "bytes": 4238,
+      "sha256": "092032ed4d83c435f2d7eb4f03d89610fd2e1ceeab73a361c98775695267aa2f"
+    },
+    {
+      "path": "save_as-continue.native.igz",
+      "bytes": 5020,
+      "sha256": "010c899d1a75458bffdadea68f15ee213f25475388fc01c4835ca13c4c78bece"
+    },
+    {
+      "path": "save_as-continue.original.igz",
+      "bytes": 4238,
+      "sha256": "092032ed4d83c435f2d7eb4f03d89610fd2e1ceeab73a361c98775695267aa2f"
+    },
+    {
+      "path": "save_as-cancel.native.igz",
+      "bytes": 5020,
+      "sha256": "010c899d1a75458bffdadea68f15ee213f25475388fc01c4835ca13c4c78bece"
+    },
+    {
+      "path": "save_as-cancel.original.igz",
+      "bytes": 4238,
+      "sha256": "092032ed4d83c435f2d7eb4f03d89610fd2e1ceeab73a361c98775695267aa2f"
+    }
+  ],
+  "source_capture_exit": "Reports complete; PySide finalizer aborted after close. Retained source.log; not process-close acceptance. Harness now exits explicitly after reports/actions.",
+  "source_capture_replayed": false,
+  "focused_build_seconds": 14.93,
+  "native_workflow_exit": 0,
+  "original_reopen_exit": 0,
+  "read_only_independent_review": "validation: no concrete blocker; state/preview/history boundary only"
+}

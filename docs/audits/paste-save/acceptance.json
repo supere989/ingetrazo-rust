@@ -1,0 +1,1 @@
+{"passed": true, "workflows": 8, "source_states": 24, "original_reopens": 4, "invalid_finish_preserves_pending_owner": true, "immutable_preview_owner": true, "negative_controls": ["lost_preview", "moved_preview", "extra_history", "fragment_save", "missing_workflow"]}

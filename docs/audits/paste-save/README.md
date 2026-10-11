@@ -1,0 +1,9 @@
+# Pending Paste across document Save
+
+The actual original Save handlers leave Paste active after exiting nested component editing. Native Finish-all called `set_tool`, which discarded its separately owned Paste preview. The repair moves that immutable owner across tool reset only after all proposed context exits pass; it adds no preview geometry copy or per-frame work.
+
+A single focused 14.93-second cached build runs the actual native App consumer. Eight exact original/native workflows (Save, Save As, canceled chooser and failed write; each followed by Continue or Cancel) match 24 geometry/identity/history/preview states. Continuing adds one reversible stamp; cancel adds no history. Four successful native saves reopen in the pinned original with the complete root/groups and no pending preview serialized. A nonfinite Finish candidate retains both live context and the same preview allocation. Five mutations reject lost preview, moved offset, extra history, fragment saves and missing workflows.
+
+Input is the already retained reflected/scaled two-level component fixture. No older workflow corpus was recaptured. `records.zip` retains literal reports, files and logs; `provenance.json` maps every owned record. The original capture wrote all reports then hit a PySide offscreen finalization abort, explicitly retained. It is not clean application process-close proof. Subsequent original reopens exited successfully. The current capture harness exits only after completed actions/reports to avoid that unrelated finalizer.
+
+Independent read-only review found no concrete runtime blocker. This finite transition proof complements the existing P12 shared definitions, Make Unique, transformed instances, linked clipboard and context Save proofs; it does not claim every document metadata field or platform clipboard backend was newly checked.
