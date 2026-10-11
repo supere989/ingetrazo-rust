@@ -1,0 +1,32 @@
+{
+  "workspace_source": "8d45492a",
+  "workspace_command": "cargo test --workspace --locked -j2",
+  "workspace": {
+    "passed": 763,
+    "failed": 0,
+    "ignored": 2
+  },
+  "packed_source": "e55ab2fb",
+  "packed_test": "owner::packed_replacement_tests::prepared_replacement_refusals_discard_and_chronological_inverse",
+  "packed_test_passed": 1,
+  "actual_packed_allocation_refusals": 4,
+  "registry_execution_source": "d89ea220",
+  "registry_binary_sha256": "681f2f9ce449dfa618144c7a660a6b8c3044e4f29c3a09e140a835e8f6842316",
+  "identity_source_facts": 4,
+  "identity_negative_controls": 11,
+  "overlay": "Independent actual source/native union3830 exact; whole frame1285 differs",
+  "metal": "Initial prototype cache reviewed/integrated; native placement run38100664143 pending; instance batching separate next batch",
+  "intel": "Independent artifact queryTracked/Default/Untracked0/0; no frames; strict admission retained",
+  "open": [
+    "Production scripting and full deletion/replacement routing",
+    "Whole-model rendered parity",
+    "Broader overlay primitive/font/DPI acceptance",
+    "Metal full viewport and presentation",
+    "All release gates"
+  ],
+  "log_sha256": {
+    "workspace.log": "dd2b5c8d4a9c878ff4b1603a707d1ebe7f1231bc550de1ae58811f6443625a0d",
+    "packed-test.log": "7b7dd1769fa799fe55b9a013f620042a4afbd12422ff6ec102aeadbdc256c425",
+    "packed-build.log": "cd8c6afd343e55ef9d68338d72165da3656b5b1ae68e27f40f460db4f0ee7a96"
+  }
+}

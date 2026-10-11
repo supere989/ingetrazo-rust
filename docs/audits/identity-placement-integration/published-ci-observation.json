@@ -1,0 +1,37 @@
+{
+  "source": "20637454",
+  "run": 38099912446,
+  "jobs": [
+    {
+      "id": 114353523735,
+      "name": "Native Metal framework link (macos-15-intel)",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 114353523859,
+      "name": "compilation-and-tests",
+      "status": "in_progress",
+      "conclusion": null,
+      "active_step": "Original and native strict physical grid and hatch pages"
+    },
+    {
+      "id": 114353523877,
+      "name": "Native Metal compile (aarch64-apple-darwin)",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 114353523921,
+      "name": "Native Metal framework link (macos-15)",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 114353523924,
+      "name": "Native Metal compile (x86_64-apple-darwin)",
+      "status": "completed",
+      "conclusion": "success"
+    }
+  ]
+}

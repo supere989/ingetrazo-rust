@@ -1,0 +1,11 @@
+{
+  "capture_source": "fdc6a0d0",
+  "verified_hashes": 17,
+  "overlay_union_pixels": 3830,
+  "overlay_difference": 0,
+  "mask_xor": 0,
+  "whole_frame_difference": 1285,
+  "whole_frame_max": 27,
+  "native_restore_exact": true,
+  "scope": "Actual Chapel iso complete overlay; full model, other cameras, DPI and primitive families remain open."
+}
