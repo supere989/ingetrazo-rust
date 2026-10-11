@@ -1,0 +1,7 @@
+# Raw-loop OBJ reference fusion
+
+Reference branches now borrow parsed point/attribute slices and build source round-four keys, signatures and normals once, without first constructing native Mesh vertices/edges/IDs. Regions trace their first authored coordinates; only emitted output enters the tolerant Mesh registry. Editable/native-double and legacy paths are unchanged. Native output faces use original _add_fused fallback: reject a fused candidate, retry each region original with region paint; a rejected original does not discard its siblings. Singleton rejection also retries its original.
+
+Three new actual source workflows/15states cover cross-cell near welding, same-cell far welding, and textured duplicate winning coordinates. Source admission fallback has three explicitly fault-injected helper controls, with attempts, full loops and opaque paint compared by a focused native emitter test; no claim that default source naturally rejects those shapes. The old frozen binary independently differs in six import/Redo/final states, proving real cross-cell/duplicate defects; same-cell remains a positive contract control. No source oracle normalization or existing winding whitelist change.
+
+New mode: context_document_lifecycle DIR --obj-raw-fusion; original reader scripts/reference-obj-raw-fusion-reopens.py DIR; strict checker scripts/check-obj-raw-fusion.py DIR. Existing fused12/MTL/nested sources are reused unchanged. Source/proof records retained until root release. No rendered/all-library/P22 promotion or total heap bound.

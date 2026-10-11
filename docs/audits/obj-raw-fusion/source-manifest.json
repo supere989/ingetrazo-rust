@@ -1,0 +1,121 @@
+{
+  "source_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "archive": "source-records.zip",
+  "archive_sha256": "1903d7eb84653f314e23b950711b64764aded1193a9de10742a983fd5dd9cf3b",
+  "entries": [
+    {
+      "path": "attempts/initial-recipe-observer/cross-cell-near-weld-original.igz",
+      "bytes": 4781,
+      "sha256": "afe19ef638e81125a49f4810698c7452ddc900d9a569bc207892f9aead3c65c8"
+    },
+    {
+      "path": "attempts/initial-recipe-observer/same-cell-far-weld-original.igz",
+      "bytes": 4317,
+      "sha256": "6e0686da53e1d10c82db14223747725c60981bb19e62a0fe82f9a085be567d66"
+    },
+    {
+      "path": "attempts/initial-recipe-observer/stderr.log",
+      "bytes": 3091,
+      "sha256": "9c764a426a4bedbb3609a92093a50c4cd064dac1caf5d1c58e93b4c63aeb96fb"
+    },
+    {
+      "path": "cross-cell-near-weld-input.igz",
+      "bytes": 325,
+      "sha256": "fa9c2cb30d4f8afe1b3ec1c99587362006d5da0d620cfb3d0663a617138b1f20"
+    },
+    {
+      "path": "cross-cell-near-weld-original.igz",
+      "bytes": 4781,
+      "sha256": "b23ec43994ff2f40af539e4654c193a3e9ff6b93cdb1ec72328de3b94da35936"
+    },
+    {
+      "path": "cross-cell-near-weld.obj",
+      "bytes": 118,
+      "sha256": "24044c3f3ef148b935d6d90766c04c2c0189baf3bb1ef3c4d09f1b907bf741ef"
+    },
+    {
+      "path": "logs/obj-raw-admission-source.log",
+      "bytes": 64,
+      "sha256": "2edb82bb05f4626b0d935252c3af60674d64e43a50fad7fa5ffcc1eba0a04575"
+    },
+    {
+      "path": "logs/obj-raw-admission-source.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "logs/obj-raw-source-final.log",
+      "bytes": 64,
+      "sha256": "2edb82bb05f4626b0d935252c3af60674d64e43a50fad7fa5ffcc1eba0a04575"
+    },
+    {
+      "path": "logs/obj-raw-source-final.stderr",
+      "bytes": 147,
+      "sha256": "c0cf3de7adfde67e063969f6c3dfce3bc40a7a3694cb8d645ebf5409bed17591"
+    },
+    {
+      "path": "original-admission-fallback.json",
+      "bytes": 1951,
+      "sha256": "50df1581bd14e3bea1dde023c1c8cff79e4d366c1af2b8b86e9b1c688aca519e"
+    },
+    {
+      "path": "original-obj-raw-fusion.json",
+      "bytes": 88217,
+      "sha256": "8f4839dd89aa223c98ecc0d3be771f7db377d91e060d90a9645c053016a5d049"
+    },
+    {
+      "path": "paint.mtl",
+      "bytes": 28,
+      "sha256": "e5b6f0801b4e9a94203f1dfc692904a2ea4e9d04f400087769820491c304db60"
+    },
+    {
+      "path": "paint.png",
+      "bytes": 98,
+      "sha256": "4a5b34eb9bdb4c647e7609a80b1dfc1ac9ea7136ad181b799d50215efed071ca"
+    },
+    {
+      "path": "same-cell-far-weld-input.igz",
+      "bytes": 325,
+      "sha256": "fa9c2cb30d4f8afe1b3ec1c99587362006d5da0d620cfb3d0663a617138b1f20"
+    },
+    {
+      "path": "same-cell-far-weld-original.igz",
+      "bytes": 4317,
+      "sha256": "73e10cc88a3fc6deb32194fa2593295c507e71fc12daf61bbf9bd04ac1023f71"
+    },
+    {
+      "path": "same-cell-far-weld.obj",
+      "bytes": 132,
+      "sha256": "8eb9e58e26938308a1948986f55f2223683b41606c9c1b3f920d8bd029dc4141"
+    },
+    {
+      "path": "textured-duplicate-winning-coordinate-input.igz",
+      "bytes": 325,
+      "sha256": "fa9c2cb30d4f8afe1b3ec1c99587362006d5da0d620cfb3d0663a617138b1f20"
+    },
+    {
+      "path": "textured-duplicate-winning-coordinate-original.igz",
+      "bytes": 992,
+      "sha256": "fc5d1ce31ce00f7a2de13516f36b6cdaca0bdef5036c8746df834913a631d94a"
+    },
+    {
+      "path": "textured-duplicate-winning-coordinate.obj",
+      "bytes": 151,
+      "sha256": "25f16073b1e214240084c9b2a8eeb5eea8983fcdc3afee2e1e6346746acf2e02"
+    }
+  ],
+  "helpers": [
+    {
+      "path": "scripts/reference-obj-raw-fusion.py",
+      "sha256": "42383631a2ad32b66aa2a2f108791ccd8031e11f86d153eca250c75a4db912b9"
+    },
+    {
+      "path": "scripts/reference-obj-raw-admission.py",
+      "sha256": "50906f630590f230841dd6b22a20ccd1882c88d799e0727245cdb1716625181f"
+    }
+  ],
+  "cases": 3,
+  "states": 15,
+  "fault_injected_helper_controls": 3,
+  "scope": "Three actual original SnapshotImport/history/save workflows. Admission fallback control explicitly injects dependency refusal, not natural invalid geometry. Original Python unchanged."
+}

@@ -27,15 +27,6 @@ fn qt_length(n: Vec3) -> f32 {
         m * (p.x * p.x + p.y * p.y + p.z * p.z).sqrt()
     }
 }
-fn normal(mesh: &Mesh, face: usize) -> Vec3 {
-    let n = newell(mesh, &mesh.faces[face].vertices);
-    let l = qt_length(n);
-    if l < 1e-10 {
-        Vec3::ZERO
-    } else {
-        n / l
-    }
-}
 fn face_normal(mesh: &Mesh, id: usize) -> Vec3 {
     let ring = &mesh.faces[id].vertices;
     let mut n = DVec3::ZERO;
@@ -211,59 +202,111 @@ fn trace(mesh: &Mesh, members: &[usize], n: Vec3) -> Option<(Vec<usize>, Vec<Vec
     }
     Some((outer, rings))
 }
-/// Reference fusion never touches an existing owner. Rows and attributes are
-/// traversed once; adjacency/union roots delimit independently traceable regions.
-pub(super) fn reference(mesh: &mut Mesh) -> Result<(), String> {
-    let normals = (0..mesh.faces.len())
-        .map(|i| normal(mesh, i))
-        .collect::<Vec<_>>();
-    let signatures = mesh
-        .faces
-        .iter()
-        .map(|f| signature(&f.attrs))
-        .collect::<Vec<_>>();
-    let mut eligible = Vec::new();
+// Raw loop keys are the source fusion grid, distinct from Mesh's tolerant
+// registry. No native vertices, edges or history IDs exist until emission.
+#[derive(Clone, Copy, Hash, PartialEq, Eq)]
+struct RawKey([u64; 3]);
+fn raw_key(p: DVec3) -> RawKey {
+    RawKey(p.to_array().map(|x| {
+        let rounded = format!("{x:.4}")
+            .parse::<f64>()
+            .expect("finite authored point");
+        if rounded == 0. {
+            0
+        } else {
+            rounded.to_bits()
+        }
+    }))
+}
+fn raw_newell(points: &[DVec3]) -> Vec3 {
+    let mut n = Vec3::ZERO;
+    for i in 0..points.len() {
+        let a = points[i];
+        let b = points[(i + 1) % points.len()];
+        n += Vec3::new(
+            ((a.y - b.y) * (a.z + b.z)) as f32,
+            ((a.z - b.z) * (a.x + b.x)) as f32,
+            ((a.x - b.x) * (a.y + b.y)) as f32,
+        );
+    }
+    n
+}
+struct RawFace<'a> {
+    points: &'a [DVec3],
+    attrs: &'a Attrs,
+    keys: Vec<usize>,
+    normal: Vec3,
+    signature: Attrs,
+}
+/// Borrow parsed loops, fuse on source round-four keys, then weld only output.
+pub(super) fn reference<'a>(
+    loops: impl Iterator<Item = (&'a [DVec3], &'a Attrs)>,
+) -> Result<Mesh, String> {
+    reference_with_admission(loops, |_, _| Ok(()))
+}
+fn reference_with_admission<'a>(
+    loops: impl Iterator<Item = (&'a [DVec3], &'a Attrs)>,
+    mut admit: impl FnMut(&[DVec3], &[Vec<DVec3>]) -> Result<(), String>,
+) -> Result<Mesh, String> {
+    let mut faces = Vec::<RawFace<'a>>::new();
+    let mut keys = HashMap::<RawKey, usize>::new();
     let mut triangles = HashMap::<Vec<usize>, usize>::new();
-    for (id, f) in mesh.faces.iter().enumerate() {
-        if normals[id] == Vec3::ZERO {
+    for (points, attrs) in loops {
+        if points.len() < 3 {
             continue;
         }
-        if f.vertices.len() == 3 {
-            let mut key = f.vertices.clone();
+        if points.iter().any(|p| !p.is_finite()) {
+            return Err("Nonfinite imported raw loop".into());
+        }
+        let n = raw_newell(points);
+        let length = qt_length(n);
+        if length < 1e-10 {
+            continue;
+        }
+        let ids = points
+            .iter()
+            .map(|&p| {
+                let next = keys.len();
+                *keys.entry(raw_key(p)).or_insert(next)
+            })
+            .collect::<Vec<_>>();
+        let face = RawFace {
+            points,
+            attrs,
+            keys: ids,
+            normal: n / length,
+            signature: signature(attrs),
+        };
+        if points.len() == 3 {
+            let mut key = face.keys.clone();
             key.sort_unstable();
             key.dedup();
-            let rank = |id: usize| {
-                if mesh.faces[id].attrs.contains_key("texture") {
-                    2
-                } else {
-                    1
-                }
-            };
             if let Some(&slot) = triangles.get(&key) {
-                if rank(id) > rank(eligible[slot]) {
-                    eligible[slot] = id;
+                let rank = |a: &Attrs| if a.contains_key("texture") { 2 } else { 1 };
+                if rank(attrs) > rank(faces[slot].attrs) {
+                    faces[slot] = face;
                 }
                 continue;
             }
-            triangles.insert(key, eligible.len());
+            triangles.insert(key, faces.len());
         }
-        eligible.push(id);
+        faces.push(face);
     }
-    let mut parent = (0..eligible.len()).collect::<Vec<_>>();
+    let mut parent = (0..faces.len()).collect::<Vec<_>>();
     let mut edges = HashMap::<(usize, usize), Vec<usize>>::new();
     let mut order = Vec::new();
-    for (slot, &id) in eligible.iter().enumerate() {
-        let r = &mesh.faces[id].vertices;
+    for (slot, face) in faces.iter().enumerate() {
+        let r = &face.keys;
         for i in 0..r.len() {
             let (a, b) = (r[i], r[(i + 1) % r.len()]);
             if a == b {
                 continue;
             }
-            let k = (a.min(b), a.max(b));
-            if !edges.contains_key(&k) {
-                order.push(k);
+            let key = (a.min(b), a.max(b));
+            if !edges.contains_key(&key) {
+                order.push(key);
             }
-            edges.entry(k).or_default().push(slot);
+            edges.entry(key).or_default().push(slot);
         }
     }
     for key in order {
@@ -272,83 +315,172 @@ pub(super) fn reference(mesh: &mut Mesh) -> Result<(), String> {
             continue;
         }
         let (a, b) = (ids[0], ids[1]);
-        if dot(normals[eligible[a]], normals[eligible[b]]).abs() < 0.99999
-            || !material_equal(&signatures[eligible[a]], &signatures[eligible[b]])
+        if dot(faces[a].normal, faces[b].normal).abs() < 0.99999
+            || !material_equal(&faces[a].signature, &faces[b].signature)
         {
             continue;
         }
         let (ra, rb) = (find(&mut parent, a), find(&mut parent, b));
         if ra != rb
-            && dot(normals[eligible[ra]], normals[eligible[rb]]).abs() >= 0.99999
-            && material_equal(&signatures[eligible[ra]], &signatures[eligible[rb]])
+            && dot(faces[ra].normal, faces[rb].normal).abs() >= 0.99999
+            && material_equal(&faces[ra].signature, &faces[rb].signature)
         {
             parent[rb] = ra;
         }
     }
     let mut regions = Vec::<Vec<usize>>::new();
     let mut slots = HashMap::new();
-    for (slot, &id) in eligible.iter().enumerate() {
-        let root = find(&mut parent, slot);
+    for i in 0..faces.len() {
+        let root = find(&mut parent, i);
         let next = regions.len();
-        let index = *slots.entry(root).or_insert_with(|| {
+        let slot = *slots.entry(root).or_insert_with(|| {
             regions.push(Vec::new());
             next
         });
-        regions[index].push(id);
+        regions[slot].push(i);
     }
     let mut output = Mesh::new();
     for ids in regions {
-        let first = &mesh.faces[ids[0]];
-        let traced = if ids.len() == 1 {
-            Some((first.vertices.clone(), first.holes.clone()))
-        } else {
-            trace(mesh, &ids, normals[ids[0]])
-        };
-        if let Some((outer, holes)) = traced {
-            if outer.len() >= 3
-                && outer.iter().copied().collect::<HashSet<_>>().len() == outer.len()
-                && holes.iter().all(|r| {
-                    r.len() >= 3 && r.iter().copied().collect::<HashSet<_>>().len() == r.len()
-                })
+        let first = &faces[ids[0]];
+        if ids.len() == 1 {
+            if admit(first.points, &[])
+                .and_then(|()| append_raw(&mut output, first.points, &[], first.attrs))
+                .is_err()
             {
-                append(&mut output, mesh, &outer, &holes, first)?;
-            } else {
-                for id in ids {
-                    let f = &mesh.faces[id];
-                    append(&mut output, mesh, &f.vertices, &f.holes, f)?;
+                if admit(first.points, &[]).is_ok() {
+                    let _ = append_raw(&mut output, first.points, &[], first.attrs);
                 }
             }
+            continue;
+        }
+        let traced = trace_raw(&faces, &ids, first.normal);
+        let accepted = if let Some((outer, holes)) = traced {
+            admit(&outer, &holes)
+                .and_then(|()| append_raw(&mut output, &outer, &holes, first.attrs))
+                .is_ok()
         } else {
-            for id in ids {
-                let f = &mesh.faces[id];
-                append(&mut output, mesh, &f.vertices, &f.holes, f)?;
+            false
+        };
+        if !accepted {
+            // _add_fused retries each original with the REGION's paint. An
+            // individual refusal does not discard the other original loops.
+            for &id in &ids {
+                let original = &faces[id];
+                if admit(original.points, &[]).is_ok() {
+                    let _ = append_raw(&mut output, original.points, &[], first.attrs);
+                }
             }
         }
     }
-    *mesh = output;
-    soften(mesh, true);
-    Ok(())
+    soften(&mut output, true);
+    Ok(output)
 }
-fn append(
+fn trace_raw(
+    faces: &[RawFace<'_>],
+    ids: &[usize],
+    n: Vec3,
+) -> Option<(Vec<DVec3>, Vec<Vec<DVec3>>)> {
+    let mut counts = HashMap::<(usize, usize), usize>::new();
+    let mut order = Vec::new();
+    let mut positions = HashMap::new();
+    for &id in ids {
+        let face = &faces[id];
+        for i in 0..face.keys.len() {
+            let (a, b) = (face.keys[i], face.keys[(i + 1) % face.keys.len()]);
+            if a == b {
+                continue;
+            }
+            let key = (a.min(b), a.max(b));
+            if !counts.contains_key(&key) {
+                order.push((a, b));
+            }
+            *counts.entry(key).or_default() += 1;
+            positions.entry(a).or_insert(face.points[i]);
+            positions
+                .entry(b)
+                .or_insert(face.points[(i + 1) % face.keys.len()]);
+        }
+    }
+    if counts.values().any(|&c| c > 2) {
+        return None;
+    }
+    let mut adj = HashMap::<usize, Vec<usize>>::new();
+    let mut unused = HashSet::new();
+    for &(a, b) in &order {
+        let key = (a.min(b), a.max(b));
+        if counts[&key] == 1 {
+            adj.entry(a).or_default().push(b);
+            adj.entry(b).or_default().push(a);
+            unused.insert(key);
+        }
+    }
+    if unused.is_empty() || adj.values().any(|r| r.len() != 2) {
+        return None;
+    }
+    let mut rings = Vec::new();
+    for &(a, b) in &order {
+        if !unused.remove(&(a.min(b), a.max(b))) {
+            continue;
+        }
+        let mut ring = vec![a, b];
+        let (mut prev, mut cur) = (a, b);
+        loop {
+            let r = &adj[&cur];
+            let next = if r[0] == prev { r[1] } else { r[0] };
+            if next == a {
+                unused.remove(&(cur.min(next), cur.max(next)));
+                break;
+            }
+            if !unused.remove(&(cur.min(next), cur.max(next))) || ring.len() > adj.len() {
+                return None;
+            }
+            ring.push(next);
+            prev = cur;
+            cur = next;
+        }
+        if ring.len() < 3 {
+            return None;
+        }
+        rings.push(ring.into_iter().map(|v| positions[&v]).collect::<Vec<_>>());
+    }
+    rings.sort_by(|a, b| qt_length(raw_newell(b)).total_cmp(&qt_length(raw_newell(a))));
+    let mut outer = rings.remove(0);
+    if dot(raw_newell(&outer), n) < 0. {
+        outer.reverse();
+    }
+    for ring in &mut rings {
+        if dot(raw_newell(ring), n) > 0. {
+            ring.reverse();
+        }
+    }
+    Some((outer, rings))
+}
+fn append_raw(
     out: &mut Mesh,
-    source: &Mesh,
-    outer: &[usize],
-    holes: &[Vec<usize>],
-    face: &MeshFace,
+    outer: &[DVec3],
+    holes: &[Vec<DVec3>],
+    attrs: &Attrs,
 ) -> Result<(), String> {
-    let ring = |out: &mut Mesh, r: &[usize]| {
-        r.iter()
-            .map(|&v| out.add_vertex(source.vertices[v].position))
-            .collect::<Vec<_>>()
-    };
-    let vertices = ring(out, outer);
-    let holes = holes.iter().map(|r| ring(out, r)).collect();
+    if outer.len() < 3
+        || outer
+            .iter()
+            .chain(holes.iter().flatten())
+            .any(|p| !p.is_finite())
+    {
+        return Err("Invalid imported reference ring".into());
+    }
+    let vertices = outer.iter().map(|&p| out.add_vertex(p)).collect();
+    let holes = holes
+        .iter()
+        .map(|ring| ring.iter().map(|&p| out.add_vertex(p)).collect())
+        .collect();
     let id = out
         .add_face(vertices, holes)
-        .ok_or("Invalid imported fused face")?;
-    out.faces[id].attrs = face.attrs.clone();
+        .ok_or("Native reference face admission refused")?;
+    out.faces[id].attrs = attrs.clone();
     Ok(())
 }
+
 pub(super) fn soften(mesh: &mut Mesh, automatic: bool) {
     let normals = (0..mesh.faces.len())
         .map(|i| face_normal(mesh, i))
@@ -772,4 +904,73 @@ pub(super) fn editable(mesh: &mut Mesh, first_new: usize, seed: &[DVec3]) -> Res
     }
     soften(mesh, false);
     Ok(())
+}
+
+#[cfg(test)]
+mod raw_reference_tests {
+    use super::*;
+    #[test]
+    fn reference_admission_retries_originals_and_preserves_region_paint() {
+        let a = [DVec3::ZERO, DVec3::X, DVec3::new(1., 1., 0.)];
+        let b = [DVec3::ZERO, DVec3::new(1., 1., 0.), DVec3::Y];
+        let attrs = HashMap::from([
+            ("color".into(), serde_json::json!([0.2, 0.3, 0.4])),
+            ("opaque".into(), serde_json::json!({"preserve":[1]})),
+        ]);
+        let source: Value = serde_json::from_str(include_str!(
+            "../../../docs/audits/obj-raw-fusion/admission-source.json"
+        ))
+        .unwrap();
+        let mut controls = Vec::new();
+        let mut attempts = Vec::new();
+        let out = reference_with_admission(
+            [(&a[..], &attrs), (&b[..], &attrs)].into_iter(),
+            |outer, _| {
+                attempts.push(outer.len());
+                if outer.len() > 3 {
+                    Err("injected fused admission refusal".into())
+                } else {
+                    Ok(())
+                }
+            },
+        )
+        .unwrap();
+        assert_eq!(attempts, [4, 3, 3]);
+        assert_eq!(out.faces.len(), 2);
+        assert!(out.faces.iter().all(|f| f.attrs == attrs));
+        assert_eq!(out.vertices.len(), 4);
+        controls.push(serde_json::json!({"case":"fused","attempts":attempts,"faces":out.faces.len(),"attrs":out.faces.iter().map(|f|f.attrs.clone()).collect::<Vec<_>>(),"loops":out.faces.iter().map(|f|f.vertices.iter().map(|&v|out.vertices[v].position.to_array()).collect::<Vec<_>>()).collect::<Vec<_>>()}));
+        let mut attempts = Vec::new();
+        let single = reference_with_admission([(&a[..], &attrs)].into_iter(), |outer, _| {
+            attempts.push(outer.len());
+            if attempts.len() == 1 {
+                Err("injected singleton refusal".into())
+            } else {
+                Ok(())
+            }
+        })
+        .unwrap();
+        assert_eq!(attempts, [3, 3]);
+        assert_eq!(single.faces.len(), 1);
+        assert_eq!(single.faces[0].attrs, attrs);
+        controls.push(serde_json::json!({"case":"singleton","attempts":attempts,"faces":single.faces.len(),"attrs":single.faces.iter().map(|f|f.attrs.clone()).collect::<Vec<_>>(),"loops":single.faces.iter().map(|f|f.vertices.iter().map(|&v|single.vertices[v].position.to_array()).collect::<Vec<_>>()).collect::<Vec<_>>()}));
+        let mut attempts = Vec::new();
+        let partial = reference_with_admission(
+            [(&a[..], &attrs), (&b[..], &attrs)].into_iter(),
+            |outer, _| {
+                attempts.push(outer.len());
+                if attempts.len() <= 2 {
+                    Err("injected original refusal".into())
+                } else {
+                    Ok(())
+                }
+            },
+        )
+        .unwrap();
+        assert_eq!(attempts, [4, 3, 3]);
+        assert_eq!(partial.faces.len(), 1);
+        assert_eq!(partial.faces[0].attrs, attrs);
+        controls.push(serde_json::json!({"case":"partial-original","attempts":attempts,"faces":partial.faces.len(),"attrs":partial.faces.iter().map(|f|f.attrs.clone()).collect::<Vec<_>>(),"loops":partial.faces.iter().map(|f|f.vertices.iter().map(|&v|partial.vertices[v].position.to_array()).collect::<Vec<_>>()).collect::<Vec<_>>()}));
+        assert_eq!(serde_json::json!(controls), source);
+    }
 }

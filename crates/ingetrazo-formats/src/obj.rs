@@ -166,20 +166,13 @@ impl ObjPlan {
             for (number, (piece, indices)) in self.pieces.iter().enumerate() {
                 let name = source_piece_name(piece, number + 1);
                 let mut child = ingetrazo_core::groups::Group::new(name);
-                for index in indices {
-                    Self::emit_entity(&mut self.entities[*index], &mut child.mesh)?;
-                }
-                obj_geometry::reference(&mut child.mesh).map_err(|e|ObjError::Parse(0,e))?;
+                child.mesh=obj_geometry::reference(indices.iter().map(|&i|(&self.entities[i].points[..],&self.entities[i].attrs))).map_err(|e|ObjError::Parse(0,e))?;
                 if !child.mesh.faces.is_empty() { container.children.push(child); }
             }
             source_group_kind(&mut container, true);
             scene.groups.push(container);
         } else if self.face_count > 400 {
-            let mut mesh = ingetrazo_core::mesh::Mesh::new();
-            for entity in self.entities.iter_mut().filter(|e| e.face) {
-                Self::emit_entity(entity, &mut mesh)?;
-            }
-            obj_geometry::reference(&mut mesh).map_err(|e|ObjError::Parse(0,e))?;
+            let mesh=obj_geometry::reference(self.entities.iter().filter(|e|e.face).map(|e|(&e.points[..],&e.attrs))).map_err(|e|ObjError::Parse(0,e))?;
             let name = ingetrazo_core::groups::next_source_group_name()
                 .map_err(|e| ObjError::Parse(0, e.into()))?;
             let mut group = ingetrazo_core::groups::Group::with_mesh(name, mesh);
