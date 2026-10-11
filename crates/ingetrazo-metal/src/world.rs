@@ -6,6 +6,7 @@ use crate::world_policy::{Mode, Plan, Policy};
 use crate::{Buffer, NativeMetal};
 use crate::world_section::Section;
 mod positive_depth_probe;
+mod vertex_probe;
 use ingetrazo_core::gpu_memory::MemoryBudget;
 use ingetrazo_render::buffer::MeshRenderBuffer;
 use objc2::{rc::Retained, runtime::ProtocolObject};

@@ -29,7 +29,8 @@ fn run() -> Result<(), String> {
         let out = std::path::PathBuf::from(std::env::args().nth(1).ok_or("Output required")?);
         std::fs::create_dir_all(&out).map_err(|e| e.to_string())?;
 
-        let candidate = match std::env::args().nth(3).as_deref() { None => false, Some("--positive-depth-viewport") => true, _ => return Err("Unknown observation mode".into()) };
+        let vertex_replay=std::env::args().nth(3).as_deref()==Some("--vertex-replay");
+        let candidate = match std::env::args().nth(3).as_deref() { None | Some("--vertex-replay") => false, Some("--positive-depth-viewport") => true, _ => return Err("Unknown observation mode".into()) };
         let metal = NativeMetal::new()?;
         let sample_diagnostics = ingetrazo_metal::annotation::sample_diagnostics(&metal);
         let mut rows = vec![];
@@ -130,6 +131,7 @@ fn run() -> Result<(), String> {
             if candidate && world.enable_positive_depth_viewport_probe().is_ok(){return Err("Warm positive-depth opt-in unexpectedly admitted".into());}
             if !candidate && ordinary!=expected{return Err("Ordinary closed-iso frame differs from authenticated retained134-residual frame".into());}
             drop(baseline);
+            if vertex_replay {let replay=frame.observe_compiled_vertex_replay(&metal)?;std::fs::write(out.join("vertex-replay.json"),serde_json::to_vec_pretty(&replay).map_err(|e|e.to_string())?).map_err(|e|e.to_string())?;}
             let points=[[297,329],[297,328],[298,303]];
             let diagnostic=frame.submit_iso_stages(&metal,points,None)?;
             let bytes=diagnostic.readback(std::time::Duration::from_secs(5))?;
