@@ -1,12 +1,26 @@
 #!/usr/bin/env python3
 """Strict retained actual Qt/RTX ownership, extent, warm and negative controls."""
-import hashlib,json,re,sys
+import hashlib,json,re,sys,tempfile,zipfile
 from pathlib import Path
 import numpy as np
 from PIL import Image
 repo=Path(__file__).resolve().parents[1]
 audit=Path(sys.argv[1])if len(sys.argv)>1 else repo/'docs/audits/annotation-fixed-boundary'
 def load(path):return json.loads(path.read_text())
+# Keep raw failures and provenance byte-for-byte, unpacking only for this run.
+packed=load(audit/'archive.json')
+archive=audit/packed['archive']
+assert hashlib.sha256(archive.read_bytes()).hexdigest()==packed['sha256'],'Archive digest'
+_temporary=tempfile.TemporaryDirectory(prefix='annotation-fixed-check-')
+with zipfile.ZipFile(archive) as z:
+ assert len(z.infolist())==packed['files'],'Archive inventory'
+ assert sum(i.file_size for i in z.infolist())==packed['uncompressed_bytes'],'Archive extent'
+ assert len(set(z.namelist()))==len(z.namelist()),'Duplicate archive entry'
+ for name in z.namelist():
+  path=Path(name);assert not path.is_absolute() and '..' not in path.parts,'Unsafe archive entry'
+ z.extractall(_temporary.name)
+audit=Path(_temporary.name)
+assert hashlib.sha256((audit/'manifest.json').read_bytes()).hexdigest()==packed['manifest_sha256'],'Raw manifest digest'
 for name,sha in load(audit/'manifest.json').items():
  assert hashlib.sha256((audit/name).read_bytes()).hexdigest()==sha,'Retained artifact digest '+name
 def image(path):

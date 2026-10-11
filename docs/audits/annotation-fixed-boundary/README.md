@@ -15,3 +15,5 @@ Literal old analytic-float top edge y20.4999 differs60 pixels and is retained as
 Run `python3 scripts/check-annotation-fixed-boundary.py`. It validates mandatory named inventories, exact full images, source pins/engine/samples/precision, actual DPR/pose, warm counters and final ledger, and rejects a missing named case, an actual altered pixel and the retained old GPU law. `manifest.json` contains artifact hashes. `provenance.json` maps executable source revisions explicitly; inherited historical transport source labels are not build provenance.
 
 Shader tool: pinned shaderc0.8.3 via `/tmp/ingetrazo-skp-native-target/debug/ingetrazo-shader-build crates/ingetrazo-gui/src/native_vulkan/shaders/annotation_overlay.frag crates/ingetrazo-gui/src/native_vulkan/shaders/annotation_overlay.frag.spv`. Source and bytecode hashes are in provenance. No broad suite was repeated.
+
+Raw evidence is retained byte-for-byte in `raw-evidence.zip`; `archive.json` pins the archive, inventory, extent and original per-file manifest. The checker verifies it and extracts into an automatically removed temporary directory. No raw failures or provenance were dropped.
