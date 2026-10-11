@@ -1,0 +1,62 @@
+#!/usr/bin/env python3
+"""Owned Qt OpenGL widget primitive source controls; diagnostic, not import proof."""
+import ctypes,json,sys,hashlib
+from pathlib import Path
+from PySide6.QtWidgets import QApplication
+from PySide6.QtOpenGLWidgets import QOpenGLWidget
+from PySide6.QtGui import QPainter,QPen,QColor,QPolygonF,QSurfaceFormat
+from PySide6.QtCore import QPointF,Qt,QTimer,qVersion
+out=Path(sys.argv[-1]);out.mkdir(parents=True,exist_ok=True)
+assert qVersion().startswith('6.12.')
+fmt=QSurfaceFormat();fmt.setVersion(3,3);fmt.setProfile(QSurfaceFormat.CompatibilityProfile);fmt.setSamples(0);fmt.setAlphaBufferSize(0);fmt.setDepthBufferSize(24);fmt.setStencilBufferSize(8)
+QSurfaceFormat.setDefaultFormat(fmt)
+ink=[45,55,75,255]
+def line(name,a,b,w):return {'name':name,'operations':[{'kind':'line','a':a,'b':b,'width':w,'pen':ink,'brush':ink}]}
+rows=[line('horizontal-square',[20,20],[80,20],2),line('vertical-square',[20,20],[20,80],1.5),line('reversed',[80.25,20.75],[20.125,40.625],1.5),line('short',[20.125,20.125],[20.2,20.15],1),line('degenerate',[20,20],[20,20],1),line('cosmetic-zero',[20.25,20.75],[80.625,25.25],0),line('negative-origin',[-10.25,-.25],[80.75,40.5],3.125),line('shallow-clipped',[-1000,63.75],[1000,64.25],3.125),line('steep',[35.001,-30.125],[36.999,350.875],3.125),line('narrow',[20.25,20.5],[180.75,80.25],.35),line('fractional',[20.125,20.375],[180.625,280.875],2.875)]
+for name,pts in [('triangle-clockwise',[[20.25,20.75],[80.5,25.25],[40.75,80.125]]),('triangle-reversed',[[40.75,80.125],[80.5,25.25],[20.25,20.75]]),('triangle-boundary',[[20.5,20.5],[80.5,20.5],[20.5,80.5]])]:rows.append({'name':name,'operations':[{'kind':'polygon','points':pts,'width':0,'pen':[0,0,0,255],'brush':[17,89,203,255]}]})
+app=QApplication([])
+class Widget(QOpenGLWidget):
+ def __init__(self):
+  super().__init__();self.row=0;self.paints=0;self.records=[];self.setFormat(fmt);self.setFixedSize(800,600);self.setWindowFlag(Qt.WindowTransparentForInput);self.setWindowFlag(Qt.WindowDoesNotAcceptFocus)
+ def paintGL(self):
+  self.paints+=1;p=QPainter(self);p.setRenderHint(QPainter.Antialiasing,True);p.fillRect(self.rect(),QColor(255,255,255));p.setClipRect(0,0,640,400)
+  for op in rows[self.row]['operations']:
+   if op['kind']=='line':p.setPen(QPen(QColor(*op['pen']),op['width']));p.drawLine(QPointF(*op['a']),QPointF(*op['b']))
+   else:p.setPen(Qt.NoPen);p.setBrush(QColor(*op['brush']));p.drawPolygon(QPolygonF([QPointF(*v)for v in op['points']]))
+  self.engine=p.paintEngine().type().value
+  gl=ctypes.CDLL('libGL.so.1')
+  gl.glGetVertexAttribiv.argtypes=[ctypes.c_uint,ctypes.c_uint,ctypes.POINTER(ctypes.c_int)]
+  gl.glGetVertexAttribPointerv.argtypes=[ctypes.c_uint,ctypes.c_uint,ctypes.POINTER(ctypes.c_void_p)]
+  gl.glBindBuffer.argtypes=[ctypes.c_uint,ctypes.c_uint]
+  gl.glGetBufferSubData.argtypes=[ctypes.c_uint,ctypes.c_ssize_t,ctypes.c_ssize_t,ctypes.c_void_p]
+  binding=ctypes.c_int();gl.glGetVertexAttribiv(0,0x889f,ctypes.byref(binding))
+  pointer=ctypes.c_void_p();gl.glGetVertexAttribPointerv(0,0x8645,ctypes.byref(pointer))
+  count=8 if rows[self.row]['operations'][0]['kind']=='line' else 3
+  self.vertex_observation={'buffer':binding.value,'offset':pointer.value or 0}
+  if binding.value:
+   old=ctypes.c_int();gl.glGetIntegerv(0x8f36,ctypes.byref(old));gl.glBindBuffer(0x8f36,binding.value)
+   size=ctypes.c_int();gl.glGetBufferParameteriv(0x8f36,0x8764,ctypes.byref(size))
+   if (pointer.value or 0)+count*8<=size.value:
+    values=(ctypes.c_float*(count*2))();gl.glGetBufferSubData(0x8f36,pointer.value or 0,count*8,values)
+    self.vertex_observation['positions']=[[values[i*2],values[i*2+1]]for i in range(count)]
+   gl.glBindBuffer(0x8f36,old.value)
+  program=ctypes.c_int();gl.glGetIntegerv(0x8b8d,ctypes.byref(program));self.vertex_observation['program']=program.value
+  gl.glGetAttribLocation.argtypes=[ctypes.c_uint,ctypes.c_char_p];gl.glGetAttribLocation.restype=ctypes.c_int
+  gl.glGetVertexAttribfv.argtypes=[ctypes.c_uint,ctypes.c_uint,ctypes.POINTER(ctypes.c_float)]
+  self.vertex_observation['matrix_attributes']={}
+  for name in [b'pmvMatrix1',b'pmvMatrix2',b'pmvMatrix3']:
+   location=gl.glGetAttribLocation(program.value,name)
+   if location>=0:
+    values=(ctypes.c_float*4)();gl.glGetVertexAttribfv(location,0x8626,values)
+    self.vertex_observation['matrix_attributes'][name.decode()]=list(values)
+  p.end()
+ def capture(self):
+  im=self.grabFramebuffer();assert im.size().width()==800 and im.size().height()==600
+  self.makeCurrent();gl=ctypes.CDLL('libGL.so.1');gl.glGetString.restype=ctypes.c_char_p;renderer=gl.glGetString(0x1f01).decode();samples=ctypes.c_int();gl.glGetIntegerv(0x80a9,ctypes.byref(samples));self.doneCurrent()
+  assert 'NVIDIA' in renderer or '5090' in renderer;assert samples.value==0 and self.engine==13
+  path=out/(rows[self.row]['name']+'.png');assert im.save(str(path));self.records.append(dict(rows[self.row],framebuffer=[im.width(),im.height()],clip=[0,0,640,400],renderer=renderer,samples=samples.value,engine=self.engine,vertex_observation=self.vertex_observation,paints=self.paints,sha256=hashlib.sha256(path.read_bytes()).hexdigest()))
+  self.row+=1
+  if self.row==len(rows):
+   (out/'original.json').write_text(json.dumps({'source_pin':'6be29fe437a7cd992d4e079f71720821b25216b9','qt':qVersion(),'scope':'actual Qt OpenGL widget painter primitive controls; not original import/view geometry','cases':self.records},indent=2)+'\n');self.close();app.quit()
+  else:self.update();QTimer.singleShot(80,self.capture)
+w=Widget();w.show();QTimer.singleShot(500,w.capture);QTimer.singleShot(10000,lambda:sys.exit('bounded Qt primitive capture missed completion'));raise SystemExit(app.exec())

@@ -94,7 +94,7 @@ impl Cache {
   for operation in &plan.operations {
    match &operation.primitive {
     Primitive::Line{a,b,width,color}=>{
-     if placement==GlyphPlacement::OpenGl&&color[3]==255{if let Some(v)=widget_primitives::square_cap_line(*a,*b,*width)?{writer.direct(&v,&[0,1,2,2,1,3],*color,operation.gate)?;}continue;}
+     if placement==GlyphPlacement::OpenGl&&color[3]==255{if let Some(v)=widget_primitives::square_cap_line(*a,*b,*width)?{writer.direct(&v,&[0,1,2,2,1,3,2,3,4,4,3,5,4,5,6,6,5,7],*color,operation.gate)?;}continue;}
      let path=PathContour{start:*a,segments:vec![Segment::Line(*b)]};
      let spans=if width*density<=1.{let path=transform_path(&path,density);ingetrazo_render::qt_cosmetic::rasterize_path(&path,false,width*density,self.limits.spans)?}
       else{ingetrazo_render::qt_line::rasterize(a.map(|v|v*density),b.map(|v|v*density),width*density,clip,self.limits.cells,self.limits.spans)?};

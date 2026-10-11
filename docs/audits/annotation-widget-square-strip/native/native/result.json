@@ -1,0 +1,272 @@
+{
+  "scope": "actual strict NVIDIA own-window immutable primitive painter controls",
+  "oracle_sha256": "713dca9fe2547cbcad0094508ba92f05fa3b97eb3bb4bb262a152834f2cd233e",
+  "rows": [
+    {
+      "name": "horizontal-square",
+      "pid": 53,
+      "window_id": 136314882,
+      "state": {
+        "nonce": 0,
+        "submitted_serial": 129,
+        "completed_present_serial": 126,
+        "cleared": false,
+        "held_refusal": false,
+        "geometry_uploads": 1,
+        "cached_bytes": 168,
+        "rollback_buffers": 0,
+        "query_uploads": 1,
+        "committed_bytes": 688760
+      },
+      "binary_sha256": "fa3439b3d1ed0af16b64bbbe14f7d4cce99c1c26f2872062584265630268e98c",
+      "native_sha256": "10fc673582a8ea2c65bdaba1c37e74b4d2d829376b60f799f84b832479328397"
+    },
+    {
+      "name": "vertical-square",
+      "pid": 60,
+      "window_id": 136314882,
+      "state": {
+        "nonce": 0,
+        "submitted_serial": 118,
+        "completed_present_serial": 115,
+        "cleared": false,
+        "held_refusal": false,
+        "geometry_uploads": 1,
+        "cached_bytes": 168,
+        "rollback_buffers": 0,
+        "query_uploads": 1,
+        "committed_bytes": 688760
+      },
+      "binary_sha256": "fa3439b3d1ed0af16b64bbbe14f7d4cce99c1c26f2872062584265630268e98c",
+      "native_sha256": "8d9ca1a205f474f989f9e394fb3837485b00c6a371e4baa46eaddf27fe723ecf"
+    },
+    {
+      "name": "reversed",
+      "pid": 67,
+      "window_id": 136314882,
+      "state": {
+        "nonce": 0,
+        "submitted_serial": 139,
+        "completed_present_serial": 136,
+        "cleared": false,
+        "held_refusal": false,
+        "geometry_uploads": 1,
+        "cached_bytes": 168,
+        "rollback_buffers": 0,
+        "query_uploads": 1,
+        "committed_bytes": 688760
+      },
+      "binary_sha256": "fa3439b3d1ed0af16b64bbbe14f7d4cce99c1c26f2872062584265630268e98c",
+      "native_sha256": "db1b377cc7896d7108e6d02aa0636cd761a316960da117c8d43e2423d46154ad"
+    },
+    {
+      "name": "short",
+      "pid": 74,
+      "window_id": 136314882,
+      "state": {
+        "nonce": 0,
+        "submitted_serial": 69,
+        "completed_present_serial": 66,
+        "cleared": false,
+        "held_refusal": false,
+        "geometry_uploads": 1,
+        "cached_bytes": 168,
+        "rollback_buffers": 0,
+        "query_uploads": 1,
+        "committed_bytes": 688760
+      },
+      "binary_sha256": "fa3439b3d1ed0af16b64bbbe14f7d4cce99c1c26f2872062584265630268e98c",
+      "native_sha256": "f6500ad85b655009ade7d7189175a41d7624b2afe191724858c47a414607a088"
+    },
+    {
+      "name": "degenerate",
+      "pid": 81,
+      "window_id": 136314882,
+      "state": {
+        "nonce": 0,
+        "submitted_serial": 107,
+        "completed_present_serial": 104,
+        "cleared": false,
+        "held_refusal": false,
+        "geometry_uploads": 0,
+        "cached_bytes": 0,
+        "rollback_buffers": 0,
+        "query_uploads": 1,
+        "committed_bytes": 688488
+      },
+      "binary_sha256": "fa3439b3d1ed0af16b64bbbe14f7d4cce99c1c26f2872062584265630268e98c",
+      "native_sha256": "b1770d0041b4eba30c0ff2d99afc56cebd54df3c8cf8b444628c55ee1d28b549"
+    },
+    {
+      "name": "cosmetic-zero",
+      "pid": 88,
+      "window_id": 136314882,
+      "state": {
+        "nonce": 0,
+        "submitted_serial": 33,
+        "completed_present_serial": 30,
+        "cleared": false,
+        "held_refusal": false,
+        "geometry_uploads": 1,
+        "cached_bytes": 168,
+        "rollback_buffers": 0,
+        "query_uploads": 1,
+        "committed_bytes": 688760
+      },
+      "binary_sha256": "fa3439b3d1ed0af16b64bbbe14f7d4cce99c1c26f2872062584265630268e98c",
+      "native_sha256": "cdd7a5c9bfc81acf5d26c5d031e22791c6bc6f44021512cf2623179ee30f75d3"
+    },
+    {
+      "name": "negative-origin",
+      "pid": 95,
+      "window_id": 136314882,
+      "state": {
+        "nonce": 0,
+        "submitted_serial": 62,
+        "completed_present_serial": 59,
+        "cleared": false,
+        "held_refusal": false,
+        "geometry_uploads": 1,
+        "cached_bytes": 168,
+        "rollback_buffers": 0,
+        "query_uploads": 1,
+        "committed_bytes": 688760
+      },
+      "binary_sha256": "fa3439b3d1ed0af16b64bbbe14f7d4cce99c1c26f2872062584265630268e98c",
+      "native_sha256": "34902f2cfe759591c128f095d46636c7d8cbb6dec614ad75f9bf052200947d2b"
+    },
+    {
+      "name": "shallow-clipped",
+      "pid": 102,
+      "window_id": 136314882,
+      "state": {
+        "nonce": 0,
+        "submitted_serial": 71,
+        "completed_present_serial": 68,
+        "cleared": false,
+        "held_refusal": false,
+        "geometry_uploads": 1,
+        "cached_bytes": 168,
+        "rollback_buffers": 0,
+        "query_uploads": 1,
+        "committed_bytes": 688760
+      },
+      "binary_sha256": "fa3439b3d1ed0af16b64bbbe14f7d4cce99c1c26f2872062584265630268e98c",
+      "native_sha256": "f6fee1d83ca33c9cdc823a29f12b46b1a48ee6ff5c63115114f8b345af13b5ed"
+    },
+    {
+      "name": "steep",
+      "pid": 109,
+      "window_id": 136314882,
+      "state": {
+        "nonce": 0,
+        "submitted_serial": 30,
+        "completed_present_serial": 27,
+        "cleared": false,
+        "held_refusal": false,
+        "geometry_uploads": 1,
+        "cached_bytes": 168,
+        "rollback_buffers": 0,
+        "query_uploads": 1,
+        "committed_bytes": 688760
+      },
+      "binary_sha256": "fa3439b3d1ed0af16b64bbbe14f7d4cce99c1c26f2872062584265630268e98c",
+      "native_sha256": "0751db107d3b93ef62340599b918321f326894ed27e922591342c3de362df018"
+    },
+    {
+      "name": "narrow",
+      "pid": 116,
+      "window_id": 136314882,
+      "state": {
+        "nonce": 0,
+        "submitted_serial": 49,
+        "completed_present_serial": 46,
+        "cleared": false,
+        "held_refusal": false,
+        "geometry_uploads": 1,
+        "cached_bytes": 168,
+        "rollback_buffers": 0,
+        "query_uploads": 1,
+        "committed_bytes": 688760
+      },
+      "binary_sha256": "fa3439b3d1ed0af16b64bbbe14f7d4cce99c1c26f2872062584265630268e98c",
+      "native_sha256": "038a2bb02344279063a661366e98961e14045b072fda7a43e50ea01a43761c1a"
+    },
+    {
+      "name": "fractional",
+      "pid": 123,
+      "window_id": 136314882,
+      "state": {
+        "nonce": 0,
+        "submitted_serial": 49,
+        "completed_present_serial": 46,
+        "cleared": false,
+        "held_refusal": false,
+        "geometry_uploads": 1,
+        "cached_bytes": 168,
+        "rollback_buffers": 0,
+        "query_uploads": 1,
+        "committed_bytes": 688760
+      },
+      "binary_sha256": "fa3439b3d1ed0af16b64bbbe14f7d4cce99c1c26f2872062584265630268e98c",
+      "native_sha256": "ddde388706837809c3357c5afcce78ccdf67558e95dcc48e3b9758362addf7a0"
+    },
+    {
+      "name": "triangle-clockwise",
+      "pid": 130,
+      "window_id": 136314882,
+      "state": {
+        "nonce": 0,
+        "submitted_serial": 102,
+        "completed_present_serial": 99,
+        "cleared": false,
+        "held_refusal": false,
+        "geometry_uploads": 1,
+        "cached_bytes": 48,
+        "rollback_buffers": 0,
+        "query_uploads": 1,
+        "committed_bytes": 688600
+      },
+      "binary_sha256": "fa3439b3d1ed0af16b64bbbe14f7d4cce99c1c26f2872062584265630268e98c",
+      "native_sha256": "e5e84ec2ac29ccfc16249b024567c8c1254b36c80a5857f38ef05d15c5d17acf"
+    },
+    {
+      "name": "triangle-reversed",
+      "pid": 137,
+      "window_id": 136314882,
+      "state": {
+        "nonce": 0,
+        "submitted_serial": 35,
+        "completed_present_serial": 32,
+        "cleared": false,
+        "held_refusal": false,
+        "geometry_uploads": 1,
+        "cached_bytes": 48,
+        "rollback_buffers": 0,
+        "query_uploads": 1,
+        "committed_bytes": 688600
+      },
+      "binary_sha256": "fa3439b3d1ed0af16b64bbbe14f7d4cce99c1c26f2872062584265630268e98c",
+      "native_sha256": "e5e84ec2ac29ccfc16249b024567c8c1254b36c80a5857f38ef05d15c5d17acf"
+    },
+    {
+      "name": "triangle-boundary",
+      "pid": 144,
+      "window_id": 136314882,
+      "state": {
+        "nonce": 0,
+        "submitted_serial": 38,
+        "completed_present_serial": 35,
+        "cleared": false,
+        "held_refusal": false,
+        "geometry_uploads": 1,
+        "cached_bytes": 48,
+        "rollback_buffers": 0,
+        "query_uploads": 1,
+        "committed_bytes": 688600
+      },
+      "binary_sha256": "fa3439b3d1ed0af16b64bbbe14f7d4cce99c1c26f2872062584265630268e98c",
+      "native_sha256": "ddac0b7a1d58a7ffa07e637abd385c4ed13379b6f4079fbcb2b0b9bd743e2ea9"
+    }
+  ]
+}

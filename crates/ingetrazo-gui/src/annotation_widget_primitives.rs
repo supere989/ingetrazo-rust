@@ -4,7 +4,9 @@
 
 /// Separate source casts/additions matter: Qt stores each coordinate and the
 /// normal in float before constructing its square-cap triangle strip.
-pub(crate) fn square_cap_line(a: [f64; 2], b: [f64; 2], width: f64) -> Result<Option<[[f32; 2]; 4]>, String> {
+/// Keep both original endpoint pairs: collapsing the eight source vertices
+/// into four outer corners changes float edge segments at narrow strokes.
+pub(crate) fn square_cap_line(a: [f64; 2], b: [f64; 2], width: f64) -> Result<Option<[[f32; 2]; 8]>, String> {
     if !a.into_iter().chain(b).chain([width]).all(f64::is_finite) || width < 0. {
         return Err("Invalid widget line input".into());
     }
@@ -27,6 +29,10 @@ pub(crate) fn square_cap_line(a: [f64; 2], b: [f64; 2], width: f64) -> Result<Op
     let vertices = [
         [start[0] + nx, start[1] + ny],
         [start[0] - nx, start[1] - ny],
+        [a[0] + nx, a[1] + ny],
+        [a[0] - nx, a[1] - ny],
+        [b[0] + nx, b[1] + ny],
+        [b[0] - nx, b[1] - ny],
         [end[0] + nx, end[1] + ny],
         [end[0] - nx, end[1] - ny],
     ];
@@ -40,9 +46,24 @@ pub(crate) fn square_cap_line(a: [f64; 2], b: [f64; 2], width: f64) -> Result<Op
 mod tests {
     use super::*;
     #[test]
+    fn exact_narrow_strip_matches_actual_qt_vbo() {
+        let expected = [
+            [20.02494239807129,20.602949142456055],
+            [20.147050857543945,20.27494239807129],
+            [20.188945770263672,20.664003372192383],
+            [20.311054229736328,20.335996627807617],
+            [180.68894958496094,80.41400146484375],
+            [180.81105041503906,80.08599853515625],
+            [180.8529510498047,80.47505950927734],
+            [180.9750518798828,80.14705657958984],
+        ];
+        let actual = square_cap_line([20.25,20.5],[180.75,80.25],0.35).unwrap().unwrap();
+        assert_eq!(actual.map(|p|p.map(f32::to_bits)), expected.map(|p:[f32;2]|p.map(f32::to_bits)));
+    }
+    #[test]
     fn square_cap_float_sequence_and_collapsed_source_points() {
         assert_eq!(square_cap_line([2., 3.], [8., 3.], 2.).unwrap().unwrap(),
-            [[1., 4.], [1., 2.], [9., 4.], [9., 2.]]);
+            [[1., 4.], [1., 2.], [2., 4.], [2., 2.], [8., 4.], [8., 2.], [9., 4.], [9., 2.]]);
         assert_eq!(square_cap_line([2., 3.], [2., 3.], 2.).unwrap(), None);
         assert_eq!(square_cap_line([16_777_216., 3.], [16_777_217., 3.], 2.).unwrap(), None);
         assert!(square_cap_line([f64::MAX, 0.], [0., 0.], 1.).is_err());
