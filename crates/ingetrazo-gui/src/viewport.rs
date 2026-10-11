@@ -29,7 +29,6 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
 
     // 1. Mouse Navigation (Orbit, Pan, Zoom)
     let pointer = ui.input(|i| i.pointer.clone());
-    let scroll_delta = ui.input(|i| i.smooth_scroll_delta.y);
     let shift_down = ui.input(|i| i.modifiers.shift);
     let alt_down = ui.input(|i| i.modifiers.alt);
     let ctrl_down = ui.input(|i| i.modifiers.command || i.modifiers.ctrl);
@@ -47,31 +46,7 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
 
     }
 
-    // Zoom on wheel
-    if app.text3d_dialog.is_none() && scroll_delta != 0.0 && response.hovered() {
-        let zoom_factor = if scroll_delta > 0.0 { 1.15 } else { 0.85 };
-        app.camera.zoom(zoom_factor);
-    }
-
-    // Drag navigation
-    if app.text3d_dialog.is_none() && response.dragged() {
-        let drag_delta = response.drag_delta();
-        let is_middle = pointer.middle_down();
-        let is_alt_left =
-            alt_down && pointer.primary_down() && app.active_tool_type != ToolType::FollowMe && app.navigation.mode.is_none();
-
-        if is_middle || is_alt_left {
-            if shift_down {
-                // Pan
-                app.camera.pan(drag_delta.x as f64, drag_delta.y as f64);
-            } else {
-                // Orbit
-                let delta_yaw = -(drag_delta.x as f64) * 0.01;
-                let delta_pitch = (drag_delta.y as f64) * 0.01;
-                app.camera.orbit(delta_yaw, delta_pitch);
-            }
-        }
-    }
+    if app.text3d_dialog.is_none(){crate::cursor_navigation::input(app,ui,rect,response.contains_pointer());}
 
     // 2. Cursor Raycasting & Snapping
     let mut active_snap_glyph = None;

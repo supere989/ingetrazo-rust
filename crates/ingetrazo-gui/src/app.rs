@@ -54,6 +54,7 @@ pub struct IngeTrazoApp {
     pub component_edit_stack: Vec<crate::component_edit::ComponentEditSession>,
     pub scene: Scene,
     pub camera: OrbitCamera,
+    pub(crate) cursor_navigation:crate::cursor_navigation::CursorNavigation,
     pub navigation: crate::navigation::Navigation,
     pub active_tool_type: ToolType,
     fillet_parameters:(f64,usize),
@@ -167,6 +168,7 @@ impl IngeTrazoApp {
             component_edit_stack: Vec::new(),
             scene,
             camera,
+            cursor_navigation:Default::default(),
             navigation: Default::default(),
             active_tool_type: ToolType::Select,
             fillet_parameters:(0.1,8),
@@ -274,7 +276,7 @@ impl IngeTrazoApp {
     pub fn set_tool(&mut self, tool_type: ToolType) {
         if let Some(parameters)=self.active_tool.fillet_parameters(){self.fillet_parameters=parameters;}
         self.cancel_blender_pick();
-        self.navigation.cancel(); self.navigation.mode=None;
+        self.navigation.cancel(); self.navigation.mode=None;self.cursor_navigation.cancel();
         self.paste_preview=None;
         let version=self.scene.version;let images=self.scene.image_planes.publication_revision();self.active_tool.on_deactivate(&mut self.scene);
         if self.scene.version!=version{self.bump_model_revision();}else if self.scene.image_planes.publication_revision()!=images{self.bump_image_presentation_revision();}

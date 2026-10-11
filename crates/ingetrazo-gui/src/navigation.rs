@@ -16,7 +16,7 @@ impl Default for Navigation {
 }
 impl Navigation {
  // Remember refused admission until revision changes; direct queries preserve correctness.
- fn prepare_collision(&mut self,scene:&ingetrazo_core::scene::Scene,model_revision:u64){
+ pub(crate) fn prepare_collision(&mut self,scene:&ingetrazo_core::scene::Scene,model_revision:u64){
   let key=(scene.version,scene.view_version,model_revision);
   if self.collision_key==Some(key){return;}
   self.collision=None;self.collision_error=None;self.collision_key=Some(key);
@@ -25,7 +25,7 @@ impl Navigation {
    Ok(index)=>self.collision=Some(index),Err(error)=>self.collision_error=Some(error),
   }
  }
- fn hit(&self,scene:&ingetrazo_core::scene::Scene,ray:&Ray)->Option<(DVec3,DVec3,f64)>{
+ pub(crate) fn hit(&self,scene:&ingetrazo_core::scene::Scene,ray:&Ray)->Option<(DVec3,DVec3,f64)>{
   match &self.collision {Some(index)=>index.hit(scene,ray),None=>VisibleRayIndex::direct_hit(scene,ray)}
  }
  fn distance(&self,scene:&ingetrazo_core::scene::Scene,ray:&Ray)->Option<f64>{self.hit(scene,ray).map(|hit|hit.2)}

@@ -80,3 +80,5 @@ pub mod ai_bridge;
 pub mod sun;
 
 pub mod autofold;
+
+mod camera_cursor;
