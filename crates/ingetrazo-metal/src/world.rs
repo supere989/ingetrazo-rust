@@ -807,6 +807,8 @@ impl Prepared {
         }
         self.target.order.as_ref().map_or(0, |o| o.runs.len())
     }
+    /// Diagnostic routing observation; pixels remain the acceptance oracle.
+    pub fn section_contours_enabled(&self)->bool{self.section.enabled()&&self.contour.is_some()}
     pub fn validate_owner(&self, metal: &NativeMetal) -> Result<(), String> {
         self.owner.validate(metal)
     }
