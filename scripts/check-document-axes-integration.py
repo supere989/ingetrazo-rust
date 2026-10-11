@@ -20,7 +20,7 @@ out.mkdir(parents=True, exist_ok=True)
 pin = "6be29fe437a7cd992d4e079f71720821b25216b9"
 assert subprocess.check_output(["git", "-C", str(repo/"ingetrazo"), "rev-parse", "HEAD"], text=True).strip() == pin
 suffix = ".exe" if os.name == "nt" else ""
-consumers = ["change_axes_fixture", "document_preservation_workflow", "pushpull_solid_workflows", "fillet_scoped", "pushpull_finite_workflows", "paste_save_workflow", "box_selection_fixture", "material_restamp_workflow", "material_tray_egui", "cursor_navigation_workflow", "annotation_delete_fixture", "zoom_extents_workflow", "annotation_move_fixture", "annotation_acquisition_fixture", "mesh_kernel_acceptance", "annotation_edit_style_fixture"]
+consumers = ["change_axes_fixture", "document_preservation_workflow", "pushpull_solid_workflows", "fillet_scoped", "pushpull_finite_workflows", "paste_save_workflow", "box_selection_fixture", "material_restamp_workflow", "material_tray_egui", "cursor_navigation_workflow", "annotation_delete_fixture", "zoom_extents_workflow", "annotation_move_fixture", "annotation_acquisition_fixture", "mesh_kernel_acceptance", "annotation_edit_style_fixture", "annotation_text_create_fixture"]
 identities = {name: hashlib.sha256((binaries/(name+suffix)).read_bytes()).hexdigest() for name in consumers}
 env = dict(os.environ, QT_QPA_PLATFORM="offscreen", INGETRAZO_STATE_DIR=str(out/"state"),
            XDG_CONFIG_HOME=str(out/"config"), XDG_DATA_HOME=str(out/"data"), XDG_CACHE_HOME=str(out/"cache"))
@@ -131,11 +131,17 @@ ae = archive("annotation-edit-style", "manifest.json", ["input.igz", "original.j
 run([binaries/(consumers[15]+suffix), annotation_edit], "annotation-edit-style/runtime.log")
 run([sys.executable, repo/"scripts/reopen-annotation-edit-style.py", annotation_edit], "annotation-edit-style/reopen.log")
 run([sys.executable, repo/"scripts/check-annotation-edit-style.py", annotation_edit], "annotation-edit-style/acceptance.json")
+annotation_text = out/"annotation-text-create"
+text_cases = [context+"-"+kind for context in ["root", "nested"] for kind in ["edge", "face", "coordinates"]]+["closed-face"]
+at = archive("annotation-text-create", "manifest.json", ["input.igz", "original.json", "original-history.json", "failed-unknown-label-root-edge.igz", "failed-group-edge-suggestion.json"]+[name+ending for name in text_cases for ending in ["-input.igz", ".igz"]], annotation_text)
+run([binaries/(consumers[16]+suffix), annotation_text], "annotation-text-create/runtime.log")
+run([sys.executable, repo/"scripts/reopen-annotation-text-create.py", annotation_text], "annotation-text-create/reopen.log")
+run([sys.executable, repo/"scripts/check-annotation-text-create.py", annotation_text], "annotation-text-create/acceptance.jsonl")
 rows = json.loads((doc/"native.json").read_text())["rows"]
 assert [(x["fixture"],x["phase"]) for x in rows] == [(f,p) for f in ["retained","nested-leaves"] for p in ["edited","undo","redo"]]
 assert all(x["saved"] and x["clean"] for x in rows)
 result = {"revision":subprocess.check_output(["git","rev-parse","HEAD"],cwd=repo,text=True).strip(),
-          "source_pin":pin,"binary_sha256":identities,"source_archives":{"axes":a,"documents":d,"fillet":f,"pushpull_finite":p,"paste_save":ps,"box_selection":bs,"materials":mr,"cursor":cn,"annotations":ad,"zoom_extents":ze,"annotation_move":am,"annotation_acquisition":aa,"mesh_kernel":mk,"annotation_edit_style":ae},
+          "source_pin":pin,"binary_sha256":identities,"source_archives":{"axes":a,"documents":d,"fillet":f,"pushpull_finite":p,"paste_save":ps,"box_selection":bs,"materials":mr,"cursor":cn,"annotations":ad,"zoom_extents":ze,"annotation_move":am,"annotation_acquisition":aa,"mesh_kernel":mk,"annotation_edit_style":ae,"annotation_text_create":at},
           "axes":json.loads((axes/"check.json").read_text()),"documents":{"actual_app_saves":len(rows),"exact_original_reopens":6,"leaf_record_types":15,"negative_controls":5},
           "fillet":json.loads((fillet/"check.json").read_text()),"fillet_volume":json.loads((fillet/"volume.json").read_text()),"pushpull":json.loads((out/"pushpull-comparison.json").read_text()),
           "pushpull_finite":json.loads((finite/"comparison.json").read_text()),
@@ -150,6 +156,7 @@ result = {"revision":subprocess.check_output(["git","rev-parse","HEAD"],cwd=repo
           "annotation_acquisition":json.loads((acquisition/"acceptance.json").read_text()),
           "mesh_kernel":json.loads((mesh/"acceptance.json").read_text()),
           "annotation_edit_style":json.loads((annotation_edit/"acceptance.json").read_text()),
+          "annotation_text_create":[json.loads(line) for line in (annotation_text/"acceptance.jsonl").read_text().splitlines()],
           "fresh_source_acquisitions":0,"result":"pass"}
 (out/"result.json").write_text(json.dumps(result,indent=2)+"\n")
 print(json.dumps(result))
