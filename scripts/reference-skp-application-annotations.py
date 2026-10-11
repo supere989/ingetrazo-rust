@@ -74,5 +74,12 @@ def take(name):
  operations(name)
  rows.append(dict(name=name,gl=dict(vp.gl_info),camera_snapshot=actual,depth_snapshot_shape=list(snap[0].shape)if snap is not None else None,image_sha256=hashlib.sha256((out/(name+'.png')).read_bytes()).hexdigest()))
 take('annotations-on');dimensions,labels=scene.dimensions,scene.text_labels;scene.dimensions=[];scene.text_labels=[];take('annotations-off');scene.dimensions=dimensions;scene.text_labels=labels;take('annotations-restored')
+# Diagnostic target-engine isolation: unchanged original methods on the exact
+# source model baseline through QImage raster, separate from widget acceptance.
+raster=QImage(str(out/'annotations-off.png'));assert not raster.isNull()
+raster.setDotsPerMeterX(round(vp.logicalDpiX()/0.0254));raster.setDotsPerMeterY(round(vp.logicalDpiY()/0.0254))
+painter=Recorder(raster);painter.setRenderHint(QPainter.Antialiasing,True);painter.setRenderHint(QPainter.TextAntialiasing,True)
+vp._draw_dimensions(painter);vp._draw_text_labels(painter);painter.end();assert raster.save(str(out/'raster-overlay-on-source-baseline.png'))
+(out/'raster-target-diagnostic.json').write_text(json.dumps(dict(scope='same actual original bound annotation methods/depth against exact source baseline; QImage raster engine diagnostic, not widget replacement',widget_dpi=[vp.logicalDpiX(),vp.logicalDpiY()],raster_dpi=[raster.logicalDpiX(),raster.logicalDpiY()],render_hints=['Antialiasing','TextAntialiasing']),indent=2)+'\n')
 vp.close();vp.deleteLater();app.processEvents()
 (out/'source.json').write_text(json.dumps(dict(source_pin='6be29fe437a7cd992d4e079f71720821b25216b9',parser_pin='291700bc213655a00461838de71e5f206311e619',input_sha256=hashlib.sha256(skp.read_bytes()).hexdigest(),camera=camera,records=rows,scope='actual original Viewport with actual depth capture and annotations; paired native application ROI required'),indent=2)+'\n')
