@@ -1,0 +1,19 @@
+{
+  "source": "4a1a0395900bdb9e19003ef40a9abd4403d7ec61",
+  "workflow": ".github/workflows/metal-world-gpu.yml",
+  "review": "approved isolated native ARM and Intel execution",
+  "checks": [
+    "Exact diagnostic branch; broad parity and compute branches exclude this branch",
+    "Only native_world_depth built with locked dependencies and two build jobs",
+    "45 second runtime deadline and retained failure artifacts",
+    "Nine literal frame names with strict interior/background pixel oracle",
+    "Before/after warm counters and zero committed/reserved ledger required",
+    "Blank and disabled-depth outputs rejected as positives"
+  ],
+  "limitations": [
+    "Triangle edges and MSAA excluded from this bounded oracle",
+    "Full materials and physical presentation not covered"
+  ],
+  "run_id": 38098691387,
+  "execution_status": "Agent reports queued; native results not yet reviewed"
+}

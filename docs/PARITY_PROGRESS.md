@@ -19,6 +19,8 @@ Latest independent rendering diagnosis: [real layout](audits/annotation-real-ope
 
 ## Dated implementation and verification evidence
 
+Metal world native execution launched (2026-10-11 UTC): reviewed isolated source `4a1a0395` has a single dedicated ARM/Intel run [38098691387](https://github.com/supere989/ingetrazo-rust/actions/runs/38098691387). [Workflow review](audits/metal-world-root-review/native-workflow-review.json) requires nine GPU frames, depth-disabled rejection, retained old/new UI sampling, unchanged warm counters and zero final tracked allocations. Runtime results remain pending; no rendering or release gate is promoted.
+
 Merged dynamic Edge lookup (2026-10-11 UTC): fresh original and merged Rust match all 17 ordered observations, including smaller-incidence selection, detached public-list lookup, dynamic length/iteration/other callbacks and propagated errors. Five mutated outputs reject; native teardown asserts zero ledger and Vertex/Edge payloads. [Merged evidence](audits/ai-graph-find-edge-merged-root/acceptance.json). Arbitrary membership projection and production scripting remain OPEN.
 
 Actual Qt target-engine distinction (2026-10-11 UTC): independent root decoding verifies that the same original annotation methods drawn onto the exact source baseline through QImage differ from the actual widget at 3,608 pixels. Native differs from the widget at 4,891 pixels and from this raster diagnostic at 2,082. [Independent review](audits/annotation-widget-raster-target/root-review.json). The diagnostic is not a replacement oracle: actual QWidget parity remains required, and earlier QImage replay equality cannot close this gate.
