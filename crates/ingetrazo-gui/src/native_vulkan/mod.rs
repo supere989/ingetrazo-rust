@@ -410,6 +410,8 @@ impl System {
         Ok(())
     }
 
+    /// Read-only engineering observation; adds no waits or production uploads.
+    pub fn billboard_observation_for_probe(&self)->serde_json::Value{serde_json::json!({"submitted_serial":self.draw_serial,"completed_present_serial":self.completed_present_serial_for_probe,"prepare_error":self.annotation_prepare_error,"world":self.world.as_ref().map(|w|w.billboard_stats_for_probe())})}
     pub fn solar_stats_for_probe(&self)->Option<(u64,u64,bool)>{self.world.as_ref().map(|world|world.shadow_stats_for_probe())}
     pub fn submitted_frames_for_probe(&self)->u64{self.draw_serial}
 

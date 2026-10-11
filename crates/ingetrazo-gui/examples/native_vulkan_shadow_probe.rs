@@ -193,6 +193,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         image::ColorType::Rgba8,
     )?;
     let cold = world.shadow_stats_for_probe();
+    let billboard_cold=world.billboard_stats_for_probe();
     let uploads = world.uploads;
     for _ in 0..3 {
         world.set_scene_with_sun(
@@ -210,6 +211,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         assert_eq!(render(&mut world, &mut serial)?, on);
         assert_eq!(world.shadow_stats_for_probe(), cold);
         assert_eq!(world.uploads, uploads);
+        assert_eq!(world.billboard_stats_for_probe(),billboard_cold,"warm frame did image or vertex work");
     }
     let committed = budget.ledger.lock().unwrap().total_committed();
     budget.ledger.lock().unwrap().total_limit = Some(committed);
@@ -296,7 +298,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     std::fs::write(
         out.join("result.json"),
         serde_json::to_vec_pretty(
-            &serde_json::json!({"source_commit":option_env!("INGETRAZO_BUILD_SOURCE"),"bitmap_direction_control":bitmap_direction_control,"ground_receiver":ground,"cold":cold,"uploads":uploads,"refusal":refusal,"ledger_zero":final_bytes==0,"map_size":2048,"source_reference_pending":reference.is_none(),"reference_case":reference.as_ref().map(|r|r["name"].clone()),"receiver_matrix":receiver_matrix,"light_matrix":light_matrix,"samples":receiver_samples}),
+            &serde_json::json!({"billboard_cold":billboard_cold,"source_commit":option_env!("INGETRAZO_BUILD_SOURCE"),"bitmap_direction_control":bitmap_direction_control,"ground_receiver":ground,"cold":cold,"uploads":uploads,"refusal":refusal,"ledger_zero":final_bytes==0,"map_size":2048,"source_reference_pending":reference.is_none(),"reference_case":reference.as_ref().map(|r|r["name"].clone()),"receiver_matrix":receiver_matrix,"light_matrix":light_matrix,"samples":receiver_samples}),
         )?,
     )?;
     Ok(())
