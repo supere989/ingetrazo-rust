@@ -1,9 +1,9 @@
 {
   "runtime_commit": "7277ac61b97e481d1f62f73b50a3797bafd7810c",
-  "checker_commit": "7277ac61b97e481d1f62f73b50a3797bafd7810c",
+  "checker_commit": "7f988f93773ca16990faf2f03392df78113e42d3",
   "source_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
   "archive": "records.zip",
-  "archive_sha256": "d5c204dc289a62d5d16fe2fd08e23d7c34c9405de756942756a16de0d7dea064",
+  "archive_sha256": "8f91f1eff8e01a6c87f5e72e1e17874a8da5b32c7ba7d7a83f54faabbdcd04e6",
   "entries": [
     {
       "path": "attempts/affected-input-extraction/cause.json",
@@ -156,6 +156,11 @@
       "sha256": "feec66d6c0f72bc607c2baf8dbe0331847532da5a366f60083d4059f996bf1d3"
     },
     {
+      "path": "logs/obj-fusion-whitelist-check.log",
+      "bytes": 181,
+      "sha256": "eaa8733513f5e36ba552b804a260faad96e5e19c3717e0a88c522f8a19ec1167"
+    },
+    {
       "path": "native-fusion-controls.json",
       "bytes": 86,
       "sha256": "8ca93cfa3de67d8fcf8204e58172ad465a53e8eb8a066147c687a870aec4eca6"
@@ -209,6 +214,11 @@
       "path": "reopens-obj-fusion.json",
       "bytes": 409834,
       "sha256": "80c6599745f0b629983f5f08b9e868b46add9db6767dfad91be368c0d487c617"
+    },
+    {
+      "path": "winding-whitelist.json",
+      "bytes": 5811,
+      "sha256": "679f78b8e165284936a1503f7384e4ca97b480f183f0c045f47998f3b7ef7515"
     }
   ],
   "sources": [
@@ -250,9 +260,9 @@
     },
     {
       "path": "scripts/check-obj-fusion.py",
-      "bytes": 6030,
-      "sha256": "a2bff3e0656929c048d6e6ee406f157055f5a3685bee2bccbca835ef05ea7634",
-      "commit": "7277ac61b97e481d1f62f73b50a3797bafd7810c"
+      "bytes": 6880,
+      "sha256": "c9c22013f4ec184479b4610fa43ddaf3269ef2bc9299db6b4679d857a9cda3db",
+      "commit": "7f988f93773ca16990faf2f03392df78113e42d3"
     },
     {
       "path": "scripts/reference-obj-fusion-reopens.py",
@@ -277,7 +287,7 @@
     "states": 55,
     "unresolved_source_winding_case": "closed-cube-leaf",
     "unresolved_winding_leaves": 16,
-    "negative_controls": 16,
+    "negative_controls": 17,
     "ownership_controls": 2,
     "passed": true
   },
