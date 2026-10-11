@@ -7,7 +7,7 @@ archive=root/manifest["archive"];assert hashlib.sha256(archive.read_bytes()).hex
 with zipfile.ZipFile(archive) as z:
  assert set(z.namelist())==set(manifest["files"])
  for name,sha in manifest["files"].items():assert hashlib.sha256(z.read(name)).hexdigest()==sha,name
- source=json.loads(z.read("original.json"));native=json.loads(z.read("native.json"));old=json.loads(z.read("compiled-old-picker.json"))
+ source=json.loads(z.read("original.json"));native=json.loads(z.read("native.json"));old=json.loads(z.read("compiled-old-picker.json"));frame_final=json.loads(z.read("compiled-frame-final-modifiers.json"))
  assert source["source_commit"]=="6be29fe437a7cd992d4e079f71720821b25216b9"
  inventory=["soft-off","soft-on","occluded","outside","shift-remove","ctrl-add","both-remove","hidden-object-off","hidden-object-on","hidden-face-off","hidden-face-on","hidden-face-locked","hidden-face-layer-off","hidden-face-layer-restored","geometry-toggle-off","object-before-toggle","object-toggle-off","object-enter","undo-object-before","undo-object-hide","undo-object-shown","undo-object-undo","xray-below","wireframe-below","double-soft","double-visible","locked-occluder","excluded-occluder"]
  assert [r["name"] for r in source["rows"]]==inventory
@@ -26,9 +26,12 @@ with zipfile.ZipFile(archive) as z:
  try:compare(old)
  except AssertionError:pass
  else:raise AssertionError("Compiled literal old reference-picker accepted")
+ try:compare(frame_final)
+ except AssertionError:pass
+ else:raise AssertionError("Compiled frame-final modifier defect accepted")
  missing={**native,"rows":native["rows"][:-1]}
  try:compare(missing)
  except AssertionError:pass
  else:raise AssertionError("Missing state accepted")
  assert b'let hit_edge = crate::base::pick_scene_edge(scene, &ctx.ray, 0.2);' in z.read("compiled-old-picker.patch")
- print("PASS 28 exact Qt/native dispatcher states, 10 actual egui pointer sequences, compiled old-picker and missing-state negatives")
+ print("PASS 28 exact Qt/native dispatcher states, 10 actual egui pointer sequences, compiled old-picker, frame-final modifiers and missing-state negatives")

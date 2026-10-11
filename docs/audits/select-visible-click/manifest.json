@@ -1,0 +1,30 @@
+{
+  "archive": "records.zip",
+  "archive_sha256": "300d9e64aa04d683896104c0a8b33212ade3f5fba7c2f7f7f1f33ea1388ceeda",
+  "files": {
+    "original.json": "39ce11903f2488eeb78644a8c868837d1b51c9d92930989648bf326e65786045",
+    "native.json": "c74b7cf24edf2c9615c892c177a720f69523c0fb95230c315715b32050157ba1",
+    "compiled-old-picker.json": "6f62f61ef570d20d2d65484dd94ca5ff5ce29e51e532f4f96c448c640aa963b7",
+    "compiled-old-picker.patch": "cb76ecfbca82caa5a56bdfe02151991dfef79d2a7cf6bf23f37be8ffdbef01e7",
+    "old-picker-build-provenance.json": "c939866548a112c23a3d961e0d16180cf7820605b06e29acf862a4881d006ec2",
+    "build-provenance.json": "3678e9ebbc92e4259234f37c76faffdfaaf682c00bfd05a119109daa876b5b0e",
+    "focused-tests.log": "b9b355b099ba6aa056bc4bb7c5c17cbfde59a506832216d34500f141e81e5ad4",
+    "frozen-build.log": "de1c13ffa0a5884f97a0ca9a043ae3a2aa9fbf86152f2fe2fe7ae697e02358a3",
+    "compiled-old-build.log": "ad14155ddc11d2b9b60e475ab787a5ef634881a1196a38d153d6ef3750070405",
+    "compiled-frame-final-modifiers.json": "a5ff3fcc67936a075d03bc31fbe5dd9fe13f5646eea3231da40b6d919efba0e8",
+    "compiled-frame-final-modifiers.patch": "0648616111e237d81746b86c0fa9eff1dfb48dc9556cf68fdabe4ed553ebb7e7",
+    "compiled-frame-final-build.log": "de1c13ffa0a5884f97a0ca9a043ae3a2aa9fbf86152f2fe2fe7ae697e02358a3",
+    "restored-build.log": "de1c13ffa0a5884f97a0ca9a043ae3a2aa9fbf86152f2fe2fe7ae697e02358a3"
+  },
+  "runtime_source": "938f0ba1c9de751ee938718d32bc34ab9224f434",
+  "original_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "oracle_helper_sha256": "157b9473fb71e16e9a63ad996b3a967c08f4478d8887a5ae161b3bf19329edde",
+  "source_file_sha256": {
+    "tools/select.py": "baa33a660666cbc78a25ca291e0b40a4b2bd88755393ebce08295e1de6327916",
+    "views/viewport.py": "1fb62f55b8f559deb3676924ee69a9a444397faa28c49651111cea44e420c724",
+    "views/main_window.py": "ea02be3e439c80731d0f5b5fde3d92d9b3f62e8ad10cd44ad305c3261b7786fa",
+    "core/scene.py": "9dfcd32f1ff5b1445180eafd8df36eafb92fa08ed3597bb90eac09554899d2e0",
+    "tests/test_hidden_things_are_clickable.py": "b398880987d7649cbfc74d8f83b1a42b10082cf81cda70d603b87a0248528e41"
+  },
+  "binary_sha256": "9a6d6db8b109df44694b4587c3c6e605615ed40a4c913694d267981359207c46"
+}
