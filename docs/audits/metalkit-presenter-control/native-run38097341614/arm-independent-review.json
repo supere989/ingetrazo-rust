@@ -1,0 +1,271 @@
+{
+  "run_id": 38097341614,
+  "artifact_id": 11686665828,
+  "source": "f8540a50b58e4a5d070c59687b118d108404d0ce",
+  "zip_sha256": "54d9cfdc0f862cae580396ad7e1bff7be2f56ac4c16bc79a205b1d1f47822f5d",
+  "independent_checks": "ZIP/sourcefiles/reportSHA/retainedObjCbinarySHA/literal2inventory/nativeSDKstage/actualcallbackIDs/times/Completed/device/errors/outerdeadline verified",
+  "stage_outcomes": {
+    "rust_build": "success",
+    "sdk_build": "success",
+    "execution_report_present": true
+  },
+  "execution": {
+    "scope": "Sequential same-runner/session diagnostic; distinct processes/eventloops, no production fallback",
+    "controls": {
+      "appkit_presenter_control": {
+        "source_revision": "f8540a50b58e4a5d070c59687b118d108404d0ce",
+        "binary_sha256": "538707b0f44f6ddc5edf635b4547140e7c7c3158af8df0456a64034804413c1c",
+        "source_file_sha256": {
+          "crates/ingetrazo-metal/examples/appkit_presenter_control.rs": "1f8c84c14f25f0164aaa511f062293167d2974b03dc578587b2a6e9939d6fabb",
+          "crates/ingetrazo-metal/examples/support/metalkit_frame.rs": "cead4c3128a72c963568a02c6b459a229b6c4eec931ebd973c1dc7d16f3740e4"
+        },
+        "process_timeout_seconds": 45,
+        "fixture_deadline_seconds": 15,
+        "passed": false,
+        "exit_code": 1,
+        "elapsed_seconds": 15.361142833999992,
+        "fixture_report_present": true,
+        "fixture_report_sha256": "6b10cc1d767ce8cbbd5b8b66de8f80f1c9df42c5988c2dfc025b2c66b0895634",
+        "fixture": {
+          "passed": false,
+          "error": "AppKit strict positive presentation deadline",
+          "scope": "Native AppKit/systemMTKView diagnostic without winit hosting or observers; no production fallback",
+          "queue_device": 4294967706,
+          "device_registry_id": 4294967706,
+          "layer_device": 4294967706,
+          "draw_calls": 887,
+          "submitted": 6,
+          "displayed": 0,
+          "skipped": 3,
+          "pending": 3,
+          "no_drawable": 0,
+          "frames": [
+            {
+              "id": 3,
+              "status": 4,
+              "seen": false,
+              "time": 0.0
+            },
+            {
+              "id": 4,
+              "status": 4,
+              "seen": false,
+              "time": 0.0
+            },
+            {
+              "id": 5,
+              "status": 4,
+              "seen": false,
+              "time": 0.0
+            }
+          ],
+          "application_active": true,
+          "window_visible": true,
+          "window_key": true,
+          "framework_timed_updates": true,
+          "framework_current_drawable": true,
+          "winit_hosting": false
+        }
+      },
+      "appkit_objc_presenter_control": {
+        "source_revision": "f8540a50b58e4a5d070c59687b118d108404d0ce",
+        "binary_sha256": "dacf26086d940debed903764e9fdd3fa7322b0409ac475f27a28af0296c8d353",
+        "source_file_sha256": {
+          "scripts/native/appkit_objc_presenter_control.m": "b40ad63ed040118788629f312f5ca06348d1f199b9670a95f1d48f8329f90157"
+        },
+        "process_timeout_seconds": 45,
+        "fixture_deadline_seconds": 15,
+        "passed": false,
+        "exit_code": 1,
+        "elapsed_seconds": 15.14121799999998,
+        "fixture_report_present": true,
+        "fixture_report_sha256": "7986c74769d94c6baa1e0ab2238cbe4fb163cbf2c889865eb98d688c65470c92",
+        "fixture": {
+          "winit_hosting": false,
+          "framework_timed_updates": true,
+          "displayed": 0,
+          "queue_device": 4294967706,
+          "submitted": 42,
+          "device_name": "Apple Paravirtual device",
+          "skipped": 39,
+          "layer_device": 4294967706,
+          "window_key": true,
+          "window_visible": true,
+          "application_active": true,
+          "terminal_proof_last16": [
+            {
+              "command_status": 4,
+              "drawable_id": 23,
+              "gpu_end": 168.69359300000002,
+              "callback_drawable_id": 23,
+              "presented_time": 0,
+              "gpu_start": 168.69291387500002
+            },
+            {
+              "command_status": 4,
+              "drawable_id": 24,
+              "gpu_end": 168.710352875,
+              "callback_drawable_id": 24,
+              "presented_time": 0,
+              "gpu_start": 168.70956925000002
+            },
+            {
+              "command_status": 4,
+              "drawable_id": 25,
+              "gpu_end": 168.727069625,
+              "callback_drawable_id": 25,
+              "presented_time": 0,
+              "gpu_start": 168.72627200000002
+            },
+            {
+              "command_status": 4,
+              "drawable_id": 26,
+              "gpu_end": 169.74449625,
+              "callback_drawable_id": 26,
+              "presented_time": 0,
+              "gpu_start": 169.743748
+            },
+            {
+              "command_status": 4,
+              "drawable_id": 27,
+              "gpu_end": 169.7602691666667,
+              "callback_drawable_id": 27,
+              "presented_time": 0,
+              "gpu_start": 169.75955125000002
+            },
+            {
+              "command_status": 4,
+              "drawable_id": 28,
+              "gpu_end": 169.77685625,
+              "callback_drawable_id": 28,
+              "presented_time": 0,
+              "gpu_start": 169.776199125
+            },
+            {
+              "command_status": 4,
+              "drawable_id": 29,
+              "gpu_end": 169.793476375,
+              "callback_drawable_id": 29,
+              "presented_time": 0,
+              "gpu_start": 169.792862875
+            },
+            {
+              "command_status": 4,
+              "drawable_id": 30,
+              "gpu_end": 170.810421625,
+              "callback_drawable_id": 30,
+              "presented_time": 0,
+              "gpu_start": 170.80959004166667
+            },
+            {
+              "command_status": 4,
+              "drawable_id": 31,
+              "gpu_end": 170.82655941666667,
+              "callback_drawable_id": 31,
+              "presented_time": 0,
+              "gpu_start": 170.8257455
+            },
+            {
+              "command_status": 4,
+              "drawable_id": 32,
+              "gpu_end": 170.843632,
+              "callback_drawable_id": 32,
+              "presented_time": 0,
+              "gpu_start": 170.8429065
+            },
+            {
+              "command_status": 4,
+              "drawable_id": 33,
+              "gpu_end": 170.86027287500002,
+              "callback_drawable_id": 33,
+              "presented_time": 0,
+              "gpu_start": 170.85957437500002
+            },
+            {
+              "command_status": 4,
+              "drawable_id": 34,
+              "gpu_end": 171.87723687500002,
+              "callback_drawable_id": 34,
+              "presented_time": 0,
+              "gpu_start": 171.87640179166667
+            },
+            {
+              "command_status": 4,
+              "drawable_id": 35,
+              "gpu_end": 171.89422050000002,
+              "callback_drawable_id": 35,
+              "presented_time": 0,
+              "gpu_start": 171.893429625
+            },
+            {
+              "command_status": 4,
+              "drawable_id": 36,
+              "gpu_end": 171.910814375,
+              "callback_drawable_id": 36,
+              "presented_time": 0,
+              "gpu_start": 171.90994212500001
+            },
+            {
+              "command_status": 4,
+              "drawable_id": 37,
+              "gpu_end": 171.92707716666666,
+              "callback_drawable_id": 37,
+              "presented_time": 0,
+              "gpu_start": 171.92629541666668
+            },
+            {
+              "command_status": 4,
+              "drawable_id": 38,
+              "gpu_end": 172.94306862500002,
+              "callback_drawable_id": 38,
+              "presented_time": 0,
+              "gpu_start": 172.94232304166667
+            }
+          ],
+          "scope": "Literal Apple SDK Objective-C AppKit/MTKView diagnostic; no Rust callback path or production fallback",
+          "device_registry_id": 4294967706,
+          "no_drawable": 0,
+          "error": "Objective-C strict positive presentation deadline",
+          "rust_bindings": false,
+          "frames": [
+            {
+              "presented_time": 0,
+              "callback_seen": false,
+              "gpu_start": 172.95865425000002,
+              "command_status": 4,
+              "gpu_end": 172.959402125,
+              "callback_drawable_id": 0,
+              "drawable_id": 39
+            },
+            {
+              "presented_time": 0,
+              "callback_seen": false,
+              "gpu_start": 172.976669875,
+              "command_status": 4,
+              "gpu_end": 172.97724266666668,
+              "callback_drawable_id": 0,
+              "drawable_id": 40
+            },
+            {
+              "presented_time": 0,
+              "callback_seen": false,
+              "gpu_start": 172.993431125,
+              "command_status": 4,
+              "gpu_end": 172.99401425000002,
+              "callback_drawable_id": 0,
+              "drawable_id": 41
+            }
+          ],
+          "pending": 3,
+          "passed": false,
+          "draw_calls": 895,
+          "framework_current_drawable": true
+        }
+      }
+    },
+    "same_device": true,
+    "passed": false
+  },
+  "classification": "Both directAppKit Rust and literalAppleSDK ObjectiveC FAILpositivepresentation. Literalnativeblocks execute39 skippedcallbacks; retainedlast16 IDs matchandreportedtime0 withcompletedGPUwork. SharedRustbindings/Block2/State notsupportedassolecause. CommonAPIconfiguration/platformdriver/session unresolved; noVMlimitation/physicalplatformclaim or gateweakening.",
+  "next": "Intelpairedpositiveexpectedbutpending. Noevidence-drivenproductionfix identified; noautomaticcloudrerun."
+}
