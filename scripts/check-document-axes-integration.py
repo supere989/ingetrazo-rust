@@ -8,6 +8,7 @@ from pathlib import Path
 import subprocess
 import sys
 import zipfile
+from consumer_stages import Stages
 
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument("binaries", type=Path, help="prebuilt example directory")
@@ -17,15 +18,17 @@ repo = Path(__file__).resolve().parents[1]
 binaries = args.binaries.resolve()
 out = args.output.resolve()
 out.mkdir(parents=True, exist_ok=True)
+stages = Stages(out)
+archive_dependencies = {}
 pin = "6be29fe437a7cd992d4e079f71720821b25216b9"
 assert subprocess.check_output(["git", "-C", str(repo/"ingetrazo"), "rev-parse", "HEAD"], text=True).strip() == pin
 suffix = ".exe" if os.name == "nt" else ""
 consumers = ["change_axes_fixture", "document_preservation_workflow", "pushpull_solid_workflows", "fillet_scoped", "pushpull_finite_workflows", "paste_save_workflow", "box_selection_fixture", "material_restamp_workflow", "material_tray_egui", "cursor_navigation_workflow", "annotation_delete_fixture", "zoom_extents_workflow", "annotation_move_fixture", "annotation_acquisition_fixture", "mesh_kernel_acceptance", "annotation_edit_style_fixture", "annotation_text_create_fixture", "mesh_finite_kernel_fixture", "annotation_hover_fixture", "dimension_anchor_acceptance_fixture", "context_document_lifecycle", "line_command_history_fixture"]
-identities = {name: hashlib.sha256((binaries/(name+suffix)).read_bytes()).hexdigest() for name in consumers}
+identities = {name: stages.stage("binary:"+name, [], lambda name=name: hashlib.sha256((binaries/(name+suffix)).read_bytes()).hexdigest()) for name in consumers}
 env = dict(os.environ, QT_QPA_PLATFORM="offscreen", INGETRAZO_STATE_DIR=str(out/"state"),
            XDG_CONFIG_HOME=str(out/"config"), XDG_DATA_HOME=str(out/"data"), XDG_CACHE_HOME=str(out/"cache"))
 
-def archive(name, manifest_name, selected, destination, preserve_paths=False, archive_name="records.zip"):
+def _archive(name, manifest_name, selected, destination, preserve_paths=False, archive_name="records.zip"):
     folder = repo/"docs/audits"/name
     manifest = json.loads((folder/manifest_name).read_text())
     records = manifest.get("records", manifest.get("entries", manifest.get("members")))
@@ -55,9 +58,20 @@ def archive(name, manifest_name, selected, destination, preserve_paths=False, ar
         assert set(selected) <= set(z.namelist()), name
     return hashlib.sha256(raw).hexdigest()
 
-def run(argv, output):
-    with (out/output).open("w") as stdout, (out/(output+".stderr")).open("w") as stderr:
-        subprocess.run([str(v) for v in argv], cwd=repo, env=env, stdout=stdout, stderr=stderr, check=True, timeout=120)
+def archive(name, manifest_name, selected, destination, preserve_paths=False, archive_name="records.zip"):
+    key = "archive:"+name
+    archive_dependencies.setdefault(destination.name, []).append(key)
+    return stages.stage(key, [], lambda: _archive(name, manifest_name, selected, destination, preserve_paths, archive_name))
+
+def run(argv, output, requires=()):
+    dependencies = list(archive_dependencies.get(Path(output).parts[0], [])) + list(requires)
+    if Path(argv[0]).parent == binaries:
+        dependencies.append("binary:"+Path(argv[0]).stem)
+    def execute():
+        (out/output).parent.mkdir(parents=True, exist_ok=True)
+        with (out/output).open("w") as stdout, (out/(output+".stderr")).open("w") as stderr:
+            subprocess.run([str(v) for v in argv], cwd=repo, env=env, stdout=stdout, stderr=stderr, check=True, timeout=120)
+    return stages.stage(output, dependencies, execute)
 
 axes = out/"axes"
 axis_cases = ["classic", "shared", "nested", "oblique", "context"]
@@ -65,151 +79,161 @@ a = archive("change-axes", "provenance.json", [c+".input.igz" for c in axis_case
 doc = out/"documents"
 d = archive("document-preservation-workflow", "manifest.json", ["capture/retained.igz", "capture/nested-leaves.igz", "capture/expected.json"], doc)
 run([binaries/(consumers[0]+suffix), axes], "axes/native.json")
-run([sys.executable, repo/"scripts/reference-change-axes.py", axes, "inspect"], "axes/reopened.json")
-run([sys.executable, repo/"scripts/check-change-axes.py", axes], "axes/check.json")
+run([sys.executable, repo/"scripts/reference-change-axes.py", axes, "inspect"], "axes/reopened.json", requires=['axes/native.json'])
+run([sys.executable, repo/"scripts/check-change-axes.py", axes], "axes/check.json", requires=['axes/native.json', 'axes/reopened.json'])
 run([binaries/(consumers[1]+suffix), doc], "documents/native.json")
-run([sys.executable, repo/"scripts/reference-document-preservation-workflow.py", "compare", doc], "documents/compare.json")
-run([sys.executable, repo/"scripts/check-document-preservation-workflow.py", doc/"observed.json"], "documents/check.log")
+run([sys.executable, repo/"scripts/reference-document-preservation-workflow.py", "compare", doc], "documents/compare.json", requires=['documents/native.json'])
+run([sys.executable, repo/"scripts/check-document-preservation-workflow.py", doc/"observed.json"], "documents/check.log", requires=['documents/compare.json'])
 fillet = out/"fillet"
 f = archive("fillet-nested-history", "provenance.json", ["source.json", "source-app.json", "old-native.json"], fillet)
 run([binaries/(consumers[3]+suffix), fillet/"source.json", fillet/"native.json"], "fillet/runtime.log")
-run([sys.executable, repo/"scripts/check-fillet-nested-history.py", fillet], "fillet/check.json")
-run([sys.executable, repo/"scripts/check-fillet-independent-volume.py", repo/"docs/audits", fillet/"volume.json", fillet/"native.json"], "fillet/volume.log")
+run([sys.executable, repo/"scripts/check-fillet-nested-history.py", fillet], "fillet/check.json", requires=['fillet/runtime.log'])
+run([sys.executable, repo/"scripts/check-fillet-independent-volume.py", repo/"docs/audits", fillet/"volume.json", fillet/"native.json"], "fillet/volume.log", requires=['fillet/runtime.log'])
 run([binaries/(consumers[2]+suffix), repo/"docs/audits/pushpull-solid-workflows/app-input.json", out/"pushpull-app.json"], "pushpull-runtime.log")
-run([sys.executable, repo/"scripts/check-pushpull-solid-workflows.py", repo/"docs/audits/pushpull-solid-workflows", out/"pushpull-comparison.json", out/"pushpull-app.json"], "pushpull-check.log")
+run([sys.executable, repo/"scripts/check-pushpull-solid-workflows.py", repo/"docs/audits/pushpull-solid-workflows", out/"pushpull-comparison.json", out/"pushpull-app.json"], "pushpull-check.log", requires=['pushpull-runtime.log'])
 finite = out/"finite"
 p = archive("pushpull-finite-corpus", "provenance.json", ["source.json"], finite)
 run([binaries/(consumers[4]+suffix), finite/"source.json", finite/"native.json"], "finite/runtime.log")
-run([sys.executable, repo/"scripts/check-pushpull-finite-corpus.py", repo/"docs/audits/pushpull-finite-corpus", finite/"comparison.json", finite/"native.json"], "finite/check.log")
+run([sys.executable, repo/"scripts/check-pushpull-finite-corpus.py", repo/"docs/audits/pushpull-finite-corpus", finite/"comparison.json", finite/"native.json"], "finite/check.log", requires=['finite/runtime.log'])
 paste = out/"paste-save"
 ps = archive("paste-save", "provenance.json", ["input.igz", "original.json"], paste)
 run([binaries/(consumers[5]+suffix), paste], "paste-save/runtime.log")
-run([sys.executable, repo/"scripts/reference-paste-save.py", paste, "inspect"], "paste-save/reopen.log")
-run([sys.executable, repo/"scripts/check-paste-save.py", paste], "paste-save/acceptance.json")
+run([sys.executable, repo/"scripts/reference-paste-save.py", paste, "inspect"], "paste-save/reopen.log", requires=['paste-save/runtime.log'])
+run([sys.executable, repo/"scripts/check-paste-save.py", paste], "paste-save/acceptance.json", requires=['paste-save/runtime.log', 'paste-save/reopen.log'])
 box = out/"box-selection"
 bs = archive("box-selection", "provenance.json", ["input.igz", "original.json", "orphan-input.igz", "guide-input.igz", "failures/missing-guides-native.json", "failures/face-layer-gate-native.json"], box, preserve_paths=True)
 run([binaries/(consumers[6]+suffix), box], "box-selection/runtime.log")
-run([sys.executable, repo/"scripts/reference-box-guides.py", "reopen", box], "box-selection/reopen.log")
-run([sys.executable, repo/"scripts/check-box-selection.py", box], "box-selection/acceptance.json")
+run([sys.executable, repo/"scripts/reference-box-guides.py", "reopen", box], "box-selection/reopen.log", requires=['box-selection/runtime.log'])
+run([sys.executable, repo/"scripts/check-box-selection.py", box], "box-selection/acceptance.json", requires=['box-selection/runtime.log', 'box-selection/reopen.log'])
 material = out/"material-edit-restamp"
 mr = archive("material-edit-restamp", "provenance.json", [], material)
 run([binaries/(consumers[7]+suffix), material], "material-edit-restamp/runtime.log")
 run([binaries/(consumers[8]+suffix), material], "material-edit-restamp/tray-runtime.log")
-run([sys.executable, repo/"scripts/reopen-material-restamp.py", material, material/"reopened.json"], "material-edit-restamp/reopen.log")
-run([sys.executable, repo/"scripts/check-material-restamp.py", "--native", material/"native.json", "--tray", material/"tray.json", "--reopened", material/"reopened.json"], "material-edit-restamp/acceptance.json")
+run([sys.executable, repo/"scripts/reopen-material-restamp.py", material, material/"reopened.json"], "material-edit-restamp/reopen.log", requires=['material-edit-restamp/runtime.log', 'material-edit-restamp/tray-runtime.log'])
+run([sys.executable, repo/"scripts/check-material-restamp.py", "--native", material/"native.json", "--tray", material/"tray.json", "--reopened", material/"reopened.json"], "material-edit-restamp/acceptance.json", requires=['material-edit-restamp/runtime.log', 'material-edit-restamp/tray-runtime.log', 'material-edit-restamp/reopen.log'])
 cursor = out/"cursor-pivot-navigation"
 cn = archive("cursor-pivot-navigation", "manifest.json", ["original.json", "old-dispatch-native.json"], cursor)
 run([binaries/(consumers[9]+suffix), cursor/"original.json", cursor/"native.json"], "cursor-pivot-navigation/runtime.log")
-run([sys.executable, repo/"scripts/check-cursor-navigation.py", cursor/"original.json", cursor/"native.json"], "cursor-pivot-navigation/acceptance.json")
-with (cursor/"old-dispatch-rejection.log").open("w") as failure:
-    rejected = subprocess.run([sys.executable, str(repo/"scripts/check-cursor-navigation.py"), str(cursor/"original.json"), str(cursor/"old-dispatch-native.json")], cwd=repo, env=env, stdout=failure, stderr=failure, timeout=120)
-assert rejected.returncode != 0, "Compiled original cursor dispatcher unexpectedly passed"
+run([sys.executable, repo/"scripts/check-cursor-navigation.py", cursor/"original.json", cursor/"native.json"], "cursor-pivot-navigation/acceptance.json", requires=['cursor-pivot-navigation/runtime.log'])
+def reject_old_cursor():
+    with (cursor/"old-dispatch-rejection.log").open("w") as failure:
+        rejected = subprocess.run([sys.executable, str(repo/"scripts/check-cursor-navigation.py"), str(cursor/"original.json"), str(cursor/"old-dispatch-native.json")], cwd=repo, env=env, stdout=failure, stderr=failure, timeout=120)
+    assert rejected.returncode != 0, "Compiled original cursor dispatcher unexpectedly passed"
+stages.stage("cursor-pivot-navigation/old-dispatch-rejection.log", archive_dependencies[cursor.name], reject_old_cursor)
 annotations = out/"annotation-delete"
 ad = archive("annotation-delete", "manifest.json", ["delete-input.igz", "original.json"]+[name+"-original.igz" for name in ["root", "nested-annotations", "nested-mixed", "parked"]], annotations)
 ahd = archive("annotation-hover-delete", "manifest.json", ["hover-input.igz", "hover-delete-original.json"], annotations)
 run([binaries/(consumers[10]+suffix), annotations], "annotation-delete/runtime.log")
-run([sys.executable, repo/"scripts/check-annotation-delete.py", annotations], "annotation-delete/acceptance.json")
-run([sys.executable, repo/"scripts/check-annotation-delete-reopen.py", annotations], "annotation-delete/reopen-acceptance.json")
+run([sys.executable, repo/"scripts/check-annotation-delete.py", annotations], "annotation-delete/acceptance.json", requires=['annotation-delete/runtime.log'])
+run([sys.executable, repo/"scripts/check-annotation-delete-reopen.py", annotations], "annotation-delete/reopen-acceptance.json", requires=['annotation-delete/runtime.log'])
 zoom = out/"zoom-extents"
 zoom_cases = ["parallel", "perspective", "two-point", "portrait", "hidden-nested", "empty", "orphan", "figure-only", "survey-only", "survey-hidden", "hidden-wire", "hidden-face"]
 ze = archive("zoom-extents", "provenance.json", ["capture/source.json"]+["capture/"+case+".igz" for case in zoom_cases], zoom)
 run([binaries/(consumers[11]+suffix), zoom], "zoom-extents/runtime.log")
-run([sys.executable, repo/"scripts/check-zoom-extents.py", "--native", zoom/"native.json"], "zoom-extents/acceptance.json")
+run([sys.executable, repo/"scripts/check-zoom-extents.py", "--native", zoom/"native.json"], "zoom-extents/acceptance.json", requires=['zoom-extents/runtime.log'])
 move = out/"annotation-move"
 am = archive("annotation-move", "manifest.json", ["input.igz", "move-input.igz", "one-riding-input.igz", "original.json", "annotation-move-original-first-failure.json", "annotation-move-native-first-failure.json"], move)
 run([binaries/(consumers[12]+suffix), move], "annotation-move/runtime.log")
-run([sys.executable, repo/"scripts/check-annotation-move.py", move], "annotation-move/acceptance.json")
+run([sys.executable, repo/"scripts/check-annotation-move.py", move], "annotation-move/acceptance.json", requires=['annotation-move/runtime.log'])
 acquisition = out/"annotation-acquisition"
 aa = archive("annotation-acquisition/riding-order", "manifest.json", ["input.igz", "riding-input.igz", "original.json", "threshold-first-failure.json", "source-first-failure.log"], acquisition, archive_name="source-records.zip")
 run([binaries/(consumers[13]+suffix), acquisition], "annotation-acquisition/runtime.log")
-run([sys.executable, repo/"scripts/check-annotation-acquisition.py", acquisition], "annotation-acquisition/acceptance.json")
+run([sys.executable, repo/"scripts/check-annotation-acquisition.py", acquisition], "annotation-acquisition/acceptance.json", requires=['annotation-acquisition/runtime.log'])
 mesh = out/"mesh-kernel"
 mk = archive("p05-mesh-kernel", "manifest.json", ["input.json", "source.json"], mesh)
 run([binaries/(consumers[14]+suffix), mesh/"input.json"], "mesh-kernel/native.json")
-run([sys.executable, repo/"scripts/check-mesh-kernel.py", mesh/"source.json", mesh/"native.json"], "mesh-kernel/acceptance.json")
+run([sys.executable, repo/"scripts/check-mesh-kernel.py", mesh/"source.json", mesh/"native.json"], "mesh-kernel/acceptance.json", requires=['mesh-kernel/native.json'])
 annotation_edit = out/"annotation-edit-style"
 ae = archive("annotation-edit-style", "manifest.json", ["input.igz", "original.json", "failed-nested-style.json", "source-label-priority.json"] + [kind+"-"+context+".igz" for kind in ["label", "dimension"] for context in ["root", "nested"]], annotation_edit)
 run([binaries/(consumers[15]+suffix), annotation_edit], "annotation-edit-style/runtime.log")
-run([sys.executable, repo/"scripts/reopen-annotation-edit-style.py", annotation_edit], "annotation-edit-style/reopen.log")
-run([sys.executable, repo/"scripts/check-annotation-edit-style.py", annotation_edit], "annotation-edit-style/acceptance.json")
+run([sys.executable, repo/"scripts/reopen-annotation-edit-style.py", annotation_edit], "annotation-edit-style/reopen.log", requires=['annotation-edit-style/runtime.log'])
+run([sys.executable, repo/"scripts/check-annotation-edit-style.py", annotation_edit], "annotation-edit-style/acceptance.json", requires=['annotation-edit-style/runtime.log', 'annotation-edit-style/reopen.log'])
 annotation_text = out/"annotation-text-create"
 text_cases = [context+"-"+kind for context in ["root", "nested"] for kind in ["edge", "face", "coordinates"]]+["closed-face"]
 at = archive("annotation-text-create", "manifest.json", ["input.igz", "original.json", "original-history.json", "failed-unknown-label-root-edge.igz", "failed-group-edge-suggestion.json"]+[name+ending for name in text_cases for ending in ["-input.igz", ".igz"]], annotation_text)
 run([binaries/(consumers[16]+suffix), annotation_text], "annotation-text-create/runtime.log")
-run([sys.executable, repo/"scripts/reopen-annotation-text-create.py", annotation_text], "annotation-text-create/reopen.log")
-run([sys.executable, repo/"scripts/check-annotation-text-create.py", annotation_text], "annotation-text-create/acceptance.jsonl")
+run([sys.executable, repo/"scripts/reopen-annotation-text-create.py", annotation_text], "annotation-text-create/reopen.log", requires=['annotation-text-create/runtime.log'])
+run([sys.executable, repo/"scripts/check-annotation-text-create.py", annotation_text], "annotation-text-create/acceptance.jsonl", requires=['annotation-text-create/runtime.log', 'annotation-text-create/reopen.log'])
 finite_mesh = out/"finite-kernel"
 finite_names = ["empty", "one", "two", "repeated", "welded-close", "empty-hole", "one-hole", "two-hole", "empty-outer-proper-hole"]
 mf = archive("p05-finite-kernel", "manifest.json", ["original.json"]+[name+".original.igz" for name in finite_names], finite_mesh)
 mfa = archive("p05-finite-acceptance", "manifest.json", ["initial-native.json"], finite_mesh)
 run([binaries/(consumers[17]+suffix), finite_mesh], "finite-kernel/runtime.log")
-run([sys.executable, repo/"scripts/reopen-p05-finite-kernel.py", finite_mesh], "finite-kernel/reopen.log")
-run([sys.executable, repo/"scripts/check-p05-finite-invariants.py", finite_mesh, "--initial", finite_mesh/"initial-native.json", "--initial-sha256", "519bc52b68587c56ed3c4f5683d7945ad9de24bd0e862c808b716b2eb9237aa9", "--report", finite_mesh/"acceptance.json"], "finite-kernel/checker.log")
+run([sys.executable, repo/"scripts/reopen-p05-finite-kernel.py", finite_mesh], "finite-kernel/reopen.log", requires=['finite-kernel/runtime.log'])
+run([sys.executable, repo/"scripts/check-p05-finite-invariants.py", finite_mesh, "--initial", finite_mesh/"initial-native.json", "--initial-sha256", "519bc52b68587c56ed3c4f5683d7945ad9de24bd0e862c808b716b2eb9237aa9", "--report", finite_mesh/"acceptance.json"], "finite-kernel/checker.log", requires=['finite-kernel/runtime.log', 'finite-kernel/reopen.log'])
 annotation_hover = out/"annotation-hover"
 ah = archive("annotation-hover", "manifest.json", ["input.igz", "original-hover.json", "first40-native-weak.json"], annotation_hover)
 run([binaries/(consumers[18]+suffix), annotation_hover], "annotation-hover/runtime.log")
-run([sys.executable, repo/"scripts/check-annotation-hover.py", annotation_hover], "annotation-hover/acceptance.json")
+run([sys.executable, repo/"scripts/check-annotation-hover.py", annotation_hover], "annotation-hover/acceptance.json", requires=['annotation-hover/runtime.log'])
 dimension_anchors = out/"dimension-anchor-admission"
 anchor_cases = ["near", "outside", "nested-shared", "billboard", "orphan"]
 da = archive("dimension-anchor-admission", "manifest.json", [name+ending for name in anchor_cases for ending in ["-input.igz", "-original.igz"]]+["admission-original.json", "first-native-inverse-mismatch.json"], dimension_anchors)
 run([binaries/(consumers[19]+suffix), dimension_anchors, "--admission"], "dimension-anchor-admission/runtime.log")
-run([sys.executable, repo/"scripts/check-dimension-anchor-admission.py", dimension_anchors], "dimension-anchor-admission/acceptance.json")
-run([sys.executable, repo/"scripts/reopen-dimension-anchor-admission.py", dimension_anchors], "dimension-anchor-admission/reopen-acceptance.json")
+run([sys.executable, repo/"scripts/check-dimension-anchor-admission.py", dimension_anchors], "dimension-anchor-admission/acceptance.json", requires=['dimension-anchor-admission/runtime.log'])
+run([sys.executable, repo/"scripts/reopen-dimension-anchor-admission.py", dimension_anchors], "dimension-anchor-admission/reopen-acceptance.json", requires=['dimension-anchor-admission/runtime.log'])
 dimension_preview = out/"dimension-preview"
 preview_cases = ["front-z", "side-x", "aligned", "axial-x", "axial-y", "nested"]
 dp = archive("dimension-preview", "manifest.json", [name+ending for name in preview_cases for ending in ["-input.igz", "-original.igz"]]+["preview-original.json", "initial-native.json"], dimension_preview)
 run([binaries/(consumers[19]+suffix), dimension_preview, "--preview"], "dimension-preview/runtime.log")
-run([sys.executable, repo/"scripts/check-dimension-preview.py", dimension_preview], "dimension-preview/acceptance.json")
-run([sys.executable, repo/"scripts/reopen-dimension-preview.py", dimension_preview], "dimension-preview/reopen-acceptance.json")
+run([sys.executable, repo/"scripts/check-dimension-preview.py", dimension_preview], "dimension-preview/acceptance.json", requires=['dimension-preview/runtime.log'])
+run([sys.executable, repo/"scripts/reopen-dimension-preview.py", dimension_preview], "dimension-preview/reopen-acceptance.json", requires=['dimension-preview/runtime.log'])
 recent = out/"open-recent"
 rr = archive("open-recent", "manifest.json", ["original-recent.json"], recent)
 run([binaries/(consumers[20]+suffix), recent, "--recent"], "open-recent/runtime.log")
-run([sys.executable, repo/"scripts/check-open-recent.py", recent], "open-recent/acceptance.json")
+run([sys.executable, repo/"scripts/check-open-recent.py", recent], "open-recent/acceptance.json", requires=['open-recent/runtime.log'])
 general_preferences = out/"general-preferences"
 gp = archive("general-preferences", "manifest.json", ["original-preferences.json"], general_preferences)
 run([binaries/(consumers[20]+suffix), general_preferences, "--preferences"], "general-preferences/runtime.log")
-run([sys.executable, repo/"scripts/check-general-preferences.py", general_preferences], "general-preferences/acceptance.json")
+run([sys.executable, repo/"scripts/check-general-preferences.py", general_preferences], "general-preferences/acceptance.json", requires=['general-preferences/runtime.log'])
 unit_preferences = out/"units-preferences"
 unit_codes = ["m", "cm", "mm", "in", "ft", "ft-in", "in-frac", "ft-in-frac"]
 up = archive("units-preferences", "manifest.json", ["original-units.json", "input.igz"]+[code+".igz" for code in unit_codes], unit_preferences)
 run([binaries/(consumers[20]+suffix), unit_preferences, "--units"], "units-preferences/runtime.log")
-run([sys.executable, repo/"scripts/check-units-preferences.py", unit_preferences], "units-preferences/acceptance.json")
-run([sys.executable, repo/"scripts/reopen-units-preferences.py", unit_preferences], "units-preferences/reopen.log")
+run([sys.executable, repo/"scripts/check-units-preferences.py", unit_preferences], "units-preferences/acceptance.json", requires=['units-preferences/runtime.log'])
+run([sys.executable, repo/"scripts/reopen-units-preferences.py", unit_preferences], "units-preferences/reopen.log", requires=['units-preferences/runtime.log'])
 measurements = out/"vcb-measurements"
 vm = archive("vcb-measurements", "manifest.json", ["original-measurements.json"], measurements)
 run([binaries/(consumers[21]+suffix), measurements, "--measurements"], "vcb-measurements/runtime.log")
-run([sys.executable, repo/"scripts/check-vcb-measurements.py", measurements], "vcb-measurements/acceptance.json")
-rows = json.loads((doc/"native.json").read_text())["rows"]
-assert [(x["fixture"],x["phase"]) for x in rows] == [(f,p) for f in ["retained","nested-leaves"] for p in ["edited","undo","redo"]]
-assert all(x["saved"] and x["clean"] for x in rows)
-result = {"revision":subprocess.check_output(["git","rev-parse","HEAD"],cwd=repo,text=True).strip(),
-          "source_pin":pin,"binary_sha256":identities,"source_archives":{"axes":a,"documents":d,"fillet":f,"pushpull_finite":p,"paste_save":ps,"box_selection":bs,"materials":mr,"cursor":cn,"annotations":ad,"annotation_hover_delete":ahd,"zoom_extents":ze,"annotation_move":am,"annotation_acquisition":aa,"mesh_kernel":mk,"annotation_edit_style":ae,"annotation_text_create":at,"finite_kernel":mf,"finite_kernel_initial":mfa,"annotation_hover":ah,"dimension_anchor_admission":da,"dimension_preview":dp,"open_recent":rr,"general_preferences":gp,"units_preferences":up,"vcb_measurements":vm},
-          "axes":json.loads((axes/"check.json").read_text()),"documents":{"actual_app_saves":len(rows),"exact_original_reopens":6,"leaf_record_types":15,"negative_controls":5},
-          "fillet":json.loads((fillet/"check.json").read_text()),"fillet_volume":json.loads((fillet/"volume.json").read_text()),"pushpull":json.loads((out/"pushpull-comparison.json").read_text()),
-          "pushpull_finite":json.loads((finite/"comparison.json").read_text()),
-          "paste_save":json.loads((paste/"acceptance.json").read_text()),
-          "box_selection":json.loads((box/"acceptance.json").read_text()),
-          "materials":json.loads((material/"acceptance.json").read_text()),
-          "cursor":json.loads((cursor/"acceptance.json").read_text()),
-          "annotations":json.loads((annotations/"acceptance.json").read_text()),
-          "annotation_reopens":json.loads((annotations/"reopen-acceptance.json").read_text()),
-          "zoom_extents":json.loads((zoom/"acceptance.json").read_text()),
-          "annotation_move":json.loads((move/"acceptance.json").read_text()),
-          "annotation_acquisition":json.loads((acquisition/"acceptance.json").read_text()),
-          "mesh_kernel":json.loads((mesh/"acceptance.json").read_text()),
-          "annotation_edit_style":json.loads((annotation_edit/"acceptance.json").read_text()),
-          "annotation_text_create":[json.loads(line) for line in (annotation_text/"acceptance.jsonl").read_text().splitlines()],
-          "finite_kernel":json.loads((finite_mesh/"acceptance.json").read_text()),
-          "annotation_hover":json.loads((annotation_hover/"acceptance.json").read_text()),
-          "dimension_anchor_admission":json.loads((dimension_anchors/"acceptance.json").read_text()),
-          "dimension_anchor_reopens":json.loads((dimension_anchors/"reopen-acceptance.json").read_text()),
-          "dimension_preview":json.loads((dimension_preview/"acceptance.json").read_text()),
-          "dimension_preview_reopens":json.loads((dimension_preview/"reopen-acceptance.json").read_text()),
-          "open_recent":json.loads((recent/"acceptance.json").read_text()),
-          "general_preferences":json.loads((general_preferences/"acceptance.json").read_text()),
-          "units_preferences":json.loads((unit_preferences/"acceptance.json").read_text()),
-          "unit_reopens":json.loads((unit_preferences/"reopen-units.json").read_text()),
-          "vcb_measurements":json.loads((measurements/"acceptance.json").read_text()),
-          "fresh_source_acquisitions":0,"result":"pass"}
-(out/"result.json").write_text(json.dumps(result,indent=2)+"\n")
-print(json.dumps(result))
+run([sys.executable, repo/"scripts/check-vcb-measurements.py", measurements], "vcb-measurements/acceptance.json", requires=['vcb-measurements/runtime.log'])
+import_preferences = out/"import-preferences"
+ip = archive("import-preferences", "manifest.json", ["original-import-preferences.json", "ambiguous.obj", "large.obj", "huge.obj", "header.dxf", "lying.dxf", "tiny.dxf"], import_preferences)
+run([binaries/(consumers[20]+suffix), import_preferences, "--import-preferences"], "import-preferences/runtime.log")
+run([sys.executable, repo/"scripts/check-import-preferences.py", import_preferences], "import-preferences/acceptance.json", requires=["import-preferences/runtime.log"])
+
+def summarize():
+    rows = json.loads((doc/"native.json").read_text())["rows"]
+    assert [(x["fixture"],x["phase"]) for x in rows] == [(f,p) for f in ["retained","nested-leaves"] for p in ["edited","undo","redo"]]
+    assert all(x["saved"] and x["clean"] for x in rows)
+    result = {"revision":subprocess.check_output(["git","rev-parse","HEAD"],cwd=repo,text=True).strip(),
+              "source_pin":pin,"binary_sha256":identities,"source_archives":{"axes":a,"documents":d,"fillet":f,"pushpull_finite":p,"paste_save":ps,"box_selection":bs,"materials":mr,"cursor":cn,"annotations":ad,"annotation_hover_delete":ahd,"zoom_extents":ze,"annotation_move":am,"annotation_acquisition":aa,"mesh_kernel":mk,"annotation_edit_style":ae,"annotation_text_create":at,"finite_kernel":mf,"finite_kernel_initial":mfa,"annotation_hover":ah,"dimension_anchor_admission":da,"dimension_preview":dp,"open_recent":rr,"general_preferences":gp,"units_preferences":up,"vcb_measurements":vm,"import_preferences":ip},
+              "axes":json.loads((axes/"check.json").read_text()),"documents":{"actual_app_saves":len(rows),"exact_original_reopens":6,"leaf_record_types":15,"negative_controls":5},
+              "fillet":json.loads((fillet/"check.json").read_text()),"fillet_volume":json.loads((fillet/"volume.json").read_text()),"pushpull":json.loads((out/"pushpull-comparison.json").read_text()),
+              "pushpull_finite":json.loads((finite/"comparison.json").read_text()),
+              "paste_save":json.loads((paste/"acceptance.json").read_text()),
+              "box_selection":json.loads((box/"acceptance.json").read_text()),
+              "materials":json.loads((material/"acceptance.json").read_text()),
+              "cursor":json.loads((cursor/"acceptance.json").read_text()),
+              "annotations":json.loads((annotations/"acceptance.json").read_text()),
+              "annotation_reopens":json.loads((annotations/"reopen-acceptance.json").read_text()),
+              "zoom_extents":json.loads((zoom/"acceptance.json").read_text()),
+              "annotation_move":json.loads((move/"acceptance.json").read_text()),
+              "annotation_acquisition":json.loads((acquisition/"acceptance.json").read_text()),
+              "mesh_kernel":json.loads((mesh/"acceptance.json").read_text()),
+              "annotation_edit_style":json.loads((annotation_edit/"acceptance.json").read_text()),
+              "annotation_text_create":[json.loads(line) for line in (annotation_text/"acceptance.jsonl").read_text().splitlines()],
+              "finite_kernel":json.loads((finite_mesh/"acceptance.json").read_text()),
+              "annotation_hover":json.loads((annotation_hover/"acceptance.json").read_text()),
+              "dimension_anchor_admission":json.loads((dimension_anchors/"acceptance.json").read_text()),
+              "dimension_anchor_reopens":json.loads((dimension_anchors/"reopen-acceptance.json").read_text()),
+              "dimension_preview":json.loads((dimension_preview/"acceptance.json").read_text()),
+              "dimension_preview_reopens":json.loads((dimension_preview/"reopen-acceptance.json").read_text()),
+              "open_recent":json.loads((recent/"acceptance.json").read_text()),
+              "general_preferences":json.loads((general_preferences/"acceptance.json").read_text()),
+              "units_preferences":json.loads((unit_preferences/"acceptance.json").read_text()),
+              "unit_reopens":json.loads((unit_preferences/"reopen-units.json").read_text()),
+              "vcb_measurements":json.loads((measurements/"acceptance.json").read_text()),
+              "import_preferences":json.loads((import_preferences/"acceptance.json").read_text()),
+              "fresh_source_acquisitions":0,"result":"pass"}
+    return result
+
+sys.exit(stages.finish(summarize))

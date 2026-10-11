@@ -1,0 +1,9 @@
+{
+  "sources": {
+    "scripts/consumer_stages.py": "10b8b2e9d69276bc129e5d890703ff0a6bcbe0fe64b1809b5af8d44bdb467734",
+    "scripts/check-consumer-stages.py": "b949c91df98c691ca4035cc5670ed79200171098ea67dcb45fd5d86b23986fd6",
+    "scripts/check-document-axes-integration.py": "3f530765bfe7de9e13d4de7804f81afa37fab34e08bc2f981f581cf2183d6aaa"
+  },
+  "faults_sha256": "d0cba6e3efccb4676c13d46e2578f385bac15edf2c87a8d2c8350dc228ca0cd3",
+  "verification": "Python syntax + small child-process faults only; no Rust build, source capture or full consumer replay"
+}
