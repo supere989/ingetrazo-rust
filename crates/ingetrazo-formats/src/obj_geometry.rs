@@ -927,15 +927,28 @@ mod raw_reference_tests {
     use super::*;
     #[test]
     fn trace_refusal_preserves_each_original_paint() {
-        let points = [1., 2., -1.].map(|y| [DVec3::ZERO, DVec3::X, DVec3::new(0.5, y, 0.)]);
-        let attrs = [0,1,2].map(|i| HashMap::from([("texture".into(), serde_json::json!({"path":"witness.png","uvw":[1.+i as f64*0.000001,0.,0.,0.,0.,1.,0.,0.]}))]));
+        let points = [
+            vec![DVec3::ZERO, DVec3::X, DVec3::Y, DVec3::new(-1., 0., 0.)],
+            vec![
+                DVec3::X,
+                DVec3::ZERO,
+                DVec3::new(-1., -1., 0.),
+                DVec3::Y,
+                DVec3::new(1., 2., 0.),
+            ],
+        ];
+        let attrs = [0,1].map(|i| HashMap::from([("texture".into(), serde_json::json!({"path":"witness.png","uvw":[1.+i as f64*0.000001,0.,0.,0.,0.,1.,0.,0.]}))]));
         let out = reference(points.iter().zip(attrs.iter()).map(|(p, a)| (&p[..], a))).unwrap();
         let actual = serde_json::json!({"attrs":out.faces.iter().map(|f|f.attrs.clone()).collect::<Vec<_>>(),"loops":out.faces.iter().map(|f|f.vertices.iter().map(|&v|out.vertices[v].position.to_array()).collect::<Vec<_>>()).collect::<Vec<_>>()});
         let source: Value = serde_json::from_str(include_str!(
             "../../../docs/audits/obj-raw-fusion/trace-source.json"
         ))
         .unwrap();
-        assert_eq!(actual, source);
+        assert_eq!(
+            source["trace"],
+            serde_json::json!([{"region_size":2,"refused":true}])
+        );
+        assert_eq!(actual, source["emitted"]);
     }
     #[test]
     fn reference_admission_retries_originals_and_preserves_region_paint() {
