@@ -1,8 +1,8 @@
 {
-  "runtime_commit": "95aede78a9be575763cfe2f263743bcd71c5f791",
+  "runtime_commit": "c3b3a5ed257b69c07574e2e3f99707aa227c9641",
   "original_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
   "runtime_sha256": {
-    "crates/ingetrazo-core/src/groups.rs": "3d4b7b4fdfa0122246e6d0aa278eb3ade59185730e31f6cd1f219fbe2429cb0d",
+    "crates/ingetrazo-core/src/groups.rs": "00704547c4b7601acff175ef0b8b6b9552cacc68ec5b0497652885eb0b9bcf87",
     "crates/ingetrazo-core/src/saved_views.rs": "48e2131f5480c92c99261aba6f36aae1ece1e4f3368329cb65499aca6e059835",
     "crates/ingetrazo-core/src/scene.rs": "ba582b84d89ee6e40f1a7d56a7b67879e1688a21b504a88eab7e3a34528bb29d",
     "crates/ingetrazo-gui/examples/saved_view_history_fixture.rs": "c717296fb80fc83d6a377ad34d057f67bbe2ff51928188f4faa50456ad0fb805",
@@ -12,7 +12,8 @@
     "crates/ingetrazo-gui/src/lib.rs": "634ffa47c4253d9b47f461ac3b67d89d72c75b1e8c083e823aef32ecc0731fb2",
     "crates/ingetrazo-gui/src/outliner.rs": "d62783ad9aae1c87fda484e137bcbd73b27a97c0f644dd137c8a8fcda1cd5d12",
     "scripts/check-saved-view-history.py": "94a0242edcb4e17a81230ec213e61eb91209429a96fc5baf5963ddcbcf91323a",
-    "scripts/reference-saved-view-history.py": "aebbfaf6d3d256fc5e04a0a4c885523c014a1d4f1d092258c8d2bbf5d13173fa"
+    "scripts/reference-saved-view-history.py": "aebbfaf6d3d256fc5e04a0a4c885523c014a1d4f1d092258c8d2bbf5d13173fa",
+    "crates/ingetrazo-core/src/components.rs": "49f39f1a6074a8dd1cf8068649dec88df015eeaaaa578edd0e36564fd36f2552"
   },
   "original_sha256": {
     "core/history.py": "2eb66a1d557099b51383988a7819145289fc4ce2c37fc7de3a92ed35b5830559",
@@ -20,7 +21,7 @@
     "core/scene.py": "9dfcd32f1ff5b1445180eafd8df36eafb92fa08ed3597bb90eac09554899d2e0",
     "main.py": "048d939904b7c48068964a3307a39aa933d38137cdd9cbca7152eb80d7184149"
   },
-  "binary_sha256": "3fe309b3d6c906f9f37d97eabdebf8a79d97345c12548f02375783dd255c5dba",
+  "binary_sha256": "d28b4a2809cd6f12799a5add04bd5086ff1757dd1efb6dde0ce3c903e2c52d7d",
   "results": {
     "cases": 2,
     "exact_states": 60,
@@ -28,7 +29,8 @@
     "native_preservation": 17,
     "previous_identity_cases": 4,
     "actual_python_recalls": 8,
-    "previous_identity_negatives": 6
+    "previous_identity_negatives": 6,
+    "runtime_identity_controls": 2
   },
   "retained_directory": "/tmp/ingetrazo-saved-view-history-proof"
 }
