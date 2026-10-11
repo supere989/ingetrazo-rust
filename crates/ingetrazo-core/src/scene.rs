@@ -62,6 +62,8 @@ pub struct Scene {
     /// Command-specific prototype restore target, carried only by history snapshots.
     #[serde(skip)] pub history_annotation_delete:bool,
     #[serde(skip)] pub history_annotation_move:bool,
+    #[serde(skip)] pub history_annotation_edit:bool,
+    #[serde(skip)] pub dimension_style_override:Option<serde_json::Value>,
     #[serde(skip)]
     pub history_shareback: Option<uuid::Uuid>,
     #[serde(skip)]pub history_axes:Option<crate::change_axes::Command>,
@@ -135,6 +137,12 @@ impl Default for Scene {
 }
 
 impl Scene {
+    /// Explicit live style edits overlay original raw metadata without changing
+    /// fresh/imported document provenance.
+    pub fn dimension_style(&self)->&serde_json::Value {
+        self.dimension_style_override.as_ref().unwrap_or(&self.native_document["dimension_style"])
+    }
+
     pub fn new() -> Self {
         let mut layers = Vec::new();
         layers.push(Layer::default());
@@ -145,7 +153,7 @@ impl Scene {
             dimension_frame:glam::DMat4::IDENTITY,
             drawing_frame:None,
             history_context:vec![],
-            display_style:Default::default(),shadows:Default::default(),history_annotation_delete:false,history_annotation_move:false,history_shareback:None,history_axes:None,history_bim:None,history_material:None,history_python:None,history_views:Default::default(),history_group_visibility:None,history_terrain:Default::default(),history_layers:Default::default(),
+            display_style:Default::default(),shadows:Default::default(),history_annotation_delete:false,history_annotation_move:false,history_annotation_edit:false,dimension_style_override:None,history_shareback:None,history_axes:None,history_bim:None,history_material:None,history_python:None,history_views:Default::default(),history_group_visibility:None,history_terrain:Default::default(),history_layers:Default::default(),
             component_definitions: HashMap::new(),
             mesh_shares: HashMap::new(),
             native_document: serde_json::Value::Null,

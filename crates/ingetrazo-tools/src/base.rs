@@ -37,6 +37,9 @@ pub enum ToolType {
     ChangeAxes,
 }
 
+#[derive(Clone,Copy,Debug,PartialEq,Eq)]
+pub enum AnnotationEditTarget { Label(u64), Dimension(uuid::Uuid) }
+
 /// Immutable annotation identities from the source screen-pick producer.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
 pub struct AnnotationHits {
@@ -196,6 +199,8 @@ pub trait Tool: Send + Sync {
     fn on_deactivate(&mut self, _scene: &mut Scene) {}
     fn wants_annotation_hits(&self) -> bool { false }
     fn note_annotation_hits(&mut self, _hits: AnnotationHits) {}
+    fn note_annotation_leader_hit(&mut self,_hit:Option<u64>) {}
+    fn take_annotation_edit_request(&mut self)->Option<AnnotationEditTarget>{None}
     fn note_annotation_pick_error(&mut self, _error: String) {}
     fn on_click(&mut self, _scene: &mut Scene, _ctx: &ToolContext) {}
     fn on_double_click(&mut self, scene: &mut Scene, ctx: &ToolContext) {

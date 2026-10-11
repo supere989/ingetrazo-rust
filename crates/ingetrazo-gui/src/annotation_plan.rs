@@ -5,7 +5,7 @@ use crate::annotation_overlay_geometry::Cache;
 fn map(matrix:&[f32;16],v:[f32;4])->[f32;4]{std::array::from_fn(|row|matrix[row]*v[0]+matrix[4+row]*v[1]+matrix[8+row]*v[2]+matrix[12+row]*v[3])}
 // One planner shared by production and bounded CPU-only engineering inspection.
 pub(crate) fn build_plan(app:&crate::IngeTrazoApp,rect:egui::Rect,matrix:&[f32;16],cache:&mut Cache,include_annotations:bool)->Result<annotations::Plan,String>{
- let raw=&app.scene.native_document["dimension_style"];
+ let raw=app.scene.dimension_style();
   let project=|point:glam::Vec3|{
    let q=map(&matrix,[point.x,point.y,point.z,1.]);
    if !q.iter().all(|v|v.is_finite())||q[3]<=0.{return None;}

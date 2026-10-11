@@ -91,6 +91,7 @@ pub struct IngeTrazoApp {
     pub(crate) clipboard_mesh_share_imports: crate::clipboard::MeshShareImports,
     pub selected_dimension: Option<usize>,
     pub dimension_text_input: Option<(usize,String)>,
+    pub annotation_editor:Option<crate::annotation_editor::Editor>,
     pub parts_options:crate::outliner::PartsOptions,
     pub parts_cache:crate::outliner::PartsCache,
     pub outliner_rename: Option<(uuid::Uuid,String)>,
@@ -211,6 +212,7 @@ impl IngeTrazoApp {
             outliner_rename: None,
             selected_dimension: None,
             dimension_text_input: None,
+            annotation_editor:None,
             active_tray_tab: TrayTab::Inspector,
             active_layer_idx: 0,
             selected_mat_category: None,
@@ -521,7 +523,7 @@ impl IngeTrazoApp {
                     Err(error)=>{self.undo_stack.push(prev);self.status_message=error;false},
                 };
             }
-            let mut inverse=crate::history_terrain::inverse_snapshot(&mut self.scene);inverse.history_annotation_move=prev.history_annotation_move;prev.history_annotation_move=false;inverse.history_annotation_delete=prev.history_annotation_delete;prev.history_annotation_delete=false;inverse.history_views.0=crate::history_views::restore(&self.scene,&mut prev);inverse.history_group_visibility=crate::history_visibility::restore(&self.scene,&mut prev,&mut self.visibility_owners);self.apply_context_visibility();inverse.history_layers.0=crate::history_layers::restore(&self.scene,&mut prev);crate::history_terrain::restore(&mut self.scene,&mut prev,&mut inverse);inverse.history_images.0=crate::image_plane_actions::restore(&self.scene,&mut prev);self.redo_stack.push(inverse);
+            let mut inverse=crate::history_terrain::inverse_snapshot(&mut self.scene);inverse.history_annotation_edit=prev.history_annotation_edit;prev.history_annotation_edit=false;inverse.history_annotation_move=prev.history_annotation_move;prev.history_annotation_move=false;inverse.history_annotation_delete=prev.history_annotation_delete;prev.history_annotation_delete=false;inverse.history_views.0=crate::history_views::restore(&self.scene,&mut prev);inverse.history_group_visibility=crate::history_visibility::restore(&self.scene,&mut prev,&mut self.visibility_owners);self.apply_context_visibility();inverse.history_layers.0=crate::history_layers::restore(&self.scene,&mut prev);crate::history_terrain::restore(&mut self.scene,&mut prev,&mut inverse);inverse.history_images.0=crate::image_plane_actions::restore(&self.scene,&mut prev);self.redo_stack.push(inverse);
             // Model history cannot replace later independent composer edits.
             prev.camera=self.camera.clone();
             prev.sheets=self.scene.sheets.clone();prev.active_sheet_index=self.scene.active_sheet_index;
@@ -574,7 +576,7 @@ impl IngeTrazoApp {
                     Err(error)=>{self.redo_stack.push(next);self.status_message=error;false},
                 };
             }
-            let mut inverse=crate::history_terrain::inverse_snapshot(&mut self.scene);inverse.history_annotation_move=next.history_annotation_move;next.history_annotation_move=false;inverse.history_annotation_delete=next.history_annotation_delete;next.history_annotation_delete=false;inverse.history_views.0=crate::history_views::restore(&self.scene,&mut next);inverse.history_group_visibility=crate::history_visibility::restore(&self.scene,&mut next,&mut self.visibility_owners);self.apply_context_visibility();inverse.history_layers.0=crate::history_layers::restore(&self.scene,&mut next);crate::history_terrain::restore(&mut self.scene,&mut next,&mut inverse);inverse.history_images.0=crate::image_plane_actions::restore(&self.scene,&mut next);self.undo_stack.push(inverse);
+            let mut inverse=crate::history_terrain::inverse_snapshot(&mut self.scene);inverse.history_annotation_edit=next.history_annotation_edit;next.history_annotation_edit=false;inverse.history_annotation_move=next.history_annotation_move;next.history_annotation_move=false;inverse.history_annotation_delete=next.history_annotation_delete;next.history_annotation_delete=false;inverse.history_views.0=crate::history_views::restore(&self.scene,&mut next);inverse.history_group_visibility=crate::history_visibility::restore(&self.scene,&mut next,&mut self.visibility_owners);self.apply_context_visibility();inverse.history_layers.0=crate::history_layers::restore(&self.scene,&mut next);crate::history_terrain::restore(&mut self.scene,&mut next,&mut inverse);inverse.history_images.0=crate::image_plane_actions::restore(&self.scene,&mut next);self.undo_stack.push(inverse);
             next.camera=self.camera.clone();
             next.sheets=self.scene.sheets.clone();next.active_sheet_index=self.scene.active_sheet_index;
             next.tile_layer=self.scene.tile_layer.take();
@@ -1016,7 +1018,7 @@ impl IngeTrazoApp {
         self.blender_state.poll_events(ctx);
         self.tick_blender_follow(ctx);
 
-        if self.text3d_dialog.is_none()&&!self.show_material_edit_dialog {
+        if self.annotation_editor.is_none()&&self.text3d_dialog.is_none()&&!self.show_material_edit_dialog {
         // A complete Ctrl chord can arrive in one frame; the final modifier
         // snapshot is then released. Use the key event's captured modifiers.
         let (undo_pressed,redo_pressed)=ctx.input(|i|i.events.iter().fold((false,false),|mut flags,event|{
@@ -1089,21 +1091,21 @@ impl IngeTrazoApp {
 
         // 1. Menu Bar Panel
         egui::TopBottomPanel::top("menu_bar").show(ctx, |ui| {
-            ui.set_enabled(self.text3d_dialog.is_none()&&!self.show_material_edit_dialog);
+            ui.set_enabled(self.annotation_editor.is_none()&&self.text3d_dialog.is_none()&&!self.show_material_edit_dialog);
             render_menu_bar(self, ui);
         });
 
         // 2. Toolbar Panel
         if self.show_toolbar {
             egui::TopBottomPanel::top("toolbar").show(ctx, |ui| {
-                ui.set_enabled(self.text3d_dialog.is_none()&&!self.show_material_edit_dialog);
+                ui.set_enabled(self.annotation_editor.is_none()&&self.text3d_dialog.is_none()&&!self.show_material_edit_dialog);
             render_top_toolbar(self, ui);
             });
         }
 
         // 3. Status Bar Panel
         egui::TopBottomPanel::bottom("status_bar").show(ctx, |ui| {
-            ui.set_enabled(self.text3d_dialog.is_none()&&!self.show_material_edit_dialog);
+            ui.set_enabled(self.annotation_editor.is_none()&&self.text3d_dialog.is_none()&&!self.show_material_edit_dialog);
             render_status_bar(self, ui);
         });
 
@@ -1112,7 +1114,7 @@ impl IngeTrazoApp {
             .exact_width(42.0)
             .resizable(false)
             .show(ctx, |ui| {
-                ui.set_enabled(self.text3d_dialog.is_none()&&!self.show_material_edit_dialog);
+                ui.set_enabled(self.annotation_editor.is_none()&&self.text3d_dialog.is_none()&&!self.show_material_edit_dialog);
             render_left_cad_palette(self, ui);
             });
 
@@ -1123,14 +1125,14 @@ impl IngeTrazoApp {
                 .min_width(200.0)
                 .max_width(400.0)
                 .show(ctx, |ui| {
-                    ui.set_enabled(self.text3d_dialog.is_none()&&!self.show_material_edit_dialog);
+                    ui.set_enabled(self.annotation_editor.is_none()&&self.text3d_dialog.is_none()&&!self.show_material_edit_dialog);
             render_side_tray(self, ui);
                 });
         }
 
         // 6. Central 3D Viewport or 2D Sheet Composer Canvas
         egui::CentralPanel::default().show(ctx, |ui| {
-            ui.set_enabled(self.text3d_dialog.is_none()&&!self.show_material_edit_dialog);
+            ui.set_enabled(self.annotation_editor.is_none()&&self.text3d_dialog.is_none()&&!self.show_material_edit_dialog);
             if let Some(sheet_idx) = self.scene.active_sheet_index {
                 crate::composer::render_sheet_composer(self, ui, sheet_idx);
             } else {
@@ -1142,6 +1144,7 @@ impl IngeTrazoApp {
         // 7. Modal Dialogs
         render_dialogs(self, ctx);
         crate::text3d::render_dialog(self, ctx);
+        crate::annotation_editor::render(self,ctx);
         crate::section_actions::render_section_name_prompt(self,ctx);
         crate::blender::render_blender_dialog(self, ctx);
         self.sync_document_presentation();

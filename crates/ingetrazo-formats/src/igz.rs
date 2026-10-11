@@ -705,6 +705,7 @@ fn scene_model(scene: &Scene) -> serde_json::Value {
 pub fn scene_to_igz_document(scene: &Scene) -> serde_json::Value {
     let current = scene_model(scene);
     let mut doc = overlay(&scene.native_document, &scene.native_baseline, current.clone());
+    if let Some(style)=&scene.dimension_style_override {doc["dimension_style"]=style.clone();}
     if scene.native_baseline.get("hidden_view")!=current.get("hidden_view") {
         let mut shown=doc.get("hidden_view").and_then(|v|v.as_object()).cloned().unwrap_or_default();
         for (key,enabled) in [("objects",scene.show_hidden_objects),("geometry",scene.show_hidden_geometry)] {

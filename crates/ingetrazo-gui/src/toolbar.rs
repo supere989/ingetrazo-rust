@@ -19,6 +19,7 @@ pub fn render_top_toolbar(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
     ui.horizontal(|ui| {
         ui.spacing_mut().item_spacing = egui::vec2(2.0, 2.0);
 
+        ui.menu_button("Dimension style",|ui|crate::dimension_style::render(app,ui));
         // --- File & History ---
         let ic_save = app.icons.get(ui.ctx(), "save").cloned();
         if render_icon_button(ui, ic_save.as_ref(), "S", false, &format!("{} (Ctrl+S)", tr("Save"))).clicked() {

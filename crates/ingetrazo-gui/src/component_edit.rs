@@ -73,8 +73,8 @@ fn prepare_finish(finishing_scene: &Scene, stack: &[ComponentEditSession], undo:
                 if entry.history_context==target {
                     *entry=match component_candidate(session,entry) {Ok((mut scene,_))=>{
                         scene.selection=session.original_scene.selection.clone();scene.selection_order=session.original_scene.selection_order.clone();
-                        scene.history_annotation_delete=entry.history_annotation_delete;scene.history_annotation_move=entry.history_annotation_move;
-                        if entry.history_annotation_delete||entry.history_annotation_move{scene.clear_selection();}
+                        scene.history_annotation_delete=entry.history_annotation_delete;scene.history_annotation_move=entry.history_annotation_move;scene.history_annotation_edit=entry.history_annotation_edit;
+                        if entry.history_annotation_delete||entry.history_annotation_move||entry.history_annotation_edit{scene.clear_selection();}
                         scene.version=session.original_scene.version;scene.view_version=session.original_scene.view_version;scene.history_shareback=entry.history_shareback;scene.history_axes=entry.history_axes.clone();scene.history_bim=entry.history_bim.clone();scene.history_material=entry.history_material.clone();scene.history_views.0=entry.history_views.0.clone();scene.history_group_visibility=entry.history_group_visibility.clone();scene.history_terrain=entry.history_terrain.clone();scene.history_layers=entry.history_layers.clone();scene.history_images=entry.history_images.clone();scene
                     },Err(error)=>return Err(error)};
                 }
@@ -334,6 +334,7 @@ pub(crate) fn component_candidate(session:&ComponentEditSession,scene:&Scene)->R
             candidate.refresh_dimensions();
         }
         candidate.image_planes=scene.image_planes.clone();candidate.image_objects=scene.image_objects.clone();if image_global_only{candidate.layers=scene.layers.clone();candidate.embedded_textures=scene.embedded_textures.clone();}
+        candidate.dimension_style_override=scene.dimension_style_override.clone();
         candidate.display_style=scene.display_style.clone();candidate.shadows=scene.shadows.clone();
         candidate.show_hidden_objects=scene.show_hidden_objects;candidate.show_hidden_geometry=scene.show_hidden_geometry;
         candidate.clear_selection();
@@ -407,12 +408,12 @@ impl IngeTrazoApp {
             }
         }
         crate::document_presentation::preserve(&self.scene,&mut replacement);
-        let annotation_delete=next.history_annotation_delete||next.history_annotation_move;
-        let mut previous=session.original_scene.clone();previous.history_shareback=next.history_shareback;previous.history_annotation_delete=next.history_annotation_delete;previous.history_annotation_move=next.history_annotation_move;
+        let annotation_delete=next.history_annotation_delete||next.history_annotation_move||next.history_annotation_edit;
+        let mut previous=session.original_scene.clone();previous.history_shareback=next.history_shareback;previous.history_annotation_delete=next.history_annotation_delete;previous.history_annotation_move=next.history_annotation_move;previous.history_annotation_edit=next.history_annotation_edit;
         if annotation_delete {
             previous.guides=self.scene.guides.clone();previous.dimensions=self.scene.dimensions.clone();previous.text_labels=self.scene.text_labels.clone();previous.clear_selection();
             self.scene.guides=replacement.guides.clone();self.scene.dimensions=replacement.dimensions.clone();self.scene.text_labels=replacement.text_labels.clone();self.scene.clear_selection();
-            replacement.history_annotation_move=false;replacement.history_annotation_delete=false;replacement.clear_selection();
+            replacement.history_annotation_edit=false;replacement.history_annotation_move=false;replacement.history_annotation_delete=false;replacement.clear_selection();
         }
         if next.history_shareback.is_none(){previous.layers=self.scene.layers.clone();previous.history_layers.0=crate::history_layers::restore(&self.scene,&mut replacement);self.scene.layers=replacement.layers.clone();previous.saved_views=self.scene.saved_views.clone();previous.history_views.0=crate::history_views::restore(&self.scene,&mut replacement);self.scene.saved_views=replacement.saved_views.clone();crate::history_terrain::restore(&mut self.scene,&mut replacement,&mut previous);self.scene.terrain=replacement.terrain.clone();previous.image_planes=self.scene.image_planes.clone();previous.history_images.0=crate::image_plane_actions::restore(&self.scene,&mut replacement);self.scene.image_planes=replacement.image_planes.clone();self.scene.image_objects=replacement.image_objects.clone();}
         if redo {self.redo_stack.pop();self.undo_stack.push(previous);} else {self.undo_stack.pop();self.redo_stack.push(previous);}
@@ -552,6 +553,7 @@ impl IngeTrazoApp {
         // Original begin_group_edit swaps mesh and placements only; these are
         // document-global entities in the same world frame.
         edit.tile_layer=self.scene.tile_layer.clone();
+        edit.dimension_style_override=(!self.scene.dimension_style().is_null()).then(||self.scene.dimension_style().clone());
         edit.display_style=self.scene.display_style.clone();edit.shadows=self.scene.shadows.clone();
         edit.show_hidden_objects=self.scene.show_hidden_objects;edit.show_hidden_geometry=self.scene.show_hidden_geometry;
         edit.image_planes=self.scene.image_planes.clone();edit.image_objects=self.scene.image_objects.clone();edit.guides=self.scene.guides.clone();edit.text_labels=self.scene.text_labels.clone();edit.geo_datum=self.scene.geo_datum.clone();edit.geo_points=self.scene.geo_points.clone();edit.geo_paths=self.scene.geo_paths.clone();edit.terrain=self.scene.terrain.clone();edit.sheets=self.scene.sheets.clone();edit.active_sheet_index=self.scene.active_sheet_index;edit.saved_views=self.scene.saved_views.clone();

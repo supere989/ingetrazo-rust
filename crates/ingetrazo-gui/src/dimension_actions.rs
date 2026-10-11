@@ -4,9 +4,9 @@ impl IngeTrazoApp{
     pub fn edit_dimension(&mut self,index:usize,text:Option<String>,axis:Option<String>,layer:Option<String>)->bool{
         if axis.as_deref().map(|a|!["x","y","z"].contains(&a)).unwrap_or(false){return false;}
         let Some(old)=self.scene.dimensions.get(index)else{return false;};if old.text_override==text&&old.axis==axis&&old.layer==layer{return false;}
-        self.save_undo_state();let dimension=&mut self.scene.dimensions[index];dimension.text_override=text;dimension.axis=axis;dimension.layer=layer;self.scene.bump_version();true
+        self.save_undo_state();self.undo_stack.last_mut().unwrap().history_annotation_edit=true;let dimension=&mut self.scene.dimensions[index];dimension.text_override=text;dimension.axis=axis;dimension.layer=layer;self.scene.bump_version();self.bump_model_revision();true
     }
-    pub fn remove_dimension(&mut self,index:usize)->bool{if index>=self.scene.dimensions.len(){return false;}self.save_undo_state();self.scene.dimensions.remove(index);self.selected_dimension=None;self.scene.bump_version();true}
+    pub fn remove_dimension(&mut self,index:usize)->bool{if index>=self.scene.dimensions.len(){return false;}self.save_undo_state();self.scene.dimensions.remove(index);self.selected_dimension=None;self.scene.bump_version();self.bump_model_revision();true}
 }
 pub fn render_dimensions(app:&mut IngeTrazoApp,ui:&mut egui::Ui){
     egui::CollapsingHeader::new("Dimensions").show(ui,|ui|{

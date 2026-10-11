@@ -15,6 +15,7 @@ pub(crate) struct Picks {
     font: Option<Cache>,
     labels: Vec<(u64, [f64; 4])>,
     dimensions: Vec<(uuid::Uuid, DVec2, DVec2)>,
+    leaders:Vec<(u64,DVec2,Option<DVec2>)>,
     pub builds: u64,
 }
 impl Picks {
@@ -52,6 +53,7 @@ impl Picks {
             ))
         };
         let mut labels = Vec::new();
+        let mut leaders=Vec::new();
         let mut dimensions = Vec::new();
         if self.font.is_none() {
             self.font = Some(Cache::new(
@@ -70,7 +72,7 @@ impl Picks {
         }
         let font = self.font.as_mut().unwrap();
         let size = i32::try_from(
-            scene.native_document["dimension_style"]["font_size"]
+            scene.dimension_style()["font_size"]
                 .as_i64()
                 .unwrap_or(9),
         )
@@ -83,6 +85,7 @@ impl Picks {
                 continue;
             };
             let anchor = project(t.anchor);
+            leaders.push((t.history_id,p,anchor));
             let mut lines = ingetrazo_render::annotations::splitlines(&t.text, 200_000)?;
             if lines.is_empty() {
                 lines.push("");
@@ -132,11 +135,19 @@ impl Picks {
                 }
             }
         }
-        self.labels = labels;
+        self.labels = labels;self.leaders=leaders;
         self.dimensions = dimensions;
         self.key = Some(key);
         self.builds += 1;
         Ok(())
+    }
+    pub(crate) fn leader_hit(&self,p:DVec2)->Option<u64>{
+        let mut best=16.;let mut hit=None;
+        for(id,end,anchor)in &self.leaders{
+            let mut d=(p-*end).length();
+            if let Some(a)=anchor{let ab=*end-*a;let n=ab.length_squared();let t=if n==0.{0.}else{((p-*a).dot(ab)/n).clamp(0.,1.)};d=d.min((p-(*a+ab*t)).length());}
+            if d<best{best=d;hit=Some(*id);}
+        }hit
     }
     pub(crate) fn hit(&self, p: DVec2) -> AnnotationHits {
         let label = self
@@ -171,8 +182,8 @@ impl crate::IngeTrazoApp {
         extent: [f32; 2],
         cursor: DVec2,
     ) -> Result<AnnotationHits, String> {
-        if self.active_tool_type != ingetrazo_tools::base::ToolType::Move
-            || !self.scene.selection.is_empty()
+        if !matches!(self.active_tool_type,ingetrazo_tools::base::ToolType::Move|ingetrazo_tools::base::ToolType::Select)
+            || (self.active_tool_type==ingetrazo_tools::base::ToolType::Move&&!self.scene.selection.is_empty())
             || !self.active_tool.wants_annotation_hits()
         {
             self.active_tool.note_annotation_hits(Default::default());
@@ -181,6 +192,7 @@ impl crate::IngeTrazoApp {
         if let Err(error)=self.annotation_pick_cache.update(&self.scene,self.model_revision,&self.camera,extent){self.active_tool.note_annotation_pick_error(error.clone());return Err(error);}
         let hits = self.annotation_pick_cache.hit(cursor);
         self.active_tool.note_annotation_hits(hits);
+        self.active_tool.note_annotation_leader_hit(self.annotation_pick_cache.leader_hit(cursor));
         Ok(hits)
     }
 }

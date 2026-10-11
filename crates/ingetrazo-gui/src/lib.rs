@@ -187,6 +187,8 @@ mod history_edges;
 mod annotation_overlay_geometry;
 mod annotation_plan;
 mod annotation_pick;
+pub mod annotation_editor;
+pub mod dimension_style;
 
 mod bim_history;
 

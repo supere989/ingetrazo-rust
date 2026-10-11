@@ -39,6 +39,7 @@ fn same_model(a:&Scene,b:&Scene)->bool {
     a.geo_paths==b.geo_paths &&
     a.terrain==b.terrain &&
     a.sheets==b.sheets &&
+    a.dimension_style()==b.dimension_style() &&
     a.native_document==b.native_document &&
     a.plugin_data==b.plugin_data &&
     a.native_baseline==b.native_baseline &&

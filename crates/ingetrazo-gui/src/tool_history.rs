@@ -208,6 +208,8 @@ impl IngeTrazoApp {
         if self.prepare_bim_draw_commit().is_err(){return;}
         let before = self.tool_snapshot();
         self.active_tool.on_double_click(&mut self.scene, context);
+        if let Some(target)=self.active_tool.take_annotation_edit_request(){if let Err(error)=self.begin_annotation_edit(target){self.status_message=error;}return;}
+
         self.status_message = self
             .active_tool
             .error_message()

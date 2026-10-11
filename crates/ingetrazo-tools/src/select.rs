@@ -13,6 +13,9 @@ use crate::base::{Tool, ToolContext, ToolType};
 pub struct SelectTool {
     pick_viewport:Option<(ingetrazo_core::screen_pick::PixelViewport,DVec3)>,
     click_index:crate::select_pick::ClickIndex,
+    annotation_hits:crate::base::AnnotationHits,
+    annotation_leader:Option<u64>,
+    annotation_edit:Option<crate::base::AnnotationEditTarget>,
     pub box_start: Option<DVec3>,
     pub box_end: Option<DVec3>,
     pub is_box_selecting: bool,
@@ -331,6 +334,9 @@ impl SelectTool {
     }
 
     pub fn reset(&mut self) {
+        self.annotation_hits=Default::default();
+        self.annotation_leader=None;
+        self.annotation_edit=None;
         self.box_start = None;
         self.box_end = None;
         self.is_box_selecting = false;
@@ -518,6 +524,12 @@ impl SelectTool {
 }
 
 impl Tool for SelectTool {
+    fn wants_annotation_hits(&self)->bool {true}
+    fn note_annotation_hits(&mut self,hits:crate::base::AnnotationHits){self.annotation_hits=hits;}
+    fn note_annotation_leader_hit(&mut self,hit:Option<u64>){self.annotation_leader=hit;}
+    fn note_annotation_pick_error(&mut self,_error:String){self.annotation_hits=crate::base::AnnotationHits::default();self.annotation_leader=None;}
+    fn take_annotation_edit_request(&mut self)->Option<crate::base::AnnotationEditTarget>{self.annotation_edit.take()}
+
     fn box_select(&mut self, selection:&crate::base::BoxSelection,scene:&mut Scene)->Result<(),String>{Self::select_pixels(selection,scene)}
     fn tool_type(&self) -> ToolType {
         ToolType::Select
@@ -550,14 +562,17 @@ impl Tool for SelectTool {
     fn note_pick_viewport(&mut self,viewport:ingetrazo_core::screen_pick::PixelViewport,eye:DVec3,model_revision:u64){self.pick_viewport=Some((viewport,eye));self.click_index.note_model_revision(model_revision);}
 
     fn on_click(&mut self, scene: &mut Scene, ctx: &ToolContext) {
+        if let Some(id)=self.annotation_hits.label.and_then(|token|scene.text_labels.iter().position(|t|t.history_id==token&&scene.is_layer_selectable(t.layer.as_deref()))){Self::apply_selection(scene,ctx,vec![SelectionItem::TextLabel(id)]);return;}
         let hit_plane=crate::base::pick_section_plane(scene,&ctx.ray,0.2);
         let hit_edge = if let (Some((viewport,eye)),Some(cursor))=(self.pick_viewport,ctx.screen){self.click_index.edge(scene,viewport,cursor,eye)}else{crate::base::pick_scene_edge(scene, &ctx.ray, 0.2)};
         let face_hit=crate::base::pick_scene_face(scene,&ctx.ray);let hit_face=face_hit.map(|(id,_,_)|id);
         let hit_group=crate::base::pick_scene_group(scene,&ctx.ray,0.2).map(|(id,_)|id);
 
-        let item = if let Some(id)=hit_plane{Some(SelectionItem::SectionPlane(id))}else if let Some(eid) = hit_edge {
+        let dimension=self.annotation_hits.dimension.and_then(|token|scene.dimensions.iter().position(|d|d.id==token&&scene.is_layer_selectable(d.layer.as_deref())));
+        let leader=self.annotation_leader.and_then(|token|scene.text_labels.iter().position(|t|t.history_id==token&&scene.is_layer_selectable(t.layer.as_deref())));
+        let item = if let Some(eid) = hit_edge {
             Some(SelectionItem::Edge(eid))
-        } else if let Some(id)=hit_group {Some(SelectionItem::Group(id))} else if let Some(fid) = hit_face {
+        } else if let Some(id)=hit_group {Some(SelectionItem::Group(id))} else if let Some(id)=dimension {Some(SelectionItem::Dimension(id))} else if let Some(id)=leader {Some(SelectionItem::TextLabel(id))} else if let Some(id)=hit_plane {Some(SelectionItem::SectionPlane(id))} else if let Some(fid) = hit_face {
             Some(SelectionItem::Face(fid))
         } else {
             scene.image_plane_hit(&ctx.ray,ingetrazo_core::image_plane::ImagePickMode::Selectable).map(|(i,_)|SelectionItem::ImagePlane(i))
@@ -572,6 +587,10 @@ impl Tool for SelectTool {
     }
 
     fn on_double_click(&mut self, scene: &mut Scene, ctx: &ToolContext) {
+        if let Some(token)=self.annotation_hits.label {
+            if scene.text_labels.iter().any(|t|t.history_id==token&&scene.is_layer_selectable(t.layer.as_deref())){self.annotation_edit=Some(crate::base::AnnotationEditTarget::Label(token));return;}
+        }
+
         let hit_plane=crate::base::pick_section_plane(scene,&ctx.ray,0.2);
         let hit_edge = if let (Some((viewport,eye)),Some(cursor))=(self.pick_viewport,ctx.screen){self.click_index.edge(scene,viewport,cursor,eye)}else{crate::base::pick_scene_edge(scene, &ctx.ray, 0.2)};
         let face_hit=crate::base::pick_scene_face(scene,&ctx.ray);let hit_face=face_hit.map(|(id,_,_)|id);
@@ -579,6 +598,10 @@ impl Tool for SelectTool {
 
         if let Some(id)=hit_plane{scene.clear_selection();scene.select(SelectionItem::SectionPlane(id));return;}
         if let Some(id)=hit_group.filter(|_|hit_edge.is_none()){scene.clear_selection();scene.select(SelectionItem::Group(id));return;}
+        if hit_group.is_none()&&hit_edge.is_none(){
+            if let Some(token)=self.annotation_hits.dimension {if scene.dimensions.iter().any(|d|d.id==token&&scene.is_layer_selectable(d.layer.as_deref())){self.annotation_edit=Some(crate::base::AnnotationEditTarget::Dimension(token));return;}}
+            if let Some(token)=self.annotation_leader {if scene.text_labels.iter().any(|t|t.history_id==token&&scene.is_layer_selectable(t.layer.as_deref())){self.annotation_edit=Some(crate::base::AnnotationEditTarget::Label(token));return;}}
+        }
         let target=hit_edge.map(SelectionItem::Edge).or_else(||hit_face.map(SelectionItem::Face));
         if let Some(target)=target {
             let mut targets=Self::expanded(scene,target.clone());

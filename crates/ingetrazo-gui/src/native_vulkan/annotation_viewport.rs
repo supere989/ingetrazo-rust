@@ -21,7 +21,7 @@ impl ViewportAnnotations{
   let distance=app.active_tool.distance_label().map(|(value,point)|(value,point.to_array()));
   if distance.is_some_and(|(value,point)|!value.is_finite()||point.iter().any(|p|!p.is_finite())){return Err("Tool label outside finite admission".into());}
   let key=Key{revision:app.native_geometry_revision,scene_version:app.scene.version,factory:factory.cache_identity(),view:app.scene.view_version,matrix,rect:[rect.min.x,rect.min.y,rect.max.x,rect.max.y],density,selected:app.selected_dimension,bypass_depth,include_annotations,distance,units};
-  let raw=&app.scene.native_document["dimension_style"];
+  let raw=app.scene.dimension_style();
   let style_unchanged=self.style==*raw&&self.vcb==app.vcb_text;
   if style_unchanged&&self.empty.as_ref()==Some(&key){return Ok(None);}
   if style_unchanged&&self.current.as_ref().is_some_and(|(old,_)|*old==key){return Ok(self.current.as_ref().map(|(_,ready)|ready));}
