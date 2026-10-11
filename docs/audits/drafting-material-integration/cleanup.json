@@ -1,0 +1,8 @@
+{
+  "archive_sha256": "842a5e1268e6c33cfbada6e0b0f85aae5c6fab4bc8b142892bb66451e44828aa",
+  "raw_root": "/tmp/ingetrazo-drafting-material-integration",
+  "purged_exact_duplicate_files": 462,
+  "purged_bytes": 11460386,
+  "retained_unlisted_files": [],
+  "scope": "Only byte-authenticated producer duplicates removed. Source worktrees, reusable build/dependency caches, binaries and unique failed evidence preserved."
+}
