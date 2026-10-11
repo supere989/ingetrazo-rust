@@ -1,0 +1,65 @@
+[
+  {
+    "run": 38128645700,
+    "source": "9cd824db3e3ab94dbd7b10b1ea2a56e1f2a3fb1c",
+    "conclusion": "success",
+    "jobs": [
+      {
+        "id": 114438189918,
+        "name": "Native Metal framework link (macos-15)",
+        "status": "completed",
+        "conclusion": "success",
+        "completed_at": "2026-10-11T09:33:24Z"
+      },
+      {
+        "id": 114438190060,
+        "name": "Native Metal framework link (macos-15-intel)",
+        "status": "completed",
+        "conclusion": "success",
+        "completed_at": "2026-10-11T09:36:01Z"
+      },
+      {
+        "id": 114438190116,
+        "name": "compilation-and-tests",
+        "status": "completed",
+        "conclusion": "success",
+        "completed_at": "2026-10-11T09:46:28Z"
+      },
+      {
+        "id": 114438190150,
+        "name": "Native Metal compile (aarch64-apple-darwin)",
+        "status": "completed",
+        "conclusion": "success",
+        "completed_at": "2026-10-11T09:31:42Z"
+      },
+      {
+        "id": 114438190197,
+        "name": "Native Metal compile (x86_64-apple-darwin)",
+        "status": "completed",
+        "conclusion": "success",
+        "completed_at": "2026-10-11T09:31:37Z"
+      }
+    ]
+  },
+  {
+    "run": 38128645618,
+    "source": "9cd824db3e3ab94dbd7b10b1ea2a56e1f2a3fb1c",
+    "conclusion": "success",
+    "jobs": [
+      {
+        "id": 114438189719,
+        "name": "Actual ordered UI and CAD compute (macos-15)",
+        "status": "completed",
+        "conclusion": "success",
+        "completed_at": "2026-10-11T09:32:20Z"
+      },
+      {
+        "id": 114438189812,
+        "name": "Actual ordered UI and CAD compute (macos-15-intel)",
+        "status": "completed",
+        "conclusion": "success",
+        "completed_at": "2026-10-11T09:33:21Z"
+      }
+    ]
+  }
+]
