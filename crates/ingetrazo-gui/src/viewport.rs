@@ -33,11 +33,11 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
     let alt_down = ui.input(|i| i.modifiers.alt);
     let ctrl_down = ui.input(|i| i.modifiers.command || i.modifiers.ctrl);
     // Modifier release must retire the temporary lock even outside the canvas.
-    if app.text3d_dialog.is_none() {
-    app.snap_engine.sync_drawing_frame(app.scene.drawing_frame);
     let scale_modifiers=if app.active_tool_type==ToolType::Scale{crate::pointer_modifiers::get(ui.ctx())}else{None};
     let mut scale_modifier_cursor=0;
     let scale_input_admitted=scale_modifiers.as_ref().is_none_or(|handle|handle.lock().unwrap().admitted());
+    if app.text3d_dialog.is_none() {
+    app.snap_engine.sync_drawing_frame(app.scene.drawing_frame);
     if !scale_input_admitted{app.status_message="Native modifier batch exceeded bounded admission".into();}
     if app.active_tool_type == ToolType::Scale {
         app.snap_engine.update_shift_state(false, None);

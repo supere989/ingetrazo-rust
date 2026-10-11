@@ -149,6 +149,7 @@ impl IngeTrazoApp {
     pub fn dispatch_tool_cancel(&mut self){
         let placement_before=self.active_tool.placement_only_preview();let version=self.scene.version;let images=self.scene.image_planes.publication_revision();self.active_tool.on_cancel(&mut self.scene);
         if self.scene.version!=version{if placement_before||self.active_tool.placement_only_preview(){self.bump_placement_revision();}else{self.bump_model_revision();}}else if self.scene.image_planes.publication_revision()!=images{self.bump_image_presentation_revision();}
+        if self.active_tool.completed(){self.set_tool(ingetrazo_tools::base::ToolType::Select);}
     }
     pub fn dispatch_tool_move(&mut self,context:&ToolContext){
         let placement_before=self.active_tool.placement_only_preview();let version=self.scene.version;let images=self.scene.image_planes.publication_revision();self.active_tool.on_move(&mut self.scene,context);
