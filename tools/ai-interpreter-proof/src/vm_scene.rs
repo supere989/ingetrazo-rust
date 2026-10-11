@@ -383,7 +383,7 @@ pub(super) mod console_scene {
             }
             fields.set_item("billboard", vm.ctx.new_bool(false).into(), vm)?;
             Ok(Self {
-                mesh: PyRwLock::new(mesh),
+                mesh: rustpython_vm::common::lock::PyRwLock::new(mesh),
                 fields,
                 id,
                 baseline: ingetrazo_core::groups::Group::new(""),
@@ -460,6 +460,28 @@ pub(super) mod console_scene {
         fn children(zelf: &Py<Self>, vm: &VirtualMachine) -> PyObjectRef {
             zelf.get("children", vm)
         }
+        #[pygetset(setter)]
+        fn set_children(zelf: &Py<Self>, value: PyObjectRef, vm: &VirtualMachine) -> PyResult<()> {
+            zelf.set("children", value, vm)
+        }
+        #[pymethod]
+        fn adopt(zelf: &Py<Self>, children: PyObjectRef, vm: &VirtualMachine) -> PyResult<()> {
+            vm.host_budget_tick()?;
+            let children = vm.extract_elements_with(&children, Ok)?;
+            let nonempty = !children.is_empty();
+            zelf.set("children", vm.ctx.new_list(children).into(), vm)?;
+            if nonempty && vm.is_none(&zelf.get("xform", vm)) {
+                zelf.set(
+                    "xform",
+                    QMatrix4x4::from_native(glam::DMat4::IDENTITY)
+                        .expect("Finite exact identity")
+                        .into_ref(&vm.ctx)
+                        .into(),
+                    vm,
+                )?;
+            }
+            Ok(())
+        }
         #[pygetset]
         fn xform(zelf: &Py<Self>, vm: &VirtualMachine) -> PyObjectRef {
             zelf.get("xform", vm)
@@ -471,6 +493,10 @@ pub(super) mod console_scene {
         #[pygetset]
         fn component(zelf: &Py<Self>, vm: &VirtualMachine) -> PyObjectRef {
             zelf.get("component", vm)
+        }
+        #[pygetset(setter)]
+        fn set_component(zelf: &Py<Self>, value: PyObjectRef, vm: &VirtualMachine) -> PyResult<()> {
+            zelf.set("component", value, vm)
         }
         #[pymethod]
         fn is_component(zelf: &Py<Self>, vm: &VirtualMachine) -> PyResult<bool> {
@@ -765,11 +791,63 @@ pub(super) fn publication(
     shares
         .try_reserve(values.len())
         .map_err(|_| "Group shares capacity refused")?;
+    let groups = publish_groups(
+        values,
+        budget,
+        vm,
+        &mut charge,
+        &mut shares,
+        &mut costs,
+        &mut definitions,
+        &mut Vec::new(),
+    )?;
+    Ok(GroupPublication {
+        groups,
+        packed_meshes: costs.len(),
+        definitions,
+        shares,
+        charge,
+    })
+}
+
+fn publish_groups(
+    values: Vec<PyObjectRef>,
+    budget: &OwnerBudget,
+    vm: &VirtualMachine,
+    charge: &mut Lease,
+    shares: &mut std::collections::HashMap<uuid::Uuid, ingetrazo_core::mesh::Mesh>,
+    costs: &mut std::collections::HashMap<uuid::Uuid, usize>,
+    definitions: &mut std::collections::HashMap<
+        uuid::Uuid,
+        ingetrazo_core::components::ComponentDefinition,
+    >,
+    path: &mut Vec<usize>,
+) -> Result<Vec<ingetrazo_core::groups::Group>, String> {
+    if path.len() >= 128 {
+        return Err("Group nesting admission exceeded".into());
+    }
+    path.try_reserve(1)
+        .map_err(|_| "Group ancestry preparation refused")?;
     let mut groups = Vec::new();
     groups
         .try_reserve_exact(values.len())
-        .map_err(|_| "Native group receipt capacity refused")?;
+        .map_err(|_| "Group publication capacity refused")?;
     for value in values {
+        let identity = value.get_id();
+        if path.contains(&identity) {
+            return Err("Cyclic Group children cannot be published".into());
+        }
+        path.push(identity);
+        charge.merge(budget.reserve(Kind::Preparation, 2048)?)?;
+        shares
+            .try_reserve(1)
+            .map_err(|_| "Group share references refused")?;
+        costs
+            .try_reserve(1)
+            .map_err(|_| "Group cost references refused")?;
+        definitions
+            .try_reserve(1)
+            .map_err(|_| "Group definitions refused")?;
         let group = value
             .downcast::<console_scene::Group>()
             .map_err(|_| "Scene groups require genuine Group")?;
@@ -790,9 +868,28 @@ pub(super) fn publication(
             .map_err(|_| "Group children missing")?
             .downcast::<rustpython_vm::builtins::PyList>()
             .map_err(|_| "Group children require list")?;
-        if !children.borrow_vec().is_empty() {
-            return Err("Nested Group publication remains required".into());
-        }
+        let count = children.borrow_vec().len();
+        let _refs = budget.reserve(
+            Kind::Preparation,
+            count
+                .checked_mul(std::mem::size_of::<PyObjectRef>())
+                .ok_or("Child extent overflow")?,
+        )?;
+        let mut child_values = Vec::new();
+        child_values
+            .try_reserve_exact(count)
+            .map_err(|_| "Child references refused")?;
+        child_values.extend(children.borrow_vec().iter().cloned());
+        let native_children = publish_groups(
+            child_values,
+            budget,
+            vm,
+            charge,
+            shares,
+            costs,
+            definitions,
+            path,
+        )?;
         let mesh = group.mesh.read().clone();
         let token = mesh.share_token.get().unwrap_or_else(|| {
             let token = uuid::Uuid::new_v4();
@@ -834,6 +931,7 @@ pub(super) fn publication(
         .ok_or("Native group name requires text")?;
         let mut native = ingetrazo_core::groups::Group::with_mesh(name, mesh_receipt);
         native.id = group.id;
+        native.children = native_children;
         native.layer = str_value(
             group
                 .fields
@@ -877,13 +975,36 @@ pub(super) fn publication(
                 token
             };
             if !definitions.contains_key(&definition_id) {
-                charge.merge(budget.reserve(Kind::Preparation, share_bytes)?)?;
+                let mut definition_bytes = share_bytes;
+                fn child_bytes(
+                    children: &[ingetrazo_core::groups::Group],
+                    costs: &std::collections::HashMap<uuid::Uuid, usize>,
+                ) -> Result<usize, String> {
+                    let mut total = 0usize;
+                    for child in children {
+                        let mesh = child
+                            .mesh_share
+                            .and_then(|token| costs.get(&token))
+                            .copied()
+                            .ok_or("Child mesh receipt cost missing")?;
+                        total = total
+                            .checked_add(mesh)
+                            .and_then(|n| n.checked_add(2048))
+                            .and_then(|n| n.checked_add(child_bytes(&child.children, costs).ok()?))
+                            .ok_or("Definition child receipt overflow")?;
+                    }
+                    Ok(total)
+                }
+                definition_bytes = definition_bytes
+                    .checked_add(child_bytes(&native.children, costs)?)
+                    .ok_or("Definition receipt extent overflow")?;
+                charge.merge(budget.reserve(Kind::Preparation, definition_bytes)?)?;
                 definitions.insert(
                     definition_id,
                     ingetrazo_core::components::ComponentDefinition {
                         mesh_share: Some(token),
                         mesh: native.mesh.clone(),
-                        children: vec![],
+                        children: native.children.clone(),
                     },
                 );
             }
@@ -939,14 +1060,9 @@ pub(super) fn publication(
             .ok_or("Group uid requires text")?,
         );
         groups.push(native);
+        path.pop();
     }
-    Ok(GroupPublication {
-        groups,
-        packed_meshes: costs.len(),
-        definitions,
-        shares,
-        charge,
-    })
+    Ok(groups)
 }
 
 pub(super) fn import(
@@ -955,19 +1071,36 @@ pub(super) fn import(
     budget: &OwnerBudget,
     vm: &VirtualMachine,
 ) -> Result<PyRef<console_scene::Scene>, String> {
-    use rustpython_vm::common::lock::PyRwLock;
     let mut owners = std::collections::HashMap::<uuid::Uuid, PyRef<editable_mesh::Mesh>>::new();
     owners
         .try_reserve(scene.groups.len())
         .map_err(|_| "Imported Mesh owner references refused")?;
+    let groups = import_groups(scene, &scene.groups, budget, vm, &mut owners, 0)?;
+    Ok(console_scene::Scene {
+        mesh: root,
+        groups: vm.ctx.new_list(groups),
+    }
+    .into_ref(&vm.ctx))
+}
+fn import_groups(
+    scene: &ingetrazo_core::scene::Scene,
+    native_groups: &[ingetrazo_core::groups::Group],
+    budget: &OwnerBudget,
+    vm: &VirtualMachine,
+    owners: &mut std::collections::HashMap<uuid::Uuid, PyRef<editable_mesh::Mesh>>,
+    depth: usize,
+) -> Result<Vec<PyObjectRef>, String> {
+    if depth >= 128 {
+        return Err("Group nesting admission exceeded".into());
+    }
+    owners
+        .try_reserve(native_groups.len())
+        .map_err(|_| "Imported Mesh owner references refused")?;
     let mut groups = Vec::new();
     groups
-        .try_reserve_exact(scene.groups.len())
-        .map_err(|_| "Imported Group references refused")?;
-    for g in &scene.groups {
-        if !g.children.is_empty() {
-            return Err("Placed/nested Group hydration remains required".into());
-        }
+        .try_reserve_exact(native_groups.len())
+        .map_err(|_| "Imported child references refused")?;
+    for g in native_groups {
         if let Some(id) = g.component_definition {
             let definition = scene
                 .component_definitions
@@ -980,7 +1113,6 @@ pub(super) fn import(
                 .mesh_share
                 .is_some_and(|token| Some(token) != g.mesh_share)
                 || definition.mesh != g.mesh
-                || !definition.children.is_empty()
                 || g.native_document
                     .get("component")
                     .is_some_and(|v| v != &serde_json::Value::Bool(true))
@@ -1025,7 +1157,20 @@ pub(super) fn import(
             .set_item("hidden", vm.ctx.new_bool(g.hidden).into(), vm)
             .map_err(|_| "Group visibility import refused")?;
         fields
-            .set_item("children", vm.ctx.new_list(vec![]).into(), vm)
+            .set_item(
+                "children",
+                vm.ctx
+                    .new_list(import_groups(
+                        scene,
+                        &g.children,
+                        budget,
+                        vm,
+                        owners,
+                        depth + 1,
+                    )?)
+                    .into(),
+                vm,
+            )
             .map_err(|_| "Group children import refused")?;
         fields
             .set_item("component", vm.ctx.new_bool(true).into(), vm)
@@ -1051,7 +1196,8 @@ pub(super) fn import(
                 .set_item("material", hydrate::value(material, vm)?, vm)
                 .map_err(|_| "Group paint import refused")?;
         }
-        if g.transform != glam::DMat4::IDENTITY
+        if !g.children.is_empty()
+            || g.transform != glam::DMat4::IDENTITY
             || g.component_definition.is_some()
             || g.native_document.get("xform").is_some_and(|v| !v.is_null())
         {
@@ -1076,10 +1222,29 @@ pub(super) fn import(
         let charge = budget.reserve(Kind::History, 2048)?;
         groups.push(
             console_scene::Group {
-                mesh: PyRwLock::new(mesh),
+                mesh: rustpython_vm::common::lock::PyRwLock::new(mesh),
                 fields,
                 id: g.id,
-                baseline: g.clone(),
+                // The VM owns genuine Mesh/child references separately. Preserve
+                // placement metadata, never clone the full nested native graph
+                // into every ancestor's baseline.
+                baseline: ingetrazo_core::groups::Group {
+                    mesh_share: g.mesh_share,
+                    component_definition: g.component_definition,
+                    definition_member: g.definition_member,
+                    native_document: g.native_document.clone(),
+                    native_baseline: g.native_baseline.clone(),
+                    id: g.id,
+                    name: g.name.clone(),
+                    mesh: ingetrazo_core::mesh::Mesh::new(),
+                    transform: g.transform,
+                    layer: g.layer.clone(),
+                    children: vec![],
+                    ifc_tag: g.ifc_tag.clone(),
+                    billboard: g.billboard,
+                    billboard_texture: g.billboard_texture.clone(),
+                    hidden: g.hidden,
+                },
                 _charge: charge,
                 imported: true,
             }
@@ -1087,9 +1252,5 @@ pub(super) fn import(
             .into(),
         );
     }
-    Ok(console_scene::Scene {
-        mesh: root,
-        groups: vm.ctx.new_list(groups),
-    }
-    .into_ref(&vm.ctx))
+    Ok(groups)
 }

@@ -600,6 +600,39 @@ mod tests {
         assert_eq!(app.scene.groups.len(), 2);
     }
     #[test]
+    fn nested_group_publication_admission_preserves_redo_and_retries() {
+        let mut app = crate::IngeTrazoApp::new();
+        let input = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../../docs/audits/ai-console-nested-scene/input.igz");
+        app.scene = ingetrazo_formats::igz::load_igz(&input).unwrap();
+        app.engineering_python_enabled = true;
+        app.run_script("groups.append(Group(name='History'))");
+        assert!(!app.status_message.contains("refused"));
+        app.undo();
+        let before = app.scene.clone();
+        let undo = app.undo_stack.clone();
+        let redo = app.redo_stack.clone();
+        app.engineering_python.export_pressure = true;
+        app.run_script("groups[0].children[0].children[0].xform.translate(.125,0,0); groups.append(Group(name='Refused'))");
+        assert_eq!(app.scene, before);
+        assert_eq!(app.undo_stack, undo);
+        assert_eq!(app.redo_stack, redo);
+        assert!(app.engineering_python.controller.is_none());
+        assert!(app.status_message.contains("scope retired"));
+        app.redo();
+        assert_eq!(app.scene.groups.last().unwrap().name, "History");
+        app.engineering_python.export_pressure = false;
+        app.run_script("groups[0].children[0].children[0].xform.translate(.125,0,0)");
+        assert!(!app.status_message.contains("refused"));
+        assert_eq!(
+            app.scene.groups[0].children[0].children[0]
+                .transform
+                .w_axis
+                .x,
+            0.625
+        );
+    }
+    #[test]
     fn changed_row_prepare_refuses_stale_unchanged_coordinate_before_writes() {
         let mut target = ingetrazo_core::mesh::Mesh::new();
         target.add_vertex(glam::DVec3::ZERO);

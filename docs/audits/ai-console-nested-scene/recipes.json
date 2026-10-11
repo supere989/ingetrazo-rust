@@ -1,0 +1,62 @@
+[
+  {
+    "name": "import",
+    "code": "p=groups[0]; c=p.children[0]; leaf=c.children[0]; held=leaf.mesh; assert held is groups[1].mesh",
+    "history": null
+  },
+  {
+    "name": "nested-pose",
+    "code": "c.xform.translate(.25,-.5,.75); leaf.xform.scale(-1,2,.5)",
+    "history": null
+  },
+  {
+    "name": "detach",
+    "code": "c.children.remove(leaf)",
+    "history": null
+  },
+  {
+    "name": "reinsert",
+    "code": "c.children.append(leaf); assert leaf.mesh is held",
+    "history": null
+  },
+  {
+    "name": "shared-edit",
+    "code": "held.vertices[0].position.setZ(.5)",
+    "history": null
+  },
+  {
+    "name": "membership-add",
+    "code": "groups.append(leaf)",
+    "history": null
+  },
+  {
+    "name": "undo",
+    "code": "",
+    "history": false
+  },
+  {
+    "name": "redo",
+    "code": "",
+    "history": true
+  },
+  {
+    "name": "delete-parent",
+    "code": "groups.remove(p)",
+    "history": null
+  },
+  {
+    "name": "reinsert-parent",
+    "code": "groups.insert(0,p)",
+    "history": null
+  },
+  {
+    "name": "nested-create",
+    "code": "new=Group(held,name='NestedNew'); new.xform=type(p.xform)(); new.xform.translate(.125,.25,.5); wrap=Group(name='Wrapper'); wrap.adopt([new]); wrap.component=False; p.children.append(wrap); assert wrap.children[0] is new; assert new.mesh is held",
+    "history": null
+  },
+  {
+    "name": "children-replace",
+    "code": "saved=p.children; p.children=list(saved); assert p.children is not saved; assert p.children[1] is wrap",
+    "history": null
+  }
+]
