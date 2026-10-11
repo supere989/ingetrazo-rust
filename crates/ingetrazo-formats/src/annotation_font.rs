@@ -11,6 +11,7 @@ pub struct Face {
     key: FontKey,
     pixels: u32,
     font: PaperFont,
+    #[cfg(target_os="macos")] native: Option<Rc<crate::paper_coretext_glyph::NativeFont>>,
 }
 impl Face {
     pub fn pixels(&self) -> u32 {
@@ -22,9 +23,11 @@ impl Face {
         density: f64,
         phase: [u8; 2],
     ) -> Result<RasterGlyph, String> {
+        #[cfg(target_os="macos")] if let Some(native)=&self.native {return native.raster(glyph,density,phase,0.,0.);}
         self.font.rasterize_glyph(glyph, density, phase, 0.)
     }
     pub fn rasterize_lcd(&self,glyph:u32,density:f64,phase:[u8;2])->Result<crate::paper_text::RasterLcdGlyph,String>{
+        #[cfg(target_os="macos")] if let Some(native)=&self.native {return native.raster_lcd(glyph,density,phase,0.,0.);}
         self.font.rasterize_lcd_glyph(glyph,density,phase,0.)
     }
 
@@ -119,11 +122,17 @@ impl Cache {
         self.faces
             .try_reserve(1)
             .map_err(|_| "Annotation face cache allocation failed")?;
+        #[cfg(target_os="macos")]
+        let native=matched.font.native_font().map(|font|font.at_pixel_size(pixels)).transpose()?;
+        #[cfg(target_os="macos")]
+        let font=if let Some(native)=&native {PaperFont::new_coretext_sized(native,pixels,None)?}else{sized_font(&matched,pixels)?};
+        #[cfg(not(target_os="macos"))]
         let font = sized_font(&matched, pixels)?;
         let face = Rc::new(Face {
             key: key.0,
             pixels,
             font,
+            #[cfg(target_os="macos")] native,
         });
         // All admission/native construction succeeded before old cache-only
         // faces are retired. A live plan/run owner is never selected.

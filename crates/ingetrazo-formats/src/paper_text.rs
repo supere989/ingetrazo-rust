@@ -392,7 +392,11 @@ impl PaperFont {
     }
     #[cfg(target_os="macos")]
     pub(crate) fn new_coretext(native:&crate::paper_coretext_glyph::NativeFont)->Result<Self,String>{
-        let mut font=Self::new_with_shaping_context(native.bytes.clone(),0,None,100,Some(QT_PAPER_SHAPING_POINT_SIZE))?;
+        Self::new_coretext_sized(native,100,Some(QT_PAPER_SHAPING_POINT_SIZE))
+    }
+    #[cfg(target_os="macos")]
+    pub(crate) fn new_coretext_sized(native:&crate::paper_coretext_glyph::NativeFont,pixels:u32,point_size:Option<f32>)->Result<Self,String>{
+        let mut font=Self::new_with_shaping_context(native.bytes.clone(),0,None,pixels,point_size)?;
         let metrics=native.metrics();let data=unsafe{font.data.as_mut()};
         for (id,width)in data.widths.iter_mut().enumerate(){*width=(native.advance(id as u32)?*64.)as i32;}
         data.metrics=[metrics[0],metrics[1],metrics[2]];font.ascent_26_6=metrics[0];font.descent_26_6=metrics[1];font.leading_26_6=metrics[2];Ok(font)
