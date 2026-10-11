@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Independent fan boundary integral and oriented edge inventory, no native volume helper."""
-import json,sys,math,collections,copy
+import json,sys,math,collections,copy,hashlib,zipfile
 from pathlib import Path
 def check(r):
  assert r['invalid_transform_atomic'] is True
@@ -25,7 +25,21 @@ def check(r):
   assert abs(abs(volume)-row['expected_volume'])<1e-8,(row['scenario'],row['operation'],volume)
   assert owners and owners<={'a','b'}
  return len(rows)
+audit=Path(__file__).resolve().parents[1]/'docs/audits/solid-boolean-workflow'
+manifest=json.loads((audit/'disjoint-manifest.json').read_text())
+raw=(audit/'disjoint-records.zip').read_bytes();assert hashlib.sha256(raw).hexdigest()==manifest['archive_sha256']
+with zipfile.ZipFile(audit/'disjoint-records.zip') as z:
+ assert set(z.namelist())==set(manifest['records'])
+ for name,v in manifest['records'].items():
+  b=z.read(name);assert len(b)==v['bytes'] and hashlib.sha256(b).hexdigest()==v['sha256']
+ source=json.loads(z.read('original.json'))
+assert source['source_pin']=='6be29fe437a7cd992d4e079f71720821b25216b9'
+assert [q['operation'] for q in source['rows']]==['subtract','intersect']
+for q in source['rows']:
+ assert q['kernel_error']=='no overlap' and q['created']==0 and q['flash']==['The two solids do not overlap',5000]
+ assert q['update_calls']==q['undo']==q['redo']==0 and q['version_unchanged'] and q['identity_unchanged'] and q['scene_bytes_unchanged']
 r=json.loads(Path(sys.argv[1]).read_text());n=check(r)
+assert {q['operation'] for q in r['cases'] if q['refused']}=={'Subtract','Intersect'}
 # Literal independent-oracle corruptions must reject.
 negative=0
 for kind in ['volume','winding','attributes','history','inventory']:

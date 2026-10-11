@@ -1,0 +1,17 @@
+{
+  "archive_sha256": "da94e2da6d6b849cfc4d56a6c8b9049d07cc2a3876104c9b99bbc683ab5b7390",
+  "records": {
+    "original.json": {
+      "bytes": 1257,
+      "sha256": "1935a75818a26ae66d5671843c0a1fdcd3e4157cf03d545d4afb97d8afa1a2dc"
+    },
+    "original.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "helper.py": {
+      "bytes": 2587,
+      "sha256": "817ea9416bb8e19f869d0c8945161068c7f7cd35f352ac0d7ca5a1bdc76613e5"
+    }
+  }
+}
