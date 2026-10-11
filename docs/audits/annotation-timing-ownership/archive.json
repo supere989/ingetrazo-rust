@@ -1,0 +1,26 @@
+{
+  "source": "89ab785de4f088fdda2d7240bfae5b2325e46588",
+  "sha256": "ceb75ee9c45e42fa4c7d6ac816fc4e231a478e99b2b9fb76ae514146570dbe77",
+  "files": {
+    "lifecycle/application/1-add.png": "2380bd73b21e9d1c68d34035530e3942054c609d870ea1096541322b94f76de2",
+    "lifecycle/application/2-delete.png": "2d012225ca4592b38a7fca66546b64042034b3edb24f058b8157349964e3cdc1",
+    "lifecycle/application/3-add.png": "2380bd73b21e9d1c68d34035530e3942054c609d870ea1096541322b94f76de2",
+    "lifecycle/application/4-refuse.png": "2380bd73b21e9d1c68d34035530e3942054c609d870ea1096541322b94f76de2",
+    "lifecycle/application/5-retry.png": "b3a4d9e7aaf800accfda36d4abab933e0e4d350f9023e8d9cc5d3a8c1a053c7a",
+    "lifecycle/application/6-delete.png": "9d211e0494d12b80a8ee150224acde278662fa4e2a28bfb941553dff7b36da0c",
+    "lifecycle/application/app-cleanup.json": "002b2ad4378af24a2bf8ea97cf7dcaab0240aa0e2923218dec01245f4e59b3e4",
+    "lifecycle/application/baseline.png": "fccb5c0cc7ea25d9d8ecbdf49457d153edd59aa43eb01e3e8e066ba4fda14ccf",
+    "lifecycle/application/control/request.json": "b06120a00a21bd06a5a46d4c3749852896852d65c4dd169a86b59f958f7215fa",
+    "lifecycle/application/control/state.json": "8c50a69fc34ce9b6eedad7a0e1a7ca4b76a7f8909cbd3aa1a4b16d813517fbc1",
+    "lifecycle/application/result.json": "6e1b7474765ef1d677a89e5884ed4006a73e490ccac3dddb7355a0783a5e8ae9",
+    "lifecycle/application/runtime.log": "da5ec0011addce6953ef8e58dc21cb7eb2fcf5fded2bae82f3677131db97aba7",
+    "lifecycle/application/xvfb-cleanup.json": "ac3db790fb10744c5adcca88c62d290edc9c581201a89b7d5ecef1828bf1398e",
+    "lifecycle/application.log": "756cb846e24456877284db9454eab68f0c06464554bde6422bf639e295b7e1b0",
+    "lifecycle/nvidia-glx-icd.json": "580e00d71b7aee371c54e277aed4c9ef114a686688bfd8406d567233cd8d9357",
+    "lifecycle/transport.json": "a57318dcb6f76be4cdc3dc9b743455739e86f2039cd9f4092c84e3497e9221c5",
+    "annotation-timing-ownership-tests.log": "99bd53e9f7ea9bcbb519aca8b77a8806e19f5c92b93d6777a46f4190e6ddaec0",
+    "annotation-timing-ownership-build.log": "7cdadc48de43bcc94f6df586f944f5e936839e70914daf53fe1aa968cf9e7804",
+    "run-annotation-source-application-timing.py": "6049540f607e8af9b1c398a0de2f494d1c38297cc9bba4c8d92e7fabab0cc745"
+  },
+  "scope": "8 focused admission tests; actual application add/delete/refusal/new managed texture retry with optional timing enabled, explicit timing destruction before successful zero-ledger cleanup. DEVICE_LOST quarantine paths source-reviewed, not hardware-injected."
+}
