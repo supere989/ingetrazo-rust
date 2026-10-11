@@ -1,0 +1,57 @@
+[
+  {
+    "name": "import",
+    "code": "a,b=groups; held=a.xform; shared=a.mesh; Matrix=type(held); assert shared is b.mesh",
+    "history": null
+  },
+  {
+    "name": "translate",
+    "code": "held.translate(.125,-.25,.5)",
+    "history": null
+  },
+  {
+    "name": "reflect",
+    "code": "held.scale(-2,3,.5)",
+    "history": null
+  },
+  {
+    "name": "rotate",
+    "code": "held.rotate(90,0,0,1)",
+    "history": null
+  },
+  {
+    "name": "generalrotate",
+    "code": "held.rotate(37.5,QVector3D(1,2,3))",
+    "history": null
+  },
+  {
+    "name": "copy",
+    "code": "b.xform=Matrix(held); b.xform.translate(QVector3D(.5,.25,-.125)); assert b.xform is not held",
+    "history": null
+  },
+  {
+    "name": "append",
+    "code": "c=Group(shared,name='C'); c.xform=Matrix(held); groups.append(c)",
+    "history": null
+  },
+  {
+    "name": "undo",
+    "code": "",
+    "history": false
+  },
+  {
+    "name": "redo",
+    "code": "",
+    "history": true
+  },
+  {
+    "name": "slanted",
+    "code": "a.xform=Matrix(1,.25,0,2,0,1,.5,-3,.125,0,1,4,0,0,0,1); mapped=a.xform.map(QVector3D(1,2,3)); assert mapped==QVector3D(3.5,.5,7.125)",
+    "history": null
+  },
+  {
+    "name": "inspection",
+    "code": "assert shared is groups[0].mesh is groups[1].mesh is groups[2].mesh",
+    "history": null
+  }
+]

@@ -1,0 +1,19 @@
+{
+  "base": "2cfe3111",
+  "required_correction": "b3fbc4af (same condition included here)",
+  "original_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "source_sha256": {
+    "tools/ai-interpreter-proof/src/vm_scene.rs": "ee62b7c12277231b0d9a2c3e4113d5eafa69b594c962a7463819cb5eb7d37f02",
+    "crates/ingetrazo-gui/Cargo.toml": "7cce5c7e33f0a673332ea53a89ec6b573530f8131fc3dd9ee882d66fa46b37aa",
+    "crates/ingetrazo-gui/examples/engineering_console_affine_fixture.rs": "a4462094ec20e6e71d507ddfaa18a80cd07ec193b03258b64818e7c7e8aa7290",
+    "scripts/reference-ai-console-affine-placement.py": "0a9dfd4c0355074f6a9a99224e023eb4ab80bd78b6497605939016c5d7e5fda6",
+    "scripts/check-ai-console-affine-placement.py": "69a6127fe0cee4e2eaabdd1c39c070f92769f0b622d8f78eec1221f2e1f1703a",
+    "scripts/check-ai-console-affine-reopen.py": "4579b23614788b4a6e951c5b8e7afa9044b7237502591e624ebb8551393db875",
+    "docs/audits/ai-console-affine-placement/recipes.json": "b7a6f61d6269178a62644673fd67880b07e235ff7d5d5d0db81ea751aa4e41af"
+  },
+  "binary_sha256": "dc44865d70e242ef6d5c820d5405e39a38dc958c5d866723dd9a17e03127593e",
+  "states": 11,
+  "real_atomic_refusals": 3,
+  "state_negative_controls": 6,
+  "reopen_negative_controls": 3
+}

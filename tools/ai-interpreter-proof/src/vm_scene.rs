@@ -16,27 +16,267 @@ pub(super) mod console_scene {
         types::Constructor,
         FromArgs, Py, PyResult, Traverse,
     };
-    /// Genuine native identity placement object. Arbitrary matrix construction
-    /// and mutation remain required; no Python None alias for placed groups.
     #[pyattr]
     #[pyclass(name = "QMatrix4x4", traverse)]
     #[derive(Debug, PyPayload)]
-    pub struct QMatrix4x4 {}
-    #[pyclass]
+    pub struct QMatrix4x4 {
+        #[pytraverse(skip)]
+        pub(super) values: PyRwLock<[f32; 16]>,
+    }
+    impl Constructor for QMatrix4x4 {
+        type Args = rustpython_vm::function::PosArgs<PyObjectRef>;
+        fn py_new(_cls: &Py<PyType>, args: Self::Args, vm: &VirtualMachine) -> PyResult<Self> {
+            vm.host_budget_tick()?;
+            let args = args.into_vec();
+            let values = match args.as_slice() {
+                [] => glam::Mat4::IDENTITY.to_cols_array(),
+                [value] => *value
+                    .downcast_ref::<Self>()
+                    .ok_or_else(|| vm.new_type_error("QMatrix4x4 copy requires matrix"))?
+                    .values
+                    .read(),
+                row if row.len() == 16 => {
+                    let mut v = [0.; 16];
+                    for r in 0..4 {
+                        for c in 0..4 {
+                            v[c * 4 + r] = row[r * 4 + c].try_float(vm)?.to_f64() as f32;
+                        }
+                    }
+                    v
+                }
+                _ => {
+                    return Err(vm.new_type_error(
+                        "QMatrix4x4 requires zero, copy, or sixteen numeric arguments",
+                    ))
+                }
+            };
+            Ok(Self {
+                values: PyRwLock::new(values),
+            })
+        }
+    }
+    impl QMatrix4x4 {
+        pub(super) fn from_native(matrix: glam::DMat4) -> Self {
+            Self {
+                values: PyRwLock::new(matrix.to_cols_array().map(|v| v as f32)),
+            }
+        }
+        pub(super) fn native(&self) -> Result<glam::DMat4, String> {
+            let v = *self.values.read();
+            if !v.iter().all(|v| v.is_finite())
+                || v[3] != 0.
+                || v[7] != 0.
+                || v[11] != 0.
+                || v[15] != 1.
+            {
+                return Err("Group placement requires finite affine QMatrix4x4".into());
+            }
+            Ok(glam::DMat4::from_cols_array(&v.map(f64::from)))
+        }
+        fn xyz(
+            args: rustpython_vm::function::PosArgs<PyObjectRef>,
+            uniform: bool,
+            vm: &VirtualMachine,
+        ) -> PyResult<[f32; 3]> {
+            let args = args.into_vec();
+            match args.as_slice() {
+                [v] if v
+                    .downcast_ref::<crate::vm_groups::native_groups::QVector3D>()
+                    .is_some() =>
+                {
+                    Ok(
+                        v.downcast_ref::<crate::vm_groups::native_groups::QVector3D>()
+                            .unwrap()
+                            .coordinates(),
+                    )
+                }
+                [v] if uniform => Ok([v.try_float(vm)?.to_f64() as f32; 3]),
+                [x, y, z] => Ok([
+                    x.try_float(vm)?.to_f64() as f32,
+                    y.try_float(vm)?.to_f64() as f32,
+                    z.try_float(vm)?.to_f64() as f32,
+                ]),
+                _ => Err(vm.new_type_error("Matrix operation requires vector or three numbers")),
+            }
+        }
+    }
+    #[pyclass(with(Constructor))]
     impl QMatrix4x4 {
         #[pymethod(name = "isIdentity")]
-        fn is_identity(_zelf: &Py<Self>) -> bool {
-            true
+        fn is_identity(zelf: &Py<Self>) -> bool {
+            *zelf.values.read() == glam::Mat4::IDENTITY.to_cols_array()
+        }
+        #[pymethod(name = "setToIdentity")]
+        fn set_identity(zelf: &Py<Self>, vm: &VirtualMachine) -> PyResult<()> {
+            vm.host_budget_tick()?;
+            *zelf.values.write() = glam::Mat4::IDENTITY.to_cols_array();
+            Ok(())
         }
         #[pymethod]
-        fn data(_zelf: &Py<Self>, vm: &VirtualMachine) -> rustpython_vm::builtins::PyTupleRef {
+        fn data(zelf: &Py<Self>, vm: &VirtualMachine) -> rustpython_vm::builtins::PyTupleRef {
+            let values = *zelf.values.read();
             vm.ctx.new_tuple(
-                glam::DMat4::IDENTITY
-                    .to_cols_array()
+                values
                     .into_iter()
-                    .map(|v| vm.ctx.new_float(v).into())
+                    .map(|v| vm.ctx.new_float(v as f64).into())
                     .collect(),
             )
+        }
+        #[pymethod]
+        fn translate(
+            zelf: &Py<Self>,
+            args: rustpython_vm::function::PosArgs<PyObjectRef>,
+            vm: &VirtualMachine,
+        ) -> PyResult<()> {
+            vm.host_budget_tick()?;
+            let [x, y, z] = Self::xyz(args, false, vm)?;
+            let mut m = zelf.values.write();
+            for r in 0..4 {
+                m[12 + r] = m[r] * x + m[4 + r] * y + m[8 + r] * z + m[12 + r];
+            }
+            Ok(())
+        }
+        #[pymethod]
+        fn scale(
+            zelf: &Py<Self>,
+            args: rustpython_vm::function::PosArgs<PyObjectRef>,
+            vm: &VirtualMachine,
+        ) -> PyResult<()> {
+            vm.host_budget_tick()?;
+            let scale = Self::xyz(args, true, vm)?;
+            let mut m = zelf.values.write();
+            for c in 0..3 {
+                for r in 0..4 {
+                    m[c * 4 + r] *= scale[c];
+                }
+            }
+            Ok(())
+        }
+        #[pymethod]
+        fn rotate(
+            zelf: &Py<Self>,
+            args: rustpython_vm::function::PosArgs<PyObjectRef>,
+            vm: &VirtualMachine,
+        ) -> PyResult<()> {
+            vm.host_budget_tick()?;
+            let args = args.into_vec();
+            let (angle, axis) = match args.as_slice() {
+                [a, v] => (
+                    a.try_float(vm)?.to_f64() as f32,
+                    v.downcast_ref::<crate::vm_groups::native_groups::QVector3D>()
+                        .ok_or_else(|| vm.new_type_error("Rotation axis requires QVector3D"))?
+                        .coordinates(),
+                ),
+                [a, x, y, z] => (
+                    a.try_float(vm)?.to_f64() as f32,
+                    [
+                        x.try_float(vm)?.to_f64() as f32,
+                        y.try_float(vm)?.to_f64() as f32,
+                        z.try_float(vm)?.to_f64() as f32,
+                    ],
+                ),
+                _ => {
+                    return Err(vm.new_type_error("rotate requires angle and vector or angle,x,y,z"))
+                }
+            };
+            if angle == 0. {
+                return Ok(());
+            }
+            let (mut sin, cos) = match angle {
+                90. | -270. => (1., 0.),
+                -90. | 270. => (-1., 0.),
+                180. | -180. => (0., -1.),
+                _ => {
+                    let radians = angle * (std::f64::consts::PI / 180.) as f32;
+                    (radians.sin(), radians.cos())
+                }
+            };
+            let [x, y, z] = axis;
+            let mut m = zelf.values.write();
+            let pair = if x == 0. && y == 0. && z != 0. {
+                if z < 0. {
+                    sin = -sin;
+                }
+                Some((0, 1))
+            } else if x == 0. && y != 0. && z == 0. {
+                if y < 0. {
+                    sin = -sin;
+                }
+                Some((2, 0))
+            } else if x != 0. && y == 0. && z == 0. {
+                if x < 0. {
+                    sin = -sin;
+                }
+                Some((1, 2))
+            } else {
+                None
+            };
+            if let Some((a, b)) = pair {
+                for r in 0..4 {
+                    let old = m[a * 4 + r];
+                    m[a * 4 + r] = old * cos + m[b * 4 + r] * sin;
+                    m[b * 4 + r] = m[b * 4 + r] * cos - old * sin;
+                }
+            } else {
+                let squared = x as f64 * x as f64 + y as f64 * y as f64 + z as f64 * z as f64;
+                let length = squared.sqrt();
+                let (x, y, z) = if (squared - 1.).abs() * 1e12 > squared.abs().min(1.)
+                    && squared.abs() > 1e-12
+                {
+                    (
+                        (x as f64 / length) as f32,
+                        (y as f64 / length) as f32,
+                        (z as f64 / length) as f32,
+                    )
+                } else {
+                    (x, y, z)
+                };
+                let ic = 1. - cos;
+                let rot = [
+                    x * x * ic + cos,
+                    y * x * ic + z * sin,
+                    x * z * ic - y * sin,
+                    0.,
+                    x * y * ic - z * sin,
+                    y * y * ic + cos,
+                    y * z * ic + x * sin,
+                    0.,
+                    x * z * ic + y * sin,
+                    y * z * ic - x * sin,
+                    z * z * ic + cos,
+                    0.,
+                    0.,
+                    0.,
+                    0.,
+                    1.,
+                ];
+                let old = *m;
+                for c in 0..4 {
+                    for r in 0..4 {
+                        m[c * 4 + r] = old[r] * rot[c * 4]
+                            + old[4 + r] * rot[c * 4 + 1]
+                            + old[8 + r] * rot[c * 4 + 2]
+                            + old[12 + r] * rot[c * 4 + 3];
+                    }
+                }
+            }
+            Ok(())
+        }
+        #[pymethod]
+        fn map(
+            zelf: &Py<Self>,
+            point: PyRef<crate::vm_groups::native_groups::QVector3D>,
+            vm: &VirtualMachine,
+        ) -> PyResult<crate::vm_groups::native_groups::QVector3D> {
+            vm.host_budget_tick()?;
+            let [x, y, z] = point.coordinates();
+            let m = *zelf.values.read();
+            let w = m[3] * x + m[7] * y + m[11] * z + m[15];
+            let mut p = [0.; 3];
+            for r in 0..3 {
+                p[r] = (m[r] * x + m[4 + r] * y + m[8 + r] * z + m[12 + r]) / w;
+            }
+            Ok(crate::vm_groups::native_groups::QVector3D::from_coordinates(p))
         }
     }
     #[derive(FromArgs)]
@@ -212,6 +452,10 @@ pub(super) mod console_scene {
         #[pygetset]
         fn xform(zelf: &Py<Self>, vm: &VirtualMachine) -> PyObjectRef {
             zelf.get("xform", vm)
+        }
+        #[pygetset(setter)]
+        fn set_xform(zelf: &Py<Self>, value: PyObjectRef, vm: &VirtualMachine) -> PyResult<()> {
+            zelf.set("xform", value, vm)
         }
         #[pygetset]
         fn component(zelf: &Py<Self>, vm: &VirtualMachine) -> PyObjectRef {
@@ -598,7 +842,14 @@ pub(super) fn publication(
         } else {
             return Err("Native Group visibility currently requires bool".into());
         };
-        native.transform = group.baseline.transform;
+        native.transform = if vm.is_none(&placement) {
+            glam::DMat4::IDENTITY
+        } else {
+            placement
+                .downcast_ref::<console_scene::QMatrix4x4>()
+                .unwrap()
+                .native()?
+        };
         native.mesh_share = Some(token);
         let component = group
             .fields
@@ -703,7 +954,7 @@ pub(super) fn import(
         .try_reserve_exact(scene.groups.len())
         .map_err(|_| "Imported Group references refused")?;
     for g in &scene.groups {
-        if !g.children.is_empty() || g.transform != glam::DMat4::IDENTITY {
+        if !g.children.is_empty() {
             return Err("Placed/nested Group hydration remains required".into());
         }
         if let Some(id) = g.component_definition {
@@ -789,13 +1040,16 @@ pub(super) fn import(
                 .set_item("material", hydrate::value(material, vm)?, vm)
                 .map_err(|_| "Group paint import refused")?;
         }
-        if g.component_definition.is_some()
+        if g.transform != glam::DMat4::IDENTITY
+            || g.component_definition.is_some()
             || g.native_document.get("xform").is_some_and(|v| !v.is_null())
         {
             fields
                 .set_item(
                     "xform",
-                    console_scene::QMatrix4x4 {}.into_ref(&vm.ctx).into(),
+                    console_scene::QMatrix4x4::from_native(g.transform)
+                        .into_ref(&vm.ctx)
+                        .into(),
                     vm,
                 )
                 .map_err(|_| "Group identity placement import refused")?;

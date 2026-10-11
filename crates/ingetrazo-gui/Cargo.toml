@@ -83,3 +83,7 @@ required-features=["engineering-python"]
 name="engineering_console_imported_mesh_fixture"
 path="examples/engineering_console_imported_mesh_fixture.rs"
 required-features=["engineering-python"]
+
+[[example]]
+name = "engineering_console_affine_fixture"
+required-features = ["engineering-python"]
