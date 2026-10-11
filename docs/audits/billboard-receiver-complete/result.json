@@ -1,0 +1,225 @@
+{
+  "rows": [
+    {
+      "case": "billboard-bitmap",
+      "phase": "on",
+      "pixels": 0,
+      "max_channel": 0
+    },
+    {
+      "case": "billboard-bitmap",
+      "phase": "off",
+      "pixels": 0,
+      "max_channel": 0
+    },
+    {
+      "case": "billboard-bitmap",
+      "phase": "restored",
+      "pixels": 0,
+      "max_channel": 0
+    },
+    {
+      "case": "billboard-mesh",
+      "phase": "on",
+      "pixels": 0,
+      "max_channel": 0
+    },
+    {
+      "case": "billboard-mesh",
+      "phase": "off",
+      "pixels": 0,
+      "max_channel": 0
+    },
+    {
+      "case": "billboard-mesh",
+      "phase": "restored",
+      "pixels": 0,
+      "max_channel": 0
+    },
+    {
+      "case": "billboard-bitmap-perspective",
+      "phase": "on",
+      "pixels": 0,
+      "max_channel": 0
+    },
+    {
+      "case": "billboard-bitmap-perspective",
+      "phase": "off",
+      "pixels": 0,
+      "max_channel": 0
+    },
+    {
+      "case": "billboard-bitmap-perspective",
+      "phase": "restored",
+      "pixels": 0,
+      "max_channel": 0
+    },
+    {
+      "case": "billboard-bitmap-oblique",
+      "phase": "on",
+      "pixels": 0,
+      "max_channel": 0
+    },
+    {
+      "case": "billboard-bitmap-oblique",
+      "phase": "off",
+      "pixels": 0,
+      "max_channel": 0
+    },
+    {
+      "case": "billboard-bitmap-oblique",
+      "phase": "restored",
+      "pixels": 0,
+      "max_channel": 0
+    },
+    {
+      "case": "billboard-bitmap-nested-reflection",
+      "phase": "on",
+      "pixels": 1,
+      "max_channel": 36
+    },
+    {
+      "case": "billboard-bitmap-nested-reflection",
+      "phase": "off",
+      "pixels": 0,
+      "max_channel": 0
+    },
+    {
+      "case": "billboard-bitmap-nested-reflection",
+      "phase": "restored",
+      "pixels": 1,
+      "max_channel": 36
+    },
+    {
+      "case": "billboard-mesh-solid-perspective",
+      "phase": "on",
+      "pixels": 0,
+      "max_channel": 0
+    },
+    {
+      "case": "billboard-mesh-solid-perspective",
+      "phase": "off",
+      "pixels": 0,
+      "max_channel": 0
+    },
+    {
+      "case": "billboard-mesh-solid-perspective",
+      "phase": "restored",
+      "pixels": 0,
+      "max_channel": 0
+    },
+    {
+      "case": "billboard-mesh-uv-transform",
+      "phase": "on",
+      "pixels": 0,
+      "max_channel": 0
+    },
+    {
+      "case": "billboard-mesh-uv-transform",
+      "phase": "off",
+      "pixels": 0,
+      "max_channel": 0
+    },
+    {
+      "case": "billboard-mesh-uv-transform",
+      "phase": "restored",
+      "pixels": 0,
+      "max_channel": 0
+    },
+    {
+      "case": "billboard-mesh-mixed-order",
+      "phase": "on",
+      "pixels": 0,
+      "max_channel": 0
+    },
+    {
+      "case": "billboard-mesh-mixed-order",
+      "phase": "off",
+      "pixels": 0,
+      "max_channel": 0
+    },
+    {
+      "case": "billboard-mesh-mixed-order",
+      "phase": "restored",
+      "pixels": 0,
+      "max_channel": 0
+    },
+    {
+      "case": "billboard-bitmap-missing",
+      "phase": "on",
+      "pixels": 0,
+      "max_channel": 0
+    },
+    {
+      "case": "billboard-bitmap-missing",
+      "phase": "off",
+      "pixels": 0,
+      "max_channel": 0
+    },
+    {
+      "case": "billboard-bitmap-missing",
+      "phase": "restored",
+      "pixels": 0,
+      "max_channel": 0
+    },
+    {
+      "case": "billboard-bitmap-hardcutout",
+      "phase": "on",
+      "pixels": 0,
+      "max_channel": 0
+    },
+    {
+      "case": "billboard-bitmap-hardcutout",
+      "phase": "off",
+      "pixels": 0,
+      "max_channel": 0
+    },
+    {
+      "case": "billboard-bitmap-hardcutout",
+      "phase": "restored",
+      "pixels": 0,
+      "max_channel": 0
+    },
+    {
+      "case": "billboard-mesh-placement-order",
+      "phase": "on",
+      "pixels": 1509,
+      "max_channel": 115
+    },
+    {
+      "case": "billboard-mesh-placement-order",
+      "phase": "off",
+      "pixels": 1509,
+      "max_channel": 115
+    },
+    {
+      "case": "billboard-mesh-placement-order",
+      "phase": "restored",
+      "pixels": 1509,
+      "max_channel": 115
+    },
+    {
+      "case": "billboard-bitmap-empty-parent",
+      "phase": "on",
+      "pixels": 2,
+      "max_channel": 37
+    },
+    {
+      "case": "billboard-bitmap-empty-parent",
+      "phase": "off",
+      "pixels": 0,
+      "max_channel": 0
+    },
+    {
+      "case": "billboard-bitmap-empty-parent",
+      "phase": "restored",
+      "pixels": 2,
+      "max_channel": 37
+    }
+  ],
+  "whole_frame_exact": 29,
+  "whole_frame_total": 36,
+  "application_pass": true,
+  "strict_parity_pass": false,
+  "scope": "Normal IngeTrazoApp Vulkan receiver publication and source-paired headless receiver frames. Per-run revision-specific native provenance retained; not full billboard/shadow parity."
+}
