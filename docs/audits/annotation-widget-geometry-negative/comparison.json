@@ -1,0 +1,10 @@
+{
+  "whole_pixels": 1738,
+  "whole_max": 196,
+  "geometry_union_pixels": 455,
+  "geometry_union_max": 196,
+  "mask_source": 641,
+  "mask_native": 914,
+  "mask_xor": 273,
+  "off_pixels": 1297
+}
