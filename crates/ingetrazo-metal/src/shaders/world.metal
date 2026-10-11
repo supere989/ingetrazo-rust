@@ -7,7 +7,7 @@ vertex Out world_vertex(uint id [[vertex_id]],uint instance [[instance_id]],cons
  // OrbitCamera uses OpenGL clip depth; Metal raster depth is [0,w].
  o.position.z=(o.position.z+o.position.w)*0.5; o.color=float4(v[id].color); return o;
 }
-struct Paint {float4 front;float4 back;uint mode;uint padding0;uint padding1;uint padding2;};
+struct Paint {float4 front;float4 back;uint mode;float opacity;uint padding1;uint padding2;};
 // Frozen source RGBA8 blend factor conversion uses nearest-even UNORM8.
 // Preserve straight RGB; only the attachment blend factor is encoded here.
 float source_blend_alpha(float alpha){return rint(clamp(alpha,0.,1.)*255.)/255.;}
@@ -15,7 +15,8 @@ fragment float4 world_fragment(Out in [[stage_in]],bool front [[front_facing]],c
  if(paint.mode==1||paint.mode==3)return paint.front;
  if(paint.mode==4)return front?in.color:paint.back;
  if(paint.mode==2)return front?paint.front:paint.back;
- return float4(in.color.rgb,source_blend_alpha(in.color.a));
+ // Source u_opacity is uniform per run, not perspective-interpolated alpha.
+ return float4(in.color.rgb,source_blend_alpha(paint.opacity));
 }
 
 // Source basic.frag sampled policy: bottom-up UV asset rows, linear repeat,
