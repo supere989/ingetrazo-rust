@@ -106,7 +106,65 @@ fn scoped_plane_faces_are_fresh_but_reuse_existing_edge_objects() {
 }
 
 #[test]
-fn scoped_graph_start_ignores_an_earlier_off_plane_edge(){
- let mut m=Mesh::new();let b=m.add_vertex(DVec3::X);let off=m.add_vertex(DVec3::X+DVec3::Z);m.add_edge(b,off).unwrap();let a=m.add_vertex(DVec3::ZERO);let c=m.add_vertex(DVec3::Y);m.add_face(vec![a,b,c],vec![]).unwrap();
- let out=drafting::add_segments(&m,&[(DVec3::new(2.,0.,0.),DVec3::new(3.,0.,0.))],None,None).unwrap();assert_eq!(out.faces[0].vertices,vec![a,b,c]);assert_eq!(out.edges[0].history_id,m.edges[0].history_id);
+fn scoped_graph_start_ignores_an_earlier_off_plane_edge() {
+    let mut m = Mesh::new();
+    let b = m.add_vertex(DVec3::X);
+    let off = m.add_vertex(DVec3::X + DVec3::Z);
+    m.add_edge(b, off).unwrap();
+    let a = m.add_vertex(DVec3::ZERO);
+    let c = m.add_vertex(DVec3::Y);
+    m.add_face(vec![a, b, c], vec![]).unwrap();
+    let out = drafting::add_segments(
+        &m,
+        &[(DVec3::new(2., 0., 0.), DVec3::new(3., 0., 0.))],
+        None,
+        None,
+    )
+    .unwrap();
+    assert_eq!(out.faces[0].vertices, vec![a, b, c]);
+    assert_eq!(out.edges[0].history_id, m.edges[0].history_id);
+}
+
+#[test]
+fn split_constructor_defaults_do_not_overwrite_welded_or_opaque_objects() {
+    let mut m = Mesh::new();
+    let a = m.add_vertex(DVec3::new(0., -1., 0.));
+    let b = m.add_vertex(DVec3::new(0., 1., 0.));
+    let p = m.add_vertex(DVec3::ZERO);
+    let long = m.add_edge(a, b).unwrap();
+    m.edges[long].soft = true;
+    m.edges[long].hidden = true;
+    m.edges[long].layer = Some("Old".into());
+    m.edges[long].attrs.insert("vendor".into(), 71.into());
+    let weld = m.add_edge(a, p).unwrap();
+    m.edges[weld].hidden = true;
+    m.edges[weld].layer = Some("Weld".into());
+    m.edges[weld].attrs.insert("vendor".into(), 72.into());
+    let retained = m.edges[weld].clone();
+    let out = drafting::add_segments(
+        &m,
+        &[(DVec3::new(-1., 0., 0.), DVec3::new(1., 0., 0.))],
+        None,
+        None,
+    )
+    .unwrap();
+    let welded = out
+        .edges
+        .iter()
+        .find(|e| e.history_id == retained.history_id)
+        .unwrap();
+    assert_eq!(welded.attrs, retained.attrs);
+    assert_eq!(welded.hidden, retained.hidden);
+    assert_eq!(welded.soft, retained.soft);
+    assert_eq!(welded.layer, retained.layer);
+    let upper = out
+        .edges
+        .iter()
+        .find(|e| (e.v0 == p && e.v1 == b) || (e.v0 == b && e.v1 == p))
+        .unwrap();
+    assert!(upper.soft);
+    assert!(!upper.hidden);
+    assert_eq!(upper.layer, None);
+    assert!(upper.attrs.is_empty());
+    assert_ne!(upper.history_id, m.edges[long].history_id);
 }

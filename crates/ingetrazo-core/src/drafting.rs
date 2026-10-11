@@ -799,6 +799,57 @@ pub fn add_segments(
     explicit: Option<&[DVec3]>,
     curve: Option<usize>,
 ) -> Result<Mesh, String> { add_segments_tagged(mesh,segments,explicit,curve,None) }
+// Source topology.segment_intersection: QVector3D differences/lengths,
+// double unit-direction closest points, scale-aware gap, final Qt point.
+fn source_segment_intersection(a: DVec3, b: DVec3, c: DVec3, d: DVec3) -> Option<DVec3> {
+    let (a, b, c, d) = (a.as_vec3(), b.as_vec3(), c.as_vec3(), d.as_vec3());
+    let d1 = b - a;
+    let d2 = d - c;
+    let l1 = qt_length(d1) as f64;
+    let l2 = qt_length(d2) as f64;
+    if l1 < 1e-4 || l2 < 1e-4 {
+        return None;
+    }
+    let u = d1.as_dvec3() / l1;
+    let v = d2.as_dvec3() / l2;
+    let w = (a - c).as_dvec3();
+    let dot = |x: DVec3, y: DVec3| x.x * y.x + x.y * y.y + x.z * y.z;
+    let aa = dot(u, u);
+    let ab = dot(u, v);
+    let bb = dot(v, v);
+    let ad = dot(u, w);
+    let bd = dot(v, w);
+    let denominator = aa * bb - ab * ab;
+    if denominator < 1e-12 {
+        return None;
+    }
+    let along_a = (ab * bd - bb * ad) / denominator;
+    let along_b = (aa * bd - ab * ad) / denominator;
+    if !(-1e-4 / l1..=1. + 1e-4 / l1).contains(&(along_a / l1))
+        || !(-1e-4 / l2..=1. + 1e-4 / l2).contains(&(along_b / l2))
+    {
+        return None;
+    }
+    let p = a.as_dvec3() + u * along_a;
+    let q = c.as_dvec3() + v * along_b;
+    if (p - q).length() > 1e-4f64.max(1e-7 * l1.max(l2)) {
+        return None;
+    }
+    Some(((p + q) * 0.5).as_vec3().as_dvec3())
+}
+fn source_same_position(a: DVec3, b: DVec3) -> bool {
+    // Float32×10000 is exact in float64 (at most 38 significant bits).
+    // Keep float keys instead of saturating integer casts for large coordinates.
+    let key = |p: DVec3| {
+        p.as_vec3()
+            .to_array()
+            .map(|v| ((v as f64) * 10000.).round_ties_even())
+    };
+    key(a) == key(b)
+}
+fn source_distance(a: DVec3, b: DVec3) -> f32 {
+    qt_length(a.as_vec3() - b.as_vec3())
+}
 // Pinned edits.plan_edge_commands executes existing-edge replacements before
 // new segment pieces. Keep record ownership/order here, not by sorting the
 // final coordinates (which loses duplicate/equal object distinctions).
@@ -807,45 +858,25 @@ fn append_straight_segment(
     a: DVec3,
     b: DVec3,
 ) -> Result<Vec<(DVec3, DVec3)>, String> {
-    let u = b - a;
-    let aa = u.length_squared();
+    let direction = b.as_vec3() - a.as_vec3();
     let mut cuts = vec![];
-    let mut stations = vec![(0., a), (1., b)];
+    let mut points = vec![];
     for (id, e) in mesh.edges.iter().enumerate() {
         let c = mesh.vertices[e.v0].position;
         let d = mesh.vertices[e.v1].position;
-        let v = d - c;
-        let bb = v.length_squared();
-        if bb < 1e-18 {
+        let Some(mut p) = source_segment_intersection(a, b, c, d) else {
             continue;
-        }
-        let ab = u.dot(v);
-        let delta = c - a;
-        let denom = aa * bb - ab * ab;
-        if denom.abs() <= aa * bb * 1e-12 {
-            continue;
-        }
-        let t = (delta.dot(u) * bb - delta.dot(v) * ab) / denom;
-        let q = (delta.dot(u) * ab - delta.dot(v) * aa) / denom;
-        if !(-1e-7..=1. + 1e-7).contains(&t) || !(-1e-7..=1. + 1e-7).contains(&q) {
-            continue;
-        }
-        let p = a + u * t;
-        let r = c + v * q;
-        if p.distance(r) >= 1e-6 {
-            continue;
-        }
-        let mut p = (p + r) * 0.5;
+        };
         for anchor in [c, d, a, b] {
-            if p.distance(anchor) <= 1e-4 {
+            if source_distance(p, anchor) <= 1e-4 {
                 p = anchor;
                 break;
             }
         }
-        if p.distance(a) > 1e-4 && p.distance(b) > 1e-4 {
-            stations.push(((p - a).dot(u) / aa, p));
+        if !source_same_position(p, a) && !source_same_position(p, b) {
+            points.push(p);
         }
-        if p.distance(c) > 1e-4 && p.distance(d) > 1e-4 {
+        if !source_same_position(p, c) && !source_same_position(p, d) {
             cuts.push((id, p));
         }
     }
@@ -868,13 +899,21 @@ fn append_straight_segment(
         let old_edge = &old_edge;
         let vertex = mesh.add_vertex(p);
         for (x, y) in [(old_edge.v0, vertex), (vertex, old_edge.v1)] {
+            // The split planner emits no AddEdgeCommand for a subedge
+            // already present in its simulated graph: do not stamp it.
+            if mesh.find_edge(x, y).is_some() {
+                continue;
+            }
             let edge = mesh.add_edge(x, y).ok_or("Drawing subedge collapsed")?;
-            let token = mesh.edges[edge].history_id;
-            mesh.edges[edge] = old_edge.clone();
-            mesh.edges[edge].v0 = x;
-            mesh.edges[edge].v1 = y;
-            mesh.edges[edge].faces.clear();
-            mesh.edges[edge].history_id = token;
+            // AddEdgeCommand stamps only specified soft/curve flags. A
+            // welded existing subedge keeps its own hidden/layer/opaque data;
+            // a newly constructed subedge keeps constructor defaults.
+            if old_edge.soft {
+                mesh.edges[edge].soft = true;
+            }
+            if let Some(curve) = old_edge.curve_id {
+                mesh.edges[edge].curve_id = Some(curve);
+            }
         }
         for f in &mut mesh.faces {
             for ring in std::iter::once(&mut f.vertices).chain(&mut f.holes) {
@@ -897,12 +936,24 @@ fn append_straight_segment(
         }
         mesh.rebuild_incidence();
     }
-    stations.sort_by(|x, y| x.0.total_cmp(&y.0));
-    stations.dedup_by(|x, y| x.1.distance(y.1) <= 1e-4);
-    let pieces = stations
-        .windows(2)
-        .map(|p| (p[0].1, p[1].1))
+    let mut unique = vec![];
+    for p in points {
+        if source_distance(p, a) <= 1e-4 || source_distance(p, b) <= 1e-4 {
+            continue;
+        }
+        if !unique.iter().any(|&q| source_distance(p, q) <= 1e-4) {
+            unique.push(p);
+        }
+    }
+    unique.sort_by(|&x, &y| {
+        let station = |p: DVec3| (p.as_vec3() - a.as_vec3()).dot(direction);
+        station(x).total_cmp(&station(y))
+    });
+    let chain = std::iter::once(a)
+        .chain(unique)
+        .chain(std::iter::once(b))
         .collect::<Vec<_>>();
+    let pieces = chain.windows(2).map(|p| (p[0], p[1])).collect::<Vec<_>>();
     for &(x, y) in &pieces {
         let x = mesh.add_vertex(x);
         let y = mesh.add_vertex(y);
