@@ -138,7 +138,7 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
                 .as_ref()
                 .map(|p| p.reference)
                 .or_else(|| app.active_tool.snap_anchor());
-            let screen_drawing=app.blender_is_picking()||matches!(app.active_tool_type,ToolType::Line|ToolType::Rectangle|ToolType::Move|ToolType::Scale);
+            let screen_drawing=app.blender_is_picking()||matches!(app.active_tool_type,ToolType::Line|ToolType::Rectangle|ToolType::Circle|ToolType::Polygon|ToolType::Arc|ToolType::RotatedRectangle|ToolType::Move|ToolType::Scale);
             app.snap_engine.note_model_revision(app.model_revision);
             let snap_res=if !app.active_tool.uses_snap(){ingetrazo_core::snap::SnapResult::default()}else if screen_drawing{
                 let context=ingetrazo_core::snap_screen::ScreenSnapContext{
@@ -161,7 +161,7 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
             app.snap_engine.note_inference_result(&snap_res);
 
             app.active_tool.note_cursor_plane(plane_point,plane_normal);
-            if matches!(app.active_tool_type,ToolType::Select|ToolType::Scale|ToolType::Text) {app.active_tool.note_pick_viewport(ingetrazo_core::screen_pick::PixelViewport::new(&app.camera,rect.width() as f64,rect.height() as f64),app.camera.eye(),app.model_revision);}
+            if matches!(app.active_tool_type,ToolType::Select|ToolType::Scale|ToolType::Text|ToolType::Circle|ToolType::Polygon|ToolType::Arc|ToolType::RotatedRectangle) {app.active_tool.note_pick_viewport(ingetrazo_core::screen_pick::PixelViewport::new(&app.camera,rect.width() as f64,rect.height() as f64),app.camera.eye(),app.model_revision);}
             if let Err(error)=app.update_move_annotation_hits([rect.width(),rect.height()],glam::DVec2::new(rel_x,rel_y)){app.status_message=error;}
             let mut tool_ctx = ToolContext {
                 screen: Some(glam::DVec2::new(rel_x,rel_y)),
@@ -214,12 +214,13 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
                             press_ctx.alt_held = modifiers.alt;
                             let screen = press_ctx.screen.unwrap();
                             press_ctx.ray = app.camera.screen_to_ray(screen.x,screen.y,rect.width() as f64,rect.height() as f64);
-                            if pos != mouse_pos && app.active_tool.pending_model_preview() {
+                            if pos != mouse_pos && (app.active_tool.pending_model_preview() || matches!(app.active_tool_type,ToolType::Circle|ToolType::Polygon|ToolType::Arc|ToolType::RotatedRectangle)) {
                                 let (point,normal)=cursor_work_plane(app,&press_ctx.ray);
                                 let candidate=Plane::new(point,normal).intersect_ray(&press_ctx.ray).filter(|t| *t>0.).map_or(point,|t|press_ctx.ray.at(t));
                                 let context=ingetrazo_core::snap_screen::ScreenSnapContext {viewport:ingetrazo_core::screen_pick::PixelViewport::new(&app.camera,rect.width() as f64,rect.height() as f64),cursor:screen,candidate,plane_normal:normal};
                                 let press_snap=app.snap_engine.snap_screen_with_policy(&press_ctx.ray,&app.scene,app.active_tool.snap_anchor(),app.active_tool.snap_close(),&context,&ingetrazo_core::snap_screen::ScreenSnapPolicy {exclusions:app.active_tool.snap_exclusions(),magnetic_axis_deg:app.active_tool.magnetic_axis_deg(),screen_axis_px:app.active_tool.screen_axis_px(),face_under_cursor:ingetrazo_core::screen_pick::hover_face(&app.scene,&press_ctx.ray).is_some()});
                                 press_ctx.world=press_snap.point;
+                                app.active_tool.note_cursor_plane(point,normal);
                                 app.active_tool.note_snap_result(&press_snap);
                             }
                             app.dispatch_tool_click(&press_ctx);
@@ -416,7 +417,8 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
     crate::navigation::paint_overlay(&app.navigation,&painter,rect);
 
     // 4. Render Active Tool Rubber Band (if any)
-    for ((p0,p1),stroke) in app.active_tool.rubber_band_lines().into_iter().map(|line|(line,egui::Stroke::new(2.0,egui::Color32::from_rgb(255,60,60)))).chain(app.navigation.preview_line().map(|line|(line,navigation_preview_stroke))) {
+    let preview_color=app.active_tool.preview_color().map(|c|egui::Color32::from_rgb((c[0]*255.).round() as u8,(c[1]*255.).round() as u8,(c[2]*255.).round() as u8)).unwrap_or(egui::Color32::from_rgb(255,60,60));
+    for ((p0,p1),stroke) in app.active_tool.rubber_band_lines().into_iter().map(|line|(line,egui::Stroke::new(2.0,preview_color))).chain(app.navigation.preview_line().map(|line|(line,navigation_preview_stroke))) {
         let view_proj = app.camera.projection_matrix() * app.camera.view_matrix();
         if let (Some((s0, _)), Some((s1, _))) = (
             project_point(p0, &view_proj, rect),

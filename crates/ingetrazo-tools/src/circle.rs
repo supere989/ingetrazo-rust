@@ -1,115 +1,131 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-// Copyright (C) 2026 Marco Sumari Tellez and IngeTrazo contributors.
-
-use std::f64::consts::PI;
+use crate::{
+    base::{Tool, ToolContext, ToolType},
+    shape_plane::{self as qt, ShapePlane},
+};
 use glam::DVec3;
-use ingetrazo_core::math::plane_basis;
 use ingetrazo_core::scene::Scene;
-
-use crate::base::{Tool, ToolContext, ToolType};
-
-/// Interactive Circle tool for drawing regular N-gon circles and circular faces.
 #[derive(Debug, Clone)]
 pub struct CircleTool {
     pub start_point: Option<DVec3>,
-    authored_draw_faces:Vec<usize>,
     pub hover_point: Option<DVec3>,
     pub plane_normal: DVec3,
     pub segments: usize,
+    plane: ShapePlane,
+    error: Option<String>,
 }
-
 impl Default for CircleTool {
     fn default() -> Self {
         Self {
             start_point: None,
-            authored_draw_faces:Vec::new(),
             hover_point: None,
             plane_normal: DVec3::Z,
             segments: 24,
+            plane: Default::default(),
+            error: None,
         }
     }
 }
-
 impl CircleTool {
     pub fn new() -> Self {
         Self::default()
     }
-
     pub fn with_segments(segments: usize) -> Self {
         Self {
             segments: segments.max(3),
             ..Self::default()
         }
     }
-
     pub fn with_normal(normal: DVec3) -> Self {
-        Self {
-            plane_normal: normal.normalize_or_zero(),
-            ..Self::default()
-        }
+        let mut t = Self::default();
+        t.plane_normal = qt::norm(normal);
+        t.plane.note(DVec3::ZERO, t.plane_normal);
+        t
     }
-
     pub fn reset(&mut self) {
         self.start_point = None;
-        self.hover_point = None;
+        self.plane.reset();
+        self.error = None;
     }
-
+    fn normal_for(&self, center: DVec3, rim: DVec3) -> DVec3 {
+        let mut p = self.plane.clone();
+        if p.hover.is_none() && p.captured.is_none() {
+            p.note(center, self.plane_normal);
+        }
+        p.drawing(&[center, rim]).1
+    }
     pub fn compute_points(&self, center: DVec3, rim: DVec3) -> Option<Vec<DVec3>> {
-        let (u, v) = plane_basis(self.plane_normal);
-        let delta = rim - center;
-        let du = delta.dot(u);
-        let dv = delta.dot(v);
-        let radius = (du * du + dv * dv).sqrt();
-
-        if radius < 1e-6 {
+        if !center.is_finite() || !rim.is_finite() || self.segments < 3 {
             return None;
         }
-
-        let a0 = dv.atan2(du);
-        let n = self.segments.max(3);
-        let mut pts = Vec::with_capacity(n);
-
-        for k in 0..n {
-            let angle = a0 + 2.0 * PI * (k as f64) / (n as f64);
-            pts.push(center + (u * angle.cos() + v * angle.sin()) * radius);
+        let (u, v) = self.plane.axes_for(self.normal_for(center, rim));
+        let d = qt::sub(rim, center);
+        let du = qt::dot(d, u);
+        let dv = qt::dot(d, v);
+        let r = du.hypot(dv);
+        if r < 1e-6 {
+            return None;
         }
-
+        let a0 = dv.atan2(du);
+        let mut pts = Vec::new();
+        pts.try_reserve_exact(self.segments).ok()?;
+        for k in 0..self.segments {
+            let a = a0 + std::f64::consts::TAU * k as f64 / self.segments as f64;
+            pts.push(qt::add(
+                center,
+                qt::mul(qt::add(qt::mul(u, a.cos()), qt::mul(v, a.sin())), r),
+            ));
+        }
         Some(pts)
     }
-
     pub fn preview_points(&self) -> Option<Vec<DVec3>> {
-        match (self.start_point, self.hover_point) {
-            (Some(c), Some(r)) => self.compute_points(c, r),
-            _ => None,
-        }
+        self.compute_points(self.start_point?, self.hover_point?)
     }
-
-    fn commit_points(&mut self, pts: Vec<DVec3>, scene: &mut Scene) {
-        let vert_ids: Vec<usize> = pts.into_iter().map(|p| scene.mesh.add_vertex(p)).collect();
-        if let Some(id)=scene.mesh.add_face(vert_ids, vec![]){self.authored_draw_faces.push(id);}
+    fn commit_points(&mut self, pts: Vec<DVec3>, scene: &mut Scene) -> Result<(), String> {
+        let segments = pts
+            .iter()
+            .enumerate()
+            .map(|(i, p)| (*p, pts[(i + 1) % pts.len()]))
+            .collect::<Vec<_>>();
+        let curve = scene
+            .mesh
+            .edges
+            .iter()
+            .filter_map(|e| e.curve_id)
+            .max()
+            .unwrap_or(0)
+            .checked_add(1)
+            .ok_or("Curve identity exhausted")?;
+        let mesh = ingetrazo_core::drafting::add_segments_tagged_with_id(
+            &scene.mesh,
+            &segments,
+            Some(&pts),
+            Some(curve),
+            scene.active_ifc.as_ref(),
+            scene.bim_draw_id.as_ref(),
+        )?;
+        scene.mesh = mesh;
         scene.bump_version();
         self.reset();
+        Ok(())
     }
 }
-
 impl Tool for CircleTool {
-    fn take_authored_draw_faces(&mut self)->Vec<usize>{std::mem::take(&mut self.authored_draw_faces)}
+    fn shape_segments(&self) -> Option<usize> {
+        Some(self.segments)
+    }
     fn tool_type(&self) -> ToolType {
         ToolType::Circle
     }
-
     fn name(&self) -> &'static str {
         "Circle"
     }
-
     fn shortcut(&self) -> Option<&'static str> {
         Some("C")
     }
-
     fn description(&self) -> &'static str {
         "Draw a circle from its centre and radius."
     }
-
     fn vcb_label(&self) -> &'static str {
         if self.start_point.is_some() {
             "Radius"
@@ -117,79 +133,136 @@ impl Tool for CircleTool {
             "Sides"
         }
     }
-
-    fn on_activate(&mut self, _scene: &mut Scene) {
+    fn error_message(&self) -> Option<&str> {
+        self.error.as_deref()
+    }
+    fn magnetic_axis_deg(&self) -> Option<f64> {
+        Some(3.)
+    }
+    fn screen_axis_px(&self) -> Option<f64> {
+        Some(9.)
+    }
+    fn snap_anchor(&self) -> Option<DVec3> {
+        self.start_point
+    }
+    fn note_pick_viewport(
+        &mut self,
+        v: ingetrazo_core::screen_pick::PixelViewport,
+        _: DVec3,
+        _: u64,
+    ) {
+        self.plane.viewport = Some(v);
+    }
+    fn note_cursor_plane(&mut self, p: DVec3, n: DVec3) {
+        self.plane.note(p, n);
+        self.plane_normal = n;
+    }
+    fn lock_drawing_plane(&mut self, n: DVec3) -> bool {
+        self.start_point.is_none() && self.plane.lock_axis(n)
+    }
+    fn lock_drawing_reference(
+        &mut self,
+        r: Option<ingetrazo_core::screen_pick::HoverReference>,
+    ) -> bool {
+        self.start_point.is_none() && self.plane.lock_reference(r)
+    }
+    fn drawing_plane(&self) -> Option<(DVec3, DVec3)> {
+        let Some(p) = self.start_point else {
+            return self.plane.locked(self.hover_point);
+        };
+        Some(self.plane.drawing(&[p, self.hover_point.unwrap_or(p)]))
+    }
+    fn on_activate(&mut self, s: &mut Scene) {
+        self.plane.axes = s.drawing_axes();
+        self.reset();
+        self.hover_point = None;
+    }
+    fn on_deactivate(&mut self, _: &mut Scene) {
+        self.reset();
+        self.hover_point = None;
+    }
+    fn on_cancel(&mut self, _: &mut Scene) {
         self.reset();
     }
-
-    fn on_deactivate(&mut self, _scene: &mut Scene) {
-        self.reset();
+    fn on_move(&mut self, s: &mut Scene, c: &ToolContext) {
+        self.plane.axes = s.drawing_axes();
+        self.hover_point = Some(qt::q(c.world));
     }
-
-    fn on_cancel(&mut self, _scene: &mut Scene) {
-        self.reset();
-    }
-
-    fn on_move(&mut self, _scene: &mut Scene, ctx: &ToolContext) {
-        self.hover_point = Some(ctx.world);
-    }
-
-    fn on_click(&mut self, scene: &mut Scene, ctx: &ToolContext) {
-        if self.start_point.is_none() {
-            self.start_point = Some(ctx.world);
-        } else {
-            let center = self.start_point.unwrap();
-            if let Some(pts) = self.compute_points(center, ctx.world) {
-                self.commit_points(pts, scene);
-            }
-        }
-    }
-
-    fn on_vcb_input(&mut self, scene: &mut Scene, text: &str) -> Result<(), String> {
-        let trimmed = text.trim();
-
-        // Check for segment count suffix e.g. "16s" or "16S"
-        if trimmed.ends_with('s') || trimmed.ends_with('S') {
-            let num_str = &trimmed[..trimmed.len() - 1];
-            let segs: usize = num_str.trim().parse().map_err(|e| format!("Invalid segments: {e}"))?;
-            if segs < 3 {
-                return Err("Circle must have at least 3 segments".into());
-            }
-            self.segments = segs;
-            return Ok(());
-        }
-
-        // Before center is placed, integer sets segment count
-        if self.start_point.is_none() {
-            if let Ok(value) = ingetrazo_core::units::vcb::parse_single(trimmed,1.) {
-                let segs=value.round_ties_even() as usize;
-                if segs >= 3 {
-                    self.segments = segs;
-                    return Ok(());
+    fn on_click(&mut self, s: &mut Scene, c: &ToolContext) {
+        self.plane.axes = s.drawing_axes();
+        if let Some(start) = self.start_point {
+            if let Some(pts) = self.compute_points(start, c.world) {
+                if let Err(e) = self.commit_points(pts, s) {
+                    self.error = Some(e);
                 }
             }
-            return Err("Provide side count before placing centre point".into());
-        }
-
-        // Radius input
-        let radius=ingetrazo_core::units::vcb::parse_single(trimmed,ingetrazo_core::units::model_scale(scene))?;
-        if radius <= 0.0 {
-            return Err("Radius must be positive".into());
-        }
-
-        let center = self.start_point.unwrap();
-        let (u, _) = plane_basis(self.plane_normal);
-        let rim = center + u * radius;
-
-        if let Some(pts) = self.compute_points(center, rim) {
-            self.commit_points(pts, scene);
-            Ok(())
         } else {
-            Err("Failed to generate circle".into())
+            let p = qt::q(c.world);
+            self.start_point = Some(p);
+            self.plane.start(p);
         }
     }
+    fn on_vcb_input(&mut self, s: &mut Scene, text: &str) -> Result<(), String> {
+        let text = text.trim();
+        let suffix = text.ends_with('s') || text.ends_with('S');
+        if suffix || self.start_point.is_none() {
+            let raw = if suffix {
+                &text[..text.len() - 1]
+            } else {
+                text
+            };
+            let n = ingetrazo_core::units::vcb::parse_single(raw, 1.)?;
+            let n = if suffix {
+                if n != n.trunc() {
+                    return Err("Sides suffix requires an integer".into());
+                }
+                n
+            } else {
+                n.round_ties_even()
+            };
+            if !n.is_finite() || n < 3. || n > usize::MAX as f64 {
+                return Err("Provide side count >=3".into());
+            }
+            self.segments = n.round_ties_even() as usize;
+            return Ok(());
+        }
+        let r =
+            ingetrazo_core::units::vcb::parse_single(text, ingetrazo_core::units::model_scale(s))?;
+        if !r.is_finite() || r <= 0. {
+            return Err("Radius must be positive and finite".into());
+        }
+        let center = self.start_point.unwrap();
+        let hover = self
+            .hover_point
+            .ok_or("Move to set the radius direction first")?;
+        let (u, v) = self.plane.axes_for(self.normal_for(center, hover));
+        let d = qt::sub(hover, center);
+        let a = qt::dot(d, v).atan2(qt::dot(d, u));
+        let rim = qt::add(
+            center,
+            qt::mul(qt::add(qt::mul(u, a.cos()), qt::mul(v, a.sin())), r),
+        );
+        let pts = self
+            .compute_points(center, rim)
+            .ok_or("Failed to generate circle")?;
+        self.commit_points(pts, s)
+    }
+    fn preview_color(&self) -> Option<[f32; 3]> {
+        self.plane.lock_color()
+    }
+    fn rubber_band_lines(&self) -> Vec<(DVec3, DVec3)> {
+        if self.start_point.is_none() {
+            return self
+                .hover_point
+                .map(|p| self.plane.cursor_ring(p, self.segments))
+                .unwrap_or_default();
+        }
+        let Some(p) = self.preview_points() else {
+            return vec![];
+        };
+        (0..p.len()).map(|i| (p[i], p[(i + 1) % p.len()])).collect()
+    }
 }
-
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -204,7 +277,8 @@ mod tests {
         tool.on_click(&mut scene, &ctx0);
         assert_eq!(tool.start_point, Some(DVec3::ZERO));
 
-        let ctx_hover = ToolContext::new(DVec3::new(2.0, 0.0, 0.0), Ray::new(DVec3::ZERO, DVec3::Z));
+        let ctx_hover =
+            ToolContext::new(DVec3::new(2.0, 0.0, 0.0), Ray::new(DVec3::ZERO, DVec3::Z));
         tool.on_move(&mut scene, &ctx_hover);
         assert_eq!(tool.preview_points().unwrap().len(), 24);
 
@@ -231,7 +305,12 @@ mod tests {
         let ctx0 = ToolContext::new(DVec3::new(1.0, 1.0, 0.0), Ray::new(DVec3::ZERO, DVec3::Z));
         tool.on_click(&mut scene, &ctx0);
 
-        // VCB radius
+        // Source radius input requires an actual hover direction.
+        assert!(tool.on_vcb_input(&mut scene, "5.0").is_err());
+        tool.on_move(
+            &mut scene,
+            &ToolContext::new(DVec3::new(2., 1., 0.), Ray::new(DVec3::Z, -DVec3::Z)),
+        );
         assert!(tool.on_vcb_input(&mut scene, "5.0").is_ok());
         assert_eq!(scene.mesh.vertices.len(), 8);
         assert_eq!(scene.mesh.faces.len(), 1);
