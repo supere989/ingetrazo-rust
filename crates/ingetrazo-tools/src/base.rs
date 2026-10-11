@@ -76,6 +76,23 @@ impl ToolContext {
     }
 }
 
+/// Immutable source sweep. The renderer borrows the current mesh, validates
+/// face identity/revision, and derives cap/wall vertices from offset. Suppress
+/// the base only when attached and offset points away from the camera; prism
+/// caps instead translate the existing cap/walls. No document mutation.
+#[derive(Debug, Clone, Copy)]
+pub struct FaceSweepPreview {
+    pub face: usize,
+    pub face_identity: u64,
+    pub mesh_revision: u64,
+    pub anchor: DVec3,
+    pub normal: DVec3,
+    pub offset: DVec3,
+    pub attached: bool,
+    pub prism_cap: bool,
+    pub keep_base: bool,
+}
+
 /// Borrowed groups-only translation preview for a placement-aware renderer.
 /// Scene already contains visible transforms; never suppress revision invalidation.
 /// Indices address the active editing Scene, including component-local scenes.
@@ -166,6 +183,7 @@ pub trait Tool: Send + Sync {
     /// Pure placement translation only, not mixed geometry, planes or copy.
     /// This borrowed descriptor allocates no model snapshot.
     fn placement_preview(&self) -> Option<PlacementPreview<'_>> { None }
+    fn face_sweep_preview(&self)->Option<FaceSweepPreview>{None}
     fn preview_mesh(&self) -> Option<&Mesh> {
         None
     }
