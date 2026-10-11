@@ -8,7 +8,7 @@ Retain concise results, source identity, and necessary failure evidence. Purge o
 
 ## Current cadence
 
-The latest published integration is `55d76ef2`: 888 local workspace tests, doctests and example checks passed, followed by Linux CI and six Apple checks. See [the retained checkpoint](selection-inward-integration/README.md). Reversed Push/Pull model changes have a later focused integrated proof; Line ordering and shared Vulkan/Metal sweep rendering are independent active workstreams.
+The latest published integration is `55d76ef2`: 888 local workspace tests, doctests and example checks passed, followed by Linux CI and six Apple checks. See [the retained checkpoint](selection-inward-integration/README.md). Reversed Push/Pull model changes have a later focused integrated proof. The accepted local `804cd732` batch adds Line ordering and shared sweep packets with 900 passing tests and four jointly built consumers; actual Vulkan/Metal rendering remains in independent workstreams.
 
 - Reuse each owner's existing checkout and target. Build all affected named consumers in one Cargo invocation. Do not run broad suites in owner worktrees.
 - Review shared interfaces early so Vulkan and Metal work can proceed concurrently. Wait for a coherent implementation before the combined integration suite.

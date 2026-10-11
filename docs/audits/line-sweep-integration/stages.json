@@ -1,0 +1,152 @@
+[
+  {
+    "name": "workspace-tests",
+    "command": [
+      "cargo",
+      "test",
+      "--workspace",
+      "--locked",
+      "--tests",
+      "--no-fail-fast",
+      "-j2"
+    ],
+    "source_commit": "804cd73268f66332cebf6bd2192e563483545927",
+    "exit": 0,
+    "seconds": 28.775
+  },
+  {
+    "name": "doctests",
+    "command": [
+      "cargo",
+      "test",
+      "--workspace",
+      "--locked",
+      "--doc",
+      "--no-fail-fast",
+      "-j2"
+    ],
+    "source_commit": "804cd73268f66332cebf6bd2192e563483545927",
+    "exit": 0,
+    "seconds": 0.942
+  },
+  {
+    "name": "examples-check",
+    "command": [
+      "cargo",
+      "check",
+      "--workspace",
+      "--locked",
+      "--examples",
+      "-j2"
+    ],
+    "source_commit": "804cd73268f66332cebf6bd2192e563483545927",
+    "exit": 0,
+    "seconds": 6.723
+  },
+  {
+    "name": "named-build",
+    "command": [
+      "cargo",
+      "build",
+      "--locked",
+      "-j2",
+      "-p",
+      "ingetrazo-core",
+      "--example",
+      "line_split_contract",
+      "--example",
+      "drafting_acceptance_fixture",
+      "-p",
+      "ingetrazo-gui",
+      "--example",
+      "line_command_history_fixture",
+      "-p",
+      "ingetrazo-render",
+      "--example",
+      "face_sweep_protocol"
+    ],
+    "source_commit": "804cd73268f66332cebf6bd2192e563483545927",
+    "exit": 0,
+    "seconds": 0.46
+  },
+  {
+    "name": "split-native",
+    "command": [
+      "/tmp/ingetrazo-native-font-merge-target/debug/examples/line_split_contract",
+      "/tmp/ingetrazo-next-integration/docs/audits/line-orphan-history/split-contract/original.json",
+      "/tmp/ingetrazo-line-sweep-integration/split-native.json"
+    ],
+    "source_commit": "804cd73268f66332cebf6bd2192e563483545927",
+    "exit": 0,
+    "seconds": 0.002
+  },
+  {
+    "name": "split-check",
+    "command": [
+      "python3",
+      "scripts/check-line-split-contract.py",
+      "/tmp/ingetrazo-next-integration/docs/audits/line-orphan-history/split-contract/original.json",
+      "/tmp/ingetrazo-line-sweep-integration/split-native.json",
+      "/tmp/ingetrazo-line-sweep-integration/split-comparison.json"
+    ],
+    "source_commit": "804cd73268f66332cebf6bd2192e563483545927",
+    "exit": 0,
+    "seconds": 0.015
+  },
+  {
+    "name": "nine-native",
+    "command": [
+      "/tmp/ingetrazo-native-font-merge-target/debug/examples/line_command_history_fixture",
+      "/tmp/ingetrazo-line-sweep-integration/nine"
+    ],
+    "source_commit": "804cd73268f66332cebf6bd2192e563483545927",
+    "exit": 0,
+    "seconds": 0.006
+  },
+  {
+    "name": "nine-check",
+    "command": [
+      "python3",
+      "scripts/check-line-command-history.py",
+      "/tmp/ingetrazo-line-sweep-integration/nine"
+    ],
+    "source_commit": "804cd73268f66332cebf6bd2192e563483545927",
+    "exit": 0,
+    "seconds": 0.017
+  },
+  {
+    "name": "drafting-native",
+    "command": [
+      "/tmp/ingetrazo-native-font-merge-target/debug/examples/drafting_acceptance_fixture",
+      "/tmp/ingetrazo-line-sweep-integration/drafting-input.json",
+      "/tmp/ingetrazo-line-sweep-integration/drafting-native.json"
+    ],
+    "source_commit": "804cd73268f66332cebf6bd2192e563483545927",
+    "exit": 0,
+    "seconds": 0.013
+  },
+  {
+    "name": "drafting-check",
+    "command": [
+      "/tmp/ingetrazo-parity-python/bin/python",
+      "-c",
+      "import importlib.util,json,sys\nfrom pathlib import Path\nsys.path.insert(0,'scripts')\nspec=importlib.util.spec_from_file_location('drafting_checker','scripts/check-python-drafting.py')\nm=importlib.util.module_from_spec(spec);spec.loader.exec_module(m)\nfrozen=json.loads(Path('docs/audits/drafting-accepted-corpus.json').read_text())\nnative=json.loads(Path(sys.argv[1]).read_text())\nassert len(native)==len(frozen)==22\nrows=[]\nfor f,n in zip(frozen,native):\n o=f['original']\n match=m.faces(o['faces'])==m.faces(n['faces']) and m.edges(o['edges'])==m.edges(n['edges']) and m.curves(o['edges'])==m.curves(n['edges'])\n rows.append({'case':f['input']['name'],'match':match})\nPath(sys.argv[2]).write_text(json.dumps(rows,indent=2)+'\\n')\nassert all(r['match'] for r in rows),[r for r in rows if not r['match']]\nprint('22 unchanged frozen drafting comparisons passed')\n",
+      "/tmp/ingetrazo-line-sweep-integration/drafting-native.json",
+      "/tmp/ingetrazo-line-sweep-integration/drafting-comparison.json"
+    ],
+    "source_commit": "804cd73268f66332cebf6bd2192e563483545927",
+    "exit": 0,
+    "seconds": 0.083
+  },
+  {
+    "name": "sweep-protocol",
+    "command": [
+      "/tmp/ingetrazo-native-font-merge-target/debug/examples/face_sweep_protocol",
+      "/tmp/ingetrazo-next-integration/docs/audits/pushpull-reversed/source.json",
+      "/tmp/ingetrazo-line-sweep-integration/sweep-native.json"
+    ],
+    "source_commit": "804cd73268f66332cebf6bd2192e563483545927",
+    "exit": 0,
+    "seconds": 0.002
+  }
+]
