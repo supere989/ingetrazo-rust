@@ -30,29 +30,34 @@ impl Textures{
    {let _pressure=if self.probe_pressure{let mut ledger=self.budget.ledger.lock().unwrap();let previous=ledger.total_limit;ledger.total_limit=Some(ledger.total_committed());Some(PressureRestore{budget:self.budget.clone(),previous})}else{None};candidate.references=Some(self.references.prepare(context,resources,&mut self.cache,scene,fence).map_err(|e|format!("Reference image admission: {e}"))?);}
    if buffers.is_empty(){return Ok(());}
    let count=u32::try_from(buffers.len()).map_err(|_|"Too many texture descriptors")?;
-   let pool=if average{vk::DescriptorPool::null()}else{unsafe{self.device.create_descriptor_pool(&vk::DescriptorPoolCreateInfo::default().max_sets(count).pool_sizes(&[vk::DescriptorPoolSize{ty:vk::DescriptorType::COMBINED_IMAGE_SAMPLER,descriptor_count:count}]),None)}.map_err(|e|e.to_string())?};
-   if !average{candidate.pool=Some(Pool{device:self.device.clone(),handle:pool});}
    let mut paths=buffers.iter().collect::<Vec<_>>();paths.sort_by_key(|(_,b)|b.source_texture_runs.iter().map(|r|r.order).min().unwrap_or(usize::MAX));
    let mut images=candidate.references.as_ref().unwrap().sampled().collect::<HashMap<AssetId,(vk::ImageView,vk::Sampler,bool)>>();
    for(path,buffer)in paths{
     let geometry=Geometry::prepare(buffer)?;if geometry.vertices.is_empty(){continue;}
-    let file;let encoded=if let Some(bytes)=assets.get(path){bytes.as_slice()}else{file=if average{read_average_file(path,self.averages.limits().encoded_bytes)?}else{std::fs::read(path).map_err(|e|format!("Texture {path}: {e}"))?};file.as_slice()};
+    // viewport.py1612/1780: shaded opaque faces use the Qt mean, but
+    // translucent front AND back runs still sample the original texture.
+    // One asset can need both; retain one geometry upload and one sampled image.
+    let needs_mean=average&&geometry.draws.iter().any(|d|d.source.opacity>=0.999);
+    let needs_sampled=geometry.draws.iter().any(|d|!average||d.source.opacity<0.999);
+    let file;let encoded=if let Some(bytes)=assets.get(path){bytes.as_slice()}else{file=if needs_mean{read_average_file(path,self.averages.limits().encoded_bytes)?}else{std::fs::read(path).map_err(|e|format!("Texture {path}: {e}"))?};file.as_slice()};
     let asset=self.cache.identify(encoded);let id=asset.id();
-    let (sampled,set,mean)=if average {
-     let value=self.averages.prepare(&mut candidate.averages,id,encoded)?;
-     ((vk::ImageView::null(),vk::Sampler::null(),false),vk::DescriptorSet::null(),Some(value))
-    }else{
+    let mean=if needs_mean{Some(self.averages.prepare(&mut candidate.averages,id,encoded)?)}else{None};
+    let (sampled,set)=if needs_sampled {
+     // Lazy pool creation keeps pure opaque shaded scenes free of sampled
+     // image/descriptor allocations, including when changing render styles.
+     if candidate.pool.is_none(){let handle=unsafe{self.device.create_descriptor_pool(&vk::DescriptorPoolCreateInfo::default().max_sets(count).pool_sizes(&[vk::DescriptorPoolSize{ty:vk::DescriptorType::COMBINED_IMAGE_SAMPLER,descriptor_count:count}]),None)}.map_err(|e|e.to_string())?;candidate.pool=Some(Pool{device:self.device.clone(),handle});}
+     let pool=candidate.pool.as_ref().unwrap().handle;
      let sampled=if let Some(sampled)=images.get(&id){*sampled}else{let _pressure=if self.probe_pressure{let mut ledger=self.budget.ledger.lock().unwrap();let previous=ledger.total_limit;ledger.total_limit=Some(ledger.total_committed());Some(PressureRestore{budget:self.budget.clone(),previous})}else{None};let image=self.cache.prepare(context,resources,&asset,256*1024*1024).map_err(|e|format!("Texture image admission: {e}"))?;let sampled=image.sampled();images.insert(id,sampled);candidate.images.push(image);sampled};
      let set=unsafe{self.device.allocate_descriptor_sets(&vk::DescriptorSetAllocateInfo::default().descriptor_pool(pool).set_layouts(&[self.descriptor_layout]))}.map_err(|e|e.to_string())?[0];
      let infos=[vk::DescriptorImageInfo::default().image_view(sampled.0).sampler(sampled.1).image_layout(vk::ImageLayout::SHADER_READ_ONLY_OPTIMAL)];unsafe{self.device.update_descriptor_sets(&[vk::WriteDescriptorSet::default().dst_set(set).dst_binding(0).descriptor_type(vk::DescriptorType::COMBINED_IMAGE_SAMPLER).image_info(&infos)],&[])};
-     (sampled,set,None)
-    };
+     (sampled,set)
+    }else{((vk::ImageView::null(),vk::Sampler::null(),false),vk::DescriptorSet::null())};
     let vertex=resources.upload(context,geometry.upload_bytes(),vk::BufferUsageFlags::VERTEX_BUFFER|vk::BufferUsageFlags::STORAGE_BUFFER,false)?;candidate.buffers.push(vertex);self.stats.uploads+=1;self.stats.vertex_bytes+=geometry.upload_bytes().len()as u64;
     if geometry.front_vertices>0 {
      if geometry.upload_bytes().len()as u64<=storage_limit{candidate.contours.push((vertex,geometry.front_vertices/3,5));}
      else {let triangles=storage_limit.min(8*1024*1024)/36;if triangles==0{return Err("Texture contour storage range cannot hold one triangle".into());}for chunk in geometry.vertices[..geometry.front_vertices as usize].chunks(triangles as usize*3){let positions=chunk.iter().map(|v|v.position).collect::<Vec<_>>();let id=resources.upload(context,bytemuck::cast_slice(&positions),vk::BufferUsageFlags::STORAGE_BUFFER,false)?;candidate.buffers.push(id);candidate.contours.push((id,(positions.len()/3)as u32,3));}}
     }
-    for draw in geometry.draws{let source=draw.source;let opaque=source.opacity>=0.999;let opacity=if opaque{1.}else{format!("{:.3}",source.opacity).parse::<f32>().map_err(|e|e.to_string())?};candidate.draws.push(Draw{buffer:vertex,set,asset:id,first:draw.first,count:draw.count,opacity,shade:source.shade,cutout:sampled.2,back:source.back_side,cull:source.front_cull,opaque,path:path.clone(),order:source.order,mean});}
+    for draw in geometry.draws{let source=draw.source;let opaque=source.opacity>=0.999;let mean=if opaque{mean}else{None};let opacity=if opaque{1.}else{format!("{:.3}",source.opacity).parse::<f32>().map_err(|e|e.to_string())?};candidate.draws.push(Draw{buffer:vertex,set,asset:id,first:draw.first,count:draw.count,opacity,shade:source.shade,cutout:sampled.2,back:source.back_side,cull:source.front_cull,opaque,path:path.clone(),order:source.order,mean});}
    }
    // Source front opaque first occurrence, then sorted back/transparent keys.
    candidate.average_active.try_reserve(candidate.draws.len()).map_err(|_|"Average active identity admission")?;
