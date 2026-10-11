@@ -348,3 +348,13 @@ pub(super) fn polyline(
     path.transform(ocs(normal)?, elevation);
     path.flatten(scale)
 }
+
+pub(super) fn bezier_path(
+    start: DVec3,
+    curves: Vec<[DVec3; 4]>,
+    scale: f64,
+) -> Result<Vec<DVec3>, DxfError> {
+    let mut path = Path::new(start);
+    path.beziers(curves);
+    path.flatten(scale)
+}

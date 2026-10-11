@@ -140,6 +140,7 @@ fn main() {
     if std::env::args().any(|a|a=="--obj-raw-fusion") {obj_fusion::run_raw();return;}
     if std::env::args().any(|a|a=="--obj-fusion") {obj_fusion::run();return;}
     if std::env::args().any(|a|a=="--obj-mtl") {obj_mtl::run();return;}
+    if std::env::args().any(|a|a=="--dxf-splines"){dxf_entities::run_splines();return;}
     if std::env::args().any(|a|a=="--dxf-curves"){dxf_entities::run_curves();return;}
     if std::env::args().any(|a|a=="--dxf-entities"){dxf_entities::run();return;}
     if std::env::args().any(|a|a=="--nested-import"){nested_import::run();return;}

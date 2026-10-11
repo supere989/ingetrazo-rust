@@ -5,6 +5,8 @@
 
 #[path = "dxf_curves.rs"]
 mod curves;
+#[path = "dxf_spline.rs"]
+mod spline;
 use glam::DVec3;
 use ingetrazo_core::scene::Scene;
 use std::io::{BufRead, BufReader, Read, Write};
@@ -315,10 +317,12 @@ fn parse_dxf_options(
                         .ok_or_else(|| DxfError::Parse(format!("Invalid numeric field {code}")))
                 })
         };
-        if !matches!(kind.as_str(), "LWPOLYLINE" | "CIRCLE" | "ARC" | "ELLIPSE")
-            && (number(210, 0.)?.abs() > 1e-9
-                || number(220, 0.)?.abs() > 1e-9
-                || (number(230, 1.)? - 1.).abs() > 1e-9)
+        if !matches!(
+            kind.as_str(),
+            "LWPOLYLINE" | "CIRCLE" | "ARC" | "ELLIPSE" | "SPLINE"
+        ) && (number(210, 0.)?.abs() > 1e-9
+            || number(220, 0.)?.abs() > 1e-9
+            || (number(230, 1.)? - 1.).abs() > 1e-9)
         {
             return Err(DxfError::Parse(
                 "Non-Z DXF entity coordinate systems require OCS conversion".into(),
@@ -424,6 +428,82 @@ fn parse_dxf_options(
                 )?;
                 curved = true;
             }
+            "SPLINE" => {
+                let mut controls = Vec::<DVec3>::new();
+                let mut fits = Vec::<DVec3>::new();
+                let mut knots = Vec::new();
+                let mut weights = Vec::new();
+                for (code, value) in attributes {
+                    let scalar = || {
+                        value
+                            .parse::<f64>()
+                            .ok()
+                            .filter(|v| v.is_finite())
+                            .ok_or_else(|| DxfError::Parse("Invalid spline numeric field".into()))
+                    };
+                    match *code {
+                        10 => controls.push(DVec3::new(scalar()?, 0., 0.)),
+                        20 | 30 => {
+                            let p = controls.last_mut().ok_or_else(|| {
+                                DxfError::Parse("Spline coordinate without control".into())
+                            })?;
+                            if *code == 20 {
+                                p.y = scalar()?;
+                            } else {
+                                p.z = scalar()?;
+                            }
+                        }
+                        11 => fits.push(DVec3::new(scalar()?, 0., 0.)),
+                        21 | 31 => {
+                            let p = fits.last_mut().ok_or_else(|| {
+                                DxfError::Parse("Spline coordinate without fit point".into())
+                            })?;
+                            if *code == 21 {
+                                p.y = scalar()?;
+                            } else {
+                                p.z = scalar()?;
+                            }
+                        }
+                        40 => knots.push(scalar()?),
+                        41 => weights.push(scalar()?),
+                        _ => {}
+                    }
+                }
+                let tangents = if attributes.iter().any(|(c, _)| *c == 12)
+                    && attributes.iter().any(|(c, _)| *c == 13)
+                {
+                    Some([
+                        DVec3::new(number(12, 0.)?, number(22, 0.)?, number(32, 0.)?),
+                        DVec3::new(number(13, 0.)?, number(23, 0.)?, number(33, 0.)?),
+                    ])
+                } else {
+                    None
+                };
+                match spline::flatten(
+                    controls,
+                    fits,
+                    number(71, 3.)? as usize,
+                    knots,
+                    weights,
+                    number(42, 1e-10)?,
+                    tangents,
+                    scale,
+                ) {
+                    Ok(p) => points = p,
+                    // Original _entity_segments catches invalid make_path
+                    // construction and skips just that entity. Admission limits
+                    // and nonfinite output still refuse the native transaction.
+                    Err(DxfError::Parse(message))
+                        if message.starts_with("Invalid spline")
+                            || message.starts_with("Singular spline")
+                            || message.starts_with("Degenerate spline") =>
+                    {
+                        continue
+                    }
+                    Err(error) => return Err(error),
+                }
+                curved = true;
+            }
             _ => {
                 return Err(DxfError::Parse(format!(
                     "DXF entity {kind} is not yet supported; document unchanged"
@@ -447,6 +527,9 @@ fn parse_dxf_options(
             face,
             curved,
         });
+    }
+    if plan.entities.is_empty() {
+        return Err(DxfError::Parse("No importable DXF geometry".into()));
     }
     Ok(plan)
 }
@@ -550,6 +633,24 @@ fn legacy_polyline(
 
 #[cfg(test)]
 mod tests {
+    #[test]
+    fn exact_source_spline_paths() {
+        let source: serde_json::Value = serde_json::from_str(include_str!(
+            "../../../docs/audits/dxf-splines/source-paths.json"
+        ))
+        .unwrap();
+        for row in source.as_array().unwrap() {
+            let mut input = row["dxf"].as_str().unwrap().as_bytes();
+            let plan = super::parse_dxf_options(&mut input, 1., true).unwrap();
+            let actual=plan.entities.iter().map(|e|serde_json::json!({"points":e.points.iter().map(|p|p.to_array()).collect::<Vec<_>>(),"curved":e.curved})).collect::<Vec<_>>();
+            assert_eq!(
+                serde_json::json!(actual),
+                row["entities"],
+                "{}",
+                row["case"]
+            );
+        }
+    }
     #[test]
     fn exact_source_curve_paths() {
         let source: serde_json::Value = serde_json::from_str(include_str!(

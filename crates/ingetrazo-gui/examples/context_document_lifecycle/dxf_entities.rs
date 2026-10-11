@@ -9,6 +9,9 @@ pub fn run() {
 pub fn run_curves() {
     run_input("original-dxf-curves.json", "native-dxf-curves.json", true);
 }
+pub fn run_splines() {
+    run_input("original-dxf-splines.json", "native-dxf-splines.json", true);
+}
 fn run_input(source_name: &str, native_name: &str, curve_flags: bool) {
     let root = std::path::PathBuf::from(std::env::args().nth(1).expect("inputs"));
     let source: Value =
@@ -103,6 +106,25 @@ fn run_input(source_name: &str, native_name: &str, curve_flags: bool) {
     app.redo();
     assert_eq!(app.scene.mesh, protected);
     std::fs::write(root.join("native-dxf-guards.json"),serde_json::to_vec_pretty(&json!({"cancel_preserves_document_history_revision":true,"malformed_sequence_preserves_document_history_revision":true,"native_f64_and_opaque_payload_preserved":true})).unwrap()).unwrap();
+    if source_name == "original-dxf-splines.json" {
+        let before = super::nested_import::source_scene(&app);
+        let history = (app.undo_stack.len(), app.redo_stack.len());
+        let version = app.scene.version;
+        app.begin_unit_import(&root.join("invalid-only.dxf"))
+            .unwrap();
+        app.document_session.unit_import.as_mut().unwrap().code = "m".into();
+        assert!(app.accept_unit_import().is_err());
+        assert_eq!(super::nested_import::source_scene(&app), before);
+        assert_eq!((app.undo_stack.len(), app.redo_stack.len()), history);
+        assert_eq!(app.scene.version, version);
+        app.cancel_unit_import();
+        std::fs::write(
+            root.join("native-spline-errors.json"),
+            serde_json::to_vec_pretty(&json!({"invalid_only_preserves_document_history":true}))
+                .unwrap(),
+        )
+        .unwrap();
+    }
     std::fs::write(
         root.join(native_name),
         serde_json::to_vec_pretty(&json!({"cases":source["cases"],"states":rows})).unwrap(),
