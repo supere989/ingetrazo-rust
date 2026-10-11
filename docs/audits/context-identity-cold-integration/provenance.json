@@ -1,0 +1,48 @@
+{
+  "source": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "base": "98a86ea790e34a6b6ccb1d8e9e99f939b41b6814",
+  "intake": {
+    "geometry": [
+      "a81d6640",
+      "d9df049c"
+    ],
+    "context_save": [
+      "81ff1c63"
+    ],
+    "saved_views": [
+      "82fa0256",
+      "79a9ccb1"
+    ],
+    "vulkan": [
+      "b9cfbf64",
+      "65223332",
+      "22f56006",
+      "a1c6a000"
+    ]
+  },
+  "review": [
+    "Root reviewed runtime diffs and independently replayed saved-view and GPU archived validators.",
+    "Geometry agent independently reviewed whole-context Save staging and checker inventory controls."
+  ],
+  "cadence": "One combined suite, then affected/unreached targets. External dependencies reused. Original rendering evidence reused without duplicate GPU capture.",
+  "known_scope": "Actual unshown original Qt handlers/native app consumers. Committed-edit Save; no new OS pointer/rendered gestures or complete feature-row verification.",
+  "corrected_runtime": "17951ed8cc9b98ec7ba690a88ebbd828d7f26bdd",
+  "previous_ci": {
+    "commit": "dbcb905bbc47fd002c92ef650762fdad0f361e2f",
+    "runs": [
+      38120769905,
+      38120769906
+    ],
+    "jobs_succeeded": 7
+  },
+  "postrun_inventory_guard": {
+    "pushpull_cases": 26,
+    "passed": 23,
+    "exact_failures": [
+      "wedge0--0.4",
+      "ctrl-roof-0.2",
+      "ctrl-step-0.5"
+    ],
+    "check": "Independently checked against retained output after replay; resume-oracle.py now also enforces it inline."
+  }
+}

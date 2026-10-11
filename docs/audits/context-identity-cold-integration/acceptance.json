@@ -1,0 +1,125 @@
+{
+  "runtime": "8d1bda964f173db6c0db8d85a39283c23011e24d",
+  "steps": [
+    {
+      "step": "local-package-invalidation",
+      "exit": 0,
+      "seconds": 0.415
+    },
+    {
+      "step": "workspace-suite",
+      "exit": 101,
+      "seconds": 51.641
+    },
+    {
+      "step": "corrected-native-preservation",
+      "exit": 0,
+      "seconds": 21.55
+    },
+    {
+      "step": "remaining-format-targets",
+      "exit": 0,
+      "seconds": 3.545
+    },
+    {
+      "step": "remaining-workspace-targets",
+      "exit": 0,
+      "seconds": 42.727
+    },
+    {
+      "step": "workspace-doctests",
+      "exit": 0,
+      "seconds": 5.558
+    },
+    {
+      "step": "workspace-examples",
+      "exit": 0,
+      "seconds": 35.217
+    },
+    {
+      "step": "named-build",
+      "exit": 0,
+      "seconds": 4.873
+    },
+    {
+      "step": "context-native",
+      "exit": 0,
+      "seconds": 0.293
+    },
+    {
+      "step": "context-original-reopen",
+      "exit": 0,
+      "seconds": 2.308
+    },
+    {
+      "step": "context-check",
+      "exit": 0,
+      "seconds": 0.082
+    },
+    {
+      "step": "view-check",
+      "exit": 0,
+      "seconds": 0.385
+    },
+    {
+      "step": "igz-native",
+      "exit": 0,
+      "seconds": 24.896
+    },
+    {
+      "step": "igz-source-reopen",
+      "exit": 1,
+      "seconds": 0.145
+    },
+    {
+      "step": "igz-source-reopen",
+      "exit": 0,
+      "seconds": 10.304
+    },
+    {
+      "step": "igz-check",
+      "exit": 0,
+      "seconds": 6.478
+    },
+    {
+      "step": "pushpull-native",
+      "exit": 0,
+      "seconds": 0.154
+    },
+    {
+      "step": "pushpull-live-check",
+      "exit": 0,
+      "seconds": 0.644
+    },
+    {
+      "step": "pushpull-app",
+      "exit": 0,
+      "seconds": 0.117
+    },
+    {
+      "step": "pushpull-expanded-check",
+      "exit": 1,
+      "seconds": 0.441
+    },
+    {
+      "step": "retained-gpu-evidence",
+      "exit": 0,
+      "seconds": 0.401
+    }
+  ],
+  "corrected_runtime": "17951ed8cc9b98ec7ba690a88ebbd828d7f26bdd",
+  "complete": true,
+  "unique_tests_passed": 859,
+  "remaining_test_failures": 0,
+  "existing_ignores": 2,
+  "pushpull_shape_controls": {
+    "passed": 23,
+    "total": 26,
+    "remaining": [
+      "wedge0--0.4",
+      "ctrl-roof-0.2",
+      "ctrl-step-0.5"
+    ],
+    "internal_winding_difference_retained": true
+  }
+}

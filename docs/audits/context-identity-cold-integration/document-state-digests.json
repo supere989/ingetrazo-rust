@@ -1,0 +1,6 @@
+{
+  "canonical_expected": "../igz-edit-preservation/expected-after.json.gz",
+  "expected_sha256": "ba858d8aa10957e65ba2c8119701057cb2ddd021a0a4e63a0c19fd96c25ff49f",
+  "observed_sha256": "4816ca8592336ae774740d714162a5ebbe0043b7d087f3cb2fc2f6f813e2c736",
+  "parsed_complete_state_equal": true
+}

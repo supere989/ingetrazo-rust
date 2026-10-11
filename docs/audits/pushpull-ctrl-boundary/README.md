@@ -18,3 +18,5 @@ Replay from worktree:
 ```
 
 Source/binary hashes are frozen in provenance.json. Target build settings: debug0, incremental0, jobs2. Initial build failed because a new worktree's submodule directory incorrectly contained the source symlink instead of being that symlink; environment corrected without source changes. Earlier speculative interior-winding restoration was tested, did not resolve literal winding, and was removed. Only the boundary extraction is production source in this batch.
+
+Root integration replay passed the retained live-boundary checker. Terminal raw logs are byte-verified and compressed in `logs.zip`; structured source/native reports remain directly readable.

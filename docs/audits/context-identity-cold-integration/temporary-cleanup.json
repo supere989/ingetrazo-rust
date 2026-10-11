@@ -1,0 +1,90 @@
+{
+  "verified_archive": "replay-and-logs.zip",
+  "canonical_large_observation": "../igz-edit-preservation/expected-after.json.gz",
+  "released": [
+    {
+      "path": "/tmp/ingetrazo-context-identity-integration",
+      "bytes": 86482626
+    },
+    {
+      "path": "/tmp/ingetrazo-igz-integrated-inputs",
+      "bytes": 4435
+    },
+    {
+      "path": "/tmp/ingetrazo-context-save-proof",
+      "bytes": 77357
+    },
+    {
+      "path": "/tmp/ingetrazo-context-save-source.log",
+      "bytes": 1246
+    },
+    {
+      "path": "/tmp/ingetrazo-context-save-source2.log",
+      "bytes": 81
+    },
+    {
+      "path": "/tmp/ingetrazo-context-save-build.log",
+      "bytes": 16923
+    },
+    {
+      "path": "/tmp/ingetrazo-context-save-reopen.log",
+      "bytes": 49
+    },
+    {
+      "path": "/tmp/ingetrazo-context-save-build-final.log",
+      "bytes": 16027
+    },
+    {
+      "path": "/tmp/ingetrazo-context-save-native-final.log",
+      "bytes": 0
+    },
+    {
+      "path": "/tmp/ingetrazo-context-save-reopen-final.log",
+      "bytes": 49
+    },
+    {
+      "path": "/tmp/ingetrazo-context-save-compare-final.log",
+      "bytes": 229
+    },
+    {
+      "path": "/tmp/ingetrazo-context-save-component-final.log",
+      "bytes": 16010
+    },
+    {
+      "path": "/tmp/ingetrazo-context-save-session-final.log",
+      "bytes": 15828
+    },
+    {
+      "path": "/tmp/ingetrazo-context-save-build-atomic.log",
+      "bytes": 16028
+    },
+    {
+      "path": "/tmp/ingetrazo-context-save-native-atomic.log",
+      "bytes": 0
+    },
+    {
+      "path": "/tmp/ingetrazo-context-save-reopen-atomic.log",
+      "bytes": 49
+    },
+    {
+      "path": "/tmp/ingetrazo-context-save-compare-atomic.log",
+      "bytes": 281
+    },
+    {
+      "path": "/tmp/ingetrazo-context-save-component-atomic.log",
+      "bytes": 16126
+    },
+    {
+      "path": "/tmp/ingetrazo-context-save-session-atomic.log",
+      "bytes": 15828
+    }
+  ],
+  "bytes": 86679172,
+  "dependency_targets_and_worktrees_preserved": true,
+  "agent_saved_view_cleanup": {
+    "path": "/tmp/ingetrazo-saved-view-identity-proof",
+    "files": 17,
+    "logical_bytes": 49960,
+    "allocated_bytes": 94208
+  }
+}
