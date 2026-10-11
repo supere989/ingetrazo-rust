@@ -1,0 +1,25 @@
+{
+  "rows": [
+    {
+      "view": "iso",
+      "paired_differences": {
+        "annotations-on": 78,
+        "annotations-off": 58,
+        "annotations-restored": 78
+      },
+      "source_on_off_delta": 20,
+      "source_restore_delta": 0
+    },
+    {
+      "view": "asymmetric",
+      "paired_differences": {
+        "annotations-on": 335,
+        "annotations-off": 335,
+        "annotations-restored": 339
+      },
+      "source_on_off_delta": 0,
+      "source_restore_delta": 4
+    }
+  ],
+  "scope": "Zero-annotation matched-camera baselines contain source variability; no pixels excluded and no annotation acceptance inferred."
+}
