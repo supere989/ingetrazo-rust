@@ -15,6 +15,7 @@ use winit::{
 
 mod lifecycle_probe;
 pub(crate) mod world_viewport;
+mod distance_label;
 mod world_app_probe;
 mod world_classic_probe;
 mod world_material_probe;
@@ -239,10 +240,11 @@ impl ApplicationHandler for Host {
                 metal.info.name, metal.info.unified_memory
             );
             let precise_cad = std::env::var_os("INGETRAZO_METAL_CAD_CALLBACKS").is_some();
-            if precise_cad && !ingetrazo_metal::MetalCad2d::supported(&metal) && !ingetrazo_metal::cad_compute_painter::Painter::supported(&metal) {
+            let viewport_cad = std::env::var_os("INGETRAZO_METAL_WORLD").is_some();
+            if (precise_cad || viewport_cad) && !ingetrazo_metal::MetalCad2d::supported(&metal) && !ingetrazo_metal::cad_compute_painter::Painter::supported(&metal) {
                 return Err("Native Metal exact callback requires Apple framebuffer fetch or tier2 read/write RGBA canvas; no approximate fallback".into());
             }
-            let painter = if precise_cad&&!ingetrazo_metal::MetalCad2d::supported(&metal){EguiPainter::new_compute(&metal)?}else{EguiPainter::new(&metal)?};
+            let painter = if (precise_cad || viewport_cad)&&!ingetrazo_metal::MetalCad2d::supported(&metal){EguiPainter::new_compute(&metal)?}else{EguiPainter::new(&metal)?};
             let gpu = MetalPresentation::attach(window.clone(), metal)?;
             let input = egui_winit::State::new(
                 self.ctx.clone(),

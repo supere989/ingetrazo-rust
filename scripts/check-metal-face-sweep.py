@@ -15,14 +15,15 @@ def main():
  manifest=json.loads((root/'manifest.json').read_text());archive=root/'records.zip'
  assert hashlib.sha256(archive.read_bytes()).hexdigest()==manifest['archive_sha256']
  with zipfile.ZipFile(archive) as z:
-  files={r['path']:r['sha256'] for r in manifest['entries']};assert set(z.namelist())==set(files)
+  files={r['path']:r['sha256'] for r in manifest.get('entries',manifest.get('records'))};assert set(z.namelist())==set(files)
   for n,h in files.items():assert hashlib.sha256(z.read(n)).hexdigest()==h,n
-  source=json.loads(z.read('original.json'));assert source['source_pin']=='6be29fe437a7cd992d4e079f71720821b25216b9'
+  prefix='complete-config/' if 'complete-config/original.json' in files else '';source=json.loads(z.read(prefix+'original.json'));assert source['source_pin']=='6be29fe437a7cd992d4e079f71720821b25216b9'
   assert len(source['cases'])==6 and len({r['name'] for r in source['cases']})==6
   if a.unpack:
    out.mkdir(parents=True,exist_ok=True)
    for n in z.namelist():
-    dest=out/n;assert dest.resolve().is_relative_to(out.resolve());dest.parent.mkdir(parents=True,exist_ok=True);dest.write_bytes(z.read(n))
+    if prefix and not n.startswith(prefix):continue
+    dest=out/n.removeprefix(prefix);assert dest.resolve().is_relative_to(out.resolve());dest.parent.mkdir(parents=True,exist_ok=True);dest.write_bytes(z.read(n))
    return
   from PIL import Image
   import io
@@ -38,7 +39,7 @@ def main():
    assert case['gl']['vendor']=='NVIDIA Corporation' and 'RTX 5090' in case['gl']['renderer']
    for row in case['frames']:
     assert row['samples']==4
-    im=Image.open(io.BytesIO(z.read(row['file']))).convert('RGBA');assert im.size==(800,600);expected=im.tobytes();actual=(out/(case['name']+'-'+row['phase']+'.rgba')).read_bytes()
+    im=Image.open(io.BytesIO(z.read(prefix+row['file']))).convert('RGBA');assert im.size==(800,600);expected=im.tobytes();actual=(out/(case['name']+'-'+row['phase']+'.rgba')).read_bytes()
     try:equal(expected,actual)
     except AssertionError:
      assert len(actual)==len(expected)
