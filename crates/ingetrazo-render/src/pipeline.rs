@@ -349,7 +349,18 @@ pub fn build_placement_prototype_surfaces(
     camera: &OrbitCamera,
     style: &StyleConfig,
 ) -> Result<SceneRenderData, String> {
-    if !source_group_has_placement(group) {
+    build_inherited_placement_prototype_surfaces(group,inherited_paint,scene,camera,style,false)
+}
+
+/// A classic nested own mesh is a placement when the composed source ancestor
+/// has an xform. Caller supplies this inherited classification; no Group clone.
+pub fn build_inherited_placement_prototype_surfaces(
+    group: &ingetrazo_core::groups::Group,
+    inherited_paint: Option<&serde_json::Value>,
+    scene: &Scene, camera: &OrbitCamera, style: &StyleConfig,
+    inherited_placement: bool,
+) -> Result<SceneRenderData,String> {
+    if !inherited_placement && !source_group_has_placement(group) {
         return Err("Local prototype collection requires source placement semantics".into());
     }
     let mut data = SceneRenderData::default();
@@ -484,7 +495,7 @@ fn build_group_buffers(
     // Original viewport._instance_entry.tp32 preserves painted front winding
     // under reflected placements. Reorder local corners before UV evaluation.
     let reflected = world_t.determinant() < 0.0;
-    let source_placement = source_group_has_placement(group);
+    let source_placement = source_group_has_placement(group) || root_world_override.is_some();
     let paint = source_group_paint(group).or(owner_paint);
 
     // Billboard / Face-Me cutout figures

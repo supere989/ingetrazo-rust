@@ -1517,6 +1517,7 @@ dependencies = [
  "block2 0.6.2",
  "bytemuck",
  "egui",
+ "glam",
  "ingetrazo-core",
  "ingetrazo-render",
  "objc2 0.6.5",
@@ -1526,6 +1527,7 @@ dependencies = [
  "objc2-metal 0.3.2",
  "objc2-quartz-core 0.3.2",
  "raw-window-handle",
+ "serde_json",
  "winit",
 ]
 
