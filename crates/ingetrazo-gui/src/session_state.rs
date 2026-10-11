@@ -1,5 +1,5 @@
 //! Durable preferences and recovery copies, separate from project documents.
-use std::{collections::BTreeMap,path::{Path,PathBuf},time::{SystemTime,UNIX_EPOCH}};
+use std::{collections::BTreeMap,path::{Path,PathBuf},time::{SystemTime,UNIX_EPOCH},sync::{Arc,Mutex}};
 use serde::{Serialize,Deserialize};
 use ingetrazo_core::{scene::Scene,units::LengthUnit};
 use ingetrazo_formats::igz::{save_igz,load_igz};
@@ -47,12 +47,15 @@ pub struct RecoveryRecord {
     pub session_id: uuid::Uuid,
     pub updated_ms: u64,
 }
+#[derive(Debug)]
+struct SessionLease {path:PathBuf,_file:std::fs::File}
 #[derive(Debug,Clone)]
 pub struct SessionStore {
     pub config_dir: PathBuf,
     pub data_dir: PathBuf,
     pub session_id: uuid::Uuid,
     pub settings_writable: bool,
+    lease:Arc<Mutex<Option<SessionLease>>>,
 }
 fn timestamp()->u64 {SystemTime::now().duration_since(UNIX_EPOCH).unwrap_or_default().as_millis().min(u64::MAX as u128) as u64}
 fn atomic_json(path:&Path,value:&impl Serialize)->Result<(),String> {
@@ -73,14 +76,55 @@ fn atomic_json(path:&Path,value:&impl Serialize)->Result<(),String> {
 fn absolute(path:&Path)->Result<PathBuf,String> {
     if path.is_absolute(){Ok(path.to_path_buf())}else{std::env::current_dir().map(|d|d.join(path)).map_err(|e|e.to_string())}
 }
-fn owner_alive(pid:u32)->bool {
+// Legacy metadata predates lease files. Keep PID fallback conservative:
+// only an actual OS absence observation permits automatic recovery.
+fn legacy_owner_alive(pid:u32)->bool {
+    if pid==0{return false;}
     #[cfg(target_os="linux")]
     {Path::new("/proc").join(pid.to_string()).exists()}
-    #[cfg(not(target_os="linux"))]
-    {pid==std::process::id()}
+    #[cfg(all(unix,not(target_os="linux")))]
+    {
+        let Ok(pid)=libc::pid_t::try_from(pid) else{return true;};
+        let result=unsafe{libc::kill(pid,0)};
+        result==0 || std::io::Error::last_os_error().raw_os_error()!=Some(libc::ESRCH)
+    }
+    #[cfg(not(unix))]
+    {true} // Unknown legacy PID liveness is not evidence of abandonment.
 }
+
 impl SessionStore {
-    pub fn isolated(root:&Path)->Self {Self{config_dir:root.join("config"),data_dir:root.join("data"),session_id:uuid::Uuid::new_v4(),settings_writable:true}}
+    fn lease_path(&self,session:uuid::Uuid)->PathBuf {
+        self.data_dir.join("autosave").join(format!(".owner-{session}.lock"))
+    }
+    fn ensure_owner_lease(&self)->Result<(),String> {
+        let path=self.lease_path(self.session_id);
+        let mut held=self.lease.lock().map_err(|_|"Autosave owner lease lock poisoned")?;
+        if let Some(lease)=held.as_ref(){
+            return if lease.path==path{Ok(())}else{Err("Autosave session identity changed after publication".into())};
+        }
+        std::fs::create_dir_all(path.parent().unwrap()).map_err(|e|e.to_string())?;
+        // Never truncate a lease or unlink it: another open file must observe
+        // the same inode, including while a live writer is being inspected.
+        let file=std::fs::OpenOptions::new().read(true).write(true).create(true).truncate(false).open(&path).map_err(|e|e.to_string())?;
+        file.try_lock().map_err(|e|format!("Autosave owner lease unavailable: {e}"))?;
+        *held=Some(SessionLease{path,_file:file});Ok(())
+    }
+    fn owner_alive(&self,record:&RecoveryRecord)->Result<bool,String> {
+        if record.session_id.is_nil(){return Ok(legacy_owner_alive(record.owner_pid));}
+        let path=self.lease_path(record.session_id);
+        let file=match std::fs::OpenOptions::new().read(true).write(true).open(&path){
+            Ok(file)=>file,
+            Err(e)if e.kind()==std::io::ErrorKind::NotFound=>return Ok(legacy_owner_alive(record.owner_pid)),
+            Err(e)=>return Err(format!("Recovery owner lease cannot be observed: {e}")),
+        };
+        match file.try_lock(){
+            Ok(())=>Ok(false), // probe drops its acquired lock with the file
+            Err(std::fs::TryLockError::WouldBlock)=>Ok(true),
+            Err(e)=>Err(format!("Recovery owner lease cannot be observed: {e}")),
+        }
+    }
+
+    pub fn isolated(root:&Path)->Self {Self{config_dir:root.join("config"),data_dir:root.join("data"),session_id:uuid::Uuid::new_v4(),settings_writable:true,lease:Arc::new(Mutex::new(None))}}
     pub fn user_default()->Self {
         let home=std::env::var_os("HOME").map(PathBuf::from).unwrap_or_else(||PathBuf::from("."));
         #[cfg(target_os="windows")]
@@ -91,7 +135,7 @@ impl SessionStore {
         #[cfg(not(any(target_os="windows",target_os="macos")))]
         let (config,data)=(std::env::var_os("XDG_CONFIG_HOME").map(PathBuf::from).unwrap_or_else(||home.join(".config")),
             std::env::var_os("XDG_DATA_HOME").map(PathBuf::from).unwrap_or_else(||home.join(".local/share")));
-        Self{config_dir:config.join("ingetrazo-rust"),data_dir:data.join("ingetrazo-rust"),session_id:uuid::Uuid::new_v4(),settings_writable:true}
+        Self{config_dir:config.join("ingetrazo-rust"),data_dir:data.join("ingetrazo-rust"),session_id:uuid::Uuid::new_v4(),settings_writable:true,lease:Arc::new(Mutex::new(None))}
     }
     pub fn load_preferences(&mut self)->Result<Preferences,String> {
         let path=self.config_dir.join("settings.json");
@@ -117,6 +161,7 @@ impl SessionStore {
         Ok(self.data_dir.join("autosave").join(name))
     }
     pub fn autosave(&self,scene:&Scene,path:Option<&Path>)->Result<RecoveryRecord,String> {
+        self.ensure_owner_lease()?;
         let slot=self.slot_for(path)?;std::fs::create_dir_all(slot.parent().unwrap()).map_err(|e|e.to_string())?;
         let record=RecoveryRecord{slot:slot.clone(),document_path:path.map(absolute).transpose()?,owner_pid:std::process::id(),session_id:self.session_id,updated_ms:timestamp()};
         // Payload first. If metadata fails, keep the recovery payload rather than
@@ -139,8 +184,16 @@ impl SessionStore {
                     .and_then(|t|t.duration_since(UNIX_EPOCH).ok()).map(|d|d.as_millis().min(u64::MAX as u128) as u64).unwrap_or(0)
             });
             // Metadata failure must not hide a successfully written payload.
+            // The filename is our immutable session identity even when metadata
+            // publication failed or its sidecar is malformed. Never expose a
+            // live writer's successfully saved payload due to a sidecar error.
+            if let Some(stem)=path.file_stem().and_then(|s|s.to_str()) {
+                if let Some(tail)=stem.len().checked_sub(36).and_then(|i|stem.get(i..)) {
+                    if let Ok(session)=uuid::Uuid::parse_str(tail){record.session_id=session;}
+                }
+            }
             record.slot=path;
-            if discarded || !owner_alive(record.owner_pid) {records.push(record);}
+            if discarded || !self.owner_alive(&record)? {records.push(record);}
 
         }
         records.sort_by_key(|r|std::cmp::Reverse(r.updated_ms));Ok(records)
@@ -168,6 +221,29 @@ mod tests {
     use super::*;
     use glam::DVec3;
     fn root()->PathBuf {std::env::temp_dir().join(format!("ingetrazo-session-test-{}",uuid::Uuid::new_v4()))}
+    #[test]
+    fn lease_clone_pid_reuse_and_metadata_failure_preserve_owner(){
+        let root=root();let store=SessionStore::isolated(&root);let other=SessionStore::isolated(&root);
+        let clone=store.clone();let record=store.autosave(&Scene::new(),None).unwrap();
+        assert!(other.recovery_candidates(false).unwrap().is_empty());
+        // A failed/missing sidecar must not expose its live writer's payload.
+        std::fs::remove_file(record.slot.with_extension("json")).unwrap();
+        assert!(other.recovery_candidates(false).unwrap().is_empty());
+        drop(store);assert!(other.recovery_candidates(false).unwrap().is_empty());
+        drop(clone);let records=other.recovery_candidates(false).unwrap();assert_eq!(records.len(),1);
+        // Even a reused/current PID cannot hide a released session lease.
+        let mut reused=records[0].clone();reused.owner_pid=std::process::id();atomic_json(&record.slot.with_extension("json"),&reused).unwrap();
+        assert_eq!(other.recovery_candidates(false).unwrap().len(),1);
+        std::fs::remove_dir_all(root).unwrap();
+    }
+    #[test]
+    fn competing_session_identity_refuses_before_payload_overwrite(){
+        let root=root();let store=SessionStore::isolated(&root);let record=store.autosave(&Scene::new(),None).unwrap();let old=std::fs::read(&record.slot).unwrap();
+        let mut impostor=SessionStore::isolated(&root);impostor.session_id=store.session_id;
+        assert!(impostor.autosave(&Scene::new(),None).is_err());assert_eq!(std::fs::read(&record.slot).unwrap(),old);
+        let mut changed=store.clone();changed.session_id=uuid::Uuid::new_v4();assert!(changed.autosave(&Scene::new(),None).is_err());assert_eq!(std::fs::read(&record.slot).unwrap(),old);
+        std::fs::remove_dir_all(root).unwrap();
+    }
     #[test]
     fn preferences_keep_unknown_settings_and_corrupt_source_is_never_overwritten() {
         let root=root();let mut store=SessionStore::isolated(&root);
