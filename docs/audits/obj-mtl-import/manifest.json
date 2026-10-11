@@ -2,7 +2,7 @@
   "runtime_commit": "050b79437e5d2fb0eb99a56e911fd4bacce655a0",
   "source_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
   "archive": "records.zip",
-  "archive_sha256": "a62e302a386fdc5bc1548152b06bb2d978379798c2d7dbf14aa69acdcc6e2a16",
+  "archive_sha256": "6d8bf63c05acde446362c8ffc2eaa1e0b0b43a0147b9872c254176d491723a45",
   "entries": [
     {
       "path": "attempts/initial-raw-unit-observer/check.log",
@@ -128,6 +128,11 @@
       "path": "logs/obj-uv-repair-build.log",
       "bytes": 20123,
       "sha256": "63294c37109173a73c09ff05e0e5bc37860935e59cad7751d13a8fb143471269"
+    },
+    {
+      "path": "logs/obj-uv-single-json-check.log",
+      "bytes": 190,
+      "sha256": "b3e602b4a3ee3e8dda594ebea6278adee59b9b9517a99e6471b1a3682db20abc"
     },
     {
       "path": "missing-map-root-native.igz",
@@ -263,8 +268,8 @@
     },
     {
       "path": "scripts/check-obj-mtl-import.py",
-      "bytes": 3615,
-      "sha256": "1c92db127b8abb823cce20e2182499c29cd83e0bbdb6a8a2067bcc46933cebc1"
+      "bytes": 3580,
+      "sha256": "fefbec69db9f4e192191cad9ae6f446f469b18fa4d2e626e40e1ededcda06732"
     },
     {
       "path": "scripts/reference-obj-mtl-import.py",

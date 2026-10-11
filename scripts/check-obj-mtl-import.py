@@ -36,8 +36,7 @@ for b in mutations:
  try:strict(source,b)
  except AssertionError:pass
  else:raise AssertionError('material/ownership mutation accepted')
-print(json.dumps({'cases':15,'states':75,'malformed_sidecar_controls':2,'asset_ownership_controls':15,'actual_original_reopens':15,'negative_controls':len(mutations),'passed':True}))
 
 syntax=json.loads((p/'original-uv-syntax.json').read_text());strict(syntax,json.loads((p/'native-uv-syntax.json').read_text()))
 assert syntax==[{'case':'noninteger','faces':0,'textured':False,'affine':False},{'case':'out-of-range','faces':1,'textured':True,'affine':False},{'case':'missing','faces':1,'textured':True,'affine':False}]
-print(json.dumps({'uv_syntax_controls':3,'passed':True}))
+print(json.dumps({'cases':15,'states':75,'malformed_sidecar_controls':2,'asset_ownership_controls':15,'actual_original_reopens':15,'negative_controls':len(mutations),'uv_syntax_controls':3,'passed':True}))
