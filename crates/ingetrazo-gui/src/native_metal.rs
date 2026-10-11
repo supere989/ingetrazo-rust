@@ -384,3 +384,6 @@ impl ApplicationHandler for Host {
         }
     }
 }
+
+mod world_ghost_probe;
+pub fn run_world_ghost_probe(input:PathBuf,output:PathBuf)->Result<(),String>{world_ghost_probe::run(input,output)}

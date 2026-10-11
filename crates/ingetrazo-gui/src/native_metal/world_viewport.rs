@@ -42,6 +42,7 @@ impl Viewport {
     pub(crate) fn geometry_uploads(&self) -> u64 {
         self.world.stats.geometry_uploads
     }
+    pub(crate) fn ghost_metrics(&self)->(u64,u64,u64,u64,u64){(self.world.stats.ghost_builds,self.world.stats.ghost_uploads,self.world.stats.ghost_upload_bytes,self.world.stats.wire_uploads,self.world.stats.wire_upload_bytes)}
     fn prepare(&mut self, app: &IngeTrazoApp, extent: (u32, u32)) -> Result<bool, String> {
         let RenderRevisions {
             static_domains,
@@ -60,9 +61,13 @@ impl Viewport {
                 return Err(reason.clone());
             }
         }
-        let camera = (app.camera.projection_matrix() * app.camera.view_matrix())
-            .as_mat4()
-            .to_cols_array_2d();
+        // Frozen source ghost raster uses four samples. Refuse unsupported native
+        // sample capability instead of silently substituting single-sample pixels.
+        self.world.set_sample_count(&self.metal,4)?;
+        // Same Qt-f32/OpenGL matrix as the Vulkan world consumer. The Metal
+        // vertex shader performs the native [-w,w] -> [0,w] depth mapping.
+        let camera=crate::navigation_ray::camera_snapshot(&app.camera)
+            .ok_or("Metal source camera arithmetic admission")?.matrix;
         match self.world.prepare_scene_placements_revisioned(
             &self.metal,
             &mut self.adapter,

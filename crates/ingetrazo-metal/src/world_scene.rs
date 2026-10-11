@@ -179,7 +179,7 @@ impl Catalog {
         previous: Option<&Self>,
     ) -> Result<Self, String> {
         let loose=!scene.mesh.faces.is_empty();
-        if !loose && !scene.mesh.edges.is_empty(){return Err("Metal placement wire requires native edge stage".into());}
+        // Loose wires have a separate cached native line owner, no surface prototype.
         let mut count = usize::from(loose);
         fn count_groups(gs: &[Group], depth: usize, n: &mut usize) -> Result<(), String> {
             if depth >= MAX_DEPTH && !gs.is_empty() {
@@ -892,7 +892,7 @@ impl crate::world::World {
         extent: (u32, u32),
     ) -> Result<Option<Arc<crate::world::Prepared>>, String> {
         self.validate_context_owner(metal)?;
-        if style.show_edges || style.show_profiles || style.show_sky || style.show_grid {
+        if (style.show_edges && (!scene.groups.is_empty()||!scene.mesh.faces.is_empty()||style.line_width!=1.||style.show_soft_edges||style.back_edges_hidden)) || style.show_profiles || style.show_sky || style.show_grid {
             return Err("Metal Scene adapter needs native edge/profile/sky/grid passes".into());
         }
         if scene.show_section_cuts && !scene.section_planes.is_empty()
@@ -949,7 +949,10 @@ impl crate::world::World {
         if adapter.retained_payload_bytes() > MAX_BYTES * 3 {
             return Err("Metal adapter retained CPU storage exceeds24MiB".into());
         }
-        let frame = self.prepare_material_placements_with_camera(
+        let ghost_key=super::world_ghost::Key{revisions,poses:pose_revision,objects:scene.show_hidden_objects,geometry:scene.show_hidden_geometry,wire:style.show_edges};
+        let ghost_changed=!ghost_key.reusable(self.ghosts.as_ref().map(|g|g.key));
+        let ghosts=if ghost_changed{Arc::new(super::world_ghost::Ghosts::prepare(metal,scene,ghost_key)?)}else{self.ghosts.as_ref().unwrap().clone()};
+        let mut frame = self.prepare_material_placements_with_camera(
             metal,
             catalog.packet.clone(),
             if refresh { &adapter.scratch } else { &adapter.current },
@@ -964,7 +967,12 @@ impl crate::world::World {
             |key| catalog.collect_surfaces(key, scene, camera, style),
             |path|sampled_asset(scene,path),
         )?;
-        if frame.is_some() {
+        if let Some(prepared)=frame.as_mut() {
+            let prepared=Arc::get_mut(prepared).expect("New unpublished Metal frame is exclusive");
+            prepared.ghosts=Some(ghosts.clone());
+            prepared.ghost_edge=style.edge_color;
+            if ghost_changed {self.stats.ghost_builds+=1;self.stats.ghost_uploads+=ghosts.buffers.iter().filter(|b|b.is_some()).count() as u64;self.stats.ghost_upload_bytes+=(ghosts.bytes-ghosts.wire_count*24) as u64;self.stats.wire_uploads+=u64::from(ghosts.wire.is_some());self.stats.wire_upload_bytes+=(ghosts.wire_count*24) as u64;}
+            self.ghosts=Some(ghosts);
             if let Some(c) = candidate {
                 adapter.catalog = Some(c);
                 adapter.catalog_builds += 1;
@@ -1021,7 +1029,19 @@ impl crate::world::World {
         assert_eq!(data.indices,expected.opaque_mesh.indices);
         assert!(!data.indices.is_empty());
         let mut wire=Scene::new();let a=wire.mesh.add_vertex(glam::DVec3::ZERO);let b=wire.mesh.add_vertex(glam::DVec3::X);wire.mesh.add_edge(a,b);
-        assert!(Catalog::new(&wire,revisions(),None).is_err());
+        assert_eq!(Catalog::new(&wire,revisions(),None).unwrap().packet.placement_count(),0);
     }
 
+}
+
+#[cfg(test)]mod ghost_catalog_tests {
+ use super::*;
+ #[test]fn hidden_only_edge_does_not_enter_ordinary_prototype(){
+  let mut s=Scene::new();let a=s.mesh.add_vertex(glam::DVec3::ZERO);let b=s.mesh.add_vertex(glam::DVec3::X);let e=s.mesh.add_edge(a,b).unwrap();s.mesh.edges[e].hidden=true;
+  s.show_hidden_geometry=true;
+  let c=Catalog::new(&s,Revisions::default(),None).unwrap();assert_eq!(c.packet.placement_count(),0);
+  assert_eq!(ingetrazo_render::hidden_ghosts::Packet::build(&s).unwrap().edges.len(),2);
+  s.show_hidden_geometry=false;assert!(ingetrazo_render::hidden_ghosts::Packet::build(&s).unwrap().edges.is_empty());
+  s.mesh.edges[e].hidden=false;assert_eq!(Catalog::new(&s,Revisions::default(),Some(&c)).unwrap().packet.placement_count(),0);
+ }
 }

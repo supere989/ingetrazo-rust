@@ -1,0 +1,55 @@
+name: Native Metal hidden ghost consumer
+on:
+  workflow_dispatch:
+concurrency:
+  group: metal-hidden-ghost-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  actual-native-gpu:
+    strategy:
+      fail-fast: false
+      matrix:
+        runner: [macos-15, macos-15-intel]
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 30
+    env:
+      CARGO_PROFILE_DEV_DEBUG: 0
+      CARGO_PROFILE_TEST_DEBUG: 0
+      CARGO_INCREMENTAL: 0
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@49a0bdc70d2e1b713ca9e2869b211fcce03d3c1c
+        with:
+          cache-bin: "false"
+          cache-workspace-crates: "false"
+      - name: Freeze runtime and materialize existing original12 only
+        run: |
+          mkdir -p metal-ghost-evidence
+          git rev-parse HEAD > metal-ghost-evidence/revision.txt
+          git ls-files crates/ingetrazo-metal/src crates/ingetrazo-gui/src/native_metal crates/ingetrazo-gui/src/native_metal.rs scripts/check-metal-hidden-ghost.py | xargs shasum -a 256 > metal-ghost-evidence/source.sha256
+          python3 scripts/check-metal-hidden-ghost.py docs/audits/hidden-ghost-workflow metal-ghost-evidence/input --unpack
+      - name: Build only named native app consumer
+        run: |
+          cargo build --locked -p ingetrazo-gui --example native_metal_hidden_ghost -j2 > metal-ghost-evidence/build.log 2>&1
+          shasum -a 256 target/debug/examples/native_metal_hidden_ghost > metal-ghost-evidence/binary.sha256
+      - name: Execute actual native Metal world GPU readback with outer deadline
+        run: |
+          python3 - <<'PYTHON'
+          import subprocess
+          with open('metal-ghost-evidence/runtime.log','w') as log:
+              subprocess.run(['target/debug/examples/native_metal_hidden_ghost','metal-ghost-evidence/input','metal-ghost-evidence/native'],stdout=log,stderr=subprocess.STDOUT,timeout=120,check=True)
+          PYTHON
+      - name: Check strict whole-frame source parity
+        run: |
+          python3 -m venv metal-ghost-evidence/venv
+          metal-ghost-evidence/venv/bin/pip install pillow
+          metal-ghost-evidence/venv/bin/python scripts/check-metal-hidden-ghost.py docs/audits/hidden-ghost-workflow metal-ghost-evidence/native > metal-ghost-evidence/checker.log 2>&1
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: metal-hidden-ghost-${{ matrix.runner }}
+          path: metal-ghost-evidence/
+          if-no-files-found: error
