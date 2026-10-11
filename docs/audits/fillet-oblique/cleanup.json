@@ -1,0 +1,94 @@
+{
+  "canonical_archive_sha256": "1914b9b9d50b8e8e2836e448a365640ebb38891e024d1a61d3fbe1819729648e",
+  "removed": [
+    {
+      "path": "/tmp/fillet-oblique-archive-replay.json",
+      "bytes": 1166,
+      "sha256": "fddaa4ab7250f777254ff6294ac255f0326ee2c38f31ed3f895da5699826ddde",
+      "canonical_member": null,
+      "scope": "superseded terminal diagnostic"
+    },
+    {
+      "path": "/tmp/fillet-oblique-archive-replay.log",
+      "bytes": 1166,
+      "sha256": "fddaa4ab7250f777254ff6294ac255f0326ee2c38f31ed3f895da5699826ddde",
+      "canonical_member": null,
+      "scope": "superseded terminal diagnostic"
+    },
+    {
+      "path": "/tmp/fillet-oblique-build.log",
+      "bytes": 20078,
+      "sha256": "cc008ff8aa61494259c6c9961e06c8ea0a5ac6a8e57465eaf1bc91fbe7fcb876",
+      "canonical_member": "fillet-oblique-build.log",
+      "scope": "canonical byte match"
+    },
+    {
+      "path": "/tmp/fillet-oblique-check-fixed.log",
+      "bytes": 1166,
+      "sha256": "fddaa4ab7250f777254ff6294ac255f0326ee2c38f31ed3f895da5699826ddde",
+      "canonical_member": null,
+      "scope": "superseded terminal diagnostic"
+    },
+    {
+      "path": "/tmp/fillet-oblique-check.log",
+      "bytes": 233,
+      "sha256": "ee1716e867801f51ee7c9df2762f09093b1c076e4e06d46e2e532f3da9e8f4a0",
+      "canonical_member": null,
+      "scope": "superseded terminal diagnostic"
+    },
+    {
+      "path": "/tmp/fillet-oblique-native-two.json",
+      "bytes": 563382,
+      "sha256": "a0710b6a17306d57041221c3d2af1902244d515fd68d14f2a3489a7e05338295",
+      "canonical_member": "native.json",
+      "scope": "canonical byte match"
+    },
+    {
+      "path": "/tmp/fillet-oblique-native-two.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "canonical_member": "fillet-oblique-native-two.log",
+      "scope": "canonical byte match"
+    },
+    {
+      "path": "/tmp/fillet-oblique-source-fixed.json",
+      "bytes": 68355,
+      "sha256": "7b3b02e7d7605919c0b2373a85e683f8e9db7820fba5c77183441b8508454f13",
+      "canonical_member": null,
+      "scope": "superseded terminal diagnostic"
+    },
+    {
+      "path": "/tmp/fillet-oblique-source-fixed.log",
+      "bytes": 49,
+      "sha256": "9148e145e58b87c50fd49ce7410b6e547365bef08a9b8c91d92465a27f1fa848",
+      "canonical_member": null,
+      "scope": "superseded terminal diagnostic"
+    },
+    {
+      "path": "/tmp/fillet-oblique-source-two.json",
+      "bytes": 581183,
+      "sha256": "cd04f87be62db6b0bd066c1402bcd9e007f1531c62d5fed65099ac4b965084d4",
+      "canonical_member": "source-fixed.json",
+      "scope": "canonical byte match"
+    },
+    {
+      "path": "/tmp/fillet-oblique-source-two.log",
+      "bytes": 98,
+      "sha256": "85c6cf6bf1f858b3a75272df711ca9ab0fbf9a55a30725e60b754acc709d79a9",
+      "canonical_member": "fillet-oblique-source-two.log",
+      "scope": "canonical byte match"
+    },
+    {
+      "path": "/tmp/fillet-oblique-source.json",
+      "bytes": 282266,
+      "sha256": "8eff9f683b07ad4103f5f5d38b34dc108288b7937c83534a849b4a93d7376263",
+      "canonical_member": "source-invalid-registry.json",
+      "scope": "canonical byte match"
+    }
+  ],
+  "preserved": [
+    "source worktrees",
+    "reusable target",
+    "canonical archive"
+  ]
+}
