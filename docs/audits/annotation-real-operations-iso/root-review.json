@@ -1,0 +1,12 @@
+{
+  "review": "Independent root retained-artifact comparison",
+  "manifest_files_verified": 19,
+  "ordered_operations_exact": 1352,
+  "ordered_query_coordinates_exact": 1404,
+  "source_occluded": 0,
+  "limitations": [
+    "Native GPU visibility not measured by this evidence",
+    "Font family/weight and actual QWidget raster engine not established by matching point size",
+    "Full rendered pixel parity remains open"
+  ]
+}

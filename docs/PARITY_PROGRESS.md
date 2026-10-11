@@ -19,6 +19,8 @@ Independent latest ARM evidence: [all nine GPU Canvas images exact; presentation
 
 ## Dated implementation and verification evidence
 
+Real Chapel annotation layout diagnosis (2026-10-11 UTC): independent root verification checks all retained artifact hashes and matches all 1,352 ordered primitive fields represented by the native plan, plus all 1,404 ordered world query coordinates. Original depth decisions hide zero queries. [Independent review](audits/annotation-real-operations-iso/root-review.json). Native GPU visibility, actual QWidget font/raster behavior and the retained 609-pixel annotation-mask discrepancy remain OPEN; matching layout alone is not rendered parity.
+
 Combined review CI complete (2026-10-11 UTC): source `f44cbd86` passes all five configured jobs, including Linux original/native semantic workflows and both Apple SDK jobs. [Complete retained job evidence](audits/review-f44-ci-completion.json). Later camera, readiness and scripting changes retain separately scoped checks; strict rendering/platform/release acceptance remains OPEN.
 
 Matched-camera full-scene annotation residual (2026-10-11 UTC): independently decoded Chapel asymmetric images differ from original Python by 3,868 pixels with annotations and 963 without. Source/native annotation masks differ at 494 pixels; both restore their own images exactly. [Root comparison](audits/annotation-source-window-diagnosis/root-image-review.json). This is an actual rendering/depth/overlay gap after camera admission, not a capture-readiness failure. Strict full-scene parity remains OPEN.
