@@ -1,0 +1,26 @@
+{
+  "source": "f260c73a",
+  "review": "18 literal frame names; independent blank rejection for every frame; authored winding/front-back style cases, old-frame preservation on metadata refusal, unchanged allocation admission",
+  "blank_controls_rejected": [
+    "far-then-near",
+    "near-then-far",
+    "depth-disabled-negative",
+    "warm-0",
+    "warm-1",
+    "warm-2",
+    "owner-refusal-preserved",
+    "map-free-old-green",
+    "map-free-new-red",
+    "material-front",
+    "material-default-back",
+    "material-override-back",
+    "hidden-line-front",
+    "hidden-line-back",
+    "monochrome-front",
+    "monochrome-back",
+    "reflected-authored-front",
+    "policy-refusal-preserved"
+  ],
+  "native_status": "one changed-source ARM/Intel run authorized; not yet observed",
+  "boundary": "Strict interior/background samples only. No whole-image edges, full source scene, textures, alpha, presentation or production activation acceptance."
+}
