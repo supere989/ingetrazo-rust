@@ -1,0 +1,23 @@
+{
+  "runtime_commit": "313c287caf2f9482a40b3b01662953a5915aa463",
+  "proof_commit": "03372cf1",
+  "archive_sha256": "3f220d49fd94c65316e96a5075510b2bc81b03b3d4e71cc08bb07b588e13412e",
+  "members": 56,
+  "raw_bytes": 11341890,
+  "git_source_bindings": 17,
+  "both_current_binary_hashes_authenticated": true,
+  "matching_phases": 488,
+  "egui_controls": 7,
+  "retained_drafting": 22,
+  "focused_tests": 5,
+  "scope": "Finite source/controller geometry at retained five-decimal keys, oriented cycles/holes/edge flags/curve grouping, attrs, preview/caption/color/history; no raw UUID/f32 bit or whole-frame/desktop claim. Generic f64 path remains strict.",
+  "review_findings_fixed": [
+    "Arc viewport propagation",
+    "radius no-hover/sign/trim law",
+    "source all-point plane admission",
+    "incoming exact-f32 admission",
+    "empty/short face indexing",
+    "avoid additional edge-restamp scan"
+  ],
+  "verdict": "accepted within explicit finite boundary"
+}
