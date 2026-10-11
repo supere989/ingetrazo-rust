@@ -1,0 +1,320 @@
+{
+  "source_commit": "8f32467f254660bf0b6bb809b2e81f07598c7d24",
+  "artifact_id": 11690588647,
+  "artifact_sha256": "5b8a12bc4b5e41b5575c710b61fff114e67b71e49abe5f5239c01cf82d98681c",
+  "verified_source_files": 37,
+  "binary_sha256": "c9fe7269ed69c7bc789ea2ec23e3654c612011d9ca213d1912b15aaa6985d3cb",
+  "native_acceptance": false,
+  "frames": [
+    {
+      "name": "opaque-front",
+      "expected": [
+        247,
+        0,
+        0,
+        255
+      ],
+      "observed_unique": [
+        [
+          247,
+          0,
+          0,
+          255
+        ]
+      ],
+      "mismatching_pixels": 0,
+      "material_order_builds": 2,
+      "matrix_bytes": 128
+    },
+    {
+      "name": "opaque-front-warm",
+      "expected": [
+        247,
+        0,
+        0,
+        255
+      ],
+      "observed_unique": [
+        [
+          247,
+          0,
+          0,
+          255
+        ]
+      ],
+      "mismatching_pixels": 0,
+      "material_order_builds": 3,
+      "matrix_bytes": 192
+    },
+    {
+      "name": "opaque-front-warm2",
+      "expected": [
+        247,
+        0,
+        0,
+        255
+      ],
+      "observed_unique": [
+        [
+          247,
+          0,
+          0,
+          255
+        ]
+      ],
+      "mismatching_pixels": 0,
+      "material_order_builds": 3,
+      "matrix_bytes": 192
+    },
+    {
+      "name": "opaque-default-back",
+      "expected": [
+        158,
+        178,
+        199,
+        255
+      ],
+      "observed_unique": [
+        [
+          158,
+          178,
+          199,
+          255
+        ]
+      ],
+      "mismatching_pixels": 0,
+      "material_order_builds": 4,
+      "matrix_bytes": 192
+    },
+    {
+      "name": "opaque-default-back-warm",
+      "expected": [
+        158,
+        178,
+        199,
+        255
+      ],
+      "observed_unique": [
+        [
+          158,
+          178,
+          199,
+          255
+        ]
+      ],
+      "mismatching_pixels": 0,
+      "material_order_builds": 5,
+      "matrix_bytes": 192
+    },
+    {
+      "name": "opaque-default-back-warm2",
+      "expected": [
+        158,
+        178,
+        199,
+        255
+      ],
+      "observed_unique": [
+        [
+          158,
+          178,
+          199,
+          255
+        ]
+      ],
+      "mismatching_pixels": 0,
+      "material_order_builds": 5,
+      "matrix_bytes": 192
+    },
+    {
+      "name": "opaque-painted-back",
+      "expected": [
+        0,
+        247,
+        0,
+        255
+      ],
+      "observed_unique": [
+        [
+          0,
+          247,
+          0,
+          255
+        ]
+      ],
+      "mismatching_pixels": 0,
+      "material_order_builds": 6,
+      "matrix_bytes": 192
+    },
+    {
+      "name": "opaque-painted-back-warm",
+      "expected": [
+        0,
+        247,
+        0,
+        255
+      ],
+      "observed_unique": [
+        [
+          0,
+          247,
+          0,
+          255
+        ]
+      ],
+      "mismatching_pixels": 0,
+      "material_order_builds": 7,
+      "matrix_bytes": 192
+    },
+    {
+      "name": "opaque-painted-back-warm2",
+      "expected": [
+        0,
+        247,
+        0,
+        255
+      ],
+      "observed_unique": [
+        [
+          0,
+          247,
+          0,
+          255
+        ]
+      ],
+      "mismatching_pixels": 0,
+      "material_order_builds": 7,
+      "matrix_bytes": 192
+    },
+    {
+      "name": "alpha-front",
+      "expected": [
+        124,
+        0,
+        127,
+        255
+      ],
+      "observed_unique": [
+        [
+          124,
+          0,
+          128,
+          255
+        ]
+      ],
+      "mismatching_pixels": 25,
+      "material_order_builds": 8,
+      "matrix_bytes": 192
+    },
+    {
+      "name": "alpha-front-warm",
+      "expected": [
+        124,
+        0,
+        127,
+        255
+      ],
+      "observed_unique": [
+        [
+          124,
+          0,
+          128,
+          255
+        ]
+      ],
+      "mismatching_pixels": 25,
+      "material_order_builds": 9,
+      "matrix_bytes": 192
+    },
+    {
+      "name": "alpha-front-warm2",
+      "expected": [
+        124,
+        0,
+        127,
+        255
+      ],
+      "observed_unique": [
+        [
+          124,
+          0,
+          128,
+          255
+        ]
+      ],
+      "mismatching_pixels": 25,
+      "material_order_builds": 9,
+      "matrix_bytes": 192
+    },
+    {
+      "name": "alpha-painted-back",
+      "expected": [
+        0,
+        62,
+        191,
+        255
+      ],
+      "observed_unique": [
+        [
+          0,
+          62,
+          191,
+          255
+        ]
+      ],
+      "mismatching_pixels": 0,
+      "material_order_builds": 10,
+      "matrix_bytes": 192
+    },
+    {
+      "name": "alpha-painted-back-warm",
+      "expected": [
+        0,
+        62,
+        191,
+        255
+      ],
+      "observed_unique": [
+        [
+          0,
+          62,
+          191,
+          255
+        ]
+      ],
+      "mismatching_pixels": 0,
+      "material_order_builds": 11,
+      "matrix_bytes": 192
+    },
+    {
+      "name": "alpha-painted-back-warm2",
+      "expected": [
+        0,
+        62,
+        191,
+        255
+      ],
+      "observed_unique": [
+        [
+          0,
+          62,
+          191,
+          255
+        ]
+      ],
+      "mismatching_pixels": 0,
+      "material_order_builds": 11,
+      "matrix_bytes": 192
+    }
+  ],
+  "sample_pixels": 375,
+  "mismatching_pixels": 75,
+  "refusal": {
+    "passed": false,
+    "phase": "texture-blue",
+    "frame_present": true,
+    "route_reason": "Metal viewport paused: Metal sampled allocation exceeded native preallocation admission",
+    "scope": "Actual shared UI route refusal; no native frame acceptance"
+  },
+  "scope": "Strict partial actual shared UI/native frame observations, not completed18case acceptance. Cache panic absent; exact one-blue-channel alpha mismatch retained. Sampled image refused before publication at native estimate guard."
+}
