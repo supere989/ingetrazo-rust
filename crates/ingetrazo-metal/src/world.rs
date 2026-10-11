@@ -156,6 +156,7 @@ pub struct Stats {
 #[derive(Default)]
 pub struct World {
     samples: usize,
+    diagnostic_samples: bool,
     pub(crate) ghosts: Option<Arc<super::world_ghost::Ghosts>>,
     owner: Option<Arc<Owner>>,
     mesh: Option<Arc<Mesh>>,
@@ -171,6 +172,7 @@ pub struct World {
     pub stats: Stats,
 }
 pub struct Prepared {
+    diagnostic_samples: bool,
     pub(crate) billboards:Option<Arc<super::world_billboard::Prepared>>,
     pub(crate) section: Section,
     pub(crate) contour:Option<Arc<super::world_contour::Pipeline>>,
@@ -203,6 +205,11 @@ struct PaintUniform {
 }
 #[repr(C)]struct TexturePaint{opacity:f32,shade:f32,hard_cutout:u32,height:u32,mean:[f32;4]}
 impl World {
+    /// Probe-only cold opt-in. Ordinary targets retain their original usage/store policy.
+    pub fn enable_sample_observation(&mut self)->Result<(),String>{
+        if !self.targets.is_empty() {return Err("Sample observation must be enabled before any World target exists".into());}
+        self.diagnostic_samples=true;Ok(())
+    }
     pub(crate) fn sampled_assets(&self)->&[Arc<super::world_texture::Asset>]{&self.texture_assets}
     /// Diagnostic metadata only: counts billboard references that share the exact
     /// immutable image owner with the accepted ordinary World inventory.
@@ -326,7 +333,7 @@ impl World {
             Arc::new(Target {
                 samples:self.samples.max(1),
                 fill_enabled:false,
-                multisample:if self.samples.max(1)>1{Some(image_samples(metal,extent,MTLPixelFormat::RGBA8Unorm,MTLTextureUsage::RenderTarget,4,self.samples.max(1))?)}else{None},
+                multisample:if self.samples.max(1)>1{Some(image_samples(metal,extent,MTLPixelFormat::RGBA8Unorm,MTLTextureUsage::RenderTarget | if self.diagnostic_samples {MTLTextureUsage::ShaderRead}else{MTLTextureUsage::empty()},4,self.samples.max(1))?)}else{None},
                 color: image(
                     metal,
                     extent,
@@ -376,6 +383,7 @@ impl World {
         self.pipeline = Some(pipeline.clone());
         self.stats.prepared += 1;
         Ok(Some(Arc::new(Prepared {
+            diagnostic_samples:self.diagnostic_samples,
             section: Section::OFF,
             contour:None,contour_eye_width:[0.;4],
             fill:None,
@@ -569,7 +577,7 @@ impl World {
             Some(Arc::new(Target {
                 samples:self.samples.max(1),
                 fill_enabled:fill.is_some(),
-                multisample:if self.samples.max(1)>1{Some(image_samples(metal,extent,MTLPixelFormat::RGBA8Unorm,MTLTextureUsage::RenderTarget,4,self.samples.max(1))?)}else{None},
+                multisample:if self.samples.max(1)>1{Some(image_samples(metal,extent,MTLPixelFormat::RGBA8Unorm,MTLTextureUsage::RenderTarget | if self.diagnostic_samples {MTLTextureUsage::ShaderRead}else{MTLTextureUsage::empty()},4,self.samples.max(1))?)}else{None},
                 color: image(
                     metal,
                     extent,
@@ -749,6 +757,7 @@ impl World {
         self.placements = Some(placements.clone());
         if fill.is_some(){self.section_pipeline=Some(pipeline.clone());}else{self.pipeline=Some(pipeline.clone());}
         Ok(Some(Arc::new(Prepared {
+            diagnostic_samples:self.diagnostic_samples,
             section: Section::OFF,
             contour:None,contour_eye_width:[0.;4],
             fill,
@@ -966,7 +975,7 @@ impl Prepared {
         color.setTexture(Some(self.target.multisample.as_ref().map_or(&*self.target.color.raw,|i|&*i.raw)));
         if self.target.multisample.is_some(){color.setResolveTexture(Some(&self.target.color.raw));}
         color.setLoadAction(MTLLoadAction::Clear);
-        color.setStoreAction(if self.target.multisample.is_some(){MTLStoreAction::MultisampleResolve}else{MTLStoreAction::Store});
+        color.setStoreAction(if self.target.multisample.is_some(){if self.diagnostic_samples {MTLStoreAction::StoreAndMultisampleResolve}else{MTLStoreAction::MultisampleResolve}}else{MTLStoreAction::Store});
         color.setClearColor(MTLClearColor {
             red: self.clear[0],
             green: self.clear[1],
@@ -1336,6 +1345,7 @@ pub struct Diagnostic {
     frame: ManuallyDrop<Arc<Prepared>>,
     readback: ManuallyDrop<Buffer>,
     row: usize,
+    sample_owner: ManuallyDrop<Option<(Buffer, Retained<ProtocolObject<dyn MTLComputePipelineState>>)>>,
     poison: Arc<std::sync::atomic::AtomicBool>,
 }
 impl Prepared {
@@ -1346,7 +1356,7 @@ impl Prepared {
         if self.target.material_draws.as_ref().is_none_or(|d|d.operations.iter().any(|op|matches!(op.kind,MaterialKind::Legacy))) {
             return Err("Front-facing diagnostic requires explicit material runs".into());
         }
-        self.submit_diagnostic_inner(metal, true, true)
+        self.submit_diagnostic_inner(metal, true, true, None)
     }
     /// Cold bounded receipt of actual admitted commands, not recomputed Scene metadata.
     pub fn material_diagnostic(&self) -> Result<serde_json::Value, String> {
@@ -1368,20 +1378,27 @@ impl Prepared {
         Ok(serde_json::json!({"depth_compare":"less_equal","sample_count":self.sample_count(),"operations":rows}))
     }
     pub fn submit_diagnostic(self: &Arc<Self>, metal: &NativeMetal) -> Result<Diagnostic, String> {
-        self.submit_diagnostic_inner(metal, true, false)
+        self.submit_diagnostic_inner(metal, true, false, None)
     }
     /// Negative control only: literal disabled depth state must fail the near-first oracle.
     pub fn submit_diagnostic_without_depth(
         self: &Arc<Self>,
         metal: &NativeMetal,
     ) -> Result<Diagnostic, String> {
-        self.submit_diagnostic_inner(metal, false, false)
+        self.submit_diagnostic_inner(metal, false, false, None)
+    }
+    /// Four fixed diagnostic pixels, in Metal top-origin coordinates. No resolve replacement.
+    pub fn submit_sample_diagnostic(self:&Arc<Self>,metal:&NativeMetal,points:[[u32;2];4])->Result<Diagnostic,String>{
+        if !self.diagnostic_samples || self.sample_count()!=4 || self.target.multisample.is_none(){return Err("Cold four-sample observation opt-in required".into());}
+        if points.iter().any(|p|p[0]>=self.extent().0||p[1]>=self.extent().1){return Err("Sample observation pixel outside target".into());}
+        self.submit_diagnostic_inner(metal,true,false,Some(points))
     }
     fn submit_diagnostic_inner(
         self: &Arc<Self>,
         metal: &NativeMetal,
         depth_enabled: bool,
         front_probe: bool,
+        points:Option<[[u32;2];4]>,
     ) -> Result<Diagnostic, String> {
         self.owner.validate(metal)?;
         let (w, h) = self.extent();
@@ -1409,17 +1426,36 @@ impl Prepared {
             blit.copyFromTexture_sourceSlice_sourceLevel_sourceOrigin_sourceSize_toBuffer_destinationOffset_destinationBytesPerRow_destinationBytesPerImage(self.texture(),0,0,MTLOrigin{x:0,y:0,z:0},MTLSize{width:w as usize,height:h as usize,depth:1},&readback.raw,0,row,row*h as usize);
         }
         blit.endEncoding();
+        let sample_owner=if let Some(points)=points {
+            let source="#include <metal_stdlib>\nusing namespace metal; kernel void observe(texture2d_ms<float,access::read> image [[texture(0)]], constant uint2* points [[buffer(0)]], device float4* output [[buffer(1)]], uint id [[thread_position_in_grid]]) { if(id<16) output[id]=image.read(points[id/4],id%4); }";
+            let options=MTLCompileOptions::new();options.setFastMathEnabled(false);
+            let library=metal.device.newLibraryWithSource_options_error(&NSString::from_str(source),Some(&options)).map_err(|e|format!("Sample observation shader: {e:?}"))?;
+            let function=library.newFunctionWithName(&NSString::from_str("observe")).ok_or("Sample observation function unavailable")?;
+            let pipeline=metal.device.newComputePipelineStateWithFunction_error(&function).map_err(|e|format!("Sample observation pipeline: {e:?}"))?;
+            let output=metal.buffer(16*16,true)?;
+            let encoder=command.computeCommandEncoder().ok_or("Sample observation encoder unavailable")?;
+            encoder.setComputePipelineState(&pipeline);
+            unsafe {encoder.setTexture_atIndex(Some(&self.target.multisample.as_ref().unwrap().raw),0);encoder.setBytes_length_atIndex(std::ptr::NonNull::from(&points).cast(),std::mem::size_of_val(&points),0);encoder.setBuffer_offset_atIndex(Some(&output.raw),0,1);}
+            encoder.dispatchThreads_threadsPerThreadgroup(MTLSize{width:16,height:1,depth:1},MTLSize{width:16,height:1,depth:1});encoder.endEncoding();Some((output,pipeline))
+        }else{None};
         command.commit();
         Ok(Diagnostic {
             command: ManuallyDrop::new(command),
             frame: ManuallyDrop::new(self.clone()),
             readback: ManuallyDrop::new(readback),
             row,
+            sample_owner:ManuallyDrop::new(sample_owner),
             poison: metal.poisoned.clone(),
         })
     }
 }
 impl Diagnostic {
+    /// Read only after the same completion gate as the resolved diagnostic.
+    pub fn sample_values(&self)->Result<[[f32;4];16],String>{
+        if self.command.status()!=MTLCommandBufferStatus::Completed{return Err("Sample completion not acknowledged".into());}
+        let (buffer,_)=self.sample_owner.as_ref().ok_or("No sample observation submitted")?;
+        Ok(unsafe {std::ptr::read(buffer.raw.contents().as_ptr().cast::<[[f32;4];16]>())})
+    }
     pub fn readback(&self, timeout: std::time::Duration) -> Result<Vec<u8>, String> {
         if timeout > std::time::Duration::from_secs(5) {
             return Err("World diagnostic deadline exceeds5s".into());
@@ -1452,6 +1488,7 @@ impl Drop for Diagnostic {
     fn drop(&mut self) {
         if self.command.status() == MTLCommandBufferStatus::Completed {
             unsafe {
+                ManuallyDrop::drop(&mut self.sample_owner);
                 ManuallyDrop::drop(&mut self.readback);
                 ManuallyDrop::drop(&mut self.frame);
                 ManuallyDrop::drop(&mut self.command)
