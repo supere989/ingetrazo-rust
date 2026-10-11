@@ -116,12 +116,12 @@ pub(crate) fn run(input: PathBuf, output: PathBuf) -> Result<(), String> {
         let mut old_label = None;
         for source_frame in c["frames"].as_array().ok_or("Frames")? {
             let phase = source_frame["phase"].as_str().ok_or("Phase")?;
-            if phase == "preview" {
+            if phase == "base" {
                 app.set_tool(ingetrazo_tools::ToolType::PushPull);
                 app.dispatch_tool_move(&context(anchor));
                 app.dispatch_tool_click(&context(anchor));
             }
-            if phase == "preview" || phase == "offset" {
+            if matches!(phase, "base" | "preview" | "offset" | "cancel") {
                 let d = source_frame["distance"].as_f64().ok_or("Offset")?;
                 app.dispatch_tool_move(&context(anchor + normal * d));
                 let p = app
@@ -135,9 +135,8 @@ pub(crate) fn run(input: PathBuf, output: PathBuf) -> Result<(), String> {
                     return Err(format!("{name} source acquisition mismatch"));
                 }
             }
-            if phase == "cancel" {
-                app.set_tool(ingetrazo_tools::ToolType::Select);
-            }
+            // Source base/cancel retain acquisition at zero offset (and its label).
+            // Tool cancellation itself is a separate lifecycle control.
             if phase == "offset" {
                 old_label = Some(Arc::downgrade(
                     &app.native_metal_world
