@@ -1,0 +1,30 @@
+{
+  "scope": "Clean committed terminal worktree copies; branches and tracked source/evidence retained in Git. Active worktrees, original source, proof input directories and reusable dependency targets retained.",
+  "records": [
+    {
+      "path": "/tmp/ingetrazo-document-lifecycle",
+      "head": "2165ce00d77b02ee423c715ae06bda9a19a03021",
+      "preserved_branch": "refs/heads/review/document-lifecycle",
+      "apparent_bytes": 472668824,
+      "status": "only expected original symlink",
+      "cwd_users": 0
+    },
+    {
+      "path": "/tmp/ingetrazo-saved-view-history",
+      "head": "ecfc19167f17c5218f9926723695d826120cb445",
+      "preserved_branch": "refs/heads/swarm/saved-view-history",
+      "apparent_bytes": 472697875,
+      "status": "only expected original symlink",
+      "cwd_users": 0
+    },
+    {
+      "path": "/tmp/ingetrazo-pushpull-endpoints",
+      "head": "7c292c891a771cf19f7a94be1603983b903a7e32",
+      "preserved_branch": "refs/heads/swarm/pushpull-endpoints",
+      "apparent_bytes": 472801346,
+      "status": "only expected original symlink",
+      "cwd_users": 0
+    }
+  ],
+  "total_apparent_bytes": 1418168045
+}

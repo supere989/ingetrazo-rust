@@ -1,0 +1,51 @@
+{
+  "checked_utc": "2026-10-11T08:47:17.927140+00:00",
+  "integration_runtime": "0e2b6371",
+  "integration_evidence": "971f7374",
+  "review_scope": "Root reviewed runtime ownership/classifier and replayed strict checkers against retained source/native outputs. Fresh combined runtime execution waits for next stable batch.",
+  "results": {
+    "commands": {
+      "cases": 9,
+      "exact_bare_history_cases": 5,
+      "exact_command_and_undo_cases": 9,
+      "negative_controls": 11,
+      "compound_forward_raw_differences": [
+        "snapshot-plane-face",
+        "snapshot-crossing",
+        "snapshot-closing"
+      ]
+    },
+    "lifecycle": {
+      "passed": true,
+      "lifecycle_workflows": 11,
+      "lifecycle_passed": true,
+      "pending_workflows": 3,
+      "pending_full_parity": true,
+      "state_history_phases": 41,
+      "original_reopens": 4,
+      "negative_controls": [
+        "prompt_depth",
+        "scene",
+        "history",
+        "camera",
+        "anchor",
+        "continued",
+        "empty",
+        "missing",
+        "duplicate",
+        "missing_phase"
+      ],
+      "strict_failures": []
+    }
+  },
+  "source_files": {
+    "commands/forward-raw-differences.json": "04ff548d4a170f7015508aba5bdf47a50ed2b7fb318afa873e303269f43e70a7",
+    "commands/native.json": "b28082aef3f539ad5ab459637edd4d86c6f69d7ba3973ed11afc64e8acc4068f",
+    "commands/original.json": "26837b35d88bb2fa9985ed6be987c5cfa291e9fbb5fad7c697a394ae8a55547a",
+    "lifecycle/native-pending.json": "8422234e9e0ef08349db989a1f6e699dd6d6589c04f9cb9d6850477fcf8009d1",
+    "lifecycle/native.json": "7a528eeb166b8c5b74bf842946d68bba912616558af5a55361d4cda2b04a8e8c",
+    "lifecycle/original-pending.json": "5c09cc49431f9860283599a57cf98fda640f22bfa60dcad10c6780d30ae1c9bd",
+    "lifecycle/original.json": "c9fc8ae5cef6e34cc1c2bea2edd92143fbbbdee742dbd089fac5a9e5cf8d9990",
+    "lifecycle/reopened.json": "f06926ce75f71d85a2b20a1e307eb27a7a76f67a3296b753317953fae80b1983"
+  }
+}

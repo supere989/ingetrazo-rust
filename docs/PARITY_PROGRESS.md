@@ -15,6 +15,12 @@ Full Python parity remains unverified: **10 Implemented / 27 Partial / 0 Verifie
 
 Current evidence: [integrated validation](audits/lifecycle-visibility-endpoint-integration/README.md), [document lifecycle](audits/context-document-lifecycle/README.md), [saved-view history](audits/saved-view-history/README.md), [Push/Pull endpoints](audits/pushpull-endpoints/README.md), [mip barrier batching](audits/texture-mip-barrier-batch/README.md), [component Save CI repair](audits/component-context-save-ci/README.md). Previous published `6a921533` passed all six Apple/Metal jobs; Linux semantic acceptance reached the stale fragment-Save assertion. That assertion is corrected and its complete original component acceptance step passes locally. The earlier standalone UUID-v5 feature omission is closed by explicit dependency declaration and green Apple reruns. The new integrated batch has pending published CI. Main remains `c73fe993`. Historical checkpoints and earlier measurements remain retained.
 
+## Next integration batch (local, not yet published)
+
+Reviewed Line runtime `0e2b6371` closes both previously retained pending-Save Undo orphan-vertex mismatches. The strict checker now passes all eleven lifecycle workflows, three pending gestures, 41 phases and four original reopens; ten mutations reject. Nine additional command classifications and ordered Undo states match, with five complete bare-command histories and eleven rejected mutations. Three compound forward-order differences remain explicit. Root reviewed the implementation and replayed the captured-output checkers; a fresh combined build waits for the next stable batch. [Line proof](audits/line-orphan-history/README.md), [root intake](audits/line-orphan-history/root-intake.json).
+
+The same batch is completing subdivided Push/Pull collapse, actual Hide/Unhide actions and hidden-entity viewing/picking/rendering. Published `bd081cae` has all six Apple/Metal CI jobs green; Linux semantic acceptance is still running. Three clean completed temporary checkouts were removed after commit/branch and process-cwd verification, retaining their source/evidence in Git and all active inputs/caches: 1,418,168,045 apparent bytes. [Cleanup record](audits/closed-worktree-release/cleanup.json).
+
 ## Status and priorities
 
 - **Verified**: original/Rust semantic comparison and user workflow evidence satisfy the row's acceptance criteria.
