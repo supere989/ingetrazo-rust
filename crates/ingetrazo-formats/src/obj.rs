@@ -43,7 +43,8 @@ pub fn export_obj(scene: &Scene, writer: &mut impl Write) -> Result<(), ObjError
 
 /// Import an OBJ stream into a scene's mesh.
 pub fn import_obj(reader: &mut impl Read, scene: &mut Scene) -> Result<(), ObjError> {
-    import_obj_options(reader, scene, 1., false)
+    *scene = prepare_obj_options(reader, scene, 1., false)?;
+    Ok(())
 }
 
 /// Source Import confirmation: scale authored points then construct Qt-float positions.
@@ -53,23 +54,32 @@ pub fn import_obj_with_units(
     scene: &mut Scene,
     scale: f64,
 ) -> Result<(), ObjError> {
-    import_obj_options(reader, scene, scale, true)
+    *scene = prepare_obj_with_units(reader, scene, scale)?;
+    Ok(())
 }
 
-fn import_obj_options(
+/// Prepare the atomic source-unit import without publishing or an extra caller clone.
+pub fn prepare_obj_with_units(
     reader: &mut impl Read,
-    scene: &mut Scene,
+    scene: &Scene,
+    scale: f64,
+) -> Result<Scene, ObjError> {
+    prepare_obj_options(reader, scene, scale, true)
+}
+
+fn prepare_obj_options(
+    reader: &mut impl Read,
+    scene: &Scene,
     scale: f64,
     source_points: bool,
-) -> Result<(), ObjError> {
+) -> Result<Scene, ObjError> {
     if !scale.is_finite() || scale <= 0. {
         return Err(ObjError::Parse(0, "Invalid import scale".into()));
     }
     let mut candidate = scene.clone();
     import_obj_inner(reader, &mut candidate, scale, source_points)?;
     candidate.bump_version();
-    *scene = candidate;
-    Ok(())
+    Ok(candidate)
 }
 
 fn import_obj_inner(

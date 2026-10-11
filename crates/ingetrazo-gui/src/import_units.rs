@@ -251,23 +251,22 @@ impl IngeTrazoApp {
         if !self.component_edit_stack.is_empty() {
             return Err("Finish or cancel the component edit before importing".into());
         }
-        let mut candidate = self.scene.clone();
         let mut reader = std::io::Cursor::new(confirmed.bytes);
-        if confirmed.kind == "obj" {
-            ingetrazo_formats::obj::import_obj_with_units(
+        let candidate = if confirmed.kind == "obj" {
+            ingetrazo_formats::obj::prepare_obj_with_units(
                 &mut reader,
-                &mut candidate,
+                &self.scene,
                 confirmed.factor,
             )
-            .map_err(|e| e.to_string())?;
+            .map_err(|e| e.to_string())?
         } else {
-            ingetrazo_formats::dxf::import_dxf_with_units(
+            ingetrazo_formats::dxf::prepare_dxf_with_units(
                 &mut reader,
-                &mut candidate,
+                &self.scene,
                 confirmed.factor,
             )
-            .map_err(|e| e.to_string())?;
-        }
+            .map_err(|e| e.to_string())?
+        };
         self.undo_stack
             .try_reserve(1)
             .map_err(|_| "Import history allocation refused")?;

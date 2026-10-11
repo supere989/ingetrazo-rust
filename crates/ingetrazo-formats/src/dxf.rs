@@ -45,7 +45,8 @@ pub fn export_dxf(scene: &Scene, writer: &mut impl Write) -> Result<(), DxfError
 
 /// Parse a complete entity transaction before modifying the caller's document.
 pub fn import_dxf(reader: &mut impl Read, scene: &mut Scene) -> Result<(), DxfError> {
-    import_dxf_options(reader, scene, 1., false)
+    *scene = prepare_dxf_options(reader, scene, 1., false)?;
+    Ok(())
 }
 
 /// Scale typed dimensional fields before tessellation and author only emitted points as Qt floats.
@@ -54,15 +55,25 @@ pub fn import_dxf_with_units(
     scene: &mut Scene,
     scale: f64,
 ) -> Result<(), DxfError> {
-    import_dxf_options(reader, scene, scale, true)
+    *scene = prepare_dxf_with_units(reader, scene, scale)?;
+    Ok(())
 }
 
-fn import_dxf_options(
+/// Prepare the atomic source-unit import without publishing or an extra caller clone.
+pub fn prepare_dxf_with_units(
     reader: &mut impl Read,
-    scene: &mut Scene,
+    scene: &Scene,
+    scale: f64,
+) -> Result<Scene, DxfError> {
+    prepare_dxf_options(reader, scene, scale, true)
+}
+
+fn prepare_dxf_options(
+    reader: &mut impl Read,
+    scene: &Scene,
     scale: f64,
     source_points: bool,
-) -> Result<(), DxfError> {
+) -> Result<Scene, DxfError> {
     if !scale.is_finite() || scale <= 0. {
         return Err(DxfError::Parse("Invalid import scale".into()));
     }
@@ -354,8 +365,7 @@ fn import_dxf_options(
         }
     }
     candidate.bump_version();
-    *scene = candidate;
-    Ok(())
+    Ok(candidate)
 }
 
 #[cfg(test)]
