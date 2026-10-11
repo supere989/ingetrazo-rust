@@ -1,0 +1,42 @@
+{
+  "source_commit": "5127bb1f",
+  "base": "352805d2",
+  "original_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "source_sha256": {
+    "tools/ai-interpreter-proof/src/vm_scene.rs": "b5b64aabce01a18ef9fcbc1ceca3f879d397d3278b4b594823a26c9b37804ebf",
+    "crates/ingetrazo-gui/src/engineering_python.rs": "467814b84b7debf4a7b0f6d0806a855f64799543a5d717486617d2b40a491ace",
+    "crates/ingetrazo-gui/examples/engineering_console_nested_fixture.rs": "81be9deb0eae98b98c4ba01ec5c1783375d3f061f719d6eabd0ffa1ef380bdb4",
+    "crates/ingetrazo-gui/Cargo.toml": "b6e71d2e886ac948b9f7f09b73d8519b0237286f827d527deb9d9b1bd60c2aec",
+    "docs/audits/ai-console-nested-scene/recipes.json": "07c5b3c264fedc389e55ca651cbd47f89cfc853c4984ba6bfdccf514c3e7d017",
+    "scripts/reference-ai-console-nested-scene.py": "f94393ddd1bdbc2dfb7915ff8251f4452ea80ceab8fc96168f397b8c92acb842",
+    "scripts/check-ai-console-nested-scene.py": "635a0a5812931c9e77de5714c139b3b4e3282f390a56ceffa1e6ad7f917f6a95",
+    "scripts/check-ai-console-nested-reopen.py": "08d5801531b56f33ef6f29dbb0f14ab22c18000ad851a30b272dca58f0c3279d"
+  },
+  "original_sha256": {
+    "core/history.py": "2eb66a1d557099b51383988a7819145289fc4ce2c37fc7de3a92ed35b5830559",
+    "core/group.py": "9ba6a20eca241cb4969a545a3784fcff25566166606d5447a18780747d4f11c5",
+    "core/ai.py": "6208a5c3e7773d27f028b9d7460f317693bab107705d6efdcd598ef048a82678",
+    "formats/igz.py": "f318d685830c49c2fede7fd5a238ac7a1469ee0b0226cf48cab3751e194a9576",
+    "core/mesh.py": "5f2c1625e6dd717db029ba39a9de337e75beec06bd0df28a592a8a34875ca22c"
+  },
+  "binary": "/tmp/ingetrazo-ai-registry-target/debug/examples/engineering_console_nested_fixture",
+  "binary_sha256": "14242728ddce80673b216b056b29477613adf8fac56b10b1f9529df438b1c77a",
+  "artifacts_sha256": {
+    "recipes.json": "07c5b3c264fedc389e55ca651cbd47f89cfc853c4984ba6bfdccf514c3e7d017",
+    "input.igz": "243e811ed4017cb879cdc5c23f376647fc669dd456fb0da659775dae735d74a4",
+    "original.json": "28b6427dc08f844551cc52efec090fba1cada270fc8bce6b5d454a85312198d7",
+    "native.json": "dbbd501573caedfab06fb96ce7598bc8a9bb2c0d748502cce576f6506ee9c53c",
+    "reopen.json": "e06da1421f0bbffe105ff5ff2304a1c87056ac898dceec37acf4a4011ea396ba",
+    "native.igz": "0b8121a1b5166a5b0c50602968c6d9c5bde3df436159297f448b4f662d41afcd",
+    "original-final.igz": "b52e0de254ffb4d0845df3a24b7e5da90e73a997fc4161a2a13801e404d366f7",
+    "README.md": "3543fb0fb37115e6079b68d7c1810ca1ab623d88bf582a9b2c162635dae04bb6",
+    "focused-test.txt": "ffca2e49e09b19b8f37f40fadfaea215d57bf54653a5f9e37c52b960bba3130f"
+  },
+  "acceptance": {
+    "states": 12,
+    "refusals": 3,
+    "mutations_rejected": 8,
+    "reopen_mutations_rejected": 3,
+    "focused_app_tests": 1
+  }
+}
