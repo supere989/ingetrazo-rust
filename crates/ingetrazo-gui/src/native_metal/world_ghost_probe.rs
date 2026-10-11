@@ -145,6 +145,9 @@ pub(crate) fn run(input: PathBuf, output: PathBuf) -> Result<(), String> {
             if unhide_reason.is_some() {
                 return Err("Unhide wire invisible-style route refused".into());
             }
+            // This additional ordinary-wire control exercises the admitted one-pixel path.
+            // Ghost source12 frames above retain their original edge-disabled style.
+            app.style.line_width = 1.;
             app.style.show_edges = true;
             let wire = capture(&mut app, &metal)?;
             if wire.chunks_exact(4).all(|p| p == [255, 255, 255, 255]) {
