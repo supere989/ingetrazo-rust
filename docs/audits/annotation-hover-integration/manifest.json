@@ -1,0 +1,43 @@
+{
+  "runtime_commit": "638039bc7168c26e3cffecf04eb65a08f2d107ba",
+  "archive_sha256": "ea31e0892c5db8b130e2df2fa6d19f92a020e392e099bc63b6a15b0b67edcfe5",
+  "members": {
+    "input.igz": {
+      "bytes": 2512,
+      "sha256": "c9ce01d930fff89d9af94b5580093f6f82626b75d6ce690482e32fd787d4a87b"
+    },
+    "original-hover.json": {
+      "bytes": 18615,
+      "sha256": "bd4b3480d1c0e6e93067e14f1b36b609d34fcef43b9fb046aaff7d84706c425c"
+    },
+    "first40-native-weak.json": {
+      "bytes": 13493,
+      "sha256": "3ef43811f8ff63778c46cadb406df8709fbb2440dd110344fc2f9c927f9e330c"
+    },
+    "build.log": {
+      "bytes": 20323,
+      "sha256": "6e58304a1688374c79621390f13faf11d405f7afc7d53734b27c66c336239dbd"
+    },
+    "build.json": {
+      "bytes": 328,
+      "sha256": "d682ef4c5fc6c37d367db8f3f62f0b496c5b67e5ae7f44267adf37e10c96e20f"
+    },
+    "runtime.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "checker.log": {
+      "bytes": 246,
+      "sha256": "7c81f090bd2d36d21fe4901d12bfbeb6168f98375e56efc5beb02edb3311d3d2"
+    },
+    "native-hover.json": {
+      "bytes": 18615,
+      "sha256": "501db4388fcbbec498dda413c7ba570afac1db3bd710444d748310a317804ae4"
+    },
+    "receipt.json": {
+      "bytes": 3145,
+      "sha256": "e46e091703cace74f52ee3e4e419174837d9a66b74887df4117ea1855aa480d0"
+    }
+  },
+  "byte_verified": true
+}
