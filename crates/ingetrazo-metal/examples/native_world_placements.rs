@@ -301,6 +301,49 @@ fn run() -> Result<(), String> {
             )?
             .ok_or("Preserved target unavailable")?;
         save("refusal-preserved", &read(f)?)?;
+        let mut order_world = World::default();
+        let mut order_key = key;
+        order_key.identity = 2;
+        let mut order_geometry = geometry([1., 0., 0., 1.]);
+        order_geometry.indices = vec![0, 2, 1];
+        for p in [[-0.175, -0.175, 0.], [0.175, -0.175, 0.], [0., 0.175, 0.]] {
+            order_geometry.vertices.push(Vertex {
+                position: p,
+                normal: [0., 0., 1.],
+                color: [0., 1., 0., 1.],
+                uv: [0.; 2],
+            });
+        }
+        order_geometry.indices.extend([3, 4, 5]);
+        order_geometry.source_default_back = vec![(0, 3)];
+        let order = order_world
+            .prepare_placements(
+                &metal,
+                Packet::new(vec![order_key], vec![0, 0])?,
+                &[pose(-0.4, false), pose(0.4, false)],
+                (64, 64),
+                [0., 0., 1., 1.],
+                style,
+                |_| Ok(order_geometry.clone()),
+            )?
+            .ok_or("Order frame unavailable")?;
+        assert_eq!(order.instance_run_count(), 1);
+        save("coplanar-late-default-back", &read(order)?)?;
+        order_key.paint_revision += 1;
+        order_geometry.source_default_back.clear();
+        let negative = order_world
+            .prepare_placements(
+                &metal,
+                Packet::new(vec![order_key], vec![0, 0])?,
+                &[pose(-0.4, false), pose(0.4, false)],
+                (64, 64),
+                [0., 0., 1., 1.],
+                style,
+                |_| Ok(order_geometry.clone()),
+            )?
+            .ok_or("Order negative unavailable")?;
+        save("coplanar-missing-back-negative", &read(negative)?)?;
+        drop(order_world);
         drop(world);
         drop(foreign);
         let budget = metal.budget.lock().map_err(|_| "Budget poisoned")?;
