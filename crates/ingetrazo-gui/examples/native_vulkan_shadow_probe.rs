@@ -53,8 +53,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 .command_buffer_count(1),
         )
     }?[0];
+    let receiver_samples = reference.as_ref().map(|r| r["receiver_samples"].as_u64().ok_or("reference lacks actual receiver-pass sample count")).transpose()?.unwrap_or(4) as u32;
     let mut world = if reference.is_some() {
-        World::new_with_sample_count_for_probe(&context, budget.clone(), 1)?
+        World::new_with_sample_count_for_probe(&context, budget.clone(), receiver_samples)?
     } else {
         World::new(&context, budget.clone())?
     };
@@ -80,7 +81,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     style.background_color = [1.; 4];
     let mut sun = [0.6, 0., 0.8];
     if let Some(r) = &reference {
-        assert_eq!(r["samples"].as_u64(), Some(0));
+        assert_eq!(r["receiver_samples"].as_u64(), Some(receiver_samples as u64));
         let c = &r["camera"];
         camera.target = glam::DVec3::new(
             c["target"][0].as_f64().ok_or("target")?,
@@ -295,7 +296,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     std::fs::write(
         out.join("result.json"),
         serde_json::to_vec_pretty(
-            &serde_json::json!({"source_commit":option_env!("INGETRAZO_BUILD_SOURCE"),"bitmap_direction_control":bitmap_direction_control,"ground_receiver":ground,"cold":cold,"uploads":uploads,"refusal":refusal,"ledger_zero":final_bytes==0,"map_size":2048,"source_reference_pending":reference.is_none(),"reference_case":reference.as_ref().map(|r|r["name"].clone()),"receiver_matrix":receiver_matrix,"light_matrix":light_matrix,"samples":if reference.is_some(){1}else{4}}),
+            &serde_json::json!({"source_commit":option_env!("INGETRAZO_BUILD_SOURCE"),"bitmap_direction_control":bitmap_direction_control,"ground_receiver":ground,"cold":cold,"uploads":uploads,"refusal":refusal,"ledger_zero":final_bytes==0,"map_size":2048,"source_reference_pending":reference.is_none(),"reference_case":reference.as_ref().map(|r|r["name"].clone()),"receiver_matrix":receiver_matrix,"light_matrix":light_matrix,"samples":receiver_samples}),
         )?,
     )?;
     Ok(())
