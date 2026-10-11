@@ -1,0 +1,90 @@
+[
+  {
+    "case": "painted-line-chord",
+    "match": true
+  },
+  {
+    "case": "crossing-wires",
+    "match": true
+  },
+  {
+    "case": "line-bowtie",
+    "match": true
+  },
+  {
+    "case": "rectangle-band",
+    "match": true
+  },
+  {
+    "case": "rectangle-overlap",
+    "match": true
+  },
+  {
+    "case": "freehand-closed",
+    "match": true
+  },
+  {
+    "case": "freehand-open-chord",
+    "match": true
+  },
+  {
+    "case": "old-curve-global-rebuild",
+    "match": true
+  },
+  {
+    "case": "rectangle-3d-step-band",
+    "match": true
+  },
+  {
+    "case": "holed-line-chord",
+    "match": true
+  },
+  {
+    "case": "holed-rectangle-band",
+    "match": true
+  },
+  {
+    "case": "holed-freehand-chord",
+    "match": true
+  },
+  {
+    "case": "angled-painted-line-chord",
+    "match": true
+  },
+  {
+    "case": "angled-rectangle-band",
+    "match": true
+  },
+  {
+    "case": "angled-holed-line-chord",
+    "match": true
+  },
+  {
+    "case": "angled-holed-rectangle-band",
+    "match": true
+  },
+  {
+    "case": "angled-holed-freehand-chord",
+    "match": true
+  },
+  {
+    "case": "holed-outside-void-chord",
+    "match": true
+  },
+  {
+    "case": "two-hole-chord-locality",
+    "match": true
+  },
+  {
+    "case": "angled-holed-outside-void-chord",
+    "match": true
+  },
+  {
+    "case": "holed-sequential-chords",
+    "match": true
+  },
+  {
+    "case": "old-curve-holed-chord",
+    "match": true
+  }
+]

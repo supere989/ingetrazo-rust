@@ -6,13 +6,15 @@ Run focused checks for changed behavior and unresolved failures. Run the broad w
 
 Retain concise results, source identity, and necessary failure evidence. Purge owned terminal temporary build, transport, and state data after evidence is retained. Never purge another active process or source worktree.
 
-## Current batch
+## Current cadence
 
-Base: public main `039a5b63d1160011faaa196bfb3cd69af4e5645c`.
-The review branch now contains nested/tagged/shared SKP placements, embedded default texture import with aggregate asset admission, and pure MCP protocol/error guards. Root has independently checked all 23 complete retained SKP document comparisons and their compressed/uncompressed hashes. The merged MCP protocol already passed its three focused tests.
+The latest published integration is `55d76ef2`: 888 local workspace tests, doctests and example checks passed, followed by Linux CI and six Apple checks. See [the retained checkpoint](selection-inward-integration/README.md). Reversed Push/Pull model changes have a later focused integrated proof. The accepted local `804cd732` batch adds Line ordering and shared sweep packets with 900 passing tests and four jointly built consumers; actual Vulkan/Metal rendering remains in independent workstreams.
 
-Pending intake: source sheet-border rendering, exact default-layer behavior including paper visibility, and the live MCP application queue. Keep these coherent workstreams frozen before starting the one combined workspace run. Relevant focused source/reference results remain attached to their commits; do not repeat them merely to reproduce an unchanged result.
+- Reuse each owner's existing checkout and target. Build all affected named consumers in one Cargo invocation. Do not run broad suites in owner worktrees.
+- Review shared interfaces early so Vulkan and Metal work can proceed concurrently. Wait for a coherent implementation before the combined integration suite.
+- Run only the failed or unfinished stage after an environment correction. Do not recapture unchanged original inputs.
+- Keep local implementation moving while hosted platform jobs run. One owner monitors each platform run and retains its terminal result; other agents reuse that receipt.
+- Keep allocation-only Metal changes on the isolated branch and run the affected platform. Restore both Apple runners for a Metal rendering change. Do not trigger broad CI for evidence-only updates.
+- Archive and byte-verify terminal temporary outputs before purging them. Preserve active targets and canonical original captures. Rotate targets only for a concrete disk or validity reason.
 
-Metal raw texture/host/font work remains in `review/metal-raw-canvas` and has separate actual macOS checks. Its successful raw-pixel fixture and host compilation are not Canvas text acceptance: the current Linux-only font provider is an explicit open dependency. Native CoreText matching and actual host rendered comparison remain required. Do not trigger broad CI for evidence-only updates to that isolated branch.
-
-After combined validation, retain the tested source revision, result log and scope, then purge only the owned terminal target. No full feature or release gate is promoted by compilation or a bounded fixture alone.
+No feature or release gate is promoted by compilation or a bounded fixture alone. Current feature scope and remaining acceptance belong in [the parity tracker](../PARITY_PROGRESS.md), so this policy does not maintain a second feature backlog.

@@ -799,6 +799,169 @@ pub fn add_segments(
     explicit: Option<&[DVec3]>,
     curve: Option<usize>,
 ) -> Result<Mesh, String> { add_segments_tagged(mesh,segments,explicit,curve,None) }
+// Source topology.segment_intersection: QVector3D differences/lengths,
+// double unit-direction closest points, scale-aware gap, final Qt point.
+fn source_segment_intersection(a: DVec3, b: DVec3, c: DVec3, d: DVec3) -> Option<DVec3> {
+    let (a, b, c, d) = (a.as_vec3(), b.as_vec3(), c.as_vec3(), d.as_vec3());
+    let d1 = b - a;
+    let d2 = d - c;
+    let l1 = qt_length(d1) as f64;
+    let l2 = qt_length(d2) as f64;
+    if l1 < 1e-4 || l2 < 1e-4 {
+        return None;
+    }
+    let u = d1.as_dvec3() / l1;
+    let v = d2.as_dvec3() / l2;
+    let w = (a - c).as_dvec3();
+    let dot = |x: DVec3, y: DVec3| x.x * y.x + x.y * y.y + x.z * y.z;
+    let aa = dot(u, u);
+    let ab = dot(u, v);
+    let bb = dot(v, v);
+    let ad = dot(u, w);
+    let bd = dot(v, w);
+    let denominator = aa * bb - ab * ab;
+    if denominator < 1e-12 {
+        return None;
+    }
+    let along_a = (ab * bd - bb * ad) / denominator;
+    let along_b = (aa * bd - ab * ad) / denominator;
+    if !(-1e-4 / l1..=1. + 1e-4 / l1).contains(&(along_a / l1))
+        || !(-1e-4 / l2..=1. + 1e-4 / l2).contains(&(along_b / l2))
+    {
+        return None;
+    }
+    let p = a.as_dvec3() + u * along_a;
+    let q = c.as_dvec3() + v * along_b;
+    if (p - q).length() > 1e-4f64.max(1e-7 * l1.max(l2)) {
+        return None;
+    }
+    Some(((p + q) * 0.5).as_vec3().as_dvec3())
+}
+fn source_same_position(a: DVec3, b: DVec3) -> bool {
+    // Float32×10000 is exact in float64 (at most 38 significant bits).
+    // Keep float keys instead of saturating integer casts for large coordinates.
+    let key = |p: DVec3| {
+        p.as_vec3()
+            .to_array()
+            .map(|v| ((v as f64) * 10000.).round_ties_even())
+    };
+    key(a) == key(b)
+}
+fn source_distance(a: DVec3, b: DVec3) -> f32 {
+    qt_length(a.as_vec3() - b.as_vec3())
+}
+// Pinned edits.plan_edge_commands executes existing-edge replacements before
+// new segment pieces. Keep record ownership/order here, not by sorting the
+// final coordinates (which loses duplicate/equal object distinctions).
+fn append_straight_segment(
+    mesh: &mut Mesh,
+    a: DVec3,
+    b: DVec3,
+) -> Result<Vec<(DVec3, DVec3)>, String> {
+    let direction = b.as_vec3() - a.as_vec3();
+    let mut cuts = vec![];
+    let mut points = vec![];
+    for (id, e) in mesh.edges.iter().enumerate() {
+        let c = mesh.vertices[e.v0].position;
+        let d = mesh.vertices[e.v1].position;
+        let Some(mut p) = source_segment_intersection(a, b, c, d) else {
+            continue;
+        };
+        for anchor in [c, d, a, b] {
+            if source_distance(p, anchor) <= 1e-4 {
+                p = anchor;
+                break;
+            }
+        }
+        if !source_same_position(p, a) && !source_same_position(p, b) {
+            points.push(p);
+        }
+        if !source_same_position(p, c) && !source_same_position(p, d) {
+            cuts.push((id, p));
+        }
+    }
+    // Remove each old row then append its subedges in command order. Endpoint
+    // vertices survive removal, and the first subedge authors the intersection.
+    let replacements = cuts
+        .into_iter()
+        .map(|(id, p)| (mesh.edges[id].clone(), p))
+        .collect::<Vec<_>>();
+    let removed = replacements
+        .iter()
+        .map(|(edge, _)| edge.history_id)
+        .collect::<std::collections::HashSet<_>>();
+    if !removed.is_empty() {
+        mesh.edges
+            .retain(|edge| !removed.contains(&edge.history_id));
+        mesh.rebuild_incidence();
+    }
+    for (old_edge, p) in replacements {
+        let old_edge = &old_edge;
+        let vertex = mesh.add_vertex(p);
+        for (x, y) in [(old_edge.v0, vertex), (vertex, old_edge.v1)] {
+            // The split planner emits no AddEdgeCommand for a subedge
+            // already present in its simulated graph: do not stamp it.
+            if mesh.find_edge(x, y).is_some() {
+                continue;
+            }
+            let edge = mesh.add_edge(x, y).ok_or("Drawing subedge collapsed")?;
+            // AddEdgeCommand stamps only specified soft/curve flags. A
+            // welded existing subedge keeps its own hidden/layer/opaque data;
+            // a newly constructed subedge keeps constructor defaults.
+            if old_edge.soft {
+                mesh.edges[edge].soft = true;
+            }
+            if let Some(curve) = old_edge.curve_id {
+                mesh.edges[edge].curve_id = Some(curve);
+            }
+        }
+        for f in &mut mesh.faces {
+            for ring in std::iter::once(&mut f.vertices).chain(&mut f.holes) {
+                let mut refined = vec![];
+                for i in 0..ring.len() {
+                    let x = ring[i];
+                    let y = ring[(i + 1) % ring.len()];
+                    refined.push(x);
+                    if (x == old_edge.v0 && y == old_edge.v1)
+                        || (x == old_edge.v1 && y == old_edge.v0)
+                    {
+                        refined.push(vertex);
+                    }
+                }
+                if *ring != refined {
+                    f.history_id = crate::mesh::MeshFace::new(vec![]).history_id;
+                }
+                *ring = refined;
+            }
+        }
+        mesh.rebuild_incidence();
+    }
+    let mut unique = vec![];
+    for p in points {
+        if source_distance(p, a) <= 1e-4 || source_distance(p, b) <= 1e-4 {
+            continue;
+        }
+        if !unique.iter().any(|&q| source_distance(p, q) <= 1e-4) {
+            unique.push(p);
+        }
+    }
+    unique.sort_by(|&x, &y| {
+        let station = |p: DVec3| (p.as_vec3() - a.as_vec3()).dot(direction);
+        station(x).total_cmp(&station(y))
+    });
+    let chain = std::iter::once(a)
+        .chain(unique)
+        .chain(std::iter::once(b))
+        .collect::<Vec<_>>();
+    let pieces = chain.windows(2).map(|p| (p[0], p[1])).collect::<Vec<_>>();
+    for &(x, y) in &pieces {
+        let x = mesh.add_vertex(x);
+        let y = mesh.add_vertex(y);
+        mesh.add_edge(x, y).ok_or("Drawing edge collapsed")?;
+    }
+    Ok(pieces)
+}
+
 /// Active tags stamp the draw plan's own declarations before coverage rebuild.
 /// Existing/re-emitted regions are never selected by index/count differences.
 pub fn add_segments_tagged(mesh:&Mesh,segments:&[(DVec3,DVec3)],explicit:Option<&[DVec3]>,curve:Option<usize>,active:Option<&serde_json::Value>)->Result<Mesh,String>{
@@ -835,17 +998,15 @@ pub fn add_segments_tagged_with_id(mesh:&Mesh,segments:&[(DVec3,DVec3)],explicit
         })
     });
     let mut out = mesh.clone();
-    let mut targets = vec![];
-    for &(a, b) in segments {
-        if a.distance(b) < 1e-9 {
-            continue;
-        }
-        let va = out.add_vertex(a);
-        let vb = out.add_vertex(b);
-        let id = out.add_edge(va, vb).ok_or("Drawing edge collapsed")?;
-        targets.push(id);
+    let reuse_straight=curve.is_none()&&!mesh.edges.iter().any(|e|e.curve_id.is_some());
+    let mut authored_pieces=vec![];
+    if reuse_straight {
+        for &(a,b) in segments {if a.distance(b)>=1e-9{authored_pieces.extend(append_straight_segment(&mut out,a,b)?);}}
+    }else{
+        let mut targets=vec![];
+        for &(a,b) in segments {if a.distance(b)<1e-9{continue;}let va=out.add_vertex(a);let vb=out.add_vertex(b);targets.push(out.add_edge(va,vb).ok_or("Drawing edge collapsed")?);}
+        out=planar::split_edge_intersections(&out,&targets)?;
     }
-    out = planar::split_edge_intersections(&out, &targets)?;
     // Containment concerns the whole footprint, not only its corners. A band
     // whose corners lie on the mother may cross a declared hole. Source
     // AddFaceCommand refuses that carve, leaving the mother's attributes on
@@ -1071,6 +1232,10 @@ pub fn add_segments_tagged_with_id(mesh:&Mesh,segments:&[(DVec3,DVec3)],explicit
             continue;
         }
         let mut result = Mesh::new();
+        if reuse_straight {
+            result.vertices=out.vertices.clone();result.edges=out.edges.clone();
+            result.rebuild_spatial_index();result.rebuild_incidence();
+        }
         for (i, f) in out.faces.iter().enumerate() {
             if !affected.contains(&i) {
                 planar::add_face(&mut result, &planar::rings(&out, f), f)?;
@@ -1088,6 +1253,17 @@ pub fn add_segments_tagged_with_id(mesh:&Mesh,segments:&[(DVec3,DVec3)],explicit
                 for ring in &mut loops {
                     let start=(0..ring.len()).min_by_key(|&i|plane.vertices.iter().position(|v|v.position.distance_squared(ring[i])<1e-18).unwrap_or(usize::MAX)).unwrap_or(0);
                     ring.rotate_left(start);
+                }
+            }
+            if reuse_straight {
+                // A newly closed cycle starts at the authored subedge's first
+                // endpoint (topology.find_smallest_cycle_through); a scoped
+                // existing-face rebuild starts at the first graph insertion.
+                for ring in &mut loops {
+                    let start=if explicit.is_none()&&affected.is_empty(){
+                        authored_pieces.iter().find_map(|&(a,b)| (0..ring.len()).find(|&i|ring[i].distance_squared(a)<1e-18&&(ring[(i+1)%ring.len()].distance_squared(b)<1e-18||ring[(i+ring.len()-1)%ring.len()].distance_squared(b)<1e-18)))
+                    }else{out.edges.iter().filter(|e|[e.v0,e.v1].iter().all(|&v|(out.vertices[v].position-point).dot(normal).abs()<1e-6)).flat_map(|e|[e.v0,e.v1]).find_map(|v|ring.iter().position(|p|p.distance_squared(out.vertices[v].position)<1e-18))};
+                    if let Some(start)=start {ring.rotate_left(start);}
                 }
             }
             let frame = planar::Frame::new(&loops[0])?;
@@ -1154,6 +1330,7 @@ pub fn add_segments_tagged_with_id(mesh:&Mesh,segments:&[(DVec3,DVec3)],explicit
                     });
                     if let Some(active)=active {source.attrs.insert("ifc".into(),draw_tag(mesh,active,&mut allocated_tag,source_id)?);}
                 }
+                if reuse_straight {source.history_id=crate::mesh::MeshFace::new(vec![]).history_id;}
                 planar::add_face(&mut result, &loops, &source)?;
             }
         }

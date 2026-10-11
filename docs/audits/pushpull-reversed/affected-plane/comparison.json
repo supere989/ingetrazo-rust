@@ -1,0 +1,23 @@
+{
+  "direction_preview_recipe_exact": 4,
+  "final_oriented_fields_exact": 4,
+  "negative_controls": [
+    "empty",
+    "duplicate",
+    "wrong_normal",
+    "wrong_preview",
+    "wrong_commit_direction",
+    "lost_metadata",
+    "lost_history",
+    "lost_support_vertex",
+    "wrong_floor_paint",
+    "lost_new_base",
+    "old_floor_overlap"
+  ],
+  "actual_app_history_cancel_exact": true,
+  "native_visible_suppression_proved": false,
+  "remaining": {
+    "visible-preview": "Borrowed sweep descriptor is unconsumed by native Vulkan/Metal; source camera-aware suppression required.",
+    "closed-reversed-acquisition": "Original entry orientation and arbitrary Qt precision beyond these four open controls remain unproved."
+  }
+}

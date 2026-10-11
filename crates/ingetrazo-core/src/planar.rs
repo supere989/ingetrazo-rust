@@ -333,6 +333,22 @@ pub(crate) fn preserve_edges(mesh: &mut Mesh, original: &Mesh) {
     }
     mesh.preserve_vertex_uids_from(original);
 }
+/// Source-authored sweep arrangement, without coverage or material decisions.
+/// Callers must restrict the mesh to the affected component and classify each
+/// returned bounded cell; this does not face a void merely because it is bounded.
+pub fn sweep_plane_cells(mesh:&Mesh,origin:DVec3,normal:DVec3)->Result<Vec<PlanarCell>,String>{
+    validate_mesh(mesh)?;
+    let n=normal.as_vec3().normalize();let origin=origin.as_vec3();
+    let reference=if n.x.abs()>0.9{glam::Vec3::Y}else{glam::Vec3::X};
+    let u=(reference-n*reference.dot(n)).normalize();let v=n.cross(u).normalize();
+    let project=|p:DVec3|{let d=p.as_vec3()-origin;DVec2::new(d.dot(u)as f64,d.dot(v)as f64)};
+    let on=|p:DVec3|(p.as_vec3()-origin).dot(n).abs()<1e-4;
+    let lines=mesh.edges.iter().filter_map(|e|{let a=mesh.vertices[e.v0].position;let b=mesh.vertices[e.v1].position;(on(a)&&on(b)).then(||(project(a),project(b)))}).collect::<Vec<_>>();
+    if lines.len()<3{return Ok(vec![]);}
+    let unproject=|p:DVec2|(origin+u*(p.x as f32)+v*(p.y as f32)).as_dvec3();
+    Ok(arrange_2d(&lines)?.into_iter().map(|(outer,holes)|PlanarCell{outer:outer.into_iter().map(unproject).collect(),holes:holes.into_iter().map(|h|h.into_iter().map(unproject).collect()).collect()}).collect())
+}
+
 /// Rebuild all coplanar regions on one selected plane, retaining other planes.
 pub fn rebuild_faces(mesh: &Mesh, selected: &[usize]) -> Result<Mesh, String> {
     rebuild_faces_policy(mesh, selected, true)

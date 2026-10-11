@@ -1,0 +1,36 @@
+{
+  "runtime_commit": "b9753ab55e953a72879c056cf99c8aeb5c0873de",
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "source_hashes": {
+    "crates/ingetrazo-core/src/drafting.rs": "8c3456531d55905b64e1706787ebcd9e2607f011e7dc8ccbbf0abd54d45df272",
+    "crates/ingetrazo-core/tests/drafting_record_order.rs": "c298f22417a21484ece0e7592f25bf3551f64c27a1a52eab8821e25d2ba6147d",
+    "crates/ingetrazo-gui/examples/line_command_history_fixture.rs": "0057916bd840233e0c26ba38174262c96621ccae25c56f92c47268beb088cdc2",
+    "scripts/check-line-command-history.py": "4395a7ab725949919e00bc52ab60913871372b5d14be42f3f5e71fe19bf67c2e",
+    "scripts/check-python-drafting.py": "65f907f730014410ce024d70b08f4cc0d7e539cd9e523fa21a14f9b456667204",
+    "docs/audits/drafting-accepted-corpus.json": "e9c63b3d3ca6120e8212cdb0a35c27252c944883fb1d4864f16fae89f3683b7f"
+  },
+  "binary_hashes": {
+    "line_command_history_fixture": "f621a7c74e69ff1d3a743ff91e661bf98f75b52fbb0839bd6cffa4d3f491592d",
+    "drafting_acceptance_fixture": "470f76b56d63e225572095032637b63caa336f20b733375b341a3e51dd2ea117"
+  },
+  "commands": [
+    "cargo test -j2 -p ingetrazo-core --test drafting_record_order",
+    "cargo build -j2 -p ingetrazo-gui --example line_command_history_fixture -p ingetrazo-core --example drafting_acceptance_fixture",
+    "line_command_history_fixture docs/audits/line-orphan-history/raw-forward/commands > native.json",
+    "python3 scripts/check-line-command-history.py docs/audits/line-orphan-history/raw-forward/commands"
+  ],
+  "source_law": [
+    "core/edits.py plan_edge_commands: existing edge deletion/subedges before new drawn pieces",
+    "core/topology.py plan_edge_split and find_smallest_cycle_through: existing edge-order cuts, drawn a-to-b pieces and cycle acquisition anchor",
+    "core/history.py RebuildPlaneFacesCommand: old vertices/edges reused; affected faces newly authored",
+    "core/arrangement.py _build_graph/_trace_faces: graph vertex insertion order, not coordinate-sorted start"
+  ],
+  "scope": "9 exact complete raw command/app histories, 14 negative controls; 22 unchanged frozen drafting comparisons; three independent ownership/order tests. Actual handlers, not OS gesture proof. Source captures reused, no new source capture or broad suite.",
+  "ownership": "Non-curve straight path retains original vertex UID/order and uncut edge history_id/order/flags; cut edges replaced with fresh tokens; rebuilt plane faces receive fresh tokens; global/old curve reconstruction path unchanged. No whole-Scene copy.",
+  "test_correction": "An initial unit compared derived vertex.edges against pre-split incidence, which must change. Corrected to exact positions+UIDs and explicit new edge incidence/order.",
+  "boundaries": [
+    "The existing 22-case drafting comparator uses its unchanged five-decimal cyclic spatial comparison; nine raw histories are literal exact equality.",
+    "Source general f32 intersection precision versus native authoritative f64 remains its existing boundary; this change reorders ownership instead of globally reducing precision.",
+    "Curve clear/rebuild semantics are deliberately unchanged; no whole-row drafting or OS claim."
+  ]
+}

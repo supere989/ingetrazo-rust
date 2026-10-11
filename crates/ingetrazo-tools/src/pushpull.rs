@@ -7,6 +7,7 @@ use ingetrazo_core::scene::Scene;
 use crate::base::{Tool, ToolContext, ToolType};
 
 mod inward_limit;
+mod open_rebuild;
 
 /// Interactive Push/Pull tool for extruding faces into solids and recessing geometry.
 #[derive(Debug, Default, Clone)]
@@ -177,6 +178,10 @@ impl PushPullTool {
     fn stitch_open_sweep(source:&ingetrazo_core::mesh::Mesh,seeds:impl Iterator<Item=DVec3>)->Result<ingetrazo_core::mesh::Mesh,String>{
         let mut lo=DVec3::splat(f64::INFINITY);let mut hi=DVec3::splat(f64::NEG_INFINITY);
         for p in seeds {lo=lo.min(p);hi=hi.max(p);}
+        // Cold sweep refinement: index vertices once, then search only each
+        // intersecting edge's coordinate interval instead of E×V scans.
+        let mut by_x=(0..source.vertices.len()).collect::<Vec<_>>();
+        by_x.sort_unstable_by(|&a,&b|source.vertices[a].position.x.total_cmp(&source.vertices[b].position.x));
         let mut out=ingetrazo_core::mesh::Mesh::new();
         for v in &source.vertices{let id=out.add_vertex(v.position);out.vertices[id].uid=v.uid;}
         for f in &source.faces {
@@ -184,7 +189,9 @@ impl PushPullTool {
                 let a=source.vertices[ring[i]].position;let b=source.vertices[ring[(i+1)%ring.len()]].position;let d=b-a;
                 let mut stations=vec![(0.,ring[i])];
                 if a.max(b).cmplt(lo-DVec3::splat(1e-6)).any()==false && a.min(b).cmpgt(hi+DVec3::splat(1e-6)).any()==false {
-                    for (id,v) in source.vertices.iter().enumerate(){let t=(v.position-a).dot(d)/d.length_squared();if t>1e-7&&t<1.-1e-7&&(v.position-a-d*t).length()<1e-6{stations.push((t,id));}}
+                    let lower=by_x.partition_point(|&id|source.vertices[id].position.x<a.x.min(b.x)-1e-6);
+                    let upper=by_x.partition_point(|&id|source.vertices[id].position.x<=a.x.max(b.x)+1e-6);
+                    for &id in &by_x[lower..upper]{let p=source.vertices[id].position;if p.cmplt(a.min(b)-DVec3::splat(1e-6)).any()||p.cmpgt(a.max(b)+DVec3::splat(1e-6)).any(){continue;}let t=(p-a).dot(d)/d.length_squared();if t>1e-7&&t<1.-1e-7&&(p-a-d*t).length()<1e-6{stations.push((t,id));}}
                 }
                 stations.sort_by(|a,b|a.0.total_cmp(&b.0));stations.dedup_by(|a,b|(a.0-b.0).abs()<1e-7);refined.extend(stations.into_iter().map(|(_,id)|id));
             }refined};
@@ -655,6 +662,14 @@ impl PushPullTool {
         // consumed face rim before publication (including hole rims).
         if !was_solid {
             candidate=Self::stitch_open_sweep(&candidate,rings.iter().flatten().chain(shifted.iter().flatten()).copied())?;
+        }
+        // Source sheet_fast excludes a fully attached perpendicular support.
+        // Its open component then uses the same affected-plane boundary rebuild
+        // as a solid; disconnected authored geometry stays outside the domain.
+        let attached_all=std::iter::once(&face.vertices).chain(&face.holes).all(|ring|(0..ring.len()).all(|i|adjacent[&(ring[i].min(ring[(i+1)%ring.len()]),ring[i].max(ring[(i+1)%ring.len()]))].len()>1));
+        let perpendicular_support=std::iter::once(&face.vertices).chain(&face.holes).any(|ring|(0..ring.len()).any(|i|adjacent[&(ring[i].min(ring[(i+1)%ring.len()]),ring[i].max(ring[(i+1)%ring.len()]))].iter().any(|&other|other!=face_id&&mesh.face_normal(other).dot(normal).abs()<0.999)));
+        if !was_solid&&!keep_base&&attached_all&&perpendicular_support {
+            candidate=open_rebuild::rebuild(&candidate,mesh,&component_faces,distance<0.)?;
         }
         if was_solid && !keep_base && !prism_cap {
             let mut rims=vec![];

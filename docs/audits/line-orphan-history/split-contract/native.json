@@ -1,0 +1,356 @@
+{
+  "cases": [
+    {
+      "case": "metadata-split-weld",
+      "before": {
+        "vertices": [
+          [
+            0.0,
+            -1.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            5.0,
+            0.0,
+            1.0
+          ],
+          [
+            6.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "edges": [
+          {
+            "vertices": [
+              0,
+              1
+            ],
+            "soft": true,
+            "hidden": true,
+            "layer": "Old",
+            "curve": null,
+            "old_identity": 0
+          },
+          {
+            "vertices": [
+              0,
+              2
+            ],
+            "soft": false,
+            "hidden": true,
+            "layer": "Weld",
+            "curve": null,
+            "old_identity": 1
+          },
+          {
+            "vertices": [
+              3,
+              4
+            ],
+            "soft": true,
+            "hidden": true,
+            "layer": "Remote",
+            "curve": null,
+            "old_identity": 2
+          }
+        ],
+        "faces": []
+      },
+      "after": {
+        "vertices": [
+          [
+            0.0,
+            -1.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            5.0,
+            0.0,
+            1.0
+          ],
+          [
+            6.0,
+            0.0,
+            1.0
+          ],
+          [
+            -1.0,
+            0.0,
+            0.0
+          ],
+          [
+            1.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "edges": [
+          {
+            "vertices": [
+              0,
+              2
+            ],
+            "soft": false,
+            "hidden": true,
+            "layer": "Weld",
+            "curve": null,
+            "old_identity": 1
+          },
+          {
+            "vertices": [
+              3,
+              4
+            ],
+            "soft": true,
+            "hidden": true,
+            "layer": "Remote",
+            "curve": null,
+            "old_identity": 2
+          },
+          {
+            "vertices": [
+              2,
+              1
+            ],
+            "soft": true,
+            "hidden": false,
+            "layer": null,
+            "curve": null,
+            "old_identity": null
+          },
+          {
+            "vertices": [
+              5,
+              2
+            ],
+            "soft": false,
+            "hidden": false,
+            "layer": null,
+            "curve": null,
+            "old_identity": null
+          },
+          {
+            "vertices": [
+              2,
+              6
+            ],
+            "soft": false,
+            "hidden": false,
+            "layer": null,
+            "curve": null,
+            "old_identity": null
+          }
+        ],
+        "faces": []
+      }
+    },
+    {
+      "case": "long-skew-accepted",
+      "before": {
+        "vertices": [
+          [
+            0.12345670163631439,
+            -2.0,
+            0.0005000000237487257
+          ],
+          [
+            0.12345670163631439,
+            2.0,
+            0.0005000000237487257
+          ]
+        ],
+        "edges": [
+          {
+            "vertices": [
+              0,
+              1
+            ],
+            "soft": false,
+            "hidden": false,
+            "layer": null,
+            "curve": null,
+            "old_identity": 0
+          }
+        ],
+        "faces": []
+      },
+      "after": {
+        "vertices": [
+          [
+            0.12345670163631439,
+            -2.0,
+            0.0005000000237487257
+          ],
+          [
+            0.12345670163631439,
+            2.0,
+            0.0005000000237487257
+          ],
+          [
+            0.1232517883181572,
+            0.3456788659095764,
+            0.0002500000118743628
+          ],
+          [
+            -10000.0,
+            0.3456788957118988,
+            0.0
+          ],
+          [
+            10000.0,
+            0.3456788957118988,
+            0.0
+          ]
+        ],
+        "edges": [
+          {
+            "vertices": [
+              0,
+              2
+            ],
+            "soft": false,
+            "hidden": false,
+            "layer": null,
+            "curve": null,
+            "old_identity": null
+          },
+          {
+            "vertices": [
+              2,
+              1
+            ],
+            "soft": false,
+            "hidden": false,
+            "layer": null,
+            "curve": null,
+            "old_identity": null
+          },
+          {
+            "vertices": [
+              3,
+              2
+            ],
+            "soft": false,
+            "hidden": false,
+            "layer": null,
+            "curve": null,
+            "old_identity": null
+          },
+          {
+            "vertices": [
+              2,
+              4
+            ],
+            "soft": false,
+            "hidden": false,
+            "layer": null,
+            "curve": null,
+            "old_identity": null
+          }
+        ],
+        "faces": []
+      }
+    },
+    {
+      "case": "long-skew-refused",
+      "before": {
+        "vertices": [
+          [
+            0.12345670163631439,
+            -2.0,
+            0.003000000026077032
+          ],
+          [
+            0.12345670163631439,
+            2.0,
+            0.003000000026077032
+          ]
+        ],
+        "edges": [
+          {
+            "vertices": [
+              0,
+              1
+            ],
+            "soft": false,
+            "hidden": false,
+            "layer": null,
+            "curve": null,
+            "old_identity": 0
+          }
+        ],
+        "faces": []
+      },
+      "after": {
+        "vertices": [
+          [
+            0.12345670163631439,
+            -2.0,
+            0.003000000026077032
+          ],
+          [
+            0.12345670163631439,
+            2.0,
+            0.003000000026077032
+          ],
+          [
+            -10000.0,
+            0.3456788957118988,
+            0.0
+          ],
+          [
+            10000.0,
+            0.3456788957118988,
+            0.0
+          ]
+        ],
+        "edges": [
+          {
+            "vertices": [
+              0,
+              1
+            ],
+            "soft": false,
+            "hidden": false,
+            "layer": null,
+            "curve": null,
+            "old_identity": 0
+          },
+          {
+            "vertices": [
+              2,
+              3
+            ],
+            "soft": false,
+            "hidden": false,
+            "layer": null,
+            "curve": null,
+            "old_identity": null
+          }
+        ],
+        "faces": []
+      }
+    }
+  ]
+}
