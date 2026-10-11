@@ -21,6 +21,8 @@ Latest independent rendering diagnosis: [real layout](audits/annotation-real-ope
 
 ## Dated implementation and verification evidence
 
+ARM material artifact independently verified (2026-10-11 UTC): root checks ZIP/source hashes and all 18 GPU frames at 1,152 interior plus 2,584 background pixels each. Front/default-back/override, hidden-line/monochrome, reflected authored front and preserved frame after metadata refusal match expected packet/style colors; warm uploads/targets remain 2/1 and final ledger is 0/0 ([root review](audits/metal-world-root-review/material-arm-artifact-review.json)). Full source scene, triangle edges, textures/alpha and presentation remain OPEN.
+
 Geometry-only failure independently verified (2026-10-11 UTC): 455 geometry-union pixels differ; source/native masks contain 641/914 pixels with XOR 273, and full frame differs at 1,738 pixels ([root review](audits/annotation-widget-geometry-negative/root-review.json)). Direct source widget stroke/triangle coverage is the next correction; strict acceptance remains FAIL.
 
 Published ordered compute completed (2026-10-11 UTC): review source `20637454` passes both ARM and Intel native ordered UI/CAD compute jobs in run 38099912424 ([completion evidence](audits/review-206-ordered-compute-completion.json)). The combined ARM SDK job also passes; combined Linux and Intel SDK jobs remain active. Full viewport/presentation and release acceptance remain OPEN.

@@ -1,0 +1,86 @@
+{
+  "source": "f260c73ac0362d71e27ea723e4c36b4ea5c47cf9",
+  "zip_sha256": "e5032ba8bc14971aee19254c10b28cc2da65f953618cb13662f251867cf5881a",
+  "independent_frames": {
+    "far-then-near": [
+      1152,
+      2584
+    ],
+    "near-then-far": [
+      1152,
+      2584
+    ],
+    "depth-disabled-negative": [
+      1152,
+      2584
+    ],
+    "warm-0": [
+      1152,
+      2584
+    ],
+    "warm-1": [
+      1152,
+      2584
+    ],
+    "warm-2": [
+      1152,
+      2584
+    ],
+    "owner-refusal-preserved": [
+      1152,
+      2584
+    ],
+    "map-free-old-green": [
+      1152,
+      2584
+    ],
+    "map-free-new-red": [
+      1152,
+      2584
+    ],
+    "material-front": [
+      1152,
+      2584
+    ],
+    "material-default-back": [
+      1152,
+      2584
+    ],
+    "material-override-back": [
+      1152,
+      2584
+    ],
+    "hidden-line-front": [
+      1152,
+      2584
+    ],
+    "hidden-line-back": [
+      1152,
+      2584
+    ],
+    "monochrome-front": [
+      1152,
+      2584
+    ],
+    "monochrome-back": [
+      1152,
+      2584
+    ],
+    "reflected-authored-front": [
+      1152,
+      2584
+    ],
+    "policy-refusal-preserved": [
+      1152,
+      2584
+    ]
+  },
+  "source_hashes": "all verified against frozen Git source",
+  "warm_uploads": 2,
+  "warm_targets": 1,
+  "final_ledger": [
+    0,
+    0
+  ],
+  "scope": "Strict interior/background samples only; edges, textures, alpha, full source viewport and presentation remain unverified."
+}
