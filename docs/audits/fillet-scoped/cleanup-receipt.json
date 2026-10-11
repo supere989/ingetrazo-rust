@@ -1,0 +1,304 @@
+{
+  "timestamp_utc": "2026-10-11T13:00:42.258325+00:00",
+  "authorization": "Parent cleanup task after fresh merged native JSON equality and canonical archive verification; no new builds.",
+  "canonical_archive": "/tmp/ingetrazo-next-integration/docs/audits/fillet-scoped/records.zip",
+  "canonical_archive_sha256": "5c2b32f970ab1cf2279113efb071468394857e14b5facb29911d57352c4f86a2",
+  "canonical_manifest_members_verified": 12,
+  "canonical_documents_verified": [
+    "README.md",
+    "comparison.json",
+    "provenance.json"
+  ],
+  "deleted": [
+    {
+      "path": "/tmp/fillet-scoped-archive-replay.json",
+      "bytes": 8643,
+      "sha256": "65e2809fa41ae0d21c20a2e83c44367dd1a085346562bb91743e270ab0ab2902",
+      "canonical_byte_match": false
+    },
+    {
+      "path": "/tmp/fillet-scoped-archive-replay.log",
+      "bytes": 8643,
+      "sha256": "65e2809fa41ae0d21c20a2e83c44367dd1a085346562bb91743e270ab0ab2902",
+      "canonical_byte_match": false
+    },
+    {
+      "path": "/tmp/fillet-scoped-build-case.log",
+      "bytes": 18691,
+      "sha256": "7b2223fcf2caced4c57de0179fcf81f14e3aa5f5c2e7e86e826d9304bd30c760",
+      "canonical_byte_match": false
+    },
+    {
+      "path": "/tmp/fillet-scoped-build-fixed.log",
+      "bytes": 18782,
+      "sha256": "70ceefd240896811e9c6de429e9747a563e9249c048dbdd989f5b7bf45998b27",
+      "canonical_byte_match": false
+    },
+    {
+      "path": "/tmp/fillet-scoped-build-frozen.log",
+      "bytes": 18782,
+      "sha256": "657f81dfadb05f14df2df523775918f16b63bd9c759108897f61ef3497fddbf2",
+      "canonical_byte_match": true
+    },
+    {
+      "path": "/tmp/fillet-scoped-build-interior.log",
+      "bytes": 18782,
+      "sha256": "4b06f04b0d1ad0305ead60a33a547815488583370bd06f7a270cd6931ddca186",
+      "canonical_byte_match": false
+    },
+    {
+      "path": "/tmp/fillet-scoped-build-nested.log",
+      "bytes": 18782,
+      "sha256": "ee4a594456357b0a04b492bc170ac5712dc6c590cc4186b9dab1f540bb8cd5e3",
+      "canonical_byte_match": false
+    },
+    {
+      "path": "/tmp/fillet-scoped-build-simple-nested.log",
+      "bytes": 18691,
+      "sha256": "1070e6c8b519fd4f3f1019184a02168bdd4d4a9383cda4b7bbcedb6f2c8e2862",
+      "canonical_byte_match": false
+    },
+    {
+      "path": "/tmp/fillet-scoped-build.log",
+      "bytes": 24234,
+      "sha256": "edf3fa9139998b404ff182fdaf88b27bd872c00931450c807e6a275d11568a20",
+      "canonical_byte_match": false
+    },
+    {
+      "path": "/tmp/fillet-scoped-check-bounded.log",
+      "bytes": 8643,
+      "sha256": "65e2809fa41ae0d21c20a2e83c44367dd1a085346562bb91743e270ab0ab2902",
+      "canonical_byte_match": false
+    },
+    {
+      "path": "/tmp/fillet-scoped-check-final-fixed.log",
+      "bytes": 842,
+      "sha256": "ffc7370dae07804d2686daa3c15abdf57c12b669f62b7fcd848aaeb5ef58571f",
+      "canonical_byte_match": false
+    },
+    {
+      "path": "/tmp/fillet-scoped-check-final-fixed2.log",
+      "bytes": 723,
+      "sha256": "ed8965c5c2a3d3e82971e6c33091273c8190d2dc2eb2a188b0101ed33b7d1c0c",
+      "canonical_byte_match": false
+    },
+    {
+      "path": "/tmp/fillet-scoped-check-final-fixed3.log",
+      "bytes": 866,
+      "sha256": "d5829495b27c60ec81707ed0493b236f157e97349c394d9533675c7152b5be9f",
+      "canonical_byte_match": false
+    },
+    {
+      "path": "/tmp/fillet-scoped-check-final.log",
+      "bytes": 359,
+      "sha256": "4e71067334e1c4a1f3e654f992da120854ed4291a4a21af8c307123176bc68fa",
+      "canonical_byte_match": false
+    },
+    {
+      "path": "/tmp/fillet-scoped-check-fixed.log",
+      "bytes": 743,
+      "sha256": "e64202178515f366135a4be59498368416bc397a1cf62549c5e21587efb31fcb",
+      "canonical_byte_match": false
+    },
+    {
+      "path": "/tmp/fillet-scoped-check-simple.log",
+      "bytes": 791,
+      "sha256": "c0317b8e91b0dcc1c330dfed82e17cd4c090918358a59fbb825502321f8a42f2",
+      "canonical_byte_match": false
+    },
+    {
+      "path": "/tmp/fillet-scoped-check.log",
+      "bytes": 298,
+      "sha256": "d2e3e9db95ede0b46613619f5e77c37960ee3ef8c0765f53f925a5f8006ee143",
+      "canonical_byte_match": false
+    },
+    {
+      "path": "/tmp/fillet-scoped-comparison.json",
+      "bytes": 8643,
+      "sha256": "65e2809fa41ae0d21c20a2e83c44367dd1a085346562bb91743e270ab0ab2902",
+      "canonical_byte_match": false
+    },
+    {
+      "path": "/tmp/fillet-scoped-final-check-fixed.log",
+      "bytes": 8643,
+      "sha256": "65e2809fa41ae0d21c20a2e83c44367dd1a085346562bb91743e270ab0ab2902",
+      "canonical_byte_match": false
+    },
+    {
+      "path": "/tmp/fillet-scoped-final-check.log",
+      "bytes": 632,
+      "sha256": "7a8c281f752a2fecddb082f0e19eb0d2a02ca46442252462d1820f179a52abc9",
+      "canonical_byte_match": false
+    },
+    {
+      "path": "/tmp/fillet-scoped-final-strict.log",
+      "bytes": 8643,
+      "sha256": "65e2809fa41ae0d21c20a2e83c44367dd1a085346562bb91743e270ab0ab2902",
+      "canonical_byte_match": false
+    },
+    {
+      "path": "/tmp/fillet-scoped-focused-fixed.log",
+      "bytes": 1446,
+      "sha256": "dc308b8849a745718078ef59ae168e30fd26c644b95f0ae9930bdad6c010f2cd",
+      "canonical_byte_match": false
+    },
+    {
+      "path": "/tmp/fillet-scoped-focused.log",
+      "bytes": 2034,
+      "sha256": "ee5fb83b54f2865fc7cc88904eab5d4d9f3d13bcb6dfe5a615227ca60b122f2a",
+      "canonical_byte_match": true
+    },
+    {
+      "path": "/tmp/fillet-scoped-native-case.log",
+      "bytes": 287,
+      "sha256": "cb180a42ef3595f55505002a6f34345bb421f20ecc9096ba24ca2747bc9046f6",
+      "canonical_byte_match": true
+    },
+    {
+      "path": "/tmp/fillet-scoped-native-final.json",
+      "bytes": 557231,
+      "sha256": "e9e47401a1a41448ba1ee98870ac160047dccec1573be9fb54c5fa2d917b79a8",
+      "canonical_byte_match": false
+    },
+    {
+      "path": "/tmp/fillet-scoped-native-final.log",
+      "bytes": 152,
+      "sha256": "39df69fc0443eb5881f2caea0b5d6be9b1d8b69c283bcba083ffc2a5aba7fe61",
+      "canonical_byte_match": false
+    },
+    {
+      "path": "/tmp/fillet-scoped-native-frozen.json",
+      "bytes": 542942,
+      "sha256": "647ead956b519103798e4876aac5098176b6b0409e09fca15b6f9bafe968e69a",
+      "canonical_byte_match": true
+    },
+    {
+      "path": "/tmp/fillet-scoped-native-frozen.log",
+      "bytes": 152,
+      "sha256": "39df69fc0443eb5881f2caea0b5d6be9b1d8b69c283bcba083ffc2a5aba7fe61",
+      "canonical_byte_match": true
+    },
+    {
+      "path": "/tmp/fillet-scoped-native-interior.log",
+      "bytes": 127,
+      "sha256": "01ebafdddb7c2d34320e9998b284ac708c25255db5a8c352bd241c0996f753ea",
+      "canonical_byte_match": true
+    },
+    {
+      "path": "/tmp/fillet-scoped-native-protected-nested-failure.json",
+      "bytes": 557231,
+      "sha256": "e9e47401a1a41448ba1ee98870ac160047dccec1573be9fb54c5fa2d917b79a8",
+      "canonical_byte_match": true
+    },
+    {
+      "path": "/tmp/fillet-scoped-native-simple-nested.json",
+      "bytes": 542942,
+      "sha256": "31b9ae97d65107db73cc9a8f1e62cd097bd681c46c962bfd173966561c1da46f",
+      "canonical_byte_match": false
+    },
+    {
+      "path": "/tmp/fillet-scoped-native-simple-nested.log",
+      "bytes": 152,
+      "sha256": "39df69fc0443eb5881f2caea0b5d6be9b1d8b69c283bcba083ffc2a5aba7fe61",
+      "canonical_byte_match": false
+    },
+    {
+      "path": "/tmp/fillet-scoped-native.json",
+      "bytes": 416425,
+      "sha256": "f7c266bec18331b3360d3742b4b7dea965ff27df72f2d76cbe14e4ce968b6c4b",
+      "canonical_byte_match": false
+    },
+    {
+      "path": "/tmp/fillet-scoped-native.log",
+      "bytes": 261,
+      "sha256": "fff560a2786c748f72545e4b0c2148f780480884d220b0e92d0533dfefe3fa25",
+      "canonical_byte_match": false
+    },
+    {
+      "path": "/tmp/fillet-scoped-source-app-fixed.log",
+      "bytes": 98,
+      "sha256": "85c6cf6bf1f858b3a75272df711ca9ab0fbf9a55a30725e60b754acc709d79a9",
+      "canonical_byte_match": false
+    },
+    {
+      "path": "/tmp/fillet-scoped-source-app-nested-fixed.log",
+      "bytes": 147,
+      "sha256": "c0cf3de7adfde67e063969f6c3dfce3bc40a7a3694cb8d645ebf5409bed17591",
+      "canonical_byte_match": false
+    },
+    {
+      "path": "/tmp/fillet-scoped-source-app-nested.json",
+      "bytes": 280308,
+      "sha256": "640475f03abd85f0513794c0fbe15344a79c4f84e8f420e430dac4b4186e2c07",
+      "canonical_byte_match": false
+    },
+    {
+      "path": "/tmp/fillet-scoped-source-app-nested.log",
+      "bytes": 1061,
+      "sha256": "86eaaadfc8850f11a969c1836dda75b2b72748999eb49c9422966f2c92f2bddb",
+      "canonical_byte_match": false
+    },
+    {
+      "path": "/tmp/fillet-scoped-source-app-protected-nested-failure.json",
+      "bytes": 280308,
+      "sha256": "640475f03abd85f0513794c0fbe15344a79c4f84e8f420e430dac4b4186e2c07",
+      "canonical_byte_match": true
+    },
+    {
+      "path": "/tmp/fillet-scoped-source-app-simple-nested.json",
+      "bytes": 268505,
+      "sha256": "3f975fa3fba86a1278534723e92c78f6cb7acfb46a000bda42790dd4b0971ce8",
+      "canonical_byte_match": true
+    },
+    {
+      "path": "/tmp/fillet-scoped-source-app-simple-nested.log",
+      "bytes": 147,
+      "sha256": "c0cf3de7adfde67e063969f6c3dfce3bc40a7a3694cb8d645ebf5409bed17591",
+      "canonical_byte_match": false
+    },
+    {
+      "path": "/tmp/fillet-scoped-source-app.json",
+      "bytes": 156669,
+      "sha256": "d878d7554bd78d5a9a6cda690236b48aca3c7bf1c545b21c3c6ff9a3ba7e8672",
+      "canonical_byte_match": false
+    },
+    {
+      "path": "/tmp/fillet-scoped-source-app.log",
+      "bytes": 643,
+      "sha256": "99c6b449dfcd84a49d7b301d81cf48968ba2ffdc2005d78aba49b7895bd889bc",
+      "canonical_byte_match": true
+    },
+    {
+      "path": "/tmp/fillet-scoped-source-fixed.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "canonical_byte_match": false
+    },
+    {
+      "path": "/tmp/fillet-scoped-source.json",
+      "bytes": 282266,
+      "sha256": "8eff9f683b07ad4103f5f5d38b34dc108288b7937c83534a849b4a93d7376263",
+      "canonical_byte_match": true
+    },
+    {
+      "path": "/tmp/fillet-scoped-source.log",
+      "bytes": 391,
+      "sha256": "8baa6af57837ec7c7f1e5b2674ae44bc668b8da24f89b11a5737876dec559b42",
+      "canonical_byte_match": false
+    },
+    {
+      "path": "/tmp/fillet-scoped-tests-final.log",
+      "bytes": 1446,
+      "sha256": "8a5d499e71fa40941f59361d93c780b27c4851ec63c28860b34e5b0110e51fb9",
+      "canonical_byte_match": true
+    }
+  ],
+  "total_bytes": 4087227,
+  "scope": "Canonical inputs/final output/frozen failures verified byte-for-byte. Other deleted files are terminal superseded intermediate outputs/build/check logs, not claimed identical to accepted final output; accepted corpus, protected-context failures, initial topology/test failures and final provenance remain committed. Source worktrees, reusable target and binary untouched.",
+  "preserved": [
+    "/tmp/ingetrazo-source-fillet",
+    "/tmp/ingetrazo-metal-world-target",
+    "/tmp/ingetrazo-next-integration"
+  ],
+  "remaining_owned_fillets": []
+}
