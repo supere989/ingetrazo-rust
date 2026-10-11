@@ -1,0 +1,45 @@
+name: Native Metal application viewport consumer
+on:
+  workflow_dispatch:
+concurrency:
+  group: metal-world-app-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  app-consumer:
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        runner: [macos-15, macos-15-intel]
+    env:
+      CARGO_PROFILE_DEV_DEBUG: 0
+      CARGO_INCREMENTAL: 0
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Build only actual application viewport probe
+        run: |
+          mkdir -p world-app-evidence
+          git rev-parse HEAD > world-app-evidence/revision.txt
+          git ls-files crates/ingetrazo-gui/src/native_metal crates/ingetrazo-gui/src/native_metal.rs crates/ingetrazo-gui/src/viewport.rs crates/ingetrazo-metal/src crates/ingetrazo-gui/examples/native_metal_world_app.rs scripts/check-metal-world-app.py | xargs shasum -a 256 > world-app-evidence/source.sha256
+          cargo build --locked -p ingetrazo-gui --example native_metal_world_app -j2 > world-app-evidence/build.log 2>&1
+          shasum -a 256 target/debug/examples/native_metal_world_app > world-app-evidence/binary.sha256
+      - name: Execute bounded actual app offscreen pipeline
+        run: |
+          python3 - <<'PYTHON'
+          import subprocess
+          with open('world-app-evidence/runtime.log','w') as log:
+              subprocess.run(['target/debug/examples/native_metal_world_app','world-app-evidence/native'],stdout=log,stderr=subprocess.STDOUT,timeout=90,check=True)
+          PYTHON
+      - name: Validate exact frame inventory and changed behavior
+        if: ${{ !cancelled() }}
+        run: python3 scripts/check-metal-world-app.py world-app-evidence/native > world-app-evidence/checker.log 2>&1
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: world-app-${{ matrix.runner }}
+          path: world-app-evidence/
+          if-no-files-found: error
