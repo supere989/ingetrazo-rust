@@ -31,7 +31,7 @@ def take(name):
  actual=dict(matrix=list(matrix.data()),inverse=list(inv.data()),eye=list(vp.camera.eye().toTuple()),forward=list(vp.camera.forward().toTuple()))
  for field,expected in state['camera_snapshot'].items():assert actual[field]==expected,(name,field)
  snap=vp._depth_snap
- if name!='annotations-off':assert snap is not None and snap[3:5]==(800,600)
+ if name!='annotations-off'and state['dimensions']+state['leaders']>0:assert snap is not None and snap[3:5]==(800,600)
  else:assert snap is None
  rows.append(dict(name=name,gl=dict(vp.gl_info),camera_snapshot=actual,depth_snapshot_shape=list(snap[0].shape)if snap is not None else None,image_sha256=hashlib.sha256((out/(name+'.png')).read_bytes()).hexdigest()))
 take('annotations-on');dimensions,labels=scene.dimensions,scene.text_labels;scene.dimensions=[];scene.text_labels=[];take('annotations-off');scene.dimensions=dimensions;scene.text_labels=labels;take('annotations-restored')

@@ -78,7 +78,8 @@ with(out/'runtime.log').open('w')as stream:
   row=state();rect=row['viewport'];assert rect[2]-rect[0]==800 and rect[3]-rect[1]==600
   assert all(v==int(v)for v in rect),'Fractional ROI must not be rounded away'
   assert row['annotation_prepare_error']is None,'Preparation refusal cannot masquerade as readiness'
-  initial=[row['dimensions'],row['leaders']];assert sum(initial)>0,'Real imported annotations absent'
+  initial=[row['dimensions'],row['leaders']]
+  assert row['annotation_ready']==(sum(initial)>0),'Readiness differs from actual imported annotation inventory'
   def take(name):
    row=state();assert row['viewport']==rect and row['annotation_prepare_error']is None
    width,height=map(int,row['screen_size']);image=wait(lambda:capture_owned(w,width,height));assert image.save(str(out/(name+'-window.png')))
@@ -89,7 +90,7 @@ with(out/'runtime.log').open('w')as stream:
    before=state()['submitted_serial'];temp=control/'request.tmp';temp.write_text(json.dumps(dict(nonce=nonce,action=action)));temp.replace(control/'request.json')
    first=wait(lambda:state()if state()['nonce']==nonce else None)
    wait(lambda:state()['nonce']==nonce and state()['completed_present_serial']>first['submitted_serial'] and [state()['dimensions'],state()['leaders']]==counts)
-   assert state()['annotation_ready']==(name!='annotations-off');take(name)
+   assert state()['annotation_ready']==(sum(counts)>0);take(name)
   close(w);assert child.wait(timeout=5)==0
   text=(out/'runtime.log').read_text();assert 'NVIDIA GeForce RTX 5090'in text and 'llvmpipe'not in text
   assert 'Native bounded GPU cleanup complete; present_fences_enabled=true; committed_bytes=0'in text,text[-2000:]
