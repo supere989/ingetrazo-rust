@@ -871,17 +871,21 @@ impl Prepared {
         self.encode_inner(command, true, false, false)
     }
     fn encode_material_draws(&self,encoder:&ProtocolObject<dyn MTLRenderCommandEncoder>,placements:&PlacementMeshes,draws:&MaterialDraws,depth_enabled:bool,front_probe:bool)->Result<(),String>{
-        if draws.operations.is_empty(){self.encode_fill(encoder)?;self.encode_aux(encoder,depth_enabled,false);return Ok(());}
+        self.encode_material_draws_observed(encoder,placements,draws,depth_enabled,front_probe,None).map(|_|())
+    }
+    fn encode_material_draws_observed(&self,encoder:&ProtocolObject<dyn MTLRenderCommandEncoder>,placements:&PlacementMeshes,draws:&MaterialDraws,depth_enabled:bool,front_probe:bool,observation:Option<&super::world_iso_observation::Observation>)->Result<bool,String>{
+        if draws.operations.is_empty(){self.encode_fill(encoder)?;self.encode_aux(encoder,depth_enabled,false);return Ok(false);}
         let pipelines=self.pipeline.material.as_ref().ok_or("Metal material pipelines unavailable")?;let matrices=self.target.instance_matrices.as_ref().ok_or("Metal material matrices unavailable")?;
         let mut filled=false;
         for overlay_pass in [false,true] {
-            if overlay_pass && !filled {self.encode_fill(encoder)?;filled=true;}
+            if overlay_pass && !filled {if self.encode_fill_observed(encoder,observation)?{return Ok(true);}filled=true;}
             if overlay_pass {self.encode_aux(encoder,depth_enabled,false);}
         for op in &draws.operations {
             let overlay=self.overlay.is_some_and(|key|placements.packet.prototypes[op.prototype]==key);
             if overlay!=overlay_pass {continue;}
             let transparent=match op.kind{MaterialKind::Color(i)=>mesh_run_transparent(placements,op.prototype,i),MaterialKind::Texture{bucket,draw}=>placements.meshes[op.prototype].as_ref().unwrap().materials.as_ref().unwrap().textures[bucket].draws[draw].source.opacity<0.999,_=>false};
-            if !overlay && transparent && !filled{self.encode_fill(encoder)?;filled=true;}
+            if !overlay && transparent && !filled{if self.encode_fill_observed(encoder,observation)?{return Ok(true);}filled=true;}
+            if !overlay && matches!(op.kind,MaterialKind::DefaultBack) && observation.is_some_and(|o|o.checkpoint(encoder,0)){return Ok(true);}
             bind_section(encoder,if overlay {Section::OFF}else{self.section});
             // Original fvcol draw is inside the global _faces_count>0 block.
             if !overlay && matches!(op.kind,MaterialKind::Opaque{cull:true,..}) && !draws.guard.open(self.overlay) {continue;}
@@ -897,9 +901,10 @@ impl Prepared {
                 MaterialKind::Color(index)=>{let material=mesh.materials.as_ref().ok_or("Metal admitted material payload missing")?;let run=*material.runs.get(index).ok_or("Metal admitted material run stale")?;let default=run.phase==super::world_surface::Phase::DefaultBack;let alpha=matches!(run.phase,super::world_surface::Phase::TransparentFront|super::world_surface::Phase::TransparentBack);encoder.setDepthBias_slopeScale_clamp(if overlay||alpha||default{1.}else{0.},if overlay||alpha||default{1.}else{0.},0.);encoder.setRenderPipelineState(if alpha{&pipelines.colored_alpha}else{&self.pipeline.color});encoder.setDepthStencilState(Some(if !depth_enabled{&self.pipeline.depth_disabled}else if alpha{&pipelines.depth}else{&self.pipeline.depth}));encoder.setCullMode(if run.cull_front{MTLCullMode::Front}else if run.front_only{MTLCullMode::Back}else{MTLCullMode::None});unsafe{encoder.setVertexBuffer_offset_atIndex(Some(&material.colored_vertices.as_ref().ok_or("Metal admitted color vertex buffer missing")?.raw),0,0);encoder.setVertexBuffer_offset_atIndex(Some(&matrices.raw),op.packed*64,1);}bind_paint(encoder,&PaintUniform{front:if default{self.policy.back}else{paint.front},mode:if default{3}else{0},opacity:run.opacity,..paint});unsafe{encoder.drawIndexedPrimitives_indexCount_indexType_indexBuffer_indexBufferOffset_instanceCount(MTLPrimitiveType::Triangle,run.count,MTLIndexType::UInt32,&material.colored_indices.as_ref().ok_or("Metal admitted color index buffer missing")?.raw,run.first*4,1);}},
                 MaterialKind::Texture{bucket,draw}=>{let texture=&mesh.materials.as_ref().ok_or("Metal admitted material payload missing")?.textures[bucket];let draw=&texture.draws[draw];let source=&draw.source;let alpha=source.opacity<0.999;encoder.setDepthBias_slopeScale_clamp(if !source.back_side||alpha{1.}else{0.},if !source.back_side||alpha{1.}else{0.},0.);encoder.setRenderPipelineState(if alpha{&pipelines.textured_alpha}else{&pipelines.textured});encoder.setDepthStencilState(Some(if !depth_enabled{&self.pipeline.depth_disabled}else if alpha{&pipelines.depth}else{&self.pipeline.depth}));encoder.setCullMode(if source.back_side{MTLCullMode::Front}else if source.front_cull{MTLCullMode::Back}else{MTLCullMode::None});let opacity=op.opacity;let uniform=TexturePaint{opacity,shade:source.shade,hard_cutout:u32::from(texture.asset.cutout),height:self.extent().1,mean:[texture.asset.mean[0],texture.asset.mean[1],texture.asset.mean[2],if front_probe{-1.}else if !overlay && self.policy.mode.texture_mean(source.opacity,source.back_side){1.}else{0.}]};unsafe{encoder.setVertexBuffer_offset_atIndex(Some(&texture.vertices.raw),0,0);encoder.setVertexBuffer_offset_atIndex(Some(&matrices.raw),op.packed*64,1);encoder.setFragmentTexture_atIndex(Some(&texture.asset.image),0);encoder.setFragmentSamplerState_atIndex(Some(&texture.asset.sampler),0);encoder.setFragmentBytes_length_atIndex(std::ptr::NonNull::from(&uniform).cast(),std::mem::size_of::<TexturePaint>(),0);encoder.drawPrimitives_vertexStart_vertexCount_instanceCount(MTLPrimitiveType::Triangle,draw.first as usize,draw.count as usize,1);}},
             }
+            if !overlay && matches!(op.kind,MaterialKind::DefaultBack) && observation.is_some_and(|o|o.checkpoint(encoder,1)){return Ok(true);}
         }
         }
-        encoder.setDepthBias_slopeScale_clamp(0.,0.,0.);Ok(())
+        encoder.setDepthBias_slopeScale_clamp(0.,0.,0.);Ok(false)
     }
     fn encode_contours(&self,encoder:&ProtocolObject<dyn MTLRenderCommandEncoder>)->Result<(),String>{
         let Some(pipeline)=&self.contour else{return Ok(());};
@@ -1058,9 +1063,10 @@ impl Prepared {
             encoder.setVertexBytes_length_atIndex(std::ptr::NonNull::from(camera).cast(), 64, 2);
         }
         bind_section(&encoder,self.section);
+        let mut prefix_stopped=false;
         if let Some(placements) = &self.placements {
             if let Some(draws)=&self.target.material_draws{
-                if let Err(error)=self.encode_material_draws(&encoder,placements,draws,depth_enabled,front_probe){encoder.endEncoding();return Err(error);}
+                match self.encode_material_draws_observed(&encoder,placements,draws,depth_enabled,front_probe,observation){Ok(stopped)=>prefix_stopped=stopped,Err(error)=>{encoder.endEncoding();return Err(error);}}
             }else{
             for run in &self.target.order.as_ref().unwrap().runs {
                 encoder.setFrontFacingWinding(if run.reflected {
@@ -1084,9 +1090,9 @@ impl Prepared {
             encode_mesh(&encoder, mesh, &self.mvp, self.policy);
         }
         if self.target.material_draws.is_none(){self.encode_fill(&encoder)?;self.encode_aux(&encoder,depth_enabled,false);}
-        self.encode_contours(&encoder)?;
+        if !prefix_stopped {self.encode_contours(&encoder)?;
         self.encode_aux(&encoder,depth_enabled,true);
-        if let Some(observation)=observation {observation.tile(&encoder);}
+        if let Some(observation)=observation {observation.tile(&encoder);}}
         if let Some(resolve)=&self.resolve_prototype {resolve.tile(&encoder);}
         encoder.endEncoding();
         if let Some(resolve)=&self.resolve_prototype {resolve.compute(command,&self.target.multisample.as_ref().ok_or("Resolve prototype requires multisample target")?.raw,&self.target.color.raw)?;}
@@ -1401,7 +1407,7 @@ impl Prepared {
         if self.target.material_draws.as_ref().is_none_or(|d|d.operations.iter().any(|op|matches!(op.kind,MaterialKind::Legacy))) {
             return Err("Front-facing diagnostic requires explicit material runs".into());
         }
-        self.submit_diagnostic_inner(metal, true, true, None,None)
+        self.submit_diagnostic_inner(metal, true, true, None,None,false,None)
     }
     /// Cold bounded receipt of actual admitted commands, not recomputed Scene metadata.
     pub fn material_diagnostic(&self) -> Result<serde_json::Value, String> {
@@ -1423,14 +1429,14 @@ impl Prepared {
         Ok(serde_json::json!({"depth_compare":"less_equal","sample_count":self.sample_count(),"operations":rows}))
     }
     pub fn submit_diagnostic(self: &Arc<Self>, metal: &NativeMetal) -> Result<Diagnostic, String> {
-        self.submit_diagnostic_inner(metal, true, false, None,None)
+        self.submit_diagnostic_inner(metal, true, false, None,None,false,None)
     }
     /// Negative control only: literal disabled depth state must fail the near-first oracle.
     pub fn submit_diagnostic_without_depth(
         self: &Arc<Self>,
         metal: &NativeMetal,
     ) -> Result<Diagnostic, String> {
-        self.submit_diagnostic_inner(metal, false, false, None,None)
+        self.submit_diagnostic_inner(metal, false, false, None,None,false,None)
     }
     pub fn source_resolve_diagnostic(&self)->serde_json::Value{
         self.resolve_prototype.as_ref().map_or(serde_json::json!({"path":"untouched-native-reference"}),|r|r.diagnostic(self.extent()))
@@ -1439,13 +1445,23 @@ impl Prepared {
     pub fn submit_sample_diagnostic(self:&Arc<Self>,metal:&NativeMetal,points:[[u32;2];4])->Result<Diagnostic,String>{
         if !self.diagnostic_samples || self.sample_count()!=4 || self.target.multisample.is_none(){return Err("Cold four-sample observation opt-in required".into());}
         if points.iter().any(|p|p[0]>=self.extent().0||p[1]>=self.extent().1){return Err("Sample observation pixel outside target".into());}
-        self.submit_diagnostic_inner(metal,true,false,Some(points),None)
+        self.submit_diagnostic_inner(metal,true,false,Some(points),None,false,None)
     }
     /// Probe only, final color before tile normalization and final post-cap depth.
     pub fn submit_iso_observation(self:&Arc<Self>,metal:&NativeMetal,points:[[u32;2];3])->Result<Diagnostic,String>{
         if self.sample_count()!=4 || self.source_resolve_diagnostic()["path"]!="same-pass-tile" {return Err("Iso observation requires production four-sample tile resolve".into());}
         if points.iter().any(|p|p[0]>=self.extent().0||p[1]>=self.extent().1){return Err("Iso point outside admitted target".into());}
-        self.submit_diagnostic_inner(metal,true,false,None,Some(points))
+        self.submit_diagnostic_inner(metal,true,false,None,Some(points),false,None)
+    }
+    /// Probe-only five in-pass checkpoints or one terminal prefix; never resumes a pass.
+    pub fn submit_iso_stages(self:&Arc<Self>,metal:&NativeMetal,points:[[u32;2];3],stop:Option<u8>)->Result<Diagnostic,String>{
+        if stop.is_some_and(|s|s>3){return Err("Iso prefix stage outside0..3".into());}
+        if self.sample_count()!=4 || self.source_resolve_diagnostic()["path"]!="same-pass-tile" {return Err("Iso stages require actual production tile path".into());}
+        if points!=[[297,329],[297,328],[298,303]]{return Err("Iso stage points differ from literal inventory".into());}
+        if self.overlay.is_some() || self.fill.is_none(){return Err("Iso stages require literal non-overlay filled scene".into());}
+        let commands=self.material_diagnostic()?;
+        if commands["operations"].as_array().map(Vec::len)!=Some(2) || commands["operations"][0]["draw"]["kind"]!="opaque" || commands["operations"][1]["draw"]["kind"]!="default_back" {return Err(format!("Iso stage draw inventory differs:{commands:?}"));}
+        self.submit_diagnostic_inner(metal,true,false,None,Some(points),true,stop)
     }
     fn submit_diagnostic_inner(
         self: &Arc<Self>,
@@ -1454,6 +1470,7 @@ impl Prepared {
         front_probe: bool,
         points:Option<[[u32;2];4]>,
         iso_points:Option<[[u32;2];3]>,
+        iso_stages:bool,iso_stop:Option<u8>,
     ) -> Result<Diagnostic, String> {
         self.owner.validate(metal)?;
         let (w, h) = self.extent();
@@ -1473,7 +1490,7 @@ impl Prepared {
         } else {
             "World explicit Always/no-write negative diagnostic"
         })));
-        let iso_owner=iso_points.map(|p|super::world_iso_observation::Observation::new(metal,p)).transpose()?;
+        let iso_owner=iso_points.map(|p|super::world_iso_observation::Observation::new(metal,p,iso_stages,iso_stop)).transpose()?;
         if let Some(o)=&iso_owner {
             o.owner.validate(metal)?;
             let Some(resolve)=&self.resolve_prototype else{return Err("Iso production resolve owner absent".into());};
@@ -1517,10 +1534,21 @@ impl Diagnostic {
     pub fn iso_values(&self)->Result<([[f32;4];12],[f32;12]),String>{
         if self.command.status()!=MTLCommandBufferStatus::Completed{return Err("Iso completion not acknowledged".into());}
         let o=self.iso_owner.as_ref().ok_or("No iso observation submitted")?;
-        let colors=unsafe{std::ptr::read(o.colors.raw.contents().as_ptr().cast::<[[f32;4];12]>())};
+        let stage=o.stop.unwrap_or(4) as usize;
+        let colors=unsafe{std::ptr::read(o.colors.raw.contents().as_ptr().cast::<u8>().add(stage*192).cast::<[[f32;4];12]>())};
         let depths=unsafe{std::ptr::read(o.depths.raw.contents().as_ptr().cast::<[f32;12]>())};
         if colors.iter().flatten().chain(depths.iter()).any(|v|!v.is_finite()){return Err("Iso observer left nonfinite/unwritten samples".into());}
         Ok((colors,depths))
+    }
+
+    /// Full-pass color checkpoints only; rejected contenders are not inferred.
+    pub fn iso_stage_colors(&self)->Result<[[[f32;4];12];5],String>{
+        if self.command.status()!=MTLCommandBufferStatus::Completed{return Err("Iso stage completion absent".into());}
+        let o=self.iso_owner.as_ref().ok_or("Iso stage owner absent")?;
+        if !o.stages || o.stop.is_some(){return Err("Full stage colors require an uninterrupted stage observation".into());}
+        let values=unsafe{std::ptr::read(o.colors.raw.contents().as_ptr().cast::<[[[f32;4];12];5]>())};
+        if values.iter().flatten().flatten().any(|v|!v.is_finite()){return Err("Iso stage slice unwritten/nonfinite".into());}
+        Ok(values)
     }
 
     /// Read-only metadata; readback itself remains gated on Completed.
@@ -1716,9 +1744,10 @@ impl Prepared {
         &self,
         encoder: &ProtocolObject<dyn MTLRenderCommandEncoder>,
     ) -> Result<(), String> {
-        let Some(fill) = &self.fill else {
-            return Ok(());
-        };
+        self.encode_fill_observed(encoder,None).map(|_|())
+    }
+    fn encode_fill_observed(&self,encoder:&ProtocolObject<dyn MTLRenderCommandEncoder>,observation:Option<&super::world_iso_observation::Observation>)->Result<bool,String>{
+        let Some(fill) = &self.fill else {return Ok(false);};
         let pipelines = self
             .pipeline
             .fill
@@ -1819,6 +1848,7 @@ impl Prepared {
                 }
             }
         }
+        if observation.is_some_and(|o|o.checkpoint(encoder,2)){return Ok(true);}
         encoder.setCullMode(MTLCullMode::None);
         encoder.setFrontFacingWinding(MTLWinding::CounterClockwise);
         encoder.setDepthStencilState(Some(&pipelines.cap_depth));
@@ -1844,10 +1874,11 @@ impl Prepared {
                 1,
             );
         }
+        if observation.is_some_and(|o|o.checkpoint(encoder,3)){return Ok(true);}
         encoder.setDepthBias_slopeScale_clamp(0., 0., 0.);
         encoder.setDepthStencilState(Some(&self.pipeline.depth));
         bind_section(encoder, self.section);
-        Ok(())
+        Ok(false)
     }
 }
 
