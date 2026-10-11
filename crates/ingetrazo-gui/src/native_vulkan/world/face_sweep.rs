@@ -92,6 +92,7 @@ impl Owner {
     pub fn packet(&self) -> Option<&Packet> {
         self.packet.as_ref()
     }
+    pub fn image_stats(&self)->serde_json::Value {let s=self.textures.as_ref().unwrap().cache_stats();serde_json::json!({"hashes":s.hashes,"decodes":s.decodes,"uploads":s.uploads,"shared_images":s.shared_images})}
     pub fn stats(&self) -> (u64, u64, super::super::textures::Stats) {
         (
             self.uploads,
@@ -109,6 +110,7 @@ impl Owner {
         epoch: u64,
         fence: vk::Fence,
         completed: u64,
+        source_textures:&super::super::textures::Textures,
     ) -> Result<Option<Prepared>, String> {
         let key = sweep.map(|s| {
             (
@@ -231,6 +233,8 @@ impl Owner {
                         )?,
                 );
             } else {
+                // Warm and offset-only updates do not scan sampled owners.
+                if key.is_some(){self.textures.as_mut().unwrap().share_completed_images(context,source_textures)?;}
                 candidate = Some(self.textures.as_mut().unwrap().prepare_preview(
                     context,
                     &mut self.resources,

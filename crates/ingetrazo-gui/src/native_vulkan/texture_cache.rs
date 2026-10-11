@@ -11,6 +11,7 @@ pub struct AssetId([u8; 32]);
 #[derive(Default, Debug)]
 pub struct TextureStats {
     pub hashes: u64,
+    pub shared_images:u64,
     pub encoded_bytes_hashed: u64,
     pub decodes: u64,
     pub uploads: u64,
@@ -43,7 +44,7 @@ pub struct DecodedTexture {
     pub hard_cutout: bool,
 }
 struct Entry {
-    image: TextureImage,
+    image: std::sync::Arc<TextureImage>,
     hard_cutout: bool,
     last_use: u64,
 }
@@ -51,7 +52,7 @@ struct Entry {
 /// Build referencing descriptors first; abandon drops only the new resource.
 pub struct PreparedTexture {
     id: AssetId,
-    image: Option<TextureImage>,
+    image: Option<std::sync::Arc<TextureImage>>,
     view: vk::ImageView,
     sampler: vk::Sampler,
     hard_cutout: bool,
@@ -112,6 +113,20 @@ impl TextureCache {
         self.stats.encoded_bytes_hashed += encoded.len() as u64;
         self.stats.hash_ms += start.elapsed().as_secs_f64() * 1000.;
         EncodedAsset { id, encoded }
+    }
+    /// Capture completed immutable image owners from a sibling draw cache.
+    /// Per-consumer descriptor retirement and draw serials remain independent;
+    /// physical allocation/ledger ownership is shared until the last Arc leaves.
+    pub(crate) fn share_completed_images(&mut self,context:&VulkanContext,source:&Self)->Result<(),String>{
+        let missing=source.images.iter().filter(|(id,_)|!self.images.contains_key(id)).count();
+        for entry in source.images.values(){entry.image.admit_shared_context(context)?;}
+        self.images.try_reserve(missing).map_err(|_|"Shared sampled owner map admission")?;
+        for(&id,entry)in &source.images{
+            if let std::collections::hash_map::Entry::Vacant(slot)=self.images.entry(id){
+                slot.insert(Entry{image:entry.image.clone(),hard_cutout:entry.hard_cutout,last_use:entry.last_use});self.stats.shared_images+=1;
+            }
+        }
+        Ok(())
     }
     pub fn contains(&self, id: AssetId) -> bool {
         self.images.contains_key(&id)
@@ -174,7 +189,7 @@ impl TextureCache {
             view: image.view,
             sampler: image.sampler,
             hard_cutout: decoded.hard_cutout,
-            image: Some(image),
+            image: Some(std::sync::Arc::new(image)),
             pending: Some(data),
         })
     }
@@ -184,7 +199,7 @@ impl TextureCache {
         if admitted.is_empty(){return Ok(());}
         let mut candidates=admitted;
         let mut inputs=Vec::new();inputs.try_reserve_exact(candidates.len()).map_err(|_|"Image batch input admission")?;
-        for c in &candidates{if let Some(data)=&c.pending{inputs.push((c.image.as_ref().expect("pending image owner"),data.as_slice()));}}
+        for c in &candidates{if let Some(data)=&c.pending{inputs.push((c.image.as_ref().expect("pending image owner").as_ref(),data.as_slice()));}}
         let start=Instant::now();
         resources.upload_texture_batch(context,&inputs)?;
         self.stats.upload_ms+=start.elapsed().as_secs_f64()*1000.;

@@ -407,6 +407,11 @@ pub struct TextureImage {
     readback_enabled: bool,
 }
 impl TextureImage {
+    pub(crate) fn admit_shared_context(&self,context:&VulkanContext)->Result<(),String>{
+        if !std::sync::Arc::ptr_eq(&self.lifetime,&context.lifetime){return Err("Shared sampled image context differs from immutable owner".into());}
+        self.lifetime.check()
+    }
+
     /// RGBA8 upload; callers supply source-compatible row orientation.
     pub fn rgba8(context: &VulkanContext, resources: &mut Resources, extent: vk::Extent2D, data: &[u8], mips: bool, diagnostic_readback: bool) -> Result<Self, String> {
         Self::color(context, resources, extent, data, ingetrazo_render::texture_layout::Format::Rgba8, mips, diagnostic_readback)

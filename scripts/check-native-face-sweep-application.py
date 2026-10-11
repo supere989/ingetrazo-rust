@@ -111,7 +111,7 @@ try:
    acquired=action(1,"acquire");assert state()["label"] is not None and state()["label"]["distance"]==0 and np.any(roi(acquired)!=base_roi)
    shown=action(2,"drag",distance=.6);assert state()["label"]["distance"]==abs(expected_distance) and state()["world"]["preview_bytes"]>0 and np.any(roi(shown)!=roi(acquired))
    warm=dict(state()["world"]);serial=state()["submitted_serial"];wait(lambda:state()["completed_present_serial"]>serial+3)
-   for key in ["base_uploads","preview_uploads","texture_builds","texture_uploads","sampled_entries"]:assert state()["world"][key]==warm[key],f"Warm work changed {key}"
+   for key in ["base_uploads","preview_uploads","texture_builds","texture_uploads","sampled_entries","image_owners"]:assert state()["world"][key]==warm[key],f"Warm work changed {key}"
    offset=action(3,"drag",distance=.9);assert state()["world"]["base_uploads"]==warm["base_uploads"] and state()["world"]["preview_uploads"]==warm["preview_uploads"]+1
    assert np.any(roi(offset)!=roi(shown))
    before=state();refused=action(4,"refuse",True,distance=1.2)
@@ -131,7 +131,9 @@ try:
    assert state()["old_label_owner_alive"],"CAD refusal dropped old complete label owner"
    cad_retry=action(10,"retry");assert np.any(roi(cad_retry)!=roi(font_retry))
    wait(lambda:state()["old_label_owner_alive"] is False)
-   cancelled=action(11,"cancel");assert state()["label"] is None and np.array_equal(roi(cancelled),base_roi)
+   cancel_uploads=state()["world"]["base_uploads"]
+   cancelled=action(11,"cancel");assert state()["world"]["base_uploads"]==cancel_uploads,"Cancel reuploaded base geometry"
+   assert state()["label"] is None and np.array_equal(roi(cancelled),base_roi)
    before=state()["submitted_serial"];lib.XResizeWindow(d,window,900,650);lib.XFlush(d);wait(lambda:state()["screen_size"]==[900.0,650.0] and state()["completed_present_serial"]>before)
    before=state()["submitted_serial"];lib.XResizeWindow(d,window,1000,700);lib.XFlush(d);wait(lambda:state()["screen_size"]==[1000.0,700.0] and state()["completed_present_serial"]>before)
    assert np.array_equal(roi(take("resize-restored")),base_roi)

@@ -8,6 +8,8 @@ use std::collections::{HashMap,HashSet};
 #[derive(Clone,Debug)]struct Draw{buffer:BufferId,set:vk::DescriptorSet,asset:AssetId,first:u32,count:u32,opacity:f32,shade:f32,cutout:bool,back:bool,cull:bool,opaque:bool,path:String,order:usize,mean:Option<[f32;3]>,shadow_only:bool,billboard:bool,missing:bool,bitmap:bool}
 struct Pool{device:Device,handle:vk::DescriptorPool}
 impl Drop for Pool{fn drop(&mut self){unsafe{self.device.destroy_descriptor_pool(self.handle,None)}}}
+pub(super) struct DrawState{pool:Option<Pool>,buffers:Vec<BufferId>,draws:Vec<Draw>}
+impl DrawState{pub(super) fn buffers(&self)->&[BufferId]{&self.buffers}}
 pub(crate) struct Publication{retirement:super::resources::CompletedRetirement,active:HashSet<AssetId>}
 pub struct Candidate{pool:Option<Pool>,buffers:Vec<BufferId>,draws:Vec<Draw>,images:Vec<PreparedTexture>,references:Option<super::reference_images::Candidate>,pub contours:Vec<(BufferId,u32,u32)>,averages:super::texture_average::Candidate,average_active:HashSet<AssetId>}
 #[derive(Default,Clone,Copy,Debug)]pub struct Stats{pub builds:u64,pub uploads:u64,pub vertex_bytes:u64,pub draws:u64,pub cache_hits:u64,pub rollbacks:u64,pub average_decodes:u64,pub average_hits:u64,pub average_entries:usize,pub sampled_entries:usize}
@@ -15,6 +17,9 @@ pub struct Textures{references:super::reference_images::ReferenceImages,image_ke
 pub(crate) struct VertexUpdate{old:BufferId,new:BufferId,index:usize,draws:Vec<usize>,shades:Option<Vec<f32>>,bytes:usize}
 pub(crate) struct VertexRefresh{updates:Vec<VertexUpdate>,retirement:super::resources::CompletedRetirement}
 impl Textures{
+ pub(crate) fn share_completed_images(&mut self,context:&VulkanContext,source:&Self)->Result<(),String>{self.cache.share_completed_images(context,&source.cache)}
+ pub(super) fn take_draw_state(&mut self)->DrawState{DrawState{pool:self.pool.take(),buffers:std::mem::take(&mut self.buffers),draws:std::mem::take(&mut self.draws)}}
+ pub(super) fn swap_draw_state(&mut self,state:&mut DrawState){std::mem::swap(&mut self.pool,&mut state.pool);std::mem::swap(&mut self.buffers,&mut state.buffers);std::mem::swap(&mut self.draws,&mut state.draws);}
  pub(crate) fn asset_layout(&self)->vk::DescriptorSetLayout{self.descriptor_layout}
  pub fn new(context:&VulkanContext,render_pass:vk::RenderPass,samples:vk::SampleCountFlags,budget:std::sync::Arc<super::budget::VulkanBudget>)->Result<Self,String>{
   let device=context.device.clone();let mut result=Self{references:super::reference_images::ReferenceImages::new(context,render_pass,samples)?,image_key:None,probe_pressure:false,budget,device,layout:vk::PipelineLayout::null(),descriptor_layout:vk::DescriptorSetLayout::null(),pipelines:[vk::Pipeline::null();16],billboard_pipelines:[vk::Pipeline::null();2],averages:super::texture_average::Cache::new(ingetrazo_render::source_texture_decode::Limits::default(),65536),pool:None,buffers:vec![],draws:vec![],cache:TextureCache::default(),stats:Stats::default()};
@@ -117,13 +122,20 @@ impl Textures{
  }
  pub fn abort(&mut self,resources:&mut Resources,mut candidate:Candidate,fence:vk::Fence,completed:u64)->Result<(),String>{drop(candidate.pool.take());for buffer in candidate.buffers{resources.retire(buffer)?;}resources.collect(fence,completed)?;self.stats.rollbacks+=1;Ok(())}
  pub(crate) fn preflight_publication(&mut self,context:&VulkanContext,resources:&Resources,candidate:&Candidate,fence:vk::Fence,completed:u64,extra_old:&[BufferId],extra_next:&[BufferId])->Result<Publication,String>{
+  self.preflight_publication_retaining(context,resources,candidate,fence,completed,extra_old,extra_next,false,None)
+ }
+ pub(super) fn preflight_publication_retaining(&mut self,context:&VulkanContext,resources:&Resources,candidate:&Candidate,fence:vk::Fence,completed:u64,extra_old:&[BufferId],extra_next:&[BufferId],retain_current:bool,retained:Option<&DrawState>)->Result<Publication,String>{
   if candidate.references.is_none(){return Err("Texture candidate lacks reference publication".into());}
-  let mut old=Vec::new();old.try_reserve_exact(self.buffers.len().checked_add(extra_old.len()).ok_or("Retirement count overflow")?).map_err(|_|"Retirement list admission")?;old.extend_from_slice(&self.buffers);old.extend_from_slice(extra_old);
+  let mut old=Vec::new();old.try_reserve_exact(self.buffers.len().checked_add(extra_old.len()).ok_or("Retirement count overflow")?).map_err(|_|"Retirement list admission")?;if !retain_current{old.extend_from_slice(&self.buffers);}old.extend_from_slice(extra_old);
   let mut next=Vec::new();next.try_reserve_exact(candidate.buffers.len().checked_add(extra_next.len()).ok_or("Candidate count overflow")?).map_err(|_|"Candidate list admission")?;next.extend_from_slice(&candidate.buffers);next.extend_from_slice(extra_next);
   self.cache.preflight_publication(candidate.images.iter().chain(candidate.references.iter().flat_map(|r|r.images())))?;
   let mut active=HashSet::new();let count=candidate.draws.len().checked_add(candidate.references.as_ref().map_or(0,|r|r.assets().count())).ok_or("Active texture count overflow")?;
+  let retained_count=retained.map_or(0,|s|s.draws.len());
+  let count=count.checked_add(retained_count).and_then(|n|n.checked_add(if retain_current{self.draws.len()}else{0})).ok_or("Retained texture identity overflow")?;
   active.try_reserve(count).map_err(|_|"Active texture identity admission")?;
   active.extend(candidate.draws.iter().filter(|d|d.set!=vk::DescriptorSet::null()).map(|d|d.asset).chain(candidate.references.iter().flat_map(|r|r.assets())));
+  if retain_current{active.extend(self.draws.iter().filter(|d|d.set!=vk::DescriptorSet::null()).map(|d|d.asset));}
+  if let Some(retained)=retained{active.extend(retained.draws.iter().filter(|d|d.set!=vk::DescriptorSet::null()).map(|d|d.asset));}
   let retirement=resources.publication_preflight(context,fence,completed,&old,&next)?;
   Ok(Publication{retirement,active})
  }
