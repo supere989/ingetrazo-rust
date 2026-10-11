@@ -1,0 +1,220 @@
+{
+  "runtime_commit": "79dd958e0fcbb32a7b3d92388ea9223a13528cb1",
+  "original_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "source_files": {
+    "crates/ingetrazo-core/src/scene.rs": "3840884315d96c4993710440afff8e278641e13001114a1b670bacc9b5691702",
+    "crates/ingetrazo-core/src/textlabel.rs": "3b859640a537a000b10ab72520564272338aa9b39374726a63477c6d643f3f2b",
+    "crates/ingetrazo-formats/src/igz.rs": "5d1a9902ae0b277a721e4b898c806e67c57a6bd14b7743d8a2426d5ef51ad4a7",
+    "crates/ingetrazo-gui/examples/annotation_text_create_fixture.rs": "3091f94dbcdb0b16d0b8861c4bf6a4785379a698810194dc042e14e0b60fa090",
+    "crates/ingetrazo-gui/src/annotation_editor.rs": "c124244b95b6d670add1c7cb45b970c2c51c2bfaadd7bac6ffa7e1f751694363",
+    "crates/ingetrazo-gui/src/app.rs": "94958639ed04e21007d0b8d4dc595cb6805a8ff85d671a4a2c4642e5fc2bc27a",
+    "crates/ingetrazo-gui/src/component_edit.rs": "ea37d524df66b38353856e3b6f92617432142344c700c8b312665be50175984e",
+    "crates/ingetrazo-gui/src/tool_history.rs": "0b9b49d91e582317b3416498071c0b1e62be08bf78dc0c0ff97164e98e356f30",
+    "crates/ingetrazo-gui/src/viewport.rs": "ce085b451710d1d747981dd54e62f2137c2d87415113f962f77f61ebf217dacd",
+    "crates/ingetrazo-tools/src/base.rs": "4468118f0d430eea964e6bc7e9f72cd5d319309c40ff93d11c086f02a95c1f44",
+    "crates/ingetrazo-tools/src/text.rs": "5b6509c6745550b52c075a8f322b1ffcdf98170911e3fc869ef450904eb1cf68",
+    "scripts/check-annotation-text-create.py": "b1f8e4786b48628ce8c0dd2eeef31e046c23cd8b7cddbf7df7632a479825ae49",
+    "scripts/reference-annotation-text-create.py": "e7d89ad4f57ad1881c92985ab5091363726e2cc5cdb87ed89443da671b545f5e",
+    "scripts/reference-annotation-text-history.py": "26af0f712e9a843ae031c570ec545b434130078e3d7a24aac6ad4e031512e5c3",
+    "scripts/reopen-annotation-text-create.py": "6d1fedb07b0d62ac4f13f55ddfc28b033f983640fd7f06e3c06d207d892f5b7f"
+  },
+  "original_files": {
+    "tools/text.py": "cad7317b3978d4480623e32997368f806ba2d028b39bd193bb011e370e8e34d2",
+    "core/history.py": "2eb66a1d557099b51383988a7819145289fc4ce2c37fc7de3a92ed35b5830559",
+    "core/units.py": "5885b9f52b2394c21bb5421af482cf40c6273818fd70e2a85b5670c10914b1ea",
+    "core/mesh.py": "5f2c1625e6dd717db029ba39a9de337e75beec06bd0df28a592a8a34875ca22c",
+    "views/viewport.py": "1fb62f55b8f559deb3676924ee69a9a444397faa28c49651111cea44e420c724",
+    "formats/igz.py": "f318d685830c49c2fede7fd5a238ac7a1469ee0b0226cf48cab3751e194a9576"
+  },
+  "binaries": {
+    "/tmp/ingetrazo-ai-registry-target/debug/examples/annotation_text_create_fixture": {
+      "bytes": 27016912,
+      "sha256": "21049b85564ca613832e04ebcf35cf681fd2fafe73e3d89d8533383449cca324"
+    },
+    "/tmp/ingetrazo-ai-registry-target/debug/examples/annotation_edit_style_fixture": {
+      "bytes": 32650320,
+      "sha256": "f5ecc98406b47b63c89c28e3a20e9d3be4e0002bab0993af70d8a97d82ab1acf"
+    },
+    "/tmp/ingetrazo-ai-registry-target/debug/deps/ingetrazo_gui-134b3c2a4f97972a": {
+      "bytes": 67059664,
+      "sha256": "e8bc6f53e86458305adc8709485bae91df51bc4b9680a23522bdb2bf12d5d20e"
+    }
+  },
+  "records": {
+    "attempts.json": {
+      "bytes": 749,
+      "sha256": "6763db299272c722a5dc37279802990c06532b8c0e0101920146db13fefe010c"
+    },
+    "closed-face-input.igz": {
+      "bytes": 4676,
+      "sha256": "fcb6ead98d378be62b8d96cb0c23a3c9de5ac9f76ab8055598cb9c8160966964"
+    },
+    "closed-face-native.igz": {
+      "bytes": 5313,
+      "sha256": "d0162dd04b98cbb27f42ae9794a2a95f9d95d6e0563110305fd6e53a2b7af5fd"
+    },
+    "closed-face.igz": {
+      "bytes": 4877,
+      "sha256": "f26245f643d0f45f17c6ece30131da5794924f1223d5befb7811aac28dc49dd7"
+    },
+    "failed-group-edge-suggestion.json": {
+      "bytes": 47930,
+      "sha256": "8533b0bc22ef9d408d65d4455371a7c9df252432d93c59b9d7d74234e98a5b8a"
+    },
+    "failed-incomplete-context-finish.igz": {
+      "bytes": 4569,
+      "sha256": "4fbca1bbc5ea1384dd24a9d93ea57a8e7540b36258a1be0014e6fdfdb0d0e519"
+    },
+    "failed-unknown-label-root-edge.igz": {
+      "bytes": 3469,
+      "sha256": "f13a6d220a5230eef22219296550cee9b5b808197ee5d43f83cf6f4475bcbd63"
+    },
+    "failed-unknown-label.json": {
+      "bytes": 127,
+      "sha256": "16947d5f96a7e3c7125e3afed405adddd756f643c741d1cd2db2cac7da7a39f6"
+    },
+    "final-named-build.log": {
+      "bytes": 20245,
+      "sha256": "f375937d2a2a6066f56a9ffad022420a53652cb78a436d159c841eb463af1b7c"
+    },
+    "input.igz": {
+      "bytes": 2512,
+      "sha256": "c9ce01d930fff89d9af94b5580093f6f82626b75d6ce690482e32fd787d4a87b"
+    },
+    "modal-test-final.log": {
+      "bytes": 19401,
+      "sha256": "e27581e0806169b6280b4441f8832548ec8fe7d5b84dedcbfefd7574bcf437ba"
+    },
+    "modal-test.log": {
+      "bytes": 19401,
+      "sha256": "cff7b458030991572a53186245a632b71ad6b805f0ced84ef1222ac543105609"
+    },
+    "native-history.json": {
+      "bytes": 4907,
+      "sha256": "108d7abe3418f3473ee385584f1825d9ba9cd4cfae6838c83c04199862266b14"
+    },
+    "native.json": {
+      "bytes": 47946,
+      "sha256": "231a9c3b2bb79a5031f44cb5fc42812a0075ed62fed95ea05c10363bd93fa3f2"
+    },
+    "nested-coordinates-input.igz": {
+      "bytes": 4504,
+      "sha256": "eb6b8c65d8a98807e66efdd16497847d1df150a90983e184904f580889623c8c"
+    },
+    "nested-coordinates-native.igz": {
+      "bytes": 5200,
+      "sha256": "a8ee38d4b81703b88eb23bd83dc43d8b16ca474a2f079cb9464dd9f055f94f16"
+    },
+    "nested-coordinates.igz": {
+      "bytes": 4979,
+      "sha256": "775703b6a4ec6a7864a1210f491634876665cf0c00bc4f112a8da04d55a4b7dc"
+    },
+    "nested-edge-input.igz": {
+      "bytes": 4504,
+      "sha256": "eb6b8c65d8a98807e66efdd16497847d1df150a90983e184904f580889623c8c"
+    },
+    "nested-edge-native.igz": {
+      "bytes": 5194,
+      "sha256": "f51fda441e4f0330bf8b1ceda5ccfd47a4163fd91e0baccb5031c2026eb8fd2f"
+    },
+    "nested-edge.igz": {
+      "bytes": 4973,
+      "sha256": "f4f0d40591ea918215ecddac774ee529b129a70d7d7dbf014a380cd2ec781e3d"
+    },
+    "nested-face-input.igz": {
+      "bytes": 4504,
+      "sha256": "eb6b8c65d8a98807e66efdd16497847d1df150a90983e184904f580889623c8c"
+    },
+    "nested-face-native.igz": {
+      "bytes": 5194,
+      "sha256": "f7a4a2c384207e1c9c0fd7c55ee7a25fbd4c0b40b6cc709a33b6e37f9985e555"
+    },
+    "nested-face.igz": {
+      "bytes": 4973,
+      "sha256": "c9184c3a34db456104919e894e58701c2e79682662ff6492daf9c76933f20e1b"
+    },
+    "original-history.json": {
+      "bytes": 4907,
+      "sha256": "108d7abe3418f3473ee385584f1825d9ba9cd4cfae6838c83c04199862266b14"
+    },
+    "original.json": {
+      "bytes": 49536,
+      "sha256": "de4685a20d60e14c4363217a855b9d0be321bb2ce2b158c5c633f198da46a8ab"
+    },
+    "reopen.json": {
+      "bytes": 16498,
+      "sha256": "8d0459dc17e46e0b225faff9b9ca4f4e8c7bf37ea4321621b181aac5653f5434"
+    },
+    "results.json": {
+      "bytes": 657,
+      "sha256": "f0f8f36c909db767c1421a693ccee2dfc32c34f576c57cee8ce74756dec6b899"
+    },
+    "root-coordinates-input.igz": {
+      "bytes": 2932,
+      "sha256": "8d2931650f6594606b6020e1ec16ea18736ac8bdded6e6b143de581884ad89c9"
+    },
+    "root-coordinates-native.igz": {
+      "bytes": 3575,
+      "sha256": "42670b9131381ede9aa2b4d6272a11e7731b8be0cd03daf4a694efc4b089e42e"
+    },
+    "root-coordinates.igz": {
+      "bytes": 3139,
+      "sha256": "2ba9188cea70d61962bb9d4b4a2e66b1f04b836028b0f94b71a36c627653687d"
+    },
+    "root-edge-input.igz": {
+      "bytes": 2932,
+      "sha256": "8d2931650f6594606b6020e1ec16ea18736ac8bdded6e6b143de581884ad89c9"
+    },
+    "root-edge-native.igz": {
+      "bytes": 3570,
+      "sha256": "4f1311366e24e1d9cb78a194c5a779b5a4a685a241fd59f6f983abb8d8eaf63c"
+    },
+    "root-edge.igz": {
+      "bytes": 3134,
+      "sha256": "01317c044e93fce9c803f5e7ae099f8788105c182122630c792f36bc690e1e15"
+    },
+    "root-face-input.igz": {
+      "bytes": 2932,
+      "sha256": "8d2931650f6594606b6020e1ec16ea18736ac8bdded6e6b143de581884ad89c9"
+    },
+    "root-face-native.igz": {
+      "bytes": 3569,
+      "sha256": "1a18f41ca2d59a40d0dad6798c90e904350d842721615e6919714f8f4c4f7cae"
+    },
+    "root-face.igz": {
+      "bytes": 3133,
+      "sha256": "48b1cca4f6c4e3ccbb5c63a7ac6e2011d84d485855e60dc78ca8bae4c5aeef08"
+    },
+    "prior-edit/native.json": {
+      "bytes": 31842,
+      "sha256": "b66379974cf981577d92eae464a5672cfa4826b957d9122dd41e449a86ffbe7b"
+    },
+    "prior-edit/reopen.json": {
+      "bytes": 8183,
+      "sha256": "174c4fd2c168ba6f2a611d112cb12ba7c1250bacbd321a4dad68495290f5152f"
+    }
+  },
+  "archive_sha256": "dc5abf054f10abb45da9e19ad63c57366dc13bbe2014c056eefcc09955ec9c70",
+  "results": {
+    "text_states": 77,
+    "ancestor_history_states": 6,
+    "actual_original_reopens": 7,
+    "raw_payload_reopens": 7,
+    "state_mutations_rejected": 14,
+    "ancestor_mutations_rejected": 6,
+    "reopen_mutations_rejected": 3,
+    "mandatory_actual_failures_rejected": 2,
+    "actual_egui_test": {
+      "pass": 1,
+      "filtered": 339
+    },
+    "prior_edit_style": {
+      "states": 44,
+      "actual_original_reopens": 4,
+      "rejected_controls": 54
+    },
+    "source_acquisition": "66 initial states, then11 closed-group states; no old source recapture",
+    "scope": "Actual pinned TextTool/pick/history and native App dispatch+real egui modal; no GL/GPU or device-input proof"
+  },
+  "reused_prior_source_archive": "docs/audits/annotation-edit-style/records.zip"
+}
