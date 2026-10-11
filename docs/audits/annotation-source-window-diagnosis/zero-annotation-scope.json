@@ -1,0 +1,10 @@
+{
+  "gondola_dimensions": 0,
+  "gondola_leaders": 0,
+  "iso_source_toggle_pixels": 20,
+  "iso_source_restore_pixels": 0,
+  "asymmetric_source_toggle_pixels": 0,
+  "asymmetric_source_restore_pixels": 4,
+  "native_all_toggle_restore_pixels": 0,
+  "scope": "strict zero-annotation baseline source image variability retained; no overlay acceptance or tolerance"
+}

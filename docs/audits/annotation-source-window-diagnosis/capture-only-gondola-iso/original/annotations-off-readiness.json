@@ -1,0 +1,61 @@
+{
+  "timestamp": 196498.096095316,
+  "viewport_logical": [
+    800,
+    600
+  ],
+  "framebuffer": [
+    800,
+    600
+  ],
+  "dpr": 1.0,
+  "input_events": [
+    {
+      "timestamp": 196489.941137303,
+      "type": 14,
+      "spontaneous": false,
+      "camera_yaw": -0.7853981633974483,
+      "camera_pitch": 0.5235987755982988,
+      "size": [
+        800,
+        600
+      ]
+    }
+  ],
+  "initial_navigation": {
+    "_last_pos": "None",
+    "_look_drag": "None",
+    "nav_mode": "None",
+    "_pan_mode": "False",
+    "_orbit_pivot": "None"
+  },
+  "camera": {
+    "target": [
+      48.07872009277344,
+      5.732326507568359,
+      1.5701091289520264
+    ],
+    "distance": 10.354882521905513,
+    "yaw": -0.7853981633974483,
+    "pitch": 0.5235987755982988,
+    "up": [
+      0.0,
+      0.0,
+      1.0
+    ],
+    "fov_deg": 45.0,
+    "aspect": 1.3333333333333333,
+    "znear": 0.1,
+    "zfar": 10000.0,
+    "perspective": false,
+    "two_point": false
+  },
+  "gl": {
+    "vendor": "NVIDIA Corporation",
+    "renderer": "NVIDIA GeForce RTX 5090/PCIe/SSE2",
+    "version": "3.3.0 NVIDIA 615.71.09",
+    "software": false,
+    "platform": "xcb",
+    "fallback": ""
+  }
+}

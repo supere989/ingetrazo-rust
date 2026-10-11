@@ -1,0 +1,19 @@
+{
+  "annotations-on": {
+    "changed_pixels": 335,
+    "max_channel_delta": 84
+  },
+  "annotations-off": {
+    "changed_pixels": 335,
+    "max_channel_delta": 84
+  },
+  "annotations-restored": {
+    "changed_pixels": 339,
+    "max_channel_delta": 84
+  },
+  "restore": {
+    "original": 4,
+    "native": 0
+  },
+  "source_toggle_pixels": 0
+}
