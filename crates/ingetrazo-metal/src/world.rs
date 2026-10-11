@@ -65,6 +65,7 @@ struct Mesh {
 struct Pipeline {
     color: Retained<ProtocolObject<dyn MTLRenderPipelineState>>,
     depth: Retained<ProtocolObject<dyn MTLDepthStencilState>>,
+    depth_disabled: Retained<ProtocolObject<dyn MTLDepthStencilState>>,
 }
 #[derive(Default, Debug, Clone, Copy)]
 pub struct Stats {
@@ -244,11 +245,14 @@ impl Prepared {
             .renderCommandEncoderWithDescriptor(&pass)
             .ok_or("Metal world encoder unavailable")?;
         encoder.setRenderPipelineState(&self.pipeline.color);
-        encoder.setDepthStencilState(if depth_enabled {
-            Some(&self.pipeline.depth)
+        // A pipeline with a depth attachment still binds a valid native state.
+        // The negative control disables comparison/writes explicitly rather than
+        // submitting a missing depth-state object that Metal may reject.
+        encoder.setDepthStencilState(Some(if depth_enabled {
+            &self.pipeline.depth
         } else {
-            None
-        });
+            &self.pipeline.depth_disabled
+        }));
         encoder.setCullMode(MTLCullMode::None);
         if let Some(mesh) = &self.mesh {
             unsafe {
@@ -298,8 +302,15 @@ fn pipeline(metal: &NativeMetal) -> Result<Pipeline, String> {
     let depth = MTLDepthStencilDescriptor::new();
     depth.setDepthCompareFunction(MTLCompareFunction::LessEqual);
     depth.setDepthWriteEnabled(true);
+    let disabled = MTLDepthStencilDescriptor::new();
+    disabled.setDepthCompareFunction(MTLCompareFunction::Always);
+    disabled.setDepthWriteEnabled(false);
     Ok(Pipeline {
         color,
+        depth_disabled: metal
+            .device
+            .newDepthStencilStateWithDescriptor(&disabled)
+            .ok_or("World disabled depth state missing")?,
         depth: metal
             .device
             .newDepthStencilStateWithDescriptor(&depth)
@@ -331,7 +342,7 @@ fn image(
     let native = metal.device.heapTextureSizeAndAlignWithDescriptor(&d);
     let admitted = u64::try_from(native.size).map_err(|_| "World native texture size overflow")?;
     if admitted < requested || native.align == 0 {
-        return Err("World native texture size query unavailable".into());
+        return Err(format!("World native texture size query unavailable: requested_bytes={requested}, queried_size={}, queried_align={}, extent={}x{}, format={format:?}, storage={:?}, hazard={:?}, usage={usage:?}, device={}", native.size, native.align, extent.0, extent.1, d.storageMode(), d.hazardTrackingMode(), metal.device.name()));
     }
     let ticket = metal
         .budget
@@ -406,10 +417,17 @@ impl Prepared {
         }
         let row = (w as usize * 4 + 255) & !255;
         let readback = metal.buffer(row * h as usize, true)?;
+        let descriptor = MTLCommandBufferDescriptor::new();
+        descriptor.setErrorOptions(MTLCommandBufferErrorOption::EncoderExecutionStatus);
         let command = metal
             .queue
-            .commandBuffer()
+            .commandBufferWithDescriptor(&descriptor)
             .ok_or("World diagnostic command unavailable")?;
+        command.setLabel(Some(&NSString::from_str(if depth_enabled {
+            "World depth positive diagnostic"
+        } else {
+            "World explicit Always/no-write negative diagnostic"
+        })));
         self.encode_inner(&command, depth_enabled)?;
         let blit = command
             .blitCommandEncoder()
@@ -439,7 +457,7 @@ impl Diagnostic {
             {
                 self.poison
                     .store(true, std::sync::atomic::Ordering::Release);
-                return Err("World diagnostic completion unknown; owners quarantined".into());
+                return Err(format!("World diagnostic completion unknown; owners quarantined; status={:?}; native_error={:?}; elapsed_ms={}",self.command.status(),self.command.error(),start.elapsed().as_millis()));
             }
             std::thread::sleep(std::time::Duration::from_millis(1));
         }
