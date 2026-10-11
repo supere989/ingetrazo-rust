@@ -1,0 +1,33 @@
+{
+  "engines": [
+    {
+      "engine": "cycles",
+      "pid": 3,
+      "model_exports": 1,
+      "completed": 3,
+      "same_process_and_model": true,
+      "restore_exact": true,
+      "save_exact": true
+    },
+    {
+      "engine": "eevee",
+      "pid": 61,
+      "model_exports": 2,
+      "completed": 6,
+      "same_process_and_model": true,
+      "restore_exact": true,
+      "save_exact": true
+    }
+  ],
+  "cancel_reaped": true,
+  "spawn_failure_preserves_image": true,
+  "document_and_history_unchanged": true,
+  "completed_renders": 11,
+  "keep_blend_one_shot": true,
+  "follow_rest_mouse_hold_latest_camera": true,
+  "follow_render_count": 4,
+  "follow_reused_pid": 171,
+  "follow_config_reload": true,
+  "follow_three_file_retention": true,
+  "follow_stop_reaped": true
+}

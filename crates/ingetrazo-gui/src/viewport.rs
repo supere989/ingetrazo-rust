@@ -148,7 +148,7 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
                 .as_ref()
                 .map(|p| p.reference)
                 .or_else(|| app.active_tool.snap_anchor());
-            let screen_drawing=matches!(app.active_tool_type,ToolType::Line|ToolType::Rectangle|ToolType::Move);
+            let screen_drawing=app.blender_is_picking()||matches!(app.active_tool_type,ToolType::Line|ToolType::Rectangle|ToolType::Move);
             app.snap_engine.note_model_revision(app.model_revision);
             let snap_res=if screen_drawing{
                 let context=ingetrazo_core::snap_screen::ScreenSnapContext{
@@ -179,7 +179,9 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
                 alt_held: alt_down,
             };
 
-            if app.paste_preview.is_some() {
+            if response.clicked()&&!alt_down&&app.handle_blender_click(&tool_ctx,mouse_pos,rect,snap_res.kind==ingetrazo_core::snap::SnapKind::OnFace) {
+                // Light placement and picked bulbs own this click.
+            } else if app.paste_preview.is_some() {
                 app.update_paste_preview(cursor_world_pos);
                 if response.clicked() && !alt_down {
                     app.commit_paste_preview();
@@ -225,7 +227,8 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
     // Handle Esc to cancel active tool and clear locks
     if ui.input(|i| i.key_pressed(egui::Key::Escape)) {
         app.snap_engine.reset_operation_state();
-        if app.paste_preview.is_some() {
+        if app.cancel_blender_pick() {
+        } else if app.paste_preview.is_some() {
             app.cancel_paste_preview();
         } else {
             app.dispatch_tool_cancel();
@@ -303,6 +306,8 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
     if app.native_metal_world.is_some()&&app.native_gpu_viewport_enabled&&app.navigation.mode!=Some(crate::navigation::Mode::Position){
         if let Some(glyph)=active_snap_glyph.as_ref(){ingetrazo_render::pipeline::render_snap_glyphs(std::slice::from_ref(glyph),&app.camera,&painter,rect);}
     }
+
+    app.draw_blender_lights(&painter,rect);
 
     // Original QPainter image borders are independent overlay strokes, drawn
     // above the native world texture. Cached native CAD callbacks preserve order.

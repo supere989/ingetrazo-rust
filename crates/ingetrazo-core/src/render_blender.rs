@@ -96,12 +96,12 @@ impl LightKind {
     }
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct BlenderLight {
     pub kind: LightKind,
     pub pos: [f64; 3],
     pub dir: [f64; 3],
-    pub kelvin: u32,
+    pub kelvin: Option<u32>,
     pub color: [f64; 3],
     pub power: f64, // Watts
     pub angle: f64, // Beam angle in degrees
@@ -115,7 +115,7 @@ impl Default for BlenderLight {
             kind: LightKind::Point,
             pos: [0.0, 0.0, 3.0],
             dir: [0.0, 0.0, -1.0],
-            kelvin: DEFAULT_KELVIN,
+            kelvin: Some(DEFAULT_KELVIN),
             color: kelvin_to_rgb(DEFAULT_KELVIN as f64),
             power: 400.0,
             angle: 60.0,
@@ -390,12 +390,13 @@ fn qt_eye(camera: &OrbitCamera) -> glam::Vec3 {
             (camera.distance * sp) as f32,
         )
 }
-/// Reject native values that cannot enter the original QVector3D camera without
-/// loss. Call before both cold job export and persistent camera requests.
+/// Admit finite poses through the original QVector3D float32 conversion.
+/// Rendering does not rewrite the double-precision document camera. Reject
+/// nonfinite or overflowing poses before cold export and persistent requests.
 pub fn validate_camera(camera: &OrbitCamera) -> Result<(), String> {
     for v in [camera.target, camera.up] {
-        if !v.is_finite() || qt_vec(v).as_dvec3() != v {
-            return Err("Blender camera requires finite exact QVector3D target/up".into());
+        if !v.is_finite() || !qt_vec(v).is_finite() {
+            return Err("Blender camera requires finite QVector3D target/up".into());
         }
     }
     if ![
@@ -551,7 +552,9 @@ pub fn build_job(
         .iter()
         .filter(|lt| lt.on && lt.pos.iter().chain(lt.dir.iter()).all(|v| v.is_finite()))
         .map(|lt| {
-            let kelvin = lt.kelvin.clamp(MIN_KELVIN as u32, MAX_KELVIN as u32);
+            let kelvin = lt
+                .kelvin
+                .map(|k| k.clamp(MIN_KELVIN as u32, MAX_KELVIN as u32));
             let dir = if lt.dir.iter().map(|v| v * v).sum::<f64>().sqrt() < 1e-9 {
                 [0., 0., -1.]
             } else {
@@ -562,7 +565,7 @@ pub fn build_job(
                 "pos": lt.pos,
                 "dir": dir,
                 "kelvin": kelvin,
-                "color": kelvin_to_rgb(f64::from(kelvin)),
+                "color": kelvin.map_or(lt.color,|k|kelvin_to_rgb(f64::from(k))),
                 "power": if lt.power.is_nan(){0.}else{lt.power.clamp(0.,1e6)},
                 "angle": if lt.angle.is_nan(){1.}else{lt.angle.clamp(1.,179.)},
                 "on": lt.on,
@@ -680,3 +683,6 @@ mod tests {
         assert_eq!(cmd[6], "/tmp/job.json");
     }
 }
+
+mod document;
+pub use document::{clean_lights, BlenderDocument};

@@ -82,7 +82,7 @@ fn shareback_snapshot(session:&ComponentEditSession,candidate:&Scene)->Result<Sc
     restored.history_shareback=Some(session.group_id);Ok(restored)
 }
 
-fn component_candidate(session:&ComponentEditSession,scene:&Scene)->Result<(Scene,bool),String> {
+pub(crate) fn component_candidate(session:&ComponentEditSession,scene:&Scene)->Result<(Scene,bool),String> {
         let mut candidate=session.original_scene.clone();
         let Some(group_index)=candidate.groups.iter().position(|g|g.id==session.group_id) else {
             return Err("Edited instance no longer exists".into());
@@ -502,6 +502,7 @@ impl IngeTrazoApp {
     }
 
     pub fn cancel_component_edit(&mut self) {
+        self.preserve_blender_cancel_state();
         self.sync_document_presentation();
         if let Some(mut session)=self.component_edit_stack.pop() {
             self.set_tool(ToolType::Select);

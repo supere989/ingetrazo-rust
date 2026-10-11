@@ -37,6 +37,7 @@ fn same_model(a:&Scene,b:&Scene)->bool {
     a.terrain==b.terrain &&
     a.sheets==b.sheets &&
     a.native_document==b.native_document &&
+    a.plugin_data==b.plugin_data &&
     a.native_baseline==b.native_baseline &&
     a.component_definitions==b.component_definitions &&
     a.mesh_shares==b.mesh_shares

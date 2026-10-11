@@ -134,7 +134,7 @@ fn main() {
         })
         .collect();
     let mut refused = vec![];
-    for target in [DVec3::new(0.1, 0., 0.), DVec3::new(f64::INFINITY, 0., 0.)] {
+    for target in [DVec3::new(1e300, 0., 0.), DVec3::new(f64::INFINITY, 0., 0.)] {
         let mut c = OrbitCamera::new();
         c.target = target;
         refused.push(validate_camera(&c).is_err());

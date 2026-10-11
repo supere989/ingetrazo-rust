@@ -1,0 +1,15 @@
+{
+  "exact": true,
+  "clean_cases": 5,
+  "document_states": 8,
+  "camera_cases": 2,
+  "native_reopened_by_source": true,
+  "negative_controls": [
+    "light-position",
+    "undo",
+    "custom-rgb",
+    "saved-power",
+    "camera",
+    "camera-key"
+  ]
+}

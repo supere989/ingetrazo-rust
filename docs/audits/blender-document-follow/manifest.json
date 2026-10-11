@@ -1,0 +1,116 @@
+{
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "base": "aaea1a3101b357b1d5a240adda3c6b6a96812e4b",
+  "gltf_runtime": "90302c0687a85e13c7fdffdda1054c5b284ce20f",
+  "source_images": "../blender-consumer/captures.zip: source/{cycles,eevee}/render.png",
+  "source_capture_archive_sha256": "d2c636ddd5e15128877f4b3b1e3a34e73cbcb26350c20cf653bb86d89cf4512a",
+  "formatting_note": "New Rust module/example source formatted after final binary build; only whitespace changed. Integrated suite rebuilds the committed source.",
+  "binary_sha256": {
+    "blender_document_fixture": "f22133e8125c79932646819e6b1b68bbeca718ab4c4d4e46e05b1f3138465b49",
+    "blender_application_fixture": "3603a7964aa6e977c5d0268b2948a2763e342ff1b87dd1e0517dd2164016e2a3"
+  },
+  "source_sha256": {
+    "crates/ingetrazo-core/src/render_blender.rs": "24841d09c0a342bc02e83030552b17e336d98fcabfb1f7c92e2dd3046e79957b",
+    "crates/ingetrazo-core/src/render_blender/document.rs": "ac092088fa942f8d277171a2cbe84a75809e1abd29c553f8e6a96aa2f2753219",
+    "crates/ingetrazo-core/src/scene.rs": "a24143dc0579ea491ae111c999c54d26756f2f663f5684820fb90bdfcca6335d",
+    "crates/ingetrazo-formats/src/igz.rs": "1204306635467554d19ebacec0a75f63b862857e7305bf23341c6fa67b826377",
+    "crates/ingetrazo-formats/src/gltf.rs": "97954b0c75b7026f8b08b6605db9e6b2d758693a7bb3fecf0b28447a4a716099",
+    "crates/ingetrazo-formats/src/gltf/rich.rs": "87a79fc38d76e98f489bd37b1e7bb0458df121f5a695ba9813984611e6db01ee",
+    "crates/ingetrazo-gui/src/blender.rs": "8d9f43771431dd91d2e66a61438ad724fcf80a23acb55435bd6f25372bbc8c46",
+    "crates/ingetrazo-gui/src/blender/worker.rs": "3dac9422117509fec6fe746ca7d8fe169a7aa2972d32112fe9f491e6e94b553e",
+    "crates/ingetrazo-gui/src/blender/document.rs": "55b7b7a553a78573014b6a02883c2e0b3b54647d261158a290b4fd4aaffa1c3b",
+    "crates/ingetrazo-gui/src/blender/follow.rs": "b2e90f16ebeaa4b23adbc2da87ad43d68bfd3cfab00643861f045a3785448f88",
+    "crates/ingetrazo-gui/src/blender/projection.rs": "604d7881e37c6ea6d97a06708bde1ca60703956bb4ab2f79d005d6142771d85c",
+    "crates/ingetrazo-gui/examples/blender_application_fixture.rs": "09f6797cb8394a8287fb8cfb4f2e040c979ecc774cb334d100eb908a97fc7073",
+    "crates/ingetrazo-gui/examples/blender_document_fixture.rs": "c847553f3eb445287cef1f84fd351728b9c5067a47f80fa90e8c34e15b928fce",
+    "scripts/reference-blender-document.py": "7718392c18bc08abee394e67c0d0d8965232293a0726c58753d1e24ae60ff2b1",
+    "scripts/check-blender-document.py": "45fe2ba06cdf1d1e58872bdd40d6fd6783bdd8fc5911693c3c8f992cd2939a7d"
+  },
+  "application_files": [
+    {
+      "name": "application.log",
+      "size": 79,
+      "sha256": "9fbae2c9b5c1de3ab045f10d514beff46e9f212ebc67c8d46869f63ae83ba244"
+    },
+    {
+      "name": "cycles-camera.png",
+      "size": 20918,
+      "sha256": "c604e3d8b9f817ad3fc2cbdb5f68476dea3c26cfcc4eb9b69df91c09eec1f2d3"
+    },
+    {
+      "name": "cycles-first.png",
+      "size": 20566,
+      "sha256": "0f65ae43a653f05467671d51ff4dca140fed25470ec990eb7a39f66a3862ee92"
+    },
+    {
+      "name": "cycles-job.json",
+      "size": 534,
+      "sha256": "d80aa23e3daf1e09340ed88c29bc21328e8dde91c3872856c35cedafb20396db"
+    },
+    {
+      "name": "cycles-model.glb",
+      "size": 1708,
+      "sha256": "c11e91f5f0bcb9be40402582c5a3ca8f0fc2f4d01f84d783c8b309db5020d4b4"
+    },
+    {
+      "name": "cycles-saved.png",
+      "size": 20566,
+      "sha256": "0f65ae43a653f05467671d51ff4dca140fed25470ec990eb7a39f66a3862ee92"
+    },
+    {
+      "name": "eevee-camera.png",
+      "size": 20253,
+      "sha256": "2e9e46d451ef696eeea0042ca646d1733e76f34072ea9d160911e7ab70f6ab23"
+    },
+    {
+      "name": "eevee-first.png",
+      "size": 20261,
+      "sha256": "c6aa040d5c40c4dd3a7d73a95a575b90acd5679995d9380a9c749d97a6186392"
+    },
+    {
+      "name": "eevee-job.json",
+      "size": 533,
+      "sha256": "bd1727b19a82370042aa281e496e1e951f0a386234279e847fc13384500ad5b0"
+    },
+    {
+      "name": "eevee-model.glb",
+      "size": 1708,
+      "sha256": "c11e91f5f0bcb9be40402582c5a3ca8f0fc2f4d01f84d783c8b309db5020d4b4"
+    },
+    {
+      "name": "eevee-saved.png",
+      "size": 20261,
+      "sha256": "4fed3ff563ef2422cbb2e5de9fe3472cd55c10dfbbab65c218162701a288790e"
+    },
+    {
+      "name": "follow-first.png",
+      "size": 1097449,
+      "sha256": "93e0754c1c4d36eb185ff1d83cf97d98f0f847ede2091f0897e73aeda6de6524"
+    },
+    {
+      "name": "render.blend",
+      "size": 89943,
+      "sha256": "1d5c0d3ce79a370e843645db1dac8e7d9d84ca78dc0b61dca12d8d4756ead305"
+    },
+    {
+      "name": "result.json",
+      "size": 782,
+      "sha256": "0b1b50ba5c89675a0b44abad3a64a401d6c6a0c4ab062ffcedfe7cee6fbfe2b3"
+    },
+    {
+      "name": "run.json",
+      "size": 41,
+      "sha256": "ae9013bf19f0b681aaba5e92002f61f3b7b873fa9812f6b79587005e6e9fd94b"
+    },
+    {
+      "name": "strict-image-comparison.json",
+      "size": 201,
+      "sha256": "6b8bc09145d988a0bb072a17de242c3342d2f3a7d9906a758af2842b3ed4fdf2"
+    },
+    {
+      "name": "transport.json",
+      "size": 1393,
+      "sha256": "e407f5e53f51174252884fce0726d966d4369abc52db8a195dae09f93fb7523c"
+    }
+  ]
+}

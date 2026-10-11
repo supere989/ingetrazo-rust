@@ -77,6 +77,9 @@ pub struct Scene {
     /// source representation, including future/extension metadata.
     #[serde(default)]
     pub native_document: serde_json::Value,
+    /// Original extension payloads, independently editable and preserved.
+    #[serde(default)]
+    pub plugin_data: serde_json::Value,
     #[serde(default)]
     pub native_baseline: serde_json::Value,
 
@@ -132,6 +135,7 @@ impl Scene {
             component_definitions: HashMap::new(),
             mesh_shares: HashMap::new(),
             native_document: serde_json::Value::Null,
+            plugin_data: serde_json::json!({}),
             native_baseline: serde_json::Value::Null,
             mesh: Mesh::new(),
             selection: HashSet::new(),

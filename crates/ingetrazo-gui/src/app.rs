@@ -259,6 +259,7 @@ impl IngeTrazoApp {
     }
 
     pub fn set_tool(&mut self, tool_type: ToolType) {
+        self.cancel_blender_pick();
         self.navigation.cancel(); self.navigation.mode=None;
         self.paste_preview=None;
         let version=self.scene.version;let images=self.scene.image_planes.publication_revision();self.active_tool.on_deactivate(&mut self.scene);
@@ -391,7 +392,7 @@ impl IngeTrazoApp {
         crate::document_presentation::preserve(&self.scene, &mut before);
         self.push_prepared_undo_snapshot(before);
     }
-    fn push_prepared_undo_snapshot(&mut self, before: Scene) {
+    pub(crate) fn push_prepared_undo_snapshot(&mut self, before: Scene) {
         self.undo_stack.push(before);
         let mut reclaim_images = !self.redo_stack.is_empty();
         self.redo_stack.clear();
@@ -1016,7 +1017,9 @@ impl IngeTrazoApp {
             "IngeTrazo 0.3.15".to_string()
         };
         ctx.send_viewport_cmd(egui::ViewportCommand::Title(title));
+        self.sync_blender_document();
         self.blender_state.poll_events(ctx);
+        self.tick_blender_follow(ctx);
 
         // A complete Ctrl chord can arrive in one frame; the final modifier
         // snapshot is then released. Use the key event's captured modifiers.
@@ -1052,8 +1055,8 @@ impl IngeTrazoApp {
         if !ctx.wants_keyboard_input(){
             let events=ctx.input(|i|i.events.clone());for event in events{match event{egui::Event::Copy=>self.copy_selection(),egui::Event::Cut=>self.cut_selection(),egui::Event::Paste(_)=>self.paste_selection(),_=>{}}}
         }
-        if ctx.input(|i| i.key_pressed(egui::Key::Delete)) {
-            self.delete_selection();
+        if !ctx.wants_keyboard_input() && ctx.input(|i| i.key_pressed(egui::Key::Delete)) {
+            if !self.delete_picked_blender_light() { self.delete_selection(); }
         }
         if ctx.input(|i| i.key_pressed(egui::Key::F3)) {
             self.show_command_search = !self.show_command_search;

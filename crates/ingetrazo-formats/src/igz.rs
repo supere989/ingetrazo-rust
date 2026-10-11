@@ -661,6 +661,7 @@ fn scene_model(scene: &Scene) -> serde_json::Value {
         LengthUnit::Meters => "m", LengthUnit::Centimeters => "cm",
         LengthUnit::Millimeters => "mm", LengthUnit::Inches => "in", LengthUnit::Feet => "ft"
     };
+    doc["plugin_data"] = scene.plugin_data.clone();
     doc["units"] = serde_json::json!({"length":unit,"precision":2});
 
     doc["saved_views"] = serde_json::json!(scene.saved_views.iter().map(|v|
@@ -882,6 +883,7 @@ pub fn load_igz(path: &Path) -> Result<Scene, IgzError> {
     scene.embedded_textures = embedded_textures;
     scene.tile_layer=s_val.get("tile_layer").and_then(ingetrazo_core::georef::TileCapture::from_source_json);
     scene.native_document = s_val.clone();
+    scene.plugin_data=s_val.get("plugin_data").cloned().unwrap_or_else(||serde_json::json!({}));
     scene.mesh = json_to_mesh(s_val);
 
     // Load component prototypes if present
@@ -1171,6 +1173,7 @@ pub fn load_igz(path: &Path) -> Result<Scene, IgzError> {
     }
     scene.tile_layer=s_val.get("tile_layer").and_then(ingetrazo_core::georef::TileCapture::from_source_json);
     scene.native_document = s_val.clone();
+    scene.plugin_data=s_val.get("plugin_data").cloned().unwrap_or_else(||serde_json::json!({}));
     if s_val.get("display_style").is_some(){scene.show_section_fill=scene.display_style.section_fill;}else{scene.display_style.section_fill=scene.show_section_fill;}
     scene.native_baseline = scene_model(&scene);
     scene.mesh.rebuild_spatial_index();

@@ -1,0 +1,181 @@
+[
+  {},
+  {
+    "ambience": "night",
+    "sun_scale": 3,
+    "lights": [
+      {
+        "pos": [
+          1,
+          2,
+          3
+        ],
+        "name": "Point"
+      },
+      {
+        "kind": "spot",
+        "pos": [
+          0,
+          1,
+          2
+        ],
+        "dir": [
+          0,
+          0,
+          0
+        ],
+        "power": -1,
+        "angle": 200
+      }
+    ]
+  },
+  {
+    "ambience": "bad",
+    "sun_scale": "NaN",
+    "lights": [
+      {
+        "pos": [
+          1,
+          2,
+          3
+        ],
+        "color": [
+          0.2,
+          0.4,
+          0.6
+        ]
+      },
+      {
+        "pos": [
+          0,
+          0,
+          1
+        ],
+        "kelvin": 99999,
+        "color": [
+          1,
+          0,
+          0
+        ]
+      },
+      {
+        "pos": [
+          0,
+          0,
+          2
+        ],
+        "color": "cool",
+        "on": []
+      }
+    ]
+  },
+  {
+    "sun_scale": "bad",
+    "lights": [
+      {
+        "kind": "area",
+        "pos": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "pos": [
+          1,
+          2
+        ]
+      },
+      {
+        "pos": [
+          1,
+          2,
+          3
+        ],
+        "dir": [
+          "NaN",
+          0,
+          1
+        ]
+      },
+      {
+        "pos": [
+          0,
+          0,
+          0
+        ],
+        "power": "bad"
+      },
+      5,
+      {
+        "kind": 5,
+        "pos": [
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "pos": [
+          1,
+          2,
+          3,
+          "bad"
+        ]
+      },
+      {
+        "pos": [
+          1,
+          2,
+          3
+        ],
+        "dir": [
+          0,
+          0,
+          -1,
+          "bad"
+        ]
+      }
+    ]
+  },
+  {
+    "ambience": "overcast",
+    "lights": [
+      {
+        "pos": [
+          "1.25",
+          false,
+          4,
+          10
+        ],
+        "dir": [
+          0,
+          1,
+          -2,
+          4
+        ],
+        "color": [
+          -4,
+          "NaN",
+          2
+        ],
+        "power": "NaN",
+        "angle": "NaN",
+        "name": false
+      },
+      {
+        "pos": [
+          0,
+          0,
+          0
+        ],
+        "kelvin": "bad",
+        "color": [
+          1,
+          0,
+          0
+        ]
+      }
+    ]
+  }
+]

@@ -1,0 +1,12 @@
+{
+  "cycles": {
+    "different_pixels": 0,
+    "max_channel_error": 0,
+    "total_pixels": 12288
+  },
+  "eevee": {
+    "different_pixels": 0,
+    "max_channel_error": 0,
+    "total_pixels": 12288
+  }
+}

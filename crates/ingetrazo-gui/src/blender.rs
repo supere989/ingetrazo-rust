@@ -14,15 +14,19 @@ use egui::{Color32, Vec2};
 use ingetrazo_core::camera::OrbitCamera;
 use ingetrazo_core::i18n::tr;
 use ingetrazo_core::render_blender::{
-    Ambience, BLENDER_RENDER_SCRIPT, BlenderEngine, BlenderFound, BlenderLight, LightKind,
-    MAX_KELVIN, MIN_KELVIN, RenderQuality, build_job, command, default_work_base, find_blender,
-    kelvin_to_rgb,
+    build_job, command, default_work_base, find_blender, kelvin_to_rgb, Ambience, BlenderEngine,
+    BlenderFound, BlenderLight, LightKind, RenderQuality, BLENDER_RENDER_SCRIPT, MAX_KELVIN,
+    MIN_KELVIN,
 };
 use ingetrazo_core::scene::Scene;
 use ingetrazo_formats::gltf::export_glb;
 
 use crate::app::IngeTrazoApp;
 
+mod document;
+mod follow;
+mod projection;
+pub use follow::camera_key as follow_camera_key;
 mod worker;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -80,7 +84,17 @@ pub struct BlenderRenderState {
     reuse_key: Option<String>,
     work_dir: Option<PathBuf>,
     running_size: (u32, u32),
+    running_follow: bool,
+    draft_images: std::collections::VecDeque<PathBuf>,
     repaint: Option<egui::Context>,
+    cached_document: Option<serde_json::Value>,
+    cached_document_id: Option<uuid::Uuid>,
+    pending_document_controls: bool,
+    pub follow: follow::FollowState,
+    projection: projection::ProjectionCache,
+    pub selected_light: Option<usize>,
+    pick: Option<document::Pick>,
+    picked_light: Option<(usize, serde_json::Value)>,
 }
 
 impl Default for BlenderRenderState {
@@ -96,7 +110,7 @@ impl Default for BlenderRenderState {
             ground: true,
             keep_blend: false,
             sun_scale: 1.0,
-            lights: vec![BlenderLight::default()],
+            lights: vec![],
             blender_found: found,
             is_rendering: false,
             progress: 0.0,
@@ -111,7 +125,17 @@ impl Default for BlenderRenderState {
             reuse_key: None,
             work_dir: None,
             running_size: (0, 0),
+            running_follow: false,
+            draft_images: Default::default(),
             repaint: None,
+            cached_document: None,
+            cached_document_id: None,
+            pending_document_controls: false,
+            follow: Default::default(),
+            projection: Default::default(),
+            selected_light: None,
+            pick: None,
+            picked_light: None,
         }
     }
 }
@@ -167,6 +191,7 @@ impl BlenderRenderState {
             match event {
                 BlenderRenderMsg::Started(pid) => self.process_id = Some(pid),
                 BlenderRenderMsg::Stopped { .. } => {
+                    if self.follow.enabled { self.follow.retry_after_failure(); }
                     self.process_id = None;
                     self.worker = None;
                     self.reuse_key = None;
@@ -189,6 +214,14 @@ impl BlenderRenderState {
                                 egui::ColorImage::from_rgba_unmultiplied(size, rgba.as_raw()),
                                 egui::TextureOptions::LINEAR,
                             ));
+                            if self.running_follow {
+                                self.draft_images.push_back(path.clone());
+                                while self.draft_images.len() > 3 {
+                                    if let Some(old) = self.draft_images.pop_front() {
+                                        let _ = fs::remove_file(old);
+                                    }
+                                }
+                            }
                             self.last_rendered_image_path = Some(path);
                             self.completed_renders += 1;
                             self.progress = 1.;
@@ -209,6 +242,7 @@ impl BlenderRenderState {
                     self.status_line = tr("Render cancelled");
                 }
                 BlenderRenderMsg::Error(error) => {
+                    if self.follow.enabled { self.follow.retry_after_failure(); }
                     self.is_rendering = false;
                     self.status_line = format!("{}: {error}", tr("Error"));
                 }
@@ -278,10 +312,13 @@ impl BlenderRenderState {
         camera: &OrbitCamera,
         geometry_revision: Option<u64>,
     ) {
+        if self.follow.enabled {
+            self.set_follow(false);
+        }
         if self.is_rendering {
             return;
         }
-        if let Err(error) = self.prepare_render(scene, camera, geometry_revision) {
+        if let Err(error) = self.prepare_render(scene, camera, geometry_revision, None) {
             self.status_line = format!("{}: {error}", tr("Error"));
         }
     }
@@ -291,9 +328,13 @@ impl BlenderRenderState {
         scene: &Scene,
         camera: &OrbitCamera,
         geometry_revision: Option<u64>,
+        draft: Option<(u32, u32, u32)>,
     ) -> Result<(), String> {
         ingetrazo_core::render_blender::validate_camera(camera)?;
-        let (w, h) = if self.res_preset == ResolutionPreset::Custom {
+        self.running_follow = draft.is_some();
+        let (w, h) = if let Some((w, h, _)) = draft {
+            (w, h)
+        } else if self.res_preset == ResolutionPreset::Custom {
             (self.width, self.height)
         } else {
             self.res_preset.dimensions()
@@ -318,7 +359,12 @@ impl BlenderRenderState {
             ])
             .to_string()
         });
-        let can_reuse = !self.keep_blend
+        let keep_blend = self.keep_blend && draft.is_none();
+        let samples = draft.map_or_else(
+            || ingetrazo_core::render_blender::samples_for(self.engine, self.quality),
+            |(_, _, s)| s,
+        );
+        let can_reuse = !keep_blend
             && key.is_some()
             && self.reuse_key == key
             && self.worker.is_some()
@@ -329,7 +375,7 @@ impl BlenderRenderState {
                 .as_ref()
                 .unwrap()
                 .join(format!("view-{}.png", uuid::Uuid::new_v4()));
-            let request = serde_json::json!({"camera":ingetrazo_core::render_blender::camera_dict(camera),"output":output,"width":w,"height":h,"samples":ingetrazo_core::render_blender::samples_for(self.engine,self.quality)});
+            let request = serde_json::json!({"camera":ingetrazo_core::render_blender::camera_dict(camera),"output":output,"width":w,"height":h,"samples":samples});
             // Clear prior request's coalesced diagnostics before associating the next job.
             let _ = self.worker.as_ref().unwrap().progress();
             self.worker.as_ref().unwrap().request(request)?;
@@ -356,7 +402,7 @@ impl BlenderRenderState {
         let output = work_dir.join("render.png");
         let script = work_dir.join("render_scene.py");
         let job_path = work_dir.join("job.json");
-        let blend = self.keep_blend.then(|| work_dir.join("render.blend"));
+        let blend = keep_blend.then(|| work_dir.join("render.blend"));
         let mut file = fs::File::create(&glb).map_err(|e| e.to_string())?;
         export_glb(scene, &mut file).map_err(|e| e.to_string())?;
         drop(file);
@@ -378,7 +424,8 @@ impl BlenderRenderState {
             &self.lights,
             year,
         );
-        let serving = !self.keep_blend;
+        job["samples"] = samples.into();
+        let serving = !keep_blend;
         if serving {
             job["serve"] = true.into();
         }
@@ -424,6 +471,10 @@ pub fn render_blender_dialog(app: &mut IngeTrazoApp, ctx: &egui::Context) {
 
 /// Contents of the Render Controls, shared between dialog and side tray.
 pub fn render_blender_ui_contents(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
+    app.sync_blender_document();
+    let before_document = app.blender_document_controls();
+    let mut begin_pick = None;
+    let mut editing_document_text = false;
     // Blender discovery banner
     let is_blender_available = app.blender_state.blender_found.is_some();
     if let Some(ref found) = app.blender_state.blender_found {
@@ -519,7 +570,7 @@ pub fn render_blender_ui_contents(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
                 ui.horizontal(|ui| {
                     ui.label(tr("Sun Strength:"));
                     ui.add(
-                        egui::Slider::new(&mut app.blender_state.sun_scale, 0.1..=3.0).text("x"),
+                        egui::Slider::new(&mut app.blender_state.sun_scale, 0.1..=2.0).text("x"),
                     );
                 });
             }
@@ -592,7 +643,17 @@ pub fn render_blender_ui_contents(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
                     for (idx, lt) in app.blender_state.lights.iter_mut().enumerate() {
                         ui.group(|ui| {
                             ui.horizontal(|ui| {
-                                ui.checkbox(&mut lt.on, &lt.name);
+                                ui.checkbox(&mut lt.on, "");
+                                let response=ui.text_edit_singleline(&mut lt.name);
+                                editing_document_text |= response.has_focus() && !ui.input(|i|i.key_pressed(egui::Key::Enter));
+                                if ui.small_button(tr("Move")).clicked() {
+                                    begin_pick = Some(document::Pick::Move(idx));
+                                }
+                                if lt.kind == LightKind::Spot
+                                    && ui.small_button(tr("Aim")).clicked()
+                                {
+                                    begin_pick = Some(document::Pick::Aim(idx));
+                                }
                                 ui.with_layout(
                                     egui::Layout::right_to_left(egui::Align::Center),
                                     |ui| {
@@ -607,16 +668,20 @@ pub fn render_blender_ui_contents(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
                                 ui.radio_value(&mut lt.kind, LightKind::Point, tr("Point"));
                                 ui.radio_value(&mut lt.kind, LightKind::Spot, tr("Spot"));
                                 ui.label(tr("Power:"));
-                                ui.add(
+                                let response=ui.add(
                                     egui::DragValue::new(&mut lt.power)
-                                        .range(1.0..=10000.0)
+                                        .range(1.0..=100000.0)
                                         .suffix(" W"),
                                 );
+                                editing_document_text |= response.has_focus() && !response.dragged() && !response.drag_stopped() && !ui.input(|i|i.key_pressed(egui::Key::Enter));
                             });
 
                             ui.horizontal(|ui| {
                                 ui.label(tr("Temp:"));
-                                let mut kelvin_val = lt.kelvin as f64;
+                                let mut kelvin_val = lt
+                                    .kelvin
+                                    .unwrap_or(ingetrazo_core::render_blender::DEFAULT_KELVIN)
+                                    as f64;
                                 if ui
                                     .add(
                                         egui::Slider::new(&mut kelvin_val, MIN_KELVIN..=MAX_KELVIN)
@@ -624,7 +689,7 @@ pub fn render_blender_ui_contents(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
                                     )
                                     .changed()
                                 {
-                                    lt.kelvin = kelvin_val as u32;
+                                    lt.kelvin = Some(kelvin_val as u32);
                                     lt.color = kelvin_to_rgb(kelvin_val);
                                 }
                                 // Color swatch
@@ -646,12 +711,14 @@ pub fn render_blender_ui_contents(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
                 }
             }
 
-            if ui.button(tr("+ Add Light")).clicked() {
-                let n = app.blender_state.lights.len() + 1;
-                let mut new_lt = BlenderLight::default();
-                new_lt.name = format!("Light {n}");
-                app.blender_state.lights.push(new_lt);
-            }
+            ui.horizontal(|ui| {
+                if ui.button(tr("+ Point light")).clicked() {
+                    begin_pick = Some(document::Pick::New(LightKind::Point));
+                }
+                if ui.button(tr("+ Spot light")).clicked() {
+                    begin_pick = Some(document::Pick::New(LightKind::Spot));
+                }
+            });
 
             ui.separator();
 
@@ -676,6 +743,20 @@ pub fn render_blender_ui_contents(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
         });
     });
 
+    if app.blender_document_controls() != before_document {
+        app.blender_state.pending_document_controls = true;
+    }
+    if app.blender_state.pending_document_controls && !editing_document_text && !ui.input(|i|i.pointer.any_down()) {
+        app.commit_blender_document_controls();
+    }
+    if let Some(pick) = begin_pick {
+        app.begin_blender_pick(pick);
+    }
+    let mut follow = app.blender_state.follow.enabled;
+    if ui.checkbox(&mut follow, tr("Sync with the view")).changed() {
+        app.blender_state.set_follow(follow);
+    }
+
     ui.add_space(10.0);
     ui.separator();
 
@@ -696,11 +777,7 @@ pub fn render_blender_ui_contents(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
             .add_enabled(is_blender_available && !is_rendering, render_btn)
             .clicked()
         {
-            app.blender_state.start_render_cached(
-                &app.scene,
-                &app.camera,
-                Some(app.native_geometry_revision),
-            );
+            app.start_blender_render();
         }
 
         if is_rendering {
@@ -726,8 +803,7 @@ mod tests {
         assert_eq!(state.ambience, Ambience::Day);
         assert_eq!(state.width, 1920);
         assert_eq!(state.height, 1080);
-        assert_eq!(state.lights.len(), 1);
-        assert_eq!(state.lights[0].kind, LightKind::Point);
+        assert!(state.lights.is_empty());
     }
 
     #[test]
@@ -765,13 +841,11 @@ mod output_tests {
         fs::create_dir(&directory).unwrap();
         assert!(state.save_image(&directory).is_err());
         assert!(directory.is_dir());
-        assert!(
-            !fs::read_dir(&dir).unwrap().any(|p| p
-                .unwrap()
-                .file_name()
-                .to_string_lossy()
-                .ends_with(".tmp"))
-        );
+        assert!(!fs::read_dir(&dir).unwrap().any(|p| p
+            .unwrap()
+            .file_name()
+            .to_string_lossy()
+            .ends_with(".tmp")));
         state.save_image(&dest).unwrap();
         assert_eq!(fs::read(&source).unwrap(), fs::read(&dest).unwrap());
         fs::remove_dir_all(dir).unwrap();
