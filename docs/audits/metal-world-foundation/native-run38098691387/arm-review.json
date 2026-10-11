@@ -1,0 +1,41 @@
+{
+  "source": "4a1a0395900bdb9e19003ef40a9abd4403d7ec61",
+  "artifact_id": 11687038341,
+  "zip_sha256": "2e81ff205f16c0ee5485e44385960a9ecd52b4a6738d8952db04134830341ba4",
+  "native_sdk_build": "PASS",
+  "runtime": {
+    "exit_code": 1,
+    "outer_timeout": false
+  },
+  "inventory": [
+    "binary.sha256",
+    "build.log",
+    "native/far-then-near.rgba",
+    "native/near-then-far.rgba",
+    "os.txt",
+    "pixel-review.json",
+    "pixel-review.log",
+    "revision.txt",
+    "runtime-result.json",
+    "runtime.log",
+    "sdk.txt",
+    "source.sha256"
+  ],
+  "completed_gpu_frames": {
+    "native/far-then-near.rgba": {
+      "sha256": "1098d6c1ffe5069f7869f1b825ee662fd75895e60d5c28863985a46dc4e1a634",
+      "interior_pixels": 1152,
+      "background_pixels": 2584
+    },
+    "native/near-then-far.rgba": {
+      "sha256": "1098d6c1ffe5069f7869f1b825ee662fd75895e60d5c28863985a46dc4e1a634",
+      "interior_pixels": 1152,
+      "background_pixels": 2584
+    }
+  },
+  "failure_phase": "after two successful opposite-order positive readbacks; depth-disabled negative is next call in literal source recipe",
+  "cause_boundary": "nil depth-stencil state with depth-enabled render target/pipeline is the next failed command; native NSError not retained, so exact driver rejection reason unobserved",
+  "required_full_nine_frame_gate": "FAIL: only2/9readbacks, no native report, negative/warm/owner/UIcleanup unproven",
+  "corrected_initial_claim": "Earlier first-draw/noRGBA claim was incorrect because ZIP inventory was not inspected. Both actual positive frames exist and pass strict sampled checker.",
+  "recorded_binary_sha256": "8ee0489b812c1177c0264588082cb8877ec5d2b9540b8de3b1a997d519bd25db  target/debug/examples/native_world_depth"
+}
