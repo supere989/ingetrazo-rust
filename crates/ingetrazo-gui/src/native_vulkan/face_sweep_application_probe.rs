@@ -20,7 +20,17 @@ impl App for Probe{
   Self{app,nonce:0,refuse:false,font_refuse:false,cad_refuse:false,distance:None,dir:PathBuf::from(std::env::var_os("INGETRAZO_SWEEP_CONTROL").expect("Sweep control")),anchor:vec(&row["anchor"]),normal:vec(&row["normal"]),face:row["face"].as_u64().unwrap()as usize,owner_nonce:0,old_owner:None}
  }
  fn build_ui(&mut self,ctx:&egui::Context){
-  self.app.update_ui(ctx);ctx.request_repaint_after(std::time::Duration::from_millis(16));
+  if std::env::var_os("INGETRAZO_SWEEP_SOURCE_FRAME").is_some(){
+   // Declared 800x600 viewport-only engineering comparison. The production
+   // App::prepare_gpu/World/label path is unchanged; document chrome is omitted.
+   egui::CentralPanel::default().frame(egui::Frame::none()).show(ctx,|ui|{
+    let rect=ui.max_rect();self.app.camera.aspect=f64::from(rect.width())/f64::from(rect.height());
+    self.app.native_gpu_viewport_rect=Some(rect);
+    if let Some(texture)=self.app.native_gpu_viewport_texture{ui.painter().image(texture,rect,egui::Rect::from_min_max(egui::pos2(0.,0.),egui::pos2(1.,1.)),egui::Color32::WHITE);}
+    if let Some(egui::Shape::Callback(callback))=&self.app.native_gpu_annotation_shape{let mut callback=callback.clone();callback.rect=rect;ui.painter().add(egui::Shape::Callback(callback));}
+   });
+  }else{self.app.update_ui(ctx);}
+  ctx.request_repaint_after(std::time::Duration::from_millis(16));
   if let Ok(file)=std::fs::File::open(self.dir.join("request.json")){
    let mut bytes=Vec::new();file.take(1025).read_to_end(&mut bytes).unwrap();assert!(bytes.len()<=1024);
    let row:serde_json::Value=serde_json::from_slice(&bytes).unwrap();let nonce=row["nonce"].as_u64().unwrap();

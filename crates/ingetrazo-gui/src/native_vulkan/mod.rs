@@ -1511,8 +1511,9 @@ impl App for crate::IngeTrazoApp {
                     None=>{
                         // Clearing cannot require new font/CAD allocations.
                         // Keep old callback ownership until World succeeds.
-                        prepare_app_world(self,system.world.as_mut().ok_or("World absent")?,&system.vulkan_context,system.fence,system.draw_serial)?;
-                        system.clear_annotation_overlay()?;system.annotation_ready_shape=None;
+                        let renderer=system.annotation_cad.as_mut().ok_or("Annotation renderer absent")?;
+                        system.world.as_mut().ok_or("World absent")?.clear_annotation_overlay_transaction(renderer,&system.vulkan_context,system.fence,system.draw_serial,|world|prepare_app_world(self,world,&system.vulkan_context,system.fence,system.draw_serial))?;
+                        system.annotation_ready_shape=None;
                     },
                 }
                 Ok::<(),String>(())

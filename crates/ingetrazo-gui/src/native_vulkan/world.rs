@@ -243,9 +243,16 @@ impl World {
   self.annotation_depth_binding=Some(identity);self.annotation_parameters=Some(parameters);Ok(())
  }
  pub(crate) fn clear_annotation_overlay(&mut self,renderer:&mut super::cad2d::Renderer,context:&VulkanContext,fence:vk::Fence,completed:u64)->Result<(),String>{
+  self.clear_annotation_overlay_transaction(renderer,context,fence,completed,|_|Ok(()))
+ }
+ pub(crate) fn clear_annotation_overlay_transaction<F:FnOnce(&mut Self)->Result<(),String>>(&mut self,renderer:&mut super::cad2d::Renderer,context:&VulkanContext,fence:vk::Fence,completed:u64,prepare_world:F)->Result<(),String>{
   self.resources.publication_preflight(context,fence,completed,&[],&[])?;
-  let staged=self.annotation_visibility.as_mut().map(|evaluator|evaluator.stage_clear(context,fence,completed)).transpose()?;
-  renderer.clear_annotation(context,staged,fence,completed)?;
+  let mut evaluator=self.annotation_visibility.take();
+  let result=(||{
+   let staged=evaluator.as_mut().map(|owner|owner.stage_clear(context,fence,completed)).transpose()?;
+   renderer.clear_annotation_transaction(context,staged,fence,completed,||prepare_world(self))
+  })();
+  self.annotation_visibility=evaluator;result?;
   self.annotation_parameters=None;self.annotation_depth_binding=None;Ok(())
  }
  pub(crate) fn record_annotations_if_prepared(&mut self,command:vk::CommandBuffer,serial:u64)->Result<(),String>{

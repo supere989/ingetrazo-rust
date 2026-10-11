@@ -789,6 +789,11 @@ unsafe{context.device.create_descriptor_set_layout(&vk::DescriptorSetLayoutCreat
     pub(crate) fn clear_annotation(&mut self,context:&VulkanContext,
         queries:Option<super::annotation_visibility_gpu::PreparedVisibility<'_>>,
         fence:vk::Fence,completed:u64)->Result<(),String>{
+        self.clear_annotation_transaction(context,queries,fence,completed,||Ok(()))
+    }
+    pub(crate) fn clear_annotation_transaction<F:FnOnce()->Result<(),String>>(&mut self,context:&VulkanContext,
+        queries:Option<super::annotation_visibility_gpu::PreparedVisibility<'_>>,
+        fence:vk::Fence,completed:u64,prepare_world:F)->Result<(),String>{
         let old=self.annotation_buffers.as_ref().map(|(_,buffers)|[buffers.vertex,buffers.index]);
         let proof=self.resources.publication_preflight(context,fence,completed,
             old.as_ref().map_or(&[][..],|ids|ids.as_slice()),&[])?;
@@ -796,6 +801,7 @@ unsafe{context.device.create_descriptor_set_layout(&vk::DescriptorSetLayoutCreat
         if !pipeline.annotations{return Err("Ordinary CAD cannot clear annotation state".into());}
         let owner=self.annotation_owner.as_ref().and_then(std::sync::Weak::upgrade);
         let mut state=owner.as_ref().map(|owner|owner.state.lock().map_err(|_|"Annotation state poisoned")).transpose()?;
+        prepare_world()?;
         if let Some(queries)=queries{queries.commit();}
         pipeline.visibility=None;
         if let Some(state)=state.as_mut(){state.ready=None;}
