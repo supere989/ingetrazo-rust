@@ -34,6 +34,8 @@ impl SelectTool {
 
         // Seed queue from start item
         match start_item {
+            SelectionItem::ContextGroup{context,group}=>{scene.select(SelectionItem::ContextGroup{context,group});return;}
+            SelectionItem::ContextFace{context,face,vertices}=>{scene.select(SelectionItem::ContextFace{context,face,vertices});return;}
             SelectionItem::ImagePlane(id)=>{scene.select(SelectionItem::ImagePlane(id));return;}
             SelectionItem::SectionPlane(id)=>{scene.select(SelectionItem::SectionPlane(id));return;}
             SelectionItem::Vertex(vid) => {

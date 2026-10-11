@@ -449,8 +449,12 @@ fn world_mesh(group: &Group) -> Result<Mesh, String> {
     Ok(out)
 }
 pub fn collect_objects(scene: &Scene) -> Result<Vec<Object<'_>>, String> {
+    collect_objects_from(&scene.mesh,&scene.groups)
+}
+/// Borrow the original loose-face domain and active placement list independently.
+pub fn collect_objects_from<'a>(loose:&'a Mesh,groups:&'a [Group])->Result<Vec<Object<'a>>,String>{
     let mut by_id = BTreeMap::<Option<i64>, (&serde_json::Value, Vec<usize>)>::new();
-    for (id, f) in scene.mesh.faces.iter().enumerate() {
+    for (id, f) in loose.faces.iter().enumerate() {
         if let Some(tag) = f
             .attrs
             .get("ifc")
@@ -479,11 +483,11 @@ pub fn collect_objects(scene: &Scene) -> Result<Vec<Object<'_>>, String> {
                 .and_then(|v| v.as_str())
                 .unwrap_or("")
                 .into(),
-            mesh: Cow::Borrowed(&scene.mesh),
+            mesh: Cow::Borrowed(loose),
             faces,
         });
     }
-    for (i, g) in scene.groups.iter().enumerate() {
+    for (i, g) in groups.iter().enumerate() {
         if let Some(tag) = g
             .ifc_tag
             .as_ref()
@@ -536,6 +540,8 @@ pub fn takeoff(scene: &Scene) -> Result<Vec<Takeoff>, String> {
     collect_objects(scene)?.iter().map(object_takeoff).collect()
 }
 
+pub fn takeoff_from(loose:&Mesh,groups:&[Group])->Result<Vec<Takeoff>,String>{collect_objects_from(loose,groups)?.iter().map(object_takeoff).collect()}
+
 pub fn quantities_csv(rows: &[Takeoff]) -> String {
     let mut s = "class,name,metrado,unit,area_m2,volume_m3\n".to_owned();
     for r in rows {
@@ -568,7 +574,7 @@ pub(crate) fn json_truthy(value: &serde_json::Value) -> bool {
         serde_json::Value::Object(v) => !v.is_empty(),
     }
 }
-pub(crate) fn next_draw_object_id(mesh: &Mesh) -> Result<i64, String> {
+pub fn next_draw_object_id(mesh: &Mesh) -> Result<i64, String> {
     let mut top = 0;
     for face in &mesh.faces {
         let Some(tag) = face.attrs.get("ifc").filter(|t| json_truthy(t)) else {
@@ -599,6 +605,10 @@ pub fn stamp_drawn_faces(
     owned: &[usize],
     active: Option<&serde_json::Value>,
 ) -> Result<(), String> {
+    stamp_drawn_faces_with_id(mesh,owned,active,None)
+}
+/// Explicit source allocation domain; callers cannot infer authored faces from topology churn.
+pub fn stamp_drawn_faces_with_id(mesh:&mut Mesh,owned:&[usize],active:Option<&serde_json::Value>,source_id:Option<&Result<i64,String>>)->Result<(),String>{
     let Some(active) = active else { return Ok(()) };
     if !json_truthy(active) {
         return Ok(());
@@ -617,7 +627,7 @@ pub fn stamp_drawn_faces(
             return Err("Drawn BIM face command no longer live".into());
         }
     }
-    let id = next_draw_object_id(mesh)?;
+    let id = match source_id {Some(id)=>id.clone()?,None=>next_draw_object_id(mesh)?};
     let mut tag = active.as_object().unwrap().clone();
     tag.insert("id".into(), id.into());
     let tag = serde_json::Value::Object(tag);

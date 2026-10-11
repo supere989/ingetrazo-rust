@@ -230,6 +230,10 @@ impl IngeTrazoApp {
             let mut a=a.clone();let mut b=b.clone();
             fn normalize(a:&mut ingetrazo_core::groups::Group,b:&mut ingetrazo_core::groups::Group) {
                 if a.mesh_share.is_none() || b.mesh_share.is_none(){a.mesh_share=None;b.mesh_share=None;}
+                // IFC placement metadata does not replace the active mesh,
+                // transform, child list or definition identity. A parked BIM
+                // tag command may be undone while this group remains open.
+                a.ifc_tag=None;b.ifc_tag=None;
                 for (a,b) in a.children.iter_mut().zip(&mut b.children){normalize(a,b);}
             }
             normalize(&mut a,&mut b);a==b
@@ -408,7 +412,7 @@ impl IngeTrazoApp {
         edit.section_planes=self.scene.section_planes.clone();edit.show_section_cuts=self.scene.show_section_cuts;edit.show_section_planes=self.scene.show_section_planes;edit.show_section_fill=self.scene.show_section_fill;session.section_baseline=edit.section_planes.clone();
         edit.bind_dimensions();session.dimension_baseline=edit.dimensions.clone();
         edit.camera=self.camera.clone();
-        self.scene=edit;self.bump_model_revision();self.component_edit_stack.push(session);
+        self.scene=edit;self.bump_model_revision();self.component_edit_stack.push(session);self.sync_bim_draw_activation();
         self.status_message="Editing group; Finish commits, Cancel restores".into();
     }
 
@@ -493,6 +497,7 @@ impl IngeTrazoApp {
             if changed {self.undo_stack.push(folded_snapshot.unwrap());self.redo_stack.clear();}
         }
 
+        self.sync_bim_draw_activation();
         self.status_message=if changed {"Committed group edit"} else {"Group edit unchanged; pending history targets validated"}.into();
     }
 
@@ -502,6 +507,7 @@ impl IngeTrazoApp {
             self.set_tool(ToolType::Select);
             crate::document_presentation::preserve(&self.scene,&mut session.cancel_scene);self.scene=session.cancel_scene;self.bump_model_revision();self.camera=session.original_camera;
             self.undo_stack=session.original_undo;self.redo_stack=session.original_redo;
+            self.sync_bim_draw_activation();
             self.status_message="Cancelled group edit".into();
         } else {self.status_message="No group edit is active".into();}
     }

@@ -26,27 +26,11 @@ impl IngeTrazoApp {
         self.sync_bim_draw_activation();
     }
     pub(crate) fn prepare_bim_draw_commit(&mut self) -> Result<(), String> {
-        use ingetrazo_tools::base::ToolType;
-        if self.bim_active_tag_mode
-            && !self.component_edit_stack.is_empty()
-            && matches!(
-                self.active_tool_type,
-                ToolType::Line
-                    | ToolType::Rectangle
-                    | ToolType::Freehand
-                    | ToolType::Circle
-                    | ToolType::Polygon
-                    | ToolType::Arc
-            )
-        {
-            let error = "Finish group editing before drawing with an active BIM tag".to_string();
-            self.status_message = error.clone();
-            return Err(error);
-        }
         self.sync_bim_draw_activation();
         Ok(())
     }
     pub(crate) fn sync_bim_draw_activation(&mut self) {
+        self.scene.bim_draw_id=if self.bim_active_tag_mode {self.component_edit_stack.first().map(|session|bim::next_draw_object_id(&session.original_scene.mesh))}else{None};
         self.scene.active_ifc = if self.bim_active_tag_mode {
             Some(
                 serde_json::json!({"class":self.bim_active_class,"name":if self.bim_name_input.trim().is_empty(){self.bim_active_class.strip_prefix("Ifc").unwrap_or(&self.bim_active_class)}else{self.bim_name_input.trim()}}),
@@ -61,6 +45,7 @@ impl IngeTrazoApp {
             self.status_message = "Unsupported BIM class".into();
             return;
         }
+        if self.edit_bim_context_selection(Some((class,name))).is_some(){return;}
         let faces: Vec<_> = self
             .scene
             .selection
@@ -117,6 +102,7 @@ impl IngeTrazoApp {
         );
     }
     pub fn untag_selection_bim(&mut self) {
+        if self.edit_bim_context_selection(None).is_some(){return;}
         let faces: Vec<_> = self
             .scene
             .selection
@@ -164,6 +150,44 @@ impl IngeTrazoApp {
         self.scene.bump_version();
         self.status_message = "Removed selected BIM tags".into();
     }
+    // Original row selection holds real outer loose-face objects while the
+    // active tool mesh is a different group. Resolve the immutable target;
+    // never reinterpret an outer face number against the active mesh.
+    fn edit_bim_context_selection(&mut self,tag:Option<(&str,&str)>)->Option<bool>{
+        let selected:Vec<_>=self.scene.selection.iter().filter_map(|s|if let SelectionItem::ContextFace{context,face,vertices}=s {Some((context.clone(),*face,vertices.clone()))}else{None}).collect();
+        let groups:Vec<_>=self.scene.selection.iter().filter_map(|s|if let SelectionItem::ContextGroup{context,group}=s {Some((context.clone(),*group))}else{None}).collect();
+        if selected.is_empty()&&groups.is_empty(){return None;}
+        let result=(||->Result<(),String>{
+            let root=self.component_edit_stack.first().ok_or("BIM face target is no longer active")?;
+            if selected.iter().any(|(context,face,vertices)|*context!=root.original_scene.history_context || root.original_scene.mesh.faces.get(*face).is_none_or(|f|f.vertices.iter().map(|&v|root.original_scene.mesh.vertices[v].uid).collect::<Vec<_>>()!=*vertices)) {return Err("BIM face target no longer resolves; no tags changed".into());}
+            if groups.iter().any(|(context,id)|*context!=root.original_scene.history_context || !root.original_scene.groups.iter().any(|g|g.id==*id)){return Err("BIM group target no longer resolves; no tags changed".into());}
+            if selected.len()+groups.len()!=self.scene.selection.len(){return Err("Mixed active and parked BIM targets require separate tagging".into());}
+            let before=root.original_scene.clone();let mut candidate=before.clone();
+            let id=if tag.is_some(){Some(bim::next_draw_object_id(&candidate.mesh)?)}else{None};
+            for (_,face,_) in &selected {if let Some((class,name))=tag {candidate.mesh.faces[*face].attrs.insert("ifc".into(),serde_json::json!({"id":id.unwrap(),"class":class,"name":name.trim()}));}else{candidate.mesh.faces[*face].attrs.remove("ifc");}}
+            for (_,id) in &groups {let group=candidate.groups.iter_mut().find(|g|g.id==*id).unwrap();group.ifc_tag=tag.map(|(class,name)|serde_json::json!({"class":class,"name":if name.trim().is_empty(){group.name.as_str()}else{name.trim()}}));}
+            if candidate.mesh==before.mesh&&candidate.groups==before.groups{return Ok(());}
+            candidate.bump_version();self.undo_stack.push(before);self.redo_stack.clear();
+            self.component_edit_stack[0].original_scene=candidate;
+            self.scene.bump_view_version();self.bump_model_revision();Ok(())
+        })();
+        match result {Ok(())=>{self.status_message=if tag.is_some(){"Tagged parked document faces"}else{"Removed parked document face tags"}.into();Some(true)},Err(error)=>{self.status_message=error;Some(false)}}
+    }
+    /// Source leaves the document placement list in place during group editing.
+    /// Reconstruct only that cold BIM view; tools still own the isolated active
+    /// mesh. No Scene clone, registry publication or warm traversal is required.
+    pub fn bim_document_groups(&self)->std::borrow::Cow<'_,[ingetrazo_core::groups::Group]>{
+        if self.component_edit_stack.is_empty(){return std::borrow::Cow::Borrowed(&self.scene.groups);}
+        let mut children=self.scene.groups.clone();let mut mesh=&self.scene.mesh;
+        for session in self.component_edit_stack.iter().rev(){
+            let mut groups=session.original_scene.groups.clone();
+            if let Some(group)=groups.iter_mut().find(|g|g.id==session.group_id){
+                group.mesh=mesh.clone();group.transform=glam::DMat4::IDENTITY;group.children=children;
+            }
+            children=groups;mesh=&session.original_scene.mesh;
+        }
+        std::borrow::Cow::Owned(children)
+    }
     pub(crate) fn refresh_bim_takeoff(&mut self) {
         let key = (
             self.model_revision,
@@ -173,47 +197,50 @@ impl IngeTrazoApp {
         if self.bim_cache.key == Some(key) {
             return;
         }
-        self.bim_cache.rows = if self.component_edit_stack.is_empty() {
-            bim::takeoff(&self.scene)
-        } else {
-            Err("Finish group editing to view document quantities".into())
-        };
+        let loose=self.component_edit_stack.first().map_or(&self.scene.mesh,|session|&session.original_scene.mesh);
+        let groups=self.bim_document_groups();
+        let rows=bim::takeoff_from(loose,&groups).and_then(|mut rows|{
+            if !self.component_edit_stack.is_empty(){
+                // Original BimPanel/CSV classifies a root Group by its own
+                // currently exposed mesh, even though area/volume use subtree
+                // world geometry. Retain that operative active-context policy.
+                for row in &mut rows {if let ObjectKey::Group(index)=row.key {
+                    let group=&groups[index];row.quantities=bim::class_quantities(&row.class,&group.mesh,&(0..group.mesh.faces.len()).collect::<Vec<_>>())?;
+                }}
+            }
+            Ok(rows)
+        });
+        self.bim_cache.rows=rows;
         self.bim_cache.key = Some(key);
         self.bim_cache.builds += 1;
+    }
+    pub fn bim_takeoff_rows(&mut self)->Result<&[Takeoff],String>{
+        self.refresh_bim_takeoff();self.bim_cache.rows.as_ref().map(Vec::as_slice).map_err(Clone::clone)
     }
     pub fn select_bim_object(&mut self, key: &ObjectKey) {
         self.scene.clear_selection();
         match key {
             ObjectKey::Group(i) => {
-                if *i < self.scene.groups.len() {
-                    self.scene.select(SelectionItem::Group(*i));
-                }
+                if let Some(root)=self.component_edit_stack.first(){if let Some(group)=root.original_scene.groups.get(*i){self.scene.select(SelectionItem::ContextGroup{context:root.original_scene.history_context.clone(),group:group.id});}}
+                else if *i<self.scene.groups.len(){self.scene.select(SelectionItem::Group(*i));}
             }
             ObjectKey::Faces(id) => {
-                let ids: Vec<_> = self
-                    .scene
-                    .mesh
-                    .faces
-                    .iter()
-                    .enumerate()
-                    .filter_map(|(i, f)| {
-                        let tag = f.attrs.get("ifc")?.as_object()?;
-                        (!tag.is_empty() && tag.get("id").and_then(|n| n.as_i64()) == *id)
-                            .then_some(i)
-                    })
-                    .collect();
-                for i in ids {
-                    self.scene.select(SelectionItem::Face(i));
-                }
+                let root=self.component_edit_stack.first();
+                let loose=root.map_or(&self.scene.mesh,|session|&session.original_scene.mesh);
+                let ids:Vec<_>=loose.faces.iter().enumerate().filter_map(|(i,f)|{
+                    let tag=f.attrs.get("ifc")?.as_object()?;
+                    (!tag.is_empty() && tag.get("id").and_then(|n|n.as_i64())==*id).then_some(i)
+                }).collect();
+                let context=root.map(|s|s.original_scene.history_context.clone());
+                let ids:Vec<_>=ids.into_iter().map(|face|(face,loose.faces[face].vertices.iter().map(|&v|loose.vertices[v].uid).collect::<Vec<_>>())).collect();
+                for (face,vertices) in ids {self.scene.select(match &context {Some(context)=>SelectionItem::ContextFace{context:context.clone(),face,vertices},None=>SelectionItem::Face(face)});}
             }
         }
     }
     pub fn export_bim_csv(&mut self, path: &std::path::Path) -> Result<usize, String> {
-        if !self.component_edit_stack.is_empty() {
-            return Err("Finish group editing before exporting document quantities".into());
-        }
-        let n = ingetrazo_formats::ifc::save_quantities_csv(&self.scene, path)
-            .map_err(|e| e.to_string())?;
+        self.refresh_bim_takeoff();
+        let rows=self.bim_cache.rows.as_ref().map_err(Clone::clone)?;
+        let n=ingetrazo_formats::ifc::save_quantities_rows(rows,path).map_err(|e|e.to_string())?;
         self.status_message = format!("Exported {n} BIM objects to {}", path.display());
         Ok(n)
     }
@@ -415,23 +442,61 @@ mod draw_tests {
         assert_ne!(a.scene.mesh, before);
     }
     #[test]
-    fn active_draw_context_refusal_is_atomic() {
-        use ingetrazo_core::{groups::Group, scene::SelectionItem};
-        let mut a = app();
+    fn active_draw_context_uses_root_identity_and_local_history() {
+        use ingetrazo_core::{groups::Group,scene::SelectionItem};
+        let mut a=app();rect(&mut a,20.,20.);
+        a.scene.mesh.faces[0].attrs.insert("ifc".into(),serde_json::json!({"id":40,"class":"IfcSlab","name":"root"}));
         a.scene.groups.push(Group::new("group"));
-        a.scene.select(SelectionItem::Group(0));
-        a.begin_component_edit();
-        assert_eq!(a.component_edit_stack.len(), 1);
-        a.set_tool(ToolType::Rectangle);
-        let before = a.scene.clone();
-        let undo = a.undo_stack.clone();
-        let redo = a.redo_stack.clone();
-        a.dispatch_tool_click(&point(0., 0., 0.));
-        assert_eq!(a.scene, before);
-        assert_eq!(a.undo_stack, undo);
-        assert_eq!(a.redo_stack, redo);
-        assert!(a.active_tool.rubber_band_lines().is_empty());
-        assert!(a.status_message.contains("Finish group editing"));
+        a.scene.select(SelectionItem::Group(0));a.begin_component_edit();
+        rect(&mut a,0.,0.);rect(&mut a,0.,5.);
+        assert_eq!(a.scene.mesh.faces.len(),2);
+        assert!(a.scene.mesh.faces.iter().all(|f|f.attrs["ifc"]["id"]==41));
+        a.undo();assert_eq!(a.scene.mesh.faces.len(),1);a.redo();assert_eq!(a.scene.mesh.faces.len(),2);
+        a.finish_component_edit();assert_eq!(a.scene.mesh.faces[0].attrs["ifc"]["id"],40);
+        assert_eq!(a.scene.groups[0].mesh.faces.len(),2);
+        assert!(a.scene.groups[0].mesh.faces.iter().all(|f|f.attrs["ifc"]["id"]==41));
+    }
+    #[test]
+    fn context_takeoff_selection_tag_history_and_csv_use_parked_mesh(){
+        use ingetrazo_core::{groups::Group,scene::SelectionItem};
+        let mut a=app();rect(&mut a,20.,20.);a.scene.mesh.faces[0].attrs.get_mut("ifc").unwrap()["id"]=40.into();
+        a.scene.groups.push(Group::new("target"));a.scene.clear_selection();a.scene.select(SelectionItem::Group(0));a.begin_component_edit();rect(&mut a,0.,0.);
+        let active=a.scene.mesh.clone();let root=a.component_edit_stack[0].original_scene.mesh.clone();
+        assert_eq!(a.bim_takeoff_rows().unwrap().len(),1);assert_eq!(a.bim_takeoff_rows().unwrap()[0].key,ObjectKey::Faces(Some(40)));
+        let builds=a.bim_cache.builds;for _ in 0..20{a.refresh_bim_takeoff();}assert_eq!(a.bim_cache.builds,builds);
+        a.select_bim_object(&ObjectKey::Faces(Some(40)));assert!(matches!(a.scene.selection.iter().next(),Some(SelectionItem::ContextFace{face:0,..})));assert!(!a.scene.is_selected(&SelectionItem::Face(0)));
+        a.tag_selection_bim("IfcSlab","renamed");assert_eq!(a.scene.mesh,active);assert_eq!(a.component_edit_stack[0].original_scene.mesh.faces[0].attrs["ifc"]["name"],"renamed");
+        a.undo();assert_eq!(a.scene.mesh,active);assert_eq!(a.component_edit_stack[0].original_scene.mesh,root);a.redo();assert_eq!(a.scene.mesh,active);assert_eq!(a.bim_takeoff_rows().unwrap()[0].name,"renamed");
+        let path=std::env::temp_dir().join(format!("bim-context-{}.csv",uuid::Uuid::new_v4()));assert_eq!(a.export_bim_csv(&path).unwrap(),1);let csv=std::fs::read_to_string(&path).unwrap();assert!(csv.contains("renamed"));assert!(!csv.contains("context"));std::fs::remove_file(path).unwrap();
+        a.select_bim_object(&ObjectKey::Faces(Some(41))); // No root row41 after source id allocation40→41.
+        assert_eq!(a.scene.selection.len(),1);
+        a.untag_selection_bim();assert!(a.component_edit_stack[0].original_scene.mesh.faces[0].attrs.get("ifc").is_none());assert_eq!(a.scene.mesh,active);
+    }
+    #[test]
+    fn parked_selection_stale_context_and_topology_refuse_atomically(){
+        use ingetrazo_core::{groups::Group,scene::SelectionItem};
+        let mut a=app();rect(&mut a,20.,20.);a.scene.groups.push(Group::new("target"));a.scene.select(SelectionItem::Group(0));a.begin_component_edit();rect(&mut a,0.,0.);a.select_bim_object(&ObjectKey::Faces(Some(1)));
+        let valid=a.scene.selection.clone();a.component_edit_stack[0].original_scene.mesh.vertices[0].uid=uuid::Uuid::new_v4();let before=a.scene.clone();let root=a.component_edit_stack[0].original_scene.clone();let undo=a.undo_stack.clone();let redo=a.redo_stack.clone();a.tag_selection_bim("IfcWall","wrong");assert_eq!(a.scene,before);assert_eq!(a.component_edit_stack[0].original_scene,root);assert_eq!(a.undo_stack,undo);assert_eq!(a.redo_stack,redo);assert!(a.status_message.contains("no longer resolves"));
+        a.scene.selection=valid;let stale=a.scene.selection.iter().next().cloned().unwrap();a.cancel_component_edit();a.scene.clear_selection();a.scene.select(stale);let before=a.scene.clone();a.tag_selection_bim("IfcWall","wrong");assert_eq!(a.scene,before);assert!(a.status_message.contains("no longer active"));
+    }
+    #[test]
+    fn context_group_row_targets_root_placement_not_active_child_index() {
+        use ingetrazo_core::{groups::Group,scene::SelectionItem};
+        let mut a=app();let mut parent=Group::new("parent");
+        parent.ifc_tag=Some(serde_json::json!({"class":"IfcSlab","name":"parent slab"}));
+        parent.children.push(Group::new("child"));a.scene.groups.push(parent);
+        let parent_id=a.scene.groups[0].id;let child_id=a.scene.groups[0].children[0].id;
+        a.scene.select(SelectionItem::Group(0));a.begin_component_edit();
+        a.scene.select(SelectionItem::Group(0));a.begin_component_edit();rect(&mut a,0.,0.);
+        let active=a.scene.mesh.clone();a.select_bim_object(&ObjectKey::Group(0));
+        assert!(matches!(a.scene.selection.iter().next(),Some(SelectionItem::ContextGroup{group,..})if *group==parent_id));
+        a.tag_selection_bim("IfcRoof","root only");
+        let root=&a.component_edit_stack[0].original_scene;
+        assert_eq!(root.groups[0].ifc_tag.as_ref().unwrap()["name"],"root only");
+        assert_eq!(root.groups[0].children[0].id,child_id);assert!(root.groups[0].children[0].ifc_tag.is_none());
+        assert_eq!(a.scene.mesh,active);a.undo();assert_eq!(a.scene.mesh,active);
+        assert_eq!(a.component_edit_stack[0].original_scene.groups[0].ifc_tag.as_ref().unwrap()["name"],"parent slab");
+        a.redo();a.untag_selection_bim();assert!(a.component_edit_stack[0].original_scene.groups[0].ifc_tag.is_none());
     }
     #[test]
     fn active_mode_is_runtime_and_does_not_revert_with_model_history() {

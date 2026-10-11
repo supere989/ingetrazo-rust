@@ -382,6 +382,7 @@ fn hole_cycle_declarations(
     plane: Option<(DVec3,DVec3)>,
     active: Option<&serde_json::Value>,
     tag: &mut Option<serde_json::Value>,
+    source_id: Option<&Result<i64,String>>,
 ) -> Result<Mesh, String> {
     let mut declared = mesh.clone();
     for vertex in &mut declared.vertices {
@@ -537,7 +538,7 @@ fn hole_cycle_declarations(
     if authored.len()!=declared.faces.len(){return Err("Drawing declaration identity was lost".into());}
     if let Some(active)=active {
         if authored.iter().any(|a|*a) {
-            let stamp=draw_tag(original,active,tag)?;
+            let stamp=draw_tag(original,active,tag,source_id)?;
             for (face,is_auto) in declared.faces.iter_mut().zip(authored) {
                 if is_auto && !face.attrs.get("ifc").is_some_and(tag_truthy) {face.attrs.insert("ifc".into(),stamp.clone());}
             }
@@ -546,10 +547,10 @@ fn hole_cycle_declarations(
     Ok(declared)
 }
 fn tag_truthy(v:&serde_json::Value)->bool {crate::bim::json_truthy(v)}
-fn draw_tag(mesh:&Mesh,active:&serde_json::Value,allocated:&mut Option<serde_json::Value>)->Result<serde_json::Value,String>{
+fn draw_tag(mesh:&Mesh,active:&serde_json::Value,allocated:&mut Option<serde_json::Value>,source_id:Option<&Result<i64,String>>)->Result<serde_json::Value,String>{
     if let Some(tag)=allocated {return Ok(tag.clone());}
     let mut tag=active.as_object().ok_or("Active BIM tag must be an object")?.clone();
-    let id=crate::bim::next_draw_object_id(mesh)?;
+    let id=match source_id{Some(id)=>id.clone()?,None=>crate::bim::next_draw_object_id(mesh)?};
     tag.insert("id".into(),id.into());let tag=serde_json::Value::Object(tag);*allocated=Some(tag.clone());Ok(tag)
 }
 // AddFaceCommand reintroduces full-length polygon sides after the segment
@@ -702,6 +703,9 @@ pub fn add_segments(
 /// Active tags stamp the draw plan's own declarations before coverage rebuild.
 /// Existing/re-emitted regions are never selected by index/count differences.
 pub fn add_segments_tagged(mesh:&Mesh,segments:&[(DVec3,DVec3)],explicit:Option<&[DVec3]>,curve:Option<usize>,active:Option<&serde_json::Value>)->Result<Mesh,String>{
+    add_segments_tagged_with_id(mesh,segments,explicit,curve,active,None)
+}
+pub fn add_segments_tagged_with_id(mesh:&Mesh,segments:&[(DVec3,DVec3)],explicit:Option<&[DVec3]>,curve:Option<usize>,active:Option<&serde_json::Value>,source_id:Option<&Result<i64,String>>)->Result<Mesh,String>{
     let active=active.filter(|v|tag_truthy(v));let mut allocated_tag=None;
     planar::validate_mesh(mesh)?;
     if segments
@@ -788,7 +792,7 @@ pub fn add_segments_tagged(mesh:&Mesh,segments:&[(DVec3,DVec3)],explicit:Option<
     if let Some(ring) = explicit {
         let ids = ring.iter().map(|&p| out.add_vertex(p)).collect();
         let id=out.add_face(ids, vec![]).ok_or("Invalid drawing face")?;
-        if let Some(active)=active {out.faces[id].attrs.insert("ifc".into(),draw_tag(mesh,active,&mut allocated_tag)?);}
+        if let Some(active)=active {out.faces[id].attrs.insert("ifc".into(),draw_tag(mesh,active,&mut allocated_tag,source_id)?);}
         out = planar::stitch_boundaries(&out)?;
     }
     if let Some(id) = curve {
@@ -954,10 +958,13 @@ pub fn add_segments_tagged(mesh:&Mesh,segments:&[(DVec3,DVec3)],explicit:Option<
         let rebuilt = planar::rebuild_drawing_faces(&plane)?;
         // Source commit_arc disables auto-face planning on a flat drawing.
         // Rebuild-created curve cells therefore carry no newly active tag.
-        let declaration_active = if curve.is_some() && out.vertices.iter().all(|v|(v.position-point).dot(normal).abs()<1e-6) {None} else {active};
-        let declarations = if explicit.is_none() && (declaration_active.is_some() || plane.faces.iter().any(|f| !f.holes.is_empty()))
+        // commit_arc places the busy-plane rebuild in extra BEFORE AutoTag.
+        // Its face commands have been replaced by then and are no longer live.
+        let source_curve_plane=curve.is_some()&&!flat&&!affected.is_empty();
+        let declaration_active=if curve.is_some()&&(flat||source_curve_plane){None}else{active};
+        let declarations = if explicit.is_none() && (declaration_active.is_some() || source_curve_plane || plane.faces.iter().any(|f| !f.holes.is_empty()))
         {
-            hole_cycle_declarations(&plane, mesh, segments,Some((point,normal)),declaration_active,&mut allocated_tag)?
+            hole_cycle_declarations(&plane, mesh, segments,Some((point,normal)),declaration_active,&mut allocated_tag,source_id)?
         } else {
             plane.clone()
         };
@@ -974,7 +981,16 @@ pub fn add_segments_tagged(mesh:&Mesh,segments:&[(DVec3,DVec3)],explicit:Option<
             .map(|i| coverage_triangles(&declarations, i))
             .collect::<Result<_, _>>()?;
         for f in &rebuilt.faces {
-            let loops = planar::rings(&rebuilt, f);
+            let mut loops=planar::rings(&rebuilt,f);
+            if source_curve_plane {
+                // Original _walk_faces begins each loop at the first inserted
+                // graph vertex. Ring start controls the first fan probe, so a
+                // collinear start must not select the adjacent cell's attrs.
+                for ring in &mut loops {
+                    let start=(0..ring.len()).min_by_key(|&i|plane.vertices.iter().position(|v|v.position.distance_squared(ring[i])<1e-18).unwrap_or(usize::MAX)).unwrap_or(0);
+                    ring.rotate_left(start);
+                }
+            }
             let frame = planar::Frame::new(&loops[0])?;
             let sample = frame.unproject(planar::sample(
                 &loops[0]
@@ -1037,7 +1053,7 @@ pub fn add_segments_tagged(mesh:&Mesh,segments:&[(DVec3,DVec3)],explicit:Option<
                     source.attrs.retain(|key, _| {
                         matches!(key.as_str(), "color" | "mat" | "texture" | "opacity")
                     });
-                    if let Some(active)=active {source.attrs.insert("ifc".into(),draw_tag(mesh,active,&mut allocated_tag)?);}
+                    if let Some(active)=active {source.attrs.insert("ifc".into(),draw_tag(mesh,active,&mut allocated_tag,source_id)?);}
                 }
                 planar::add_face(&mut result, &loops, &source)?;
             }
@@ -1399,4 +1415,15 @@ mod bim_draw_tests {
  #[test]fn contained_authored_face_does_not_tag_mother_remainder(){let mut m=Mesh::new();let p=ring(0.,0.,6.,6.);let v=p.into_iter().map(|p|m.add_vertex(p)).collect();m.add_face(v,vec![]).unwrap();let o=rect(&m,&ring(2.,2.,1.,1.),Some(&active())).unwrap();let tagged:Vec<_>=o.faces.iter().enumerate().filter(|(_,f)|f.attrs.contains_key("ifc")).collect();assert_eq!(tagged.len(),1);assert!((o.face_area(tagged[0].0)-1.).abs()<1e-9);assert!(o.faces.iter().any(|f|!f.attrs.contains_key("ifc")));}
  #[test]fn line_cycle_and_chord_are_explicit_auto_declarations(){let tag=active();let p=ring(0.,0.,2.,2.);let mut m=Mesh::new();for i in 0..4{m=add_segments_tagged(&m,&[(p[i],p[(i+1)%4])],None,None,Some(&tag)).unwrap();}assert_eq!(m.faces.len(),1);assert_eq!(m.faces[0].attrs["ifc"]["id"],1);let o=add_segments_tagged(&m,&[(DVec3::new(0.,1.,0.),DVec3::new(2.,1.,0.))],None,None,Some(&tag)).unwrap();assert_eq!(o.faces.len(),2);assert!(o.faces.iter().all(|f|f.attrs["ifc"]["id"]==1));}
  #[test]fn exhaustion_refuses_without_mutating_input(){let mut m=rect(&Mesh::new(),&ring(0.,0.,1.,1.),None).unwrap();m.faces[0].attrs.insert("ifc".into(),serde_json::json!({"id":i64::MAX,"class":"IfcWall"}));let before=m.clone();assert!(rect(&m,&ring(5.,0.,1.,1.),Some(&active())).unwrap_err().contains("identity exhausted"));assert_eq!(m,before);}
+}
+
+#[cfg(test)]mod segmented_curve_metadata_tests {
+ use super::*;
+ #[test]fn nonflat_segmented_chord_authors_paint_only_region(){
+  let mut m=Mesh::new();let ids=[DVec3::new(0.,0.,0.),DVec3::new(4.,0.,0.),DVec3::new(4.,4.,0.),DVec3::new(0.,4.,0.)].map(|p|m.add_vertex(p));let f=m.add_face(ids.to_vec(),vec![]).unwrap();m.faces[f].attrs.insert("vendor".into(),71.into());m.faces[f].attrs.insert("color".into(),serde_json::json!([1,0,0]));let a=m.add_vertex(DVec3::new(10.,0.,4.));let b=m.add_vertex(DVec3::new(11.,0.,4.));m.add_edge(a,b);
+  let segments=[(DVec3::new(0.,2.,0.),DVec3::new(2.,2.,0.)),(DVec3::new(2.,2.,0.),DVec3::new(4.,2.,0.))];let tag=serde_json::json!({"class":"IfcWall","name":"context"});
+  let out=add_segments_tagged(&m,&segments,None,Some(99),Some(&tag)).unwrap();
+  assert_eq!(out.faces.len(),2);let lower=out.faces.iter().find(|f|f.vertices.iter().map(|&i|out.vertices[i].position.y).sum::<f64>()/(f.vertices.len()as f64)<2.).unwrap();
+  assert!(!lower.attrs.contains_key("vendor"));assert_eq!(lower.attrs["color"],serde_json::json!([1,0,0]));assert!(!lower.attrs.contains_key("ifc"));
+ }
 }

@@ -154,7 +154,7 @@ impl FreehandTool {
         if closed&&pts.len()>=3 {let p=pts[0];*pts.last_mut().unwrap()=p;}
         if pts.len()<2{return Ok(());}
         let segments=pts.windows(2).map(|p|(p[0],p[1])).collect::<Vec<_>>();let curve=scene.mesh.edges.iter().filter_map(|e|e.curve_id).max().unwrap_or(0).checked_add(1).ok_or("Curve identity overflow")?;
-        let candidate=ingetrazo_core::drafting::add_segments_tagged(&scene.mesh,&segments,None,Some(curve),scene.active_ifc.as_ref())?;scene.mesh=candidate;scene.bump_version();Ok(())
+        let candidate=ingetrazo_core::drafting::add_segments_tagged_with_id(&scene.mesh,&segments,None,Some(curve),scene.active_ifc.as_ref(),scene.bim_draw_id.as_ref())?;scene.mesh=candidate;scene.bump_version();Ok(())
     }
 
 }

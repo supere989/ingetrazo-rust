@@ -81,7 +81,7 @@ impl IngeTrazoApp {
 
     fn record_tool_commit(&mut self, mut before: Scene) -> Result<(),String> {
         let owned=self.active_tool.take_authored_draw_faces();
-        if let Err(error)=ingetrazo_core::bim::stamp_drawn_faces(&mut self.scene.mesh,&owned,self.scene.active_ifc.as_ref()){
+        if let Err(error)=ingetrazo_core::bim::stamp_drawn_faces_with_id(&mut self.scene.mesh,&owned,self.scene.active_ifc.as_ref(),self.scene.bim_draw_id.as_ref()){
             self.scene=before;self.bump_model_revision();self.status_message=format!("Tool error: {error}");return Err(error);
         }
 

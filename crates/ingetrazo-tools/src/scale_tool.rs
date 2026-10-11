@@ -57,7 +57,7 @@ impl ScaleTool {
                         }
                     }
                     SelectionItem::Group(_) => {}
-                    SelectionItem::ImagePlane(_) | SelectionItem::GeoPoint(_) | SelectionItem::GeoPath(_) | SelectionItem::SectionPlane(_) => {}
+                    SelectionItem::ContextFace{..} | SelectionItem::ContextGroup{..} | SelectionItem::ImagePlane(_) | SelectionItem::GeoPoint(_) | SelectionItem::GeoPath(_) | SelectionItem::SectionPlane(_) => {}
                 }
             }
         } else if let Some(vid) = crate::base::pick_scene_vertex(scene, &ctx.ray, 0.2) {

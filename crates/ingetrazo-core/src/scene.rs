@@ -23,6 +23,9 @@ pub enum SelectionItem {
     Vertex(VertexId),
     Edge(EdgeId),
     Face(FaceId),
+    /// Face selected from a parked mesh while another immutable edit target is active.
+    ContextFace { context: Vec<uuid::Uuid>, face: FaceId, vertices: Vec<uuid::Uuid> },
+    ContextGroup { context: Vec<uuid::Uuid>, group: uuid::Uuid },
     Group(usize),
     GeoPoint(usize),
     GeoPath(usize),
@@ -34,6 +37,8 @@ pub enum SelectionItem {
 pub struct Scene {
     /// Runtime BIM activation. Draw plans allocate identities at commit; never persisted.
     #[serde(skip)]pub active_ifc:Option<serde_json::Value>,
+    /// Original active edit allocates from the root loose mesh, not the exposed group mesh.
+    #[serde(skip)]pub bim_draw_id:Option<Result<i64,String>>,
     #[serde(default)]pub image_planes:crate::image_plane::ImagePlaneList,
     #[serde(skip)]pub image_objects:crate::image_plane::ImageObjects,
     #[serde(skip)]pub history_images:crate::image_plane::ImageHistory,
@@ -118,7 +123,7 @@ impl Scene {
         layers.push(Layer::default());
 
         Self {
-            active_ifc:None,
+            active_ifc:None,bim_draw_id:None,
             image_planes:Default::default(),image_objects:Default::default(),history_images:Default::default(),
             dimension_frame:glam::DMat4::IDENTITY,
             drawing_frame:None,

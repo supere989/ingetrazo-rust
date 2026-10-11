@@ -459,7 +459,10 @@ pub fn save_ifc(
 }
 pub fn save_quantities_csv(scene: &Scene, path: &std::path::Path) -> Result<usize, FormatError> {
     let rows = ingetrazo_core::bim::takeoff(scene).map_err(invalid)?;
-    let csv = ingetrazo_core::bim::quantities_csv(&rows);
+    save_quantities_rows(&rows,path)
+}
+pub fn save_quantities_rows(rows:&[ingetrazo_core::bim::Takeoff],path:&std::path::Path)->Result<usize,FormatError>{
+    let csv = ingetrazo_core::bim::quantities_csv(rows);
     write_atomic(path, |f| {
         f.write_all(csv.as_bytes())?;
         Ok(())
