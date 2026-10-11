@@ -1,0 +1,141 @@
+{
+  "run_id": 38096834905,
+  "artifact_id": 11686071116,
+  "source": "3b1062ae8132c3a0d08f86935b2dc31626aebf4f",
+  "zip_sha256": "0c1372369c4b2f29282f81b5c4b0d199ef6fb0ab5eeb66ad52f68752bfd6d180",
+  "independent_checks": "SHA/source/exact3inventory/reportSHA/strictcounter/error/time/device/nativeAppKitactive/key/Completedcallback verified",
+  "execution": {
+    "scope": "Sequential same-runner/session diagnostic; distinct processes/eventloops, no production fallback",
+    "controls": {
+      "custom_presenter_control": {
+        "source_revision": "3b1062ae8132c3a0d08f86935b2dc31626aebf4f",
+        "binary_sha256": "65ec7879968d411db91bcaa89610cfa9c54ebce9ab6047f99228b7780fb06895",
+        "process_timeout_seconds": 45,
+        "fixture_deadline_seconds": 15,
+        "passed": false,
+        "exit_code": 1,
+        "elapsed_seconds": 15.300956708000001,
+        "fixture_report_present": true,
+        "fixture_report_sha256": "6358b0cf26ad01bef95f98d82db02b0de9e152daa2818a55ed8c47f4766d189e",
+        "fixture": {
+          "passed": false,
+          "error": "Custom strict positive presentation deadline",
+          "scope": "Production custom direct-clear presenter diagnostic only",
+          "device": "Apple Paravirtual device",
+          "device_registry_id": 4294967706,
+          "queue_device": 4294967706,
+          "submitted": 17,
+          "retired": 14,
+          "pending": 3,
+          "displayed": 0,
+          "skipped": 14,
+          "diagnostics": "appkit=Some(\"number=24 visible=true active_space=true occlusion=NSWindowOcclusionState(8194) screen=Some(\\\"name=Apple Virtual backing_scale=1 max_fps=60 refresh_min=0.016666666 refresh_max=0.016666666 frame=CGRect { origin: CGPoint { x: 0.0, y: 0.0 }, size: CGSize { width: 1024.0, height: 768.0 } }\\\")\"); extent=(800, 600); visible=Some(true); layer_frame=CGRect { origin: CGPoint { x: 0.0, y: 0.0 }, size: CGSize { width: 800.0, height: 600.0 } }; bounds=CGRect { origin: CGPoint { x: 0.0, y: 0.0 }, size: CGSize { width: 800.0, height: 600.0 } }; hidden=false; drawable_size=CGSize { width: 800.0, height: 600.0 }; presentsWithTransaction=false; displaySyncEnabled=true; device_id=4294967706; preferred_device=Some((4294967706, \"Apple Paravirtual device\")); submitted=17; retired=14; displayed=0; skipped=14; frames=[submission=15 id=14 command=MTLCommandBufferStatus(4) drawable_owner=released_after_commit gpuStart=315.2171559166667 gpuEnd=315.218051375 callback_seen=false callback_time=0; submission=16 id=15 command=MTLCommandBufferStatus(4) drawable_owner=released_after_commit gpuStart=315.21805475 gpuEnd=315.2184712916667 callback_seen=false callback_time=0; submission=17 id=16 command=MTLCommandBufferStatus(4) drawable_owner=released_after_commit gpuStart=315.242189875 gpuEnd=315.24309300000004 callback_seen=false callback_time=0]"
+        }
+      },
+      "metalkit_presenter_control": {
+        "source_revision": "3b1062ae8132c3a0d08f86935b2dc31626aebf4f",
+        "binary_sha256": "b042efc2d63f90d8d19ab6aae603cbe772992e896c122b5a58edc60008eb2d2f",
+        "process_timeout_seconds": 45,
+        "fixture_deadline_seconds": 15,
+        "passed": false,
+        "exit_code": 1,
+        "elapsed_seconds": 15.216779582999948,
+        "fixture_report_present": true,
+        "fixture_report_sha256": "06550f055ee55d6de27a2022354a46f225e24270b40a36aada9de052db859cd5",
+        "fixture": {
+          "passed": false,
+          "scope": "Native MTKView hosting/timed delegate control; no production or physical-Mac acceptance",
+          "device": "Apple Paravirtual device",
+          "device_registry_id": 4294967706,
+          "queue_device": 4294967706,
+          "draw_calls": 889,
+          "submitted": 6,
+          "displayed": 0,
+          "skipped": 3,
+          "pending": 3,
+          "no_drawable": 0,
+          "error": "Framework strict positive presentation deadline",
+          "framework_timed_updates": true,
+          "framework_current_drawable": true,
+          "window_visible": true,
+          "layer_device": 4294967706,
+          "frames": [
+            {
+              "id": 3,
+              "status": 4,
+              "seen": false,
+              "time": 0.0
+            },
+            {
+              "id": 4,
+              "status": 4,
+              "seen": false,
+              "time": 0.0
+            },
+            {
+              "id": 5,
+              "status": 4,
+              "seen": false,
+              "time": 0.0
+            }
+          ]
+        }
+      },
+      "appkit_presenter_control": {
+        "source_revision": "3b1062ae8132c3a0d08f86935b2dc31626aebf4f",
+        "binary_sha256": "538707b0f44f6ddc5edf635b4547140e7c7c3158af8df0456a64034804413c1c",
+        "process_timeout_seconds": 45,
+        "fixture_deadline_seconds": 15,
+        "passed": false,
+        "exit_code": 1,
+        "elapsed_seconds": 15.194285250000007,
+        "fixture_report_present": true,
+        "fixture_report_sha256": "cf85d89a2d9c6c4f070a1017fb706ef5b0caa4fa3d4fd262c70ba21a18f7951d",
+        "fixture": {
+          "passed": false,
+          "error": "AppKit strict positive presentation deadline",
+          "scope": "Native AppKit/systemMTKView diagnostic without winit hosting or observers; no production fallback",
+          "queue_device": 4294967706,
+          "device_registry_id": 4294967706,
+          "layer_device": 4294967706,
+          "draw_calls": 893,
+          "submitted": 55,
+          "displayed": 0,
+          "skipped": 52,
+          "pending": 3,
+          "no_drawable": 0,
+          "frames": [
+            {
+              "id": 52,
+              "status": 4,
+              "seen": false,
+              "time": 0.0
+            },
+            {
+              "id": 53,
+              "status": 4,
+              "seen": false,
+              "time": 0.0
+            },
+            {
+              "id": 54,
+              "status": 4,
+              "seen": false,
+              "time": 0.0
+            }
+          ],
+          "application_active": true,
+          "window_visible": true,
+          "window_key": true,
+          "framework_timed_updates": true,
+          "framework_current_drawable": true,
+          "winit_hosting": false
+        }
+      }
+    },
+    "same_device": true,
+    "passed": false
+  },
+  "classification": "All3presentationcontrols failstrictpositivecallbacks. DirectnativeAppKit setup/draws execute, active/keywindow; removingwinit hosting didnotclosegate. Customhosting andwinit-onlycauses unsupportedassoleexplanation; sharedcallbackbinding/device/session remainsunresolved. NoVM/platformconclusion or gatechange.",
+  "next": "Inteltriad acceptancepending; cross-languageAppleSDKcallbackcontrol mayisolate sharedRustblock vs OS/device/session ifsource-reviewed, notautomaticnextcloudrun."
+}
