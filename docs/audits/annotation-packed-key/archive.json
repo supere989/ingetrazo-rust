@@ -1,0 +1,59 @@
+{
+  "source": "891d82869277328f1f518c8f4b52152a76313503",
+  "binary_sha256": "c7fc214f38952953e06e459fd50fc4a149df7f5b8330f78038284fe42866fa89",
+  "archive_sha256": "f1c67eab80508bb63355c32e2d38f81f27adfd04ae0b29a58f21b1b96a385f99",
+  "members": {
+    "native/ellipse-alpha/control/request.json": {
+      "sha256": "758264744dfc5c48d221bfb214a3d4a80bfe6a7c1bcfda7b8c62c7b2c31dc921",
+      "bytes": 44
+    },
+    "native/ellipse-alpha/control/state.json": {
+      "sha256": "6df0aed0fa8e5fbe296db07c9ee88c6156631b3caa19f0437709f5cffa3dc407",
+      "bytes": 280
+    },
+    "native/ellipse-alpha/native.png": {
+      "sha256": "b7452c4c56322fbc5d79f67e1734bb67a4545279ff43815d8ddfde6bd2ec77e9",
+      "bytes": 3128
+    },
+    "native/ellipse-alpha/packed-key-change.png": {
+      "sha256": "7500f98e655b3b8185af2695bce9bf07f316cc375e8c65f8efaa947027c20c83",
+      "bytes": 3148
+    },
+    "native/ellipse-alpha/packed-key-install.png": {
+      "sha256": "520355323557c27629e147c735f1edf827d3f42f3fdf59ace10d788cb5784cb4",
+      "bytes": 3145
+    },
+    "native/ellipse-alpha/packed-key-restore.png": {
+      "sha256": "520355323557c27629e147c735f1edf827d3f42f3fdf59ace10d788cb5784cb4",
+      "bytes": 3145
+    },
+    "native/ellipse-alpha/packed-key-states.json": {
+      "sha256": "ebd07e7690aced21175c69bc2ecc3768861c394b2e55f248f5dfe22201c8263d",
+      "bytes": 1206
+    },
+    "native/ellipse-alpha/runtime.log": {
+      "sha256": "fc0e54240f1b6ed8ccf092fb591103543be457759f7692a462f222c12268715b",
+      "bytes": 2245
+    },
+    "native/ellipse-alpha/state.json": {
+      "sha256": "bcc2861a2c386f5ca688c3a3935e1e69fb3ec27c8304235a2eb81e62c2cd7c62",
+      "bytes": 360
+    },
+    "native/result.json": {
+      "sha256": "1cebfb61c6d32f1fddd58a1e4fb9fd4be97a83b095a486f3054207d488714a3d",
+      "bytes": 981
+    },
+    "native.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "nvidia-glx-icd.json": {
+      "sha256": "580e00d71b7aee371c54e277aed4c9ef114a686688bfd8406d567233cd8d9357",
+      "bytes": 99
+    },
+    "transport.json": {
+      "sha256": "594a2d14bc796b262abb75622b37641633b7df97d70956cd749b13872c71249f",
+      "bytes": 4078
+    }
+  }
+}
