@@ -40,7 +40,7 @@ fn qt_observed_mesh(mesh: &Mesh, m: DMat4) -> Value {
     faces.sort_by_key(|f| f.to_string());
     json!({"points":points,"edges":edges,"faces":faces})
 }
-pub(super) fn source_scene(app: &IngeTrazoApp) -> Value {
+pub(super) fn source_groups(app: &IngeTrazoApp) -> Vec<Group> {
     let mut groups = app.component_edit_stack.first().map_or_else(
         || app.scene.groups.clone(),
         |s| s.parked_scene().groups.clone(),
@@ -66,6 +66,12 @@ pub(super) fn source_scene(app: &IngeTrazoApp) -> Value {
         group.children = owner.groups.clone();
         group.transform = DMat4::IDENTITY;
     }
+    groups
+}
+pub(super) fn source_scene(app: &IngeTrazoApp) -> Value {
+    source_scene_from_groups(app,&source_groups(app))
+}
+pub(super) fn source_scene_from_groups(app: &IngeTrazoApp,groups:&[Group]) -> Value {
     fn group(g: &Group, parent: DMat4) -> Value {
         let m = parent * g.transform;
         json!({"name":g.name,"layer":g.layer,"mesh":qt_observed_mesh(&g.mesh,m),"children":g.children.iter().map(|g|group(g,m)).collect::<Vec<_>>()})

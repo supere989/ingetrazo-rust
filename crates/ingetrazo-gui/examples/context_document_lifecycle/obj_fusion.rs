@@ -1,5 +1,5 @@
 use super::*;
-fn flags(app: &IngeTrazoApp) -> Value {
+fn flags(app: &IngeTrazoApp,groups:&[Group]) -> Value {
     fn mesh(m: &ingetrazo_core::mesh::Mesh) -> Value {
         let mut rows = m
             .edges
@@ -19,10 +19,11 @@ fn flags(app: &IngeTrazoApp) -> Value {
     fn group(g: &ingetrazo_core::groups::Group) -> Value {
         json!({"mesh":mesh(&g.mesh),"children":g.children.iter().map(group).collect::<Vec<_>>()})
     }
-    json!({"active":mesh(&app.scene.mesh),"groups":app.scene.groups.iter().map(group).collect::<Vec<_>>()})
+    json!({"active":mesh(&app.scene.mesh),"groups":groups.iter().map(group).collect::<Vec<_>>()})
 }
 fn observe(app: &IngeTrazoApp, name: &str, phase: &str) -> Value {
-    json!({"case":name,"phase":phase,"scene":super::obj_mtl::normalized(super::nested_import::source_scene(app),app),"flags":flags(app),"depth":app.component_edit_stack.len(),"undo":app.undo_stack.len(),"redo":app.redo_stack.len()})
+    let groups=super::nested_import::source_groups(app);
+    json!({"case":name,"phase":phase,"scene":super::obj_mtl::normalized(super::nested_import::source_scene_from_groups(app,&groups),app),"flags":flags(app,&groups),"depth":app.component_edit_stack.len(),"undo":app.undo_stack.len(),"redo":app.redo_stack.len()})
 }
 pub fn run() {
     let root = std::path::PathBuf::from(std::env::args().nth(1).unwrap());
