@@ -150,7 +150,8 @@ impl ScaleTool {
             } else {
                 op.bounds.frame.map(|f| f.axes)
             };
-            if !Self::finite_matrix(op, &ScaleMatrix::new(op.anchor, factors, axes)) {
+            let matrix = ScaleMatrix::new(op.anchor, factors, axes);
+            if !Self::finite_matrix(op, &matrix) || !op.targets.shared_commit_finite(&matrix) {
                 self.error = Some("Scale exceeds the finite coordinate range".into());
                 return;
             }
@@ -406,7 +407,7 @@ impl Tool for ScaleTool {
             op.bounds.frame.map(|f| f.axes)
         };
         let matrix = ScaleMatrix::new(op.anchor, factors, axes);
-        if !Self::finite_matrix(op, &matrix) {
+        if !Self::finite_matrix(op, &matrix) || !op.targets.shared_commit_finite(&matrix) {
             return Err("Scale exceeds the finite coordinate range".into());
         }
         if let Some(unfolded) = &last.unfolded {

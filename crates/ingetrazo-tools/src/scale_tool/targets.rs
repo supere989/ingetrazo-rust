@@ -410,6 +410,20 @@ impl Targets {
     pub fn is_empty(&self) -> bool {
         self.images.is_empty() && self.vertices.is_empty() && self.groups.is_empty()
     }
+    /// Source shared groups repeat one command per selected owner on commit.
+    /// Admit the complete repeated mapping before touching any live owner.
+    pub fn shared_commit_finite(&self, matrix: &ScaleMatrix) -> bool {
+        self.shared.iter().all(|shared| shared.owners.iter().all(|owner| {
+            owner.vertices.iter().all(|seed| {
+                let mut point = seed.position;
+                for _ in 0..shared.commands {
+                    point = matrix.point(point);
+                    if !point.is_finite() { return false; }
+                }
+                true
+            })
+        }))
+    }
     /// The matrix is None for an exact grab-time restore. Commit metadata is
     /// derived from originals once; previews never reauthor texture maps/axes.
     pub fn apply(&mut self, scene: &mut Scene, matrix: Option<&ScaleMatrix>, commit: bool) {

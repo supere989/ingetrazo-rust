@@ -539,6 +539,42 @@ mod tests {
     }
 
     #[test]
+    fn scale_shared_repeated_overflow_refuses_before_any_owner_mutates() {
+        use ingetrazo_core::{groups::Group, mesh::Mesh};
+        let mut app = IngeTrazoApp::new();
+        app.scene = Scene::new();
+        let mut mesh = Mesh::new();
+        let ids = [DVec3::ZERO,DVec3::X,DVec3::Y].map(|p| mesh.add_vertex(p));
+        mesh.add_face(ids.to_vec(),vec![]);
+        let token = uuid::Uuid::new_v4();
+        app.scene.register_mesh_share(token,mesh.clone()).unwrap();
+        for name in ["first","second"] {
+            let mut group = Group::with_mesh(name,mesh.clone());
+            group.mesh_share=Some(token);
+            app.scene.groups.push(group);
+        }
+        app.scene.select(SelectionItem::Group(0));
+        app.scene.select(SelectionItem::Group(1));
+        app.set_tool(ToolType::Scale);
+        app.dispatch_tool_click(&ToolContext::new(DVec3::ZERO,Ray::new(DVec3::Z*5.,-DVec3::Z)));
+        let before=app.scene.clone();
+        assert!(app.dispatch_tool_vcb("1e20").unwrap_err().contains("finite coordinate"));
+        assert_eq!(app.scene,before);
+        assert!(app.undo_stack.is_empty());
+        app.dispatch_tool_vcb("2").unwrap();
+        let accepted=app.scene.clone();
+        assert!(app.dispatch_tool_vcb("1e20").unwrap_err().contains("finite coordinate"));
+        assert_eq!(app.scene,accepted);
+        assert_eq!(app.undo_stack.len(),1);
+        app.dispatch_tool_vcb("3").unwrap();
+        assert_eq!(app.undo_stack.len(),1);
+        app.undo();
+        assert_eq!(app.scene.groups[0].mesh,mesh);
+        assert_eq!(app.scene.groups[1].mesh,mesh);
+        assert_eq!(app.scene.mesh_shares[&token],mesh);
+    }
+
+    #[test]
     fn scale_refused_hot_value_preserves_command_and_next_transaction() {
         let mut app=app();app.scene.select(SelectionItem::Face(0));app.set_tool(ToolType::Scale);
         let p=|x|ToolContext::new(DVec3::new(x,x,0.),Ray::new(DVec3::Z,-DVec3::Z));
