@@ -157,7 +157,7 @@ impl Resources {
                     );
                     if offset + length == bytes {
                         generate_mips(&self.device, command, image, &layout);self.stats.mip_barrier_commands+=u64::from(mip_levels-1);
-                        let mut ready=ReadyMipBatch::new();self.stats.mip_barrier_commands+=ready.push(&self.device,command,image,mip_levels);self.stats.mip_barrier_commands+=ready.flush(&self.device,command);
+                        let mut ready=ReadyMipBatch::<2>::new();self.stats.mip_barrier_commands+=ready.push(&self.device,command,image,mip_levels);self.stats.mip_barrier_commands+=ready.flush(&self.device,command);
                     }
                     self.device
                         .end_command_buffer(command)
@@ -228,7 +228,7 @@ impl Resources {
             unsafe{
                 self.device.reset_command_buffer(command,vk::CommandBufferResetFlags::empty()).map_err(|e|e.to_string())?;
                 self.device.begin_command_buffer(command,&vk::CommandBufferBeginInfo::default().flags(vk::CommandBufferUsageFlags::ONE_TIME_SUBMIT)).map_err(|e|e.to_string())?;
-                let mut ready=ReadyMipBatch::new();
+                let mut ready=ReadyMipBatch::<256>::new();
                 for &(i,offset,start,length) in &pieces{
                     let image=inputs[i].0;let (_,bh,_)=image.format.block();let row=layouts[i].1;
                     if offset==0{transition(&self.device,command,image.image,0,image.mip_levels,vk::ImageLayout::UNDEFINED,vk::ImageLayout::TRANSFER_DST_OPTIMAL,vk::AccessFlags::empty(),vk::AccessFlags::TRANSFER_WRITE,vk::PipelineStageFlags::TOP_OF_PIPE,vk::PipelineStageFlags::TRANSFER);}
@@ -373,9 +373,9 @@ fn generate_mips(
 // Two contiguous layout ranges per completed image, using bounded stack
 // storage. No allocation/failure can occur after transfer recording begins.
 // Flushing a full batch is legal; it never changes chain blits or sampling.
-struct ReadyMipBatch{barriers:[vk::ImageMemoryBarrier<'static>;256],len:usize}
-impl ReadyMipBatch{
- fn new()->Self{Self{barriers:[vk::ImageMemoryBarrier::default();256],len:0}}
+struct ReadyMipBatch<const N:usize>{barriers:[vk::ImageMemoryBarrier<'static>;N],len:usize}
+impl<const N:usize> ReadyMipBatch<N>{
+ fn new()->Self{Self{barriers:[vk::ImageMemoryBarrier::default();N],len:0}}
  fn push(&mut self,device:&Device,command:vk::CommandBuffer,image:vk::Image,levels:u32)->u64{
   let needed=if levels>1{2}else{1};let count=if self.len+needed>self.barriers.len(){self.flush(device,command)}else{0};
   if levels>1{self.add(image,0,levels-1,vk::ImageLayout::TRANSFER_SRC_OPTIMAL,vk::AccessFlags::TRANSFER_READ|vk::AccessFlags::TRANSFER_WRITE);}
