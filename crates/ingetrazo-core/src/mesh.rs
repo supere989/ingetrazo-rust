@@ -275,7 +275,9 @@ impl Mesh {
             edge.faces.clear();
             pairs.insert((edge.v0.min(edge.v1), edge.v0.max(edge.v1)), id);
             if let Some(vertex) = self.vertices.get_mut(edge.v0) { vertex.edges.push(id); }
-            if let Some(vertex) = self.vertices.get_mut(edge.v1) { vertex.edges.push(id); }
+            if edge.v1 != edge.v0 {
+                if let Some(vertex) = self.vertices.get_mut(edge.v1) { vertex.edges.push(id); }
+            }
         }
         for (face_id, face) in self.faces.iter().enumerate() {
             for ring in std::iter::once(&face.vertices).chain(&face.holes) {
@@ -283,9 +285,9 @@ impl Mesh {
                 for i in 0..ring.len() {
                     let a = ring[i]; let b = ring[(i + 1) % ring.len()];
                     if let Some(&edge) = pairs.get(&(a.min(b), a.max(b))) {
-                        if self.edges[edge].faces.last() != Some(&face_id) {
-                            self.edges[edge].faces.push(face_id);
-                        }
+                        // Source incidence records each boundary occurrence,
+                        // including repeated corners in retained sliver faces.
+                        self.edges[edge].faces.push(face_id);
                     }
                 }
             }
@@ -330,7 +332,7 @@ impl Mesh {
 
     /// Find an existing edge between vertices v0 and v1 regardless of order.
     pub fn find_edge(&self, v0: VertexId, v1: VertexId) -> Option<EdgeId> {
-        if v0 == v1 || v0 >= self.vertices.len() || v1 >= self.vertices.len() {
+        if v0 >= self.vertices.len() || v1 >= self.vertices.len() {
             return None;
         }
         let small=if self.vertices[v0].edges.len()<=self.vertices[v1].edges.len(){v0}else{v1};
@@ -345,7 +347,16 @@ impl Mesh {
 
     /// Add an edge between two vertices. Reuses existing edge if already present.
     pub fn add_edge(&mut self, v0: VertexId, v1: VertexId) -> Option<EdgeId> {
-        if v0 == v1 || v0 >= self.vertices.len() || v1 >= self.vertices.len() {
+        if v0 == v1 {
+            return None;
+        }
+        self.link_boundary_edge(v0, v1)
+    }
+
+    // Unlike free-edge creation, source face boundaries retain welded slivers.
+    // Vertex incidence is a set; radial face incidence preserves occurrences.
+    fn link_boundary_edge(&mut self, v0: VertexId, v1: VertexId) -> Option<EdgeId> {
+        if v0 >= self.vertices.len() || v1 >= self.vertices.len() {
             return None;
         }
         if let Some(existing) = self.find_edge(v0, v1) {
@@ -354,7 +365,9 @@ impl Mesh {
         let id = self.edges.len();
         self.edges.push(MeshEdge::new(v0, v1));
         self.vertices[v0].edges.push(id);
-        self.vertices[v1].edges.push(id);
+        if v1 != v0 {
+            self.vertices[v1].edges.push(id);
+        }
         Some(id)
     }
 
@@ -415,7 +428,7 @@ impl Mesh {
         for i in 0..n {
             let v0 = loop_verts[i];
             let v1 = loop_verts[(i + 1) % n];
-            if let Some(e) = self.add_edge(v0, v1) {
+            if let Some(e) = self.link_boundary_edge(v0, v1) {
                 boundary_edges.push(e);
             }
         }
@@ -427,7 +440,7 @@ impl Mesh {
             for i in 0..hn {
                 let v0 = h[i];
                 let v1 = h[(i + 1) % hn];
-                if let Some(e) = self.add_edge(v0, v1) {
+                if let Some(e) = self.link_boundary_edge(v0, v1) {
                     hole_edges.push(e);
                 }
             }
@@ -445,9 +458,7 @@ impl Mesh {
 
         // Register incident face on all boundary and hole edges
         for e in boundary_edges.into_iter().chain(hole_edges) {
-            if !self.edges[e].faces.contains(&face_id) {
-                self.edges[e].faces.push(face_id);
-            }
+            self.edges[e].faces.push(face_id);
         }
 
         Some(face_id)

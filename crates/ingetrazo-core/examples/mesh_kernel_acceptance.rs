@@ -14,7 +14,25 @@ fn main()->Result<(),Box<dyn std::error::Error>>{
    _=>panic!("unknown operation")}
    if !name.starts_with("bulk-")&&!name.starts_with("large-"){states.push(snapshot(&mesh));}
   }
-  if name.starts_with("bulk-")||name.starts_with("large-"){states.push(snapshot(&mesh));}
+  if name.starts_with("bulk-")||name.starts_with("large-"){
+   let before=snapshot(&mesh);
+   let self_edges=mesh.edges.iter().enumerate().filter(|(_,e)|e.v0==e.v1).map(|(id,e)|(id,e.v0)).collect::<Vec<_>>();
+   assert_eq!(self_edges.len(),1);
+   for (id,v) in self_edges {
+    assert_eq!(mesh.find_edge(v,v),Some(id));
+    assert_eq!(mesh.vertices[v].edges.iter().filter(|&&e|e==id).count(),1);
+    assert_eq!(mesh.add_edge(v,v),None);
+    assert!(mesh.split_edge(id,mesh.vertices[v].position+DVec3::Z).is_err());
+   }
+   assert_eq!(snapshot(&mesh),before);
+   mesh.rebuild_incidence();
+   assert_eq!(snapshot(&mesh),before);
+   for vertex in &mesh.vertices {
+    let unique=vertex.edges.iter().copied().collect::<std::collections::HashSet<_>>();
+    assert_eq!(unique.len(),vertex.edges.len());
+   }
+   states.push(snapshot(&mesh));
+  }
   result.push(json!({"name":name,"states":states}));
  }
  // Native f64 controls: no Qt narrowing at large coordinate or near its weld cell.

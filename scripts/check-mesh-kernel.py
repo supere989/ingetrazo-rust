@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
-"""Exact direct-kernel delta acceptance; retain source sliver self-edge gap."""
-import sys,json,copy
+"""Exact direct-kernel corpus, including source sliver radial multiplicity."""
+import sys,json,copy,hashlib,zipfile
+from pathlib import Path
 NAMES=['cross-positive','cross-negative','distance-reject','tie-and-order','neighbor-first','radial-2','radial-3','hole-split-weld']+['bulk-seed-'+str(i) for i in range(8)]+['large-grid-1200','same-cell-diagonal','place-collision-owner','exact-half-diagonal']
 COUNTS=[2,2,2,4,3,5,6,3]+[1]*9+[2,4,2]
 def equal(a,b):
@@ -16,15 +17,8 @@ def validate(source,native):
  for s,n,count in zip(source,native,COUNTS):
   assert len(s['states'])==len(n['states'])==count,'mandatory state inventory'
   match=equal(s,n)
-  bulk=s['name'].startswith(('bulk-','large-'))
-  if not bulk:assert match,s['name']+' literal mismatch'
-  else:
-   a=s['states'][0];b=n['states'][0]
-   assert equal(a['vertices'],b['vertices'])and equal(a['faces'],b['faces']),s['name']+' changed vertices/faces'
-   missing=[e for e in a['edges']if e['v'][0]==e['v'][1]]
-   assert len(missing)==1 and missing[0]['faces']==[len(a['faces'])-1]*3,'source sliver law'
-   assert equal(a['edges'],b['edges'])or equal([e for e in a['edges']if e['v'][0]!=e['v'][1]],b['edges']),s['name']+' lost proper edge payload/order'
-  result.append({'name':s['name'],'raw_equal':match,'states':count,'source_vertices':len(s['states'][-1]['vertices']),'source_edges':len(s['states'][-1]['edges']),'native_edges':len(n['states'][-1]['edges']),'remaining_gap':None if match else 'welded sliver source self-edge and triple radial incidence omitted'})
+  assert match,s['name']+' literal mismatch'
+  result.append({'name':s['name'],'raw_equal':match,'states':count,'source_vertices':len(s['states'][-1]['vertices']),'source_edges':len(s['states'][-1]['edges']),'native_edges':len(n['states'][-1]['edges']),'remaining_gap':None})
  return result
 
 def main():
@@ -44,5 +38,13 @@ def main():
  reject('wrong-painted-face',lambda x:x[5]['states'][-1]['faces'][0]['attrs'].__setitem__('vendor',{'wall':99}))
  reject('boolean-id',lambda x:x[5]['states'][-1]['faces'][0]['loop'].__setitem__(0,False))
  reject('wrong-half-tie-weld',lambda x:x[19]['states'][-1]['vertices'].pop())
- return {'delta_passed':True,'p05_complete':False,'raw_equal_cases':sum(c['raw_equal']for c in cases),'case_count':len(cases),'cases':cases,'negative_controls':controls,'boundary':'No normalization of full source sliver mismatch; native f64/integrity guards execute in named binary.'}
+ reject('missing-sliver-self-edge',lambda x:x[8]['states'][0]['edges'].pop())
+ reject('deduplicated-sliver-radial',lambda x:x[8]['states'][0]['edges'][-1]['faces'].pop())
+ archive=Path(__file__).resolve().parents[1]/'docs/audits/p05-mesh-kernel/records.zip'
+ assert hashlib.sha256(archive.read_bytes()).hexdigest()=='c3dfb6722a59293e4e8d8d4394d439ae8c699f55bc77635431fbe97d123b9e3b'
+ with zipfile.ZipFile(archive)as z:previous=json.loads(z.read('native.json'))
+ try:validate(source,previous)
+ except AssertionError:controls['previous-native-sliver-omission']=True
+ else:raise AssertionError('previous incomplete native output accepted')
+ return {'delta_passed':True,'p05_complete':False,'raw_equal_cases':sum(c['raw_equal']for c in cases),'case_count':len(cases),'cases':cases,'negative_controls':controls,'boundary':'All 20 complete raw cases must match; broader P05 lifecycle/triangulation remains open. Native f64/incidence/integrity guards execute in named binary.'}
 if __name__=='__main__':print(json.dumps(main(),indent=2))
