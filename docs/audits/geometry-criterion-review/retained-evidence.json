@@ -1,0 +1,58 @@
+{
+  "reviewed_runtime": "67afd7fa154b47928e84b6b0a9e5c2a6d3146ce9",
+  "original_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "evidence": {
+    "python-followme-evidence.json": {
+      "sha256": "754d4a7148c06f13c5ad1ab385cbba866d8664790b60d49f44cce714864dbb8b",
+      "provenance": {
+        "rust_commit": "00d32ab29804a7a3403a21d1e9afcfdbc12b9c11",
+        "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+        "checker_python": "3.13.13",
+        "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
+      },
+      "passed": true,
+      "case_count": 20,
+      "negative_controls_detected": 1
+    },
+    "python-intersect-evidence.json": {
+      "sha256": "d6c530f14b77613eb0cc000e648714d7ed647aa1962d9853132760fc45325e63",
+      "provenance": {
+        "rust_commit": "dd17c2aa08926052c23243a20ce589e552c51cef",
+        "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+        "checker_python": "3.13.13",
+        "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
+      },
+      "passed": true,
+      "case_count": 5,
+      "negative_controls_detected": 1
+    },
+    "python-heal-evidence.json": {
+      "sha256": "f265c2022fe2b1b175bc6b922ceb09a27a23d1705ce85d38db9367d93f06f1c8",
+      "provenance": {
+        "rust_commit": "dd17c2aa08926052c23243a20ce589e552c51cef",
+        "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+        "checker_python": "3.13.13",
+        "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
+      },
+      "passed": true,
+      "case_count": 8,
+      "negative_controls_detected": null
+    },
+    "python-pieces-evidence.json": {
+      "sha256": "bab8eb05c93ad1b6992ffec4e781be79627acbab865be9f8ac00be7b6567e95a",
+      "provenance": {
+        "rust_commit": "cb8ada952e44a298e11d043865d80adf63d2be42",
+        "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+        "checker_python": "3.13.13",
+        "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
+      },
+      "passed": true,
+      "case_count": 4,
+      "negative_controls_detected": 1
+    }
+  },
+  "native_workspace_job": 114493921556,
+  "native_workspace_step": "Workspace tests and example compile coverage",
+  "native_workspace_step_result": "success",
+  "source_receipts": "Retained earlier comparisons as explicitly pinned here; the running published semantic job independently replays these existing checks."
+}
