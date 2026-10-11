@@ -243,3 +243,5 @@ mod paper_font_sfnt;
 pub mod text3d;
 
 pub mod photo_bounds;
+
+pub mod sheet_image;

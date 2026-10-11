@@ -1,0 +1,68 @@
+{
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "archive": "source-records.zip",
+  "archive_sha256": "5c745ca007519b07043d46d910cb788cadbe7ba172f116732c21892310bfbfb0",
+  "entries": [
+    {
+      "path": "blank-a3.jpg",
+      "bytes": 28267,
+      "sha256": "ae985c24dba8023a838eb993ee105dd008a6e6c9d8f72e588510bb204b5dff61"
+    },
+    {
+      "path": "blank-landscape.PNG",
+      "bytes": 14905,
+      "sha256": "afa006e446dc3d3c6dad16126b12ea5e62aaf6a420ff96d72431fe588f7faa30"
+    },
+    {
+      "path": "blank-portrait.png",
+      "bytes": 2009,
+      "sha256": "0b9264f46b206976777f93b46d43727bf6365565f2227acbf1d8162c378e95b7"
+    },
+    {
+      "path": "capture.log",
+      "bytes": 53,
+      "sha256": "092a07b530f92a59d98637037c99b662460dc6eca8ab59f9215f772d0b18cddb"
+    },
+    {
+      "path": "chosen-jpeg.jpg",
+      "bytes": 32747,
+      "sha256": "5f5f79bfabad49034910bdf29f095ded03d317711d4c2d8521406aa501ddcfc7"
+    },
+    {
+      "path": "chosen.png",
+      "bytes": 3923,
+      "sha256": "b8fe55c3549c631f957b5dd8536c71e2eea533d9b11b7f704a0afb306406e338"
+    },
+    {
+      "path": "shapes-jpeg.jpeg",
+      "bytes": 68236,
+      "sha256": "c0c5555fc1c81df8d3d67fd962e4616b564cc5d9ad1b0aec5d41c9e63a28116d"
+    },
+    {
+      "path": "shapes-portrait.png",
+      "bytes": 17805,
+      "sha256": "1b972bea7772e0ebf83db1265fc8e840cab8b45c1183092dd4e269e42b5e7d42"
+    },
+    {
+      "path": "shapes.png",
+      "bytes": 18269,
+      "sha256": "e1b9af8ec1132a6da00cb67b2c4404ab3d9df0a8bb570926cca361dbf0681fcd"
+    },
+    {
+      "path": "source.json",
+      "bytes": 8829,
+      "sha256": "c365180873a2f3c9df6ee55121dfd327b9d2d249b215590a70c42f2807332b52"
+    },
+    {
+      "path": "text.png",
+      "bytes": 10220,
+      "sha256": "b35852cb1d072201ac3f4ab726998b57ce559dee6a5c3de4023fd0969b9cca86"
+    },
+    {
+      "path": "upper.JPG",
+      "bytes": 38819,
+      "sha256": "4e599f16ad8c474c7d23c109c8eb9abf69346cff869407179640595ef85adedb"
+    }
+  ],
+  "script_sha256": "7a9840b59f1ef9a57cf387bd93582c76f43782a18068f3615b9f15d9cd3328a5"
+}

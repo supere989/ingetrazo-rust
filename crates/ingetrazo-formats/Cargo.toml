@@ -21,6 +21,7 @@ base64 = "0.22.1"
 sha1_smol = "=1.0.1"
 roxmltree = "0.20"
 image.workspace = true
+png = "=0.18.1"
 harfbuzz-sys = { version = "=0.8.0", default-features = false, features = ["bundled"] }
 ttf-parser = "=0.25.1"
 freetype-sys = { version = "=0.23.0", features = ["bundled", "source-lcd"] }
