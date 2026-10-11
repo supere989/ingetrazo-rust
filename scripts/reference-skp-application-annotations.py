@@ -6,8 +6,8 @@ source,parser,skp,capture,out=map(Path,sys.argv[1:6]);out.mkdir(parents=True,exi
 assert subprocess.check_output(['git','-C',str(source),'rev-parse','HEAD'],text=True).strip()=='6be29fe437a7cd992d4e079f71720821b25216b9'
 assert subprocess.check_output(['git','-C',str(parser),'rev-parse','HEAD'],text=True).strip()=='291700bc213655a00461838de71e5f206311e619'
 sys.path[:0]=[str(parser/'packages/python/src'),str(source)]
-from PySide6.QtCore import QObject,QEvent,Qt
-from PySide6.QtGui import QSurfaceFormat,QVector3D,QPainter,QFontInfo,QImage,QFont
+from PySide6.QtCore import QObject,QEvent,Qt,QRectF,QPointF
+from PySide6.QtGui import QSurfaceFormat,QVector3D,QPainter,QFontInfo,QImage,QFont,QColor
 from PySide6.QtWidgets import QApplication
 fmt=QSurfaceFormat();fmt.setVersion(3,3);fmt.setProfile(QSurfaceFormat.CoreProfile);fmt.setDepthBufferSize(24);fmt.setStencilBufferSize(8);fmt.setSamples(4);QSurfaceFormat.setDefaultFormat(fmt)
 app=QApplication([])
@@ -110,5 +110,18 @@ try:
   painter=QPainter(image);painter.setRenderHint(QPainter.Antialiasing,True);painter.setRenderHint(QPainter.TextAntialiasing,True);original_dimension_draw(PrimitiveFilter(painter,primitive_kind));original_leader_draw(PrimitiveFilter(painter,primitive_kind));painter.end();assert image.save(str(out/(kind+'-raster-diagnostic.png')))
 finally:vp._draw_dimensions=original_dimension_draw;vp._draw_text_labels=original_leader_draw
 (out/'primitive-engine-diagnostic.json').write_text(json.dumps(dict(scope='post-acceptance source-only layer filtering for target-engine attribution; original bound methods unchanged, not parity oracle',engine_rows=engine_rows,surface_requested=dict(alpha=fmt.alphaBufferSize(),samples=fmt.samples(),depth=fmt.depthBufferSize(),stencil=fmt.stencilBufferSize()),surface_realized=dict(alpha=vp.context().format().alphaBufferSize(),samples=vp.context().format().samples(),depth=vp.context().format().depthBufferSize(),stencil=vp.context().format().stencilBufferSize()),font_requested=dict(family=QFont().family(),hinting=QFont().hintingPreference().value,strategy=QFont().styleStrategy().value,dimension_point_size=scene.dimension_style.get('font_size',9),bold=True)),indent=2)+'\n')
+# Independent authored source-operator controls, after all immutable frame
+# acceptance captures. These use the same actual widget OpenGL paint engine.
+alpha_controls=[]
+for color,alpha,bg in [([0,0,0],0,[255,255,255]),([0,0,0],127,[255,255,255]),([0,0,0],255,[255,255,255]),([45,55,75],0,[17,89,203]),([45,55,75],230,[17,89,203]),([45,55,75],255,[17,89,203])]:
+ def alpha_draw(painter,color=color,alpha=alpha,bg=bg):
+  painter.fillRect(QRectF(0,0,250,90),QColor(*bg));font=QFont('Sans Serif',12);font.setBold(True);painter.setFont(font);painter.setPen(QColor(*color,alpha));painter.drawText(QPointF(30,50),'Hg')
+ vp._draw_dimensions=alpha_draw;vp._draw_text_labels=lambda painter:None
+ vp.update();deadline=time.monotonic()+4
+ while time.monotonic()<deadline:app.processEvents();time.sleep(.01)
+ name='lcd-alpha-'+str(alpha)+'-'+str(color[0])+'.png';assert vp.grabFramebuffer().save(str(out/name))
+ alpha_controls.append(dict(file=name,straight=color+[alpha],background=bg,roi=[0,0,250,90],font_family='Sans Serif',font_point_size=12,bold=True,scope='actual source widget authored solid glyph operator control; no reference image modifications'))
+vp._draw_dimensions=original_dimension_draw;vp._draw_text_labels=original_leader_draw
+(out/'lcd-alpha-controls.json').write_text(json.dumps(alpha_controls,indent=2)+'\n')
 vp.close();vp.deleteLater();app.processEvents()
 (out/'source.json').write_text(json.dumps(dict(source_pin='6be29fe437a7cd992d4e079f71720821b25216b9',parser_pin='291700bc213655a00461838de71e5f206311e619',input_sha256=hashlib.sha256(skp.read_bytes()).hexdigest(),camera=camera,records=rows,scope='actual original Viewport with actual depth capture and annotations; paired native application ROI required'),indent=2)+'\n')

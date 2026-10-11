@@ -452,7 +452,9 @@ impl PaperFont {
             let mut bbox:ft::FT_BBox=std::mem::zeroed();ft::FT_Outline_Get_CBox(&(*slot).outline,&mut bbox);
             let w=bbox.xMax.checked_sub(bbox.xMin).and_then(|v|v.checked_add(127)).map(|v|v/64+2).filter(|&v|(0..=4096).contains(&v)).ok_or("Canvas glyph dimension exceeded")?;
             let h=bbox.yMax.checked_sub(bbox.yMin).and_then(|v|v.checked_add(127)).map(|v|v/64+2).filter(|&v|(0..=4096).contains(&v)).ok_or("Canvas glyph dimension exceeded")?;
-            if w.checked_mul(h).is_none_or(|n|n>4*1024*1024){return Err("Canvas glyph coverage budget exceeded".into());}
+            // LCD is3 bytes/pixel; admit the filtered bitmap and conservative
+            // two-pixel filter padding before FreeType allocates its output.
+            if w.checked_add(4).and_then(|w|h.checked_add(2).and_then(|h|w.checked_mul(h))).and_then(|n|n.checked_mul(3)).is_none_or(|n|n>4*1024*1024){return Err("LCD glyph pre-raster RGB budget exceeded".into());}
             // Qt6.12 QFontEngineFT A32 uses the default LCD filter, then resets
             // the library filter. Layout/load flags remain shared with the gray path.
             if ft::FT_Library_SetLcdFilter((*slot).library,ft::FT_LCD_FILTER_DEFAULT)!=0{return Err("LCD glyph filter unavailable".into());}

@@ -14,6 +14,7 @@ void main(){
  uvec4 color=uvec4(floor(clamp(push.rgba,0,1)*255.0+0.5));
  if((push.composition&255u)==2u){
   vec3 mask=vec3((push.composition>>8u)&255u,(push.composition>>16u)&255u,(push.composition>>24u)&255u)/255.0;
+  mask*=push.rgba.a;
   if(all(equal(mask,vec3(1)))){output_color=vec4(push.rgba.rgb,1.);return;}
   // Source OpenGL A32 solid brush: CONSTANT_COLOR, ONE_MINUS_SRC_COLOR.
   // Source alphaBufferSize=0 discards alpha; the retained target remains opaque.
