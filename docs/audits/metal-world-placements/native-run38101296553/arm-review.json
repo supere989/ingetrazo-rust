@@ -1,0 +1,95 @@
+{
+  "source_commit": "ebc676d1644445e9b2db34291c7c174899a740c5",
+  "artifact_id": 11687463275,
+  "zip_sha256": "bea7fe77d37caaf458c9cdec9844bc352b096786f01ef0039f57b522a05b88b8",
+  "source_sha256_inventory": "verified all frozen source entries",
+  "runtime": {
+    "exit_code": 0,
+    "outer_timeout": false
+  },
+  "passed": true,
+  "frames": {
+    "coplanar-late-default-back": {
+      "interior_pixels": 182,
+      "background_pixels": 3754
+    },
+    "coplanar-missing-back-negative": {
+      "interior_pixels": 116,
+      "background_pixels": 3754
+    },
+    "camera-only-no-instance-upload": {
+      "interior_pixels": 189,
+      "background_pixels": 3763
+    },
+    "nonzero-offset-two-runs": {
+      "interior_pixels": 378,
+      "background_pixels": 3472
+    },
+    "coalesced-two-instances": {
+      "interior_pixels": 182,
+      "background_pixels": 3754
+    },
+    "shared-prototype-reflected": {
+      "interior_pixels": 182,
+      "background_pixels": 3754
+    },
+    "warm-left": {
+      "interior_pixels": 189,
+      "background_pixels": 3763
+    },
+    "warm-center": {
+      "interior_pixels": 182,
+      "background_pixels": 3754
+    },
+    "warm-right": {
+      "interior_pixels": 189,
+      "background_pixels": 3763
+    },
+    "winding-disabled-negative": {
+      "interior_pixels": 182,
+      "background_pixels": 3754
+    },
+    "old-retained-green": {
+      "interior_pixels": 182,
+      "background_pixels": 3754
+    },
+    "new-revision-red": {
+      "interior_pixels": 182,
+      "background_pixels": 3754
+    },
+    "binding-only-reuse": {
+      "interior_pixels": 91,
+      "background_pixels": 3925
+    },
+    "refusal-preserved": {
+      "interior_pixels": 91,
+      "background_pixels": 3925
+    }
+  },
+  "negatives": "blank/winding-disabled-as-positive/new-as-old/missing-late-back rejected",
+  "scope": "actual cached local prototypes, per-binding matrices/winding, warm retained capacities and old-frame/refusal ownership; interior/background only; adjacent instance grouping observed; fullScene/UI/presentation and performance not claimed",
+  "native_report": {
+    "passed": true,
+    "device": "Apple Paravirtual device",
+    "geometry_uploads_before_warm": 1,
+    "geometry_uploads_after_warm": 1,
+    "targets_before_warm": 1,
+    "targets_after_warm": 1,
+    "pose_bytes_before_warm": 136,
+    "pose_bytes_after_warm": 136,
+    "cache_bytes_before_warm": 280,
+    "cache_bytes_after_warm": 280,
+    "instance_buffers_before_warm": 1,
+    "instance_buffers_after_warm": 1,
+    "warm_matrix_upload_bytes": 384,
+    "camera_only_instance_upload_bytes": 0,
+    "offset_runs": 2,
+    "coalesced_instances": 2,
+    "coalesced_runs": 1,
+    "final_uploads": 2,
+    "ledger_committed": 0,
+    "ledger_reserved": 0,
+    "wrong_owner_refused": true,
+    "invalid_pose_refused": true
+  }
+}

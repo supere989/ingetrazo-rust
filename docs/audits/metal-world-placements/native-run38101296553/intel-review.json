@@ -1,0 +1,13 @@
+{
+  "source_commit": "ebc676d1644445e9b2db34291c7c174899a740c5",
+  "artifact_id": 11687558435,
+  "zip_sha256": "fb10fc52c0c4a68e5a282ff8d597a0ca13f29b5ee59613338c8b6e6c8bfa1b71",
+  "source_sha256_inventory": "verified all frozen source entries",
+  "runtime": {
+    "exit_code": 1,
+    "outer_timeout": false
+  },
+  "frames": 0,
+  "classification": "SDK succeeds; pre-frame native layout query0/0 refuses without admission relaxation",
+  "runtime_log": "World native texture size query unavailable: requested_bytes=16384, queried_size=0, queried_align=0, extent=64x64, format=MTLPixelFormat(70), storage=MTLStorageMode(2), hazard=MTLHazardTrackingMode(2), usage=MTLTextureUsage(5), device=Apple Paravirtual device, default_query=0/0, untracked_query=0/0, family_apple2=false, family_mac2=false, family_common3=false, low_power=false, headless=false\n"
+}
