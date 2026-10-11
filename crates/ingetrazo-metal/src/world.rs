@@ -1068,16 +1068,19 @@ fn image_samples(metal:&NativeMetal,extent:(u32,u32),format:MTLPixelFormat,usage
             // Heap estimates can be unavailable for a standalone MSAA target.
             // Temporarily exclude all other logical admissions; actual allocatedSize
             // must fit this ticket before publication. This is not an allocator bound.
-            super::world_admission::standalone_capacity(&budget)?
+            let available = super::world_admission::standalone_capacity(&budget)?;
+            if available < requested {
+                return Err("World MSAA target exceeds available allocation admission".into());
+            }
+            available
         } else {
-            if admitted < requested || native.align == 0 {
-                return Err("World native texture size query invalid".into());
+            // Native layout requirements are authoritative and can be smaller
+            // than the logical sample payload; do not impose a guessed floor.
+            if admitted == 0 || native.align == 0 {
+                return Err(format!("World native texture size query invalid: requested_bytes={requested}, queried_size={}, queried_align={}, extent={}x{}, format={format:?}, samples={samples}, device={}", native.size, native.align, extent.0, extent.1, metal.device.name()));
             }
             admitted
         };
-        if admitted < requested {
-            return Err("World MSAA target exceeds available allocation admission".into());
-        }
         (admitted, budget.reserve(0, admitted)?)
     };
     let Some(raw) = metal.device.newTextureWithDescriptor(&d) else {
