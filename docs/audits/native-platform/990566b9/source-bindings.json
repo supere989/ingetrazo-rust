@@ -1,0 +1,31 @@
+{
+  "revision": "990566b94519c02fe3c0257b2db18bcf3dfffa7c",
+  "original_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "files": [
+    {
+      "path": ".github/workflows/parity.yml",
+      "sha256": "b0681693954a2a19b03da7fab94f4b80eba8d64d497c245e03dfc489843f5bbb",
+      "bytes": 53263
+    },
+    {
+      "path": ".github/workflows/metal-compute-consumer.yml",
+      "sha256": "bce24078146f16afab7cd9998386a03a0aa2b69c0a6954bfc517b009c452efb9",
+      "bytes": 4532
+    },
+    {
+      "path": "scripts/check-document-axes-integration.py",
+      "sha256": "85a4db8070d45ac85130768d0c5d3daf2fd105b7c0fd1749322d2c1a76711133",
+      "bytes": 30533
+    },
+    {
+      "path": "scripts/check-rendered-drawing-reference.py",
+      "sha256": "eb76599f86b44ac6176eb09ae8f45179a34fb57d95646028e4c867584d4b3d8b",
+      "bytes": 9381
+    },
+    {
+      "path": "scripts/check-rendered-shift-inference.py",
+      "sha256": "c70a7a2fe7dcdadfc5de3db58de7fa9f6ccc8dd8dea348fdfc242a9f0f63a47f",
+      "bytes": 6901
+    }
+  ]
+}

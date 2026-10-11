@@ -1,0 +1,7 @@
+Exact published `990566b94519c02fe3c0257b2db18bcf3dfffa7c`: full run38181908886 and automatic ordered run38181908890 observed once, without dispatch/retry/cancel. Main remains `c73fe993`.
+
+Linux PASS: all113 configured job steps successful, no skips; literal25 named consumers and145 successful semantic stage records including summary. Rectangle Escape and Shift rendered repairs both pass. Windows, both cross checks and both ordered jobs pass. Overall full run fails only retained native Mac section/CGL gates; Intel additionally retains strict annotation/CLI sample refusal. No new platform regression. Canonical observation records retain exact per-job failures/skips and sample/image diagnostics.
+
+Archive223members,102319343rawbytes, SHA `79a1d76a22e58b9657efb75da3822167ff2fe9bdbbd2e847b6006147fca61aae`; every member independently size/hash checked after construction. Linux20,726,429-byte artifact was range-read only:686718bytes fetched,18 selected receipts/log/state records retained. Small platform artifacts were decoded once. Source and runtime bindings are separate in source-bindings.json and native receipts.
+
+Six fresh source recipe captures total31.591s; binding5.785s. Probe and whole-step timing records retained; no speedup or isolated raster-time claim. Historical replay remains disabled. No source corpus extracted for optimization. Temporary duplicates remain pending authorized byte-verified cleanup.
