@@ -391,7 +391,8 @@ impl IngeTrazoApp {
     pub(crate) fn bump_render_layers_revision(&mut self){
         self.native_render_revisions.layers_changed();
         self.native_geometry_revision=self.native_geometry_revision.wrapping_add(1);
-        self.bump_image_presentation_revision();
+        self.snap_engine.invalidate_center_cache();
+        self.composer_compute.invalidate();
     }
     pub(crate) fn bump_image_presentation_revision(&mut self){self.model_revision=self.model_revision.wrapping_add(1);self.composer_compute.invalidate();}
     pub fn undo(&mut self) {self.undo_outcome();}

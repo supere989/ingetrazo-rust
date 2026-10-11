@@ -1,0 +1,33 @@
+{
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "original_controller_pass": true,
+  "original_before": [
+    0,
+    6
+  ],
+  "original_after": [
+    0,
+    6,
+    12,
+    18
+  ],
+  "original_undo_commands": 1,
+  "original_layer_history_top_unchanged": true,
+  "native_initial_failure": {
+    "source": "5e6a0b88",
+    "assertion": "layer presentation is outside modeling command history",
+    "before_identity": 2,
+    "after_identity": 3,
+    "exit": 101
+  },
+  "native_corrected_pass": {
+    "actual_move_array_layer_dispatch": 1,
+    "center_cache_memory_and_identity": 1
+  },
+  "fix": "Layer epoch + legacy native geometry epoch + composer invalidation + explicit dirty centre catalog, without model/tool history identity mutation. Inference memories preserved.",
+  "scope": "Original Qt handler/controller and native dispatcher tests; no actual pointer/pixel acceptance.",
+  "source_hashes": {
+    "tools/move.py": "67ba58b7f01f84dd5654fd31c1f4ae217296efcfab05ad21b4c61e43d7c87acd",
+    "views/tray.py": "717b597ee7c0d1747ce77931f5f6027a5b35b2bae97a0e4b393eb0973c1ab00b"
+  }
+}

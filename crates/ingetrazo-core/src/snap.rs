@@ -189,6 +189,9 @@ impl SnapEngine {
         self.last_inference=Some(result.clone());
     }
 
+    /// Visibility/locking changes invalidate borrowed center candidates without
+    /// retiring a source tool operation or clearing its inference memories.
+    pub fn invalidate_center_cache(&mut self) { self.center_cache_dirty = true; }
     /// Application identity is monotonic even when restored Scene versions repeat.
     /// Call before screen snapping after document replacement or model mutation.
     pub fn note_model_revision(&mut self, revision: u64) {
@@ -832,4 +835,14 @@ mod tests {
     #[test]fn nested_group_snap_uses_world_placement_and_active_cut(){let mut scene=Scene::new();let mut mesh=crate::mesh::Mesh::new();mesh.add_vertex(DVec3::new(0.02,0.,0.));mesh.add_vertex(DVec3::new(-0.2,0.,0.));let mut child=crate::groups::Group::with_mesh("child",mesh);child.transform=glam::DMat4::from_translation(-DVec3::X);let mut parent=crate::groups::Group::new("parent");parent.transform=glam::DMat4::from_translation(DVec3::X);parent.children.push(child);scene.groups.push(parent);scene.section_planes.push(crate::section::SectionPlane::new(DVec3::ZERO,DVec3::X,"A","A"));scene.show_section_cuts=true;let mut engine=SnapEngine::new(0.5);let ray=Ray::new(DVec3::new(0.02,0.,3.),-DVec3::Z);let result=engine.snap(&ray,&scene,None,None);assert_eq!(result.kind,SnapKind::Endpoint);assert!((result.point-DVec3::new(-0.2,0.,0.)).length()<1e-10);scene.groups[0].hidden=true;assert_ne!(engine.snap(&ray,&scene,None,None).kind,SnapKind::Endpoint);}
     #[test]fn hidden_face_boundaries_are_not_endpoint_midpoint_or_edge_snap_targets(){let mut scene=Scene::new();let ids=[DVec3::ZERO,DVec3::X,DVec3::Y].map(|p|scene.mesh.add_vertex(p));scene.mesh.add_face(ids.to_vec(),vec![]);scene.mesh.faces[0].attrs.insert("hidden".into(),serde_json::json!(true));let mut engine=SnapEngine::new(0.2);for point in[DVec3::ZERO,DVec3::X*0.5]{let result=engine.snap(&Ray::new(point+DVec3::Z*3.,-DVec3::Z),&scene,None,None);assert!(!matches!(result.kind,SnapKind::Endpoint|SnapKind::Midpoint|SnapKind::OnEdge|SnapKind::Intersection|SnapKind::Center));}scene.mesh.faces[0].attrs.remove("hidden");assert_eq!(engine.snap(&Ray::new(DVec3::Z*3.,-DVec3::Z),&scene,None,None).kind,SnapKind::Endpoint);}
 
+}
+
+#[cfg(test)] mod presentation_cache_tests {
+    use super::*;
+    #[test] fn visibility_dirty_preserves_operation_and_tracking(){
+        let mut snap=SnapEngine::default();snap.note_model_revision(7);snap.center_cache_dirty=false;
+        snap.encourage_point(DVec3::new(1.,2.,3.));let memory=snap.encouraged_points.clone();
+        snap.invalidate_center_cache();assert!(snap.center_cache_dirty);
+        assert_eq!(snap.model_revision,Some(7));assert_eq!(snap.encouraged_points,memory);
+    }
 }
