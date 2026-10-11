@@ -1,0 +1,8 @@
+{
+  "passed": false,
+  "scope": "Actual native partial baseline floor correction against frozen actual Qt widget",
+  "on_and_restored_differing_pixels": 4765,
+  "annotation_mask_xor": 460,
+  "off_differing_pixels": 1297,
+  "remaining": "QFixed-before-scale followup and per-channel A32 glyph coverage required; no threshold changes"
+}

@@ -1,0 +1,19 @@
+{
+  "annotations-on": {
+    "diff": 4765,
+    "max": 195
+  },
+  "annotations-off": {
+    "diff": 1297,
+    "max": 27
+  },
+  "annotations-restored": {
+    "diff": 4765,
+    "max": 195
+  },
+  "masks": {
+    "source": 3830,
+    "native": 3760,
+    "xor": 460
+  }
+}

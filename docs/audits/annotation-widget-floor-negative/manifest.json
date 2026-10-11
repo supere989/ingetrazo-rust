@@ -1,0 +1,19 @@
+{
+  "capilla_quiroz_v17-iso/native/annotations-off-window.png": "d1ee7d5c264ed373ec91da85c8a50b2968d45b71080e0127655f34b60c47d509",
+  "capilla_quiroz_v17-iso/native/annotations-off.png": "d1ee7d5c264ed373ec91da85c8a50b2968d45b71080e0127655f34b60c47d509",
+  "capilla_quiroz_v17-iso/native/annotations-on-window.png": "75b765f9de2afd45097eb1de7fd0ce41824e9f44b3d29dfc51f1b5c8245f27cc",
+  "capilla_quiroz_v17-iso/native/annotations-on.png": "75b765f9de2afd45097eb1de7fd0ce41824e9f44b3d29dfc51f1b5c8245f27cc",
+  "capilla_quiroz_v17-iso/native/annotations-restored-window.png": "75b765f9de2afd45097eb1de7fd0ce41824e9f44b3d29dfc51f1b5c8245f27cc",
+  "capilla_quiroz_v17-iso/native/annotations-restored.png": "75b765f9de2afd45097eb1de7fd0ce41824e9f44b3d29dfc51f1b5c8245f27cc",
+  "capilla_quiroz_v17-iso/native/capture.json": "0a35c6d58a142d785c512924e5a5aa8d791d0b1b8e6f6b088552a01ce1dd2d89",
+  "capilla_quiroz_v17-iso/native/control/request.json": "3d39700ad9520bf49fbaceae05eec73427913c1f5310084301c7231bb4502c0c",
+  "capilla_quiroz_v17-iso/native/control/state.json": "62b481401c7e80309b5936fd6751318cbcf10d16e6720347dec9e213c8c39472",
+  "capilla_quiroz_v17-iso/native/control/visibility.json": "8f8e3c7d00bd7714e0a9aa90a30834a4cbb00e1641e764c1e5c98627825f7e77",
+  "capilla_quiroz_v17-iso/native/runtime.log": "212b39b99c4b4a06ac3e26fa1f1cb51cf3d3605f22a2ba97eb919df4b85ab8b8",
+  "capilla_quiroz_v17-iso/native/visibility.json": "8f8e3c7d00bd7714e0a9aa90a30834a4cbb00e1641e764c1e5c98627825f7e77",
+  "comparison.json": "2d55dd2f2b1235f7ebfec396dcdfe4fc91a774919bef91526c16640e068d7fcc",
+  "nvidia-glx-icd.json": "580e00d71b7aee371c54e277aed4c9ef114a686688bfd8406d567233cd8d9357",
+  "source.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "transport.json": "1dc4641e22e8896ddbcca5c274188ed61af1cf344ad6092f3a683cda5c123a07",
+  "verdict.json": "9533f787c6657a4f5e7621e4e1c68c6076a092cc3151fab57e04ff073cc04866"
+}
