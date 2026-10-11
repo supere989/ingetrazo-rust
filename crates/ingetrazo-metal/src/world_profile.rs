@@ -401,6 +401,29 @@ mod tests {
         }
     }
     #[test]
+    fn preserved_short_group_faces_do_not_refuse_profile_publication() {
+        for (outer, holes, center) in [
+            (vec![DVec3::ZERO], vec![], DVec3::ZERO),
+            (vec![DVec3::ZERO, DVec3::X], vec![], DVec3::X * 0.5),
+            (vec![], vec![vec![DVec3::ZERO, DVec3::X, DVec3::Y]], DVec3::ZERO),
+        ] {
+            let mut mesh = Mesh::new();
+            let outer = outer.into_iter().map(|p| mesh.add_vertex(p)).collect();
+            let holes = holes.into_iter().map(|h| h.into_iter().map(|p| mesh.add_vertex(p)).collect()).collect();
+            mesh.add_face(outer, holes).unwrap();
+            for edge in &mut mesh.edges { edge.soft = true; }
+            let mut scene = Scene::new();
+            scene.groups.push(Group::with_mesh("preserved short face", mesh));
+            let packet = Profiles::build(&scene, &[]).unwrap();
+            assert_eq!(packet.placements.len(), 1);
+            assert!(!packet.placements[0].edges.is_empty());
+            for edge in packet.placements[0].edges.iter() {
+                assert_eq!(edge.normals, [DVec3::Z; 2]);
+                assert_eq!(edge.anchors, [center.as_vec3().to_array(); 2]);
+            }
+        }
+    }
+    #[test]
     fn single_face_soft_visibility_and_camera_change() {
         let mut s = Scene::new();
         let ids = [DVec3::ZERO, DVec3::X, DVec3::Y].map(|p| s.mesh.add_vertex(p));
