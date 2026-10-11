@@ -1,0 +1,12 @@
+{
+  "base": "bf85b4c41c6f6fcc6128a53db3db36318936ec12",
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "inputs": {
+    "fillet-oblique": "1914b9b9d50b8e8e2836e448a365640ebb38891e024d1a61d3fbe1819729648e",
+    "fillet-nested-history": "c7aa6d9ec54ec63ef30233df30750ac13abde941edf7d9e917deae81a72dcff8"
+  },
+  "checker_sha256": "7f5182eb7c3e9ab8d77d07a24e76f887d30091967726491a2148d1e97623f7b9",
+  "report_sha256": "752fcf0f076945b5367cc69f1470c62c3a8101c2ca90268cd256bfd71badee15",
+  "rust_builds": 0,
+  "original_recaptures": 0
+}
