@@ -1,4 +1,4 @@
-name: Isolated native Metal source-global prototype order
+name: Isolated native Metal borrowed Scene placement cache
 on:
   push:
     branches: [review/metal-world-gpu]
@@ -21,22 +21,22 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
       - name: Build focused native world fixture against Apple SDK
         run: |
-          mkdir -p metal-placement-evidence
-          git rev-parse HEAD > metal-placement-evidence/revision.txt
-          sw_vers > metal-placement-evidence/os.txt
-          xcrun --show-sdk-path > metal-placement-evidence/sdk.txt
-          shasum -a 256 crates/ingetrazo-metal/src/world.rs crates/ingetrazo-metal/src/world_admission.rs crates/ingetrazo-metal/src/world_placement.rs crates/ingetrazo-metal/src/world_policy.rs crates/ingetrazo-metal/src/shaders/world.metal crates/ingetrazo-metal/src/egui_painter.rs crates/ingetrazo-metal/src/presentation.rs crates/ingetrazo-metal/examples/native_world_placement_order.rs scripts/check-metal-world-placement-order.py scripts/reference-metal-placement-global-order.py docs/audits/metal-world-placements/source-global-order/review.json docs/audits/metal-world-placements/source-global-order/source-global-prototype-order.png docs/audits/metal-world-placements/source-global-order/ungrouped-source-negative.png > metal-placement-evidence/source.sha256
-          cargo build --locked -p ingetrazo-metal --example native_world_placement_order -j2 > metal-placement-evidence/build.log 2>&1
-          shasum -a 256 target/debug/examples/native_world_placement_order > metal-placement-evidence/binary.sha256
-      - name: Execute source-global prototype order and camera-only controls under outer deadline
+          mkdir -p metal-scene-evidence
+          git rev-parse HEAD > metal-scene-evidence/revision.txt
+          sw_vers > metal-scene-evidence/os.txt
+          xcrun --show-sdk-path > metal-scene-evidence/sdk.txt
+          shasum -a 256 crates/ingetrazo-metal/src/world.rs crates/ingetrazo-metal/src/world_admission.rs crates/ingetrazo-metal/src/world_placement.rs crates/ingetrazo-metal/src/world_policy.rs crates/ingetrazo-metal/src/shaders/world.metal crates/ingetrazo-metal/src/egui_painter.rs crates/ingetrazo-metal/src/presentation.rs crates/ingetrazo-metal/examples/native_world_scene.rs scripts/check-metal-world-scene.py scripts/reference-metal-scene-catalog.py docs/audits/metal-world-scene/source-catalog.json crates/ingetrazo-metal/src/world_scene.rs crates/ingetrazo-render/src/pipeline.rs > metal-scene-evidence/source.sha256
+          cargo build --locked -p ingetrazo-metal --example native_world_scene -j2 > metal-scene-evidence/build.log 2>&1
+          shasum -a 256 target/debug/examples/native_world_scene > metal-scene-evidence/binary.sha256
+      - name: Execute borrowed Scene grouping, camera/model and material refusal controls under outer deadline
         if: ${{ !cancelled() }}
         run: |
           python3 - <<'PYTHON'
           import json,pathlib,subprocess
-          root=pathlib.Path('metal-placement-evidence')
+          root=pathlib.Path('metal-scene-evidence')
           try:
               with (root/'runtime.log').open('w') as log:
-                  result=subprocess.run(['target/debug/examples/native_world_placement_order',str(root/'native')],stdout=log,stderr=subprocess.STDOUT,timeout=45)
+                  result=subprocess.run(['target/debug/examples/native_world_scene',str(root/'native')],stdout=log,stderr=subprocess.STDOUT,timeout=45)
               outcome={'exit_code':result.returncode,'outer_timeout':False}
           except subprocess.TimeoutExpired:
               outcome={'exit_code':None,'outer_timeout':True}
@@ -47,10 +47,10 @@ jobs:
           PYTHON
       - name: Independently check literal frame inventory and GPU interior samples
         if: ${{ !cancelled() }}
-        run: python3 scripts/check-metal-world-placement-order.py metal-placement-evidence/native > metal-placement-evidence/pixel-review.json 2> metal-placement-evidence/pixel-review.log
+        run: python3 scripts/check-metal-world-scene.py metal-scene-evidence/native > metal-scene-evidence/pixel-review.json 2> metal-scene-evidence/pixel-review.log
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: metal-world-${{ matrix.runner }}
-          path: metal-placement-evidence/
+          path: metal-scene-evidence/
           if-no-files-found: error
