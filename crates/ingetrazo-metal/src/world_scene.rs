@@ -1100,7 +1100,7 @@ impl crate::world::World {
             if active_preview.is_some(){&adapter.preview_poses}else{base_models},
             camera_matrix,
             extent,
-            style.background_color.map(f64::from),
+            super::world_background::clear_rgba8(style.background_color),
             Policy {
                 mode,
                 front: style.front_color,

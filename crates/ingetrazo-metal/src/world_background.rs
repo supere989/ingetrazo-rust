@@ -1,6 +1,19 @@
 //! Original viewport.py horizon/gradient policy. Small per-frame constants;
 //! no texture, vertex buffer, CPU rasterization or extra render pass.
 use glam::{DVec3, Mat4, Vec3, Vec4};
+/// Quantize the source f32 clear in its RGBA8 domain before Metal's f64 API.
+/// Retained source section frames clear to [230,232,235,255]; widening 0.9f32
+/// first instead produces red 229 on the native Intel target. This adds no pass.
+pub(crate) fn clear_rgba8(color: [f32; 4]) -> [f64; 4] {
+    color.map(|c| {
+        if (0. ..=1.).contains(&c) {
+            f64::from((c * 255.).round()) / 255.
+        } else {
+            // Preserve existing invalid-input refusal in World admission.
+            f64::from(c)
+        }
+    })
+}
 #[repr(C)]
 #[derive(Clone, Copy, Debug, bytemuck::Pod, bytemuck::Zeroable)]
 pub(crate) struct Background {
@@ -83,6 +96,14 @@ impl Background {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn retained_source_clear_bytes_survive_metal_double_api() {
+        let source = [0.90, 0.91, 0.92, 1.0];
+        assert_eq!(clear_rgba8(source).map(|c| (c * 255.).round() as u8), [230,232,235,255]);
+        assert_eq!((f64::from(source[0]) * 255.).round() as u8, 229);
+        let invalid = clear_rgba8([f32::NAN, -f32::EPSILON, 1. + f32::EPSILON, f32::INFINITY]);
+        assert!(invalid[0].is_nan() && invalid[1] < 0. && invalid[2] > 1. && invalid[3].is_infinite());
+    }
     #[test]
     fn original_camera_gradient_bits() {
         let fixture: serde_json::Value = serde_json::from_str(include_str!(

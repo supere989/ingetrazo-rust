@@ -1,0 +1,53 @@
+{
+  "head": "01211f52fd40d4e6976493726200ab424826bc04",
+  "build_command": [
+    "cargo",
+    "build",
+    "--locked",
+    "-p",
+    "ingetrazo-cli",
+    "-p",
+    "ingetrazo-gui",
+    "--bin",
+    "ingetrazo",
+    "--example",
+    "annotation_move_fixture",
+    "--example",
+    "annotation_acquisition_fixture",
+    "-j2"
+  ],
+  "build_seconds": 14.01731089700479,
+  "build_exit": 0,
+  "replay_seconds": 1.977936615003273,
+  "acceptance": {
+    "selected-move": {
+      "mandatory_boundaries": 2,
+      "oblique_annotation_observations": 5,
+      "states": 77,
+      "negative_controls": 77,
+      "exact": true
+    },
+    "acquisition": {
+      "exact_states": 49,
+      "rejected_mutations": 49,
+      "rejected_retained_threshold_candidate": true
+    }
+  },
+  "source_archives": {
+    "selected-move": "73f40475dad0f6fb8cff3ec5bc12be0e8b26a15904c91cb3830f1e6be7be685b",
+    "acquisition": "d153057c9849b186577c47a51d6e1cca45ee1122308805802d48ae00b37b6621"
+  },
+  "fresh_source_acquisitions": 0,
+  "binaries": {
+    "ingetrazo": "c36957cdf3038808648e076fdc74f1e66c9d086b387f068f1fb06e3da4b02265",
+    "examples/annotation_move_fixture": "827871d8649bf6b6ff20579a8f8a9fb4e0849228f65a24587fe8b3a14198b1e9",
+    "examples/annotation_acquisition_fixture": "5b68d02ac2a3d1d88bb3a13773e9180a99633ac34bdc5047a53ec1e76059bc4a"
+  },
+  "result": "pass",
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "additional_precision_test": {
+    "passed": 1,
+    "failed": 0,
+    "filtered": 334
+  }
+}
