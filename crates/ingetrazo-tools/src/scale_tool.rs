@@ -481,6 +481,7 @@ impl Tool for ScaleTool {
     fn preserves_global_preview_on_context_exit(&self) -> bool {
         self.active
             .as_ref()
+            .or_else(|| self.last.as_ref().map(|last| &last.operation))
             .is_some_and(|o| o.targets.only_images())
     }
     fn visit_image_metadata_roots(
