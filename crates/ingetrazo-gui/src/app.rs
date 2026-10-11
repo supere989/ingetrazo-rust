@@ -1017,7 +1017,20 @@ impl IngeTrazoApp {
         } else {
             "IngeTrazo 0.3.15".to_string()
         };
-        ctx.send_viewport_cmd(egui::ViewportCommand::Title(title));
+        // Sending a viewport command itself requests another frame. Emit only
+        // changed titles, with ownership scoped to this context and viewport.
+        let title_key = egui::Id::new(("ingetrazo-window-title", ctx.viewport_id()));
+        let changed = ctx.data_mut(|data| {
+            if data.get_temp::<String>(title_key).as_ref() == Some(&title) {
+                false
+            } else {
+                data.insert_temp(title_key, title.clone());
+                true
+            }
+        });
+        if changed {
+            ctx.send_viewport_cmd(egui::ViewportCommand::Title(title));
+        }
         self.sync_blender_document();
         self.blender_state.poll_events(ctx);
         self.tick_blender_follow(ctx);
@@ -1710,5 +1723,30 @@ mod released_history_chord_tests {
         frame(&mut app,egui::Key::Y,egui::Modifiers::NONE);assert_eq!(app.scene.sheets,before);
         frame(&mut app,egui::Key::Y,egui::Modifiers::COMMAND);assert_eq!(app.scene.sheets,after);
         assert!(app.undo_stack.is_empty());
+    }
+}
+
+#[cfg(test)]
+mod title_frame_regression {
+    use super::*;
+    #[test]
+    fn title_commands_only_on_first_or_changed_document_frame() {
+        let mut app = IngeTrazoApp::new();
+        let ctx = egui::Context::default();
+        let frame = |app: &mut IngeTrazoApp| {
+            let output = ctx.run(egui::RawInput::default(), |ctx| app.update_ui(ctx));
+            output.viewport_output[&egui::ViewportId::ROOT].commands.iter()
+                .filter_map(|command| match command {
+                    egui::ViewportCommand::Title(title) => Some(title.clone()),
+                    _ => None,
+                }).collect::<Vec<_>>()
+        };
+        assert_eq!(frame(&mut app), vec!["IngeTrazo 0.3.15"]);
+        assert!(frame(&mut app).is_empty());
+        app.current_file = Some(std::path::PathBuf::from("changed.igz"));
+        assert_eq!(frame(&mut app), vec!["IngeTrazo — changed.igz"]);
+        assert!(frame(&mut app).is_empty());
+        app.current_file = None;
+        assert_eq!(frame(&mut app), vec!["IngeTrazo 0.3.15"]);
     }
 }
