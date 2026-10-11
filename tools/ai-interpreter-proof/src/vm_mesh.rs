@@ -41,6 +41,9 @@ struct Entry {
     faces: usize,
     vertices: usize,
     published: bool,
+    packed_base: Option<Vec<rustpython_vm::PyObjectRef>>,
+    _packed_charge: Option<Lease>,
+    native_vertices: usize,
     vertices_created: Vec<PyRef<editable_mesh::Vertex>>,
     faces_created: Vec<PyRef<editable_mesh::Face>>,
     edges_created: Vec<PyRef<editable_mesh::Edge>>,
@@ -59,6 +62,11 @@ impl Drop for Entry {
 thread_local! { static GRAPH_REENTRY_PROBE: std::cell::Cell<u8> = const { std::cell::Cell::new(0) }; }
 
 impl Entry {
+    fn vertex_ref(&self,id:usize)->Result<rustpython_vm::PyObjectRef,String>{
+        if id>=self.native_vertices{return self.vertices_created.get(id-self.native_vertices).map(|v|v.clone().into()).ok_or("Staged packed Vertex missing".into());}
+        if let Some(base)=&self.packed_base{return base.get(id).cloned().ok_or("Packed base Vertex missing".into());}
+        self.mesh.vertices.borrow_vec().get(id).cloned().ok_or("Public base Vertex missing".into())
+    }
     fn validate_created(&self) -> Result<(), String> {
         use rustpython_vm::AsObject;
         let vertices = self.mesh.vertices.borrow_vec();
@@ -81,8 +89,8 @@ impl Entry {
                 return Err("Staged Edge identity/order modification unsupported".into());
             }
             let (a,b) = transaction.added_edge_endpoints()[i];
-            if !edge.v0.read().as_ref().ok_or("Cleared Edge endpoint")?.is(&vertices[a])
-                || !edge.v1.read().as_ref().ok_or("Cleared Edge endpoint")?.is(&vertices[b]) {
+            if !edge.v0.read().as_ref().ok_or("Cleared Edge endpoint")?.is(&self.vertex_ref(a)?)
+                || !edge.v1.read().as_ref().ok_or("Cleared Edge endpoint")?.is(&self.vertex_ref(b)?) {
                 return Err("Staged Edge endpoint modification requires packed projection".into());
             }
         }
@@ -119,7 +127,7 @@ impl Entry {
                 || outer
                     .iter()
                     .zip(&native.vertices)
-                    .any(|(v, &id)| !v.is(&vertices[id]))
+                    .any(|(v, &id)| self.vertex_ref(id).map_or(true,|reference|!v.is(&reference)))
             {
                 return Err("Staged Face loop modification unsupported".into());
             }
@@ -133,7 +141,7 @@ impl Entry {
                     .downcast_ref::<rustpython_vm::builtins::PyList>()
                     .ok_or("Staged hole requires list")?;
                 let h = h.borrow_vec();
-                if h.len() != ids.len() || h.iter().zip(ids).any(|(v, &id)| !v.is(&vertices[id])) {
+                if h.len() != ids.len() || h.iter().zip(ids).any(|(v, &id)| self.vertex_ref(id).map_or(true,|reference|!v.is(&reference))) {
                     return Err("Staged Face hole modification unsupported".into());
                 }
             }
@@ -775,7 +783,9 @@ pub mod editable_mesh {
                 let operation = (|| {
                     let key = zelf.get_id();
                     if !stage.entries.contains_key(&key) {
-                        if zelf.vertices.borrow_vec().len()!=zelf.owner.read().mesh().vertices.len(){return Err(vm.new_value_error("Detached packed rows require genuine-reference append staging"));}
+                        let native_vertices=zelf.owner.read().mesh().vertices.len();
+                        let graph_before=GraphState::capture(&zelf.to_owned(),&stage.budget,vm).map_err(|e|vm.new_value_error(e))?;
+                        let (packed_base,packed_charge)=if zelf.vertices.borrow_vec().len()!=native_vertices{let(values,charge)=packed::references(&zelf.to_owned(),&graph_before,&stage.budget).map_err(|e|vm.new_value_error(e))?;(Some(values),Some(charge))}else{(None,None)};
                         stage
                             .entries
                             .try_reserve(1)
@@ -803,10 +813,11 @@ pub mod editable_mesh {
                                 faces: zelf.faces.borrow_vec().len(),
                                 vertices: zelf.vertices.borrow_vec().len(),
                                 published: false,
+                                packed_base,_packed_charge:packed_charge,native_vertices,
                                 vertices_created: Vec::new(),
                                 faces_created: Vec::new(),
                                 edges_created: Vec::new(),
-                                graph_before: Some(GraphState::capture(&zelf.to_owned(),&stage.budget,vm).map_err(|e|vm.new_value_error(e))?),
+                                graph_before: Some(graph_before),
                                 handle_charge: stage
                                     .budget
                                     .reserve(Kind::Staging, 0)
@@ -822,7 +833,7 @@ pub mod editable_mesh {
                         let q=QVector3D::from_coordinates(p.as_vec3().to_array()).into_ref(&vm.ctx);
                         let found=Self::_lookup(zelf,q,vm)?;
                         let expected=transaction.lookup_position(*p).map_err(|e|vm.new_value_error(e))?;
-                        let agrees=if let Some(id)=expected{let value={zelf.vertices.borrow_vec().get(id).cloned()};value.is_some_and(|v|v.is(&found))}else{vm.is_none(&found)};
+                        let agrees=if let Some(id)=expected{let value=if id>=entry.native_vertices{entry.vertices_created.get(id-entry.native_vertices).map(|v|v.clone().into())}else if let Some(base)=&entry.packed_base{base.get(id).cloned()}else{zelf.vertices.borrow_vec().get(id).cloned()};value.is_some_and(|v|v.is(&found))}else{vm.is_none(&found)};
                         if !agrees{return Err(vm.new_value_error("Public registry weld requires identity-owned staging"));}
                     }
                     let id = transaction
@@ -894,12 +905,7 @@ pub mod editable_mesh {
                             .map_err(|_| vm.new_value_error("Face loop reservation refused"))?;
                         for &id in ids {
                             ring.push(
-                                vertices
-                                    .get(id)
-                                    .ok_or_else(|| {
-                                        vm.new_value_error("Face vertex ownership mismatch")
-                                    })?
-                                    .clone(),
+                                if id>=entry.native_vertices {entry.vertices_created.get(id-entry.native_vertices).map(|v|v.clone().into())}else if let Some(base)=&entry.packed_base{base.get(id).cloned()}else{vertices.get(id).cloned()}.ok_or_else(||vm.new_value_error("Face genuine packed Vertex missing"))?,
                             );
                         }
                         Ok(vm.ctx.new_list(ring))
@@ -929,10 +935,8 @@ pub mod editable_mesh {
                     edges.try_reserve(new_edges).map_err(|_|vm.new_value_error("Edge list reservation refused"))?;
                     drop(edges);
                     for &(a,b) in &transaction.added_edge_endpoints()[entry.edges_created.len()..] {
-                        let vertices=zelf.vertices.borrow_vec();
-                        let a=vertices.get(a).ok_or_else(||vm.new_value_error("Edge endpoint outside membership"))?.clone().downcast::<Vertex>().map_err(|_|vm.new_value_error("Edge endpoint requires Vertex"))?;
-                        let b=vertices.get(b).ok_or_else(||vm.new_value_error("Edge endpoint outside membership"))?.clone().downcast::<Vertex>().map_err(|_|vm.new_value_error("Edge endpoint requires Vertex"))?;
-                        drop(vertices);
+                        let resolve=|id:usize|->PyResult<PyRef<Vertex>>{let value=if id>=entry.native_vertices{entry.vertices_created.get(id-entry.native_vertices).map(|v|v.clone().into())}else if let Some(base)=&entry.packed_base{base.get(id).cloned()}else{zelf.vertices.borrow_vec().get(id).cloned()};value.ok_or_else(||vm.new_value_error("Edge genuine packed endpoint missing"))?.downcast::<Vertex>().map_err(|_|vm.new_value_error("Edge endpoint requires Vertex"))};
+                        let a=resolve(a)?;let b=resolve(b)?;
                         let edge=Edge::generated(a.clone(),b.clone(),vm);
                         let probe=GRAPH_REENTRY_PROBE.with(|p|p.replace(0));
                         if probe==1 {
@@ -1063,19 +1067,21 @@ impl Projection {
     ) -> Result<Option<Self>, String> {
         Self::prepare_inner(mesh, budget, append, false)
     }
-    fn prepare_inner(mesh:&PyRef<editable_mesh::Mesh>,budget:&OwnerBudget,append:bool,force:bool)->Result<Option<Self>,String>{Self::prepare_kind(mesh,budget,append,force,false)}
-    fn prepare_topology(mesh:&PyRef<editable_mesh::Mesh>,budget:&OwnerBudget)->Result<Self,String>{Self::prepare_kind(mesh,budget,false,true,true)?.ok_or("Topology projection missing".into())}
+    fn prepare_inner(mesh:&PyRef<editable_mesh::Mesh>,budget:&OwnerBudget,append:bool,force:bool)->Result<Option<Self>,String>{Self::prepare_kind(mesh,budget,append,force,false,None)}
+    fn prepare_topology(mesh:&PyRef<editable_mesh::Mesh>,budget:&OwnerBudget)->Result<Self,String>{Self::prepare_kind(mesh,budget,false,true,true,None)?.ok_or("Topology projection missing".into())}
     fn prepare_kind(
         mesh: &PyRef<editable_mesh::Mesh>,
         budget: &OwnerBudget,
         append: bool,
         force: bool,
         topology:bool,
+        packed:Option<&[rustpython_vm::PyObjectRef]>,
     ) -> Result<Option<Self>, String> {
         use rustpython_vm::AsObject;
         let owner = mesh.owner.read();
         let native = owner.mesh();
-        let vertices = mesh.vertices.borrow_vec();
+        let public_vertices = mesh.vertices.borrow_vec();
+        let vertices=packed.unwrap_or(&public_vertices);
         let faces = mesh.faces.borrow_vec();
         if (!append
             && (vertices.len() != native.vertices.len() || (!topology&&faces.len() != native.faces.len())))
@@ -1917,8 +1923,11 @@ impl Controller {
                                 }
                                 if history_packed_edges {
                                     let mut live=RootRestore::prepare(mesh.clone(),&self.budget,vm)?;live.armed=false;
-                                    if self.history_enabled&&!history_changed{return Ok(false);}
                                     let candidate=packed::prepare(&mesh,&live.vertices,&live.graph,&live.positions,&live.faces,&live.face_fields,&self.budget,vm)?;
+                                    if self.history_enabled&&!history_changed{
+                                        if candidate.positions_changed(&mesh)?{let state=mesh.owner.read().state_token();candidate.apply(&mesh,state)?;}
+                                        return Ok(false);
+                                    }
                                     candidate.apply(&mesh,uuid::Uuid::new_v4())?;
                                     return Ok(true);
                                 }
@@ -1977,11 +1986,12 @@ impl Controller {
                         .try_reserve_exact(entries.len())
                         .map_err(|_| "Mixed projection tickets refused")?;
                     for entry in &entries {
-                        projections.push(Projection::prepare_prefix(
-                            &entry.mesh,
-                            &self.budget,
-                            true,
-                        )?);
+                        if let Some(base)=&entry.packed_base {
+                            let extent=base.len().checked_add(entry.vertices_created.len()).ok_or("Packed projection extent overflow")?;
+                            let _charge=self.budget.reserve(Kind::Preparation,extent.checked_mul(std::mem::size_of::<rustpython_vm::PyObjectRef>()).ok_or("Packed projection bytes overflow")?)?;
+                            let mut references=Vec::new();references.try_reserve_exact(extent).map_err(|_|"Packed projection references refused")?;references.extend(base.iter().cloned());references.extend(entry.vertices_created.iter().map(|v|v.clone().into()));
+                            projections.push(Projection::prepare_kind(&entry.mesh,&self.budget,true,false,false,Some(&references))?);
+                        }else{projections.push(Projection::prepare_prefix(&entry.mesh,&self.budget,true)?);}
                     }
                     let mut locks = Vec::new();
                     locks
@@ -2027,7 +2037,7 @@ impl Controller {
                 } else {
                     for e in &mut entries {
                         let owner=e.mesh.owner.read();
-                        for(i,vertex)in e.vertices_created.iter().enumerate(){vertex.packed_uid.set(Some(owner.mesh().vertices[e.vertices+i].uid));}
+                        for(i,vertex)in e.vertices_created.iter().enumerate(){vertex.packed_uid.set(Some(owner.mesh().vertices[e.native_vertices+i].uid));}
                         e.published = true;
                     }
                 }
@@ -2144,13 +2154,12 @@ impl Controller {
                         .apply();
                 }
             } else {
-                let changed = if redo {
-                    target.mesh.owner.write().redo()?
-                } else {
-                    target.mesh.owner.write().undo()?
-                };
-                if !changed {
-                    return Err("Native append history missing".into());
+                if target.vertices.len()!=target.mesh.owner.read().mesh().vertices.len(){
+                    let candidate=packed::prepare(&target.mesh,&target.vertices,&target.graph,&target.positions,&target.faces,&target.fields,&self.budget,vm)?;
+                    candidate.apply_history(&target.mesh,target.native_state,redo)?;
+                }else{
+                    let changed=if redo{target.mesh.owner.write().redo()?}else{target.mesh.owner.write().undo()?};
+                    if !changed{return Err("Native append history missing".into());}
                 }
             }
             restore.restore();

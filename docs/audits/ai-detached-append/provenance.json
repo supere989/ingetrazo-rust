@@ -1,0 +1,17 @@
+{
+  "base": "4fa48f3c12f25cadacba72ea332bbf5eb8d061a9",
+  "original_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "binary_sha256": {
+    "vm_detached_append": "8b529afef49ba5d687282d9aadf276c6fc1263e7ad7da0ae2dfe78086535f7d5",
+    "vm_vertex_membership": "f658477fa2e5306b1e80a1881eb34e64569cf458938332dac3e8db4d0fc75fdc",
+    "vm_face_deletion": "7046b53642e40de3244622f2277e4ab250c43706470e1da8facb0144ed811c8c"
+  },
+  "source_sha256": {
+    "tools/ai-interpreter-proof/src/vm_mesh.rs": "f2ab3de06b4b721d70415b09d08640662beff2d2bfdbc8424f52a62339f1c7f4",
+    "tools/ai-interpreter-proof/src/vm_packed.rs": "ea8374891ae4019c7833576513f0a4028f26fbf8890f60f7a5a41d1673b38e75",
+    "tools/ai-interpreter-proof/src/owner.rs": "7eff8a03be4eec9dfef08bdd453464036f099dbc7eeb3d8085766cd25ddee953",
+    "tools/ai-interpreter-proof/src/face_owner.rs": "4fad00a1e7a068c7473cdb26979f9fdf1137ab5ebc1a2ac9fc7ff657f645bd57"
+  },
+  "build": "CARGO_PROFILE_DEV_DEBUG=0 CARGO_INCREMENTAL=0 cargo build --manifest-path tools/ai-interpreter-proof/Cargo.toml --bin vm_detached_append --bin vm_vertex_membership --bin vm_face_deletion -j2",
+  "production_enabled": false
+}

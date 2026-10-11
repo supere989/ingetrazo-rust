@@ -412,6 +412,12 @@ impl JournalOwner {
         if mesh.vertices.len()!=self.mesh.vertices.len()||mesh.vertices.iter().zip(&self.mesh.vertices).any(|(a,b)|a.uid!=b.uid){return Err("Edge replacement requires exact Vertex identity order".into());}
         self.prepare_packed_replacement_inner(mesh,state,true,None)
     }
+    pub fn prepare_identity_history_replacement_as(&mut self,mesh:Mesh,keys:Vec<(crate::journal::SourceKey,usize)>,state:Uuid,redo:bool)->Result<PreparedPackedReplacement<'_>,String>{
+        let command=if redo{self.redo.last()}else{self.undo.last()}.ok_or("Packed history command missing")?;
+        if self.state!=if redo{command.before}else{command.after}||state!=if redo{command.after}else{command.before}{return Err("Packed history state mismatch".into());}
+        if redo{self.undo.try_reserve(1).map_err(|_|"Packed undo destination refused")?;}else{self.redo.try_reserve(1).map_err(|_|"Packed redo destination refused")?;}
+        let mut ticket=self.prepare_identity_replacement_as(mesh,keys,state)?;ticket.history=Some(redo);Ok(ticket)
+    }
     pub fn prepare_identity_replacement_as(&mut self,mesh:Mesh,keys:Vec<(crate::journal::SourceKey,usize)>,state:Uuid)->Result<PreparedPackedReplacement<'_>,String>{self.prepare_packed_replacement_inner(mesh,state,false,Some(keys))}
     fn prepare_packed_replacement_inner(&mut self,mut mesh:Mesh,state:Uuid,keys:bool,owned_keys:Option<Vec<(crate::journal::SourceKey,usize)>>)->Result<PreparedPackedReplacement<'_>,String>{
         let next_version=self.version.checked_add(1).ok_or("Owner revision overflow")?;
@@ -421,7 +427,7 @@ impl JournalOwner {
         let index=self.index(&positions)?;
         mesh.install_prepared_spatial_index(index).map_err(str::to_owned)?;
         let registry=if let Some(rows)=owned_keys{self.registry.identity_replacement(&mesh,rows,state,next_version)?}else if keys{self.registry.edge_replacement(&mesh,state,next_version)?}else{Registry::new(&mesh,self.budget.clone(),self.document,state,next_version)?};
-        Ok(PreparedPackedReplacement{owner:self,mesh,registry,state,next_version,_preparation:preparation})
+        Ok(PreparedPackedReplacement{owner:self,mesh,registry,state,next_version,_preparation:preparation,history:None})
     }
     pub fn replace(&mut self, mut mesh: Mesh) -> Result<(), String> {
         let next_version = self
@@ -1929,7 +1935,7 @@ mod membership_tests {
 
 /// Exclusive prepared packed replacement: discard leaves semantic state,
 /// chronological history and source accelerator revision untouched.
-pub struct PreparedPackedReplacement<'a>{owner:&'a mut JournalOwner,mesh:Mesh,registry:Registry,state:Uuid,next_version:u64,_preparation:Lease}
+pub struct PreparedPackedReplacement<'a>{owner:&'a mut JournalOwner,mesh:Mesh,registry:Registry,state:Uuid,next_version:u64,_preparation:Lease,history:Option<bool>}
 impl PreparedPackedReplacement<'_>{
     pub fn apply(self)->Mesh{
         self.owner.registry.invalidate();
@@ -1937,6 +1943,10 @@ impl PreparedPackedReplacement<'_>{
         let _old_registry=std::mem::replace(&mut self.owner.registry,self.registry);
         self.owner.state=self.state;
         self.owner.version=self.next_version;
+        if let Some(redo)=self.history{
+            if redo{let command=self.owner.redo.pop().expect("prepared redo command");self.owner.redo_bytes-=command.bytes;self.owner.undo_bytes+=command.bytes;self.owner.undo.push(command);}
+            else{let command=self.owner.undo.pop().expect("prepared undo command");self.owner.undo_bytes-=command.bytes;self.owner.redo_bytes+=command.bytes;self.owner.redo.push(command);}
+        }
         old_mesh
     }
 }

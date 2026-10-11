@@ -1,0 +1,49 @@
+{
+  "vm_vertex_membership": {
+    "check": {
+      "exact_states": 29,
+      "rejected_mutations": [
+        "public",
+        "positions",
+        "edges",
+        "faces",
+        "registry",
+        "native_edges",
+        "native_faces",
+        "native_positions",
+        "undo",
+        "redo",
+        "final_charge",
+        "production_enabled",
+        "opaque_registry_payload_identity_history",
+        "quota_refusal_preserves_graph_redo_and_charge",
+        "source inventory"
+      ],
+      "production_enabled": false
+    },
+    "normalized_native_sha256": "527fd21e94a3254d12d84e56692b8dd4bb54bd3181c6c85d8ce0455970c02914"
+  },
+  "vm_face_deletion": {
+    "check": {
+      "exact_states": 31,
+      "rejected_mutations": [
+        "radial",
+        "native_radial",
+        "faces",
+        "native_faces",
+        "held_face_live",
+        "held_face_loop",
+        "held_edge_incidence",
+        "native_incidence",
+        "undo",
+        "redo",
+        "production_enabled",
+        "final_charge",
+        "quota_refusal_preserves_graph_history_and_charge",
+        "source inventory"
+      ],
+      "production_enabled": false
+    },
+    "normalized_native_sha256": "4431f728e12aa98cd3036f1b6dc2b5e3d0fbbf2d3249d19e687b61baba77d085"
+  }
+}

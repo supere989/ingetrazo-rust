@@ -1,0 +1,21 @@
+{
+  "observed": [
+    {
+      "failure": "same command repeated Face weld",
+      "diagnostic": "Public registry weld requires identity-owned staging",
+      "full_log": "initial-failure.log",
+      "fix": "Resolve both baseline and newly staged genuine Vertex refs."
+    },
+    {
+      "failure": "detached pose append Undo",
+      "exact_mismatch": "root[21].native_positions[0].position[2] expected 3.0, native 0.0",
+      "fix": "Prepare current detached-reference closure plus chronological append history movement before any mutation."
+    },
+    {
+      "failure": "discarded uncommitted after-Undo prototype",
+      "diagnostic": "Registry removed vertex identity mismatch",
+      "fix": "Do not call numeric Undo and then perform fallible closure preparation; replace owner/index/registry/history together."
+    }
+  ],
+  "boundary": "Latter two exact diagnostics retained from observed execution; full intermediate JSON/log was overwritten before retention."
+}

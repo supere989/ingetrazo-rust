@@ -1031,3 +1031,16 @@ impl FaceOwner {
 impl FaceOwner {
  pub fn prepare_edge_replacement_as(&mut self,mesh:Mesh,state:uuid::Uuid)->Result<crate::owner::PreparedPackedReplacement<'_>,String>{self.owner.prepare_edge_replacement_as(mesh,state)}
 }
+
+/// All replacement/index/history destination admission precedes publication.
+pub struct PreparedPackedFaceHistory<'a>{edge:crate::owner::PreparedPackedReplacement<'a>,undo:&'a mut Vec<Command>,redo:&'a mut Vec<Command>,forward:bool}
+impl PreparedPackedFaceHistory<'_>{pub fn apply(self)->Mesh{let Self{edge,undo,redo,forward}=self;let mut old=edge.apply();if forward{let mut command=redo.pop().expect("prepared face redo");command.faces.clear();undo.push(command);}else{let mut command=undo.pop().expect("prepared face undo");command.faces.extend(old.faces.drain(command.base_faces..));redo.push(command);}old}}
+impl FaceOwner{
+ pub fn prepare_identity_history_replacement_as(&mut self,mesh:Mesh,keys:Vec<(crate::journal::SourceKey,usize)>,state:uuid::Uuid,forward:bool)->Result<PreparedPackedFaceHistory<'_>,String>{
+  let command=if forward{self.redo.last()}else{self.undo.last()}.ok_or("Packed Face history missing")?;
+  let expected=if forward{command.base_faces.checked_add(command.face_count).ok_or("Packed Face extent overflow")?}else{command.base_faces};
+  if mesh.faces.len()!=expected{return Err("Packed Face target extent mismatch".into());}
+  if forward{if command.faces.len()!=command.face_count{return Err("Packed Face redo payload mismatch".into());}self.undo.try_reserve(1).map_err(|_|"Packed Face undo destination refused")?;}else{if !command.faces.is_empty()||command.faces.capacity()<command.face_count{return Err("Packed Face undo slots missing".into());}self.redo.try_reserve(1).map_err(|_|"Packed Face redo destination refused")?;}
+  let edge=self.owner.prepare_identity_history_replacement_as(mesh,keys,state,forward)?;Ok(PreparedPackedFaceHistory{edge,undo:&mut self.undo,redo:&mut self.redo,forward})
+ }
+}

@@ -1,0 +1,1 @@
+{"exact_states": 35, "rejected_mutations": ["public", "positions", "edges", "faces", "registry", "native_edges", "native_faces", "undo", "redo", "packed identity", "packed position", "final_charge", "production_enabled", "undo_redo_refusals_preserve_graph_history_charge", "source inventory"], "production_enabled": false}

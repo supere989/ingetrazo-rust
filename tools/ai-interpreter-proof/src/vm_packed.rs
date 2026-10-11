@@ -11,6 +11,17 @@ pub(super) struct Candidate{
  pub charge:Lease,
 }
 impl Candidate{
+ pub fn positions_changed(&self,live:&PyRef<Mesh>)->Result<bool,String>{
+  let owner=live.owner.read();let native=owner.mesh();if native.vertices.len()!=self.mesh.vertices.len(){return Ok(true);}
+  let mut positions=HashMap::new();positions.try_reserve(native.vertices.len()).map_err(|_|"Packed comparison positions refused")?;
+  for vertex in &native.vertices{if positions.insert(vertex.uid,vertex.position).is_some(){return Err("Repeated native packed UID".into());}}
+  Ok(self.mesh.vertices.iter().any(|vertex|positions.get(&vertex.uid)!=Some(&vertex.position)))
+ }
+ pub fn apply_history(self,live:&PyRef<Mesh>,state:uuid::Uuid,redo:bool)->Result<(),String>{
+  let Self{mesh,keys,assignments,charge}=self;
+  let result={let mut owner=live.owner.write();owner.prepare_identity_history_replacement_as(mesh,keys,state,redo).map(|ticket|ticket.apply())};
+  let old=result?;for(vertex,uid)in assignments{vertex.packed_uid.set(Some(uid));}drop(old);drop(charge);Ok(())
+ }
  pub fn apply(self,live:&PyRef<Mesh>,state:uuid::Uuid)->Result<(),String>{
   let Self{mesh,keys,assignments,charge}=self;
   let result={let mut owner=live.owner.write();owner.prepare_identity_replacement_as(mesh,keys,state).map(|ticket|ticket.apply())};
@@ -86,4 +97,20 @@ pub(super) fn prepare(mesh:&PyRef<Mesh>,public:&[PyObjectRef],graph:&GraphState,
  }
  let native=mesh.owner.read();if native.mesh().faces.iter().any(|face|!face.attrs.is_empty()||face.layer.is_some()||face.interior){return Err("Native painted Face closure admission pending".into());}
  Ok(Candidate{mesh:out,keys,assignments,charge})
+}
+
+/// Cold command-owned ID table. No coordinate rebinding: every native UID must
+/// resolve to an actual retained object before append staging can be published.
+pub(super) fn references(mesh:&PyRef<Mesh>,graph:&GraphState,budget:&OwnerBudget)->Result<(Vec<PyObjectRef>,Lease),String>{
+ let count=mesh.owner.read().mesh().vertices.len();
+ let charge=budget.reserve(Kind::Staging,count.checked_mul(256).ok_or("Packed reference table overflow")?)?;
+ let mut by_uid:HashMap<uuid::Uuid,PyObjectRef>=HashMap::new();by_uid.try_reserve(count).map_err(|_|"Packed reference identities refused")?;
+ let mut remember=|value:PyObjectRef|->Result<(),String>{if let Some(v)=value.downcast_ref::<Vertex>(){if let Some(uid)=v.packed_uid.get(){if let Some(old)=by_uid.get(&uid){if !AsObject::is(old,&value){return Err("Packed UID has multiple genuine owners".into());}}else{by_uid.insert(uid,value);}}}Ok(())};
+ {let values=mesh.vertices.borrow_vec();for value in values.iter(){remember(value.clone())?;}}
+ for value in &graph.members{let edge=value.downcast_ref::<super::editable_mesh::Edge>().ok_or("Packed graph requires Edge")?;let a={edge.v0.read().clone().ok_or("Cleared endpoint")?};let b={edge.v1.read().clone().ok_or("Cleared endpoint")?};remember(a.into())?;remember(b.into())?;}
+ {let faces=mesh.faces.borrow_vec();for value in faces.iter(){let face=value.downcast_ref::<super::editable_mesh::Face>().ok_or("Packed Face identity")?;let outer=face.r#loop.read().clone();for value in outer.borrow_vec().iter(){remember(value.clone())?;}let holes=face.hole_loops.read().clone();for hole in holes.borrow_vec().iter(){let ring=hole.downcast_ref::<PyList>().ok_or("Packed hole requires list")?;for value in ring.borrow_vec().iter(){remember(value.clone())?;}}}}
+ if let Some(registry)=&graph.registry{for(_,value)in registry{remember(value)?;}}
+ let mut result=Vec::new();result.try_reserve_exact(count).map_err(|_|"Packed reference rows refused")?;
+ {let owner=mesh.owner.read();for vertex in &owner.mesh().vertices{result.push(by_uid.remove(&vertex.uid).ok_or("Packed row lacks genuine retained reference")?);}}
+ Ok((result,charge))
 }

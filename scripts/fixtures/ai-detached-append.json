@@ -1,0 +1,37 @@
+[
+  {
+    "name": "removed-weld",
+    "before": "m.vertices.remove(v)",
+    "append": "g=m.add_face([QVector3D(),QVector3D(2,0,0),QVector3D(0,2,0)])\nV.extend(m.vertices[2:])\nassert g.loop[0] is v"
+  },
+  {
+    "name": "cleared-weld",
+    "before": "m.vertices.clear()",
+    "append": "g=m.add_face([QVector3D(),QVector3D(2,0,0),QVector3D(0,2,0)])\nV.extend(m.vertices)\nassert g.loop[0] is v"
+  },
+  {
+    "name": "removed-alias",
+    "before": "m.vertices.remove(v)\nm._registry[(90000,0,0)]=v",
+    "append": "g=m.add_face([QVector3D(9,0,0),QVector3D(2,0,0),QVector3D(0,2,0)])\nV.extend(m.vertices[2:])\nassert g.loop[0] is v"
+  },
+  {
+    "name": "removed-current-endpoint",
+    "before": "m.vertices.remove(v)\nw=Vertex(QVector3D(3,0,0))\nV.append(w)\nm.edges[0].v0=w",
+    "append": "g=m.add_face([QVector3D(),QVector3D(2,0,0),QVector3D(0,2,0)])\nV.extend(m.vertices[2:])"
+  },
+  {
+    "name": "detached-pose-with-append",
+    "before": "m.vertices.remove(v)",
+    "append": "v.position.setZ(3)\ng=m.add_face([QVector3D(),QVector3D(2,0,0),QVector3D(0,2,0)])\nV.extend(m.vertices[2:])"
+  },
+  {
+    "name": "repeated-face-append",
+    "before": "m.vertices.remove(v)",
+    "append": "g=m.add_face([QVector3D(),QVector3D(2,0,0),QVector3D(0,2,0)])\nk=m.add_face([QVector3D(),QVector3D(2,0,0),QVector3D(0,3,0)])\nV.extend(m.vertices[2:])\nassert g.loop[1] is k.loop[1]"
+  },
+  {
+    "name": "detached-only-pose-no-command",
+    "before": "m.vertices.remove(v)",
+    "append": "v.position.setZ(3)"
+  }
+]
