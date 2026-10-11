@@ -1,0 +1,13 @@
+{
+  "source_commit": "23fc56a3",
+  "original_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "binary_sha256": "3b9153ec757318d5940df28bedc1ac011782dad97a0abfacbd51404c02e1e5ac",
+  "artifact_sha256": {
+    "original.json": "e0091ed51c6596d7ff0c1188014a44a8d394598daf6c9e993b75e4bef71f0b14",
+    "native.json": "ce306914491bbcfef9d1a62c2246c7d4fa20bd0237408b48cacb38de5f61fd71",
+    "native.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "checker.json": "421df88ca9654e70ff58ed6cee06121a6713be77f9ef564cf19017898155de28",
+    "focused-build.log": "366d646c6490e7e1ab6beb0f5440af08b4cd2ee96ea0936351f0beadc80099c9"
+  },
+  "production_enabled": false
+}
