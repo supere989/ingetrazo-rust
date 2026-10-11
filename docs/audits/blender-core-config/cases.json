@@ -1,0 +1,955 @@
+{
+  "cases": [
+    {
+      "name": "iso",
+      "camera": {
+        "target": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "distance": 20.0,
+        "yaw": -0.7853981633974483,
+        "pitch": 0.5235987755982988,
+        "up": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "fov_deg": 45.0,
+        "aspect": 1.0,
+        "znear": 0.1,
+        "zfar": 10000.0,
+        "perspective": true,
+        "two_point": false
+      },
+      "scene": "nested",
+      "year": 2026,
+      "engine": "cycles",
+      "quality": 1,
+      "ambience": "day",
+      "ground": true,
+      "sun_scale": 1.0,
+      "shadow": {
+        "month": 3,
+        "day": 21,
+        "hour": 12,
+        "minute": 0,
+        "utc_offset": null
+      },
+      "datum": null,
+      "lights": []
+    },
+    {
+      "name": "top",
+      "camera": {
+        "target": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "distance": 20.0,
+        "yaw": 0.0,
+        "pitch": 1.5707963267948966,
+        "up": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "fov_deg": 45.0,
+        "aspect": 1.0,
+        "znear": 0.1,
+        "zfar": 10000.0,
+        "perspective": true,
+        "two_point": false
+      },
+      "scene": "nested",
+      "year": 2026,
+      "engine": "cycles",
+      "quality": 1,
+      "ambience": "day",
+      "ground": true,
+      "sun_scale": 1.0,
+      "shadow": {
+        "month": 3,
+        "day": 21,
+        "hour": 12,
+        "minute": 0,
+        "utc_offset": null
+      },
+      "datum": null,
+      "lights": []
+    },
+    {
+      "name": "bottom",
+      "camera": {
+        "target": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "distance": 20.0,
+        "yaw": 0.75,
+        "pitch": -1.5707963267948966,
+        "up": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "fov_deg": 45.0,
+        "aspect": 1.0,
+        "znear": 0.1,
+        "zfar": 10000.0,
+        "perspective": true,
+        "two_point": false
+      },
+      "scene": "nested",
+      "year": 2026,
+      "engine": "cycles",
+      "quality": 1,
+      "ambience": "day",
+      "ground": true,
+      "sun_scale": 1.0,
+      "shadow": {
+        "month": 3,
+        "day": 21,
+        "hour": 12,
+        "minute": 0,
+        "utc_offset": null
+      },
+      "datum": null,
+      "lights": []
+    },
+    {
+      "name": "rolled-top",
+      "camera": {
+        "target": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "distance": 20.0,
+        "yaw": -0.7853981633974483,
+        "pitch": 1.5707963267948966,
+        "up": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "fov_deg": 45.0,
+        "aspect": 1.0,
+        "znear": 0.1,
+        "zfar": 10000.0,
+        "perspective": true,
+        "two_point": false
+      },
+      "scene": "nested",
+      "year": 2026,
+      "engine": "cycles",
+      "quality": 1,
+      "ambience": "day",
+      "ground": true,
+      "sun_scale": 1.0,
+      "shadow": {
+        "month": 3,
+        "day": 21,
+        "hour": 12,
+        "minute": 0,
+        "utc_offset": null
+      },
+      "datum": null,
+      "lights": []
+    },
+    {
+      "name": "fractional-target",
+      "camera": {
+        "target": [
+          0.125,
+          -0.375,
+          2.5
+        ],
+        "distance": 7.123456789,
+        "yaw": 0.37,
+        "pitch": 0.41,
+        "up": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "fov_deg": 45.0,
+        "aspect": 1.0,
+        "znear": 0.1,
+        "zfar": 10000.0,
+        "perspective": true,
+        "two_point": false
+      },
+      "scene": "nested",
+      "year": 2026,
+      "engine": "cycles",
+      "quality": 1,
+      "ambience": "day",
+      "ground": true,
+      "sun_scale": 1.0,
+      "shadow": {
+        "month": 3,
+        "day": 21,
+        "hour": 12,
+        "minute": 0,
+        "utc_offset": null
+      },
+      "datum": null,
+      "lights": []
+    },
+    {
+      "name": "near-eye",
+      "camera": {
+        "target": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "distance": 0.001,
+        "yaw": -0.7853981633974483,
+        "pitch": 0.5235987755982988,
+        "up": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "fov_deg": 45.0,
+        "aspect": 1.0,
+        "znear": 0.1,
+        "zfar": 10000.0,
+        "perspective": true,
+        "two_point": false
+      },
+      "scene": "nested",
+      "year": 2026,
+      "engine": "cycles",
+      "quality": 1,
+      "ambience": "day",
+      "ground": true,
+      "sun_scale": 1.0,
+      "shadow": {
+        "month": 3,
+        "day": 21,
+        "hour": 12,
+        "minute": 0,
+        "utc_offset": null
+      },
+      "datum": null,
+      "lights": []
+    },
+    {
+      "name": "two-point",
+      "camera": {
+        "target": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "distance": 20.0,
+        "yaw": -0.7853981633974483,
+        "pitch": 0.8,
+        "up": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "fov_deg": 45.0,
+        "aspect": 1.0,
+        "znear": 0.1,
+        "zfar": 10000.0,
+        "perspective": true,
+        "two_point": true
+      },
+      "scene": "nested",
+      "year": 2026,
+      "engine": "cycles",
+      "quality": 1,
+      "ambience": "day",
+      "ground": true,
+      "sun_scale": 1.0,
+      "shadow": {
+        "month": 3,
+        "day": 21,
+        "hour": 12,
+        "minute": 0,
+        "utc_offset": null
+      },
+      "datum": null,
+      "lights": []
+    },
+    {
+      "name": "orthographic",
+      "camera": {
+        "target": [
+          16777216.0,
+          -2.0,
+          1.0
+        ],
+        "distance": 1.23456789,
+        "yaw": 0.23,
+        "pitch": 0.5235987755982988,
+        "up": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "fov_deg": 45.0,
+        "aspect": 1.0,
+        "znear": 0.1,
+        "zfar": 10000.0,
+        "perspective": false,
+        "two_point": false
+      },
+      "scene": "nested",
+      "year": 2026,
+      "engine": "cycles",
+      "quality": 1,
+      "ambience": "day",
+      "ground": true,
+      "sun_scale": 1.0,
+      "shadow": {
+        "month": 3,
+        "day": 21,
+        "hour": 12,
+        "minute": 0,
+        "utc_offset": null
+      },
+      "datum": null,
+      "lights": []
+    },
+    {
+      "name": "empty",
+      "camera": {
+        "target": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "distance": 20.0,
+        "yaw": -0.7853981633974483,
+        "pitch": 0.5235987755982988,
+        "up": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "fov_deg": 45.0,
+        "aspect": 1.0,
+        "znear": 0.1,
+        "zfar": 10000.0,
+        "perspective": true,
+        "two_point": false
+      },
+      "scene": "empty",
+      "year": 2026,
+      "engine": "cycles",
+      "quality": 1,
+      "ambience": "day",
+      "ground": true,
+      "sun_scale": 1.0,
+      "shadow": {
+        "month": 3,
+        "day": 21,
+        "hour": 12,
+        "minute": 0,
+        "utc_offset": null
+      },
+      "datum": null,
+      "lights": []
+    },
+    {
+      "name": "orphan",
+      "camera": {
+        "target": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "distance": 20.0,
+        "yaw": -0.7853981633974483,
+        "pitch": 0.5235987755982988,
+        "up": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "fov_deg": 45.0,
+        "aspect": 1.0,
+        "znear": 0.1,
+        "zfar": 10000.0,
+        "perspective": true,
+        "two_point": false
+      },
+      "scene": "orphan",
+      "year": 2026,
+      "engine": "cycles",
+      "quality": 1,
+      "ambience": "day",
+      "ground": true,
+      "sun_scale": 1.0,
+      "shadow": {
+        "month": 3,
+        "day": 21,
+        "hour": 12,
+        "minute": 0,
+        "utc_offset": null
+      },
+      "datum": null,
+      "lights": []
+    },
+    {
+      "name": "loose-edge",
+      "camera": {
+        "target": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "distance": 20.0,
+        "yaw": -0.7853981633974483,
+        "pitch": 0.5235987755982988,
+        "up": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "fov_deg": 45.0,
+        "aspect": 1.0,
+        "znear": 0.1,
+        "zfar": 10000.0,
+        "perspective": true,
+        "two_point": false
+      },
+      "scene": "loose-edge",
+      "year": 2026,
+      "engine": "cycles",
+      "quality": 1,
+      "ambience": "day",
+      "ground": true,
+      "sun_scale": 1.0,
+      "shadow": {
+        "month": 3,
+        "day": 21,
+        "hour": 12,
+        "minute": 0,
+        "utc_offset": null
+      },
+      "datum": null,
+      "lights": []
+    },
+    {
+      "name": "hidden-layer",
+      "camera": {
+        "target": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "distance": 20.0,
+        "yaw": -0.7853981633974483,
+        "pitch": 0.5235987755982988,
+        "up": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "fov_deg": 45.0,
+        "aspect": 1.0,
+        "znear": 0.1,
+        "zfar": 10000.0,
+        "perspective": true,
+        "two_point": false
+      },
+      "scene": "hidden-layer",
+      "year": 2026,
+      "engine": "cycles",
+      "quality": 1,
+      "ambience": "day",
+      "ground": true,
+      "sun_scale": 1.0,
+      "shadow": {
+        "month": 3,
+        "day": 21,
+        "hour": 12,
+        "minute": 0,
+        "utc_offset": null
+      },
+      "datum": null,
+      "lights": []
+    },
+    {
+      "name": "hidden-face",
+      "camera": {
+        "target": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "distance": 20.0,
+        "yaw": -0.7853981633974483,
+        "pitch": 0.5235987755982988,
+        "up": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "fov_deg": 45.0,
+        "aspect": 1.0,
+        "znear": 0.1,
+        "zfar": 10000.0,
+        "perspective": true,
+        "two_point": false
+      },
+      "scene": "hidden-face",
+      "year": 2026,
+      "engine": "cycles",
+      "quality": 1,
+      "ambience": "day",
+      "ground": true,
+      "sun_scale": 1.0,
+      "shadow": {
+        "month": 3,
+        "day": 21,
+        "hour": 12,
+        "minute": 0,
+        "utc_offset": null
+      },
+      "datum": null,
+      "lights": []
+    },
+    {
+      "name": "hidden-root",
+      "camera": {
+        "target": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "distance": 20.0,
+        "yaw": -0.7853981633974483,
+        "pitch": 0.5235987755982988,
+        "up": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "fov_deg": 45.0,
+        "aspect": 1.0,
+        "znear": 0.1,
+        "zfar": 10000.0,
+        "perspective": true,
+        "two_point": false
+      },
+      "scene": "hidden-root",
+      "year": 2026,
+      "engine": "cycles",
+      "quality": 1,
+      "ambience": "day",
+      "ground": true,
+      "sun_scale": 1.0,
+      "shadow": {
+        "month": 3,
+        "day": 21,
+        "hour": 12,
+        "minute": 0,
+        "utc_offset": null
+      },
+      "datum": null,
+      "lights": []
+    },
+    {
+      "name": "hidden-middle",
+      "camera": {
+        "target": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "distance": 20.0,
+        "yaw": -0.7853981633974483,
+        "pitch": 0.5235987755982988,
+        "up": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "fov_deg": 45.0,
+        "aspect": 1.0,
+        "znear": 0.1,
+        "zfar": 10000.0,
+        "perspective": true,
+        "two_point": false
+      },
+      "scene": "hidden-middle",
+      "year": 2026,
+      "engine": "cycles",
+      "quality": 1,
+      "ambience": "day",
+      "ground": true,
+      "sun_scale": 1.0,
+      "shadow": {
+        "month": 3,
+        "day": 21,
+        "hour": 12,
+        "minute": 0,
+        "utc_offset": null
+      },
+      "datum": null,
+      "lights": []
+    },
+    {
+      "name": "billboard-middle",
+      "camera": {
+        "target": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "distance": 20.0,
+        "yaw": -0.7853981633974483,
+        "pitch": 0.5235987755982988,
+        "up": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "fov_deg": 45.0,
+        "aspect": 1.0,
+        "znear": 0.1,
+        "zfar": 10000.0,
+        "perspective": true,
+        "two_point": false
+      },
+      "scene": "billboard-middle",
+      "year": 2026,
+      "engine": "cycles",
+      "quality": 1,
+      "ambience": "day",
+      "ground": true,
+      "sun_scale": 1.0,
+      "shadow": {
+        "month": 3,
+        "day": 21,
+        "hour": 12,
+        "minute": 0,
+        "utc_offset": null
+      },
+      "datum": null,
+      "lights": []
+    },
+    {
+      "name": "site-north",
+      "camera": {
+        "target": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "distance": 20.0,
+        "yaw": -0.7853981633974483,
+        "pitch": 0.5235987755982988,
+        "up": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "fov_deg": 45.0,
+        "aspect": 1.0,
+        "znear": 0.1,
+        "zfar": 10000.0,
+        "perspective": true,
+        "two_point": false
+      },
+      "scene": "nested",
+      "year": 2026,
+      "engine": "cycles",
+      "quality": 1,
+      "ambience": "day",
+      "ground": true,
+      "sun_scale": 1.0,
+      "shadow": {
+        "month": 12,
+        "day": 21,
+        "hour": 15,
+        "minute": 30,
+        "utc_offset": -3
+      },
+      "datum": {
+        "lat": -34.9,
+        "lon": -56.2,
+        "north": 37.5
+      },
+      "lights": []
+    },
+    {
+      "name": "site-night",
+      "camera": {
+        "target": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "distance": 20.0,
+        "yaw": -0.7853981633974483,
+        "pitch": 0.5235987755982988,
+        "up": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "fov_deg": 45.0,
+        "aspect": 1.0,
+        "znear": 0.1,
+        "zfar": 10000.0,
+        "perspective": true,
+        "two_point": false
+      },
+      "scene": "nested",
+      "year": 2026,
+      "engine": "cycles",
+      "quality": 1,
+      "ambience": "day",
+      "ground": true,
+      "sun_scale": 1.0,
+      "shadow": {
+        "month": 12,
+        "day": 21,
+        "hour": 0,
+        "minute": 30,
+        "utc_offset": 0
+      },
+      "datum": {
+        "lat": 51.5,
+        "lon": -0.12,
+        "north": -45.0
+      },
+      "lights": []
+    },
+    {
+      "name": "invalid-calendar",
+      "camera": {
+        "target": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "distance": 20.0,
+        "yaw": -0.7853981633974483,
+        "pitch": 0.5235987755982988,
+        "up": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "fov_deg": 45.0,
+        "aspect": 1.0,
+        "znear": 0.1,
+        "zfar": 10000.0,
+        "perspective": true,
+        "two_point": false
+      },
+      "scene": "nested",
+      "year": 2025,
+      "engine": "cycles",
+      "quality": 1,
+      "ambience": "day",
+      "ground": true,
+      "sun_scale": 1.0,
+      "shadow": {
+        "month": 2,
+        "day": 29,
+        "hour": 12,
+        "minute": 0,
+        "utc_offset": 0
+      },
+      "datum": null,
+      "lights": []
+    },
+    {
+      "name": "overcast",
+      "camera": {
+        "target": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "distance": 20.0,
+        "yaw": -0.7853981633974483,
+        "pitch": 0.5235987755982988,
+        "up": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "fov_deg": 45.0,
+        "aspect": 1.0,
+        "znear": 0.1,
+        "zfar": 10000.0,
+        "perspective": true,
+        "two_point": false
+      },
+      "scene": "nested",
+      "year": 2026,
+      "engine": "eevee",
+      "quality": 2,
+      "ambience": "overcast",
+      "ground": true,
+      "sun_scale": 1.0,
+      "shadow": {
+        "month": 3,
+        "day": 21,
+        "hour": 12,
+        "minute": 0,
+        "utc_offset": null
+      },
+      "datum": null,
+      "lights": []
+    },
+    {
+      "name": "night-light",
+      "camera": {
+        "target": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "distance": 20.0,
+        "yaw": -0.7853981633974483,
+        "pitch": 0.5235987755982988,
+        "up": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "fov_deg": 45.0,
+        "aspect": 1.0,
+        "znear": 0.1,
+        "zfar": 10000.0,
+        "perspective": true,
+        "two_point": false
+      },
+      "scene": "nested",
+      "year": 2026,
+      "engine": "cycles",
+      "quality": 1,
+      "ambience": "night",
+      "ground": true,
+      "sun_scale": 1.0,
+      "shadow": {
+        "month": 3,
+        "day": 21,
+        "hour": 12,
+        "minute": 0,
+        "utc_offset": null
+      },
+      "datum": null,
+      "lights": [
+        {
+          "kind": "spot",
+          "pos": [
+            1.0,
+            2.0,
+            3.0
+          ],
+          "dir": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "kelvin": 1700,
+          "color": [
+            0.1,
+            0.2,
+            0.3
+          ],
+          "power": -5.0,
+          "angle": 190.0,
+          "on": true,
+          "name": "Spot"
+        },
+        {
+          "kind": "point",
+          "pos": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "dir": [
+            0.0,
+            0.0,
+            -1.0
+          ],
+          "kelvin": 2700,
+          "color": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "power": 4.0,
+          "angle": 60.0,
+          "on": false,
+          "name": "Off"
+        }
+      ]
+    }
+  ],
+  "environments": [
+    {
+      "values": {
+        "HOME": "/tmp",
+        "PYTHONHOME": "bad",
+        "PYTHONPATH": "bad",
+        "QT_PLUGIN_PATH": "bad",
+        "QT_QPA_PLATFORM_PLUGIN_PATH": "bad",
+        "QML2_IMPORT_PATH": "bad",
+        "QT_QPA_PLATFORM": "bad",
+        "LD_LIBRARY_PATH": "packed",
+        "LD_LIBRARY_PATH_ORIG": "host",
+        "DYLD_LIBRARY_PATH": "packed",
+        "DYLD_LIBRARY_PATH_ORIG": "hostmac",
+        "KEEP": "value"
+      },
+      "frozen": false
+    },
+    {
+      "values": {
+        "LD_LIBRARY_PATH": "packed",
+        "DYLD_LIBRARY_PATH": "packed",
+        "KEEP": "x"
+      },
+      "frozen": true
+    },
+    {
+      "values": {
+        "LD_LIBRARY_PATH": "normal",
+        "LD_LIBRARY_PATH_ORIG": ""
+      },
+      "frozen": false
+    }
+  ],
+  "cache": [
+    {
+      "home": "/tmp",
+      "xdg": null,
+      "flatpak": false
+    },
+    {
+      "home": "/tmp",
+      "xdg": "/tmp/custom-cache",
+      "flatpak": false
+    },
+    {
+      "home": "/tmp",
+      "xdg": "relative-cache",
+      "flatpak": false
+    },
+    {
+      "home": "/tmp",
+      "xdg": "/tmp/sandbox-cache",
+      "flatpak": true
+    }
+  ]
+}

@@ -7,11 +7,10 @@
 //! Handles Blender binary auto-discovery, GLB scene export, lighting, physical sky,
 //! camera matching, environment cleanup, and live progress reporting.
 
-use std::path::{Path, PathBuf};
-use serde::{Deserialize, Serialize};
-use glam::DVec3;
 use crate::camera::OrbitCamera;
 use crate::scene::Scene;
+use serde::{Deserialize, Serialize};
+use std::path::{Path, PathBuf};
 
 pub const MIN_KELVIN: f64 = 1800.0;
 pub const MAX_KELVIN: f64 = 10000.0;
@@ -295,7 +294,21 @@ pub fn find_blender(saved: Option<&str>) -> Option<BlenderFound> {
 
 /// Strips conflicting environment variables (PyInstaller, Qt, etc.)
 pub fn clean_env() -> Vec<(String, String)> {
-    let mut env: Vec<(String, String)> = std::env::vars().collect();
+    clean_env_values(std::env::vars().collect(), false)
+}
+/// Deterministic source environment law. Native builds are not PyInstaller;
+/// packaging callers may explicitly select its frozen-library fallback.
+pub fn clean_env_values(mut env: Vec<(String, String)>, frozen: bool) -> Vec<(String, String)> {
+    for name in ["LD_LIBRARY_PATH", "DYLD_LIBRARY_PATH"] {
+        let original = format!("{name}_ORIG");
+        if let Some(i) = env.iter().position(|(k, _)| k == &original) {
+            let (_, value) = env.remove(i);
+            env.retain(|(k, _)| k != name);
+            env.push((name.into(), value));
+        } else if frozen {
+            env.retain(|(k, _)| k != name);
+        }
+    }
     env.retain(|(k, _)| {
         !matches!(
             k.as_str(),
@@ -307,14 +320,6 @@ pub fn clean_env() -> Vec<(String, String)> {
                 | "QT_QPA_PLATFORM"
         )
     });
-    // Restore or remove LD_LIBRARY_PATH if overridden
-    if let Ok(orig) = std::env::var("LD_LIBRARY_PATH_ORIG") {
-        if let Some(pos) = env.iter().position(|(k, _)| k == "LD_LIBRARY_PATH") {
-            env[pos] = ("LD_LIBRARY_PATH".to_string(), orig);
-        } else {
-            env.push(("LD_LIBRARY_PATH".to_string(), orig));
-        }
-    }
     env
 }
 
@@ -354,65 +359,172 @@ pub fn progress_of(line: &str) -> Option<f32> {
 }
 
 /// Builds camera dictionary for the Blender script.
+fn qt_vec(v: glam::DVec3) -> glam::Vec3 {
+    v.as_vec3()
+}
+fn qt_normalized(v: glam::Vec3) -> glam::Vec3 {
+    let m = v.abs().max_element();
+    let length = if m == 0. {
+        0.
+    } else {
+        let s = v / m;
+        m * (s.x * s.x + s.y * s.y + s.z * s.z).sqrt()
+    };
+    if (length - 1.).abs() <= 1e-5 {
+        v
+    } else if length.abs() <= 1e-5 {
+        glam::Vec3::ZERO
+    } else {
+        v / length
+    }
+}
+fn qt_eye(camera: &OrbitCamera) -> glam::Vec3 {
+    let cp = camera.pitch.cos();
+    let sp = camera.pitch.sin();
+    let cy = camera.yaw.cos();
+    let sy = camera.yaw.sin();
+    qt_vec(camera.target)
+        + glam::Vec3::new(
+            (camera.distance * cp * cy) as f32,
+            (camera.distance * cp * sy) as f32,
+            (camera.distance * sp) as f32,
+        )
+}
+/// Reject native values that cannot enter the original QVector3D camera without
+/// loss. Call before both cold job export and persistent camera requests.
+pub fn validate_camera(camera: &OrbitCamera) -> Result<(), String> {
+    for v in [camera.target, camera.up] {
+        if !v.is_finite() || qt_vec(v).as_dvec3() != v {
+            return Err("Blender camera requires finite exact QVector3D target/up".into());
+        }
+    }
+    if ![
+        camera.distance,
+        camera.yaw,
+        camera.pitch,
+        camera.fov_deg,
+        camera.znear,
+        camera.zfar,
+    ]
+    .iter()
+    .all(|v| v.is_finite())
+        || !qt_eye(camera).is_finite()
+    {
+        return Err("Blender camera derived pose must be finite".into());
+    }
+    Ok(())
+}
 pub fn camera_dict(camera: &OrbitCamera) -> serde_json::Value {
-    let eye = camera.eye();
-    let target = camera.target;
-    let up = camera.up;
+    let eye = qt_eye(camera);
+    let target = qt_vec(camera.target);
+    let raw = target - eye;
+    let squared = raw.x * raw.x + raw.y * raw.y + raw.z * raw.z;
+    let forward = if squared > 1e-18 {
+        qt_normalized(raw)
+    } else {
+        glam::Vec3::Y
+    };
+    let stored_up = qt_vec(camera.up);
+    let dot = forward.x * stored_up.x + forward.y * stored_up.y + forward.z * stored_up.z;
+    let up = if dot.abs() < 0.9999 {
+        stored_up
+    } else {
+        let sign = if camera.pitch > 0. { -1. } else { 1. };
+        glam::Vec3::new(
+            (sign * camera.yaw.cos()) as f32,
+            (sign * camera.yaw.sin()) as f32,
+            0.,
+        )
+    };
     let half_h = camera.distance * (camera.fov_deg.to_radians() / 2.0).tan();
-
-    serde_json::json!({
-        "eye": [eye.x, eye.y, eye.z],
-        "target": [target.x, target.y, target.z],
-        "up": [up.x, up.y, up.z],
-        "perspective": camera.perspective,
-        "fov_deg": camera.fov_deg,
-        "half_height": half_h,
-        "near": (camera.distance * 0.02).max(1e-4),
-        "far": 100000.0,
-    })
+    serde_json::json!({"eye":eye.as_dvec3().to_array(),"target":target.as_dvec3().to_array(),"up":up.as_dvec3().to_array(),"perspective":camera.perspective,"fov_deg":camera.fov_deg,"half_height":half_h,"near":camera.znear.min((camera.distance*0.02).max(1e-4)),"far":camera.zfar})
 }
 
 /// Builds ground catcher dictionary for the Blender script.
 pub fn ground_dict(scene: &Scene) -> Option<serde_json::Value> {
+    fn truth(v: &serde_json::Value) -> bool {
+        match v {
+            serde_json::Value::Null => false,
+            serde_json::Value::Bool(v) => *v,
+            serde_json::Value::Number(v) => v.as_f64() != Some(0.),
+            serde_json::Value::String(v) => !v.is_empty(),
+            serde_json::Value::Array(v) => !v.is_empty(),
+            serde_json::Value::Object(v) => !v.is_empty(),
+        }
+    }
     let mut bb = crate::math::BoundingBox::empty();
-    for v in &scene.mesh.vertices {
-        bb.extend(v.position);
+    // Original bounds ignores orphan loose vertices and Edge.hidden; it asks
+    // entity_visible(edge), which is the layer, not incident-face visibility.
+    for edge in &scene.mesh.edges {
+        if scene.is_layer_visible(edge.layer.as_deref()) {
+            for id in [edge.v0, edge.v1] {
+                if let Some(v) = scene.mesh.vertices.get(id) {
+                    bb.extend(qt_vec(v.position).as_dvec3());
+                }
+            }
+        }
+    }
+    for face in &scene.mesh.faces {
+        if !face.attrs.get("hidden").is_some_and(truth)
+            && scene.is_layer_visible(
+                face.layer
+                    .as_deref()
+                    .or_else(|| face.attrs.get("layer").and_then(|v| v.as_str())),
+            )
+        {
+            for id in &face.vertices {
+                if let Some(v) = scene.mesh.vertices.get(*id) {
+                    bb.extend(qt_vec(v.position).as_dvec3());
+                }
+            }
+        }
+    }
+    fn placement(
+        scene: &Scene,
+        g: &crate::groups::Group,
+        parent: glam::Mat4,
+        bb: &mut crate::math::BoundingBox,
+    ) {
+        let local = glam::Mat4::from_cols_array(&g.transform.to_cols_array().map(|v| v as f32));
+        let matrix = parent * local;
+        if !g.hidden && !g.billboard && scene.is_layer_visible(g.layer.as_deref()) {
+            // Source NumPy applies the composed Qt float matrix in double;
+            // rounding happens at the final bounds QVector3D, not per vertex.
+            let matrix = glam::DMat4::from_cols_array(&matrix.to_cols_array().map(f64::from));
+            for v in &g.mesh.vertices {
+                bb.extend(matrix.transform_point3(qt_vec(v.position).as_dvec3()));
+            }
+        }
+        // Original placements filters each nested item, rather than pruning
+        // descendants of an invisible intermediate placement.
+        for child in &g.children {
+            placement(scene, child, matrix, bb);
+        }
     }
     for g in &scene.groups {
-        if !g.hidden {
-            for v in &g.mesh.vertices {
-                bb.extend(g.transform.transform_point3(v.position));
-            }
+        if !g.hidden && !g.billboard && scene.is_layer_visible(g.layer.as_deref()) {
+            placement(scene, g, glam::Mat4::IDENTITY, &mut bb);
         }
     }
     if !bb.is_valid() {
         return None;
     }
-    let size = (bb.max.x - bb.min.x)
-        .max(bb.max.y - bb.min.y)
-        .max(1.0);
-    Some(serde_json::json!({
-        "z": bb.min.z.min(0.0) - 0.002,
-        "size": (size * 200.0).max(4000.0),
-        "color": [0.42, 0.42, 0.40],
-    }))
+    let lo = qt_vec(bb.min).as_dvec3();
+    let hi = qt_vec(bb.max).as_dvec3();
+    let size = (hi.x - lo.x).max(hi.y - lo.y).max(1.);
+    Some(
+        serde_json::json!({"z":lo.z.min(0.)-0.002,"size":(size*200.).max(4000.),"color":[0.42,0.42,0.40]}),
+    )
 }
 
 /// Estimates sun unit vector toward the sun based on scene datum.
-pub fn sun_toward(scene: &Scene) -> Option<[f64; 3]> {
-    // Standard afternoon architectural lighting (45 deg azimuth, 35 deg altitude)
-    let alt_rad = 38.0_f64.to_radians();
-    let az_rad = 135.0_f64.to_radians(); // From southeast
-
-    let north_rot = scene.geo_datum.as_ref().map(|d| d.north.to_radians()).unwrap_or(0.0);
-    let effective_az = az_rad + north_rot;
-
-    let x = alt_rad.cos() * effective_az.sin();
-    let y = alt_rad.cos() * effective_az.cos();
-    let z = alt_rad.sin();
-
-    let v = DVec3::new(x, y, z).normalize();
-    Some([v.x, v.y, v.z])
+pub fn sun_toward(scene: &Scene, year: i32) -> Option<[f64; 3]> {
+    let mut settings = scene.shadows.clone();
+    // Rendering follows the date/site even when viewport shadows are disabled.
+    settings.enabled = true;
+    crate::sun::scene_direction(&settings, scene.geo_datum.as_ref(), year)
+        .ok()
+        .flatten()
 }
 
 /// Builds complete job json configuration for Blender.
@@ -430,22 +542,29 @@ pub fn build_job(
     sun_scale: f64,
     ground: bool,
     lights: &[BlenderLight],
+    year: i32,
 ) -> serde_json::Value {
     let samples = samples_for(engine, quality);
     let exposure = exposure_for(ambience);
 
     let active_lights: Vec<serde_json::Value> = lights
         .iter()
-        .filter(|lt| lt.on)
+        .filter(|lt| lt.on && lt.pos.iter().chain(lt.dir.iter()).all(|v| v.is_finite()))
         .map(|lt| {
+            let kelvin = lt.kelvin.clamp(MIN_KELVIN as u32, MAX_KELVIN as u32);
+            let dir = if lt.dir.iter().map(|v| v * v).sum::<f64>().sqrt() < 1e-9 {
+                [0., 0., -1.]
+            } else {
+                lt.dir
+            };
             serde_json::json!({
                 "kind": lt.kind.as_str(),
                 "pos": lt.pos,
-                "dir": lt.dir,
-                "kelvin": lt.kelvin,
-                "color": lt.color,
-                "power": lt.power,
-                "angle": lt.angle,
+                "dir": dir,
+                "kelvin": kelvin,
+                "color": kelvin_to_rgb(f64::from(kelvin)),
+                "power": if lt.power.is_nan(){0.}else{lt.power.clamp(0.,1e6)},
+                "angle": if lt.angle.is_nan(){1.}else{lt.angle.clamp(1.,179.)},
                 "on": lt.on,
                 "name": lt.name,
             })
@@ -463,8 +582,8 @@ pub fn build_job(
         "camera": camera_dict(camera),
         "ambience": ambience.as_str(),
         "exposure": exposure,
-        "sun": if ambience == Ambience::Day { sun_toward(scene) } else { None },
-        "sun_strength": 3.0 * sun_scale.clamp(0.0, 4.0),
+        "sun": if ambience == Ambience::Day { sun_toward(scene, year) } else { None },
+        "sun_strength": 3.0 * if sun_scale.is_nan(){0.}else{sun_scale.clamp(0.0, 4.0)},
         "lights": active_lights,
         "ground": if ground { ground_dict(scene) } else { None },
     })
@@ -484,12 +603,33 @@ pub fn command(found: &BlenderFound, script_path: &Path, job_path: &Path) -> Vec
 
 /// Returns the cache work base directory for rendering jobs.
 pub fn default_work_base() -> PathBuf {
-    let home = std::env::var("HOME").unwrap_or_else(|_| "/tmp".to_string());
-    PathBuf::from(home).join(".cache").join("IngeTrazo").join("render")
+    let home = std::env::var_os("HOME")
+        .map(PathBuf::from)
+        .unwrap_or_else(|| PathBuf::from("/tmp"));
+    work_base_values(
+        &home,
+        std::env::var_os("XDG_CACHE_HOME")
+            .map(PathBuf::from)
+            .as_deref(),
+        Path::new("/.flatpak-info").exists(),
+    )
+}
+/// Linux QStandardPaths GenericCacheLocation and host-visible Flatpak rule.
+/// Native macOS/Windows platform cache-location acceptance remains separate.
+pub fn work_base_values(home: &Path, xdg: Option<&Path>, flatpak: bool) -> PathBuf {
+    let base = if flatpak {
+        home.join(".cache")
+    } else {
+        xdg.filter(|p| p.is_absolute())
+            .map(Path::to_path_buf)
+            .unwrap_or_else(|| home.join(".cache"))
+    };
+    base.join("IngeTrazo").join("render")
 }
 
 /// Embedded Python script that executes inside Blender.
-pub const BLENDER_RENDER_SCRIPT: &str = include_str!("../../../ingetrazo/resources/blender/render_scene.py");
+pub const BLENDER_RENDER_SCRIPT: &str =
+    include_str!("../../../ingetrazo/resources/blender/render_scene.py");
 
 #[cfg(test)]
 mod tests {

@@ -1,0 +1,13 @@
+{
+  "base": "352805d2",
+  "original_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "source_sha256": {
+    "crates/ingetrazo-core/src/render_blender.rs": "605171c9cfed66a6bf40f424ff27bf1c9311a52d48b8154af1993f3bf3677ace",
+    "crates/ingetrazo-core/examples/blender_core_config.rs": "ce307f64323a23e22c3de225aa1405ad28a813ba8aceb8ee0e1ac479a19346a8",
+    "scripts/reference-blender-core-config.py": "37da099537ff64c820c048ee92ba6d4b0b8406546378b769ded435cd0bac6454",
+    "scripts/check-blender-core-config.py": "0a62fece5bcc27355af8f100f76e45faf6d1efb85807344ffd49df2160e9f395",
+    "docs/audits/blender-core-config/cases.json": "cc52dfec2615e57718e748e976145fdcc8076a4cbe88404ab0f1391584ede106"
+  },
+  "binary_sha256": "74298f3152816a154cee697033d69ea678afa6b4b1fc25ee58c4768d7405952c",
+  "result": "21 exact jobs; 3 environments; 4 cache cases; 3 camera refusals; 5 rejected mutations"
+}
