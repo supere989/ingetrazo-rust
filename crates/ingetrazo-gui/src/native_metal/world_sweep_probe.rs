@@ -257,6 +257,25 @@ pub(crate) fn run(input: PathBuf, output: PathBuf) -> Result<(), String> {
             }
             if phase == "base" {
                 base = Some(rgba.clone());
+                let admitted = app.native_metal_world.as_ref().unwrap().frame.as_ref()
+                    .ok_or("No admitted base diagnostic frame")?.clone();
+                let policy = admitted.material_diagnostic()?;
+                std::fs::write(output.join(format!("{name}-material-policy.json")),
+                    serde_json::to_vec_pretty(&policy).map_err(|e|e.to_string())?)
+                    .map_err(|e|e.to_string())?;
+                let probe = admitted.submit_front_facing_diagnostic(&metal)?;
+                let mask = probe.readback(std::time::Duration::from_secs(5))?;
+                std::fs::write(output.join(format!("{name}-front-facing.rgba")), &mask)
+                    .map_err(|e|e.to_string())?;
+                drop(probe);
+                // The probe overwrites the same native target. Restore the ordinary
+                // owner before any UI sampling, and assert the complete source frame.
+                let restored = admitted.submit_diagnostic(&metal)?;
+                restored.readback(std::time::Duration::from_secs(5))?;
+                drop(restored);
+                if frame(&mut app, &metal, &ctx, &mut painter, true)? != rgba {
+                    return Err("Front-facing diagnostic changed restored complete frame".into());
+                }
             }
             if phase == "cancel" && base.as_ref() != Some(&rgba) {
                 return Err(format!("{name} Cancel changed base pixels"));

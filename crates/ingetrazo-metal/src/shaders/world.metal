@@ -12,6 +12,7 @@ struct Paint {float4 front;float4 back;uint mode;float opacity;uint padding1;uin
 // Preserve straight RGB; only the attachment blend factor is encoded here.
 float source_blend_alpha(float alpha){return rint(clamp(alpha,0.,1.)*255.)/255.;}
 fragment float4 world_fragment(Out in [[stage_in]],bool front [[front_facing]],constant Paint& paint [[buffer(0)]]) {
+ if(paint.padding1==1)return front?float4(0.,1.,0.,1.):float4(1.,0.,0.,1.);
  if(paint.mode==1||paint.mode==3)return paint.front;
  if(paint.mode==4)return front?in.color:paint.back;
  if(paint.mode==2)return front?paint.front:paint.back;
@@ -28,7 +29,8 @@ vertex TextureOut world_texture_vertex(uint id [[vertex_id]],uint instance [[ins
 }
 struct TexturePaint {float opacity;float shade;uint hard_cutout;uint height;float4 mean;};
 constant float source_bayer[16]={0.5/16.,8.5/16.,2.5/16.,10.5/16.,12.5/16.,4.5/16.,14.5/16.,6.5/16.,3.5/16.,11.5/16.,1.5/16.,9.5/16.,15.5/16.,7.5/16.,13.5/16.,5.5/16.};
-fragment float4 world_texture_fragment(TextureOut in [[stage_in]],texture2d<float> image [[texture(0)]],sampler filter [[sampler(0)]],constant TexturePaint& paint [[buffer(0)]]) {
+fragment float4 world_texture_fragment(TextureOut in [[stage_in]],texture2d<float> image [[texture(0)]],sampler filter [[sampler(0)]],constant TexturePaint& paint [[buffer(0)]],bool front [[front_facing]]) {
+ if(paint.mean.w<0.)return front?float4(0.,1.,0.,1.):float4(1.,0.,0.,1.);
  if(paint.mean.w!=0.)return float4(paint.mean.rgb,source_blend_alpha(paint.opacity));
  float4 texel=image.sample(filter,in.uv);
  if(paint.opacity>.999&&texel.a<.5){if(paint.hard_cutout!=0)discard_fragment();uint x=uint(in.position.x)%4;uint y=uint(float(paint.height)-in.position.y)%4;if(texel.a<source_bayer[y*4+x])discard_fragment();return float4(texel.rgb*paint.shade,1.);}

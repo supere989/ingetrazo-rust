@@ -125,3 +125,24 @@ interior differences also remain: the source ordinary-prism back overlay is
 red while native interiors are blue, and source cream default back surfaces
 appear gray natively. These are separate material-policy defects under audit.
 No colors, thresholds or frozen source frames were changed.
+
+## Bounded ordinary back-policy diagnostic
+
+The next named consumer emits the actual admitted operation roster per base
+frame: prototype/reflection/winding, color phase, first uploaded vertex RGBA,
+opacity, cull, depth write/compare and bias. Immutable shared upload-buffer reads
+are extent checked and cold only. A separate same-buffer native diagnostic
+renders shader front_facing as green/front or red/back while preserving actual
+cull/depth/bias/order. It uses the existing finite Diagnostic owner/readback and
+quarantines all owners on unknown completion. It then restores the ordinary
+render and verifies the complete world+label frame before continuing unchanged
+strict source comparisons and lifecycle controls. MSAA boundary/line pixels
+are unclassified; colors are not changed to match the source.
+
+Production uses a zero diagnostic uniform field. The emitted fragment shader
+adds a uniform diagnostic branch; no normal draw, upload, allocation or pass is
+added. Diagnostic-only renders/readbacks and bounded JSON receipts are extra
+cold acceptance work, not a production performance improvement. The workflow
+now pins the four native font implementation files and both Qt helper scripts
+in the runner-produced source inventory as well. Actual Apple result for this
+addition is pending; no local crosscheck substitutes for it.
