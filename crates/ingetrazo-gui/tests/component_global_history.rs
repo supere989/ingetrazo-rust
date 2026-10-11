@@ -68,7 +68,7 @@ fn line_chain_then_pending_point_take_priority_over_make_unique_ancestor() {
     use ingetrazo_tools::base::{ToolType,ToolContext};
     use ingetrazo_core::math::Ray;
     let mut app=setup("placed-ordinary");app.begin_component_edit();
-    let unique_history=app.undo_stack.clone();let active_baseline=app.scene.clone();
+    let unique_history=app.undo_stack.clone();let mut active_baseline=app.scene.clone();
     assert_eq!(unique_history.len(),1);assert!(unique_history[0].history_context.is_empty());
     let context_path=app.scene.history_context.clone();let ids=app.scene.groups.iter().map(|g|g.id).collect::<Vec<_>>();
     app.set_tool(ToolType::Line);
@@ -76,6 +76,14 @@ fn line_chain_then_pending_point_take_priority_over_make_unique_ancestor() {
     let second=ToolContext::new(first.world+DVec3::X,first.ray);
     app.dispatch_tool_click(&first);app.dispatch_tool_click(&second);
     assert_eq!(app.undo_stack.len(),2);assert_eq!(app.active_tool.snap_anchor(),Some(second.world));
+    // The pinned original bare AddEdge Undo retains both welded endpoint
+    // objects; see docs/audits/line-orphan-history. The parent history and
+    // every other scene field must still match the pre-Line baseline.
+    for point in [first.world,second.world] {
+        let actual=app.scene.mesh.vertex_at_position(point).unwrap();
+        let expected=active_baseline.mesh.add_vertex(point);
+        active_baseline.mesh.vertices[expected].uid=app.scene.mesh.vertices[actual].uid;
+    }
     app.undo();
     assert_eq!(app.scene,active_baseline);assert_eq!(app.undo_stack,unique_history);
     assert_eq!(app.active_tool.snap_anchor(),Some(first.world));assert_eq!(app.redo_stack.len(),1);

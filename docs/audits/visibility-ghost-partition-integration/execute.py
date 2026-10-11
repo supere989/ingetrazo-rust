@@ -11,8 +11,9 @@ assert not subprocess.check_output(['git','-C','ingetrazo','status','--porcelain
 parser=argparse.ArgumentParser()
 parser.add_argument('--start-at',choices=['named-build'])
 parser.add_argument('--stop-after',choices=['examples-check'])
+parser.add_argument('--resume-line-test',action='store_true')
 args=parser.parse_args()
-stages=json.loads((work/'stages.json').read_text()) if args.start_at else []
+stages=json.loads((work/'stages.json').read_text()) if args.start_at or args.resume_line_test else []
 running=args.start_at is None
 def run(name,command,expected=0):
  global running
@@ -26,7 +27,12 @@ def run(name,command,expected=0):
  (work/'stages.json').write_text(json.dumps(stages,indent=2))
  if r.returncode!=expected:raise SystemExit(name+' failed: '+str(r.returncode))
  if name==args.stop_after:raise SystemExit(0)
-run('workspace-tests',['cargo','test','--workspace','--locked','--tests','-j2'])
+if args.resume_line_test:
+ run('line-test-correction',['cargo','test','--locked','-j2','-p','ingetrazo-gui','--test','component_global_history','line_chain_then_pending_point_take_priority_over_make_unique_ancestor','--','--exact'])
+ run('gui-unfinished',['cargo','test','--locked','-j2','-p','ingetrazo-gui','--test','composer_pdf_export','--test','move_component_arrays','--test','offset_controller_acceptance','--test','recovery_acceptance'])
+ run('remaining-package-tests',['cargo','test','--locked','-j2','-p','ingetrazo-metal','-p','ingetrazo-render','-p','ingetrazo-tools','--tests'])
+else:
+ run('workspace-tests',['cargo','test','--workspace','--locked','--tests','-j2'])
 run('doctests',['cargo','test','--workspace','--locked','--doc','-j2'])
 run('examples-check',['cargo','check','--workspace','--locked','--examples','-j2'])
 run('named-build',['cargo','build','--locked','-j2','-p','ingetrazo-gui','--example','context_document_lifecycle','--example','line_command_history_fixture','--example','pushpull_partition_collapse','--example','unhide_actions_fixture','--example','native_vulkan_texture_draw_probe','--example','native_vulkan_hidden_ghost_application_probe','--example','saved_view_history_fixture','--example','pushpull_endpoints_app','-p','ingetrazo-tools','--example','pushpull_gate2_fixture','-p','ingetrazo-formats','--example','component_acceptance_fixture','--example','component_editor_acceptance_fixture','--example','component_ci_world_bake_fixture'])
