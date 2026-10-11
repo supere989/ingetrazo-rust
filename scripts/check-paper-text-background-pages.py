@@ -14,7 +14,7 @@ for name in names:
  for role,path in [('original',original/(name+'.original.pdf')),('native',out/(name+'.native.pdf'))]:
   doc=QPdfDocument();assert doc.load(str(path))==QPdfDocument.Error.None_;assert doc.pageCount()==1;size=doc.pagePointSize(0);sizes.append(size);raw=doc.render(0,QSize(round(size.width()*dpi/72),round(size.height()*dpi/72)));assert not raw.isNull();image=QImage(raw.size(),QImage.Format.Format_RGB32);image.fill(0xffffffff);p=QPainter(image);p.drawImage(0,0,raw);p.end();image=image.convertToFormat(QImage.Format.Format_RGBA8888);image.save(str(out/(name+'.'+role+'.'+str(dpi)+'.png')));images.append(bytes(image.constBits()))
  assert sizes[0]==sizes[1];a,b=images;assert any(a[i:i+3]!=b'\xff\xff\xff'for i in range(0,len(a),4)),name+' source blank'
- changed=sum(a[i:i+4]!=b[i:i+4]for i in range(0,len(a),4));rows.append({'case':name,'changed_pixels':changed,'passed':changed==0})
+ changed=0 if a==b else sum(a[i:i+4]!=b[i:i+4]for i in range(0,len(a),4));rows.append({'case':name,'changed_pixels':changed,'passed':changed==0})
 # Same-size valid PDF mutation: move both left slab corners by 1mm, preserve xref offsets.
 b=(out/'bg_basic.native.pdf').read_bytes();assert b.count(b'-0.500000000')==2
 bad=out/'bg_basic.background-mutated.pdf';bad.write_bytes(b.replace(b'-0.500000000',b'-1.500000000'))
