@@ -275,6 +275,7 @@ pub fn build_scene_render_data(
             &mut data.textured_meshes,
             true,
             false,
+            None,
         );
     }
 
@@ -330,9 +331,38 @@ pub fn build_world_surfaces(scene:&Scene,camera:&OrbitCamera,style:&StyleConfig)
     let mut data=SceneRenderData::default();
     if style.visual_style!=VisualStyle::Wireframe {
         build_mesh_buffers(&scene.mesh,scene,style,&mut data.opaque_mesh,&mut data.transparent_mesh,&mut data.textured_meshes,true);
-        for group in &scene.groups {build_group_buffers(group,source_group_paint(group),&DMat4::IDENTITY,scene,camera,style,&mut data.opaque_mesh,&mut data.transparent_mesh,&mut data.visible_edges,&mut data.billboards,&mut data.textured_meshes,false,true);}
+        for group in &scene.groups {build_group_buffers(group,source_group_paint(group),&DMat4::IDENTITY,scene,camera,style,&mut data.opaque_mesh,&mut data.transparent_mesh,&mut data.visible_edges,&mut data.billboards,&mut data.textured_meshes,false,true,None);}
     }
     data
+}
+
+
+/// Cold source-placement prototype collection. The caller retains its placement
+/// matrix separately; children are independent bindings, never folded into this
+/// own-mesh prototype. No Scene clone, inverse/cancellation or CPU projection.
+/// Classic inline groups keep world-dependent shading and require the ordinary
+/// world collector. Source prototype/placement identity is supplied by the caller.
+pub fn build_placement_prototype_surfaces(
+    group: &ingetrazo_core::groups::Group,
+    inherited_paint: Option<&serde_json::Value>,
+    scene: &Scene,
+    camera: &OrbitCamera,
+    style: &StyleConfig,
+) -> Result<SceneRenderData, String> {
+    if !source_group_has_placement(group) {
+        return Err("Local prototype collection requires source placement semantics".into());
+    }
+    let mut data = SceneRenderData::default();
+    if style.visual_style != VisualStyle::Wireframe {
+        build_group_buffers(group, inherited_paint, &DMat4::IDENTITY,
+            scene, camera, style, &mut data.opaque_mesh, &mut data.transparent_mesh,
+            &mut data.visible_edges, &mut data.billboards, &mut data.textured_meshes,
+            false, true, Some(DMat4::IDENTITY));
+    }
+    if !data.billboards.is_empty() {
+        return Err("Billboard prototype requires camera-dependent placement stage".into());
+    }
+    Ok(data)
 }
 
 fn build_mesh_buffers(
@@ -444,12 +474,13 @@ fn build_group_buffers(
     textured_meshes: &mut crate::buffer::TextureBuffers,
     include_edges: bool,
     native_texture_sides: bool,
+    root_world_override: Option<DMat4>,
 ) {
     if group.hidden || !scene.is_layer_visible(group.layer.as_deref()) {
         return;
     }
 
-    let world_t = *parent_transform * group.transform;
+    let world_t = root_world_override.unwrap_or_else(|| *parent_transform * group.transform);
     // Original viewport._instance_entry.tp32 preserves painted front winding
     // under reflected placements. Reorder local corners before UV evaluation.
     let reflected = world_t.determinant() < 0.0;
@@ -649,6 +680,9 @@ fn build_group_buffers(
     }
 
     }
+    // A prototype is this placement's own mesh; children remain independently
+    // posed bindings. Normal world collection still walks the full subtree.
+    if root_world_override.is_none() {
     for child in &group.children {
         build_group_buffers(
             child,
@@ -664,7 +698,9 @@ fn build_group_buffers(
             textured_meshes,
             include_edges,
             native_texture_sides,
+            None,
         );
+    }
     }
     // Original _group_chunk flattens the entire adopted subtree into the
     // ancestor prototype cache. Classify only after child geometry is collected:
@@ -1639,4 +1675,66 @@ fn append_source_back_texture(buffers:&mut crate::buffer::TextureBuffers,attrs:&
   attrs.insert("color".into(),serde_json::json!([0.5/64.,1.5/64.,2.5/64.]));
   assert_eq!(native_ordinary_shaded_color(&attrs,[0.;4],1.,0.5),[0.,2./64.,2./64.,0.5]);
  }
+}
+
+#[cfg(test)]
+mod placement_prototype_controls {
+    use super::*;
+    use ingetrazo_core::groups::Group;
+    fn triangle() -> Mesh {
+        let mut mesh = Mesh::new();
+        let ids = [DVec3::ZERO, DVec3::X, DVec3::Y].map(|p| mesh.add_vertex(p));
+        mesh.add_face(ids.to_vec(), vec![]).unwrap();
+        mesh
+    }
+    fn placed() -> Group {
+        let mut g = Group::with_mesh("source prototype", triangle());
+        g.native_document = serde_json::json!({"proto":0,"xform":DMat4::IDENTITY.to_cols_array(),"component":false});
+        g
+    }
+    #[test]
+    fn local_packet_excludes_reflected_scaled_root_pose_without_inverse_roundtrip() {
+        let scene = Scene::new(); let camera = OrbitCamera::default(); let style = StyleConfig::default();
+        let base = placed();
+        let reference = build_placement_prototype_surfaces(&base,None,&scene,&camera,&style).unwrap();
+        let mut moved = base;
+        moved.transform = DMat4::from_scale_rotation_translation(DVec3::new(-2.,3.,4.),
+            glam::DQuat::from_rotation_x(0.7),DVec3::new(19.,29.,39.));
+        let local = build_placement_prototype_surfaces(&moved,None,&scene,&camera,&style).unwrap();
+        assert_eq!(local.opaque_mesh.indices, reference.opaque_mesh.indices);
+        assert_eq!(local.opaque_mesh.vertices.len(),3);
+        for (a,b) in local.opaque_mesh.vertices.iter().zip(&reference.opaque_mesh.vertices) {
+            assert_eq!(a.position,b.position); assert_eq!(a.color,b.color); assert_eq!(a.uv,b.uv);
+            assert!(a.position.iter().all(|v| (0. ..=1.).contains(v)));
+        }
+        let mut world_scene=Scene::new();world_scene.groups.push(moved);
+        let world=build_world_surfaces(&world_scene,&camera,&style);
+        assert!(world.opaque_mesh.vertices.iter().any(|v|v.position[0]>10.));
+    }
+    #[test]
+    fn nested_child_is_independent_binding_and_inherited_paint_applies_to_own_mesh() {
+        let scene=Scene::new();let camera=OrbitCamera::default();let style=StyleConfig::default();
+        let mut root=Group::new("adopted");
+        let mut child=placed();
+        child.transform=DMat4::from_translation(DVec3::new(2.,3.,4.));root.children.push(child);
+        root.transform=DMat4::from_translation(DVec3::splat(100.));
+        let paint=serde_json::json!({"color":[1.,0.,0.]});
+        let parent=build_placement_prototype_surfaces(&root,Some(&paint),&scene,&camera,&style).unwrap();
+        assert!(parent.opaque_mesh.indices.is_empty(),"children must not be duplicated in parent prototype");
+        let local=build_placement_prototype_surfaces(&root.children[0],Some(&paint),&scene,&camera,&style).unwrap();
+        let vertices=&local.opaque_mesh.vertices;assert_eq!(vertices.len(),3);
+        assert!(vertices.iter().all(|v|v.position[2]==0.&&v.color[0]>0.&&v.color[1]==0.));
+        assert!(vertices.iter().any(|v|v.position==[0.,0.,0.]));
+        let mut world_scene=Scene::new();world_scene.groups.push(root);
+        let world=build_world_surfaces(&world_scene,&camera,&style);
+        assert!(world.opaque_mesh.vertices.iter().any(|v|v.position==[102.,103.,104.]));
+        world_scene.groups[0].children[0].hidden=true;
+        assert!(build_placement_prototype_surfaces(&world_scene.groups[0].children[0],Some(&paint),&scene,&camera,&style).unwrap().opaque_mesh.indices.is_empty());
+    }
+    #[test]
+    fn classic_group_refuses_local_normal_shading_substitution() {
+        let mut g=Group::with_mesh("classic",triangle());
+        g.native_document=serde_json::json!({"proto":null,"component":true});
+        assert!(build_placement_prototype_surfaces(&g,None,&Scene::new(),&OrbitCamera::default(),&StyleConfig::default()).is_err());
+    }
 }

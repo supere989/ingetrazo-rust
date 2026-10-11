@@ -1,0 +1,12 @@
+{
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "source_mapping": [
+    "viewport.py2315 _instanced_eligible requires placement, rejects alpha/back/billboard",
+    "viewport.py2335 _proto_base_chunk uses g.mesh/effective paint only; child placement independent",
+    "viewport.py8183 _group_chunk routes placed group to local instance cache"
+  ],
+  "contract": "borrow Group/Scene; root local identity override directly; own mesh only, child independently posed; no Scene clone/inverse/CPU projection; classic groups refuse world-dependent shade substitution",
+  "focused": "three controls PASS: reflected/scaled root excluded, nested child separate/no duplication+paint, classic refused",
+  "log_sha256": "802f2f732c429affa08005172bb1707b73daf4c5f6f8ce44d7951f26b590af42",
+  "remaining": "native mesh cache/placement bindings and actual source GPU output/warm upload proofs not implemented yet"
+}

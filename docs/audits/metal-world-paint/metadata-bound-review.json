@@ -6,5 +6,10 @@
   "logs": {
     "metal-world-policy-bound-check.log": "3064fb9f6d8ac78ab5ed8dcb7fd8eecf67d3534e3b6a80a42f84403665710637",
     "metal-world-policy-bound-apple-check.log": "4c5f83e1fbd22b4bb88c01fc9394e57ccc380bb81d83ecaf0e9af11a5cd912eb"
+  },
+  "final_source_commit": "d9dd897a",
+  "final_logs": {
+    "metal-world-policy-bound-final.log": "defbbb3a33994a27a9d0bc8d8bb10e1771b9a8f531d1adeb3e6159eab2ab9b9a",
+    "metal-world-policy-bound-apple-final.log": "df2fe2380a42ecdd11726105a786e2244ec552c8f8fb05eef37f743f3a2eeb2b"
   }
 }
