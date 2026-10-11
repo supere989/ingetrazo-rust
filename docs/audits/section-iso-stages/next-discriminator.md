@@ -1,0 +1,21 @@
+# Read-only next discriminator: clipping versus depth remap order
+
+No new GPU/build/production change. Actual terminal record is arm-review.json (run38168690515); camera bits, ordinary/observed full bytes and source pin are authenticated there.
+
+## Identified opaque contenders
+
+The pinned source shading law is views/viewport.py3329–3359, and its exact face stream construction is bucket_face around4925–4943. tests/test_orient.py140 builds the fixture; source script removes the slab and calls orient_outward. Running only those original CPU methods (no widget/GL/capture) gives source-cpu-triangles.json. Y-plane shade is175,175,171; X-plane shade183,183,175. At bad sample3(297.625,329.125) in top coordinates, literal candidates are upper y=0 face3 triangle1 and upper x=0 face9 triangle0. Other parallel x1/y1 walls do not contain the reconstructed ray intersection. Both candidates are inside their ideal triangles and below sectionz1.5. Source/native current vertex coordinates are the literal0/1/2 fixture values; native GPU triangle-record bytes were NOT exported, so native exact triangulation index identity is not claimed from this CPU record.
+
+cpu-plane-depth.json evaluates the recordedf32 camera as an ideal affine map in f64; it is NOT a hardware rasterizer emulator. At bad and good sample3, y0 is nearer thanx0 by0.68755528floatULP. Both planes have ideal absolute slope6.68701620ULP/pixel. The sourceD24(1,1) bias law contributes8.18701629ULP including slope. A sub-ULP separation makes interpolation/quantization ties meaningful, but this does not identify a hardware rounding implementation.
+
+## Concrete source ordering seam
+
+Primary exact-tag source: https://gitlab.freedesktop.org/mesa/mesa/-/raw/mesa-25.2.8/src/gallium/auxiliary/draw/draw_pipe_clip.c , interp at157–174. Generated clip vertices interpolate original clip_pos, then recompute projective divide and viewport transform. Ordinary vertices also map before rasterization (draw_llvm.c1065–1124); this is not the rejected after-raster-interpolation premise. Native shaders/world.metal remaps(z+w)*.5 BEFORE user-plane hardware clipping. Therefore generated section intersections can see different rounding order even though ordinary camera bits match.
+
+cpu-clipped-depth-order.json uses explicitly rounded scalarf32 operations and the same retained camera, not captured hardware VS/intersection values. Two literal diagonal crossings change+1ULP under remap-before-interpolate; their shared vertical crossing does not change. This rejects a universal offset explanation, but does not prove these are the device's generated vertex bits. FMA/clip interpolation and D24/D32 bias/quantization remain separate possible contributors.
+
+## Cheapest bounded candidate, subject to parent review
+
+For this closed-iso recipe every originalGLclip-z vertex and generated section intersection is positive, w=1. Probe-only shader variant emits original GLclipz without(z+w)*.5, and native viewport uses znear=.5/zfar1. Both viewport endpoints remain valid0..1. This delegates window depth remapping until AFTER native clipping, without fragmentdepth, an extra image/pass, CPU geometry, or bias changes. Shader variant must be consistently applied to ordinary/default-back/mask/cap/contour vertex functions; x/y/w/color and sample positions unchanged. Cold-only opt-in, immutable pipeline identity and retained Prepared ownership required. Reject any nonpositiveGLz/wnot1 input before publication. This is NOT general production routing: negativeGLz would encounter Metal's different near clip boundary.
+
+Reuse the same three-point stage observer and literal draw inventory. Keep untouched normal path's full frame9fab guard and prefix/in-pass color attribution guards. Candidate full frame is separately retained and compared with source; never call it unchanged. Predicted useful outcomes: initial bad sample3 choosesY/front175 rather thanX183 if clipping/remap order caused the tie; good neighbor keepsY/front; cap can remain unresolved if stencil/D24 bias differs. Exact candidate depth bits cannot be predicted from ideal affine math without assuming undocumented hardware interpolation. Record all bytes/bits, including changes away from these points, and reject any claim that a successful local ownership correction alone closes134pixels. No new source capture is needed.
