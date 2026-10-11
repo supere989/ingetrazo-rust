@@ -107,10 +107,8 @@ impl Fill {
 fn dot(a: glam::Vec3, b: glam::Vec3) -> f32 {
     a.x * b.x + a.y * b.y + a.z * b.z
 }
-fn normalize(p: glam::Vec3) -> glam::Vec3 {
-    let length = ((p.x as f64).powi(2) + (p.y as f64).powi(2) + (p.z as f64).powi(2)).sqrt();
-    (p.as_dvec3() / length).as_vec3()
-}
+fn length(p:glam::Vec3)->f32{let m=p.abs().max_element();if m==0.{0.}else{let q=glam::Vec3::new(p.x/m,p.y/m,p.z/m);m*(q.x*q.x+q.y*q.y+q.z*q.z).sqrt()}}
+fn normalize(p:glam::Vec3)->glam::Vec3{let n=length(p);if (n-1.).abs()<=1e-5{p}else if n.abs()<=1e-5{glam::Vec3::ZERO}else{glam::Vec3::new(p.x/n,p.y/n,p.z/n)}}
 /// Literal viewport.section_plane_frame, including Qt vector operation boundaries.
 fn frame(scene: &ingetrazo_core::scene::Scene) -> Result<[glam::Vec3; 4], String> {
     use glam::{DVec3, Mat4, Vec3};
@@ -122,7 +120,7 @@ fn frame(scene: &ingetrazo_core::scene::Scene) -> Result<[glam::Vec3; 4], String
     let origin = p.point.as_vec3();
     let n = normalize(p.normal.as_vec3());
     let mut u = Vec3::X - n * dot(Vec3::X, n);
-    if u.length() < 0.1 {
+    if length(u) < 0.1 {
         u = Vec3::Y - n * dot(Vec3::Y, n);
     }
     let u = normalize(u);
