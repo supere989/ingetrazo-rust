@@ -11,7 +11,7 @@ pub struct DocumentSession {
     pub last_autosave:Instant,pub pending:Option<DocumentAction>,
     pub confirm_unsaved:bool,pub close_allowed:bool,
     /// One file-choice transaction, invalidated by intervening model edits.
-    pub open_dialog_revision:Option<(u64,u64)>,
+    pub open_dialog_revision:Option<(u64,u64,ingetrazo_core::presentation::DocumentStyle,ingetrazo_core::presentation::ShadowSettings)>,
     pub recovery:Vec<RecoveryRecord>,pub show_recovery:bool,pub recovered_slot:Option<PathBuf>,
 }
 impl Default for DocumentSession {fn default()->Self {Self{store:None,preferences:Preferences::default(),clean:None,
@@ -69,6 +69,7 @@ impl IngeTrazoApp {
         if let Some(store)=&self.document_session.store {if let Err(e)=store.save_preferences(p){self.status_message=e;}}
     }
     pub fn request_document_action(&mut self,action:DocumentAction) {
+        self.cancel_document_action();
         // Original New/Open exits every context before asking. Close asks in
         // place: Cancel must retain the live edit, and Save performs the exit.
         if matches!(action,DocumentAction::New|DocumentAction::Open(_)|DocumentAction::ChooseOpen) {
@@ -76,7 +77,6 @@ impl IngeTrazoApp {
         } else if matches!(action,DocumentAction::Recover(_)) && !self.component_edit_stack.is_empty() {
             self.status_message="Finish or cancel the component edit first".into();return;
         }
-        self.document_session.open_dialog_revision=None;
         self.document_session.pending=Some(action);
         if self.document_dirty(){self.document_session.confirm_unsaved=true;}else{self.finish_document_action();}
     }
@@ -89,7 +89,8 @@ impl IngeTrazoApp {
             Some(DocumentAction::Open(path))=>self.open_document_unchecked(&path),
             Some(DocumentAction::ChooseOpen)=>{
                 self.show_open_dialog=true;self.dialog_path_input.clear();
-                self.document_session.open_dialog_revision=Some((self.model_revision,self.scene.version));
+                self.sync_document_presentation();
+                self.document_session.open_dialog_revision=Some((self.model_revision,self.scene.version,self.scene.display_style.clone(),self.scene.shadows.clone()));
             },
             Some(DocumentAction::Close)=>{self.retire_current_recovery();self.persist_preferences();self.document_session.close_allowed=true;},
             Some(DocumentAction::Recover(record))=>match ingetrazo_formats::igz::load_igz(&record.slot){
@@ -173,6 +174,35 @@ mod tests {
         app.open_chosen_document(&path);assert!(app.document_session.confirm_unsaved);assert_eq!(app.scene.mesh.faces.len(),2);
         app.cancel_document_action();app.begin_open_document();app.discard_document_action();app.open_chosen_document(&path);
         assert!(!app.document_session.confirm_unsaved);assert!(app.scene.mesh.faces.is_empty());assert!(app.document_session.open_dialog_revision.is_none());
+        std::fs::remove_dir_all(directory).unwrap();
+    }
+    #[test]
+    fn chooser_rechecks_unsaved_presentation_without_rejecting_camera_only_changes() {
+        let directory=root();std::fs::create_dir_all(&directory).unwrap();let path=directory.join("replacement.igz");
+        ingetrazo_formats::igz::save_igz(&Scene::new(),&path).unwrap();
+        for change in [0,1,2] {
+            let mut app=IngeTrazoApp::new();triangle(&mut app,DVec3::ZERO);app.begin_open_document();app.discard_document_action();
+            if change==0{app.style.visual_style=VisualStyle::Wireframe;}else if change==1{app.shadows_enabled=!app.shadows_enabled;}else{app.camera.target=DVec3::splat(7.);}
+            app.open_chosen_document(&path);assert_eq!(app.document_session.confirm_unsaved,change!=2);assert_eq!(app.scene.mesh.faces.is_empty(),change==2);
+        }
+        std::fs::remove_dir_all(directory).unwrap();
+    }
+    #[test]
+    fn failed_context_save_aborts_pending_close_and_later_save_does_not_quit() {
+        let directory=root();std::fs::create_dir_all(&directory).unwrap();
+        for save_as in [false,true] {
+            let mut app=IngeTrazoApp::new();triangle(&mut app,DVec3::ZERO);
+            let mesh=std::mem::take(&mut app.scene.mesh);app.scene.groups.push(ingetrazo_core::groups::Group::with_mesh("active",mesh));
+            app.scene.select(ingetrazo_core::scene::SelectionItem::Group(0));app.begin_component_edit();
+            app.scene.mesh.vertices[0].position.x=f64::NAN;app.request_document_action(DocumentAction::Close);
+            app.document_session.confirm_unsaved=false;
+            if save_as{app.save_document_as();}else{app.save_to_path(&directory.join("invalid.igz"));}
+            assert!(app.document_session.pending.is_none());assert!(!app.document_session.confirm_unsaved);assert!(!app.document_session.close_allowed);
+            assert_eq!(app.component_edit_stack.len(),1);assert!(!directory.join("invalid.igz").exists());
+            app.scene.mesh.vertices[0].position.x=0.;app.save_to_path(&directory.join("valid.igz"));assert!(!app.document_session.close_allowed);
+            app.scene.mesh.add_vertex(DVec3::Z);app.request_document_action(DocumentAction::Close);app.save_to_path(&directory.join("blocked.ifc"));
+            assert!(!directory.join("blocked.ifc").exists());assert!(!app.document_session.close_allowed);assert!(app.document_session.confirm_unsaved);
+        }
         std::fs::remove_dir_all(directory).unwrap();
     }
     #[test]

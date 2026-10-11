@@ -303,7 +303,10 @@ impl IngeTrazoApp {
         self.show_open_dialog=false;
         // File/Open has already resolved unsaved changes before the chooser.
         // Import callers and intervening edits still need their own guard.
-        if self.document_session.open_dialog_revision.take()==Some((self.model_revision,self.scene.version)) {
+        self.sync_document_presentation();
+        let approved=self.document_session.open_dialog_revision.take().is_some_and(|(revision,version,style,shadows)|
+            revision==self.model_revision && version==self.scene.version && style==self.scene.display_style && shadows==self.scene.shadows);
+        if approved {
             self.open_document_unchecked(path);
         } else {self.open_document(path);}
     }
@@ -344,7 +347,7 @@ impl IngeTrazoApp {
     }
 
     pub fn save_document_as(&mut self) {
-        if !self.finish_contexts_for_document() { return; }
+        if !self.finish_contexts_for_document() { self.cancel_document_action(); return; }
         self.show_save_dialog = true;
         self.dialog_path_input = self.current_file.as_ref()
             .map(|p| p.to_string_lossy().into_owned())
@@ -360,14 +363,14 @@ impl IngeTrazoApp {
     }
 
     pub fn save_to_path(&mut self, path: &Path) {
+        if self.document_session.pending.is_some() && path.extension().and_then(|e|e.to_str()).map(|e|!e.eq_ignore_ascii_case("igz")).unwrap_or(true) {
+            self.status_message="Save an .igz document before continuing".into();self.document_session.confirm_unsaved=true;return;
+        }
         if path.extension().and_then(|s|s.to_str()).is_some_and(|s|s.eq_ignore_ascii_case("ifc")) {
             self.status_message=match self.export_bim_ifc(path){Ok(n)=>format!("{n} IFC elements exported to {}",path.display()),Err(error)=>format!("Export IFC failed: {error}")};
             return;
         }
-        if !self.finish_contexts_for_document() { return; }
-        if self.document_session.pending.is_some() && path.extension().and_then(|e|e.to_str()).map(|e|!e.eq_ignore_ascii_case("igz")).unwrap_or(true) {
-            self.status_message="Save an .igz document before continuing".into();self.document_session.confirm_unsaved=true;return;
-        }
+        if !self.finish_contexts_for_document() { self.cancel_document_action(); return; }
         self.sync_document_presentation();
         // Like the source camera_home update, synchronize before the write.
         // Saving must not copy every mesh just to substitute the camera.
