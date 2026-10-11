@@ -4,7 +4,7 @@ Authority: unchanged original `formats/dxf_in.py` at6be29fe. Actual SnapshotImpo
 
 Runtime consumes POLYLINE/VERTEX/SEQEND once into existing DxfPlan. New source-import points alone narrow to Qt float; old direct f64 callers remain f64. OCS uses literal arbitrary-axis algorithm. MissingSEQEND and nonfinite output refuse before publication. Cancel/invalid transaction and protected nativef64/opaque history guards are separate from natural source cases.
 
-Bulged legacy polylines remain explicitly refused; ELLIPSE/SPLINE/INSERT/MINSERT, existingcurve ezdxf-flattening differences and source face stitch/fusion remain open. No P22 promotion, GPU or totalheap claim. No accepted OBJ/MTL/nested source recapture.
+This initial straight-only checkpoint was extended by the accepted [curve batch](../dxf-curves/README.md), which adds bulges, ellipses and source curve flattening. SPLINE, INSERT/MINSERT and source face stitch/fusion remain open. No P22 promotion, GPU or totalheap claim. No accepted OBJ/MTL/nested source recapture.
 
 ## Acceptance
 

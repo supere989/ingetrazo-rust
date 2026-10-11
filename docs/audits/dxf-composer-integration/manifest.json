@@ -1,0 +1,672 @@
+{
+  "archive": "records.zip",
+  "archive_sha256": "443cdb1bf21cf2727447464e37b94a617c25a8fc7efe6b127c7c613145fcb67d",
+  "runtime_commit": "147b9a9104e80aa5125dcd1a4976151292ff9caf",
+  "entries": [
+    {
+      "path": "combined-build.log",
+      "bytes": 21583,
+      "sha256": "9c41acc6d4ea358f7af144325abf4c77a1739db6458710337210732af615879a"
+    },
+    {
+      "path": "composer-pointer/acceptance.json",
+      "bytes": 722,
+      "sha256": "43d4e8b673d420156aff773615a053ad4429b75a6e177cda6720a9945d1b5daa"
+    },
+    {
+      "path": "composer-pointer/check.log",
+      "bytes": 65,
+      "sha256": "884ee0eae3f2afebf308637220ff05a9cb392f8198fd31e519571e9c2d8ca4e7"
+    },
+    {
+      "path": "composer-pointer/native.json",
+      "bytes": 63387,
+      "sha256": "3bb60a06934736aaef169ec40e62025a6d19a2f9eee7c4a77fecdd516d71cfa0"
+    },
+    {
+      "path": "composer-pointer/runtime.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "composer-pointer/source.json",
+      "bytes": 93638,
+      "sha256": "9e0fdaf5ae75bdb5d715477eb01b7ab3dd0e06b1fadb877c3f57b34bcfb7d8a3"
+    },
+    {
+      "path": "dxf-curves/2d-open-input.igz",
+      "bytes": 3552,
+      "sha256": "52003d496290656f79ef289568d3056598015ebad014f944b4f2eba11227e853"
+    },
+    {
+      "path": "dxf-curves/2d-open.dxf",
+      "bytes": 15896,
+      "sha256": "af409cce414de370c5c77cb80ae450adc3f0dc265fcf75eb8ae019e80e8497c0"
+    },
+    {
+      "path": "dxf-curves/arc-half-input.igz",
+      "bytes": 3552,
+      "sha256": "e7d76c18e792e70f457aba8d8e7863fda561631b14509f816239dd2c5a0d3021"
+    },
+    {
+      "path": "dxf-curves/arc-half-native.igz",
+      "bytes": 9653,
+      "sha256": "9fd777ef28d031b64f74dc448bd1750801e3b17992e9833ecee06ff41427aadd"
+    },
+    {
+      "path": "dxf-curves/arc-half-original.igz",
+      "bytes": 9393,
+      "sha256": "d03fa26a9326bf5130d01cf2b115498ad293057bc973488058eb17d0bed93144"
+    },
+    {
+      "path": "dxf-curves/arc-half.dxf",
+      "bytes": 15523,
+      "sha256": "387f2b8a0e3ba3524f612373d7b078cfa4600db1c8d06a1abbfd0729533f18fc"
+    },
+    {
+      "path": "dxf-curves/arc-ocs-input.igz",
+      "bytes": 3552,
+      "sha256": "1b15caa1f402b65be4bdfe10e6c9091a9cc0a622ea07b0362fcd2ae129471ef2"
+    },
+    {
+      "path": "dxf-curves/arc-ocs-native.igz",
+      "bytes": 9707,
+      "sha256": "9189ab8dbdb75d4edc08f01bc1dc2dbcb9cdbfe998eb7dd43c746f5110a0b7ab"
+    },
+    {
+      "path": "dxf-curves/arc-ocs-original.igz",
+      "bytes": 9447,
+      "sha256": "6e43b2e54399a43a3148bf15cd714297571642cbef2e4cf87972bb4d3c0dda7c"
+    },
+    {
+      "path": "dxf-curves/arc-ocs.dxf",
+      "bytes": 15548,
+      "sha256": "41023778f9756095e55fbc46b8f43ebbfe8119e667677a8479918b7cf6c04f00"
+    },
+    {
+      "path": "dxf-curves/arc-wrap-input.igz",
+      "bytes": 3552,
+      "sha256": "ac7985475e83fb8a33a6f23d4f374a014a8b2d88af6ebe64d3876d6062d26721"
+    },
+    {
+      "path": "dxf-curves/arc-wrap-native.igz",
+      "bytes": 6297,
+      "sha256": "71a7b0cbefa800f89a9582108d5ea6017c5eb5cede19417a3dc6d951806083bb"
+    },
+    {
+      "path": "dxf-curves/arc-wrap-original.igz",
+      "bytes": 6037,
+      "sha256": "3cf38197051a565862f88be6eebb8f023ef006274998f4a5a3e9be30e8a14656"
+    },
+    {
+      "path": "dxf-curves/arc-wrap.dxf",
+      "bytes": 15524,
+      "sha256": "276276a6188c898298a7f0a2b17b2de170faa62cc0697532e6127643a43c6495"
+    },
+    {
+      "path": "dxf-curves/attempts/initial-curve-observer/source.log",
+      "bytes": 2676,
+      "sha256": "c475a6bacfa011e03993b6123d4a2e6013dee62684a3f252d383b86b084a0804"
+    },
+    {
+      "path": "dxf-curves/check.log",
+      "bytes": 123,
+      "sha256": "6da01c6b84a6960307319c7dd8882301ff4239c87f286e9f7bf7c85fd6766eff"
+    },
+    {
+      "path": "dxf-curves/circle-input.igz",
+      "bytes": 3552,
+      "sha256": "57fd174a6b7ae816e97704126169769ac06b0c952074c662343eaf8f972e9478"
+    },
+    {
+      "path": "dxf-curves/circle-large-input.igz",
+      "bytes": 3552,
+      "sha256": "03be838ffc0a68088543c1a1800dbd01b477382b0e3f8dbe1671a89c1e90fbd3"
+    },
+    {
+      "path": "dxf-curves/circle-large-native.igz",
+      "bytes": 76908,
+      "sha256": "8bad757a1ac7ca31546ff8cfacd1c4ae1f28a603aa4dd58b58a26c2e93d1cfad"
+    },
+    {
+      "path": "dxf-curves/circle-large-original.igz",
+      "bytes": 76648,
+      "sha256": "9974a112ba73120ac426caee9fd3099eed6396a380b23687d0b5b721ed5c7ebb"
+    },
+    {
+      "path": "dxf-curves/circle-large.dxf",
+      "bytes": 15498,
+      "sha256": "de1270d1fc074bd67f7d3af29873cadc4eacc7c3ec18a1c56c8f22b6a58289d4"
+    },
+    {
+      "path": "dxf-curves/circle-native.igz",
+      "bytes": 12964,
+      "sha256": "0a7a5140bed2a51d0365967ce1e23edafa5fae4a899082e1e7c57deb50d38177"
+    },
+    {
+      "path": "dxf-curves/circle-original.igz",
+      "bytes": 12704,
+      "sha256": "e0804eb44365c082c0a52ca1a1e6514ba8eaa8b0c892302fde328f4848d1c607"
+    },
+    {
+      "path": "dxf-curves/circle.dxf",
+      "bytes": 15496,
+      "sha256": "601eb7a7ec78a1072634b90d00f81b6e0eff0b2aae46b98531a35208dcf17248"
+    },
+    {
+      "path": "dxf-curves/ellipse-full-input.igz",
+      "bytes": 3552,
+      "sha256": "2c149c661d6da821292c2d646aeb57b671ed5d3a79787146e5246649fbf5dfba"
+    },
+    {
+      "path": "dxf-curves/ellipse-full-native.igz",
+      "bytes": 18834,
+      "sha256": "4b9822b014291f6d3452a752057b7cca9d72ef3f83f47bc479cb4547a8c5dfba"
+    },
+    {
+      "path": "dxf-curves/ellipse-full-original.igz",
+      "bytes": 18574,
+      "sha256": "792633c9c0a8341a93ef2d4343d7c0e1352beadf9835ee32aa6fac52fc30e719"
+    },
+    {
+      "path": "dxf-curves/ellipse-full.dxf",
+      "bytes": 15552,
+      "sha256": "69706674e8fd24380687f00f523e4ddde66dd21f76a1643cf1bd76128018d8d6"
+    },
+    {
+      "path": "dxf-curves/ellipse-partial-input.igz",
+      "bytes": 3552,
+      "sha256": "69d32fb59c268e3b4c37e871dff41de37106cd7beb3b55281634f7dfef1f900b"
+    },
+    {
+      "path": "dxf-curves/ellipse-partial-native.igz",
+      "bytes": 10290,
+      "sha256": "62339a1f7951d346b883f6355d9c8069eb8f926a84538316824289e8d1391aa2"
+    },
+    {
+      "path": "dxf-curves/ellipse-partial-original.igz",
+      "bytes": 10030,
+      "sha256": "fcd1fae6e05aff7eb0b27e5edbefe6948f55f2644ee77c1fd7ab35dc42f61ed3"
+    },
+    {
+      "path": "dxf-curves/ellipse-partial.dxf",
+      "bytes": 15538,
+      "sha256": "1856463b76b4c21b419738b49c4d91b537cc75a3060fb92e990202fabca0e87a"
+    },
+    {
+      "path": "dxf-curves/ellipse-tilted-input.igz",
+      "bytes": 3552,
+      "sha256": "e6981d0ef2d4ff0722d3cc5a9bcb36218bfe396771333c0ba31a9d26b10c8ba1"
+    },
+    {
+      "path": "dxf-curves/ellipse-tilted-native.igz",
+      "bytes": 16518,
+      "sha256": "ffe0b4b093e21d13e93e521044d8b4201e424c8200f05773cce3068a795df50c"
+    },
+    {
+      "path": "dxf-curves/ellipse-tilted-original.igz",
+      "bytes": 16258,
+      "sha256": "db6acb91f3052a227d23f40f22b002a20cc5ccc0ccb2ace82275d078ed801587"
+    },
+    {
+      "path": "dxf-curves/ellipse-tilted.dxf",
+      "bytes": 15577,
+      "sha256": "1a5514c076cd89a81c341809bfa276fc801dcb53401fa1c699934025acdcd25e"
+    },
+    {
+      "path": "dxf-curves/legacy-bulge-ocs-input.igz",
+      "bytes": 3552,
+      "sha256": "d31665d3e2152361fb49c47dd7178d6dce0b02e9d578d97ff6964684f48084ac"
+    },
+    {
+      "path": "dxf-curves/legacy-bulge-ocs-native.igz",
+      "bytes": 11984,
+      "sha256": "f3dafff2c67487868b0dbfa7e69185a7e2deae6c46defc846b02a7a08b2adb19"
+    },
+    {
+      "path": "dxf-curves/legacy-bulge-ocs-original.igz",
+      "bytes": 11749,
+      "sha256": "3733b7436b204b3ff3434408d5f58923b84c39b76689e547a2815aa0325d17fc"
+    },
+    {
+      "path": "dxf-curves/legacy-bulge-ocs.dxf",
+      "bytes": 15938,
+      "sha256": "ba0cc890d5153a20bbec54492c434867b513c2c9744382bb7a08a24ed194a017"
+    },
+    {
+      "path": "dxf-curves/lw-negative-closed-input.igz",
+      "bytes": 3552,
+      "sha256": "bb410389eea6a077e19eacd057f432a9dd9bee445b3d3dc0e4c5305600eb91de"
+    },
+    {
+      "path": "dxf-curves/lw-negative-closed-native.igz",
+      "bytes": 10774,
+      "sha256": "af6b37989d456c810c6b973a7ab14d9292b8f0468b635cb21c5249f00849a675"
+    },
+    {
+      "path": "dxf-curves/lw-negative-closed-original.igz",
+      "bytes": 10539,
+      "sha256": "70634b0b3dc41da24f843593073fca4729dc1efe59ff2ce2e641427db7a4a694"
+    },
+    {
+      "path": "dxf-curves/lw-negative-closed.dxf",
+      "bytes": 15548,
+      "sha256": "d8e30b46ec9d8192b12920365a8ce2b766312fe0edbd4848174e61370daab597"
+    },
+    {
+      "path": "dxf-curves/lw-positive-input.igz",
+      "bytes": 3552,
+      "sha256": "196763be303fe026fee1200a3a23783c59cbc9919672bd5eaf41020ece131f11"
+    },
+    {
+      "path": "dxf-curves/lw-positive-native.igz",
+      "bytes": 8788,
+      "sha256": "31a0ca05ddb2791551944b73a88a9503857ed9cf174dc3d7180484049d83deb3"
+    },
+    {
+      "path": "dxf-curves/lw-positive-original.igz",
+      "bytes": 8528,
+      "sha256": "d9dd645cd445d3d02e42636fe9af33ecb36c9990dd7d219f8cabc22c11e718fe"
+    },
+    {
+      "path": "dxf-curves/lw-positive.dxf",
+      "bytes": 15547,
+      "sha256": "0213abbb5c14fea778af3ba8c24e8ae9c9e5cced405162d640bd9c6113ef80e1"
+    },
+    {
+      "path": "dxf-curves/lw-small-bulge-input.igz",
+      "bytes": 3552,
+      "sha256": "2096d0934b3c8de1e447e3b9cdc4f13d91cfcef08bfdb5590559dcb2eb11d1ed"
+    },
+    {
+      "path": "dxf-curves/lw-small-bulge-native.igz",
+      "bytes": 4464,
+      "sha256": "4d1151535c46364ebd468fc844affa49a618123ccd4f06f8daf50f042124ffdd"
+    },
+    {
+      "path": "dxf-curves/lw-small-bulge-original.igz",
+      "bytes": 4206,
+      "sha256": "e94f467cf8f6eb1dbb0bb98ff29fce0a64dd50b92bebf2d0f6d81121c5d190d8"
+    },
+    {
+      "path": "dxf-curves/lw-small-bulge.dxf",
+      "bytes": 15549,
+      "sha256": "62eaf11972266a5920ae13cc3f86d86c17aa496e8cc6c95b452836d0f5acac1b"
+    },
+    {
+      "path": "dxf-curves/malformed.dxf",
+      "bytes": 15896,
+      "sha256": "59ba32eb161f4a042b7288956023ace2c6bb1cb28f66e8d74298879ef30be5f7"
+    },
+    {
+      "path": "dxf-curves/native-dxf-curves.json",
+      "bytes": 1596442,
+      "sha256": "965a230893f8f827131697067c5f4d1bd93a97bb74dab69bd64022866c6f8c1c"
+    },
+    {
+      "path": "dxf-curves/native-dxf-guards.json",
+      "bytes": 173,
+      "sha256": "89b49795723ba45284deb4df57e8b8215d0ff1f7499fdefc74bef312c67cd6ac"
+    },
+    {
+      "path": "dxf-curves/original-dxf-curves.json",
+      "bytes": 1596443,
+      "sha256": "432a0af65b1d47aa94726d181703f56aba4d95e0e98d4bebb380ebea0c2516f2"
+    },
+    {
+      "path": "dxf-curves/original-dxf-paths.json",
+      "bytes": 54278,
+      "sha256": "49fe8709fde05e75e56776197a3503b2c36f895c5e800080688f87b86fd9f651"
+    },
+    {
+      "path": "dxf-curves/reopen.log",
+      "bytes": 32,
+      "sha256": "154dad2e32dd166d6a6160d2d2a08a0af79030366d83ea23deea066ae33bfca3"
+    },
+    {
+      "path": "dxf-curves/reopens-dxf-curves.json",
+      "bytes": 1140600,
+      "sha256": "4065eedff0c2fd1d2a17db0751ea0c42b3e6233e03133d5b5459f0a24a3c4527"
+    },
+    {
+      "path": "dxf-curves/runtime.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "dxf-curves/settings-arc-half/config/settings.json",
+      "bytes": 619,
+      "sha256": "10b0a46ca1b5885f899c24a3d5788e2d5b0b5d041133078d8ef6a8f6880e8aa4"
+    },
+    {
+      "path": "dxf-curves/settings-arc-ocs/config/settings.json",
+      "bytes": 617,
+      "sha256": "462d2d5dad169792317cf285244d931dfdbee6ebc0b013a3b642ec896f0505e3"
+    },
+    {
+      "path": "dxf-curves/settings-arc-wrap/config/settings.json",
+      "bytes": 619,
+      "sha256": "d4292c4793b9e08e10cacfe685845b0db71380317fc64d78477d7c99a182f7c1"
+    },
+    {
+      "path": "dxf-curves/settings-circle/config/settings.json",
+      "bytes": 615,
+      "sha256": "b7469ac7d728b845afd1b1f3f227272567cf598cdf2d4f6d86a0eafa436ce29d"
+    },
+    {
+      "path": "dxf-curves/settings-circle-large/config/settings.json",
+      "bytes": 627,
+      "sha256": "bc5c7a38844c412ba4cf827f0c4da847e37c655b07de164263e8d094003d2c0d"
+    },
+    {
+      "path": "dxf-curves/settings-ellipse-full/config/settings.json",
+      "bytes": 627,
+      "sha256": "2b9ac285ea5a7d1f77a443e5b1c65bd258f709f8e9db8808be5e977cf05b977b"
+    },
+    {
+      "path": "dxf-curves/settings-ellipse-partial/config/settings.json",
+      "bytes": 633,
+      "sha256": "0cef02f10e89ee48e1caa038e22f1c0d266cafd8815f30390c3beb374da38c57"
+    },
+    {
+      "path": "dxf-curves/settings-ellipse-tilted/config/settings.json",
+      "bytes": 631,
+      "sha256": "0a41fa2027e5ac1a1c5a5e982fe18c40408cc92104aef9dac986b726b7be7743"
+    },
+    {
+      "path": "dxf-curves/settings-guards/config/settings.json",
+      "bytes": 540,
+      "sha256": "254dd94155cfabfaa31a62d65b7c05cc2eb58b041082d3dbc604d60276462a1e"
+    },
+    {
+      "path": "dxf-curves/settings-legacy-bulge-ocs/config/settings.json",
+      "bytes": 635,
+      "sha256": "fe8c2be2a569108fa520ea7d6c47537c814d80714ad471c7f62a744e27e3ca9a"
+    },
+    {
+      "path": "dxf-curves/settings-lw-negative-closed/config/settings.json",
+      "bytes": 639,
+      "sha256": "ef24553174ed9c15e7b0a1aa576879743dae0adc633efb12180b9cc4909a6566"
+    },
+    {
+      "path": "dxf-curves/settings-lw-positive/config/settings.json",
+      "bytes": 625,
+      "sha256": "9efbec61770eb1664c6a44933b50c51d8d07cb6df0cdf7a032ac63ed0867b32d"
+    },
+    {
+      "path": "dxf-curves/settings-lw-small-bulge/config/settings.json",
+      "bytes": 631,
+      "sha256": "ba80e074776d9b523a9b94193d53d0a7d7bd1fd871aee7a61b5c1f14dfdcd949"
+    },
+    {
+      "path": "dxf-curves/source.log",
+      "bytes": 685,
+      "sha256": "a7a6bb9aae6915042d4d8b79675b3434f73bf67ae82c58de8f306c6663c1c171"
+    },
+    {
+      "path": "dxf-entities/2d-closed-input.igz",
+      "bytes": 3552,
+      "sha256": "6916767b8d56690fc7604c5300844db8cc98e98ff89fc2ae8b066a318cacd85a"
+    },
+    {
+      "path": "dxf-entities/2d-closed-native.igz",
+      "bytes": 4620,
+      "sha256": "2a1776a9d21f0ac570b2f193b6bb827a90b56defcc0a3542bb87d17fd1ef0a4b"
+    },
+    {
+      "path": "dxf-entities/2d-closed-original.igz",
+      "bytes": 4360,
+      "sha256": "f3c3fb1b766034996331302c1065c05000ee989b3e6a6e160f534a14536e4a8b"
+    },
+    {
+      "path": "dxf-entities/2d-closed.dxf",
+      "bytes": 15896,
+      "sha256": "4ad9085d0221868572e9b41a2d7f70fbffda758120349bb2259281346b129b9e"
+    },
+    {
+      "path": "dxf-entities/2d-elevation-input.igz",
+      "bytes": 3552,
+      "sha256": "9f6e2820f68f05276dbfe531ab4c92fa486639167c11d902e923c1b662c9409f"
+    },
+    {
+      "path": "dxf-entities/2d-elevation-native.igz",
+      "bytes": 4416,
+      "sha256": "c7dde44d26e3f52326a31d9056be29e1279c141d351a5509eeb6b825fe313843"
+    },
+    {
+      "path": "dxf-entities/2d-elevation-original.igz",
+      "bytes": 4156,
+      "sha256": "c7ab262b071884db5eba4d2574db22bc85e8608a9c6603e1340bb1fb3263949c"
+    },
+    {
+      "path": "dxf-entities/2d-elevation.dxf",
+      "bytes": 15896,
+      "sha256": "a48b836930f679aadb4748bf252f5e8829d1de612a3f2a770d4851535a61a9b0"
+    },
+    {
+      "path": "dxf-entities/2d-open-input.igz",
+      "bytes": 3552,
+      "sha256": "52003d496290656f79ef289568d3056598015ebad014f944b4f2eba11227e853"
+    },
+    {
+      "path": "dxf-entities/2d-open-native.igz",
+      "bytes": 4416,
+      "sha256": "3c03ed01327b209601b71d8a363827f07649948d22efb6b48123192487f8952a"
+    },
+    {
+      "path": "dxf-entities/2d-open-original.igz",
+      "bytes": 4156,
+      "sha256": "1a8bcf8e37a3fbf32c6619083d426179188b03682e37eaf77ae5cff3afb2ddae"
+    },
+    {
+      "path": "dxf-entities/2d-open.dxf",
+      "bytes": 15896,
+      "sha256": "af409cce414de370c5c77cb80ae450adc3f0dc265fcf75eb8ae019e80e8497c0"
+    },
+    {
+      "path": "dxf-entities/3d-closed-input.igz",
+      "bytes": 3552,
+      "sha256": "67363d1e1db4d793120b3873cd60d5fbcb860cc6ac159d35da50dc61c0093c64"
+    },
+    {
+      "path": "dxf-entities/3d-closed-native.igz",
+      "bytes": 4620,
+      "sha256": "cc0e3e25a08cc18aa34d8a873cf385751935bea37179972ddb20b26362856b9c"
+    },
+    {
+      "path": "dxf-entities/3d-closed-original.igz",
+      "bytes": 4360,
+      "sha256": "2bc69ba81e2e40b59a963e4b39ac2c23c92b0df53a5d496d937e53c58c120789"
+    },
+    {
+      "path": "dxf-entities/3d-closed.dxf",
+      "bytes": 15923,
+      "sha256": "da9b697b3689e0bc497668860c06efc457d00d93bfcaf53072ef809f603281ed"
+    },
+    {
+      "path": "dxf-entities/3d-open-input.igz",
+      "bytes": 3552,
+      "sha256": "655634736d4292bf3d06deca2690e94bcc6bacaa15741da7202b4e6ba61f5c18"
+    },
+    {
+      "path": "dxf-entities/3d-open-native.igz",
+      "bytes": 4416,
+      "sha256": "3c91b317089a842d456465dc585a692eda5c7e5354006a6b7a1180511af02d58"
+    },
+    {
+      "path": "dxf-entities/3d-open-original.igz",
+      "bytes": 4156,
+      "sha256": "b4b083e5ccd261eb1096190091d9fa0c40aa647fd0c1514443fc1ea101e59448"
+    },
+    {
+      "path": "dxf-entities/3d-open.dxf",
+      "bytes": 15923,
+      "sha256": "5b25a8136d98b7dd2112882fee0780b99b00230a8540ef980420209495e6f6d0"
+    },
+    {
+      "path": "dxf-entities/check.log",
+      "bytes": 121,
+      "sha256": "4bfa9006a7f6afa161705e8ade2095fc6a25c21dc4cc3f1f44219db4781949ba"
+    },
+    {
+      "path": "dxf-entities/leaf-3d-input.igz",
+      "bytes": 3552,
+      "sha256": "893ec1e294f453e8d44c9388d0f506f1e677230cc8013c46c0cdf5fe3ed648fd"
+    },
+    {
+      "path": "dxf-entities/leaf-3d-native.igz",
+      "bytes": 4894,
+      "sha256": "4d8a5762fd5ad8022dd0c6698309022aff6bc91a099044e0c48098d06e6058af"
+    },
+    {
+      "path": "dxf-entities/leaf-3d-original.igz",
+      "bytes": 4632,
+      "sha256": "fdff8d10eb2a3e0bf2cd0ea921fb3edb8e41aedde340b77c13733f7c3daca506"
+    },
+    {
+      "path": "dxf-entities/leaf-3d.dxf",
+      "bytes": 15923,
+      "sha256": "afa6672cbae02d8206abe8dfb8648da5da338eab471d2da22d1a57dda45a5037"
+    },
+    {
+      "path": "dxf-entities/malformed.dxf",
+      "bytes": 15896,
+      "sha256": "59ba32eb161f4a042b7288956023ace2c6bb1cb28f66e8d74298879ef30be5f7"
+    },
+    {
+      "path": "dxf-entities/native-dxf-entities.json",
+      "bytes": 428431,
+      "sha256": "22e20e901b8e7e590533bb1d7f9ace1e398819f4f93c8ccdf8ae4fb34a5bc1d0"
+    },
+    {
+      "path": "dxf-entities/native-dxf-guards.json",
+      "bytes": 173,
+      "sha256": "89b49795723ba45284deb4df57e8b8215d0ff1f7499fdefc74bef312c67cd6ac"
+    },
+    {
+      "path": "dxf-entities/ocs-negative-input.igz",
+      "bytes": 3552,
+      "sha256": "42b065e2e9a7b5d605f1df6d6c3b62429a475188301e1758b1ab02dc09965a1c"
+    },
+    {
+      "path": "dxf-entities/ocs-negative-native.igz",
+      "bytes": 4630,
+      "sha256": "0b24c2b01f9f74c2dcd3b77cbd8bc60707d14b95413aa55317549da8d1fde2e1"
+    },
+    {
+      "path": "dxf-entities/ocs-negative-original.igz",
+      "bytes": 4370,
+      "sha256": "3d97f97a2372925513d3aef4e57a0f0914d4468aaf3a784b254f2c2fb4631ab7"
+    },
+    {
+      "path": "dxf-entities/ocs-negative.dxf",
+      "bytes": 15921,
+      "sha256": "9e3c35b935872ae6b947312dbdb0407b0627ebef95c55f1229ef49378273009e"
+    },
+    {
+      "path": "dxf-entities/ocs-oblique-input.igz",
+      "bytes": 3552,
+      "sha256": "172b733badd12edb9ab6f768fbc9eeac113494a368a37da696e9184628cf3ba7"
+    },
+    {
+      "path": "dxf-entities/ocs-oblique-native.igz",
+      "bytes": 4599,
+      "sha256": "a357fe81caecf203d06b6e3d3bc26bee3c3b10e97d59e241295f262a05fcd496"
+    },
+    {
+      "path": "dxf-entities/ocs-oblique-original.igz",
+      "bytes": 4339,
+      "sha256": "73d987ec49fb1c0f489bab089412966e5e77c6ebd6b15383997eb5bea9d76f1c"
+    },
+    {
+      "path": "dxf-entities/ocs-oblique.dxf",
+      "bytes": 15920,
+      "sha256": "b3b13c677b28be5d2674f7070562be14e886bd3e66afa6eeb0f32c6ddc8f5e74"
+    },
+    {
+      "path": "dxf-entities/original-dxf-entities.json",
+      "bytes": 428432,
+      "sha256": "ae49994c2866df6359531652aa66b0c503e5b94981b1ad0113ff98721340b657"
+    },
+    {
+      "path": "dxf-entities/reopen.log",
+      "bytes": 31,
+      "sha256": "da86a87a94e59e2cafdc81a62146beb0b1849f1877acc89a6238a498db8795dc"
+    },
+    {
+      "path": "dxf-entities/reopens-dxf-entities.json",
+      "bytes": 218547,
+      "sha256": "e45cfa9925e7ca00e26f4b2aca67be9faddefbea5d23e9f31f484d2d9a3348e9"
+    },
+    {
+      "path": "dxf-entities/runtime.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "dxf-entities/settings-2d-closed/config/settings.json",
+      "bytes": 625,
+      "sha256": "289d2ff03028cf5ded0376d4cea8e3ddc43d7e0472c1cee3d80b1cd0e4479404"
+    },
+    {
+      "path": "dxf-entities/settings-2d-elevation/config/settings.json",
+      "bytes": 631,
+      "sha256": "86ab1596fa4808bd5dc9842da7d62caf97cd2f76516abe4050e7834acbe8def3"
+    },
+    {
+      "path": "dxf-entities/settings-2d-open/config/settings.json",
+      "bytes": 621,
+      "sha256": "9699f7b4bf967c53dde10f6dd673bdcb885b56d8c1dde52249a42df7bd9beea0"
+    },
+    {
+      "path": "dxf-entities/settings-3d-closed/config/settings.json",
+      "bytes": 625,
+      "sha256": "fa73a5c7c887a2f2643a160a56569c4b1ad436e03684a8580aae7a56bc5d4755"
+    },
+    {
+      "path": "dxf-entities/settings-3d-open/config/settings.json",
+      "bytes": 621,
+      "sha256": "bc2512b7ef417c976e2ee7756bd0f94d27c1678925f84cf07f8dac84ce84831c"
+    },
+    {
+      "path": "dxf-entities/settings-guards/config/settings.json",
+      "bytes": 542,
+      "sha256": "4bc9d666d3cc80fa36e2a6bbfc9e73c9336c194ede8f953f91c057e3d7c49cb8"
+    },
+    {
+      "path": "dxf-entities/settings-leaf-3d/config/settings.json",
+      "bytes": 621,
+      "sha256": "8b54adb74fbd20cd1f95b43a7cb41cd1ba58bc500b13a602507c33e9459fcc8d"
+    },
+    {
+      "path": "dxf-entities/settings-ocs-negative/config/settings.json",
+      "bytes": 631,
+      "sha256": "2bbd47fd9d515668db3dec0fe8d78f2cb1beda48e84331eeda0bbba521791457"
+    },
+    {
+      "path": "dxf-entities/settings-ocs-oblique/config/settings.json",
+      "bytes": 629,
+      "sha256": "e16151fe6b40f586871483023fd33cc98df9eeb8b3eb365ae799ea9064bbec77"
+    },
+    {
+      "path": "dxf-entities/source.log",
+      "bytes": 470,
+      "sha256": "bf1ee01bf2782609e6034b666dacde922c8454bda90e5f3af28e21f9784d203a"
+    },
+    {
+      "path": "local-package-clean.log",
+      "bytes": 37,
+      "sha256": "fbd162f269449ff80254390a3c93aedfcde6ce03183c516a18c9136317b5a7c8"
+    },
+    {
+      "path": "receipt.json",
+      "bytes": 5511,
+      "sha256": "24eedbffec79ca0b1b603d64d735a86f79aa3306196ff1c70855738a0cf5d5c1"
+    },
+    {
+      "path": "run.py",
+      "bytes": 4161,
+      "sha256": "acfe5319763546ac304e40a28e653332cd8f148e1c5b7d336640ca6b1f42e4fc"
+    }
+  ]
+}

@@ -1,0 +1,158 @@
+{
+  "runtime_commit": "147b9a9104e80aa5125dcd1a4976151292ff9caf",
+  "fresh_source_captures": 0,
+  "broad_local_runs": 0,
+  "stages": [
+    {
+      "name": "local-package-clean",
+      "argv": [
+        "cargo",
+        "clean",
+        "-p",
+        "ingetrazo-core",
+        "-p",
+        "ingetrazo-metal",
+        "-p",
+        "ingetrazo-tools",
+        "-p",
+        "ingetrazo-formats",
+        "-p",
+        "ingetrazo-render",
+        "-p",
+        "ingetrazo-gui",
+        "-p",
+        "ingetrazo-cli"
+      ],
+      "seconds": 0.11382366402540356,
+      "exit_code": 0
+    },
+    {
+      "name": "combined-build",
+      "argv": [
+        "cargo",
+        "build",
+        "--locked",
+        "--offline",
+        "-p",
+        "ingetrazo-gui",
+        "--example",
+        "context_document_lifecycle",
+        "--example",
+        "composer_pointer_workflows"
+      ],
+      "seconds": 10.931486130983103,
+      "exit_code": 0
+    },
+    {
+      "name": "dxf-entities/runtime",
+      "argv": [
+        "/tmp/ingetrazo-native-font-merge-target/debug/examples/context_document_lifecycle",
+        "/tmp/ingetrazo-dxf-composer-integration/dxf-entities",
+        "--dxf-entities"
+      ],
+      "seconds": 0.46430814103223383,
+      "exit_code": 0
+    },
+    {
+      "name": "dxf-entities/reopen",
+      "argv": [
+        "/tmp/ingetrazo-parity-python/bin/python",
+        "/tmp/ingetrazo-next-integration/scripts/reference-dxf-entities-reopens.py",
+        "/tmp/ingetrazo-dxf-composer-integration/dxf-entities"
+      ],
+      "seconds": 0.1646212949999608,
+      "exit_code": 0
+    },
+    {
+      "name": "dxf-entities/check",
+      "argv": [
+        "python3",
+        "/tmp/ingetrazo-next-integration/scripts/check-dxf-entities.py",
+        "/tmp/ingetrazo-dxf-composer-integration/dxf-entities"
+      ],
+      "seconds": 0.11382307700114325,
+      "exit_code": 0
+    },
+    {
+      "name": "dxf-curves/runtime",
+      "argv": [
+        "/tmp/ingetrazo-native-font-merge-target/debug/examples/context_document_lifecycle",
+        "/tmp/ingetrazo-dxf-composer-integration/dxf-curves",
+        "--dxf-curves"
+      ],
+      "seconds": 0.7146950489841402,
+      "exit_code": 0
+    },
+    {
+      "name": "dxf-curves/reopen",
+      "argv": [
+        "/tmp/ingetrazo-parity-python/bin/python",
+        "/tmp/ingetrazo-next-integration/scripts/reference-dxf-curves-reopens.py",
+        "/tmp/ingetrazo-dxf-composer-integration/dxf-curves"
+      ],
+      "seconds": 0.2157268039882183,
+      "exit_code": 0
+    },
+    {
+      "name": "dxf-curves/check",
+      "argv": [
+        "python3",
+        "/tmp/ingetrazo-next-integration/scripts/check-dxf-source-curves.py",
+        "/tmp/ingetrazo-dxf-composer-integration/dxf-curves"
+      ],
+      "seconds": 0.8650320199667476,
+      "exit_code": 0
+    },
+    {
+      "name": "composer-pointer/runtime",
+      "argv": [
+        "/tmp/ingetrazo-native-font-merge-target/debug/examples/composer_pointer_workflows",
+        "/tmp/ingetrazo-dxf-composer-integration/composer-pointer/source.json",
+        "/tmp/ingetrazo-dxf-composer-integration/composer-pointer/native.json"
+      ],
+      "seconds": 0.46424757299246266,
+      "exit_code": 0
+    },
+    {
+      "name": "composer-pointer/check",
+      "argv": [
+        "python3",
+        "/tmp/ingetrazo-next-integration/scripts/check-composer-pointer.py",
+        "/tmp/ingetrazo-dxf-composer-integration/composer-pointer/source.json",
+        "/tmp/ingetrazo-dxf-composer-integration/composer-pointer/native.json",
+        "/tmp/ingetrazo-dxf-composer-integration/composer-pointer/acceptance.json"
+      ],
+      "seconds": 0.031624325027223676,
+      "exit_code": 0
+    }
+  ],
+  "archives": {
+    "dxf-legacy-polylines": "21a7482725fe5f5605aafa8adf469b2ceaeda676ea74bba2f6e27a6ab282ac35",
+    "dxf-curves": "d49936e1ebbda3af21f053f1d939cd5abd1cfa339ae83705ac49e701cfdd3d73",
+    "composer-pointer": "63852c80d2a1ba3a12baa75f4f97e374e36fca3a3c7646e3b157320688ecaa97"
+  },
+  "binaries": {
+    "context_document_lifecycle": "7bee219138e426b778f6453b0a4ee711a8b91eaa6ea2ba2680816f98caeafe0c",
+    "composer_pointer_workflows": "1d10305d875b3745b4b0f58b94b56d45d9f2c3a2c21f59a5be91db5ebd8d532e"
+  },
+  "result": "pass",
+  "semantic_seconds": 3.0340782839921303,
+  "crates_tree": "32403440258264a081df700267739d5a83b83f9e",
+  "review": {
+    "dxf_straight": "31647e35",
+    "dxf_curves": "e84460cd",
+    "dxf_ci": "e4a4e5d0",
+    "composer_and_ci": "f3a585e5",
+    "ci_static": "28 semantic consumers / 30 shared examples; Python AST and shell argument inventory pass; YAML static review only",
+    "scope": "P04 stays Partial and P22 Implemented; no changed criterion or new renderer/platform/performance claim."
+  },
+  "files": {
+    "scripts/check-document-axes-integration.py": "8fb7d2502f0caffc2a161ef6f3c91feca224ff8b7ae88764919b9245402324fe",
+    "scripts/check-dxf-entities.py": "96dff14f7c2466fd666d3590e26a36b6dbc0151351c43f8661b9dc1d36240ef4",
+    "scripts/check-dxf-source-curves.py": "b2efd1405f1bf1d53160fa1e85308e2c1649d85408f7d7ab307b385d38bb6a69",
+    "scripts/reference-dxf-entities-reopens.py": "8cfb9be9eb78cb6bfb19b9320a0b157a323b682382c2e530c9fea5359891cb2f",
+    "scripts/reference-dxf-curves-reopens.py": "fa6e6be9ee11e916757140688ff62b99b23e8af2480242f6d899b6e9d2a5c721",
+    "scripts/check-composer-pointer.py": "aa98762c0dcf493217628fa5566c005a88157879407c1c2b93814fce6f987ca6",
+    ".github/workflows/parity.yml": "86a1b9a1ed5361ca5cff6c88c9f1c957c7ae954882ed02d25c0ad7b511fa74db"
+  }
+}
