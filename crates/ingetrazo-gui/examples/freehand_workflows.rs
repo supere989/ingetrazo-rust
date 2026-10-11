@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 //! Actual App shape activation/dispatch/history with explicit source world recipes.
-use glam::{DVec2, DVec3};
+use glam::{DMat4, DVec2, DVec3};
 use ingetrazo_core::{math::Ray, scene::Scene};
 use ingetrazo_gui::app::IngeTrazoApp;
 use ingetrazo_tools::base::{ToolContext, ToolType};
@@ -118,6 +118,9 @@ fn egui_ingress() -> Vec<Value> {
         frame(&ctx, &mut a, 1.1, vec![button(points[count - 1], false)]);
         let release = state(&a);
         if mode == "cancel-repeat" {
+            a.set_tool(ToolType::Select);
+            a.repeat_last_command();
+            assert_eq!(a.active_tool_type, ToolType::Freehand);
             frame(
                 &ctx,
                 &mut a,
@@ -152,10 +155,29 @@ fn main() {
         let mut a = IngeTrazoApp::new();
         a.system_clipboard = None;
         a.scene = Scene::new();
-        a.set_tool(ToolType::Freehand);
+        a.set_tool(match recipe["tool"].as_str().unwrap() {
+            "line" => ToolType::Line,
+            "rectangle" => ToolType::Rectangle,
+            _ => ToolType::Freehand,
+        });
+        let vp=ingetrazo_core::screen_pick::PixelViewport{matrix:DMat4::from_cols_array(&[0.2,0.,0.,0.,0.,-2./7.,0.,0.,0.,-2./7.,1.,0.,-1.,1.,0.,1.]),width:1000.,height:700.};
+        a.active_tool.note_pick_viewport(vp,DVec3::Z*10.,a.model_revision);
         a.active_tool
             .note_cursor_plane(DVec3::ZERO, v(&recipe["normal"]));
-        let mut states = vec![json!({"phase":"activated","state":state(&a)})];
+        let observe = |a: &IngeTrazoApp| {
+            let mut s = state(a);
+            if row["states"][0]["state"].get("active_tool").is_some() {
+                s["active_tool"] = json!(match a.active_tool_type {
+                    ToolType::Line => "line",
+                    ToolType::Rectangle => "rectangle",
+                    ToolType::Freehand => "freehand",
+                    ToolType::Select => "select",
+                    _ => "unexpected",
+                });
+            }
+            s
+        };
+        let mut states = vec![json!({"phase":"activated","state":observe(&a)})];
         let mut last = ToolContext::new(DVec3::ZERO, Ray::new(DVec3::Z, -DVec3::Z));
         for (i, op) in recipe["operations"].as_array().unwrap().iter().enumerate() {
             let kind = op[0].as_str().unwrap();
@@ -179,15 +201,17 @@ fn main() {
                     }
                     last = c;
                 }
+                "select" => a.set_tool(ToolType::Select),
+                "repeat" => {a.repeat_last_command();a.active_tool.note_pick_viewport(vp,DVec3::Z*10.,a.model_revision);},
                 "release" => a.dispatch_tool_release(&last, 100.),
                 "cancel" => a.dispatch_tool_cancel(),
                 "undo" => a.undo(),
                 "redo" => a.redo(),
                 _ => panic!(),
             }
-            states.push(json!({"phase":format!("{i}-{kind}"),"accepted":null,"state":state(&a)}));
+            states.push(json!({"phase":format!("{i}-{kind}"),"accepted":null,"state":observe(&a)}));
         }
-        rows.push(json!({"recipe":recipe,"activation":"FreehandTool","states":states}));
+        rows.push(json!({"recipe":recipe,"activation":recipe["tool"],"states":states}));
     }
     std::fs::write(
         &args[2],

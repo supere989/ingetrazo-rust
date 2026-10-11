@@ -35,6 +35,9 @@ def compare(s,n):
  assert s['source_pin']=='6be29fe437a7cd992d4e079f71720821b25216b9','original pin'
  assert [{'name':c['recipe']['name'],'phases':[x['phase']for x in c['states']]}for c in s['cases']]==ROSTER,'frozen source recipe/phase roster'
  rows,failures=h.compare(s,n)
+ for a,b in zip(s['cases'],n['cases']):
+  for aa,bb in zip(a['states'],b['states']):
+   if 'active_tool' in aa['state'] and (type(bb['state'].get('active_tool'))is not str or aa['state']['active_tool']!=bb['state']['active_tool']):failures.append({'case':a['recipe']['name'],'phase':aa['phase'],'match':False,'differences':['active tool identity']})
  for c in s['cases']+n['cases']:
   for phase in c['states']:
    if phase['state'].get('last_error') is not None:failures.append({'case':c['recipe']['name'],'phase':phase['phase'],'match':False,'differences':['unexpected operation error']})
@@ -62,6 +65,8 @@ def main():
   reject('inert-egui',lambda x:x.__setitem__('egui_ingress',[]))
   reject('cancel-committed',lambda x:x['egui_ingress'][2].__setitem__('release',copy.deepcopy(x['egui_ingress'][2]['repeated'])))
   reject('snapped-egui-vertex',lambda x:x['egui_ingress'][0]['repeated']['vertices'].__setitem__(2,x['egui_ingress'][0]['nearby_world'][0]))
+  repeat_index=next(i for i,c in enumerate(n['cases'])if c['recipe']['name']=='freehand-select-repeat-command');repeat_phase=next(i for i,t in enumerate(n['cases'][repeat_index]['states'])if t['phase'].endswith('-repeat'))
+  reject('repeat-stayed-select',lambda x:x['cases'][repeat_index]['states'][repeat_phase]['state'].__setitem__('active_tool','select'))
   for label,edit in [('jointly-empty',lambda x:x.__setitem__('cases',[])),('jointly-truncated',lambda x:x['cases'].pop())]:
    ss,nn=copy.deepcopy(s),copy.deepcopy(n);edit(ss);edit(nn)
    try:compare(ss,nn);detected=False

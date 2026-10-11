@@ -175,5 +175,55 @@
       "15-redo",
       "16-undo"
     ]
+  },
+  {
+    "name": "line-select-repeat-command",
+    "phases": [
+      "activated",
+      "0-press",
+      "1-move",
+      "2-select",
+      "3-repeat",
+      "4-press",
+      "5-move",
+      "6-press",
+      "7-cancel",
+      "8-undo",
+      "9-redo"
+    ]
+  },
+  {
+    "name": "rectangle-select-repeat-command",
+    "phases": [
+      "activated",
+      "0-press",
+      "1-move",
+      "2-select",
+      "3-repeat",
+      "4-press",
+      "5-move",
+      "6-move",
+      "7-press",
+      "8-cancel",
+      "9-undo",
+      "10-redo"
+    ]
+  },
+  {
+    "name": "freehand-select-repeat-command",
+    "phases": [
+      "activated",
+      "0-press",
+      "1-move",
+      "2-select",
+      "3-repeat",
+      "4-press",
+      "5-move",
+      "6-move",
+      "7-release",
+      "8-cancel",
+      "9-undo",
+      "10-redo"
+    ]
   }
 ]

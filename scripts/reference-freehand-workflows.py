@@ -12,7 +12,8 @@ from tools.freehand import FreehandTool
 from tools.base import ToolContext
 from core import axes
 import importlib.util
-spec=importlib.util.spec_from_file_location("shape_reference",Path(__file__).with_name("reference-shape-drafting.py"));helper=importlib.util.module_from_spec(spec);spec.loader.exec_module(helper);capture=helper.capture;PIN=helper.PIN
+spec=importlib.util.spec_from_file_location("shape_reference",Path(__file__).with_name("reference-shape-drafting.py"));helper=importlib.util.module_from_spec(spec);spec.loader.exec_module(helper);from inspect import getsource
+observer_globals=vars(helper).copy();exec(getsource(helper.capture).replace("t.start_point", "getattr(t, 'start_point', None)"),observer_globals);capture=observer_globals["capture"];PIN=helper.PIN
 
 def recipes():
  out=[]
@@ -31,15 +32,33 @@ def recipes():
  case('cancel-active-repeat',pts,tail=[['press',[3,0,0],[300,0]],['move',[4,0,0],[400,0]],['move',[4,1,0],[400,100]],['cancel'],['press',[3,0,0],[300,0]],['move',[4,0,0],[400,0]],['move',[4,1,0],[400,100]],['release'],['undo'],['redo'],['undo']])
  return out
 
+def repeat_recipes():
+ out=[]
+ for tool in ('line','rectangle','freehand'):
+  ops=[['press',[0,0,0],[0,0]],['move',[1,1,0],[100,100]],['select'],['repeat'],['press',[2,0,0],[200,0]],['move',[3,0,0],[300,0]]]
+  if tool=='freehand':ops += [['move',[3,1,0],[300,100]],['release']]
+  elif tool=='rectangle':ops += [['move',[3,1,0],[300,100]],['press',[3,1,0],[300,100]]]
+  else:ops += [['press',[3,0,0],[300,0]]]
+  ops += [['cancel'],['undo'],['redo']]
+  out.append(dict(name=tool+'-select-repeat-command',tool=tool,normal=[0,0,1],operations=ops))
+ return out
+
 def main():
- ap=argparse.ArgumentParser();ap.add_argument('output');a=ap.parse_args();assert subprocess.check_output(['git','-C','/work/ingetrazo','rev-parse','HEAD'],text=True).strip()==PIN
+ ap=argparse.ArgumentParser();ap.add_argument('output');ap.add_argument('--repeat-command',action='store_true');a=ap.parse_args();assert subprocess.check_output(['git','-C','/work/ingetrazo','rev-parse','HEAD'],text=True).strip()==PIN
  app=QApplication.instance()or QApplication([]);win=MainWindow();vp=win.viewport;vp.resize(1000,700);vp.flash_status=lambda *a,**k:None
+ if a.repeat_command:
+  vp._world_to_pixel=lambda p:(p.x()*100,p.y()*100+p.z()*100)
+  vp._pixel_to_ray=lambda x,y:(V(x/100,y/100,10),V(0,0,-1))
  rows=[]
- for r in recipes():
+ for r in (repeat_recipes()if a.repeat_command else recipes()):
   vp.scene.mesh.clear();vp.scene.groups.clear();vp.history.undo_stack.clear();vp.history.redo_stack.clear();axes.sync(None);vp._last_work_plane=(V(0,0,0),V(*r['normal']));vp.axis_lock=None
-  win._tools['freehand']=FreehandTool();win._activate_tool('freehand');t=vp.active_tool
+  key=r['tool'];win._tools[key]=type(win._tools[key])();win._activate_tool(key);t=vp.active_tool
   vp.pick_face_placement=lambda *a:(None,None)
-  states=[dict(phase='activated',state=capture(vp,t))]
+  def observed():
+   s=capture(vp,t)
+   if a.repeat_command:s['active_tool']=next(k for k,v in win._tools.items()if v is t)
+   return s
+  states=[dict(phase='activated',state=observed())]
   for i,op in enumerate(r['operations']):
    k=op[0]
    if k in ('press','move'):
@@ -47,12 +66,14 @@ def main():
     ev=SimpleNamespace(position=lambda s=screen:s,modifiers=lambda:Qt.NoModifier)
     if k=='press':vp._dispatch_tool_click(ev)
     else:t.on_hover(vp._build_ctx(ev))
+   elif k=='select':win._activate_tool('select');t=vp.active_tool
+   elif k=='repeat':assert win.repeat_last_command();t=vp.active_tool
    elif k=='release':t.on_release(vp)
    elif k=='cancel':t.on_cancel(vp)
    else:getattr(vp.history,k)()
-   states.append(dict(phase=str(i)+'-'+k,accepted=None,state=capture(vp,t)))
-  rows.append(dict(recipe=r,activation=type(t).__name__,states=states));Path(a.output+'.partial').write_text(json.dumps(dict(source_pin=PIN,cases=rows),indent=2)+'\n')
- files=['tools/freehand.py','tools/base.py','tools/arc.py','core/edits.py','core/history.py','views/viewport.py']
+   states.append(dict(phase=str(i)+'-'+k,accepted=None,state=observed()))
+  rows.append(dict(recipe=r,activation=r["tool"],states=states));Path(a.output+'.partial').write_text(json.dumps(dict(source_pin=PIN,cases=rows),indent=2)+'\n')
+ files=['views/main_window.py','tools/line.py','tools/rectangle.py','tools/freehand.py','tools/base.py','tools/arc.py','core/edits.py','core/history.py','views/viewport.py']
  data=dict(source_pin=PIN,source_sha256={f:hashlib.sha256((Path('/work/ingetrazo')/f).read_bytes()).hexdigest()for f in files},scope='Actual MainWindow Freehand activation and Viewport click/context handler, original hover/release/Cancel/History, controlled world/screen recipes; no renderer/desktop claim.',cases=rows)
  Path(a.output).write_text(json.dumps(data,indent=2)+'\n');print('captured',len(rows),'Freehand sessions')
 if __name__=='__main__':main()
