@@ -78,6 +78,8 @@ def validate_phase(source,native,phase):
             if i!=j:require(not triangle_inside(c,t),'overlapping triangle interiors')
     if phase=='face':
         normal=point(native['face_normal'])
+        norm2=sum(x*x for x in normal)
+        require(native['face_normal']==source['face_normal'] or abs(float(norm2)-1.0)<=1e-12,'normal is neither literal source Qt value nor unit native f64')
         require(sum(normal[i]*n[i] for i in range(3))>0,'normal opposite/zero')
         require([normal[1]*n[2]-normal[2]*n[1],normal[2]*n[0]-normal[0]*n[2],normal[0]*n[1]-normal[1]*n[0]]==[0,0,0],'normal not parallel to exact Newell direction')
     return {'mode':'exact-rational-coverage','triangle_count':len(tri3),'projected_twice_area':str(target),'boundary_edges':len(boundary),'internal_edges':len(counts)-len(boundary)}
@@ -108,6 +110,8 @@ def negatives(source):
     mutation('crossing',lambda r:r['face']['triangles'].__setitem__(0,[[0,0,0],[8,8,0],[0,8,0]]))
     mutation('hole-covering',lambda r:r['face']['triangles'].__setitem__(0,[[2,2,0],[6,2,0],[6,6,0]]))
     mutation('input-mutation',lambda r:r['mesh_face_input']['outer'][0].__setitem__(0,1))
+    mutation('normal-scaled-2x',lambda r:r.__setitem__('face_normal',[x*2 for x in r['face_normal']]))
+    mutation('normal-opposite',lambda r:r.__setitem__('face_normal',[-x for x in r['face_normal']]))
     for name,n in variants:
         try:rows=compare(source,n);rejected=not all(p['accepted'] for r in rows for p in r['phases'].values())
         except ValueError:rejected=True

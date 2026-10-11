@@ -11,7 +11,7 @@ def topology(m):
         edges=[dict(vertices=[ix[id(e.v0)],ix[id(e.v1)]],faces=[fi[id(f)] for f in e.faces]) for e in m.edges],
         faces=[dict(outer=[ix[id(v)] for v in f.loop],holes=[[ix[id(v)] for v in h] for h in f.hole_loops]) for f in m.faces])
 def main():
-    ap=argparse.ArgumentParser();ap.add_argument('directory',type=Path);ap.add_argument('--source',type=Path,default=Path('/work/ingetrazo'));args=ap.parse_args()
+    ap=argparse.ArgumentParser();ap.add_argument('directory',type=Path);ap.add_argument('--source',type=Path,default=Path(__file__).resolve().parents[1]/'ingetrazo');args=ap.parse_args()
     pin=subprocess.check_output(['git','-C',str(args.source),'rev-parse','HEAD'],text=True).strip()
     if pin!='6be29fe437a7cd992d4e079f71720821b25216b9':raise RuntimeError('source pin mismatch')
     os.environ.setdefault('QT_QPA_PLATFORM','offscreen');sys.path.insert(0,str(args.source))
