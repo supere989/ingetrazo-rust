@@ -1374,7 +1374,7 @@ fn bitmap_textures(scene:&ingetrazo_core::scene::Scene,direction:[f64;3])->Resul
  fn visit(g:&ingetrazo_core::groups::Group,parent:glam::DMat4,scene:&ingetrazo_core::scene::Scene,sun:[f64;3],out:&mut TextureBuffers)->Result<(),String>{
   let world=parent*g.transform;
   if !g.hidden&&scene.is_layer_visible(g.layer.as_deref())&&g.billboard&&g.native_document.get("billboard").map_or(true,|v|v.as_bool()==Some(true)){
-   if let Some(path)=g.mesh.faces.iter().find_map(|f|f.attrs.get("texture").and_then(|t|t.get("path")).and_then(|p|p.as_str())).filter(|p|!p.is_empty()){
+   if let Some(path)=g.mesh.faces.iter().find_map(|f|f.attrs.get("texture").and_then(|t|t.get("embed").or_else(||t.get("path"))).and_then(|p|p.as_str())).filter(|p|!p.is_empty()){
     let mut lo=[f32::INFINITY;3];let mut hi=[f32::NEG_INFINITY;3];let m=world.as_mat4().to_cols_array();
     for v in &g.mesh.vertices{let [x,y,z]=v.position.as_vec3().to_array();let w=((m[3]*x+m[7]*y)+m[11]*z)+m[15];let p: [f32;3]=std::array::from_fn(|r|{let n=((m[r]*x+m[4+r]*y)+m[8+r]*z)+m[12+r];if w==1.{n}else{n/w}});if !p.iter().all(|x|x.is_finite()){return Err("Sprite placement arithmetic admission".into());}for r in 0..3{lo[r]=lo[r].min(p[r]);hi[r]=hi[r].max(p[r]);}}
     if !g.mesh.vertices.is_empty(){let width=(f64::from(hi[0])-f64::from(lo[0])).hypot(f64::from(hi[1])-f64::from(lo[1]));let height=f64::from(hi[2])-f64::from(lo[2]);if width>=1e-9&&height>=1e-9{
