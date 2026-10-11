@@ -54,3 +54,24 @@ pub fn source_sample_policy(metal:&NativeMetal,samples:usize)->Result<(u32,Optio
  if positions.iter().all(|p|defaults.iter().any(|d|d.x==p.x&&d.y==p.y)){let selected=defaults.iter().position(|p|p.x==positions[0].x&&p.y==positions[0].y).unwrap();return Ok((selected as u32,None));}
  Err("Metal default sample positions cannot admit measured source annotation resolve".into())
 }
+
+/// Observations only: these do not authorize a depth-resolve selector.
+pub fn sample_diagnostics(metal: &NativeMetal) -> serde_json::Value {
+    let mut defaults = [MTLSamplePosition { x: 0., y: 0. }; 4];
+    unsafe {
+        metal.device.getDefaultSamplePositions_count(std::ptr::NonNull::from(&mut defaults[0]), 4);
+    }
+    let policy = source_sample_policy(metal, 4);
+    serde_json::json!({
+        "device_name": metal.device.name().to_string(),
+        "registry_id": metal.device.registryID(),
+        "samples": 4,
+        "programmable": metal.device.areProgrammableSamplePositionsSupported(),
+        "default_positions_top_origin": defaults.iter().map(|p| [p.x,p.y]).collect::<Vec<_>>(),
+        "strict_nvidia_reference_policy": match policy {
+            Ok((sample, programmed)) => serde_json::json!({"admitted":true,"selected_sample":sample,"programmed":programmed.is_some()}),
+            Err(error) => serde_json::json!({"admitted":false,"error":error}),
+        },
+        "resolve_selector_measured_on_this_device": false
+    })
+}

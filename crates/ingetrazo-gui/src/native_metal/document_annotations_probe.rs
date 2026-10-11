@@ -5,7 +5,9 @@ use std::sync::Arc;
 pub(crate) fn run(input:PathBuf,output:PathBuf)->Result<(),String>{
  std::fs::create_dir_all(&output).map_err(|e|e.to_string())?;
  if std::fs::read_dir(&output).map_err(|e|e.to_string())?.next().is_some(){return Err("Fresh document annotation output required".into());}
- let metal=Arc::new(NativeMetal::new()?);let ctx=egui::Context::default();
+ let metal=Arc::new(NativeMetal::new()?);
+ std::fs::write(output.join("sample-diagnostics.json"),serde_json::to_vec_pretty(&ingetrazo_metal::annotation::sample_diagnostics(&metal)).map_err(|e|e.to_string())?).map_err(|e|e.to_string())?;
+ let ctx=egui::Context::default();
  let mut painter=if ingetrazo_metal::MetalCad2d::supported(&metal){ingetrazo_metal::egui_painter::EguiPainter::new(&metal)?}else{ingetrazo_metal::egui_painter::EguiPainter::new_compute(&metal)?};
  let mut app=IngeTrazoApp::new();app.scene=ingetrazo_formats::igz::load_igz(&input).map_err(|e|e.to_string())?;app.apply_document_presentation();app.zoom_extents();app.camera.aspect=800./600.;
  if app.scene.dimensions.len()!=4||!app.scene.show_section_cuts||app.scene.section_planes.len()!=1||app.scene.section_planes.iter().any(|p|p.active)||app.scene.show_section_fill{return Err("Pinned pergola stage inventory changed".into());}
