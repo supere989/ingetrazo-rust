@@ -161,7 +161,7 @@ jobs:
       - name: Persistent shared-buffer HLR and worker deadline controls
         run: cargo run --locked -p ingetrazo-render --example process_hlr_acceptance -- target/debug/ingetrazo-render-worker
       - name: Build direct Vulkan host and allocation probe
-        run: cargo build --locked -p ingetrazo-gui --example native_vulkan --example native_vulkan_budget_probe --example native_vulkan_headless_probe --example native_vulkan_contour_chunks_probe --example native_vulkan_upload_churn --example native_vulkan_texture_upload_probe
+        run: cargo build --locked -p ingetrazo-gui --example native_vulkan --example native_vulkan_budget_probe --example native_vulkan_headless_probe --example native_vulkan_contour_chunks_probe --example native_vulkan_upload_churn --example native_vulkan_texture_upload_probe --example native_vulkan_exact_bc7
       - name: Direct Vulkan virtual-display lifecycle
         run: python3 scripts/check-native-vulkan-startup.py target/debug/examples/native_vulkan docs/audits/native-vulkan-ci-host
       - name: Actual Vulkan image and staging denial rollback
@@ -180,6 +180,7 @@ jobs:
         run: |
           mkdir -p docs/audits/texture-upload-ci
           timeout 40s target/debug/examples/native_vulkan_texture_upload_probe --software-fixture > docs/audits/texture-upload-ci/probe.log 2>&1
+          timeout 40s target/debug/examples/native_vulkan_exact_bc7 docs/audits/texture-upload-ci/exact-bc7 --software-fixture > docs/audits/texture-upload-ci/exact-bc7.log 2>&1
       - name: Software-rendered virtual-display startup
         run: scripts/render-smoke.sh
       - name: Semantic document acceptance
