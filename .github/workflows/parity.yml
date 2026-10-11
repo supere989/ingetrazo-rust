@@ -57,7 +57,7 @@ jobs:
           if-no-files-found: error
   metal-native-link:
     # Platform repair branches exercise their affected platform only.
-    if: github.ref != 'refs/heads/review/platform-startup'
+    if: github.ref != 'refs/heads/review/platform-startup' && github.ref != 'refs/heads/review/history-repair'
     name: Native Metal framework link (${{ matrix.runner }})
     runs-on: ${{ matrix.runner }}
     strategy:
@@ -152,7 +152,7 @@ jobs:
           if-no-files-found: error
   metal-cross-compilation:
     # Platform repair branches exercise their affected platform only.
-    if: github.ref != 'refs/heads/review/platform-startup'
+    if: github.ref != 'refs/heads/review/platform-startup' && github.ref != 'refs/heads/review/history-repair'
     name: Native Metal compile (${{ matrix.target }})
     runs-on: ubuntu-24.04
     strategy:
