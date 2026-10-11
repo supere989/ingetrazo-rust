@@ -151,7 +151,7 @@ impl ReferenceImages {
             handle: pool,
         });
         let mut sampled = HashMap::new();
-        let mut pending_bytes=0usize;
+        let mut pending_bytes=0usize;let mut pending_start=0usize;
         for (index, p) in scene.image_planes.iter().enumerate() {
             if !image_visible(scene, p) {
                 continue;
@@ -181,7 +181,7 @@ impl ReferenceImages {
                 let v = image.sampled();
                 sampled.insert(id, v);
                 c.images.push(image);
-                if pending_bytes>=8*1024*1024{cache.complete_many(context,resources,c.images.iter_mut())?;pending_bytes=0;}
+                if pending_bytes>=8*1024*1024{cache.complete_many(context,resources,c.images[pending_start..].iter_mut())?;pending_bytes=0;pending_start=c.images.len();}
                 v
             };
             let set = unsafe {
@@ -218,7 +218,7 @@ impl ReferenceImages {
             c.draws.push(draw);
         }
         self.stats.builds += 1;
-        cache.complete_many(context,resources,c.images.iter_mut())?;
+        cache.complete_many(context,resources,c.images[pending_start..].iter_mut())?;
         Ok(c)
     }
     pub fn publish(&mut self,cache:&mut TextureCache,c:Candidate,publication:u64)->Result<(),String>{

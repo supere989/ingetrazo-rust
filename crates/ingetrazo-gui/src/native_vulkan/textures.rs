@@ -41,7 +41,7 @@ impl Textures{
    let count=u32::try_from(buffers.len().checked_add(extra.iter().try_fold(0usize,|n,b|n.checked_add(b.len())).ok_or("Shadow texture count overflow")?).ok_or("Shadow descriptor count overflow")?).map_err(|_|"Too many texture descriptors")?;
    let mut paths=buffers.iter().map(|(p,b)|(p,b,false)).chain(extra.iter().flat_map(|b|b.iter().map(|(p,b)|(p,b,true)))).collect::<Vec<_>>();paths.sort_by_key(|(_,b,_)|b.source_texture_runs.iter().map(|r|r.order).min().unwrap_or(usize::MAX));
    let mut images=candidate.references.as_ref().unwrap().sampled().collect::<HashMap<AssetId,(vk::ImageView,vk::Sampler,bool)>>();
-   let mut pending_image_bytes=0usize;
+   let mut pending_image_bytes=0usize;let mut pending_image_start=0usize;
    for(path,buffer,extra_only)in paths{
     let billboard=buffer.source_billboard_receiver;let shadow_only=extra_only&&!billboard;
     let geometry=Geometry::prepare(buffer)?;if geometry.vertices.is_empty(){continue;}
@@ -62,7 +62,7 @@ impl Textures{
      // image/descriptor allocations, including when changing render styles.
      if candidate.pool.is_none(){let handle=unsafe{self.device.create_descriptor_pool(&vk::DescriptorPoolCreateInfo::default().max_sets(count).pool_sizes(&[vk::DescriptorPoolSize{ty:vk::DescriptorType::COMBINED_IMAGE_SAMPLER,descriptor_count:count}]),None)}.map_err(|e|e.to_string())?;candidate.pool=Some(Pool{device:self.device.clone(),handle});}
      let pool=candidate.pool.as_ref().unwrap().handle;
-     let sampled=if let Some(sampled)=images.get(&id){*sampled}else{let _pressure=if self.probe_pressure{let mut ledger=self.budget.ledger.lock().unwrap();let previous=ledger.total_limit;ledger.total_limit=Some(ledger.total_committed());Some(PressureRestore{budget:self.budget.clone(),previous})}else{None};let image=self.cache.prepare_deferred(context,resources,&asset,256*1024*1024).map_err(|e|format!("Texture image admission: {e}"))?;let sampled=image.sampled();images.insert(id,sampled);pending_image_bytes=pending_image_bytes.checked_add(image.pending_bytes()).ok_or("Pending texture image bytes overflow")?;candidate.images.push(image);if pending_image_bytes>=8*1024*1024{self.cache.complete_many(context,resources,candidate.images.iter_mut())?;pending_image_bytes=0;}sampled};
+     let sampled=if let Some(sampled)=images.get(&id){*sampled}else{let _pressure=if self.probe_pressure{let mut ledger=self.budget.ledger.lock().unwrap();let previous=ledger.total_limit;ledger.total_limit=Some(ledger.total_committed());Some(PressureRestore{budget:self.budget.clone(),previous})}else{None};let image=self.cache.prepare_deferred(context,resources,&asset,256*1024*1024).map_err(|e|format!("Texture image admission: {e}"))?;let sampled=image.sampled();images.insert(id,sampled);pending_image_bytes=pending_image_bytes.checked_add(image.pending_bytes()).ok_or("Pending texture image bytes overflow")?;candidate.images.push(image);if pending_image_bytes>=8*1024*1024{self.cache.complete_many(context,resources,candidate.images[pending_image_start..].iter_mut())?;pending_image_bytes=0;pending_image_start=candidate.images.len();}sampled};
      let set=unsafe{self.device.allocate_descriptor_sets(&vk::DescriptorSetAllocateInfo::default().descriptor_pool(pool).set_layouts(&[self.descriptor_layout]))}.map_err(|e|e.to_string())?[0];
      let infos=[vk::DescriptorImageInfo::default().image_view(sampled.0).sampler(sampled.1).image_layout(vk::ImageLayout::SHADER_READ_ONLY_OPTIMAL)];unsafe{self.device.update_descriptor_sets(&[vk::WriteDescriptorSet::default().dst_set(set).dst_binding(0).descriptor_type(vk::DescriptorType::COMBINED_IMAGE_SAMPLER).image_info(&infos)],&[])};
      (sampled,set)
@@ -74,7 +74,7 @@ impl Textures{
     }
     for draw in geometry.draws{let source=draw.source;let opaque=source.opacity>=0.999;let mean=if opaque&&!source.back_side{mean}else{None};let opacity=if opaque{1.}else{format!("{:.3}",source.opacity).parse::<f32>().map_err(|e|e.to_string())?};candidate.draws.push(Draw{buffer:vertex,set,asset:id,first:draw.first,count:draw.count,opacity,shade:source.shade,cutout:billboard||sampled.2,back:source.back_side,cull:source.front_cull,opaque,path:path.clone(),order:source.order,mean,shadow_only,billboard,missing,bitmap:buffer.source_shadow_bitmap});}
    }
-   self.cache.complete_many(context,resources,candidate.images.iter_mut())?;
+   self.cache.complete_many(context,resources,candidate.images[pending_image_start..].iter_mut())?;
    // Source front opaque first occurrence, then sorted back/transparent keys.
    candidate.average_active.try_reserve(candidate.draws.len()).map_err(|_|"Average active identity admission")?;
    candidate.average_active.extend(candidate.draws.iter().filter(|d|d.mean.is_some()).map(|d|d.asset));
