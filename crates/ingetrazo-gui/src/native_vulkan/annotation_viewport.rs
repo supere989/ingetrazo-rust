@@ -8,7 +8,7 @@ use crate::annotation_overlay_geometry::{Cache,Limits};
 pub(crate) struct Prepared{pub handle:Handle,pub queries:Arc<[Query]>,pub inverse:[f32;16],pub eye:[f32;3],pub forward:[f32;3]}
 pub(crate) struct ViewportAnnotations{cache:Cache,current:Option<(Key,Prepared)>,empty:Option<Key>,style:serde_json::Value}
 impl ViewportAnnotations{
- pub fn new()->Result<Self,String>{Ok(Self{cache:Cache::new(ingetrazo_formats::annotation_font::Limits{faces:32,retained_font_bytes:32*1024*1024},Limits{cells:2_000_000,spans:200_000,geometry_bytes:32*1024*1024,glyphs:4096,glyph_bytes:16*1024*1024})?,current:None,empty:None,style:serde_json::Value::Null})}
+ pub fn new(stencil:bool)->Result<Self,String>{let mut result=Self{cache:Cache::new(ingetrazo_formats::annotation_font::Limits{faces:32,retained_font_bytes:32*1024*1024},Limits{cells:2_000_000,spans:200_000,geometry_bytes:32*1024*1024,glyphs:4096,glyph_bytes:16*1024*1024})?,current:None,empty:None,style:serde_json::Value::Null};if stencil{result.cache.enable_source_stencil();}Ok(result)}
  pub fn prepare<'a>(&'a mut self,app:&crate::IngeTrazoApp,factory:&Factory,rect:egui::Rect,density:f32)->Result<Option<&'a Prepared>,String>{
   if !density.is_finite()||density<=0.||!rect.min.is_finite()||!rect.max.is_finite()||rect.width()<=0.||rect.height()<=0.{return Err("Annotation viewport/density outside admission".into());}
   let bypass_depth=matches!(app.style.visual_style,ingetrazo_render::style::VisualStyle::XRay|ingetrazo_render::style::VisualStyle::Wireframe);
@@ -54,7 +54,7 @@ fn build_plan(app:&crate::IngeTrazoApp,rect:egui::Rect,matrix:&[f32;16],cache:&m
   };
   let mut builder=Builder::new(project,annotations::Limits{queries:200_000,operations:200_000,text_bytes:16*1024*1024});
   let mut style=annotations::Style::default();
-  if let Some(v)=raw["color"].as_array(){if v.len()>=3{for(i,c)in style.color[..3].iter_mut().enumerate(){*c=v[i].as_u64().and_then(|x|u8::try_from(x).ok()).ok_or("Invalid annotation style color")?;}}}
+  if let Some(v)=raw["color"].as_array(){if v.len()>=3{for(i,c)in style.color[..v.len().min(4)].iter_mut().enumerate(){*c=v[i].as_u64().and_then(|x|u8::try_from(x).ok()).ok_or("Invalid annotation style color")?;}}}
   if let Some(v)=raw["font_size"].as_i64(){style.font_size=i32::try_from(v).map_err(|_|"Annotation style size overflow")?;}
   if let Some(v)=raw["ends"].as_str(){style.ends=v.into();}
   if let Some(v)=raw["units"].as_str(){style.units=v.into();}
@@ -75,6 +75,6 @@ fn build_plan(app:&crate::IngeTrazoApp,rect:egui::Rect,matrix:&[f32;16],cache:&m
 pub fn plan_for_probe(app:&crate::IngeTrazoApp,rect:egui::Rect)->Result<annotations::Plan,String>{
  let snapshot=crate::navigation_ray::camera_snapshot(&app.camera).ok_or("Invalid diagnostic camera")?;
  let matrix=std::array::from_fn(|i|snapshot.matrix[i/4][i%4]);
- let mut owner=ViewportAnnotations::new()?;
+ let mut owner=ViewportAnnotations::new(false)?;
  build_plan(app,rect,&matrix,&mut owner.cache)
 }

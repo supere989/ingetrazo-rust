@@ -29,6 +29,9 @@ impl Cache {
   let line=self.fonts.shape(&request,text,size as u32)?;
   Ok((((line.ascent_26_6+63)/64+(line.descent_26_6+63)/64)as f64,(line.advance_26_6 as f64/64.+0.5).floor()))
  }
+ /// Configure once from the actual native renderpass capability, before preparing
+ /// any source widget operations. Default portable/QImage producers are unchanged.
+ pub(crate) fn enable_source_stencil(&mut self){self.stencil_union=true;self.current=None;}
  pub fn prepare(&mut self,plan:Arc<Plan>,density:f32,font_dpi:f64)->Result<Arc<Mesh>,String>{
   self.prepare_clipped(plan,density,font_dpi,[-1_000_000,-1_000_000,1_000_001,1_000_001])
  }

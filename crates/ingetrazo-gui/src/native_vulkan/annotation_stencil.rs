@@ -5,6 +5,10 @@ use ash::{vk,Device};
 use egui_ash_renderer::MemoryObserver;
 use super::{VulkanContext,budget::VulkanBudget,lifetime::Lifetime};
 pub(super) struct Target {device:Device,lifetime:Arc<Lifetime>,budget:Arc<VulkanBudget>,pub format:vk::Format,pub view:vk::ImageView,image:vk::Image,memory:vk::DeviceMemory}
+/// Cold source raster selection. The legacy path is retained only for bounded
+/// diagnostics; unknown values refuse rather than silently changing operators.
+pub(super) fn selected()->Result<bool,String>{let value=std::env::var("INGETRAZO_ANNOTATION_STENCIL").ok();parse_selection(value.as_deref())}
+fn parse_selection(value:Option<&str>)->Result<bool,String>{match value{None|Some("1")=>Ok(true),Some("0")=>Ok(false),Some(_)=>Err("Unknown native annotation stencil mode".into())}}
 impl Target{
  /// Diagnostic allocation refusal; the submitted target is never replaced.
  pub fn verify_candidate_refusal(&self,context:&VulkanContext,extent:vk::Extent2D)->Result<(),String>{
@@ -52,3 +56,7 @@ impl Drop for Target{fn drop(&mut self){
  if self.lifetime.uncertain(){self.lifetime.retain((self.device.clone(),self.budget.clone(),self.image,self.memory,self.view));return;}
  unsafe{self.device.destroy_image_view(self.view,None);self.device.destroy_image(self.image,None);self.device.free_memory(self.memory,None);}self.budget.freed(self.memory);
 }}
+
+#[cfg(test)]mod selection_tests{
+ #[test]fn source_mode_defaults_on_and_refuses_unknown_selection(){assert!(super::parse_selection(None).unwrap());assert!(super::parse_selection(Some("1")).unwrap());assert!(!super::parse_selection(Some("0")).unwrap());assert!(super::parse_selection(Some("approximate")).is_err());}
+}

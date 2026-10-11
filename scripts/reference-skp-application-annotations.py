@@ -15,7 +15,11 @@ from core.scene import Scene
 from core.style import Style
 from formats.skp import load_skp
 from views.viewport import Viewport
-record=json.loads((capture/'capture.json').read_text());state=record['records'][0]['state'];camera=state['camera'];scene=Scene();load_skp(scene,skp)
+record=json.loads((capture/'capture.json').read_text());state=record['records'][0]['state'];camera=state['camera'];scene=Scene();
+if skp.suffix==".igz":
+ from formats.igz import load_into
+ load_into(scene,skp)
+else:load_skp(scene,skp)
 assert [len(scene.dimensions),len(scene.text_labels)]==[state['dimensions'],state['leaders']]
 vp=Viewport();vp.setWindowFlags(vp.windowFlags()|Qt.WindowTransparentForInput|Qt.WindowDoesNotAcceptFocus);vp.setFixedSize(800,600);vp.scene=scene;vp.style_override=Style(face_mode='shaded',sky=False,edges=True,profiles=False,background=(1.,1.,1.))
 for key,value in camera.items():
@@ -74,6 +78,10 @@ def take(name):
  operations(name)
  rows.append(dict(name=name,gl=dict(vp.gl_info),camera_snapshot=actual,depth_snapshot_shape=list(snap[0].shape)if snap is not None else None,image_sha256=hashlib.sha256((out/(name+'.png')).read_bytes()).hexdigest()))
 take('annotations-on');dimensions,labels=scene.dimensions,scene.text_labels;scene.dimensions=[];scene.text_labels=[];take('annotations-off');scene.dimensions=dimensions;scene.text_labels=labels;take('annotations-restored')
+if '--basic-only' in sys.argv:
+ vp.close();vp.deleteLater();app.processEvents()
+ (out/'source.json').write_text(json.dumps(dict(source_pin='6be29fe437a7cd992d4e079f71720821b25216b9',parser_pin='291700bc213655a00461838de71e5f206311e619',input_sha256=hashlib.sha256(skp.read_bytes()).hexdigest(),camera=camera,records=rows,scope='actual original Viewport and actual retained depth; authored IGZ operations use original codec; no primitive filtering'),indent=2)+'\n')
+ raise SystemExit(0)
 # Diagnostic target-engine isolation: unchanged original methods on the exact
 # source model baseline through QImage raster, separate from widget acceptance.
 raster=QImage(str(out/'annotations-off.png'));assert not raster.isNull()

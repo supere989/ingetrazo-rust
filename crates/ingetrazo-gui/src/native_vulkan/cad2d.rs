@@ -580,6 +580,7 @@ pub struct Renderer {
     annotation_marker_source:Option<(Arc<[crate::annotation_overlay_geometry::Draw]>,Arc<[Batch]>)>,
     annotation_owner:Option<std::sync::Weak<NativePaint>>,
     annotation_admission:Option<AnnotationAdmission>,
+    batch_stencil_markers:bool,
     cache: HashMap<u64, Cached>,
     active: HashSet<u64>,
     pending: HashMap<u64, Cached>,
@@ -603,6 +604,7 @@ impl Renderer {
         Self::new_mode(context,budget,pass,views,true,true,stencil)
     }
     fn new_mode(context:&VulkanContext,budget:Arc<VulkanBudget>,pass:vk::RenderPass,views:&[vk::ImageView],integer:bool,annotations:bool,stencil:bool)->Result<Self,String>{
+        let batch_stencil_markers=match std::env::var("INGETRAZO_ANNOTATION_UNBATCHED_DIAGNOSTIC").ok().as_deref(){None=>true,Some("1")=>false,Some(_)=>return Err("Unknown annotation unbatched diagnostic".into())};
         let descriptor_layout=if integer{let mut bindings=vec![vk::DescriptorSetLayoutBinding::default().binding(0).descriptor_type(vk::DescriptorType::INPUT_ATTACHMENT).descriptor_count(1).stage_flags(vk::ShaderStageFlags::FRAGMENT)];
         if annotations{bindings.push(vk::DescriptorSetLayoutBinding::default().binding(1).descriptor_type(vk::DescriptorType::STORAGE_BUFFER).descriptor_count(1).stage_flags(vk::ShaderStageFlags::FRAGMENT));}
 unsafe{context.device.create_descriptor_set_layout(&vk::DescriptorSetLayoutCreateInfo::default().bindings(&bindings),None)}.map_err(|e|{if e==vk::Result::ERROR_DEVICE_LOST{context.lifetime.quarantine();}e.to_string()})?}else{vk::DescriptorSetLayout::null()};
@@ -636,7 +638,7 @@ unsafe{context.device.create_descriptor_set_layout(&vk::DescriptorSetLayoutCreat
             pipeline: Arc::new(Mutex::new(Pipeline { annotations,visibility:None,pipeline,lcd_pipeline,widget_pipeline,stencil_mark,stencil_composite, layout,integer,descriptor_layout,descriptor_pool,descriptor_sets,active_set:None })),
             resources: Resources::new(context, budget),
             arena:Default::default(),
-            annotation_buffers:None,annotation_marker_source:None,annotation_owner:None,annotation_admission:None,
+            annotation_buffers:None,annotation_marker_source:None,annotation_owner:None,annotation_admission:None,batch_stencil_markers,
             cache: HashMap::new(),
             active: HashSet::new(),
             pending: HashMap::new(),
@@ -731,7 +733,7 @@ unsafe{context.device.create_descriptor_set_layout(&vk::DescriptorSetLayoutCreat
                 let vertex=self.resources.buffer(buffers.vertex).ok_or("Annotation vertex owner missing")?;
                 let index=self.resources.buffer(buffers.index).ok_or("Annotation index owner missing")?;
                 self.resources.mark_used(buffers.vertex,next)?;self.resources.mark_used(buffers.index,next)?;
-                Some(Ready{gates:state.gates.clone(),id,vertex,index,first_index:0,base_vertex:0,marker_offset:(pipeline.stencil_mark!=vk::Pipeline::null()).then_some((state.geometry.vertices().len()*12)as u64),marker_groups:Some(admitted.marker_groups.clone()),
+                Some(Ready{gates:state.gates.clone(),id,vertex,index,first_index:0,base_vertex:0,marker_offset:(pipeline.stencil_mark!=vk::Pipeline::null()).then_some((state.geometry.vertices().len()*12)as u64),marker_groups:self.batch_stencil_markers.then(||admitted.marker_groups.clone()),
                     batches:state.batches.clone(),premultiplied:state.premultiplied.clone(),pose:state.pose,
                     ordered_draws:state.geometry.ordered_draws(),opaque})
             }else{None};

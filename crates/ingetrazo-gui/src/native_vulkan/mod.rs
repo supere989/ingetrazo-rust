@@ -12,6 +12,7 @@ mod queues;
 pub mod lifetime;
 pub mod budget;
 mod annotation_stencil;
+mod annotation_timing;
 // Adapted from egui-ash-renderer 0.7.0 example (MIT, Adrien Bennadji).
 
 
@@ -173,6 +174,7 @@ pub struct System {
     annotation_viewport:Option<annotation_viewport::ViewportAnnotations>,
     annotation_prepare_error:Option<String>,
     annotation_ready_shape:Option<egui::Shape>,
+    annotation_timing:Option<annotation_timing::Timing>,
     annotation_sample:Option<u32>,
     draw_serial:u64,
     completed_present_serial_for_probe:u64,
@@ -239,7 +241,7 @@ impl System {
         memory_budget.bind_lifetime(vulkan_context.lifetime.clone());
         let mut retired=false;
         let integer=std::env::var_os("INGETRAZO_CAD2D_INTEGER_BLEND").is_some();
-        let mut pending_swapchain=Swapchain::build(&vulkan_context,memory_budget.clone(),std::env::var_os("INGETRAZO_ANNOTATION_STENCIL_PROBE").is_some(),integer,vk::SwapchainKHR::null(),&mut retired,None,control)?;
+        let mut pending_swapchain=Swapchain::build(&vulkan_context,memory_budget.clone(),annotation_stencil::selected()?,integer,vk::SwapchainKHR::null(),&mut retired,None,control)?;
         control.checkpoint(resize::Stage::StartupSwapchain)?;
         let swapchain=pending_swapchain.value.as_ref().unwrap();
 
@@ -293,6 +295,7 @@ impl System {
         // Nothing has been submitted. Move every owner only after all constructors succeed.
         startup.command=None;startup.acquire=None;startup.fence=None;
         let pointer_modifiers=crate::pointer_modifiers::install(&egui_ctx);
+        let annotation_timing=annotation_timing::Timing::new(&vulkan_context)?;
         Ok(Self {
             vulkan_context,
             command_buffer,
@@ -310,7 +313,7 @@ impl System {
             pointer_modifiers,
             renderer:std::mem::ManuallyDrop::new(renderer.take()),
             memory_budget,
-            world:None,cad2d:None,annotation_cad:None,annotation_viewport:None,annotation_prepare_error:None,annotation_ready_shape:None,annotation_sample,draw_serial:0,completed_present_serial_for_probe:0,
+            annotation_timing,world:None,cad2d:None,annotation_cad:None,annotation_viewport:None,annotation_prepare_error:None,annotation_ready_shape:None,annotation_sample,draw_serial:0,completed_present_serial_for_probe:0,
             textures_to_free: None,
             close_requested: false,
             repaint_at: std::time::Instant::now(),
@@ -472,6 +475,8 @@ impl System {
             return;
         }
 
+        if let Some(timing)=&mut self.annotation_timing{if let Err(error)=timing.complete(){egui_app.gpu_error(&error);return;}}
+
         // Free last frames textures after the previous frame is done rendering
         if let Some(textures) = self.textures_to_free.take() {
             if let Err(error)=crate::paper_raw_texture::cancel(&self.egui_ctx,&textures,&mut self.pending_texture_updates){egui_app.gpu_error(&error);self.textures_to_free=Some(textures);return;}
@@ -583,7 +588,7 @@ impl System {
             pixels_per_point,
             &mut self.renderer,
             &clipped_primitives,
-            self.world.as_mut(),self.draw_serial+1,
+            self.world.as_mut(),self.draw_serial+1,self.annotation_timing.as_ref().map(|t|t.pool),
         ){Ok(result)=>result,Err(error)=>{self.vulkan_context.lifetime.quarantine();egui_app.gpu_error(&error.to_string());return;}};
         if let Some(error)=draw_error {egui_app.gpu_error(&error);self.repaint_at=std::time::Instant::now()+std::time::Duration::from_secs(1);}
 
@@ -597,6 +602,7 @@ impl System {
             self.vulkan_context.lifetime.quarantine();egui_app.gpu_error(&format!("GPU submission failed: {error}; resources quarantined"));return;
         }
 
+        if let Some(timing)=&mut self.annotation_timing{timing.submitted();}
         self.draw_serial+=1;
         let swapchains = [self.swapchain.khr];
         let images_indices = [image_index];
@@ -1355,13 +1361,14 @@ fn record_command_buffers(
     renderer: &mut Renderer,
 
     clipped_primitives: &[ClippedPrimitive],
-    world:Option<&mut world::World>,serial:u64,
+    world:Option<&mut world::World>,serial:u64,timing:Option<vk::QueryPool>,
 ) -> Result<Option<String>, Box<dyn Error>> {
     unsafe { device.reset_command_pool(command_pool, vk::CommandPoolResetFlags::empty())? };
 
     let command_buffer_begin_info =
         vk::CommandBufferBeginInfo::default().flags(vk::CommandBufferUsageFlags::SIMULTANEOUS_USE);
     unsafe { device.begin_command_buffer(command_buffer, &command_buffer_begin_info)? };
+    if let Some(pool)=timing{unsafe{device.cmd_reset_query_pool(command_buffer,pool,0,2)}}
     if let Some(world)=world {world.record(command_buffer,serial)?;world.record_annotations_if_prepared(command_buffer,serial)?;}
 
     let render_pass_begin_info = vk::RenderPassBeginInfo::default()
@@ -1385,7 +1392,9 @@ fn record_command_buffers(
         )
     };
 
+    if let Some(pool)=timing{unsafe{device.cmd_write_timestamp(command_buffer,vk::PipelineStageFlags::BOTTOM_OF_PIPE,pool,0)}}
     let draw_error=renderer.cmd_draw(command_buffer,extent,pixels_per_point,clipped_primitives).err().map(|e|e.to_string());
+    if let Some(pool)=timing{unsafe{device.cmd_write_timestamp(command_buffer,vk::PipelineStageFlags::BOTTOM_OF_PIPE,pool,1)}}
     if draw_error.is_some() {
         // Previous fence is complete and this command buffer has not submitted.
         // Abort all partial callback commands, then consume the acquired frame
@@ -1393,6 +1402,7 @@ fn record_command_buffers(
         unsafe {
             device.reset_command_buffer(command_buffer,vk::CommandBufferResetFlags::empty())?;
             device.begin_command_buffer(command_buffer,&command_buffer_begin_info)?;
+            if let Some(pool)=timing{device.cmd_reset_query_pool(command_buffer,pool,0,2);}
             device.cmd_begin_render_pass(command_buffer,&render_pass_begin_info,vk::SubpassContents::INLINE);
         }
     }
@@ -1445,7 +1455,7 @@ impl App for crate::IngeTrazoApp {
         if let Some(sample)=system.annotation_sample{
             let result=(||{
                 let factory=system.annotation_factory()?;
-                let mut state=match system.annotation_viewport.take(){Some(state)=>state,None=>annotation_viewport::ViewportAnnotations::new()?};
+                let mut state=match system.annotation_viewport.take(){Some(state)=>state,None=>annotation_viewport::ViewportAnnotations::new(system.swapchain.stencil_enabled)?};
                 let candidate=state.prepare(self,&factory,rect,system.egui_ctx.pixels_per_point()).map(|value|value.map(|value|(value.handle.clone(),value.queries.clone(),value.inverse,value.eye,value.forward)));
                 system.annotation_viewport=Some(state);
                 match candidate?{

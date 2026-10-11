@@ -112,6 +112,7 @@ impl App for Probe{
    let row=oracle["cases"].as_array().ok_or("Annotation case inventory")?.iter().find(|r|r["name"]==if range_control{"arrow"}else{&name}).ok_or("Annotation required case missing")?;
    let plan=Arc::new(source_plan(row)?);
    let mut cache=crate::annotation_overlay_geometry::Cache::new(ingetrazo_formats::annotation_font::Limits{faces:32,retained_font_bytes:32*1024*1024},crate::annotation_overlay_geometry::Limits{cells:2_000_000,spans:200_000,geometry_bytes:32*1024*1024,glyphs:4096,glyph_bytes:16*1024*1024})?;
+   if system.swapchain.stencil_enabled{cache.enable_source_stencil();}
    if std::env::var_os("INGETRAZO_ANNOTATION_ANALYTIC_BOUNDARY").is_some(){cache.enable_analytic_boundary_for_probe();}
    system.world=Some(world::World::new(&system.vulkan_context,system.memory_budget.clone())?);
    system.world.as_mut().unwrap().resize_offscreen(&system.vulkan_context,vk::Extent2D{width:64,height:64})?;
