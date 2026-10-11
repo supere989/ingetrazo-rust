@@ -1,0 +1,68 @@
+{
+  "runtime_commit": "cbc7fd244281b2e0dede8399379e4e3749413841",
+  "original_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "source_sha256": {
+    "crates/ingetrazo-core/src/mesh.rs": "b6ca3d2c82e512b4cea228a079f45381ac6d76d78b74c57bdf7fb25ee6ed114e",
+    "crates/ingetrazo-core/src/saved_views.rs": "08b7c9f677a60e4ca36504d3ff3e71d742b4e4fdb8e6215a8f6f5f3bec7371c0",
+    "crates/ingetrazo-core/tests/mesh_history_identity.rs": "f491fb438a187839c1c9dc68d06cce8c54f64e0a69edeefd1254e5d1075477d1",
+    "crates/ingetrazo-gui/src/history_visibility.rs": "3e936a7e8177aa7bc0fdf7bd3833a5772414f6f12434325b2c77caa8ede71cfb",
+    "crates/ingetrazo-gui/src/app.rs": "c99dd0bab7b037b59419dc2cb74ca920a62f27c6f1f8cec8289b932504a50df6",
+    "crates/ingetrazo-gui/src/menu.rs": "e71478b29148080493e75fb9a7641d34c40fde6992e5964b5247991b982d580a",
+    "crates/ingetrazo-gui/src/history_edges.rs": "812ea2c9e67f30d0e84dd7ceaa41363dd6e41767e910b69a5e5f1bb0b64bf40e",
+    "crates/ingetrazo-gui/src/tool_history.rs": "4a6f34ad6ae83a192f8c3cb8533a940d936a0cd83c577e7f29d2d0e606d034df",
+    "crates/ingetrazo-gui/examples/unhide_actions_fixture.rs": "055d70558878f78a774a4aad5efc22e8b1ddf4a180d76343a4a0af04d19bab5e",
+    "crates/ingetrazo-gui/examples/saved_view_history_fixture.rs": "6a4655d8a13d0a39d59207404b55936de267f40fd4357331da2296b164199d6c",
+    "scripts/reference-unhide-actions.py": "ef28cf62a5ead1110a87b9173dc4093a37bf24cc286fc0fe331407cdb1426db3",
+    "scripts/reference-unhide-nested.py": "a45285ed242ff02ee7e464188bdc723aef7936072166543ce883be1c4894ead5",
+    "scripts/check-unhide-actions.py": "e8182211b8f8a61c508c777757fe5fb3f535384b822349e382faaef04f0b1329"
+  },
+  "original_sha256": {
+    "views/main_window.py": "ea02be3e439c80731d0f5b5fde3d92d9b3f62e8ad10cd44ad305c3261b7786fa",
+    "core/history.py": "2eb66a1d557099b51383988a7819145289fc4ce2c37fc7de3a92ed35b5830559",
+    "core/mesh.py": "5f2c1625e6dd717db029ba39a9de337e75beec06bd0df28a592a8a34875ca22c",
+    "core/scene.py": "9dfcd32f1ff5b1445180eafd8df36eafb92fa08ed3597bb90eac09554899d2e0",
+    "core/group.py": "9ba6a20eca241cb4969a545a3784fcff25566166606d5447a18780747d4f11c5"
+  },
+  "binary_sha256": {
+    "unhide_actions_fixture": "2d55fc37ef2283a30ba3c5ceed5317d2fc14ebbe4b901294f52a221114fb0699",
+    "saved_view_history_fixture": "7c23c15b3fbfa9e85e9a594b1921e4434c6237aef5459a02dc0ee147874e3419"
+  },
+  "results": {
+    "actions": {
+      "states": 34,
+      "negative_controls": 19,
+      "result": "PASS"
+    },
+    "saved_view_compatibility": {
+      "cases": 2,
+      "exact_states": 60,
+      "rejected_controls": 21
+    },
+    "core_tests": 3,
+    "gui_tests": 4
+  },
+  "build_environment": {
+    "CARGO_PROFILE_DEV_DEBUG": "0",
+    "CARGO_PROFILE_TEST_DEBUG": "0",
+    "CARGO_INCREMENTAL": "0",
+    "jobs": 2,
+    "target": "/tmp/ingetrazo-ai-registry-target"
+  },
+  "artifact_sha256": {
+    "original.json": "91abdbbba313488b92997cd9571b5f1b2132f41a7518c17c6f27cb3c71a3cf28",
+    "original-nested.json": "2961dc7b02c85ed7964aa8e613c0bf6c5d21755e61ef8285282e4d19688f5586",
+    "native.json": "6c8e41814e0aab537c555624585a258b1e78c40608731108fab8e657c5e4d604",
+    "native-nested.json": "277094e08d859bc02d128e3ea8d8f8c37b61223cd66f5f40142be87f79814cde",
+    "checker.log": "035a69afe38764646752a4a48463a9ff3799beb52180631f1443d3d2d64c1258",
+    "prior60-final.log": "37285a064b3f31b0b1b2767f139f22226d1a1ca679d451fdb4decb5eaa828ecc",
+    "token-tests-final3.log": "0377ad297167acf7bedc0a8c35542896cbcc76ef8df14c6ea08f3ce749e6dde8",
+    "owner-tests-frozen.log": "60487bebf6a64828a5432868985ea0719813462639ead5352e294c9dafb879fb",
+    "build-frozen-final.log": "8143ca9ff9ad86ac0ca271811672afa0b4018afb54dcfa65f9470a5c02dddad3",
+    "original-raw-delete.json": "47f713f936678c667135e43033415ca28c907a583af2433c259f256061c43c70",
+    "native2.json": "f5ffb563221fe8e5b9b941386df6c7e87bc46dd71f695a9b65b5a459b585beab",
+    "token-tests.log": "e69853347579e267fd23f530705198c693a6707a337a2f2781973bb7327759f5",
+    "token-tests-final.log": "f6f1ee9fabcbfc907adc83333f034d5b0f112f488954bdf5dc7171e254c65c5d",
+    "check.log": "fbf203dc2762be86d3b709ea0c5f44bc43f9663db42f717552c6c5f3fda088c0",
+    "build3.log": "0289acd05b97ac99510688f9a91f4cdec69b4628b653e13decccb493b2a0be61"
+  }
+}
