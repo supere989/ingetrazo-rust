@@ -1,0 +1,42 @@
+[
+  {
+    "package": "ingetrazo-metal",
+    "target": "native_world_defaults",
+    "kind": [
+      "example"
+    ],
+    "path": "crates/ingetrazo-metal/examples/native_world_defaults.rs"
+  },
+  {
+    "package": "ingetrazo-gui",
+    "target": "native_metal_billboards",
+    "kind": [
+      "example"
+    ],
+    "path": "crates/ingetrazo-gui/examples/native_metal_billboards.rs"
+  },
+  {
+    "package": "ingetrazo-gui",
+    "target": "native_metal_document_annotations",
+    "kind": [
+      "example"
+    ],
+    "path": "crates/ingetrazo-gui/examples/native_metal_document_annotations.rs"
+  },
+  {
+    "package": "ingetrazo-gui",
+    "target": "native_metal_section_resolve",
+    "kind": [
+      "example"
+    ],
+    "path": "crates/ingetrazo-gui/examples/native_metal_section_resolve.rs"
+  },
+  {
+    "package": "ingetrazo-cli",
+    "target": "ingetrazo",
+    "kind": [
+      "bin"
+    ],
+    "path": "crates/ingetrazo-cli/src/main.rs"
+  }
+]
