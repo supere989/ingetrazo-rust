@@ -1,0 +1,29 @@
+{
+  "run": 38162488204,
+  "source": "398a45982bfa1c269bbe0197588c467879bff578",
+  "classification": "workflow package target selection refusal before compilation; no native frames/binaries",
+  "arm": {
+    "zip_sha256": "7487af73af3ee52b7c787096091c204f8a643010e8cfdcfacb90a77bb9a87458",
+    "authenticated_source_members": 73,
+    "arithmetic": {
+      "source_channel_float_bits_exact": 64,
+      "decode_entries": 256,
+      "ordered_four_pixels_exact": true,
+      "wrong_truncation_half_away_reassociation_rejected": true,
+      "scope": "Scalar proof of measured inputs and explicit operation order; native shader implementation remains pending"
+    },
+    "frames": 0
+  },
+  "intel": {
+    "zip_sha256": "67df3322959f7193ded5745c05757a3d2e77c32744c1b3d8e33d2ed37a0bed73",
+    "authenticated_source_members": 73,
+    "arithmetic": {
+      "source_channel_float_bits_exact": 64,
+      "decode_entries": 256,
+      "ordered_four_pixels_exact": true,
+      "wrong_truncation_half_away_reassociation_rejected": true,
+      "scope": "Scalar proof of measured inputs and explicit operation order; native shader implementation remains pending"
+    },
+    "frames": 0
+  }
+}
