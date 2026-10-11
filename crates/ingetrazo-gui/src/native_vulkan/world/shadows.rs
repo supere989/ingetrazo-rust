@@ -1390,7 +1390,7 @@ fn bitmap_textures(scene:&ingetrazo_core::scene::Scene,direction:[f64;3])->Resul
 }
 pub(super) fn has_billboards(scene:&ingetrazo_core::scene::Scene)->bool{fn has(g:&ingetrazo_core::groups::Group)->bool{g.billboard||g.children.iter().any(has)}scene.groups.iter().any(has)}
 
-fn qt_normalized(v: glam::Vec3) -> glam::Vec3 {
+pub(super) fn qt_normalized(v: glam::Vec3) -> glam::Vec3 {
         let m = v.abs().max_element();
         let length = if m == 0. {
             0.

@@ -549,7 +549,7 @@ fn build_group_buffers(
     let source_placement = root_world_override.map_or_else(||source_group_has_placement(group),|v|v.1);
     let paint = source_group_paint(group).or(owner_paint);
 
-    if shadow_casters && group.billboard { return; }
+    if (shadow_casters||native_texture_sides) && group.billboard { return; }
 
     // Billboard / Face-Me cutout figures
     if group.billboard {
