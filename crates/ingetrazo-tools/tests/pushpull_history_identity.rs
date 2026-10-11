@@ -24,3 +24,16 @@ fn punched_mother_is_new_but_protected_partitions_keep_identity(){
     let a=scene.mesh.add_face(vec![vertices[0],vertices[1],vertices[2]],vec![]).unwrap();let b=scene.mesh.add_face(vec![vertices[0],vertices[2],vertices[3]],vec![]).unwrap();let tokens=[scene.mesh.faces[a].history_id,scene.mesh.faces[b].history_id];
     let cap=scene.mesh.faces.iter().position(|f|f.vertices.iter().all(|&v|scene.mesh.vertices[v].position.z==3.)).unwrap();let mother=scene.mesh.faces[cap].history_id;PushPullTool::extrude_face(&mut scene,cap,-3.).unwrap();let replacement=scene.mesh.faces.iter().find(|f|f.holes.len()==2).unwrap();assert_ne!(replacement.history_id,mother);for token in tokens {assert!(scene.mesh.faces.iter().any(|f|f.history_id==token));}
 }
+
+#[test]
+fn open_sweep_preserves_remote_face_identity_and_unrelated_tjunction() {
+    let mut scene=Scene::new();
+    let selected=[DVec3::ZERO,DVec3::X,DVec3::X+DVec3::Y,DVec3::Y].map(|p|scene.mesh.add_vertex(p));
+    scene.mesh.add_face(selected.to_vec(),vec![]).unwrap();
+    let remote=[DVec3::new(10.,0.,5.),DVec3::new(14.,0.,5.),DVec3::new(14.,4.,5.),DVec3::new(10.,4.,5.)].map(|p|scene.mesh.add_vertex(p));
+    let id=scene.mesh.add_face(remote.to_vec(),vec![]).unwrap();let token=scene.mesh.faces[id].history_id;
+    scene.mesh.add_vertex(DVec3::new(12.,0.,5.));
+    PushPullTool::extrude_face(&mut scene,0,-0.6).unwrap();
+    let unchanged=scene.mesh.faces.iter().find(|f|f.history_id==token).expect("remote Face remains same object");
+    assert_eq!(unchanged.vertices.len(),4);assert_eq!(unchanged.vertices.iter().map(|&v|scene.mesh.vertices[v].position).collect::<Vec<_>>(),vec![DVec3::new(10.,0.,5.),DVec3::new(14.,0.,5.),DVec3::new(14.,4.,5.),DVec3::new(10.,4.,5.)]);
+}

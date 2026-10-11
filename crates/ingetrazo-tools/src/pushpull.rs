@@ -174,6 +174,26 @@ impl PushPullTool {
         for (id,face) in snapshot.iter().enumerate(){if !removed[id]&&!punch[id].is_empty(){let mut face=face.clone();face.history_id=ingetrazo_core::mesh::MeshFace::new(Vec::new()).history_id;for &small in &punch[id]{face.holes.push(snapshot[small].vertices.clone());}out.faces.push(face);}}
         Self::relink_surface(&out)
     }
+    fn stitch_open_sweep(source:&ingetrazo_core::mesh::Mesh,seeds:impl Iterator<Item=DVec3>)->Result<ingetrazo_core::mesh::Mesh,String>{
+        let mut lo=DVec3::splat(f64::INFINITY);let mut hi=DVec3::splat(f64::NEG_INFINITY);
+        for p in seeds {lo=lo.min(p);hi=hi.max(p);}
+        let mut out=ingetrazo_core::mesh::Mesh::new();
+        for v in &source.vertices{let id=out.add_vertex(v.position);out.vertices[id].uid=v.uid;}
+        for f in &source.faces {
+            let refine=|ring:&Vec<usize>| {let mut refined=vec![];for i in 0..ring.len(){
+                let a=source.vertices[ring[i]].position;let b=source.vertices[ring[(i+1)%ring.len()]].position;let d=b-a;
+                let mut stations=vec![(0.,ring[i])];
+                if a.max(b).cmplt(lo-DVec3::splat(1e-6)).any()==false && a.min(b).cmpgt(hi+DVec3::splat(1e-6)).any()==false {
+                    for (id,v) in source.vertices.iter().enumerate(){let t=(v.position-a).dot(d)/d.length_squared();if t>1e-7&&t<1.-1e-7&&(v.position-a-d*t).length()<1e-6{stations.push((t,id));}}
+                }
+                stations.sort_by(|a,b|a.0.total_cmp(&b.0));stations.dedup_by(|a,b|(a.0-b.0).abs()<1e-7);refined.extend(stations.into_iter().map(|(_,id)|id));
+            }refined};
+            let vertices=refine(&f.vertices);let holes=f.holes.iter().map(refine).collect();let id=out.add_face(vertices,holes).ok_or("Invalid open sweep support")?;
+            let vertices=out.faces[id].vertices.clone();let holes=out.faces[id].holes.clone();out.faces[id]=f.clone();out.faces[id].vertices=vertices;out.faces[id].holes=holes;
+        }
+        Ok(out)
+    }
+
     fn relink_surface(source:&ingetrazo_core::mesh::Mesh)->Result<ingetrazo_core::mesh::Mesh,String> {
         let mut out=ingetrazo_core::mesh::Mesh::new();for vertex in &source.vertices{out.add_vertex(vertex.position);}
         for face in &source.faces{let id=out.add_face(face.vertices.clone(),face.holes.clone()).ok_or("Invalid collapsed surface")?;out.faces[id]=face.clone();}
@@ -593,6 +613,7 @@ impl PushPullTool {
                     .map(|h| h.iter().map(|&v| mesh.vertices[v].position).collect())
                     .collect();
                 add_polygon(&mut result, &points, &holes, original)?;
+                result.faces.last_mut().unwrap().history_id=original.history_id;
             }
             if attached {
                 add_polygon(&mut result, &shifted[0], &shifted[1..], face)?;
@@ -633,7 +654,7 @@ impl PushPullTool {
         // Original run_stitch refines the supporting open surface at the
         // consumed face rim before publication (including hole rims).
         if !was_solid {
-            candidate=ingetrazo_core::planar::stitch_boundaries(&candidate)?;
+            candidate=Self::stitch_open_sweep(&candidate,rings.iter().flatten().chain(shifted.iter().flatten()).copied())?;
         }
         if was_solid && !keep_base && !prism_cap {
             let mut rims=vec![];
