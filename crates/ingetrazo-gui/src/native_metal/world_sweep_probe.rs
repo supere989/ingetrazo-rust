@@ -113,6 +113,7 @@ pub(crate) fn run(input: PathBuf, output: PathBuf) -> Result<(), String> {
         let mut previous = None;
         let mut previous_stats = None;
         let mut refusal = false;
+        let mut old_label = None;
         for source_frame in c["frames"].as_array().ok_or("Frames")? {
             let phase = source_frame["phase"].as_str().ok_or("Phase")?;
             if phase == "preview" {
@@ -136,6 +137,54 @@ pub(crate) fn run(input: PathBuf, output: PathBuf) -> Result<(), String> {
             }
             if phase == "cancel" {
                 app.set_tool(ingetrazo_tools::ToolType::Select);
+            }
+            if phase == "offset" {
+                old_label = Some(Arc::downgrade(
+                    &app.native_metal_world
+                        .as_ref()
+                        .unwrap()
+                        .label_owner()
+                        .ok_or("No old native label")?,
+                ));
+                let charge = {
+                    let b = metal.budget.lock().map_err(|_| "Budget")?;
+                    b.heaps
+                        .iter()
+                        .map(|h| h.committed + h.reserved)
+                        .sum::<u64>()
+                };
+                app.native_metal_world
+                    .as_mut()
+                    .unwrap()
+                    .probe_font_budget(true)?;
+                let reason = world_viewport::route(
+                    &mut app,
+                    egui::Rect::from_min_size(egui::Pos2::ZERO, egui::vec2(800., 600.)),
+                    1.,
+                );
+                if reason.is_none() {
+                    return Err("Real font budget refusal missing".into());
+                }
+                let after = {
+                    let b = metal.budget.lock().map_err(|_| "Budget")?;
+                    b.heaps
+                        .iter()
+                        .map(|h| h.committed + h.reserved)
+                        .sum::<u64>()
+                };
+                if after != charge
+                    || previous.as_ref()
+                        != Some(&frame(&mut app, &metal, &ctx, &mut painter, false)?)
+                {
+                    return Err("Font refusal changed accepted frame or GPU charges".into());
+                }
+                if old_label.as_ref().unwrap().upgrade().is_none() {
+                    return Err("Font refusal released accepted label owner".into());
+                }
+                app.native_metal_world
+                    .as_mut()
+                    .unwrap()
+                    .probe_font_budget(false)?;
             }
             if phase == "offset" {
                 let (old_limit, charge) = {
@@ -170,10 +219,16 @@ pub(crate) fn run(input: PathBuf, output: PathBuf) -> Result<(), String> {
                 if previous.as_ref() != Some(&old) {
                     return Err("Refusal changed old preview pixels".into());
                 }
+                if old_label.as_ref().unwrap().upgrade().is_none() {
+                    return Err("CAD refusal released accepted label owner".into());
+                }
                 refusal = true;
             }
             let rgba = frame(&mut app, &metal, &ctx, &mut painter, true)
                 .map_err(|e| format!("{name}/{phase}: {e}"))?;
+            if phase == "offset" && old_label.as_ref().unwrap().upgrade().is_some() {
+                return Err("Completed replacement retained retired label owner".into());
+            }
             if phase == "base" {
                 base = Some(rgba.clone());
             }
@@ -181,11 +236,13 @@ pub(crate) fn run(input: PathBuf, output: PathBuf) -> Result<(), String> {
                 return Err(format!("{name} Cancel changed base pixels"));
             }
             let stats = app.native_metal_world.as_ref().unwrap().sweep_stats();
+            let label_native = app.native_metal_world.as_ref().unwrap().label_stats();
             let label_uploads = painter.cad_stats().uploads;
             let label_compute = painter
                 .compute_stats()
                 .map(|s| (s.plan_uploads, s.palette_uploads));
             if frame(&mut app, &metal, &ctx, &mut painter, true)? != rgba
+                || app.native_metal_world.as_ref().unwrap().label_stats() != label_native
                 || painter.cad_stats().uploads != label_uploads
                 || painter
                     .compute_stats()
@@ -235,14 +292,14 @@ pub(crate) fn run(input: PathBuf, output: PathBuf) -> Result<(), String> {
             }
             previous = Some(frame(&mut app, &metal, &ctx, &mut painter, true)?);
             previous_stats = Some(stats);
-            phases.push(serde_json::json!({"phase":phase,"geometry_uploads":stats.geometry_uploads,"preview_builds":stats.preview_builds,"preview_line_uploads":stats.preview_line_uploads,"base_line_uploads":stats.base_line_uploads,"label_uploads":label_uploads,"label_compute_uploads":label_compute}));
+            phases.push(serde_json::json!({"phase":phase,"geometry_uploads":stats.geometry_uploads,"preview_builds":stats.preview_builds,"preview_line_uploads":stats.preview_line_uploads,"base_line_uploads":stats.base_line_uploads,"label_native_builds_bytes":label_native,"label_uploads":label_uploads,"label_compute_uploads":label_compute}));
         }
         if app.scene.mesh != mesh_before || app.undo_stack.len() != history_before {
             return Err("Preview mutated model/history".into());
         }
         drop(app);
         drop(painter);
-        results.push(serde_json::json!({"name":name,"phases":phases,"model_unchanged":true,"warm_uploads_zero":true,"pressure_old_pixels_charge_retry":refusal}));
+        results.push(serde_json::json!({"name":name,"phases":phases,"model_unchanged":true,"warm_uploads_zero":true,"pressure_old_pixels_charge_retry":refusal,"font_refusal_retained":true}));
     }
     let ledger = metal
         .budget

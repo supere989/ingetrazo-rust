@@ -52,6 +52,7 @@ pub struct Prepared {
     colors: Arc<[[f32; 4]]>,
 }
 impl Painter {
+    pub(crate) fn reusing_pipeline(ready:&Prepared)->Self{let mut painter=Self::default();painter.pipeline=Some(ready.pipeline.clone());painter}
     pub fn prepare(
         &mut self,
         metal: &NativeMetal,

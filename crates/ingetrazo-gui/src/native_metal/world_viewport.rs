@@ -18,6 +18,9 @@ pub(crate) struct Viewport {
     unsupported: Option<(ingetrazo_render::scene_revision::Revisions, u16, String)>,
 }
 impl Viewport {
+    pub(crate) fn label_owner(&self)->Option<Arc<ingetrazo_metal::egui_painter::AdmittedCallback>>{self.labels.as_ref().and_then(|l|l.admitted())}
+    pub(crate) fn label_stats(&self)->(u64,u64){self.labels.as_ref().map(|l|l.stats()).unwrap_or((0,0))}
+    pub(crate) fn probe_font_budget(&mut self,refuse:bool)->Result<(),String>{self.labels.as_mut().ok_or("No prepared label owner")?.probe_font_budget(refuse)}
     pub(crate) fn sweep_stats(&self)->ingetrazo_metal::world::Stats{self.world.stats}
     pub(crate) fn new(metal: Arc<NativeMetal>) -> Self {
         Self {
@@ -106,6 +109,13 @@ impl Viewport {
 /// Called after current-frame pointer/navigation edits and before paint choice.
 pub(crate) fn route(app: &mut IngeTrazoApp, rect: egui::Rect, density: f32) -> Option<String> {
     let mut viewport = app.native_metal_world.take()?;
+    // Admit the complete label privately before any world publication. The
+    // candidate retains native buffers but cannot alter the accepted callback.
+    let candidate=(|| -> Result<super::distance_label::Candidate,String> {
+        if viewport.labels.is_none(){viewport.labels=Some(super::distance_label::Labels::new()?);}
+        viewport.labels.as_mut().unwrap().prepare(app,rect,density,viewport.metal.clone())
+    })();
+    let candidate=match candidate{Ok(c)=>c,Err(error)=>{viewport.last_route_reason=Some(error.clone());app.native_metal_world=Some(viewport);return Some(error)}};
     let result = crate::viewport_extent::scene_extent(
         [rect.width() as f64, rect.height() as f64],
         density as f64,
@@ -140,11 +150,8 @@ pub(crate) fn route(app: &mut IngeTrazoApp, rect: egui::Rect, density: f32) -> O
         }
     };
     if app.native_gpu_viewport_enabled && reason.is_none() {
-        let labels = (|| -> Result<Option<egui::Shape>,String> {
-            if viewport.labels.is_none() { viewport.labels=Some(super::distance_label::Labels::new()?); }
-            viewport.labels.as_mut().unwrap().prepare(app,rect,density)
-        })();
-        match labels { Ok(shape)=>app.native_gpu_annotation_shape=shape, Err(error)=>{viewport.last_route_reason=Some(error.clone());app.native_metal_world=Some(viewport);return Some(error)} }
+        app.native_gpu_annotation_shape=candidate.shape(rect);
+        viewport.labels.as_mut().unwrap().publish(candidate);
     } else if !app.native_gpu_viewport_enabled { app.native_gpu_annotation_shape=None; }
     viewport.last_route_reason = reason.clone();
     app.native_metal_world = Some(viewport);
@@ -157,6 +164,7 @@ pub(crate) fn install(
     metal: &NativeMetal,
     app: &IngeTrazoApp,
 ) -> Result<(), String> {
+    painter.install_admitted_callback(app.native_metal_world.as_ref().and_then(|v|v.labels.as_ref()).and_then(|labels|labels.admitted()));
     if let Some(viewport) = app.native_metal_world.as_ref() {
         if let Some(frame) = viewport.frame.as_ref() {
             painter.install_world_texture(metal, TEXTURE, frame.clone())?;

@@ -55,6 +55,7 @@ impl Painter {
             MTLReadWriteTextureTier::Tier1 | MTLReadWriteTextureTier::Tier2
         )
     }
+    pub(crate) fn reusing_pipeline(ready:&Prepared)->Self{let mut painter=Self::default();painter.pipeline=Some(ready.pipeline.clone());painter}
     pub fn prepare(
         &mut self,
         metal: &NativeMetal,
