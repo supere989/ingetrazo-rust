@@ -1,0 +1,16 @@
+{
+  "scope": "Independent retained-artifact replay, source and current frozen binary verification; no repeated GPU/app launch",
+  "archive_files": 183,
+  "whole_frame_exact": 29,
+  "whole_frame_total": 36,
+  "strict_parity": false,
+  "actual_app_image_controls_rechecked": 9,
+  "actual_app_row_hashes": 8,
+  "original_shader_viewport_hashes": 5,
+  "current_render_sources_equal": "42a3be57",
+  "latest_headless_binary_sha256": "5fa09475f434f86db5ba1d8b45244d4853e2888370860973f395527d4cea5006",
+  "actual_app_binary_sha256": "a5eb2ae289e859da3b2e27f8de04a5d71ad2705b73be0c65ed84b35bbe198571",
+  "app_image_cache_and_resize_controls": true,
+  "refusal_whole_window_exact": true,
+  "remaining": "Equal-depth placement 1509 pixels in three phases; nested reflection one and empty parent two shadow pixels in on/restored"
+}

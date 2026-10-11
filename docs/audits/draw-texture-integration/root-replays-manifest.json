@@ -1,0 +1,125 @@
+{
+  "archive_sha256": "e285f56b15b8fca2e2e0567e59c10737cfea76c8fdec94161db7d74fb71944ee",
+  "entries": {
+    "imported-mesh/check.log": {
+      "bytes": 254,
+      "sha256": "1d530b92607a8b23194adaae7049d0efa98f9d61e89c9ae9ba1a9a8683a5beaf"
+    },
+    "imported-mesh/input.igz": {
+      "bytes": 2479,
+      "sha256": "ab4f3dfa6e32dd1e65fecd226aa91395344bafb43b435a99bda6487d1840b329"
+    },
+    "imported-mesh/input.igz.source-final": {
+      "bytes": 2625,
+      "sha256": "9ed9392e8832f4a5cf80592c8ee917fe62c42db420884ecd7d67fc8a771d3053"
+    },
+    "imported-mesh/input.igz.source-replacement": {
+      "bytes": 5219,
+      "sha256": "39f711b9c6a7082f19f900f489330a8d22fce28fcefdafca9656cdb0d7599822"
+    },
+    "imported-mesh/native.igz": {
+      "bytes": 3960,
+      "sha256": "f5272d8b1de7c390f5bfd118de6c33580b121db92d52bb3d5b83f8ece000cc49"
+    },
+    "imported-mesh/native.igz.replacement": {
+      "bytes": 5547,
+      "sha256": "70667e82b0683b6ba65543e74e124891848764c4ba48c4f68ae120aca5b23bd3"
+    },
+    "imported-mesh/native.json": {
+      "bytes": 80063,
+      "sha256": "b30355e7f8b3d652ef28b4b91c18e33545f9b27918d13e067731a90139f26139"
+    },
+    "imported-mesh/original.json": {
+      "bytes": 80063,
+      "sha256": "7f13817ef6fa7fb7b2f1f8840bab610d710fbba3a515eb58d3f068b11789be9b"
+    },
+    "imported-mesh/runtime-review.json": {
+      "bytes": 313,
+      "sha256": "6446e1a6a8a55c465277e3573bf368ae5de30ec9b814f7e02361effe36c75552"
+    },
+    "imported-mesh/source-review.json": {
+      "bytes": 150,
+      "sha256": "fe67606c61057cb604bd2554bb9ff389e5bab7ea15abff3adbff7a61574c653d"
+    },
+    "native-component/replay.log": {
+      "bytes": 201,
+      "sha256": "dc4b000d0d1a2e3f8e06a345733b050d5a16c0cf5c8ddc17394df8d386eb4119"
+    },
+    "native-component/review.json": {
+      "bytes": 198,
+      "sha256": "ac5e1a9179ecf75f18c939f374ae3abaca09511c33969f42f677f109ab313c60"
+    },
+    "bim-draw/native.json": {
+      "bytes": 21070,
+      "sha256": "f1df6c1899130660825d249651c530cf2c8eb01e310e45341a186c8e4221b060"
+    },
+    "bim-draw/original-ui/report.json": {
+      "bytes": 18091,
+      "sha256": "8183ab97001b28088ecc3c7211822c1b1b7b85aa8cf5e4fbe46f0a86312829e0"
+    },
+    "bim-draw/review.json": {
+      "bytes": 727,
+      "sha256": "820e62087c8cecc53d40dc801b4c78f5c216c6225329440eb10916a655c4593c"
+    },
+    "bim-draw/ui/report.json": {
+      "bytes": 16291,
+      "sha256": "eff0a2ebf40f93bf89a126a5803c4d3507216c15dce54278161117ba4d88a7fa"
+    },
+    "bim-draw/ui-check.log": {
+      "bytes": 50,
+      "sha256": "40612e2496930a880080f2defa0b859717b3459b350f82e5e9474c742af889b7"
+    },
+    "bim-draw/ui-comparison.json": {
+      "bytes": 575,
+      "sha256": "80bc757abf08b5a05a73c684e77bba8ed0278740c1cf8232049538f6a79dd5ba"
+    },
+    "affine/check.log": {
+      "bytes": 90,
+      "sha256": "e472427d36fbbb3b58f942ef1b63d67d55a4a229ddbfefcdf40ce70de80f2ef6"
+    },
+    "affine/check.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "affine/input.igz": {
+      "bytes": 2482,
+      "sha256": "8c6fa4892c98cb209f27b2eea84a0eb1cb1a1e8b83e3d8d14108f6ca36eb854d"
+    },
+    "affine/input.igz.source-final": {
+      "bytes": 3201,
+      "sha256": "17a7221fe28c3b0d68ae1beb91672140d1a80b2eeb4fad959cfea4640f7143b5"
+    },
+    "affine/native.igz": {
+      "bytes": 3339,
+      "sha256": "b0e2c81b316bd6d700de90f8ee01badaf5dbe3343a4fc15559dd1da6a0d8d810"
+    },
+    "affine/native.json": {
+      "bytes": 5781,
+      "sha256": "d41a0d95e51385712f338bd07f3643bd8e1484a1b2ebc2187eccd17b693c9c4a"
+    },
+    "affine/native.json.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "affine/original.json": {
+      "bytes": 13479,
+      "sha256": "69a55393e9d8ba843cd124bdad0068e78f0df92e14ab6dc9c04f72dbdf990f05"
+    },
+    "affine/original.json.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "affine/reopen.json": {
+      "bytes": 1392,
+      "sha256": "f58f05bf8087b801d26a1130cb9e4e9b3e2da8c71d7fc6d6428dc09a65e82bc8"
+    },
+    "affine/reopen.json.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "affine/review.json": {
+      "bytes": 305,
+      "sha256": "2812c1fdb12483ccb89a75ce8665d9adbc8c44ad22a1f199dfad1a784d809256"
+    }
+  }
+}

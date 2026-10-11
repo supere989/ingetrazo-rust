@@ -1,0 +1,15 @@
+{
+  "source": "1b7da4e1e2f98f9afe9ecd2ac247b2075007171a",
+  "reviewer": "independent document_integrity agent",
+  "archive_entries_checked": 117,
+  "source_hashes_checked": 8,
+  "binary_sha256": "65492ae058133c3ff5a5282d7f87f76b3fc1dd1a2607a4d60514024e63b94095",
+  "backends": [
+    "NVIDIA RTX5090",
+    "software llvmpipe"
+  ],
+  "frames_exact_per_backend": 4,
+  "pixels_checked_per_backend": 262144,
+  "negative_controls_per_backend": 4,
+  "followup": "format metadata made private in48adefe2"
+}

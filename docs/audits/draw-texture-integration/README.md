@@ -1,0 +1,15 @@
+# Draw, texture and imported-placement integration
+
+This batch integrates BIM draw tags, imported console Mesh ownership and flat affine placements, exact native Vulkan BC7 uploads, and cached camera-facing billboard receivers. The Python oracle remains `6be29fe437a7cd992d4e079f71720821b25216b9`.
+
+`bb27165d` passed 831 workspace tests, zero failures/two existing ignores, doctests and all enabled example compilation in 28.55 seconds. The only later runtime change is optional-console precision admission; final optional runtime `689d3779` passed all fourteen engineering-console tests in 28.20 seconds. Billboard evidence commit `21e176db` changes no runtime. Exact source/commands/times are in [acceptance.json](acceptance.json); compressed logs retain every test result. No broad suite was repeated for evidence or tracker edits.
+
+Independent root replay regenerated pinned original and frozen native imported-alias and affine observations, then reopened actual IGZ files with the original loader. Nineteen imported states, eleven affine states, real refusal controls and rejecting checker controls pass. Root separately verified and replayed the native-component identity regression and 22 BIM command cases, then rechecked ten retained delivered-UI phases. `root-replays.zip` and its manifest preserve those fresh and retained scopes explicitly. The final precision admission refuses native float64 placements that Qt float32 cannot represent exactly, before an unrelated script can change the document.
+
+Independent compression review verifies 117 retained records, eight source hashes and the frozen binary. NVIDIA and software Vulkan GPU-decoded texels match; four complete World frames per backend are exact. A 512-square cutout uses 262,144 rather than 1,048,576 allocated/uploaded bytes on the RTX 5090. This is exact mode 5 BC7 eligibility for hard-cutout/no-mip images; no general compression or optimized-throughput claim.
+
+Billboard root review verifies 183 archive entries, current app/headless binary hashes, pinned viewport/shader hashes and equal integrated render sources. It independently compares every whole frame and rechecks retained actual app images, full-window refusal, warm image counters and resize. **29/36 frames are exact; strict overall billboard parity remains FAIL.** Equal-depth placement differs at 1,509 pixels in all three phases; nested reflection and empty-parent shadows retain one/two pixels on/restored. Those failures are preserved without tolerance changes. The source receiver uses four samples; old widget-surface zero-sample attribution was incorrect and remains historical evidence.
+
+BIM matches 22/22 geometry/tag signatures but 21/22 complete attribute cases: nonflat Freehand vendor ownership remains open. Active BIM edit context, full scripting/nesting/resource bounds, full models, broader compression/mips/streaming, Metal and ray tracing remain required. No feature row or release gate is promoted.
+
+[Preceding published 77027 CI](preceding-ci.json) passes all seven jobs. Current publication CI is pending. The [canonical tracker](../../PARITY_PROGRESS.md) lists current acceptance and remaining work.

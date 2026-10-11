@@ -1,0 +1,13 @@
+{
+  "source": "689d3779c8bd9ad7bdac2335bda60f4dbdd4881f",
+  "command": "cargo test -p ingetrazo-gui --features engineering-python --lib engineering_python:: -j2",
+  "exit_code": 0,
+  "seconds": 28.20063285701326,
+  "test_totals": {
+    "passed": 14,
+    "failed": 0,
+    "ignored": 0,
+    "measured": 0,
+    "filtered_out": 260
+  }
+}

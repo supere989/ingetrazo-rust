@@ -2,6 +2,22 @@
 
 Frozen from review source `8d2f37ce` on 2026-10-11 UTC. All original evidence, failures and source scopes remain below. Historical uses of "current", "pending" and "published" describe their recorded checkout, not today. See [the current canonical tracker](PARITY_PROGRESS.md).
 
+## Published 77027f5d checkpoint (historical)
+
+The Rust workspace is a substantial implementation. Full Python parity is unverified: **10 Implemented / 27 Partial / 0 Verified across 37 areas; all five release gates remain OPEN**. Counts are not effort percentages.
+
+| Area | Current evidence | Remaining acceptance |
+| --- | --- | --- |
+| Publication | Main remains `c73fe993`. Previous published review `45ca1771` passes all seven CI jobs. Integrated runtime `8be06a1f` passes 810 workspace tests plus ten optional-console tests, zero failures/two existing ignores; enabled examples compile. BIM/IFC, console groups/recipes/house, Metal materials and Vulkan solar are integrated | Current batch published CI; release gates |
+| BIM and IFC | Actual object tagging/history/selection, cached per-class takeoff and real CSV/IFC export. Twenty exact source quantity cases; nineteen IFC4 files independently pass schema and EXPRESS, world rings/holes and class quantities. Existing-file refusal and native IGZ group tags pass | Tag-as-you-draw, active editing context, arbitrary precision/orientation, broader component and actual UI gesture acceptance |
+| Scripting | Genuine Scene/Group aliases match ten immediate states; extrude/prism/revolve/wall match thirteen and house matches twelve typed states. Independent root replay and mutation controls pass; native IGZ reopened by original Python preserves shared Mesh identity/current paint. Default-off engineering consumer | Atomic current shared-registry publication is integrated. Full Scene, imported aliases/reassignment identity, stdlib, external history, resource bounds and production bridge execution remain open |
+| Native Metal | Cached material app stage passes 25 original recipes, 75 actual ARM frames, 1,950 exact interior RGBA samples, two asset uploads, shared admitted 4MiB backing heap, warm reuse and final ledger zero. Root artifact replay and six negatives pass | Interior sample scope only; whole images, mips, edges, presentation and physical Mac. Intel strict first-target size/alignment0/0 refusal remains OPEN |
+| Solar shadows | Default Vulkan app uses existing solar settings. Actual RTX app off/on restore reuses one map/uniform and retires all GPU memory. Bitmap packed map is exact at all 4,194,304 pixels; sun-only changes reuse ordinary geometry/images | Receiver frame differences, clipped packed bytes, production MSAA, photo readiness, vector-art, full panel/location gestures and Metal shadows remain OPEN |
+| Annotations and full models | Prior source stencil activation and JPEG controls remain scoped; Chapel capture retains 1,066/1,113 differing pixels, maximum error37 | No new full-model equivalence claim; remaining pixel, font/camera/DPI and platform work |
+
+Current evidence: [integration and independent root review](audits/console-material-integration/README.md), [prior all-green CI](audits/console-material-integration/preceding-ci.json), [BIM/IFC](audits/bim-ifc/README.md), [Metal material acceptance](audits/metal-world-scene/material-run38111448432/HANDOFF.md), [solar app and changed-sun controls](audits/solar-application-native/README.md), [console groups](audits/ai-console-groups/README.md), [console recipes](audits/ai-console-recipes/README.md), [house and shared publication](audits/ai-console-house/README.md). Prior checkpoints and exact failure boundaries remain in [the historical log](PARITY_PROGRESS_HISTORY.md).
+
+
 ## Published 45ca1771 checkpoint (historical)
 
 The Rust workspace is a substantial implementation. Full Python parity is unverified: **10 Implemented / 27 Partial / 0 Verified across 37 areas; all five release gates remain OPEN**. Counts are not effort percentages.

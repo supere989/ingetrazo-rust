@@ -1,0 +1,17 @@
+{
+  "source": "bb27165dd98fbd19cda04de25b9b1e1661522a04",
+  "command": "scripts/check-rust-workspace.sh -j2",
+  "exit_code": 0,
+  "seconds": 28.552042191004148,
+  "target": "/tmp/ingetrazo-native-font-merge-target",
+  "debug_info": false,
+  "incremental": false,
+  "test_totals": {
+    "passed": 831,
+    "failed": 0,
+    "ignored": 2,
+    "measured": 0,
+    "filtered_out": 0
+  },
+  "test_result_blocks": 35
+}

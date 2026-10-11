@@ -1,0 +1,72 @@
+{
+  "integrated_head": "21e176db328241ae4bb8c1521e6cb1e274e2614e",
+  "workspace": {
+    "source": "bb27165dd98fbd19cda04de25b9b1e1661522a04",
+    "command": "scripts/check-rust-workspace.sh -j2",
+    "exit_code": 0,
+    "seconds": 28.552042191004148,
+    "target": "/tmp/ingetrazo-native-font-merge-target",
+    "debug_info": false,
+    "incremental": false,
+    "test_totals": {
+      "passed": 831,
+      "failed": 0,
+      "ignored": 2,
+      "measured": 0,
+      "filtered_out": 0
+    },
+    "test_result_blocks": 35
+  },
+  "optional_console": {
+    "source": "689d3779c8bd9ad7bdac2335bda60f4dbdd4881f",
+    "command": "cargo test -p ingetrazo-gui --features engineering-python --lib engineering_python:: -j2",
+    "exit_code": 0,
+    "seconds": 28.20063285701326,
+    "test_totals": {
+      "passed": 14,
+      "failed": 0,
+      "ignored": 0,
+      "measured": 0,
+      "filtered_out": 260
+    }
+  },
+  "default_runtime_note": "Only optional engineering-python runtime changed after the combined workspace suite; final focused optional suite covers that correction. Subsequent billboard intake is evidence only.",
+  "compression": {
+    "source": "1b7da4e1e2f98f9afe9ecd2ac247b2075007171a",
+    "reviewer": "independent document_integrity agent",
+    "archive_entries_checked": 117,
+    "source_hashes_checked": 8,
+    "binary_sha256": "65492ae058133c3ff5a5282d7f87f76b3fc1dd1a2607a4d60514024e63b94095",
+    "backends": [
+      "NVIDIA RTX5090",
+      "software llvmpipe"
+    ],
+    "frames_exact_per_backend": 4,
+    "pixels_checked_per_backend": 262144,
+    "negative_controls_per_backend": 4,
+    "followup": "format metadata made private in48adefe2"
+  },
+  "billboards": {
+    "scope": "Independent retained-artifact replay, source and current frozen binary verification; no repeated GPU/app launch",
+    "archive_files": 183,
+    "whole_frame_exact": 29,
+    "whole_frame_total": 36,
+    "strict_parity": false,
+    "actual_app_image_controls_rechecked": 9,
+    "actual_app_row_hashes": 8,
+    "original_shader_viewport_hashes": 5,
+    "current_render_sources_equal": "42a3be57",
+    "latest_headless_binary_sha256": "5fa09475f434f86db5ba1d8b45244d4853e2888370860973f395527d4cea5006",
+    "actual_app_binary_sha256": "a5eb2ae289e859da3b2e27f8de04a5d71ad2705b73be0c65ed84b35bbe198571",
+    "app_image_cache_and_resize_controls": true,
+    "refusal_whole_window_exact": true,
+    "remaining": "Equal-depth placement 1509 pixels in three phases; nested reflection one and empty parent two shadow pixels in on/restored"
+  },
+  "tracker": {
+    "implemented": 10,
+    "partial": 27,
+    "verified": 0,
+    "open_release_gates": 5
+  },
+  "published_ci": "Preceding77027f5d all7 jobs pass; this batch pending publication CI"
+}

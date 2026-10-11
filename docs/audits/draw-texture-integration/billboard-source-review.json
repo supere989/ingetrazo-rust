@@ -1,0 +1,33 @@
+{
+  "reviewed_head": "42a3be57bca1bada3737bcc11ed48797ca9a078c",
+  "original_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "base": "77027f5d",
+  "scope": "Read-only source inspection; no edits, builds, or runtime oracle runs.",
+  "findings": [
+    {
+      "id": "shared-path-order",
+      "status": "retracted",
+      "reason": "Each Packet run receives a distinct global order and first/count range. Geometry.prepare preserves SourceTextureRun; opaque-front Draw sorting restores order across shared buffers. Buffer grouping does not combine individual draw ranges."
+    },
+    {
+      "id": "hole-area-ranking",
+      "status": "retracted",
+      "reason": "Pinned core/mesh.py Face.area returns 0.5 * self._newell().length() on outer loop only. Native outer-ring Newell ranking follows source; earlier assertion that holes are subtracted was incorrect."
+    },
+    {
+      "id": "nested-billboard-traversal",
+      "status": "confirmed-on-earlier-head",
+      "reason": "Earlier visit returned after own billboard packet and omitted children, unlike original _expand_placements. Validation confirmed and owns correction; current head advanced during review, correction acceptance belongs separate tests."
+    }
+  ],
+  "ownership_review": {
+    "camera_only": "Image and descriptor cache retained; staged vertex replacements use completion preflight before publication.",
+    "uv": "Inverse-transpose and affine constant adjustment match original core/group.py _remap_uvws.",
+    "failure": "Candidate vertex rollback and uncertain transfer quarantine appear consistent with existing resource ownership. Source review only, not runtime proof."
+  },
+  "limitations": [
+    "No full independent runtime/pixel proof.",
+    "Review observed concurrent HEAD advancement.",
+    "BIM stable target preserved."
+  ]
+}
