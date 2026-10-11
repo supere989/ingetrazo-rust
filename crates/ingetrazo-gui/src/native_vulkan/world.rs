@@ -353,8 +353,8 @@ impl World {
  fn source_camera_projection(&self,camera:&ingetrazo_core::camera::OrbitCamera)->Result<([f32;16],[f32;16]),String>{
   let snapshot=crate::navigation_ray::camera_snapshot(camera).ok_or("Source viewport camera arithmetic admission")?;
   let matrix:[f32;16]=std::array::from_fn(|i|snapshot.matrix[i/4][i%4]);
-  // Portable fallback rounds the Z row before vertex multiplication; its
-  // precision remains separately observable from native GL depth control.
+  // Retain source Qt-f32 MVP on both policies. Portable shaders convert
+  // homogeneous Z after multiplication; native viewport mapping stays unchanged.
   let mvp=matrix;
   Ok((matrix,mvp))
  }
@@ -628,7 +628,7 @@ impl World {
    for i in 0..3{if let Some(buffer)=self.ghost_buffers[i]{
     self.device.cmd_bind_pipeline(command,vk::PipelineBindPoint::GRAPHICS,self.ghost_pipelines[usize::from(i==2)]);
     self.push_face_style(command,if i==2{5}else{4},1.);
-    self.device.cmd_push_constants(command,self.layout,vk::ShaderStageFlags::VERTEX|vk::ShaderStageFlags::FRAGMENT,80,bytemuck::bytes_of(&0u32));
+    self.device.cmd_push_constants(command,self.layout,vk::ShaderStageFlags::VERTEX|vk::ShaderStageFlags::FRAGMENT,80,bytemuck::bytes_of(&super::source_depth::unclipped_draw_flags(draw_flags)));
     self.device.cmd_push_constants(command,self.layout,vk::ShaderStageFlags::VERTEX|vk::ShaderStageFlags::FRAGMENT,96,bytemuck::cast_slice(&self.edge_color));
     self.device.cmd_bind_vertex_buffers(command,0,&[self.resources.buffer(buffer).ok_or("Hidden geometry buffer absent")?],&[0]);
     self.device.cmd_draw(command,self.ghost_counts[i],1,0,0);self.resources.mark_used(buffer,serial)?;

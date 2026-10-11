@@ -1,0 +1,10 @@
+{
+  "finding": "Hidden ghosts cleared all offset80 flags while retaining source GL MVP; portable depth bit was lost.",
+  "correction": "Ghost push now uses source_depth::unclipped_draw_flags(draw_flags), preserving high31 and clearing section/cutout low bits.",
+  "checks": "Three focused source_depth tests pass; portable/source ghost negative clip-Z witness, native/ordinary flags clear, section bits clear.",
+  "remaining_scope": "CPU routing/numeric regression only; no new ghost/source-camera GPU frame capture or broad suite. Existing24 portable source frames contain no hidden ghosts.",
+  "source_hashes": {
+    "crates/ingetrazo-gui/src/native_vulkan/world.rs": "a70f673be65f041687957777a036daa31decd4496e81c075ec747df684b4b1fa",
+    "crates/ingetrazo-gui/src/native_vulkan/source_depth.rs": "bc727ba6933a463aaac5f656a14f57a5755a3998bb71b2507d279b8fc6f94278"
+  }
+}
