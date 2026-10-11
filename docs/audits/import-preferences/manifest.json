@@ -1,0 +1,109 @@
+{
+  "runtime_commit": "ba69e2d5",
+  "followups_pending_integration": [
+    "e0475b19",
+    "795161c0"
+  ],
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "entries": {
+    "ambiguous.obj": {
+      "bytes": 32,
+      "sha256": "697b00ab13410c52a542d2e9c63711fcc04e9cbf6c0d3439a9b43cc812e6e713"
+    },
+    "build.log": {
+      "bytes": 20335,
+      "sha256": "1c27f4bb9cd158062cfe40fca1f8a4ffcdb31299ba5eb02e155033d21d619ef4"
+    },
+    "check.log": {
+      "bytes": 71,
+      "sha256": "2d5ed92a35a863b2b6683e80863ce07c5d32a212a34ff94be11e02dbecb647d6"
+    },
+    "first-source-api-failure.log": {
+      "bytes": 416,
+      "sha256": "9637ae3b95ccffc54e9c58101e644000e554fdea38873cf4dff01e64711a6709"
+    },
+    "first-source-settings.zip": {
+      "bytes": 582,
+      "sha256": "865ce6f47dddb0b3ab45a541d74a434ce40f5cecef6e83575c470728cb845950"
+    },
+    "header.dxf": {
+      "bytes": 128,
+      "sha256": "2fc67368d5c612051cf24d571782ca36874ac3ee56fbf6290de48e4d3d202c1a"
+    },
+    "huge.obj": {
+      "bytes": 40,
+      "sha256": "4b0c6020a21b6731ba41a47286f784d2f57d6472ac45ebc96d8612e33d962f42"
+    },
+    "invalid.obj": {
+      "bytes": 24,
+      "sha256": "4d9eed0c1a94154ca91aeb5721fe4e8db4760fb455576b47a588a2cdb617077d"
+    },
+    "large.obj": {
+      "bytes": 36,
+      "sha256": "3fc1b608881a4fa0f4673033a02284d12c416958f0e9c6fbc18d2045e74f4a91"
+    },
+    "lying.dxf": {
+      "bytes": 128,
+      "sha256": "19510ffbda3537d742cabe93f19a1c1feea7a20f9f1872b1ebf381e9a0c9913e"
+    },
+    "native-import-preferences.json": {
+      "bytes": 12421,
+      "sha256": "8e2a46e6767fa8647eeb4bae4b6f2fa72f5e6706a11a87dcf1a799c7f87cfb89"
+    },
+    "native-import-settings/config/settings.json": {
+      "bytes": 552,
+      "sha256": "4a158a22b07d0619630753185d673e8ca7b7dc398c780c7a21af5c8883d3405b"
+    },
+    "native.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "original-import-preferences.json": {
+      "bytes": 12421,
+      "sha256": "8e2a46e6767fa8647eeb4bae4b6f2fa72f5e6706a11a87dcf1a799c7f87cfb89"
+    },
+    "source-settings/ImportPreferencesProof/ImportPreferencesProof.ini": {
+      "bytes": 599,
+      "sha256": "c4eceb372a39f0a4f9be3ac39072e3fb9fd135640e94df526d0aedca742893d1"
+    },
+    "source.log": {
+      "bytes": 864,
+      "sha256": "b5091d47c02029e810f06878abb938d5343d95d05c12d7edea3d923f03f202b4"
+    },
+    "tiny.dxf": {
+      "bytes": 128,
+      "sha256": "523b77dc608a121c5352e80b1528439959ef0d36a39f4b292aafa0d842c1a96c"
+    },
+    "ui.log": {
+      "bytes": 19525,
+      "sha256": "ae64e6ef5005e4a4c6f6e99c8217dca816da4e6f682d8a90e8d1bf4c8ea3554b"
+    }
+  },
+  "runtime_sources": {
+    "crates/ingetrazo-formats/src/obj.rs": "2366d1cda8f2ab0d75a3fbf36b8a173c95a3976e2f5c4f3e4881c4b7d0bf68db",
+    "crates/ingetrazo-formats/src/dxf.rs": "c24c4a076b68181983e73b344b8a82b5c7d9d3a510acf8c51daef8aeb7abd2ac",
+    "crates/ingetrazo-gui/src/import_units.rs": "1073704a2c30d7962dc6deb58426d7d5a6e13fed7c55761d793e64d565fd1e8a",
+    "crates/ingetrazo-gui/src/preferences_editor.rs": "90310f59ce5abaa053ea56962e3450adb53e1a45ffc7951b54be23e8078dccfe",
+    "crates/ingetrazo-gui/src/app.rs": "52bb18234011a3b1f6bf0971597140937c8de3f26862771be0dddcee4adfe5e6",
+    "crates/ingetrazo-gui/src/dialogs.rs": "a06962346b35bca9755cff3e6b41f4e01dd906428b90fa2f5d2ab92100b8b2fe",
+    "crates/ingetrazo-gui/src/document_session.rs": "813cc5d4dd42f058d9c904afb3c39c5a2a1428b8847c3d472dfe2d23b9370926",
+    "crates/ingetrazo-gui/src/lib.rs": "34f9abc83ccf94995df11bb7b968543f13cc4a133bd71eab1eaae35b67492ab2",
+    "crates/ingetrazo-gui/src/menu.rs": "e6e9bffa9d9dca626ec9cb6fd67a4e8a20a2c8e286ce237a69f1867178174374",
+    "crates/ingetrazo-gui/src/navigation.rs": "272fd6043f6566a751befcc6eae18ebf69605346d701d95368a4eecc8a124969",
+    "crates/ingetrazo-gui/examples/context_document_lifecycle.rs": "218d7c896a19f23df932d19153e28e55a87ab5165a42c0553a62a9bc04369fce",
+    "scripts/reference-import-preferences.py": "d5b4a4dfda0e65967621691e94c14680cfcb151c48d6f5c4dce062c8e8476637",
+    "scripts/check-import-preferences.py": "015fd697455d8c87cb003d82932b0d13e340e081108a1a93134381dc2ff59988"
+  },
+  "original_sources": {
+    "views/preferences_dialog.py": "9d9c97b35cd9dbd19c7cbb85652f670c3a85549021af853d027418557d7129ab",
+    "views/main_window.py": "ea02be3e439c80731d0f5b5fde3d92d9b3f62e8ad10cd44ad305c3261b7786fa",
+    "formats/obj.py": "d34b025e2f312c68945705acedcdd69b987dfbd77e2e0ddc7d339dfecbc9a5b7",
+    "formats/dxf_in.py": "5a8a1728536de1936af2db8bdcc0c146db3a320f5cb256a3288a903b74f718a9",
+    "core/history.py": "2eb66a1d557099b51383988a7819145289fc4ce2c37fc7de3a92ed35b5830559"
+  },
+  "binary": {
+    "path": "/tmp/ingetrazo-ai-registry-target/debug/examples/context_document_lifecycle",
+    "sha256": "d4399ce82b5aea49ea35a247e36cdc3652694da3c7ff0bf845131afc2436043a"
+  },
+  "archive_sha256": "594417fe65e14861a9a822a74512c012927fc917b72f3ca940d8c30ddeea961c"
+}
