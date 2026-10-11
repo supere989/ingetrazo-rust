@@ -69,3 +69,6 @@ mod world_billboard;
 /// Native caller scope for Objective-C temporary object retirement.
 #[cfg(target_os="macos")]
 pub use objc2::rc::autoreleasepool;
+
+#[cfg(target_os="macos")]
+mod world_resolve;

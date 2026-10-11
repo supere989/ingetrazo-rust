@@ -1,0 +1,72 @@
+name: Native Metal production tile resolve regressions
+on:
+  push:
+    branches: [review/metal-tile-resolve]
+  workflow_dispatch:
+concurrency:
+  group: metal-tile-resolve-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  app-consumer:
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        runner: [macos-15, macos-15-intel]
+    env:
+      CARGO_PROFILE_DEV_DEBUG: 0
+      CARGO_PROFILE_TEST_DEBUG: 0
+      CARGO_INCREMENTAL: 0
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Reuse compiled Cargo dependencies
+        uses: Swatinem/rust-cache@49a0bdc70d2e1b713ca9e2869b211fcce03d3c1c # v2
+        with:
+          cache-bin: "false"
+          cache-workspace-crates: "false"
+          cache-on-failure: "true"
+          save-if: ${{ github.event_name != 'pull_request' }}
+      - name: Build only changed production World consumers
+        id: nativebuild
+        run: |
+          mkdir -p section-resolve-evidence
+          git rev-parse HEAD > section-resolve-evidence/revision.txt
+          git ls-files crates/ingetrazo-gui/src/native_metal crates/ingetrazo-gui/src/native_metal.rs crates/ingetrazo-gui/src/viewport.rs crates/ingetrazo-metal/src crates/ingetrazo-gui/examples/native_metal_section_resolve.rs crates/ingetrazo-gui/examples/native_world_defaults.rs crates/ingetrazo-gui/examples/native_metal_billboards.rs crates/ingetrazo-gui/examples/native_metal_document_annotations.rs crates/ingetrazo-cli scripts/check-native-metal-launcher.py scripts/check-metal-section-resolve.py scripts/check-metal-section-fill.py scripts/check-section-resolve-arithmetic.py docs/audits/section-original-gl | xargs shasum -a 256 > section-resolve-evidence/source.sha256
+          python3 scripts/check-section-resolve-arithmetic.py > section-resolve-evidence/arithmetic.log 2>&1
+          cargo build --locked -p ingetrazo-gui -p ingetrazo-cli --bin ingetrazo --example native_metal_section_resolve --example native_world_defaults --example native_metal_billboards --example native_metal_document_annotations -j2 > section-resolve-evidence/build.log 2>&1
+          shasum -a 256 target/debug/ingetrazo target/debug/examples/native_metal_section_resolve target/debug/examples/native_world_defaults target/debug/examples/native_metal_billboards target/debug/examples/native_metal_document_annotations > section-resolve-evidence/binary.sha256
+      - name: Compare untouched and candidate resolve through the actual World encoder
+        run: |
+          python3 - <<'PYTHON'
+          import subprocess
+          with open('section-resolve-evidence/runtime.log','w') as log:
+              subprocess.run(['target/debug/examples/native_metal_section_resolve','section-resolve-evidence/native','--production'],stdout=log,stderr=subprocess.STDOUT,timeout=120,check=True)
+          PYTHON
+      - name: Default billboard document and packaged CLI production regressions
+        if: ${{ !cancelled() && steps.nativebuild.outcome == 'success' }}
+        run: |
+          python3 - <<'PYTHON'
+          import subprocess, pathlib
+          root=pathlib.Path('section-resolve-evidence')
+          doc='ingetrazo/examples/banca-pergola-yanque.igz'
+          commands=[('defaults',['target/debug/examples/native_world_defaults',str(root/'defaults')]),('billboards',['target/debug/examples/native_metal_billboards',doc,str(root/'billboards')]),('document',['target/debug/examples/native_metal_document_annotations',doc,str(root/'document')]),('launcher',['python3','scripts/check-native-metal-launcher.py','target/debug/ingetrazo',doc,str(root/'launcher')])]
+          failed=[]
+          for name,command in commands:
+              try:
+                  with (root/(name+'.log')).open('w') as log:subprocess.run(command,stdout=log,stderr=subprocess.STDOUT,timeout=90,check=True)
+              except (subprocess.CalledProcessError,subprocess.TimeoutExpired) as error:failed.append((name,str(error)))
+          if failed:raise SystemExit(str(failed))
+          PYTHON
+      - name: Record strict full RGBA source comparisons for both paths
+        if: ${{ !cancelled() }}
+        run: python3 scripts/check-metal-section-resolve.py section-resolve-evidence/native --output section-resolve-evidence/comparison.json > section-resolve-evidence/checker.log 2>&1
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: tile-resolve-${{ matrix.runner }}
+          path: section-resolve-evidence/
+          if-no-files-found: error

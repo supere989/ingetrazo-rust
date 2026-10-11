@@ -1,0 +1,7 @@
+{
+  "source_channel_float_bits_exact": 64,
+  "decode_entries": 256,
+  "ordered_four_pixels_exact": true,
+  "wrong_truncation_half_away_reassociation_rejected": true,
+  "scope": "Scalar proof of measured inputs and explicit operation order; native shader implementation remains pending"
+}
