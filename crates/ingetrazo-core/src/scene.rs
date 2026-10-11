@@ -229,6 +229,13 @@ impl Scene {
         self.layers.iter().find(|layer| layer.name == name).map_or(true, |layer| layer.visible)
     }
 
+    /// Locking does not change visibility. Ordinary picking also rejects locks;
+    /// unknown layer names remain visible and unlocked, as in the source.
+    pub fn is_layer_selectable(&self, layer_name: Option<&str>) -> bool {
+        let name = crate::layers::entity_layer_name(layer_name);
+        self.layers.iter().find(|layer| layer.name == name).is_none_or(|layer| layer.visible && !layer.locked)
+    }
+
     pub fn used_layer_names(&self)->std::collections::HashSet<String>{
         fn mesh(mesh:&Mesh,used:&mut HashSet<String>){for f in &mesh.faces{if let Some(name)=f.layer.as_deref().or_else(||f.attrs.get("layer").and_then(|v|v.as_str())){used.insert(name.into());}}for e in &mesh.edges{if let Some(name)=&e.layer{used.insert(name.clone());}}}
         fn groups(gs:&[Group],used:&mut HashSet<String>){for g in gs{if let Some(name)=&g.layer{used.insert(name.clone());}mesh(&g.mesh,used);groups(&g.children,used);}}
@@ -274,4 +281,22 @@ impl Scene{
  pub fn mesh_face_visible(&self,mesh:&Mesh,id:usize)->bool{mesh.faces.get(id).is_some_and(|face|face.attrs.get("hidden").and_then(|v|v.as_bool())!=Some(true)&&self.is_layer_visible(face.layer.as_deref().or_else(||face.attrs.get("layer").and_then(|v|v.as_str()))))}
  pub fn mesh_edge_visible(&self,mesh:&Mesh,id:usize)->bool{mesh.edges.get(id).is_some_and(|edge|!edge.hidden&&self.is_layer_visible(edge.layer.as_deref())&&(edge.faces.is_empty()||edge.faces.iter().any(|&id|self.mesh_face_visible(mesh,id))))}
  pub fn mesh_vertex_visible(&self,mesh:&Mesh,id:usize)->bool{mesh.vertices.get(id).is_some_and(|vertex|vertex.edges.is_empty()||vertex.edges.iter().any(|&id|self.mesh_edge_visible(mesh,id)))}
+}
+
+impl Scene {
+    pub fn mesh_face_selectable(&self, mesh: &Mesh, id: usize) -> bool {
+        mesh.faces.get(id).is_some_and(|face| {
+            face.attrs.get("hidden").and_then(|v| v.as_bool()) != Some(true)
+                && self.is_layer_selectable(face.layer.as_deref().or_else(|| {
+                    face.attrs.get("layer").and_then(|v| v.as_str())
+                }))
+        })
+    }
+
+    pub fn mesh_edge_selectable(&self, mesh: &Mesh, id: usize) -> bool {
+        mesh.edges.get(id).is_some_and(|edge| {
+            !edge.hidden && self.is_layer_selectable(edge.layer.as_deref())
+                && (edge.faces.is_empty() || edge.faces.iter().any(|&id| self.mesh_face_visible(mesh, id)))
+        })
+    }
 }

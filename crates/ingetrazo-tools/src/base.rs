@@ -200,7 +200,7 @@ pub fn pick_scene_face(scene: &Scene, ray: &Ray) -> Option<(usize, f64, DVec3)> 
     let mut closest = None;
     let mut min_t = f64::INFINITY;
     for id in 0..scene.mesh.faces.len() {
-        if !scene.mesh_face_visible(&scene.mesh,id){continue;}
+        if !scene.mesh_face_selectable(&scene.mesh,id){continue;}
         for (a, b, c) in scene.mesh.triangulate_face(id) {
             if let Some((t, p)) = ray_triangle_intersect(ray, a, b, c) {
                 if t < min_t && scene.section_point_visible(p) {
@@ -216,7 +216,7 @@ pub fn pick_scene_edge(scene: &Scene, ray: &Ray, tolerance: f64) -> Option<usize
     let mut closest = None;
     let mut min_dist = tolerance;
     for (id, edge) in scene.mesh.edges.iter().enumerate() {
-        if !scene.mesh_edge_visible(&scene.mesh,id){continue;}
+        if !scene.mesh_edge_selectable(&scene.mesh,id){continue;}
         let Some((a, b)) = scene.section_segment(
             scene.mesh.vertices[edge.v0].position,
             scene.mesh.vertices[edge.v1].position,
@@ -474,17 +474,14 @@ pub fn pick_scene_group(scene: &Scene, ray: &Ray, tolerance: f64) -> Option<(usi
         tolerance: f64,
         best: &mut f64,
     ) {
-        if group.hidden || !scene.is_layer_visible(group.layer.as_deref()) {
+        if group.hidden || !scene.is_layer_selectable(group.layer.as_deref()) {
             return;
         }
+        // The source closed-group picker applies the placement layer; internal
+        // face/edge tags acquire their own meaning after entering that context.
         let transform = parent * group.transform;
         for (id, face) in group.mesh.faces.iter().enumerate() {
             if face.attrs.get("hidden").and_then(|v| v.as_bool()) == Some(true)
-                || !scene.is_layer_visible(
-                    face.layer
-                        .as_deref()
-                        .or_else(|| face.attrs.get("layer").and_then(|v| v.as_str())),
-                )
             {
                 continue;
             }
@@ -502,18 +499,13 @@ pub fn pick_scene_group(scene: &Scene, ray: &Ray, tolerance: f64) -> Option<(usi
             }
         }
         for edge in &group.mesh.edges {
-            if edge.hidden || !scene.is_layer_visible(edge.layer.as_deref()) {
+            if edge.hidden {
                 continue;
             }
             if !edge.faces.is_empty()
                 && !edge.faces.iter().any(|&id| {
                     group.mesh.faces.get(id).is_some_and(|face| {
                         face.attrs.get("hidden").and_then(|v| v.as_bool()) != Some(true)
-                            && scene.is_layer_visible(
-                                face.layer
-                                    .as_deref()
-                                    .or_else(|| face.attrs.get("layer").and_then(|v| v.as_str())),
-                            )
                     })
                 })
             {

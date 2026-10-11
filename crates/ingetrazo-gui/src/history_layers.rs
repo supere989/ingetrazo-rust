@@ -148,31 +148,27 @@ impl IngeTrazoApp {
         }
     }
     fn prune_layer_selection(&mut self, name: &str) {
-        use ingetrazo_core::scene::SelectionItem;
+        use ingetrazo_core::{layers::entity_layer_name, scene::SelectionItem};
         let dead: Vec<_> = self
             .scene
             .selection
             .iter()
-            .filter(|item| match item {
-                SelectionItem::Face(i) => {
-                    self.scene.mesh.faces.get(*i).and_then(|f| {
+            .filter(|item| {
+                let layer = match item {
+                    SelectionItem::Face(i) => self.scene.mesh.faces.get(*i).map(|f| {
                         f.layer
                             .as_deref()
                             .or_else(|| f.attrs.get("layer").and_then(|v| v.as_str()))
-                    }) == Some(name)
-                }
-                SelectionItem::Edge(i) => {
-                    self.scene
-                        .mesh
-                        .edges
-                        .get(*i)
-                        .and_then(|e| e.layer.as_deref())
-                        == Some(name)
-                }
-                SelectionItem::Group(i) => {
-                    self.scene.groups.get(*i).and_then(|g| g.layer.as_deref()) == Some(name)
-                }
-                _ => false,
+                    }),
+                    SelectionItem::Edge(i) => {
+                        self.scene.mesh.edges.get(*i).map(|e| e.layer.as_deref())
+                    }
+                    SelectionItem::Group(i) => {
+                        self.scene.groups.get(*i).map(|g| g.layer.as_deref())
+                    }
+                    _ => None,
+                };
+                layer.is_some_and(|layer| entity_layer_name(layer) == name)
             })
             .cloned()
             .collect();
@@ -186,7 +182,8 @@ impl IngeTrazoApp {
         }
         self.seal_layer_history();
         self.scene.layers.push(Layer::new(name));
-        self.scene.bump_view_version();self.bump_render_layers_revision();
+        self.scene.bump_view_version();
+        self.bump_render_layers_revision();
         true
     }
     pub fn set_layer_locked(&mut self, index: usize, locked: bool) -> bool {
@@ -205,7 +202,8 @@ impl IngeTrazoApp {
         if !layer.visible || layer.locked {
             self.prune_layer_selection(&layer.name);
         }
-        self.scene.bump_view_version();self.bump_render_layers_revision();
+        self.scene.bump_view_version();
+        self.bump_render_layers_revision();
         true
     }
     pub(crate) fn change_layer_visibility(&mut self, index: usize, visible: bool) -> bool {
@@ -224,7 +222,8 @@ impl IngeTrazoApp {
         if !layer.visible || layer.locked {
             self.prune_layer_selection(&layer.name);
         }
-        self.scene.bump_view_version();self.bump_render_layers_revision();
+        self.scene.bump_view_version();
+        self.bump_render_layers_revision();
         true
     }
     pub fn rename_layer(&mut self, index: usize, name: String) -> bool {
@@ -232,7 +231,7 @@ impl IngeTrazoApp {
             return false;
         };
         let old = layer.name.clone();
-        if old==ingetrazo_core::layers::DEFAULT_LAYER
+        if old == ingetrazo_core::layers::DEFAULT_LAYER
             || name.trim().is_empty()
             || old == name
             || self.scene.layers.iter().any(|l| l.name == name)
@@ -267,7 +266,8 @@ impl IngeTrazoApp {
         if !layer.visible || layer.locked {
             self.prune_layer_selection(&layer.name);
         }
-        self.scene.bump_view_version();self.bump_render_layers_revision();
+        self.scene.bump_view_version();
+        self.bump_render_layers_revision();
         true
     }
     pub fn assign_selection_to_named_layer(&mut self, name: &str) -> usize {
@@ -301,7 +301,7 @@ impl IngeTrazoApp {
             return false;
         };
         let name = layer.name.clone();
-        if name==ingetrazo_core::layers::DEFAULT_LAYER {
+        if name == ingetrazo_core::layers::DEFAULT_LAYER {
             return false;
         }
         self.seal_layer_history();
@@ -355,7 +355,8 @@ impl IngeTrazoApp {
         self.active_layer_idx = self
             .active_layer_idx
             .min(self.scene.layers.len().saturating_sub(1));
-        self.scene.bump_view_version();self.bump_render_layers_revision();
+        self.scene.bump_view_version();
+        self.bump_render_layers_revision();
         true
     }
 }

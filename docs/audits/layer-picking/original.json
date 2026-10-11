@@ -1,0 +1,1763 @@
+{
+  "rows": [
+    {
+      "name": "face-default-open",
+      "ray": [
+        [
+          3.7568980008212595e-29,
+          -6.135480578456365e-13,
+          10020.0
+        ],
+        [
+          -3.7493993930529855e-33,
+          6.123234262925839e-17,
+          -1.0
+        ]
+      ],
+      "point": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "face": 0,
+      "edge": null,
+      "group": null,
+      "vertex": [
+        -2.0,
+        -2.0,
+        0.0
+      ],
+      "selection": [],
+      "visible_faces": [
+        true
+      ]
+    },
+    {
+      "name": "face-default-locked",
+      "ray": [
+        [
+          3.7568980008212595e-29,
+          -6.135480578456365e-13,
+          10020.0
+        ],
+        [
+          -3.7493993930529855e-33,
+          6.123234262925839e-17,
+          -1.0
+        ]
+      ],
+      "point": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "face": null,
+      "edge": null,
+      "group": null,
+      "vertex": [
+        -2.0,
+        -2.0,
+        0.0
+      ],
+      "selection": [],
+      "visible_faces": [
+        true
+      ]
+    },
+    {
+      "name": "face-default-hidden",
+      "ray": [
+        [
+          3.7568980008212595e-29,
+          -6.135480578456365e-13,
+          10020.0
+        ],
+        [
+          -3.7493993930529855e-33,
+          6.123234262925839e-17,
+          -1.0
+        ]
+      ],
+      "point": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "face": null,
+      "edge": null,
+      "group": null,
+      "vertex": [
+        -2.0,
+        -2.0,
+        0.0
+      ],
+      "selection": [],
+      "visible_faces": [
+        false
+      ]
+    },
+    {
+      "name": "face-default-restored",
+      "ray": [
+        [
+          3.7568980008212595e-29,
+          -6.135480578456365e-13,
+          10020.0
+        ],
+        [
+          -3.7493993930529855e-33,
+          6.123234262925839e-17,
+          -1.0
+        ]
+      ],
+      "point": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "face": 0,
+      "edge": null,
+      "group": null,
+      "vertex": [
+        -2.0,
+        -2.0,
+        0.0
+      ],
+      "selection": [],
+      "visible_faces": [
+        true
+      ]
+    },
+    {
+      "name": "face-empty-open",
+      "ray": [
+        [
+          3.7568980008212595e-29,
+          -6.135480578456365e-13,
+          10020.0
+        ],
+        [
+          -3.7493993930529855e-33,
+          6.123234262925839e-17,
+          -1.0
+        ]
+      ],
+      "point": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "face": 0,
+      "edge": null,
+      "group": null,
+      "vertex": [
+        -2.0,
+        -2.0,
+        0.0
+      ],
+      "selection": [],
+      "visible_faces": [
+        true
+      ]
+    },
+    {
+      "name": "face-empty-locked",
+      "ray": [
+        [
+          3.7568980008212595e-29,
+          -6.135480578456365e-13,
+          10020.0
+        ],
+        [
+          -3.7493993930529855e-33,
+          6.123234262925839e-17,
+          -1.0
+        ]
+      ],
+      "point": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "face": null,
+      "edge": null,
+      "group": null,
+      "vertex": [
+        -2.0,
+        -2.0,
+        0.0
+      ],
+      "selection": [],
+      "visible_faces": [
+        true
+      ]
+    },
+    {
+      "name": "face-empty-hidden",
+      "ray": [
+        [
+          3.7568980008212595e-29,
+          -6.135480578456365e-13,
+          10020.0
+        ],
+        [
+          -3.7493993930529855e-33,
+          6.123234262925839e-17,
+          -1.0
+        ]
+      ],
+      "point": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "face": null,
+      "edge": null,
+      "group": null,
+      "vertex": [
+        -2.0,
+        -2.0,
+        0.0
+      ],
+      "selection": [],
+      "visible_faces": [
+        false
+      ]
+    },
+    {
+      "name": "face-empty-restored",
+      "ray": [
+        [
+          3.7568980008212595e-29,
+          -6.135480578456365e-13,
+          10020.0
+        ],
+        [
+          -3.7493993930529855e-33,
+          6.123234262925839e-17,
+          -1.0
+        ]
+      ],
+      "point": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "face": 0,
+      "edge": null,
+      "group": null,
+      "vertex": [
+        -2.0,
+        -2.0,
+        0.0
+      ],
+      "selection": [],
+      "visible_faces": [
+        true
+      ]
+    },
+    {
+      "name": "face-named-open",
+      "ray": [
+        [
+          3.7568980008212595e-29,
+          -6.135480578456365e-13,
+          10020.0
+        ],
+        [
+          -3.7493993930529855e-33,
+          6.123234262925839e-17,
+          -1.0
+        ]
+      ],
+      "point": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "face": 0,
+      "edge": null,
+      "group": null,
+      "vertex": [
+        -2.0,
+        -2.0,
+        0.0
+      ],
+      "selection": [],
+      "visible_faces": [
+        true
+      ]
+    },
+    {
+      "name": "face-named-locked",
+      "ray": [
+        [
+          3.7568980008212595e-29,
+          -6.135480578456365e-13,
+          10020.0
+        ],
+        [
+          -3.7493993930529855e-33,
+          6.123234262925839e-17,
+          -1.0
+        ]
+      ],
+      "point": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "face": null,
+      "edge": null,
+      "group": null,
+      "vertex": [
+        -2.0,
+        -2.0,
+        0.0
+      ],
+      "selection": [
+        "edge",
+        "edge",
+        "edge",
+        "edge"
+      ],
+      "visible_faces": [
+        true
+      ]
+    },
+    {
+      "name": "face-named-hidden",
+      "ray": [
+        [
+          3.7568980008212595e-29,
+          -6.135480578456365e-13,
+          10020.0
+        ],
+        [
+          -3.7493993930529855e-33,
+          6.123234262925839e-17,
+          -1.0
+        ]
+      ],
+      "point": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "face": null,
+      "edge": null,
+      "group": null,
+      "vertex": [
+        -2.0,
+        -2.0,
+        0.0
+      ],
+      "selection": [
+        "edge",
+        "edge",
+        "edge",
+        "edge"
+      ],
+      "visible_faces": [
+        false
+      ]
+    },
+    {
+      "name": "face-named-restored",
+      "ray": [
+        [
+          3.7568980008212595e-29,
+          -6.135480578456365e-13,
+          10020.0
+        ],
+        [
+          -3.7493993930529855e-33,
+          6.123234262925839e-17,
+          -1.0
+        ]
+      ],
+      "point": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "face": 0,
+      "edge": null,
+      "group": null,
+      "vertex": [
+        -2.0,
+        -2.0,
+        0.0
+      ],
+      "selection": [
+        "edge",
+        "edge",
+        "edge",
+        "edge"
+      ],
+      "visible_faces": [
+        true
+      ]
+    },
+    {
+      "name": "face-unknown-open",
+      "ray": [
+        [
+          3.7568980008212595e-29,
+          -6.135480578456365e-13,
+          10020.0
+        ],
+        [
+          -3.7493993930529855e-33,
+          6.123234262925839e-17,
+          -1.0
+        ]
+      ],
+      "point": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "face": 0,
+      "edge": null,
+      "group": null,
+      "vertex": [
+        -2.0,
+        -2.0,
+        0.0
+      ],
+      "selection": [],
+      "visible_faces": [
+        true
+      ]
+    },
+    {
+      "name": "face-unknown-locked",
+      "ray": [
+        [
+          3.7568980008212595e-29,
+          -6.135480578456365e-13,
+          10020.0
+        ],
+        [
+          -3.7493993930529855e-33,
+          6.123234262925839e-17,
+          -1.0
+        ]
+      ],
+      "point": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "face": 0,
+      "edge": null,
+      "group": null,
+      "vertex": [
+        -2.0,
+        -2.0,
+        0.0
+      ],
+      "selection": [
+        "edge",
+        "edge",
+        "edge",
+        "edge",
+        "face"
+      ],
+      "visible_faces": [
+        true
+      ]
+    },
+    {
+      "name": "face-unknown-hidden",
+      "ray": [
+        [
+          3.7568980008212595e-29,
+          -6.135480578456365e-13,
+          10020.0
+        ],
+        [
+          -3.7493993930529855e-33,
+          6.123234262925839e-17,
+          -1.0
+        ]
+      ],
+      "point": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "face": 0,
+      "edge": null,
+      "group": null,
+      "vertex": [
+        -2.0,
+        -2.0,
+        0.0
+      ],
+      "selection": [
+        "edge",
+        "edge",
+        "edge",
+        "edge",
+        "face"
+      ],
+      "visible_faces": [
+        true
+      ]
+    },
+    {
+      "name": "face-unknown-restored",
+      "ray": [
+        [
+          3.7568980008212595e-29,
+          -6.135480578456365e-13,
+          10020.0
+        ],
+        [
+          -3.7493993930529855e-33,
+          6.123234262925839e-17,
+          -1.0
+        ]
+      ],
+      "point": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "face": 0,
+      "edge": null,
+      "group": null,
+      "vertex": [
+        -2.0,
+        -2.0,
+        0.0
+      ],
+      "selection": [
+        "edge",
+        "edge",
+        "edge",
+        "edge",
+        "face"
+      ],
+      "visible_faces": [
+        true
+      ]
+    },
+    {
+      "name": "face-rear-open",
+      "ray": [
+        [
+          3.7568980008212595e-29,
+          -6.135480578456365e-13,
+          10020.0
+        ],
+        [
+          -3.7493993930529855e-33,
+          6.123234262925839e-17,
+          -1.0
+        ]
+      ],
+      "point": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "face": 0,
+      "edge": null,
+      "group": null,
+      "vertex": [
+        -2.0,
+        -2.0,
+        0.0
+      ],
+      "selection": [],
+      "visible_faces": [
+        true,
+        true
+      ]
+    },
+    {
+      "name": "face-rear-locked",
+      "ray": [
+        [
+          3.7568980008212595e-29,
+          -6.135480578456365e-13,
+          10020.0
+        ],
+        [
+          -3.7493993930529855e-33,
+          6.123234262925839e-17,
+          -1.0
+        ]
+      ],
+      "point": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "face": 1,
+      "edge": null,
+      "group": null,
+      "vertex": [
+        -2.0,
+        -2.0,
+        0.0
+      ],
+      "selection": [
+        "edge",
+        "edge",
+        "edge",
+        "edge",
+        "edge",
+        "edge",
+        "edge",
+        "edge",
+        "face"
+      ],
+      "visible_faces": [
+        true,
+        true
+      ]
+    },
+    {
+      "name": "face-rear-hidden",
+      "ray": [
+        [
+          3.7568980008212595e-29,
+          -6.135480578456365e-13,
+          10020.0
+        ],
+        [
+          -3.7493993930529855e-33,
+          6.123234262925839e-17,
+          -1.0
+        ]
+      ],
+      "point": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "face": 1,
+      "edge": null,
+      "group": null,
+      "vertex": [
+        -2.0,
+        -2.0,
+        0.0
+      ],
+      "selection": [
+        "edge",
+        "edge",
+        "edge",
+        "edge",
+        "edge",
+        "edge",
+        "edge",
+        "edge",
+        "face"
+      ],
+      "visible_faces": [
+        false,
+        true
+      ]
+    },
+    {
+      "name": "face-rear-restored",
+      "ray": [
+        [
+          3.7568980008212595e-29,
+          -6.135480578456365e-13,
+          10020.0
+        ],
+        [
+          -3.7493993930529855e-33,
+          6.123234262925839e-17,
+          -1.0
+        ]
+      ],
+      "point": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "face": 0,
+      "edge": null,
+      "group": null,
+      "vertex": [
+        -2.0,
+        -2.0,
+        0.0
+      ],
+      "selection": [
+        "edge",
+        "edge",
+        "edge",
+        "edge",
+        "edge",
+        "edge",
+        "edge",
+        "edge",
+        "face"
+      ],
+      "visible_faces": [
+        true,
+        true
+      ]
+    },
+    {
+      "name": "edge-default-open",
+      "ray": [
+        [
+          1.2246468525851679e-16,
+          -2.0,
+          10020.0
+        ],
+        [
+          0.0,
+          0.0,
+          -1.0
+        ]
+      ],
+      "point": [
+        0.0,
+        -2.0,
+        0.0
+      ],
+      "face": null,
+      "edge": 0,
+      "group": null,
+      "vertex": [
+        -2.0,
+        -2.0,
+        0.0
+      ],
+      "selection": [],
+      "visible_faces": []
+    },
+    {
+      "name": "edge-default-locked",
+      "ray": [
+        [
+          1.2246468525851679e-16,
+          -2.0,
+          10020.0
+        ],
+        [
+          0.0,
+          0.0,
+          -1.0
+        ]
+      ],
+      "point": [
+        0.0,
+        -2.0,
+        0.0
+      ],
+      "face": null,
+      "edge": null,
+      "group": null,
+      "vertex": [
+        -2.0,
+        -2.0,
+        0.0
+      ],
+      "selection": [],
+      "visible_faces": []
+    },
+    {
+      "name": "edge-default-hidden",
+      "ray": [
+        [
+          1.2246468525851679e-16,
+          -2.0,
+          10020.0
+        ],
+        [
+          0.0,
+          0.0,
+          -1.0
+        ]
+      ],
+      "point": [
+        0.0,
+        -2.0,
+        0.0
+      ],
+      "face": null,
+      "edge": null,
+      "group": null,
+      "vertex": [
+        -2.0,
+        -2.0,
+        0.0
+      ],
+      "selection": [],
+      "visible_faces": []
+    },
+    {
+      "name": "edge-default-restored",
+      "ray": [
+        [
+          1.2246468525851679e-16,
+          -2.0,
+          10020.0
+        ],
+        [
+          0.0,
+          0.0,
+          -1.0
+        ]
+      ],
+      "point": [
+        0.0,
+        -2.0,
+        0.0
+      ],
+      "face": null,
+      "edge": 0,
+      "group": null,
+      "vertex": [
+        -2.0,
+        -2.0,
+        0.0
+      ],
+      "selection": [],
+      "visible_faces": []
+    },
+    {
+      "name": "edge-empty-open",
+      "ray": [
+        [
+          1.2246468525851679e-16,
+          -2.0,
+          10020.0
+        ],
+        [
+          0.0,
+          0.0,
+          -1.0
+        ]
+      ],
+      "point": [
+        0.0,
+        -2.0,
+        0.0
+      ],
+      "face": null,
+      "edge": 0,
+      "group": null,
+      "vertex": [
+        -2.0,
+        -2.0,
+        0.0
+      ],
+      "selection": [],
+      "visible_faces": []
+    },
+    {
+      "name": "edge-empty-locked",
+      "ray": [
+        [
+          1.2246468525851679e-16,
+          -2.0,
+          10020.0
+        ],
+        [
+          0.0,
+          0.0,
+          -1.0
+        ]
+      ],
+      "point": [
+        0.0,
+        -2.0,
+        0.0
+      ],
+      "face": null,
+      "edge": null,
+      "group": null,
+      "vertex": [
+        -2.0,
+        -2.0,
+        0.0
+      ],
+      "selection": [],
+      "visible_faces": []
+    },
+    {
+      "name": "edge-empty-hidden",
+      "ray": [
+        [
+          1.2246468525851679e-16,
+          -2.0,
+          10020.0
+        ],
+        [
+          0.0,
+          0.0,
+          -1.0
+        ]
+      ],
+      "point": [
+        0.0,
+        -2.0,
+        0.0
+      ],
+      "face": null,
+      "edge": null,
+      "group": null,
+      "vertex": [
+        -2.0,
+        -2.0,
+        0.0
+      ],
+      "selection": [],
+      "visible_faces": []
+    },
+    {
+      "name": "edge-empty-restored",
+      "ray": [
+        [
+          1.2246468525851679e-16,
+          -2.0,
+          10020.0
+        ],
+        [
+          0.0,
+          0.0,
+          -1.0
+        ]
+      ],
+      "point": [
+        0.0,
+        -2.0,
+        0.0
+      ],
+      "face": null,
+      "edge": 0,
+      "group": null,
+      "vertex": [
+        -2.0,
+        -2.0,
+        0.0
+      ],
+      "selection": [],
+      "visible_faces": []
+    },
+    {
+      "name": "edge-named-open",
+      "ray": [
+        [
+          1.2246468525851679e-16,
+          -2.0,
+          10020.0
+        ],
+        [
+          0.0,
+          0.0,
+          -1.0
+        ]
+      ],
+      "point": [
+        0.0,
+        -2.0,
+        0.0
+      ],
+      "face": null,
+      "edge": 0,
+      "group": null,
+      "vertex": [
+        -2.0,
+        -2.0,
+        0.0
+      ],
+      "selection": [],
+      "visible_faces": []
+    },
+    {
+      "name": "edge-named-locked",
+      "ray": [
+        [
+          1.2246468525851679e-16,
+          -2.0,
+          10020.0
+        ],
+        [
+          0.0,
+          0.0,
+          -1.0
+        ]
+      ],
+      "point": [
+        0.0,
+        -2.0,
+        0.0
+      ],
+      "face": null,
+      "edge": null,
+      "group": null,
+      "vertex": [
+        -2.0,
+        -2.0,
+        0.0
+      ],
+      "selection": [],
+      "visible_faces": []
+    },
+    {
+      "name": "edge-named-hidden",
+      "ray": [
+        [
+          1.2246468525851679e-16,
+          -2.0,
+          10020.0
+        ],
+        [
+          0.0,
+          0.0,
+          -1.0
+        ]
+      ],
+      "point": [
+        0.0,
+        -2.0,
+        0.0
+      ],
+      "face": null,
+      "edge": null,
+      "group": null,
+      "vertex": [
+        -2.0,
+        -2.0,
+        0.0
+      ],
+      "selection": [],
+      "visible_faces": []
+    },
+    {
+      "name": "edge-named-restored",
+      "ray": [
+        [
+          1.2246468525851679e-16,
+          -2.0,
+          10020.0
+        ],
+        [
+          0.0,
+          0.0,
+          -1.0
+        ]
+      ],
+      "point": [
+        0.0,
+        -2.0,
+        0.0
+      ],
+      "face": null,
+      "edge": 0,
+      "group": null,
+      "vertex": [
+        -2.0,
+        -2.0,
+        0.0
+      ],
+      "selection": [],
+      "visible_faces": []
+    },
+    {
+      "name": "group-default-open",
+      "ray": [
+        [
+          3.7568980008212595e-29,
+          -6.135480578456365e-13,
+          10020.0
+        ],
+        [
+          -3.7493993930529855e-33,
+          6.123234262925839e-17,
+          -1.0
+        ]
+      ],
+      "point": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "face": null,
+      "edge": null,
+      "group": 0,
+      "vertex": [
+        -2.0,
+        -2.0,
+        0.0
+      ],
+      "selection": [],
+      "visible_faces": []
+    },
+    {
+      "name": "group-default-locked",
+      "ray": [
+        [
+          3.7568980008212595e-29,
+          -6.135480578456365e-13,
+          10020.0
+        ],
+        [
+          -3.7493993930529855e-33,
+          6.123234262925839e-17,
+          -1.0
+        ]
+      ],
+      "point": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "face": null,
+      "edge": null,
+      "group": null,
+      "vertex": null,
+      "selection": [],
+      "visible_faces": []
+    },
+    {
+      "name": "group-default-hidden",
+      "ray": [
+        [
+          3.7568980008212595e-29,
+          -6.135480578456365e-13,
+          10020.0
+        ],
+        [
+          -3.7493993930529855e-33,
+          6.123234262925839e-17,
+          -1.0
+        ]
+      ],
+      "point": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "face": null,
+      "edge": null,
+      "group": null,
+      "vertex": null,
+      "selection": [],
+      "visible_faces": []
+    },
+    {
+      "name": "group-default-restored",
+      "ray": [
+        [
+          3.7568980008212595e-29,
+          -6.135480578456365e-13,
+          10020.0
+        ],
+        [
+          -3.7493993930529855e-33,
+          6.123234262925839e-17,
+          -1.0
+        ]
+      ],
+      "point": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "face": null,
+      "edge": null,
+      "group": 0,
+      "vertex": [
+        -2.0,
+        -2.0,
+        0.0
+      ],
+      "selection": [],
+      "visible_faces": []
+    },
+    {
+      "name": "group-named-open",
+      "ray": [
+        [
+          3.7568980008212595e-29,
+          -6.135480578456365e-13,
+          10020.0
+        ],
+        [
+          -3.7493993930529855e-33,
+          6.123234262925839e-17,
+          -1.0
+        ]
+      ],
+      "point": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "face": null,
+      "edge": null,
+      "group": 0,
+      "vertex": [
+        -2.0,
+        -2.0,
+        0.0
+      ],
+      "selection": [],
+      "visible_faces": []
+    },
+    {
+      "name": "group-named-locked",
+      "ray": [
+        [
+          3.7568980008212595e-29,
+          -6.135480578456365e-13,
+          10020.0
+        ],
+        [
+          -3.7493993930529855e-33,
+          6.123234262925839e-17,
+          -1.0
+        ]
+      ],
+      "point": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "face": null,
+      "edge": null,
+      "group": null,
+      "vertex": null,
+      "selection": [],
+      "visible_faces": []
+    },
+    {
+      "name": "group-named-hidden",
+      "ray": [
+        [
+          3.7568980008212595e-29,
+          -6.135480578456365e-13,
+          10020.0
+        ],
+        [
+          -3.7493993930529855e-33,
+          6.123234262925839e-17,
+          -1.0
+        ]
+      ],
+      "point": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "face": null,
+      "edge": null,
+      "group": null,
+      "vertex": null,
+      "selection": [],
+      "visible_faces": []
+    },
+    {
+      "name": "group-named-restored",
+      "ray": [
+        [
+          3.7568980008212595e-29,
+          -6.135480578456365e-13,
+          10020.0
+        ],
+        [
+          -3.7493993930529855e-33,
+          6.123234262925839e-17,
+          -1.0
+        ]
+      ],
+      "point": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "face": null,
+      "edge": null,
+      "group": 0,
+      "vertex": [
+        -2.0,
+        -2.0,
+        0.0
+      ],
+      "selection": [],
+      "visible_faces": []
+    },
+    {
+      "name": "group-face-named-open",
+      "ray": [
+        [
+          3.7568980008212595e-29,
+          -6.135480578456365e-13,
+          10020.0
+        ],
+        [
+          -3.7493993930529855e-33,
+          6.123234262925839e-17,
+          -1.0
+        ]
+      ],
+      "point": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "face": null,
+      "edge": null,
+      "group": 0,
+      "vertex": [
+        -2.0,
+        -2.0,
+        0.0
+      ],
+      "selection": [],
+      "visible_faces": []
+    },
+    {
+      "name": "group-face-named-locked",
+      "ray": [
+        [
+          3.7568980008212595e-29,
+          -6.135480578456365e-13,
+          10020.0
+        ],
+        [
+          -3.7493993930529855e-33,
+          6.123234262925839e-17,
+          -1.0
+        ]
+      ],
+      "point": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "face": null,
+      "edge": null,
+      "group": 0,
+      "vertex": [
+        -2.0,
+        -2.0,
+        0.0
+      ],
+      "selection": [
+        "group"
+      ],
+      "visible_faces": []
+    },
+    {
+      "name": "group-face-named-hidden",
+      "ray": [
+        [
+          3.7568980008212595e-29,
+          -6.135480578456365e-13,
+          10020.0
+        ],
+        [
+          -3.7493993930529855e-33,
+          6.123234262925839e-17,
+          -1.0
+        ]
+      ],
+      "point": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "face": null,
+      "edge": null,
+      "group": 0,
+      "vertex": [
+        -2.0,
+        -2.0,
+        0.0
+      ],
+      "selection": [
+        "group"
+      ],
+      "visible_faces": []
+    },
+    {
+      "name": "group-face-named-restored",
+      "ray": [
+        [
+          3.7568980008212595e-29,
+          -6.135480578456365e-13,
+          10020.0
+        ],
+        [
+          -3.7493993930529855e-33,
+          6.123234262925839e-17,
+          -1.0
+        ]
+      ],
+      "point": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "face": null,
+      "edge": null,
+      "group": 0,
+      "vertex": [
+        -2.0,
+        -2.0,
+        0.0
+      ],
+      "selection": [
+        "group"
+      ],
+      "visible_faces": []
+    },
+    {
+      "name": "child-named-open",
+      "ray": [
+        [
+          3.7568980008212595e-29,
+          -6.135480578456365e-13,
+          10020.0
+        ],
+        [
+          -3.7493993930529855e-33,
+          6.123234262925839e-17,
+          -1.0
+        ]
+      ],
+      "point": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "face": null,
+      "edge": null,
+      "group": 0,
+      "vertex": [
+        -2.0,
+        -1.9999998807907104,
+        0.0
+      ],
+      "selection": [],
+      "visible_faces": []
+    },
+    {
+      "name": "child-named-locked",
+      "ray": [
+        [
+          3.7568980008212595e-29,
+          -6.135480578456365e-13,
+          10020.0
+        ],
+        [
+          -3.7493993930529855e-33,
+          6.123234262925839e-17,
+          -1.0
+        ]
+      ],
+      "point": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "face": null,
+      "edge": null,
+      "group": null,
+      "vertex": null,
+      "selection": [
+        "group"
+      ],
+      "visible_faces": []
+    },
+    {
+      "name": "child-named-hidden",
+      "ray": [
+        [
+          3.7568980008212595e-29,
+          -6.135480578456365e-13,
+          10020.0
+        ],
+        [
+          -3.7493993930529855e-33,
+          6.123234262925839e-17,
+          -1.0
+        ]
+      ],
+      "point": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "face": null,
+      "edge": null,
+      "group": null,
+      "vertex": null,
+      "selection": [
+        "group"
+      ],
+      "visible_faces": []
+    },
+    {
+      "name": "child-named-restored",
+      "ray": [
+        [
+          3.7568980008212595e-29,
+          -6.135480578456365e-13,
+          10020.0
+        ],
+        [
+          -3.7493993930529855e-33,
+          6.123234262925839e-17,
+          -1.0
+        ]
+      ],
+      "point": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "face": null,
+      "edge": null,
+      "group": 0,
+      "vertex": [
+        -2.0,
+        -1.9999998807907104,
+        0.0
+      ],
+      "selection": [
+        "group"
+      ],
+      "visible_faces": []
+    },
+    {
+      "name": "parent-named-open",
+      "ray": [
+        [
+          3.7568980008212595e-29,
+          -6.135480578456365e-13,
+          10020.0
+        ],
+        [
+          -3.7493993930529855e-33,
+          6.123234262925839e-17,
+          -1.0
+        ]
+      ],
+      "point": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "face": null,
+      "edge": null,
+      "group": 0,
+      "vertex": [
+        -2.0,
+        -1.9999998807907104,
+        0.0
+      ],
+      "selection": [],
+      "visible_faces": []
+    },
+    {
+      "name": "parent-named-locked",
+      "ray": [
+        [
+          3.7568980008212595e-29,
+          -6.135480578456365e-13,
+          10020.0
+        ],
+        [
+          -3.7493993930529855e-33,
+          6.123234262925839e-17,
+          -1.0
+        ]
+      ],
+      "point": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "face": null,
+      "edge": null,
+      "group": null,
+      "vertex": null,
+      "selection": [],
+      "visible_faces": []
+    },
+    {
+      "name": "parent-named-hidden",
+      "ray": [
+        [
+          3.7568980008212595e-29,
+          -6.135480578456365e-13,
+          10020.0
+        ],
+        [
+          -3.7493993930529855e-33,
+          6.123234262925839e-17,
+          -1.0
+        ]
+      ],
+      "point": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "face": null,
+      "edge": null,
+      "group": null,
+      "vertex": null,
+      "selection": [],
+      "visible_faces": []
+    },
+    {
+      "name": "parent-named-restored",
+      "ray": [
+        [
+          3.7568980008212595e-29,
+          -6.135480578456365e-13,
+          10020.0
+        ],
+        [
+          -3.7493993930529855e-33,
+          6.123234262925839e-17,
+          -1.0
+        ]
+      ],
+      "point": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "face": null,
+      "edge": null,
+      "group": 0,
+      "vertex": [
+        -2.0,
+        -1.9999998807907104,
+        0.0
+      ],
+      "selection": [],
+      "visible_faces": []
+    },
+    {
+      "name": "line-group-named-open",
+      "ray": [
+        [
+          1.2246468525851679e-16,
+          -2.0,
+          10020.0
+        ],
+        [
+          0.0,
+          0.0,
+          -1.0
+        ]
+      ],
+      "point": [
+        0.0,
+        -2.0,
+        0.0
+      ],
+      "face": null,
+      "edge": null,
+      "group": 0,
+      "vertex": [
+        -2.0,
+        -2.0,
+        0.0
+      ],
+      "selection": [],
+      "visible_faces": []
+    },
+    {
+      "name": "line-group-named-locked",
+      "ray": [
+        [
+          1.2246468525851679e-16,
+          -2.0,
+          10020.0
+        ],
+        [
+          0.0,
+          0.0,
+          -1.0
+        ]
+      ],
+      "point": [
+        0.0,
+        -2.0,
+        0.0
+      ],
+      "face": null,
+      "edge": null,
+      "group": null,
+      "vertex": null,
+      "selection": [],
+      "visible_faces": []
+    },
+    {
+      "name": "line-group-named-hidden",
+      "ray": [
+        [
+          1.2246468525851679e-16,
+          -2.0,
+          10020.0
+        ],
+        [
+          0.0,
+          0.0,
+          -1.0
+        ]
+      ],
+      "point": [
+        0.0,
+        -2.0,
+        0.0
+      ],
+      "face": null,
+      "edge": null,
+      "group": null,
+      "vertex": null,
+      "selection": [],
+      "visible_faces": []
+    },
+    {
+      "name": "line-group-named-restored",
+      "ray": [
+        [
+          1.2246468525851679e-16,
+          -2.0,
+          10020.0
+        ],
+        [
+          0.0,
+          0.0,
+          -1.0
+        ]
+      ],
+      "point": [
+        0.0,
+        -2.0,
+        0.0
+      ],
+      "face": null,
+      "edge": null,
+      "group": 0,
+      "vertex": [
+        -2.0,
+        -2.0,
+        0.0
+      ],
+      "selection": [],
+      "visible_faces": []
+    }
+  ]
+}
