@@ -29,9 +29,13 @@ for x in mutations:
  try:strict(source,x)
  except AssertionError:pass
  else:raise AssertionError('semantic corruption accepted')
+initial=json.loads((root/'attempts/initial-f64-shareback/native-nested-import.json').read_text())
+try:strict(source,initial)
+except AssertionError:pass
+else:raise AssertionError('retained leaf Finish precision loss accepted')
 reopens_path=root/'reopens.json'
 assert reopens_path.exists(),'required actual original reopen observations missing'
 if reopens_path.exists():
  reopens=json.loads(reopens_path.read_text());assert [r['case']for r in reopens]==[r['name']for r in source['cases']]
  for row in reopens:strict(row['original'],row['native'])
-print(json.dumps({'source_states':105,'threshold_states':8,'loaded_repeat_naming_states':5,'piece_name_controls':6,'atomic_checkpoint_guards':len(guards),'rejected_mutations':len(mutations),'actual_original_reopens':15 if reopens_path.exists()else 0,'passed':True}))
+print(json.dumps({'source_states':105,'threshold_states':8,'loaded_repeat_naming_states':5,'piece_name_controls':6,'atomic_checkpoint_guards':len(guards),'rejected_mutations':len(mutations),'retained_precision_failure_rejected':True,'actual_original_reopens':15 if reopens_path.exists()else 0,'passed':True}))

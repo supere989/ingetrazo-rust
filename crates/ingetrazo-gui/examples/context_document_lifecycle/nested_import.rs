@@ -1,4 +1,45 @@
 use super::*;
+fn qt_observed_mesh(mesh: &Mesh, m: DMat4) -> Value {
+    let point = |i: usize| {
+        let p = mesh.vertices[i].position;
+        if m == m.as_mat4().as_dmat4() && p == p.as_vec3().as_dvec3() {
+            ingetrazo_core::change_axes::map(m, p)
+        } else {
+            m.transform_point3(p)
+        }
+        .to_array()
+    };
+    let ring = |ids: &Vec<usize>| {
+        let p = ids.iter().map(|i| point(*i)).collect::<Vec<_>>();
+        (0..p.len())
+            .map(|i| p[i..].iter().chain(&p[..i]).copied().collect::<Vec<_>>())
+            .min_by(|a, b| a.partial_cmp(b).unwrap())
+            .unwrap()
+    };
+    let mut points = (0..mesh.vertices.len()).map(point).collect::<Vec<_>>();
+    points.sort_by(|a, b| a.partial_cmp(b).unwrap());
+    let mut edges = mesh
+        .edges
+        .iter()
+        .map(|e| {
+            let mut p = [point(e.v0), point(e.v1)];
+            p.sort_by(|a, b| a.partial_cmp(b).unwrap());
+            p
+        })
+        .collect::<Vec<_>>();
+    edges.sort_by(|a, b| a.partial_cmp(b).unwrap());
+    let mut faces = mesh
+        .faces
+        .iter()
+        .map(|f| {
+            let mut holes = f.holes.iter().map(&ring).collect::<Vec<_>>();
+            holes.sort_by(|a, b| a.partial_cmp(b).unwrap());
+            json!({"outer":ring(&f.vertices),"holes":holes,"attrs":f.attrs})
+        })
+        .collect::<Vec<_>>();
+    faces.sort_by_key(|f| f.to_string());
+    json!({"points":points,"edges":edges,"faces":faces})
+}
 fn source_scene(app: &IngeTrazoApp) -> Value {
     let mut groups = app.component_edit_stack.first().map_or_else(
         || app.scene.groups.clone(),
@@ -27,7 +68,7 @@ fn source_scene(app: &IngeTrazoApp) -> Value {
     }
     fn group(g: &Group, parent: DMat4) -> Value {
         let m = parent * g.transform;
-        json!({"name":g.name,"layer":g.layer,"mesh":mesh_state(&g.mesh,m),"children":g.children.iter().map(|g|group(g,m)).collect::<Vec<_>>()})
+        json!({"name":g.name,"layer":g.layer,"mesh":qt_observed_mesh(&g.mesh,m),"children":g.children.iter().map(|g|group(g,m)).collect::<Vec<_>>()})
     }
     let loose = app
         .component_edit_stack
