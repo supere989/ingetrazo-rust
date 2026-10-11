@@ -31,6 +31,17 @@ pub fn unsupported_stage(error:&str)->bool {
         "Metal Scene adapter needs geographic/terrain passes" |
         "Metal plan style mixed-material policy requires subsequent stage")
 }
+// viewport.py ordinary faces use DEFAULT_FACE_COLOR, independent of the
+// monochrome/hidden-line front tint. Shaded mode still retains texture runs
+// for the cached image-mean consumer. Only cold prototype collection uses this.
+fn ordinary_surface_style(style: &StyleConfig) -> StyleConfig {
+    let mut value = style.clone();
+    if value.visual_style == ingetrazo_render::VisualStyle::ShadedWithTextures {
+        value.front_color = [0.96, 0.95, 0.925, 1.];
+        value.show_textures = true;
+    }
+    value
+}
 const MAX_BYTES: usize = 8 * 1024 * 1024;
 const MAX_DEPTH: usize = 128;
 pub use ingetrazo_render::scene_revision::Revisions;
@@ -507,10 +518,8 @@ impl Catalog {
     ) -> Result<ingetrazo_render::pipeline::SceneRenderData, String> {
         // The source shaded mode retains texture geometry but replaces sampling
         // with its cached 4x4 Qt image mean. The general render API stays unchanged.
-        let textured_style;
-        let style=if style.visual_style==ingetrazo_render::VisualStyle::ShadedWithTextures && !style.show_textures {
-            textured_style={let mut value=style.clone();value.show_textures=true;value}; &textured_style
-        }else{style};
+        let ordinary_style = ordinary_surface_style(style);
+        let style = &ordinary_style;
         let lookup = self
             .key_index
             .binary_search_by_key(key, |v| v.0)
@@ -548,6 +557,21 @@ impl Catalog {
 
 #[cfg(test)]
 mod tests {
+    #[test]
+    fn ordinary_face_color_is_independent_of_plan_front_tint() {
+        let mut style = ingetrazo_render::StyleConfig::default();
+        style.front_color = [0.2, 0.4, 0.8, 1.];
+        style.show_textures = false;
+        let ordinary = super::ordinary_surface_style(&style);
+        assert_eq!(ordinary.front_color, [0.96, 0.95, 0.925, 1.]);
+        assert!(ordinary.show_textures);
+        assert_eq!(style.front_color, [0.2, 0.4, 0.8, 1.]);
+        for mode in [ingetrazo_render::VisualStyle::Monochrome, ingetrazo_render::VisualStyle::HiddenLine] {
+            style.visual_style = mode;
+            assert_eq!(super::ordinary_surface_style(&style).front_color, style.front_color);
+        }
+    }
+
     use super::*;
     use ingetrazo_core::mesh::Mesh;
     fn revisions() -> Revisions {
@@ -1026,9 +1050,9 @@ impl crate::world::World {
                 if let Some(p)=active_preview {
                     if *key==p.preview_key {return Ok(match p.sweep.kind {
                         ingetrazo_render::face_sweep::Kind::Overlay=>ingetrazo_render::pipeline::build_preview_mesh_surfaces(&p.sweep.mesh,scene),
-                        ingetrazo_render::face_sweep::Kind::Prism=>{let mut rich=style.clone();if mode==Mode::MaterialAverage{rich.show_textures=true;}ingetrazo_render::pipeline::build_borrowed_mesh_world_surfaces(&p.sweep.mesh,scene,&rich)},
+                        ingetrazo_render::face_sweep::Kind::Prism=>{let rich=ordinary_surface_style(style);ingetrazo_render::pipeline::build_borrowed_mesh_world_surfaces(&p.sweep.mesh,scene,&rich)},
                     });}
-                    if p.uses_variant && p.base.is_some_and(|pair|pair.1==*key) {let mut rich=style.clone();if mode==Mode::MaterialAverage{rich.show_textures=true;}return Ok(ingetrazo_render::pipeline::build_loose_world_surfaces_suppressed(scene,&rich,&p.sweep.suppressed));}
+                    if p.uses_variant && p.base.is_some_and(|pair|pair.1==*key) {let rich=ordinary_surface_style(style);return Ok(ingetrazo_render::pipeline::build_loose_world_surfaces_suppressed(scene,&rich,&p.sweep.suppressed));}
                 }
                 catalog.collect_surfaces(key, scene, camera, style)
             },
