@@ -46,9 +46,14 @@ fn main()->Result<(),Box<dyn std::error::Error>> {
   let mut selection=app.scene.selection.iter().map(|i|match i{SelectionItem::Edge(id)=>json!(["edge",id]),SelectionItem::Face(id)=>json!(["face",id]),SelectionItem::Group(id)=>json!(["group",id]),_=>panic!("Unexpected selection")}).collect::<Vec<_>>();selection.sort_by_key(|v|v.to_string());
   rows.push(json!({"name":name,"edit":!app.component_edit_stack.is_empty(),"group_hidden":if app.component_edit_stack.is_empty(){json!(app.scene.groups.iter().map(|g|g.hidden).collect::<Vec<_>>())}else{Value::Null},"active_vertices":app.scene.mesh.vertices.iter().map(|v|v.position.to_array()).collect::<Vec<_>>(),"selection":selection,"objects":app.scene.show_hidden_objects,"geometry":app.scene.show_hidden_geometry}));
  }
+ let priority:Value=serde_json::from_slice(&std::fs::read(&args[3])?)?;
+ let mut group_app=setup(1);group_app.scene.groups[0].hidden=false;face(&mut group_app,&[DVec3::new(0.,0.,1.),DVec3::new(4.,0.,1.),DVec3::new(4.,4.,1.),DVec3::new(0.,4.,1.)]);group_app.scene.bump_version();
+ let m:Vec<f64>=serde_json::from_value(priority["matrix"].clone())?;let v=PixelViewport{matrix:DMat4::from_cols_array(m.as_slice().try_into()?),width:1000.,height:600.};let eye=DVec3::from_array(serde_json::from_value(priority["eye"].clone())?);let cursor=DVec2::from_array(serde_json::from_value(priority["pixel"].clone())?);
+ group_app.active_tool.note_pick_viewport(v,eye);let mut context=ToolContext::new(DVec3::new(2.,2.,0.),v.ray(cursor).unwrap());context.screen=Some(cursor);group_app.dispatch_tool_click(&context);
+ let priority_selection=group_app.scene.selection.iter().map(|i|match i{SelectionItem::Group(id)=>json!(["group",id]),SelectionItem::Face(id)=>json!(["face",id]),SelectionItem::Edge(id)=>json!(["edge",id]),_=>panic!("Unexpected selection")}).collect::<Vec<_>>();
  let mut ui=vec![ui_click(0,DVec3::new(1.2,1.,1.),false),ui_click(0,DVec3::new(1.,1.,1.),true),ui_click(0,DVec3::new(1.6,1.,0.),false),ui_click(1,DVec3::new(2.,2.,0.),false),ui_click(1,DVec3::new(2.,2.,0.),true),ui_click(2,DVec3::new(1.,1.,0.),false),ui_click(2,DVec3::new(1.,1.,0.),true)];
  ui.push(ui_click_modifiers(0,DVec3::new(-0.5,1.,0.),false,egui::Modifiers{shift:true,..Default::default()},true));
  ui.push(ui_click_modifiers(0,DVec3::new(-0.5,1.,0.),false,egui::Modifiers{ctrl:true,..Default::default()},false));
  ui.push(ui_click_modifiers(0,DVec3::new(-0.5,1.,0.),false,egui::Modifiers{shift:true,ctrl:true,..Default::default()},true));
- std::fs::write(&args[2],serde_json::to_vec_pretty(&json!({"rows":rows,"ui_events":ui}))?)?;Ok(())
+ std::fs::write(&args[2],serde_json::to_vec_pretty(&json!({"rows":rows,"ui_events":ui,"group_priority":priority_selection}))?)?;Ok(())
 }

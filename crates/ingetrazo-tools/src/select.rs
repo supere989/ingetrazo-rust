@@ -266,7 +266,7 @@ impl Tool for SelectTool {
         let hit_plane=crate::base::pick_section_plane(scene,&ctx.ray,0.2);
         let hit_edge = if let (Some((viewport,eye)),Some(cursor))=(self.pick_viewport,ctx.screen){self.click_index.edge(scene,viewport,cursor,eye)}else{crate::base::pick_scene_edge(scene, &ctx.ray, 0.2)};
         let face_hit=crate::base::pick_scene_face(scene,&ctx.ray);let hit_face=face_hit.map(|(id,_,_)|id);
-        let hit_group=crate::base::pick_scene_group(scene,&ctx.ray,0.2).filter(|(_,t)|face_hit.is_none_or(|(_,distance,_)|*t<distance)).map(|(id,_)|id);
+        let hit_group=crate::base::pick_scene_group(scene,&ctx.ray,0.2).map(|(id,_)|id);
 
         let item = if let Some(id)=hit_plane{Some(SelectionItem::SectionPlane(id))}else if let Some(eid) = hit_edge {
             Some(SelectionItem::Edge(eid))
@@ -288,7 +288,7 @@ impl Tool for SelectTool {
         let hit_plane=crate::base::pick_section_plane(scene,&ctx.ray,0.2);
         let hit_edge = if let (Some((viewport,eye)),Some(cursor))=(self.pick_viewport,ctx.screen){self.click_index.edge(scene,viewport,cursor,eye)}else{crate::base::pick_scene_edge(scene, &ctx.ray, 0.2)};
         let face_hit=crate::base::pick_scene_face(scene,&ctx.ray);let hit_face=face_hit.map(|(id,_,_)|id);
-        let hit_group=crate::base::pick_scene_group(scene,&ctx.ray,0.2).filter(|(_,t)|face_hit.is_none_or(|(_,distance,_)|*t<distance)).map(|(id,_)|id);
+        let hit_group=crate::base::pick_scene_group(scene,&ctx.ray,0.2).map(|(id,_)|id);
 
         if let Some(id)=hit_plane{scene.clear_selection();scene.select(SelectionItem::SectionPlane(id));return;}
         if let Some(id)=hit_group.filter(|_|hit_edge.is_none()){scene.clear_selection();scene.select(SelectionItem::Group(id));return;}
@@ -311,7 +311,7 @@ impl Tool for SelectTool {
         let hit_plane=crate::base::pick_section_plane(scene,&ctx.ray,0.2);
         let hit_edge = if let (Some((viewport,eye)),Some(cursor))=(self.pick_viewport,ctx.screen){self.click_index.edge(scene,viewport,cursor,eye)}else{crate::base::pick_scene_edge(scene, &ctx.ray, 0.2)};
         let face_hit=crate::base::pick_scene_face(scene,&ctx.ray);let hit_face=face_hit.map(|(id,_,_)|id);
-        let hit_group=crate::base::pick_scene_group(scene,&ctx.ray,0.2).filter(|(_,t)|face_hit.is_none_or(|(_,distance,_)|*t<distance)).map(|(id,_)|id);
+        let hit_group=crate::base::pick_scene_group(scene,&ctx.ray,0.2).map(|(id,_)|id);
 
         if let Some(id)=hit_plane{scene.clear_selection();scene.select(SelectionItem::SectionPlane(id));return;}
         if let Some(id)=hit_group{scene.clear_selection();scene.select(SelectionItem::Group(id));return;}
