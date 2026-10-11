@@ -14,9 +14,10 @@ Change Axes retains its separate source policy (fresh reconstructed entity IDs).
 All input vertices, even unused ones, preflight for finiteness; references and
 computed inverse also validate before candidates can publish.
 
-Source QMatrix4x4 frames are exactly f32-representable. For such shareback frames
-retain the Qt mapping law; native-authored f64 frames that cannot roundtrip f32
-use f64 mapping/inverse so existing world measurements are not narrowed. This is
+Shareback uses the Qt mapping law only when both the input positions and frame
+roundtrip f32 exactly. Otherwise native shareback uses f64 mapping/inverse,
+including identity and integer translation of a referenced 1+2^-40 coordinate.
+Change Axes retains its explicit Qt policy. This is
 a native precision-preservation boundary, not a changed source coordinate tolerance.
 
 The exact three failed tests pass unchanged. Directly affected core reconstruction
@@ -31,3 +32,11 @@ Axes mutations+three retained failures reject. The five saved Axes IGZ bytes rem
 identical to existing actual Python reader inputs, so no reader recapture is needed.
 No broad suite, push or tracker changes. Temporary final inputs remain under
 /tmp/shareback-repair-proof until root integration/release; reusable target retained.
+
+Review followup: native mapped outer/hole rings require at least three distinct
+IDs, with no repeated IDs or duplicate hole memberships. Invalid rings refuse
+before publication; no full topology classifier is introduced. Numeric UVW
+coefficients and computed outputs must remain finite before JSON conversion;
+a finite 1e308 coefficient under scale(0.5,1,1) now refuses rather than becoming
+JSON null. Four malformed-ring controls, identity/translation precision controls,
+and the overflow refusal preserve the original input records unchanged.

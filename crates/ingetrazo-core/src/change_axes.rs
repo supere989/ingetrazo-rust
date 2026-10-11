@@ -226,6 +226,26 @@ pub(crate) fn transformed_policy(
                     .collect::<Result<Vec<_>, _>>()
             })
             .collect::<Result<Vec<_>, _>>()?;
+        if preserve_ids {
+            let valid_ring = |r: &[usize]| {
+                r.len() >= 3
+                    && r.iter()
+                        .copied()
+                        .collect::<std::collections::HashSet<_>>()
+                        .len()
+                        == r.len()
+            };
+            let mut hole_keys = std::collections::HashSet::new();
+            if !valid_ring(&ring)
+                || holes.iter().any(|h| {
+                    let mut key = h.clone();
+                    key.sort_unstable();
+                    !valid_ring(h) || !hole_keys.insert(key)
+                })
+            {
+                return Err("Native face has invalid mapped rings".into());
+            }
+        }
         if let Some(id) = mesh.add_face(ring, holes) {
             mesh.faces[id].layer = face.layer.clone();
             if preserve_ids {
@@ -244,7 +264,13 @@ pub(crate) fn transformed_policy(
                         .iter()
                         .map(|v| v.as_f64())
                         .collect::<Option<Vec<_>>>();
+                    if preserve_ids && values.is_none() {
+                        return Err("Native UVW coefficients are invalid".into());
+                    }
                     if let Some(v) = values {
+                        if v.iter().any(|x| !x.is_finite()) {
+                            return Err("UVW coefficients are nonfinite".into());
+                        }
                         let a = inv.to_cols_array_2d();
                         let t = m.w_axis.truncate();
                         let mut out = v.clone();
@@ -258,6 +284,9 @@ pub(crate) fn transformed_policy(
                             out[b + 1] = gp.y;
                             out[b + 2] = gp.z;
                             out[b + 3] = v[b + 3] - (gp.x * t.x + gp.y * t.y + gp.z * t.z);
+                        }
+                        if out.iter().any(|x| !x.is_finite()) {
+                            return Err("Transformed UVW coefficients overflow".into());
                         }
                         texture.insert("uvw".into(), serde_json::json!(out));
                     }

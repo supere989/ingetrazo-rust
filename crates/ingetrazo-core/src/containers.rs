@@ -68,7 +68,13 @@ pub fn transform_mesh(source:&Mesh,transform:DMat4)->Result<Mesh,String>{
 /// Clipboard snapshots deliberately retain a separate copy policy.
 pub fn source_shareback_mesh(source: &Mesh, transform: DMat4) -> Result<Mesh, String> {
     // Native-authored f64 placement frames cannot silently become Qt f32.
-    let qt_precision = transform == transform.as_mat4().as_dmat4();
+    // Qt-authored points and frames retain the literal source mapping law.
+    // Native f64 points must not lose precision even under an exact Qt frame.
+    let qt_precision = transform == transform.as_mat4().as_dmat4()
+        && source
+            .vertices
+            .iter()
+            .all(|v| v.position == v.position.as_vec3().as_dvec3());
     let mut mesh = crate::change_axes::transformed_policy(source, transform, qt_precision, true)?;
     let mut by_id = std::collections::BTreeMap::<usize, Vec<usize>>::new();
     for (id, e) in mesh.edges.iter().enumerate() {
@@ -332,10 +338,14 @@ mod source_shareback_tests {
         m.add_vertex(DVec3::new(99., 99., 99.));
         m.faces[0].interior = true;
         m.faces[0].layer = Some("protected".into());
-        m.faces[0].attrs.insert("vendor".into(), serde_json::json!({"opaque":[1,"Ω"]}));
+        m.faces[0]
+            .attrs
+            .insert("vendor".into(), serde_json::json!({"opaque":[1,"Ω"]}));
         m.edges[0].hidden = true;
         m.edges[0].layer = Some("edge layer".into());
-        m.edges[0].attrs.insert("vendor".into(), serde_json::json!({"nested":[2]}));
+        m.edges[0]
+            .attrs
+            .insert("vendor".into(), serde_json::json!({"nested":[2]}));
         let before = m.clone();
         let result = source_shareback_mesh(&m, DMat4::IDENTITY).unwrap();
         assert_eq!(result.vertices.len(), 6);
@@ -353,29 +363,85 @@ mod source_shareback_tests {
         assert_eq!(result.faces[0].interior, m.faces[0].interior);
         assert_eq!(result.faces[0].layer, m.faces[0].layer);
         assert_eq!(result.faces[0].attrs, m.faces[0].attrs);
-        let edge = result.edges.iter().find(|edge| edge.history_id == m.edges[0].history_id).unwrap();
+        let edge = result
+            .edges
+            .iter()
+            .find(|edge| edge.history_id == m.edges[0].history_id)
+            .unwrap();
         assert_eq!(edge.attrs, m.edges[0].attrs);
         assert_eq!(edge.layer, m.edges[0].layer);
         assert_eq!(edge.hidden, m.edges[0].hidden);
         for vertex in &result.vertices {
-            assert!(m.vertices.iter().any(|old| old.uid == vertex.uid && old.position == vertex.position));
+            assert!(m
+                .vertices
+                .iter()
+                .any(|old| old.uid == vertex.uid && old.position == vertex.position));
         }
         let mut ambiguous = m.clone();
         let mut duplicate = ambiguous.edges[0].clone();
-        duplicate.attrs.insert("vendor".into(), serde_json::json!({"incompatible":true}));
+        duplicate
+            .attrs
+            .insert("vendor".into(), serde_json::json!({"incompatible":true}));
         ambiguous.edges.push(duplicate);
         let held = ambiguous.clone();
-        assert!(source_shareback_mesh(&ambiguous, DMat4::IDENTITY).unwrap_err().contains("incompatible native metadata"));
+        assert!(source_shareback_mesh(&ambiguous, DMat4::IDENTITY)
+            .unwrap_err()
+            .contains("incompatible native metadata"));
         assert_eq!(ambiguous, held);
         let mut malformed = m.clone();
         malformed.vertices.last_mut().unwrap().position.x = f64::INFINITY;
         assert!(source_shareback_mesh(&malformed, DMat4::IDENTITY).is_err());
-        let frame = DMat4::from_rotation_y(30_f64.to_radians()) * DMat4::from_scale(DVec3::new(-2., 3., 4.));
+        let frame = DMat4::from_rotation_y(30_f64.to_radians())
+            * DMat4::from_scale(DVec3::new(-2., 3., 4.));
         let precise = source_shareback_mesh(&m, frame).unwrap();
         for vertex in &precise.vertices {
             let old = m.vertices.iter().find(|old| old.uid == vertex.uid).unwrap();
             assert_eq!(vertex.position, frame.transform_point3(old.position));
         }
+        for frame in [
+            DMat4::IDENTITY,
+            DMat4::from_translation(DVec3::new(2., -3., 4.)),
+        ] {
+            let mut native = m.clone();
+            native.vertices[1].position.x = 1. + 2_f64.powi(-40);
+            let output = source_shareback_mesh(&native, frame).unwrap();
+            let point = output
+                .vertices
+                .iter()
+                .find(|v| v.uid == native.vertices[1].uid)
+                .unwrap();
+            assert_eq!(
+                point.position,
+                frame.transform_point3(native.vertices[1].position)
+            );
+        }
+        for (outer, holes) in [
+            (vec![0, 0, 1], vec![]),
+            (ids.to_vec(), vec![vec![0, 1]]),
+            (ids.to_vec(), vec![vec![0, 1, 1]]),
+            (ids.to_vec(), vec![vec![0, 1, 2], vec![2, 0, 1]]),
+        ] {
+            let mut malformed = m.clone();
+            malformed.faces[0].vertices = outer;
+            malformed.faces[0].holes = holes;
+            let held = malformed.clone();
+            assert!(source_shareback_mesh(&malformed, DMat4::IDENTITY)
+                .unwrap_err()
+                .contains("mapped rings"));
+            assert_eq!(malformed, held);
+        }
+        let mut textured = m.clone();
+        textured.faces[0].attrs.insert(
+            "texture".into(),
+            serde_json::json!({"uvw":[1e308,0.,0.,0.,0.,1.,0.,0.]}),
+        );
+        let held = textured.clone();
+        assert!(
+            source_shareback_mesh(&textured, DMat4::from_scale(DVec3::new(0.5, 1., 1.)))
+                .unwrap_err()
+                .contains("UVW")
+        );
+        assert_eq!(textured, held);
         assert!(source_shareback_mesh(&m, DMat4::ZERO).is_err());
         assert_eq!(m, before);
     }

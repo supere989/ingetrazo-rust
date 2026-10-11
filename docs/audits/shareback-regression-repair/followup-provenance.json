@@ -1,0 +1,20 @@
+{
+  "parent": "f8e16b7e",
+  "source": {
+    "crates/ingetrazo-core/src/change_axes.rs": "bbe0dba983e0a5eb8f08eab24aaa10156728e4881b80046d6a35181deac0ee40",
+    "crates/ingetrazo-core/src/containers.rs": "b2ca4f256b31fc60efc4377bb0775c88f3e988cf1f34c7832df6d98a462ec0eb"
+  },
+  "binaries": {
+    "fillet_scoped": "2fbec147df82166655bfeb92c4980234e639af1c2255fda6cedd13ab5454fed4",
+    "change_axes_fixture": "2c03bb12d909c99e1f95cd940141e72211071a5013f31354da83a3c01dd6cf6b"
+  },
+  "archive_sha256": "a9412798d13ee07a5124d7d71982fdb2a10576cf28295f7379b62e0bcc0c9933",
+  "checks": {
+    "core": 1,
+    "unchanged_CI_regressions": 3,
+    "fillet_states": 28,
+    "axes_states": 33,
+    "fillet_mutations": 4,
+    "axes_mutations": 8
+  }
+}
