@@ -1,0 +1,24 @@
+{
+  "runtime_commit": "e7d7824a6f4d528bfd1ebe3c71ec1398f130ee3c",
+  "source": [
+    {
+      "path": "crates/ingetrazo-gui/src/annotation_editor.rs",
+      "sha256": "7fa26461d7bc2dd876859669d1544672ce56cee16a52f7d0dce9b0328a22010d"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/viewport.rs",
+      "sha256": "8474861c1d6eef27fa95fe93b8c2e5aa28bac91e1f5d7cf72620488aef319eef"
+    },
+    {
+      "path": "crates/ingetrazo-tools/src/select.rs",
+      "sha256": "e79c03913b1e021195738d827fb99fa9857931a9c5b8417aaad8521ab6d69923"
+    }
+  ],
+  "test_binary_sha256": "ae28e9a7b1e7dcd3c79e14ec9f4bdccd1e23ceee393876b963a57fc6a5601f43",
+  "entry": {
+    "path": "same-frame-focused.log",
+    "bytes": 19511,
+    "sha256": "ad87e92d58dcc25627ccb320c7cdd27ac099c3a970f05bc60767c914bb7aa39e"
+  },
+  "archive_sha256": "557ac697e62d224c38fbcb2280b6ca6a9b66ff08f7795ab9ffa77c8d83d1a98a"
+}
