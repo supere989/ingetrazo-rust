@@ -1,0 +1,25 @@
+{
+  "commit": "562a301d5fccd07ace8aa4a9d00e78cb006117fc",
+  "files": {
+    ".github/workflows/parity.yml": {
+      "bytes": 52807,
+      "sha256": "b83ea6ff0e6d8e98986178a3b79b9a0a01518d9b831791570b6ab7da2d9df622"
+    },
+    "docs/audits/visibility-ghost-partition-integration/execute.py": {
+      "bytes": 6826,
+      "sha256": "54026d06d276261c34cd8d6e7b29e42edd862aa987629dda4ff472258f0631c6"
+    },
+    "crates/ingetrazo-gui/src/component_edit.rs": {
+      "bytes": 66847,
+      "sha256": "ecc39a1089f812011df547050feeca2d6e6e5f9fc5bf032646b67040da5c7254"
+    },
+    "crates/ingetrazo-core/src/units/vcb.rs": {
+      "bytes": 4506,
+      "sha256": "5685be3d8585de2cbc2ee036eb9ee7d17b73af156428a77c4d8a0ad1279fb47f"
+    },
+    "crates/ingetrazo-gui/src/native_vulkan/annotation_viewport.rs": {
+      "bytes": 7831,
+      "sha256": "5f7d7bbbd4142cfc79a686d581daede3b8e569c9cf1f86117f0829fed6a5df95"
+    }
+  }
+}
