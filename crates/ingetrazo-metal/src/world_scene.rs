@@ -1096,7 +1096,7 @@ impl crate::world::World {
         }else{[0.;4]};
         let contour_candidate=if section.enabled(){
             let samples=self.configured_sample_count();let fill=fill_candidate.is_some();
-            Some(if let Some(old)=self.contour_pipeline.as_ref().filter(|p|p.samples==samples&&p.fill==fill){old.clone()}else{Arc::new(super::world_contour::Pipeline::new(metal,samples,fill)?)})
+            Some(if let Some(old)=self.contour_pipeline.as_ref().filter(|p|p.samples==samples&&p.fill==fill){old.clone()}else{Arc::new(super::world_contour::Pipeline::new(metal,samples,fill,self.diagnostic_positive_depth)?)})
         }else{None};
         let mut frame = self.prepare_material_placements_with_section(
             metal,

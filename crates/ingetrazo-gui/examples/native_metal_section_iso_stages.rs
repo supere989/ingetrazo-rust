@@ -1,4 +1,4 @@
-//! ARM closed-iso final per-sample color/depth observation only.
+//! ARM closed-iso stage observation with an explicit cold positive-depth candidate.
 #[cfg(not(target_os = "macos"))]
 fn main() {
     eprintln!("Native Metal required");
@@ -29,6 +29,7 @@ fn run() -> Result<(), String> {
         let out = std::path::PathBuf::from(std::env::args().nth(1).ok_or("Output required")?);
         std::fs::create_dir_all(&out).map_err(|e| e.to_string())?;
 
+        let candidate = match std::env::args().nth(3).as_deref() { None => false, Some("--positive-depth-viewport") => true, _ => return Err("Unknown observation mode".into()) };
         let metal = NativeMetal::new()?;
         let sample_diagnostics = ingetrazo_metal::annotation::sample_diagnostics(&metal);
         let mut rows = vec![];
@@ -118,18 +119,22 @@ fn run() -> Result<(), String> {
             let expected=std::fs::read(&expected_path).map_err(|e|e.to_string())?;
             if expected.len()!=1_920_000{return Err("Expected whole-frame size mismatch".into());}
             let mut adapter=Adapter::default();let mut world=World::default();world.set_sample_count(&metal,4)?;
+            if candidate { world.enable_positive_depth_viewport_probe()?; }
             let frame=prepare(&mut world,&mut adapter,&scene)?;
             if !frame.section_contours_enabled(){return Err("Iso contours absent".into());}
             let baseline=frame.submit_diagnostic(&metal)?;
             let ordinary=baseline.readback(std::time::Duration::from_secs(5))?;
             std::fs::write(out.join("closed-iso-ordinary.rgba"),&ordinary).map_err(|e|e.to_string())?;
-            if ordinary!=expected{return Err("Ordinary closed-iso frame differs from authenticated retained134-residual frame".into());}
+            if ordinary.len()!=1_920_000{return Err("Ordinary whole-frame extent mismatch".into());}
+            let domain=frame.positive_depth_domain_receipt()?;
+            if candidate && world.enable_positive_depth_viewport_probe().is_ok(){return Err("Warm positive-depth opt-in unexpectedly admitted".into());}
+            if !candidate && ordinary!=expected{return Err("Ordinary closed-iso frame differs from authenticated retained134-residual frame".into());}
             drop(baseline);
             let points=[[297,329],[297,328],[298,303]];
             let diagnostic=frame.submit_iso_stages(&metal,points,None)?;
             let bytes=diagnostic.readback(std::time::Duration::from_secs(5))?;
             std::fs::write(out.join("closed-iso-observed.rgba"),&bytes).map_err(|e|e.to_string())?;
-            if bytes!=expected{return Err("Iso observation perturbed whole frame".into());}
+            if bytes!=ordinary{return Err("Iso observation perturbed whole frame".into());}
             let full_colors=diagnostic.iso_stage_colors()?;
             let mut prefixes=vec![];
             for stage in 0..4u8 {
@@ -148,7 +153,7 @@ fn run() -> Result<(), String> {
                     "sample_depth_float":&depths[i*4..i*4+4],"sample_depth_bits":depths[i*4..i*4+4].iter().map(|v|v.to_bits()).collect::<Vec<_>>() }));}
             std::fs::write(out.join("report.json"),serde_json::to_vec_pretty(&serde_json::json!({"case":"closed-iso","pixels":rows,"prefixes":prefixes,"stage_colors":full_colors,"stage_color_bits":full_colors.map(|stage|stage.map(|v|v.map(f32::to_bits))),
                 "resource":diagnostic.resource_observation(),"sample_diagnostics":sample_diagnostics,"material_commands":frame.material_diagnostic()?,
-                "ordinary_and_observed_equal_authenticated_retained":true,"scope":"Read-only in-pass stage colors plus independently terminated prefix depth, attributed only after exact12color equality. No split/resumed render pass or production change."})).map_err(|e|e.to_string())?).map_err(|e|e.to_string())?;
+                "candidate_positive_depth_viewport":candidate,"positive_depth_domain":domain,"warm_opt_in_refused":candidate,"ordinary_and_observed_equal":true,"ordinary_and_observed_equal_authenticated_retained":!candidate,"scope":"Read-only in-pass stage colors plus independently terminated prefix depth, attributed only after exact12color equality. No split/resumed render pass or production change."})).map_err(|e|e.to_string())?).map_err(|e|e.to_string())?;
             drop(diagnostic);drop(frame);drop(world);drop(adapter);
         }
         Ok(())

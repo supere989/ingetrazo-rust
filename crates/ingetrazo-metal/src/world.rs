@@ -5,6 +5,7 @@ use crate::world_placement::{Packet as PlacementPacket, Pose as PlacementPose, P
 use crate::world_policy::{Mode, Plan, Policy};
 use crate::{Buffer, NativeMetal};
 use crate::world_section::Section;
+mod positive_depth_probe;
 use ingetrazo_core::gpu_memory::MemoryBudget;
 use ingetrazo_render::buffer::MeshRenderBuffer;
 use objc2::{rc::Retained, runtime::ProtocolObject};
@@ -159,6 +160,7 @@ pub struct World {
     resolve_prototype:Option<Arc<super::world_resolve::Pipeline>>,
     source_tile:Option<Arc<super::world_resolve::Pipeline>>,
     diagnostic_native_resolve:bool,
+    pub(crate) diagnostic_positive_depth:bool,
     samples: usize,
     diagnostic_samples: bool,
     pub(crate) ghosts: Option<Arc<super::world_ghost::Ghosts>>,
@@ -177,6 +179,7 @@ pub struct World {
 }
 pub struct Prepared {
     resolve_prototype:Option<Arc<super::world_resolve::Pipeline>>,    diagnostic_samples: bool,
+    diagnostic_positive_depth:bool,
     pub(crate) billboards:Option<Arc<super::world_billboard::Prepared>>,
     pub(crate) section: Section,
     pub(crate) contour:Option<Arc<super::world_contour::Pipeline>>,
@@ -209,6 +212,11 @@ struct PaintUniform {
 }
 #[repr(C)]struct TexturePaint{opacity:f32,shade:f32,hard_cutout:u32,height:u32,mean:[f32;4]}
 impl World {
+    /// Closed positive-z diagnostic only. Cannot replace an existing owner/cache.
+    pub fn enable_positive_depth_viewport_probe(&mut self)->Result<(),String>{
+        if !self.targets.is_empty() || self.pipeline.is_some() || self.section_pipeline.is_some() || self.contour_pipeline.is_some() || self.placements.is_some() || self.mesh.is_some(){return Err("Positive depth probe requires cold World without admitted geometry/targets/pipelines".into());}
+        self.diagnostic_positive_depth=true;Ok(())
+    }
     /// Cold diagnostic reference only: preserve the untouched native resolve.
     pub fn use_native_resolve_reference(&mut self)->Result<(),String>{
         if !self.targets.is_empty()||self.source_tile.is_some()||self.resolve_prototype.is_some(){return Err("Native resolve reference requires an unconfigured cold World".into());}
@@ -352,7 +360,7 @@ impl World {
         let pipeline = if let Some(p) = self.pipeline.as_ref().filter(|p|p.fill.is_none()) {
             p.clone()
         } else {
-            Arc::new(pipeline(metal,false,self.samples.max(1),false)?)
+            Arc::new(pipeline(metal,false,self.samples.max(1),false,self.diagnostic_positive_depth)?)
         };
         let allocated = cached.is_none();
         let target = if let Some(t) = cached {
@@ -412,6 +420,7 @@ impl World {
         self.stats.prepared += 1;
         Ok(Some(Arc::new(Prepared {
             diagnostic_samples:self.diagnostic_samples,
+            diagnostic_positive_depth:self.diagnostic_positive_depth,
             resolve_prototype:self.active_resolve(),
             section: Section::OFF,
             contour:None,contour_eye_width:[0.;4],
@@ -601,7 +610,7 @@ impl World {
         };
         let needs_materials=placements.has_materials;
         let cached_pipeline=if fill.is_some(){&self.section_pipeline}else{&self.pipeline};
-        let pipeline=if let Some(p)=cached_pipeline{if (!needs_materials||p.material.is_some()) && p.fill.is_some()==fill.is_some(){p.clone()}else{Arc::new(pipeline(metal,true,self.samples.max(1),fill.is_some())? )}}else{Arc::new(pipeline(metal,needs_materials,self.samples.max(1),fill.is_some())?)};
+        let pipeline=if let Some(p)=cached_pipeline{if (!needs_materials||p.material.is_some()) && p.fill.is_some()==fill.is_some(){p.clone()}else{Arc::new(pipeline(metal,true,self.samples.max(1),fill.is_some(),self.diagnostic_positive_depth)? )}}else{Arc::new(pipeline(metal,needs_materials,self.samples.max(1),fill.is_some(),self.diagnostic_positive_depth)?)};
         let mut new_target = if idle.is_none() {
             Some(Arc::new(Target {
                 samples:self.samples.max(1),
@@ -787,6 +796,7 @@ impl World {
         if fill.is_some(){self.section_pipeline=Some(pipeline.clone());}else{self.pipeline=Some(pipeline.clone());}
         Ok(Some(Arc::new(Prepared {
             diagnostic_samples:self.diagnostic_samples,
+            diagnostic_positive_depth:self.diagnostic_positive_depth,
             resolve_prototype:self.active_resolve(),
             section: Section::OFF,
             contour:None,contour_eye_width:[0.;4],
@@ -1034,9 +1044,11 @@ impl Prepared {
         depth.setStoreAction(if retain_depth {MTLStoreAction::Store}else{MTLStoreAction::DontCare});
         depth.setClearDepth(1.);
         if self.fill.is_some(){let stencil=pass.stencilAttachment();stencil.setTexture(Some(&self.target.depth.raw));stencil.setLoadAction(MTLLoadAction::Clear);stencil.setStoreAction(MTLStoreAction::DontCare);stencil.setClearStencil(0);}
+        if self.diagnostic_positive_depth{positive_depth_probe::validate(self)?;}
         let encoder = command
             .renderCommandEncoderWithDescriptor(&pass)
             .ok_or("Metal world encoder unavailable")?;
+        if self.diagnostic_positive_depth{encoder.setViewport(MTLViewport{originX:0.,originY:0.,width:self.extent().0 as f64,height:self.extent().1 as f64,znear:0.5,zfar:1.});}
         if let Some(background)=&self.background {
             encoder.setRenderPipelineState(&self.pipeline.background);
             encoder.setDepthStencilState(Some(&self.pipeline.depth_disabled));
@@ -1248,11 +1260,16 @@ where G:FnMut(&str)->Result<std::borrow::Cow<'a,[u8]>,String>{
     Ok(Some(Arc::new(Mesh{vertices,indices,count:data.indices.len(),plan,materials})))
 }
 
-fn pipeline(metal: &NativeMetal, rich:bool, samples:usize, fill:bool) -> Result<Pipeline, String> {
+fn pipeline(metal: &NativeMetal, rich:bool, samples:usize, fill:bool,positive_depth:bool) -> Result<Pipeline, String> {
+    let source=include_str!("shaders/world.metal");
+    let variant=if positive_depth{
+        if source.matches("o.position.z=(o.position.z+o.position.w)*0.5;").count()!=1 || source.matches("o.position.z=(o.position.z+o.position.w)*.5;").count()!=4{return Err("Positive depth probe shader writer inventory changed".into());}
+        Some(source.replace("o.position.z=(o.position.z+o.position.w)*0.5;","").replace("o.position.z=(o.position.z+o.position.w)*.5;",""))
+    }else{None};
     let lib = metal
         .device
         .newLibraryWithSource_options_error(
-            &NSString::from_str(include_str!("shaders/world.metal")),
+            &NSString::from_str(variant.as_deref().unwrap_or(source)),
             None,
         )
         .map_err(|e| format!("Metal world shader:{e:?}"))?;
@@ -1409,6 +1426,11 @@ impl Prepared {
         }
         self.submit_diagnostic_inner(metal, true, true, None,None,false,None)
     }
+    /// Probe receipt reads immutable Shared vertex/pose buffers; never supplies render geometry.
+    pub fn positive_depth_domain_receipt(&self)->Result<serde_json::Value,String>{
+        if !self.diagnostic_positive_depth{return Ok(serde_json::json!({"enabled":false}));}
+        positive_depth_probe::validate(self)
+    }
     /// Cold bounded receipt of actual admitted commands, not recomputed Scene metadata.
     pub fn material_diagnostic(&self) -> Result<serde_json::Value, String> {
         let draws=self.target.material_draws.as_ref().ok_or("No admitted material draws")?;
@@ -1559,6 +1581,7 @@ impl Diagnostic {
         serde_json::json!({"command":format!("{:p}",&**self.command),"completed":self.command.status()==MTLCommandBufferStatus::Completed,"status":format!("{:?}",self.command.status()),"error":format!("{:?}",self.command.error()),
             "device":format!("{:p}",&*f.owner.device),"queue":format!("{:p}",&*f.owner.queue),
             "color":texture(&f.target.color.raw),"multisample":f.target.multisample.as_ref().map(|i|texture(&i.raw)),"depth":texture(&f.target.depth.raw),
+            "positive_depth_viewport_probe":f.diagnostic_positive_depth,"viewport_depth_range":if f.diagnostic_positive_depth{[0.5,1.]}else{[0.,1.]},
             "camera_column_major_f32_bits":f.mvp.map(|v|v.map(f32::to_bits)),
             "clear_f64_bits":f.clear.map(f64::to_bits),"load":"Clear",
             "store":if compute{"Store"}else if f.target.multisample.is_some(){if f.diagnostic_samples{"StoreAndMultisampleResolve"}else{"MultisampleResolve"}}else{"Store"},
