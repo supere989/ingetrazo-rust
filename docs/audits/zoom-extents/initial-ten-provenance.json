@@ -1,0 +1,37 @@
+{
+  "runtime_commit": "a017a70e",
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "archive_sha256": "453cf7514bccee75b91093d6d518ec060aa3a1b984d0e2a89fd2b62e9d4448c2",
+  "members": {
+    "capture/parallel.igz": "1a31324e8f4e9dfc2041c6e423409bfe5cd538511995cdcce718460d160ce67e",
+    "capture/perspective.igz": "1a31324e8f4e9dfc2041c6e423409bfe5cd538511995cdcce718460d160ce67e",
+    "capture/two-point.igz": "1a31324e8f4e9dfc2041c6e423409bfe5cd538511995cdcce718460d160ce67e",
+    "capture/portrait.igz": "1a31324e8f4e9dfc2041c6e423409bfe5cd538511995cdcce718460d160ce67e",
+    "capture/hidden-nested.igz": "f59953fb16a4227a6b2327e57933a278b93e12cca02a24d3f88c8fdc88d9742f",
+    "capture/empty.igz": "fa9c2cb30d4f8afe1b3ec1c99587362006d5da0d620cfb3d0663a617138b1f20",
+    "capture/orphan.igz": "fa9c2cb30d4f8afe1b3ec1c99587362006d5da0d620cfb3d0663a617138b1f20",
+    "capture/figure-only.igz": "369c4d15299ace9edd83c31e838dd9ead08766280396bfea97e1d77bd717b6bd",
+    "capture/survey-only.igz": "48c2d9effe0d65b0013811bc544d8b7f1befb1d543f4096fb7d0c67e65c548f2",
+    "capture/survey-hidden.igz": "cbe42f478857f0f07f2cc8f9b263afa539db2cace0cf1c797ce5880d6bc6f83a",
+    "capture/source.json": "ab7e114183cae31d624c54b58114e5d5140721b33852874a537d3023487e91ef",
+    "capture/native.json": "c834f029c837c37bf551984bffd6627df9421d687735594d9823178da1139ac0",
+    "logs/zoom-extents-build.log": "b66238982372605bc136924d51dc9ee3ad19c7829d4b06a4222dfc361cb7629b",
+    "logs/zoom-extents-build-2.log": "27b76d392d5b7f0658c7021240c41380cb419cc86f52fcafa7cb05e8a8407964",
+    "logs/zoom-extents-build-final.log": "7a0eb9824a1c3ff377c313d34915fc62dc7afdcf54cacd796f4805b8204e5c61"
+  },
+  "source_sha256": {
+    "scripts/reference-zoom-extents.py": "74d5292e0726c411c3ee758971f08bb8f8bfd97420b94906c8a88c1d24fcfd2a",
+    "scripts/check-zoom-extents.py": "6415a35e758e64722e25407110b76bbfab0eed06e4ef3ebbb017655ecc26ef83",
+    "crates/ingetrazo-gui/src/zoom_extents.rs": "15ea9853f71740811fb80a79a0350b7ecb3f9c00d56c06a8fe68d23ace5cff62",
+    "crates/ingetrazo-gui/examples/zoom_extents_workflow.rs": "42fbc2a67419b3e8e348361f68864477359f9554a81c7944f363b8cc7524dd5e",
+    "crates/ingetrazo-formats/src/photo_bounds.rs": "b5c43e925eef7c379f3a0442279c308ee1662bc45897846d310d8d4951c3b100",
+    "crates/ingetrazo-gui/src/navigation_ray.rs": "553d8cd4fbbf7f6d6b7b17b2546fbe73f16a8af44973ec5746c98a47a6499cd5"
+  },
+  "binary_sha256": "fa0a0b8b615eb45c4f7b0e9ac892e0e1587ae8404d56ffead96e03d3c1ab89fe",
+  "setup_failures": [
+    "Initial original script used nonexistent formats.igz.save; corrected to save_scene before acceptance.",
+    "Original orphan setup used nonexistent Mesh.add_vertex; corrected to actual Mesh.vertex.",
+    "Initial draft Rust literals omitted leading zero; compiler refused before runtime; build log retained."
+  ],
+  "scope": "Actual pinned MainWindow handler with real Scene/OrbitCamera and repaint-only stub, versus actual Rust App Open/Zoom Extents. No rendered or desktop event claim."
+}

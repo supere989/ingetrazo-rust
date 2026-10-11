@@ -1,8 +1,9 @@
 {
-  "reference_sessions_exact": 10,
-  "camera_states_exact": 20,
+  "reference_sessions_exact": 12,
+  "camera_states_exact": 24,
+  "mode_transition_states_exact": 4,
   "atomic_refusals": 3,
-  "model_history_unchanged": 10,
+  "model_history_unchanged": 12,
   "rejected_controls": [
     "empty-corpus",
     "missing-case",
@@ -11,6 +12,9 @@
     "distance",
     "mode",
     "history",
-    "missing-refusal"
+    "missing-refusal",
+    "resumed-two-point",
+    "hidden-wire-omitted",
+    "hidden-face-omitted"
   ]
 }
