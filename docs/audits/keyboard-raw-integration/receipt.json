@@ -1,0 +1,213 @@
+{
+  "runtime_commit": "239d0c854baa9d3027a10ce202d1dbd379fa2212",
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "fresh_source_captures": 0,
+  "broad_local_runs": 0,
+  "stages": [
+    {
+      "name": "local-package-clean",
+      "argv": [
+        "cargo",
+        "clean",
+        "-p",
+        "ingetrazo-core",
+        "-p",
+        "ingetrazo-metal",
+        "-p",
+        "ingetrazo-tools",
+        "-p",
+        "ingetrazo-formats",
+        "-p",
+        "ingetrazo-render",
+        "-p",
+        "ingetrazo-gui",
+        "-p",
+        "ingetrazo-cli"
+      ],
+      "seconds": 0.11368368897819892,
+      "exit_code": 0
+    },
+    {
+      "name": "combined-build",
+      "argv": [
+        "cargo",
+        "build",
+        "--locked",
+        "-p",
+        "ingetrazo-gui",
+        "--example",
+        "perspective_guide_workflows",
+        "--example",
+        "p07_keyboard_workflows",
+        "--example",
+        "p07_inference_workflows",
+        "--example",
+        "context_document_lifecycle",
+        "--example",
+        "drawing_reference_render_fixture",
+        "--example",
+        "shift_inference_render_fixture"
+      ],
+      "seconds": 12.032950825989246,
+      "exit_code": 0
+    },
+    {
+      "name": "perspective/runtime",
+      "argv": [
+        "/tmp/ingetrazo-native-font-merge-target/debug/examples/perspective_guide_workflows",
+        "/tmp/ingetrazo-keyboard-raw-integration/perspective/source.json",
+        "/tmp/ingetrazo-keyboard-raw-integration/perspective/native.json"
+      ],
+      "seconds": 0.1640150269959122,
+      "exit_code": 0
+    },
+    {
+      "name": "perspective/check",
+      "argv": [
+        "python3",
+        "scripts/check-perspective-guides.py",
+        "/tmp/ingetrazo-keyboard-raw-integration/perspective/source.json",
+        "/tmp/ingetrazo-keyboard-raw-integration/perspective/native.json",
+        "/tmp/ingetrazo-keyboard-raw-integration/perspective/acceptance.json"
+      ],
+      "seconds": 0.03161100996658206,
+      "exit_code": 0
+    },
+    {
+      "name": "keyboard/runtime",
+      "argv": [
+        "/tmp/ingetrazo-native-font-merge-target/debug/examples/p07_keyboard_workflows",
+        "/tmp/ingetrazo-keyboard-raw-integration/keyboard/source.json",
+        "/tmp/ingetrazo-keyboard-raw-integration/keyboard/native.json"
+      ],
+      "seconds": 0.4642806209740229,
+      "exit_code": 0
+    },
+    {
+      "name": "keyboard/check",
+      "argv": [
+        "python3",
+        "scripts/check-p07-keyboard.py",
+        "/tmp/ingetrazo-keyboard-raw-integration/keyboard/source.json",
+        "/tmp/ingetrazo-keyboard-raw-integration/keyboard/native.json",
+        "/tmp/ingetrazo-keyboard-raw-integration/keyboard/acceptance.json"
+      ],
+      "seconds": 0.03161638998426497,
+      "exit_code": 0
+    },
+    {
+      "name": "inference/runtime",
+      "argv": [
+        "/tmp/ingetrazo-native-font-merge-target/debug/examples/p07_inference_workflows",
+        "/tmp/ingetrazo-keyboard-raw-integration/inference/source.json",
+        "/tmp/ingetrazo-keyboard-raw-integration/inference/source-app.json",
+        "/tmp/ingetrazo-keyboard-raw-integration/inference/native.json"
+      ],
+      "seconds": 0.06359197001438588,
+      "exit_code": 0
+    },
+    {
+      "name": "inference/check",
+      "argv": [
+        "python3",
+        "scripts/check-p07-inference.py",
+        "/tmp/ingetrazo-keyboard-raw-integration/inference/source.json",
+        "/tmp/ingetrazo-keyboard-raw-integration/inference/source-app.json",
+        "/tmp/ingetrazo-keyboard-raw-integration/inference/native.json",
+        "/tmp/ingetrazo-keyboard-raw-integration/inference/acceptance.json"
+      ],
+      "seconds": 0.03156732796924189,
+      "exit_code": 0
+    },
+    {
+      "name": "obj/runtime",
+      "argv": [
+        "/tmp/ingetrazo-native-font-merge-target/debug/examples/context_document_lifecycle",
+        "/tmp/ingetrazo-keyboard-raw-integration/obj",
+        "--obj-raw-fusion"
+      ],
+      "seconds": 0.16378511203220114,
+      "exit_code": 0
+    },
+    {
+      "name": "obj/reopen",
+      "argv": [
+        "/tmp/ingetrazo-parity-python/bin/python",
+        "scripts/reference-obj-raw-fusion-reopens.py",
+        "/tmp/ingetrazo-keyboard-raw-integration/obj"
+      ],
+      "seconds": 0.1652861389447935,
+      "exit_code": 0
+    },
+    {
+      "name": "obj/check",
+      "argv": [
+        "python3",
+        "scripts/check-obj-raw-fusion.py",
+        "/tmp/ingetrazo-keyboard-raw-integration/obj"
+      ],
+      "seconds": 0.03161015798104927,
+      "exit_code": 0
+    },
+    {
+      "name": "rectangle/check",
+      "argv": [
+        "python3",
+        "scripts/check-rendered-drawing-reference.py",
+        "--prebuilt-dir",
+        "/tmp/ingetrazo-native-font-merge-target/debug/examples"
+      ],
+      "seconds": 5.621922841994092,
+      "exit_code": 0
+    },
+    {
+      "name": "shift/check",
+      "argv": [
+        "python3",
+        "scripts/check-rendered-shift-inference.py",
+        "--prebuilt-dir",
+        "/tmp/ingetrazo-native-font-merge-target/debug/examples"
+      ],
+      "seconds": 3.869480308960192,
+      "exit_code": 0
+    }
+  ],
+  "archives": {
+    "perspective-guide-workflows/source-manifest.json": "e7ce846b37eefe6659460cbf3d0ef9ce739703fc44808b392e844800a31670da",
+    "p07-keyboard/source-manifest.json": "2050f802fcdba29cf7b156723d7c5c60223bd42225cb65b0278acb5fd0f71548",
+    "p07-inference/ci-source-manifest.json": "5e9fbeddbe466460a0c57849b487ed47e3babd37dd3f290f9a95dab55850b75e",
+    "obj-raw-fusion/source-manifest.json": "1903d7eb84653f314e23b950711b64764aded1193a9de10742a983fd5dd9cf3b",
+    "obj-raw-fusion/manifest.json": "318aa203fd254d33c766fc67e9340afe7c59af2a921815b5caa932af933863b3"
+  },
+  "binaries": {
+    "perspective_guide_workflows": "ccdd782e44f89160a05fc0d009942fab8f5e44c935f442532580233a0ded3301",
+    "p07_keyboard_workflows": "cbb1e17df471a420b8ebbd3f091d09419c83cc081436d66df79869a114283113",
+    "p07_inference_workflows": "39b6062bed7b5776a5e8ab88665493cc60ffa4fc3e51118d0059c145d64e0cc1",
+    "context_document_lifecycle": "ff67d79311bc298f0bc98c4348b209054f34061c8a672cbe0e39b15b5fbd5b4b",
+    "drawing_reference_render_fixture": "243d4abf0490e25ff419a89b04d66935af03995615409d171c66276a85ecfe13",
+    "shift_inference_render_fixture": "53b7ace2ee57d3c4d1835ca55b8e679ffaab262eb2f31248443ca475ed9283fc"
+  },
+  "result": "pass",
+  "semantic_seconds": 1.1473637548624538,
+  "rendered_seconds": 9.491403150954284,
+  "review": {
+    "p07_independent_criterion": "7ef324dc",
+    "ci_static_review": "27 consumers / 29 shared examples; archive and stage dependencies accepted; Python AST and YAML static only",
+    "obj_root_review": "Raw source fusion precedes native Mesh emission. Root required trace refusal preserve each original attrs and demanded a connected witness rejecting the old branch. Candidate admission fallback separately preserves region attrs. Both focused tests accepted at d180d469; final combined App runtime is recorded above.",
+    "rendered_scope": "Existing software OpenGL/Xvfb engineering route, not native Vulkan/Metal pixel or hardware acceptance.",
+    "p07_disposition": "Verified for unchanged finite row criterion after final combined replay; OS/glyph/whole-frame/performance remain separate criteria",
+    "broad_ci": "pending one stable review publication"
+  },
+  "files": {
+    "scripts/check-document-axes-integration.py": "3ed4d01974f89d4d5974304731a4e921f9d497dab17dc668d62a596a7821745c",
+    "scripts/check-perspective-guides.py": "b44632f81bdbe713bb8c3f9874cf28f0d6ca358803a31e437d43da9520d5e9ad",
+    "scripts/check-p07-keyboard.py": "fa139c8b67f7c87332ff7fd1b7fabe1fec6385eb81a9a35676fbd4ba947122b9",
+    "scripts/check-p07-inference.py": "bcffb13451fa5b25030475b2b8323a1c638ef0397f42b110fc987cbe711f60bc",
+    "scripts/check-obj-raw-fusion.py": "9c9196e33f92d811c0c6392559573b236411fb8d090f5ee05ecbd927e3890f17",
+    "scripts/reference-obj-raw-fusion-reopens.py": "f22b834893465500bfbd08793355649ff0f36263930409bd04e61cd3ea62ea67",
+    "scripts/check-rendered-drawing-reference.py": "eb76599f86b44ac6176eb09ae8f45179a34fb57d95646028e4c867584d4b3d8b",
+    "scripts/check-rendered-shift-inference.py": "c70a7a2fe7dcdadfc5de3db58de7fa9f6ccc8dd8dea348fdfc242a9f0f63a47f",
+    ".github/workflows/parity.yml": "cbf8f31cbdb5109367a62e47e02081db55402ea96ed39912aa9943595ed71f5e"
+  },
+  "crates_tree": "29145aeaa4e54fb7a0ed5d96cad2b9db620d8a8b"
+}

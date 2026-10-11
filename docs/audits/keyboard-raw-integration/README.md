@@ -1,0 +1,11 @@
+# Keyboard, perspective and raw OBJ integration
+
+One six-example build at `239d0c85` passes the changed keyboard, perspective-guide, retained inference and raw OBJ consumers plus both rendered drawing checks. The shared target handoff cleaned local workspace packages only. External dependencies were retained. Build: 12.033 seconds; semantic runtime/checkers/readers: 1.147 seconds; two rendered checks: 9.491 seconds. Zero original source captures and zero broad local suite runs.
+
+The combined runtime passes 19 keyboard recipes / 121 exact states / eight rejecting controls, 35 perspective-guide cases / five camera modes / 55 App states / five egui sessions / seven controls, the retained 48 guides / 286 numeric rows / 56 App states / eight controls, and 15 raw OBJ states / three actual original reopens / seven controls plus the retained preliminary-Mesh rejection. Rectangle cancellation and Line Shift render checks pass through their explicit prebuilt binaries.
+
+Independent P07 reconciliation accepts the unchanged finite criterion after this integrated replay. P07 is Verified; the other platform, glyph, whole-frame and performance criteria remain open. P22 stays Implemented: raw-key fusion and distinct trace/admission fallback material rules close two named gaps, while the existing allocation-dependent winding and broader DXF/library cases remain open. The connected trace-refusal test rejects the old material branch; its earlier singleton witness is explicitly withdrawn as branch acceptance and retained historically.
+
+Shared CI now builds 29 examples together for 27 semantic consumers and both rendered consumers. The new keyboard and raw OBJ lanes use authenticated retained inputs, including mandatory old-candidate rejection. Python AST and static workflow review pass. One normal CI run follows this stable review publication; native Mac release blockers remain open. Original Python and main remain pinned.
+
+`records.zip` includes the runner, full commands/timing/binary identities, unchanged source inputs, native outputs, failures inherited as regression controls, runtime state and rendered PNGs. `manifest.json` authenticates every member. Software OpenGL/Xvfb rendering here is engineering acceptance, not Vulkan/Metal hardware pixel parity.

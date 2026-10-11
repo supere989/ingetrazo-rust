@@ -16,3 +16,5 @@ python3 scripts/check-perspective-guides.py SOURCE/source.json OUTPUT/native.jso
 ```
 
 [Independent read-only review](independent-review.json) accepts the bounded perspective-guide contract; combined integration remains pending. P07 remains Implemented until the separate keyboard-buffer work and full unchanged criterion review are accepted. No complete Protractor/Tape, whole-frame, OS-pointer or platform acceptance is inferred.
+
+Final combined acceptance at `239d0c85` passes this consumer together with the new keyboard router, retained inference, raw OBJ and both rendered drawing checks. P07 now meets its independently reconciled unchanged finite criterion. [Joint proof](../keyboard-raw-integration/README.md).
