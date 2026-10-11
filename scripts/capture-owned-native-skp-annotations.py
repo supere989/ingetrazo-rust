@@ -91,6 +91,10 @@ with(out/'runtime.log').open('w')as stream:
    first=wait(lambda:state()if state()['nonce']==nonce else None)
    wait(lambda:state()['nonce']==nonce and state()['completed_present_serial']>first['submitted_serial'] and [state()['dimensions'],state()['leaders']]==counts)
    assert state()['annotation_ready']==(sum(counts)>0);take(name)
+  if env.get('INGETRAZO_ANNOTATION_VISIBILITY_DIAGNOSTIC'):
+   temp=control/'request.tmp';temp.write_text(json.dumps(dict(nonce=3,action='visibility')));temp.replace(control/'request.json')
+   wait(lambda:(control/'visibility.json').is_file())
+   (out/'visibility.json').write_bytes((control/'visibility.json').read_bytes())
   close(w);assert child.wait(timeout=5)==0
   text=(out/'runtime.log').read_text();assert 'NVIDIA GeForce RTX 5090'in text and 'llvmpipe'not in text
   assert 'Native bounded GPU cleanup complete; present_fences_enabled=true; committed_bytes=0'in text,text[-2000:]

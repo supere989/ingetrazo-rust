@@ -114,7 +114,7 @@ impl App for Probe{
 }
 pub fn run()->Result<(),Box<dyn Error>>{if std::env::var_os("INGETRAZO_ANNOTATION_APP_CONTROL").is_some(){run_app::<ApplicationProbe>(None)}else{run_app::<Probe>(None)}}
 
-struct ApplicationProbe{app:crate::IngeTrazoApp,viewport_only:bool,nonce:u64,held:bool,pressure:bool,texture:Option<egui::TextureHandle>,saved_annotations:Option<(Vec<ingetrazo_core::dimensions::Dimension>,Vec<ingetrazo_core::textlabel::TextLabel>)>}
+struct ApplicationProbe{visibility_requested:bool,app:crate::IngeTrazoApp,viewport_only:bool,nonce:u64,held:bool,pressure:bool,texture:Option<egui::TextureHandle>,saved_annotations:Option<(Vec<ingetrazo_core::dimensions::Dimension>,Vec<ingetrazo_core::textlabel::TextLabel>)>}
 impl App for ApplicationProbe{
  fn title()->&'static str{"IngeTrazo actual application annotation probe"}
  fn new(_: &mut System,_:Option<std::path::PathBuf>)->Self{
@@ -129,7 +129,7 @@ impl App for ApplicationProbe{
    app.style.show_textures=false;app.style.background_color=[1.;4];app.style.show_sky=false;app.style.show_profiles=false;
    app.mark_document_clean();
   }
-  Self{app,viewport_only:std::env::var_os("INGETRAZO_ANNOTATION_VIEWPORT_ONLY").is_some(),nonce:0,held:false,pressure:false,texture:None,saved_annotations:None}
+  Self{visibility_requested:false,app,viewport_only:std::env::var_os("INGETRAZO_ANNOTATION_VIEWPORT_ONLY").is_some(),nonce:0,held:false,pressure:false,texture:None,saved_annotations:None}
  }
  fn build_ui(&mut self,ctx:&Context){
   if self.viewport_only{egui::CentralPanel::default().frame(egui::Frame::none()).show(ctx,|ui|crate::viewport::render_viewport(&mut self.app,ui));}else{self.app.update_ui(ctx);}
@@ -138,6 +138,7 @@ impl App for ApplicationProbe{
   let dir=std::path::PathBuf::from(std::env::var_os("INGETRAZO_ANNOTATION_CONTROL_DIR").unwrap());
   if let Ok(file)=std::fs::File::open(dir.join("request.json")){use std::io::Read;let mut bytes=Vec::new();file.take(257).read_to_end(&mut bytes).unwrap();assert!(bytes.len()<=256);let row:serde_json::Value=serde_json::from_slice(&bytes).unwrap();let nonce=row["nonce"].as_u64().unwrap();if nonce>self.nonce{
    match row["action"].as_str().unwrap(){
+    "visibility"=>{assert!(std::env::var_os("INGETRAZO_ANNOTATION_VISIBILITY_DIAGNOSTIC").is_some());self.visibility_requested=true;},
     "annotations-off"=>{assert!(self.saved_annotations.is_none());self.saved_annotations=Some((std::mem::take(&mut self.app.scene.dimensions),std::mem::take(&mut self.app.scene.text_labels)));self.app.scene.bump_version();},
     "annotations-on"=>{let(dimensions,labels)=self.saved_annotations.take().expect("Annotations baseline must precede restoration");self.app.scene.dimensions=dimensions;self.app.scene.text_labels=labels;self.app.scene.bump_version();},
     "add"=>{self.app.save_undo_state();self.app.scene.dimensions.push(ingetrazo_core::dimensions::Dimension::new(glam::DVec3::new(-1.,0.,0.),glam::DVec3::new(1.,0.,0.),glam::DVec3::Y));self.app.scene.bump_version();},
@@ -155,6 +156,13 @@ impl App for ApplicationProbe{
    if self.pressure{system.annotation_cad.as_mut().expect("renderer created before controlled replacement").force_annotation_pressure_for_probe();}
    App::prepare_gpu(&mut self.app,system,resize);
    if self.pressure{assert!(system.annotation_prepare_error.is_some(),"Actual app pressure unexpectedly published");self.pressure=false;self.held=true;}
+  }
+  if self.visibility_requested&&!resize{
+   assert!(system.annotation_prepare_error.is_none());
+   let bytes=system.world.as_mut().expect("Diagnostic World").readback_annotation_queries_for_probe(&system.vulkan_context).expect("Bounded diagnostic query readback");
+   assert_eq!(bytes.len()%4,0);let flags:Vec<_>=bytes.chunks_exact(4).map(|b|u32::from_le_bytes(b.try_into().unwrap())).collect();assert!(flags.iter().all(|v|*v<=1));
+   let dir=std::path::PathBuf::from(std::env::var_os("INGETRAZO_ANNOTATION_CONTROL_DIR").unwrap());
+   std::fs::write(dir.join("visibility.json"),serde_json::to_vec(&serde_json::json!({"flags":flags,"submitted_serial":system.draw_serial,"completed_present_serial":system.completed_present_serial_for_probe,"camera":self.app.camera,"sample":system.annotation_sample,"scope":"engineering query-only GPU readback after existing graphics completion; no full-depth readback"})).unwrap()).unwrap();self.visibility_requested=false;
   }
   let row=serde_json::json!({"viewport_only":self.viewport_only,"nonce":self.nonce,"submitted_serial":system.draw_serial,"completed_present_serial":system.completed_present_serial_for_probe,"held_refusal":self.held,"dimensions":self.app.scene.dimensions.len(),"leaders":self.app.scene.text_labels.len(),"camera":self.app.camera,"camera_snapshot":crate::navigation_ray::camera_snapshot(&self.app.camera).map(|s|serde_json::json!({"matrix":s.matrix.concat(),"inverse":s.inverse().map(|m|m.concat()),"eye":s.eye,"forward":s.forward})),"screen_size":[system.egui_ctx.screen_rect().width(),system.egui_ctx.screen_rect().height()],"viewport":self.app.native_gpu_viewport_rect.map(|r|[r.min.x,r.min.y,r.max.x,r.max.y]),"cached_bytes":system.annotation_cad.as_ref().map_or(0,|r|r.stats().cached_bytes),"pending_textures":system.pending_texture_updates.len(),"annotation_prepare_error":system.annotation_prepare_error,"annotation_ready":system.annotation_ready_shape.is_some()});
   let dir=std::path::PathBuf::from(std::env::var_os("INGETRAZO_ANNOTATION_CONTROL_DIR").unwrap());let temp=dir.join("state.tmp");std::fs::write(&temp,serde_json::to_vec(&row).unwrap()).unwrap();std::fs::rename(temp,dir.join("state.json")).unwrap();
