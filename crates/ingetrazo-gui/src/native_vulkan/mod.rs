@@ -2,6 +2,7 @@ pub mod cad2d;
 pub mod resize;
 pub mod headless;
 mod source_depth;
+mod source_discard;
 pub mod world;
 mod annotation_visibility;
 pub mod annotation_viewport;
@@ -808,6 +809,7 @@ pub struct VulkanContext {
     pub present_fences_enabled:bool,
     pub texture_bc_enabled:bool,
     pub source_depth_clip_enabled:bool,
+    pub source_discard_terminate_enabled:bool,
     pub transfer_timeout_ns:u64,
     pub diagnostic_fail_fast:bool,
 }
@@ -853,7 +855,7 @@ impl VulkanContext {
             )?;
 
         // Vulkan logical device and queues
-        let (device, graphics_queue, present_queue,present_fences_enabled,texture_bc_enabled,source_depth_clip_enabled) =
+        let (device, graphics_queue, present_queue,present_fences_enabled,texture_bc_enabled,source_depth_clip_enabled,source_discard_terminate_enabled) =
             create_vulkan_device_and_graphics_and_present_qs(
                 &instance,
                 physical_device,
@@ -892,6 +894,7 @@ impl VulkanContext {
             present_fences_enabled,
             texture_bc_enabled,
             source_depth_clip_enabled,
+            source_discard_terminate_enabled,
             transfer_timeout_ns:lifetime::WAIT_NS,
             diagnostic_fail_fast:false,
         })
@@ -1121,7 +1124,7 @@ fn create_vulkan_device_and_graphics_and_present_qs(
     graphics_q_index: u32,
     present_q_index: u32,
     surface_maintenance_enabled:bool,
-) -> Result<(Device, vk::Queue, vk::Queue,bool,bool,bool), Box<dyn Error>> {
+) -> Result<(Device, vk::Queue, vk::Queue,bool,bool,bool,bool), Box<dyn Error>> {
     log::debug!("Creating vulkan device and graphics and present queues");
     let queue_priorities = [1.0f32];
     let queue_create_infos = {
@@ -1146,6 +1149,8 @@ fn create_vulkan_device_and_graphics_and_present_qs(
 
     let extensions=unsafe{instance.enumerate_device_extension_properties(physical_device)?};
     let (source_depth_clip_enabled,mut source_clip,mut source_dynamic)=source_depth::negotiate(instance,physical_device,&extensions);
+    let (source_discard_terminate_enabled,mut source_discard)=source_discard::negotiate(instance,physical_device,&extensions);
+    if source_discard_terminate_enabled{device_extensions_ptrs.push(ash::khr::shader_terminate_invocation::NAME.as_ptr());}
     if source_depth_clip_enabled{device_extensions_ptrs.extend([ash::ext::depth_clip_control::NAME.as_ptr(),ash::ext::extended_dynamic_state3::NAME.as_ptr()]);}
     let has_maintenance=surface_maintenance_enabled&&extensions.iter().any(|e|unsafe{CStr::from_ptr(e.extension_name.as_ptr())}==ash::ext::swapchain_maintenance1::NAME);
     let mut maintenance=vk::PhysicalDeviceSwapchainMaintenance1FeaturesEXT::default();
@@ -1163,11 +1168,12 @@ fn create_vulkan_device_and_graphics_and_present_qs(
 
     if enabled{device_create_info=device_create_info.push_next(&mut maintenance);}
     if source_depth_clip_enabled{device_create_info=device_create_info.push_next(&mut source_clip).push_next(&mut source_dynamic);}
+    if source_discard_terminate_enabled{device_create_info=device_create_info.push_next(&mut source_discard);}
     let device = unsafe { instance.create_device(physical_device, &device_create_info, None)? };
     let graphics_queue = unsafe { device.get_device_queue(graphics_q_index, 0) };
     let present_queue = unsafe { device.get_device_queue(present_q_index, 0) };
 
-    Ok((device, graphics_queue, present_queue,enabled,texture_bc_enabled,source_depth_clip_enabled))
+    Ok((device, graphics_queue, present_queue,enabled,texture_bc_enabled,source_depth_clip_enabled,source_discard_terminate_enabled))
 }
 
 fn create_vulkan_swapchain(

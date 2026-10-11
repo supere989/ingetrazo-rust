@@ -24,7 +24,7 @@ impl Textures{
   let clip_distance=unsafe{context.instance.get_physical_device_features(context.physical_device)}.shader_clip_distance!=0;
   for index in 0..16{result.pipelines[index]=pipeline(&result.device,render_pass,result.layout,samples,index,context.source_depth_clip_enabled,clip_distance)?;}
   // Source disables polygon offset before its camera-facing placement pass.
-  for (slot,index) in [0,8].into_iter().enumerate(){result.billboard_pipelines[slot]=pipeline_source_mode(&result.device,render_pass,result.layout,samples,index,false,true,context.source_depth_clip_enabled,clip_distance)?;}Ok(result)
+  for (slot,index) in [0,8].into_iter().enumerate(){result.billboard_pipelines[slot]=pipeline_source_mode(&result.device,render_pass,result.layout,samples,index,false,true,context.source_depth_clip_enabled,clip_distance,false)?;}Ok(result)
  }
  pub fn prepare(&mut self,context:&VulkanContext,resources:&mut Resources,buffers:&TextureBuffers,assets:&HashMap<String,Vec<u8>>,scene:&ingetrazo_core::scene::Scene,fence:vk::Fence,completed:u64,storage_limit:u64)->Result<Candidate,String>{
   self.prepare_mode(context,resources,buffers,assets,scene,fence,completed,storage_limit,false)
@@ -177,15 +177,15 @@ impl Textures{
  pub fn buffers(&self)->&[BufferId]{&self.buffers}
 }
 impl Drop for Textures{fn drop(&mut self){drop(self.pool.take());unsafe{for p in self.pipelines.into_iter().chain(self.billboard_pipelines){self.device.destroy_pipeline(p,None);}self.device.destroy_pipeline_layout(self.layout,None);self.device.destroy_descriptor_set_layout(self.descriptor_layout,None);}}}
-pub(crate) fn shadow_pipeline(device:&Device,pass:vk::RenderPass,layout:vk::PipelineLayout,samples:vk::SampleCountFlags,index:usize,source_depth:bool,clip_distance:bool)->Result<vk::Pipeline,String>{pipeline_source_mode(device,pass,layout,samples,index,true,false,source_depth,clip_distance)}
+pub(crate) fn shadow_pipeline(device:&Device,pass:vk::RenderPass,layout:vk::PipelineLayout,samples:vk::SampleCountFlags,index:usize,source_depth:bool,clip_distance:bool,terminate:bool)->Result<vk::Pipeline,String>{pipeline_source_mode(device,pass,layout,samples,index,true,false,source_depth,clip_distance,terminate)}
 fn pipeline(device:&Device,pass:vk::RenderPass,layout:vk::PipelineLayout,samples:vk::SampleCountFlags,index:usize,source_depth:bool,clip_distance:bool)->Result<vk::Pipeline,String>{
- pipeline_source_mode(device,pass,layout,samples,index,false,false,source_depth,clip_distance)
+ pipeline_source_mode(device,pass,layout,samples,index,false,false,source_depth,clip_distance,false)
 }
 fn pipeline_source(device:&Device,pass:vk::RenderPass,layout:vk::PipelineLayout,samples:vk::SampleCountFlags,index:usize,shadow:bool)->Result<vk::Pipeline,String>{
- pipeline_source_mode(device,pass,layout,samples,index,shadow,false,false,false)
+ pipeline_source_mode(device,pass,layout,samples,index,shadow,false,false,false,false)
 }
-fn pipeline_source_mode(device:&Device,pass:vk::RenderPass,layout:vk::PipelineLayout,samples:vk::SampleCountFlags,index:usize,shadow:bool,billboard:bool,source_depth:bool,clip_distance:bool)->Result<vk::Pipeline,String>{
- let load=|bytes:&[u8]|ash::util::read_spv(&mut std::io::Cursor::new(bytes)).map_err(|e|e.to_string());let v=load(if clip_distance{include_bytes!("shaders/texture_clip.vert.spv").as_slice()}else{include_bytes!("shaders/texture.vert.spv").as_slice()})?;let f=load(if shadow&&index%8==0{if index<8{include_bytes!("shaders/texture_shadow.frag.spv").as_slice()}else{include_bytes!("shaders/texture_average_shadow.frag.spv").as_slice()}}else if index<8{include_bytes!("shaders/texture.frag.spv").as_slice()}else{include_bytes!("shaders/texture_average.frag.spv").as_slice()})?;let index=index%8;
+fn pipeline_source_mode(device:&Device,pass:vk::RenderPass,layout:vk::PipelineLayout,samples:vk::SampleCountFlags,index:usize,shadow:bool,billboard:bool,source_depth:bool,clip_distance:bool,terminate:bool)->Result<vk::Pipeline,String>{
+ let load=|bytes:&[u8]|ash::util::read_spv(&mut std::io::Cursor::new(bytes)).map_err(|e|e.to_string());let v=load(if clip_distance{include_bytes!("shaders/texture_clip.vert.spv").as_slice()}else{include_bytes!("shaders/texture.vert.spv").as_slice()})?;let f=load(if shadow&&index%8==0{if index<8{if terminate{include_bytes!("shaders/texture_shadow_terminate.frag.spv").as_slice()}else{include_bytes!("shaders/texture_shadow.frag.spv").as_slice()}}else{include_bytes!("shaders/texture_average_shadow.frag.spv").as_slice()}}else if index<8{include_bytes!("shaders/texture.frag.spv").as_slice()}else{include_bytes!("shaders/texture_average.frag.spv").as_slice()})?;let index=index%8;
  let vertex=unsafe{device.create_shader_module(&vk::ShaderModuleCreateInfo::default().code(&v),None)}.map_err(|e|e.to_string())?;
  let fragment=match unsafe{device.create_shader_module(&vk::ShaderModuleCreateInfo::default().code(&f),None)}{Ok(f)=>f,Err(e)=>{unsafe{device.destroy_shader_module(vertex,None)};return Err(e.to_string());}};
  let clipped=u32::from(clip_distance);let entry=[vk::SpecializationMapEntry{constant_id:0,offset:0,size:4}];let specialization=vk::SpecializationInfo::default().map_entries(&entry).data(bytemuck::bytes_of(&clipped));

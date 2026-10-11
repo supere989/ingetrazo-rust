@@ -848,6 +848,7 @@ impl Owner {
                 i,
                 context.source_depth_clip_enabled,
                 clip_distance,
+                context.source_discard_terminate_enabled,
             )?;
         }
         Ok(owner)
