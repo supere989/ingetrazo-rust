@@ -1,7 +1,7 @@
 {
   "source_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
   "archive": "source-records.zip",
-  "archive_sha256": "0eee5acfe8af6d63b8d17e9fe4e19838e7fafb5686e3ee325673dc1c2f0d4523",
+  "archive_sha256": "c97f4906db5f94097bacb41ca66dc64249182eea732d8576b43551c2f29092ab",
   "entries": [
     {
       "path": "attempts/source-seed-import/stderr.log",
@@ -217,10 +217,16 @@
       "path": "reference-smooth.obj",
       "bytes": 151,
       "sha256": "783c7410697134a0227f3541975ba9b52ce0be0ea3eac378cf4301cabbf8620c"
+    },
+    {
+      "path": "winding-whitelist.json",
+      "bytes": 5811,
+      "sha256": "679f78b8e165284936a1503f7384e4ca97b480f183f0c045f47998f3b7ef7515"
     }
   ],
   "helper_sha256": "19f3f564be902ad09beab33880fd0e3e8a6085f1cf37e0a31ad091dba8205719",
   "cases": 12,
   "states": 60,
-  "scope": "Only missing finite OBJ geometry controller cases; actual SnapshotImport/Viewport/history/save, no GPU claim. Previously accepted MTL/nested source corpus reused."
+  "scope": "Only missing finite OBJ geometry controller cases; actual SnapshotImport/Viewport/history/save, no GPU claim. Previously accepted MTL/nested source corpus reused.",
+  "winding_whitelist": "winding-whitelist.json"
 }

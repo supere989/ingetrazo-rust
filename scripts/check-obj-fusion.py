@@ -14,6 +14,7 @@ def strict(a,b,path=''):
 expected=['closed-cube-root','closed-cube-leaf','explicit-smooth-root','hard-root','reference-patch','reference-annulus','reference-irregular','reference-smooth','reference-duplicates','large-reference-grid','reference-auto-smooth','reference-paint-boundary']
 assert [r['case']for r in a['cases']]==expected
 assert [(r['case'],r['phase'])for r in a['states']]==[(n,p)for n in expected for p in ['before','import','undo','redo','finish']]
+strict(a['cases'],b['cases']);assert [(r['case'],r['phase'])for r in b['states']]==[(r['case'],r['phase'])for r in a['states']]
 def winding_diff(a,b,path=''):
  if isinstance(a,dict):
   assert isinstance(b,dict)and a.keys()==b.keys(),(path,'keys')
@@ -40,13 +41,22 @@ def winding_diff(a,b,path=''):
   for i,(x,y)in enumerate(zip(a,b)):rows.extend(winding_diff(x,y,path+'/'+str(i)))
   return rows
  strict(a,b,path);return []
+whitelist=json.loads((p/'winding-whitelist.json').read_text())
+assert len(whitelist)==16 and len({(r['case'],r['phase'],r['path'])for r in whitelist})==16
+allowed={(r['case'],r['phase'],r['path']):r['source']for r in whitelist}
+def classified_winding(case,phase,x,y):
+ rows=winding_diff(x,y)
+ for row in rows:
+  key=(case,phase,row['path']);assert key in allowed,('unapproved winding owner/face',key)
+  strict(allowed[key],row['source'])
+ return rows
 known='closed-cube-leaf';full_diff=[]
 for x,y in zip(a['states'],b['states']):
  if x['case']!=known:strict(x,y);continue
  try:strict(x,y)
  except AssertionError:
   assert x['phase']in ['import','redo','finish'],('unapproved phase',x['phase'])
-  diff=winding_diff(x,y);assert diff,'unclassified strict difference'
+  diff=classified_winding(known,x['phase'],x,y);assert diff,'unclassified strict difference'
   full_diff.extend({'case':known,'phase':x['phase'],**r}for r in diff)
 assert {r['phase']for r in full_diff}=={'import','redo','finish'},'retained boundary missing/unexpected'
 (p/'full-winding-diff.json').write_text(json.dumps(full_diff,indent=2)+'\n')
@@ -64,12 +74,14 @@ for case in ['explicit-smooth-root','reference-auto-smooth']:
 boundary_mutations=[]
 src=next(r for r in a['states']if r['case']==known and r['phase']=='import')
 base=next(r for r in b['states']if r['case']==known and r['phase']=='import')
-for kind in ['history','paint','position']:
+for kind in ['history','paint','position','untouched-winding']:
  candidate=copy.deepcopy(base)
  if kind=='history':candidate['undo']+=1
  elif kind=='paint':candidate['scene']['active']['faces'][0]['attrs']['opaque-loss']=True
- else:candidate['scene']['active']['faces'][0]['outer'][0][0]+=.125
- try:winding_diff(src,candidate)
+ elif kind=='position':candidate['scene']['active']['faces'][0]['outer'][0][0]+=.125
+ else:
+  face=next(f for f in candidate['scene']['active']['faces']if min(v[0]for v in f['outer'])>3);face['outer']=[face['outer'][0]]+list(reversed(face['outer'][1:]))
+ try:classified_winding(known,'import',src,candidate)
  except AssertionError:boundary_mutations.append(kind)
  else:raise AssertionError('unrelated boundary regression accepted')
 for c in mutations:
@@ -81,7 +93,7 @@ for c in mutations:
 reopens=json.loads((p/'reopens-obj-fusion.json').read_text());assert [r['case']for r in reopens]==expected
 for row in reopens:
  if '--deterministic'in sys.argv and row['case']==known:
-  diff=winding_diff(row['original'],row['native']);assert diff,'reopen boundary missing';full_diff.extend({'case':known,'phase':'reopen',**r}for r in diff);continue
+  diff=classified_winding(known,'reopen',row['original'],row['native']);assert diff,'reopen boundary missing';full_diff.extend({'case':known,'phase':'reopen',**r}for r in diff);continue
  strict(row['original'],row['native'])
 (p/'full-winding-diff.json').write_text(json.dumps(full_diff,indent=2)+'\n')
 print(json.dumps({'cases':11 if '--deterministic'in sys.argv else len(a['cases']),'states':55 if '--deterministic'in sys.argv else len(a['states']),'unresolved_source_winding_case':'closed-cube-leaf' if '--deterministic'in sys.argv else None,'unresolved_winding_leaves':len(full_diff),'negative_controls':len(mutations)+len(boundary_mutations),'ownership_controls':2,'passed':True}))
