@@ -1,0 +1,310 @@
+{
+  "timing": {
+    "revision": "5a17fff1e5c78f1cff2dacc760b20e393ed0b152",
+    "build_seconds": 12.212485487980302,
+    "replay_seconds": 21.5582008069905,
+    "consumers": [
+      "change_axes_fixture",
+      "document_preservation_workflow",
+      "pushpull_solid_workflows",
+      "fillet_scoped",
+      "pushpull_finite_workflows",
+      "paste_save_workflow",
+      "box_selection_fixture",
+      "material_restamp_workflow",
+      "material_tray_egui",
+      "cursor_navigation_workflow",
+      "annotation_delete_fixture",
+      "zoom_extents_workflow",
+      "annotation_move_fixture"
+    ],
+    "fresh_source_acquisitions": 0,
+    "result": "pass"
+  },
+  "result": {
+    "revision": "5a17fff1e5c78f1cff2dacc760b20e393ed0b152",
+    "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+    "binary_sha256": {
+      "change_axes_fixture": "9adc3c769a31a182f23f6ef4bbc60e67d6a891d315c46d86af1cfd420983e233",
+      "document_preservation_workflow": "77a1b7e572f89224744464480ce9393c4c05b8d1d132f569bd4314f5ae32200f",
+      "pushpull_solid_workflows": "476facb31966d75552a1b4ccc71ef8ceeebfc31ff801a40e2e018e6a71fd208e",
+      "fillet_scoped": "fe8c74670218906deebeb44d3c900949f302a8f69fc058d66e308e2fa07970e7",
+      "pushpull_finite_workflows": "64bd8730bdac54c39e46404bbfed8c18f2e2a4c34f02eca8618acc63e08a2b83",
+      "paste_save_workflow": "68eba33ed8716df19b7d2396b397ea0c24edffe7003b51804aaf95294484a8ac",
+      "box_selection_fixture": "a6713bba6588b66156153641b3f14e7222d8e885456d0e562f438eb36c296ba3",
+      "material_restamp_workflow": "28d28e7d3b3fb01defcd01a607766df8effe7ee256b181d11435cbe860b906e9",
+      "material_tray_egui": "a5d64c3df205023d4c7fae13a06657b370e8a70f109435ae346c041b9b7d4ec8",
+      "cursor_navigation_workflow": "5c75324c77fc162867edabad9964cbdec8e1bbaecdcd3e6c5e3fbe3096d2642d",
+      "annotation_delete_fixture": "9eda5e6766135f2bcfe9ac095847b9fd8e0588b679462dd9a1b48e9f24ae9580",
+      "zoom_extents_workflow": "064a6a079db1756f2aa4dcf8809342518b8c2f50fe1b685b5206f844d832152d",
+      "annotation_move_fixture": "c461ecff03ba2e13486a57b8c97f50f5018cd00e1d3c9d6a5898de55279a94a8"
+    },
+    "source_archives": {
+      "axes": "2a8653e4589f38ad6355c15f280451990643d5188852e28b56111e5a1d909c1f",
+      "documents": "f381a13f523ff6b3a0d7e237309b8276d633fa1cfeced420c88b856ece786926",
+      "fillet": "c7aa6d9ec54ec63ef30233df30750ac13abde941edf7d9e917deae81a72dcff8",
+      "pushpull_finite": "df498d377eab877dee2c1031181dcf95d1514fbecbc4d087fc4d7756c633991c",
+      "paste_save": "796bc67d4ee7b1f69fa1e72b205037074d7244d91f568b078fe8cb3805ea6b79",
+      "box_selection": "6ccc86c7dabe3b2a672906e795de61e6db171d6394447fd7ca988f833b2c16c7",
+      "materials": "61ea1f3658ffa93eb3a8cf80768e5ee78ee02ece5516f2c168c7ba637c315439",
+      "cursor": "c6a8c49db3216b4a1f6e36d8efd0504058bc52078ac5f2b2433f1dd9a5e4e12c",
+      "annotations": "05ac389d493dfbf6a25e279cc109ac71041b0f19a414b3eb6182d04a9609cc1b",
+      "zoom_extents": "99847eda085b88aed1fbb414015917f05fbe4681c12e3d11273fc6ae60702105",
+      "annotation_move": "73f40475dad0f6fb8cff3ec5bc12be0e8b26a15904c91cb3830f1e6be7be685b"
+    },
+    "axes": {
+      "retained_failures_rejected": 3,
+      "states": 33,
+      "actual_python_reopens": 5,
+      "rejecting_controls": 8,
+      "literal_uid_cases": 5,
+      "exact": true
+    },
+    "documents": {
+      "actual_app_saves": 6,
+      "exact_original_reopens": 6,
+      "leaf_record_types": 15,
+      "negative_controls": 5
+    },
+    "fillet": {
+      "exact_app_states": 28,
+      "old_candidate_rejected": true,
+      "negative_controls": 4
+    },
+    "fillet_volume": {
+      "passed": true,
+      "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+      "method": "Exact rational oriented polygon boundary determinant; Qt binary32 rounding-cell interval propagation, no fitted volume percentage. Analytic discrete quarter-circle corner checked against binary64 rounding-cell interval.",
+      "cases": [
+        {
+          "name": "endpoint-free-wire",
+          "source_volume": 1.9824289020188646,
+          "native_volume": 1.982428903045161,
+          "source_exact_fraction": "2232016516105165/1125899906842624",
+          "native_exact_fraction": "643334960346877129393548614170775/324518553658426726783156020576256",
+          "source_qt_rounding_interval": [
+            1.9824284895829667,
+            1.982429481986966
+          ],
+          "open_faces_excluded": 0
+        },
+        {
+          "name": "open-neighbor",
+          "source_volume": 1.9824289020188646,
+          "native_volume": 1.982428903045161,
+          "source_exact_fraction": "2232016516105165/1125899906842624",
+          "native_exact_fraction": "643334960346877129393548614170775/324518553658426726783156020576256",
+          "source_qt_rounding_interval": [
+            1.9824284895829667,
+            1.982429481986966
+          ],
+          "open_faces_excluded": 1
+        },
+        {
+          "name": "paint-first-rim",
+          "source_volume": 1.9504719673263495,
+          "native_volume": 1.9504719630236553,
+          "source_exact_fraction": "589493980433841302932757/302231454903657293676544",
+          "native_exact_fraction": "547318649765201808156845906878844705232701581025561/280608314367533360295107487881526339773939048251392",
+          "source_qt_rounding_interval": [
+            1.9504694886718017,
+            1.950474574898503
+          ],
+          "open_faces_excluded": 0
+        },
+        {
+          "name": "oblique-cap",
+          "source_volume": 2.2282352206538545,
+          "native_volume": 2.228235207174462,
+          "source_exact_fraction": "21045086643930819538789/9444732965739290427392",
+          "native_exact_fraction": "4884854105465759968317938086223753471291120092457/2192252455996354377305527249074424529483898814464",
+          "source_qt_rounding_interval": [
+            2.2282347214570857,
+            2.2282358680759393
+          ],
+          "open_faces_excluded": 0
+        },
+        {
+          "name": "concave",
+          "source_volume": 3.008785543111216,
+          "native_volume": 3.0087855484774195,
+          "source_exact_fraction": "211724460168647/70368744177664",
+          "native_exact_fraction": "61025420903766771092587589660455/20282409603651670423947251286016",
+          "source_qt_rounding_interval": [
+            3.0087834616213835,
+            3.0087878823258287
+          ],
+          "open_faces_excluded": 0
+        },
+        {
+          "name": "turned-squashed",
+          "source_volume": 5.931071730952756,
+          "native_volume": 5.931071572075336,
+          "source_exact_fraction": "109408962303699014573/18446744073709551616",
+          "native_exact_fraction": "67720865732147464285651225361277085913365235141/11417981541647679048466287755595961091061972992",
+          "source_qt_rounding_interval": [
+            5.93098975289979,
+            5.931153631649375
+          ],
+          "open_faces_excluded": 0
+        }
+      ],
+      "analytic": {
+        "case": "endpoint-free-wire",
+        "radius": 0.2,
+        "segments": 8,
+        "edge_length": 2.0,
+        "box_dimensions": [
+          2.0,
+          1.0,
+          1.0
+        ],
+        "formula": "abc-L*r^2*(1-N*sin(pi/(2*N))/2)",
+        "expected_volume": 1.982428903045161,
+        "native_binary64_volume_interval": [
+          1.9824289030451603,
+          1.982428903045162
+        ]
+      },
+      "negative_controls": [
+        "topology_preserving_scale",
+        "topology_preserving_vertex_displacement",
+        "reversed_boundary",
+        "removed_face",
+        "invalid_old_oblique"
+      ],
+      "scope": "Six retained closed fillet bodies, two corrected oblique/turned production models. Open neighbor faces excluded explicitly; no new geometry, app run or full P09 claim.",
+      "fresh_native_sha256": "7aaac26fa6a44c30fa0d4a948dcbe5ffe4a09840ddaaa2ef92e3cea6eda056a1"
+    },
+    "pushpull": {
+      "passed": true,
+      "scope": "Eight exact pinned private regression operations; six exact actual App consumers including nested shared history. Direct helper holed-winding discrepancy retained; no full P03 promotion.",
+      "exact_model_cases": 8,
+      "actual_app_cases": 6,
+      "source_private_helper_discrepancy": "test_repush_top_extends_holed_wall_keeping_opening-2",
+      "negative_controls": [
+        "empty",
+        "missing_case",
+        "duplicate_case",
+        "removed_face",
+        "reversed_boundary",
+        "wrong_interior",
+        "wrong_paint",
+        "lost_hole",
+        "coordinate_drift",
+        "wrong_undo",
+        "lost_cancel",
+        "missing_history",
+        "lost_linked_finish"
+      ],
+      "retained_invalid_original_atomic_refusals": [
+        "ctrl-roof-0.2",
+        "ctrl-step-0.5"
+      ],
+      "retained_wedge_policy": "Unchanged zero-limit no-op; literal invalid-source result not copied"
+    },
+    "pushpull_finite": {
+      "passed": true,
+      "workflows": 26,
+      "exact_primitive_operations": 65,
+      "exact_persistent_app_operations": 65,
+      "negative_controls": [
+        "empty",
+        "truncated",
+        "duplicate",
+        "removed_face",
+        "reversed_face",
+        "wrong_paint",
+        "wrong_interior",
+        "coordinate_2^-22",
+        "wrong_undo",
+        "lost_cancel",
+        "collapsed_history",
+        "wrong_workflow"
+      ],
+      "scope": "Finite valid slanted roof, all wedge permutations, side-wall permutations and repeated pushes; exact source geometry/metadata and actual App VCB/Cancel/Undo/Redo. Not full P03 or renderer acceptance."
+    },
+    "paste_save": {
+      "passed": true,
+      "workflows": 8,
+      "source_states": 24,
+      "original_reopens": 4,
+      "invalid_finish_preserves_pending_owner": true,
+      "immutable_preview_owner": true,
+      "negative_controls": [
+        "lost_preview",
+        "moved_preview",
+        "extra_history",
+        "fragment_save",
+        "missing_workflow"
+      ]
+    },
+    "box_selection": {
+      "states": 41,
+      "negative_controls": 41,
+      "exact": true,
+      "guide_reopens": 2,
+      "guide_negative_controls": 3,
+      "retained_failed_candidates_rejected": 2
+    },
+    "materials": {
+      "exact_source_states": 23,
+      "explicit_source_integrity_divergences": 2,
+      "tray_phases": 5,
+      "original_archive_reopens": 5,
+      "rejected_controls": [
+        "empty",
+        "color-drift",
+        "lost-back",
+        "lost-opaque",
+        "retained-old-texture",
+        "missing-phase"
+      ]
+    },
+    "cursor": {
+      "core_exact": 7,
+      "source_sessions_exact": 6,
+      "event_states_exact": 18,
+      "strict_negatives_rejected": 6
+    },
+    "annotations": {
+      "states": 30,
+      "negative_controls": 30,
+      "exact": true
+    },
+    "annotation_reopens": {
+      "original_reopens": 4,
+      "negative_controls": 4,
+      "exact": true
+    },
+    "zoom_extents": {
+      "reference_sessions_exact": 12,
+      "camera_states_exact": 24,
+      "mode_transition_states_exact": 4,
+      "atomic_refusals": 3,
+      "model_history_unchanged": 12,
+      "rejected_controls": [
+        "empty-corpus",
+        "missing-case",
+        "duplicate-case",
+        "target",
+        "distance",
+        "mode",
+        "history",
+        "missing-refusal",
+        "resumed-two-point",
+        "hidden-wire-omitted",
+        "hidden-face-omitted"
+      ]
+    },
+    "annotation_move": {
+      "mandatory_boundaries": 2,
+      "oblique_annotation_observations": 5,
+      "states": 77,
+      "negative_controls": 77,
+      "exact": true
+    },
+    "fresh_source_acquisitions": 0,
+    "result": "pass"
+  }
+}
