@@ -89,5 +89,6 @@
     "core/composition.py": "24aa8327d1c6a0b4afbaab0d153743f28c3deb557f44a66c467d5aed4dd65da9"
   },
   "binary": "6a7c12775e4501b59cdf15b3ae0f80804d6cf9e8dbffaf38f66f6bcd11515639",
-  "archive_sha256": "d9758c81b633fff96d89c85ce15a56d8bc09a7616b6183371001b8890e7372d1"
+  "archive_sha256": "d9758c81b633fff96d89c85ce15a56d8bc09a7616b6183371001b8890e7372d1",
+  "runtime_commit": "60e489ae388e9bcdcd35839e145353eadafa7896"
 }
