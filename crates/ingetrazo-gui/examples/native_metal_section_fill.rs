@@ -13,7 +13,7 @@ fn main() {
 }
 #[cfg(target_os = "macos")]
 fn run() -> Result<(), String> {
-    objc2::rc::autoreleasepool(|_| {
+    ingetrazo_metal::autoreleasepool(|_| {
         use glam::DVec3;
         use ingetrazo_core::{
             camera::{OrbitCamera, StandardView},
@@ -53,11 +53,11 @@ fn run() -> Result<(), String> {
             scene
                 .mesh
                 .add_face(layers[0].into_iter().rev().collect(), vec![])
-                .map_err(|e| format!("{e:?}"))?;
+                .ok_or("Source section fixture face insertion refused")?;
             scene
                 .mesh
                 .add_face(layers[2].to_vec(), vec![])
-                .map_err(|e| format!("{e:?}"))?;
+                .ok_or("Source section fixture face insertion refused")?;
             for i in 0..4 {
                 let j = (i + 1) % 4;
                 for k in 0..2 {
@@ -72,7 +72,7 @@ fn run() -> Result<(), String> {
                             ],
                             vec![],
                         )
-                        .map_err(|e| format!("{e:?}"))?;
+                        .ok_or("Source section fixture face insertion refused")?;
                 }
             }
             if name.starts_with("shared-slab") {
@@ -83,7 +83,7 @@ fn run() -> Result<(), String> {
                 let id = scene
                     .mesh
                     .add_face(ring, vec![])
-                    .map_err(|e| format!("{e:?}"))?;
+                    .ok_or("Source section fixture face insertion refused")?;
                 scene.mesh.faces[id].interior = true;
             }
             if name == "transparent" {
@@ -97,7 +97,7 @@ fn run() -> Result<(), String> {
                     scene
                         .mesh
                         .add_face(f.vertices, vec![])
-                        .map_err(|e| format!("{e:?}"))?;
+                        .ok_or("Source section fixture face insertion refused")?;
                 }
             }
             if name == "coplanar-backface" {
@@ -107,7 +107,7 @@ fn run() -> Result<(), String> {
                 scene
                     .mesh
                     .add_face(ids.to_vec(), vec![])
-                    .map_err(|e| format!("{e:?}"))?;
+                    .ok_or("Source section fixture face insertion refused")?;
             }
             scene.section_planes.push(SectionPlane::new(
                 DVec3::new(0., 0., 1.5),
