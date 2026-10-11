@@ -68,6 +68,25 @@ fn uvw(attrs: &Attrs) -> Option<Vec<f64>> {
         .map(Value::as_f64)
         .collect()
 }
+fn signature(attrs: &Attrs) -> Attrs {
+    let mut out = attrs.clone();
+    if let Some(values) = out
+        .get_mut("texture")
+        .and_then(|t| t.get_mut("uvw"))
+        .and_then(Value::as_array_mut)
+    {
+        for value in values {
+            if let Some(n) = value.as_f64() {
+                *value = Value::from(
+                    format!("{n:.4}")
+                        .parse::<f64>()
+                        .expect("finite authored UV fit"),
+                );
+            }
+        }
+    }
+    out
+}
 fn material_equal(a: &Attrs, b: &Attrs) -> bool {
     if a == b {
         return true;
@@ -198,6 +217,11 @@ pub(super) fn reference(mesh: &mut Mesh) -> Result<(), String> {
     let normals = (0..mesh.faces.len())
         .map(|i| normal(mesh, i))
         .collect::<Vec<_>>();
+    let signatures = mesh
+        .faces
+        .iter()
+        .map(|f| signature(&f.attrs))
+        .collect::<Vec<_>>();
     let mut eligible = Vec::new();
     let mut triangles = HashMap::<Vec<usize>, usize>::new();
     for (id, f) in mesh.faces.iter().enumerate() {
@@ -249,20 +273,14 @@ pub(super) fn reference(mesh: &mut Mesh) -> Result<(), String> {
         }
         let (a, b) = (ids[0], ids[1]);
         if dot(normals[eligible[a]], normals[eligible[b]]).abs() < 0.99999
-            || !material_equal(
-                &mesh.faces[eligible[a]].attrs,
-                &mesh.faces[eligible[b]].attrs,
-            )
+            || !material_equal(&signatures[eligible[a]], &signatures[eligible[b]])
         {
             continue;
         }
         let (ra, rb) = (find(&mut parent, a), find(&mut parent, b));
         if ra != rb
             && dot(normals[eligible[ra]], normals[eligible[rb]]).abs() >= 0.99999
-            && material_equal(
-                &mesh.faces[eligible[ra]].attrs,
-                &mesh.faces[eligible[rb]].attrs,
-            )
+            && material_equal(&signatures[eligible[ra]], &signatures[eligible[rb]])
         {
             parent[rb] = ra;
         }
@@ -287,7 +305,19 @@ pub(super) fn reference(mesh: &mut Mesh) -> Result<(), String> {
             trace(mesh, &ids, normals[ids[0]])
         };
         if let Some((outer, holes)) = traced {
-            append(&mut output, mesh, &outer, &holes, first)?;
+            if outer.len() >= 3
+                && outer.iter().copied().collect::<HashSet<_>>().len() == outer.len()
+                && holes.iter().all(|r| {
+                    r.len() >= 3 && r.iter().copied().collect::<HashSet<_>>().len() == r.len()
+                })
+            {
+                append(&mut output, mesh, &outer, &holes, first)?;
+            } else {
+                for id in ids {
+                    let f = &mesh.faces[id];
+                    append(&mut output, mesh, &f.vertices, &f.holes, f)?;
+                }
+            }
         } else {
             for id in ids {
                 let f = &mesh.faces[id];
@@ -334,7 +364,7 @@ pub(super) fn soften(mesh: &mut Mesh, automatic: bool) {
         }
         let same_group = aa
             .get("_s")
-            .filter(|v| v.as_i64().is_some_and(|g| g != 0))
+            .filter(|v| v.as_u64().is_some_and(|g| g != 0))
             .is_some_and(|g| bb.get("_s") == Some(g));
         let d = dot(normals[a], normals[b]).abs();
         if (same_group && (normals[a] == Vec3::ZERO || normals[b] == Vec3::ZERO || d > 0.17))

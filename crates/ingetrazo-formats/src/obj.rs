@@ -260,8 +260,18 @@ pub fn parse_obj_with_units(
 // Unicode decimal blocks pinned to the unchanged original Python runtime.
 // Python int accepts Nd digits and interior single underscores, independently
 // of machine index range. Numeric overflow is a missing UV, not invalid syntax.
-fn source_uv_integer(raw: &str) -> Result<Option<isize>, ()> {
+fn source_decimal_digit(ch:char)->Option<u32> {
     const ZEROES: &[u32] = &[0x30,0x660,0x6f0,0x7c0,0x966,0x9e6,0xa66,0xae6,0xb66,0xbe6,0xc66,0xce6,0xd66,0xde6,0xe50,0xed0,0xf20,0x1040,0x1090,0x17e0,0x1810,0x1946,0x19d0,0x1a80,0x1a90,0x1b50,0x1bb0,0x1c40,0x1c50,0xa620,0xa8d0,0xa900,0xa9d0,0xa9f0,0xaa50,0xabf0,0xff10,0x104a0,0x10d30,0x11066,0x110f0,0x11136,0x111d0,0x112f0,0x11450,0x114d0,0x11650,0x116c0,0x11730,0x118e0,0x11950,0x11c50,0x11d50,0x11da0,0x11f50,0x16a60,0x16ac0,0x16b50,0x1d7ce,0x1d7d8,0x1d7e2,0x1d7ec,0x1d7f6,0x1e140,0x1e2f0,0x1e4f0,0x1e950,0x1fbf0];
+    let n=ch as u32;ZEROES.iter().find_map(|zero|n.checked_sub(*zero).filter(|d|*d<10))
+}
+fn source_smoothing_token(raw:&str)->Result<Option<String>,()> {
+    const OTHER_DIGITS:&[(u32,u32)]=&[(0xb2,0xb3),(0xb9,0xb9),(0x1369,0x1371),(0x19da,0x19da),(0x2070,0x2070),(0x2074,0x2079),(0x2080,0x2089),(0x2460,0x2468),(0x2474,0x247c),(0x2488,0x2490),(0x24ea,0x24ea),(0x24f5,0x24fd),(0x24ff,0x24ff),(0x2776,0x277e),(0x2780,0x2788),(0x278a,0x2792),(0x10a40,0x10a43),(0x10e60,0x10e68),(0x11052,0x1105a),(0x1f100,0x1f10a)];
+    if raw.is_empty() || !raw.chars().all(|c|source_decimal_digit(c).is_some()||OTHER_DIGITS.iter().any(|&(a,b)|(a..=b).contains(&(c as u32)))) {return Ok(None);}
+    let mut digits=String::with_capacity(raw.len());let mut count=0;
+    for c in raw.chars(){count+=1;if count>4300{return Err(());}let d=source_decimal_digit(c).ok_or(())?;digits.push((b'0'+d as u8)as char);}
+    let normalized=digits.trim_start_matches('0');if normalized.is_empty(){Ok(None)}else{Ok(Some(normalized.to_owned()))}
+}
+fn source_uv_integer(raw: &str) -> Result<Option<isize>, ()> {
     let (negative, digits) = match raw.as_bytes().first() {
         Some(b'-') => (true, &raw[1..]), Some(b'+') => (false, &raw[1..]), _ => (false, raw),
     };
@@ -274,8 +284,7 @@ fn source_uv_integer(raw: &str) -> Result<Option<isize>, ()> {
             last_digit = false;
             continue;
         }
-        let n = ch as u32;
-        let digit = ZEROES.iter().find_map(|zero| n.checked_sub(*zero).filter(|d| *d < 10)).ok_or(())?;
+        let digit = source_decimal_digit(ch).ok_or(())?;
         digit_count += 1;
         // Pinned Python's default decimal conversion limit.
         if digit_count > 4300 { return Err(()); }
@@ -329,6 +338,7 @@ fn parse_obj_options(
     let mut asset_paths = std::collections::HashMap::new();
     let mut file_uv = Vec::<glam::DVec2>::new();
     let mut smooth = 0_u64;
+    let mut smoothing_tokens=std::collections::HashMap::<String,u64>::new();
 
     for (line_num, line_res) in buf_reader.lines().enumerate() {
         let line = line_res?;
@@ -437,7 +447,12 @@ fn parse_obj_options(
                 }
             }
             "s" if source_policy => {
-                smooth = parts.next().filter(|s|s.bytes().all(|b|b.is_ascii_digit())).and_then(|s|s.parse().ok()).unwrap_or(0);
+                let raw=parts.next().unwrap_or("off");
+                let token=source_smoothing_token(raw).map_err(|_|ObjError::Parse(line_num+1,"Invalid smoothing group integer".into()))?;
+                smooth=if let Some(token)=token {
+                    let next=u64::try_from(smoothing_tokens.len()).ok().and_then(|v|v.checked_add(1)).ok_or_else(||ObjError::Parse(line_num+1,"Smoothing identity exhausted".into()))?;
+                    *smoothing_tokens.entry(token).or_insert(next)
+                }else{0};
             }
             "usemtl" => {
                 if source_policy {
