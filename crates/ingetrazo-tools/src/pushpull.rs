@@ -91,35 +91,55 @@ impl PushPullTool {
         n
     }
 
-    // Source run_stitch phase 2: only valence-two stations whose two
-    // edges border exactly the same faces can disappear. Keep unrelated
-    // authored geometry outside this operation's bounds and loose-wire junctions.
+    // Source run_stitch phase 2, restricted to the connected authored sweep.
+    // Discover once, retire all redundant stations in one publication, and
+    // preserve disconnected records even when they overlap the sweep's box.
     fn collapse_redundant_sweep_vertices(mesh:&mut ingetrazo_core::mesh::Mesh,seeds:impl Iterator<Item=DVec3>) {
-        let mut low=DVec3::splat(f64::INFINITY);let mut high=DVec3::splat(f64::NEG_INFINITY);
-        for p in seeds {low=low.min(p);high=high.max(p);}
-        if !low.is_finite(){return;}
+        use std::collections::{HashSet,HashMap};
         mesh.rebuild_incidence();
-        loop {
-            let found=mesh.vertices.iter().enumerate().find_map(|(id,v)|{
-                if v.edges.len()!=2 || v.position.cmplt(low-DVec3::splat(1e-4)).any() || v.position.cmpgt(high+DVec3::splat(1e-4)).any(){return None;}
-                let (e0,e1)=(&mesh.edges[v.edges[0]],&mesh.edges[v.edges[1]]);
-                if e0.faces.is_empty() || e0.faces!=e1.faces{return None;}
-                let a=if e0.v0==id{e0.v1}else{e0.v0};let b=if e1.v0==id{e1.v1}else{e1.v0};
-                let d0=v.position.as_vec3()-mesh.vertices[a].position.as_vec3();let d1=mesh.vertices[b].position.as_vec3()-v.position.as_vec3();
-                if d0.length()<1e-4||d1.length()<1e-4||d0.normalize().dot(d1.normalize())<0.999{return None;}
-                Some((id,a,b,v.edges.clone()))
-            });
-            let Some((id,a,b,mut edges))=found else{break;};
-            for face in &mut mesh.faces {face.vertices.retain(|&v|v!=id);for h in &mut face.holes{h.retain(|&v|v!=id);}}
-            edges.sort_unstable();for edge in edges.into_iter().rev(){mesh.edges.remove(edge);}
-            mesh.rebuild_incidence();
-            mesh.add_edge(a,b);
-            mesh.vertices.remove(id);
-            for face in &mut mesh.faces {for v in face.vertices.iter_mut().chain(face.holes.iter_mut().flatten()){if *v>id{*v-=1;}}}
-            for e in &mut mesh.edges {if e.v0>id{e.v0-=1;}if e.v1>id{e.v1-=1;}}
-            mesh.rebuild_incidence();
+        let positions=mesh.vertices.iter().enumerate().map(|(i,v)|(v.position.to_array().map(f64::to_bits),i)).collect::<HashMap<_,_>>();
+        let mut owned=HashSet::new();let mut queue=Vec::new();
+        for p in seeds {if let Some(&id)=positions.get(&p.to_array().map(f64::to_bits)){if owned.insert(id){queue.push(id);}}}
+        let mut cursor=0;
+        while cursor<queue.len(){let id=queue[cursor];cursor+=1;for &eid in &mesh.vertices[id].edges{let e=&mesh.edges[eid];let other=if e.v0==id{e.v1}else{e.v0};if owned.insert(other){queue.push(other);}}}
+        let mut removed=HashSet::new();
+        // Re-evaluate only neighbours after each station collapse. Ordered
+        // candidates retain source's first-vertex policy without rescanning.
+        let mut adjacency=mesh.vertices.iter().enumerate().map(|(id,v)|v.edges.iter().map(|&eid|{let e=&mesh.edges[eid];(if e.v0==id{e.v1}else{e.v0},e.faces.clone())}).collect::<Vec<_>>()).collect::<Vec<_>>();
+        let mut candidates=queue.into_iter().collect::<std::collections::BTreeSet<_>>();
+        while let Some(id)=candidates.pop_first(){
+            if removed.contains(&id)||adjacency[id].len()!=2{continue;}
+            let(a,faces)=&adjacency[id][0];let(b,other_faces)=&adjacency[id][1];
+            if faces.is_empty()||faces!=other_faces{continue;}
+            let(a,b)=(*a,*b);let p=mesh.vertices[id].position.as_vec3();
+            let d0=p-mesh.vertices[a].position.as_vec3();let d1=mesh.vertices[b].position.as_vec3()-p;
+            if d0.length()<1e-4||d1.length()<1e-4||d0.normalize().dot(d1.normalize())<0.999{continue;}
+            let faces=faces.clone();removed.insert(id);
+            adjacency[a].retain(|(v,_)|*v!=id);adjacency[b].retain(|(v,_)|*v!=id);
+            if !adjacency[a].iter().any(|(v,_)|*v==b){adjacency[a].push((b,faces.clone()));adjacency[b].push((a,faces));}
+            if owned.contains(&a){candidates.insert(a);}if owned.contains(&b){candidates.insert(b);}
         }
-        mesh.rebuild_spatial_index();
+        if removed.is_empty(){return;}
+        let mut joined=HashSet::new();
+        // Each retired degree-two chain is walked once from its surviving
+        // endpoint; its replacement edge has source constructor ownership.
+        let mut visited=HashSet::new();
+        for &id in &removed {
+            if visited.contains(&id){continue;}
+            let mut ends=Vec::new();let mut walk=vec![id];visited.insert(id);
+            while let Some(v)=walk.pop(){for &eid in &mesh.vertices[v].edges{let e=&mesh.edges[eid];let other=if e.v0==v{e.v1}else{e.v0};if removed.contains(&other){if visited.insert(other){walk.push(other);}}else{ends.push(other);}}}
+            if ends.len()==2{joined.insert((ends[0].min(ends[1]),ends[0].max(ends[1])));}
+        }
+        mesh.edges.retain(|e|!removed.contains(&e.v0)&&!removed.contains(&e.v1));
+        let existing=mesh.edges.iter().map(|e|(e.v0.min(e.v1),e.v0.max(e.v1))).collect::<HashSet<_>>();
+        let mut joined=joined.into_iter().collect::<Vec<_>>();joined.sort_unstable();
+        for(a,b)in joined{if !existing.contains(&(a,b)){mesh.edges.push(ingetrazo_core::mesh::MeshEdge::new(a,b));}}
+        let mut remap=vec![0;mesh.vertices.len()];let mut next=0;
+        for(i,r)in remap.iter_mut().enumerate(){if !removed.contains(&i){*r=next;next+=1;}}
+        let mut i=0;mesh.vertices.retain(|_|{let keep=!removed.contains(&i);i+=1;keep});
+        for face in &mut mesh.faces {for ring in std::iter::once(&mut face.vertices).chain(&mut face.holes){ring.retain(|v|!removed.contains(v));for v in ring{*v=remap[*v];}}}
+        for e in &mut mesh.edges{e.v0=remap[e.v0];e.v1=remap[e.v1];}
+        mesh.rebuild_incidence();mesh.rebuild_spatial_index();
     }
 
     const MIN_EXTRUDE:f64=2e-4;
@@ -1401,12 +1421,15 @@ mod tests {
         let ring=pts.into_iter().map(|p|m.add_vertex(p)).collect();let f=m.add_face(ring,vec![]).unwrap();
         m.faces[f].attrs.insert("vendor".into(),serde_json::json!(17));let identity=m.faces[f].history_id;
         let unrelated=m.add_vertex(DVec3::new(100.,0.,1.+2_f64.powi(-40)));let uid=m.vertices[unrelated].uid;
+        // A disconnected subdivided face lies inside the sweep's bounds.
+        let detached=[DVec3::new(0.2,0.2,0.5),DVec3::new(0.5,0.2,0.5),DVec3::new(0.8,0.2,0.5),DVec3::new(0.8,0.8,0.5),DVec3::new(0.2,0.8,0.5)].into_iter().map(|p|m.add_vertex(p)).collect();
+        let detached=m.add_face(detached,vec![]).unwrap();let retained=m.faces[detached].clone();let retained_vertices=retained.vertices.iter().map(|&v|(m.vertices[v].uid,m.vertices[v].position)).collect::<Vec<_>>();
         let mut junction=m.clone();let station=1;let branch=junction.add_vertex(DVec3::new(1.,-1.,0.));let edge=junction.add_edge(station,branch).unwrap();junction.edges[edge].attrs.insert("wire".into(),serde_json::json!(true));let wire=junction.edges[edge].history_id;
         PushPullTool::collapse_redundant_sweep_vertices(&mut junction,pts.into_iter());
         assert_eq!(junction.faces[0].vertices.len(),5);assert!(junction.edges.iter().any(|e|e.history_id==wire&&e.attrs.contains_key("wire")));
-        PushPullTool::collapse_redundant_sweep_vertices(&mut m,pts.into_iter());
+        PushPullTool::collapse_redundant_sweep_vertices(&mut m,pts.into_iter().chain([DVec3::new(2.,1.,1.)]));
         assert_eq!(m.faces[0].vertices.len(),4);assert_eq!(m.faces[0].history_id,identity);assert_eq!(m.faces[0].attrs["vendor"],17);
-        assert!(m.vertices.iter().any(|v|v.uid==uid&&v.position.z==1.+2_f64.powi(-40)));assert_eq!(m.edges.len(),4);
+        assert!(m.vertices.iter().any(|v|v.uid==uid&&v.position.z==1.+2_f64.powi(-40)));assert_eq!(m.edges.len(),9);assert_eq!(m.faces[1].history_id,retained.history_id);assert_eq!(m.faces[1].vertices.len(),5);assert_eq!(m.faces[1].vertices.iter().map(|&v|(m.vertices[v].uid,m.vertices[v].position)).collect::<Vec<_>>(),retained_vertices);
     }
 
 }
