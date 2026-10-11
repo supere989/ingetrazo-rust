@@ -273,10 +273,10 @@ fn record_ready<'a>(info:&egui::PaintCallbackInfo,device:&Device,command:vk::Com
                 let batch=&r.batches[batch_index];let rgba=&r.premultiplied[batch_index];
                 if batch.count==0{batch_index+=1;continue;}
                 let group=r.marker_groups.as_ref().and_then(|g|g.get(marker_cursor)).filter(|g|g.start==batch_index);
-                let marker=group.is_some();let next_batch=group.map_or(batch_index+1,|g|g.end);
+                let marker=group.is_some()||r.gates.as_ref().and_then(|g|g.get(batch_index)).is_some_and(|g|matches!(g.composition,crate::annotation_overlay_geometry::Composition::WidgetStencilTriangle{..}));let next_batch=group.map_or(batch_index+1,|g|g.end);
                 let last=r.batches[next_batch-1];let draw_count=last.first+last.count-batch.first;
                 if marker{
-                    marker_cursor+=1;
+                    if group.is_some(){marker_cursor+=1;}
                     let offset=r.marker_offset.ok_or_else(||egui_ash_renderer::RendererError::Init("Stencil immutable vertex records absent".into()))?;
                     device.cmd_bind_vertex_buffers(command,1,&[r.vertex],&[offset]);
                 }
