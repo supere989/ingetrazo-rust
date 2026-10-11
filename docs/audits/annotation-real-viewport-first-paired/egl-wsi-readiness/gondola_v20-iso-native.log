@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "/tmp/ingetrazo-skp-native-import/scripts/capture-owned-native-skp-annotations.py", line 69, in <module>
+    first=wait(lambda:state()if state()and state()['viewport']else None)
+  File "/tmp/ingetrazo-skp-native-import/scripts/capture-owned-native-skp-annotations.py", line 38, in wait
+    raise TimeoutError("Owned proof window readiness timed out")
+TimeoutError: Owned proof window readiness timed out

@@ -1,0 +1,5 @@
+Frozen actual NVIDIA GLX paired run: all four native production viewport cases completed on/off/restored at integral800x600, presentation acknowledgment, boundedclose and ledger0. Gondola has zero imported annotations; Chapel has26. Native toggle image deltas and exact restoration are recorded, not original overlay equality.
+
+Only Gondola iso has all three original source camera guards accepted. Its78 pixel residual is unchanged with annotations on/off/restored. Other original phases refused exact MVP comparison; saved pre-assert images are explicitly NOT admitted paired pixels. Source per-phase diagnostics are next. Earlier missingXKB and EGL-WSI failures are startup/setup evidence, not renderer parity failures.
+
+The production binary was built from dc662ebd plus the Frame::none correction frozen in817c48c9. Later commits changed harness scripts only. Transport records checkout SHA separately from binarySHA. Full application fractional viewport geometry, MSAA sample policy and full-model overlay strict equality remain required.

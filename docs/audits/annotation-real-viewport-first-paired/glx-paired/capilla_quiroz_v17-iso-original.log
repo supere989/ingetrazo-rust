@@ -1,0 +1,12 @@
+Traceback (most recent call last):
+  File "/tmp/ingetrazo-skp-native-import/scripts/reference-skp-application-annotations.py", line 37, in <module>
+    take('annotations-on');dimensions,labels=scene.dimensions,scene.text_labels;scene.dimensions=[];scene.text_labels=[];take('annotations-off');scene.dimensions=dimensions;scene.text_labels=labels;take('annotations-restored')
+                                                                                                                                                                                                      ~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/ingetrazo-skp-native-import/scripts/reference-skp-application-annotations.py", line 32, in take
+    for field,expected in state['camera_snapshot'].items():assert actual[field]==expected,(name,field)
+                                                                  ^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ('annotations-restored', 'matrix')
+QOpenGLTexturePrivate::destroy() called without a current context.
+Texture has not been destroyed
+QOpenGLTexturePrivate::destroy() called without a current context.
+Texture has not been destroyed

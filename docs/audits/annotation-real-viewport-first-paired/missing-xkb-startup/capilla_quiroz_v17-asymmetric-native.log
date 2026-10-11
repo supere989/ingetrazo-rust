@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/tmp/ingetrazo-skp-native-import/scripts/capture-owned-native-skp-annotations.py", line 68, in <module>
+    w=wait(owned);x.XMapRaised(d,w);x.XFlush(d)
+  File "/tmp/ingetrazo-skp-native-import/scripts/capture-owned-native-skp-annotations.py", line 35, in wait
+    value=fn()
+  File "/tmp/ingetrazo-skp-native-import/scripts/capture-owned-native-skp-annotations.py", line 65, in owned
+    assert child.poll()is None,'Actual app exited before capture'
+           ^^^^^^^^^^^^^^^^^^^
+AssertionError: Actual app exited before capture
+Fontconfig error: Cannot load default config file: No such file: (null)

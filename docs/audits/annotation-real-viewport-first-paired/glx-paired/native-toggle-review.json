@@ -1,0 +1,22 @@
+[
+  {
+    "case": "capilla_quiroz_v17-asymmetric",
+    "native_annotation_delta_pixels": 3054,
+    "native_restore_diff_pixels": 0
+  },
+  {
+    "case": "capilla_quiroz_v17-iso",
+    "native_annotation_delta_pixels": 3737,
+    "native_restore_diff_pixels": 0
+  },
+  {
+    "case": "gondola_v20-asymmetric",
+    "native_annotation_delta_pixels": 0,
+    "native_restore_diff_pixels": 0
+  },
+  {
+    "case": "gondola_v20-iso",
+    "native_annotation_delta_pixels": 0,
+    "native_restore_diff_pixels": 0
+  }
+]
