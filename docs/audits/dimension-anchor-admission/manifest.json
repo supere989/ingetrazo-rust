@@ -1,0 +1,56 @@
+{
+  "runtime_commit": "1c94a72008e38ff4176446476bf5ead788b8a886",
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "entries": {
+    "admission-native.json": "da739728fafc540ead41b7d6409685b59abc241ea44962827ab8a9a7e4cc5956",
+    "admission-original.json": "e97235eec720bbf2c12d31757a9c970385783422e4d861006f2dd4fb54cee73a",
+    "admission-reopens.json": "7d81630a72f5f31291383ac83a73da101cd2d3b9b6daf9a2550fc95f1b1a2527",
+    "billboard-input.igz": "6d55daa86020f5ab4a5795edcdfc328e0df0f9f4e0e181bd07712ab92ebff6bb",
+    "billboard-native.igz": "606c43632a41981f0931889f8e282b523a456b2b125f7441289cdda93cfcb425",
+    "billboard-original.igz": "bb2ff4401744807f8b7fb0758fa261178fdbe1971333ce6cc336eb29fb394e52",
+    "build.log": "3a8c71f0b61dd5171214d30fb53312844337d3534c28352a35767c02f1c9954b",
+    "check.log": "c237b4c466bd5b5e22d75252865615400ec239e7908bda52246b97854d3d5703",
+    "first-build-ray-signature.log": "e00b5202fb91de65382029cdc849eaad8db5579bf092f643879b4e5dc8964307",
+    "first-native-inverse-check.log": "db0dfd3fa5b23222f24b43755d9fabeca11f87200f65e8c94f0f9ff207a36e20",
+    "first-native-inverse-mismatch.json": "19dca5ee7ce3de6a866d8407530a212c216681179236577438042e7a2f8cf82c",
+    "near-input.igz": "1008644b5d3c934a625205b6b7cddf8b4a4cc3ae5cc8e827749c744bb2ca5ed1",
+    "near-native.igz": "571991883ff4be3ef6712875c89e0aa9a7c7fbd6eebed3d26b309c9add542c85",
+    "near-original.igz": "236f500ad5c0440e9d889708a8828c5ea34bec386f7474beee49a2af04d80e87",
+    "nested-shared-input.igz": "40eec9ac286343251b187d104d7cad667f37446c95c89c7623d1dffb99810144",
+    "nested-shared-native.igz": "c7637113c6f29876c8c33a36328c70d93d2852953cd5cd421c99e6af1b2faec4",
+    "nested-shared-original.igz": "b25f0dfb012101036fbc831404b32a6fb5386793f940c65499c14addfe520c19",
+    "orphan-input.igz": "a7daba48b6573c5f238f36dd0fbc5bdd6b295970c1cf46753e6775a93deaad24",
+    "orphan-native.igz": "18142e7cde5b8125fc5b842a3b25d81bbcf1970b2888b89eb2de8c942f2d089b",
+    "orphan-original.igz": "5c6b7f8cd8fc91eed469f50d7a555ac6cf759c5c4d7c4af4dbd27d0cba9dcb0c",
+    "outside-input.igz": "1008644b5d3c934a625205b6b7cddf8b4a4cc3ae5cc8e827749c744bb2ca5ed1",
+    "outside-native.igz": "27226748683c85213576413750c2ffee58fbc36d683fa25d5cc1fed9fef896e0",
+    "outside-original.igz": "7ad133581bd9def5ede7655a98f20e623559a81e80d613a5c2357357e0d1297b",
+    "owner-test.log": "e0235ea926b4488272ad7b75c1fab61290704ab30059e3b87fad9029091d11e1",
+    "reopen.log": "8efc1e040fc00f6fb77f60ce301f5d3bb1d0c835e3cc921fa058f3f04aec9f0a",
+    "runtime.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "source-orphan-method.log": "3a2fce880d42603cf982ca2b9d565f8412ce03a73b76a4ea5d92aa2ddfe77190",
+    "source-preview-unavailable.log": "ae9c17e3e0b8f16363141b1233eb030239517592c3cd070821291d6a84c69a9a",
+    "source.log": "327a5237e920a9b652eb7687c53e8b4c283f630250d0cef19f7feb75b42bd6eb"
+  },
+  "source_files": {
+    "crates/ingetrazo-core/src/dimension_anchors.rs": "d4e3e40f55bdd46029d3bfb5371154e2ca63c438ba311c85af245f169bdf7643",
+    "crates/ingetrazo-gui/examples/dimension_anchor_acceptance_fixture.rs": "a3241143e9507ee6976eb1e4df92f55e23978eea0248920384cb39472cbb76a2",
+    "scripts/check-dimension-anchor-admission.py": "4b8211924f4324b8ae20440bf2e9e81b905d8d437122048f921e1385870a5b8c",
+    "scripts/reference-dimension-anchor-admission.py": "9cdb9bc573c6258defcaa47d2ac42af5da54b119dd9f387386cf462b9a447d03",
+    "scripts/reopen-dimension-anchor-admission.py": "1999dcbd69a30d9af5c368bfd4a5b121677596d355b387a0faba2a2f33bc00f5"
+  },
+  "original_files": {
+    "core/dimension.py": "2253da1bb8e186f786c8fcfb780d91ca48460926a1641f8c42913473109f2ce6",
+    "core/mesh.py": "5f2c1625e6dd717db029ba39a9de337e75beec06bd0df28a592a8a34875ca22c",
+    "tools/dimension.py": "9b65eab2f46e77b062494312ad089c4031bdc495f3cf15b4375c827dd29810fe",
+    "tools/move.py": "67ba58b7f01f84dd5654fd31c1f4ae217296efcfab05ad21b4c61e43d7c87acd",
+    "views/viewport.py": "1fb62f55b8f559deb3676924ee69a9a444397faa28c49651111cea44e420c724"
+  },
+  "binary": {
+    "path": "/tmp/ingetrazo-ai-registry-target/debug/examples/dimension_anchor_acceptance_fixture",
+    "sha256": "320017ce64bb4f8d4df4a96df3164fa3f994c237df13cd13744c99dc92e4b66e"
+  },
+  "archive_sha256": "9b732b6f731e720581dbb14418e92de7a4d89f8c900a1a30bcae3339e50b4c9e",
+  "archive_byte_verified": true,
+  "post_build_change": "rustfmt only; no semantic changes"
+}
