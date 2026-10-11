@@ -1,0 +1,19 @@
+{
+  "README.md": "169d738439627eca5d906dc372018fd505105497d93f0f21bd96461bad0d8ed4",
+  "capilla_quiroz_v17-iso/native/annotations-off-window.png": "d1ee7d5c264ed373ec91da85c8a50b2968d45b71080e0127655f34b60c47d509",
+  "capilla_quiroz_v17-iso/native/annotations-off.png": "d1ee7d5c264ed373ec91da85c8a50b2968d45b71080e0127655f34b60c47d509",
+  "capilla_quiroz_v17-iso/native/annotations-on-window.png": "1f6ceaf7237bcfe554bd11198d003e92cf29e4819336f2ab94080f2364049224",
+  "capilla_quiroz_v17-iso/native/annotations-on.png": "1f6ceaf7237bcfe554bd11198d003e92cf29e4819336f2ab94080f2364049224",
+  "capilla_quiroz_v17-iso/native/annotations-restored-window.png": "1f6ceaf7237bcfe554bd11198d003e92cf29e4819336f2ab94080f2364049224",
+  "capilla_quiroz_v17-iso/native/annotations-restored.png": "1f6ceaf7237bcfe554bd11198d003e92cf29e4819336f2ab94080f2364049224",
+  "capilla_quiroz_v17-iso/native/capture.json": "1fbb42b611f14079e3f7fe3545b15d622724dcf1cefca388d974e01ec4085e53",
+  "capilla_quiroz_v17-iso/native/control/request.json": "3d39700ad9520bf49fbaceae05eec73427913c1f5310084301c7231bb4502c0c",
+  "capilla_quiroz_v17-iso/native/control/state.json": "5e339e640a88b02ab43563954482fab0292f4a279835a4a3d6ae7ee203736a94",
+  "capilla_quiroz_v17-iso/native/control/visibility.json": "c88290bce3a1310d04fe255bfc9fe4da08104fe48026d1eade8887c510292c8f",
+  "capilla_quiroz_v17-iso/native/runtime.log": "baafb5cc6c277e5b28323b4ad59fdd6a751becebdd547558e0ad88a7867ef6fb",
+  "capilla_quiroz_v17-iso/native/visibility.json": "c88290bce3a1310d04fe255bfc9fe4da08104fe48026d1eade8887c510292c8f",
+  "comparison.json": "b5080a3f204e4ca9e42d2254c342f26f617c69844b5167ab3aaec576518f0ec5",
+  "nvidia-glx-icd.json": "580e00d71b7aee371c54e277aed4c9ef114a686688bfd8406d567233cd8d9357",
+  "source.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "transport.json": "322c3bf95be4b430a5a7611e3145e1372f6d3748b5c660f1835adef876a4e0b2"
+}
