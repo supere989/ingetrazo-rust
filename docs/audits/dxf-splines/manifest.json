@@ -1,0 +1,287 @@
+{
+  "runtime_chain": [
+    "8cc1ac31",
+    "7fff975c"
+  ],
+  "source_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "archive": "records.zip",
+  "archive_sha256": "3d2cb1294975ca1c9577a754d1c30c150c4e5dcce324be1b41287378e01e4224",
+  "entries": [
+    {
+      "path": "affected/curves/native-dxf-curves.json",
+      "bytes": 1596442,
+      "sha256": "965a230893f8f827131697067c5f4d1bd93a97bb74dab69bd64022866c6f8c1c"
+    },
+    {
+      "path": "affected/curves/reopens-dxf-curves.json",
+      "bytes": 1140600,
+      "sha256": "4065eedff0c2fd1d2a17db0751ea0c42b3e6233e03133d5b5459f0a24a3c4527"
+    },
+    {
+      "path": "affected/straight/native-dxf-entities.json",
+      "bytes": 428431,
+      "sha256": "22e20e901b8e7e590533bb1d7f9ace1e398819f4f93c8ccdf8ae4fb34a5bc1d0"
+    },
+    {
+      "path": "affected/straight/reopens-dxf-entities.json",
+      "bytes": 218547,
+      "sha256": "e45cfa9925e7ca00e26f4b2aca67be9faddefbea5d23e9f31f484d2d9a3348e9"
+    },
+    {
+      "path": "closed-flag-open-path-native.igz",
+      "bytes": 10253,
+      "sha256": "dd6a0fae0c578cdf8fdd68499be442d48bed04f55c133174dac4bf3d3f621e20"
+    },
+    {
+      "path": "cubic-single-native.igz",
+      "bytes": 10253,
+      "sha256": "b76ae016fb6e2d7574180b170f9a36f31487705f36055145daa7834862adc4fc"
+    },
+    {
+      "path": "cubic-spans-native.igz",
+      "bytes": 20921,
+      "sha256": "d6d7513c5bcddae8fac9723eab85b377e86bb1232fabf392620a7168bf3259b5"
+    },
+    {
+      "path": "fit-diagnostic.json",
+      "bytes": 7530,
+      "sha256": "4e4f25345efd68b163994903594e6b251cb72a9bfe9ee944705b6589ddeb6098"
+    },
+    {
+      "path": "fit-natural-native.igz",
+      "bytes": 17759,
+      "sha256": "cbc4f8689f863f51a19eb3b127f88a8ed59c7959113675ec8a22835e1de6dc8c"
+    },
+    {
+      "path": "fit-solver.json",
+      "bytes": 4158,
+      "sha256": "a506b4a7ec9fa1e598c6f1dbca262693eac2d50d1373797af88eaeca2dce4804"
+    },
+    {
+      "path": "fit-tangents-native.igz",
+      "bytes": 20543,
+      "sha256": "2df8871580ba504a538954839893f3ab61321a498c96066bd1232880ccf0c97c"
+    },
+    {
+      "path": "invalid-weights-with-line-native.igz",
+      "bytes": 4217,
+      "sha256": "7434cf0fb46865b4f66e5e85d45b96c7e2000cc63cc5030cefa12e6d8edabfd4"
+    },
+    {
+      "path": "knots-rounded-native.igz",
+      "bytes": 21019,
+      "sha256": "58860ccdd45ab815024f4d1f76d297d030a6806295c526a3ca9c1a6d823fdf75"
+    },
+    {
+      "path": "knots-shifted-native.igz",
+      "bytes": 10253,
+      "sha256": "ffa6efdd3b37ad4ee316c1f9067e612e53aa4524da61b7c46c165b0ea01bf626"
+    },
+    {
+      "path": "logs/dxf-splines-build.log",
+      "bytes": 21211,
+      "sha256": "90b99a4955ff00dd51f6397ae9723975d2a3ddd6c91b56fb9a17f1128f124081"
+    },
+    {
+      "path": "logs/dxf-splines-check.log",
+      "bytes": 124,
+      "sha256": "c53e258a5201384d2813050728876487315c0e66311a834d946bfd186b3d0f53"
+    },
+    {
+      "path": "logs/dxf-splines-corrected-build.log",
+      "bytes": 21211,
+      "sha256": "712e113d72430afc89b47d150e57ab3c8a767a52f93a65a968c12ad12cc31a19"
+    },
+    {
+      "path": "logs/dxf-splines-curves-check.log",
+      "bytes": 123,
+      "sha256": "6da01c6b84a6960307319c7dd8882301ff4239c87f286e9f7bf7c85fd6766eff"
+    },
+    {
+      "path": "logs/dxf-splines-curves-native.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "logs/dxf-splines-curves-reopens.log",
+      "bytes": 32,
+      "sha256": "154dad2e32dd166d6a6160d2d2a08a0af79030366d83ea23deea066ae33bfca3"
+    },
+    {
+      "path": "logs/dxf-splines-fused-lu-test.log",
+      "bytes": 13942,
+      "sha256": "0359f132d7421e2191d7c730eeb9c1aca056d0abf2a90502bdfd5b89871aaa37"
+    },
+    {
+      "path": "logs/dxf-splines-initial-test-failure.log",
+      "bytes": 22359,
+      "sha256": "1b2c7ccd100a5463e7b7869c2843f630ec52c8b5491c9fdb513cb2edea55d17e"
+    },
+    {
+      "path": "logs/dxf-splines-lu-test.log",
+      "bytes": 22426,
+      "sha256": "4ba443589b4f8bea6d1570c6661ef4dd2aeb857650f8dedffcdce00a51e3e05d"
+    },
+    {
+      "path": "logs/dxf-splines-native.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "logs/dxf-splines-reopens.log",
+      "bytes": 32,
+      "sha256": "a5e1e162626aa4e3aba5a5edca86b1c05c67dbab076a21835caf987d54b50895"
+    },
+    {
+      "path": "logs/dxf-splines-separate-lu-failure.log",
+      "bytes": 22426,
+      "sha256": "4ba443589b4f8bea6d1570c6661ef4dd2aeb857650f8dedffcdce00a51e3e05d"
+    },
+    {
+      "path": "logs/dxf-splines-source.log",
+      "bytes": 2060,
+      "sha256": "0af86ce8afa667182eb181d356ff271d6ce8ac8478f2dee7c0f3d5274c94bdfb"
+    },
+    {
+      "path": "logs/dxf-splines-straight-check.log",
+      "bytes": 121,
+      "sha256": "4bfa9006a7f6afa161705e8ade2095fc6a25c21dc4cc3f1f44219db4781949ba"
+    },
+    {
+      "path": "logs/dxf-splines-straight-native.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "logs/dxf-splines-straight-reopens.log",
+      "bytes": 31,
+      "sha256": "da86a87a94e59e2cafdc81a62146beb0b1849f1877acc89a6238a498db8795dc"
+    },
+    {
+      "path": "logs/dxf-splines-test.log",
+      "bytes": 22359,
+      "sha256": "1b2c7ccd100a5463e7b7869c2843f630ec52c8b5491c9fdb513cb2edea55d17e"
+    },
+    {
+      "path": "malformed.dxf",
+      "bytes": 15896,
+      "sha256": "59ba32eb161f4a042b7288956023ace2c6bb1cb28f66e8d74298879ef30be5f7"
+    },
+    {
+      "path": "missing-knots-native.igz",
+      "bytes": 10253,
+      "sha256": "2f9b90387b05cde07703399ed7551a5fb660150e075d05bedf4c9fdaae4c04a0"
+    },
+    {
+      "path": "native-dxf-guards.json",
+      "bytes": 173,
+      "sha256": "89b49795723ba45284deb4df57e8b8215d0ff1f7499fdefc74bef312c67cd6ac"
+    },
+    {
+      "path": "native-dxf-splines.json",
+      "bytes": 5114826,
+      "sha256": "b2ffa57ebbcb4bdf746a8ac4e801d78b719bf7486ea1e1a030f815cbce0212bc"
+    },
+    {
+      "path": "native-spline-errors.json",
+      "bytes": 53,
+      "sha256": "c54a4fff63d2a041926e7654fe8f48b1ccea37238f493c72ab3f899d43814ed2"
+    },
+    {
+      "path": "periodic-native.igz",
+      "bytes": 146581,
+      "sha256": "21bb6337800ad388a45fc6883133cdc4be131dc8bbb44ce0b179411f26ca04b7"
+    },
+    {
+      "path": "periodic-rational-native.igz",
+      "bytes": 146904,
+      "sha256": "1ab22994aa2530b84136c8146953e10d217175116ee606621d8063678a0ea239"
+    },
+    {
+      "path": "quadratic-native.igz",
+      "bytes": 85307,
+      "sha256": "33128dc051c5d7196961d017fd302a8eeb8c03da3135930106c7137fc0600ddb"
+    },
+    {
+      "path": "quartic-native.igz",
+      "bytes": 125687,
+      "sha256": "503cc1878c55c916cdfa5a7907fcffe5be6ba2a5ad0443706a093fd047caa6a1"
+    },
+    {
+      "path": "rational-cubic-native.igz",
+      "bytes": 65423,
+      "sha256": "77ccf8fcb09a2e80f141a518d76591647a85d791bcf6a22f1d374d1ebb1d910d"
+    },
+    {
+      "path": "rational-quadratic-native.igz",
+      "bytes": 40899,
+      "sha256": "b61dd7f9a5d18a36b69df6d1fb863a50e390f826488aab38a7777e153d74017d"
+    },
+    {
+      "path": "reopens-dxf-splines.json",
+      "bytes": 4143117,
+      "sha256": "c24d566401c315ce53ba653f0e17483f6936ac5fb03d216fdc512b5d935fbe5a"
+    }
+  ],
+  "binary": {
+    "path": "/tmp/ingetrazo-ai-registry-target/debug/examples/context_document_lifecycle",
+    "bytes": 65562672,
+    "sha256": "7e94ff1e50399456a6c80880fddc595b5ed081eff34e52d771e3abe6c0bfc996"
+  },
+  "sources": [
+    {
+      "path": "crates/ingetrazo-formats/src/dxf.rs",
+      "sha256": "deb957d2d992c4276de56270121d82b26b441506254caccb72ca122ee79b8372"
+    },
+    {
+      "path": "crates/ingetrazo-formats/src/dxf_curves.rs",
+      "sha256": "a2f40bf83faaa131eadc5b40b0df66976effe1b6b9b4b26739727085e62f94e3"
+    },
+    {
+      "path": "crates/ingetrazo-formats/src/dxf_spline.rs",
+      "sha256": "8e90f87b47a513b3933e7fe119700ad840881cbbe7e13d3ed54862f80c447077"
+    },
+    {
+      "path": "crates/ingetrazo-gui/examples/context_document_lifecycle.rs",
+      "sha256": "1ccd95d80ef414d969b52dcc84f5930165b2d50d80cd00650775d2102b79ad0e"
+    },
+    {
+      "path": "crates/ingetrazo-gui/examples/context_document_lifecycle/dxf_entities.rs",
+      "sha256": "096d1be5b9c33a326233a9aeff47f8e914c2ce34a6be179437d619d8fd39377e"
+    },
+    {
+      "path": "scripts/reference-dxf-splines.py",
+      "sha256": "f1e006abb4850fa21cee232b417785a42dff2f367104c9effe45ea7f0b58f0bf"
+    },
+    {
+      "path": "scripts/reference-dxf-splines-reopens.py",
+      "sha256": "7205089eed7969a1e7a96e8b700efa2151451e75334ca0074ced443111517220"
+    },
+    {
+      "path": "scripts/check-dxf-source-splines.py",
+      "sha256": "8043afe3c85b3b81196c19604aab1d4753e845923aed3891d0656b2c12ecb05b"
+    },
+    {
+      "path": "scripts/diagnose-dxf-spline-fit.py",
+      "sha256": "783fdc293f2717192bdd80fac1a6f8f2959aad9b6d4674a9e6bb13f2e555239a"
+    },
+    {
+      "path": "docs/audits/dxf-splines/source-paths.json",
+      "sha256": "1fadee30849ce74af30644f5210844a78f290326d249adbe7a476de91e80c56e"
+    }
+  ],
+  "result": {
+    "cases": 15,
+    "states": 105,
+    "actual_original_reopens": 15,
+    "negative_controls": 45,
+    "native_ownership_guards": 3,
+    "invalid_only_control": true,
+    "focused_tests": 4,
+    "curve_affected_states": 84,
+    "straight_affected_states": 56,
+    "initial_build_seconds": 7.09,
+    "corrected_build_seconds": 7.24
+  },
+  "scope": "Linux source/native finite acceptance only; inherited ARM curve trig residue failure remains open. >=20-row fit banded solver literal-code port not independently exercised by this finite corpus; fullP22 remainsopen."
+}

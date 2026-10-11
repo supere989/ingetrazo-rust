@@ -5,3 +5,11 @@ Original6be29fe + ezdxf1.4.4 `construction_tool` chooses controls beforefits, ro
 15natural workflows/105states covercubic single/multispan,rounded/shifted/missingknots,quadratic/quartic,rational,periodic+rational,natural/tangentfit,closedflag openpath andinvalidweight skipping alongsidevalidline. Oneinvalid-only sourcecontrol preservesdocument/history andreportsHistory.last_error (execute returnsNone, notbool/exception). Initial2observer failures fromwrong execute returnassumptions are retainedwiththeir producedfiles; completedacceptedcorpora neverrecaptured. Source failures increaseScene.version underexistingHistorylaw; native atomicrefusal retainsrevision. This knownfailure-policy distinction isexplicit, notclaimedfullstateparity. Natural validstates retainfullgeometry/curveowner/history/context inventory, noapproximation tolerance.
 
 Native construction admission isbounded to10000control/fit points anddegree32; sharedflattening limits remainexplicit safetyboundary, nottotalheap bound. SPLINEadmissionlimits/nonfiniteoutput refusewholetransaction; source-invalid construction skipsonlythatentity andemptyimport refuses. INSERT/MINSERT andfacepoststitch remainopen; noP22promotion/GPUclaim.
+
+## Frozen Linux acceptance and remaining platform boundary
+
+Runtime `8cc1ac31→7fff975c` passes15sourceworkflows/105fullstates,15actualoriginal reopens(includingcurveowners),45mutations,3preservationguards +invalid-onlycontrol. Fourfocusedtests pass exactliteralQtpaths for15spline/12priorcurve recipes, legacytransaction andhuge-degrees. Initialcontextbuild7.09s, justifiedcorrectedbuild7.24s. Accepted84curvestates/56straightstates alsoPASS on finalbinary SHA256 `7e94ff1e50399456a6c80880fddc595b5ed081eff34e52d771e3abe6c0bfc996`.
+
+InitialGaussian andseparateLU direct-point failures remain mandatory archivedrecords. Measuredsource NumPy/OpenBLASsmallLU uses reciprocalscaling+fusedsubtraction; sourceequation diagnostic records actualmatrices/solutions. No vertex snapping/tolerance/point replacement. Source>=20rowcompactband solver port is code-derived andnotclaimed independentlycovered bythis finitecorpus.
+
+ARM087 found an inherited LWPOLYLINE tinyendpoint trig residue mismatch in priorcurve code. This receipt doesnotclaim crossplatformacceptance; rootholds capabilitypublication whilethat concretefailure isdiagnosed separately. NoCIretry.
