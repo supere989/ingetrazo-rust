@@ -1,0 +1,302 @@
+{
+  "compiled_source": "7944f43fe8115953a3b768c299e138a1ce110605",
+  "archive_sha256": "8075c3973600c78a801442414ab312856d304a4230262828cdaea37d10f6a318",
+  "records": {
+    "final/1-acquire.png": {
+      "bytes": 50606,
+      "sha256": "7064231e28339db3897f7658140f96f9be75f20d31b11530cc546dbd25759ae5"
+    },
+    "final/2-drag.png": {
+      "bytes": 50929,
+      "sha256": "b23ae17864a50687bc2e52ac4031970aee2d333074791bdd7fc20af6a0211300"
+    },
+    "final/app-cleanup.json": {
+      "bytes": 87,
+      "sha256": "002b2ad4378af24a2bf8ea97cf7dcaab0240aa0e2923218dec01245f4e59b3e4"
+    },
+    "final/baseline.png": {
+      "bytes": 50958,
+      "sha256": "c83359a7e7110f78659b07531b76ad667a88037860f63c0358a28d280ad2d105"
+    },
+    "final/config/ingetrazo-rust/settings.json": {
+      "bytes": 502,
+      "sha256": "ca55b6b4f868e973db8d97218596ac3d5023368779a0875c9004d8d6904f8486"
+    },
+    "final/control/request.json": {
+      "bytes": 31,
+      "sha256": "537793565aea6bbc8f3042d804926f3265bee81732124470a330f771d7b44438"
+    },
+    "final/control/saved.igz": {
+      "bytes": 6440,
+      "sha256": "684ff53be9bf425f1dc838781871fec1f799e1359dd91056f13d223f2e3cd386"
+    },
+    "final/control/state.json": {
+      "bytes": 555,
+      "sha256": "43d8efa0cbc1c644792530ffb991cda776b6b6c7c5130a758807a8d97033e5e9"
+    },
+    "final/control/target-11.rgba": {
+      "bytes": 2087280,
+      "sha256": "d695766dc89b58f432f19e0c80cd60e4cad6dd7a41f008caac15a30da24e42ea"
+    },
+    "final/control/target-13.rgba": {
+      "bytes": 2087280,
+      "sha256": "d695766dc89b58f432f19e0c80cd60e4cad6dd7a41f008caac15a30da24e42ea"
+    },
+    "final/control/target-15.rgba": {
+      "bytes": 2298480,
+      "sha256": "a1bf8f87b039c08840085bf1049e74054ed9d1bfdf1ac40399387dd52f66cd0c"
+    },
+    "final/control/target-3.rgba": {
+      "bytes": 2298480,
+      "sha256": "4ca7233ad642b9da5ff52340f7390cb75d0ba6fd6c962065de108f63c28e5118"
+    },
+    "final/control/target-5.rgba": {
+      "bytes": 2298480,
+      "sha256": "4ca7233ad642b9da5ff52340f7390cb75d0ba6fd6c962065de108f63c28e5118"
+    },
+    "final/control/target-7.rgba": {
+      "bytes": 1886080,
+      "sha256": "aa46b94000916951283314f7087e8e2bb31e83cd7cad065f2f21e63b5514d391"
+    },
+    "final/control/target-9.rgba": {
+      "bytes": 1886080,
+      "sha256": "aa46b94000916951283314f7087e8e2bb31e83cd7cad065f2f21e63b5514d391"
+    },
+    "final/nvidia.json": {
+      "bytes": 105,
+      "sha256": "559298238b82b7ef5db83f2674d7a3fe416158735a56302121b7f2e2d5c1f053"
+    },
+    "final/result.json": {
+      "bytes": 36752,
+      "sha256": "1646b3727c16305dd584f0e27a40bdb7250c4b5c9df47d275f9929d75e80c068"
+    },
+    "final/runtime.log": {
+      "bytes": 10741,
+      "sha256": "6267fd79305f7db5dfa339c60a672d4beb59aa699f6bdafc0c598187b37fabe7"
+    },
+    "final/transport.json": {
+      "bytes": 2909,
+      "sha256": "69faa93062bcdeda186421c1f4fada66b7f0fa950199946cdb99c6ba05cf9cf5"
+    },
+    "final/transport.log": {
+      "bytes": 43,
+      "sha256": "0edeadb29bda5d91af73ead0657d44bb358958f12535c0fc19512882fb6168b6"
+    },
+    "final/xvfb-cleanup.json": {
+      "bytes": 87,
+      "sha256": "ac3db790fb10744c5adcca88c62d290edc9c581201a89b7d5ecef1828bf1398e"
+    },
+    "first-wsi-charge-negative/1-acquire.png": {
+      "bytes": 50606,
+      "sha256": "7064231e28339db3897f7658140f96f9be75f20d31b11530cc546dbd25759ae5"
+    },
+    "first-wsi-charge-negative/2-drag.png": {
+      "bytes": 50929,
+      "sha256": "b23ae17864a50687bc2e52ac4031970aee2d333074791bdd7fc20af6a0211300"
+    },
+    "first-wsi-charge-negative/app-cleanup.json": {
+      "bytes": 89,
+      "sha256": "d48eaa060c31e6dafe274bd3d7a33d6a7780d8d4f470d2571748ad176941e477"
+    },
+    "first-wsi-charge-negative/baseline.png": {
+      "bytes": 50958,
+      "sha256": "c83359a7e7110f78659b07531b76ad667a88037860f63c0358a28d280ad2d105"
+    },
+    "first-wsi-charge-negative/config/ingetrazo-rust/settings.json": {
+      "bytes": 471,
+      "sha256": "ca12af3bd68e29419f0f2bd292f093728836e56d8272789455ffdb27a82c0741"
+    },
+    "first-wsi-charge-negative/control/request.json": {
+      "bytes": 34,
+      "sha256": "829b80d7e87f4503608e3f704351715747e74e2fabecbfbdc993f36efa39de0e"
+    },
+    "first-wsi-charge-negative/control/state.json": {
+      "bytes": 655,
+      "sha256": "3ebccb9ad8164843f19bb9176b46aa94e9e886eac47fd3f9f5f4367cc789bfa6"
+    },
+    "first-wsi-charge-negative/control/target-3.rgba": {
+      "bytes": 2298480,
+      "sha256": "4ca7233ad642b9da5ff52340f7390cb75d0ba6fd6c962065de108f63c28e5118"
+    },
+    "first-wsi-charge-negative/control/target-5.rgba": {
+      "bytes": 2298480,
+      "sha256": "4ca7233ad642b9da5ff52340f7390cb75d0ba6fd6c962065de108f63c28e5118"
+    },
+    "first-wsi-charge-negative/failure.json": {
+      "bytes": 12686,
+      "sha256": "41ddb7d7ed5a0a3858cc2ba4fb99ce613d4b97b8f9a8b427ec53e701170ec993"
+    },
+    "first-wsi-charge-negative/nvidia.json": {
+      "bytes": 105,
+      "sha256": "559298238b82b7ef5db83f2674d7a3fe416158735a56302121b7f2e2d5c1f053"
+    },
+    "first-wsi-charge-negative/runtime.log": {
+      "bytes": 1746,
+      "sha256": "9348238b32afcdd52089edc1f62bee935baded86a48429b78c35d5e29cf57d30"
+    },
+    "first-wsi-charge-negative/transport.json": {
+      "bytes": 2899,
+      "sha256": "0fb3e40da424bf815a7e769e084968b7131f85edccd42f49bada4a29948dcfce"
+    },
+    "first-wsi-charge-negative/transport.log": {
+      "bytes": 331,
+      "sha256": "75c0d8099058986ad4955f7ca87c39cd0474725e305373db1e940d6c2cac297f"
+    },
+    "first-wsi-charge-negative/xvfb-cleanup.json": {
+      "bytes": 87,
+      "sha256": "ac3db790fb10744c5adcca88c62d290edc9c581201a89b7d5ecef1828bf1398e"
+    },
+    "warm-cad-control-negative/1-acquire.png": {
+      "bytes": 50606,
+      "sha256": "7064231e28339db3897f7658140f96f9be75f20d31b11530cc546dbd25759ae5"
+    },
+    "warm-cad-control-negative/2-drag.png": {
+      "bytes": 50929,
+      "sha256": "b23ae17864a50687bc2e52ac4031970aee2d333074791bdd7fc20af6a0211300"
+    },
+    "warm-cad-control-negative/app-cleanup.json": {
+      "bytes": 89,
+      "sha256": "d48eaa060c31e6dafe274bd3d7a33d6a7780d8d4f470d2571748ad176941e477"
+    },
+    "warm-cad-control-negative/baseline.png": {
+      "bytes": 50958,
+      "sha256": "c83359a7e7110f78659b07531b76ad667a88037860f63c0358a28d280ad2d105"
+    },
+    "warm-cad-control-negative/config/ingetrazo-rust/settings.json": {
+      "bytes": 471,
+      "sha256": "ca12af3bd68e29419f0f2bd292f093728836e56d8272789455ffdb27a82c0741"
+    },
+    "warm-cad-control-negative/control/request.json": {
+      "bytes": 59,
+      "sha256": "112d471481694b71b5f14537132b11a671e75c75355d9f24f24381a535d8a026"
+    },
+    "warm-cad-control-negative/control/state.json": {
+      "bytes": 620,
+      "sha256": "4ec81f6a63ff0b7d3fb794e95caf30c1ee859b0b580f9c43a4bf7b0286beb10c"
+    },
+    "warm-cad-control-negative/control/target-3.rgba": {
+      "bytes": 2298480,
+      "sha256": "4ca7233ad642b9da5ff52340f7390cb75d0ba6fd6c962065de108f63c28e5118"
+    },
+    "warm-cad-control-negative/control/target-5.rgba": {
+      "bytes": 2298480,
+      "sha256": "4ca7233ad642b9da5ff52340f7390cb75d0ba6fd6c962065de108f63c28e5118"
+    },
+    "warm-cad-control-negative/control/target-7.rgba": {
+      "bytes": 1886080,
+      "sha256": "aa46b94000916951283314f7087e8e2bb31e83cd7cad065f2f21e63b5514d391"
+    },
+    "warm-cad-control-negative/failure.json": {
+      "bytes": 16783,
+      "sha256": "59211132527fccde4e3d42558f4fb14924e2b2402001f5d79c45325e03acc6de"
+    },
+    "warm-cad-control-negative/nvidia.json": {
+      "bytes": 105,
+      "sha256": "559298238b82b7ef5db83f2674d7a3fe416158735a56302121b7f2e2d5c1f053"
+    },
+    "warm-cad-control-negative/runtime.log": {
+      "bytes": 1808,
+      "sha256": "3df2f0e7f288b6605adb4a7456f730e6530c6256a93bc6c9f3512cdb1a364d17"
+    },
+    "warm-cad-control-negative/transport.json": {
+      "bytes": 2899,
+      "sha256": "b5d2911131abd5e43c157f066779397d44ae145df834b85a89ababcbefeff924"
+    },
+    "warm-cad-control-negative/transport.log": {
+      "bytes": 670,
+      "sha256": "9e27f065ac0272b1b89fd2aab5a16f8ed2ac75bf38b22482b405cceadfb91b6c"
+    },
+    "warm-cad-control-negative/xvfb-cleanup.json": {
+      "bytes": 87,
+      "sha256": "ac3db790fb10744c5adcca88c62d290edc9c581201a89b7d5ecef1828bf1398e"
+    },
+    "initial-pass/1-acquire.png": {
+      "bytes": 50606,
+      "sha256": "7064231e28339db3897f7658140f96f9be75f20d31b11530cc546dbd25759ae5"
+    },
+    "initial-pass/2-drag.png": {
+      "bytes": 50929,
+      "sha256": "b23ae17864a50687bc2e52ac4031970aee2d333074791bdd7fc20af6a0211300"
+    },
+    "initial-pass/app-cleanup.json": {
+      "bytes": 87,
+      "sha256": "002b2ad4378af24a2bf8ea97cf7dcaab0240aa0e2923218dec01245f4e59b3e4"
+    },
+    "initial-pass/baseline.png": {
+      "bytes": 50958,
+      "sha256": "c83359a7e7110f78659b07531b76ad667a88037860f63c0358a28d280ad2d105"
+    },
+    "initial-pass/config/ingetrazo-rust/settings.json": {
+      "bytes": 502,
+      "sha256": "ca55b6b4f868e973db8d97218596ac3d5023368779a0875c9004d8d6904f8486"
+    },
+    "initial-pass/control/request.json": {
+      "bytes": 31,
+      "sha256": "537793565aea6bbc8f3042d804926f3265bee81732124470a330f771d7b44438"
+    },
+    "initial-pass/control/saved.igz": {
+      "bytes": 6440,
+      "sha256": "684ff53be9bf425f1dc838781871fec1f799e1359dd91056f13d223f2e3cd386"
+    },
+    "initial-pass/control/state.json": {
+      "bytes": 555,
+      "sha256": "63481508ed60e873a6319ff414bfea6f8c3f89a855b16445f399617c2d77ee27"
+    },
+    "initial-pass/control/target-11.rgba": {
+      "bytes": 2087280,
+      "sha256": "d695766dc89b58f432f19e0c80cd60e4cad6dd7a41f008caac15a30da24e42ea"
+    },
+    "initial-pass/control/target-13.rgba": {
+      "bytes": 2087280,
+      "sha256": "d695766dc89b58f432f19e0c80cd60e4cad6dd7a41f008caac15a30da24e42ea"
+    },
+    "initial-pass/control/target-15.rgba": {
+      "bytes": 2298480,
+      "sha256": "a1bf8f87b039c08840085bf1049e74054ed9d1bfdf1ac40399387dd52f66cd0c"
+    },
+    "initial-pass/control/target-3.rgba": {
+      "bytes": 2298480,
+      "sha256": "4ca7233ad642b9da5ff52340f7390cb75d0ba6fd6c962065de108f63c28e5118"
+    },
+    "initial-pass/control/target-5.rgba": {
+      "bytes": 2298480,
+      "sha256": "4ca7233ad642b9da5ff52340f7390cb75d0ba6fd6c962065de108f63c28e5118"
+    },
+    "initial-pass/control/target-7.rgba": {
+      "bytes": 1886080,
+      "sha256": "aa46b94000916951283314f7087e8e2bb31e83cd7cad065f2f21e63b5514d391"
+    },
+    "initial-pass/control/target-9.rgba": {
+      "bytes": 1886080,
+      "sha256": "aa46b94000916951283314f7087e8e2bb31e83cd7cad065f2f21e63b5514d391"
+    },
+    "initial-pass/nvidia.json": {
+      "bytes": 105,
+      "sha256": "559298238b82b7ef5db83f2674d7a3fe416158735a56302121b7f2e2d5c1f053"
+    },
+    "initial-pass/result.json": {
+      "bytes": 36752,
+      "sha256": "648bc2bc8bd05b7365cf6ccd615e95925aea8d33351d1de25e1154dadf7b2373"
+    },
+    "initial-pass/runtime.log": {
+      "bytes": 11705,
+      "sha256": "fbea4edcc32fa23f0c8cce9d7d8caa386704e7dff8c8b2c73ff9f6092fddcc28"
+    },
+    "initial-pass/transport.json": {
+      "bytes": 2899,
+      "sha256": "d60610c7b7249cd126c4b0874b68f5f81d84653e0d1a4862cbeddbca9f179b4c"
+    },
+    "initial-pass/transport.log": {
+      "bytes": 43,
+      "sha256": "0edeadb29bda5d91af73ead0657d44bb358958f12535c0fc19512882fb6168b6"
+    },
+    "initial-pass/xvfb-cleanup.json": {
+      "bytes": 87,
+      "sha256": "ac3db790fb10744c5adcca88c62d290edc9c581201a89b7d5ecef1828bf1398e"
+    },
+    "transport/run-face-sweep-app-resize-final.py": {
+      "bytes": 2603,
+      "sha256": "6464f816ccb704a91253da1cd34d9257524520442ed6b0cda4909b127b28fdff"
+    }
+  }
+}
