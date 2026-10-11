@@ -14,3 +14,6 @@ Prior published `0310291e` is fully green in its five-job semantic workflow. [Ex
 Open: oblique-cap topology, nested Finish ownership, actual desktop recovery/close, Windows and current Mac process execution, complete preferences, strict Metal pixels/cross-driver precision, broader document/UI variants and the remaining feature/release gates. No renderer throughput or full parity claim is made from these bounded checks.
 
 `records.zip` retains joint build logs, both fresh application outputs, full Fillet comparison including failures, original-file and recovery payloads, process logs and source/binary provenance; `manifest.json` authenticates each record. Existing owner checkers accepted the fresh outputs. Reproduce with a joint build of `fillet_scoped` and `session_recovery_process`, then use `scripts/check-fillet-scoped.py` and `scripts/check-session-recovery.py` against the named outputs. Original captures need not be regenerated.
+
+
+Published e866ccb7 terminal CI: all five semantic jobs and both ordered Metal jobs pass, including actual ARM/Intel macOS process recovery. See [published-ci.json](published-ci.json). Strict world pixel and Windows acceptance remain separate.

@@ -1,0 +1,449 @@
+{
+  "runtime_revision": "10d97c06d2f0f09f6f7a428ac599d786e96667a2",
+  "original": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "binary_sha256": {
+    "ingetrazo": "a4097ee94a0548ce3bbc7ccdc111632e8091766bd89f03f2bb492ba130cc9586",
+    "examples/solid_boolean_workflow": "f50ab75f753572e98e69dee0f46bdb9aff5f8a0fcffa8fa8ea9a864e3c21e7b5",
+    "examples/fillet_oblique": "e78c56855be4a3e3bfdf6fec40ffdcdf2d458f281964ff8f3d88366c19f29361"
+  },
+  "changed_runtime_sha256": {
+    "crates/ingetrazo-cli/src/main.rs": "6c9348f6194613beb95369a26f9110069573548286ae4b1c04f4c5a1ba421e0a",
+    "crates/ingetrazo-gui/examples/fillet_oblique.rs": "2d6db1ae8cb0440c999a2a3d124de3cdd6b368b08b6ac17c7cde6af6f2b09830",
+    "crates/ingetrazo-gui/examples/solid_boolean_workflow.rs": "e95d2bc88ba31f96d1834ad15c4427125a783ee3b2d636be5e0e74b3ebd739cd",
+    "crates/ingetrazo-gui/src/app.rs": "f7991e3066cec924dbbcea5aac3e35309789cfed12b4b057f739ee545dcd8d2c",
+    "crates/ingetrazo-gui/src/native_metal.rs": "bba915481110f33c528e161e8b2e4e350d7b3a34dcc6af2e66a67a783d6875ad",
+    "crates/ingetrazo-gui/src/native_vulkan/mod.rs": "5efb104fa504d11da42f86e136ef908352c1aa625d37a00f346861aba2ed1ef5",
+    "crates/ingetrazo-gui/src/session_state.rs": "340700c5873c751d7203d8efbf0f5025a09338088ddbb3ec328e799d9b5a648f",
+    "crates/ingetrazo-gui/src/viewport.rs": "0a3a8a79e7d5f9a2820a76932b26fddef635771c0d04081cb3a11e36070124e1"
+  },
+  "metrics": {
+    "before-idle-fix": {
+      "cad_callbacks": 426,
+      "final_ledger_zero": true,
+      "world_uploads": 1
+    },
+    "software": {
+      "cad_callbacks": 32,
+      "final_ledger_zero": true,
+      "world_uploads": 1
+    },
+    "hardware/host": {
+      "cad_callbacks": 21,
+      "final_ledger_zero": true,
+      "world_uploads": 1
+    }
+  },
+  "scope": "actual production CLI software/RTX5090 startup original document two resizes and clean close, isolated state; no full frame parity or performance benchmark claim",
+  "records": {
+    "before-idle-fix/cache/mesa_shader_cache/12/9f35bd7849cfa9f349897a0ab7d8daf6c8b07a": {
+      "bytes": 2784,
+      "sha256": "4074ff73bd90beab10a878baa5df80b80ed89b934246e4f2e2c44aa730079584"
+    },
+    "before-idle-fix/cache/mesa_shader_cache/13/b213443b22c008655a8be029beb08d868e94f1": {
+      "bytes": 2058,
+      "sha256": "d51208b9b1edecbd8b77dfb744687efad8f0111db8fb17fa34dee78695ae35be"
+    },
+    "before-idle-fix/cache/mesa_shader_cache/31/19b8b04f02af1f2f4b93fc8c540bf324b13795": {
+      "bytes": 455,
+      "sha256": "12277b67a5f11b7be89c3d69f0e881c8007a501ac5cbdfe6ac9e0341b239d073"
+    },
+    "before-idle-fix/cache/mesa_shader_cache/4e/61e6f6495449719a75488d6a0844c5d9460609": {
+      "bytes": 2107,
+      "sha256": "0fb75f949d73b4fd30b96a66922c8c53781b80d0eb4845397adfa42ec33ca42b"
+    },
+    "before-idle-fix/cache/mesa_shader_cache/50/b48a8c323c1ddf6e50eca1da0b1373d22c192d": {
+      "bytes": 436,
+      "sha256": "3362e3ee22f48f2f8234983b691e69f1216056cb0996e9cd02ceaa3b379a615e"
+    },
+    "before-idle-fix/cache/mesa_shader_cache/5a/7ec4217bcb4ee88089a986b36893593e2f773f": {
+      "bytes": 1170,
+      "sha256": "c23f90c5c2e3f6d0db423f762dd448e3486ffbff9fa2225dc14cc22df179f4f8"
+    },
+    "before-idle-fix/cache/mesa_shader_cache/62/13b87419674274cf9c4315e4fe0ec65690aa3c": {
+      "bytes": 579,
+      "sha256": "6b980750a485bce02419ed934ffc93f74ebed28d07c56925124b60c9b619d3a8"
+    },
+    "before-idle-fix/cache/mesa_shader_cache/64/3a2d97249ae0e8a2dad5c6f1c3ad83ce370a34": {
+      "bytes": 413,
+      "sha256": "abc4ccfcfac4396eb62447dc3e7ae5ab6305e9a37604ed17c7f2d9aae01ad0c5"
+    },
+    "before-idle-fix/cache/mesa_shader_cache/6a/d4df33cb1c11a9fd6c0042a1b1c1c27d719929": {
+      "bytes": 2391,
+      "sha256": "3204f23267f47ff3959c678a2c7a3bf20fd51ba4cdec720d6928062d07bf11b0"
+    },
+    "before-idle-fix/cache/mesa_shader_cache/83/103bd3a0c1ddf9d46b028260f0b66af2e4f2d1": {
+      "bytes": 1200,
+      "sha256": "58429c8c8bcca001feb61bace0b6b53ad2dbd1f1fc5b09ac90417d4961165032"
+    },
+    "before-idle-fix/cache/mesa_shader_cache/83/f230d7a8b2a09260fa95098fc8db7567e32bf7": {
+      "bytes": 2275,
+      "sha256": "54e36d84c66f4e692dceecc24efa03dd50b130086bfcd88e20e18133199ac0d8"
+    },
+    "before-idle-fix/cache/mesa_shader_cache/8d/a5267b77d8c2d4373f8034c5312e09fd214f6d": {
+      "bytes": 587,
+      "sha256": "24c3694299bd3bda79f84dc75288917df315780cfdc3b9c4adcdb287ee21f888"
+    },
+    "before-idle-fix/cache/mesa_shader_cache/8f/f8498a3218e620bf87bbf907863c925bc982b3": {
+      "bytes": 1199,
+      "sha256": "8f76707058a909133e9cbf6fe78b609585244b478ca1cd42f27272f3f700d71a"
+    },
+    "before-idle-fix/cache/mesa_shader_cache/9a/f538b3ae32145d6aa19e1e6817e3dd451d6662": {
+      "bytes": 2927,
+      "sha256": "8fbcaf52aae6cb0f183697dbdbc7e72bf9ada09e27271513cf132b6d8224293d"
+    },
+    "before-idle-fix/cache/mesa_shader_cache/9e/633d1fa7df6f024252397d1c06ba1bbe20206f": {
+      "bytes": 659,
+      "sha256": "cebbc82f31500a92c499374a2abf7484995fa125d3957d9e5e11ae213ca55a64"
+    },
+    "before-idle-fix/cache/mesa_shader_cache/a6/b048c363451996e00b4055ef1830265abea767": {
+      "bytes": 2185,
+      "sha256": "bb06304b892068293ce31e50a3d0f081acd558a2146ef07c6a521c43863795bf"
+    },
+    "before-idle-fix/cache/mesa_shader_cache/aa/e05532b5fac2939809d1286873d9cafb757b69": {
+      "bytes": 455,
+      "sha256": "12277b67a5f11b7be89c3d69f0e881c8007a501ac5cbdfe6ac9e0341b239d073"
+    },
+    "before-idle-fix/cache/mesa_shader_cache/ab/db3a12f705ed781a79834144a4788730205c2c": {
+      "bytes": 3975,
+      "sha256": "967bd0d41f76a77b9a1032557204c6f1b68b9ba29feb0f0298ed3befaf15ba91"
+    },
+    "before-idle-fix/cache/mesa_shader_cache/bc/36ac62711d436b1a7e28a285be1de52112498c": {
+      "bytes": 387,
+      "sha256": "71d4412766043be2785235719f7013e7039d3aff1f1f297b7d2a25f7e43e72cd"
+    },
+    "before-idle-fix/cache/mesa_shader_cache/c0/f022b852ee5bfe7ad62e7a84284f750b5f00f9": {
+      "bytes": 1200,
+      "sha256": "77a2937b6a5d2f1025edc7bf346fb6cb061eb5eb62b16845be9f908d5414260b"
+    },
+    "before-idle-fix/cache/mesa_shader_cache/c4/dc992ef80f8e2547870b39da40a820f6066923": {
+      "bytes": 2093,
+      "sha256": "e5790e0dac3d1d19b9f35e8293b2e5baf8b06f92496428eecaa5c46f047ebfb8"
+    },
+    "before-idle-fix/cache/mesa_shader_cache/c6/b7bbfdccd6ce3f0280973decb30d36dc5f537b": {
+      "bytes": 589,
+      "sha256": "2fca9d29b9843d24a94109415ce15afe4f855861dbd64a058767cc54ce036780"
+    },
+    "before-idle-fix/cache/mesa_shader_cache/cd/4142991d3e106cdb4a27e1337599a2437356b4": {
+      "bytes": 1182,
+      "sha256": "2623b7aa1176a1c9adc3d2e4437f0435b8699e344df2a81f356a76b065ea524c"
+    },
+    "before-idle-fix/cache/mesa_shader_cache/d6/4ff51f3d2b638dba8e8e669cab737bee3f5d50": {
+      "bytes": 1219,
+      "sha256": "2d560db2b876ad57fb4b4f6dc4083173f0c419de9fba555da3763fb930d7fe84"
+    },
+    "before-idle-fix/cache/mesa_shader_cache/da/10efd9d046cc14995b91f0fd1b9d32283b4fdf": {
+      "bytes": 583,
+      "sha256": "506fca542aa19b4accc168a879ff49d4ef020afc244f41cc610ab264fa22924b"
+    },
+    "before-idle-fix/cache/mesa_shader_cache/e9/17c471eef7a4e96ddb5da0d633fe1c42bd299f": {
+      "bytes": 2902,
+      "sha256": "f9dee2d14300eff3200d7aa81fd1a11e4d19a1a1022bb1ed975d708383f95565"
+    },
+    "before-idle-fix/cache/mesa_shader_cache/ef/bc94fd612bfdb8836ff0b3ecb1494cdec6d0d8": {
+      "bytes": 6184,
+      "sha256": "1322683c23ce02134391c9af862ab13bb86cf43206062f6af60d3966b71daba5"
+    },
+    "before-idle-fix/cache/mesa_shader_cache/f2/eabc5720e02471f421197a6125eacb750ad322": {
+      "bytes": 588,
+      "sha256": "9ee9d3dd0364c8dc78b1f7bdd4139e1560c310bc61535bafcc4a86c196ea6401"
+    },
+    "before-idle-fix/cache/mesa_shader_cache/f3/91d1c45bc0ef74bd05304f6e43d7eb0382dfdc": {
+      "bytes": 589,
+      "sha256": "20e2fe5f2b23a58655dd4bea05013b6cda7b89892fa1a0a52ff36088659f9646"
+    },
+    "before-idle-fix/cache/mesa_shader_cache/index": {
+      "bytes": 1310728,
+      "sha256": "d0d866d4569250e5f670db6e6e08fd9b222429a5d528318b73cbdc5c524b4c4b"
+    },
+    "before-idle-fix/cache/mesa_shader_cache/marker": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "before-idle-fix/cache/radv_builtin_shaders/index": {
+      "bytes": 1310728,
+      "sha256": "6d0552c4e71fe85e6cdc7e7745882ea91b382fbc56448f2e9e1c2d77dcf67d81"
+    },
+    "before-idle-fix/cache/radv_builtin_shaders/marker": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "before-idle-fix/config/ingetrazo-rust/settings.json": {
+      "bytes": 495,
+      "sha256": "7771abf85d3a630348e5e8bc396276313409ec7f4c151889e2a4942c7f66cec7"
+    },
+    "before-idle-fix/resize-1100x700.png": {
+      "bytes": 95458,
+      "sha256": "9b0e5edcf8ece1e4e51a4fc96bcd3927bc2d8b44adddf03805156b14d1db8581"
+    },
+    "before-idle-fix/resize-800x600.png": {
+      "bytes": 81278,
+      "sha256": "8053f2ba9d26fb63a161e4ab9f952050173cd5547561f6b53e9548c0dff16799"
+    },
+    "before-idle-fix/result.json": {
+      "bytes": 724,
+      "sha256": "e118a095f2c0dd15e9b02955c01a90b99cf9d06aca53875d559f1742f8be2d18"
+    },
+    "before-idle-fix/startup.log": {
+      "bytes": 3707,
+      "sha256": "f345debbb9f4b749c7bcee05e2eef71e5d0ffcb144eb92406f9935cf48d062d4"
+    },
+    "before-idle-fix/startup.png": {
+      "bytes": 108442,
+      "sha256": "0106347a02df9f53507301c157c2d33a643b9cee40227f4cee018d932332f93e"
+    },
+    "before-idle-fix/xvfb-cleanup.json": {
+      "bytes": 92,
+      "sha256": "efc523260a0563f966fbd5e5cabf161ae2b2d12dc0ae5dc73a3ca80ec35abc8a"
+    },
+    "boolean-check.json": {
+      "bytes": 53,
+      "sha256": "82f2a78f16007650e75f07a07b4a0da7e8c027e07382cc651a5d9aac28c11c87"
+    },
+    "boolean.json": {
+      "bytes": 10707,
+      "sha256": "9a24bf8e9ca387eb179a212e01092f603c42e78eb1a80c8d93577e421d2d1498"
+    },
+    "cli-check.log": {
+      "bytes": 547,
+      "sha256": "1698fc421fe633cb61e1b4e87961738ef20f945e0dfc3ea8636664d44f252f59"
+    },
+    "fillet-check.json": {
+      "bytes": 1166,
+      "sha256": "fddaa4ab7250f777254ff6294ac255f0326ee2c38f31ed3f895da5699826ddde"
+    },
+    "fillet-source.json": {
+      "bytes": 581183,
+      "sha256": "cd04f87be62db6b0bd066c1402bcd9e007f1531c62d5fed65099ac4b965084d4"
+    },
+    "fillet.json": {
+      "bytes": 563382,
+      "sha256": "a0710b6a17306d57041221c3d2af1902244d515fd68d14f2a3489a7e05338295"
+    },
+    "hardware/host/resize-1100x700.png": {
+      "bytes": 95162,
+      "sha256": "c2983b3ac08aa56e7baecea9a1b7e82e40ee197d9a314284d138fe351000dc18"
+    },
+    "hardware/host/resize-800x600.png": {
+      "bytes": 81002,
+      "sha256": "16be08b3ab35364452084b8cb3e2b151fee83ca055ed023eaab0a64aaafad82a"
+    },
+    "hardware/host/result.json": {
+      "bytes": 655,
+      "sha256": "af876b872bfdec1d1d58fc1259f92d2478f7467a43b5d0c3ef22a7bb759f0a0a"
+    },
+    "hardware/host/session/config/settings.json": {
+      "bytes": 477,
+      "sha256": "8ec7365a4b6192d1acdff1bbadfeff4a59ceaf81662cd39cf759cccf147b6a0a"
+    },
+    "hardware/host/startup.log": {
+      "bytes": 3077,
+      "sha256": "3c32bfcb85ce7b43c73c94a3f7761115caedeace271134b6d969611cae767153"
+    },
+    "hardware/host/startup.png": {
+      "bytes": 108117,
+      "sha256": "d24246448e460bbce33ef66a90aa28f0ad1444d61ea20026bac8d759b6e3db6a"
+    },
+    "hardware/host/xvfb-cleanup.json": {
+      "bytes": 87,
+      "sha256": "ac3db790fb10744c5adcca88c62d290edc9c581201a89b7d5ecef1828bf1398e"
+    },
+    "hardware/nvidia.json": {
+      "bytes": 105,
+      "sha256": "559298238b82b7ef5db83f2674d7a3fe416158735a56302121b7f2e2d5c1f053"
+    },
+    "hardware/transport.json": {
+      "bytes": 3085,
+      "sha256": "9ae5966e7b313d5ab3e657d04ebf96bfbf67e9c0e33ee98dacd4736ddb007295"
+    },
+    "hardware/transport.log": {
+      "bytes": 152,
+      "sha256": "8db626da761f3f7f704fe200e4ff5dd23fe0e822e178cc642b6737dab63f24d8"
+    },
+    "hardware-transport-refusal/nvidia.json": {
+      "bytes": 105,
+      "sha256": "559298238b82b7ef5db83f2674d7a3fe416158735a56302121b7f2e2d5c1f053"
+    },
+    "hardware-transport-refusal/transport.json": {
+      "bytes": 3165,
+      "sha256": "0a9e3243f53d94e257db2a6a015d88ef9e1e23c32eaf271fc6ade0b71589f59d"
+    },
+    "hardware-transport-refusal/transport.log": {
+      "bytes": 192,
+      "sha256": "bf7fca7d6c320464370bffddeedf86a5f1ef9d3bfad5eb5d2dab9b1dda3e62d7"
+    },
+    "ingetrazo-native-launcher-build.log": {
+      "bytes": 19620,
+      "sha256": "e97cea5a2de4bfe93f6ebf701269e0bb325f61457ae35acc0ccce337e2ec57fd"
+    },
+    "ingetrazo-native-launcher-final-build-2.log": {
+      "bytes": 19370,
+      "sha256": "c31758963335227583e3235196102afc4017dc39a0f7587660cc2f32b91ee62c"
+    },
+    "ingetrazo-native-launcher-final-build.log": {
+      "bytes": 19370,
+      "sha256": "5042f39b4e0dc032e7efdb581455ed6724df6c5d5b390634104272dd9c295b1d"
+    },
+    "software/cache/mesa_shader_cache/12/9f35bd7849cfa9f349897a0ab7d8daf6c8b07a": {
+      "bytes": 2784,
+      "sha256": "4074ff73bd90beab10a878baa5df80b80ed89b934246e4f2e2c44aa730079584"
+    },
+    "software/cache/mesa_shader_cache/13/b213443b22c008655a8be029beb08d868e94f1": {
+      "bytes": 2058,
+      "sha256": "d51208b9b1edecbd8b77dfb744687efad8f0111db8fb17fa34dee78695ae35be"
+    },
+    "software/cache/mesa_shader_cache/31/19b8b04f02af1f2f4b93fc8c540bf324b13795": {
+      "bytes": 455,
+      "sha256": "12277b67a5f11b7be89c3d69f0e881c8007a501ac5cbdfe6ac9e0341b239d073"
+    },
+    "software/cache/mesa_shader_cache/4e/61e6f6495449719a75488d6a0844c5d9460609": {
+      "bytes": 2107,
+      "sha256": "0fb75f949d73b4fd30b96a66922c8c53781b80d0eb4845397adfa42ec33ca42b"
+    },
+    "software/cache/mesa_shader_cache/50/b48a8c323c1ddf6e50eca1da0b1373d22c192d": {
+      "bytes": 436,
+      "sha256": "3362e3ee22f48f2f8234983b691e69f1216056cb0996e9cd02ceaa3b379a615e"
+    },
+    "software/cache/mesa_shader_cache/5a/7ec4217bcb4ee88089a986b36893593e2f773f": {
+      "bytes": 1170,
+      "sha256": "c23f90c5c2e3f6d0db423f762dd448e3486ffbff9fa2225dc14cc22df179f4f8"
+    },
+    "software/cache/mesa_shader_cache/62/13b87419674274cf9c4315e4fe0ec65690aa3c": {
+      "bytes": 579,
+      "sha256": "6b980750a485bce02419ed934ffc93f74ebed28d07c56925124b60c9b619d3a8"
+    },
+    "software/cache/mesa_shader_cache/64/3a2d97249ae0e8a2dad5c6f1c3ad83ce370a34": {
+      "bytes": 413,
+      "sha256": "abc4ccfcfac4396eb62447dc3e7ae5ab6305e9a37604ed17c7f2d9aae01ad0c5"
+    },
+    "software/cache/mesa_shader_cache/6a/d4df33cb1c11a9fd6c0042a1b1c1c27d719929": {
+      "bytes": 2391,
+      "sha256": "3204f23267f47ff3959c678a2c7a3bf20fd51ba4cdec720d6928062d07bf11b0"
+    },
+    "software/cache/mesa_shader_cache/83/103bd3a0c1ddf9d46b028260f0b66af2e4f2d1": {
+      "bytes": 1200,
+      "sha256": "58429c8c8bcca001feb61bace0b6b53ad2dbd1f1fc5b09ac90417d4961165032"
+    },
+    "software/cache/mesa_shader_cache/83/f230d7a8b2a09260fa95098fc8db7567e32bf7": {
+      "bytes": 2275,
+      "sha256": "54e36d84c66f4e692dceecc24efa03dd50b130086bfcd88e20e18133199ac0d8"
+    },
+    "software/cache/mesa_shader_cache/8d/a5267b77d8c2d4373f8034c5312e09fd214f6d": {
+      "bytes": 587,
+      "sha256": "24c3694299bd3bda79f84dc75288917df315780cfdc3b9c4adcdb287ee21f888"
+    },
+    "software/cache/mesa_shader_cache/8f/f8498a3218e620bf87bbf907863c925bc982b3": {
+      "bytes": 1199,
+      "sha256": "8f76707058a909133e9cbf6fe78b609585244b478ca1cd42f27272f3f700d71a"
+    },
+    "software/cache/mesa_shader_cache/9a/f538b3ae32145d6aa19e1e6817e3dd451d6662": {
+      "bytes": 2927,
+      "sha256": "8fbcaf52aae6cb0f183697dbdbc7e72bf9ada09e27271513cf132b6d8224293d"
+    },
+    "software/cache/mesa_shader_cache/9e/633d1fa7df6f024252397d1c06ba1bbe20206f": {
+      "bytes": 659,
+      "sha256": "cebbc82f31500a92c499374a2abf7484995fa125d3957d9e5e11ae213ca55a64"
+    },
+    "software/cache/mesa_shader_cache/a6/b048c363451996e00b4055ef1830265abea767": {
+      "bytes": 2185,
+      "sha256": "bb06304b892068293ce31e50a3d0f081acd558a2146ef07c6a521c43863795bf"
+    },
+    "software/cache/mesa_shader_cache/aa/e05532b5fac2939809d1286873d9cafb757b69": {
+      "bytes": 455,
+      "sha256": "12277b67a5f11b7be89c3d69f0e881c8007a501ac5cbdfe6ac9e0341b239d073"
+    },
+    "software/cache/mesa_shader_cache/ab/db3a12f705ed781a79834144a4788730205c2c": {
+      "bytes": 3975,
+      "sha256": "967bd0d41f76a77b9a1032557204c6f1b68b9ba29feb0f0298ed3befaf15ba91"
+    },
+    "software/cache/mesa_shader_cache/bc/36ac62711d436b1a7e28a285be1de52112498c": {
+      "bytes": 387,
+      "sha256": "71d4412766043be2785235719f7013e7039d3aff1f1f297b7d2a25f7e43e72cd"
+    },
+    "software/cache/mesa_shader_cache/c0/f022b852ee5bfe7ad62e7a84284f750b5f00f9": {
+      "bytes": 1200,
+      "sha256": "77a2937b6a5d2f1025edc7bf346fb6cb061eb5eb62b16845be9f908d5414260b"
+    },
+    "software/cache/mesa_shader_cache/c4/dc992ef80f8e2547870b39da40a820f6066923": {
+      "bytes": 2093,
+      "sha256": "e5790e0dac3d1d19b9f35e8293b2e5baf8b06f92496428eecaa5c46f047ebfb8"
+    },
+    "software/cache/mesa_shader_cache/c6/b7bbfdccd6ce3f0280973decb30d36dc5f537b": {
+      "bytes": 589,
+      "sha256": "2fca9d29b9843d24a94109415ce15afe4f855861dbd64a058767cc54ce036780"
+    },
+    "software/cache/mesa_shader_cache/cd/4142991d3e106cdb4a27e1337599a2437356b4": {
+      "bytes": 1182,
+      "sha256": "2623b7aa1176a1c9adc3d2e4437f0435b8699e344df2a81f356a76b065ea524c"
+    },
+    "software/cache/mesa_shader_cache/d6/4ff51f3d2b638dba8e8e669cab737bee3f5d50": {
+      "bytes": 1219,
+      "sha256": "2d560db2b876ad57fb4b4f6dc4083173f0c419de9fba555da3763fb930d7fe84"
+    },
+    "software/cache/mesa_shader_cache/da/10efd9d046cc14995b91f0fd1b9d32283b4fdf": {
+      "bytes": 583,
+      "sha256": "506fca542aa19b4accc168a879ff49d4ef020afc244f41cc610ab264fa22924b"
+    },
+    "software/cache/mesa_shader_cache/e9/17c471eef7a4e96ddb5da0d633fe1c42bd299f": {
+      "bytes": 2902,
+      "sha256": "f9dee2d14300eff3200d7aa81fd1a11e4d19a1a1022bb1ed975d708383f95565"
+    },
+    "software/cache/mesa_shader_cache/ef/bc94fd612bfdb8836ff0b3ecb1494cdec6d0d8": {
+      "bytes": 6184,
+      "sha256": "1322683c23ce02134391c9af862ab13bb86cf43206062f6af60d3966b71daba5"
+    },
+    "software/cache/mesa_shader_cache/f2/eabc5720e02471f421197a6125eacb750ad322": {
+      "bytes": 588,
+      "sha256": "9ee9d3dd0364c8dc78b1f7bdd4139e1560c310bc61535bafcc4a86c196ea6401"
+    },
+    "software/cache/mesa_shader_cache/f3/91d1c45bc0ef74bd05304f6e43d7eb0382dfdc": {
+      "bytes": 589,
+      "sha256": "20e2fe5f2b23a58655dd4bea05013b6cda7b89892fa1a0a52ff36088659f9646"
+    },
+    "software/cache/mesa_shader_cache/index": {
+      "bytes": 1310728,
+      "sha256": "d0d866d4569250e5f670db6e6e08fd9b222429a5d528318b73cbdc5c524b4c4b"
+    },
+    "software/cache/mesa_shader_cache/marker": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "software/cache/radv_builtin_shaders/index": {
+      "bytes": 1310728,
+      "sha256": "6d0552c4e71fe85e6cdc7e7745882ea91b382fbc56448f2e9e1c2d77dcf67d81"
+    },
+    "software/cache/radv_builtin_shaders/marker": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "software/resize-1100x700.png": {
+      "bytes": 95458,
+      "sha256": "9b0e5edcf8ece1e4e51a4fc96bcd3927bc2d8b44adddf03805156b14d1db8581"
+    },
+    "software/resize-800x600.png": {
+      "bytes": 81278,
+      "sha256": "8053f2ba9d26fb63a161e4ab9f952050173cd5547561f6b53e9548c0dff16799"
+    },
+    "software/result.json": {
+      "bytes": 724,
+      "sha256": "a8cf325f2109afe8d1749e23e6f64be288c6687e16bbc884ae053de9205d51f0"
+    },
+    "software/session/config/settings.json": {
+      "bytes": 495,
+      "sha256": "7771abf85d3a630348e5e8bc396276313409ec7f4c151889e2a4942c7f66cec7"
+    },
+    "software/startup.log": {
+      "bytes": 3705,
+      "sha256": "457cfe135a755bdddd29284f313ad973f3172624903c4c66527f851dcd53a0fd"
+    },
+    "software/startup.png": {
+      "bytes": 108442,
+      "sha256": "0106347a02df9f53507301c157c2d33a643b9cee40227f4cee018d932332f93e"
+    },
+    "software/xvfb-cleanup.json": {
+      "bytes": 92,
+      "sha256": "9e6901513b8e42f20dd554237019bdf4077c0cce614f0c56a98ea17fcaeabf91"
+    }
+  },
+  "archive_sha256": "5fd2657ed324203c7459d417380880c6574d5cd0c001e8fcf9f31a7d27447636",
+  "archive_bytes": 963626
+}

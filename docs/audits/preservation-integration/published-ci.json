@@ -1,0 +1,1064 @@
+{
+  "scope": "Published preservation integration CI. Native Metal process recovery passes on both actual Apple runners. No strict world pixel or Windows acceptance implied.",
+  "runs": [
+    {
+      "id": 38141675070,
+      "head_sha": "e866ccb732111922b451b2f3c28a7abcc32e2201",
+      "url": "https://github.com/supere989/ingetrazo-rust/actions/runs/38141675070",
+      "jobs": [
+        {
+          "id": 114476632050,
+          "name": "compilation-and-tests",
+          "status": "completed",
+          "conclusion": "success",
+          "started_at": "2026-10-11T13:03:44Z",
+          "completed_at": "2026-10-11T13:16:21Z",
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run actions/checkout@v4",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run dtolnay/rust-toolchain@stable",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Reuse compiled Cargo dependencies",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Install native build dependencies",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Check mandatory original fixtures",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Workspace tests and example compile coverage",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Native isolated X11 clipboard acceptance",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Native rendered Offset viewport gestures",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Build native launcher and minimal render worker",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Persistent shared-buffer HLR and worker deadline controls",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Build direct Vulkan host and allocation probe",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Direct Vulkan virtual-display lifecycle",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Actual Vulkan image and staging denial rollback",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Headless software Vulkan resource depth refusal and timeout controls",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Headless contour chunk equality and allocation rollback",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Batched transfer readback and transactional ownership controls",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Native texture image mip staging and pressure controls",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Software-rendered virtual-display startup",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Semantic document acceptance",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Independent export buffer acceptance",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run actions/setup-python@v5",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Install pinned original runtime in CI environment",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Original and native bridge query and history parity",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Pinned original and native legacy SKP primitive parity",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Original native Fontconfig request matching and ownership",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Actual original paragraph layout and direct PDF text",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Build paper vector consumers once",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Original and native strict vector View PDF pages",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Original and native saved-view PDF state against opposed live state",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Exact source section loops clipping and plane axes",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Original and native strict solid section PDF pages",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Original and native saved tilted cropped colored hatch PDF pages",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Actual source grid cutoff spacing and perspective suppression",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Original and native strict physical grid and hatch pages",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Original and native noninteger grid saved tilted solid pages",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Actual composer PDF save dialogs and refusal preservation",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Actual Text composer export source pages and save dialogs",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Original punctuation and discretionary Text boundaries",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Actual Text background export and save dialogs",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Exact original Qt and production CAD color protocol",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Build production native composer cache fixture",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Native Vulkan composer cache edit history context and recovery",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Classified composer view DXF and transactional writer acceptance",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Original Move policy and short rendered drag controls",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Original orthographic screen snapping controls",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Original perspective snapping and eye boundary controls",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Independently calibrated center glyph positive and negative controls",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Actual original and native center hint and Move UI controls",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Rendered software OpenGL drawing reference gestures",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Rendered software OpenGL temporary Shift inference gestures",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Original OpenGL section stencil controls",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Build native Vulkan section fixture",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Native Vulkan ten-case stencil comparison and lifecycle",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Native rendered section stencil comparison",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Original Python runtime document reopen",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Original Python runtime fresh and edited Rust interpretation",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Original Python versus Rust boolean shape acceptance",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Original Python PushPull reference regressions",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Original Python versus Rust PushPull shape acceptance",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Original Python versus Rust connected sweep geometry",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Original Python shared component definition acceptance",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Independent COLLADA export geometry and original reopening",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Original runtime physical pieces geometry",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Original runtime nested world dimension measurement",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Original terrain runtime visibility and owned command footprint",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Original saved-view command membership and object lifetime",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Original parked-context layer deletion ownership",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Original layer panel and command ownership",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Original global entities survive nested edit history",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Original referenced textures survive nested context history",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Original command-specific annotation shareback Undo and anchor lifetimes",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Original runtime dimension anchors and nested outliner",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Original runtime planar healing",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Original COLLADA editable geometry materials and resource import",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Original COLLADA nonaffine UV fitting and editable station topology",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Original COLLADA reference threshold shared prototypes and transformed textures",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Original paper HLR endpoints classes and even-odd section coverage",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Original and native production composer pen and dash pixels",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Original Line Rectangle Freehand drafting semantics",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Original image Move and context lifetime semantics",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Original mixed Move contexts and reliable image membership",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Original image Rotate gestures and Finish ownership",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Original map metadata codec and actual source reopens",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Original geographic path conversion topology",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Ctrl PushPull literal success and intentional safety boundaries",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Original simplification geometry and protected attributes",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Original interior partition orientation oracle",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Original offset regions and chains",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Original Offset hard-edge display semantics",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Original and native presentation controllers contexts and IGZ adapters",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Original image plane ownership and native archive reopening",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Original image layer command ownership and branch lifetime",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Original command-held image frame semantics",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Original image picking and reference work planes",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Original runtime saved view recall",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Original runtime polygon intersection segments and mutation",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Original runtime dimension schema and placement",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Original runtime authored glTF reference imports",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Original runtime mixed clipboard geometry",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Clipboard context and resource boundary oracle",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Original painted overlap paste oracle",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Original Python versus Rust fillet geometry",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Independent nested mesh exchange geometry",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Original runtime exchange import semantics",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Independent DXF curve and refusal boundaries",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Retain semantic evidence even on failure",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Run actions/setup-python@v5",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Reuse compiled Cargo dependencies",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Run actions/checkout@v4",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ]
+        },
+        {
+          "id": 114476632101,
+          "name": "Native Metal compile (x86_64-apple-darwin)",
+          "status": "completed",
+          "conclusion": "success",
+          "started_at": "2026-10-11T13:03:44Z",
+          "completed_at": "2026-10-11T13:04:13Z",
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run actions/checkout@v4",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run dtolnay/rust-toolchain@stable",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Reuse compiled Cargo dependencies",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Check native Metal library and device probe",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Retain compile evidence",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Reuse compiled Cargo dependencies",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Run actions/checkout@v4",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ]
+        },
+        {
+          "id": 114476632110,
+          "name": "Native Metal compile (aarch64-apple-darwin)",
+          "status": "completed",
+          "conclusion": "success",
+          "started_at": "2026-10-11T13:03:43Z",
+          "completed_at": "2026-10-11T13:04:14Z",
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run actions/checkout@v4",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run dtolnay/rust-toolchain@stable",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Reuse compiled Cargo dependencies",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Check native Metal library and device probe",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Retain compile evidence",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Reuse compiled Cargo dependencies",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Run actions/checkout@v4",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ]
+        },
+        {
+          "id": 114476632122,
+          "name": "Native Metal framework link (macos-15-intel)",
+          "status": "completed",
+          "conclusion": "success",
+          "started_at": "2026-10-11T13:03:46Z",
+          "completed_at": "2026-10-11T13:07:37Z",
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run actions/checkout@v4",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run dtolnay/rust-toolchain@stable",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Reuse compiled Cargo dependencies",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Native paper font dependency build and library tests",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Build combined native macOS GUI with Apple SDK",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Native isolated session lease crash and app recovery",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Native modifier ingress and missing-metadata refusal",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Link native device probe against Apple frameworks",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Execute native Metal device and allocation probe",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Execute native Metal GPU submission and retirement probe",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Execute strict source-ordered Metal compute rendering",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Execute Apple framebuffer-fetch rendering or explicit capability refusal",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Actual completed and pending Metal CAD Drop ownership",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Reject literal old GPU byte multiplication",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Retain native linking evidence",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Reuse compiled Cargo dependencies",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Run actions/checkout@v4",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ]
+        },
+        {
+          "id": 114476632130,
+          "name": "Native Metal framework link (macos-15)",
+          "status": "completed",
+          "conclusion": "success",
+          "started_at": "2026-10-11T13:03:50Z",
+          "completed_at": "2026-10-11T13:06:43Z",
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run actions/checkout@v4",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run dtolnay/rust-toolchain@stable",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Reuse compiled Cargo dependencies",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Native paper font dependency build and library tests",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Build combined native macOS GUI with Apple SDK",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Native isolated session lease crash and app recovery",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Native modifier ingress and missing-metadata refusal",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Link native device probe against Apple frameworks",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Execute native Metal device and allocation probe",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Execute native Metal GPU submission and retirement probe",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Execute strict source-ordered Metal compute rendering",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Execute Apple framebuffer-fetch rendering or explicit capability refusal",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Actual completed and pending Metal CAD Drop ownership",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Reject literal old GPU byte multiplication",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Retain native linking evidence",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Reuse compiled Cargo dependencies",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Run actions/checkout@v4",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 38141674967,
+      "head_sha": "e866ccb732111922b451b2f3c28a7abcc32e2201",
+      "url": "https://github.com/supere989/ingetrazo-rust/actions/runs/38141674967",
+      "jobs": [
+        {
+          "id": 114476631493,
+          "name": "Actual ordered UI and CAD compute (macos-15-intel)",
+          "status": "completed",
+          "conclusion": "success",
+          "started_at": "2026-10-11T13:03:45Z",
+          "completed_at": "2026-10-11T13:05:44Z",
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run actions/checkout@v4",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run dtolnay/rust-toolchain@stable",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Reuse compiled Cargo dependencies",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run actions/setup-python@v5",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Install pinned diagnostic Qt reference",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Generate fresh actual QPainter references",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Build native compute consumer with source provenance",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Execute actual GPU consumer and strict seven-image controls",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Retain complete native evidence on every verdict",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Run actions/setup-python@v5",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Reuse compiled Cargo dependencies",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Run actions/checkout@v4",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ]
+        },
+        {
+          "id": 114476631819,
+          "name": "Actual ordered UI and CAD compute (macos-15)",
+          "status": "completed",
+          "conclusion": "success",
+          "started_at": "2026-10-11T13:03:53Z",
+          "completed_at": "2026-10-11T13:05:44Z",
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run actions/checkout@v4",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run dtolnay/rust-toolchain@stable",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Reuse compiled Cargo dependencies",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run actions/setup-python@v5",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Install pinned diagnostic Qt reference",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Generate fresh actual QPainter references",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Build native compute consumer with source provenance",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Execute actual GPU consumer and strict seven-image controls",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Retain complete native evidence on every verdict",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Run actions/setup-python@v5",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Reuse compiled Cargo dependencies",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Run actions/checkout@v4",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

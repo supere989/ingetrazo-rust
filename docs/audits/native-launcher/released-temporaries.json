@@ -1,0 +1,43 @@
+{
+  "archive_sha256": "5fd2657ed324203c7459d417380880c6574d5cd0c001e8fcf9f31a7d27447636",
+  "roots": [
+    {
+      "path": "/tmp/ingetrazo-native-launcher-final",
+      "archive_prefix": "",
+      "files": 102,
+      "bytes": 7424823,
+      "verified_before_removal": true
+    },
+    {
+      "path": "/tmp/ingetrazo-native-launcher-software",
+      "archive_prefix": "before-idle-fix",
+      "files": 40,
+      "bytes": 2957023,
+      "verified_before_removal": true
+    },
+    {
+      "path": "/tmp/ingetrazo-native-launcher-build.log",
+      "files": 1,
+      "bytes": 19620,
+      "verified_before_removal": true
+    },
+    {
+      "path": "/tmp/ingetrazo-native-launcher-final-build.log",
+      "files": 1,
+      "bytes": 19370,
+      "verified_before_removal": true
+    },
+    {
+      "path": "/tmp/ingetrazo-native-launcher-final-build-2.log",
+      "files": 1,
+      "bytes": 19370,
+      "verified_before_removal": true
+    }
+  ],
+  "preserved": [
+    "all source worktrees",
+    "all reusable Cargo targets",
+    "original Python checkout",
+    "task-private NVIDIA driver bundle"
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "archive_sha256": "5fd2657ed324203c7459d417380880c6574d5cd0c001e8fcf9f31a7d27447636",
+  "roots": [
+    {
+      "path": "/tmp/ingetrazo-native-launcher-hardware-final-2",
+      "archive_prefix": "hardware",
+      "files": 10,
+      "bytes": 291919,
+      "verified_before_removal": true
+    },
+    {
+      "path": "/tmp/ingetrazo-native-launcher-hardware-final",
+      "archive_prefix": "hardware-transport-refusal",
+      "files": 3,
+      "bytes": 3462,
+      "verified_before_removal": true
+    },
+    {
+      "path": "/tmp/ingetrazo-native-launcher-preview.png",
+      "files": 1,
+      "bytes": 95458,
+      "verified_before_removal": true
+    }
+  ]
+}
