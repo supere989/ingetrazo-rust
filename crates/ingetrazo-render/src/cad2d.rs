@@ -50,9 +50,13 @@ impl SourceSpans {
   let mut result=[0;2];for axis in 0..2{let value=f64::from(pose.translation[axis])*f64::from(ppp)-self.phase[axis];if !value.is_finite()||value.fract()!=0.||value.abs()>1_000_000.{return Err("Source span phase changed; producer rerasterization required".into());}result[axis]=value as i32;}Ok(result)
  }
  fn validated(g:&Geometry,rows:Vec<SourceSpan>,zoom:f32,ppp:f32,phase:[f64;2])->Result<Self,String>{
+  Self::validate_rows(g,&g.indices,&rows,zoom,ppp,phase)?;
+  Ok(Self{rows:rows.into(),zoom,ppp,phase})
+ }
+ fn validate_rows(g:&Geometry,indices:&[u32],rows:&[SourceSpan],zoom:f32,ppp:f32,phase:[f64;2])->Result<(),String>{
   let density=zoom*ppp;
-  if !zoom.is_finite()||zoom<=0.||!ppp.is_finite()||ppp<=0.||!density.is_finite()||density<=0.||phase.iter().any(|p|!p.is_finite()||p.abs()>1_000_000.)||rows.len()>100_000||g.indices.len()!=rows.len()*6{return Err("Invalid immutable source span admission".into());}
-  for (row,indices) in rows.iter().zip(g.indices.chunks_exact(6)){
+  if !zoom.is_finite()||zoom<=0.||!ppp.is_finite()||ppp<=0.||!density.is_finite()||density<=0.||phase.iter().any(|p|!p.is_finite()||p.abs()>1_000_000.)||rows.len()>100_000||indices.len()!=rows.len()*6{return Err("Invalid immutable source span admission".into());}
+  for (row,indices) in rows.iter().zip(indices.chunks_exact(6)){
    let right=row.x.checked_add(row.len).ok_or("Source span integer overflow")?;let bottom=row.y.checked_add(1).ok_or("Source span integer overflow")?;
    if row.len<=0||[row.x,row.y,right,bottom].iter().any(|p|p.unsigned_abs()>1_000_000)||indices[0]!=indices[3]||indices[2]!=indices[4]{return Err("Invalid source span quad topology/domain".into());}
    let expected=[[row.x,row.y],[right,row.y],[right,bottom],[row.x,bottom]];
@@ -61,12 +65,26 @@ impl SourceSpans {
     if vertex.position!=expected||vertex.coverage!=f32::from(row.coverage)/255.{return Err("Source span metadata differs from immutable geometry".into());}
    }
   }
-  Ok(Self{rows:rows.into(),zoom,ppp,phase})
+  Ok(())
  }
+}
+/// Annotation-only mixed layers. Direct layers may overlap internally only
+/// because admission requires every participating batch to write opaque pixels
+/// without destination access. Coverage layers retain the ordinary span proof.
+#[derive(Debug)]
+pub struct AnnotationLayers {grid:SourceSpans,direct:Arc<[std::ops::Range<u32>]>}
+impl AnnotationLayers {
+ pub fn translation(&self,pose:Pose,ppp:f32)->Result<[i32;2],String>{self.grid.translation(pose,ppp)}
+ pub fn direct_ranges(&self)->&[std::ops::Range<u32>]{&self.direct}
+}
+#[derive(Debug)]
+pub enum AnnotationLayer {
+ Spans {range:std::ops::Range<u32>,rows:Vec<SourceSpan>},
+ Opaque {range:std::ops::Range<u32>},
 }
 /// ID is allocated once for this immutable allocation. Changing palette/pose
 /// retains ID; changing geometry constructs a fresh ID, preventing stale cache.
-#[derive(Debug)]pub struct Geometry {id:u64,vertices:Arc<[Vertex]>,indices:Arc<[u32]>,ordered_draws:Option<Arc<[std::ops::Range<u32>]>>,bounds:[[f32;2];2],opaque_coverage:bool,premultiplied_palette:Option<Arc<[PremultipliedRgba8]>>,source_spans:Option<Arc<SourceSpans>>}
+#[derive(Debug)]pub struct Geometry {id:u64,vertices:Arc<[Vertex]>,indices:Arc<[u32]>,ordered_draws:Option<Arc<[std::ops::Range<u32>]>>,bounds:[[f32;2];2],opaque_coverage:bool,premultiplied_palette:Option<Arc<[PremultipliedRgba8]>>,source_spans:Option<Arc<SourceSpans>>,annotation_layers:Option<Arc<AnnotationLayers>>}
 impl Geometry {
  pub fn new(vertices:Vec<Vertex>,indices:Vec<u32>)->Result<Arc<Self>,String>{
   if vertices.len()>u32::MAX as usize||indices.len()>u32::MAX as usize{return Err("CAD2D geometry exceeds index domain".into());}
@@ -75,7 +93,7 @@ impl Geometry {
   let mut bounds=[[0.;2];2];if let Some(first)=vertices.first(){bounds=[first.position;2];for v in &vertices{for axis in 0..2{bounds[0][axis]=bounds[0][axis].min(v.position[axis]);bounds[1][axis]=bounds[1][axis].max(v.position[axis]);}}}
   static NEXT:AtomicU64=AtomicU64::new(1);let id=NEXT.fetch_update(Ordering::Relaxed,Ordering::Relaxed,|v|v.checked_add(1)).map_err(|_|"CAD2D geometry identity exhausted")?;
   let opaque_coverage=vertices.iter().all(|v|v.coverage==1.);
-  Ok(Arc::new(Self{id,vertices:vertices.into(),indices:indices.into(),ordered_draws:None,bounds,opaque_coverage,premultiplied_palette:None,source_spans:None}))
+  Ok(Arc::new(Self{id,vertices:vertices.into(),indices:indices.into(),ordered_draws:None,bounds,opaque_coverage,premultiplied_palette:None,source_spans:None,annotation_layers:None}))
  }
  /// Pixel-aligned source span producer declares nonoverlapping ordered draw ranges.
  /// Metadata partitions all indices; a caller must not use this for arbitrary
@@ -94,6 +112,31 @@ impl Geometry {
   if self.ordered_draws.is_some(){for v in self.bounds{for axis in 0..2{let product=v[axis]*pose.scale[axis];let sum=product+pose.translation[axis];if !product.is_finite()||!sum.is_finite()||!(sum*2.).is_finite(){return Err("CAD2D pose overflows shader f32 intermediates".into());}let p=(f64::from(v[axis])*f64::from(pose.scale[axis])+f64::from(pose.translation[axis]))*f64::from(ppp);if !p.is_finite()||p.abs()>1_000_000.{return Err("CAD2D ordered pose exceeds bounded physical domain".into());}}}}Ok(())
  }
  pub fn source_spans(&self)->Option<&Arc<SourceSpans>>{self.source_spans.as_ref()}
+ pub fn annotation_layers(&self)->Option<&Arc<AnnotationLayers>>{self.annotation_layers.as_ref()}
+ pub fn new_with_annotation_layers(vertices:Vec<Vertex>,indices:Vec<u32>,layers:Vec<AnnotationLayer>,ppp:f32)->Result<Arc<Self>,String>{
+  if layers.len()>100_000||!ppp.is_finite()||ppp<=0.{return Err("Annotation layer count/density admission exceeded".into());}
+  let mut g=Self::new(vertices,indices)?;let mut end=0;let mut direct=Vec::new();let mut ranges=Vec::new();
+  direct.try_reserve(layers.len()).map_err(|_|"Annotation direct metadata allocation failed")?;
+  ranges.try_reserve(layers.len()).map_err(|_|"Annotation ordered metadata allocation failed")?;
+  for layer in layers{
+   let range=match &layer{AnnotationLayer::Spans{range,..}|AnnotationLayer::Opaque{range}=>range};
+   if range.start!=end||range.end<=range.start||range.end%3!=0||range.end as usize>g.indices.len(){return Err("Annotation layers do not partition geometry".into());}end=range.end;
+   match &layer{
+    AnnotationLayer::Opaque{..}=>{
+     if g.indices[range.start as usize..range.end as usize].iter().any(|&i|g.vertices[i as usize].coverage!=1.){return Err("Direct annotation coverage must be opaque".into());}
+     direct.push(range.clone());
+    }
+    AnnotationLayer::Spans{rows,..}=>{
+     verify_disjoint_span_draws(&g,std::slice::from_ref(range))?;
+     SourceSpans::validate_rows(&g,&g.indices[range.start as usize..range.end as usize],rows,1.,ppp,[0.;2])?;
+    }
+   }
+   ranges.push(range.clone());
+  }
+  if end as usize!=g.indices.len(){return Err("Annotation layers do not cover geometry".into());}
+  let grid=SourceSpans{rows:Arc::from([]),zoom:1.,ppp,phase:[0.;2]};
+  let inner=Arc::get_mut(&mut g).unwrap();inner.ordered_draws=Some(ranges.into());inner.annotation_layers=Some(Arc::new(AnnotationLayers{grid,direct:direct.into()}));Ok(g)
+ }
  pub fn new_with_source_spans(vertices:Vec<Vertex>,indices:Vec<u32>,ranges:Vec<std::ops::Range<u32>>,spans:Vec<SourceSpan>,zoom:f32,ppp:f32,phase:[f64;2])->Result<Arc<Self>,String>{
   let mut geometry=Self::new_with_ordered_draws(vertices,indices,ranges)?;
   let source=SourceSpans::validated(&geometry,spans,zoom,ppp,phase)?;
@@ -118,7 +161,12 @@ impl Geometry {
  pub fn is_opaque(&self,batches:&[Batch])->bool{self.opaque_coverage&&self.premultiplied_palette.as_ref().map_or_else(||batches.iter().all(|b|b.color.0[3]==1.),|colors|colors.len()==batches.len()&&colors.iter().all(|c|c.bytes()[3]==255))}
  pub fn id(&self)->u64{self.id}pub fn vertices(&self)->&[Vertex]{&self.vertices}pub fn indices(&self)->&[u32]{&self.indices}
  pub fn logical_bytes(&self)->u64{self.vertices.len()as u64*std::mem::size_of::<Vertex>()as u64+self.indices.len()as u64*4}
- pub fn validate_batches(&self,batches:&[Batch])->Result<(),String>{if self.premultiplied_palette.as_ref().is_some_and(|colors|colors.len()!=batches.len()){return Err("CAD2D exact palette batch count mismatch".into());}for b in batches{b.color.validate()?;if b.first%3!=0||b.count%3!=0||b.first.checked_add(b.count).is_none_or(|end|end as usize>self.indices.len()){return Err("CAD2D batch index bounds invalid".into());}}Ok(())}
+ pub fn validate_batches(&self,batches:&[Batch])->Result<(),String>{if self.premultiplied_palette.as_ref().is_some_and(|colors|colors.len()!=batches.len()){return Err("CAD2D exact palette batch count mismatch".into());}for (batch_index,b) in batches.iter().enumerate(){b.color.validate()?;if b.first%3!=0||b.count%3!=0||b.first.checked_add(b.count).is_none_or(|end|end as usize>self.indices.len()){return Err("CAD2D batch index bounds invalid".into());}
+ if self.annotation_layers.as_ref().is_some_and(|layers|layers.direct.iter().any(|range|b.first<range.end&&range.start<b.first+b.count)){
+  let alpha=self.premultiplied_palette.as_ref().map_or(b.color.0[3]==1.,|p|p[batch_index].bytes()[3]==255);
+  if !alpha{return Err("Direct annotation batch must be opaque".into());}
+ }
+ }Ok(())}
 }
 #[cfg(test)]mod tests {
  use super::*;
@@ -218,5 +266,26 @@ fn verify_disjoint_span_draws(g:&Geometry,ranges:&[std::ops::Range<u32>])->Resul
   assert!(g.resolve_batch_colors(&[]).unwrap_err().contains("count mismatch"));
   let plain=Geometry::new(vec![Vertex{position:[0.;2],coverage:1.};3],vec![0,1,2]).unwrap();let batches=[Batch{first:0,count:3,color:EncodedRgba::from_bytes([17,31,63,100],1.).unwrap()}];
   assert_eq!(plain.palette_cache_identity(),0);assert_eq!(plain.resolve_batch_colors(&batches).unwrap(),vec![batches[0].color.qt_premultiplied8().unwrap()]);
+ }
+}
+
+#[cfg(test)]mod annotation_mixed_admission {
+ use super::*;
+ #[test]fn direct_overlap_requires_opaque_palette_and_grid_identity(){
+  let vertices=vec![Vertex{position:[0.,0.],coverage:1.},Vertex{position:[2.,0.],coverage:1.},Vertex{position:[0.,2.],coverage:1.}];
+  let g=Geometry::new_with_annotation_layers(vertices.clone(),vec![0,1,2,0,1,2],vec![AnnotationLayer::Opaque{range:0..6}],1.).unwrap();
+  let b=Batch{first:0,count:6,color:EncodedRgba::from_bytes([10,20,30,255],1.).unwrap()};
+  g.validate_batches(&[b]).unwrap();
+  assert!(g.validate_batches(&[Batch{color:EncodedRgba::from_bytes([10,20,30,254],1.).unwrap(),..b}]).is_err());
+  let layout=g.annotation_layers().unwrap();assert_eq!(layout.translation(Pose::default(),1.).unwrap(),[0;2]);
+  assert!(layout.translation(Pose{translation:[0.25,0.],..Default::default()},1.).is_err());
+  assert!(layout.translation(Pose::default(),1.25).is_err());
+  let mut partial=vertices;partial[0].coverage=0.5;
+  assert!(Geometry::new_with_annotation_layers(partial,vec![0,1,2],vec![AnnotationLayer::Opaque{range:0..3}],1.).is_err());
+ }
+ #[test]fn coverage_layers_still_require_literal_source_span_geometry(){
+  let v=[[0.,0.],[2.,0.],[2.,1.],[0.,1.]].map(|position|Vertex{position,coverage:0.5}).to_vec();
+  let i=vec![0,1,2,0,2,3];let row=SourceSpan{x:0,y:0,len:2,coverage:128};
+  assert!(Geometry::new_with_annotation_layers(v,i,vec![AnnotationLayer::Spans{range:0..6,rows:vec![row]}],1.).is_err());
  }
 }

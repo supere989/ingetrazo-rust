@@ -485,11 +485,17 @@ unsafe{context.device.create_descriptor_set_layout(&vk::DescriptorSetLayoutCreat
         let mut state=handle.inner.state.lock().map_err(|_|"Annotation state poisoned")?;
         state.pose.validate()?;
         state.geometry.validate_ordered_pose(state.pose,pixels_per_point)?;
-        state.geometry.source_spans().ok_or("Annotation immutable spans absent")?.translation(state.pose,pixels_per_point)?;
+        if let Some(layers)=state.geometry.annotation_layers(){layers.translation(state.pose,pixels_per_point)?;}else{state.geometry.source_spans().ok_or("Annotation immutable spans absent")?.translation(state.pose,pixels_per_point)?;}
         let already_admitted=self.annotation_admission.as_ref().is_some_and(|key|key.matches(&state,count));
         let opaque=if already_admitted{self.annotation_admission.as_ref().unwrap().opaque}else{
             state.geometry.validate_batches(&state.batches)?;
             admit_gates(state.gates.as_deref(),state.batches.len(),count)?;
+            if let Some(layers)=state.geometry.annotation_layers(){
+                for (batch,draw) in state.batches.iter().zip(state.gates.as_ref().unwrap().iter()){
+                    if layers.direct_ranges().iter().any(|range|batch.first<range.end&&range.start<batch.first+batch.count)
+                      &&draw.composition!=crate::annotation_overlay_geometry::Composition::SpanByte{return Err("Direct annotation operator must write opaque source".into());}
+                }
+            }
             let opaque=state.geometry.is_opaque(&state.batches)&&state.gates.as_ref().is_none_or(|gates|gates.iter().all(|g|!matches!(g.composition,crate::annotation_overlay_geometry::Composition::GlyphLcd(mask) if mask!=[255;3])));
             if !opaque{
                 state.geometry.ordered_draws().ok_or("Annotation ordered span metadata absent")?;

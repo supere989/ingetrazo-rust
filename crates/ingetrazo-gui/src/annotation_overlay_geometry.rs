@@ -1,5 +1,6 @@
 //! Ordered physical annotation spans. Coverage is immutable cached geometry;
 //! retained GPU depth gates remain separate from this CPU producer.
+#[path="annotation_widget_primitives.rs"] mod widget_primitives;
 use std::{sync::Arc,collections::{HashMap,VecDeque}};
 use ingetrazo_formats::paper_text_layout::LayoutFont;
 use glam::DVec2;
@@ -93,12 +94,13 @@ impl Cache {
   for operation in &plan.operations {
    match &operation.primitive {
     Primitive::Line{a,b,width,color}=>{
+     if placement==GlyphPlacement::OpenGl&&color[3]==255{if let Some(v)=widget_primitives::square_cap_line(*a,*b,*width)?{writer.direct(&v,&[0,1,2,2,1,3],*color,operation.gate)?;}continue;}
      let path=PathContour{start:*a,segments:vec![Segment::Line(*b)]};
      let spans=if width*density<=1.{let path=transform_path(&path,density);ingetrazo_render::qt_cosmetic::rasterize_path(&path,false,width*density,self.limits.spans)?}
       else{ingetrazo_render::qt_line::rasterize(a.map(|v|v*density),b.map(|v|v*density),width*density,clip,self.limits.cells,self.limits.spans)?};
      writer.layer(spans,*color,operation.gate)?;
     }
-    Primitive::Polygon{points,color}=>{let contour=points.map(|p|[p[0]*density,p[1]*density]);writer.layer(qt_gray::rasterize(&[contour.to_vec()],self.limits.cells,self.limits.spans)?,*color,operation.gate)?;}
+    Primitive::Polygon{points,color}=>{if placement==GlyphPlacement::OpenGl&&color[3]==255{let v=points.map(|p|p.map(|v|v as f32));writer.direct(&v,&[0,1,2],*color,operation.gate)?;continue;}let contour=points.map(|p|[p[0]*density,p[1]*density]);writer.layer(qt_gray::rasterize(&[contour.to_vec()],self.limits.cells,self.limits.spans)?,*color,operation.gate)?;}
     Primitive::Ellipse{center,radius,width,color}=>{
      let size=DVec2::from_array(*radius)*2.;let mut path=crate::composer_cad::source_closed_curve(&ingetrazo_core::sheet_shape::ShapePath::Ellipse{size}).ok_or("Annotation ellipse path absent")?;
      translate_path(&mut path,[center[0]-radius[0],center[1]-radius[1]]);
@@ -188,9 +190,30 @@ fn translate_path(path:&mut PathContour,delta:[f64;2]){
 fn transform_path(path:&PathContour,density:f64)->PathContour{
  let mut path=path.clone();let p=|p:&mut [f64;2]|{p[0]*=density;p[1]*=density;};p(&mut path.start);for segment in &mut path.segments{match segment{Segment::Line(to)=>p(to),Segment::Cubic{control1,control2,to}=>{p(control1);p(control2);p(to);}}}path
 }
-struct Writer {density:f64,limits:Limits,vertices:Vec<Vertex>,indices:Vec<u32>,rows:Vec<SourceSpan>,ranges:Vec<std::ops::Range<u32>>,batches:Vec<Batch>,gates:Vec<Draw>}
+struct Writer {density:f64,limits:Limits,vertices:Vec<Vertex>,indices:Vec<u32>,rows:Vec<SourceSpan>,ranges:Vec<std::ops::Range<u32>>,direct_ranges:Vec<std::ops::Range<u32>>,batches:Vec<Batch>,gates:Vec<Draw>}
 impl Writer {
- fn new(density:f64,limits:Limits)->Self{Self{density,limits,vertices:Vec::new(),indices:Vec::new(),rows:Vec::new(),ranges:Vec::new(),batches:Vec::new(),gates:Vec::new()}}
+ fn new(density:f64,limits:Limits)->Self{Self{density,limits,vertices:Vec::new(),indices:Vec::new(),rows:Vec::new(),ranges:Vec::new(),direct_ranges:Vec::new(),batches:Vec::new(),gates:Vec::new()}}
+ fn direct(&mut self,vertices:&[[f32;2]],indices:&[u32],color:[u8;4],gate:Gate)->Result<(),String>{
+  if color[3]!=255||vertices.iter().flatten().any(|v|!v.is_finite())||indices.iter().any(|&i|i as usize>=vertices.len()){return Err("Direct annotation primitive admission failed".into());}
+  let vc=self.vertices.len().checked_add(vertices.len()).ok_or("Annotation vertex overflow")?;
+  let ic=self.indices.len().checked_add(indices.len()).ok_or("Annotation index overflow")?;
+  if vc>u32::MAX as usize||ic>u32::MAX as usize{return Err("Annotation index domain exceeded".into());}
+  let bytes=vc.checked_mul(std::mem::size_of::<Vertex>()).and_then(|n|ic.checked_mul(4).and_then(|i|n.checked_add(i)))
+   .and_then(|n|self.rows.len().checked_mul(std::mem::size_of::<SourceSpan>()).and_then(|i|n.checked_add(i)))
+   .and_then(|n|(self.ranges.len()+self.direct_ranges.len()+2).checked_mul(std::mem::size_of::<std::ops::Range<u32>>()).and_then(|i|n.checked_add(i)))
+   .and_then(|n|(self.batches.len()+1).checked_mul(std::mem::size_of::<Batch>()+std::mem::size_of::<Draw>()).and_then(|i|n.checked_add(i)));
+  if bytes.is_none_or(|n|n>self.limits.geometry_bytes){return Err("Annotation direct retained admission exceeded".into());}
+  self.vertices.try_reserve(vertices.len()).map_err(|_|"Annotation direct vertices allocation failed")?;
+  self.indices.try_reserve(indices.len()).map_err(|_|"Annotation direct indices allocation failed")?;
+  self.ranges.try_reserve(1).map_err(|_|"Annotation direct range allocation failed")?;
+  self.direct_ranges.try_reserve(1).map_err(|_|"Annotation direct proof allocation failed")?;
+  self.batches.try_reserve(1).map_err(|_|"Annotation direct batch allocation failed")?;
+  self.gates.try_reserve(1).map_err(|_|"Annotation direct gate allocation failed")?;
+  let first=self.indices.len()as u32;let base=self.vertices.len()as u32;
+  self.vertices.extend(vertices.iter().map(|&position|Vertex{position,coverage:1.}));self.indices.extend(indices.iter().map(|&i|base+i));
+  let range=first..self.indices.len()as u32;self.ranges.push(range.clone());self.direct_ranges.push(range.clone());
+  self.batches.push(Batch{first,count:range.end-first,color:EncodedRgba::from_bytes(color,1.)?});self.gates.push(Draw{gate,composition:Composition::SpanByte,straight_rgba:color});Ok(())
+ }
  fn layer(&mut self,spans:Vec<Span>,color:[u8;4],gate:Gate)->Result<(),String>{self.layer_with_composition(spans,color,gate,Composition::SpanByte)}
  fn layer_with_composition(&mut self,spans:Vec<Span>,color:[u8;4],gate:Gate,composition:Composition)->Result<(),String>{
   if spans.is_empty(){return Ok(());}
@@ -224,7 +247,17 @@ impl Writer {
   self.batches.push(Batch{first,count:self.indices.len()as u32-first,color:EncodedRgba::from_bytes(color,1.)?});self.gates.push(Draw{gate,composition,straight_rgba:color});Ok(())
  }
  fn finish(self)->Result<Mesh,String>{
-  let geometry=Geometry::new_with_source_spans(self.vertices,self.indices,self.ranges,self.rows,1.,self.density as f32,[0.;2])?;
+  let geometry=if self.direct_ranges.is_empty(){Geometry::new_with_source_spans(self.vertices,self.indices,self.ranges,self.rows,1.,self.density as f32,[0.;2])?}else{
+   use ingetrazo_render::cad2d::AnnotationLayer;
+   let mut layers=Vec::new();layers.try_reserve(self.ranges.len()).map_err(|_|"Annotation layer allocation failed")?;
+   let mut rows=self.rows.into_iter();let mut direct=self.direct_ranges.into_iter().peekable();
+   for range in self.ranges{
+    if direct.peek()==Some(&range){direct.next();layers.push(AnnotationLayer::Opaque{range});}
+    else{let n=(range.end-range.start)as usize/6;let mut part=Vec::new();part.try_reserve(n).map_err(|_|"Annotation source layer allocation failed")?;part.extend(rows.by_ref().take(n));if part.len()!=n{return Err("Annotation source rows absent".into());}layers.push(AnnotationLayer::Spans{range,rows:part});}
+   }
+   if rows.next().is_some()||direct.next().is_some(){return Err("Annotation layer inventory mismatch".into());}
+   Geometry::new_with_annotation_layers(self.vertices,self.indices,layers,self.density as f32)?
+  };
   Ok(Mesh{geometry,batches:self.batches.into(),gates:self.gates.into()})
  }
 }
