@@ -17,6 +17,8 @@ env:
   CARGO_INCREMENTAL: 0
 jobs:
   windows-native-process:
+    # Dedicated Metal repair branches execute actual Apple acceptance only.
+    if: ${{ !startsWith(github.ref, 'refs/heads/review/metal-') }}
     name: Native Windows compile and isolated recovery
     runs-on: windows-2022
     steps:
@@ -154,7 +156,7 @@ jobs:
           if-no-files-found: error
   metal-cross-compilation:
     # Platform repair branches exercise their affected platform only.
-    if: github.ref != 'refs/heads/review/platform-startup' && github.ref != 'refs/heads/review/history-repair'
+    if: github.ref != 'refs/heads/review/platform-startup' && github.ref != 'refs/heads/review/history-repair' && !startsWith(github.ref, 'refs/heads/review/metal-')
     name: Native Metal compile (${{ matrix.target }})
     runs-on: ubuntu-24.04
     strategy:
@@ -189,7 +191,7 @@ jobs:
           if-no-files-found: error
   compilation-and-tests:
     # Platform repair branches exercise their affected platform only.
-    if: github.ref != 'refs/heads/review/platform-startup'
+    if: github.ref != 'refs/heads/review/platform-startup' && !startsWith(github.ref, 'refs/heads/review/metal-')
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4

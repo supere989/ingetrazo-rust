@@ -173,6 +173,12 @@ fn run() -> Result<(), String> {
         scene.section_planes.push(ingetrazo_core::section::SectionPlane::new(DVec3::ZERO,DVec3::X,"cut","1"));
         scene.show_section_cuts=true;
         let section_stats=world.stats;
+        // This generated control requests clipping alone. First prove that the
+        // separate, still-unimplemented fill stage refuses without publication.
+        let fill_error=prepare(&mut world,&mut adapter,&scene,rev,&style,DVec3::new(0.,-2.,2.)).err().ok_or("Unsupported section fill accepted")?;
+        assert!(fill_error.contains("section fill"));
+        assert_eq!(world.stats.geometry_uploads,section_stats.geometry_uploads);
+        scene.show_section_fill=false;
         let clipped=read(prepare(&mut world,&mut adapter,&scene,rev,&style,DVec3::new(0.,-2.,2.))?)?;
         assert_ne!(clipped,edited,"Active section did not change known model pixels");
         assert_eq!(world.stats.geometry_uploads,section_stats.geometry_uploads);
@@ -218,7 +224,7 @@ fn run() -> Result<(), String> {
         let committed: u64 = budget.heaps.iter().map(|h| h.committed).sum();
         let reserved: u64 = budget.heaps.iter().map(|h| h.reserved).sum();
         assert_eq!((committed, reserved), (0, 0));
-        std::fs::write(out.join("report.json"),serde_json::to_vec_pretty(&serde_json::json!({"passed":true,"extent":[64,64],"samples":4,"default_style":true,"section_pixel_contrast":true,"section_restore_exact":true,"section_extra_geometry_uploads":0,"warm_extra_profile_uploads":0,"warm_extra_geometry_uploads":0,"camera_extra_base_uploads":0,"unchanged_selection_camera_extra_profile_uploads":0,"profile_builds":accepted.profile_builds,"profile_uploads":accepted.profile_uploads,"profile_upload_bytes":accepted.profile_upload_bytes,"unsupported_grid_refusal":error,"ledger_committed":committed,"ledger_reserved":reserved})).unwrap()).map_err(|e|e.to_string())?;
+        std::fs::write(out.join("report.json"),serde_json::to_vec_pretty(&serde_json::json!({"passed":true,"extent":[64,64],"samples":4,"default_style":true,"unsupported_section_fill_refusal":fill_error,"section_pixel_contrast":true,"section_restore_exact":true,"section_extra_geometry_uploads":0,"warm_extra_profile_uploads":0,"warm_extra_geometry_uploads":0,"camera_extra_base_uploads":0,"unchanged_selection_camera_extra_profile_uploads":0,"profile_builds":accepted.profile_builds,"profile_uploads":accepted.profile_uploads,"profile_upload_bytes":accepted.profile_upload_bytes,"unsupported_grid_refusal":error,"ledger_committed":committed,"ledger_reserved":reserved})).unwrap()).map_err(|e|e.to_string())?;
         Ok(())
     })
 }
