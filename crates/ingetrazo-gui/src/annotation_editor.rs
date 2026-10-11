@@ -1,14 +1,56 @@
 //! Source Select double-click annotation text commands and buffered native dialog.
 use crate::IngeTrazoApp;
-use ingetrazo_tools::base::AnnotationEditTarget;
+use ingetrazo_tools::base::{AnnotationEditTarget, TextCreationRequest};
+#[derive(Clone, Debug)]
+pub enum Target {
+    Existing(AnnotationEditTarget),
+    Create(TextCreationRequest),
+}
 #[derive(Clone, Debug)]
 pub struct Editor {
-    pub target: AnnotationEditTarget,
+    pub target: Target,
     pub text: String,
     pub measured: Option<String>,
     focus_pending: bool,
 }
 impl IngeTrazoApp {
+    pub(crate) fn format_text_suggestion(
+        &self,
+        suggestion: ingetrazo_tools::base::TextSuggestion,
+        point: glam::DVec3,
+    ) -> Result<String, String> {
+        // Model units are global even while an edit exposes a local Scene.
+        let units_scene = self
+            .component_edit_stack
+            .first()
+            .map(|s| &s.original_scene)
+            .unwrap_or(&self.scene);
+        let (unit, precision) = crate::annotation_plan::label_units(units_scene)?;
+        match suggestion {
+            ingetrazo_tools::base::TextSuggestion::Length(length) => {
+                ingetrazo_render::annotations::format_length(length, unit, precision)
+            }
+            ingetrazo_tools::base::TextSuggestion::Area(area) => {
+                let (scaled, suffix) = match unit {
+                    "m" => (area, "m"),
+                    "cm" => (area * 1e4, "cm"),
+                    "mm" => (area * 1e6, "mm"),
+                    u if u.starts_with("ft") => (area / (0.3048 * 0.3048), "ft"),
+                    _ => (area / (0.0254 * 0.0254), "in"),
+                };
+                let precision =
+                    usize::try_from(precision.max(0)).map_err(|_| "Text precision overflow")?;
+                if precision > 100 {
+                    return Err("Text precision exceeds supported admission".into());
+                }
+                Ok(format!("{:.*} {}²", precision, scaled, suffix))
+            }
+            ingetrazo_tools::base::TextSuggestion::Coordinates => {
+                Ok(format!("({:.2}, {:.2}, {:.2})", point.x, point.y, point.z))
+            }
+        }
+    }
+
     pub fn begin_annotation_edit(&mut self, target: AnnotationEditTarget) -> Result<(), String> {
         let (text, measured) = match target {
             AnnotationEditTarget::Label(id) => {
@@ -44,7 +86,7 @@ impl IngeTrazoApp {
             }
         };
         self.annotation_editor = Some(Editor {
-            target,
+            target: Target::Existing(target),
             text,
             measured,
             focus_pending: true,
@@ -69,13 +111,31 @@ impl IngeTrazoApp {
             .annotation_editor
             .as_ref()
             .ok_or("No annotation edit is pending")?;
-        let target = editor.target;
+        let target = editor.target.clone();
         let entered = editor
             .text
             .trim_matches(|c: char| c.is_whitespace() || matches!(c, '\u{1c}'..='\u{1f}'))
             .to_owned();
         match target {
-            AnnotationEditTarget::Label(token) => {
+            Target::Create(draft) => {
+                if entered.is_empty() {
+                    self.cancel_annotation_edit();
+                    return Ok(false);
+                }
+                if !draft.anchor.is_finite() || !draft.offset.is_finite() {
+                    return Err("Text placement must be finite".into());
+                }
+                let label =
+                    ingetrazo_core::textlabel::TextLabel::new(draft.anchor, draft.offset, entered);
+                self.save_undo_state();
+                self.undo_stack
+                    .last_mut()
+                    .unwrap()
+                    .history_annotation_create = Some(label.history_id);
+                self.scene.text_labels.push(label);
+                self.active_tool.finish_text_creation();
+            }
+            Target::Existing(AnnotationEditTarget::Label(token)) => {
                 let id = self
                     .scene
                     .text_labels
@@ -94,7 +154,7 @@ impl IngeTrazoApp {
                 self.undo_stack.last_mut().unwrap().history_annotation_edit = true;
                 self.scene.text_labels[id].text = entered;
             }
-            AnnotationEditTarget::Dimension(token) => {
+            Target::Existing(AnnotationEditTarget::Dimension(token)) => {
                 let id = self
                     .scene
                     .dimensions
@@ -127,7 +187,22 @@ impl IngeTrazoApp {
         self.annotation_editor = None;
         Ok(true)
     }
+    pub fn begin_text_creation(&mut self, draft: TextCreationRequest) {
+        self.annotation_editor = Some(Editor {
+            text: draft.suggestion.clone(),
+            target: Target::Create(draft),
+            measured: None,
+            focus_pending: true,
+        });
+    }
     pub fn cancel_annotation_edit(&mut self) {
+        if self
+            .annotation_editor
+            .as_ref()
+            .is_some_and(|e| matches!(e.target, Target::Create(_)))
+        {
+            self.active_tool.finish_text_creation();
+        }
         self.annotation_editor = None;
     }
 }
@@ -135,7 +210,10 @@ pub(crate) fn render(app: &mut IngeTrazoApp, ctx: &egui::Context) {
     let Some(editor) = app.annotation_editor.as_mut() else {
         return;
     };
-    let label = matches!(editor.target, AnnotationEditTarget::Label(_));
+    let label = matches!(
+        editor.target,
+        Target::Existing(AnnotationEditTarget::Label(_)) | Target::Create(_)
+    );
     let mut accept = false;
     let mut cancel = false;
     egui::Modal::new(egui::Id::new("annotation_text_editor")).show(ctx, |ui| {
@@ -181,6 +259,119 @@ pub(crate) fn render(app: &mut IngeTrazoApp, ctx: &egui::Context) {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn text_creation_real_modal_accept_cancel_and_live_selection_history() {
+        use ingetrazo_core::{math::Ray, scene::SelectionItem, textlabel::TextLabel};
+        use ingetrazo_tools::base::{ToolContext, ToolType};
+        let mut a = IngeTrazoApp::new();
+        a.system_clipboard = None;
+        a.scene.text_labels.push(TextLabel::new(
+            glam::DVec3::ZERO,
+            glam::DVec3::Y,
+            "existing",
+        ));
+        a.scene.select(SelectionItem::TextLabel(0));
+        a.set_tool(ToolType::Text);
+        let input = |p| ToolContext::new(p, Ray::new(p + glam::DVec3::Z, -glam::DVec3::Z));
+        let open = |a: &mut IngeTrazoApp| {
+            a.dispatch_tool_click(&input(glam::DVec3::ZERO));
+            a.dispatch_tool_move(&input(glam::DVec3::X));
+            a.dispatch_tool_click(&input(glam::DVec3::X));
+        };
+        let original = a.scene.clone();
+        open(&mut a);
+        assert_eq!(a.scene, original);
+        assert!(a.undo_stack.is_empty());
+        assert_eq!(a.active_tool.snap_anchor(), Some(glam::DVec3::ZERO));
+        let ctx = egui::Context::default();
+        let frame = |a: &mut IngeTrazoApp, events| {
+            ctx.run(
+                egui::RawInput {
+                    screen_rect: Some(egui::Rect::from_min_size(
+                        egui::Pos2::ZERO,
+                        egui::vec2(800., 600.),
+                    )),
+                    events,
+                    ..Default::default()
+                },
+                |ctx| {
+                    egui::CentralPanel::default()
+                        .show(ctx, |ui| crate::viewport::render_viewport(a, ui));
+                    render(a, ctx);
+                },
+            )
+        };
+        frame(&mut a, vec![]);
+        assert_eq!(
+            ctx.memory(|m| m.focused()),
+            Some(egui::Id::new("annotation_editor_text"))
+        );
+        frame(
+            &mut a,
+            vec![egui::Event::Key {
+                key: egui::Key::Escape,
+                physical_key: None,
+                pressed: true,
+                repeat: false,
+                modifiers: egui::Modifiers::NONE,
+            }],
+        );
+        assert!(a.annotation_editor.is_none());
+        assert!(a.active_tool.snap_anchor().is_none());
+        assert_eq!(a.scene, original);
+        assert!(a.undo_stack.is_empty());
+        open(&mut a);
+        a.annotation_editor.as_mut().unwrap().text = "authored".into();
+        frame(&mut a, vec![]);
+        frame(
+            &mut a,
+            vec![egui::Event::Key {
+                key: egui::Key::Enter,
+                physical_key: None,
+                pressed: true,
+                repeat: false,
+                modifiers: egui::Modifiers::NONE,
+            }],
+        );
+        assert!(a.annotation_editor.is_some());
+        assert!(a.annotation_editor.as_ref().unwrap().text.contains('\n'));
+        a.annotation_editor.as_mut().unwrap().text = "  authored\nlabel  ".into();
+        let out = frame(&mut a, vec![]);
+        let ok = out
+            .shapes
+            .iter()
+            .find_map(|s| {
+                if let egui::Shape::Text(t) = &s.shape {
+                    (t.galley.job.text == "OK").then_some(t.pos + t.galley.rect.center().to_vec2())
+                } else {
+                    None
+                }
+            })
+            .expect("actual OK button text");
+        let pointer = |pressed| egui::Event::PointerButton {
+            pos: ok,
+            button: egui::PointerButton::Primary,
+            pressed,
+            modifiers: egui::Modifiers::NONE,
+        };
+        frame(&mut a, vec![egui::Event::PointerMoved(ok), pointer(true)]);
+        frame(&mut a, vec![pointer(false)]);
+        assert!(a.annotation_editor.is_none());
+        assert!(a.active_tool.snap_anchor().is_none());
+        assert_eq!(a.scene.text_labels.len(), 2);
+        assert_eq!(a.scene.text_labels[1].text, "authored\nlabel");
+        assert_eq!(a.undo_stack.len(), 1);
+        assert!(a.scene.selection.contains(&SelectionItem::TextLabel(0)));
+        a.scene.select(SelectionItem::TextLabel(1));
+        a.undo();
+        assert_eq!(a.scene.text_labels.len(), 1);
+        assert_eq!(a.scene.selection.len(), 1);
+        assert!(a.scene.selection.contains(&SelectionItem::TextLabel(0)));
+        a.redo();
+        assert_eq!(a.scene.text_labels.len(), 2);
+        assert_eq!(a.scene.selection.len(), 1);
+    }
+
     #[test]
     fn locked_target_refuses_before_history_and_preserves_redo() {
         let mut a = IngeTrazoApp::new();
@@ -525,4 +716,70 @@ mod tests {
         assert!(a.redo_stack.is_empty());
         assert_eq!(a.scene.text_labels[0].text, "source glyph");
     }
+}
+
+/// AddTextLabel owns only membership of its label, not the user's live selection.
+pub(crate) fn preserve_creation_selection(
+    current: &ingetrazo_core::scene::Scene,
+    target: &mut ingetrazo_core::scene::Scene,
+) {
+    let (selection, order) = creation_selection(current, &target.text_labels);
+    target.selection = selection;
+    target.selection_order = order;
+}
+pub(crate) fn creation_selection(
+    current: &ingetrazo_core::scene::Scene,
+    labels: &[ingetrazo_core::textlabel::TextLabel],
+) -> (
+    std::collections::HashSet<ingetrazo_core::scene::SelectionItem>,
+    Vec<ingetrazo_core::scene::SelectionItem>,
+) {
+    use ingetrazo_core::scene::SelectionItem;
+    let mut fallback = None;
+    let mut remap = |item: &SelectionItem| match item {
+        SelectionItem::TextLabel(index) => {
+            let token = current.text_labels.get(*index)?.history_id;
+            if labels.get(*index).is_some_and(|t| t.history_id == token) {
+                Some(SelectionItem::TextLabel(*index))
+            } else {
+                let index = fallback.get_or_insert_with(|| {
+                    labels
+                        .iter()
+                        .enumerate()
+                        .map(|(i, t)| (t.history_id, i))
+                        .collect::<std::collections::HashMap<_, _>>()
+                });
+                index.get(&token).copied().map(SelectionItem::TextLabel)
+            }
+        }
+        other => Some(other.clone()),
+    };
+    let selection = current.selection.iter().filter_map(&mut remap).collect();
+    let order = current.selection_order.iter().filter_map(remap).collect();
+    (selection, order)
+}
+
+/// Global label membership can cross an edit context; geometry selection cannot.
+pub(crate) fn preserve_creation_label_selection(
+    current: &ingetrazo_core::scene::Scene,
+    target: &mut ingetrazo_core::scene::Scene,
+) {
+    use ingetrazo_core::scene::SelectionItem;
+    let (selection, order) = creation_selection(current, &target.text_labels);
+    target
+        .selection
+        .retain(|s| !matches!(s, SelectionItem::TextLabel(_)));
+    target
+        .selection_order
+        .retain(|s| !matches!(s, SelectionItem::TextLabel(_)));
+    target.selection.extend(
+        selection
+            .into_iter()
+            .filter(|s| matches!(s, SelectionItem::TextLabel(_))),
+    );
+    target.selection_order.extend(
+        order
+            .into_iter()
+            .filter(|s| matches!(s, SelectionItem::TextLabel(_))),
+    );
 }

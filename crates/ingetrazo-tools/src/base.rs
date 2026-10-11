@@ -47,6 +47,17 @@ pub struct AnnotationHits {
     pub dimension: Option<uuid::Uuid>,
 }
 
+#[derive(Clone, Copy, Debug)]
+pub enum TextSuggestion { Length(f64), Area(f64), Coordinates }
+
+/// Buffered source Text prompt. Acquisition remains owned by the tool until resolution.
+#[derive(Clone, Debug)]
+pub struct TextCreationRequest {
+    pub anchor: DVec3,
+    pub offset: DVec3,
+    pub suggestion: String,
+}
+
 #[derive(Debug, Clone)]
 pub struct ToolContext {
     pub world: DVec3,
@@ -202,6 +213,11 @@ pub trait Tool: Send + Sync {
     fn note_annotation_leader_hit(&mut self,_hit:Option<u64>) {}
     fn take_annotation_edit_request(&mut self)->Option<AnnotationEditTarget>{None}
     /// Select admission query opens a dialog without cloning a model/history snapshot.
+    fn take_text_suggestion(&mut self) -> Option<TextSuggestion> { None }
+    fn text_creation_request(&mut self) -> Option<TextCreationRequest> { None }
+    fn set_text_suggestion(&mut self, _text: String) {}
+    fn finish_text_creation(&mut self) {}
+
     fn annotation_edit_target(&mut self,_scene:&Scene,_ctx:&ToolContext)->Option<AnnotationEditTarget>{None}
     fn note_annotation_pick_error(&mut self, _error: String) {}
     fn on_click(&mut self, _scene: &mut Scene, _ctx: &ToolContext) {}

@@ -668,7 +668,7 @@ fn scene_model(scene: &Scene) -> serde_json::Value {
     doc["dimensions"] = serde_json::json!(scene.dimensions.iter().map(|d|{let mut live=d.clone();(live.start,live.end)=scene.dimension_points(d);overlay(&d.native_document,&d.native_baseline,dimension_model(&live))}).collect::<Vec<_>>());
     doc["image_planes"]=serde_json::json!(scene.image_planes.iter().map(|p|image_plane_to_json(scene,p)).collect::<Vec<_>>());
     doc["guides"] = serde_json::json!(scene.guides.iter().map(|g|overlay(&g.native_document,&g.native_baseline,guide_model(g))).collect::<Vec<_>>());
-    doc["text_labels"] = serde_json::to_value(&scene.text_labels).unwrap_or(serde_json::json!([]));
+    doc["text_labels"] = serde_json::json!(scene.text_labels.iter().map(|label| overlay(&label.native_document,&label.native_baseline,serde_json::to_value(label).expect("TextLabel model serialization"))).collect::<Vec<_>>());
     let unit = match scene.unit {
         LengthUnit::Meters => "m", LengthUnit::Centimeters => "cm",
         LengthUnit::Millimeters => "mm", LengthUnit::Inches => "in", LengthUnit::Feet => "ft"
@@ -1135,14 +1135,12 @@ pub fn load_igz(path: &Path) -> Result<Scene, IgzError> {
         }
     }
 
-    if let Some(tl_val) = s_val.get("text_labels") {
-        if let Ok(labels) = serde_json::from_value::<Vec<ingetrazo_core::textlabel::TextLabel>>(tl_val.clone()) {
-            scene.text_labels = labels;
-        } else if let Some(arr) = tl_val.as_array() {
-            for item in arr {
-                if let Ok(lab) = serde_json::from_value::<ingetrazo_core::textlabel::TextLabel>(item.clone()) {
-                    scene.text_labels.push(lab);
-                }
+    if let Some(arr) = s_val.get("text_labels").and_then(|v|v.as_array()) {
+        for raw in arr {
+            if let Ok(mut label)=serde_json::from_value::<ingetrazo_core::textlabel::TextLabel>(raw.clone()) {
+                label.native_document=std::sync::Arc::new(raw.clone());
+                label.native_baseline=std::sync::Arc::new(serde_json::to_value(&label).expect("TextLabel model serialization"));
+                scene.text_labels.push(label);
             }
         }
     }

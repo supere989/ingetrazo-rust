@@ -164,6 +164,20 @@ impl IngeTrazoApp {
     }
 
     pub fn dispatch_tool_click(&mut self, context: &ToolContext) {
+        // Text acquisition and its dialog are transient; only OK owns a model snapshot.
+        if self.active_tool_type == ingetrazo_tools::base::ToolType::Text {
+            if self.annotation_editor.is_some() { return; }
+            self.active_tool.on_click(&mut self.scene, context);
+            if let Some(suggestion)=self.active_tool.take_text_suggestion() {
+                match self.format_text_suggestion(suggestion,context.world.as_vec3().as_dvec3()) {
+                    Ok(text)=>self.active_tool.set_text_suggestion(text),
+                    Err(error)=>{self.active_tool.finish_text_creation();self.status_message=error;return;}
+                }
+            }
+            if let Some(request) = self.active_tool.text_creation_request() { self.begin_text_creation(request); }
+            return;
+        }
+
         if matches!(self.active_tool_type,ingetrazo_tools::base::ToolType::Rotate|ingetrazo_tools::base::ToolType::Scale)
             && self.scene.selection.iter().any(|s|matches!(s,ingetrazo_core::scene::SelectionItem::Guide(_)|ingetrazo_core::scene::SelectionItem::Dimension(_)|ingetrazo_core::scene::SelectionItem::TextLabel(_))) {
             self.status_message="Annotation transform ownership is not yet supported".into();return;
