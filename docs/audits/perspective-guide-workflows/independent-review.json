@@ -1,0 +1,21 @@
+{
+  "owner_commit": "d0238546",
+  "runtime_commit": "ae96e2028c17cf5a307ca5037f6b1a867230325f",
+  "method": "Read-only runtime/source/checker review and canonical ZIP/member/Git-byte authentication; no builds, checker replay or capture.",
+  "authenticated": {
+    "proof_members": 41,
+    "source_members": 1,
+    "git_file_bindings": 11,
+    "proof_sha256": "8cf1c5eb835ef17f0b1e72619df80d4a7ce80d826296921e53b7acef7889191f",
+    "source_sha256": "e7ce846b37eefe6659460cbf3d0ef9ce739703fc44808b392e844800a31670da"
+  },
+  "disposition": "Accepted bounded perspective-guide producer/camera/ray workflow; no blocking defect found.",
+  "observations": [
+    "Existing GUI camera API remains reexported; moved implementation retains existing navigation arithmetic.",
+    "Source ray inverse is lazy once per snap query; exact-f32 endpoint/direction admission leaves native-double fallback intact.",
+    "Pinned views/viewport.py _project_to_lock_line matches normalized directions, float dots, parallel fallback and final Qt vector operation.",
+    "Checker preserves exact authored directions, matrices, clipped endpoints and state inventories; existing 1e-6 snap and five-decimal App geometry boundaries are explicit.",
+    "Owner receipt reports 35 cases, five camera modes, 55 App states, five egui sessions, seven negatives plus retained48/286/56/eight controls and four focused tests. These executions were not repeated."
+  ],
+  "remaining": "P07 global keyboard-buffer filtering/chord/edit ingress remains pending. No whole-frame, full Tape/Protractor, desktop or performance qualification."
+}
