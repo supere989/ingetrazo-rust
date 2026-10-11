@@ -1,0 +1,22 @@
+{
+  "independent_decoded_comparison": {
+    "on": {
+      "pixels": 1713,
+      "max": 195
+    },
+    "off": {
+      "pixels": 1297,
+      "max": 27
+    },
+    "restored": {
+      "pixels": 1713,
+      "max": 195
+    },
+    "mask_xor": 195
+  },
+  "verified_manifest_files": 17,
+  "source": "78c35858",
+  "strict_parity": "FAIL",
+  "restore": "Both original and native restore exactly",
+  "scope": "Retained actual scene images; no merged-tree runtime or full feature acceptance claimed."
+}
