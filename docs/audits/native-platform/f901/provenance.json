@@ -1,0 +1,20 @@
+{
+  "revision": "f90106ca2a74e21f6d9cca50d02324fce32ea1f9",
+  "run": 38143497282,
+  "windows_job": 114481963915,
+  "macos_arm_job": 114481964155,
+  "artifacts": [
+    {
+      "file": "macos-arm.zip",
+      "bytes": 22861,
+      "sha256": "c5d4390053fa55579f3392bf9e3bb601a2671a386a5d7e130e17e9dd8d3651e0",
+      "entries": 6
+    },
+    {
+      "file": "windows.zip",
+      "bytes": 11728,
+      "sha256": "be68638a16291a2148af75026fedbc302482fb1fd1e6d3b336c544206e2978c8",
+      "entries": 7
+    }
+  ]
+}
