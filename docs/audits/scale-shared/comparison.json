@@ -1,0 +1,15 @@
+{
+  "exact_source_phases": 30,
+  "negative_controls": [
+    "empty",
+    "missing_phase",
+    "stale_sibling",
+    "merged_equal_mesh",
+    "wrong_axes_owner",
+    "stale_uv",
+    "lost_registry",
+    "lost_cancel",
+    "double_preview"
+  ],
+  "native_scope": "Real Targets consumer with snapshot replay; parent owns actual Scale controller/application proof"
+}

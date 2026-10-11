@@ -1,0 +1,13 @@
+{
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "binary_sha256": "a25d1e196043815c1b77e78060a145b6174374b7214c5ca2d9397c5d1e9cb5a0",
+  "source_sha256": "c70fdcdcae637c9e7c2d57048f2cb4b02e2df066338a1e29f29d8184490ff278",
+  "build_prerequisite_hashes": {
+    "crates/ingetrazo-tools/src/scale_tool/targets.rs": "33eba2ed32a29810d984abeda601de0be0a42837048e471e1836b6b9ee62a5bf",
+    "crates/ingetrazo-tools/examples/scale_shared.rs": "5d91086fae9490b35c6a06d7e026eaaedf04ab5f00460959a045609b90304b49",
+    "crates/ingetrazo-core/src/mesh.rs": "7b9f902e320ecd5524938ce7715d8ca2d616525d7f77f3e411edb5487b469d86",
+    "crates/ingetrazo-core/src/image_plane.rs": "6cf4960eec225b38b5d4c0130cc7f878814958790cae955fcb6dfbc520eca84f"
+  },
+  "formatting_note": "Binary built before rustfmt-only formatting; ownership test includes final cold seed deduplication",
+  "runtime_scope": "Targets real consumer, not controller or OS gesture"
+}

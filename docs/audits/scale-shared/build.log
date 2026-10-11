@@ -1,0 +1,35 @@
+warning: function `visit_meshes` is never used
+   --> crates/ingetrazo-core/src/screen_pick.rs:120:15
+    |
+120 | pub(crate) fn visit_meshes(scene: &Scene, mut visit: impl FnMut(&Mesh, DMat4, bool)) {
+    |               ^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-core` (lib) generated 1 warning
+   Compiling ingetrazo-tools v0.3.15 (/tmp/ingetrazo-scale-shared/crates/ingetrazo-tools)
+warning: methods `apply_cold_mesh`, `has_loose_vertices`, `only_placements`, `only_images`, `is_empty`, and `apply_cold` are never used
+   --> crates/ingetrazo-tools/examples/../src/scale_tool/targets.rs:143:12
+    |
+115 | impl Targets {
+    | ------------ methods in this implementation
+...
+143 |     pub fn apply_cold_mesh(&self,mesh:&mut Mesh){
+    |            ^^^^^^^^^^^^^^^
+...
+146 |     pub fn has_loose_vertices(&self)->bool{!self.vertices.is_empty()}
+    |            ^^^^^^^^^^^^^^^^^^
+147 |     pub fn only_placements(&self)->bool{self.images.is_empty()&&self.vertices.is_empty()&&!self.groups.is_empty()&&self.groups.iter...
+    |            ^^^^^^^^^^^^^^^
+148 |     pub fn only_images(&self)->bool{!self.images.is_empty()&&self.vertices.is_empty()&&self.groups.is_empty()}
+    |            ^^^^^^^^^^^
+149 |     pub fn is_empty(&self)->bool{self.images.is_empty()&&self.vertices.is_empty()&&self.groups.is_empty()}
+    |            ^^^^^^^^
+...
+156 |     pub fn apply_cold(&self,scene:&mut Scene,matrix:Option<&ScaleMatrix>,commit:bool){
+    |            ^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-tools` (example "scale_shared") generated 1 warning
+    Finished `dev` profile [unoptimized] target(s) in 1.10s
