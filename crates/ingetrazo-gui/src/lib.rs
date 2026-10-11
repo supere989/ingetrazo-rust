@@ -16,6 +16,7 @@ pub mod blender;
 pub mod composer;
 mod composer_text_fields;
 mod solar_controls;
+mod bim_controller;
 mod paper_raw_texture;
 pub mod composer_cad;
 pub mod composer_backend;

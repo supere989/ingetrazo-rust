@@ -1,0 +1,26 @@
+{
+  "base": "45ca17714b3dec2b2b8567489b4e3b6269e6ed23",
+  "sources": {
+    "crates/ingetrazo-core/src/bim.rs": "328fa71003fb6f7fa291b63a4417981407996a5530c9d27487825d0fe04e0fa4",
+    "crates/ingetrazo-formats/src/ifc.rs": "dcf68a4565b96ee90b9c457b3c2a8dca1b381a1c52c520582313304765e1f719",
+    "crates/ingetrazo-formats/src/lib.rs": "f8761ff6fdc0796e25e8fc2ef1c8504d1bee5ebbb4f2739f15317d1e01cf5182",
+    "crates/ingetrazo-gui/src/app.rs": "65f2b88036290e883b0af676cc164cdb76f8d52a0cbf68348264b054fa18289e",
+    "crates/ingetrazo-gui/src/lib.rs": "3dfdf39a8ca011f85b15ced9c55244d09c709837a40c40c82c43e8bd37f896fe",
+    "crates/ingetrazo-gui/src/tray.rs": "a5106769554cc5748c32a107003399bd47682a2a1e84953edcaf3572f33ae128",
+    "crates/ingetrazo-gui/src/bim_controller.rs": "d1ad9fb58de71fa257eb0306559df38118002b964868490aa81acedb79e19a83",
+    "crates/ingetrazo-gui/examples/bim_ifc_fixture.rs": "8d6fd68f75da1d5c14d3d146f79632252bf382655e5e6a9cede690c2c6246edd",
+    "scripts/reference-bim-ifc.py": "75024541dd4578b0b8f0b10df3c59f4196887441977a2be42f6db3e128c5ab87",
+    "scripts/check-bim-ifc.py": "3a6e47dfcb27696db786be29f1b85f6208601e231e89ef9e6cbc87a554a3e0a7"
+  },
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "source_files": {
+    "core/bim.py": "22d77af4887c87b87f19e900f3fb7726075d8351b6014678e6ef396faaad01e9",
+    "formats/ifc.py": "845db70bae7092b284dc4775a1266418a33bf7bf6304594c9346171a39905093",
+    "core/group.py": "9ba6a20eca241cb4969a545a3784fcff25566166606d5447a18780747d4f11c5",
+    "core/mesh.py": "5f2c1625e6dd717db029ba39a9de337e75beec06bd0df28a592a8a34875ca22c"
+  },
+  "fixture_binary_sha256": "f3667f55f3eb9ce9dee27eca7c33a7f87d9bd947396bd424302593af3c096dc6",
+  "validator": "IfcOpenShell0.9.0 full IFC4 EXPRESS with pytest9.1.1",
+  "result": "20case exact values;19validIFC;1untagged refusal",
+  "focused_tests": "3application/publication tests followed by2changed-source overflow/precision refusal tests; final measurements independently reopened after single-measurement refactor; combined integration tests pending"
+}

@@ -119,9 +119,8 @@ pub fn save_file(scene: &Scene, path: &Path) -> Result<(), FormatError> {
             Ok(())
         }
         "ifc" => {
-            let mut file = std::fs::File::create(path)?;
             let name = path.file_stem().and_then(|s| s.to_str()).unwrap_or("IngeTrazo Project");
-            export_ifc(scene, &mut file, name)?;
+            ifc::save_ifc(scene, path, name)?;
             Ok(())
         }
         other => Err(FormatError::Unsupported(format!("*.{other}"))),

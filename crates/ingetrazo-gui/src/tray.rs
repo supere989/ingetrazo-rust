@@ -454,27 +454,14 @@ fn render_bim_panel(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
     ui.label(egui::RichText::new(tr("IFC Semantic Layer & Live Quantities")).small().color(egui::Color32::from_rgb(160, 160, 170)));
     ui.separator();
 
-    let ifc_classes = [
-        "IfcWall",
-        "IfcWallStandardCase",
-        "IfcSlab",
-        "IfcColumn",
-        "IfcBeam",
-        "IfcDoor",
-        "IfcWindow",
-        "IfcRoof",
-        "IfcStair",
-        "IfcFooting",
-        "IfcSpace",
-        "IfcBuildingElementProxy",
-    ];
+    let ifc_classes = ingetrazo_core::bim::IFC_CLASSES;
 
     egui::Grid::new("bim_inputs_grid").spacing([8.0, 6.0]).show(ui, |ui| {
         ui.label(tr("IFC Class:"));
         egui::ComboBox::from_id_salt("bim_class_combo")
             .selected_text(&app.bim_active_class)
             .show_ui(ui, |ui| {
-                for &cls in &ifc_classes {
+                for &cls in ifc_classes {
                     ui.selectable_value(&mut app.bim_active_class, cls.to_string(), cls);
                 }
             });
@@ -497,42 +484,34 @@ fn render_bim_panel(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
         }
     });
 
-    ui.checkbox(&mut app.bim_active_tag_mode, tr("Tag as you draw"));
+    ui.add_enabled(false, egui::Checkbox::new(&mut app.bim_active_tag_mode, tr("Tag as you draw"))).on_hover_text(tr("Draw-plan tag propagation is not available yet"));
 
     ui.separator();
     ui.strong(tr("Tagged BIM Objects Takeoff:"));
 
-    let mut tagged_objects = Vec::new();
-    for (f_id, face) in app.scene.mesh.faces.iter().enumerate() {
-        if let Some(ifc_val) = face.attrs.get("ifc") {
-            let cls = ifc_val.get("class").and_then(|v| v.as_str()).unwrap_or("IfcElement").to_string();
-            let name = ifc_val.get("name").and_then(|v| v.as_str()).unwrap_or("").to_string();
-            let area = app.scene.mesh.face_area(f_id);
-            tagged_objects.push((cls, name, area, f_id));
+    app.refresh_bim_takeoff();
+    let mut picked=None;
+    match &app.bim_cache.rows {
+        Err(error)=>{ui.label(error);},
+        Ok(rows) if rows.is_empty()=>{ui.label(tr("No BIM tags yet. Select geometry and click 'Tag Selection'."));},
+        Ok(rows)=>{
+            egui::Grid::new("bim_takeoff_grid").striped(true).show(ui, |ui| {
+                for title in ["Class","Name","Takeoff","Vol m³"] {ui.strong(tr(title));}ui.end_row();
+                for row in rows {
+                    if ui.selectable_label(false,&row.class).clicked(){picked=Some(row.key.clone());}
+                    ui.label(&row.name);
+                    ui.label(row.quantities.metrado.map(|v|format!("{v:.4} {}",row.quantities.unit)).unwrap_or_else(||"—".into()));
+                    ui.label(row.volume.map(|v|format!("{v:.4}")).unwrap_or_else(||"—".into()));ui.end_row();
+                }
+            });
         }
     }
-
-    if tagged_objects.is_empty() {
-        ui.label(egui::RichText::new(tr("No BIM tags yet. Select geometry and click 'Tag Selection'.")).weak());
-    } else {
-        egui::Grid::new("bim_takeoff_grid").striped(true).show(ui, |ui| {
-            ui.strong(tr("Class"));
-            ui.strong(tr("Name"));
-            ui.strong(tr("Area"));
-            ui.end_row();
-
-            for (cls, name, area, _) in &tagged_objects {
-                ui.label(cls);
-                ui.label(name);
-                ui.label(format!("{area:.2} m²"));
-                ui.end_row();
-            }
-        });
-    }
-
+    if let Some(key)=picked{app.select_bim_object(&key);}
     ui.add_space(6.0);
     if ui.button(tr("Export Quantities CSV…")).clicked() {
-        app.status_message = format!("Exported {} BIM takeoff items to CSV", tagged_objects.len());
+        if let Some(path)=crate::dialogs::pick_save_file(&tr("Export quantities CSV"),"quantities.csv","*.csv|CSV") {
+            if let Err(error)=app.export_bim_csv(&path){app.status_message=format!("CSV export failed: {error}");}
+        }
     }
 }
 

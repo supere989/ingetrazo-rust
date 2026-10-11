@@ -113,6 +113,7 @@ pub struct IngeTrazoApp {
     pub bim_active_class: String,
     pub bim_name_input: String,
     pub bim_active_tag_mode: bool,
+    pub(crate) bim_cache: crate::bim_controller::Cache,
     pub texture_scale_u: f32,
     pub texture_scale_v: f32,
     pub texture_rot_deg: f32,
@@ -221,6 +222,7 @@ impl IngeTrazoApp {
             bim_active_class: "IfcWall".to_string(),
             bim_name_input: String::new(),
             bim_active_tag_mode: false,
+            bim_cache: Default::default(),
             texture_scale_u: 1.0,
             texture_scale_v: 1.0,
             texture_rot_deg: 0.0,
@@ -784,60 +786,6 @@ impl IngeTrazoApp {
         self.scene.mesh.rebuild_spatial_index();
         self.scene.bump_version();
         self.status_message = format!("Flipped selection along axis {}", axis.to_uppercase());
-    }
-
-    pub fn tag_selection_bim(&mut self, class_name: &str, name: &str) {
-        self.save_undo_state();
-        let mut count = 0;
-        let bim_val = serde_json::json!({
-            "class": class_name,
-            "name": if name.is_empty() { class_name } else { name },
-        });
-        for item in &self.scene.selection {
-            match item {
-                SelectionItem::Face(f_id) => {
-                    if *f_id < self.scene.mesh.faces.len() {
-                        self.scene.mesh.faces[*f_id].attrs.insert("ifc".to_string(), bim_val.clone());
-                        count += 1;
-                    }
-                }
-                SelectionItem::Group(g_id) => {
-                    if *g_id < self.scene.groups.len() {
-                        self.scene.groups[*g_id].ifc_tag = Some(bim_val.clone());
-                        count += 1;
-                    }
-                }
-                _ => {}
-            }
-        }
-        self.scene.bump_version();
-        self.status_message = format!("Tagged {count} entity/entities as {class_name}");
-    }
-
-    pub fn untag_selection_bim(&mut self) {
-        self.save_undo_state();
-        let mut count = 0;
-        for item in &self.scene.selection {
-            match item {
-                SelectionItem::Face(f_id) => {
-                    if *f_id < self.scene.mesh.faces.len() {
-                        if self.scene.mesh.faces[*f_id].attrs.remove("ifc").is_some() {
-                            count += 1;
-                        }
-                    }
-                }
-                SelectionItem::Group(g_id) => {
-                    if *g_id < self.scene.groups.len() {
-                        if self.scene.groups[*g_id].ifc_tag.take().is_some() {
-                            count += 1;
-                        }
-                    }
-                }
-                _ => {}
-            }
-        }
-        self.scene.bump_version();
-        self.status_message = format!("Removed BIM tags from {count} entity/entities");
     }
 
     pub fn run_script(&mut self, code: &str) {

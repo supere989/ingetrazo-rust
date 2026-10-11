@@ -7,11 +7,12 @@
 //! Exports spatial hierarchy (Project -> Site -> Building -> Storey), faceted B-Rep representations,
 //! IFC element classifications (IfcWall, IfcSlab, IfcColumn...), and BaseQuantities.
 
-use std::collections::HashMap;
-use std::io::Write;
+use crate::FormatError;
+#[cfg(test)]
 use glam::DVec3;
 use ingetrazo_core::scene::Scene;
-use crate::FormatError;
+use std::collections::HashMap;
+use std::io::Write;
 
 const GUID_CHARS: &[u8] = b"0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz_$";
 
@@ -33,15 +34,30 @@ pub fn ifc_guid() -> String {
 }
 
 fn step_str(text: &str) -> String {
-    let escaped = text.replace('\'', "''");
-    format!("'{escaped}'")
+    let mut out = String::from("'");
+    for c in text.chars() {
+        if c == '\'' {
+            out.push_str("''");
+        } else if c.is_ascii() && !c.is_control() && c != '\\' {
+            out.push(c);
+        } else {
+            out.push_str("\\X2\\");
+            for u in c.encode_utf16(&mut [0; 2]) {
+                out.push_str(&format!("{u:04X}"));
+            }
+            out.push_str("\\X0\\");
+        }
+    }
+    out.push('\'');
+    out
 }
 
 fn step_float(v: f64) -> String {
-    if v.abs() < 1e-9 {
-        "0.".to_string()
+    let s = format!("{v:.6}");
+    if s == "-0.000000" {
+        "0.000000".into()
     } else {
-        format!("{v:.6}")
+        s
     }
 }
 
@@ -61,12 +77,17 @@ impl StepWriter {
     pub fn add(&mut self, entity: &str, attrs: &[&str]) -> usize {
         let eid = self.next_id;
         self.next_id += 1;
-        self.lines.push(format!("#{eid}={entity}({});", attrs.join(",")));
+        self.lines
+            .push(format!("#{eid}={entity}({});", attrs.join(",")));
         eid
     }
 }
 
-pub fn export_ifc(scene: &Scene, writer: &mut impl Write, project_name: &str) -> Result<usize, FormatError> {
+pub fn export_ifc(
+    scene: &Scene,
+    writer: &mut impl Write,
+    project_name: &str,
+) -> Result<usize, FormatError> {
     let mut w = StepWriter::new();
 
     // 1. Spatial Structure & Context
@@ -162,192 +183,322 @@ pub fn export_ifc(scene: &Scene, writer: &mut impl Write, project_name: &str) ->
     let rel_proj_site = ifc_guid();
     w.add(
         "IFCRELAGGREGATES",
-        &[&step_str(&rel_proj_site), "$", "$", "$", &format!("#{project}"), &format!("(#{site})")],
+        &[
+            &step_str(&rel_proj_site),
+            "$",
+            "$",
+            "$",
+            &format!("#{project}"),
+            &format!("(#{site})"),
+        ],
     );
     let rel_site_bld = ifc_guid();
     w.add(
         "IFCRELAGGREGATES",
-        &[&step_str(&rel_site_bld), "$", "$", "$", &format!("#{site}"), &format!("(#{building})")],
+        &[
+            &step_str(&rel_site_bld),
+            "$",
+            "$",
+            "$",
+            &format!("#{site}"),
+            &format!("(#{building})"),
+        ],
     );
     let rel_bld_str = ifc_guid();
     w.add(
         "IFCRELAGGREGATES",
-        &[&step_str(&rel_bld_str), "$", "$", "$", &format!("#{building}"), &format!("(#{storey})")],
+        &[
+            &step_str(&rel_bld_str),
+            "$",
+            "$",
+            "$",
+            &format!("#{building}"),
+            &format!("(#{storey})"),
+        ],
     );
 
-    // 2. Export BIM Elements
-    let mut point_cache: HashMap<[i64; 3], usize> = HashMap::new();
-    let mut get_pt_id = |p: DVec3, w: &mut StepWriter| -> usize {
-        let key = [
-            (p.x * 1_000_000.0).round() as i64,
-            (p.y * 1_000_000.0).round() as i64,
-            (p.z * 1_000_000.0).round() as i64,
-        ];
-        if let Some(&pid) = point_cache.get(&key) {
-            pid
-        } else {
-            let pid = w.add(
-                "IFCCARTESIANPOINT",
-                &[&format!("({},{},{})", step_float(p.x), step_float(p.y), step_float(p.z))],
-            );
-            point_cache.insert(key, pid);
-            pid
-        }
-    };
-
-    let mut element_ids: Vec<usize> = Vec::new();
-
-    // Export groups as BIM elements
-    for (_g_idx, g) in scene.groups.iter().enumerate() {
-        if g.hidden || g.mesh.faces.is_empty() {
+    // Tagged objects retain their polygon and hole rings. Compute world geometry
+    // once per object; the same geometry drives its shape and quantities.
+    let objects = ingetrazo_core::bim::collect_objects(scene).map_err(invalid)?;
+    let mut element_ids = Vec::new();
+    let mut space_ids = Vec::new();
+    for obj in objects {
+        if obj.faces.is_empty() {
             continue;
         }
-
-        let mut face_ids = Vec::new();
-        for f_id in 0..g.mesh.faces.len() {
-            for (p0, p1, p2) in g.mesh.triangulate_face(f_id) {
-                let tp0 = g.transform.transform_point3(p0);
-                let tp1 = g.transform.transform_point3(p1);
-                let tp2 = g.transform.transform_point3(p2);
-
-                let id0 = get_pt_id(tp0, &mut w);
-                let id1 = get_pt_id(tp1, &mut w);
-                let id2 = get_pt_id(tp2, &mut w);
-
-                let loop_pts = format!("(#{id0},#{id1},#{id2})");
-                let poly_loop = w.add("IFCPOLYLOOP", &[&loop_pts]);
-                let bound = w.add("IFCFACEOUTERBOUND", &[&format!("#{poly_loop}"), ".T."]);
-                let ifc_face = w.add("IFCFACE", &[&format!("(#{bound})")]);
-                face_ids.push(ifc_face);
+        let measured = ingetrazo_core::bim::object_takeoff(&obj).map_err(invalid)?;
+        let q = measured.quantities;
+        let mut points = HashMap::<String, usize>::new();
+        let mut faces = Vec::new();
+        for &id in &obj.faces {
+            let f = &obj.mesh.faces[id];
+            let mut bounds = Vec::new();
+            for (n, ring) in std::iter::once(&f.vertices)
+                .chain(f.holes.iter())
+                .enumerate()
+            {
+                let mut ids = Vec::new();
+                for &v in ring {
+                    let p = obj.mesh.vertices[v].position;
+                    let coords = format!(
+                        "({},{},{})",
+                        step_float(p.x),
+                        step_float(p.y),
+                        step_float(p.z)
+                    );
+                    let id = *points
+                        .entry(coords.clone())
+                        .or_insert_with(|| w.add("IFCCARTESIANPOINT", &[&coords]));
+                    ids.push(id);
+                }
+                if ids
+                    .iter()
+                    .copied()
+                    .collect::<std::collections::HashSet<_>>()
+                    .len()
+                    != ids.len()
+                {
+                    return Err(invalid(
+                        "IFC six-decimal precision collapses distinct ring corners",
+                    ));
+                }
+                let poly = w.add("IFCPOLYLOOP", &[&refs(&ids)]);
+                let kind = if n == 0 {
+                    "IFCFACEOUTERBOUND"
+                } else {
+                    "IFCFACEBOUND"
+                };
+                bounds.push(w.add(kind, &[&format!("#{poly}"), ".T."]));
             }
+            faces.push(w.add("IFCFACE", &[&refs(&bounds)]));
         }
-
-        if face_ids.is_empty() {
-            continue;
-        }
-
-        let face_list = format!("({})", face_ids.iter().map(|id| format!("#{id}")).collect::<Vec<_>>().join(","));
-        let shell = w.add("IFCCLOSEDSHELL", &[&face_list]);
-        let brep = w.add("IFCFACETEDBREP", &[&format!("#{shell}")]);
+        let closed = measured.volume.is_some();
+        let shell = w.add(
+            if closed {
+                "IFCCLOSEDSHELL"
+            } else {
+                "IFCOPENSHELL"
+            },
+            &[&refs(&faces)],
+        );
+        let item = if closed {
+            w.add("IFCFACETEDBREP", &[&format!("#{shell}")])
+        } else {
+            w.add("IFCSHELLBASEDSURFACEMODEL", &[&refs(&[shell])])
+        };
         let rep = w.add(
             "IFCSHAPEREPRESENTATION",
-            &[&format!("#{context}"), "'Body'", "'Brep'", &format!("(#{brep})")],
-        );
-        let pds = w.add("IFCPRODUCTDEFINITIONSHAPE", &["$", "$", &format!("(#{rep})")]);
-
-        // Element class from BIM tag attr or group name
-        let ifc_class = g
-            .ifc_tag
-            .as_ref()
-            .and_then(|v| v.get("class"))
-            .and_then(|c| c.as_str())
-            .unwrap_or("IfcBuildingElementProxy");
-
-        let elem_name = g
-            .ifc_tag
-            .as_ref()
-            .and_then(|v| v.get("name"))
-            .and_then(|n| n.as_str())
-            .unwrap_or(&g.name);
-
-        let elem_guid = ifc_guid();
-        let class_upper = ifc_class.to_uppercase();
-        let elem_id = w.add(
-            &class_upper,
             &[
-                &step_str(&elem_guid),
-                "$",
-                &step_str(elem_name),
-                "$",
-                "$",
-                &format!("#{placement}"),
-                &format!("#{pds}"),
-                "'IngeTrazo'",
-                "$",
+                &format!("#{context}"),
+                "'Body'",
+                if closed { "'Brep'" } else { "'SurfaceModel'" },
+                &refs(&[item]),
             ],
         );
-        element_ids.push(elem_id);
-    }
-
-    // Export untagged / ungrouped loose mesh faces if present
-    if !scene.mesh.faces.is_empty() {
-        let mut loose_faces = Vec::new();
-        for f_id in 0..scene.mesh.faces.len() {
-            for (p0, p1, p2) in scene.mesh.triangulate_face(f_id) {
-                let id0 = get_pt_id(p0, &mut w);
-                let id1 = get_pt_id(p1, &mut w);
-                let id2 = get_pt_id(p2, &mut w);
-
-                let loop_pts = format!("(#{id0},#{id1},#{id2})");
-                let poly_loop = w.add("IFCPOLYLOOP", &[&loop_pts]);
-                let bound = w.add("IFCFACEOUTERBOUND", &[&format!("#{poly_loop}"), ".T."]);
-                let ifc_face = w.add("IFCFACE", &[&format!("(#{bound})")]);
-                loose_faces.push(ifc_face);
+        let pds = w.add("IFCPRODUCTDEFINITIONSHAPE", &["$", "$", &refs(&[rep])]);
+        let class = if ingetrazo_core::bim::IFC_CLASSES.contains(&obj.class.as_str()) {
+            obj.class.as_str()
+        } else {
+            "IfcBuildingElementProxy"
+        };
+        let count = match class {
+            "IfcPile" => 10,
+            "IfcDoor" | "IfcWindow" => 13,
+            "IfcSpace" => 11,
+            _ => 9,
+        };
+        let name = if obj.name.is_empty() {
+            class
+        } else {
+            &obj.name
+        };
+        let mut attrs = vec![
+            step_str(&ifc_guid()),
+            "$".into(),
+            step_str(name),
+            "$".into(),
+            "$".into(),
+            format!("#{placement}"),
+            format!("#{pds}"),
+            "'IngeTrazo'".into(),
+        ];
+        if matches!(class, "IfcDoor" | "IfcWindow") {
+            for name in ["Height", "Width"] {
+                attrs.push(
+                    q.entries
+                        .iter()
+                        .find(|e| e.kind == "length" && e.name == name)
+                        .map(|e| step_float(e.value))
+                        .unwrap_or_else(|| "$".into()),
+                );
             }
         }
-
-        if !loose_faces.is_empty() {
-            let face_list = format!("({})", loose_faces.iter().map(|id| format!("#{id}")).collect::<Vec<_>>().join(","));
-            let shell = w.add("IFCCLOSEDSHELL", &[&face_list]);
-            let brep = w.add("IFCFACETEDBREP", &[&format!("#{shell}")]);
-            let rep = w.add(
-                "IFCSHAPEREPRESENTATION",
-                &[&format!("#{context}"), "'Body'", "'Brep'", &format!("(#{brep})")],
-            );
-            let pds = w.add("IFCPRODUCTDEFINITIONSHAPE", &["$", "$", &format!("(#{rep})")]);
-
-            let elem_guid = ifc_guid();
-            let elem_id = w.add(
-                "IFCBUILDINGELEMENTPROXY",
+        attrs.resize(count, "$".into());
+        let elem = w.add(
+            &class.to_ascii_uppercase(),
+            &attrs.iter().map(String::as_str).collect::<Vec<_>>(),
+        );
+        if class == "IfcSpace" {
+            space_ids.push(elem);
+        } else {
+            element_ids.push(elem);
+        }
+        let mut quantities = Vec::new();
+        for e in &q.entries {
+            if !e.value.is_finite() {
+                return Err(invalid("Nonfinite IFC quantity"));
+            }
+            let kind = match e.kind {
+                "length" => "IFCQUANTITYLENGTH",
+                "area" => "IFCQUANTITYAREA",
+                _ => "IFCQUANTITYVOLUME",
+            };
+            quantities.push(w.add(
+                kind,
+                &[&step_str(e.name), "$", "$", &step_float(e.value), "$"],
+            ));
+        }
+        if !quantities.is_empty() {
+            let eq = w.add(
+                "IFCELEMENTQUANTITY",
                 &[
-                    &step_str(&elem_guid),
+                    &step_str(&ifc_guid()),
                     "$",
-                    "'Freeform Model'",
+                    &step_str(&q.set),
                     "$",
                     "$",
-                    &format!("#{placement}"),
-                    &format!("#{pds}"),
-                    "'IngeTrazo'",
-                    "$",
+                    &refs(&quantities),
                 ],
             );
-            element_ids.push(elem_id);
+            w.add(
+                "IFCRELDEFINESBYPROPERTIES",
+                &[
+                    &step_str(&ifc_guid()),
+                    "$",
+                    "$",
+                    "$",
+                    &refs(&[elem]),
+                    &format!("#{eq}"),
+                ],
+            );
         }
     }
-
-    // RelContainedInSpatialStructure
+    if element_ids.is_empty() && space_ids.is_empty() {
+        return Err(invalid("No tagged BIM objects to export"));
+    }
     if !element_ids.is_empty() {
-        let rel_guid = ifc_guid();
-        let elems_str = format!("({})", element_ids.iter().map(|id| format!("#{id}")).collect::<Vec<_>>().join(","));
         w.add(
             "IFCRELCONTAINEDINSPATIALSTRUCTURE",
-            &[&step_str(&rel_guid), "$", "$", "$", &elems_str, &format!("#{storey}")],
+            &[
+                &step_str(&ifc_guid()),
+                "$",
+                "$",
+                "$",
+                &refs(&element_ids),
+                &format!("#{storey}"),
+            ],
         );
     }
-
-    // Write STEP file format
-    let stamp = "2026-10-07T12:00:00";
-    writeln!(writer, "ISO-10303-21;")?;
-    writeln!(writer, "HEADER;")?;
-    writeln!(writer, "FILE_DESCRIPTION(('ViewDefinition [CoordinationView]'),'2;1');")?;
+    if !space_ids.is_empty() {
+        w.add(
+            "IFCRELAGGREGATES",
+            &[
+                &step_str(&ifc_guid()),
+                "$",
+                "$",
+                "$",
+                &format!("#{storey}"),
+                &refs(&space_ids),
+            ],
+        );
+    }
+    // Header timestamp is optional in IFC4; no fabricated export date.
     writeln!(
         writer,
-        "FILE_NAME('{}','{}',('IngeTrazo'),('IngeTrazo'),'IngeTrazo 0.3.15','IngeTrazo','');",
-        step_str(project_name),
-        stamp
+        "ISO-10303-21;\nHEADER;\nFILE_DESCRIPTION((''),'2;1');"
     )?;
-    writeln!(writer, "FILE_SCHEMA(('IFC4'));")?;
-    writeln!(writer, "ENDSEC;")?;
-    writeln!(writer, "DATA;")?;
-
-    for line in &w.lines {
+    writeln!(
+        writer,
+        "FILE_NAME({},'',('IngeTrazo'),('IngeTrazo'),'IngeTrazo Rust','IngeTrazo','');",
+        step_str(project_name)
+    )?;
+    writeln!(writer, "FILE_SCHEMA(('IFC4'));\nENDSEC;\nDATA;")?;
+    for line in w.lines {
         writeln!(writer, "{line}")?;
     }
+    writeln!(writer, "ENDSEC;\nEND-ISO-10303-21;")?;
+    Ok(element_ids.len() + space_ids.len())
+}
 
-    writeln!(writer, "ENDSEC;")?;
-    writeln!(writer, "END-ISO-10303-21;")?;
+fn invalid(message: impl Into<String>) -> FormatError {
+    std::io::Error::new(std::io::ErrorKind::InvalidData, message.into()).into()
+}
+fn refs(ids: &[usize]) -> String {
+    format!(
+        "({})",
+        ids.iter()
+            .map(|id| format!("#{id}"))
+            .collect::<Vec<_>>()
+            .join(",")
+    )
+}
 
-    Ok(element_ids.len())
+/// Stage beside the destination; failures before rename preserve its bytes.
+/// A directory sync error after rename reports that publication has occurred.
+pub fn save_ifc(
+    scene: &Scene,
+    path: &std::path::Path,
+    project: &str,
+) -> Result<usize, FormatError> {
+    let mut count = 0;
+    write_atomic(path, |f| {
+        count = export_ifc(scene, f, project)?;
+        Ok(())
+    })?;
+    Ok(count)
+}
+pub fn save_quantities_csv(scene: &Scene, path: &std::path::Path) -> Result<usize, FormatError> {
+    let rows = ingetrazo_core::bim::takeoff(scene).map_err(invalid)?;
+    let csv = ingetrazo_core::bim::quantities_csv(&rows);
+    write_atomic(path, |f| {
+        f.write_all(csv.as_bytes())?;
+        Ok(())
+    })?;
+    Ok(rows.len())
+}
+fn write_atomic(
+    path: &std::path::Path,
+    write: impl FnOnce(&mut std::fs::File) -> Result<(), FormatError>,
+) -> Result<(), FormatError> {
+    let parent = path
+        .parent()
+        .filter(|p| !p.as_os_str().is_empty())
+        .unwrap_or_else(|| std::path::Path::new("."));
+    let temp = parent.join(format!(".ingetrazo-bim-{}.tmp", uuid::Uuid::new_v4()));
+    let result = (|| {
+        let mut file = std::fs::OpenOptions::new()
+            .write(true)
+            .create_new(true)
+            .open(&temp)?;
+        write(&mut file)?;
+        file.sync_all()?;
+        drop(file);
+        std::fs::rename(&temp, path)?;
+        #[cfg(unix)]
+        std::fs::File::open(parent)
+            .and_then(|f| f.sync_all())
+            .map_err(|e| {
+                std::io::Error::new(
+                    e.kind(),
+                    format!("BIM file replaced; parent directory durability sync failed: {e}"),
+                )
+            })?;
+        Ok(())
+    })();
+    if result.is_err() {
+        let _ = std::fs::remove_file(&temp);
+    }
+    result
 }
 
 #[cfg(test)]
@@ -376,7 +527,11 @@ mod tests {
         let v1 = scene.mesh.add_vertex(pts[1]);
         let v2 = scene.mesh.add_vertex(pts[2]);
         let v3 = scene.mesh.add_vertex(pts[3]);
-        scene.mesh.add_face(vec![v0, v1, v2, v3], vec![]);
+        let id = scene.mesh.add_face(vec![v0, v1, v2, v3], vec![]).unwrap();
+        scene.mesh.faces[id].attrs.insert(
+            "ifc".into(),
+            serde_json::json!({"id":1,"class":"IfcSlab","name":"Slab"}),
+        );
 
         let mut output = Vec::new();
         let count = export_ifc(&scene, &mut output, "TestHouse").unwrap();
@@ -389,7 +544,69 @@ mod tests {
         assert!(ifc_str.contains("IFCSITE"));
         assert!(ifc_str.contains("IFCBUILDING"));
         assert!(ifc_str.contains("IFCBUILDINGSTOREY"));
-        assert!(ifc_str.contains("IFCFACETEDBREP"));
+        assert!(ifc_str.contains("IFCSHELLBASEDSURFACEMODEL"));
+        assert!(!ifc_str.contains("IFCFACETEDBREP"));
+        assert!(ifc_str.contains("Qto_SlabBaseQuantities"));
         assert!(ifc_str.ends_with("END-ISO-10303-21;\n"));
+    }
+}
+#[cfg(test)]
+mod refusal_tests {
+    use super::*;
+    #[test]
+    fn bim_export_refusal_preserves_existing_file_and_removes_stage() {
+        let dir = std::env::temp_dir().join(format!("ifc-refusal-{}", uuid::Uuid::new_v4()));
+        std::fs::create_dir(&dir).unwrap();
+        let path = dir.join("existing.ifc");
+        std::fs::write(&path, b"original").unwrap();
+        assert!(crate::save_file(&Scene::new(), &path).is_err());
+        assert_eq!(std::fs::read(&path).unwrap(), b"original");
+        assert_eq!(std::fs::read_dir(&dir).unwrap().count(), 1);
+        let mut s = Scene::new();
+        let ids = [DVec3::ZERO, DVec3::X, DVec3::Y].map(|p| s.mesh.add_vertex(p));
+        let f = s.mesh.add_face(ids.to_vec(), vec![]).unwrap();
+        s.mesh.faces[f]
+            .attrs
+            .insert("ifc".into(), serde_json::json!({"id":1,"class":"IfcSlab"}));
+        s.mesh.vertices[0].position.x = f64::NAN;
+        assert!(save_ifc(&s, &path, "invalid").is_err());
+        assert_eq!(std::fs::read(&path).unwrap(), b"original");
+        assert_eq!(std::fs::read_dir(&dir).unwrap().count(), 1);
+        std::fs::remove_dir_all(dir).unwrap();
+    }
+    #[test]
+    fn bim_overflow_and_quantized_corner_refusals_preserve_destination() {
+        let dir = std::env::temp_dir().join(format!("ifc-finite-{}", uuid::Uuid::new_v4()));
+        std::fs::create_dir(&dir).unwrap();
+        let path = dir.join("kept.ifc");
+        std::fs::write(&path, b"kept").unwrap();
+        for points in [
+            [
+                DVec3::ZERO,
+                DVec3::new(1e20, 0., 0.),
+                DVec3::new(0., 1e20, 0.),
+            ],
+            [DVec3::ZERO, DVec3::new(0.0000004, 0., 0.), DVec3::Y],
+        ] {
+            let mut s = Scene::new();
+            let ids = points.map(|p| s.mesh.add_vertex(p));
+            // Explicit vertex identities bypass modelling weld for the precision refusal control.
+            let ids = if ids[0] == ids[1] {
+                s.mesh
+                    .vertices
+                    .push(ingetrazo_core::mesh::MeshVertex::new(points[1]));
+                [ids[0], s.mesh.vertices.len() - 1, ids[2]]
+            } else {
+                ids
+            };
+            let f = s.mesh.add_face(ids.to_vec(), vec![]).unwrap();
+            s.mesh.faces[f]
+                .attrs
+                .insert("ifc".into(), serde_json::json!({"id":1,"class":"IfcWall"}));
+            assert!(save_ifc(&s, &path, "invalid").is_err());
+            assert_eq!(std::fs::read(&path).unwrap(), b"kept");
+            assert_eq!(std::fs::read_dir(&dir).unwrap().count(), 1);
+        }
+        std::fs::remove_dir_all(dir).unwrap();
     }
 }

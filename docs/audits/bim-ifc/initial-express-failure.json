@@ -1,0 +1,128 @@
+{
+  "passed": false,
+  "validator_version": "0.9.0",
+  "cases": [
+    {
+      "name": "IfcWall",
+      "objects": 1,
+      "express_issues": 0
+    },
+    {
+      "name": "IfcSlab",
+      "objects": 1,
+      "express_issues": 0
+    },
+    {
+      "name": "IfcColumn",
+      "objects": 1,
+      "express_issues": 0
+    },
+    {
+      "name": "IfcBeam",
+      "objects": 1,
+      "express_issues": 0
+    },
+    {
+      "name": "IfcFooting",
+      "objects": 1,
+      "express_issues": 0
+    },
+    {
+      "name": "IfcRoof",
+      "objects": 1,
+      "express_issues": 0
+    },
+    {
+      "name": "IfcStair",
+      "objects": 1,
+      "express_issues": 0
+    },
+    {
+      "name": "IfcRamp",
+      "objects": 1,
+      "express_issues": 0
+    },
+    {
+      "name": "IfcDoor",
+      "objects": 1,
+      "express_issues": 0
+    },
+    {
+      "name": "IfcWindow",
+      "objects": 1,
+      "express_issues": 0
+    },
+    {
+      "name": "IfcRailing",
+      "objects": 1,
+      "express_issues": 0
+    },
+    {
+      "name": "IfcCovering",
+      "objects": 1,
+      "express_issues": 0
+    },
+    {
+      "name": "IfcPile",
+      "objects": 1,
+      "express_issues": 0
+    },
+    {
+      "name": "IfcMember",
+      "objects": 1,
+      "express_issues": 0
+    },
+    {
+      "name": "wall-hole",
+      "objects": 1,
+      "express_issues": 0
+    },
+    {
+      "name": "rotated-door",
+      "objects": 1,
+      "express_issues": 0
+    },
+    {
+      "name": "transformed-nested",
+      "objects": 1,
+      "express_issues": 0
+    },
+    {
+      "name": "unknown-class",
+      "objects": 1,
+      "express_issues": 0
+    },
+    {
+      "name": "untagged",
+      "objects": 0
+    }
+  ],
+  "failures": [
+    {
+      "name": "IfcSpace",
+      "error": "[{\"level\": \"error\", \"message\": \"(sizeof([temp for temp in relatedelements if 'ifc4.ifcspatialstructureelement' in typeof(temp)]) == 0)\\n\\nViolated by:\\n    (1 == 0)\\n     +  where 1 = sizeof([#46=IfcSpace('2gTrvXT3nCRwpPYyVVuhpY',$,'Muro de Jos\\u00e9 IfcSpace',$,$,#9,#45,'IngeTrazo',$,$,$)])\\n\\nOn instance:\\n    #52=IfcRelContainedInSpatialStructure('0BF2dKF3X8nR_a1qeFpHlz',$,$,$,(#46),#12)\\n\", \"type\": \"entity_rule\", \"instance\": \"#52=IfcRelContainedInSpatialStructure('0BF2dKF3X8nR_a1qeFpHlz',$,$,$,(#46),#12)\", \"attribute\": \"IfcRelContainedInSpatialStructure.WR31\"}, {\"level\": \"error\", \"message\": \"(hiindex(SELF.Decomposes) == 1 and 'ifc4.ifcrelaggregates' in typeof(SELF.Decomposes[1]) and ('ifc4.ifcproject' in typeof(SELF.Decomposes[1].RelatingObject) or 'ifc4.ifcspatialstructureelement' in typeof(SELF.Decomposes[1].RelatingObject)))\\n\\nViolated by:\\n    ((0 == 1))\\n     +  where 0 = hiindex(())\\n     +    where () = #46=IfcSpace('2gTrvXT3nCRwpPYyVVuhpY',$,'Muro de Jos\\u00e9 IfcSpace',$,$,#9,#45,'IngeTrazo',$,$,$).Decomposes\\n\\nOn instance:\\n    #46=IfcSpace('2gTrvXT3nCRwpPYyVVuhpY',$,'Muro de Jos\\u00e9 IfcSpace',$,$,#9,#45,'IngeTrazo',$,$,$)\\n\", \"type\": \"entity_rule\", \"instance\": \"#46=IfcSpace('2gTrvXT3nCRwpPYyVVuhpY',$,'Muro de Jos\\u00e9 IfcSpace',$,$,#9,#45,'IngeTrazo',$,$,$)\", \"attribute\": \"IfcSpatialStructureElement.WR41\"}]"
+    }
+  ],
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "ifc_sha256": {
+    "IfcWall.ifc": "f1d80545de0d7369946d34208bb7afce86e91617adbd841c2da6f571084767fb",
+    "IfcSlab.ifc": "9aee349b4df157748cf5b4aac54c910119c4e57c44aa438f7e992e479575df20",
+    "IfcColumn.ifc": "abc02eec468b38b57825d4757f440608066559f6cdbb525451c7aeb9069bb52f",
+    "IfcBeam.ifc": "fba573269a1e6d6003bcdf97a78e6d481dba126c0b5629353e3389d38285c34c",
+    "IfcFooting.ifc": "62f7388b3691ec64f3bc3d80dde10dc255c37bacfee9d6a9216be30326925fad",
+    "IfcRoof.ifc": "7a0a1dab3ed1f41a2bff4559069cb5df6dd0baba1ae5f844dbc5aa426fc642b2",
+    "IfcStair.ifc": "2b7b0bdca5a53632d5e86d8436673c716c8bfcf1baf5b48d3d834960b7994df6",
+    "IfcRamp.ifc": "5eca520f7ada6e09557c4d649ec1d283c7b46fe5d4a9976fe201503b5ca6d13b",
+    "IfcDoor.ifc": "497e4204675e492fa010c7ba941f2cf3aa4cdc374c5ede4622179e30561fd7cd",
+    "IfcWindow.ifc": "460dcc7d090ac5352f486c52f4d58b47a152a8ac601c9ef7c81b5d91cede30d3",
+    "IfcRailing.ifc": "fdab93d86f752cf7730cebe587fc724e3ef43229759d4b3e28828a3bed823ce0",
+    "IfcCovering.ifc": "e5b78cdb6edc383035515fe4a7df6aad5f4bd58f26e56e5e231e71a32e03f709",
+    "IfcPile.ifc": "cc628a370025cd2738ebfbb1f587b69b2fd65ddf53ffffdf9357a1ecc3d1b6d4",
+    "IfcMember.ifc": "647011043ea3faedb0ee9fca46a4a3346d4bd9fd448e14fc51ebdfc9a08c453b",
+    "IfcSpace.ifc": "4835f75ccf83015e15f19ccb001629c9fe9d5537eab915e5789cfab3775202de",
+    "wall-hole.ifc": "d83d811206a757df3a79e38f43b902f8efe3dca2af105f3c30688ed41cd8733a",
+    "rotated-door.ifc": "63d3a3b20b756751acbf0ebb98e05e7f98be115f34e0b5afc0170f7b04e06b96",
+    "transformed-nested.ifc": "8041d3d091c7fbfb8daf118a38f3c65e7ada988aa43120872f02aa4859712dcb",
+    "unknown-class.ifc": "4b7885dc124c49c838d3da392cba02fd6dbbcfae1f48880f51d0c8a2f0f65969"
+  }
+}

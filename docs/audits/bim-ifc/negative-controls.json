@@ -1,0 +1,39 @@
+{
+  "quantity-2^-22": {
+    "rejected": true,
+    "reason": "quantity drift"
+  },
+  "wrong-name": {
+    "rejected": true,
+    "reason": "IFC name"
+  },
+  "world-coordinate-2^-22": {
+    "rejected": true,
+    "reason": "world polygon/hole coordinate drift",
+    "actual_delta": 2.384185791015625e-07
+  },
+  "hole-loss": {
+    "rejected": true,
+    "reason": "world polygon/hole coordinate drift"
+  },
+  "product-count": {
+    "rejected": true,
+    "reason": "IFC product count"
+  },
+  "open-vs-closed": {
+    "rejected": true,
+    "reason": ""
+  },
+  "invalid-space-hierarchy": {
+    "rejected": true,
+    "reason": "[{\"level\": \"error\", \"message\": \"(sizeof([temp for temp in relatedelements if 'ifc4.ifcspatialstructureelement' in typeof(temp)]) == 0)\\n\\nViolated by:\\n    (1 == 0)\\n     +  where "
+  },
+  "wrong-class": {
+    "rejected": true,
+    "reason": "IFC class"
+  },
+  "wrong-quantity-type": {
+    "rejected": true,
+    "reason": ""
+  }
+}

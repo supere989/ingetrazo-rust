@@ -1,0 +1,128 @@
+{
+  "passed": true,
+  "validator_version": "0.9.0",
+  "cases": [
+    {
+      "name": "IfcWall",
+      "objects": 1,
+      "express_issues": 0
+    },
+    {
+      "name": "IfcSlab",
+      "objects": 1,
+      "express_issues": 0
+    },
+    {
+      "name": "IfcColumn",
+      "objects": 1,
+      "express_issues": 0
+    },
+    {
+      "name": "IfcBeam",
+      "objects": 1,
+      "express_issues": 0
+    },
+    {
+      "name": "IfcFooting",
+      "objects": 1,
+      "express_issues": 0
+    },
+    {
+      "name": "IfcRoof",
+      "objects": 1,
+      "express_issues": 0
+    },
+    {
+      "name": "IfcStair",
+      "objects": 1,
+      "express_issues": 0
+    },
+    {
+      "name": "IfcRamp",
+      "objects": 1,
+      "express_issues": 0
+    },
+    {
+      "name": "IfcDoor",
+      "objects": 1,
+      "express_issues": 0
+    },
+    {
+      "name": "IfcWindow",
+      "objects": 1,
+      "express_issues": 0
+    },
+    {
+      "name": "IfcRailing",
+      "objects": 1,
+      "express_issues": 0
+    },
+    {
+      "name": "IfcCovering",
+      "objects": 1,
+      "express_issues": 0
+    },
+    {
+      "name": "IfcPile",
+      "objects": 1,
+      "express_issues": 0
+    },
+    {
+      "name": "IfcMember",
+      "objects": 1,
+      "express_issues": 0
+    },
+    {
+      "name": "IfcSpace",
+      "objects": 1,
+      "express_issues": 0
+    },
+    {
+      "name": "wall-hole",
+      "objects": 1,
+      "express_issues": 0
+    },
+    {
+      "name": "rotated-door",
+      "objects": 1,
+      "express_issues": 0
+    },
+    {
+      "name": "transformed-nested",
+      "objects": 1,
+      "express_issues": 0
+    },
+    {
+      "name": "unknown-class",
+      "objects": 1,
+      "express_issues": 0
+    },
+    {
+      "name": "untagged",
+      "objects": 0
+    }
+  ],
+  "failures": [],
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "ifc_sha256": {
+    "IfcWall.ifc": "af4ce838720697c729900683480cbf626dd95838960460a2f0d0e94c6a162b47",
+    "IfcSlab.ifc": "08a37fa4b72a94527a60e8ae20986de3573021843e81b76e44a8fa500535d195",
+    "IfcColumn.ifc": "04a63f9bd20f1ec5fe9a3982e12d2e6dfe7d7b6a24c48d5a0383938c087f7f7e",
+    "IfcBeam.ifc": "da20f372d93f910a5f2709cb9e5659c3d0678ffbf90e98c4bf57e48846546504",
+    "IfcFooting.ifc": "6409f4997d5ad7276242392b1d64a0f5b0d3d95f0af0a41b063b3be4f84191a9",
+    "IfcRoof.ifc": "19e3e66dff39577f0eccec2a9981c1c2872379447218350c0cc0defdb6cd03a3",
+    "IfcStair.ifc": "78aa4b909e5e757948128bca17b4455d661b8d94050acf15cd6d99a6c0d1a3b2",
+    "IfcRamp.ifc": "fbdcab569bccff805ee5630d47153ff8c485748ad8d0e4faaf287dd3f6d3a33c",
+    "IfcDoor.ifc": "cb44c3f49c8b98f0dfe1a5ee2d0eb5a1467c538648e938c2e21cc23d0bb617d4",
+    "IfcWindow.ifc": "3b0053388e2bbf39f86d83a38bec6da9e02e29be59894a745585c078def48012",
+    "IfcRailing.ifc": "5e8633fe97f95859b920d331f8b4f298fea94eb9ef5f710ef338ebcc3dbe8a98",
+    "IfcCovering.ifc": "8f3c96e6b6da8058bd50723e0b6aa34b37548b065a943e8097dd8fa2dc11275f",
+    "IfcPile.ifc": "7c9a2225b69889efb425e4e8449914040202c0b6b51150304131a6f71561ab54",
+    "IfcMember.ifc": "70c07853aa11476bb298e0189cf02f337dfb8be335a645d3b4877912877fbb6d",
+    "IfcSpace.ifc": "d6c323f3d3f52cbd7ae087a7272beb2fe1421db40a24a29ac8c7e99bc8cf8563",
+    "wall-hole.ifc": "55ceff71eae19125421260c43ddb5794660d73a340722b04516d868dffe2808b",
+    "rotated-door.ifc": "7dfca6e7a31f4ff1abf6bd0d3d00d19004bd10e4a240af07155e61980868fe71",
+    "transformed-nested.ifc": "d12bf1390c3bc505490d82aa7117608d11f75a8f746ed8520f786e3acce63b6f",
+    "unknown-class.ifc": "a3f58b48bb233643e212072da4ebd3c130a9dbda5d1b932c61805f5ec85cfd1b"
+  }
+}
