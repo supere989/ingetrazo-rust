@@ -219,6 +219,8 @@ pub trait Tool: Send + Sync {
     fn finish_text_creation(&mut self) {}
 
     fn annotation_edit_target(&mut self,_scene:&Scene,_ctx:&ToolContext)->Option<AnnotationEditTarget>{None}
+    fn annotation_hover_target(&self,_scene:&Scene)->Option<AnnotationEditTarget>{None}
+    fn clear_annotation_hover(&mut self){}
     fn note_annotation_pick_error(&mut self, _error: String) {}
     fn on_click(&mut self, _scene: &mut Scene, _ctx: &ToolContext) {}
     fn on_double_click(&mut self, scene: &mut Scene, ctx: &ToolContext) {

@@ -16,6 +16,9 @@ pub struct SelectTool {
     annotation_hits:crate::base::AnnotationHits,
     annotation_leader:Option<u64>,
     annotation_edit:Option<crate::base::AnnotationEditTarget>,
+    annotation_hover:Option<crate::base::AnnotationEditTarget>,
+    annotation_hover_index:Option<usize>,
+    hover_context:Vec<uuid::Uuid>,
     pub box_start: Option<DVec3>,
     pub box_end: Option<DVec3>,
     pub is_box_selecting: bool,
@@ -24,6 +27,14 @@ pub struct SelectTool {
 impl SelectTool {
     pub fn new() -> Self {
         Self::default()
+    }
+
+    fn annotation_index(&self,scene:&Scene,target:crate::base::AnnotationEditTarget)->Option<usize>{
+        use crate::base::AnnotationEditTarget;
+        match target{
+            AnnotationEditTarget::Label(id)=>self.annotation_hover_index.filter(|i|self.annotation_hover==Some(target)&&scene.text_labels.get(*i).is_some_and(|t|t.history_id==id)).or_else(||scene.text_labels.iter().position(|t|t.history_id==id)),
+            AnnotationEditTarget::Dimension(id)=>self.annotation_hover_index.filter(|i|self.annotation_hover==Some(target)&&scene.dimensions.get(*i).is_some_and(|d|d.id==id)).or_else(||scene.dimensions.iter().position(|d|d.id==id)),
+        }
     }
 
     fn expanded(scene:&Scene,target:SelectionItem)->Vec<SelectionItem> {
@@ -337,6 +348,7 @@ impl SelectTool {
         self.annotation_hits=Default::default();
         self.annotation_leader=None;
         self.annotation_edit=None;
+        self.annotation_hover=None;
         self.box_start = None;
         self.box_end = None;
         self.is_box_selecting = false;
@@ -527,18 +539,34 @@ impl Tool for SelectTool {
     fn wants_annotation_hits(&self)->bool {true}
     fn note_annotation_hits(&mut self,hits:crate::base::AnnotationHits){self.annotation_hits=hits;}
     fn note_annotation_leader_hit(&mut self,hit:Option<u64>){self.annotation_leader=hit;}
-    fn note_annotation_pick_error(&mut self,_error:String){self.annotation_hits=crate::base::AnnotationHits::default();self.annotation_leader=None;}
+    fn note_annotation_pick_error(&mut self,_error:String){self.annotation_hits=crate::base::AnnotationHits::default();self.annotation_leader=None;self.annotation_hover=None;}
     fn take_annotation_edit_request(&mut self)->Option<crate::base::AnnotationEditTarget>{self.annotation_edit.take()}
     fn annotation_edit_target(&mut self,scene:&Scene,ctx:&ToolContext)->Option<crate::base::AnnotationEditTarget>{
         use crate::base::AnnotationEditTarget;
-        if let Some(id)=self.annotation_hits.label.filter(|id|scene.text_labels.iter().any(|t|t.history_id==*id&&scene.is_layer_selectable(t.layer.as_deref()))){return Some(AnnotationEditTarget::Label(id));}
+        if let Some(id)=self.annotation_hits.label.filter(|id|self.annotation_index(scene,AnnotationEditTarget::Label(*id)).is_some_and(|i|scene.is_layer_selectable(scene.text_labels[i].layer.as_deref()))){return Some(AnnotationEditTarget::Label(id));}
         if self.annotation_hits.dimension.is_none()&&self.annotation_leader.is_none(){return None;}
         let edge=if let(Some((viewport,eye)),Some(cursor))=(self.pick_viewport,ctx.screen){self.click_index.edge(scene,viewport,cursor,eye)}else{crate::base::pick_scene_edge(scene,&ctx.ray,0.2)};
         if edge.is_some()||crate::base::pick_scene_group(scene,&ctx.ray,0.2).is_some(){return None;}
-        if let Some(id)=self.annotation_hits.dimension.filter(|id|scene.dimensions.iter().any(|d|d.id==*id&&scene.is_layer_selectable(d.layer.as_deref()))){return Some(AnnotationEditTarget::Dimension(id));}
-        self.annotation_leader.filter(|id|scene.text_labels.iter().any(|t|t.history_id==*id&&scene.is_layer_selectable(t.layer.as_deref()))).map(AnnotationEditTarget::Label)
+        if let Some(id)=self.annotation_hits.dimension.filter(|id|self.annotation_index(scene,AnnotationEditTarget::Dimension(*id)).is_some_and(|i|scene.is_layer_selectable(scene.dimensions[i].layer.as_deref()))){return Some(AnnotationEditTarget::Dimension(id));}
+        self.annotation_leader.filter(|id|self.annotation_index(scene,AnnotationEditTarget::Label(*id)).is_some_and(|i|scene.is_layer_selectable(scene.text_labels[i].layer.as_deref()))).map(AnnotationEditTarget::Label)
     }
 
+
+    fn on_move(&mut self,scene:&mut Scene,ctx:&ToolContext){
+        let target=self.annotation_edit_target(scene,ctx);
+        let index=target.and_then(|t|self.annotation_index(scene,t));
+        self.annotation_hover=target;
+        self.annotation_hover_index=index;
+        if self.hover_context!=scene.history_context{self.hover_context.clone_from(&scene.history_context);}
+    }
+    fn clear_annotation_hover(&mut self){self.annotation_hover=None;}
+    fn annotation_hover_target(&self,scene:&Scene)->Option<crate::base::AnnotationEditTarget>{
+        if self.hover_context!=scene.history_context{return None;}
+        self.annotation_hover.filter(|target|match target{
+            crate::base::AnnotationEditTarget::Label(id)=>self.annotation_hover_index.and_then(|i|scene.text_labels.get(i)).filter(|t|t.history_id==*id).or_else(||scene.text_labels.iter().find(|t|t.history_id==*id)).is_some_and(|t|scene.is_layer_selectable(t.layer.as_deref())),
+            crate::base::AnnotationEditTarget::Dimension(id)=>self.annotation_hover_index.and_then(|i|scene.dimensions.get(i)).filter(|d|d.id==*id).or_else(||scene.dimensions.iter().find(|d|d.id==*id)).is_some_and(|d|!d.native_document["hidden"].as_bool().unwrap_or(false)&&scene.is_layer_selectable(d.layer.as_deref())),
+        })
+    }
 
     fn box_select(&mut self, selection:&crate::base::BoxSelection,scene:&mut Scene)->Result<(),String>{Self::select_pixels(selection,scene)}
     fn tool_type(&self) -> ToolType {
@@ -566,7 +594,13 @@ impl Tool for SelectTool {
     }
 
     fn on_cancel(&mut self, _scene: &mut Scene) {
+        // Source Select inherits the no-op cancel; retiring a box must not
+        // erase an otherwise live hover (tool deactivation/leave do that).
+        let hover=self.annotation_hover;
+        let index=self.annotation_hover_index;
         self.reset();
+        self.annotation_hover=hover;
+        self.annotation_hover_index=index;
     }
 
     fn note_pick_viewport(&mut self,viewport:ingetrazo_core::screen_pick::PixelViewport,eye:DVec3,model_revision:u64){self.pick_viewport=Some((viewport,eye));self.click_index.note_model_revision(model_revision);}

@@ -27,6 +27,8 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
     let painter = ui.painter_at(rect);
     if app.annotation_editor.is_some() {ui.ctx().data_mut(|data| {data.remove::<egui::Pos2>(response.id.with("followme_press"));data.remove::<ToolContext>(response.id.with("followme_context"));});}
     let tool_input_admitted=ui.is_enabled()&&app.text3d_dialog.is_none()&&app.annotation_editor.is_none();
+    // Source leaveEvent clears hover; a modal freezes it until actual departure.
+    if ui.input(|i|i.pointer.hover_pos().is_none_or(|p|!rect.contains(p))){app.active_tool.clear_annotation_hover();}
     let box_release=crate::box_selection::input(app,ui,rect,response.id,response.contains_pointer());
 
     // 1. Mouse Navigation (Orbit, Pan, Zoom)

@@ -6,7 +6,7 @@ use ingetrazo_render::annotations;
 use crate::annotation_plan::{build_plan,label_units};
 #[cfg(test)] use crate::annotation_plan::typed_distance_text;
 use crate::annotation_overlay_geometry::{Cache,Limits};
-#[derive(PartialEq)]struct Key{revision:u64,scene_version:u64,factory:usize,view:u64,matrix:[f32;16],rect:[f32;4],density:f32,selected:Option<usize>,bypass_depth:bool,include_annotations:bool,distance:Option<(f64,[f64;3])>,units:(&'static str,i32)}
+#[derive(PartialEq)]struct Key{hover:Option<ingetrazo_tools::base::AnnotationEditTarget>,revision:u64,scene_version:u64,factory:usize,view:u64,matrix:[f32;16],rect:[f32;4],density:f32,selected:Option<usize>,bypass_depth:bool,include_annotations:bool,distance:Option<(f64,[f64;3])>,units:(&'static str,i32)}
 pub(crate) struct Prepared{pub handle:Handle,pub queries:Arc<[Query]>,pub inverse:[f32;16],pub eye:[f32;3],pub forward:[f32;3]}
 pub(crate) struct ViewportAnnotations{cache:Cache,current:Option<(Key,Prepared)>,empty:Option<Key>,style:serde_json::Value,vcb:String}
 impl ViewportAnnotations{
@@ -20,7 +20,7 @@ impl ViewportAnnotations{
   let units=label_units(&app.scene)?;
   let distance=app.active_tool.distance_label().map(|(value,point)|(value,point.to_array()));
   if distance.is_some_and(|(value,point)|!value.is_finite()||point.iter().any(|p|!p.is_finite())){return Err("Tool label outside finite admission".into());}
-  let key=Key{revision:app.native_geometry_revision,scene_version:app.scene.version,factory:factory.cache_identity(),view:app.scene.view_version,matrix,rect:[rect.min.x,rect.min.y,rect.max.x,rect.max.y],density,selected:app.selected_dimension,bypass_depth,include_annotations,distance,units};
+  let key=Key{hover:app.active_tool.annotation_hover_target(&app.scene),revision:app.native_geometry_revision,scene_version:app.scene.version,factory:factory.cache_identity(),view:app.scene.view_version,matrix,rect:[rect.min.x,rect.min.y,rect.max.x,rect.max.y],density,selected:app.selected_dimension,bypass_depth,include_annotations,distance,units};
   let raw=app.scene.dimension_style();
   let style_unchanged=self.style==*raw&&self.vcb==app.vcb_text;
   if style_unchanged&&self.empty.as_ref()==Some(&key){return Ok(None);}

@@ -6,6 +6,7 @@ fn map(matrix:&[f32;16],v:[f32;4])->[f32;4]{std::array::from_fn(|row|matrix[row]
 // One planner shared by production and bounded CPU-only engineering inspection.
 pub(crate) fn build_plan(app:&crate::IngeTrazoApp,rect:egui::Rect,matrix:&[f32;16],cache:&mut Cache,include_annotations:bool)->Result<annotations::Plan,String>{
  let raw=app.scene.dimension_style();
+ let hover=app.active_tool.annotation_hover_target(&app.scene);
   let project=|point:glam::Vec3|{
    let q=map(&matrix,[point.x,point.y,point.z,1.]);
    if !q.iter().all(|v|v.is_finite())||q[3]<=0.{return None;}
@@ -22,12 +23,12 @@ pub(crate) fn build_plan(app:&crate::IngeTrazoApp,rect:egui::Rect,matrix:&[f32;1
   if include_annotations{
   for(index,dim)in app.scene.dimensions.iter().enumerate(){
    let frame=app.scene.dimension_frame;
-   builder.dimension(DimensionInput{a:frame.transform_point3(dim.start).as_vec3(),b:frame.transform_point3(dim.end).as_vec3(),offset:frame.transform_vector3(dim.offset).as_vec3(),axis:dim.axis.as_deref(),text:dim.text_override.as_deref(),highlighted:app.selected_dimension==Some(index),hidden:dim.native_document["hidden"].as_bool().unwrap_or(false)||!app.scene.is_layer_visible(dim.layer.as_deref())},&style)?;
+   builder.dimension(DimensionInput{a:frame.transform_point3(dim.start).as_vec3(),b:frame.transform_point3(dim.end).as_vec3(),offset:frame.transform_vector3(dim.offset).as_vec3(),axis:dim.axis.as_deref(),text:dim.text_override.as_deref(),highlighted:app.selected_dimension==Some(index)||app.scene.is_selected(&ingetrazo_core::scene::SelectionItem::Dimension(index))||hover==Some(ingetrazo_tools::base::AnnotationEditTarget::Dimension(dim.id)),hidden:dim.native_document["hidden"].as_bool().unwrap_or(false)||!app.scene.is_layer_visible(dim.layer.as_deref())},&style)?;
   }
   let leader_style=style.clone();
-  for label in &app.scene.text_labels{
+  for(index,label)in app.scene.text_labels.iter().enumerate(){
    let(height,_)=cache.leader_metrics("",leader_style.font_size,96.)?;
-   builder.leader(LeaderInput{anchor:label.anchor.as_vec3(),offset:label.offset.as_vec3(),text:&label.text,highlighted:false,hidden:!app.scene.is_layer_visible(label.layer.as_deref())},&leader_style,height,|text|cache.leader_metrics(text,leader_style.font_size,96.).map(|(_,advance)|advance))?;
+   builder.leader(LeaderInput{anchor:label.anchor.as_vec3(),offset:label.offset.as_vec3(),text:&label.text,highlighted:app.scene.is_selected(&ingetrazo_core::scene::SelectionItem::TextLabel(index))||hover==Some(ingetrazo_tools::base::AnnotationEditTarget::Label(label.history_id)),hidden:!app.scene.is_layer_visible(label.layer.as_deref())},&leader_style,height,|text|cache.leader_metrics(text,leader_style.font_size,96.).map(|(_,advance)|advance))?;
   }
   }
   let mut plan=builder.finish()?;
@@ -80,4 +81,67 @@ pub(crate) fn typed_distance_text(buffer:&str,unit:&str)->String{
   let plan=build_plan(&app,rect,&matrix,&mut cache,true).unwrap();assert!(!plan.queries.is_empty());assert!(plan.operations.iter().any(|op|matches!(&op.primitive,annotations::Primitive::Text{text,..}if text.as_ref()=="1000.00 mm")));
   app.scene.dimensions[0].native_document["hidden"]=serde_json::json!(true);assert!(build_plan(&app,rect,&matrix,&mut cache,true).unwrap().operations.is_empty());
  }
+}
+
+#[cfg(test)]
+mod hover_tests {
+    use super::*;
+    use ingetrazo_tools::base::{AnnotationEditTarget, AnnotationHits, ToolContext, ToolType};
+
+    #[test]
+    fn hover_identity_context_stale_and_transient_ownership() {
+        let mut app = crate::IngeTrazoApp::new();
+        app.system_clipboard = None;
+        app.scene.text_labels.push(ingetrazo_core::textlabel::TextLabel::new(
+            glam::DVec3::ZERO, glam::DVec3::X, "hover"));
+        let id = app.scene.text_labels[0].history_id;
+        app.set_tool(ToolType::Select);
+        let ctx = ToolContext::new(glam::DVec3::ZERO,
+            ingetrazo_core::math::Ray::new(glam::DVec3::Z, -glam::DVec3::Z));
+        let parent = uuid::Uuid::new_v4();
+        let child = uuid::Uuid::new_v4();
+        app.scene.history_context = vec![parent, child];
+        app.active_tool.note_annotation_hits(AnnotationHits {label:Some(id),dimension:None});
+        let before = app.scene.clone();
+        let revision = app.model_revision;
+        app.dispatch_tool_move(&ctx);
+        assert_eq!(app.active_tool.annotation_hover_target(&app.scene),Some(AnnotationEditTarget::Label(id)));
+        app.dispatch_tool_move(&ctx);
+        app.active_tool.on_cancel(&mut app.scene);
+        assert_eq!(app.active_tool.annotation_hover_target(&app.scene),Some(AnnotationEditTarget::Label(id)));
+        assert_eq!(app.scene,before);
+        assert_eq!(app.model_revision,revision);
+        assert!(app.undo_stack.is_empty() && app.redo_stack.is_empty());
+        // Equal depth and shared last child do not identify the same placement context.
+        app.scene.history_context[0]=uuid::Uuid::new_v4();
+        assert_eq!(app.active_tool.annotation_hover_target(&app.scene),None);
+        app.scene.history_context[0]=parent;
+        let held=app.scene.text_labels.remove(0);
+        assert_eq!(app.active_tool.annotation_hover_target(&app.scene),None);
+        app.scene.text_labels.push(ingetrazo_core::textlabel::TextLabel::new(
+            glam::DVec3::ZERO,glam::DVec3::X,"hover"));
+        assert_ne!(app.scene.text_labels[0].history_id,id);
+        assert_eq!(app.active_tool.annotation_hover_target(&app.scene),None);
+        app.scene.text_labels[0]=held;
+        assert_eq!(app.active_tool.annotation_hover_target(&app.scene),Some(AnnotationEditTarget::Label(id)));
+        app.begin_annotation_edit(AnnotationEditTarget::Label(id)).unwrap();
+        let egui=egui::Context::default();
+        let frame=|app:&mut crate::IngeTrazoApp,point:egui::Pos2|{
+            let raw=egui::RawInput{screen_rect:Some(egui::Rect::from_min_size(egui::Pos2::ZERO,egui::vec2(800.,600.))),events:vec![egui::Event::PointerMoved(point)],..Default::default()};
+            let _=egui.run(raw,|ctx|{egui::CentralPanel::default().show(ctx,|ui|crate::viewport::render_viewport(app,ui));});
+        };
+        frame(&mut app,egui::pos2(400.,300.));
+        assert_eq!(app.active_tool.annotation_hover_target(&app.scene),Some(AnnotationEditTarget::Label(id)),"modal freezes existing hover");
+        frame(&mut app,egui::pos2(900.,700.));
+        assert_eq!(app.active_tool.annotation_hover_target(&app.scene),None,"actual viewport departure retires hover");
+        assert!(app.undo_stack.is_empty()&&app.redo_stack.is_empty());
+    }
+}
+
+/// CPU-only engineering inspection of the same native annotation plan, no depth/pixel claim.
+pub fn annotation_plan_for_probe(app:&crate::IngeTrazoApp,rect:egui::Rect)->Result<annotations::Plan,String>{
+    let snapshot=crate::navigation_ray::camera_snapshot(&app.camera).ok_or("Invalid diagnostic camera")?;
+    let matrix=std::array::from_fn(|i|snapshot.matrix[i/4][i%4]);
+    let mut cache=Cache::new(ingetrazo_formats::annotation_font::Limits{faces:32,retained_font_bytes:32*1024*1024},crate::annotation_overlay_geometry::Limits{cells:2_000_000,spans:200_000,geometry_bytes:32*1024*1024,glyphs:4096,glyph_bytes:16*1024*1024})?;
+    build_plan(app,rect,&matrix,&mut cache,true)
 }

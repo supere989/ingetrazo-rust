@@ -200,3 +200,5 @@ mod box_selection;
 mod cursor_navigation;
 mod annotation_delete;
 mod zoom_extents;
+
+pub use annotation_plan::annotation_plan_for_probe;
