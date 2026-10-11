@@ -1,0 +1,10 @@
+{
+  "manifest_files_verified": 17,
+  "query_flags_exact": 1404,
+  "source_hidden": 0,
+  "native_hidden": 0,
+  "unchanged_complete_native_frames": 3,
+  "adapter": "NVIDIA GeForce RTX 5090",
+  "cleanup_committed_bytes": 0,
+  "scope": "Retained actual Chapel iso run only; full rendered discrepancy and other depth cases remain open"
+}
