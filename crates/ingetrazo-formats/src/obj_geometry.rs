@@ -526,8 +526,8 @@ fn collapse_stations(mesh: &mut Mesh) -> Result<(), String> {
             i
         };
         for f in fa {
-            for ring in std::iter::once(&mut mesh.faces[f].vertices).chain(&mut mesh.faces[f].holes)
-            {
+            let face = &mut mesh.faces[f];
+            for ring in std::iter::once(&mut face.vertices).chain(&mut face.holes) {
                 ring.retain(|&i| i != v);
                 if ring.len() < 3 {
                     return Err("Invalid imported station collapse".into());
