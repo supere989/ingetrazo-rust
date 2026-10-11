@@ -50,35 +50,38 @@ impl Drop for Transfer {
     }
 }
 impl Resources {
-    /// Fresh RGBA8_UNORM image must have TRANSFER_DST|SAMPLED usage, and
+    /// Fresh color image must have TRANSFER_DST|SAMPLED usage, and
     /// TRANSFER_SRC when mip_levels>1. Failure leaves only this new image
     /// partially prepared; callers must drop it and retain prior cached images.
-    fn upload_rgba8_image(
+    fn upload_color_image(
         &mut self,
         context: &VulkanContext,
         image: vk::Image,
         extent: vk::Extent2D,
         data: &[u8],
         mip_levels: u32,
+        format: ingetrazo_render::texture_layout::Format,
     ) -> Result<(), String> {
         self.admit_context(context)?;
         let layout = ingetrazo_render::texture_layout::Layout::new(
-            ingetrazo_render::texture_layout::Format::Rgba8,
+            format,
             extent.width,
             extent.height,
             mip_levels,
         )?;
         let bytes = layout.mips[0].bytes;
         if bytes != data.len() as u64 {
-            return Err("RGBA image bytes do not match dimensions".into());
+            return Err("Texture image bytes do not match block dimensions".into());
         }
-        let row = extent.width as u64 * 4;
+        let (bw,bh,block_bytes)=format.block();
+        let row = (extent.width as u64).div_ceil(bw as u64)*block_bytes as u64;
         if row > UPLOAD_CHUNK {
             return Err(
-                "RGBA image row exceeds bounded Vulkan staging; tile upload required".into(),
+                "Texture block row exceeds bounded Vulkan staging; tile upload required".into(),
             );
         }
         if mip_levels > 1 {
+            if format != ingetrazo_render::texture_layout::Format::Rgba8 { return Err("Compressed images require authored mip data".into()); }
             let props = unsafe {
                 context.instance.get_physical_device_format_properties(
                     context.physical_device,
@@ -137,12 +140,12 @@ impl Resources {
                         )
                         .image_offset(vk::Offset3D {
                             x: 0,
-                            y: (offset / row) as i32,
+                            y: ((offset / row)*bh as u64) as i32,
                             z: 0,
                         })
                         .image_extent(vk::Extent3D {
                             width: extent.width,
-                            height: (length / row) as u32,
+                            height: ((length / row)*bh as u64).min(extent.height as u64-(offset / row)*bh as u64) as u32,
                             depth: 1,
                         });
                     self.device.cmd_copy_buffer_to_image(
@@ -344,36 +347,46 @@ pub struct TextureImage {
     memory: vk::DeviceMemory,
     pub extent: vk::Extent2D,
     pub mip_levels: u32,
+    pub format: ingetrazo_render::texture_layout::Format,
     pub allocation_bytes: u64,
     readback_enabled: bool,
 }
 impl TextureImage {
-    /// Decode bytes remain top-row first. Source V reversal belongs to the
-    /// source-compatible UV shader, avoiding an extra CPU image flip/copy.
-    pub fn rgba8(
-        context: &VulkanContext,
-        resources: &mut Resources,
-        extent: vk::Extent2D,
-        data: &[u8],
-        mips: bool,
-        diagnostic_readback: bool,
-    ) -> Result<Self, String> {
+    /// RGBA8 upload; callers supply source-compatible row orientation.
+    pub fn rgba8(context: &VulkanContext, resources: &mut Resources, extent: vk::Extent2D, data: &[u8], mips: bool, diagnostic_readback: bool) -> Result<Self, String> {
+        Self::color(context, resources, extent, data, ingetrazo_render::texture_layout::Format::Rgba8, mips, diagnostic_readback)
+    }
+    /// Real BC7 blocks, single mip. Call after source-exact cold admission.
+    pub fn bc7(context: &VulkanContext, resources: &mut Resources, extent: vk::Extent2D, data: &[u8], diagnostic_readback: bool) -> Result<Self, String> {
+        if !context.texture_bc_enabled { return Err("BC texture feature was not enabled on this device".into()); }
+        Self::color(context, resources, extent, data, ingetrazo_render::texture_layout::Format::Bc7, false, diagnostic_readback)
+    }
+    pub fn supports_bc7(context: &VulkanContext, extent: vk::Extent2D, readback: bool) -> bool {
+        if !context.texture_bc_enabled { return false; }
+        let format=vk::Format::BC7_UNORM_BLOCK;
+        let features=unsafe {context.instance.get_physical_device_format_properties(context.physical_device,format)}.optimal_tiling_features;
+        if !features.contains(vk::FormatFeatureFlags::SAMPLED_IMAGE | vk::FormatFeatureFlags::SAMPLED_IMAGE_FILTER_LINEAR | vk::FormatFeatureFlags::TRANSFER_DST) { return false; }
+        let usage=vk::ImageUsageFlags::SAMPLED | vk::ImageUsageFlags::TRANSFER_DST | if readback {vk::ImageUsageFlags::TRANSFER_SRC} else {vk::ImageUsageFlags::empty()};
+        let Ok(props)=(unsafe {context.instance.get_physical_device_image_format_properties(context.physical_device,format,vk::ImageType::TYPE_2D,vk::ImageTiling::OPTIMAL,usage,vk::ImageCreateFlags::empty())}) else { return false; };
+        extent.width>0 && extent.height>0 && extent.width<=props.max_extent.width && extent.height<=props.max_extent.height && props.max_mip_levels>=1 && props.max_array_layers>=1 && props.sample_counts.contains(vk::SampleCountFlags::TYPE_1) && ingetrazo_render::texture_layout::Format::Bc7.mip_bytes(extent.width,extent.height).is_ok_and(|n|n<=props.max_resource_size)
+    }
+    fn color(context: &VulkanContext, resources: &mut Resources, extent: vk::Extent2D, data: &[u8], block_format: ingetrazo_render::texture_layout::Format, mips: bool, diagnostic_readback: bool) -> Result<Self, String> {
         resources.admit_context(context)?;
         use egui_ash_renderer::MemoryObserver;
         let layout = ingetrazo_render::texture_layout::Layout::full(
-            ingetrazo_render::texture_layout::Format::Rgba8,
+            block_format,
             extent.width,
             extent.height,
         )?;
         let levels = if mips { layout.mips.len() as u32 } else { 1 };
         if layout.mips[0].bytes != data.len() as u64 {
-            return Err("Decoded RGBA bytes differ from dimensions".into());
+            return Err("Texture bytes differ from block dimensions".into());
         }
         let mut usage = vk::ImageUsageFlags::SAMPLED | vk::ImageUsageFlags::TRANSFER_DST;
         if mips || diagnostic_readback {
             usage |= vk::ImageUsageFlags::TRANSFER_SRC;
         }
-        let format = vk::Format::R8G8B8A8_UNORM;
+        let format = match block_format { ingetrazo_render::texture_layout::Format::Rgba8=>vk::Format::R8G8B8A8_UNORM, ingetrazo_render::texture_layout::Format::Bc7=>vk::Format::BC7_UNORM_BLOCK, _=>return Err("Unsupported sampled texture format".into()) };
         let props = unsafe {
             context
                 .instance
@@ -386,7 +399,7 @@ impl TextureImage {
                     vk::ImageCreateFlags::empty(),
                 )
         }
-        .map_err(|e| format!("RGBA texture format/usage unavailable: {e}"))?;
+        .map_err(|e| format!("Sampled texture format/usage unavailable: {e}"))?;
         let logical_bytes: u64 = layout.mips[..levels as usize].iter().map(|m|m.bytes).sum();
         if extent.width > props.max_extent.width
             || extent.height > props.max_extent.height
@@ -407,7 +420,7 @@ impl TextureImage {
             vk::FormatFeatureFlags::SAMPLED_IMAGE
                 | vk::FormatFeatureFlags::SAMPLED_IMAGE_FILTER_LINEAR,
         ) {
-            return Err("RGBA texture requires actual linear sampling support".into());
+            return Err("Texture requires actual linear sampling support".into());
         }
         let device = context.device.clone();
         let budget = resources.budget.clone();
@@ -505,7 +518,7 @@ impl TextureImage {
                 )
             }
             .map_err(|e| e.to_string())?;
-            resources.upload_rgba8_image(context, image, extent, data, levels)
+            resources.upload_color_image(context, image, extent, data, levels, block_format)
         })();
         if let Err(e) = result {
             if context.lifetime.uncertain(){context.lifetime.retain(budget.clone());context.lifetime.retain((image,view,sampler,memory));return Err(e);}
@@ -534,6 +547,7 @@ impl TextureImage {
             memory: memory.unwrap(),
             extent,
             mip_levels: levels,
+            format: block_format,
             allocation_bytes: req.size,
             readback_enabled: diagnostic_readback,
         })
@@ -555,7 +569,8 @@ impl Drop for TextureImage {
 
 impl Resources {
     /// Diagnostic-only transfer from a sampled mip. Image must have TRANSFER_SRC
-    /// usage. Restores its sampled layout and waits the real GPU transfer fence.
+    /// usage. Returns encoded blocks for compressed images, not decoded texels.
+    /// Restores its sampled layout and waits the real GPU transfer fence.
     pub fn readback_texture_mip(
         &mut self,
         context: &VulkanContext,
@@ -578,8 +593,9 @@ impl Resources {
             width: (texture.extent.width >> level).max(1),
             height: (texture.extent.height >> level).max(1),
         };
-        let row = extent.width as u64 * 4;
-        let bytes = row * extent.height as u64;
+        let (bw,bh,block_bytes)=texture.format.block();
+        let row = (extent.width as u64).div_ceil(bw as u64)*block_bytes as u64;
+        let bytes = row * (extent.height as u64).div_ceil(bh as u64);
         self.read_chunks(
             context,
             bytes,
@@ -607,12 +623,12 @@ impl Resources {
                     )
                     .image_offset(vk::Offset3D {
                         x: 0,
-                        y: (offset / row) as i32,
+                        y: ((offset / row)*bh as u64) as i32,
                         z: 0,
                     })
                     .image_extent(vk::Extent3D {
                         width: extent.width,
-                        height: (length / row) as u32,
+                        height: ((length / row)*bh as u64).min(extent.height as u64-(offset / row)*bh as u64) as u32,
                         depth: 1,
                     });
                 device.cmd_copy_image_to_buffer(
@@ -637,5 +653,40 @@ impl Resources {
                 );
             },
         )
+    }
+}
+
+impl Resources {
+    /// Diagnostic only: actual hardware BC7 decode into an RGBA transfer target.
+    /// No CPU decoder in this proof path. Never called during rendering.
+    #[doc(hidden)]
+    pub fn readback_texture_decoded_for_probe(&mut self, context: &VulkanContext, texture: &TextureImage) -> Result<Vec<u8>,String> {
+        self.admit_context(context)?;
+        if texture.format == ingetrazo_render::texture_layout::Format::Rgba8 { return self.readback_texture_mip(context,texture,0); }
+        if !texture.readback_enabled || !std::sync::Arc::ptr_eq(&self.lifetime,&texture.lifetime) { return Err("Diagnostic texture usage/owner mismatch".into()); }
+        let props=unsafe {context.instance.get_physical_device_format_properties(context.physical_device,vk::Format::BC7_UNORM_BLOCK)};
+        let dst_props=unsafe {context.instance.get_physical_device_format_properties(context.physical_device,vk::Format::R8G8B8A8_UNORM)};
+        if !props.optimal_tiling_features.contains(vk::FormatFeatureFlags::BLIT_SRC) || !dst_props.optimal_tiling_features.contains(vk::FormatFeatureFlags::BLIT_DST) { return Err("Hardware BC7 decode blit unavailable for diagnostic".into()); }
+        let bytes=ingetrazo_render::texture_layout::Format::Rgba8.mip_bytes(texture.extent.width,texture.extent.height)?;
+        let mut zero=Vec::new();zero.try_reserve_exact(usize::try_from(bytes).map_err(|_|"Diagnostic extent overflow")?).map_err(|_|"Diagnostic RGBA allocation")?;zero.resize(bytes as usize,0);
+        let target=TextureImage::rgba8(context,self,texture.extent,&zero,false,true)?;drop(zero);
+        let (command,fence)=self.transfer_handles(context)?;
+        let device=&self.device;
+        unsafe {
+            device.reset_command_buffer(command,vk::CommandBufferResetFlags::empty()).map_err(|e|e.to_string())?;
+            device.begin_command_buffer(command,&vk::CommandBufferBeginInfo::default().flags(vk::CommandBufferUsageFlags::ONE_TIME_SUBMIT)).map_err(|e|e.to_string())?;
+            transition(device,command,texture.image,0,1,vk::ImageLayout::SHADER_READ_ONLY_OPTIMAL,vk::ImageLayout::TRANSFER_SRC_OPTIMAL,vk::AccessFlags::SHADER_READ,vk::AccessFlags::TRANSFER_READ,vk::PipelineStageFlags::ALL_GRAPHICS,vk::PipelineStageFlags::TRANSFER);
+            transition(device,command,target.image,0,1,vk::ImageLayout::SHADER_READ_ONLY_OPTIMAL,vk::ImageLayout::TRANSFER_DST_OPTIMAL,vk::AccessFlags::SHADER_READ,vk::AccessFlags::TRANSFER_WRITE,vk::PipelineStageFlags::ALL_GRAPHICS,vk::PipelineStageFlags::TRANSFER);
+            let layers=vk::ImageSubresourceLayers::default().aspect_mask(vk::ImageAspectFlags::COLOR).layer_count(1);
+            let offsets=[vk::Offset3D::default(),vk::Offset3D{x:texture.extent.width as i32,y:texture.extent.height as i32,z:1}];
+            device.cmd_blit_image(command,texture.image,vk::ImageLayout::TRANSFER_SRC_OPTIMAL,target.image,vk::ImageLayout::TRANSFER_DST_OPTIMAL,&[vk::ImageBlit::default().src_subresource(layers).dst_subresource(layers).src_offsets(offsets).dst_offsets(offsets)],vk::Filter::NEAREST);
+            transition(device,command,texture.image,0,1,vk::ImageLayout::TRANSFER_SRC_OPTIMAL,vk::ImageLayout::SHADER_READ_ONLY_OPTIMAL,vk::AccessFlags::TRANSFER_READ,vk::AccessFlags::SHADER_READ,vk::PipelineStageFlags::TRANSFER,vk::PipelineStageFlags::ALL_GRAPHICS);
+            transition(device,command,target.image,0,1,vk::ImageLayout::TRANSFER_DST_OPTIMAL,vk::ImageLayout::SHADER_READ_ONLY_OPTIMAL,vk::AccessFlags::TRANSFER_WRITE,vk::AccessFlags::SHADER_READ,vk::PipelineStageFlags::TRANSFER,vk::PipelineStageFlags::ALL_GRAPHICS);
+            device.end_command_buffer(command).map_err(|e|e.to_string())?;
+            device.reset_fences(&[fence]).map_err(|e|e.to_string())?;
+            device.queue_submit(context.graphics_queue,&[vk::SubmitInfo::default().command_buffers(&[command])],fence).map_err(|e|{self.lifetime.quarantine();e.to_string()})?;
+        }
+        if let Err(e)=context.wait_transfer(fence) { self.lifetime.quarantine();return Err(e.to_string()); }
+        self.readback_texture_mip(context,&target,0)
     }
 }

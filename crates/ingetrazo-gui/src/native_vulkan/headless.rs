@@ -16,6 +16,11 @@ impl VulkanContext {
  /// Diagnostic contexts have a five-second fence bound and fail fast rather than
  /// destroying resources that may still be in flight after timeout.
  pub fn new_headless(request:&DeviceRequest)->Result<Self,Box<dyn Error>> {
+  Self::new_headless_features(request,true)
+ }
+ #[doc(hidden)]
+ pub fn new_headless_rgba_fixture(request:&DeviceRequest)->Result<Self,Box<dyn Error>> { Self::new_headless_features(request,false) }
+ fn new_headless_features(request:&DeviceRequest,enable_bc:bool)->Result<Self,Box<dyn Error>> {
   let entry=unsafe {Entry::load()?};
   let version=unsafe {entry.try_enumerate_instance_version()?}.unwrap_or(vk::API_VERSION_1_0);
   if version<vk::API_VERSION_1_1{return Err("Headless context requires Vulkan1.1".into());}
@@ -36,16 +41,16 @@ impl VulkanContext {
    let extensions=unsafe {instance.enumerate_device_extension_properties(physical)?};
    let enabled=if extensions.iter().any(|e|unsafe {CStr::from_ptr(e.extension_name.as_ptr())}==ash::ext::memory_budget::NAME){vec![ash::ext::memory_budget::NAME.as_ptr()]}else{vec![]};
    let priorities=[1.];let queues=[vk::DeviceQueueCreateInfo::default().queue_family_index(graphics).queue_priorities(&priorities)];
-   let available=unsafe{instance.get_physical_device_features(physical)};let features=vk::PhysicalDeviceFeatures::default().shader_clip_distance(available.shader_clip_distance!=0);
+   let available=unsafe{instance.get_physical_device_features(physical)};let texture_bc_enabled=enable_bc&&available.texture_compression_bc!=0;let features=vk::PhysicalDeviceFeatures::default().shader_clip_distance(available.shader_clip_distance!=0).texture_compression_bc(texture_bc_enabled);
    let device=unsafe {instance.create_device(physical,&vk::DeviceCreateInfo::default().queue_create_infos(&queues).enabled_extension_names(&enabled).enabled_features(&features),None)?};
    let pool=match unsafe {device.create_command_pool(&vk::CommandPoolCreateInfo::default().queue_family_index(graphics).flags(vk::CommandPoolCreateFlags::RESET_COMMAND_BUFFER),None)} {Ok(pool)=>pool,Err(e)=>{unsafe {device.destroy_device(None)};return Err(Box::<dyn Error>::from(e));}};
    let queue=unsafe {device.get_device_queue(graphics,0)};
    eprintln!("Selected headless adapter {name}; strict request {:?}; no surface/present requirement",request);
-   Ok((physical,graphics,device,pool,queue))
+   Ok((physical,graphics,device,pool,queue,texture_bc_enabled))
   })();
-  let (physical,graphics,device,pool,queue)=match result {Ok(values)=>values,Err(e)=>{unsafe {instance.destroy_instance(None)};return Err(e);}};
+  let (physical,graphics,device,pool,queue,texture_bc_enabled)=match result {Ok(values)=>values,Err(e)=>{unsafe {instance.destroy_instance(None)};return Err(e);}};
   let debug_utils=debug_utils::Instance::new(&entry,&instance);let surface=surface::Instance::new(&entry,&instance);
-  Ok(Self{startup_audit:Default::default(),lifetime:std::sync::Arc::new(super::lifetime::Lifetime::new(device.clone(),queue)),_entry:Some(entry),instance,debug_utils,debug_utils_messenger:vk::DebugUtilsMessengerEXT::null(),surface,surface_khr:vk::SurfaceKHR::null(),physical_device:physical,graphics_q_index:graphics,present_q_index:graphics,device,graphics_queue:queue,present_queue:queue,command_pool:pool,present_fences_enabled:false,transfer_timeout_ns:5_000_000_000,diagnostic_fail_fast:true})
+  Ok(Self{startup_audit:Default::default(),lifetime:std::sync::Arc::new(super::lifetime::Lifetime::new(device.clone(),queue)),_entry:Some(entry),instance,debug_utils,debug_utils_messenger:vk::DebugUtilsMessengerEXT::null(),surface,surface_khr:vk::SurfaceKHR::null(),physical_device:physical,graphics_q_index:graphics,present_q_index:graphics,device,graphics_queue:queue,present_queue:queue,command_pool:pool,present_fences_enabled:false,texture_bc_enabled,transfer_timeout_ns:5_000_000_000,diagnostic_fail_fast:true})
  }
 }
 #[cfg(test)]mod tests {

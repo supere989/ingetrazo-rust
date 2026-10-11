@@ -803,6 +803,7 @@ pub struct VulkanContext {
     present_queue: vk::Queue,
     pub command_pool: vk::CommandPool,
     pub present_fences_enabled:bool,
+    pub texture_bc_enabled:bool,
     pub transfer_timeout_ns:u64,
     pub diagnostic_fail_fast:bool,
 }
@@ -848,7 +849,7 @@ impl VulkanContext {
             )?;
 
         // Vulkan logical device and queues
-        let (device, graphics_queue, present_queue,present_fences_enabled) =
+        let (device, graphics_queue, present_queue,present_fences_enabled,texture_bc_enabled) =
             create_vulkan_device_and_graphics_and_present_qs(
                 &instance,
                 physical_device,
@@ -885,6 +886,7 @@ impl VulkanContext {
             present_queue,
             command_pool,
             present_fences_enabled,
+            texture_bc_enabled,
             transfer_timeout_ns:lifetime::WAIT_NS,
             diagnostic_fail_fast:false,
         })
@@ -1114,7 +1116,7 @@ fn create_vulkan_device_and_graphics_and_present_qs(
     graphics_q_index: u32,
     present_q_index: u32,
     surface_maintenance_enabled:bool,
-) -> Result<(Device, vk::Queue, vk::Queue,bool), Box<dyn Error>> {
+) -> Result<(Device, vk::Queue, vk::Queue,bool,bool), Box<dyn Error>> {
     log::debug!("Creating vulkan device and graphics and present queues");
     let queue_priorities = [1.0f32];
     let queue_create_infos = {
@@ -1145,7 +1147,8 @@ fn create_vulkan_device_and_graphics_and_present_qs(
     if enabled{device_extensions_ptrs.push(ash::ext::swapchain_maintenance1::NAME.as_ptr());}
     eprintln!("Native present-fence negotiation: extension={has_maintenance} feature={} enabled={enabled}",maintenance.swapchain_maintenance1!=0);
     let available=unsafe{instance.get_physical_device_features(physical_device)};
-    let features=vk::PhysicalDeviceFeatures::default().shader_clip_distance(available.shader_clip_distance!=0);
+    let texture_bc_enabled=available.texture_compression_bc!=0;
+    let features=vk::PhysicalDeviceFeatures::default().shader_clip_distance(available.shader_clip_distance!=0).texture_compression_bc(texture_bc_enabled);
     let mut device_create_info = vk::DeviceCreateInfo::default()
         .queue_create_infos(&queue_create_infos)
         .enabled_extension_names(&device_extensions_ptrs)
@@ -1156,7 +1159,7 @@ fn create_vulkan_device_and_graphics_and_present_qs(
     let graphics_queue = unsafe { device.get_device_queue(graphics_q_index, 0) };
     let present_queue = unsafe { device.get_device_queue(present_q_index, 0) };
 
-    Ok((device, graphics_queue, present_queue,enabled))
+    Ok((device, graphics_queue, present_queue,enabled,texture_bc_enabled))
 }
 
 fn create_vulkan_swapchain(

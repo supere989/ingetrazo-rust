@@ -14,6 +14,11 @@ pub struct TextureStats {
     pub encoded_bytes_hashed: u64,
     pub decodes: u64,
     pub uploads: u64,
+    pub bc7_uploads: u64,
+    pub compression_attempts: u64,
+    pub compression_ms: f64,
+    pub uploaded_bytes: u64,
+    pub exact_saved_bytes: u64,
     pub hits: u64,
     pub retired: u64,
     pub hash_ms: f64,
@@ -95,7 +100,7 @@ impl TextureCache {
         id: AssetId,
     ) -> Result<Vec<u8>, String> {
         let entry = self.images.get(&id).ok_or("Texture not published")?;
-        resources.readback_texture_mip(context, &entry.image, 0)
+        resources.readback_texture_decoded_for_probe(context, &entry.image)
     }
 
     pub fn identify<'a>(&mut self, encoded: &'a [u8]) -> EncodedAsset<'a> {
@@ -142,15 +147,23 @@ impl TextureCache {
         mirror_rgba_rows(&mut decoded.rgba, decoded.extent.width as usize, decoded.extent.height as usize);
         self.stats.orientation_bytes += decoded.rgba.len() as u64;
         self.stats.orientation_ms += orientation_start.elapsed().as_secs_f64() * 1000.;
+        // The original hard-cutout path has no mips. General/mipped images
+        // retain existing GPU mip generation until exact BC mip chains exist.
+        let compression_start=Instant::now();
+        let compressed=if decoded.hard_cutout && TextureImage::supports_bc7(context, decoded.extent, self.diagnostic_readback) {
+            self.stats.compression_attempts+=1;
+            ingetrazo_render::block_compression::exact_bc7(decoded.extent.width,decoded.extent.height,&decoded.rgba)?
+        } else { None };
+        self.stats.compression_ms+=compression_start.elapsed().as_secs_f64()*1000.;
         let start = Instant::now();
-        let image = TextureImage::rgba8(
-            context,
-            resources,
-            decoded.extent,
-            &decoded.rgba,
-            !decoded.hard_cutout,
-            self.diagnostic_readback,
-        )?;
+        let image=if let Some(blocks)=compressed.as_ref() {
+            TextureImage::bc7(context,resources,decoded.extent,blocks,self.diagnostic_readback)?
+        } else {
+            TextureImage::rgba8(context,resources,decoded.extent,&decoded.rgba,!decoded.hard_cutout,self.diagnostic_readback)?
+        };
+        let bytes=compressed.as_ref().map_or(decoded.rgba.len(),Vec::len) as u64;
+        self.stats.uploaded_bytes+=bytes;
+        if compressed.is_some() {self.stats.bc7_uploads+=1;self.stats.exact_saved_bytes+=decoded.rgba.len() as u64-bytes;}
         self.stats.upload_ms += start.elapsed().as_secs_f64() * 1000.;
         self.stats.uploads += 1;
         Ok(PreparedTexture {

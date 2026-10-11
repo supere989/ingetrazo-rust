@@ -160,3 +160,5 @@ pub mod source_texture_decode;
 pub mod qt_line;
 
 pub mod scene_revision;
+
+pub mod block_compression;
