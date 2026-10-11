@@ -85,9 +85,11 @@ jobs:
         run: |
           mkdir -p docs/audits/metal-combined-gui-ci
           cargo check --locked -p ingetrazo-gui --all-targets > docs/audits/metal-combined-gui-ci/check.log 2>&1
-          cargo build --locked -p ingetrazo-cli -p ingetrazo-gui -p ingetrazo-metal --bin ingetrazo --example native_metal --example native_metal_document_probe --example session_recovery_process --example native_world_defaults --example device_probe --example submission_probe --example cad2d_probe > docs/audits/metal-combined-gui-ci/build.log 2>&1
+          cargo build --locked -p ingetrazo-cli -p ingetrazo-gui -p ingetrazo-metal --bin ingetrazo --example native_metal --example native_metal_document_probe --example session_recovery_process --example native_world_defaults --example native_metal_document_annotations --example device_probe --example submission_probe --example cad2d_probe > docs/audits/metal-combined-gui-ci/build.log 2>&1
       - name: Native default sky profile cache refusal and ownership
         run: target/debug/examples/native_world_defaults docs/audits/metal-combined-gui-ci/defaults
+      - name: Native document dimensions depth and immutable frame ownership
+        run: target/debug/examples/native_metal_document_annotations ingetrazo/examples/banca-pergola-yanque.igz docs/audits/metal-combined-gui-ci/document-annotations
       - name: Actual packaged CLI native Metal world startup
         run: python3 scripts/check-native-metal-launcher.py target/debug/ingetrazo ingetrazo/examples/banca-pergola-yanque.igz docs/audits/metal-combined-gui-ci/launcher
       - name: Native isolated session lease crash and app recovery
@@ -255,7 +257,7 @@ jobs:
           python scripts/check-ai-bridge-query.py docs/audits/ai-bridge-ci --require-full > docs/audits/ai-bridge-ci/comparison.json
       - name: Integrated document axes PushPull and nested Fillet workflows using retained source fixtures
         run: |
-          cargo build --locked -p ingetrazo-gui --example change_axes_fixture --example document_preservation_workflow --example pushpull_solid_workflows --example fillet_scoped --example pushpull_finite_workflows
+          cargo build --locked -p ingetrazo-gui --example change_axes_fixture --example document_preservation_workflow --example pushpull_solid_workflows --example fillet_scoped --example pushpull_finite_workflows --example paste_save_workflow
           python scripts/check-document-axes-integration.py target/debug/examples docs/audits/document-axes-ci
       - name: Pinned original and native legacy SKP primitive parity
         run: |
