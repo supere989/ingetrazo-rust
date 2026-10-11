@@ -355,7 +355,9 @@ mod tests {
         let ctx_hover = ToolContext::new(DVec3::new(2.0, 2.0, 0.0), Ray::new(DVec3::ZERO, DVec3::Z));
         tool.on_move(&mut scene, &ctx_hover);
 
-        assert!(tool.on_vcb_input(&mut scene, "5.0, 2.0").is_ok());
+        // Source commas delimit Rectangle values only when there is no space.
+        assert!(tool.on_vcb_input(&mut scene, "5.0, 2.0").is_err());
+        assert!(tool.on_vcb_input(&mut scene, "5.0; 2.0").is_ok());
         assert_eq!(scene.mesh.faces.len(), 1);
         assert!((scene.mesh.face_area(0) - 10.0).abs() < 1e-4);
     }

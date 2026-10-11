@@ -65,7 +65,7 @@ pub fn plan_for_probe(app:&crate::IngeTrazoApp,rect:egui::Rect)->Result<annotati
   let mut app=crate::IngeTrazoApp::new();app.system_clipboard=None;
   let ids=[DVec3::ZERO,DVec3::X,DVec3::new(1.,1.,0.),DVec3::Y].into_iter().map(|p|app.scene.mesh.add_vertex(p)).collect();
   app.scene.mesh.add_face(ids,vec![]);app.active_tool=create_tool(ToolType::PushPull);app.active_tool_type=ToolType::PushPull;
-  app.scene.native_document["units"]=serde_json::json!({"length":"mm","precision":2});
+  app.apply_model_units(serde_json::json!({"length":"mm","precision":2}));
   let ctx=ToolContext::new(DVec3::new(0.5,0.5,0.),ingetrazo_core::math::Ray::new(DVec3::new(0.5,0.5,5.),-DVec3::Z));
   app.dispatch_tool_click(&ctx);assert!(app.active_tool.distance_label().is_some());
   let rect=egui::Rect::from_min_size(egui::Pos2::ZERO,egui::vec2(800.,600.));

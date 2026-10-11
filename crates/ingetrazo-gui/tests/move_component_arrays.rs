@@ -67,7 +67,9 @@ fn crossing_and_exact_overlap_arrays_match_retained_original_segments(){
   let a=m.add_vertex(-DVec3::X);let b=m.add_vertex(DVec3::X);let edge=m.add_edge(a,b).unwrap();
   let c=m.add_vertex(if overlap{-DVec3::X+DVec3::Y*2.}else{DVec3::Y});let d=m.add_vertex(if overlap{DVec3::X+DVec3::Y*2.}else{DVec3::Y*5.});m.add_edge(c,d).unwrap();
   app.scene.select(SelectionItem::Edge(edge));let before=app.scene.clone();app.active_tool=Box::new(MoveTool::new());let mut grab=context(DVec3::ZERO);grab.ctrl_held=true;app.dispatch_tool_click(&grab);
-  app.dispatch_tool_vcb("0,2,0").unwrap();app.dispatch_tool_vcb("2x").unwrap();
+  // Source comma is decimal for Move; semicolons delimit the delta.
+  assert!(app.dispatch_tool_vcb("0,2,0").is_err());
+  app.dispatch_tool_vcb("0;2;0").unwrap();app.dispatch_tool_vcb("2x").unwrap();
   fn segments(m:&Mesh)->serde_json::Value{let mut out=m.edges.iter().map(|e|{let mut p=[m.vertices[e.v0].position.to_array(),m.vertices[e.v1].position.to_array()];p.sort_by(|a,b|a.partial_cmp(b).unwrap());p}).collect::<Vec<_>>();out.sort_by(|a,b|a.partial_cmp(b).unwrap());serde_json::json!(out)}
   assert_eq!(segments(&app.scene.mesh),baseline["cases"][index]["copied_segments"]);assert_eq!(app.undo_stack.len(),1);
   let after=app.scene.clone();app.undo();assert_eq!(app.scene.mesh,before.mesh);assert_eq!(segments(&app.scene.mesh),baseline["cases"][index]["undo_segments"]);

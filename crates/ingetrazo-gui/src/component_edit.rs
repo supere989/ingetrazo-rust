@@ -565,7 +565,7 @@ impl IngeTrazoApp {
         // Original begin_group_edit swaps mesh and placements only; these are
         // document-global entities in the same world frame.
         edit.tile_layer=self.scene.tile_layer.clone();
-        edit.unit=self.scene.unit;edit.model_units_override=Some(self.scene.model_units().clone());
+        edit.unit=self.scene.unit;edit.model_units_override=(!self.scene.model_units().is_null()).then(||self.scene.model_units().clone());
         edit.dimension_style_override=(!self.scene.dimension_style().is_null()).then(||self.scene.dimension_style().clone());
         edit.display_style=self.scene.display_style.clone();edit.shadows=self.scene.shadows.clone();
         edit.show_hidden_objects=self.scene.show_hidden_objects;edit.show_hidden_geometry=self.scene.show_hidden_geometry;
