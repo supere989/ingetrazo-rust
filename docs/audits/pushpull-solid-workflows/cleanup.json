@@ -1,0 +1,136 @@
+{
+  "removed": [
+    {
+      "path": "/tmp/pushpull-solid-app-input.json",
+      "bytes": 70301,
+      "sha256": "135b1d0d7debcb5210ec3e88f1ae5a271a99f4163fce7025be2202c0580c65d2",
+      "canonical_member": "app-input.json",
+      "scope": "canonical byte match"
+    },
+    {
+      "path": "/tmp/pushpull-solid-app-native-final.json",
+      "bytes": 173202,
+      "sha256": "878b24febd3eb0a8eebec8076d494b3ee35576aff4330a8b20d0033b6126fe90",
+      "canonical_member": "app-native.json",
+      "scope": "canonical byte match"
+    },
+    {
+      "path": "/tmp/pushpull-solid-app-native.json",
+      "bytes": 143000,
+      "sha256": "73307eb7e15ebfd2c0580239c9c59e7738c9b95ed7a1d524116786cd5e4946a1",
+      "canonical_member": null,
+      "scope": "superseded terminal diagnostic"
+    },
+    {
+      "path": "/tmp/pushpull-solid-gate2-final.json",
+      "bytes": 129530,
+      "sha256": "bfc40f96faab8be3ec1215923b8668830c50454837fa828edec31b366b4e430f",
+      "canonical_member": "gate2-native.json",
+      "scope": "canonical byte match"
+    },
+    {
+      "path": "/tmp/pushpull-solid-gate2.json",
+      "bytes": 129530,
+      "sha256": "61b04a13b9cf13b95b4ed2530ab50dbccfad26548ab9ec6c2a1053cf56182275",
+      "canonical_member": null,
+      "scope": "superseded terminal diagnostic"
+    },
+    {
+      "path": "/tmp/pushpull-solid-holed-native.json",
+      "bytes": 5766,
+      "sha256": "45844ba66f625bb3eaf997fddb830c608686fbe498876348d783df1b6212bdbe",
+      "canonical_member": null,
+      "scope": "superseded terminal diagnostic"
+    },
+    {
+      "path": "/tmp/pushpull-solid-holed-operative.json",
+      "bytes": 11411,
+      "sha256": "de2f10b11a18520065ae1788ef243a3e6559be3cd581d15f80f6403ff339298b",
+      "canonical_member": "operative-holed-source.json",
+      "scope": "canonical byte match"
+    },
+    {
+      "path": "/tmp/pushpull-solid-native-context.json",
+      "bytes": 44786,
+      "sha256": "296a26b38b3ca8c747864ee73bde3bba0976a86db0a3ea3f2cba6531580147e9",
+      "canonical_member": null,
+      "scope": "superseded terminal diagnostic"
+    },
+    {
+      "path": "/tmp/pushpull-solid-native-debug.json",
+      "bytes": 44786,
+      "sha256": "296a26b38b3ca8c747864ee73bde3bba0976a86db0a3ea3f2cba6531580147e9",
+      "canonical_member": null,
+      "scope": "superseded terminal diagnostic"
+    },
+    {
+      "path": "/tmp/pushpull-solid-native-final-draft.json",
+      "bytes": 44751,
+      "sha256": "0948c34833c62932065ea935937e9e0895b99db7a3c4b08bdac40c92bc199be5",
+      "canonical_member": null,
+      "scope": "superseded terminal diagnostic"
+    },
+    {
+      "path": "/tmp/pushpull-solid-native-final.json",
+      "bytes": 44711,
+      "sha256": "aa353bf65b238573c878ecb3c5e6e718a470b41bf16b6ec538d47f9eeb5171b4",
+      "canonical_member": "native.json",
+      "scope": "canonical byte match"
+    },
+    {
+      "path": "/tmp/pushpull-solid-native-rebuild.json",
+      "bytes": 43957,
+      "sha256": "ecfafb6e336314d5228e49afab83bd17fb066ef151bcf438bc74cc3dfbd5ee60",
+      "canonical_member": null,
+      "scope": "superseded terminal diagnostic"
+    },
+    {
+      "path": "/tmp/pushpull-solid-native-stitch.json",
+      "bytes": 44711,
+      "sha256": "aa353bf65b238573c878ecb3c5e6e718a470b41bf16b6ec538d47f9eeb5171b4",
+      "canonical_member": null,
+      "scope": "superseded terminal diagnostic"
+    },
+    {
+      "path": "/tmp/pushpull-solid-native-triangle.json",
+      "bytes": 44727,
+      "sha256": "3c5b9d02accf778eb1ee848d5a6424bc625e03b6b8c85b55090dde4e75d42e56",
+      "canonical_member": null,
+      "scope": "superseded terminal diagnostic"
+    },
+    {
+      "path": "/tmp/pushpull-solid-native-weld.json",
+      "bytes": 44751,
+      "sha256": "0948c34833c62932065ea935937e9e0895b99db7a3c4b08bdac40c92bc199be5",
+      "canonical_member": null,
+      "scope": "superseded terminal diagnostic"
+    },
+    {
+      "path": "/tmp/pushpull-solid-native.json",
+      "bytes": 43957,
+      "sha256": "ecfafb6e336314d5228e49afab83bd17fb066ef151bcf438bc74cc3dfbd5ee60",
+      "canonical_member": "initial-native.json",
+      "scope": "canonical byte match"
+    },
+    {
+      "path": "/tmp/pushpull-solid-repaired-debug.json",
+      "bytes": 9413,
+      "sha256": "cb7f20c54de3ba1cdb7d04627666914199e42a43ef11da6a3bb453431e1fc78a",
+      "canonical_member": "repaired-failed-candidate.json",
+      "scope": "canonical byte match"
+    },
+    {
+      "path": "/tmp/pushpull-solid-source.json",
+      "bytes": 76364,
+      "sha256": "159381922f79316805da668151180acf7276e9c02800eaf103d789588302c7a5",
+      "canonical_member": "source.json",
+      "scope": "canonical byte match"
+    }
+  ],
+  "preserved": [
+    "worktrees",
+    "source",
+    "reusable target"
+  ],
+  "canonical": "/tmp/ingetrazo-next-integration/docs/audits/pushpull-solid-workflows"
+}
