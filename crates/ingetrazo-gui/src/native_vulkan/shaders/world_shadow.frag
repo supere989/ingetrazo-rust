@@ -61,4 +61,4 @@ vec3 shadow_surface(vec3 rgb){
  return rgb*mix(shadow.parameters.x,1.,clamp(ndl*1.5,0.,1.)*lit);
 }
 
-void main(){if(!pre_raster_clip&&clip.enabled!=0 && dot(vec4(world_position,1.0),clip.plane)>0.0) discard;vec3 rgb=color.rgb;if(clip.mode==1)rgb=clip.front_color.rgb;else if(clip.mode==2)rgb=gl_FrontFacing?clip.front_color.rgb:clip.back_color.rgb;else if(clip.mode==3)rgb=clip.back_color.rgb;output_color=vec4(shadow_surface(rgb),clip.opacity);}
+void main(){if(!pre_raster_clip&&(clip.enabled&1u)!=0u && dot(vec4(world_position,1.0),clip.plane)>0.0) discard;vec3 rgb=color.rgb;if(clip.mode==1)rgb=clip.front_color.rgb;else if(clip.mode==2)rgb=gl_FrontFacing?clip.front_color.rgb:clip.back_color.rgb;else if(clip.mode==3)rgb=clip.back_color.rgb;output_color=vec4(shadow_surface(rgb),clip.opacity);}

@@ -13,5 +13,5 @@ void main(){
  if(count!=2)return;vec3 tangent=hits[1]-hits[0];float length_t=length(tangent);if(length_t<=1e-9)return;
  vec3 side=cross(p.plane.xyz,tangent/length_t);float width=max(length((hits[0]+hits[1])*0.5-p.eye)*p.width_factor,1.25e-6);vec3 lift=p.plane.xyz*(0.6*width);
  vec3 quad[4]=vec3[4](hits[0]-side*width+lift,hits[1]-side*width+lift,hits[1]+side*width+lift,hits[0]+side*width+lift);
- int order[6]=int[6](0,1,2,0,2,3);world_position=quad[order[gl_VertexIndex]];gl_Position=p.mvp*vec4(world_position,1);
+ int order[6]=int[6](0,1,2,0,2,3);world_position=quad[order[gl_VertexIndex]];gl_Position=p.mvp*vec4(world_position,1);if((p.enabled&0x80000000u)!=0u)gl_Position.z=(gl_Position.z+gl_Position.w)*0.5;
 }

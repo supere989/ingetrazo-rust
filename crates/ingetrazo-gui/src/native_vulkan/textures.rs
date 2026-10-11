@@ -235,7 +235,7 @@ impl Textures{
   self.references.publish_admitted(&mut self.cache,candidate,scene.image_planes.publication_revision());
   resources.retire_completed(retirement);self.image_key=Some(key);self.cache.collect_unused_completed(&active,completed);self.stats.sampled_entries=self.cache.published_entries();Ok(())
  }
- pub fn record_images(&mut self,command:vk::CommandBuffer,serial:u64,mvp:&[f32;16])->Result<(),String>{self.references.record(&mut self.cache,command,serial,mvp)}
+ pub fn record_images(&mut self,command:vk::CommandBuffer,serial:u64,mvp:&[f32;16],flags:u32)->Result<(),String>{self.references.record(&mut self.cache,command,serial,mvp,flags)}
  pub fn image_stats(&self)->super::reference_images::Stats{self.references.stats}
  pub fn discard_average_means(&mut self){self.averages.clear();self.stats.average_entries=0;}
  pub fn set_publication_entry_limit(&mut self,limit:Option<usize>){self.cache.set_publication_entry_limit(limit);}

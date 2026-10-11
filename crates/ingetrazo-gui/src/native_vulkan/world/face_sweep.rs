@@ -578,7 +578,7 @@ impl Owner {
                     layout,
                     vk::ShaderStageFlags::VERTEX | vk::ShaderStageFlags::FRAGMENT,
                     80,
-                    bytemuck::bytes_of(&0u32),
+                    bytemuck::bytes_of(&(clip_enabled & super::super::source_depth::PORTABLE_CLIP_BIT)),
                 );
                 self.device.cmd_push_constants(
                     command,
@@ -606,7 +606,7 @@ impl Owner {
             super::super::textures::Phase::Opaque,
             mvp,
             &[0.; 4],
-            0,
+            clip_enabled & super::super::source_depth::PORTABLE_CLIP_BIT,
             height,
             false,
         )
@@ -626,7 +626,7 @@ impl Owner {
         if prism && !show_edges {
             return Ok(());
         }
-        let line_clip = if prism { clip_enabled } else { 0 };
+        let line_clip = if prism { clip_enabled } else { clip_enabled & super::super::source_depth::PORTABLE_CLIP_BIT };
         let line_color = if prism {
             *edge_color
         } else {

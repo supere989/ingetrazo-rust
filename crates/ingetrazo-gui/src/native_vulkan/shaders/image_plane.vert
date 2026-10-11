@@ -8,5 +8,5 @@ void main(){
  vec3 corner=p.origin_opacity.xyz;
  if(uv.x>0.5)corner+=p.u.xyz;
  if(uv.y>0.5)corner+=p.v.xyz;
- gl_Position=p.mvp*vec4(corner,1.0);tex_uv=uv;
+ gl_Position=p.mvp*vec4(corner,1.0);if((floatBitsToUint(p.reserved.x)&0x80000000u)!=0u)gl_Position.z=(gl_Position.z+gl_Position.w)*0.5;tex_uv=uv;
 }

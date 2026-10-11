@@ -253,11 +253,13 @@ impl ReferenceImages {
         command: vk::CommandBuffer,
         serial: u64,
         mvp: &[f32; 16],
+        flags:u32,
     ) -> Result<(), String> {
         for d in &self.draws {
             cache.mark_used(d.asset, serial)?;
             let mut push = [0f32; 32];
             push[..16].copy_from_slice(mvp);
+            push[28]=f32::from_bits(flags);
             for i in 0..3 {
                 push[16 + i * 4..20 + i * 4].copy_from_slice(&d.frame[i]);
             }

@@ -338,7 +338,7 @@ impl World {
   let matrix:[f32;16]=std::array::from_fn(|i|snapshot.matrix[i/4][i%4]);
   // Portable fallback rounds the Z row before vertex multiplication; its
   // precision remains separately observable from native GL depth control.
-  let mvp=if self.source_depth_dispatch.is_none(){super::source_depth::portable_matrix(matrix)?}else{matrix};
+  let mvp=matrix;
   Ok((matrix,mvp))
  }
  pub(super) fn set_scene_with_source_camera(&mut self,context:&VulkanContext,scene:&ingetrazo_core::scene::Scene,camera:&ingetrazo_core::camera::OrbitCamera,style:&ingetrazo_render::style::StyleConfig,fence:vk::Fence,completed:u64,epoch:u64)->Result<(),String>{
@@ -544,6 +544,7 @@ impl World {
   if self.target.is_none(){return Ok(());}
   self.record_shadow_map(command,serial)?;
   let target=self.target.as_ref().unwrap();
+  let draw_flags=super::source_depth::draw_flags(self.clip_enabled,self.source_camera_matrix.is_some(),self.source_depth_dispatch.is_some());
   let mut clears=vec![vk::ClearValue{color:vk::ClearColorValue{float32:self.background}}];
   if self.samples!=vk::SampleCountFlags::TYPE_1{clears.push(vk::ClearValue::default());}
   clears.push(vk::ClearValue{depth_stencil:vk::ClearDepthStencilValue{depth:1.0,stencil:0}});
@@ -556,11 +557,11 @@ impl World {
    self.device.cmd_begin_render_pass(command,&vk::RenderPassBeginInfo::default().render_pass(self.render_pass).framebuffer(target.framebuffer).render_area(vk::Rect2D{offset:vk::Offset2D::default(),extent:target.extent}).clear_values(&clears),vk::SubpassContents::INLINE);
    self.device.cmd_bind_pipeline(command,vk::PipelineBindPoint::GRAPHICS,surface);
    self.device.cmd_set_viewport(command,0,&[vk::Viewport{x:0.0,y:0.0,width:target.extent.width as f32,height:target.extent.height as f32,min_depth:0.0,max_depth:1.0}]);self.device.cmd_set_scissor(command,0,&[vk::Rect2D{offset:vk::Offset2D::default(),extent:target.extent}]);
-   self.textures.as_mut().unwrap().record_images(command,serial,&self.mvp)?;
+   self.textures.as_mut().unwrap().record_images(command,serial,&self.mvp,draw_flags)?;
    self.device.cmd_bind_pipeline(command,vk::PipelineBindPoint::GRAPHICS,surface);
    self.device.cmd_push_constants(command,self.layout,vk::ShaderStageFlags::VERTEX|vk::ShaderStageFlags::FRAGMENT,0,bytemuck::cast_slice(&self.mvp));
    self.device.cmd_push_constants(command,self.layout,vk::ShaderStageFlags::VERTEX|vk::ShaderStageFlags::FRAGMENT,64,bytemuck::cast_slice(&self.clip));
-   self.device.cmd_push_constants(command,self.layout,vk::ShaderStageFlags::VERTEX|vk::ShaderStageFlags::FRAGMENT,80,bytemuck::bytes_of(&self.clip_enabled));
+   self.device.cmd_push_constants(command,self.layout,vk::ShaderStageFlags::VERTEX|vk::ShaderStageFlags::FRAGMENT,80,bytemuck::bytes_of(&draw_flags));
    let colors=[self.style_front,self.style_back];self.device.cmd_push_constants(command,self.layout,vk::ShaderStageFlags::VERTEX|vk::ShaderStageFlags::FRAGMENT,96,bytemuck::cast_slice(&colors));
    let wire=self.style_mode==ingetrazo_render::style::VisualStyle::Wireframe;
    let xray=self.style_mode==ingetrazo_render::style::VisualStyle::XRay;
@@ -570,13 +571,13 @@ impl World {
    if self.shadow_active{let owner=self.shadow.as_mut().unwrap();owner.bind(command,serial)?;if self.shadow_ground_enabled{owner.record_ground(command,serial)?;}}
    if !wire {if let (Some(vertices),Some(indices))=(self.vertices,self.indices){self.device.cmd_bind_vertex_buffers(command,0,&[self.resources.buffer(vertices).unwrap()],&[0]);self.device.cmd_bind_index_buffer(command,self.resources.buffer(indices).unwrap(),0,vk::IndexType::UINT32);let ordinary=self.consolidated_opaque_count>0;
     for &(first,count,cull) in &self.ordinary_runs {if cull&&!ordinary{continue;}self.device.cmd_bind_pipeline(command,vk::PipelineBindPoint::GRAPHICS,if xray{paint[if cull{6}else{5}]}else if cull{paint[0]}else{surface});self.device.cmd_draw_indexed(command,count,1,first,0,0);}self.resources.mark_used(vertices,serial)?;self.resources.mark_used(indices,serial)?;}}
-   if !wire&&self.texture_enabled{self.textures.as_mut().unwrap().record_receiver(&mut self.resources,command,serial,super::textures::Phase::Opaque,&self.mvp,&self.clip,self.clip_enabled,target.extent.height,xray,self.shadow.as_ref().filter(|_|self.shadow_active).map(|s|(s.layout,&s.texture_pipelines)))?;}
+   if !wire&&self.texture_enabled{self.textures.as_mut().unwrap().record_receiver(&mut self.resources,command,serial,super::textures::Phase::Opaque,&self.mvp,&self.clip,draw_flags,target.extent.height,xray,self.shadow.as_ref().filter(|_|self.shadow_active).map(|s|(s.layout,&s.texture_pipelines)))?;}
    // Original separate default-back tint, shaded/textured opaque faces only.
    if self.style_mode==ingetrazo_render::style::VisualStyle::ShadedWithTextures {if let (Some(vertices),Some(indices))=(self.vertices,self.indices){self.push_face_style(command,3,1.);self.device.cmd_bind_pipeline(command,vk::PipelineBindPoint::GRAPHICS,paint[4]);self.device.cmd_bind_vertex_buffers(command,0,&[self.resources.buffer(vertices).unwrap()],&[0]);self.device.cmd_bind_index_buffer(command,self.resources.buffer(indices).unwrap(),0,vk::IndexType::UINT32);for &(first,count)in &self.default_back_runs{self.device.cmd_draw_indexed(command,count,1,first,0,0);}}}
    self.push_face_style(command,0,1.);
    // Original opaque back overrides win over front copies before stencil fill.
    if material {if let Some(vertices)=self.transparent_vertices {self.device.cmd_bind_pipeline(command,vk::PipelineBindPoint::GRAPHICS,paint[3]);self.device.cmd_bind_vertex_buffers(command,0,&[self.resources.buffer(vertices).unwrap()],&[0]);for run in self.opacity_runs.iter().filter(|r|r.kind==3){self.device.cmd_draw(command,run.count,1,run.first,0);}self.resources.mark_used(vertices,serial)?;}}
-   if !wire&&self.texture_enabled{self.textures.as_mut().unwrap().record_receiver(&mut self.resources,command,serial,super::textures::Phase::BackOpaque,&self.mvp,&self.clip,self.clip_enabled,target.extent.height,xray,self.shadow.as_ref().filter(|_|self.shadow_active).map(|s|(s.layout,&s.texture_pipelines)))?;}
+   if !wire&&self.texture_enabled{self.textures.as_mut().unwrap().record_receiver(&mut self.resources,command,serial,super::textures::Phase::BackOpaque,&self.mvp,&self.clip,draw_flags,target.extent.height,xray,self.shadow.as_ref().filter(|_|self.shadow_active).map(|s|(s.layout,&s.texture_pipelines)))?;}
    if self.clip_enabled!=0 {
     if let Some(cap)=self.cap_vertices {
      if let (Some(vertices),Some(indices))=(self.vertices,self.indices) {
@@ -585,10 +586,10 @@ impl World {
      self.device.cmd_bind_index_buffer(command,self.resources.buffer(indices).unwrap(),0,vk::IndexType::UINT32);
      for &(first,count,cull)in &self.ordinary_runs{if !cull{self.device.cmd_draw_indexed(command,count,1,first,0,0);}}
      }
-     if self.texture_enabled{self.textures.as_mut().unwrap().record(&mut self.resources,command,serial,super::textures::Phase::Mask,&self.mvp,&self.clip,self.clip_enabled,target.extent.height,xray)?;}
+     if self.texture_enabled{self.textures.as_mut().unwrap().record(&mut self.resources,command,serial,super::textures::Phase::Mask,&self.mvp,&self.clip,draw_flags,target.extent.height,xray)?;}
      self.push_face_style(command,0,1.);
      self.device.cmd_bind_pipeline(command,vk::PipelineBindPoint::GRAPHICS,self.cap_pipeline);
-     let disabled=0u32;self.device.cmd_push_constants(command,self.layout,vk::ShaderStageFlags::VERTEX|vk::ShaderStageFlags::FRAGMENT,80,bytemuck::bytes_of(&disabled));
+     let disabled=draw_flags & super::source_depth::PORTABLE_CLIP_BIT;self.device.cmd_push_constants(command,self.layout,vk::ShaderStageFlags::VERTEX|vk::ShaderStageFlags::FRAGMENT,80,bytemuck::bytes_of(&disabled));
      self.device.cmd_bind_vertex_buffers(command,0,&[self.resources.buffer(cap).unwrap()],&[0]);self.device.cmd_draw(command,6,1,0,0);self.resources.mark_used(cap,serial)?;
     }
    }
@@ -596,16 +597,16 @@ impl World {
    for back in [false,true]{
     if material {if let Some(vertices)=self.transparent_vertices {
      self.push_face_style(command,0,1.);
-     self.device.cmd_push_constants(command,self.layout,vk::ShaderStageFlags::VERTEX|vk::ShaderStageFlags::FRAGMENT,80,bytemuck::bytes_of(&self.clip_enabled));
+     self.device.cmd_push_constants(command,self.layout,vk::ShaderStageFlags::VERTEX|vk::ShaderStageFlags::FRAGMENT,80,bytemuck::bytes_of(&draw_flags));
      self.device.cmd_bind_vertex_buffers(command,0,&[self.resources.buffer(vertices).unwrap()],&[0]);
      for run in self.opacity_runs.iter().filter(|r|r.kind!=3&&(r.kind==2)==back){self.device.cmd_bind_pipeline(command,vk::PipelineBindPoint::GRAPHICS,match run.kind{1=>paint[1],2=>paint[2],_=>transparent});self.device.cmd_push_constants(command,self.layout,vk::ShaderStageFlags::VERTEX|vk::ShaderStageFlags::FRAGMENT,84,bytemuck::bytes_of(&run.opacity));self.device.cmd_draw(command,run.count,1,run.first,0);}
      self.resources.mark_used(vertices,serial)?;
     }}
 
    }
-   if self.texture_enabled{for phase in [super::textures::Phase::TransparentFront,super::textures::Phase::TransparentBack]{self.textures.as_mut().unwrap().record_receiver(&mut self.resources,command,serial,phase,&self.mvp,&self.clip,self.clip_enabled,target.extent.height,xray,self.shadow.as_ref().filter(|_|self.shadow_active).map(|s|(s.layout,&s.texture_pipelines)))?;}}
-   if matches!(self.style_mode,ingetrazo_render::style::VisualStyle::ShadedWithTextures|ingetrazo_render::style::VisualStyle::XRay){self.textures.as_mut().unwrap().record(&mut self.resources,command,serial,super::textures::Phase::Billboard,&self.mvp,&self.clip,self.clip_enabled,target.extent.height,false)?;}
-   if let Some(sweep)=self.sweep.as_mut(){sweep.draw_faces(command,serial,self.pipeline,self.layout,&self.mvp,target.extent.height,&paint,self.transparent_pipeline,self.style_mode,&self.clip,self.clip_enabled,&[self.style_front,self.style_back],self.consolidated_opaque_count>0)?;}
+   if self.texture_enabled{for phase in [super::textures::Phase::TransparentFront,super::textures::Phase::TransparentBack]{self.textures.as_mut().unwrap().record_receiver(&mut self.resources,command,serial,phase,&self.mvp,&self.clip,draw_flags,target.extent.height,xray,self.shadow.as_ref().filter(|_|self.shadow_active).map(|s|(s.layout,&s.texture_pipelines)))?;}}
+   if matches!(self.style_mode,ingetrazo_render::style::VisualStyle::ShadedWithTextures|ingetrazo_render::style::VisualStyle::XRay){self.textures.as_mut().unwrap().record(&mut self.resources,command,serial,super::textures::Phase::Billboard,&self.mvp,&self.clip,draw_flags,target.extent.height,false)?;}
+   if let Some(sweep)=self.sweep.as_mut(){sweep.draw_faces(command,serial,self.pipeline,self.layout,&self.mvp,target.extent.height,&paint,self.transparent_pipeline,self.style_mode,&self.clip,draw_flags,&[self.style_front,self.style_back],self.consolidated_opaque_count>0)?;}
    // Hidden ghosts are separate, source depth-tested/depth-writing and unclipped.
    for i in 0..3{if let Some(buffer)=self.ghost_buffers[i]{
     self.device.cmd_bind_pipeline(command,vk::PipelineBindPoint::GRAPHICS,self.ghost_pipelines[usize::from(i==2)]);
@@ -619,17 +620,17 @@ impl World {
     if xray {
      // Source _xray_face_depth excludes colored transparent/front-only glass.
      // Reuse cached opaque runs; no scene copy, per-frame sort or CPU rebuild.
-     self.device.cmd_push_constants(command,self.layout,vk::ShaderStageFlags::VERTEX|vk::ShaderStageFlags::FRAGMENT,80,bytemuck::bytes_of(&self.clip_enabled));
+     self.device.cmd_push_constants(command,self.layout,vk::ShaderStageFlags::VERTEX|vk::ShaderStageFlags::FRAGMENT,80,bytemuck::bytes_of(&draw_flags));
      if let(Some(v),Some(i))=(self.vertices,self.indices){self.device.cmd_bind_pipeline(command,vk::PipelineBindPoint::GRAPHICS,paint[8]);self.device.cmd_bind_vertex_buffers(command,0,&[self.resources.buffer(v).unwrap()],&[0]);self.device.cmd_bind_index_buffer(command,self.resources.buffer(i).unwrap(),0,vk::IndexType::UINT32);for &(first,count,cull)in &self.ordinary_runs{if !cull{self.device.cmd_draw_indexed(command,count,1,first,0,0);}}self.resources.mark_used(v,serial)?;self.resources.mark_used(i,serial)?;}
-     if self.texture_enabled{self.textures.as_mut().unwrap().record(&mut self.resources,command,serial,super::textures::Phase::Depth,&self.mvp,&self.clip,self.clip_enabled,target.extent.height,xray)?;}
+     if self.texture_enabled{self.textures.as_mut().unwrap().record(&mut self.resources,command,serial,super::textures::Phase::Depth,&self.mvp,&self.clip,draw_flags,target.extent.height,xray)?;}
      let faded=[0,1,2].map(|i|self.edge_color[i]+(self.background[i]-self.edge_color[i])*0.6);let faded=[faded[0],faded[1],faded[2],1.];self.device.cmd_bind_pipeline(command,vk::PipelineBindPoint::GRAPHICS,paint[9]);self.push_face_style(command,1,1.);self.device.cmd_push_constants(command,self.layout,vk::ShaderStageFlags::VERTEX|vk::ShaderStageFlags::FRAGMENT,96,bytemuck::cast_slice(&faded));self.device.cmd_bind_vertex_buffers(command,0,&[self.resources.buffer(vertices).unwrap()],&[0]);self.device.cmd_draw(command,2,self.edge_count/2,0,0);
     }
-    self.device.cmd_bind_pipeline(command,vk::PipelineBindPoint::GRAPHICS,paint[7]);self.push_face_style(command,1,1.);self.device.cmd_push_constants(command,self.layout,vk::ShaderStageFlags::VERTEX|vk::ShaderStageFlags::FRAGMENT,96,bytemuck::cast_slice(&self.edge_color));self.device.cmd_push_constants(command,self.layout,vk::ShaderStageFlags::VERTEX|vk::ShaderStageFlags::FRAGMENT,80,bytemuck::bytes_of(&self.clip_enabled));self.device.cmd_bind_vertex_buffers(command,0,&[self.resources.buffer(vertices).unwrap()],&[0]);self.device.cmd_draw(command,2,self.edge_count/2,0,0);self.resources.mark_used(vertices,serial)?;
+    self.device.cmd_bind_pipeline(command,vk::PipelineBindPoint::GRAPHICS,paint[7]);self.push_face_style(command,1,1.);self.device.cmd_push_constants(command,self.layout,vk::ShaderStageFlags::VERTEX|vk::ShaderStageFlags::FRAGMENT,96,bytemuck::cast_slice(&self.edge_color));self.device.cmd_push_constants(command,self.layout,vk::ShaderStageFlags::VERTEX|vk::ShaderStageFlags::FRAGMENT,80,bytemuck::bytes_of(&draw_flags));self.device.cmd_bind_vertex_buffers(command,0,&[self.resources.buffer(vertices).unwrap()],&[0]);self.device.cmd_draw(command,2,self.edge_count/2,0,0);self.resources.mark_used(vertices,serial)?;
    }}
-   if let Some(sweep)=self.sweep.as_mut(){sweep.draw_lines(command,serial,paint[7],self.layout,&self.mvp,self.clip_enabled,&self.edge_color,self.show_edges||wire)?;}
+   if let Some(sweep)=self.sweep.as_mut(){sweep.draw_lines(command,serial,paint[7],self.layout,&self.mvp,draw_flags,&self.edge_color,self.show_edges||wire)?;}
    if xray {self.device.cmd_clear_attachments(command,&[vk::ClearAttachment::default().aspect_mask(vk::ImageAspectFlags::DEPTH).clear_value(vk::ClearValue{depth_stencil:vk::ClearDepthStencilValue{depth:1.,stencil:0}})],&[vk::ClearRect::default().rect(vk::Rect2D{offset:vk::Offset2D::default(),extent:target.extent}).base_array_layer(0).layer_count(1)]);}
    if self.clip_enabled!=0 {
-    let contours=self.contours.as_ref().unwrap();let mut push=[0u8;128];push[..64].copy_from_slice(bytemuck::cast_slice(&self.mvp));push[64..80].copy_from_slice(bytemuck::cast_slice(&self.clip));push[96..108].copy_from_slice(bytemuck::cast_slice(&self.eye));
+    let contours=self.contours.as_ref().unwrap();let mut push=[0u8;128];push[..64].copy_from_slice(bytemuck::cast_slice(&self.mvp));push[64..80].copy_from_slice(bytemuck::cast_slice(&self.clip));push[80..84].copy_from_slice(bytemuck::bytes_of(&draw_flags));push[96..108].copy_from_slice(bytemuck::cast_slice(&self.eye));
     let factor=self.width_factor*self.display_scale/target.extent.height as f32;push[108..112].copy_from_slice(bytemuck::bytes_of(&factor));push[112..128].copy_from_slice(bytemuck::cast_slice(&self.edge_color));
     self.device.cmd_bind_pipeline(command,vk::PipelineBindPoint::GRAPHICS,contours.pipeline);self.device.cmd_push_constants(command,contours.layout,vk::ShaderStageFlags::VERTEX|vk::ShaderStageFlags::FRAGMENT,0,&push);
     for (batch,set) in self.contour_batches.iter().zip(&contours.sets){
