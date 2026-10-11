@@ -1,0 +1,32 @@
+{
+  "source": "5e6a0b88",
+  "focused": {
+    "render_domain": 1,
+    "actual_group_move_preview_cancel_noop": 1,
+    "cold_group_transform_static_negative": 1,
+    "presentation_layer_callers": 1,
+    "accepted_pose_epoch_policy": 1
+  },
+  "apple_metadata": {
+    "command": "cargo check --locked -p ingetrazo-metal --example native_world_scene --target aarch64-apple-darwin -j2",
+    "exit": 0,
+    "scope": "Rust Apple API metadata only; no SDK link/runtime proof"
+  },
+  "admission": "Unknown commands/replacements conservatively invalidate all domains; grouped stable topology transform-only commits and trusted previews preserve static cache. Accepted pose epoch skips warm camera model traversal. Legacy native_geometry_revision still advances for flattened Vulkan transforms. Style advances its domain and composer invalidation without retiring source Move array history. Layer changes advance layer domain and shared model/snap/composer identity.",
+  "remaining": [
+    "actual app Metal host remains inactive",
+    "fine-grained paint/geometry committed classification beyond transform-only is conservative",
+    "source layer changes versus active array retyping must be checked before broad optimization claim",
+    "actual native revision-aware camera no-traversal runtime counters remain pending",
+    "unsupported default edges/profiles/sky/grid/sections/shadows/images/annotations/textures/translucency remain visibly refused"
+  ],
+  "initial_check_correction": "First local cargo invocation omitted container -w and compiled canonical, interrupted; next changed-tree invocation reused timestamp-fresh canonical object and reported zero selected tests. Touching changed render lib forced actual changed-tree compile and one focused test passed. No zero-test result counted.",
+  "sha256": {
+    "crates/ingetrazo-render/src/scene_revision.rs": "06b7fd0ea4dae4586b497bcde098625f6ea6fe0f9bec74e31f570058d600250f",
+    "crates/ingetrazo-metal/src/world_scene.rs": "1f6722d4d16bd112fd04040f5f7bdba44dabfb8c8e5ce81452b3d82ade083fcb",
+    "crates/ingetrazo-gui/src/app.rs": "f87e8ed033f2bdaf5841a246ecff773a8aa09731f8bc7622595329f8ff4d25d8",
+    "crates/ingetrazo-gui/src/tool_history.rs": "dad05685e2dac0ec658073a434397e62b3ca8a006dd28b41bc4e7ac4f83d77f6",
+    "crates/ingetrazo-gui/src/document_presentation.rs": "0ac6150cfa8f2e77d99dae7db25fb8897cfdf810bbe9cf572d1bc20f83701843",
+    "crates/ingetrazo-gui/src/history_layers.rs": "de4ffeb178969ea9977d48d76cca30c43be0e945f0a69df80cd8bc3035a9504b"
+  }
+}
