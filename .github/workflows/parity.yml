@@ -290,7 +290,7 @@ jobs:
           python scripts/check-ai-bridge-query.py docs/audits/ai-bridge-ci --require-full > docs/audits/ai-bridge-ci/comparison.json
       - name: Integrated document axes PushPull and nested Fillet workflows using retained source fixtures
         run: |
-          cargo build --locked -p ingetrazo-core -p ingetrazo-gui --example change_axes_fixture --example document_preservation_workflow --example pushpull_solid_workflows --example fillet_scoped --example pushpull_finite_workflows --example paste_save_workflow --example box_selection_fixture --example material_restamp_workflow --example material_tray_egui --example cursor_navigation_workflow --example annotation_delete_fixture --example zoom_extents_workflow --example annotation_move_fixture --example annotation_acquisition_fixture --example mesh_kernel_acceptance --example annotation_edit_style_fixture --example annotation_text_create_fixture --example mesh_finite_kernel_fixture --example annotation_hover_fixture --example dimension_anchor_acceptance_fixture --example context_document_lifecycle --example line_command_history_fixture --example shape_drafting_workflows
+          cargo build --locked -p ingetrazo-core -p ingetrazo-gui --example change_axes_fixture --example document_preservation_workflow --example pushpull_solid_workflows --example fillet_scoped --example pushpull_finite_workflows --example paste_save_workflow --example box_selection_fixture --example material_restamp_workflow --example material_tray_egui --example cursor_navigation_workflow --example annotation_delete_fixture --example zoom_extents_workflow --example annotation_move_fixture --example annotation_acquisition_fixture --example mesh_kernel_acceptance --example annotation_edit_style_fixture --example annotation_text_create_fixture --example mesh_finite_kernel_fixture --example annotation_hover_fixture --example dimension_anchor_acceptance_fixture --example context_document_lifecycle --example line_command_history_fixture --example shape_drafting_workflows --example freehand_workflows
           python scripts/check-document-axes-integration.py target/debug/examples docs/audits/document-axes-ci
       - name: Pinned original and native legacy SKP primitive parity
         run: |
@@ -488,6 +488,8 @@ jobs:
         run: python scripts/check-python-dae-uv-fit.py
       - name: Original COLLADA reference threshold shared prototypes and transformed textures
         run: python scripts/check-python-dae-reference.py
+      - name: Frozen original COLLADA optional materials and shared resources
+        run: python scripts/replay-dae-material-resolution.py target/debug/examples/dae_import_acceptance_fixture docs/audits/dae-material-resolution-ci
       - name: Original paper HLR endpoints classes and even-odd section coverage
         run: python scripts/check-python-composer-hlr.py
       - name: Original and native production composer pen and dash pixels
@@ -606,6 +608,7 @@ jobs:
           name: semantic-parity-evidence
           path: |
             docs/audits/document-axes-ci/
+            docs/audits/dae-material-resolution-ci/
             docs/audits/image-ownership-ci/
             docs/audits/ai-bridge-ci/
             docs/audits/skp-legacy-ci/

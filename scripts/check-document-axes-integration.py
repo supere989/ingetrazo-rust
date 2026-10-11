@@ -23,7 +23,7 @@ archive_dependencies = {}
 pin = "6be29fe437a7cd992d4e079f71720821b25216b9"
 assert subprocess.check_output(["git", "-C", str(repo/"ingetrazo"), "rev-parse", "HEAD"], text=True).strip() == pin
 suffix = ".exe" if os.name == "nt" else ""
-consumers = ["change_axes_fixture", "document_preservation_workflow", "pushpull_solid_workflows", "fillet_scoped", "pushpull_finite_workflows", "paste_save_workflow", "box_selection_fixture", "material_restamp_workflow", "material_tray_egui", "cursor_navigation_workflow", "annotation_delete_fixture", "zoom_extents_workflow", "annotation_move_fixture", "annotation_acquisition_fixture", "mesh_kernel_acceptance", "annotation_edit_style_fixture", "annotation_text_create_fixture", "mesh_finite_kernel_fixture", "annotation_hover_fixture", "dimension_anchor_acceptance_fixture", "context_document_lifecycle", "line_command_history_fixture", "shape_drafting_workflows"]
+consumers = ["change_axes_fixture", "document_preservation_workflow", "pushpull_solid_workflows", "fillet_scoped", "pushpull_finite_workflows", "paste_save_workflow", "box_selection_fixture", "material_restamp_workflow", "material_tray_egui", "cursor_navigation_workflow", "annotation_delete_fixture", "zoom_extents_workflow", "annotation_move_fixture", "annotation_acquisition_fixture", "mesh_kernel_acceptance", "annotation_edit_style_fixture", "annotation_text_create_fixture", "mesh_finite_kernel_fixture", "annotation_hover_fixture", "dimension_anchor_acceptance_fixture", "context_document_lifecycle", "line_command_history_fixture", "shape_drafting_workflows", "freehand_workflows"]
 identities = {name: stages.stage("binary:"+name, [], lambda name=name: hashlib.sha256((binaries/(name+suffix)).read_bytes()).hexdigest()) for name in consumers}
 env = dict(os.environ, QT_QPA_PLATFORM="offscreen", INGETRAZO_STATE_DIR=str(out/"state"),
            XDG_CONFIG_HOME=str(out/"config"), XDG_DATA_HOME=str(out/"data"), XDG_CACHE_HOME=str(out/"cache"))
@@ -200,6 +200,13 @@ ip = archive("import-preferences", "manifest.json", ["original-import-preference
 run([binaries/(consumers[20]+suffix), import_preferences, "--import-preferences"], "import-preferences/runtime.log")
 run([sys.executable, repo/"scripts/check-import-preferences.py", import_preferences], "import-preferences/acceptance.json", requires=["import-preferences/runtime.log"])
 
+obj_mtl = out/"obj-mtl-import"
+obj_members = [row["path"] for row in json.loads((repo/"docs/audits/obj-mtl-import/source-manifest.json").read_text())["entries"]]
+om = archive("obj-mtl-import", "source-manifest.json", obj_members, obj_mtl, preserve_paths=True, archive_name="source-records.zip", stage_name="obj-mtl-source")
+run([binaries/(consumers[20]+suffix), obj_mtl, "--obj-mtl"], "obj-mtl-import/runtime.log")
+run([sys.executable, repo/"scripts/reference-obj-mtl-reopens.py", obj_mtl], "obj-mtl-import/reopen.log", requires=["obj-mtl-import/runtime.log"])
+run([sys.executable, repo/"scripts/check-obj-mtl-import.py", obj_mtl], "obj-mtl-import/acceptance.json", requires=["obj-mtl-import/runtime.log", "obj-mtl-import/reopen.log"])
+
 nested_import = out/"nested-import"
 nested_cases = [context+"-"+asset for context in ["root", "container", "leaf"] for asset in ["ambiguous", "named", "parts", "header", "zero"]]
 ni = archive("nested-import", "source-manifest.json", ["original-nested-import.json", "ambiguous.obj", "named.obj", "parts.obj", "header.dxf", "zero.dxf"]+[case+ending for case in nested_cases for ending in ["-input.igz", "-original.igz"]], nested_import, archive_name="source-records.zip", stage_name="nested-import-source")
@@ -230,12 +237,17 @@ stages.stage("shape-drafting/combined-source.json", archive_dependencies[shape.n
 run([binaries/(consumers[22]+suffix), shape/"combined-source.json", shape/"native.json"], "shape-drafting/runtime.log", requires=["shape-drafting/combined-source.json"])
 run([sys.executable, repo/"scripts/check-shape-drafting.py", shape/"combined-source.json", shape/"native.json", shape/"acceptance.json"], "shape-drafting/checker.log", requires=["shape-drafting/runtime.log", "shape-drafting/combined-source.json"])
 
+freehand = out/"freehand-workflows"
+fh = archive("freehand-workflows", "manifest.json", ["source-combined.json"], freehand)
+run([binaries/(consumers[23]+suffix), freehand/"source-combined.json", freehand/"native.json"], "freehand-workflows/runtime.log")
+run([sys.executable, repo/"scripts/check-freehand-workflows.py", freehand/"source-combined.json", freehand/"native.json", freehand/"acceptance.json"], "freehand-workflows/checker.log", requires=["freehand-workflows/runtime.log"])
+
 def summarize():
     rows = json.loads((doc/"native.json").read_text())["rows"]
     assert [(x["fixture"],x["phase"]) for x in rows] == [(f,p) for f in ["retained","nested-leaves"] for p in ["edited","undo","redo"]]
     assert all(x["saved"] and x["clean"] for x in rows)
     result = {"revision":subprocess.check_output(["git","rev-parse","HEAD"],cwd=repo,text=True).strip(),
-              "source_pin":pin,"binary_sha256":identities,"source_archives":{"axes":a,"documents":d,"fillet":f,"pushpull_finite":p,"paste_save":ps,"box_selection":bs,"materials":mr,"cursor":cn,"annotations":ad,"annotation_hover_delete":ahd,"zoom_extents":ze,"annotation_move":am,"annotation_acquisition":aa,"mesh_kernel":mk,"annotation_edit_style":ae,"annotation_text_create":at,"finite_kernel":mf,"finite_kernel_initial":mfa,"annotation_hover":ah,"dimension_anchor_admission":da,"dimension_preview":dp,"open_recent":rr,"general_preferences":gp,"units_preferences":up,"vcb_measurements":vm,"import_preferences":ip,"appearance_preferences":ap,"nested_import":ni,"nested_import_threshold":nt,"nested_import_naming":nn,"nested_import_retained_failure":nf,"shape_drafting":sd},
+              "source_pin":pin,"binary_sha256":identities,"source_archives":{"axes":a,"documents":d,"fillet":f,"pushpull_finite":p,"paste_save":ps,"box_selection":bs,"materials":mr,"cursor":cn,"annotations":ad,"annotation_hover_delete":ahd,"zoom_extents":ze,"annotation_move":am,"annotation_acquisition":aa,"mesh_kernel":mk,"annotation_edit_style":ae,"annotation_text_create":at,"finite_kernel":mf,"finite_kernel_initial":mfa,"annotation_hover":ah,"dimension_anchor_admission":da,"dimension_preview":dp,"open_recent":rr,"general_preferences":gp,"units_preferences":up,"vcb_measurements":vm,"import_preferences":ip,"appearance_preferences":ap,"nested_import":ni,"nested_import_threshold":nt,"nested_import_naming":nn,"nested_import_retained_failure":nf,"shape_drafting":sd,"freehand_workflows":fh,"obj_mtl_import":om},
               "axes":json.loads((axes/"check.json").read_text()),"documents":{"actual_app_saves":len(rows),"exact_original_reopens":6,"leaf_record_types":15,"negative_controls":5},
               "fillet":json.loads((fillet/"check.json").read_text()),"fillet_volume":json.loads((fillet/"volume.json").read_text()),"pushpull":json.loads((out/"pushpull-comparison.json").read_text()),
               "pushpull_finite":json.loads((finite/"comparison.json").read_text()),
@@ -265,7 +277,9 @@ def summarize():
               "import_preferences":json.loads((import_preferences/"acceptance.json").read_text()),
               "appearance_preferences":json.loads((appearance/"acceptance.json").read_text()),
               "nested_import":json.loads((nested_import/"acceptance.json").read_text()),
+              "obj_mtl_import":json.loads((obj_mtl/"acceptance.json").read_text()),
               "shape_drafting":json.loads((shape/"acceptance.json").read_text()),
+              "freehand_workflows":json.loads((freehand/"acceptance.json").read_text()),
               "fresh_source_acquisitions":0,"result":"pass"}
     return result
 
