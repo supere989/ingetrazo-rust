@@ -1,0 +1,21 @@
+{
+  "archive_sha256": "0567214c205b7b27ebb3cea7971286ee43000910cee85c35c07700c4630ba285",
+  "records": {
+    "native.json": {
+      "bytes": 10707,
+      "sha256": "af8adc8afc4721c37d388e7af4e61ca98e2eaf13aeb81c95e6bd53238cb2c2dd"
+    },
+    "build.log": {
+      "bytes": 19564,
+      "sha256": "950b4e04c43fb38dd14fa789f4d45089ab0280f767b54d1b4e44121772c15c6d"
+    },
+    "runtime.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "provenance.json": {
+      "bytes": 514,
+      "sha256": "e30418343fceaa9557c1adc1483309261aa75188eff0607970ed055982c9d667"
+    }
+  }
+}
