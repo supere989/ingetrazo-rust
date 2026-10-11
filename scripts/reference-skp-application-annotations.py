@@ -8,7 +8,6 @@ assert subprocess.check_output(['git','-C',str(parser),'rev-parse','HEAD'],text=
 sys.path[:0]=[str(parser/'packages/python/src'),str(source)]
 from PySide6.QtCore import QObject,QEvent,Qt
 from PySide6.QtGui import QSurfaceFormat,QVector3D,QPainter,QFontInfo,QImage,QFont
-from OpenGL import GL
 from PySide6.QtWidgets import QApplication
 fmt=QSurfaceFormat();fmt.setVersion(3,3);fmt.setProfile(QSurfaceFormat.CoreProfile);fmt.setDepthBufferSize(24);fmt.setStencilBufferSize(8);fmt.setSamples(4);QSurfaceFormat.setDefaultFormat(fmt)
 app=QApplication([])
@@ -100,7 +99,7 @@ try:
   if kind=='glyph-neutral':scene.dimension_style=dict(scene.dimension_style,color=[0,0,0])
   primitive_kind='glyph'if kind=='glyph-neutral'else kind
   def dimension_draw(painter,kind=kind,primitive_kind=primitive_kind):
-   engine_rows.append(dict(kind=kind,engine=painter.paintEngine().type().value,device_dpi=[painter.device().logicalDpiX(),painter.device().logicalDpiY()],multisample_enabled=bool(GL.glIsEnabled(GL.GL_MULTISAMPLE)),samples=int(GL.glGetIntegerv(GL.GL_SAMPLES)),sample_buffers=int(GL.glGetIntegerv(GL.GL_SAMPLE_BUFFERS))));original_dimension_draw(PrimitiveFilter(painter,primitive_kind))
+   engine_rows.append(dict(kind=kind,engine=painter.paintEngine().type().value,device_dpi=[painter.device().logicalDpiX(),painter.device().logicalDpiY()],multisample_enabled=bool(vp._gl.glIsEnabled(0x809D)),samples=int(vp._gl.glGetIntegerv(0x80A9)),sample_buffers=int(vp._gl.glGetIntegerv(0x80A8))));original_dimension_draw(PrimitiveFilter(painter,primitive_kind))
   vp._draw_dimensions=dimension_draw;vp._draw_text_labels=lambda painter,primitive_kind=primitive_kind:original_leader_draw(PrimitiveFilter(painter,primitive_kind))
   vp.update();deadline=time.monotonic()+4
   while time.monotonic()<deadline:app.processEvents();time.sleep(.01)
