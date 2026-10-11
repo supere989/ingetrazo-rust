@@ -417,3 +417,7 @@ pub fn run_world_sweep_probe(input:PathBuf,output:PathBuf)->Result<(),String>{wo
 
 mod document_annotations_probe;
 pub fn run_document_annotations_probe(input:PathBuf,output:PathBuf)->Result<(),String>{document_annotations_probe::run(input,output)}
+
+mod billboard_probe;
+/// Bounded original-document billboard stage acceptance.
+pub fn run_billboard_probe(input:PathBuf,output:PathBuf)->Result<(),String>{billboard_probe::run(input,output)}

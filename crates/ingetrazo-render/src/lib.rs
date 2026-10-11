@@ -168,3 +168,6 @@ pub mod hidden_ghosts;
 pub mod face_sweep;
 
 pub mod annotation_query;
+
+/// Shared cold source billboard geometry for direct native backends.
+pub mod billboards;

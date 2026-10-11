@@ -16,14 +16,14 @@ use std::{
 };
 /// Retain native identities as well as comparing them: address reuse after a
 /// context drop cannot make a new context alias this renderer's cache.
-struct Owner {
+pub(crate) struct Owner {
     device: Retained<ProtocolObject<dyn MTLDevice>>,
     queue: Retained<ProtocolObject<dyn MTLCommandQueue>>,
     budget: Arc<Mutex<MemoryBudget>>,
     poison: Arc<std::sync::atomic::AtomicBool>,
 }
 impl Owner {
-    fn new(metal: &NativeMetal) -> Self {
+    pub(crate) fn new(metal: &NativeMetal) -> Self {
         Self {
             device: metal.device.clone(),
             queue: metal.queue.clone(),
@@ -31,7 +31,7 @@ impl Owner {
             poison: metal.poisoned.clone(),
         }
     }
-    fn validate(&self, metal: &NativeMetal) -> Result<(), String> {
+    pub(crate) fn validate(&self, metal: &NativeMetal) -> Result<(), String> {
         if !std::ptr::eq(&*self.device, &*metal.device)
             || !std::ptr::eq(&*self.queue, &*metal.queue)
             || !Arc::ptr_eq(&self.budget, &metal.budget)
@@ -103,6 +103,10 @@ struct Pipeline {
 }
 #[derive(Default, Debug, Clone, Copy)]
 pub struct Stats {
+    pub billboard_builds:u64,
+    pub billboard_uploads:u64,
+    pub billboard_upload_bytes:u64,
+    pub billboard_texture_uploads:u64,
     /// Extra cached original/suppressed native buffers, excluding current placements and shared images.
     pub base_variant_gpu_bytes:u64,
     pub preview_builds:u64,
@@ -159,6 +163,7 @@ pub struct World {
     pub stats: Stats,
 }
 pub struct Prepared {
+    pub(crate) billboards:Option<Arc<super::world_billboard::Prepared>>,
     pub(crate) section: Section,
     pub(crate) source_sample_positions:Option<[MTLSamplePosition;4]>,
     pub(crate) lines: [Option<Arc<super::world_preview::Lines>>;2],
@@ -349,6 +354,7 @@ impl World {
         Ok(Some(Arc::new(Prepared {
             section: Section::OFF,
             source_sample_positions:None,
+            billboards:None,
             placements: None,
             ghosts: None, ghost_edge: [0.;4], lines:[None,None],profiles:None,background:None,overlay:None,
             owner,
@@ -709,6 +715,7 @@ impl World {
         Ok(Some(Arc::new(Prepared {
             section: Section::OFF,
             source_sample_positions:None,
+            billboards:None,
             placements: Some(placements),
             ghosts: None, ghost_edge: [0.;4], lines:[None,None],profiles:None,background:None,overlay:None,
             owner,
@@ -808,6 +815,7 @@ impl Prepared {
         encoder.setDepthBias_slopeScale_clamp(0.,0.,0.);Ok(())
     }
     fn encode_aux(&self,encoder:&ProtocolObject<dyn MTLRenderCommandEncoder>,depth_enabled:bool,preview_only:bool){
+        if !preview_only {if let Some(billboards)=&self.billboards{billboards.encode(encoder,&self.mvp,&self.section,self.extent().1,depth_enabled);}}
         bind_section(encoder,if preview_only {Section::OFF}else{self.section});
         for lines in self.lines[usize::from(preview_only)..usize::from(preview_only)+1].iter().flatten() {
             if let Some(buffer)=&lines.buffer {

@@ -20,7 +20,6 @@ pub fn unsupported_stage(error:&str)->bool {
         "Metal placement-only adapter needs consolidated loose geometry stage" |
         "Metal classic group requires consolidated world shading stage" |
         "Metal placement wire requires native edge stage" |
-        "Metal placement billboard requires camera-facing stage" |
         "Metal placement material texture requires native texture stage" |
         "Metal placement translucent material requires alpha stage" |
         "Metal Scene placement needs texture/alpha/billboard stage" |
@@ -150,7 +149,7 @@ fn signature(g: &Group, root: &Group) -> Result<Signature, String> {
     Ok(s)
 }
 #[cfg(target_os="macos")]
-fn sampled_asset<'a>(scene:&'a Scene,path:&str)->Result<std::borrow::Cow<'a,[u8]>,String>{
+pub(crate) fn sampled_asset<'a>(scene:&'a Scene,path:&str)->Result<std::borrow::Cow<'a,[u8]>,String>{
     if let Some(bytes)=scene.embedded_textures.get(path){if bytes.len()>16*1024*1024{return Err("Metal embedded texture exceeds16MiB".into());}return Ok(std::borrow::Cow::Borrowed(bytes));}
     use std::io::Read;let file=std::fs::File::open(path).map_err(|e|format!("Metal texture resource {path}: {e}"))?;if file.metadata().map_err(|e|e.to_string())?.len()>16*1024*1024{return Err("Metal file texture exceeds16MiB".into());}
     let mut bytes=Vec::new();file.take(16*1024*1024+1).read_to_end(&mut bytes).map_err(|e|e.to_string())?;if bytes.len()>16*1024*1024{return Err("Metal file texture grew beyond16MiB".into());}Ok(std::borrow::Cow::Owned(bytes))
@@ -249,10 +248,9 @@ impl Catalog {
                 if !world.is_finite() {
                     return Err("Metal placement composed matrix invalid".into());
                 }
-                if g.billboard {
-                    return Err("Metal placement billboard requires camera-facing stage".into());
-                }
-                if !g.mesh.faces.is_empty() {
+                // A face-me group's own surface uses the dedicated receiver;
+                // its visible children retain ordinary source traversal.
+                if !g.billboard && !g.mesh.faces.is_empty() {
                     let mut p = Vec::new();
                     p.try_reserve_exact(depth + 1)
                         .map_err(|_| "Placement path allocation refused")?;
@@ -273,7 +271,7 @@ impl Catalog {
                             );
                     }
                     candidates.push((sig, index));
-                } else if !g.mesh.edges.is_empty() {
+                } else if !g.billboard && !g.mesh.edges.is_empty() {
                     return Err("Metal placement wire requires native edge stage".into());
                 }
                 if !g.children.is_empty() {
@@ -864,6 +862,8 @@ mod tests {
 /// prepare keeps these Vec capacities; only accepted frames publish current models.
 #[derive(Default)]
 pub struct Adapter {
+    #[cfg(target_os="macos")] billboard_topology:Option<(super::world_billboard::Key,Arc<ingetrazo_render::billboards::Packet>)>,
+    #[cfg(target_os="macos")] billboards:Option<(super::world_billboard::Key,Arc<super::world_billboard::Prepared>)>,
     pub(crate) catalog: Option<Catalog>,
     pub(crate) current: Vec<Pose>,
     pub(crate) scratch: Vec<Pose>,
@@ -885,12 +885,16 @@ impl Adapter {
         #[cfg(target_os="macos")] {self.profiles.as_ref().map_or(0,|p|p.2.capacity()*std::mem::size_of::<usize>()+p.3.retained_bytes()+p.7.capacity()*std::mem::size_of::<(usize,usize)>())+self.profile_selection_scratch.capacity()*std::mem::size_of::<(usize,usize)>()}
         #[cfg(not(target_os="macos"))] {0}
     }
+    fn billboard_payload_bytes(&self)->usize {
+        #[cfg(target_os="macos")] {self.billboard_topology.as_ref().map_or(0,|p|p.1.retained_bytes())+self.billboards.as_ref().map_or(0,|p|p.1.retained_bytes())}
+        #[cfg(not(target_os="macos"))] {0}
+    }
     pub fn retained_payload_bytes(&self) -> usize {
         self.catalog
             .as_ref()
             .map_or(0, Catalog::retained_payload_bytes)
             + (self.current.capacity() + self.scratch.capacity()) * std::mem::size_of::<Pose>()
-            + self.profile_payload_bytes()
+            + self.profile_payload_bytes() + self.billboard_payload_bytes()
     }
 }
 
@@ -1062,6 +1066,18 @@ impl crate::world::World {
         // Allocate the small cache membership list before GPU publication.
         let mut line_ids=Vec::new();if base_line_changed{line_ids.try_reserve_exact(suppressed.len()).map_err(|_|"Metal line membership allocation refused")?;line_ids.extend_from_slice(suppressed);}
         let section=super::world_section::Section::from_scene(scene)?;
+        if let Some((_,old))=&adapter.billboards{old.validate_owner(metal)?;}
+        let billboard_key=super::world_billboard::Key::new(revisions,pose_revision,camera,eye.as_vec3(),matches!(mode,Mode::Material|Mode::MaterialAverage),self.configured_sample_count(),scene.show_section_cuts&&scene.show_section_fill&&scene.section_planes.iter().any(|p|p.active))?;
+        let billboard_topology_changed=adapter.billboard_topology.as_ref().is_none_or(|old|!billboard_key.same_topology(&old.0));
+        let billboard_topology=if billboard_topology_changed{
+            let packet=ingetrazo_render::billboards::Packet::build(scene)?;
+            if packet.retained_bytes()>8*1024*1024{return Err("Metal billboard cold packet exceeds8MiB".into());}
+            Arc::new(packet)
+        }else{adapter.billboard_topology.as_ref().unwrap().1.clone()};
+        let billboard_changed=billboard_topology_changed||adapter.billboards.as_ref().is_none_or(|old|old.0!=billboard_key);
+        let billboard_frame=if billboard_changed{Arc::new(super::world_billboard::Prepared::prepare(metal,scene,&billboard_topology,camera,eye.as_vec3(),billboard_key,adapter.billboards.as_ref().map(|p|p.1.as_ref()),!billboard_topology_changed)?)}else{adapter.billboards.as_ref().unwrap().1.clone()};
+        let candidate_billboard_bytes=billboard_topology.retained_bytes()+billboard_frame.retained_bytes();
+        if adapter.retained_payload_bytes().saturating_sub(adapter.billboard_payload_bytes()).checked_add(candidate_billboard_bytes).is_none_or(|n|n>MAX_BYTES*3){return Err("Metal adapter billboard storage exceeds24MiB".into());}
         let sample_positions=if !scene.dimensions.is_empty(){super::annotation::source_sample_policy(metal,self.configured_sample_count())?.1}else if self.configured_sample_count()==4{self.annotation_positions}else{None};
         let mut frame = self.prepare_material_placements_with_overlay(
             metal,
@@ -1090,6 +1106,9 @@ impl crate::world::World {
         )?;
         if let Some(prepared)=frame.as_mut() {
             let prepared=Arc::get_mut(prepared).expect("New unpublished Metal frame is exclusive");
+            prepared.billboards=Some(billboard_frame.clone());
+            if billboard_changed {self.stats.billboard_uploads+=billboard_frame.uploads;self.stats.billboard_upload_bytes+=billboard_frame.bytes as u64;self.stats.billboard_texture_uploads+=billboard_frame.texture_uploads;adapter.billboards=Some((billboard_key,billboard_frame));}
+            if billboard_topology_changed {self.stats.billboard_builds+=1;adapter.billboard_topology=Some((billboard_key,billboard_topology));}
             prepared.lines=[base_lines.clone(),preview_lines.clone()];
             prepared.profiles=profiles;
             prepared.background=background;

@@ -64,3 +64,6 @@ vertex Out world_background_vertex(uint id [[vertex_id]],constant Background& b 
  o.position=float4(x,y,.5,1.);o.color=id>=12?b.colors[4]:(upper?(top?b.colors[1]:b.colors[0]):(top?b.colors[2]:b.colors[3]));return o;
 }
 fragment float4 world_background_fragment(Out in [[stage_in]]) {return in.color;}
+
+// Face-me mesh solid runs retain the literal source color, without face lighting.
+fragment float4 world_billboard_color(TextureOut in [[stage_in]],constant float4& color [[buffer(0)]]) {return color;}
