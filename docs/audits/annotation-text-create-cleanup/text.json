@@ -1,0 +1,264 @@
+{
+  "removed": [
+    {
+      "path": "/tmp/ingetrazo-annotation-text-create-proof/attempts.json",
+      "bytes": 749,
+      "sha256": "6763db299272c722a5dc37279802990c06532b8c0e0101920146db13fefe010c"
+    },
+    {
+      "path": "/tmp/ingetrazo-annotation-text-create-proof/closed-face-input.igz",
+      "bytes": 4676,
+      "sha256": "fcb6ead98d378be62b8d96cb0c23a3c9de5ac9f76ab8055598cb9c8160966964"
+    },
+    {
+      "path": "/tmp/ingetrazo-annotation-text-create-proof/closed-face-native.igz",
+      "bytes": 5313,
+      "sha256": "d0162dd04b98cbb27f42ae9794a2a95f9d95d6e0563110305fd6e53a2b7af5fd"
+    },
+    {
+      "path": "/tmp/ingetrazo-annotation-text-create-proof/closed-face.igz",
+      "bytes": 4877,
+      "sha256": "f26245f643d0f45f17c6ece30131da5794924f1223d5befb7811aac28dc49dd7"
+    },
+    {
+      "path": "/tmp/ingetrazo-annotation-text-create-proof/failed-group-edge-suggestion.json",
+      "bytes": 47930,
+      "sha256": "8533b0bc22ef9d408d65d4455371a7c9df252432d93c59b9d7d74234e98a5b8a"
+    },
+    {
+      "path": "/tmp/ingetrazo-annotation-text-create-proof/failed-incomplete-context-finish.igz",
+      "bytes": 4569,
+      "sha256": "4fbca1bbc5ea1384dd24a9d93ea57a8e7540b36258a1be0014e6fdfdb0d0e519"
+    },
+    {
+      "path": "/tmp/ingetrazo-annotation-text-create-proof/failed-unknown-label-root-edge.igz",
+      "bytes": 3469,
+      "sha256": "f13a6d220a5230eef22219296550cee9b5b808197ee5d43f83cf6f4475bcbd63"
+    },
+    {
+      "path": "/tmp/ingetrazo-annotation-text-create-proof/failed-unknown-label.json",
+      "bytes": 127,
+      "sha256": "16947d5f96a7e3c7125e3afed405adddd756f643c741d1cd2db2cac7da7a39f6"
+    },
+    {
+      "path": "/tmp/ingetrazo-annotation-text-create-proof/final-named-build.log",
+      "bytes": 20245,
+      "sha256": "f375937d2a2a6066f56a9ffad022420a53652cb78a436d159c841eb463af1b7c"
+    },
+    {
+      "path": "/tmp/ingetrazo-annotation-text-create-proof/input.igz",
+      "bytes": 2512,
+      "sha256": "c9ce01d930fff89d9af94b5580093f6f82626b75d6ce690482e32fd787d4a87b"
+    },
+    {
+      "path": "/tmp/ingetrazo-annotation-text-create-proof/modal-test-final.log",
+      "bytes": 19401,
+      "sha256": "e27581e0806169b6280b4441f8832548ec8fe7d5b84dedcbfefd7574bcf437ba"
+    },
+    {
+      "path": "/tmp/ingetrazo-annotation-text-create-proof/modal-test.log",
+      "bytes": 19401,
+      "sha256": "cff7b458030991572a53186245a632b71ad6b805f0ced84ef1222ac543105609"
+    },
+    {
+      "path": "/tmp/ingetrazo-annotation-text-create-proof/native-history.json",
+      "bytes": 4907,
+      "sha256": "108d7abe3418f3473ee385584f1825d9ba9cd4cfae6838c83c04199862266b14"
+    },
+    {
+      "path": "/tmp/ingetrazo-annotation-text-create-proof/native.json",
+      "bytes": 47946,
+      "sha256": "231a9c3b2bb79a5031f44cb5fc42812a0075ed62fed95ea05c10363bd93fa3f2"
+    },
+    {
+      "path": "/tmp/ingetrazo-annotation-text-create-proof/nested-coordinates-input.igz",
+      "bytes": 4504,
+      "sha256": "eb6b8c65d8a98807e66efdd16497847d1df150a90983e184904f580889623c8c"
+    },
+    {
+      "path": "/tmp/ingetrazo-annotation-text-create-proof/nested-coordinates-native.igz",
+      "bytes": 5200,
+      "sha256": "a8ee38d4b81703b88eb23bd83dc43d8b16ca474a2f079cb9464dd9f055f94f16"
+    },
+    {
+      "path": "/tmp/ingetrazo-annotation-text-create-proof/nested-coordinates.igz",
+      "bytes": 4979,
+      "sha256": "775703b6a4ec6a7864a1210f491634876665cf0c00bc4f112a8da04d55a4b7dc"
+    },
+    {
+      "path": "/tmp/ingetrazo-annotation-text-create-proof/nested-edge-input.igz",
+      "bytes": 4504,
+      "sha256": "eb6b8c65d8a98807e66efdd16497847d1df150a90983e184904f580889623c8c"
+    },
+    {
+      "path": "/tmp/ingetrazo-annotation-text-create-proof/nested-edge-native.igz",
+      "bytes": 5194,
+      "sha256": "f51fda441e4f0330bf8b1ceda5ccfd47a4163fd91e0baccb5031c2026eb8fd2f"
+    },
+    {
+      "path": "/tmp/ingetrazo-annotation-text-create-proof/nested-edge.igz",
+      "bytes": 4973,
+      "sha256": "f4f0d40591ea918215ecddac774ee529b129a70d7d7dbf014a380cd2ec781e3d"
+    },
+    {
+      "path": "/tmp/ingetrazo-annotation-text-create-proof/nested-face-input.igz",
+      "bytes": 4504,
+      "sha256": "eb6b8c65d8a98807e66efdd16497847d1df150a90983e184904f580889623c8c"
+    },
+    {
+      "path": "/tmp/ingetrazo-annotation-text-create-proof/nested-face-native.igz",
+      "bytes": 5194,
+      "sha256": "f7a4a2c384207e1c9c0fd7c55ee7a25fbd4c0b40b6cc709a33b6e37f9985e555"
+    },
+    {
+      "path": "/tmp/ingetrazo-annotation-text-create-proof/nested-face.igz",
+      "bytes": 4973,
+      "sha256": "c9184c3a34db456104919e894e58701c2e79682662ff6492daf9c76933f20e1b"
+    },
+    {
+      "path": "/tmp/ingetrazo-annotation-text-create-proof/original-history.json",
+      "bytes": 4907,
+      "sha256": "108d7abe3418f3473ee385584f1825d9ba9cd4cfae6838c83c04199862266b14"
+    },
+    {
+      "path": "/tmp/ingetrazo-annotation-text-create-proof/original.json",
+      "bytes": 49536,
+      "sha256": "de4685a20d60e14c4363217a855b9d0be321bb2ce2b158c5c633f198da46a8ab"
+    },
+    {
+      "path": "/tmp/ingetrazo-annotation-text-create-proof/prior-edit/dimension-nested.igz",
+      "bytes": 3256,
+      "sha256": "5ab860e97df0624c35fa82433b303fa1b717135fc430da8b9fa5995b9e01dfc0"
+    },
+    {
+      "path": "/tmp/ingetrazo-annotation-text-create-proof/prior-edit/dimension-root.igz",
+      "bytes": 2988,
+      "sha256": "b8dc626e8fb64f893b26b1ce09c4ea6179017f6a6fc733ddc1a11acdadeecf28"
+    },
+    {
+      "path": "/tmp/ingetrazo-annotation-text-create-proof/prior-edit/failed-nested-style.json",
+      "bytes": 27354,
+      "sha256": "c1c1fb623b03df2938735350fbecaea0fb8b6156f55e86843b5d94b3d116f2ce"
+    },
+    {
+      "path": "/tmp/ingetrazo-annotation-text-create-proof/prior-edit/input.igz",
+      "bytes": 2512,
+      "sha256": "c9ce01d930fff89d9af94b5580093f6f82626b75d6ce690482e32fd787d4a87b"
+    },
+    {
+      "path": "/tmp/ingetrazo-annotation-text-create-proof/prior-edit/label-nested.igz",
+      "bytes": 3258,
+      "sha256": "607588068068ace04b10a9fc4cc562b30a2d92fe3bf23a9bfb697df40fc18785"
+    },
+    {
+      "path": "/tmp/ingetrazo-annotation-text-create-proof/prior-edit/label-root.igz",
+      "bytes": 2990,
+      "sha256": "a706444f0f8ff79d404fbc613f6f65a6e5af629f54dda60e6fb57e0adb653c42"
+    },
+    {
+      "path": "/tmp/ingetrazo-annotation-text-create-proof/prior-edit/native-dimension-nested.igz",
+      "bytes": 2634,
+      "sha256": "3d51d668909d0662820e62eca9843c882e4c94ec9b16930c2216c793874354d2"
+    },
+    {
+      "path": "/tmp/ingetrazo-annotation-text-create-proof/prior-edit/native-dimension-root.igz",
+      "bytes": 2849,
+      "sha256": "57b35500086f3ef35d0229cd3cd9031629bffeab39026176f82ba0d65f6bbdae"
+    },
+    {
+      "path": "/tmp/ingetrazo-annotation-text-create-proof/prior-edit/native-label-nested.igz",
+      "bytes": 2636,
+      "sha256": "2751908e1edb165f890527b7fe4e5a88a087663da587dcb6a28c6d5665325d8d"
+    },
+    {
+      "path": "/tmp/ingetrazo-annotation-text-create-proof/prior-edit/native-label-root.igz",
+      "bytes": 2851,
+      "sha256": "089b01ca3e173036baa72013d4738287430089dff135275f7a1e9446633e03a3"
+    },
+    {
+      "path": "/tmp/ingetrazo-annotation-text-create-proof/prior-edit/native.json",
+      "bytes": 31842,
+      "sha256": "b66379974cf981577d92eae464a5672cfa4826b957d9122dd41e449a86ffbe7b"
+    },
+    {
+      "path": "/tmp/ingetrazo-annotation-text-create-proof/prior-edit/original.json",
+      "bytes": 31842,
+      "sha256": "b66379974cf981577d92eae464a5672cfa4826b957d9122dd41e449a86ffbe7b"
+    },
+    {
+      "path": "/tmp/ingetrazo-annotation-text-create-proof/prior-edit/reopen.json",
+      "bytes": 8183,
+      "sha256": "174c4fd2c168ba6f2a611d112cb12ba7c1250bacbd321a4dad68495290f5152f"
+    },
+    {
+      "path": "/tmp/ingetrazo-annotation-text-create-proof/prior-edit/source-label-priority.json",
+      "bytes": 31120,
+      "sha256": "3c4096312e7d88b88df6c5d7bb689fa8af07ef5a967669249543ca20f1137828"
+    },
+    {
+      "path": "/tmp/ingetrazo-annotation-text-create-proof/reopen.json",
+      "bytes": 16498,
+      "sha256": "8d0459dc17e46e0b225faff9b9ca4f4e8c7bf37ea4321621b181aac5653f5434"
+    },
+    {
+      "path": "/tmp/ingetrazo-annotation-text-create-proof/results.json",
+      "bytes": 657,
+      "sha256": "f0f8f36c909db767c1421a693ccee2dfc32c34f576c57cee8ce74756dec6b899"
+    },
+    {
+      "path": "/tmp/ingetrazo-annotation-text-create-proof/root-coordinates-input.igz",
+      "bytes": 2932,
+      "sha256": "8d2931650f6594606b6020e1ec16ea18736ac8bdded6e6b143de581884ad89c9"
+    },
+    {
+      "path": "/tmp/ingetrazo-annotation-text-create-proof/root-coordinates-native.igz",
+      "bytes": 3575,
+      "sha256": "42670b9131381ede9aa2b4d6272a11e7731b8be0cd03daf4a694efc4b089e42e"
+    },
+    {
+      "path": "/tmp/ingetrazo-annotation-text-create-proof/root-coordinates.igz",
+      "bytes": 3139,
+      "sha256": "2ba9188cea70d61962bb9d4b4a2e66b1f04b836028b0f94b71a36c627653687d"
+    },
+    {
+      "path": "/tmp/ingetrazo-annotation-text-create-proof/root-edge-input.igz",
+      "bytes": 2932,
+      "sha256": "8d2931650f6594606b6020e1ec16ea18736ac8bdded6e6b143de581884ad89c9"
+    },
+    {
+      "path": "/tmp/ingetrazo-annotation-text-create-proof/root-edge-native.igz",
+      "bytes": 3570,
+      "sha256": "4f1311366e24e1d9cb78a194c5a779b5a4a685a241fd59f6f983abb8d8eaf63c"
+    },
+    {
+      "path": "/tmp/ingetrazo-annotation-text-create-proof/root-edge.igz",
+      "bytes": 3134,
+      "sha256": "01317c044e93fce9c803f5e7ae099f8788105c182122630c792f36bc690e1e15"
+    },
+    {
+      "path": "/tmp/ingetrazo-annotation-text-create-proof/root-face-input.igz",
+      "bytes": 2932,
+      "sha256": "8d2931650f6594606b6020e1ec16ea18736ac8bdded6e6b143de581884ad89c9"
+    },
+    {
+      "path": "/tmp/ingetrazo-annotation-text-create-proof/root-face-native.igz",
+      "bytes": 3569,
+      "sha256": "1a18f41ca2d59a40d0dad6798c90e904350d842721615e6919714f8f4c4f7cae"
+    },
+    {
+      "path": "/tmp/ingetrazo-annotation-text-create-proof/root-face.igz",
+      "bytes": 3133,
+      "sha256": "48b1cca4f6c4e3ccbb5c63a7ac6e2011d84d485855e60dc78ca8bae4c5aeef08"
+    }
+  ],
+  "retained": [
+    {
+      "path": "/tmp/ingetrazo-annotation-text-create-proof/prior-edit/check.json",
+      "bytes": 97,
+      "sha256": "c492db91619ec9ec4a2a47d8df9d1e0c2e89f5110b92848be5ae10b320b0e140"
+    }
+  ],
+  "released_bytes": 486976,
+  "target": "preserved and idle",
+  "source_worktree": "preserved"
+}

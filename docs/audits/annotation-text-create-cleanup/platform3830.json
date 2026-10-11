@@ -1,0 +1,105 @@
+{
+  "authenticated_members": 194,
+  "removed": [
+    {
+      "path": "/tmp/3830-arm.log",
+      "bytes": 58843,
+      "sha256": "7cfc963fca869b1f15e27b2fc2c738be8c3b6e53033b9e1305495c7cb1310279"
+    },
+    {
+      "path": "/tmp/3830-arm.zip",
+      "bytes": 840739,
+      "sha256": "06a483842efcc74447c1890ec4017950b739be4f9cea5705fc2fb089019103ec"
+    },
+    {
+      "path": "/tmp/3830-full.json",
+      "bytes": 37001,
+      "sha256": "125044d8bc6b55d7d2a84f22219273efda91a3cb8b41a4bfb9b959aae14a1ddb"
+    },
+    {
+      "path": "/tmp/3830-intel.log",
+      "bytes": 62377,
+      "sha256": "2d12b8dd3ac0148260f70fc8b6fc88cf72a149843ea2054a627168fb2d99cce9"
+    },
+    {
+      "path": "/tmp/3830-intel.zip",
+      "bytes": 452707,
+      "sha256": "b94cb6f13f8ebc5837cf6696fb082940c083af0acd9d9c380a8b03948a447d49"
+    },
+    {
+      "path": "/tmp/3830-ordered-arm.zip",
+      "bytes": 11884,
+      "sha256": "3f6682500d65fd5915284f1ad07536d82cc11a6a927f9ed7908c42d21314bac5"
+    },
+    {
+      "path": "/tmp/3830-ordered-intel.zip",
+      "bytes": 11859,
+      "sha256": "15ff5ed657fef224c69f8fb4b58dcd73805b95bd6778ceb7880793196c450067"
+    },
+    {
+      "path": "/tmp/3830-ordered.json",
+      "bytes": 5515,
+      "sha256": "7a87b5b779fc7fdfe2b1631dc74c37ca75e643354911c633de5313440d2d791e"
+    },
+    {
+      "path": "/tmp/3830-retained/arm.zip",
+      "bytes": 840739,
+      "sha256": "06a483842efcc74447c1890ec4017950b739be4f9cea5705fc2fb089019103ec"
+    },
+    {
+      "path": "/tmp/3830-retained/full-run.json",
+      "bytes": 37001,
+      "sha256": "125044d8bc6b55d7d2a84f22219273efda91a3cb8b41a4bfb9b959aae14a1ddb"
+    },
+    {
+      "path": "/tmp/3830-retained/intel.zip",
+      "bytes": 452707,
+      "sha256": "b94cb6f13f8ebc5837cf6696fb082940c083af0acd9d9c380a8b03948a447d49"
+    },
+    {
+      "path": "/tmp/3830-retained/job-logs.zip",
+      "bytes": 27935,
+      "sha256": "7db5b56aef3c6c372237a96e2526a0550d836d6acba25f34b6ae8cf800f59022"
+    },
+    {
+      "path": "/tmp/3830-retained/manifest.json",
+      "bytes": 40031,
+      "sha256": "24d1f703354f91aca9509d007e6d597dc766cda80a20a8ec3fe819b1db90489e"
+    },
+    {
+      "path": "/tmp/3830-retained/ordered-arm.zip",
+      "bytes": 11884,
+      "sha256": "3f6682500d65fd5915284f1ad07536d82cc11a6a927f9ed7908c42d21314bac5"
+    },
+    {
+      "path": "/tmp/3830-retained/ordered-intel.zip",
+      "bytes": 11859,
+      "sha256": "15ff5ed657fef224c69f8fb4b58dcd73805b95bd6778ceb7880793196c450067"
+    },
+    {
+      "path": "/tmp/3830-retained/ordered-run.json",
+      "bytes": 5515,
+      "sha256": "7a87b5b779fc7fdfe2b1631dc74c37ca75e643354911c633de5313440d2d791e"
+    },
+    {
+      "path": "/tmp/3830-retained/windows.zip",
+      "bytes": 19160,
+      "sha256": "0e884e3c61de8645249596ab51d43215cfa8eae07137b159979691a2f8224285"
+    },
+    {
+      "path": "/tmp/3830-windows.zip",
+      "bytes": 19160,
+      "sha256": "0e884e3c61de8645249596ab51d43215cfa8eae07137b159979691a2f8224285"
+    }
+  ],
+  "retained": [
+    {
+      "path": "/tmp/3830-retained/README.md",
+      "bytes": 1618,
+      "sha256": "51ed1fcd070336940bd5bd9a0fe42d49b09cd99475e837ccaad9cd8c831cb09c"
+    }
+  ],
+  "released_bytes": 2946916,
+  "canonical_archives": "preserved",
+  "worktree": "preserved"
+}
