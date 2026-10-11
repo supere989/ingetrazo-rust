@@ -16,7 +16,7 @@ pub fn render_menu_bar(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
         // ==========================================
         // 1. File Menu
         // ==========================================
-        ui.menu_button(tr("File"), |ui| {
+        let file_menu = ui.menu_button(tr("File"), |ui| {
             if ui.button(format!("{}\tCtrl+N", tr("New"))).clicked() {
                 app.new_document();
                 ui.close_menu();
@@ -30,23 +30,8 @@ pub fn render_menu_bar(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
                 ui.close_menu();
             }
 
-            ui.menu_button(tr("Open Recent"), |ui| {
-                if app.recent_files.is_empty() {
-                    ui.label(egui::RichText::new(tr("(No recent files)")).italics().weak());
-                } else {
-                    let mut file_to_open = None;
-                    for p in &app.recent_files {
-                        let name = p.file_name().unwrap_or_default().to_string_lossy();
-                        if ui.button(name.to_string()).clicked() {
-                            file_to_open = Some(p.clone());
-                            ui.close_menu();
-                        }
-                    }
-                    if let Some(p) = file_to_open {
-                        app.open_document(&p);
-                    }
-                }
-            });
+            let recent_menu = ui.menu_button(tr("Open Recent"), |ui| recent_files_menu(app, ui));
+            if recent_menu.inner.is_none() { app.document_session.recent_menu.frame = None; }
 
             if ui.button(tr("Recover a discarded auto-save…")).clicked() {
                 app.show_discarded_recovery();
@@ -192,6 +177,12 @@ pub fn render_menu_bar(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
                 ui.ctx().send_viewport_cmd(egui::ViewportCommand::Close);
             }
         });
+
+        // Inspect the actual menu state after interaction, including outside
+        // dismissal and Escape. Adjacent-frame reopen must rescan the files.
+        if file_menu.inner.is_none() || egui::menu::BarState::load(ui.ctx(), ui.id()).is_none() {
+            app.document_session.recent_menu.frame = None;
+        }
 
         // ==========================================
         // 2. Edit Menu
@@ -852,4 +843,38 @@ pub fn render_menu_bar(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
             }
         });
     });
+}
+
+/// Actual Open Recent content, also usable by embedded menu hosts.
+pub fn recent_files_menu(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
+    let frame = ui.ctx().cumulative_frame_nr();
+    let cache = &mut app.document_session.recent_menu;
+    if !cache.frame.is_some_and(|last| last == frame || last.checked_add(1) == Some(frame)) {
+        // Source checks files once when this menu opens, not every paint.
+        cache.indices.clear();
+        cache.indices.extend(app.recent_files.iter().enumerate().filter_map(|(i,path)| path.exists().then_some(i)));
+    }
+    cache.frame = Some(frame);
+    if cache.indices.is_empty() {
+        ui.add_enabled(false, egui::Button::new(tr("(no recent documents)")));
+        return;
+    }
+    let mut selected = None;
+    for (index, &entry) in cache.indices.iter().enumerate() {
+        let Some(path) = app.recent_files.get(entry) else { continue; };
+        let name = path.file_name().unwrap_or_default().to_string_lossy();
+        let parent = path.parent().unwrap_or_else(|| std::path::Path::new(""));
+        let label = format!("{}  {}  —  {}", index + 1, name, parent.display());
+        if ui.button(label).on_hover_text(path.display().to_string()).clicked() {
+            selected = Some(path.clone());
+        }
+    }
+    ui.separator();
+    if ui.button(tr("Clear list")).clicked() {
+        app.clear_recent_files();
+        ui.close_menu();
+    } else if let Some(path) = selected {
+        app.open_recent_document(&path);
+        ui.close_menu();
+    }
 }

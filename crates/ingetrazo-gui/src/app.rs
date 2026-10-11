@@ -349,12 +349,7 @@ impl IngeTrazoApp {
                 self.scene = loaded_scene;self.bim_active_tag_mode=false;self.apply_document_presentation();self.bump_model_revision();self.clipboard_document=uuid::Uuid::new_v4();self.clipboard_mesh_share_imports.clear();
                 self.undo_stack.clear();self.redo_stack.clear();
                 self.current_file = Some(path.to_path_buf());
-                let pb = path.to_path_buf();
-                self.recent_files.retain(|p| p != &pb);
-                self.recent_files.insert(0, pb);
-                if self.recent_files.len() > 10 {
-                    self.recent_files.truncate(10);
-                }
+                self.remember_recent_document(path);
                 self.textures.clear();
                 self.mark_document_clean();
                 self.persist_preferences();
@@ -403,7 +398,7 @@ impl IngeTrazoApp {
                 self.retire_current_recovery();
                 self.scene.camera = self.camera.clone();
                 self.current_file = Some(path.to_path_buf());
-                self.recent_files.retain(|p|p!=path);self.recent_files.insert(0,path.to_path_buf());self.recent_files.truncate(10);
+                self.remember_recent_document(path);
                 self.mark_document_clean();self.persist_preferences();
                 self.finish_document_action();
                 self.status_message = format!("Saved: {}", path.display());

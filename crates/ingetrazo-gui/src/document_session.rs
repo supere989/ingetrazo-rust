@@ -12,11 +12,13 @@ pub struct DocumentSession {
     pub confirm_unsaved:bool,pub close_allowed:bool,
     /// One file-choice transaction, invalidated by intervening model edits.
     pub open_dialog_revision:Option<(u64,u64,ingetrazo_core::presentation::DocumentStyle,ingetrazo_core::presentation::ShadowSettings)>,
+    pub recent_missing:Option<PathBuf>,
+    pub(crate) recent_menu:crate::recent_files::MenuCache,
     pub recovery:Vec<RecoveryRecord>,pub show_recovery:bool,pub recovered_slot:Option<PathBuf>,
 }
 impl Default for DocumentSession {fn default()->Self {Self{store:None,preferences:Preferences::default(),clean:None,
     autosaved:None,last_autosave:Instant::now(),pending:None,confirm_unsaved:false,close_allowed:false,open_dialog_revision:None,
-    recovery:vec![],show_recovery:false,recovered_slot:None}}}
+    recent_missing:None,recent_menu:Default::default(),recovery:vec![],show_recovery:false,recovered_slot:None}}}
 fn same_model(a:&Scene,b:&Scene)->bool {
     a.show_hidden_objects==b.show_hidden_objects && a.show_hidden_geometry==b.show_hidden_geometry &&
     a.image_planes==b.image_planes &&
@@ -55,7 +57,7 @@ impl IngeTrazoApp {
         if let Some(lang)=p.language.clone() {self.set_language(&lang);}
         let p=&self.document_session.preferences;
         self.navigation.eye_height=p.walk_eye_height;
-        self.scene.unit=p.new_document_unit;self.recent_files=p.recent_files.clone();self.style.line_width=p.line_width;self.style.profile_width=p.profile_width;
+        self.scene.unit=p.new_document_unit;self.recent_files=p.recent_files.clone();self.document_session.recent_menu.frame=None;self.style.line_width=p.line_width;self.style.profile_width=p.profile_width;
         self.style.visual_style=match p.visual_style.as_str(){"wireframe"=>VisualStyle::Wireframe,"hidden"=>VisualStyle::HiddenLine,"mono"=>VisualStyle::Monochrome,"xray"=>VisualStyle::XRay,_=>VisualStyle::ShadedWithTextures};
         if let Some(rgb)=p.extra.get("section_fill_color").and_then(|v|v.as_array()).filter(|v|v.len()==3){for(i,value)in rgb.iter().enumerate(){if let Some(value)=value.as_f64().filter(|value|value.is_finite()){self.style.section_fill_color[i]=value.clamp(0.,1.)as f32;}}}
         self.shadows_enabled=p.shadows;self.show_toolbar=p.show_toolbar;self.show_tray=p.show_tray;
@@ -136,6 +138,15 @@ impl IngeTrazoApp {
         let gesture=ctx.input(|i|i.pointer.any_down());
         if let Err(e)=self.autosave_if_due(Instant::now(),gesture){self.status_message=format!("Autosave failed: {e}");self.document_session.last_autosave=Instant::now();}
         ctx.request_repaint_after(Duration::from_secs(30));
+        if let Some(path)=self.document_session.recent_missing.as_ref() {
+            let message=ingetrazo_core::i18n::tr("{name} is no longer there.").replace("{name}",&path.file_name().unwrap_or_default().to_string_lossy());
+            let dismissed=egui::Modal::new(egui::Id::new("missing-recent-document")).show(ctx,|ui|{
+                ui.heading(ingetrazo_core::i18n::tr("Open Recent"));
+                ui.label(message);
+                ui.button("OK").clicked()
+            });
+            if dismissed.inner || dismissed.should_close(){self.document_session.recent_missing=None;}
+        }
         if self.document_session.confirm_unsaved {
             egui::Window::new("Unsaved changes").collapsible(false).resizable(false).anchor(egui::Align2::CENTER_CENTER,egui::Vec2::ZERO).show(ctx,|ui|{
                 ui.label("Save changes before continuing?");ui.horizontal(|ui|{

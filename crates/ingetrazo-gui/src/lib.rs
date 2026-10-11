@@ -24,6 +24,7 @@ pub mod composer_backend;
 pub mod dialogs;
 pub mod icons;
 pub mod menu;
+mod recent_files;
 pub mod statusbar;
 pub mod toolbar;
 mod tool_history;
