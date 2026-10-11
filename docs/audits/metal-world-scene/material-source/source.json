@@ -1,0 +1,467 @@
+{
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "passed": true,
+  "asset_sha256": "35134a675168fb80c354d042036bd3e7e5ceb4cd4a6f7e898f9328fde1ce1601",
+  "cases": [
+    {
+      "name": "opaque-front",
+      "rgba": [
+        247,
+        0,
+        0,
+        255
+      ],
+      "pixel": [
+        400,
+        318
+      ],
+      "png_sha256": "afa1aafa777500f2508431a429b40facf19d652f464825906a4ff12c62ca37f1",
+      "reverse": false,
+      "mode": "textures",
+      "attrs": {
+        "color": [
+          1.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    {
+      "name": "opaque-default-back",
+      "rgba": [
+        158,
+        178,
+        199,
+        255
+      ],
+      "pixel": [
+        400,
+        318
+      ],
+      "png_sha256": "511565647d1a471aeefe6cababde521c1bb86a026acfc492edc8ea93d2baad2c",
+      "reverse": true,
+      "mode": "textures",
+      "attrs": {
+        "color": [
+          1.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    {
+      "name": "opaque-painted-back",
+      "rgba": [
+        0,
+        247,
+        0,
+        255
+      ],
+      "pixel": [
+        400,
+        318
+      ],
+      "png_sha256": "5b2c33ddfaf3d7901ce598c390c833750331d4d520096da520b2b5650ac0df51",
+      "reverse": true,
+      "mode": "textures",
+      "attrs": {
+        "color": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "back": {
+          "color": [
+            0.0,
+            1.0,
+            0.0
+          ]
+        }
+      }
+    },
+    {
+      "name": "alpha-front",
+      "rgba": [
+        124,
+        0,
+        127,
+        255
+      ],
+      "pixel": [
+        400,
+        318
+      ],
+      "png_sha256": "bc5dc82b3e357642e804b3769eff0170e101c780d46083859fe6bf37e2c9dc23",
+      "reverse": false,
+      "mode": "textures",
+      "attrs": {
+        "color": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "opacity": 0.5
+      }
+    },
+    {
+      "name": "alpha-painted-back",
+      "rgba": [
+        0,
+        62,
+        191,
+        255
+      ],
+      "pixel": [
+        400,
+        318
+      ],
+      "png_sha256": "b8eb7bb402a96cec72ee9203ec242839d714ec50ebf7af9af36a326c30e7c180",
+      "reverse": true,
+      "mode": "textures",
+      "attrs": {
+        "color": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "opacity": 0.5,
+        "back": {
+          "color": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "opacity": 0.25
+        }
+      }
+    },
+    {
+      "name": "texture-blue",
+      "rgba": [
+        0,
+        0,
+        247,
+        255
+      ],
+      "pixel": [
+        400,
+        318
+      ],
+      "png_sha256": "1a808753d45fb3d7438e6f6c4499dd04ba422eb5222a4e1fe5e2d03a2caa0909",
+      "reverse": false,
+      "mode": "textures",
+      "attrs": {
+        "texture": {
+          "path": "docs/audits/metal-world-scene/material-source/quadrants.png",
+          "uvw": [
+            0.0,
+            0.0,
+            0.0,
+            0.25,
+            0.0,
+            0.0,
+            0.0,
+            0.25
+          ]
+        }
+      }
+    },
+    {
+      "name": "texture-red",
+      "rgba": [
+        247,
+        0,
+        0,
+        255
+      ],
+      "pixel": [
+        400,
+        318
+      ],
+      "png_sha256": "afa1aafa777500f2508431a429b40facf19d652f464825906a4ff12c62ca37f1",
+      "reverse": false,
+      "mode": "textures",
+      "attrs": {
+        "texture": {
+          "path": "docs/audits/metal-world-scene/material-source/quadrants.png",
+          "uvw": [
+            0.0,
+            0.0,
+            0.0,
+            0.25,
+            0.0,
+            0.0,
+            0.0,
+            0.75
+          ]
+        }
+      }
+    },
+    {
+      "name": "texture-repeat",
+      "rgba": [
+        247,
+        0,
+        0,
+        255
+      ],
+      "pixel": [
+        400,
+        318
+      ],
+      "png_sha256": "afa1aafa777500f2508431a429b40facf19d652f464825906a4ff12c62ca37f1",
+      "reverse": false,
+      "mode": "textures",
+      "attrs": {
+        "texture": {
+          "path": "docs/audits/metal-world-scene/material-source/quadrants.png",
+          "uvw": [
+            0.0,
+            0.0,
+            0.0,
+            1.25,
+            0.0,
+            0.0,
+            0.0,
+            -0.25
+          ]
+        }
+      }
+    },
+    {
+      "name": "texture-default-back",
+      "rgba": [
+        158,
+        178,
+        199,
+        255
+      ],
+      "pixel": [
+        400,
+        318
+      ],
+      "png_sha256": "511565647d1a471aeefe6cababde521c1bb86a026acfc492edc8ea93d2baad2c",
+      "reverse": true,
+      "mode": "textures",
+      "attrs": {
+        "texture": {
+          "path": "docs/audits/metal-world-scene/material-source/quadrants.png",
+          "uvw": [
+            0.0,
+            0.0,
+            0.0,
+            0.25,
+            0.0,
+            0.0,
+            0.0,
+            0.25
+          ]
+        }
+      }
+    },
+    {
+      "name": "texture-alpha",
+      "rgba": [
+        124,
+        0,
+        127,
+        255
+      ],
+      "pixel": [
+        400,
+        318
+      ],
+      "png_sha256": "bc5dc82b3e357642e804b3769eff0170e101c780d46083859fe6bf37e2c9dc23",
+      "reverse": false,
+      "mode": "textures",
+      "attrs": {
+        "texture": {
+          "path": "docs/audits/metal-world-scene/material-source/quadrants.png",
+          "uvw": [
+            0.0,
+            0.0,
+            0.0,
+            0.25,
+            0.0,
+            0.0,
+            0.0,
+            0.75
+          ]
+        },
+        "opacity": 0.5
+      }
+    },
+    {
+      "name": "texture-shaded",
+      "rgba": [
+        128,
+        128,
+        64,
+        255
+      ],
+      "pixel": [
+        400,
+        318
+      ],
+      "png_sha256": "0c3d1c020458f0de2abf79eb09c16aaf451356f646c4ad5b92359572e81237bc",
+      "reverse": false,
+      "mode": "shaded",
+      "attrs": {
+        "texture": {
+          "path": "docs/audits/metal-world-scene/material-source/quadrants.png",
+          "uvw": [
+            0.0,
+            0.0,
+            0.0,
+            0.25,
+            0.0,
+            0.0,
+            0.0,
+            0.25
+          ]
+        }
+      }
+    },
+    {
+      "name": "texture-shaded-back",
+      "rgba": [
+        158,
+        178,
+        199,
+        255
+      ],
+      "pixel": [
+        400,
+        318
+      ],
+      "png_sha256": "511565647d1a471aeefe6cababde521c1bb86a026acfc492edc8ea93d2baad2c",
+      "reverse": true,
+      "mode": "shaded",
+      "attrs": {
+        "texture": {
+          "path": "docs/audits/metal-world-scene/material-source/quadrants.png",
+          "uvw": [
+            0.0,
+            0.0,
+            0.0,
+            0.25,
+            0.0,
+            0.0,
+            0.0,
+            0.25
+          ]
+        }
+      }
+    },
+    {
+      "name": "group-color",
+      "rgba": [
+        247,
+        0,
+        0,
+        255
+      ],
+      "pixel": [
+        400,
+        318
+      ],
+      "png_sha256": "afa1aafa777500f2508431a429b40facf19d652f464825906a4ff12c62ca37f1",
+      "reverse": false,
+      "mode": "textures",
+      "attrs": {
+        "color": [
+          1.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    {
+      "name": "group-texture",
+      "rgba": [
+        0,
+        0,
+        247,
+        255
+      ],
+      "pixel": [
+        400,
+        318
+      ],
+      "png_sha256": "1a808753d45fb3d7438e6f6c4499dd04ba422eb5222a4e1fe5e2d03a2caa0909",
+      "reverse": false,
+      "mode": "textures",
+      "attrs": {
+        "texture": {
+          "path": "docs/audits/metal-world-scene/material-source/quadrants.png",
+          "uvw": [
+            0.0,
+            0.0,
+            0.0,
+            0.25,
+            0.0,
+            0.0,
+            0.0,
+            0.25
+          ]
+        }
+      }
+    },
+    {
+      "name": "group-reflected-texture",
+      "rgba": [
+        0,
+        0,
+        247,
+        255
+      ],
+      "pixel": [
+        400,
+        318
+      ],
+      "png_sha256": "1a808753d45fb3d7438e6f6c4499dd04ba422eb5222a4e1fe5e2d03a2caa0909",
+      "reverse": false,
+      "mode": "textures",
+      "attrs": {
+        "texture": {
+          "path": "docs/audits/metal-world-scene/material-source/quadrants.png",
+          "uvw": [
+            0.0,
+            0.0,
+            0.0,
+            0.25,
+            0.0,
+            0.0,
+            0.0,
+            0.25
+          ]
+        }
+      }
+    },
+    {
+      "name": "group-alpha",
+      "rgba": [
+        124,
+        0,
+        127,
+        255
+      ],
+      "pixel": [
+        400,
+        318
+      ],
+      "png_sha256": "bc5dc82b3e357642e804b3769eff0170e101c780d46083859fe6bf37e2c9dc23",
+      "reverse": false,
+      "mode": "textures",
+      "attrs": {
+        "color": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "opacity": 0.5
+      }
+    }
+  ],
+  "scope": "Actual frozen Qt OpenGL viewport sampled interior RGBA, authored constant/repeat UV covectors, color/alpha/front/back/texture mean; no whole image or mip parity claim"
+}

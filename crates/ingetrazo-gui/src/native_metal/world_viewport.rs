@@ -34,6 +34,8 @@ impl Viewport {
     pub(crate) fn matrix_bytes(&self) -> u64 {
         self.world.stats.instance_matrix_upload_bytes
     }
+    pub(crate) fn texture_uploads(&self)->u64{self.world.stats.texture_uploads}
+    pub(crate) fn material_order_builds(&self)->u64{self.world.stats.material_order_builds}
     pub(crate) fn geometry_uploads(&self) -> u64 {
         self.world.stats.geometry_uploads
     }
