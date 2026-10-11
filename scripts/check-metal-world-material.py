@@ -3,6 +3,14 @@
 import hashlib,json,pathlib,sys
 NAMES=['opaque-front','opaque-default-back','opaque-painted-back','alpha-front','alpha-painted-back','texture-blue','dual-textures','texture-red','texture-repeat','texture-default-back','texture-alpha','texture-shaded','texture-shaded-back','group-color','group-texture','group-reflected-texture','group-alpha','shaded-transparent-texture','shaded-back-texture','alpha-0.1','alpha-0.25','alpha-0.3','alpha-0.5','alpha-0.7','alpha-0.9']
 PIN='6be29fe437a7cd992d4e079f71720821b25216b9'
+def validate_backings(f):
+ owners=f['sampled_heaps'];kinds=f.get('sampled_backing_kinds',['heap'])
+ assert len(owners)==len(kinds) and kinds in [['heap'],['standalone','standalone']]
+ if kinds==['heap']:
+  cap,actual,used=owners[0];assert cap==4*1024*1024 and 0<used<=actual<=cap
+ else:
+  for cap,actual,used in owners:assert 0<cap==actual==used
+  assert sum(row[0] for row in owners)<=f['backing_ledger_committed']
 def check(source,native):
  s=json.loads((source/'source.json').read_text());side=source.parent/'material-shaded-side-source';extra=json.loads((side/'source.json').read_text());assert extra['source_pin']==PIN and extra['asset_sha256']==s['asset_sha256'];s['cases']+=extra['cases'];alpha=source.parent/'material-alpha-source';third=json.loads((alpha/'source.json').read_text());assert third['source_pin']==PIN and third['asset_sha256']==s['asset_sha256'];s['cases']+=third['cases'];dual=source.parent/'material-dual-source';fourth=json.loads((dual/'source.json').read_text());assert fourth['source_pin']==PIN and fourth['asset_sha256']==s['asset_sha256'];assert hashlib.sha256((dual/'alternate.png').read_bytes()).hexdigest()==fourth['alternate_sha256'];s['cases'].insert(6,fourth['cases'][0]);r=json.loads((native/'report.json').read_text())
  assert s['passed'] is True and s['source_pin']==PIN and [c['name']for c in s['cases']]==NAMES
@@ -20,10 +28,21 @@ def check(source,native):
    if case['name']=='dual-textures':
     dx,dy=map(round,f['extra_pixel']);assert l+3<dx<l+w-3 and t+3<dy<t+h-3
     assert all(data[4*(yy*1280+xx):4*(yy*1280+xx)+4]==bytes(case['extra_rgba'])for yy in range(dy-2,dy+3)for xx in range(dx-2,dx+3)),f['name']+' second asset'
-    assert len(f['sampled_heaps'])==1,'two immutable assets must share one retained backing heap'
-    cap,actual,used=f['sampled_heaps'][0];assert cap==4*1024*1024 and 0<used<=actual<=cap
+    validate_backings(f)
   for k in ['catalog_builds','geometry_uploads','model_refreshes','matrix_bytes','texture_uploads','material_order_builds']:
    assert r['frames'][i*3+1][k]==r['frames'][i*3+2][k],(case['name'],k)
  assert r['frames'][-1]['texture_uploads']==2,'unchanged immutable image must be reused across material recipes'
  return {'passed':True,'source_cases':25,'native_cases':75,'pixels':1950,'scope':'Actual shared app update_ui/native Metal cached material sampled interiors; no full viewport, mip, edge, whole-image, user gesture or presentation parity claim'}
-if __name__=='__main__':print(json.dumps(check(pathlib.Path(sys.argv[1]),pathlib.Path(sys.argv[2])),indent=2))
+if __name__=='__main__':
+ if sys.argv[1:]==['--backing-self-test']:
+  import copy
+  good={'sampled_heaps':[[64,64,64],[64,64,64]],'sampled_backing_kinds':['standalone','standalone'],'backing_ledger_committed':128};validate_backings(good)
+  validate_backings({'sampled_heaps':[[4*1024*1024,64,64]]})
+  mutations=[lambda r:r.update(backing_ledger_committed=127),lambda r:r.update(sampled_backing_kinds=['heap','heap']),lambda r:r['sampled_heaps'].pop(),lambda r:r['sampled_heaps'][0].__setitem__(1,65),lambda r:r.update(sampled_backing_kinds=['fake','fake'])]
+  for mutate in mutations:
+   bad=copy.deepcopy(good);mutate(bad)
+   try:validate_backings(bad)
+   except (AssertionError,KeyError):pass
+   else:raise AssertionError('Invalid backing owner accepted')
+  print('PASS two backing routes/five ownership negatives')
+ else:print(json.dumps(check(pathlib.Path(sys.argv[1]),pathlib.Path(sys.argv[2])),indent=2))
