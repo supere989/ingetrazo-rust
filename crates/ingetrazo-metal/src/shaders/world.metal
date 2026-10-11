@@ -3,9 +3,9 @@ using namespace metal;
 struct Vertex { packed_float3 position; packed_float3 normal; packed_float4 color; packed_float2 uv; };
 struct Section {float4 plane;uint enabled;uint padding[3];};
 float section_distance(float4 world,constant Section& s){return s.enabled?dot(world,s.plane):1.;}
-struct Out { float4 position [[position]]; float4 color; float clip[1] [[clip_distance]]; };
+struct Out { float4 position [[position]]; float4 color; float clip [[clip_distance]]; };
 vertex Out world_vertex(uint id [[vertex_id]],uint instance [[instance_id]],const device Vertex* v [[buffer(0)]],const device float4x4* model [[buffer(1)]],constant float4x4& camera [[buffer(2)]],constant Section& section [[buffer(3)]]) {
- Out o;float4 world=model[instance]*float4(v[id].position,1.0);o.clip[0]=section_distance(world,section);o.position=camera*world;
+ Out o;float4 world=model[instance]*float4(v[id].position,1.0);o.clip=section_distance(world,section);o.position=camera*world;
  // OrbitCamera uses OpenGL clip depth; Metal raster depth is [0,w].
  o.position.z=(o.position.z+o.position.w)*0.5; o.color=float4(v[id].color); return o;
 }
@@ -25,9 +25,9 @@ fragment float4 world_fragment(Out in [[stage_in]],bool front [[front_facing]],c
 // Source basic.frag sampled policy: bottom-up UV asset rows, linear repeat,
 // trilinear mips unless sparse alpha selects source hard-cutout mode.
 struct TextureVertex {packed_float3 position;packed_float2 uv;};
-struct TextureOut {float4 position [[position]];float2 uv;float clip[1] [[clip_distance]];};
+struct TextureOut {float4 position [[position]];float2 uv;float clip [[clip_distance]];};
 vertex TextureOut world_texture_vertex(uint id [[vertex_id]],uint instance [[instance_id]],const device TextureVertex* v [[buffer(0)]],const device float4x4* model [[buffer(1)]],constant float4x4& camera [[buffer(2)]],constant Section& section [[buffer(3)]]) {
- TextureOut o;float4 world=model[instance]*float4(v[id].position,1.);o.clip[0]=section_distance(world,section);o.position=camera*world;o.position.z=(o.position.z+o.position.w)*.5;o.uv=float2(v[id].uv);return o;
+ TextureOut o;float4 world=model[instance]*float4(v[id].position,1.);o.clip=section_distance(world,section);o.position=camera*world;o.position.z=(o.position.z+o.position.w)*.5;o.uv=float2(v[id].uv);return o;
 }
 struct TexturePaint {float opacity;float shade;uint hard_cutout;uint height;float4 mean;};
 constant float source_bayer[16]={0.5/16.,8.5/16.,2.5/16.,10.5/16.,12.5/16.,4.5/16.,14.5/16.,6.5/16.,3.5/16.,11.5/16.,1.5/16.,9.5/16.,15.5/16.,7.5/16.,13.5/16.,5.5/16.};
@@ -42,7 +42,7 @@ fragment float4 world_texture_fragment(TextureOut in [[stage_in]],texture2d<floa
 // World-space ghosts deliberately omit section clipping and ordinary paint policy.
 struct GhostVertex {packed_float3 position;packed_float3 color;};
 vertex Out world_ghost_vertex(uint id [[vertex_id]],const device GhostVertex* v [[buffer(0)]],constant float4x4& camera [[buffer(2)]]) {
- Out o;o.clip[0]=1.;o.position=camera*float4(v[id].position,1.);o.position.z=(o.position.z+o.position.w)*.5;o.color=float4(v[id].color,1.);return o;
+ Out o;o.clip=1.;o.position=camera*float4(v[id].position,1.);o.position.z=(o.position.z+o.position.w)*.5;o.color=float4(v[id].color,1.);return o;
 }
 struct GhostPaint {float4 edge;uint height;uint mode;uint padding1;uint padding2;};
 fragment float4 world_ghost_fragment(Out in [[stage_in]],constant GhostPaint& paint [[buffer(0)]]) {
@@ -53,12 +53,12 @@ fragment float4 world_ghost_fragment(Out in [[stage_in]],constant GhostPaint& pa
 
 // Frozen GL_LINES path has default width1; no authoring-style width remap.
 vertex Out world_line_vertex(uint id [[vertex_id]],const device packed_float3* v [[buffer(0)]],constant float4x4& camera [[buffer(2)]],constant Section& section [[buffer(3)]]) {
- Out o;o.clip[0]=section_distance(float4(v[id],1.),section);o.position=camera*float4(v[id],1.);o.position.z=(o.position.z+o.position.w)*.5;o.color=float4(1.);return o;
+ Out o;o.clip=section_distance(float4(v[id],1.),section);o.position=camera*float4(v[id],1.);o.position.z=(o.position.z+o.position.w)*.5;o.color=float4(1.);return o;
 }
 
 struct Background {float4 colors[5];float horizon;float padding[3];};
 vertex Out world_background_vertex(uint id [[vertex_id]],constant Background& b [[buffer(0)]]) {
- Out o;o.clip[0]=1.;uint q=id%6;bool upper=id<6;float x=(q==0||q==3||q==5)?-1.:1.;
+ Out o;o.clip=1.;uint q=id%6;bool upper=id<6;float x=(q==0||q==3||q==5)?-1.:1.;
  bool top=(q==2||q==4||q==5);float y=upper?(top?1.:b.horizon):(top?b.horizon:-1.);
  if(id>=12){x=id==12?-1.:1.;y=b.horizon;}
  o.position=float4(x,y,.5,1.);o.color=id>=12?b.colors[4]:(upper?(top?b.colors[1]:b.colors[0]):(top?b.colors[2]:b.colors[3]));return o;
