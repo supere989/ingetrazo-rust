@@ -1,0 +1,55 @@
+{
+  "scope": "Observed six completed unchanged page acceptance steps on separate GitHub-hosted Linux runs; cache/load-sensitive, not a controlled overall CI or runtime benchmark.",
+  "old_source": "9cd824db3e3ab94dbd7b10b1ea2a56e1f2a3fb1c",
+  "new_source": "55d76ef28dd06eeff768eca7d271e6c6e9345c6e",
+  "old_job": 114438190116,
+  "new_job": 114443296466,
+  "rows": [
+    {
+      "name": "Original and native strict vector View PDF pages",
+      "old_status": "success",
+      "new_status": "success",
+      "old_seconds": 52,
+      "new_seconds": 24
+    },
+    {
+      "name": "Original and native saved-view PDF state against opposed live state",
+      "old_status": "success",
+      "new_status": "success",
+      "old_seconds": 52,
+      "new_seconds": 24
+    },
+    {
+      "name": "Original and native strict solid section PDF pages",
+      "old_status": "success",
+      "new_status": "success",
+      "old_seconds": 50,
+      "new_seconds": 23
+    },
+    {
+      "name": "Original and native saved tilted cropped colored hatch PDF pages",
+      "old_status": "success",
+      "new_status": "success",
+      "old_seconds": 53,
+      "new_seconds": 24
+    },
+    {
+      "name": "Original and native strict physical grid and hatch pages",
+      "old_status": "success",
+      "new_status": "success",
+      "old_seconds": 50,
+      "new_seconds": 24
+    },
+    {
+      "name": "Original and native noninteger grid saved tilted solid pages",
+      "old_status": "success",
+      "new_status": "success",
+      "old_seconds": 51,
+      "new_seconds": 24
+    }
+  ],
+  "old_total": 308,
+  "new_total": 143,
+  "old_run": 38128645700,
+  "new_run": 38130384176
+}
