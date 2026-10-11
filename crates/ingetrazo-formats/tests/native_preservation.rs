@@ -374,3 +374,37 @@ fn ghost_flags_roundtrip_refresh_known_values_preserve_unknown_metadata() {
  assert_eq!(scene_to_igz_document(&reopened)["saved_views"][0]["hidden_shown"],doc["saved_views"][0]["hidden_shown"]);
  std::fs::remove_file(src).unwrap();std::fs::remove_file(dst).unwrap();
 }
+
+#[test]
+fn inherited_unit_metadata_and_explicit_replacement_survive_disk_roundtrip() {
+    use ingetrazo_core::units::LengthUnit;
+    for raw in [
+        json!({"length":"ft-in","precision":3,"vendor":{"keep":[1,true]}}),
+        json!({"length":"mm","precision":"authored","vendor":7}),
+        json!({"precision":-1,"vendor":["opaque"]}),
+        json!(["legacy"]), json!("legacy"), Value::Null,
+    ] {
+        let src = temp("unit-owner-source.igz");
+        let dst = temp("unit-owner-saved.igz");
+        write_plain(&json!({"edges":[],"faces":[],"units":raw}), &src);
+        let mut scene = load_igz(&src).unwrap();
+        scene.model_units_override = Some(raw.clone());
+        save_igz(&scene, &dst).unwrap();
+        assert_eq!(load_igz(&dst).unwrap().native_document["units"], raw);
+
+        scene.unit = LengthUnit::Feet;
+        let mut changed = if raw.is_object() { raw.clone() }
+            else { json!({"precision":2}) };
+        changed["length"] = json!("ft");
+        save_igz(&scene, &dst).unwrap();
+        assert_eq!(load_igz(&dst).unwrap().native_document["units"], changed);
+
+        scene.unit = LengthUnit::Centimeters;
+        scene.model_units_override = Some(json!({"length":"cm","precision":4}));
+        save_igz(&scene, &dst).unwrap();
+        assert_eq!(load_igz(&dst).unwrap().native_document["units"],
+            json!({"length":"cm","precision":4}));
+        std::fs::remove_file(src).unwrap();
+        std::fs::remove_file(dst).unwrap();
+    }
+}

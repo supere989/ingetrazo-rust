@@ -697,7 +697,17 @@ fn scene_model(scene: &Scene) -> serde_json::Value {
 pub fn scene_to_igz_document(scene: &Scene) -> serde_json::Value {
     let current = scene_model(scene);
     let mut doc = overlay(&scene.native_document, &scene.native_baseline, current.clone());
-    if scene.model_units_override.is_some() {doc["units"]=current["units"].clone();}
+    if let Some(units) = &scene.model_units_override {
+        // Contexts inherit the complete authored value; explicit Preferences
+        // Apply owns a replacement pair. Preserve either owner, changing only
+        // a legacy typed-unit edit relative to the raw value's projection.
+        let mut baseline = current["units"].clone();
+        baseline["length"] = serde_json::json!(units.get("length")
+            .and_then(serde_json::Value::as_str)
+            .filter(|code| ingetrazo_core::units::MODEL_UNIT_CODES.contains(code))
+            .unwrap_or("m"));
+        doc["units"] = merge_changed(Some(units), Some(&baseline), &current["units"]);
+    }
     if let Some(style)=&scene.dimension_style_override {doc["dimension_style"]=style.clone();}
     if scene.native_baseline.get("hidden_view")!=current.get("hidden_view") {
         let mut shown=doc.get("hidden_view").and_then(|v|v.as_object()).cloned().unwrap_or_default();
