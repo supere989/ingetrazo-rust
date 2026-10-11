@@ -1,0 +1,66 @@
+[
+  {
+    "id": 11706599400,
+    "name": "native-metal-link-macos-15",
+    "bytes": 22139,
+    "sha256": "fd4452c898dab495d6436da6eeb55ac2a6ad41cfa9f63d8d1cdbe536e6afbb78",
+    "entries": [
+      "paper-font-native-ci/font-resource.log",
+      "paper-font-native-ci/tests.log",
+      "metal-combined-gui-ci/build.log",
+      "metal-combined-gui-ci/check.log"
+    ]
+  },
+  {
+    "id": 11706349959,
+    "name": "native-windows-process",
+    "bytes": 19008,
+    "sha256": "fd74762db4f0b821af25b1bafd96e22cd102fadb6716a761ce010a06f899c0a1",
+    "entries": [
+      "build.log",
+      "recovery-check.json",
+      "recovery-check.log",
+      "recovery-run.log",
+      "self-check.log",
+      "session-recovery/init-0.stderr",
+      "session-recovery/init-0.stdout",
+      "session-recovery/original-after.igz",
+      "session-recovery/original-before.igz",
+      "session-recovery/recover-6.stderr",
+      "session-recovery/recover-6.stdout",
+      "session-recovery/recovered.igz",
+      "session-recovery/result.json",
+      "session-recovery/scan-0.stderr",
+      "session-recovery/scan-0.stdout",
+      "session-recovery/scan-1.stderr",
+      "session-recovery/scan-1.stdout",
+      "session-recovery/scan-2.stderr",
+      "session-recovery/scan-2.stdout",
+      "session-recovery/scan-3.stderr",
+      "session-recovery/scan-3.stdout",
+      "session-recovery/scan-4.stderr",
+      "session-recovery/scan-4.stdout",
+      "session-recovery/scan-5.stderr",
+      "session-recovery/scan-5.stdout",
+      "session-recovery/state/config/settings.json",
+      "session-recovery/state/data/autosave/discarded/retired-1791732270878-4f8dbe4c-b4cf-44d9-9242-e286796079f9.igz",
+      "session-recovery/state/data/autosave/discarded/retired-1791732270878-4f8dbe4c-b4cf-44d9-9242-e286796079f9.json",
+      "session-recovery/state/original.igz",
+      "session-recovery/state/recovered.igz",
+      "session-recovery/writer.stderr",
+      "version.log"
+    ]
+  },
+  {
+    "id": 11705549359,
+    "name": "native-metal-link-macos-15-intel",
+    "bytes": 22174,
+    "sha256": "bab265c44e1440da9462a6d9e37253bfd8e592bdbf62fd724be8a0673120d445",
+    "entries": [
+      "paper-font-native-ci/font-resource.log",
+      "paper-font-native-ci/tests.log",
+      "metal-combined-gui-ci/build.log",
+      "metal-combined-gui-ci/check.log"
+    ]
+  }
+]
