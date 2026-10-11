@@ -1,0 +1,15 @@
+{
+  "exact_cases": 130,
+  "overlay_union": 3830,
+  "overlay_mismatches": 0,
+  "whole_scene_strict_failure": {
+    "on": 1285,
+    "off": 1297,
+    "restored": 1285
+  },
+  "negatives": [
+    "actual_changed_pixel",
+    "missing_named_case",
+    "old_gpu_float_edge_60_pixels"
+  ]
+}

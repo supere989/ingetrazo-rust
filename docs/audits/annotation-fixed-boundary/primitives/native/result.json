@@ -1,0 +1,286 @@
+{
+  "scope": "actual strict NVIDIA own-window immutable primitive painter controls",
+  "oracle_sha256": "713dca9fe2547cbcad0094508ba92f05fa3b97eb3bb4bb262a152834f2cd233e",
+  "rows": [
+    {
+      "name": "horizontal-square",
+      "pid": 53,
+      "window_id": 136314882,
+      "state": {
+        "pixels_per_point": 1.0,
+        "nonce": 0,
+        "submitted_serial": 56,
+        "completed_present_serial": 53,
+        "cleared": false,
+        "held_refusal": false,
+        "geometry_uploads": 1,
+        "cached_bytes": 168,
+        "rollback_buffers": 0,
+        "query_uploads": 1,
+        "committed_bytes": 688760
+      },
+      "binary_sha256": "a69ab33884b589329746f37eaeca0e97b8f8df89534589f8d4bbb43c2106c468",
+      "native_sha256": "10fc673582a8ea2c65bdaba1c37e74b4d2d829376b60f799f84b832479328397"
+    },
+    {
+      "name": "vertical-square",
+      "pid": 60,
+      "window_id": 136314882,
+      "state": {
+        "pixels_per_point": 1.0,
+        "nonce": 0,
+        "submitted_serial": 44,
+        "completed_present_serial": 41,
+        "cleared": false,
+        "held_refusal": false,
+        "geometry_uploads": 1,
+        "cached_bytes": 168,
+        "rollback_buffers": 0,
+        "query_uploads": 1,
+        "committed_bytes": 688760
+      },
+      "binary_sha256": "a69ab33884b589329746f37eaeca0e97b8f8df89534589f8d4bbb43c2106c468",
+      "native_sha256": "8d9ca1a205f474f989f9e394fb3837485b00c6a371e4baa46eaddf27fe723ecf"
+    },
+    {
+      "name": "reversed",
+      "pid": 67,
+      "window_id": 136314882,
+      "state": {
+        "pixels_per_point": 1.0,
+        "nonce": 0,
+        "submitted_serial": 126,
+        "completed_present_serial": 123,
+        "cleared": false,
+        "held_refusal": false,
+        "geometry_uploads": 1,
+        "cached_bytes": 168,
+        "rollback_buffers": 0,
+        "query_uploads": 1,
+        "committed_bytes": 688760
+      },
+      "binary_sha256": "a69ab33884b589329746f37eaeca0e97b8f8df89534589f8d4bbb43c2106c468",
+      "native_sha256": "db1b377cc7896d7108e6d02aa0636cd761a316960da117c8d43e2423d46154ad"
+    },
+    {
+      "name": "short",
+      "pid": 74,
+      "window_id": 136314882,
+      "state": {
+        "pixels_per_point": 1.0,
+        "nonce": 0,
+        "submitted_serial": 150,
+        "completed_present_serial": 147,
+        "cleared": false,
+        "held_refusal": false,
+        "geometry_uploads": 1,
+        "cached_bytes": 168,
+        "rollback_buffers": 0,
+        "query_uploads": 1,
+        "committed_bytes": 688760
+      },
+      "binary_sha256": "a69ab33884b589329746f37eaeca0e97b8f8df89534589f8d4bbb43c2106c468",
+      "native_sha256": "f6500ad85b655009ade7d7189175a41d7624b2afe191724858c47a414607a088"
+    },
+    {
+      "name": "degenerate",
+      "pid": 81,
+      "window_id": 136314882,
+      "state": {
+        "pixels_per_point": 1.0,
+        "nonce": 0,
+        "submitted_serial": 81,
+        "completed_present_serial": 78,
+        "cleared": false,
+        "held_refusal": false,
+        "geometry_uploads": 0,
+        "cached_bytes": 0,
+        "rollback_buffers": 0,
+        "query_uploads": 1,
+        "committed_bytes": 688488
+      },
+      "binary_sha256": "a69ab33884b589329746f37eaeca0e97b8f8df89534589f8d4bbb43c2106c468",
+      "native_sha256": "b1770d0041b4eba30c0ff2d99afc56cebd54df3c8cf8b444628c55ee1d28b549"
+    },
+    {
+      "name": "cosmetic-zero",
+      "pid": 88,
+      "window_id": 136314882,
+      "state": {
+        "pixels_per_point": 1.0,
+        "nonce": 0,
+        "submitted_serial": 105,
+        "completed_present_serial": 102,
+        "cleared": false,
+        "held_refusal": false,
+        "geometry_uploads": 1,
+        "cached_bytes": 168,
+        "rollback_buffers": 0,
+        "query_uploads": 1,
+        "committed_bytes": 688760
+      },
+      "binary_sha256": "a69ab33884b589329746f37eaeca0e97b8f8df89534589f8d4bbb43c2106c468",
+      "native_sha256": "cdd7a5c9bfc81acf5d26c5d031e22791c6bc6f44021512cf2623179ee30f75d3"
+    },
+    {
+      "name": "negative-origin",
+      "pid": 95,
+      "window_id": 136314882,
+      "state": {
+        "pixels_per_point": 1.0,
+        "nonce": 0,
+        "submitted_serial": 111,
+        "completed_present_serial": 108,
+        "cleared": false,
+        "held_refusal": false,
+        "geometry_uploads": 1,
+        "cached_bytes": 168,
+        "rollback_buffers": 0,
+        "query_uploads": 1,
+        "committed_bytes": 688760
+      },
+      "binary_sha256": "a69ab33884b589329746f37eaeca0e97b8f8df89534589f8d4bbb43c2106c468",
+      "native_sha256": "34902f2cfe759591c128f095d46636c7d8cbb6dec614ad75f9bf052200947d2b"
+    },
+    {
+      "name": "shallow-clipped",
+      "pid": 102,
+      "window_id": 136314882,
+      "state": {
+        "pixels_per_point": 1.0,
+        "nonce": 0,
+        "submitted_serial": 101,
+        "completed_present_serial": 98,
+        "cleared": false,
+        "held_refusal": false,
+        "geometry_uploads": 1,
+        "cached_bytes": 168,
+        "rollback_buffers": 0,
+        "query_uploads": 1,
+        "committed_bytes": 688760
+      },
+      "binary_sha256": "a69ab33884b589329746f37eaeca0e97b8f8df89534589f8d4bbb43c2106c468",
+      "native_sha256": "f6fee1d83ca33c9cdc823a29f12b46b1a48ee6ff5c63115114f8b345af13b5ed"
+    },
+    {
+      "name": "steep",
+      "pid": 109,
+      "window_id": 136314882,
+      "state": {
+        "pixels_per_point": 1.0,
+        "nonce": 0,
+        "submitted_serial": 105,
+        "completed_present_serial": 102,
+        "cleared": false,
+        "held_refusal": false,
+        "geometry_uploads": 1,
+        "cached_bytes": 168,
+        "rollback_buffers": 0,
+        "query_uploads": 1,
+        "committed_bytes": 688760
+      },
+      "binary_sha256": "a69ab33884b589329746f37eaeca0e97b8f8df89534589f8d4bbb43c2106c468",
+      "native_sha256": "0751db107d3b93ef62340599b918321f326894ed27e922591342c3de362df018"
+    },
+    {
+      "name": "narrow",
+      "pid": 116,
+      "window_id": 136314882,
+      "state": {
+        "pixels_per_point": 1.0,
+        "nonce": 0,
+        "submitted_serial": 90,
+        "completed_present_serial": 87,
+        "cleared": false,
+        "held_refusal": false,
+        "geometry_uploads": 1,
+        "cached_bytes": 168,
+        "rollback_buffers": 0,
+        "query_uploads": 1,
+        "committed_bytes": 688760
+      },
+      "binary_sha256": "a69ab33884b589329746f37eaeca0e97b8f8df89534589f8d4bbb43c2106c468",
+      "native_sha256": "038a2bb02344279063a661366e98961e14045b072fda7a43e50ea01a43761c1a"
+    },
+    {
+      "name": "fractional",
+      "pid": 123,
+      "window_id": 136314882,
+      "state": {
+        "pixels_per_point": 1.0,
+        "nonce": 0,
+        "submitted_serial": 118,
+        "completed_present_serial": 115,
+        "cleared": false,
+        "held_refusal": false,
+        "geometry_uploads": 1,
+        "cached_bytes": 168,
+        "rollback_buffers": 0,
+        "query_uploads": 1,
+        "committed_bytes": 688760
+      },
+      "binary_sha256": "a69ab33884b589329746f37eaeca0e97b8f8df89534589f8d4bbb43c2106c468",
+      "native_sha256": "ddde388706837809c3357c5afcce78ccdf67558e95dcc48e3b9758362addf7a0"
+    },
+    {
+      "name": "triangle-clockwise",
+      "pid": 130,
+      "window_id": 136314882,
+      "state": {
+        "pixels_per_point": 1.0,
+        "nonce": 0,
+        "submitted_serial": 98,
+        "completed_present_serial": 95,
+        "cleared": false,
+        "held_refusal": false,
+        "geometry_uploads": 1,
+        "cached_bytes": 72,
+        "rollback_buffers": 0,
+        "query_uploads": 1,
+        "committed_bytes": 688616
+      },
+      "binary_sha256": "a69ab33884b589329746f37eaeca0e97b8f8df89534589f8d4bbb43c2106c468",
+      "native_sha256": "e5e84ec2ac29ccfc16249b024567c8c1254b36c80a5857f38ef05d15c5d17acf"
+    },
+    {
+      "name": "triangle-reversed",
+      "pid": 137,
+      "window_id": 136314882,
+      "state": {
+        "pixels_per_point": 1.0,
+        "nonce": 0,
+        "submitted_serial": 111,
+        "completed_present_serial": 108,
+        "cleared": false,
+        "held_refusal": false,
+        "geometry_uploads": 1,
+        "cached_bytes": 72,
+        "rollback_buffers": 0,
+        "query_uploads": 1,
+        "committed_bytes": 688616
+      },
+      "binary_sha256": "a69ab33884b589329746f37eaeca0e97b8f8df89534589f8d4bbb43c2106c468",
+      "native_sha256": "e5e84ec2ac29ccfc16249b024567c8c1254b36c80a5857f38ef05d15c5d17acf"
+    },
+    {
+      "name": "triangle-boundary",
+      "pid": 144,
+      "window_id": 136314882,
+      "state": {
+        "pixels_per_point": 1.0,
+        "nonce": 0,
+        "submitted_serial": 43,
+        "completed_present_serial": 40,
+        "cleared": false,
+        "held_refusal": false,
+        "geometry_uploads": 1,
+        "cached_bytes": 72,
+        "rollback_buffers": 0,
+        "query_uploads": 1,
+        "committed_bytes": 688616
+      },
+      "binary_sha256": "a69ab33884b589329746f37eaeca0e97b8f8df89534589f8d4bbb43c2106c468",
+      "native_sha256": "604f9a26ad3dc129b2085551362a162ee9579dee1c5099eb91dc51237d9f2c0b"
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "on": {
+    "pixels": 1285,
+    "max": 27
+  },
+  "off": {
+    "pixels": 1297,
+    "max": 27
+  },
+  "restored": {
+    "pixels": 1285,
+    "max": 27
+  },
+  "overlay": {
+    "union": 3830,
+    "pixels": 0
+  }
+}

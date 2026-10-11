@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "/tmp/ingetrazo-skp-native-import/scripts/temporary-boundary-dpr-native.py", line 75, in <module>
+    ready=wait(lambda:(s if (s:=state())and s['completed_present_serial']>baseline else None))
+  File "/tmp/ingetrazo-skp-native-import/scripts/temporary-boundary-dpr-native.py", line 38, in wait
+    raise TimeoutError("Owned proof window readiness timed out")
+TimeoutError: Owned proof window readiness timed out

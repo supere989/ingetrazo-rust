@@ -1,0 +1,18 @@
+[
+  {
+    "name": "right-boundary",
+    "pixels": 0
+  },
+  {
+    "name": "left-boundary",
+    "pixels": 0
+  },
+  {
+    "name": "bottom-boundary",
+    "pixels": 0
+  },
+  {
+    "name": "top-boundary",
+    "pixels": 60
+  }
+]

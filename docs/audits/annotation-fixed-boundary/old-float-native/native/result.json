@@ -1,0 +1,82 @@
+{
+  "scope": "actual strict NVIDIA own-window immutable primitive painter controls",
+  "oracle_sha256": "771e28699cab824a3ddd7759c22702c75a9e4f1c5608f1b57d0f1bee0210b094",
+  "rows": [
+    {
+      "name": "top-boundary",
+      "pid": 53,
+      "window_id": 136314882,
+      "state": {
+        "nonce": 0,
+        "submitted_serial": 47,
+        "completed_present_serial": 44,
+        "cleared": false,
+        "held_refusal": false,
+        "geometry_uploads": 1,
+        "cached_bytes": 72,
+        "rollback_buffers": 0,
+        "query_uploads": 1,
+        "committed_bytes": 688616
+      },
+      "binary_sha256": "35857bb038ef9958cf413cbb396010184bc19209d69e65dbc0fb52f5bd27943d",
+      "native_sha256": "ddac0b7a1d58a7ffa07e637abd385c4ed13379b6f4079fbcb2b0b9bd743e2ea9"
+    },
+    {
+      "name": "bottom-boundary",
+      "pid": 60,
+      "window_id": 136314882,
+      "state": {
+        "nonce": 0,
+        "submitted_serial": 15,
+        "completed_present_serial": 12,
+        "cleared": false,
+        "held_refusal": false,
+        "geometry_uploads": 1,
+        "cached_bytes": 72,
+        "rollback_buffers": 0,
+        "query_uploads": 1,
+        "committed_bytes": 688616
+      },
+      "binary_sha256": "35857bb038ef9958cf413cbb396010184bc19209d69e65dbc0fb52f5bd27943d",
+      "native_sha256": "0016c4e4cd3950ae152da7d12c97c90d4c2d94b880254e4457472ae065ab0193"
+    },
+    {
+      "name": "left-boundary",
+      "pid": 67,
+      "window_id": 136314882,
+      "state": {
+        "nonce": 0,
+        "submitted_serial": 52,
+        "completed_present_serial": 49,
+        "cleared": false,
+        "held_refusal": false,
+        "geometry_uploads": 1,
+        "cached_bytes": 72,
+        "rollback_buffers": 0,
+        "query_uploads": 1,
+        "committed_bytes": 688616
+      },
+      "binary_sha256": "35857bb038ef9958cf413cbb396010184bc19209d69e65dbc0fb52f5bd27943d",
+      "native_sha256": "1cd6e0152f3d2bf2e80e2363f12a367d3a14c9bf997816aa9f0ccc6e60cabd75"
+    },
+    {
+      "name": "right-boundary",
+      "pid": 74,
+      "window_id": 136314882,
+      "state": {
+        "nonce": 0,
+        "submitted_serial": 39,
+        "completed_present_serial": 36,
+        "cleared": false,
+        "held_refusal": false,
+        "geometry_uploads": 1,
+        "cached_bytes": 72,
+        "rollback_buffers": 0,
+        "query_uploads": 1,
+        "committed_bytes": 688616
+      },
+      "binary_sha256": "35857bb038ef9958cf413cbb396010184bc19209d69e65dbc0fb52f5bd27943d",
+      "native_sha256": "d162239efed91d6a4fdd6adf78f58722d599f8d748fb4700ac05ba0b962d9383"
+    }
+  ]
+}

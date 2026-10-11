@@ -1,0 +1,215 @@
+{
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "qt": "6.12.0",
+  "scope": "actual Qt OpenGL widget painter primitive controls; not original import/view geometry",
+  "cases": [
+    {
+      "name": "top-boundary",
+      "operations": [
+        {
+          "kind": "polygon",
+          "points": [
+            [
+              20.5,
+              20.4999
+            ],
+            [
+              80.5,
+              20.4999
+            ],
+            [
+              20.5,
+              80.5
+            ]
+          ],
+          "width": 0,
+          "pen": [
+            0,
+            0,
+            0,
+            255
+          ],
+          "brush": [
+            17,
+            89,
+            203,
+            255
+          ]
+        }
+      ],
+      "framebuffer": [
+        800,
+        600
+      ],
+      "clip": [
+        0,
+        0,
+        640,
+        400
+      ],
+      "renderer": "NVIDIA GeForce RTX 5090/PCIe/SSE2",
+      "samples": 0,
+      "subpixel_bits": 8,
+      "gl_version": "4.6.0 NVIDIA 615.71.09",
+      "engine": 13,
+      "paints": 4,
+      "sha256": "604f9a26ad3dc129b2085551362a162ee9579dee1c5099eb91dc51237d9f2c0b"
+    },
+    {
+      "name": "bottom-boundary",
+      "operations": [
+        {
+          "kind": "polygon",
+          "points": [
+            [
+              20.5,
+              80.5001
+            ],
+            [
+              80.5,
+              80.5001
+            ],
+            [
+              20.5,
+              20.5
+            ]
+          ],
+          "width": 0,
+          "pen": [
+            0,
+            0,
+            0,
+            255
+          ],
+          "brush": [
+            17,
+            89,
+            203,
+            255
+          ]
+        }
+      ],
+      "framebuffer": [
+        800,
+        600
+      ],
+      "clip": [
+        0,
+        0,
+        640,
+        400
+      ],
+      "renderer": "NVIDIA GeForce RTX 5090/PCIe/SSE2",
+      "samples": 0,
+      "subpixel_bits": 8,
+      "gl_version": "4.6.0 NVIDIA 615.71.09",
+      "engine": 13,
+      "paints": 6,
+      "sha256": "0016c4e4cd3950ae152da7d12c97c90d4c2d94b880254e4457472ae065ab0193"
+    },
+    {
+      "name": "left-boundary",
+      "operations": [
+        {
+          "kind": "polygon",
+          "points": [
+            [
+              20.5,
+              20.25
+            ],
+            [
+              20.5,
+              80.25
+            ],
+            [
+              80.25,
+              50.25
+            ]
+          ],
+          "width": 0,
+          "pen": [
+            0,
+            0,
+            0,
+            255
+          ],
+          "brush": [
+            17,
+            89,
+            203,
+            255
+          ]
+        }
+      ],
+      "framebuffer": [
+        800,
+        600
+      ],
+      "clip": [
+        0,
+        0,
+        640,
+        400
+      ],
+      "renderer": "NVIDIA GeForce RTX 5090/PCIe/SSE2",
+      "samples": 0,
+      "subpixel_bits": 8,
+      "gl_version": "4.6.0 NVIDIA 615.71.09",
+      "engine": 13,
+      "paints": 8,
+      "sha256": "1cd6e0152f3d2bf2e80e2363f12a367d3a14c9bf997816aa9f0ccc6e60cabd75"
+    },
+    {
+      "name": "right-boundary",
+      "operations": [
+        {
+          "kind": "polygon",
+          "points": [
+            [
+              80.5,
+              20.25
+            ],
+            [
+              80.5,
+              80.25
+            ],
+            [
+              20.25,
+              50.25
+            ]
+          ],
+          "width": 0,
+          "pen": [
+            0,
+            0,
+            0,
+            255
+          ],
+          "brush": [
+            17,
+            89,
+            203,
+            255
+          ]
+        }
+      ],
+      "framebuffer": [
+        800,
+        600
+      ],
+      "clip": [
+        0,
+        0,
+        640,
+        400
+      ],
+      "renderer": "NVIDIA GeForce RTX 5090/PCIe/SSE2",
+      "samples": 0,
+      "subpixel_bits": 8,
+      "gl_version": "4.6.0 NVIDIA 615.71.09",
+      "engine": 13,
+      "paints": 10,
+      "sha256": "d162239efed91d6a4fdd6adf78f58722d599f8d748fb4700ac05ba0b962d9383"
+    }
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "source_commits": {
+    "1c162fdd": {
+      "full_sha": "1c162fdddcde5d0f409ba58a2b7559e6db273167",
+      "files": {
+        "crates/ingetrazo-gui/src/annotation_overlay_geometry.rs": "427d60b2d617c9f963de4aea4aff2ba017b66f021207d9b4c8432180c72b9304",
+        "crates/ingetrazo-gui/src/native_vulkan/cad2d.rs": "9094b06f0b440612b7d747c8481298066b31033a2be10464e86a5f13beb7229a",
+        "crates/ingetrazo-gui/src/native_vulkan/annotation_overlay_probe.rs": "3a85b89434c178a2bdadd0012627a5fec333c3ebab88e90a80fdf10f0c014923",
+        "crates/ingetrazo-gui/src/native_vulkan/shaders/annotation_overlay.frag": "bdb720b7ba049311b1bb1dd8f89abc843ee748ea005fe7d17a30cffedc4193d0",
+        "crates/ingetrazo-gui/src/native_vulkan/shaders/annotation_overlay.frag.spv": "094deb85bfdf2dbdfc3a80cdc8bc5cd5083e555b660485d7c7f94f895b0dc169",
+        "crates/ingetrazo-render/src/cad2d.rs": "02e85317687fd6a0300b068c932132662f460f08347a8d8aa9762b63917ebe6f"
+      }
+    },
+    "bdc5f18f": {
+      "full_sha": "bdc5f18f698ec95667083b1765a40d223f401fe4",
+      "files": {
+        "crates/ingetrazo-gui/src/annotation_overlay_geometry.rs": "427d60b2d617c9f963de4aea4aff2ba017b66f021207d9b4c8432180c72b9304",
+        "crates/ingetrazo-gui/src/native_vulkan/cad2d.rs": "9094b06f0b440612b7d747c8481298066b31033a2be10464e86a5f13beb7229a",
+        "crates/ingetrazo-gui/src/native_vulkan/annotation_overlay_probe.rs": "4ced20a2fa857c55a66ee79b068da716b717340ba23c8d92c92c8f87c62053c1",
+        "crates/ingetrazo-gui/src/native_vulkan/shaders/annotation_overlay.frag": "bdb720b7ba049311b1bb1dd8f89abc843ee748ea005fe7d17a30cffedc4193d0",
+        "crates/ingetrazo-gui/src/native_vulkan/shaders/annotation_overlay.frag.spv": "094deb85bfdf2dbdfc3a80cdc8bc5cd5083e555b660485d7c7f94f895b0dc169",
+        "crates/ingetrazo-render/src/cad2d.rs": "02e85317687fd6a0300b068c932132662f460f08347a8d8aa9762b63917ebe6f"
+      }
+    }
+  },
+  "execution_source": {
+    "phase-native": "1c162fdd",
+    "dpr-native": "1c162fdd",
+    "tie-native": "1c162fdd",
+    "primitives": "1c162fdd",
+    "full-overlay": "1c162fdd",
+    "pose-native": "bdc5f18f"
+  },
+  "notes": [
+    "Inherited transport source strings identify old transport ancestry, not these executables. Use execution_source and actual binary_sha256 in each transport.",
+    "DPR stale-density and pre-UI serial failures are fixture refusals, not accepted pixel controls. Failed second corrected build/stale launch is not used as binary provenance.",
+    "DPR positive execution source contents match frozen 1c162fdd; commit was created after execution, then identical frozen source was built before phase/full-image replay.",
+    "Source helpers are retained with SHA and exact commands. Pose reference uses actual QPainter.translate(3,-2); DPR reference uses actual QT_SCALE_FACTOR=1.25."
+  ],
+  "old_float_source": "f839f728",
+  "checker_sha256": "81da7173f09b9015b94caba62be21bb3b5d4bc244b631fa79d457e968deea35e"
+}

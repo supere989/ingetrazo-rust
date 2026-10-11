@@ -1,0 +1,423 @@
+{
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "qt": "6.12.0",
+  "scope": "actual Qt OpenGL widget painter primitive controls; not original import/view geometry",
+  "cases": [
+    {
+      "name": "sloped-tie-00",
+      "operations": [
+        {
+          "kind": "polygon",
+          "points": [
+            [
+              20.498046875,
+              20.5
+            ],
+            [
+              80.501953125,
+              80.5
+            ],
+            [
+              20.5,
+              80.5
+            ]
+          ],
+          "width": 0,
+          "pen": [
+            0,
+            0,
+            0,
+            255
+          ],
+          "brush": [
+            17,
+            89,
+            203,
+            255
+          ]
+        }
+      ],
+      "framebuffer": [
+        800,
+        600
+      ],
+      "clip": [
+        0,
+        0,
+        640,
+        400
+      ],
+      "renderer": "NVIDIA GeForce RTX 5090/PCIe/SSE2",
+      "samples": 0,
+      "subpixel_bits": 8,
+      "gl_version": "4.6.0 NVIDIA 615.71.09",
+      "engine": 13,
+      "paints": 4,
+      "sha256": "0016c4e4cd3950ae152da7d12c97c90d4c2d94b880254e4457472ae065ab0193"
+    },
+    {
+      "name": "sloped-tie-01",
+      "operations": [
+        {
+          "kind": "polygon",
+          "points": [
+            [
+              20.5,
+              20.498046875
+            ],
+            [
+              80.5,
+              80.501953125
+            ],
+            [
+              20.5,
+              80.5
+            ]
+          ],
+          "width": 0,
+          "pen": [
+            0,
+            0,
+            0,
+            255
+          ],
+          "brush": [
+            17,
+            89,
+            203,
+            255
+          ]
+        }
+      ],
+      "framebuffer": [
+        800,
+        600
+      ],
+      "clip": [
+        0,
+        0,
+        640,
+        400
+      ],
+      "renderer": "NVIDIA GeForce RTX 5090/PCIe/SSE2",
+      "samples": 0,
+      "subpixel_bits": 8,
+      "gl_version": "4.6.0 NVIDIA 615.71.09",
+      "engine": 13,
+      "paints": 6,
+      "sha256": "0016c4e4cd3950ae152da7d12c97c90d4c2d94b880254e4457472ae065ab0193"
+    },
+    {
+      "name": "sloped-tie-02",
+      "operations": [
+        {
+          "kind": "polygon",
+          "points": [
+            [
+              80.501953125,
+              80.5
+            ],
+            [
+              20.498046875,
+              20.5
+            ],
+            [
+              20.5,
+              80.5
+            ]
+          ],
+          "width": 0,
+          "pen": [
+            0,
+            0,
+            0,
+            255
+          ],
+          "brush": [
+            17,
+            89,
+            203,
+            255
+          ]
+        }
+      ],
+      "framebuffer": [
+        800,
+        600
+      ],
+      "clip": [
+        0,
+        0,
+        640,
+        400
+      ],
+      "renderer": "NVIDIA GeForce RTX 5090/PCIe/SSE2",
+      "samples": 0,
+      "subpixel_bits": 8,
+      "gl_version": "4.6.0 NVIDIA 615.71.09",
+      "engine": 13,
+      "paints": 8,
+      "sha256": "0016c4e4cd3950ae152da7d12c97c90d4c2d94b880254e4457472ae065ab0193"
+    },
+    {
+      "name": "sloped-tie-03",
+      "operations": [
+        {
+          "kind": "polygon",
+          "points": [
+            [
+              80.5,
+              80.501953125
+            ],
+            [
+              20.5,
+              20.498046875
+            ],
+            [
+              20.5,
+              80.5
+            ]
+          ],
+          "width": 0,
+          "pen": [
+            0,
+            0,
+            0,
+            255
+          ],
+          "brush": [
+            17,
+            89,
+            203,
+            255
+          ]
+        }
+      ],
+      "framebuffer": [
+        800,
+        600
+      ],
+      "clip": [
+        0,
+        0,
+        640,
+        400
+      ],
+      "renderer": "NVIDIA GeForce RTX 5090/PCIe/SSE2",
+      "samples": 0,
+      "subpixel_bits": 8,
+      "gl_version": "4.6.0 NVIDIA 615.71.09",
+      "engine": 13,
+      "paints": 10,
+      "sha256": "0016c4e4cd3950ae152da7d12c97c90d4c2d94b880254e4457472ae065ab0193"
+    },
+    {
+      "name": "sloped-tie-04",
+      "operations": [
+        {
+          "kind": "polygon",
+          "points": [
+            [
+              20.501953125,
+              20.5
+            ],
+            [
+              80.498046875,
+              80.5
+            ],
+            [
+              20.5,
+              80.5
+            ]
+          ],
+          "width": 0,
+          "pen": [
+            0,
+            0,
+            0,
+            255
+          ],
+          "brush": [
+            17,
+            89,
+            203,
+            255
+          ]
+        }
+      ],
+      "framebuffer": [
+        800,
+        600
+      ],
+      "clip": [
+        0,
+        0,
+        640,
+        400
+      ],
+      "renderer": "NVIDIA GeForce RTX 5090/PCIe/SSE2",
+      "samples": 0,
+      "subpixel_bits": 8,
+      "gl_version": "4.6.0 NVIDIA 615.71.09",
+      "engine": 13,
+      "paints": 12,
+      "sha256": "0016c4e4cd3950ae152da7d12c97c90d4c2d94b880254e4457472ae065ab0193"
+    },
+    {
+      "name": "sloped-tie-05",
+      "operations": [
+        {
+          "kind": "polygon",
+          "points": [
+            [
+              20.5,
+              20.501953125
+            ],
+            [
+              80.5,
+              80.498046875
+            ],
+            [
+              20.5,
+              80.5
+            ]
+          ],
+          "width": 0,
+          "pen": [
+            0,
+            0,
+            0,
+            255
+          ],
+          "brush": [
+            17,
+            89,
+            203,
+            255
+          ]
+        }
+      ],
+      "framebuffer": [
+        800,
+        600
+      ],
+      "clip": [
+        0,
+        0,
+        640,
+        400
+      ],
+      "renderer": "NVIDIA GeForce RTX 5090/PCIe/SSE2",
+      "samples": 0,
+      "subpixel_bits": 8,
+      "gl_version": "4.6.0 NVIDIA 615.71.09",
+      "engine": 13,
+      "paints": 14,
+      "sha256": "0016c4e4cd3950ae152da7d12c97c90d4c2d94b880254e4457472ae065ab0193"
+    },
+    {
+      "name": "sloped-tie-06",
+      "operations": [
+        {
+          "kind": "polygon",
+          "points": [
+            [
+              80.498046875,
+              80.5
+            ],
+            [
+              20.501953125,
+              20.5
+            ],
+            [
+              20.5,
+              80.5
+            ]
+          ],
+          "width": 0,
+          "pen": [
+            0,
+            0,
+            0,
+            255
+          ],
+          "brush": [
+            17,
+            89,
+            203,
+            255
+          ]
+        }
+      ],
+      "framebuffer": [
+        800,
+        600
+      ],
+      "clip": [
+        0,
+        0,
+        640,
+        400
+      ],
+      "renderer": "NVIDIA GeForce RTX 5090/PCIe/SSE2",
+      "samples": 0,
+      "subpixel_bits": 8,
+      "gl_version": "4.6.0 NVIDIA 615.71.09",
+      "engine": 13,
+      "paints": 16,
+      "sha256": "0016c4e4cd3950ae152da7d12c97c90d4c2d94b880254e4457472ae065ab0193"
+    },
+    {
+      "name": "sloped-tie-07",
+      "operations": [
+        {
+          "kind": "polygon",
+          "points": [
+            [
+              80.5,
+              80.498046875
+            ],
+            [
+              20.5,
+              20.501953125
+            ],
+            [
+              20.5,
+              80.5
+            ]
+          ],
+          "width": 0,
+          "pen": [
+            0,
+            0,
+            0,
+            255
+          ],
+          "brush": [
+            17,
+            89,
+            203,
+            255
+          ]
+        }
+      ],
+      "framebuffer": [
+        800,
+        600
+      ],
+      "clip": [
+        0,
+        0,
+        640,
+        400
+      ],
+      "renderer": "NVIDIA GeForce RTX 5090/PCIe/SSE2",
+      "samples": 0,
+      "subpixel_bits": 8,
+      "gl_version": "4.6.0 NVIDIA 615.71.09",
+      "engine": 13,
+      "paints": 18,
+      "sha256": "0016c4e4cd3950ae152da7d12c97c90d4c2d94b880254e4457472ae065ab0193"
+    }
+  ]
+}

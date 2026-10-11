@@ -1,0 +1,380 @@
+[
+  {
+    "name": "cosmetic-zero",
+    "state": {
+      "pixels_per_point": 1.0,
+      "nonce": 0,
+      "submitted_serial": 105,
+      "completed_present_serial": 102,
+      "cleared": false,
+      "held_refusal": false,
+      "geometry_uploads": 1,
+      "cached_bytes": 168,
+      "rollback_buffers": 0,
+      "query_uploads": 1,
+      "committed_bytes": 688760
+    },
+    "final": {
+      "geometry_uploads": 1,
+      "geometry_upload_bytes": 168,
+      "geometry_cached_bytes": 168,
+      "cache_hits": 121,
+      "draws": 122,
+      "rolled_back_buffers": 0,
+      "query_uploads": 1
+    },
+    "unchanged_warm_uploads": true,
+    "final_ledger_zero": true
+  },
+  {
+    "name": "degenerate",
+    "state": {
+      "pixels_per_point": 1.0,
+      "nonce": 0,
+      "submitted_serial": 81,
+      "completed_present_serial": 78,
+      "cleared": false,
+      "held_refusal": false,
+      "geometry_uploads": 0,
+      "cached_bytes": 0,
+      "rollback_buffers": 0,
+      "query_uploads": 1,
+      "committed_bytes": 688488
+    },
+    "final": {
+      "geometry_uploads": 0,
+      "geometry_upload_bytes": 0,
+      "geometry_cached_bytes": 0,
+      "cache_hits": 0,
+      "draws": 0,
+      "rolled_back_buffers": 0,
+      "query_uploads": 1
+    },
+    "unchanged_warm_uploads": true,
+    "final_ledger_zero": true
+  },
+  {
+    "name": "fractional",
+    "state": {
+      "pixels_per_point": 1.0,
+      "nonce": 0,
+      "submitted_serial": 118,
+      "completed_present_serial": 115,
+      "cleared": false,
+      "held_refusal": false,
+      "geometry_uploads": 1,
+      "cached_bytes": 168,
+      "rollback_buffers": 0,
+      "query_uploads": 1,
+      "committed_bytes": 688760
+    },
+    "final": {
+      "geometry_uploads": 1,
+      "geometry_upload_bytes": 168,
+      "geometry_cached_bytes": 168,
+      "cache_hits": 132,
+      "draws": 133,
+      "rolled_back_buffers": 0,
+      "query_uploads": 1
+    },
+    "unchanged_warm_uploads": true,
+    "final_ledger_zero": true
+  },
+  {
+    "name": "horizontal-square",
+    "state": {
+      "pixels_per_point": 1.0,
+      "nonce": 0,
+      "submitted_serial": 56,
+      "completed_present_serial": 53,
+      "cleared": false,
+      "held_refusal": false,
+      "geometry_uploads": 1,
+      "cached_bytes": 168,
+      "rollback_buffers": 0,
+      "query_uploads": 1,
+      "committed_bytes": 688760
+    },
+    "final": {
+      "geometry_uploads": 1,
+      "geometry_upload_bytes": 168,
+      "geometry_cached_bytes": 168,
+      "cache_hits": 85,
+      "draws": 86,
+      "rolled_back_buffers": 0,
+      "query_uploads": 1
+    },
+    "unchanged_warm_uploads": true,
+    "final_ledger_zero": true
+  },
+  {
+    "name": "narrow",
+    "state": {
+      "pixels_per_point": 1.0,
+      "nonce": 0,
+      "submitted_serial": 90,
+      "completed_present_serial": 87,
+      "cleared": false,
+      "held_refusal": false,
+      "geometry_uploads": 1,
+      "cached_bytes": 168,
+      "rollback_buffers": 0,
+      "query_uploads": 1,
+      "committed_bytes": 688760
+    },
+    "final": {
+      "geometry_uploads": 1,
+      "geometry_upload_bytes": 168,
+      "geometry_cached_bytes": 168,
+      "cache_hits": 101,
+      "draws": 102,
+      "rolled_back_buffers": 0,
+      "query_uploads": 1
+    },
+    "unchanged_warm_uploads": true,
+    "final_ledger_zero": true
+  },
+  {
+    "name": "negative-origin",
+    "state": {
+      "pixels_per_point": 1.0,
+      "nonce": 0,
+      "submitted_serial": 111,
+      "completed_present_serial": 108,
+      "cleared": false,
+      "held_refusal": false,
+      "geometry_uploads": 1,
+      "cached_bytes": 168,
+      "rollback_buffers": 0,
+      "query_uploads": 1,
+      "committed_bytes": 688760
+    },
+    "final": {
+      "geometry_uploads": 1,
+      "geometry_upload_bytes": 168,
+      "geometry_cached_bytes": 168,
+      "cache_hits": 126,
+      "draws": 127,
+      "rolled_back_buffers": 0,
+      "query_uploads": 1
+    },
+    "unchanged_warm_uploads": true,
+    "final_ledger_zero": true
+  },
+  {
+    "name": "reversed",
+    "state": {
+      "pixels_per_point": 1.0,
+      "nonce": 0,
+      "submitted_serial": 126,
+      "completed_present_serial": 123,
+      "cleared": false,
+      "held_refusal": false,
+      "geometry_uploads": 1,
+      "cached_bytes": 168,
+      "rollback_buffers": 0,
+      "query_uploads": 1,
+      "committed_bytes": 688760
+    },
+    "final": {
+      "geometry_uploads": 1,
+      "geometry_upload_bytes": 168,
+      "geometry_cached_bytes": 168,
+      "cache_hits": 133,
+      "draws": 134,
+      "rolled_back_buffers": 0,
+      "query_uploads": 1
+    },
+    "unchanged_warm_uploads": true,
+    "final_ledger_zero": true
+  },
+  {
+    "name": "shallow-clipped",
+    "state": {
+      "pixels_per_point": 1.0,
+      "nonce": 0,
+      "submitted_serial": 101,
+      "completed_present_serial": 98,
+      "cleared": false,
+      "held_refusal": false,
+      "geometry_uploads": 1,
+      "cached_bytes": 168,
+      "rollback_buffers": 0,
+      "query_uploads": 1,
+      "committed_bytes": 688760
+    },
+    "final": {
+      "geometry_uploads": 1,
+      "geometry_upload_bytes": 168,
+      "geometry_cached_bytes": 168,
+      "cache_hits": 115,
+      "draws": 116,
+      "rolled_back_buffers": 0,
+      "query_uploads": 1
+    },
+    "unchanged_warm_uploads": true,
+    "final_ledger_zero": true
+  },
+  {
+    "name": "short",
+    "state": {
+      "pixels_per_point": 1.0,
+      "nonce": 0,
+      "submitted_serial": 150,
+      "completed_present_serial": 147,
+      "cleared": false,
+      "held_refusal": false,
+      "geometry_uploads": 1,
+      "cached_bytes": 168,
+      "rollback_buffers": 0,
+      "query_uploads": 1,
+      "committed_bytes": 688760
+    },
+    "final": {
+      "geometry_uploads": 1,
+      "geometry_upload_bytes": 168,
+      "geometry_cached_bytes": 168,
+      "cache_hits": 157,
+      "draws": 158,
+      "rolled_back_buffers": 0,
+      "query_uploads": 1
+    },
+    "unchanged_warm_uploads": true,
+    "final_ledger_zero": true
+  },
+  {
+    "name": "steep",
+    "state": {
+      "pixels_per_point": 1.0,
+      "nonce": 0,
+      "submitted_serial": 105,
+      "completed_present_serial": 102,
+      "cleared": false,
+      "held_refusal": false,
+      "geometry_uploads": 1,
+      "cached_bytes": 168,
+      "rollback_buffers": 0,
+      "query_uploads": 1,
+      "committed_bytes": 688760
+    },
+    "final": {
+      "geometry_uploads": 1,
+      "geometry_upload_bytes": 168,
+      "geometry_cached_bytes": 168,
+      "cache_hits": 118,
+      "draws": 119,
+      "rolled_back_buffers": 0,
+      "query_uploads": 1
+    },
+    "unchanged_warm_uploads": true,
+    "final_ledger_zero": true
+  },
+  {
+    "name": "triangle-boundary",
+    "state": {
+      "pixels_per_point": 1.0,
+      "nonce": 0,
+      "submitted_serial": 43,
+      "completed_present_serial": 40,
+      "cleared": false,
+      "held_refusal": false,
+      "geometry_uploads": 1,
+      "cached_bytes": 72,
+      "rollback_buffers": 0,
+      "query_uploads": 1,
+      "committed_bytes": 688616
+    },
+    "final": {
+      "geometry_uploads": 1,
+      "geometry_upload_bytes": 72,
+      "geometry_cached_bytes": 72,
+      "cache_hits": 58,
+      "draws": 59,
+      "rolled_back_buffers": 0,
+      "query_uploads": 1
+    },
+    "unchanged_warm_uploads": true,
+    "final_ledger_zero": true
+  },
+  {
+    "name": "triangle-clockwise",
+    "state": {
+      "pixels_per_point": 1.0,
+      "nonce": 0,
+      "submitted_serial": 98,
+      "completed_present_serial": 95,
+      "cleared": false,
+      "held_refusal": false,
+      "geometry_uploads": 1,
+      "cached_bytes": 72,
+      "rollback_buffers": 0,
+      "query_uploads": 1,
+      "committed_bytes": 688616
+    },
+    "final": {
+      "geometry_uploads": 1,
+      "geometry_upload_bytes": 72,
+      "geometry_cached_bytes": 72,
+      "cache_hits": 105,
+      "draws": 106,
+      "rolled_back_buffers": 0,
+      "query_uploads": 1
+    },
+    "unchanged_warm_uploads": true,
+    "final_ledger_zero": true
+  },
+  {
+    "name": "triangle-reversed",
+    "state": {
+      "pixels_per_point": 1.0,
+      "nonce": 0,
+      "submitted_serial": 111,
+      "completed_present_serial": 108,
+      "cleared": false,
+      "held_refusal": false,
+      "geometry_uploads": 1,
+      "cached_bytes": 72,
+      "rollback_buffers": 0,
+      "query_uploads": 1,
+      "committed_bytes": 688616
+    },
+    "final": {
+      "geometry_uploads": 1,
+      "geometry_upload_bytes": 72,
+      "geometry_cached_bytes": 72,
+      "cache_hits": 124,
+      "draws": 125,
+      "rolled_back_buffers": 0,
+      "query_uploads": 1
+    },
+    "unchanged_warm_uploads": true,
+    "final_ledger_zero": true
+  },
+  {
+    "name": "vertical-square",
+    "state": {
+      "pixels_per_point": 1.0,
+      "nonce": 0,
+      "submitted_serial": 44,
+      "completed_present_serial": 41,
+      "cleared": false,
+      "held_refusal": false,
+      "geometry_uploads": 1,
+      "cached_bytes": 168,
+      "rollback_buffers": 0,
+      "query_uploads": 1,
+      "committed_bytes": 688760
+    },
+    "final": {
+      "geometry_uploads": 1,
+      "geometry_upload_bytes": 168,
+      "geometry_cached_bytes": 168,
+      "cache_hits": 64,
+      "draws": 65,
+      "rolled_back_buffers": 0,
+      "query_uploads": 1
+    },
+    "unchanged_warm_uploads": true,
+    "final_ledger_zero": true
+  }
+]
