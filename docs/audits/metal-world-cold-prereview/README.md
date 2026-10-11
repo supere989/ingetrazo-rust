@@ -1,6 +1,6 @@
 # Intel cold World diagnostic prereview
 
-Prerequisite a04e7adf adds observation only. This followup keeps native candidates on production defaults exactly as the failing 9302 branch, with the override confined to seeds and compute controls. Apple4/unified devices refuse before preparing any World. Only the retained closed recipe is constructed.
+Prerequisite a04e7adf adds observation only. This followup keeps native candidates on production defaults exactly as the failing 9302 branch, with the override confined to seeds and compute controls. Apple4 and non-x86_64 devices refuse before preparing any World. Root review removed the unified-memory exclusion because memory topology does not identify CPU architecture; the published probe must admit x86_64 integrated/shared-memory devices. Only the retained closed recipe is constructed.
 
 Each independently seeded cell retains one seed and first plus three warm 800×600 RGBA8 frames. Every frame must be exactly 1,920,000 bytes before comparisons. Contours must be enabled. Same NativeMetal throughout; the seed submission completes and its owners drop before the candidate cold World is created. The reused-native cell preserves the failing acquisition sequence. No pixel result aborts later observations.
 

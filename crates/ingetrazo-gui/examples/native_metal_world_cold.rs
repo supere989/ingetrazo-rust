@@ -31,7 +31,7 @@ fn run() -> Result<(), String> {
 
         let metal = NativeMetal::new()?;
         let sample_diagnostics = ingetrazo_metal::annotation::sample_diagnostics(&metal);
-        if sample_diagnostics["supports_family_apple4"] == true || metal.info.unified_memory { return Err("Intel-only diagnostic refuses Apple/unified device".into()); }
+        if sample_diagnostics["supports_family_apple4"] == true || !cfg!(target_arch = "x86_64") { return Err("Intel-only diagnostic requires x86_64 without Apple4".into()); }
         let mut rows = vec![];
         for _name in ["closed"] {
             let mut scene = Scene::new();
