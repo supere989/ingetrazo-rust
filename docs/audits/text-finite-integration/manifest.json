@@ -1,0 +1,235 @@
+{
+  "tested_runtime": "02bf8dfb",
+  "finite_acceptance_archive_sha256": "067b59cbb53da6c8d632c801d062643b3eede921e872bb7ac9ba6819f27b1323",
+  "archive_sha256": "8e37581dfb90f22f15c87ca5e21cc934e7f853163188bafff0990503708544b9",
+  "members": {
+    "build.json": {
+      "bytes": 470,
+      "sha256": "d5252e7f281cf0071e1a87ff2e7e93693db176082c4c44cccb9206b4e0d84a35"
+    },
+    "build.log": {
+      "bytes": 20610,
+      "sha256": "766d4ba9d5ba86250b4d125c2f16e82faee2af3076a5cd8c8ab39d1cdaf28cb1"
+    },
+    "finite-check.log": {
+      "bytes": 664,
+      "sha256": "d09863c3583712e8ecd855ea9135bd8b02026c0a966a867f8ce84bbe6a68066f"
+    },
+    "finite-native.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "kernel-check.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "kernel-native.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "kernel/acceptance.json": {
+      "bytes": 4666,
+      "sha256": "272cfd95349ddf61bd98cdc7cdf6b982bb623006cb24bcdab540c2e54d4bfe1c"
+    },
+    "kernel/build.log": {
+      "bytes": 526,
+      "sha256": "fe149e97be418df4cd1abf50ddd932355928acf91a9774b03925a6800351bc2d"
+    },
+    "kernel/execution.json": {
+      "bytes": 1247,
+      "sha256": "981ce02b61bf8f1d9744e5ebb4642b10fb8d4e8d8ac6f99a5f88b82faea25c0e"
+    },
+    "kernel/input.json": {
+      "bytes": 655166,
+      "sha256": "9ccd0bf151f8d36f272ea5202a9cea02a39248f1a985bd2817d1c4f6909e5226"
+    },
+    "kernel/native.json": {
+      "bytes": 1193546,
+      "sha256": "05e1f20bdafe3d40a0b9dd70d946f8eb1487c54127c58143853635f14460c9fb"
+    },
+    "kernel/source.json": {
+      "bytes": 1188564,
+      "sha256": "8c26125981209062f0f133abb02ed1032479e2a1f180305a9d5d8ead56c58e56"
+    },
+    "profile-test.json": {
+      "bytes": 354,
+      "sha256": "038742b67b2a7e901165ecea5a24065c48e18e8abf7757e3ce99b6948e4d8aaf"
+    },
+    "profile-test.log": {
+      "bytes": 3542,
+      "sha256": "a9ec5653bbd4a5e99feb1f5bc8536c385a73337114c312668d40ad64b0ecdbf8"
+    },
+    "provenance.json": {
+      "bytes": 2223,
+      "sha256": "447a80e51e14117c08097799bb8b147413c3878ef16e8a4f929c725074bb7e4e"
+    },
+    "replay.json": {
+      "bytes": 643,
+      "sha256": "007a2027ffb375c7b91da891f0c247038568589c2929e035c5549ba64c3b929f"
+    },
+    "text-check.log": {
+      "bytes": 267,
+      "sha256": "784201f674ad2a370379886c7c957e120f80ca1642d21479de99505e4462a223"
+    },
+    "text-native.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "text-reader.log": {
+      "bytes": 686,
+      "sha256": "cf5bbbefc803daf8b42bfceed6582dfd2cb47f9768942b1e08f1dce134eb35e2"
+    },
+    "text/attempts.json": {
+      "bytes": 749,
+      "sha256": "6763db299272c722a5dc37279802990c06532b8c0e0101920146db13fefe010c"
+    },
+    "text/closed-face-input.igz": {
+      "bytes": 4676,
+      "sha256": "fcb6ead98d378be62b8d96cb0c23a3c9de5ac9f76ab8055598cb9c8160966964"
+    },
+    "text/closed-face-native.igz": {
+      "bytes": 5313,
+      "sha256": "d0162dd04b98cbb27f42ae9794a2a95f9d95d6e0563110305fd6e53a2b7af5fd"
+    },
+    "text/closed-face.igz": {
+      "bytes": 4877,
+      "sha256": "f26245f643d0f45f17c6ece30131da5794924f1223d5befb7811aac28dc49dd7"
+    },
+    "text/failed-group-edge-suggestion.json": {
+      "bytes": 47930,
+      "sha256": "8533b0bc22ef9d408d65d4455371a7c9df252432d93c59b9d7d74234e98a5b8a"
+    },
+    "text/failed-incomplete-context-finish.igz": {
+      "bytes": 4569,
+      "sha256": "4fbca1bbc5ea1384dd24a9d93ea57a8e7540b36258a1be0014e6fdfdb0d0e519"
+    },
+    "text/failed-unknown-label-root-edge.igz": {
+      "bytes": 3469,
+      "sha256": "f13a6d220a5230eef22219296550cee9b5b808197ee5d43f83cf6f4475bcbd63"
+    },
+    "text/failed-unknown-label.json": {
+      "bytes": 127,
+      "sha256": "16947d5f96a7e3c7125e3afed405adddd756f643c741d1cd2db2cac7da7a39f6"
+    },
+    "text/final-named-build.log": {
+      "bytes": 20245,
+      "sha256": "f375937d2a2a6066f56a9ffad022420a53652cb78a436d159c841eb463af1b7c"
+    },
+    "text/input.igz": {
+      "bytes": 2512,
+      "sha256": "c9ce01d930fff89d9af94b5580093f6f82626b75d6ce690482e32fd787d4a87b"
+    },
+    "text/modal-test-final.log": {
+      "bytes": 19401,
+      "sha256": "e27581e0806169b6280b4441f8832548ec8fe7d5b84dedcbfefd7574bcf437ba"
+    },
+    "text/modal-test.log": {
+      "bytes": 19401,
+      "sha256": "cff7b458030991572a53186245a632b71ad6b805f0ced84ef1222ac543105609"
+    },
+    "text/native-history.json": {
+      "bytes": 4907,
+      "sha256": "108d7abe3418f3473ee385584f1825d9ba9cd4cfae6838c83c04199862266b14"
+    },
+    "text/native.json": {
+      "bytes": 47946,
+      "sha256": "231a9c3b2bb79a5031f44cb5fc42812a0075ed62fed95ea05c10363bd93fa3f2"
+    },
+    "text/nested-coordinates-input.igz": {
+      "bytes": 4504,
+      "sha256": "eb6b8c65d8a98807e66efdd16497847d1df150a90983e184904f580889623c8c"
+    },
+    "text/nested-coordinates-native.igz": {
+      "bytes": 5200,
+      "sha256": "a8ee38d4b81703b88eb23bd83dc43d8b16ca474a2f079cb9464dd9f055f94f16"
+    },
+    "text/nested-coordinates.igz": {
+      "bytes": 4979,
+      "sha256": "775703b6a4ec6a7864a1210f491634876665cf0c00bc4f112a8da04d55a4b7dc"
+    },
+    "text/nested-edge-input.igz": {
+      "bytes": 4504,
+      "sha256": "eb6b8c65d8a98807e66efdd16497847d1df150a90983e184904f580889623c8c"
+    },
+    "text/nested-edge-native.igz": {
+      "bytes": 5194,
+      "sha256": "f51fda441e4f0330bf8b1ceda5ccfd47a4163fd91e0baccb5031c2026eb8fd2f"
+    },
+    "text/nested-edge.igz": {
+      "bytes": 4973,
+      "sha256": "f4f0d40591ea918215ecddac774ee529b129a70d7d7dbf014a380cd2ec781e3d"
+    },
+    "text/nested-face-input.igz": {
+      "bytes": 4504,
+      "sha256": "eb6b8c65d8a98807e66efdd16497847d1df150a90983e184904f580889623c8c"
+    },
+    "text/nested-face-native.igz": {
+      "bytes": 5194,
+      "sha256": "f7a4a2c384207e1c9c0fd7c55ee7a25fbd4c0b40b6cc709a33b6e37f9985e555"
+    },
+    "text/nested-face.igz": {
+      "bytes": 4973,
+      "sha256": "c9184c3a34db456104919e894e58701c2e79682662ff6492daf9c76933f20e1b"
+    },
+    "text/original-history.json": {
+      "bytes": 4907,
+      "sha256": "108d7abe3418f3473ee385584f1825d9ba9cd4cfae6838c83c04199862266b14"
+    },
+    "text/original.json": {
+      "bytes": 49536,
+      "sha256": "de4685a20d60e14c4363217a855b9d0be321bb2ce2b158c5c633f198da46a8ab"
+    },
+    "text/prior-edit/native.json": {
+      "bytes": 31842,
+      "sha256": "b66379974cf981577d92eae464a5672cfa4826b957d9122dd41e449a86ffbe7b"
+    },
+    "text/prior-edit/reopen.json": {
+      "bytes": 8183,
+      "sha256": "174c4fd2c168ba6f2a611d112cb12ba7c1250bacbd321a4dad68495290f5152f"
+    },
+    "text/reopen.json": {
+      "bytes": 16498,
+      "sha256": "8d0459dc17e46e0b225faff9b9ca4f4e8c7bf37ea4321621b181aac5653f5434"
+    },
+    "text/results.json": {
+      "bytes": 657,
+      "sha256": "f0f8f36c909db767c1421a693ccee2dfc32c34f576c57cee8ce74756dec6b899"
+    },
+    "text/root-coordinates-input.igz": {
+      "bytes": 2932,
+      "sha256": "8d2931650f6594606b6020e1ec16ea18736ac8bdded6e6b143de581884ad89c9"
+    },
+    "text/root-coordinates-native.igz": {
+      "bytes": 3575,
+      "sha256": "42670b9131381ede9aa2b4d6272a11e7731b8be0cd03daf4a694efc4b089e42e"
+    },
+    "text/root-coordinates.igz": {
+      "bytes": 3139,
+      "sha256": "2ba9188cea70d61962bb9d4b4a2e66b1f04b836028b0f94b71a36c627653687d"
+    },
+    "text/root-edge-input.igz": {
+      "bytes": 2932,
+      "sha256": "8d2931650f6594606b6020e1ec16ea18736ac8bdded6e6b143de581884ad89c9"
+    },
+    "text/root-edge-native.igz": {
+      "bytes": 3570,
+      "sha256": "4f1311366e24e1d9cb78a194c5a779b5a4a685a241fd59f6f983abb8d8eaf63c"
+    },
+    "text/root-edge.igz": {
+      "bytes": 3134,
+      "sha256": "01317c044e93fce9c803f5e7ae099f8788105c182122630c792f36bc690e1e15"
+    },
+    "text/root-face-input.igz": {
+      "bytes": 2932,
+      "sha256": "8d2931650f6594606b6020e1ec16ea18736ac8bdded6e6b143de581884ad89c9"
+    },
+    "text/root-face-native.igz": {
+      "bytes": 3569,
+      "sha256": "1a18f41ca2d59a40d0dad6798c90e904350d842721615e6919714f8f4c4f7cae"
+    },
+    "text/root-face.igz": {
+      "bytes": 3133,
+      "sha256": "48b1cca4f6c4e3ccbb5c63a7ac6e2011d84d485855e60dc78ca8bae4c5aeef08"
+    }
+  }
+}

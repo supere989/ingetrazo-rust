@@ -1,6 +1,6 @@
 # Finite P05 source reader and triangulation oracle
 
-This captures only the missing source behavior: nine actual `save_scene` → `load_into` outcomes and sixteen actual `Face.triangulate`/`core.triangulate` inputs. Original source is pinned at `6be29fe437a7cd992d4e079f71720821b25216b9`. Production Rust behavior has not been compared by this source-only handoff; P05 remains incomplete.
+This captures only the missing source behavior: nine actual `save_scene` → `load_into` outcomes and sixteen actual `Face.triangulate`/`core.triangulate` inputs. Original source is pinned at `6be29fe437a7cd992d4e079f71720821b25216b9`. At this source-only capture, production Rust behavior had not yet been compared. The subsequent [combined criterion disposition](../p05-criterion-review/README.md) accepts P05 using the separately retained production and topology evidence.
 
 The nine inputs and all 27 retained construction/Undo/Redo states remain unchanged in `docs/audits/ai-degenerate-faces/original.json`. Before saving, each captured topology was asserted exactly against its existing construction record. No history session was recaptured. All nine source files save and load successfully using the actual **plain** reader (estimated corner count below 1024). This does not establish bulk-reader behavior. Eight loaded topologies equal construction; `welded-close` has different reader vertex encounter ordering, retained literally. Native load must match the source loaded topology rather than assume construction identity.
 

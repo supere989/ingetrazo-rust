@@ -1,0 +1,120 @@
+{
+  "tested_runtime": "02bf8dfb",
+  "source_archive_sha256": "2270e5fca99c9791ce547926b46699c97db0f368ff7acc6377d715665cd1ab3c",
+  "retained_initial_sha256": "519bc52b68587c56ed3c4f5683d7945ad9de24bd0e862c808b716b2eb9237aa9",
+  "archive_sha256": "067b59cbb53da6c8d632c801d062643b3eede921e872bb7ac9ba6819f27b1323",
+  "members": {
+    "empty-hole.native.igz": {
+      "bytes": 4743,
+      "sha256": "cabcadc5fedeacafcb216639d760bd15aa571381612b7421668fb3df796add2e"
+    },
+    "empty-hole.original.igz": {
+      "bytes": 1117,
+      "sha256": "dac2cf50c67ab69adcfb5b64d727204b350d4a5d6bc4d7483bc13045353781b4"
+    },
+    "empty-outer-proper-hole.native.igz": {
+      "bytes": 4775,
+      "sha256": "ff1734b56007ebc97bd78b7453591a023ebe7d85283516fa97b59525980656a6"
+    },
+    "empty-outer-proper-hole.original.igz": {
+      "bytes": 1149,
+      "sha256": "e9c3fe5e5be535088b00cb10a23ede2de58a2ebe3fe9e578223275137db03406"
+    },
+    "empty.native.igz": {
+      "bytes": 3995,
+      "sha256": "c6aa20d301b27dc3cfaf48cf7261d353cefeeb819ee548f10b9359f2293a8b08"
+    },
+    "empty.original.igz": {
+      "bytes": 369,
+      "sha256": "25fc528c1955a0c4bc872a499535150d9f8a53f8634856586170c15c4e69aec5"
+    },
+    "history-native.json": {
+      "bytes": 14971,
+      "sha256": "2dc2fbe5ab4e2ec0898acdb9f84876e7193661d091b36608d5ffd51bc5410551"
+    },
+    "initial-build.json": {
+      "bytes": 53,
+      "sha256": "3897a2b30a73072cf587a1e21525b245d463c6feddd6d91f14af9c5e569dc322"
+    },
+    "initial-build.log": {
+      "bytes": 21009,
+      "sha256": "56518a73d844f28cfac29e6710bd27f2f5c2b4c535344dcdf6dae1c453b18961"
+    },
+    "initial-comparison.json": {
+      "bytes": 2438,
+      "sha256": "2babc47215e16a0da72106a952178a84237ee685dc0d80a7b0bcf4340b6418be"
+    },
+    "initial-native.json": {
+      "bytes": 62097,
+      "sha256": "519bc52b68587c56ed3c4f5683d7945ad9de24bd0e862c808b716b2eb9237aa9"
+    },
+    "invariants.json": {
+      "bytes": 37361,
+      "sha256": "30987a4cc10bedfa7d4ccc91d132bc945524f3a2b6ca183941c4561a71dc54b0"
+    },
+    "native-reopened.json": {
+      "bytes": 10167,
+      "sha256": "7dc0fd9446edeb97750578dd69260e3d8efb02946f77f0def771575ee3d8c7cf"
+    },
+    "native.json": {
+      "bytes": 62097,
+      "sha256": "904ca517498924b6a8a20df7c00d59a2e21e753bc19b1a0273ced0e1ec4e349d"
+    },
+    "one-hole.native.igz": {
+      "bytes": 5090,
+      "sha256": "6257e550cbf5ada7783679438615dd1cff058f8bdc235d6f0c7208c8de4954b1"
+    },
+    "one-hole.original.igz": {
+      "bytes": 1464,
+      "sha256": "dd5d7d78ada9262d78ec2198c6cc8dd5bda77980f14707b6a54a40807514fe2c"
+    },
+    "one.native.igz": {
+      "bytes": 4238,
+      "sha256": "94504c2e4506766f3501792bd3cae48b02d284abdf5fcefe84df8a7d8fa172e1"
+    },
+    "one.original.igz": {
+      "bytes": 612,
+      "sha256": "ce069b85aa8b8987d26f6029b43ead284a5108cb1b893220da021ec7e5f7b8a3"
+    },
+    "original.json": {
+      "bytes": 69086,
+      "sha256": "8dc778fc7e5ec6e25f0cb9d554a885ac59831451e7342a9b446efb576d4157e8"
+    },
+    "reader-native.json": {
+      "bytes": 7809,
+      "sha256": "5c640bb08241a1217c02bf6ea18827d5565d7f95d1fc2fea58a3903ce8c5921f"
+    },
+    "repeated.native.igz": {
+      "bytes": 4544,
+      "sha256": "78d82add3786dce855a25f2ec8080ef96f2198b28371427d0e485548a4f9675b"
+    },
+    "repeated.original.igz": {
+      "bytes": 918,
+      "sha256": "e56e0def1cd3b3100ee15e6def280376bedacafefcfa2989f09f6207ca577bbd"
+    },
+    "two-hole.native.igz": {
+      "bytes": 5207,
+      "sha256": "a5df75e2c849e006ea37c821f7beba8c8d18f818d9892e6cbdb0672a207c0ec5"
+    },
+    "two-hole.original.igz": {
+      "bytes": 1581,
+      "sha256": "b97e5edb0eee88e5aeabe71e8ec8cf905cfa57b3e2760789e3e8c2088c81b0bd"
+    },
+    "two.native.igz": {
+      "bytes": 4313,
+      "sha256": "64c0c95ce13d9976bf8e7ab4ef28ecaf08a966e029d5448cc9744773e1f18af7"
+    },
+    "two.original.igz": {
+      "bytes": 687,
+      "sha256": "bf2e4b01acc8ce0f020f80dfb4d8a1503d7596017186ce343def39cc189ab00f"
+    },
+    "welded-close.native.igz": {
+      "bytes": 4544,
+      "sha256": "58e5076916436b614a1ca71778d9f576b46eed3e422e2cdcd12eea0886df5724"
+    },
+    "welded-close.original.igz": {
+      "bytes": 918,
+      "sha256": "0b81cba91b70131da7bd3681cdc29f3759810537d4f4e5785be4313aaa9856c5"
+    }
+  }
+}
