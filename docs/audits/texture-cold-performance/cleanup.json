@@ -1,0 +1,40 @@
+{
+  "archive_records_verified": 93,
+  "archive_sha256": "e85c38218cdde8afc457a7d99a00dc83291af1babab7a051de0349fb6b23da4d",
+  "released": [
+    {
+      "path": "devbox:/tmp/texture-cold-baseline-frozen",
+      "bytes": 14798824
+    },
+    {
+      "path": "devbox:/tmp/texture-cold-candidate-frozen",
+      "bytes": 14820592
+    },
+    {
+      "path": "devbox:/tmp/texture-cold-final-frozen",
+      "bytes": 14950368
+    },
+    {
+      "path": "devbox:/tmp/texture-cold-controls-frozen",
+      "bytes": 15189320
+    },
+    {
+      "path": "host:/tmp/texture-perf-gpu",
+      "bytes": 82918
+    },
+    {
+      "path": "host:/tmp/texture-perf-final-gpu",
+      "bytes": 83042
+    },
+    {
+      "path": "host:/tmp/texture-perf-controls-gpu",
+      "bytes": 30800
+    }
+  ],
+  "total_bytes": 59955864,
+  "preserved": [
+    "devbox:/tmp/ingetrazo-texture-cold-performance",
+    "devbox:/tmp/ingetrazo-skp-native-target"
+  ],
+  "authorization": "Parent independently replayed archived proof and authorized release after integration; no build or GPU recapture."
+}
