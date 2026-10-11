@@ -1,0 +1,20 @@
+{
+  "owner_proof_commit": "a9c5516b",
+  "runtime_commit": "c09e5ff8",
+  "method": "Read-only source/runtime/checker review and canonical archive/Git/current-binary authentication; direct comparison of archived observations, no process/checker execution/build/source capture.",
+  "authenticated": {
+    "native_members": 18,
+    "native_raw_bytes": 721725,
+    "source_members": 26,
+    "source_raw_bytes": 619145,
+    "git_files": 6,
+    "current_binary_sha256": "1e135d71e8c9a92550250f1aa549273bc0e97ccc28b60dff755b79f86590a4a4",
+    "literal_states": 56,
+    "actual_reader_pairs": 8,
+    "reviewed_mutations": 16,
+    "preservation_guards": 3
+  },
+  "disposition": "Accepted straight legacy POLYLINE subset, no blocking defect found.",
+  "source_law": "Pinned importer calls ezdxf make_path. Its _from_polyline excludes polygon/polyface meshes, uses WCS for3D and OCS with header-or-first-vertex elevation for2D, preserving sequence and closed policy. Candidate consumes VERTEX/SEQEND once before publication and narrows only source-import points; direct native f64 path remains.",
+  "boundaries": "Bulges/ELLIPSE/SPLINE/INSERT/MINSERT, curve flattening and face fusion remain explicitly open. Malformed missing SEQEND is native atomic-refusal guard, not asserted equivalent to every permissive original reader repair. P22 remains Implemented; no new whole-frame/platform/heap claim."
+}
