@@ -1,0 +1,12 @@
+{
+  "reviewed_commit": "76ae9847500131df38274cdcf4a46699293c7813",
+  "method": "Read-only shared runner diff and dependency helper review, no execution/build/capture.",
+  "disposition": "Accepted, no blocking wiring defect.",
+  "observations": [
+    "Both DXF modes reuse existing context_document_lifecycle binary; no additional Cargo build/target.",
+    "Distinct dxf-entities-source and dxf-curves-source stages authenticate complete source package digests/member bytes and preserve paths.",
+    "Runtime depends on its source archive and current binary identity; reader depends on runtime; checker depends on runtime and reader. Failed stages therefore prevent dependent acceptance rather than hiding missing outputs.",
+    "Summary loads both actual checker JSON results and retains their authenticated archive digests."
+  ],
+  "scope": "Wiring acceptance only; owner code/proof independently reviewed separately, fresh integrated execution remains root-owned."
+}
