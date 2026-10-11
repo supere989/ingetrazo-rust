@@ -42,6 +42,7 @@ if "--shaded-translucent" in sys.argv:
   ("shaded-opaque",{"style":"shaded"}),
   ("shaded-trans-front",{"style":"shaded","opacity":.5}),
   ("shaded-trans-front-cull",{"style":"shaded","opacity":.5,"back_color":True}),
+  ("shaded-opaque-back",{"style":"shaded","color_front":True,"back_texture":True,"back_quadrants":True,"back_opacity":1.,"reverse":True}),
   ("shaded-trans-back",{"style":"shaded","color_front":True,"back_texture":True,"back_quadrants":True,"back_opacity":.3,"reverse":True}),
   ("shaded-mixed-asset",{"style":"shaded","opacity":.5,"opaque_copy":True}),
  ]

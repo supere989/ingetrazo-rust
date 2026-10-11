@@ -34,11 +34,11 @@ impl Textures{
    let mut images=candidate.references.as_ref().unwrap().sampled().collect::<HashMap<AssetId,(vk::ImageView,vk::Sampler,bool)>>();
    for(path,buffer)in paths{
     let geometry=Geometry::prepare(buffer)?;if geometry.vertices.is_empty(){continue;}
-    // viewport.py1612/1780: shaded opaque faces use the Qt mean, but
-    // translucent front AND back runs still sample the original texture.
+    // viewport.py1612/1780: shaded opaque FRONTS use the Qt mean;
+    // all back overrides and translucent fronts sample the original texture.
     // One asset can need both; retain one geometry upload and one sampled image.
-    let needs_mean=average&&geometry.draws.iter().any(|d|d.source.opacity>=0.999);
-    let needs_sampled=geometry.draws.iter().any(|d|!average||d.source.opacity<0.999);
+    let needs_mean=average&&geometry.draws.iter().any(|d|!d.source.back_side&&d.source.opacity>=0.999);
+    let needs_sampled=geometry.draws.iter().any(|d|!average||d.source.back_side||d.source.opacity<0.999);
     let file;let encoded=if let Some(bytes)=assets.get(path){bytes.as_slice()}else{file=if needs_mean{read_average_file(path,self.averages.limits().encoded_bytes)?}else{std::fs::read(path).map_err(|e|format!("Texture {path}: {e}"))?};file.as_slice()};
     let asset=self.cache.identify(encoded);let id=asset.id();
     let mean=if needs_mean{Some(self.averages.prepare(&mut candidate.averages,id,encoded)?)}else{None};
@@ -57,7 +57,7 @@ impl Textures{
      if geometry.upload_bytes().len()as u64<=storage_limit{candidate.contours.push((vertex,geometry.front_vertices/3,5));}
      else {let triangles=storage_limit.min(8*1024*1024)/36;if triangles==0{return Err("Texture contour storage range cannot hold one triangle".into());}for chunk in geometry.vertices[..geometry.front_vertices as usize].chunks(triangles as usize*3){let positions=chunk.iter().map(|v|v.position).collect::<Vec<_>>();let id=resources.upload(context,bytemuck::cast_slice(&positions),vk::BufferUsageFlags::STORAGE_BUFFER,false)?;candidate.buffers.push(id);candidate.contours.push((id,(positions.len()/3)as u32,3));}}
     }
-    for draw in geometry.draws{let source=draw.source;let opaque=source.opacity>=0.999;let mean=if opaque{mean}else{None};let opacity=if opaque{1.}else{format!("{:.3}",source.opacity).parse::<f32>().map_err(|e|e.to_string())?};candidate.draws.push(Draw{buffer:vertex,set,asset:id,first:draw.first,count:draw.count,opacity,shade:source.shade,cutout:sampled.2,back:source.back_side,cull:source.front_cull,opaque,path:path.clone(),order:source.order,mean});}
+    for draw in geometry.draws{let source=draw.source;let opaque=source.opacity>=0.999;let mean=if opaque&&!source.back_side{mean}else{None};let opacity=if opaque{1.}else{format!("{:.3}",source.opacity).parse::<f32>().map_err(|e|e.to_string())?};candidate.draws.push(Draw{buffer:vertex,set,asset:id,first:draw.first,count:draw.count,opacity,shade:source.shade,cutout:sampled.2,back:source.back_side,cull:source.front_cull,opaque,path:path.clone(),order:source.order,mean});}
    }
    // Source front opaque first occurrence, then sorted back/transparent keys.
    candidate.average_active.try_reserve(candidate.draws.len()).map_err(|_|"Average active identity admission")?;
