@@ -1,3 +1,5 @@
+#[path = "context_document_lifecycle/appearance.rs"]
+mod appearance;
 use glam::{DMat4, DVec3};
 use ingetrazo_core::{
     groups::Group,
@@ -131,6 +133,10 @@ mod nested_import;
 fn main() {
     if std::env::args().any(|a|a=="--nested-import"){nested_import::run();return;}
 
+    if std::env::args().any(|a| a == "--appearance") {
+        appearance::run();
+        return;
+    }
     if std::env::args().any(|a| a == "--import-preferences") {
         import_preferences_acceptance();
         return;

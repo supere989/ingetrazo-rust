@@ -1,0 +1,22 @@
+{
+  "source_commit": "78ace12341dd41b3500d448932884b4f8cec3c5e",
+  "run": 38172886794,
+  "job": 114569037114,
+  "artifact": 11714911790,
+  "artifact_sha256": "09b52adbad35b3af994fe9143110be77f0ae6665de18d61f47a0bcefeb9fa93c",
+  "source_manifest_members_authenticated": 157,
+  "ordinary_frame_retained_exact": true,
+  "ordinary_frame_sha256": "9fabf645e1f3518902a2cfebbbae600663d48e8caf3980391d44a12313e88e55",
+  "sdk_build_pass": true,
+  "msl_library_and_replay_pipeline_creation_pass": true,
+  "replay_command_failed": true,
+  "runtime_error": "Vertex replay completion unknown; command/frame/output/pipeline quarantined\nVertex replay command error:Some(NSError { code: 2, localizedDescription: \"Caused GPU Hang Error (00000003:kIOGPUCommandBufferCallbackErrorHang)\", domain: \"MTLCommandBufferErrorDomain\", userInfo: {\"NSLocalizedDescription\": <__NSCFString: 0x6000035b4ba0>, \"NSUnderlyingError\": <NSError: 0x600001fb4ba0>}, .. })\n",
+  "compiled_vertex_output_available": false,
+  "actual_input_receipt_available": false,
+  "observed_frame_available": false,
+  "checker_failure": "missing observed frame following replay command failure",
+  "owners_quarantined": true,
+  "retry_performed": false,
+  "release_parity_claim": false,
+  "inference": "Failure is in separate vertex-only replay execution. It does not identify a production shader arithmetic/ownership defect or a hardware limitation. Actual input receipt is currently returned only after completion; failed command loses that otherwise bounded observation."
+}

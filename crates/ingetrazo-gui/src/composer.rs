@@ -366,9 +366,11 @@ pub fn render_sheet_composer(app: &mut IngeTrazoApp, ui: &mut egui::Ui, sheet_id
     if std::env::var_os("INGETRAZO_PDF_UI_OBSERVE").is_some(){let raw_texture_stats=crate::paper_raw_texture::stats(ui.ctx());ui.ctx().data_mut(|d|{d.insert_temp(egui::Id::new("pdf-ui-canvas-paint-stats"),app.composer_state.text_canvas.stats());d.insert_temp(egui::Id::new("pdf-ui-canvas-ordered-stats"),app.composer_state.text_canvas.ordered_stats());if let Some(stats)=raw_texture_stats{d.insert_temp(egui::Id::new("pdf-ui-raw-texture-stats"),stats);}d.insert_temp(egui::Id::new("pdf-ui-field-expansion-computations"),app.composer_state.field_expansions.computations);d.insert_temp(egui::Id::new("pdf-ui-calendar-samples"),crate::composer_text_fields::calendar_samples().wrapping_sub(calendar_before));});}
 
     // Top Floating Toolbar for Composer Controls
+    let icon_px = crate::appearance_preferences::current_toolbar_size(ui.ctx());
+    let text_icon = app.icons.get(ui.ctx(), "text").cloned();
     let toolbar_rect = Rect::from_min_size(
         Pos2::new(response_rect.min.x + 20.0, response_rect.min.y + 16.0),
-        Vec2::new(580.0, 42.0),
+        Vec2::new(580.0, icon_px + 18.0),
     );
 
     let saved_view_names=app.scene.saved_views.iter().map(|v|v.name.clone()).collect::<Vec<_>>();
@@ -382,6 +384,7 @@ pub fn render_sheet_composer(app: &mut IngeTrazoApp, ui: &mut egui::Ui, sheet_id
 
     ui.allocate_new_ui(egui::UiBuilder::new().max_rect(toolbar_rect), |ui| {
         egui::Frame::window(ui.style()).show(ui, |ui| {
+            ui.spacing_mut().interact_size.y = icon_px + 4.0;
             ui.horizontal(|ui| {
                 ui.label(egui::RichText::new(tr("Composer:")).strong());
 
@@ -430,7 +433,7 @@ pub fn render_sheet_composer(app: &mut IngeTrazoApp, ui: &mut egui::Ui, sheet_id
 
                 // Add Items Menu
                 app.composer_state.tool_switch_rects=[egui::Rect::NOTHING;8];
-                let text_button=ui.button(tr("+ Text"));app.composer_state.tool_switch_rects[0]=text_button.rect;if text_button.clicked(){app.composer_state.arm_text();app.native_composer.clear_preview();}
+                let text_button=crate::icons::render_icon_button(ui,text_icon.as_ref(),"T",false,&tr("Add a text block"));app.composer_state.tool_switch_rects[0]=text_button.rect;if text_button.clicked(){app.composer_state.arm_text();app.native_composer.clear_preview();}
                 if std::env::var_os("INGETRAZO_PDF_UI_OBSERVE").is_some(){ui.ctx().data_mut(|d|d.insert_temp(egui::Id::new("composer-add-text"),text_button.rect));}
                 let shape_menu=ui.menu_button(tr("+ Shape"),|ui|{
                     for (n,(kind,label)) in [("rect","Rectangle"),("elipse","Ellipse"),("poligono","Polygon"),("linea","Line"),("flecha","Arrow"),("terreno","Terrain")].into_iter().enumerate() {

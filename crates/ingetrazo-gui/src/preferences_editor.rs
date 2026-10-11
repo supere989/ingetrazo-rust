@@ -101,6 +101,10 @@ impl IngeTrazoApp {
             .preferences
             .extra
             .insert("import/dxf_unit".into(), serde_json::json!(draft.dxf_unit));
+        crate::appearance_preferences::prepare_accept(
+            &self.document_session.preferences,
+            &mut draft.preferences,
+        );
         self.document_session.preferences = draft.preferences;
         if let Some(language) = self.document_session.preferences.language.clone() {
             self.set_language(&language);
@@ -197,6 +201,7 @@ pub fn render(app: &mut IngeTrazoApp, ctx: &egui::Context) {
                     .insert(key.into(), serde_json::json!(value));
             }
         }
+        crate::appearance_preferences::render(&mut draft.preferences, ui);
         ui.separator();
         ui.label("Import defaults");
         for (code, label, codes) in [

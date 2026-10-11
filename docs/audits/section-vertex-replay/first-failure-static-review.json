@@ -1,0 +1,37 @@
+{
+  "scope": "Read-only code/API review after preserved native GPU-hang; no build/capture/retry/production change",
+  "source_commit": "78ace12341dd41b3500d448932884b4f8cec3c5e",
+  "binding_review": {
+    "vertices": "buffer0, actual Shared immutable60 records\u00d748bytes =2880",
+    "models": "buffer1, actual retained target matrix; identity16float input admission passed before pipeline creation",
+    "camera": "buffer2, copied64bytes, column-major captured production uniform",
+    "section": "buffer3, copied size_of Section=32bytes",
+    "output": "buffer4, distinct Shared3840bytes =60Record\u00d764bytes; four float4 fields have16byte MSL alignment",
+    "invocations": "Point draw start0,count60; no indexed/repeated vertex reuse; records indexed by vertex_id0..59",
+    "static_out_of_bounds_identified": false
+  },
+  "shader_review": {
+    "actual_expression": "world=model[instance]*float4(v[id].position,1); section_distance; camera*world; z=(z+w)*0.5",
+    "modification": "Only void replay signature and output-store tail; no arithmetic-policy change; optionsNone matches production",
+    "library_and_pipeline_creation_observed_success": true,
+    "return_void_and_rasterization_disabled": "Matches Apple MSL5.1.1/5.2.1.1/5.11 and MTLRenderPipelineDescriptor rasterizationEnabled documentation",
+    "generated_shader_or_raster_api_violation_identified": false
+  },
+  "lifetime_review": {
+    "before_commit": "self Arc plus local output/pipeline/library/function and actual frame buffers alive",
+    "after_commit": "infallible Flight construction retains command/frame/output/pipeline; copied setVertexBytes input bytes owned by command",
+    "unknown_completion": "Flight destructor quarantines all four owners and poisons NativeMetal admission; no early release found",
+    "static_lifetime_defect_identified": false
+  },
+  "concrete_instrumentation_gaps": [
+    "Raw upload/uniform/generated shader receipt is constructed but returned only after completed execution; first failed command leaves no such JSON",
+    "Command uses queue.commandBuffer without EncoderExecutionStatus error option; NSError Debug omits underlying structured error detail",
+    "Resource buffer pointer/length/storage and pipeline description were not serialized before commit"
+  ],
+  "unresolved": "No demonstrable binding/bounds/lifetime/MSL violation established statically. Replay command hang may involve compiled vertex-only execution or hosted driver, but retained evidence cannot assign cause. Do not call production shader wrong or platform unsupported.",
+  "minimum_future_change_to_review": "Persist fixed cold input/shader/binding receipt before command submission and request EncoderExecutionStatus with structured command error extraction; instrumentation only, not justification to rerun without a discriminating execution change.",
+  "primary_sources": [
+    "https://developer.apple.com/metal/Metal-Shading-Language-Specification.pdf",
+    "https://developer.apple.com/documentation/metal/mtlrenderpipelinedescriptor/israsterizationenabled"
+  ]
+}

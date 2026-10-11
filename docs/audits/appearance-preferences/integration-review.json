@@ -1,0 +1,20 @@
+{
+  "owner_runtime": "792010fbb154caf1e08263019ffdc7f080fad71d",
+  "integrated_revision": "41fcf1e4469fd477ccd8e6d55bfd95a7d9a35066",
+  "runtime_paths_checked": [
+    "crates",
+    "Cargo.toml",
+    "Cargo.lock",
+    ".cargo",
+    "rust-toolchain.toml",
+    "build.rs"
+  ],
+  "runtime_diff": [],
+  "identical_crates_tree": "26cd7d88dbabbffa944bb48ff4b8f3572a224321",
+  "owner_cargo_lock_blob": "243a1c3f1fbb095dac57943f44540417d187ed00",
+  "integrated_cargo_lock_blob": "243a1c3f1fbb095dac57943f44540417d187ed00",
+  "reused_owner_proof": true,
+  "duplicate_build_or_ui_test_executed": false,
+  "next_check": "One published broad CI for the stable integrated batch",
+  "runner_change": "Only existing consumer --appearance mode, two authenticated frozen inputs, dependent checker and result aggregation; no new Rust binary"
+}
