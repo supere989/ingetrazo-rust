@@ -1,0 +1,15 @@
+{
+  "scope": "opaque source-operation causal diagnostic only; no GPU/top-left/degenerate/DPR generalization",
+  "operations": {
+    "line": 1248,
+    "polygon": 52
+  },
+  "vertices": 5148,
+  "pixels": 0,
+  "max": 0,
+  "source_sha256": {
+    "annotations-on-operations.json": "a83ea20c7770dc1bc9003b720870261519ae1734e52377e71783a75335bb5a17",
+    "annotations-off.png": "ec520b70e03c2e445d7fff9d9bab0cf3dbd6ca9bf7d764551ee6cd02805a11f6",
+    "geometry-widget-diagnostic.png": "6ab625f8942bf259d686b6f59dc9bd575b456c08e5da10e5803f895a52d24ad9"
+  }
+}
