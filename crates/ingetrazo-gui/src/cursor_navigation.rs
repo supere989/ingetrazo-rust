@@ -234,7 +234,7 @@ pub(crate) fn wheel(a: &mut IngeTrazoApp, p: DVec2, r: egui::Rect, steps: f64) -
 /// Borrow the original event batch: each wheel notch and pointer transition is
 /// handled once, rather than reapplying egui cumulative drag_delta/smoothed scroll.
 pub(crate) fn input(a: &mut IngeTrazoApp, ui: &egui::Ui, r: egui::Rect, owns_pointer: bool) {
-    if a.navigation_suspended() {
+    if !ui.is_enabled() || a.navigation_suspended() {
         a.cursor_navigation.drag = None;
         return;
     }
@@ -474,6 +474,34 @@ mod tests {
             ],
             true,
         );
+        assert!(a.cursor_navigation.drag.is_none());
+    }
+    #[test]
+    fn disabled_or_modal_viewport_retires_cached_capture() {
+        let mut a = IngeTrazoApp::new();
+        let ctx = egui::Context::default();
+        let p = egui::pos2(400., 300.);
+        frame(&mut a, &ctx, vec![button(p, true)], true);
+        assert!(a.cursor_navigation.drag.is_some());
+        let _ = ctx.run(egui::RawInput::default(), |ctx| {
+            egui::CentralPanel::default().show(ctx, |ui| {
+                ui.set_enabled(false);
+                input_events(&mut a, ui, true);
+            });
+        });
+        assert!(a.cursor_navigation.drag.is_none());
+        let old = a.camera.clone();
+        frame(
+            &mut a,
+            &ctx,
+            vec![egui::Event::PointerMoved(egui::pos2(450., 330.))],
+            true,
+        );
+        assert_eq!(a.camera, old);
+        frame(&mut a, &ctx, vec![button(p, true)], true);
+        assert!(a.cursor_navigation.drag.is_some());
+        a.show_preferences_dialog = true;
+        frame(&mut a, &ctx, vec![], true);
         assert!(a.cursor_navigation.drag.is_none());
     }
     #[test]

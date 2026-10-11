@@ -46,7 +46,7 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
 
     }
 
-    if app.text3d_dialog.is_none(){crate::cursor_navigation::input(app,ui,rect,response.contains_pointer());}
+    crate::cursor_navigation::input(app,ui,rect,response.contains_pointer());
 
     // 2. Cursor Raycasting & Snapping
     let mut active_snap_glyph = None;
