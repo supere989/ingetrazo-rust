@@ -17,3 +17,21 @@ python3 scripts/check-p05-finite-kernel.py /path/to/native.json --report /path/t
 ```
 
 The first checker command authenticates the canonical source inventory and nine rejecting mutations; it does **not** claim native acceptance. The native protocol uses schema 1 and the same `save_load`/`triangulation` records. Native provenance/archive bytes/error prose/area diagnostics are not geometry equality fields; literal outcome booleans, input rings, normal, loaded/constructed topology and complete ordered triangle coordinates are. Native refusal against a source success is a failure. Exceptions remain explicit outcomes. `p05_complete` stays false.
+
+## Separate finite coverage checker
+
+`check-p05-finite-kernel.py` remains unchanged and strict. The independent `check-p05-finite-invariants.py` reports its strict result and retains complete ordered source/native triangle differences and the Qt-f32/native-f64 normal difference. It does not call differing diagonals or normals exact and makes no pixel-parity claim.
+
+The nine degenerate/short-ring cases require exact ordered triangles and normals. Other finite cases use rational arithmetic over the actual binary floating-point coordinates: authored-corner membership, planarity, authored winding, source triangle count, exact projected area, boundary/internal segment multiplicity, edge crossing, triangle-interior overlap, and centroid solid-domain membership. Equal-height source holes contain long collinear bridge edges; **coverage counters only** subdivide at authored vertices, without rewriting any raw triangle. Native nondegenerate normals must be finite, nonzero and exactly parallel to the authored Newell direction. Six changed-geometry/input negatives reject.
+
+Native acceptance additionally requires exact 27 App history states, nine native-reader source-file loads, and nine actual pinned Python-reader reopens of native-written files. The initial failing candidate must be supplied with its SHA256 and must fail both strict comparison and the changed short-ring invariant check. Its canonical archive belongs to the parent acceptance audit, not this source-only archive.
+
+```sh
+/tmp/ingetrazo-parity-python/bin/python scripts/reopen-p05-finite-kernel.py /path/to/native-output-directory
+python3 scripts/check-p05-finite-invariants.py /path/to/native-output-directory \
+  --initial /path/to/authenticated-initial-native.json \
+  --initial-sha256 519bc52b68587c56ed3c4f5683d7945ad9de24bd0e862c808b716b2eb9237aa9 \
+  --report /path/to/invariants.json
+```
+
+The independently inspected corrected consumer at `/tmp/ingetrazo-text-finite-integration/mesh` passes all sixteen finite cases, 27 history states, nine source-file native loads and nine actual Python reopens. Its strict result remains **false**: one oblique normal uses native f64 rather than Qt f32, and proper-hole/equal-height-hole ordered diagonals differ. Parent retains the fresh native files/report and initial failure under `docs/audits/p05-finite-acceptance`; these are not a source recapture or a new Rust build by this observer.

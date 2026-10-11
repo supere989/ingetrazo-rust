@@ -1,0 +1,330 @@
+{
+  "native_compared": false,
+  "strict_exact": null,
+  "strict_first_mismatch": null,
+  "history_27_exact": null,
+  "source_reader_9_exact": null,
+  "native_written_python_reopens_9_exact": null,
+  "retained_initial": null,
+  "finite_invariants_pass": true,
+  "negative_controls": [
+    "missing",
+    "duplicate",
+    "reversed",
+    "crossing",
+    "hole-covering",
+    "input-mutation"
+  ],
+  "cases": [
+    {
+      "name": "empty",
+      "phases": {
+        "face": {
+          "accepted": true,
+          "mode": "strict-degenerate",
+          "triangle_count": 0
+        },
+        "direct": {
+          "accepted": true,
+          "mode": "strict-degenerate",
+          "triangle_count": 0
+        }
+      },
+      "normal_difference": null,
+      "ordered_triangle_differences": {}
+    },
+    {
+      "name": "one",
+      "phases": {
+        "face": {
+          "accepted": true,
+          "mode": "strict-degenerate",
+          "triangle_count": 0
+        },
+        "direct": {
+          "accepted": true,
+          "mode": "strict-degenerate",
+          "triangle_count": 0
+        }
+      },
+      "normal_difference": null,
+      "ordered_triangle_differences": {}
+    },
+    {
+      "name": "two",
+      "phases": {
+        "face": {
+          "accepted": true,
+          "mode": "strict-degenerate",
+          "triangle_count": 0
+        },
+        "direct": {
+          "accepted": true,
+          "mode": "strict-degenerate",
+          "triangle_count": 0
+        }
+      },
+      "normal_difference": null,
+      "ordered_triangle_differences": {}
+    },
+    {
+      "name": "repeated",
+      "phases": {
+        "face": {
+          "accepted": true,
+          "mode": "strict-degenerate",
+          "triangle_count": 1
+        },
+        "direct": {
+          "accepted": true,
+          "mode": "strict-degenerate",
+          "triangle_count": 1
+        }
+      },
+      "normal_difference": null,
+      "ordered_triangle_differences": {}
+    },
+    {
+      "name": "welded-close",
+      "phases": {
+        "face": {
+          "accepted": true,
+          "mode": "strict-degenerate",
+          "triangle_count": 1
+        },
+        "direct": {
+          "accepted": true,
+          "mode": "strict-degenerate",
+          "triangle_count": 1
+        }
+      },
+      "normal_difference": null,
+      "ordered_triangle_differences": {}
+    },
+    {
+      "name": "empty-hole",
+      "phases": {
+        "face": {
+          "accepted": true,
+          "mode": "strict-degenerate",
+          "triangle_count": 1
+        },
+        "direct": {
+          "accepted": true,
+          "mode": "strict-degenerate",
+          "triangle_count": 1
+        }
+      },
+      "normal_difference": null,
+      "ordered_triangle_differences": {}
+    },
+    {
+      "name": "one-hole",
+      "phases": {
+        "face": {
+          "accepted": true,
+          "mode": "strict-degenerate",
+          "triangle_count": 1
+        },
+        "direct": {
+          "accepted": true,
+          "mode": "strict-degenerate",
+          "triangle_count": 1
+        }
+      },
+      "normal_difference": null,
+      "ordered_triangle_differences": {}
+    },
+    {
+      "name": "two-hole",
+      "phases": {
+        "face": {
+          "accepted": true,
+          "mode": "strict-degenerate",
+          "triangle_count": 1
+        },
+        "direct": {
+          "accepted": true,
+          "mode": "strict-degenerate",
+          "triangle_count": 1
+        }
+      },
+      "normal_difference": null,
+      "ordered_triangle_differences": {}
+    },
+    {
+      "name": "empty-outer-proper-hole",
+      "phases": {
+        "face": {
+          "accepted": true,
+          "mode": "strict-degenerate",
+          "triangle_count": 0
+        },
+        "direct": {
+          "accepted": true,
+          "mode": "strict-degenerate",
+          "triangle_count": 0
+        }
+      },
+      "normal_difference": null,
+      "ordered_triangle_differences": {}
+    },
+    {
+      "name": "collinear",
+      "phases": {
+        "face": {
+          "accepted": true,
+          "mode": "strict-degenerate",
+          "triangle_count": 1
+        },
+        "direct": {
+          "accepted": true,
+          "mode": "strict-degenerate",
+          "triangle_count": 1
+        }
+      },
+      "normal_difference": null,
+      "ordered_triangle_differences": {}
+    },
+    {
+      "name": "concave-xy",
+      "phases": {
+        "face": {
+          "accepted": true,
+          "mode": "exact-rational-coverage",
+          "triangle_count": 4,
+          "projected_twice_area": "14",
+          "boundary_edges": 6,
+          "internal_edges": 3
+        },
+        "direct": {
+          "accepted": true,
+          "mode": "exact-rational-coverage",
+          "triangle_count": 4,
+          "projected_twice_area": "14",
+          "boundary_edges": 6,
+          "internal_edges": 3
+        }
+      },
+      "normal_difference": null,
+      "ordered_triangle_differences": {}
+    },
+    {
+      "name": "concave-reversed",
+      "phases": {
+        "face": {
+          "accepted": true,
+          "mode": "exact-rational-coverage",
+          "triangle_count": 4,
+          "projected_twice_area": "14",
+          "boundary_edges": 6,
+          "internal_edges": 3
+        },
+        "direct": {
+          "accepted": true,
+          "mode": "exact-rational-coverage",
+          "triangle_count": 4,
+          "projected_twice_area": "14",
+          "boundary_edges": 6,
+          "internal_edges": 3
+        }
+      },
+      "normal_difference": null,
+      "ordered_triangle_differences": {}
+    },
+    {
+      "name": "concave-yz",
+      "phases": {
+        "face": {
+          "accepted": true,
+          "mode": "exact-rational-coverage",
+          "triangle_count": 4,
+          "projected_twice_area": "14",
+          "boundary_edges": 6,
+          "internal_edges": 3
+        },
+        "direct": {
+          "accepted": true,
+          "mode": "exact-rational-coverage",
+          "triangle_count": 4,
+          "projected_twice_area": "14",
+          "boundary_edges": 6,
+          "internal_edges": 3
+        }
+      },
+      "normal_difference": null,
+      "ordered_triangle_differences": {}
+    },
+    {
+      "name": "concave-oblique",
+      "phases": {
+        "face": {
+          "accepted": true,
+          "mode": "exact-rational-coverage",
+          "triangle_count": 4,
+          "projected_twice_area": "14",
+          "boundary_edges": 6,
+          "internal_edges": 3
+        },
+        "direct": {
+          "accepted": true,
+          "mode": "exact-rational-coverage",
+          "triangle_count": 4,
+          "projected_twice_area": "14",
+          "boundary_edges": 6,
+          "internal_edges": 3
+        }
+      },
+      "normal_difference": null,
+      "ordered_triangle_differences": {}
+    },
+    {
+      "name": "proper-hole",
+      "phases": {
+        "face": {
+          "accepted": true,
+          "mode": "exact-rational-coverage",
+          "triangle_count": 8,
+          "projected_twice_area": "96",
+          "boundary_edges": 8,
+          "internal_edges": 8
+        },
+        "direct": {
+          "accepted": true,
+          "mode": "exact-rational-coverage",
+          "triangle_count": 8,
+          "projected_twice_area": "96",
+          "boundary_edges": 8,
+          "internal_edges": 8
+        }
+      },
+      "normal_difference": null,
+      "ordered_triangle_differences": {}
+    },
+    {
+      "name": "equal-height-holes",
+      "phases": {
+        "face": {
+          "accepted": true,
+          "mode": "exact-rational-coverage",
+          "triangle_count": 12,
+          "projected_twice_area": "176",
+          "boundary_edges": 12,
+          "internal_edges": 13
+        },
+        "direct": {
+          "accepted": true,
+          "mode": "exact-rational-coverage",
+          "triangle_count": 12,
+          "projected_twice_area": "176",
+          "boundary_edges": 12,
+          "internal_edges": 13
+        }
+      },
+      "normal_difference": null,
+      "ordered_triangle_differences": {}
+    }
+  ],
+  "pixel_parity_claim": false,
+  "p05_complete": false
+}
