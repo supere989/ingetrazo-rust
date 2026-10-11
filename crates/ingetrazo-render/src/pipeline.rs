@@ -337,6 +337,16 @@ pub fn build_world_surfaces(scene:&Scene,camera:&OrbitCamera,style:&StyleConfig)
 }
 
 
+/// Borrowed loose own mesh only. Groups remain independent cached placements.
+/// Uses the same world shading/material/layer policy as build_world_surfaces.
+pub fn build_loose_world_surfaces(scene:&Scene,style:&StyleConfig)->SceneRenderData {
+    let mut data=SceneRenderData::default();
+    if style.visual_style!=VisualStyle::Wireframe {
+        build_mesh_buffers(&scene.mesh,scene,style,&mut data.opaque_mesh,&mut data.transparent_mesh,&mut data.textured_meshes,true);
+    }
+    data
+}
+
 /// Cold source-placement prototype collection. The caller retains its placement
 /// matrix separately; children are independent bindings, never folded into this
 /// own-mesh prototype. No Scene clone, inverse/cancellation or CPU projection.
