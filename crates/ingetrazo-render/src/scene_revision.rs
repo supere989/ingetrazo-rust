@@ -23,6 +23,8 @@ impl RenderRevisions {
         self.placement_changed();
     }
     pub fn placement_changed(&mut self) { self.poses = self.poses.wrapping_add(1); }
+    pub fn paint_changed(&mut self) { self.static_domains.paint = self.static_domains.paint.wrapping_add(1); }
+    pub fn geometry_changed(&mut self) { self.static_domains.geometry = self.static_domains.geometry.wrapping_add(1); }
     pub fn style_changed(&mut self) { self.static_domains.style = self.static_domains.style.wrapping_add(1); }
     pub fn layers_changed(&mut self) { self.static_domains.layers = self.static_domains.layers.wrapping_add(1); }
 }

@@ -41,6 +41,36 @@ fn only_group_poses(before:&Scene,after:&Scene)->bool {
     && before.materials==after.materials && before.layers==after.layers && before.text_labels==after.text_labels && before.sheets==after.sheets
 }
 
+fn same_mesh_shape(a:&ingetrazo_core::mesh::Mesh,b:&ingetrazo_core::mesh::Mesh)->bool{
+    a.vertices==b.vertices && a.edges.len()==b.edges.len() && a.faces.len()==b.faces.len()
+    && a.edges.iter().zip(&b.edges).all(|(a,b)|a.v0==b.v0&&a.v1==b.v1&&a.faces==b.faces&&a.soft==b.soft&&a.curve_id==b.curve_id&&a.layer==b.layer&&a.hidden==b.hidden)
+    && a.faces.iter().zip(&b.faces).all(|(a,b)|a.vertices==b.vertices&&a.holes==b.holes&&a.layer==b.layer&&a.interior==b.interior)
+}
+fn same_mesh_paint(a:&ingetrazo_core::mesh::Mesh,b:&ingetrazo_core::mesh::Mesh)->bool{
+    a.edges.len()==b.edges.len()&&a.faces.len()==b.faces.len()
+    && a.edges.iter().zip(&b.edges).all(|(a,b)|a.attrs==b.attrs&&a.soft==b.soft&&a.curve_id==b.curve_id&&a.layer==b.layer&&a.hidden==b.hidden)
+    && a.faces.iter().zip(&b.faces).all(|(a,b)|a.attrs==b.attrs&&a.layer==b.layer&&a.interior==b.interior)
+}
+fn group_domain_equal(a:&ingetrazo_core::groups::Group,b:&ingetrazo_core::groups::Group,paint:bool)->bool{
+    a.id==b.id&&a.mesh_share==b.mesh_share&&a.component_definition==b.component_definition&&a.definition_member==b.definition_member
+    && a.transform==b.transform&&a.name==b.name&&a.native_document==b.native_document&&a.native_baseline==b.native_baseline
+    && a.layer==b.layer&&a.hidden==b.hidden&&a.ifc_tag==b.ifc_tag&&a.billboard==b.billboard&&a.billboard_texture==b.billboard_texture
+    && if paint{same_mesh_shape(&a.mesh,&b.mesh)}else{same_mesh_paint(&a.mesh,&b.mesh)}
+    && a.children.len()==b.children.len()&&a.children.iter().zip(&b.children).all(|(a,b)|group_domain_equal(a,b,paint))
+}
+fn same_scene_non_mesh(a:&Scene,b:&Scene)->bool{
+    a.image_planes==b.image_planes&&a.component_definitions==b.component_definitions&&a.mesh_shares==b.mesh_shares
+    && a.dimensions==b.dimensions&&a.guides==b.guides&&a.section_planes==b.section_planes
+    && a.geo_points==b.geo_points&&a.geo_paths==b.geo_paths&&a.terrain==b.terrain
+    && a.layers==b.layers&&a.text_labels==b.text_labels&&a.sheets==b.sheets
+}
+fn only_mesh_domain(a:&Scene,b:&Scene,paint:bool)->bool{
+    same_scene_non_mesh(a,b)&&a.groups.len()==b.groups.len()
+    && (paint||a.materials==b.materials)
+    && if paint{same_mesh_shape(&a.mesh,&b.mesh)}else{same_mesh_paint(&a.mesh,&b.mesh)}
+    && a.groups.iter().zip(&b.groups).all(|(a,b)|group_domain_equal(a,b,paint))
+}
+
 impl IngeTrazoApp {
     fn tool_snapshot(&self) -> Scene {
         let mut before = self.scene.clone();
@@ -63,7 +93,10 @@ impl IngeTrazoApp {
         if committed {
             self.seal_view_history_before(&before);self.seal_terrain_history_before(&before);self.seal_layer_history_before(&before);self.seal_image_history_before(&before);
             if let Some(command)=image_command{let mut delta=ingetrazo_core::image_plane::ImageDelta::between(&before.image_planes,&self.scene.image_planes);delta.frame_command=Some((command,false));before.history_images.0=Some(delta);}
-            if only_group_poses(&before,&self.scene){self.bump_placement_revision();}else{self.bump_model_revision();}
+            if only_group_poses(&before,&self.scene){self.bump_placement_revision();}
+            else if only_mesh_domain(&before,&self.scene,true){self.bump_render_paint_revision();}
+            else if only_mesh_domain(&before,&self.scene,false){self.bump_render_geometry_revision();}
+            else{self.bump_model_revision();}
             if !self.active_tool.take_history_replacement()||self.undo_stack.is_empty(){self.undo_stack.push(before);}
             self.active_tool.note_history_revision(self.model_revision,true);
             self.redo_stack.clear();
@@ -167,6 +200,23 @@ mod tests {
         )
     }
 
+    #[test]
+    fn paint_click_and_geometry_commit_have_distinct_static_domains(){
+        let mut app=app();app.set_tool(ToolType::Paint);let before=app.native_render_revisions;
+        app.dispatch_tool_click(&context(0.));
+        assert!(app.native_render_revisions.static_domains.paint>before.static_domains.paint);
+        assert_eq!(app.native_render_revisions.static_domains.geometry,before.static_domains.geometry);
+        assert_eq!(app.native_render_revisions.poses,before.poses);
+        let before=app.scene.clone();app.scene.mesh.vertices[0].position.x+=0.25;
+        assert!(only_mesh_domain(&before,&app.scene,false));assert!(!only_mesh_domain(&before,&app.scene,true));
+        let revisions=app.native_render_revisions;app.record_tool_commit(before).unwrap();
+        assert!(app.native_render_revisions.static_domains.geometry>revisions.static_domains.geometry);
+        assert_eq!(app.native_render_revisions.static_domains.paint,revisions.static_domains.paint);
+        let before=app.scene.clone();app.scene.mesh.faces[0].holes.push(vec![0,1,2]);
+        assert!(!only_mesh_domain(&before,&app.scene,true));
+        app.scene=before.clone();app.scene.groups.push(ingetrazo_core::groups::Group::new("new"));
+        assert!(!only_mesh_domain(&before,&app.scene,true));assert!(!only_mesh_domain(&before,&app.scene,false));
+    }
     #[test]
     fn layer_visibility_preserves_source_move_array_window(){
         let mut app=app();app.add_layer("visible".into());app.set_tool(ToolType::Move);app.scene.select(SelectionItem::Face(0));

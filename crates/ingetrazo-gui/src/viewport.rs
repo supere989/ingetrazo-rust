@@ -267,6 +267,9 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
     }
 
     app.native_gpu_viewport_rect=Some(rect);
+    #[cfg(target_os="macos")]
+    let metal_route_reason={app.sync_document_presentation();crate::native_metal::world_viewport::route(app,rect,ui.ctx().pixels_per_point())};
+
     if app.native_gpu_viewport_enabled {
         if let Some(texture)=app.native_gpu_viewport_texture {
             painter.image(texture,rect,egui::Rect::from_min_max(egui::pos2(0.0,0.0),egui::pos2(1.0,1.0)),egui::Color32::WHITE);
@@ -289,7 +292,15 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
     );
 
     }
+    #[cfg(target_os="macos")]
+    if let Some(reason)=metal_route_reason.as_ref(){painter.text(rect.left_top()+egui::vec2(8.,8.),egui::Align2::LEFT_TOP,reason,egui::FontId::proportional(12.),egui::Color32::from_rgb(160,40,20));}
+
     if app.native_gpu_viewport_enabled && app.navigation.mode==Some(crate::navigation::Mode::Position){
+        if let Some(glyph)=active_snap_glyph.as_ref(){ingetrazo_render::pipeline::render_snap_glyphs(std::slice::from_ref(glyph),&app.camera,&painter,rect);}
+    }
+
+    #[cfg(target_os="macos")]
+    if app.native_metal_world.is_some()&&app.native_gpu_viewport_enabled&&app.navigation.mode!=Some(crate::navigation::Mode::Position){
         if let Some(glyph)=active_snap_glyph.as_ref(){ingetrazo_render::pipeline::render_snap_glyphs(std::slice::from_ref(glyph),&app.camera,&painter,rect);}
     }
 
