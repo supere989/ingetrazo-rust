@@ -1528,7 +1528,7 @@ impl Diagnostic {
         let f=&self.frame;
         let texture=|t:&ProtocolObject<dyn MTLTexture>|serde_json::json!({"identity":format!("{:p}",t),"storage":format!("{:?}",t.storageMode()),"usage":format!("{:?}",t.usage()),"format":format!("{:?}",t.pixelFormat()),"extent":[t.width(),t.height()],"samples":t.sampleCount()});
         let compute=f.resolve_prototype.as_ref().is_some_and(|r|r.is_compute());
-        serde_json::json!({"command":format!("{:p}",&**self.command),"status":format!("{:?}",self.command.status()),"error":format!("{:?}",self.command.error()),
+        serde_json::json!({"command":format!("{:p}",&**self.command),"completed":self.command.status()==MTLCommandBufferStatus::Completed,"status":format!("{:?}",self.command.status()),"error":format!("{:?}",self.command.error()),
             "device":format!("{:p}",&*f.owner.device),"queue":format!("{:p}",&*f.owner.queue),
             "color":texture(&f.target.color.raw),"multisample":f.target.multisample.as_ref().map(|i|texture(&i.raw)),"depth":texture(&f.target.depth.raw),
             "camera_column_major_f32_bits":f.mvp.map(|v|v.map(f32::to_bits)),
@@ -1536,7 +1536,7 @@ impl Diagnostic {
             "store":if compute{"Store"}else if f.target.multisample.is_some(){if f.diagnostic_samples{"StoreAndMultisampleResolve"}else{"MultisampleResolve"}}else{"Store"},
             "resolve_destination":if compute{None}else{f.target.multisample.as_ref().map(|_|format!("{:p}",&**f.target.color.raw))},
             "resolve_route":f.source_resolve_diagnostic(),"sample_positions":f.programmed_sample_positions(),
-            "readback":{"identity":format!("{:p}",&**self.readback.raw),"storage":format!("{:?}",self.readback.raw.storageMode()),"contents":format!("{:p}",self.readback.raw.contents().as_ptr()),"length":self.readback.raw.length(),"row_bytes":self.row,"copied_extent":f.extent(),"completion_required":"Completed"}})
+            "readback":{"identity":format!("{:p}",&**self.readback.raw),"shared":self.readback.raw.storageMode()==MTLStorageMode::Shared,"storage":format!("{:?}",self.readback.raw.storageMode()),"contents":format!("{:p}",self.readback.raw.contents().as_ptr()),"length":self.readback.raw.length(),"row_bytes":self.row,"copied_extent":f.extent(),"completion_required":"Completed"}})
     }
 
     /// Read only after the same completion gate as the resolved diagnostic.

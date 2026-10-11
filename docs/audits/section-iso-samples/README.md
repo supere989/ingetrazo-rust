@@ -1,0 +1,11 @@
+# Three-point original closed-iso color/depth observations
+
+One original Mesa/Xvfb capture passed the mandatory entire frozen closed-iso PNG guard. Sourcepin6be29fe437a7cd992d4e079f71720821b25216b9; unchanged original code. SourceZIP SHA25617547dfb9a567858230325b83795dd534f0175c463300174a053c7e687e02499. The archive includes full resolved PNG/RGBA, renderer/attachment records, exact slotfloatbits/depthfloatbits, actual camera uniform bits, runtime/display logs and per-file SHA256 provenance. FullsourceRGBA SHA256d391994e70f7d6f0f1d5b57cc1189e9507cda0ad43d382cd1055ba8e891507b2.
+
+Actual original renderer: llvmpipe LLVM20.1.2, Mesa25.2.8Ubuntu. ColorRGBA8 renderbuffer4samples; depthGL_DEPTH24_STENCIL8(35056)4samples. At bad297329 and good297328, originalcolor slots are[background,front,background,front]. Baddepth is[1,.5002562999725342,1,.5002562403678894]; gooddepth[1,.5002560615539551,1,.5002560615539551]. Cap298303 has[front,front,cap,front] and capslot2depth .5002493262290955. These observations establish source final samples, not Metal cause or a depthprecision fix.
+
+One focused ARM Rust metadata check passed2.26s on the owned reused target, jobs2/debug0/incremental0 with existing z/freetype/harfbuzz Cargo link declarations. metadata.log is retained. No local Apple C SDK/MSL/link/GPU proof is claimed. Subsequently the observation JSON reused root's already-executed actualenum boolean comparisons (`completed`, `shared`), preserving corrected native-object dereferencing; no additional compiler run.
+
+The ARM-only workflow is staged for ROOT REVIEW, not published. It authenticates the prior production ARM archive SHA2562569145928864b000e07e9d44d46e59bacffb9a88e45755de870e26bda1ef784 and extracts member native/closed-iso-candidate.rgba only after SHA2569fabf645e1f3518902a2cfebbbae600663d48e8caf3980391d44a12313e88e55 matches. It builds only native_metal_section_iso_samples and retains source/binary/log provenance under a45second process limit. Exact branch exclusions prevent broadparity/compute. No Intel or ten-case jobs.
+
+NativeMSL compilation is deferred to the actual ARM job. The final checker requires ordinary and observed entireRGBA to remain identical to the authenticated134-residual frame and retains the source/native12sample observations without promoting parity. No intermediatecheckpoint or productionfix is included.

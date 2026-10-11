@@ -1,0 +1,63 @@
+name: Native Metal closed-iso final sample observation
+on:
+  push:
+    branches: [review/metal-section-iso-samples]
+  workflow_dispatch:
+concurrency:
+  group: metal-section-iso-samples-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  app-consumer:
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        runner: [macos-15]
+    env:
+      CARGO_PROFILE_DEV_DEBUG: 0
+      CARGO_PROFILE_TEST_DEBUG: 0
+      CARGO_INCREMENTAL: 0
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Reuse compiled Cargo dependencies
+        uses: Swatinem/rust-cache@49a0bdc70d2e1b713ca9e2869b211fcce03d3c1c # v2
+        with:
+          cache-bin: "false"
+          cache-workspace-crates: "false"
+          cache-on-failure: "true"
+          save-if: ${{ github.event_name != 'pull_request' }}
+      - name: Authenticate expected frame and build only the three-point diagnostic
+        run: |
+          mkdir -p section-iso-evidence
+          git rev-parse HEAD > section-iso-evidence/revision.txt
+          git ls-files Cargo.lock .github/workflows/metal-section-iso-samples.yml crates/ingetrazo-core/src crates/ingetrazo-render/src crates/ingetrazo-gui/src/navigation_ray.rs scripts/reference-section-iso-samples.py docs/audits/section-iso-samples/source.zip crates/ingetrazo-gui/src/native_metal crates/ingetrazo-gui/src/native_metal.rs crates/ingetrazo-gui/src/viewport.rs crates/ingetrazo-metal/src crates/ingetrazo-gui/examples/native_metal_section_iso_samples.rs scripts/check-section-iso-samples.py | xargs shasum -a 256 > section-iso-evidence/source.sha256
+          python3 - <<'PYTHON'
+          import hashlib,pathlib,zipfile
+          archive=pathlib.Path('docs/audits/section-tile-promotion/production/arm.zip')
+          assert hashlib.sha256(archive.read_bytes()).hexdigest()=='2569145928864b000e07e9d44d46e59bacffb9a88e45755de870e26bda1ef784'
+          with zipfile.ZipFile(archive) as z: data=z.read('native/closed-iso-candidate.rgba')
+          assert len(data)==1920000 and hashlib.sha256(data).hexdigest()=='9fabf645e1f3518902a2cfebbbae600663d48e8caf3980391d44a12313e88e55'
+          pathlib.Path('section-iso-evidence/expected.rgba').write_bytes(data)
+          PYTHON
+          cargo build --locked -p ingetrazo-gui --example native_metal_section_iso_samples -j2 > section-iso-evidence/build.log 2>&1
+          shasum -a 256 target/debug/examples/native_metal_section_iso_samples > section-iso-evidence/binary.sha256
+      - name: Observe twelve final color and depth samples
+        run: |
+          python3 - <<'PYTHON'
+          import subprocess
+          with open('section-iso-evidence/runtime.log','w') as log:
+              subprocess.run(['target/debug/examples/native_metal_section_iso_samples','section-iso-evidence/native','section-iso-evidence/expected.rgba'],stdout=log,stderr=subprocess.STDOUT,timeout=45,check=True)
+          PYTHON
+      - name: Validate observation completeness, not release parity
+        if: ${{ !cancelled() }}
+        run: python3 scripts/check-section-iso-samples.py section-iso-evidence/native section-iso-evidence/expected.rgba docs/audits/section-iso-samples/source.zip > section-iso-evidence/checker.log 2>&1
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: section-iso-samples-${{ matrix.runner }}
+          path: section-iso-evidence/
+          if-no-files-found: error
