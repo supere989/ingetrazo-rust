@@ -4,6 +4,7 @@
 pub mod arc;
 pub mod base;
 pub mod circle;
+pub mod change_axes;
 pub mod dimension;
 pub mod eraser;
 pub mod fillet;
@@ -31,6 +32,7 @@ pub use base::*;
 
 pub use arc::{ArcMode, ArcTool};
 pub use circle::CircleTool;
+pub use change_axes::ChangeAxesTool;
 pub use dimension::DimensionTool;
 pub use eraser::EraserTool;
 pub use fillet::FilletTool;

@@ -88,6 +88,8 @@ impl IngeTrazoApp {
                 if before_face.history_id==face.history_id { *before_face=face; }
             }
         }
+        let axes_command=self.active_tool.take_axes_command().map(|c|self.complete_axes_command(c));
+        if let Some(command)=axes_command.as_ref(){match self.prepare_axes_parked(command,&self.scene){Ok(parked)=>self.publish_axes_parked(parked),Err(error)=>{self.active_tool.axes_commit_refused(command.target);self.scene=before;self.bump_model_revision();self.status_message=error.clone();return Err(error);}}}
         let bare_edge=self.active_tool.take_bare_edge_command();
         let owned=self.active_tool.take_authored_draw_faces();
         if let Err(error)=ingetrazo_core::bim::stamp_drawn_faces_with_id(&mut self.scene.mesh,&owned,self.scene.active_ifc.as_ref(),self.scene.bim_draw_id.as_ref()){
@@ -106,6 +108,7 @@ impl IngeTrazoApp {
         let transient_changed=before.version!=self.scene.version;
         let committed=changed_model(&before,&self.scene) || bare_edge.is_some();
         if committed {
+            before.history_axes=axes_command.map(|c|c.inverse());
             // Source Fillet SnapshotMutation owns mesh only; undo does not restore selection.
             if self.active_tool_type==ingetrazo_tools::base::ToolType::Fillet { before.selection=self.scene.selection.clone(); }
             if let Some((a,b))=bare_edge {

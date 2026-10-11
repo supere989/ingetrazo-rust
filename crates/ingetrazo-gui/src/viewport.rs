@@ -481,7 +481,7 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
         }
     }
 
-    if app.navigation.mode!=Some(crate::navigation::Mode::FirstPerson){response.context_menu(|ui|{if app.selected_text3d().is_some() && ui.button("Edit 3D Text…").clicked(){app.open_edit_text3d();ui.close_menu();}if app.scene.selection.iter().any(|item|matches!(item,ingetrazo_core::scene::SelectionItem::SectionPlane(_))){crate::section_actions::render_section_controls(app,ui);}});}
+    if app.navigation.mode!=Some(crate::navigation::Mode::FirstPerson){response.context_menu(|ui|{if app.scene.selection.len()==1 && app.scene.selection.iter().any(|s|matches!(s,ingetrazo_core::scene::SelectionItem::Group(_))) && ui.button("Change Axes").clicked(){app.start_change_axes();ui.close_menu();}if app.selected_text3d().is_some() && ui.button("Edit 3D Text…").clicked(){app.open_edit_text3d();ui.close_menu();}if app.scene.selection.iter().any(|item|matches!(item,ingetrazo_core::scene::SelectionItem::SectionPlane(_))){crate::section_actions::render_section_controls(app,ui);}});}
 
     // 5. Render Section Planes (cutting frames and symbol tags)
     if app.scene.show_section_planes {

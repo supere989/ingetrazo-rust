@@ -34,6 +34,7 @@ pub enum ToolType {
     Text,
     SectionPlane,
     PlaceGroup,
+    ChangeAxes,
 }
 
 #[derive(Debug, Clone)]
@@ -176,6 +177,8 @@ pub trait Tool: Send + Sync {
     /// Update transient tool state before undo. True consumes undo without a document edit.
     fn prepare_undo(&mut self, _available: bool) -> bool { false }
     /// A successful retype replaces the immediately preceding tool transaction.
+    fn axes_commit_refused(&mut self,_target:uuid::Uuid){}
+    fn take_axes_command(&mut self)->Option<ingetrazo_core::change_axes::Command>{None}
     fn take_history_replacement(&mut self)->bool{false}
     /// Consume source entry-time orientation rows which precede the command
     /// snapshot. Subsequent extrusion commits retain ordinary Undo ownership.
@@ -409,6 +412,7 @@ pub fn create_tool(tool_type: ToolType) -> Box<dyn Tool> {
         ToolType::Dimension => Box::new(crate::dimension::DimensionTool::default()),
         ToolType::Text => Box::new(crate::text::TextTool::default()),
         ToolType::SectionPlane => Box::new(crate::section::SectionPlaneTool::default()),
+        ToolType::ChangeAxes => Box::new(crate::change_axes::ChangeAxesTool::default()),
         ToolType::PlaceGroup => Box::new(crate::place_group::PlaceGroupTool::default()),
     }
 }

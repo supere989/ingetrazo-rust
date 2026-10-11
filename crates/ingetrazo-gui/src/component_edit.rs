@@ -70,7 +70,7 @@ fn prepare_finish(finishing_scene: &Scene, stack: &[ComponentEditSession], undo:
                 if entry.history_context==target {
                     *entry=match component_candidate(session,entry) {Ok((mut scene,_))=>{
                         scene.selection=session.original_scene.selection.clone();scene.selection_order=session.original_scene.selection_order.clone();
-                        scene.version=session.original_scene.version;scene.view_version=session.original_scene.view_version;scene.history_shareback=entry.history_shareback;scene.history_bim=entry.history_bim.clone();scene.history_views.0=entry.history_views.0.clone();scene.history_group_visibility=entry.history_group_visibility.clone();scene.history_terrain=entry.history_terrain.clone();scene.history_layers=entry.history_layers.clone();scene.history_images=entry.history_images.clone();scene
+                        scene.version=session.original_scene.version;scene.view_version=session.original_scene.view_version;scene.history_shareback=entry.history_shareback;scene.history_axes=entry.history_axes.clone();scene.history_bim=entry.history_bim.clone();scene.history_views.0=entry.history_views.0.clone();scene.history_group_visibility=entry.history_group_visibility.clone();scene.history_terrain=entry.history_terrain.clone();scene.history_layers=entry.history_layers.clone();scene.history_images=entry.history_images.clone();scene
                     },Err(error)=>return Err(error)};
                 }
             }
@@ -313,6 +313,13 @@ pub(crate) fn component_candidate(session:&ComponentEditSession,scene:&Scene)->R
 }
 
 impl IngeTrazoApp {
+    pub(crate) fn complete_axes_command(&self,mut command:ingetrazo_core::change_axes::Command)->ingetrazo_core::change_axes::Command{for session in &self.component_edit_stack{ingetrazo_core::change_axes::extend_parked_instances(&mut command,&self.scene,&session.original_scene);}command}
+    /// All parked candidate owners are prepared before any is published.
+    pub(crate) fn prepare_axes_parked(&self,command:&ingetrazo_core::change_axes::Command,active:&Scene)->Result<Vec<Scene>,String>{
+        self.component_edit_stack.iter().map(|session|{let mut scene=session.original_scene.clone();ingetrazo_core::change_axes::compensate_parked(command,active,&mut scene)?;Ok(scene)}).collect()
+    }
+    pub(crate) fn publish_axes_parked(&mut self,candidates:Vec<Scene>){for(session,scene)in self.component_edit_stack.iter_mut().zip(candidates){session.original_scene=scene;}}
+
     /// Route global commands to their immutable edit mesh identity. Return
     /// Some when handled/refused, None for the normal active-scene path.
     fn component_history_target(&self,redo:bool)->Result<Option<usize>,String> {
@@ -727,4 +734,11 @@ mod tests {
         app.undo();assert_eq!(app.scene,grouped);app.undo();assert_eq!(app.scene,before);
     }
 
+}
+
+#[cfg(test)]mod change_axes_admission_tests{
+ use super::*;use glam::{DMat4,DVec3};use ingetrazo_core::{groups::Group,mesh::Mesh,math::Ray};use ingetrazo_tools::ToolContext;
+ #[test]fn parked_refusal_preserves_frame_history_and_retries(){
+ let mut app=IngeTrazoApp::new();let mut mesh=Mesh::new();let ids=[DVec3::ZERO,DVec3::X,DVec3::Y].map(|p|mesh.add_vertex(p));mesh.add_face(ids.to_vec(),vec![]);let share=uuid::Uuid::new_v4();app.scene.register_mesh_share(share,mesh.clone()).unwrap();let mut target=Group::with_mesh("Target",mesh.clone());target.mesh_share=Some(share);target.transform=DMat4::from_translation(DVec3::X);let mut sibling=target.duplicate_instance();sibling.name="Sibling".into();sibling.transform=DMat4::from_translation(DVec3::new(10.,0.,0.));let mut parent=Group::new("Parent");parent.children.push(target);app.scene.groups=vec![parent,sibling];app.scene.selection.insert(SelectionItem::Group(0));app.begin_component_edit();app.scene.selection.insert(SelectionItem::Group(0));assert!(app.start_change_axes());let click=|app:&mut IngeTrazoApp,p:DVec3|app.dispatch_tool_click(&ToolContext::new(p,Ray::new(p+DVec3::Z,-DVec3::Z)));click(&mut app,DVec3::ZERO);click(&mut app,DVec3::Y);let retained=app.component_edit_stack[0].original_scene.mesh_shares.remove(&share).unwrap();let before=app.scene.clone();let parked=app.component_edit_stack[0].original_scene.clone();click(&mut app,-DVec3::X);assert_eq!(app.scene,before);assert_eq!(app.component_edit_stack[0].original_scene,parked);assert!(app.undo_stack.is_empty());assert_eq!(app.active_tool_type,ToolType::ChangeAxes);app.component_edit_stack[0].original_scene.mesh_shares.insert(share,retained);click(&mut app,-DVec3::X);assert_eq!(app.active_tool_type,ToolType::Select);assert_eq!(app.undo_stack.len(),1);
+ }
 }

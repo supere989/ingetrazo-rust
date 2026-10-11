@@ -269,6 +269,8 @@ fn group_model(g: &Group) -> serde_json::Value {
     obj["_component_definition"] = serde_json::json!(g.component_definition);
     obj["_mesh_share"] = serde_json::json!(g.mesh_share);
     obj["xform"] = serde_json::json!(g.transform.to_cols_array());
+    // Classic Change Axes is authoritative metadata even when geometry is unchanged.
+    obj["axes"] = g.native_document.get("axes").cloned().unwrap_or(serde_json::Value::Null);
     obj["layer"] = serde_json::json!(g.layer);
     obj["ifc"] = serde_json::json!(g.ifc_tag);
     obj["hidden"] = serde_json::json!(g.hidden);

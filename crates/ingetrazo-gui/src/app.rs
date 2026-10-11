@@ -263,6 +263,13 @@ impl IngeTrazoApp {
         app
     }
 
+    /// Context-menu Change Axes uses a runtime placement identity, not a row index.
+    pub fn start_change_axes(&mut self)->bool {
+        let targets:Vec<_>=self.scene.selection.iter().filter_map(|item|match item{ingetrazo_core::scene::SelectionItem::Group(i)=>self.scene.groups.get(*i).map(|g|g.history_id),_=>None}).collect();
+        if self.scene.selection.len()!=1||targets.len()!=1{self.status_message="Select one group or component first".into();return false;}
+        self.set_tool(ToolType::ChangeAxes);self.active_tool=Box::new(ingetrazo_tools::ChangeAxesTool::new(targets[0]));self.status_message="Click the new origin".into();true
+    }
+
     pub fn set_tool(&mut self, tool_type: ToolType) {
         if let Some(parameters)=self.active_tool.fillet_parameters(){self.fillet_parameters=parameters;}
         self.cancel_blender_pick();
@@ -493,6 +500,13 @@ impl IngeTrazoApp {
             Ok(step)=>step, Err(error)=>{self.status_message=error;return false;}
         };
         if let Some(mut prev) = self.undo_stack.pop() {
+            if let Some(command)=prev.history_axes.take() {
+                let mut candidate=self.scene.clone();
+                match command.apply(&mut candidate).and_then(|()|self.prepare_axes_parked(&command,&candidate)) {
+                    Ok(parked)=>{self.publish_axes_parked(parked);let mut inverse=self.scene.clone();inverse.history_axes=Some(command.inverse());self.redo_stack.push(inverse);self.scene=candidate;self.bump_model_revision();self.status_message="Undo".into();return true;},
+                    Err(error)=>{prev.history_axes=Some(command);self.undo_stack.push(prev);self.status_message=error;return false;}
+                }
+            }
             self.scene.camera = self.camera.clone();
             if prev.history_shareback.is_some() {
                 let mut inverse=self.scene.clone();inverse.history_shareback=prev.history_shareback;
@@ -537,6 +551,14 @@ impl IngeTrazoApp {
             Ok(step)=>step, Err(error)=>{self.status_message=error;return false;}
         };
         if let Some(mut next) = self.redo_stack.pop() {
+            if let Some(saved)=next.history_axes.take() {
+                let command=match ingetrazo_core::change_axes::Command::prepare(&self.scene,saved.target,saved.frame){Ok(command)=>self.complete_axes_command(command),Err(error)=>{next.history_axes=Some(saved);self.redo_stack.push(next);self.status_message=error;return false;}};
+                let mut candidate=self.scene.clone();
+                match command.apply(&mut candidate).and_then(|()|self.prepare_axes_parked(&command,&candidate)) {
+                    Ok(parked)=>{self.publish_axes_parked(parked);let mut inverse=self.scene.clone();inverse.history_axes=Some(command.inverse());self.undo_stack.push(inverse);self.scene=candidate;self.bump_model_revision();self.status_message="Redo".into();return true;},
+                    Err(error)=>{next.history_axes=Some(command);self.redo_stack.push(next);self.status_message=error;return false;}
+                }
+            }
             self.scene.camera = self.camera.clone();
             if next.history_shareback.is_some() {
                 let mut inverse=self.scene.clone();inverse.history_shareback=next.history_shareback;
