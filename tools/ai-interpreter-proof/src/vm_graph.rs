@@ -15,11 +15,11 @@ struct EdgeFields {
     curve: PyObjectRef,
 }
 pub(super) struct GraphState {
-    members: Vec<PyObjectRef>,
+    pub(super) members: Vec<PyObjectRef>,
     incidence: Vec<(PyRef<Vertex>, PyObjectRef)>,
     fields: Vec<EdgeFields>,
     charge: Option<Lease>,
-    registry: Option<rustpython_vm::builtins::PyDictRef>,
+    pub(super) registry: Option<rustpython_vm::builtins::PyDictRef>,
 }
 fn list_copy(list: &PyListRef, vm: &VirtualMachine) -> Result<PyListRef, String> {
     let values = list.borrow_vec();

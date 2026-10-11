@@ -31,6 +31,20 @@ impl Registry{
   charge.resize(registry_bytes(vertices.capacity().max(positions.capacity()),edges.capacity())?)?;
   Ok(Self(Rc::new(RefCell::new(State{document:old.document,state,version,valid:true,positions,edge_extent:mesh.edges.len(),vertices,edges,charge,budget:old.budget.clone(),metrics:Metrics{cold_vertex_rows:mesh.vertices.len(),cold_edge_rows:mesh.edges.len(),lookup_calls:0,publication_rows:0,position_rows:0}}))))
  }
+ /// Prepared packed IDs are an accelerator for genuine public registry values;
+ /// preserve authored/stale keys instead of rebuilding from current positions.
+ pub fn identity_replacement(&self,mesh:&Mesh,rows:Vec<(SourceKey,usize)>,state:Uuid,version:u64)->Result<Self,String>{
+  if rows.iter().any(|(_,id)|*id>=mesh.vertices.len()){return Err("Identity registry packed reference out of range".into());}
+  let old=self.0.borrow();
+  let mut charge=old.budget.reserve(Kind::Registry,registry_bytes(rows.len().max(mesh.vertices.len()),mesh.edges.len())?)?;
+  let mut positions=Vec::new();positions.try_reserve_exact(mesh.vertices.len()).map_err(|_|"Identity registry positions refused")?;positions.extend(mesh.vertices.iter().map(|v|v.position));
+  let mut vertices=HashMap::new();vertices.try_reserve(rows.len()).map_err(|_|"Identity registry key table refused")?;
+  let mut edges=HashMap::new();edges.try_reserve(mesh.edges.len()).map_err(|_|"Identity registry edge table refused")?;
+  charge.resize(registry_bytes(vertices.capacity().max(positions.capacity()),edges.capacity())?)?;
+  for(key,id)in rows{vertices.insert(key,id);}
+  for(id,e)in mesh.edges.iter().enumerate(){edges.insert(ordered(e.v0,e.v1),(id,e.v0,e.v1));}
+  Ok(Self(Rc::new(RefCell::new(State{document:old.document,state,version,valid:true,positions,edge_extent:mesh.edges.len(),vertices,edges,charge,budget:old.budget.clone(),metrics:Metrics{cold_vertex_rows:mesh.vertices.len(),cold_edge_rows:mesh.edges.len(),lookup_calls:0,publication_rows:0,position_rows:0}}))))
+ }
  pub fn view(&self)->View{let s=self.0.borrow();View{inner:self.0.clone(),document:s.document,state:s.state,version:s.version}}
  pub fn invalidate(&self){self.0.borrow_mut().valid=false;}
  pub fn metrics(&self)->Metrics{self.0.borrow().metrics}

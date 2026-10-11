@@ -1,0 +1,3801 @@
+{
+  "states": [
+    {
+      "name": "public-remove/edited",
+      "public": [
+        1,
+        2
+      ],
+      "positions": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "edges": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "faces": [
+        {
+          "outer": [
+            0,
+            1,
+            2
+          ],
+          "holes": []
+        }
+      ],
+      "registry": [
+        {
+          "key": [
+            "0",
+            "0",
+            "0"
+          ],
+          "vertex": 0
+        },
+        {
+          "key": [
+            "10000",
+            "0",
+            "0"
+          ],
+          "vertex": 1
+        },
+        {
+          "key": [
+            "0",
+            "10000",
+            "0"
+          ],
+          "vertex": 2
+        }
+      ],
+      "native_edges": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "native_faces": [
+        {
+          "outer": [
+            0,
+            1,
+            2
+          ],
+          "holes": []
+        }
+      ],
+      "native_positions": [
+        {
+          "identity": 1,
+          "position": [
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "identity": 2,
+          "position": [
+            0.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "identity": 0,
+          "position": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "undo": 2,
+      "redo": 0
+    },
+    {
+      "name": "public-remove/undone",
+      "public": [
+        0,
+        1,
+        2
+      ],
+      "positions": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "edges": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "faces": [
+        {
+          "outer": [
+            0,
+            1,
+            2
+          ],
+          "holes": []
+        }
+      ],
+      "registry": [
+        {
+          "key": [
+            "0",
+            "0",
+            "0"
+          ],
+          "vertex": 0
+        },
+        {
+          "key": [
+            "10000",
+            "0",
+            "0"
+          ],
+          "vertex": 1
+        },
+        {
+          "key": [
+            "0",
+            "10000",
+            "0"
+          ],
+          "vertex": 2
+        }
+      ],
+      "native_edges": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "native_faces": [
+        {
+          "outer": [
+            0,
+            1,
+            2
+          ],
+          "holes": []
+        }
+      ],
+      "native_positions": [
+        {
+          "identity": 0,
+          "position": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "identity": 1,
+          "position": [
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "identity": 2,
+          "position": [
+            0.0,
+            1.0,
+            0.0
+          ]
+        }
+      ],
+      "undo": 1,
+      "redo": 1
+    },
+    {
+      "name": "public-remove/redone",
+      "public": [
+        1,
+        2
+      ],
+      "positions": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "edges": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "faces": [
+        {
+          "outer": [
+            0,
+            1,
+            2
+          ],
+          "holes": []
+        }
+      ],
+      "registry": [
+        {
+          "key": [
+            "0",
+            "0",
+            "0"
+          ],
+          "vertex": 0
+        },
+        {
+          "key": [
+            "10000",
+            "0",
+            "0"
+          ],
+          "vertex": 1
+        },
+        {
+          "key": [
+            "0",
+            "10000",
+            "0"
+          ],
+          "vertex": 2
+        }
+      ],
+      "native_edges": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "native_faces": [
+        {
+          "outer": [
+            0,
+            1,
+            2
+          ],
+          "holes": []
+        }
+      ],
+      "native_positions": [
+        {
+          "identity": 1,
+          "position": [
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "identity": 2,
+          "position": [
+            0.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "identity": 0,
+          "position": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "undo": 2,
+      "redo": 0
+    },
+    {
+      "name": "public-clear/edited",
+      "public": [],
+      "positions": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "edges": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "faces": [
+        {
+          "outer": [
+            0,
+            1,
+            2
+          ],
+          "holes": []
+        }
+      ],
+      "registry": [
+        {
+          "key": [
+            "0",
+            "0",
+            "0"
+          ],
+          "vertex": 0
+        },
+        {
+          "key": [
+            "10000",
+            "0",
+            "0"
+          ],
+          "vertex": 1
+        },
+        {
+          "key": [
+            "0",
+            "10000",
+            "0"
+          ],
+          "vertex": 2
+        }
+      ],
+      "native_edges": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "native_faces": [
+        {
+          "outer": [
+            0,
+            1,
+            2
+          ],
+          "holes": []
+        }
+      ],
+      "native_positions": [
+        {
+          "identity": 0,
+          "position": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "identity": 1,
+          "position": [
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "identity": 2,
+          "position": [
+            0.0,
+            1.0,
+            0.0
+          ]
+        }
+      ],
+      "undo": 2,
+      "redo": 0
+    },
+    {
+      "name": "public-clear/undone",
+      "public": [
+        0,
+        1,
+        2
+      ],
+      "positions": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "edges": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "faces": [
+        {
+          "outer": [
+            0,
+            1,
+            2
+          ],
+          "holes": []
+        }
+      ],
+      "registry": [
+        {
+          "key": [
+            "0",
+            "0",
+            "0"
+          ],
+          "vertex": 0
+        },
+        {
+          "key": [
+            "10000",
+            "0",
+            "0"
+          ],
+          "vertex": 1
+        },
+        {
+          "key": [
+            "0",
+            "10000",
+            "0"
+          ],
+          "vertex": 2
+        }
+      ],
+      "native_edges": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "native_faces": [
+        {
+          "outer": [
+            0,
+            1,
+            2
+          ],
+          "holes": []
+        }
+      ],
+      "native_positions": [
+        {
+          "identity": 0,
+          "position": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "identity": 1,
+          "position": [
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "identity": 2,
+          "position": [
+            0.0,
+            1.0,
+            0.0
+          ]
+        }
+      ],
+      "undo": 1,
+      "redo": 1
+    },
+    {
+      "name": "public-clear/redone",
+      "public": [],
+      "positions": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "edges": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "faces": [
+        {
+          "outer": [
+            0,
+            1,
+            2
+          ],
+          "holes": []
+        }
+      ],
+      "registry": [
+        {
+          "key": [
+            "0",
+            "0",
+            "0"
+          ],
+          "vertex": 0
+        },
+        {
+          "key": [
+            "10000",
+            "0",
+            "0"
+          ],
+          "vertex": 1
+        },
+        {
+          "key": [
+            "0",
+            "10000",
+            "0"
+          ],
+          "vertex": 2
+        }
+      ],
+      "native_edges": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "native_faces": [
+        {
+          "outer": [
+            0,
+            1,
+            2
+          ],
+          "holes": []
+        }
+      ],
+      "native_positions": [
+        {
+          "identity": 0,
+          "position": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "identity": 1,
+          "position": [
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "identity": 2,
+          "position": [
+            0.0,
+            1.0,
+            0.0
+          ]
+        }
+      ],
+      "undo": 2,
+      "redo": 0
+    },
+    {
+      "name": "public-replacement/edited",
+      "public": [
+        3,
+        1,
+        2
+      ],
+      "positions": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          5.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "edges": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "faces": [
+        {
+          "outer": [
+            0,
+            1,
+            2
+          ],
+          "holes": []
+        }
+      ],
+      "registry": [
+        {
+          "key": [
+            "0",
+            "0",
+            "0"
+          ],
+          "vertex": 0
+        },
+        {
+          "key": [
+            "10000",
+            "0",
+            "0"
+          ],
+          "vertex": 1
+        },
+        {
+          "key": [
+            "0",
+            "10000",
+            "0"
+          ],
+          "vertex": 2
+        }
+      ],
+      "native_edges": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "native_faces": [
+        {
+          "outer": [
+            0,
+            1,
+            2
+          ],
+          "holes": []
+        }
+      ],
+      "native_positions": [
+        {
+          "identity": 3,
+          "position": [
+            5.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "identity": 1,
+          "position": [
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "identity": 2,
+          "position": [
+            0.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "identity": 0,
+          "position": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "undo": 2,
+      "redo": 0
+    },
+    {
+      "name": "public-replacement/undone",
+      "public": [
+        0,
+        1,
+        2
+      ],
+      "positions": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          5.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "edges": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "faces": [
+        {
+          "outer": [
+            0,
+            1,
+            2
+          ],
+          "holes": []
+        }
+      ],
+      "registry": [
+        {
+          "key": [
+            "0",
+            "0",
+            "0"
+          ],
+          "vertex": 0
+        },
+        {
+          "key": [
+            "10000",
+            "0",
+            "0"
+          ],
+          "vertex": 1
+        },
+        {
+          "key": [
+            "0",
+            "10000",
+            "0"
+          ],
+          "vertex": 2
+        }
+      ],
+      "native_edges": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "native_faces": [
+        {
+          "outer": [
+            0,
+            1,
+            2
+          ],
+          "holes": []
+        }
+      ],
+      "native_positions": [
+        {
+          "identity": 0,
+          "position": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "identity": 1,
+          "position": [
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "identity": 2,
+          "position": [
+            0.0,
+            1.0,
+            0.0
+          ]
+        }
+      ],
+      "undo": 1,
+      "redo": 1
+    },
+    {
+      "name": "public-replacement/redone",
+      "public": [
+        3,
+        1,
+        2
+      ],
+      "positions": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          5.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "edges": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "faces": [
+        {
+          "outer": [
+            0,
+            1,
+            2
+          ],
+          "holes": []
+        }
+      ],
+      "registry": [
+        {
+          "key": [
+            "0",
+            "0",
+            "0"
+          ],
+          "vertex": 0
+        },
+        {
+          "key": [
+            "10000",
+            "0",
+            "0"
+          ],
+          "vertex": 1
+        },
+        {
+          "key": [
+            "0",
+            "10000",
+            "0"
+          ],
+          "vertex": 2
+        }
+      ],
+      "native_edges": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "native_faces": [
+        {
+          "outer": [
+            0,
+            1,
+            2
+          ],
+          "holes": []
+        }
+      ],
+      "native_positions": [
+        {
+          "identity": 3,
+          "position": [
+            5.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "identity": 1,
+          "position": [
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "identity": 2,
+          "position": [
+            0.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "identity": 0,
+          "position": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "undo": 2,
+      "redo": 0
+    },
+    {
+      "name": "detached-pose-in-removal/edited",
+      "public": [
+        1,
+        2
+      ],
+      "positions": [
+        [
+          3.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "edges": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "faces": [
+        {
+          "outer": [
+            0,
+            1,
+            2
+          ],
+          "holes": []
+        }
+      ],
+      "registry": [
+        {
+          "key": [
+            "0",
+            "0",
+            "0"
+          ],
+          "vertex": 0
+        },
+        {
+          "key": [
+            "10000",
+            "0",
+            "0"
+          ],
+          "vertex": 1
+        },
+        {
+          "key": [
+            "0",
+            "10000",
+            "0"
+          ],
+          "vertex": 2
+        }
+      ],
+      "native_edges": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "native_faces": [
+        {
+          "outer": [
+            0,
+            1,
+            2
+          ],
+          "holes": []
+        }
+      ],
+      "native_positions": [
+        {
+          "identity": 1,
+          "position": [
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "identity": 2,
+          "position": [
+            0.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "identity": 0,
+          "position": [
+            3.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "undo": 2,
+      "redo": 0
+    },
+    {
+      "name": "detached-pose-in-removal/undone",
+      "public": [
+        0,
+        1,
+        2
+      ],
+      "positions": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "edges": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "faces": [
+        {
+          "outer": [
+            0,
+            1,
+            2
+          ],
+          "holes": []
+        }
+      ],
+      "registry": [
+        {
+          "key": [
+            "0",
+            "0",
+            "0"
+          ],
+          "vertex": 0
+        },
+        {
+          "key": [
+            "10000",
+            "0",
+            "0"
+          ],
+          "vertex": 1
+        },
+        {
+          "key": [
+            "0",
+            "10000",
+            "0"
+          ],
+          "vertex": 2
+        }
+      ],
+      "native_edges": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "native_faces": [
+        {
+          "outer": [
+            0,
+            1,
+            2
+          ],
+          "holes": []
+        }
+      ],
+      "native_positions": [
+        {
+          "identity": 0,
+          "position": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "identity": 1,
+          "position": [
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "identity": 2,
+          "position": [
+            0.0,
+            1.0,
+            0.0
+          ]
+        }
+      ],
+      "undo": 1,
+      "redo": 1
+    },
+    {
+      "name": "detached-pose-in-removal/redone",
+      "public": [
+        1,
+        2
+      ],
+      "positions": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "edges": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "faces": [
+        {
+          "outer": [
+            0,
+            1,
+            2
+          ],
+          "holes": []
+        }
+      ],
+      "registry": [
+        {
+          "key": [
+            "0",
+            "0",
+            "0"
+          ],
+          "vertex": 0
+        },
+        {
+          "key": [
+            "10000",
+            "0",
+            "0"
+          ],
+          "vertex": 1
+        },
+        {
+          "key": [
+            "0",
+            "10000",
+            "0"
+          ],
+          "vertex": 2
+        }
+      ],
+      "native_edges": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "native_faces": [
+        {
+          "outer": [
+            0,
+            1,
+            2
+          ],
+          "holes": []
+        }
+      ],
+      "native_positions": [
+        {
+          "identity": 1,
+          "position": [
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "identity": 2,
+          "position": [
+            0.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "identity": 0,
+          "position": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "undo": 2,
+      "redo": 0
+    },
+    {
+      "name": "detached-pose-in-removal/undone-again",
+      "public": [
+        0,
+        1,
+        2
+      ],
+      "positions": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "edges": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "faces": [
+        {
+          "outer": [
+            0,
+            1,
+            2
+          ],
+          "holes": []
+        }
+      ],
+      "registry": [
+        {
+          "key": [
+            "0",
+            "0",
+            "0"
+          ],
+          "vertex": 0
+        },
+        {
+          "key": [
+            "10000",
+            "0",
+            "0"
+          ],
+          "vertex": 1
+        },
+        {
+          "key": [
+            "0",
+            "10000",
+            "0"
+          ],
+          "vertex": 2
+        }
+      ],
+      "native_edges": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "native_faces": [
+        {
+          "outer": [
+            0,
+            1,
+            2
+          ],
+          "holes": []
+        }
+      ],
+      "native_positions": [
+        {
+          "identity": 0,
+          "position": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "identity": 1,
+          "position": [
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "identity": 2,
+          "position": [
+            0.0,
+            1.0,
+            0.0
+          ]
+        }
+      ],
+      "undo": 1,
+      "redo": 1
+    },
+    {
+      "name": "detached-pose-in-removal/redone-again",
+      "public": [
+        1,
+        2
+      ],
+      "positions": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "edges": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "faces": [
+        {
+          "outer": [
+            0,
+            1,
+            2
+          ],
+          "holes": []
+        }
+      ],
+      "registry": [
+        {
+          "key": [
+            "0",
+            "0",
+            "0"
+          ],
+          "vertex": 0
+        },
+        {
+          "key": [
+            "10000",
+            "0",
+            "0"
+          ],
+          "vertex": 1
+        },
+        {
+          "key": [
+            "0",
+            "10000",
+            "0"
+          ],
+          "vertex": 2
+        }
+      ],
+      "native_edges": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "native_faces": [
+        {
+          "outer": [
+            0,
+            1,
+            2
+          ],
+          "holes": []
+        }
+      ],
+      "native_positions": [
+        {
+          "identity": 1,
+          "position": [
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "identity": 2,
+          "position": [
+            0.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "identity": 0,
+          "position": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "undo": 2,
+      "redo": 0
+    },
+    {
+      "name": "orphan-registry-retained/edited",
+      "public": [
+        1,
+        2
+      ],
+      "positions": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "edges": [],
+      "faces": [],
+      "registry": [
+        {
+          "key": [
+            "0",
+            "0",
+            "0"
+          ],
+          "vertex": 0
+        },
+        {
+          "key": [
+            "10000",
+            "0",
+            "0"
+          ],
+          "vertex": 1
+        },
+        {
+          "key": [
+            "0",
+            "10000",
+            "0"
+          ],
+          "vertex": 2
+        }
+      ],
+      "native_edges": [],
+      "native_faces": [],
+      "native_positions": [
+        {
+          "identity": 1,
+          "position": [
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "identity": 2,
+          "position": [
+            0.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "identity": 0,
+          "position": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "undo": 2,
+      "redo": 0
+    },
+    {
+      "name": "orphan-registry-retained/undone",
+      "public": [
+        0,
+        1,
+        2
+      ],
+      "positions": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "edges": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "faces": [
+        {
+          "outer": [
+            0,
+            1,
+            2
+          ],
+          "holes": []
+        }
+      ],
+      "registry": [
+        {
+          "key": [
+            "0",
+            "0",
+            "0"
+          ],
+          "vertex": 0
+        },
+        {
+          "key": [
+            "10000",
+            "0",
+            "0"
+          ],
+          "vertex": 1
+        },
+        {
+          "key": [
+            "0",
+            "10000",
+            "0"
+          ],
+          "vertex": 2
+        }
+      ],
+      "native_edges": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "native_faces": [
+        {
+          "outer": [
+            0,
+            1,
+            2
+          ],
+          "holes": []
+        }
+      ],
+      "native_positions": [
+        {
+          "identity": 0,
+          "position": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "identity": 1,
+          "position": [
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "identity": 2,
+          "position": [
+            0.0,
+            1.0,
+            0.0
+          ]
+        }
+      ],
+      "undo": 1,
+      "redo": 1
+    },
+    {
+      "name": "orphan-registry-retained/redone",
+      "public": [
+        1,
+        2
+      ],
+      "positions": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "edges": [],
+      "faces": [],
+      "registry": [
+        {
+          "key": [
+            "0",
+            "0",
+            "0"
+          ],
+          "vertex": 0
+        },
+        {
+          "key": [
+            "10000",
+            "0",
+            "0"
+          ],
+          "vertex": 1
+        },
+        {
+          "key": [
+            "0",
+            "10000",
+            "0"
+          ],
+          "vertex": 2
+        }
+      ],
+      "native_edges": [],
+      "native_faces": [],
+      "native_positions": [
+        {
+          "identity": 1,
+          "position": [
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "identity": 2,
+          "position": [
+            0.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "identity": 0,
+          "position": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "undo": 2,
+      "redo": 0
+    },
+    {
+      "name": "registry-alias/edited",
+      "public": [
+        0,
+        1,
+        2
+      ],
+      "positions": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "edges": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "faces": [
+        {
+          "outer": [
+            0,
+            1,
+            2
+          ],
+          "holes": []
+        }
+      ],
+      "registry": [
+        {
+          "key": [
+            "0",
+            "0",
+            "0"
+          ],
+          "vertex": 0
+        },
+        {
+          "key": [
+            "10000",
+            "0",
+            "0"
+          ],
+          "vertex": 1
+        },
+        {
+          "key": [
+            "0",
+            "10000",
+            "0"
+          ],
+          "vertex": 2
+        },
+        {
+          "key": [
+            "90000",
+            "0",
+            "0"
+          ],
+          "vertex": 0
+        }
+      ],
+      "native_edges": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "native_faces": [
+        {
+          "outer": [
+            0,
+            1,
+            2
+          ],
+          "holes": []
+        }
+      ],
+      "native_positions": [
+        {
+          "identity": 0,
+          "position": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "identity": 1,
+          "position": [
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "identity": 2,
+          "position": [
+            0.0,
+            1.0,
+            0.0
+          ]
+        }
+      ],
+      "undo": 2,
+      "redo": 0
+    },
+    {
+      "name": "registry-alias/undone",
+      "public": [
+        0,
+        1,
+        2
+      ],
+      "positions": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "edges": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "faces": [
+        {
+          "outer": [
+            0,
+            1,
+            2
+          ],
+          "holes": []
+        }
+      ],
+      "registry": [
+        {
+          "key": [
+            "0",
+            "0",
+            "0"
+          ],
+          "vertex": 0
+        },
+        {
+          "key": [
+            "10000",
+            "0",
+            "0"
+          ],
+          "vertex": 1
+        },
+        {
+          "key": [
+            "0",
+            "10000",
+            "0"
+          ],
+          "vertex": 2
+        }
+      ],
+      "native_edges": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "native_faces": [
+        {
+          "outer": [
+            0,
+            1,
+            2
+          ],
+          "holes": []
+        }
+      ],
+      "native_positions": [
+        {
+          "identity": 0,
+          "position": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "identity": 1,
+          "position": [
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "identity": 2,
+          "position": [
+            0.0,
+            1.0,
+            0.0
+          ]
+        }
+      ],
+      "undo": 1,
+      "redo": 1
+    },
+    {
+      "name": "registry-alias/redone",
+      "public": [
+        0,
+        1,
+        2
+      ],
+      "positions": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "edges": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "faces": [
+        {
+          "outer": [
+            0,
+            1,
+            2
+          ],
+          "holes": []
+        }
+      ],
+      "registry": [
+        {
+          "key": [
+            "0",
+            "0",
+            "0"
+          ],
+          "vertex": 0
+        },
+        {
+          "key": [
+            "10000",
+            "0",
+            "0"
+          ],
+          "vertex": 1
+        },
+        {
+          "key": [
+            "0",
+            "10000",
+            "0"
+          ],
+          "vertex": 2
+        },
+        {
+          "key": [
+            "90000",
+            "0",
+            "0"
+          ],
+          "vertex": 0
+        }
+      ],
+      "native_edges": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "native_faces": [
+        {
+          "outer": [
+            0,
+            1,
+            2
+          ],
+          "holes": []
+        }
+      ],
+      "native_positions": [
+        {
+          "identity": 0,
+          "position": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "identity": 1,
+          "position": [
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "identity": 2,
+          "position": [
+            0.0,
+            1.0,
+            0.0
+          ]
+        }
+      ],
+      "undo": 2,
+      "redo": 0
+    },
+    {
+      "name": "registry-alias/appended",
+      "public": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "positions": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          10.0,
+          0.0,
+          0.0
+        ],
+        [
+          9.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "edges": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          0,
+          3
+        ],
+        [
+          3,
+          4
+        ],
+        [
+          4,
+          0
+        ]
+      ],
+      "faces": [
+        {
+          "outer": [
+            0,
+            1,
+            2
+          ],
+          "holes": []
+        },
+        {
+          "outer": [
+            0,
+            3,
+            4
+          ],
+          "holes": []
+        }
+      ],
+      "registry": [
+        {
+          "key": [
+            "0",
+            "0",
+            "0"
+          ],
+          "vertex": 0
+        },
+        {
+          "key": [
+            "10000",
+            "0",
+            "0"
+          ],
+          "vertex": 1
+        },
+        {
+          "key": [
+            "0",
+            "10000",
+            "0"
+          ],
+          "vertex": 2
+        },
+        {
+          "key": [
+            "90000",
+            "0",
+            "0"
+          ],
+          "vertex": 0
+        },
+        {
+          "key": [
+            "100000",
+            "0",
+            "0"
+          ],
+          "vertex": 3
+        },
+        {
+          "key": [
+            "90000",
+            "10000",
+            "0"
+          ],
+          "vertex": 4
+        }
+      ],
+      "native_edges": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          0,
+          3
+        ],
+        [
+          3,
+          4
+        ],
+        [
+          4,
+          0
+        ]
+      ],
+      "native_faces": [
+        {
+          "outer": [
+            0,
+            1,
+            2
+          ],
+          "holes": []
+        },
+        {
+          "outer": [
+            0,
+            3,
+            4
+          ],
+          "holes": []
+        }
+      ],
+      "native_positions": [
+        {
+          "identity": 0,
+          "position": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "identity": 1,
+          "position": [
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "identity": 2,
+          "position": [
+            0.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "identity": 3,
+          "position": [
+            10.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "identity": 4,
+          "position": [
+            9.0,
+            1.0,
+            0.0
+          ]
+        }
+      ],
+      "undo": 3,
+      "redo": 0
+    },
+    {
+      "name": "registry-alias/append-undone",
+      "public": [
+        0,
+        1,
+        2
+      ],
+      "positions": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          10.0,
+          0.0,
+          0.0
+        ],
+        [
+          9.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "edges": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "faces": [
+        {
+          "outer": [
+            0,
+            1,
+            2
+          ],
+          "holes": []
+        }
+      ],
+      "registry": [
+        {
+          "key": [
+            "0",
+            "0",
+            "0"
+          ],
+          "vertex": 0
+        },
+        {
+          "key": [
+            "10000",
+            "0",
+            "0"
+          ],
+          "vertex": 1
+        },
+        {
+          "key": [
+            "0",
+            "10000",
+            "0"
+          ],
+          "vertex": 2
+        },
+        {
+          "key": [
+            "90000",
+            "0",
+            "0"
+          ],
+          "vertex": 0
+        }
+      ],
+      "native_edges": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "native_faces": [
+        {
+          "outer": [
+            0,
+            1,
+            2
+          ],
+          "holes": []
+        }
+      ],
+      "native_positions": [
+        {
+          "identity": 0,
+          "position": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "identity": 1,
+          "position": [
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "identity": 2,
+          "position": [
+            0.0,
+            1.0,
+            0.0
+          ]
+        }
+      ],
+      "undo": 2,
+      "redo": 1
+    },
+    {
+      "name": "registry-alias/append-redone",
+      "public": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "positions": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          10.0,
+          0.0,
+          0.0
+        ],
+        [
+          9.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "edges": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          0,
+          3
+        ],
+        [
+          3,
+          4
+        ],
+        [
+          4,
+          0
+        ]
+      ],
+      "faces": [
+        {
+          "outer": [
+            0,
+            1,
+            2
+          ],
+          "holes": []
+        },
+        {
+          "outer": [
+            0,
+            3,
+            4
+          ],
+          "holes": []
+        }
+      ],
+      "registry": [
+        {
+          "key": [
+            "0",
+            "0",
+            "0"
+          ],
+          "vertex": 0
+        },
+        {
+          "key": [
+            "10000",
+            "0",
+            "0"
+          ],
+          "vertex": 1
+        },
+        {
+          "key": [
+            "0",
+            "10000",
+            "0"
+          ],
+          "vertex": 2
+        },
+        {
+          "key": [
+            "90000",
+            "0",
+            "0"
+          ],
+          "vertex": 0
+        },
+        {
+          "key": [
+            "100000",
+            "0",
+            "0"
+          ],
+          "vertex": 3
+        },
+        {
+          "key": [
+            "90000",
+            "10000",
+            "0"
+          ],
+          "vertex": 4
+        }
+      ],
+      "native_edges": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          0,
+          3
+        ],
+        [
+          3,
+          4
+        ],
+        [
+          4,
+          0
+        ]
+      ],
+      "native_faces": [
+        {
+          "outer": [
+            0,
+            1,
+            2
+          ],
+          "holes": []
+        },
+        {
+          "outer": [
+            0,
+            3,
+            4
+          ],
+          "holes": []
+        }
+      ],
+      "native_positions": [
+        {
+          "identity": 0,
+          "position": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "identity": 1,
+          "position": [
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "identity": 2,
+          "position": [
+            0.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "identity": 3,
+          "position": [
+            10.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "identity": 4,
+          "position": [
+            9.0,
+            1.0,
+            0.0
+          ]
+        }
+      ],
+      "undo": 3,
+      "redo": 0
+    },
+    {
+      "name": "registry-clear/edited",
+      "public": [
+        0,
+        1,
+        2
+      ],
+      "positions": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "edges": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "faces": [
+        {
+          "outer": [
+            0,
+            1,
+            2
+          ],
+          "holes": []
+        }
+      ],
+      "registry": [],
+      "native_edges": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "native_faces": [
+        {
+          "outer": [
+            0,
+            1,
+            2
+          ],
+          "holes": []
+        }
+      ],
+      "native_positions": [
+        {
+          "identity": 0,
+          "position": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "identity": 1,
+          "position": [
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "identity": 2,
+          "position": [
+            0.0,
+            1.0,
+            0.0
+          ]
+        }
+      ],
+      "undo": 2,
+      "redo": 0
+    },
+    {
+      "name": "registry-clear/undone",
+      "public": [
+        0,
+        1,
+        2
+      ],
+      "positions": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "edges": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "faces": [
+        {
+          "outer": [
+            0,
+            1,
+            2
+          ],
+          "holes": []
+        }
+      ],
+      "registry": [
+        {
+          "key": [
+            "0",
+            "0",
+            "0"
+          ],
+          "vertex": 0
+        },
+        {
+          "key": [
+            "10000",
+            "0",
+            "0"
+          ],
+          "vertex": 1
+        },
+        {
+          "key": [
+            "0",
+            "10000",
+            "0"
+          ],
+          "vertex": 2
+        }
+      ],
+      "native_edges": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "native_faces": [
+        {
+          "outer": [
+            0,
+            1,
+            2
+          ],
+          "holes": []
+        }
+      ],
+      "native_positions": [
+        {
+          "identity": 0,
+          "position": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "identity": 1,
+          "position": [
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "identity": 2,
+          "position": [
+            0.0,
+            1.0,
+            0.0
+          ]
+        }
+      ],
+      "undo": 1,
+      "redo": 1
+    },
+    {
+      "name": "registry-clear/redone",
+      "public": [
+        0,
+        1,
+        2
+      ],
+      "positions": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "edges": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "faces": [
+        {
+          "outer": [
+            0,
+            1,
+            2
+          ],
+          "holes": []
+        }
+      ],
+      "registry": [],
+      "native_edges": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "native_faces": [
+        {
+          "outer": [
+            0,
+            1,
+            2
+          ],
+          "holes": []
+        }
+      ],
+      "native_positions": [
+        {
+          "identity": 0,
+          "position": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "identity": 1,
+          "position": [
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "identity": 2,
+          "position": [
+            0.0,
+            1.0,
+            0.0
+          ]
+        }
+      ],
+      "undo": 2,
+      "redo": 0
+    },
+    {
+      "name": "combined-remove-alias/edited",
+      "public": [
+        1,
+        2
+      ],
+      "positions": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "edges": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "faces": [
+        {
+          "outer": [
+            0,
+            1,
+            2
+          ],
+          "holes": []
+        }
+      ],
+      "registry": [
+        {
+          "key": [
+            "0",
+            "0",
+            "0"
+          ],
+          "vertex": 0
+        },
+        {
+          "key": [
+            "10000",
+            "0",
+            "0"
+          ],
+          "vertex": 1
+        },
+        {
+          "key": [
+            "0",
+            "10000",
+            "0"
+          ],
+          "vertex": 2
+        },
+        {
+          "key": [
+            "90000",
+            "0",
+            "0"
+          ],
+          "vertex": 0
+        }
+      ],
+      "native_edges": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "native_faces": [
+        {
+          "outer": [
+            0,
+            1,
+            2
+          ],
+          "holes": []
+        }
+      ],
+      "native_positions": [
+        {
+          "identity": 1,
+          "position": [
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "identity": 2,
+          "position": [
+            0.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "identity": 0,
+          "position": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "undo": 2,
+      "redo": 0
+    },
+    {
+      "name": "combined-remove-alias/undone",
+      "public": [
+        0,
+        1,
+        2
+      ],
+      "positions": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "edges": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "faces": [
+        {
+          "outer": [
+            0,
+            1,
+            2
+          ],
+          "holes": []
+        }
+      ],
+      "registry": [
+        {
+          "key": [
+            "0",
+            "0",
+            "0"
+          ],
+          "vertex": 0
+        },
+        {
+          "key": [
+            "10000",
+            "0",
+            "0"
+          ],
+          "vertex": 1
+        },
+        {
+          "key": [
+            "0",
+            "10000",
+            "0"
+          ],
+          "vertex": 2
+        }
+      ],
+      "native_edges": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "native_faces": [
+        {
+          "outer": [
+            0,
+            1,
+            2
+          ],
+          "holes": []
+        }
+      ],
+      "native_positions": [
+        {
+          "identity": 0,
+          "position": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "identity": 1,
+          "position": [
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "identity": 2,
+          "position": [
+            0.0,
+            1.0,
+            0.0
+          ]
+        }
+      ],
+      "undo": 1,
+      "redo": 1
+    },
+    {
+      "name": "combined-remove-alias/redone",
+      "public": [
+        1,
+        2
+      ],
+      "positions": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "edges": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "faces": [
+        {
+          "outer": [
+            0,
+            1,
+            2
+          ],
+          "holes": []
+        }
+      ],
+      "registry": [
+        {
+          "key": [
+            "0",
+            "0",
+            "0"
+          ],
+          "vertex": 0
+        },
+        {
+          "key": [
+            "10000",
+            "0",
+            "0"
+          ],
+          "vertex": 1
+        },
+        {
+          "key": [
+            "0",
+            "10000",
+            "0"
+          ],
+          "vertex": 2
+        },
+        {
+          "key": [
+            "90000",
+            "0",
+            "0"
+          ],
+          "vertex": 0
+        }
+      ],
+      "native_edges": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "native_faces": [
+        {
+          "outer": [
+            0,
+            1,
+            2
+          ],
+          "holes": []
+        }
+      ],
+      "native_positions": [
+        {
+          "identity": 1,
+          "position": [
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "identity": 2,
+          "position": [
+            0.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "identity": 0,
+          "position": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "undo": 2,
+      "redo": 0
+    }
+  ],
+  "final_charge": 0,
+  "quota_refusal_preserves_graph_redo_and_charge": true,
+  "opaque_registry_payload_identity_history": true,
+  "production_enabled": false
+}

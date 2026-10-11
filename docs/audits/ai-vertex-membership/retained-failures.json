@@ -1,0 +1,16 @@
+{
+  "observed_failures": [
+    {
+      "phase": "initial appended UID binding",
+      "mismatch": "states[20].native_edges[3][1] expected integer, observed null",
+      "correction": "Bind only newly created genuine Vertex objects to actual committed core vertex UIDs."
+    },
+    {
+      "phase": "opaque registry no-op following public deletion",
+      "exit": 101,
+      "panic": "Existing field projection requires unchanged membership",
+      "correction": "Route persistent detached packed-row closure through identity-owned publication; unchanged command remains no-op."
+    }
+  ],
+  "boundary": "Recorded exact observed diagnostics; initial full failed output was overwritten before this retention."
+}

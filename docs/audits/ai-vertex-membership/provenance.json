@@ -1,0 +1,13 @@
+{
+  "base": "1c8407a88a0aa6cc7cee5cb4615077b2a5d1dba0",
+  "source_original": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "binary_sha256": {
+    "vm_vertex_membership": "a521ff952c58469b92a74a81f13f48930c10f17790664c41cc7869861d46ea0d",
+    "vm_face_deletion": "f47ca50f1790be643885c248107f3812e4816f6d376944134ad013cdb91258e2"
+  },
+  "build_env": {
+    "CARGO_PROFILE_DEV_DEBUG": "0",
+    "CARGO_INCREMENTAL": "0"
+  },
+  "production_enabled": false
+}

@@ -407,19 +407,20 @@ impl JournalOwner {
     /// admission. This does not implement source deletion/lookup by itself.
     /// Existing chronological append deltas remain parked until inverse restores
     /// their state token/packing. No public production scripting route uses it.
-    pub fn prepare_packed_replacement_as(&mut self,mesh:Mesh,state:Uuid)->Result<PreparedPackedReplacement<'_>,String>{self.prepare_packed_replacement_inner(mesh,state,false)}
+    pub fn prepare_packed_replacement_as(&mut self,mesh:Mesh,state:Uuid)->Result<PreparedPackedReplacement<'_>,String>{self.prepare_packed_replacement_inner(mesh,state,false,None)}
     pub fn prepare_edge_replacement_as(&mut self,mesh:Mesh,state:Uuid)->Result<PreparedPackedReplacement<'_>,String>{
         if mesh.vertices.len()!=self.mesh.vertices.len()||mesh.vertices.iter().zip(&self.mesh.vertices).any(|(a,b)|a.uid!=b.uid){return Err("Edge replacement requires exact Vertex identity order".into());}
-        self.prepare_packed_replacement_inner(mesh,state,true)
+        self.prepare_packed_replacement_inner(mesh,state,true,None)
     }
-    fn prepare_packed_replacement_inner(&mut self,mut mesh:Mesh,state:Uuid,keys:bool)->Result<PreparedPackedReplacement<'_>,String>{
+    pub fn prepare_identity_replacement_as(&mut self,mesh:Mesh,keys:Vec<(crate::journal::SourceKey,usize)>,state:Uuid)->Result<PreparedPackedReplacement<'_>,String>{self.prepare_packed_replacement_inner(mesh,state,false,Some(keys))}
+    fn prepare_packed_replacement_inner(&mut self,mut mesh:Mesh,state:Uuid,keys:bool,owned_keys:Option<Vec<(crate::journal::SourceKey,usize)>>)->Result<PreparedPackedReplacement<'_>,String>{
         let next_version=self.version.checked_add(1).ok_or("Owner revision overflow")?;
         let preparation=self.budget.reserve(Kind::Preparation,preparation_bound(mesh.vertices.len(),mesh.edges.len())?)?;
         validate_base(&mesh)?;
         let positions=positions(&mesh.vertices,0)?;
         let index=self.index(&positions)?;
         mesh.install_prepared_spatial_index(index).map_err(str::to_owned)?;
-        let registry=if keys{self.registry.edge_replacement(&mesh,state,next_version)?}else{Registry::new(&mesh,self.budget.clone(),self.document,state,next_version)?};
+        let registry=if let Some(rows)=owned_keys{self.registry.identity_replacement(&mesh,rows,state,next_version)?}else if keys{self.registry.edge_replacement(&mesh,state,next_version)?}else{Registry::new(&mesh,self.budget.clone(),self.document,state,next_version)?};
         Ok(PreparedPackedReplacement{owner:self,mesh,registry,state,next_version,_preparation:preparation})
     }
     pub fn replace(&mut self, mut mesh: Mesh) -> Result<(), String> {

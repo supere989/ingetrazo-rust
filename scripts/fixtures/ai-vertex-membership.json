@@ -1,0 +1,34 @@
+[
+  {
+    "name": "public-remove",
+    "recipe": "m.vertices.remove(v)"
+  },
+  {
+    "name": "public-clear",
+    "recipe": "m.vertices.clear()"
+  },
+  {
+    "name": "public-replacement",
+    "recipe": "w=Vertex(QVector3D(5,0,0))\nV.append(w)\nm.vertices[0]=w"
+  },
+  {
+    "name": "detached-pose-in-removal",
+    "recipe": "v.position.setX(3)\nm.vertices.remove(v)"
+  },
+  {
+    "name": "orphan-registry-retained",
+    "recipe": "m.remove_face(f)\nfor item in list(m.edges):m.remove_edge(item)\nm.vertices.remove(v)"
+  },
+  {
+    "name": "registry-alias",
+    "recipe": "m._registry[(90000,0,0)]=v"
+  },
+  {
+    "name": "registry-clear",
+    "recipe": "m._registry.clear()"
+  },
+  {
+    "name": "combined-remove-alias",
+    "recipe": "m.vertices.remove(v)\nm._registry[(90000,0,0)]=v"
+  }
+]

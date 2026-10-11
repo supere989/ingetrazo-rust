@@ -1022,6 +1022,7 @@ impl FaceOwner {
 }
 
 impl FaceOwner {
+ pub fn prepare_identity_replacement_as(&mut self,mesh:Mesh,keys:Vec<(crate::journal::SourceKey,usize)>,state:uuid::Uuid)->Result<crate::owner::PreparedPackedReplacement<'_>,String>{self.owner.prepare_identity_replacement_as(mesh,keys,state)}
  pub fn prepare_packed_replacement_as(&mut self,mesh:Mesh,state:uuid::Uuid)->Result<crate::owner::PreparedPackedReplacement<'_>,String>{
   self.owner.prepare_packed_replacement_as(mesh,state)
  }

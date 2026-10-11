@@ -198,6 +198,7 @@ pub mod editable_mesh {
     #[pyclass(name = "Vertex", traverse = "manual")]
     #[derive(Debug, PyPayload)]
     pub struct Vertex {
+        pub(super) packed_uid: std::cell::Cell<Option<uuid::Uuid>>,
         pub(super) position: PyRwLock<PyRef<QVector3D>>,
         pub(super) edges: PyRwLock<Option<PyObjectRef>>,
     }
@@ -232,6 +233,7 @@ pub mod editable_mesh {
         fn py_new(_cls: &Py<PyType>, position: Self::Args, vm: &VirtualMachine) -> PyResult<Self> {
             vm.host_budget_tick()?;
             Ok(Self {
+                packed_uid: std::cell::Cell::new(None),
                 position: PyRwLock::new(
                     QVector3D::from_coordinates(position.coordinates()).into_ref(&vm.ctx),
                 ),
@@ -773,6 +775,7 @@ pub mod editable_mesh {
                 let operation = (|| {
                     let key = zelf.get_id();
                     if !stage.entries.contains_key(&key) {
+                        if zelf.vertices.borrow_vec().len()!=zelf.owner.read().mesh().vertices.len(){return Err(vm.new_value_error("Detached packed rows require genuine-reference append staging"));}
                         stage
                             .entries
                             .try_reserve(1)
@@ -876,6 +879,7 @@ pub mod editable_mesh {
                         let position =
                             QVector3D::from_coordinates(p.as_vec3().to_array()).into_ref(&vm.ctx);
                         let vertex = Vertex {
+                            packed_uid: std::cell::Cell::new(None),
                             position: PyRwLock::new(position),
                             edges: PyRwLock::new(Some(PySet::default().into_ref(&vm.ctx).into())),
                         }
@@ -1200,6 +1204,13 @@ fn packed_edge_candidate(mesh:&PyRef<editable_mesh::Mesh>,graph:&GraphState,vert
     out.edges=edges;charge.merge(p._charge)?;Ok((out,charge))
 }
 
+fn seed_packed_uids(mesh:&PyRef<editable_mesh::Mesh>)->Result<(),String>{
+    let owner=mesh.owner.read();let values=mesh.vertices.borrow_vec();
+    if values.len()>owner.mesh().vertices.len(){return Err("Public Vertex prefix exceeds known native packing".into());}
+    for(value,native)in values.iter().zip(&owner.mesh().vertices){let vertex=value.downcast_ref::<editable_mesh::Vertex>().ok_or("Public Vertex identity requires Vertex")?;if vertex.packed_uid.get().is_none(){vertex.packed_uid.set(Some(native.uid));}}
+    Ok(())
+}
+#[path="vm_packed.rs"]mod packed;
 struct VertexRestore {
     vertex: PyRef<editable_mesh::Vertex>,
     position: PyRef<crate::vm_groups::native_groups::QVector3D>,
@@ -1823,13 +1834,7 @@ impl Controller {
             vm.host_budget_arm(100000)
                 .map_err(|_| "VM fuel admission refused")?;
             let mut baseline = match self.scope.globals.get_item("mesh", vm) {
-                Ok(value) => Some(RootRestore::prepare(
-                    value
-                        .downcast::<editable_mesh::Mesh>()
-                        .map_err(|_| "Root binding requires Mesh")?,
-                    &self.budget,
-                    vm,
-                )?),
+                Ok(value) => {let mesh=value.downcast::<editable_mesh::Mesh>().map_err(|_|"Root binding requires Mesh")?;seed_packed_uids(&mesh)?;Some(RootRestore::prepare(mesh,&self.budget,vm)?)},
                 Err(_) => None,
             };
             let executed = session::execute(vm, &self.scope, source);
@@ -1864,13 +1869,8 @@ impl Controller {
                     }
                     if let Some(before) = &baseline {
                         for entry in &entries {if rustpython_vm::AsObject::is(&entry.mesh,&before.mesh)&&!before.graph.registry_append_live(&before.mesh,&entry.vertices_created){return Err("Modified public registry with append requires identity-owned lookup publication".into());}}
-                        history_packed_edges=entries.is_empty()&&(before.graph.requires_replacement(&before.mesh,&self.budget)?||requires_identity_replacement(&before.mesh.faces.borrow_vec(),&before.faces,&self.budget)?);
-                        if history_packed_edges {
-                            use rustpython_vm::AsObject;
-                            let vertices=before.mesh.vertices.borrow_vec();let faces=before.mesh.faces.borrow_vec();
-                            if vertices.len()!=before.vertices.len()||vertices.iter().zip(&before.vertices).any(|(a,b)|!a.is(b)){return Err("Combined Vertex membership replacement pending".into());}
-                            let _=faces;
-                        }else{let _=before.validate_live_membership(!entries.is_empty(),entries.is_empty())?;}
+                        history_packed_edges=entries.is_empty()&&(before.mesh.vertices.borrow_vec().len()!=before.mesh.owner.read().mesh().vertices.len()||before.graph.requires_replacement(&before.mesh,&self.budget)?||requires_identity_replacement(&before.mesh.faces.borrow_vec(),&before.faces,&self.budget)?||requires_identity_replacement(&before.mesh.vertices.borrow_vec(),&before.vertices,&self.budget)?||!before.graph.registry_identity_live(&before.mesh));
+                        if !history_packed_edges{let _=before.validate_live_membership(!entries.is_empty(),entries.is_empty())?;}
                     }
                     if self.history_enabled {
                         let before = baseline
@@ -1917,9 +1917,9 @@ impl Controller {
                                 }
                                 if history_packed_edges {
                                     let mut live=RootRestore::prepare(mesh.clone(),&self.budget,vm)?;live.armed=false;
-                                    let projection=Projection::prepare_topology(&mesh,&self.budget)?;
-                                    let (candidate,_lease)=packed_edge_candidate(&mesh,&live.graph,&live.vertices,&live.faces,projection,&self.budget,vm)?;
-                                    let _old=mesh.owner.write().prepare_edge_replacement_as(candidate,uuid::Uuid::new_v4())?.apply();
+                                    if self.history_enabled&&!history_changed{return Ok(false);}
+                                    let candidate=packed::prepare(&mesh,&live.vertices,&live.graph,&live.positions,&live.faces,&live.face_fields,&self.budget,vm)?;
+                                    candidate.apply(&mesh,uuid::Uuid::new_v4())?;
                                     return Ok(true);
                                 }
                                 let vertex_order = identity_order(
@@ -2026,6 +2026,8 @@ impl Controller {
                     }
                 } else {
                     for e in &mut entries {
+                        let owner=e.mesh.owner.read();
+                        for(i,vertex)in e.vertices_created.iter().enumerate(){vertex.packed_uid.set(Some(owner.mesh().vertices[e.vertices+i].uid));}
                         e.published = true;
                     }
                 }
@@ -2105,17 +2107,17 @@ impl Controller {
             &command.before
         };
         let result = self.interpreter.enter(|vm| {
+            seed_packed_uids(&target.mesh)?;
             let restore = target.thaw(vm, &self.budget)?;
-            let projection = if command.append {
+            let projection = if command.append||command.packed_edges {
                 None
             } else {
                 Some(target.geometry(&self.budget)?)
             };
-            if let Some(p) = projection {
-                if command.packed_edges {
-                    let (candidate,_lease)=packed_edge_candidate(&target.mesh,&target.graph,&target.vertices,&target.faces,p,&self.budget,vm)?;
-                    let _old=target.mesh.owner.write().prepare_edge_replacement_as(candidate,target.native_state)?.apply();
-                } else {
+            if command.packed_edges{
+                let candidate=packed::prepare(&target.mesh,&target.vertices,&target.graph,&target.positions,&target.faces,&target.fields,&self.budget,vm)?;
+                candidate.apply(&target.mesh,target.native_state)?;
+            }else if let Some(p) = projection {
                 let vertex_order = identity_order(
                     &target.vertices,
                     &target.mesh.vertices.borrow_vec(),
@@ -2140,7 +2142,6 @@ impl Controller {
                     owner
                         .prepare_fields_as(p.positions, p.loops, target.native_state)?
                         .apply();
-                }
                 }
             } else {
                 let changed = if redo {
@@ -2186,6 +2187,24 @@ impl Controller {
        use rustpython_vm::AsObject;
        let mesh=self.scope.globals.get_item("m",vm).unwrap().downcast::<editable_mesh::Mesh>().unwrap();let f=self.scope.globals.get_item("held",vm).unwrap().downcast::<editable_mesh::Face>().unwrap();let v=self.scope.globals.get_item("v",vm).unwrap().downcast::<editable_mesh::Vertex>().unwrap();let oldloop=self.scope.globals.get_item("oldloop",vm).unwrap();let oldattrs=self.scope.globals.get_item("oldattrs",vm).unwrap();let oldposition=self.scope.globals.get_item("oldposition",vm).unwrap().downcast::<crate::vm_groups::native_groups::QVector3D>().unwrap();let shared=self.scope.globals.get_item("shared",vm).unwrap();let attrs=f.attrs.read().clone().downcast::<rustpython_vm::builtins::PyDict>().unwrap();let value=attrs.get_item("shared",vm).unwrap();let strings=value.downcast_ref::<rustpython_vm::builtins::PyList>().unwrap().borrow_vec().iter().map(|x|x.downcast_ref::<rustpython_vm::builtins::PyStr>().unwrap().as_utf8().unwrap().as_str().to_owned()).collect::<Vec<_>>();let owner=mesh.owner.read();let native=owner.mesh();let faces=mesh.faces.borrow_vec();let vertices=mesh.vertices.borrow_vec();
        serde_json::json!({"name":name,"positions":native.vertices.iter().map(|v|v.position.to_array()).collect::<Vec<_>>(),"faces":native.faces.iter().map(|f|f.vertices.clone()).collect::<Vec<_>>(),"face_live":faces.iter().any(|x|x.is(&f)),"vertex_live":vertices.iter().any(|x|x.is(&v)),"loop_original":f.r#loop.read().is(&oldloop),"position_original":v.position.read().is(&oldposition),"attrs_original":f.attrs.read().is(&oldattrs),"shared_value":strings,"shared_identity":value.is(&shared),"held_position":oldposition.coordinates(),"undo":self.undo.len(),"redo":self.redo.len()})
+      })
+    }
+    pub fn observe_vertex_membership(&self,name:&str)->serde_json::Value{
+      self.interpreter.enter(|vm|{
+       use rustpython_vm::{AsObject,builtins::{PyList,PyTuple,PyInt}};
+       let get=|key:&str|self.scope.globals.get_item(key,vm).unwrap();
+       let mesh=get("m").downcast::<editable_mesh::Mesh>().unwrap();let all=get("V").downcast::<PyList>().unwrap();let all=all.borrow_vec();
+       let id=|value:&rustpython_vm::PyObject|all.iter().position(|v|v.is(value));
+       let values=mesh.vertices.borrow_vec().iter().map(|v|id(v)).collect::<Vec<_>>();
+       let positions=all.iter().map(|v|v.downcast_ref::<editable_mesh::Vertex>().unwrap().position.read().coordinates()).collect::<Vec<_>>();
+       let loops=mesh.faces.borrow_vec().iter().map(|f|{let f=f.downcast_ref::<editable_mesh::Face>().unwrap();let outer=f.r#loop.read().clone();let holes=f.hole_loops.read().clone();serde_json::json!({"outer":outer.borrow_vec().iter().map(|v|id(v)).collect::<Vec<_>>(),"holes":holes.borrow_vec().iter().map(|ring|ring.downcast_ref::<PyList>().unwrap().borrow_vec().iter().map(|v|id(v)).collect::<Vec<_>>()).collect::<Vec<_>>()})}).collect::<Vec<_>>();
+       let edges=mesh.edges.borrow_vec().iter().map(|e|{let e=e.downcast_ref::<editable_mesh::Edge>().unwrap();[id(e.v0.read().as_ref().unwrap().as_object()),id(e.v1.read().as_ref().unwrap().as_object())]}).collect::<Vec<_>>();
+       let registry=(&mesh.registry).into_iter().map(|(key,value)|{let key=key.downcast_ref::<PyTuple>().unwrap();serde_json::json!({"key":key.as_slice().iter().map(|c|c.downcast_ref::<PyInt>().unwrap().as_bigint().to_string()).collect::<Vec<_>>(),"vertex":id(&value)})}).collect::<Vec<_>>();
+       let owner=mesh.owner.read();let native=owner.mesh();let native_id=|index:usize|all.iter().position(|v|v.downcast_ref::<editable_mesh::Vertex>().unwrap().packed_uid.get()==Some(native.vertices[index].uid));
+       let native_edges=native.edges.iter().map(|e|[native_id(e.v0),native_id(e.v1)]).collect::<Vec<_>>();
+       let native_faces=native.faces.iter().map(|f|serde_json::json!({"outer":f.vertices.iter().map(|&i|native_id(i)).collect::<Vec<_>>(),"holes":f.holes.iter().map(|ring|ring.iter().map(|&i|native_id(i)).collect::<Vec<_>>()).collect::<Vec<_>>() })).collect::<Vec<_>>();
+       let native_positions=native.vertices.iter().enumerate().map(|(i,v)|serde_json::json!({"identity":native_id(i),"position":v.position.to_array()})).collect::<Vec<_>>();
+       serde_json::json!({"name":name,"public":values,"positions":positions,"edges":edges,"faces":loops,"registry":registry,"native_edges":native_edges,"native_faces":native_faces,"native_positions":native_positions,"undo":self.undo.len(),"redo":self.redo.len()})
       })
     }
     pub fn observe_face_deletion(&self,name:&str)->serde_json::Value{
