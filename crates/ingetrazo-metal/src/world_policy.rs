@@ -8,6 +8,13 @@ pub enum Mode {
     HiddenLine,
     Monochrome,
 }
+impl Mode {
+    /// Operative viewport.py: only the opaque front `_tex_runs` take the
+    /// shaded image-mean pass. Back overrides and glass still use textures.
+    pub(crate) fn texture_mean(self,opacity:f64,back_side:bool)->bool {
+        self==Self::MaterialAverage && opacity>=0.999 && !back_side
+    }
+}
 #[derive(Debug, Clone, Copy)]
 pub struct Policy {
     pub mode: Mode,
@@ -216,4 +223,15 @@ mod tests {
         .validate()
         .is_err());
     }
+}
+
+#[cfg(test)]mod mean_policy_tests{
+ use super::Mode;
+ #[test]fn source_shaded_mean_does_not_replace_glass_or_back_texture_samples(){
+  assert!(Mode::MaterialAverage.texture_mean(1.,false));
+  assert!(Mode::MaterialAverage.texture_mean(0.999,false));
+  assert!(!Mode::MaterialAverage.texture_mean(0.998999,false));
+  assert!(!Mode::MaterialAverage.texture_mean(1.,true));
+  assert!(!Mode::Material.texture_mean(1.,false));
+ }
 }
