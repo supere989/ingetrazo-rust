@@ -502,7 +502,11 @@ impl PushPullTool {
             let body = ingetrazo_core::pieces::copy_part(
                 &candidate,
                 &ingetrazo_core::pieces::Piece {
-                    faces: ids,
+                    // Interior partitions remain document geometry, but do not
+                    // belong to the solid boundary being admitted. In particular
+                    // an edge joining two interior faces has zero boundary
+                    // incidence and cannot invalidate an otherwise closed shell.
+                    faces: ids.into_iter().filter(|&id| !candidate.faces[id].interior).collect(),
                     edges: vec![],
                 },
             )?;
