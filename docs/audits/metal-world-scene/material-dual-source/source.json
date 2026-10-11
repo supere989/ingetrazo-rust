@@ -1,0 +1,65 @@
+{
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "passed": true,
+  "asset_sha256": "35134a675168fb80c354d042036bd3e7e5ceb4cd4a6f7e898f9328fde1ce1601",
+  "cases": [
+    {
+      "name": "dual-textures",
+      "rgba": [
+        0,
+        0,
+        247,
+        255
+      ],
+      "pixel": [
+        400,
+        318
+      ],
+      "png_sha256": "f96a8704369b6a84d748b9cd192dc2390eb99e8492552199bb4adff5a34f4ba7",
+      "reverse": false,
+      "mode": "textures",
+      "attrs": {
+        "texture": {
+          "path": "/tmp/ingetrazo-render-revisions/docs/audits/metal-world-scene/material-dual-source/quadrants.png",
+          "uvw": [
+            0.0,
+            0.0,
+            0.0,
+            0.25,
+            0.0,
+            0.0,
+            0.0,
+            0.25
+          ]
+        }
+      },
+      "extra_attrs": {
+        "texture": {
+          "path": "/tmp/ingetrazo-render-revisions/docs/audits/metal-world-scene/material-dual-source/alternate.png",
+          "uvw": [
+            0.0,
+            0.0,
+            0.0,
+            0.25,
+            0.0,
+            0.0,
+            0.0,
+            0.25
+          ]
+        }
+      },
+      "extra_rgba": [
+        0,
+        247,
+        0,
+        255
+      ],
+      "extra_pixel": [
+        536,
+        318
+      ]
+    }
+  ],
+  "alternate_sha256": "882dbeab91d983dbbe00fd6573e07c501ce1ebeb497f90b3e22c90d30f4bba66",
+  "scope": "Actual frozen Qt two distinct sampled assets in one loose prototype, paired interior observations; no whole-image/mip claim"
+}

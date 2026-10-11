@@ -36,6 +36,7 @@ impl Viewport {
     pub(crate) fn matrix_bytes(&self) -> u64 {
         self.world.stats.instance_matrix_upload_bytes
     }
+    pub(crate) fn sampled_heaps(&self)->Result<Vec<[u64;3]>,String>{self.world.sampled_heap_allocations()}
     pub(crate) fn texture_uploads(&self)->u64{self.world.stats.texture_uploads}
     pub(crate) fn material_order_builds(&self)->u64{self.world.stats.material_order_builds}
     pub(crate) fn geometry_uploads(&self) -> u64 {

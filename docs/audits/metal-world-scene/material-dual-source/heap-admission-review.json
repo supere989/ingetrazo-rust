@@ -1,0 +1,16 @@
+{
+  "scope": "Changed-source heap-backed sampled material consumer; native execution pending.",
+  "admission": "Reserve full requested non-aliasable tracked native heap capacity before allocation; reject native heap size/current allocation beyond reservation. Child heap placement uses native size/alignment query and delta guards. Assets retain heap through Prepared readers and upload quarantine.",
+  "reuse": "Cold bounded first-fit over live immutable asset owners. Two distinct source assets must share one actual 4MiB heap in native fixture. No allocator registry or warm scan.",
+  "checks": [
+    "Apple Rust API metadata check passed after disambiguating MTLResource::allocatedSize; initial E0034 retained in work history",
+    "Python checker/script AST parse and git diff --check",
+    "Actual original Qt dual-texture capture: distinct primary blue and alternate green regions"
+  ],
+  "references": [
+    "https://developer.apple.com/documentation/metal/mtldevice/heaptexturesizeandalign(descriptor:)",
+    "https://developer.apple.com/documentation/metal/mtlheap/maketexture(descriptor:)",
+    "https://developer.apple.com/documentation/metal/mtlheap/maxavailablesize(alignment:)"
+  ],
+  "remaining": "Native SDK/MSL/GPU proof pending; Intel zero size/alignment refusal preserved; no mip/full-scene/all-driver compositing equivalence claim."
+}
