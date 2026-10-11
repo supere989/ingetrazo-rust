@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "<ai>", line 1, in <module>
+TypeError: type 'editable_mesh.Vertex' is not an acceptable base type
+
+thread 'main' (1393524) panicked at src/bin/../vm_mesh.rs:2017:13:
+Python execution refused
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

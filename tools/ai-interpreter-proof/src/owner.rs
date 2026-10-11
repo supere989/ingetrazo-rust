@@ -402,6 +402,21 @@ impl JournalOwner {
         }
         Mesh::prepare_spatial_index(positions).map_err(str::to_owned)
     }
+    /// Cold packed representation replacement prerequisite. The caller owns the
+    /// source identity registry and inverse command, plus candidate payload
+    /// admission. This does not implement source deletion/lookup by itself.
+    /// Existing chronological append deltas remain parked until inverse restores
+    /// their state token/packing. No public production scripting route uses it.
+    pub fn prepare_packed_replacement_as(&mut self,mut mesh:Mesh,state:Uuid)->Result<PreparedPackedReplacement<'_>,String>{
+        let next_version=self.version.checked_add(1).ok_or("Owner revision overflow")?;
+        let preparation=self.budget.reserve(Kind::Preparation,preparation_bound(mesh.vertices.len(),mesh.edges.len())?)?;
+        validate_base(&mesh)?;
+        let positions=positions(&mesh.vertices,0)?;
+        let index=self.index(&positions)?;
+        mesh.install_prepared_spatial_index(index).map_err(str::to_owned)?;
+        let registry=Registry::new(&mesh,self.budget.clone(),self.document,state,next_version)?;
+        Ok(PreparedPackedReplacement{owner:self,mesh,registry,state,next_version,_preparation:preparation})
+    }
     pub fn replace(&mut self, mut mesh: Mesh) -> Result<(), String> {
         let next_version = self
             .version
@@ -1903,5 +1918,36 @@ mod membership_tests {
   assert!(view.check().is_err());assert_eq!(owner.mesh().edges[4].attrs["opaque"].as_array().unwrap().as_ptr(),payload);
   let current=owner.mesh().clone();assert!(owner.commit(stale).is_err());assert_eq!(owner.mesh(),&current);assert_eq!(owner.history_counts(),history);assert_eq!(budget.snapshot().total(),charge);
   let view=owner.registry.view();assert_eq!(view.vertex(&crate::journal::SourceKey::new(DVec3::ZERO)),Some(3));assert_eq!(view.edge(&(2,3)),Some((4,3,2)));
+ }
+}
+
+/// Exclusive prepared packed replacement: discard leaves semantic state,
+/// chronological history and source accelerator revision untouched.
+pub struct PreparedPackedReplacement<'a>{owner:&'a mut JournalOwner,mesh:Mesh,registry:Registry,state:Uuid,next_version:u64,_preparation:Lease}
+impl PreparedPackedReplacement<'_>{
+    pub fn apply(self)->Mesh{
+        self.owner.registry.invalidate();
+        let old_mesh=std::mem::replace(&mut self.owner.mesh,self.mesh);
+        let _old_registry=std::mem::replace(&mut self.owner.registry,self.registry);
+        self.owner.state=self.state;
+        self.owner.version=self.next_version;
+        old_mesh
+    }
+}
+#[cfg(test)]mod packed_replacement_tests{
+ use super::*;
+ fn initial()->Mesh{let mut m=Mesh::new();m.add_vertex(DVec3::ZERO);m.add_vertex(DVec3::X);m.add_edge(0,1);m}
+ fn dropped_edge()->Mesh{let mut m=initial();m.edges.clear();for v in &mut m.vertices{v.edges.clear();}m}
+ #[test]fn prepared_replacement_refusals_discard_and_chronological_inverse(){
+  let budget=OwnerBudget::new(None);let mut o=JournalOwner::new_with_budget(initial(),budget.clone()).unwrap();
+  let mut t=o.try_begin().unwrap();t.add_edge(DVec3::X,DVec3::Y).unwrap();assert!(o.commit(t).unwrap());
+  let mut t=o.try_begin().unwrap();t.add_edge(DVec3::Y,DVec3::Z).unwrap();assert!(o.commit(t).unwrap());assert!(o.undo().unwrap());
+  let before=o.mesh().clone();let oldstate=o.state_token();let oldhistory=o.history_counts();assert_eq!(oldhistory,(1,1));let view=o.registry.view();let stale=o.try_begin().unwrap();
+  let baseline=budget.snapshot().total();let target=Uuid::new_v4();
+  let ticket=o.prepare_packed_replacement_as(dropped_edge(),target).unwrap();assert!(budget.snapshot().total()>baseline);drop(ticket);assert_eq!(o.mesh(),&before);assert_eq!(o.history_counts(),oldhistory);assert_eq!(budget.snapshot().total(),baseline);assert!(view.check().is_ok());
+  budget.set_limit(Some(baseline));assert!(o.prepare_packed_replacement_as(dropped_edge(),target).is_err());budget.set_limit(None);assert_eq!(o.mesh(),&before);assert_eq!(o.history_counts(),oldhistory);assert_eq!(budget.snapshot().total(),baseline);
+  let mut invalid=dropped_edge();invalid.edges.push(MeshEdge::new(0,99));assert!(o.prepare_packed_replacement_as(invalid,target).is_err());assert_eq!(o.mesh(),&before);assert_eq!(o.history_counts(),oldhistory);assert_eq!(budget.snapshot().total(),baseline);
+  let parked=o.prepare_packed_replacement_as(dropped_edge(),target).unwrap().apply();assert_eq!(parked,before);assert!(view.check().is_err());assert!(o.commit(stale).is_err());assert_eq!(o.history_counts(),oldhistory);let installed=o.mesh().clone();let held_charge=budget.snapshot().total();let installed_state=o.state_token();assert!(o.undo().is_err());assert!(o.redo().is_err());assert_eq!(o.mesh(),&installed);assert_eq!(o.state_token(),installed_state);assert_eq!(o.history_counts(),oldhistory);assert_eq!(budget.snapshot().total(),held_charge);
+  let _removed=o.prepare_packed_replacement_as(parked,oldstate).unwrap().apply();assert_eq!(o.mesh(),&before);assert!(o.undo().unwrap());assert_eq!(o.mesh().edges.len(),1);assert!(o.redo().unwrap());assert_eq!(o.mesh(),&before);drop(o);assert!(budget.snapshot().registry>0);drop(view);assert_eq!(budget.snapshot().total(),0);
  }
 }
