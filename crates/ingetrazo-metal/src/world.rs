@@ -870,6 +870,8 @@ impl Prepared {
             if count==0{return Ok(());}
             let triangles=u32::try_from(count/3).map_err(|_|"Metal contour triangle count admission")?;
             let draws=(count/3).checked_mul(instances).ok_or("Metal contour instance count overflow")?;
+            // MSL instance_id is uint even though Metal draw counts are NSUInteger.
+            u32::try_from(draws).map_err(|_|"Metal contour draw exceeds uint instance domain")?;
             let parameters=super::world_contour::Parameters{eye_width:self.contour_eye_width,color:self.ghost_edge,info:[stride,u32::from(indices.is_none()),u32::try_from(first).map_err(|_|"Metal contour index offset admission")?,triangles]};
             unsafe{
                 encoder.setVertexBuffer_offset_atIndex(Some(&vertices.raw),0,0);
