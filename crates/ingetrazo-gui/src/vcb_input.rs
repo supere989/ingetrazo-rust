@@ -85,7 +85,7 @@ fn valid(text: &str, tool: ToolType) -> bool {
     if let Some(radius) = t.strip_suffix(['r', 'R']) {
         return matches!(tool, ToolType::Arc) && decimal(radius);
     }
-    if t.contains('*') || t.contains('x') || t.starts_with('/') {
+    if t.contains('*') || t.contains('x') || t.contains('X') || t.starts_with('/') {
         return matches!(tool, ToolType::Move | ToolType::Rotate) && array(t);
     }
     vcb::parse_values(t, 1., tool == ToolType::Rectangle).is_ok()
