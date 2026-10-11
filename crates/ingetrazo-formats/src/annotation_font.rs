@@ -119,12 +119,7 @@ impl Cache {
         self.faces
             .try_reserve(1)
             .map_err(|_| "Annotation face cache allocation failed")?;
-        let font = PaperFont::new_at_pixel_size(
-            matched.font.shared_bytes().clone(),
-            matched.index,
-            Some(matched.policy),
-            pixels,
-        )?;
+        let font = sized_font(&matched, pixels)?;
         let face = Rc::new(Face {
             key: key.0,
             pixels,
@@ -161,9 +156,34 @@ impl Cache {
     }
 }
 
+// CoreText extracts a standalone SFNT while Match.index still identifies the
+// selected face in its physical TTC. Decode the cached byte owner's index.
+fn sized_font(matched: &crate::paper_font_resolver::Match, pixels: u32) -> Result<PaperFont, String> {
+    PaperFont::new_at_pixel_size(
+        matched.font.shared_bytes().clone(),
+        matched.font.key().face_index,
+        Some(matched.policy),
+        pixels,
+    )
+}
+
 #[cfg(all(test, target_os = "linux"))]
 mod tests {
     use super::*;
+    #[test]
+    fn extracted_face_uses_byte_owner_index_not_physical_collection_index() {
+        let mut resolver = Resolver::new().unwrap();
+        let mut matched = resolver.resolve(Request {
+            family: "DejaVu Sans".into(), bold: true, italic: false,
+            required_chars: vec![],
+        }).unwrap();
+        assert_eq!(matched.font.key().face_index, 0);
+        matched.index = 37; // Original physical collection identity remains distinct.
+        assert!(PaperFont::new_at_pixel_size(matched.font.shared_bytes().clone(),
+            matched.index, Some(matched.policy), 13).is_err());
+        assert!(sized_font(&matched, 13).is_ok());
+        assert_eq!(matched.index, 37);
+    }
     #[test]
     fn actual_annotation_metrics_and_warm_face_ownership() {
         let oracle: serde_json::Value = serde_json::from_str(include_str!(

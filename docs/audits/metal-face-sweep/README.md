@@ -32,3 +32,20 @@ Unchanged label frames reuse the prepared native callback with no preparation/up
 Both direct MetalCad2d and inline callback draws now upload the same DrawPush type: 64 bytes, rgba at byte32, glyph at byte48. Plain CAD always sets glyph=[0;4]. The host layout/zero-operator control passes. The separate cad2d_spans ordered direct compute shader retains its original48-byte ComputePush and uint4 palette; cad2d_compose callback compute retains its48-byte push with the explicit48-byte glyph palette record. All include/upload sites were audited; the earlier direct48-byte draw upload was a real regression caught before Apple execution.
 
 Immutable glyph admission retains both batches and operators by Arc identity. Two thousand warmed snapshots cause one operator scan; new unknown/missing inventories reject without invalidating the previously admitted pair. The two focused host controls and ARM app consumer check pass. Accepted native label records are immutable; each changed private candidate gets a new producer snapshot and fresh buffers. Only pipeline Arcs are shared with the accepted owner, so candidate discard cannot mutate the previous callback. These controls do not establish actual Metal shader or hardware execution.
+
+## Actual Apple label admission follow-up
+
+Run 38135216541 at d74e0f4c built all four named consumers on ARM.
+The sweep stopped at reversed-door/preview with `Invalid paper font`; classic
+and material runtime/checkers passed. CoreText extracts a standalone SFNT,
+while Match.index identifies its face in the physical TTC. Annotation sized
+faces now decode with the cached byte owner's face_index (zero on that path),
+without changing physical identity. The focused Linux regression deliberately
+sets the physical index to 37: old decoding refuses, owner-index decoding
+succeeds. This is a decoding regression control, not Apple GPU acceptance.
+
+The source base/cancel frame protocol retains the acquired PushPull tool at
+zero distance, including its label. The native diagnostic now uses that same
+actual tool hover rather than switching to Select. Actual tool cancellation
+is distinct from these source frame names. Strict pixels remain OPEN pending
+the corrected consumer's Apple execution; no reference or tolerance changed.
