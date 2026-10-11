@@ -1,0 +1,20 @@
+{
+  "run_id": 38097341614,
+  "zip_source_binary_report_hashes_verified": true,
+  "controls": {
+    "appkit_presenter_control": {
+      "submitted": 6,
+      "displayed": 6,
+      "skipped": 0,
+      "pending": 0
+    },
+    "appkit_objc_presenter_control": {
+      "submitted": 5,
+      "displayed": 4,
+      "skipped": 1,
+      "pending": 0
+    }
+  },
+  "literal_sdk_positive_callback_identities_verified": 4,
+  "scope": "Intel two-control native presentation success; ARM and complete Metal viewport/platform acceptance remain open."
+}

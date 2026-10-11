@@ -19,6 +19,8 @@ Independent latest ARM evidence: [all nine GPU Canvas images exact; presentation
 
 ## Dated implementation and verification evidence
 
+Intel literal SDK acceptance (2026-10-11 UTC): independent verification confirms both direct-AppKit Rust and Objective-C controls pass, including four SDK callbacks with positive timestamps, matching drawable identities and completed GPU commands. [Root review](audits/metalkit-presenter-control/native-run38097341614/intel-root-review.json). ARM remains failed. Native Metal 3D viewport implementation is now the next production workstream; existing CAD/Canvas evidence does not cover the missing full world renderer.
+
 Literal Apple SDK ARM control (2026-10-11 UTC): independent ZIP/report/source and Objective-C binary hashes match retained execution. Both direct-AppKit Rust and literal Objective-C SDK controls fail positive presentation. The SDK callback runs with matching drawable identities, completed commands and zero presentedTime; no Rust-only cause is supported. [Root review](audits/metalkit-presenter-control/native-run38097341614/arm-root-review.json), [retained native execution](audits/metalkit-presenter-control/native-run38097341614/arm-independent-review.json). Root cause and physical hardware acceptance remain OPEN.
 
 Actual RTX viewport evidence (2026-10-11 UTC): independent image decoding confirms Chapel annotation toggles change 3,737 / 3,054 pixels and restoration is exact; both Gondola views are zero-annotation baselines. The admitted Gondola iso Python pair retains 78 differing pixels in all three phases. Other source comparisons fail exact camera guards and are not admitted. [Root image review](audits/annotation-real-viewport-first-paired/root-image-review.json). Full image/depth parity remains OPEN.
