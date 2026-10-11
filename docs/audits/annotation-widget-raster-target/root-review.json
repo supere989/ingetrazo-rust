@@ -1,0 +1,16 @@
+{
+  "manifest_files_verified": 11,
+  "source_widget_vs_source_raster": {
+    "different_pixels": 3608,
+    "max_channel_delta": 210
+  },
+  "native_vs_source_widget": {
+    "different_pixels": 4891,
+    "max_channel_delta": 210
+  },
+  "native_vs_source_raster": {
+    "different_pixels": 2082,
+    "max_channel_delta": 27
+  },
+  "scope": "Same-source QImage and QWidget targets differ; no change to accepted framebuffer or parity threshold"
+}
