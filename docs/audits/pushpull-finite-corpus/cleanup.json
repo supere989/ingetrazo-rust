@@ -1,0 +1,43 @@
+{
+  "authorized_by": "Root after integrated bf85 fresh replay",
+  "verified_archive": "records.zip",
+  "removed": [
+    {
+      "path": "/tmp/pushpull-finite-source.json",
+      "bytes": 587013,
+      "sha256": "d56003f907dd01afaf2d3c4576bb505bce4f81cf71ccc77ad6ed5e2471b89f47"
+    },
+    {
+      "path": "/tmp/pushpull-finite-native-initial.json",
+      "bytes": 334567,
+      "sha256": "f13b52933a462af01093f4685b44b0249fd0426614b81e4b616d68bd2cdaf684"
+    },
+    {
+      "path": "/tmp/pushpull-finite-native-collapse.json",
+      "bytes": 327783,
+      "sha256": "68a5c845de49773df951e9490ec75317da7ea9150ed32689877234c1dfed3183"
+    },
+    {
+      "path": "/tmp/pushpull-finite-app.json",
+      "bytes": 1414981,
+      "sha256": "949268c4af7f89579d04d8f0a4dbf2c219399036f691f1efc55c47aa432907f5"
+    },
+    {
+      "path": "/tmp/pushpull-finite-prior9.json",
+      "bytes": 44711,
+      "sha256": "aa353bf65b238573c878ecb3c5e6e718a470b41bf16b6ec538d47f9eeb5171b4"
+    },
+    {
+      "path": "/tmp/pushpull-finite-app-build.log",
+      "bytes": 18800,
+      "sha256": "c282e6d95ae5eb6318ea402ab9203317479b2fc298e1ef617a5d489475971058"
+    },
+    {
+      "path": "/tmp/pushpull-finite-test.log",
+      "bytes": 866,
+      "sha256": "e08782c2f7a486a9aa5e291545658ce0212bd22a467d482993f87ff10792c4e3"
+    }
+  ],
+  "retained": "Source/worktrees/reusable target and canonical records",
+  "total_bytes": 2728721
+}
