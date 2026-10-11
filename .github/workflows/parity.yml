@@ -79,49 +79,79 @@ jobs:
           cache-on-failure: "true"
           save-if: ${{ github.event_name != 'pull_request' }}
       - name: Native paper font dependency build and library tests
+        if: ${{ !startsWith(github.ref, 'refs/heads/review/metal-') }}
         run: |
           mkdir -p docs/audits/paper-font-native-ci
           cargo test --locked -p ingetrazo-formats --lib > docs/audits/paper-font-native-ci/tests.log 2>&1
           cargo run --locked -p ingetrazo-formats --example native_font_resource_probe -- /System/Library/Fonts/Supplemental/Arial.ttf > docs/audits/paper-font-native-ci/font-resource.log 2>&1
       - name: Build combined native macOS GUI with Apple SDK
+        id: nativebuild
         run: |
           mkdir -p docs/audits/metal-combined-gui-ci
-          cargo check --locked -p ingetrazo-gui --all-targets > docs/audits/metal-combined-gui-ci/check.log 2>&1
-          cargo build --locked -p ingetrazo-cli -p ingetrazo-gui -p ingetrazo-metal --bin ingetrazo --example native_metal --example native_metal_document_probe --example session_recovery_process --example native_world_defaults --example native_metal_document_annotations --example device_probe --example submission_probe --example cad2d_probe > docs/audits/metal-combined-gui-ci/build.log 2>&1
+          if [[ "$GITHUB_REF" != refs/heads/review/metal-* ]]; then
+            cargo check --locked -p ingetrazo-gui --all-targets > docs/audits/metal-combined-gui-ci/check.log 2>&1
+          fi
+          cargo build --locked -p ingetrazo-cli -p ingetrazo-gui -p ingetrazo-metal --bin ingetrazo --example native_metal --example native_metal_document_probe --example session_recovery_process --example native_world_defaults --example native_metal_document_annotations --example native_metal_billboards --example native_metal_section_fill --example device_probe --example submission_probe --example cad2d_probe > docs/audits/metal-combined-gui-ci/build.log 2>&1
       - name: Native default sky profile cache refusal and ownership
+        if: ${{ !cancelled() && steps.nativebuild.outcome == 'success' }}
         run: target/debug/examples/native_world_defaults docs/audits/metal-combined-gui-ci/defaults
+      - name: Original-document native billboard stage and camera cache
+        if: ${{ !cancelled() && steps.nativebuild.outcome == 'success' }}
+        run: target/debug/examples/native_metal_billboards ingetrazo/examples/banca-pergola-yanque.igz docs/audits/metal-combined-gui-ci/billboards
+      - name: Native stencil section source scenes and exact pixel comparison
+        if: ${{ !cancelled() && steps.nativebuild.outcome == 'success' }}
+        run: |
+          target/debug/examples/native_metal_section_fill docs/audits/metal-combined-gui-ci/section-fill
+          python3 scripts/check-metal-section-fill.py docs/audits/metal-combined-gui-ci/section-fill --output docs/audits/metal-combined-gui-ci/section-fill/comparison.json
+      - name: Observe actual Apple OpenGL multisample depth resolve
+        if: ${{ !cancelled() && steps.nativebuild.outcome == 'success' }}
+        run: |
+          clang -std=c11 -Wno-deprecated-declarations scripts/native-apple-gl-depth-resolve.c -framework OpenGL -o "$RUNNER_TEMP/apple-gl-depth-resolve"
+          "$RUNNER_TEMP/apple-gl-depth-resolve" > docs/audits/metal-combined-gui-ci/apple-gl-depth-resolve.json 2> docs/audits/metal-combined-gui-ci/apple-gl-depth-resolve.log
+          python3 scripts/check-apple-gl-depth-resolve.py docs/audits/metal-combined-gui-ci/apple-gl-depth-resolve.json > docs/audits/metal-combined-gui-ci/apple-gl-depth-resolve-check.json
       - name: Native document dimensions depth and immutable frame ownership
+        if: ${{ !cancelled() && steps.nativebuild.outcome == 'success' }}
         run: target/debug/examples/native_metal_document_annotations ingetrazo/examples/banca-pergola-yanque.igz docs/audits/metal-combined-gui-ci/document-annotations
       - name: Actual packaged CLI native Metal world startup
+        if: ${{ !cancelled() && steps.nativebuild.outcome == 'success' }}
         run: python3 scripts/check-native-metal-launcher.py target/debug/ingetrazo ingetrazo/examples/banca-pergola-yanque.igz docs/audits/metal-combined-gui-ci/launcher
       - name: Native isolated session lease crash and app recovery
+        if: ${{ !startsWith(github.ref, 'refs/heads/review/metal-') }}
         run: |
           python3 scripts/run-session-recovery-process.py target/debug/examples/session_recovery_process docs/audits/metal-combined-gui-ci/session-recovery
           python3 scripts/check-session-recovery.py docs/audits/metal-combined-gui-ci/session-recovery/result.json > docs/audits/metal-combined-gui-ci/session-recovery-check.json
       - name: Native modifier ingress and missing-metadata refusal
+        if: ${{ !startsWith(github.ref, 'refs/heads/review/metal-') }}
         run: |
           cargo run --locked -p ingetrazo-gui --example walk_native_modifier_ingress > docs/audits/metal-combined-gui-ci/modifier-ingress.json 2> docs/audits/metal-combined-gui-ci/modifier-ingress.log
           python3 scripts/check-walk-modifier-ingress.py docs/audits/navigation-walk-modifier-ingress/navigation-ingress-source.json docs/audits/metal-combined-gui-ci/modifier-ingress.json > docs/audits/metal-combined-gui-ci/modifier-ingress-check.json
           INGETRAZO_INGRESS_MISSING_CONTROL=1 cargo run --locked -p ingetrazo-gui --example walk_native_modifier_ingress > docs/audits/metal-combined-gui-ci/modifier-missing.json 2> docs/audits/metal-combined-gui-ci/modifier-missing.log
       - name: Inspect prebuilt native probe Apple framework linkage
+        if: ${{ !startsWith(github.ref, 'refs/heads/review/metal-') }}
         run: |
           mkdir -p docs/audits/metal-native-link-ci
           cp docs/audits/metal-combined-gui-ci/build.log docs/audits/metal-native-link-ci/build.log
           file target/debug/examples/device_probe > docs/audits/metal-native-link-ci/binary.txt
           otool -L target/debug/examples/device_probe > docs/audits/metal-native-link-ci/frameworks.txt
       - name: Execute native Metal device and allocation probe
+        if: ${{ !startsWith(github.ref, 'refs/heads/review/metal-') }}
         run: target/debug/examples/device_probe > docs/audits/metal-native-link-ci/device-and-allocation.log 2>&1
       - name: Execute native Metal GPU submission and retirement probe
+        if: ${{ !startsWith(github.ref, 'refs/heads/review/metal-') }}
         run: target/debug/examples/submission_probe > docs/audits/metal-native-link-ci/gpu-submission.log 2>&1
       - name: Execute strict source-ordered Metal compute rendering
+        if: ${{ !startsWith(github.ref, 'refs/heads/review/metal-') }}
         run: |
           target/debug/examples/cad2d_probe --compute --output=docs/audits/metal-native-link-ci/compute > docs/audits/metal-native-link-ci/compute-render.log 2>&1
       - name: Execute Apple framebuffer-fetch rendering or explicit capability refusal
+        if: ${{ !startsWith(github.ref, 'refs/heads/review/metal-') }}
         run: |
           target/debug/examples/cad2d_probe --allow-unsupported --output=docs/audits/metal-native-link-ci/fetch > docs/audits/metal-native-link-ci/fetch-render.log 2>&1
       - name: Actual completed and pending Metal CAD Drop ownership
+        if: ${{ !startsWith(github.ref, 'refs/heads/review/metal-') }}
         run: cargo test --locked -p ingetrazo-metal cad_drop_controls -- --nocapture > docs/audits/metal-native-link-ci/cad-drop.log 2>&1
       - name: Reject literal old GPU byte multiplication
+        if: ${{ !startsWith(github.ref, 'refs/heads/review/metal-') }}
         run: |
           python3 - <<'PY'
           from pathlib import Path
