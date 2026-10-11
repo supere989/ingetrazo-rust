@@ -3,7 +3,7 @@ use crate::annotation_overlay_geometry::{Cache, Composition, Limits};
 use ingetrazo_render::{
     annotations::{Gate, Operation, Plan, Primitive},
     cad2d::Pose,
-    cad_callback::{Callback, Factory, GlyphOperator},
+    cad_callback::{Factory, GlyphOperator},
 };
 use std::sync::Arc;
 #[derive(PartialEq)]
@@ -17,10 +17,20 @@ struct Key {
     precision: i32,
     typed: String,
 }
+pub(crate) struct Candidate {
+    ready: Option<(Key, Arc<ingetrazo_metal::egui_painter::AdmittedCallback>)>,
+}
+impl Candidate {
+    pub fn shape(&self, rect: egui::Rect) -> Option<egui::Shape> {
+        self.ready.as_ref().map(|(_, h)| shape(rect, h.clone()))
+    }
+}
 pub(crate) struct Labels {
     cache: Cache,
     factory: Factory,
-    current: Option<(Key, Arc<Callback>)>,
+    native_builds: u64,
+    uploaded_bytes: u64,
+    current: Option<(Key, Arc<ingetrazo_metal::egui_painter::AdmittedCallback>)>,
 }
 impl Labels {
     pub fn new() -> Result<Self, String> {
@@ -39,6 +49,8 @@ impl Labels {
                 },
             )?,
             factory: Factory::default(),
+            native_builds: 0,
+            uploaded_bytes: 0,
             current: None,
         })
     }
@@ -47,10 +59,10 @@ impl Labels {
         app: &crate::IngeTrazoApp,
         rect: egui::Rect,
         density: f32,
-    ) -> Result<Option<egui::Shape>, String> {
+        metal: Arc<ingetrazo_metal::NativeMetal>,
+    ) -> Result<Candidate, String> {
         let Some((distance, point)) = app.active_tool.distance_label() else {
-            self.current = None;
-            return Ok(None);
+            return Ok(Candidate { ready: None });
         };
         if !distance.is_finite()
             || !point.is_finite()
@@ -75,7 +87,9 @@ impl Labels {
         };
         if let Some((old, handle)) = &self.current {
             if *old == key {
-                return Ok(Some(shape(rect, handle.clone())));
+                return Ok(Candidate {
+                    ready: Some((key, handle.clone())),
+                });
             }
         }
         let v = point.as_vec3().extend(1.).to_array();
@@ -86,8 +100,7 @@ impl Labels {
                 + camera.matrix[3][row] * v[3]
         });
         if !q.iter().all(|v| v.is_finite()) || q[3] <= 0. {
-            self.current = None;
-            return Ok(None);
+            return Ok(Candidate { ready: None });
         }
         let pixel = [
             f64::from(rect.min.x)
@@ -132,8 +145,7 @@ impl Labels {
             .cache
             .prepare_widget_clipped(plan, density, 96., clip)?;
         if mesh.batches.is_empty() {
-            self.current = None;
-            return Ok(None);
+            return Ok(Candidate { ready: None });
         }
         let mut glyphs = Vec::new();
         glyphs
@@ -156,30 +168,59 @@ impl Labels {
                 straight_rgba: gate.straight_rgba,
             });
         }
-        let handle = if let Some((_, handle)) = &self.current {
-            handle.update_glyphs(
-                mesh.geometry.clone(),
-                mesh.batches.clone(),
-                Pose::default(),
-                glyphs.into(),
-            )?;
-            handle.clone()
-        } else {
-            self.factory.glyph_handle(
-                mesh.geometry.clone(),
-                mesh.batches.clone(),
-                Pose::default(),
-                glyphs.into(),
-            )?
-        };
-        self.current = Some((key, handle.clone()));
-        Ok(Some(shape(rect, handle)))
+        let producer = self.factory.glyph_handle(
+            mesh.geometry.clone(),
+            mesh.batches.clone(),
+            Pose::default(),
+            glyphs.into(),
+        )?;
+        let handle = ingetrazo_metal::egui_painter::AdmittedCallback::prepare(
+            metal,
+            producer.snapshot()?,
+            density,
+            self.current.as_ref().map(|(_, ready)| ready.as_ref()),
+        )?;
+        self.native_builds += 1;
+        self.uploaded_bytes += handle.uploaded_bytes();
+        Ok(Candidate {
+            ready: Some((key, handle)),
+        })
+    }
+    /// Cold engineering control: replace only the font preparation cache with a
+    /// real too-small font admission. Accepted native owners stay untouched.
+    pub fn probe_font_budget(&mut self, refuse: bool) -> Result<(), String> {
+        self.cache = Cache::new(
+            ingetrazo_formats::annotation_font::Limits {
+                faces: 32,
+                retained_font_bytes: if refuse { 1 } else { 32 * 1024 * 1024 },
+            },
+            Limits {
+                cells: 2_000_000,
+                spans: 200_000,
+                geometry_bytes: 32 * 1024 * 1024,
+                glyphs: 4096,
+                glyph_bytes: 16 * 1024 * 1024,
+            },
+        )?;
+        Ok(())
+    }
+    pub fn stats(&self) -> (u64, u64) {
+        (self.native_builds, self.uploaded_bytes)
+    }
+    pub fn admitted(&self) -> Option<Arc<ingetrazo_metal::egui_painter::AdmittedCallback>> {
+        self.current.as_ref().map(|(_, h)| h.clone())
+    }
+    pub fn publish(&mut self, candidate: Candidate) {
+        self.current = candidate.ready;
     }
 }
-fn shape(rect: egui::Rect, handle: Arc<Callback>) -> egui::Shape {
+fn shape(
+    rect: egui::Rect,
+    handle: Arc<ingetrazo_metal::egui_painter::AdmittedCallback>,
+) -> egui::Shape {
     egui::Shape::Callback(egui::PaintCallback {
         rect,
-        callback: handle,
+        callback: handle.token(),
     })
 }
 fn units(scene: &ingetrazo_core::scene::Scene) -> Result<(&'static str, i32), String> {

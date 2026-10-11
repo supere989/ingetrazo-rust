@@ -169,6 +169,21 @@ struct Mesh {
     key: blake3::Hash,
     bounds: [[f32; 2]; 2],
 }
+/// Frozen native callback admitted before publication of a matching world frame.
+pub struct AdmittedCallback { token:Arc<NativeCallback>, owner:Arc<NativeMetal>, density:f32, uploaded_bytes:u64, prepared:NativeCallbackKind }
+enum NativeCallbackKind { Cad(Arc<crate::cad_callback_painter::Prepared>), Compute(Arc<crate::cad_compute_painter::Prepared>) }
+pub struct NativeCallback { id:u64 }
+impl AdmittedCallback {
+ pub fn token(&self)->Arc<NativeCallback>{self.token.clone()}
+ pub fn uploaded_bytes(&self)->u64{self.uploaded_bytes}
+ pub fn prepare(owner:Arc<NativeMetal>,snapshot:ingetrazo_render::cad_callback::Snapshot,density:f32,previous:Option<&Self>)->Result<Arc<Self>,String>{
+  if previous.is_some_and(|p|!Arc::ptr_eq(&p.owner.poisoned,&owner.poisoned)||!Arc::ptr_eq(&p.owner.budget,&owner.budget)){return Err("Foreign native callback pipeline owner".into())}
+  let (prepared,uploaded_bytes)=if crate::MetalCad2d::supported(&owner){let mut p=match previous.map(|p|&p.prepared){Some(NativeCallbackKind::Cad(ready))=>crate::cad_callback_painter::Painter::reusing_pipeline(ready),_=>crate::cad_callback_painter::Painter::default()};let ready=p.prepare(&owner,snapshot,density)?;(NativeCallbackKind::Cad(ready),p.stats.bytes)}else{let mut p=match previous.map(|p|&p.prepared){Some(NativeCallbackKind::Compute(ready))=>crate::cad_compute_painter::Painter::reusing_pipeline(ready),_=>crate::cad_compute_painter::Painter::default()};let ready=p.prepare(&owner,snapshot,density)?;(NativeCallbackKind::Compute(ready),p.stats.uploaded_bytes)};
+  static NEXT:std::sync::atomic::AtomicU64=std::sync::atomic::AtomicU64::new(1);
+  let id=NEXT.fetch_update(std::sync::atomic::Ordering::Relaxed,std::sync::atomic::Ordering::Relaxed,|n|n.checked_add(1)).map_err(|_|"Native callback identity exhausted")?;
+  Ok(Arc::new(Self{token:Arc::new(NativeCallback{id}),owner,density,uploaded_bytes,prepared}))
+ }
+}
 enum PaintOrder { Mesh(usize), Cad(Arc<crate::cad_callback_painter::Prepared>, egui::Rect), Compute(Arc<crate::cad_compute_painter::Prepared>,egui::Rect) }
 pub struct PreparedPaint {
     pipeline: Arc<Retained<ProtocolObject<dyn MTLRenderPipelineState>>>,
@@ -314,6 +329,7 @@ pub struct EguiPainter {
     compute: Option<crate::cad_compute_painter::Painter>,
     textures: HashMap<TextureId, Arc<Texture>>,
     world_texture: Option<(TextureId,Arc<WorldTexture>)>,
+    admitted_callback:Option<Arc<AdmittedCallback>>,
     mesh: Option<Arc<Mesh>>,
     stats: PainterStats,
     retained_cpu: Arc<std::sync::atomic::AtomicUsize>,
@@ -360,6 +376,7 @@ impl EguiPainter {
                 compute:compute.then(crate::cad_compute_painter::Painter::default),
                 textures: HashMap::new(),
                 world_texture: None,
+                admitted_callback:None,
                 mesh: None,
                 stats: PainterStats::default(),
                 retained_cpu: Arc::new(std::sync::atomic::AtomicUsize::new(0)),
@@ -367,6 +384,7 @@ impl EguiPainter {
             })
         })
     }
+    pub fn install_admitted_callback(&mut self,callback:Option<Arc<AdmittedCallback>>){self.admitted_callback=callback;}
     pub fn cad_stats(&self)->crate::cad_callback_painter::Stats{self.cad.stats}
     pub fn compute_stats(&self)->Option<crate::cad_compute_painter::Stats>{self.compute.as_ref().map(|p|p.stats)}
     pub fn stats(&self) -> PainterStats {
@@ -898,6 +916,13 @@ impl EguiPainter {
         for primitive in primitives {
             let egui::epaint::Primitive::Mesh(mesh) = &primitive.primitive else {
                 let egui::epaint::Primitive::Callback(callback)=&primitive.primitive else{unreachable!()};
+                if let Some(token)=callback.callback.downcast_ref::<NativeCallback>(){
+                    let native=self.admitted_callback.as_ref().filter(|c|c.token.id==token.id).ok_or("Native callback owner not installed")?;
+                    if !Arc::ptr_eq(&native.owner.poisoned,&metal.poisoned)||!Arc::ptr_eq(&native.owner.budget,&metal.budget)||native.density!=density||!valid_clip(primitive.clip_rect)||!valid_clip(callback.rect){return Err("Metal preadmitted callback context/density/clip mismatch".into())}
+                    let clip=primitive.clip_rect.intersect(callback.rect);
+                    match &native.prepared{NativeCallbackKind::Cad(p)=>order.push(PaintOrder::Cad(p.clone(),clip)),NativeCallbackKind::Compute(p)=>order.push(PaintOrder::Compute(p.clone(),clip))}
+                    continue;
+                }
                 let producer=callback.callback.downcast_ref::<ingetrazo_render::cad_callback::Callback>().ok_or("Metal paint callback type unsupported; no alternate backend fallback")?;
                 if !valid_clip(primitive.clip_rect)||!valid_clip(callback.rect){return Err("Invalid Metal CAD callback clip".into());}
                 let clip=primitive.clip_rect.intersect(callback.rect);
