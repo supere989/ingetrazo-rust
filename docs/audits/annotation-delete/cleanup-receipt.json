@@ -1,0 +1,14 @@
+{
+  "authenticated_canonical_entries": 18,
+  "additional_archived_logs": 29,
+  "removed_files": 47,
+  "released_logical_bytes": 535880,
+  "removed_proof_directory": "/tmp/ingetrazo-annotation-delete-proof",
+  "preserved": [
+    "worktree",
+    "source",
+    "canonical evidence",
+    "/tmp/ingetrazo-ai-registry-target"
+  ],
+  "tests_or_builds": 0
+}

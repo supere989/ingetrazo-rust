@@ -1,0 +1,118 @@
+{
+  "annotation-delete-build.log": {
+    "bytes": 20147,
+    "sha256": "a8b3a9165dfe0458f897aa41aef4497d4a2bc0e3e96a719837548f1e4010967a"
+  },
+  "annotation-delete-build2.log": {
+    "bytes": 19313,
+    "sha256": "6cee2e2c8c5fe9c3e3e59d13c34ee0295791239dac57e4b26983a791bcfe5a61"
+  },
+  "annotation-delete-build3.log": {
+    "bytes": 10252,
+    "sha256": "37928884119a9dfb0dfc85e9cd3598121a5afe700105772bbb8a4a21ca3393fd"
+  },
+  "annotation-delete-build4.log": {
+    "bytes": 19697,
+    "sha256": "2b4b71d9d92c26d79bc8cdc52e8e565896158c0b6f927da72faaecb1a5d2d2f3"
+  },
+  "annotation-delete-build5.log": {
+    "bytes": 19313,
+    "sha256": "0068486bcf7d4e9c6e3ff950b09077bfb3bd9ee3e57b2017975b92b70f937d61"
+  },
+  "annotation-delete-clean.log": {
+    "bytes": 39,
+    "sha256": "5203e478422e9b3ef4f3c0039aa298090279c72dba2246472d3e308fec7b7ee6"
+  },
+  "annotation-delete-debug-build.log": {
+    "bytes": 19222,
+    "sha256": "7407d83e483680d38c5c11b15aa62e0b02a75427a231fe45299fb2c4d2630487"
+  },
+  "annotation-delete-debug-native.log": {
+    "bytes": 36,
+    "sha256": "95c4cca760b8ffe5cdb4bdf2f9359375c7ad7f2bf41014c150f4beb4fd566bed"
+  },
+  "annotation-delete-debug-removal.log": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "annotation-delete-final-build.log": {
+    "bytes": 19313,
+    "sha256": "c7b32f3845452b7380536c1c14d05405f6e44fc0698a67b68c85f2b4a001ddee"
+  },
+  "annotation-delete-final-check.log": {
+    "bytes": 55,
+    "sha256": "5ecf62073dc6194c48398f1cc0243042228b6ee994a494b553a051386fdb8f1f"
+  },
+  "annotation-delete-final-native.log": {
+    "bytes": 36,
+    "sha256": "95c4cca760b8ffe5cdb4bdf2f9359375c7ad7f2bf41014c150f4beb4fd566bed"
+  },
+  "annotation-delete-final-tests.log": {
+    "bytes": 18575,
+    "sha256": "54bd238d2d005bb1587421b2f815df1e8deec858c214abf7cc7a57fc4b0c23c3"
+  },
+  "annotation-delete-native.log": {
+    "bytes": 36,
+    "sha256": "95c4cca760b8ffe5cdb4bdf2f9359375c7ad7f2bf41014c150f4beb4fd566bed"
+  },
+  "annotation-delete-native2.log": {
+    "bytes": 36,
+    "sha256": "95c4cca760b8ffe5cdb4bdf2f9359375c7ad7f2bf41014c150f4beb4fd566bed"
+  },
+  "annotation-delete-native3.log": {
+    "bytes": 36,
+    "sha256": "95c4cca760b8ffe5cdb4bdf2f9359375c7ad7f2bf41014c150f4beb4fd566bed"
+  },
+  "annotation-delete-original-final.log": {
+    "bytes": 211,
+    "sha256": "a84703a7f2ac19b41e209ef55e353c6a1bd25ecbf3ffd20df67c455a8041a541"
+  },
+  "annotation-delete-original.log": {
+    "bytes": 211,
+    "sha256": "a84703a7f2ac19b41e209ef55e353c6a1bd25ecbf3ffd20df67c455a8041a541"
+  },
+  "annotation-delete-precision-build.log": {
+    "bytes": 19313,
+    "sha256": "dd94c86477ff590d3ea260277afb22f86f336ee37f07fbeb15f19fb06441b6fd"
+  },
+  "annotation-delete-precision-native.log": {
+    "bytes": 36,
+    "sha256": "95c4cca760b8ffe5cdb4bdf2f9359375c7ad7f2bf41014c150f4beb4fd566bed"
+  },
+  "annotation-delete-precision-reopen.log": {
+    "bytes": 5910,
+    "sha256": "5fc92c373e9195147d19f0f116345248d8a8b90ab67e21fc4288bf50067e0c8d"
+  },
+  "annotation-delete-precision-tests.log": {
+    "bytes": 18575,
+    "sha256": "2c7e0d1a251815963cb048f7ebc827c1e1fb59ec32c79f138039142a716c3498"
+  },
+  "annotation-delete-removal-build-fresh.log": {
+    "bytes": 19313,
+    "sha256": "fa1d94c5fe05f8f552a24eac6424c612a285f539d1759bcb77446fb465aa5755"
+  },
+  "annotation-delete-removal-build-real.log": {
+    "bytes": 19313,
+    "sha256": "69c1774b90d34a2e36620adb9b42cc23d3c7d3f4dfa717ce27202363918d087c"
+  },
+  "annotation-delete-removal-build.log": {
+    "bytes": 19222,
+    "sha256": "7407d83e483680d38c5c11b15aa62e0b02a75427a231fe45299fb2c4d2630487"
+  },
+  "annotation-delete-removal-clean.log": {
+    "bytes": 38,
+    "sha256": "10d12d40918a214a4ac1e85e981cf66fe0fdd4979cec73b83ea39136bb04d2df"
+  },
+  "annotation-delete-removal-native.log": {
+    "bytes": 36,
+    "sha256": "95c4cca760b8ffe5cdb4bdf2f9359375c7ad7f2bf41014c150f4beb4fd566bed"
+  },
+  "annotation-delete-source-parked.log": {
+    "bytes": 113,
+    "sha256": "681911516805134b4883960cacc46073ecb5d072b600e35a8745b51229882e2d"
+  },
+  "annotation-delete-tests.log": {
+    "bytes": 19319,
+    "sha256": "ce39de49c6d1a50b175a8fe0a6d9d39d3de4c56e891f9edddf50e937750b94d4"
+  }
+}
