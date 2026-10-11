@@ -293,9 +293,9 @@ impl System {
         let mut renderer=resize::Tracked::new(renderer,control,vec![(resize::Kind::EguiPipeline,1)]);
         control.checkpoint(resize::Stage::StartupRenderer)?;
         // Nothing has been submitted. Move every owner only after all constructors succeed.
+        let annotation_timing=annotation_timing::Timing::new(&vulkan_context)?;
         startup.command=None;startup.acquire=None;startup.fence=None;
         let pointer_modifiers=crate::pointer_modifiers::install(&egui_ctx);
-        let annotation_timing=annotation_timing::Timing::new(&vulkan_context)?;
         Ok(Self {
             vulkan_context,
             command_buffer,
@@ -731,10 +731,11 @@ impl System {
     }
     fn clean_gpu(&mut self){
         if self.exited{return;}
-        if !self.wait_gpu_completion(){return;}
+        if !self.wait_gpu_completion(){drop(self.annotation_timing.take());return;}
         if let Some(world)=&self.world {eprintln!("Native world GPU surface uploads: {}",world.uploads);}
         if let Some(cad)=&self.cad2d {eprintln!("CAD2D metrics: {:?}",cad.stats());eprintln!("Outline arena metrics: {}",cad.outline_arena_stats());}
         if let Some(cad)=&self.annotation_cad{let stats=cad.stats();eprintln!("Native annotation metrics: {}",serde_json::json!({"geometry_uploads":stats.uploads,"geometry_upload_bytes":stats.upload_bytes,"geometry_cached_bytes":stats.cached_bytes,"cache_hits":stats.cache_hits,"draws":stats.draws,"rolled_back_buffers":stats.rolled_back_buffers,"query_uploads":self.world.as_ref().map_or(0,|world|world.annotation_query_uploads_for_probe())}));}
+        drop(self.annotation_timing.take());
         drop(self.world.take());drop(self.annotation_cad.take());drop(self.cad2d.take());
         if self.vulkan_context.lifetime.uncertain(){return;}
         unsafe{

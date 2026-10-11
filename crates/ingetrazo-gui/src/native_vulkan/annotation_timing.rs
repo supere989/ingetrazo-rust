@@ -9,7 +9,7 @@ impl Timing{
   if std::env::var_os("INGETRAZO_ANNOTATION_TIMING").is_none(){return Ok(None);}
   context.lifetime.check()?;
   let(bits,period)=context.graphics_timestamp_info().ok_or("Graphics timestamp capability unavailable")?;
-  let pool=unsafe{context.device.create_query_pool(&vk::QueryPoolCreateInfo::default().query_type(vk::QueryType::TIMESTAMP).query_count(2),None)}.map_err(|e|e.to_string())?;
+  let pool=unsafe{context.device.create_query_pool(&vk::QueryPoolCreateInfo::default().query_type(vk::QueryType::TIMESTAMP).query_count(2),None)}.map_err(|e|{if e==vk::Result::ERROR_DEVICE_LOST{context.lifetime.quarantine();}e.to_string()})?;
   Ok(Some(Self{device:context.device.clone(),lifetime:context.lifetime.clone(),pool,period:f64::from(period),bits,samples:[0.;4096],count:0,seen:0,pending:false}))
  }
  pub fn complete(&mut self)->Result<(),String>{
@@ -17,7 +17,7 @@ impl Timing{
   let mut values=[[0u64;2];2];
   let result=unsafe{self.device.get_query_pool_results(self.pool,0,&mut values,vk::QueryResultFlags::TYPE_64|vk::QueryResultFlags::WITH_AVAILABILITY)};
   self.pending=false;
-  match result{Ok(())=>{},Err(vk::Result::NOT_READY)=>return Ok(()),Err(e)=>return Err(e.to_string())}
+  match result{Ok(())=>{},Err(vk::Result::NOT_READY)=>return Ok(()),Err(e)=>{if e==vk::Result::ERROR_DEVICE_LOST{self.lifetime.quarantine();}return Err(e.to_string());}}
   if values.iter().any(|v|v[1]==0){return Ok(());}
   let mask=if self.bits==64{u64::MAX}else{(1u64<<self.bits)-1};
   let elapsed=(values[1][0].wrapping_sub(values[0][0])&mask)as f64*self.period;
