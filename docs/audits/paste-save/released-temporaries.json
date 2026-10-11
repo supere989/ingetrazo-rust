@@ -1,0 +1,79 @@
+{
+  "reason": "Focused consumer, capture and reopen handles terminal; every removed evidence file byte-equal to canonical archive or report",
+  "files": [
+    {
+      "path": "/tmp/ingetrazo-paste-save-proof/input.igz",
+      "bytes": 3713
+    },
+    {
+      "path": "/tmp/ingetrazo-paste-save-proof/original.json",
+      "bytes": 53054
+    },
+    {
+      "path": "/tmp/ingetrazo-paste-save-proof/native.json",
+      "bytes": 53116
+    },
+    {
+      "path": "/tmp/ingetrazo-paste-save-proof/reopened.json",
+      "bytes": 4804
+    },
+    {
+      "path": "/tmp/ingetrazo-paste-save-proof/source.log",
+      "bytes": 381
+    },
+    {
+      "path": "/tmp/ingetrazo-paste-save-proof/native.log",
+      "bytes": 38
+    },
+    {
+      "path": "/tmp/ingetrazo-paste-save-proof/build.log",
+      "bytes": 19456
+    },
+    {
+      "path": "/tmp/ingetrazo-paste-save-proof/reopen.log",
+      "bytes": 49
+    },
+    {
+      "path": "/tmp/ingetrazo-paste-save-proof/save-continue.native.igz",
+      "bytes": 5020
+    },
+    {
+      "path": "/tmp/ingetrazo-paste-save-proof/save-continue.original.igz",
+      "bytes": 4238
+    },
+    {
+      "path": "/tmp/ingetrazo-paste-save-proof/save-cancel.native.igz",
+      "bytes": 5020
+    },
+    {
+      "path": "/tmp/ingetrazo-paste-save-proof/save-cancel.original.igz",
+      "bytes": 4238
+    },
+    {
+      "path": "/tmp/ingetrazo-paste-save-proof/save_as-continue.native.igz",
+      "bytes": 5020
+    },
+    {
+      "path": "/tmp/ingetrazo-paste-save-proof/save_as-continue.original.igz",
+      "bytes": 4238
+    },
+    {
+      "path": "/tmp/ingetrazo-paste-save-proof/save_as-cancel.native.igz",
+      "bytes": 5020
+    },
+    {
+      "path": "/tmp/ingetrazo-paste-save-proof/save_as-cancel.original.igz",
+      "bytes": 4238
+    },
+    {
+      "path": "/tmp/ingetrazo-paste-save-proof/acceptance.json",
+      "bytes": 268
+    }
+  ],
+  "test_state_directories": [
+    "/tmp/ingetrazo-paste-save-proof/state",
+    "/tmp/ingetrazo-paste-save-proof/config",
+    "/tmp/ingetrazo-paste-save-proof/cache"
+  ],
+  "targets_and_worktrees_preserved": true
+}

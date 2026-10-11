@@ -1,0 +1,16 @@
+{
+  "released": [
+    {
+      "path": "/tmp/ingetrazo-history-terminal/semantic.zip",
+      "bytes": 18672726,
+      "sha256": "342345a94a6deef786050bf82b6c02bc65b8455c2e03f72fd119c0dd16557444"
+    },
+    {
+      "path": "/tmp/ingetrazo-history-terminal/windows.zip",
+      "bytes": 21909,
+      "sha256": "ddf6c68aa0088567f6986eb9f2acda36b37414fb70387b75ddc4ddc39ccba02a"
+    }
+  ],
+  "retention": "Complete terminal job state and selected relevant raw reports are canonical locally; complete semantic ZIP remains the linked GitHub Actions artifact, not duplicated in Git",
+  "selected_records_byte_verified": true
+}
