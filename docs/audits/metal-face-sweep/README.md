@@ -56,3 +56,11 @@ label slots empty, and completed old label Weak owner released. This assertion
 has no source-frame pixel comparison (source cancel means zero-offset acquisition).
 The strict checker requires its result and rejects false cancellation metadata.
 It awaits actual Apple execution together with the font correction.
+
+Corrected named ARM Rust consumer check passed (9.79 seconds, host C/C++
+shortcut only; not native link/shader execution). The first local invocation
+failed because host C++ received Apple -arch flags; both logs are retained.
+Both d74 Apple jobs are terminal failures with the same font admission error;
+160 source hashes per artifact independently match d74. Classic/material
+checkers pass on both; ghost runtime passes while strict pixels remain OPEN.
+Receipts and original downloaded artifacts are under apple-d74-failure.

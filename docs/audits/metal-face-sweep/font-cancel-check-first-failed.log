@@ -1,0 +1,143 @@
+warning: function `visit_meshes` is never used
+   --> crates/ingetrazo-core/src/screen_pick.rs:120:15
+    |
+120 | pub(crate) fn visit_meshes(scene: &Scene, mut visit: impl FnMut(&Mesh, DMat4, bool)) {
+    |               ^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-core` (lib) generated 1 warning
+   Compiling libz-sys v1.1.29
+   Compiling harfbuzz-sys v0.8.0 (/tmp/ingetrazo-unhide-actions/vendor/harfbuzz-sys)
+warning: libz-sys@1.1.29: Could not find zlib include paths via pkg-config: pkg-config has not been configured to support cross-compilation.
+warning: libz-sys@1.1.29: cc: error: unrecognized command-line option '-arch'
+warning: libz-sys@1.1.29: cc: error: unrecognized command-line option '-mmacosx-version-min=11.0'
+error: failed to run custom build command for `libz-sys v1.1.29`
+
+Caused by:
+  process didn't exit successfully: `/tmp/ingetrazo-ai-registry-target/debug/build/libz-sys-1570f1d504f887b5/build-script-build` (exit status: 1)
+  --- stdout
+  cargo:rerun-if-env-changed=LIBZ_SYS_STATIC
+  cargo:rerun-if-changed=build.rs
+  cargo:rerun-if-changed=zng/cmake.rs
+  cargo:rerun-if-changed=zng/cc.rs
+  cargo:rerun-if-env-changed=ZLIB_NO_PKG_CONFIG
+  cargo:rerun-if-env-changed=PKG_CONFIG_ALLOW_CROSS_aarch64-apple-darwin
+  cargo:rerun-if-env-changed=PKG_CONFIG_ALLOW_CROSS_aarch64_apple_darwin
+  cargo:rerun-if-env-changed=TARGET_PKG_CONFIG_ALLOW_CROSS
+  cargo:rerun-if-env-changed=PKG_CONFIG_ALLOW_CROSS
+  cargo:rerun-if-env-changed=PKG_CONFIG_aarch64-apple-darwin
+  cargo:rerun-if-env-changed=PKG_CONFIG_aarch64_apple_darwin
+  cargo:rerun-if-env-changed=TARGET_PKG_CONFIG
+  cargo:rerun-if-env-changed=PKG_CONFIG
+  cargo:rerun-if-env-changed=PKG_CONFIG_SYSROOT_DIR_aarch64-apple-darwin
+  cargo:rerun-if-env-changed=PKG_CONFIG_SYSROOT_DIR_aarch64_apple_darwin
+  cargo:rerun-if-env-changed=TARGET_PKG_CONFIG_SYSROOT_DIR
+  cargo:rerun-if-env-changed=PKG_CONFIG_SYSROOT_DIR
+  cargo:warning=Could not find zlib include paths via pkg-config: pkg-config has not been configured to support cross-compilation.
+
+  Install a sysroot for the target platform and configure it via
+  PKG_CONFIG_SYSROOT_DIR and PKG_CONFIG_PATH, or install a
+  cross-compiling wrapper for pkg-config and set it via
+  PKG_CONFIG environment variable.
+  cargo:rerun-if-env-changed=CC_aarch64-apple-darwin
+  CC_aarch64-apple-darwin = None
+  cargo:rerun-if-env-changed=CC_aarch64_apple_darwin
+  CC_aarch64_apple_darwin = Some(cc)
+  cargo:rerun-if-env-changed=CC_KNOWN_WRAPPER_CUSTOM
+  CC_KNOWN_WRAPPER_CUSTOM = None
+  cargo:rerun-if-env-changed=CC_ENABLE_DEBUG_OUTPUT
+  cargo:rerun-if-env-changed=CRATE_CC_NO_DEFAULTS
+  CRATE_CC_NO_DEFAULTS = None
+  cargo:rerun-if-env-changed=MACOSX_DEPLOYMENT_TARGET
+  MACOSX_DEPLOYMENT_TARGET = None
+  cargo:rerun-if-env-changed=CFLAGS
+  CFLAGS = None
+  cargo:rerun-if-env-changed=TARGET_CFLAGS
+  TARGET_CFLAGS = None
+  cargo:rerun-if-env-changed=CFLAGS_aarch64_apple_darwin
+  CFLAGS_aarch64_apple_darwin = None
+  cargo:rerun-if-env-changed=CFLAGS_aarch64-apple-darwin
+  CFLAGS_aarch64-apple-darwin = None
+  running env -i CARGO="/home/dev/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo" CARGO_CFG_DEBUG_ASSERTIONS="" CARGO_CFG_FEATURE="default,libc,stock-zlib" CARGO_CFG_PANIC="unwind" CARGO_CFG_TARGET_ABI="" CARGO_CFG_TARGET_ARCH="aarch64" CARGO_CFG_TARGET_ENDIAN="little" CARGO_CFG_TARGET_ENV="" CARGO_CFG_TARGET_FAMILY="unix" CARGO_CFG_TARGET_FEATURE="aes,crc,dit,dotprod,dpb,dpb2,fcma,fhm,flagm,fp16,frintts,jsconv,lor,lse,neon,paca,pacg,pan,pmuv3,ras,rcpc,rcpc2,rdm,sb,sha2,sha3,ssbs,vh" CARGO_CFG_TARGET_HAS_ATOMIC="128,16,32,64,8,ptr" CARGO_CFG_TARGET_OS="macos" CARGO_CFG_TARGET_POINTER_WIDTH="64" CARGO_CFG_TARGET_VENDOR="apple" CARGO_CFG_UNIX="" CARGO_ENCODED_RUSTFLAGS="" CARGO_FEATURE_DEFAULT="1" CARGO_FEATURE_LIBC="1" CARGO_FEATURE_STOCK_ZLIB="1" CARGO_HOME="/home/dev/.cargo" CARGO_INCREMENTAL="0" CARGO_MAKEFLAGS="-j --jobserver-fds=6,7 --jobserver-auth=6,7" CARGO_MANIFEST_DIR="/home/dev/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/libz-sys-1.1.29" CARGO_MANIFEST_LINKS="z" CARGO_MANIFEST_PATH="/home/dev/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/libz-sys-1.1.29/Cargo.toml" CARGO_PKG_AUTHORS="Alex Crichton <alex@alexcrichton.com>:Josh Triplett <josh@joshtriplett.org>:Sebastian Thiel <sebastian.thiel@icloud.com>" CARGO_PKG_DESCRIPTION="Low-level bindings to the system libz library (also known as zlib)." CARGO_PKG_HOMEPAGE="" CARGO_PKG_LICENSE="MIT OR Apache-2.0" CARGO_PKG_LICENSE_FILE="" CARGO_PKG_NAME="libz-sys" CARGO_PKG_README="README.md" CARGO_PKG_REPOSITORY="https://github.com/rust-lang/libz-sys" CARGO_PKG_RUST_VERSION="" CARGO_PKG_VERSION="1.1.29" CARGO_PKG_VERSION_MAJOR="1" CARGO_PKG_VERSION_MINOR="1" CARGO_PKG_VERSION_PATCH="29" CARGO_PKG_VERSION_PRE="" CARGO_PROFILE_DEV_DEBUG="0" CARGO_TARGET_DIR="/tmp/ingetrazo-ai-registry-target" CC_aarch64_apple_darwin="cc" DEBUG="false" DEBUGINFOD_URLS="https://debuginfod.ubuntu.com " DISABLE_AUTOUPDATER="1" HOME="/home/dev" HOST="x86_64-unknown-linux-gnu" HOSTNAME="ingetrazo-publish" LANG="en_US.UTF-8" LC_ALL="C" LD_LIBRARY_PATH="/tmp/ingetrazo-ai-registry-target/debug/deps:/home/dev/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib/rustlib/x86_64-unknown-linux-gnu/lib:/home/dev/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib" NUM_JOBS="2" OLDPWD="/work" OPT_LEVEL="0" OUT_DIR="/tmp/ingetrazo-ai-registry-target/aarch64-apple-darwin/debug/build/libz-sys-aff0cf1788df8320/out" PATH="/home/dev/.local/bin:/home/dev/.cargo/bin:/home/dev/.local/bin:/opt/conda/bin:/usr/local/go/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin" PROFILE="debug" PWD="/tmp/ingetrazo-unhide-actions" RUSTC="/home/dev/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc" RUSTDOC="/home/dev/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustdoc" RUSTUP_HOME="/home/dev/.rustup" RUSTUP_TOOLCHAIN="stable-x86_64-unknown-linux-gnu" RUSTUP_TOOLCHAIN_SOURCE="default" RUST_RECURSION_COUNT="1" SHLVL="1" SSL_CERT_DIR="/usr/lib/ssl/certs" SSL_CERT_FILE="/usr/lib/ssl/cert.pem" TARGET="aarch64-apple-darwin" _="/home/dev/.cargo/bin/cargo" container="podman" "cc" "-O0" "-ffunction-sections" "-fdata-sections" "-fPIC" "-arch" "arm64" "-mmacosx-version-min=11.0" "-Wall" "-Wextra" "src/smoke.c" "-g0" "-o" "/dev/null" "-lz"
+  cargo:rerun-if-env-changed=CC_FORCE_DISABLE
+  CC_FORCE_DISABLE = None
+  cargo:rerun-if-env-changed=CC_aarch64-apple-darwin
+  CC_aarch64-apple-darwin = None
+  cargo:rerun-if-env-changed=CC_aarch64_apple_darwin
+  CC_aarch64_apple_darwin = Some(cc)
+  cargo:rerun-if-env-changed=CC_KNOWN_WRAPPER_CUSTOM
+  CC_KNOWN_WRAPPER_CUSTOM = None
+  cargo:rerun-if-env-changed=CRATE_CC_NO_DEFAULTS
+  CRATE_CC_NO_DEFAULTS = None
+  cargo:rerun-if-env-changed=CFLAGS
+  CFLAGS = None
+  cargo:rerun-if-env-changed=TARGET_CFLAGS
+  TARGET_CFLAGS = None
+  cargo:rerun-if-env-changed=CFLAGS_aarch64_apple_darwin
+  CFLAGS_aarch64_apple_darwin = None
+  cargo:rerun-if-env-changed=CFLAGS_aarch64-apple-darwin
+  CFLAGS_aarch64-apple-darwin = None
+  cargo:warning=cc: error: unrecognized command-line option '-arch'
+  cargo:warning=cc: error: unrecognized command-line option '-mmacosx-version-min=11.0'
+
+  --- stderr
+  cc: error: unrecognized command-line option '-arch'
+  cc: error: unrecognized command-line option '-mmacosx-version-min=11.0'
+
+
+  error occurred in cc-rs: command did not execute successfully (status code exit status: 1): "cc" "-O0" "-ffunction-sections" "-fdata-sections" "-fPIC" "-arch" "arm64" "-mmacosx-version-min=11.0" "-I" "src/zlib" "-w" "-fvisibility=hidden" "-DSTDC" "-D_LARGEFILE64_SOURCE" "-o" "/tmp/ingetrazo-ai-registry-target/aarch64-apple-darwin/debug/build/libz-sys-aff0cf1788df8320/out/lib/f0389296f42960e9-adler32.o" "-c" "src/zlib/adler32.c"
+
+
+warning: build failed, waiting for other jobs to finish...
+warning: harfbuzz-sys@0.8.0: c++: error: unrecognized command-line option '-arch'
+warning: harfbuzz-sys@0.8.0: c++: error: unrecognized command-line option '-mmacosx-version-min=11.0'
+error: failed to run custom build command for `harfbuzz-sys v0.8.0 (/tmp/ingetrazo-unhide-actions/vendor/harfbuzz-sys)`
+
+Caused by:
+  process didn't exit successfully: `/tmp/ingetrazo-ai-registry-target/debug/build/harfbuzz-sys-22b947e27bd5b66f/build-script-build` (exit status: 1)
+  --- stdout
+  cargo:rerun-if-env-changed=CC_FORCE_DISABLE
+  CC_FORCE_DISABLE = None
+  cargo:rerun-if-env-changed=CXX_aarch64-apple-darwin
+  CXX_aarch64-apple-darwin = None
+  cargo:rerun-if-env-changed=CXX_aarch64_apple_darwin
+  CXX_aarch64_apple_darwin = None
+  cargo:rerun-if-env-changed=TARGET_CXX
+  TARGET_CXX = None
+  cargo:rerun-if-env-changed=CXX
+  CXX = None
+  cargo:rerun-if-env-changed=CROSS_COMPILE
+  CROSS_COMPILE = None
+  cargo:rerun-if-env-changed=CC_ENABLE_DEBUG_OUTPUT
+  cargo:rerun-if-env-changed=CRATE_CC_NO_DEFAULTS
+  CRATE_CC_NO_DEFAULTS = None
+  cargo:rerun-if-env-changed=MACOSX_DEPLOYMENT_TARGET
+  MACOSX_DEPLOYMENT_TARGET = None
+  cargo:rerun-if-env-changed=CXXFLAGS
+  CXXFLAGS = None
+  cargo:rerun-if-env-changed=TARGET_CXXFLAGS
+  TARGET_CXXFLAGS = None
+  cargo:rerun-if-env-changed=CXXFLAGS_aarch64_apple_darwin
+  CXXFLAGS_aarch64_apple_darwin = None
+  cargo:rerun-if-env-changed=CXXFLAGS_aarch64-apple-darwin
+  CXXFLAGS_aarch64-apple-darwin = None
+  cargo:rerun-if-env-changed=CRATE_CC_NO_DEFAULTS
+  CRATE_CC_NO_DEFAULTS = None
+  cargo:rerun-if-env-changed=CXXFLAGS
+  CXXFLAGS = None
+  cargo:rerun-if-env-changed=TARGET_CXXFLAGS
+  TARGET_CXXFLAGS = None
+  cargo:rerun-if-env-changed=CXXFLAGS_aarch64_apple_darwin
+  CXXFLAGS_aarch64_apple_darwin = None
+  cargo:rerun-if-env-changed=CXXFLAGS_aarch64-apple-darwin
+  CXXFLAGS_aarch64-apple-darwin = None
+  cargo:warning=c++: error: unrecognized command-line option '-arch'
+  cargo:warning=c++: error: unrecognized command-line option '-mmacosx-version-min=11.0'
+
+  --- stderr
+
+
+  error occurred in cc-rs: command did not execute successfully (status code exit status: 1): "c++" "-O0" "-ffunction-sections" "-fdata-sections" "-fPIC" "-arch" "arm64" "-mmacosx-version-min=11.0" "-w" "-DHAVE_PTHREAD=1" "-o" "/tmp/ingetrazo-ai-registry-target/aarch64-apple-darwin/debug/build/harfbuzz-sys-62de8755f07dcc51/out/3be9a5a8b90f3f2c-harfbuzz.o" "-c" "harfbuzz/src/harfbuzz.cc"
+
+
