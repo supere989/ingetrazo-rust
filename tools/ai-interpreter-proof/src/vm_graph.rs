@@ -65,6 +65,47 @@ fn references(list: &PyListRef) -> Result<Vec<PyObjectRef>, String> {
 }
 
 impl GraphState {
+    // Endpoints are read from genuine live Edge objects: pinned capture_state never
+    // snapshots v0/v1. Other fields come from this command-owned source snapshot.
+    pub(super) fn packed_edges(&self,vertices:&[PyObjectRef],faces:&[PyObjectRef],budget:&OwnerBudget,vm:&VirtualMachine)->Result<(Vec<ingetrazo_core::mesh::MeshEdge>,Lease),String>{
+        use rustpython_vm::builtins::{PyInt,PyStr};
+        use num_traits::ToPrimitive;
+        let bytes=self.members.len().checked_mul(256).and_then(|n|vertices.len().checked_add(faces.len()).and_then(|m|m.checked_mul(64)).and_then(|m|n.checked_add(m))).ok_or("Packed graph extent overflow")?;
+        let mut charge=budget.reserve(Kind::Preparation,bytes)?;
+        let mut vertex_ids=std::collections::HashMap::new();vertex_ids.try_reserve(vertices.len()).map_err(|_|"Packed Vertex identity map refused")?;
+        for (id,v) in vertices.iter().enumerate(){if vertex_ids.insert(v.get_id(),id).is_some(){return Err("Repeated packed Vertex identity unsupported".into());}}
+        let mut face_ids=std::collections::HashMap::new();face_ids.try_reserve(faces.len()).map_err(|_|"Packed Face identity map refused")?;
+        for (id,f) in faces.iter().enumerate(){if face_ids.insert(f.get_id(),id).is_some(){return Err("Repeated packed Face identity unsupported".into());}}
+        if self.members.len()!=self.fields.len(){return Err("Packed Edge snapshot extent mismatch".into());}
+        let mut out=Vec::new();out.try_reserve_exact(self.members.len()).map_err(|_|"Packed Edge slots refused")?;
+        let mut ids=std::collections::HashSet::new();ids.try_reserve(self.members.len()).map_err(|_|"Packed Edge identity slots refused")?;
+        let boolean=|v:&PyObjectRef|->Result<bool,String>{if v.is(&vm.ctx.true_value){Ok(true)}else if v.is(&vm.ctx.false_value){Ok(false)}else{Err("Packed arbitrary Edge boolean projection pending".into())}};
+        for (value,field) in self.members.iter().zip(&self.fields){
+            if !ids.insert(value.get_id()){return Err("Repeated packed Edge identity unsupported".into());}
+            let edge=value.downcast_ref::<Edge>().ok_or("Packed member requires Edge")?;
+            let a=edge.v0.read().clone().ok_or("Cleared packed Edge endpoint")?;let b=edge.v1.read().clone().ok_or("Cleared packed Edge endpoint")?;
+            let a=*vertex_ids.get(&a.get_id()).ok_or("Detached packed endpoint projection pending")?;let b=*vertex_ids.get(&b.get_id()).ok_or("Detached packed endpoint projection pending")?;
+            let mut native=ingetrazo_core::mesh::MeshEdge::new(a,b);
+            native.soft=boolean(&field.soft)?;native.hidden=boolean(&field.hidden)?;
+            if !field.layer.is(&vm.ctx.none()) {let text=field.layer.downcast_ref::<PyStr>().ok_or("Arbitrary Edge layer projection pending")?.as_utf8().ok_or("Surrogate Edge layer projection pending")?.as_str();charge.resize(charge.bytes().checked_add(text.len()).ok_or("Packed layer extent overflow")?)?;let mut layer=String::new();layer.try_reserve_exact(text.len()).map_err(|_|"Packed layer allocation refused")?;layer.push_str(text);native.layer=Some(layer);}
+            if !field.curve.is(&vm.ctx.none()){native.curve_id=Some(field.curve.downcast_ref::<PyInt>().and_then(|n|n.as_bigint().to_usize()).ok_or("Arbitrary Edge curve projection pending")?);}
+            let radial=field.faces.borrow_vec();charge.resize(charge.bytes().checked_add(radial.len().checked_mul(8).ok_or("Packed radial overflow")?).ok_or("Packed radial overflow")?)?;
+            native.faces.try_reserve_exact(radial.len()).map_err(|_|"Packed radial allocation refused")?;
+            for f in radial.iter(){native.faces.push(*face_ids.get(&f.get_id()).ok_or("Detached radial Face projection pending")?);}
+            out.push(native);
+        }
+        Ok((out,charge))
+    }
+    pub(super) fn members(&self)->&[PyObjectRef]{&self.members}
+    pub(super) fn requires_replacement(&self,mesh:&PyRef<Mesh>,budget:&OwnerBudget)->Result<bool,String>{
+        let current=mesh.edges.borrow_vec();if current.len()!=self.members.len(){return Ok(true);}
+        let _charge=budget.reserve(Kind::Preparation,self.members.len().checked_mul(64).ok_or("Edge identity extent overflow")?)?;
+        let mut previous=std::collections::HashSet::new();previous.try_reserve(self.members.len()).map_err(|_|"Edge identity classification refused")?;
+        for value in &self.members{if !previous.insert(value.get_id()){return Err("Repeated prior Edge membership unsupported".into());}}
+        for value in current.iter(){if !previous.remove(&value.get_id()){return Ok(true);}}
+        // Preserve the existing in-place permutation path rather than repacking it.
+        Ok(false)
+    }
     pub(super) fn changed_order(&self,mesh:&PyRef<Mesh>,budget:&OwnerBudget)->Result<super::IdentityOrder,String>{super::identity_order(&mesh.edges.borrow_vec(),&self.members,budget)}
     pub(super) fn restore_order(&self,mesh:&PyRef<Mesh>,budget:&OwnerBudget)->Result<super::IdentityOrder,String>{super::identity_order(&self.members,&mesh.edges.borrow_vec(),budget)}
 

@@ -1,0 +1,26 @@
+[
+  {
+    "name": "public-drop",
+    "recipe": "m.edges.remove(e)"
+  },
+  {
+    "name": "primitive-remove",
+    "recipe": "m.remove_edge(e)"
+  },
+  {
+    "name": "replacement",
+    "recipe": "replacement=Edge(v0,v1)\nm.edges[0]=replacement"
+  },
+  {
+    "name": "reverse-endpoint-replacement",
+    "recipe": "replacement=Edge(v1,v0)\nm.edges[0]=replacement"
+  },
+  {
+    "name": "live-unsnapshotted-endpoint",
+    "recipe": "e.v1=v2\nm.edges.pop()"
+  },
+  {
+    "name": "metadata-replacement",
+    "recipe": "replacement=Edge(v0,v1)\nreplacement.soft=True\nreplacement.hidden=True\nreplacement.layer=\"authored\"\nreplacement.curve=7\nm.edges[0]=replacement"
+  }
+]

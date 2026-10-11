@@ -1,0 +1,12 @@
+{
+  "parent_source": "5c7e9b92",
+  "original_revision": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "binary_sha256": "81c0d7997e75eb487d4384ba4c05fa05404c1e7cbe87e29f67584c23ed1f1cd1",
+  "rust_source_sha256": {
+    "tools/ai-interpreter-proof/src/vm_mesh.rs": "c29663ddc60a11e37ad70d430a03d6ab96656d09a727108ac15b5526b9b20451",
+    "tools/ai-interpreter-proof/src/vm_graph.rs": "c7f8cde9a236ba294f9f62d3f5bb53030b2e9da5369b70763ba645709ccb79db",
+    "tools/ai-interpreter-proof/src/owner.rs": "1d7b61b960aa9787d28753aa3cd34ed8ee75ecc1f77fe1b8c69f893f40c1ed8d",
+    "tools/ai-interpreter-proof/src/owner_registry.rs": "13a3c3cfcda626773aa1aa4e9208faf3c1a6002edf4a2724f40e43d6a6644f5c"
+  },
+  "production_enabled": false
+}

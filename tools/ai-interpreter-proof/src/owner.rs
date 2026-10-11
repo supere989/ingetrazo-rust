@@ -407,14 +407,19 @@ impl JournalOwner {
     /// admission. This does not implement source deletion/lookup by itself.
     /// Existing chronological append deltas remain parked until inverse restores
     /// their state token/packing. No public production scripting route uses it.
-    pub fn prepare_packed_replacement_as(&mut self,mut mesh:Mesh,state:Uuid)->Result<PreparedPackedReplacement<'_>,String>{
+    pub fn prepare_packed_replacement_as(&mut self,mesh:Mesh,state:Uuid)->Result<PreparedPackedReplacement<'_>,String>{self.prepare_packed_replacement_inner(mesh,state,false)}
+    pub fn prepare_edge_replacement_as(&mut self,mesh:Mesh,state:Uuid)->Result<PreparedPackedReplacement<'_>,String>{
+        if mesh.vertices.len()!=self.mesh.vertices.len()||mesh.vertices.iter().zip(&self.mesh.vertices).any(|(a,b)|a.uid!=b.uid){return Err("Edge replacement requires exact Vertex identity order".into());}
+        self.prepare_packed_replacement_inner(mesh,state,true)
+    }
+    fn prepare_packed_replacement_inner(&mut self,mut mesh:Mesh,state:Uuid,keys:bool)->Result<PreparedPackedReplacement<'_>,String>{
         let next_version=self.version.checked_add(1).ok_or("Owner revision overflow")?;
         let preparation=self.budget.reserve(Kind::Preparation,preparation_bound(mesh.vertices.len(),mesh.edges.len())?)?;
         validate_base(&mesh)?;
         let positions=positions(&mesh.vertices,0)?;
         let index=self.index(&positions)?;
         mesh.install_prepared_spatial_index(index).map_err(str::to_owned)?;
-        let registry=Registry::new(&mesh,self.budget.clone(),self.document,state,next_version)?;
+        let registry=if keys{self.registry.edge_replacement(&mesh,state,next_version)?}else{Registry::new(&mesh,self.budget.clone(),self.document,state,next_version)?};
         Ok(PreparedPackedReplacement{owner:self,mesh,registry,state,next_version,_preparation:preparation})
     }
     pub fn replace(&mut self, mut mesh: Mesh) -> Result<(), String> {
@@ -1949,5 +1954,15 @@ impl PreparedPackedReplacement<'_>{
   let mut invalid=dropped_edge();invalid.edges.push(MeshEdge::new(0,99));assert!(o.prepare_packed_replacement_as(invalid,target).is_err());assert_eq!(o.mesh(),&before);assert_eq!(o.history_counts(),oldhistory);assert_eq!(budget.snapshot().total(),baseline);
   let parked=o.prepare_packed_replacement_as(dropped_edge(),target).unwrap().apply();assert_eq!(parked,before);assert!(view.check().is_err());assert!(o.commit(stale).is_err());assert_eq!(o.history_counts(),oldhistory);let installed=o.mesh().clone();let held_charge=budget.snapshot().total();let installed_state=o.state_token();assert!(o.undo().is_err());assert!(o.redo().is_err());assert_eq!(o.mesh(),&installed);assert_eq!(o.state_token(),installed_state);assert_eq!(o.history_counts(),oldhistory);assert_eq!(budget.snapshot().total(),held_charge);
   let _removed=o.prepare_packed_replacement_as(parked,oldstate).unwrap().apply();assert_eq!(o.mesh(),&before);assert!(o.undo().unwrap());assert_eq!(o.mesh().edges.len(),1);assert!(o.redo().unwrap());assert_eq!(o.mesh(),&before);drop(o);assert!(budget.snapshot().registry>0);drop(view);assert_eq!(budget.snapshot().total(),0);
+ }
+}
+
+#[cfg(test)]mod edge_replacement_keys_tests{
+ use super::*;
+ #[test]fn raw_pose_replacement_keeps_source_key_and_foreign_uid_refuses(){
+  let mut mesh=Mesh::new();mesh.add_vertex(DVec3::ZERO);mesh.add_vertex(DVec3::X);mesh.add_edge(0,1);let budget=OwnerBudget::new(None);let mut o=JournalOwner::new_with_budget(mesh,budget.clone()).unwrap();let state=Uuid::new_v4();let mut candidate=o.mesh().clone();candidate.vertices[0].position=DVec3::Y;
+  let old=o.prepare_edge_replacement_as(candidate,state).unwrap().apply();let view=o.registry.view();assert_eq!(view.vertex(&crate::journal::SourceKey::new(DVec3::ZERO)),Some(0));assert_eq!(view.vertex(&crate::journal::SourceKey::new(DVec3::Y)),None);
+  let mut foreign=o.mesh().clone();foreign.vertices[0].uid=Uuid::new_v4();let charge=budget.snapshot().total();assert!(o.prepare_edge_replacement_as(foreign,state).is_err());assert_eq!(budget.snapshot().total(),charge);assert_eq!(o.mesh().vertices[0].position,DVec3::Y);
+  o.prepare_edge_replacement_as(old,state).unwrap().apply();assert!(view.check().is_err());drop(view);drop(o);assert_eq!(budget.snapshot().total(),0);
  }
 }

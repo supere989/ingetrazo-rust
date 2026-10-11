@@ -1019,3 +1019,13 @@ impl FaceOwner {
   self.owner.prepare_graph_order_as(vertices,edges,faces,positions,loops,after)
  }
 }
+
+impl FaceOwner {
+ pub fn prepare_packed_replacement_as(&mut self,mesh:Mesh,state:uuid::Uuid)->Result<crate::owner::PreparedPackedReplacement<'_>,String>{
+  self.owner.prepare_packed_replacement_as(mesh,state)
+ }
+}
+
+impl FaceOwner {
+ pub fn prepare_edge_replacement_as(&mut self,mesh:Mesh,state:uuid::Uuid)->Result<crate::owner::PreparedPackedReplacement<'_>,String>{self.owner.prepare_edge_replacement_as(mesh,state)}
+}

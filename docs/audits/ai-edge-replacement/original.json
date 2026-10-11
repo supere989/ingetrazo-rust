@@ -1,0 +1,2851 @@
+{
+  "states": [
+    {
+      "name": "public-drop/edited",
+      "positions": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "endpoints": [
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "incidence": [
+        [
+          null,
+          1
+        ],
+        [
+          null,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "radial": [
+        [
+          0
+        ],
+        [
+          0
+        ]
+      ],
+      "faces": [
+        {
+          "loop": [
+            0,
+            1,
+            2
+          ],
+          "holes": []
+        }
+      ],
+      "native_radial": [
+        [
+          0
+        ],
+        [
+          0
+        ]
+      ],
+      "undo": 2,
+      "redo": 0,
+      "native_endpoints": [
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "native_incidence": [
+        [
+          1
+        ],
+        [
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "native_positions": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "native_faces": [
+        {
+          "loop": [
+            0,
+            1,
+            2
+          ],
+          "holes": []
+        }
+      ],
+      "held_edge_live": false,
+      "held_endpoint_ids": [
+        0,
+        1
+      ],
+      "held_edge_incidence": [
+        true,
+        true,
+        false
+      ],
+      "native_metadata": [
+        {
+          "soft": false,
+          "hidden": false,
+          "layer": null,
+          "curve": null
+        },
+        {
+          "soft": false,
+          "hidden": false,
+          "layer": null,
+          "curve": null
+        }
+      ]
+    },
+    {
+      "name": "public-drop/undone",
+      "positions": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "endpoints": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "incidence": [
+        [
+          0,
+          2
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ]
+      ],
+      "radial": [
+        [
+          0
+        ],
+        [
+          0
+        ],
+        [
+          0
+        ]
+      ],
+      "faces": [
+        {
+          "loop": [
+            0,
+            1,
+            2
+          ],
+          "holes": []
+        }
+      ],
+      "native_radial": [
+        [
+          0
+        ],
+        [
+          0
+        ],
+        [
+          0
+        ]
+      ],
+      "undo": 1,
+      "redo": 1,
+      "native_endpoints": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "native_incidence": [
+        [
+          0,
+          2
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ]
+      ],
+      "native_positions": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "native_faces": [
+        {
+          "loop": [
+            0,
+            1,
+            2
+          ],
+          "holes": []
+        }
+      ],
+      "held_edge_live": true,
+      "held_endpoint_ids": [
+        0,
+        1
+      ],
+      "held_edge_incidence": [
+        true,
+        true,
+        false
+      ],
+      "native_metadata": [
+        {
+          "soft": false,
+          "hidden": false,
+          "layer": null,
+          "curve": null
+        },
+        {
+          "soft": false,
+          "hidden": false,
+          "layer": null,
+          "curve": null
+        },
+        {
+          "soft": false,
+          "hidden": false,
+          "layer": null,
+          "curve": null
+        }
+      ]
+    },
+    {
+      "name": "public-drop/redone",
+      "positions": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "endpoints": [
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "incidence": [
+        [
+          null,
+          1
+        ],
+        [
+          null,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "radial": [
+        [
+          0
+        ],
+        [
+          0
+        ]
+      ],
+      "faces": [
+        {
+          "loop": [
+            0,
+            1,
+            2
+          ],
+          "holes": []
+        }
+      ],
+      "native_radial": [
+        [
+          0
+        ],
+        [
+          0
+        ]
+      ],
+      "undo": 2,
+      "redo": 0,
+      "native_endpoints": [
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "native_incidence": [
+        [
+          1
+        ],
+        [
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "native_positions": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "native_faces": [
+        {
+          "loop": [
+            0,
+            1,
+            2
+          ],
+          "holes": []
+        }
+      ],
+      "held_edge_live": false,
+      "held_endpoint_ids": [
+        0,
+        1
+      ],
+      "held_edge_incidence": [
+        true,
+        true,
+        false
+      ],
+      "native_metadata": [
+        {
+          "soft": false,
+          "hidden": false,
+          "layer": null,
+          "curve": null
+        },
+        {
+          "soft": false,
+          "hidden": false,
+          "layer": null,
+          "curve": null
+        }
+      ]
+    },
+    {
+      "name": "primitive-remove/edited",
+      "positions": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "endpoints": [
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "incidence": [
+        [
+          1
+        ],
+        [
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "radial": [
+        [
+          0
+        ],
+        [
+          0
+        ]
+      ],
+      "faces": [
+        {
+          "loop": [
+            0,
+            1,
+            2
+          ],
+          "holes": []
+        }
+      ],
+      "native_radial": [
+        [
+          0
+        ],
+        [
+          0
+        ]
+      ],
+      "undo": 2,
+      "redo": 0,
+      "native_endpoints": [
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "native_incidence": [
+        [
+          1
+        ],
+        [
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "native_positions": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "native_faces": [
+        {
+          "loop": [
+            0,
+            1,
+            2
+          ],
+          "holes": []
+        }
+      ],
+      "held_edge_live": false,
+      "held_endpoint_ids": [
+        0,
+        1
+      ],
+      "held_edge_incidence": [
+        false,
+        false,
+        false
+      ],
+      "native_metadata": [
+        {
+          "soft": false,
+          "hidden": false,
+          "layer": null,
+          "curve": null
+        },
+        {
+          "soft": false,
+          "hidden": false,
+          "layer": null,
+          "curve": null
+        }
+      ]
+    },
+    {
+      "name": "primitive-remove/undone",
+      "positions": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "endpoints": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "incidence": [
+        [
+          0,
+          2
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ]
+      ],
+      "radial": [
+        [
+          0
+        ],
+        [
+          0
+        ],
+        [
+          0
+        ]
+      ],
+      "faces": [
+        {
+          "loop": [
+            0,
+            1,
+            2
+          ],
+          "holes": []
+        }
+      ],
+      "native_radial": [
+        [
+          0
+        ],
+        [
+          0
+        ],
+        [
+          0
+        ]
+      ],
+      "undo": 1,
+      "redo": 1,
+      "native_endpoints": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "native_incidence": [
+        [
+          0,
+          2
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ]
+      ],
+      "native_positions": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "native_faces": [
+        {
+          "loop": [
+            0,
+            1,
+            2
+          ],
+          "holes": []
+        }
+      ],
+      "held_edge_live": true,
+      "held_endpoint_ids": [
+        0,
+        1
+      ],
+      "held_edge_incidence": [
+        true,
+        true,
+        false
+      ],
+      "native_metadata": [
+        {
+          "soft": false,
+          "hidden": false,
+          "layer": null,
+          "curve": null
+        },
+        {
+          "soft": false,
+          "hidden": false,
+          "layer": null,
+          "curve": null
+        },
+        {
+          "soft": false,
+          "hidden": false,
+          "layer": null,
+          "curve": null
+        }
+      ]
+    },
+    {
+      "name": "primitive-remove/redone",
+      "positions": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "endpoints": [
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "incidence": [
+        [
+          1
+        ],
+        [
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "radial": [
+        [
+          0
+        ],
+        [
+          0
+        ]
+      ],
+      "faces": [
+        {
+          "loop": [
+            0,
+            1,
+            2
+          ],
+          "holes": []
+        }
+      ],
+      "native_radial": [
+        [
+          0
+        ],
+        [
+          0
+        ]
+      ],
+      "undo": 2,
+      "redo": 0,
+      "native_endpoints": [
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "native_incidence": [
+        [
+          1
+        ],
+        [
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "native_positions": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "native_faces": [
+        {
+          "loop": [
+            0,
+            1,
+            2
+          ],
+          "holes": []
+        }
+      ],
+      "held_edge_live": false,
+      "held_endpoint_ids": [
+        0,
+        1
+      ],
+      "held_edge_incidence": [
+        false,
+        false,
+        false
+      ],
+      "native_metadata": [
+        {
+          "soft": false,
+          "hidden": false,
+          "layer": null,
+          "curve": null
+        },
+        {
+          "soft": false,
+          "hidden": false,
+          "layer": null,
+          "curve": null
+        }
+      ]
+    },
+    {
+      "name": "replacement/edited",
+      "positions": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "endpoints": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "incidence": [
+        [
+          null,
+          2
+        ],
+        [
+          null,
+          1
+        ],
+        [
+          1,
+          2
+        ]
+      ],
+      "radial": [
+        [],
+        [
+          0
+        ],
+        [
+          0
+        ]
+      ],
+      "faces": [
+        {
+          "loop": [
+            0,
+            1,
+            2
+          ],
+          "holes": []
+        }
+      ],
+      "native_radial": [
+        [],
+        [
+          0
+        ],
+        [
+          0
+        ]
+      ],
+      "undo": 2,
+      "redo": 0,
+      "native_endpoints": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "native_incidence": [
+        [
+          0,
+          2
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ]
+      ],
+      "native_positions": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "native_faces": [
+        {
+          "loop": [
+            0,
+            1,
+            2
+          ],
+          "holes": []
+        }
+      ],
+      "held_edge_live": false,
+      "held_endpoint_ids": [
+        0,
+        1
+      ],
+      "held_edge_incidence": [
+        true,
+        true,
+        false
+      ],
+      "native_metadata": [
+        {
+          "soft": false,
+          "hidden": false,
+          "layer": null,
+          "curve": null
+        },
+        {
+          "soft": false,
+          "hidden": false,
+          "layer": null,
+          "curve": null
+        },
+        {
+          "soft": false,
+          "hidden": false,
+          "layer": null,
+          "curve": null
+        }
+      ]
+    },
+    {
+      "name": "replacement/undone",
+      "positions": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "endpoints": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "incidence": [
+        [
+          0,
+          2
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ]
+      ],
+      "radial": [
+        [
+          0
+        ],
+        [
+          0
+        ],
+        [
+          0
+        ]
+      ],
+      "faces": [
+        {
+          "loop": [
+            0,
+            1,
+            2
+          ],
+          "holes": []
+        }
+      ],
+      "native_radial": [
+        [
+          0
+        ],
+        [
+          0
+        ],
+        [
+          0
+        ]
+      ],
+      "undo": 1,
+      "redo": 1,
+      "native_endpoints": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "native_incidence": [
+        [
+          0,
+          2
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ]
+      ],
+      "native_positions": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "native_faces": [
+        {
+          "loop": [
+            0,
+            1,
+            2
+          ],
+          "holes": []
+        }
+      ],
+      "held_edge_live": true,
+      "held_endpoint_ids": [
+        0,
+        1
+      ],
+      "held_edge_incidence": [
+        true,
+        true,
+        false
+      ],
+      "native_metadata": [
+        {
+          "soft": false,
+          "hidden": false,
+          "layer": null,
+          "curve": null
+        },
+        {
+          "soft": false,
+          "hidden": false,
+          "layer": null,
+          "curve": null
+        },
+        {
+          "soft": false,
+          "hidden": false,
+          "layer": null,
+          "curve": null
+        }
+      ]
+    },
+    {
+      "name": "replacement/redone",
+      "positions": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "endpoints": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "incidence": [
+        [
+          null,
+          2
+        ],
+        [
+          null,
+          1
+        ],
+        [
+          1,
+          2
+        ]
+      ],
+      "radial": [
+        [],
+        [
+          0
+        ],
+        [
+          0
+        ]
+      ],
+      "faces": [
+        {
+          "loop": [
+            0,
+            1,
+            2
+          ],
+          "holes": []
+        }
+      ],
+      "native_radial": [
+        [],
+        [
+          0
+        ],
+        [
+          0
+        ]
+      ],
+      "undo": 2,
+      "redo": 0,
+      "native_endpoints": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "native_incidence": [
+        [
+          0,
+          2
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ]
+      ],
+      "native_positions": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "native_faces": [
+        {
+          "loop": [
+            0,
+            1,
+            2
+          ],
+          "holes": []
+        }
+      ],
+      "held_edge_live": false,
+      "held_endpoint_ids": [
+        0,
+        1
+      ],
+      "held_edge_incidence": [
+        true,
+        true,
+        false
+      ],
+      "native_metadata": [
+        {
+          "soft": false,
+          "hidden": false,
+          "layer": null,
+          "curve": null
+        },
+        {
+          "soft": false,
+          "hidden": false,
+          "layer": null,
+          "curve": null
+        },
+        {
+          "soft": false,
+          "hidden": false,
+          "layer": null,
+          "curve": null
+        }
+      ]
+    },
+    {
+      "name": "reverse-endpoint-replacement/edited",
+      "positions": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "endpoints": [
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "incidence": [
+        [
+          null,
+          2
+        ],
+        [
+          null,
+          1
+        ],
+        [
+          1,
+          2
+        ]
+      ],
+      "radial": [
+        [],
+        [
+          0
+        ],
+        [
+          0
+        ]
+      ],
+      "faces": [
+        {
+          "loop": [
+            0,
+            1,
+            2
+          ],
+          "holes": []
+        }
+      ],
+      "native_radial": [
+        [],
+        [
+          0
+        ],
+        [
+          0
+        ]
+      ],
+      "undo": 2,
+      "redo": 0,
+      "native_endpoints": [
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "native_incidence": [
+        [
+          0,
+          2
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ]
+      ],
+      "native_positions": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "native_faces": [
+        {
+          "loop": [
+            0,
+            1,
+            2
+          ],
+          "holes": []
+        }
+      ],
+      "held_edge_live": false,
+      "held_endpoint_ids": [
+        0,
+        1
+      ],
+      "held_edge_incidence": [
+        true,
+        true,
+        false
+      ],
+      "native_metadata": [
+        {
+          "soft": false,
+          "hidden": false,
+          "layer": null,
+          "curve": null
+        },
+        {
+          "soft": false,
+          "hidden": false,
+          "layer": null,
+          "curve": null
+        },
+        {
+          "soft": false,
+          "hidden": false,
+          "layer": null,
+          "curve": null
+        }
+      ]
+    },
+    {
+      "name": "reverse-endpoint-replacement/undone",
+      "positions": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "endpoints": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "incidence": [
+        [
+          0,
+          2
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ]
+      ],
+      "radial": [
+        [
+          0
+        ],
+        [
+          0
+        ],
+        [
+          0
+        ]
+      ],
+      "faces": [
+        {
+          "loop": [
+            0,
+            1,
+            2
+          ],
+          "holes": []
+        }
+      ],
+      "native_radial": [
+        [
+          0
+        ],
+        [
+          0
+        ],
+        [
+          0
+        ]
+      ],
+      "undo": 1,
+      "redo": 1,
+      "native_endpoints": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "native_incidence": [
+        [
+          0,
+          2
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ]
+      ],
+      "native_positions": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "native_faces": [
+        {
+          "loop": [
+            0,
+            1,
+            2
+          ],
+          "holes": []
+        }
+      ],
+      "held_edge_live": true,
+      "held_endpoint_ids": [
+        0,
+        1
+      ],
+      "held_edge_incidence": [
+        true,
+        true,
+        false
+      ],
+      "native_metadata": [
+        {
+          "soft": false,
+          "hidden": false,
+          "layer": null,
+          "curve": null
+        },
+        {
+          "soft": false,
+          "hidden": false,
+          "layer": null,
+          "curve": null
+        },
+        {
+          "soft": false,
+          "hidden": false,
+          "layer": null,
+          "curve": null
+        }
+      ]
+    },
+    {
+      "name": "reverse-endpoint-replacement/redone",
+      "positions": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "endpoints": [
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "incidence": [
+        [
+          null,
+          2
+        ],
+        [
+          null,
+          1
+        ],
+        [
+          1,
+          2
+        ]
+      ],
+      "radial": [
+        [],
+        [
+          0
+        ],
+        [
+          0
+        ]
+      ],
+      "faces": [
+        {
+          "loop": [
+            0,
+            1,
+            2
+          ],
+          "holes": []
+        }
+      ],
+      "native_radial": [
+        [],
+        [
+          0
+        ],
+        [
+          0
+        ]
+      ],
+      "undo": 2,
+      "redo": 0,
+      "native_endpoints": [
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "native_incidence": [
+        [
+          0,
+          2
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ]
+      ],
+      "native_positions": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "native_faces": [
+        {
+          "loop": [
+            0,
+            1,
+            2
+          ],
+          "holes": []
+        }
+      ],
+      "held_edge_live": false,
+      "held_endpoint_ids": [
+        0,
+        1
+      ],
+      "held_edge_incidence": [
+        true,
+        true,
+        false
+      ],
+      "native_metadata": [
+        {
+          "soft": false,
+          "hidden": false,
+          "layer": null,
+          "curve": null
+        },
+        {
+          "soft": false,
+          "hidden": false,
+          "layer": null,
+          "curve": null
+        },
+        {
+          "soft": false,
+          "hidden": false,
+          "layer": null,
+          "curve": null
+        }
+      ]
+    },
+    {
+      "name": "live-unsnapshotted-endpoint/edited",
+      "positions": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "endpoints": [
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          2
+        ]
+      ],
+      "incidence": [
+        [
+          null,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          null,
+          1
+        ]
+      ],
+      "radial": [
+        [
+          0
+        ],
+        [
+          0
+        ]
+      ],
+      "faces": [
+        {
+          "loop": [
+            0,
+            1,
+            2
+          ],
+          "holes": []
+        }
+      ],
+      "native_radial": [
+        [
+          0
+        ],
+        [
+          0
+        ]
+      ],
+      "undo": 2,
+      "redo": 0,
+      "native_endpoints": [
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          2
+        ]
+      ],
+      "native_incidence": [
+        [
+          0
+        ],
+        [
+          1
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "native_positions": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "native_faces": [
+        {
+          "loop": [
+            0,
+            1,
+            2
+          ],
+          "holes": []
+        }
+      ],
+      "held_edge_live": true,
+      "held_endpoint_ids": [
+        0,
+        2
+      ],
+      "held_edge_incidence": [
+        true,
+        true,
+        false
+      ],
+      "native_metadata": [
+        {
+          "soft": false,
+          "hidden": false,
+          "layer": null,
+          "curve": null
+        },
+        {
+          "soft": false,
+          "hidden": false,
+          "layer": null,
+          "curve": null
+        }
+      ]
+    },
+    {
+      "name": "live-unsnapshotted-endpoint/undone",
+      "positions": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "endpoints": [
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "incidence": [
+        [
+          0,
+          2
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ]
+      ],
+      "radial": [
+        [
+          0
+        ],
+        [
+          0
+        ],
+        [
+          0
+        ]
+      ],
+      "faces": [
+        {
+          "loop": [
+            0,
+            1,
+            2
+          ],
+          "holes": []
+        }
+      ],
+      "native_radial": [
+        [
+          0
+        ],
+        [
+          0
+        ],
+        [
+          0
+        ]
+      ],
+      "undo": 1,
+      "redo": 1,
+      "native_endpoints": [
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "native_incidence": [
+        [
+          0,
+          2
+        ],
+        [
+          1
+        ],
+        [
+          0,
+          1,
+          2
+        ]
+      ],
+      "native_positions": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "native_faces": [
+        {
+          "loop": [
+            0,
+            1,
+            2
+          ],
+          "holes": []
+        }
+      ],
+      "held_edge_live": true,
+      "held_endpoint_ids": [
+        0,
+        2
+      ],
+      "held_edge_incidence": [
+        true,
+        true,
+        false
+      ],
+      "native_metadata": [
+        {
+          "soft": false,
+          "hidden": false,
+          "layer": null,
+          "curve": null
+        },
+        {
+          "soft": false,
+          "hidden": false,
+          "layer": null,
+          "curve": null
+        },
+        {
+          "soft": false,
+          "hidden": false,
+          "layer": null,
+          "curve": null
+        }
+      ]
+    },
+    {
+      "name": "live-unsnapshotted-endpoint/redone",
+      "positions": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "endpoints": [
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          2
+        ]
+      ],
+      "incidence": [
+        [
+          null,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          null,
+          1
+        ]
+      ],
+      "radial": [
+        [
+          0
+        ],
+        [
+          0
+        ]
+      ],
+      "faces": [
+        {
+          "loop": [
+            0,
+            1,
+            2
+          ],
+          "holes": []
+        }
+      ],
+      "native_radial": [
+        [
+          0
+        ],
+        [
+          0
+        ]
+      ],
+      "undo": 2,
+      "redo": 0,
+      "native_endpoints": [
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          2
+        ]
+      ],
+      "native_incidence": [
+        [
+          0
+        ],
+        [
+          1
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "native_positions": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "native_faces": [
+        {
+          "loop": [
+            0,
+            1,
+            2
+          ],
+          "holes": []
+        }
+      ],
+      "held_edge_live": true,
+      "held_endpoint_ids": [
+        0,
+        2
+      ],
+      "held_edge_incidence": [
+        true,
+        true,
+        false
+      ],
+      "native_metadata": [
+        {
+          "soft": false,
+          "hidden": false,
+          "layer": null,
+          "curve": null
+        },
+        {
+          "soft": false,
+          "hidden": false,
+          "layer": null,
+          "curve": null
+        }
+      ]
+    },
+    {
+      "name": "metadata-replacement/edited",
+      "positions": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "endpoints": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "incidence": [
+        [
+          null,
+          2
+        ],
+        [
+          null,
+          1
+        ],
+        [
+          1,
+          2
+        ]
+      ],
+      "radial": [
+        [],
+        [
+          0
+        ],
+        [
+          0
+        ]
+      ],
+      "faces": [
+        {
+          "loop": [
+            0,
+            1,
+            2
+          ],
+          "holes": []
+        }
+      ],
+      "native_radial": [
+        [],
+        [
+          0
+        ],
+        [
+          0
+        ]
+      ],
+      "undo": 2,
+      "redo": 0,
+      "native_endpoints": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "native_incidence": [
+        [
+          0,
+          2
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ]
+      ],
+      "native_positions": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "native_faces": [
+        {
+          "loop": [
+            0,
+            1,
+            2
+          ],
+          "holes": []
+        }
+      ],
+      "held_edge_live": false,
+      "held_endpoint_ids": [
+        0,
+        1
+      ],
+      "held_edge_incidence": [
+        true,
+        true,
+        false
+      ],
+      "native_metadata": [
+        {
+          "soft": true,
+          "hidden": true,
+          "layer": "authored",
+          "curve": 7
+        },
+        {
+          "soft": false,
+          "hidden": false,
+          "layer": null,
+          "curve": null
+        },
+        {
+          "soft": false,
+          "hidden": false,
+          "layer": null,
+          "curve": null
+        }
+      ]
+    },
+    {
+      "name": "metadata-replacement/undone",
+      "positions": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "endpoints": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "incidence": [
+        [
+          0,
+          2
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ]
+      ],
+      "radial": [
+        [
+          0
+        ],
+        [
+          0
+        ],
+        [
+          0
+        ]
+      ],
+      "faces": [
+        {
+          "loop": [
+            0,
+            1,
+            2
+          ],
+          "holes": []
+        }
+      ],
+      "native_radial": [
+        [
+          0
+        ],
+        [
+          0
+        ],
+        [
+          0
+        ]
+      ],
+      "undo": 1,
+      "redo": 1,
+      "native_endpoints": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "native_incidence": [
+        [
+          0,
+          2
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ]
+      ],
+      "native_positions": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "native_faces": [
+        {
+          "loop": [
+            0,
+            1,
+            2
+          ],
+          "holes": []
+        }
+      ],
+      "held_edge_live": true,
+      "held_endpoint_ids": [
+        0,
+        1
+      ],
+      "held_edge_incidence": [
+        true,
+        true,
+        false
+      ],
+      "native_metadata": [
+        {
+          "soft": false,
+          "hidden": false,
+          "layer": null,
+          "curve": null
+        },
+        {
+          "soft": false,
+          "hidden": false,
+          "layer": null,
+          "curve": null
+        },
+        {
+          "soft": false,
+          "hidden": false,
+          "layer": null,
+          "curve": null
+        }
+      ]
+    },
+    {
+      "name": "metadata-replacement/redone",
+      "positions": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "endpoints": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "incidence": [
+        [
+          null,
+          2
+        ],
+        [
+          null,
+          1
+        ],
+        [
+          1,
+          2
+        ]
+      ],
+      "radial": [
+        [],
+        [
+          0
+        ],
+        [
+          0
+        ]
+      ],
+      "faces": [
+        {
+          "loop": [
+            0,
+            1,
+            2
+          ],
+          "holes": []
+        }
+      ],
+      "native_radial": [
+        [],
+        [
+          0
+        ],
+        [
+          0
+        ]
+      ],
+      "undo": 2,
+      "redo": 0,
+      "native_endpoints": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "native_incidence": [
+        [
+          0,
+          2
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ]
+      ],
+      "native_positions": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "native_faces": [
+        {
+          "loop": [
+            0,
+            1,
+            2
+          ],
+          "holes": []
+        }
+      ],
+      "held_edge_live": false,
+      "held_endpoint_ids": [
+        0,
+        1
+      ],
+      "held_edge_incidence": [
+        true,
+        true,
+        false
+      ],
+      "native_metadata": [
+        {
+          "soft": true,
+          "hidden": true,
+          "layer": "authored",
+          "curve": 7
+        },
+        {
+          "soft": false,
+          "hidden": false,
+          "layer": null,
+          "curve": null
+        },
+        {
+          "soft": false,
+          "hidden": false,
+          "layer": null,
+          "curve": null
+        }
+      ]
+    }
+  ],
+  "production_enabled": false
+}

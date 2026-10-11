@@ -19,6 +19,18 @@ impl Registry{
   for (id,e) in mesh.edges.iter().enumerate(){edges.insert(ordered(e.v0,e.v1),(id,e.v0,e.v1));}
   Ok(Self(Rc::new(RefCell::new(State{document,state,version,valid:true,positions,edge_extent:mesh.edges.len(),vertices,edges,charge,budget,metrics:Metrics{cold_vertex_rows:mesh.vertices.len(),cold_edge_rows:mesh.edges.len(),lookup_calls:0,publication_rows:0,position_rows:0}}))))
  }
+ // Unchanged genuine Vertex membership retains source weld keys, including stale
+ // keys after raw pose edits. New packed Edge numbering is an accelerator only.
+ pub fn edge_replacement(&self,mesh:&Mesh,state:Uuid,version:u64)->Result<Self,String>{
+  let old=self.0.borrow();if mesh.vertices.len()!=old.positions.len(){return Err("Edge replacement Vertex extent mismatch".into());}
+  let mut charge=old.budget.reserve(Kind::Registry,registry_bytes(old.vertices.len().max(mesh.vertices.len()),mesh.edges.len())?)?;
+  let mut positions=Vec::new();positions.try_reserve_exact(mesh.vertices.len()).map_err(|_|"Replacement registry positions refused")?;positions.extend(mesh.vertices.iter().map(|v|v.position));
+  let mut vertices=HashMap::new();vertices.try_reserve(old.vertices.len()).map_err(|_|"Replacement source key registry refused")?;
+  for (key,id)in &old.vertices{vertices.insert(key.clone(),*id);}
+  let mut edges=HashMap::new();edges.try_reserve(mesh.edges.len()).map_err(|_|"Replacement Edge registry refused")?;for(id,e)in mesh.edges.iter().enumerate(){edges.insert(ordered(e.v0,e.v1),(id,e.v0,e.v1));}
+  charge.resize(registry_bytes(vertices.capacity().max(positions.capacity()),edges.capacity())?)?;
+  Ok(Self(Rc::new(RefCell::new(State{document:old.document,state,version,valid:true,positions,edge_extent:mesh.edges.len(),vertices,edges,charge,budget:old.budget.clone(),metrics:Metrics{cold_vertex_rows:mesh.vertices.len(),cold_edge_rows:mesh.edges.len(),lookup_calls:0,publication_rows:0,position_rows:0}}))))
+ }
  pub fn view(&self)->View{let s=self.0.borrow();View{inner:self.0.clone(),document:s.document,state:s.state,version:s.version}}
  pub fn invalidate(&self){self.0.borrow_mut().valid=false;}
  pub fn metrics(&self)->Metrics{self.0.borrow().metrics}
