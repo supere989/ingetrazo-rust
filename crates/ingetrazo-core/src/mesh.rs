@@ -15,6 +15,16 @@ use serde::{Deserialize, Serialize};
 use crate::math::{newell_vector, PointKey, EPSILON};
 use crate::triangulate::{triangulate, Tri3};
 
+// Source Qt-authored keys use Python's ties-even quantization. Native
+// doubles keep the existing key extension; neither branch changes payloads.
+fn mesh_weld_key(p:DVec3)->PointKey {
+    if p.is_finite()&&p.as_vec3().as_dvec3()==p {
+        PointKey((p.x*crate::math::KEY_SCALE).round_ties_even()as i64,
+                 (p.y*crate::math::KEY_SCALE).round_ties_even()as i64,
+                 (p.z*crate::math::KEY_SCALE).round_ties_even()as i64)
+    }else{PointKey::from_vec3(p)}
+}
+
 pub type VertexId = usize;
 pub type EdgeId = usize;
 pub type FaceId = usize;
@@ -175,8 +185,8 @@ impl Mesh {
     /// New cut/extrusion stations receive fresh identities from add_vertex.
     pub fn preserve_vertex_uids_from(&mut self, original:&Mesh) {
         let mut identities=HashMap::new();
-        for vertex in &original.vertices {identities.entry(PointKey::from_vec3(vertex.position)).or_insert(vertex.uid);}
-        for vertex in &mut self.vertices {if let Some(&uid)=identities.get(&PointKey::from_vec3(vertex.position)){vertex.uid=uid;}}
+        for vertex in &original.vertices {identities.entry(mesh_weld_key(vertex.position)).or_insert(vertex.uid);}
+        for vertex in &mut self.vertices {if let Some(&uid)=identities.get(&mesh_weld_key(vertex.position)){vertex.uid=uid;}}
     }
 
     pub fn clear(&mut self) {
@@ -191,7 +201,7 @@ impl Mesh {
         let mut ordered=Vec::new();ordered.try_reserve_exact(positions.len()).map_err(|_|"Prepared coordinate allocation refused")?;
         ordered.extend_from_slice(positions);
         let mut index=HashMap::new();index.try_reserve(positions.len()).map_err(|_|"Prepared index allocation refused")?;
-        for (id,&position) in positions.iter().enumerate(){index.insert(PointKey::from_vec3(position),id);}
+        for (id,&position) in positions.iter().enumerate(){index.insert(mesh_weld_key(position),id);}
         Ok(PreparedSpatialIndex{positions:ordered,index})
     }
     /// Allocation-free validation and swap; a foreign/stale preparation cannot
@@ -209,7 +219,7 @@ impl Mesh {
         let mut ordered=Vec::new();ordered.try_reserve_exact(positions.len()).map_err(|_|"Spatial delta coordinates refused")?;
         let mut changes:Vec<(PointKey,Option<VertexId>,VertexId)>=Vec::new();changes.try_reserve_exact(positions.len()).map_err(|_|"Spatial delta keys refused")?;
         let mut seen=HashMap::<PointKey,usize>::new();seen.try_reserve(positions.len()).map_err(|_|"Spatial delta key planning refused")?;
-        for (offset,&p) in positions.iter().enumerate(){if !p.is_finite(){return Err("Nonfinite spatial delta coordinate");}let key=PointKey::from_vec3(p);let id=base+offset;ordered.push(p);if let Some(&slot)=seen.get(&key){changes[slot].2=id;}else{seen.insert(key,changes.len());changes.push((key,self.spatial_index.get(&key).copied(),id));}}
+        for (offset,&p) in positions.iter().enumerate(){if !p.is_finite(){return Err("Nonfinite spatial delta coordinate");}let key=mesh_weld_key(p);let id=base+offset;ordered.push(p);if let Some(&slot)=seen.get(&key){changes[slot].2=id;}else{seen.insert(key,changes.len());changes.push((key,self.spatial_index.get(&key).copied(),id));}}
         self.spatial_index.try_reserve(changes.len()).map_err(|_|"Spatial delta index reservation refused")?;
         Ok(PreparedSpatialDelta{base,positions:ordered,changes})
     }
@@ -237,12 +247,12 @@ impl Mesh {
         for (id,identity,position) in positions.clone() {
             let Some(vertex)=self.vertices.get(id).filter(|v|v.uid.as_u128()==identity)else{continue;};
             changed|=vertex.position!=position;
-            let old=PointKey::from_vec3(vertex.position);let new=PointKey::from_vec3(position);
+            let old=mesh_weld_key(vertex.position);let new=mesh_weld_key(position);
             if old!=new&&self.spatial_index.get(&old)==Some(&id){self.spatial_index.remove(&old);}
         }
         for (id,identity,position) in positions {
             let Some(vertex)=self.vertices.get_mut(id).filter(|v|v.uid.as_u128()==identity)else{continue;};
-            vertex.position=position;self.spatial_index.entry(PointKey::from_vec3(position)).or_insert(id);
+            vertex.position=position;self.spatial_index.entry(mesh_weld_key(position)).or_insert(id);
         }
         changed
     }
@@ -251,7 +261,7 @@ impl Mesh {
     pub fn rebuild_spatial_index(&mut self) {
         self.spatial_index.clear();
         for (i, v) in self.vertices.iter().enumerate() {
-            let key = PointKey::from_vec3(v.position);
+            let key = mesh_weld_key(v.position);
             self.spatial_index.insert(key, i);
         }
     }
@@ -284,13 +294,32 @@ impl Mesh {
 
     /// Resolve the same existing endpoint that add_vertex would weld to.
     pub fn vertex_at_position(&self, p:DVec3)->Option<VertexId>{
-        self.spatial_index.get(&PointKey::from_vec3(p)).copied()
+        let key=mesh_weld_key(p);
+        if let Some(&id)=self.spatial_index.get(&key){return Some(id);}
+        if !p.is_finite(){return None;}
+        for dx in -1i64..=1 {for dy in -1i64..=1 {for dz in -1i64..=1 {
+            if dx==0&&dy==0&&dz==0{continue;}
+            let Some(x)=key.0.checked_add(dx)else{continue};
+            let Some(y)=key.1.checked_add(dy)else{continue};
+            let Some(z)=key.2.checked_add(dz)else{continue};
+            if let Some(&id)=self.spatial_index.get(&PointKey(x,y,z)) {
+                let q=self.vertices[id].position;
+                // Qt-authored endpoints use the source QVector3D distance law.
+                // Genuine native doubles keep their distance and payload precision.
+                let close=if p.as_vec3().as_dvec3()==p&&q.as_vec3().as_dvec3()==q {
+                    let d=p.as_vec3()-q.as_vec3();
+                    f64::from(d.x*d.x+d.y*d.y+d.z*d.z)<1e-8
+                }else{(p-q).length_squared()<1e-8};
+                if close{return Some(id);}
+            }
+        }}}
+        None
     }
 
     /// Add a 3D position to the mesh, automatically welding to any coincident vertex.
     pub fn add_vertex(&mut self, p: DVec3) -> VertexId {
-        let key = PointKey::from_vec3(p);
-        if let Some(&existing) = self.spatial_index.get(&key) {
+        let key = mesh_weld_key(p);
+        if let Some(existing) = self.vertex_at_position(p) {
             return existing;
         }
         let id = self.vertices.len();
@@ -301,10 +330,11 @@ impl Mesh {
 
     /// Find an existing edge between vertices v0 and v1 regardless of order.
     pub fn find_edge(&self, v0: VertexId, v1: VertexId) -> Option<EdgeId> {
-        if v0 == v1 || v0 >= self.vertices.len() {
+        if v0 == v1 || v0 >= self.vertices.len() || v1 >= self.vertices.len() {
             return None;
         }
-        for &e_id in &self.vertices[v0].edges {
+        let small=if self.vertices[v0].edges.len()<=self.vertices[v1].edges.len(){v0}else{v1};
+        for &e_id in &self.vertices[small].edges {
             let e = &self.edges[e_id];
             if (e.v0 == v0 && e.v1 == v1) || (e.v0 == v1 && e.v1 == v0) {
                 return Some(e_id);
@@ -326,6 +356,50 @@ impl Mesh {
         self.vertices[v0].edges.push(id);
         self.vertices[v1].edges.push(id);
         Some(id)
+    }
+
+    /// Source shared-edge split: all radial faces reuse their records; the
+    /// removed edge is replaced by ordinary constructor subedges, or already
+    /// existing subedges. Admission finishes before any semantic mutation.
+    pub fn split_edge(&mut self, edge_id:EdgeId, position:DVec3)->Result<(EdgeId,EdgeId),String>{
+        if !position.is_finite(){return Err("Nonfinite split position".into());}
+        let edge=self.edges.get(edge_id).ok_or("Missing split edge")?;
+        let (a,b)=(edge.v0,edge.v1);
+        if a>=self.vertices.len()||b>=self.vertices.len()||a==b{return Err("Invalid split endpoints".into());}
+        let existing=self.vertex_at_position(position);
+        if existing==Some(a)||existing==Some(b){return Ok((edge_id,edge_id));}
+        let mut incident=Vec::new();incident.try_reserve_exact(edge.faces.len()).map_err(|_|"Split radial admission refused")?;
+        incident.extend_from_slice(&edge.faces);
+        // Record only the source's first matching ring/station per incident face.
+        let mut seen=std::collections::HashSet::new();seen.try_reserve(incident.len()).map_err(|_|"Split radial identity admission refused")?;
+        let mut inserts=Vec::new();inserts.try_reserve_exact(incident.len()).map_err(|_|"Split ring admission refused")?;
+        for &face_id in &incident {
+            if !seen.insert(face_id){continue;}
+            let face=self.faces.get(face_id).ok_or("Invalid split radial face")?;
+            let station=std::iter::once(&face.vertices).chain(&face.holes).enumerate().find_map(|(ring_id,ring)|{
+                if ring.iter().any(|&v|v>=self.vertices.len()){return Some(Err("Invalid split ring vertex"));}
+                (0..ring.len()).find(|&i|{let x=ring[i];let y=ring[(i+1)%ring.len()];(x==a&&y==b)||(x==b&&y==a)}).map(|i|Ok((ring_id,i+1)))
+            }).transpose()?.ok_or("Split radial face lacks endpoint boundary")?;
+            inserts.push((face_id,station.0,station.1));
+        }
+        if existing.is_none(){self.vertices.try_reserve(1).map_err(|_|"Split vertex admission refused")?;self.spatial_index.try_reserve(1).map_err(|_|"Split index admission refused")?;}
+        self.edges.try_reserve(2).map_err(|_|"Split edge admission refused")?;
+        for id in [Some(a),Some(b),existing].into_iter().flatten(){self.vertices[id].edges.try_reserve(2).map_err(|_|"Split incidence admission refused")?;}
+        for &(f,r,_) in &inserts {let face=&mut self.faces[f];let ring=if r==0{&mut face.vertices}else{&mut face.holes[r-1]};ring.try_reserve(1).map_err(|_|"Split face admission refused")?;}
+        // Existing welded subedges must retain their own metadata and identities.
+        for &v in [a,b].iter(){if let Some(mid)=existing{if let Some(id)=self.find_edge(v,mid){self.edges[id].faces.try_reserve(incident.len()).map_err(|_|"Split reused radial admission refused")?;}}}
+        let mut fresh0=MeshEdge::new(a,existing.unwrap_or(self.vertices.len()));
+        let mut fresh1=MeshEdge::new(existing.unwrap_or(self.vertices.len()),b);
+        fresh0.faces.try_reserve_exact(incident.len()).map_err(|_|"Split radial allocation refused")?;
+        fresh1.faces.try_reserve_exact(incident.len()).map_err(|_|"Split radial allocation refused")?;
+        let mut fresh_vertex=MeshVertex::new(position);fresh_vertex.edges.try_reserve_exact(2).map_err(|_|"Split vertex links refused")?;
+        let mid=if let Some(id)=existing{id}else{let id=self.vertices.len();self.vertices.push(fresh_vertex);self.spatial_index.insert(mesh_weld_key(position),id);id};
+        self.edges.remove(edge_id);
+        for vertex in &mut self.vertices {vertex.edges.retain(|&id|id!=edge_id);for id in &mut vertex.edges{if *id>edge_id{*id-=1;}}}
+        let link=|mesh:&mut Mesh,v0,v1,fresh:MeshEdge|{if let Some(id)=mesh.find_edge(v0,v1){id}else{let id=mesh.edges.len();mesh.edges.push(fresh);mesh.vertices[v0].edges.push(id);mesh.vertices[v1].edges.push(id);id}};
+        let e0=link(self,a,mid,fresh0);let e1=link(self,mid,b,fresh1);
+        for (f,r,i) in inserts {let face=&mut self.faces[f];let ring=if r==0{&mut face.vertices}else{&mut face.holes[r-1]};ring.insert(i,mid);for e in [e0,e1]{if !self.edges[e].faces.contains(&f){self.edges[e].faces.push(f);}}}
+        Ok((e0,e1))
     }
 
     /// Add a face defined by an ordered loop of vertex IDs and optional holes.
