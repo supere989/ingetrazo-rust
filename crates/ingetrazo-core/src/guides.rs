@@ -45,7 +45,9 @@ impl Guide {
             native_baseline: serde_json::Value::Null,
             kind: GuideType::InfiniteLine {
                 point,
-                dir: dir.normalize_or_zero(),
+                dir: if [point, dir].into_iter().all(|p| p.is_finite() && p.as_vec3().as_dvec3() == p) {
+                    crate::math::source_normalized(dir.as_vec3()).as_dvec3()
+                } else { dir.normalize_or_zero() },
             },
         }
     }

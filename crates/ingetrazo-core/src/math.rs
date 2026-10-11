@@ -17,6 +17,19 @@ pub const PLANAR_TOLERANCE: f64 = 1e-3;
 pub const SPLIT_TOLERANCE: f64 = 1e-4;
 pub const EPSILON: f64 = 1e-9;
 
+/// QVector3D normalization for source-authorable inference vectors only.
+/// Keep the scaled float length and component division order; native model
+/// coordinates and generic double geometry continue to use DVec3.
+pub(crate) fn source_normalized(v: glam::Vec3) -> glam::Vec3 {
+    let m = v.abs().max_element();
+    if m == 0. { return glam::Vec3::ZERO; }
+    let n = glam::Vec3::new(v.x / m, v.y / m, v.z / m);
+    let len = m * ((n.x * n.x + n.y * n.y) + n.z * n.z).sqrt();
+    if (len - 1.).abs() <= 1e-5 { v }
+    else if len.abs() <= 1e-5 { glam::Vec3::ZERO }
+    else { glam::Vec3::new(v.x / len, v.y / len, v.z / len) }
+}
+
 /// Quantized integer coordinate key for spatial hashing and vertex welding (~0.1 mm precision).
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
 pub struct PointKey(pub i64, pub i64, pub i64);

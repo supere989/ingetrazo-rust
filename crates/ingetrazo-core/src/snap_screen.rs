@@ -10,6 +10,7 @@ use crate::{
     snap::*,
 };
 use glam::{DVec2, DVec3};
+mod source_camera;
 
 #[derive(Debug, Clone, Copy)]
 pub struct ScreenSnapContext {
@@ -61,7 +62,7 @@ fn result(point: DVec3, kind: SnapKind, color: [f32; 3], label: &str) -> SnapRes
 /// viewport is confined to inference; render/picking and generic double
 /// projection protocols retain their existing camera representation.
 pub fn source_camera_matrix(camera:&crate::camera::OrbitCamera)->glam::Mat4{
-    camera.projection_matrix().as_mat4()*camera.view_matrix().as_mat4()
+    source_camera::matrix(camera)
 }
 struct ProjectedContext<'a>{ctx:&'a ScreenSnapContext,source:Option<glam::Mat4>}
 impl std::ops::Deref for ProjectedContext<'_>{type Target=ScreenSnapContext;fn deref(&self)->&ScreenSnapContext{self.ctx}}

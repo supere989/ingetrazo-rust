@@ -67,8 +67,7 @@ impl TapeTool {
                     scene.bump_version();
                 }
                 TapeMode::GuideLine => {
-                    let dir = delta.normalize_or_zero();
-                    scene.guides.push(Guide::infinite_line(start, dir));
+                    scene.guides.push(Guide::infinite_line(start, delta));
                     scene.bump_version();
                 }
             }

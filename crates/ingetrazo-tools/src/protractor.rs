@@ -67,7 +67,7 @@ impl Tool for ProtractorTool {
             let dir = sweep - c;
 
             if dir.length() > 1e-6 {
-                let guide = Guide::infinite_line(c, dir.normalize());
+                let guide = Guide::infinite_line(c, dir);
                 scene.guides.push(guide);
                 scene.bump_version();
             }
