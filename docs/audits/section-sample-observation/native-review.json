@@ -1,0 +1,410 @@
+[
+  {
+    "platform": "arm",
+    "source_files_authenticated": 52,
+    "resolved_equals_prior86": true,
+    "changed_pixels_from_prior86": 0,
+    "resolved_sha256": "51240eb95fcca70ce939c4fd0f0311076ac0ee6007553e5ce5c650f94631d451",
+    "prior_archive": "/tmp/86cf-arm.zip",
+    "pixels": [
+      {
+        "point": [
+          400,
+          228
+        ],
+        "source_resolved": [
+          89,
+          32,
+          108,
+          255
+        ],
+        "native_resolved": [
+          89,
+          32,
+          108,
+          255
+        ],
+        "same_sample_rgba8": true,
+        "source_cap_slot": 0,
+        "native_cap_slot": 0,
+        "float_bit_differences": [
+          {
+            "sample": 1,
+            "channel": 2,
+            "source": 1047325934,
+            "native": 1047325933
+          },
+          {
+            "sample": 2,
+            "channel": 2,
+            "source": 1047325934,
+            "native": 1047325933
+          },
+          {
+            "sample": 3,
+            "channel": 2,
+            "source": 1047325934,
+            "native": 1047325933
+          }
+        ]
+      },
+      {
+        "point": [
+          328,
+          300
+        ],
+        "source_resolved": [
+          89,
+          32,
+          108,
+          255
+        ],
+        "native_resolved": [
+          89,
+          32,
+          108,
+          255
+        ],
+        "same_sample_rgba8": true,
+        "source_cap_slot": 1,
+        "native_cap_slot": 1,
+        "float_bit_differences": [
+          {
+            "sample": 0,
+            "channel": 2,
+            "source": 1047325934,
+            "native": 1047325933
+          },
+          {
+            "sample": 2,
+            "channel": 2,
+            "source": 1047325934,
+            "native": 1047325933
+          },
+          {
+            "sample": 3,
+            "channel": 2,
+            "source": 1047325934,
+            "native": 1047325933
+          }
+        ]
+      },
+      {
+        "point": [
+          471,
+          300
+        ],
+        "source_resolved": [
+          88,
+          32,
+          108,
+          255
+        ],
+        "native_resolved": [
+          89,
+          32,
+          108,
+          255
+        ],
+        "same_sample_rgba8": true,
+        "source_cap_slot": 2,
+        "native_cap_slot": 2,
+        "float_bit_differences": [
+          {
+            "sample": 0,
+            "channel": 2,
+            "source": 1047325934,
+            "native": 1047325933
+          },
+          {
+            "sample": 1,
+            "channel": 2,
+            "source": 1047325934,
+            "native": 1047325933
+          },
+          {
+            "sample": 3,
+            "channel": 2,
+            "source": 1047325934,
+            "native": 1047325933
+          }
+        ]
+      },
+      {
+        "point": [
+          400,
+          371
+        ],
+        "source_resolved": [
+          88,
+          32,
+          108,
+          255
+        ],
+        "native_resolved": [
+          89,
+          32,
+          108,
+          255
+        ],
+        "same_sample_rgba8": true,
+        "source_cap_slot": 3,
+        "native_cap_slot": 3,
+        "float_bit_differences": [
+          {
+            "sample": 0,
+            "channel": 2,
+            "source": 1047325934,
+            "native": 1047325933
+          },
+          {
+            "sample": 1,
+            "channel": 2,
+            "source": 1047325934,
+            "native": 1047325933
+          },
+          {
+            "sample": 2,
+            "channel": 2,
+            "source": 1047325934,
+            "native": 1047325933
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "platform": "intel",
+    "source_files_authenticated": 52,
+    "resolved_equals_prior86": true,
+    "changed_pixels_from_prior86": 0,
+    "resolved_sha256": "6a3c34c071c82b9f73e39a633345f98a631a1430779b291fea61b51f83c7b1ea",
+    "prior_archive": "/tmp/ingetrazo-675-platform-observation/docs/audits/native-platform/metal-sample-routing/intel.zip",
+    "pixels": [
+      {
+        "point": [
+          400,
+          228
+        ],
+        "source_resolved": [
+          89,
+          32,
+          108,
+          255
+        ],
+        "native_resolved": [
+          88,
+          32,
+          108,
+          255
+        ],
+        "same_sample_rgba8": false,
+        "source_cap_slot": 0,
+        "native_cap_slot": 3,
+        "float_bit_differences": [
+          {
+            "sample": 0,
+            "channel": 0,
+            "source": 1065353216,
+            "native": 1040483461
+          },
+          {
+            "sample": 0,
+            "channel": 1,
+            "source": 0,
+            "native": 1043115181
+          },
+          {
+            "sample": 0,
+            "channel": 2,
+            "source": 1065353216,
+            "native": 1047325933
+          },
+          {
+            "sample": 1,
+            "channel": 2,
+            "source": 1047325934,
+            "native": 1047325933
+          },
+          {
+            "sample": 2,
+            "channel": 2,
+            "source": 1047325934,
+            "native": 1047325933
+          },
+          {
+            "sample": 3,
+            "channel": 0,
+            "source": 1040483461,
+            "native": 1065353216
+          },
+          {
+            "sample": 3,
+            "channel": 1,
+            "source": 1043115181,
+            "native": 0
+          },
+          {
+            "sample": 3,
+            "channel": 2,
+            "source": 1047325934,
+            "native": 1065353216
+          }
+        ]
+      },
+      {
+        "point": [
+          328,
+          300
+        ],
+        "source_resolved": [
+          89,
+          32,
+          108,
+          255
+        ],
+        "native_resolved": [
+          88,
+          32,
+          108,
+          255
+        ],
+        "same_sample_rgba8": true,
+        "source_cap_slot": 1,
+        "native_cap_slot": 1,
+        "float_bit_differences": [
+          {
+            "sample": 0,
+            "channel": 2,
+            "source": 1047325934,
+            "native": 1047325933
+          },
+          {
+            "sample": 2,
+            "channel": 2,
+            "source": 1047325934,
+            "native": 1047325933
+          },
+          {
+            "sample": 3,
+            "channel": 2,
+            "source": 1047325934,
+            "native": 1047325933
+          }
+        ]
+      },
+      {
+        "point": [
+          471,
+          300
+        ],
+        "source_resolved": [
+          88,
+          32,
+          108,
+          255
+        ],
+        "native_resolved": [
+          88,
+          32,
+          108,
+          255
+        ],
+        "same_sample_rgba8": true,
+        "source_cap_slot": 2,
+        "native_cap_slot": 2,
+        "float_bit_differences": [
+          {
+            "sample": 0,
+            "channel": 2,
+            "source": 1047325934,
+            "native": 1047325933
+          },
+          {
+            "sample": 1,
+            "channel": 2,
+            "source": 1047325934,
+            "native": 1047325933
+          },
+          {
+            "sample": 3,
+            "channel": 2,
+            "source": 1047325934,
+            "native": 1047325933
+          }
+        ]
+      },
+      {
+        "point": [
+          400,
+          371
+        ],
+        "source_resolved": [
+          88,
+          32,
+          108,
+          255
+        ],
+        "native_resolved": [
+          88,
+          32,
+          108,
+          255
+        ],
+        "same_sample_rgba8": false,
+        "source_cap_slot": 3,
+        "native_cap_slot": 0,
+        "float_bit_differences": [
+          {
+            "sample": 0,
+            "channel": 0,
+            "source": 1040483461,
+            "native": 1065353216
+          },
+          {
+            "sample": 0,
+            "channel": 1,
+            "source": 1043115181,
+            "native": 0
+          },
+          {
+            "sample": 0,
+            "channel": 2,
+            "source": 1047325934,
+            "native": 1065353216
+          },
+          {
+            "sample": 1,
+            "channel": 2,
+            "source": 1047325934,
+            "native": 1047325933
+          },
+          {
+            "sample": 2,
+            "channel": 2,
+            "source": 1047325934,
+            "native": 1047325933
+          },
+          {
+            "sample": 3,
+            "channel": 0,
+            "source": 1065353216,
+            "native": 1040483461
+          },
+          {
+            "sample": 3,
+            "channel": 1,
+            "source": 0,
+            "native": 1043115181
+          },
+          {
+            "sample": 3,
+            "channel": 2,
+            "source": 1065353216,
+            "native": 1047325933
+          }
+        ]
+      }
+    ]
+  }
+]

@@ -1,0 +1,15 @@
+{
+  "completed_integration_raw": {
+    "path": "/tmp/ingetrazo-edit-kernel-integration",
+    "files": 27,
+    "bytes": 3251153,
+    "archive_sha256": "28a794102249784cbab0c1b66e3125440abf04b63d911c4f3ddc37ace9f58969"
+  },
+  "p05_owner_raw": {
+    "path": "/tmp/p05-kernel-proof",
+    "files": 10,
+    "bytes": 4887257,
+    "archive_sha256": "c3dfb6722a59293e4e8d8d4394d439ae8c699f55bc77635431fbe97d123b9e3b"
+  },
+  "policy": "Removed only owned terminal outputs after exact byte authentication against preserved canonical archives; no targets, sources, worktrees or unique failures removed."
+}

@@ -1,0 +1,172 @@
+{
+  "verified_archive_entries": 33,
+  "removed_files": [
+    {
+      "path": "check.json",
+      "bytes": 97,
+      "sha256": "c492db91619ec9ec4a2a47d8df9d1e0c2e89f5110b92848be5ae10b320b0e140"
+    },
+    {
+      "path": "corrected-build.log",
+      "bytes": 20144,
+      "sha256": "22dc03095392e33e743aa2db05e8c76a7bbc87b681af3f061ed36c85bbbecc6f"
+    },
+    {
+      "path": "dimension-nested.igz",
+      "bytes": 3256,
+      "sha256": "5ab860e97df0624c35fa82433b303fa1b717135fc430da8b9fa5995b9e01dfc0"
+    },
+    {
+      "path": "dimension-root.igz",
+      "bytes": 2988,
+      "sha256": "b8dc626e8fb64f893b26b1ce09c4ea6179017f6a6fc733ddc1a11acdadeecf28"
+    },
+    {
+      "path": "failed-nested-style.json",
+      "bytes": 27354,
+      "sha256": "c1c1fb623b03df2938735350fbecaea0fb8b6156f55e86843b5d94b3d116f2ce"
+    },
+    {
+      "path": "final-focused.log",
+      "bytes": 19491,
+      "sha256": "d56bed91bad6ec3dcf0e4c5d7d14bb77ddd404bcc3f8f809b44b4bbc8210a8f7"
+    },
+    {
+      "path": "final-named-build.log",
+      "bytes": 20144,
+      "sha256": "b64bbaeb48c161b4b522ea92b457304c83840a04bdf30dc6b4235e1e6a6935b4"
+    },
+    {
+      "path": "final-native.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "focused-build.log",
+      "bytes": 20347,
+      "sha256": "1fd7345025956a51095b33d15db8ee88f47081d606e931b01638608ca03f8378"
+    },
+    {
+      "path": "input.igz",
+      "bytes": 2512,
+      "sha256": "c9ce01d930fff89d9af94b5580093f6f82626b75d6ce690482e32fd787d4a87b"
+    },
+    {
+      "path": "label-nested.igz",
+      "bytes": 3258,
+      "sha256": "607588068068ace04b10a9fc4cc562b30a2d92fe3bf23a9bfb697df40fc18785"
+    },
+    {
+      "path": "label-root.igz",
+      "bytes": 2990,
+      "sha256": "a706444f0f8ff79d404fbc613f6f65a6e5af629f54dda60e6fb57e0adb653c42"
+    },
+    {
+      "path": "modal-focused.log",
+      "bytes": 19693,
+      "sha256": "c8512de0e67aa992dbf37adc8e6d5800e81cdd14403574981250e89caee773b1"
+    },
+    {
+      "path": "modal-frozen-build.log",
+      "bytes": 20144,
+      "sha256": "62cb79c111402658bd0d521c769826113e7def772cbc2763e5e64eaf5a53ec4e"
+    },
+    {
+      "path": "modal-frozen-native.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "modal-ingress-final.log",
+      "bytes": 19399,
+      "sha256": "2259f8ea0494a7069d7664bd59a85558dee8edf0f5b5e28e4ec4e43ff24b645d"
+    },
+    {
+      "path": "modal-raw-focused.log",
+      "bytes": 19399,
+      "sha256": "ba975c3e5d9afde0eedacf897204ea8d48a470184bd878034c50291ba06bba37"
+    },
+    {
+      "path": "named-build.log",
+      "bytes": 20144,
+      "sha256": "9fa534dd680ca86ebcb3eb33995d65dae38a8afb73dbe55db52ac3e576b3fb46"
+    },
+    {
+      "path": "native-dimension-nested.igz",
+      "bytes": 2634,
+      "sha256": "3d51d668909d0662820e62eca9843c882e4c94ec9b16930c2216c793874354d2"
+    },
+    {
+      "path": "native-dimension-root.igz",
+      "bytes": 2849,
+      "sha256": "57b35500086f3ef35d0229cd3cd9031629bffeab39026176f82ba0d65f6bbdae"
+    },
+    {
+      "path": "native-label-nested.igz",
+      "bytes": 2636,
+      "sha256": "2751908e1edb165f890527b7fe4e5a88a087663da587dcb6a28c6d5665325d8d"
+    },
+    {
+      "path": "native-label-root.igz",
+      "bytes": 2851,
+      "sha256": "089b01ca3e173036baa72013d4738287430089dff135275f7a1e9446633e03a3"
+    },
+    {
+      "path": "native.json",
+      "bytes": 31842,
+      "sha256": "b66379974cf981577d92eae464a5672cfa4826b957d9122dd41e449a86ffbe7b"
+    },
+    {
+      "path": "native.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "original.json",
+      "bytes": 31842,
+      "sha256": "b66379974cf981577d92eae464a5672cfa4826b957d9122dd41e449a86ffbe7b"
+    },
+    {
+      "path": "reopen.json",
+      "bytes": 8183,
+      "sha256": "174c4fd2c168ba6f2a611d112cb12ba7c1250bacbd321a4dad68495290f5152f"
+    },
+    {
+      "path": "reopen.log",
+      "bytes": 392,
+      "sha256": "8f90d232282fcb43ed4ac28d874df7b140873b5c61d309f9c5556fadd3907b1f"
+    },
+    {
+      "path": "same-frame-focused.log",
+      "bytes": 19511,
+      "sha256": "ad87e92d58dcc25627ccb320c7cdd27ac099c3a970f05bc60767c914bb7aa39e"
+    },
+    {
+      "path": "source-first-failure.log",
+      "bytes": 317,
+      "sha256": "c499b7d56c248f3ad08e40b4cc71bb4d9495eff18e6589456438568985b072a6"
+    },
+    {
+      "path": "source-label-priority.json",
+      "bytes": 31120,
+      "sha256": "3c4096312e7d88b88df6c5d7bb689fa8af07ef5a967669249543ca20f1137828"
+    },
+    {
+      "path": "source.log",
+      "bytes": 196,
+      "sha256": "d3bbbeebd80e95e20503e0db8304e9bb4915b0f6bdff4b55b0adb531dec35eb8"
+    },
+    {
+      "path": "modal-named-build.log",
+      "bytes": 20144,
+      "sha256": "62cb79c111402658bd0d521c769826113e7def772cbc2763e5e64eaf5a53ec4e"
+    },
+    {
+      "path": "modal-native.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "removed_bytes": 375877,
+  "retained_unique_files": []
+}
