@@ -1,0 +1,185 @@
+{
+  "validation_plan_completed": true,
+  "full_python_parity": false,
+  "production_runtime": "01018aad",
+  "test_corrections": [
+    "d32d11e9",
+    "5c4b41db"
+  ],
+  "component_build_change": "2698f82d",
+  "workspace_tests": {
+    "passed_unique": 867,
+    "ignored_existing": 2,
+    "historical_failures_resolved": 2,
+    "remaining_failures": 0
+  },
+  "lifecycle": {
+    "passed": false,
+    "lifecycle_workflows": 11,
+    "lifecycle_passed": true,
+    "pending_workflows": 3,
+    "pending_full_parity": false,
+    "state_history_phases": 41,
+    "original_reopens": 4,
+    "negative_controls": [
+      "prompt_depth",
+      "scene",
+      "history",
+      "camera",
+      "anchor",
+      "continued",
+      "empty",
+      "missing",
+      "duplicate",
+      "missing_phase"
+    ],
+    "strict_failures": [
+      "pending/rows/0/phases/2/state/root_mesh/points/length",
+      "pending/rows/1/phases/2/state/root_mesh/points/length"
+    ]
+  },
+  "saved_views": {
+    "cases": 2,
+    "exact_states": 60,
+    "rejected_controls": 21
+  },
+  "endpoints": {
+    "passed": true,
+    "cases": [
+      {
+        "name": "zero",
+        "exact_fields": true,
+        "faces": 6,
+        "difference": 0.0
+      },
+      {
+        "name": "subminimum",
+        "exact_fields": true,
+        "faces": 6,
+        "difference": 0.0
+      },
+      {
+        "name": "exact-minimum",
+        "exact_fields": true,
+        "faces": 6,
+        "difference": 0.0
+      },
+      {
+        "name": "collapse",
+        "exact_fields": true,
+        "faces": 1,
+        "difference": null
+      },
+      {
+        "name": "past-collapse",
+        "exact_fields": true,
+        "faces": 1,
+        "difference": null
+      },
+      {
+        "name": "painted-collapse",
+        "exact_fields": true,
+        "faces": 1,
+        "difference": null
+      },
+      {
+        "name": "holed-collapse",
+        "exact_fields": true,
+        "faces": 1,
+        "difference": null
+      },
+      {
+        "name": "holed-near-endpoint",
+        "exact_fields": true,
+        "faces": 10,
+        "difference": 0.0
+      },
+      {
+        "name": "bump-flush",
+        "exact_fields": true,
+        "faces": 6,
+        "difference": 0.0
+      },
+      {
+        "name": "corner-through",
+        "exact_fields": true,
+        "faces": 8,
+        "difference": 0.0
+      },
+      {
+        "name": "mouth-through",
+        "exact_fields": true,
+        "faces": 10,
+        "difference": 0.0
+      },
+      {
+        "name": "repeat-after-collapse",
+        "exact_fields": true,
+        "faces": 6,
+        "difference": 0.0
+      }
+    ],
+    "negative_controls": [
+      "empty_collapse",
+      "duplicate_flat_cap",
+      "lost_hole",
+      "lost_paint",
+      "unclamped_endpoint",
+      "orientation"
+    ],
+    "app_cases": [
+      "zero",
+      "subminimum",
+      "exact-minimum",
+      "collapse",
+      "past-collapse",
+      "painted-collapse",
+      "holed-collapse",
+      "holed-near-endpoint",
+      "bump-flush",
+      "corner-through",
+      "mouth-through",
+      "repeat-after-collapse",
+      "nested-clamped-collapse-repeat",
+      "wider-punchable-sheet",
+      "annular-support"
+    ],
+    "scope": "12 exact source geometric/attribute inventories; closed shape oracle tolerance unchanged1e-6"
+  },
+  "mips": {
+    "verdict": "PASS",
+    "raw_levels_equal": 38,
+    "world_frames_exact": 2,
+    "final_single_levels": 38,
+    "barrier_commands": [
+      72,
+      38
+    ],
+    "odd_mip_source_residuals": [
+      [
+        1020,
+        9
+      ],
+      [
+        28094,
+        10
+      ],
+      [
+        5596,
+        72
+      ],
+      [
+        4876,
+        58
+      ]
+    ],
+    "negative_controls": 2,
+    "scope": "barrier reduction; odd mip source parity remains FAIL; no timing claim"
+  },
+  "component_acceptance_passed": true,
+  "component_builds_before": 3,
+  "component_builds_after": 1,
+  "missing_prebuilt_refused": true,
+  "timing_claim": null,
+  "original_pin": "6be29fe437a7cd992d4e079f71720821b25216b9"
+}

@@ -1,0 +1,62 @@
+{
+  "original_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "runtime_commits": [
+    "ddfcbc41",
+    "73acb93c"
+  ],
+  "fixture_commit": "1406fc90",
+  "integrated_runtime": "01018aad",
+  "archive_scope": "Original Qt capture, prior native candidates, retained development failures and focused correction logs; final native integrated replay is separately archived under lifecycle-visibility-endpoint-integration.",
+  "files": {
+    "after-differences.json": "da35dcb404403c07988170ae4d69f65119992a77241cd26357f9843fd3630183",
+    "after-pending-differences.json": "671994bd686f3c7e7e3910563bef86e7880dd5ffe557784427a682bc9c5c4571",
+    "before-differences.json": "d842f350882a31b32fe41673d0310fabe15a17a5af5267641dd518c57ee5ce0d",
+    "before-native-pending.json": "6c3d1f31aa4d9c4619f0933dfc7b57e3d09b73b15117a00650db6025a4b409d2",
+    "before-native.json": "00e89065f9f794fe3abcb2d4bcb149aaa69c817b95d9435eae62a2592b3dbac4",
+    "before-original-pending.json": "5c09cc49431f9860283599a57cf98fda640f22bfa60dcad10c6780d30ae1c9bd",
+    "before-original.json": "6e7c61662e9cee5a1d4284690da05532f7124a8e2cd8f6c9e93341180f829cfc",
+    "before-pending-differences.json": "4b981a406ee2e003aeb36a0153f9a573503f7c20e3ee7f190bc9806d5fa49626",
+    "check-before-camera.json": "3d4e816b36b36c27df04fa32ef9f767fd0a00ed9f48c4350e756a845f11e0b62",
+    "close_save.native.igz": "f0cbea3f5862825b7c03a8b766648a373a591884575b31e35a2ee9c6cb2fda18",
+    "close_save.original.igz": "3ed52d8f708e031aa2fed5a9dfa8a0888cf9049a5802fe6590ca2a0687b0cf03",
+    "close_save.original.igz.bak": "3ed52d8f708e031aa2fed5a9dfa8a0888cf9049a5802fe6590ca2a0687b0cf03",
+    "corrupt.igz": "472e92735c7b9c1fa079fbecb5eaa69dbf0212f7a7168cfac644df2124ec3531",
+    "focused-lifecycle.log": "7c6457c17cdc4ca8497e79f3b25737feaf61a5951f119c2b102a0d1471194fd2",
+    "focused-review-corrections.log": "5a84e9aa1a1c45676cb64f3f82f0f3e88292d6930ecece11cfdae51f8c9f5ec8",
+    "input.igz": "46881377594d29355932883f2b452d9193ed3950f9ecc8d9bd89c18757c53c93",
+    "line-chain.native.igz": "bb41abad095853df26dfc750948b72f3291ca5cc6c4215a10d3d672bd2b359cc",
+    "line-chain.original.igz": "c9b85ce2f289daa4af60e72a2be9a2efb9380c3551e1e656fcabfe38eeffa709",
+    "line-chain.original.igz.bak": "c9b85ce2f289daa4af60e72a2be9a2efb9380c3551e1e656fcabfe38eeffa709",
+    "line-first.native.igz": "f0cbea3f5862825b7c03a8b766648a373a591884575b31e35a2ee9c6cb2fda18",
+    "line-first.original.igz": "3ed52d8f708e031aa2fed5a9dfa8a0888cf9049a5802fe6590ca2a0687b0cf03",
+    "line-first.original.igz.bak": "3ed52d8f708e031aa2fed5a9dfa8a0888cf9049a5802fe6590ca2a0687b0cf03",
+    "local-clean.log": "3675725eb43a032d8176c548e4f5075988d5b13789681291eb54db6c10df415a",
+    "native-after.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "native-before.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "native-build-final.log": "6a1baad7e1ef2b2b8346a85794690c12ff5d0ce721781c48768d0e41d964cf5d",
+    "native-build-resume.log": "6c72c62c68fef6fd68d897e8824508be3dca44ac4149d2ee44ebcaa9c4250cd5",
+    "native-build.log": "2fc0f55439efb6fee7a1e78e316a1d334058a5abc401cad9046f53b03e912e68",
+    "native-pending.json": "4bc27819f76059830f0e754baf6069acace7fb6408b5960a4f5a7cdc650e0287",
+    "native.json": "08ccbc160dbf1b03c846a564f9cb4c180eba10cdf3dd392ff59e2f7301f5b2ed",
+    "original-pending.json": "5c09cc49431f9860283599a57cf98fda640f22bfa60dcad10c6780d30ae1c9bd",
+    "original.json": "c9fc8ae5cef6e34cc1c2bea2edd92143fbbbdee742dbd089fac5a9e5cf8d9990",
+    "rectangle-first.native.igz": "f0cbea3f5862825b7c03a8b766648a373a591884575b31e35a2ee9c6cb2fda18",
+    "rectangle-first.original.igz": "3ed52d8f708e031aa2fed5a9dfa8a0888cf9049a5802fe6590ca2a0687b0cf03",
+    "rectangle-first.original.igz.bak": "3ed52d8f708e031aa2fed5a9dfa8a0888cf9049a5802fe6590ca2a0687b0cf03",
+    "reopen.log": "9148e145e58b87c50fd49ce7410b6e547365bef08a9b8c91d92465a27f1fa848",
+    "reopened.json": "f06926ce75f71d85a2b20a1e307eb27a7a76f67a3296b753317953fae80b1983",
+    "replacement.igz": "36638329e2f0299b3f5045f6884316eafcc15033e788dbddc7e56cba6daf9857",
+    "source-config/Unknown Organization/reference-context-document-lifecycle.py.conf": "dd40223b4673f40a4d756720bbc43d0d7490870215b172689ebe68f11b34b061",
+    "source-final.log": "4209c2c6fc8b96004a3d4d33b18e182fd039b662c46850dd91740f56616b5f46",
+    "source.log": "4209c2c6fc8b96004a3d4d33b18e182fd039b662c46850dd91740f56616b5f46"
+  },
+  "scripts": {
+    "scripts/reference-context-document-lifecycle.py": "acec8ac6a9d5faca466914c32994bfd9b0b4f1723582309bbd8e30dee855868d",
+    "scripts/check-context-document-lifecycle.py": "7b75ac718679b59bc4b0fbdd8d18a5456d6ddf066f5db6d0d2fc3991ae4fbee5",
+    "crates/ingetrazo-gui/examples/context_document_lifecycle.rs": "6b094cacfef5e756a8f0a955445e04676f96ef1fb3ff4c51161a203c5d2d57b5"
+  },
+  "test_only_expectation_corrections": [
+    "d32d11e9",
+    "5c4b41db"
+  ]
+}

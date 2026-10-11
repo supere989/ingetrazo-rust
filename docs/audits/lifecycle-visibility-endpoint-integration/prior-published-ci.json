@@ -1,0 +1,20 @@
+{
+  "checked_utc": "2026-10-11T08:26:28.500068+00:00",
+  "published_commit": "6a921533183abacb6de6b995860fbfbb22cd45fe",
+  "semantic_run": 38123015534,
+  "metal_run": 38123015518,
+  "successful_jobs": [
+    "Native Metal compile x86_64-apple-darwin",
+    "Native Metal compile aarch64-apple-darwin",
+    "Native Metal framework link macos-15-intel",
+    "Native Metal framework link macos-15",
+    "Actual ordered UI and CAD compute macos-15",
+    "Actual ordered UI and CAD compute macos-15-intel"
+  ],
+  "linux_failure": "Original Python shared component definition acceptance: stale assertion that Save inside context must not create a file. Actual new source-compatible behavior Finish-all saves complete document. Corrected by d87b699e with independent exact Cancel retained.",
+  "links": [
+    "https://github.com/supere989/ingetrazo-rust/actions/runs/38123015534",
+    "https://github.com/supere989/ingetrazo-rust/actions/runs/38123015518"
+  ],
+  "next_published_ci": "pending"
+}

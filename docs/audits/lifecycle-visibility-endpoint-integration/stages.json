@@ -1,0 +1,291 @@
+[
+  {
+    "name": "local-package-handoff",
+    "command": [
+      "cargo",
+      "clean",
+      "-p",
+      "ingetrazo-core",
+      "-p",
+      "ingetrazo-formats",
+      "-p",
+      "ingetrazo-tools",
+      "-p",
+      "ingetrazo-render",
+      "-p",
+      "ingetrazo-gui",
+      "-p",
+      "ingetrazo-cli",
+      "-p",
+      "ingetrazo-metal"
+    ],
+    "exit": 0,
+    "seconds": 1.147
+  },
+  {
+    "name": "workspace-tests",
+    "command": [
+      "cargo",
+      "test",
+      "--workspace",
+      "--locked",
+      "--tests",
+      "-j2"
+    ],
+    "exit": 101,
+    "seconds": 160.35
+  },
+  {
+    "name": "camera-test-correction",
+    "command": [
+      "cargo",
+      "test",
+      "--locked",
+      "-j2",
+      "-p",
+      "ingetrazo-gui",
+      "--lib",
+      "document_camera_tests::"
+    ],
+    "exit": 0,
+    "seconds": 37.691
+  },
+  {
+    "name": "gui-unfinished",
+    "command": [
+      "cargo",
+      "test",
+      "--locked",
+      "-j2",
+      "-p",
+      "ingetrazo-gui",
+      "--bins",
+      "--test",
+      "recovery_acceptance",
+      "--test",
+      "offset_controller_acceptance",
+      "--test",
+      "move_component_arrays",
+      "--test",
+      "composer_pdf_export",
+      "--test",
+      "component_global_history",
+      "--test",
+      "clipboard_transport_acceptance"
+    ],
+    "exit": 101,
+    "seconds": 39.171
+  },
+  {
+    "name": "recovery-test-correction",
+    "command": [
+      "cargo",
+      "test",
+      "--locked",
+      "-j2",
+      "-p",
+      "ingetrazo-gui",
+      "--test",
+      "recovery_acceptance",
+      "crash_restart_retains_original_and_failed_close"
+    ],
+    "exit": 0,
+    "seconds": 8.464
+  },
+  {
+    "name": "remaining-package-tests",
+    "command": [
+      "cargo",
+      "test",
+      "--locked",
+      "-j2",
+      "-p",
+      "ingetrazo-metal",
+      "-p",
+      "ingetrazo-render",
+      "-p",
+      "ingetrazo-tools",
+      "--tests"
+    ],
+    "exit": 0,
+    "seconds": 32.89
+  },
+  {
+    "name": "doctests",
+    "command": [
+      "cargo",
+      "test",
+      "--workspace",
+      "--locked",
+      "--doc",
+      "-j2"
+    ],
+    "exit": 0,
+    "seconds": 7.407
+  },
+  {
+    "name": "examples-check",
+    "command": [
+      "cargo",
+      "check",
+      "--workspace",
+      "--locked",
+      "--examples",
+      "-j2"
+    ],
+    "exit": 0,
+    "seconds": 47.442
+  },
+  {
+    "name": "named-build",
+    "command": [
+      "cargo",
+      "build",
+      "--locked",
+      "-j2",
+      "-p",
+      "ingetrazo-gui",
+      "--example",
+      "context_document_lifecycle",
+      "--example",
+      "saved_view_history_fixture",
+      "--example",
+      "pushpull_endpoints_app",
+      "-p",
+      "ingetrazo-tools",
+      "--example",
+      "pushpull_gate2_fixture"
+    ],
+    "exit": 0,
+    "seconds": 7.915
+  },
+  {
+    "name": "lifecycle-native",
+    "command": [
+      "/tmp/ingetrazo-native-font-merge-target/debug/examples/context_document_lifecycle",
+      "/tmp/ingetrazo-lifecycle-visibility-integration/lifecycle"
+    ],
+    "exit": 0,
+    "seconds": 0.373
+  },
+  {
+    "name": "lifecycle-original-reopen",
+    "command": [
+      "/tmp/ingetrazo-parity-python/bin/python",
+      "scripts/reference-context-document-lifecycle.py",
+      "/tmp/ingetrazo-lifecycle-visibility-integration/lifecycle",
+      "inspect"
+    ],
+    "exit": 0,
+    "seconds": 3.307
+  },
+  {
+    "name": "lifecycle-strict-check",
+    "command": [
+      "python3",
+      "scripts/check-context-document-lifecycle.py",
+      "/tmp/ingetrazo-lifecycle-visibility-integration/lifecycle"
+    ],
+    "exit": 1,
+    "seconds": 0.112
+  },
+  {
+    "name": "views-unique",
+    "command": [
+      "/tmp/ingetrazo-native-font-merge-target/debug/examples/saved_view_history_fixture",
+      "/tmp/ingetrazo-lifecycle-visibility-integration/views/unique"
+    ],
+    "exit": 0,
+    "seconds": 0.017
+  },
+  {
+    "name": "views-duplicate",
+    "command": [
+      "/tmp/ingetrazo-native-font-merge-target/debug/examples/saved_view_history_fixture",
+      "/tmp/ingetrazo-lifecycle-visibility-integration/views/duplicate"
+    ],
+    "exit": 0,
+    "seconds": 0.049
+  },
+  {
+    "name": "views-check",
+    "command": [
+      "python3",
+      "scripts/check-saved-view-history.py",
+      "/tmp/ingetrazo-lifecycle-visibility-integration/views"
+    ],
+    "exit": 0,
+    "seconds": 0.077
+  },
+  {
+    "name": "mip-readonly-check",
+    "command": [
+      "/tmp/ingetrazo-parity-python/bin/python",
+      "scripts/check-texture-mip-barrier-batch.py"
+    ],
+    "exit": 0,
+    "seconds": 0.759
+  },
+  {
+    "name": "endpoint-primitive",
+    "command": [
+      "/tmp/ingetrazo-native-font-merge-target/debug/examples/pushpull_gate2_fixture",
+      "/tmp/ingetrazo-lifecycle-visibility-integration/endpoints/source.json",
+      "/tmp/ingetrazo-lifecycle-visibility-integration/endpoints/native.json"
+    ],
+    "exit": 0,
+    "seconds": 0.035
+  },
+  {
+    "name": "endpoint-app",
+    "command": [
+      "/tmp/ingetrazo-native-font-merge-target/debug/examples/pushpull_endpoints_app",
+      "/tmp/ingetrazo-lifecycle-visibility-integration/endpoints/source.json",
+      "/tmp/ingetrazo-lifecycle-visibility-integration/endpoints/app.json"
+    ],
+    "exit": 0,
+    "seconds": 0.043
+  },
+  {
+    "name": "endpoint-check",
+    "command": [
+      "/tmp/ingetrazo-parity-python/bin/python",
+      "scripts/check-pushpull-endpoints.py",
+      "/tmp/ingetrazo-lifecycle-visibility-integration/endpoints/source.json",
+      "/tmp/ingetrazo-lifecycle-visibility-integration/endpoints/native.json",
+      "/tmp/ingetrazo-lifecycle-visibility-integration/endpoints/comparison.json",
+      "/tmp/ingetrazo-lifecycle-visibility-integration/endpoints/app.json"
+    ],
+    "exit": 0,
+    "seconds": 0.792
+  },
+  {
+    "name": "component-ci-check",
+    "command": [
+      "/tmp/ingetrazo-parity-python/bin/python",
+      "scripts/check-python-components.py"
+    ],
+    "exit": 0,
+    "seconds": 18.746
+  },
+  {
+    "name": "component-build-once-check",
+    "command": [
+      "/tmp/ingetrazo-parity-python/bin/python",
+      "scripts/check-python-components.py"
+    ],
+    "exit": 0,
+    "seconds": 2.331
+  },
+  {
+    "name": "component-missing-prebuilt",
+    "command": [
+      "/tmp/ingetrazo-parity-python/bin/python",
+      "scripts/check-python-components.py",
+      "--prebuilt-dir",
+      "/tmp/ingetrazo-lifecycle-visibility-integration/absent-binaries"
+    ],
+    "exit": 2,
+    "seconds": 0.129
+  }
+]
