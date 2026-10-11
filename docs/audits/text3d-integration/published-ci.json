@@ -1,0 +1,43 @@
+{
+  "revision": "0310291e0e1a6f13363d314fb9ace93e41b3bd12",
+  "run": 38139677732,
+  "url": "https://github.com/supere989/ingetrazo-rust/actions/runs/38139677732",
+  "jobs": [
+    {
+      "name": "Native Metal framework link (macos-15)",
+      "id": 114470765425,
+      "conclusion": "success",
+      "started_at": "2026-10-11T12:33:03Z",
+      "completed_at": "2026-10-11T12:35:19Z"
+    },
+    {
+      "name": "Native Metal framework link (macos-15-intel)",
+      "id": 114470765561,
+      "conclusion": "success",
+      "started_at": "2026-10-11T12:32:58Z",
+      "completed_at": "2026-10-11T12:38:07Z"
+    },
+    {
+      "name": "Native Metal compile (x86_64-apple-darwin)",
+      "id": 114470765580,
+      "conclusion": "success",
+      "started_at": "2026-10-11T12:32:56Z",
+      "completed_at": "2026-10-11T12:33:25Z"
+    },
+    {
+      "name": "compilation-and-tests",
+      "id": 114470765587,
+      "conclusion": "success",
+      "started_at": "2026-10-11T12:32:57Z",
+      "completed_at": "2026-10-11T12:47:45Z"
+    },
+    {
+      "name": "Native Metal compile (aarch64-apple-darwin)",
+      "id": 114470765658,
+      "conclusion": "success",
+      "started_at": "2026-10-11T12:32:56Z",
+      "completed_at": "2026-10-11T12:33:24Z"
+    }
+  ],
+  "scope": "Semantic workflow: Linux original/native checks and ARM/Intel macOS compile/framework linkage; this is not strict Metal pixel acceptance."
+}

@@ -11,7 +11,7 @@ Acceptance:
 - Actual application insertion/hover/Cancel/click, one group per glyph, original-compatible IGZ, 20 m edit, Undo/Redo owner identity, unchanged/invalid refusal, open-container owner editing, real egui dialog Escape, flat text, manual vertex/paint/erase/individual-pose refusal, common-pose allowance, and pending Move→edit→Cancel/Undo pass.
 - Python's unchanged reader reopens three workflow documents plus a fourth decimal-half/Unicode/paint fingerprint boundary. All remain pristine editable text; parameters, letter membership, dimensions and placement are checked.
 - Fresh merged Scale consumer: nine recipes, 52 states exact. The modal input boundary and retained native modifier timeline coexist in this build.
-- The earlier published `9c74158b` checkpoint is green on Linux and all six Apple jobs. This batch requires its own published CI; main is unchanged.
+- The earlier published `9c74158b` checkpoint is green on Linux and all six Apple jobs. Published `0310291e` also passes its semantic workflow: Linux acceptance plus ARM/Intel cross compilation and actual native framework linkage, five jobs green. See [CI receipt](published-ci.json). Main is unchanged.
 
 Read-only verification: `python3 scripts/check-text3d-integration.py`.
 
