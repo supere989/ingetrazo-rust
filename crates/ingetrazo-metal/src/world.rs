@@ -75,6 +75,8 @@ pub struct Stats {
     pub target_allocations: u64,
     pub prepared: u64,
     pub warm_geometry_hits: u64,
+    /// Retained paint-plan capacities only; excludes allocator/shared/GPU owners.
+    pub policy_retained_payload_bytes: usize,
 }
 #[derive(Default)]
 pub struct World {
@@ -213,6 +215,7 @@ impl World {
         }
         self.owner = Some(owner.clone());
         self.key = Some(key);
+        self.stats.policy_retained_payload_bytes = mesh.as_ref().map_or(0,|m|m.plan.retained_payload_bytes);
         self.mesh = mesh.clone();
         self.pipeline = Some(pipeline.clone());
         self.stats.prepared += 1;
