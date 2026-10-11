@@ -22,10 +22,24 @@ pub(crate) fn run(root: PathBuf) -> Result<(), String> {
     let mut app = IngeTrazoApp::new();
     app.scene.mesh = Mesh::new();
     app.scene.groups.clear();
-    let recipe: serde_json::Value = serde_json::from_str(include_str!(
+    let mut recipe: serde_json::Value = serde_json::from_str(include_str!(
         "../../../../docs/audits/metal-world-scene/material-source/source.json"
     ))
     .map_err(|e| e.to_string())?;
+    let heldout: serde_json::Value = serde_json::from_str(include_str!(
+        "../../../../docs/audits/metal-world-scene/material-shaded-side-source/source.json"
+    ))
+    .map_err(|e| e.to_string())?;
+    recipe["cases"]
+        .as_array_mut()
+        .ok_or("Recipe cases missing")?
+        .extend(
+            heldout["cases"]
+                .as_array()
+                .ok_or("Held-out cases missing")?
+                .iter()
+                .cloned(),
+        );
     const ASSET: &[u8] =
         include_bytes!("../../../../docs/audits/metal-world-scene/material-source/quadrants.png");
     app.scene
@@ -60,6 +74,12 @@ pub(crate) fn run(root: PathBuf) -> Result<(), String> {
         raw.time = Some(time);
         raw.events = events;
         let output = ctx.run(raw, |ctx| app.update_ui(ctx));
+        let viewport = app.native_metal_world.as_ref().ok_or("Bridge retired")?;
+        if viewport.frame.is_none() || viewport.last_route_reason.is_some() {
+            let rejection = serde_json::json!({"passed":false,"phase":name,"frame_present":viewport.frame.is_some(),"route_reason":viewport.last_route_reason,"scope":"Actual shared UI route refusal; no native frame acceptance"});
+            std::fs::write(root.join("refusal.json"),serde_json::to_vec_pretty(&rejection).map_err(|e|e.to_string())?).map_err(|e|e.to_string())?;
+            return Err(format!("Material frame {name} was not accepted: {:?}", viewport.last_route_reason));
+        }
         painter.update_textures(&metal, &output.textures_delta)?;
         world_viewport::install(&mut painter, &metal, app)?;
         let primitives = ctx.tessellate(output.shapes, output.pixels_per_point);
@@ -81,7 +101,12 @@ pub(crate) fn run(root: PathBuf) -> Result<(), String> {
             ingetrazo_render::pipeline::project_point(DVec3::new(0., -0.2, 0.), &matrix, rect)
                 .ok_or("Old observation outside projection")?
                 .0;
-        observations.push(serde_json::json!({"name":name,"native":app.native_gpu_viewport_enabled,"selection_count":app.scene.selection.len(),"rect":[rect.min.x,rect.min.y,rect.width(),rect.height()],"red_pixel":[red.x,red.y],"old_pixel":[old.x,old.y],"catalog_builds":viewport.catalog_builds(),"model_refreshes":viewport.model_refreshes(),"matrix_bytes":viewport.matrix_bytes(),"geometry_uploads":viewport.geometry_uploads(),"texture_uploads":viewport.texture_uploads(),"material_order_builds":viewport.material_order_builds()}));
+        observations.push(serde_json::json!({"name":name,"native":app.native_gpu_viewport_enabled,"frame_present":viewport.frame.is_some(),"route_reason":viewport.last_route_reason,"selection_count":app.scene.selection.len(),"rect":[rect.min.x,rect.min.y,rect.width(),rect.height()],"red_pixel":[red.x,red.y],"old_pixel":[old.x,old.y],"catalog_builds":viewport.catalog_builds(),"model_refreshes":viewport.model_refreshes(),"matrix_bytes":viewport.matrix_bytes(),"geometry_uploads":viewport.geometry_uploads(),"texture_uploads":viewport.texture_uploads(),"material_order_builds":viewport.material_order_builds()}));
+        std::fs::write(
+            root.join("observations.json"),
+            serde_json::to_vec_pretty(&observations).map_err(|e| e.to_string())?,
+        )
+        .map_err(|e| e.to_string())?;
         Ok(())
     };
     for case in recipe["cases"].as_array().ok_or("Recipe cases missing")? {

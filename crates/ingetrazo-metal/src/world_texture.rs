@@ -140,7 +140,10 @@ pub fn upload(metal: &NativeMetal, id: Identity, encoded: &[u8]) -> Result<Arc<A
             .budget
             .lock()
             .map_err(|_| "Metal texture budget poisoned")?;
-        b.commit(ticket, handle)?;
+        if let Err(error) = b.commit(ticket, handle) {
+            let _ = b.cancel(ticket);
+            return Err(error);
+        }
     }
     let sd = MTLSamplerDescriptor::new();
     sd.setMinFilter(MTLSamplerMinMagFilter::Linear);

@@ -13,6 +13,7 @@ pub(crate) struct Viewport {
     world: World,
     adapter: Adapter,
     pub(crate) frame: Option<Arc<Prepared>>,
+    pub(crate) last_route_reason: Option<String>,
     unsupported: Option<(ingetrazo_render::scene_revision::Revisions, u16, String)>,
 }
 impl Viewport {
@@ -23,6 +24,7 @@ impl Viewport {
             adapter: Adapter::default(),
             frame: None,
             unsupported: None,
+            last_route_reason: None,
         }
     }
     pub(crate) fn catalog_builds(&self) -> u64 {
@@ -123,6 +125,7 @@ pub(crate) fn route(app: &mut IngeTrazoApp, rect: egui::Rect, density: f32) -> O
             })
         }
     };
+    viewport.last_route_reason = reason.clone();
     app.native_metal_world = Some(viewport);
     reason
 }
