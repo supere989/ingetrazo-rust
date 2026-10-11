@@ -31,6 +31,8 @@ pub(crate) fn preserve(current: &Scene, target: &mut Scene) {
     target.display_style = current.display_style.clone();
     target.shadows = current.shadows.clone();
     target.show_section_fill = current.show_section_fill;
+    target.show_hidden_objects = current.show_hidden_objects;
+    target.show_hidden_geometry = current.show_hidden_geometry;
 }
 impl IngeTrazoApp {
     pub(crate) fn presentation_controls_match(&self)->bool{
@@ -190,6 +192,48 @@ mod tests {
         assert_eq!(a.scene.groups[0].mesh, m);
         assert_eq!(a.scene.display_style.face_mode, FaceMode::Wireframe);
     }
+    #[test]
+    fn ghost_flags_stay_live_across_model_history_and_nested_contexts() {
+        let mut a = IngeTrazoApp::new();
+        a.system_clipboard = None;
+        a.scene = Scene::new();
+        a.save_undo_state();
+        a.scene.mesh.add_vertex(DVec3::X);
+        a.scene.set_hidden_view(true, true);
+        a.undo();
+        assert!(a.scene.mesh.vertices.is_empty());
+        assert!(a.scene.show_hidden_objects && !a.scene.show_hidden_geometry);
+        a.scene.set_hidden_view(false, true);
+        a.redo();
+        assert_eq!(a.scene.mesh.vertices.len(), 1);
+        assert!(a.scene.show_hidden_objects && a.scene.show_hidden_geometry);
+        let mut parent = Group::new("parent");
+        parent.children.push(Group::new("child"));
+        a.scene.groups.push(parent);
+        let history = a.undo_stack.len();
+        a.scene.select(SelectionItem::Group(0));
+        a.begin_component_edit();
+        assert!(a.scene.show_hidden_objects && a.scene.show_hidden_geometry);
+        a.scene.set_hidden_view(true, false);
+        a.scene.select(SelectionItem::Group(0));
+        a.begin_component_edit();
+        assert!(!a.scene.show_hidden_objects && a.scene.show_hidden_geometry);
+        a.scene.set_hidden_view(false, false);
+        a.finish_component_edit();
+        assert!(!a.scene.show_hidden_objects && !a.scene.show_hidden_geometry);
+        a.scene.set_hidden_view(true, true);
+        a.cancel_component_edit();
+        assert!(a.scene.show_hidden_objects && !a.scene.show_hidden_geometry);
+        assert_eq!(a.undo_stack.len(), history, "View toggles must not create geometry history");
+        a.scene.clear_selection();
+        a.scene.select(SelectionItem::Group(0));
+        a.begin_component_edit();
+        a.scene.set_hidden_view(false, true);
+        assert!(a.finish_contexts_for_document());
+        assert!(a.scene.show_hidden_objects && a.scene.show_hidden_geometry);
+        assert_eq!(a.undo_stack.len(), history);
+    }
+
     #[test]
     fn complete_saved_view_recalls_precision_recipe_sky_and_time() {
         let mut a = IngeTrazoApp::new();

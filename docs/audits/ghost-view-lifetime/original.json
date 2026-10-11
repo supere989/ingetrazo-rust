@@ -1,0 +1,44 @@
+[
+  {
+    "label": "undo",
+    "objects": true,
+    "geometry": false,
+    "depth": 0
+  },
+  {
+    "label": "redo",
+    "objects": true,
+    "geometry": true,
+    "depth": 0
+  },
+  {
+    "label": "parent-entry",
+    "objects": true,
+    "geometry": true,
+    "depth": 1
+  },
+  {
+    "label": "child-entry",
+    "objects": false,
+    "geometry": true,
+    "depth": 2
+  },
+  {
+    "label": "child-finish",
+    "objects": false,
+    "geometry": false,
+    "depth": 1
+  },
+  {
+    "label": "document-finish",
+    "objects": true,
+    "geometry": false,
+    "depth": 0
+  },
+  {
+    "label": "final-finish",
+    "objects": true,
+    "geometry": true,
+    "depth": 0
+  }
+]

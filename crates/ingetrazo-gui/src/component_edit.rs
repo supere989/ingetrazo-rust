@@ -194,7 +194,7 @@ pub(crate) fn component_candidate(session:&ComponentEditSession,scene:&Scene)->R
             return Err("Edited instance no longer exists".into());
         };
         let images_changed=candidate.image_planes!=scene.image_planes;
-        let presentation_changed=candidate.display_style!=scene.display_style || candidate.shadows!=scene.shadows;
+        let presentation_changed=candidate.display_style!=scene.display_style || candidate.shadows!=scene.shadows || candidate.show_hidden_objects!=scene.show_hidden_objects || candidate.show_hidden_geometry!=scene.show_hidden_geometry;
         let changed=session.mesh_baseline!=scene.mesh || session.groups_baseline!=scene.groups
             || candidate.materials!=scene.materials || candidate.layers!=scene.layers
             || candidate.embedded_textures!=scene.embedded_textures
@@ -307,6 +307,7 @@ pub(crate) fn component_candidate(session:&ComponentEditSession,scene:&Scene)->R
         }
         candidate.image_planes=scene.image_planes.clone();candidate.image_objects=scene.image_objects.clone();if image_global_only{candidate.layers=scene.layers.clone();candidate.embedded_textures=scene.embedded_textures.clone();}
         candidate.display_style=scene.display_style.clone();candidate.shadows=scene.shadows.clone();
+        candidate.show_hidden_objects=scene.show_hidden_objects;candidate.show_hidden_geometry=scene.show_hidden_geometry;
         candidate.clear_selection();
         Ok((candidate,changed||presentation_changed||images_changed))
 }
@@ -506,6 +507,7 @@ impl IngeTrazoApp {
         // document-global entities in the same world frame.
         edit.tile_layer=self.scene.tile_layer.clone();
         edit.display_style=self.scene.display_style.clone();edit.shadows=self.scene.shadows.clone();
+        edit.show_hidden_objects=self.scene.show_hidden_objects;edit.show_hidden_geometry=self.scene.show_hidden_geometry;
         edit.image_planes=self.scene.image_planes.clone();edit.image_objects=self.scene.image_objects.clone();edit.guides=self.scene.guides.clone();edit.text_labels=self.scene.text_labels.clone();edit.geo_datum=self.scene.geo_datum.clone();edit.geo_points=self.scene.geo_points.clone();edit.geo_paths=self.scene.geo_paths.clone();edit.terrain=self.scene.terrain.clone();edit.sheets=self.scene.sheets.clone();edit.active_sheet_index=self.scene.active_sheet_index;edit.saved_views=self.scene.saved_views.clone();
         edit.component_definitions=self.scene.component_definitions.clone();
         edit.mesh_shares=self.scene.mesh_shares.clone();
