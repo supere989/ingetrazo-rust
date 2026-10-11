@@ -1,0 +1,95 @@
+{
+  "runtime_source": "abd6f65f",
+  "final_workflow_source": "a3cab394",
+  "archive_bytes": 113191,
+  "archive_sha256": "8d4745592867bcc278078d7c690c8cecf48cbcfef887ba57b387d47bcf3c5ef8",
+  "records": {
+    "build.log": {
+      "bytes": 19501,
+      "sha256": "772969eae9ed6adee5d7f72b874c31be4ba60241dadd8c7c63d0734e98cd47fe"
+    },
+    "context-flat.igz": {
+      "bytes": 64403,
+      "sha256": "b78f872b2866383315f3f4a44cafd64af93c34eb1cbe993e876a119c1305791b"
+    },
+    "edited.igz": {
+      "bytes": 31844,
+      "sha256": "920967d6c49dc4b75dbc02f5b6057c11d4a6ff7f68cf78846c998e7e2d9423ac"
+    },
+    "fingerprint-boundary.igz": {
+      "bytes": 4796,
+      "sha256": "3fdcbddb195395ed020ce2142b140ebca87daf3de3336dcad4691e04af8c4143"
+    },
+    "font-native.json": {
+      "bytes": 302761,
+      "sha256": "35c07c57cd21799e57ca21a85ab436c9f4907d634bfa95bbbac27ef45ae7966d"
+    },
+    "font.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "initial-workflow-probe-assertion.log": {
+      "bytes": 227,
+      "sha256": "084fad612243f830ccf88061f06dafd90dc1775a30e5082e7ad86d0f9fcd1556"
+    },
+    "original-reopen.json": {
+      "bytes": 1432,
+      "sha256": "bc2442ada3e76f5eca4d1afe045394bc1eaddaae9e5cf9eeeb5d8ab3b0abe2b4"
+    },
+    "placed.igz": {
+      "bytes": 326637,
+      "sha256": "981f7e5a98cd4e07a8a14a6330d6db933be91a2973803d20f6f53972a1da387d"
+    },
+    "provenance.json": {
+      "bytes": 1011,
+      "sha256": "4d69b707bc8d0407713215c94dd0e67227dc58c6fc45d2d74f2f15a28bae16e2"
+    },
+    "scale-acceptance.json": {
+      "bytes": 33,
+      "sha256": "0c5c591ab5dc5ab142d13debf2572c8db78524b634436b5be7ed53946e1088b4"
+    },
+    "scale-native.json": {
+      "bytes": 31095,
+      "sha256": "0a5b689552868c3caa9eb39247479e6db10256a2dbe64b8e473c65f8b8ad7cdf"
+    },
+    "scale.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "workflow-rebuild.log": {
+      "bytes": 18693,
+      "sha256": "a4ac065a59eb29b5e407ea586e4204ae000b8dec7235e6b3f430068e7d9351fd"
+    },
+    "workflow.json": {
+      "bytes": 761,
+      "sha256": "e9a54019700768257b43fdbd326ee829a5593ce48a343ea7657d62f31e53ca79"
+    },
+    "workflow.log": {
+      "bytes": 36,
+      "sha256": "f6868ad302696dc7e023667b5dac9137aab7c84e7f9f06c8392dbb8f62c1078d"
+    },
+    "workspace-summary.json": {
+      "bytes": 110,
+      "sha256": "01082de9c80eaad60f4bdde6d7dd81ef479d34697b5e51a318ee7ef46ed20a74"
+    },
+    "workspace.log": {
+      "bytes": 129557,
+      "sha256": "44860222a9a755176c920ce2487e35fc03d7cdc5f424fe7c45ad64dcdf770d87"
+    }
+  },
+  "workspace": {
+    "test_binaries": 32,
+    "passed": 933,
+    "failed": 0,
+    "ignored": 2,
+    "results": 38,
+    "cargo_exit": 0
+  },
+  "source_files": {
+    "crates/ingetrazo-formats/src/text3d.rs": "5eac1c9a9306e242de684c50bd7fa5a352b35eabf0175f2400fe1068147025c3",
+    "crates/ingetrazo-formats/src/text3d/font.rs": "4b0dffba7ef4bc5cd00cc47c93f0c7a7f5102e229aa06b27e693a2a986072d5f",
+    "crates/ingetrazo-tools/src/place_group.rs": "c03a44c8b5ecad99cb8661d84e6417fedef2f0465c6449c7e2da6612ea1cf74f",
+    "crates/ingetrazo-gui/src/text3d.rs": "671db988504fa613d109de2dcdaaf83383728bd57d0984a4d612a7657eb69320",
+    "crates/ingetrazo-gui/examples/text3d_workflow.rs": "bc40107c9dde1cd656003c359519b7c7e0c2ab3403a0cccdb7b3cf578537f45e"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "directory": "/tmp/ingetrazo-text3d-acceptance",
+  "files": 18,
+  "bytes": 932897,
+  "archive_sha256": "8d4745592867bcc278078d7c690c8cecf48cbcfef887ba57b387d47bcf3c5ef8",
+  "verification": "every temporary file byte-equal to canonical ZIP member before deletion",
+  "preserved": [
+    "source trees",
+    "shared reusable Cargo target",
+    "pinned original",
+    "shared matching NVIDIA CDI runtime"
+  ]
+}

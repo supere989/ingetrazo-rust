@@ -1,0 +1,23 @@
+{
+  "revision": "9c74158b8683123c51fed0d3767663b0635e9efa",
+  "semantic_jobs": 5,
+  "compute_jobs": 2,
+  "runs": [
+    {
+      "run_id": 38137982393,
+      "url": "https://github.com/supere989/ingetrazo-rust/actions/runs/38137982393",
+      "head_sha": "9c74158b8683123c51fed0d3767663b0635e9efa",
+      "status": "completed",
+      "conclusion": "success",
+      "updated_at": "2026-10-11T12:18:23Z"
+    },
+    {
+      "run_id": 38137982450,
+      "url": "https://github.com/supere989/ingetrazo-rust/actions/runs/38137982450",
+      "head_sha": "9c74158b8683123c51fed0d3767663b0635e9efa",
+      "status": "completed",
+      "conclusion": "success",
+      "updated_at": "2026-10-11T12:09:36Z"
+    }
+  ]
+}
