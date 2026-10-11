@@ -1,0 +1,14 @@
+{
+  "source_revision": "6d9cc5ec0a5992dca95591d8fd16dd1968e1aeaa",
+  "binary_sha256": "c0dc7cda32217a334494a71bcb12a6eafc2ce4a250d8d53724e6adde2baa0312",
+  "actual_application_lifecycle_passed": true,
+  "actions": [
+    "add",
+    "delete",
+    "add",
+    "refuse",
+    "retry",
+    "delete"
+  ],
+  "scope": "First addition, exact deletion restoration, repeat addition, full-frame refusal preservation, managed-texture retry and owned cleanup. Capture admitted after associated presentation fence retirement; no additional production wait. Full model/source depth remains open."
+}
