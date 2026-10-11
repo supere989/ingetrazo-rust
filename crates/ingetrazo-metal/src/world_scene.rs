@@ -5,7 +5,7 @@ use crate::world_placement::{Packet, Pose, PrototypeKey};
 use glam::DMat4;
 use ingetrazo_core::{camera::OrbitCamera, groups::Group, scene::Scene};
 use ingetrazo_render::{
-    buffer::MeshRenderBuffer, pipeline::build_inherited_placement_prototype_surfaces, StyleConfig,
+    buffer::MeshRenderBuffer, pipeline::{build_inherited_placement_prototype_surfaces,build_loose_world_surfaces}, StyleConfig,
 };
 use std::sync::Arc;
 /// Exact missing-stage classifications. Allocation/invalid data/device errors
@@ -30,6 +30,7 @@ const MAX_DEPTH: usize = 128;
 pub use ingetrazo_render::scene_revision::Revisions;
 #[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord)]
 struct Signature {
+    loose: bool,
     identity: u128,
     color: Option<[u64; 3]>,
     opacity: Option<u64>,
@@ -65,6 +66,7 @@ fn paint(g: &Group) -> Option<&serde_json::Value> {
 fn signature(g: &Group, root: &Group) -> Result<Signature, String> {
     let p = paint(g).or_else(|| paint(root));
     let mut s = Signature {
+        loose: false,
         identity: g.mesh_share.unwrap_or(g.id).as_u128(),
         color: None,
         opacity: None,
@@ -146,12 +148,9 @@ impl Catalog {
         revisions: Revisions,
         previous: Option<&Self>,
     ) -> Result<Self, String> {
-        if !scene.mesh.faces.is_empty() || !scene.mesh.edges.is_empty() {
-            return Err(
-                "Metal placement-only adapter needs consolidated loose geometry stage".into(),
-            );
-        }
-        let mut count = 0usize;
+        let loose=!scene.mesh.faces.is_empty();
+        if !loose && !scene.mesh.edges.is_empty(){return Err("Metal placement wire requires native edge stage".into());}
+        let mut count = usize::from(loose);
         fn count_groups(gs: &[Group], depth: usize, n: &mut usize) -> Result<(), String> {
             if depth >= MAX_DEPTH && !gs.is_empty() {
                 return Err("Metal placement nesting exceeds128".into());
@@ -241,6 +240,10 @@ impl Catalog {
                 }
             }
             Ok(())
+        }
+        if loose {
+            slots.push(Slot{path:Vec::new(),id:0,root:usize::MAX});
+            candidates.push((Signature{loose:true,identity:0,color:None,opacity:None,mat:None},0));
         }
         for (i, g) in scene.groups.iter().enumerate() {
             path[0] = (i, g.id.as_u128());
@@ -366,6 +369,7 @@ impl Catalog {
         // Validate every identity/matrix before mutation. Capacity admission is cold;
         // an unchanged warm output needs no allocation and no geometry/material scan.
         for s in &self.slots {
+            if s.path.is_empty(){continue;}
             let _ = resolve(scene, s)?;
             let mut m = DMat4::IDENTITY;
             let mut gs = &scene.groups;
@@ -419,6 +423,11 @@ impl Catalog {
             .map_err(|_| "Metal prototype key not in Scene catalog")?;
         let p = &self.prototypes[self.key_index[lookup].1];
         let s = &self.slots[p.representative];
+        if s.path.is_empty(){
+            let data=build_loose_world_surfaces(scene,style);
+            if !data.transparent_mesh.indices.is_empty()||!data.textured_meshes.is_empty(){return Err("Metal Scene placement needs texture/alpha/billboard stage".into());}
+            return Ok(data.opaque_mesh);
+        }
         let g = resolve(scene, s)?;
         let owner = scene
             .groups
@@ -769,4 +778,28 @@ impl crate::world::World {
         for reason in ["Metal placement-only adapter needs consolidated loose geometry stage","Metal placement translucent material requires alpha stage","Metal Scene adapter needs selection/guide overlays","Metal Scene adapter needs geographic/terrain passes"]{assert!(unsupported_stage(reason));}
         for reason in ["Metal container color invalid","Metal scene catalog cold metadata exceeds8MiB","World native texture size query unavailable","Placement path allocation refused","Metal placement composed matrix invalid"]{assert!(!unsupported_stage(reason));}
     }
+    #[test]
+    fn loose_own_mesh_is_one_identity_model_without_duplicate_groups() {
+        fn revisions()->Revisions {Revisions{geometry:1,paint:1,style:1,layers:1,topology:1}}
+        fn mesh()->ingetrazo_core::mesh::Mesh {let mut m=ingetrazo_core::mesh::Mesh::new();let v=[glam::DVec3::ZERO,glam::DVec3::X,glam::DVec3::Y].map(|p|m.add_vertex(p));m.add_face(v.to_vec(),vec![]).unwrap();m}
+        let mut scene=Scene::new();scene.mesh=mesh();
+        let mut g=Group::with_mesh("placed",mesh());
+        g.mesh_share=Some(g.id);g.component_definition=Some(g.id);
+        g.native_document=serde_json::json!({"proto":0,"xform":DMat4::IDENTITY.to_cols_array()});
+        g.transform=DMat4::from_translation(glam::DVec3::new(3.,0.,0.));scene.groups.push(g);
+        let catalog=Catalog::new(&scene,revisions(),None).unwrap();
+        assert_eq!(catalog.slots.len(),2);assert_eq!(catalog.prototypes.len(),2);
+        let mut models=Vec::new();catalog.refresh_models(&scene,revisions(),&mut models).unwrap();
+        assert_eq!(models[0].mvp,DMat4::IDENTITY.as_mat4().to_cols_array_2d());
+        assert_eq!(models[1].mvp,scene.groups[0].transform.as_mat4().to_cols_array_2d());
+        let loose=catalog.prototypes.iter().find(|p|p.signature.loose).unwrap();
+        let data=catalog.collect(&loose.key,&scene,&OrbitCamera::new(),&StyleConfig::default()).unwrap();
+        let expected=build_loose_world_surfaces(&scene,&StyleConfig::default());
+        assert_eq!(data.vertices.len(),expected.opaque_mesh.vertices.len());
+        assert_eq!(data.indices,expected.opaque_mesh.indices);
+        assert!(!data.indices.is_empty());
+        let mut wire=Scene::new();let a=wire.mesh.add_vertex(glam::DVec3::ZERO);let b=wire.mesh.add_vertex(glam::DVec3::X);wire.mesh.add_edge(a,b);
+        assert!(Catalog::new(&wire,revisions(),None).is_err());
+    }
+
 }
