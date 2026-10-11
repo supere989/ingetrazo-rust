@@ -21,6 +21,8 @@ Latest independent rendering diagnosis: [real layout](audits/annotation-real-ope
 
 ## Dated implementation and verification evidence
 
+Published ordered compute completed (2026-10-11 UTC): review source `20637454` passes both ARM and Intel native ordered UI/CAD compute jobs in run 38099912424 ([completion evidence](audits/review-206-ordered-compute-completion.json)). The combined ARM SDK job also passes; combined Linux and Intel SDK jobs remain active. Full viewport/presentation and release acceptance remain OPEN.
+
 Fractional-DPI display mismatch isolated (2026-10-11 UTC): source copies its scene target one-for-one with GL_NEAREST into the widget framebuffer, while Rust currently samples it across the full logical rect. In two measured cases scene and widget differ by one pixel, so corrected target rounding alone cannot establish displayed parity ([source/native review](audits/viewport-extent-merged-root/blit-review.json)). Actual border placement and pointer-depth mapping remain required before changing display coordinates.
 
 Expanded ARM native Metal job passes (2026-10-11 UTC): run 38099978920 source `f260c73a` completes its SDK build, GPU fixture and 18-frame checker successfully on ARM; Intel remains in SDK build ([direct job observation](audits/metal-world-root-review/material-run-observation.json)). Independent raw artifact verification is pending; packet-level samples do not close full viewport acceptance.

@@ -1,0 +1,19 @@
+{
+  "source": "2063745484e11232d1175a4a6744a7cc991d6e10",
+  "run": 38099912424,
+  "jobs": [
+    {
+      "id": 114353523650,
+      "name": "Actual ordered UI and CAD compute (macos-15)",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 114353523929,
+      "name": "Actual ordered UI and CAD compute (macos-15-intel)",
+      "status": "completed",
+      "conclusion": "success"
+    }
+  ],
+  "boundary": "Ordered compute acceptance only; full viewport, presentation and release gates remain open."
+}
