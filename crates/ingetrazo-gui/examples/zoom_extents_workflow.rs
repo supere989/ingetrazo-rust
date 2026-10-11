@@ -7,6 +7,105 @@ fn state(app: &IngeTrazoApp) -> Value {
     let c = &app.camera;
     json!({"target":c.target.to_array(),"distance":c.distance,"yaw":c.yaw,"pitch":c.pitch,"perspective":c.perspective,"two_point":c.two_point})
 }
+fn frame(
+    ctx: &egui::Context,
+    app: &mut IngeTrazoApp,
+    time: f64,
+    events: Vec<egui::Event>,
+) -> egui::FullOutput {
+    ctx.run(
+        egui::RawInput {
+            screen_rect: Some(egui::Rect::from_min_size(
+                egui::Pos2::ZERO,
+                egui::vec2(1400., 1000.),
+            )),
+            time: Some(time),
+            events,
+            ..Default::default()
+        },
+        |ctx| app.update_ui(ctx),
+    )
+}
+fn find(shape: &egui::epaint::Shape, name: &str) -> Option<egui::Pos2> {
+    match shape {
+        egui::epaint::Shape::Text(t) if t.galley.text().split("\t").next() == Some(name) => {
+            Some(t.pos + t.galley.rect.center().to_vec2())
+        }
+        egui::epaint::Shape::Vec(v) => v.iter().find_map(|s| find(s, name)),
+        _ => None,
+    }
+}
+fn click(
+    ctx: &egui::Context,
+    app: &mut IngeTrazoApp,
+    out: &egui::FullOutput,
+    time: &mut f64,
+    name: &str,
+) -> egui::FullOutput {
+    let p = out
+        .shapes
+        .iter()
+        .find_map(|s| find(&s.shape, name))
+        .unwrap_or_else(|| panic!("Menu item missing: {name}"));
+    *time += 0.1;
+    frame(
+        ctx,
+        app,
+        *time,
+        vec![
+            egui::Event::PointerMoved(p),
+            egui::Event::PointerButton {
+                pos: p,
+                button: egui::PointerButton::Primary,
+                pressed: true,
+                modifiers: Default::default(),
+            },
+        ],
+    );
+    *time += 0.1;
+    frame(
+        ctx,
+        app,
+        *time,
+        vec![egui::Event::PointerButton {
+            pos: p,
+            button: egui::PointerButton::Primary,
+            pressed: false,
+            modifiers: Default::default(),
+        }],
+    )
+}
+fn mode_session(source: &Value) -> Result<Value, Box<dyn std::error::Error>> {
+    let mut app = IngeTrazoApp::new();
+    let i = &source["mode_session"]["initial"];
+    app.camera.target = DVec3::from_array(serde_json::from_value(i["target"].clone())?);
+    app.camera.distance = i["distance"].as_f64().unwrap();
+    app.camera.yaw = i["yaw"].as_f64().unwrap();
+    app.camera.pitch = i["pitch"].as_f64().unwrap();
+    app.camera.perspective = i["perspective"].as_bool().unwrap();
+    app.camera.two_point = i["two_point"].as_bool().unwrap();
+    let model = app.scene.clone();
+    let mut phases = vec![json!({"phase":"before","camera":state(&app)})];
+    let ctx = egui::Context::default();
+    let mut time = 0.;
+    let mut out = frame(&ctx, &mut app, time, vec![]);
+    for (phase, name) in [
+        ("two-point", "Two-Point Perspective"),
+        ("parallel", "Toggle Perspective / Parallel"),
+        ("perspective", "Toggle Perspective / Parallel"),
+    ] {
+        out = click(&ctx, &mut app, &out, &mut time, "Camera");
+        time += 0.1;
+        out = frame(&ctx, &mut app, time, vec![]);
+        out = click(&ctx, &mut app, &out, &mut time, name);
+        phases.push(json!({"phase":phase,"camera":state(&app)}));
+        time += 0.1;
+        out = frame(&ctx, &mut app, time, vec![]);
+    }
+    assert_eq!(app.scene, model);
+    assert!(app.undo_stack.is_empty() && app.redo_stack.is_empty());
+    Ok(json!({"phases":phases,"model_history_unchanged":true}))
+}
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let dir = std::env::args().nth(1).ok_or("Input directory required")?;
     let dir = Path::new(&dir);
@@ -75,7 +174,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     std::fs::write(
         dir.join("native.json"),
         serde_json::to_vec_pretty(
-            &json!({"cases":cases,"nonfinite_camera_refused":nonfinite_camera_refused,"missing_survey_refused":true,"nonfinite_model_refused":nonfinite_model_refused}),
+            &json!({"cases":cases,"mode_session":mode_session(&source)?,"nonfinite_camera_refused":nonfinite_camera_refused,"missing_survey_refused":true,"nonfinite_model_refused":nonfinite_model_refused}),
         )?,
     )?;
     Ok(())

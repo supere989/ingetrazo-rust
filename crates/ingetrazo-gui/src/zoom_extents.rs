@@ -53,8 +53,10 @@ fn bounds(app: &IngeTrazoApp) -> Result<Option<(DVec3, DVec3)>, String> {
     let scene = &app.scene;
     let mesh = app.material_loose_mesh();
     let mut b = None;
-    for (i, e) in mesh.edges.iter().enumerate() {
-        if scene.mesh_edge_visible(mesh, i) {
+    // Source entity_visible(edge) excludes layer-hidden entities, but intentionally
+    // ignores Edge.hidden and the draw visibility of incident faces.
+    for e in &mesh.edges {
+        if scene.is_layer_visible(e.layer.as_deref()) {
             for v in [e.v0, e.v1] {
                 absorb(
                     &mut b,

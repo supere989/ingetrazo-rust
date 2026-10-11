@@ -410,6 +410,7 @@ pub fn render_menu_bar(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
 
             if ui.selectable_label(!app.camera.perspective, format!("{}\tShift+P", tr("Toggle Perspective / Parallel"))).clicked() {
                 app.camera.perspective = !app.camera.perspective;
+                app.camera.two_point = false;
                 ui.close_menu();
             }
             if ui.selectable_label(app.camera.two_point, tr("Two-Point Perspective")).clicked() {
