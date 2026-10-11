@@ -60,6 +60,8 @@ mod world_profile;
 pub mod annotation;
 
 mod world_section;
+#[cfg(target_os="macos")]
+mod world_contour;
 
 #[cfg(target_os="macos")]
 mod world_billboard;

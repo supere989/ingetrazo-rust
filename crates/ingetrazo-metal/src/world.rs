@@ -106,6 +106,7 @@ struct Pipeline {
 }
 #[derive(Default, Debug, Clone, Copy)]
 pub struct Stats {
+    pub section_contour_pipeline_builds:u64,
     pub billboard_builds:u64,
     pub billboard_uploads:u64,
     pub billboard_upload_bytes:u64,
@@ -164,6 +165,7 @@ pub struct World {
     base_variants: [Option<(PrototypeKey,Option<Arc<Mesh>>)>;2],
     pipeline: Option<Arc<Pipeline>>,
     section_pipeline:Option<Arc<Pipeline>>,
+    pub(crate) contour_pipeline:Option<Arc<super::world_contour::Pipeline>>,
     targets: Vec<Arc<Target>>,
     texture_assets:Vec<Arc<super::world_texture::Asset>>,
     pub stats: Stats,
@@ -171,6 +173,8 @@ pub struct World {
 pub struct Prepared {
     pub(crate) billboards:Option<Arc<super::world_billboard::Prepared>>,
     pub(crate) section: Section,
+    pub(crate) contour:Option<Arc<super::world_contour::Pipeline>>,
+    pub(crate) contour_eye_width:[f32;4],
     pub(crate) fill: Option<Arc<crate::world_section::Fill>>,
     pub(crate) source_sample_positions:Option<[MTLSamplePosition;4]>,
     pub(crate) lines: [Option<Arc<super::world_preview::Lines>>;2],
@@ -368,6 +372,7 @@ impl World {
         self.stats.prepared += 1;
         Ok(Some(Arc::new(Prepared {
             section: Section::OFF,
+            contour:None,contour_eye_width:[0.;4],
             fill:None,
             source_sample_positions:None,
             billboards:None,
@@ -740,6 +745,7 @@ impl World {
         if fill.is_some(){self.section_pipeline=Some(pipeline.clone());}else{self.pipeline=Some(pipeline.clone());}
         Ok(Some(Arc::new(Prepared {
             section: Section::OFF,
+            contour:None,contour_eye_width:[0.;4],
             fill,
             source_sample_positions:None,
             billboards:None,
@@ -844,6 +850,46 @@ impl Prepared {
         }
         }
         encoder.setDepthBias_slopeScale_clamp(0.,0.,0.);Ok(())
+    }
+    fn encode_contours(&self,encoder:&ProtocolObject<dyn MTLRenderCommandEncoder>)->Result<(),String>{
+        let Some(pipeline)=&self.contour else{return Ok(());};
+        if !self.section.enabled(){return Ok(());}
+        encoder.setRenderPipelineState(&pipeline.state);encoder.setDepthStencilState(Some(&pipeline.depth));
+        encoder.setCullMode(MTLCullMode::None);encoder.setDepthBias_slopeScale_clamp(0.,0.,0.);
+        bind_section(encoder,self.section);
+        unsafe{encoder.setVertexBytes_length_atIndex(std::ptr::NonNull::from(&self.mvp).cast(),64,2);}
+        let draw=|vertices:&Buffer,indices:Option<&Buffer>,stride:u32,first:usize,count:usize,instances:usize|->Result<(),String>{
+            if count==0{return Ok(());}
+            let triangles=u32::try_from(count/3).map_err(|_|"Metal contour triangle count admission")?;
+            let draws=(count/3).checked_mul(instances).ok_or("Metal contour instance count overflow")?;
+            let parameters=super::world_contour::Parameters{eye_width:self.contour_eye_width,color:self.ghost_edge,info:[stride,u32::from(indices.is_none()),u32::try_from(first).map_err(|_|"Metal contour index offset admission")?,triangles]};
+            unsafe{
+                encoder.setVertexBuffer_offset_atIndex(Some(&vertices.raw),0,0);
+                encoder.setVertexBuffer_offset_atIndex(Some(&indices.unwrap_or(vertices).raw),0,4);
+                encoder.setVertexBytes_length_atIndex(std::ptr::NonNull::from(&parameters).cast(),std::mem::size_of_val(&parameters),5);
+                encoder.drawPrimitives_vertexStart_vertexCount_instanceCount(MTLPrimitiveType::Triangle,0,6,draws);
+            }Ok(())
+        };
+        if let Some(placements)=&self.placements{
+            let matrices=self.target.instance_matrices.as_ref().ok_or("Metal contour placement matrices absent")?;
+            for run in &self.target.order.as_ref().ok_or("Metal contour placement order absent")?.runs{
+                if self.overlay==Some(placements.packet.prototypes[run.prototype as usize]){continue;}
+                let Some(mesh)=&placements.meshes[run.prototype as usize] else{continue;};
+                unsafe{encoder.setVertexBuffer_offset_atIndex(Some(&matrices.raw),run.first*64,1);}
+                if let (Some(vertices),Some(indices))=(&mesh.vertices,&mesh.indices){draw(vertices,Some(indices),12,0,mesh.count,run.count)?;}
+                if let Some(material)=&mesh.materials{
+                    if let (Some(vertices),Some(indices))=(&material.colored_vertices,&material.colored_indices){
+                        for source in &material.runs{if source.phase==super::world_surface::Phase::TransparentFront{draw(vertices,Some(indices),12,source.first,source.count,run.count)?;}}
+                    }
+                    for texture in &material.textures{for source in &texture.draws{if !source.source.back_side{draw(&texture.vertices,None,5,source.first as usize,source.count as usize,run.count)?;}}}
+                }
+            }
+        }else if let Some(mesh)=&self.mesh{
+            let identity=glam::Mat4::IDENTITY.to_cols_array_2d();
+            unsafe{encoder.setVertexBytes_length_atIndex(std::ptr::NonNull::from(&identity).cast(),64,1);}
+            if let (Some(vertices),Some(indices))=(&mesh.vertices,&mesh.indices){draw(vertices,Some(indices),12,0,mesh.count,1)?;}
+        }
+        Ok(())
     }
     fn encode_aux(&self,encoder:&ProtocolObject<dyn MTLRenderCommandEncoder>,depth_enabled:bool,preview_only:bool){
         if !preview_only {if let Some(billboards)=&self.billboards{billboards.encode(encoder,&self.mvp,&self.section,self.extent().1,depth_enabled);}}
@@ -976,6 +1022,7 @@ impl Prepared {
         }
         if self.target.material_draws.is_none(){self.encode_fill(&encoder)?;self.encode_aux(&encoder,depth_enabled,false);}
         self.encode_aux(&encoder,depth_enabled,true);
+        self.encode_contours(&encoder)?;
         encoder.endEncoding();
         Ok(())
     }

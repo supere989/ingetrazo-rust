@@ -3,6 +3,7 @@
 #[derive(Clone, Copy, bytemuck::Pod, bytemuck::Zeroable)]
 pub(crate) struct Section { plane: [f32;4], enabled: u32, padding: [u32;3] }
 impl Section {
+    pub(crate) fn enabled(&self)->bool{self.enabled!=0}
     pub(crate) const OFF: Self = Self { plane:[0.;4], enabled:0, padding:[0;3] };
     pub(crate) fn from_scene(scene:&ingetrazo_core::scene::Scene)->Result<Self,String>{
         if !scene.show_section_cuts { return Ok(Self::OFF); }
