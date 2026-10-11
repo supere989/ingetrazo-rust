@@ -224,6 +224,21 @@ run([binaries/(consumers[20]+suffix), obj_raw, "--obj-raw-fusion"], "obj-raw-fus
 run([sys.executable, repo/"scripts/reference-obj-raw-fusion-reopens.py", obj_raw], "obj-raw-fusion/reopen.log", requires=["obj-raw-fusion/runtime.log"])
 run([sys.executable, repo/"scripts/check-obj-raw-fusion.py", obj_raw], "obj-raw-fusion/acceptance.json", requires=["obj-raw-fusion/runtime.log", "obj-raw-fusion/reopen.log"])
 
+# Reuse the same context consumer and authenticated source packages for both DXF subsets.
+dxf_archives = {}
+dxf_results = {}
+for lane, package, mode, reader, checker in [
+    ("dxf-entities", "dxf-legacy-polylines", "--dxf-entities", "reference-dxf-entities-reopens.py", "check-dxf-entities.py"),
+    ("dxf-curves", "dxf-curves", "--dxf-curves", "reference-dxf-curves-reopens.py", "check-dxf-source-curves.py"),
+]:
+    folder = out/lane
+    members = [row["path"] for row in json.loads((repo/"docs/audits"/package/"source-manifest.json").read_text())["entries"]]
+    dxf_archives[lane] = archive(package, "source-manifest.json", members, folder, preserve_paths=True, archive_name="source-records.zip", stage_name=lane+"-source")
+    run([binaries/(consumers[20]+suffix), folder, mode], lane+"/runtime.log")
+    run([sys.executable, repo/"scripts"/reader, folder], lane+"/reopen.log", requires=[lane+"/runtime.log"])
+    run([sys.executable, repo/"scripts"/checker, folder], lane+"/acceptance.json", requires=[lane+"/runtime.log", lane+"/reopen.log"])
+    dxf_results[lane] = folder/"acceptance.json"
+
 nested_import = out/"nested-import"
 nested_cases = [context+"-"+asset for context in ["root", "container", "leaf"] for asset in ["ambiguous", "named", "parts", "header", "zero"]]
 ni = archive("nested-import", "source-manifest.json", ["original-nested-import.json", "ambiguous.obj", "named.obj", "parts.obj", "header.dxf", "zero.dxf"]+[case+ending for case in nested_cases for ending in ["-input.igz", "-original.igz"]], nested_import, archive_name="source-records.zip", stage_name="nested-import-source")
@@ -319,6 +334,7 @@ def summarize():
               "perspective_guides":json.loads((perspective_guides/"acceptance.json").read_text()),
               "shape_drafting":json.loads((shape/"acceptance.json").read_text()),
               "freehand_workflows":json.loads((freehand/"acceptance.json").read_text()),
+              "dxf_source_archives":dxf_archives,"dxf":{lane:json.loads(path.read_text()) for lane,path in dxf_results.items()},
               "fresh_source_acquisitions":0,"result":"pass"}
     return result
 
