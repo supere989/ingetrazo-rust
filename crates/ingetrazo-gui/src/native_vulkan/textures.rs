@@ -42,9 +42,25 @@ impl Textures{
    let mut paths=buffers.iter().map(|(p,b)|(p,b,false)).chain(extra.iter().flat_map(|b|b.iter().map(|(p,b)|(p,b,true)))).collect::<Vec<_>>();paths.sort_by_key(|(_,b,_)|b.source_texture_runs.iter().map(|r|r.order).min().unwrap_or(usize::MAX));
    let mut images=candidate.references.as_ref().unwrap().sampled().collect::<HashMap<AssetId,(vk::ImageView,vk::Sampler,bool)>>();
    let mut pending_image_bytes=0usize;let mut pending_image_start=0usize;
-   for(path,buffer,extra_only)in paths{
+   let mut paths=paths.into_iter();
+   loop {
+    // Retain at most one 8 MiB group plus its last indivisible asset.
+    // Scatter into persistent staging without another packed CPU copy.
+    let mut group=Vec::new();let mut bytes=0usize;
+    while let Some((path,buffer,extra_only))=paths.next(){
+     let geometry=Geometry::prepare(buffer)?;if geometry.vertices.is_empty(){continue;}
+     bytes=bytes.checked_add(geometry.upload_bytes().len()).ok_or("Texture geometry group overflow")?;
+     group.try_reserve(1).map_err(|_|"Texture geometry group admission")?;
+     group.push((path,buffer,extra_only,geometry));if bytes>=8*1024*1024{break;}
+    }
+    if group.is_empty(){break;}
+    let mut inputs=Vec::new();inputs.try_reserve_exact(group.len()).map_err(|_|"Texture upload list admission")?;
+    inputs.extend(group.iter().map(|(_,_,_,g)|(g.upload_bytes(),vk::BufferUsageFlags::VERTEX_BUFFER|vk::BufferUsageFlags::STORAGE_BUFFER)));
+    candidate.buffers.try_reserve(group.len()).map_err(|_|"Texture buffer identity admission")?;
+    let vertices=resources.upload_many(context,&inputs)?;
+    candidate.buffers.extend_from_slice(&vertices);
+    for((path,buffer,extra_only,geometry),vertex)in group.into_iter().zip(vertices){
     let billboard=buffer.source_billboard_receiver;let shadow_only=extra_only&&!billboard;
-    let geometry=Geometry::prepare(buffer)?;if geometry.vertices.is_empty(){continue;}
     // viewport.py1612/1780: shaded opaque FRONTS use the Qt mean;
     // all back overrides and translucent fronts sample the original texture.
     // One asset can need both; retain one geometry upload and one sampled image.
@@ -67,12 +83,13 @@ impl Textures{
      let infos=[vk::DescriptorImageInfo::default().image_view(sampled.0).sampler(sampled.1).image_layout(vk::ImageLayout::SHADER_READ_ONLY_OPTIMAL)];unsafe{self.device.update_descriptor_sets(&[vk::WriteDescriptorSet::default().dst_set(set).dst_binding(0).descriptor_type(vk::DescriptorType::COMBINED_IMAGE_SAMPLER).image_info(&infos)],&[])};
      (sampled,set)
     }else{((vk::ImageView::null(),vk::Sampler::null(),false),vk::DescriptorSet::null())};
-    let vertex=resources.upload(context,geometry.upload_bytes(),vk::BufferUsageFlags::VERTEX_BUFFER|vk::BufferUsageFlags::STORAGE_BUFFER,false)?;candidate.buffers.push(vertex);self.stats.uploads+=1;self.stats.vertex_bytes+=geometry.upload_bytes().len()as u64;
+    self.stats.uploads+=1;self.stats.vertex_bytes+=geometry.upload_bytes().len()as u64;
     if !billboard&&!shadow_only&&geometry.front_vertices>0 {
      if geometry.upload_bytes().len()as u64<=storage_limit{candidate.contours.push((vertex,geometry.front_vertices/3,5));}
      else {let triangles=storage_limit.min(8*1024*1024)/36;if triangles==0{return Err("Texture contour storage range cannot hold one triangle".into());}for chunk in geometry.vertices[..geometry.front_vertices as usize].chunks(triangles as usize*3){let positions=chunk.iter().map(|v|v.position).collect::<Vec<_>>();let id=resources.upload(context,bytemuck::cast_slice(&positions),vk::BufferUsageFlags::STORAGE_BUFFER,false)?;candidate.buffers.push(id);candidate.contours.push((id,(positions.len()/3)as u32,3));}}
     }
     for draw in geometry.draws{let source=draw.source;let opaque=source.opacity>=0.999;let mean=if opaque&&!source.back_side{mean}else{None};let opacity=if opaque{1.}else{format!("{:.3}",source.opacity).parse::<f32>().map_err(|e|e.to_string())?};candidate.draws.push(Draw{buffer:vertex,set,asset:id,first:draw.first,count:draw.count,opacity,shade:source.shade,cutout:billboard||sampled.2,back:source.back_side,cull:source.front_cull,opaque,path:path.clone(),order:source.order,mean,shadow_only,billboard,missing,bitmap:buffer.source_shadow_bitmap});}
+   }
    }
    self.cache.complete_many(context,resources,candidate.images[pending_image_start..].iter_mut())?;
    // Source front opaque first occurrence, then sorted back/transparent keys.
