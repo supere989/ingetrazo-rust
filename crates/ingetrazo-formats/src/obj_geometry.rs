@@ -354,6 +354,22 @@ fn reference_with_admission<'a>(
             continue;
         }
         let traced = trace_raw(&faces, &ids, first.normal);
+        if traced.is_none() {
+            // fuse_coplanar_loops emits separate singleton candidates here,
+            // preserving each original's attrs (unlike _add_fused's region
+            // admission fallback below).
+            for &id in &ids {
+                let original = &faces[id];
+                if admit(original.points, &[])
+                    .and_then(|()| append_raw(&mut output, original.points, &[], original.attrs))
+                    .is_err()
+                    && admit(original.points, &[]).is_ok()
+                {
+                    let _ = append_raw(&mut output, original.points, &[], original.attrs);
+                }
+            }
+            continue;
+        }
         let accepted = if let Some((outer, holes)) = traced {
             admit(&outer, &holes)
                 .and_then(|()| append_raw(&mut output, &outer, &holes, first.attrs))
@@ -909,6 +925,18 @@ pub(super) fn editable(mesh: &mut Mesh, first_new: usize, seed: &[DVec3]) -> Res
 #[cfg(test)]
 mod raw_reference_tests {
     use super::*;
+    #[test]
+    fn trace_refusal_preserves_each_original_paint() {
+        let points = [1., 2., -1.].map(|y| [DVec3::ZERO, DVec3::X, DVec3::new(0.5, y, 0.)]);
+        let attrs = [0,1,2].map(|i| HashMap::from([("texture".into(), serde_json::json!({"path":"witness.png","uvw":[1.+i as f64*0.000001,0.,0.,0.,0.,1.,0.,0.]}))]));
+        let out = reference(points.iter().zip(attrs.iter()).map(|(p, a)| (&p[..], a))).unwrap();
+        let actual = serde_json::json!({"attrs":out.faces.iter().map(|f|f.attrs.clone()).collect::<Vec<_>>(),"loops":out.faces.iter().map(|f|f.vertices.iter().map(|&v|out.vertices[v].position.to_array()).collect::<Vec<_>>()).collect::<Vec<_>>()});
+        let source: Value = serde_json::from_str(include_str!(
+            "../../../docs/audits/obj-raw-fusion/trace-source.json"
+        ))
+        .unwrap();
+        assert_eq!(actual, source);
+    }
     #[test]
     fn reference_admission_retries_originals_and_preserves_region_paint() {
         let a = [DVec3::ZERO, DVec3::X, DVec3::new(1., 1., 0.)];
