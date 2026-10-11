@@ -1,0 +1,6 @@
+{
+  "source": "282bf8ad42f586eee3da03f4f7f7c800672e6370",
+  "command": "scripts/check-rust-workspace.sh -j2",
+  "exit_code": 0,
+  "elapsed_seconds": 21.13
+}

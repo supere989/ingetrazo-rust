@@ -1,0 +1,31 @@
+{
+  "archive": "logs.zip",
+  "sha256": "64972279202dceb8296e83f526aefd1fc46bfd818a3a6f8caca69e1db9ba939b",
+  "files": [
+    {
+      "path": "console-build.log",
+      "bytes": 83124,
+      "sha256": "92eb58147bca05811756a1834d2bee1ed8b762226e3abb355bafdfeeb78ec60b"
+    },
+    {
+      "path": "console-stale-path-cache-failure.log",
+      "bytes": 85728,
+      "sha256": "d1cb1959ac3b767020aeaa6e14d881c758ff1563e5d09ff36ca4b49e05764b91"
+    },
+    {
+      "path": "console-tests.log",
+      "bytes": 83177,
+      "sha256": "f30bf70306edfd745662f565b274cff410aa2e6e132d0d8497e03788bda250aa"
+    },
+    {
+      "path": "path-dependency-cache-reset.log",
+      "bytes": 37,
+      "sha256": "5b0050dbed1b051c3e8fd511ed2be27e424fa3933325e704afb51fdba730b114"
+    },
+    {
+      "path": "workspace.log",
+      "bytes": 136851,
+      "sha256": "d4ca3dcef26ebbd5453572649d6c520aaf953dc27cce9e7c04854054f56147e6"
+    }
+  ]
+}

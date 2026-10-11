@@ -1,0 +1,16 @@
+{
+  "archive": "logs.zip",
+  "sha256": "99b8a943a99b8838c17d83b9276cb7db79ac3c0af34d0a167b822122df0e5561",
+  "files": [
+    {
+      "path": "focused-tests.log",
+      "bytes": 79444,
+      "sha256": "d62e956f9b9542628b495f7ca1fbeb48a8f760b023f963090bdf9abc00c6b102"
+    },
+    {
+      "path": "retained-private-mesh-log-assumption-failure.log",
+      "bytes": 80031,
+      "sha256": "5d6e13db48e45496b02165c9d2feaab1ef0cf8fff75371c7362d68c75a467eab"
+    }
+  ]
+}

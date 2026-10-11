@@ -1,0 +1,31 @@
+{
+  "inspected_source": "d76eb668",
+  "workspace_packages": 7,
+  "non_test_examples": 219,
+  "examples_with_test_true": 0,
+  "check_command": "scripts/check-rust-workspace.sh",
+  "runnable_test_targets_retained": true,
+  "all_examples_typechecked": true,
+  "runtime_acceptance_examples_still_explicitly_built": true,
+  "rust_cache_action": "Swatinem/rust-cache@49a0bdc70d2e1b713ca9e2869b211fcce03d3c1c",
+  "workspace_build_artifacts_cached": false,
+  "ci_debug_symbols": false,
+  "ci_incremental_data": false,
+  "measured_speedup": null,
+  "verified_terminal_duplicate_bytes_purged": 53492844,
+  "prebatch_ci": {
+    "source": "807b489ce1589489671d13cf556579d2afd91e61",
+    "broad_run": 38104465518,
+    "broad_jobs_passed": 5,
+    "ordered_compute_run": 38104465478,
+    "ordered_compute_jobs_passed": 2
+  },
+  "observed_warm_workspace_run": {
+    "source": "282bf8ad",
+    "elapsed_seconds": 21.13,
+    "passed": 784,
+    "failed": 0,
+    "ignored": 2
+  },
+  "local_path_target_handoff_requires_invalidation": true
+}

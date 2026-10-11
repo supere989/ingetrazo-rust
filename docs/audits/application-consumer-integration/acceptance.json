@@ -1,0 +1,24 @@
+{
+  "runtime_source": "282bf8ad42f586eee3da03f4f7f7c800672e6370",
+  "original_python": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "workspace": {
+    "passed": 784,
+    "failed": 0,
+    "ignored": 2,
+    "test_and_doc_targets": 35,
+    "examples_compile_checked": true,
+    "elapsed_seconds": 21.13,
+    "warm_target": true,
+    "speedup_ratio_claimed": false
+  },
+  "optional_console": {
+    "focused_tests_passed": 3,
+    "focused_tests_failed": 0,
+    "actual_app_states": 4,
+    "negative_controls_rejected": 5,
+    "default_enabled": false
+  },
+  "retained_setup_failure": "Borrowed target reused stale local-path crate artifacts from another worktree. Selective local-package clean retained registry dependencies; retry passed. Raw failure and reset logs are archived unchanged.",
+  "graphics_scope": "No new full-model or annotation captures in this batch; retained graphics evidence keeps its exact original source hash.",
+  "release_gates": "All five OPEN; 10 Implemented, 27 Partial, 0 Verified across 37 areas."
+}

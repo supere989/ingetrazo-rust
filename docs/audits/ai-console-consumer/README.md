@@ -11,3 +11,5 @@ Cold hydration clones native mesh before logical admission; changed publication 
 Compiler dependencies use the exact reviewed Ruff0.16.5 graph; the latest compatible0.16.10 required a newer Rust compiler. Workspace exclusion avoids nested-workspace errors; default GUI does not compile the optional VM. The changed Rust modules were formatted for review. Initial build/workspace/MSRV failures and a private-Mesh log expectation failure were engineering setup/test failures, not weakened runtime assertions: operative source confirms private Mesh creation returns changed=false and creates no document history, while retaining one private face.
 
 This proves the real app controller consumer, not a rendered OS console gesture. No extra full workspace or graphics capture was run.
+
+The original focused-test output and retained private-Mesh expectation failure are stored byte-for-byte in `logs.zip`; `logs-manifest.json` records independently checked file lengths and SHA-256 hashes. Fresh root replay and the merged optional-feature run are retained in `root-review/` and [the integration checkpoint](../application-consumer-integration/README.md).

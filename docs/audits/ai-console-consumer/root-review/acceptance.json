@@ -1,0 +1,19 @@
+{
+  "frozen_source": "2af33497",
+  "binary_sha256": "ffeed1a49036e68a478e5ffa68778c266292b00edd4a795836c182633037ae0d",
+  "source_files_verified": 12,
+  "fresh_actual_app_console_execution": true,
+  "reference": "Previously independently refreshed pinned original four-state source protocol; unchanged reference hash verified",
+  "result": {
+    "states": 4,
+    "rejected": [
+      "attrs",
+      "undo",
+      "id",
+      "missing",
+      "charge"
+    ],
+    "production_enabled": false
+  },
+  "scope": "Optional engineering-python consumer only; full Scene scripting and total resource bounds remain open."
+}
