@@ -4,12 +4,12 @@ use std::sync::Arc;
 use super::{annotation_visibility::{prepare_query,Query},cad2d::{Factory,Handle}};
 use ingetrazo_render::annotations::{self,Builder,DimensionInput,LeaderInput};
 use crate::annotation_overlay_geometry::{Cache,Limits};
-#[derive(PartialEq)]struct Key{revision:u64,scene_version:u64,factory:usize,view:u64,matrix:[f32;16],rect:[f32;4],density:f32,selected:Option<usize>,bypass_depth:bool,distance:Option<(f64,[f64;3])>,units:(&'static str,i32)}
+#[derive(PartialEq)]struct Key{revision:u64,scene_version:u64,factory:usize,view:u64,matrix:[f32;16],rect:[f32;4],density:f32,selected:Option<usize>,bypass_depth:bool,include_annotations:bool,distance:Option<(f64,[f64;3])>,units:(&'static str,i32)}
 pub(crate) struct Prepared{pub handle:Handle,pub queries:Arc<[Query]>,pub inverse:[f32;16],pub eye:[f32;3],pub forward:[f32;3]}
 pub(crate) struct ViewportAnnotations{cache:Cache,current:Option<(Key,Prepared)>,empty:Option<Key>,style:serde_json::Value,vcb:String}
 impl ViewportAnnotations{
  pub fn new(stencil:bool)->Result<Self,String>{let mut result=Self{cache:Cache::new(ingetrazo_formats::annotation_font::Limits{faces:32,retained_font_bytes:32*1024*1024},Limits{cells:2_000_000,spans:200_000,geometry_bytes:32*1024*1024,glyphs:4096,glyph_bytes:16*1024*1024})?,current:None,empty:None,style:serde_json::Value::Null,vcb:String::new()};if stencil{result.cache.enable_source_stencil();}Ok(result)}
- pub fn prepare<'a>(&'a mut self,app:&crate::IngeTrazoApp,factory:&Factory,rect:egui::Rect,density:f32)->Result<Option<&'a Prepared>,String>{
+ pub fn prepare<'a>(&'a mut self,app:&crate::IngeTrazoApp,factory:&Factory,rect:egui::Rect,density:f32,include_annotations:bool)->Result<Option<&'a Prepared>,String>{
   if !density.is_finite()||density<=0.||!rect.min.is_finite()||!rect.max.is_finite()||rect.width()<=0.||rect.height()<=0.{return Err("Annotation viewport/density outside admission".into());}
   let bypass_depth=matches!(app.style.visual_style,ingetrazo_render::style::VisualStyle::XRay|ingetrazo_render::style::VisualStyle::Wireframe);
   let snapshot=crate::navigation_ray::camera_snapshot(&app.camera).ok_or("Annotation camera arithmetic outside admission")?;
@@ -17,7 +17,7 @@ impl ViewportAnnotations{
   let units=label_units(&app.scene)?;
   let distance=app.active_tool.distance_label().map(|(value,point)|(value,point.to_array()));
   if distance.is_some_and(|(value,point)|!value.is_finite()||point.iter().any(|p|!p.is_finite())){return Err("Tool label outside finite admission".into());}
-  let key=Key{revision:app.native_geometry_revision,scene_version:app.scene.version,factory:factory.cache_identity(),view:app.scene.view_version,matrix,rect:[rect.min.x,rect.min.y,rect.max.x,rect.max.y],density,selected:app.selected_dimension,bypass_depth,distance,units};
+  let key=Key{revision:app.native_geometry_revision,scene_version:app.scene.version,factory:factory.cache_identity(),view:app.scene.view_version,matrix,rect:[rect.min.x,rect.min.y,rect.max.x,rect.max.y],density,selected:app.selected_dimension,bypass_depth,include_annotations,distance,units};
   let raw=&app.scene.native_document["dimension_style"];
   let style_unchanged=self.style==*raw&&self.vcb==app.vcb_text;
   if style_unchanged&&self.empty.as_ref()==Some(&key){return Ok(None);}
@@ -25,7 +25,7 @@ impl ViewportAnnotations{
   // Invert only on a changed immutable camera key, before changing any ready owner.
   let inverse_columns=snapshot.inverse().ok_or("Annotation camera inverse is singular")?;
   let inverse=std::array::from_fn(|i|inverse_columns[i/4][i%4]);
-  let plan=Arc::new(build_plan(app,rect,&matrix,&mut self.cache)?);
+  let plan=Arc::new(build_plan(app,rect,&matrix,&mut self.cache,include_annotations)?);
   if plan.operations.is_empty(){self.style=raw.clone();self.vcb=app.vcb_text.clone();self.current=None;self.empty=Some(key);return Ok(None);}
   self.empty=None;
   let clip=[(rect.min.x*density).floor()as i32,(rect.min.y*density).floor()as i32,(rect.max.x*density).ceil()as i32,(rect.max.y*density).ceil()as i32];
@@ -47,7 +47,7 @@ impl ViewportAnnotations{
 }
 
 // One planner shared by production and bounded CPU-only engineering inspection.
-fn build_plan(app:&crate::IngeTrazoApp,rect:egui::Rect,matrix:&[f32;16],cache:&mut Cache)->Result<annotations::Plan,String>{
+fn build_plan(app:&crate::IngeTrazoApp,rect:egui::Rect,matrix:&[f32;16],cache:&mut Cache,include_annotations:bool)->Result<annotations::Plan,String>{
  let raw=&app.scene.native_document["dimension_style"];
   let project=|point:glam::Vec3|{
    let q=super::annotation_visibility::map(&matrix,[point.x,point.y,point.z,1.]);
@@ -62,6 +62,7 @@ fn build_plan(app:&crate::IngeTrazoApp,rect:egui::Rect,matrix:&[f32;16],cache:&m
   if let Some(v)=raw["ends"].as_str(){style.ends=v.into();}
   if let Some(v)=raw["units"].as_str(){style.units=v.into();}
   if let Some(v)=raw["decimals"].as_i64(){style.decimals=i32::try_from(v).map_err(|_|"Annotation decimal overflow")?;}
+  if include_annotations{
   for(index,dim)in app.scene.dimensions.iter().enumerate(){
    let frame=app.scene.dimension_frame;
    builder.dimension(DimensionInput{a:frame.transform_point3(dim.start).as_vec3(),b:frame.transform_point3(dim.end).as_vec3(),offset:frame.transform_vector3(dim.offset).as_vec3(),axis:dim.axis.as_deref(),text:dim.text_override.as_deref(),highlighted:app.selected_dimension==Some(index),hidden:dim.native_document["hidden"].as_bool().unwrap_or(false)||!app.scene.is_layer_visible(dim.layer.as_deref())},&style)?;
@@ -70,6 +71,7 @@ fn build_plan(app:&crate::IngeTrazoApp,rect:egui::Rect,matrix:&[f32;16],cache:&m
   for label in &app.scene.text_labels{
    let(height,_)=cache.leader_metrics("",leader_style.font_size,96.)?;
    builder.leader(LeaderInput{anchor:label.anchor.as_vec3(),offset:label.offset.as_vec3(),text:&label.text,highlighted:false,hidden:!app.scene.is_layer_visible(label.layer.as_deref())},&leader_style,height,|text|cache.leader_metrics(text,leader_style.font_size,96.).map(|(_,advance)|advance))?;
+  }
   }
   let mut plan=builder.finish()?;
   if let Some((distance,point))=app.active_tool.distance_label(){
@@ -94,7 +96,7 @@ pub fn plan_for_probe(app:&crate::IngeTrazoApp,rect:egui::Rect)->Result<annotati
  let snapshot=crate::navigation_ray::camera_snapshot(&app.camera).ok_or("Invalid diagnostic camera")?;
  let matrix=std::array::from_fn(|i|snapshot.matrix[i/4][i%4]);
  let mut owner=ViewportAnnotations::new(false)?;
- build_plan(app,rect,&matrix,&mut owner.cache)
+ build_plan(app,rect,&matrix,&mut owner.cache,true)
 }
 
 fn label_units(scene:&ingetrazo_core::scene::Scene)->Result<(&'static str,i32),String>{

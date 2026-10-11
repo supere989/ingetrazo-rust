@@ -1486,11 +1486,16 @@ impl App for crate::IngeTrazoApp {
         // Marking mesh/query buffers for the next serial here would prevent a
         // same-frame deletion from retiring them at the completed prior fence.
         if _resize{return;}
-        if let Some(sample)=system.annotation_sample{
+        {
+            // Floating tool text is always visible and never samples depth.
+            // Its publication must not depend on the independently admitted
+            // source MSAA depth policy for scene dimensions and leaders.
+            let include_annotations=system.annotation_sample.is_some();
+            let sample=system.annotation_sample.unwrap_or(0);
             let result=(||{
                 let factory=system.annotation_factory()?;
                 let mut state=match system.annotation_viewport.take(){Some(state)=>state,None=>annotation_viewport::ViewportAnnotations::new(system.swapchain.stencil_enabled)?};
-                let candidate=state.prepare(self,&factory,rect,system.egui_ctx.pixels_per_point()).map(|value|value.map(|value|(value.handle.clone(),value.queries.clone(),value.inverse,value.eye,value.forward)));
+                let candidate=state.prepare(self,&factory,rect,system.egui_ctx.pixels_per_point(),include_annotations).map(|value|value.map(|value|(value.handle.clone(),value.queries.clone(),value.inverse,value.eye,value.forward)));
                 system.annotation_viewport=Some(state);
                 match candidate?{
                     Some((handle,queries,inverse,eye,forward))=>{system.prepare_annotation_overlay(&handle,queries,inverse,eye,forward,sample)?;system.annotation_ready_shape=Some(handle.shape(rect));},
