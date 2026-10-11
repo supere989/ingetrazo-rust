@@ -75,7 +75,8 @@ pub struct Stats {
     pub target_allocations: u64,
     pub prepared: u64,
     pub warm_geometry_hits: u64,
-    /// Retained paint-plan capacities only; excludes allocator/shared/GPU owners.
+    /// Current World cache paint-plan capacities only. Prior Prepared frames may
+    /// independently retain older plans; excludes allocator/shared/GPU owners.
     pub policy_retained_payload_bytes: usize,
 }
 #[derive(Default)]
@@ -232,6 +233,7 @@ impl World {
     pub fn clear_idle(&mut self) {
         self.targets.retain(|t| Arc::strong_count(t) > 1);
         self.mesh = None;
+        self.stats.policy_retained_payload_bytes = 0;
         self.key = None;
     }
 }
