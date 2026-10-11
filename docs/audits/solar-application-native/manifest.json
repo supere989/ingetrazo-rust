@@ -1,0 +1,410 @@
+{
+  "archive_sha256": "8dec6c44c9271e7eae10b3542d9071c67365fd6fd4607ddf1723d5794d98a092",
+  "files": [
+    {
+      "path": "solar-native-bitmap-direction/billboard-bitmap/depth.png",
+      "sha256": "eb4be84b5e7b8a6c23a49356b0172990785e16fa5ac98db7af17fbfd7d0542c0",
+      "bytes": 93502
+    },
+    {
+      "path": "solar-native-bitmap-direction/billboard-bitmap/off.png",
+      "sha256": "fcd78e126cb6c5f75bb0fd2c7f2114f8dbd5497bd404e7854d233211039fd505",
+      "bytes": 11972
+    },
+    {
+      "path": "solar-native-bitmap-direction/billboard-bitmap/on.png",
+      "sha256": "e4e60c2830def315e51c3c7310b97de67c06089d80ace8d93aef4d20cffc4bb9",
+      "bytes": 19689
+    },
+    {
+      "path": "solar-native-bitmap-direction/billboard-bitmap/restored.png",
+      "sha256": "e4e60c2830def315e51c3c7310b97de67c06089d80ace8d93aef4d20cffc4bb9",
+      "bytes": 19689
+    },
+    {
+      "path": "solar-native-bitmap-direction/billboard-bitmap/result.json",
+      "sha256": "9d8936cd24177c8fb0c0806772ef9e40af84ba4a598dedcd1a5fd5496a979323",
+      "bytes": 1080
+    },
+    {
+      "path": "solar-native-bitmap-direction/billboard-bitmap/runtime.log",
+      "sha256": "55e8655b9786a7925f18a7813b4a3e5732c85bb3eb109c0d465cb37b281a06e9",
+      "bytes": 514
+    },
+    {
+      "path": "solar-native-bitmap-direction/billboard-bitmap/sun-turned.png",
+      "sha256": "f6d6bc24380efe3ea0e056fd57a0f572b86e971404e51d6fcd3b31de1830abc4",
+      "bytes": 20601
+    },
+    {
+      "path": "solar-native-bitmap-direction/icd.json",
+      "sha256": "88fd93f6476f1db453dbbc2a7f0c5af40e6eb3cdf4c20758bdaf4eba79f79131",
+      "bytes": 108
+    },
+    {
+      "path": "solar-native-bitmap-direction/transport.json",
+      "sha256": "53c640b5253f647e6dbee7c7f28eeeacef203474f7f31fdf579830ec06f954a6",
+      "bytes": 1751
+    },
+    {
+      "path": "solar-actual-app-frozen/actual-app.log",
+      "sha256": "20c07fed1cc6fba8f7f6c1e1aa5873451e6ac3aec5b78bdaa776c5229366be48",
+      "bytes": 2538
+    },
+    {
+      "path": "solar-actual-app-frozen/nvidia-glx-icd.json",
+      "sha256": "580e00d71b7aee371c54e277aed4c9ef114a686688bfd8406d567233cd8d9357",
+      "bytes": 99
+    },
+    {
+      "path": "solar-actual-app-frozen/transport.json",
+      "sha256": "bd00d096a45b52a9cd347e76b82edf577abcb7059882c23dfcaf770cc11689c8",
+      "bytes": 3700
+    },
+    {
+      "path": "solar-actual-app-cache-fixed/actual-app.log",
+      "sha256": "10e5b4eb751ff921b672dd1bf0cc7f7b4edc6b93bada624adb9273191551f8b7",
+      "bytes": 2716
+    },
+    {
+      "path": "solar-actual-app-cache-fixed/nvidia-glx-icd.json",
+      "sha256": "580e00d71b7aee371c54e277aed4c9ef114a686688bfd8406d567233cd8d9357",
+      "bytes": 99
+    },
+    {
+      "path": "solar-actual-app-cache-fixed/transport.json",
+      "sha256": "e32614eaebc2a9507811edffec82978377baea344df61a3615b7190edfc23793",
+      "bytes": 3703
+    },
+    {
+      "path": "solar-native-initial-corpus/comparison.json",
+      "sha256": "33be6e7766768ec5aae37029ec69a5d77ade983bcf990e892e06d4fee5443fad",
+      "bytes": 8464
+    },
+    {
+      "path": "solar-native-initial-corpus/cutout/depth.png",
+      "sha256": "55e50a49abc02e9dea2dbcd092f15ef99d2f6d27fe099939f00f7ec068cbe20d",
+      "bytes": 110026
+    },
+    {
+      "path": "solar-native-initial-corpus/cutout/off.png",
+      "sha256": "865a1ccb1a6cd0fc6b6fe001d9a7c987178d411679e16c99d8e01db6dde91e36",
+      "bytes": 12306
+    },
+    {
+      "path": "solar-native-initial-corpus/cutout/on.png",
+      "sha256": "0ad6c88ff70cc6352d6274a67c5e6d7f0a5b97ff7dbd78d1772e0c083d98c1bc",
+      "bytes": 13896
+    },
+    {
+      "path": "solar-native-initial-corpus/cutout/restored.png",
+      "sha256": "0ad6c88ff70cc6352d6274a67c5e6d7f0a5b97ff7dbd78d1772e0c083d98c1bc",
+      "bytes": 13896
+    },
+    {
+      "path": "solar-native-initial-corpus/cutout/result.json",
+      "sha256": "e5629f9fb1f0d6c8b47e025facd39bd78fd2bf0afbb40f24d5863398546bd51b",
+      "bytes": 636
+    },
+    {
+      "path": "solar-native-initial-corpus/cutout/runtime.log",
+      "sha256": "55e8655b9786a7925f18a7813b4a3e5732c85bb3eb109c0d465cb37b281a06e9",
+      "bytes": 514
+    },
+    {
+      "path": "solar-native-initial-corpus/glass-69/depth.png",
+      "sha256": "085494bee43a5a9d70b6c6641bc08dea7695957fa3b3ee313d1d1c802fe0ea2f",
+      "bytes": 86134
+    },
+    {
+      "path": "solar-native-initial-corpus/glass-69/off.png",
+      "sha256": "4aac78c79ebb7540345acc2482ac5ffb7961db078879385fddd33231aec7a0fd",
+      "bytes": 11011
+    },
+    {
+      "path": "solar-native-initial-corpus/glass-69/on.png",
+      "sha256": "71b347683da12baec79b85233e7e39193ed21f7e65fabc9c1f6e013bcdec7a3a",
+      "bytes": 11011
+    },
+    {
+      "path": "solar-native-initial-corpus/glass-69/restored.png",
+      "sha256": "71b347683da12baec79b85233e7e39193ed21f7e65fabc9c1f6e013bcdec7a3a",
+      "bytes": 11011
+    },
+    {
+      "path": "solar-native-initial-corpus/glass-69/result.json",
+      "sha256": "3832ff77a6605b61a3dd022b7fee17f22384d74d8fdbcde6a31b35e653dcefd2",
+      "bytes": 638
+    },
+    {
+      "path": "solar-native-initial-corpus/glass-69/runtime.log",
+      "sha256": "55e8655b9786a7925f18a7813b4a3e5732c85bb3eb109c0d465cb37b281a06e9",
+      "bytes": 514
+    },
+    {
+      "path": "solar-native-initial-corpus/glass-70/depth.png",
+      "sha256": "0c9634d05791a3da9fa49db3649b69fd8472642203a38a21dcd62eb9aeefcf74",
+      "bytes": 115814
+    },
+    {
+      "path": "solar-native-initial-corpus/glass-70/off.png",
+      "sha256": "f55d5ffbd938181a14c903284c20c0144505a60423280d66341278dc229dafcd",
+      "bytes": 11011
+    },
+    {
+      "path": "solar-native-initial-corpus/glass-70/on.png",
+      "sha256": "9ad16d9e53df795a7514d7e46b55e57a4b1a6e5cda661830297614eec8d27ca5",
+      "bytes": 12604
+    },
+    {
+      "path": "solar-native-initial-corpus/glass-70/restored.png",
+      "sha256": "9ad16d9e53df795a7514d7e46b55e57a4b1a6e5cda661830297614eec8d27ca5",
+      "bytes": 12604
+    },
+    {
+      "path": "solar-native-initial-corpus/glass-70/result.json",
+      "sha256": "bb852ba2c114c9aecb4c246479199b893b5cada9f309b4063225f2ced431de09",
+      "bytes": 638
+    },
+    {
+      "path": "solar-native-initial-corpus/glass-70/runtime.log",
+      "sha256": "55e8655b9786a7925f18a7813b4a3e5732c85bb3eb109c0d465cb37b281a06e9",
+      "bytes": 514
+    },
+    {
+      "path": "solar-native-initial-corpus/hidden-line-cutout/depth.png",
+      "sha256": "55e50a49abc02e9dea2dbcd092f15ef99d2f6d27fe099939f00f7ec068cbe20d",
+      "bytes": 110026
+    },
+    {
+      "path": "solar-native-initial-corpus/hidden-line-cutout/off.png",
+      "sha256": "67ee8d17c986c04a1602392b8e4ee22c4ba205899d0de60024590e5fc9f5b418",
+      "bytes": 11012
+    },
+    {
+      "path": "solar-native-initial-corpus/hidden-line-cutout/on.png",
+      "sha256": "0f7a90559d65643c52754f96ff24de621a9e7f6c47d74497ad2e80d3720e90df",
+      "bytes": 12570
+    },
+    {
+      "path": "solar-native-initial-corpus/hidden-line-cutout/restored.png",
+      "sha256": "0f7a90559d65643c52754f96ff24de621a9e7f6c47d74497ad2e80d3720e90df",
+      "bytes": 12570
+    },
+    {
+      "path": "solar-native-initial-corpus/hidden-line-cutout/result.json",
+      "sha256": "ff8fe786753ecf0ecf30c8fe60f3e56b64822f90ec6ebded97876caca64bb878",
+      "bytes": 648
+    },
+    {
+      "path": "solar-native-initial-corpus/hidden-line-cutout/runtime.log",
+      "sha256": "55e8655b9786a7925f18a7813b4a3e5732c85bb3eb109c0d465cb37b281a06e9",
+      "bytes": 514
+    },
+    {
+      "path": "solar-native-initial-corpus/icd.json",
+      "sha256": "88fd93f6476f1db453dbbc2a7f0c5af40e6eb3cdf4c20758bdaf4eba79f79131",
+      "bytes": 108
+    },
+    {
+      "path": "solar-native-initial-corpus/missing-texture/depth.png",
+      "sha256": "0c9634d05791a3da9fa49db3649b69fd8472642203a38a21dcd62eb9aeefcf74",
+      "bytes": 115814
+    },
+    {
+      "path": "solar-native-initial-corpus/missing-texture/off.png",
+      "sha256": "ea25f12c5c524d782caa088b3535e7ec759f9758246919fffdd1b2087d3d85b3",
+      "bytes": 10996
+    },
+    {
+      "path": "solar-native-initial-corpus/missing-texture/on.png",
+      "sha256": "f32d5451a0060384e1dc9e7ef565d94ce43f3a8aa48ba595521db63f192200ca",
+      "bytes": 12573
+    },
+    {
+      "path": "solar-native-initial-corpus/missing-texture/restored.png",
+      "sha256": "f32d5451a0060384e1dc9e7ef565d94ce43f3a8aa48ba595521db63f192200ca",
+      "bytes": 12573
+    },
+    {
+      "path": "solar-native-initial-corpus/missing-texture/result.json",
+      "sha256": "1ecd59c890a8ef422a50a5f399104c1927b4dcae81f79c0146176d83cc962c02",
+      "bytes": 645
+    },
+    {
+      "path": "solar-native-initial-corpus/missing-texture/runtime.log",
+      "sha256": "55e8655b9786a7925f18a7813b4a3e5732c85bb3eb109c0d465cb37b281a06e9",
+      "bytes": 514
+    },
+    {
+      "path": "solar-native-initial-corpus/offscreen-instance/depth.png",
+      "sha256": "a8d921e1fff3d4738770195a7c3c0b2b5899614808b6f4ffb02604b949c39291",
+      "bytes": 89920
+    },
+    {
+      "path": "solar-native-initial-corpus/offscreen-instance/off.png",
+      "sha256": "ea25f12c5c524d782caa088b3535e7ec759f9758246919fffdd1b2087d3d85b3",
+      "bytes": 10996
+    },
+    {
+      "path": "solar-native-initial-corpus/offscreen-instance/on.png",
+      "sha256": "ea25f12c5c524d782caa088b3535e7ec759f9758246919fffdd1b2087d3d85b3",
+      "bytes": 10996
+    },
+    {
+      "path": "solar-native-initial-corpus/offscreen-instance/restored.png",
+      "sha256": "ea25f12c5c524d782caa088b3535e7ec759f9758246919fffdd1b2087d3d85b3",
+      "bytes": 10996
+    },
+    {
+      "path": "solar-native-initial-corpus/offscreen-instance/result.json",
+      "sha256": "9d79583ef7ad7f0993e2350fc2b914a12645d42c42728f7a213f0ac5c33581ea",
+      "bytes": 645
+    },
+    {
+      "path": "solar-native-initial-corpus/offscreen-instance/runtime.log",
+      "sha256": "55e8655b9786a7925f18a7813b4a3e5732c85bb3eb109c0d465cb37b281a06e9",
+      "bytes": 514
+    },
+    {
+      "path": "solar-native-initial-corpus/section/depth.png",
+      "sha256": "68a5f38793953e7ae8767776c3ef639a7b6355dd379c4ab2b5ea82796272c68e",
+      "bytes": 136655
+    },
+    {
+      "path": "solar-native-initial-corpus/section/off.png",
+      "sha256": "deb7fed6fc05ea4ab54a39507ec3297f0d50d20bcc29f0d82cce4f6c54927483",
+      "bytes": 11010
+    },
+    {
+      "path": "solar-native-initial-corpus/section/on.png",
+      "sha256": "12dadc36be36d84b2831a75a468c839ec30987b8a9a4949d669b67bd53883460",
+      "bytes": 12057
+    },
+    {
+      "path": "solar-native-initial-corpus/section/restored.png",
+      "sha256": "12dadc36be36d84b2831a75a468c839ec30987b8a9a4949d669b67bd53883460",
+      "bytes": 12057
+    },
+    {
+      "path": "solar-native-initial-corpus/section/result.json",
+      "sha256": "387759ae62a26f72f8fc65c42659e6e027f6e5299c77cd0ecaf96aba2f87f371",
+      "bytes": 637
+    },
+    {
+      "path": "solar-native-initial-corpus/section/runtime.log",
+      "sha256": "55e8655b9786a7925f18a7813b4a3e5732c85bb3eb109c0d465cb37b281a06e9",
+      "bytes": 514
+    },
+    {
+      "path": "solar-native-initial-corpus/solid/depth.png",
+      "sha256": "0c9634d05791a3da9fa49db3649b69fd8472642203a38a21dcd62eb9aeefcf74",
+      "bytes": 115814
+    },
+    {
+      "path": "solar-native-initial-corpus/solid/off.png",
+      "sha256": "6d5e289416555023fef16ec19da6b7e1d03ec22510afc526fc21c44ac91d813b",
+      "bytes": 11011
+    },
+    {
+      "path": "solar-native-initial-corpus/solid/on.png",
+      "sha256": "c1ef67ca153d4019369f9d3851cb8c7b878f7bc9bae84402a1964d066ffccecf",
+      "bytes": 12605
+    },
+    {
+      "path": "solar-native-initial-corpus/solid/restored.png",
+      "sha256": "c1ef67ca153d4019369f9d3851cb8c7b878f7bc9bae84402a1964d066ffccecf",
+      "bytes": 12605
+    },
+    {
+      "path": "solar-native-initial-corpus/solid/result.json",
+      "sha256": "e955da9626e6e9ed1904f0d15ef8af85ee138ae72e1fec4b42dfc88f13bb6d1d",
+      "bytes": 635
+    },
+    {
+      "path": "solar-native-initial-corpus/solid/runtime.log",
+      "sha256": "55e8655b9786a7925f18a7813b4a3e5732c85bb3eb109c0d465cb37b281a06e9",
+      "bytes": 514
+    },
+    {
+      "path": "solar-native-initial-corpus/transport.json",
+      "sha256": "498afa4ccf86c1d2392c0c67b72a5fd10b6fdab6010e7c2578812b5f2bb64e07",
+      "bytes": 10327
+    },
+    {
+      "path": "solar-native-corpus/glass-69/depth.png",
+      "sha256": "085494bee43a5a9d70b6c6641bc08dea7695957fa3b3ee313d1d1c802fe0ea2f",
+      "bytes": 86134
+    },
+    {
+      "path": "solar-native-corpus/glass-69/off.png",
+      "sha256": "4aac78c79ebb7540345acc2482ac5ffb7961db078879385fddd33231aec7a0fd",
+      "bytes": 11011
+    },
+    {
+      "path": "solar-native-corpus/glass-69/on.png",
+      "sha256": "4aac78c79ebb7540345acc2482ac5ffb7961db078879385fddd33231aec7a0fd",
+      "bytes": 11011
+    },
+    {
+      "path": "solar-native-corpus/glass-69/restored.png",
+      "sha256": "4aac78c79ebb7540345acc2482ac5ffb7961db078879385fddd33231aec7a0fd",
+      "bytes": 11011
+    },
+    {
+      "path": "solar-native-corpus/glass-69/result.json",
+      "sha256": "3832ff77a6605b61a3dd022b7fee17f22384d74d8fdbcde6a31b35e653dcefd2",
+      "bytes": 638
+    },
+    {
+      "path": "solar-native-corpus/glass-69/runtime.log",
+      "sha256": "55e8655b9786a7925f18a7813b4a3e5732c85bb3eb109c0d465cb37b281a06e9",
+      "bytes": 514
+    },
+    {
+      "path": "solar-native-corpus/glass-70/depth.png",
+      "sha256": "0c9634d05791a3da9fa49db3649b69fd8472642203a38a21dcd62eb9aeefcf74",
+      "bytes": 115814
+    },
+    {
+      "path": "solar-native-corpus/glass-70/off.png",
+      "sha256": "f55d5ffbd938181a14c903284c20c0144505a60423280d66341278dc229dafcd",
+      "bytes": 11011
+    },
+    {
+      "path": "solar-native-corpus/glass-70/on.png",
+      "sha256": "c3d4df5ec192b4c8c59fdcda8c1767ab4621abbf2d3a592a952fa033d9b1d68a",
+      "bytes": 12602
+    },
+    {
+      "path": "solar-native-corpus/glass-70/restored.png",
+      "sha256": "c3d4df5ec192b4c8c59fdcda8c1767ab4621abbf2d3a592a952fa033d9b1d68a",
+      "bytes": 12602
+    },
+    {
+      "path": "solar-native-corpus/glass-70/result.json",
+      "sha256": "bb852ba2c114c9aecb4c246479199b893b5cada9f309b4063225f2ced431de09",
+      "bytes": 638
+    },
+    {
+      "path": "solar-native-corpus/glass-70/runtime.log",
+      "sha256": "55e8655b9786a7925f18a7813b4a3e5732c85bb3eb109c0d465cb37b281a06e9",
+      "bytes": 514
+    },
+    {
+      "path": "solar-native-corpus/icd.json",
+      "sha256": "88fd93f6476f1db453dbbc2a7f0c5af40e6eb3cdf4c20758bdaf4eba79f79131",
+      "bytes": 108
+    },
+    {
+      "path": "solar-native-corpus/transport.json",
+      "sha256": "840075121710f798e0a4ad95b1991e0fbd6e4ae15441e8bfbf012120945ddc92",
+      "bytes": 1552
+    },
+    {
+      "path": "run-solar-app.py",
+      "sha256": "ad766ae6d37133b88d18bff106acc337ef2c48daf620efebe47bab75edebfc33",
+      "bytes": 3464
+    }
+  ]
+}

@@ -228,3 +228,24 @@ mod tests {
         assert!(!a.style.show_textures && !a.style.show_sky && !a.scene.show_section_fill);
     }
 }
+
+#[cfg(test)]
+mod solar_revision_tests {
+ #[test]
+ fn solar_only_changes_preserve_geometry_but_style_does_not() {
+  let mut app=crate::IngeTrazoApp::new();
+  app.sync_document_presentation();
+  let geometry=app.native_geometry_revision;
+  let view=app.scene.view_version;
+  app.shadows_enabled=!app.shadows_enabled;
+  app.sync_document_presentation();
+  assert_eq!(app.native_geometry_revision,geometry);
+  assert!(app.scene.view_version>view);
+  app.scene.shadows.hour=13;
+  app.sync_document_presentation();
+  assert_eq!(app.native_geometry_revision,geometry);
+  app.style.show_edges=!app.style.show_edges;
+  app.sync_document_presentation();
+  assert!(app.native_geometry_revision>geometry);
+ }
+}
