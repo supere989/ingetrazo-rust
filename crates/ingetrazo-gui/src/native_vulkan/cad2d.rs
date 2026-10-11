@@ -708,7 +708,7 @@ unsafe{context.device.create_descriptor_set_layout(&vk::DescriptorSetLayoutCreat
         let mut fresh=None;
         let admission=(||{
             if !warm&&!state.geometry.indices().is_empty(){
-                let packed=if pipeline.stencil_mark!=vk::Pipeline::null(){Some(packed_stencil_vertices(&state.geometry,state.gates.as_deref().unwrap(),&state.batches)?)}else{None};
+                let packed=if pipeline.stencil_mark!=vk::Pipeline::null()&&!admitted.marker_groups.is_empty(){Some(packed_stencil_vertices(&state.geometry,state.gates.as_deref().unwrap(),&state.batches)?)}else{None};
                 let vertex_bytes=packed.as_deref().unwrap_or_else(||bytemuck::cast_slice(state.geometry.vertices()));
                 let actual_bytes=vertex_bytes.len().checked_add(state.geometry.indices().len()*4).ok_or("Stencil cached size overflow")?;
                 let vertex=self.resources.upload(context,vertex_bytes,vk::BufferUsageFlags::VERTEX_BUFFER,false)?;
@@ -733,7 +733,7 @@ unsafe{context.device.create_descriptor_set_layout(&vk::DescriptorSetLayoutCreat
                 let vertex=self.resources.buffer(buffers.vertex).ok_or("Annotation vertex owner missing")?;
                 let index=self.resources.buffer(buffers.index).ok_or("Annotation index owner missing")?;
                 self.resources.mark_used(buffers.vertex,next)?;self.resources.mark_used(buffers.index,next)?;
-                Some(Ready{gates:state.gates.clone(),id,vertex,index,first_index:0,base_vertex:0,marker_offset:(pipeline.stencil_mark!=vk::Pipeline::null()).then_some((state.geometry.vertices().len()*12)as u64),marker_groups:self.batch_stencil_markers.then(||admitted.marker_groups.clone()),
+                Some(Ready{gates:state.gates.clone(),id,vertex,index,first_index:0,base_vertex:0,marker_offset:(pipeline.stencil_mark!=vk::Pipeline::null()&&!admitted.marker_groups.is_empty()).then_some((state.geometry.vertices().len()*12)as u64),marker_groups:self.batch_stencil_markers.then(||admitted.marker_groups.clone()),
                     batches:state.batches.clone(),premultiplied:state.premultiplied.clone(),pose:state.pose,
                     ordered_draws:state.geometry.ordered_draws(),opaque})
             }else{None};
