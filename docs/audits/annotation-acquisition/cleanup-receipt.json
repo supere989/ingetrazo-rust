@@ -1,0 +1,176 @@
+{
+  "archive_sha256": "9cbb3e648bc65d3cbd06a56389a224a8c1f85eb5a466e0056724628b4a391118",
+  "canonical_entries_verified": 19,
+  "deleted_files": 32,
+  "released_bytes": 520227,
+  "deleted": [
+    {
+      "path": "/tmp/ingetrazo-annotation-acquisition-proof/source-first-failure.log",
+      "bytes": 1224,
+      "sha256": "28153b68963a8ea28b9bb94d000b53230112d3329d96126b46cebf510ebeaab1"
+    },
+    {
+      "path": "/tmp/ingetrazo-annotation-acquisition-proof/input.igz",
+      "bytes": 2512,
+      "sha256": "c9ce01d930fff89d9af94b5580093f6f82626b75d6ce690482e32fd787d4a87b"
+    },
+    {
+      "path": "/tmp/ingetrazo-annotation-acquisition-proof/original.json",
+      "bytes": 27081,
+      "sha256": "a92b9c1cb85aa7ceccf2ca29d8aba1f0af99b4e75bb3b095632f9a2f8986f380"
+    },
+    {
+      "path": "/tmp/ingetrazo-annotation-acquisition-proof/native.json",
+      "bytes": 27109,
+      "sha256": "0b194564e1eb9eb41639d6a2391ea00476c2dd8992b2ac72b51106dfb5b2d055"
+    },
+    {
+      "path": "/tmp/ingetrazo-annotation-acquisition-proof/threshold-first-failure.json",
+      "bytes": 27049,
+      "sha256": "508a032a9c750eb71a71579e13b7edf77025b3fe226ec6b057fd608190005772"
+    },
+    {
+      "path": "/tmp/ingetrazo-annotation-acquisition-proof/check.json",
+      "bytes": 102,
+      "sha256": "3bdc451c035418df5d271dc081f6e59a3c22795d5dcc55da75e8a78769ca4041"
+    },
+    {
+      "path": "/tmp/ingetrazo-annotation-acquisition-proof/annotation-acquisition-check.log",
+      "bytes": 16485,
+      "sha256": "f85e527be6ceb774201fc2379750f2a31b5fd348ef33b36e8915b499a47fa608"
+    },
+    {
+      "path": "/tmp/ingetrazo-annotation-acquisition-proof/annotation-acquisition-check-final.log",
+      "bytes": 19946,
+      "sha256": "44b2373ad90077c80c87ab20e50cf7382556112e61971a8ec79bbedffb8c87db"
+    },
+    {
+      "path": "/tmp/ingetrazo-annotation-acquisition-proof/annotation-acquisition-tests.log",
+      "bytes": 20212,
+      "sha256": "4cc2c3ffb70103e5a2b5c85967e0ebac617a9cb51f5b9258a7f3808728ce4a0b"
+    },
+    {
+      "path": "/tmp/ingetrazo-annotation-acquisition-proof/annotation-acquisition-original.log",
+      "bytes": 1224,
+      "sha256": "28153b68963a8ea28b9bb94d000b53230112d3329d96126b46cebf510ebeaab1"
+    },
+    {
+      "path": "/tmp/ingetrazo-annotation-acquisition-proof/annotation-acquisition-original-final.log",
+      "bytes": 343,
+      "sha256": "699a86a4b805c91946f7fcea050cfb8b6121927380e7088fa59d694fa1fea872"
+    },
+    {
+      "path": "/tmp/ingetrazo-annotation-acquisition-proof/annotation-acquisition-build.log",
+      "bytes": 21780,
+      "sha256": "80b7e029a9699a8b3461fc61e9b5eb02801935d78dd07cf23ffc4d2388de5516"
+    },
+    {
+      "path": "/tmp/ingetrazo-annotation-acquisition-proof/annotation-acquisition-build-final.log",
+      "bytes": 19946,
+      "sha256": "63f39d26de90eeeb26a777fceeddbc7e5239af009b492766ebff96e6f997aa15"
+    },
+    {
+      "path": "/tmp/ingetrazo-annotation-acquisition-proof/annotation-acquisition-build-source-camera.log",
+      "bytes": 18337,
+      "sha256": "9138d56a5011c7bda2498b012b992464a4badcbfda833446c6135e02830476dc"
+    },
+    {
+      "path": "/tmp/ingetrazo-annotation-acquisition-proof/annotation-acquisition-build-source-camera-final.log",
+      "bytes": 19946,
+      "sha256": "5afe0bc38d18cdb4f78ca26bde7fd6ff84e12cc5aa81d73365ec7663ed4bbfa5"
+    },
+    {
+      "path": "/tmp/ingetrazo-annotation-acquisition-proof/annotation-acquisition-tests-final.log",
+      "bytes": 19413,
+      "sha256": "7534ce31b04df21a4b8532780c23891c7a1923556c8170e171179e2bf3f60f0e"
+    },
+    {
+      "path": "/tmp/ingetrazo-annotation-acquisition-proof/annotation-acquisition-build-frozen.log",
+      "bytes": 19946,
+      "sha256": "7fe1be24006676ef1f26f77c765a85034a74908f6ccd4053e30ea69e89c89b88"
+    },
+    {
+      "path": "/tmp/ingetrazo-annotation-acquisition-proof/annotation-acquisition-build-frozen-final.log",
+      "bytes": 20051,
+      "sha256": "3aadb6ed62c21627e35b012f46359c756f1006ddaeee8da90d723aede44ff6e7"
+    },
+    {
+      "path": "/tmp/ingetrazo-annotation-acquisition-proof/annotation-acquisition-build-admission.log",
+      "bytes": 19946,
+      "sha256": "ed2f31262531be08353f117b4dbceee7bcb836dcd189eacf799a64249538f9cb"
+    },
+    {
+      "path": "/tmp/annotation-acquisition-check.log",
+      "bytes": 16485,
+      "sha256": "f85e527be6ceb774201fc2379750f2a31b5fd348ef33b36e8915b499a47fa608"
+    },
+    {
+      "path": "/tmp/annotation-acquisition-check-final.log",
+      "bytes": 19946,
+      "sha256": "44b2373ad90077c80c87ab20e50cf7382556112e61971a8ec79bbedffb8c87db"
+    },
+    {
+      "path": "/tmp/annotation-acquisition-tests.log",
+      "bytes": 20212,
+      "sha256": "4cc2c3ffb70103e5a2b5c85967e0ebac617a9cb51f5b9258a7f3808728ce4a0b"
+    },
+    {
+      "path": "/tmp/annotation-acquisition-original.log",
+      "bytes": 1224,
+      "sha256": "28153b68963a8ea28b9bb94d000b53230112d3329d96126b46cebf510ebeaab1"
+    },
+    {
+      "path": "/tmp/annotation-acquisition-original-final.log",
+      "bytes": 343,
+      "sha256": "699a86a4b805c91946f7fcea050cfb8b6121927380e7088fa59d694fa1fea872"
+    },
+    {
+      "path": "/tmp/annotation-acquisition-build.log",
+      "bytes": 21780,
+      "sha256": "80b7e029a9699a8b3461fc61e9b5eb02801935d78dd07cf23ffc4d2388de5516"
+    },
+    {
+      "path": "/tmp/annotation-acquisition-build-final.log",
+      "bytes": 19946,
+      "sha256": "63f39d26de90eeeb26a777fceeddbc7e5239af009b492766ebff96e6f997aa15"
+    },
+    {
+      "path": "/tmp/annotation-acquisition-build-source-camera.log",
+      "bytes": 18337,
+      "sha256": "9138d56a5011c7bda2498b012b992464a4badcbfda833446c6135e02830476dc"
+    },
+    {
+      "path": "/tmp/annotation-acquisition-build-source-camera-final.log",
+      "bytes": 19946,
+      "sha256": "5afe0bc38d18cdb4f78ca26bde7fd6ff84e12cc5aa81d73365ec7663ed4bbfa5"
+    },
+    {
+      "path": "/tmp/annotation-acquisition-tests-final.log",
+      "bytes": 19413,
+      "sha256": "7534ce31b04df21a4b8532780c23891c7a1923556c8170e171179e2bf3f60f0e"
+    },
+    {
+      "path": "/tmp/annotation-acquisition-build-frozen.log",
+      "bytes": 19946,
+      "sha256": "7fe1be24006676ef1f26f77c765a85034a74908f6ccd4053e30ea69e89c89b88"
+    },
+    {
+      "path": "/tmp/annotation-acquisition-build-frozen-final.log",
+      "bytes": 20051,
+      "sha256": "3aadb6ed62c21627e35b012f46359c756f1006ddaeee8da90d723aede44ff6e7"
+    },
+    {
+      "path": "/tmp/annotation-acquisition-build-admission.log",
+      "bytes": 19946,
+      "sha256": "ed2f31262531be08353f117b4dbceee7bcb836dcd189eacf799a64249538f9cb"
+    }
+  ],
+  "unreleased": [],
+  "preserved": [
+    "worktree",
+    "source",
+    "canonical archive and manifest",
+    "reusable dependency target"
+  ],
+  "builds_or_captures": 0
+}
