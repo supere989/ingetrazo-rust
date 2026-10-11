@@ -31,5 +31,68 @@
     "core/scene.py": "9dfcd32f1ff5b1445180eafd8df36eafb92fa08ed3597bb90eac09554899d2e0",
     "core/layers.py": "21d31c9aa1b4bfe0c9437a1a7a83a8212b4d34f38ad3c2b1b3a6b1a7ee4c835b",
     "formats/igz.py": "f318d685830c49c2fede7fd5a238ac7a1469ee0b0226cf48cab3751e194a9576"
-  }
+  },
+  "records": {
+    "checker.log": {
+      "bytes": 149,
+      "sha256": "61d34efcbaa884fac786cc98ab12c39b59822e8d560f3af3e716599fa28dfb72"
+    },
+    "failures/face-layer-gate-native.json": {
+      "bytes": 15928,
+      "sha256": "36a26139454fe1701bbb477509185298eeee57cac3118b2aa157a8665e416d67"
+    },
+    "failures/ingress-lock-initial.log": {
+      "bytes": 18612,
+      "sha256": "f4422f8f03ad63443ecd19368a070e9945efc10349e6d09a02f437994fcc320b"
+    },
+    "failures/missing-guides-native.json": {
+      "bytes": 12220,
+      "sha256": "da88f9be29f00ab11c276a7d3e8b048895022b6ea6ccdec89931fa1e4d408533"
+    },
+    "focused-tests.log": {
+      "bytes": 18614,
+      "sha256": "e013c0c73de89e47d831db568725711f52221fc77178843bd24166d0132eda95"
+    },
+    "guide-edited.igz": {
+      "bytes": 7329,
+      "sha256": "0af2b754ee9c395ad6e0e4f2a3958be43aa97dfdd024e104b4441487e795d316"
+    },
+    "guide-fresh.igz": {
+      "bytes": 4120,
+      "sha256": "0f395bc8fd2853b0be9095cdb169f5b25528a11ead3a52359387ce40475059e7"
+    },
+    "guide-input.igz": {
+      "bytes": 2610,
+      "sha256": "1800e3a93cf4b6a0815f0cba7093929b4f11592e551cc1312155adc32db229e9"
+    },
+    "guide-original-reopen.json": {
+      "bytes": 463,
+      "sha256": "b02f8a5a1b479c145fbd10a14cc1e1ce36c0186d7014ad29eb8c585648efde43"
+    },
+    "input.igz": {
+      "bytes": 7152,
+      "sha256": "eb63da83b79e3e28d65268f2a44ab89edb34acd2cb1b75a3335818b06bcf4763"
+    },
+    "named-build.log": {
+      "bytes": 18691,
+      "sha256": "3d85caedf5c583b96f60ea065d76fc3f1969923ecb22b42d99d3e6287dd20bbe"
+    },
+    "native.json": {
+      "bytes": 17457,
+      "sha256": "bad41aa9ad2fa2d2687f74ddd253a671ce83fd77fc01fa95008a9e63beac6d49"
+    },
+    "original.json": {
+      "bytes": 25824,
+      "sha256": "866b48c684d5bf6f6aa8a3c54ce39d69da2b03a3efc1b527f82d6f6c15133ed6"
+    },
+    "orphan-input.igz": {
+      "bytes": 7152,
+      "sha256": "eb63da83b79e3e28d65268f2a44ab89edb34acd2cb1b75a3335818b06bcf4763"
+    },
+    "manifest.json": {
+      "bytes": 1306,
+      "sha256": "a440909a6c74925357ae5039d5ec321414d61a1ce9422e07f1fb61496ffe7537"
+    }
+  },
+  "archive_sha256": "6ccc86c7dabe3b2a672906e795de61e6db171d6394447fd7ca988f833b2c16c7"
 }

@@ -20,7 +20,7 @@ pub(crate) fn input(
     owns_pointer: bool,
 ) -> bool {
     let key = id.with("source_box_press");
-    if app.active_tool_type != ToolType::Select
+    if !ui.is_enabled() || app.active_tool_type != ToolType::Select
         || app.paste_preview.is_some()
         || app.navigation.mode.is_some()
         || app.text3d_dialog.is_some()

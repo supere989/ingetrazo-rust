@@ -20,12 +20,12 @@ out.mkdir(parents=True, exist_ok=True)
 pin = "6be29fe437a7cd992d4e079f71720821b25216b9"
 assert subprocess.check_output(["git", "-C", str(repo/"ingetrazo"), "rev-parse", "HEAD"], text=True).strip() == pin
 suffix = ".exe" if os.name == "nt" else ""
-consumers = ["change_axes_fixture", "document_preservation_workflow", "pushpull_solid_workflows", "fillet_scoped", "pushpull_finite_workflows", "paste_save_workflow"]
+consumers = ["change_axes_fixture", "document_preservation_workflow", "pushpull_solid_workflows", "fillet_scoped", "pushpull_finite_workflows", "paste_save_workflow", "box_selection_fixture"]
 identities = {name: hashlib.sha256((binaries/(name+suffix)).read_bytes()).hexdigest() for name in consumers}
 env = dict(os.environ, QT_QPA_PLATFORM="offscreen", INGETRAZO_STATE_DIR=str(out/"state"),
            XDG_CONFIG_HOME=str(out/"config"), XDG_DATA_HOME=str(out/"data"), XDG_CACHE_HOME=str(out/"cache"))
 
-def archive(name, manifest_name, selected, destination):
+def archive(name, manifest_name, selected, destination, preserve_paths=False):
     folder = repo/"docs/audits"/name
     manifest = json.loads((folder/manifest_name).read_text())
     raw = (folder/"records.zip").read_bytes()
@@ -42,7 +42,9 @@ def archive(name, manifest_name, selected, destination):
             if isinstance(expected, dict):
                 assert len(blob) == expected["bytes"], key
             if key in selected:
-                (destination/Path(key).name).write_bytes(blob)
+                target = destination/(key if preserve_paths else Path(key).name)
+                target.parent.mkdir(parents=True, exist_ok=True)
+                target.write_bytes(blob)
         assert set(selected) <= set(z.namelist()), name
     return hashlib.sha256(raw).hexdigest()
 
@@ -77,15 +79,21 @@ ps = archive("paste-save", "provenance.json", ["input.igz", "original.json"], pa
 run([binaries/(consumers[5]+suffix), paste], "paste-save/runtime.log")
 run([sys.executable, repo/"scripts/reference-paste-save.py", paste, "inspect"], "paste-save/reopen.log")
 run([sys.executable, repo/"scripts/check-paste-save.py", paste], "paste-save/acceptance.json")
+box = out/"box-selection"
+bs = archive("box-selection", "provenance.json", ["input.igz", "original.json", "orphan-input.igz", "guide-input.igz", "failures/missing-guides-native.json", "failures/face-layer-gate-native.json"], box, preserve_paths=True)
+run([binaries/(consumers[6]+suffix), box], "box-selection/runtime.log")
+run([sys.executable, repo/"scripts/reference-box-guides.py", "reopen", box], "box-selection/reopen.log")
+run([sys.executable, repo/"scripts/check-box-selection.py", box], "box-selection/acceptance.json")
 rows = json.loads((doc/"native.json").read_text())["rows"]
 assert [(x["fixture"],x["phase"]) for x in rows] == [(f,p) for f in ["retained","nested-leaves"] for p in ["edited","undo","redo"]]
 assert all(x["saved"] and x["clean"] for x in rows)
 result = {"revision":subprocess.check_output(["git","rev-parse","HEAD"],cwd=repo,text=True).strip(),
-          "source_pin":pin,"binary_sha256":identities,"source_archives":{"axes":a,"documents":d,"fillet":f,"pushpull_finite":p,"paste_save":ps},
+          "source_pin":pin,"binary_sha256":identities,"source_archives":{"axes":a,"documents":d,"fillet":f,"pushpull_finite":p,"paste_save":ps,"box_selection":bs},
           "axes":json.loads((axes/"check.json").read_text()),"documents":{"actual_app_saves":len(rows),"exact_original_reopens":6,"leaf_record_types":15,"negative_controls":5},
           "fillet":json.loads((fillet/"check.json").read_text()),"fillet_volume":json.loads((fillet/"volume.json").read_text()),"pushpull":json.loads((out/"pushpull-comparison.json").read_text()),
           "pushpull_finite":json.loads((finite/"comparison.json").read_text()),
           "paste_save":json.loads((paste/"acceptance.json").read_text()),
+          "box_selection":json.loads((box/"acceptance.json").read_text()),
           "fresh_source_acquisitions":0,"result":"pass"}
 (out/"result.json").write_text(json.dumps(result,indent=2)+"\n")
 print(json.dumps(result))

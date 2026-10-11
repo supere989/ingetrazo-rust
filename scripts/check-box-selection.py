@@ -17,7 +17,7 @@ for i,row in enumerate(native['cases']):
  try:validate(bad)
  except AssertionError:controls+=1
  else:raise AssertionError('mutation accepted')
-print(json.dumps({'states':len(native['cases']),'negative_controls':controls,'exact':True}))
+report={'states':len(native['cases']),'negative_controls':controls,'exact':True}
 
 def guide_validate(v):
  assert v=={'edited':[{'point':[7.,8.,9.],'origin':[1.,2.,3.]},{'point':[0.,3.,0.],'direction':[1.,0.,0.]}],'fresh':[{'point':[4.,5.,6.],'origin':[0.,0.,0.]}]}
@@ -27,12 +27,13 @@ for key,field in [('edited','origin'),('edited','point'),('fresh','origin')]:
  try:guide_validate(bad)
  except AssertionError:pass
  else:raise AssertionError('guide loss accepted')
-print(json.dumps({'guide_reopens':2,'guide_negative_controls':3}))
+report.update({'guide_reopens':2,'guide_negative_controls':3})
 
 for name,count in [('missing-guides-native.json',35),('face-layer-gate-native.json',39)]:
  path=p/'failures'/name
- if path.exists():
-  try:validate(json.loads(path.read_text()),original['cases'][:count])
-  except AssertionError:pass
-  else:raise AssertionError('retained failing candidate accepted: '+name)
-print(json.dumps({'retained_failed_candidates_rejected':2}))
+ assert path.is_file(),'Missing retained failure control: '+name
+ try:validate(json.loads(path.read_text()),original['cases'][:count])
+ except AssertionError:pass
+ else:raise AssertionError('retained failing candidate accepted: '+name)
+report['retained_failed_candidates_rejected']=2
+print(json.dumps(report))
