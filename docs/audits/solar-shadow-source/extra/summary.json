@@ -1,0 +1,117 @@
+[
+  {
+    "name": "billboard-bitmap",
+    "bounds": [
+      [
+        -1.0,
+        -1.0,
+        0.0
+      ],
+      [
+        1.0,
+        1.0,
+        3.0
+      ]
+    ],
+    "suppression": {
+      "terrain": false,
+      "photo": false,
+      "tiles": false
+    },
+    "on_off_changed_pixels": 29603,
+    "depth_nonwhite_pixels": 397100,
+    "map_renders": 1
+  },
+  {
+    "name": "billboard-mesh",
+    "bounds": [
+      [
+        -1.0,
+        -1.0,
+        0.0
+      ],
+      [
+        1.0,
+        1.0,
+        3.0
+      ]
+    ],
+    "suppression": {
+      "terrain": false,
+      "photo": false,
+      "tiles": false
+    },
+    "on_off_changed_pixels": 0,
+    "depth_nonwhite_pixels": 0,
+    "map_renders": 1
+  },
+  {
+    "name": "ground-terrain",
+    "bounds": [
+      [
+        -1.0,
+        -1.0,
+        1.5
+      ],
+      [
+        1.0,
+        1.0,
+        1.5
+      ]
+    ],
+    "suppression": {
+      "terrain": true,
+      "photo": false,
+      "tiles": false
+    },
+    "on_off_changed_pixels": 19854,
+    "depth_nonwhite_pixels": 398497,
+    "map_renders": 1
+  },
+  {
+    "name": "ground-photo",
+    "bounds": [
+      [
+        -1.0,
+        -1.0,
+        1.5
+      ],
+      [
+        1.0,
+        1.0,
+        1.5
+      ]
+    ],
+    "suppression": {
+      "terrain": false,
+      "photo": true,
+      "tiles": false
+    },
+    "on_off_changed_pixels": 19854,
+    "depth_nonwhite_pixels": 398497,
+    "map_renders": 1
+  },
+  {
+    "name": "ground-tiles",
+    "bounds": [
+      [
+        -1.0,
+        -1.0,
+        1.5
+      ],
+      [
+        1.0,
+        1.0,
+        1.5
+      ]
+    ],
+    "suppression": {
+      "terrain": false,
+      "photo": false,
+      "tiles": true
+    },
+    "on_off_changed_pixels": 19854,
+    "depth_nonwhite_pixels": 398497,
+    "map_renders": 1
+  }
+]

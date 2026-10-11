@@ -18,6 +18,7 @@ args=['podman','run','--rm','--name',name,'--read-only','--network','none','--de
 for left,right in [('/usr/lib/libEGL.so.1','/usr/lib/libEGL.so.1'),('/usr/lib/libGLdispatch.so.0','/usr/lib/libGLdispatch.so.0'),(merged+'/tmp/ingetrazo-parity-python','/tmp/ingetrazo-parity-python'),(merged+'/usr/lib/x86_64-linux-gnu','/usr/lib/x86_64-linux-gnu'),(merged+work,work),(source,'/work'),('/tmp/.X11-unix','/tmp/.X11-unix'),(str(auth),'/auth')]:args+=['-v',left+':'+right+':ro']
 args+=['-v',str(out)+':/out:rw']
 for entry in ['DISPLAY='+display,'XAUTHORITY=/auth','QT_QPA_PLATFORM=xcb','QT_OPENGL=desktop','__GLX_VENDOR_LIBRARY_NAME=nvidia','__NV_PRIME_RENDER_OFFLOAD=1','HOME=/tmp/solar-home','XDG_CONFIG_HOME=/tmp/solar-config','XDG_CACHE_HOME=/tmp/solar-cache']:args+=['-e',entry]
+if os.environ.get('INGETRAZO_SOLAR_EXTRA_ONLY'):args+=['-e','INGETRAZO_SOLAR_EXTRA_ONLY=1']
 args += [image,'/tmp/ingetrazo-parity-python/bin/python',work+'/scripts/reference-solar-shadow-raster.py','/out']
 start=time.monotonic();rc=124
 try:
