@@ -1,0 +1,20 @@
+{
+  "reviewed_head": "6621ae35",
+  "runtime_commit": "87d84c4f842daa5ca350d8f33f662c1df65b1252",
+  "archive_members": 117,
+  "raw_bytes": 4098294,
+  "runtime_sources_git_bound": 13,
+  "binary_sha256": "b80d9d25fa7468f12458b6971a6b3a6a4e594862dbe61a9095a91f68a46df174",
+  "observations": {
+    "lifecycle_states": 105,
+    "threshold_states": 8,
+    "naming_states": 5,
+    "piece_names": 6,
+    "guards": 6,
+    "actual_original_reopens": 15
+  },
+  "retained_precision_failure": "state74 y0.009999990463256836 versus0.009999999776482582",
+  "checker_review": "10 mutation controls plus mandatory prior precision rejection; no acceptance rerun",
+  "scope": "CPU/controller/codec ownership. Numeric int/float equivalence; bool/key/order strict. OBJ fusion/MTL/smoothing, linked-copy normalization and Unicode decimal names remain open.",
+  "verdict": "accepted"
+}
