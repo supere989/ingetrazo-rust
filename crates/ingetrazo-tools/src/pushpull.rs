@@ -17,6 +17,7 @@ pub struct PushPullTool {
     pub last_distance: Option<f64>,
     pub keep_base: bool,
     pub error: Option<String>,
+    inward_limit:Option<f64>,
 }
 
 impl PushPullTool {
@@ -39,10 +40,41 @@ impl PushPullTool {
         }
     }
 
+    const MIN_EXTRUDE:f64=2e-4;
+    // Clean prism caps have a parallel supporting cap. Its boundary contact
+    // is a blocker, unlike a strictly contained through-hole mouth.
+    fn cap_limit(mesh:&ingetrazo_core::mesh::Mesh,face_id:usize)->Option<f64> {
+        let face=mesh.faces.get(face_id)?;let normal=mesh.face_normal(face_id);
+        let clean=std::iter::once(&face.vertices).chain(&face.holes).all(|ring|(0..ring.len()).all(|i| {
+            let edge=mesh.find_edge(ring[i],ring[(i+1)%ring.len()]).and_then(|id|mesh.edges.get(id));
+            edge.is_some_and(|e|e.faces.len()==2&&e.faces.iter().copied().filter(|&id|id!=face_id).all(|id| {
+                let other=&mesh.faces[id];mesh.face_normal(id).dot(normal).abs()<0.001&&(0..other.vertices.len()).any(|i| {
+                    let d=mesh.vertices[other.vertices[(i+1)%other.vertices.len()]].position-mesh.vertices[other.vertices[i]].position;
+                    d.length()>1e-9&&d.normalize().dot(normal).abs()>0.999
+                })
+            }))
+        }));
+        if !clean{return None;}
+        let origin=mesh.vertices[face.vertices[0]].position;
+        (0..mesh.faces.len()).filter(|&id|id!=face_id&&mesh.face_normal(id).dot(normal).abs()>0.999).filter_map(|id| {
+            let distance=(origin-mesh.vertices[mesh.faces[id].vertices[0]].position).dot(normal);
+            if distance<=1e-6{return None;}
+            let triangles=mesh.triangulate_face(id);
+            face.vertices.iter().all(|&v| {
+                let ray=ingetrazo_core::math::Ray::new(mesh.vertices[v].position,-normal);
+                triangles.iter().any(|&(a,b,c)|ingetrazo_core::math::ray_triangle_intersect(&ray,a,b,c).is_some_and(|(t,_)|(t-distance).abs()<1e-6))
+            }).then_some(distance)
+        }).min_by(f64::total_cmp)
+    }
+    fn limited_distance(mesh:&ingetrazo_core::mesh::Mesh,face:usize,d:f64,keep:bool)->f64 {
+        if !keep&&d<0. {Self::cap_limit(mesh,face).map_or(d,|limit|d.max(-limit))}else{d}
+    }
+
     pub fn reset(&mut self) {
         self.hovered_face = None;
         self.selected_face = None;
         self.start_point = None;
+        self.inward_limit=None;
         self.extrusion_distance = 0.0;
         self.is_dragging = false;
         self.keep_base = false;
@@ -98,9 +130,10 @@ impl PushPullTool {
         {
             return Err("Invalid face boundary".into());
         }
-        if distance.abs() < 1e-6 {
+        if distance.abs() < Self::MIN_EXTRUDE {
             return Ok(());
         }
+        let distance=Self::limited_distance(mesh,face_id,distance,keep_base);
         let normal = mesh.face_normal(face_id);
         let origin = mesh.vertices[face.vertices[0]].position;
         if face
@@ -279,6 +312,62 @@ impl PushPullTool {
             let mut result=mesh.clone();
             let moving=face.vertices.iter().chain(face.holes.iter().flatten()).copied().collect::<std::collections::HashSet<_>>();
             for &id in &moving {result.vertices[id].position=(result.vertices[id].position.as_vec3()+translation.as_vec3()).as_dvec3();}
+            let end=origin+translation;
+            let flat=component_faces.iter().all(|&id|result.faces[id].vertices.iter().chain(result.faces[id].holes.iter().flatten()).all(|&v|(result.vertices[v].position-end).dot(normal).abs()<1e-6));
+            if flat {
+                // Full collapse is a valid surface endpoint, not an empty
+                // Boolean result. Preserve the authored cap and its holes/paint.
+                let mut collapsed=Mesh::new();
+                let mut flat_rings=shifted.clone();
+                let stationary_faces=component_faces.iter().copied().filter(|&id|!mesh.faces[id].vertices.iter().any(|v|moving.contains(v))&&mesh.face_normal(id).dot(normal).abs()>0.999).collect::<Vec<_>>();
+                if stationary_faces.len()!=1 {return Err("Full collapse with subdivided opposing faces is not yet supported; geometry and metadata left unchanged".into());}
+                let stationary=stationary_faces.first().copied();
+                if stationary.is_some_and(|id|mesh.face_normal(id).dot(normal)<0.) {for ring in &mut flat_rings {ring.reverse();}}
+                add_polygon(&mut collapsed,&flat_rings[0],&flat_rings[1..],face)?;
+                for (id,other) in mesh.faces.iter().enumerate() {
+                    if component_faces.contains(&id){continue;}
+                    let points=other.vertices.iter().map(|&v|mesh.vertices[v].position).collect::<Vec<_>>();
+                    let holes=other.holes.iter().map(|ring|ring.iter().map(|&v|mesh.vertices[v].position).collect()).collect::<Vec<Vec<_>>>();
+                    add_polygon(&mut collapsed,&points,&holes,other)?;
+                    collapsed.faces.last_mut().unwrap().interior=other.interior;
+                }
+                collapsed
+            }else{
+            if component_faces.iter().any(|&id|result.face_area(id)<1e-12) {
+                // Landing a raised cap flush consumes its side walls. Repair
+                // the closed boundary with the actual swept subtraction,
+                // rather than rejecting a legitimate endpoint or retaining fins.
+                let mut repaired=perform_solid_op(SolidOp::Subtract,&component,&prism)?;
+                if repaired.faces.is_empty(){return Err("Endpoint has no valid surface boundary".into());}
+                // Source endpoint rebuild gives the translated cap ownership
+                // of the restored coplanar surface. Fuse only that swept plane.
+                let plane_ids=(0..repaired.faces.len()).filter(|&id|repaired.face_normal(id).dot(normal)>0.999&&repaired.faces[id].vertices.iter().all(|&v|(repaired.vertices[v].position-end).dot(normal).abs()<1e-6)).collect::<Vec<_>>();
+                if plane_ids.len()>1 {
+                    let mut plane=ingetrazo_core::pieces::copy_part(&repaired,&ingetrazo_core::pieces::Piece{faces:plane_ids.clone(),edges:vec![]})?;
+                    for f in &mut plane.faces {f.attrs=face.attrs.clone();f.layer=face.layer.clone();}
+                    let mut triangles=Mesh::new();
+                    for id in 0..plane.faces.len() {
+                        for (a,b,c) in plane.triangulate_face(id) {add_polygon(&mut triangles,&[a,b,c],&[],&plane.faces[id])?;}
+                    }
+                    plane=triangles;
+                    let (plane,_)=ingetrazo_core::simplify::simplify_mesh(&plane,0.,false)?;
+                    let mut joined=Mesh::new();
+                    for (source,ids) in [(&repaired,(0..repaired.faces.len()).filter(|id|!plane_ids.contains(id)).collect::<Vec<_>>()),(&plane,(0..plane.faces.len()).collect())] {
+                        for id in ids {
+                            let f=&source.faces[id];let points=f.vertices.iter().map(|&v|source.vertices[v].position).collect::<Vec<_>>();let holes=f.holes.iter().map(|r|r.iter().map(|&v|source.vertices[v].position).collect()).collect::<Vec<Vec<_>>>();add_polygon(&mut joined,&points,&holes,f)?;
+                        }
+                    }
+                    repaired=ingetrazo_core::planar::stitch_boundaries(&joined)?;
+                    ingetrazo_core::solids::validate_solid_mesh(&repaired)?;
+                }
+                for (id,other) in mesh.faces.iter().enumerate() {
+                    if component_faces.contains(&id){continue;}
+                    let points=other.vertices.iter().map(|&v|mesh.vertices[v].position).collect::<Vec<_>>();
+                    let holes=other.holes.iter().map(|ring|ring.iter().map(|&v|mesh.vertices[v].position).collect()).collect::<Vec<Vec<_>>>();
+                    add_polygon(&mut repaired,&points,&holes,other)?;repaired.faces.last_mut().unwrap().interior=other.interior;
+                }
+                repaired
+            }else{
             result=ingetrazo_core::planar::stitch_boundaries(&result)?;
             let ids=component_faces.iter().copied().collect::<Vec<_>>();
             // Topology is unchanged before stitch; a collapse can consume
@@ -288,6 +377,8 @@ impl PushPullTool {
                 ingetrazo_core::solids::validate_solid_mesh(&body).map_err(|e|format!("Push/Pull cap translation would leave an invalid solid: {e}"))?;
             }else{return Err("Push/Pull cap translation reached a topology collapse; use a smaller distance".into());}
             result
+            }
+            }
         } else if keep_base && component_faces.len() > 1 {
             if was_solid {
                 ingetrazo_core::solids::validate_solid_mesh(&component)?;
@@ -458,6 +549,29 @@ impl PushPullTool {
             }
         }
         candidate.preserve_vertex_uids_from(mesh);
+        // Unchanged authored hole loops retain their source winding. The
+        // kernel's canonical hole winding is only for newly cut contours.
+        for f in &mut candidate.faces {
+            for hole in &mut f.holes {
+                let identities=hole.iter().map(|&v|candidate.vertices[v].uid).collect::<std::collections::HashSet<_>>();
+                if let Some(original)=mesh.faces.iter().flat_map(|f|&f.holes).find(|ring|ring.len()==hole.len()&&ring.iter().all(|&v|identities.contains(&mesh.vertices[v].uid))) {
+                    *hole=original.iter().map(|&v|candidate.vertices.iter().position(|point|point.uid==mesh.vertices[v].uid).unwrap()).collect();
+                }
+            }
+        }
+        // Original stamps only faces carrying this push's genuinely new
+        // vertices. Rebuilt neighbours over old vertices retain their paint.
+        let old_vertices=mesh.vertices.iter().map(|v|v.uid).collect::<std::collections::HashSet<_>>();
+        for f in &mut candidate.faces {
+            let fresh=f.vertices.iter().chain(f.holes.iter().flatten()).any(|&v|!old_vertices.contains(&candidate.vertices[v].uid));
+            if !fresh {continue;}
+            if !["color","mat","texture","opacity"].iter().any(|key|f.attrs.contains_key(*key)) {
+                for key in ["color","mat","texture","opacity"] {if let Some(value)=wall_source.attrs.get(key) {f.attrs.insert(key.into(),value.clone());}}
+            }
+            if !f.attrs.get("ifc").is_some_and(|v|match v {serde_json::Value::Null=>false,serde_json::Value::Bool(v)=>*v,serde_json::Value::Number(v)=>v.as_f64()!=Some(0.),serde_json::Value::String(v)=>!v.is_empty(),serde_json::Value::Array(v)=>!v.is_empty(),serde_json::Value::Object(v)=>!v.is_empty()}) {
+                if let Some(tag)=wall_source.attrs.get("ifc") {f.attrs.insert("ifc".into(),tag.clone());}
+            }
+        }
         // No partial mutation or version bump escapes a failed preparation.
         ingetrazo_core::heal::refresh_interior(&mut candidate)?;
         if keep_base && was_solid {
@@ -562,7 +676,8 @@ impl Tool for PushPullTool {
             self.hovered_face = Self::eligible_face_at(scene,ctx).ok().flatten();
         } else if let (Some(face_id), Some(start)) = (self.selected_face, self.start_point) {
             let normal = scene.mesh.face_normal(face_id);
-            self.extrusion_distance = (ctx.world - start).dot(normal);
+            let raw=(ctx.world-start).dot(normal);
+            self.extrusion_distance=if !self.keep_base&&raw<0. {self.inward_limit.map_or(raw,|limit|raw.max(-limit))}else{raw};
         }
     }
 
@@ -573,12 +688,14 @@ impl Tool for PushPullTool {
 
             if let Some(face_id) = face_pick {
                 self.selected_face = Some(face_id);
+                self.inward_limit=Self::cap_limit(&scene.mesh,face_id);
                 self.start_point = Some(ctx.world);
                 self.is_dragging = true;
                 self.extrusion_distance = 0.0;
             }
         } else if let Some(face_id) = self.selected_face {
             let dist = self.extrusion_distance;
+            if dist.abs()<Self::MIN_EXTRUDE{return;}
             match Self::extrude_face_with_options(scene, face_id, dist, self.keep_base) {
                 Ok(()) => {
                     self.last_distance = Some(dist);
@@ -606,7 +723,9 @@ impl Tool for PushPullTool {
     }
 
     fn on_vcb_input(&mut self, scene: &mut Scene, text: &str) -> Result<(), String> {
-        let dist=ingetrazo_core::units::parse_length(text,ingetrazo_core::units::LengthUnit::Meters)?;
+        let requested=ingetrazo_core::units::parse_length(text,ingetrazo_core::units::LengthUnit::Meters)?;
+        if requested.abs()<Self::MIN_EXTRUDE {return Err("Push/Pull distance is below the minimum extrusion".into());}
+        let dist=self.selected_face.or(self.hovered_face).map_or(requested,|id|Self::limited_distance(&scene.mesh,id,requested,self.keep_base));
 
         if let Some(face_id) = self.selected_face {
             if let Err(error) =
@@ -788,6 +907,24 @@ mod tests {
     }
 
     #[test]
+    fn collapse_with_protected_base_subdivision_is_atomic() {
+        let mut scene=make_test_square_scene();
+        PushPullTool::extrude_face(&mut scene,0,1.).unwrap();
+        let base=scene.mesh.faces.iter().position(|f|f.vertices.iter().all(|&v|scene.mesh.vertices[v].position.z==0.)).unwrap();
+        let ids=scene.mesh.faces[base].vertices.clone();
+        let old=scene.mesh.clone();scene.mesh=ingetrazo_core::mesh::Mesh::new();
+        for v in &old.vertices {scene.mesh.add_vertex(v.position);}
+        for (i,f) in old.faces.iter().enumerate() {if i!=base {scene.mesh.add_face(f.vertices.clone(),f.holes.clone()).unwrap();}}
+        for ring in [vec![ids[0],ids[1],ids[2]],vec![ids[0],ids[2],ids[3]]] {
+            let id=scene.mesh.add_face(ring,vec![]).unwrap();scene.mesh.faces[id].attrs.insert("vendor".into(),serde_json::json!(71));
+        }
+        let cap=scene.mesh.faces.iter().position(|f|f.vertices.iter().all(|&v|scene.mesh.vertices[v].position.z==1.)).unwrap();
+        let before=scene.clone();
+        let error=PushPullTool::extrude_face(&mut scene,cap,-1.).unwrap_err();
+        assert!(error.contains("subdivided opposing"));assert_eq!(scene,before);
+    }
+
+    #[test]
     fn test_pushpull_extrude_cube() {
         let mut scene = make_test_square_scene();
         let mut tool = PushPullTool::new();
@@ -865,10 +1002,13 @@ mod tests {
     #[test]
     fn invalid_or_sub_weld_extrusion_is_atomic() {
         let mut scene = make_test_square_scene();
-        for distance in [0.00002, f64::NAN, f64::INFINITY] {
+        for distance in [f64::NAN, f64::INFINITY] {
             let before = scene.clone();
             assert!(PushPullTool::extrude_face(&mut scene, 0, distance).is_err());
             assert_eq!(scene, before);
+        }
+        for distance in [0.,0.00002,-0.00002] {
+            let before=scene.clone();PushPullTool::extrude_face(&mut scene,0,distance).unwrap();assert_eq!(scene,before);
         }
         scene.mesh.vertices[0].position.z = 0.01;
         let before = scene.clone();
