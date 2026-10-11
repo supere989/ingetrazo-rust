@@ -81,6 +81,18 @@ for row in data['cases']:
    ready=wait(lambda:(s if (s:=state())and s['completed_present_serial']>baseline else None))
    im=capture_owned(w);assert im is not None;assert im.save(str(case/'native.png'))
    controls=None
+   if '--packed-key-control' in sys.argv:
+    phases=[]
+    for nonce,action in enumerate(['packed-key-install','packed-key-change','packed-key-restore'],1):
+     (control/'request.json').write_text(json.dumps({'action':action,'nonce':nonce}))
+     accepted=wait(lambda:(s if (s:=state())and s['nonce']==nonce else None))['submitted_serial']
+     phase=wait(lambda:(s if (s:=state())and s['nonce']==nonce and s['completed_present_serial']>accepted else None))
+     image=capture_owned(w);assert image is not None and image.save(str(case/(action+'.png')))
+     phases.append(phase)
+    assert phases[1]['geometry_uploads']==phases[0]['geometry_uploads']+1
+    assert phases[2]['geometry_uploads']==phases[1]['geometry_uploads']+1
+    assert phases[0]['cached_bytes']==phases[1]['cached_bytes']==phases[2]['cached_bytes']
+    (case/'packed-key-states.json').write_text(json.dumps(phases,indent=2)+'\n')
    if '--stencil-controls' in sys.argv and row['name']=='ellipse-alpha':
     assert ready['extent']==[800,600]
     prior=ready['submitted_serial'];(control/'request.json').write_text(json.dumps({'action':'stencil-refuse','nonce':1}))

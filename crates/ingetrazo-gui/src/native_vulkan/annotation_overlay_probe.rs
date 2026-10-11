@@ -4,7 +4,7 @@
 use super::*;
 use std::sync::Arc;
 use ingetrazo_render::annotations::{Plan,Primitive,Operation,Gate};
-struct Probe{pose:ingetrazo_render::cad2d::Pose,density:Option<f32>,handle_density:f32,plan:Arc<Plan>,cache:crate::annotation_overlay_geometry::Cache,handle:Option<cad2d::Handle>,failure:Option<String>,range_control:bool,byte_glyph_control:bool,widget_control:bool,queries:Arc<[annotation_visibility::Query]>,pending:Option<(cad2d::Handle,Arc<[annotation_visibility::Query]>)>,control_nonce:u64,cleared:bool,hold:bool}
+struct Probe{pose:ingetrazo_render::cad2d::Pose,density:Option<f32>,handle_density:f32,plan:Arc<Plan>,cache:crate::annotation_overlay_geometry::Cache,handle:Option<cad2d::Handle>,failure:Option<String>,range_control:bool,byte_glyph_control:bool,widget_control:bool,queries:Arc<[annotation_visibility::Query]>,pending:Option<(cad2d::Handle,Arc<[annotation_visibility::Query]>)>,control_mesh:Option<Arc<crate::annotation_overlay_geometry::Mesh>>,control_nonce:u64,cleared:bool,hold:bool}
 fn pair(value:&serde_json::Value)->Result<[f64;2],String>{let v=value.as_array().ok_or("Annotation point absent")?;if v.len()!=2{return Err("Annotation point inventory".into());}Ok([v[0].as_f64().ok_or("Annotation point x")?,v[1].as_f64().ok_or("Annotation point y")?])}
 fn color(value:&serde_json::Value)->Result<[u8;4],String>{let v=value.as_array().ok_or("Annotation color absent")?;if v.len()!=4{return Err("Annotation color inventory".into());}let mut result=[0;4];for(i,item)in v.iter().enumerate(){result[i]=u8::try_from(item.as_u64().ok_or("Annotation color byte")?).map_err(|_|"Annotation color range")?;}Ok(result)}
 fn source_plan(row:&serde_json::Value)->Result<Plan,String>{
@@ -31,6 +31,17 @@ fn range_mesh(density:f32,alternate:bool)->Result<Arc<crate::annotation_overlay_
  let geometry=Geometry::new_with_premultiplied_source_spans(vertices,indices,vec![0..12,12..18],rows.to_vec(),1.,density,[0.;2],colors,&batches)?;
  Ok(Arc::new(crate::annotation_overlay_geometry::Mesh{geometry,batches,gates:Arc::from([crate::annotation_overlay_geometry::Draw::span(Gate::Always);3])}))
 }
+fn packed_key_mesh()->Result<Arc<crate::annotation_overlay_geometry::Mesh>,String>{
+ use ingetrazo_render::cad2d::{Vertex,Batch,AnnotationLayer,EncodedRgba,Geometry};
+ use crate::annotation_overlay_geometry::{Draw,Composition};
+ let quad=[[99.5,99.5],[200.5,99.5],[99.5,200.5],[200.5,200.5]];
+ let vertices=quad.into_iter().chain(quad).map(|position|Vertex{position,coverage:1.}).collect();
+ let geometry=Geometry::new_with_annotation_layers(vertices,vec![0,1,2,2,1,3,4,5,6,6,5,7],vec![AnnotationLayer::Opaque{range:0..6},AnnotationLayer::UnionQuad{range:6..12}],1.)?;
+ let rgba=[37,93,157,128];let bounds=[100f32.to_bits(),100f32.to_bits(),200f32.to_bits(),200f32.to_bits()];
+ let batches=Arc::from([Batch{first:0,count:6,color:EncodedRgba::from_bytes([0,0,0,255],1.)?},Batch{first:6,count:6,color:EncodedRgba::from_bytes(rgba,1.)?}]);
+ let gates=Arc::from([Draw{gate:Gate::Always,composition:Composition::WidgetStencilTriangle{triangle:[100f32.to_bits(),100f32.to_bits(),200f32.to_bits(),100f32.to_bits(),100f32.to_bits(),200f32.to_bits()],bounds},straight_rgba:[0,0,0,255]},Draw{gate:Gate::Always,composition:Composition::WidgetStencilComposite{bounds},straight_rgba:rgba}]);
+ Ok(Arc::new(crate::annotation_overlay_geometry::Mesh{geometry,batches,gates}))
+}
 impl Probe{
  fn control(&mut self,system:&mut System,factory:&cad2d::Factory)->Result<(),String>{
   let Some(dir)=std::env::var_os("INGETRAZO_ANNOTATION_CONTROL_DIR")else{return Ok(());};let dir=std::path::PathBuf::from(dir);
@@ -38,6 +49,18 @@ impl Probe{
   if path.exists(){let bytes=std::fs::read(&path).map_err(|e|e.to_string())?;if bytes.len()>256{return Err("Annotation control request admission".into());}request=Some(serde_json::from_slice::<serde_json::Value>(&bytes).map_err(|e|e.to_string())?);}
   if let Some(request)=request{let nonce=request["nonce"].as_u64().ok_or("Annotation control nonce")?;if nonce>self.control_nonce{
    match request["action"].as_str().ok_or("Annotation control action")?{
+    "packed-key-install"=>{
+     let mesh=packed_key_mesh()?;
+     self.handle=Some(factory.annotation_handle(mesh.geometry.clone(),mesh.batches.clone(),self.pose,mesh.gates.clone())?);
+     self.handle_density=system.egui_ctx.pixels_per_point();self.control_mesh=Some(mesh);self.hold=false;self.cleared=false;
+    },
+    "packed-key-change"|"packed-key-restore"=>{
+     let mesh=self.control_mesh.as_ref().ok_or("Packed key control mesh absent")?;
+     let mut draws=mesh.gates.to_vec();
+     if request["action"]=="packed-key-change"{if let crate::annotation_overlay_geometry::Composition::WidgetStencilTriangle{triangle,..}=&mut draws[0].composition{triangle[4]=200f32.to_bits();}}
+     self.handle.as_ref().ok_or("Packed key handle absent")?.update_annotation(mesh.geometry.clone(),mesh.batches.clone(),self.pose,draws.into())?;
+     eprintln!("Packed key same geometry {:?} action {}",mesh.geometry.id(),request["action"]);
+    },
     "stencil-refuse"=>{
      let stencil=system.swapchain.stencil.as_ref().ok_or("Stencil attachment absent")?;
      stencil.verify_candidate_refusal(&system.vulkan_context,system.swapchain.extent)?;
@@ -95,7 +118,7 @@ impl App for Probe{
    system.world.as_mut().unwrap().set_scene(&system.vulkan_context,&ingetrazo_core::scene::Scene::new(),&ingetrazo_core::camera::OrbitCamera::default(),&ingetrazo_render::style::StyleConfig::default(),system.fence,system.draw_serial,1)?;
    Ok::<_,String>((plan,cache,range_control))
   })();
-  match result{Ok((plan,cache,range_control))=>Self{pose:std::env::var("INGETRAZO_ANNOTATION_POSE_PROBE").ok().map(|s|{let v=s.split(",").map(|v|v.parse::<f32>().expect("Annotation pose numeric")).collect::<Vec<_>>();assert!(v.len()==2&&v.iter().all(|x|x.is_finite()&&x.fract()==0.&&x.abs()<=100.));ingetrazo_render::cad2d::Pose{translation:[v[0],v[1]],..Default::default()}}).unwrap_or_default(),density:std::env::var("INGETRAZO_ANNOTATION_DENSITY_PROBE").ok().map(|s|{let d=s.parse::<f32>().expect("Annotation density probe finite number");assert!([1.,1.25,1.5,2.].contains(&d));d}),handle_density:0.,plan,cache,handle:None,failure:None,range_control,widget_control:std::env::var_os("INGETRAZO_ANNOTATION_WIDGET_CONTROL").is_some(),byte_glyph_control:std::env::var_os("INGETRAZO_ANNOTATION_GLYPH_BYTE_CONTROL").is_some(),queries:Arc::from([annotation_visibility::Query{pixel:[0;2],normalized:[0.;2],threshold:0.,active:0,_padding:[0;2]}]),pending:None,control_nonce:0,cleared:false,hold:false},Err(error)=>panic!("Annotation fixture admission: {error}")}
+  match result{Ok((plan,cache,range_control))=>Self{pose:std::env::var("INGETRAZO_ANNOTATION_POSE_PROBE").ok().map(|s|{let v=s.split(",").map(|v|v.parse::<f32>().expect("Annotation pose numeric")).collect::<Vec<_>>();assert!(v.len()==2&&v.iter().all(|x|x.is_finite()&&x.fract()==0.&&x.abs()<=100.));ingetrazo_render::cad2d::Pose{translation:[v[0],v[1]],..Default::default()}}).unwrap_or_default(),density:std::env::var("INGETRAZO_ANNOTATION_DENSITY_PROBE").ok().map(|s|{let d=s.parse::<f32>().expect("Annotation density probe finite number");assert!([1.,1.25,1.5,2.].contains(&d));d}),handle_density:0.,plan,cache,handle:None,failure:None,range_control,widget_control:std::env::var_os("INGETRAZO_ANNOTATION_WIDGET_CONTROL").is_some(),byte_glyph_control:std::env::var_os("INGETRAZO_ANNOTATION_GLYPH_BYTE_CONTROL").is_some(),queries:Arc::from([annotation_visibility::Query{pixel:[0;2],normalized:[0.;2],threshold:0.,active:0,_padding:[0;2]}]),pending:None,control_mesh:None,control_nonce:0,cleared:false,hold:false},Err(error)=>panic!("Annotation fixture admission: {error}")}
  }
  fn prepare_gpu(&mut self,system:&mut System,before_ui:bool){
   if before_ui{return;}
