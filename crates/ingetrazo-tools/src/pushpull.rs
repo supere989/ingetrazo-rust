@@ -274,6 +274,28 @@ impl PushPullTool {
         Self::extrude_face_with_options(scene, face_id, distance, false)
     }
     /// Ctrl copies a segment and retains the original cap as a slab division.
+    // A host-hole touching its outer rim can have redundant polygon-edge
+    // incidences while its actual triangulated boundary is a proper solid.
+    // Admit only a fully checked oriented triangle manifold, never the raw
+    // source's weaker polygon closure test.
+    fn validate_triangle_boundary(mesh: &ingetrazo_core::mesh::Mesh) -> Result<(), String> {
+        let mut boundary = ingetrazo_core::mesh::Mesh::new();
+        for (id, face) in mesh.faces.iter().enumerate() {
+            if face.interior { continue; }
+            let triangles = mesh.triangulate_face(id);
+            if triangles.is_empty() { return Err("Solid face has no triangle boundary".into()); }
+            for (a,b,c) in triangles {
+                if !a.is_finite() || !b.is_finite() || !c.is_finite() {
+                    return Err("Solid triangle coordinates must be finite".into());
+                }
+                if (b-a).cross(c-a).length_squared() == 0.0 { continue; }
+                let ids = [a,b,c].into_iter().map(|p|boundary.add_vertex(p)).collect();
+                boundary.add_face(ids,vec![]).ok_or("Invalid solid boundary triangle")?;
+            }
+        }
+        ingetrazo_core::solids::validate_solid_mesh(&boundary)
+    }
+
     pub fn extrude_face_with_options(
         scene: &mut Scene,
         face_id: usize,
@@ -479,7 +501,9 @@ impl PushPullTool {
             add_polygon(&mut component, &points, &holes, original)?;
             component.faces.last_mut().unwrap().interior = original.interior;
         }
-        let was_solid = solid_report(&component).0;
+        let was_solid = solid_report(&component).0
+            || (component.faces.iter().any(|f| !f.holes.is_empty())
+                && Self::validate_triangle_boundary(&component).is_ok());
         // Original _classify_base admits a clean cap translation only when
         // every rim edge backs onto a perpendicular wall swept along the push.
         // Moving shared cap vertices extends those walls instead of creating
@@ -497,6 +521,7 @@ impl PushPullTool {
                 })
             })
         });
+        let mut ctrl_rebuilt_planes = Vec::new();
         let mut collapsed_positions=None;
         let mut candidate = if prism_cap && was_solid && !keep_base {
             let mut result=mesh.clone();
@@ -516,7 +541,10 @@ impl PushPullTool {
                 }
                 collapsed
             }else{
-            if component_faces.iter().any(|&id|result.face_area(id)<1e-12) {
+            if component_faces.iter().any(|&id| result.face_area(id)<1e-12
+                || std::iter::once(&result.faces[id].vertices).chain(&result.faces[id].holes).any(|ring|
+                    (0..ring.len()).any(|i| result.vertices[ring[i]].position.distance_squared(
+                        result.vertices[ring[(i+1)%ring.len()]].position)<1e-12))) {
                 // Landing a raised cap flush consumes its side walls. Repair
                 // the translated boundary with source weld and affected-plane repair,
                 // rather than rejecting a legitimate endpoint or retaining fins.
@@ -525,6 +553,7 @@ impl PushPullTool {
                 // affected planes. A swept subtraction is wrong for an outward
                 // annulus landing on an already-raised neighbour.
                 let mut repaired=Self::weld_translated_surface(&result,&component_faces)?;
+                repaired=ingetrazo_core::planar::stitch_boundaries(&repaired)?;
                 let seeds=face.vertices.iter().chain(face.holes.iter().flatten()).flat_map(|&v|[ingetrazo_core::math::PointKey::from_vec3(mesh.vertices[v].position),ingetrazo_core::math::PointKey::from_vec3(result.vertices[v].position)]).collect::<std::collections::HashSet<_>>();
                 let marked=repaired.faces.iter().filter(|f|f.vertices.iter().any(|&v|seeds.contains(&ingetrazo_core::math::PointKey::from_vec3(repaired.vertices[v].position)))).map(|f|f.history_id).collect();
                 repaired=open_rebuild::rebuild_marked(&repaired,mesh,&component_faces,distance<0.,&marked)?;
@@ -533,7 +562,7 @@ impl PushPullTool {
                 // A formerly internal retained slab can become the new outer
                 // cap after welding. Source reclassifies it on prism exit.
                 ingetrazo_core::heal::orient_boundary_candidate(&mut repaired)?;
-                ingetrazo_core::solids::validate_solid_mesh(&repaired)?;
+                Self::validate_triangle_boundary(&repaired).map_err(|e|format!("Prism endpoint triangle admission: {e}"))?;
                 for (id,other) in mesh.faces.iter().enumerate() {
                     if component_faces.contains(&id){continue;}
                     let points=other.vertices.iter().map(|&v|mesh.vertices[v].position).collect::<Vec<_>>();
@@ -548,7 +577,7 @@ impl PushPullTool {
             // faces, so validate the full changed component by geometry below.
             if result.faces.len()==mesh.faces.len(){
                 let body=ingetrazo_core::pieces::copy_part(&result,&ingetrazo_core::pieces::Piece{faces:ids,edges:vec![]})?;
-                ingetrazo_core::solids::validate_solid_mesh(&body).map_err(|e|format!("Push/Pull cap translation would leave an invalid solid: {e}"))?;
+                Self::validate_triangle_boundary(&body).map_err(|e|format!("Push/Pull cap translation would leave an invalid solid: {e}"))?;
             }else{return Err("Push/Pull cap translation reached a topology collapse; use a smaller distance".into());}
             result
             }
@@ -590,6 +619,12 @@ impl PushPullTool {
                 });
                 if let Some(id) = selected {
                     result = ingetrazo_core::planar::rebuild_faces(&result, &[id])?;
+                    // Source cap_rebuild::plane_key canonicalizes this plane;
+                    // rebuilt partitions keep its arrangement winding.
+                    let axis = if normal.x.abs() >= normal.y.abs() && normal.x.abs() >= normal.z.abs() { 0 }
+                        else if normal.y.abs() >= normal.z.abs() { 1 } else { 2 };
+                    let canonical = if normal[axis] < 0.0 { -normal } else { normal };
+                    ctrl_rebuilt_planes.push((point, canonical));
                 }
             }
             result = ingetrazo_core::planar::stitch_boundaries(&result)?;
@@ -806,6 +841,17 @@ impl PushPullTool {
         }
         // No partial mutation or version bump escapes a failed preparation.
         if collapsed_positions.is_none(){ingetrazo_core::heal::refresh_interior(&mut candidate)?;}
+        for id in 0..candidate.faces.len() {
+            if !candidate.faces[id].interior { continue; }
+            if ctrl_rebuilt_planes.iter().any(|&(point, normal)| {
+                candidate.face_normal(id).dot(normal) < -0.999
+                    && candidate.faces[id].vertices.iter().chain(candidate.faces[id].holes.iter().flatten())
+                        .all(|&v| (candidate.vertices[v].position-point).dot(normal).abs()<1e-6)
+            }) {
+                candidate.faces[id].vertices.reverse();
+                for hole in &mut candidate.faces[id].holes { hole.reverse(); }
+            }
+        }
         if keep_base&&distance<0. {
             // Source marks the new inward slab as interior before orienting;
             // its authored cap retains the original face winding.
@@ -1029,6 +1075,21 @@ mod tests {
         let v3 = scene.mesh.add_vertex(DVec3::new(0.0, 1.0, 0.0));
         scene.mesh.add_face(vec![v0, v1, v2, v3], vec![]);
         scene
+    }
+
+    #[test]
+    fn triangle_boundary_admission_rejects_actual_corruptions() {
+        let mut scene=make_test_square_scene();
+        PushPullTool::extrude_face_with_options(&mut scene,0,1.,false).unwrap();
+        assert!(PushPullTool::validate_triangle_boundary(&scene.mesh).is_ok());
+        let mut missing=scene.mesh.clone();missing.faces.pop();
+        assert!(PushPullTool::validate_triangle_boundary(&missing).is_err());
+        let mut reversed=scene.mesh.clone();reversed.faces[0].vertices.reverse();
+        assert!(PushPullTool::validate_triangle_boundary(&reversed).is_err());
+        let mut doubled=scene.mesh.clone();doubled.faces.push(doubled.faces[0].clone());
+        assert!(PushPullTool::validate_triangle_boundary(&doubled).is_err());
+        let mut nonfinite=scene.mesh.clone();nonfinite.vertices[0].position.x=f64::NAN;
+        assert!(PushPullTool::validate_triangle_boundary(&nonfinite).is_err());
     }
 
     #[test]
