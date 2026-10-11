@@ -1,0 +1,13 @@
+{
+  "rust_metadata": {
+    "target": "aarch64-apple-darwin",
+    "example": "native_metal_section_iso_stages",
+    "result": "PASS",
+    "seconds": 1.9,
+    "sdk_link_or_msl_claim": false
+  },
+  "source_capture": "PASS exact original final-frame guards and four terminal prefixes",
+  "source_readback_first_failure": "Qt FBO.toImage left GL_INVALID_OPERATION; retained phase log; replaced only readback with direct glReadPixels, preserving original draw commands",
+  "source_after_capture_change": "Added pinned-file byte equality and corrected scope text; capture geometry/hooks/readback unchanged",
+  "source_archive_sha256": "9759c0f8a4b67a7e85268e581c3b0ffe7d477809327e46ec4b39d9790fed933f"
+}

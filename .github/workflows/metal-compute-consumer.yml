@@ -1,7 +1,7 @@
 name: Isolated native Metal ordered compute consumer
 on:
   push:
-    branches-ignore: [review/metal-section-iso-samples, review/metal-world-cold, review/metal-section-resolve, review/metal-tile-resolve, review/metal-section-samples, review/metal-raw-canvas, review/metal-world-classic, review/metal-world-material, review/metal-hidden-ghost]
+    branches-ignore: [review/metal-section-iso-samples, review/metal-section-iso-stages, review/metal-world-cold, review/metal-section-resolve, review/metal-tile-resolve, review/metal-section-samples, review/metal-raw-canvas, review/metal-world-classic, review/metal-world-material, review/metal-hidden-ghost]
     paths:
       - '.github/workflows/metal-compute-consumer.yml'
       - '.cargo/**'
