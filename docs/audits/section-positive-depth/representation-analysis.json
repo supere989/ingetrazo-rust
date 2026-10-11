@@ -1,0 +1,432 @@
+{
+  "scope": "CPU source-record/native-code reconstruction only; no new build or capture; not an actual GPU upload/VS-output dump",
+  "all10_face20_triangle_order_equal": true,
+  "coordinate_domain": [
+    0,
+    1,
+    2
+  ],
+  "all_coordinates_exactly_float32_representable": true,
+  "source_plane_expected": [
+    0,
+    0,
+    -1,
+    1.5
+  ],
+  "native_plane_code_expected": [
+    0,
+    0,
+    -1,
+    1.5
+  ],
+  "candidate_identity_model_guard_passed": true,
+  "camera16_bits_actual_equal": true,
+  "triangles": [
+    {
+      "face": 0,
+      "triangles": [
+        [
+          [
+            0,
+            1,
+            0
+          ],
+          [
+            1,
+            1,
+            0
+          ],
+          [
+            1,
+            0,
+            0
+          ]
+        ],
+        [
+          [
+            0,
+            1,
+            0
+          ],
+          [
+            1,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ]
+      ],
+      "source_recipe_and_native_convex_fan_equal": true
+    },
+    {
+      "face": 1,
+      "triangles": [
+        [
+          [
+            0,
+            0,
+            2
+          ],
+          [
+            1,
+            0,
+            2
+          ],
+          [
+            1,
+            1,
+            2
+          ]
+        ],
+        [
+          [
+            0,
+            0,
+            2
+          ],
+          [
+            1,
+            1,
+            2
+          ],
+          [
+            0,
+            1,
+            2
+          ]
+        ]
+      ],
+      "source_recipe_and_native_convex_fan_equal": true
+    },
+    {
+      "face": 2,
+      "triangles": [
+        [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            1
+          ]
+        ],
+        [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ]
+        ]
+      ],
+      "source_recipe_and_native_convex_fan_equal": true
+    },
+    {
+      "face": 3,
+      "triangles": [
+        [
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            1,
+            0,
+            1
+          ],
+          [
+            1,
+            0,
+            2
+          ]
+        ],
+        [
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            1,
+            0,
+            2
+          ],
+          [
+            0,
+            0,
+            2
+          ]
+        ]
+      ],
+      "source_recipe_and_native_convex_fan_equal": true
+    },
+    {
+      "face": 4,
+      "triangles": [
+        [
+          [
+            1,
+            0,
+            0
+          ],
+          [
+            1,
+            1,
+            0
+          ],
+          [
+            1,
+            1,
+            1
+          ]
+        ],
+        [
+          [
+            1,
+            0,
+            0
+          ],
+          [
+            1,
+            1,
+            1
+          ],
+          [
+            1,
+            0,
+            1
+          ]
+        ]
+      ],
+      "source_recipe_and_native_convex_fan_equal": true
+    },
+    {
+      "face": 5,
+      "triangles": [
+        [
+          [
+            1,
+            0,
+            1
+          ],
+          [
+            1,
+            1,
+            1
+          ],
+          [
+            1,
+            1,
+            2
+          ]
+        ],
+        [
+          [
+            1,
+            0,
+            1
+          ],
+          [
+            1,
+            1,
+            2
+          ],
+          [
+            1,
+            0,
+            2
+          ]
+        ]
+      ],
+      "source_recipe_and_native_convex_fan_equal": true
+    },
+    {
+      "face": 6,
+      "triangles": [
+        [
+          [
+            1,
+            1,
+            0
+          ],
+          [
+            0,
+            1,
+            0
+          ],
+          [
+            0,
+            1,
+            1
+          ]
+        ],
+        [
+          [
+            1,
+            1,
+            0
+          ],
+          [
+            0,
+            1,
+            1
+          ],
+          [
+            1,
+            1,
+            1
+          ]
+        ]
+      ],
+      "source_recipe_and_native_convex_fan_equal": true
+    },
+    {
+      "face": 7,
+      "triangles": [
+        [
+          [
+            1,
+            1,
+            1
+          ],
+          [
+            0,
+            1,
+            1
+          ],
+          [
+            0,
+            1,
+            2
+          ]
+        ],
+        [
+          [
+            1,
+            1,
+            1
+          ],
+          [
+            0,
+            1,
+            2
+          ],
+          [
+            1,
+            1,
+            2
+          ]
+        ]
+      ],
+      "source_recipe_and_native_convex_fan_equal": true
+    },
+    {
+      "face": 8,
+      "triangles": [
+        [
+          [
+            0,
+            1,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        [
+          [
+            0,
+            1,
+            0
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            1,
+            1
+          ]
+        ]
+      ],
+      "source_recipe_and_native_convex_fan_equal": true
+    },
+    {
+      "face": 9,
+      "triangles": [
+        [
+          [
+            0,
+            1,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            2
+          ]
+        ],
+        [
+          [
+            0,
+            1,
+            1
+          ],
+          [
+            0,
+            0,
+            2
+          ],
+          [
+            0,
+            1,
+            2
+          ]
+        ]
+      ],
+      "source_recipe_and_native_convex_fan_equal": true
+    }
+  ],
+  "first_unobserved_boundary": "Actual native uploaded position/index/plane bits are not serialized in retained reports, nor are source/native vertex-shader clip outputs or hardware-generated user-plane clipped vertices. Recipe + fan law predicts identical triangle records, but compiled multiply/FMA/clipping/raster plane setup cannot be inferred as bit-identical.",
+  "minimum_missing_data": [
+    "Actual immutable native Y/X triangle positions/index records and section uniform bits (could be cold CPU buffer dump; no GPU image corpus needed)",
+    "Compiled source/native per-vertex clip coordinates and clip-distance values, including generated clipped vertices, or equivalently independent per-contender raster coverage/depth at fixed bad/good samples before depth comparison"
+  ],
+  "conclusion": "No first representation mismatch established. Reconstructed Y3triangle1 and X9triangle0 agree with source. Positive-z timing did not change selected sample ownership; bias fitting is not justified."
+}
