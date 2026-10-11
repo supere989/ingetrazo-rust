@@ -1,0 +1,33 @@
+{
+  "authorization": "Parent independently replayed cache proof and granted release",
+  "canonical_archive_sha256": "f3f533f7e781e738b4a23a3195ed02340dc295977a604b93b0018a0942a82c13",
+  "released": [
+    {
+      "path": "/tmp/face-sweep-app-cache-1",
+      "bytes": 999386,
+      "files": 29
+    },
+    {
+      "path": "/tmp/face-sweep-app-cache-texture",
+      "bytes": 937069,
+      "files": 29
+    },
+    {
+      "path": "/tmp/face-sweep-app-cache-texture-source",
+      "bytes": 120750,
+      "files": 19
+    },
+    {
+      "path": "/tmp/face-sweep-app-frozen-cache",
+      "bytes": 75325400,
+      "files": 1
+    },
+    {
+      "path": "/tmp/face-sweep-base-cache-proof",
+      "bytes": 1836091,
+      "files": 2
+    }
+  ],
+  "total_bytes": 79218696,
+  "preserved": "New resize outputs/binaries, source inputs, transport helper scripts, source worktree and reusable dependency target"
+}

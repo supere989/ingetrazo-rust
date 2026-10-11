@@ -6,4 +6,4 @@ One inactive draw inventory is retained under the shared Vulkan allocation ledge
 
 Read-only replay: `python3 scripts/check-face-sweep-base-cache.py docs/audits/face-sweep-base-cache`.
 
-Canonical ZIP preserves raw PNGs, logs, action snapshots and transport metadata. Frozen comparison binary and temporary captures remain until parent review/release; reusable target is preserved.
+Canonical ZIP preserves raw PNGs, logs, action snapshots and transport metadata. Parent independently replayed the archive and granted release. Covered comparison binary and duplicate captures are now removed; exact paths/bytes are in released-temporaries.json. Source inputs, transport helper scripts, new resize outputs and reusable target are preserved.
