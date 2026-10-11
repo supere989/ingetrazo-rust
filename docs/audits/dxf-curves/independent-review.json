@@ -1,0 +1,24 @@
+{
+  "owner_proof_commit": "ae80a363",
+  "runtime_commit": "0e1d475b",
+  "checker_reader_commit": "be845e39",
+  "method": "Read-only source/runtime/checker review, canonical archive/member/Git/current-binary authentication and direct archived observation comparisons. No build/process/checker replay/source capture.",
+  "authenticated": {
+    "native_members": 30,
+    "native_raw_bytes": 3633767,
+    "native_archive_sha256": "04aab94a6f4644678591cd42bde0edd60f7f176908ab017e51cf4479b6db18fe",
+    "source_members": 42,
+    "source_raw_bytes": 2097105,
+    "git_files": 9,
+    "current_binary_sha256": "2eec0f70c24ab641bbc3dfd8aa8b697e8427b24afaa531f0f86726035424e788",
+    "literal_states": 84,
+    "reader_pairs": 12,
+    "same_binary_straight_states": 56,
+    "same_binary_straight_reader_pairs": 8,
+    "reviewed_mutations": 36,
+    "native_guards": 3
+  },
+  "disposition": "Accepted bounded source curve path subset; no blocking defect found.",
+  "review": "Authored OCS transforms cubic controls before flattening. Offset-relative Bernstein evaluation, minimum eight subdivisions, strict midpoint deviation and final scaling follow the retained ezdxf law. Curve selection/owner flags remain separate from tiny-bulge geometry straightening. Checker preserves ordered source states and actual reopen curve-owner inventories; mutations remove geometry/history/owners. Same current binary straight regression equals unchanged original source. Source-only point narrowing and existing transaction protect native f64/opaque history.",
+  "boundaries": "SPLINE knot/rational/periodic construction, INSERT/MINSERT and broader face stitching/fusion remain open; P22 remains Implemented. No all-DXF, renderer/GPU, OS or totalheap claim."
+}
