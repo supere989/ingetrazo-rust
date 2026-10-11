@@ -1,5 +1,19 @@
 //! Source VCB length fields. Parsing happens once per submitted entry.
 
+/// Python3.13/UCD15.1 numeric ingress accepts Unicode decimal digits, not
+/// all Unicode numeric symbols. Keep ordinary ASCII submission allocation-free.
+/// The source also treats ASCII information separators as whitespace.
+pub fn normalize_source_numeric(text:&str)->std::borrow::Cow<'_,str> {
+    if text.bytes().all(|b|b.is_ascii()&& !(0x1c..=0x1f).contains(&b)){return std::borrow::Cow::Borrowed(text);}
+    const ZERO:&[u32]=&[0x30,0x660,0x6f0,0x7c0,0x966,0x9e6,0xa66,0xae6,0xb66,0xbe6,0xc66,0xce6,0xd66,0xde6,0xe50,0xed0,0xf20,0x1040,0x1090,0x17e0,0x1810,0x1946,0x19d0,0x1a80,0x1a90,0x1b50,0x1bb0,0x1c40,0x1c50,0xa620,0xa8d0,0xa900,0xa9d0,0xa9f0,0xaa50,0xabf0,0xff10,0x104a0,0x10d30,0x11066,0x110f0,0x11136,0x111d0,0x112f0,0x11450,0x114d0,0x11650,0x116c0,0x11730,0x118e0,0x11950,0x11c50,0x11d50,0x11da0,0x11f50,0x16a60,0x16ac0,0x16b50,0x1d7ce,0x1d7d8,0x1d7e2,0x1d7ec,0x1d7f6,0x1e140,0x1e2f0,0x1e4f0,0x1e950,0x1fbf0];
+    std::borrow::Cow::Owned(text.chars().map(|c|{
+        let n=c as u32;
+        if (0x1c..=0x1f).contains(&n){return ' ';}
+        if let Some(&zero)=ZERO.iter().find(|&&zero|n>=zero&&n<zero+10){return char::from_u32(48+n-zero).unwrap();}
+        c
+    }).collect())
+}
+
 fn digits(s: &str) -> bool { !s.is_empty() && s.bytes().all(|c| c.is_ascii_digit()) }
 fn decimal(s: &str, leading_dot: bool) -> bool {
     if let Some((a,b))=s.split_once('.') {
@@ -54,6 +68,7 @@ fn fraction_field(s: &str)->bool {
 /// uses commas as separators. Otherwise a comma is decimal punctuation.
 /// Bare numbers use `scale`; explicit units retain their own conversion.
 pub fn parse_values(text:&str,scale:f64,comma_lists:bool)->Result<Vec<f64>,String> {
+    let text=normalize_source_numeric(text);let text=text.as_ref();
     let lists=comma_lists&&!text.contains(';')&&!text.trim().chars().any(char::is_whitespace);
     let normalized=text.to_ascii_lowercase().replace(',',if lists {" "}else{"."}).replace(';'," ");
     let fields:Vec<_>=normalized.split_whitespace().collect();
@@ -77,6 +92,7 @@ pub fn parse_single(text:&str,scale:f64)->Result<f64,String> {
 }
 /// Angle tools accept rise:run as degrees. Bare values are unitless.
 pub fn parse_angle(text:&str)->Result<f64,String> {
+    let text=normalize_source_numeric(text);let text=text.as_ref();
     if let Some((rise,run))=text.trim().split_once(':') {
         let rise=rise.replace(',',".");let run=run.replace(',',".");
         let r=rise.strip_prefix('-').unwrap_or(&rise);

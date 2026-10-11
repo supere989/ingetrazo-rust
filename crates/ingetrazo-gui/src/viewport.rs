@@ -145,7 +145,7 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
                     viewport:ingetrazo_core::screen_pick::PixelViewport::new(&app.camera,rect.width() as f64,rect.height() as f64),
                     cursor:glam::DVec2::new(rel_x,rel_y),candidate:cursor_world_pos,plane_normal,
                 };
-                let result=app.snap_engine.snap_screen_with_policy(&cursor_ray,&app.scene,start_pt,app.active_tool.snap_close(),&context,&ingetrazo_core::snap_screen::ScreenSnapPolicy{exclusions:app.active_tool.snap_exclusions(),magnetic_axis_deg:app.active_tool.magnetic_axis_deg(),screen_axis_px:app.active_tool.screen_axis_px(),face_under_cursor:ingetrazo_core::screen_pick::hover_face(&app.scene,&cursor_ray).is_some()});
+                let result=app.snap_engine.snap_screen_with_policy(&cursor_ray,&app.scene,start_pt,app.active_tool.snap_close(),&context,&ingetrazo_core::snap_screen::ScreenSnapPolicy{exclusions:app.active_tool.snap_exclusions(),magnetic_axis_deg:app.active_tool.magnetic_axis_deg(),screen_axis_px:app.active_tool.screen_axis_px(),source_matrix:Some(ingetrazo_core::snap_screen::source_camera_matrix(&app.camera)),face_under_cursor:ingetrazo_core::screen_pick::hover_face(&app.scene,&cursor_ray).is_some()});
                 app.snap_engine.note_screen_result(&result,start_pt.is_some(),ui.input(|i|i.time));
                 if result.kind!=ingetrazo_core::snap::SnapKind::Center || app.native_gpu_viewport_enabled {
                     active_center_hint=app.snap_engine.center_hint_pixel(&context.viewport,context.cursor);
@@ -218,7 +218,7 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
                                 let (point,normal)=cursor_work_plane(app,&press_ctx.ray);
                                 let candidate=Plane::new(point,normal).intersect_ray(&press_ctx.ray).filter(|t| *t>0.).map_or(point,|t|press_ctx.ray.at(t));
                                 let context=ingetrazo_core::snap_screen::ScreenSnapContext {viewport:ingetrazo_core::screen_pick::PixelViewport::new(&app.camera,rect.width() as f64,rect.height() as f64),cursor:screen,candidate,plane_normal:normal};
-                                let press_snap=app.snap_engine.snap_screen_with_policy(&press_ctx.ray,&app.scene,app.active_tool.snap_anchor(),app.active_tool.snap_close(),&context,&ingetrazo_core::snap_screen::ScreenSnapPolicy {exclusions:app.active_tool.snap_exclusions(),magnetic_axis_deg:app.active_tool.magnetic_axis_deg(),screen_axis_px:app.active_tool.screen_axis_px(),face_under_cursor:ingetrazo_core::screen_pick::hover_face(&app.scene,&press_ctx.ray).is_some()});
+                                let press_snap=app.snap_engine.snap_screen_with_policy(&press_ctx.ray,&app.scene,app.active_tool.snap_anchor(),app.active_tool.snap_close(),&context,&ingetrazo_core::snap_screen::ScreenSnapPolicy {exclusions:app.active_tool.snap_exclusions(),magnetic_axis_deg:app.active_tool.magnetic_axis_deg(),screen_axis_px:app.active_tool.screen_axis_px(),source_matrix:Some(ingetrazo_core::snap_screen::source_camera_matrix(&app.camera)),face_under_cursor:ingetrazo_core::screen_pick::hover_face(&app.scene,&press_ctx.ray).is_some()});
                                 press_ctx.world=press_snap.point;
                                 app.active_tool.note_cursor_plane(point,normal);
                                 app.active_tool.note_snap_result(&press_snap);

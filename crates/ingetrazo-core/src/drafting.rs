@@ -812,7 +812,7 @@ pub fn add_segments(
 ) -> Result<Mesh, String> { add_segments_tagged(mesh,segments,explicit,curve,None) }
 // Source topology.segment_intersection: QVector3D differences/lengths,
 // double unit-direction closest points, scale-aware gap, final Qt point.
-fn source_segment_intersection(a: DVec3, b: DVec3, c: DVec3, d: DVec3) -> Option<DVec3> {
+pub(crate) fn source_segment_intersection(a: DVec3, b: DVec3, c: DVec3, d: DVec3) -> Option<DVec3> {
     let (a, b, c, d) = (a.as_vec3(), b.as_vec3(), c.as_vec3(), d.as_vec3());
     let d1 = b - a;
     let d2 = d - c;

@@ -237,6 +237,10 @@ impl IngeTrazoApp {
     }
 
     pub fn dispatch_tool_vcb(&mut self, text: &str) -> Result<(), String> {
+        // Original Viewport parses Unicode decimal fields before dispatching
+        // numeric/segment/radius/array tags. Preserve the visible entered text.
+        let normalized=ingetrazo_core::units::vcb::normalize_source_numeric(text);
+        let text=normalized.as_ref();
         if self.navigation.mode.is_some(){return self.navigation_height(text);}
         if self.section_name_prompt.is_some(){return Err("Finish the section naming dialog first".into());}
         self.prepare_bim_draw_commit()?;

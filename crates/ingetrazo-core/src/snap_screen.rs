@@ -26,6 +26,8 @@ pub struct ScreenSnapPolicy<'a>{
     /// Source compute_snap defaults this false; only a viewport caller with
     /// an actual face hit opts into the OnFace fallback.
     pub face_under_cursor:bool,
+    /// Source Qt clip matrix; native-double points retain ctx.viewport.
+    pub source_matrix:Option<glam::Mat4>,
 }
 /// Geometry currently moved by a transform is absent from source inference.
 /// Group identities exclude their entire nested placement subtree.
@@ -52,11 +54,32 @@ fn result(point: DVec3, kind: SnapKind, color: [f32; 3], label: &str) -> SnapRes
         guides: vec![],
     }
 }
-fn visible(scene: &Scene, context: &ScreenSnapContext, p: DVec3) -> bool {
+// Source logical-pixel decisions are based on QVector4D clip arithmetic,
+// then Python double division and viewport mapping. Keep render/pick projection
+// and genuinely native-double points unchanged.
+/// Original camera matrices and point clip arithmetic are float32. This
+/// viewport is confined to inference; render/picking and generic double
+/// projection protocols retain their existing camera representation.
+pub fn source_camera_matrix(camera:&crate::camera::OrbitCamera)->glam::Mat4{
+    camera.projection_matrix().as_mat4()*camera.view_matrix().as_mat4()
+}
+struct ProjectedContext<'a>{ctx:&'a ScreenSnapContext,source:Option<glam::Mat4>}
+impl std::ops::Deref for ProjectedContext<'_>{type Target=ScreenSnapContext;fn deref(&self)->&ScreenSnapContext{self.ctx}}
+impl ProjectedContext<'_>{fn project(&self,p:DVec3)->Option<DVec2>{source_pixel(&self.viewport,p,self.source)}}
+fn source_pixel(viewport:&PixelViewport,p:DVec3,source:Option<glam::Mat4>)->Option<DVec2>{
+    if !p.is_finite()||p.as_vec3().as_dvec3()!=p{return viewport.project_for_snapping(p);}
+    let matrix=source.or_else(||(viewport.matrix.as_mat4().as_dmat4()==viewport.matrix).then(||viewport.matrix.as_mat4()));
+    let Some(matrix)=matrix else{return viewport.project_for_snapping(p);};
+    if viewport.width<=0.||viewport.height<=0.{return None;}
+    let c=(matrix*p.as_vec3().extend(1.)).as_dvec4();
+    if !c.is_finite()||c.w<=0.{return None;}
+    Some(DVec2::new((c.x/c.w*0.5+0.5)*viewport.width,(1.-(c.y/c.w*0.5+0.5))*viewport.height))
+}
+fn visible(scene: &Scene, context: &ProjectedContext, p: DVec3) -> bool {
     if !scene.section_point_visible(p) {
         return false;
     }
-    let Some(pixel) = context.viewport.project_for_snapping(p) else {
+    let Some(pixel) = context.project(p) else {
         return false;
     };
     let Some(ray) = context.viewport.ray(pixel) else {
@@ -83,6 +106,11 @@ fn project_line(ray: &Ray, origin: DVec3, dir: DVec3) -> DVec3 {
     origin + dir * t
 }
 fn crossing(a: DVec3, b: DVec3, c: DVec3, d: DVec3) -> Option<DVec3> {
+    // Source endpoints are QVector3D. Preserve the native-double extension
+    // instead of narrowing authored model positions merely to acquire a snap.
+    if [a,b,c,d].into_iter().all(|p|p.is_finite()&&p.as_vec3().as_dvec3()==p) {
+        return crate::drafting::source_segment_intersection(a,b,c,d);
+    }
     let u = b - a;
     let v = d - c;
     let w = a - c;
@@ -105,14 +133,33 @@ fn crossing(a: DVec3, b: DVec3, c: DVec3, d: DVec3) -> Option<DVec3> {
     }
     Some((p + q) * 0.5)
 }
-fn edges(scene: &Scene, ctx: &ScreenSnapContext, exclusions: Option<&SnapExclusions>) -> Vec<Edge> {
+/// Source Viewport._guide_snap_segment: clip an infinite construction line
+/// to a 1.5-wide homogeneous viewport, then author the two Qt endpoints. No
+/// scene mutation, projection/tessellation of document geometry or new cache.
+pub fn guide_snap_segment(viewport:&PixelViewport,point:DVec3,dir:DVec3)->Option<(DVec3,DVec3)> {
+    if !point.is_finite()||!dir.is_finite(){return None;}
+    let source=viewport.matrix.as_mat4().as_dmat4()==viewport.matrix&&[point,dir].into_iter().all(|p|p.as_vec3().as_dvec3()==p);
+    let (c0,c1)=if source {
+        let m=viewport.matrix.as_mat4();
+        ((m*point.as_vec3().extend(1.)).as_dvec4(),(m*dir.as_vec3().extend(0.)).as_dvec4())
+    }else{(viewport.matrix*point.extend(1.),viewport.matrix*dir.extend(0.))};
+    let (mut lo,mut hi)=(-10000f64,10000f64);
+    for (a,b) in [(c0.w-1e-3,c1.w),(1.5*c0.w-c0.x,1.5*c1.w-c1.x),(1.5*c0.w+c0.x,1.5*c1.w+c1.x),(1.5*c0.w-c0.y,1.5*c1.w-c1.y),(1.5*c0.w+c0.y,1.5*c1.w+c1.y)]{
+        if !a.is_finite()||!b.is_finite(){return None;}
+        if b.abs()<1e-15{if a<0.{return None;}continue;}
+        let t=-a/b;if b>0.{lo=lo.max(t);}else{hi=hi.min(t);}if lo>=hi{return None;}
+    }
+    let (a,b)=(point+dir*lo,point+dir*hi);
+    Some(if source{(a.as_vec3().as_dvec3(),b.as_vec3().as_dvec3())}else{(a,b)})
+}
+fn edges(scene: &Scene, ctx: &ProjectedContext, exclusions: Option<&SnapExclusions>) -> Vec<Edge> {
     let mut loose = vec![];
     let mut groups = vec![];
     let mut append = |a: DVec3, b: DVec3, group: bool, guide: bool| {
         if scene.section_segment(a, b).is_none() {
             return;
         }
-        let distance = match (ctx.viewport.project_for_snapping(a),ctx.viewport.project_for_snapping(b)) {
+        let distance = match (ctx.project(a),ctx.project(b)) {
             (Some(pa),Some(pb)) => pixel_segment_distance(ctx.cursor,pa,pb).0,
             // Source small loose scenes consider each endpoint independently.
             // A segment crossing the eye must retain its front endpoint without
@@ -155,10 +202,11 @@ fn edges(scene: &Scene, ctx: &ScreenSnapContext, exclusions: Option<&SnapExclusi
     for g in &scene.guides {
         use crate::guides::GuideType;
         match g.kind {
-            GuideType::Point(p) => append(p, p, false, true),
+            GuideType::Point(p) => append(p, p, false, false),
             GuideType::Segment { a, b } => append(a, b, false, true),
             GuideType::InfiniteLine { point, dir } => {
-                append(point - dir * 10000., point + dir * 10000., false, true)
+                let viewport=if [point,dir].into_iter().all(|p|p.as_vec3().as_dvec3()==p){ctx.source.map_or(ctx.viewport,|m|PixelViewport{matrix:m.as_dmat4(),..ctx.viewport})}else{ctx.viewport};
+                if let Some((a,b))=guide_snap_segment(&viewport,point,dir){append(a,b,false,true);}
             }
         }
     }
@@ -176,7 +224,7 @@ fn edges(scene: &Scene, ctx: &ScreenSnapContext, exclusions: Option<&SnapExclusi
 
 fn from_point(
     scene: &Scene,
-    ctx: &ScreenSnapContext,
+    ctx: &ProjectedContext,
     edges: &[Edge],
     extra: Option<DVec3>,
     start: DVec3,
@@ -184,8 +232,7 @@ fn from_point(
     hovered: bool,
 ) -> Option<SnapResult> {
     let pixels = |p: DVec3| {
-        ctx.viewport
-            .project_for_snapping(p)
+        ctx.project(p)
             .map(|q| q.distance(ctx.cursor))
             .unwrap_or(f64::INFINITY)
     };
@@ -239,12 +286,11 @@ fn axis_direction(draw: DVec3, degrees: f64, axes: crate::drawing_axes::DrawingA
 fn memory_snap(
     engine: &SnapEngine,
     scene: &Scene,
-    ctx: &ScreenSnapContext,
+    ctx: &ProjectedContext,
     on_face: bool,
 ) -> Option<SnapResult> {
     let pixels = |p: DVec3| {
-        ctx.viewport
-            .project_for_snapping(p)
+        ctx.project(p)
             .map(|q| q.distance(ctx.cursor))
             .unwrap_or(f64::INFINITY)
     };
@@ -360,7 +406,7 @@ fn curve_center(
     Some((world.transform_point3(center), radius))
 }
 impl SnapEngine {
-    fn update_center(&mut self, scene: &Scene, ray: &Ray, ctx: &ScreenSnapContext) {
+    fn update_center(&mut self, scene: &Scene, ray: &Ray, ctx: &ProjectedContext) {
         use crate::screen_pick::{hover_edge_placement_for_snapping, hover_face_placement, visit_placements};
         self.hovered_center = None;
         if self
@@ -437,8 +483,7 @@ impl SnapEngine {
                     crate::circle_inference::face_centers(hit.mesh, hit.face, hit.world);
                 centers.sort_by(|(a, _, _), (b, _, _)| {
                     let d = |p| {
-                        ctx.viewport
-                            .project_for_snapping(p)
+                        ctx.project(p)
                             .map(|p| p.distance(ctx.cursor))
                             .unwrap_or(f64::INFINITY)
                     };
@@ -551,12 +596,12 @@ impl SnapEngine {
     pub fn snap_screen_with_policy(
         &mut self,ray:&Ray,scene:&Scene,start:Option<DVec3>,close:Option<DVec3>,ctx:&ScreenSnapContext,policy:&ScreenSnapPolicy,
     )->SnapResult{
+        let ctx=&ProjectedContext{ctx,source:policy.source_matrix};
         self.sync_drawing_frame(scene.drawing_frame);
         self.update_center(scene, ray, ctx);
         let edges = edges(scene, ctx, policy.exclusions);
         let pixels = |p: DVec3| {
-            ctx.viewport
-                .project_for_snapping(p)
+            ctx.project(p)
                 .map(|q| q.distance(ctx.cursor))
                 .unwrap_or(f64::INFINITY)
         };
@@ -778,10 +823,10 @@ impl SnapEngine {
                         let mut r=result(point,SnapKind::AxisLock,color,"Axis");r.axis=Some(axis);r.guides.push((start,point,color));return r;
                     }
                 }
-                if let (Some(threshold),Some(pixel))=(policy.screen_axis_px,ctx.viewport.project_for_snapping(start)){
+                if let (Some(threshold),Some(pixel))=(policy.screen_axis_px,ctx.project(start)){
                     let mut best=None;
                     for (axis,dir,color) in axes {
-                        let Some(other)=ctx.viewport.project_for_snapping(start+dir*d.length())else{continue;};
+                        let Some(other)=ctx.project(start+dir*d.length())else{continue;};
                         let heading=other-pixel;let span=heading.length();if span<12.{continue;}
                         let cursor=ctx.cursor-pixel;let distance=(cursor.x*heading.y-cursor.y*heading.x).abs()/span;
                         if distance<=threshold&&best.is_none_or(|(old,_,_,_)|distance<old){best=Some((distance,axis,dir,color));}
@@ -843,6 +888,15 @@ mod tests {
         c.perspective = false;
         c
     }
+    #[test]
+    fn native_double_projection_retains_original_matrix_under_source_policy(){
+        let viewport=PixelViewport{matrix:DMat4::from_translation(DVec3::new(-1e12,0.,0.5)),width:1000.,height:800.};
+        let p=DVec3::new(1e12+0.125,0.,0.);let ctx=ScreenSnapContext{viewport,cursor:DVec2::ZERO,candidate:p,plane_normal:DVec3::Z};
+        let projected=ProjectedContext{ctx:&ctx,source:Some(viewport.matrix.as_mat4())};
+        assert_eq!(projected.project(p),viewport.project_for_snapping(p));
+        assert_ne!(projected.project(p),PixelViewport{matrix:viewport.matrix.as_mat4().as_dmat4(),..viewport}.project_for_snapping(p));
+    }
+
     #[test]
     fn endpoint_threshold_uses_pixels_at_near_and_far_zooms() {
         let mut scene = Scene::new();
