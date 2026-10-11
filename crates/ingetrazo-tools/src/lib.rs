@@ -13,6 +13,7 @@ pub mod line;
 pub mod move_tool;
 pub mod offset;
 pub mod paint;
+pub mod place_group;
 pub mod polygon;
 pub mod protractor;
 pub mod pushpull;
@@ -39,6 +40,7 @@ pub use line::LineTool;
 pub use move_tool::MoveTool;
 pub use offset::OffsetTool;
 pub use paint::PaintTool;
+pub use place_group::PlaceGroupTool;
 pub use polygon::PolygonTool;
 pub use protractor::ProtractorTool;
 pub use pushpull::PushPullTool;
@@ -83,6 +85,7 @@ mod tests {
             ToolType::Dimension,
             ToolType::Text,
             ToolType::SectionPlane,
+            ToolType::PlaceGroup,
         ] {
             let tool = create_tool(tool_type);
             assert_eq!(tool.tool_type(), tool_type);

@@ -1,0 +1,112 @@
+[
+  {
+    "name": "plain",
+    "anchor": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "vertices": [
+      [
+        9.0,
+        20.0,
+        30.0
+      ],
+      [
+        11.0,
+        20.0,
+        32.0
+      ]
+    ],
+    "matrix": null,
+    "remaining": false
+  },
+  {
+    "name": "slab",
+    "anchor": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "vertices": [
+      [
+        9.0,
+        20.0,
+        30.0
+      ],
+      [
+        11.0,
+        22.0,
+        30.0
+      ]
+    ],
+    "matrix": null,
+    "remaining": false
+  },
+  {
+    "name": "wall",
+    "anchor": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "vertices": [
+      [
+        11.0,
+        20.0,
+        30.0
+      ],
+      [
+        9.0,
+        20.0,
+        32.0
+      ]
+    ],
+    "matrix": null,
+    "remaining": false
+  },
+  {
+    "name": "instance",
+    "anchor": [
+      6.0,
+      0.0,
+      0.0
+    ],
+    "vertices": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        2.0,
+        0.0,
+        2.0
+      ]
+    ],
+    "matrix": [
+      1.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0,
+      0.0,
+      9.0,
+      20.0,
+      30.0,
+      1.0
+    ],
+    "remaining": false
+  },
+  {
+    "name": "cancel",
+    "inserted": false,
+    "remaining": false
+  }
+]

@@ -1,0 +1,7 @@
+# Place component tool
+
+Pinned original 6be29fe437a7cd992d4e079f71720821b25216b9. `reference-place-group.py` executes the actual original PlaceGroup controller with its InsertGroupCommand admission stand-in. Four placement rows and Cancel are retained; native four focused tests pass, including source rows, candidate retention on nonfinite pose, selected inserted group, and untouched instance prototype.
+
+API: `PlaceGroupTool::new(group, align_to_face)`, `with_anchor(group, align_to_face, anchor)`; `Tool::completed()` becomes true after insertion or Cancel. Root GUI records the insertion and switches to Select. Constructor privately owns the group and caches at most 2000 preview edges (nested oversized trees use 12 bounding edges). Hover recomputes only those cached edges; the existing rubber-band trait returns an allocated Vec copy. Bounds use f64 placement arithmetic over Qt-f32 coefficients; placement and alignment use Qt-f32 authored coordinates. Source instance picker returns prototype Face objects (`viewport.py8103`), so alignment deliberately uses the local prototype normal, including rotated instances.
+
+No complete native application input/GPU acceptance is claimed by these controller tests. Source texture UVW remapping is carried with classic geometry; arbitrary projective matrices, nonfinite geometry and nesting deeper than128 are refused before insertion. Original constructor allocation and native total heap bounds are not claimed. The parent application owns Undo admission; this tool never creates an independent history stack.

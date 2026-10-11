@@ -1,0 +1,21 @@
+warning: function `visit_meshes` is never used
+   --> crates/ingetrazo-core/src/screen_pick.rs:120:15
+    |
+120 | pub(crate) fn visit_meshes(scene: &Scene, mut visit: impl FnMut(&Mesh, DMat4, bool)) {
+    |               ^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-core` (lib) generated 1 warning
+   Compiling ingetrazo-tools v0.3.15 (/tmp/ingetrazo-place-group/crates/ingetrazo-tools)
+    Finished `test` profile [unoptimized] target(s) in 1.50s
+     Running unittests src/lib.rs (/tmp/ingetrazo-ai-registry-target/debug/deps/ingetrazo_tools-09a5d9c82354e415)
+
+running 4 tests
+test place_group::tests::invalid_pose_retains_document_and_candidate ... ok
+test place_group::tests::placement_and_cancel_ownership ... ok
+test place_group::tests::pinned_source_controller_rows ... ok
+test place_group::tests::source_front_alignment_and_instance ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 93 filtered out; finished in 0.00s
+

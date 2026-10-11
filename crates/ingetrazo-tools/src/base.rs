@@ -33,6 +33,7 @@ pub enum ToolType {
     Dimension,
     Text,
     SectionPlane,
+    PlaceGroup,
 }
 
 #[derive(Debug, Clone)]
@@ -144,6 +145,9 @@ pub trait Tool: Send + Sync {
     fn status_message(&self) -> Option<&str> { None }
     /// Consume one informational event after an actual tool call.
     fn take_status_message(&mut self)->Option<String>{None}
+
+    /// Candidate tools report a successful insertion so the app can select its normal tool.
+    fn completed(&self) -> bool { false }
 
     fn tool_type(&self) -> ToolType;
     fn name(&self) -> &'static str;
@@ -403,6 +407,7 @@ pub fn create_tool(tool_type: ToolType) -> Box<dyn Tool> {
         ToolType::Dimension => Box::new(crate::dimension::DimensionTool::default()),
         ToolType::Text => Box::new(crate::text::TextTool::default()),
         ToolType::SectionPlane => Box::new(crate::section::SectionPlaneTool::default()),
+        ToolType::PlaceGroup => Box::new(crate::place_group::PlaceGroupTool::default()),
     }
 }
 
