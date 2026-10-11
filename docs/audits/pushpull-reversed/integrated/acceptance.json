@@ -1,0 +1,53 @@
+{
+  "source_commit": "c91f1f550520b511ce136aa3861ceda6053ad2f1",
+  "passed": true,
+  "reversed": {
+    "direction_preview_recipe_exact": 4,
+    "final_oriented_fields_exact": 4,
+    "negative_controls": [
+      "empty",
+      "duplicate",
+      "wrong_normal",
+      "wrong_preview",
+      "wrong_commit_direction",
+      "lost_metadata",
+      "lost_history",
+      "lost_support_vertex",
+      "wrong_floor_paint",
+      "lost_new_base",
+      "old_floor_overlap"
+    ],
+    "actual_app_history_cancel_exact": true,
+    "native_visible_suppression_proved": false,
+    "remaining": {
+      "visible-preview": "Borrowed sweep descriptor is unconsumed by native Vulkan/Metal; source camera-aware suppression required.",
+      "closed-reversed-acquisition": "Original entry orientation and arbitrary Qt precision beyond these four open controls remain unproved."
+    }
+  },
+  "inward_summary": {
+    "decisions": 13,
+    "exact_inventory": 12,
+    "negative_controls": 12,
+    "disconnected_preservation_divergence": true
+  },
+  "identity_checks": 4,
+  "broad_suite_repeated": false,
+  "source_captures_repeated": false,
+  "archive": "evidence.zip",
+  "archive_sha256": "35747f2f5f78842755345d5c7615456763724668ece20f30f026581383642304",
+  "files": {
+    "binary-sha256.json": "b15ae752d3bc96ca31ccbefabe316c7771bbaa6ca5f0e0b91e7286d7e18afef1",
+    "build.log": "3cccdc41658d8ead7efde71938b3e722cd9445f99bc34ef247a4289ce60e1027",
+    "comparison.json": "e110a7696e58106d74166587c23b3fab39db7de8f0139842930ba1b3ba4f5b00",
+    "identity.log": "79026eda4fd7496025e46a92e71fd6b630cffcc125abf8b37515bc604665519c",
+    "inward-check.log": "e8640b5d607f7c296084ed3eba96abed859932b2963a70e199ae10168b6a2cb3",
+    "inward-comparison.json": "e8640b5d607f7c296084ed3eba96abed859932b2963a70e199ae10168b6a2cb3",
+    "inward-native.json": "cecf930860b89a481b4c61422b695764f8eb9859c3483e17d04aa7c07be5a524",
+    "inward-native.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "native.json": "6735af7900fb7e306ffc93fa7daf4c79d75b19e209b988a0204d3a63d578ab96",
+    "reversed-check.log": "e110a7696e58106d74166587c23b3fab39db7de8f0139842930ba1b3ba4f5b00",
+    "reversed-native.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stages.json": "ac0ade54de42db4291fa74b3a3fa3d703ebb2d3259e478a8b9f3b76f10994350"
+  },
+  "released_bytes": 102176
+}

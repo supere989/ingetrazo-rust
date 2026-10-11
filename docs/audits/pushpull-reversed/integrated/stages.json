@@ -1,0 +1,87 @@
+[
+  {
+    "name": "identity",
+    "command": [
+      "cargo",
+      "test",
+      "--locked",
+      "-j2",
+      "-p",
+      "ingetrazo-tools",
+      "--test",
+      "pushpull_history_identity"
+    ],
+    "source_commit": "c91f1f550520b511ce136aa3861ceda6053ad2f1",
+    "exit": 0,
+    "seconds": 3.014
+  },
+  {
+    "name": "build",
+    "command": [
+      "cargo",
+      "build",
+      "--locked",
+      "-j2",
+      "-p",
+      "ingetrazo-gui",
+      "--example",
+      "pushpull_reversed",
+      "--example",
+      "pushpull_inward_limits"
+    ],
+    "source_commit": "c91f1f550520b511ce136aa3861ceda6053ad2f1",
+    "exit": 0,
+    "seconds": 8.274
+  },
+  {
+    "name": "reversed-native",
+    "command": [
+      "/tmp/ingetrazo-native-font-merge-target/debug/examples/pushpull_reversed",
+      "/tmp/ingetrazo-next-integration/docs/audits/pushpull-reversed/source.json",
+      "/tmp/ingetrazo-reversed-integrated-proof/native.json"
+    ],
+    "source_commit": "c91f1f550520b511ce136aa3861ceda6053ad2f1",
+    "exit": 0,
+    "seconds": 0.006
+  },
+  {
+    "name": "reversed-check",
+    "command": [
+      "python3",
+      "scripts/check-pushpull-reversed.py",
+      "/tmp/ingetrazo-next-integration/docs/audits/pushpull-reversed/source.json",
+      "/tmp/ingetrazo-reversed-integrated-proof/native.json",
+      "/tmp/ingetrazo-next-integration/docs/audits/pushpull-reversed/remaining-native.json",
+      "/tmp/ingetrazo-reversed-integrated-proof/comparison.json"
+    ],
+    "source_commit": "c91f1f550520b511ce136aa3861ceda6053ad2f1",
+    "exit": 0,
+    "seconds": 0.019
+  },
+  {
+    "name": "inward-native",
+    "command": [
+      "/tmp/ingetrazo-native-font-merge-target/debug/examples/pushpull_inward_limits",
+      "/tmp/ingetrazo-next-integration/docs/audits/pushpull-inward-limits/source.json",
+      "/tmp/ingetrazo-reversed-integrated-proof/inward-native.json"
+    ],
+    "source_commit": "c91f1f550520b511ce136aa3861ceda6053ad2f1",
+    "exit": 0,
+    "seconds": 0.036
+  },
+  {
+    "name": "inward-check",
+    "command": [
+      "python3",
+      "scripts/check-pushpull-inward-limits.py",
+      "/tmp/ingetrazo-next-integration/docs/audits/pushpull-inward-limits/source.json",
+      "/tmp/ingetrazo-reversed-integrated-proof/inward-native.json",
+      "/tmp/ingetrazo-next-integration/docs/audits/pushpull-inward-limits/source-vcb.json",
+      "/tmp/ingetrazo-next-integration/docs/audits/pushpull-inward-limits/remaining-native.json",
+      "/tmp/ingetrazo-reversed-integrated-proof/inward-comparison.json"
+    ],
+    "source_commit": "c91f1f550520b511ce136aa3861ceda6053ad2f1",
+    "exit": 0,
+    "seconds": 0.023
+  }
+]
