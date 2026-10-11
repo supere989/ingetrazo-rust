@@ -1,0 +1,68 @@
+name: Native Metal compiled vertex replay
+on:
+  push:
+    branches: [review/metal-section-vertex-replay]
+  workflow_dispatch:
+concurrency:
+  group: metal-section-vertex-replay-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  app-consumer:
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        runner: [macos-15]
+    env:
+      CARGO_PROFILE_DEV_DEBUG: 0
+      CARGO_PROFILE_TEST_DEBUG: 0
+      CARGO_INCREMENTAL: 0
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Reuse compiled Cargo dependencies
+        uses: Swatinem/rust-cache@49a0bdc70d2e1b713ca9e2869b211fcce03d3c1c # v2
+        with:
+          cache-bin: "false"
+          cache-workspace-crates: "false"
+          cache-on-failure: "true"
+          save-if: ${{ github.event_name != 'pull_request' }}
+      - name: Authenticate expected frame and build only the three-point diagnostic
+        run: |
+          mkdir -p section-iso-stage-evidence
+          git rev-parse HEAD > section-iso-stage-evidence/revision.txt
+          git ls-files Cargo.lock .github/workflows/metal-section-vertex-replay.yml crates/ingetrazo-core/src crates/ingetrazo-render/src crates/ingetrazo-gui/src/navigation_ray.rs scripts/reference-section-iso-stages.py docs/audits/section-iso-stages/source.zip crates/ingetrazo-gui/src/native_metal crates/ingetrazo-gui/src/native_metal.rs crates/ingetrazo-gui/src/viewport.rs crates/ingetrazo-metal/src crates/ingetrazo-gui/examples/native_metal_section_iso_stages.rs scripts/check-section-iso-stages.py scripts/check-section-vertex-replay.py docs/audits/section-vertex-replay/source-model.zip scripts/reference-section-vertex-replay.py | xargs shasum -a 256 > section-iso-stage-evidence/source.sha256
+          python3 - <<'PYTHON'
+          import hashlib,pathlib,zipfile
+          vertex_source=pathlib.Path('docs/audits/section-vertex-replay/source-model.zip')
+          assert hashlib.sha256(vertex_source.read_bytes()).hexdigest()=='08ceb200be83cb4e2099ab51a211f248818c94b01818a05d4e81c7a6bd16012c'
+          source=pathlib.Path('docs/audits/section-iso-stages/source.zip')
+          assert hashlib.sha256(source.read_bytes()).hexdigest()=='9759c0f8a4b67a7e85268e581c3b0ffe7d477809327e46ec4b39d9790fed933f'
+          archive=pathlib.Path('docs/audits/section-tile-promotion/production/arm.zip')
+          assert hashlib.sha256(archive.read_bytes()).hexdigest()=='2569145928864b000e07e9d44d46e59bacffb9a88e45755de870e26bda1ef784'
+          with zipfile.ZipFile(archive) as z: data=z.read('native/closed-iso-candidate.rgba')
+          assert len(data)==1920000 and hashlib.sha256(data).hexdigest()=='9fabf645e1f3518902a2cfebbbae600663d48e8caf3980391d44a12313e88e55'
+          pathlib.Path('section-iso-stage-evidence/expected.rgba').write_bytes(data)
+          PYTHON
+          cargo build --locked -p ingetrazo-gui --example native_metal_section_iso_stages -j2 > section-iso-stage-evidence/build.log 2>&1
+          shasum -a 256 target/debug/examples/native_metal_section_iso_stages > section-iso-stage-evidence/binary.sha256
+      - name: Observe in-pass colors and terminal-prefix depths
+        run: |
+          python3 - <<'PYTHON'
+          import subprocess
+          with open('section-iso-stage-evidence/runtime.log','w') as log:
+              subprocess.run(['target/debug/examples/native_metal_section_iso_stages','section-iso-stage-evidence/native','section-iso-stage-evidence/expected.rgba','--vertex-replay'],stdout=log,stderr=subprocess.STDOUT,timeout=45,check=True)
+      - name: Validate observation completeness, not release parity
+        if: ${{ !cancelled() }}
+        run: |
+          python3 scripts/check-section-iso-stages.py section-iso-stage-evidence/native section-iso-stage-evidence/expected.rgba docs/audits/section-iso-stages/source.zip > section-iso-stage-evidence/checker.log 2>&1
+          python3 scripts/check-section-vertex-replay.py section-iso-stage-evidence/native docs/audits/section-vertex-replay/source-model.zip > section-iso-stage-evidence/vertex-checker.log 2>&1
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: section-vertex-replay-${{ matrix.runner }}
+          path: section-iso-stage-evidence/
+          if-no-files-found: error

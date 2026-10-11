@@ -1,0 +1,23 @@
+{
+  "bounded_replay_admission_pass": true,
+  "production_vs_instruction_identity_claim": false,
+  "release_parity_claim": false,
+  "actual_input_positions_indices_camera_model_matched": true,
+  "plane_mathematically_equal": true,
+  "plane_exact_bits_equal": true,
+  "plane_bit_differences": [],
+  "gl_clip_different_vertices": 0,
+  "clip_distance_different_vertices": 0,
+  "world_xyz_different_vertices": 0,
+  "limitation": "Separate void Metal replay and separately linked GL transform feedback can change compiler association; matching outputs do not prove production rasterizing VS instruction identity.",
+  "negative_controls": {
+    "position": "rejected",
+    "missing_output": "rejected",
+    "camera": "rejected",
+    "model": "rejected",
+    "uncompleted": "rejected",
+    "nonfinite_output": "rejected",
+    "signedzero_plane": "accepted and reported"
+  },
+  "scope": "Constructed source-derived records exercise validation and negative controls only; NOT native compiled replay acceptance."
+}
