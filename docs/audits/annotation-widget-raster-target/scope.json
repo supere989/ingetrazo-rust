@@ -1,0 +1,6 @@
+{
+  "scope": "source-only target engine isolation after strict widget captures; exact original bound methods and retained depth onQImage baseline; no accepted production replacement",
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "native_reference": "docs/audits/annotation-real-viewport-first-paired/glx/capilla_quiroz_v17-iso/native",
+  "remaining": "font versus stroke/MSAA/composition mechanism unproven; strict actual widget pixel failure retained"
+}

@@ -1,0 +1,18 @@
+{
+  "source_widget_vs_source_raster": {
+    "whole_pixels": 3608,
+    "annotation_union_pixels": 3608,
+    "max_channel_delta": 210
+  },
+  "native_vs_source_widget": {
+    "whole_pixels": 4891,
+    "annotation_union_pixels": 3608,
+    "max_channel_delta": 210
+  },
+  "native_vs_source_raster": {
+    "whole_pixels": 2082,
+    "annotation_union_pixels": 799,
+    "max_channel_delta": 27
+  },
+  "annotation_union_pixels": 4088
+}
