@@ -1,0 +1,91 @@
+{
+  "runtime_commit": "62a7e45a15ade97d820537e8cbd73526d744512b",
+  "binary_sha256": "2c9b0adc892baa0811b9467c00e3b10cd0ca7ea5552d93d307bed8dc52d64f70",
+  "source_sha256": {
+    "crates/ingetrazo-core/src/scene.rs": "71923431065a4d88a25dc4d61b5cfc048bbcd8845a2a0b85e2311ae82ffb62c9",
+    "crates/ingetrazo-core/src/textlabel.rs": "7f537fc596974cd95453e4f48fc131950139189c11cc2fada6f324253672cc90",
+    "crates/ingetrazo-gui/examples/annotation_delete_fixture.rs": "a55b21d77dd4ddf423fe7d904c175bdb3954fffa9c5be63f5a8a2a18384078d5",
+    "crates/ingetrazo-gui/src/annotation_delete.rs": "b9bcd6438511fa9102714e416e8390d57f9eb5fc16c0284534134127b78876ae",
+    "crates/ingetrazo-gui/src/app.rs": "30eab0c21bdf651f956e31a9588e33eb73a5559bea27275064044a0c24af1a9f",
+    "crates/ingetrazo-gui/src/box_selection.rs": "93bea835333b4f6512c59a3e3926b8f8eff3d5aa1cc6a4d9b38f8db4a8fe20fe",
+    "crates/ingetrazo-gui/src/component_edit.rs": "dbf97a0f4c2818746b25c41cd151e381da8369958d27684a20cb61d326ffd039",
+    "crates/ingetrazo-gui/src/lib.rs": "7ebe158807bca3f0bfd0a227966ef3bc95fdadb50b29d9de62c13a7b2f0a491a",
+    "scripts/check-annotation-delete-reopen.py": "3536048634a0e7e0c93a022104b3211e2b6509f76c291d29f37674994d0b5e97",
+    "scripts/check-annotation-delete.py": "f2dcf8c9edd4dde1f3242855602315dfb07e11aea41b09e1f57f40d42027863e",
+    "scripts/reference-annotation-delete.py": "5953c4c850f3b723609afdc9cc06a7985a8fdb8c85b16ad03c7e04ee4d4da6e0"
+  },
+  "entries": {
+    "input.igz": {
+      "bytes": 7152,
+      "sha256": "eb63da83b79e3e28d65268f2a44ab89edb34acd2cb1b75a3335818b06bcf4763"
+    },
+    "original.json": {
+      "bytes": 54079,
+      "sha256": "33a019edfab7ce871407df0251451aaf4fba0aa319bdcbeb72095cde0aa3c1d2"
+    },
+    "root-original.igz": {
+      "bytes": 4988,
+      "sha256": "954d3c5b60bf4da7ba277999edb4c9fbae94e2946100a7c59065a9369f630a50"
+    },
+    "nested-annotations-original.igz": {
+      "bytes": 7639,
+      "sha256": "75c4ca94cb565654796688f6b9eb32da47f73eca24e2894ca7fd33ae901f4cbc"
+    },
+    "nested-mixed-original.igz": {
+      "bytes": 7327,
+      "sha256": "f2291af879a9936020c331aeec593d1016665865a7abd953071356d32077e3a1"
+    },
+    "native.json": {
+      "bytes": 54079,
+      "sha256": "33a019edfab7ce871407df0251451aaf4fba0aa319bdcbeb72095cde0aa3c1d2"
+    },
+    "delete-input.igz": {
+      "bytes": 7976,
+      "sha256": "cf0b59bec964e99937de58035198c16e7ddd4c380b056ffd68367cb71a206558"
+    },
+    "parked-original.igz": {
+      "bytes": 7639,
+      "sha256": "75c4ca94cb565654796688f6b9eb32da47f73eca24e2894ca7fd33ae901f4cbc"
+    },
+    "root-native.igz": {
+      "bytes": 6421,
+      "sha256": "584ce574f6cd7d2159a190d6ac11686f7edb97e46fe336d1af4b66e9c2201685"
+    },
+    "nested-annotations-native.igz": {
+      "bytes": 7640,
+      "sha256": "d4614671d4170f290195721454839810ba9d231491445b3a240c8e75aff8ca60"
+    },
+    "nested-mixed-native.igz": {
+      "bytes": 8658,
+      "sha256": "8cfbae69f1c793b07ae9559dd29476a973cd9dee58085ce649c54190cf1f090b"
+    },
+    "parked-native.igz": {
+      "bytes": 7640,
+      "sha256": "d4614671d4170f290195721454839810ba9d231491445b3a240c8e75aff8ca60"
+    },
+    "original-reopens.json": {
+      "bytes": 33832,
+      "sha256": "a63256e5e460a0821c099f85214ecf0e1ada954d2c99b802ed4aac93de352feb"
+    },
+    "logs/annotation-delete-final-focused.log": {
+      "bytes": 18676,
+      "sha256": "3796b9b61e9994fa7e791bd6f6e0c8d7f5e56208ad67855eac0e60bf5e2039ac"
+    },
+    "logs/annotation-delete-removal-reopen.log": {
+      "bytes": 63,
+      "sha256": "5ab62b1aa2d8060c9777be3789e3532ecfc7030e057aeea2ba59761d7f17b831"
+    },
+    "logs/annotation-delete-frozen-build.log": {
+      "bytes": 19313,
+      "sha256": "ad47087e94b7f1a385b93b2449432bee21e6455e2f5864408bde9adadc9f2834"
+    },
+    "logs/annotation-delete-reopen.log": {
+      "bytes": 5954,
+      "sha256": "4e49bd3e24bd816e26e0b26e81a4109b8ba5660c7282baf96d46ac8887dfc4e9"
+    },
+    "logs/annotation-delete-unchanged-leaf-old.igz": {
+      "bytes": 9088,
+      "sha256": "c7eaaae90e8cd051a8262678097d8a8899c0bd50b0fe96736de01ce2330b2ca5"
+    }
+  }
+}
