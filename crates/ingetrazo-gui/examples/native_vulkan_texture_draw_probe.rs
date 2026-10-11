@@ -105,6 +105,14 @@ pub fn main() -> Result<(), Box<dyn std::error::Error>> {
             600,
             image::ColorType::Rgba8,
         )?;
+        if name.starts_with("shaded-") {
+            let (textures,sampled)=world.texture_stats();
+            let means=usize::from(matches!(name,"shaded-opaque"|"shaded-mixed-asset"));
+            let images=usize::from(name!="shaded-opaque");
+            assert_eq!((textures.average_entries,textures.sampled_entries),(means,images),"Source shaded opaque means and translucent sampling must coexist per asset");
+            assert_eq!(sampled.uploads,images as u64,"One shared image per sampled asset");
+            assert_eq!(textures.uploads,1,"Mixed paint runs share one geometry upload");
+        }
         let before=world.texture_stats();let warm=(before.0.uploads,before.1.hashes,before.1.decodes,before.1.uploads);
         world.set_scene(&context,&scene,&camera,&style,fence,1,1)?;
         let after=world.texture_stats();assert_eq!(warm,(after.0.uploads,after.1.hashes,after.1.decodes,after.1.uploads),"Warm scene reuses actual sampled images and geometry");

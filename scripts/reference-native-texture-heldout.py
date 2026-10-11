@@ -37,6 +37,14 @@ cases=[
  ("tex-shaded-average",{"style":"shaded"}),
  ("tex-xray",{"style":"xray"}),
 ]
+if "--shaded-translucent" in sys.argv:
+ cases=[
+  ("shaded-opaque",{"style":"shaded"}),
+  ("shaded-trans-front",{"style":"shaded","opacity":.5}),
+  ("shaded-trans-front-cull",{"style":"shaded","opacity":.5,"back_color":True}),
+  ("shaded-trans-back",{"style":"shaded","color_front":True,"back_texture":True,"back_quadrants":True,"back_opacity":.3,"reverse":True}),
+  ("shaded-mixed-asset",{"style":"shaded","opacity":.5,"opaque_copy":True}),
+ ]
 for name,options in cases:
  mesh=Mesh();ring=[QVector3D(-1,-1,0),QVector3D(1,-1,0),QVector3D(1,1,0),QVector3D(-1,1,0)]
  if options.get("reverse"):ring.reverse()
@@ -51,7 +59,9 @@ for name,options in cases:
  if options.get("color_front"):face.attrs["color"]=[1.,0.,0.]
  else:face.attrs["texture"]={"path":str(root/(("alpha" if options.get("mixed") else "quadrants")+".png")),"uvw":[.5,0,0,.5,0,.5,0,.5]}
  if options.get("back_color"):face.attrs["back"]={"color":[0.,0.,1.],"opacity":options.get("back_opacity",.3)}
- if options.get("back_texture"):face.attrs["back"]={"texture":{"path":str(root/"back.png"),"uvw":[.5,0,0,.5,0,.5,0,.5]},"opacity":options.get("back_opacity",1.)}
+ if options.get("back_texture"):face.attrs["back"]={"texture":{"path":str(root/("quadrants.png" if options.get("back_quadrants") else "back.png")),"uvw":[.5,0,0,.5,0,.5,0,.5]},"opacity":options.get("back_opacity",1.)}
+ if options.get("opaque_copy"):
+  opaque=mesh.add_face([p+QVector3D(0,0,-.2) for p in ring]);opaque.attrs["texture"]=dict(face.attrs["texture"])
  if options.get("mixed") and not options.get("color_first"):add_color()
  groups=[]
  if options.get("group"):
