@@ -19,6 +19,8 @@ Latest independent rendering diagnosis: [real layout](audits/annotation-real-ope
 
 ## Dated implementation and verification evidence
 
+Merged dynamic Edge lookup (2026-10-11 UTC): fresh original and merged Rust match all 17 ordered observations, including smaller-incidence selection, detached public-list lookup, dynamic length/iteration/other callbacks and propagated errors. Five mutated outputs reject; native teardown asserts zero ledger and Vertex/Edge payloads. [Merged evidence](audits/ai-graph-find-edge-merged-root/acceptance.json). Arbitrary membership projection and production scripting remain OPEN.
+
 Actual Qt target-engine distinction (2026-10-11 UTC): independent root decoding verifies that the same original annotation methods drawn onto the exact source baseline through QImage differ from the actual widget at 3,608 pixels. Native differs from the widget at 4,891 pixels and from this raster diagnostic at 2,082. [Independent review](audits/annotation-widget-raster-target/root-review.json). The diagnostic is not a replacement oracle: actual QWidget parity remains required, and earlier QImage replay equality cannot close this gate.
 
 Metal world foundation integrated (2026-10-11 UTC): reviewed context ownership correction binds cached resources to retained device/queue/budget/poison identities and rejects foreign owners before cache work. Merged source `f87916bd` passes all three focused portable admission tests. [Root correction review](audits/metal-world-root-review/owner-correction-review.json). Direct world/depth rendering and retained UI sampling are integrated in review; native shader/GPU execution, full paint policies and production viewport activation remain OPEN.
