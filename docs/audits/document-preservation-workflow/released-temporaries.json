@@ -1,0 +1,258 @@
+{
+  "files": 36,
+  "bytes": 36130231,
+  "records": [
+    {
+      "path": "/tmp/document-preservation-workflow/differences.json",
+      "bytes": 172,
+      "sha256": "4d5c3613ce0ce8b37d63ed48668fb75694be40dc2391660d927e1a995d07349a",
+      "archive": "records.zip",
+      "record": "capture/differences.json"
+    },
+    {
+      "path": "/tmp/document-preservation-workflow/expected.json",
+      "bytes": 144164,
+      "sha256": "7934adb8d982a5547db8403de43040b1035dcb3514ec98f6b073800986b8fa72",
+      "archive": "records.zip",
+      "record": "capture/expected.json"
+    },
+    {
+      "path": "/tmp/document-preservation-workflow/nested-leaves-edited.expected.igz",
+      "bytes": 6050,
+      "sha256": "40e2b4f2ba773e2b5f41d89282cb1cd6ed07e51586b669c50cc6fb3da3c3c479",
+      "archive": "records.zip",
+      "record": "capture/nested-leaves-edited.expected.igz"
+    },
+    {
+      "path": "/tmp/document-preservation-workflow/nested-leaves-edited.native.igz",
+      "bytes": 5501,
+      "sha256": "38420350663571fa33315871f4f1f6a3da7b4f5f557be7d94de623189a6f08e7",
+      "archive": "records.zip",
+      "record": "capture/nested-leaves-edited.native.igz"
+    },
+    {
+      "path": "/tmp/document-preservation-workflow/nested-leaves-edited.python-reopen.igz",
+      "bytes": 6050,
+      "sha256": "40e2b4f2ba773e2b5f41d89282cb1cd6ed07e51586b669c50cc6fb3da3c3c479",
+      "archive": "records.zip",
+      "record": "capture/nested-leaves-edited.expected.igz"
+    },
+    {
+      "path": "/tmp/document-preservation-workflow/nested-leaves-edited.source-reopen.igz",
+      "bytes": 6050,
+      "sha256": "40e2b4f2ba773e2b5f41d89282cb1cd6ed07e51586b669c50cc6fb3da3c3c479",
+      "archive": "records.zip",
+      "record": "capture/nested-leaves-edited.expected.igz"
+    },
+    {
+      "path": "/tmp/document-preservation-workflow/nested-leaves-redo.expected.igz",
+      "bytes": 6050,
+      "sha256": "40e2b4f2ba773e2b5f41d89282cb1cd6ed07e51586b669c50cc6fb3da3c3c479",
+      "archive": "records.zip",
+      "record": "capture/nested-leaves-edited.expected.igz"
+    },
+    {
+      "path": "/tmp/document-preservation-workflow/nested-leaves-redo.native.igz",
+      "bytes": 5501,
+      "sha256": "38420350663571fa33315871f4f1f6a3da7b4f5f557be7d94de623189a6f08e7",
+      "archive": "records.zip",
+      "record": "capture/nested-leaves-edited.native.igz"
+    },
+    {
+      "path": "/tmp/document-preservation-workflow/nested-leaves-redo.python-reopen.igz",
+      "bytes": 6050,
+      "sha256": "40e2b4f2ba773e2b5f41d89282cb1cd6ed07e51586b669c50cc6fb3da3c3c479",
+      "archive": "records.zip",
+      "record": "capture/nested-leaves-edited.expected.igz"
+    },
+    {
+      "path": "/tmp/document-preservation-workflow/nested-leaves-redo.source-reopen.igz",
+      "bytes": 6050,
+      "sha256": "40e2b4f2ba773e2b5f41d89282cb1cd6ed07e51586b669c50cc6fb3da3c3c479",
+      "archive": "records.zip",
+      "record": "capture/nested-leaves-edited.expected.igz"
+    },
+    {
+      "path": "/tmp/document-preservation-workflow/nested-leaves-undo.expected.igz",
+      "bytes": 6088,
+      "sha256": "49c48f10d43f990ffe3b09e9e50469d48e41f1dc9b99814d49123b96fa18a768",
+      "archive": "records.zip",
+      "record": "capture/nested-leaves-undo.expected.igz"
+    },
+    {
+      "path": "/tmp/document-preservation-workflow/nested-leaves-undo.native.igz",
+      "bytes": 5537,
+      "sha256": "1608a0e41c3931722f56fa89783b763045163a947206db9aa2c81c25b3a009bc",
+      "archive": "records.zip",
+      "record": "capture/nested-leaves-undo.native.igz"
+    },
+    {
+      "path": "/tmp/document-preservation-workflow/nested-leaves-undo.python-reopen.igz",
+      "bytes": 6088,
+      "sha256": "49c48f10d43f990ffe3b09e9e50469d48e41f1dc9b99814d49123b96fa18a768",
+      "archive": "records.zip",
+      "record": "capture/nested-leaves-undo.expected.igz"
+    },
+    {
+      "path": "/tmp/document-preservation-workflow/nested-leaves-undo.source-reopen.igz",
+      "bytes": 6088,
+      "sha256": "49c48f10d43f990ffe3b09e9e50469d48e41f1dc9b99814d49123b96fa18a768",
+      "archive": "records.zip",
+      "record": "capture/nested-leaves-undo.expected.igz"
+    },
+    {
+      "path": "/tmp/document-preservation-workflow/nested-leaves.igz",
+      "bytes": 6088,
+      "sha256": "49c48f10d43f990ffe3b09e9e50469d48e41f1dc9b99814d49123b96fa18a768",
+      "archive": "records.zip",
+      "record": "capture/nested-leaves-undo.expected.igz"
+    },
+    {
+      "path": "/tmp/document-preservation-workflow/observed.json",
+      "bytes": 125245,
+      "sha256": "6f65628b592599a98f565fe717b2c82f3c5d66136b9640a984d67fc50a2fe142",
+      "archive": "records.zip",
+      "record": "capture/observed.json"
+    },
+    {
+      "path": "/tmp/document-preservation-workflow/retained-edited.expected.igz",
+      "bytes": 4321,
+      "sha256": "c751407737fc009d7a360a5753af9587d2842f0140b68be99fd27bc40c8aff3a",
+      "archive": "records.zip",
+      "record": "capture/retained-edited.expected.igz"
+    },
+    {
+      "path": "/tmp/document-preservation-workflow/retained-edited.native.igz",
+      "bytes": 3788,
+      "sha256": "547670f59eeed9a1151e39551955d672d8ffa1345e997fdd7f31c7a75524a065",
+      "archive": "records.zip",
+      "record": "capture/retained-edited.native.igz"
+    },
+    {
+      "path": "/tmp/document-preservation-workflow/retained-edited.python-reopen.igz",
+      "bytes": 4321,
+      "sha256": "c751407737fc009d7a360a5753af9587d2842f0140b68be99fd27bc40c8aff3a",
+      "archive": "records.zip",
+      "record": "capture/retained-edited.expected.igz"
+    },
+    {
+      "path": "/tmp/document-preservation-workflow/retained-edited.source-reopen.igz",
+      "bytes": 4321,
+      "sha256": "c751407737fc009d7a360a5753af9587d2842f0140b68be99fd27bc40c8aff3a",
+      "archive": "records.zip",
+      "record": "capture/retained-edited.expected.igz"
+    },
+    {
+      "path": "/tmp/document-preservation-workflow/retained-redo.expected.igz",
+      "bytes": 4321,
+      "sha256": "c751407737fc009d7a360a5753af9587d2842f0140b68be99fd27bc40c8aff3a",
+      "archive": "records.zip",
+      "record": "capture/retained-edited.expected.igz"
+    },
+    {
+      "path": "/tmp/document-preservation-workflow/retained-redo.native.igz",
+      "bytes": 3788,
+      "sha256": "547670f59eeed9a1151e39551955d672d8ffa1345e997fdd7f31c7a75524a065",
+      "archive": "records.zip",
+      "record": "capture/retained-edited.native.igz"
+    },
+    {
+      "path": "/tmp/document-preservation-workflow/retained-redo.python-reopen.igz",
+      "bytes": 4321,
+      "sha256": "c751407737fc009d7a360a5753af9587d2842f0140b68be99fd27bc40c8aff3a",
+      "archive": "records.zip",
+      "record": "capture/retained-edited.expected.igz"
+    },
+    {
+      "path": "/tmp/document-preservation-workflow/retained-redo.source-reopen.igz",
+      "bytes": 4321,
+      "sha256": "c751407737fc009d7a360a5753af9587d2842f0140b68be99fd27bc40c8aff3a",
+      "archive": "records.zip",
+      "record": "capture/retained-edited.expected.igz"
+    },
+    {
+      "path": "/tmp/document-preservation-workflow/retained-undo.expected.igz",
+      "bytes": 4359,
+      "sha256": "8575055bff26e1767bd3fa1d1d7d7d633a0ef91cbe327d0a814708440f2f2cb8",
+      "archive": "records.zip",
+      "record": "capture/retained-undo.expected.igz"
+    },
+    {
+      "path": "/tmp/document-preservation-workflow/retained-undo.native.igz",
+      "bytes": 3827,
+      "sha256": "af6f3d54ebd6b7f87f4b7c2950d6546cd9598b4ed2c069921b1d237d5f6080e3",
+      "archive": "records.zip",
+      "record": "capture/retained-undo.native.igz"
+    },
+    {
+      "path": "/tmp/document-preservation-workflow/retained-undo.python-reopen.igz",
+      "bytes": 4359,
+      "sha256": "8575055bff26e1767bd3fa1d1d7d7d633a0ef91cbe327d0a814708440f2f2cb8",
+      "archive": "records.zip",
+      "record": "capture/retained-undo.expected.igz"
+    },
+    {
+      "path": "/tmp/document-preservation-workflow/retained-undo.source-reopen.igz",
+      "bytes": 4359,
+      "sha256": "8575055bff26e1767bd3fa1d1d7d7d633a0ef91cbe327d0a814708440f2f2cb8",
+      "archive": "records.zip",
+      "record": "capture/retained-undo.expected.igz"
+    },
+    {
+      "path": "/tmp/document-preservation-workflow/retained.igz",
+      "bytes": 4316,
+      "sha256": "ccb223f71da070a55a82166d84d96e8d51a948184cbd418a5529b30a80d4c92f",
+      "archive": "records.zip",
+      "record": "capture/retained.igz"
+    },
+    {
+      "path": "/tmp/document-preservation-acceptance-backup.rs",
+      "bytes": 3683,
+      "sha256": "ad3f873844b986e80bb2b446b00633e7de1583d3720fb032906cdb7efd1e5176",
+      "archive": "released-extra-records.zip",
+      "record": "document-preservation-acceptance-backup.rs"
+    },
+    {
+      "path": "/tmp/document-preservation-build.log",
+      "bytes": 19636,
+      "sha256": "5a1f1f1ba354f2e8202356238e85d00b7ba0c82b8821386716e298d854d5c1aa",
+      "archive": "records.zip",
+      "record": "build.log"
+    },
+    {
+      "path": "/tmp/document-preservation-compare.log",
+      "bytes": 158,
+      "sha256": "2c6a80629b2880eb5296cb1770c5973fcbafeec3cc144fed5c8ddb5e54dc5b5d",
+      "archive": "records.zip",
+      "record": "compare.log"
+    },
+    {
+      "path": "/tmp/document-preservation-native.json",
+      "bytes": 564,
+      "sha256": "2d00f5f58921876782813eff4e6385a7e996ccbb4b68defda214e8aebd4fcce9",
+      "archive": "records.zip",
+      "record": "native.json"
+    },
+    {
+      "path": "/tmp/document-preservation-runtime.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "archive": "records.zip",
+      "record": "runtime.log"
+    },
+    {
+      "path": "/tmp/document-preservation-source.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "archive": "records.zip",
+      "record": "runtime.log"
+    },
+    {
+      "path": "/tmp/document-preservation-frozen",
+      "bytes": 35704696,
+      "sha256": "09654f5265066e778c917eb04e7def7ce0aa9386501fed050ebfdf9eb50f471a",
+      "retained_identical_binary": "/tmp/ingetrazo-skp-native-target/debug/examples/document_preservation_workflow"
+    }
+  ],
+  "policy": "Byte-equal to canonical archive or retained reusable binary before removing only terminal test copies."
+}
