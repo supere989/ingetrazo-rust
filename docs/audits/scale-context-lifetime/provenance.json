@@ -1,0 +1,20 @@
+{
+  "runtime_commit": "212fc5d6dcba97be93fedec44799c9c730d9feec",
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "source_sha256": {
+    "crates/ingetrazo-gui/examples/scale_context.rs": "e6c5972c969078d7eca8eb059579e28e11b08b2ebd51cc53b9d59ea0c36084bf",
+    "scripts/reference-scale-context.py": "c42d1563239df9f13e78da2caea9137b9cc2ca99d4905f4719cb1ccbe8235270",
+    "scripts/check-scale-context.py": "6cc315e7891fea364f4d4c09a65e679ddf7e9c37ca84a4a98ef4e8a2b8529ecb",
+    "crates/ingetrazo-gui/src/component_edit.rs": "115f96b24888fd88685e4a7e023fa4fc13fe897c4261083d98253d1dcfb86f68",
+    "crates/ingetrazo-tools/src/scale_tool.rs": "f8055b5625d83205ee7df2bee3e7f4e27906174477cad71c5f960b10c4042635",
+    "crates/ingetrazo-tools/src/scale_tool/targets.rs": "33eba2ed32a29810d984abeda601de0be0a42837048e471e1836b6b9ee62a5bf",
+    "crates/ingetrazo-gui/src/tool_history.rs": "da6d573a143089b41c9f99c66e0c24c955d2f9141f5c9ada631a3f09912bdcfd"
+  },
+  "original_sha256": {
+    "tools/scale.py": "6b696f01a44e4cb22c16f236151c79407a62f91667775aa6ae12d35f6095b564",
+    "views/viewport.py": "1fb62f55b8f559deb3676924ee69a9a444397faa28c49651111cea44e420c724",
+    "core/scene.py": "9dfcd32f1ff5b1445180eafd8df36eafb92fa08ed3597bb90eac09554899d2e0"
+  },
+  "binary_sha256": "d3a20db15759c1daa11cb2162618e008dd6c809ad56d91f959c2a51597d884f0",
+  "scope": "Actual original QWidget/Viewport context + Scale handlers; native actual app dispatch/context methods; no visible OS or renderer capture."
+}
