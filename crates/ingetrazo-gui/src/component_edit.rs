@@ -577,7 +577,13 @@ impl IngeTrazoApp {
         }
         // Retire context-bound acquisition only after every candidate passed.
         // The selected tool and current camera stay active for the document.
+        // Paste owns a separate immutable world-space preview while Select is
+        // active. Save exits world-space edit contexts without cancelling the
+        // original Paste tool, including picker cancellation and write failure.
+        // Move that owner only after all Finish candidates have been admitted.
+        let paste_preview=self.paste_preview.take();
         if preserve {self.active_tool.detach_context_preview();}else{self.set_tool(self.active_tool_type);}
+        self.paste_preview=paste_preview;
         scene.clear_selection();self.scene=scene;self.undo_stack=undo;self.redo_stack=redo;
         self.component_edit_stack.clear();self.bump_model_revision();self.sync_bim_draw_activation();true
     }
