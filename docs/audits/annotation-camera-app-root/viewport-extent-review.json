@@ -1,0 +1,30 @@
+{
+  "source_revision": "370a974f408b2eb948b998fa56c323cf49bd8b40",
+  "observed_rect": [
+    50.0,
+    60.0,
+    992.0,
+    669.6375122070312
+  ],
+  "observed_camera_aspect": 1.5451805591583252,
+  "logical_extent": [
+    942.0,
+    609.6375122070312
+  ],
+  "density_assumption": 1,
+  "derived_world_extent_at_density_one": [
+    942,
+    610
+  ],
+  "derived_physical_aspect": 1.544262295081967,
+  "source_authority": [
+    "ingetrazo/views/viewport.py:1238 resizeGL sets camera aspect and FBO from same w,h",
+    "ingetrazo/views/viewport.py:1247 _fb_size rounds logical size times DPR"
+  ],
+  "native_authority": [
+    "crates/ingetrazo-gui/src/viewport.rs:22 camera aspect from fractional logical extent",
+    "crates/ingetrazo-gui/src/native_vulkan/mod.rs:1417 World extent ceil(rect*scale)",
+    "crates/ingetrazo-gui/src/native_vulkan/annotation_viewport.rs:52 query extent ceil(rect*density)"
+  ],
+  "remaining_requirement": "One deliberate shared physical viewport extent policy for camera, world, annotations and picking; validate fractional layouts and DPI against actual original runtime. Integral controlled viewport comparisons alone cannot close this gap."
+}
