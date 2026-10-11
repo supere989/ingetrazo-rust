@@ -1,0 +1,72 @@
+{
+  "runtime_commit": "5c4d0cf9",
+  "source_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "archive": "portable-math-records.zip",
+  "archive_sha256": "af3c38f73679173ed2d734001a64db7882b7eed738bd55a3feeff442b42506f6",
+  "entries": [
+    {
+      "path": "arm087-tests.log",
+      "bytes": 32163,
+      "sha256": "7b034b6230773209160c5636148c7c5a638c02a7a3b7a2548d69a2fde8e6a9bd"
+    },
+    {
+      "path": "arm087-artifact-provenance.json",
+      "bytes": 282,
+      "sha256": "6618558559eaef597ca7de72b32f7124b52ef1dc4b4932aa91868e0c554c915e"
+    },
+    {
+      "path": "linux-libm-candidate-test.log",
+      "bytes": 13968,
+      "sha256": "318db9bbb75a385b560afbf7b8c7f911f2e9a34ed0874938cb7fc4f4875493a9"
+    },
+    {
+      "path": "linux-intermediate-test.log",
+      "bytes": 14699,
+      "sha256": "3eff94d04be0326ccdaddfba40f8eec29418a70858d0a33421c3f66cbeffc6f6"
+    },
+    {
+      "path": "linux-soft-math-test.log",
+      "bytes": 14978,
+      "sha256": "60721b96401bf0bfc92f7f055bc5b0ae6985fbccc7bb8e23c56b500be1b30ace"
+    },
+    {
+      "path": "source-lw-positive-trace.json",
+      "bytes": 528,
+      "sha256": "7119eb70ca831d299442b5f0493a5261ad0ae48de58b9e05a3b9c296f3bc5748"
+    }
+  ],
+  "sources": [
+    {
+      "path": "Cargo.lock",
+      "sha256": "0eae96a71003d88b1327eacdf3c45564aceb082a9c9ccc324471982634dea45d"
+    },
+    {
+      "path": "crates/ingetrazo-formats/Cargo.toml",
+      "sha256": "c89fc6496454e37bd8fe529006f9950d4a46b5ad8a4a3d807521b4c031479791"
+    },
+    {
+      "path": "crates/ingetrazo-formats/src/dxf_curves.rs",
+      "sha256": "928cd90f7c1421c24c59683f6a79cb00bde1eb9013c797b3f530a34ffd670fb8"
+    },
+    {
+      "path": "scripts/diagnose-dxf-curve-math.py",
+      "sha256": "6ec69c6618873b9f785830186e0ca6ef3e95e991b3cc793dd55bf81441a780dd"
+    },
+    {
+      "path": "docs/audits/dxf-curves/lw-positive-math-source.json",
+      "sha256": "7119eb70ca831d299442b5f0493a5261ad0ae48de58b9e05a3b9c296f3bc5748"
+    }
+  ],
+  "test_binary": {
+    "path": "/tmp/ingetrazo-ai-registry-target/debug/deps/ingetrazo_formats-4d3e439c1f8135df",
+    "bytes": 29694384,
+    "sha256": "dc1e987bc33b4a6feee565d95d862c6c72edd4036bf8b530014852a5f3edca5c"
+  },
+  "result": {
+    "linux_focused_tests": 5,
+    "frozen_curve_paths": 12,
+    "frozen_spline_paths": 15,
+    "portable_intermediate_fields_exact": true
+  },
+  "scope": "Actual ARM087 failure retained; correctedARM execution remainspending. No tolerance/snapping/originaledit/CIretry. Source-onlycoldcurve numerichelpers changed; existingSPLINEAppconsumer binary/proof remainsseparateunchanged."
+}

@@ -9,3 +9,9 @@ SPLINE rational/knot/periodic path construction and INSERT/MINSERT remain separa
 ## Frozen result
 
 Runtime `0e1d475b`, checker/reader `be845e39`: onecontextconsumerbuild7.10s andtwoaffectedformatstestbuild5.51s PASS. Independent source-point equality covers every emitted Qt point for all12recipes. Actual App84fullstates match,12original-readerreopens match geometry/schema/curve-ownerinventories,36mutationsreject,3nativeCancel/malformed/f64opaqueguards PASS. The acceptedstraight56states/8reopens remainexact onthisbinary. SHA256 `2eec0f70c24ab641bbc3dfd8aa8b697e8427b24afaa531f0f86726035424e788`. No Rust rebuild after checker-only curve-owner strengthening; actualreader rerun only. `records.zip` pins nativeoutputs, focusedlogs andstraightaffectedJSON; source12recipes capturedonce after retained initialobserver failure.
+
+## ARM087 failure and deterministic math correction
+
+ActualARM087 `lw-positive` finalbulge y was-3.3306690738754696e-16 against frozenLinux source-1.1102230246251565e-16. Failurelog is byte-authenticated fromoriginal CIartifact inportable-mathrecords. `5c4d0cf9` changesonly curveconstruction trig/atan/hypot toalreadylockedlibm0.2.16 withforce-soft-floats; thisoverridesarch/intrinsic choices evenunderCargo featureunification. No point snapping/tolerance orauthored-data change. Coldimport arithmeticonly; no per-framehook orownercloneadded.
+
+All12frozencurvepaths and15splinepaths remainexact onLinux;5focusedtestsPASS. Sourcepositivebulge constructortrace andportableintermediate fields match, includingliteral yresidue. Diagnostic alsoemits currentplatform-math intermediates separately with --nocapture forattribution. ActualcorrectedARM execution remainspending; noCIretry launched. ExistingSPLINEAppbinary wasnotrebuilt afterthismathchange, anditsfrozenproofremainstiedto7fff975c.
