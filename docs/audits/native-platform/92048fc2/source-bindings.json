@@ -1,0 +1,25 @@
+{
+  "commit": "92048fc2196c4b9229f6a14bc1a2870400f6df09",
+  "files": {
+    ".github/workflows/parity.yml": {
+      "bytes": 52807,
+      "sha256": "b83ea6ff0e6d8e98986178a3b79b9a0a01518d9b831791570b6ab7da2d9df622"
+    },
+    ".github/workflows/metal-compute-consumer.yml": {
+      "bytes": 4532,
+      "sha256": "bce24078146f16afab7cd9998386a03a0aa2b69c0a6954bfc517b009c452efb9"
+    },
+    "scripts/check-document-axes-integration.py": {
+      "bytes": 19887,
+      "sha256": "7cd203f56d23042165a37001860f4ccfa1825549e2c8ccae61eab95180c81373"
+    },
+    "crates/ingetrazo-gui/examples/annotation_text_create_fixture.rs": {
+      "bytes": 8249,
+      "sha256": "3091f94dbcdb0b16d0b8861c4bf6a4785379a698810194dc042e14e0b60fa090"
+    },
+    "crates/ingetrazo-gui/src/component_edit.rs": {
+      "bytes": 66887,
+      "sha256": "578e02d8da257f5eea0ec63fb048513a2b477baf52fec526924dcfa3c2a97cde"
+    }
+  }
+}
