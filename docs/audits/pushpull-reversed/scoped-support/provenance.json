@@ -1,0 +1,24 @@
+{
+  "runtime": "ca2207402d2f1186730c1df9b74ec1bd010cb473",
+  "prerequisite_runtime": "db16cb0e",
+  "source_capture_sha256": "402edd6f64504cb55ce7c2e75ac861277fe1f8380518a6213ebf9e34407d3f26",
+  "source_sha256": {
+    "crates/ingetrazo-tools/src/pushpull.rs": "1cf63543a929f5b1e6189967bbb96b4ae6c0c011e698d91a591fea38d5d73b9c",
+    "crates/ingetrazo-tools/src/base.rs": "d0cd16de8553dc61c95752ade769a4c5cf04ec2388cba41905135350dbad5417",
+    "crates/ingetrazo-tools/src/pushpull/inward_limit.rs": "b8937883b0ced1ad955574200b480eae474e25e3babbc33b1fe0c0172b828c92",
+    "crates/ingetrazo-tools/tests/pushpull_history_identity.rs": "a294ff6239979802cf5996bfab0c2d3785ccfd0d8a9267b5042ccbcf0efd9521"
+  },
+  "binary_sha256": {
+    "pushpull_reversed": "4c2aae18d03e39f12a60f2e45a41f992c6afc87330e46053fcc07b18f190cb41",
+    "pushpull_inward_limits": "c3718393b973cc817bb5aa662bc974680cdff03e3a72dd24e5d4f57258164152"
+  },
+  "artifacts_sha256": {
+    "build.log": "a7b2ef43fde1ca4d74b1689767d452804cfea85f156d7e0eda542957ba04f0c6",
+    "native.json": "f0b9ddd6a0747cf7d0b8336b74a1b17d8105db9def16992ecc4bc449cab74316",
+    "comparison.json": "5acf6ad5d5b348a9ea3affbc21c4cbcf79da87ddccce3381bcb35e67f46250e6",
+    "affected-inward-native.json": "cecf930860b89a481b4c61422b695764f8eb9859c3483e17d04aa7c07be5a524",
+    "affected-inward-comparison.json": "e8640b5d607f7c296084ed3eba96abed859932b2963a70e199ae10168b6a2cb3",
+    "identity-tests.log": "afe8100e8a4b33cd76189aa8709b6083bb618f843f11dd73fedd20ce4c8823a0",
+    "README.md": "2dcf4fec00c0e1d3221cf31724fec198ed4de5fec7897713d9d18015b52e9b40"
+  }
+}
