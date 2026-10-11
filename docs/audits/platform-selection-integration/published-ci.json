@@ -1,0 +1,22 @@
+{
+  "published_runtime": "ddda1ee2b7d616cbe6756486f20977186fdc1ceb",
+  "runs": [
+    {
+      "id": 38150988828,
+      "name": "Rust and semantic acceptance",
+      "url": "https://github.com/supere989/ingetrazo-rust/actions/runs/38150988828",
+      "head_sha": "ddda1ee2b7d616cbe6756486f20977186fdc1ceb",
+      "status": "in_progress",
+      "conclusion": null
+    },
+    {
+      "id": 38150988832,
+      "name": "Isolated native Metal ordered compute consumer",
+      "url": "https://github.com/supere989/ingetrazo-rust/actions/runs/38150988832",
+      "head_sha": "ddda1ee2b7d616cbe6756486f20977186fdc1ceb",
+      "status": "in_progress",
+      "conclusion": null
+    }
+  ],
+  "acceptance": "In progress; no Apple GPU completion claim"
+}
