@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 """Actual pinned original import and Viewport, matched native viewport camera."""
-import sys,os,json,time,hashlib,subprocess
+import sys,os,json,time,hashlib,subprocess,ast
 from pathlib import Path
 source,parser,skp,capture,out=map(Path,sys.argv[1:6]);out.mkdir(parents=True,exist_ok=False)
 assert subprocess.check_output(['git','-C',str(source),'rev-parse','HEAD'],text=True).strip()=='6be29fe437a7cd992d4e079f71720821b25216b9'
 assert subprocess.check_output(['git','-C',str(parser),'rev-parse','HEAD'],text=True).strip()=='291700bc213655a00461838de71e5f206311e619'
 sys.path[:0]=[str(parser/'packages/python/src'),str(source)]
 from PySide6.QtCore import QObject,QEvent,Qt
-from PySide6.QtGui import QSurfaceFormat,QVector3D
+from PySide6.QtGui import QSurfaceFormat,QVector3D,QPainter,QFontInfo,QImage
 from PySide6.QtWidgets import QApplication
 fmt=QSurfaceFormat();fmt.setVersion(3,3);fmt.setProfile(QSurfaceFormat.CoreProfile);fmt.setDepthBufferSize(24);fmt.setStencilBufferSize(8);fmt.setSamples(4);QSurfaceFormat.setDefaultFormat(fmt)
 app=QApplication([])
@@ -34,6 +34,24 @@ class InputObserver(QObject):
    else:row['overflow']=True;input_events[-1]=row
   return False
 observer=InputObserver();app.installEventFilter(observer)
+# Post-capture diagnostic uses the existing recorder and original bound methods.
+# It never changes the accepted framebuffer or source tree.
+recorder_path=Path(__file__).with_name('reference-native-annotations.py')
+recorder_tree=ast.parse(recorder_path.read_text());recorder_nodes=[n for n in recorder_tree.body if(isinstance(n,ast.FunctionDef)and n.name=='point')or(isinstance(n,ast.ClassDef)and n.name=='Painter')]
+recorder_namespace=dict(QPainter=QPainter,QFontInfo=QFontInfo)
+exec(compile(ast.fix_missing_locations(ast.Module(body=recorder_nodes,type_ignores=[])),str(recorder_path),'exec'),recorder_namespace)
+Recorder=recorder_namespace['Painter']
+def operations(name):
+ queries=[];original_occlusion=vp._occluded_on_screen
+ def observed(point):
+  value=original_occlusion(point);queries.append(dict(world=list(point.toTuple()),occluded=value));return value
+ vp._occluded_on_screen=observed
+ try:
+  target=QImage(800,600,QImage.Format_ARGB32_Premultiplied);target.fill(0);painter=Recorder(target);vp._draw_dimensions(painter);vp._draw_text_labels(painter);actual_ops=painter.ops;metrics=painter.metrics;painter.end()
+  vp._occluded_on_screen=lambda point:False
+  target=QImage(800,600,QImage.Format_ARGB32_Premultiplied);target.fill(0);painter=Recorder(target);vp._draw_dimensions(painter);vp._draw_text_labels(painter);visible_ops=painter.ops;painter.end()
+ finally:vp._occluded_on_screen=original_occlusion
+ (out/(name+'-operations.json')).write_text(json.dumps(dict(scope='post-capture original bound methods; actual retained-depth decisions and separate all-visible layout diagnostic; accepted framebuffer unchanged',actual_operations=actual_ops,all_visible_operations=visible_ops,font_metrics=metrics,visibility_queries=queries,style=scene.dimension_style,dimensions=[d.to_dict()for d in scene.dimensions],leaders=[d.to_dict()for d in scene.text_labels]),indent=2)+'\n')
 initial_navigation={key:repr(getattr(vp,key,None))for key in['_last_pos','_look_drag','nav_mode','_pan_mode','_orbit_pivot']};vp.show();rows=[]
 def take(name):
  before=getattr(vp,'_depth_snap',None);started=time.monotonic();vp.update();deadline=started+4
@@ -53,6 +71,7 @@ def take(name):
  snap=vp._depth_snap
  if name!='annotations-off'and state['dimensions']+state['leaders']>0:assert snap is not None and snap[3:5]==(800,600)
  else:assert snap is None
+ operations(name)
  rows.append(dict(name=name,gl=dict(vp.gl_info),camera_snapshot=actual,depth_snapshot_shape=list(snap[0].shape)if snap is not None else None,image_sha256=hashlib.sha256((out/(name+'.png')).read_bytes()).hexdigest()))
 take('annotations-on');dimensions,labels=scene.dimensions,scene.text_labels;scene.dimensions=[];scene.text_labels=[];take('annotations-off');scene.dimensions=dimensions;scene.text_labels=labels;take('annotations-restored')
 vp.close();vp.deleteLater();app.processEvents()
