@@ -6,73 +6,60 @@
     "bytes": 20763,
     "sha256": "c6a8c49db3216b4a1f6e36d8efd0504058bc52078ac5f2b2433f1dd9a5e4e12c"
   },
-  "records": [
-    {
-      "path": "original.json",
+  "records": {
+    "original.json": {
       "bytes": 16506,
       "sha256": "f40e099acdf8a0f70a446daaf07b879eef75caa05fda484beb1db83288218cff"
     },
-    {
-      "path": "original.log",
+    "original.log": {
       "bytes": 294,
       "sha256": "54b6044a45e875c5dce58e02d593b2792b9ef0ea4df9ac19514774b0a73e5cd1"
     },
-    {
-      "path": "native.json",
+    "native.json": {
       "bytes": 8493,
       "sha256": "2570951dc4f34ebcf253739bd69fd68d2f04bc8696d08f61fd300bfc444931b1"
     },
-    {
-      "path": "restored-native.json",
+    "restored-native.json": {
       "bytes": 8493,
       "sha256": "2570951dc4f34ebcf253739bd69fd68d2f04bc8696d08f61fd300bfc444931b1"
     },
-    {
-      "path": "old-dispatch-native.json",
+    "old-dispatch-native.json": {
       "bytes": 7162,
       "sha256": "72200a8f1c91cf67db51d1d56af5f0a2819a02885337c95d5565a75617799929"
     },
-    {
-      "path": "old-dispatch-check.log",
+    "old-dispatch-check.log": {
       "bytes": 729,
       "sha256": "b804050acc56105a9f8472a56701de1f708797997019534f198b7a79eda85ad9"
     },
-    {
-      "path": "core-tests.log",
+    "core-tests.log": {
       "bytes": 2412,
       "sha256": "87b2a6c42720a39256a2a4963252812fc55665f929dccb1f5468952b44e2e82f"
     },
-    {
-      "path": "gui-tests.log",
+    "gui-tests.log": {
       "bytes": 18804,
       "sha256": "821ab2c4650b51769a800a18b363b88f2d88ab30762ca30632d32925fdb6b0ac"
     },
-    {
-      "path": "final-build.log",
+    "final-build.log": {
       "bytes": 19308,
       "sha256": "dee625cbb40b1af3b3db9c9c1dded3bd34db35bf30dda3b37f06ffe75e1cb55d"
     },
-    {
-      "path": "initial-build.log",
+    "initial-build.log": {
       "bytes": 19672,
       "sha256": "aa77018b764e7ed06378edd6eb5d266acf65118bf3ad747237e132375e766832"
     },
-    {
-      "path": "old-dispatch-build.log",
+    "old-dispatch-build.log": {
       "bytes": 23100,
       "sha256": "c27565e201bfe57eb0356acd3fc8af34a5863d803e35d0fb02b4cec531ebc4d0"
     },
-    {
-      "path": "check.json",
+    "check.json": {
       "bytes": 104,
       "sha256": "179b945762002096d21405412262661a3a3d75384ed1dd8cb92c3028545b5e02"
     },
-    {
-      "path": "restored-check.json",
+    "restored-check.json": {
       "bytes": 104,
       "sha256": "179b945762002096d21405412262661a3a3d75384ed1dd8cb92c3028545b5e02"
     }
-  ],
+  },
   "binaries": [
     {
       "path": "/tmp/cursor-navigation-corrected-frozen",
@@ -96,5 +83,6 @@
   "old_dispatch_source": {
     "revision": "a70c5488129833218aec42d507b5387af3dfdb3e",
     "sha256": "992bb130c28ab2669847e7968308d767334458aafde197b911ebb3706dc149bd"
-  }
+  },
+  "archive_sha256": "c6a8c49db3216b4a1f6e36d8efd0504058bc52078ac5f2b2433f1dd9a5e4e12c"
 }
