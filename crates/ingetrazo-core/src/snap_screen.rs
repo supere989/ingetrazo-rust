@@ -890,7 +890,7 @@ mod tests {
     }
     #[test]
     fn native_double_projection_retains_original_matrix_under_source_policy(){
-        let viewport=PixelViewport{matrix:DMat4::from_translation(DVec3::new(-1e12,0.,0.5)),width:1000.,height:800.};
+        let viewport=PixelViewport{matrix:glam::DMat4::from_translation(DVec3::new(-1e12,0.,0.5)),width:1000.,height:800.};
         let p=DVec3::new(1e12+0.125,0.,0.);let ctx=ScreenSnapContext{viewport,cursor:DVec2::ZERO,candidate:p,plane_normal:DVec3::Z};
         let projected=ProjectedContext{ctx:&ctx,source:Some(viewport.matrix.as_mat4())};
         assert_eq!(projected.project(p),viewport.project_for_snapping(p));
