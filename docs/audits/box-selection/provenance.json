@@ -1,0 +1,35 @@
+{
+  "runtime_commit": "fb64817771f541074c67dd0fa6c682e3fffaf988",
+  "base": "2fe2b44d",
+  "binary_sha256": "ff05baf982035726633d1dc18f100f655775f470ed98e47094186b3ed5333ae1",
+  "runtime_files": {
+    "crates/ingetrazo-core/src/guides.rs": "bd825334ed278cabe6ba98b2876666fbd52162ce0411a0edf0ac3ab4af74c1b0",
+    "crates/ingetrazo-core/src/scene.rs": "715352aa42feae97636d375bbc1f25eeb022a875dc753c84a3c63452898d4b29",
+    "crates/ingetrazo-formats/src/igz.rs": "76c1d14c1b6fe9348d3cf8e4bcaee3ee6d4d696188099661613fb7a9ef818da3",
+    "crates/ingetrazo-gui/examples/box_selection_fixture.rs": "14fe4cf759f9f2287085106589307c0cb719a58ae8aa8316e78703bdf7b9c831",
+    "crates/ingetrazo-gui/src/app.rs": "2b2f8f743b225643168ff835944e1c19a1a55713b3aca60727e436b6b21510f7",
+    "crates/ingetrazo-gui/src/box_selection.rs": "26360644ff2e01ee42bae7f07d699f243d7d52ade3354e7375ce756955b75c8a",
+    "crates/ingetrazo-gui/src/lib.rs": "2937d13261fc6da4b3c572c6a154b28cf7557825a3f7080d795e99cde7c9e0b7",
+    "crates/ingetrazo-gui/src/tool_history.rs": "e455d10bf6dfec0826e1fd255e944647dfa40127ee78461103277eeed3a8f3be",
+    "crates/ingetrazo-gui/src/tray.rs": "804b3ed15b644d6e16063a6725edbc8194ac1dc9d9ae2f006bb3a0435df88bc8",
+    "crates/ingetrazo-gui/src/viewport.rs": "71cf92930016fdb376a0f37401837c795be49a34f77e94f4e7fe79d2f579f386",
+    "crates/ingetrazo-render/src/selection.rs": "6a9640cfa700d7d7331e32690cba4c31e5dcfd888d41e22b782e953ffe042cb1",
+    "crates/ingetrazo-tools/src/base.rs": "55d59a49966e8419450a2d0d496d1a9b88306f8ea66256b8ddd6eb5b8c5562cb",
+    "crates/ingetrazo-tools/src/move_tool.rs": "d38580b6c74e740b357ce3a8567dd7728f60cb3b6a3714d0cb90f50004178715",
+    "crates/ingetrazo-tools/src/rotate_tool.rs": "4e84510fca7b03a88a0a5fe0dbb59d016c8a9699f427975e7dc0c7ecddde2292",
+    "crates/ingetrazo-tools/src/select.rs": "c07cbd92a61f0bceb15ad9e73d5ec51718c6bfb55fc2723070a5b830583b4c42",
+    "scripts/check-box-selection.py": "181306b753f83d2dc1217a346c79ba21b0b4c38b751831891f8d4ccd607d0f79",
+    "scripts/reference-box-guides.py": "2e913eb0b5297926b7dff111189aa355dccf0a7c23bda421d201da77ade3bb94",
+    "scripts/reference-box-orphan.py": "f331fff7f2ff351a0b201b4ef84976d1bfec2eccf7a821126ac7261752b5c7a8",
+    "scripts/reference-box-selection.py": "dd82291e06d84dac179351d0c556b6914b32114be17abb920deff87358787d47"
+  },
+  "original_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "original_files": {
+    "tools/select.py": "baa33a660666cbc78a25ca291e0b40a4b2bd88755393ebce08295e1de6327916",
+    "views/viewport.py": "1fb62f55b8f559deb3676924ee69a9a444397faa28c49651111cea44e420c724",
+    "core/guide.py": "a95d0ec873c58c34bd14e23c5e34d56d14bc38cdcd0b0008678be7eb2966d4f6",
+    "core/scene.py": "9dfcd32f1ff5b1445180eafd8df36eafb92fa08ed3597bb90eac09554899d2e0",
+    "core/layers.py": "21d31c9aa1b4bfe0c9437a1a7a83a8212b4d34f38ad3c2b1b3a6b1a7ee4c835b",
+    "formats/igz.py": "f318d685830c49c2fede7fd5a238ac7a1469ee0b0226cf48cab3751e194a9576"
+  }
+}
