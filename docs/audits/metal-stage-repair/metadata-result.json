@@ -1,0 +1,7 @@
+{
+  "source_head": "00d2c74b15d6ec9a29928e64ac262d69935eede9",
+  "command": "scripts/check-metal-gui-metadata.sh aarch64-apple-darwin",
+  "duration_seconds": 1.943060207995586,
+  "exit_code": 0,
+  "scope": "Rust metadata for actual GUI section, billboard and annotation examples. Cargo links overrides skip checked-in sys crate C builds. No SDK, native linking, shader or GPU acceptance."
+}
