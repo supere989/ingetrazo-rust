@@ -80,6 +80,7 @@ impl IngeTrazoApp {
             self.scene.display_style = d;
             self.scene.shadows = s;
             self.scene.bump_view_version();
+            self.bump_render_style_revision();
         }
     }
     pub(crate) fn apply_document_presentation(&mut self) {
@@ -114,6 +115,7 @@ impl IngeTrazoApp {
             self.scene.display_style = style;
             self.apply_document_presentation();
             self.scene.bump_view_version();
+            self.bump_render_style_revision();
         }
     }
     pub fn set_shadow_settings(&mut self, settings: ShadowSettings) {
@@ -121,6 +123,7 @@ impl IngeTrazoApp {
             self.scene.shadows = settings;
             self.apply_document_presentation();
             self.scene.bump_view_version();
+            self.bump_render_style_revision();
         }
     }
 }

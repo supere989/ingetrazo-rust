@@ -158,3 +158,5 @@ pub mod source_texture_average;
 pub mod source_texture_decode;
 
 pub mod qt_line;
+
+pub mod scene_revision;

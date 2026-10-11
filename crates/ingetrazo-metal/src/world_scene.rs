@@ -10,14 +10,7 @@ use ingetrazo_render::{
 use std::sync::Arc;
 const MAX_BYTES: usize = 8 * 1024 * 1024;
 const MAX_DEPTH: usize = 128;
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub struct Revisions {
-    pub geometry: u64,
-    pub paint: u64,
-    pub style: u64,
-    pub layers: u64,
-    pub topology: u64,
-}
+pub use ingetrazo_render::scene_revision::Revisions;
 #[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord)]
 struct Signature {
     identity: u128,
@@ -607,8 +600,12 @@ pub struct Adapter {
     pub(crate) current: Vec<Pose>,
     pub(crate) scratch: Vec<Pose>,
     pub catalog_builds: u64,
+    accepted_pose_revision: Option<u64>,
 }
 impl Adapter {
+    fn needs_model_refresh(&self,cold:bool,revision:Option<u64>)->bool {
+        cold || revision.is_none() || self.accepted_pose_revision != revision
+    }
     pub fn retained_payload_bytes(&self) -> usize {
         self.catalog
             .as_ref()
@@ -628,6 +625,23 @@ impl crate::world::World {
         adapter: &mut Adapter,
         scene: &Scene,
         revisions: Revisions,
+        camera: &OrbitCamera,
+        style: &StyleConfig,
+        camera_matrix: [[f32; 4]; 4],
+        extent: (u32, u32),
+    ) -> Result<Option<Arc<crate::world::Prepared>>, String> {
+        self.prepare_scene_placements_revisioned(metal,adapter,scene,revisions,None,camera,style,camera_matrix,extent)
+    }
+
+    /// Revision-aware host entry. None preserves legacy always-refresh behavior.
+    /// Some requires an authoritative pose epoch, separate from camera changes.
+    pub fn prepare_scene_placements_revisioned(
+        &mut self,
+        metal: &crate::NativeMetal,
+        adapter: &mut Adapter,
+        scene: &Scene,
+        revisions: Revisions,
+        pose_revision: Option<u64>,
         camera: &OrbitCamera,
         style: &StyleConfig,
         camera_matrix: [[f32; 4]; 4],
@@ -663,7 +677,8 @@ impl crate::world::World {
             None
         };
         let catalog = candidate.as_ref().or(adapter.catalog.as_ref()).unwrap();
-        catalog.refresh_models(scene, revisions, &mut adapter.scratch)?;
+        let refresh = adapter.needs_model_refresh(cold,pose_revision);
+        if refresh { catalog.refresh_models(scene, revisions, &mut adapter.scratch)?; }
         // Seed both pose Vec capacities during cold preparation. First camera
         // motion must not allocate a second buffer. Keep growth unpublished.
         let mut candidate_current = if catalog.packet.placement_count() > adapter.current.capacity()
@@ -683,7 +698,7 @@ impl crate::world::World {
         let frame = self.prepare_placements_with_camera(
             metal,
             catalog.packet.clone(),
-            &adapter.scratch,
+            if refresh { &adapter.scratch } else { &adapter.current },
             camera_matrix,
             extent,
             style.background_color.map(f64::from),
@@ -702,8 +717,24 @@ impl crate::world::World {
             if let Some(poses) = candidate_current.take() {
                 adapter.current = poses;
             }
-            std::mem::swap(&mut adapter.current, &mut adapter.scratch);
+            if refresh { std::mem::swap(&mut adapter.current, &mut adapter.scratch); }
+            adapter.accepted_pose_revision = pose_revision;
         }
         Ok(frame)
+    }
+}
+
+#[cfg(test)] mod pose_revision_tests {
+    use super::*;
+    #[test] fn only_accepted_pose_epoch_reuses_models() {
+        let mut adapter=Adapter::default();
+        assert!(adapter.needs_model_refresh(false,Some(0)));
+        adapter.accepted_pose_revision=Some(0);
+        assert!(!adapter.needs_model_refresh(false,Some(0)));
+        assert!(adapter.needs_model_refresh(false,Some(1)));
+        assert!(adapter.needs_model_refresh(true,Some(0)));
+        assert!(adapter.needs_model_refresh(false,None));
+        // A refused candidate must not publish its proposed epoch.
+        assert_eq!(adapter.accepted_pose_revision,Some(0));
     }
 }

@@ -21,6 +21,26 @@ fn changed_model(before: &Scene, after: &Scene) -> bool {
         || before.sheets != after.sheets
 }
 
+// Cold commit comparison reuses the existing history snapshot. No Scene clone,
+// geometry equality walk, or registry scan is added to pointer-move handling.
+fn same_group_static(a:&ingetrazo_core::groups::Group,b:&ingetrazo_core::groups::Group)->bool {
+    a.id==b.id && a.mesh_share==b.mesh_share && a.component_definition==b.component_definition
+    && a.definition_member==b.definition_member && a.mesh==b.mesh && a.name==b.name
+    && a.native_document==b.native_document && a.native_baseline==b.native_baseline
+    && a.layer==b.layer && a.hidden==b.hidden && a.ifc_tag==b.ifc_tag
+    && a.billboard==b.billboard && a.billboard_texture==b.billboard_texture
+    && a.children.len()==b.children.len() && a.children.iter().zip(&b.children).all(|(a,b)|same_group_static(a,b))
+}
+fn only_group_poses(before:&Scene,after:&Scene)->bool {
+    before.groups!=after.groups && before.groups.len()==after.groups.len()
+    && before.groups.iter().zip(&after.groups).all(|(a,b)|same_group_static(a,b))
+    && before.image_planes==after.image_planes && before.mesh==after.mesh
+    && before.component_definitions==after.component_definitions && before.mesh_shares==after.mesh_shares
+    && before.dimensions==after.dimensions && before.guides==after.guides && before.section_planes==after.section_planes
+    && before.geo_points==after.geo_points && before.geo_paths==after.geo_paths && before.terrain==after.terrain
+    && before.materials==after.materials && before.layers==after.layers && before.text_labels==after.text_labels && before.sheets==after.sheets
+}
+
 impl IngeTrazoApp {
     fn tool_snapshot(&self) -> Scene {
         let mut before = self.scene.clone();
@@ -43,7 +63,7 @@ impl IngeTrazoApp {
         if committed {
             self.seal_view_history_before(&before);self.seal_terrain_history_before(&before);self.seal_layer_history_before(&before);self.seal_image_history_before(&before);
             if let Some(command)=image_command{let mut delta=ingetrazo_core::image_plane::ImageDelta::between(&before.image_planes,&self.scene.image_planes);delta.frame_command=Some((command,false));before.history_images.0=Some(delta);}
-            self.bump_model_revision();
+            if only_group_poses(&before,&self.scene){self.bump_placement_revision();}else{self.bump_model_revision();}
             if !self.active_tool.take_history_replacement()||self.undo_stack.is_empty(){self.undo_stack.push(before);}
             self.active_tool.note_history_revision(self.model_revision,true);
             self.redo_stack.clear();
@@ -56,16 +76,16 @@ impl IngeTrazoApp {
     }
 
     pub fn dispatch_tool_control_state(&mut self,held:bool){
-        let version=self.scene.version;let images=self.scene.image_planes.publication_revision();self.active_tool.on_control_state(&mut self.scene,held);
-        if self.scene.version!=version{self.bump_model_revision();}else if self.scene.image_planes.publication_revision()!=images{self.bump_image_presentation_revision();}
+        let placement_before=self.active_tool.placement_preview().is_some();let version=self.scene.version;let images=self.scene.image_planes.publication_revision();self.active_tool.on_control_state(&mut self.scene,held);
+        if self.scene.version!=version{if placement_before||self.active_tool.placement_preview().is_some(){self.bump_placement_revision();}else{self.bump_model_revision();}}else if self.scene.image_planes.publication_revision()!=images{self.bump_image_presentation_revision();}
     }
     pub fn dispatch_tool_cancel(&mut self){
-        let version=self.scene.version;let images=self.scene.image_planes.publication_revision();self.active_tool.on_cancel(&mut self.scene);
-        if self.scene.version!=version{self.bump_model_revision();}else if self.scene.image_planes.publication_revision()!=images{self.bump_image_presentation_revision();}
+        let placement_before=self.active_tool.placement_preview().is_some();let version=self.scene.version;let images=self.scene.image_planes.publication_revision();self.active_tool.on_cancel(&mut self.scene);
+        if self.scene.version!=version{if placement_before||self.active_tool.placement_preview().is_some(){self.bump_placement_revision();}else{self.bump_model_revision();}}else if self.scene.image_planes.publication_revision()!=images{self.bump_image_presentation_revision();}
     }
     pub fn dispatch_tool_move(&mut self,context:&ToolContext){
-        let version=self.scene.version;let images=self.scene.image_planes.publication_revision();self.active_tool.on_move(&mut self.scene,context);
-        if self.scene.version!=version{self.bump_model_revision();}else if self.scene.image_planes.publication_revision()!=images{self.bump_image_presentation_revision();}
+        let placement_before=self.active_tool.placement_preview().is_some();let version=self.scene.version;let images=self.scene.image_planes.publication_revision();self.active_tool.on_move(&mut self.scene,context);
+        if self.scene.version!=version{if placement_before||self.active_tool.placement_preview().is_some(){self.bump_placement_revision();}else{self.bump_model_revision();}}else if self.scene.image_planes.publication_revision()!=images{self.bump_image_presentation_revision();}
     }
 
     pub fn dispatch_tool_click(&mut self, context: &ToolContext) {
@@ -147,6 +167,47 @@ mod tests {
         )
     }
 
+    #[test]
+    fn presentation_and_layer_callers_advance_only_their_static_domains(){
+        let mut app=app();app.add_layer("visible".into());let initial=app.native_render_revisions;
+        app.change_layer_visibility(1,false);assert_eq!(app.native_render_revisions.static_domains.geometry,initial.static_domains.geometry);
+        assert!(app.native_render_revisions.static_domains.layers>initial.static_domains.layers);
+        let before=app.native_render_revisions;let history_identity=app.model_revision;app.style.show_edges=!app.style.show_edges;app.sync_document_presentation();
+        assert!(app.native_render_revisions.static_domains.style>before.static_domains.style);
+        assert_eq!(app.model_revision,history_identity,"presentation must not retire array history");
+        assert_eq!(app.native_render_revisions.static_domains.geometry,before.static_domains.geometry);
+        let unchanged=app.native_render_revisions;app.sync_document_presentation();assert_eq!(app.native_render_revisions,unchanged);
+    }
+    #[test]
+    fn committed_group_transform_classification_rejects_paint_topology_and_mesh_changes(){
+        let mut before=Scene::new();before.groups.push(ingetrazo_core::groups::Group::new("group"));
+        let mut after=before.clone();after.groups[0].transform=glam::DMat4::from_translation(DVec3::X);
+        assert!(only_group_poses(&before,&after));
+        after.groups[0].native_document=serde_json::json!({"material":{"color":[1,0,0]}});
+        assert!(!only_group_poses(&before,&after));after.groups[0].native_document=serde_json::Value::Null;
+        after.groups[0].mesh.add_vertex(DVec3::ZERO);assert!(!only_group_poses(&before,&after));
+        after=before.clone();after.groups.push(after.groups[0].duplicate_instance());assert!(!only_group_poses(&before,&after));
+    }
+    #[test]
+    fn group_move_preview_preserves_static_domains_and_invalidates_legacy_world() {
+        let mut app=app();let mesh=std::mem::take(&mut app.scene.mesh);
+        app.scene.groups.push(ingetrazo_core::groups::Group::with_mesh("placed",mesh));
+        app.scene.select(SelectionItem::Group(0));app.set_tool(ToolType::Move);
+        app.dispatch_tool_click(&context(0.));
+        let domains=app.native_render_revisions.static_domains;
+        let poses=app.native_render_revisions.poses;let legacy=app.native_geometry_revision;let model=app.model_revision;
+        app.dispatch_tool_move(&context(1.));
+        assert_eq!(app.native_render_revisions.static_domains,domains);
+        assert!(app.native_render_revisions.poses>poses);
+        assert!(app.native_geometry_revision>legacy);assert!(app.model_revision>model);
+        let unchanged=app.native_render_revisions;app.dispatch_tool_move(&context(1.));
+        assert_eq!(app.native_render_revisions,unchanged);
+        app.dispatch_tool_cancel();assert_eq!(app.native_render_revisions.static_domains,domains);
+        assert!(app.native_render_revisions.poses>unchanged.poses);
+        assert_eq!(app.scene.groups[0].transform,glam::DMat4::IDENTITY);
+        // Unknown replacement is deliberately conservative, even with same Scene.version.
+        app.bump_model_revision();assert_ne!(app.native_render_revisions.static_domains,domains);
+    }
     #[test]fn history_replacement_retires_move_targets_and_redo_preserves_original_geometry(){
         let mut app=app();let original=app.scene.clone();app.undo_stack.push(Scene::new());app.set_tool(ToolType::Move);app.scene.select(SelectionItem::Face(0));app.dispatch_tool_click(&context(0.));app.dispatch_tool_move(&context(1.));
         assert_ne!(app.scene.mesh,original.mesh);app.undo();assert!(app.scene.mesh.faces.is_empty());assert!(app.active_tool.snap_anchor().is_none());
