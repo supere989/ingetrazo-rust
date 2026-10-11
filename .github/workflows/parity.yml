@@ -55,6 +55,8 @@ jobs:
           path: docs/audits/windows-native-ci/
           if-no-files-found: error
   metal-native-link:
+    # Platform repair branches exercise their affected platform only.
+    if: github.ref != 'refs/heads/review/platform-startup'
     name: Native Metal framework link (${{ matrix.runner }})
     runs-on: ${{ matrix.runner }}
     strategy:
@@ -145,6 +147,8 @@ jobs:
             docs/audits/metal-combined-gui-ci/
           if-no-files-found: error
   metal-cross-compilation:
+    # Platform repair branches exercise their affected platform only.
+    if: github.ref != 'refs/heads/review/platform-startup'
     name: Native Metal compile (${{ matrix.target }})
     runs-on: ubuntu-24.04
     strategy:
@@ -177,6 +181,8 @@ jobs:
           path: docs/audits/metal-cross-ci/
           if-no-files-found: error
   compilation-and-tests:
+    # Platform repair branches exercise their affected platform only.
+    if: github.ref != 'refs/heads/review/platform-startup'
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4

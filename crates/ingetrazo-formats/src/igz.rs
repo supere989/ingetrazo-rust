@@ -854,7 +854,9 @@ pub fn save_igz(scene: &Scene, path: &Path) -> Result<(), IgzError> {
         let _=std::fs::remove_file(&temp);
         return Err(err);
     }
-    if let Err(err)=File::open(&temp).and_then(|f|f.sync_all()) {
+    // FlushFileBuffers requires GENERIC_WRITE on Windows. Reopening read-only
+    // made every otherwise successful save fail before publishing the temp file.
+    if let Err(err)=std::fs::OpenOptions::new().write(true).open(&temp).and_then(|f|f.sync_all()) {
         let _=std::fs::remove_file(&temp);return Err(err.into());
     }
     if let Err(err)=std::fs::rename(&temp,path) {
