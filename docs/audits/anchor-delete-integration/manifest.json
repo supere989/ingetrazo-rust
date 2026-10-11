@@ -1,0 +1,184 @@
+{
+  "runtime_commit": "0a291c4f932af00d25327dfd45e57a48bd4a906e",
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "archive_sha256": "ec12797f21b7e64d63bf9cd579788b1bfa05e6a38b88ff8ece2edac6190473a4",
+  "members": {
+    "anchors/acceptance.json": {
+      "bytes": 91,
+      "sha256": "c237b4c466bd5b5e22d75252865615400ec239e7908bda52246b97854d3d5703"
+    },
+    "anchors/admission-native.json": {
+      "bytes": 16429,
+      "sha256": "da739728fafc540ead41b7d6409685b59abc241ea44962827ab8a9a7e4cc5956"
+    },
+    "anchors/admission-original.json": {
+      "bytes": 16416,
+      "sha256": "e97235eec720bbf2c12d31757a9c970385783422e4d861006f2dd4fb54cee73a"
+    },
+    "anchors/admission-reopens.json": {
+      "bytes": 5112,
+      "sha256": "7d81630a72f5f31291383ac83a73da101cd2d3b9b6daf9a2550fc95f1b1a2527"
+    },
+    "anchors/billboard-input.igz": {
+      "bytes": 703,
+      "sha256": "6d55daa86020f5ab4a5795edcdfc328e0df0f9f4e0e181bd07712ab92ebff6bb"
+    },
+    "anchors/billboard-native.igz": {
+      "bytes": 1476,
+      "sha256": "606c43632a41981f0931889f8e282b523a456b2b125f7441289cdda93cfcb425"
+    },
+    "anchors/billboard-original.igz": {
+      "bytes": 1262,
+      "sha256": "bb2ff4401744807f8b7fb0758fa261178fdbe1971333ce6cc336eb29fb394e52"
+    },
+    "anchors/first-native-inverse-mismatch.json": {
+      "bytes": 16439,
+      "sha256": "19dca5ee7ce3de6a866d8407530a212c216681179236577438042e7a2f8cf82c"
+    },
+    "anchors/near-input.igz": {
+      "bytes": 485,
+      "sha256": "1008644b5d3c934a625205b6b7cddf8b4a4cc3ae5cc8e827749c744bb2ca5ed1"
+    },
+    "anchors/near-native.igz": {
+      "bytes": 810,
+      "sha256": "571991883ff4be3ef6712875c89e0aa9a7c7fbd6eebed3d26b309c9add542c85"
+    },
+    "anchors/near-original.igz": {
+      "bytes": 742,
+      "sha256": "236f500ad5c0440e9d889708a8828c5ea34bec386f7474beee49a2af04d80e87"
+    },
+    "anchors/nested-shared-input.igz": {
+      "bytes": 2109,
+      "sha256": "40eec9ac286343251b187d104d7cad667f37446c95c89c7623d1dffb99810144"
+    },
+    "anchors/nested-shared-native.igz": {
+      "bytes": 2458,
+      "sha256": "c7637113c6f29876c8c33a36328c70d93d2852953cd5cd421c99e6af1b2faec4"
+    },
+    "anchors/nested-shared-original.igz": {
+      "bytes": 2390,
+      "sha256": "b25f0dfb012101036fbc831404b32a6fb5386793f940c65499c14addfe520c19"
+    },
+    "anchors/orphan-input.igz": {
+      "bytes": 676,
+      "sha256": "a7daba48b6573c5f238f36dd0fbc5bdd6b295970c1cf46753e6775a93deaad24"
+    },
+    "anchors/orphan-native.igz": {
+      "bytes": 1422,
+      "sha256": "18142e7cde5b8125fc5b842a3b25d81bbcf1970b2888b89eb2de8c942f2d089b"
+    },
+    "anchors/orphan-original.igz": {
+      "bytes": 1235,
+      "sha256": "5c6b7f8cd8fc91eed469f50d7a555ac6cf759c5c4d7c4af4dbd27d0cba9dcb0c"
+    },
+    "anchors/outside-input.igz": {
+      "bytes": 485,
+      "sha256": "1008644b5d3c934a625205b6b7cddf8b4a4cc3ae5cc8e827749c744bb2ca5ed1"
+    },
+    "anchors/outside-native.igz": {
+      "bytes": 844,
+      "sha256": "27226748683c85213576413750c2ffee58fbc36d683fa25d5cc1fed9fef896e0"
+    },
+    "anchors/outside-original.igz": {
+      "bytes": 776,
+      "sha256": "7ad133581bd9def5ede7655a98f20e623559a81e80d613a5c2357357e0d1297b"
+    },
+    "anchors/reopen-acceptance.json": {
+      "bytes": 57,
+      "sha256": "8efc1e040fc00f6fb77f60ce301f5d3bb1d0c835e3cc921fa058f3f04aec9f0a"
+    },
+    "anchors/runtime.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "build.json": {
+      "bytes": 446,
+      "sha256": "d4045261e8b99af13db7dc9752db700a7810b89ed3d7dcb970abd11dbb57f832"
+    },
+    "build.log": {
+      "bytes": 20609,
+      "sha256": "e7b64bb708c928c35fc8f86c641b931620b017bf1afe6e54193acfb43820e42e"
+    },
+    "delete/acceptance.json": {
+      "bytes": 133,
+      "sha256": "aa50f51583fc5cd3339e3bb6af7b9d6f91ae10882738cab71f68325f4001afc8"
+    },
+    "delete/delete-input.igz": {
+      "bytes": 7976,
+      "sha256": "cf0b59bec964e99937de58035198c16e7ddd4c380b056ffd68367cb71a206558"
+    },
+    "delete/hover-delete-native.json": {
+      "bytes": 22654,
+      "sha256": "63400dd1e81c3968cd53487591b463750ea32815245059366f095333d883c891"
+    },
+    "delete/hover-delete-original.json": {
+      "bytes": 22654,
+      "sha256": "0a898261ef799b66a75ffaa47ac99ebe45bf57916fc94b021fd0684e109bce59"
+    },
+    "delete/hover-input.igz": {
+      "bytes": 2512,
+      "sha256": "c9ce01d930fff89d9af94b5580093f6f82626b75d6ce690482e32fd787d4a87b"
+    },
+    "delete/native.json": {
+      "bytes": 54079,
+      "sha256": "33a019edfab7ce871407df0251451aaf4fba0aa319bdcbeb72095cde0aa3c1d2"
+    },
+    "delete/nested-annotations-native.igz": {
+      "bytes": 7640,
+      "sha256": "d4614671d4170f290195721454839810ba9d231491445b3a240c8e75aff8ca60"
+    },
+    "delete/nested-annotations-original.igz": {
+      "bytes": 7639,
+      "sha256": "75c4ca94cb565654796688f6b9eb32da47f73eca24e2894ca7fd33ae901f4cbc"
+    },
+    "delete/nested-mixed-native.igz": {
+      "bytes": 8658,
+      "sha256": "8cfbae69f1c793b07ae9559dd29476a973cd9dee58085ce649c54190cf1f090b"
+    },
+    "delete/nested-mixed-original.igz": {
+      "bytes": 7327,
+      "sha256": "f2291af879a9936020c331aeec593d1016665865a7abd953071356d32077e3a1"
+    },
+    "delete/original-reopens.json": {
+      "bytes": 33832,
+      "sha256": "a63256e5e460a0821c099f85214ecf0e1ada954d2c99b802ed4aac93de352feb"
+    },
+    "delete/original.json": {
+      "bytes": 54079,
+      "sha256": "33a019edfab7ce871407df0251451aaf4fba0aa319bdcbeb72095cde0aa3c1d2"
+    },
+    "delete/parked-native.igz": {
+      "bytes": 7640,
+      "sha256": "d4614671d4170f290195721454839810ba9d231491445b3a240c8e75aff8ca60"
+    },
+    "delete/parked-original.igz": {
+      "bytes": 7639,
+      "sha256": "75c4ca94cb565654796688f6b9eb32da47f73eca24e2894ca7fd33ae901f4cbc"
+    },
+    "delete/reopen-acceptance.json": {
+      "bytes": 63,
+      "sha256": "5ab62b1aa2d8060c9777be3789e3532ecfc7030e057aeea2ba59761d7f17b831"
+    },
+    "delete/root-native.igz": {
+      "bytes": 6421,
+      "sha256": "584ce574f6cd7d2159a190d6ac11686f7edb97e46fe336d1af4b66e9c2201685"
+    },
+    "delete/root-original.igz": {
+      "bytes": 4988,
+      "sha256": "954d3c5b60bf4da7ba277999edb4c9fbae94e2946100a7c59065a9369f630a50"
+    },
+    "delete/runtime.log": {
+      "bytes": 36,
+      "sha256": "95c4cca760b8ffe5cdb4bdf2f9359375c7ad7f2bf41014c150f4beb4fd566bed"
+    },
+    "receipt.json": {
+      "bytes": 2910,
+      "sha256": "7a914b7905b3260165d2a0a0da5215eebad823e876c0b67655f974c00a34e1ef"
+    },
+    "replay.py": {
+      "bytes": 3527,
+      "sha256": "4d865650f87fbd82bd3898b440f5bdf49525d757a5f55fac77714e72884190f1"
+    }
+  },
+  "byte_verified": true
+}
