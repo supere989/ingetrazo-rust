@@ -210,6 +210,11 @@ pub trait Tool: Send + Sync {
     fn value_label(&self) -> Option<(String, DVec3)> {
         None
     }
+    /// Raw tool distance and source midpoint; the viewport owns document units
+    /// and label composition. No per-frame formatted string is retained here.
+    fn distance_label(&self) -> Option<(f64, DVec3)> {
+        None
+    }
     fn rubber_band_lines(&self) -> Vec<(DVec3, DVec3)> {
         self.rubber_band().into_iter().collect()
     }
