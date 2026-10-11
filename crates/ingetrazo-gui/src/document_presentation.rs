@@ -77,10 +77,13 @@ impl IngeTrazoApp {
         if self.presentation_controls_match(){return;}
         let (d, s) = self.live_presentation();
         if self.scene.display_style != d || self.scene.shadows != s {
+            let geometry_style_changed = self.scene.display_style != d;
             self.scene.display_style = d;
             self.scene.shadows = s;
             self.scene.bump_view_version();
-            self.bump_render_style_revision();
+            // Solar settings have their own retained map/uniform identity;
+            // an enabled toggle does not mutate any ordinary surface geometry.
+            if geometry_style_changed { self.bump_render_style_revision(); }
         }
     }
     pub(crate) fn apply_document_presentation(&mut self) {
