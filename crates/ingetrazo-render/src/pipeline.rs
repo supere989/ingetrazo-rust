@@ -327,6 +327,21 @@ pub fn build_scene_render_data(
 /// World-space surfaces only: no CPU projection, painter sorting or HLR work.
 /// GPU backends reuse the same visibility, material and recursive transform logic.
 pub fn build_world_surfaces(scene:&Scene,camera:&OrbitCamera,style:&StyleConfig)->SceneRenderData {build_world_surfaces_policy(scene,camera,style,false)}
+/// Borrowed active-mesh omission for direct tool previews. Other placements stay unchanged.
+pub fn build_world_surfaces_suppressed(scene:&Scene,camera:&OrbitCamera,style:&StyleConfig,suppressed:&[usize])->SceneRenderData {
+ let mut data=SceneRenderData::default();
+ if style.visual_style!=VisualStyle::Wireframe {
+  build_mesh_buffers_filtered(&scene.mesh,scene,style,&mut data.opaque_mesh,&mut data.transparent_mesh,&mut data.textured_meshes,true,suppressed,false);
+  for group in &scene.groups{build_group_buffers(group,source_group_paint(group),&DMat4::IDENTITY,scene,camera,style,&mut data.opaque_mesh,&mut data.transparent_mesh,&mut data.visible_edges,&mut data.billboards,&mut data.textured_meshes,false,true,None,false);}
+ }data
+}
+/// Ordinary style/material collection for a bounded prism replacement packet.
+pub fn build_borrowed_mesh_world_surfaces(mesh:&Mesh,scene:&Scene,style:&StyleConfig)->SceneRenderData{let mut data=SceneRenderData::default();if style.visual_style!=VisualStyle::Wireframe{build_mesh_buffers(mesh,scene,style,&mut data.opaque_mesh,&mut data.transparent_mesh,&mut data.textured_meshes,true);}data}
+/// Tool-authored bounded mesh borrows scene materials/assets; no Scene clone.
+pub fn build_preview_mesh_surfaces(mesh:&Mesh,scene:&Scene)->SceneRenderData {
+ let mut style=StyleConfig::default();style.visual_style=VisualStyle::ShadedWithTextures;style.show_textures=true;style.front_color=[0.96,0.95,0.925,1.];
+ let mut data=SceneRenderData::default();build_mesh_buffers_filtered(mesh,scene,&style,&mut data.opaque_mesh,&mut data.transparent_mesh,&mut data.textured_meshes,true,&[],true);data
+}
 /// Shadow casters retain ordinary source material policy but omit every face-me
 /// group; bitmap silhouettes are placed separately toward the sun.
 pub fn build_shadow_surfaces(scene:&Scene,camera:&OrbitCamera,style:&StyleConfig)->SceneRenderData {build_world_surfaces_policy(scene,camera,style,true)}
@@ -435,19 +450,33 @@ fn build_mesh_buffers(
     textured_meshes: &mut crate::buffer::TextureBuffers,
     native_texture_sides: bool,
 ) {
+    build_mesh_buffers_filtered(mesh,scene,style,opaque,transparent,textured_meshes,native_texture_sides,&[],false);
+}
+fn build_mesh_buffers_filtered(
+    mesh: &Mesh,
+    scene: &Scene,
+    style: &StyleConfig,
+    opaque: &mut MeshRenderBuffer,
+    transparent: &mut MeshRenderBuffer,
+    textured_meshes: &mut crate::buffer::TextureBuffers,
+    native_texture_sides: bool,
+    suppressed:&[usize],
+    preview:bool,
+) {
     for (f_id, face) in mesh.faces.iter().enumerate() {
+        if suppressed.binary_search(&f_id).is_ok(){continue;}
         let face_layer = face.layer.as_deref().or_else(|| face.attrs.get("layer").and_then(|v| v.as_str()));
-        if !scene.is_layer_visible(face_layer) {
+        if !preview&&!scene.is_layer_visible(face_layer) {
             continue;
         }
-        if face.attrs.get("hidden").and_then(|v| v.as_bool()) == Some(true) {
+        if !preview&&face.attrs.get("hidden").and_then(|v| v.as_bool()) == Some(true) {
             continue;
         }
 
         let norm = mesh.face_normal(f_id);
         let shade = shade_factor(norm);
-        let tex_val = get_face_texture(&face.attrs, scene);
-        let source_opacity = get_face_source_opacity(&face.attrs, scene);
+        let tex_val = if preview{face.attrs.get("texture").cloned()}else{get_face_texture(&face.attrs, scene)};
+        let source_opacity = if preview{1.}else{get_face_source_opacity(&face.attrs, scene)};
 
         let is_xray = style.visual_style == VisualStyle::XRay;
         let source_final_opacity = if is_xray {style.xray_opacity as f64} else {source_opacity};
@@ -487,7 +516,7 @@ fn build_mesh_buffers(
             record_source_texture(buffer,first,&face.attrs,shade,source_final_opacity,order);
             if native_texture_sides {append_source_back_texture(textured_meshes,&face.attrs,norm,shade,face_order,&tris,DMat4::IDENTITY,false,false);}
         } else {
-            let base_color = get_face_base_color(&face.attrs, scene, style);
+            let base_color = if preview{face.attrs.get("color").and_then(|v|v.as_array()).filter(|v|v.len()>=3).map(|v|[v[0].as_f64().unwrap_or(0.96) as f32,v[1].as_f64().unwrap_or(0.95) as f32,v[2].as_f64().unwrap_or(0.925) as f32,1.]).unwrap_or(style.front_color)}else{get_face_base_color(&face.attrs, scene, style)};
             let shaded_color = if native_texture_sides && tex_val.is_none() && !is_xray && source_final_opacity>=0.999 && !matches!(style.visual_style,VisualStyle::HiddenLine|VisualStyle::Monochrome) {
                 native_ordinary_shaded_color(&face.attrs,base_color,shade,final_opacity)
             } else {[
@@ -513,10 +542,10 @@ fn build_mesh_buffers(
             }
             let order=face_order;
             let target=if is_xray||source_final_opacity<0.999{&mut *transparent}else{&mut *opaque};
-            record_source_back_paint(target,first,order,&face.attrs,shade);
-            record_default_back(target,first,&face.attrs,source_final_opacity);
+            if !preview{record_source_back_paint(target,first,order,&face.attrs,shade);}
+            if !preview{record_default_back(target,first,&face.attrs,source_final_opacity);}
             if !(is_xray||source_final_opacity<0.999)&&!target.source_front_cull.last().is_some_and(|r|r.0==first){target.source_consolidated_opaque_count+=target.indices.len()-first;}
-            if native_texture_sides&&style.show_textures {append_source_back_texture(textured_meshes,&face.attrs,norm,shade,face_order,&tris,DMat4::IDENTITY,false,false);}
+            if !preview&&native_texture_sides&&style.show_textures {append_source_back_texture(textured_meshes,&face.attrs,norm,shade,face_order,&tris,DMat4::IDENTITY,false,false);}
         }
     }
 }

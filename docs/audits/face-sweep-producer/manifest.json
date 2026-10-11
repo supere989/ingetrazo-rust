@@ -1,0 +1,15 @@
+{
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "source_recipe_commit": "380fbb3ea9a42da69a32b67c18a634aff71ecf13",
+  "source_recipe_path": "docs/audits/pushpull-reversed/source.json",
+  "source_recipe_sha256": "402edd6f64504cb55ce7c2e75ac861277fe1f8380518a6213ebf9e34407d3f26",
+  "archive_sha256": "93f4b6c0cb0d414288d989b4259d05038fec4be0e72726659bed0d7091872a2c",
+  "files": {
+    "native.json": "23ba99f0fd1aad0fb7c5acc4cc1e4abab29cf794172aa1d0828254b2697cd23d",
+    "tests.log": "397cfcbaf2c366e1ba93e3ffc7f85816c1af5a70f23eb67a58d5fe4f94b7bf0b",
+    "protocol.log": "ad8abf3e8b63b9dde2126b0747215ad001afe97f3d7f3a7a7f0923dca9de6751"
+  },
+  "binary_sha256": "0051c4fffca556d864cac555a0ff1e9d5ae736debcafec320707869359fa9971",
+  "producer_sha256": "c1a3c5c5446fafc781293b62210c7eae0491f6b294fb044f2bebdcd30b533d4a",
+  "verdict": "4 retained source lightweight polygon inventories exact; 3 focused admission/ownership tests pass; GPU consumer remains pending"
+}
