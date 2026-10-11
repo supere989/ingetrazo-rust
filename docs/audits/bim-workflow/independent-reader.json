@@ -1,0 +1,121 @@
+{
+  "passed": true,
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "scope": "Actual pointer nested entry and real CSV/IFC Save dialogs; exact exported root slab only, untyped internal face tags excluded by source census",
+  "reader_version": "0.9.0",
+  "results": {
+    "ui": {
+      "rings": [
+        [
+          [
+            [
+              20.0,
+              20.0,
+              0.0
+            ],
+            [
+              22.0,
+              20.0,
+              0.0
+            ],
+            [
+              22.0,
+              21.0,
+              0.0
+            ],
+            [
+              20.0,
+              21.0,
+              0.0
+            ]
+          ]
+        ]
+      ],
+      "quantities": [
+        [
+          "IfcQuantityArea",
+          "GrossArea",
+          2.0
+        ],
+        [
+          "IfcQuantityArea",
+          "NetArea",
+          2.0
+        ],
+        [
+          "IfcQuantityLength",
+          "Perimeter",
+          6.0
+        ]
+      ],
+      "elements": [
+        [
+          "IfcSlab",
+          "root"
+        ]
+      ],
+      "express_errors": 0
+    },
+    "original-ui": {
+      "rings": [
+        [
+          [
+            [
+              20.0,
+              20.0,
+              0.0
+            ],
+            [
+              22.0,
+              20.0,
+              0.0
+            ],
+            [
+              22.0,
+              21.0,
+              0.0
+            ],
+            [
+              20.0,
+              21.0,
+              0.0
+            ]
+          ]
+        ]
+      ],
+      "quantities": [
+        [
+          "IfcQuantityArea",
+          "GrossArea",
+          2.0
+        ],
+        [
+          "IfcQuantityArea",
+          "NetArea",
+          2.0
+        ],
+        [
+          "IfcQuantityLength",
+          "Perimeter",
+          6.0
+        ]
+      ],
+      "elements": [
+        [
+          "IfcSlab",
+          "root"
+        ]
+      ],
+      "express_errors": 0
+    }
+  },
+  "negative_controls": [
+    "name",
+    "class",
+    "coordinate"
+  ],
+  "file_hashes": {
+    "ui": "181481e2420050e7ab5ee9aeb3f574c0a23e37f3eb551857b63439d1e1cb0a62",
+    "original-ui": "b85825714eebb1e3b1cb52e27dd068ea97e42c3c73037763af3eeb797d458d18"
+  }
+}

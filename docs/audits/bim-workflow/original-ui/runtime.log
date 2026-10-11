@@ -1,0 +1,2 @@
+/work/ingetrazo/views/viewport.py:2636: RuntimeWarning: invalid value encountered in multiply
+  keep = ((pick * n[:, None, :]).sum(axis=2)

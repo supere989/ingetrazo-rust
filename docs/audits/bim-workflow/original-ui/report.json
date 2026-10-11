@@ -1,0 +1,1184 @@
+{
+  "passed": true,
+  "binary_sha256": "efe2fd6232dce3f2db8d76d694b830b16ee8736a2debbf74dc667be48304323f",
+  "states": [
+    {
+      "label": "initial",
+      "state": {
+        "name_point": [
+          1040,
+          108
+        ],
+        "edit_menu": [
+          56,
+          9
+        ],
+        "redo_point": null,
+        "window_id": 4194311,
+        "toggle": [
+          780,
+          164
+        ],
+        "active": false,
+        "tag": null,
+        "faces": [
+          {
+            "vertices": [
+              [
+                20.0,
+                20.0,
+                0.0
+              ],
+              [
+                22.0,
+                20.0,
+                0.0
+              ],
+              [
+                22.0,
+                21.0,
+                0.0
+              ],
+              [
+                20.0,
+                21.0,
+                0.0
+              ]
+            ],
+            "attrs": {
+              "ifc": {
+                "id": 40,
+                "class": "IfcSlab",
+                "name": "root"
+              }
+            }
+          }
+        ],
+        "undo": 0,
+        "redo": 0,
+        "tool": "Select",
+        "viewport": [
+          40,
+          58,
+          715,
+          711
+        ],
+        "points": [
+          [
+            140,
+            671
+          ],
+          [
+            226,
+            585
+          ],
+          [
+            483,
+            328
+          ],
+          [
+            569,
+            242
+          ],
+          [
+            398,
+            414
+          ]
+        ],
+        "status": "IngeTrazo is drawing with the software renderer (llvmpipe (LLVM 20.1.2, 256 bits)): the viewport will be slow. Update the graphics driver, or assign IngeTrazo to the high-performance GPU in Windows graphics settings.",
+        "context_depth": 0,
+        "csv_point": [
+          980,
+          260
+        ],
+        "file_menu": [
+          20,
+          9
+        ],
+        "export_submenu": null,
+        "ifc_menu": null
+      }
+    },
+    {
+      "label": "parent-entry",
+      "state": {
+        "name_point": [
+          1040,
+          108
+        ],
+        "edit_menu": [
+          56,
+          9
+        ],
+        "redo_point": null,
+        "window_id": 4194311,
+        "toggle": [
+          780,
+          164
+        ],
+        "active": false,
+        "tag": null,
+        "faces": [],
+        "undo": 0,
+        "redo": 0,
+        "tool": "Select",
+        "viewport": [
+          40,
+          58,
+          715,
+          711
+        ],
+        "points": [
+          [
+            140,
+            671
+          ],
+          [
+            226,
+            585
+          ],
+          [
+            483,
+            328
+          ],
+          [
+            569,
+            242
+          ],
+          [
+            398,
+            414
+          ]
+        ],
+        "status": "Editing parent \u2014 Esc or click outside goes up one level",
+        "context_depth": 1,
+        "csv_point": [
+          980,
+          260
+        ],
+        "file_menu": [
+          20,
+          9
+        ],
+        "export_submenu": null,
+        "ifc_menu": null
+      }
+    },
+    {
+      "label": "child-entry",
+      "state": {
+        "name_point": [
+          1040,
+          108
+        ],
+        "edit_menu": [
+          56,
+          9
+        ],
+        "redo_point": null,
+        "window_id": 4194311,
+        "toggle": [
+          780,
+          164
+        ],
+        "active": false,
+        "tag": null,
+        "faces": [
+          {
+            "vertices": [
+              [
+                5.0,
+                4.0,
+                0.0
+              ],
+              [
+                7.0,
+                4.0,
+                0.0
+              ],
+              [
+                7.0,
+                6.0,
+                0.0
+              ],
+              [
+                5.0,
+                6.0,
+                0.0
+              ]
+            ],
+            "attrs": {}
+          }
+        ],
+        "undo": 0,
+        "redo": 0,
+        "tool": "Select",
+        "viewport": [
+          40,
+          58,
+          715,
+          711
+        ],
+        "points": [
+          [
+            140,
+            671
+          ],
+          [
+            226,
+            585
+          ],
+          [
+            483,
+            328
+          ],
+          [
+            569,
+            242
+          ],
+          [
+            398,
+            414
+          ]
+        ],
+        "status": "Editing component 'target' \u2014 the change reaches its 1 copies when you leave (Esc); Make Unique first to edit one copy only",
+        "context_depth": 2,
+        "csv_point": [
+          980,
+          260
+        ],
+        "file_menu": [
+          20,
+          9
+        ],
+        "export_submenu": null,
+        "ifc_menu": null
+      }
+    },
+    {
+      "label": "active",
+      "state": {
+        "name_point": [
+          1040,
+          108
+        ],
+        "edit_menu": [
+          56,
+          9
+        ],
+        "redo_point": null,
+        "window_id": 4194311,
+        "toggle": [
+          780,
+          164
+        ],
+        "active": true,
+        "tag": {
+          "class": "IfcWall",
+          "name": "Wall"
+        },
+        "faces": [
+          {
+            "vertices": [
+              [
+                5.0,
+                4.0,
+                0.0
+              ],
+              [
+                7.0,
+                4.0,
+                0.0
+              ],
+              [
+                7.0,
+                6.0,
+                0.0
+              ],
+              [
+                5.0,
+                6.0,
+                0.0
+              ]
+            ],
+            "attrs": {}
+          }
+        ],
+        "undo": 0,
+        "redo": 0,
+        "tool": "Select",
+        "viewport": [
+          40,
+          58,
+          715,
+          711
+        ],
+        "points": [
+          [
+            140,
+            671
+          ],
+          [
+            226,
+            585
+          ],
+          [
+            483,
+            328
+          ],
+          [
+            569,
+            242
+          ],
+          [
+            398,
+            414
+          ]
+        ],
+        "status": "Drawing as Wall (IfcWall) \u2014 new geometry assumes this tag",
+        "context_depth": 2,
+        "csv_point": [
+          980,
+          260
+        ],
+        "file_menu": [
+          20,
+          9
+        ],
+        "export_submenu": null,
+        "ifc_menu": null
+      }
+    },
+    {
+      "label": "drawn",
+      "state": {
+        "name_point": [
+          1040,
+          108
+        ],
+        "edit_menu": [
+          56,
+          9
+        ],
+        "redo_point": null,
+        "window_id": 4194311,
+        "toggle": [
+          780,
+          164
+        ],
+        "active": true,
+        "tag": {
+          "class": "IfcWall",
+          "name": "Wall"
+        },
+        "faces": [
+          {
+            "vertices": [
+              [
+                2.9997191429138184,
+                1.9997189044952393,
+                0.0
+              ],
+              [
+                4.0017547607421875,
+                1.9997189044952393,
+                0.0
+              ],
+              [
+                4.0017547607421875,
+                3.0017545223236084,
+                0.0
+              ],
+              [
+                2.9997191429138184,
+                3.0017545223236084,
+                0.0
+              ]
+            ],
+            "attrs": {
+              "ifc": {
+                "class": "IfcWall",
+                "name": "Wall",
+                "id": 41
+              }
+            }
+          },
+          {
+            "vertices": [
+              [
+                5.0,
+                4.0,
+                0.0
+              ],
+              [
+                7.0,
+                4.0,
+                0.0
+              ],
+              [
+                7.0,
+                6.0,
+                0.0
+              ],
+              [
+                5.0,
+                6.0,
+                0.0
+              ]
+            ],
+            "attrs": {}
+          }
+        ],
+        "undo": 1,
+        "redo": 0,
+        "tool": "Rectangle",
+        "viewport": [
+          40,
+          58,
+          715,
+          711
+        ],
+        "points": [
+          [
+            140,
+            671
+          ],
+          [
+            226,
+            585
+          ],
+          [
+            483,
+            328
+          ],
+          [
+            569,
+            242
+          ],
+          [
+            398,
+            414
+          ]
+        ],
+        "status": "Drawing as Wall (IfcWall) \u2014 new geometry assumes this tag",
+        "context_depth": 2,
+        "csv_point": [
+          980,
+          260
+        ],
+        "file_menu": [
+          20,
+          9
+        ],
+        "export_submenu": null,
+        "ifc_menu": null
+      }
+    },
+    {
+      "label": "undo",
+      "state": {
+        "name_point": [
+          1040,
+          108
+        ],
+        "edit_menu": [
+          56,
+          9
+        ],
+        "redo_point": null,
+        "window_id": 4194311,
+        "toggle": [
+          780,
+          164
+        ],
+        "active": true,
+        "tag": {
+          "class": "IfcWall",
+          "name": "Wall"
+        },
+        "faces": [
+          {
+            "vertices": [
+              [
+                5.0,
+                4.0,
+                0.0
+              ],
+              [
+                7.0,
+                4.0,
+                0.0
+              ],
+              [
+                7.0,
+                6.0,
+                0.0
+              ],
+              [
+                5.0,
+                6.0,
+                0.0
+              ]
+            ],
+            "attrs": {}
+          }
+        ],
+        "undo": 0,
+        "redo": 1,
+        "tool": "Rectangle",
+        "viewport": [
+          40,
+          58,
+          715,
+          711
+        ],
+        "points": [
+          [
+            140,
+            671
+          ],
+          [
+            226,
+            585
+          ],
+          [
+            483,
+            328
+          ],
+          [
+            569,
+            242
+          ],
+          [
+            398,
+            414
+          ]
+        ],
+        "status": "Rectangle from the centre",
+        "context_depth": 2,
+        "csv_point": [
+          980,
+          260
+        ],
+        "file_menu": [
+          20,
+          9
+        ],
+        "export_submenu": null,
+        "ifc_menu": null
+      }
+    },
+    {
+      "label": "redo",
+      "state": {
+        "name_point": [
+          1040,
+          108
+        ],
+        "edit_menu": [
+          56,
+          9
+        ],
+        "redo_point": null,
+        "window_id": 4194311,
+        "toggle": [
+          780,
+          164
+        ],
+        "active": true,
+        "tag": {
+          "class": "IfcWall",
+          "name": "Wall"
+        },
+        "faces": [
+          {
+            "vertices": [
+              [
+                2.9997191429138184,
+                1.9997189044952393,
+                0.0
+              ],
+              [
+                4.0017547607421875,
+                1.9997189044952393,
+                0.0
+              ],
+              [
+                4.0017547607421875,
+                3.0017545223236084,
+                0.0
+              ],
+              [
+                2.9997191429138184,
+                3.0017545223236084,
+                0.0
+              ]
+            ],
+            "attrs": {
+              "ifc": {
+                "class": "IfcWall",
+                "name": "Wall",
+                "id": 41
+              }
+            }
+          },
+          {
+            "vertices": [
+              [
+                5.0,
+                4.0,
+                0.0
+              ],
+              [
+                7.0,
+                4.0,
+                0.0
+              ],
+              [
+                7.0,
+                6.0,
+                0.0
+              ],
+              [
+                5.0,
+                6.0,
+                0.0
+              ]
+            ],
+            "attrs": {}
+          }
+        ],
+        "undo": 1,
+        "redo": 0,
+        "tool": "Rectangle",
+        "viewport": [
+          40,
+          58,
+          715,
+          711
+        ],
+        "points": [
+          [
+            140,
+            671
+          ],
+          [
+            226,
+            585
+          ],
+          [
+            483,
+            328
+          ],
+          [
+            569,
+            242
+          ],
+          [
+            398,
+            414
+          ]
+        ],
+        "status": "Click faces to paint them with the chosen material.",
+        "context_depth": 2,
+        "csv_point": [
+          980,
+          260
+        ],
+        "file_menu": [
+          20,
+          9
+        ],
+        "export_submenu": null,
+        "ifc_menu": null
+      }
+    },
+    {
+      "label": "csv",
+      "state": {
+        "name_point": [
+          1040,
+          108
+        ],
+        "edit_menu": [
+          56,
+          9
+        ],
+        "redo_point": null,
+        "window_id": 4194311,
+        "toggle": [
+          780,
+          164
+        ],
+        "active": true,
+        "tag": {
+          "class": "IfcWall",
+          "name": "Wall"
+        },
+        "faces": [
+          {
+            "vertices": [
+              [
+                2.9997191429138184,
+                1.9997189044952393,
+                0.0
+              ],
+              [
+                4.0017547607421875,
+                1.9997189044952393,
+                0.0
+              ],
+              [
+                4.0017547607421875,
+                3.0017545223236084,
+                0.0
+              ],
+              [
+                2.9997191429138184,
+                3.0017545223236084,
+                0.0
+              ]
+            ],
+            "attrs": {
+              "ifc": {
+                "class": "IfcWall",
+                "name": "Wall",
+                "id": 41
+              }
+            }
+          },
+          {
+            "vertices": [
+              [
+                5.0,
+                4.0,
+                0.0
+              ],
+              [
+                7.0,
+                4.0,
+                0.0
+              ],
+              [
+                7.0,
+                6.0,
+                0.0
+              ],
+              [
+                5.0,
+                6.0,
+                0.0
+              ]
+            ],
+            "attrs": {}
+          }
+        ],
+        "undo": 1,
+        "redo": 0,
+        "tool": "Rectangle",
+        "viewport": [
+          40,
+          58,
+          715,
+          711
+        ],
+        "points": [
+          [
+            140,
+            671
+          ],
+          [
+            226,
+            585
+          ],
+          [
+            483,
+            328
+          ],
+          [
+            569,
+            242
+          ],
+          [
+            398,
+            414
+          ]
+        ],
+        "status": "Quantities exported to /tmp/ingetrazo-bim-context-export/docs/audits/bim-workflow/original-ui/delivered.csv",
+        "context_depth": 2,
+        "csv_point": [
+          980,
+          260
+        ],
+        "file_menu": [
+          20,
+          9
+        ],
+        "export_submenu": null,
+        "ifc_menu": null
+      }
+    },
+    {
+      "label": "file-menu",
+      "state": {
+        "name_point": [
+          1040,
+          108
+        ],
+        "edit_menu": [
+          56,
+          9
+        ],
+        "redo_point": null,
+        "window_id": 4194311,
+        "toggle": [
+          780,
+          164
+        ],
+        "active": true,
+        "tag": {
+          "class": "IfcWall",
+          "name": "Wall"
+        },
+        "faces": [
+          {
+            "vertices": [
+              [
+                2.9997191429138184,
+                1.9997189044952393,
+                0.0
+              ],
+              [
+                4.0017547607421875,
+                1.9997189044952393,
+                0.0
+              ],
+              [
+                4.0017547607421875,
+                3.0017545223236084,
+                0.0
+              ],
+              [
+                2.9997191429138184,
+                3.0017545223236084,
+                0.0
+              ]
+            ],
+            "attrs": {
+              "ifc": {
+                "class": "IfcWall",
+                "name": "Wall",
+                "id": 41
+              }
+            }
+          },
+          {
+            "vertices": [
+              [
+                5.0,
+                4.0,
+                0.0
+              ],
+              [
+                7.0,
+                4.0,
+                0.0
+              ],
+              [
+                7.0,
+                6.0,
+                0.0
+              ],
+              [
+                5.0,
+                6.0,
+                0.0
+              ]
+            ],
+            "attrs": {}
+          }
+        ],
+        "undo": 1,
+        "redo": 0,
+        "tool": "Rectangle",
+        "viewport": [
+          40,
+          58,
+          715,
+          711
+        ],
+        "points": [
+          [
+            140,
+            671
+          ],
+          [
+            226,
+            585
+          ],
+          [
+            483,
+            328
+          ],
+          [
+            569,
+            242
+          ],
+          [
+            398,
+            414
+          ]
+        ],
+        "status": "Quantities exported to /tmp/ingetrazo-bim-context-export/docs/audits/bim-workflow/original-ui/delivered.csv",
+        "context_depth": 2,
+        "csv_point": [
+          980,
+          260
+        ],
+        "file_menu": [
+          20,
+          9
+        ],
+        "export_submenu": [
+          169,
+          207
+        ],
+        "ifc_menu": null
+      }
+    },
+    {
+      "label": "export-menu",
+      "state": {
+        "name_point": [
+          1040,
+          108
+        ],
+        "edit_menu": [
+          56,
+          9
+        ],
+        "redo_point": null,
+        "window_id": 4194311,
+        "toggle": [
+          780,
+          164
+        ],
+        "active": true,
+        "tag": {
+          "class": "IfcWall",
+          "name": "Wall"
+        },
+        "faces": [
+          {
+            "vertices": [
+              [
+                2.9997191429138184,
+                1.9997189044952393,
+                0.0
+              ],
+              [
+                4.0017547607421875,
+                1.9997189044952393,
+                0.0
+              ],
+              [
+                4.0017547607421875,
+                3.0017545223236084,
+                0.0
+              ],
+              [
+                2.9997191429138184,
+                3.0017545223236084,
+                0.0
+              ]
+            ],
+            "attrs": {
+              "ifc": {
+                "class": "IfcWall",
+                "name": "Wall",
+                "id": 41
+              }
+            }
+          },
+          {
+            "vertices": [
+              [
+                5.0,
+                4.0,
+                0.0
+              ],
+              [
+                7.0,
+                4.0,
+                0.0
+              ],
+              [
+                7.0,
+                6.0,
+                0.0
+              ],
+              [
+                5.0,
+                6.0,
+                0.0
+              ]
+            ],
+            "attrs": {}
+          }
+        ],
+        "undo": 1,
+        "redo": 0,
+        "tool": "Rectangle",
+        "viewport": [
+          40,
+          58,
+          715,
+          711
+        ],
+        "points": [
+          [
+            140,
+            671
+          ],
+          [
+            226,
+            585
+          ],
+          [
+            483,
+            328
+          ],
+          [
+            569,
+            242
+          ],
+          [
+            398,
+            414
+          ]
+        ],
+        "status": "Quantities exported to /tmp/ingetrazo-bim-context-export/docs/audits/bim-workflow/original-ui/delivered.csv",
+        "context_depth": 2,
+        "csv_point": [
+          980,
+          260
+        ],
+        "file_menu": [
+          20,
+          9
+        ],
+        "export_submenu": [
+          169,
+          207
+        ],
+        "ifc_menu": [
+          440,
+          207
+        ]
+      }
+    },
+    {
+      "label": "ifc",
+      "state": {
+        "name_point": [
+          1040,
+          108
+        ],
+        "edit_menu": [
+          56,
+          9
+        ],
+        "redo_point": null,
+        "window_id": 4194311,
+        "toggle": [
+          780,
+          164
+        ],
+        "active": true,
+        "tag": {
+          "class": "IfcWall",
+          "name": "Wall"
+        },
+        "faces": [
+          {
+            "vertices": [
+              [
+                20.0,
+                20.0,
+                0.0
+              ],
+              [
+                22.0,
+                20.0,
+                0.0
+              ],
+              [
+                22.0,
+                21.0,
+                0.0
+              ],
+              [
+                20.0,
+                21.0,
+                0.0
+              ]
+            ],
+            "attrs": {
+              "ifc": {
+                "id": 40,
+                "class": "IfcSlab",
+                "name": "root"
+              }
+            }
+          }
+        ],
+        "undo": 1,
+        "redo": 0,
+        "tool": "Rectangle",
+        "viewport": [
+          40,
+          58,
+          715,
+          711
+        ],
+        "points": [
+          [
+            140,
+            671
+          ],
+          [
+            226,
+            585
+          ],
+          [
+            483,
+            328
+          ],
+          [
+            569,
+            242
+          ],
+          [
+            398,
+            414
+          ]
+        ],
+        "status": "1 IFC elements exported to /tmp/ingetrazo-bim-context-export/docs/audits/bim-workflow/original-ui/delivered.ifc",
+        "context_depth": 0,
+        "csv_point": [
+          980,
+          260
+        ],
+        "file_menu": [
+          20,
+          9
+        ],
+        "export_submenu": null,
+        "ifc_menu": null
+      }
+    }
+  ],
+  "original": true,
+  "original_source": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "scope": "Actual original MainWindow/History delivery in pointer-entered transformed nested context"
+}

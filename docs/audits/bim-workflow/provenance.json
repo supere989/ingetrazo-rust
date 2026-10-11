@@ -1,0 +1,30 @@
+{
+  "runtime_commit": "47d7e952ec94da7e7f1d2ebbbe0b3f5fc0448990",
+  "base": "aaea1a31",
+  "original_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "source_sha256": {
+    "crates/ingetrazo-gui/src/bim_history.rs": "c15346ed24358d9ac341242ea0eed0f924ff48d43c19b5cc7fdf39976a00173f",
+    "crates/ingetrazo-gui/src/bim_controller.rs": "48392a6408a526aec2bbbc9049a1d413193f4df1ab71db804fdecbaa5005dade",
+    "crates/ingetrazo-gui/src/component_edit.rs": "2b646f2177e19074806890063d3a1ea4f1105d098e39a206b74f1f010b748e67",
+    "crates/ingetrazo-gui/src/app.rs": "9b7513b79c97b08356edaada6a0a50c70ae89940a30d6cac88826206dc6fe330",
+    "crates/ingetrazo-gui/src/menu.rs": "4f161c02ed20b924cf04f5085eff51eb916396d111f4aa24119910fd345060c6",
+    "crates/ingetrazo-tools/src/rectangle.rs": "365fd0c07b378f4e4ce69397a907649abcf2181ab9814a1951d409866bc1009b",
+    "crates/ingetrazo-core/src/scene.rs": "2107c32eb6edbac6901cf76221ec67d795e47bba11ee57c68110710f7b800881",
+    "crates/ingetrazo-core/src/bim.rs": "8c95544833efbb97224a4d3a4b38b407d77e9e3e7afcc838caa55ded08d8f9a1",
+    "crates/ingetrazo-gui/examples/bim_workflow_ui_fixture.rs": "c08270545fd113715c6e0e087f050d1eec44b5ae7d91ee98fd7fa2b733dbcaba",
+    "scripts/bim-workflow-original-ui.py": "7e29f4b7d9cec451a5c216bca0e7d364422acff97e7154de9b3beb44c5a87f64",
+    "scripts/check-bim-workflow-ui.py": "ba63b1dca5f8157dc181acf4710df71fdca7736150045c9be7a5efc126539f88",
+    "scripts/check-bim-workflow-ifc.py": "e9e81bf07b43954249c685f43d21a3ac9ce5585b80f0f6ae272368e1e8c2591c"
+  },
+  "binary_sha256": "e27e693bb0f01da16d10cd7efcd2dc6515a64acdb351568c75ab8ecb8f807e95",
+  "build": "cargo build -j2 -p ingetrazo-gui --example bim_workflow_ui_fixture; debug=0 incremental=0",
+  "test_inventory": {
+    "mixed_native": 4,
+    "ifc_context_native": 2,
+    "ui_phases_per_application": 11,
+    "independent_ifc_mutations": 3
+  },
+  "followup_commit": "51865be00c555a36ea60256275640560f434b8b9",
+  "followup_scope": "Missing vertex identity admission only; four focused mixed tests pass. Actual GUI binary is frozen runtime_commit, before this refusal-only followup.",
+  "followup_sha256": "db5d7c8d0d215ac93cc1d3a046f611b16ba5afc23c0d802ad8da5531522d236d"
+}
