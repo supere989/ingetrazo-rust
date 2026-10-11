@@ -416,6 +416,7 @@ impl World {
  pub fn billboard_stats_for_probe(&self)->serde_json::Value{
   let(geometry,images)=self.texture_stats();serde_json::json!({"source_terminate_discard":self.source_discard_terminate,"native_gl_depth_control":self.source_depth_dispatch.is_some(),"source_gl_camera":self.source_gl_camera,"base_builds":self.billboard_builds,"base_runs":self.billboard_packet.as_ref().map_or(0,|p|p.runs.len()),"world_uploads":self.uploads,"vertex_uploads":geometry.uploads,"vertex_bytes":geometry.vertex_bytes,"image_hashes":images.hashes,"image_decodes":images.decodes,"image_uploads":images.uploads,"sampled_entries":geometry.sampled_entries,"bc7_uploads":images.bc7_uploads,"uploaded_image_bytes":images.uploaded_bytes,"saved_image_bytes":images.exact_saved_bytes,"extent":self.target.as_ref().map(|t|[t.extent.width,t.extent.height])})
  }
+ #[doc(hidden)] pub fn resource_upload_stats_for_probe(&self)->super::resources::UploadStats{self.resources.stats}
  pub fn texture_stats(&self)->(super::textures::Stats,&super::texture_cache::TextureStats){let textures=self.textures.as_ref().unwrap();(textures.stats,textures.cache_stats())}
  pub fn edge_geometry_bytes(&self)->u64{self.edge_vertices.and_then(|id|self.resources.logical_bytes(id)).unwrap_or(0)}
  pub fn edge_endpoint_count(&self)->u32{self.edge_count}

@@ -55,6 +55,7 @@ pub struct PreparedTexture {
     view: vk::ImageView,
     sampler: vk::Sampler,
     hard_cutout: bool,
+    pending: Option<Vec<u8>>,
 }
 impl PreparedTexture {
     pub fn sampled(&self) -> (vk::ImageView, vk::Sampler, bool) {
@@ -63,6 +64,7 @@ impl PreparedTexture {
     pub fn id(&self) -> AssetId {
         self.id
     }
+    pub(crate) fn pending_bytes(&self)->usize{self.pending.as_ref().map_or(0,Vec::len)}
 }
 
 /// Native backend owns images; CAD asset identity is platform-independent and
@@ -123,6 +125,11 @@ impl TextureCache {
         asset: &EncodedAsset<'_>,
         max_decoded_bytes: u64,
     ) -> Result<PreparedTexture, String> {
+        let mut candidate=self.prepare_deferred(context,resources,asset,max_decoded_bytes)?;
+        self.complete_many(context,resources,std::iter::once(&mut candidate))?;
+        Ok(candidate)
+    }
+    pub(crate) fn prepare_deferred(&mut self,context:&VulkanContext,resources:&mut Resources,asset:&EncodedAsset<'_>,max_decoded_bytes:u64)->Result<PreparedTexture,String>{
         let id = asset.id;
         let encoded = asset.encoded;
         if let Some(entry) = self.images.get(&id) {
@@ -133,6 +140,7 @@ impl TextureCache {
                 view: entry.image.view,
                 sampler: entry.image.sampler,
                 hard_cutout: entry.hard_cutout,
+                pending: None,
             });
         }
         let start = Instant::now();
@@ -155,30 +163,40 @@ impl TextureCache {
             ingetrazo_render::block_compression::exact_bc7(decoded.extent.width,decoded.extent.height,&decoded.rgba)?
         } else { None };
         self.stats.compression_ms+=compression_start.elapsed().as_secs_f64()*1000.;
-        let start = Instant::now();
-        let image=if let Some(blocks)=compressed.as_ref() {
-            TextureImage::bc7(context,resources,decoded.extent,blocks,self.diagnostic_readback)?
-        } else {
-            TextureImage::rgba8(context,resources,decoded.extent,&decoded.rgba,!decoded.hard_cutout,self.diagnostic_readback)?
-        };
-        let bytes=compressed.as_ref().map_or(decoded.rgba.len(),Vec::len) as u64;
-        self.stats.uploaded_bytes+=bytes;
-        if compressed.is_some() {self.stats.bc7_uploads+=1;self.stats.exact_saved_bytes+=decoded.rgba.len() as u64-bytes;}
-        self.stats.upload_ms += start.elapsed().as_secs_f64() * 1000.;
-        self.stats.uploads += 1;
+        let format=if compressed.is_some(){ingetrazo_render::texture_layout::Format::Bc7}else{ingetrazo_render::texture_layout::Format::Rgba8};
+        let data=compressed.unwrap_or(decoded.rgba);
+        let image=TextureImage::allocate_color(context,resources,decoded.extent,data.len()as u64,format,!decoded.hard_cutout,self.diagnostic_readback)?;
         Ok(PreparedTexture {
             id,
             view: image.view,
             sampler: image.sampler,
             hard_cutout: decoded.hard_cutout,
             image: Some(image),
+            pending: Some(data),
         })
+    }
+    pub(crate) fn complete_many<'a>(&mut self,context:&VulkanContext,resources:&mut Resources,candidates:impl Iterator<Item=&'a mut PreparedTexture>)->Result<(),String>{
+        let mut admitted=Vec::new();
+        for candidate in candidates{admitted.try_reserve(1).map_err(|_|"Image batch candidate admission")?;admitted.push(candidate);}
+        let mut candidates=admitted;
+        let mut inputs=Vec::new();inputs.try_reserve_exact(candidates.len()).map_err(|_|"Image batch input admission")?;
+        for c in &candidates{if let Some(data)=&c.pending{inputs.push((c.image.as_ref().expect("pending image owner"),data.as_slice()));}}
+        let start=Instant::now();
+        resources.upload_texture_batch(context,&inputs)?;
+        self.stats.upload_ms+=start.elapsed().as_secs_f64()*1000.;
+        for candidate in &mut candidates{if let Some(data)=candidate.pending.take(){
+            self.stats.uploads+=1;self.stats.uploaded_bytes+=data.len()as u64;
+            let image=candidate.image.as_ref().expect("pending image owner");
+            if image.format==ingetrazo_render::texture_layout::Format::Bc7{self.stats.bc7_uploads+=1;self.stats.exact_saved_bytes+=image.extent.width as u64*image.extent.height as u64*4-data.len()as u64;}
+        }}
+        Ok(())
     }
     /// Publish only after all referencing descriptor and scene candidates succeed.
     pub fn set_publication_entry_limit(&mut self,limit:Option<usize>){self.publication_entry_limit=limit;}
     pub(crate) fn preflight_publication<'a>(&mut self,candidates:impl Iterator<Item=&'a PreparedTexture>)->Result<(),String>{
         let mut count=0usize;
         for candidate in candidates {
+            if candidate.pending.is_some(){return Err("Texture upload has not completed".into());}
             if candidate.image.is_none()&&!self.images.contains_key(&candidate.id){
                 return Err("Prepared cached texture was evicted before publication".into());
             }

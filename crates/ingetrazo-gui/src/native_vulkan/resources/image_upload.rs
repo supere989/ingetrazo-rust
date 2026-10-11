@@ -173,6 +173,7 @@ impl Resources {
                         .map_err(|e| {self.lifetime.quarantine();e.to_string()})?;
                     submitted = true;
                     self.stats.transfer_submissions += 1;
+                    self.stats.image_transfer_submissions += 1;
                 }
                 context.wait_transfer(fence).map_err(|e| e.to_string())?;
                 submitted = false;
@@ -188,6 +189,60 @@ impl Resources {
         self.stats.image_upload_calls += 1;
         self.stats.image_bytes += bytes;
         self.stats.image_mips_generated += (mip_levels - 1) as u64;
+        Ok(())
+    }
+    /// Scatter immutable cold payloads directly into one retained <=8MiB staging
+    /// allocation. All image owners remain in the caller until every bounded
+    /// submission completes; no descriptor may be published before this returns.
+    pub(crate) fn upload_texture_batch(&mut self,context:&VulkanContext,inputs:&[(&TextureImage,&[u8])])->Result<(),String>{
+        self.admit_context(context)?;
+        if inputs.is_empty(){return Ok(());}
+        let mut layouts=Vec::new();layouts.try_reserve_exact(inputs.len()).map_err(|_|"Image batch layout admission")?;
+        let mut total=0u64;
+        for &(image,data) in inputs{
+            if !std::sync::Arc::ptr_eq(&image.lifetime,&self.lifetime){return Err("Image batch owner differs from resources".into());}
+            let layout=ingetrazo_render::texture_layout::Layout::new(image.format,image.extent.width,image.extent.height,image.mip_levels)?;
+            let (bw,_,block)=image.format.block();let row=image.extent.width.div_ceil(bw)as u64*block as u64;
+            if layout.mips[0].bytes!=data.len()as u64||row>UPLOAD_CHUNK{return Err("Image batch payload or row admission".into());}
+            total=total.checked_add(data.len()as u64).and_then(|n|n.checked_add(15)).ok_or("Image batch bytes overflow")?;
+            layouts.push((layout,row));
+        }
+        let capacity=total.min(UPLOAD_CHUNK);
+        let staging=self.staging_buffer(context,capacity)?;let (command,fence)=self.transfer_handles(context)?;
+        let mut pieces=Vec::new();pieces.try_reserve_exact(inputs.len()).map_err(|_|"Image batch pieces admission")?;
+        let mut index=0usize;let mut offset=0u64;let mut submitted=false;
+        let result=(||->Result<(),String>{while index<inputs.len(){
+            pieces.clear();let mut used=0u64;
+            while index<inputs.len(){
+                let start=(used+15)&!15;let row=layouts[index].1;
+                let length=((capacity-start.min(capacity))/row*row).min(inputs[index].1.len()as u64-offset);
+                if length==0{break;}
+                pieces.push((index,offset,start,length));used=start+length;offset+=length;
+                if offset==inputs[index].1.len()as u64{index+=1;offset=0;}else{break;}
+            }
+            if pieces.is_empty(){return Err("Image batch staging cannot hold a row".into());}
+            let host=&self.buffers[&staging];let pointer=host.persistent_map.ok_or("Image staging is not mapped")?as *mut u8;
+            for &(i,offset,start,length) in &pieces{unsafe{std::ptr::copy_nonoverlapping(inputs[i].1.as_ptr().add(offset as usize),pointer.add(start as usize),length as usize);}}
+            if !host.properties.contains(vk::MemoryPropertyFlags::HOST_COHERENT){unsafe{self.device.flush_mapped_memory_ranges(&[vk::MappedMemoryRange::default().memory(host.memory).size(vk::WHOLE_SIZE)])}.map_err(|e|e.to_string())?;}
+            unsafe{
+                self.device.reset_command_buffer(command,vk::CommandBufferResetFlags::empty()).map_err(|e|e.to_string())?;
+                self.device.begin_command_buffer(command,&vk::CommandBufferBeginInfo::default().flags(vk::CommandBufferUsageFlags::ONE_TIME_SUBMIT)).map_err(|e|e.to_string())?;
+                for &(i,offset,start,length) in &pieces{
+                    let image=inputs[i].0;let (_,bh,_)=image.format.block();let row=layouts[i].1;
+                    if offset==0{transition(&self.device,command,image.image,0,image.mip_levels,vk::ImageLayout::UNDEFINED,vk::ImageLayout::TRANSFER_DST_OPTIMAL,vk::AccessFlags::empty(),vk::AccessFlags::TRANSFER_WRITE,vk::PipelineStageFlags::TOP_OF_PIPE,vk::PipelineStageFlags::TRANSFER);}
+                    let y=offset/row*bh as u64;
+                    let copy=vk::BufferImageCopy::default().buffer_offset(start).image_subresource(vk::ImageSubresourceLayers::default().aspect_mask(vk::ImageAspectFlags::COLOR).layer_count(1)).image_offset(vk::Offset3D{x:0,y:y as i32,z:0}).image_extent(vk::Extent3D{width:image.extent.width,height:(length/row*bh as u64).min(image.extent.height as u64-y)as u32,depth:1});
+                    self.device.cmd_copy_buffer_to_image(command,host.handle,image.image,vk::ImageLayout::TRANSFER_DST_OPTIMAL,&[copy]);
+                    if offset+length==inputs[i].1.len()as u64{finish_mips(&self.device,command,image.image,&layouts[i].0);}
+                }
+                self.device.end_command_buffer(command).map_err(|e|e.to_string())?;self.device.reset_fences(&[fence]).map_err(|e|e.to_string())?;
+                self.device.queue_submit(context.graphics_queue,&[vk::SubmitInfo::default().command_buffers(&[command])],fence).map_err(|e|{self.lifetime.quarantine();e.to_string()})?;
+            }
+            submitted=true;self.stats.transfer_submissions+=1;self.stats.image_transfer_submissions+=1;context.wait_transfer(fence).map_err(|e|e.to_string())?;submitted=false;self.stats.chunks+=1;
+        }Ok(())})();
+        if submitted{self.lifetime.quarantine();}result?;
+        self.stats.image_upload_calls+=inputs.len()as u64;
+        for &(image,data) in inputs{self.stats.image_bytes+=data.len()as u64;self.stats.image_mips_generated+=(image.mip_levels-1)as u64;}
         Ok(())
     }
     pub fn release_image_staging(&mut self) {
@@ -371,6 +426,11 @@ impl TextureImage {
         extent.width>0 && extent.height>0 && extent.width<=props.max_extent.width && extent.height<=props.max_extent.height && props.max_mip_levels>=1 && props.max_array_layers>=1 && props.sample_counts.contains(vk::SampleCountFlags::TYPE_1) && ingetrazo_render::texture_layout::Format::Bc7.mip_bytes(extent.width,extent.height).is_ok_and(|n|n<=props.max_resource_size)
     }
     fn color(context: &VulkanContext, resources: &mut Resources, extent: vk::Extent2D, data: &[u8], block_format: ingetrazo_render::texture_layout::Format, mips: bool, diagnostic_readback: bool) -> Result<Self, String> {
+        let image=Self::allocate_color(context,resources,extent,data.len() as u64,block_format,mips,diagnostic_readback)?;
+        resources.upload_color_image(context,image.image,extent,data,image.mip_levels,block_format)?;
+        Ok(image)
+    }
+    pub(crate) fn allocate_color(context: &VulkanContext, resources: &mut Resources, extent: vk::Extent2D, data_bytes: u64, block_format: ingetrazo_render::texture_layout::Format, mips: bool, diagnostic_readback: bool) -> Result<Self, String> {
         resources.admit_context(context)?;
         use egui_ash_renderer::MemoryObserver;
         let layout = ingetrazo_render::texture_layout::Layout::full(
@@ -379,7 +439,7 @@ impl TextureImage {
             extent.height,
         )?;
         let levels = if mips { layout.mips.len() as u32 } else { 1 };
-        if layout.mips[0].bytes != data.len() as u64 {
+        if layout.mips[0].bytes != data_bytes {
             return Err("Texture bytes differ from block dimensions".into());
         }
         let mut usage = vk::ImageUsageFlags::SAMPLED | vk::ImageUsageFlags::TRANSFER_DST;
@@ -422,6 +482,7 @@ impl TextureImage {
         ) {
             return Err("Texture requires actual linear sampling support".into());
         }
+        if mips&&!features.contains(vk::FormatFeatureFlags::BLIT_SRC|vk::FormatFeatureFlags::BLIT_DST|vk::FormatFeatureFlags::SAMPLED_IMAGE_FILTER_LINEAR){return Err("Device format does not support linear GPU mip generation".into());}
         let device = context.device.clone();
         let budget = resources.budget.clone();
         let image = unsafe {
@@ -518,7 +579,7 @@ impl TextureImage {
                 )
             }
             .map_err(|e| e.to_string())?;
-            resources.upload_color_image(context, image, extent, data, levels, block_format)
+            Ok::<(),String>(())
         })();
         if let Err(e) = result {
             if context.lifetime.uncertain(){context.lifetime.retain(budget.clone());context.lifetime.retain((image,view,sampler,memory));return Err(e);}

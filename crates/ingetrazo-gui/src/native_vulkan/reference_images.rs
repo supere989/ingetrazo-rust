@@ -151,6 +151,7 @@ impl ReferenceImages {
             handle: pool,
         });
         let mut sampled = HashMap::new();
+        let mut pending_bytes=0usize;
         for (index, p) in scene.image_planes.iter().enumerate() {
             if !image_visible(scene, p) {
                 continue;
@@ -175,10 +176,12 @@ impl ReferenceImages {
             let value = if let Some(v) = sampled.get(&id) {
                 *v
             } else {
-                let image = cache.prepare(context, resources, &encoded, 256 * 1024 * 1024)?;
+                let image = cache.prepare_deferred(context, resources, &encoded, 256 * 1024 * 1024)?;
+                pending_bytes=pending_bytes.checked_add(image.pending_bytes()).ok_or("Reference pending image bytes overflow")?;
                 let v = image.sampled();
                 sampled.insert(id, v);
                 c.images.push(image);
+                if pending_bytes>=8*1024*1024{cache.complete_many(context,resources,c.images.iter_mut())?;pending_bytes=0;}
                 v
             };
             let set = unsafe {
@@ -215,6 +218,7 @@ impl ReferenceImages {
             c.draws.push(draw);
         }
         self.stats.builds += 1;
+        cache.complete_many(context,resources,c.images.iter_mut())?;
         Ok(c)
     }
     pub fn publish(&mut self,cache:&mut TextureCache,c:Candidate,publication:u64)->Result<(),String>{
