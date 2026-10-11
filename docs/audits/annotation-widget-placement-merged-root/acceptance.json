@@ -1,0 +1,13 @@
+{
+  "source": "67392d5a",
+  "focused_tests_passed": 2,
+  "qt_source_hash_verified": true,
+  "scope": "Merged placement arithmetic only; logical fixed-point origin precedes physical density, widget Y floors, raster default preserved",
+  "full_widget_image_parity": false,
+  "remaining": [
+    "Per-channel LCD glyph raster/composition",
+    "Actual corrected full-frame DPR replay",
+    "Geometry raster discrepancy",
+    "Shared physical viewport extent"
+  ]
+}

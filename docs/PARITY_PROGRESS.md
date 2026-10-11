@@ -19,6 +19,8 @@ Latest independent rendering diagnosis: [real layout](audits/annotation-real-ope
 
 ## Dated implementation and verification evidence
 
+Merged widget glyph placement (2026-10-11 UTC): source `67392d5a` passes both focused merged placement tests, including fractional density counterexamples and negative logical coordinates. Logical fixed-point conversion precedes density scaling; widget Y uses floor and raster-target default is preserved. [Merged checks](audits/annotation-widget-placement-merged-root/acceptance.json). This fixes placement arithmetic only; LCD coverage/composition and complete widget pixel parity remain OPEN.
+
 Neutral widget glyph diagnosis (2026-10-11 UTC): root independently verifies 3,044 unequal-RGB pixels among 3,158 changed neutral-glyph pixels over a white baseline, proving a per-channel coverage requirement. Actual paint samples/sample buffers are zero and realized surface alpha is zero; requested multisampling does not establish overlay MSAA. [Root evidence](audits/annotation-widget-neutral-policy/root-review.json). Scalar glyph coverage remains insufficient; full rendered acceptance stays OPEN.
 
 Intel world failure distinguished (2026-10-11 UTC): independently verified artifact/source hashes show a pre-frame native texture-size query refusal, with exit 1 and no outer timeout. [Root review](audits/metal-world-root-review/intel-artifact-review.json). This is distinct from ARM, which completed two positive frames before the negative-control command failed. Native size/align diagnostics and supported allocation admission must be resolved; no memory-budget guard is waived.
