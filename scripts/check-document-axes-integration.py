@@ -169,6 +169,12 @@ general_preferences = out/"general-preferences"
 gp = archive("general-preferences", "manifest.json", ["original-preferences.json"], general_preferences)
 run([binaries/(consumers[20]+suffix), general_preferences, "--preferences"], "general-preferences/runtime.log")
 run([sys.executable, repo/"scripts/check-general-preferences.py", general_preferences], "general-preferences/acceptance.json")
+unit_preferences = out/"units-preferences"
+unit_codes = ["m", "cm", "mm", "in", "ft", "ft-in", "in-frac", "ft-in-frac"]
+up = archive("units-preferences", "manifest.json", ["original-units.json", "input.igz"]+[code+".igz" for code in unit_codes], unit_preferences)
+run([binaries/(consumers[20]+suffix), unit_preferences, "--units"], "units-preferences/runtime.log")
+run([sys.executable, repo/"scripts/check-units-preferences.py", unit_preferences], "units-preferences/acceptance.json")
+run([sys.executable, repo/"scripts/reopen-units-preferences.py", unit_preferences], "units-preferences/reopen.log")
 measurements = out/"vcb-measurements"
 vm = archive("vcb-measurements", "manifest.json", ["original-measurements.json"], measurements)
 run([binaries/(consumers[21]+suffix), measurements, "--measurements"], "vcb-measurements/runtime.log")
@@ -177,7 +183,7 @@ rows = json.loads((doc/"native.json").read_text())["rows"]
 assert [(x["fixture"],x["phase"]) for x in rows] == [(f,p) for f in ["retained","nested-leaves"] for p in ["edited","undo","redo"]]
 assert all(x["saved"] and x["clean"] for x in rows)
 result = {"revision":subprocess.check_output(["git","rev-parse","HEAD"],cwd=repo,text=True).strip(),
-          "source_pin":pin,"binary_sha256":identities,"source_archives":{"axes":a,"documents":d,"fillet":f,"pushpull_finite":p,"paste_save":ps,"box_selection":bs,"materials":mr,"cursor":cn,"annotations":ad,"annotation_hover_delete":ahd,"zoom_extents":ze,"annotation_move":am,"annotation_acquisition":aa,"mesh_kernel":mk,"annotation_edit_style":ae,"annotation_text_create":at,"finite_kernel":mf,"finite_kernel_initial":mfa,"annotation_hover":ah,"dimension_anchor_admission":da,"dimension_preview":dp,"open_recent":rr,"general_preferences":gp,"vcb_measurements":vm},
+          "source_pin":pin,"binary_sha256":identities,"source_archives":{"axes":a,"documents":d,"fillet":f,"pushpull_finite":p,"paste_save":ps,"box_selection":bs,"materials":mr,"cursor":cn,"annotations":ad,"annotation_hover_delete":ahd,"zoom_extents":ze,"annotation_move":am,"annotation_acquisition":aa,"mesh_kernel":mk,"annotation_edit_style":ae,"annotation_text_create":at,"finite_kernel":mf,"finite_kernel_initial":mfa,"annotation_hover":ah,"dimension_anchor_admission":da,"dimension_preview":dp,"open_recent":rr,"general_preferences":gp,"units_preferences":up,"vcb_measurements":vm},
           "axes":json.loads((axes/"check.json").read_text()),"documents":{"actual_app_saves":len(rows),"exact_original_reopens":6,"leaf_record_types":15,"negative_controls":5},
           "fillet":json.loads((fillet/"check.json").read_text()),"fillet_volume":json.loads((fillet/"volume.json").read_text()),"pushpull":json.loads((out/"pushpull-comparison.json").read_text()),
           "pushpull_finite":json.loads((finite/"comparison.json").read_text()),
@@ -201,6 +207,8 @@ result = {"revision":subprocess.check_output(["git","rev-parse","HEAD"],cwd=repo
           "dimension_preview_reopens":json.loads((dimension_preview/"reopen-acceptance.json").read_text()),
           "open_recent":json.loads((recent/"acceptance.json").read_text()),
           "general_preferences":json.loads((general_preferences/"acceptance.json").read_text()),
+          "units_preferences":json.loads((unit_preferences/"acceptance.json").read_text()),
+          "unit_reopens":json.loads((unit_preferences/"reopen-units.json").read_text()),
           "vcb_measurements":json.loads((measurements/"acceptance.json").read_text()),
           "fresh_source_acquisitions":0,"result":"pass"}
 (out/"result.json").write_text(json.dumps(result,indent=2)+"\n")
