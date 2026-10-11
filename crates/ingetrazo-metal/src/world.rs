@@ -484,7 +484,6 @@ impl World {
         } else {
             None
         };
-        let poses_changed = unique.poses.as_slice() != poses;
         let matrix_bytes = poses
             .len()
             .checked_mul(64)
@@ -501,7 +500,7 @@ impl World {
         };
         // Grow an unpublished candidate, so refused allocation/admission leaves
         // the idle target and its accounted capacity unchanged.
-        if poses.len() > unique.poses.capacity() {
+        let candidate_poses = if poses.len() > unique.poses.capacity() {
             let mut candidate = Vec::new();
             candidate
                 .try_reserve_exact(poses.len())
@@ -514,26 +513,29 @@ impl World {
                 return Err("Metal actual pose storage exceeds8MiB per target".into());
             }
             candidate.extend_from_slice(poses);
-            unique.poses = candidate;
+            Some(candidate)
         } else {
-            unique.poses.clear();
-            unique.poses.extend_from_slice(poses);
-        }
+            None
+        };
         let allocated_matrices = candidate_matrices.is_some();
-        if let Some(order) = candidate_order {
-            unique.order = Some(order);
-        }
-        unique.ordering_packet = Some(placements.packet.clone());
-        if let Some(buffer) = candidate_matrices {
-            unique.instance_matrices = Some(buffer);
-        }
-        if poses_changed || order_changed {
-            if let Some(buffer) = &mut unique.instance_matrices {
-                // Exclusive idle target ownership: no submitted sampler or encoder
-                // can observe writes. No temporary packed matrix allocation.
-                for (i, &source_index) in unique.order.as_ref().unwrap().indices.iter().enumerate()
+        let order = candidate_order.as_ref().or(unique.order.as_ref()).unwrap();
+        let buffer = candidate_matrices
+            .as_ref()
+            .or(unique.instance_matrices.as_ref());
+        let mut copied_bytes = 0u64;
+        if let Some(buffer) = buffer {
+            // Admission is complete and the target is exclusively idle. Compare
+            // against old packed slots before publishing poses/order/buffer.
+            for (i, &source_index) in order.indices.iter().enumerate() {
+                let pose = &poses[source_index];
+                if allocated_matrices
+                    || super::world_placement::packed_matrix_changed(
+                        unique.order.as_ref(),
+                        &unique.poses,
+                        i,
+                        pose,
+                    )
                 {
-                    let pose = &poses[source_index];
                     unsafe {
                         std::ptr::copy_nonoverlapping(
                             pose.mvp.as_ptr().cast::<u8>(),
@@ -541,8 +543,22 @@ impl World {
                             64,
                         );
                     }
+                    copied_bytes += 64;
                 }
             }
+        }
+        if let Some(candidate) = candidate_poses {
+            unique.poses = candidate;
+        } else {
+            unique.poses.clear();
+            unique.poses.extend_from_slice(poses);
+        }
+        if let Some(order) = candidate_order {
+            unique.order = Some(order);
+        }
+        unique.ordering_packet = Some(placements.packet.clone());
+        if let Some(buffer) = candidate_matrices {
+            unique.instance_matrices = Some(buffer);
         }
         let target = target.clone();
         if new_target.is_some() {
@@ -554,9 +570,7 @@ impl World {
             .clone()
             .unwrap_or_else(|| Arc::new(Owner::new(metal)));
         self.stats.instance_buffer_allocations += u64::from(allocated_matrices);
-        if poses_changed || order_changed {
-            self.stats.instance_matrix_upload_bytes += matrix_bytes as u64;
-        }
+        self.stats.instance_matrix_upload_bytes += copied_bytes;
         self.stats.draw_order_builds += u64::from(order_changed);
         self.stats.draw_order_payload_bytes = self
             .targets
