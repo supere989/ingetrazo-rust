@@ -93,6 +93,51 @@ fn run() -> Result<(), String> {
                 "bad pose collected"
             ))
             .is_err());
+        // Production UI sampling path owns the whole old frame even after replacing
+        // and freeing its texture map entry. No CPU image upload is involved.
+        let mut painter = ingetrazo_metal::egui_painter::EguiPainter::new(&metal)?;
+        let id = egui::TextureId::User(0x574f524c44);
+        let frame = world
+            .prepare(&metal, 1, identity, (64, 64), [0., 0., 1., 1.], || {
+                panic!("UI must reuse world geometry")
+            })?
+            .ok_or("UI target unavailable")?;
+        painter.install_world_texture(&metal, id, frame.clone())?;
+        let mut mesh = egui::Mesh::with_texture(id);
+        let rect = egui::Rect::from_min_size(egui::Pos2::ZERO, egui::vec2(64., 64.));
+        mesh.add_rect_with_uv(
+            rect,
+            egui::Rect::from_min_max(egui::Pos2::ZERO, egui::pos2(1., 1.)),
+            egui::Color32::WHITE,
+        );
+        let primitives = [egui::ClippedPrimitive {
+            clip_rect: rect,
+            primitive: egui::epaint::Primitive::Mesh(mesh),
+        }];
+        let old_paint = painter.prepare(&metal, &primitives, 1.)?;
+        drop(frame);
+        let replacement = world
+            .prepare(&metal, 2, identity, (64, 64), [0., 0., 1., 1.], || {
+                let mut p = packet(true);
+                for v in &mut p.vertices {
+                    v.color = [1., 0., 0., 1.];
+                }
+                Ok(p)
+            })?
+            .ok_or("Replacement target unavailable")?;
+        painter.install_world_texture(&metal, id, replacement)?;
+        let new_paint = painter.prepare(&metal, &primitives, 1.)?;
+        painter.free_textures(&[id]);
+        for (paint, expected) in [(old_paint, [0, 255, 0, 255]), (new_paint, [255, 0, 0, 255])] {
+            let pixels = painter
+                .submit_diagnostic(&metal, paint, 64, 64, false)?
+                .wait_readback(std::time::Duration::from_secs(5))?;
+            assert_eq!(
+                &pixels[(32 * 64 + 32) * 4..(32 * 64 + 32) * 4 + 4],
+                &expected,
+                "UI sampling must retain exact old/new world owners after map free"
+            );
+        }
         println!("Native Metal world opaque/depth: two draw orders, clear, three warm frames and invalid pose PASS; device={}; uploads={uploads}; targets={targets}",metal.info.name);
         Ok(())
     })

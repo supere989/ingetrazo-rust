@@ -1,0 +1,13 @@
+{
+  "scope": "Direct Metal world texture ingress and complete frame ownership; native execution pending",
+  "metadata_check": "cargo check -p ingetrazo-metal --lib --example native_world_depth --target aarch64-apple-darwin -j2 PASS",
+  "ownership": "one User ID owns Arc<PreparedWorld>+sampler; each prepared UI draw retains full owner independently of map replacement/free; PreparedPaint runs world render prepass before sampling in same native command",
+  "fixture_addition": "old green world owner and replacement red owner both sampled through production EguiPainter after texture-map free; exact center RGBA independently asserted. Native execution pending.",
+  "ordinary_textures": "managed map unchanged; admission rejects managed replacement colliding with active world User ID; no raw Color32 or CPU image conversion",
+  "remaining": "Host viewport activation, full source paint policies and actual native GPU/UI evidence remain open",
+  "hashes": {
+    "crates/ingetrazo-metal/src/egui_painter.rs": "b6d7294f652c53e16e3a6f80dd25c31e211211439be6c7c875b48505077772b0",
+    "crates/ingetrazo-metal/src/presentation.rs": "0bf380cb141c712c1654eb895c1c0a5465f2133e43db9ba6420ce1c324e4f87d",
+    "crates/ingetrazo-metal/examples/native_world_depth.rs": "bc7d568c254e23ba39f97520a75d56475acaeed13c6fdf96baf08f94625a819a"
+  }
+}
