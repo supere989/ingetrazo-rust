@@ -21,6 +21,8 @@ Latest independent rendering diagnosis: [real layout](audits/annotation-real-ope
 
 ## Dated implementation and verification evidence
 
+Source geometric coverage reproduced independently (2026-10-11 UTC): root independently reconstructs the actual opaque geometry-only Qt image from 1,248 square-cap lines and 52 triangles, using 5,148 float32 vertices; full decoded RGBA matches exactly ([review](audits/annotation-widget-aliased-source/root-review.json)). This identifies a viable source-derived geometry path; native GPU edge rules, degenerates, translucent/stencil behavior and fractional DPI remain unverified.
+
 ARM material artifact independently verified (2026-10-11 UTC): root checks ZIP/source hashes and all 18 GPU frames at 1,152 interior plus 2,584 background pixels each. Front/default-back/override, hidden-line/monochrome, reflected authored front and preserved frame after metadata refusal match expected packet/style colors; warm uploads/targets remain 2/1 and final ledger is 0/0 ([root review](audits/metal-world-root-review/material-arm-artifact-review.json)). Full source scene, triangle edges, textures/alpha and presentation remain OPEN.
 
 Geometry-only failure independently verified (2026-10-11 UTC): 455 geometry-union pixels differ; source/native masks contain 641/914 pixels with XOR 273, and full frame differs at 1,738 pixels ([root review](audits/annotation-widget-geometry-negative/root-review.json)). Direct source widget stroke/triangle coverage is the next correction; strict acceptance remains FAIL.

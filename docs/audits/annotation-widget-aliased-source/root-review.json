@@ -1,0 +1,7 @@
+{
+  "source_inputs": "all hashes verified",
+  "independent_vectorized_reconstruction": "exact full RGBA image",
+  "vertices": 5148,
+  "pixels_different": 0,
+  "boundary": "Opaque scene source operations only; native GPU coverage, top-left edge rules, degenerates, alpha and fractional DPI remain open."
+}
