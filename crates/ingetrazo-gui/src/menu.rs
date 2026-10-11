@@ -70,7 +70,9 @@ pub fn render_menu_bar(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
                     ui.close_menu();
                 }
                 if ui.button(tr("Wavefront OBJ (.obj)…")).clicked() {
-                    app.show_open_dialog = true;
+                    if let Some(path)=crate::dialogs::pick_open_file(&tr("Import OBJ"),"*.obj|OBJ") {
+                        if let Err(error)=app.begin_unit_import(&path) {app.status_message=error;}
+                    }
                     ui.close_menu();
                 }
                 if ui.button(tr("STL mesh (*.stl)…")).clicked() {
@@ -90,7 +92,9 @@ pub fn render_menu_bar(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
                     ui.close_menu();
                 }
                 if ui.button(tr("AutoCAD DXF (.dxf)…")).clicked() {
-                    app.show_open_dialog = true;
+                    if let Some(path)=crate::dialogs::pick_open_file(&tr("Import DXF"),"*.dxf|DXF") {
+                        if let Err(error)=app.begin_unit_import(&path) {app.status_message=error;}
+                    }
                     ui.close_menu();
                 }
                 if ui.button(tr("Georeference (KML / GeoJSON)…")).clicked() {

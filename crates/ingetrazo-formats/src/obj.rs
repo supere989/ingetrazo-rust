@@ -43,14 +43,41 @@ pub fn export_obj(scene: &Scene, writer: &mut impl Write) -> Result<(), ObjError
 
 /// Import an OBJ stream into a scene's mesh.
 pub fn import_obj(reader: &mut impl Read, scene: &mut Scene) -> Result<(), ObjError> {
+    import_obj_options(reader, scene, 1., false)
+}
+
+/// Source Import confirmation: scale authored points then construct Qt-float positions.
+/// Existing unscaled callers retain their native f64 policy.
+pub fn import_obj_with_units(
+    reader: &mut impl Read,
+    scene: &mut Scene,
+    scale: f64,
+) -> Result<(), ObjError> {
+    import_obj_options(reader, scene, scale, true)
+}
+
+fn import_obj_options(
+    reader: &mut impl Read,
+    scene: &mut Scene,
+    scale: f64,
+    source_points: bool,
+) -> Result<(), ObjError> {
+    if !scale.is_finite() || scale <= 0. {
+        return Err(ObjError::Parse(0, "Invalid import scale".into()));
+    }
     let mut candidate = scene.clone();
-    import_obj_inner(reader, &mut candidate)?;
+    import_obj_inner(reader, &mut candidate, scale, source_points)?;
     candidate.bump_version();
     *scene = candidate;
     Ok(())
 }
 
-fn import_obj_inner(reader: &mut impl Read, scene: &mut Scene) -> Result<(), ObjError> {
+fn import_obj_inner(
+    reader: &mut impl Read,
+    scene: &mut Scene,
+    scale: f64,
+    source_points: bool,
+) -> Result<(), ObjError> {
     let buf_reader = BufReader::new(reader);
     let mut file_verts: Vec<DVec3> = Vec::new();
     let mut container = None;
@@ -84,7 +111,12 @@ fn import_obj_inner(reader: &mut impl Read, scene: &mut Scene) -> Result<(), Obj
                     .next()
                     .and_then(|s| s.parse().ok())
                     .ok_or_else(|| ObjError::Parse(line_num + 1, "Invalid vertex Z".to_string()))?;
-                let point = DVec3::new(x, y, z);
+                let point = DVec3::new(x, y, z) * scale;
+                let point = if source_points {
+                    point.as_vec3().as_dvec3()
+                } else {
+                    point
+                };
                 if !point.is_finite() {
                     return Err(ObjError::Parse(line_num + 1, "Nonfinite vertex".into()));
                 }

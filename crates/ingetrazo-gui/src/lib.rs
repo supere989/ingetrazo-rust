@@ -13,6 +13,7 @@ pub mod app;
 mod engineering_python;
 mod ai_bridge;
 mod geographic_import;
+pub mod import_units;
 pub mod blender;
 pub mod composer;
 mod composer_text_fields;

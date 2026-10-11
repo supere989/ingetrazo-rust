@@ -8,6 +8,8 @@ pub struct Draft {
     pub unit_code: String,
     pub precision: i64,
     pub units_for_new: bool,
+    pub obj_unit: String,
+    pub dxf_unit: String,
     pub visual_style: VisualStyle,
     pub profile_width: f32,
     pub line_width: f32,
@@ -65,6 +67,10 @@ impl IngeTrazoApp {
             let mut preferences = self.document_session.preferences.clone();
             preferences.language = Some(self.language.clone());
             self.document_session.preferences_draft = Some(Draft {
+                obj_unit: crate::import_units::preference(&preferences, "import/obj_unit", "m")
+                    .to_owned(),
+                dxf_unit: crate::import_units::preference(&preferences, "import/dxf_unit", "mm")
+                    .to_owned(),
                 preferences,
                 unit_code: ingetrazo_core::units::model_unit(&self.scene).into(),
                 precision: ingetrazo_core::units::model_precision(&self.scene).clamp(0, 6),
@@ -87,6 +93,14 @@ impl IngeTrazoApp {
             return;
         };
         draft.preferences.clamp();
+        draft
+            .preferences
+            .extra
+            .insert("import/obj_unit".into(), serde_json::json!(draft.obj_unit));
+        draft
+            .preferences
+            .extra
+            .insert("import/dxf_unit".into(), serde_json::json!(draft.dxf_unit));
         self.document_session.preferences = draft.preferences;
         if let Some(language) = self.document_session.preferences.language.clone() {
             self.set_language(&language);
@@ -182,6 +196,28 @@ pub fn render(app: &mut IngeTrazoApp, ctx: &egui::Context) {
                     .extra
                     .insert(key.into(), serde_json::json!(value));
             }
+        }
+        ui.separator();
+        ui.label("Import defaults");
+        for (code, label, codes) in [
+            (
+                &mut draft.obj_unit,
+                "Suggested unit for OBJ",
+                crate::import_units::OBJ_CODES,
+            ),
+            (
+                &mut draft.dxf_unit,
+                "Suggested unit for DXF/DWG",
+                crate::import_units::DXF_CODES,
+            ),
+        ] {
+            egui::ComboBox::from_id_salt(label)
+                .selected_text(format!("{label}: {code}"))
+                .show_ui(ui, |ui| {
+                    for option in codes {
+                        ui.selectable_value(code, option.to_owned(), option);
+                    }
+                });
         }
         ui.separator();
         ui.label("Units of this document");

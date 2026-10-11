@@ -127,6 +127,10 @@ fn click(a: &mut IngeTrazoApp, ctx: &egui::Context, label: &str) {
     }
 }
 fn main() {
+    if std::env::args().any(|a| a == "--import-preferences") {
+        import_preferences_acceptance();
+        return;
+    }
     if std::env::args().any(|a| a == "--units") {
         units_acceptance();
         return;
@@ -521,6 +525,147 @@ fn units_acceptance() {
     std::fs::write(
         root.join("native-units.json"),
         serde_json::to_vec_pretty(&json!({"rows":rows})).unwrap(),
+    )
+    .unwrap();
+}
+
+fn import_preferences_acceptance() {
+    let root = std::path::PathBuf::from(std::env::args().nth(1).unwrap());
+    let store = root.join("native-import-settings");
+    let mut a = IngeTrazoApp::new();
+    a.attach_session_store(ingetrazo_gui::session_state::SessionStore::isolated(&store));
+    let mut prefs = Vec::new();
+    let pref = |a: &IngeTrazoApp, phase: &str| json!({"phase":phase,"obj":ingetrazo_gui::import_units::preference(&a.document_session.preferences,"import/obj_unit","m"),"dxf":ingetrazo_gui::import_units::preference(&a.document_session.preferences,"import/dxf_unit","mm")});
+    prefs.push(pref(&a, "default"));
+    a.begin_preferences();
+    {
+        let d = a.document_session.preferences_draft.as_mut().unwrap();
+        d.obj_unit = "ft".into();
+        d.dxf_unit = "in".into();
+    }
+    prefs.push(pref(&a, "draft"));
+    a.cancel_preferences();
+    prefs.push(pref(&a, "cancel"));
+    a.begin_preferences();
+    {
+        let d = a.document_session.preferences_draft.as_mut().unwrap();
+        d.obj_unit = "ft".into();
+        d.dxf_unit = "in".into();
+    }
+    a.accept_preferences();
+    prefs.push(pref(&a, "accept"));
+    let mut a = IngeTrazoApp::new();
+    a.attach_session_store(ingetrazo_gui::session_state::SessionStore::isolated(&store));
+    prefs.push(pref(&a, "restart"));
+    fn points(scene: &Scene) -> Vec<[f64; 3]> {
+        let mut all = scene
+            .mesh
+            .vertices
+            .iter()
+            .map(|v| v.position.to_array())
+            .collect::<Vec<_>>();
+        fn walk(gs: &[Group], x: DMat4, out: &mut Vec<[f64; 3]>) {
+            for g in gs {
+                let x = x * g.transform;
+                out.extend(
+                    g.mesh
+                        .vertices
+                        .iter()
+                        .map(|v| x.transform_point3(v.position).to_array()),
+                );
+                walk(&g.children, x, out);
+            }
+        }
+        walk(&scene.groups, DMat4::IDENTITY, &mut all);
+        all.sort_by(|a, b| {
+            a[0].total_cmp(&b[0])
+                .then(a[1].total_cmp(&b[1]))
+                .then(a[2].total_cmp(&b[2]))
+        });
+        all
+    }
+    let cases = [
+        ("obj-cancel", "ambiguous.obj", None),
+        ("obj-stored", "ambiguous.obj", Some("ft")),
+        ("obj-size", "large.obj", Some("cm")),
+        ("obj-huge", "huge.obj", Some("mm")),
+        ("obj-explicit", "ambiguous.obj", Some("in")),
+        ("dxf-header", "header.dxf", Some("mm")),
+        ("dxf-lying", "lying.dxf", Some("cm")),
+        ("dxf-stored", "tiny.dxf", Some("ft")),
+    ];
+    let mut rows = Vec::new();
+    for (case, file, chosen) in cases {
+        let mut a = IngeTrazoApp::new();
+        a.attach_session_store(ingetrazo_gui::session_state::SessionStore::isolated(&store));
+        let x = a.scene.mesh.add_vertex(DVec3::new(-1., 0., 0.));
+        let y = a.scene.mesh.add_vertex(DVec3::ZERO);
+        a.scene.mesh.add_edge(x, y);
+        let before = a.scene.clone();
+        a.begin_unit_import(&root.join(file)).unwrap();
+        let suggested = a
+            .document_session
+            .unit_import
+            .as_ref()
+            .unwrap()
+            .code
+            .clone();
+        let confirmed = if let Some(code) = chosen {
+            a.document_session.unit_import.as_mut().unwrap().code = code.into();
+            a.confirm_unit_import().unwrap()
+        } else {
+            a.cancel_unit_import();
+            None
+        };
+        let factor = confirmed.as_ref().map(|c| c.factor);
+        let record = |a: &IngeTrazoApp, phase: &str| json!({"case":case,"phase":phase,"suggested":suggested,"factor":factor,"obj":ingetrazo_gui::import_units::preference(&a.document_session.preferences,"import/obj_unit","m"),"dxf":ingetrazo_gui::import_units::preference(&a.document_session.preferences,"import/dxf_unit","mm"),"points":points(&a.scene),"undo":a.undo_stack.len(),"redo":a.redo_stack.len()});
+        rows.push(record(&a, "confirmed"));
+        if let Some(c) = confirmed {
+            a.commit_unit_import(c).unwrap();
+            assert_eq!(a.undo_stack.len(), 1);
+            rows.push(record(&a, "import"));
+            a.undo();
+            assert_eq!(a.scene.mesh, before.mesh);
+            rows.push(record(&a, "undo"));
+            a.redo();
+            rows.push(record(&a, "redo"));
+        } else {
+            assert_eq!(a.scene, before);
+        }
+    }
+    // Invalid accepted content preserves document/history, but source unit choice persists.
+    std::fs::write(root.join("invalid.obj"), "v 0 0 0\nv 1 0 0\nf 1 2 9\n").unwrap();
+    let before = a.scene.clone();
+    let depth = a.undo_stack.len();
+    a.begin_unit_import(&root.join("invalid.obj")).unwrap();
+    a.document_session.unit_import.as_mut().unwrap().code = "cm".into();
+    assert!(a.accept_unit_import().is_err());
+    assert_eq!(a.scene, before);
+    assert_eq!(a.undo_stack.len(), depth);
+    assert_eq!(
+        ingetrazo_gui::import_units::preference(
+            &a.document_session.preferences,
+            "import/obj_unit",
+            "m"
+        ),
+        "cm"
+    );
+    let mut g = Group::new("nested");
+    let x = g.mesh.add_vertex(DVec3::ZERO);
+    let y = g.mesh.add_vertex(DVec3::X);
+    g.mesh.add_edge(x, y);
+    a.scene.groups.push(g);
+    a.scene.select(SelectionItem::Group(0));
+    a.begin_component_edit();
+    let before = a.scene.clone();
+    let depth = a.undo_stack.len();
+    assert!(a.begin_unit_import(&root.join("ambiguous.obj")).is_err());
+    assert_eq!(a.scene, before);
+    assert_eq!(a.undo_stack.len(), depth);
+    assert_eq!(a.component_edit_stack.len(), 1);
+    std::fs::write(
+        root.join("native-import-preferences.json"),
+        serde_json::to_vec_pretty(&json!({"preferences":prefs,"rows":rows})).unwrap(),
     )
     .unwrap();
 }

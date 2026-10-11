@@ -45,6 +45,28 @@ pub fn export_dxf(scene: &Scene, writer: &mut impl Write) -> Result<(), DxfError
 
 /// Parse a complete entity transaction before modifying the caller's document.
 pub fn import_dxf(reader: &mut impl Read, scene: &mut Scene) -> Result<(), DxfError> {
+    import_dxf_options(reader, scene, 1., false)
+}
+
+/// Scale typed dimensional fields before tessellation and author only emitted points as Qt floats.
+pub fn import_dxf_with_units(
+    reader: &mut impl Read,
+    scene: &mut Scene,
+    scale: f64,
+) -> Result<(), DxfError> {
+    import_dxf_options(reader, scene, scale, true)
+}
+
+fn import_dxf_options(
+    reader: &mut impl Read,
+    scene: &mut Scene,
+    scale: f64,
+    source_points: bool,
+) -> Result<(), DxfError> {
+    if !scale.is_finite() || scale <= 0. {
+        return Err(DxfError::Parse("Invalid import scale".into()));
+    }
+
     let lines = BufReader::new(reader)
         .lines()
         .collect::<Result<Vec<_>, _>>()?;
@@ -132,11 +154,15 @@ pub fn import_dxf(reader: &mut impl Read, scene: &mut Scene) -> Result<(), DxfEr
             ));
         }
         let point = |n| -> Result<DVec3, DxfError> {
-            Ok(DVec3::new(
+            let point = DVec3::new(
                 number(10 + n, 0.)?,
                 number(20 + n, 0.)?,
                 number(30 + n, 0.)?,
-            ))
+            ) * scale;
+            if !point.is_finite() {
+                return Err(DxfError::Parse("Import coordinate overflow".into()));
+            }
+            Ok(point)
         };
         let mut points = Vec::new();
         let mut face = false;
@@ -160,7 +186,7 @@ pub fn import_dxf(reader: &mut impl Read, scene: &mut Scene) -> Result<(), DxfEr
                 points = vec![point(0)?, point(1)?];
             }
             "LWPOLYLINE" => {
-                let elevation = number(38, 0.)?;
+                let elevation = number(38, 0.)? * scale;
                 let mut vertices = Vec::<(DVec3, f64)>::new();
                 for (code, value) in attributes {
                     if *code == 10 {
@@ -169,7 +195,7 @@ pub fn import_dxf(reader: &mut impl Read, scene: &mut Scene) -> Result<(), DxfEr
                             .ok()
                             .filter(|v| v.is_finite())
                             .ok_or_else(|| DxfError::Parse("Invalid polyline X".into()))?;
-                        vertices.push((DVec3::new(x, 0., elevation), 0.));
+                        vertices.push((DVec3::new(x * scale, 0., elevation), 0.));
                     } else if *code == 20 || *code == 42 {
                         let v = value
                             .parse::<f64>()
@@ -180,7 +206,7 @@ pub fn import_dxf(reader: &mut impl Read, scene: &mut Scene) -> Result<(), DxfEr
                             DxfError::Parse("Polyline field without vertex".into())
                         })?;
                         if *code == 20 {
-                            last.0.y = v;
+                            last.0.y = v * scale;
                         } else {
                             last.1 = v;
                         }
@@ -188,6 +214,9 @@ pub fn import_dxf(reader: &mut impl Read, scene: &mut Scene) -> Result<(), DxfEr
                 }
                 if vertices.len() < 2 {
                     return Err(DxfError::Parse("Polyline requires two vertices".into()));
+                }
+                if vertices.iter().any(|(p, _)| !p.is_finite()) {
+                    return Err(DxfError::Parse("Import coordinate overflow".into()));
                 }
                 let closed = (number(70, 0.)? as u32) & 1 != 0;
                 let segments = vertices.len() - usize::from(!closed);
@@ -234,8 +263,8 @@ pub fn import_dxf(reader: &mut impl Read, scene: &mut Scene) -> Result<(), DxfEr
             }
             "CIRCLE" | "ARC" => {
                 let center = point(0)?;
-                let radius = number(40, 0.)?;
-                if radius <= 0. {
+                let radius = number(40, 0.)? * scale;
+                if !radius.is_finite() || radius <= 0. {
                     return Err(DxfError::Parse("Curve requires positive radius".into()));
                 }
                 let begin = if kind == "CIRCLE" {
@@ -266,6 +295,14 @@ pub fn import_dxf(reader: &mut impl Read, scene: &mut Scene) -> Result<(), DxfEr
                 return Err(DxfError::Parse(format!(
                     "DXF entity {kind} is not yet supported; document unchanged"
                 )))
+            }
+        }
+        for point in &mut points {
+            if source_points {
+                *point = point.as_vec3().as_dvec3();
+            }
+            if !point.is_finite() {
+                return Err(DxfError::Parse("Import coordinate overflow".into()));
             }
         }
         let mesh = if layer == "0" {
