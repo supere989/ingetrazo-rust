@@ -532,6 +532,7 @@ impl Tool for SelectTool {
     fn annotation_edit_target(&mut self,scene:&Scene,ctx:&ToolContext)->Option<crate::base::AnnotationEditTarget>{
         use crate::base::AnnotationEditTarget;
         if let Some(id)=self.annotation_hits.label.filter(|id|scene.text_labels.iter().any(|t|t.history_id==*id&&scene.is_layer_selectable(t.layer.as_deref()))){return Some(AnnotationEditTarget::Label(id));}
+        if self.annotation_hits.dimension.is_none()&&self.annotation_leader.is_none(){return None;}
         let edge=if let(Some((viewport,eye)),Some(cursor))=(self.pick_viewport,ctx.screen){self.click_index.edge(scene,viewport,cursor,eye)}else{crate::base::pick_scene_edge(scene,&ctx.ray,0.2)};
         if edge.is_some()||crate::base::pick_scene_group(scene,&ctx.ray,0.2).is_some(){return None;}
         if let Some(id)=self.annotation_hits.dimension.filter(|id|scene.dimensions.iter().any(|d|d.id==*id&&scene.is_layer_selectable(d.layer.as_deref()))){return Some(AnnotationEditTarget::Dimension(id));}

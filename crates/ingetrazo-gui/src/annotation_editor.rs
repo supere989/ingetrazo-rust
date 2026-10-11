@@ -379,4 +379,150 @@ mod tests {
         assert_eq!(a.undo_stack.len(), 1);
         assert_eq!(count.load(Ordering::Relaxed), 0);
     }
+    #[test]
+    fn actual_select_double_click_and_escape_same_frame_never_cancel_background_tool() {
+        use ingetrazo_tools::{
+            base::{AnnotationHits, Tool, ToolContext, ToolType},
+            select::SelectTool,
+        };
+        use std::sync::{
+            atomic::{AtomicUsize, Ordering},
+            Arc,
+        };
+        #[derive(Debug)]
+        struct Observed {
+            select: SelectTool,
+            cancel: Arc<AtomicUsize>,
+        }
+        impl Tool for Observed {
+            fn tool_type(&self) -> ToolType {
+                ToolType::Select
+            }
+            fn name(&self) -> &'static str {
+                "Select"
+            }
+            fn wants_annotation_hits(&self) -> bool {
+                true
+            }
+            fn note_annotation_hits(&mut self, h: AnnotationHits) {
+                self.select.note_annotation_hits(h);
+            }
+            fn note_annotation_leader_hit(&mut self, h: Option<u64>) {
+                self.select.note_annotation_leader_hit(h);
+            }
+            fn note_pick_viewport(
+                &mut self,
+                v: ingetrazo_core::screen_pick::PixelViewport,
+                e: glam::DVec3,
+                r: u64,
+            ) {
+                self.select.note_pick_viewport(v, e, r);
+            }
+            fn annotation_edit_target(
+                &mut self,
+                s: &ingetrazo_core::scene::Scene,
+                c: &ToolContext,
+            ) -> Option<AnnotationEditTarget> {
+                self.select.annotation_edit_target(s, c)
+            }
+            fn on_click(&mut self, s: &mut ingetrazo_core::scene::Scene, c: &ToolContext) {
+                self.select.on_click(s, c);
+            }
+            fn on_double_click(&mut self, s: &mut ingetrazo_core::scene::Scene, c: &ToolContext) {
+                self.select.on_double_click(s, c);
+            }
+            fn on_cancel(&mut self, s: &mut ingetrazo_core::scene::Scene) {
+                self.cancel.fetch_add(1, Ordering::Relaxed);
+                self.select.on_cancel(s);
+            }
+        }
+        let mut a = IngeTrazoApp::new();
+        a.system_clipboard = None;
+        a.camera.target = glam::DVec3::ZERO;
+        a.camera.pitch = std::f64::consts::FRAC_PI_2;
+        a.camera.yaw = 0.;
+        a.camera.distance = 10.;
+        a.camera.perspective = false;
+        a.scene
+            .text_labels
+            .push(ingetrazo_core::textlabel::TextLabel::new(
+                glam::DVec3::ZERO,
+                glam::DVec3::ZERO,
+                "source glyph",
+            ));
+        let count = Arc::new(AtomicUsize::new(0));
+        a.active_tool = Box::new(Observed {
+            select: SelectTool::new(),
+            cancel: count.clone(),
+        });
+        a.active_tool_type = ToolType::Select;
+        let ctx = egui::Context::default();
+        let input = |time, events| egui::RawInput {
+            time: Some(time),
+            screen_rect: Some(egui::Rect::from_min_size(
+                egui::Pos2::ZERO,
+                egui::vec2(800., 600.),
+            )),
+            events,
+            ..Default::default()
+        };
+        let _ = ctx.run(input(0., vec![]), |ctx| {
+            egui::CentralPanel::default()
+                .show(ctx, |ui| crate::viewport::render_viewport(&mut a, ui));
+        });
+        let rect = a.native_gpu_viewport_rect.unwrap();
+        let pixel = rect.center() + egui::vec2(8., -8.);
+        let pointer = |pressed| egui::Event::PointerButton {
+            pos: pixel,
+            button: egui::PointerButton::Primary,
+            pressed,
+            modifiers: egui::Modifiers::NONE,
+        };
+        let _ = ctx.run(
+            input(
+                0.1,
+                vec![
+                    egui::Event::PointerMoved(pixel),
+                    pointer(true),
+                    pointer(false),
+                ],
+            ),
+            |ctx| {
+                egui::CentralPanel::default()
+                    .show(ctx, |ui| crate::viewport::render_viewport(&mut a, ui));
+            },
+        );
+        assert!(a.annotation_editor.is_none());
+        assert!(a.undo_stack.is_empty());
+        let _ = ctx.run(
+            input(
+                0.2,
+                vec![
+                    pointer(true),
+                    pointer(false),
+                    egui::Event::Key {
+                        key: egui::Key::Escape,
+                        physical_key: None,
+                        pressed: true,
+                        repeat: false,
+                        modifiers: egui::Modifiers::NONE,
+                    },
+                ],
+            ),
+            |ctx| {
+                egui::CentralPanel::default()
+                    .show(ctx, |ui| crate::viewport::render_viewport(&mut a, ui));
+                assert!(
+                    a.annotation_editor.is_some(),
+                    "actual Select double-click must open the editor before modal Escape"
+                );
+                render(&mut a, ctx);
+            },
+        );
+        assert!(a.annotation_editor.is_none());
+        assert_eq!(count.load(Ordering::Relaxed), 0);
+        assert!(a.undo_stack.is_empty());
+        assert!(a.redo_stack.is_empty());
+        assert_eq!(a.scene.text_labels[0].text, "source glyph");
+    }
 }

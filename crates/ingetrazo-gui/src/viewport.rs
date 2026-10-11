@@ -249,7 +249,7 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
         }
     }
     // Observe release beyond the viewport, without committing a tool during paste.
-    if scale_input_admitted && app.paste_preview.is_none()
+    if app.annotation_editor.is_none() && scale_input_admitted && app.paste_preview.is_none()
         && matches!(app.active_tool_type,ToolType::FollowMe|ToolType::Freehand|ToolType::Scale)
         && pointer.button_released(egui::PointerButton::Primary)
     {
@@ -265,10 +265,10 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
         }
     }
 
-    scale_modifier_changes(app,scale_modifiers.as_ref(),usize::MAX,&mut scale_modifier_cursor);
+    if app.annotation_editor.is_none(){scale_modifier_changes(app,scale_modifiers.as_ref(),usize::MAX,&mut scale_modifier_cursor);}
 
     // Handle Esc to cancel active tool and clear locks
-    if ui.input(|i| i.key_pressed(egui::Key::Escape)) {
+    if app.annotation_editor.is_none() && ui.input(|i| i.key_pressed(egui::Key::Escape)) {
         app.snap_engine.reset_operation_state();
         if app.cancel_blender_pick() {
         } else if app.paste_preview.is_some() {
