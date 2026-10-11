@@ -1,0 +1,10 @@
+{
+  "base": "af4ba777",
+  "job_logs_sha256": "28577bdd175e424cfbd21498454f2b8bd982a22c9f57d81946854d630099cba8",
+  "member": "arm.log",
+  "failure_lines": [
+    "2026-10-11T16:40:53.8997780Z World standalone texture has unusable size or exceeds admission ticket"
+  ],
+  "cause_branch": "unknown: actual size and ticket absent",
+  "validation": "source review and diff --check only"
+}

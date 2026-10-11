@@ -1264,30 +1264,21 @@ fn image_samples(metal:&NativeMetal,extent:(u32,u32),format:MTLPixelFormat,usage
     d.setStorageMode(MTLStorageMode::Private);
     d.setHazardTrackingMode(MTLHazardTrackingMode::Tracked);
     d.setUsage(usage);
-    // Query native layout before allocation. This is a heap-size estimate for a
-    // standalone texture: verify allocatedSize before publication, never admit a
-    // larger allocation by silently increasing the ticket after allocation.
+    // Apple's heap query describes creation FROM A HEAP, not the allocation
+    // size of newTextureWithDescriptor. Observe it, but do not use it as an
+    // upper bound for this standalone resource. Reserve remaining logical
+    // capacity before allocation, then reconcile actual allocatedSize under
+    // the budget lock before publication. This is not a physical allocator bound.
     let native = metal.device.heapTextureSizeAndAlignWithDescriptor(&d);
-    let admitted = u64::try_from(native.size).map_err(|_| "World native texture size overflow")?;
+    if (native.size == 0) != (native.align == 0) {
+        return Err(format!("World native texture size query invalid: requested_bytes={requested}, queried_size={}, queried_align={}, extent={}x{}, format={format:?}, samples={samples}, device={}", native.size, native.align, extent.0, extent.1, metal.device.name()));
+    }
     let (admitted, ticket) = {
         let mut budget = metal.budget.lock().map_err(|_| "Metal budget poisoned")?;
-        let admitted = if native.size == 0 && native.align == 0 {
-            // Heap estimates can be unavailable for a standalone texture.
-            // Temporarily exclude all other logical admissions; actual allocatedSize
-            // must fit this ticket before publication. This is not an allocator bound.
-            let available = super::world_admission::standalone_capacity(&budget)?;
-            if available < requested {
-                return Err("World target exceeds available allocation admission".into());
-            }
-            available
-        } else {
-            // Native layout requirements are authoritative and can be smaller
-            // than the logical sample payload; do not impose a guessed floor.
-            if admitted == 0 || native.align == 0 {
-                return Err(format!("World native texture size query invalid: requested_bytes={requested}, queried_size={}, queried_align={}, extent={}x{}, format={format:?}, samples={samples}, device={}", native.size, native.align, extent.0, extent.1, metal.device.name()));
-            }
-            admitted
-        };
+        let admitted = super::world_admission::standalone_capacity(&budget)?;
+        if admitted == 0 || (native.size == 0 && admitted < requested) {
+            return Err(format!("World target exceeds available allocation admission: ticket_bytes={admitted}, requested_bytes={requested}, queried_size={}, queried_align={}, extent={}x{}, format={format:?}, samples={samples}, device={}", native.size, native.align, extent.0, extent.1, metal.device.name()));
+        }
         (admitted, budget.reserve(0, admitted)?)
     };
     let Some(raw) = metal.device.newTextureWithDescriptor(&d) else {
@@ -1303,7 +1294,7 @@ fn image_samples(metal:&NativeMetal,extent:(u32,u32),format:MTLPixelFormat,usage
     let mut budget = metal.budget.lock().map_err(|_| "Metal budget poisoned")?;
     if actual == 0 || actual > admitted {
         budget.cancel(ticket)?;
-        return Err("World standalone texture has unusable size or exceeds admission ticket".into());
+        return Err(format!("World standalone texture has unusable size or exceeds admission ticket: actual_bytes={actual}, ticket_bytes={admitted}, requested_bytes={requested}, queried_size={}, queried_align={}, extent={}x{}, format={format:?}, samples={samples}, device={}", native.size, native.align, extent.0, extent.1, metal.device.name()));
     }
     if admitted != actual {
         budget.cancel(ticket)?;

@@ -103,7 +103,7 @@ mod tests {
     }
 }
 
-/// Cold standalone allocation admission when a device cannot estimate MSAA heap layout.
+/// Cold standalone allocation admission; heap layout is not a standalone size bound.
 /// Reserves all available logical capacity, never guesses a texture byte multiplier.
 pub(crate) fn standalone_capacity(b: &ingetrazo_core::gpu_memory::MemoryBudget) -> Result<u64, String> {
     let h = b.heaps.first().ok_or("Metal memory heap missing")?;
