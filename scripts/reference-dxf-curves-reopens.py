@@ -29,6 +29,9 @@ for case in source['cases']:
     kinds.append({'path':list(p),'name':g.name,'component':g.component,'is_component':g.is_component(),'xform':None if g.xform is None else list(g.xform.data())})
     walk(g.children,p)
   walk(s.groups)
+  def curve_group(g):
+   return {'edges':len(g.mesh.edges),'curved':sum(e.curve is not None for e in g.mesh.edges),'owners':len({e.curve for e in g.mesh.edges if e.curve is not None}),'children':[curve_group(c)for c in g.children]}
+  pair[suffix]['curve_inventory']=[curve_group(g)for g in s.groups]
   pair[suffix]['group_kinds']=kinds
   pair[suffix]['entity_layers']=sorted(entity_layers,key=lambda row:json.dumps(row,sort_keys=True))
   pair[suffix]['shared_mesh_pairs']=[[list(a),list(b)]for i,(a,ma)in enumerate(meshes)for b,mb in meshes[i+1:]if ma is mb]

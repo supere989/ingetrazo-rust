@@ -23,6 +23,7 @@ mutations=[]
 for name in expected:
  c=copy.deepcopy(b);row=next(r for r in c['states']if r['case']==name and r['phase']=='import');row['scene']['groups'][-1]['mesh']['edges'].pop();mutations.append(c)
  c=copy.deepcopy(b);row=next(r for r in c['states']if r['case']==name and r['phase']=='import');row['undo']+=1;mutations.append(c)
+ c=copy.deepcopy(b);row=next(r for r in c['states']if r['case']==name and r['phase']=='import');row['curves'][-1]['owners']+=1;mutations.append(c)
 for c in mutations:
  try:strict(a,c)
  except AssertionError:pass
