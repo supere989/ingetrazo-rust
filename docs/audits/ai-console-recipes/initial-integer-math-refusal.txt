@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "<ai>", line 1, in <module>
+  File "<recipes>", line 143, in wall
+  File "<recipes>", line 101, in _wall_mesh
+TypeError: Expected type 'float' but 'int' found.
+
+thread 'main' (1520195) panicked at crates/ingetrazo-gui/examples/engineering_console_recipes_fixture.rs:15:13:

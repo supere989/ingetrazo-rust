@@ -323,6 +323,21 @@ impl crate::IngeTrazoApp {
 mod tests {
     use super::Engine;
     #[test]
+    fn recipe_caught_native_orientation_refusal_aborts_visible_command() {
+        let mut app = crate::IngeTrazoApp::new();
+        app.engineering_python_enabled = true;
+        app.run_script("assert model.groups is groups");
+        let budget = app.engineering_python_budget().unwrap();
+        let before = app.scene.clone();
+        app.run_script("g=extrude([(0,0),(1,0),(1,1),(0,1)],0,1,name='Candidate')\ng.mesh.faces[0].attrs['back']={'color':(1,0,0)}\nfrom console_scene import orient_owned\ntry:\n orient_owned(g.mesh)\nexcept ValueError:\n pass");
+        assert_eq!(app.scene, before);
+        assert!(app.undo_stack.is_empty());
+        assert!(app.redo_stack.is_empty());
+        assert!(app.status_message.contains("scope retired"));
+        assert!(app.engineering_python.controller.is_none());
+        assert_eq!(budget.snapshot().total(), 0);
+    }
+    #[test]
     fn group_publication_refusal_retains_document_redo_and_retries() {
         let mut app = crate::IngeTrazoApp::new();
         app.engineering_python_enabled = true;

@@ -199,6 +199,130 @@ pub(super) mod console_scene {
             Ok(!vm.is_none(&zelf.get("xform", vm)) && zelf.get("component", vm).is_true(vm)?)
         }
     }
+    /// Native orientation preparation for the actual editable graph. The recipe
+    /// softening pass runs in the VM; no alternate helper Mesh/Group graph.
+    #[pyfunction]
+    fn orient_owned(mesh: PyRef<editable_mesh::Mesh>, vm: &VirtualMachine) -> PyResult<()> {
+        vm.host_budget_tick()?;
+        let budget = super::super::STAGED
+            .with(|s| {
+                s.try_borrow()
+                    .ok()
+                    .and_then(|s| s.as_ref().map(|s| s.budget.clone()))
+            })
+            .ok_or_else(|| {
+                vm.new_value_error("Recipe orientation requires an owned transaction")
+            })?;
+        let result = (|| -> Result<(), String> {
+            super::super::seed_packed_uids(&mesh)?;
+            let mut live = RootRestore::prepare(mesh.clone(), &budget, vm)?;
+            live.armed = false;
+            let mut candidate = packed::prepare(
+                &mesh,
+                &live.vertices,
+                &live.graph,
+                &live.positions,
+                &live.faces,
+                &live.face_fields,
+                &budget,
+                vm,
+            )?;
+            // Explicit bounded native-cost prerequisite. This is not a wall-time
+            // limit or the complete arbitrary orientation/partition API.
+            if candidate.mesh.faces.len() > 2048 {
+                return Err("Recipe native orientation face admission exceeded".into());
+            }
+            let mut count = 0usize;
+            for face in &candidate.mesh.faces {
+                if face.attrs.get("back").is_some_and(|v| v.is_object()) {
+                    return Err("Two-sided recipe orientation publication remains required".into());
+                }
+                count = count
+                    .checked_add(face.vertices.len())
+                    .ok_or("Recipe ring extent overflow")?;
+            }
+            let _charge = budget.reserve(
+                Kind::Preparation,
+                count
+                    .checked_mul(std::mem::size_of::<usize>())
+                    .and_then(|n| {
+                        n.checked_add(
+                            candidate.mesh.faces.len() * std::mem::size_of::<Vec<usize>>(),
+                        )
+                    })
+                    .ok_or("Recipe preparation extent overflow")?,
+            )?;
+            let mut old = Vec::new();
+            old.try_reserve_exact(candidate.mesh.faces.len())
+                .map_err(|_| "Recipe orientation rows refused")?;
+            for face in &candidate.mesh.faces {
+                let mut row = Vec::new();
+                row.try_reserve_exact(face.vertices.len())
+                    .map_err(|_| "Recipe winding preparation refused")?;
+                row.extend_from_slice(&face.vertices);
+                old.push(row);
+            }
+            if !candidate.mesh.faces.is_empty()
+                && !crate::vm_groups::native_groups::source_coplanar(&candidate.mesh)
+            {
+                ingetrazo_core::heal::orient_boundary_candidate(&mut candidate.mesh)?;
+            }
+            if candidate.mesh.faces.iter().any(|f| f.interior) {
+                return Err("Recipe partition field projection remains required".into());
+            }
+            // All fallible preparation precedes in-place ring reversal. Existing
+            // persistent list objects and held Face/Vertex identities survive.
+            for ((face, before), after) in
+                live.face_fields.iter().zip(&old).zip(&candidate.mesh.faces)
+            {
+                if before != &after.vertices {
+                    if !before
+                        .iter()
+                        .rev()
+                        .copied()
+                        .eq(after.vertices.iter().copied())
+                    {
+                        return Err("Recipe kernel changed unsupported topology".into());
+                    }
+                }
+                for ring in face.face.hole_loops.read().borrow_vec().iter() {
+                    if ring
+                        .downcast_ref::<rustpython_vm::builtins::PyList>()
+                        .is_none()
+                    {
+                        return Err("Recipe hole container requires list".into());
+                    }
+                }
+            }
+            // Compare packed face winding with the saved genuine graph rows.
+            for ((face, native), before) in
+                live.face_fields.iter().zip(&candidate.mesh.faces).zip(&old)
+            {
+                if before != &native.vertices {
+                    let ring = face.face.r#loop.read().clone();
+                    ring.borrow_vec_mut().reverse();
+                    let holes = face.face.hole_loops.read().clone();
+                    for hole in holes.borrow_vec().iter() {
+                        hole.downcast_ref::<rustpython_vm::builtins::PyList>()
+                            .unwrap()
+                            .borrow_vec_mut()
+                            .reverse();
+                    }
+                }
+            }
+            Ok(())
+        })();
+        if result.is_err() {
+            super::super::STAGED.with(|s| {
+                if let Ok(mut s) = s.try_borrow_mut() {
+                    if let Some(stage) = s.as_mut() {
+                        stage.failed = true;
+                    }
+                }
+            });
+        }
+        result.map_err(|e| vm.new_value_error(e))
+    }
     #[pyattr]
     #[pyclass(name = "Scene", traverse)]
     #[derive(Debug, PyPayload)]

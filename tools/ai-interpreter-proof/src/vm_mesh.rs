@@ -1752,6 +1752,8 @@ mod face_fields;
 mod hydrate;
 #[path = "vm_scene.rs"]
 pub mod scene;
+#[path = "vm_recipes.rs"]
+mod recipes;
 #[path = "vm_packed.rs"]
 mod packed;
 struct VertexRestore {
@@ -2323,10 +2325,12 @@ impl Controller {
         let vectors = crate::vm_groups::native_groups::module_def(&builder.ctx);
         let meshes = editable_mesh::module_def(&builder.ctx);
         let scenes = scene::console_scene::module_def(&builder.ctx);
+        let recipe_math = recipes::_recipe_math::module_def(&builder.ctx);
         let interpreter = builder
             .add_native_module(vectors)
             .add_native_module(meshes)
             .add_native_module(scenes)
+            .add_native_module(recipe_math)
             .interpreter();
         let interpreter = std::rc::Rc::new(interpreter);
         let vertex_runtime = identity_registry::Runtime::new(interpreter.clone());
@@ -2903,6 +2907,8 @@ impl Controller {
             prepared.set_item("scene", scene.clone().into(), vm).map_err(|_|"Scene scope refused")?;
             prepared.set_item("model", scene.clone().into(), vm).map_err(|_|"Model alias refused")?;
             prepared.set_item("groups", scene.groups.clone().into(), vm).map_err(|_|"Groups alias refused")?;
+            let helpers=recipes::prepare(scene.clone(),vm)?;
+            for (name,helper) in helpers { prepared.set_item(&*name,helper,vm).map_err(|_|"Recipe scope publication refused")?; }
             self.scope.globals.swap_prepared_contents(&prepared);
             Ok::<_,String>(scene)
         })?;

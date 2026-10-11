@@ -1,0 +1,14 @@
+
+warning: `ingetrazo-gui` (lib) generated 10 warnings
+warning: `rustpython-vm` (lib) generated 215 warnings (run `cargo fix --lib -p rustpython-vm` to apply 4 suggestions)
+    Finished `dev` profile [unoptimized] target(s) in 25.86s
+     Running `/tmp/ingetrazo-ai-registry-target/debug/examples/engineering_console_recipes_fixture`
+Traceback (most recent call last):
+  File "<recipes>", line 3, in _recipes
+ModuleNotFoundError: No module named 'math'
+
+thread 'main' (1518987) panicked at crates/ingetrazo-gui/examples/engineering_console_recipes_fixture.rs:3:116:
+assertion `left == right` failed: ["IngeTrazo 0.3.15 Interactive Console initialized.", ">>> g=extrude([(0,0),(2,0),(2,1),(0,1)],0,3,name='Extruded',color=(0.2,0.4,0.6)); m=g.mesh; f=m.faces[0]; ring=f.loop", "Engineering Python refused: Recipe bindings refused"]
+  left: true
+ right: false
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

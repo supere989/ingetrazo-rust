@@ -423,7 +423,7 @@ pub mod native_groups {
         }
         v.map(|x| x as f32)
     }
-    fn source_coplanar(m: &NativeMesh) -> bool {
+    pub(crate) fn source_coplanar(m: &NativeMesh) -> bool {
         let n = source_normal(m, 0);
         let o = centroid(m, 0);
         (0..m.faces.len()).all(|i| {

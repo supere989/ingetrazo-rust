@@ -1,0 +1,81 @@
+[
+  {
+    "name": "extrude",
+    "code": "g=extrude([(0,0),(2,0),(2,1),(0,1)],0,3,name='Extruded',color=(0.2,0.4,0.6)); m=g.mesh; f=m.faces[0]; ring=f.loop",
+    "history": null,
+    "check": "assert groups[-1] is g and g.mesh is m and m.faces[0] is f and f.loop is ring and isinstance(g,Group) and isinstance(m,Mesh)"
+  },
+  {
+    "name": "undo",
+    "code": "",
+    "history": false,
+    "check": "assert g not in groups and g.mesh is m and f.loop is ring"
+  },
+  {
+    "name": "detached",
+    "code": "f.attrs['vendor']={'note':'Held'}; g.name='DetachedExtrusion'",
+    "history": null,
+    "check": "assert f.loop is ring"
+  },
+  {
+    "name": "redo",
+    "code": "",
+    "history": true,
+    "check": "assert groups[-1] is g and f.loop is ring"
+  },
+  {
+    "name": "prism-holes",
+    "code": "p=prism([(0,0,0),(4,0,0),(4,4,0),(0,4,0)],(1,0,2),holes=[[(1,1,0),(1,2,0),(2,2,0),(2,1,0)]],name='Holed',color=[0.8,0.1,0.3]); pm=p.mesh",
+    "history": null,
+    "check": "assert groups[-1] is p and p.mesh is pm and isinstance(pm,Mesh)"
+  },
+  {
+    "name": "revolve",
+    "code": "r=revolve([(1,0),(1,2)],segments=12,name='Column',color=(0.6,0.4,0.2,1.0)); rm=r.mesh; rf=rm.faces[0]",
+    "history": null,
+    "check": "assert groups[-1] is r and r.mesh is rm and rm.faces[0] is rf and any(e.soft for e in rm.edges)"
+  },
+  {
+    "name": "wall",
+    "code": "w=wall((0,0),(4,0),height=3,thickness=0.2,openings=[(1,1,1,1)],peak=(2,0.5),name='Wall'); wm=w.mesh",
+    "history": null,
+    "check": "assert groups[-1] is w and w.mesh is wm"
+  },
+  {
+    "name": "undo-wall",
+    "code": "",
+    "history": false,
+    "check": "assert w not in groups and w.mesh is wm"
+  },
+  {
+    "name": "redo-wall",
+    "code": "",
+    "history": true,
+    "check": "assert groups[-1] is w and w.mesh is wm"
+  },
+  {
+    "name": "negative-extrude",
+    "code": "n=extrude([(0,0),(0,1),(1,1),(1,0)],2,-1,name='Negative')",
+    "history": null,
+    "check": "assert groups[-1] is n"
+  },
+  {
+    "name": "undo-negative",
+    "code": "",
+    "history": false,
+    "check": "assert n not in groups"
+  },
+  {
+    "name": "error",
+    "code": "extrude([(0,0),(1,0),(1,1),(0,1)],0,1,name='Refused'); raise ValueError('stop')",
+    "history": null,
+    "check": "",
+    "expect_error": true
+  },
+  {
+    "name": "redo-after-error",
+    "code": "",
+    "history": true,
+    "check": ""
+  }
+]

@@ -1,0 +1,9 @@
+warning: `ingetrazo-gui` (lib test) generated 7 warnings
+    Finished `test` profile [unoptimized] target(s) in 26.75s
+     Running unittests src/lib.rs (/tmp/ingetrazo-ai-registry-target/debug/deps/ingetrazo_gui-6d261567da4b7210)
+
+running 1 test
+test engineering_python::tests::recipe_caught_native_orientation_refusal_aborts_visible_command ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 251 filtered out; finished in 0.07s
+
