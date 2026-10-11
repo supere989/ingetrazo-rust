@@ -460,6 +460,38 @@ mod tests {
         }
     }
     #[test]
+    fn original_igz_definition_snapshot_admits_shared_owner() {
+        let path =
+            std::env::temp_dir().join(format!("component-codec-{}.igz", uuid::Uuid::new_v4()));
+        std::fs::write(
+            &path,
+            include_bytes!("../../../docs/audits/ai-console-imported-mesh/original-input.igz"),
+        )
+        .unwrap();
+        let mut app = crate::IngeTrazoApp::new();
+        app.scene = ingetrazo_formats::igz::load_igz(&path).unwrap();
+        std::fs::remove_file(path).unwrap();
+        let definition = app.scene.groups[0].component_definition.unwrap();
+        let share = app.scene.groups[0].mesh_share.unwrap();
+        assert_eq!(
+            app.scene.component_definitions[&definition].mesh_share,
+            None
+        );
+        app.engineering_python_enabled = true;
+        app.run_script("a,b=groups; assert a.mesh is b.mesh; assert a.xform.isIdentity()");
+        assert!(
+            !app.console_logs.last().unwrap().contains("refused"),
+            "{:?}",
+            app.console_logs
+        );
+        assert_eq!(app.scene.groups[0].component_definition, Some(definition));
+        assert_eq!(app.scene.groups[0].mesh_share, Some(share));
+        assert_eq!(
+            app.scene.component_definitions[&definition].mesh_share,
+            Some(share)
+        );
+    }
+    #[test]
     fn imported_mesh_reassignment_refusal_preserves_registry_and_redo() {
         let path = std::env::temp_dir().join(format!(
             "ingetrazo-imported-mesh-{}.igz",

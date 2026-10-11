@@ -1,0 +1,14 @@
+{
+  "base": "2cfe3111",
+  "tests": 13,
+  "states": 19,
+  "negative_controls": 11,
+  "source_sha256": {
+    "tools/ai-interpreter-proof/src/vm_scene.rs": "faf02be0b72a0ff35619e1bcc891986f6715d7c86e5a2874f982a044e1ca6227",
+    "crates/ingetrazo-gui/src/engineering_python.rs": "c552d936cb4824587b514f6813fc15634548fa39d8676a2ee5b3b5d7897e8e28"
+  },
+  "binary_sha256": "7a65d0706a3dfc6e1074a77c3f4ebb92433b212189eb43645779069ccb90063b",
+  "native_json_sha256": "315df4b7b0b4cd9a632b81550e65a8c997dd25b7cb9b8f8eb0966af59e9dda99",
+  "original_json_sha256": "105d67d9ccefc4a24f053b9a17f20b242650747549bfe64b1835fc975159fadb",
+  "canonical_parsed_payload_equal": true
+}

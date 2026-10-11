@@ -711,7 +711,12 @@ pub(super) fn import(
                 .component_definitions
                 .get(&id)
                 .ok_or("Imported component definition is missing")?;
-            if definition.mesh_share != g.mesh_share
+            // The native IGZ loader publishes prototype membership on Group;
+            // its definition snapshot intentionally has no mesh_share token.
+            // Only an explicitly linked definition must agree with that owner.
+            if definition
+                .mesh_share
+                .is_some_and(|token| Some(token) != g.mesh_share)
                 || definition.mesh != g.mesh
                 || !definition.children.is_empty()
                 || g.native_document

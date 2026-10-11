@@ -1,0 +1,23 @@
+    Finished `test` profile [unoptimized] target(s) in 31.16s
+     Running unittests src/lib.rs (/tmp/ingetrazo-ai-registry-target/debug/deps/ingetrazo_gui-6d261567da4b7210)
+
+running 13 tests
+test engineering_python::tests::changed_row_prepare_refuses_stale_unchanged_coordinate_before_writes ... ok
+test engineering_python::tests::changed_row_topology_and_unrelated_document_state_share_one_command ... ok
+test engineering_python::tests::refused_vm_history_preserves_visible_command_and_retry ... ok
+Traceback (most recent call last):
+  File "<ai>", line 1, in <module>
+ValueError: refuse
+test engineering_python::tests::application_undo_redo_retains_real_vm_aliases_and_globals ... ok
+test engineering_python::tests::vm_only_mesh_creation_does_not_claim_document_commit ... ok
+test engineering_python::tests::original_igz_definition_snapshot_admits_shared_owner ... ok
+test engineering_python::tests::recipe_caught_native_orientation_refusal_aborts_visible_command ... ok
+test engineering_python::tests::changed_row_consumer_keeps_unchanged_payload_and_index_correct ... ok
+test engineering_python::tests::group_publication_refusal_retains_document_redo_and_retries ... ok
+test engineering_python::tests::actual_console_current_mesh_persistent_scope_error_and_document_undo ... ok
+test engineering_python::tests::imported_mesh_reassignment_refusal_preserves_registry_and_redo ... ok
+test engineering_python::tests::native_component_identity_hydration_and_refusal ... ok
+test engineering_python::tests::post_execution_export_budget_refusal_retires_scope_preserves_document_and_history ... ok
+
+test result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 249 filtered out; finished in 0.19s
+
