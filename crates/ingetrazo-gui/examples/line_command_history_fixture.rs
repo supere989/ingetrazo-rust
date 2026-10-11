@@ -1,3 +1,5 @@
+#[path="line_command_history_fixture/measurements.rs"]
+mod measurements;
 use glam::DVec3;
 use ingetrazo_core::{math::Ray, mesh::Mesh};
 use ingetrazo_gui::IngeTrazoApp;
@@ -8,6 +10,7 @@ fn state(m: &Mesh) -> Value {
 }
 fn main() {
     let out = std::path::PathBuf::from(std::env::args().nth(1).unwrap());
+    if std::env::args().nth(2).as_deref()==Some("--measurements"){measurements::run(&out);return;}
     let source: Vec<Value> =
         serde_json::from_slice(&std::fs::read(out.join("original.json")).unwrap()).unwrap();
     let mut rows = vec![];
