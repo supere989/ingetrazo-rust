@@ -51,5 +51,5 @@ endpoint=audit/'pushpull-endpoints/source.json'
 primitive=run('endpoint-native',[str(bin/'pushpull_gate2_fixture'),str(endpoint),str(work/'endpoint-native.json')])
 app=run('endpoint-app',[str(bin/'pushpull_endpoints_app'),str(endpoint),str(work/'endpoint-app.json')])
 if primitive and app:
- run('endpoint-check',['python3','scripts/check-pushpull-endpoints.py',str(endpoint),str(work/'endpoint-native.json'),str(work/'endpoint-comparison.json'),str(work/'endpoint-app.json')])
+ run('endpoint-check',['/tmp/ingetrazo-parity-python/bin/python','scripts/check-pushpull-endpoints.py',str(endpoint),str(work/'endpoint-native.json'),str(work/'endpoint-comparison.json'),str(work/'endpoint-app.json')])
 raise SystemExit(any(stage['exit'] for stage in stages))
