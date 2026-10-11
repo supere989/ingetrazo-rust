@@ -1,9 +1,9 @@
 {
   "archive": "records.zip",
-  "archive_sha256": "300d9e64aa04d683896104c0a8b33212ade3f5fba7c2f7f7f1f33ea1388ceeda",
+  "archive_sha256": "008e1eddbd14b3001481d607621f13300cfa5072b88c306481a8f3fcd4b2ae6e",
   "files": {
     "original.json": "39ce11903f2488eeb78644a8c868837d1b51c9d92930989648bf326e65786045",
-    "native.json": "c74b7cf24edf2c9615c892c177a720f69523c0fb95230c315715b32050157ba1",
+    "native.json": "83197e8e714e4ac371278e76dfaac7e9c6561dbf3e31337b7bf84820974c26ab",
     "compiled-old-picker.json": "6f62f61ef570d20d2d65484dd94ca5ff5ce29e51e532f4f96c448c640aa963b7",
     "compiled-old-picker.patch": "cb76ecfbca82caa5a56bdfe02151991dfef79d2a7cf6bf23f37be8ffdbef01e7",
     "old-picker-build-provenance.json": "c939866548a112c23a3d961e0d16180cf7820605b06e29acf862a4881d006ec2",
@@ -14,9 +14,18 @@
     "compiled-frame-final-modifiers.json": "a5ff3fcc67936a075d03bc31fbe5dd9fe13f5646eea3231da40b6d919efba0e8",
     "compiled-frame-final-modifiers.patch": "0648616111e237d81746b86c0fa9eff1dfb48dc9556cf68fdabe4ed553ebb7e7",
     "compiled-frame-final-build.log": "de1c13ffa0a5884f97a0ca9a043ae3a2aa9fbf86152f2fe2fe7ae697e02358a3",
-    "restored-build.log": "de1c13ffa0a5884f97a0ca9a043ae3a2aa9fbf86152f2fe2fe7ae697e02358a3"
+    "restored-build.log": "de1c13ffa0a5884f97a0ca9a043ae3a2aa9fbf86152f2fe2fe7ae697e02358a3",
+    "native-before-priority.json": "c74b7cf24edf2c9615c892c177a720f69523c0fb95230c315715b32050157ba1",
+    "original-group-priority.json": "d14f941eafcb4b2d0d42f7a943ad733a71ef7f0b8469029e3525e18fd031b38d",
+    "compiled-old-group-priority.json": "ae1de6635d6d193c0160e1bef0996d20cdea01f1fb01cdde3b3ea5e23a59947e",
+    "compiled-old-group-priority.patch": "2c115e3b7dafa920ac39cfc9858b705833c231134ad56f3c2535317f5584f7b3",
+    "priority-build-provenance.json": "9b2c3b64c21f4f9a1ab97d260be3c445c81121c24ed1f42fd90f0d4ecafc7f73",
+    "group-priority-restored-build.log": "72aebeea03ed90387ce0bcf88202000ecac87ede94039815ead81c970e49daac",
+    "model-revision-tests.log": "fecec5a3718a2923546aa2d94969de58f324062e27af9a816b3d3452bfe54c44",
+    "model-revision-build.log": "a5f79c1afb1b5a858ef933e5c0bf3c58eaa476411ef5d977aef7789b9f930954",
+    "final-build-provenance.json": "41e388908624c8c1d5efa311e843619bf5faec4599486a6fd56d8a9f5bc62dab"
   },
-  "runtime_source": "938f0ba1c9de751ee938718d32bc34ab9224f434",
+  "runtime_source": "28e6fe283ee29f8453ebcd1565e752a891ebb7f4",
   "original_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
   "oracle_helper_sha256": "157b9473fb71e16e9a63ad996b3a967c08f4478d8887a5ae161b3bf19329edde",
   "source_file_sha256": {
@@ -26,5 +35,6 @@
     "core/scene.py": "9dfcd32f1ff5b1445180eafd8df36eafb92fa08ed3597bb90eac09554899d2e0",
     "tests/test_hidden_things_are_clickable.py": "b398880987d7649cbfc74d8f83b1a42b10082cf81cda70d603b87a0248528e41"
   },
-  "binary_sha256": "9a6d6db8b109df44694b4587c3c6e605615ed40a4c913694d267981359207c46"
+  "binary_sha256": "f8e15893b64914b0ad738c2a3b71dcdac56d0732f3dc61f89223ad95bf949df7",
+  "priority_oracle_helper_sha256": "437d57f4256c969d1fca2242c88639311f7cce1ba6e6f9aa5fd351f3cadd977f"
 }
