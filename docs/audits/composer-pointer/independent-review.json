@@ -1,0 +1,37 @@
+{
+  "owner_proof_commit": "4e86d5713b02c1b4b10e49d0f21095e97869cc98",
+  "runtime_chain": [
+    "d6baaed8",
+    "3ab9d334",
+    "42c2f7de"
+  ],
+  "method": "Read-only literal source/runtime/checker review and archive/member/Git/current-binary authentication; direct archived state comparisons, no builds/replays/captures.",
+  "authenticated": {
+    "proof_members": 31,
+    "proof_raw_bytes": 508868,
+    "proof_sha256": "75c1411fa4c6fb6b4d5adf82b54f84b0a0dce215353bc5912c118b6721d4f61d",
+    "source_members": 3,
+    "source_raw_bytes": 158997,
+    "source_sha256": "63852c80d2a1ba3a12baa75f4f97e374e36fca3a3c7646e3b157320688ecaa97",
+    "git_files": 7,
+    "current_binary_sha256": "d75b7b6a5bb04b32acf03c0aa0377a00aeecc8394b2d1513bb0efd2cbe096f2b",
+    "literal_recipes": 13,
+    "literal_states": 89,
+    "reported_mutations": 15
+  },
+  "disposition": "Accepted bounded Select-item pointer transactions, no blocking defect found.",
+  "review": [
+    "Press-origin grab precedes platform drag threshold and lazily snapshots only actual movement.",
+    "Visible unlocked reverse stacked order is distinct from snap targets, which retain hidden/locked siblings; literal edge snapping order matches source.",
+    "Source Escape clears selection and preserves moved geometry until actual release; explicit Cancel API retains rollback.",
+    "Corrected42c finishes each owned release immediately, preserving intermediate Undo across two gestures in one event packet. Property-editor releases do not finish unrelated drafts.",
+    "Actual foreground-layer ownership, lost/consumed release and two-gesture controls are required by checker; old nonoperative source/pointer fixtures and lock-query hang remain explicitly retained."
+  ],
+  "ci_wiring": {
+    "commit": "43058131b672c3f6d231a52c20b613efec32516a",
+    "consumers": 28,
+    "joint_examples": 30,
+    "review": "Authenticated source archive plus current binary precede runtime; checker depends runtime; summary reads actual acceptance and records source digest. Existing shared build extended once, no extra Cargo invocation."
+  },
+  "scope": "No resize, multi-item selection, drawing-geometry snap, rendering/OS delivery/frame-rate or full P04 promotion; pending integrated replay is root-owned."
+}
