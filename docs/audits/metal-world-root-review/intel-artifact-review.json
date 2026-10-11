@@ -1,0 +1,15 @@
+{
+  "run_id": 38098691387,
+  "source": "4a1a0395900bdb9e19003ef40a9abd4403d7ec61",
+  "zip_sha256": "2c44277599ef6ff8f7c71af721be1b8bd328cdcf5f558153db23d8b7831cb567",
+  "source_hashes_verified": true,
+  "runtime": {
+    "exit_code": 1,
+    "outer_timeout": false
+  },
+  "error": "World native texture size query unavailable",
+  "rgba_frames": 0,
+  "finding": "Intel refuses native texture size admission before producing frames; distinct from ARM failure after two completed positive frames",
+  "native_size_values": "not reported; required for diagnosis",
+  "acceptance": false
+}

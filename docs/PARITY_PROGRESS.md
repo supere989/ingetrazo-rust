@@ -19,6 +19,8 @@ Latest independent rendering diagnosis: [real layout](audits/annotation-real-ope
 
 ## Dated implementation and verification evidence
 
+Intel world failure distinguished (2026-10-11 UTC): independently verified artifact/source hashes show a pre-frame native texture-size query refusal, with exit 1 and no outer timeout. [Root review](audits/metal-world-root-review/intel-artifact-review.json). This is distinct from ARM, which completed two positive frames before the negative-control command failed. Native size/align diagnostics and supported allocation admission must be resolved; no memory-budget guard is waived.
+
 Merged radial multiplicity correction (2026-10-11 UTC): fresh Python and freshly built merged Rust match 21 full degenerate/shared-hole graph states across edit/Undo/Redo. Eight negatives reject, including literal old deduplication output. [Merged evidence](audits/ai-graph-radial-merged-root/acceptance.json). Per-segment add_face registration now preserves original multiplicity; arbitrary graph deletion/replacement and production scripting remain OPEN.
 
 ARM world artifact correction (2026-10-11 UTC): root verifies the ZIP digest and every retained source hash. Contrary to the initial failure interpretation, both positive draw-order GPU frames exist and pass the strict interior/background oracle. The next depth-disabled negative frame is absent; execution fails before full report publication. [Independent artifact review](audits/metal-world-root-review/arm-artifact-review.json). Precise command error, negative control, warm reuse and ownership acceptance remain pending; the full fixture still FAILS.
