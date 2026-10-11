@@ -1,0 +1,20 @@
+{
+  "status": "source audit; implementation pending",
+  "source": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "source_locations": {
+    "views/viewport.py:1238": "resizeGL uses the same supplied w,h for glViewport, camera aspect and scene FBO",
+    "views/viewport.py:1247": "_fb_size uses max(int(round(logical size times DPR)),1)"
+  },
+  "rust_locations": {
+    "crates/ingetrazo-gui/src/viewport.rs:23": "camera aspect uses fractional logical rectangle width/height",
+    "crates/ingetrazo-gui/src/native_vulkan/mod.rs:1417": "world target uses ceil(logical extent times scale)",
+    "crates/ingetrazo-gui/src/native_vulkan/annotation_viewport.rs": "annotation query extent independently repeats ceil"
+  },
+  "required_followup": [
+    "Measure actual Qt resizeGL dimensions at fractional DPR rather than relying on source comment alone",
+    "Define one physical viewport extent shared by camera, World target and annotation depth query preparation",
+    "Keep pointer-to-NDC mapping consistent with displayed texture rectangle",
+    "Retain fractional layout and DPI original/native controls before whole-application acceptance"
+  ],
+  "coordination": "Root owns extent investigation; validation agent retains annotation glyph correction ownership"
+}
