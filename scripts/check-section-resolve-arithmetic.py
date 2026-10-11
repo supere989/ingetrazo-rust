@@ -24,6 +24,4 @@ for p in source['pixels']:
  assert resolve('ordered')==p['resolved_rgba8']
  p['computed']=resolve('ordered');p['mutations']={m:resolve(m)for m in ['truncate','half-away','reassociate']}
 for mutation in ['truncate','half-away','reassociate']:assert any(p['mutations'][mutation]!=p['resolved_rgba8']for p in source['pixels'])
-# All-equal encoded pixels must bypass resolve arithmetic, preserving original bytes.
-assert all([q]*4==[q,q,q,q]for q in range(256))
 print(json.dumps({'source_channel_float_bits_exact':checked,'decode_entries':256,'ordered_four_pixels_exact':True,'wrong_truncation_half_away_reassociation_rejected':True,'scope':'Scalar proof of measured inputs and explicit operation order; native shader implementation remains pending'},indent=2))
