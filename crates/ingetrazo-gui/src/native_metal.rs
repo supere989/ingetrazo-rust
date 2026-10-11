@@ -1,4 +1,4 @@
-//! Opt-in native Metal host using the shared application and egui-winit.
+//! Native Metal host using the shared application and egui-winit.
 //! Full native world/CAD callbacks and physical macOS acceptance remain open.
 use crate::{IngeTrazoApp, session_state::SessionStore};
 use ingetrazo_metal::{NativeMetal, egui_painter::EguiPainter, presentation::MetalPresentation};
@@ -28,14 +28,28 @@ pub fn run_world_offscreen_probe(root:PathBuf)->Result<(),String>{world_app_prob
 pub fn run_document_probe(root: PathBuf, choice: &str) -> Result<(), Box<dyn std::error::Error>> {
     let probe = lifecycle_probe::Probe::new(root, choice)?;
     let initial = Some(probe.document.clone());
-    run_inner(initial, Some(probe))
+    run_inner(initial, Some(probe), HostOptions::diagnostic())
 }
 pub fn run(initial_file: Option<PathBuf>) -> Result<(), Box<dyn std::error::Error>> {
-    run_inner(initial_file, None)
+    run_inner(initial_file, None, HostOptions::diagnostic())
+}
+/// Production world and CAD callbacks use the same native Metal device.
+pub fn run_native(initial_file: Option<PathBuf>) -> Result<(), Box<dyn std::error::Error>> {
+    run_inner(initial_file, None, HostOptions { world: true, precise_cad: true })
+}
+struct HostOptions { world: bool, precise_cad: bool }
+impl HostOptions {
+    fn diagnostic() -> Self {
+        Self {
+            world: std::env::var_os("INGETRAZO_METAL_WORLD").is_some(),
+            precise_cad: std::env::var_os("INGETRAZO_METAL_CAD_CALLBACKS").is_some(),
+        }
+    }
 }
 fn run_inner(
     initial_file: Option<PathBuf>,
     probe: Option<lifecycle_probe::Probe>,
+    options: HostOptions,
 ) -> Result<(), Box<dyn std::error::Error>> {
     let event = EventLoop::<()>::with_user_event().build()?;
     let ctx = egui::Context::default();
@@ -52,6 +66,7 @@ fn run_inner(
         repaint: Instant::now(),
         error: None,
         probe,
+        options,
     };
     event.run_app(&mut host)?;
     if let Some(error) = host.error {
@@ -68,6 +83,7 @@ struct State {
     window: std::sync::Arc<Window>,
     close_requested: bool,
     pending_textures: egui::TexturesDelta,
+    world_submitted: bool,
 }
 struct Host {
     state: Option<State>,
@@ -76,6 +92,7 @@ struct Host {
     repaint: Instant,
     error: Option<String>,
     probe: Option<lifecycle_probe::Probe>,
+    options: HostOptions,
 }
 impl Host {
     fn draw(&mut self, ev: &ActiveEventLoop) {
@@ -202,6 +219,10 @@ impl Host {
         })();
         match result {
             Ok(true) => {
+                if state.app.native_gpu_viewport_enabled && state.app.native_gpu_viewport_texture.is_some() && !state.world_submitted {
+                    eprintln!("Graphics backend: native Metal; first GPU world frame submitted; document={:?}", state.app.current_file);
+                    state.world_submitted=true;
+                }
                 if let Some(probe) = self.probe.as_mut() {
                     probe.submitted(&state.app, state.gpu.counters().0);
                     probe.canvas_submitted(&self.ctx, &state.painter);
@@ -228,7 +249,7 @@ impl ApplicationHandler for Host {
             let window = std::sync::Arc::new(
                 ev.create_window(
                     Window::default_attributes()
-                        .with_title("IngeTrazo — native Metal (opt-in)")
+                        .with_title("IngeTrazo — native Metal")
                         .with_inner_size(winit::dpi::LogicalSize::new(1280., 800.))
                         .with_min_inner_size(winit::dpi::LogicalSize::new(640., 480.)),
                 )
@@ -236,13 +257,13 @@ impl ApplicationHandler for Host {
             );
             let metal = NativeMetal::new()?;
             eprintln!(
-                "Graphics backend: native Metal; device={}; unified={}; opt-in egui host",
+                "Graphics backend: native Metal; device={}; unified={}",
                 metal.info.name, metal.info.unified_memory
             );
-            let precise_cad = std::env::var_os("INGETRAZO_METAL_CAD_CALLBACKS").is_some();
-            let viewport_cad = std::env::var_os("INGETRAZO_METAL_WORLD").is_some();
+            let precise_cad = self.options.precise_cad;
+            let viewport_cad = self.options.world;
             if (precise_cad || viewport_cad) && !ingetrazo_metal::MetalCad2d::supported(&metal) && !ingetrazo_metal::cad_compute_painter::Painter::supported(&metal) {
-                return Err("Native Metal exact callback requires Apple framebuffer fetch or tier2 read/write RGBA canvas; no approximate fallback".into());
+                return Err("Native Metal exact callback requires Apple framebuffer fetch or read/write RGBA canvas; no approximate fallback".into());
             }
             let painter = if (precise_cad || viewport_cad)&&!ingetrazo_metal::MetalCad2d::supported(&metal){EguiPainter::new_compute(&metal)?}else{EguiPainter::new(&metal)?};
             let gpu = MetalPresentation::attach(window.clone(), metal)?;
@@ -255,7 +276,7 @@ impl ApplicationHandler for Host {
                 Some(4096),
             );
             let mut app = IngeTrazoApp::new();
-            if std::env::var_os("INGETRAZO_METAL_WORLD").is_some(){app.native_metal_world=Some(world_viewport::Viewport::new(gpu.shared_metal()));}
+            if viewport_cad{app.native_metal_world=Some(world_viewport::Viewport::new(gpu.shared_metal()));}
             if precise_cad {
                 app.native_composer.factory=Some(crate::composer_backend::Factory::MetalProducer(ingetrazo_render::cad_callback::Factory::default()));
             }
@@ -283,6 +304,7 @@ impl ApplicationHandler for Host {
                 window,
                 close_requested: false,
                 pending_textures: Default::default(),
+                world_submitted: false,
             })
         })();
         match result {

@@ -34,7 +34,12 @@ fn print_help() {
 fn self_check() -> i32 {
     println!("IngeTrazo {}", VERSION);
     println!("  packaged   : yes (compiled Rust binary)");
-    println!("  runtime    : Rust native (eframe/egui + OpenGL)");
+    #[cfg(any(target_os = "linux", target_os = "windows"))]
+    println!("  runtime    : Rust native (Vulkan + egui)");
+    #[cfg(target_os = "macos")]
+    println!("  runtime    : Rust native (Metal + egui)");
+    #[cfg(not(any(target_os = "linux", target_os = "windows", target_os = "macos")))]
+    println!("  runtime    : unsupported platform");
 
     let checks = [
         ("formats: igz", "found (native JSON/ZIP format 1 & 2)"),
@@ -106,15 +111,15 @@ fn main() {
         None
     };
 
-    // Explicit native Metal opt-in; default renderer is unchanged until actual
-    // macOS application/lifecycle/visual acceptance passes.
-    #[cfg(target_os="macos")]
-    if std::env::var("INGETRAZO_NATIVE_METAL").as_deref()==Ok("1") {
-        if let Err(error)=ingetrazo_gui::native_metal::run(initial_file){eprintln!("Native Metal host error: {error}");std::process::exit(1);}
-        return;
-    }
-    // 4. Launch GUI Application
-    if let Err(e) = ingetrazo_gui::run_gui(initial_file) {
+    // The packaged executable uses the platform renderer directly. Diagnostic
+    // examples retain their own options; production never needs an opt-in flag.
+    #[cfg(any(target_os = "linux", target_os = "windows"))]
+    let result = ingetrazo_gui::native_vulkan::run_native(initial_file);
+    #[cfg(target_os = "macos")]
+    let result = ingetrazo_gui::native_metal::run_native(initial_file);
+    #[cfg(not(any(target_os = "linux", target_os = "windows", target_os = "macos")))]
+    let result: Result<(), Box<dyn std::error::Error>> = Err("No native renderer for this platform".into());
+    if let Err(e) = result {
         eprintln!("Error running IngeTrazo GUI: {e}");
         std::process::exit(1);
     }

@@ -76,7 +76,16 @@ pub trait App {
     }
 }
 
+/// Production host: world and CAD rendering share the same native Vulkan device.
+pub fn run_native(initial_file: Option<std::path::PathBuf>) -> Result<(), Box<dyn Error>> {
+    run_app_with_world::<crate::IngeTrazoApp>(initial_file, true)
+}
+
 pub fn run_app<A: App>(initial_file: Option<std::path::PathBuf>) -> Result<(), Box<dyn Error>> {
+    run_app_with_world::<A>(initial_file, std::env::var_os("INGETRAZO_VULKAN_WORLD").is_some())
+}
+
+fn run_app_with_world<A: App>(initial_file: Option<std::path::PathBuf>, native_world: bool) -> Result<(), Box<dyn Error>> {
     let event_loop = EventLoop::<()>::with_user_event().build()?;
     event_loop.set_control_flow(ControlFlow::Wait);
 
@@ -88,6 +97,7 @@ pub fn run_app<A: App>(initial_file: Option<std::path::PathBuf>) -> Result<(), B
         egui_app: None,
         initial_file,
         initialization_error:None,
+        native_world,
     };
 
     event_loop.run_app(&mut app)?;
@@ -103,12 +113,13 @@ struct AppWrapper<A: App> {
     egui_app: Option<A>,
     initial_file: Option<std::path::PathBuf>,
     initialization_error:Option<String>,
+    native_world:bool,
 }
 
 impl<A: App> ApplicationHandler for AppWrapper<A> {
     fn resumed(&mut self, event_loop: &ActiveEventLoop) {
         let window = match create_window(self.title,event_loop){Ok(window)=>window,Err(error)=>{self.initialization_error=Some(error.to_string());event_loop.exit();return;}};
-        let mut app = match System::new(self.title,&window){Ok(system)=>system,Err(error)=>{self.initialization_error=Some(error.to_string());event_loop.exit();return;}};
+        let mut app = match System::new_controlled_with_world(self.title,&window,&resize::Control::default(),self.native_world){Ok(system)=>system,Err(error)=>{self.initialization_error=Some(error.to_string());event_loop.exit();return;}};
         let proxy=self.proxy.clone();
         app.egui_ctx.set_request_repaint_callback(move |info| { if info.delay.is_zero() { let _=proxy.send_event(()); } });
         let egui_app = A::new(&mut app, self.initial_file.take());
@@ -182,6 +193,8 @@ pub struct System {
     annotation_timing:Option<annotation_timing::Timing>,
     annotation_sample:Option<u32>,
     draw_serial:u64,
+    native_world:bool,
+    world_presented:bool,
     completed_present_serial_for_probe:u64,
 
     textures_to_free: Option<Vec<TextureId>>,
@@ -218,6 +231,9 @@ impl System {
         Ok(observed)
     }
     fn new_controlled(title:&str,window:&Window,control:&resize::Control)->Result<Self,Box<dyn Error>>{
+        Self::new_controlled_with_world(title,window,control,std::env::var_os("INGETRAZO_VULKAN_WORLD").is_some())
+    }
+    fn new_controlled_with_world(title:&str,window:&Window,control:&resize::Control,native_world:bool)->Result<Self,Box<dyn Error>>{
         let annotation_sample=match std::env::var("INGETRAZO_ANNOTATION_DEPTH_SAMPLE"){
             Ok(value)=>Some(value.parse::<u32>().map_err(|_|std::io::Error::new(std::io::ErrorKind::InvalidInput,"Invalid annotation depth sample policy"))?),
             Err(std::env::VarError::NotPresent)=>None,Err(error)=>return Err(error.into()),
@@ -249,7 +265,7 @@ impl System {
         // required attachment/pipeline once at startup, retaining the existing
         // explicit unsupported-usage refusal and resize selection.
         let integer=std::env::var_os("INGETRAZO_CAD2D_INTEGER_BLEND").is_some()
-            ||std::env::var_os("INGETRAZO_VULKAN_WORLD").is_some();
+            ||native_world;
         let mut pending_swapchain=Swapchain::build(&vulkan_context,memory_budget.clone(),annotation_stencil::selected()?,integer,vk::SwapchainKHR::null(),&mut retired,None,control)?;
         control.checkpoint(resize::Stage::StartupSwapchain)?;
         let swapchain=pending_swapchain.value.as_ref().unwrap();
@@ -323,6 +339,7 @@ impl System {
             renderer:std::mem::ManuallyDrop::new(renderer.take()),
             memory_budget,
             annotation_timing,world:None,cad2d:None,annotation_cad:None,annotation_viewport:None,annotation_prepare_error:None,annotation_font_refusal_for_probe:false,annotation_ready_shape:None,annotation_sample,draw_serial:0,completed_present_serial_for_probe:0,
+            native_world,world_presented:false,
             textures_to_free: None,
             close_requested: false,
             repaint_at: std::time::Instant::now(),
@@ -637,6 +654,10 @@ impl System {
                 .loader
                 .queue_present(self.vulkan_context.present_queue, &present_info)
         };
+        if present_result.is_ok() && self.world.is_some() && !self.world_presented && self.annotation_prepare_error.is_none() {
+            eprintln!("Graphics backend: native Vulkan; first GPU world frame presented");
+            self.world_presented=true;
+        }
         match present_result {
             Ok(is_suboptimal) if is_suboptimal => {
                 self.dirty_swapchain = true;
@@ -1450,7 +1471,7 @@ impl App for crate::IngeTrazoApp {
     fn new(system: &mut System, initial_file: Option<std::path::PathBuf>) -> Self {
         let mut app=Self::new();
         match system.enable_cad2d(){Ok(renderer)=>app.native_composer.factory=Some(renderer.factory().into()),Err(error)=>app.gpu_error(&error)}
-        app.native_gpu_viewport_enabled=std::env::var_os("INGETRAZO_VULKAN_WORLD").is_some();
+        app.native_gpu_viewport_enabled=system.native_world;
         app.system_clipboard=arboard::Clipboard::new().ok();
         app.attach_session_store(crate::session_state::SessionStore::user_default());
         if let Some(path)=initial_file { app.open_document(&path); }

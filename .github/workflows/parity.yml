@@ -43,7 +43,9 @@ jobs:
         run: |
           mkdir -p docs/audits/metal-combined-gui-ci
           cargo check --locked -p ingetrazo-gui --all-targets > docs/audits/metal-combined-gui-ci/check.log 2>&1
-          cargo build --locked -p ingetrazo-gui --example native_metal --example native_metal_document_probe --example session_recovery_process > docs/audits/metal-combined-gui-ci/build.log 2>&1
+          cargo build --locked -p ingetrazo-cli -p ingetrazo-gui --bin ingetrazo --example native_metal --example native_metal_document_probe --example session_recovery_process > docs/audits/metal-combined-gui-ci/build.log 2>&1
+      - name: Actual packaged CLI native Metal world startup
+        run: python3 scripts/check-native-metal-launcher.py target/debug/ingetrazo ingetrazo/examples/banca-pergola-yanque.igz docs/audits/metal-combined-gui-ci/launcher
       - name: Native isolated session lease crash and app recovery
         run: |
           python3 scripts/run-session-recovery-process.py target/debug/examples/session_recovery_process docs/audits/metal-combined-gui-ci/session-recovery
@@ -165,8 +167,8 @@ jobs:
         run: cargo run --locked -p ingetrazo-render --example process_hlr_acceptance -- target/debug/ingetrazo-render-worker
       - name: Build direct Vulkan host and allocation probe
         run: cargo build --locked -p ingetrazo-gui --example native_vulkan --example native_vulkan_budget_probe --example native_vulkan_headless_probe --example native_vulkan_contour_chunks_probe --example native_vulkan_upload_churn --example native_vulkan_texture_upload_probe --example native_vulkan_exact_bc7
-      - name: Direct Vulkan virtual-display lifecycle
-        run: python3 scripts/check-native-vulkan-startup.py target/debug/examples/native_vulkan docs/audits/native-vulkan-ci-host
+      - name: Packaged launcher native Vulkan world and document lifecycle
+        run: python3 scripts/check-native-vulkan-startup.py target/debug/ingetrazo docs/audits/native-vulkan-ci-host --require-native-world --document ingetrazo/examples/banca-pergola-yanque.igz
       - name: Actual Vulkan image and staging denial rollback
         run: python3 scripts/check-native-vulkan-startup.py target/debug/examples/native_vulkan_budget_probe docs/audits/native-vulkan-ci-budget
       - name: Headless software Vulkan resource depth refusal and timeout controls
