@@ -14,6 +14,19 @@ def strict(a,b,path=''):
  else:assert a==b,(path,a,b)
 assert [r['case']for r in a['cases']]==expected
 assert [(r['case'],r['phase'])for r in a['states']]==[(n,phase)for n in expected for phase in ['before','import','undo','redo','finish']]
+# Edge flags are an unordered inventory; both observers already sort them,
+# but Python/serde scientific notation has different lexical ordering.
+# Compare a numeric endpoint order without changing any endpoint/flag value.
+def ordered_flags(doc):
+ doc=copy.deepcopy(doc)
+ def group(row):
+  row['mesh'].sort(key=lambda r:tuple(x for end in r['ends']for x in end))
+  for child in row['children']:group(child)
+ for state in doc['states']:
+  state['flags']['active'].sort(key=lambda r:tuple(x for end in r['ends']for x in end))
+  for row in state['flags']['groups']:group(row)
+ return doc
+a=ordered_flags(a);b=ordered_flags(b)
 strict(a,b)
 reopens=json.loads((p/'reopens-obj-raw-fusion.json').read_text());assert [r['case']for r in reopens]==expected
 for row in reopens:strict(row['original'],row['native'])
