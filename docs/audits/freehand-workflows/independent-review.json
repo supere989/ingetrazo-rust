@@ -1,0 +1,22 @@
+{
+  "runtime": "5312e4cc+cdbcc31b",
+  "consumer": "c2a385cb",
+  "proof": "fc3ba98f",
+  "archive_sha256": "9ca8d4691e876ab7ecd42e79196288d4046ce16fd21650dc745c9b41031cc0d4",
+  "members": 42,
+  "raw_bytes": 6081048,
+  "git_bindings": 9,
+  "current_binary_sha256": "3a922ee99395c24f23a2a7896e464eb24dc1de910ff27daa02e010e34213226c",
+  "observed_results": {
+    "cases": 15,
+    "phases": 152,
+    "egui": 3,
+    "negative_controls": 11,
+    "affected_shape": 66,
+    "shape_phases": 488,
+    "retained_drafting": 22
+  },
+  "review": "Exact ordered roster/phase admission plus baseline-safe negatives and actual unsnapped egui pixel-to-plane witness; newstrokeQt capture only. Resplit currentcurveID lookup/source_flat firststroke law; Repeat only named drafting tools; Rectangle cursor/degenerate preview keeps commit refusal.",
+  "criterion": "Finite P06 interactive planes/VCB/cancel-repeat/inference satisfied by retained evidence conditional on integrated replay; rawidentity and wholeframe/desktop/P07 claims excluded.",
+  "verdict": "accepted; no execution"
+}
