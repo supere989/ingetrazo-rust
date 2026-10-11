@@ -151,11 +151,17 @@ impl Drop for MipReadback {
         }
     }
 }
+struct WorldTexture { frame: Arc<crate::world::Prepared>, sampler: Retained<ProtocolObject<dyn MTLSamplerState>> }
+enum DrawTexture { Managed(Arc<Texture>), World(Arc<WorldTexture>) }
+impl DrawTexture {
+ fn image(&self)->&ProtocolObject<dyn MTLTexture>{match self{Self::Managed(t)=>&t.image.raw,Self::World(t)=>t.frame.texture()}}
+ fn sampler(&self)->&ProtocolObject<dyn MTLSamplerState>{match self{Self::Managed(t)=>&t.sampler,Self::World(t)=>&t.sampler}}
+}
 struct Draw {
     first: usize,
     count: usize,
     clip: egui::Rect,
-    texture: Arc<Texture>,
+    texture: DrawTexture,
 }
 struct Mesh {
     vertices: Buffer,
@@ -171,8 +177,13 @@ pub struct PreparedPaint {
     order: Vec<PaintOrder>,
     density: f32,
     canvas: bool,
+    world: Option<Arc<crate::world::Prepared>>,
 }
 impl PreparedPaint {
+    /// Encode world targets before any UI sampling in the same native command.
+    /// The PreparedPaint owner retains the complete world frame through completion.
+    pub fn encode_world(&self,command:&ProtocolObject<dyn MTLCommandBuffer>)->Result<(),String>{if let Some(world)=&self.world{world.encode(command)?;}Ok(())}
+
     pub(crate) fn encode(
         &self,
         encoder: &ProtocolObject<dyn MTLRenderCommandEncoder>,
@@ -209,8 +220,8 @@ impl PreparedPaint {
                 height: bottom - y,
             });
             unsafe {
-                encoder.setFragmentTexture_atIndex(Some(&draw.texture.image.raw), 0);
-                encoder.setFragmentSamplerState_atIndex(Some(&draw.texture.sampler), 0);
+                encoder.setFragmentTexture_atIndex(Some(draw.texture.image()), 0);
+                encoder.setFragmentSamplerState_atIndex(Some(draw.texture.sampler()), 0);
                 encoder.drawIndexedPrimitives_indexCount_indexType_indexBuffer_indexBufferOffset(
                     MTLPrimitiveType::Triangle,
                     draw.count,
@@ -244,8 +255,8 @@ impl PreparedPaint {
                 height: bottom - y,
             });
             unsafe {
-                encoder.setFragmentTexture_atIndex(Some(&draw.texture.image.raw), 0);
-                encoder.setFragmentSamplerState_atIndex(Some(&draw.texture.sampler), 0);
+                encoder.setFragmentTexture_atIndex(Some(draw.texture.image()), 0);
+                encoder.setFragmentSamplerState_atIndex(Some(draw.texture.sampler()), 0);
                 encoder.drawIndexedPrimitives_indexCount_indexType_indexBuffer_indexBufferOffset(
                     MTLPrimitiveType::Triangle,
                     draw.count,
@@ -302,6 +313,7 @@ pub struct EguiPainter {
     cad: crate::cad_callback_painter::Painter,
     compute: Option<crate::cad_compute_painter::Painter>,
     textures: HashMap<TextureId, Arc<Texture>>,
+    world_texture: Option<(TextureId,Arc<WorldTexture>)>,
     mesh: Option<Arc<Mesh>>,
     stats: PainterStats,
     retained_cpu: Arc<std::sync::atomic::AtomicUsize>,
@@ -347,6 +359,7 @@ impl EguiPainter {
                 cad: crate::cad_callback_painter::Painter::default(),
                 compute:compute.then(crate::cad_compute_painter::Painter::default),
                 textures: HashMap::new(),
+                world_texture: None,
                 mesh: None,
                 stats: PainterStats::default(),
                 retained_cpu: Arc::new(std::sync::atomic::AtomicUsize::new(0)),
@@ -392,6 +405,7 @@ impl EguiPainter {
         let mut matched = std::collections::HashSet::new();
         matched.try_reserve(raw.len()).map_err(|_| "Encoded Metal identity allocation failed")?;
         for (id, change) in &delta.set {
+            if self.world_texture.as_ref().is_some_and(|(world,_)|world==id){return Err("Managed update collides with native world texture".into());}
             if raw.contains_key(id) && (!matched.insert(*id) || change.pos.is_some()) {
                 return Err("Encoded Metal texture requires one complete replacement".into());
             }
@@ -844,7 +858,16 @@ impl EguiPainter {
         }
         Ok(retired)
     }
+    /// Direct GPU texture ingress: no managed-image bytes, copy or readback.
+    /// One production viewport owner; replacing it leaves prior PreparedPaints alive.
+    pub fn install_world_texture(&mut self,metal:&NativeMetal,id:TextureId,frame:Arc<crate::world::Prepared>)->Result<(),String>{
+        if !std::ptr::eq(&*frame.texture().device(),&*metal.device){return Err("World texture device mismatch".into());}
+        if !matches!(id,TextureId::User(_))||self.textures.contains_key(&id){return Err("World texture requires an unoccupied native User ID".into());}
+        let sampler=if let Some((old,texture))=&self.world_texture{if *old!=id{return Err("Only one native world texture identity is admitted".into());}texture.sampler.clone()}else{make_sampler(metal,egui::TextureOptions::LINEAR)?};
+        self.world_texture=Some((id,Arc::new(WorldTexture{frame,sampler})));Ok(())
+    }
     pub fn free_textures(&mut self, ids: &[TextureId]) {
+        if self.world_texture.as_ref().is_some_and(|(id,_)|ids.contains(id)){self.world_texture=None;}
         for id in ids {
             if let Some(t) = self.textures.remove(id) {
                 self.stats.cpu_texture_bytes -= t.pixels.len();
@@ -898,11 +921,9 @@ impl EguiPainter {
             if count > 1_000_000 || indices.len() / 4 + mesh.indices.len() > 3_000_000 {
                 return Err("Metal egui geometry admission exceeded".into());
             }
-            let texture = self
-                .textures
-                .get(&mesh.texture_id)
-                .cloned()
-                .ok_or("Metal egui texture unavailable")?;
+            let texture = if let Some((id,texture))=&self.world_texture {
+                if *id==mesh.texture_id {DrawTexture::World(texture.clone())}else{DrawTexture::Managed(self.textures.get(&mesh.texture_id).cloned().ok_or("Metal egui texture unavailable")?)}
+            }else{DrawTexture::Managed(self.textures.get(&mesh.texture_id).cloned().ok_or("Metal egui texture unavailable")?)};
             for v in &mesh.vertices {
                 for (axis, value) in [v.pos.x, v.pos.y].into_iter().enumerate() {
                     bounds[axis][0] = bounds[axis][0].min(value);
@@ -964,6 +985,7 @@ impl EguiPainter {
                 Some(result)
             }
         };
+        let world=draws.iter().find_map(|d|if let DrawTexture::World(t)=&d.texture{Some(t.frame.clone())}else{None});
         Ok(Arc::new(PreparedPaint {
             pipeline: self.pipeline.clone(),
             mesh,
@@ -971,6 +993,7 @@ impl EguiPainter {
             order,
             density,
             canvas:self.compute.is_some(),
+            world,
         }))
     }
 }
@@ -1417,6 +1440,7 @@ impl EguiPainter {
             if let Some(gate) = gate.as_ref() {
                 command.encodeWaitForEvent_value(ProtocolObject::from_ref(&**gate), 1);
             }
+            paint.encode_world(&command)?;
             let canvas=if paint.requires_canvas(){
                 let canvas=pool.acquire(metal,(width as u32,height as u32))?.ok_or("Diagnostic canvas capacity unavailable")?;
                 paint.encode_canvas(&command,&canvas,[1.;4])?;canvas.present(&command,&target.raw)?;Some(canvas)

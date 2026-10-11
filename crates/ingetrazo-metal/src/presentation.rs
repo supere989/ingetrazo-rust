@@ -248,6 +248,7 @@ impl MetalPresentation {
             .queue
             .commandBuffer()
             .ok_or("Metal command allocation failed")?;
+        if let Some(paint)=paint.as_ref(){paint.encode_world(&command)?;}
         if let Some(canvas)=canvas.as_ref(){
             paint.as_ref().unwrap().encode_canvas(&command,&canvas,rgba)?;
             canvas.present(&command,&drawable.texture())?;
