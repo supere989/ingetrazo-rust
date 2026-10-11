@@ -6,16 +6,7 @@ use objc2::{rc::Retained, runtime::ProtocolObject};
 use objc2_foundation::NSString;
 use objc2_metal::*;
 use std::{collections::HashMap, sync::Arc};
-#[repr(C)]
-#[derive(Clone, Copy)]
-struct Push {
-    scale: [f32; 2],
-    translation: [f32; 2],
-    screen: [f32; 2],
-    pad: [f32; 2],
-    rgba: [f32; 4],
-    glyph: [u32; 4],
-}
+use crate::cad_abi::DrawPush as Push;
 struct Cached {
     vertices: Buffer,
     indices: Buffer,
@@ -30,6 +21,7 @@ pub struct Stats {
     pub bytes: u64,
 }
 pub struct Painter {
+    glyph_admissions:crate::glyph_admission::Cache,
     pipeline: Option<Arc<Retained<ProtocolObject<dyn MTLRenderPipelineState>>>>,
     geometry: HashMap<u64, Arc<Cached>>,
     palette: HashMap<(u64, usize), (Arc<[Batch]>, Arc<[[f32; 4]]>)>,
@@ -38,6 +30,7 @@ pub struct Painter {
 impl Default for Painter {
     fn default() -> Self {
         Self {
+            glyph_admissions:crate::glyph_admission::Cache::default(),
             pipeline: None,
             geometry: HashMap::new(),
             palette: HashMap::new(),
@@ -62,17 +55,10 @@ impl Painter {
         if !crate::cad2d::MetalCad2d::supported(metal) {
             return Err("Metal CAD callback exact Apple framebuffer-fetch unsupported; Intel/AMD span-compute presentation still required".into());
         }
-        if let Some(glyphs) = &snapshot.glyphs {
-            if glyphs.len() != snapshot.batches.len() {
-                return Err("Metal glyph batch inventory mismatch".into());
-            }
-            for glyph in glyphs.iter() {
-                glyph.validate()?;
-            }
-        }
         if snapshot.batches.len() > 4096 {
             return Err("Metal CAD palette exceeds4096 batch admission".into());
         }
+        self.glyph_admissions.admit(&snapshot.batches,snapshot.glyphs.as_ref())?;
         snapshot
             .geometry
             .validate_ordered_pose(snapshot.pose, density)?;
