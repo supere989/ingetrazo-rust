@@ -625,6 +625,28 @@ pub mod editable_mesh {
             zelf.vertices.clone()
         }
         #[pymethod]
+        fn find_edge(zelf: &Py<Self>, v0: PyRef<Vertex>, v1: PyRef<Vertex>, vm: &VirtualMachine) -> PyResult<PyObjectRef> {
+            vm.host_budget_tick()?;
+            // Source uses the smaller endpoint incidence, never the public edge list.
+            // Clone slots under short locks, then invoke arbitrary Python iteration/other outside them.
+            let a=v0.edges.read().clone().ok_or_else(||vm.new_value_error("Cleared Vertex incidence"))?;
+            let na=a.length(vm)?;
+            let b=v1.edges.read().clone().ok_or_else(||vm.new_value_error("Cleared Vertex incidence"))?;
+            let nb=b.length(vm)?;
+            let (small_vertex,target)=if na<=nb { (v0,v1) } else { (v1,v0) };
+            // Re-read after user-defined length callbacks, matching source's small.edges iteration.
+            let small=small_vertex.edges.read().clone().ok_or_else(||vm.new_value_error("Cleared Vertex incidence"))?;
+            let iterable=small.try_into_value::<rustpython_vm::function::ArgIterable>(vm)?;
+            for candidate in iterable.iter(vm)? {
+                vm.host_budget_tick()?;
+                let candidate=candidate?;
+                let other=vm.call_method(&candidate,"other",(small_vertex.clone(),))?;
+                if other.is(&target){return Ok(candidate);}
+            }
+            let _=zelf;
+            Ok(vm.ctx.none())
+        }
+        #[pymethod]
         fn add_face(
             zelf: &Py<Self>,
             outer: PyObjectRef,
