@@ -1,0 +1,49 @@
+{
+  "integration": {
+    "exit": 0,
+    "seconds": 27.91,
+    "source": "deaa2131bc4de099863c0b5660b965c94bce5a35",
+    "local_packages_invalidated": [
+      "ingetrazo-core",
+      "ingetrazo-metal",
+      "ingetrazo-render",
+      "ingetrazo-tools",
+      "ingetrazo-formats",
+      "ingetrazo-gui",
+      "ingetrazo-cli"
+    ],
+    "tests": {
+      "passed": 838,
+      "failed": 0,
+      "ignored": 2
+    },
+    "log_sha256": "c97a4df2ed5a8f8baab9c1800c4d0aa87347b646681ad45d777600823f611c88"
+  },
+  "optional": {
+    "exit": 0,
+    "seconds": 25.69,
+    "source": "deaa2131bc4de099863c0b5660b965c94bce5a35",
+    "tests": {
+      "passed": 15,
+      "failed": 0,
+      "ignored": 0
+    },
+    "log_sha256": "3fdd94d350f19076599839a0dfcf93ba7451efb7f61c5f83a7cd9d4dc3a3cb48"
+  },
+  "independent_review": {
+    "nested_fresh_states": 12,
+    "nested_refusals": 3,
+    "nested_mutation_rejections": 8,
+    "reopen_mutation_rejections": 3,
+    "bim_fresh_phases": 42,
+    "bim_mutation_rejections": 7,
+    "blender_core_fresh_jobs": 21,
+    "shader_pairs_hashed": 16,
+    "gpu_archive_files_verified": 184,
+    "gpu_exact": 53,
+    "gpu_total": 56,
+    "actual_gpu_app_retained_pngs_and_warm_metrics_verified": true,
+    "gpu_full_parity": false,
+    "blender_full_parity": false
+  }
+}

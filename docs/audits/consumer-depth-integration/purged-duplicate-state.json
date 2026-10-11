@@ -1,0 +1,32 @@
+[
+  {
+    "path": "/tmp/ingetrazo-blender-original",
+    "bytes": 130116,
+    "verified_archive": "blender-consumer/captures.zip"
+  },
+  {
+    "path": "/tmp/ingetrazo-blender-native52",
+    "bytes": 222018,
+    "verified_archive": "blender-consumer/captures.zip"
+  },
+  {
+    "path": "/tmp/ingetrazo-blender-native",
+    "bytes": 39360,
+    "verified_archive": "blender-consumer/captures.zip"
+  },
+  {
+    "path": "/tmp/ingetrazo-nested-root",
+    "bytes": 155104,
+    "verified_archive": "consumer-depth-integration/root-replays.zip"
+  },
+  {
+    "path": "/tmp/ingetrazo-bim-context-root",
+    "bytes": 327642,
+    "verified_archive": "consumer-depth-integration/root-replays.zip"
+  },
+  {
+    "path": "/tmp/ingetrazo-blender-core-root",
+    "bytes": 34272,
+    "verified_archive": "consumer-depth-integration/root-replays.zip"
+  }
+]

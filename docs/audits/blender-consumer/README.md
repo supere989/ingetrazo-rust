@@ -1,0 +1,11 @@
+# Blender consumer acceptance
+
+Runtime `7ff38d2d`, core `4329645d`, original `6be29fe437a7cd992d4e079f71720821b25216b9`.
+
+Actual application rendered seven outputs with installed Blender 5.2.2 LTS in an isolated read-only container. For both Cycles and EEVEE, cold/camera/restore used one process and one model export; changed camera changed pixels, restored camera reproduced pixels exactly, and Save preserved PNG bytes. Keep-blend produced a nonempty .blend through the real one-shot path. Idle and in-flight cancellation reaped the owned child; executable failure preserved the earlier image. Scene and both history stacks stayed unchanged. The full application fixture took 11.83 seconds including container startup. This is CPU/software rendering, not GPU utilization acceptance.
+
+The worker owns and joins the Blender child, bounds pipe lines and coalesces progress. POSIX process groups retire descendants before joining inherited pipes. Focused tests cover inherited-pipe Drop liveness, wrong-size image refusal, existing-destination preservation and failed-rename temporary cleanup. Save uses a synced sibling file and atomic rename. Camera/configuration admission precedes both cold and warm requests. Camera-only requests reuse geometry without exporting or cloning the Scene.
+
+Strict full-image comparison remains FAILED: Cycles differs at 4,353/12,288 pixels and EEVEE at 3,597/12,288, maximum channel error10 each. Native GLB currently omits source material and explicit normal attributes. This batch does not claim material or complete rendering parity. Original job/GLB/script/output, native job/GLB/output, logs and transport commands are retained in captures.zip. The distribution Blender4.0 missing-NumPy and missing-denoiser failures and initial mixed-library EEVEE crash remain retained; no source renderer was altered to bypass them.
+
+Remaining: material/texture-rich GLB export, saved-light/pick and automatic follow-view UI, native Windows descendant-pipe shutdown, Mac/Windows cache paths, physical GPU/platform validation and total preview peak-memory accounting. Atomic rename is checked; parent-directory crash durability is not claimed. Full P30 and release gates remain open.
