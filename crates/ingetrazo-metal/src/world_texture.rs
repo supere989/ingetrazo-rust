@@ -34,7 +34,24 @@ pub struct Asset {
     pub sampler: Retained<ProtocolObject<dyn MTLSamplerState>>,
     pub cutout: bool,
     pub mean: [f32; 3],
-    heap: Arc<HeapOwner>,
+    backing: Backing,
+}
+enum Backing {
+    Heap(Arc<HeapOwner>),
+    Standalone {
+        budget: Arc<Mutex<MemoryBudget>>,
+        handle: u64,
+        bytes: u64,
+    },
+}
+impl Drop for Backing {
+    fn drop(&mut self) {
+        if let Self::Standalone { budget, handle, .. } = self {
+            if let Ok(mut b) = budget.lock() {
+                let _ = b.freed(*handle);
+            }
+        }
+    }
 }
 impl Drop for Asset {
     fn drop(&mut self) {
@@ -43,14 +60,19 @@ impl Drop for Asset {
 }
 impl Asset {
     pub(crate) fn heap_observation(&self) -> (usize, [u64; 3]) {
-        (
-            Arc::as_ptr(&self.heap) as usize,
-            [
-                self.heap.capacity as u64,
-                self.heap.raw.currentAllocatedSize() as u64,
-                self.heap.raw.usedSize() as u64,
-            ],
-        )
+        match &self.backing {
+            Backing::Heap(heap) => (
+                Arc::as_ptr(heap) as usize,
+                [
+                    heap.capacity as u64,
+                    heap.raw.currentAllocatedSize() as u64,
+                    heap.raw.usedSize() as u64,
+                ],
+            ),
+            Backing::Standalone { handle, bytes, .. } => {
+                (*handle as usize, [*bytes, *bytes, *bytes])
+            }
+        }
     }
 }
 fn new_heap(metal: &NativeMetal, required: usize) -> Result<Arc<HeapOwner>, String> {
@@ -205,47 +227,50 @@ pub fn upload(
             )
             .ok_or("Metal texture mip bytes overflow")?;
     }
-    if native.size < minimum || native.align == 0 {
-        return Err(format!("Metal sampled native query unavailable: requested_bytes={minimum}, queried_size={}, queried_align={}, extent={w}x{h}, levels={levels}, storage={:?}",native.size,native.align,d.storageMode()));
-    }
-    if !native.align.is_power_of_two() {
-        return Err("Metal sampled native heap alignment invalid".into());
-    }
-    let mut heap = None;
-    // Cold bounded first fit over live cache owners. No new allocator registry,
-    // no aliasable resources, and no lookup on warm unchanged frames.
-    for asset in candidates
-        .iter()
-        .cloned()
-        .chain(published.iter().cloned())
-    {
-        if Arc::ptr_eq(&asset.heap.budget, &metal.budget)
-            && asset.heap.raw.maxAvailableSizeWithAlignment(native.align) >= native.size
-        {
-            heap = Some(asset.heap.clone());
-            break;
+    let (raw, backing) = if native.size == 0 && native.align == 0 {
+        standalone(metal, &d, minimum as u64)?
+    } else {
+        if native.size == 0 || native.align == 0 {
+            return Err(format!("Metal sampled native query unavailable: requested_bytes={minimum}, queried_size={}, queried_align={}, extent={w}x{h}, levels={levels}, storage={:?}",native.size,native.align,d.storageMode()));
         }
-    }
-    let heap = match heap {
-        Some(heap) => heap,
-        None => new_heap(metal, native.size)?,
+        if !native.align.is_power_of_two() {
+            return Err("Metal sampled native heap alignment invalid".into());
+        }
+        let mut heap = None;
+        // Cold bounded first fit over live cache owners. No new allocator registry,
+        // no aliasable resources, and no lookup on warm unchanged frames.
+        for asset in candidates.iter().cloned().chain(published.iter().cloned()) {
+            if let Backing::Heap(h) = &asset.backing {
+                if Arc::ptr_eq(&h.budget, &metal.budget)
+                    && h.raw.maxAvailableSizeWithAlignment(native.align) >= native.size
+                {
+                    heap = Some(h.clone());
+                    break;
+                }
+            }
+        }
+        let heap = match heap {
+            Some(heap) => heap,
+            None => new_heap(metal, native.size)?,
+        };
+        let available = heap.raw.maxAvailableSizeWithAlignment(native.align);
+        if available < native.size {
+            return Err(format!("Metal sampled heap placement refused: queried_size={}, queried_align={}, available={available}",native.size,native.align));
+        }
+        let used_before = heap.raw.usedSize();
+        let Some(raw) = heap.raw.newTextureWithDescriptor(&d) else {
+            return Err("Metal sampled heap texture allocation failed".into());
+        };
+        let used_after = heap.raw.usedSize();
+        let allocated = heap.raw.currentAllocatedSize();
+        let placement = used_after
+            .checked_sub(used_before)
+            .ok_or("Metal sampled heap placement accounting regressed")?;
+        if placement > native.size || used_after > heap.capacity || allocated > heap.capacity {
+            return Err(format!("Metal sampled heap placement exceeded admission: queried_size={}, queried_align={}, used_before={used_before}, used_after={used_after}, placement_size={placement}, heap_capacity={}, heap_allocated={allocated}, child_allocated={}",native.size,native.align,heap.capacity,MTLResource::allocatedSize(&*raw)));
+        }
+        (raw, Backing::Heap(heap))
     };
-    let available = heap.raw.maxAvailableSizeWithAlignment(native.align);
-    if available < native.size {
-        return Err(format!("Metal sampled heap placement refused: queried_size={}, queried_align={}, available={available}",native.size,native.align));
-    }
-    let used_before = heap.raw.usedSize();
-    let Some(raw) = heap.raw.newTextureWithDescriptor(&d) else {
-        return Err("Metal sampled heap texture allocation failed".into());
-    };
-    let used_after = heap.raw.usedSize();
-    let allocated = heap.raw.currentAllocatedSize();
-    let placement = used_after
-        .checked_sub(used_before)
-        .ok_or("Metal sampled heap placement accounting regressed")?;
-    if placement > native.size || used_after > heap.capacity || allocated > heap.capacity {
-        return Err(format!("Metal sampled heap placement exceeded admission: queried_size={}, queried_align={}, used_before={used_before}, used_after={used_after}, placement_size={placement}, heap_capacity={}, heap_allocated={allocated}, child_allocated={}",native.size,native.align,heap.capacity,MTLResource::allocatedSize(&*raw)));
-    }
     let sd = MTLSamplerDescriptor::new();
     sd.setMinFilter(MTLSamplerMinMagFilter::Linear);
     sd.setMagFilter(MTLSamplerMinMagFilter::Linear);
@@ -266,7 +291,7 @@ pub fn upload(
         sampler,
         cutout,
         mean,
-        heap,
+        backing,
     });
     let staging = metal.buffer(staging_bytes, true)?;
     unsafe {
@@ -314,4 +339,61 @@ pub fn upload(
         std::thread::sleep(std::time::Duration::from_millis(1));
     }
     Ok(asset)
+}
+
+// Zero heap-layout queries are handled only with a standalone owner. Heap-backed
+// cache entries retain the existing native placement and shared capacity accounting.
+fn standalone(
+    metal: &NativeMetal,
+    d: &MTLTextureDescriptor,
+    requested: u64,
+) -> Result<(Retained<ProtocolObject<dyn MTLTexture>>, Backing), String> {
+    let (admitted, ticket) = {
+        let mut b = metal
+            .budget
+            .lock()
+            .map_err(|_| "Metal sampled budget poisoned")?;
+        let n = crate::world_admission::standalone_capacity(&b)?;
+        if n < requested || n == 0 {
+            return Err("Metal sampled standalone admission refused".into());
+        }
+        (n, b.reserve(0, n)?)
+    };
+    let Some(raw) = metal.device.newTextureWithDescriptor(d) else {
+        metal
+            .budget
+            .lock()
+            .map_err(|_| "Metal sampled budget poisoned")?
+            .cancel(ticket)?;
+        return Err("Metal sampled standalone allocation failed".into());
+    };
+    let actual = MTLResource::allocatedSize(&*raw) as u64;
+    let handle = (&*raw as *const ProtocolObject<dyn MTLTexture>).cast::<()>() as usize as u64;
+    let mut b = metal
+        .budget
+        .lock()
+        .map_err(|_| "Metal sampled budget poisoned")?;
+    if actual == 0 || actual > admitted {
+        b.cancel(ticket)?;
+        return Err("Metal sampled standalone size exceeds finite admission or is zero".into());
+    }
+    let ticket = if actual != admitted {
+        b.cancel(ticket)?;
+        b.reserve(0, actual)?
+    } else {
+        ticket
+    };
+    if let Err(e) = b.commit(ticket, handle) {
+        let _ = b.cancel(ticket);
+        return Err(e);
+    }
+    drop(b);
+    Ok((
+        raw,
+        Backing::Standalone {
+            budget: metal.budget.clone(),
+            handle,
+            bytes: actual,
+        },
+    ))
 }

@@ -1,0 +1,7 @@
+# Sampled texture allocation correction
+
+Exact Intel run38131536725 at6e22d578 reached the sampled texture owner: classic passes, framebuffer allocations execute, but heap layout returns0/0 for Private2x2 two-mip texture. The immutable cache now distinguishes actual heap-backed assets from standalone assets. Valid heap layouts retain shared first-fit heaps. Only the exact0/0 layout uses standalone creation with a finite available shared-budget ticket reserved before allocation; nonzero partial/invalid layouts still refuse. Native allocatedSize must be positive and fit the ticket, which is shrunk under the same budget lock before publication. Image destruction precedes release of either backing charge; unknown upload completion retains the asset, command and staging.
+
+All Metal texture creation sites were inspected. Only world targets and sampled assets use heap layout queries. Other canvas/CAD/UI allocations use their existing explicit descriptor admission; this correction does not broaden their policies. Legacy texture backing observation rows include standalone owners individually (no heap-sharing claim for that route).
+
+Focused ARM library crosscheck passes. Existing standalone shared-budget admission test passes1/1. Actual Intel fallback execution remains unproven until a new exact-source Apple run; strict ghost pixel gate remains open. Preview WIP is excluded from this runtime commit.
