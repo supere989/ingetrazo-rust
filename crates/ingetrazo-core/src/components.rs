@@ -169,6 +169,7 @@ impl Scene {
                 placed.definition_member=Some(template.id);
                 if let Some(existing)=existing {
                     placed.id=existing.id;
+                    placed.history_id=existing.history_id;
                     // Original copy_group shares meshes, not child placement
                     // matrices. Definition mesh refresh must retain overrides.
                     placed.transform=existing.transform;

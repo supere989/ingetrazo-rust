@@ -17,7 +17,7 @@ pub fn source_uid_key(id: &str) -> Uuid {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Group {
     /// Mesh prototype identity, independent of component flags and child placement lists.
     /// Equal meshes never acquire the same token by geometry deduplication.
@@ -51,6 +51,29 @@ pub struct Group {
     pub billboard_texture: Option<String>,
     #[serde(default)]
     pub hidden: bool,
+}
+
+// Semantic document equality deliberately excludes the transient command token.
+// Exhaustive destructuring makes adding a modeled field require updating this policy.
+impl PartialEq for Group {
+    fn eq(&self, other: &Self) -> bool {
+        let Self { history_id: _, mesh_share, component_definition, definition_member, native_document, native_baseline, id, name, mesh, transform, layer, children, ifc_tag, billboard, billboard_texture, hidden } = self;
+        mesh_share == &other.mesh_share
+            && component_definition == &other.component_definition
+            && definition_member == &other.definition_member
+            && native_document == &other.native_document
+            && native_baseline == &other.native_baseline
+            && id == &other.id
+            && name == &other.name
+            && mesh == &other.mesh
+            && transform == &other.transform
+            && layer == &other.layer
+            && children == &other.children
+            && ifc_tag == &other.ifc_tag
+            && billboard == &other.billboard
+            && billboard_texture == &other.billboard_texture
+            && hidden == &other.hidden
+    }
 }
 
 impl Group {
@@ -124,4 +147,42 @@ impl Group {
         copy
     }
 
+}
+
+#[cfg(test)]
+mod history_identity_tests {
+    use super::*;
+    #[test]
+    fn definition_refresh_preserves_each_existing_placement_token() {
+        let mut scene = crate::scene::Scene::new();
+        let mut parent = Group::new("parent");
+        parent.children.push(Group::new("child"));
+        let id = parent.id;
+        scene.groups.push(parent);
+        let definition = scene.make_component(id).unwrap();
+        scene.groups.push(scene.groups[0].duplicate_instance());
+        let tokens: Vec<_> = scene.groups.iter().map(|g|g.children[0].history_id).collect();
+        assert_ne!(tokens[0],tokens[1]);
+        let replacement=scene.component_definitions[&definition].clone();
+        scene.replace_component_definition(definition,replacement).unwrap();
+        assert_eq!(tokens,scene.groups.iter().map(|g|g.children[0].history_id).collect::<Vec<_>>());
+    }
+    #[test]
+    fn command_tokens_do_not_change_serialized_document_equality() {
+        let mut group = Group::new("authored");
+        group.children.push(Group::new("child"));
+        let restored: Group = serde_json::from_value(serde_json::to_value(&group).unwrap()).unwrap();
+        assert_eq!(group, restored);
+        assert_ne!(group.history_id, restored.history_id);
+        assert_ne!(group.children[0].history_id, restored.children[0].history_id);
+        let snapshot = group.clone();
+        assert_eq!(group.history_id, snapshot.history_id);
+        let copy = group.duplicate_instance();
+        assert_ne!(group.history_id, copy.history_id);
+        assert_ne!(group.children[0].history_id, copy.children[0].history_id);
+        let mut scene = crate::scene::Scene::new();
+        scene.groups.push(group);
+        let restored: crate::scene::Scene = serde_json::from_value(serde_json::to_value(&scene).unwrap()).unwrap();
+        assert_eq!(scene, restored);
+    }
 }
