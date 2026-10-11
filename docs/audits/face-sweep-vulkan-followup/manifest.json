@@ -1,0 +1,1600 @@
+{
+  "archive_sha256": "8c4f7df81d16c7e4772fefcee287f7f682c6fc4d004f80807b1af91851850bb5",
+  "records": [
+    {
+      "path": "failed-app-1/1-acquire.png",
+      "bytes": 46883,
+      "sha256": "4795e03827e4cb3c3b753b24885e1c7124ff37c3744bbf81805736d730a276ab"
+    },
+    {
+      "path": "failed-app-1/app-cleanup.json",
+      "bytes": 89,
+      "sha256": "d48eaa060c31e6dafe274bd3d7a33d6a7780d8d4f470d2571748ad176941e477"
+    },
+    {
+      "path": "failed-app-1/baseline.png",
+      "bytes": 50958,
+      "sha256": "c83359a7e7110f78659b07531b76ad667a88037860f63c0358a28d280ad2d105"
+    },
+    {
+      "path": "failed-app-1/config/ingetrazo-rust/settings.json",
+      "bytes": 471,
+      "sha256": "ca12af3bd68e29419f0f2bd292f093728836e56d8272789455ffdb27a82c0741"
+    },
+    {
+      "path": "failed-app-1/control/request.json",
+      "bytes": 33,
+      "sha256": "aabaab0952cfc703eaf5d34b69fe90550cf6fb420de461733879c05d1766a656"
+    },
+    {
+      "path": "failed-app-1/control/state.json",
+      "bytes": 412,
+      "sha256": "01b080d1c7f0fe3c6d444f6af752a23f652bd9142829389bf24096e38a0f783a"
+    },
+    {
+      "path": "failed-app-1/failure.json",
+      "bytes": 2420,
+      "sha256": "02a0a6293760ccef21804b9d0b4828c7c04bfad18e2d32057f0d29c50d75d2d8"
+    },
+    {
+      "path": "failed-app-1/nvidia.json",
+      "bytes": 105,
+      "sha256": "559298238b82b7ef5db83f2674d7a3fe416158735a56302121b7f2e2d5c1f053"
+    },
+    {
+      "path": "failed-app-1/runtime.log",
+      "bytes": 1151,
+      "sha256": "d0851575928120205696a900886d6a6206cbeb647991a686cff9589c698c1f03"
+    },
+    {
+      "path": "failed-app-1/transport.json",
+      "bytes": 2871,
+      "sha256": "b36f3b972c7a81e3b4ec955a56acd6aea3c6f32b0c17a08f23d9e9683a7b285d"
+    },
+    {
+      "path": "failed-app-1/transport.log",
+      "bytes": 409,
+      "sha256": "6089b509a201a9ad451a548cdcf32af52af8c5e969f3844a122b17b3e8d90872"
+    },
+    {
+      "path": "failed-app-1/xvfb-cleanup.json",
+      "bytes": 87,
+      "sha256": "ac3db790fb10744c5adcca88c62d290edc9c581201a89b7d5ecef1828bf1398e"
+    },
+    {
+      "path": "failed-app-2/1-acquire.png",
+      "bytes": 49664,
+      "sha256": "b4d037534d3c3e81f5f6d9dd74fdd419ab5fbb8c64d43a8832bc40c4e8c106d7"
+    },
+    {
+      "path": "failed-app-2/app-cleanup.json",
+      "bytes": 89,
+      "sha256": "d48eaa060c31e6dafe274bd3d7a33d6a7780d8d4f470d2571748ad176941e477"
+    },
+    {
+      "path": "failed-app-2/baseline.png",
+      "bytes": 50958,
+      "sha256": "c83359a7e7110f78659b07531b76ad667a88037860f63c0358a28d280ad2d105"
+    },
+    {
+      "path": "failed-app-2/config/ingetrazo-rust/settings.json",
+      "bytes": 471,
+      "sha256": "ca12af3bd68e29419f0f2bd292f093728836e56d8272789455ffdb27a82c0741"
+    },
+    {
+      "path": "failed-app-2/control/request.json",
+      "bytes": 33,
+      "sha256": "aabaab0952cfc703eaf5d34b69fe90550cf6fb420de461733879c05d1766a656"
+    },
+    {
+      "path": "failed-app-2/control/state.json",
+      "bytes": 380,
+      "sha256": "1e316324e45d484c798ae4e8b8521452a5a7c5126e0a6156ea1df2f02e01bead"
+    },
+    {
+      "path": "failed-app-2/failure.json",
+      "bytes": 2350,
+      "sha256": "54f4a8fb526c80c316b8ed1d35377718e0fff437ffc9441fe25dbc5161e07ffe"
+    },
+    {
+      "path": "failed-app-2/nvidia.json",
+      "bytes": 105,
+      "sha256": "559298238b82b7ef5db83f2674d7a3fe416158735a56302121b7f2e2d5c1f053"
+    },
+    {
+      "path": "failed-app-2/runtime.log",
+      "bytes": 1151,
+      "sha256": "d0851575928120205696a900886d6a6206cbeb647991a686cff9589c698c1f03"
+    },
+    {
+      "path": "failed-app-2/transport.json",
+      "bytes": 2870,
+      "sha256": "ed2953374cf61c65a2dbaa52fb9ad232f29dbb1e5e66b0ea9201735dbe61f4bf"
+    },
+    {
+      "path": "failed-app-2/transport.log",
+      "bytes": 409,
+      "sha256": "6089b509a201a9ad451a548cdcf32af52af8c5e969f3844a122b17b3e8d90872"
+    },
+    {
+      "path": "failed-app-2/xvfb-cleanup.json",
+      "bytes": 87,
+      "sha256": "ac3db790fb10744c5adcca88c62d290edc9c581201a89b7d5ecef1828bf1398e"
+    },
+    {
+      "path": "failed-app-3/app-cleanup.json",
+      "bytes": 89,
+      "sha256": "d48eaa060c31e6dafe274bd3d7a33d6a7780d8d4f470d2571748ad176941e477"
+    },
+    {
+      "path": "failed-app-3/baseline.png",
+      "bytes": 50958,
+      "sha256": "c83359a7e7110f78659b07531b76ad667a88037860f63c0358a28d280ad2d105"
+    },
+    {
+      "path": "failed-app-3/config/ingetrazo-rust/settings.json",
+      "bytes": 471,
+      "sha256": "ca12af3bd68e29419f0f2bd292f093728836e56d8272789455ffdb27a82c0741"
+    },
+    {
+      "path": "failed-app-3/control/request.json",
+      "bytes": 33,
+      "sha256": "aabaab0952cfc703eaf5d34b69fe90550cf6fb420de461733879c05d1766a656"
+    },
+    {
+      "path": "failed-app-3/control/state.json",
+      "bytes": 379,
+      "sha256": "90801126bce9c6a26d9d573623534468d2ea2a1007f90cbdedfd05e2fef2519a"
+    },
+    {
+      "path": "failed-app-3/failure.json",
+      "bytes": 1103,
+      "sha256": "2391177975e48343e1a8a309cb0d0bc77bd78052e77adb1e76d873547e2f70e5"
+    },
+    {
+      "path": "failed-app-3/nvidia.json",
+      "bytes": 105,
+      "sha256": "559298238b82b7ef5db83f2674d7a3fe416158735a56302121b7f2e2d5c1f053"
+    },
+    {
+      "path": "failed-app-3/runtime.log",
+      "bytes": 803667,
+      "sha256": "f4b02da046b82d546285c32e9b6e09e2b4fe350437a5b8dc31db1126ba393441"
+    },
+    {
+      "path": "failed-app-3/transport.json",
+      "bytes": 2870,
+      "sha256": "491eed9814432ebff22efad5bcb42ffbe4c2ea9d549c61221a8d3bd992c289d0"
+    },
+    {
+      "path": "failed-app-3/transport.log",
+      "bytes": 671,
+      "sha256": "5d8f56000b607afd3c5cb1491ae0a8249ef7b647fd3bde02191efd76fb23a08c"
+    },
+    {
+      "path": "failed-app-3/xvfb-cleanup.json",
+      "bytes": 87,
+      "sha256": "ac3db790fb10744c5adcca88c62d290edc9c581201a89b7d5ecef1828bf1398e"
+    },
+    {
+      "path": "transaction-initial/1-acquire.png",
+      "bytes": 50606,
+      "sha256": "7064231e28339db3897f7658140f96f9be75f20d31b11530cc546dbd25759ae5"
+    },
+    {
+      "path": "transaction-initial/10-retry.png",
+      "bytes": 54336,
+      "sha256": "7f3284672e1126d65db68ad4fae0103ce0c2f11832f048508836b3632666d7ba"
+    },
+    {
+      "path": "transaction-initial/11-cancel.png",
+      "bytes": 52078,
+      "sha256": "62b6012231112aa7645f1f99e57a04043b5c00d980ed0b9454a38de1becb3ba4"
+    },
+    {
+      "path": "transaction-initial/12-acquire.png",
+      "bytes": 50606,
+      "sha256": "7064231e28339db3897f7658140f96f9be75f20d31b11530cc546dbd25759ae5"
+    },
+    {
+      "path": "transaction-initial/13-drag.png",
+      "bytes": 50929,
+      "sha256": "b23ae17864a50687bc2e52ac4031970aee2d333074791bdd7fc20af6a0211300"
+    },
+    {
+      "path": "transaction-initial/14-commit.png",
+      "bytes": 49828,
+      "sha256": "935da0e823801f6ff156a39cb137a2f7b63cabcfbfad93d760eb516586c05792"
+    },
+    {
+      "path": "transaction-initial/15-undo.png",
+      "bytes": 47438,
+      "sha256": "b46975a90ae6d67ef4699e7c2057d107a4b62865d7caba76a4c7be2639eed9c8"
+    },
+    {
+      "path": "transaction-initial/16-save.png",
+      "bytes": 49060,
+      "sha256": "79b98938aa1d295800ad1e5e76ebd2c41c4cd878175805359f626d2fdb74947d"
+    },
+    {
+      "path": "transaction-initial/2-drag.png",
+      "bytes": 50929,
+      "sha256": "b23ae17864a50687bc2e52ac4031970aee2d333074791bdd7fc20af6a0211300"
+    },
+    {
+      "path": "transaction-initial/3-drag.png",
+      "bytes": 50320,
+      "sha256": "5989acfb34f126fc8e0fdbac8f2861335db3221e4f59e82b0212906e053c3dc2"
+    },
+    {
+      "path": "transaction-initial/4-refuse.png",
+      "bytes": 50320,
+      "sha256": "5989acfb34f126fc8e0fdbac8f2861335db3221e4f59e82b0212906e053c3dc2"
+    },
+    {
+      "path": "transaction-initial/5-retry.png",
+      "bytes": 52089,
+      "sha256": "6a3e5da610a8dec362db6f51063c69b577b2b1512bd71d29e1009d2fcf36ee22"
+    },
+    {
+      "path": "transaction-initial/6-typed.png",
+      "bytes": 52423,
+      "sha256": "5cf5a440079f33509e7e2a653ac1c771f124f26e9f1d56c21ba7041bece633cf"
+    },
+    {
+      "path": "transaction-initial/7-refuse-font.png",
+      "bytes": 52423,
+      "sha256": "5cf5a440079f33509e7e2a653ac1c771f124f26e9f1d56c21ba7041bece633cf"
+    },
+    {
+      "path": "transaction-initial/8-retry.png",
+      "bytes": 52712,
+      "sha256": "e7d51cd2499571357c9e5dfbafefcda896b85ad0dfcd218676b5c1348acc176d"
+    },
+    {
+      "path": "transaction-initial/9-refuse-cad.png",
+      "bytes": 52712,
+      "sha256": "e7d51cd2499571357c9e5dfbafefcda896b85ad0dfcd218676b5c1348acc176d"
+    },
+    {
+      "path": "transaction-initial/app-cleanup.json",
+      "bytes": 87,
+      "sha256": "002b2ad4378af24a2bf8ea97cf7dcaab0240aa0e2923218dec01245f4e59b3e4"
+    },
+    {
+      "path": "transaction-initial/baseline.png",
+      "bytes": 50958,
+      "sha256": "c83359a7e7110f78659b07531b76ad667a88037860f63c0358a28d280ad2d105"
+    },
+    {
+      "path": "transaction-initial/config/ingetrazo-rust/settings.json",
+      "bytes": 502,
+      "sha256": "ca55b6b4f868e973db8d97218596ac3d5023368779a0875c9004d8d6904f8486"
+    },
+    {
+      "path": "transaction-initial/control/request.json",
+      "bytes": 31,
+      "sha256": "7b20885c1addedc418179dc80ba2b7982b51421d85c69d687949895d1b4fc32d"
+    },
+    {
+      "path": "transaction-initial/control/saved.igz",
+      "bytes": 6440,
+      "sha256": "684ff53be9bf425f1dc838781871fec1f799e1359dd91056f13d223f2e3cd386"
+    },
+    {
+      "path": "transaction-initial/control/state.json",
+      "bytes": 379,
+      "sha256": "05596ef4d7c5e71a74803162b9231948769db2d75a91388bc080b786961dd20e"
+    },
+    {
+      "path": "transaction-initial/nvidia.json",
+      "bytes": 105,
+      "sha256": "559298238b82b7ef5db83f2674d7a3fe416158735a56302121b7f2e2d5c1f053"
+    },
+    {
+      "path": "transaction-initial/resize-restored.png",
+      "bytes": 52078,
+      "sha256": "62b6012231112aa7645f1f99e57a04043b5c00d980ed0b9454a38de1becb3ba4"
+    },
+    {
+      "path": "transaction-initial/result.json",
+      "bytes": 21886,
+      "sha256": "ac0540f8cba9eeead91188fddbcb0d647a57fbffccb2129e39341124299141c0"
+    },
+    {
+      "path": "transaction-initial/runtime.log",
+      "bytes": 34725,
+      "sha256": "9a9197766ca932300040acc35914aebd9c4dd47bdb6fcc19949b5422cb4ed9b9"
+    },
+    {
+      "path": "transaction-initial/transport.json",
+      "bytes": 2873,
+      "sha256": "b6c158a7cd812decfbe699d4ce20a6150d27f759bff3410ccdcb6a44bb02f413"
+    },
+    {
+      "path": "transaction-initial/transport.log",
+      "bytes": 43,
+      "sha256": "0edeadb29bda5d91af73ead0657d44bb358958f12535c0fc19512882fb6168b6"
+    },
+    {
+      "path": "transaction-initial/xvfb-cleanup.json",
+      "bytes": 87,
+      "sha256": "ac3db790fb10744c5adcca88c62d290edc9c581201a89b7d5ecef1828bf1398e"
+    },
+    {
+      "path": "transaction-final/1-acquire.png",
+      "bytes": 50606,
+      "sha256": "7064231e28339db3897f7658140f96f9be75f20d31b11530cc546dbd25759ae5"
+    },
+    {
+      "path": "transaction-final/10-retry.png",
+      "bytes": 54336,
+      "sha256": "7f3284672e1126d65db68ad4fae0103ce0c2f11832f048508836b3632666d7ba"
+    },
+    {
+      "path": "transaction-final/11-cancel.png",
+      "bytes": 52078,
+      "sha256": "62b6012231112aa7645f1f99e57a04043b5c00d980ed0b9454a38de1becb3ba4"
+    },
+    {
+      "path": "transaction-final/12-acquire.png",
+      "bytes": 50606,
+      "sha256": "7064231e28339db3897f7658140f96f9be75f20d31b11530cc546dbd25759ae5"
+    },
+    {
+      "path": "transaction-final/13-drag.png",
+      "bytes": 50929,
+      "sha256": "b23ae17864a50687bc2e52ac4031970aee2d333074791bdd7fc20af6a0211300"
+    },
+    {
+      "path": "transaction-final/14-commit.png",
+      "bytes": 49828,
+      "sha256": "935da0e823801f6ff156a39cb137a2f7b63cabcfbfad93d760eb516586c05792"
+    },
+    {
+      "path": "transaction-final/15-undo.png",
+      "bytes": 47438,
+      "sha256": "b46975a90ae6d67ef4699e7c2057d107a4b62865d7caba76a4c7be2639eed9c8"
+    },
+    {
+      "path": "transaction-final/16-save.png",
+      "bytes": 49060,
+      "sha256": "79b98938aa1d295800ad1e5e76ebd2c41c4cd878175805359f626d2fdb74947d"
+    },
+    {
+      "path": "transaction-final/2-drag.png",
+      "bytes": 50929,
+      "sha256": "b23ae17864a50687bc2e52ac4031970aee2d333074791bdd7fc20af6a0211300"
+    },
+    {
+      "path": "transaction-final/3-drag.png",
+      "bytes": 50320,
+      "sha256": "5989acfb34f126fc8e0fdbac8f2861335db3221e4f59e82b0212906e053c3dc2"
+    },
+    {
+      "path": "transaction-final/4-refuse.png",
+      "bytes": 50320,
+      "sha256": "5989acfb34f126fc8e0fdbac8f2861335db3221e4f59e82b0212906e053c3dc2"
+    },
+    {
+      "path": "transaction-final/5-retry.png",
+      "bytes": 52089,
+      "sha256": "6a3e5da610a8dec362db6f51063c69b577b2b1512bd71d29e1009d2fcf36ee22"
+    },
+    {
+      "path": "transaction-final/6-typed.png",
+      "bytes": 52423,
+      "sha256": "5cf5a440079f33509e7e2a653ac1c771f124f26e9f1d56c21ba7041bece633cf"
+    },
+    {
+      "path": "transaction-final/7-refuse-font.png",
+      "bytes": 52423,
+      "sha256": "5cf5a440079f33509e7e2a653ac1c771f124f26e9f1d56c21ba7041bece633cf"
+    },
+    {
+      "path": "transaction-final/8-retry.png",
+      "bytes": 52712,
+      "sha256": "e7d51cd2499571357c9e5dfbafefcda896b85ad0dfcd218676b5c1348acc176d"
+    },
+    {
+      "path": "transaction-final/9-refuse-cad.png",
+      "bytes": 52712,
+      "sha256": "e7d51cd2499571357c9e5dfbafefcda896b85ad0dfcd218676b5c1348acc176d"
+    },
+    {
+      "path": "transaction-final/app-cleanup.json",
+      "bytes": 87,
+      "sha256": "002b2ad4378af24a2bf8ea97cf7dcaab0240aa0e2923218dec01245f4e59b3e4"
+    },
+    {
+      "path": "transaction-final/baseline.png",
+      "bytes": 50958,
+      "sha256": "c83359a7e7110f78659b07531b76ad667a88037860f63c0358a28d280ad2d105"
+    },
+    {
+      "path": "transaction-final/config/ingetrazo-rust/settings.json",
+      "bytes": 502,
+      "sha256": "ca55b6b4f868e973db8d97218596ac3d5023368779a0875c9004d8d6904f8486"
+    },
+    {
+      "path": "transaction-final/control/request.json",
+      "bytes": 31,
+      "sha256": "7b20885c1addedc418179dc80ba2b7982b51421d85c69d687949895d1b4fc32d"
+    },
+    {
+      "path": "transaction-final/control/saved.igz",
+      "bytes": 6440,
+      "sha256": "684ff53be9bf425f1dc838781871fec1f799e1359dd91056f13d223f2e3cd386"
+    },
+    {
+      "path": "transaction-final/control/state.json",
+      "bytes": 379,
+      "sha256": "76164eac5a747b407be7fb3ca13aefc9053baf047e33c164d5e74348bfccbe75"
+    },
+    {
+      "path": "transaction-final/nvidia.json",
+      "bytes": 105,
+      "sha256": "559298238b82b7ef5db83f2674d7a3fe416158735a56302121b7f2e2d5c1f053"
+    },
+    {
+      "path": "transaction-final/resize-restored.png",
+      "bytes": 52078,
+      "sha256": "62b6012231112aa7645f1f99e57a04043b5c00d980ed0b9454a38de1becb3ba4"
+    },
+    {
+      "path": "transaction-final/result.json",
+      "bytes": 21882,
+      "sha256": "79688230ecdb21e386c4fa7c097b3e4266dd77fc23c9e1a3ac5e8386b31591da"
+    },
+    {
+      "path": "transaction-final/runtime.log",
+      "bytes": 33820,
+      "sha256": "70f9a2e828822de46524007660009c7b2232b554fa55c455f4265f411f0f3277"
+    },
+    {
+      "path": "transaction-final/transport.json",
+      "bytes": 2867,
+      "sha256": "d7827962001a1aaa81b18abaa4c5e3851aa1143a7831a1d3a091591c207114c7"
+    },
+    {
+      "path": "transaction-final/transport.log",
+      "bytes": 43,
+      "sha256": "0edeadb29bda5d91af73ead0657d44bb358958f12535c0fc19512882fb6168b6"
+    },
+    {
+      "path": "transaction-final/xvfb-cleanup.json",
+      "bytes": 87,
+      "sha256": "ac3db790fb10744c5adcca88c62d290edc9c581201a89b7d5ecef1828bf1398e"
+    },
+    {
+      "path": "source-first-protocol/back-recess/1-acquire.png",
+      "bytes": 4202,
+      "sha256": "ec45a835bdae562366469e11f49947b4decbe49545c3c0879f3dc46a022528a6"
+    },
+    {
+      "path": "source-first-protocol/back-recess/2-drag.png",
+      "bytes": 4358,
+      "sha256": "adf1ea0d39855800e5b1a7c0b23e709c8d71d6e6c41d3a9c047286c3603feb9e"
+    },
+    {
+      "path": "source-first-protocol/back-recess/3-drag.png",
+      "bytes": 4344,
+      "sha256": "58b6c159465a75eaedfedd74adff806906285ce8ce359f24dd8f1cde586a811b"
+    },
+    {
+      "path": "source-first-protocol/back-recess/4-cancel.png",
+      "bytes": 891,
+      "sha256": "e5212f5bf8580bf43c48d3514882e68660959be99b7a8325beb275b5ce1d7cab"
+    },
+    {
+      "path": "source-first-protocol/back-recess/5-save.png",
+      "bytes": 891,
+      "sha256": "e5212f5bf8580bf43c48d3514882e68660959be99b7a8325beb275b5ce1d7cab"
+    },
+    {
+      "path": "source-first-protocol/back-recess/app-cleanup.json",
+      "bytes": 87,
+      "sha256": "002b2ad4378af24a2bf8ea97cf7dcaab0240aa0e2923218dec01245f4e59b3e4"
+    },
+    {
+      "path": "source-first-protocol/back-recess/baseline.png",
+      "bytes": 891,
+      "sha256": "e5212f5bf8580bf43c48d3514882e68660959be99b7a8325beb275b5ce1d7cab"
+    },
+    {
+      "path": "source-first-protocol/back-recess/config/ingetrazo-rust/settings.json",
+      "bytes": 499,
+      "sha256": "ad14dfdc6e70977cd277553e4bed192830279ae2c1f5971d893499963b57f8f6"
+    },
+    {
+      "path": "source-first-protocol/back-recess/control/request.json",
+      "bytes": 30,
+      "sha256": "ef79a8c750cd008926bc83969069613d754b7fd789fb82d4d1819dd2f19e9ae0"
+    },
+    {
+      "path": "source-first-protocol/back-recess/control/saved.igz",
+      "bytes": 3633,
+      "sha256": "775e2ad8a685d822a992c9e1ab7a0fb17e5b8a24c6e1efbac90d06d1eac52adc"
+    },
+    {
+      "path": "source-first-protocol/back-recess/control/state.json",
+      "bytes": 360,
+      "sha256": "fdef89f4c83e5e021838435b533790cd474119f95545fb0b92f87fbe53994d92"
+    },
+    {
+      "path": "source-first-protocol/back-recess/nvidia.json",
+      "bytes": 105,
+      "sha256": "559298238b82b7ef5db83f2674d7a3fe416158735a56302121b7f2e2d5c1f053"
+    },
+    {
+      "path": "source-first-protocol/back-recess/result.json",
+      "bytes": 6556,
+      "sha256": "f71a2d5f2413f87db4b94b9669cd695ea326c1cc248c0a228499cf27856526bc"
+    },
+    {
+      "path": "source-first-protocol/back-recess/runtime.log",
+      "bytes": 2939,
+      "sha256": "0dda3abb6817b2ecb39794dd3c752c253c2e29bc5deecd73661b7ff851ab2fa9"
+    },
+    {
+      "path": "source-first-protocol/back-recess/source-comparison.json",
+      "bytes": 907,
+      "sha256": "44543beb56c081dd9c827e8c242799d0f5448fb341c42ee9981da774b64aaf64"
+    },
+    {
+      "path": "source-first-protocol/back-recess/transport.json",
+      "bytes": 2943,
+      "sha256": "c714578572e7fa244f54dd73bd62a084947bc59f7178c0bc5ebb57d7def792ca"
+    },
+    {
+      "path": "source-first-protocol/back-recess/transport.log",
+      "bytes": 43,
+      "sha256": "0edeadb29bda5d91af73ead0657d44bb358958f12535c0fc19512882fb6168b6"
+    },
+    {
+      "path": "source-first-protocol/back-recess/xvfb-cleanup.json",
+      "bytes": 87,
+      "sha256": "ac3db790fb10744c5adcca88c62d290edc9c581201a89b7d5ecef1828bf1398e"
+    },
+    {
+      "path": "source-first-protocol/back-recess.py",
+      "bytes": 2619,
+      "sha256": "ded4087d83e44269eea03cfda17824a4fd7a9bd1ca3112ef9cb06253a58cdd69"
+    },
+    {
+      "path": "source-first-protocol/execution.json",
+      "bytes": 360,
+      "sha256": "98103095416ca2115da9500d7b9b52b75ca3cfd1b0ca60d11ce603df49143b2d"
+    },
+    {
+      "path": "source-first-protocol/front-recess/1-acquire.png",
+      "bytes": 4205,
+      "sha256": "a3f69bb770664f583b77490692455b662c9fd31854d9853fba8b5f3f7f6a0b65"
+    },
+    {
+      "path": "source-first-protocol/front-recess/2-drag.png",
+      "bytes": 4350,
+      "sha256": "a71358cc8a8011bba7153edf7823a185cc90ffcd57855f1c15538bc6d5029782"
+    },
+    {
+      "path": "source-first-protocol/front-recess/3-drag.png",
+      "bytes": 4347,
+      "sha256": "6aa0bee6b3ae3d9f92a2f4663c035689541b05d01a4c701d6a10fd7da0ff49bf"
+    },
+    {
+      "path": "source-first-protocol/front-recess/4-cancel.png",
+      "bytes": 878,
+      "sha256": "6f5347ee0762ae47146de2c1cabf3d80438e9e5d5d424ac3195b19054d0074ac"
+    },
+    {
+      "path": "source-first-protocol/front-recess/5-save.png",
+      "bytes": 878,
+      "sha256": "6f5347ee0762ae47146de2c1cabf3d80438e9e5d5d424ac3195b19054d0074ac"
+    },
+    {
+      "path": "source-first-protocol/front-recess/app-cleanup.json",
+      "bytes": 87,
+      "sha256": "002b2ad4378af24a2bf8ea97cf7dcaab0240aa0e2923218dec01245f4e59b3e4"
+    },
+    {
+      "path": "source-first-protocol/front-recess/baseline.png",
+      "bytes": 878,
+      "sha256": "6f5347ee0762ae47146de2c1cabf3d80438e9e5d5d424ac3195b19054d0074ac"
+    },
+    {
+      "path": "source-first-protocol/front-recess/config/ingetrazo-rust/settings.json",
+      "bytes": 500,
+      "sha256": "008678c80ce1daa7095bc9bdb6299698909e09cd0e72c86c901c484b5f211317"
+    },
+    {
+      "path": "source-first-protocol/front-recess/control/request.json",
+      "bytes": 30,
+      "sha256": "ef79a8c750cd008926bc83969069613d754b7fd789fb82d4d1819dd2f19e9ae0"
+    },
+    {
+      "path": "source-first-protocol/front-recess/control/saved.igz",
+      "bytes": 3634,
+      "sha256": "d93c68d9ec4db7ad5589a83aac7cf3e02861b3f99d3aad3874f30314a6cb6460"
+    },
+    {
+      "path": "source-first-protocol/front-recess/control/state.json",
+      "bytes": 360,
+      "sha256": "36698c1a0df0ed779fbc4aaa9a43576467ebd793b5938cfb71773596431e44cb"
+    },
+    {
+      "path": "source-first-protocol/front-recess/nvidia.json",
+      "bytes": 105,
+      "sha256": "559298238b82b7ef5db83f2674d7a3fe416158735a56302121b7f2e2d5c1f053"
+    },
+    {
+      "path": "source-first-protocol/front-recess/result.json",
+      "bytes": 6558,
+      "sha256": "6ae84f443c0b7b4aace07a0220bfcdf7186a721a0c8dea931c1fd28abd4c7e20"
+    },
+    {
+      "path": "source-first-protocol/front-recess/runtime.log",
+      "bytes": 2939,
+      "sha256": "f50fadfe11921e938c46ca248ad8e93411721457c77b2f81fefc38e4675d7fa5"
+    },
+    {
+      "path": "source-first-protocol/front-recess/source-comparison.json",
+      "bytes": 908,
+      "sha256": "70c4464f95fbf0e4420aaccdb809af3fb39958e2f8740b58829971ce83b1d949"
+    },
+    {
+      "path": "source-first-protocol/front-recess/transport.json",
+      "bytes": 2945,
+      "sha256": "31f5a8c99623feae70ad3f16b95e7e5e77102077248b6002191d92565e679b5f"
+    },
+    {
+      "path": "source-first-protocol/front-recess/transport.log",
+      "bytes": 43,
+      "sha256": "0edeadb29bda5d91af73ead0657d44bb358958f12535c0fc19512882fb6168b6"
+    },
+    {
+      "path": "source-first-protocol/front-recess/xvfb-cleanup.json",
+      "bytes": 87,
+      "sha256": "ac3db790fb10744c5adcca88c62d290edc9c581201a89b7d5ecef1828bf1398e"
+    },
+    {
+      "path": "source-first-protocol/front-recess.py",
+      "bytes": 2621,
+      "sha256": "8c6ed526ee3a0543bd31f6f5f47b8164556cd1908ae9a7b144b7b8e74845da13"
+    },
+    {
+      "path": "source-first-protocol/front-texture-back-override/1-acquire.png",
+      "bytes": 11373,
+      "sha256": "fb6767c47b43de6a3e288507442be22fdb700c27b28a2368d128ccc51cdb8c86"
+    },
+    {
+      "path": "source-first-protocol/front-texture-back-override/2-drag.png",
+      "bytes": 21255,
+      "sha256": "36e3ea72e1578ba101653fb0e2377a448b27ce27b7b17676d668710568521467"
+    },
+    {
+      "path": "source-first-protocol/front-texture-back-override/3-drag.png",
+      "bytes": 25181,
+      "sha256": "2351d256a96c7af881a06c22c309ba2925604b1541d706a1387b606aff7c767c"
+    },
+    {
+      "path": "source-first-protocol/front-texture-back-override/4-cancel.png",
+      "bytes": 10137,
+      "sha256": "d2fbae884b4893a7555dba886a125373994930bd7474ab18bab2ef54bb26103a"
+    },
+    {
+      "path": "source-first-protocol/front-texture-back-override/5-save.png",
+      "bytes": 10137,
+      "sha256": "d2fbae884b4893a7555dba886a125373994930bd7474ab18bab2ef54bb26103a"
+    },
+    {
+      "path": "source-first-protocol/front-texture-back-override/app-cleanup.json",
+      "bytes": 87,
+      "sha256": "002b2ad4378af24a2bf8ea97cf7dcaab0240aa0e2923218dec01245f4e59b3e4"
+    },
+    {
+      "path": "source-first-protocol/front-texture-back-override/baseline.png",
+      "bytes": 10137,
+      "sha256": "d2fbae884b4893a7555dba886a125373994930bd7474ab18bab2ef54bb26103a"
+    },
+    {
+      "path": "source-first-protocol/front-texture-back-override/config/ingetrazo-rust/settings.json",
+      "bytes": 515,
+      "sha256": "58890098f83b5446c2f978e3f8263ba2672d8f9efda4d7988afc4a17b5c91d00"
+    },
+    {
+      "path": "source-first-protocol/front-texture-back-override/control/request.json",
+      "bytes": 30,
+      "sha256": "ef79a8c750cd008926bc83969069613d754b7fd789fb82d4d1819dd2f19e9ae0"
+    },
+    {
+      "path": "source-first-protocol/front-texture-back-override/control/saved.igz",
+      "bytes": 1004,
+      "sha256": "e8058153b872124ccd89ff66ee770edb9ec10ddd7fc40104241703923ed7b298"
+    },
+    {
+      "path": "source-first-protocol/front-texture-back-override/control/state.json",
+      "bytes": 360,
+      "sha256": "582f5f4288a17bc88d030d1e0ce28627e213ad86f19a62ee9c5a658345d6439e"
+    },
+    {
+      "path": "source-first-protocol/front-texture-back-override/nvidia.json",
+      "bytes": 105,
+      "sha256": "559298238b82b7ef5db83f2674d7a3fe416158735a56302121b7f2e2d5c1f053"
+    },
+    {
+      "path": "source-first-protocol/front-texture-back-override/result.json",
+      "bytes": 6554,
+      "sha256": "4ee54a2fc45e07166a8c31302092c6861efa1b9fcb26171103e05ee26f9840b6"
+    },
+    {
+      "path": "source-first-protocol/front-texture-back-override/runtime.log",
+      "bytes": 2939,
+      "sha256": "56fd172d172b0e66869ac5025433040458a1fc63fb23f98909a9a81f3f38e267"
+    },
+    {
+      "path": "source-first-protocol/front-texture-back-override/source-comparison.json",
+      "bytes": 923,
+      "sha256": "e2d9f7ea27852c1b3b1f5b209a2a53f4fedfcac70181cb6f2d077ac9b9d44fbb"
+    },
+    {
+      "path": "source-first-protocol/front-texture-back-override/transport.json",
+      "bytes": 2974,
+      "sha256": "505cca58da8b1c9a52f492a5e2e0a5e2a4a60f1308178cd78ed6a8270625407d"
+    },
+    {
+      "path": "source-first-protocol/front-texture-back-override/transport.log",
+      "bytes": 43,
+      "sha256": "0edeadb29bda5d91af73ead0657d44bb358958f12535c0fc19512882fb6168b6"
+    },
+    {
+      "path": "source-first-protocol/front-texture-back-override/xvfb-cleanup.json",
+      "bytes": 87,
+      "sha256": "ac3db790fb10744c5adcca88c62d290edc9c581201a89b7d5ecef1828bf1398e"
+    },
+    {
+      "path": "source-first-protocol/front-texture-back-override.py",
+      "bytes": 2651,
+      "sha256": "ab35e61d1261a7b291a8f4c4d58f70334899e90abb6e80e0fd26b0f4460be7d1"
+    },
+    {
+      "path": "source-first-protocol/lone-sheet/1-acquire.png",
+      "bytes": 1638,
+      "sha256": "e867021a932a287b93cf87137ddaf8966ba4793472f06d80a7f402d32b09d615"
+    },
+    {
+      "path": "source-first-protocol/lone-sheet/2-drag.png",
+      "bytes": 4175,
+      "sha256": "e1f11ece1534c842b2bd46ef6b1bc9b378bc47cc23db06452a477616532c39d1"
+    },
+    {
+      "path": "source-first-protocol/lone-sheet/3-drag.png",
+      "bytes": 4170,
+      "sha256": "cc520a985d4b8b16d07f4d7359a204d04ae6318243da774f14f090d3f1a3e03e"
+    },
+    {
+      "path": "source-first-protocol/lone-sheet/4-cancel.png",
+      "bytes": 511,
+      "sha256": "2f1237454efbc71eb6b19e00b142cd20c9eccab84dba56ba3a9f576e3f44054c"
+    },
+    {
+      "path": "source-first-protocol/lone-sheet/5-save.png",
+      "bytes": 511,
+      "sha256": "2f1237454efbc71eb6b19e00b142cd20c9eccab84dba56ba3a9f576e3f44054c"
+    },
+    {
+      "path": "source-first-protocol/lone-sheet/app-cleanup.json",
+      "bytes": 87,
+      "sha256": "002b2ad4378af24a2bf8ea97cf7dcaab0240aa0e2923218dec01245f4e59b3e4"
+    },
+    {
+      "path": "source-first-protocol/lone-sheet/baseline.png",
+      "bytes": 511,
+      "sha256": "2f1237454efbc71eb6b19e00b142cd20c9eccab84dba56ba3a9f576e3f44054c"
+    },
+    {
+      "path": "source-first-protocol/lone-sheet/config/ingetrazo-rust/settings.json",
+      "bytes": 498,
+      "sha256": "e59e86da3c3d1b79fe589033c18c5934dda0004d11d0cc7d06d17c2fccc702f8"
+    },
+    {
+      "path": "source-first-protocol/lone-sheet/control/request.json",
+      "bytes": 30,
+      "sha256": "ef79a8c750cd008926bc83969069613d754b7fd789fb82d4d1819dd2f19e9ae0"
+    },
+    {
+      "path": "source-first-protocol/lone-sheet/control/saved.igz",
+      "bytes": 2269,
+      "sha256": "12731051dd698a5ec11a8cd9b355d7b8bbb0c618c3dbd2c699dc78fa7e565eb7"
+    },
+    {
+      "path": "source-first-protocol/lone-sheet/control/state.json",
+      "bytes": 360,
+      "sha256": "74b1b2c8f790b1979a93c0947cd5e3977965d4a8f632c5fa49be419efdd880d9"
+    },
+    {
+      "path": "source-first-protocol/lone-sheet/nvidia.json",
+      "bytes": 105,
+      "sha256": "559298238b82b7ef5db83f2674d7a3fe416158735a56302121b7f2e2d5c1f053"
+    },
+    {
+      "path": "source-first-protocol/lone-sheet/result.json",
+      "bytes": 6558,
+      "sha256": "ac1bfd2fcb2bd02a370fc7056bce6e0ecbac5da1a23a2209d944cf71f561d37f"
+    },
+    {
+      "path": "source-first-protocol/lone-sheet/runtime.log",
+      "bytes": 2939,
+      "sha256": "7b292118c00af6e66b6801e99e9f57faca7dbed2cacaa772e9cdaf719bb31ec6"
+    },
+    {
+      "path": "source-first-protocol/lone-sheet/source-comparison.json",
+      "bytes": 906,
+      "sha256": "80b410859763a488a5736dba5e7a1e0ccb716b901c879d2e0a0dc1ed84602fce"
+    },
+    {
+      "path": "source-first-protocol/lone-sheet/transport.json",
+      "bytes": 2941,
+      "sha256": "c3d585b7159f827d4215109e6b04d8246e3c08fd1772ad65340c7f0979c554d4"
+    },
+    {
+      "path": "source-first-protocol/lone-sheet/transport.log",
+      "bytes": 43,
+      "sha256": "0edeadb29bda5d91af73ead0657d44bb358958f12535c0fc19512882fb6168b6"
+    },
+    {
+      "path": "source-first-protocol/lone-sheet/xvfb-cleanup.json",
+      "bytes": 87,
+      "sha256": "ac3db790fb10744c5adcca88c62d290edc9c581201a89b7d5ecef1828bf1398e"
+    },
+    {
+      "path": "source-first-protocol/lone-sheet.py",
+      "bytes": 2617,
+      "sha256": "441eea271e2ecc9a8214e2b30981ae5306232adafa7fc8908ec12f202e2a7a0e"
+    },
+    {
+      "path": "source-first-protocol/ordinary-prism/1-acquire.png",
+      "bytes": 12079,
+      "sha256": "a8eebb42d926aaba85dd11926914b69a2f7ca01f1e02ce39c1dab4b76385ecd8"
+    },
+    {
+      "path": "source-first-protocol/ordinary-prism/2-drag.png",
+      "bytes": 11931,
+      "sha256": "9988d9ee786a2848c440446c00d8ac1fc2a4bc9a1a4ab2e346caba7cfec057f6"
+    },
+    {
+      "path": "source-first-protocol/ordinary-prism/3-drag.png",
+      "bytes": 11700,
+      "sha256": "eaff55b5e0aa873aeb7d640f5eb962d437d1cf8153f003574a9c6fe1436911be"
+    },
+    {
+      "path": "source-first-protocol/ordinary-prism/4-cancel.png",
+      "bytes": 4835,
+      "sha256": "7265857f7ee1563ffc89a89cb121953864e2eabcfdda50b298e92f4a3bf8f3c8"
+    },
+    {
+      "path": "source-first-protocol/ordinary-prism/5-save.png",
+      "bytes": 4835,
+      "sha256": "7265857f7ee1563ffc89a89cb121953864e2eabcfdda50b298e92f4a3bf8f3c8"
+    },
+    {
+      "path": "source-first-protocol/ordinary-prism/app-cleanup.json",
+      "bytes": 87,
+      "sha256": "002b2ad4378af24a2bf8ea97cf7dcaab0240aa0e2923218dec01245f4e59b3e4"
+    },
+    {
+      "path": "source-first-protocol/ordinary-prism/baseline.png",
+      "bytes": 4835,
+      "sha256": "7265857f7ee1563ffc89a89cb121953864e2eabcfdda50b298e92f4a3bf8f3c8"
+    },
+    {
+      "path": "source-first-protocol/ordinary-prism/config/ingetrazo-rust/settings.json",
+      "bytes": 502,
+      "sha256": "ca55b6b4f868e973db8d97218596ac3d5023368779a0875c9004d8d6904f8486"
+    },
+    {
+      "path": "source-first-protocol/ordinary-prism/control/request.json",
+      "bytes": 30,
+      "sha256": "ef79a8c750cd008926bc83969069613d754b7fd789fb82d4d1819dd2f19e9ae0"
+    },
+    {
+      "path": "source-first-protocol/ordinary-prism/control/saved.igz",
+      "bytes": 6440,
+      "sha256": "684ff53be9bf425f1dc838781871fec1f799e1359dd91056f13d223f2e3cd386"
+    },
+    {
+      "path": "source-first-protocol/ordinary-prism/control/state.json",
+      "bytes": 360,
+      "sha256": "aec95d34f8eed6cc8f4d48dfd47830c618e57c99a5ed4dce9d97a61612ecb74d"
+    },
+    {
+      "path": "source-first-protocol/ordinary-prism/nvidia.json",
+      "bytes": 105,
+      "sha256": "559298238b82b7ef5db83f2674d7a3fe416158735a56302121b7f2e2d5c1f053"
+    },
+    {
+      "path": "source-first-protocol/ordinary-prism/result.json",
+      "bytes": 6567,
+      "sha256": "cec00400d1ae9fd47112c603742d71cccc6834c1da6b47395fb8f05889efdc63"
+    },
+    {
+      "path": "source-first-protocol/ordinary-prism/runtime.log",
+      "bytes": 2939,
+      "sha256": "d6a042d159cf72a75370c991ac3d6f0e59e2c81e375da18883c81f62caf40988"
+    },
+    {
+      "path": "source-first-protocol/ordinary-prism/source-comparison.json",
+      "bytes": 910,
+      "sha256": "b1d58f08ea573c4b0b922b4d90c9b6d0db2629ad32ea1ea9023aed534c9dde65"
+    },
+    {
+      "path": "source-first-protocol/ordinary-prism/transport.json",
+      "bytes": 2949,
+      "sha256": "8f6e8b3bb11e1798e02cbff6091c2a436d4f2caf3ef343c190c0f86bf87211ad"
+    },
+    {
+      "path": "source-first-protocol/ordinary-prism/transport.log",
+      "bytes": 43,
+      "sha256": "0edeadb29bda5d91af73ead0657d44bb358958f12535c0fc19512882fb6168b6"
+    },
+    {
+      "path": "source-first-protocol/ordinary-prism/xvfb-cleanup.json",
+      "bytes": 87,
+      "sha256": "ac3db790fb10744c5adcca88c62d290edc9c581201a89b7d5ecef1828bf1398e"
+    },
+    {
+      "path": "source-first-protocol/ordinary-prism.py",
+      "bytes": 2625,
+      "sha256": "619de99ef9d8895b27be856175466034341906aaeb219e51b7b3a31d7ac3a264"
+    },
+    {
+      "path": "source-first-protocol/reversed-door/1-acquire.png",
+      "bytes": 2246,
+      "sha256": "57ff6e30a7ed4b2819f2a51478449757e6dc1d28d55e2887947e86ae47c756d4"
+    },
+    {
+      "path": "source-first-protocol/reversed-door/2-drag.png",
+      "bytes": 4401,
+      "sha256": "4031694c1b4d5ba75315a41e238833fc593941d4b0443e39dff98f07b62e1415"
+    },
+    {
+      "path": "source-first-protocol/reversed-door/3-drag.png",
+      "bytes": 4416,
+      "sha256": "e03549234dc5ff83c022eb23971b17b3bc3b348dfe783f435fe93828d4d41a04"
+    },
+    {
+      "path": "source-first-protocol/reversed-door/4-cancel.png",
+      "bytes": 837,
+      "sha256": "be526ec7fb99b83018bbebaf4360a4cd63a62f04a618bf898fc0e910e144074f"
+    },
+    {
+      "path": "source-first-protocol/reversed-door/5-save.png",
+      "bytes": 837,
+      "sha256": "be526ec7fb99b83018bbebaf4360a4cd63a62f04a618bf898fc0e910e144074f"
+    },
+    {
+      "path": "source-first-protocol/reversed-door/app-cleanup.json",
+      "bytes": 87,
+      "sha256": "267bd7b83a444328a18a4c985667f68b1e980c665c573243913699a6ab118d1f"
+    },
+    {
+      "path": "source-first-protocol/reversed-door/baseline.png",
+      "bytes": 837,
+      "sha256": "be526ec7fb99b83018bbebaf4360a4cd63a62f04a618bf898fc0e910e144074f"
+    },
+    {
+      "path": "source-first-protocol/reversed-door/config/ingetrazo-rust/settings.json",
+      "bytes": 501,
+      "sha256": "1290c26601ce0c04c2036ab6c450821f0dfb39200c6463fe16c9a38fe6e149ab"
+    },
+    {
+      "path": "source-first-protocol/reversed-door/control/request.json",
+      "bytes": 30,
+      "sha256": "ef79a8c750cd008926bc83969069613d754b7fd789fb82d4d1819dd2f19e9ae0"
+    },
+    {
+      "path": "source-first-protocol/reversed-door/control/saved.igz",
+      "bytes": 4663,
+      "sha256": "66caf47b43c78326a95bb3f924afb88faf95eb1ff883bf9c7046106296debad9"
+    },
+    {
+      "path": "source-first-protocol/reversed-door/control/state.json",
+      "bytes": 360,
+      "sha256": "1722088090f29bef64761d282e3a88f1337e8ea124d57d5ce422d3b11d201f04"
+    },
+    {
+      "path": "source-first-protocol/reversed-door/nvidia.json",
+      "bytes": 105,
+      "sha256": "559298238b82b7ef5db83f2674d7a3fe416158735a56302121b7f2e2d5c1f053"
+    },
+    {
+      "path": "source-first-protocol/reversed-door/result.json",
+      "bytes": 6559,
+      "sha256": "8feee35e8cabc0588929cbffe11cf7c9f787edf2f0c673c98db3d19932f4df47"
+    },
+    {
+      "path": "source-first-protocol/reversed-door/runtime.log",
+      "bytes": 2939,
+      "sha256": "c1ce2123508c4e0d3e232be4f2e4a678f9b06591aeb1fdd108724fed6cfbcc31"
+    },
+    {
+      "path": "source-first-protocol/reversed-door/source-comparison.json",
+      "bytes": 919,
+      "sha256": "12dcd1321447111a1d9d30c4ab7f98284154a03472a2f0cc1c8804b9e588dec1"
+    },
+    {
+      "path": "source-first-protocol/reversed-door/transport.json",
+      "bytes": 2946,
+      "sha256": "9ff827af26ae1cfc9df28b84ebcb307921bcbc2d1fc11819e6eef747ae7fdbd0"
+    },
+    {
+      "path": "source-first-protocol/reversed-door/transport.log",
+      "bytes": 43,
+      "sha256": "0edeadb29bda5d91af73ead0657d44bb358958f12535c0fc19512882fb6168b6"
+    },
+    {
+      "path": "source-first-protocol/reversed-door/xvfb-cleanup.json",
+      "bytes": 87,
+      "sha256": "046accd8b97c747674e7913c3f9dc1960e1f788e8e4bdde25e22a69b514d7dfc"
+    },
+    {
+      "path": "source-first-protocol/reversed-door.py",
+      "bytes": 2623,
+      "sha256": "893a5b09e260898adff7c9aeea7accbde86551766d453ddbd9ee982de7d09c1e"
+    },
+    {
+      "path": "source-first-protocol/run.py",
+      "bytes": 463,
+      "sha256": "9836da5df2a548d634a87c02b1d0c1230fd825209e08cc67efe512f524b8efc3"
+    },
+    {
+      "path": "source-zero-phase/back-recess/1-acquire.png",
+      "bytes": 4202,
+      "sha256": "ec45a835bdae562366469e11f49947b4decbe49545c3c0879f3dc46a022528a6"
+    },
+    {
+      "path": "source-zero-phase/back-recess/4-drag.png",
+      "bytes": 4202,
+      "sha256": "ec45a835bdae562366469e11f49947b4decbe49545c3c0879f3dc46a022528a6"
+    },
+    {
+      "path": "source-zero-phase/back-recess/5-cancel.png",
+      "bytes": 891,
+      "sha256": "e5212f5bf8580bf43c48d3514882e68660959be99b7a8325beb275b5ce1d7cab"
+    },
+    {
+      "path": "source-zero-phase/back-recess/6-save.png",
+      "bytes": 891,
+      "sha256": "e5212f5bf8580bf43c48d3514882e68660959be99b7a8325beb275b5ce1d7cab"
+    },
+    {
+      "path": "source-zero-phase/back-recess/app-cleanup.json",
+      "bytes": 87,
+      "sha256": "002b2ad4378af24a2bf8ea97cf7dcaab0240aa0e2923218dec01245f4e59b3e4"
+    },
+    {
+      "path": "source-zero-phase/back-recess/baseline.png",
+      "bytes": 891,
+      "sha256": "e5212f5bf8580bf43c48d3514882e68660959be99b7a8325beb275b5ce1d7cab"
+    },
+    {
+      "path": "source-zero-phase/back-recess/config/ingetrazo-rust/settings.json",
+      "bytes": 499,
+      "sha256": "ad14dfdc6e70977cd277553e4bed192830279ae2c1f5971d893499963b57f8f6"
+    },
+    {
+      "path": "source-zero-phase/back-recess/control/request.json",
+      "bytes": 30,
+      "sha256": "69b2f69a4d991dade11c8a7ca92e9790b04e36c6d57c5c8141cf2310ce17e3ae"
+    },
+    {
+      "path": "source-zero-phase/back-recess/control/saved.igz",
+      "bytes": 3633,
+      "sha256": "775e2ad8a685d822a992c9e1ab7a0fb17e5b8a24c6e1efbac90d06d1eac52adc"
+    },
+    {
+      "path": "source-zero-phase/back-recess/control/state.json",
+      "bytes": 360,
+      "sha256": "c1e1ff28c9ef72a9d5a76301869285b49f1b79273bb6aee2b6d9ace07e6fbfbf"
+    },
+    {
+      "path": "source-zero-phase/back-recess/nvidia.json",
+      "bytes": 105,
+      "sha256": "559298238b82b7ef5db83f2674d7a3fe416158735a56302121b7f2e2d5c1f053"
+    },
+    {
+      "path": "source-zero-phase/back-recess/result.json",
+      "bytes": 5199,
+      "sha256": "49288bd883f4d9e0909c15f896c79bd8873ed4f68d31622f7f692fe982efb407"
+    },
+    {
+      "path": "source-zero-phase/back-recess/runtime.log",
+      "bytes": 2938,
+      "sha256": "4df9b10a844a68dd5434af72574727b316d6119e412930c3740afa972a2e643c"
+    },
+    {
+      "path": "source-zero-phase/back-recess/source-comparison.json",
+      "bytes": 499,
+      "sha256": "12f2be452dc929db9ac1546a6760d4e39396ca068304dae510a841e2d10a7506"
+    },
+    {
+      "path": "source-zero-phase/back-recess/transport.json",
+      "bytes": 2984,
+      "sha256": "b04d7804c6aaaf55af996573ddec9f78cc8689915169eaefd0b623db9ec736fe"
+    },
+    {
+      "path": "source-zero-phase/back-recess/transport.log",
+      "bytes": 43,
+      "sha256": "0edeadb29bda5d91af73ead0657d44bb358958f12535c0fc19512882fb6168b6"
+    },
+    {
+      "path": "source-zero-phase/back-recess/xvfb-cleanup.json",
+      "bytes": 87,
+      "sha256": "ac3db790fb10744c5adcca88c62d290edc9c581201a89b7d5ecef1828bf1398e"
+    },
+    {
+      "path": "source-zero-phase/back-recess.py",
+      "bytes": 2651,
+      "sha256": "4b6e8d9baf75cc9791967e4378ff09a64708c80042f77539047c86f07ed87d31"
+    },
+    {
+      "path": "source-zero-phase/execution.json",
+      "bytes": 360,
+      "sha256": "98103095416ca2115da9500d7b9b52b75ca3cfd1b0ca60d11ce603df49143b2d"
+    },
+    {
+      "path": "source-zero-phase/front-recess/1-acquire.png",
+      "bytes": 4205,
+      "sha256": "a3f69bb770664f583b77490692455b662c9fd31854d9853fba8b5f3f7f6a0b65"
+    },
+    {
+      "path": "source-zero-phase/front-recess/4-drag.png",
+      "bytes": 4205,
+      "sha256": "a3f69bb770664f583b77490692455b662c9fd31854d9853fba8b5f3f7f6a0b65"
+    },
+    {
+      "path": "source-zero-phase/front-recess/5-cancel.png",
+      "bytes": 878,
+      "sha256": "6f5347ee0762ae47146de2c1cabf3d80438e9e5d5d424ac3195b19054d0074ac"
+    },
+    {
+      "path": "source-zero-phase/front-recess/6-save.png",
+      "bytes": 878,
+      "sha256": "6f5347ee0762ae47146de2c1cabf3d80438e9e5d5d424ac3195b19054d0074ac"
+    },
+    {
+      "path": "source-zero-phase/front-recess/app-cleanup.json",
+      "bytes": 87,
+      "sha256": "002b2ad4378af24a2bf8ea97cf7dcaab0240aa0e2923218dec01245f4e59b3e4"
+    },
+    {
+      "path": "source-zero-phase/front-recess/baseline.png",
+      "bytes": 878,
+      "sha256": "6f5347ee0762ae47146de2c1cabf3d80438e9e5d5d424ac3195b19054d0074ac"
+    },
+    {
+      "path": "source-zero-phase/front-recess/config/ingetrazo-rust/settings.json",
+      "bytes": 500,
+      "sha256": "008678c80ce1daa7095bc9bdb6299698909e09cd0e72c86c901c484b5f211317"
+    },
+    {
+      "path": "source-zero-phase/front-recess/control/request.json",
+      "bytes": 30,
+      "sha256": "69b2f69a4d991dade11c8a7ca92e9790b04e36c6d57c5c8141cf2310ce17e3ae"
+    },
+    {
+      "path": "source-zero-phase/front-recess/control/saved.igz",
+      "bytes": 3634,
+      "sha256": "d93c68d9ec4db7ad5589a83aac7cf3e02861b3f99d3aad3874f30314a6cb6460"
+    },
+    {
+      "path": "source-zero-phase/front-recess/control/state.json",
+      "bytes": 360,
+      "sha256": "5e0321e5a9a8e9fa13b6b3d8e1cb56cac1ba484b3dd0d3f732e13cfe3f5d7a84"
+    },
+    {
+      "path": "source-zero-phase/front-recess/nvidia.json",
+      "bytes": 105,
+      "sha256": "559298238b82b7ef5db83f2674d7a3fe416158735a56302121b7f2e2d5c1f053"
+    },
+    {
+      "path": "source-zero-phase/front-recess/result.json",
+      "bytes": 5199,
+      "sha256": "32471cdeaa9ff37b1809f6166eb2de22d3e1fa4a423a786ac4bf147bd64b17ed"
+    },
+    {
+      "path": "source-zero-phase/front-recess/runtime.log",
+      "bytes": 2938,
+      "sha256": "87548620120d689a9d225f98f1a06b7aa85f151dc29fad42826d3a9ecf36c129"
+    },
+    {
+      "path": "source-zero-phase/front-recess/source-comparison.json",
+      "bytes": 500,
+      "sha256": "3695db0216dfd66f76cfd908a3aae43fcbd1b7eadfe1bb1c954a3bed4bf2251c"
+    },
+    {
+      "path": "source-zero-phase/front-recess/transport.json",
+      "bytes": 2987,
+      "sha256": "3fee636d87de9e111b3cf9d47d454f81ccb03eb8ca84afa24e09614276a81123"
+    },
+    {
+      "path": "source-zero-phase/front-recess/transport.log",
+      "bytes": 43,
+      "sha256": "0edeadb29bda5d91af73ead0657d44bb358958f12535c0fc19512882fb6168b6"
+    },
+    {
+      "path": "source-zero-phase/front-recess/xvfb-cleanup.json",
+      "bytes": 87,
+      "sha256": "ac3db790fb10744c5adcca88c62d290edc9c581201a89b7d5ecef1828bf1398e"
+    },
+    {
+      "path": "source-zero-phase/front-recess.py",
+      "bytes": 2653,
+      "sha256": "7df27658b0da7c5c5deb22c8f62aacdd4d6c7b9bbd1f0477cce138e98fd2bd26"
+    },
+    {
+      "path": "source-zero-phase/front-texture-back-override/1-acquire.png",
+      "bytes": 11373,
+      "sha256": "fb6767c47b43de6a3e288507442be22fdb700c27b28a2368d128ccc51cdb8c86"
+    },
+    {
+      "path": "source-zero-phase/front-texture-back-override/4-drag.png",
+      "bytes": 11373,
+      "sha256": "fb6767c47b43de6a3e288507442be22fdb700c27b28a2368d128ccc51cdb8c86"
+    },
+    {
+      "path": "source-zero-phase/front-texture-back-override/5-cancel.png",
+      "bytes": 10137,
+      "sha256": "d2fbae884b4893a7555dba886a125373994930bd7474ab18bab2ef54bb26103a"
+    },
+    {
+      "path": "source-zero-phase/front-texture-back-override/6-save.png",
+      "bytes": 10137,
+      "sha256": "d2fbae884b4893a7555dba886a125373994930bd7474ab18bab2ef54bb26103a"
+    },
+    {
+      "path": "source-zero-phase/front-texture-back-override/app-cleanup.json",
+      "bytes": 87,
+      "sha256": "002b2ad4378af24a2bf8ea97cf7dcaab0240aa0e2923218dec01245f4e59b3e4"
+    },
+    {
+      "path": "source-zero-phase/front-texture-back-override/baseline.png",
+      "bytes": 10137,
+      "sha256": "d2fbae884b4893a7555dba886a125373994930bd7474ab18bab2ef54bb26103a"
+    },
+    {
+      "path": "source-zero-phase/front-texture-back-override/config/ingetrazo-rust/settings.json",
+      "bytes": 515,
+      "sha256": "58890098f83b5446c2f978e3f8263ba2672d8f9efda4d7988afc4a17b5c91d00"
+    },
+    {
+      "path": "source-zero-phase/front-texture-back-override/control/request.json",
+      "bytes": 30,
+      "sha256": "69b2f69a4d991dade11c8a7ca92e9790b04e36c6d57c5c8141cf2310ce17e3ae"
+    },
+    {
+      "path": "source-zero-phase/front-texture-back-override/control/saved.igz",
+      "bytes": 1004,
+      "sha256": "e8058153b872124ccd89ff66ee770edb9ec10ddd7fc40104241703923ed7b298"
+    },
+    {
+      "path": "source-zero-phase/front-texture-back-override/control/state.json",
+      "bytes": 360,
+      "sha256": "2a4b5d72dc630d335fa59a24d6d4d737d4e8ec6bf78479867f3d62939d3fdad5"
+    },
+    {
+      "path": "source-zero-phase/front-texture-back-override/nvidia.json",
+      "bytes": 105,
+      "sha256": "559298238b82b7ef5db83f2674d7a3fe416158735a56302121b7f2e2d5c1f053"
+    },
+    {
+      "path": "source-zero-phase/front-texture-back-override/result.json",
+      "bytes": 5199,
+      "sha256": "1ee7c374a0efc975b7da87f02ef1f21845adc0bbd2c4156eb2ab8667a2b1e237"
+    },
+    {
+      "path": "source-zero-phase/front-texture-back-override/runtime.log",
+      "bytes": 2938,
+      "sha256": "1e58901a15c9d68e2a90c80525ca6ed73a9203b3d860318a185ab98d2d6f08b9"
+    },
+    {
+      "path": "source-zero-phase/front-texture-back-override/source-comparison.json",
+      "bytes": 515,
+      "sha256": "845091de6b317883406ed24f294bb87968a170d8665e3f9a38b50c119fe8bc5c"
+    },
+    {
+      "path": "source-zero-phase/front-texture-back-override/transport.json",
+      "bytes": 3017,
+      "sha256": "a83578e5300c565e0de7d067d6e3fbd46a57fb46f4d7aae9d1d78b24a11dadfd"
+    },
+    {
+      "path": "source-zero-phase/front-texture-back-override/transport.log",
+      "bytes": 43,
+      "sha256": "0edeadb29bda5d91af73ead0657d44bb358958f12535c0fc19512882fb6168b6"
+    },
+    {
+      "path": "source-zero-phase/front-texture-back-override/xvfb-cleanup.json",
+      "bytes": 87,
+      "sha256": "ac3db790fb10744c5adcca88c62d290edc9c581201a89b7d5ecef1828bf1398e"
+    },
+    {
+      "path": "source-zero-phase/front-texture-back-override.py",
+      "bytes": 2683,
+      "sha256": "7915eeb68b2ae5126f2535a9f380a9018ddefc99a205ed76b1d0cadf599c28eb"
+    },
+    {
+      "path": "source-zero-phase/lone-sheet/1-acquire.png",
+      "bytes": 1638,
+      "sha256": "e867021a932a287b93cf87137ddaf8966ba4793472f06d80a7f402d32b09d615"
+    },
+    {
+      "path": "source-zero-phase/lone-sheet/4-drag.png",
+      "bytes": 1638,
+      "sha256": "e867021a932a287b93cf87137ddaf8966ba4793472f06d80a7f402d32b09d615"
+    },
+    {
+      "path": "source-zero-phase/lone-sheet/5-cancel.png",
+      "bytes": 511,
+      "sha256": "2f1237454efbc71eb6b19e00b142cd20c9eccab84dba56ba3a9f576e3f44054c"
+    },
+    {
+      "path": "source-zero-phase/lone-sheet/6-save.png",
+      "bytes": 511,
+      "sha256": "2f1237454efbc71eb6b19e00b142cd20c9eccab84dba56ba3a9f576e3f44054c"
+    },
+    {
+      "path": "source-zero-phase/lone-sheet/app-cleanup.json",
+      "bytes": 87,
+      "sha256": "002b2ad4378af24a2bf8ea97cf7dcaab0240aa0e2923218dec01245f4e59b3e4"
+    },
+    {
+      "path": "source-zero-phase/lone-sheet/baseline.png",
+      "bytes": 511,
+      "sha256": "2f1237454efbc71eb6b19e00b142cd20c9eccab84dba56ba3a9f576e3f44054c"
+    },
+    {
+      "path": "source-zero-phase/lone-sheet/config/ingetrazo-rust/settings.json",
+      "bytes": 498,
+      "sha256": "e59e86da3c3d1b79fe589033c18c5934dda0004d11d0cc7d06d17c2fccc702f8"
+    },
+    {
+      "path": "source-zero-phase/lone-sheet/control/request.json",
+      "bytes": 30,
+      "sha256": "69b2f69a4d991dade11c8a7ca92e9790b04e36c6d57c5c8141cf2310ce17e3ae"
+    },
+    {
+      "path": "source-zero-phase/lone-sheet/control/saved.igz",
+      "bytes": 2269,
+      "sha256": "12731051dd698a5ec11a8cd9b355d7b8bbb0c618c3dbd2c699dc78fa7e565eb7"
+    },
+    {
+      "path": "source-zero-phase/lone-sheet/control/state.json",
+      "bytes": 360,
+      "sha256": "d358ac76defe8a4fed680415be38fc8fd7c02241f628ebc50c77cc1999293915"
+    },
+    {
+      "path": "source-zero-phase/lone-sheet/nvidia.json",
+      "bytes": 105,
+      "sha256": "559298238b82b7ef5db83f2674d7a3fe416158735a56302121b7f2e2d5c1f053"
+    },
+    {
+      "path": "source-zero-phase/lone-sheet/result.json",
+      "bytes": 5199,
+      "sha256": "9375d5a1392a23386279f6140b82cf0bf35dd86e1aa11f793df18697f5694af3"
+    },
+    {
+      "path": "source-zero-phase/lone-sheet/runtime.log",
+      "bytes": 2937,
+      "sha256": "a0a6b932edb1276dd43fac58d7e611b6e7b33bef824942d2925f43959b515108"
+    },
+    {
+      "path": "source-zero-phase/lone-sheet/source-comparison.json",
+      "bytes": 498,
+      "sha256": "8c58e863bcdf6040f6e47d039a64818a12f3c08c5949bce70d70c2f7903eb41a"
+    },
+    {
+      "path": "source-zero-phase/lone-sheet/transport.json",
+      "bytes": 2983,
+      "sha256": "142b1020b9df0ffb6a565ec946fd7d49dd0fb277dd4b686099acf6e2bcdc3d48"
+    },
+    {
+      "path": "source-zero-phase/lone-sheet/transport.log",
+      "bytes": 43,
+      "sha256": "0edeadb29bda5d91af73ead0657d44bb358958f12535c0fc19512882fb6168b6"
+    },
+    {
+      "path": "source-zero-phase/lone-sheet/xvfb-cleanup.json",
+      "bytes": 87,
+      "sha256": "ac3db790fb10744c5adcca88c62d290edc9c581201a89b7d5ecef1828bf1398e"
+    },
+    {
+      "path": "source-zero-phase/lone-sheet.py",
+      "bytes": 2649,
+      "sha256": "a1c9659a68b62ecb64b68b69e7665b72fa2e927de2b96484336580bbba531020"
+    },
+    {
+      "path": "source-zero-phase/ordinary-prism/1-acquire.png",
+      "bytes": 12079,
+      "sha256": "a8eebb42d926aaba85dd11926914b69a2f7ca01f1e02ce39c1dab4b76385ecd8"
+    },
+    {
+      "path": "source-zero-phase/ordinary-prism/4-drag.png",
+      "bytes": 12079,
+      "sha256": "a8eebb42d926aaba85dd11926914b69a2f7ca01f1e02ce39c1dab4b76385ecd8"
+    },
+    {
+      "path": "source-zero-phase/ordinary-prism/5-cancel.png",
+      "bytes": 4835,
+      "sha256": "7265857f7ee1563ffc89a89cb121953864e2eabcfdda50b298e92f4a3bf8f3c8"
+    },
+    {
+      "path": "source-zero-phase/ordinary-prism/6-save.png",
+      "bytes": 4835,
+      "sha256": "7265857f7ee1563ffc89a89cb121953864e2eabcfdda50b298e92f4a3bf8f3c8"
+    },
+    {
+      "path": "source-zero-phase/ordinary-prism/app-cleanup.json",
+      "bytes": 87,
+      "sha256": "002b2ad4378af24a2bf8ea97cf7dcaab0240aa0e2923218dec01245f4e59b3e4"
+    },
+    {
+      "path": "source-zero-phase/ordinary-prism/baseline.png",
+      "bytes": 4835,
+      "sha256": "7265857f7ee1563ffc89a89cb121953864e2eabcfdda50b298e92f4a3bf8f3c8"
+    },
+    {
+      "path": "source-zero-phase/ordinary-prism/config/ingetrazo-rust/settings.json",
+      "bytes": 502,
+      "sha256": "ca55b6b4f868e973db8d97218596ac3d5023368779a0875c9004d8d6904f8486"
+    },
+    {
+      "path": "source-zero-phase/ordinary-prism/control/request.json",
+      "bytes": 30,
+      "sha256": "69b2f69a4d991dade11c8a7ca92e9790b04e36c6d57c5c8141cf2310ce17e3ae"
+    },
+    {
+      "path": "source-zero-phase/ordinary-prism/control/saved.igz",
+      "bytes": 6440,
+      "sha256": "684ff53be9bf425f1dc838781871fec1f799e1359dd91056f13d223f2e3cd386"
+    },
+    {
+      "path": "source-zero-phase/ordinary-prism/control/state.json",
+      "bytes": 360,
+      "sha256": "4cf35a6287c06a031abdd0f1d1aa14f827f99d079037881fc47e314268afb962"
+    },
+    {
+      "path": "source-zero-phase/ordinary-prism/nvidia.json",
+      "bytes": 105,
+      "sha256": "559298238b82b7ef5db83f2674d7a3fe416158735a56302121b7f2e2d5c1f053"
+    },
+    {
+      "path": "source-zero-phase/ordinary-prism/result.json",
+      "bytes": 5199,
+      "sha256": "ac97e223245d56d27af9a9d950c565a63d25796057d9446348ba485354877e7c"
+    },
+    {
+      "path": "source-zero-phase/ordinary-prism/runtime.log",
+      "bytes": 2938,
+      "sha256": "aa86d90dcab866f7550734365d4e01a03081e9797be3fe0d9bd41e3a005ac8cf"
+    },
+    {
+      "path": "source-zero-phase/ordinary-prism/source-comparison.json",
+      "bytes": 502,
+      "sha256": "c63496f2e209f6056a3d531e289314b3585b93e4ce535e687ca531359a755145"
+    },
+    {
+      "path": "source-zero-phase/ordinary-prism/transport.json",
+      "bytes": 2991,
+      "sha256": "d48bb9cf7caca0fd1b47fb6a1dc8e79991ed91e9a22e57a7880d97d508937912"
+    },
+    {
+      "path": "source-zero-phase/ordinary-prism/transport.log",
+      "bytes": 43,
+      "sha256": "0edeadb29bda5d91af73ead0657d44bb358958f12535c0fc19512882fb6168b6"
+    },
+    {
+      "path": "source-zero-phase/ordinary-prism/xvfb-cleanup.json",
+      "bytes": 87,
+      "sha256": "ac3db790fb10744c5adcca88c62d290edc9c581201a89b7d5ecef1828bf1398e"
+    },
+    {
+      "path": "source-zero-phase/ordinary-prism.py",
+      "bytes": 2657,
+      "sha256": "4b43074e9eac7abdec8c2aae8c957f4e15ba136f5e6bd5e4357389a59cb3b74c"
+    },
+    {
+      "path": "source-zero-phase/reversed-door/1-acquire.png",
+      "bytes": 2246,
+      "sha256": "57ff6e30a7ed4b2819f2a51478449757e6dc1d28d55e2887947e86ae47c756d4"
+    },
+    {
+      "path": "source-zero-phase/reversed-door/4-drag.png",
+      "bytes": 2246,
+      "sha256": "57ff6e30a7ed4b2819f2a51478449757e6dc1d28d55e2887947e86ae47c756d4"
+    },
+    {
+      "path": "source-zero-phase/reversed-door/5-cancel.png",
+      "bytes": 837,
+      "sha256": "be526ec7fb99b83018bbebaf4360a4cd63a62f04a618bf898fc0e910e144074f"
+    },
+    {
+      "path": "source-zero-phase/reversed-door/6-save.png",
+      "bytes": 837,
+      "sha256": "be526ec7fb99b83018bbebaf4360a4cd63a62f04a618bf898fc0e910e144074f"
+    },
+    {
+      "path": "source-zero-phase/reversed-door/app-cleanup.json",
+      "bytes": 87,
+      "sha256": "002b2ad4378af24a2bf8ea97cf7dcaab0240aa0e2923218dec01245f4e59b3e4"
+    },
+    {
+      "path": "source-zero-phase/reversed-door/baseline.png",
+      "bytes": 837,
+      "sha256": "be526ec7fb99b83018bbebaf4360a4cd63a62f04a618bf898fc0e910e144074f"
+    },
+    {
+      "path": "source-zero-phase/reversed-door/config/ingetrazo-rust/settings.json",
+      "bytes": 501,
+      "sha256": "1290c26601ce0c04c2036ab6c450821f0dfb39200c6463fe16c9a38fe6e149ab"
+    },
+    {
+      "path": "source-zero-phase/reversed-door/control/request.json",
+      "bytes": 30,
+      "sha256": "69b2f69a4d991dade11c8a7ca92e9790b04e36c6d57c5c8141cf2310ce17e3ae"
+    },
+    {
+      "path": "source-zero-phase/reversed-door/control/saved.igz",
+      "bytes": 4663,
+      "sha256": "66caf47b43c78326a95bb3f924afb88faf95eb1ff883bf9c7046106296debad9"
+    },
+    {
+      "path": "source-zero-phase/reversed-door/control/state.json",
+      "bytes": 360,
+      "sha256": "2d0ff1b4e52e091af0c1ea05522b80cbaf3fd3f3fd1148cf43decc383ac9a19d"
+    },
+    {
+      "path": "source-zero-phase/reversed-door/nvidia.json",
+      "bytes": 105,
+      "sha256": "559298238b82b7ef5db83f2674d7a3fe416158735a56302121b7f2e2d5c1f053"
+    },
+    {
+      "path": "source-zero-phase/reversed-door/result.json",
+      "bytes": 5201,
+      "sha256": "db2435fe7a1e4f66aef3a26bffef23608159b5b69bc2357fd99bb43b44fdf13a"
+    },
+    {
+      "path": "source-zero-phase/reversed-door/runtime.log",
+      "bytes": 2938,
+      "sha256": "9d5cb91d412f389f5fe34859bb587e6b3f5decf77d15e53ec4e0a8b5b4e04fde"
+    },
+    {
+      "path": "source-zero-phase/reversed-door/source-comparison.json",
+      "bytes": 501,
+      "sha256": "60ea2de33966baf77f2a9c7b9c248497ed8a951f9e594e3ad8d292430a153109"
+    },
+    {
+      "path": "source-zero-phase/reversed-door/transport.json",
+      "bytes": 2989,
+      "sha256": "df4a4dca04cb2a34a8907eae5a22fe311b03cf0b5e49f92d6de1619e03165514"
+    },
+    {
+      "path": "source-zero-phase/reversed-door/transport.log",
+      "bytes": 43,
+      "sha256": "0edeadb29bda5d91af73ead0657d44bb358958f12535c0fc19512882fb6168b6"
+    },
+    {
+      "path": "source-zero-phase/reversed-door/xvfb-cleanup.json",
+      "bytes": 87,
+      "sha256": "ac3db790fb10744c5adcca88c62d290edc9c581201a89b7d5ecef1828bf1398e"
+    },
+    {
+      "path": "source-zero-phase/reversed-door.py",
+      "bytes": 2655,
+      "sha256": "6fdea08593ab9cefbf85fc75279137df8631707d4e0b665d6fb0efe1368bd99e"
+    },
+    {
+      "path": "source-zero-phase/run.py",
+      "bytes": 463,
+      "sha256": "c3b98ad64820d211210a415201e598d4b39e6155556bb195ce943ab56466bf11"
+    }
+  ]
+}
