@@ -534,10 +534,17 @@ impl IngeTrazoApp {
             Ok(plan)=>plan,Err(error)=>{self.status_message=error;return;}
         };
         let changed=plan.changed;
+        let history_head_retained=!plan.fold || !plan.changed;
+        // Validation precedes any transient mutation. Expire an already stale
+        // retype window before deciding whether its global command survives.
+        self.active_tool.note_history_revision(self.model_revision,false);
+        let preserve_global_preview=self.active_tool.preserves_global_preview_on_context_exit();
         let camera=self.component_edit_stack.last().unwrap().original_camera.clone();
         if !preserve_global_preview {self.set_tool(ToolType::Select);}else{self.active_tool.detach_context_preview();}
         publish_finish(plan,&mut self.scene,&mut self.component_edit_stack,&mut self.undo_stack,&mut self.redo_stack);
-        self.bump_model_revision();self.camera=camera;self.sync_bim_draw_activation();
+        self.bump_model_revision();
+        self.active_tool.note_history_revision(self.model_revision,history_head_retained && preserve_global_preview);
+        self.camera=camera;self.sync_bim_draw_activation();
         self.status_message=if changed {"Committed group edit"}else{"Group edit unchanged; pending history targets validated"}.into();
     }
 

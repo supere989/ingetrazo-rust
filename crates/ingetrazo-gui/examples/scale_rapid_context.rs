@@ -1,0 +1,27 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+//! Actual egui modifier ingress + app image/context commands; no OS capture.
+use glam::{DMat4,DVec3};
+use ingetrazo_core::{mesh::Mesh,groups::Group,image_plane::ImagePlane,scene::SelectionItem,math::Ray,snap::{SnapResult,SnapKind}};
+use ingetrazo_gui::{IngeTrazoApp,pointer_modifiers};
+use ingetrazo_tools::base::{ToolContext,ToolType};
+use serde_json::{json,Value};
+fn state(a:&IngeTrazoApp)->Value{json!({"positions":a.scene.mesh.vertices.iter().map(|v|v.position.to_array()).collect::<Vec<_>>(),"images":a.scene.image_planes.iter().map(|im|[im.origin.to_array(),im.u.to_array(),im.v.to_array()]).collect::<Vec<_>>(),"depth":a.component_edit_stack.len(),"active":a.active_tool.value_label().is_some(),"undo":a.undo_stack.len(),"redo":a.redo_stack.len(),"status":a.status_message})}
+fn point(v:&Value)->DVec3{DVec3::from_array(std::array::from_fn(|i|v[i].as_f64().unwrap()))}
+fn context(p:DVec3)->ToolContext{ToolContext::with_modifiers(p,Ray::new(p+DVec3::Z*10.,-DVec3::Z),false,false,false)}
+fn setup(image:bool)->IngeTrazoApp{
+ let mut a=IngeTrazoApp::new();a.system_clipboard=None;let mut m=Mesh::new();let ids=[DVec3::ZERO,DVec3::new(2.,0.,0.),DVec3::new(2.,3.,0.),DVec3::new(0.,3.,0.)].map(|p|m.add_vertex(p));m.add_face(ids.to_vec(),vec![]);
+ if image{let mut child=Group::with_mesh("child",m);child.transform=DMat4::from_translation(DVec3::new(1.,2.,0.));child.native_document=json!({"component":true,"xform":child.transform.to_cols_array()});let mut outer=Group::with_mesh("outer",Mesh::new());outer.transform=DMat4::from_translation(DVec3::new(4.,5.,0.));outer.native_document=json!({"component":true,"xform":outer.transform.to_cols_array()});outer.children.push(child);a.scene.groups.push(outer);a.scene.image_planes.push(ImagePlane::new("scan",DVec3::new(1.,2.,0.),DVec3::new(2.,0.,0.),DVec3::new(0.,3.,0.)));a.scene.select(SelectionItem::Group(0));a.begin_component_edit();a.scene.select(SelectionItem::Group(0));a.begin_component_edit();a.scene.clear_selection();a.scene.select(SelectionItem::ImagePlane(0));}
+ else{a.scene.mesh=m;a.scene.select(SelectionItem::Face(0));}
+ a.set_tool(ToolType::Scale);a
+}
+fn frame(ctx:&egui::Context,a:&mut IngeTrazoApp,time:f64){let _=ctx.run(egui::RawInput{screen_rect:Some(egui::Rect::from_min_size(egui::Pos2::ZERO,egui::vec2(1000.,700.))),time:Some(time),..Default::default()},|ctx|a.update_ui(ctx));}
+fn main(){let args=std::env::args().collect::<Vec<_>>();let source:Value=serde_json::from_slice(&std::fs::read(&args[1]).unwrap()).unwrap();let mut rows=vec![];
+ for row in source["cases"].as_array().unwrap(){let name=row["name"].as_str().unwrap();let image=row["kind"]=="image";let mut a=setup(image);let ctx=egui::Context::default();frame(&ctx,&mut a,0.);frame(&ctx,&mut a,0.1);let timeline=pointer_modifiers::install(&ctx);a.dispatch_tool_click(&context(point(&row["grab"])));let hover=point(&row["hover"]);a.active_tool.note_snap_result(&SnapResult{point:hover,kind:SnapKind::Endpoint,..Default::default()});a.dispatch_tool_move(&context(hover));let mut states=serde_json::Map::new();let mut accepted=vec![];
+ if !image{states.insert("before-taps".into(),state(&a));let mut raw=egui::RawInput::default();for key in row["keys"].as_array().unwrap(){raw.modifiers=if key=="ctrl"{egui::Modifiers::CTRL}else{egui::Modifiers::SHIFT};timeline.lock().unwrap().record_appended(&raw,0);raw.modifiers=egui::Modifiers::NONE;timeline.lock().unwrap().record_appended(&raw,0);}if !args.iter().any(|arg|arg=="--final-only"){timeline.lock().unwrap().begin_frame();}frame(&ctx,&mut a,0.2);states.insert("after-taps".into(),state(&a));accepted.push(a.dispatch_tool_vcb("2").is_ok());states.insert("commit".into(),state(&a));}
+ else{states.insert("preview".into(),state(&a));if name=="image-commit-finish-retype"{accepted.push(a.dispatch_tool_vcb("2").is_ok());states.insert("commit-before".into(),state(&a));}a.finish_component_edit();states.insert("boundary".into(),state(&a));if name=="image-exit-two"{a.finish_component_edit();states.insert("outer-boundary".into(),state(&a));}if name!="image-commit-finish-retype"{accepted.push(a.dispatch_tool_vcb("2").is_ok());states.insert("commit".into(),state(&a));}accepted.push(a.dispatch_tool_vcb("3").is_ok());states.insert("retype".into(),state(&a));}
+ a.undo();states.insert("undo".into(),state(&a));a.redo();states.insert("redo".into(),state(&a));if image{a.dispatch_tool_cancel();states.insert("tool-cancel".into(),state(&a));}rows.push(json!({"name":name,"kind":row["kind"],"accepted":accepted,"states":states}));}
+ // An unrelated publication invalidates the command window before Finish;
+ // the context transition must never revive it.
+ let row=source["cases"].as_array().unwrap().iter().find(|r|r["name"]=="image-commit-finish-retype").unwrap();
+ let mut a=setup(true);a.dispatch_tool_click(&context(point(&row["grab"])));assert!(a.dispatch_tool_vcb("2").is_ok());a.save_undo_state();a.finish_component_edit();let expired_before=state(&a);a.dispatch_tool_vcb("3").ok();let expired_after=state(&a);assert_eq!(expired_before["images"],expired_after["images"]);assert_eq!(expired_before["undo"],expired_after["undo"]);
+ std::fs::write(&args[2],serde_json::to_vec_pretty(&json!({"cases":rows,"expired_head_preserved":expired_before["images"]==expired_after["images"] && expired_before["undo"]==expired_after["undo"],"scope":"native modifier ingress record/begin_frame then real egui update_ui; actual app context/VCB/history dispatch, no OS capture"})).unwrap()).unwrap();}

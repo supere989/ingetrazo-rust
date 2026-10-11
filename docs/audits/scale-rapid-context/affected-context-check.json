@@ -1,0 +1,168 @@
+{
+  "literal_source_parity": false,
+  "exact_phases": 17,
+  "total_source_phases": 23,
+  "retained_divergent_phases": 6,
+  "native_cancel_invariants": 5,
+  "phases": [
+    {
+      "case": "nested-preview",
+      "phase": "before",
+      "literal_exact": true,
+      "different_fields": []
+    },
+    {
+      "case": "nested-preview",
+      "phase": "preview",
+      "literal_exact": true,
+      "different_fields": []
+    },
+    {
+      "case": "nested-preview",
+      "phase": "boundary",
+      "literal_exact": false,
+      "different_fields": [
+        "active",
+        "undo",
+        "context_groups"
+      ]
+    },
+    {
+      "case": "nested-preview",
+      "phase": "tool-cancel",
+      "literal_exact": false,
+      "different_fields": [
+        "undo",
+        "context_groups"
+      ]
+    },
+    {
+      "case": "nested-commit",
+      "phase": "before",
+      "literal_exact": true,
+      "different_fields": []
+    },
+    {
+      "case": "nested-commit",
+      "phase": "preview",
+      "literal_exact": true,
+      "different_fields": []
+    },
+    {
+      "case": "nested-commit",
+      "phase": "commit",
+      "literal_exact": true,
+      "different_fields": []
+    },
+    {
+      "case": "nested-commit",
+      "phase": "boundary",
+      "literal_exact": true,
+      "different_fields": []
+    },
+    {
+      "case": "nested-commit",
+      "phase": "retype",
+      "literal_exact": true,
+      "different_fields": []
+    },
+    {
+      "case": "nested-commit",
+      "phase": "undo",
+      "literal_exact": true,
+      "different_fields": []
+    },
+    {
+      "case": "nested-commit",
+      "phase": "redo",
+      "literal_exact": true,
+      "different_fields": []
+    },
+    {
+      "case": "image-preview",
+      "phase": "before",
+      "literal_exact": true,
+      "different_fields": []
+    },
+    {
+      "case": "image-preview",
+      "phase": "preview",
+      "literal_exact": true,
+      "different_fields": []
+    },
+    {
+      "case": "image-preview",
+      "phase": "boundary",
+      "literal_exact": true,
+      "different_fields": []
+    },
+    {
+      "case": "image-preview",
+      "phase": "tool-cancel",
+      "literal_exact": true,
+      "different_fields": []
+    },
+    {
+      "case": "mixed-preview",
+      "phase": "before",
+      "literal_exact": true,
+      "different_fields": []
+    },
+    {
+      "case": "mixed-preview",
+      "phase": "preview",
+      "literal_exact": true,
+      "different_fields": []
+    },
+    {
+      "case": "mixed-preview",
+      "phase": "boundary",
+      "literal_exact": false,
+      "different_fields": [
+        "images",
+        "active",
+        "undo",
+        "context_groups"
+      ]
+    },
+    {
+      "case": "mixed-preview",
+      "phase": "tool-cancel",
+      "literal_exact": false,
+      "different_fields": [
+        "undo",
+        "context_groups"
+      ]
+    },
+    {
+      "case": "entry-preview",
+      "phase": "before",
+      "literal_exact": true,
+      "different_fields": []
+    },
+    {
+      "case": "entry-preview",
+      "phase": "preview",
+      "literal_exact": true,
+      "different_fields": []
+    },
+    {
+      "case": "entry-preview",
+      "phase": "boundary",
+      "literal_exact": false,
+      "different_fields": [
+        "active",
+        "context_groups"
+      ]
+    },
+    {
+      "case": "entry-preview",
+      "phase": "tool-cancel",
+      "literal_exact": false,
+      "different_fields": [
+        "context_groups"
+      ]
+    }
+  ],
+  "rejected_mutations": 5
+}

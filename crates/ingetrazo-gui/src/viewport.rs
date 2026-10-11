@@ -35,11 +35,14 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
     // Modifier release must retire the temporary lock even outside the canvas.
     if app.text3d_dialog.is_none() {
     app.snap_engine.sync_drawing_frame(app.scene.drawing_frame);
+    let scale_modifiers=if app.active_tool_type==ToolType::Scale{crate::pointer_modifiers::get(ui.ctx())}else{None};
+    let mut scale_modifier_cursor=0;
+    let scale_input_admitted=scale_modifiers.as_ref().is_none_or(|handle|handle.lock().unwrap().admitted());
+    if !scale_input_admitted{app.status_message="Native modifier batch exceeded bounded admission".into();}
     if app.active_tool_type == ToolType::Scale {
         app.snap_engine.update_shift_state(false, None);
-        app.active_tool.note_shift_state(shift_down);
-    } else { app.snap_engine.update_shift_state(shift_down,app.active_tool.snap_anchor()); }
-    app.dispatch_tool_control_state(ui.input(|i| i.modifiers.ctrl));
+        if scale_modifiers.is_none(){app.active_tool.note_shift_state(shift_down);app.dispatch_tool_control_state(ui.input(|i|i.modifiers.ctrl));}
+    } else { app.snap_engine.update_shift_state(shift_down,app.active_tool.snap_anchor());app.dispatch_tool_control_state(ui.input(|i|i.modifiers.ctrl)); }
 
     }
 
@@ -209,18 +212,19 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
                 }
             } else {
                 let follow_me = matches!(app.active_tool_type,ToolType::FollowMe|ToolType::Freehand|ToolType::Scale);
-                if follow_me && !alt_down && pointer.button_pressed(egui::PointerButton::Primary) {
+                if follow_me && scale_input_admitted && !alt_down && pointer.button_pressed(egui::PointerButton::Primary) {
                     ui.ctx().data_mut(|data| {
                         data.insert_temp(response.id.with("followme_press"), mouse_pos)
                     });
                     if app.active_tool_type == ToolType::Scale {
                         // Acquisition belongs to the press event, not the final
                         // hover position after coalesced pointer motion.
-                        let press = ui.input(|input| input.events.iter().find_map(|event| match event {
-                            egui::Event::PointerButton { pos, button: egui::PointerButton::Primary, pressed: true, modifiers } => Some((*pos, *modifiers)),
+                        let press = ui.input(|input| input.events.iter().enumerate().find_map(|(index,event)| match event {
+                            egui::Event::PointerButton { pos, button: egui::PointerButton::Primary, pressed: true, modifiers } => Some((index,*pos, *modifiers)),
                             _ => None,
                         }));
-                        if let Some((pos, modifiers)) = press {
+                        if let Some((index,pos, modifiers)) = press {
+                            scale_modifier_changes(app,scale_modifiers.as_ref(),index,&mut scale_modifier_cursor);
                             ui.ctx().data_mut(|data| data.insert_temp(response.id.with("followme_press"), pos));
                             let mut press_ctx = tool_ctx.clone();
                             press_ctx.screen = Some(glam::DVec2::new((pos.x-rect.min.x) as f64,(pos.y-rect.min.y) as f64));
@@ -248,7 +252,8 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
                     let press = input.events.iter().rposition(|event| matches!(event, egui::Event::PointerButton { button: egui::PointerButton::Primary, pressed: true, .. }));
                     input.events.iter().enumerate().any(|(index,event)| matches!(event,egui::Event::PointerMoved(_)) && press.is_none_or(|press| index > press))
                 });
-                if app.active_tool_type != ToolType::Scale || scale_motion {
+                if app.active_tool_type != ToolType::Scale || (scale_input_admitted && scale_motion) {
+                    if app.active_tool_type==ToolType::Scale{let index=ui.input(|i|i.events.iter().rposition(|e|matches!(e,egui::Event::PointerMoved(_))).unwrap_or(0));scale_modifier_changes(app,scale_modifiers.as_ref(),index,&mut scale_modifier_cursor);}
                     app.dispatch_tool_move(&tool_ctx);
                 }
                 if follow_me {
@@ -265,10 +270,11 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
         }
     }
     // Observe release beyond the viewport, without committing a tool during paste.
-    if app.paste_preview.is_none()
+    if scale_input_admitted && app.paste_preview.is_none()
         && matches!(app.active_tool_type,ToolType::FollowMe|ToolType::Freehand|ToolType::Scale)
         && pointer.button_released(egui::PointerButton::Primary)
     {
+        if app.active_tool_type==ToolType::Scale{let index=ui.input(|i|i.events.iter().position(|e|matches!(e,egui::Event::PointerButton{button:egui::PointerButton::Primary,pressed:false,..})).unwrap_or(usize::MAX));scale_modifier_changes(app,scale_modifiers.as_ref(),index,&mut scale_modifier_cursor);}
         let origin = ui
             .ctx()
             .data_mut(|data| data.remove_temp::<egui::Pos2>(response.id.with("followme_press")));
@@ -279,6 +285,8 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
             app.dispatch_tool_release(&context, origin.distance(end) as f64);
         }
     }
+
+    scale_modifier_changes(app,scale_modifiers.as_ref(),usize::MAX,&mut scale_modifier_cursor);
 
     // Handle Esc to cancel active tool and clear locks
     if ui.input(|i| i.key_pressed(egui::Key::Escape)) {
@@ -628,4 +636,15 @@ mod native_overlay_dispatch_tests {
         assert_eq!(factory.metrics().unchanged,1);
         assert_eq!(app.image_outlines.cold_builds,1);
     }
+}
+
+// Modifier keys have no egui Key variant; the native ingress retains their
+// transitions. Consuming by raw-event index prevents a later tap from changing
+// the acquisition/commit that occurred earlier in this same frame.
+fn scale_modifier_changes(app:&mut IngeTrazoApp,handle:Option<&crate::pointer_modifiers::Handle>,index:usize,cursor:&mut usize){
+ let Some(handle)=handle else{return;};
+ match handle.lock(){
+  Ok(timeline)=>if let Err(error)=timeline.visit_changes_before(index,cursor,|m|{app.dispatch_tool_control_state(m.ctrl);app.active_tool.note_shift_state(m.shift);}){app.status_message=error.into();},
+  Err(_)=>app.status_message="Native modifier timeline unavailable".into(),
+ }
 }

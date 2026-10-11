@@ -1,0 +1,23 @@
+{
+  "cases": 9,
+  "exact_states": 52,
+  "fields": [
+    "positions",
+    "images",
+    "depth",
+    "active",
+    "undo",
+    "redo"
+  ],
+  "negative_controls": {
+    "empty": true,
+    "truncated": true,
+    "duplicated": true,
+    "lost-retype": true,
+    "history-drift": true,
+    "revived-expired": true,
+    "actual-final-state-only-ingress": true,
+    "retained-initial-context-failure": true
+  },
+  "scope": "Qt delivered modifier key handlers vs native timeline/egui; actual app context/value/history handlers, no physical input/pixel claim"
+}

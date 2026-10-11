@@ -1,0 +1,1822 @@
+{
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "cases": [
+    {
+      "name": "ctrl-tap",
+      "kind": "rapid",
+      "keys": [
+        "ctrl"
+      ],
+      "grab": [
+        2.0,
+        1.5,
+        0.0
+      ],
+      "hover": [
+        3.0,
+        1.5,
+        0.0
+      ],
+      "accepted": true,
+      "states": {
+        "before-taps": {
+          "positions": [
+            [
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              3.0,
+              0.0,
+              0.0
+            ],
+            [
+              3.0,
+              3.0,
+              0.0
+            ],
+            [
+              0.0,
+              3.0,
+              0.0
+            ]
+          ],
+          "images": [],
+          "depth": 0,
+          "active": true,
+          "undo": 0,
+          "redo": 0,
+          "about_center": false,
+          "uniform": false
+        },
+        "after-taps": {
+          "positions": [
+            [
+              -0.5,
+              0.0,
+              0.0
+            ],
+            [
+              2.5,
+              0.0,
+              0.0
+            ],
+            [
+              2.5,
+              3.0,
+              0.0
+            ],
+            [
+              -0.5,
+              3.0,
+              0.0
+            ]
+          ],
+          "images": [],
+          "depth": 0,
+          "active": true,
+          "undo": 0,
+          "redo": 0,
+          "about_center": true,
+          "uniform": false
+        },
+        "commit": {
+          "positions": [
+            [
+              -1.0,
+              0.0,
+              0.0
+            ],
+            [
+              3.0,
+              0.0,
+              0.0
+            ],
+            [
+              3.0,
+              3.0,
+              0.0
+            ],
+            [
+              -1.0,
+              3.0,
+              0.0
+            ]
+          ],
+          "images": [],
+          "depth": 0,
+          "active": false,
+          "undo": 1,
+          "redo": 0,
+          "about_center": true,
+          "uniform": false
+        },
+        "undo": {
+          "positions": [
+            [
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              2.0,
+              0.0,
+              0.0
+            ],
+            [
+              2.0,
+              3.0,
+              0.0
+            ],
+            [
+              0.0,
+              3.0,
+              0.0
+            ]
+          ],
+          "images": [],
+          "depth": 0,
+          "active": false,
+          "undo": 0,
+          "redo": 1,
+          "about_center": true,
+          "uniform": false
+        },
+        "redo": {
+          "positions": [
+            [
+              -1.0,
+              0.0,
+              0.0
+            ],
+            [
+              3.0,
+              0.0,
+              0.0
+            ],
+            [
+              3.0,
+              3.0,
+              0.0
+            ],
+            [
+              -1.0,
+              3.0,
+              0.0
+            ]
+          ],
+          "images": [],
+          "depth": 0,
+          "active": false,
+          "undo": 1,
+          "redo": 0,
+          "about_center": true,
+          "uniform": false
+        }
+      }
+    },
+    {
+      "name": "ctrl-double",
+      "kind": "rapid",
+      "keys": [
+        "ctrl",
+        "ctrl"
+      ],
+      "grab": [
+        2.0,
+        1.5,
+        0.0
+      ],
+      "hover": [
+        3.0,
+        1.5,
+        0.0
+      ],
+      "accepted": true,
+      "states": {
+        "before-taps": {
+          "positions": [
+            [
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              3.0,
+              0.0,
+              0.0
+            ],
+            [
+              3.0,
+              3.0,
+              0.0
+            ],
+            [
+              0.0,
+              3.0,
+              0.0
+            ]
+          ],
+          "images": [],
+          "depth": 0,
+          "active": true,
+          "undo": 0,
+          "redo": 0,
+          "about_center": false,
+          "uniform": false
+        },
+        "after-taps": {
+          "positions": [
+            [
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              3.0,
+              0.0,
+              0.0
+            ],
+            [
+              3.0,
+              3.0,
+              0.0
+            ],
+            [
+              0.0,
+              3.0,
+              0.0
+            ]
+          ],
+          "images": [],
+          "depth": 0,
+          "active": true,
+          "undo": 0,
+          "redo": 0,
+          "about_center": false,
+          "uniform": false
+        },
+        "commit": {
+          "positions": [
+            [
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              4.0,
+              0.0,
+              0.0
+            ],
+            [
+              4.0,
+              3.0,
+              0.0
+            ],
+            [
+              0.0,
+              3.0,
+              0.0
+            ]
+          ],
+          "images": [],
+          "depth": 0,
+          "active": false,
+          "undo": 1,
+          "redo": 0,
+          "about_center": false,
+          "uniform": false
+        },
+        "undo": {
+          "positions": [
+            [
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              2.0,
+              0.0,
+              0.0
+            ],
+            [
+              2.0,
+              3.0,
+              0.0
+            ],
+            [
+              0.0,
+              3.0,
+              0.0
+            ]
+          ],
+          "images": [],
+          "depth": 0,
+          "active": false,
+          "undo": 0,
+          "redo": 1,
+          "about_center": false,
+          "uniform": false
+        },
+        "redo": {
+          "positions": [
+            [
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              4.0,
+              0.0,
+              0.0
+            ],
+            [
+              4.0,
+              3.0,
+              0.0
+            ],
+            [
+              0.0,
+              3.0,
+              0.0
+            ]
+          ],
+          "images": [],
+          "depth": 0,
+          "active": false,
+          "undo": 1,
+          "redo": 0,
+          "about_center": false,
+          "uniform": false
+        }
+      }
+    },
+    {
+      "name": "shift-tap",
+      "kind": "rapid",
+      "keys": [
+        "shift"
+      ],
+      "grab": [
+        2.0,
+        1.5,
+        0.0
+      ],
+      "hover": [
+        3.0,
+        1.5,
+        0.0
+      ],
+      "accepted": true,
+      "states": {
+        "before-taps": {
+          "positions": [
+            [
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              3.0,
+              0.0,
+              0.0
+            ],
+            [
+              3.0,
+              3.0,
+              0.0
+            ],
+            [
+              0.0,
+              3.0,
+              0.0
+            ]
+          ],
+          "images": [],
+          "depth": 0,
+          "active": true,
+          "undo": 0,
+          "redo": 0,
+          "about_center": false,
+          "uniform": false
+        },
+        "after-taps": {
+          "positions": [
+            [
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              3.0,
+              0.0,
+              0.0
+            ],
+            [
+              3.0,
+              3.0,
+              0.0
+            ],
+            [
+              0.0,
+              3.0,
+              0.0
+            ]
+          ],
+          "images": [],
+          "depth": 0,
+          "active": true,
+          "undo": 0,
+          "redo": 0,
+          "about_center": false,
+          "uniform": true
+        },
+        "commit": {
+          "positions": [
+            [
+              0.0,
+              -1.5,
+              0.0
+            ],
+            [
+              4.0,
+              -1.5,
+              0.0
+            ],
+            [
+              4.0,
+              4.5,
+              0.0
+            ],
+            [
+              0.0,
+              4.5,
+              0.0
+            ]
+          ],
+          "images": [],
+          "depth": 0,
+          "active": false,
+          "undo": 1,
+          "redo": 0,
+          "about_center": false,
+          "uniform": true
+        },
+        "undo": {
+          "positions": [
+            [
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              2.0,
+              0.0,
+              0.0
+            ],
+            [
+              2.0,
+              3.0,
+              0.0
+            ],
+            [
+              0.0,
+              3.0,
+              0.0
+            ]
+          ],
+          "images": [],
+          "depth": 0,
+          "active": false,
+          "undo": 0,
+          "redo": 1,
+          "about_center": false,
+          "uniform": true
+        },
+        "redo": {
+          "positions": [
+            [
+              0.0,
+              -1.5,
+              0.0
+            ],
+            [
+              4.0,
+              -1.5,
+              0.0
+            ],
+            [
+              4.0,
+              4.5,
+              0.0
+            ],
+            [
+              0.0,
+              4.5,
+              0.0
+            ]
+          ],
+          "images": [],
+          "depth": 0,
+          "active": false,
+          "undo": 1,
+          "redo": 0,
+          "about_center": false,
+          "uniform": true
+        }
+      }
+    },
+    {
+      "name": "shift-double",
+      "kind": "rapid",
+      "keys": [
+        "shift",
+        "shift"
+      ],
+      "grab": [
+        2.0,
+        1.5,
+        0.0
+      ],
+      "hover": [
+        3.0,
+        1.5,
+        0.0
+      ],
+      "accepted": true,
+      "states": {
+        "before-taps": {
+          "positions": [
+            [
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              3.0,
+              0.0,
+              0.0
+            ],
+            [
+              3.0,
+              3.0,
+              0.0
+            ],
+            [
+              0.0,
+              3.0,
+              0.0
+            ]
+          ],
+          "images": [],
+          "depth": 0,
+          "active": true,
+          "undo": 0,
+          "redo": 0,
+          "about_center": false,
+          "uniform": false
+        },
+        "after-taps": {
+          "positions": [
+            [
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              3.0,
+              0.0,
+              0.0
+            ],
+            [
+              3.0,
+              3.0,
+              0.0
+            ],
+            [
+              0.0,
+              3.0,
+              0.0
+            ]
+          ],
+          "images": [],
+          "depth": 0,
+          "active": true,
+          "undo": 0,
+          "redo": 0,
+          "about_center": false,
+          "uniform": false
+        },
+        "commit": {
+          "positions": [
+            [
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              4.0,
+              0.0,
+              0.0
+            ],
+            [
+              4.0,
+              3.0,
+              0.0
+            ],
+            [
+              0.0,
+              3.0,
+              0.0
+            ]
+          ],
+          "images": [],
+          "depth": 0,
+          "active": false,
+          "undo": 1,
+          "redo": 0,
+          "about_center": false,
+          "uniform": false
+        },
+        "undo": {
+          "positions": [
+            [
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              2.0,
+              0.0,
+              0.0
+            ],
+            [
+              2.0,
+              3.0,
+              0.0
+            ],
+            [
+              0.0,
+              3.0,
+              0.0
+            ]
+          ],
+          "images": [],
+          "depth": 0,
+          "active": false,
+          "undo": 0,
+          "redo": 1,
+          "about_center": false,
+          "uniform": false
+        },
+        "redo": {
+          "positions": [
+            [
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              4.0,
+              0.0,
+              0.0
+            ],
+            [
+              4.0,
+              3.0,
+              0.0
+            ],
+            [
+              0.0,
+              3.0,
+              0.0
+            ]
+          ],
+          "images": [],
+          "depth": 0,
+          "active": false,
+          "undo": 1,
+          "redo": 0,
+          "about_center": false,
+          "uniform": false
+        }
+      }
+    },
+    {
+      "name": "ctrl-shift",
+      "kind": "rapid",
+      "keys": [
+        "ctrl",
+        "shift"
+      ],
+      "grab": [
+        2.0,
+        1.5,
+        0.0
+      ],
+      "hover": [
+        3.0,
+        1.5,
+        0.0
+      ],
+      "accepted": true,
+      "states": {
+        "before-taps": {
+          "positions": [
+            [
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              3.0,
+              0.0,
+              0.0
+            ],
+            [
+              3.0,
+              3.0,
+              0.0
+            ],
+            [
+              0.0,
+              3.0,
+              0.0
+            ]
+          ],
+          "images": [],
+          "depth": 0,
+          "active": true,
+          "undo": 0,
+          "redo": 0,
+          "about_center": false,
+          "uniform": false
+        },
+        "after-taps": {
+          "positions": [
+            [
+              -0.5,
+              0.0,
+              0.0
+            ],
+            [
+              2.5,
+              0.0,
+              0.0
+            ],
+            [
+              2.5,
+              3.0,
+              0.0
+            ],
+            [
+              -0.5,
+              3.0,
+              0.0
+            ]
+          ],
+          "images": [],
+          "depth": 0,
+          "active": true,
+          "undo": 0,
+          "redo": 0,
+          "about_center": true,
+          "uniform": true
+        },
+        "commit": {
+          "positions": [
+            [
+              -1.0,
+              -1.5,
+              0.0
+            ],
+            [
+              3.0,
+              -1.5,
+              0.0
+            ],
+            [
+              3.0,
+              4.5,
+              0.0
+            ],
+            [
+              -1.0,
+              4.5,
+              0.0
+            ]
+          ],
+          "images": [],
+          "depth": 0,
+          "active": false,
+          "undo": 1,
+          "redo": 0,
+          "about_center": true,
+          "uniform": true
+        },
+        "undo": {
+          "positions": [
+            [
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              2.0,
+              0.0,
+              0.0
+            ],
+            [
+              2.0,
+              3.0,
+              0.0
+            ],
+            [
+              0.0,
+              3.0,
+              0.0
+            ]
+          ],
+          "images": [],
+          "depth": 0,
+          "active": false,
+          "undo": 0,
+          "redo": 1,
+          "about_center": true,
+          "uniform": true
+        },
+        "redo": {
+          "positions": [
+            [
+              -1.0,
+              -1.5,
+              0.0
+            ],
+            [
+              3.0,
+              -1.5,
+              0.0
+            ],
+            [
+              3.0,
+              4.5,
+              0.0
+            ],
+            [
+              -1.0,
+              4.5,
+              0.0
+            ]
+          ],
+          "images": [],
+          "depth": 0,
+          "active": false,
+          "undo": 1,
+          "redo": 0,
+          "about_center": true,
+          "uniform": true
+        }
+      }
+    },
+    {
+      "name": "ctrl-shift-twice",
+      "kind": "rapid",
+      "keys": [
+        "ctrl",
+        "shift",
+        "ctrl",
+        "shift"
+      ],
+      "grab": [
+        2.0,
+        1.5,
+        0.0
+      ],
+      "hover": [
+        3.0,
+        1.5,
+        0.0
+      ],
+      "accepted": true,
+      "states": {
+        "before-taps": {
+          "positions": [
+            [
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              3.0,
+              0.0,
+              0.0
+            ],
+            [
+              3.0,
+              3.0,
+              0.0
+            ],
+            [
+              0.0,
+              3.0,
+              0.0
+            ]
+          ],
+          "images": [],
+          "depth": 0,
+          "active": true,
+          "undo": 0,
+          "redo": 0,
+          "about_center": false,
+          "uniform": false
+        },
+        "after-taps": {
+          "positions": [
+            [
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              3.0,
+              0.0,
+              0.0
+            ],
+            [
+              3.0,
+              3.0,
+              0.0
+            ],
+            [
+              0.0,
+              3.0,
+              0.0
+            ]
+          ],
+          "images": [],
+          "depth": 0,
+          "active": true,
+          "undo": 0,
+          "redo": 0,
+          "about_center": false,
+          "uniform": false
+        },
+        "commit": {
+          "positions": [
+            [
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              4.0,
+              0.0,
+              0.0
+            ],
+            [
+              4.0,
+              3.0,
+              0.0
+            ],
+            [
+              0.0,
+              3.0,
+              0.0
+            ]
+          ],
+          "images": [],
+          "depth": 0,
+          "active": false,
+          "undo": 1,
+          "redo": 0,
+          "about_center": false,
+          "uniform": false
+        },
+        "undo": {
+          "positions": [
+            [
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              2.0,
+              0.0,
+              0.0
+            ],
+            [
+              2.0,
+              3.0,
+              0.0
+            ],
+            [
+              0.0,
+              3.0,
+              0.0
+            ]
+          ],
+          "images": [],
+          "depth": 0,
+          "active": false,
+          "undo": 0,
+          "redo": 1,
+          "about_center": false,
+          "uniform": false
+        },
+        "redo": {
+          "positions": [
+            [
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              4.0,
+              0.0,
+              0.0
+            ],
+            [
+              4.0,
+              3.0,
+              0.0
+            ],
+            [
+              0.0,
+              3.0,
+              0.0
+            ]
+          ],
+          "images": [],
+          "depth": 0,
+          "active": false,
+          "undo": 1,
+          "redo": 0,
+          "about_center": false,
+          "uniform": false
+        }
+      }
+    },
+    {
+      "name": "image-finish-preview-commit",
+      "kind": "image",
+      "grab": [
+        3.0,
+        5.0,
+        0.0
+      ],
+      "hover": [
+        5.0,
+        8.0,
+        0.0
+      ],
+      "accepted": [
+        true,
+        true
+      ],
+      "states": {
+        "preview": {
+          "positions": [
+            [
+              5.0,
+              7.0,
+              0.0
+            ],
+            [
+              7.0,
+              7.0,
+              0.0
+            ],
+            [
+              7.0,
+              10.0,
+              0.0
+            ],
+            [
+              5.0,
+              10.0,
+              0.0
+            ]
+          ],
+          "images": [
+            [
+              [
+                1.0,
+                2.0,
+                0.0
+              ],
+              [
+                4.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                6.0,
+                0.0
+              ]
+            ]
+          ],
+          "depth": 2,
+          "active": true,
+          "undo": 0,
+          "redo": 0,
+          "about_center": false,
+          "uniform": false
+        },
+        "boundary": {
+          "positions": [],
+          "images": [
+            [
+              [
+                1.0,
+                2.0,
+                0.0
+              ],
+              [
+                4.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                6.0,
+                0.0
+              ]
+            ]
+          ],
+          "depth": 1,
+          "active": true,
+          "undo": 0,
+          "redo": 0,
+          "about_center": false,
+          "uniform": false
+        },
+        "commit": {
+          "positions": [],
+          "images": [
+            [
+              [
+                1.0,
+                2.0,
+                0.0
+              ],
+              [
+                4.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                6.0,
+                0.0
+              ]
+            ]
+          ],
+          "depth": 1,
+          "active": false,
+          "undo": 1,
+          "redo": 0,
+          "about_center": false,
+          "uniform": false
+        },
+        "retype": {
+          "positions": [],
+          "images": [
+            [
+              [
+                1.0,
+                2.0,
+                0.0
+              ],
+              [
+                6.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                9.0,
+                0.0
+              ]
+            ]
+          ],
+          "depth": 1,
+          "active": false,
+          "undo": 1,
+          "redo": 0,
+          "about_center": false,
+          "uniform": false
+        },
+        "undo": {
+          "positions": [],
+          "images": [
+            [
+              [
+                1.0,
+                2.0,
+                0.0
+              ],
+              [
+                2.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                3.0,
+                0.0
+              ]
+            ]
+          ],
+          "depth": 1,
+          "active": false,
+          "undo": 0,
+          "redo": 1,
+          "about_center": false,
+          "uniform": false
+        },
+        "redo": {
+          "positions": [],
+          "images": [
+            [
+              [
+                1.0,
+                2.0,
+                0.0
+              ],
+              [
+                6.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                9.0,
+                0.0
+              ]
+            ]
+          ],
+          "depth": 1,
+          "active": false,
+          "undo": 1,
+          "redo": 0,
+          "about_center": false,
+          "uniform": false
+        },
+        "tool-cancel": {
+          "positions": [],
+          "images": [
+            [
+              [
+                1.0,
+                2.0,
+                0.0
+              ],
+              [
+                6.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                9.0,
+                0.0
+              ]
+            ]
+          ],
+          "depth": 1,
+          "active": false,
+          "undo": 1,
+          "redo": 0,
+          "about_center": false,
+          "uniform": false
+        }
+      }
+    },
+    {
+      "name": "image-exit-two",
+      "kind": "image",
+      "grab": [
+        3.0,
+        5.0,
+        0.0
+      ],
+      "hover": [
+        5.0,
+        8.0,
+        0.0
+      ],
+      "accepted": [
+        true,
+        true
+      ],
+      "states": {
+        "preview": {
+          "positions": [
+            [
+              5.0,
+              7.0,
+              0.0
+            ],
+            [
+              7.0,
+              7.0,
+              0.0
+            ],
+            [
+              7.0,
+              10.0,
+              0.0
+            ],
+            [
+              5.0,
+              10.0,
+              0.0
+            ]
+          ],
+          "images": [
+            [
+              [
+                1.0,
+                2.0,
+                0.0
+              ],
+              [
+                4.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                6.0,
+                0.0
+              ]
+            ]
+          ],
+          "depth": 2,
+          "active": true,
+          "undo": 0,
+          "redo": 0,
+          "about_center": false,
+          "uniform": false
+        },
+        "boundary": {
+          "positions": [],
+          "images": [
+            [
+              [
+                1.0,
+                2.0,
+                0.0
+              ],
+              [
+                4.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                6.0,
+                0.0
+              ]
+            ]
+          ],
+          "depth": 1,
+          "active": true,
+          "undo": 0,
+          "redo": 0,
+          "about_center": false,
+          "uniform": false
+        },
+        "outer-boundary": {
+          "positions": [],
+          "images": [
+            [
+              [
+                1.0,
+                2.0,
+                0.0
+              ],
+              [
+                4.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                6.0,
+                0.0
+              ]
+            ]
+          ],
+          "depth": 0,
+          "active": true,
+          "undo": 0,
+          "redo": 0,
+          "about_center": false,
+          "uniform": false
+        },
+        "commit": {
+          "positions": [],
+          "images": [
+            [
+              [
+                1.0,
+                2.0,
+                0.0
+              ],
+              [
+                4.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                6.0,
+                0.0
+              ]
+            ]
+          ],
+          "depth": 0,
+          "active": false,
+          "undo": 1,
+          "redo": 0,
+          "about_center": false,
+          "uniform": false
+        },
+        "retype": {
+          "positions": [],
+          "images": [
+            [
+              [
+                1.0,
+                2.0,
+                0.0
+              ],
+              [
+                6.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                9.0,
+                0.0
+              ]
+            ]
+          ],
+          "depth": 0,
+          "active": false,
+          "undo": 1,
+          "redo": 0,
+          "about_center": false,
+          "uniform": false
+        },
+        "undo": {
+          "positions": [],
+          "images": [
+            [
+              [
+                1.0,
+                2.0,
+                0.0
+              ],
+              [
+                2.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                3.0,
+                0.0
+              ]
+            ]
+          ],
+          "depth": 0,
+          "active": false,
+          "undo": 0,
+          "redo": 1,
+          "about_center": false,
+          "uniform": false
+        },
+        "redo": {
+          "positions": [],
+          "images": [
+            [
+              [
+                1.0,
+                2.0,
+                0.0
+              ],
+              [
+                6.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                9.0,
+                0.0
+              ]
+            ]
+          ],
+          "depth": 0,
+          "active": false,
+          "undo": 1,
+          "redo": 0,
+          "about_center": false,
+          "uniform": false
+        },
+        "tool-cancel": {
+          "positions": [],
+          "images": [
+            [
+              [
+                1.0,
+                2.0,
+                0.0
+              ],
+              [
+                6.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                9.0,
+                0.0
+              ]
+            ]
+          ],
+          "depth": 0,
+          "active": false,
+          "undo": 1,
+          "redo": 0,
+          "about_center": false,
+          "uniform": false
+        }
+      }
+    },
+    {
+      "name": "image-commit-finish-retype",
+      "kind": "image",
+      "grab": [
+        3.0,
+        5.0,
+        0.0
+      ],
+      "hover": [
+        5.0,
+        8.0,
+        0.0
+      ],
+      "accepted": [
+        true,
+        true
+      ],
+      "states": {
+        "preview": {
+          "positions": [
+            [
+              5.0,
+              7.0,
+              0.0
+            ],
+            [
+              7.0,
+              7.0,
+              0.0
+            ],
+            [
+              7.0,
+              10.0,
+              0.0
+            ],
+            [
+              5.0,
+              10.0,
+              0.0
+            ]
+          ],
+          "images": [
+            [
+              [
+                1.0,
+                2.0,
+                0.0
+              ],
+              [
+                4.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                6.0,
+                0.0
+              ]
+            ]
+          ],
+          "depth": 2,
+          "active": true,
+          "undo": 0,
+          "redo": 0,
+          "about_center": false,
+          "uniform": false
+        },
+        "commit-before": {
+          "positions": [
+            [
+              5.0,
+              7.0,
+              0.0
+            ],
+            [
+              7.0,
+              7.0,
+              0.0
+            ],
+            [
+              7.0,
+              10.0,
+              0.0
+            ],
+            [
+              5.0,
+              10.0,
+              0.0
+            ]
+          ],
+          "images": [
+            [
+              [
+                1.0,
+                2.0,
+                0.0
+              ],
+              [
+                4.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                6.0,
+                0.0
+              ]
+            ]
+          ],
+          "depth": 2,
+          "active": false,
+          "undo": 1,
+          "redo": 0,
+          "about_center": false,
+          "uniform": false
+        },
+        "boundary": {
+          "positions": [],
+          "images": [
+            [
+              [
+                1.0,
+                2.0,
+                0.0
+              ],
+              [
+                4.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                6.0,
+                0.0
+              ]
+            ]
+          ],
+          "depth": 1,
+          "active": false,
+          "undo": 1,
+          "redo": 0,
+          "about_center": false,
+          "uniform": false
+        },
+        "retype": {
+          "positions": [],
+          "images": [
+            [
+              [
+                1.0,
+                2.0,
+                0.0
+              ],
+              [
+                6.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                9.0,
+                0.0
+              ]
+            ]
+          ],
+          "depth": 1,
+          "active": false,
+          "undo": 1,
+          "redo": 0,
+          "about_center": false,
+          "uniform": false
+        },
+        "undo": {
+          "positions": [],
+          "images": [
+            [
+              [
+                1.0,
+                2.0,
+                0.0
+              ],
+              [
+                2.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                3.0,
+                0.0
+              ]
+            ]
+          ],
+          "depth": 1,
+          "active": false,
+          "undo": 0,
+          "redo": 1,
+          "about_center": false,
+          "uniform": false
+        },
+        "redo": {
+          "positions": [],
+          "images": [
+            [
+              [
+                1.0,
+                2.0,
+                0.0
+              ],
+              [
+                6.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                9.0,
+                0.0
+              ]
+            ]
+          ],
+          "depth": 1,
+          "active": false,
+          "undo": 1,
+          "redo": 0,
+          "about_center": false,
+          "uniform": false
+        },
+        "tool-cancel": {
+          "positions": [],
+          "images": [
+            [
+              [
+                1.0,
+                2.0,
+                0.0
+              ],
+              [
+                6.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                9.0,
+                0.0
+              ]
+            ]
+          ],
+          "depth": 1,
+          "active": false,
+          "undo": 1,
+          "redo": 0,
+          "about_center": false,
+          "uniform": false
+        }
+      }
+    }
+  ],
+  "scope": "actual Qt Viewport modifier key delivery; grab/hover/value/context handler recipes, no OS capture"
+}

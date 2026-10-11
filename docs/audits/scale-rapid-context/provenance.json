@@ -1,0 +1,21 @@
+{
+  "runtime_commit": "deed301fe068e38d003c36dd0c95e75a5e8c3045",
+  "baseline_merge": "2c0c85ab",
+  "root_base": "5e3f46c738ae88ddc33fe7b0f1d0383840c33c8d",
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "binary": "/tmp/ingetrazo-metal-world-target/debug/examples/scale_rapid_context",
+  "binary_sha256": "90bf282e1eab6c1195db24eb55c9ddd04b2186266d258d9b6ddec9349e888a85",
+  "files": {
+    "crates/ingetrazo-gui/src/pointer_modifiers.rs": "f42cd4160d773744f6fac444e3a7c6b4c09832dede299969e9d51084d4e59c0f",
+    "crates/ingetrazo-gui/src/viewport.rs": "3b99af3e17ab718b5bfbf1b2da02644e6654dc859f240cbc28c02cf2e59817c9",
+    "crates/ingetrazo-gui/src/component_edit.rs": "678f7d32fcda7fd9752bc4b7ebbd2a65874724a2a2948c33aecfe153abab4512",
+    "crates/ingetrazo-tools/src/scale_tool.rs": "7db343c7c03b33dff27d915c6c988ade72fa84736f6e87f147d736c57449abff",
+    "crates/ingetrazo-gui/examples/scale_rapid_context.rs": "1309c996c9f23f8da6f59a06ebdf2e2e986d6db8ef66ae36601ba19598220869",
+    "scripts/reference-scale-rapid-context.py": "c06a96fe9bec1c60d3c80db062e317b1dc6dc1b19c117fdff0596e5df5c7cc8c",
+    "scripts/check-scale-rapid-context.py": "1e2a6b1a15bfbc47834ddd567d46eed02d7e7001f3875e32152c4d7d59f475b7"
+  },
+  "source_output_sha256": "1b6136d6e4b3b25a0387150ac5eac50969932ae8940ede55bc38ef883372abc2",
+  "source_recipe_note": "Capture used same operative recipe; an unreachable if-False alternative in side-grip selection was subsequently removed as cosmetic cleanup. Retained source values were not regenerated or normalized.",
+  "build": "jobs2; dev/test debug0; incremental0; stable exclusive target",
+  "claims": "9 recipes/52 exact handler states; native timeline+actual egui UI update for modifier taps. No OS/pixel or arbitrary platform claim."
+}

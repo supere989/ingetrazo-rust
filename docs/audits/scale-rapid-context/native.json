@@ -1,0 +1,1668 @@
+{
+  "cases": [
+    {
+      "name": "ctrl-tap",
+      "kind": "rapid",
+      "accepted": [
+        true
+      ],
+      "states": {
+        "before-taps": {
+          "positions": [
+            [
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              3.0,
+              0.0,
+              0.0
+            ],
+            [
+              3.0,
+              3.0,
+              0.0
+            ],
+            [
+              0.0,
+              3.0,
+              0.0
+            ]
+          ],
+          "images": [],
+          "depth": 0,
+          "active": true,
+          "undo": 0,
+          "redo": 0,
+          "status": ""
+        },
+        "after-taps": {
+          "positions": [
+            [
+              -0.5,
+              0.0,
+              0.0
+            ],
+            [
+              2.5,
+              0.0,
+              0.0
+            ],
+            [
+              2.5,
+              3.0,
+              0.0
+            ],
+            [
+              -0.5,
+              3.0,
+              0.0
+            ]
+          ],
+          "images": [],
+          "depth": 0,
+          "active": true,
+          "undo": 0,
+          "redo": 0,
+          "status": ""
+        },
+        "commit": {
+          "positions": [
+            [
+              -1.0,
+              0.0,
+              0.0
+            ],
+            [
+              3.0,
+              0.0,
+              0.0
+            ],
+            [
+              3.0,
+              3.0,
+              0.0
+            ],
+            [
+              -1.0,
+              3.0,
+              0.0
+            ]
+          ],
+          "images": [],
+          "depth": 0,
+          "active": false,
+          "undo": 1,
+          "redo": 0,
+          "status": "About Center: on"
+        },
+        "undo": {
+          "positions": [
+            [
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              2.0,
+              0.0,
+              0.0
+            ],
+            [
+              2.0,
+              3.0,
+              0.0
+            ],
+            [
+              0.0,
+              3.0,
+              0.0
+            ]
+          ],
+          "images": [],
+          "depth": 0,
+          "active": false,
+          "undo": 0,
+          "redo": 1,
+          "status": "Undo"
+        },
+        "redo": {
+          "positions": [
+            [
+              -1.0,
+              0.0,
+              0.0
+            ],
+            [
+              3.0,
+              0.0,
+              0.0
+            ],
+            [
+              3.0,
+              3.0,
+              0.0
+            ],
+            [
+              -1.0,
+              3.0,
+              0.0
+            ]
+          ],
+          "images": [],
+          "depth": 0,
+          "active": false,
+          "undo": 1,
+          "redo": 0,
+          "status": "Redo"
+        }
+      }
+    },
+    {
+      "name": "ctrl-double",
+      "kind": "rapid",
+      "accepted": [
+        true
+      ],
+      "states": {
+        "before-taps": {
+          "positions": [
+            [
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              3.0,
+              0.0,
+              0.0
+            ],
+            [
+              3.0,
+              3.0,
+              0.0
+            ],
+            [
+              0.0,
+              3.0,
+              0.0
+            ]
+          ],
+          "images": [],
+          "depth": 0,
+          "active": true,
+          "undo": 0,
+          "redo": 0,
+          "status": ""
+        },
+        "after-taps": {
+          "positions": [
+            [
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              3.0,
+              0.0,
+              0.0
+            ],
+            [
+              3.0,
+              3.0,
+              0.0
+            ],
+            [
+              0.0,
+              3.0,
+              0.0
+            ]
+          ],
+          "images": [],
+          "depth": 0,
+          "active": true,
+          "undo": 0,
+          "redo": 0,
+          "status": ""
+        },
+        "commit": {
+          "positions": [
+            [
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              4.0,
+              0.0,
+              0.0
+            ],
+            [
+              4.0,
+              3.0,
+              0.0
+            ],
+            [
+              0.0,
+              3.0,
+              0.0
+            ]
+          ],
+          "images": [],
+          "depth": 0,
+          "active": false,
+          "undo": 1,
+          "redo": 0,
+          "status": "About Center: off"
+        },
+        "undo": {
+          "positions": [
+            [
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              2.0,
+              0.0,
+              0.0
+            ],
+            [
+              2.0,
+              3.0,
+              0.0
+            ],
+            [
+              0.0,
+              3.0,
+              0.0
+            ]
+          ],
+          "images": [],
+          "depth": 0,
+          "active": false,
+          "undo": 0,
+          "redo": 1,
+          "status": "Undo"
+        },
+        "redo": {
+          "positions": [
+            [
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              4.0,
+              0.0,
+              0.0
+            ],
+            [
+              4.0,
+              3.0,
+              0.0
+            ],
+            [
+              0.0,
+              3.0,
+              0.0
+            ]
+          ],
+          "images": [],
+          "depth": 0,
+          "active": false,
+          "undo": 1,
+          "redo": 0,
+          "status": "Redo"
+        }
+      }
+    },
+    {
+      "name": "shift-tap",
+      "kind": "rapid",
+      "accepted": [
+        true
+      ],
+      "states": {
+        "before-taps": {
+          "positions": [
+            [
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              3.0,
+              0.0,
+              0.0
+            ],
+            [
+              3.0,
+              3.0,
+              0.0
+            ],
+            [
+              0.0,
+              3.0,
+              0.0
+            ]
+          ],
+          "images": [],
+          "depth": 0,
+          "active": true,
+          "undo": 0,
+          "redo": 0,
+          "status": ""
+        },
+        "after-taps": {
+          "positions": [
+            [
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              3.0,
+              0.0,
+              0.0
+            ],
+            [
+              3.0,
+              3.0,
+              0.0
+            ],
+            [
+              0.0,
+              3.0,
+              0.0
+            ]
+          ],
+          "images": [],
+          "depth": 0,
+          "active": true,
+          "undo": 0,
+          "redo": 0,
+          "status": ""
+        },
+        "commit": {
+          "positions": [
+            [
+              0.0,
+              -1.5,
+              0.0
+            ],
+            [
+              4.0,
+              -1.5,
+              0.0
+            ],
+            [
+              4.0,
+              4.5,
+              0.0
+            ],
+            [
+              0.0,
+              4.5,
+              0.0
+            ]
+          ],
+          "images": [],
+          "depth": 0,
+          "active": false,
+          "undo": 1,
+          "redo": 0,
+          "status": "Scale Uniformly: on"
+        },
+        "undo": {
+          "positions": [
+            [
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              2.0,
+              0.0,
+              0.0
+            ],
+            [
+              2.0,
+              3.0,
+              0.0
+            ],
+            [
+              0.0,
+              3.0,
+              0.0
+            ]
+          ],
+          "images": [],
+          "depth": 0,
+          "active": false,
+          "undo": 0,
+          "redo": 1,
+          "status": "Undo"
+        },
+        "redo": {
+          "positions": [
+            [
+              0.0,
+              -1.5,
+              0.0
+            ],
+            [
+              4.0,
+              -1.5,
+              0.0
+            ],
+            [
+              4.0,
+              4.5,
+              0.0
+            ],
+            [
+              0.0,
+              4.5,
+              0.0
+            ]
+          ],
+          "images": [],
+          "depth": 0,
+          "active": false,
+          "undo": 1,
+          "redo": 0,
+          "status": "Redo"
+        }
+      }
+    },
+    {
+      "name": "shift-double",
+      "kind": "rapid",
+      "accepted": [
+        true
+      ],
+      "states": {
+        "before-taps": {
+          "positions": [
+            [
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              3.0,
+              0.0,
+              0.0
+            ],
+            [
+              3.0,
+              3.0,
+              0.0
+            ],
+            [
+              0.0,
+              3.0,
+              0.0
+            ]
+          ],
+          "images": [],
+          "depth": 0,
+          "active": true,
+          "undo": 0,
+          "redo": 0,
+          "status": ""
+        },
+        "after-taps": {
+          "positions": [
+            [
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              3.0,
+              0.0,
+              0.0
+            ],
+            [
+              3.0,
+              3.0,
+              0.0
+            ],
+            [
+              0.0,
+              3.0,
+              0.0
+            ]
+          ],
+          "images": [],
+          "depth": 0,
+          "active": true,
+          "undo": 0,
+          "redo": 0,
+          "status": ""
+        },
+        "commit": {
+          "positions": [
+            [
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              4.0,
+              0.0,
+              0.0
+            ],
+            [
+              4.0,
+              3.0,
+              0.0
+            ],
+            [
+              0.0,
+              3.0,
+              0.0
+            ]
+          ],
+          "images": [],
+          "depth": 0,
+          "active": false,
+          "undo": 1,
+          "redo": 0,
+          "status": "Scale Uniformly: off"
+        },
+        "undo": {
+          "positions": [
+            [
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              2.0,
+              0.0,
+              0.0
+            ],
+            [
+              2.0,
+              3.0,
+              0.0
+            ],
+            [
+              0.0,
+              3.0,
+              0.0
+            ]
+          ],
+          "images": [],
+          "depth": 0,
+          "active": false,
+          "undo": 0,
+          "redo": 1,
+          "status": "Undo"
+        },
+        "redo": {
+          "positions": [
+            [
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              4.0,
+              0.0,
+              0.0
+            ],
+            [
+              4.0,
+              3.0,
+              0.0
+            ],
+            [
+              0.0,
+              3.0,
+              0.0
+            ]
+          ],
+          "images": [],
+          "depth": 0,
+          "active": false,
+          "undo": 1,
+          "redo": 0,
+          "status": "Redo"
+        }
+      }
+    },
+    {
+      "name": "ctrl-shift",
+      "kind": "rapid",
+      "accepted": [
+        true
+      ],
+      "states": {
+        "before-taps": {
+          "positions": [
+            [
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              3.0,
+              0.0,
+              0.0
+            ],
+            [
+              3.0,
+              3.0,
+              0.0
+            ],
+            [
+              0.0,
+              3.0,
+              0.0
+            ]
+          ],
+          "images": [],
+          "depth": 0,
+          "active": true,
+          "undo": 0,
+          "redo": 0,
+          "status": ""
+        },
+        "after-taps": {
+          "positions": [
+            [
+              -0.5,
+              0.0,
+              0.0
+            ],
+            [
+              2.5,
+              0.0,
+              0.0
+            ],
+            [
+              2.5,
+              3.0,
+              0.0
+            ],
+            [
+              -0.5,
+              3.0,
+              0.0
+            ]
+          ],
+          "images": [],
+          "depth": 0,
+          "active": true,
+          "undo": 0,
+          "redo": 0,
+          "status": ""
+        },
+        "commit": {
+          "positions": [
+            [
+              -1.0,
+              -1.5,
+              0.0
+            ],
+            [
+              3.0,
+              -1.5,
+              0.0
+            ],
+            [
+              3.0,
+              4.5,
+              0.0
+            ],
+            [
+              -1.0,
+              4.5,
+              0.0
+            ]
+          ],
+          "images": [],
+          "depth": 0,
+          "active": false,
+          "undo": 1,
+          "redo": 0,
+          "status": "Scale Uniformly: on"
+        },
+        "undo": {
+          "positions": [
+            [
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              2.0,
+              0.0,
+              0.0
+            ],
+            [
+              2.0,
+              3.0,
+              0.0
+            ],
+            [
+              0.0,
+              3.0,
+              0.0
+            ]
+          ],
+          "images": [],
+          "depth": 0,
+          "active": false,
+          "undo": 0,
+          "redo": 1,
+          "status": "Undo"
+        },
+        "redo": {
+          "positions": [
+            [
+              -1.0,
+              -1.5,
+              0.0
+            ],
+            [
+              3.0,
+              -1.5,
+              0.0
+            ],
+            [
+              3.0,
+              4.5,
+              0.0
+            ],
+            [
+              -1.0,
+              4.5,
+              0.0
+            ]
+          ],
+          "images": [],
+          "depth": 0,
+          "active": false,
+          "undo": 1,
+          "redo": 0,
+          "status": "Redo"
+        }
+      }
+    },
+    {
+      "name": "ctrl-shift-twice",
+      "kind": "rapid",
+      "accepted": [
+        true
+      ],
+      "states": {
+        "before-taps": {
+          "positions": [
+            [
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              3.0,
+              0.0,
+              0.0
+            ],
+            [
+              3.0,
+              3.0,
+              0.0
+            ],
+            [
+              0.0,
+              3.0,
+              0.0
+            ]
+          ],
+          "images": [],
+          "depth": 0,
+          "active": true,
+          "undo": 0,
+          "redo": 0,
+          "status": ""
+        },
+        "after-taps": {
+          "positions": [
+            [
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              3.0,
+              0.0,
+              0.0
+            ],
+            [
+              3.0,
+              3.0,
+              0.0
+            ],
+            [
+              0.0,
+              3.0,
+              0.0
+            ]
+          ],
+          "images": [],
+          "depth": 0,
+          "active": true,
+          "undo": 0,
+          "redo": 0,
+          "status": ""
+        },
+        "commit": {
+          "positions": [
+            [
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              4.0,
+              0.0,
+              0.0
+            ],
+            [
+              4.0,
+              3.0,
+              0.0
+            ],
+            [
+              0.0,
+              3.0,
+              0.0
+            ]
+          ],
+          "images": [],
+          "depth": 0,
+          "active": false,
+          "undo": 1,
+          "redo": 0,
+          "status": "Scale Uniformly: off"
+        },
+        "undo": {
+          "positions": [
+            [
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              2.0,
+              0.0,
+              0.0
+            ],
+            [
+              2.0,
+              3.0,
+              0.0
+            ],
+            [
+              0.0,
+              3.0,
+              0.0
+            ]
+          ],
+          "images": [],
+          "depth": 0,
+          "active": false,
+          "undo": 0,
+          "redo": 1,
+          "status": "Undo"
+        },
+        "redo": {
+          "positions": [
+            [
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              4.0,
+              0.0,
+              0.0
+            ],
+            [
+              4.0,
+              3.0,
+              0.0
+            ],
+            [
+              0.0,
+              3.0,
+              0.0
+            ]
+          ],
+          "images": [],
+          "depth": 0,
+          "active": false,
+          "undo": 1,
+          "redo": 0,
+          "status": "Redo"
+        }
+      }
+    },
+    {
+      "name": "image-finish-preview-commit",
+      "kind": "image",
+      "accepted": [
+        true,
+        true
+      ],
+      "states": {
+        "preview": {
+          "positions": [
+            [
+              5.0,
+              7.0,
+              0.0
+            ],
+            [
+              7.0,
+              7.0,
+              0.0
+            ],
+            [
+              7.0,
+              10.0,
+              0.0
+            ],
+            [
+              5.0,
+              10.0,
+              0.0
+            ]
+          ],
+          "images": [
+            [
+              [
+                1.0,
+                2.0,
+                0.0
+              ],
+              [
+                4.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                6.0,
+                0.0
+              ]
+            ]
+          ],
+          "depth": 2,
+          "active": true,
+          "undo": 0,
+          "redo": 0,
+          "status": ""
+        },
+        "boundary": {
+          "positions": [],
+          "images": [
+            [
+              [
+                1.0,
+                2.0,
+                0.0
+              ],
+              [
+                4.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                6.0,
+                0.0
+              ]
+            ]
+          ],
+          "depth": 1,
+          "active": true,
+          "undo": 0,
+          "redo": 0,
+          "status": "Committed group edit"
+        },
+        "commit": {
+          "positions": [],
+          "images": [
+            [
+              [
+                1.0,
+                2.0,
+                0.0
+              ],
+              [
+                4.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                6.0,
+                0.0
+              ]
+            ]
+          ],
+          "depth": 1,
+          "active": false,
+          "undo": 1,
+          "redo": 0,
+          "status": "Committed group edit"
+        },
+        "retype": {
+          "positions": [],
+          "images": [
+            [
+              [
+                1.0,
+                2.0,
+                0.0
+              ],
+              [
+                6.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                9.0,
+                0.0
+              ]
+            ]
+          ],
+          "depth": 1,
+          "active": false,
+          "undo": 1,
+          "redo": 0,
+          "status": "Committed group edit"
+        },
+        "undo": {
+          "positions": [],
+          "images": [
+            [
+              [
+                1.0,
+                2.0,
+                0.0
+              ],
+              [
+                2.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                3.0,
+                0.0
+              ]
+            ]
+          ],
+          "depth": 1,
+          "active": false,
+          "undo": 0,
+          "redo": 1,
+          "status": "Undo"
+        },
+        "redo": {
+          "positions": [],
+          "images": [
+            [
+              [
+                1.0,
+                2.0,
+                0.0
+              ],
+              [
+                6.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                9.0,
+                0.0
+              ]
+            ]
+          ],
+          "depth": 1,
+          "active": false,
+          "undo": 1,
+          "redo": 0,
+          "status": "Redo"
+        },
+        "tool-cancel": {
+          "positions": [],
+          "images": [
+            [
+              [
+                1.0,
+                2.0,
+                0.0
+              ],
+              [
+                6.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                9.0,
+                0.0
+              ]
+            ]
+          ],
+          "depth": 1,
+          "active": false,
+          "undo": 1,
+          "redo": 0,
+          "status": "Redo"
+        }
+      }
+    },
+    {
+      "name": "image-exit-two",
+      "kind": "image",
+      "accepted": [
+        true,
+        true
+      ],
+      "states": {
+        "preview": {
+          "positions": [
+            [
+              5.0,
+              7.0,
+              0.0
+            ],
+            [
+              7.0,
+              7.0,
+              0.0
+            ],
+            [
+              7.0,
+              10.0,
+              0.0
+            ],
+            [
+              5.0,
+              10.0,
+              0.0
+            ]
+          ],
+          "images": [
+            [
+              [
+                1.0,
+                2.0,
+                0.0
+              ],
+              [
+                4.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                6.0,
+                0.0
+              ]
+            ]
+          ],
+          "depth": 2,
+          "active": true,
+          "undo": 0,
+          "redo": 0,
+          "status": ""
+        },
+        "boundary": {
+          "positions": [],
+          "images": [
+            [
+              [
+                1.0,
+                2.0,
+                0.0
+              ],
+              [
+                4.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                6.0,
+                0.0
+              ]
+            ]
+          ],
+          "depth": 1,
+          "active": true,
+          "undo": 0,
+          "redo": 0,
+          "status": "Committed group edit"
+        },
+        "outer-boundary": {
+          "positions": [],
+          "images": [
+            [
+              [
+                1.0,
+                2.0,
+                0.0
+              ],
+              [
+                4.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                6.0,
+                0.0
+              ]
+            ]
+          ],
+          "depth": 0,
+          "active": true,
+          "undo": 0,
+          "redo": 0,
+          "status": "Committed group edit"
+        },
+        "commit": {
+          "positions": [],
+          "images": [
+            [
+              [
+                1.0,
+                2.0,
+                0.0
+              ],
+              [
+                4.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                6.0,
+                0.0
+              ]
+            ]
+          ],
+          "depth": 0,
+          "active": false,
+          "undo": 1,
+          "redo": 0,
+          "status": "Committed group edit"
+        },
+        "retype": {
+          "positions": [],
+          "images": [
+            [
+              [
+                1.0,
+                2.0,
+                0.0
+              ],
+              [
+                6.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                9.0,
+                0.0
+              ]
+            ]
+          ],
+          "depth": 0,
+          "active": false,
+          "undo": 1,
+          "redo": 0,
+          "status": "Committed group edit"
+        },
+        "undo": {
+          "positions": [],
+          "images": [
+            [
+              [
+                1.0,
+                2.0,
+                0.0
+              ],
+              [
+                2.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                3.0,
+                0.0
+              ]
+            ]
+          ],
+          "depth": 0,
+          "active": false,
+          "undo": 0,
+          "redo": 1,
+          "status": "Undo"
+        },
+        "redo": {
+          "positions": [],
+          "images": [
+            [
+              [
+                1.0,
+                2.0,
+                0.0
+              ],
+              [
+                6.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                9.0,
+                0.0
+              ]
+            ]
+          ],
+          "depth": 0,
+          "active": false,
+          "undo": 1,
+          "redo": 0,
+          "status": "Redo"
+        },
+        "tool-cancel": {
+          "positions": [],
+          "images": [
+            [
+              [
+                1.0,
+                2.0,
+                0.0
+              ],
+              [
+                6.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                9.0,
+                0.0
+              ]
+            ]
+          ],
+          "depth": 0,
+          "active": false,
+          "undo": 1,
+          "redo": 0,
+          "status": "Redo"
+        }
+      }
+    },
+    {
+      "name": "image-commit-finish-retype",
+      "kind": "image",
+      "accepted": [
+        true,
+        true
+      ],
+      "states": {
+        "preview": {
+          "positions": [
+            [
+              5.0,
+              7.0,
+              0.0
+            ],
+            [
+              7.0,
+              7.0,
+              0.0
+            ],
+            [
+              7.0,
+              10.0,
+              0.0
+            ],
+            [
+              5.0,
+              10.0,
+              0.0
+            ]
+          ],
+          "images": [
+            [
+              [
+                1.0,
+                2.0,
+                0.0
+              ],
+              [
+                4.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                6.0,
+                0.0
+              ]
+            ]
+          ],
+          "depth": 2,
+          "active": true,
+          "undo": 0,
+          "redo": 0,
+          "status": ""
+        },
+        "commit-before": {
+          "positions": [
+            [
+              5.0,
+              7.0,
+              0.0
+            ],
+            [
+              7.0,
+              7.0,
+              0.0
+            ],
+            [
+              7.0,
+              10.0,
+              0.0
+            ],
+            [
+              5.0,
+              10.0,
+              0.0
+            ]
+          ],
+          "images": [
+            [
+              [
+                1.0,
+                2.0,
+                0.0
+              ],
+              [
+                4.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                6.0,
+                0.0
+              ]
+            ]
+          ],
+          "depth": 2,
+          "active": false,
+          "undo": 1,
+          "redo": 0,
+          "status": ""
+        },
+        "boundary": {
+          "positions": [],
+          "images": [
+            [
+              [
+                1.0,
+                2.0,
+                0.0
+              ],
+              [
+                4.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                6.0,
+                0.0
+              ]
+            ]
+          ],
+          "depth": 1,
+          "active": false,
+          "undo": 1,
+          "redo": 0,
+          "status": "Committed group edit"
+        },
+        "retype": {
+          "positions": [],
+          "images": [
+            [
+              [
+                1.0,
+                2.0,
+                0.0
+              ],
+              [
+                6.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                9.0,
+                0.0
+              ]
+            ]
+          ],
+          "depth": 1,
+          "active": false,
+          "undo": 1,
+          "redo": 0,
+          "status": "Committed group edit"
+        },
+        "undo": {
+          "positions": [],
+          "images": [
+            [
+              [
+                1.0,
+                2.0,
+                0.0
+              ],
+              [
+                2.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                3.0,
+                0.0
+              ]
+            ]
+          ],
+          "depth": 1,
+          "active": false,
+          "undo": 0,
+          "redo": 1,
+          "status": "Undo"
+        },
+        "redo": {
+          "positions": [],
+          "images": [
+            [
+              [
+                1.0,
+                2.0,
+                0.0
+              ],
+              [
+                6.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                9.0,
+                0.0
+              ]
+            ]
+          ],
+          "depth": 1,
+          "active": false,
+          "undo": 1,
+          "redo": 0,
+          "status": "Redo"
+        },
+        "tool-cancel": {
+          "positions": [],
+          "images": [
+            [
+              [
+                1.0,
+                2.0,
+                0.0
+              ],
+              [
+                6.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                9.0,
+                0.0
+              ]
+            ]
+          ],
+          "depth": 1,
+          "active": false,
+          "undo": 1,
+          "redo": 0,
+          "status": "Redo"
+        }
+      }
+    }
+  ],
+  "expired_head_preserved": true,
+  "scope": "native modifier ingress record/begin_frame then real egui update_ui; actual app context/VCB/history dispatch, no OS capture"
+}
