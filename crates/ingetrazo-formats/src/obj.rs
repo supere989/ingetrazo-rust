@@ -250,6 +250,40 @@ pub fn parse_obj_with_units(
     parse_obj_options(reader, scene, scale, true, true, None)
 }
 /// Path-aware source Import; sidecars and used images are prepared before owner selection.
+// Unicode decimal blocks pinned to the unchanged original Python runtime.
+// Python int accepts Nd digits and interior single underscores, independently
+// of machine index range. Numeric overflow is a missing UV, not invalid syntax.
+fn source_uv_integer(raw: &str) -> Result<Option<isize>, ()> {
+    const ZEROES: &[u32] = &[0x30,0x660,0x6f0,0x7c0,0x966,0x9e6,0xa66,0xae6,0xb66,0xbe6,0xc66,0xce6,0xd66,0xde6,0xe50,0xed0,0xf20,0x1040,0x1090,0x17e0,0x1810,0x1946,0x19d0,0x1a80,0x1a90,0x1b50,0x1bb0,0x1c40,0x1c50,0xa620,0xa8d0,0xa900,0xa9d0,0xa9f0,0xaa50,0xabf0,0xff10,0x104a0,0x10d30,0x11066,0x110f0,0x11136,0x111d0,0x112f0,0x11450,0x114d0,0x11650,0x116c0,0x11730,0x118e0,0x11950,0x11c50,0x11d50,0x11da0,0x11f50,0x16a60,0x16ac0,0x16b50,0x1d7ce,0x1d7d8,0x1d7e2,0x1d7ec,0x1d7f6,0x1e140,0x1e2f0,0x1e4f0,0x1e950,0x1fbf0];
+    let (negative, digits) = match raw.as_bytes().first() {
+        Some(b'-') => (true, &raw[1..]), Some(b'+') => (false, &raw[1..]), _ => (false, raw),
+    };
+    let mut last_digit = false;
+    let mut magnitude = Some(0_u128);
+    let mut digit_count = 0;
+    for ch in digits.chars() {
+        if ch == '_' {
+            if !last_digit { return Err(()); }
+            last_digit = false;
+            continue;
+        }
+        let n = ch as u32;
+        let digit = ZEROES.iter().find_map(|zero| n.checked_sub(*zero).filter(|d| *d < 10)).ok_or(())?;
+        digit_count += 1;
+        // Pinned Python's default decimal conversion limit.
+        if digit_count > 4300 { return Err(()); }
+        magnitude = magnitude.and_then(|v| v.checked_mul(10)?.checked_add(digit as u128));
+        last_digit = true;
+    }
+    if !last_digit { return Err(()); }
+    Ok(magnitude.and_then(|n| {
+        if negative {
+            if n == isize::MAX as u128 + 1 { Some(isize::MIN) }
+            else { isize::try_from(n).ok().map(|v| -v) }
+        } else { isize::try_from(n).ok() }
+    }))
+}
+
 pub fn parse_obj_import(
     reader: &mut impl Read,
     scene: &Scene,
@@ -409,7 +443,7 @@ fn parse_obj_options(
                 // token. Numeric out-of-range indices instead keep planar paint.
                 if source_policy && cmd == "f" && parts.clone().any(|token| {
                     token.split('/').nth(1).filter(|raw| !raw.is_empty())
-                        .is_some_and(|raw| raw.parse::<isize>().is_err())
+                        .is_some_and(|raw| source_uv_integer(raw).is_err())
                 }) {
                     continue;
                 }
@@ -443,9 +477,12 @@ fn parse_obj_options(
                         .nth(1)
                         .filter(|v| !v.is_empty())
                         .map(|raw| {
-                            let i = raw.parse::<isize>().map_err(|_| {
-                                ObjError::Parse(line_num + 1, "Invalid UV index".into())
-                            })?;
+                            let i = if source_policy {
+                                source_uv_integer(raw).map_err(|_| ObjError::Parse(line_num + 1, "Invalid UV index".into()))?
+                                    .ok_or_else(|| ObjError::Parse(line_num + 1, "UV index outside source array".into()))?
+                            } else {
+                                raw.parse::<isize>().map_err(|_| ObjError::Parse(line_num + 1, "Invalid UV index".into()))?
+                            };
                             let index = if i > 0 {
                                 i - 1
                             } else if i < 0 {

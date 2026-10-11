@@ -38,5 +38,8 @@ for b in mutations:
  else:raise AssertionError('material/ownership mutation accepted')
 
 syntax=json.loads((p/'original-uv-syntax.json').read_text());strict(syntax,json.loads((p/'native-uv-syntax.json').read_text()))
-assert syntax==[{'case':'noninteger','faces':0,'textured':False,'affine':False},{'case':'out-of-range','faces':1,'textured':True,'affine':False},{'case':'missing','faces':1,'textured':True,'affine':False}]
-print(json.dumps({'cases':15,'states':75,'malformed_sidecar_controls':2,'asset_ownership_controls':15,'actual_original_reopens':15,'negative_controls':len(mutations),'uv_syntax_controls':3,'passed':True}))
+assert [r['case']for r in syntax]==['noninteger','out-of-range','missing','overflow','underscore','unicode','bad-underscore','nondecimal']
+for r in syntax:
+ skipped=r['case']in {'noninteger','bad-underscore','nondecimal'};affine=r['case']in {'underscore','unicode'}
+ assert r=={'case':r['case'],'faces':0 if skipped else 1,'textured':not skipped,'affine':affine}
+print(json.dumps({'cases':15,'states':75,'malformed_sidecar_controls':2,'asset_ownership_controls':15,'actual_original_reopens':15,'negative_controls':len(mutations),'uv_syntax_controls':8,'passed':True}))
