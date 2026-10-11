@@ -200,12 +200,17 @@ ip = archive("import-preferences", "manifest.json", ["original-import-preference
 run([binaries/(consumers[20]+suffix), import_preferences, "--import-preferences"], "import-preferences/runtime.log")
 run([sys.executable, repo/"scripts/check-import-preferences.py", import_preferences], "import-preferences/acceptance.json", requires=["import-preferences/runtime.log"])
 
+appearance = out/"appearance-preferences"
+ap = archive("appearance-preferences", "manifest.json", ["original-appearance.json", "source-icons.json"], appearance)
+run([binaries/(consumers[20]+suffix), appearance, "--appearance"], "appearance-preferences/runtime.log")
+run([sys.executable, repo/"scripts/check-appearance-preferences.py", appearance], "appearance-preferences/acceptance.json", requires=["appearance-preferences/runtime.log"])
+
 def summarize():
     rows = json.loads((doc/"native.json").read_text())["rows"]
     assert [(x["fixture"],x["phase"]) for x in rows] == [(f,p) for f in ["retained","nested-leaves"] for p in ["edited","undo","redo"]]
     assert all(x["saved"] and x["clean"] for x in rows)
     result = {"revision":subprocess.check_output(["git","rev-parse","HEAD"],cwd=repo,text=True).strip(),
-              "source_pin":pin,"binary_sha256":identities,"source_archives":{"axes":a,"documents":d,"fillet":f,"pushpull_finite":p,"paste_save":ps,"box_selection":bs,"materials":mr,"cursor":cn,"annotations":ad,"annotation_hover_delete":ahd,"zoom_extents":ze,"annotation_move":am,"annotation_acquisition":aa,"mesh_kernel":mk,"annotation_edit_style":ae,"annotation_text_create":at,"finite_kernel":mf,"finite_kernel_initial":mfa,"annotation_hover":ah,"dimension_anchor_admission":da,"dimension_preview":dp,"open_recent":rr,"general_preferences":gp,"units_preferences":up,"vcb_measurements":vm,"import_preferences":ip},
+              "source_pin":pin,"binary_sha256":identities,"source_archives":{"axes":a,"documents":d,"fillet":f,"pushpull_finite":p,"paste_save":ps,"box_selection":bs,"materials":mr,"cursor":cn,"annotations":ad,"annotation_hover_delete":ahd,"zoom_extents":ze,"annotation_move":am,"annotation_acquisition":aa,"mesh_kernel":mk,"annotation_edit_style":ae,"annotation_text_create":at,"finite_kernel":mf,"finite_kernel_initial":mfa,"annotation_hover":ah,"dimension_anchor_admission":da,"dimension_preview":dp,"open_recent":rr,"general_preferences":gp,"units_preferences":up,"vcb_measurements":vm,"import_preferences":ip,"appearance_preferences":ap},
               "axes":json.loads((axes/"check.json").read_text()),"documents":{"actual_app_saves":len(rows),"exact_original_reopens":6,"leaf_record_types":15,"negative_controls":5},
               "fillet":json.loads((fillet/"check.json").read_text()),"fillet_volume":json.loads((fillet/"volume.json").read_text()),"pushpull":json.loads((out/"pushpull-comparison.json").read_text()),
               "pushpull_finite":json.loads((finite/"comparison.json").read_text()),
@@ -233,6 +238,7 @@ def summarize():
               "unit_reopens":json.loads((unit_preferences/"reopen-units.json").read_text()),
               "vcb_measurements":json.loads((measurements/"acceptance.json").read_text()),
               "import_preferences":json.loads((import_preferences/"acceptance.json").read_text()),
+              "appearance_preferences":json.loads((appearance/"acceptance.json").read_text()),
               "fresh_source_acquisitions":0,"result":"pass"}
     return result
 
