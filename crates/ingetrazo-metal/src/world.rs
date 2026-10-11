@@ -1630,18 +1630,27 @@ impl Prepared {
                 if let (Some(vertices), Some(indices)) = (&mesh.vertices, &mesh.indices) {
                     unsafe {
                         encoder.setVertexBuffer_offset_atIndex(Some(&vertices.raw), 0, 0);
-                        encoder.drawIndexedPrimitives_indexCount_indexType_indexBuffer_indexBufferOffset_instanceCount(MTLPrimitiveType::Triangle,mesh.count,MTLIndexType::UInt32,&indices.raw,0,run.count);
+                    }
+                    // Source _faces_count stops before translucent, back-paint,
+                    // and front-cull tails. Eligible _draw_instanced_raw instead
+                    // submits its complete prototype vcol stream.
+                    if let Some(material) = mesh.materials.as_ref().filter(|m| !m.instanced) {
+                        for &(first, count, front_only) in &material.opaque_runs {
+                            if front_only { continue; }
+                            unsafe {
+                                encoder.drawIndexedPrimitives_indexCount_indexType_indexBuffer_indexBufferOffset_instanceCount(MTLPrimitiveType::Triangle,count,MTLIndexType::UInt32,&indices.raw,first*4,run.count);
+                            }
+                        }
+                    } else {
+                        unsafe {
+                            encoder.drawIndexedPrimitives_indexCount_indexType_indexBuffer_indexBufferOffset_instanceCount(MTLPrimitiveType::Triangle,mesh.count,MTLIndexType::UInt32,&indices.raw,0,run.count);
+                        }
                     }
                 }
                 if let Some(material) = &mesh.materials {
-                    if let (Some(vertices), Some(indices)) =
-                        (&material.colored_vertices, &material.colored_indices)
-                    {
-                        unsafe {
-                            encoder.setVertexBuffer_offset_atIndex(Some(&vertices.raw), 0, 0);
-                            encoder.drawIndexedPrimitives_indexCount_indexType_indexBuffer_indexBufferOffset_instanceCount(MTLPrimitiveType::Triangle,indices.length()/4,MTLIndexType::UInt32,&indices.raw,0,run.count);
-                        }
-                    }
+                    // Expanded colored runs are source tails, not _faces_count.
+                    // In contrast _tex_faces_count includes ALL appended texture
+                    // tails (including translucent and independently painted backs).
                     encoder.setRenderPipelineState(&pipelines.texture_mask);
                     for texture in &material.textures {
                         unsafe {
