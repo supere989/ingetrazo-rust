@@ -1,0 +1,13 @@
+{
+  "entries": {
+    "original.json": "79fdb0eea0e916de9eecad06e14861405c5043af633aae2e7216525dcb421d22",
+    "input.igz": "c9ce01d930fff89d9af94b5580093f6f82626b75d6ce690482e32fd787d4a87b",
+    "threshold-first-failure.json": "508a032a9c750eb71a71579e13b7edf77025b3fe226ec6b057fd608190005772",
+    "source-first-failure.log": "28153b68963a8ea28b9bb94d000b53230112d3329d96126b46cebf510ebeaab1",
+    "riding-source.log": "85c6cf6bf1f858b3a75272df711ca9ab0fbf9a55a30725e60b754acc709d79a9",
+    "riding-input.igz": "431d7f5eb852fa88d8b988822070001009ccaaffe9af898f31564bc7c3d7f0fb"
+  },
+  "new_source_states": 7,
+  "prior_42_exactly_unchanged": true,
+  "corrected_native_execution": "pending root joint build"
+}

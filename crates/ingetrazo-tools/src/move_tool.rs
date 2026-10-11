@@ -135,9 +135,15 @@ impl MoveTool {
             }
         }
 
-        if scene.selection.is_empty() && (self.annotation_hits.label.is_some() || self.annotation_hits.dimension.is_some()) {
+        if scene.selection.is_empty() && self.annotation_hits.label.is_some() {
             vert_set.clear();group_set.clear();copy_edges.clear();copy_faces.clear();isolated.clear();
         }
+        // Source classifies riding dimension anchors against picked geometry,
+        // after label exclusivity but before effective dimension exclusivity.
+        let picked_vertices:Vec<_>=vert_set.iter().copied().collect();
+        let picked_groups:Vec<_>=group_set.iter().copied().collect();
+        if let Err(error)=self.annotations.gather(scene,&picked_vertices,&picked_groups,self.annotation_hits){self.last_error=Some(error);vert_set.clear();group_set.clear();plane_set.clear();self.target_images.clear();self.annotations=Default::default();}
+        if scene.selection.is_empty() && self.annotations.has_dimensions(){vert_set.clear();group_set.clear();copy_edges.clear();copy_faces.clear();isolated.clear();}
         let mut face_sides=HashSet::new();
         for &id in &copy_faces{let face=&scene.mesh.faces[id];for ring in std::iter::once(&face.vertices).chain(&face.holes){for i in 0..ring.len(){let (a,b)=(ring[i],ring[(i+1)%ring.len()]);face_sides.insert(if a<b{(a,b)}else{(b,a)});}}}
         let mut plain=vec![];
@@ -165,7 +171,6 @@ impl MoveTool {
         self.exclusions.groups=group_set.iter().filter_map(|&id|scene.groups.get(id).map(|g|g.id)).collect();
         self.target_vertices = vert_set.into_iter().collect();
         self.target_groups = group_set.into_iter().collect();self.target_planes=plane_set.into_iter().collect();
-        if let Err(error)=self.annotations.gather(scene,&self.target_vertices,&self.target_groups,self.annotation_hits){self.last_error=Some(error);self.target_vertices.clear();self.target_groups.clear();self.target_planes.clear();self.target_images.clear();self.annotations=Default::default();}
         self.original_version=scene.version;self.preview_version=scene.version;
         self.original_positions=self.target_vertices.iter().map(|&id|(id,scene.mesh.vertices[id].position)).collect();
         self.original_groups=self.target_groups.iter().filter_map(|&id|scene.groups.get(id).map(|g|(id,g.transform))).collect();

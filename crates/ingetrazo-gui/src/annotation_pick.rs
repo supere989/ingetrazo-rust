@@ -79,7 +79,7 @@ impl Picks {
             if !scene.is_layer_selectable(t.layer.as_deref()) {
                 continue;
             }
-            let Some(p) = project(t.anchor + t.offset) else {
+            let Some(p) = project((t.anchor.as_vec3() + t.offset.as_vec3()).as_dvec3()) else {
                 continue;
             };
             let anchor = project(t.anchor);
@@ -188,6 +188,21 @@ impl crate::IngeTrazoApp {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn label_position_quantizes_each_operand_before_addition_without_mutating_authored_fields() {
+        let mut app=crate::IngeTrazoApp::new();app.system_clipboard=None;
+        let anchor=DVec3::new(100_000_000.25,0.,0.);
+        let offset=DVec3::new(-99_999_999.75,0.,0.);
+        app.scene.text_labels.push(ingetrazo_core::textlabel::TextLabel::new(anchor,offset,"label"));
+        let mut picks=Picks::default();picks.update(&app.scene,0,&app.camera,[800.,600.]).unwrap();
+        let rows=picks.labels.clone();
+        app.scene.text_labels[0].anchor=anchor.as_vec3().as_dvec3();
+        app.scene.text_labels[0].offset=offset.as_vec3().as_dvec3();
+        picks.update(&app.scene,1,&app.camera,[800.,600.]).unwrap();
+        assert_eq!(rows,picks.labels);
+        app.scene.text_labels[0].anchor=anchor;app.scene.text_labels[0].offset=offset;
+        assert_eq!(app.scene.text_labels[0].anchor,anchor);assert_eq!(app.scene.text_labels[0].offset,offset);
+    }
     #[test]
     fn nearest_strict_threshold_and_first_label_are_source_ordered() {
         let a = uuid::Uuid::new_v4();

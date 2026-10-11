@@ -34,6 +34,7 @@ fn shift(d: &mut Dimension, line: bool, step: DVec3) {
     }
 }
 impl Annotations {
+    pub fn has_dimensions(&self)->bool { !self.dimensions.is_empty() }
     pub fn is_empty(&self) -> bool {
         self.labels.is_empty() && self.dimensions.is_empty()
     }

@@ -14,10 +14,16 @@ fn main() {
         "hidden",
         "locked",
         "nested",
+        "riding-edge",
     ] {
         let mut a = IngeTrazoApp::new();
         a.system_clipboard = None;
-        a.scene = ingetrazo_formats::igz::load_igz(&p.join("input.igz")).unwrap();
+        a.scene = ingetrazo_formats::igz::load_igz(&p.join(if case == "riding-edge" {
+            "riding-input.igz"
+        } else {
+            "input.igz"
+        }))
+        .unwrap();
         if case == "nested" {
             a.scene
                 .select(ingetrazo_core::scene::SelectionItem::Group(0));
@@ -59,11 +65,26 @@ fn main() {
         let dimension = hits
             .dimension
             .and_then(|id| a.scene.dimensions.iter().position(|d| d.id == id));
-        let record = |a: &IngeTrazoApp, phase: &str| json!({"case":case,"phase":phase,"screen":screen.to_array(),"hit_label":label,"hit_dimension":dimension,"labels":a.scene.text_labels.iter().map(|t|t.offset.to_array()).collect::<Vec<_>>(),"dimensions":a.scene.dimensions.iter().map(|d|json!({"a":a.scene.dimension_points(d).0.to_array(),"b":a.scene.dimension_points(d).1.to_array(),"offset":d.offset.to_array()})).collect::<Vec<_>>(),"selection":a.scene.selection.len(),"undo":a.undo_stack.len(),"redo":a.redo_stack.len(),"active":a.active_tool.snap_anchor().is_some()});
+        let record = |a: &IngeTrazoApp, phase: &str| {
+            let mut row = json!({"case":case,"phase":phase,"screen":screen.to_array(),"hit_label":label,"hit_dimension":dimension,"labels":a.scene.text_labels.iter().map(|t|t.offset.to_array()).collect::<Vec<_>>(),"dimensions":a.scene.dimensions.iter().map(|d|json!({"a":a.scene.dimension_points(d).0.to_array(),"b":a.scene.dimension_points(d).1.to_array(),"offset":d.offset.to_array()})).collect::<Vec<_>>(),"selection":a.scene.selection.len(),"undo":a.undo_stack.len(),"redo":a.redo_stack.len(),"active":a.active_tool.snap_anchor().is_some()});
+            if case == "riding-edge" {
+                row["vertices"] = json!(a
+                    .scene
+                    .mesh
+                    .vertices
+                    .iter()
+                    .map(|v| v.position.to_array())
+                    .collect::<Vec<_>>());
+            }
+            row
+        };
         let ctx = |v| {
             ToolContext::new(
                 v,
-                ingetrazo_core::math::Ray::new(DVec3::new(0., 0., 10.), -DVec3::Z),
+                ingetrazo_core::math::Ray::new(
+                    DVec3::new(0., if case == "riding-edge" { -2. } else { 0. }, 10.),
+                    -DVec3::Z,
+                ),
             )
         };
         let delta = DVec3::new(0.5, 0.25, 0.);
