@@ -9,10 +9,15 @@ def validate(root,reference):
  for row in report['cases']:
   name=row['case'];assert row['warm_frames']==3
   for counter in ['target_allocations','geometry_uploads','section_fill_uploads','section_fill_upload_bytes','section_contour_pipeline_builds','resolve_pipeline_builds']:assert row[counter+'_before']==row[counter+'_after']
-  assert row['resolve_pipeline_builds_before']==1
+  diagnostic=row['resolve_prototype'];production=report.get('production_mode',False)
+  assert row['resolve_pipeline_builds_before']==(0 if diagnostic['path']=='untouched-native-reference' else 1)
+  if production:assert diagnostic['path'] in ('same-pass-tile','untouched-native-reference')
   assert row['contours_enabled'] is True and row['fill_off_contours_enabled'] is True and row['cuts_off_contours_enabled'] is False
-  diagnostic=row['resolve_prototype'];assert diagnostic['supports_family_apple4'] is (diagnostic['path']=='same-pass-tile')
-  assert diagnostic['extra_output_images']==0 and diagnostic['srgb_linearization'] is False and diagnostic['fast_math'] is False
+  if diagnostic['path']!='untouched-native-reference':assert diagnostic['supports_family_apple4'] is (diagnostic['path']=='same-pass-tile')
+  if diagnostic['path']!='untouched-native-reference':assert diagnostic['extra_output_images']==0 and diagnostic['srgb_linearization'] is False and diagnostic['fast_math'] is False
+  if production and name=='closed':
+   toggle=row.get('production_toggle');assert toggle is not None and toggle['samples']==[4,1,4] and toggle['retained_old_frame_equal'] is True and toggle['restored_equal'] is True and toggle['single_sample_has_resolve'] is False
+   assert toggle['cached_pipeline_builds']==(1 if toggle['route']['path']=='same-pass-tile' else 0)
   source=strict.image(reference/(name+'.png'));native=(root/(name+'.rgba')).read_bytes();candidate=(root/(name+'-candidate.rgba')).read_bytes();disabled=(root/(name+'-candidate-disabled.rgba')).read_bytes();assert len(source)==len(native)==len(candidate)==len(disabled)==800*600*4
   cap=lambda p:p[0]>180 and p[2]>180 and p[1]<80
   counts={'reference_rgba_mismatch_pixels':0,'candidate_rgba_mismatch_pixels':0,'reference_cap_mask_mismatch_pixels':0,'candidate_cap_mask_mismatch_pixels':0,'candidate_changed_pixels_from_reference':0,'newly_wrong_pixels':0,'corrected_pixels':0};pairs=collections.Counter()

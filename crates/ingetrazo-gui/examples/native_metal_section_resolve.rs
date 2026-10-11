@@ -28,6 +28,7 @@ fn run() -> Result<(), String> {
         use ingetrazo_render::StyleConfig;
         let out = std::path::PathBuf::from(std::env::args().nth(1).ok_or("Output required")?);
         std::fs::create_dir_all(&out).map_err(|e| e.to_string())?;
+        let production_mode=std::env::args().any(|a|a=="--production");
         let metal = NativeMetal::new()?;
         let sample_diagnostics = ingetrazo_metal::annotation::sample_diagnostics(&metal);
         let mut rows = vec![];
@@ -185,7 +186,7 @@ fn run() -> Result<(), String> {
             let reference_diagnostics=frame.programmed_sample_positions();
             drop(frame);
             drop(world);
-            let mut world=World::default();world.use_native_resolve_reference()?;world.set_sample_count(&metal,4)?;world.enable_source_resolve_prototype(&metal)?;
+            let mut world=World::default();if !production_mode{world.use_native_resolve_reference()?;}world.set_sample_count(&metal,4)?;if !production_mode{world.enable_source_resolve_prototype(&metal)?;}
             let frame=prepare(&mut world,&mut adapter,&scene)?;
             let resolve_diagnostics=frame.source_resolve_diagnostic();
             let bytes=frame.submit_diagnostic(&metal)?.readback(std::time::Duration::from_secs(5))?;
@@ -230,7 +231,7 @@ fn run() -> Result<(), String> {
                 if restored_pixels!=first||production.stats.source_resolve_pipeline_builds!=cold{return Err("Production4→1→4 changed pixels or rebuilt tile".into());}
                 let held_pixels=held.submit_diagnostic(&metal)?.readback(std::time::Duration::from_secs(5))?;
                 if held_pixels!=first{return Err("Detached four-sample Prepared ownership changed".into());}
-                let eligible=metal.programmable_sample_positions&&route4["supports_family_apple4"]==true;
+                let eligible=route4["path"]=="same-pass-tile";
                 if eligible && first!=bytes{return Err("Production tile differs from diagnostic candidate".into());}
                 if !eligible && first!=reference{return Err("Ineligible production changed native reference".into());}
                 production_toggle=serde_json::json!({"samples":[4,1,4],"cached_pipeline_builds":cold,"retained_old_frame_equal":true,"restored_equal":true,"single_sample_has_resolve":false,"route":route4});
@@ -259,7 +260,7 @@ fn run() -> Result<(), String> {
             drop(adapter);
             drop(world);
         }
-        std::fs::write(out.join("report.json"),serde_json::to_vec_pretty(&serde_json::json!({"cases":rows,"sample_diagnostics":sample_diagnostics,"scope":"Diagnostic source-ordered resolve prototype against untouched native reference; ten retained recipes, warm reuse, no release acceptance"})).map_err(|e|e.to_string())?).map_err(|e|e.to_string())?;
+        std::fs::write(out.join("report.json"),serde_json::to_vec_pretty(&serde_json::json!({"production_mode":production_mode,"cases":rows,"sample_diagnostics":sample_diagnostics,"scope":"Diagnostic source-ordered resolve prototype against untouched native reference; ten retained recipes, warm reuse, no release acceptance"})).map_err(|e|e.to_string())?).map_err(|e|e.to_string())?;
         Ok(())
     })
 }
