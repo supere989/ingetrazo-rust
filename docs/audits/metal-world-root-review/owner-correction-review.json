@@ -1,0 +1,16 @@
+{
+  "source": "f87916bd",
+  "reviewed_correction": "e3270eb0",
+  "owner_finding": "corrected in source; native wrong-owner fixture execution pending",
+  "checks": [
+    "Retained device, queue, budget and poison identities bind cached resources",
+    "Mismatch rejects before cache retirement or collector invocation",
+    "Diagnostic and UI ingress validate owner; encoder validates command queue"
+  ],
+  "merged_portable_tests": {
+    "passed": 3,
+    "failed": 0
+  },
+  "native_gpu_execution": "pending",
+  "full_metal_viewport_parity": false
+}
