@@ -1064,13 +1064,13 @@ fn image_samples(metal:&NativeMetal,extent:(u32,u32),format:MTLPixelFormat,usage
     let admitted = u64::try_from(native.size).map_err(|_| "World native texture size overflow")?;
     let (admitted, ticket) = {
         let mut budget = metal.budget.lock().map_err(|_| "Metal budget poisoned")?;
-        let admitted = if native.size == 0 && native.align == 0 && samples > 1 {
-            // Heap estimates can be unavailable for a standalone MSAA target.
+        let admitted = if native.size == 0 && native.align == 0 {
+            // Heap estimates can be unavailable for a standalone texture.
             // Temporarily exclude all other logical admissions; actual allocatedSize
             // must fit this ticket before publication. This is not an allocator bound.
             let available = super::world_admission::standalone_capacity(&budget)?;
             if available < requested {
-                return Err("World MSAA target exceeds available allocation admission".into());
+                return Err("World target exceeds available allocation admission".into());
             }
             available
         } else {
