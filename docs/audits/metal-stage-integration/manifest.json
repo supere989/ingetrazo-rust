@@ -1,0 +1,20 @@
+{
+  "base_revision": "af6bb483b8b6f45fb0a74c15aa4c5e396aff0c7f",
+  "records": {
+    "cross-check-first-error.log": {
+      "bytes": 4141,
+      "sha256": "5221584072e9c382673206db52c759c91d329ef116918c872bcc6dace1a4b45b"
+    },
+    "cross-check.log": {
+      "bytes": 2503,
+      "sha256": "3a4ef26936f2644683cc20e876f45c95ca66aad0e4683ddec0fe9b38d53ff1a9"
+    }
+  },
+  "runtime_sha256": {
+    "crates/ingetrazo-metal/src/world.rs": "1c2ac974f8882a2c7dc9d1e8e01cecd0c230c67326bf363be8bfa3273ba32074",
+    "crates/ingetrazo-metal/src/world_billboard.rs": "80b778bcba63945a5acf194b8070513450486f4b76af67f113cd96325d4918bd",
+    "crates/ingetrazo-metal/src/world_scene.rs": "618bca06a2cdc88f1c3398478e5d1a8d385a125c79e2b765f0211d2df4bcbd8f",
+    "crates/ingetrazo-gui/src/native_metal/billboard_probe.rs": "ba454fc082098698d2c5f1ad103d56e433fd627de3e16aeac1d471b6586558ca"
+  },
+  "archive_sha256": "57dea46c637dfa8edcd68c1ef97aef30d961aac136c4ea899501b3c53a4d5f6d"
+}

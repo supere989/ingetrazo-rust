@@ -21,6 +21,7 @@ impl Viewport {
     pub(crate) fn label_owner(&self)->Option<Arc<ingetrazo_metal::egui_painter::AdmittedCallback>>{self.labels.as_ref().and_then(|l|l.admitted())}
     pub(crate) fn label_stats(&self)->(u64,u64){self.labels.as_ref().map(|l|l.stats()).unwrap_or((0,0))}
     pub(crate) fn probe_font_budget(&mut self,refuse:bool)->Result<(),String>{self.labels.as_mut().ok_or("No prepared label owner")?.probe_font_budget(refuse)}
+    pub(crate) fn shared_billboard_images(&self)->usize{self.frame.as_ref().map_or(0,|frame|self.world.shared_billboard_texture_owners(frame))}
     pub(crate) fn sweep_stats(&self)->ingetrazo_metal::world::Stats{self.world.stats}
     pub(crate) fn new(metal: Arc<NativeMetal>) -> Self {
         Self {

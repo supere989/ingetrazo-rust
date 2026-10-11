@@ -1482,14 +1482,10 @@ fn fill_pipeline(
         samples: usize,
     ) -> Result<Retained<ProtocolObject<dyn MTLRenderPipelineState>>, String> {
         let d = MTLRenderPipelineDescriptor::new();
-        d.setVertexFunction(Some(
-            &lib.newFunctionWithName(&NSString::from_str(name))
-                .ok_or("Metal stencil vertex missing")?,
-        ));
-        d.setFragmentFunction(Some(
-            &lib.newFunctionWithName(&NSString::from_str("world_mask_fragment"))
-                .ok_or("Metal stencil fragment missing")?,
-        ));
+        let vertex=lib.newFunctionWithName(&NSString::from_str(name)).ok_or("Metal stencil vertex missing")?;
+        let fragment=lib.newFunctionWithName(&NSString::from_str("world_mask_fragment")).ok_or("Metal stencil fragment missing")?;
+        d.setVertexFunction(Some(&vertex));
+        d.setFragmentFunction(Some(&fragment));
         d.setDepthAttachmentPixelFormat(MTLPixelFormat::Depth32Float_Stencil8);
         d.setStencilAttachmentPixelFormat(MTLPixelFormat::Depth32Float_Stencil8);
         d.setRasterSampleCount(samples);
