@@ -1,0 +1,10 @@
+{
+  "archive_sha256": "e7ce846b37eefe6659460cbf3d0ef9ce739703fc44808b392e844800a31670da",
+  "entries": [
+    {
+      "path": "source.json",
+      "bytes": 176296,
+      "sha256": "ba434f73c106434f370f97be2f13060444b89b23128df7edd38f8988e6bebb3e"
+    }
+  ]
+}

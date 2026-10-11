@@ -1,0 +1,126 @@
+{
+  "runtime_commit": "ae96e2028c17cf5a307ca5037f6b1a867230325f",
+  "test_only_initializer_fix": "6bdbe7ea3822bb783e28133cd3d4c3c71648dab0",
+  "source_runtime": "PySide6 6.12.0, Python 3.13 isolated parity venv",
+  "source_sha256": "e7ce846b37eefe6659460cbf3d0ef9ce739703fc44808b392e844800a31670da",
+  "proof_sha256": "8cf1c5eb835ef17f0b1e72619df80d4a7ce80d826296921e53b7acef7889191f",
+  "accepted": {
+    "new_cases": 35,
+    "camera_modes": 5,
+    "app_states": 55,
+    "actual_egui_acquisition_sessions": 5,
+    "negative_controls": 7,
+    "retained_guides": 48,
+    "retained_numeric": 286,
+    "retained_app_states": 56,
+    "retained_negatives": 8,
+    "shared_camera_and_native_precision_tests": 4
+  },
+  "execution": {
+    "binaries": {
+      "perspective_guide_workflows": "9c7e0976a361055578758eafa01a1d13d0fbfffd5e8ad5191f94b6b9c25d3a99",
+      "p07_inference_workflows": "f9280ba81852d692b15386512b61d7c69f9bb12c9b0683765bac8fc6233fc416"
+    },
+    "stages": [
+      {
+        "label": "native-ray",
+        "command": [
+          "/tmp/ingetrazo-native-font-merge-target/debug/examples/perspective_guide_workflows",
+          "/tmp/ingetrazo-perspective-guide-proof/source-final/source.json",
+          "/tmp/ingetrazo-perspective-guide-proof/native-ray.json"
+        ],
+        "seconds": 0.12288988096406683,
+        "exit_code": 0
+      },
+      {
+        "label": "check-ray",
+        "command": [
+          "python3",
+          "scripts/check-perspective-guides.py",
+          "/tmp/ingetrazo-perspective-guide-proof/source-final/source.json",
+          "/tmp/ingetrazo-perspective-guide-proof/native-ray.json",
+          "/tmp/ingetrazo-perspective-guide-proof/check-ray.json"
+        ],
+        "seconds": 0.028589696972630918,
+        "exit_code": 0
+      },
+      {
+        "label": "retained-native",
+        "command": [
+          "/tmp/ingetrazo-native-font-merge-target/debug/examples/p07_inference_workflows",
+          "/tmp/ingetrazo-perspective-guide-proof/retained/source.json",
+          "/tmp/ingetrazo-perspective-guide-proof/retained/source-app.json",
+          "/tmp/ingetrazo-perspective-guide-proof/retained/native.json"
+        ],
+        "seconds": 0.043755730031989515,
+        "exit_code": 0
+      },
+      {
+        "label": "retained-check",
+        "command": [
+          "python3",
+          "scripts/check-p07-inference.py",
+          "/tmp/ingetrazo-perspective-guide-proof/retained/source.json",
+          "/tmp/ingetrazo-perspective-guide-proof/retained/source-app.json",
+          "/tmp/ingetrazo-perspective-guide-proof/retained/native.json",
+          "/tmp/ingetrazo-perspective-guide-proof/retained/check.json"
+        ],
+        "seconds": 0.033386455033905804,
+        "exit_code": 0
+      }
+    ]
+  },
+  "builds": [
+    {
+      "command": [
+        "cargo",
+        "build",
+        "--locked",
+        "-p",
+        "ingetrazo-gui",
+        "--example",
+        "perspective_guide_workflows"
+      ],
+      "seconds": 18.550753535993863,
+      "exit_code": 0,
+      "runtime_commit": "a4f719fbb4e15481402ef68c2a3a717756ba2b91"
+    },
+    {
+      "command": [
+        "cargo",
+        "build",
+        "--locked",
+        "-p",
+        "ingetrazo-gui",
+        "--example",
+        "perspective_guide_workflows",
+        "--example",
+        "p07_inference_workflows"
+      ],
+      "seconds": 11.906018809007946,
+      "exit_code": 0,
+      "runtime_commit": "ae96e2028c17cf5a307ca5037f6b1a867230325f"
+    }
+  ],
+  "tests": {
+    "command": [
+      "cargo",
+      "test",
+      "--locked",
+      "-p",
+      "ingetrazo-core",
+      "--lib",
+      "--",
+      "source_camera::",
+      "native_double_projection_retains_original_matrix_under_source_policy"
+    ],
+    "seconds": 3.8748547679861076,
+    "exit_code": 0
+  },
+  "retained_failures": [
+    "Initial source observer sampled a point behind the close camera while choosing screen-perpendicular offset; bounded observer changed to a nearby point, no accepted input recaptured.",
+    "Initial native comparison reports 30 differences: real source unprojection/callback arithmetic and a test-consumer label substring that confused two-point camera names with point-guide cases.",
+    "First shared-camera test compile found omitted lazy-cell initializer in an existing cfg(test) precision test. Test-only6bdbe7ea fixes it; successful production binaries were not rebuilt."
+  ],
+  "scope": "Closes the previously missing authored perspective guide/camera contract, pending independent review. Full Protractor/Tape tool behavior, whole-frame rendering, OS input and performance qualification remain under existing criteria. P07 awaits separate keyboard-buffer lane."
+}
