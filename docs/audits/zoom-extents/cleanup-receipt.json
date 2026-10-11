@@ -1,0 +1,13 @@
+{
+  "archive_sha256": "99847eda085b88aed1fbb414015917f05fbe4681c12e3d11273fc6ae60702105",
+  "authenticated_archive_members": 23,
+  "byte_verified_capture_files": 14,
+  "purged_terminal_directory": "/tmp/zoom-extents-proof",
+  "purged_byte_verified_logs": 8,
+  "diagnostic_dump": "Runaway Shape debug dump hash retained in canonical summary; terminal dump purged earlier",
+  "preserved": [
+    "source worktrees",
+    "/tmp/ingetrazo-metal-world-target"
+  ],
+  "authorization": "Parent receipt: integrated ca69dbf4, independent review accepted; authenticate/purge terminal duplicate Zoom proof/state"
+}
