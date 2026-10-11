@@ -1,0 +1,74 @@
+{
+  "runtime_commit": "ffe3510a",
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "accepted": true,
+  "checks": 34,
+  "build": {
+    "command": [
+      "cargo",
+      "test",
+      "-p",
+      "ingetrazo-gui",
+      "--lib",
+      "--no-run",
+      "--message-format=json"
+    ],
+    "elapsed_seconds": 19.85051568399649,
+    "exit_code": 0
+  },
+  "tests": {
+    "command": [
+      "/tmp/ingetrazo-native-font-merge-target/debug/deps/ingetrazo_gui-01167f5bac6cb790",
+      "composer::",
+      "--test-threads=1",
+      "--nocapture"
+    ],
+    "binary_sha256": "f571531678e2e189ae869353bc3a9a8e5ac4478d7dd4a7f9f820ace18e9371ae",
+    "elapsed_seconds": 1.00845547800418,
+    "exit_code": 0
+  },
+  "snapshot_controls": {
+    "idle_frames": 48,
+    "idle_history_snapshots": 0,
+    "toolbar_snapshots": 1,
+    "continuing_drag_snapshots": 1,
+    "history_transactions_per_gesture": 1,
+    "property_toggle_and_continuous_typing_snapshots": 2
+  },
+  "limitations": [
+    "No frame-rate or whole-application memory benchmark.",
+    "Active-sheet render items still clone per frame.",
+    "Pointer-parity fixture rejected; no P04 promotion."
+  ],
+  "archive_sha256": "c5abf09f5a914d6b84e228ff26c9a26d8b7da102933488df2177584c9f7bb814",
+  "members": {
+    "build-result.json": {
+      "bytes": 194,
+      "sha256": "d2333f1d58a9de5c36f0a43c668435df5afe7e21b3538a7715e39f2a459112fd"
+    },
+    "build.jsonl": {
+      "bytes": 315321,
+      "sha256": "04da5f249adaf4c919b545838aa25c1f1e5f13292b0c0e8223d7b4b57ffafb43"
+    },
+    "build.log": {
+      "bytes": 1012,
+      "sha256": "d969b7186cb9d366dfed4e92d8f1b4af4df7ece4c22491c8bd8f5b729c895126"
+    },
+    "preflight-missing-time.log": {
+      "bytes": 55,
+      "sha256": "3ab91308768bd18a86b63517f925e382a1329ed2e00c21c16f4633275a44f9db"
+    },
+    "target-handoff.log": {
+      "bytes": 38,
+      "sha256": "4ea5ebf367ae606cc09d7820664d1e9473589fbd4c6be399963aba46d934e008"
+    },
+    "test-result.json": {
+      "bytes": 316,
+      "sha256": "e7ac61ae8ab5efb5d2b769808a4012e53d6c089c6b6f24d217a0f3ce631e16e9"
+    },
+    "tests.log": {
+      "bytes": 3770,
+      "sha256": "29a4d437fb10e848a43d6cabbe080ce776a41cd0046cf08c9d229c893e1efff3"
+    }
+  }
+}

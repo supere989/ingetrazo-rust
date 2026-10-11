@@ -1,0 +1,23 @@
+{
+  "accepted": false,
+  "reason": "Every input was inert; no geometry movement or history entry. Deferred fixture, not parity evidence.",
+  "archive_sha256": "86fca5759b8eb16044b165a33fe5b8386653bce84bb7631fe1590c244c0faa59",
+  "members": {
+    "source.json": {
+      "sha256": "e3025f78757e5ebb4ff64bfa49fca37fbed9f2f0433abad6a1ecca4ce7337f29",
+      "bytes": 61461
+    },
+    "source.partial.json": {
+      "sha256": "1d2fd4a4d2362306932e2878fec57f736bc20f99733134646fcd9f3335e4b09c",
+      "bytes": 55518
+    },
+    "ingetrazo-composer-transactions-source.log": {
+      "sha256": "e91e0c3fb30e27ccf0db22b192fde4ff9218978576867b12d079eee93624047d",
+      "bytes": 4256
+    },
+    "reference-composer-transactions.py": {
+      "sha256": "4f9195006bc064b93f6f362f5c9e3fe94d720a48099e23bbb84a0ca1b4048506",
+      "bytes": 5403
+    }
+  }
+}

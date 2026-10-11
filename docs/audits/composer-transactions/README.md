@@ -1,0 +1,11 @@
+# Lazy active-sheet history snapshots
+
+Runtime `ffe3510a` removes the unconditional all-sheet clone from each composer frame. Item mutations snapshot only their owning sheet, once per pending transaction. History comparison borrows the current sheet and temporarily normalizes selection in the owned snapshot. Finish and Cancel locate the owner by UUID and preserve independently edited or reordered siblings. Direct paper/border properties retain their existing history law.
+
+The toolbar snapshots before Add/Delete; View/Ink menus edit a local frame draft only while open and snapshot before publishing a changed draft. Existing placement/text entry points retain their begin/finish contract. Continuing drag frames reuse the pending snapshot.
+
+One affected GUI library build passed in 19.85s. The resulting binary passed all 34 `composer::` tests in 0.97s. Four new cases drive actual egui toolbar, property, text and drag inputs, or exercise reordered-sheet cancellation. They establish zero history snapshots in 48 idle frames, one snapshot for a toolbar action, one for a continuing drag, and one history transaction for each gesture. Existing direct paper, selection, unlimited history, sheet switching and text controls also pass. [Bound checks and logs](checks.json).
+
+An unavailable `/usr/bin/time` stopped the initial command before Cargo compilation; local-package cleanup had completed. The corrected timing wrapper performed the sole build. No original source capture, full workspace test or broad CI was repeated for this patch. Independent static review is separate.
+
+P04 stays Partial. This removes a concrete allocation cost but does not establish a frame-rate or total memory benchmark. The separate active-item rendering clone remains. Unselected dragging, press-origin semantics, locked/hidden/z hit testing, snapping, multi-item/resize and remaining tray/script/import transactions remain open. The attempted broader pointer capture was inert and is explicitly rejected; its script and outputs are preserved in [failed fixture receipt](failed-pointer-fixture.json), with no parity claim.
