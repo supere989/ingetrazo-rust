@@ -1,0 +1,64 @@
+{
+  "source": "969cbda536f47578f71e2b2316659c959ac79528",
+  "run": 38101745930,
+  "zip_sha256": "fd8afa6bf647d5a92ec8a927ef23cbea631fe7aec0f7860aacdb2933fb5da1b4",
+  "verified_source_files": [
+    "crates/ingetrazo-metal/src/world.rs",
+    "crates/ingetrazo-metal/src/world_admission.rs",
+    "crates/ingetrazo-metal/src/world_placement.rs",
+    "crates/ingetrazo-metal/src/world_policy.rs",
+    "crates/ingetrazo-metal/src/shaders/world.metal",
+    "crates/ingetrazo-metal/src/egui_painter.rs",
+    "crates/ingetrazo-metal/src/presentation.rs",
+    "crates/ingetrazo-metal/examples/native_world_placement_order.rs",
+    "scripts/check-metal-world-placement-order.py",
+    "scripts/reference-metal-placement-global-order.py",
+    "docs/audits/metal-world-placements/source-global-order/review.json",
+    "docs/audits/metal-world-placements/source-global-order/source-global-prototype-order.png",
+    "docs/audits/metal-world-placements/source-global-order/ungrouped-source-negative.png"
+  ],
+  "scope": "Source-global first bucket ordering and camera-only zero matrix upload; no host/full viewport acceptance",
+  "samples": {
+    "source-global-order": {
+      "matched": 100,
+      "rgba": [
+        247,
+        0,
+        0,
+        255
+      ]
+    },
+    "camera-only-global-order": {
+      "matched": 100,
+      "rgba": [
+        247,
+        0,
+        0,
+        255
+      ]
+    },
+    "independent-last-prototype-negative": {
+      "matched": 100,
+      "rgba": [
+        0,
+        247,
+        0,
+        255
+      ]
+    }
+  },
+  "report": {
+    "passed": true,
+    "grouped_runs": 2,
+    "independent_runs": 3,
+    "geometry_uploads_before_warm": 2,
+    "geometry_uploads_after_warm": 2,
+    "order_builds_before_warm": 1,
+    "order_builds_after_warm": 1,
+    "matrix_bytes_before_warm": 192,
+    "matrix_bytes_after_warm": 192,
+    "ledger_committed": 0,
+    "ledger_reserved": 0
+  },
+  "result": "PASS3frames300interiorpixels"
+}

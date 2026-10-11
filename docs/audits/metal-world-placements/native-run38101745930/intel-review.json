@@ -1,0 +1,23 @@
+{
+  "source": "969cbda536f47578f71e2b2316659c959ac79528",
+  "run": 38101745930,
+  "zip_sha256": "9c3d99be4371e2051b3c43942aa1c1adac3d5efc47d5acc336fe27d755ab6dc4",
+  "verified_source_files": [
+    "crates/ingetrazo-metal/src/world.rs",
+    "crates/ingetrazo-metal/src/world_admission.rs",
+    "crates/ingetrazo-metal/src/world_placement.rs",
+    "crates/ingetrazo-metal/src/world_policy.rs",
+    "crates/ingetrazo-metal/src/shaders/world.metal",
+    "crates/ingetrazo-metal/src/egui_painter.rs",
+    "crates/ingetrazo-metal/src/presentation.rs",
+    "crates/ingetrazo-metal/examples/native_world_placement_order.rs",
+    "scripts/check-metal-world-placement-order.py",
+    "scripts/reference-metal-placement-global-order.py",
+    "docs/audits/metal-world-placements/source-global-order/review.json",
+    "docs/audits/metal-world-placements/source-global-order/source-global-prototype-order.png",
+    "docs/audits/metal-world-placements/source-global-order/ungrouped-source-negative.png"
+  ],
+  "scope": "Source-global first bucket ordering and camera-only zero matrix upload; no host/full viewport acceptance",
+  "result": "REFUSED before first frame",
+  "error": "World native texture size query unavailable: requested_bytes=16384, queried_size=0, queried_align=0, extent=64x64, format=MTLPixelFormat(70), storage=MTLStorageMode(2), hazard=MTLHazardTrackingMode(2), usage=MTLTextureUsage(5), device=Apple Paravirtual device, default_query=0/0, untracked_query=0/0, family_apple2=false, family_mac2=false, family_common3=false, low_power=false, headless=false\n"
+}
