@@ -12,6 +12,7 @@ impl IngeTrazoApp {
         // cannot refuse distinct validated keys. Only the existing history Scene
         // snapshot is copied, not additional whole-mesh candidates per endpoint.
         self.save_undo_state();
+        self.mark_visibility_delta();
         let old_edges=self.scene.mesh.edges.len();
         let v0=self.scene.mesh.add_vertex(a);let v1=self.scene.mesh.add_vertex(b);
         let before=&mut self.undo_stack.last_mut().expect("saved command snapshot").mesh;

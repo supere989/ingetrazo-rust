@@ -37,8 +37,16 @@ impl MeshVertex {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+fn fresh_history_identity() -> u64 {
+    static NEXT: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(1);
+    NEXT.fetch_update(std::sync::atomic::Ordering::Relaxed, std::sync::atomic::Ordering::Relaxed, |id| id.checked_add(1)).expect("runtime mesh identity exhausted")
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct MeshEdge {
+    /// Runtime object identity, preserved by identity-owning history snapshots.
+    #[serde(skip, default = "fresh_history_identity")]
+    pub history_id: u64,
     /// Opaque native edge metadata follows edge identity through edits.
     #[serde(default)]
     pub attrs: std::collections::HashMap<String, serde_json::Value>,
@@ -54,6 +62,7 @@ pub struct MeshEdge {
 impl MeshEdge {
     pub fn new(v0: VertexId, v1: VertexId) -> Self {
         Self {
+            history_id: fresh_history_identity(),
             attrs: std::collections::HashMap::new(),
             v0,
             v1,
@@ -82,8 +91,11 @@ impl MeshEdge {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct MeshFace {
+    /// Runtime object identity; persisted data and semantic equality omit it.
+    #[serde(skip, default = "fresh_history_identity")]
+    pub history_id: u64,
     /// Runtime partition classification. The original native file does not
     /// persist this derived orientation state.
     #[serde(skip)]
@@ -97,12 +109,26 @@ pub struct MeshFace {
 impl MeshFace {
     pub fn new(vertices: Vec<VertexId>) -> Self {
         Self {
+            history_id: fresh_history_identity(),
             interior: false,
             vertices,
             holes: Vec::new(),
             attrs: HashMap::new(),
             layer: None,
         }
+    }
+}
+
+impl PartialEq for MeshEdge {
+    fn eq(&self, other: &Self) -> bool {
+        let Self { history_id: _, attrs, v0, v1, faces, soft, curve_id, layer, hidden } = self;
+        attrs == &other.attrs && v0 == &other.v0 && v1 == &other.v1 && faces == &other.faces && soft == &other.soft && curve_id == &other.curve_id && layer == &other.layer && hidden == &other.hidden
+    }
+}
+impl PartialEq for MeshFace {
+    fn eq(&self, other: &Self) -> bool {
+        let Self { history_id: _, interior, vertices, holes, attrs, layer } = self;
+        interior == &other.interior && vertices == &other.vertices && holes == &other.holes && attrs == &other.attrs && layer == &other.layer
     }
 }
 
@@ -211,6 +237,32 @@ impl Mesh {
         }
     }
 
+    /// Refresh derived endpoint and radial indices after row compaction.
+    /// Entity records and runtime identities are not recreated.
+    pub fn rebuild_incidence(&mut self) {
+        let mut pairs = HashMap::with_capacity(self.edges.len());
+        for vertex in &mut self.vertices { vertex.edges.clear(); }
+        for (id, edge) in self.edges.iter_mut().enumerate() {
+            edge.faces.clear();
+            pairs.insert((edge.v0.min(edge.v1), edge.v0.max(edge.v1)), id);
+            if let Some(vertex) = self.vertices.get_mut(edge.v0) { vertex.edges.push(id); }
+            if let Some(vertex) = self.vertices.get_mut(edge.v1) { vertex.edges.push(id); }
+        }
+        for (face_id, face) in self.faces.iter().enumerate() {
+            for ring in std::iter::once(&face.vertices).chain(&face.holes) {
+                if ring.len() < 2 { continue; }
+                for i in 0..ring.len() {
+                    let a = ring[i]; let b = ring[(i + 1) % ring.len()];
+                    if let Some(&edge) = pairs.get(&(a.min(b), a.max(b))) {
+                        if self.edges[edge].faces.last() != Some(&face_id) {
+                            self.edges[edge].faces.push(face_id);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     /// Resolve the same existing endpoint that add_vertex would weld to.
     pub fn vertex_at_position(&self, p:DVec3)->Option<VertexId>{
         self.spatial_index.get(&PointKey::from_vec3(p)).copied()
@@ -290,6 +342,7 @@ impl Mesh {
 
         let face_id = self.faces.len();
         self.faces.push(MeshFace {
+            history_id: fresh_history_identity(),
             interior: false,
             vertices: loop_verts,
             holes,

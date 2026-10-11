@@ -326,11 +326,11 @@ pub fn render_menu_bar(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
             }
             ui.menu_button(tr("Unhide"), |ui| {
                 if ui.button(tr("Selected")).clicked() {
-                    app.unhide_all();
+                    app.unhide_selected();
                     ui.close_menu();
                 }
                 if ui.button(tr("Last")).clicked() {
-                    app.unhide_all();
+                    app.unhide_last();
                     ui.close_menu();
                 }
                 if ui.button(tr("All")).clicked() {

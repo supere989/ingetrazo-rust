@@ -37,7 +37,7 @@ fn main() {
     a.redo();
     rec(&a, "updated-geometry-redo", &mut out);
     a.scene.select(SelectionItem::Group(0));
-    a.hide_selection();
+    a.hide_selection_command();
     a.apply_saved_view(0);
     rec(&a, "hide-then-recall", &mut out);
     a.undo();
@@ -50,7 +50,7 @@ fn main() {
     a.redo();
     rec(&a, "hide-second-redo", &mut out);
     a.scene.select(SelectionItem::Group(0));
-    a.hide_selection();
+    a.hide_selection_command();
     a.apply_saved_view(1);
     rec(&a, "already-hidden-recall", &mut out);
     a.undo();

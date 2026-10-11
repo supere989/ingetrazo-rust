@@ -184,7 +184,9 @@ fn group_identities(groups: &[crate::groups::Group]) -> Vec<(String, usize, bool
 /// Redo invokes do again and captures their then-current previous flags.
 #[derive(Debug, Clone, PartialEq)]
 pub struct GroupVisibilityCommand {
-    pub targets: Vec<(uuid::Uuid, bool)>,
+    pub targets: Vec<(VisibilityTarget, bool)>,
+    pub retain_mesh_flags: bool,
+    pub snapshot_after: Option<Vec<(VisibilityTarget, Option<serde_json::Value>)>>,
     pub hidden: bool,
     pub undo: bool,
 }
@@ -206,4 +208,12 @@ pub struct GroupVisibilityCommand {
   legacy.apply_scene(&mut scene,&mut camera);
   assert!(!scene.show_hidden_objects&&scene.show_hidden_geometry);
  }
+}
+
+/// Object identity used by command-owned visibility, never a disk identifier.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+pub enum VisibilityTarget {
+    Group(uuid::Uuid),
+    Edge(u64),
+    Face(u64),
 }

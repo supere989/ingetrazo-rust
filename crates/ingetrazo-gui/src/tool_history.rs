@@ -98,6 +98,7 @@ impl IngeTrazoApp {
         let committed=changed_model(&before,&self.scene) || bare_edge.is_some();
         if committed {
             if let Some((a,b))=bare_edge {
+                before.history_group_visibility=Some(ingetrazo_core::saved_views::GroupVisibilityCommand { targets:Vec::new(),hidden:false,undo:true,retain_mesh_flags:true,snapshot_after:None });
                 // Reuse the admitted history snapshot. Copy only the welded
                 // endpoint records, not a second complete Mesh/Scene candidate.
                 for point in [a,b] {
@@ -106,6 +107,9 @@ impl IngeTrazoApp {
                     let id=before.mesh.add_vertex(vertex.position);
                     before.mesh.vertices[id].uid=vertex.uid;
                 }
+            }
+            if bare_edge.is_none() && self.active_tool_type==ingetrazo_tools::base::ToolType::Line {
+                before.history_group_visibility=Some(ingetrazo_core::saved_views::GroupVisibilityCommand {targets:Vec::new(),hidden:false,undo:true,retain_mesh_flags:false,snapshot_after:Some(crate::history_visibility::mesh_snapshot_flags(&self.scene))});
             }
             self.seal_view_history_before(&before);self.seal_terrain_history_before(&before);self.seal_layer_history_before(&before);self.seal_image_history_before(&before);
             if let Some(command)=image_command{let mut delta=ingetrazo_core::image_plane::ImageDelta::between(&before.image_planes,&self.scene.image_planes);delta.frame_command=Some((command,false));before.history_images.0=Some(delta);}
