@@ -60,6 +60,8 @@ struct Target {
     extent: (u32, u32),
     poses: Vec<PlacementPose>,
     instance_matrices: Option<Buffer>,
+    ordering_packet: Option<Arc<PlacementPacket>>,
+    order: Option<super::world_placement::Order>,
 }
 struct Mesh {
     vertices: Buffer,
@@ -86,6 +88,9 @@ pub struct Stats {
     pub warm_geometry_hits: u64,
     pub instance_buffer_allocations: u64,
     pub instance_matrix_upload_bytes: u64,
+    pub draw_order_builds: u64,
+    /// Retained current target ordering payload, excludes old detached frames.
+    pub draw_order_payload_bytes: usize,
     /// Current World cache paint-plan capacities only. Prior Prepared frames may
     /// independently retain older plans; excludes allocator/shared/GPU owners.
     pub policy_retained_payload_bytes: usize,
@@ -221,6 +226,8 @@ impl World {
                 extent,
                 poses: Vec::new(),
                 instance_matrices: None,
+                ordering_packet: None,
+                order: None,
             })
         };
         let owner = self
@@ -243,6 +250,12 @@ impl World {
         self.placements = None;
         self.stats.placement_cache_payload_bytes = 0;
         self.stats.placement_descriptor_payload_bytes = 0;
+        self.stats.draw_order_payload_bytes = self
+            .targets
+            .iter()
+            .filter_map(|t| t.order.as_ref())
+            .map(|o| o.retained_payload_bytes)
+            .sum();
         self.stats.pose_storage_payload_bytes = self
             .targets
             .iter()
@@ -441,6 +454,8 @@ impl World {
                 extent,
                 poses: Vec::new(),
                 instance_matrices: None,
+                ordering_packet: None,
+                order: None,
             }))
         } else {
             None
@@ -451,6 +466,24 @@ impl World {
             new_target.as_mut().unwrap()
         };
         let unique = Arc::get_mut(target).ok_or("Metal placement idle target ownership changed")?;
+        let order_changed = unique
+            .ordering_packet
+            .as_ref()
+            .is_none_or(|p| p.bindings != placements.packet.bindings)
+            || unique.poses.len() != poses.len()
+            || unique
+                .poses
+                .iter()
+                .zip(poses)
+                .any(|(a, b)| a.reflected != b.reflected);
+        let candidate_order = if order_changed {
+            Some(super::world_placement::Order::new(
+                &placements.packet,
+                poses,
+            )?)
+        } else {
+            None
+        };
         let poses_changed = unique.poses.as_slice() != poses;
         let matrix_bytes = poses
             .len()
@@ -487,14 +520,20 @@ impl World {
             unique.poses.extend_from_slice(poses);
         }
         let allocated_matrices = candidate_matrices.is_some();
+        if let Some(order) = candidate_order {
+            unique.order = Some(order);
+        }
+        unique.ordering_packet = Some(placements.packet.clone());
         if let Some(buffer) = candidate_matrices {
             unique.instance_matrices = Some(buffer);
         }
-        if poses_changed {
+        if poses_changed || order_changed {
             if let Some(buffer) = &mut unique.instance_matrices {
                 // Exclusive idle target ownership: no submitted sampler or encoder
                 // can observe writes. No temporary packed matrix allocation.
-                for (i, pose) in poses.iter().enumerate() {
+                for (i, &source_index) in unique.order.as_ref().unwrap().indices.iter().enumerate()
+                {
+                    let pose = &poses[source_index];
                     unsafe {
                         std::ptr::copy_nonoverlapping(
                             pose.mvp.as_ptr().cast::<u8>(),
@@ -515,9 +554,16 @@ impl World {
             .clone()
             .unwrap_or_else(|| Arc::new(Owner::new(metal)));
         self.stats.instance_buffer_allocations += u64::from(allocated_matrices);
-        if poses_changed {
+        if poses_changed || order_changed {
             self.stats.instance_matrix_upload_bytes += matrix_bytes as u64;
         }
+        self.stats.draw_order_builds += u64::from(order_changed);
+        self.stats.draw_order_payload_bytes = self
+            .targets
+            .iter()
+            .filter_map(|t| t.order.as_ref())
+            .map(|o| o.retained_payload_bytes)
+            .sum();
         self.stats.geometry_uploads += uploaded;
         self.stats.prepared += 1;
         if uploaded == 0 {
@@ -570,20 +616,10 @@ impl World {
 impl Prepared {
     /// Admitted contiguous instanced draw groups, observed by diagnostics only.
     pub fn instance_run_count(&self) -> usize {
-        let Some(p) = &self.placements else {
+        if self.placements.is_none() {
             return 0;
-        };
-        let mut first = 0;
-        let mut count = 0;
-        while first < self.target.poses.len() {
-            first = super::world_placement::compatible_run_end(
-                &p.packet.bindings,
-                &self.target.poses,
-                first,
-            );
-            count += 1;
         }
-        count
+        self.target.order.as_ref().map_or(0, |o| o.runs.len())
     }
     pub fn validate_owner(&self, metal: &NativeMetal) -> Result<(), String> {
         self.owner.validate(metal)
@@ -645,31 +681,22 @@ impl Prepared {
             encoder.setVertexBytes_length_atIndex(std::ptr::NonNull::from(camera).cast(), 64, 2);
         }
         if let Some(placements) = &self.placements {
-            let mut first = 0;
-            while first < self.target.poses.len() {
-                let prototype = placements.packet.bindings[first];
-                let reflected = self.target.poses[first].reflected;
-                let end = super::world_placement::compatible_run_end(
-                    &placements.packet.bindings,
-                    &self.target.poses,
-                    first,
-                );
-                encoder.setFrontFacingWinding(if reflected {
+            for run in &self.target.order.as_ref().unwrap().runs {
+                encoder.setFrontFacingWinding(if run.reflected {
                     MTLWinding::Clockwise
                 } else {
                     MTLWinding::CounterClockwise
                 });
-                if let Some(mesh) = &placements.meshes[prototype as usize] {
+                if let Some(mesh) = &placements.meshes[run.prototype as usize] {
                     encode_placement_mesh(
                         &encoder,
                         mesh,
                         self.target.instance_matrices.as_ref().unwrap(),
-                        first,
-                        end - first,
+                        run.first,
+                        run.count,
                         self.policy,
                     );
                 }
-                first = end;
             }
         } else if let Some(mesh) = &self.mesh {
             encode_mesh(&encoder, mesh, &self.mvp, self.policy);

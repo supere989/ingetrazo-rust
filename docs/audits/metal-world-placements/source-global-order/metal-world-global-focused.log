@@ -1,0 +1,36 @@
+warning: function `visit_meshes` is never used
+   --> crates/ingetrazo-core/src/screen_pick.rs:120:15
+    |
+120 | pub(crate) fn visit_meshes(scene: &Scene, mut visit: impl FnMut(&Mesh, DMat4, bool)) {
+    |               ^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-core` (lib) generated 1 warning
+   Compiling ingetrazo-metal v0.3.15 (/tmp/ingetrazo-metal-world/crates/ingetrazo-metal)
+warning: field `count` is never read
+  --> crates/ingetrazo-metal/src/world_policy.rs:42:9
+   |
+40 | pub(crate) struct BackRun {
+   |                   ------- field in this struct
+41 |     pub first: usize,
+42 |     pub count: usize,
+   |         ^^^^^
+   |
+   = note: `BackRun` has derived impls for the traits `Clone` and `Debug`, but these are intentionally ignored during dead code analysis
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-metal` (lib test) generated 1 warning
+    Finished `test` profile [unoptimized] target(s) in 0.29s
+     Running unittests src/lib.rs (/tmp/ingetrazo-metal-world-target/debug/deps/ingetrazo_metal-3ce699f8d0522085)
+
+running 6 tests
+test world_placement::instance_runs_preserve_prototype_winding_and_original_order ... ok
+test world_placement::source_global_order_preserves_first_bucket_and_original_members ... ok
+test world_placement::tests::shared_prototype_and_separate_children_are_bindings_not_geometry_copies ... ok
+test world_placement::tests::unchanged_descriptor_does_not_skip_pose_admission ... ok
+test world_placement::tests::malformed_bindings_duplicates_and_oversized_capacity_refuse ... ok
+test world_placement::source_order_allocates_runs_for_groups_and_rejects_invalid_poses ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 12 filtered out; finished in 0.00s
+
