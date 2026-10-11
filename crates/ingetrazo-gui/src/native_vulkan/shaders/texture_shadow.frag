@@ -65,5 +65,5 @@ vec3 shadow_surface(vec3 rgb){
 
 void main(){if(!pre_raster_clip&&(p.clip_enabled&1u)!=0u&&dot(p.plane,vec4(world_position,1.))>0.)discard;
  if((p.clip_enabled&2u)!=0u){color=vec4(0.);return;} vec4 texel=texture(source_texture,tex_uv);
- if(p.opacity>.999&&texel.a<.5){if((p.cutout_height&1u)!=0u)discard;int x=int(gl_FragCoord.x)%4;int y=int(float(p.cutout_height>>1u)-gl_FragCoord.y)%4;if(texel.a<BAYER[y*4+x])discard;color=vec4(texel.rgb*p.shade,1.);}else color=vec4(texel.rgb*p.shade,texel.a*p.opacity);
+ if(p.opacity>.999&&texel.a<.5){if((p.cutout_height&1u)!=0u)discard;int x=int(gl_FragCoord.x)%4;int y=int(gl_FragCoord.y)%4;if(texel.a<BAYER[y*4+x])discard;color=vec4(texel.rgb*p.shade,1.);}else color=vec4(texel.rgb*p.shade,texel.a*p.opacity);
 color.rgb=shadow_surface(color.rgb);}
