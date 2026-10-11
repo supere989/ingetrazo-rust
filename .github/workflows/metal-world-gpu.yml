@@ -1,10 +1,10 @@
-name: Isolated native Metal world depth and texture ownership
+name: Isolated native Metal placement cache ownership
 on:
   push:
     branches: [review/metal-world-gpu]
   workflow_dispatch:
 jobs:
-  world-depth:
+  world-placement:
     runs-on: ${{ matrix.runner }}
     timeout-minutes: 15
     strategy:
@@ -21,22 +21,22 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
       - name: Build focused native world fixture against Apple SDK
         run: |
-          mkdir -p metal-world-evidence
-          git rev-parse HEAD > metal-world-evidence/revision.txt
-          sw_vers > metal-world-evidence/os.txt
-          xcrun --show-sdk-path > metal-world-evidence/sdk.txt
-          shasum -a 256 crates/ingetrazo-metal/src/world.rs crates/ingetrazo-metal/src/world_admission.rs crates/ingetrazo-metal/src/world_policy.rs crates/ingetrazo-metal/src/shaders/world.metal crates/ingetrazo-metal/src/egui_painter.rs crates/ingetrazo-metal/src/presentation.rs crates/ingetrazo-metal/examples/native_world_depth.rs scripts/check-metal-world-depth.py > metal-world-evidence/source.sha256
-          cargo build --locked -p ingetrazo-metal --example native_world_depth -j2 > metal-world-evidence/build.log 2>&1
-          shasum -a 256 target/debug/examples/native_world_depth > metal-world-evidence/binary.sha256
-      - name: Execute actual offscreen world and UI sampling under outer deadline
+          mkdir -p metal-placement-evidence
+          git rev-parse HEAD > metal-placement-evidence/revision.txt
+          sw_vers > metal-placement-evidence/os.txt
+          xcrun --show-sdk-path > metal-placement-evidence/sdk.txt
+          shasum -a 256 crates/ingetrazo-metal/src/world.rs crates/ingetrazo-metal/src/world_admission.rs crates/ingetrazo-metal/src/world_placement.rs crates/ingetrazo-metal/src/world_policy.rs crates/ingetrazo-metal/src/shaders/world.metal crates/ingetrazo-metal/src/egui_painter.rs crates/ingetrazo-metal/src/presentation.rs crates/ingetrazo-metal/examples/native_world_placements.rs scripts/check-metal-world-placements.py > metal-placement-evidence/source.sha256
+          cargo build --locked -p ingetrazo-metal --example native_world_placements -j2 > metal-placement-evidence/build.log 2>&1
+          shasum -a 256 target/debug/examples/native_world_placements > metal-placement-evidence/binary.sha256
+      - name: Execute actual placement cache and retained pose controls under outer deadline
         if: ${{ !cancelled() }}
         run: |
           python3 - <<'PYTHON'
           import json,pathlib,subprocess
-          root=pathlib.Path('metal-world-evidence')
+          root=pathlib.Path('metal-placement-evidence')
           try:
               with (root/'runtime.log').open('w') as log:
-                  result=subprocess.run(['target/debug/examples/native_world_depth',str(root/'native')],stdout=log,stderr=subprocess.STDOUT,timeout=45)
+                  result=subprocess.run(['target/debug/examples/native_world_placements',str(root/'native')],stdout=log,stderr=subprocess.STDOUT,timeout=45)
               outcome={'exit_code':result.returncode,'outer_timeout':False}
           except subprocess.TimeoutExpired:
               outcome={'exit_code':None,'outer_timeout':True}
@@ -47,10 +47,10 @@ jobs:
           PYTHON
       - name: Independently check literal frame inventory and GPU interior samples
         if: ${{ !cancelled() }}
-        run: python3 scripts/check-metal-world-depth.py metal-world-evidence/native > metal-world-evidence/pixel-review.json 2> metal-world-evidence/pixel-review.log
+        run: python3 scripts/check-metal-world-placements.py metal-placement-evidence/native > metal-placement-evidence/pixel-review.json 2> metal-placement-evidence/pixel-review.log
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: metal-world-${{ matrix.runner }}
-          path: metal-world-evidence/
+          path: metal-placement-evidence/
           if-no-files-found: error
