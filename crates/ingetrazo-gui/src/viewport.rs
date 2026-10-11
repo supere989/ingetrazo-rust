@@ -306,37 +306,35 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
     } // ordinary geometry tool input
     } // modal input ownership
 
-    // 3. Render 3D Scene
-    // Decode and upload embedded textures into egui texture manager
-    for (name, bytes) in app.scene.embedded_textures.iter().chain(app.paste_preview.iter().flat_map(|preview|preview.scene.embedded_textures.iter())) {
+    // Resolve the native/compatibility route before choosing CPU texture consumers.
+    app.native_gpu_viewport_rect=Some(rect);
+    #[cfg(target_os="macos")]
+    let metal_route_reason={app.sync_document_presentation();crate::native_metal::world_viewport::route(app,rect,ui.ctx().pixels_per_point())};
+    // Native World owns its source images. Only compatibility rendering and
+    // the CPU paste overlay need egui copies; shared handles remain retained.
+    let cpu_scene = !app.native_gpu_viewport_enabled;
+    for (name, bytes) in app.scene.embedded_textures.iter().take(if cpu_scene{usize::MAX}else{0}).chain(app.paste_preview.iter().flat_map(|preview|preview.scene.embedded_textures.iter())) {
         if !app.textures.contains_key(name) {
             if let Ok(img) = image::load_from_memory(bytes) {
                 let rgba = img.to_rgba8();
                 let size = [rgba.width() as usize, rgba.height() as usize];
                 let pixels = rgba.into_raw();
                 let color_image = egui::ColorImage::from_rgba_unmultiplied(size, &pixels);
-                let handle =
-                    ui.ctx()
-                        .load_texture(name, color_image, egui::TextureOptions::LINEAR_REPEAT);
+                let handle = ui.ctx().load_texture(name, color_image, egui::TextureOptions::LINEAR_REPEAT);
                 app.textures.insert(name.clone(), handle);
             }
         }
     }
-
     let mut tex_map = std::collections::HashMap::new();
-    for (name, handle) in &app.textures {
-        tex_map.insert(name.clone(), handle.id());
-        if let Some(stripped) = name.strip_prefix("textures/") {
-            tex_map.insert(stripped.to_string(), handle.id());
-        }
-        if let Some(pos) = name.rfind('/') {
-            tex_map.insert(name[pos + 1..].to_string(), handle.id());
+    if cpu_scene || app.paste_preview.is_some() {
+        let shared = app.textures.iter().take(if cpu_scene{usize::MAX}else{0});
+        let preview = app.paste_preview.iter().filter(|_|!cpu_scene).flat_map(|p|p.scene.embedded_textures.keys()).filter_map(|name|app.textures.get(name).map(|handle|(name,handle)));
+        for (name, handle) in shared.chain(preview) {
+            tex_map.insert(name.clone(), handle.id());
+            if let Some(stripped) = name.strip_prefix("textures/") {tex_map.insert(stripped.to_string(), handle.id());}
+            if let Some(pos) = name.rfind('/') {tex_map.insert(name[pos + 1..].to_string(), handle.id());}
         }
     }
-
-    app.native_gpu_viewport_rect=Some(rect);
-    #[cfg(target_os="macos")]
-    let metal_route_reason={app.sync_document_presentation();crate::native_metal::world_viewport::route(app,rect,ui.ctx().pixels_per_point())};
 
     if app.native_gpu_viewport_enabled {
         if let Some(texture)=app.native_gpu_viewport_texture {
@@ -646,5 +644,30 @@ fn scale_modifier_changes(app:&mut IngeTrazoApp,handle:Option<&crate::pointer_mo
  match handle.lock(){
   Ok(timeline)=>if let Err(error)=timeline.visit_changes_before(index,cursor,|m|{app.dispatch_tool_control_state(m.ctrl);app.active_tool.note_shift_state(m.shift);}){app.status_message=error.into();},
   Err(_)=>app.status_message="Native modifier timeline unavailable".into(),
+ }
+}
+
+#[cfg(all(test,not(target_os="macos")))]
+mod native_texture_consumer_tests {
+ use super::*;
+ fn scene(name:&str)->ingetrazo_core::scene::Scene {
+  let mut scene=ingetrazo_core::scene::Scene::new();let mut bytes=std::io::Cursor::new(Vec::new());
+  image::DynamicImage::ImageRgba8(image::RgbaImage::from_pixel(2,2,image::Rgba([255,0,0,255]))).write_to(&mut bytes,image::ImageFormat::Png).unwrap();scene.embedded_textures.insert(name.into(),bytes.into_inner());
+  let ids=[DVec3::new(-1.,-1.,0.),DVec3::new(1.,-1.,0.),DVec3::new(1.,1.,0.),DVec3::new(-1.,1.,0.)].map(|p|scene.mesh.add_vertex(p));let f=scene.mesh.add_face(ids.to_vec(),vec![]).unwrap();scene.mesh.faces[f].attrs.insert("texture".into(),serde_json::json!({"embed":name,"sw":1.,"sh":1.,"rot":0.}));scene
+ }
+ fn frame(app:&mut IngeTrazoApp,ctx:&egui::Context)->egui::FullOutput {
+  ctx.run(egui::RawInput{screen_rect:Some(egui::Rect::from_min_size(egui::Pos2::ZERO,egui::vec2(800.,600.))),..Default::default()},|ctx|{egui::CentralPanel::default().show(ctx,|ui|render_viewport(app,ui));})
+ }
+ fn textured(output:&egui::FullOutput,id:egui::TextureId)->bool {output.shapes.iter().any(|s|matches!(&s.shape,egui::Shape::Mesh(m) if m.texture_id==id))}
+ #[test]
+ fn actual_viewport_allocates_only_cpu_consumed_textures() {
+  let mut app=IngeTrazoApp::new();app.scene=scene("scene.png");app.camera.set_standard_view(ingetrazo_core::camera::StandardView::Top);app.camera.target=DVec3::ZERO;app.camera.distance=5.;app.camera.perspective=false;
+  let ctx=egui::Context::default();app.native_gpu_viewport_enabled=true;
+  frame(&mut app,&ctx);assert!(app.textures.is_empty(),"native World must not allocate an unused egui scene image");
+  app.native_gpu_viewport_enabled=false;let cpu=frame(&mut app,&ctx);let id=app.textures["scene.png"].id();assert!(cpu.textures_delta.set.iter().any(|(i,_)|*i==id));assert!(textured(&cpu,id),"CPU compatibility must still draw its texture");
+  app.native_gpu_viewport_enabled=true;app.paste_preview=Some(crate::clipboard::PastePreview{scene:scene("preview.png"),reference:DVec3::ZERO,offset:DVec3::ZERO});
+  let paste=frame(&mut app,&ctx);let preview=app.textures["preview.png"].id();assert!(paste.textures_delta.set.iter().any(|(i,_)|*i==preview));assert!(!paste.textures_delta.set.iter().any(|(i,_)|*i==id));assert!(textured(&paste,preview));assert_eq!(app.textures.len(),2,"shared scene handle must stay retained");
+  app.cancel_paste_preview();let warm=frame(&mut app,&ctx);assert!(!warm.textures_delta.set.iter().any(|(i,_)|*i==id||*i==preview));assert_eq!(app.textures.len(),2);
+  let mut fresh=IngeTrazoApp::new();fresh.scene=scene("unused.png");fresh.native_gpu_viewport_enabled=true;fresh.paste_preview=Some(crate::clipboard::PastePreview{scene:scene("paste-only.png"),reference:DVec3::ZERO,offset:DVec3::ZERO});frame(&mut fresh,&egui::Context::default());assert_eq!(fresh.textures.len(),1);assert!(fresh.textures.contains_key("paste-only.png"));
  }
 }
