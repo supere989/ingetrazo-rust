@@ -1,0 +1,24 @@
+{
+  "runtime": "db16cb0e",
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "source_sha256": {
+    "crates/ingetrazo-tools/src/base.rs": "d0cd16de8553dc61c95752ade769a4c5cf04ec2388cba41905135350dbad5417",
+    "crates/ingetrazo-tools/src/pushpull.rs": "f027b77e318bd1174ec003473111345aebda55bb72bf0239155fe99da7618280",
+    "crates/ingetrazo-tools/src/pushpull/inward_limit.rs": "b8937883b0ced1ad955574200b480eae474e25e3babbc33b1fe0c0172b828c92",
+    "crates/ingetrazo-gui/examples/pushpull_reversed.rs": "9c880544e52d0964b91e36b9ceaf637fc3804e40572a91a856a322a484278239",
+    "scripts/reference-pushpull-reversed.py": "b8f14d58015f9accc03534380d767d8da2d4f2b95c7e94832f88874d09b7286b",
+    "scripts/check-pushpull-reversed.py": "2715656405bd8626a05f952b5d44cae8793d28520f421fe00397f8d2022dfbfd"
+  },
+  "binary_sha256": "e523b0ae8eedfb14cb98f87410f0a8366a227a0877667603b832f7819e844186",
+  "artifacts_sha256": {
+    "source.json": "402edd6f64504cb55ce7c2e75ac861277fe1f8380518a6213ebf9e34407d3f26",
+    "native.json": "9554cf2e1c89d9cb7085e1dcb831069c4abdab032796c47b0edb9325ae3c27e5",
+    "remaining-native.json": "f004b508679d85904ce256ba2390c994881c9dc5b2f2d0e7c274f7b6beefadd5",
+    "comparison.json": "5acf6ad5d5b348a9ea3affbc21c4cbcf79da87ddccce3381bcb35e67f46250e6",
+    "build.log": "a7b2ef43fde1ca4d74b1689767d452804cfea85f156d7e0eda542957ba04f0c6",
+    "check.log": "5acf6ad5d5b348a9ea3affbc21c4cbcf79da87ddccce3381bcb35e67f46250e6",
+    "affected-inward-native.json": "cecf930860b89a481b4c61422b695764f8eb9859c3483e17d04aa7c07be5a524",
+    "affected-inward-comparison.json": "e8640b5d607f7c296084ed3eba96abed859932b2963a70e199ae10168b6a2cb3",
+    "README.md": "e664b021cad1cda40895b7d2b862f7bdd1dc0b64ff0364281edf1d9c6db856b0"
+  }
+}
