@@ -14,7 +14,7 @@ impl Pipeline{
   let library=metal.device.newLibraryWithSource_options_error(&NSString::from_str(&source),Some(&options)).map_err(|e|format!("Source resolve shader:{e:?}"))?;
   let function=library.newFunctionWithName(&NSString::from_str(if tile{"source_resolve_tile"}else{"source_resolve_compute"})).ok_or("Source resolve function absent")?;
   let kind=if tile{
-   let descriptor=MTLTileRenderPipelineDescriptor::new();descriptor.setTileFunction(Some(&function));descriptor.setThreadgroupSizeMatchesTileSize(true);descriptor.setRasterSampleCount(4);
+   let descriptor=MTLTileRenderPipelineDescriptor::new();unsafe{descriptor.setTileFunction(&function);}descriptor.setThreadgroupSizeMatchesTileSize(true);unsafe{descriptor.setRasterSampleCount(4);}
    unsafe{descriptor.colorAttachments().objectAtIndexedSubscript(0)}.setPixelFormat(MTLPixelFormat::RGBA8Unorm);
    {let p=metal.device.newRenderPipelineStateWithTileDescriptor_options_reflection_error(&descriptor,MTLPipelineOption::empty(),None).map_err(|e|format!("Source tile resolve pipeline:{e:?}"))?;if p.maxTotalThreadsPerThreadgroup()<256{return Err("Source tile resolve cannot admit16x16 tile".into());}Kind::Tile(p)}
   }else{{let p=metal.device.newComputePipelineStateWithFunction_error(&function).map_err(|e|format!("Source compute resolve pipeline:{e:?}"))?;if p.maxTotalThreadsPerThreadgroup()<64{return Err("Source resolve cannot admit8x8 group".into());}Kind::Compute(p)}};
