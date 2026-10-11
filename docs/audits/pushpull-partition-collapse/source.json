@@ -1,0 +1,7258 @@
+{
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "cases": [
+    {
+      "source_undo_exact": true,
+      "source_redo_exact": true,
+      "name": "diagonal-protected",
+      "face": 0,
+      "distance": -99,
+      "ctrl": false,
+      "source": {
+        "faces": [
+          {
+            "vertices": [
+              [
+                0.0,
+                0.0,
+                3.0
+              ],
+              [
+                4.0,
+                0.0,
+                3.0
+              ],
+              [
+                4.0,
+                4.0,
+                3.0
+              ],
+              [
+                0.0,
+                4.0,
+                3.0
+              ]
+            ],
+            "holes": [],
+            "attrs": {
+              "color": [
+                1,
+                0,
+                0
+              ],
+              "vendor": 9,
+              "ifc": {
+                "id": 19,
+                "class": "IfcSlab"
+              }
+            },
+            "interior": false
+          },
+          {
+            "vertices": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                4.0,
+                0.0,
+                0.0
+              ],
+              [
+                4.0,
+                0.0,
+                3.0
+              ],
+              [
+                0.0,
+                0.0,
+                3.0
+              ]
+            ],
+            "holes": [],
+            "attrs": {},
+            "interior": false
+          },
+          {
+            "vertices": [
+              [
+                4.0,
+                0.0,
+                0.0
+              ],
+              [
+                4.0,
+                4.0,
+                0.0
+              ],
+              [
+                4.0,
+                4.0,
+                3.0
+              ],
+              [
+                4.0,
+                0.0,
+                3.0
+              ]
+            ],
+            "holes": [],
+            "attrs": {},
+            "interior": false
+          },
+          {
+            "vertices": [
+              [
+                4.0,
+                4.0,
+                0.0
+              ],
+              [
+                0.0,
+                4.0,
+                0.0
+              ],
+              [
+                0.0,
+                4.0,
+                3.0
+              ],
+              [
+                4.0,
+                4.0,
+                3.0
+              ]
+            ],
+            "holes": [],
+            "attrs": {},
+            "interior": false
+          },
+          {
+            "vertices": [
+              [
+                0.0,
+                4.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                3.0
+              ],
+              [
+                0.0,
+                4.0,
+                3.0
+              ]
+            ],
+            "holes": [],
+            "attrs": {},
+            "interior": false
+          },
+          {
+            "vertices": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                4.0,
+                0.0
+              ],
+              [
+                4.0,
+                4.0,
+                0.0
+              ]
+            ],
+            "holes": [],
+            "attrs": {
+              "vendor": 71,
+              "color": [
+                0,
+                0.0,
+                1
+              ],
+              "ifc": {
+                "id": 71,
+                "class": "IfcSlab"
+              },
+              "layer": "Base"
+            },
+            "interior": false
+          },
+          {
+            "vertices": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                4.0,
+                4.0,
+                0.0
+              ],
+              [
+                4.0,
+                0.0,
+                0.0
+              ]
+            ],
+            "holes": [],
+            "attrs": {
+              "vendor": 72,
+              "color": [
+                0,
+                0.25,
+                1
+              ],
+              "ifc": {
+                "id": 72,
+                "class": "IfcSlab"
+              },
+              "layer": "Base"
+            },
+            "interior": false
+          }
+        ],
+        "vertices": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            4.0,
+            0.0,
+            0.0
+          ],
+          [
+            4.0,
+            4.0,
+            0.0
+          ],
+          [
+            0.0,
+            4.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            3.0
+          ],
+          [
+            4.0,
+            0.0,
+            3.0
+          ],
+          [
+            4.0,
+            4.0,
+            3.0
+          ],
+          [
+            0.0,
+            4.0,
+            3.0
+          ]
+        ],
+        "vertex_origins": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "edges": [
+          {
+            "ends": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                4.0,
+                0.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                4.0,
+                0.0,
+                0.0
+              ],
+              [
+                4.0,
+                4.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                4.0,
+                4.0,
+                0.0
+              ],
+              [
+                0.0,
+                4.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                0.0,
+                4.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": 7,
+            "layer": "BaseEdges",
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                0.0,
+                0.0,
+                3.0
+              ],
+              [
+                4.0,
+                0.0,
+                3.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                4.0,
+                0.0,
+                3.0
+              ],
+              [
+                4.0,
+                4.0,
+                3.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                4.0,
+                4.0,
+                3.0
+              ],
+              [
+                0.0,
+                4.0,
+                3.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                0.0,
+                4.0,
+                3.0
+              ],
+              [
+                0.0,
+                0.0,
+                3.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                3.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                4.0,
+                0.0,
+                0.0
+              ],
+              [
+                4.0,
+                0.0,
+                3.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                4.0,
+                4.0,
+                0.0
+              ],
+              [
+                4.0,
+                4.0,
+                3.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                0.0,
+                4.0,
+                0.0
+              ],
+              [
+                0.0,
+                4.0,
+                3.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                4.0,
+                4.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          }
+        ]
+      },
+      "result": {
+        "faces": [
+          {
+            "vertices": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                4.0,
+                0.0
+              ],
+              [
+                4.0,
+                4.0,
+                0.0
+              ]
+            ],
+            "holes": [],
+            "attrs": {
+              "vendor": 71,
+              "color": [
+                0,
+                0.0,
+                1
+              ],
+              "ifc": {
+                "id": 71,
+                "class": "IfcSlab"
+              },
+              "layer": "Base"
+            },
+            "interior": false
+          },
+          {
+            "vertices": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                4.0,
+                4.0,
+                0.0
+              ],
+              [
+                4.0,
+                0.0,
+                0.0
+              ]
+            ],
+            "holes": [],
+            "attrs": {
+              "vendor": 72,
+              "color": [
+                0,
+                0.25,
+                1
+              ],
+              "ifc": {
+                "id": 72,
+                "class": "IfcSlab"
+              },
+              "layer": "Base"
+            },
+            "interior": false
+          },
+          {
+            "vertices": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                4.0,
+                0.0,
+                0.0
+              ],
+              [
+                4.0,
+                4.0,
+                0.0
+              ],
+              [
+                0.0,
+                4.0,
+                0.0
+              ]
+            ],
+            "holes": [
+              [
+                [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  4.0,
+                  0.0
+                ],
+                [
+                  4.0,
+                  4.0,
+                  0.0
+                ]
+              ],
+              [
+                [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  4.0,
+                  4.0,
+                  0.0
+                ],
+                [
+                  4.0,
+                  0.0,
+                  0.0
+                ]
+              ]
+            ],
+            "attrs": {
+              "color": [
+                1,
+                0,
+                0
+              ],
+              "vendor": 9,
+              "ifc": {
+                "id": 19,
+                "class": "IfcSlab"
+              }
+            },
+            "interior": false
+          }
+        ],
+        "vertices": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            4.0,
+            0.0,
+            0.0
+          ],
+          [
+            4.0,
+            4.0,
+            0.0
+          ],
+          [
+            0.0,
+            4.0,
+            0.0
+          ]
+        ],
+        "vertex_origins": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "edges": [
+          {
+            "ends": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                4.0,
+                0.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 3,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                4.0,
+                0.0,
+                0.0
+              ],
+              [
+                4.0,
+                4.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 3,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                4.0,
+                4.0,
+                0.0
+              ],
+              [
+                0.0,
+                4.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 3,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                0.0,
+                4.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": 7,
+            "layer": "BaseEdges",
+            "raw_incidence": 3,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                4.0,
+                4.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 4,
+            "incidence": 3
+          }
+        ]
+      },
+      "clamped_distance": -3.0,
+      "undo": 1,
+      "status": null
+    },
+    {
+      "source_undo_exact": true,
+      "source_redo_exact": true,
+      "name": "ring-island-protected",
+      "face": 0,
+      "distance": -99,
+      "ctrl": false,
+      "source": {
+        "faces": [
+          {
+            "vertices": [
+              [
+                0.0,
+                0.0,
+                3.0
+              ],
+              [
+                4.0,
+                0.0,
+                3.0
+              ],
+              [
+                4.0,
+                4.0,
+                3.0
+              ],
+              [
+                0.0,
+                4.0,
+                3.0
+              ]
+            ],
+            "holes": [],
+            "attrs": {
+              "color": [
+                1,
+                0,
+                0
+              ],
+              "vendor": 9,
+              "ifc": {
+                "id": 19,
+                "class": "IfcSlab"
+              }
+            },
+            "interior": false
+          },
+          {
+            "vertices": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                4.0,
+                0.0,
+                0.0
+              ],
+              [
+                4.0,
+                0.0,
+                3.0
+              ],
+              [
+                0.0,
+                0.0,
+                3.0
+              ]
+            ],
+            "holes": [],
+            "attrs": {},
+            "interior": false
+          },
+          {
+            "vertices": [
+              [
+                4.0,
+                0.0,
+                0.0
+              ],
+              [
+                4.0,
+                4.0,
+                0.0
+              ],
+              [
+                4.0,
+                4.0,
+                3.0
+              ],
+              [
+                4.0,
+                0.0,
+                3.0
+              ]
+            ],
+            "holes": [],
+            "attrs": {},
+            "interior": false
+          },
+          {
+            "vertices": [
+              [
+                4.0,
+                4.0,
+                0.0
+              ],
+              [
+                0.0,
+                4.0,
+                0.0
+              ],
+              [
+                0.0,
+                4.0,
+                3.0
+              ],
+              [
+                4.0,
+                4.0,
+                3.0
+              ]
+            ],
+            "holes": [],
+            "attrs": {},
+            "interior": false
+          },
+          {
+            "vertices": [
+              [
+                0.0,
+                4.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                3.0
+              ],
+              [
+                0.0,
+                4.0,
+                3.0
+              ]
+            ],
+            "holes": [],
+            "attrs": {},
+            "interior": false
+          },
+          {
+            "vertices": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                4.0,
+                0.0
+              ],
+              [
+                4.0,
+                4.0,
+                0.0
+              ],
+              [
+                4.0,
+                0.0,
+                0.0
+              ]
+            ],
+            "holes": [
+              [
+                [
+                  1.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  3.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  3.0,
+                  3.0,
+                  0.0
+                ],
+                [
+                  1.0,
+                  3.0,
+                  0.0
+                ]
+              ]
+            ],
+            "attrs": {
+              "vendor": 71,
+              "color": [
+                0,
+                0.0,
+                1
+              ],
+              "ifc": {
+                "id": 71,
+                "class": "IfcSlab"
+              },
+              "layer": "Base"
+            },
+            "interior": false
+          },
+          {
+            "vertices": [
+              [
+                1.0,
+                1.0,
+                0.0
+              ],
+              [
+                1.0,
+                3.0,
+                0.0
+              ],
+              [
+                3.0,
+                3.0,
+                0.0
+              ],
+              [
+                3.0,
+                1.0,
+                0.0
+              ]
+            ],
+            "holes": [],
+            "attrs": {
+              "vendor": 72,
+              "color": [
+                0,
+                0.25,
+                1
+              ],
+              "ifc": {
+                "id": 72,
+                "class": "IfcSlab"
+              },
+              "layer": "Base"
+            },
+            "interior": false
+          }
+        ],
+        "vertices": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            4.0,
+            0.0,
+            0.0
+          ],
+          [
+            4.0,
+            4.0,
+            0.0
+          ],
+          [
+            0.0,
+            4.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            3.0
+          ],
+          [
+            4.0,
+            0.0,
+            3.0
+          ],
+          [
+            4.0,
+            4.0,
+            3.0
+          ],
+          [
+            0.0,
+            4.0,
+            3.0
+          ],
+          [
+            1.0,
+            1.0,
+            0.0
+          ],
+          [
+            3.0,
+            1.0,
+            0.0
+          ],
+          [
+            3.0,
+            3.0,
+            0.0
+          ],
+          [
+            1.0,
+            3.0,
+            0.0
+          ]
+        ],
+        "vertex_origins": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11
+        ],
+        "edges": [
+          {
+            "ends": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                4.0,
+                0.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                4.0,
+                0.0,
+                0.0
+              ],
+              [
+                4.0,
+                4.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                4.0,
+                4.0,
+                0.0
+              ],
+              [
+                0.0,
+                4.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                0.0,
+                4.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": 7,
+            "layer": "BaseEdges",
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                0.0,
+                0.0,
+                3.0
+              ],
+              [
+                4.0,
+                0.0,
+                3.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                4.0,
+                0.0,
+                3.0
+              ],
+              [
+                4.0,
+                4.0,
+                3.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                4.0,
+                4.0,
+                3.0
+              ],
+              [
+                0.0,
+                4.0,
+                3.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                0.0,
+                4.0,
+                3.0
+              ],
+              [
+                0.0,
+                0.0,
+                3.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                3.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                4.0,
+                0.0,
+                0.0
+              ],
+              [
+                4.0,
+                0.0,
+                3.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                4.0,
+                4.0,
+                0.0
+              ],
+              [
+                4.0,
+                4.0,
+                3.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                0.0,
+                4.0,
+                0.0
+              ],
+              [
+                0.0,
+                4.0,
+                3.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                1.0,
+                1.0,
+                0.0
+              ],
+              [
+                3.0,
+                1.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                3.0,
+                1.0,
+                0.0
+              ],
+              [
+                3.0,
+                3.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                3.0,
+                3.0,
+                0.0
+              ],
+              [
+                1.0,
+                3.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                1.0,
+                3.0,
+                0.0
+              ],
+              [
+                1.0,
+                1.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          }
+        ]
+      },
+      "result": {
+        "faces": [
+          {
+            "vertices": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                4.0,
+                0.0
+              ],
+              [
+                4.0,
+                4.0,
+                0.0
+              ],
+              [
+                4.0,
+                0.0,
+                0.0
+              ]
+            ],
+            "holes": [
+              [
+                [
+                  1.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  3.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  3.0,
+                  3.0,
+                  0.0
+                ],
+                [
+                  1.0,
+                  3.0,
+                  0.0
+                ]
+              ]
+            ],
+            "attrs": {
+              "vendor": 71,
+              "color": [
+                0,
+                0.0,
+                1
+              ],
+              "ifc": {
+                "id": 71,
+                "class": "IfcSlab"
+              },
+              "layer": "Base"
+            },
+            "interior": false
+          },
+          {
+            "vertices": [
+              [
+                1.0,
+                1.0,
+                0.0
+              ],
+              [
+                1.0,
+                3.0,
+                0.0
+              ],
+              [
+                3.0,
+                3.0,
+                0.0
+              ],
+              [
+                3.0,
+                1.0,
+                0.0
+              ]
+            ],
+            "holes": [],
+            "attrs": {
+              "vendor": 72,
+              "color": [
+                0,
+                0.25,
+                1
+              ],
+              "ifc": {
+                "id": 72,
+                "class": "IfcSlab"
+              },
+              "layer": "Base"
+            },
+            "interior": false
+          }
+        ],
+        "vertices": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            4.0,
+            0.0,
+            0.0
+          ],
+          [
+            4.0,
+            4.0,
+            0.0
+          ],
+          [
+            0.0,
+            4.0,
+            0.0
+          ],
+          [
+            1.0,
+            1.0,
+            0.0
+          ],
+          [
+            3.0,
+            1.0,
+            0.0
+          ],
+          [
+            3.0,
+            3.0,
+            0.0
+          ],
+          [
+            1.0,
+            3.0,
+            0.0
+          ]
+        ],
+        "vertex_origins": [
+          0,
+          1,
+          2,
+          3,
+          8,
+          9,
+          10,
+          11
+        ],
+        "edges": [
+          {
+            "ends": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                4.0,
+                0.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 1,
+            "incidence": 1
+          },
+          {
+            "ends": [
+              [
+                4.0,
+                0.0,
+                0.0
+              ],
+              [
+                4.0,
+                4.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 1,
+            "incidence": 1
+          },
+          {
+            "ends": [
+              [
+                4.0,
+                4.0,
+                0.0
+              ],
+              [
+                0.0,
+                4.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 1,
+            "incidence": 1
+          },
+          {
+            "ends": [
+              [
+                0.0,
+                4.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": 7,
+            "layer": "BaseEdges",
+            "raw_incidence": 1,
+            "incidence": 1
+          },
+          {
+            "ends": [
+              [
+                1.0,
+                1.0,
+                0.0
+              ],
+              [
+                3.0,
+                1.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                3.0,
+                1.0,
+                0.0
+              ],
+              [
+                3.0,
+                3.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                3.0,
+                3.0,
+                0.0
+              ],
+              [
+                1.0,
+                3.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                1.0,
+                3.0,
+                0.0
+              ],
+              [
+                1.0,
+                1.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          }
+        ]
+      },
+      "clamped_distance": -3.0,
+      "undo": 1,
+      "status": null
+    },
+    {
+      "source_undo_exact": true,
+      "source_redo_exact": true,
+      "name": "annular-divisions",
+      "face": 0,
+      "distance": -99,
+      "ctrl": false,
+      "source": {
+        "faces": [
+          {
+            "vertices": [
+              [
+                0.0,
+                0.0,
+                3.0
+              ],
+              [
+                4.0,
+                0.0,
+                3.0
+              ],
+              [
+                4.0,
+                4.0,
+                3.0
+              ],
+              [
+                0.0,
+                4.0,
+                3.0
+              ]
+            ],
+            "holes": [
+              [
+                [
+                  1.0,
+                  1.0,
+                  3.0
+                ],
+                [
+                  1.0,
+                  3.0,
+                  3.0
+                ],
+                [
+                  3.0,
+                  3.0,
+                  3.0
+                ],
+                [
+                  3.0,
+                  1.0,
+                  3.0
+                ]
+              ]
+            ],
+            "attrs": {
+              "color": [
+                1,
+                0,
+                0
+              ],
+              "vendor": 9,
+              "ifc": {
+                "id": 19,
+                "class": "IfcSlab"
+              }
+            },
+            "interior": false
+          },
+          {
+            "vertices": [
+              [
+                1.0,
+                1.0,
+                0.0
+              ],
+              [
+                1.0,
+                3.0,
+                0.0
+              ],
+              [
+                1.0,
+                3.0,
+                3.0
+              ],
+              [
+                1.0,
+                1.0,
+                3.0
+              ]
+            ],
+            "holes": [],
+            "attrs": {},
+            "interior": false
+          },
+          {
+            "vertices": [
+              [
+                1.0,
+                3.0,
+                0.0
+              ],
+              [
+                3.0,
+                3.0,
+                0.0
+              ],
+              [
+                3.0,
+                3.0,
+                3.0
+              ],
+              [
+                1.0,
+                3.0,
+                3.0
+              ]
+            ],
+            "holes": [],
+            "attrs": {},
+            "interior": false
+          },
+          {
+            "vertices": [
+              [
+                3.0,
+                3.0,
+                0.0
+              ],
+              [
+                3.0,
+                1.0,
+                0.0
+              ],
+              [
+                3.0,
+                1.0,
+                3.0
+              ],
+              [
+                3.0,
+                3.0,
+                3.0
+              ]
+            ],
+            "holes": [],
+            "attrs": {},
+            "interior": false
+          },
+          {
+            "vertices": [
+              [
+                3.0,
+                1.0,
+                0.0
+              ],
+              [
+                1.0,
+                1.0,
+                0.0
+              ],
+              [
+                1.0,
+                1.0,
+                3.0
+              ],
+              [
+                3.0,
+                1.0,
+                3.0
+              ]
+            ],
+            "holes": [],
+            "attrs": {},
+            "interior": false
+          },
+          {
+            "vertices": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                4.0,
+                0.0,
+                0.0
+              ],
+              [
+                4.0,
+                0.0,
+                3.0
+              ],
+              [
+                0.0,
+                0.0,
+                3.0
+              ]
+            ],
+            "holes": [],
+            "attrs": {},
+            "interior": false
+          },
+          {
+            "vertices": [
+              [
+                4.0,
+                0.0,
+                0.0
+              ],
+              [
+                4.0,
+                4.0,
+                0.0
+              ],
+              [
+                4.0,
+                4.0,
+                3.0
+              ],
+              [
+                4.0,
+                0.0,
+                3.0
+              ]
+            ],
+            "holes": [],
+            "attrs": {},
+            "interior": false
+          },
+          {
+            "vertices": [
+              [
+                4.0,
+                4.0,
+                0.0
+              ],
+              [
+                0.0,
+                4.0,
+                0.0
+              ],
+              [
+                0.0,
+                4.0,
+                3.0
+              ],
+              [
+                4.0,
+                4.0,
+                3.0
+              ]
+            ],
+            "holes": [],
+            "attrs": {},
+            "interior": false
+          },
+          {
+            "vertices": [
+              [
+                0.0,
+                4.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                3.0
+              ],
+              [
+                0.0,
+                4.0,
+                3.0
+              ]
+            ],
+            "holes": [],
+            "attrs": {},
+            "interior": false
+          },
+          {
+            "vertices": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                4.0,
+                0.0
+              ],
+              [
+                4.0,
+                4.0,
+                0.0
+              ],
+              [
+                3.0,
+                3.0,
+                0.0
+              ],
+              [
+                1.0,
+                3.0,
+                0.0
+              ],
+              [
+                1.0,
+                1.0,
+                0.0
+              ]
+            ],
+            "holes": [],
+            "attrs": {
+              "vendor": 71,
+              "color": [
+                0,
+                0.0,
+                1
+              ],
+              "ifc": {
+                "id": 71,
+                "class": "IfcSlab"
+              },
+              "layer": "Base"
+            },
+            "interior": false
+          },
+          {
+            "vertices": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                1.0,
+                1.0,
+                0.0
+              ],
+              [
+                3.0,
+                1.0,
+                0.0
+              ],
+              [
+                3.0,
+                3.0,
+                0.0
+              ],
+              [
+                4.0,
+                4.0,
+                0.0
+              ],
+              [
+                4.0,
+                0.0,
+                0.0
+              ]
+            ],
+            "holes": [],
+            "attrs": {
+              "vendor": 72,
+              "color": [
+                0,
+                0.25,
+                1
+              ],
+              "ifc": {
+                "id": 72,
+                "class": "IfcSlab"
+              },
+              "layer": "Base"
+            },
+            "interior": false
+          }
+        ],
+        "vertices": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            4.0,
+            0.0,
+            0.0
+          ],
+          [
+            4.0,
+            4.0,
+            0.0
+          ],
+          [
+            0.0,
+            4.0,
+            0.0
+          ],
+          [
+            1.0,
+            1.0,
+            0.0
+          ],
+          [
+            1.0,
+            3.0,
+            0.0
+          ],
+          [
+            3.0,
+            3.0,
+            0.0
+          ],
+          [
+            3.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            3.0
+          ],
+          [
+            4.0,
+            0.0,
+            3.0
+          ],
+          [
+            4.0,
+            4.0,
+            3.0
+          ],
+          [
+            0.0,
+            4.0,
+            3.0
+          ],
+          [
+            1.0,
+            1.0,
+            3.0
+          ],
+          [
+            1.0,
+            3.0,
+            3.0
+          ],
+          [
+            3.0,
+            3.0,
+            3.0
+          ],
+          [
+            3.0,
+            1.0,
+            3.0
+          ]
+        ],
+        "vertex_origins": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15
+        ],
+        "edges": [
+          {
+            "ends": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                4.0,
+                0.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                4.0,
+                0.0,
+                0.0
+              ],
+              [
+                4.0,
+                4.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                4.0,
+                4.0,
+                0.0
+              ],
+              [
+                0.0,
+                4.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                0.0,
+                4.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": 7,
+            "layer": "BaseEdges",
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                1.0,
+                1.0,
+                0.0
+              ],
+              [
+                1.0,
+                3.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                1.0,
+                3.0,
+                0.0
+              ],
+              [
+                3.0,
+                3.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                3.0,
+                3.0,
+                0.0
+              ],
+              [
+                3.0,
+                1.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                3.0,
+                1.0,
+                0.0
+              ],
+              [
+                1.0,
+                1.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                0.0,
+                0.0,
+                3.0
+              ],
+              [
+                4.0,
+                0.0,
+                3.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                4.0,
+                0.0,
+                3.0
+              ],
+              [
+                4.0,
+                4.0,
+                3.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                4.0,
+                4.0,
+                3.0
+              ],
+              [
+                0.0,
+                4.0,
+                3.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                0.0,
+                4.0,
+                3.0
+              ],
+              [
+                0.0,
+                0.0,
+                3.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                3.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                4.0,
+                0.0,
+                0.0
+              ],
+              [
+                4.0,
+                0.0,
+                3.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                4.0,
+                4.0,
+                0.0
+              ],
+              [
+                4.0,
+                4.0,
+                3.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                0.0,
+                4.0,
+                0.0
+              ],
+              [
+                0.0,
+                4.0,
+                3.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                1.0,
+                1.0,
+                3.0
+              ],
+              [
+                1.0,
+                3.0,
+                3.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                1.0,
+                3.0,
+                3.0
+              ],
+              [
+                3.0,
+                3.0,
+                3.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                3.0,
+                3.0,
+                3.0
+              ],
+              [
+                3.0,
+                1.0,
+                3.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                3.0,
+                1.0,
+                3.0
+              ],
+              [
+                1.0,
+                1.0,
+                3.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                1.0,
+                1.0,
+                0.0
+              ],
+              [
+                1.0,
+                1.0,
+                3.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                1.0,
+                3.0,
+                0.0
+              ],
+              [
+                1.0,
+                3.0,
+                3.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                3.0,
+                3.0,
+                0.0
+              ],
+              [
+                3.0,
+                3.0,
+                3.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                3.0,
+                1.0,
+                0.0
+              ],
+              [
+                3.0,
+                1.0,
+                3.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                4.0,
+                4.0,
+                0.0
+              ],
+              [
+                3.0,
+                3.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                1.0,
+                1.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          }
+        ]
+      },
+      "result": {
+        "faces": [
+          {
+            "vertices": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                4.0,
+                0.0,
+                0.0
+              ],
+              [
+                4.0,
+                4.0,
+                0.0
+              ],
+              [
+                0.0,
+                4.0,
+                0.0
+              ]
+            ],
+            "holes": [
+              [
+                [
+                  1.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  1.0,
+                  3.0,
+                  0.0
+                ],
+                [
+                  3.0,
+                  3.0,
+                  0.0
+                ],
+                [
+                  3.0,
+                  1.0,
+                  0.0
+                ]
+              ]
+            ],
+            "attrs": {
+              "color": [
+                1,
+                0,
+                0
+              ],
+              "vendor": 9,
+              "ifc": {
+                "id": 19,
+                "class": "IfcSlab"
+              }
+            },
+            "interior": false
+          },
+          {
+            "vertices": [
+              [
+                1.0,
+                1.0,
+                0.0
+              ],
+              [
+                1.0,
+                3.0,
+                0.0
+              ],
+              [
+                3.0,
+                3.0,
+                0.0
+              ],
+              [
+                4.0,
+                4.0,
+                0.0
+              ],
+              [
+                0.0,
+                4.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0
+              ]
+            ],
+            "holes": [],
+            "attrs": {
+              "vendor": 71,
+              "color": [
+                0,
+                0.0,
+                1
+              ],
+              "ifc": {
+                "id": 71,
+                "class": "IfcSlab"
+              },
+              "layer": "Base"
+            },
+            "interior": false
+          },
+          {
+            "vertices": [
+              [
+                4.0,
+                0.0,
+                0.0
+              ],
+              [
+                4.0,
+                4.0,
+                0.0
+              ],
+              [
+                3.0,
+                3.0,
+                0.0
+              ],
+              [
+                3.0,
+                1.0,
+                0.0
+              ],
+              [
+                1.0,
+                1.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0
+              ]
+            ],
+            "holes": [],
+            "attrs": {
+              "vendor": 72,
+              "color": [
+                0,
+                0.25,
+                1
+              ],
+              "ifc": {
+                "id": 72,
+                "class": "IfcSlab"
+              },
+              "layer": "Base"
+            },
+            "interior": false
+          }
+        ],
+        "vertices": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            4.0,
+            0.0,
+            0.0
+          ],
+          [
+            4.0,
+            4.0,
+            0.0
+          ],
+          [
+            0.0,
+            4.0,
+            0.0
+          ],
+          [
+            1.0,
+            1.0,
+            0.0
+          ],
+          [
+            1.0,
+            3.0,
+            0.0
+          ],
+          [
+            3.0,
+            3.0,
+            0.0
+          ],
+          [
+            3.0,
+            1.0,
+            0.0
+          ]
+        ],
+        "vertex_origins": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "edges": [
+          {
+            "ends": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                4.0,
+                0.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                4.0,
+                0.0,
+                0.0
+              ],
+              [
+                4.0,
+                4.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                4.0,
+                4.0,
+                0.0
+              ],
+              [
+                0.0,
+                4.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                0.0,
+                4.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": 7,
+            "layer": "BaseEdges",
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                1.0,
+                1.0,
+                0.0
+              ],
+              [
+                1.0,
+                3.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                1.0,
+                3.0,
+                0.0
+              ],
+              [
+                3.0,
+                3.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                3.0,
+                3.0,
+                0.0
+              ],
+              [
+                3.0,
+                1.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                3.0,
+                1.0,
+                0.0
+              ],
+              [
+                1.0,
+                1.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                4.0,
+                4.0,
+                0.0
+              ],
+              [
+                3.0,
+                3.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                1.0,
+                1.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          }
+        ]
+      },
+      "clamped_distance": -3.0,
+      "undo": 1,
+      "status": null
+    },
+    {
+      "source_undo_exact": true,
+      "source_redo_exact": true,
+      "name": "diagonal-wires",
+      "face": 0,
+      "distance": -99,
+      "ctrl": false,
+      "source": {
+        "faces": [
+          {
+            "vertices": [
+              [
+                0.0,
+                0.0,
+                3.0
+              ],
+              [
+                4.0,
+                0.0,
+                3.0
+              ],
+              [
+                4.0,
+                4.0,
+                3.0
+              ],
+              [
+                0.0,
+                4.0,
+                3.0
+              ]
+            ],
+            "holes": [],
+            "attrs": {
+              "color": [
+                1,
+                0,
+                0
+              ],
+              "vendor": 9,
+              "ifc": {
+                "id": 19,
+                "class": "IfcSlab"
+              }
+            },
+            "interior": false
+          },
+          {
+            "vertices": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                4.0,
+                0.0,
+                0.0
+              ],
+              [
+                4.0,
+                0.0,
+                3.0
+              ],
+              [
+                0.0,
+                0.0,
+                3.0
+              ]
+            ],
+            "holes": [],
+            "attrs": {},
+            "interior": false
+          },
+          {
+            "vertices": [
+              [
+                4.0,
+                0.0,
+                0.0
+              ],
+              [
+                4.0,
+                4.0,
+                0.0
+              ],
+              [
+                4.0,
+                4.0,
+                3.0
+              ],
+              [
+                4.0,
+                0.0,
+                3.0
+              ]
+            ],
+            "holes": [],
+            "attrs": {},
+            "interior": false
+          },
+          {
+            "vertices": [
+              [
+                4.0,
+                4.0,
+                0.0
+              ],
+              [
+                0.0,
+                4.0,
+                0.0
+              ],
+              [
+                0.0,
+                4.0,
+                3.0
+              ],
+              [
+                4.0,
+                4.0,
+                3.0
+              ]
+            ],
+            "holes": [],
+            "attrs": {},
+            "interior": false
+          },
+          {
+            "vertices": [
+              [
+                0.0,
+                4.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                3.0
+              ],
+              [
+                0.0,
+                4.0,
+                3.0
+              ]
+            ],
+            "holes": [],
+            "attrs": {},
+            "interior": false
+          },
+          {
+            "vertices": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                4.0,
+                0.0
+              ],
+              [
+                4.0,
+                4.0,
+                0.0
+              ]
+            ],
+            "holes": [],
+            "attrs": {
+              "vendor": 71,
+              "color": [
+                0,
+                0.0,
+                1
+              ],
+              "ifc": {
+                "id": 71,
+                "class": "IfcSlab"
+              },
+              "layer": "Base"
+            },
+            "interior": false
+          },
+          {
+            "vertices": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                4.0,
+                4.0,
+                0.0
+              ],
+              [
+                4.0,
+                0.0,
+                0.0
+              ]
+            ],
+            "holes": [],
+            "attrs": {
+              "vendor": 72,
+              "color": [
+                0,
+                0.25,
+                1
+              ],
+              "ifc": {
+                "id": 72,
+                "class": "IfcSlab"
+              },
+              "layer": "Base"
+            },
+            "interior": false
+          }
+        ],
+        "vertices": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            4.0,
+            0.0,
+            0.0
+          ],
+          [
+            4.0,
+            4.0,
+            0.0
+          ],
+          [
+            0.0,
+            4.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            3.0
+          ],
+          [
+            4.0,
+            0.0,
+            3.0
+          ],
+          [
+            4.0,
+            4.0,
+            3.0
+          ],
+          [
+            0.0,
+            4.0,
+            3.0
+          ],
+          [
+            7.0,
+            0.0,
+            0.0
+          ],
+          [
+            8.0,
+            0.0,
+            0.0
+          ],
+          [
+            -1.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "vertex_origins": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ],
+        "edges": [
+          {
+            "ends": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                4.0,
+                0.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                4.0,
+                0.0,
+                0.0
+              ],
+              [
+                4.0,
+                4.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                4.0,
+                4.0,
+                0.0
+              ],
+              [
+                0.0,
+                4.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                0.0,
+                4.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": 7,
+            "layer": "BaseEdges",
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                0.0,
+                0.0,
+                3.0
+              ],
+              [
+                4.0,
+                0.0,
+                3.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                4.0,
+                0.0,
+                3.0
+              ],
+              [
+                4.0,
+                4.0,
+                3.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                4.0,
+                4.0,
+                3.0
+              ],
+              [
+                0.0,
+                4.0,
+                3.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                0.0,
+                4.0,
+                3.0
+              ],
+              [
+                0.0,
+                0.0,
+                3.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                3.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                4.0,
+                0.0,
+                0.0
+              ],
+              [
+                4.0,
+                0.0,
+                3.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                4.0,
+                4.0,
+                0.0
+              ],
+              [
+                4.0,
+                4.0,
+                3.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                0.0,
+                4.0,
+                0.0
+              ],
+              [
+                0.0,
+                4.0,
+                3.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                4.0,
+                4.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                7.0,
+                0.0,
+                0.0
+              ],
+              [
+                8.0,
+                0.0,
+                0.0
+              ]
+            ],
+            "soft": true,
+            "hidden": true,
+            "curve": 81,
+            "layer": "Construction",
+            "raw_incidence": 0,
+            "incidence": 0
+          },
+          {
+            "ends": [
+              [
+                0.0,
+                0.0,
+                3.0
+              ],
+              [
+                -1.0,
+                0.0,
+                0.0
+              ]
+            ],
+            "soft": true,
+            "hidden": true,
+            "curve": 81,
+            "layer": "Construction",
+            "raw_incidence": 0,
+            "incidence": 0
+          }
+        ]
+      },
+      "result": {
+        "faces": [
+          {
+            "vertices": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                4.0,
+                0.0
+              ],
+              [
+                4.0,
+                4.0,
+                0.0
+              ]
+            ],
+            "holes": [],
+            "attrs": {
+              "vendor": 71,
+              "color": [
+                0,
+                0.0,
+                1
+              ],
+              "ifc": {
+                "id": 71,
+                "class": "IfcSlab"
+              },
+              "layer": "Base"
+            },
+            "interior": false
+          },
+          {
+            "vertices": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                4.0,
+                4.0,
+                0.0
+              ],
+              [
+                4.0,
+                0.0,
+                0.0
+              ]
+            ],
+            "holes": [],
+            "attrs": {
+              "vendor": 72,
+              "color": [
+                0,
+                0.25,
+                1
+              ],
+              "ifc": {
+                "id": 72,
+                "class": "IfcSlab"
+              },
+              "layer": "Base"
+            },
+            "interior": false
+          },
+          {
+            "vertices": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                4.0,
+                0.0,
+                0.0
+              ],
+              [
+                4.0,
+                4.0,
+                0.0
+              ],
+              [
+                0.0,
+                4.0,
+                0.0
+              ]
+            ],
+            "holes": [
+              [
+                [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  4.0,
+                  0.0
+                ],
+                [
+                  4.0,
+                  4.0,
+                  0.0
+                ]
+              ],
+              [
+                [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  4.0,
+                  4.0,
+                  0.0
+                ],
+                [
+                  4.0,
+                  0.0,
+                  0.0
+                ]
+              ]
+            ],
+            "attrs": {
+              "color": [
+                1,
+                0,
+                0
+              ],
+              "vendor": 9,
+              "ifc": {
+                "id": 19,
+                "class": "IfcSlab"
+              }
+            },
+            "interior": false
+          }
+        ],
+        "vertices": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            4.0,
+            0.0,
+            0.0
+          ],
+          [
+            4.0,
+            4.0,
+            0.0
+          ],
+          [
+            0.0,
+            4.0,
+            0.0
+          ],
+          [
+            7.0,
+            0.0,
+            0.0
+          ],
+          [
+            8.0,
+            0.0,
+            0.0
+          ],
+          [
+            -1.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "vertex_origins": [
+          0,
+          1,
+          2,
+          3,
+          8,
+          9,
+          10
+        ],
+        "edges": [
+          {
+            "ends": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                4.0,
+                0.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 3,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                4.0,
+                0.0,
+                0.0
+              ],
+              [
+                4.0,
+                4.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 3,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                4.0,
+                4.0,
+                0.0
+              ],
+              [
+                0.0,
+                4.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 3,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                0.0,
+                4.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": 7,
+            "layer": "BaseEdges",
+            "raw_incidence": 3,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                4.0,
+                4.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 4,
+            "incidence": 3
+          },
+          {
+            "ends": [
+              [
+                7.0,
+                0.0,
+                0.0
+              ],
+              [
+                8.0,
+                0.0,
+                0.0
+              ]
+            ],
+            "soft": true,
+            "hidden": true,
+            "curve": 81,
+            "layer": "Construction",
+            "raw_incidence": 0,
+            "incidence": 0
+          },
+          {
+            "ends": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                -1.0,
+                0.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 0,
+            "incidence": 0
+          }
+        ]
+      },
+      "clamped_distance": -3.0,
+      "undo": 1,
+      "status": null
+    },
+    {
+      "source_undo_exact": true,
+      "source_redo_exact": true,
+      "name": "ring-island-empty",
+      "face": 0,
+      "distance": -99,
+      "ctrl": false,
+      "source": {
+        "faces": [
+          {
+            "vertices": [
+              [
+                0.0,
+                0.0,
+                3.0
+              ],
+              [
+                4.0,
+                0.0,
+                3.0
+              ],
+              [
+                4.0,
+                4.0,
+                3.0
+              ],
+              [
+                0.0,
+                4.0,
+                3.0
+              ]
+            ],
+            "holes": [],
+            "attrs": {
+              "color": [
+                1,
+                0,
+                0
+              ],
+              "vendor": 9,
+              "ifc": {
+                "id": 19,
+                "class": "IfcSlab"
+              }
+            },
+            "interior": false
+          },
+          {
+            "vertices": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                4.0,
+                0.0,
+                0.0
+              ],
+              [
+                4.0,
+                0.0,
+                3.0
+              ],
+              [
+                0.0,
+                0.0,
+                3.0
+              ]
+            ],
+            "holes": [],
+            "attrs": {},
+            "interior": false
+          },
+          {
+            "vertices": [
+              [
+                4.0,
+                0.0,
+                0.0
+              ],
+              [
+                4.0,
+                4.0,
+                0.0
+              ],
+              [
+                4.0,
+                4.0,
+                3.0
+              ],
+              [
+                4.0,
+                0.0,
+                3.0
+              ]
+            ],
+            "holes": [],
+            "attrs": {},
+            "interior": false
+          },
+          {
+            "vertices": [
+              [
+                4.0,
+                4.0,
+                0.0
+              ],
+              [
+                0.0,
+                4.0,
+                0.0
+              ],
+              [
+                0.0,
+                4.0,
+                3.0
+              ],
+              [
+                4.0,
+                4.0,
+                3.0
+              ]
+            ],
+            "holes": [],
+            "attrs": {},
+            "interior": false
+          },
+          {
+            "vertices": [
+              [
+                0.0,
+                4.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                3.0
+              ],
+              [
+                0.0,
+                4.0,
+                3.0
+              ]
+            ],
+            "holes": [],
+            "attrs": {},
+            "interior": false
+          },
+          {
+            "vertices": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                4.0,
+                0.0
+              ],
+              [
+                4.0,
+                4.0,
+                0.0
+              ],
+              [
+                4.0,
+                0.0,
+                0.0
+              ]
+            ],
+            "holes": [
+              [
+                [
+                  1.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  3.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  3.0,
+                  3.0,
+                  0.0
+                ],
+                [
+                  1.0,
+                  3.0,
+                  0.0
+                ]
+              ]
+            ],
+            "attrs": {},
+            "interior": false
+          },
+          {
+            "vertices": [
+              [
+                1.0,
+                1.0,
+                0.0
+              ],
+              [
+                1.0,
+                3.0,
+                0.0
+              ],
+              [
+                3.0,
+                3.0,
+                0.0
+              ],
+              [
+                3.0,
+                1.0,
+                0.0
+              ]
+            ],
+            "holes": [],
+            "attrs": {
+              "vendor": 72,
+              "color": [
+                0,
+                0.25,
+                1
+              ],
+              "ifc": {
+                "id": 72,
+                "class": "IfcSlab"
+              },
+              "layer": "Base"
+            },
+            "interior": false
+          }
+        ],
+        "vertices": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            4.0,
+            0.0,
+            0.0
+          ],
+          [
+            4.0,
+            4.0,
+            0.0
+          ],
+          [
+            0.0,
+            4.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            3.0
+          ],
+          [
+            4.0,
+            0.0,
+            3.0
+          ],
+          [
+            4.0,
+            4.0,
+            3.0
+          ],
+          [
+            0.0,
+            4.0,
+            3.0
+          ],
+          [
+            1.0,
+            1.0,
+            0.0
+          ],
+          [
+            3.0,
+            1.0,
+            0.0
+          ],
+          [
+            3.0,
+            3.0,
+            0.0
+          ],
+          [
+            1.0,
+            3.0,
+            0.0
+          ]
+        ],
+        "vertex_origins": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11
+        ],
+        "edges": [
+          {
+            "ends": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                4.0,
+                0.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                4.0,
+                0.0,
+                0.0
+              ],
+              [
+                4.0,
+                4.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                4.0,
+                4.0,
+                0.0
+              ],
+              [
+                0.0,
+                4.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                0.0,
+                4.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": 7,
+            "layer": "BaseEdges",
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                0.0,
+                0.0,
+                3.0
+              ],
+              [
+                4.0,
+                0.0,
+                3.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                4.0,
+                0.0,
+                3.0
+              ],
+              [
+                4.0,
+                4.0,
+                3.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                4.0,
+                4.0,
+                3.0
+              ],
+              [
+                0.0,
+                4.0,
+                3.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                0.0,
+                4.0,
+                3.0
+              ],
+              [
+                0.0,
+                0.0,
+                3.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                3.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                4.0,
+                0.0,
+                0.0
+              ],
+              [
+                4.0,
+                0.0,
+                3.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                4.0,
+                4.0,
+                0.0
+              ],
+              [
+                4.0,
+                4.0,
+                3.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                0.0,
+                4.0,
+                0.0
+              ],
+              [
+                0.0,
+                4.0,
+                3.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                1.0,
+                1.0,
+                0.0
+              ],
+              [
+                3.0,
+                1.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                3.0,
+                1.0,
+                0.0
+              ],
+              [
+                3.0,
+                3.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                3.0,
+                3.0,
+                0.0
+              ],
+              [
+                1.0,
+                3.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                1.0,
+                3.0,
+                0.0
+              ],
+              [
+                1.0,
+                1.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          }
+        ]
+      },
+      "result": {
+        "faces": [
+          {
+            "vertices": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                4.0,
+                0.0
+              ],
+              [
+                4.0,
+                4.0,
+                0.0
+              ],
+              [
+                4.0,
+                0.0,
+                0.0
+              ]
+            ],
+            "holes": [
+              [
+                [
+                  1.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  3.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  3.0,
+                  3.0,
+                  0.0
+                ],
+                [
+                  1.0,
+                  3.0,
+                  0.0
+                ]
+              ]
+            ],
+            "attrs": {
+              "color": [
+                1,
+                0,
+                0
+              ],
+              "vendor": 9,
+              "ifc": {
+                "id": 19,
+                "class": "IfcSlab"
+              }
+            },
+            "interior": false
+          },
+          {
+            "vertices": [
+              [
+                1.0,
+                1.0,
+                0.0
+              ],
+              [
+                1.0,
+                3.0,
+                0.0
+              ],
+              [
+                3.0,
+                3.0,
+                0.0
+              ],
+              [
+                3.0,
+                1.0,
+                0.0
+              ]
+            ],
+            "holes": [],
+            "attrs": {
+              "vendor": 72,
+              "color": [
+                0,
+                0.25,
+                1
+              ],
+              "ifc": {
+                "id": 72,
+                "class": "IfcSlab"
+              },
+              "layer": "Base"
+            },
+            "interior": false
+          }
+        ],
+        "vertices": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            4.0,
+            0.0,
+            0.0
+          ],
+          [
+            4.0,
+            4.0,
+            0.0
+          ],
+          [
+            0.0,
+            4.0,
+            0.0
+          ],
+          [
+            1.0,
+            1.0,
+            0.0
+          ],
+          [
+            3.0,
+            1.0,
+            0.0
+          ],
+          [
+            3.0,
+            3.0,
+            0.0
+          ],
+          [
+            1.0,
+            3.0,
+            0.0
+          ]
+        ],
+        "vertex_origins": [
+          0,
+          1,
+          2,
+          3,
+          8,
+          9,
+          10,
+          11
+        ],
+        "edges": [
+          {
+            "ends": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                4.0,
+                0.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 1,
+            "incidence": 1
+          },
+          {
+            "ends": [
+              [
+                4.0,
+                0.0,
+                0.0
+              ],
+              [
+                4.0,
+                4.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 1,
+            "incidence": 1
+          },
+          {
+            "ends": [
+              [
+                4.0,
+                4.0,
+                0.0
+              ],
+              [
+                0.0,
+                4.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 1,
+            "incidence": 1
+          },
+          {
+            "ends": [
+              [
+                0.0,
+                4.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": 7,
+            "layer": "BaseEdges",
+            "raw_incidence": 1,
+            "incidence": 1
+          },
+          {
+            "ends": [
+              [
+                1.0,
+                1.0,
+                0.0
+              ],
+              [
+                3.0,
+                1.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                3.0,
+                1.0,
+                0.0
+              ],
+              [
+                3.0,
+                3.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                3.0,
+                3.0,
+                0.0
+              ],
+              [
+                1.0,
+                3.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                1.0,
+                3.0,
+                0.0
+              ],
+              [
+                1.0,
+                1.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          }
+        ]
+      },
+      "clamped_distance": -3.0,
+      "undo": 1,
+      "status": null
+    },
+    {
+      "source_undo_exact": true,
+      "source_redo_exact": true,
+      "name": "annular-tjunction-invalid",
+      "face": 0,
+      "distance": -99,
+      "ctrl": false,
+      "source": {
+        "faces": [
+          {
+            "vertices": [
+              [
+                0.0,
+                0.0,
+                3.0
+              ],
+              [
+                4.0,
+                0.0,
+                3.0
+              ],
+              [
+                4.0,
+                4.0,
+                3.0
+              ],
+              [
+                0.0,
+                4.0,
+                3.0
+              ]
+            ],
+            "holes": [
+              [
+                [
+                  1.0,
+                  1.0,
+                  3.0
+                ],
+                [
+                  1.0,
+                  3.0,
+                  3.0
+                ],
+                [
+                  3.0,
+                  3.0,
+                  3.0
+                ],
+                [
+                  3.0,
+                  1.0,
+                  3.0
+                ]
+              ]
+            ],
+            "attrs": {
+              "color": [
+                1,
+                0,
+                0
+              ],
+              "vendor": 9,
+              "ifc": {
+                "id": 19,
+                "class": "IfcSlab"
+              }
+            },
+            "interior": false
+          },
+          {
+            "vertices": [
+              [
+                1.0,
+                1.0,
+                0.0
+              ],
+              [
+                1.0,
+                3.0,
+                0.0
+              ],
+              [
+                1.0,
+                3.0,
+                3.0
+              ],
+              [
+                1.0,
+                1.0,
+                3.0
+              ]
+            ],
+            "holes": [],
+            "attrs": {},
+            "interior": false
+          },
+          {
+            "vertices": [
+              [
+                1.0,
+                3.0,
+                0.0
+              ],
+              [
+                3.0,
+                3.0,
+                0.0
+              ],
+              [
+                3.0,
+                3.0,
+                3.0
+              ],
+              [
+                1.0,
+                3.0,
+                3.0
+              ]
+            ],
+            "holes": [],
+            "attrs": {},
+            "interior": false
+          },
+          {
+            "vertices": [
+              [
+                3.0,
+                3.0,
+                0.0
+              ],
+              [
+                3.0,
+                1.0,
+                0.0
+              ],
+              [
+                3.0,
+                1.0,
+                3.0
+              ],
+              [
+                3.0,
+                3.0,
+                3.0
+              ]
+            ],
+            "holes": [],
+            "attrs": {},
+            "interior": false
+          },
+          {
+            "vertices": [
+              [
+                3.0,
+                1.0,
+                0.0
+              ],
+              [
+                1.0,
+                1.0,
+                0.0
+              ],
+              [
+                1.0,
+                1.0,
+                3.0
+              ],
+              [
+                3.0,
+                1.0,
+                3.0
+              ]
+            ],
+            "holes": [],
+            "attrs": {},
+            "interior": false
+          },
+          {
+            "vertices": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                4.0,
+                0.0,
+                0.0
+              ],
+              [
+                4.0,
+                0.0,
+                3.0
+              ],
+              [
+                0.0,
+                0.0,
+                3.0
+              ]
+            ],
+            "holes": [],
+            "attrs": {},
+            "interior": false
+          },
+          {
+            "vertices": [
+              [
+                4.0,
+                0.0,
+                0.0
+              ],
+              [
+                4.0,
+                1.0,
+                0.0
+              ],
+              [
+                4.0,
+                3.0,
+                0.0
+              ],
+              [
+                4.0,
+                4.0,
+                0.0
+              ],
+              [
+                4.0,
+                4.0,
+                3.0
+              ],
+              [
+                4.0,
+                0.0,
+                3.0
+              ]
+            ],
+            "holes": [],
+            "attrs": {},
+            "interior": false
+          },
+          {
+            "vertices": [
+              [
+                4.0,
+                4.0,
+                0.0
+              ],
+              [
+                0.0,
+                4.0,
+                0.0
+              ],
+              [
+                0.0,
+                4.0,
+                3.0
+              ],
+              [
+                4.0,
+                4.0,
+                3.0
+              ]
+            ],
+            "holes": [],
+            "attrs": {},
+            "interior": false
+          },
+          {
+            "vertices": [
+              [
+                0.0,
+                4.0,
+                0.0
+              ],
+              [
+                0.0,
+                3.0,
+                0.0
+              ],
+              [
+                0.0,
+                1.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                3.0
+              ],
+              [
+                0.0,
+                4.0,
+                3.0
+              ]
+            ],
+            "holes": [],
+            "attrs": {},
+            "interior": false
+          },
+          {
+            "vertices": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                1.0,
+                0.0
+              ],
+              [
+                1.0,
+                1.0,
+                0.0
+              ],
+              [
+                3.0,
+                1.0,
+                0.0
+              ],
+              [
+                4.0,
+                1.0,
+                0.0
+              ],
+              [
+                4.0,
+                0.0,
+                0.0
+              ]
+            ],
+            "holes": [],
+            "attrs": {
+              "vendor": 71,
+              "color": [
+                0,
+                0.0,
+                1
+              ],
+              "ifc": {
+                "id": 71,
+                "class": "IfcSlab"
+              },
+              "layer": "Base"
+            },
+            "interior": false
+          },
+          {
+            "vertices": [
+              [
+                0.0,
+                3.0,
+                0.0
+              ],
+              [
+                0.0,
+                4.0,
+                0.0
+              ],
+              [
+                4.0,
+                4.0,
+                0.0
+              ],
+              [
+                4.0,
+                3.0,
+                0.0
+              ],
+              [
+                3.0,
+                3.0,
+                0.0
+              ],
+              [
+                1.0,
+                3.0,
+                0.0
+              ]
+            ],
+            "holes": [],
+            "attrs": {
+              "vendor": 72,
+              "color": [
+                0,
+                0.25,
+                1
+              ],
+              "ifc": {
+                "id": 72,
+                "class": "IfcSlab"
+              },
+              "layer": "Base"
+            },
+            "interior": false
+          },
+          {
+            "vertices": [
+              [
+                0.0,
+                1.0,
+                0.0
+              ],
+              [
+                0.0,
+                3.0,
+                0.0
+              ],
+              [
+                1.0,
+                3.0,
+                0.0
+              ],
+              [
+                1.0,
+                1.0,
+                0.0
+              ]
+            ],
+            "holes": [],
+            "attrs": {
+              "vendor": 73,
+              "color": [
+                0,
+                0.5,
+                1
+              ],
+              "ifc": {
+                "id": 73,
+                "class": "IfcSlab"
+              },
+              "layer": "Base"
+            },
+            "interior": false
+          },
+          {
+            "vertices": [
+              [
+                3.0,
+                1.0,
+                0.0
+              ],
+              [
+                3.0,
+                3.0,
+                0.0
+              ],
+              [
+                4.0,
+                3.0,
+                0.0
+              ],
+              [
+                4.0,
+                1.0,
+                0.0
+              ]
+            ],
+            "holes": [],
+            "attrs": {
+              "vendor": 74,
+              "color": [
+                0,
+                0.75,
+                1
+              ],
+              "ifc": {
+                "id": 74,
+                "class": "IfcSlab"
+              },
+              "layer": "Base"
+            },
+            "interior": false
+          }
+        ],
+        "vertices": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            4.0,
+            0.0,
+            0.0
+          ],
+          [
+            4.0,
+            4.0,
+            0.0
+          ],
+          [
+            0.0,
+            4.0,
+            0.0
+          ],
+          [
+            1.0,
+            1.0,
+            0.0
+          ],
+          [
+            1.0,
+            3.0,
+            0.0
+          ],
+          [
+            3.0,
+            3.0,
+            0.0
+          ],
+          [
+            3.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            3.0
+          ],
+          [
+            4.0,
+            0.0,
+            3.0
+          ],
+          [
+            4.0,
+            4.0,
+            3.0
+          ],
+          [
+            0.0,
+            4.0,
+            3.0
+          ],
+          [
+            1.0,
+            1.0,
+            3.0
+          ],
+          [
+            1.0,
+            3.0,
+            3.0
+          ],
+          [
+            3.0,
+            3.0,
+            3.0
+          ],
+          [
+            3.0,
+            1.0,
+            3.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            4.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            3.0,
+            0.0
+          ],
+          [
+            4.0,
+            3.0,
+            0.0
+          ]
+        ],
+        "vertex_origins": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19
+        ],
+        "edges": [
+          {
+            "ends": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                4.0,
+                0.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                4.0,
+                4.0,
+                0.0
+              ],
+              [
+                0.0,
+                4.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                1.0,
+                1.0,
+                0.0
+              ],
+              [
+                1.0,
+                3.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                1.0,
+                3.0,
+                0.0
+              ],
+              [
+                3.0,
+                3.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                3.0,
+                3.0,
+                0.0
+              ],
+              [
+                3.0,
+                1.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                3.0,
+                1.0,
+                0.0
+              ],
+              [
+                1.0,
+                1.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                0.0,
+                0.0,
+                3.0
+              ],
+              [
+                4.0,
+                0.0,
+                3.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                4.0,
+                0.0,
+                3.0
+              ],
+              [
+                4.0,
+                4.0,
+                3.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                4.0,
+                4.0,
+                3.0
+              ],
+              [
+                0.0,
+                4.0,
+                3.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                0.0,
+                4.0,
+                3.0
+              ],
+              [
+                0.0,
+                0.0,
+                3.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                3.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                4.0,
+                0.0,
+                0.0
+              ],
+              [
+                4.0,
+                0.0,
+                3.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                4.0,
+                4.0,
+                0.0
+              ],
+              [
+                4.0,
+                4.0,
+                3.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                0.0,
+                4.0,
+                0.0
+              ],
+              [
+                0.0,
+                4.0,
+                3.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                1.0,
+                1.0,
+                3.0
+              ],
+              [
+                1.0,
+                3.0,
+                3.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                1.0,
+                3.0,
+                3.0
+              ],
+              [
+                3.0,
+                3.0,
+                3.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                3.0,
+                3.0,
+                3.0
+              ],
+              [
+                3.0,
+                1.0,
+                3.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                3.0,
+                1.0,
+                3.0
+              ],
+              [
+                1.0,
+                1.0,
+                3.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                1.0,
+                1.0,
+                0.0
+              ],
+              [
+                1.0,
+                1.0,
+                3.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                1.0,
+                3.0,
+                0.0
+              ],
+              [
+                1.0,
+                3.0,
+                3.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                3.0,
+                3.0,
+                0.0
+              ],
+              [
+                3.0,
+                3.0,
+                3.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                3.0,
+                1.0,
+                0.0
+              ],
+              [
+                3.0,
+                1.0,
+                3.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                1.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": 7,
+            "layer": "BaseEdges",
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                4.0,
+                1.0,
+                0.0
+              ],
+              [
+                4.0,
+                0.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                0.0,
+                3.0,
+                0.0
+              ],
+              [
+                0.0,
+                4.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": 7,
+            "layer": "BaseEdges",
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                4.0,
+                4.0,
+                0.0
+              ],
+              [
+                4.0,
+                3.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                0.0,
+                1.0,
+                0.0
+              ],
+              [
+                0.0,
+                3.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": 7,
+            "layer": "BaseEdges",
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                0.0,
+                3.0,
+                0.0
+              ],
+              [
+                1.0,
+                3.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                1.0,
+                1.0,
+                0.0
+              ],
+              [
+                0.0,
+                1.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                3.0,
+                3.0,
+                0.0
+              ],
+              [
+                4.0,
+                3.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                4.0,
+                3.0,
+                0.0
+              ],
+              [
+                4.0,
+                1.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                4.0,
+                1.0,
+                0.0
+              ],
+              [
+                3.0,
+                1.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 2,
+            "incidence": 2
+          }
+        ]
+      },
+      "result": {
+        "faces": [
+          {
+            "vertices": [
+              [
+                4.0,
+                1.0,
+                0.0
+              ],
+              [
+                4.0,
+                3.0,
+                0.0
+              ],
+              [
+                4.0,
+                4.0,
+                0.0
+              ],
+              [
+                4.0,
+                3.0,
+                0.0
+              ],
+              [
+                4.0,
+                1.0,
+                0.0
+              ],
+              [
+                4.0,
+                0.0,
+                0.0
+              ]
+            ],
+            "holes": [],
+            "attrs": {},
+            "interior": false
+          },
+          {
+            "vertices": [
+              [
+                0.0,
+                3.0,
+                0.0
+              ],
+              [
+                0.0,
+                1.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                1.0,
+                0.0
+              ],
+              [
+                0.0,
+                3.0,
+                0.0
+              ],
+              [
+                0.0,
+                4.0,
+                0.0
+              ]
+            ],
+            "holes": [],
+            "attrs": {},
+            "interior": false
+          },
+          {
+            "vertices": [
+              [
+                4.0,
+                0.0,
+                0.0
+              ],
+              [
+                4.0,
+                1.0,
+                0.0
+              ],
+              [
+                3.0,
+                1.0,
+                0.0
+              ],
+              [
+                1.0,
+                1.0,
+                0.0
+              ],
+              [
+                0.0,
+                1.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0
+              ]
+            ],
+            "holes": [],
+            "attrs": {
+              "vendor": 71,
+              "color": [
+                0,
+                0.0,
+                1
+              ],
+              "ifc": {
+                "id": 71,
+                "class": "IfcSlab"
+              },
+              "layer": "Base"
+            },
+            "interior": false
+          },
+          {
+            "vertices": [
+              [
+                1.0,
+                3.0,
+                0.0
+              ],
+              [
+                3.0,
+                3.0,
+                0.0
+              ],
+              [
+                4.0,
+                3.0,
+                0.0
+              ],
+              [
+                4.0,
+                4.0,
+                0.0
+              ],
+              [
+                0.0,
+                4.0,
+                0.0
+              ],
+              [
+                0.0,
+                3.0,
+                0.0
+              ]
+            ],
+            "holes": [],
+            "attrs": {
+              "vendor": 72,
+              "color": [
+                0,
+                0.25,
+                1
+              ],
+              "ifc": {
+                "id": 72,
+                "class": "IfcSlab"
+              },
+              "layer": "Base"
+            },
+            "interior": false
+          },
+          {
+            "vertices": [
+              [
+                1.0,
+                1.0,
+                0.0
+              ],
+              [
+                1.0,
+                3.0,
+                0.0
+              ],
+              [
+                0.0,
+                3.0,
+                0.0
+              ],
+              [
+                0.0,
+                1.0,
+                0.0
+              ]
+            ],
+            "holes": [],
+            "attrs": {
+              "vendor": 73,
+              "color": [
+                0,
+                0.5,
+                1
+              ],
+              "ifc": {
+                "id": 73,
+                "class": "IfcSlab"
+              },
+              "layer": "Base"
+            },
+            "interior": false
+          },
+          {
+            "vertices": [
+              [
+                4.0,
+                1.0,
+                0.0
+              ],
+              [
+                4.0,
+                3.0,
+                0.0
+              ],
+              [
+                3.0,
+                3.0,
+                0.0
+              ],
+              [
+                3.0,
+                1.0,
+                0.0
+              ]
+            ],
+            "holes": [],
+            "attrs": {
+              "vendor": 74,
+              "color": [
+                0,
+                0.75,
+                1
+              ],
+              "ifc": {
+                "id": 74,
+                "class": "IfcSlab"
+              },
+              "layer": "Base"
+            },
+            "interior": false
+          },
+          {
+            "vertices": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                4.0,
+                0.0,
+                0.0
+              ],
+              [
+                4.0,
+                1.0,
+                0.0
+              ],
+              [
+                4.0,
+                3.0,
+                0.0
+              ],
+              [
+                4.0,
+                4.0,
+                0.0
+              ],
+              [
+                0.0,
+                4.0,
+                0.0
+              ],
+              [
+                0.0,
+                3.0,
+                0.0
+              ],
+              [
+                0.0,
+                1.0,
+                0.0
+              ]
+            ],
+            "holes": [
+              [
+                [
+                  1.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  1.0,
+                  3.0,
+                  0.0
+                ],
+                [
+                  3.0,
+                  3.0,
+                  0.0
+                ],
+                [
+                  3.0,
+                  1.0,
+                  0.0
+                ]
+              ],
+              [
+                [
+                  0.0,
+                  3.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  3.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  4.0,
+                  0.0
+                ]
+              ],
+              [
+                [
+                  4.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  4.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  3.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  1.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              ],
+              [
+                [
+                  1.0,
+                  3.0,
+                  0.0
+                ],
+                [
+                  3.0,
+                  3.0,
+                  0.0
+                ],
+                [
+                  4.0,
+                  3.0,
+                  0.0
+                ],
+                [
+                  4.0,
+                  4.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  4.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  3.0,
+                  0.0
+                ]
+              ],
+              [
+                [
+                  1.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  1.0,
+                  3.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  3.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  1.0,
+                  0.0
+                ]
+              ],
+              [
+                [
+                  4.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  4.0,
+                  3.0,
+                  0.0
+                ],
+                [
+                  3.0,
+                  3.0,
+                  0.0
+                ],
+                [
+                  3.0,
+                  1.0,
+                  0.0
+                ]
+              ]
+            ],
+            "attrs": {
+              "color": [
+                1,
+                0,
+                0
+              ],
+              "vendor": 9,
+              "ifc": {
+                "id": 19,
+                "class": "IfcSlab"
+              }
+            },
+            "interior": false
+          }
+        ],
+        "vertices": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            4.0,
+            0.0,
+            0.0
+          ],
+          [
+            4.0,
+            4.0,
+            0.0
+          ],
+          [
+            0.0,
+            4.0,
+            0.0
+          ],
+          [
+            1.0,
+            1.0,
+            0.0
+          ],
+          [
+            1.0,
+            3.0,
+            0.0
+          ],
+          [
+            3.0,
+            3.0,
+            0.0
+          ],
+          [
+            3.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            4.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            3.0,
+            0.0
+          ],
+          [
+            4.0,
+            3.0,
+            0.0
+          ]
+        ],
+        "vertex_origins": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          16,
+          17,
+          18,
+          19
+        ],
+        "edges": [
+          {
+            "ends": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                4.0,
+                0.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 3,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                4.0,
+                4.0,
+                0.0
+              ],
+              [
+                0.0,
+                4.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 3,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                1.0,
+                1.0,
+                0.0
+              ],
+              [
+                1.0,
+                3.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 3,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                1.0,
+                3.0,
+                0.0
+              ],
+              [
+                3.0,
+                3.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 3,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                3.0,
+                3.0,
+                0.0
+              ],
+              [
+                3.0,
+                1.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 3,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                3.0,
+                1.0,
+                0.0
+              ],
+              [
+                1.0,
+                1.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 3,
+            "incidence": 2
+          },
+          {
+            "ends": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                1.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": 7,
+            "layer": "BaseEdges",
+            "raw_incidence": 6,
+            "incidence": 3
+          },
+          {
+            "ends": [
+              [
+                4.0,
+                1.0,
+                0.0
+              ],
+              [
+                4.0,
+                0.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 4,
+            "incidence": 3
+          },
+          {
+            "ends": [
+              [
+                0.0,
+                3.0,
+                0.0
+              ],
+              [
+                0.0,
+                4.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": 7,
+            "layer": "BaseEdges",
+            "raw_incidence": 6,
+            "incidence": 3
+          },
+          {
+            "ends": [
+              [
+                4.0,
+                4.0,
+                0.0
+              ],
+              [
+                4.0,
+                3.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 4,
+            "incidence": 3
+          },
+          {
+            "ends": [
+              [
+                0.0,
+                1.0,
+                0.0
+              ],
+              [
+                0.0,
+                3.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": 7,
+            "layer": "BaseEdges",
+            "raw_incidence": 6,
+            "incidence": 3
+          },
+          {
+            "ends": [
+              [
+                0.0,
+                3.0,
+                0.0
+              ],
+              [
+                1.0,
+                3.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 4,
+            "incidence": 3
+          },
+          {
+            "ends": [
+              [
+                1.0,
+                1.0,
+                0.0
+              ],
+              [
+                0.0,
+                1.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 4,
+            "incidence": 3
+          },
+          {
+            "ends": [
+              [
+                3.0,
+                3.0,
+                0.0
+              ],
+              [
+                4.0,
+                3.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 4,
+            "incidence": 3
+          },
+          {
+            "ends": [
+              [
+                4.0,
+                3.0,
+                0.0
+              ],
+              [
+                4.0,
+                1.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 4,
+            "incidence": 3
+          },
+          {
+            "ends": [
+              [
+                4.0,
+                1.0,
+                0.0
+              ],
+              [
+                3.0,
+                1.0,
+                0.0
+              ]
+            ],
+            "soft": false,
+            "hidden": false,
+            "curve": null,
+            "layer": null,
+            "raw_incidence": 4,
+            "incidence": 3
+          }
+        ]
+      },
+      "clamped_distance": -3.0,
+      "undo": 1,
+      "status": null
+    }
+  ]
+}

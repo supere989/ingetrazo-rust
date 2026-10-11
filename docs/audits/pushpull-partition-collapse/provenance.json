@@ -1,0 +1,39 @@
+{
+  "runtime_commit": "df6d7f4d",
+  "base": "d32d11e9",
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "source_sha256": {
+    "crates/ingetrazo-tools/src/pushpull.rs": "c0aeac8320c2462b2f3b53029a68638dea39a7fdfc613fc41a0d02b49807afdc",
+    "crates/ingetrazo-gui/examples/pushpull_partition_collapse.rs": "984e2488e39e9d5db8db26773707858427d88bc94df4239667c8d82a1c9e4f3f",
+    "scripts/reference-pushpull-partition-collapse.py": "0845d89ca9ef7b9464f4362ca2e679d8af7253dda7edb988cab5de4d8845052a",
+    "scripts/check-pushpull-partition-collapse.py": "027b27c53fc018cd7dc453cb3b71c2efcccc53e74542b683cd542689497cb86d"
+  },
+  "binary_sha256": {
+    "pushpull_partition_collapse": "1905f42bee74916e0369378bfce3d2b9f2330d03e41302cce7ef99bfcf7aab89",
+    "pushpull_endpoints_app": "83a4831f668ce7086449ecd7c8a93714b3f2234bb6a0c154d8f18c9343ffee59",
+    "pushpull_gate2_fixture": "9991aea14728d7c154a3037ddce0f319f19874aabe951aab0e59519ec0e2dc02"
+  },
+  "artifact_sha256": {
+    "app.log": "abfbf282d332cf7c4fc4d24edfbc5efb506685ba0939d031daa4a36e61c84b31",
+    "build.log": "b494686a1b4840cf259ac130ce57a044f72d91d19fd3f7a7062f63874d757fc8",
+    "comparison.json": "c03e02d4ab4f3530b5f4e469acd5700e44b384efc3c7efb9315d1504221adb2e",
+    "development-invalid-collapse.json": "d90af2ec9ee65165feb9596c80dcd73d46900c280ab699da43c48f722fb2fca9",
+    "endpoint-app.json": "b6b7b09e0b86e36449875725a499b79e226d29623adb99f13bb426b17c13bf04",
+    "endpoint-app.log": "1d54f491e6b2cb2cf0f73df917bdccd7eb5aa5ea907be5a9f87c77fbbbfc9e09",
+    "endpoint-check.log": "127626162da4b9a89a51415e9d47cb94428e9c5ef2b008dde60d816822dc6505",
+    "endpoint-comparison.json": "127626162da4b9a89a51415e9d47cb94428e9c5ef2b008dde60d816822dc6505",
+    "endpoint-native.json": "fb6a1f477d127c091493e236703daa9888abf16eb53a4c88f2efa140ab9328c3",
+    "native.json": "ebebb2fdfe0b7afe7376585b1e2d23af53338a7786fb1a935a0abfb20a5cc878",
+    "source.json": "fc7d9638a677ea7a71f4a67ed9057bfecb139b5a65ef3f5f8ba190e0fba40cf1",
+    "tests.log": "99bf60f3c6e736e314120102bb7670948d79d9cd0aaa315cce5d29c0decee61d"
+  },
+  "focused_checks": {
+    "pushpull_unit_tests": 11,
+    "new_exact_valid_cases": 5,
+    "source_invalid_atomic_refusal": 1,
+    "corruption_rejections": 9,
+    "earlier_endpoint_cases": 12,
+    "source_undo_redo": 6
+  },
+  "active_handles": []
+}

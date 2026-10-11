@@ -1,0 +1,12 @@
+partition case: diagonal-protected
+primitive=Ok(()), app=Ok(())
+partition case: ring-island-protected
+primitive=Ok(()), app=Ok(())
+partition case: annular-divisions
+primitive=Ok(()), app=Ok(())
+partition case: diagonal-wires
+primitive=Ok(()), app=Ok(())
+partition case: ring-island-empty
+primitive=Ok(()), app=Ok(())
+partition case: annular-tjunction-invalid
+primitive=Err("Collapse would leave a degenerate supporting face; document unchanged"), app=Err("Collapse would leave a degenerate supporting face; document unchanged")
