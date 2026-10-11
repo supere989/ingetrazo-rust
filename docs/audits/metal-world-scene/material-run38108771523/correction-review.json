@@ -1,0 +1,31 @@
+{
+  "initial_run": 38108771523,
+  "initial_source": "c7bd526d22429f3f612644a00347f9c26f229f55",
+  "arm_failure": "Native SDK passed. Nine opaque frames existed. First alpha phase reused cached material operations against changed prototype payload and panicked on missing opaque buffer. Failed encoder teardown assertion secondary.",
+  "intel_failure": "All48 frames completed as placeholders [210,214,212,255], counters zero. Actual refusal reason unobserved by original fixture; no assumed allocation cause.",
+  "corrections": [
+    "Per-target material layout keyed by Weak immutable PlacementMeshes allocation identity, retaining control block to prevent pointer reuse; matrix order/upload keys remain independent",
+    "Recoverable encoding error ends encoder before return",
+    "Cold asset identity lookup uses unpublished candidate capacity and skips unchanged warm scans",
+    "Failed budget commit cancels reservation before publication",
+    "Actual app fixture requires accepted native frame/no route reason and retains refusal JSON",
+    "Shaded mean applies only opaque FRONT texture; transparent and explicit back texture remain sampled (two actual original references)"
+  ],
+  "focused_checks": [
+    {
+      "command": "cargo check --locked -p ingetrazo-metal --lib --target aarch64-apple-darwin -j2",
+      "result": "PASS",
+      "scope": "Rust Apple API metadata only, not native SDK/MSL/GPU"
+    },
+    {
+      "command": "cargo test --locked -p ingetrazo-metal --lib world_policy -j2",
+      "result": "6 PASS,0 FAIL"
+    },
+    {
+      "command": "Python AST parse checker; rustfmt parse material fixture; git diff --check",
+      "result": "PASS"
+    }
+  ],
+  "next_required": "One changed native SDK/GPU run18 source cases54 frames,1350 literal sample pixels, warm counters and zero ledger. No source/GPU acceptance from local metadata checks.",
+  "remaining": "Full scene textures/material policy, alpha ordering/instancing/mips/cutout/assets/whole viewport/presentation remain open."
+}

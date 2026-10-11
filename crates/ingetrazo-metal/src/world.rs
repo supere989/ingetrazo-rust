@@ -63,6 +63,9 @@ struct Target {
     ordering_packet: Option<Arc<PlacementPacket>>,
     order: Option<super::world_placement::Order>,
     material_draws:Option<Arc<MaterialDraws>>,
+    // Weak pins the control block identity, not old GPU meshes. Comparing the
+    // allocation address is safe while this Weak prevents allocation reuse.
+    material_identity:Option<std::sync::Weak<PlacementMeshes>>,
 }
 enum Collection {Opaque(MeshRenderBuffer),Surfaces(ingetrazo_render::pipeline::SceneRenderData)}
 struct SampledMesh {vertices:Buffer,asset:Arc<super::world_texture::Asset>,draws:Vec<ingetrazo_render::native_textures::Draw>}
@@ -96,6 +99,8 @@ pub struct Stats {
     pub geometry_uploads: u64,
     pub texture_uploads:u64,
     pub material_order_builds:u64,
+    /// Current weak identity lookup capacity, excluding Arc control headers.
+    pub texture_identity_payload_bytes:usize,
     /// Current target material operation capacities; detached Prepared owners separate.
     pub material_order_payload_bytes:usize,
     pub target_allocations: u64,
@@ -245,7 +250,7 @@ impl World {
                 poses: Vec::new(),
                 instance_matrices: None,
                 ordering_packet: None,
-                order: None,material_draws:None,
+                order: None,material_draws:None,material_identity:None,
             })
         };
         let owner = self
@@ -471,7 +476,7 @@ impl World {
                 poses: Vec::new(),
                 instance_matrices: None,
                 ordering_packet: None,
-                order: None,material_draws:None,
+                order: None,material_draws:None,material_identity:None,
             }))
         } else {
             None
@@ -533,9 +538,16 @@ impl World {
         } else {
             None
         };
-        if candidate_assets.len()+self.texture_assets.iter().filter(|a|a.strong_count()>0).count()>4096{return Err("Metal sampled identity publication admission exceeded".into());}
-        self.texture_assets.try_reserve_exact(candidate_assets.len()).map_err(|_|"Metal texture lookup publication allocation refused")?;
-        let material_draws=if needs_materials && (order_changed||unique.material_draws.is_none()){
+        // Grow an unpublished weak lookup only on cold new-asset admission.
+        // Failed layout/target admission must not mutate its capacity/accounting.
+        let mut candidate_lookup=None;
+        if !candidate_assets.is_empty(){
+            if candidate_assets.len()+self.texture_assets.iter().filter(|a|a.strong_count()>0).count()>4096{return Err("Metal sampled identity publication admission exceeded".into());}
+            let needed=self.texture_assets.len().checked_add(candidate_assets.len()).ok_or("Metal texture lookup size overflow")?;
+            if needed>self.texture_assets.capacity(){let mut entries=Vec::new();entries.try_reserve_exact(needed).map_err(|_|"Metal texture lookup publication allocation refused")?;entries.extend(self.texture_assets.iter().cloned());candidate_lookup=Some(entries);}
+        }
+        let material_changed=needs_materials && (order_changed||unique.material_draws.is_none()||unique.material_identity.as_ref().is_none_or(|old|old.as_ptr()!=Arc::as_ptr(&placements)));
+        let material_draws=if material_changed{
             Some(Arc::new(material_draws(&placements,candidate_order.as_ref().or(unique.order.as_ref()).unwrap(),poses)?))
         }else{None};
         let allocated_matrices = candidate_matrices.is_some();
@@ -577,8 +589,8 @@ impl World {
         if let Some(order) = candidate_order {
             unique.order = Some(order);
         }
-        if let Some(draws)=material_draws{unique.material_draws=Some(draws);}
-        if !needs_materials{unique.material_draws=None;}
+        if let Some(draws)=material_draws{unique.material_draws=Some(draws);unique.material_identity=Some(Arc::downgrade(&placements));}
+        if !needs_materials{unique.material_draws=None;unique.material_identity=None;}
         unique.ordering_packet = Some(placements.packet.clone());
         if let Some(buffer) = candidate_matrices {
             unique.instance_matrices = Some(buffer);
@@ -603,7 +615,7 @@ impl World {
             .sum();
         self.stats.geometry_uploads += uploaded;
         self.stats.texture_uploads+=candidate_assets.len()as u64;
-        self.stats.material_order_builds+=u64::from(needs_materials&&order_changed);
+        self.stats.material_order_builds+=u64::from(material_changed);
         self.stats.material_order_payload_bytes=self.targets.iter().filter_map(|t|t.material_draws.as_ref()).map(|p|p.retained_payload_bytes).sum();
         self.stats.prepared += 1;
         if uploaded == 0 {
@@ -622,7 +634,9 @@ impl World {
             .iter()
             .map(|t| t.poses.capacity() * std::mem::size_of::<PlacementPose>())
             .sum();
+        if let Some(entries)=candidate_lookup{self.texture_assets=entries;}
         if uploaded>0{self.texture_assets.retain(|a|a.strong_count()>0);self.texture_assets.extend(candidate_assets.iter().map(Arc::downgrade));}
+        self.stats.texture_identity_payload_bytes=self.texture_assets.capacity()*std::mem::size_of::<std::sync::Weak<super::world_texture::Asset>>();
         self.owner = Some(owner.clone());
         self.mesh = None;
         self.key = None;
@@ -686,10 +700,10 @@ impl Prepared {
             let paint=PaintUniform{front:self.policy.front,back:self.policy.back,mode:match self.policy.mode{Mode::Material|Mode::MaterialAverage=>0,Mode::HiddenLine=>1,Mode::Monochrome=>2},padding:[0;3]};
             match op.kind {
                 MaterialKind::Legacy=>{encoder.setDepthBias_slopeScale_clamp(1.,1.,0.);encode_placement_mesh(encoder,mesh,matrices,op.packed,op.instances,self.policy);},
-                MaterialKind::Opaque{first,count,cull}=>{encoder.setDepthBias_slopeScale_clamp(1.,1.,0.);encoder.setCullMode(if cull{MTLCullMode::Back}else{MTLCullMode::None});unsafe{encoder.setVertexBuffer_offset_atIndex(Some(&mesh.vertices.as_ref().unwrap().raw),0,0);encoder.setVertexBuffer_offset_atIndex(Some(&matrices.raw),op.packed*64,1);}bind_paint(encoder,&paint);draw_instances(encoder,mesh,first,count,1);},
-                MaterialKind::DefaultBack=>{if !matches!(self.policy.mode,Mode::Material|Mode::MaterialAverage){continue;}encoder.setDepthBias_slopeScale_clamp(1.,1.,0.);encoder.setCullMode(MTLCullMode::Front);unsafe{encoder.setVertexBuffer_offset_atIndex(Some(&mesh.vertices.as_ref().unwrap().raw),0,0);encoder.setVertexBuffer_offset_atIndex(Some(&matrices.raw),op.packed*64,1);}bind_paint(encoder,&PaintUniform{front:self.policy.back,mode:3,..paint});for &(first,count)in &mesh.plan.default_back{draw_instances(encoder,mesh,first,count,1);}},
-                MaterialKind::Color(index)=>{let material=mesh.materials.as_ref().unwrap();let run=material.runs[index];let default=run.phase==super::world_surface::Phase::DefaultBack;let alpha=matches!(run.phase,super::world_surface::Phase::TransparentFront|super::world_surface::Phase::TransparentBack);encoder.setDepthBias_slopeScale_clamp(if alpha||default{1.}else{0.},if alpha||default{1.}else{0.},0.);encoder.setRenderPipelineState(if alpha{&pipelines.colored_alpha}else{&self.pipeline.color});encoder.setDepthStencilState(Some(if !depth_enabled{&self.pipeline.depth_disabled}else if alpha{&pipelines.depth}else{&self.pipeline.depth}));encoder.setCullMode(if run.cull_front{MTLCullMode::Front}else if run.front_only{MTLCullMode::Back}else{MTLCullMode::None});unsafe{encoder.setVertexBuffer_offset_atIndex(Some(&material.colored_vertices.as_ref().unwrap().raw),0,0);encoder.setVertexBuffer_offset_atIndex(Some(&matrices.raw),op.packed*64,1);}bind_paint(encoder,&PaintUniform{front:if default{self.policy.back}else{paint.front},mode:if default{3}else{0},..paint});unsafe{encoder.drawIndexedPrimitives_indexCount_indexType_indexBuffer_indexBufferOffset_instanceCount(MTLPrimitiveType::Triangle,run.count,MTLIndexType::UInt32,&material.colored_indices.as_ref().unwrap().raw,run.first*4,1);}},
-                MaterialKind::Texture{bucket,draw}=>{let texture=&mesh.materials.as_ref().unwrap().textures[bucket];let draw=&texture.draws[draw];let source=&draw.source;let alpha=source.opacity<0.999;encoder.setDepthBias_slopeScale_clamp(if !source.back_side||alpha{1.}else{0.},if !source.back_side||alpha{1.}else{0.},0.);encoder.setRenderPipelineState(if alpha{&pipelines.textured_alpha}else{&pipelines.textured});encoder.setDepthStencilState(Some(if !depth_enabled{&self.pipeline.depth_disabled}else if alpha{&pipelines.depth}else{&self.pipeline.depth}));encoder.setCullMode(if source.back_side{MTLCullMode::Front}else if source.front_cull{MTLCullMode::Back}else{MTLCullMode::None});let opacity=op.opacity;let uniform=TexturePaint{opacity,shade:source.shade,hard_cutout:u32::from(texture.asset.cutout),height:self.extent().1,mean:[texture.asset.mean[0],texture.asset.mean[1],texture.asset.mean[2],if self.policy.mode.texture_mean(source.opacity,source.back_side){1.}else{0.}]};unsafe{encoder.setVertexBuffer_offset_atIndex(Some(&texture.vertices.raw),0,0);encoder.setVertexBuffer_offset_atIndex(Some(&matrices.raw),op.packed*64,1);encoder.setFragmentTexture_atIndex(Some(&texture.asset.image),0);encoder.setFragmentSamplerState_atIndex(Some(&texture.asset.sampler),0);encoder.setFragmentBytes_length_atIndex(std::ptr::NonNull::from(&uniform).cast(),std::mem::size_of::<TexturePaint>(),0);encoder.drawPrimitives_vertexStart_vertexCount_instanceCount(MTLPrimitiveType::Triangle,draw.first as usize,draw.count as usize,1);}},
+                MaterialKind::Opaque{first,count,cull}=>{encoder.setDepthBias_slopeScale_clamp(1.,1.,0.);encoder.setCullMode(if cull{MTLCullMode::Back}else{MTLCullMode::None});unsafe{encoder.setVertexBuffer_offset_atIndex(Some(&mesh.vertices.as_ref().ok_or("Metal admitted opaque draw buffer missing")?.raw),0,0);encoder.setVertexBuffer_offset_atIndex(Some(&matrices.raw),op.packed*64,1);}bind_paint(encoder,&paint);draw_instances(encoder,mesh,first,count,1);},
+                MaterialKind::DefaultBack=>{if !matches!(self.policy.mode,Mode::Material|Mode::MaterialAverage){continue;}encoder.setDepthBias_slopeScale_clamp(1.,1.,0.);encoder.setCullMode(MTLCullMode::Front);unsafe{encoder.setVertexBuffer_offset_atIndex(Some(&mesh.vertices.as_ref().ok_or("Metal admitted opaque draw buffer missing")?.raw),0,0);encoder.setVertexBuffer_offset_atIndex(Some(&matrices.raw),op.packed*64,1);}bind_paint(encoder,&PaintUniform{front:self.policy.back,mode:3,..paint});for &(first,count)in &mesh.plan.default_back{draw_instances(encoder,mesh,first,count,1);}},
+                MaterialKind::Color(index)=>{let material=mesh.materials.as_ref().ok_or("Metal admitted material payload missing")?;let run=*material.runs.get(index).ok_or("Metal admitted material run stale")?;let default=run.phase==super::world_surface::Phase::DefaultBack;let alpha=matches!(run.phase,super::world_surface::Phase::TransparentFront|super::world_surface::Phase::TransparentBack);encoder.setDepthBias_slopeScale_clamp(if alpha||default{1.}else{0.},if alpha||default{1.}else{0.},0.);encoder.setRenderPipelineState(if alpha{&pipelines.colored_alpha}else{&self.pipeline.color});encoder.setDepthStencilState(Some(if !depth_enabled{&self.pipeline.depth_disabled}else if alpha{&pipelines.depth}else{&self.pipeline.depth}));encoder.setCullMode(if run.cull_front{MTLCullMode::Front}else if run.front_only{MTLCullMode::Back}else{MTLCullMode::None});unsafe{encoder.setVertexBuffer_offset_atIndex(Some(&material.colored_vertices.as_ref().ok_or("Metal admitted color vertex buffer missing")?.raw),0,0);encoder.setVertexBuffer_offset_atIndex(Some(&matrices.raw),op.packed*64,1);}bind_paint(encoder,&PaintUniform{front:if default{self.policy.back}else{paint.front},mode:if default{3}else{0},..paint});unsafe{encoder.drawIndexedPrimitives_indexCount_indexType_indexBuffer_indexBufferOffset_instanceCount(MTLPrimitiveType::Triangle,run.count,MTLIndexType::UInt32,&material.colored_indices.as_ref().ok_or("Metal admitted color index buffer missing")?.raw,run.first*4,1);}},
+                MaterialKind::Texture{bucket,draw}=>{let texture=&mesh.materials.as_ref().ok_or("Metal admitted material payload missing")?.textures[bucket];let draw=&texture.draws[draw];let source=&draw.source;let alpha=source.opacity<0.999;encoder.setDepthBias_slopeScale_clamp(if !source.back_side||alpha{1.}else{0.},if !source.back_side||alpha{1.}else{0.},0.);encoder.setRenderPipelineState(if alpha{&pipelines.textured_alpha}else{&pipelines.textured});encoder.setDepthStencilState(Some(if !depth_enabled{&self.pipeline.depth_disabled}else if alpha{&pipelines.depth}else{&self.pipeline.depth}));encoder.setCullMode(if source.back_side{MTLCullMode::Front}else if source.front_cull{MTLCullMode::Back}else{MTLCullMode::None});let opacity=op.opacity;let uniform=TexturePaint{opacity,shade:source.shade,hard_cutout:u32::from(texture.asset.cutout),height:self.extent().1,mean:[texture.asset.mean[0],texture.asset.mean[1],texture.asset.mean[2],if self.policy.mode.texture_mean(source.opacity,source.back_side){1.}else{0.}]};unsafe{encoder.setVertexBuffer_offset_atIndex(Some(&texture.vertices.raw),0,0);encoder.setVertexBuffer_offset_atIndex(Some(&matrices.raw),op.packed*64,1);encoder.setFragmentTexture_atIndex(Some(&texture.asset.image),0);encoder.setFragmentSamplerState_atIndex(Some(&texture.asset.sampler),0);encoder.setFragmentBytes_length_atIndex(std::ptr::NonNull::from(&uniform).cast(),std::mem::size_of::<TexturePaint>(),0);encoder.drawPrimitives_vertexStart_vertexCount_instanceCount(MTLPrimitiveType::Triangle,draw.first as usize,draw.count as usize,1);}},
             }
         }
         encoder.setDepthBias_slopeScale_clamp(0.,0.,0.);Ok(())
@@ -742,7 +756,7 @@ impl Prepared {
         }
         if let Some(placements) = &self.placements {
             if let Some(draws)=&self.target.material_draws{
-                self.encode_material_draws(&encoder,placements,draws,depth_enabled)?;
+                if let Err(error)=self.encode_material_draws(&encoder,placements,draws,depth_enabled){encoder.endEncoding();return Err(error);}
             }else{
             for run in &self.target.order.as_ref().unwrap().runs {
                 encoder.setFrontFacingWinding(if run.reflected {
