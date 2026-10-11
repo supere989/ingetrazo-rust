@@ -168,7 +168,7 @@ impl Painter {
             let library = metal
                 .device
                 .newLibraryWithSource_options_error(
-                    &NSString::from_str(&format!("#include <metal_stdlib>\nusing namespace metal;\n{}{}{}",if annotation.is_some(){"#define ANNOTATION 1\n"}else{""},include_str!("shaders/annotation_draw.metal"),include_str!("shaders/cad2d_compose.metal"))),
+                    &NSString::from_str(&format!("#include <metal_stdlib>\nusing namespace metal;\n{}{}{}",if annotation.is_some(){"#define ANNOTATION 1\n"}else{""},if annotation.is_some(){include_str!("shaders/annotation_draw.metal")}else{""},include_str!("shaders/cad2d_compose.metal"))),
                     Some(&options),
                 )
                 .map_err(|e| format!("Exact Metal canvas shader:{e:?}"))?;

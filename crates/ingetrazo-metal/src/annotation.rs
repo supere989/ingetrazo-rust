@@ -11,7 +11,7 @@ pub struct Draw {pub gates:[u32;2],pub kind:u32,pub padding:u32,pub points:[f32;
 #[repr(C)]
 #[derive(Clone,Copy,bytemuck::Pod,bytemuck::Zeroable)]
 pub struct Parameters {pub inverse:[f32;16],pub eye:[f32;4],pub forward:[f32;4],pub extent_count_sample:[u32;4]}
-pub struct Visibility {device:Retained<ProtocolObject<dyn MTLDevice>>,queue:Retained<ProtocolObject<dyn MTLCommandQueue>>,budget:Arc<std::sync::Mutex<ingetrazo_core::gpu_memory::MemoryBudget>>,poison:Arc<std::sync::atomic::AtomicBool>,pub(crate) queries:Buffer,pub(crate) hidden:Buffer,pub(crate) draws:Buffer,pub(crate) parameters:Parameters,pipeline:[Arc<Retained<ProtocolObject<dyn MTLComputePipelineState>>>;2],pub uploaded_bytes:u64}
+pub struct Visibility {device:Retained<ProtocolObject<dyn MTLDevice>>,queue:Retained<ProtocolObject<dyn MTLCommandQueue>>,budget:Arc<std::sync::Mutex<ingetrazo_core::gpu_memory::MemoryBudget>>,poison:Arc<std::sync::atomic::AtomicBool>,pub(crate) queries:Buffer,pub(crate) hidden:Buffer,pub(crate) draws:Buffer,pub(crate) parameters:Parameters,pipeline:[Arc<Retained<ProtocolObject<dyn MTLComputePipelineState>>>;2],pub uploaded_bytes:u64,reads_depth:bool}
 impl Visibility {
  pub fn prepare(metal:&NativeMetal,queries:&[Query],draws:&[Draw],parameters:Parameters,previous:Option<&Self>)->Result<Arc<Self>,String>{
   if previous.is_some_and(|old|!std::ptr::eq(&*old.device,&*metal.device)||!std::ptr::eq(&*old.queue,&*metal.queue)||!Arc::ptr_eq(&old.budget,&metal.budget)||!Arc::ptr_eq(&old.poison,&metal.poisoned)){return Err("Metal annotation foreign pipeline owner".into());}
@@ -27,8 +27,9 @@ impl Visibility {
   let query_bytes=bytemuck::cast_slice(queries);let draw_bytes=bytemuck::cast_slice(draws);
   let mut q=metal.buffer(query_bytes.len().max(32),true)?;if !query_bytes.is_empty(){q.write(query_bytes)?;}
   let h=metal.buffer((n*4).max(4),false)?;let mut d=metal.buffer(draw_bytes.len(),true)?;d.write(draw_bytes)?;
-  Ok(Arc::new(Self {device:metal.device.clone(),queue:metal.queue.clone(),budget:metal.budget.clone(),poison:metal.poisoned.clone(),queries:q,hidden:h,draws:d,parameters,pipeline,uploaded_bytes:(query_bytes.len()+draw_bytes.len())as u64}))
+  Ok(Arc::new(Self {device:metal.device.clone(),queue:metal.queue.clone(),budget:metal.budget.clone(),poison:metal.poisoned.clone(),queries:q,hidden:h,draws:d,parameters,pipeline,uploaded_bytes:(query_bytes.len()+draw_bytes.len())as u64,reads_depth:queries.iter().any(|q|q.active!=0)}))
  }
+ pub(crate) fn reads_depth(&self)->bool{self.reads_depth}
  pub(crate) fn encode(&self,command:&ProtocolObject<dyn MTLCommandBuffer>,world:&crate::world::Prepared)->Result<(),String>{
   if !std::ptr::eq(&*command.commandQueue(),&*self.queue)||!std::ptr::eq(&*world.depth_texture().device(),&*self.device){return Err("Metal annotation command/depth owner mismatch".into());}
   let samples=world.sample_count();let [width,height,count,sample]=self.parameters.extent_count_sample;

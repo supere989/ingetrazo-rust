@@ -778,7 +778,7 @@ impl Prepared {
     }
     /// Encode before the UI samples texture(), retaining this Prepared until completion.
     pub fn encode(&self, command: &ProtocolObject<dyn MTLCommandBuffer>) -> Result<(), String> {
-        self.encode_inner(command, true, false)
+        self.encode_inner(command, true, false, false)
     }
     fn encode_material_draws(&self,encoder:&ProtocolObject<dyn MTLRenderCommandEncoder>,placements:&PlacementMeshes,draws:&MaterialDraws,depth_enabled:bool,front_probe:bool)->Result<(),String>{
         if draws.operations.is_empty(){self.encode_aux(encoder,depth_enabled,false);return Ok(());}
@@ -849,11 +849,15 @@ impl Prepared {
         }
         }
     }
+    pub(crate) fn encode_with_annotation_depth(&self, command:&ProtocolObject<dyn MTLCommandBuffer>, retain_depth:bool)->Result<(),String>{
+        self.encode_inner(command,true,false,retain_depth)
+    }
     fn encode_inner(
         &self,
         command: &ProtocolObject<dyn MTLCommandBuffer>,
         depth_enabled: bool,
         front_probe: bool,
+        retain_depth: bool,
     ) -> Result<(), String> {
         if !std::ptr::eq(&*command.commandQueue(), &*self.owner.queue) {
             return Err("Metal world command queue mismatch".into());
@@ -874,7 +878,7 @@ impl Prepared {
         let depth = pass.depthAttachment();
         depth.setTexture(Some(&self.target.depth.raw));
         depth.setLoadAction(MTLLoadAction::Clear);
-        depth.setStoreAction(MTLStoreAction::Store);
+        depth.setStoreAction(if retain_depth {MTLStoreAction::Store}else{MTLStoreAction::DontCare});
         depth.setClearDepth(1.);
         let encoder = command
             .renderCommandEncoderWithDescriptor(&pass)
@@ -1305,7 +1309,7 @@ impl Prepared {
         } else {
             "World explicit Always/no-write negative diagnostic"
         })));
-        self.encode_inner(&command, depth_enabled, front_probe)?;
+        self.encode_inner(&command, depth_enabled, front_probe, false)?;
         let blit = command
             .blitCommandEncoder()
             .ok_or("World diagnostic blit unavailable")?;

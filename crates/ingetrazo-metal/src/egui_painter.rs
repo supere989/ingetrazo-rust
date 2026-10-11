@@ -202,7 +202,7 @@ pub struct PreparedPaint {
 impl PreparedPaint {
     /// Encode world targets before any UI sampling in the same native command.
     /// The PreparedPaint owner retains the complete world frame through completion.
-    pub fn encode_world(&self,command:&ProtocolObject<dyn MTLCommandBuffer>)->Result<(),String>{if let Some(world)=&self.world{world.encode(command)?;for item in &self.order {let annotation=match item {PaintOrder::Cad(p,_)=>p.annotation.as_ref(),PaintOrder::Compute(p,_)=>p.annotation.as_ref(),_=>None};if let Some(annotation)=annotation{annotation.encode(command,world)?;}}}else if self.order.iter().any(|item|match item{PaintOrder::Cad(p,_)=>p.annotation.is_some(),PaintOrder::Compute(p,_)=>p.annotation.is_some(),_=>false}){return Err("Metal document annotations require retained World depth".into());}Ok(())}
+    pub fn encode_world(&self,command:&ProtocolObject<dyn MTLCommandBuffer>)->Result<(),String>{if let Some(world)=&self.world{let retain_depth=self.order.iter().any(|item|match item{PaintOrder::Cad(p,_)=>p.annotation.as_ref().is_some_and(|a|a.reads_depth()),PaintOrder::Compute(p,_)=>p.annotation.as_ref().is_some_and(|a|a.reads_depth()),_=>false});world.encode_with_annotation_depth(command,retain_depth)?;for item in &self.order {let annotation=match item {PaintOrder::Cad(p,_)=>p.annotation.as_ref(),PaintOrder::Compute(p,_)=>p.annotation.as_ref(),_=>None};if let Some(annotation)=annotation{annotation.encode(command,world)?;}}}else if self.order.iter().any(|item|match item{PaintOrder::Cad(p,_)=>p.annotation.is_some(),PaintOrder::Compute(p,_)=>p.annotation.is_some(),_=>false}){return Err("Metal document annotations require retained World depth".into());}Ok(())}
 
     pub(crate) fn encode(
         &self,

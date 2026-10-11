@@ -1,0 +1,7 @@
+{
+  "check": "cargo check -p ingetrazo-metal --lib --target aarch64-apple-darwin -j2",
+  "result": "PASS",
+  "scope": "Rust interface only; no native SDK/MSL/GPU proof",
+  "log_sha256": "271d463d92c07327b17b43d6bfe5583d225f4e50e213935b3cb7c7229c1dd1fd",
+  "policy": "Depth Store only if actual admitted frame callback has any active visibility query; plain, empty-query and tool-label callbacks use DontCare. Ordinary CAD source omits annotation_draw.metal."
+}
