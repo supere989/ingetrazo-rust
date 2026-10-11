@@ -1086,7 +1086,7 @@ impl crate::world::World {
         let fill_changed=fill_key.is_some_and(|key|pose_revision.is_none()||adapter.fill.as_ref().is_none_or(|p|p.0!=key));
         let fill_candidate=if let Some(key)=fill_key{Some((key,if let Some((old,fill))=&adapter.fill{if *old==key && pose_revision.is_some(){fill.clone()}else{Arc::new(super::world_section::Fill::prepare(metal,scene,style.section_fill_color)?)}}else{Arc::new(super::world_section::Fill::prepare(metal,scene,style.section_fill_color)?)}))}else{None};
         let contour_eye_width=if section.enabled(){
-            let parameters=[eye.x as f32,eye.y as f32,eye.z as f32,((camera.fov_deg.to_radians()*0.5).tan()*2.*1.25/extent.1.max(1) as f64) as f32];
+            let parameters=[eye.x as f32,eye.y as f32,eye.z as f32,((camera.fov_deg.to_radians()*0.5).tan()*2.*1.25/self.contour_logical_height.unwrap_or(extent.1 as f32).max(1.) as f64) as f32];
             if parameters.iter().any(|v|!v.is_finite())||parameters[3]<0.{return Err("Metal contour camera finite admission".into());}
             parameters
         }else{[0.;4]};

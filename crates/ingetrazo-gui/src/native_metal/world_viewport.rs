@@ -58,7 +58,7 @@ impl Viewport {
             self.last_route_reason=reason;
         }
     }
-    fn prepare(&mut self, app: &IngeTrazoApp, extent: (u32, u32)) -> Result<bool, String> {
+    fn prepare(&mut self, app: &IngeTrazoApp, extent: (u32, u32),logical_height:f32) -> Result<bool, String> {
         let RenderRevisions {
             static_domains,
             poses,
@@ -80,6 +80,7 @@ impl Viewport {
         // Frozen source ghost raster uses four samples. Refuse unsupported native
         // sample capability instead of silently substituting single-sample pixels.
         self.world.set_sample_count(&self.metal,4)?;
+        self.world.set_viewport_logical_height(logical_height)?;
         // Same Qt-f32/OpenGL matrix as the Vulkan world consumer. The Metal
         // vertex shader performs the native [-w,w] -> [0,w] depth mapping.
         let source_camera=crate::navigation_ray::camera_snapshot(&app.camera)
@@ -129,7 +130,7 @@ pub(crate) fn route(app: &mut IngeTrazoApp, rect: egui::Rect, density: f32) -> O
         density as f64,
     )
     .map_err(|e| e.to_string())
-    .and_then(|[w, h]| viewport.prepare(app, (w, h)));
+    .and_then(|[w, h]| viewport.prepare(app, (w, h),rect.height()));
     let reason = match result {
         Ok(true) => {
             app.native_gpu_viewport_enabled = true;

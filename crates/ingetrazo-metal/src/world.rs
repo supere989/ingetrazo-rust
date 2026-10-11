@@ -166,6 +166,7 @@ pub struct World {
     pipeline: Option<Arc<Pipeline>>,
     section_pipeline:Option<Arc<Pipeline>>,
     pub(crate) contour_pipeline:Option<Arc<super::world_contour::Pipeline>>,
+    pub(crate) contour_logical_height:Option<f32>,
     targets: Vec<Arc<Target>>,
     texture_assets:Vec<Arc<super::world_texture::Asset>>,
     pub stats: Stats,
@@ -209,6 +210,11 @@ impl World {
     pub fn shared_billboard_texture_owners(&self,frame:&Prepared)->usize{
         frame.billboards.as_ref().map_or(0,|billboards|billboards.assets().iter()
             .filter(|(_,asset)|self.texture_assets.iter().any(|ordinary|Arc::ptr_eq(asset,ordinary))).count())
+    }
+    /// Literal widget height for section stroke sizing; targets use physical pixels.
+    pub fn set_viewport_logical_height(&mut self,height:f32)->Result<(),String>{
+        if !height.is_finite()||height<0.{return Err("Metal logical viewport height admission".into());}
+        self.contour_logical_height=Some(height);Ok(())
     }
     pub(crate) fn configured_sample_count(&self)->usize{self.samples.max(1)}
     pub(crate) fn pin_bases(&self, keys:[Option<PrototypeKey>;2])->BasePins {
@@ -1023,8 +1029,8 @@ impl Prepared {
             encode_mesh(&encoder, mesh, &self.mvp, self.policy);
         }
         if self.target.material_draws.is_none(){self.encode_fill(&encoder)?;self.encode_aux(&encoder,depth_enabled,false);}
-        self.encode_aux(&encoder,depth_enabled,true);
         self.encode_contours(&encoder)?;
+        self.encode_aux(&encoder,depth_enabled,true);
         encoder.endEncoding();
         Ok(())
     }
