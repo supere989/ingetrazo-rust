@@ -130,6 +130,9 @@ impl TextureCache {
         Ok(candidate)
     }
     pub(crate) fn prepare_deferred(&mut self,context:&VulkanContext,resources:&mut Resources,asset:&EncodedAsset<'_>,max_decoded_bytes:u64)->Result<PreparedTexture,String>{
+        self.prepare_predecoded(context,resources,asset,max_decoded_bytes,None)
+    }
+    pub(crate) fn prepare_predecoded(&mut self,context:&VulkanContext,resources:&mut Resources,asset:&EncodedAsset<'_>,max_decoded_bytes:u64,decoded:Option<(DecodedTexture,f64)>)->Result<PreparedTexture,String>{
         let id = asset.id;
         let encoded = asset.encoded;
         if let Some(entry) = self.images.get(&id) {
@@ -144,9 +147,9 @@ impl TextureCache {
             });
         }
         let start = Instant::now();
-        let mut decoded = decode_png_jpeg(encoded, max_decoded_bytes)?;
+        let (mut decoded,decode_ms)=match decoded{Some(value)=>value,None=>{let value=decode_png_jpeg(encoded,max_decoded_bytes)?;(value,start.elapsed().as_secs_f64()*1000.)}};
         self.stats.decodes += 1;
-        self.stats.decode_ms += start.elapsed().as_secs_f64() * 1000.;
+        self.stats.decode_ms += decode_ms;
         // Original QOpenGLTexture uploads QImage.mirrored(), with positive V.
         // Inverting V instead is not equivalent under fixed-point filtering.
         // Cold in-place row swaps preserve one shared AssetId/GPU image for faces
@@ -390,4 +393,33 @@ mod publication_admission_tests{
   assert!(cache.preflight_publication(std::iter::once(&candidate)).is_err());assert!(cache.images.is_empty());
   cache.preflight_publication(std::iter::empty()).unwrap();assert!(cache.images.is_empty());
  }
+}
+
+/// One cold-only native worker plus the caller. At most 8 MiB of admitted
+/// decoded output is retained, identities are deduplicated, and published hits
+/// are excluded. No worker or decode exists on unchanged/warm frames.
+pub(crate) fn decode_parallel_png(assets:&[&EncodedAsset<'_>])->Result<HashMap<AssetId,(DecodedTexture,f64)>,String>{
+ let mut selected=Vec::new();let mut bytes=0u64;
+ for asset in assets {
+  if !asset.encoded.starts_with(b"\x89PNG\r\n\x1a\n")||selected.iter().any(|a:&&EncodedAsset<'_>|a.id==asset.id){continue;}
+  // Read only fixed IHDR dimensions for scheduling. The unchanged decoder
+  // still validates the complete stream before GPU allocation/publication.
+  if asset.encoded.get(12..16)!=Some(b"IHDR")||asset.encoded.len()<24{continue;}
+  let w=u32::from_be_bytes(asset.encoded[16..20].try_into().unwrap());let h=u32::from_be_bytes(asset.encoded[20..24].try_into().unwrap());
+  let size=u64::from(w).checked_mul(u64::from(h)).and_then(|n|n.checked_mul(4)).ok_or("Parallel decode dimensions overflow")?;
+  if size<512*1024||size>8*1024*1024||bytes.checked_add(size).is_none_or(|n|n>8*1024*1024){continue;}
+  selected.try_reserve(1).map_err(|_|"Parallel decode identity admission")?;selected.push(*asset);bytes+=size;
+ }
+ if selected.len()<2{return Ok(HashMap::new());}
+ let decode=|slice:&[&EncodedAsset<'_>]|->Result<Vec<(AssetId,(DecodedTexture,f64))>,String>{let mut result=Vec::new();result.try_reserve_exact(slice.len()).map_err(|_|"Parallel decode result admission")?;for asset in slice{let t=Instant::now();let decoded=decode_png_jpeg(asset.encoded,8*1024*1024)?;result.push((asset.id,(decoded,t.elapsed().as_secs_f64()*1000.)));}Ok(result)};
+ let middle=selected.len().div_ceil(2);
+ let (left,right)=std::thread::scope(|scope|->Result<_,String>{let worker=std::thread::Builder::new().name("texture-cold-decode".into()).spawn_scoped(scope,||decode(&selected[..middle])).map_err(|e|e.to_string())?;let right=decode(&selected[middle..]);let left=worker.join().map_err(|_|"Texture decode worker panicked")?;Ok((left?,right?))})?;
+ let mut result=HashMap::new();result.try_reserve(left.len()+right.len()).map_err(|_|"Parallel decoded map admission")?;result.extend(left);result.extend(right);Ok(result)
+}
+
+#[cfg(test)] mod parallel_decode_tests {
+ use super::*;use image::ImageEncoder;
+ fn png(color:[u8;4])->Vec<u8>{let rgba=color.repeat(512*512);let mut out=Vec::new();image::codecs::png::PngEncoder::new(&mut out).write_image(&rgba,512,512,image::ExtendedColorType::Rgba8).unwrap();out}
+ #[test]fn bounded_parallel_decode_matches_serial_and_deduplicates(){let a=png([37,93,157,255]);let b=png([11,29,77,127]);let aa=EncodedAsset{id:AssetId(*blake3::hash(&a).as_bytes()),encoded:&a};let bb=EncodedAsset{id:AssetId(*blake3::hash(&b).as_bytes()),encoded:&b};let result=decode_parallel_png(&[&aa,&bb,&aa]).unwrap();assert_eq!(result.len(),2);for asset in [&aa,&bb]{let serial=decode_png_jpeg(asset.encoded,8*1024*1024).unwrap();assert_eq!(result[&asset.id].0.rgba,serial.rgba);assert_eq!(result[&asset.id].0.hard_cutout,serial.hard_cutout);}assert!(decode_parallel_png(&[&aa]).unwrap().is_empty());}
+ #[test]fn malformed_parallel_decode_cannot_produce_candidate(){let a=png([37,93,157,255]);let mut b=png([11,29,77,127]);b.truncate(40);let aa=EncodedAsset{id:AssetId(*blake3::hash(&a).as_bytes()),encoded:&a};let bb=EncodedAsset{id:AssetId(*blake3::hash(&b).as_bytes()),encoded:&b};assert!(decode_parallel_png(&[&aa,&bb]).is_err());}
 }

@@ -57,6 +57,14 @@ impl Textures{
     let mut inputs=Vec::new();inputs.try_reserve_exact(group.len()).map_err(|_|"Texture upload list admission")?;
     inputs.extend(group.iter().map(|(_,_,_,g)|(g.upload_bytes(),vk::BufferUsageFlags::VERTEX_BUFFER|vk::BufferUsageFlags::STORAGE_BUFFER)));
     candidate.buffers.try_reserve(group.len()).map_err(|_|"Texture buffer identity admission")?;
+    let mut group_assets=HashMap::new();group_assets.try_reserve(group.len()).map_err(|_|"Texture asset group admission")?;
+    for(path,_,_,_)in &group{if let Some(bytes)=assets.get(*path){group_assets.insert(*path,self.cache.identify(bytes));}}
+    let mut decode_assets=Vec::new();decode_assets.try_reserve(group.len()).map_err(|_|"Decode input admission")?;
+    for(path,buffer,_,g)in &group {
+     let sampled=if buffer.source_billboard_receiver{buffer.source_billboard_color.is_none()}else{g.draws.iter().any(|d|!average||d.source.back_side||d.source.opacity<0.999||(shadow&&!d.source.back_side&&d.source.opacity>=0.7))};
+     if sampled{if let Some(asset)=group_assets.get(path){if !images.contains_key(&asset.id())&&!self.cache.contains(asset.id()){decode_assets.push(asset);}}}
+    }
+    let mut decoded=super::texture_cache::decode_parallel_png(&decode_assets)?;
     let vertices=resources.upload_many(context,&inputs)?;
     candidate.buffers.extend_from_slice(&vertices);
     for((path,buffer,extra_only,geometry),vertex)in group.into_iter().zip(vertices){
@@ -71,14 +79,14 @@ impl Textures{
      let read=if needs_mean{read_average_file(path,self.averages.limits().encoded_bytes)}else{match std::fs::read(path){Ok(bytes)=>Ok(bytes),Err(error)if (shadow||billboard)&&error.kind()==std::io::ErrorKind::NotFound=>Ok(Vec::new()),Err(error)=>Err(format!("Texture {path}: {error}"))}};
      file=read?;missing=(shadow||billboard)&&!needs_mean&&file.is_empty();file.as_slice()
     };
-    let asset=self.cache.identify(encoded);let id=asset.id();
+    let asset=group_assets.remove(path).unwrap_or_else(||self.cache.identify(encoded));let id=asset.id();
     let mean=if let Some(color)=buffer.source_billboard_color{Some(color)}else if needs_mean{Some(self.averages.prepare(&mut candidate.averages,id,encoded)?)}else{None};
     let (sampled,set)=if needs_sampled&&!missing {
      // Lazy pool creation keeps pure opaque shaded scenes free of sampled
      // image/descriptor allocations, including when changing render styles.
      if candidate.pool.is_none(){let handle=unsafe{self.device.create_descriptor_pool(&vk::DescriptorPoolCreateInfo::default().max_sets(count).pool_sizes(&[vk::DescriptorPoolSize{ty:vk::DescriptorType::COMBINED_IMAGE_SAMPLER,descriptor_count:count}]),None)}.map_err(|e|e.to_string())?;candidate.pool=Some(Pool{device:self.device.clone(),handle});}
      let pool=candidate.pool.as_ref().unwrap().handle;
-     let sampled=if let Some(sampled)=images.get(&id){*sampled}else{let _pressure=if self.probe_pressure{let mut ledger=self.budget.ledger.lock().unwrap();let previous=ledger.total_limit;ledger.total_limit=Some(ledger.total_committed());Some(PressureRestore{budget:self.budget.clone(),previous})}else{None};let image=self.cache.prepare_deferred(context,resources,&asset,256*1024*1024).map_err(|e|format!("Texture image admission: {e}"))?;let sampled=image.sampled();images.insert(id,sampled);pending_image_bytes=pending_image_bytes.checked_add(image.pending_bytes()).ok_or("Pending texture image bytes overflow")?;candidate.images.push(image);if pending_image_bytes>=8*1024*1024{self.cache.complete_many(context,resources,candidate.images[pending_image_start..].iter_mut())?;pending_image_bytes=0;pending_image_start=candidate.images.len();}sampled};
+     let sampled=if let Some(sampled)=images.get(&id){*sampled}else{let _pressure=if self.probe_pressure{let mut ledger=self.budget.ledger.lock().unwrap();let previous=ledger.total_limit;ledger.total_limit=Some(ledger.total_committed());Some(PressureRestore{budget:self.budget.clone(),previous})}else{None};let image=self.cache.prepare_predecoded(context,resources,&asset,256*1024*1024,decoded.remove(&id)).map_err(|e|format!("Texture image admission: {e}"))?;let sampled=image.sampled();images.insert(id,sampled);pending_image_bytes=pending_image_bytes.checked_add(image.pending_bytes()).ok_or("Pending texture image bytes overflow")?;candidate.images.push(image);if pending_image_bytes>=8*1024*1024{self.cache.complete_many(context,resources,candidate.images[pending_image_start..].iter_mut())?;pending_image_bytes=0;pending_image_start=candidate.images.len();}sampled};
      let set=unsafe{self.device.allocate_descriptor_sets(&vk::DescriptorSetAllocateInfo::default().descriptor_pool(pool).set_layouts(&[self.descriptor_layout]))}.map_err(|e|e.to_string())?[0];
      let infos=[vk::DescriptorImageInfo::default().image_view(sampled.0).sampler(sampled.1).image_layout(vk::ImageLayout::SHADER_READ_ONLY_OPTIMAL)];unsafe{self.device.update_descriptor_sets(&[vk::WriteDescriptorSet::default().dst_set(set).dst_binding(0).descriptor_type(vk::DescriptorType::COMBINED_IMAGE_SAMPLER).image_info(&infos)],&[])};
      (sampled,set)
