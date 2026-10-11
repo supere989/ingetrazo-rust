@@ -387,10 +387,18 @@ impl Sheet {
 
     /// Original composer uses stable z ordering and excludes hidden items.
     /// Retained native metadata is authoritative for these unmodeled properties.
+    /// Source canvas order, including hidden items (they still supply drag
+    /// snap targets). Painting and picking use the visible-only wrapper.
+    pub fn stacked_item_indices(&self) -> Vec<usize> {
+        self.item_indices(true)
+    }
     pub fn visible_item_indices(&self) -> Vec<usize> {
+        self.item_indices(false)
+    }
+    fn item_indices(&self, include_hidden: bool) -> Vec<usize> {
         let metadata=|index:usize|self.native_items.get(&self.items[index].id());
         let mut indices=(0..self.items.len()).filter(|&index|
-            match &self.items[index] {SheetItem::Shape(f)=>!f.shape.hidden,_=>!metadata(index).and_then(|value|value.get("hidden")).and_then(|value|value.as_bool()).unwrap_or(false)}
+            include_hidden || match &self.items[index] {SheetItem::Shape(f)=>!f.shape.hidden,_=>!metadata(index).and_then(|value|value.get("hidden")).and_then(|value|value.as_bool()).unwrap_or(false)}
         ).collect::<Vec<_>>();
         let z=|index:usize|if let SheetItem::Shape(f)=&self.items[index] {f.shape.z} else {metadata(index).and_then(|value|value.get("z")).and_then(|value|value.as_f64()).unwrap_or(0.)};
         let category=|index:usize|match &self.items[index] {SheetItem::ViewFrame(_)=>0,SheetItem::Text(_)=>1,SheetItem::GraphicScale(_)=>3,SheetItem::NorthArrow(_)=>4,SheetItem::TitleBlock(_)=>14,SheetItem::Shape(_)=>6};

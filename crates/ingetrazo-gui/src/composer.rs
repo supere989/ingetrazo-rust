@@ -20,6 +20,7 @@ use crate::app::IngeTrazoApp;
 #[path="composer_pdf.rs"] mod pdf;
 #[path="composer_text_canvas.rs"] mod text_canvas;
 #[path="composer_text_authoring.rs"] mod text_authoring;
+#[path="composer_pointer.rs"] mod pointer_transactions;
 
 /// Interactive state for the Sheet Composer view.
 #[derive(Debug, Clone)]
@@ -42,6 +43,8 @@ pub struct ComposerState {
     pub dragging_item_idx: Option<usize>,
     pub drag_start_pos: Option<Pos2>,
     pub drag_item_orig_pos: Option<(f64, f64)>,
+    drag_item_id:Option<uuid::Uuid>,
+    drag_snap_targets:Option<pointer_transactions::Targets>,
     pub interaction_sheet:Option<uuid::Uuid>,
     pub edit_before:Option<Sheet>,
     #[cfg(test)]
@@ -59,7 +62,7 @@ impl Default for ComposerState {
             zoom: 1.5, // 1.5 px per mm by default (~400mm A3 = 600px wide)
             dragging_item_idx: None,
             drag_start_pos: None,
-            drag_item_orig_pos: None,
+            drag_item_orig_pos: None,drag_item_id:None,drag_snap_targets:None,
             interaction_sheet:None,edit_before:None,sheet_history:Default::default(),
             #[cfg(test)]
             edit_snapshots:0,
@@ -133,7 +136,7 @@ impl IngeTrazoApp {
   }else if let Some(object)=target.native_document.as_object_mut(){object.remove("border");}
  }
  pub fn finish_composer_edit(&mut self){
-  self.composer_state.dragging_item_idx=None;self.composer_state.drag_start_pos=None;self.composer_state.drag_item_orig_pos=None;
+  self.composer_state.dragging_item_idx=None;self.composer_state.drag_start_pos=None;self.composer_state.drag_item_orig_pos=None;self.composer_state.drag_item_id=None;self.composer_state.drag_snap_targets=None;
   let Some(mut before)=self.composer_state.edit_before.take()else{return;};
   let Some(current)=self.scene.sheets.iter().find(|s|s.id==before.id)else{return;};
   Self::retain_direct_paper_properties(&mut before,current);
@@ -164,7 +167,7 @@ impl IngeTrazoApp {
     if changed{self.scene.bump_version();}
    }
   }
-  self.composer_state.dragging_item_idx=None;self.composer_state.drag_start_pos=None;self.composer_state.drag_item_orig_pos=None;
+  self.composer_state.dragging_item_idx=None;self.composer_state.drag_start_pos=None;self.composer_state.drag_item_orig_pos=None;self.composer_state.drag_item_id=None;self.composer_state.drag_snap_targets=None;
  }
 }
 
@@ -176,7 +179,13 @@ pub fn render_sheet_composer(app: &mut IngeTrazoApp, ui: &mut egui::Ui, sheet_id
     }
 
     app.enter_composer_sheet(sheet_idx);
-    if ui.input(|i|i.key_pressed(egui::Key::Escape)){app.cancel_composer_edit();}
+    if ui.input(|i|i.key_pressed(egui::Key::Escape)){
+        // A normal item grab keeps its geometry until the real release.
+        // Source Select Escape only drops selection; explicit edit/placement
+        // cancellation retains the existing snapshot rollback law.
+        if app.composer_state.dragging_item_idx.is_some(){app.scene.sheets[sheet_idx].selected_item=None;}
+        else {let select_mode=!app.composer_state.text_tool&&app.composer_state.shape_tool.is_none()&&app.composer_state.inline_text.is_none();app.cancel_composer_edit();if select_mode{app.scene.sheets[sheet_idx].selected_item=None;}}
+    }
 
     let (response_rect, response) = ui.allocate_exact_size(ui.available_size(), egui::Sense::click_and_drag());
     let painter = ui.painter_at(response_rect);
@@ -272,7 +281,8 @@ pub fn render_sheet_composer(app: &mut IngeTrazoApp, ui: &mut egui::Ui, sheet_id
     app.native_composer.retain_items(&items);
     if app.composer_state.shape_tool.is_none()||app.composer_state.shape_start.is_none(){app.native_composer.clear_preview();}
     // Render Sheet Items
-    for idx in app.scene.sheets[sheet_idx].visible_item_indices() {
+    let item_order=app.scene.sheets[sheet_idx].visible_item_indices();
+    for &idx in &item_order {
         let item=&items[idx];
         let is_selected = selected_item == Some(idx);
 
@@ -669,59 +679,9 @@ pub fn render_sheet_composer(app: &mut IngeTrazoApp, ui: &mut egui::Ui, sheet_id
         if app.composer_state.shape_start.is_none(){app.native_composer.clear_preview();}
         return;
     }
-    // Handle Item Selection & Dragging on Canvas
-    if let Some(hover_pos) = pointer.hover_pos() {
-        let sheet = &mut app.scene.sheets[sheet_idx];
-        if response.clicked() && !space_down {
-            // Check reverse order (topmost first)
-            let mut clicked_idx = None;
-            for (idx, item) in sheet.items.iter().enumerate().rev() {
-                let ir = rect_mm_to_screen(item.rect());
-                if ir.contains(hover_pos) {
-                    clicked_idx = Some(idx);
-                    break;
-                }
-            }
-            sheet.selected_item = clicked_idx;
-        }
-
-        // Drag selected item
-        if response.drag_started() && !space_down && !pointer.middle_down() {
-            if let Some(sel_idx) = sheet.selected_item {
-                let ir = rect_mm_to_screen(sheet.items[sel_idx].rect());
-                if ir.contains(hover_pos) {
-                    app.composer_state.snapshot_sheet(sheet);
-                    app.composer_state.dragging_item_idx = Some(sel_idx);
-                    app.composer_state.drag_start_pos = Some(hover_pos);
-                    let orig_rect = sheet.items[sel_idx].rect();
-                    app.composer_state.drag_item_orig_pos = Some((orig_rect.x, orig_rect.y));
-                }
-            }
-        }
-
-        if response.dragged() {
-            if let (Some(drag_idx), Some(start_pos), Some((orig_x, orig_y))) = (
-                app.composer_state.dragging_item_idx,
-                app.composer_state.drag_start_pos,
-                app.composer_state.drag_item_orig_pos,
-            ) {
-                if drag_idx < sheet.items.len() {
-                    let delta_px = hover_pos - start_pos;
-                    let delta_mm_x = delta_px.x as f64 / zoom as f64;
-                    let delta_mm_y = delta_px.y as f64 / zoom as f64;
-                    sheet.items[drag_idx].set_pos(orig_x + delta_mm_x, orig_y + delta_mm_y);
-                }
-            }
-        }
-
-        if response.drag_stopped() {
-            if app.composer_state.dragging_item_idx.is_some() {
-                app.composer_state.dragging_item_idx = None;
-                app.composer_state.drag_start_pos = None;
-                app.composer_state.drag_item_orig_pos = None;
-            }
-        }
-    }
+    // Original Qt item mouse grab is acquired at the press, before the
+    // platform drag threshold. It uses the original press throughout.
+    pointer_transactions::input(app,ui,sheet_idx,&response,paper_rect,toolbar_rect,zoom,&item_order,space_down);
     if app.composer_state.dragging_item_idx.is_none()&&!pointer.any_down()&&!ui.ctx().wants_keyboard_input(){app.finish_composer_edit();}
 }
 
