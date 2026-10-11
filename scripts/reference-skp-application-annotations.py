@@ -16,7 +16,7 @@ from formats.skp import load_skp
 from views.viewport import Viewport
 record=json.loads((capture/'capture.json').read_text());state=record['records'][0]['state'];camera=state['camera'];scene=Scene();load_skp(scene,skp)
 assert [len(scene.dimensions),len(scene.text_labels)]==[state['dimensions'],state['leaders']]
-vp=Viewport();vp.resize(800,600);vp.scene=scene;vp.style_override=Style(face_mode='shaded',sky=False,edges=True,profiles=False,background=(1.,1.,1.))
+vp=Viewport();vp.setFixedSize(800,600);vp.scene=scene;vp.style_override=Style(face_mode='shaded',sky=False,edges=True,profiles=False,background=(1.,1.,1.))
 for key,value in camera.items():
  if hasattr(vp.camera,key):setattr(vp.camera,key,QVector3D(*value)if key in['target','up']else value)
 vp.show();rows=[]
@@ -24,6 +24,7 @@ def take(name):
  before=getattr(vp,'_depth_snap',None);started=time.monotonic();vp.update();deadline=started+4
  while time.monotonic()<deadline:
   app.processEvents();time.sleep(.01)
+ (out/(name+'-readiness.json')).write_text(json.dumps(dict(timestamp=time.monotonic(),viewport_logical=[vp.width(),vp.height()],framebuffer=list(vp._fb_size()),dpr=vp.devicePixelRatioF(),camera={key:(list(getattr(vp.camera,key).toTuple())if key in['target','up']else getattr(vp.camera,key))for key in camera if hasattr(vp.camera,key)},gl=dict(vp.gl_info)),indent=2)+'\n')
  assert vp.width()==800 and vp.height()==600
  assert 'NVIDIA GeForce RTX 5090'in vp.gl_info['renderer'],vp.gl_info
  image=vp.grabFramebuffer();assert image.width()==800 and image.height()==600 and not image.isNull();assert image.save(str(out/(name+'.png')))
