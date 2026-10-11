@@ -7,7 +7,8 @@ assert subprocess.check_output(['git','-C',str(source),'rev-parse','HEAD'],text=
 assert subprocess.check_output(['git','-C',str(parser),'rev-parse','HEAD'],text=True).strip()=='291700bc213655a00461838de71e5f206311e619'
 sys.path[:0]=[str(parser/'packages/python/src'),str(source)]
 from PySide6.QtCore import QObject,QEvent,Qt
-from PySide6.QtGui import QSurfaceFormat,QVector3D,QPainter,QFontInfo,QImage
+from PySide6.QtGui import QSurfaceFormat,QVector3D,QPainter,QFontInfo,QImage,QFont
+from OpenGL import GL
 from PySide6.QtWidgets import QApplication
 fmt=QSurfaceFormat();fmt.setVersion(3,3);fmt.setProfile(QSurfaceFormat.CoreProfile);fmt.setDepthBufferSize(24);fmt.setStencilBufferSize(8);fmt.setSamples(4);QSurfaceFormat.setDefaultFormat(fmt)
 app=QApplication([])
@@ -95,18 +96,20 @@ class PrimitiveFilter:
   if self.kind=='glyph':self.painter.drawText(*args)
 original_dimension_draw=vp._draw_dimensions;original_leader_draw=vp._draw_text_labels;engine_rows=[]
 try:
- for kind in['geometry','glyph']:
-  def dimension_draw(painter,kind=kind):
-   engine_rows.append(dict(kind=kind,engine=painter.paintEngine().type().value,device_dpi=[painter.device().logicalDpiX(),painter.device().logicalDpiY()]));original_dimension_draw(PrimitiveFilter(painter,kind))
-  vp._draw_dimensions=dimension_draw;vp._draw_text_labels=lambda painter,kind=kind:original_leader_draw(PrimitiveFilter(painter,kind))
+ for kind in['geometry','glyph','glyph-neutral']:
+  if kind=='glyph-neutral':scene.dimension_style=dict(scene.dimension_style,color=[0,0,0])
+  primitive_kind='glyph'if kind=='glyph-neutral'else kind
+  def dimension_draw(painter,kind=kind,primitive_kind=primitive_kind):
+   engine_rows.append(dict(kind=kind,engine=painter.paintEngine().type().value,device_dpi=[painter.device().logicalDpiX(),painter.device().logicalDpiY()],multisample_enabled=bool(GL.glIsEnabled(GL.GL_MULTISAMPLE)),samples=int(GL.glGetIntegerv(GL.GL_SAMPLES)),sample_buffers=int(GL.glGetIntegerv(GL.GL_SAMPLE_BUFFERS))));original_dimension_draw(PrimitiveFilter(painter,primitive_kind))
+  vp._draw_dimensions=dimension_draw;vp._draw_text_labels=lambda painter,primitive_kind=primitive_kind:original_leader_draw(PrimitiveFilter(painter,primitive_kind))
   vp.update();deadline=time.monotonic()+4
   while time.monotonic()<deadline:app.processEvents();time.sleep(.01)
   assert [vp.width(),vp.height()]==[800,600]
   image=vp.grabFramebuffer();assert image.save(str(out/(kind+'-widget-diagnostic.png')))
   matrix=vp.camera.projection_matrix()*vp.camera.view_matrix();assert list(matrix.data())==state['camera_snapshot']['matrix']
   image=QImage(str(out/'annotations-off.png'));image.setDotsPerMeterX(round(vp.logicalDpiX()/0.0254));image.setDotsPerMeterY(round(vp.logicalDpiY()/0.0254))
-  painter=QPainter(image);painter.setRenderHint(QPainter.Antialiasing,True);painter.setRenderHint(QPainter.TextAntialiasing,True);original_dimension_draw(PrimitiveFilter(painter,kind));original_leader_draw(PrimitiveFilter(painter,kind));painter.end();assert image.save(str(out/(kind+'-raster-diagnostic.png')))
+  painter=QPainter(image);painter.setRenderHint(QPainter.Antialiasing,True);painter.setRenderHint(QPainter.TextAntialiasing,True);original_dimension_draw(PrimitiveFilter(painter,primitive_kind));original_leader_draw(PrimitiveFilter(painter,primitive_kind));painter.end();assert image.save(str(out/(kind+'-raster-diagnostic.png')))
 finally:vp._draw_dimensions=original_dimension_draw;vp._draw_text_labels=original_leader_draw
-(out/'primitive-engine-diagnostic.json').write_text(json.dumps(dict(scope='post-acceptance source-only layer filtering for target-engine attribution; original bound methods unchanged, not parity oracle',engine_rows=engine_rows),indent=2)+'\n')
+(out/'primitive-engine-diagnostic.json').write_text(json.dumps(dict(scope='post-acceptance source-only layer filtering for target-engine attribution; original bound methods unchanged, not parity oracle',engine_rows=engine_rows,surface_requested=dict(alpha=fmt.alphaBufferSize(),samples=fmt.samples(),depth=fmt.depthBufferSize(),stencil=fmt.stencilBufferSize()),surface_realized=dict(alpha=vp.context().format().alphaBufferSize(),samples=vp.context().format().samples(),depth=vp.context().format().depthBufferSize(),stencil=vp.context().format().stencilBufferSize()),font_requested=dict(family=QFont().family(),hinting=QFont().hintingPreference().value,strategy=QFont().styleStrategy().value,dimension_point_size=scene.dimension_style.get('font_size',9),bold=True)),indent=2)+'\n')
 vp.close();vp.deleteLater();app.processEvents()
 (out/'source.json').write_text(json.dumps(dict(source_pin='6be29fe437a7cd992d4e079f71720821b25216b9',parser_pin='291700bc213655a00461838de71e5f206311e619',input_sha256=hashlib.sha256(skp.read_bytes()).hexdigest(),camera=camera,records=rows,scope='actual original Viewport with actual depth capture and annotations; paired native application ROI required'),indent=2)+'\n')
