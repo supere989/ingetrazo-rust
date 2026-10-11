@@ -1,0 +1,115 @@
+{
+  "runtime_commit": "a7b329513b4cd2b7fb0e492ee27b421639bf0d0d",
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "archive_sha256": "28a794102249784cbab0c1b66e3125440abf04b63d911c4f3ddc37ace9f58969",
+  "records": {
+    "annotation/acceptance.json": {
+      "bytes": 88,
+      "sha256": "eea14e5d2e1930e70994ba76af327416790c24a71adf957568415d2f88ebcc56"
+    },
+    "annotation/check.json": {
+      "bytes": 97,
+      "sha256": "c492db91619ec9ec4a2a47d8df9d1e0c2e89f5110b92848be5ae10b320b0e140"
+    },
+    "annotation/dimension-nested.igz": {
+      "bytes": 3256,
+      "sha256": "5ab860e97df0624c35fa82433b303fa1b717135fc430da8b9fa5995b9e01dfc0"
+    },
+    "annotation/dimension-root.igz": {
+      "bytes": 2988,
+      "sha256": "b8dc626e8fb64f893b26b1ce09c4ea6179017f6a6fc733ddc1a11acdadeecf28"
+    },
+    "annotation/failed-nested-style.json": {
+      "bytes": 27354,
+      "sha256": "c1c1fb623b03df2938735350fbecaea0fb8b6156f55e86843b5d94b3d116f2ce"
+    },
+    "annotation/input.igz": {
+      "bytes": 2512,
+      "sha256": "c9ce01d930fff89d9af94b5580093f6f82626b75d6ce690482e32fd787d4a87b"
+    },
+    "annotation/label-nested.igz": {
+      "bytes": 3258,
+      "sha256": "607588068068ace04b10a9fc4cc562b30a2d92fe3bf23a9bfb697df40fc18785"
+    },
+    "annotation/label-root.igz": {
+      "bytes": 2990,
+      "sha256": "a706444f0f8ff79d404fbc613f6f65a6e5af629f54dda60e6fb57e0adb653c42"
+    },
+    "annotation/native-dimension-nested.igz": {
+      "bytes": 2634,
+      "sha256": "3d51d668909d0662820e62eca9843c882e4c94ec9b16930c2216c793874354d2"
+    },
+    "annotation/native-dimension-root.igz": {
+      "bytes": 2849,
+      "sha256": "57b35500086f3ef35d0229cd3cd9031629bffeab39026176f82ba0d65f6bbdae"
+    },
+    "annotation/native-label-nested.igz": {
+      "bytes": 2636,
+      "sha256": "2751908e1edb165f890527b7fe4e5a88a087663da587dcb6a28c6d5665325d8d"
+    },
+    "annotation/native-label-root.igz": {
+      "bytes": 2851,
+      "sha256": "089b01ca3e173036baa72013d4738287430089dff135275f7a1e9446633e03a3"
+    },
+    "annotation/native.json": {
+      "bytes": 31842,
+      "sha256": "b66379974cf981577d92eae464a5672cfa4826b957d9122dd41e449a86ffbe7b"
+    },
+    "annotation/original.json": {
+      "bytes": 31842,
+      "sha256": "b66379974cf981577d92eae464a5672cfa4826b957d9122dd41e449a86ffbe7b"
+    },
+    "annotation/reopen.json": {
+      "bytes": 8183,
+      "sha256": "174c4fd2c168ba6f2a611d112cb12ba7c1250bacbd321a4dad68495290f5152f"
+    },
+    "annotation/reopen.log": {
+      "bytes": 392,
+      "sha256": "8f90d232282fcb43ed4ac28d874df7b140873b5c61d309f9c5556fadd3907b1f"
+    },
+    "annotation/runtime.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "annotation/source-label-priority.json": {
+      "bytes": 31120,
+      "sha256": "3c4096312e7d88b88df6c5d7bb689fa8af07ef5a967669249543ca20f1137828"
+    },
+    "apple-gui-metadata.log": {
+      "bytes": 20716,
+      "sha256": "4da81feaa197c9a430cb7f0ac4009fcd06a76d3d08a0c02f5f5bfb78bc9a890d"
+    },
+    "binaries.json": {
+      "bytes": 303,
+      "sha256": "66b27101f92ef5ceeceec68dea2a88bdf334de0ec83a9c9ac84bc889b3c514d5"
+    },
+    "combined-build.log": {
+      "bytes": 20610,
+      "sha256": "36d04fd876a4dfa615f020117abc7a09951b58e12ce891212e2461e637223b5e"
+    },
+    "execution.json": {
+      "bytes": 2565,
+      "sha256": "0ff74d1c9d11673393851b82ceaaee636d1e21baeebfd089faa8103edc3e88ba"
+    },
+    "mesh/acceptance.json": {
+      "bytes": 5079,
+      "sha256": "2db91aaedbb508c7c7a55fc4083fd8fde13ac8f58ad7bfeb01da1fd1267889b2"
+    },
+    "mesh/input.json": {
+      "bytes": 655166,
+      "sha256": "9ccd0bf151f8d36f272ea5202a9cea02a39248f1a985bd2817d1c4f6909e5226"
+    },
+    "mesh/native.json": {
+      "bytes": 1192713,
+      "sha256": "d8f1587ddb4b1902ff8da7d66ff460e7b18b0224eec3a9f5e3f9a27c734e1178"
+    },
+    "mesh/source.json": {
+      "bytes": 1188564,
+      "sha256": "8c26125981209062f0f133abb02ed1032479e2a1f180305a9d5d8ead56c58e56"
+    },
+    "result.json": {
+      "bytes": 8545,
+      "sha256": "ad2f5efa9c0fc280ee646ddc03839f5405a6a5a3de3ea273de6fa7f4aabd35a6"
+    }
+  }
+}
