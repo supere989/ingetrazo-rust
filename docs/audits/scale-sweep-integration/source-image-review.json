@@ -1,0 +1,178 @@
+{
+  "frozen_verified": true,
+  "source_parity": false,
+  "exact_frames": 22,
+  "total_frames": 24,
+  "negative_controls": 36,
+  "application_controls": true,
+  "rows": [
+    {
+      "case": "reversed-door",
+      "phase": "base",
+      "different_pixels": 0,
+      "maximum": 0,
+      "exact": true
+    },
+    {
+      "case": "reversed-door",
+      "phase": "preview",
+      "different_pixels": 539,
+      "maximum": 81,
+      "exact": false
+    },
+    {
+      "case": "reversed-door",
+      "phase": "offset",
+      "different_pixels": 1079,
+      "maximum": 122,
+      "exact": false
+    },
+    {
+      "case": "reversed-door",
+      "phase": "cancel",
+      "different_pixels": 0,
+      "maximum": 0,
+      "exact": true
+    },
+    {
+      "case": "lone-sheet",
+      "phase": "base",
+      "different_pixels": 0,
+      "maximum": 0,
+      "exact": true
+    },
+    {
+      "case": "lone-sheet",
+      "phase": "preview",
+      "different_pixels": 0,
+      "maximum": 0,
+      "exact": true
+    },
+    {
+      "case": "lone-sheet",
+      "phase": "offset",
+      "different_pixels": 0,
+      "maximum": 0,
+      "exact": true
+    },
+    {
+      "case": "lone-sheet",
+      "phase": "cancel",
+      "different_pixels": 0,
+      "maximum": 0,
+      "exact": true
+    },
+    {
+      "case": "front-recess",
+      "phase": "base",
+      "different_pixels": 0,
+      "maximum": 0,
+      "exact": true
+    },
+    {
+      "case": "front-recess",
+      "phase": "preview",
+      "different_pixels": 0,
+      "maximum": 0,
+      "exact": true
+    },
+    {
+      "case": "front-recess",
+      "phase": "offset",
+      "different_pixels": 0,
+      "maximum": 0,
+      "exact": true
+    },
+    {
+      "case": "front-recess",
+      "phase": "cancel",
+      "different_pixels": 0,
+      "maximum": 0,
+      "exact": true
+    },
+    {
+      "case": "back-recess",
+      "phase": "base",
+      "different_pixels": 0,
+      "maximum": 0,
+      "exact": true
+    },
+    {
+      "case": "back-recess",
+      "phase": "preview",
+      "different_pixels": 0,
+      "maximum": 0,
+      "exact": true
+    },
+    {
+      "case": "back-recess",
+      "phase": "offset",
+      "different_pixels": 0,
+      "maximum": 0,
+      "exact": true
+    },
+    {
+      "case": "back-recess",
+      "phase": "cancel",
+      "different_pixels": 0,
+      "maximum": 0,
+      "exact": true
+    },
+    {
+      "case": "front-texture-back-override",
+      "phase": "base",
+      "different_pixels": 0,
+      "maximum": 0,
+      "exact": true
+    },
+    {
+      "case": "front-texture-back-override",
+      "phase": "preview",
+      "different_pixels": 0,
+      "maximum": 0,
+      "exact": true
+    },
+    {
+      "case": "front-texture-back-override",
+      "phase": "offset",
+      "different_pixels": 0,
+      "maximum": 0,
+      "exact": true
+    },
+    {
+      "case": "front-texture-back-override",
+      "phase": "cancel",
+      "different_pixels": 0,
+      "maximum": 0,
+      "exact": true
+    },
+    {
+      "case": "ordinary-prism",
+      "phase": "base",
+      "different_pixels": 0,
+      "maximum": 0,
+      "exact": true
+    },
+    {
+      "case": "ordinary-prism",
+      "phase": "preview",
+      "different_pixels": 0,
+      "maximum": 0,
+      "exact": true
+    },
+    {
+      "case": "ordinary-prism",
+      "phase": "offset",
+      "different_pixels": 0,
+      "maximum": 0,
+      "exact": true
+    },
+    {
+      "case": "ordinary-prism",
+      "phase": "cancel",
+      "different_pixels": 0,
+      "maximum": 0,
+      "exact": true
+    }
+  ]
+}

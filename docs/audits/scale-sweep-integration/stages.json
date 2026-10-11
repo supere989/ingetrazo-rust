@@ -1,0 +1,218 @@
+[
+  {
+    "name": "workspace-tests",
+    "command": [
+      "cargo",
+      "test",
+      "--workspace",
+      "--locked",
+      "--tests",
+      "--no-fail-fast",
+      "-j2"
+    ],
+    "source_commit": "f254614309f214b89f251b198c3d755c1b2fc484",
+    "exit": 0,
+    "seconds": 25.253
+  },
+  {
+    "name": "doctests",
+    "command": [
+      "cargo",
+      "test",
+      "--workspace",
+      "--locked",
+      "--doc",
+      "--no-fail-fast",
+      "-j2"
+    ],
+    "source_commit": "f254614309f214b89f251b198c3d755c1b2fc484",
+    "exit": 0,
+    "seconds": 0.958
+  },
+  {
+    "name": "examples-check",
+    "command": [
+      "cargo",
+      "check",
+      "--workspace",
+      "--locked",
+      "--examples",
+      "-j2"
+    ],
+    "source_commit": "f254614309f214b89f251b198c3d755c1b2fc484",
+    "exit": 0,
+    "seconds": 7.0
+  },
+  {
+    "name": "named-build",
+    "command": [
+      "cargo",
+      "build",
+      "--locked",
+      "-j2",
+      "-p",
+      "ingetrazo-gui",
+      "--example",
+      "scale_workflows",
+      "--example",
+      "scale_egui_input",
+      "--example",
+      "scale_context",
+      "--example",
+      "pushpull_closed_acquisition",
+      "--example",
+      "native_vulkan_face_sweep_application_probe"
+    ],
+    "source_commit": "f254614309f214b89f251b198c3d755c1b2fc484",
+    "exit": 0,
+    "seconds": 1.155
+  },
+  {
+    "name": "scale-native",
+    "command": [
+      "/tmp/ingetrazo-native-font-merge-target/debug/examples/scale_workflows",
+      "/tmp/ingetrazo-scale-sweep-integration/source.json",
+      "/tmp/ingetrazo-scale-sweep-integration/scale-native.json"
+    ],
+    "source_commit": "f254614309f214b89f251b198c3d755c1b2fc484",
+    "exit": 0,
+    "seconds": 0.012
+  },
+  {
+    "name": "scale-check",
+    "command": [
+      "python3",
+      "scripts/check-scale-workflows.py",
+      "/tmp/ingetrazo-scale-sweep-integration/source.json",
+      "/tmp/ingetrazo-scale-sweep-integration/warp-source.json",
+      "/tmp/ingetrazo-scale-sweep-integration/scale-native.json",
+      "/tmp/ingetrazo-scale-sweep-integration/scale-comparison.json"
+    ],
+    "source_commit": "f254614309f214b89f251b198c3d755c1b2fc484",
+    "exit": 0,
+    "seconds": 0.025
+  },
+  {
+    "name": "shared-native",
+    "command": [
+      "/tmp/ingetrazo-native-font-merge-target/debug/examples/scale_workflows",
+      "/tmp/ingetrazo-next-integration/docs/audits/scale-shared/source.json",
+      "/tmp/ingetrazo-scale-sweep-integration/shared-native.json"
+    ],
+    "source_commit": "f254614309f214b89f251b198c3d755c1b2fc484",
+    "exit": 0,
+    "seconds": 0.011
+  },
+  {
+    "name": "shared-check",
+    "command": [
+      "python3",
+      "scripts/check-scale-shared.py",
+      "/tmp/ingetrazo-next-integration/docs/audits/scale-shared/source.json",
+      "/tmp/ingetrazo-scale-sweep-integration/shared-native.json",
+      "/tmp/ingetrazo-scale-sweep-integration/shared-comparison.json"
+    ],
+    "source_commit": "f254614309f214b89f251b198c3d755c1b2fc484",
+    "exit": 0,
+    "seconds": 0.022
+  },
+  {
+    "name": "egui-native",
+    "command": [
+      "/tmp/ingetrazo-native-font-merge-target/debug/examples/scale_egui_input",
+      "/tmp/ingetrazo-scale-sweep-integration/egui-native.json",
+      "/tmp/ingetrazo-next-integration/docs/audits/scale-egui-ingress/source-eye-clip.json"
+    ],
+    "source_commit": "f254614309f214b89f251b198c3d755c1b2fc484",
+    "exit": 0,
+    "seconds": 0.136
+  },
+  {
+    "name": "egui-check",
+    "command": [
+      "python3",
+      "scripts/check-scale-egui-input.py",
+      "/tmp/ingetrazo-next-integration/docs/audits/scale-egui-ingress/source-eye-clip.json",
+      "/tmp/ingetrazo-scale-sweep-integration/egui-native.json"
+    ],
+    "source_commit": "f254614309f214b89f251b198c3d755c1b2fc484",
+    "exit": 0,
+    "seconds": 0.012
+  },
+  {
+    "name": "context-native",
+    "command": [
+      "/tmp/ingetrazo-native-font-merge-target/debug/examples/scale_context",
+      "/tmp/ingetrazo-next-integration/docs/audits/scale-context-lifetime/source.json",
+      "/tmp/ingetrazo-scale-sweep-integration/context-native.json"
+    ],
+    "source_commit": "f254614309f214b89f251b198c3d755c1b2fc484",
+    "exit": 0,
+    "seconds": 0.005
+  },
+  {
+    "name": "context-check",
+    "command": [
+      "python3",
+      "scripts/check-scale-context.py",
+      "/tmp/ingetrazo-next-integration/docs/audits/scale-context-lifetime/source.json",
+      "/tmp/ingetrazo-scale-sweep-integration/context-native.json"
+    ],
+    "source_commit": "f254614309f214b89f251b198c3d755c1b2fc484",
+    "exit": 0,
+    "seconds": 0.015
+  },
+  {
+    "name": "endpoint-native",
+    "command": [
+      "/tmp/ingetrazo-native-font-merge-target/debug/examples/pushpull_closed_acquisition",
+      "/tmp/ingetrazo-next-integration/docs/audits/pushpull-endpoint-vcb/source.json",
+      "/tmp/ingetrazo-scale-sweep-integration/endpoint-native.json"
+    ],
+    "source_commit": "f254614309f214b89f251b198c3d755c1b2fc484",
+    "exit": 0,
+    "seconds": 0.02
+  },
+  {
+    "name": "endpoint-check",
+    "command": [
+      "python3",
+      "scripts/check-pushpull-closed-vcb.py",
+      "/tmp/ingetrazo-next-integration/docs/audits/pushpull-endpoint-vcb/source.json",
+      "/tmp/ingetrazo-scale-sweep-integration/endpoint-native.json",
+      "/tmp/ingetrazo-scale-sweep-integration/endpoint-comparison.json"
+    ],
+    "source_commit": "f254614309f214b89f251b198c3d755c1b2fc484",
+    "exit": 0,
+    "seconds": 0.031
+  },
+  {
+    "name": "sweep-unpack",
+    "command": [
+      "python3",
+      "scripts/check-metal-face-sweep.py",
+      "/tmp/ingetrazo-next-integration/docs/audits/face-sweep-label-source",
+      "/tmp/ingetrazo-scale-sweep-integration/sweep-input",
+      "--unpack"
+    ],
+    "source_commit": "f254614309f214b89f251b198c3d755c1b2fc484",
+    "exit": 0,
+    "seconds": 0.027
+  },
+  {
+    "name": "vulkan-app",
+    "command": [
+      "/tmp/ingetrazo-parity-python/bin/python",
+      "scripts/check-native-face-sweep-application.py",
+      "/tmp/ingetrazo-native-font-merge-target/debug/examples/native_vulkan_face_sweep_application_probe",
+      "/tmp/ingetrazo-scale-sweep-integration/vulkan-app",
+      "--source-dir",
+      "/tmp/ingetrazo-scale-sweep-integration/sweep-input",
+      "--source",
+      "f254614309f214b89f251b198c3d755c1b2fc484"
+    ],
+    "source_commit": "f254614309f214b89f251b198c3d755c1b2fc484",
+    "exit": 0,
+    "seconds": 3.82
+  }
+]

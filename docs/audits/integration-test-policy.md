@@ -8,7 +8,7 @@ Retain concise results, source identity, and necessary failure evidence. Purge o
 
 ## Current cadence
 
-The latest published integration is `b13a0e20`: 900 local workspace tests, doctests and example checks passed, followed by Linux CI and six Apple checks. See [the retained checkpoint](line-sweep-integration/README.md). Closed Push/Pull acquisition and sampled texture ownership have later focused proofs. Actual Vulkan/Metal sweep rendering, remaining Push/Pull endpoints and the full Scale workflow remain independent active workstreams.
+The current local integration `f2546143` passes 917 workspace tests, doctests/example checks and all sixteen stages on first execution. Five affected Scale/sweep consumers build together once. Actual Vulkan application replay includes real font/CAD/world quota refusal and complete previous pixels/charges. See [the retained checkpoint](scale-sweep-integration/README.md). Published `b13a0e20` remains the latest fully green hosted checkpoint until current platform jobs complete; the isolated Metal sweep run has not yet passed. Strict original source pixels, broader Scale input/context and platform acceptance remain open.
 
 - Reuse each owner's existing checkout and target. Build all affected named consumers in one Cargo invocation. Do not run broad suites in owner worktrees.
 - Review shared interfaces early so Vulkan and Metal work can proceed concurrently. Wait for a coherent implementation before the combined integration suite.
