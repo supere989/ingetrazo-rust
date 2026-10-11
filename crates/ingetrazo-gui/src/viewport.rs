@@ -170,7 +170,7 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
             app.snap_engine.note_inference_result(&snap_res);
 
             app.active_tool.note_cursor_plane(plane_point,plane_normal);
-            if app.active_tool_type==ToolType::Select {app.active_tool.note_pick_viewport(ingetrazo_core::screen_pick::PixelViewport::new(&app.camera,rect.width() as f64,rect.height() as f64),app.camera.eye());}
+            if app.active_tool_type==ToolType::Select {app.active_tool.note_pick_viewport(ingetrazo_core::screen_pick::PixelViewport::new(&app.camera,rect.width() as f64,rect.height() as f64),app.camera.eye(),app.model_revision);}
             let mut tool_ctx = ToolContext {
                 screen: Some(glam::DVec2::new(rel_x,rel_y)),
                 world: cursor_world_pos,

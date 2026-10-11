@@ -260,7 +260,7 @@ impl Tool for SelectTool {
         self.reset();
     }
 
-    fn note_pick_viewport(&mut self,viewport:ingetrazo_core::screen_pick::PixelViewport,eye:DVec3){self.pick_viewport=Some((viewport,eye));}
+    fn note_pick_viewport(&mut self,viewport:ingetrazo_core::screen_pick::PixelViewport,eye:DVec3,model_revision:u64){self.pick_viewport=Some((viewport,eye));self.click_index.note_model_revision(model_revision);}
 
     fn on_click(&mut self, scene: &mut Scene, ctx: &ToolContext) {
         let hit_plane=crate::base::pick_section_plane(scene,&ctx.ray,0.2);

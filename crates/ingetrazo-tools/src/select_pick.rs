@@ -2,9 +2,10 @@
 use glam::{DVec2,DVec3};
 use ingetrazo_core::{scene::Scene,screen_pick::PixelViewport,math::{Ray},presentation::FaceMode};
 #[derive(Default,Clone)]
-pub(crate) struct ClickIndex { key:Option<(usize,u64)>, visible:Option<std::sync::Arc<ingetrazo_core::visible_ray_index::VisibleRayIndex>>, pub builds:u64 }
+pub(crate) struct ClickIndex { key:Option<(usize,u64)>, model_revision:u64, visible:Option<std::sync::Arc<ingetrazo_core::visible_ray_index::VisibleRayIndex>>, pub builds:u64 }
 impl std::fmt::Debug for ClickIndex {fn fmt(&self,f:&mut std::fmt::Formatter<'_>)->std::fmt::Result{f.debug_struct("ClickIndex").field("builds",&self.builds).finish()}}
 impl ClickIndex {
+ pub fn note_model_revision(&mut self,revision:u64){if self.model_revision!=revision{self.model_revision=revision;self.key=None;self.visible=None;}}
  fn prepare(&mut self,scene:&Scene) {
   let key=(scene as *const Scene as usize,scene.version);
   if self.key==Some(key){return;}
@@ -44,6 +45,10 @@ impl ClickIndex {
   let mut camera=ingetrazo_core::camera::OrbitCamera::new();camera.set_standard_view(ingetrazo_core::camera::StandardView::Top);camera.perspective=false;camera.target=DVec3::new(1.,1.,0.);camera.distance=8.;let viewport=PixelViewport::new(&camera,1000.,600.);let cursor=viewport.project_for_snapping(DVec3::new(1.,1.,-1.)).unwrap();
   let mut index=ClickIndex::default();assert_eq!(index.edge(&scene,viewport,cursor,camera.eye()),None);assert_eq!(index.builds,1);
   scene.bump_view_version();assert_eq!(index.edge(&scene,viewport,cursor,camera.eye()),None);assert_eq!(index.builds,1);
+  // Snapshot publication can replace mesh without changing Scene.version/address.
+  let version=scene.version;scene.mesh.faces[face].attrs.insert("hidden".into(),serde_json::json!(true));assert_eq!(scene.version,version);
+  index.note_model_revision(1);assert_eq!(index.edge(&scene,viewport,cursor,camera.eye()),Some(edge));assert_eq!(index.builds,2);
+  scene.mesh.faces[face].attrs.remove("hidden");index.note_model_revision(2);assert_eq!(index.edge(&scene,viewport,cursor,camera.eye()),None);assert_eq!(index.builds,3);
   // A locked surface continues to occlude, while a hidden surface does not.
   scene.mesh.faces[face].layer=Some("solid".into());let mut layer=ingetrazo_core::layers::Layer::new("solid");layer.locked=true;scene.layers.push(layer);scene.bump_version();assert_eq!(index.edge(&scene,viewport,cursor,camera.eye()),None);
   index.visible=None;assert_eq!(index.edge(&scene,viewport,cursor,camera.eye()),None,"direct correctness fallback");
