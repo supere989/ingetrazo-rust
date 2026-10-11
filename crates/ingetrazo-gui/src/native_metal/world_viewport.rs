@@ -17,6 +17,7 @@ pub(crate) struct Viewport {
     unsupported: Option<(ingetrazo_render::scene_revision::Revisions, u16, String)>,
 }
 impl Viewport {
+    pub(crate) fn sweep_stats(&self)->ingetrazo_metal::world::Stats{self.world.stats}
     pub(crate) fn new(metal: Arc<NativeMetal>) -> Self {
         Self {
             metal,
@@ -50,13 +51,14 @@ impl Viewport {
             poses,
         } = app.native_render_revisions;
         // Selection and nonpersistent viewport flags are not modeling epochs.
+        let preview=app.active_tool.face_sweep_preview().map(|p|ingetrazo_render::face_sweep::Input{face:p.face,face_identity:p.face_identity,mesh_revision:p.mesh_revision,anchor:p.anchor,normal:p.normal,offset:p.offset,attached:p.attached,prism_cap:p.prism_cap,keep_base:p.keep_base});
         let capability = (app.style.show_edges as u16)
             | ((app.style.show_profiles as u16) << 1)
             | ((app.style.show_sky as u16) << 2)
             | ((app.style.show_grid as u16) << 3)
             | ((!app.scene.selection.is_empty() as u16) << 4)
             | ((app.scene.show_section_cuts as u16) << 5)
-            | ((app.style.visual_style as u16) << 6);
+            | ((app.style.visual_style as u16) << 6) | ((preview.is_some() as u16)<<10);
         if let Some((revision, previous, reason)) = &self.unsupported {
             if *revision == static_domains && *previous == capability {
                 return Err(reason.clone());
@@ -67,9 +69,10 @@ impl Viewport {
         self.world.set_sample_count(&self.metal,4)?;
         // Same Qt-f32/OpenGL matrix as the Vulkan world consumer. The Metal
         // vertex shader performs the native [-w,w] -> [0,w] depth mapping.
-        let camera=crate::navigation_ray::camera_snapshot(&app.camera)
-            .ok_or("Metal source camera arithmetic admission")?.matrix;
-        match self.world.prepare_scene_placements_revisioned(
+        let source_camera=crate::navigation_ray::camera_snapshot(&app.camera)
+            .ok_or("Metal source camera arithmetic admission")?;
+        let camera=source_camera.matrix;
+        match self.world.prepare_scene_preview(
             &self.metal,
             &mut self.adapter,
             &app.scene,
@@ -79,6 +82,8 @@ impl Viewport {
             &app.style,
             camera,
             extent,
+            preview,
+            Some(glam::DVec3::from_array(source_camera.eye.map(f64::from))),
         ) {
             Ok(Some(frame)) => {
                 self.unsupported = None;

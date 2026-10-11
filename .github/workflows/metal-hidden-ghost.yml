@@ -11,10 +11,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # Focused allocation repair: ARM app/classic/material already passed at
-        # b0276fc7; its strict resolve-precision difference remains retained.
-        # Restore both runners when the Metal rendering path changes.
-        runner: [macos-15-intel]
+        runner: [macos-15, macos-15-intel]
     runs-on: ${{ matrix.runner }}
     timeout-minutes: 30
     env:
@@ -34,18 +31,19 @@ jobs:
         run: |
           mkdir -p metal-ghost-evidence
           git rev-parse HEAD > metal-ghost-evidence/revision.txt
-          git ls-files crates/ingetrazo-metal/src crates/ingetrazo-gui/src/native_metal crates/ingetrazo-gui/src/native_metal.rs scripts/check-metal-hidden-ghost.py scripts/check-metal-world-classic.py scripts/check-metal-world-material.py crates/ingetrazo-gui/examples/native_metal_hidden_ghost.rs crates/ingetrazo-gui/examples/native_metal_world_classic.rs crates/ingetrazo-gui/examples/native_metal_world_material.rs | xargs shasum -a 256 > metal-ghost-evidence/source.sha256
+          git ls-files crates/ingetrazo-render/src crates/ingetrazo-tools/src crates/ingetrazo-core/src crates/ingetrazo-gui/src/tool_history.rs crates/ingetrazo-gui/src/navigation_ray.rs crates/ingetrazo-metal/src crates/ingetrazo-gui/src/native_metal crates/ingetrazo-gui/src/native_metal.rs scripts/check-metal-face-sweep.py scripts/check-metal-hidden-ghost.py scripts/check-metal-world-classic.py scripts/check-metal-world-material.py crates/ingetrazo-gui/examples/native_metal_face_sweep.rs crates/ingetrazo-gui/examples/native_metal_hidden_ghost.rs crates/ingetrazo-gui/examples/native_metal_world_classic.rs crates/ingetrazo-gui/examples/native_metal_world_material.rs | xargs shasum -a 256 > metal-ghost-evidence/source.sha256
           python3 scripts/check-metal-hidden-ghost.py docs/audits/hidden-ghost-workflow "$RUNNER_TEMP/metal-ghost-input" --unpack
-      - name: Joint build of only three affected native app consumers
+          python3 scripts/check-metal-face-sweep.py docs/audits/face-sweep-source "$RUNNER_TEMP/metal-sweep-input" --unpack
+      - name: Joint build of only four affected native app consumers
         run: |
-          cargo build --locked -p ingetrazo-gui --example native_metal_hidden_ghost --example native_metal_world_classic --example native_metal_world_material -j2 > metal-ghost-evidence/build.log 2>&1
-          shasum -a 256 target/debug/examples/native_metal_hidden_ghost target/debug/examples/native_metal_world_classic target/debug/examples/native_metal_world_material > metal-ghost-evidence/binary.sha256
+          cargo build --locked -p ingetrazo-gui --example native_metal_hidden_ghost --example native_metal_world_classic --example native_metal_world_material --example native_metal_face_sweep -j2 > metal-ghost-evidence/build.log 2>&1
+          shasum -a 256 target/debug/examples/native_metal_hidden_ghost target/debug/examples/native_metal_world_classic target/debug/examples/native_metal_world_material target/debug/examples/native_metal_face_sweep > metal-ghost-evidence/binary.sha256
       - name: Execute only ghost and affected retained material/classic consumers
         run: |
           python3 - <<'PYTHON'
           import json,os,subprocess
           from pathlib import Path
-          jobs=[('ghost',['target/debug/examples/native_metal_hidden_ghost',os.environ['RUNNER_TEMP']+'/metal-ghost-input','metal-ghost-evidence/native']),('classic',['target/debug/examples/native_metal_world_classic','metal-ghost-evidence/classic']),('material',['target/debug/examples/native_metal_world_material','metal-ghost-evidence/material'])]
+          jobs=[('sweep',['target/debug/examples/native_metal_face_sweep',os.environ['RUNNER_TEMP']+'/metal-sweep-input','metal-ghost-evidence/sweep']),('ghost',['target/debug/examples/native_metal_hidden_ghost',os.environ['RUNNER_TEMP']+'/metal-ghost-input','metal-ghost-evidence/native']),('classic',['target/debug/examples/native_metal_world_classic','metal-ghost-evidence/classic']),('material',['target/debug/examples/native_metal_world_material','metal-ghost-evidence/material'])]
           failed=False
           for name,cmd in jobs:
               try:
@@ -63,7 +61,7 @@ jobs:
           "$RUNNER_TEMP/metal-ghost-check-venv/bin/pip" install pillow
           "$RUNNER_TEMP/metal-ghost-check-venv/bin/python" - <<'PYTHON'
           import subprocess,sys
-          jobs=[('ghost','scripts/check-metal-hidden-ghost.py','docs/audits/hidden-ghost-workflow','metal-ghost-evidence/native'),('classic','scripts/check-metal-world-classic.py','docs/audits/metal-world-scene/classic-source','metal-ghost-evidence/classic'),('material','scripts/check-metal-world-material.py','docs/audits/metal-world-scene/material-source','metal-ghost-evidence/material')]
+          jobs=[('sweep','scripts/check-metal-face-sweep.py','docs/audits/face-sweep-source','metal-ghost-evidence/sweep'),('ghost','scripts/check-metal-hidden-ghost.py','docs/audits/hidden-ghost-workflow','metal-ghost-evidence/native'),('classic','scripts/check-metal-world-classic.py','docs/audits/metal-world-scene/classic-source','metal-ghost-evidence/classic'),('material','scripts/check-metal-world-material.py','docs/audits/metal-world-scene/material-source','metal-ghost-evidence/material')]
           failed=False
           for name,checker,source,native in jobs:
               with open('metal-ghost-evidence/'+name+'-checker.log','w') as log:
@@ -83,7 +81,7 @@ jobs:
           import shutil,zipfile
           root=Path('metal-ghost-evidence')
           root.mkdir(exist_ok=True)
-          directories=[root/name for name in ['native','classic','material'] if (root/name).exists()]
+          directories=[root/name for name in ['native','classic','material','sweep'] if (root/name).exists()]
           files=[p for directory in directories for p in sorted(directory.rglob('*')) if p.is_file()]
           archive=root/'native-captures.zip'
           with zipfile.ZipFile(archive,'w',zipfile.ZIP_DEFLATED) as z:

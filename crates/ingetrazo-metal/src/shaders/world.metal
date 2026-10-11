@@ -46,3 +46,8 @@ fragment float4 world_ghost_fragment(Out in [[stage_in]],constant GhostPaint& pa
  if(paint.mode==0){if(fmod(x,4.)>=1.&&fmod(y,4.)>=1.)discard_fragment();return float4(in.color.rgb,1.);}
  if(paint.mode==1&&fmod(x+y,6.)>=3.)discard_fragment();return float4(paint.edge.rgb,1.);
 }
+
+// Frozen GL_LINES path has default width1; no authoring-style width remap.
+vertex Out world_line_vertex(uint id [[vertex_id]],const device packed_float3* v [[buffer(0)]],constant float4x4& camera [[buffer(2)]]) {
+ Out o;o.position=camera*float4(v[id],1.);o.position.z=(o.position.z+o.position.w)*.5;o.color=float4(1.);return o;
+}
