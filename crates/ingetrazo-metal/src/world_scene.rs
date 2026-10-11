@@ -845,6 +845,10 @@ pub struct Adapter {
     pub catalog_builds: u64,
     pub accepted_model_refreshes: u64,
     accepted_pose_revision: Option<u64>,
+    preview: Option<Arc<super::world_preview::Preview>>,
+    preview_poses: Vec<Pose>,
+    #[cfg(target_os="macos")] base_lines:[Option<(Revisions,Option<u64>,Vec<usize>,Arc<super::world_preview::Lines>)>;2],
+    #[cfg(target_os="macos")] preview_lines:Option<(ingetrazo_render::face_sweep::Key,Arc<super::world_preview::Lines>)>,
 }
 impl Adapter {
     fn needs_model_refresh(&self,cold:bool,revision:Option<u64>)->bool {
@@ -891,8 +895,25 @@ impl crate::world::World {
         camera_matrix: [[f32; 4]; 4],
         extent: (u32, u32),
     ) -> Result<Option<Arc<crate::world::Prepared>>, String> {
+        self.prepare_scene_preview(metal,adapter,scene,revisions,pose_revision,camera,style,camera_matrix,extent,None,None)
+    }
+
+    pub fn prepare_scene_preview(
+        &mut self,
+        metal: &crate::NativeMetal,
+        adapter: &mut Adapter,
+        scene: &Scene,
+        revisions: Revisions,
+        pose_revision: Option<u64>,
+        camera: &OrbitCamera,
+        style: &StyleConfig,
+        camera_matrix: [[f32; 4]; 4],
+        extent: (u32, u32),
+        preview: Option<ingetrazo_render::face_sweep::Input>,
+        source_eye: Option<glam::DVec3>,
+    ) -> Result<Option<Arc<crate::world::Prepared>>, String> {
         self.validate_context_owner(metal)?;
-        if (style.show_edges && (!scene.groups.is_empty()||!scene.mesh.faces.is_empty()||style.line_width!=1.||style.show_soft_edges||style.back_edges_hidden)) || style.show_profiles || style.show_sky || style.show_grid {
+        if (style.show_edges && (style.show_soft_edges||style.back_edges_hidden)) || style.show_profiles || style.show_sky || style.show_grid {
             return Err("Metal Scene adapter needs native edge/profile/sky/grid passes".into());
         }
         if scene.show_section_cuts && !scene.section_planes.is_empty()
@@ -906,7 +927,8 @@ impl crate::world::World {
         if scene.terrain.is_some()||!scene.geo_points.is_empty()||!scene.geo_paths.is_empty(){
             return Err("Metal Scene adapter needs geographic/terrain passes".into());
         }
-        if !scene.selection.is_empty() || !scene.guides.is_empty(){
+        let preview_selection=preview.is_some_and(|p|scene.selection.iter().all(|item|matches!(item,ingetrazo_core::scene::SelectionItem::Face(id) if *id==p.face)));
+        if (!scene.selection.is_empty() && !preview_selection) || !scene.guides.is_empty(){
             return Err("Metal Scene adapter needs selection/guide overlays".into());
         }
         use crate::world_policy::{Mode, Policy};
@@ -949,13 +971,48 @@ impl crate::world::World {
         if adapter.retained_payload_bytes() > MAX_BYTES * 3 {
             return Err("Metal adapter retained CPU storage exceeds24MiB".into());
         }
-        let ghost_key=super::world_ghost::Key{revisions,poses:pose_revision,objects:scene.show_hidden_objects,geometry:scene.show_hidden_geometry,wire:style.show_edges};
+        let preview_candidate = if let Some(input)=preview {
+            let face=scene.mesh.faces.get(input.face).ok_or("Metal preview face disappeared")?;
+            if input.mesh_revision!=scene.version || input.face_identity!=face.history_id{return Err("Metal preview acquisition changed".into());}
+            let eye=source_eye.unwrap_or_else(||camera.eye());
+            if adapter.preview.as_ref().is_some_and(|old|old.reusable(input,revisions.geometry,eye,&catalog.packet)) {None}
+            else {Some(Arc::new(super::world_preview::Preview::prepare(scene,input,revisions.geometry,eye,&catalog.packet,catalog.prototypes.iter().find(|p|p.signature.loose).map(|p|p.key),adapter.preview.as_deref())?))}
+        }else{None};
+        let active_preview=preview.and_then(|_|preview_candidate.as_ref().or(adapter.preview.as_ref()));
+        let packet=active_preview.map_or_else(||catalog.packet.clone(),|p|p.packet.clone());
+        let base_models=if refresh {&adapter.scratch}else{&adapter.current};
+        if let Some(p)=active_preview {
+            let count=p.packet.placement_count();
+            if refresh || adapter.preview_poses.len()!=count {
+                adapter.preview_poses.try_reserve(count.saturating_sub(adapter.preview_poses.len())).map_err(|_|"Metal preview model capacity refused")?;
+                adapter.preview_poses.clear();adapter.preview_poses.extend_from_slice(base_models);
+                if count>base_models.len(){adapter.preview_poses.push(Pose{mvp:DMat4::IDENTITY.as_mat4().to_cols_array_2d(),reflected:false});}
+            }
+        }
+        let base_keys=active_preview.and_then(|p|p.base).map_or([None,None],|(original,variant)|[Some(original),Some(variant)]);
+        let base_pins=self.pin_bases(base_keys);
+        let ghost_key=super::world_ghost::Key{revisions,poses:pose_revision,objects:scene.show_hidden_objects,geometry:scene.show_hidden_geometry,wire:false};
         let ghost_changed=!ghost_key.reusable(self.ghosts.as_ref().map(|g|g.key));
         let ghosts=if ghost_changed{Arc::new(super::world_ghost::Ghosts::prepare(metal,scene,ghost_key)?)}else{self.ghosts.as_ref().unwrap().clone()};
-        let mut frame = self.prepare_material_placements_with_camera(
+        let suppressed=active_preview.map_or(&[][..],|p|p.sweep.suppressed_edges.as_slice());
+        let base_line_slot=usize::from(!suppressed.is_empty());
+        let base_line_changed=style.show_edges && !adapter.base_lines[base_line_slot].as_ref().is_some_and(|(r,poses,ids,_)|*r==revisions && pose_revision.is_some()&&*poses==pose_revision&&ids==suppressed);
+        let base_lines=if !style.show_edges {None}else if !base_line_changed {Some(adapter.base_lines[base_line_slot].as_ref().unwrap().3.clone())}else{
+            let rows=ingetrazo_render::native_edges::build_hard_edges_suppressed(scene,suppressed);
+            Some(Arc::new(super::world_preview::Lines::prepare(metal,&rows.positions)?))
+        };
+        let preview_line_changed=active_preview.is_some_and(|p|!adapter.preview_lines.as_ref().is_some_and(|(key,_)|*key==p.key));
+        let preview_lines=match active_preview {
+            None=>None,
+            Some(_p) if !preview_line_changed=>Some(adapter.preview_lines.as_ref().unwrap().1.clone()),
+            Some(p)=>Some(Arc::new(super::world_preview::Lines::prepare(metal,&p.sweep.lines)?)),
+        };
+        // Allocate the small cache membership list before GPU publication.
+        let mut line_ids=Vec::new();if base_line_changed{line_ids.try_reserve_exact(suppressed.len()).map_err(|_|"Metal line membership allocation refused")?;line_ids.extend_from_slice(suppressed);}
+        let mut frame = self.prepare_material_placements_with_overlay(
             metal,
-            catalog.packet.clone(),
-            if refresh { &adapter.scratch } else { &adapter.current },
+            packet,
+            if active_preview.is_some(){&adapter.preview_poses}else{base_models},
             camera_matrix,
             extent,
             style.background_color.map(f64::from),
@@ -964,15 +1021,32 @@ impl crate::world::World {
                 front: style.front_color,
                 back: style.back_color,
             },
-            |key| catalog.collect_surfaces(key, scene, camera, style),
+            active_preview.filter(|p|p.sweep.kind==ingetrazo_render::face_sweep::Kind::Overlay).map(|p|p.preview_key),
+            |key| {
+                if let Some(p)=active_preview {
+                    if *key==p.preview_key {return Ok(match p.sweep.kind {
+                        ingetrazo_render::face_sweep::Kind::Overlay=>ingetrazo_render::pipeline::build_preview_mesh_surfaces(&p.sweep.mesh,scene),
+                        ingetrazo_render::face_sweep::Kind::Prism=>{let mut rich=style.clone();if mode==Mode::MaterialAverage{rich.show_textures=true;}ingetrazo_render::pipeline::build_borrowed_mesh_world_surfaces(&p.sweep.mesh,scene,&rich)},
+                    });}
+                    if p.uses_variant && p.base.is_some_and(|pair|pair.1==*key) {let mut rich=style.clone();if mode==Mode::MaterialAverage{rich.show_textures=true;}return Ok(ingetrazo_render::pipeline::build_loose_world_surfaces_suppressed(scene,&rich,&p.sweep.suppressed));}
+                }
+                catalog.collect_surfaces(key, scene, camera, style)
+            },
             |path|sampled_asset(scene,path),
         )?;
         if let Some(prepared)=frame.as_mut() {
             let prepared=Arc::get_mut(prepared).expect("New unpublished Metal frame is exclusive");
+            prepared.lines=[base_lines.clone(),preview_lines.clone()];
+            prepared.overlay=active_preview.filter(|p|p.sweep.kind==ingetrazo_render::face_sweep::Kind::Overlay).map(|p|p.preview_key);
+            if base_line_changed{self.stats.base_line_uploads+=u64::from(base_lines.as_ref().unwrap().buffer.is_some());self.stats.base_line_upload_bytes+=base_lines.as_ref().unwrap().bytes as u64;adapter.base_lines[base_line_slot]=Some((revisions,pose_revision,line_ids,base_lines.as_ref().unwrap().clone()));}
+            if preview_line_changed{self.stats.preview_line_uploads+=u64::from(preview_lines.as_ref().unwrap().buffer.is_some());self.stats.preview_line_upload_bytes+=preview_lines.as_ref().unwrap().bytes as u64;adapter.preview_lines=Some((active_preview.unwrap().key,preview_lines.as_ref().unwrap().clone()));}
             prepared.ghosts=Some(ghosts.clone());
             prepared.ghost_edge=style.edge_color;
             if ghost_changed {self.stats.ghost_builds+=1;self.stats.ghost_uploads+=ghosts.buffers.iter().filter(|b|b.is_some()).count() as u64;self.stats.ghost_upload_bytes+=(ghosts.bytes-ghosts.wire_count*24) as u64;self.stats.wire_uploads+=u64::from(ghosts.wire.is_some());self.stats.wire_upload_bytes+=(ghosts.wire_count*24) as u64;}
             self.ghosts=Some(ghosts);
+            self.publish_bases(base_pins,base_keys);
+            if let Some(p)=preview_candidate{self.stats.preview_builds+=1;adapter.preview=Some(p);}
+            if preview.is_none() && cold{adapter.preview=None;}
             if let Some(c) = candidate {
                 adapter.catalog = Some(c);
                 adapter.catalog_builds += 1;

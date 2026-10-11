@@ -79,6 +79,7 @@ struct Mesh {
     plan: Plan,
     materials:Option<Materials>,
 }
+pub(crate) struct BasePins([Option<(PrototypeKey,Option<Arc<Mesh>>)>;2]);
 struct PlacementMeshes {
     has_materials:bool,
     packet: Arc<PlacementPacket>,
@@ -91,6 +92,7 @@ struct PlacementMeshes {
 struct MaterialDraws{operations:Vec<MaterialDraw>,retained_payload_bytes:usize}
 struct MaterialPipeline {colored_alpha:Retained<ProtocolObject<dyn MTLRenderPipelineState>>,textured:Retained<ProtocolObject<dyn MTLRenderPipelineState>>,textured_alpha:Retained<ProtocolObject<dyn MTLRenderPipelineState>>,depth:Retained<ProtocolObject<dyn MTLDepthStencilState>>}
 struct Pipeline {
+    lines: Retained<ProtocolObject<dyn MTLRenderPipelineState>>,
     ghost: Retained<ProtocolObject<dyn MTLRenderPipelineState>>,
     color: Retained<ProtocolObject<dyn MTLRenderPipelineState>>,
     depth: Retained<ProtocolObject<dyn MTLDepthStencilState>>,
@@ -99,6 +101,13 @@ struct Pipeline {
 }
 #[derive(Default, Debug, Clone, Copy)]
 pub struct Stats {
+    /// Extra cached original/suppressed native buffers, excluding current placements and shared images.
+    pub base_variant_gpu_bytes:u64,
+    pub preview_builds:u64,
+    pub preview_line_uploads:u64,
+    pub base_line_uploads:u64,
+    pub preview_line_upload_bytes:u64,
+    pub base_line_upload_bytes:u64,
     pub ghost_uploads: u64,
     pub wire_uploads:u64,
     pub wire_upload_bytes:u64,
@@ -137,12 +146,15 @@ pub struct World {
     mesh: Option<Arc<Mesh>>,
     key: Option<u64>,
     placements: Option<Arc<PlacementMeshes>>,
+    base_variants: [Option<(PrototypeKey,Option<Arc<Mesh>>)>;2],
     pipeline: Option<Arc<Pipeline>>,
     targets: Vec<Arc<Target>>,
     texture_assets:Vec<Arc<super::world_texture::Asset>>,
     pub stats: Stats,
 }
 pub struct Prepared {
+    pub(crate) lines: [Option<Arc<super::world_preview::Lines>>;2],
+    pub(crate) overlay: Option<PrototypeKey>,
     pub(crate) ghosts: Option<Arc<super::world_ghost::Ghosts>>,
     pub(crate) ghost_edge: [f32;4],
     placements: Option<Arc<PlacementMeshes>>,
@@ -165,6 +177,25 @@ struct PaintUniform {
 }
 #[repr(C)]struct TexturePaint{opacity:f32,shade:f32,hard_cutout:u32,height:u32,mean:[f32;4]}
 impl World {
+    pub(crate) fn pin_bases(&self, keys:[Option<PrototypeKey>;2])->BasePins {
+        BasePins(keys.map(|key|key.and_then(|key| {
+            let mesh=self.placements.as_ref().and_then(|p|p.key_index.binary_search_by_key(&key,|p|p.0).ok().map(|i|p.meshes[p.key_index[i].1].clone()))
+                .or_else(||self.base_variants.iter().flatten().find(|(old,_)|*old==key).map(|(_,mesh)|mesh.clone()));
+            mesh.map(|mesh|(key,mesh))
+        })))
+    }
+    pub(crate) fn publish_bases(&mut self, mut pins:BasePins, keys:[Option<PrototypeKey>;2]) {
+        // Called only after full candidate admission; no allocation or GPU wait.
+        let current=self.pin_bases(keys);
+        for (old,new) in pins.0.iter_mut().zip(current.0) {if new.is_some(){*old=new;}}
+        self.base_variants=pins.0;
+        self.stats.base_variant_gpu_bytes=self.base_variants.iter().flatten().filter_map(|(_,m)|m.as_ref()).filter(|m|!self.placements.as_ref().is_some_and(|p|p.meshes.iter().flatten().any(|current|Arc::ptr_eq(m,current)))).map(|m|{
+            let mut n=m.vertices.as_ref().map_or(0,Buffer::allocation_bytes)+m.indices.as_ref().map_or(0,Buffer::allocation_bytes);
+            if let Some(material)=&m.materials {n+=material.colored_vertices.as_ref().map_or(0,Buffer::allocation_bytes)+material.colored_indices.as_ref().map_or(0,Buffer::allocation_bytes);for texture in &material.textures{n+=texture.vertices.allocation_bytes();}}
+            n
+        }).sum();
+    }
+
     /// Cold sample policy; old Prepared owners retain their matching targets/pipelines.
     pub fn set_sample_count(&mut self,metal:&NativeMetal,samples:usize)->Result<(),String>{
         self.validate_context_owner(metal)?;
@@ -306,7 +337,7 @@ impl World {
         self.stats.prepared += 1;
         Ok(Some(Arc::new(Prepared {
             placements: None,
-            ghosts: None, ghost_edge: [0.;4],
+            ghosts: None, ghost_edge: [0.;4], lines:[None,None],overlay:None,
             owner,
             mesh,
             pipeline,
@@ -351,9 +382,13 @@ impl World {
     where F:FnMut(&PrototypeKey)->Result<MeshRenderBuffer,String>{
         self.prepare_collections_with_camera(metal,packet,poses,camera,extent,clear,policy,|key|Ok(Collection::Opaque(collect(key)?)),|_|Err("Unexpected sampled material in opaque consumer".into()))
     }
-    pub fn prepare_material_placements_with_camera<'a,F,G>(&mut self,metal:&NativeMetal,packet:Arc<PlacementPacket>,poses:&[PlacementPose],camera:[[f32;4];4],extent:(u32,u32),clear:[f64;4],policy:Policy,mut collect:F,resolve:G)->Result<Option<Arc<Prepared>>,String>
+    pub fn prepare_material_placements_with_camera<'a,F,G>(&mut self,metal:&NativeMetal,packet:Arc<PlacementPacket>,poses:&[PlacementPose],camera:[[f32;4];4],extent:(u32,u32),clear:[f64;4],policy:Policy,collect:F,resolve:G)->Result<Option<Arc<Prepared>>,String>
     where F:FnMut(&PrototypeKey)->Result<ingetrazo_render::pipeline::SceneRenderData,String>,G:FnMut(&str)->Result<std::borrow::Cow<'a,[u8]>,String>{
-        self.prepare_collections_with_camera(metal,packet,poses,camera,extent,clear,policy,|key|{let data=collect(key)?;if matches!(policy.mode,Mode::HiddenLine|Mode::Monochrome){
+        self.prepare_material_placements_with_overlay(metal,packet,poses,camera,extent,clear,policy,None,collect,resolve)
+    }
+    pub fn prepare_material_placements_with_overlay<'a,F,G>(&mut self,metal:&NativeMetal,packet:Arc<PlacementPacket>,poses:&[PlacementPose],camera:[[f32;4];4],extent:(u32,u32),clear:[f64;4],policy:Policy,overlay:Option<PrototypeKey>,mut collect:F,resolve:G)->Result<Option<Arc<Prepared>>,String>
+    where F:FnMut(&PrototypeKey)->Result<ingetrazo_render::pipeline::SceneRenderData,String>,G:FnMut(&str)->Result<std::borrow::Cow<'a,[u8]>,String>{
+        self.prepare_collections_with_camera(metal,packet,poses,camera,extent,clear,policy,|key|{let data=collect(key)?;if overlay!=Some(*key) && matches!(policy.mode,Mode::HiddenLine|Mode::Monochrome){
             if !data.transparent_mesh.indices.is_empty()||!data.textured_meshes.is_empty()||!data.opaque_mesh.source_front_cull.is_empty(){return Err("Metal plan style mixed-material policy requires subsequent stage".into());}
             Ok(Collection::Opaque(data.opaque_mesh))
         }else{Ok(Collection::Surfaces(data))}},resolve)
@@ -445,6 +480,7 @@ impl World {
                         .ok()
                         .map(|i| old.meshes[old.key_index[i].1].clone())
                 });
+                let prior = prior.or_else(||self.base_variants.iter().flatten().find(|(old,_)|old==key).map(|(_,mesh)|mesh.clone()));
                 let mesh = if let Some(prior) = prior {
                     retained = retained
                         .checked_add(prior.as_ref().map_or(0, |m| {
@@ -659,7 +695,7 @@ impl World {
         self.pipeline = Some(pipeline.clone());
         Ok(Some(Arc::new(Prepared {
             placements: Some(placements),
-            ghosts: None, ghost_edge: [0.;4],
+            ghosts: None, ghost_edge: [0.;4], lines:[None,None],overlay:None,
             owner,
             mesh: None,
             pipeline,
@@ -690,6 +726,7 @@ impl World {
         self.mesh = None;
         self.ghosts = None;
         self.placements = None;
+        self.base_variants = [None,None];
         self.texture_assets.clear();
         self.stats.texture_identity_payload_bytes = self.texture_assets.capacity()*std::mem::size_of::<Arc<super::world_texture::Asset>>();
         self.stats.policy_retained_payload_bytes = 0;
@@ -729,21 +766,61 @@ impl Prepared {
     }
     fn encode_material_draws(&self,encoder:&ProtocolObject<dyn MTLRenderCommandEncoder>,placements:&PlacementMeshes,draws:&MaterialDraws,depth_enabled:bool)->Result<(),String>{
         let pipelines=self.pipeline.material.as_ref().ok_or("Metal material pipelines unavailable")?;let matrices=self.target.instance_matrices.as_ref().ok_or("Metal material matrices unavailable")?;
+        for overlay_pass in [false,true] {
+            if overlay_pass {self.encode_aux(encoder,depth_enabled,false);}
         for op in &draws.operations {
+            let overlay=self.overlay.is_some_and(|key|placements.packet.prototypes[op.prototype]==key);
+            if overlay!=overlay_pass {continue;}
             let mesh=placements.meshes[op.prototype].as_ref().ok_or("Metal admitted material prototype unavailable")?;
             encoder.setFrontFacingWinding(if op.reflected{MTLWinding::Clockwise}else{MTLWinding::CounterClockwise});
             let depth=if depth_enabled{&self.pipeline.depth}else{&self.pipeline.depth_disabled};
             encoder.setDepthStencilState(Some(depth));encoder.setRenderPipelineState(&self.pipeline.color);
-            let paint=PaintUniform{front:self.policy.front,back:self.policy.back,mode:match self.policy.mode{Mode::Material|Mode::MaterialAverage=>0,Mode::HiddenLine=>1,Mode::Monochrome=>2},opacity:1.,padding:[0;2]};
+            let paint=PaintUniform{front:self.policy.front,back:self.policy.back,mode:if overlay{0}else{match self.policy.mode{Mode::Material|Mode::MaterialAverage=>0,Mode::HiddenLine=>1,Mode::Monochrome=>2}},opacity:1.,padding:[0;2]};
             match op.kind {
-                MaterialKind::Legacy=>{encoder.setDepthBias_slopeScale_clamp(1.,1.,0.);encode_placement_mesh(encoder,mesh,matrices,op.packed,op.instances,self.policy);},
+                MaterialKind::Legacy=>{encoder.setDepthBias_slopeScale_clamp(1.,1.,0.);encode_placement_mesh(encoder,mesh,matrices,op.packed,op.instances,if overlay{Policy{mode:Mode::Material,..self.policy}}else{self.policy});},
                 MaterialKind::Opaque{first,count,cull}=>{encoder.setDepthBias_slopeScale_clamp(1.,1.,0.);encoder.setCullMode(if cull{MTLCullMode::Back}else{MTLCullMode::None});unsafe{encoder.setVertexBuffer_offset_atIndex(Some(&mesh.vertices.as_ref().ok_or("Metal admitted opaque draw buffer missing")?.raw),0,0);encoder.setVertexBuffer_offset_atIndex(Some(&matrices.raw),op.packed*64,1);}bind_paint(encoder,&paint);draw_instances(encoder,mesh,first,count,1);},
                 MaterialKind::DefaultBack=>{if !matches!(self.policy.mode,Mode::Material|Mode::MaterialAverage){continue;}encoder.setDepthBias_slopeScale_clamp(1.,1.,0.);encoder.setCullMode(MTLCullMode::Front);unsafe{encoder.setVertexBuffer_offset_atIndex(Some(&mesh.vertices.as_ref().ok_or("Metal admitted opaque draw buffer missing")?.raw),0,0);encoder.setVertexBuffer_offset_atIndex(Some(&matrices.raw),op.packed*64,1);}bind_paint(encoder,&PaintUniform{front:self.policy.back,mode:3,..paint});for &(first,count)in &mesh.plan.default_back{draw_instances(encoder,mesh,first,count,1);}},
-                MaterialKind::Color(index)=>{let material=mesh.materials.as_ref().ok_or("Metal admitted material payload missing")?;let run=*material.runs.get(index).ok_or("Metal admitted material run stale")?;let default=run.phase==super::world_surface::Phase::DefaultBack;let alpha=matches!(run.phase,super::world_surface::Phase::TransparentFront|super::world_surface::Phase::TransparentBack);encoder.setDepthBias_slopeScale_clamp(if alpha||default{1.}else{0.},if alpha||default{1.}else{0.},0.);encoder.setRenderPipelineState(if alpha{&pipelines.colored_alpha}else{&self.pipeline.color});encoder.setDepthStencilState(Some(if !depth_enabled{&self.pipeline.depth_disabled}else if alpha{&pipelines.depth}else{&self.pipeline.depth}));encoder.setCullMode(if run.cull_front{MTLCullMode::Front}else if run.front_only{MTLCullMode::Back}else{MTLCullMode::None});unsafe{encoder.setVertexBuffer_offset_atIndex(Some(&material.colored_vertices.as_ref().ok_or("Metal admitted color vertex buffer missing")?.raw),0,0);encoder.setVertexBuffer_offset_atIndex(Some(&matrices.raw),op.packed*64,1);}bind_paint(encoder,&PaintUniform{front:if default{self.policy.back}else{paint.front},mode:if default{3}else{0},opacity:run.opacity,..paint});unsafe{encoder.drawIndexedPrimitives_indexCount_indexType_indexBuffer_indexBufferOffset_instanceCount(MTLPrimitiveType::Triangle,run.count,MTLIndexType::UInt32,&material.colored_indices.as_ref().ok_or("Metal admitted color index buffer missing")?.raw,run.first*4,1);}},
-                MaterialKind::Texture{bucket,draw}=>{let texture=&mesh.materials.as_ref().ok_or("Metal admitted material payload missing")?.textures[bucket];let draw=&texture.draws[draw];let source=&draw.source;let alpha=source.opacity<0.999;encoder.setDepthBias_slopeScale_clamp(if !source.back_side||alpha{1.}else{0.},if !source.back_side||alpha{1.}else{0.},0.);encoder.setRenderPipelineState(if alpha{&pipelines.textured_alpha}else{&pipelines.textured});encoder.setDepthStencilState(Some(if !depth_enabled{&self.pipeline.depth_disabled}else if alpha{&pipelines.depth}else{&self.pipeline.depth}));encoder.setCullMode(if source.back_side{MTLCullMode::Front}else if source.front_cull{MTLCullMode::Back}else{MTLCullMode::None});let opacity=op.opacity;let uniform=TexturePaint{opacity,shade:source.shade,hard_cutout:u32::from(texture.asset.cutout),height:self.extent().1,mean:[texture.asset.mean[0],texture.asset.mean[1],texture.asset.mean[2],if self.policy.mode.texture_mean(source.opacity,source.back_side){1.}else{0.}]};unsafe{encoder.setVertexBuffer_offset_atIndex(Some(&texture.vertices.raw),0,0);encoder.setVertexBuffer_offset_atIndex(Some(&matrices.raw),op.packed*64,1);encoder.setFragmentTexture_atIndex(Some(&texture.asset.image),0);encoder.setFragmentSamplerState_atIndex(Some(&texture.asset.sampler),0);encoder.setFragmentBytes_length_atIndex(std::ptr::NonNull::from(&uniform).cast(),std::mem::size_of::<TexturePaint>(),0);encoder.drawPrimitives_vertexStart_vertexCount_instanceCount(MTLPrimitiveType::Triangle,draw.first as usize,draw.count as usize,1);}},
+                MaterialKind::Color(index)=>{let material=mesh.materials.as_ref().ok_or("Metal admitted material payload missing")?;let run=*material.runs.get(index).ok_or("Metal admitted material run stale")?;let default=run.phase==super::world_surface::Phase::DefaultBack;let alpha=matches!(run.phase,super::world_surface::Phase::TransparentFront|super::world_surface::Phase::TransparentBack);encoder.setDepthBias_slopeScale_clamp(if overlay||alpha||default{1.}else{0.},if overlay||alpha||default{1.}else{0.},0.);encoder.setRenderPipelineState(if alpha{&pipelines.colored_alpha}else{&self.pipeline.color});encoder.setDepthStencilState(Some(if !depth_enabled{&self.pipeline.depth_disabled}else if alpha{&pipelines.depth}else{&self.pipeline.depth}));encoder.setCullMode(if run.cull_front{MTLCullMode::Front}else if run.front_only{MTLCullMode::Back}else{MTLCullMode::None});unsafe{encoder.setVertexBuffer_offset_atIndex(Some(&material.colored_vertices.as_ref().ok_or("Metal admitted color vertex buffer missing")?.raw),0,0);encoder.setVertexBuffer_offset_atIndex(Some(&matrices.raw),op.packed*64,1);}bind_paint(encoder,&PaintUniform{front:if default{self.policy.back}else{paint.front},mode:if default{3}else{0},opacity:run.opacity,..paint});unsafe{encoder.drawIndexedPrimitives_indexCount_indexType_indexBuffer_indexBufferOffset_instanceCount(MTLPrimitiveType::Triangle,run.count,MTLIndexType::UInt32,&material.colored_indices.as_ref().ok_or("Metal admitted color index buffer missing")?.raw,run.first*4,1);}},
+                MaterialKind::Texture{bucket,draw}=>{let texture=&mesh.materials.as_ref().ok_or("Metal admitted material payload missing")?.textures[bucket];let draw=&texture.draws[draw];let source=&draw.source;let alpha=source.opacity<0.999;encoder.setDepthBias_slopeScale_clamp(if !source.back_side||alpha{1.}else{0.},if !source.back_side||alpha{1.}else{0.},0.);encoder.setRenderPipelineState(if alpha{&pipelines.textured_alpha}else{&pipelines.textured});encoder.setDepthStencilState(Some(if !depth_enabled{&self.pipeline.depth_disabled}else if alpha{&pipelines.depth}else{&self.pipeline.depth}));encoder.setCullMode(if source.back_side{MTLCullMode::Front}else if source.front_cull{MTLCullMode::Back}else{MTLCullMode::None});let opacity=op.opacity;let uniform=TexturePaint{opacity,shade:source.shade,hard_cutout:u32::from(texture.asset.cutout),height:self.extent().1,mean:[texture.asset.mean[0],texture.asset.mean[1],texture.asset.mean[2],if !overlay && self.policy.mode.texture_mean(source.opacity,source.back_side){1.}else{0.}]};unsafe{encoder.setVertexBuffer_offset_atIndex(Some(&texture.vertices.raw),0,0);encoder.setVertexBuffer_offset_atIndex(Some(&matrices.raw),op.packed*64,1);encoder.setFragmentTexture_atIndex(Some(&texture.asset.image),0);encoder.setFragmentSamplerState_atIndex(Some(&texture.asset.sampler),0);encoder.setFragmentBytes_length_atIndex(std::ptr::NonNull::from(&uniform).cast(),std::mem::size_of::<TexturePaint>(),0);encoder.drawPrimitives_vertexStart_vertexCount_instanceCount(MTLPrimitiveType::Triangle,draw.first as usize,draw.count as usize,1);}},
             }
         }
+        }
         encoder.setDepthBias_slopeScale_clamp(0.,0.,0.);Ok(())
+    }
+    fn encode_aux(&self,encoder:&ProtocolObject<dyn MTLRenderCommandEncoder>,depth_enabled:bool,preview_only:bool){
+        for lines in self.lines[usize::from(preview_only)..usize::from(preview_only)+1].iter().flatten() {
+            if let Some(buffer)=&lines.buffer {
+                encoder.setRenderPipelineState(&self.pipeline.lines);
+                encoder.setDepthStencilState(Some(if depth_enabled{&self.pipeline.depth}else{&self.pipeline.depth_disabled}));
+                encoder.setCullMode(MTLCullMode::None);encoder.setDepthBias_slopeScale_clamp(0.,0.,0.);
+                let uniform=super::world_ghost::Uniform{edge:self.ghost_edge,height:self.extent().1,mode:2,padding:[0;2]};
+                unsafe {encoder.setVertexBytes_length_atIndex(std::ptr::NonNull::from(&self.mvp).cast(),64,2);encoder.setVertexBuffer_offset_atIndex(Some(&buffer.raw),0,0);encoder.setFragmentBytes_length_atIndex(std::ptr::NonNull::from(&uniform).cast(),32,0);encoder.drawPrimitives_vertexStart_vertexCount(MTLPrimitiveType::Line,0,lines.count);}
+            }
+        }
+        if !preview_only {
+        if let Some(ghosts)=&self.ghosts {
+            encoder.setRenderPipelineState(&self.pipeline.ghost);
+            encoder.setDepthStencilState(Some(if depth_enabled{&self.pipeline.depth}else{&self.pipeline.depth_disabled}));
+            encoder.setCullMode(MTLCullMode::None);
+            unsafe { encoder.setVertexBytes_length_atIndex(std::ptr::NonNull::from(&self.mvp).cast(),64,2); }
+            if let Some(buffer)=&ghosts.wire {
+                encoder.setDepthBias_slopeScale_clamp(0.,0.,0.);
+                let uniform=super::world_ghost::Uniform{edge:self.ghost_edge,height:self.extent().1,mode:2,padding:[0;2]};
+                unsafe{encoder.setVertexBuffer_offset_atIndex(Some(&buffer.raw),0,0);encoder.setFragmentBytes_length_atIndex(std::ptr::NonNull::from(&uniform).cast(),32,0);encoder.drawPrimitives_vertexStart_vertexCount(MTLPrimitiveType::Line,0,ghosts.wire_count);}
+            }
+            for i in 0..3 {
+                if let Some(buffer)=&ghosts.buffers[i] {
+                    encoder.setDepthBias_slopeScale_clamp(if i==2{0.}else{1.},if i==2{0.}else{1.},0.);
+                    let uniform=super::world_ghost::Uniform{edge:self.ghost_edge,height:self.extent().1,mode:u32::from(i==2),padding:[0;2]};
+                    unsafe {
+                        encoder.setVertexBuffer_offset_atIndex(Some(&buffer.raw),0,0);
+                        encoder.setFragmentBytes_length_atIndex(std::ptr::NonNull::from(&uniform).cast(),32,0);
+                        encoder.drawPrimitives_vertexStart_vertexCount(if i==2{MTLPrimitiveType::Line}else{MTLPrimitiveType::Triangle},0,ghosts.counts[i]);
+                    }
+                }
+            }
+        }
+        }
     }
     fn encode_inner(
         &self,
@@ -817,28 +894,8 @@ impl Prepared {
         } else if let Some(mesh) = &self.mesh {
             encode_mesh(&encoder, mesh, &self.mvp, self.policy);
         }
-        if let Some(ghosts)=&self.ghosts {
-            encoder.setRenderPipelineState(&self.pipeline.ghost);
-            encoder.setDepthStencilState(Some(if depth_enabled{&self.pipeline.depth}else{&self.pipeline.depth_disabled}));
-            encoder.setCullMode(MTLCullMode::None);
-            unsafe { encoder.setVertexBytes_length_atIndex(std::ptr::NonNull::from(&self.mvp).cast(),64,2); }
-            if let Some(buffer)=&ghosts.wire {
-                encoder.setDepthBias_slopeScale_clamp(0.,0.,0.);
-                let uniform=super::world_ghost::Uniform{edge:self.ghost_edge,height:self.extent().1,mode:2,padding:[0;2]};
-                unsafe{encoder.setVertexBuffer_offset_atIndex(Some(&buffer.raw),0,0);encoder.setFragmentBytes_length_atIndex(std::ptr::NonNull::from(&uniform).cast(),32,0);encoder.drawPrimitives_vertexStart_vertexCount(MTLPrimitiveType::Line,0,ghosts.wire_count);}
-            }
-            for i in 0..3 {
-                if let Some(buffer)=&ghosts.buffers[i] {
-                    encoder.setDepthBias_slopeScale_clamp(if i==2{0.}else{1.},if i==2{0.}else{1.},0.);
-                    let uniform=super::world_ghost::Uniform{edge:self.ghost_edge,height:self.extent().1,mode:u32::from(i==2),padding:[0;2]};
-                    unsafe {
-                        encoder.setVertexBuffer_offset_atIndex(Some(&buffer.raw),0,0);
-                        encoder.setFragmentBytes_length_atIndex(std::ptr::NonNull::from(&uniform).cast(),32,0);
-                        encoder.drawPrimitives_vertexStart_vertexCount(if i==2{MTLPrimitiveType::Line}else{MTLPrimitiveType::Triangle},0,ghosts.counts[i]);
-                    }
-                }
-            }
-        }
+        if self.target.material_draws.is_none(){self.encode_aux(&encoder,depth_enabled,false);}
+        self.encode_aux(&encoder,depth_enabled,true);
         encoder.endEncoding();
         Ok(())
     }
@@ -1025,6 +1082,7 @@ fn pipeline(metal: &NativeMetal, rich:bool, samples:usize) -> Result<Pipeline, S
         Some(MaterialPipeline{colored_alpha:material_pipeline(metal,&lib,"world_vertex","world_fragment",true,samples)?,textured:material_pipeline(metal,&lib,"world_texture_vertex","world_texture_fragment",true,samples)?,textured_alpha:material_pipeline(metal,&lib,"world_texture_vertex","world_texture_fragment",true,samples)?,depth:metal.device.newDepthStencilStateWithDescriptor(&alpha).ok_or("Metal material depth state unavailable")?})
     }else{None};
     Ok(Pipeline {
+        lines: material_pipeline(metal,&lib,"world_line_vertex","world_ghost_fragment",false,samples)?,
         ghost: material_pipeline(metal,&lib,"world_ghost_vertex","world_ghost_fragment",false,samples)?,
         color,material,
         depth_disabled: metal
