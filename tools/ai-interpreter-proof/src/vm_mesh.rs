@@ -11,6 +11,8 @@ use std::{cell::RefCell, collections::HashMap};
 #[path = "vm_graph.rs"]
 mod graph;
 use graph::GraphState;
+#[path="identity_registry.rs"]
+pub mod identity_registry;
 // Drop removed arbitrary VM references only after releasing the membership lock.
 fn discard_tail(list: &rustpython_vm::builtins::PyListRef, keep: usize) {
     loop {
@@ -1567,7 +1569,8 @@ pub struct Controller {
     redo: Vec<HistoryCommand>,
     undo_slots: Lease,
     redo_slots: Lease,
-    interpreter: Interpreter,
+    interpreter: std::rc::Rc<Interpreter>,
+    vertex_runtime: std::rc::Rc<identity_registry::Runtime>,
     scope: Scope,
     budget: OwnerBudget,
     tainted: bool,
@@ -1585,6 +1588,8 @@ impl Controller {
             .add_native_module(vectors)
             .add_native_module(meshes)
             .interpreter();
+        let interpreter=std::rc::Rc::new(interpreter);
+        let vertex_runtime=identity_registry::Runtime::new(interpreter.clone());
         let scope=interpreter.enter(|vm|{let s=vm.new_scope_with_builtins();vm.run_code_obj(vm.compile("from native_groups import QVector3D\nfrom editable_mesh import Mesh,Vertex,Edge,Face",Mode::Exec,"<setup>").unwrap(),s.clone()).unwrap();s});
         let budget = OwnerBudget::new(None);
         let mut controller = Self {
@@ -1594,6 +1599,7 @@ impl Controller {
             undo: Vec::new(),
             redo: Vec::new(),
             interpreter,
+            vertex_runtime,
             scope,
             budget,
             tainted: false,
@@ -2076,6 +2082,22 @@ impl Controller {
        let v=get("v").downcast::<editable_mesh::Vertex>().unwrap();let e=get("e").downcast::<editable_mesh::Edge>().unwrap();
        serde_json::json!({"name":name,"vertices":mesh.vertices.borrow_vec().iter().map(|x|id(x,&vertices)).collect::<Vec<_>>(),"edges":mesh.edges.borrow_vec().iter().map(|x|id(x,&edges)).collect::<Vec<_>>(),"faces":mesh.faces.borrow_vec().iter().map(|x|id(x,&faces)).collect::<Vec<_>>(),"incidence":incidence,"radial":radial,"endpoints":endpoints,"persistent_lists":[mesh.vertices.is(&get("oldvertices")),mesh.edges.is(&get("oldedges")),mesh.faces.is(&get("oldfaces"))],"held_incidence_original":v.edges.read().as_ref().unwrap().is(&get("oldvedges")),"held_radial_original":e.faces.read().as_ref().unwrap().is(&get("oldefaces")),"soft_tag_identity":e.soft.read().as_ref().unwrap().is(&get("tag")),"layer_tag_identity":e.layer.read().as_ref().unwrap().is(&get("tag")),"curve_tag_identity":e.curve.read().as_ref().unwrap().is(&get("tag")),"undo":self.undo.len(),"redo":self.redo.len()})
       })
+    }
+    /// Cold native-finalizer engineering observer. Deliberately finite native
+    /// callback records scheduling only; it is not a production script module.
+    pub fn proof_native_finalizer(&self,borrowed:std::sync::Arc<std::sync::atomic::AtomicBool>)->(std::sync::Arc<std::sync::atomic::AtomicUsize>,std::sync::Arc<std::sync::atomic::AtomicUsize>){
+        use std::sync::{Arc,atomic::{AtomicUsize,Ordering}};
+        let count=Arc::new(AtomicUsize::new(0));let inside=Arc::new(AtomicUsize::new(0));let a=count.clone();let b=inside.clone();
+        self.interpreter.enter(|vm|{let f=vm.new_function("native_finalize",move |_args:rustpython_vm::function::PosArgs<rustpython_vm::PyObjectRef>,_vm:&rustpython_vm::VirtualMachine|->rustpython_vm::PyResult<()>{a.fetch_add(1,Ordering::SeqCst);if borrowed.load(Ordering::SeqCst){b.fetch_add(1,Ordering::SeqCst);}Ok(())});self.scope.globals.set_item("native_finalize",f.into(),vm).unwrap();});
+        (count,inside)
+    }
+    /// Cold standalone ownership observer, not a production scripting entrypoint.
+    pub fn held_vertex(&self, name:&str)->identity_registry::VertexHandle{
+        let vertex=self.interpreter.enter(|vm| self.scope.globals.get_item(name,vm).unwrap().downcast::<editable_mesh::Vertex>().unwrap());
+        identity_registry::VertexHandle::new(vertex,self.vertex_runtime.clone())
+    }
+    pub fn identity_registry(&self)->Result<identity_registry::Registry,String>{
+        identity_registry::Registry::new(self.budget.clone(),self.vertex_runtime.clone())
     }
     pub fn native_counts(&self, name: &str) -> (usize, usize, usize) {
         self.interpreter.enter(|vm| {
