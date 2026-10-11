@@ -1,0 +1,106 @@
+{
+  "run": 38105258265,
+  "source": "2382fe33976bb1b022a521a168bd39202579dc38",
+  "artifacts": {
+    "macos-15": {
+      "source_file_hashes_verified": 29,
+      "binary_sha256_manifest": "e477e53cb93b2a74d40e2429365230b7df45d42c93c50b0b5f64d36e73057b8e  target/debug/examples/native_metal_world_loose",
+      "zip_sha256": "6e967b65096f8f4df1a094072c354df14a419c2e48bd01e8e99fa25791920d53",
+      "sdk": "PASS"
+    },
+    "macos-15-intel": {
+      "source_file_hashes_verified": 29,
+      "binary_sha256_manifest": "44243f8e8f3181d331ca5144b0f978d33d52daaa7c62ae25dd196a778453b94d  target/debug/examples/native_metal_world_loose",
+      "zip_sha256": "13f1eb81351669941d77758d558988162a1c6d45706e92baa666719fb6fe3cdc",
+      "sdk": "PASS"
+    }
+  },
+  "arm_positive": {
+    "passed": true,
+    "native_cases": 8,
+    "source_cases": 7,
+    "pixels": 225,
+    "scope": "Actual shared native app consumer; exact Qt framebuffer interior samples and cache invalidation, not whole-image/OS gesture/presentation parity"
+  },
+  "negative_controls": [
+    {
+      "mutation": "blank-initial",
+      "rejected": true,
+      "assertion": "loose-initial"
+    },
+    {
+      "mutation": "stale-geometry",
+      "rejected": true,
+      "assertion": "loose-geometry"
+    },
+    {
+      "mutation": "stale-paint",
+      "rejected": true,
+      "assertion": "loose-paint"
+    },
+    {
+      "mutation": "stale-hidden-layer",
+      "rejected": true,
+      "assertion": "loose-layer-hidden"
+    },
+    {
+      "mutation": "stale-removed-topology",
+      "rejected": true,
+      "assertion": "loose-topology-removed"
+    }
+  ],
+  "warm": [
+    {
+      "name": "loose-warm",
+      "native": true,
+      "selection_count": 0,
+      "rect": [
+        50.0,
+        60.0,
+        932.0,
+        709.6375122070312
+      ],
+      "red_pixel": [
+        516.0,
+        436.23394775390625
+      ],
+      "old_pixel": [
+        516.0,
+        436.23394775390625
+      ],
+      "catalog_builds": 1,
+      "model_refreshes": 1,
+      "matrix_bytes": 384,
+      "geometry_uploads": 2
+    },
+    {
+      "name": "loose-warm2",
+      "native": true,
+      "selection_count": 0,
+      "rect": [
+        50.0,
+        60.0,
+        932.0,
+        709.6375122070312
+      ],
+      "red_pixel": [
+        516.0,
+        436.23394775390625
+      ],
+      "old_pixel": [
+        516.0,
+        436.23394775390625
+      ],
+      "catalog_builds": 1,
+      "model_refreshes": 1,
+      "matrix_bytes": 384,
+      "geometry_uploads": 2
+    }
+  ],
+  "ledger": [
+    0,
+    0
+  ],
+  "intel_failure": "Actual geometry upload assertion0>0 fails; decodedinitialimage literalWorldnative texture size query unavailable requested2646880 queried0/0 extent932x710 format70",
+  "scope": "Actual native app offscreen borrowed Scene route, Qt sampledsurface color equality and geometry/paint/layer/topology notifications; no wholeimage/OSgesture/presentation/fullviewport claim"
+}
