@@ -1,0 +1,146 @@
+{
+  "batching-negative": {
+    "summary": {
+      "baseline_small": {
+        "samples_ms": [
+          8.759578000000001,
+          5.107203999999999,
+          7.057771,
+          6.224265,
+          5.68197
+        ],
+        "median_ms": 6.224265,
+        "range_ms": [
+          5.107203999999999,
+          8.759578000000001
+        ]
+      },
+      "baseline_large": {
+        "samples_ms": [
+          48.161027000000004,
+          44.395178,
+          62.949589,
+          49.784653,
+          46.618849
+        ],
+        "median_ms": 48.161027000000004,
+        "range_ms": [
+          44.395178,
+          62.949589
+        ]
+      },
+      "candidate_small": {
+        "samples_ms": [
+          7.646584,
+          6.1344650000000005,
+          6.378978,
+          8.561122,
+          7.497952
+        ],
+        "median_ms": 7.497952,
+        "range_ms": [
+          6.1344650000000005,
+          8.561122
+        ]
+      },
+      "candidate_large": {
+        "samples_ms": [
+          52.454122,
+          44.253821,
+          47.107844,
+          51.664476,
+          52.451803
+        ],
+        "median_ms": 51.664476,
+        "range_ms": [
+          44.253821,
+          52.454122
+        ]
+      }
+    },
+    "sources": {
+      "baseline": "b9cfbf64f30e34361c90053c2c9f5f68940515f3",
+      "candidate": "65223332b3b2af839c7dc47d9e3544be94b20344"
+    },
+    "binaries": {
+      "baseline": "414f118494180467bc052472edbf2c40b745a6ed7eed6003e327770e63f16dda",
+      "candidate": "5d70d06c69a21f444aa39b357b3e9498741eaaebf053231adcec897ed3574a41"
+    }
+  },
+  "final": {
+    "summary": {
+      "baseline_small": {
+        "samples_ms": [
+          11.779641,
+          9.048439,
+          7.723626,
+          9.257294,
+          8.751197000000001
+        ],
+        "median_ms": 9.048439,
+        "range_ms": [
+          7.723626,
+          11.779641
+        ]
+      },
+      "baseline_large": {
+        "samples_ms": [
+          57.616451999999995,
+          58.874067000000004,
+          73.105922,
+          59.511661000000004,
+          63.11493
+        ],
+        "median_ms": 59.511661000000004,
+        "range_ms": [
+          57.616451999999995,
+          73.105922
+        ]
+      },
+      "final_small": {
+        "samples_ms": [
+          5.95849,
+          9.121227000000001,
+          8.107652,
+          10.015467000000001,
+          8.606443
+        ],
+        "median_ms": 8.606443,
+        "range_ms": [
+          5.95849,
+          10.015467000000001
+        ]
+      },
+      "final_large": {
+        "samples_ms": [
+          30.257209,
+          60.32475,
+          32.226329,
+          36.716304,
+          44.592737
+        ],
+        "median_ms": 36.716304,
+        "range_ms": [
+          30.257209,
+          60.32475
+        ]
+      }
+    },
+    "sources": {
+      "baseline": "b9cfbf64f30e34361c90053c2c9f5f68940515f3",
+      "final": "22f56006aa22318c6cac414f770997272bf5e1c5"
+    },
+    "binaries": {
+      "baseline": "414f118494180467bc052472edbf2c40b745a6ed7eed6003e327770e63f16dda",
+      "final": "edb0c6802c0ba766cd4e156908c32a10308aa4689d4e5998a7fc2f69c6562b49"
+    }
+  },
+  "controls": {
+    "source": "22f56006aa22318c6cac414f770997272bf5e1c5",
+    "near_far_full_rgba_exact": true,
+    "budget_refusal_retry_exact": true,
+    "large17MiB_exact": true,
+    "ledger_final": 0,
+    "negative_controls": 4
+  }
+}
