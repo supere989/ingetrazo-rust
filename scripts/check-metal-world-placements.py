@@ -32,7 +32,8 @@ def main(root):
  root=pathlib.Path(root);report=json.loads((root/'report.json').read_text());assert report['passed'] is True
  assert report['geometry_uploads_before_warm']==report['geometry_uploads_after_warm']==1
  assert report['instance_buffers_before_warm']==report['instance_buffers_after_warm']==1
- assert report['warm_matrix_upload_bytes']==384
+ # First move changes2 model matrices, the next2 moves change only1 each.
+ assert report['warm_matrix_upload_bytes']==256
  assert report['camera_only_instance_upload_bytes']==0 and report['offset_runs']==2
  assert report['coalesced_instances']==2 and report['coalesced_runs']==1
  assert report['targets_before_warm']==report['targets_after_warm']==1
