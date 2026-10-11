@@ -1,0 +1,1 @@
+Actual PySide6 QMatrix4x4.data returns tuple, not list. Source check incorrectly compared identity tuple to list and failed before native replay. Corrected native data API to genuine tuple and assertion to tuple.

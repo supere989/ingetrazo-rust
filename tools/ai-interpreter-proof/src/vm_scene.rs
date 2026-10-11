@@ -16,6 +16,29 @@ pub(super) mod console_scene {
         pyclass,
         types::Constructor,
     };
+    /// Genuine native identity placement object. Arbitrary matrix construction
+    /// and mutation remain required; no Python None alias for placed groups.
+    #[pyattr]
+    #[pyclass(name = "QMatrix4x4", traverse)]
+    #[derive(Debug, PyPayload)]
+    pub struct QMatrix4x4 {}
+    #[pyclass]
+    impl QMatrix4x4 {
+        #[pymethod(name = "isIdentity")]
+        fn is_identity(_zelf: &Py<Self>) -> bool {
+            true
+        }
+        #[pymethod]
+        fn data(_zelf: &Py<Self>, vm: &VirtualMachine) -> rustpython_vm::builtins::PyTupleRef {
+            vm.ctx.new_tuple(
+                glam::DMat4::IDENTITY
+                    .to_cols_array()
+                    .into_iter()
+                    .map(|v| vm.ctx.new_float(v).into())
+                    .collect(),
+            )
+        }
+    }
     #[derive(FromArgs)]
     pub struct GroupArgs {
         #[pyarg(any, optional)]
@@ -440,6 +463,9 @@ pub(super) fn members(
 pub struct GroupPublication {
     pub groups: Vec<ingetrazo_core::groups::Group>,
     pub shares: std::collections::HashMap<uuid::Uuid, ingetrazo_core::mesh::Mesh>,
+    pub packed_meshes: usize,
+    pub definitions:
+        std::collections::HashMap<uuid::Uuid, ingetrazo_core::components::ComponentDefinition>,
     pub charge: Lease,
 }
 fn str_value(
@@ -472,7 +498,15 @@ pub(super) fn publication(
             .checked_mul(2048)
             .ok_or("Group receipt extent overflow")?,
     )?;
-    let mut shares = std::collections::HashMap::new();
+    let mut shares = std::collections::HashMap::<uuid::Uuid, ingetrazo_core::mesh::Mesh>::new();
+    let mut definitions = std::collections::HashMap::new();
+    definitions
+        .try_reserve(values.len())
+        .map_err(|_| "Group definition references refused")?;
+    let mut costs = std::collections::HashMap::<uuid::Uuid, usize>::new();
+    costs
+        .try_reserve(values.len())
+        .map_err(|_| "Group receipt cost references refused")?;
     shares
         .try_reserve(values.len())
         .map_err(|_| "Group shares capacity refused")?;
@@ -488,8 +522,12 @@ pub(super) fn publication(
             .fields
             .get_item("xform", vm)
             .map_err(|_| "Group placement missing")?;
-        if !vm.is_none(&placement) {
-            return Err("Group transforms are not yet admitted".into());
+        if !vm.is_none(&placement)
+            && placement
+                .downcast_ref::<console_scene::QMatrix4x4>()
+                .is_none()
+        {
+            return Err("Nonidentity Group transforms are not yet admitted".into());
         }
         let children = group
             .fields
@@ -501,22 +539,35 @@ pub(super) fn publication(
             return Err("Nested Group publication remains required".into());
         }
         let mesh = group.mesh.read().clone();
-        super::seed_packed_uids(&mesh)?;
-        let mut live = RootRestore::prepare(mesh.clone(), budget, vm)?;
-        live.armed = false;
-        let candidate = packed::prepare(
-            &mesh,
-            &live.vertices,
-            &live.graph,
-            &live.positions,
-            &live.faces,
-            &live.face_fields,
-            budget,
-            vm,
-        )?;
-        let (mesh_receipt, receipt_charge) = candidate.into_mesh_receipt()?;
-        let share_bytes = receipt_charge.bytes();
-        charge.merge(receipt_charge)?;
+        let token = mesh.share_token.get().unwrap_or_else(|| {
+            let token = uuid::Uuid::new_v4();
+            mesh.share_token.set(Some(token));
+            token
+        });
+        let (mesh_receipt, share_bytes) = if let Some(existing) = shares.get(&token) {
+            let bytes = costs[&token];
+            charge.merge(budget.reserve(Kind::Preparation, bytes)?)?;
+            (existing.clone(), bytes)
+        } else {
+            super::seed_packed_uids(&mesh)?;
+            let mut live = RootRestore::prepare(mesh.clone(), budget, vm)?;
+            live.armed = false;
+            let candidate = packed::prepare(
+                &mesh,
+                &live.vertices,
+                &live.graph,
+                &live.positions,
+                &live.faces,
+                &live.face_fields,
+                budget,
+                vm,
+            )?;
+            let (receipt, receipt_charge) = candidate.into_mesh_receipt()?;
+            let bytes = receipt_charge.bytes();
+            charge.merge(receipt_charge)?;
+            costs.insert(token, bytes);
+            (receipt, bytes)
+        };
         let name = str_value(
             group
                 .fields
@@ -548,12 +599,30 @@ pub(super) fn publication(
             return Err("Native Group visibility currently requires bool".into());
         };
         native.transform = group.baseline.transform;
-        native.mesh_share = if group.imported {
-            group.baseline.mesh_share
+        native.mesh_share = Some(token);
+        let component = group
+            .fields
+            .get_item("component", vm)
+            .map_err(|_| "Group component flag missing")?;
+        if !component.is(&vm.ctx.true_value) && !component.is(&vm.ctx.false_value) {
+            return Err("Native component flags currently require bool".into());
+        }
+        native.component_definition = if !vm.is_none(&placement) && component.is(&vm.ctx.true_value)
+        {
+            if !definitions.contains_key(&token) {
+                charge.merge(budget.reserve(Kind::Preparation, share_bytes)?)?;
+                definitions.insert(
+                    token,
+                    ingetrazo_core::components::ComponentDefinition {
+                        mesh_share: Some(token),
+                        mesh: native.mesh.clone(),
+                        children: vec![],
+                    },
+                );
+            }
+            Some(token)
         } else {
-            Some(uuid::Uuid::from_u128(
-                scene.get_id() as u128 ^ ((mesh.get_id() as u128) << 64),
-            ))
+            None
         };
         if let Some(token) = native.mesh_share {
             if let Some(existing) = shares.get(&token) {
@@ -606,6 +675,8 @@ pub(super) fn publication(
     }
     Ok(GroupPublication {
         groups,
+        packed_meshes: costs.len(),
+        definitions,
         shares,
         charge,
     })
@@ -618,20 +689,33 @@ pub(super) fn import(
     vm: &VirtualMachine,
 ) -> Result<PyRef<console_scene::Scene>, String> {
     use rustpython_vm::common::lock::PyRwLock;
+    let mut owners = std::collections::HashMap::<uuid::Uuid, PyRef<editable_mesh::Mesh>>::new();
+    owners
+        .try_reserve(scene.groups.len())
+        .map_err(|_| "Imported Mesh owner references refused")?;
     let mut groups = Vec::new();
     groups
         .try_reserve_exact(scene.groups.len())
         .map_err(|_| "Imported Group references refused")?;
     for g in &scene.groups {
-        if !g.children.is_empty()
-            || g.component_definition.is_some()
-            || g.transform != glam::DMat4::IDENTITY
-            || g.native_document.get("proto").is_some_and(|p| !p.is_null())
-            || g.native_document.get("xform").is_some_and(|p| !p.is_null())
-        {
+        if !g.children.is_empty() || g.transform != glam::DMat4::IDENTITY {
             return Err("Placed/nested Group hydration remains required".into());
         }
-        let mesh = hydrate::prepare(g.mesh.clone(), budget, vm)?;
+        let mesh = if let Some(token) = g.mesh_share {
+            if scene.mesh_shares.get(&token) != Some(&g.mesh) {
+                return Err("Imported shared Mesh registry is not coherent".into());
+            }
+            if let Some(mesh) = owners.get(&token) {
+                mesh.clone()
+            } else {
+                let mesh = hydrate::prepare(g.mesh.clone(), budget, vm)?;
+                mesh.share_token.set(Some(token));
+                owners.insert(token, mesh.clone());
+                mesh
+            }
+        } else {
+            hydrate::prepare(g.mesh.clone(), budget, vm)?
+        };
         mesh.managed.set(false);
         let fields = vm.ctx.new_dict();
         fields
@@ -680,6 +764,23 @@ pub(super) fn import(
                 .set_item("material", hydrate::value(material, vm)?, vm)
                 .map_err(|_| "Group paint import refused")?;
         }
+        if g.native_document.get("xform").is_some_and(|v| !v.is_null()) {
+            fields
+                .set_item(
+                    "xform",
+                    console_scene::QMatrix4x4 {}.into_ref(&vm.ctx).into(),
+                    vm,
+                )
+                .map_err(|_| "Group identity placement import refused")?;
+        }
+        let component = g
+            .native_document
+            .get("component")
+            .and_then(|v| v.as_bool())
+            .unwrap_or(true);
+        fields
+            .set_item("component", vm.ctx.new_bool(component).into(), vm)
+            .map_err(|_| "Group component flag import refused")?;
         let charge = budget.reserve(Kind::History, 2048)?;
         groups.push(
             console_scene::Group {

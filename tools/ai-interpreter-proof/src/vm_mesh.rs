@@ -686,6 +686,8 @@ pub mod editable_mesh {
         #[pytraverse(skip)]
         pub(super) managed: std::cell::Cell<bool>,
         #[pytraverse(skip)]
+        pub(super) share_token: std::cell::Cell<Option<uuid::Uuid>>,
+        #[pytraverse(skip)]
         pub(super) native_field_charge: PyRwLock<Option<Lease>>,
         #[pytraverse(skip)]
         pub(super) opaque_native_fields: std::cell::Cell<usize>,
@@ -721,6 +723,7 @@ pub mod editable_mesh {
                 edges: vm.ctx.new_list(vec![]),
                 registry: vm.ctx.new_dict(),
                 managed: std::cell::Cell::new(false),
+                share_token: std::cell::Cell::new(None),
                 native_field_charge: PyRwLock::new(None),
                 opaque_native_fields: std::cell::Cell::new(0),
             })

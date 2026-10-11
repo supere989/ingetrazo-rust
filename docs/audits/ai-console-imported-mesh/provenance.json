@@ -1,0 +1,29 @@
+{
+  "base": "77027f5d",
+  "original": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "source_hashes": {
+    "tools/ai-interpreter-proof/src/vm_scene.rs": "ca998d2d6cbbfb1d363758d991b3e9dbca60e5f01379e4ca07b97583c8d6bc88",
+    "tools/ai-interpreter-proof/src/vm_mesh.rs": "e0ef3a395e48b527474ac661daec04b83b13303b9664f615fb7445c31b31e072",
+    "tools/ai-interpreter-proof/src/vm_hydrate.rs": "bd258bd39281ea65411ec5857b99765a41d963750efdcda73f14d5cc990e9826",
+    "tools/ai-interpreter-proof/src/vm_packed.rs": "de05df6dd3b548a72e38d59559b9209f9f1ad0f8c4143c0ea4b110ef74242d12",
+    "tools/ai-interpreter-proof/src/owner_budget.rs": "69b3ebef1841e2b0da6570af352b89e581837c3a0382ed01c3c69428829eaff4",
+    "crates/ingetrazo-gui/src/engineering_python.rs": "f46b3da2cce6f638133147b04429478303c74a80b029efb95ab9ee14ed625fde",
+    "crates/ingetrazo-gui/examples/engineering_console_imported_mesh_fixture.rs": "179d995e82c14ad1cb0433a282012082a9be5f06dbb3dd812a2325d5bb7411b9",
+    "crates/ingetrazo-gui/Cargo.toml": "d6dce5be5fc513e9fd4447e0af29adaa8a96c007d64dad7262543622fe2b0854",
+    "crates/ingetrazo-formats/src/igz.rs": "66e0eb3f8ff5e18b5e7c645b94071c2704691949ef0a43599ac5063249abd811",
+    "scripts/reference-ai-console-imported-mesh.py": "ae61af390a7ae56be53f54ed4a399c814fcb959b4de409702e5fe3fc27df3482",
+    "scripts/check-ai-console-imported-mesh.py": "f05316cd19e056deb90c583f58fe07e603234308cf5926ee9f915902e87f733a",
+    "scripts/check-ai-imported-mesh-reopen.py": "a3f7f653b90f830a20281cf183df32f2b955112b9700b05638cf965dd5b3ad3e"
+  },
+  "original_hashes": {
+    "core/ai.py": "6208a5c3e7773d27f028b9d7460f317693bab107705d6efdcd598ef048a82678",
+    "core/mesh.py": "5f2c1625e6dd717db029ba39a9de337e75beec06bd0df28a592a8a34875ca22c",
+    "core/group.py": "9ba6a20eca241cb4969a545a3784fcff25566166606d5447a18780747d4f11c5",
+    "core/history.py": "2eb66a1d557099b51383988a7819145289fc4ce2c37fc7de3a92ed35b5830559",
+    "formats/igz.py": "f318d685830c49c2fede7fd5a238ac7a1469ee0b0226cf48cab3751e194a9576"
+  },
+  "binary_path": "/tmp/ingetrazo-ai-registry-target/debug/examples/engineering_console_imported_mesh_fixture",
+  "binary_sha256": "87c4ccd71f3a05d6accd17a8054659f8c8f923936ef7277c197bbd5562d32fa6",
+  "fixture_input_sha256": "8a34681fc664ba9f4cffbb1aa636d8e2d68a9995fb4568f071f0e7a500f373c2",
+  "test_seed_sha256": "6f42fe4f928870c06bc43fc4b78620e2d43bc7c648dc0ce68be8d0b65fba4740"
+}

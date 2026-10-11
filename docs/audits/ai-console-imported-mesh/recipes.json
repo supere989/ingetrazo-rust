@@ -1,0 +1,116 @@
+[
+  {
+    "name": "imported",
+    "code": "a,b=groups; old=a.mesh; faces=old.faces; assert a.mesh is b.mesh and a.xform.isIdentity() and b.xform.isIdentity() and a.is_component() and b.is_component()",
+    "history": null,
+    "check": "assert old.faces is faces; assert type(a.xform).__name__=='QMatrix4x4' and a.xform.data()==(1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0)"
+  },
+  {
+    "name": "alias-member",
+    "code": "old.faces[0].attrs['opacity']=0.625; c=Group(old,name='C'); groups.append(c)",
+    "history": null,
+    "check": "assert c.mesh is old and a.mesh is b.mesh is c.mesh"
+  },
+  {
+    "name": "undo-member",
+    "code": "",
+    "history": false,
+    "check": "assert c not in groups and c.mesh is old"
+  },
+  {
+    "name": "detached-alias",
+    "code": "c.mesh.faces[0].attrs['color']=(0.2,0.4,0.6,1.0)",
+    "history": null,
+    "check": "assert a.mesh.faces[0] is c.mesh.faces[0]"
+  },
+  {
+    "name": "redo-member",
+    "code": "",
+    "history": true,
+    "check": "assert groups[-1] is c and c.mesh is old"
+  },
+  {
+    "name": "reassignment",
+    "code": "replacement=Mesh(); replacement.add_face([QVector3D(*p) for p in [(2,0,0),(3,0,0),(2,1,0)]]); replacement.faces[0].attrs['opacity']=0.75; a.mesh=replacement",
+    "history": null,
+    "check": "assert a.mesh is replacement and b.mesh is old and c.mesh is old and a.mesh is not old"
+  },
+  {
+    "name": "old-alias-edit",
+    "code": "old.vertices[0].position.setZ(0.25)",
+    "history": null,
+    "check": "assert c.mesh is b.mesh and a.mesh is not c.mesh"
+  },
+  {
+    "name": "replacement-member",
+    "code": "d=Group(replacement,name='D'); groups.append(d)",
+    "history": null,
+    "check": "assert d.mesh is a.mesh"
+  },
+  {
+    "name": "undo-replacement-member",
+    "code": "",
+    "history": false,
+    "check": "assert d not in groups and d.mesh is replacement"
+  },
+  {
+    "name": "second-reassignment",
+    "code": "b.mesh=replacement",
+    "history": null,
+    "check": "assert a.mesh is b.mesh is d.mesh and c.mesh is old"
+  },
+  {
+    "name": "redo-replacement-member",
+    "code": "",
+    "history": true,
+    "check": "assert groups[-1] is d and d.mesh is a.mesh is b.mesh"
+  },
+  {
+    "name": "remove-original-alias",
+    "code": "groups.remove(c)",
+    "history": null,
+    "check": "assert c.mesh is old and old.faces is faces"
+  },
+  {
+    "name": "detached-only-edit",
+    "code": "old.faces[0].attrs['opacity']=0.375",
+    "history": null,
+    "check": ""
+  },
+  {
+    "name": "reinsert-original-alias",
+    "code": "groups.append(c)",
+    "history": null,
+    "check": "assert groups[-1] is c and c.mesh is old and c.mesh.faces[0] is faces[0]"
+  },
+  {
+    "name": "undo-reinsert",
+    "code": "",
+    "history": false,
+    "check": ""
+  },
+  {
+    "name": "redo-reinsert",
+    "code": "",
+    "history": true,
+    "check": ""
+  },
+  {
+    "name": "restore-first-alias",
+    "code": "a.mesh=old",
+    "history": null,
+    "check": "assert a.mesh is c.mesh is old and b.mesh is d.mesh is replacement"
+  },
+  {
+    "name": "remove-detached-members",
+    "code": "groups.remove(c); groups.remove(d)",
+    "history": null,
+    "check": "assert c.mesh is old and d.mesh is replacement"
+  },
+  {
+    "name": "restore-imported-sharing",
+    "code": "b.mesh=old",
+    "history": null,
+    "check": "assert a.mesh is b.mesh is old and d.mesh is replacement"
+  }
+]

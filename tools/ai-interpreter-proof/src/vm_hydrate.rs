@@ -212,6 +212,7 @@ pub(super) fn prepare(
         faces: vm.ctx.new_list(faces.into_iter().map(Into::into).collect()),
         registry,
         managed: std::cell::Cell::new(true),
+        share_token: std::cell::Cell::new(None),
         native_field_charge: PyRwLock::new(Some(charge)),
         opaque_native_fields: std::cell::Cell::new(0),
     }

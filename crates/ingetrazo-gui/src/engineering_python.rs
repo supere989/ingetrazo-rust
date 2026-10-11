@@ -17,6 +17,7 @@ pub(crate) struct Engine {
     last_publication: Option<PublicationMetrics>,
     before_publication_probe: Option<fn()>,
     pending_groups: Option<GroupPublication>,
+    last_group_packs: usize,
     #[cfg(test)]
     export_pressure: bool,
 }
@@ -87,14 +88,21 @@ impl Engine {
             budget.set_limit(Some(budget.snapshot().total()));
         }
         let groups = match controller.native_groups_publication() {
-            Ok(Some(receipt))
+            Ok(Some(receipt)) => {
+                self.last_group_packs = receipt.packed_meshes;
                 if receipt.groups != scene.groups
                     || receipt
                         .shares
                         .iter()
-                        .any(|(id, mesh)| scene.mesh_shares.get(id) != Some(mesh)) =>
-            {
-                Some(receipt)
+                        .any(|(id, mesh)| scene.mesh_shares.get(id) != Some(mesh))
+                    || receipt.definitions.iter().any(|(id, definition)| {
+                        scene.component_definitions.get(id) != Some(definition)
+                    })
+                {
+                    Some(receipt)
+                } else {
+                    None
+                }
             }
             Ok(_) => None,
             Err(error) => {
@@ -151,7 +159,10 @@ impl Engine {
                 return Err("Interpreter command missing".into());
             }
             let groups = match controller.native_groups_publication() {
-                Ok(groups) => groups,
+                Ok(groups) => {
+                    self.last_group_packs = groups.as_ref().map_or(0, |g| g.packed_meshes);
+                    groups
+                }
                 Err(error) => {
                     let restored = if redo {
                         controller.undo()
@@ -189,6 +200,10 @@ impl crate::IngeTrazoApp {
                 self.engineering_python.history_steps,
             )
         })
+    }
+    #[doc(hidden)]
+    pub fn engineering_python_group_pack_count(&self) -> usize {
+        self.engineering_python.last_group_packs
     }
     #[doc(hidden)]
     pub fn engineering_python_publication_observation(
@@ -253,7 +268,18 @@ impl crate::IngeTrazoApp {
                 } else {
                     self.undo_stack.last_mut()
                 };
-                if target.unwrap().mesh_shares.try_reserve(count).is_err() {
+                let definition_count = self
+                    .engineering_python
+                    .pending_groups
+                    .as_ref()
+                    .map_or(0, |g| g.definitions.len());
+                let target = target.unwrap();
+                if target.mesh_shares.try_reserve(count).is_err()
+                    || target
+                        .component_definitions
+                        .try_reserve(definition_count)
+                        .is_err()
+                {
                     self.engineering_python.pending_groups.take();
                     self.engineering_python.controller.take();
                     self.engineering_python.revision = None;
@@ -271,6 +297,7 @@ impl crate::IngeTrazoApp {
     pub(crate) fn apply_engineering_python_history_groups(&mut self) {
         if let Some(groups) = self.engineering_python.pending_groups.take() {
             self.scene.mesh_shares.extend(groups.shares);
+            self.scene.component_definitions.extend(groups.definitions);
             self.scene.groups = groups.groups;
             drop(groups.charge);
         }
@@ -294,6 +321,11 @@ impl crate::IngeTrazoApp {
                             .mesh_shares
                             .try_reserve(receipt.shares.len())
                             .is_err()
+                            || self
+                                .scene
+                                .component_definitions
+                                .try_reserve(receipt.definitions.len())
+                                .is_err()
                         {
                             self.engineering_python.controller.take();
                             self.engineering_python.revision = None;
@@ -334,6 +366,7 @@ impl crate::IngeTrazoApp {
                     }
                     if let Some(groups) = groups {
                         self.scene.mesh_shares.extend(groups.shares);
+                        self.scene.component_definitions.extend(groups.definitions);
                         self.scene.groups = groups.groups;
                         drop(groups.charge);
                     }
@@ -372,6 +405,52 @@ impl crate::IngeTrazoApp {
 #[cfg(test)]
 mod tests {
     use super::Engine;
+    #[test]
+    fn imported_mesh_reassignment_refusal_preserves_registry_and_redo() {
+        let path = std::env::temp_dir().join(format!(
+            "ingetrazo-imported-mesh-{}.igz",
+            uuid::Uuid::new_v4()
+        ));
+        std::fs::write(
+            &path,
+            include_bytes!("../../../docs/audits/ai-console-imported-mesh/input.igz"),
+        )
+        .unwrap();
+        let mut app = crate::IngeTrazoApp::new();
+        app.scene = ingetrazo_formats::igz::load_igz(&path).unwrap();
+        std::fs::remove_file(path).unwrap();
+        app.engineering_python_enabled = true;
+        app.run_script(
+            "a,b=groups; old=a.mesh; assert old is b.mesh; groups.append(Group(old,name='C'))",
+        );
+        assert!(!app.console_logs.last().unwrap().contains("refused"));
+        app.undo();
+        assert_eq!(app.scene.groups.len(), 2);
+        let before = app.scene.clone();
+        let budget = app.engineering_python_budget().unwrap();
+        app.engineering_python.export_pressure = true;
+        app.run_script("a.mesh=Mesh()");
+        assert_eq!(app.scene, before);
+        assert_eq!(app.redo_stack.len(), 1);
+        assert!(app.status_message.contains("scope retired"));
+        assert_eq!(budget.snapshot().total(), 0);
+        app.engineering_python.export_pressure = false;
+        app.redo();
+        assert_eq!(app.scene.groups.len(), 3);
+        app.run_script("assert groups[0].mesh is groups[1].mesh is groups[2].mesh; groups[0].mesh=Mesh(); assert groups[1].mesh is groups[2].mesh and groups[0].mesh is not groups[1].mesh");
+        assert!(!app.console_logs.last().unwrap().contains("refused"));
+        assert_ne!(
+            app.scene.groups[0].mesh_share,
+            app.scene.groups[1].mesh_share
+        );
+        let a = &app.scene.groups[0];
+        assert_eq!(a.component_definition, a.mesh_share);
+        assert_eq!(
+            app.scene.component_definitions[&a.component_definition.unwrap()].mesh_share,
+            a.mesh_share
+        );
+        assert_eq!(app.scene.mesh_shares[&a.mesh_share.unwrap()], a.mesh);
+    }
     #[test]
     fn recipe_caught_native_orientation_refusal_aborts_visible_command() {
         let mut app = crate::IngeTrazoApp::new();

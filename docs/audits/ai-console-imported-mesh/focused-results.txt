@@ -1,0 +1,5 @@
+19 complete typed original/app states;11 same-validator rejected mutations PASS
+Actual source/native final IGZ alias/component/identity-placement/current geometry+paint;4 mutations rejected PASS
+Actual source/native replacement distinct prototypes/current geometry+paint;old-token mutation rejected PASS
+imported_mesh_reassignment_refusal_preserves_registry_and_redo:1 PASS (same registry/publication code; before independent identity data tuple API correction)
+All collected logical owner budgets zero after actual fixture teardown. One packed receipt per unique current Mesh owner per publication. No broad suite.
