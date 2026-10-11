@@ -26,6 +26,8 @@ fn adopted(scene: &Scene) -> Option<[f64; 3]> {
     ])
 }
 pub(crate) fn preserve(current: &Scene, target: &mut Scene) {
+    // Active BIM classification belongs to the runtime tray, not model history.
+    target.active_ifc=current.active_ifc.clone();
     target.display_style = current.display_style.clone();
     target.shadows = current.shadows.clone();
     target.show_section_fill = current.show_section_fill;

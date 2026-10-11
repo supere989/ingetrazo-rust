@@ -19,6 +19,7 @@ pub enum ArcMode {
 #[derive(Debug, Clone)]
 pub struct ArcTool {
     pub mode: ArcMode,
+    authored_draw_faces:Vec<usize>,
     pub start_point: Option<DVec3>,
     pub second_point: Option<DVec3>, // End point in 2-point mode; intermediate through-point in 3-point mode
     pub hover_point: Option<DVec3>,
@@ -30,6 +31,7 @@ impl Default for ArcTool {
     fn default() -> Self {
         Self {
             mode: ArcMode::TwoPoint,
+            authored_draw_faces:Vec::new(),
             start_point: None,
             second_point: None,
             hover_point: None,
@@ -184,6 +186,10 @@ impl ArcTool {
             return;
         }
 
+        // Source commit_arc uses detect_faces=false for a flat drawing;
+        // a face created by its later rebuild is not an auto AddFace command.
+        let origin=pts[0];let normal=self.plane_normal.normalize_or_zero();
+        let auto_face=!scene.mesh.vertices.iter().all(|v|(v.position-origin).dot(normal).abs()<1e-6);
         let first = scene.mesh.add_vertex(*pts.first().unwrap());
         let last = scene.mesh.add_vertex(*pts.last().unwrap());
         let existing_cycle = find_smallest_cycle_through(&scene.mesh, first, last, 64);
@@ -197,7 +203,7 @@ impl ArcTool {
 
         if let Some(mut cycle) = existing_cycle {
             cycle.extend(vert_ids.iter().skip(1).copied());
-            scene.mesh.add_face(cycle, vec![]);
+            if let Some(id)=scene.mesh.add_face(cycle, vec![]){if auto_face {self.authored_draw_faces.push(id);}}
         }
 
         scene.bump_version();
@@ -206,6 +212,7 @@ impl ArcTool {
 }
 
 impl Tool for ArcTool {
+    fn take_authored_draw_faces(&mut self)->Vec<usize>{std::mem::take(&mut self.authored_draw_faces)}
     fn tool_type(&self) -> ToolType {
         ToolType::Arc
     }

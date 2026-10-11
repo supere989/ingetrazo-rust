@@ -104,7 +104,7 @@ impl RectangleTool {
 
     fn commit_corners(&mut self,corners:[DVec3;4],scene:&mut Scene)->Result<(),String>{
         let segments=(0..4).map(|i|(corners[i],corners[(i+1)%4])).collect::<Vec<_>>();
-        scene.mesh=ingetrazo_core::drafting::add_segments(&scene.mesh,&segments,Some(&corners),None)?;
+        scene.mesh=ingetrazo_core::drafting::add_segments_tagged(&scene.mesh,&segments,Some(&corners),None,scene.active_ifc.as_ref())?;
         scene.bump_version();self.reset();self.error=None;Ok(())
     }
 

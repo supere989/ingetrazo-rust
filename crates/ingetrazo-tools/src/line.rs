@@ -37,7 +37,7 @@ impl LineTool {
             return Ok(());
         }
 
-        let candidate=ingetrazo_core::drafting::add_segments(&scene.mesh,&[(start,next_point)],None,None)?;
+        let candidate=ingetrazo_core::drafting::add_segments_tagged(&scene.mesh,&[(start,next_point)],None,None,scene.active_ifc.as_ref())?;
         let changed=candidate!=scene.mesh;
         scene.mesh=candidate;
         // Check if closing polygon at start of current chain

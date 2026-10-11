@@ -89,6 +89,9 @@ pub struct PlacementPreview<'a> {
 }
 
 pub trait Tool: Send + Sync {
+    /// Faces authored by direct AddFace-style commands (no later topology rebuild).
+    fn take_authored_draw_faces(&mut self)->Vec<usize>{Vec::new()}
+
     /// Source global-only previews survive leaving a group; local targets do not.
     fn preserves_global_preview_on_context_exit(&self)->bool{false}
     /// Called only after a context publication has passed validation.

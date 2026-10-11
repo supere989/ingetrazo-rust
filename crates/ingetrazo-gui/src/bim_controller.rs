@@ -20,6 +20,42 @@ impl Default for Cache {
     }
 }
 impl IngeTrazoApp {
+    /// Activation is UI state; stamp commands allocate one ID per draw commit.
+    pub fn set_bim_draw_mode(&mut self, enabled: bool) {
+        self.bim_active_tag_mode = enabled;
+        self.sync_bim_draw_activation();
+    }
+    pub(crate) fn prepare_bim_draw_commit(&mut self) -> Result<(), String> {
+        use ingetrazo_tools::base::ToolType;
+        if self.bim_active_tag_mode
+            && !self.component_edit_stack.is_empty()
+            && matches!(
+                self.active_tool_type,
+                ToolType::Line
+                    | ToolType::Rectangle
+                    | ToolType::Freehand
+                    | ToolType::Circle
+                    | ToolType::Polygon
+                    | ToolType::Arc
+            )
+        {
+            let error = "Finish group editing before drawing with an active BIM tag".to_string();
+            self.status_message = error.clone();
+            return Err(error);
+        }
+        self.sync_bim_draw_activation();
+        Ok(())
+    }
+    pub(crate) fn sync_bim_draw_activation(&mut self) {
+        self.scene.active_ifc = if self.bim_active_tag_mode {
+            Some(
+                serde_json::json!({"class":self.bim_active_class,"name":if self.bim_name_input.trim().is_empty(){self.bim_active_class.strip_prefix("Ifc").unwrap_or(&self.bim_active_class)}else{self.bim_name_input.trim()}}),
+            )
+        } else {
+            None
+        };
+    }
+
     pub fn tag_selection_bim(&mut self, class: &str, name: &str) {
         if !bim::IFC_CLASSES.contains(&class) {
             self.status_message = "Unsupported BIM class".into();
@@ -154,11 +190,21 @@ impl IngeTrazoApp {
                 }
             }
             ObjectKey::Faces(id) => {
-                let ids:Vec<_>=self.scene.mesh.faces.iter().enumerate().filter_map(|(i,f)|{
-                    let tag=f.attrs.get("ifc")?.as_object()?;
-                    (!tag.is_empty() && tag.get("id").and_then(|n|n.as_i64())==*id).then_some(i)
-                }).collect();
-                for i in ids {self.scene.select(SelectionItem::Face(i));}
+                let ids: Vec<_> = self
+                    .scene
+                    .mesh
+                    .faces
+                    .iter()
+                    .enumerate()
+                    .filter_map(|(i, f)| {
+                        let tag = f.attrs.get("ifc")?.as_object()?;
+                        (!tag.is_empty() && tag.get("id").and_then(|n| n.as_i64()) == *id)
+                            .then_some(i)
+                    })
+                    .collect();
+                for i in ids {
+                    self.scene.select(SelectionItem::Face(i));
+                }
             }
         }
     }
@@ -271,5 +317,155 @@ mod tests {
         assert_eq!(a.model_revision, revision);
         assert_eq!(a.redo_stack.len(), 1);
         assert!(a.status_message.contains("exhausted"));
+    }
+}
+
+#[cfg(test)]
+mod draw_tests {
+    use super::*;
+    use glam::DVec3;
+    use ingetrazo_core::math::Ray;
+    use ingetrazo_tools::base::{ToolContext, ToolType};
+    fn point(x: f64, y: f64, z: f64) -> ToolContext {
+        let p = DVec3::new(x, y, z);
+        ToolContext::new(p, Ray::new(p + DVec3::Z * 10., -DVec3::Z))
+    }
+    fn app() -> IngeTrazoApp {
+        let mut a = IngeTrazoApp::new();
+        a.bim_name_input = "Muros N1".into();
+        a.set_bim_draw_mode(true);
+        a
+    }
+    fn rect(a: &mut IngeTrazoApp, x: f64, y: f64) {
+        a.set_tool(ToolType::Rectangle);
+        a.dispatch_tool_click(&point(x, y, 0.));
+        a.dispatch_tool_click(&point(x + 2., y + 1., 0.));
+    }
+    #[test]
+    fn bim_draw_rectangles_undo_redo_preserve_separate_trace_ids() {
+        let mut a = app();
+        rect(&mut a, 0., 0.);
+        assert_eq!(a.undo_stack.len(), 1);
+        let first = a.scene.mesh.clone();
+        assert_eq!(first.faces[0].attrs["ifc"]["id"], 1);
+        rect(&mut a, 0., 5.);
+        assert_eq!(a.undo_stack.len(), 2);
+        let second = a.scene.mesh.clone();
+        assert!(second.faces.iter().any(|f| f.attrs["ifc"]["id"] == 2));
+        a.undo();
+        assert_eq!(a.scene.mesh, first);
+        a.redo();
+        assert_eq!(a.scene.mesh, second);
+    }
+    #[test]
+    fn bim_draw_push_extends_same_tag_without_active_mode() {
+        let mut a = app();
+        rect(&mut a, 0., 0.);
+        let tag = a.scene.mesh.faces[0].attrs["ifc"].clone();
+        a.set_bim_draw_mode(false);
+        a.set_tool(ToolType::PushPull);
+        a.dispatch_tool_move(&point(1., 0.5, 0.));
+        a.dispatch_tool_click(&point(1., 0.5, 0.));
+        a.dispatch_tool_vcb("1").unwrap();
+        assert_eq!(a.scene.mesh.faces.len(), 6);
+        assert!(a
+            .scene
+            .mesh
+            .faces
+            .iter()
+            .all(|f| f.attrs.get("ifc") == Some(&tag)));
+        assert_eq!(
+            bim::takeoff(&a.scene).unwrap()[0].volume,
+            Some(1.9999999999999998)
+        );
+        let raised = a.scene.mesh.clone();
+        a.undo();
+        assert_eq!(a.scene.mesh.faces.len(), 1);
+        a.redo();
+        assert_eq!(a.scene.mesh, raised);
+    }
+    #[test]
+    fn bim_direct_circle_commands_use_owned_faces_and_default_class_name() {
+        let mut a = app();
+        a.bim_name_input.clear();
+        a.set_bim_draw_mode(true);
+        a.set_tool(ToolType::Circle);
+        a.dispatch_tool_click(&point(0., 0., 0.));
+        a.dispatch_tool_click(&point(1., 0., 0.));
+        assert_eq!(a.scene.mesh.faces.len(), 1);
+        assert_eq!(
+            a.scene.mesh.faces[0].attrs["ifc"],
+            serde_json::json!({"id":1,"class":"IfcWall","name":"Wall"})
+        );
+        assert_eq!(a.undo_stack.len(), 1);
+    }
+    #[test]
+    fn bim_failed_draw_refuses_without_consuming_redo() {
+        let mut a = app();
+        rect(&mut a, 0., 0.);
+        rect(&mut a, 0., 5.);
+        a.undo();
+        let before = a.scene.mesh.clone();
+        a.scene.mesh.faces[0].attrs.get_mut("ifc").unwrap()["id"] = serde_json::json!(i64::MAX);
+        let frozen = a.scene.mesh.clone();
+        rect(&mut a, 0., 10.);
+        assert_eq!(a.scene.mesh, frozen);
+        assert_eq!(a.redo_stack.len(), 1);
+        assert!(a.status_message.contains("exhausted"));
+        assert_ne!(a.scene.mesh, before);
+    }
+    #[test]
+    fn active_draw_context_refusal_is_atomic() {
+        use ingetrazo_core::{groups::Group, scene::SelectionItem};
+        let mut a = app();
+        a.scene.groups.push(Group::new("group"));
+        a.scene.select(SelectionItem::Group(0));
+        a.begin_component_edit();
+        assert_eq!(a.component_edit_stack.len(), 1);
+        a.set_tool(ToolType::Rectangle);
+        let before = a.scene.clone();
+        let undo = a.undo_stack.clone();
+        let redo = a.redo_stack.clone();
+        a.dispatch_tool_click(&point(0., 0., 0.));
+        assert_eq!(a.scene, before);
+        assert_eq!(a.undo_stack, undo);
+        assert_eq!(a.redo_stack, redo);
+        assert!(a.active_tool.rubber_band_lines().is_empty());
+        assert!(a.status_message.contains("Finish group editing"));
+    }
+    #[test]
+    fn active_mode_is_runtime_and_does_not_revert_with_model_history() {
+        let mut a = app();
+        rect(&mut a, 0., 0.);
+        a.set_bim_draw_mode(false);
+        a.undo();
+        assert!(!a.bim_active_tag_mode);
+        assert!(a.scene.active_ifc.is_none());
+        a.redo();
+        assert!(a.scene.active_ifc.is_none());
+        assert!(serde_json::to_value(&a.scene)
+            .unwrap()
+            .get("active_ifc")
+            .is_none());
+        a.set_bim_draw_mode(true);
+        a.new_document_unchecked();
+        assert!(!a.bim_active_tag_mode);
+        assert!(a.scene.active_ifc.is_none());
+    }
+
+    #[test]
+    fn flat_arc_rebuild_faces_are_not_auto_tagged() {
+        let mut a = app();
+        let v0 = a.scene.mesh.add_vertex(DVec3::ZERO);
+        let v1 = a.scene.mesh.add_vertex(DVec3::X * 2.);
+        let middle=a.scene.mesh.add_vertex(DVec3::new(1.,-1.,0.));
+        a.scene.mesh.add_edge(v0,middle);a.scene.mesh.add_edge(middle,v1);
+        a.set_tool(ToolType::Arc);
+        a.dispatch_tool_click(&point(0., 0., 0.));
+        a.dispatch_tool_click(&point(2., 0., 0.));
+        a.dispatch_tool_click(&point(1., 1., 0.));
+        assert_eq!(a.scene.mesh.faces.len(), 1);
+        assert!(!a.scene.mesh.faces[0].attrs.contains_key("ifc"));
+        assert_eq!(a.undo_stack.len(), 1);
     }
 }

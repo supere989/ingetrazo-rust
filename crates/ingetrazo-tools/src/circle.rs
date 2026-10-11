@@ -12,6 +12,7 @@ use crate::base::{Tool, ToolContext, ToolType};
 #[derive(Debug, Clone)]
 pub struct CircleTool {
     pub start_point: Option<DVec3>,
+    authored_draw_faces:Vec<usize>,
     pub hover_point: Option<DVec3>,
     pub plane_normal: DVec3,
     pub segments: usize,
@@ -21,6 +22,7 @@ impl Default for CircleTool {
     fn default() -> Self {
         Self {
             start_point: None,
+            authored_draw_faces:Vec::new(),
             hover_point: None,
             plane_normal: DVec3::Z,
             segments: 24,
@@ -84,13 +86,14 @@ impl CircleTool {
 
     fn commit_points(&mut self, pts: Vec<DVec3>, scene: &mut Scene) {
         let vert_ids: Vec<usize> = pts.into_iter().map(|p| scene.mesh.add_vertex(p)).collect();
-        scene.mesh.add_face(vert_ids, vec![]);
+        if let Some(id)=scene.mesh.add_face(vert_ids, vec![]){self.authored_draw_faces.push(id);}
         scene.bump_version();
         self.reset();
     }
 }
 
 impl Tool for CircleTool {
+    fn take_authored_draw_faces(&mut self)->Vec<usize>{std::mem::take(&mut self.authored_draw_faces)}
     fn tool_type(&self) -> ToolType {
         ToolType::Circle
     }

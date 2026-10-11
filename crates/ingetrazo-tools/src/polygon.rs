@@ -13,6 +13,7 @@ use crate::base::{Tool, ToolContext, ToolType};
 
 pub struct PolygonTool {
     pub sides: usize,
+    authored_draw_faces:Vec<usize>,
     center: Option<DVec3>,
     hover_point: Option<DVec3>,
 }
@@ -21,6 +22,7 @@ impl Default for PolygonTool {
     fn default() -> Self {
         Self {
             sides: 6,
+            authored_draw_faces:Vec::new(),
             center: None,
             hover_point: None,
         }
@@ -28,6 +30,7 @@ impl Default for PolygonTool {
 }
 
 impl Tool for PolygonTool {
+    fn take_authored_draw_faces(&mut self)->Vec<usize>{std::mem::take(&mut self.authored_draw_faces)}
     fn tool_type(&self) -> ToolType {
         ToolType::Polygon
     }
@@ -72,7 +75,7 @@ impl Tool for PolygonTool {
                     vert_ids.push(scene.mesh.add_vertex(pt));
                 }
 
-                scene.mesh.add_face(vert_ids, vec![]);
+                if let Some(id)=scene.mesh.add_face(vert_ids, vec![]){self.authored_draw_faces.push(id);}
                 scene.bump_version();
             }
 

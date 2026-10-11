@@ -290,6 +290,7 @@ fn chord_declaration(mesh: &Mesh, a: usize, b: usize) -> Option<(usize, Vec<usiz
 fn carve_cycle_declaration(
     mesh: &mut Mesh,
     cycle: &[usize],
+    authored: &mut Vec<bool>,
 ) -> Result<Option<std::collections::HashMap<String, serde_json::Value>>, String> {
     let points: Vec<_> = cycle.iter().map(|&v| mesh.vertices[v].position).collect();
     for i in 0..mesh.faces.len() {
@@ -360,8 +361,10 @@ fn carve_cycle_declaration(
             continue;
         }
         mesh.faces.remove(i);
+        authored.remove(i);
         for loops in remainder {
             planar::add_face(mesh, &loops, &face)?;
+            authored.push(false);
         }
         let mut attrs = face.attrs;
         attrs.retain(|k, _| matches!(k.as_str(), "color" | "mat" | "texture" | "opacity"));
@@ -376,6 +379,9 @@ fn hole_cycle_declarations(
     mesh: &Mesh,
     original: &Mesh,
     segments: &[(DVec3, DVec3)],
+    plane: Option<(DVec3,DVec3)>,
+    active: Option<&serde_json::Value>,
+    tag: &mut Option<serde_json::Value>,
 ) -> Result<Mesh, String> {
     let mut declared = mesh.clone();
     for vertex in &mut declared.vertices {
@@ -385,13 +391,16 @@ fn hole_cycle_declarations(
     for e in &mut declared.edges {
         e.faces.clear();
     }
-    let frame = planar::Frame::new(&planar::rings(mesh, &mesh.faces[0])[0])?;
+    let on_plane = |p:DVec3| if let Some((origin,normal))=plane {(p-origin).dot(normal).abs()<1e-6} else {planar::Frame::new(&planar::rings(mesh, &mesh.faces[0])[0]).is_ok_and(|f|f.on_plane(p))};
     for face in &original.faces {
         let loops = planar::rings(original, face);
-        if loops.iter().flatten().all(|&p| frame.on_plane(p)) {
+        if loops.iter().flatten().all(|&p| on_plane(p)) {
             planar::add_face(&mut declared, &loops, face)?;
         }
     }
+    // Explicit draw-command identity. Re-emitted source/remainder declarations
+    // are false; only chord halves and authored cycles are auto commands.
+    let mut authored=vec![false;declared.faces.len()];
     let mut planned_faces: Vec<_> = declared.faces.iter().map(|f| f.vertices.clone()).collect();
     let drawn = |a: DVec3, b: DVec3| {
         segments
@@ -445,12 +454,14 @@ fn hole_cycle_declarations(
             // source chord path and proceed through cycle authoring instead.
             if let Some((id, left, right)) = chord_declaration(&declared, a, b) {
                 let source = declared.faces.remove(id);
+                authored.remove(id);
                 for ring in [left, right] {
                     let id = declared
                         .add_face(ring, vec![])
                         .ok_or("Invalid authored chord")?;
                     declared.faces[id].attrs = source.attrs.clone();
                     declared.faces[id].layer = source.layer.clone();
+                    authored.push(true);
                 }
                 continue;
             }
@@ -511,7 +522,7 @@ fn hole_cycle_declarations(
                 }
                 planned_faces.push(cycle.clone());
                 if mother.is_none() {
-                    if let Some(paint) = carve_cycle_declaration(&mut declared, &cycle)? {
+                    if let Some(paint) = carve_cycle_declaration(&mut declared, &cycle, &mut authored)? {
                         attrs = paint;
                     }
                 }
@@ -519,10 +530,27 @@ fn hole_cycle_declarations(
                     .add_face(cycle, vec![])
                     .ok_or("Invalid authored cycle")?;
                 declared.faces[id].attrs = attrs;
+                authored.push(true);
+            }
+        }
+    }
+    if authored.len()!=declared.faces.len(){return Err("Drawing declaration identity was lost".into());}
+    if let Some(active)=active {
+        if authored.iter().any(|a|*a) {
+            let stamp=draw_tag(original,active,tag)?;
+            for (face,is_auto) in declared.faces.iter_mut().zip(authored) {
+                if is_auto && !face.attrs.get("ifc").is_some_and(tag_truthy) {face.attrs.insert("ifc".into(),stamp.clone());}
             }
         }
     }
     Ok(declared)
+}
+fn tag_truthy(v:&serde_json::Value)->bool {crate::bim::json_truthy(v)}
+fn draw_tag(mesh:&Mesh,active:&serde_json::Value,allocated:&mut Option<serde_json::Value>)->Result<serde_json::Value,String>{
+    if let Some(tag)=allocated {return Ok(tag.clone());}
+    let mut tag=active.as_object().ok_or("Active BIM tag must be an object")?.clone();
+    let id=crate::bim::next_draw_object_id(mesh)?;
+    tag.insert("id".into(),id.into());let tag=serde_json::Value::Object(tag);*allocated=Some(tag.clone());Ok(tag)
 }
 // AddFaceCommand reintroduces full-length polygon sides after the segment
 // planner has noded them. Its Qt-projected arrangement may discover additional
@@ -670,7 +698,11 @@ pub fn add_segments(
     segments: &[(DVec3, DVec3)],
     explicit: Option<&[DVec3]>,
     curve: Option<usize>,
-) -> Result<Mesh, String> {
+) -> Result<Mesh, String> { add_segments_tagged(mesh,segments,explicit,curve,None) }
+/// Active tags stamp the draw plan's own declarations before coverage rebuild.
+/// Existing/re-emitted regions are never selected by index/count differences.
+pub fn add_segments_tagged(mesh:&Mesh,segments:&[(DVec3,DVec3)],explicit:Option<&[DVec3]>,curve:Option<usize>,active:Option<&serde_json::Value>)->Result<Mesh,String>{
+    let active=active.filter(|v|tag_truthy(v));let mut allocated_tag=None;
     planar::validate_mesh(mesh)?;
     if segments
         .iter()
@@ -755,7 +787,8 @@ pub fn add_segments(
     }
     if let Some(ring) = explicit {
         let ids = ring.iter().map(|&p| out.add_vertex(p)).collect();
-        out.add_face(ids, vec![]).ok_or("Invalid drawing face")?;
+        let id=out.add_face(ids, vec![]).ok_or("Invalid drawing face")?;
+        if let Some(active)=active {out.faces[id].attrs.insert("ifc".into(),draw_tag(mesh,active,&mut allocated_tag)?);}
         out = planar::stitch_boundaries(&out)?;
     }
     if let Some(id) = curve {
@@ -919,9 +952,12 @@ pub fn add_segments(
             continue;
         }
         let rebuilt = planar::rebuild_drawing_faces(&plane)?;
-        let declarations = if explicit.is_none() && plane.faces.iter().any(|f| !f.holes.is_empty())
+        // Source commit_arc disables auto-face planning on a flat drawing.
+        // Rebuild-created curve cells therefore carry no newly active tag.
+        let declaration_active = if curve.is_some() && out.vertices.iter().all(|v|(v.position-point).dot(normal).abs()<1e-6) {None} else {active};
+        let declarations = if explicit.is_none() && (declaration_active.is_some() || plane.faces.iter().any(|f| !f.holes.is_empty()))
         {
-            hole_cycle_declarations(&plane, mesh, segments)?
+            hole_cycle_declarations(&plane, mesh, segments,Some((point,normal)),declaration_active,&mut allocated_tag)?
         } else {
             plane.clone()
         };
@@ -1001,6 +1037,7 @@ pub fn add_segments(
                     source.attrs.retain(|key, _| {
                         matches!(key.as_str(), "color" | "mat" | "texture" | "opacity")
                     });
+                    if let Some(active)=active {source.attrs.insert("ifc".into(),draw_tag(mesh,active,&mut allocated_tag)?);}
                 }
                 planar::add_face(&mut result, &loops, &source)?;
             }
@@ -1350,4 +1387,16 @@ mod tests {
         .is_err());
         assert_eq!(m.faces.len(), 1);
     }
+}
+
+#[cfg(test)]
+mod bim_draw_tests {
+ use super::*;
+ fn ring(x:f64,y:f64,w:f64,h:f64)->Vec<DVec3>{vec![DVec3::new(x,y,0.),DVec3::new(x+w,y,0.),DVec3::new(x+w,y+h,0.),DVec3::new(x,y+h,0.)]}
+ fn rect(m:&Mesh,p:&[DVec3],active:Option<&serde_json::Value>)->Result<Mesh,String>{let segments=(0..p.len()).map(|i|(p[i],p[(i+1)%p.len()])).collect::<Vec<_>>();add_segments_tagged(m,&segments,Some(p),None,active)}
+ fn active()->serde_json::Value{serde_json::json!({"class":"IfcWall","name":"Muros N1"})}
+ #[test]fn each_explicit_trace_gets_its_own_object(){let tag=active();let a=rect(&Mesh::new(),&ring(0.,0.,4.,0.15),Some(&tag)).unwrap();let b=rect(&a,&ring(0.,5.,4.,0.15),Some(&tag)).unwrap();let ids:std::collections::BTreeSet<_>=b.faces.iter().map(|f|f.attrs["ifc"]["id"].as_i64().unwrap()).collect();assert_eq!(ids,std::collections::BTreeSet::from([1,2]));}
+ #[test]fn contained_authored_face_does_not_tag_mother_remainder(){let mut m=Mesh::new();let p=ring(0.,0.,6.,6.);let v=p.into_iter().map(|p|m.add_vertex(p)).collect();m.add_face(v,vec![]).unwrap();let o=rect(&m,&ring(2.,2.,1.,1.),Some(&active())).unwrap();let tagged:Vec<_>=o.faces.iter().enumerate().filter(|(_,f)|f.attrs.contains_key("ifc")).collect();assert_eq!(tagged.len(),1);assert!((o.face_area(tagged[0].0)-1.).abs()<1e-9);assert!(o.faces.iter().any(|f|!f.attrs.contains_key("ifc")));}
+ #[test]fn line_cycle_and_chord_are_explicit_auto_declarations(){let tag=active();let p=ring(0.,0.,2.,2.);let mut m=Mesh::new();for i in 0..4{m=add_segments_tagged(&m,&[(p[i],p[(i+1)%4])],None,None,Some(&tag)).unwrap();}assert_eq!(m.faces.len(),1);assert_eq!(m.faces[0].attrs["ifc"]["id"],1);let o=add_segments_tagged(&m,&[(DVec3::new(0.,1.,0.),DVec3::new(2.,1.,0.))],None,None,Some(&tag)).unwrap();assert_eq!(o.faces.len(),2);assert!(o.faces.iter().all(|f|f.attrs["ifc"]["id"]==1));}
+ #[test]fn exhaustion_refuses_without_mutating_input(){let mut m=rect(&Mesh::new(),&ring(0.,0.,1.,1.),None).unwrap();m.faces[0].attrs.insert("ifc".into(),serde_json::json!({"id":i64::MAX,"class":"IfcWall"}));let before=m.clone();assert!(rect(&m,&ring(5.,0.,1.,1.),Some(&active())).unwrap_err().contains("identity exhausted"));assert_eq!(m,before);}
 }

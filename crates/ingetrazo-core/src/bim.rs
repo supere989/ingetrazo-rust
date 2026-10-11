@@ -555,3 +555,132 @@ pub fn quantities_csv(rows: &[Takeoff]) -> String {
     }
     s
 }
+
+/// Command-owned direct faces only. Topology-rebuilding draw plans stamp their
+/// declarations before coverage reconstruction instead of calling this hook.
+pub(crate) fn json_truthy(value: &serde_json::Value) -> bool {
+    match value {
+        serde_json::Value::Null => false,
+        serde_json::Value::Bool(v) => *v,
+        serde_json::Value::Number(v) => v.as_f64().is_some_and(|n| n != 0.),
+        serde_json::Value::String(v) => !v.is_empty(),
+        serde_json::Value::Array(v) => !v.is_empty(),
+        serde_json::Value::Object(v) => !v.is_empty(),
+    }
+}
+pub(crate) fn next_draw_object_id(mesh: &Mesh) -> Result<i64, String> {
+    let mut top = 0;
+    for face in &mesh.faces {
+        let Some(tag) = face.attrs.get("ifc").filter(|t| json_truthy(t)) else {
+            continue;
+        };
+        let object = tag
+            .as_object()
+            .ok_or("Existing BIM metadata must be an object before active drawing")?;
+        let Some(id) = object.get("id") else { continue };
+        let id = if let Some(v) = id.as_i64() {
+            Some(v)
+        } else if let Some(v) = id.as_bool() {
+            Some(i64::from(v))
+        } else if id.as_u64().is_some() {
+            return Err("BIM object identity exceeds supported integer range".into());
+        } else {
+            None
+        };
+        if let Some(id) = id {
+            top = top.max(id)
+        }
+    }
+    top.checked_add(1)
+        .ok_or_else(|| "BIM object identity exhausted".into())
+}
+pub fn stamp_drawn_faces(
+    mesh: &mut Mesh,
+    owned: &[usize],
+    active: Option<&serde_json::Value>,
+) -> Result<(), String> {
+    let Some(active) = active else { return Ok(()) };
+    if !json_truthy(active) {
+        return Ok(());
+    }
+    let object = active
+        .as_object()
+        .ok_or("Active BIM tag must be an object")?;
+    if object.is_empty() {
+        return Ok(());
+    }
+    if owned.is_empty() {
+        return Ok(());
+    }
+    for &id in owned {
+        if id >= mesh.faces.len() {
+            return Err("Drawn BIM face command no longer live".into());
+        }
+    }
+    let id = next_draw_object_id(mesh)?;
+    let mut tag = active.as_object().unwrap().clone();
+    tag.insert("id".into(), id.into());
+    let tag = serde_json::Value::Object(tag);
+    for &id in owned {
+        let face = &mut mesh.faces[id];
+        if !face.attrs.get("ifc").is_some_and(json_truthy) {
+            face.attrs.insert("ifc".into(), tag.clone());
+        }
+    }
+    Ok(())
+}
+
+#[cfg(test)]
+mod drawn_truthiness_tests {
+    use super::*;
+    use serde_json::json;
+    fn face() -> Mesh {
+        let mut m = Mesh::new();
+        let ids = [DVec3::ZERO, DVec3::X, DVec3::Y].map(|p| m.add_vertex(p));
+        m.add_face(ids.to_vec(), vec![]);
+        m
+    }
+    #[test]
+    fn empty_json_ifc_values_follow_python_truthiness() {
+        for value in [
+            json!(null),
+            json!(false),
+            json!(0),
+            json!(0.0),
+            json!(""),
+            json!([]),
+            json!({}),
+        ] {
+            assert!(!json_truthy(&value));
+            let mut mesh = face();
+            mesh.faces[0].attrs.insert("ifc".into(), value);
+            stamp_drawn_faces(
+                &mut mesh,
+                &[0],
+                Some(&json!({"class":"IfcWall","name":"Wall"})),
+            )
+            .unwrap();
+            assert_eq!(mesh.faces[0].attrs["ifc"]["id"], 1);
+        }
+    }
+    #[test]
+    fn opaque_truthy_nonobject_refuses_without_overwriting() {
+        for value in [json!(true), json!(1), json!("opaque"), json!([17])] {
+            assert!(json_truthy(&value));
+            let mut mesh = face();
+            mesh.faces[0].attrs.insert("ifc".into(), value);
+            let before = mesh.clone();
+            assert!(stamp_drawn_faces(&mut mesh, &[0], Some(&json!({"class":"IfcWall"}))).is_err());
+            assert_eq!(mesh, before);
+        }
+    }
+    #[test]
+    fn inherited_truthy_object_and_python_boolean_identity_are_preserved() {
+        let mut mesh = face();
+        let tag = json!({"id":true,"vendor":71});
+        mesh.faces[0].attrs.insert("ifc".into(), tag.clone());
+        stamp_drawn_faces(&mut mesh, &[0], Some(&json!({"class":"IfcWall"}))).unwrap();
+        assert_eq!(mesh.faces[0].attrs["ifc"], tag);
+        assert_eq!(next_draw_object_id(&mesh).unwrap(), 2);
+    }
+}

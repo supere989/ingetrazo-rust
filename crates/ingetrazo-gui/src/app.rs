@@ -281,7 +281,7 @@ impl IngeTrazoApp {
         }
         self.save_undo_state();
         self.retire_current_recovery();
-        self.scene = Scene::new();self.apply_document_presentation();self.bump_model_revision();
+        self.scene = Scene::new();self.bim_active_tag_mode=false;self.apply_document_presentation();self.bump_model_revision();
         self.composer_state=Default::default();
         self.clipboard_document=uuid::Uuid::new_v4();self.clipboard_mesh_share_imports.clear();
         self.camera = self.scene.camera.clone();
@@ -307,7 +307,7 @@ impl IngeTrazoApp {
                 self.camera = loaded_scene.camera.clone();
                 self.retire_current_recovery();
                 self.composer_state=Default::default();
-                self.scene = loaded_scene;self.apply_document_presentation();self.bump_model_revision();self.clipboard_document=uuid::Uuid::new_v4();self.clipboard_mesh_share_imports.clear();
+                self.scene = loaded_scene;self.bim_active_tag_mode=false;self.apply_document_presentation();self.bump_model_revision();self.clipboard_document=uuid::Uuid::new_v4();self.clipboard_mesh_share_imports.clear();
                 self.undo_stack.clear();self.redo_stack.clear();
                 self.current_file = Some(path.to_path_buf());
                 let pb = path.to_path_buf();

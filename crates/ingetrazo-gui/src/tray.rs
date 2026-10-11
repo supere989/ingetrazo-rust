@@ -454,6 +454,7 @@ fn render_bim_panel(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
     ui.label(egui::RichText::new(tr("IFC Semantic Layer & Live Quantities")).small().color(egui::Color32::from_rgb(160, 160, 170)));
     ui.separator();
 
+    let mut activation_changed=false;
     let ifc_classes = ingetrazo_core::bim::IFC_CLASSES;
 
     egui::Grid::new("bim_inputs_grid").spacing([8.0, 6.0]).show(ui, |ui| {
@@ -462,16 +463,19 @@ fn render_bim_panel(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
             .selected_text(&app.bim_active_class)
             .show_ui(ui, |ui| {
                 for &cls in ifc_classes {
-                    ui.selectable_value(&mut app.bim_active_class, cls.to_string(), cls);
+                    activation_changed|=ui.selectable_value(&mut app.bim_active_class, cls.to_string(), cls).changed();
                 }
             });
         ui.end_row();
 
         ui.label(tr("Name:"));
-        ui.text_edit_singleline(&mut app.bim_name_input);
+        let name=ui.text_edit_singleline(&mut app.bim_name_input);
+        // Original QLineEdit rearms on editingFinished, not each keystroke.
+        activation_changed|=name.lost_focus()||(name.has_focus()&&ui.input(|i|i.key_pressed(egui::Key::Enter)));
         ui.end_row();
     });
 
+    if activation_changed&&app.bim_active_tag_mode{app.sync_bim_draw_activation();}
     ui.add_space(4.0);
     ui.horizontal(|ui| {
         if ui.button(tr("Tag Selection")).clicked() {
@@ -484,7 +488,7 @@ fn render_bim_panel(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
         }
     });
 
-    ui.add_enabled(false, egui::Checkbox::new(&mut app.bim_active_tag_mode, tr("Tag as you draw"))).on_hover_text(tr("Draw-plan tag propagation is not available yet"));
+    if ui.checkbox(&mut app.bim_active_tag_mode,tr("Tag as you draw")).changed(){app.sync_bim_draw_activation();}
 
     ui.separator();
     ui.strong(tr("Tagged BIM Objects Takeoff:"));
