@@ -1,0 +1,12 @@
+{
+  "run": 38106269557,
+  "source": "0a6760974cacca7c3dade991bb92758dc09f54ea",
+  "artifact": 11689208416,
+  "sha256": "640fce26bed4074e883483b0cbfc101bc0b3dee7baa19c54f68b8a4afe3e926a",
+  "manifest_files_verified": 30,
+  "sdk_build": "passed",
+  "runtime": "failed geometry_uploads > count after pose frame; no report.json",
+  "operative_initial_capture": "Visible production pause: requested_bytes=2646880, queried_size=0, queried_align=0, extent=932x710, format=70",
+  "classification": "Bounded native allocation-query refusal before accepted world frame, not a classic pixel mismatch; Intel acceptance remains open",
+  "scope": "No guessed allocation upper bound or retry; strict failure preserved"
+}
