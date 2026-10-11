@@ -64,6 +64,94 @@ pub fn transform_mesh(source:&Mesh,transform:DMat4)->Result<Mesh,String>{
     copy.rebuild_spatial_index();Ok(copy)
 }
 
+/// Source shareback reconstructs referenced entities and partitions curves.
+/// Clipboard snapshots deliberately retain a separate copy policy.
+pub fn source_shareback_mesh(source: &Mesh, transform: DMat4) -> Result<Mesh, String> {
+    let mut mesh = crate::change_axes::transformed(source, transform)?;
+    let mut by_id = std::collections::BTreeMap::<usize, Vec<usize>>::new();
+    for (id, e) in mesh.edges.iter().enumerate() {
+        if let Some(c) = e.curve_id {
+            by_id.entry(c).or_default().push(id);
+        }
+    }
+    let mut next = mesh
+        .edges
+        .iter()
+        .filter_map(|e| e.curve_id)
+        .max()
+        .unwrap_or(0)
+        .checked_add(1)
+        .ok_or("Curve identity exhausted")?;
+    for (curve, edges) in by_id {
+        let set: HashSet<_> = edges.iter().copied().collect();
+        let is_break = |v: usize| {
+            let incident = &mesh.vertices[v].edges;
+            let degree = incident.iter().filter(|id| set.contains(id)).count();
+            degree != 2 || incident.len() != degree
+        };
+        let seeds = edges
+            .iter()
+            .copied()
+            .filter(|&id| {
+                let e = &mesh.edges[id];
+                is_break(e.v0) || is_break(e.v1)
+            })
+            .chain(edges.iter().copied())
+            .collect::<Vec<_>>();
+        let mut unvisited = set.clone();
+        let mut chains = Vec::new();
+        for seed in seeds {
+            if !unvisited.contains(&seed) {
+                continue;
+            }
+            let edge = &mesh.edges[seed];
+            let mut v = if is_break(edge.v0) {
+                edge.v0
+            } else if is_break(edge.v1) {
+                edge.v1
+            } else {
+                edge.v0
+            };
+            let mut id = seed;
+            let mut chain = Vec::new();
+            while unvisited.remove(&id) {
+                chain.push(id);
+                let e = &mesh.edges[id];
+                v = if e.v0 == v { e.v1 } else { e.v0 };
+                if is_break(v) {
+                    break;
+                }
+                let Some(other) = mesh.vertices[v]
+                    .edges
+                    .iter()
+                    .copied()
+                    .find(|id| unvisited.contains(id))
+                else {
+                    break;
+                };
+                id = other;
+            }
+            chains.push(chain);
+        }
+        if chains.len() <= 1 {
+            continue;
+        }
+        for (i, chain) in chains.into_iter().enumerate() {
+            let id = if i == 0 {
+                curve
+            } else {
+                let id = next;
+                next = next.checked_add(1).ok_or("Curve identity exhausted")?;
+                id
+            };
+            for edge in chain {
+                mesh.edges[edge].curve_id = Some(id);
+            }
+        }
+    }
+    Ok(mesh)
+}
+
 /// Extract explicit loose faces/edges, including all copied face boundaries.
 /// Transform tools use this without cloning unrelated Scene data at grab time.
 pub fn copy_mesh_subset(source:&Mesh,faces:&HashSet<usize>,selected_edges:&HashSet<usize>)->Result<Mesh,String>{
@@ -220,5 +308,40 @@ mod tests {
         let mut scene=Scene::new();let before=scene.clone();assert!(scene.group_selection("no").is_err());assert_eq!(scene,before);
         let mut group=Group::with_mesh("invalid",donut());group.transform=DMat4::ZERO;scene.groups.push(group);
         scene.select(SelectionItem::Group(0));let before=scene.clone();assert!(scene.explode_selected_groups().is_err());assert_eq!(scene,before);
+    }
+}
+
+#[cfg(test)]
+mod source_shareback_tests {
+    use super::*;
+    #[test]
+    fn reconstruction_drops_orphans_splits_attached_curves_and_refuses_atomically() {
+        use glam::DVec3;
+        let mut m = Mesh::new();
+        let ids = [DVec3::ZERO, DVec3::X, DVec3::X + DVec3::Y, DVec3::Y].map(|p| m.add_vertex(p));
+        m.add_face(ids.to_vec(), vec![]).unwrap();
+        for e in &mut m.edges {
+            e.curve_id = Some(41);
+        }
+        let v = m.add_vertex(DVec3::new(-1., 0., 0.));
+        m.add_edge(ids[0], v).unwrap();
+        let v = m.add_vertex(DVec3::new(2., 1., 0.));
+        m.add_edge(ids[2], v).unwrap();
+        m.add_vertex(DVec3::new(99., 99., 99.));
+        let before = m.clone();
+        let result = source_shareback_mesh(&m, DMat4::IDENTITY).unwrap();
+        assert_eq!(result.vertices.len(), 6);
+        assert_eq!(
+            result
+                .edges
+                .iter()
+                .filter_map(|e| e.curve_id)
+                .collect::<HashSet<_>>()
+                .len(),
+            2
+        );
+        assert_eq!(m, before);
+        assert!(source_shareback_mesh(&m, DMat4::ZERO).is_err());
+        assert_eq!(m, before);
     }
 }

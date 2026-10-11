@@ -1,0 +1,27 @@
+{
+  "base": "54d1153e",
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "binary": "/tmp/ingetrazo-ai-registry-target/debug/examples/fillet_scoped",
+  "binary_sha256": "6b01cf0588947cefbba050c3d015374beb1eb8438e219f41b6a13140b3c57691",
+  "source_files": {
+    "crates/ingetrazo-core/src/containers.rs": "73b06d4e76502af8b4ed30d80bffc19feb6d55f608aebc6a7fc967038a9cc58f",
+    "crates/ingetrazo-core/src/change_axes.rs": "a8d430ac8dc8fce80ae61a6ecaa8786be087505d87bda470efb008f51bcc9fa4",
+    "crates/ingetrazo-gui/src/component_edit.rs": "93dca34c68dff9ae49e7ea33b48a86045c603e6d06d668a754eacb68c98c42a2",
+    "crates/ingetrazo-gui/examples/fillet_scoped.rs": "dfff32e3809476f6231bcd92da4307824c8bd04c8de3ea95490be5b03e2bf41b",
+    "scripts/check-fillet-nested-history.py": "106445815402b330548fbb18a70856d92e031a2ff9d56fcf894b390022a1fa67",
+    "scripts/check-fillet-scoped.py": "7ad060c77b7704195029b93ba9b9006f7a21446428438b842964c1762b4b25ae"
+  },
+  "archive_sha256": "c7aa6d9ec54ec63ef30233df30750ac13abde941edf7d9e917deae81a72dcff8",
+  "records": {
+    "source.json": "8eff9f683b07ad4103f5f5d38b34dc108288b7937c83534a849b4a93d7376263",
+    "source-app.json": "3f975fa3fba86a1278534723e92c78f6cb7acfb46a000bda42790dd4b0971ce8",
+    "native.json": "337f89dd874bc08451d0e403dcf157316d9e3d02add240594a2945354bdc59ca",
+    "old-native.json": "647ead956b519103798e4876aac5098176b6b0409e09fca15b6f9bafe968e69a",
+    "build.log": "490623ddf4ae499c645d447dabe1a97d62c03722545b4578be248b3c85ec9b4a",
+    "run.log": "39df69fc0443eb5881f2caea0b5d6be9b1d8b69c283bcba083ffc2a5aba7fe61",
+    "focused.log": "03098d3247df7506679e789ea29e826881db1a27292030fa0f78b14d14a717bc",
+    "check.log": "d1f4832cf973b36bad57bbe08153e7d0438d8165dc62fafb43e184008cede64b"
+  },
+  "scope": "28 actual app phases; existing source 1e-6 coordinate criterion, exact topology/attrs/curve partitions/history; no rendering or device input",
+  "focused_tests": 1
+}

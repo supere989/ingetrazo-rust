@@ -68,7 +68,7 @@ fn instance(g: &Group) -> bool {
         || g.transform != DMat4::IDENTITY
 }
 
-fn transformed(src: &crate::mesh::Mesh, m: DMat4) -> Result<crate::mesh::Mesh, String> {
+pub(crate) fn transformed(src: &crate::mesh::Mesh, m: DMat4) -> Result<crate::mesh::Mesh, String> {
     use crate::mesh::{Mesh, MeshVertex};
     if src
         .edges

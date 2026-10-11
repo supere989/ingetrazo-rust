@@ -209,7 +209,7 @@ pub(crate) fn component_candidate(session:&ComponentEditSession,scene:&Scene)->R
             if let Some(inverse)=session.leaf_share_back {
                 // Original placed leaves edit a world copy, then inverse-map
                 // only that mesh into their shared local prototype on exit.
-                replacement.mesh=match ingetrazo_core::containers::transform_mesh(&replacement.mesh,inverse) {Ok(mesh)=>mesh,Err(error)=>return Err(error)};
+                replacement.mesh=match ingetrazo_core::containers::source_shareback_mesh(&replacement.mesh,inverse) {Ok(mesh)=>mesh,Err(error)=>return Err(error)};
             }
             if session.container_bake.is_some() {
                 // Original container bake happens outside History on entry.
