@@ -307,7 +307,7 @@ impl IngeTrazoApp {
             ToolType::Polygon=>{let mut t=ingetrazo_tools::PolygonTool::default();t.sides=self.shape_segments[1];self.active_tool=Box::new(t);},
             ToolType::Arc=>{let mut t=ingetrazo_tools::ArcTool::with_segments(self.shape_segments[2]);t.set_repeat_distance(self.arc_repeat_distance);self.active_tool=Box::new(t);},_=>{}
         }
-        if matches!(tool_type,ToolType::Line|ToolType::Rectangle|ToolType::Freehand|ToolType::Circle|ToolType::Polygon|ToolType::Arc|ToolType::RotatedRectangle){self.last_shape_tool=Some((tool_type,(tool_type==ToolType::Arc).then_some(ingetrazo_tools::ArcMode::TwoPoint)));}else if tool_type!=ToolType::Select{self.last_shape_tool=None;}
+        if matches!(tool_type,ToolType::Line|ToolType::Rectangle|ToolType::Freehand|ToolType::Circle|ToolType::Polygon|ToolType::Arc|ToolType::RotatedRectangle|ToolType::Move|ToolType::Rotate){self.last_shape_tool=Some((tool_type,(tool_type==ToolType::Arc).then_some(ingetrazo_tools::ArcMode::TwoPoint)));}else if tool_type!=ToolType::Select{self.last_shape_tool=None;}
         self.active_tool.on_activate(&mut self.scene);
         self.status_message.clear();
         self.vcb_text.clear();
@@ -1043,6 +1043,7 @@ impl IngeTrazoApp {
         self.tick_blender_follow(ctx);
 
         if !import_owns_input&&self.document_session.unit_import.is_none()&&!preferences_owns_input&&!self.show_preferences_dialog&&!recent_warning_owns_input&&self.document_session.recent_missing.is_none()&&self.annotation_editor.is_none()&&self.text3d_dialog.is_none()&&!self.show_material_edit_dialog {
+        crate::vcb_input::route(self,ctx);
         // A complete Ctrl chord can arrive in one frame; the final modifier
         // snapshot is then released. Use the key event's captured modifiers.
         let (undo_pressed,redo_pressed)=ctx.input(|i|i.events.iter().fold((false,false),|mut flags,event|{
@@ -1087,25 +1088,25 @@ impl IngeTrazoApp {
 
         // Tool quick switch keys (when not typing in a text field)
         if !ctx.wants_keyboard_input() {
-            if ctx.input(|i| i.key_pressed(egui::Key::Space)) {
+            if ctx.input(|i| crate::vcb_input::plain_key(i,egui::Key::Space)) {
                 self.set_tool(ToolType::Select);
-            } else if ctx.input(|i| i.key_pressed(egui::Key::L)) {
+            } else if ctx.input(|i| crate::vcb_input::plain_key(i,egui::Key::L)) {
                 self.set_tool(ToolType::Line);
-            } else if ctx.input(|i| i.key_pressed(egui::Key::R)) {
+            } else if ctx.input(|i| crate::vcb_input::plain_key(i,egui::Key::R)) {
                 self.set_tool(ToolType::Rectangle);
-            } else if ctx.input(|i| i.key_pressed(egui::Key::P)) {
+            } else if ctx.input(|i| crate::vcb_input::plain_key(i,egui::Key::P)) {
                 self.set_tool(ToolType::PushPull);
-            } else if ctx.input(|i| i.key_pressed(egui::Key::M)) {
+            } else if ctx.input(|i| crate::vcb_input::plain_key(i,egui::Key::M)) {
                 self.set_tool(ToolType::Move);
-            } else if ctx.input(|i| i.key_pressed(egui::Key::Q)&&!self.navigation_claims_key(egui::Key::Q,i.modifiers)) {
+            } else if ctx.input(|i| crate::vcb_input::plain_key(i,egui::Key::Q)&&!self.navigation_claims_key(egui::Key::Q,i.modifiers)) {
                 self.set_tool(ToolType::Rotate);
-            } else if ctx.input(|i| i.key_pressed(egui::Key::S)&&!self.navigation_claims_key(egui::Key::S,i.modifiers)) {
+            } else if ctx.input(|i| crate::vcb_input::plain_key(i,egui::Key::S)&&!self.navigation_claims_key(egui::Key::S,i.modifiers)) {
                 self.set_tool(ToolType::Scale);
-            } else if ctx.input(|i| i.key_pressed(egui::Key::T)) {
+            } else if ctx.input(|i| crate::vcb_input::plain_key(i,egui::Key::T)) {
                 self.set_tool(ToolType::Tape);
-            } else if ctx.input(|i| i.key_pressed(egui::Key::E)&&!self.navigation_claims_key(egui::Key::E,i.modifiers)) {
+            } else if ctx.input(|i| crate::vcb_input::plain_key(i,egui::Key::E)&&!self.navigation_claims_key(egui::Key::E,i.modifiers)) {
                 self.set_tool(ToolType::Eraser);
-            } else if ctx.input(|i| i.key_pressed(egui::Key::B)) {
+            } else if ctx.input(|i| crate::vcb_input::plain_key(i,egui::Key::B)) {
                 self.set_tool(ToolType::Paint);
             }
         }

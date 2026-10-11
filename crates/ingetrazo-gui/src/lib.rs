@@ -206,3 +206,5 @@ mod annotation_delete;
 mod zoom_extents;
 
 pub use annotation_plan::annotation_plan_for_probe;
+
+mod vcb_input;

@@ -101,11 +101,12 @@ pub fn render_status_bar(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
             let edit_resp = ui.add(
                 egui::TextEdit::singleline(&mut app.vcb_text)
                     .id(egui::Id::new("measurements_vcb"))
+                    .interactive(app.scene.active_sheet_index.is_some() || app.navigation.mode.is_some())
                     .hint_text(measurement)
                     .desired_width(70.0),
             );
 
-            if edit_resp.lost_focus() && ui.input(|i| i.key_pressed(egui::Key::Enter)) {
+            if (app.scene.active_sheet_index.is_some() || app.navigation.mode.is_some()) && edit_resp.lost_focus() && ui.input(|i| i.key_pressed(egui::Key::Enter)) {
                 let input = app.vcb_text.clone();
                 if let Err(err) = app.dispatch_tool_vcb(&input) {
                     app.status_message = format!("{}: {err}", tr("Error"));
