@@ -10,8 +10,16 @@ image_index=command.index('/tmp/ingetrazo-parity-python/bin/python')-1
 command[image_index:image_index]=['-e','INGETRAZO_ANNOTATION_VISIBILITY_DIAGNOSTIC=1']
 tree=Path(__file__).resolve().parents[1];helper=tree/'scripts/capture-owned-native-skp-annotations.py'
 binary=tree.parent/'ingetrazo-skp-native-target/debug/examples/native_vulkan_annotation_overlay_fixture'
+supplied_binary=os.environ.get('INGETRAZO_ANNOTATION_PROBE')
+supplied_source=os.environ.get('INGETRAZO_ANNOTATION_PROBE_SOURCE')
+if supplied_binary:
+ assert supplied_source and len(supplied_source)==40 and all(c in '0123456789abcdef' for c in supplied_source),'Frozen supplied binary requires full source SHA'
+ binary=Path(supplied_binary);assert binary.is_file()
+ mounts=[i for i,arg in enumerate(command)if arg.endswith(':/probe:ro')];assert len(mounts)==1
+ command[mounts[0]]=str(binary)+':/probe:ro'
+elif supplied_source:raise AssertionError('Source override requires supplied binary')
 def digest(path):return hashlib.sha256(path.read_bytes()).hexdigest()
-provenance=dict(worktree=str(tree),worktree_commit=subprocess.check_output(['podman','exec','ingetrazo-publish','git','-C','/tmp/ingetrazo-skp-native-import','rev-parse','HEAD'],text=True).strip(),diagnostic_script_sha256=digest(Path(__file__)),source_script_sha256=digest(helper),recorder_sha256=digest(tree/'scripts/reference-native-annotations.py'),source_pin='6be29fe437a7cd992d4e079f71720821b25216b9',parser_pin='291700bc213655a00461838de71e5f206311e619',binary_sha256=digest(binary))
+provenance=dict(worktree=str(tree),worktree_commit=subprocess.check_output(['podman','exec','ingetrazo-publish','git','-C','/tmp/'+tree.name,'rev-parse','HEAD'],text=True).strip(),diagnostic_script_sha256=digest(Path(__file__)),source_script_sha256=digest(helper),recorder_sha256=digest(tree/'scripts/reference-native-annotations.py'),source_pin='6be29fe437a7cd992d4e079f71720821b25216b9',parser_pin='291700bc213655a00461838de71e5f206311e619',binary_sha256=digest(binary),supplied_binary_source=supplied_source,inspected_checkout_is_binary_source=not bool(supplied_binary))
 started=time.monotonic();record=dict(command=command,retained_native_reference=str(reference),timeout_seconds=60,execution_provenance=provenance)
 try:
  with(out/'source.log').open('w')as stream:record['returncode']=subprocess.run(command,stdout=stream,stderr=subprocess.STDOUT,timeout=60).returncode
