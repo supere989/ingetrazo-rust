@@ -14,7 +14,8 @@ impl Draw {pub fn span(gate:Gate)->Self{Self{gate,composition:Composition::SpanB
 pub struct Mesh {pub geometry:Arc<Geometry>,pub batches:Arc<[Batch]>,pub gates:Arc<[Draw]>}
 #[derive(Clone,Copy)]pub struct Limits {pub cells:usize,pub spans:usize,pub geometry_bytes:usize,pub glyphs:usize,pub glyph_bytes:usize}
 #[derive(Clone,Copy,PartialEq,Eq,Hash)]struct GlyphKey{font:ingetrazo_formats::paper_font::FontKey,pixels:u32,glyph:u32,density:u64,phase:[u8;2]}
-pub struct Cache {glyph_order:VecDeque<GlyphKey>,glyphs:HashMap<GlyphKey,Arc<ingetrazo_formats::paper_text::RasterGlyph>>,glyph_bytes:usize,glyph_builds:u64,fonts:annotation_font::Cache,current:Option<(Arc<Plan>,u64,u64,[i32;4],Arc<Mesh>)>,builds:u64,limits:Limits}
+#[derive(Clone,Copy,PartialEq,Eq)]enum GlyphPlacement{Raster,OpenGl}
+pub struct Cache {glyph_order:VecDeque<GlyphKey>,glyphs:HashMap<GlyphKey,Arc<ingetrazo_formats::paper_text::RasterGlyph>>,glyph_bytes:usize,glyph_builds:u64,fonts:annotation_font::Cache,current:Option<(Arc<Plan>,u64,u64,[i32;4],GlyphPlacement,Arc<Mesh>)>,builds:u64,limits:Limits}
 impl Cache {
  pub fn new(fonts:annotation_font::Limits,limits:Limits)->Result<Self,String>{if limits.cells==0||limits.spans==0||limits.geometry_bytes==0||limits.glyphs==0||limits.glyph_bytes==0{return Err("Annotation geometry budget must be positive".into());}Ok(Self{glyph_order:VecDeque::new(),glyphs:HashMap::new(),glyph_bytes:0,glyph_builds:0,fonts:annotation_font::Cache::new(fonts)?,current:None,builds:0,limits})}
  pub fn glyph_stats(&self)->(usize,usize,u64){(self.glyphs.len(),self.glyph_bytes,self.glyph_builds)}
@@ -30,9 +31,15 @@ impl Cache {
   self.prepare_clipped(plan,density,font_dpi,[-1_000_000,-1_000_000,1_000_001,1_000_001])
  }
  pub fn prepare_clipped(&mut self,plan:Arc<Plan>,density:f32,font_dpi:f64,clip:[i32;4])->Result<Arc<Mesh>,String>{
+  self.prepare_for_target(plan,density,font_dpi,clip,GlyphPlacement::Raster)
+ }
+ pub(crate) fn prepare_widget_clipped(&mut self,plan:Arc<Plan>,density:f32,font_dpi:f64,clip:[i32;4])->Result<Arc<Mesh>,String>{
+  self.prepare_for_target(plan,density,font_dpi,clip,GlyphPlacement::OpenGl)
+ }
+ fn prepare_for_target(&mut self,plan:Arc<Plan>,density:f32,font_dpi:f64,clip:[i32;4],placement:GlyphPlacement)->Result<Arc<Mesh>,String>{
   let density=f64::from(density);
   if !density.is_finite()||density<=0.||density>40.||!font_dpi.is_finite()||font_dpi<=0.{return Err("Annotation physical/font density outside admission".into());}
-  if let Some((old,d,dpi,old_clip,mesh))=&self.current{if Arc::ptr_eq(old,&plan)&&*d==density.to_bits()&&*dpi==font_dpi.to_bits()&&*old_clip==clip{return Ok(mesh.clone());}}
+  if let Some((old,d,dpi,old_clip,old_placement,mesh))=&self.current{if Arc::ptr_eq(old,&plan)&&*d==density.to_bits()&&*dpi==font_dpi.to_bits()&&*old_clip==clip&&*old_placement==placement{return Ok(mesh.clone());}}
   if plan.queries.len()>u32::MAX as usize||plan.queries.iter().flatten().any(|v|!v.is_finite()){
    return Err("Annotation plan query admission exceeded".into());
   }
@@ -41,8 +48,8 @@ impl Cache {
    Gate::Always=>{},Gate::Point(a) if a<count=>{},Gate::Both(a,b) if a<count&&b<count=>{},
    _=>return Err("Annotation plan references absent query".into()),
   }}
-  let mesh=Arc::new(self.build(&plan,density,font_dpi,clip)?);
-  self.current=Some((plan,density.to_bits(),font_dpi.to_bits(),clip,mesh.clone()));self.builds+=1;Ok(mesh)
+  let mesh=Arc::new(self.build(&plan,density,font_dpi,clip,placement)?);
+  self.current=Some((plan,density.to_bits(),font_dpi.to_bits(),clip,placement,mesh.clone()));self.builds+=1;Ok(mesh)
  }
  fn glyph(&mut self,face:&ingetrazo_formats::annotation_font::Face,glyph:u32,density:f64,phase:[u8;2])->Result<Arc<ingetrazo_formats::paper_text::RasterGlyph>,String>{
   let key=GlyphKey{font:face.key(),pixels:face.pixels(),glyph,density:density.to_bits(),phase};
@@ -81,7 +88,7 @@ impl Cache {
   self.glyphs.insert(key,image.clone());self.glyph_order.push_back(key);
   self.glyph_bytes=remaining_bytes;self.glyph_builds+=1;Ok(image)
  }
- fn build(&mut self,plan:&Plan,density:f64,font_dpi:f64,clip:[i32;4])->Result<Mesh,String>{
+ fn build(&mut self,plan:&Plan,density:f64,font_dpi:f64,clip:[i32;4],placement:GlyphPlacement)->Result<Mesh,String>{
   let mut writer=Writer::new(density,self.limits);
   for operation in &plan.operations {
    match &operation.primitive {
@@ -111,7 +118,7 @@ impl Cache {
       for glyph in &run.glyphs {
        let x=position[0]*density+(advance+i64::from(glyph.offset[0]))as f64/64.*density;
        let y=position[1]*density+f64::from(glyph.offset[1])/64.*density;
-       let (x,y,phase)=device_position(x,y)?;
+       let (x,y,phase)=device_position_for_target(x,y,placement)?;
        let image=self.glyph(&run.font,glyph.id,density,phase)?;
        let left=x.checked_add(i64::from(image.left)).ok_or("Annotation glyph position overflow")?;
        let top=y.checked_sub(i64::from(image.top)).ok_or("Annotation glyph position overflow")?;
@@ -133,11 +140,13 @@ impl Cache {
   writer.finish()
  }
 }
-fn device_position(x:f64,y:f64)->Result<(i64,i64,[u8;2]),String>{
+fn device_position(x:f64,y:f64)->Result<(i64,i64,[u8;2]),String>{device_position_for_target(x,y,GlyphPlacement::Raster)}
+fn device_position_for_target(x:f64,y:f64,placement:GlyphPlacement)->Result<(i64,i64,[u8;2]),String>{
  if !x.is_finite()||!y.is_finite()||x.abs()>1_000_000.||y.abs()>1_000_000.{return Err("Annotation glyph physical position outside domain".into());}
  let x=(x*64.)as i64;let y=(y*64.)as i64;
  let phase=((x.rem_euclid(64)+1)/16)*16;
- Ok((x.div_euclid(64)+phase/64,(y+32).div_euclid(64),[(phase%64)as u8,0]))
+ let y=match placement{GlyphPlacement::Raster=>(y+32).div_euclid(64),GlyphPlacement::OpenGl=>y.div_euclid(64)};
+ Ok((x.div_euclid(64)+phase/64,y,[(phase%64)as u8,0]))
 }
 fn translate_path(path:&mut PathContour,delta:[f64;2]){
  let p=|p:&mut [f64;2]|{p[0]+=delta[0];p[1]+=delta[1];};p(&mut path.start);for segment in &mut path.segments{match segment{Segment::Line(to)=>p(to),Segment::Cubic{control1,control2,to}=>{p(control1);p(control2);p(to);}}}
@@ -238,5 +247,15 @@ mod tests {
   let invalid_gate=Arc::new(Plan{queries:vec![],operations:vec![Operation{primitive:Primitive::Text{position:[45.,35.],text:"B".into(),size_pt:11,color:[0,0,0,255]},gate:Gate::Point(0)}]});
   let glyphs=cache.glyph_stats();assert!(cache.prepare(invalid_gate,1.,96.).is_err());assert_eq!(cache.glyph_stats(),glyphs);
   assert!(Arc::ptr_eq(&first,&cache.prepare(plan,1.,96.).unwrap()));
+ }
+}
+
+#[cfg(test)]mod widget_placement_tests{
+ use super::*;
+ #[test]fn widget_baseline_floor_preserves_raster_default(){
+  for(y,raster,widget)in[(22.75,23,22),(-22.25,-22,-23),(22.25,22,22)]{
+   assert_eq!(device_position(10.25,y).unwrap().1,raster);
+   assert_eq!(device_position_for_target(10.25,y,GlyphPlacement::OpenGl).unwrap().1,widget);
+  }
  }
 }

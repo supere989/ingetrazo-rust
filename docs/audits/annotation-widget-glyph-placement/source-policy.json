@@ -1,0 +1,8 @@
+{
+  "qt_source_sha256": "3dd9aec76a9f7338b3ccc85cc20a21a56936ed75571745146018fcb6c77f4ef9",
+  "qt_original_runtime": "6.12.0",
+  "source_policy": "drawCachedGlyphs floors glyph Y when VerticalSubpixelPositioning is absent; actual original _draw_overlay enables only Antialiasing/TextAntialiasing",
+  "production_scope": "native actual viewport chooses OpenGl glyph placement; controlled QImage raster cache default remains unchanged; target identity included in immutable mesh warm key",
+  "open": "actual source GL glyph composition and geometric/MSAA raster policy remain required; floor correction acceptance pending paired hardware pixels",
+  "heldout_widget_glyph_difference_pixels": 3344
+}

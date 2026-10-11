@@ -26,7 +26,7 @@ impl ViewportAnnotations{
   if plan.operations.is_empty(){self.style=raw.clone();self.current=None;self.empty=Some(key);return Ok(None);}
   self.empty=None;
   let clip=[(rect.min.x*density).floor()as i32,(rect.min.y*density).floor()as i32,(rect.max.x*density).ceil()as i32,(rect.max.y*density).ceil()as i32];
-  let mesh=self.cache.prepare_clipped(plan.clone(),density,96.,clip)?;
+  let mesh=self.cache.prepare_widget_clipped(plan.clone(),density,96.,clip)?;
   let extent=[(rect.width()*density).ceil().max(1.)as u32,(rect.height()*density).ceil().max(1.)as u32];
   let eye=snapshot.eye;let forward=snapshot.forward;
   let mut queries=Vec::new();queries.try_reserve_exact(plan.queries.len().max(1)).map_err(|_|"Annotation query CPU admission failed")?;
