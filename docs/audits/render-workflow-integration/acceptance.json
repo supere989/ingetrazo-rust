@@ -1,0 +1,55 @@
+{
+  "workspace": {
+    "returncode": 0,
+    "seconds": 30.44,
+    "packages_invalidated": [
+      "ingetrazo-cli",
+      "ingetrazo-core",
+      "ingetrazo-formats",
+      "ingetrazo-gui",
+      "ingetrazo-metal",
+      "ingetrazo-render",
+      "ingetrazo-tools"
+    ],
+    "dependencies_retained": true,
+    "source": "f2dbb0cdb362c1835618875a41868ef0655dd0aa",
+    "tests": {
+      "passed": 852,
+      "failed": 0,
+      "ignored": 2
+    },
+    "log_sha256": "5dadb664440b74731864361178117129c38c65eafa12b3177dd2d7a50e9f0626"
+  },
+  "optional_console": {
+    "returncode": 0,
+    "seconds": 49.08,
+    "source": "f2dbb0cdb362c1835618875a41868ef0655dd0aa",
+    "tests": {
+      "passed": 15,
+      "failed": 0,
+      "ignored": 0
+    },
+    "log_sha256": "8e8ba91cf28dbbf1ddd4c04f4f8ceff0f5880819d617e6c42a515e3d4a31bc93"
+  },
+  "independent_review": {
+    "gltf_exact_surfaces": 9,
+    "gltf_exact_triangle_collections": 8,
+    "gltf_mutations": 7,
+    "document_light_cases": 5,
+    "document_states": 8,
+    "camera_keys": 2,
+    "document_mutations": 6,
+    "blender_actual_renders": 11,
+    "blender_cube_exact_engines": 2,
+    "vulkan_native_exact": 16,
+    "portable_exact_frames": 24,
+    "portable_exact_maps": 7,
+    "portable_section_differing_map_pixels": 38486,
+    "legacy_discard_negative_pixels": 286,
+    "actual_gpu_application_controls": 4,
+    "shader_source_spirv_pairs_hashed": 3,
+    "ifc_ui_phases": 11,
+    "ifc_reader_express_pass": true,
+    "ifc_mutations": 3
+  }
+}

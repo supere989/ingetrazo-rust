@@ -1,0 +1,220 @@
+{
+  "verified_then_deleted": [
+    {
+      "directory": "/tmp/ingetrazo-blender-follow-proof",
+      "files": [
+        {
+          "path": "native.igz",
+          "bytes": 5013,
+          "sha256": "d67d02541d4bcbb5bfd5f2c075b267486a52004f8e83d52eff24a526dde474a8",
+          "retained": "docs/audits/blender-document-follow/native.igz"
+        },
+        {
+          "path": "native.json",
+          "bytes": 4666,
+          "sha256": "46647046636abf4cdd7dd0708e9d3df79978e7b4986ba8aca2c1f2324965bd86",
+          "retained": "docs/audits/blender-document-follow/native.json"
+        },
+        {
+          "path": "original.igz",
+          "bytes": 373180,
+          "sha256": "db8d128fdd806324fe47efbfaadfeb0c358ac5a614b6000d388ae3c1e718f888",
+          "retained": "docs/audits/blender-document-follow/original.igz"
+        },
+        {
+          "path": "original.json",
+          "bytes": 5342,
+          "sha256": "a0e8f06a6cffef643b1bd6df642b167d7199f075d24a5b0c412b445bc280ba36",
+          "retained": "docs/audits/blender-document-follow/original.json"
+        },
+        {
+          "path": "original.log",
+          "bytes": 49,
+          "sha256": "9148e145e58b87c50fd49ce7410b6e547365bef08a9b8c91d92465a27f1fa848",
+          "retained": "docs/audits/blender-document-follow/original.log"
+        },
+        {
+          "path": "result.json",
+          "bytes": 254,
+          "sha256": "d1b4dbe09eb3295fbd93a16f84e1dd40dcec33b14685388265d0b09e4ff2e228",
+          "retained": "docs/audits/blender-document-follow/result.json"
+        }
+      ],
+      "bytes": 388504
+    },
+    {
+      "directory": "/tmp/ingetrazo-blender-follow-actual",
+      "files": [
+        {
+          "path": "application/application.log",
+          "bytes": 79,
+          "sha256": "9fbae2c9b5c1de3ab045f10d514beff46e9f212ebc67c8d46869f63ae83ba244",
+          "retained": "docs/audits/blender-document-follow/application-captures.zip:application.log"
+        },
+        {
+          "path": "application/cycles-camera.png",
+          "bytes": 20918,
+          "sha256": "c604e3d8b9f817ad3fc2cbdb5f68476dea3c26cfcc4eb9b69df91c09eec1f2d3",
+          "retained": "docs/audits/blender-document-follow/application-captures.zip:cycles-camera.png"
+        },
+        {
+          "path": "application/cycles-first.png",
+          "bytes": 20566,
+          "sha256": "0f65ae43a653f05467671d51ff4dca140fed25470ec990eb7a39f66a3862ee92",
+          "retained": "docs/audits/blender-document-follow/application-captures.zip:cycles-first.png"
+        },
+        {
+          "path": "application/cycles-job.json",
+          "bytes": 534,
+          "sha256": "d80aa23e3daf1e09340ed88c29bc21328e8dde91c3872856c35cedafb20396db",
+          "retained": "docs/audits/blender-document-follow/application-captures.zip:cycles-job.json"
+        },
+        {
+          "path": "application/cycles-model.glb",
+          "bytes": 1708,
+          "sha256": "c11e91f5f0bcb9be40402582c5a3ca8f0fc2f4d01f84d783c8b309db5020d4b4",
+          "retained": "docs/audits/blender-document-follow/application-captures.zip:cycles-model.glb"
+        },
+        {
+          "path": "application/cycles-saved.png",
+          "bytes": 20566,
+          "sha256": "0f65ae43a653f05467671d51ff4dca140fed25470ec990eb7a39f66a3862ee92",
+          "retained": "docs/audits/blender-document-follow/application-captures.zip:cycles-saved.png"
+        },
+        {
+          "path": "application/eevee-camera.png",
+          "bytes": 20253,
+          "sha256": "2e9e46d451ef696eeea0042ca646d1733e76f34072ea9d160911e7ab70f6ab23",
+          "retained": "docs/audits/blender-document-follow/application-captures.zip:eevee-camera.png"
+        },
+        {
+          "path": "application/eevee-first.png",
+          "bytes": 20261,
+          "sha256": "c6aa040d5c40c4dd3a7d73a95a575b90acd5679995d9380a9c749d97a6186392",
+          "retained": "docs/audits/blender-document-follow/application-captures.zip:eevee-first.png"
+        },
+        {
+          "path": "application/eevee-job.json",
+          "bytes": 533,
+          "sha256": "bd1727b19a82370042aa281e496e1e951f0a386234279e847fc13384500ad5b0",
+          "retained": "docs/audits/blender-document-follow/application-captures.zip:eevee-job.json"
+        },
+        {
+          "path": "application/eevee-model.glb",
+          "bytes": 1708,
+          "sha256": "c11e91f5f0bcb9be40402582c5a3ca8f0fc2f4d01f84d783c8b309db5020d4b4",
+          "retained": "docs/audits/blender-document-follow/application-captures.zip:eevee-model.glb"
+        },
+        {
+          "path": "application/eevee-saved.png",
+          "bytes": 20261,
+          "sha256": "4fed3ff563ef2422cbb2e5de9fe3472cd55c10dfbbab65c218162701a288790e",
+          "retained": "docs/audits/blender-document-follow/application-captures.zip:eevee-saved.png"
+        },
+        {
+          "path": "application/follow-first.png",
+          "bytes": 1097449,
+          "sha256": "93e0754c1c4d36eb185ff1d83cf97d98f0f847ede2091f0897e73aeda6de6524",
+          "retained": "docs/audits/blender-document-follow/application-captures.zip:follow-first.png"
+        },
+        {
+          "path": "application/render.blend",
+          "bytes": 89943,
+          "sha256": "1d5c0d3ce79a370e843645db1dac8e7d9d84ca78dc0b61dca12d8d4756ead305",
+          "retained": "docs/audits/blender-document-follow/application-captures.zip:render.blend"
+        },
+        {
+          "path": "application/result.json",
+          "bytes": 782,
+          "sha256": "0b1b50ba5c89675a0b44abad3a64a401d6c6a0c4ab062ffcedfe7cee6fbfe2b3",
+          "retained": "docs/audits/blender-document-follow/application-captures.zip:result.json"
+        },
+        {
+          "path": "application/run.json",
+          "bytes": 41,
+          "sha256": "ae9013bf19f0b681aaba5e92002f61f3b7b873fa9812f6b79587005e6e9fd94b",
+          "retained": "docs/audits/blender-document-follow/application-captures.zip:run.json"
+        },
+        {
+          "path": "application/strict-image-comparison.json",
+          "bytes": 201,
+          "sha256": "6b8bc09145d988a0bb072a17de242c3342d2f3a7d9906a758af2842b3ed4fdf2",
+          "retained": "docs/audits/blender-document-follow/application-captures.zip:strict-image-comparison.json"
+        },
+        {
+          "path": "application/transport.json",
+          "bytes": 1393,
+          "sha256": "e407f5e53f51174252884fce0726d966d4369abc52db8a195dae09f93fb7523c",
+          "retained": "docs/audits/blender-document-follow/application-captures.zip:transport.json"
+        },
+        {
+          "path": "distribution-application/eevee-job.json",
+          "bytes": 553,
+          "sha256": "59202c6edc208574813ad33c064aae0ce13b0d06ed018d05866fa24491454be2",
+          "retained": "docs/audits/blender-consumer/captures.zip:distribution-application/eevee-job.json"
+        },
+        {
+          "path": "source/cycles/job.json",
+          "bytes": 631,
+          "sha256": "2a970f828e6eef08748af2e9caa7fcf39686f99101f54271603bd92d2d9c97a1",
+          "retained": "docs/audits/blender-consumer/captures.zip:source/cycles/job.json"
+        },
+        {
+          "path": "source/cycles/model.glb",
+          "bytes": 1708,
+          "sha256": "478610c319fa20f7a436b3e1fde1166543f12bf8bffdfe75b76f22e38b7fe9c7",
+          "retained": "docs/audits/blender-consumer/captures.zip:source/cycles/model.glb"
+        },
+        {
+          "path": "source/cycles/render.png",
+          "bytes": 20566,
+          "sha256": "d16a6e148464cf25ef622232458e21baae209f375b5bff287eb3a561d0101900",
+          "retained": "docs/audits/blender-consumer/captures.zip:source/cycles/render.png"
+        },
+        {
+          "path": "source/cycles/render_scene.py",
+          "bytes": 17848,
+          "sha256": "880f7b0fca4fb455b6c05d239049440a36a261312f6135dc51380f3be890da98",
+          "retained": "docs/audits/blender-consumer/captures.zip:source/cycles/render_scene.py"
+        },
+        {
+          "path": "source/eevee/distribution4-render.png",
+          "bytes": 12205,
+          "sha256": "1150f87ec3975d9e7cbeafea4a74e56acfd4a61250ded9cd2f12aa96b11b69d4",
+          "retained": "docs/audits/blender-consumer/captures.zip:source/eevee/distribution4-render.png"
+        },
+        {
+          "path": "source/eevee/job.json",
+          "bytes": 628,
+          "sha256": "8c1d064da42083bf417b36f8604a34e882cfd9ccd17ee98e61e08a1a2a4409ef",
+          "retained": "docs/audits/blender-consumer/captures.zip:source/eevee/job.json"
+        },
+        {
+          "path": "source/eevee/model.glb",
+          "bytes": 1708,
+          "sha256": "478610c319fa20f7a436b3e1fde1166543f12bf8bffdfe75b76f22e38b7fe9c7",
+          "retained": "docs/audits/blender-consumer/captures.zip:source/eevee/model.glb"
+        },
+        {
+          "path": "source/eevee/render.png",
+          "bytes": 20261,
+          "sha256": "914e9682b7d936e65113ce9aeec867621969280ac22c21ac044d2f0ea22117f5",
+          "retained": "docs/audits/blender-consumer/captures.zip:source/eevee/render.png"
+        },
+        {
+          "path": "source/eevee/render_scene.py",
+          "bytes": 17848,
+          "sha256": "880f7b0fca4fb455b6c05d239049440a36a261312f6135dc51380f3be890da98",
+          "retained": "docs/audits/blender-consumer/captures.zip:source/eevee/render_scene.py"
+        },
+        {
+          "path": "source/input.igz",
+          "bytes": 4365,
+          "sha256": "c12b456e4825ce31e8dd3fce59e5bea20d02ca2fc86ddd70ef340a109fbe125f",
+          "retained": "docs/audits/blender-consumer/captures.zip:source/input.igz"
+        }
+      ],
+      "bytes": 1415517
+    }
+  ]
+}
