@@ -256,6 +256,33 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         600,
         image::ColorType::Rgba8,
     )?;
+    let mut bitmap_direction_control = false;
+    if reference.as_ref().is_some_and(|r|r["name"]=="billboard-bitmap") {
+        let (_, assets)=world.texture_stats();
+        let asset_work=(assets.hashes,assets.decodes,assets.uploads);
+        let old_uploads=world.uploads;
+        let old_renders=world.shadow_stats_for_probe().0;
+        let changed=[-sun[1],sun[0],sun[2]];
+        world.set_scene_with_sun(&context,&scene,&camera,&style,fence,serial,1,Some(changed),0.55,ground)?;
+        let turned=render(&mut world,&mut serial)?;
+        assert_ne!(turned,on,"sun turn must move the actual bitmap shadow");
+        assert_eq!(world.uploads,old_uploads,"sun-only change reuploaded ordinary scene");
+        let (_,assets)=world.texture_stats();
+        assert_eq!((assets.hashes,assets.decodes,assets.uploads),asset_work,"sun-only change rebuilt images");
+        assert_eq!(world.shadow_stats_for_probe().0,old_renders+1);
+        image::save_buffer(out.join("sun-turned.png"),&turned,800,600,image::ColorType::Rgba8)?;
+        world.set_scene_with_sun(&context,&scene,&camera,&style,fence,serial,1,Some(sun),0.55,ground)?;
+        assert_eq!(render(&mut world,&mut serial)?,on,"sun restore must restore full frame");
+        let map_renders=world.shadow_stats_for_probe().0;
+        let mut moved=camera.clone();moved.yaw+=0.125;
+        world.set_scene_with_sun(&context,&scene,&moved,&style,fence,serial,1,Some(sun),0.55,ground)?;
+        let _=render(&mut world,&mut serial)?;
+        assert_eq!(world.shadow_stats_for_probe().0,map_renders,"camera-only change rerendered map");
+        assert_eq!(world.uploads,old_uploads);
+        world.set_scene_with_sun(&context,&scene,&camera,&style,fence,serial,1,Some(sun),0.55,ground)?;
+        assert_eq!(render(&mut world,&mut serial)?,on);
+        bitmap_direction_control=true;
+    }
     drop(world);
     let final_bytes = budget.ledger.lock().unwrap().total_committed();
     assert_eq!(final_bytes, 0);
@@ -268,7 +295,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     std::fs::write(
         out.join("result.json"),
         serde_json::to_vec_pretty(
-            &serde_json::json!({"source_commit":option_env!("INGETRAZO_BUILD_SOURCE"),"ground_receiver":ground,"cold":cold,"uploads":uploads,"refusal":refusal,"ledger_zero":final_bytes==0,"map_size":2048,"source_reference_pending":reference.is_none(),"reference_case":reference.as_ref().map(|r|r["name"].clone()),"receiver_matrix":receiver_matrix,"light_matrix":light_matrix,"samples":if reference.is_some(){1}else{4}}),
+            &serde_json::json!({"source_commit":option_env!("INGETRAZO_BUILD_SOURCE"),"bitmap_direction_control":bitmap_direction_control,"ground_receiver":ground,"cold":cold,"uploads":uploads,"refusal":refusal,"ledger_zero":final_bytes==0,"map_size":2048,"source_reference_pending":reference.is_none(),"reference_case":reference.as_ref().map(|r|r["name"].clone()),"receiver_matrix":receiver_matrix,"light_matrix":light_matrix,"samples":if reference.is_some(){1}else{4}}),
         )?,
     )?;
     Ok(())
