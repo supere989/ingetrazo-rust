@@ -81,5 +81,32 @@ raster.setDotsPerMeterX(round(vp.logicalDpiX()/0.0254));raster.setDotsPerMeterY(
 painter=Recorder(raster);painter.setRenderHint(QPainter.Antialiasing,True);painter.setRenderHint(QPainter.TextAntialiasing,True)
 vp._draw_dimensions(painter);vp._draw_text_labels(painter);painter.end();assert raster.save(str(out/'raster-overlay-on-source-baseline.png'))
 (out/'raster-target-diagnostic.json').write_text(json.dumps(dict(scope='same actual original bound annotation methods/depth against exact source baseline; QImage raster engine diagnostic, not widget replacement',widget_dpi=[vp.logicalDpiX(),vp.logicalDpiY()],raster_dpi=[raster.logicalDpiX(),raster.logicalDpiY()],render_hints=['Antialiasing','TextAntialiasing']),indent=2)+'\n')
+# Engineering separation of primitive families on the same actual widget.
+class PrimitiveFilter:
+ def __init__(self,painter,kind):self.painter=painter;self.kind=kind
+ def __getattr__(self,name):return getattr(self.painter,name)
+ def drawLine(self,*args):
+  if self.kind=='geometry':self.painter.drawLine(*args)
+ def drawPolygon(self,*args):
+  if self.kind=='geometry':self.painter.drawPolygon(*args)
+ def drawEllipse(self,*args):
+  if self.kind=='geometry':self.painter.drawEllipse(*args)
+ def drawText(self,*args):
+  if self.kind=='glyph':self.painter.drawText(*args)
+original_dimension_draw=vp._draw_dimensions;original_leader_draw=vp._draw_text_labels;engine_rows=[]
+try:
+ for kind in['geometry','glyph']:
+  def dimension_draw(painter,kind=kind):
+   engine_rows.append(dict(kind=kind,engine=painter.paintEngine().type().value,device_dpi=[painter.device().logicalDpiX(),painter.device().logicalDpiY()]));original_dimension_draw(PrimitiveFilter(painter,kind))
+  vp._draw_dimensions=dimension_draw;vp._draw_text_labels=lambda painter,kind=kind:original_leader_draw(PrimitiveFilter(painter,kind))
+  vp.update();deadline=time.monotonic()+4
+  while time.monotonic()<deadline:app.processEvents();time.sleep(.01)
+  assert [vp.width(),vp.height()]==[800,600]
+  image=vp.grabFramebuffer();assert image.save(str(out/(kind+'-widget-diagnostic.png')))
+  matrix=vp.camera.projection_matrix()*vp.camera.view_matrix();assert list(matrix.data())==state['camera_snapshot']['matrix']
+  image=QImage(str(out/'annotations-off.png'));image.setDotsPerMeterX(round(vp.logicalDpiX()/0.0254));image.setDotsPerMeterY(round(vp.logicalDpiY()/0.0254))
+  painter=QPainter(image);painter.setRenderHint(QPainter.Antialiasing,True);painter.setRenderHint(QPainter.TextAntialiasing,True);original_dimension_draw(PrimitiveFilter(painter,kind));original_leader_draw(PrimitiveFilter(painter,kind));painter.end();assert image.save(str(out/(kind+'-raster-diagnostic.png')))
+finally:vp._draw_dimensions=original_dimension_draw;vp._draw_text_labels=original_leader_draw
+(out/'primitive-engine-diagnostic.json').write_text(json.dumps(dict(scope='post-acceptance source-only layer filtering for target-engine attribution; original bound methods unchanged, not parity oracle',engine_rows=engine_rows),indent=2)+'\n')
 vp.close();vp.deleteLater();app.processEvents()
 (out/'source.json').write_text(json.dumps(dict(source_pin='6be29fe437a7cd992d4e079f71720821b25216b9',parser_pin='291700bc213655a00461838de71e5f206311e619',input_sha256=hashlib.sha256(skp.read_bytes()).hexdigest(),camera=camera,records=rows,scope='actual original Viewport with actual depth capture and annotations; paired native application ROI required'),indent=2)+'\n')
