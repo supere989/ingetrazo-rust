@@ -95,8 +95,12 @@ pub fn run() {
             std::fs::rename(&external, &held).unwrap();
         }
 
-        app.save_to_path(&root.join(format!("{name}-native.igz")))
-            .unwrap();
+        let output = root.join(format!("{name}-native.igz"));
+        if output.exists() {
+            std::fs::remove_file(&output).unwrap();
+        }
+        app.save_to_path(&output);
+        assert!(output.is_file(), "{}", app.status_message);
         if name == "windows-options-leaf" {
             std::fs::rename(&held, &external).unwrap();
         }
@@ -128,9 +132,12 @@ pub fn run() {
         assert_eq!(resource_guard.scene.embedded_textures.len(), 1);
     }
     assert_eq!(resource_guard.scene.groups.len(), 3);
-    resource_guard
-        .save_to_path(&root.join("cancel-resource-native.igz"))
-        .unwrap();
+    let output = root.join("cancel-resource-native.igz");
+    if output.exists() {
+        std::fs::remove_file(&output).unwrap();
+    }
+    resource_guard.save_to_path(&output);
+    assert!(output.is_file(), "{}", resource_guard.status_message);
     resource_guard.undo();
     assert_eq!(resource_guard.scene.groups.len(), 2);
     resource_guard.redo();
