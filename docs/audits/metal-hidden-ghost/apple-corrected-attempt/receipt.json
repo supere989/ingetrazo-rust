@@ -1,0 +1,13 @@
+{
+  "run": 38129926337,
+  "source": "b0276fc75a81878c6ad4c76d745f0941c86541fb",
+  "arm_job": 114441954780,
+  "intel_job": 114441954622,
+  "conclusion": "failure",
+  "verified_source_blobs_per_artifact": 38,
+  "artifacts": {
+    "arm-artifact.zip": "dcb8d79d245c3ce7d8f9110cf1d9d7eb5ca624e31717069d26a76c591f579e5d",
+    "intel-artifact.zip": "755153fdad4dfde43c20a1e4344add7c253e4c64ebb3ef40840942c4053104ad"
+  },
+  "intel": "Build passed; runtime still refuses invalid native layout estimate before first ghost frame; material same refusal and classic upload assertion follows refused route. Native queried byte requirement versus logical sample floor diagnostic narrowed next."
+}

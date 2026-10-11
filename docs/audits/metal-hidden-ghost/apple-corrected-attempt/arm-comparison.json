@@ -1,0 +1,496 @@
+{
+  "source_sha": "b0276fc75a81878c6ad4c76d745f0941c86541fb",
+  "verified_source_blobs": 38,
+  "device": "Apple Paravirtual device",
+  "cases": [
+    {
+      "case": "face-off",
+      "differing_pixels": 0,
+      "maximum_channel_delta": 0,
+      "different_pairs": []
+    },
+    {
+      "case": "face-on",
+      "differing_pixels": 0,
+      "maximum_channel_delta": 0,
+      "different_pairs": []
+    },
+    {
+      "case": "edge-off",
+      "differing_pixels": 0,
+      "maximum_channel_delta": 0,
+      "different_pairs": []
+    },
+    {
+      "case": "edge-on",
+      "differing_pixels": 144,
+      "maximum_channel_delta": 1,
+      "different_pairs": [
+        {
+          "source": [
+            88,
+            96,
+            108,
+            255
+          ],
+          "native": [
+            89,
+            96,
+            108,
+            255
+          ],
+          "count": 144
+        }
+      ]
+    },
+    {
+      "case": "object-off",
+      "differing_pixels": 0,
+      "maximum_channel_delta": 0,
+      "different_pairs": []
+    },
+    {
+      "case": "object-on",
+      "differing_pixels": 480,
+      "maximum_channel_delta": 1,
+      "different_pairs": [
+        {
+          "source": [
+            116,
+            59,
+            41,
+            255
+          ],
+          "native": [
+            116,
+            60,
+            42,
+            255
+          ],
+          "count": 480
+        }
+      ]
+    },
+    {
+      "case": "textured-object-off",
+      "differing_pixels": 0,
+      "maximum_channel_delta": 0,
+      "different_pairs": []
+    },
+    {
+      "case": "textured-object-on",
+      "differing_pixels": 480,
+      "maximum_channel_delta": 1,
+      "different_pairs": [
+        {
+          "source": [
+            96,
+            100,
+            108,
+            255
+          ],
+          "native": [
+            96,
+            101,
+            109,
+            255
+          ],
+          "count": 480
+        }
+      ]
+    },
+    {
+      "case": "nested-object-off",
+      "differing_pixels": 0,
+      "maximum_channel_delta": 0,
+      "different_pairs": []
+    },
+    {
+      "case": "nested-object-on",
+      "differing_pixels": 968,
+      "maximum_channel_delta": 56,
+      "different_pairs": [
+        {
+          "source": [
+            144,
+            149,
+            157,
+            255
+          ],
+          "native": [
+            200,
+            202,
+            206,
+            255
+          ],
+          "count": 1
+        },
+        {
+          "source": [
+            199,
+            202,
+            206,
+            255
+          ],
+          "native": [
+            200,
+            202,
+            206,
+            255
+          ],
+          "count": 301
+        },
+        {
+          "source": [
+            74,
+            51,
+            50,
+            255
+          ],
+          "native": [
+            33,
+            43,
+            59,
+            255
+          ],
+          "count": 1
+        },
+        {
+          "source": [
+            116,
+            59,
+            41,
+            255
+          ],
+          "native": [
+            116,
+            60,
+            42,
+            255
+          ],
+          "count": 240
+        },
+        {
+          "source": [
+            74,
+            51,
+            50,
+            255
+          ],
+          "native": [
+            116,
+            60,
+            42,
+            255
+          ],
+          "count": 1
+        },
+        {
+          "source": [
+            74,
+            51,
+            50,
+            255
+          ],
+          "native": [
+            75,
+            51,
+            50,
+            255
+          ],
+          "count": 180
+        },
+        {
+          "source": [
+            88,
+            96,
+            108,
+            255
+          ],
+          "native": [
+            89,
+            96,
+            108,
+            255
+          ],
+          "count": 181
+        },
+        {
+          "source": [
+            157,
+            68,
+            33,
+            255
+          ],
+          "native": [
+            158,
+            68,
+            33,
+            255
+          ],
+          "count": 60
+        },
+        {
+          "source": [
+            33,
+            43,
+            59,
+            255
+          ],
+          "native": [
+            75,
+            51,
+            50,
+            255
+          ],
+          "count": 1
+        },
+        {
+          "source": [
+            144,
+            149,
+            157,
+            255
+          ],
+          "native": [
+            89,
+            96,
+            108,
+            255
+          ],
+          "count": 1
+        },
+        {
+          "source": [
+            199,
+            202,
+            206,
+            255
+          ],
+          "native": [
+            255,
+            255,
+            255,
+            255
+          ],
+          "count": 1
+        }
+      ]
+    },
+    {
+      "case": "occluded-face-off",
+      "differing_pixels": 0,
+      "maximum_channel_delta": 0,
+      "different_pairs": []
+    },
+    {
+      "case": "occluded-face-on",
+      "differing_pixels": 0,
+      "maximum_channel_delta": 0,
+      "different_pairs": []
+    }
+  ],
+  "runtime_result": {
+    "device": "Apple Paravirtual device",
+    "backend": "native-metal",
+    "width": 800,
+    "height": 600,
+    "cases": [
+      {
+        "case": "face-off",
+        "samples": 4,
+        "counts": [
+          0,
+          0,
+          0
+        ],
+        "warm_zero_upload": true,
+        "pressure_refused": true,
+        "old_pixels_retained": true,
+        "flags_recalled": true,
+        "unhide_empty_ghosts": true,
+        "unhide_route_reason": null,
+        "unhide_wire_positive": null
+      },
+      {
+        "case": "face-on",
+        "samples": 4,
+        "counts": [
+          6,
+          0,
+          0
+        ],
+        "warm_zero_upload": true,
+        "pressure_refused": true,
+        "old_pixels_retained": true,
+        "flags_recalled": true,
+        "unhide_empty_ghosts": true,
+        "unhide_route_reason": null,
+        "unhide_wire_positive": null
+      },
+      {
+        "case": "edge-off",
+        "samples": 4,
+        "counts": [
+          0,
+          0,
+          0
+        ],
+        "warm_zero_upload": true,
+        "pressure_refused": true,
+        "old_pixels_retained": true,
+        "flags_recalled": true,
+        "unhide_empty_ghosts": true,
+        "unhide_route_reason": null,
+        "unhide_wire_positive": true
+      },
+      {
+        "case": "edge-on",
+        "samples": 4,
+        "counts": [
+          0,
+          0,
+          2
+        ],
+        "warm_zero_upload": true,
+        "pressure_refused": true,
+        "old_pixels_retained": true,
+        "flags_recalled": true,
+        "unhide_empty_ghosts": true,
+        "unhide_route_reason": null,
+        "unhide_wire_positive": true
+      },
+      {
+        "case": "object-off",
+        "samples": 4,
+        "counts": [
+          0,
+          0,
+          0
+        ],
+        "warm_zero_upload": true,
+        "pressure_refused": true,
+        "old_pixels_retained": true,
+        "flags_recalled": true,
+        "unhide_empty_ghosts": true,
+        "unhide_route_reason": null,
+        "unhide_wire_positive": null
+      },
+      {
+        "case": "object-on",
+        "samples": 4,
+        "counts": [
+          6,
+          0,
+          8
+        ],
+        "warm_zero_upload": true,
+        "pressure_refused": true,
+        "old_pixels_retained": true,
+        "flags_recalled": true,
+        "unhide_empty_ghosts": true,
+        "unhide_route_reason": null,
+        "unhide_wire_positive": null
+      },
+      {
+        "case": "textured-object-off",
+        "samples": 4,
+        "counts": [
+          0,
+          0,
+          0
+        ],
+        "warm_zero_upload": true,
+        "pressure_refused": true,
+        "old_pixels_retained": true,
+        "flags_recalled": true,
+        "unhide_empty_ghosts": true,
+        "unhide_route_reason": "Metal viewport paused: Metal texture resource missing-ghost-image.png: No such file or directory (os error 2)",
+        "unhide_wire_positive": null
+      },
+      {
+        "case": "textured-object-on",
+        "samples": 4,
+        "counts": [
+          0,
+          6,
+          8
+        ],
+        "warm_zero_upload": true,
+        "pressure_refused": true,
+        "old_pixels_retained": true,
+        "flags_recalled": true,
+        "unhide_empty_ghosts": true,
+        "unhide_route_reason": "Metal viewport paused: Metal texture resource missing-ghost-image.png: No such file or directory (os error 2)",
+        "unhide_wire_positive": null
+      },
+      {
+        "case": "nested-object-off",
+        "samples": 4,
+        "counts": [
+          0,
+          0,
+          0
+        ],
+        "warm_zero_upload": true,
+        "pressure_refused": true,
+        "old_pixels_retained": true,
+        "flags_recalled": true,
+        "unhide_empty_ghosts": true,
+        "unhide_route_reason": null,
+        "unhide_wire_positive": null
+      },
+      {
+        "case": "nested-object-on",
+        "samples": 4,
+        "counts": [
+          6,
+          0,
+          8
+        ],
+        "warm_zero_upload": true,
+        "pressure_refused": true,
+        "old_pixels_retained": true,
+        "flags_recalled": true,
+        "unhide_empty_ghosts": true,
+        "unhide_route_reason": null,
+        "unhide_wire_positive": null
+      },
+      {
+        "case": "occluded-face-off",
+        "samples": 4,
+        "counts": [
+          0,
+          0,
+          0
+        ],
+        "warm_zero_upload": true,
+        "pressure_refused": true,
+        "old_pixels_retained": true,
+        "flags_recalled": true,
+        "unhide_empty_ghosts": true,
+        "unhide_route_reason": null,
+        "unhide_wire_positive": null
+      },
+      {
+        "case": "occluded-face-on",
+        "samples": 4,
+        "counts": [
+          6,
+          0,
+          0
+        ],
+        "warm_zero_upload": true,
+        "pressure_refused": true,
+        "old_pixels_retained": true,
+        "flags_recalled": true,
+        "unhide_empty_ghosts": true,
+        "unhide_route_reason": null,
+        "unhide_wire_positive": null
+      }
+    ],
+    "committed_bytes": 0,
+    "reserved_bytes": 0,
+    "valid_texture_unhide": true
+  }
+}
