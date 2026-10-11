@@ -18,6 +18,10 @@ on:
       - 'scripts/check-metal-*.py'
   pull_request:
   workflow_dispatch:
+# New commits supersede unfinished acceptance for this workflow and ref.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   native-compute-consumer:
     name: Actual ordered UI and CAD compute (${{ matrix.runner }})

@@ -1,0 +1,22 @@
+{
+  "runtime_source": "02e05a00bedd52b8ac28c77403a463f9287a281c",
+  "union_pixels": 3830,
+  "overlay_mismatches": 0,
+  "mask_xor": 0,
+  "native_restored_mismatches": 0,
+  "whole_scene": {
+    "on": {
+      "different_pixels": 1066,
+      "max_channel_error": 37
+    },
+    "off": {
+      "different_pixels": 1113,
+      "max_channel_error": 37
+    },
+    "restored": {
+      "different_pixels": 1066,
+      "max_channel_error": 37
+    }
+  },
+  "scope": "Actual merged NVIDIA widget capture against retained pinned Qt source; full-scene FAIL retained."
+}

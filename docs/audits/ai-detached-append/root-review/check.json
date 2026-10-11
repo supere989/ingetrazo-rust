@@ -1,0 +1,28 @@
+{
+  "exact_states": 35,
+  "rejected_mutations": [
+    "public",
+    "positions",
+    "edges",
+    "faces",
+    "registry",
+    "native_edges",
+    "native_faces",
+    "undo",
+    "redo",
+    "packed identity",
+    "packed position",
+    "final_charge",
+    "production_enabled",
+    "undo_redo_refusals_preserve_graph_history_charge",
+    "source inventory"
+  ],
+  "production_enabled": false,
+  "independent_fresh_replay": true,
+  "binary_sha256": "8b529afef49ba5d687282d9aadf276c6fc1263e7ad7da0ae2dfe78086535f7d5",
+  "source_files_verified": 4,
+  "raw_sha256": {
+    "original.json": "74a5b7523cda72b331073ef01630553ba3c19383b8009ac1fd4992f3347177d8",
+    "native.json": "caf95eacf8e1f2bacee9afe7fb3b4eeb10f51788391cdb67bc14fada3a8796a5"
+  }
+}

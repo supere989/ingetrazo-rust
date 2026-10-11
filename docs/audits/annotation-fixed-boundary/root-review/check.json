@@ -1,0 +1,20 @@
+{
+  "exact_cases": 130,
+  "overlay_union": 3830,
+  "overlay_mismatches": 0,
+  "whole_scene_strict_failure": {
+    "on": 1285,
+    "off": 1297,
+    "restored": 1285
+  },
+  "negatives": [
+    "actual_changed_pixel",
+    "missing_named_case",
+    "old_gpu_float_edge_60_pixels"
+  ],
+  "source_file_digests_verified": 12,
+  "independent_decoder": "PySide6 QImage RGBA8888",
+  "shader_reproduction_sha256": "094deb85bfdf2dbdfc3a80cdc8bc5cd5083e555b660485d7c7f94f895b0dc169",
+  "archive_members_verified": 733,
+  "archive_sha256": "a6c25981dc9e0efd1f40addc802243b805204c0112d6d535252002156dbe8f8a"
+}

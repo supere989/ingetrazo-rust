@@ -1,0 +1,15 @@
+{
+  "runtime_source": "02e05a00bedd52b8ac28c77403a463f9287a281c",
+  "workspace": {
+    "passed": 781,
+    "failed": 0,
+    "ignored": 2,
+    "targets": 35,
+    "exit": 0
+  },
+  "native_widget_build": {
+    "exit": 0,
+    "binary_sha256": "7f6c49f84883f2dbf5f5ffb94ba8adc034c0367509e35d829c0b9de8f1cfe020"
+  },
+  "scope": "One combined workspace suite on stable reused target; standalone VM35 and native Metal4-frame proofs retain separate source scope; no full release gate promotion."
+}

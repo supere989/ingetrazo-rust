@@ -1,0 +1,14 @@
+{
+  "source_controller_fresh_pass": true,
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "source": "LayersPanel._on_item_changed + _touch",
+  "after_array": [
+    0,
+    6,
+    12,
+    18
+  ],
+  "undo_count": 1,
+  "layer_history_command_unchanged": true,
+  "scope": "Qt controller method replay; no fresh native pixels"
+}

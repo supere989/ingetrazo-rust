@@ -1,0 +1,22 @@
+{
+  "native_source": "4fa48f3c12f25cadacba72ea332bbf5eb8d061a9",
+  "frozen_binary_sha256": {
+    "vm_vertex_membership": "a521ff952c58469b92a74a81f13f48930c10f17790664c41cc7869861d46ea0d",
+    "vm_face_deletion": "f47ca50f1790be643885c248107f3812e4816f6d376944134ad013cdb91258e2"
+  },
+  "independently_reexecuted": {
+    "original.json": {
+      "fresh_sha256": "8527fdc63956c6eaa123020a3e441fee7f221e79e7f90bce1e16d2eac999da61",
+      "canonical": "original.json",
+      "canonical_sha256": "8527fdc63956c6eaa123020a3e441fee7f221e79e7f90bce1e16d2eac999da61",
+      "json_equal": true
+    },
+    "native.json": {
+      "fresh_sha256": "258d38d71121dfde5bfe824b42bdf5c2e47c77226070c7b8ae41b583958b2e2c",
+      "canonical": "native.json",
+      "canonical_sha256": "d97f9514f499cec36bf0cb7f151039df4e4644493afdd2c9f17ccedcb7089894",
+      "json_equal": true
+    }
+  },
+  "scope": "29 source/native Vertex membership and registry states; scoped candidate remains production disabled"
+}

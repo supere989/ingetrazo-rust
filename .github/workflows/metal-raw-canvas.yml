@@ -3,6 +3,10 @@ on:
   push:
     branches: [review/metal-raw-canvas]
   workflow_dispatch:
+# New commits supersede unfinished acceptance for this workflow and ref.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   raw-texture:
     runs-on: ${{ matrix.runner }}

@@ -1,0 +1,268 @@
+{
+  "status": "STRICT_FAIL_DIAGNOSTIC_ONLY",
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "candidate_base": "10208ac45b4d305a494a7e63a1282b1330fd09bd",
+  "candidate_source": {
+    "crates/ingetrazo-gui/examples/native_vulkan_texture_mips.rs": "11e6e2a08672718a4ab270354dab715656d6908193514532d10e59132cc77967",
+    "crates/ingetrazo-gui/src/native_vulkan/resources.rs": "9c638ebbc193db266c410f5f23b590da91bf026ed420d82e1313bcc7daf75102",
+    "crates/ingetrazo-gui/src/native_vulkan/resources/image_upload.rs": "e376689910b27d89bcbeb01e56284c1f45449d07ff16d8d520d803d23f9f52d8",
+    "crates/ingetrazo-gui/src/native_vulkan/resources/mip_area.rs": "059c4f96345b26b1d969d03896fbb74a204b87371125a41998f0352ace02a2d3",
+    "crates/ingetrazo-gui/src/native_vulkan/shaders/mip_area.comp": "748e5153388869b552850a2f3384813911b177c17ed0121216dcea8b64e91bb9",
+    "crates/ingetrazo-gui/src/native_vulkan/shaders/mip_area.comp.spv": "bb80d922c7326d9e977384daf163d445d1eb3118ce6de8429461bfb1a4e367f6"
+  },
+  "binary_sha256": "1e6c0ac4d4d816e90b28ae8b005e10280f2cfd059862e2cfc7d45ee2435e3a37",
+  "archive_sha256": "80192013cde45c87b6959ac430e6816f9dbad56d19450a94346eef27531cd060",
+  "production_enabled": false,
+  "ledger_final": 0,
+  "asset_comparison": [
+    {
+      "asset": "legacy-dib-22.jpg",
+      "levels": [
+        {
+          "level": 0,
+          "different_pixels": 0,
+          "max_channel_error": 0,
+          "bytes": 1440000
+        },
+        {
+          "level": 1,
+          "different_pixels": 0,
+          "max_channel_error": 0,
+          "bytes": 360000
+        },
+        {
+          "level": 2,
+          "different_pixels": 0,
+          "max_channel_error": 0,
+          "bytes": 90000
+        },
+        {
+          "level": 3,
+          "different_pixels": 0,
+          "max_channel_error": 0,
+          "bytes": 22500
+        },
+        {
+          "level": 4,
+          "different_pixels": 3,
+          "max_channel_error": 1,
+          "bytes": 5476
+        },
+        {
+          "level": 5,
+          "different_pixels": 3,
+          "max_channel_error": 1,
+          "bytes": 1296
+        },
+        {
+          "level": 6,
+          "different_pixels": 0,
+          "max_channel_error": 0,
+          "bytes": 324
+        },
+        {
+          "level": 7,
+          "different_pixels": 0,
+          "max_channel_error": 0,
+          "bytes": 64
+        },
+        {
+          "level": 8,
+          "different_pixels": 0,
+          "max_channel_error": 0,
+          "bytes": 16
+        },
+        {
+          "level": 9,
+          "different_pixels": 0,
+          "max_channel_error": 0,
+          "bytes": 4
+        }
+      ]
+    },
+    {
+      "asset": "legacy-dib-24.jpg",
+      "levels": [
+        {
+          "level": 0,
+          "different_pixels": 0,
+          "max_channel_error": 0,
+          "bytes": 784996
+        },
+        {
+          "level": 1,
+          "different_pixels": 265,
+          "max_channel_error": 1,
+          "bytes": 195364
+        },
+        {
+          "level": 2,
+          "different_pixels": 123,
+          "max_channel_error": 1,
+          "bytes": 48400
+        },
+        {
+          "level": 3,
+          "different_pixels": 29,
+          "max_channel_error": 1,
+          "bytes": 12100
+        },
+        {
+          "level": 4,
+          "different_pixels": 10,
+          "max_channel_error": 1,
+          "bytes": 2916
+        },
+        {
+          "level": 5,
+          "different_pixels": 2,
+          "max_channel_error": 1,
+          "bytes": 676
+        },
+        {
+          "level": 6,
+          "different_pixels": 3,
+          "max_channel_error": 1,
+          "bytes": 144
+        },
+        {
+          "level": 7,
+          "different_pixels": 1,
+          "max_channel_error": 1,
+          "bytes": 36
+        },
+        {
+          "level": 8,
+          "different_pixels": 0,
+          "max_channel_error": 0,
+          "bytes": 4
+        }
+      ]
+    },
+    {
+      "asset": "legacy-dib-28.jpg",
+      "levels": [
+        {
+          "level": 0,
+          "different_pixels": 0,
+          "max_channel_error": 0,
+          "bytes": 90600
+        },
+        {
+          "level": 1,
+          "different_pixels": 4147,
+          "max_channel_error": 57,
+          "bytes": 22500
+        },
+        {
+          "level": 2,
+          "different_pixels": 999,
+          "max_channel_error": 16,
+          "bytes": 5476
+        },
+        {
+          "level": 3,
+          "different_pixels": 278,
+          "max_channel_error": 5,
+          "bytes": 1296
+        },
+        {
+          "level": 4,
+          "different_pixels": 63,
+          "max_channel_error": 2,
+          "bytes": 324
+        },
+        {
+          "level": 5,
+          "different_pixels": 10,
+          "max_channel_error": 1,
+          "bytes": 64
+        },
+        {
+          "level": 6,
+          "different_pixels": 2,
+          "max_channel_error": 1,
+          "bytes": 16
+        },
+        {
+          "level": 7,
+          "different_pixels": 0,
+          "max_channel_error": 0,
+          "bytes": 4
+        }
+      ]
+    },
+    {
+      "asset": "legacy-dib-31.jpg",
+      "levels": [
+        {
+          "level": 0,
+          "different_pixels": 0,
+          "max_channel_error": 0,
+          "bytes": 6369792
+        },
+        {
+          "level": 1,
+          "different_pixels": 0,
+          "max_channel_error": 0,
+          "bytes": 1592448
+        },
+        {
+          "level": 2,
+          "different_pixels": 0,
+          "max_channel_error": 0,
+          "bytes": 398112
+        },
+        {
+          "level": 3,
+          "different_pixels": 0,
+          "max_channel_error": 0,
+          "bytes": 99528
+        },
+        {
+          "level": 4,
+          "different_pixels": 89,
+          "max_channel_error": 1,
+          "bytes": 24708
+        },
+        {
+          "level": 5,
+          "different_pixels": 50,
+          "max_channel_error": 1,
+          "bytes": 6020
+        },
+        {
+          "level": 6,
+          "different_pixels": 21,
+          "max_channel_error": 1,
+          "bytes": 1428
+        },
+        {
+          "level": 7,
+          "different_pixels": 12,
+          "max_channel_error": 1,
+          "bytes": 320
+        },
+        {
+          "level": 8,
+          "different_pixels": 2,
+          "max_channel_error": 1,
+          "bytes": 80
+        },
+        {
+          "level": 9,
+          "different_pixels": 0,
+          "max_channel_error": 0,
+          "bytes": 16
+        },
+        {
+          "level": 10,
+          "different_pixels": 0,
+          "max_channel_error": 0,
+          "bytes": 4
+        }
+      ]
+    }
+  ],
+  "scope": "Actual RTX5090 area-compute candidate uses same upload submission, no CPU mip generation. Three assets differ by at most1;150x151 glass differs by57. Source reset corpus proves current-level dimensions/data determine next mip independently of prior chain. No fitted offset or changed tolerance; candidate not integrated into production."
+}

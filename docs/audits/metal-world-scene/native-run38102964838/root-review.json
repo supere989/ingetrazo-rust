@@ -1,0 +1,41 @@
+{
+  "independent_artifacts": [
+    {
+      "platform": "arm",
+      "source": "afb3755b435811939772f06e187c58f8c5123367",
+      "zip_sha256": "2d2067151bf67ce9db6c1bbc61325535c225bb70a43fa66096afc4dac8490f01",
+      "source_files_verified": 13,
+      "checker": {
+        "passed": true,
+        "cases": [
+          "scene-source-global",
+          "scene-camera-only",
+          "scene-single-placement-move",
+          "scene-refused-alpha-retains-old"
+        ],
+        "matched_pixels": 475,
+        "negatives": [
+          "blank",
+          "stale-model"
+        ],
+        "scope": "Borrowed actualScene producer/native Metal instance consumer, sampled interior/sourcecolor grouping, one64byte pose write and priorframe alpha refusal; host/edges/textures/sections/annotations/MSAA excluded"
+      },
+      "runtime": {
+        "exit_code": 0,
+        "outer_timeout": false
+      }
+    },
+    {
+      "platform": "intel",
+      "source": "afb3755b435811939772f06e187c58f8c5123367",
+      "zip_sha256": "a328b1fd5c97c2a21380029b2a1df08771a7fad783687ed7a6d9f4ac583f9b44",
+      "source_files_verified": 13,
+      "checker": null,
+      "runtime": {
+        "exit_code": 1,
+        "outer_timeout": false
+      }
+    }
+  ],
+  "scope": "Four sampled opaque Scene frames with prior-frame refusal and cache counters; not full source scene/presentation parity"
+}
