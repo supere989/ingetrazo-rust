@@ -1,0 +1,1246 @@
+{
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "qt": "6.12.0",
+  "scope": "Actual original viewport, controlled fixed normalized sun only; unmodified shadow caster/receiver/packed-depth passes. Original IGZ plus source on/off/restore frames and actual queried sampler. Full native parity is a separate acceptance.",
+  "cases": [
+    {
+      "name": "solid",
+      "camera": {
+        "target": [
+          -1.2,
+          -0.6,
+          0.0
+        ],
+        "distance": 10.0,
+        "yaw": -1.5707963267948966,
+        "pitch": 1.2,
+        "perspective": false,
+        "fov_deg": 45.0,
+        "width": 800,
+        "height": 600
+      },
+      "style": {
+        "name": "Default",
+        "face_mode": "textures",
+        "edges": false,
+        "profiles": false,
+        "back_edges": false,
+        "edge_color": [
+          0.13,
+          0.17,
+          0.23
+        ],
+        "front_color": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "back_color": null,
+        "background": [
+          0.85,
+          0.9,
+          0.95
+        ],
+        "sky": false,
+        "sky_color": [
+          0.925,
+          0.935,
+          0.945
+        ],
+        "ground_color": [
+          0.815,
+          0.82,
+          0.815
+        ],
+        "section_fill": false,
+        "section_fill_color": [
+          0.35,
+          0.37,
+          0.41
+        ]
+      },
+      "sun": [
+        0.7990018711022757,
+        0.39950093555113786,
+        0.4494385524950301
+      ],
+      "bounds": [
+        [
+          -1.0,
+          -1.0,
+          1.5
+        ],
+        [
+          1.0,
+          1.0,
+          1.5
+        ]
+      ],
+      "light_vp_column_major": [
+        -0.20561544597148895,
+        -0.18482300639152527,
+        -0.2449047863483429,
+        0.0,
+        0.4112308919429779,
+        -0.09241150319576263,
+        -0.12245239317417145,
+        0.0,
+        0.0,
+        0.41071781516075134,
+        -0.13775894045829773,
+        0.0,
+        0.0,
+        -0.30803829431533813,
+        0.10331928730010986,
+        1.0
+      ],
+      "camera_vp_column_major": [
+        0.18106600642204285,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.22501413524150848,
+        3.62357750418596e-05,
+        0.0,
+        0.0,
+        0.08748090267181396,
+        -9.320390381617472e-05,
+        0.0,
+        0.21727921068668365,
+        0.13500846922397614,
+        0.0010217414237558842,
+        1.0
+      ],
+      "opacity": 1.0,
+      "cutout": false,
+      "section": false,
+      "offscreen_instance": false,
+      "caster_camera_visible": true,
+      "sampler": {
+        "min_filter": 9728,
+        "mag_filter": 9728,
+        "wrap_s": 33071,
+        "wrap_t": 33071
+      },
+      "gl": {
+        "vendor": "NVIDIA Corporation",
+        "renderer": "NVIDIA GeForce RTX 5090/PCIe/SSE2",
+        "version": "3.3.0 NVIDIA 615.71.09"
+      },
+      "samples": 0,
+      "resolved_samples": 0,
+      "draw_fbo": 1,
+      "images": [
+        {
+          "phase": "on",
+          "image": "solid-on.png",
+          "sha256": "17877ae5f62fbf01a0f00191d6d6cd84fb7b2b730ca1e5b9c1173f3a4e448207",
+          "map_renders": 1
+        },
+        {
+          "phase": "off",
+          "image": "solid-off.png",
+          "sha256": "4f9610682e0ebb3ff4c4a829fa995e78d4e29c61208393488d4c2b8e57a9b469",
+          "map_renders": 1
+        },
+        {
+          "phase": "restored",
+          "image": "solid-restored.png",
+          "sha256": "17877ae5f62fbf01a0f00191d6d6cd84fb7b2b730ca1e5b9c1173f3a4e448207",
+          "map_renders": 1
+        }
+      ],
+      "depth_image": "solid-depth.png",
+      "depth_sha256": "364d463f93e19d13e791e35fce9df639e8908c22b942e5a68edfe729f9c80be7",
+      "igz": "solid.igz",
+      "igz_sha256": "0a94874e6ed81413028fc2985c3bf639a806ea6b14116a0ba5e48b78127661b7",
+      "source_map_renders": 1
+    },
+    {
+      "name": "glass-69",
+      "camera": {
+        "target": [
+          -1.2,
+          -0.6,
+          0.0
+        ],
+        "distance": 10.0,
+        "yaw": -1.5707963267948966,
+        "pitch": 1.2,
+        "perspective": false,
+        "fov_deg": 45.0,
+        "width": 800,
+        "height": 600
+      },
+      "style": {
+        "name": "Default",
+        "face_mode": "textures",
+        "edges": false,
+        "profiles": false,
+        "back_edges": false,
+        "edge_color": [
+          0.13,
+          0.17,
+          0.23
+        ],
+        "front_color": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "back_color": null,
+        "background": [
+          0.85,
+          0.9,
+          0.95
+        ],
+        "sky": false,
+        "sky_color": [
+          0.925,
+          0.935,
+          0.945
+        ],
+        "ground_color": [
+          0.815,
+          0.82,
+          0.815
+        ],
+        "section_fill": false,
+        "section_fill_color": [
+          0.35,
+          0.37,
+          0.41
+        ]
+      },
+      "sun": [
+        0.7990018711022757,
+        0.39950093555113786,
+        0.4494385524950301
+      ],
+      "bounds": [
+        [
+          -1.0,
+          -1.0,
+          1.5
+        ],
+        [
+          1.0,
+          1.0,
+          1.5
+        ]
+      ],
+      "light_vp_column_major": [
+        -0.20561544597148895,
+        -0.18482300639152527,
+        -0.2449047863483429,
+        0.0,
+        0.4112308919429779,
+        -0.09241150319576263,
+        -0.12245239317417145,
+        0.0,
+        0.0,
+        0.41071781516075134,
+        -0.13775894045829773,
+        0.0,
+        0.0,
+        -0.30803829431533813,
+        0.10331928730010986,
+        1.0
+      ],
+      "camera_vp_column_major": [
+        0.18106600642204285,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.22501413524150848,
+        3.62357750418596e-05,
+        0.0,
+        0.0,
+        0.08748090267181396,
+        -9.320390381617472e-05,
+        0.0,
+        0.21727921068668365,
+        0.13500846922397614,
+        0.0010217414237558842,
+        1.0
+      ],
+      "opacity": 0.69,
+      "cutout": false,
+      "section": false,
+      "offscreen_instance": false,
+      "caster_camera_visible": true,
+      "sampler": {
+        "min_filter": 9728,
+        "mag_filter": 9728,
+        "wrap_s": 33071,
+        "wrap_t": 33071
+      },
+      "gl": {
+        "vendor": "NVIDIA Corporation",
+        "renderer": "NVIDIA GeForce RTX 5090/PCIe/SSE2",
+        "version": "3.3.0 NVIDIA 615.71.09"
+      },
+      "samples": 0,
+      "resolved_samples": 0,
+      "draw_fbo": 1,
+      "images": [
+        {
+          "phase": "on",
+          "image": "glass-69-on.png",
+          "sha256": "583b17b230bc0e316300e1ac5405b58224835938ae42d12528e8cacff3c0c47b",
+          "map_renders": 1
+        },
+        {
+          "phase": "off",
+          "image": "glass-69-off.png",
+          "sha256": "583b17b230bc0e316300e1ac5405b58224835938ae42d12528e8cacff3c0c47b",
+          "map_renders": 1
+        },
+        {
+          "phase": "restored",
+          "image": "glass-69-restored.png",
+          "sha256": "583b17b230bc0e316300e1ac5405b58224835938ae42d12528e8cacff3c0c47b",
+          "map_renders": 1
+        }
+      ],
+      "depth_image": "glass-69-depth.png",
+      "depth_sha256": "cf45f118de4262f4b1f3891e0fa34a8ba623b70c9b1487c3baafbac3fffbc615",
+      "igz": "glass-69.igz",
+      "igz_sha256": "43dbe8c20860b8e4a4bd084dd807406903e89969f66cb122309520e96821ed80",
+      "source_map_renders": 1
+    },
+    {
+      "name": "glass-70",
+      "camera": {
+        "target": [
+          -1.2,
+          -0.6,
+          0.0
+        ],
+        "distance": 10.0,
+        "yaw": -1.5707963267948966,
+        "pitch": 1.2,
+        "perspective": false,
+        "fov_deg": 45.0,
+        "width": 800,
+        "height": 600
+      },
+      "style": {
+        "name": "Default",
+        "face_mode": "textures",
+        "edges": false,
+        "profiles": false,
+        "back_edges": false,
+        "edge_color": [
+          0.13,
+          0.17,
+          0.23
+        ],
+        "front_color": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "back_color": null,
+        "background": [
+          0.85,
+          0.9,
+          0.95
+        ],
+        "sky": false,
+        "sky_color": [
+          0.925,
+          0.935,
+          0.945
+        ],
+        "ground_color": [
+          0.815,
+          0.82,
+          0.815
+        ],
+        "section_fill": false,
+        "section_fill_color": [
+          0.35,
+          0.37,
+          0.41
+        ]
+      },
+      "sun": [
+        0.7990018711022757,
+        0.39950093555113786,
+        0.4494385524950301
+      ],
+      "bounds": [
+        [
+          -1.0,
+          -1.0,
+          1.5
+        ],
+        [
+          1.0,
+          1.0,
+          1.5
+        ]
+      ],
+      "light_vp_column_major": [
+        -0.20561544597148895,
+        -0.18482300639152527,
+        -0.2449047863483429,
+        0.0,
+        0.4112308919429779,
+        -0.09241150319576263,
+        -0.12245239317417145,
+        0.0,
+        0.0,
+        0.41071781516075134,
+        -0.13775894045829773,
+        0.0,
+        0.0,
+        -0.30803829431533813,
+        0.10331928730010986,
+        1.0
+      ],
+      "camera_vp_column_major": [
+        0.18106600642204285,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.22501413524150848,
+        3.62357750418596e-05,
+        0.0,
+        0.0,
+        0.08748090267181396,
+        -9.320390381617472e-05,
+        0.0,
+        0.21727921068668365,
+        0.13500846922397614,
+        0.0010217414237558842,
+        1.0
+      ],
+      "opacity": 0.7,
+      "cutout": false,
+      "section": false,
+      "offscreen_instance": false,
+      "caster_camera_visible": true,
+      "sampler": {
+        "min_filter": 9728,
+        "mag_filter": 9728,
+        "wrap_s": 33071,
+        "wrap_t": 33071
+      },
+      "gl": {
+        "vendor": "NVIDIA Corporation",
+        "renderer": "NVIDIA GeForce RTX 5090/PCIe/SSE2",
+        "version": "3.3.0 NVIDIA 615.71.09"
+      },
+      "samples": 0,
+      "resolved_samples": 0,
+      "draw_fbo": 1,
+      "images": [
+        {
+          "phase": "on",
+          "image": "glass-70-on.png",
+          "sha256": "db53feb2302afcf5ea5682f4bdb2c0de1e5147010f61335865f96cc202c40f10",
+          "map_renders": 1
+        },
+        {
+          "phase": "off",
+          "image": "glass-70-off.png",
+          "sha256": "bf0baed97f5a6a75b9b54877a5547d5de5e0c0d6940261e0fba3690ea49dad01",
+          "map_renders": 1
+        },
+        {
+          "phase": "restored",
+          "image": "glass-70-restored.png",
+          "sha256": "db53feb2302afcf5ea5682f4bdb2c0de1e5147010f61335865f96cc202c40f10",
+          "map_renders": 1
+        }
+      ],
+      "depth_image": "glass-70-depth.png",
+      "depth_sha256": "364d463f93e19d13e791e35fce9df639e8908c22b942e5a68edfe729f9c80be7",
+      "igz": "glass-70.igz",
+      "igz_sha256": "6386525d7907631e15ff26260bd69693bda972edaf2e2af2948aa883ef6dd60b",
+      "source_map_renders": 1
+    },
+    {
+      "name": "cutout",
+      "camera": {
+        "target": [
+          -1.2,
+          -0.6,
+          0.0
+        ],
+        "distance": 10.0,
+        "yaw": -1.5707963267948966,
+        "pitch": 1.2,
+        "perspective": false,
+        "fov_deg": 45.0,
+        "width": 800,
+        "height": 600
+      },
+      "style": {
+        "name": "Default",
+        "face_mode": "textures",
+        "edges": false,
+        "profiles": false,
+        "back_edges": false,
+        "edge_color": [
+          0.13,
+          0.17,
+          0.23
+        ],
+        "front_color": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "back_color": null,
+        "background": [
+          0.85,
+          0.9,
+          0.95
+        ],
+        "sky": false,
+        "sky_color": [
+          0.925,
+          0.935,
+          0.945
+        ],
+        "ground_color": [
+          0.815,
+          0.82,
+          0.815
+        ],
+        "section_fill": false,
+        "section_fill_color": [
+          0.35,
+          0.37,
+          0.41
+        ]
+      },
+      "sun": [
+        0.7990018711022757,
+        0.39950093555113786,
+        0.4494385524950301
+      ],
+      "bounds": [
+        [
+          -1.0,
+          -1.0,
+          1.5
+        ],
+        [
+          1.0,
+          1.0,
+          1.5
+        ]
+      ],
+      "light_vp_column_major": [
+        -0.20561544597148895,
+        -0.18482300639152527,
+        -0.2449047863483429,
+        0.0,
+        0.4112308919429779,
+        -0.09241150319576263,
+        -0.12245239317417145,
+        0.0,
+        0.0,
+        0.41071781516075134,
+        -0.13775894045829773,
+        0.0,
+        0.0,
+        -0.30803829431533813,
+        0.10331928730010986,
+        1.0
+      ],
+      "camera_vp_column_major": [
+        0.18106600642204285,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.22501413524150848,
+        3.62357750418596e-05,
+        0.0,
+        0.0,
+        0.08748090267181396,
+        -9.320390381617472e-05,
+        0.0,
+        0.21727921068668365,
+        0.13500846922397614,
+        0.0010217414237558842,
+        1.0
+      ],
+      "opacity": 1.0,
+      "cutout": true,
+      "section": false,
+      "offscreen_instance": false,
+      "caster_camera_visible": true,
+      "sampler": {
+        "min_filter": 9728,
+        "mag_filter": 9728,
+        "wrap_s": 33071,
+        "wrap_t": 33071
+      },
+      "gl": {
+        "vendor": "NVIDIA Corporation",
+        "renderer": "NVIDIA GeForce RTX 5090/PCIe/SSE2",
+        "version": "3.3.0 NVIDIA 615.71.09"
+      },
+      "samples": 0,
+      "resolved_samples": 0,
+      "draw_fbo": 1,
+      "images": [
+        {
+          "phase": "on",
+          "image": "cutout-on.png",
+          "sha256": "0dce4bfeaab2159c1853b6f4656507f55a8612f32170203698068dce07f4b6d3",
+          "map_renders": 1
+        },
+        {
+          "phase": "off",
+          "image": "cutout-off.png",
+          "sha256": "f1da85783e9219ce8a7a465afd7a94682462452c822c68685d87ca2a750e9e5c",
+          "map_renders": 1
+        },
+        {
+          "phase": "restored",
+          "image": "cutout-restored.png",
+          "sha256": "0dce4bfeaab2159c1853b6f4656507f55a8612f32170203698068dce07f4b6d3",
+          "map_renders": 1
+        }
+      ],
+      "depth_image": "cutout-depth.png",
+      "depth_sha256": "c72029dc08fae75a6031cbc61d240be32c4c340d25a061bfbc530363ff40dd7a",
+      "igz": "cutout.igz",
+      "igz_sha256": "a645b0d64748d9106ecfa994bdb44f9c52aea0b997602d362e4d02b0eb6c53e3",
+      "source_map_renders": 1
+    },
+    {
+      "name": "hidden-line-cutout",
+      "camera": {
+        "target": [
+          -1.2,
+          -0.6,
+          0.0
+        ],
+        "distance": 10.0,
+        "yaw": -1.5707963267948966,
+        "pitch": 1.2,
+        "perspective": false,
+        "fov_deg": 45.0,
+        "width": 800,
+        "height": 600
+      },
+      "style": {
+        "name": "Default",
+        "face_mode": "hidden_line",
+        "edges": false,
+        "profiles": false,
+        "back_edges": false,
+        "edge_color": [
+          0.13,
+          0.17,
+          0.23
+        ],
+        "front_color": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "back_color": null,
+        "background": [
+          0.85,
+          0.9,
+          0.95
+        ],
+        "sky": false,
+        "sky_color": [
+          0.925,
+          0.935,
+          0.945
+        ],
+        "ground_color": [
+          0.815,
+          0.82,
+          0.815
+        ],
+        "section_fill": false,
+        "section_fill_color": [
+          0.35,
+          0.37,
+          0.41
+        ]
+      },
+      "sun": [
+        0.7990018711022757,
+        0.39950093555113786,
+        0.4494385524950301
+      ],
+      "bounds": [
+        [
+          -1.0,
+          -1.0,
+          1.5
+        ],
+        [
+          1.0,
+          1.0,
+          1.5
+        ]
+      ],
+      "light_vp_column_major": [
+        -0.20561544597148895,
+        -0.18482300639152527,
+        -0.2449047863483429,
+        0.0,
+        0.4112308919429779,
+        -0.09241150319576263,
+        -0.12245239317417145,
+        0.0,
+        0.0,
+        0.41071781516075134,
+        -0.13775894045829773,
+        0.0,
+        0.0,
+        -0.30803829431533813,
+        0.10331928730010986,
+        1.0
+      ],
+      "camera_vp_column_major": [
+        0.18106600642204285,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.22501413524150848,
+        3.62357750418596e-05,
+        0.0,
+        0.0,
+        0.08748090267181396,
+        -9.320390381617472e-05,
+        0.0,
+        0.21727921068668365,
+        0.13500846922397614,
+        0.0010217414237558842,
+        1.0
+      ],
+      "opacity": 1.0,
+      "cutout": true,
+      "section": false,
+      "offscreen_instance": false,
+      "caster_camera_visible": true,
+      "sampler": {
+        "min_filter": 9728,
+        "mag_filter": 9728,
+        "wrap_s": 33071,
+        "wrap_t": 33071
+      },
+      "gl": {
+        "vendor": "NVIDIA Corporation",
+        "renderer": "NVIDIA GeForce RTX 5090/PCIe/SSE2",
+        "version": "3.3.0 NVIDIA 615.71.09"
+      },
+      "samples": 0,
+      "resolved_samples": 0,
+      "draw_fbo": 1,
+      "images": [
+        {
+          "phase": "on",
+          "image": "hidden-line-cutout-on.png",
+          "sha256": "0193f5a72959c802a14588e0e327f5fdb0bb8c8e926bbdcf69f006a0864bd355",
+          "map_renders": 1
+        },
+        {
+          "phase": "off",
+          "image": "hidden-line-cutout-off.png",
+          "sha256": "739ac239b355a0a2e16d71aa9dfb086082011ee572f64a710e841b388b0f8186",
+          "map_renders": 1
+        },
+        {
+          "phase": "restored",
+          "image": "hidden-line-cutout-restored.png",
+          "sha256": "0193f5a72959c802a14588e0e327f5fdb0bb8c8e926bbdcf69f006a0864bd355",
+          "map_renders": 1
+        }
+      ],
+      "depth_image": "hidden-line-cutout-depth.png",
+      "depth_sha256": "c72029dc08fae75a6031cbc61d240be32c4c340d25a061bfbc530363ff40dd7a",
+      "igz": "hidden-line-cutout.igz",
+      "igz_sha256": "a645b0d64748d9106ecfa994bdb44f9c52aea0b997602d362e4d02b0eb6c53e3",
+      "source_map_renders": 1
+    },
+    {
+      "name": "missing-texture",
+      "camera": {
+        "target": [
+          -1.2,
+          -0.6,
+          0.0
+        ],
+        "distance": 10.0,
+        "yaw": -1.5707963267948966,
+        "pitch": 1.2,
+        "perspective": false,
+        "fov_deg": 45.0,
+        "width": 800,
+        "height": 600
+      },
+      "style": {
+        "name": "Default",
+        "face_mode": "textures",
+        "edges": false,
+        "profiles": false,
+        "back_edges": false,
+        "edge_color": [
+          0.13,
+          0.17,
+          0.23
+        ],
+        "front_color": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "back_color": null,
+        "background": [
+          0.85,
+          0.9,
+          0.95
+        ],
+        "sky": false,
+        "sky_color": [
+          0.925,
+          0.935,
+          0.945
+        ],
+        "ground_color": [
+          0.815,
+          0.82,
+          0.815
+        ],
+        "section_fill": false,
+        "section_fill_color": [
+          0.35,
+          0.37,
+          0.41
+        ]
+      },
+      "sun": [
+        0.7990018711022757,
+        0.39950093555113786,
+        0.4494385524950301
+      ],
+      "bounds": [
+        [
+          -1.0,
+          -1.0,
+          1.5
+        ],
+        [
+          1.0,
+          1.0,
+          1.5
+        ]
+      ],
+      "light_vp_column_major": [
+        -0.20561544597148895,
+        -0.18482300639152527,
+        -0.2449047863483429,
+        0.0,
+        0.4112308919429779,
+        -0.09241150319576263,
+        -0.12245239317417145,
+        0.0,
+        0.0,
+        0.41071781516075134,
+        -0.13775894045829773,
+        0.0,
+        0.0,
+        -0.30803829431533813,
+        0.10331928730010986,
+        1.0
+      ],
+      "camera_vp_column_major": [
+        0.18106600642204285,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.22501413524150848,
+        3.62357750418596e-05,
+        0.0,
+        0.0,
+        0.08748090267181396,
+        -9.320390381617472e-05,
+        0.0,
+        0.21727921068668365,
+        0.13500846922397614,
+        0.0010217414237558842,
+        1.0
+      ],
+      "opacity": 1.0,
+      "cutout": "missing",
+      "section": false,
+      "offscreen_instance": false,
+      "caster_camera_visible": true,
+      "sampler": {
+        "min_filter": 9728,
+        "mag_filter": 9728,
+        "wrap_s": 33071,
+        "wrap_t": 33071
+      },
+      "gl": {
+        "vendor": "NVIDIA Corporation",
+        "renderer": "NVIDIA GeForce RTX 5090/PCIe/SSE2",
+        "version": "3.3.0 NVIDIA 615.71.09"
+      },
+      "samples": 0,
+      "resolved_samples": 0,
+      "draw_fbo": 1,
+      "images": [
+        {
+          "phase": "on",
+          "image": "missing-texture-on.png",
+          "sha256": "c828e0eeb917bc0a550b8fdb70d5b3077c2e5ece33bde73aa9b1f08cdc71b27f",
+          "map_renders": 1
+        },
+        {
+          "phase": "off",
+          "image": "missing-texture-off.png",
+          "sha256": "2ed326aba7d01f08a07715ebd54704a1e136a667aaa383f8bf474ab93a01818a",
+          "map_renders": 1
+        },
+        {
+          "phase": "restored",
+          "image": "missing-texture-restored.png",
+          "sha256": "c828e0eeb917bc0a550b8fdb70d5b3077c2e5ece33bde73aa9b1f08cdc71b27f",
+          "map_renders": 1
+        }
+      ],
+      "depth_image": "missing-texture-depth.png",
+      "depth_sha256": "364d463f93e19d13e791e35fce9df639e8908c22b942e5a68edfe729f9c80be7",
+      "igz": "missing-texture.igz",
+      "igz_sha256": "7c19bfcc8a613e9b3f047e4916613b7e6418c40877b6171444291f0694ffaea2",
+      "source_map_renders": 1
+    },
+    {
+      "name": "section",
+      "camera": {
+        "target": [
+          -1.2,
+          -0.6,
+          0.0
+        ],
+        "distance": 10.0,
+        "yaw": -1.5707963267948966,
+        "pitch": 1.2,
+        "perspective": false,
+        "fov_deg": 45.0,
+        "width": 800,
+        "height": 600
+      },
+      "style": {
+        "name": "Default",
+        "face_mode": "textures",
+        "edges": false,
+        "profiles": false,
+        "back_edges": false,
+        "edge_color": [
+          0.13,
+          0.17,
+          0.23
+        ],
+        "front_color": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "back_color": null,
+        "background": [
+          0.85,
+          0.9,
+          0.95
+        ],
+        "sky": false,
+        "sky_color": [
+          0.925,
+          0.935,
+          0.945
+        ],
+        "ground_color": [
+          0.815,
+          0.82,
+          0.815
+        ],
+        "section_fill": false,
+        "section_fill_color": [
+          0.35,
+          0.37,
+          0.41
+        ]
+      },
+      "sun": [
+        0.7990018711022757,
+        0.39950093555113786,
+        0.4494385524950301
+      ],
+      "bounds": [
+        [
+          -1.0,
+          -1.0,
+          1.5
+        ],
+        [
+          1.0,
+          1.0,
+          1.5
+        ]
+      ],
+      "light_vp_column_major": [
+        -0.20561544597148895,
+        -0.18482300639152527,
+        -0.2449047863483429,
+        0.0,
+        0.4112308919429779,
+        -0.09241150319576263,
+        -0.12245239317417145,
+        0.0,
+        0.0,
+        0.41071781516075134,
+        -0.13775894045829773,
+        0.0,
+        0.0,
+        -0.30803829431533813,
+        0.10331928730010986,
+        1.0
+      ],
+      "camera_vp_column_major": [
+        0.18106600642204285,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.22501413524150848,
+        3.62357750418596e-05,
+        0.0,
+        0.0,
+        0.08748090267181396,
+        -9.320390381617472e-05,
+        0.0,
+        0.21727921068668365,
+        0.13500846922397614,
+        0.0010217414237558842,
+        1.0
+      ],
+      "opacity": 1.0,
+      "cutout": false,
+      "section": true,
+      "offscreen_instance": false,
+      "caster_camera_visible": true,
+      "sampler": {
+        "min_filter": 9728,
+        "mag_filter": 9728,
+        "wrap_s": 33071,
+        "wrap_t": 33071
+      },
+      "gl": {
+        "vendor": "NVIDIA Corporation",
+        "renderer": "NVIDIA GeForce RTX 5090/PCIe/SSE2",
+        "version": "3.3.0 NVIDIA 615.71.09"
+      },
+      "samples": 0,
+      "resolved_samples": 0,
+      "draw_fbo": 1,
+      "images": [
+        {
+          "phase": "on",
+          "image": "section-on.png",
+          "sha256": "73b4faa989c64a5e4d9d82f3b23123fc5baa7cc7ddfc4a0b3bae3bfc102a8aef",
+          "map_renders": 1
+        },
+        {
+          "phase": "off",
+          "image": "section-off.png",
+          "sha256": "e023cda682bb42eeb6970510c3cb436b61920efd25d3350fb619a00675c865c3",
+          "map_renders": 1
+        },
+        {
+          "phase": "restored",
+          "image": "section-restored.png",
+          "sha256": "73b4faa989c64a5e4d9d82f3b23123fc5baa7cc7ddfc4a0b3bae3bfc102a8aef",
+          "map_renders": 1
+        }
+      ],
+      "depth_image": "section-depth.png",
+      "depth_sha256": "ace57f739fb2575cc6fa4e27152e8e6b28d024c17526e43819a27032bd3f888f",
+      "igz": "section.igz",
+      "igz_sha256": "cdaf87a1d7ad1f7d37d6cc7a44b0645603a65c45d05584d121eba015855a99be",
+      "source_map_renders": 1
+    },
+    {
+      "name": "offscreen-instance",
+      "camera": {
+        "target": [
+          -7.111111111111111,
+          -3.5555555555555554,
+          0.0
+        ],
+        "distance": 5.0,
+        "yaw": -1.5707963267948966,
+        "pitch": 1.2,
+        "perspective": false,
+        "fov_deg": 45.0,
+        "width": 800,
+        "height": 600
+      },
+      "style": {
+        "name": "Default",
+        "face_mode": "textures",
+        "edges": false,
+        "profiles": false,
+        "back_edges": false,
+        "edge_color": [
+          0.13,
+          0.17,
+          0.23
+        ],
+        "front_color": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "back_color": null,
+        "background": [
+          0.85,
+          0.9,
+          0.95
+        ],
+        "sky": false,
+        "sky_color": [
+          0.925,
+          0.935,
+          0.945
+        ],
+        "ground_color": [
+          0.815,
+          0.82,
+          0.815
+        ],
+        "section_fill": false,
+        "section_fill_color": [
+          0.35,
+          0.37,
+          0.41
+        ]
+      },
+      "sun": [
+        0.7990018711022757,
+        0.39950093555113786,
+        0.4494385524950301
+      ],
+      "bounds": [
+        [
+          -1.0,
+          -1.0,
+          4.0
+        ],
+        [
+          1.0,
+          1.0,
+          4.0
+        ]
+      ],
+      "light_vp_column_major": [
+        -0.10280772298574448,
+        -0.09241150319576263,
+        -0.12245239317417145,
+        0.0,
+        0.20561544597148895,
+        -0.04620575159788132,
+        -0.061226196587085724,
+        0.0,
+        0.0,
+        0.20535890758037567,
+        -0.06887947022914886,
+        0.0,
+        0.0,
+        -0.41071775555610657,
+        0.13775897026062012,
+        1.0
+      ],
+      "camera_vp_column_major": [
+        0.3621320128440857,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.45002827048301697,
+        3.62357750418596e-05,
+        0.0,
+        0.0,
+        0.17496180534362793,
+        -9.320390381617472e-05,
+        0.0,
+        2.5751609802246094,
+        1.6001006364822388,
+        0.0006288383156061172,
+        1.0
+      ],
+      "opacity": 1.0,
+      "cutout": false,
+      "section": false,
+      "offscreen_instance": true,
+      "caster_camera_visible": false,
+      "sampler": {
+        "min_filter": 9728,
+        "mag_filter": 9728,
+        "wrap_s": 33071,
+        "wrap_t": 33071
+      },
+      "gl": {
+        "vendor": "NVIDIA Corporation",
+        "renderer": "NVIDIA GeForce RTX 5090/PCIe/SSE2",
+        "version": "3.3.0 NVIDIA 615.71.09"
+      },
+      "samples": 0,
+      "resolved_samples": 0,
+      "draw_fbo": 1,
+      "images": [
+        {
+          "phase": "on",
+          "image": "offscreen-instance-on.png",
+          "sha256": "2ed326aba7d01f08a07715ebd54704a1e136a667aaa383f8bf474ab93a01818a",
+          "map_renders": 1
+        },
+        {
+          "phase": "off",
+          "image": "offscreen-instance-off.png",
+          "sha256": "2ed326aba7d01f08a07715ebd54704a1e136a667aaa383f8bf474ab93a01818a",
+          "map_renders": 1
+        },
+        {
+          "phase": "restored",
+          "image": "offscreen-instance-restored.png",
+          "sha256": "2ed326aba7d01f08a07715ebd54704a1e136a667aaa383f8bf474ab93a01818a",
+          "map_renders": 1
+        }
+      ],
+      "depth_image": "offscreen-instance-depth.png",
+      "depth_sha256": "88bcb4857fb04215d83d0ca3e10733d6ef5b6bf534f1f3507975984b2b8dfaeb",
+      "igz": "offscreen-instance.igz",
+      "igz_sha256": "0f1554463464e7729d4371714eb1d85bb17bf33ff93c741fd117fdb2256b4731",
+      "source_map_renders": 1
+    }
+  ],
+  "source_files": {
+    "views/viewport.py": "1fb62f55b8f559deb3676924ee69a9a444397faa28c49651111cea44e420c724",
+    "resources/shaders/basic.vert": "39f2d50c6025a968e6e49b882b195740f1ca544063f283a9b0d3392fa524db2f",
+    "resources/shaders/basic.frag": "dbc25d2462913ed1dca727e50af194b2fd81534a20ed91e225e14e66f9c93112",
+    "resources/shaders/depth.vert": "bd4c7dc0dfe6bd4158e60b060de14869a4b33b1047fab5e37136969f98515740",
+    "resources/shaders/depth.frag": "40dc6ffb804fda5674cd7abc623128dc2ae95484d14489dfb356a960a6a0490d"
+  }
+}
