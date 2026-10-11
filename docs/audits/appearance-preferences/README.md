@@ -8,7 +8,7 @@ The original proof uses the unchanged pinned PreferencesDialog and literal MainW
 
 Named build 17.85s after local-worktree handoff invalidated only nine local-path packages, retaining external dependencies. Exact UI test compile 5.10s/run 14.52s. No source recapture, broad suite, GPU replay or unrelated compositor check. No runtime candidate failure/retry occurred.
 
-Canonical manifest authenticates every raw archive member, runtime/original source and exact tested binary. Raw proof remains /tmp/ingetrazo-appearance-proof until root release; reusable target/worktree are retained.
+Canonical manifest authenticates every raw archive member, runtime/original source and exact tested binary. Independent review accepted all 343 records. After byte-for-byte comparison with the committed archive, root removed only those authenticated temporary duplicates; cleanup.json records the removal. Reusable build targets and worktrees are retained.
 
 Replay using the existing named context_document_lifecycle binary:
 

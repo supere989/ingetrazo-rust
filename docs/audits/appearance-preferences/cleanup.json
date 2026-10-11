@@ -1,0 +1,8 @@
+{
+  "canonical_archive": "/tmp/ingetrazo-next-integration/docs/audits/appearance-preferences/records.zip",
+  "archive_sha256": "d4469bdfc01bf7df20b6d9f7f330fd1f277918b35601f6f03f03cdb314918243",
+  "authenticated_files_removed": 343,
+  "authenticated_bytes_removed": 1311423,
+  "method": "All exact manifest paths compared byte-for-byte with committed archive before unlink; unlisted paths preserved.",
+  "build_targets_and_worktrees_removed": false
+}
