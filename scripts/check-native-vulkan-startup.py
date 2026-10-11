@@ -9,7 +9,7 @@ parser.add_argument("--document");parser.add_argument("--require-native-world",a
 args=parser.parse_args()
 out=Path(args.output).resolve();out.mkdir(parents=True,exist_ok=True)
 x=subprocess.Popen(["Xvfb","-displayfd","1","-screen","0","1400x1000x24"],stdout=subprocess.PIPE,stderr=subprocess.DEVNULL,text=True)
-display=":"+x.stdout.readline().strip();env=dict(os.environ,DISPLAY=display,XDG_CONFIG_HOME=str(out/"config"),XDG_DATA_HOME=str(out/"data"),XDG_CACHE_HOME=str(out/"cache"))
+display=":"+x.stdout.readline().strip();env=dict(os.environ,DISPLAY=display,XDG_CONFIG_HOME=str(out/"config"),XDG_DATA_HOME=str(out/"data"),XDG_CACHE_HOME=str(out/"cache"),INGETRAZO_STATE_DIR=str(out/"session"))
 if args.require_native_world:
  for key in ("INGETRAZO_VULKAN_WORLD","INGETRAZO_CAD2D_INTEGER_BLEND","INGETRAZO_NATIVE_METAL","INGETRAZO_METAL_WORLD","INGETRAZO_METAL_CAD_CALLBACKS"):
   env.pop(key,None)
@@ -65,6 +65,7 @@ with (out/"startup.log").open("w") as log:
   runtime=(out/"startup.log").read_text()
   if args.require_native_world:
    assert "Native Vulkan adapter:" in runtime
+   assert "committed_bytes=0" in runtime,"Native GPU owners were not fully released"
    assert not any(message in runtime for message in ("GPU rendering paused:","GPU submission failed:","resources quarantined")),runtime
   evidence={"command":command,"native_world_required":args.require_native_world,"title":titles[0],"clean_exit":True,"resizes":[[800,600],[1100,700]],"binary_sha256":hashlib.sha256(Path(args.binary).read_bytes()).hexdigest(),"captures":{p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in out.glob("*.png")}}
   (out/"result.json").write_text(json.dumps(evidence,indent=2)+"\n")

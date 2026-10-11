@@ -126,6 +126,11 @@ impl SessionStore {
 
     pub fn isolated(root:&Path)->Self {Self{config_dir:root.join("config"),data_dir:root.join("data"),session_id:uuid::Uuid::new_v4(),settings_writable:true,lease:Arc::new(Mutex::new(None))}}
     pub fn user_default()->Self {
+        // Explicit portable/diagnostic state root works on every native platform.
+        // Do not redirect HOME or mix an isolated launch with the user's recovery.
+        if let Some(root)=std::env::var_os("INGETRAZO_STATE_DIR").filter(|root|!root.is_empty()) {
+            return Self::isolated(Path::new(&root));
+        }
         let home=std::env::var_os("HOME").map(PathBuf::from).unwrap_or_else(||PathBuf::from("."));
         #[cfg(target_os="windows")]
         let (config,data)=(std::env::var_os("APPDATA").map(PathBuf::from).unwrap_or_else(||home.join("AppData/Roaming")),

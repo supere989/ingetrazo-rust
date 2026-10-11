@@ -10,7 +10,7 @@ args=parser.parse_args()
 assert sys.platform=="darwin","Requires actual macOS"
 binary,document=Path(args.binary).resolve(),Path(args.document).resolve()
 out=Path(args.output).resolve();out.mkdir(parents=True,exist_ok=False)
-env=dict(os.environ,XDG_CONFIG_HOME=str(out/"config"),XDG_DATA_HOME=str(out/"data"),XDG_CACHE_HOME=str(out/"cache"))
+env=dict(os.environ,XDG_CONFIG_HOME=str(out/"config"),XDG_DATA_HOME=str(out/"data"),XDG_CACHE_HOME=str(out/"cache"),INGETRAZO_STATE_DIR=str(out/"session"))
 for key in ("INGETRAZO_NATIVE_METAL","INGETRAZO_METAL_WORLD","INGETRAZO_METAL_CAD_CALLBACKS"): env.pop(key,None)
 document_hash=hashlib.sha256(document.read_bytes()).hexdigest()
 marker="Graphics backend: native Metal; first GPU world frame submitted"
