@@ -80,6 +80,7 @@ impl IngeTrazoApp {
     }
 
     fn record_tool_commit(&mut self, mut before: Scene) -> Result<(),String> {
+        let bare_edge=self.active_tool.take_bare_edge_command();
         let owned=self.active_tool.take_authored_draw_faces();
         if let Err(error)=ingetrazo_core::bim::stamp_drawn_faces_with_id(&mut self.scene.mesh,&owned,self.scene.active_ifc.as_ref(),self.scene.bim_draw_id.as_ref()){
             self.scene=before;self.bump_model_revision();self.status_message=format!("Tool error: {error}");return Err(error);
@@ -94,8 +95,18 @@ impl IngeTrazoApp {
         }
         let image_command=self.active_tool.take_image_frame_command();
         let transient_changed=before.version!=self.scene.version;
-        let committed=changed_model(&before,&self.scene);
+        let committed=changed_model(&before,&self.scene) || bare_edge.is_some();
         if committed {
+            if let Some((a,b))=bare_edge {
+                // Reuse the admitted history snapshot. Copy only the welded
+                // endpoint records, not a second complete Mesh/Scene candidate.
+                for point in [a,b] {
+                    let actual=self.scene.mesh.vertex_at_position(point).expect("admitted Line endpoint");
+                    let vertex=&self.scene.mesh.vertices[actual];
+                    let id=before.mesh.add_vertex(vertex.position);
+                    before.mesh.vertices[id].uid=vertex.uid;
+                }
+            }
             self.seal_view_history_before(&before);self.seal_terrain_history_before(&before);self.seal_layer_history_before(&before);self.seal_image_history_before(&before);
             if let Some(command)=image_command{let mut delta=ingetrazo_core::image_plane::ImageDelta::between(&before.image_planes,&self.scene.image_planes);delta.frame_command=Some((command,false));before.history_images.0=Some(delta);}
             if only_group_poses(&before,&self.scene){self.bump_placement_revision();}
@@ -312,7 +323,7 @@ mod tests {
         app.set_tool(ToolType::Line);app.dispatch_tool_click(&ctx);for text in ["1;0;0","0;1;0","-1;0;0","0;-1;0"]{app.dispatch_tool_vcb(text).unwrap();}assert_eq!(app.scene.mesh.faces.len(),1);app.undo();assert!(app.scene.mesh.faces.is_empty());app.dispatch_tool_vcb("0;2;0").unwrap();assert!(app.scene.mesh.vertices.iter().any(|v|v.position==DVec3::new(0.,3.,0.)));
     }
     #[test]fn line_midchain_undo_rewinds_vcb_origin_without_consuming_prior_document_undo(){
-        let mut app=app();app.scene=Scene::new();app.active_tool=create_tool(ToolType::Line);app.active_tool_type=ToolType::Line;let ctx=ToolContext::new(DVec3::ZERO,Ray::new(DVec3::Z,-DVec3::Z));app.dispatch_tool_click(&ctx);app.dispatch_tool_vcb("2;0;0").unwrap();app.dispatch_tool_vcb("0;3;0").unwrap();assert_eq!(app.scene.mesh.edges.len(),2);app.undo();assert_eq!(app.scene.mesh.edges.len(),1);app.dispatch_tool_vcb("0;-1;0").unwrap();assert!(app.scene.mesh.vertices.iter().any(|v|v.position==DVec3::new(2.,-1.,0.)));assert!(!app.scene.mesh.vertices.iter().any(|v|v.position==DVec3::new(2.,3.,0.)));app.undo();app.undo();assert!(app.scene.mesh.edges.is_empty());app.undo();assert!(app.dispatch_tool_vcb("1;0;0").is_err());assert!(app.undo_stack.is_empty());
+        let mut app=app();app.scene=Scene::new();app.active_tool=create_tool(ToolType::Line);app.active_tool_type=ToolType::Line;let ctx=ToolContext::new(DVec3::ZERO,Ray::new(DVec3::Z,-DVec3::Z));app.dispatch_tool_click(&ctx);app.dispatch_tool_vcb("2;0;0").unwrap();app.dispatch_tool_vcb("0;3;0").unwrap();assert_eq!(app.scene.mesh.edges.len(),2);app.undo();assert_eq!(app.scene.mesh.edges.len(),1);app.dispatch_tool_vcb("0;-1;0").unwrap();assert!(app.scene.mesh.vertices.iter().any(|v|v.position==DVec3::new(2.,-1.,0.)));assert!(app.scene.mesh.vertices.iter().any(|v|v.position==DVec3::new(2.,3.,0.)),"bare source AddEdge Undo retains its endpoint object");app.undo();app.undo();assert!(app.scene.mesh.edges.is_empty());app.undo();assert!(app.dispatch_tool_vcb("1;0;0").is_err());assert!(app.undo_stack.is_empty());
     }
     #[test]fn freehand_preview_cancel_release_has_one_reversible_commit(){
         let mut app=app();app.scene=Scene::new();app.active_tool=create_tool(ToolType::Freehand);app.active_tool_type=ToolType::Freehand;

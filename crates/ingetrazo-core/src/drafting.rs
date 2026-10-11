@@ -27,6 +27,105 @@ fn qt_normalized(v: glam::Vec3) -> glam::Vec3 {
     }
     qt_divide(v, len)
 }
+/// Original build_add_edge uses a bare AddEdgeCommand only when no extra
+/// split/face/rebuild command is required and no curve already exists.
+/// Such Undo removes the edge but keeps the endpoint Vertex objects.
+pub fn source_bare_edge_history(before: &Mesh, after: &Mesh, a: DVec3, b: DVec3) -> bool {
+    if before.edges.iter().any(|e| e.curve_id.is_some())
+        || before.faces != after.faces
+        || after.edges.len() < before.edges.len()
+        || after.edges.len() > before.edges.len() + 1
+        || after.edges[..before.edges.len()] != before.edges
+        || after.vertices.len() < before.vertices.len()
+        || after.vertices.len() > before.vertices.len() + 2
+        || before
+            .vertices
+            .iter()
+            .zip(&after.vertices)
+            .any(|(x, y)| x.position != y.position || x.uid != y.uid)
+    {
+        return false;
+    }
+    if before.faces.is_empty() {
+        return true;
+    }
+    // QVector3D predicates from arrangement.coplanar_plane; no copied mesh.
+    let points = || {
+        before
+            .vertices
+            .iter()
+            .map(|v| v.position.as_vec3())
+            .chain([a.as_vec3(), b.as_vec3()])
+    };
+    let origin = points().next().unwrap();
+    let axis = points().find_map(|p| {
+        let d = p - origin;
+        (qt_length(d) > 1e-6).then(|| qt_normalized(d))
+    });
+    let normal = axis.and_then(|axis| {
+        points().find_map(|p| {
+            let n = axis.cross(p - origin);
+            (qt_length(n) > 1e-6).then(|| qt_normalized(n))
+        })
+    });
+    if normal.map_or(true, |n| points().all(|p| n.dot(p - origin).abs() <= 1e-4)) {
+        return false;
+    }
+    // _append_face_plane_rebuild returns after the first matching face, even
+    // when its populated-plane (>400) guard declines the rebuild.
+    let face_normal = |id: usize| {
+        let ring = &before.faces[id].vertices;
+        let mut n = DVec3::ZERO;
+        for i in 0..ring.len() {
+            let p = before.vertices[ring[i]].position.as_vec3().as_dvec3();
+            let q = before.vertices[ring[(i + 1) % ring.len()]]
+                .position
+                .as_vec3()
+                .as_dvec3();
+            n.x += (p.y - q.y) * (p.z + q.z);
+            n.y += (p.z - q.z) * (p.x + q.x);
+            n.z += (p.x - q.x) * (p.y + q.y);
+        }
+        let n = n.as_vec3();
+        let length = qt_length(n);
+        if ring.len() < 3 || length < 1e-9 {
+            glam::Vec3::Z
+        } else {
+            qt_divide(n, length)
+        }
+    };
+    for (id, face) in before.faces.iter().enumerate() {
+        let Some(&first) = face.vertices.first() else {
+            continue;
+        };
+        let origin = before.vertices[first].position.as_vec3();
+        let normal = face_normal(id);
+        if normal.length_squared() < 0.5 {
+            continue;
+        }
+        if [a.as_vec3(), b.as_vec3()]
+            .iter()
+            .all(|p| normal.dot(*p - origin).abs() < 1e-4)
+        {
+            let count = before
+                .faces
+                .iter()
+                .enumerate()
+                .filter(|(i, f)| {
+                    f.vertices.first().is_some_and(|&v| {
+                        normal
+                            .dot(before.vertices[v].position.as_vec3() - origin)
+                            .abs()
+                            < 1e-4
+                    }) && normal.dot(face_normal(*i)).abs() > 0.999
+                })
+                .count();
+            return count > 400;
+        }
+    }
+    true
+}
+
 fn source_project(ring: &[DVec3], point: DVec3) -> DVec2 {
     source_project_mode(ring, point, false)
 }

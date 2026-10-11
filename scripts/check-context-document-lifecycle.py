@@ -61,8 +61,8 @@ for name in ['prompt_depth','scene','history','camera','anchor','continued','emp
   except AssertionError:neg.append(name)
   else:raise AssertionError('undetected '+name)
  else:
-  changed=set(differences(s,n,'lifecycle'))|set(differences(ps,pn,'pending'))
-  assert changed-base,'undetected new mismatch '+name
-  neg.append(name)
+  try:validate(s,n,ps,pn)
+  except AssertionError:neg.append(name)
+  else:raise AssertionError('undetected '+name)
 report={'passed':not base,'lifecycle_workflows':len(expected),'lifecycle_passed':source==native,'pending_workflows':len(pending),'pending_full_parity':sp==np,'state_history_phases':sum(len(r['phases'])for r in source['rows']+sp['rows']),'original_reopens':len(reopens),'negative_controls':neg,'strict_failures':sorted(base)}
 print(json.dumps(report));sys.exit(0 if report['passed']else 1)

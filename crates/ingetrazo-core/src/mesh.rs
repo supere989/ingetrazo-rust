@@ -211,6 +211,11 @@ impl Mesh {
         }
     }
 
+    /// Resolve the same existing endpoint that add_vertex would weld to.
+    pub fn vertex_at_position(&self, p:DVec3)->Option<VertexId>{
+        self.spatial_index.get(&PointKey::from_vec3(p)).copied()
+    }
+
     /// Add a 3D position to the mesh, automatically welding to any coincident vertex.
     pub fn add_vertex(&mut self, p: DVec3) -> VertexId {
         let key = PointKey::from_vec3(p);

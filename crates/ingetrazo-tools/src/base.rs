@@ -89,6 +89,9 @@ pub struct PlacementPreview<'a> {
 }
 
 pub trait Tool: Send + Sync {
+    /// Consume source bare AddEdge ownership; compound tools keep full snapshots.
+    fn take_bare_edge_command(&mut self)->Option<(DVec3,DVec3)>{None}
+
     /// Faces authored by direct AddFace-style commands (no later topology rebuild).
     fn take_authored_draw_faces(&mut self)->Vec<usize>{Vec::new()}
 

@@ -17,6 +17,7 @@ pub struct LineTool {
     error: Option<String>,
     work_plane: Option<(DVec3,DVec3)>,
     chain_commits: Vec<bool>,
+    bare_edge_command: Option<(DVec3,DVec3)>,
 }
 
 impl LineTool {
@@ -28,10 +29,11 @@ impl LineTool {
         self.start_point = None;
         self.hover_point = None;
         self.chain_first_point = None;
-        self.chain_vertices.clear();self.work_plane=None;self.error=None;self.chain_commits.clear();
+        self.chain_vertices.clear();self.work_plane=None;self.error=None;self.chain_commits.clear();self.bare_edge_command=None;
     }
 
     fn commit_segment(&mut self, next_point: DVec3, scene: &mut Scene, close_chain:bool) -> Result<(),String> {
+        self.bare_edge_command=None;
         let Some(start) = self.start_point else { return Ok(()) };
         if (next_point - start).length() < 1e-9 {
             return Ok(());
@@ -39,6 +41,7 @@ impl LineTool {
 
         let candidate=ingetrazo_core::drafting::add_segments_tagged_with_id(&scene.mesh,&[(start,next_point)],None,None,scene.active_ifc.as_ref(),scene.bim_draw_id.as_ref())?;
         let changed=candidate!=scene.mesh;
+        let bare=ingetrazo_core::drafting::source_bare_edge_history(&scene.mesh,&candidate,start,next_point);
         scene.mesh=candidate;
         // Check if closing polygon at start of current chain
         let closed_chain = close_chain && self
@@ -48,17 +51,19 @@ impl LineTool {
         if closed_chain {
             self.reset();
         } else {
-            self.chain_commits.push(changed);
+            self.chain_commits.push(changed || bare);
             self.chain_vertices.push(next_point);
             self.start_point = Some(next_point);
         }
 
+        self.bare_edge_command=bare.then_some((start,next_point));
         scene.bump_version();
         self.error=None;Ok(())
     }
 }
 
 impl Tool for LineTool {
+    fn take_bare_edge_command(&mut self)->Option<(DVec3,DVec3)>{self.bare_edge_command.take()}
     // Acquisition and committed chain points are world coordinates. The source
     // retains this same tool across Save/New/Open context exit; subsequent
     // segments belong to the newly active root mesh.
@@ -120,6 +125,7 @@ impl Tool for LineTool {
     }
 
     fn on_vcb_input(&mut self, scene: &mut Scene, text: &str) -> Result<(), String> {
+        self.bare_edge_command=None;
         let Some(start) = self.start_point else {
             return Err("No active start point".into());
         };
