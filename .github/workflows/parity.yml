@@ -1,7 +1,7 @@
 name: Rust and semantic acceptance
 on:
   push:
-    branches-ignore: [review/metal-raw-canvas]
+    branches-ignore: [review/metal-raw-canvas, review/metal-world-gpu]
   pull_request:
 jobs:
   metal-native-link:

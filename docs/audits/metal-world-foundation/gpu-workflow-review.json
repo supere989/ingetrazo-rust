@@ -1,0 +1,29 @@
+{
+  "scope": "focused diagnostic workflow source/admission review, native runtime pending",
+  "gpu_frames": [
+    "far-then-near",
+    "near-then-far",
+    "depth-disabled-negative",
+    "warm-0",
+    "warm-1",
+    "warm-2",
+    "owner-refusal-preserved",
+    "map-free-old-green",
+    "map-free-new-red"
+  ],
+  "checker_controls": {
+    "blank": "rejected",
+    "truncated": "rejected",
+    "solid-green": "rejected",
+    "empty-inventory": "rejected"
+  },
+  "workflow_filter_check": "literal flow-list inspection, exact isolated branch triggers focused world workflow; parity/compute excluded; raw restricted to prior branch. Full YAML parser unavailable locally.",
+  "outer_timeout_seconds": 45,
+  "native_gpu_deadline_seconds": 5,
+  "runners": [
+    "macos-15",
+    "macos-15-intel"
+  ],
+  "apple_metadata_check": "focused library+example aarch64 Apple-target cargo check PASS; SDK link/MSL/GPU pending",
+  "no_cloud_launch": true
+}

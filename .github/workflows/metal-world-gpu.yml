@@ -1,0 +1,56 @@
+name: Isolated native Metal world depth and texture ownership
+on:
+  push:
+    branches: [review/metal-world-gpu]
+  workflow_dispatch:
+jobs:
+  world-depth:
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        runner: [macos-15, macos-15-intel]
+    env:
+      CARGO_PROFILE_DEV_DEBUG: 0
+      CARGO_INCREMENTAL: 0
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Build focused native world fixture against Apple SDK
+        run: |
+          mkdir -p metal-world-evidence
+          git rev-parse HEAD > metal-world-evidence/revision.txt
+          sw_vers > metal-world-evidence/os.txt
+          xcrun --show-sdk-path > metal-world-evidence/sdk.txt
+          shasum -a 256 crates/ingetrazo-metal/src/world.rs crates/ingetrazo-metal/src/world_admission.rs crates/ingetrazo-metal/src/shaders/world.metal crates/ingetrazo-metal/src/egui_painter.rs crates/ingetrazo-metal/src/presentation.rs crates/ingetrazo-metal/examples/native_world_depth.rs scripts/check-metal-world-depth.py > metal-world-evidence/source.sha256
+          cargo build --locked -p ingetrazo-metal --example native_world_depth -j2 > metal-world-evidence/build.log 2>&1
+          shasum -a 256 target/debug/examples/native_world_depth > metal-world-evidence/binary.sha256
+      - name: Execute actual offscreen world and UI sampling under outer deadline
+        if: ${{ !cancelled() }}
+        run: |
+          python3 - <<'PYTHON'
+          import json,pathlib,subprocess
+          root=pathlib.Path('metal-world-evidence')
+          try:
+              with (root/'runtime.log').open('w') as log:
+                  result=subprocess.run(['target/debug/examples/native_world_depth',str(root/'native')],stdout=log,stderr=subprocess.STDOUT,timeout=45)
+              outcome={'exit_code':result.returncode,'outer_timeout':False}
+          except subprocess.TimeoutExpired:
+              outcome={'exit_code':None,'outer_timeout':True}
+          except OSError as error:
+              outcome={'exit_code':None,'outer_timeout':False,'launch_error':str(error)}
+          (root/'runtime-result.json').write_text(json.dumps(outcome,indent=2)+'\n')
+          raise SystemExit(0 if outcome['exit_code']==0 else 1)
+          PYTHON
+      - name: Independently check literal frame inventory and GPU interior samples
+        if: ${{ !cancelled() }}
+        run: python3 scripts/check-metal-world-depth.py metal-world-evidence/native > metal-world-evidence/pixel-review.json 2> metal-world-evidence/pixel-review.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: metal-world-${{ matrix.runner }}
+          path: metal-world-evidence/
+          if-no-files-found: error

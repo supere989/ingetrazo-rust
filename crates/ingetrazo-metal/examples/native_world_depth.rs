@@ -16,6 +16,18 @@ fn run() -> Result<(), String> {
     objc2::rc::autoreleasepool(|_| {
         use ingetrazo_metal::{world::World, NativeMetal};
         use ingetrazo_render::buffer::{MeshRenderBuffer, Vertex};
+        let output = std::env::args()
+            .nth(1)
+            .map(std::path::PathBuf::from)
+            .ok_or("Native world GPU fixture requires output directory")?;
+        std::fs::create_dir_all(&output).map_err(|e| e.to_string())?;
+        let mut frames = Vec::new();
+        let mut save = |name: &'static str, pixels: &[u8]| -> Result<(), String> {
+            std::fs::write(output.join(format!("{name}.rgba")), pixels)
+                .map_err(|e| e.to_string())?;
+            frames.push(name);
+            Ok(())
+        };
         let metal = NativeMetal::new()?;
         let mut world = World::default();
         let identity = [
@@ -52,6 +64,14 @@ fn run() -> Result<(), String> {
             let pixels = frame
                 .submit_diagnostic(&metal)?
                 .readback(std::time::Duration::from_secs(5))?;
+            save(
+                if order == 0 {
+                    "far-then-near"
+                } else {
+                    "near-then-far"
+                },
+                &pixels,
+            )?;
             assert_eq!(
                 &pixels[(32 * 64 + 32) * 4..(32 * 64 + 32) * 4 + 4],
                 &[0, 255, 0, 255],
@@ -67,6 +87,7 @@ fn run() -> Result<(), String> {
         let negative = frame
             .submit_diagnostic_without_depth(&metal)?
             .readback(std::time::Duration::from_secs(5))?;
+        save("depth-disabled-negative", &negative)?;
         assert_eq!(
             &negative[(32 * 64 + 32) * 4..(32 * 64 + 32) * 4 + 4],
             &[255, 0, 0, 255],
@@ -75,17 +96,21 @@ fn run() -> Result<(), String> {
         drop(frame);
         let uploads = world.stats.geometry_uploads;
         let targets = world.stats.target_allocations;
-        for _ in 0..3 {
+        for i in 0..3 {
             let f = world
                 .prepare(&metal, 1, identity, (64, 64), [0., 0., 1., 1.], || {
                     panic!("warm geometry collector invoked")
                 })?
                 .ok_or("Warm target unavailable")?;
-            f.submit_diagnostic(&metal)?
+            let pixels = f
+                .submit_diagnostic(&metal)?
                 .readback(std::time::Duration::from_secs(5))?;
+            save(["warm-0", "warm-1", "warm-2"][i], &pixels)?;
         }
         assert_eq!(world.stats.geometry_uploads, uploads);
         assert_eq!(world.stats.target_allocations, targets);
+        let uploads_after_warm = world.stats.geometry_uploads;
+        let targets_after_warm = world.stats.target_allocations;
         let mut invalid = identity;
         invalid[0][0] = f32::NAN;
         assert!(world
@@ -116,6 +141,7 @@ fn run() -> Result<(), String> {
         let pixels = frame
             .submit_diagnostic(&metal)?
             .readback(std::time::Duration::from_secs(5))?;
+        save("owner-refusal-preserved", &pixels)?;
         assert_eq!(
             &pixels[(32 * 64 + 32) * 4..(32 * 64 + 32) * 4 + 4],
             &[0, 255, 0, 255]
@@ -156,16 +182,43 @@ fn run() -> Result<(), String> {
         painter.install_world_texture(&metal, id, replacement)?;
         let new_paint = painter.prepare(&metal, &primitives, 1.)?;
         painter.free_textures(&[id]);
-        for (paint, expected) in [(old_paint, [0, 255, 0, 255]), (new_paint, [255, 0, 0, 255])] {
+        for (name, paint, expected) in [
+            ("map-free-old-green", old_paint, [0, 255, 0, 255]),
+            ("map-free-new-red", new_paint, [255, 0, 0, 255]),
+        ] {
             let pixels = painter
                 .submit_diagnostic(&metal, paint, 64, 64, false)?
                 .wait_readback(std::time::Duration::from_secs(5))?;
+            save(name, &pixels)?;
             assert_eq!(
                 &pixels[(32 * 64 + 32) * 4..(32 * 64 + 32) * 4 + 4],
                 &expected,
                 "UI sampling must retain exact old/new world owners after map free"
             );
         }
+        drop(painter);
+        drop(world);
+        drop(foreign);
+        let budget = metal.budget.lock().map_err(|_| "GPU ledger poisoned")?;
+        let ledger_committed_after_drop: u64 = budget.heaps.iter().map(|h| h.committed).sum();
+        let ledger_reserved_after_drop: u64 = budget.heaps.iter().map(|h| h.reserved).sum();
+        assert_eq!(
+            ledger_committed_after_drop, 0,
+            "Completed world/UI owners must release tracked GPU allocations"
+        );
+        assert_eq!(
+            ledger_reserved_after_drop, 0,
+            "No native reservation may leak"
+        );
+        drop(budget);
+        drop(save);
+        let names = frames
+            .iter()
+            .map(|name| format!("\"{name}\""))
+            .collect::<Vec<_>>()
+            .join(",");
+        let device = metal.info.name.replace('\\', "\\\\").replace('"', "\\\"");
+        std::fs::write(output.join("report.json"),format!("{{\"passed\":true,\"device\":\"{device}\",\"width\":64,\"height\":64,\"pixel_encoding\":\"RGBA8Unorm opaque\",\"frames\":[{names}],\"geometry_uploads_before_warm\":{uploads},\"targets_before_warm\":{targets},\"geometry_uploads_after_warm\":{uploads_after_warm},\"targets_after_warm\":{targets_after_warm},\"ledger_committed_after_drop\":{ledger_committed_after_drop},\"ledger_reserved_after_drop\":{ledger_reserved_after_drop},\"wrong_owner_refused\":true,\"invalid_pose_refused\":true}}\n")).map_err(|e|e.to_string())?;
         println!("Native Metal world opaque/depth: two draw orders, clear, three warm frames and invalid pose PASS; device={}; uploads={uploads}; targets={targets}",metal.info.name);
         Ok(())
     })

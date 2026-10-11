@@ -1,0 +1,74 @@
+    Checking zune-jpeg v0.5.15 (/tmp/ingetrazo-metal-world-gpu/vendor/zune-jpeg)
+    Checking ingetrazo-core v0.3.15 (/tmp/ingetrazo-metal-world-gpu/crates/ingetrazo-core)
+    Checking image v0.25.10
+warning: function `visit_meshes` is never used
+   --> crates/ingetrazo-core/src/screen_pick.rs:120:15
+    |
+120 | pub(crate) fn visit_meshes(scene: &Scene, mut visit: impl FnMut(&Mesh, DMat4, bool)) {
+    |               ^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-core` (lib) generated 1 warning
+    Checking ingetrazo-render v0.3.15 (/tmp/ingetrazo-metal-world-gpu/crates/ingetrazo-render)
+    Checking ingetrazo-metal v0.3.15 (/tmp/ingetrazo-metal-world-gpu/crates/ingetrazo-metal)
+warning: use of deprecated method `objc2_metal::MTLCompileOptions::setFastMathEnabled`: Use mathMode instead
+   --> crates/ingetrazo-metal/src/cad2d.rs:141:17
+    |
+141 |         options.setFastMathEnabled(false);
+    |                 ^^^^^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(deprecated)]` on by default
+
+warning: use of deprecated method `objc2_metal::MTLCompileOptions::setFastMathEnabled`: Use mathMode instead
+  --> crates/ingetrazo-metal/src/cad_callback_painter.rs:96:21
+   |
+96 |             options.setFastMathEnabled(false);
+   |                     ^^^^^^^^^^^^^^^^^^
+
+warning: use of deprecated method `objc2_metal::MTLCompileOptions::setFastMathEnabled`: Use mathMode instead
+   --> crates/ingetrazo-metal/src/cad_compute_painter.rs:119:21
+    |
+119 |             options.setFastMathEnabled(false);
+    |                     ^^^^^^^^^^^^^^^^^^
+
+warning: variable does not need to be mutable
+   --> crates/ingetrazo-metal/src/egui_painter.rs:621:13
+    |
+621 |         let mut staging = metal.buffer(staging_bytes, true)?;
+    |             ----^^^^^^^
+    |             |
+    |             help: remove this `mut`
+    |
+    = note: `#[warn(unused_mut)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-metal` (lib) generated 4 warnings (run `cargo fix --lib -p ingetrazo-metal` to apply 1 suggestion)
+error[E0308]: mismatched types
+   --> crates/ingetrazo-metal/examples/native_world_depth.rs:185:14
+    |
+185 |             (new_paint, [255, 0, 0, 255]),
+    |              ^^^^^^^^^ expected `&str`, found `Arc<PreparedPaint>`
+    |
+    = note: expected reference `&str`
+                  found struct `Arc<PreparedPaint>`
+
+error[E0308]: mismatched types
+   --> crates/ingetrazo-metal/examples/native_world_depth.rs:185:25
+    |
+185 |             (new_paint, [255, 0, 0, 255]),
+    |                         ^^^^^^^^^^^^^^^^ expected `Arc<PreparedPaint>`, found `[{integer}; 4]`
+    |
+    = note: expected struct `Arc<PreparedPaint>`
+                found array `[{integer}; 4]`
+
+error[E0308]: mismatched types
+   --> crates/ingetrazo-metal/examples/native_world_depth.rs:185:13
+    |
+185 |             (new_paint, [255, 0, 0, 255]),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected a tuple with 3 elements, found one with 2 elements
+    |
+    = note: expected tuple `(&str, Arc<PreparedPaint>, [{integer}; 4])`
+               found tuple `(&str, Arc<PreparedPaint>)`
+
+For more information about this error, try `rustc --explain E0308`.
+error: could not compile `ingetrazo-metal` (example "native_world_depth") due to 3 previous errors
