@@ -116,7 +116,7 @@ pub fn upload(
     metal: &NativeMetal,
     id: Identity,
     encoded: &[u8],
-    published: &[std::sync::Weak<Asset>],
+    published: &[Arc<Asset>],
     candidates: &[Arc<Asset>],
 ) -> Result<Arc<Asset>, String> {
     if identity(encoded)? != id {
@@ -217,7 +217,7 @@ pub fn upload(
     for asset in candidates
         .iter()
         .cloned()
-        .chain(published.iter().filter_map(std::sync::Weak::upgrade))
+        .chain(published.iter().cloned())
     {
         if Arc::ptr_eq(&asset.heap.budget, &metal.budget)
             && asset.heap.raw.maxAvailableSizeWithAlignment(native.align) >= native.size

@@ -1,0 +1,7 @@
+{
+  "cause": "Actual75-frame replay upload counter4 showed weak cache expired at untextured source recipes. Required immutable reuse counter2 remains unchanged in checker.",
+  "fix": "World retains at most4096 immutable Arc asset owners; all native heaps already admitted against shared GPU budget. Cold cache publication reserves capacity before modifying existing lookup. Failed publication drops candidate assets and preserves prior cache/frame. Explicit clear_idle releases cache owners; retained Prepared readers still own their assets.",
+  "metadata_scope": "texture_identity_payload_bytes reports lookup capacity only, not total native/ObjC/allocator memory. GPU ledger includes complete heap backing allocations and staging separately.",
+  "checks": "Focused Apple Rust API cargo check passed0.66s; actual SDK/GPU pending changed-source replay.",
+  "remaining": "A cache-full/budget refusal remains explicit; no general asset eviction allocator introduced."
+}
