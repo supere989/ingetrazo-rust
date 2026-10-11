@@ -59,6 +59,7 @@ impl Drop for Asset {
     }
 }
 impl Asset {
+    pub(crate) fn backing_kind(&self)->&'static str {match self.backing {Backing::Heap(_)=>"heap",Backing::Standalone{..}=>"standalone"}}
     pub(crate) fn heap_observation(&self) -> (usize, [u64; 3]) {
         match &self.backing {
             Backing::Heap(heap) => (

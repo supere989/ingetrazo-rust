@@ -670,6 +670,14 @@ impl World {
         })))
     }
     /// Cold observation only; excludes unrelated renderer resources.
+    /// Cold diagnostic: one kind per unique backing owner, matching allocation rows.
+    pub fn sampled_backing_kinds(&self)->Result<Vec<&'static str>,String>{
+        let mut seen=Vec::new();let mut kinds=Vec::new();
+        seen.try_reserve_exact(self.texture_assets.len()).map_err(|_|"Metal sampled observation allocation refused")?;
+        kinds.try_reserve_exact(self.texture_assets.len()).map_err(|_|"Metal sampled observation allocation refused")?;
+        for asset in &self.texture_assets{let(id,_)=asset.heap_observation();if !seen.contains(&id){seen.push(id);kinds.push(asset.backing_kind());}}
+        Ok(kinds)
+    }
     pub fn sampled_heap_allocations(&self)->Result<Vec<[u64;3]>,String>{
         let mut seen=Vec::new();let mut rows=Vec::new();
         seen.try_reserve_exact(self.texture_assets.len()).map_err(|_|"Metal sampled observation allocation refused")?;

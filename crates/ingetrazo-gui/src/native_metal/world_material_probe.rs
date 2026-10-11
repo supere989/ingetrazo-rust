@@ -142,7 +142,9 @@ pub(crate) fn run(root: PathBuf) -> Result<(), String> {
                 .ok_or("Extra observation outside projection")?
                 .0;
         let heaps = viewport.sampled_heaps()?;
-        observations.push(serde_json::json!({"name":name,"native":app.native_gpu_viewport_enabled,"frame_present":viewport.frame.is_some(),"route_reason":viewport.last_route_reason,"selection_count":app.scene.selection.len(),"rect":[rect.min.x,rect.min.y,rect.width(),rect.height()],"red_pixel":[red.x,red.y],"old_pixel":[old.x,old.y],"extra_pixel":[extra_pixel.x,extra_pixel.y],"sampled_heaps":heaps,"catalog_builds":viewport.catalog_builds(),"model_refreshes":viewport.model_refreshes(),"matrix_bytes":viewport.matrix_bytes(),"geometry_uploads":viewport.geometry_uploads(),"texture_uploads":viewport.texture_uploads(),"material_order_builds":viewport.material_order_builds()}));
+        let backing_kinds=viewport.sampled_backing_kinds()?;
+        let backing_charge=metal.budget.lock().map_err(|_|"Budget")?.heaps.iter().map(|h|h.committed).sum::<u64>();
+        observations.push(serde_json::json!({"name":name,"native":app.native_gpu_viewport_enabled,"frame_present":viewport.frame.is_some(),"route_reason":viewport.last_route_reason,"selection_count":app.scene.selection.len(),"rect":[rect.min.x,rect.min.y,rect.width(),rect.height()],"red_pixel":[red.x,red.y],"old_pixel":[old.x,old.y],"extra_pixel":[extra_pixel.x,extra_pixel.y],"sampled_heaps":heaps,"sampled_backing_kinds":backing_kinds,"backing_ledger_committed":backing_charge,"catalog_builds":viewport.catalog_builds(),"model_refreshes":viewport.model_refreshes(),"matrix_bytes":viewport.matrix_bytes(),"geometry_uploads":viewport.geometry_uploads(),"texture_uploads":viewport.texture_uploads(),"material_order_builds":viewport.material_order_builds()}));
         std::fs::write(
             root.join("observations.json"),
             serde_json::to_vec_pretty(&observations).map_err(|e| e.to_string())?,

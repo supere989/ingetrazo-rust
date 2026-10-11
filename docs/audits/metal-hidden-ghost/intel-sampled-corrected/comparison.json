@@ -1,0 +1,64 @@
+{
+  "rows": [
+    {
+      "case": "face-off",
+      "different_pixels": 0,
+      "maximum_channel_error": 0
+    },
+    {
+      "case": "face-on",
+      "different_pixels": 0,
+      "maximum_channel_error": 0
+    },
+    {
+      "case": "edge-off",
+      "different_pixels": 0,
+      "maximum_channel_error": 0
+    },
+    {
+      "case": "edge-on",
+      "different_pixels": 0,
+      "maximum_channel_error": 0
+    },
+    {
+      "case": "object-off",
+      "different_pixels": 0,
+      "maximum_channel_error": 0
+    },
+    {
+      "case": "object-on",
+      "different_pixels": 0,
+      "maximum_channel_error": 0
+    },
+    {
+      "case": "textured-object-off",
+      "different_pixels": 0,
+      "maximum_channel_error": 0
+    },
+    {
+      "case": "textured-object-on",
+      "different_pixels": 480,
+      "maximum_channel_error": 1
+    },
+    {
+      "case": "nested-object-off",
+      "different_pixels": 0,
+      "maximum_channel_error": 0
+    },
+    {
+      "case": "nested-object-on",
+      "different_pixels": 6,
+      "maximum_channel_error": 56
+    },
+    {
+      "case": "occluded-face-off",
+      "different_pixels": 0,
+      "maximum_channel_error": 0
+    },
+    {
+      "case": "occluded-face-on",
+      "different_pixels": 0,
+      "maximum_channel_error": 0
+    }
+  ]
+}

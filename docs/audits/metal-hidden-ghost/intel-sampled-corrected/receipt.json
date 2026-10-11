@@ -1,0 +1,12 @@
+{
+  "source_sha": "7759dace36c3a79a9f2c13b99215b49d37ecf540",
+  "run_id": 38132292682,
+  "job_id": 114448932460,
+  "artifact_id": 11700135563,
+  "artifact_sha256": "d1844b7328d509e54d80ffac728e10f8c23e6fdee56306652a5507bcefb85480",
+  "all_three_native_runtime_passed": true,
+  "classic_checker_passed": true,
+  "ghost_strict_pixels": false,
+  "material_heap_sharing_assertion": false,
+  "scope": "Standalone texture allocation and lifecycle execute; strict resolve and labeled heap observation gates remain open"
+}
