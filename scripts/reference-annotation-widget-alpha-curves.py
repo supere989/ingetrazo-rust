@@ -21,6 +21,12 @@ for alpha in [0,1,127,128,230,255]:
   rows.append(row)
 for name,center,radius,w,alpha in [('circle',[80.5,80.5],[17.25,17.25],1.5,255),('ellipse',[80.125,80.375],[37.125,9.875],3.125,255),('ellipse-alpha',[80.125,80.375],[37.125,9.875],3.125,128),('ellipse-tiny',[80.5,80.5],[.25,.125],.35,230)]:
  rows.append(dict(name=name,operations=[dict(kind='ellipse',center=center,radius=radius,width=w,pen=[37,93,157,alpha],brush=[37,93,157,alpha])]))
+if '--triangles-only' in sys.argv:
+ rows=[]
+ for a in [0,1,127,128,230,255]:
+  rows.append(dict(name=f'triangle-alpha-{a}',operations=[dict(kind='polygon',points=[[20.4999,20.5],[180.75,100.125],[30.125,170.75]],width=1.,pen=[0,0,0,255],brush=[37,93,157,a])]))
+ rows.append(dict(name='triangle-overlap',operations=[dict(kind='polygon',points=v,width=1.,pen=[0,0,0,255],brush=c)for v,c in [([[30.125,20.5],[180.75,100.125],[30.125,170.75]],[37,93,157,128]),([[50.125,20.5],[200.75,100.125],[50.125,170.75]],[157,37,93,128])]]))
+ rows.append(dict(name='triangle-sliver',operations=[dict(kind='polygon',points=[[20.4999,20.5],[180.75,100.125],[180.75,100.13]],width=1.,pen=[0,0,0,255],brush=[37,93,157,230])]))
 app=QApplication([])
 class Widget(QOpenGLWidget):
  def __init__(self):

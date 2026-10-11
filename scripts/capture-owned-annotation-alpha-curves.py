@@ -58,6 +58,7 @@ if '--lines-only' in sys.argv:data['cases']=data['cases'][:24]
 names=[r['name']for r in data['cases']]
 expected=[f'alpha-{a}-{kind}'for a in [0,1,127,128,230,255]for kind in ['horizontal','narrow','short','cross']]
 if '--lines-only'not in sys.argv:expected+=['circle','ellipse','ellipse-alpha','ellipse-tiny']
+if '--triangles-only' in sys.argv:expected=[f'triangle-alpha-{a}'for a in [0,1,127,128,230,255]]+['triangle-overlap','triangle-sliver']
 assert names==expected
 if '--case' in sys.argv:
  selected=sys.argv[sys.argv.index('--case')+1];assert selected in expected
@@ -80,6 +81,11 @@ for row in data['cases']:
    first=wait(state);baseline=first['submitted_serial']
    ready=wait(lambda:(s if (s:=state())and s['completed_present_serial']>baseline else None))
    im=capture_owned(w);assert im is not None;assert im.save(str(case/'native.png'))
+   if '--benchmark' in sys.argv:
+    before=state();deadline=time.monotonic()+2
+    while time.monotonic()<deadline:app.processEvents();time.sleep(.01)
+    after=state();assert before['geometry_uploads']==after['geometry_uploads'] and before['query_uploads']==after['query_uploads']
+    (case/'benchmark-states.json').write_text(json.dumps([before,after],indent=2)+'\n')
    controls=None
    if '--packed-key-control' in sys.argv:
     phases=[]
