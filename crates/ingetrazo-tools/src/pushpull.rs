@@ -551,11 +551,20 @@ impl PushPullTool {
         candidate.preserve_vertex_uids_from(mesh);
         // Unchanged authored hole loops retain their source winding. The
         // kernel's canonical hole winding is only for newly cut contours.
-        for f in &mut candidate.faces {
-            for hole in &mut f.holes {
-                let identities=hole.iter().map(|&v|candidate.vertices[v].uid).collect::<std::collections::HashSet<_>>();
-                if let Some(original)=mesh.faces.iter().flat_map(|f|&f.holes).find(|ring|ring.len()==hole.len()&&ring.iter().all(|&v|identities.contains(&mesh.vertices[v].uid))) {
-                    *hole=original.iter().map(|&v|candidate.vertices.iter().position(|point|point.uid==mesh.vertices[v].uid).unwrap()).collect();
+        if mesh.faces.iter().any(|f|!f.holes.is_empty()) && candidate.faces.iter().any(|f|!f.holes.is_empty()) {
+            let mut original_holes=std::collections::HashMap::new();
+            for ring in mesh.faces.iter().flat_map(|f|&f.holes) {
+                let ordered=ring.iter().map(|&v|mesh.vertices[v].uid).collect::<Vec<_>>();
+                let mut key=ordered.clone();key.sort_unstable();
+                original_holes.entry(key).or_insert(ordered);
+            }
+            let candidate_indices=candidate.vertices.iter().enumerate().map(|(i,v)|(v.uid,i)).collect::<std::collections::HashMap<_,_>>();
+            for f in &mut candidate.faces {
+                for hole in &mut f.holes {
+                    let mut key=hole.iter().map(|&v|candidate.vertices[v].uid).collect::<Vec<_>>();key.sort_unstable();
+                    if let Some(original)=original_holes.get(&key) {
+                        *hole=original.iter().map(|uid|candidate_indices[uid]).collect();
+                    }
                 }
             }
         }
