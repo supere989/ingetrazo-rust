@@ -1,0 +1,25 @@
+{
+  "source": "da4699e6f360725512ea5bdd086260efcc70d1d6",
+  "command": "cargo test --workspace --locked",
+  "environment": {
+    "CARGO_BUILD_JOBS": "2",
+    "CARGO_PROFILE_DEV_DEBUG": "0",
+    "CARGO_PROFILE_DEV_INCREMENTAL": "false",
+    "CARGO_TARGET_DIR": "/tmp/ingetrazo-native-font-merge-target"
+  },
+  "test_targets": 35,
+  "passed": 773,
+  "failed": 0,
+  "ignored": 2,
+  "log_sha256": "af76d46efb9797e686e583566f444a202992cf27f06efbe41f20ad72e715456e",
+  "scope": "Combined workspace library/integration/doc targets; standalone VM frozen binary and native Metal GPU evidence are checked separately",
+  "independent_evidence": [
+    "../ai-public-registry/root-review/check.json",
+    "../annotation-widget-square-strip/root-review.json",
+    "../metal-world-placements/native-run38101745930/root-review.json",
+    "../sampled-jpeg-source/README.md",
+    "../texture-mip-source-diagnosis/README.md"
+  ],
+  "release_gates": "all five OPEN",
+  "full_features_verified": 0
+}

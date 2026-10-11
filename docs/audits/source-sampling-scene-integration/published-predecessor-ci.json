@@ -1,0 +1,71 @@
+{
+  "observed_at": "2026-10-11T01:52:02.906Z",
+  "combined": {
+    "run": 38101898267,
+    "source": "9420920b6b052ad9d26ec90764b6a0e6d0f6005a",
+    "jobs": [
+      {
+        "name": "Native Metal compile (aarch64-apple-darwin)",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-11T01:27:31Z",
+        "completed_at": "2026-10-11T01:28:23Z",
+        "steps": []
+      },
+      {
+        "name": "Native Metal compile (x86_64-apple-darwin)",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-11T01:27:32Z",
+        "completed_at": "2026-10-11T01:28:32Z",
+        "steps": []
+      },
+      {
+        "name": "Native Metal framework link (macos-15)",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-11T01:27:38Z",
+        "completed_at": "2026-10-11T01:30:43Z",
+        "steps": []
+      },
+      {
+        "name": "Native Metal framework link (macos-15-intel)",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-11T01:27:35Z",
+        "completed_at": "2026-10-11T01:36:32Z",
+        "steps": []
+      },
+      {
+        "name": "compilation-and-tests",
+        "status": "in_progress",
+        "conclusion": null,
+        "started_at": "2026-10-11T01:27:32Z",
+        "completed_at": null,
+        "steps": [
+          {
+            "name": "Original OpenGL section stencil controls",
+            "status": "in_progress",
+            "conclusion": null
+          }
+        ]
+      }
+    ]
+  },
+  "workflows": [
+    {
+      "id": 38101898249,
+      "status": "completed",
+      "conclusion": "success",
+      "source": "9420920b6b052ad9d26ec90764b6a0e6d0f6005a",
+      "url": "https://github.com/supere989/ingetrazo-rust/actions/runs/38101898249"
+    },
+    {
+      "id": 38101898267,
+      "status": "in_progress",
+      "conclusion": null,
+      "source": "9420920b6b052ad9d26ec90764b6a0e6d0f6005a",
+      "url": "https://github.com/supere989/ingetrazo-rust/actions/runs/38101898267"
+    }
+  ]
+}
