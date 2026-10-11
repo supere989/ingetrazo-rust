@@ -1,0 +1,135 @@
+{
+  "run_id": 38097341614,
+  "artifact_id": 11686201604,
+  "source": "f8540a50b58e4a5d070c59687b118d108404d0ce",
+  "zip_sha256": "7c33903f93a3d289678fd4951fc78d59e2215b49d80c3c70e9bc2bcce29cd9c3",
+  "independent_checks": "nativeSDKbuilds/source/report/nativebinarySHA/device/callbackIDs/actualpositive times/Completed/zero pending verified",
+  "stage_outcomes": {
+    "rust_build": "success",
+    "sdk_build": "success",
+    "execution_report_present": true
+  },
+  "execution": {
+    "scope": "Sequential same-runner/session diagnostic; distinct processes/eventloops, no production fallback",
+    "controls": {
+      "appkit_presenter_control": {
+        "source_revision": "f8540a50b58e4a5d070c59687b118d108404d0ce",
+        "binary_sha256": "d08557ad6ecb975c9e7d8ccb6a45e2c7a9168b43dfa65c278c8ecbfb05df6474",
+        "source_file_sha256": {
+          "crates/ingetrazo-metal/examples/appkit_presenter_control.rs": "1f8c84c14f25f0164aaa511f062293167d2974b03dc578587b2a6e9939d6fabb",
+          "crates/ingetrazo-metal/examples/support/metalkit_frame.rs": "cead4c3128a72c963568a02c6b459a229b6c4eec931ebd973c1dc7d16f3740e4"
+        },
+        "process_timeout_seconds": 45,
+        "fixture_deadline_seconds": 15,
+        "passed": true,
+        "exit_code": 0,
+        "elapsed_seconds": 5.8934668910001164,
+        "fixture_report_present": true,
+        "fixture_report_sha256": "e950de70f5dade8bf99b01c146e49ecb2a13ab7d567bb52caa789cfa0edff0e7",
+        "fixture": {
+          "passed": true,
+          "error": null,
+          "scope": "Native AppKit/systemMTKView diagnostic without winit hosting or observers; no production fallback",
+          "queue_device": 4294968040,
+          "device_registry_id": 4294968040,
+          "layer_device": 4294968040,
+          "draw_calls": 6,
+          "submitted": 6,
+          "displayed": 6,
+          "skipped": 0,
+          "pending": 0,
+          "no_drawable": 0,
+          "frames": [],
+          "application_active": true,
+          "window_visible": true,
+          "window_key": true,
+          "framework_timed_updates": true,
+          "framework_current_drawable": true,
+          "winit_hosting": false
+        }
+      },
+      "appkit_objc_presenter_control": {
+        "source_revision": "f8540a50b58e4a5d070c59687b118d108404d0ce",
+        "binary_sha256": "75b27179549767fd80580f884507f225bfa40f2a258e92887f91825a6658df00",
+        "source_file_sha256": {
+          "scripts/native/appkit_objc_presenter_control.m": "b40ad63ed040118788629f312f5ca06348d1f199b9670a95f1d48f8329f90157"
+        },
+        "process_timeout_seconds": 45,
+        "fixture_deadline_seconds": 15,
+        "passed": true,
+        "exit_code": 0,
+        "elapsed_seconds": 1.0503825820001111,
+        "fixture_report_present": true,
+        "fixture_report_sha256": "fcb9cc9d3ebcbeb88907b7d267fc255bb958288b0e2aaee46001e619f3f02793",
+        "fixture": {
+          "winit_hosting": false,
+          "framework_timed_updates": true,
+          "displayed": 4,
+          "queue_device": 4294968040,
+          "submitted": 5,
+          "device_name": "Apple Paravirtual device",
+          "skipped": 1,
+          "layer_device": 4294968040,
+          "window_key": true,
+          "window_visible": true,
+          "application_active": true,
+          "terminal_proof_last16": [
+            {
+              "command_status": 4,
+              "drawable_id": 0,
+              "gpu_end": 3751.7201869,
+              "callback_drawable_id": 0,
+              "presented_time": 0,
+              "gpu_start": 3751.7123297480002
+            },
+            {
+              "command_status": 4,
+              "drawable_id": 1,
+              "gpu_end": 3751.761513069,
+              "callback_drawable_id": 1,
+              "presented_time": 3751.767623868,
+              "gpu_start": 3751.754649897
+            },
+            {
+              "command_status": 4,
+              "drawable_id": 2,
+              "gpu_end": 3751.862990083,
+              "callback_drawable_id": 2,
+              "presented_time": 3751.8912954640005,
+              "gpu_start": 3751.862282769
+            },
+            {
+              "command_status": 4,
+              "drawable_id": 3,
+              "gpu_end": 3751.871038492,
+              "callback_drawable_id": 3,
+              "presented_time": 3751.925942113,
+              "gpu_start": 3751.865351978
+            },
+            {
+              "command_status": 4,
+              "drawable_id": 4,
+              "gpu_end": 3751.89979609,
+              "callback_drawable_id": 4,
+              "presented_time": 3751.960662408,
+              "gpu_start": 3751.8990778300004
+            }
+          ],
+          "scope": "Literal Apple SDK Objective-C AppKit/MTKView diagnostic; no Rust callback path or production fallback",
+          "device_registry_id": 4294968040,
+          "no_drawable": 0,
+          "error": null,
+          "rust_bindings": false,
+          "frames": [],
+          "pending": 0,
+          "passed": true,
+          "draw_calls": 5,
+          "framework_current_drawable": true
+        }
+      }
+    },
+    "same_device": true,
+    "passed": true
+  },
+  "classification": "IntelSDKandRustdirectAppKit bothPASS; literalSDK4positiveactualtimestamps+1skipped, Rust6positive,zero pending. ARMliteralSDKandRustbothFAIL. No provenRustbinding-only,winit-only,customhost-onlycause; commonAPI/driver/session remainsunresolved. No physicalMac/platformgatepromotion."
+}

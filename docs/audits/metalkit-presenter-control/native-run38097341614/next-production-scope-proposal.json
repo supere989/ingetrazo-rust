@@ -1,0 +1,10 @@
+{
+  "proposal": "Production native Metal 3D world viewport, ratherthanmoreunchangedARMpresenter experiments",
+  "source_inspected": "review/next-integration crates/ingetrazo-gui/src/native_metal.rs installscomposerCADfactory butno nativeworld producer; viewport.rs269..278 consumesnative_gpu_viewport_texture onlywhenenabled; nativeVulkan world.rs owns actual3D geometry/depth/style/texture path",
+  "first_reviewable_stage": "Extract/reuse source-backed immutable3Ddraw packet andcamera/placementpolicy withsharedbudget; nativeMetal persistent mesh VB/IB/depthtarget/pipeline andcachedtransformupdates; wire actualviewport output through existingMetal painter texture ownership. No Sceneclone or CPU rasterplaceholder.",
+  "focused_acceptance": "ActualGPUoffscreen knownoverlap/depth order/backface/reflectednestedplacement andsourcecamera controls pluswarmupload/admission/retirement negatives. Then actualIntelownedwindow pointerOrbit/Move captures andstrictpositivepresent; ARMpresentation gate remainsindependent andrequired.",
+  "full_followup_scope": "SourceMaterials/textures/alpha/section/imageplanes/annotations/style andplatform font/physicalMac acceptance remainrequired, notfeature exclusions.",
+  "ownership_coordination": "CoordinateVulkan/sharedworld interfaces withdocument_integrity/validation beforeedits; nativeMetalnewmodule canbeisolated; rootownscloud schedule.",
+  "alternative_hardware_characterization": "UseanavailablephysicalARM Mac withunchangedfrozenliteralSDK reference/productionhost ifaccess exists; do notrepeatidenticalcloudvirtualinputs or inferVMlimitation.",
+  "state": "Proposal only; no productionedits or newruns."
+}
