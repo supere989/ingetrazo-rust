@@ -9,7 +9,7 @@ fn main()->Result<(),Box<dyn std::error::Error>>{
   for level in case["levels"].as_array().unwrap(){let index=level["level"].as_u64().unwrap()as u32;let file=level["file"].as_str().unwrap();let actual=resources.readback_texture_mip(&context,&image,index)?;let expected=std::fs::read(input.join(file))?;assert_eq!(actual.len(),expected.len());std::fs::write(output.join(file),&actual)?;levels.push(serde_json::json!({"level":index,"different_pixels":actual.chunks_exact(4).zip(expected.chunks_exact(4)).filter(|(a,b)|a!=b).count(),"max_channel_error":actual.iter().zip(&expected).map(|(a,b)|a.abs_diff(*b)).max().unwrap_or(0),"bytes":actual.len()}));}
   rows.push(serde_json::json!({"asset":name,"levels":levels}));
  }
- resources.release_image_staging();drop(resources);assert_eq!(budget.ledger.lock().unwrap().total_committed(),0);std::fs::write(output.join("native.json"),serde_json::to_vec_pretty(&serde_json::json!({"cases":rows,"ledger_final":0,"scope":"production GPU mip upload/generation readback compared with actual pinned original; no screen pixel claim"}))?)?;Ok(())
+ let stats=resources.stats;resources.release_image_staging();drop(resources);assert_eq!(budget.ledger.lock().unwrap().total_committed(),0);std::fs::write(output.join("native.json"),serde_json::to_vec_pretty(&serde_json::json!({"source":option_env!("INGETRAZO_BUILD_SOURCE"),"resources":stats,"cases":rows,"ledger_final":0,"scope":"production GPU mip upload/generation readback compared with actual pinned original; no screen pixel claim"}))?)?;Ok(())
 }
 #[cfg(not(any(target_os="linux",target_os="windows")))]
 fn main(){eprintln!("Native Vulkan diagnostic; macOS uses Metal.");std::process::exit(2);}

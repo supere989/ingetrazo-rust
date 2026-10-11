@@ -156,7 +156,7 @@ impl Resources {
                         &[copy],
                     );
                     if offset + length == bytes {
-                        finish_mips(&self.device, command, image, &layout);
+                        finish_mips(&self.device, command, image, &layout);self.stats.mip_barrier_commands+=2*u64::from(mip_levels)-1;
                     }
                     self.device
                         .end_command_buffer(command)
@@ -233,7 +233,7 @@ impl Resources {
                     let y=offset/row*bh as u64;
                     let copy=vk::BufferImageCopy::default().buffer_offset(start).image_subresource(vk::ImageSubresourceLayers::default().aspect_mask(vk::ImageAspectFlags::COLOR).layer_count(1)).image_offset(vk::Offset3D{x:0,y:y as i32,z:0}).image_extent(vk::Extent3D{width:image.extent.width,height:(length/row*bh as u64).min(image.extent.height as u64-y)as u32,depth:1});
                     self.device.cmd_copy_buffer_to_image(command,host.handle,image.image,vk::ImageLayout::TRANSFER_DST_OPTIMAL,&[copy]);
-                    if offset+length==inputs[i].1.len()as u64{finish_mips(&self.device,command,image.image,&layouts[i].0);}
+                    if offset+length==inputs[i].1.len()as u64{finish_mips(&self.device,command,image.image,&layouts[i].0);self.stats.mip_barrier_commands+=2*u64::from(image.mip_levels)-1;}
                 }
                 self.device.end_command_buffer(command).map_err(|e|e.to_string())?;self.device.reset_fences(&[fence]).map_err(|e|e.to_string())?;
                 self.device.queue_submit(context.graphics_queue,&[vk::SubmitInfo::default().command_buffers(&[command])],fence).map_err(|e|{self.lifetime.quarantine();e.to_string()})?;
