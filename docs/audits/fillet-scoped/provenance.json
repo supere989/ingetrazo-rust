@@ -1,0 +1,39 @@
+{
+  "base": "0310291e",
+  "runtime": "0d84512b76886b9160b194ed0da76c7edc38585c",
+  "consumer": "70ccb6286a5cc9e7e8ead0bece74b9628ba05b14",
+  "original": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "binary_sha256": "afcc72ba687603e38f6b2c2a6cdcda27b46953f8f48c9cd056b8d5e194c66009",
+  "records": {
+    "source.json": "8eff9f683b07ad4103f5f5d38b34dc108288b7937c83534a849b4a93d7376263",
+    "source-app.json": "3f975fa3fba86a1278534723e92c78f6cb7acfb46a000bda42790dd4b0971ce8",
+    "native.json": "647ead956b519103798e4876aac5098176b6b0409e09fca15b6f9bafe968e69a",
+    "fillet-scoped-native-protected-nested-failure.json": "e9e47401a1a41448ba1ee98870ac160047dccec1573be9fb54c5fa2d917b79a8",
+    "fillet-scoped-source-app-protected-nested-failure.json": "640475f03abd85f0513794c0fbe15344a79c4f84e8f420e430dac4b4186e2c07",
+    "fillet-scoped-focused.log": "ee5fb83b54f2865fc7cc88904eab5d4d9f3d13bcb6dfe5a615227ca60b122f2a",
+    "fillet-scoped-tests-final.log": "8a5d499e71fa40941f59361d93c780b27c4851ec63c28860b34e5b0110e51fb9",
+    "fillet-scoped-build-frozen.log": "657f81dfadb05f14df2df523775918f16b63bd9c759108897f61ef3497fddbf2",
+    "fillet-scoped-native-frozen.log": "39df69fc0443eb5881f2caea0b5d6be9b1d8b69c283bcba083ffc2a5aba7fe61",
+    "fillet-scoped-native-case.log": "cb180a42ef3595f55505002a6f34345bb421f20ecc9096ba24ca2747bc9046f6",
+    "fillet-scoped-source-app.log": "99c6b449dfcd84a49d7b301d81cf48968ba2ffdc2005d78aba49b7895bd889bc",
+    "fillet-scoped-native-interior.log": "01ebafdddb7c2d34320e9998b284ac708c25255db5a8c352bd241c0996f753ea"
+  },
+  "source": {
+    "crates/ingetrazo-tools/src/fillet.rs": "75dd6c9677bd4a2d030b9feb069c8cafd64335c28a7e9841e6fb3ff2c2ef72cc",
+    "crates/ingetrazo-tools/src/base.rs": "7093820f741285761e50564cefe773ff76072f5a87c60664ce5d015fb8c72a73",
+    "crates/ingetrazo-gui/src/app.rs": "1f65bd7a3c7d1dd1ab97294c942c8bd763ad2ee7886911c729c806e78d9e8bee",
+    "crates/ingetrazo-gui/src/tool_history.rs": "3a08cc9d4a0823f717c33ee36526e835a51c111e8e240fb83d8afa2525830b58",
+    "crates/ingetrazo-gui/examples/fillet_scoped.rs": "dfff32e3809476f6231bcd92da4307824c8bd04c8de3ea95490be5b03e2bf41b",
+    "scripts/reference-fillet-scoped.py": "07928adbe581ba1049a462270e573fb762d816fc7d4b7dfef079b21679cae65e",
+    "scripts/reference-fillet-scoped-app.py": "0d2dd8b78eb5eb2d3f20c794e24167042813ffab1fa3bbaa375e1903a6a2f61b",
+    "scripts/check-fillet-scoped.py": "7ad060c77b7704195029b93ba9b9006f7a21446428438b842964c1762b4b25ae"
+  },
+  "build": {
+    "profile": "dev debug=0 incremental=0",
+    "jobs": 2,
+    "package": "ingetrazo-gui",
+    "example": "fillet_scoped"
+  },
+  "focused_tests": "8 PASS; prior kept-UID expectation6 failed against source-retained8 and was repaired",
+  "scope": "paired live original Viewport/History methods and native App dispatch; no XTEST/rendered proof"
+}

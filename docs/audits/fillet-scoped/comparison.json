@@ -1,0 +1,438 @@
+{
+  "scope": "Five source-matched topology/metadata preservation recipes, one retained oblique topology failure; actual handler/application states, no rendered pointer claim. Nested source context cloning drops unused vertices, native retains them; literal vertex inventory and Finish curve partition divergence retained per phase, only unreferenced extra vertices permitted. New global source curve numbers normalized by partition only; old curve IDs literal. Geometry source Qt-f32/native f64 existing 1e-6 boundary.",
+  "model": [
+    {
+      "name": "endpoint-free-wire",
+      "passed": true,
+      "error": null
+    },
+    {
+      "name": "open-neighbor",
+      "passed": true,
+      "error": null
+    },
+    {
+      "name": "paint-first-rim",
+      "passed": true,
+      "error": null
+    },
+    {
+      "name": "oblique-cap",
+      "passed": false,
+      "error": "('edges', 38, 36)"
+    },
+    {
+      "name": "concave",
+      "passed": true,
+      "error": null
+    },
+    {
+      "name": "turned-squashed",
+      "passed": true,
+      "error": null
+    }
+  ],
+  "application_states": [
+    {
+      "name": "endpoint-free-wire",
+      "phase": "activate",
+      "literal_curve_partition": true,
+      "raw_vertices": [
+        12,
+        12
+      ],
+      "literal_vertex_inventory": true,
+      "interior_counts": [
+        1,
+        1
+      ]
+    },
+    {
+      "name": "endpoint-free-wire",
+      "phase": "segments",
+      "literal_curve_partition": true,
+      "raw_vertices": [
+        12,
+        12
+      ],
+      "literal_vertex_inventory": true,
+      "interior_counts": [
+        1,
+        1
+      ]
+    },
+    {
+      "name": "endpoint-free-wire",
+      "phase": "sizing",
+      "literal_curve_partition": true,
+      "raw_vertices": [
+        12,
+        12
+      ],
+      "literal_vertex_inventory": true,
+      "interior_counts": [
+        1,
+        1
+      ]
+    },
+    {
+      "name": "endpoint-free-wire",
+      "phase": "refusal",
+      "literal_curve_partition": true,
+      "raw_vertices": [
+        12,
+        12
+      ],
+      "literal_vertex_inventory": true,
+      "interior_counts": [
+        1,
+        1
+      ]
+    },
+    {
+      "name": "endpoint-free-wire",
+      "phase": "cancel",
+      "literal_curve_partition": true,
+      "raw_vertices": [
+        12,
+        12
+      ],
+      "literal_vertex_inventory": true,
+      "interior_counts": [
+        1,
+        1
+      ]
+    },
+    {
+      "name": "endpoint-free-wire",
+      "phase": "commit",
+      "literal_curve_partition": true,
+      "raw_vertices": [
+        26,
+        26
+      ],
+      "literal_vertex_inventory": true,
+      "interior_counts": [
+        1,
+        1
+      ]
+    },
+    {
+      "name": "endpoint-free-wire",
+      "phase": "undo",
+      "literal_curve_partition": true,
+      "raw_vertices": [
+        12,
+        12
+      ],
+      "literal_vertex_inventory": true,
+      "interior_counts": [
+        1,
+        1
+      ]
+    },
+    {
+      "name": "endpoint-free-wire",
+      "phase": "redo",
+      "literal_curve_partition": true,
+      "raw_vertices": [
+        26,
+        26
+      ],
+      "literal_vertex_inventory": true,
+      "interior_counts": [
+        1,
+        1
+      ]
+    },
+    {
+      "name": "open-neighbor",
+      "phase": "activate",
+      "literal_curve_partition": true,
+      "raw_vertices": [
+        15,
+        15
+      ],
+      "literal_vertex_inventory": true,
+      "interior_counts": [
+        2,
+        2
+      ]
+    },
+    {
+      "name": "open-neighbor",
+      "phase": "segments",
+      "literal_curve_partition": true,
+      "raw_vertices": [
+        15,
+        15
+      ],
+      "literal_vertex_inventory": true,
+      "interior_counts": [
+        2,
+        2
+      ]
+    },
+    {
+      "name": "open-neighbor",
+      "phase": "sizing",
+      "literal_curve_partition": true,
+      "raw_vertices": [
+        15,
+        15
+      ],
+      "literal_vertex_inventory": true,
+      "interior_counts": [
+        2,
+        2
+      ]
+    },
+    {
+      "name": "open-neighbor",
+      "phase": "refusal",
+      "literal_curve_partition": true,
+      "raw_vertices": [
+        15,
+        15
+      ],
+      "literal_vertex_inventory": true,
+      "interior_counts": [
+        2,
+        2
+      ]
+    },
+    {
+      "name": "open-neighbor",
+      "phase": "cancel",
+      "literal_curve_partition": true,
+      "raw_vertices": [
+        15,
+        15
+      ],
+      "literal_vertex_inventory": true,
+      "interior_counts": [
+        2,
+        2
+      ]
+    },
+    {
+      "name": "open-neighbor",
+      "phase": "commit",
+      "literal_curve_partition": true,
+      "raw_vertices": [
+        29,
+        29
+      ],
+      "literal_vertex_inventory": true,
+      "interior_counts": [
+        2,
+        2
+      ]
+    },
+    {
+      "name": "open-neighbor",
+      "phase": "undo",
+      "literal_curve_partition": true,
+      "raw_vertices": [
+        15,
+        15
+      ],
+      "literal_vertex_inventory": true,
+      "interior_counts": [
+        2,
+        2
+      ]
+    },
+    {
+      "name": "open-neighbor",
+      "phase": "redo",
+      "literal_curve_partition": true,
+      "raw_vertices": [
+        29,
+        29
+      ],
+      "literal_vertex_inventory": true,
+      "interior_counts": [
+        2,
+        2
+      ]
+    },
+    {
+      "name": "nested-translated",
+      "phase": "activate",
+      "literal_curve_partition": true,
+      "raw_vertices": [
+        8,
+        8
+      ],
+      "literal_vertex_inventory": true,
+      "interior_counts": [
+        0,
+        0
+      ]
+    },
+    {
+      "name": "nested-translated",
+      "phase": "segments",
+      "literal_curve_partition": true,
+      "raw_vertices": [
+        8,
+        8
+      ],
+      "literal_vertex_inventory": true,
+      "interior_counts": [
+        0,
+        0
+      ]
+    },
+    {
+      "name": "nested-translated",
+      "phase": "sizing",
+      "literal_curve_partition": true,
+      "raw_vertices": [
+        8,
+        8
+      ],
+      "literal_vertex_inventory": true,
+      "interior_counts": [
+        0,
+        0
+      ]
+    },
+    {
+      "name": "nested-translated",
+      "phase": "refusal",
+      "literal_curve_partition": true,
+      "raw_vertices": [
+        8,
+        8
+      ],
+      "literal_vertex_inventory": true,
+      "interior_counts": [
+        0,
+        0
+      ]
+    },
+    {
+      "name": "nested-translated",
+      "phase": "cancel",
+      "literal_curve_partition": true,
+      "raw_vertices": [
+        8,
+        8
+      ],
+      "literal_vertex_inventory": true,
+      "interior_counts": [
+        0,
+        0
+      ]
+    },
+    {
+      "name": "nested-translated",
+      "phase": "commit",
+      "literal_curve_partition": true,
+      "raw_vertices": [
+        22,
+        22
+      ],
+      "literal_vertex_inventory": true,
+      "interior_counts": [
+        0,
+        0
+      ]
+    },
+    {
+      "name": "nested-translated",
+      "phase": "undo",
+      "literal_curve_partition": true,
+      "raw_vertices": [
+        8,
+        8
+      ],
+      "literal_vertex_inventory": true,
+      "interior_counts": [
+        0,
+        0
+      ]
+    },
+    {
+      "name": "nested-translated",
+      "phase": "redo",
+      "literal_curve_partition": true,
+      "raw_vertices": [
+        22,
+        22
+      ],
+      "literal_vertex_inventory": true,
+      "interior_counts": [
+        0,
+        0
+      ]
+    },
+    {
+      "name": "nested-translated",
+      "phase": "finish-child",
+      "literal_curve_partition": false,
+      "raw_vertices": [
+        20,
+        22
+      ],
+      "literal_vertex_inventory": false,
+      "interior_counts": [
+        0,
+        0
+      ]
+    },
+    {
+      "name": "nested-translated",
+      "phase": "finish-outer",
+      "literal_curve_partition": false,
+      "raw_vertices": [
+        20,
+        22
+      ],
+      "literal_vertex_inventory": false,
+      "interior_counts": [
+        0,
+        0
+      ]
+    },
+    {
+      "name": "nested-translated",
+      "phase": "finish-undo",
+      "literal_curve_partition": true,
+      "raw_vertices": [
+        8,
+        8
+      ],
+      "literal_vertex_inventory": true,
+      "interior_counts": [
+        0,
+        0
+      ]
+    },
+    {
+      "name": "nested-translated",
+      "phase": "finish-redo",
+      "literal_curve_partition": false,
+      "raw_vertices": [
+        20,
+        22
+      ],
+      "literal_vertex_inventory": false,
+      "interior_counts": [
+        0,
+        0
+      ]
+    }
+  ],
+  "negatives": [
+    "lost-wire",
+    "wrong-interior",
+    "wrong-paint",
+    "lost-identity",
+    "reverse-face",
+    "lost-face",
+    "curve-merge"
+  ]
+}
