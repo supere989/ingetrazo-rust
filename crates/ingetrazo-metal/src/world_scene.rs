@@ -1085,6 +1085,11 @@ impl crate::world::World {
         let fill_key=super::world_section::FillKey::from_scene(scene,style,revisions,pose_revision);
         let fill_changed=fill_key.is_some_and(|key|pose_revision.is_none()||adapter.fill.as_ref().is_none_or(|p|p.0!=key));
         let fill_candidate=if let Some(key)=fill_key{Some((key,if let Some((old,fill))=&adapter.fill{if *old==key && pose_revision.is_some(){fill.clone()}else{Arc::new(super::world_section::Fill::prepare(metal,scene,style.section_fill_color)?)}}else{Arc::new(super::world_section::Fill::prepare(metal,scene,style.section_fill_color)?)}))}else{None};
+        let contour_eye_width=if section.enabled(){
+            let parameters=[eye.x as f32,eye.y as f32,eye.z as f32,((camera.fov_deg.to_radians()*0.5).tan()*2.*1.25/extent.1.max(1) as f64) as f32];
+            if parameters.iter().any(|v|!v.is_finite())||parameters[3]<0.{return Err("Metal contour camera finite admission".into());}
+            parameters
+        }else{[0.;4]};
         let contour_candidate=if section.enabled(){
             let samples=self.configured_sample_count();let fill=fill_candidate.is_some();
             Some(if let Some(old)=self.contour_pipeline.as_ref().filter(|p|p.samples==samples&&p.fill==fill){old.clone()}else{Arc::new(super::world_contour::Pipeline::new(metal,samples,fill)?)})
@@ -1137,7 +1142,7 @@ impl crate::world::World {
             prepared.ghosts=Some(ghosts.clone());
             prepared.ghost_edge=style.edge_color;
             prepared.contour=contour_candidate.clone();
-            prepared.contour_eye_width=[eye.x as f32,eye.y as f32,eye.z as f32,((camera.fov_deg.to_radians()*0.5).tan()*2.*1.25/extent.1.max(1) as f64) as f32];
+            prepared.contour_eye_width=contour_eye_width;
             if let Some(contour)=contour_candidate{if self.contour_pipeline.as_ref().is_none_or(|old|!Arc::ptr_eq(old,&contour)){self.stats.section_contour_pipeline_builds+=1;}self.contour_pipeline=Some(contour);}
             if ghost_changed {self.stats.ghost_builds+=1;self.stats.ghost_uploads+=ghosts.buffers.iter().filter(|b|b.is_some()).count() as u64;self.stats.ghost_upload_bytes+=(ghosts.bytes-ghosts.wire_count*24) as u64;self.stats.wire_uploads+=u64::from(ghosts.wire.is_some());self.stats.wire_upload_bytes+=(ghosts.wire_count*24) as u64;}
             self.ghosts=Some(ghosts);
