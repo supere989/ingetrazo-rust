@@ -1,0 +1,34 @@
+   Compiling ingetrazo-core v0.3.15 (/tmp/ingetrazo-pushpull-endpoints/crates/ingetrazo-core)
+error[E0599]: no associated function or constant named `new_v5` found for struct `Uuid` in the current scope
+   --> crates/ingetrazo-core/src/groups.rs:16:20
+    |
+ 16 |         _ => Uuid::new_v5(&Uuid::NAMESPACE_URL, id.as_bytes()),
+    |                    ^^^^^^ associated function or constant not found in `Uuid`
+    |
+note: if you're trying to build a new `Uuid` consider using one of the following associated functions:
+      uuid::builder::<impl Uuid>::nil
+      uuid::builder::<impl Uuid>::max
+      uuid::builder::<impl Uuid>::from_fields
+      uuid::builder::<impl Uuid>::from_fields_le
+      and 11 others
+   --> /home/dev/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/uuid-1.27.0/src/builder.rs:72:5
+    |
+ 72 |     pub const fn nil() -> Self {
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+ 98 |     pub const fn max() -> Self {
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+122 |     pub const fn from_fields(d1: u32, d2: u16, d3: u16, d4: &[u8; 8]) -> Uuid {
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+168 |     pub const fn from_fields_le(d1: u32, d2: u16, d3: u16, d4: &[u8; 8]) -> Uuid {
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+help: there is an associated function `new_v4` with a similar name
+   --> /home/dev/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/uuid-1.27.0/src/v4.rs:33:5
+    |
+ 33 |     pub fn new_v4() -> Uuid {
+    |     ^^^^^^^^^^^^^^^^^^^^^^^
+
+For more information about this error, try `rustc --explain E0599`.
+error: could not compile `ingetrazo-core` (lib) due to 1 previous error

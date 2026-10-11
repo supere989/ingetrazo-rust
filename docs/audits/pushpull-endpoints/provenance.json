@@ -1,0 +1,43 @@
+{
+  "runtime_commit": "3e85e2921d2f47ee9a59da4f5e153c353efde8d0",
+  "base": "dc1ee0cf",
+  "original_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "recorded_utc": "2026-10-11T08:19:07.858218+00:00",
+  "source_sha256": {
+    "crates/ingetrazo-tools/src/pushpull.rs": "6f916b8bc1bdbe3254821774dbb1ad0a92d92fed9275cfca1aaaa8f749a5fa57",
+    "crates/ingetrazo-tools/examples/pushpull_gate2_fixture.rs": "1f0238813db39d5b3aac10b0d425d482e09630b66e8d6fe3ffca31948e6e8f10",
+    "crates/ingetrazo-gui/examples/pushpull_endpoints_app.rs": "be4b90ac40ab14ebd171a864a3d5639e58194a5c41704b13f0f0a5f99c7be68f",
+    "scripts/reference-pushpull-endpoints.py": "a067a4a7dfee89f3f34089feb357525b359b0550870cda1c0fc8d4076cd96b2f",
+    "scripts/check-pushpull-endpoints.py": "ec6f4751d5c893ce0711a785a349d65b32199800bb348bc89c8a7bb20a551a9d"
+  },
+  "binary_sha256": {
+    "/tmp/ingetrazo-metal-world-target/debug/examples/pushpull_gate2_fixture": "d4e0f10c23e068bc1ae6470b534eb1021139dd50ac163dc2ccabaea9bea0afec",
+    "/tmp/ingetrazo-metal-world-target/debug/examples/pushpull_endpoints_app": "c6b80bc52e18e453104d8a139fd321a25c6d57c7c47310f3c35009894b320cd4"
+  },
+  "artifact_sha256": {
+    "source.json": "67232c772e2e9c9734738e3e75a4d6f60e03d78abd75b0313073f427dbbe1bea",
+    "native.json": "1cfa55e927626ed1478b3ad35e16681f2c368dd3b9c37326400a7ba544069840",
+    "comparison.json": "127626162da4b9a89a51415e9d47cb94428e9c5ef2b008dde60d816822dc6505",
+    "app.json": "b6b7b09e0b86e36449875725a499b79e226d29623adb99f13bb426b17c13bf04",
+    "README.md": "b5cfc503b31166662c81ae3f873aed451e48913455ef745b24a7a8490dcf2284",
+    "initial-uuid-build-failure.log": "62f2b319c105776b98df8a87fb4ae1b1434f9df56e83278d9dca744d182fca75",
+    "build.log": "491cc685980a9d7fd0b3f465858e2c1bc85c0ddc80ca18a34a97c55b90332839",
+    "tests.log": "776d62d6399942376f0335600a2ef780c421e258d8453408c97bc71ebde42407",
+    "app.log": "1d54f491e6b2cb2cf0f73df917bdccd7eb5aa5ea907be5a9f87c77fbbbfc9e09"
+  },
+  "build_env": {
+    "CARGO_TARGET_DIR": "/tmp/ingetrazo-metal-world-target",
+    "CARGO_PROFILE_DEV_DEBUG": "0",
+    "CARGO_PROFILE_TEST_DEBUG": "0",
+    "CARGO_INCREMENTAL": "0",
+    "jobs": 2
+  },
+  "results": {
+    "focused_pushpull_tests": 11,
+    "exact_source_cases": 12,
+    "app_dispatch_cases": 13,
+    "source_acquisition_controls": 2,
+    "corrupted_result_controls": 6
+  },
+  "scope": "Exact bounded source tool fields/shape plus actual app pointer/VCB/history handlers. No OS-rendered gesture or full Gate 2 claim."
+}
