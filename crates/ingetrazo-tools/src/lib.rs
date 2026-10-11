@@ -22,6 +22,7 @@ pub mod rotated_rectangle;
 pub mod scale_tool;
 pub mod section;
 pub mod select;
+mod select_pick;
 pub mod tape;
 pub mod text;
 
