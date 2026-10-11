@@ -1,0 +1,14 @@
+{
+  "passed_glyph_union": true,
+  "whole_passed": false,
+  "scope": "Actual source and native own viewport glyph-only postcapture diagnostics on fixed Chapel iso, exactcamera800x600; source reference neutral-policy/glyph-widget-diagnostic.png",
+  "whole_differing_pixels": 1295,
+  "whole_max": 27,
+  "glyph_union_differing_pixels": 0,
+  "glyph_union_max": 0,
+  "source_glyph_mask": 3351,
+  "native_glyph_mask": 3351,
+  "mask_xor": 0,
+  "off_baseline_differing_pixels": 1297,
+  "remaining": "Full overlay/model geometry remainsstrictFAIL; no generalfont/DPR/depth/platform closure"
+}
