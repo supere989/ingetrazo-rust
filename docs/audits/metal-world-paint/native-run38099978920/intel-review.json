@@ -1,0 +1,25 @@
+{
+  "source": "f260c73ac0362d71e27ea723e4c36b4ea5c47cf9",
+  "artifact_id": 11687242457,
+  "zip_sha256": "a003809b8345b9a2616816d259f7c44dea94c3a3a2393a3a9c9f38b6a760a580",
+  "runtime": {
+    "exit_code": 1,
+    "outer_timeout": false
+  },
+  "runtime_log": "World native texture size query unavailable: requested_bytes=16384, queried_size=0, queried_align=0, extent=64x64, format=MTLPixelFormat(70), storage=MTLStorageMode(2), hazard=MTLHazardTrackingMode(2), usage=MTLTextureUsage(5), device=Apple Paravirtual device, default_query=0/0, untracked_query=0/0, family_apple2=false, family_mac2=false, family_common3=false, low_power=false, headless=false\n",
+  "binary_sha256": "f71531cc8973effdba6c9596770dd988f2dfe7d1a6480e30cf9c72474aac5b32  target/debug/examples/native_world_depth\n",
+  "source_sha256_manifest": "a6f95a186dd3aa970884ce833967a9fe454d465d919f012347eaf7e88c68d3eb  crates/ingetrazo-metal/src/world.rs\na9427b40cb262595fd8462ea9a69254f609585d3fbf7dc04f889536a31383703  crates/ingetrazo-metal/src/world_admission.rs\n63a659de31a818e9b73d87985b75bb42f1c6b5b9251f92baa7a2ded9b5dc9d84  crates/ingetrazo-metal/src/world_policy.rs\nbc4940d9a647118c5533a8aa3190ab0fa12970bff0c17ea37eab9f7bd51cceed  crates/ingetrazo-metal/src/shaders/world.metal\na14eb0361c482e20f0e19598d0e2b1ca070b68970bfa19e778a42019e7494de1  crates/ingetrazo-metal/src/egui_painter.rs\n0bf380cb141c712c1654eb895c1c0a5465f2133e43db9ba6420ce1c324e4f87d  crates/ingetrazo-metal/src/presentation.rs\nbc6ff81bfa30ac424d5570c336104ce8ae4280b0e4f23a258db92e1177c8f7ce  crates/ingetrazo-metal/examples/native_world_depth.rs\nc254aaa605f8955ba786b729d8d99f119534d6b0424e9be7fdd342db218bf5ee  scripts/check-metal-world-depth.py\n",
+  "inventory": [
+    "binary.sha256",
+    "os.txt",
+    "build.log",
+    "pixel-review.json",
+    "pixel-review.log",
+    "revision.txt",
+    "runtime-result.json",
+    "runtime.log",
+    "sdk.txt",
+    "source.sha256"
+  ],
+  "scope": "authoritative descriptor/family observations; original admission unchanged, no frames implies required18 gate FAIL; not physical Intel hardware acceptance"
+}
