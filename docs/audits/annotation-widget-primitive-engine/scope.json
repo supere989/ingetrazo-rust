@@ -1,0 +1,9 @@
+{
+  "scope": "actual original bound methods with post-capture primitive-family filter; diagnostic only",
+  "source_engine": 13,
+  "dpi": 96,
+  "geometry_difference_pixels": 455,
+  "glyph_difference_pixels": 3344,
+  "source_qt_policy": "qopenglpaintengine.cpp floors glyph Y without VerticalSubpixelPositioning and enables GL_MULTISAMPLE for Antialiasing; production native currently uses raster Y rounding",
+  "remaining": "operator/MSAA/font details need strict actual controls; no full row promotion"
+}

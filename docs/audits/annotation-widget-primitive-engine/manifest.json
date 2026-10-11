@@ -1,0 +1,12 @@
+{
+  "transport.json": "d890ddbfe78d4d0d73ef454b0368b7b89c0654f2c0b42d8542fc3bf78452a2b3",
+  "source.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "primitive-comparison.json": "6b86104ca1573ef7ba23ba3e8dc0108bd7fbc2c996b3a9c09c84cf48d9a0757d",
+  "geometry-widget-diagnostic.png": "6ab625f8942bf259d686b6f59dc9bd575b456c08e5da10e5803f895a52d24ad9",
+  "geometry-raster-diagnostic.png": "661b78b8118f7ee8f5cf41cc1877b2080012b8cbf0bd8058fd08999cfb599fdd",
+  "glyph-widget-diagnostic.png": "125499fc0aa6f9681eaa1e23a020cefbedcbe81e0b6cc6cc54e6264a14d6e9d9",
+  "glyph-raster-diagnostic.png": "15d2edeb682e21f5231f28c84f9ffdc88e436e321bcc69617de77c463e9fa287",
+  "primitive-engine-diagnostic.json": "d9eef8296f79135050284af6a6f16d229aac46914ffb10c9269dd09eac11745b",
+  "annotations-on-phase.json": "33f9f8d73cb67ac83681ab282e6fd13fb767c0cf5422ce6d89173b45296430c4",
+  "scope.json": "4ff12ed0f8dfd11dfe81d0cc139a4ffddc95c16f1c5d4331742dbe7737469b6b"
+}

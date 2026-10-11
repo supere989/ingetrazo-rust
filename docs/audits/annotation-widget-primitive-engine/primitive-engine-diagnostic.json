@@ -1,0 +1,37 @@
+{
+  "scope": "post-acceptance source-only layer filtering for target-engine attribution; original bound methods unchanged, not parity oracle",
+  "engine_rows": [
+    {
+      "kind": "geometry",
+      "engine": 13,
+      "device_dpi": [
+        96,
+        96
+      ]
+    },
+    {
+      "kind": "geometry",
+      "engine": 13,
+      "device_dpi": [
+        96,
+        96
+      ]
+    },
+    {
+      "kind": "glyph",
+      "engine": 13,
+      "device_dpi": [
+        96,
+        96
+      ]
+    },
+    {
+      "kind": "glyph",
+      "engine": 13,
+      "device_dpi": [
+        96,
+        96
+      ]
+    }
+  ]
+}
