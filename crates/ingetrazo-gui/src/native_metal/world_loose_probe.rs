@@ -114,6 +114,7 @@ pub(crate) fn run(root: PathBuf) -> Result<(), String> {
     };
     render(&mut app, "loose-initial", vec![])?;
     render(&mut app, "loose-warm", vec![])?;
+    render(&mut app, "loose-warm2", vec![])?;
     let count = app.native_metal_world.as_ref().unwrap().geometry_uploads();
     for vertex in &mut app.scene.mesh.vertices {
         vertex.position.x += 0.8;
