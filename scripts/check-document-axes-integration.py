@@ -155,11 +155,17 @@ da = archive("dimension-anchor-admission", "manifest.json", [name+ending for nam
 run([binaries/(consumers[19]+suffix), dimension_anchors, "--admission"], "dimension-anchor-admission/runtime.log")
 run([sys.executable, repo/"scripts/check-dimension-anchor-admission.py", dimension_anchors], "dimension-anchor-admission/acceptance.json")
 run([sys.executable, repo/"scripts/reopen-dimension-anchor-admission.py", dimension_anchors], "dimension-anchor-admission/reopen-acceptance.json")
+dimension_preview = out/"dimension-preview"
+preview_cases = ["front-z", "side-x", "aligned", "axial-x", "axial-y", "nested"]
+dp = archive("dimension-preview", "manifest.json", [name+ending for name in preview_cases for ending in ["-input.igz", "-original.igz"]]+["preview-original.json", "initial-native.json"], dimension_preview)
+run([binaries/(consumers[19]+suffix), dimension_preview, "--preview"], "dimension-preview/runtime.log")
+run([sys.executable, repo/"scripts/check-dimension-preview.py", dimension_preview], "dimension-preview/acceptance.json")
+run([sys.executable, repo/"scripts/reopen-dimension-preview.py", dimension_preview], "dimension-preview/reopen-acceptance.json")
 rows = json.loads((doc/"native.json").read_text())["rows"]
 assert [(x["fixture"],x["phase"]) for x in rows] == [(f,p) for f in ["retained","nested-leaves"] for p in ["edited","undo","redo"]]
 assert all(x["saved"] and x["clean"] for x in rows)
 result = {"revision":subprocess.check_output(["git","rev-parse","HEAD"],cwd=repo,text=True).strip(),
-          "source_pin":pin,"binary_sha256":identities,"source_archives":{"axes":a,"documents":d,"fillet":f,"pushpull_finite":p,"paste_save":ps,"box_selection":bs,"materials":mr,"cursor":cn,"annotations":ad,"annotation_hover_delete":ahd,"zoom_extents":ze,"annotation_move":am,"annotation_acquisition":aa,"mesh_kernel":mk,"annotation_edit_style":ae,"annotation_text_create":at,"finite_kernel":mf,"finite_kernel_initial":mfa,"annotation_hover":ah,"dimension_anchor_admission":da},
+          "source_pin":pin,"binary_sha256":identities,"source_archives":{"axes":a,"documents":d,"fillet":f,"pushpull_finite":p,"paste_save":ps,"box_selection":bs,"materials":mr,"cursor":cn,"annotations":ad,"annotation_hover_delete":ahd,"zoom_extents":ze,"annotation_move":am,"annotation_acquisition":aa,"mesh_kernel":mk,"annotation_edit_style":ae,"annotation_text_create":at,"finite_kernel":mf,"finite_kernel_initial":mfa,"annotation_hover":ah,"dimension_anchor_admission":da,"dimension_preview":dp},
           "axes":json.loads((axes/"check.json").read_text()),"documents":{"actual_app_saves":len(rows),"exact_original_reopens":6,"leaf_record_types":15,"negative_controls":5},
           "fillet":json.loads((fillet/"check.json").read_text()),"fillet_volume":json.loads((fillet/"volume.json").read_text()),"pushpull":json.loads((out/"pushpull-comparison.json").read_text()),
           "pushpull_finite":json.loads((finite/"comparison.json").read_text()),
@@ -179,6 +185,8 @@ result = {"revision":subprocess.check_output(["git","rev-parse","HEAD"],cwd=repo
           "annotation_hover":json.loads((annotation_hover/"acceptance.json").read_text()),
           "dimension_anchor_admission":json.loads((dimension_anchors/"acceptance.json").read_text()),
           "dimension_anchor_reopens":json.loads((dimension_anchors/"reopen-acceptance.json").read_text()),
+          "dimension_preview":json.loads((dimension_preview/"acceptance.json").read_text()),
+          "dimension_preview_reopens":json.loads((dimension_preview/"reopen-acceptance.json").read_text()),
           "fresh_source_acquisitions":0,"result":"pass"}
 (out/"result.json").write_text(json.dumps(result,indent=2)+"\n")
 print(json.dumps(result))

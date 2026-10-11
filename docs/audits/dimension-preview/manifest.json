@@ -210,5 +210,6 @@
   "binary": {
     "path": "/tmp/ingetrazo-ai-registry-target/debug/examples/dimension_anchor_acceptance_fixture",
     "sha256": "fc3b5da7ca3cf1e4da1dd191857d70d21b1386b64833239058331e1201bbf49e"
-  }
+  },
+  "archive_sha256": "d8d7b3741fe87e485b72f5b59008e0ce1cb984490ab0d8b492467413963f2f3e"
 }

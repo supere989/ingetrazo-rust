@@ -38,6 +38,8 @@ fn main() {
         .position(|v| v.position == DVec3::new(11., 20., 30.))
         .unwrap();
     app.scene.mesh.vertices[vertex].position.x = 14.;
+    // Match MoveVerticesCommand: publish the moved positions to the local registry.
+    app.scene.mesh.rebuild_spatial_index();
     app.scene.refresh_dimensions();
     app.save_undo_state();
     let mut dimension = Dimension::new(
@@ -105,6 +107,8 @@ fn main() {
     section.begin_component_edit();
     section.save_undo_state();
     section.scene.mesh.vertices[1].position.x = 14.;
+    // Match MoveVerticesCommand: publish the moved positions to the local registry.
+    section.scene.mesh.rebuild_spatial_index();
     section.save_undo_state();
     section
         .scene
@@ -154,6 +158,8 @@ fn main() {
     }
     nested.save_undo_state();
     nested.scene.mesh.vertices[1].position.x = 117.;
+    // Match MoveVerticesCommand: publish the moved positions to the local registry.
+    nested.scene.mesh.rebuild_spatial_index();
     nested.scene.refresh_dimensions();
     nested.save_undo_state();
     let mut d = Dimension::new(
