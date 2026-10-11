@@ -1,0 +1,22 @@
+{
+  "source": "505fc6ae",
+  "scope": "CPU packed-slot decision plus source review; native Apple update/write path not executed locally",
+  "changed_behavior": "copy64 bytes only when a new GPU buffer requires initialization or old packed-slot matrix differs; changed ordering compares old slot source index; winding alone is not a matrix write",
+  "admission": "Order, buffer and CPU pose allocation complete before any idle-target write/publication; existing pose/order preserved on fallible refusal",
+  "focused_test": "cargo test -p ingetrazo-metal --lib packed_update -j2",
+  "result": "1 passed;0 failed;18 filtered",
+  "controls": [
+    "one changed packed slot despite source-index2",
+    "reordering requires replacement at slot1",
+    "winding-only matrix unchanged",
+    "missing old order/storage requires write"
+  ],
+  "environment_failures": [
+    "fresh worktree omitted original-source symlink; corrected before successful test"
+  ],
+  "remaining": [
+    "native Apple compiler/runtime and64-byte counter/readback positive",
+    "Scene adapter geometry-domain invalidation contract",
+    "full Metal viewport policies/host/presentation"
+  ]
+}
