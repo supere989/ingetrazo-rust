@@ -65,16 +65,7 @@ pub fn render_menu_bar(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
                 ui.close_menu();
             }
             if ui.button(format!("{}\tCtrl+Shift+S", tr("Save As…"))).clicked() {
-                let default_name = app.current_file
-                    .as_ref()
-                    .map(|p| p.to_string_lossy().to_string())
-                    .unwrap_or_else(|| "model.igz".to_string());
-                if let Some(path) = crate::dialogs::pick_save_file(&tr("Save Document"), &default_name, "*.igz *.obj *.stl *.glb *.dae *.ifc|3D formats") {
-                    app.save_to_path(&path);
-                } else {
-                    app.show_save_dialog = true;
-                    app.dialog_path_input = default_name;
-                }
+                app.save_document_as();
                 ui.close_menu();
             }
 

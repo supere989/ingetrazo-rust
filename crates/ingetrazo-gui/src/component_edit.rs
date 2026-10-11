@@ -24,6 +24,112 @@ pub struct ComponentEditSession {
     section_baseline: Vec<ingetrazo_core::section::SectionPlane>,
 }
 
+impl ComponentEditSession {
+    fn finish_copy(&self) -> Self {
+        Self {
+            original_scene:self.original_scene.clone(),cancel_scene:Scene::new(),original_camera:self.original_camera.clone(),
+            original_undo:Vec::new(),original_redo:Vec::new(),group_id:self.group_id,fold_history:self.fold_history,
+            private_container_mesh:self.private_container_mesh,container_bake:self.container_bake,container_axes:self.container_axes,
+            leaf_share_back:self.leaf_share_back,mesh_baseline:self.mesh_baseline.clone(),groups_baseline:self.groups_baseline.clone(),
+            mesh_share_baseline:self.mesh_share_baseline.clone(),definitions_baseline:self.definitions_baseline.clone(),
+            editing_definition:self.editing_definition,dimension_baseline:self.dimension_baseline.clone(),section_baseline:self.section_baseline.clone(),
+        }
+    }
+}
+
+struct FinishPlan {
+    candidate: Scene,
+    changed: bool,
+    target: Vec<uuid::Uuid>,
+    fold: bool,
+    folded_snapshot: Option<Scene>,
+    lifted_undo: Vec<Scene>,
+    lifted_redo: Vec<Scene>,
+    parked_candidates: Vec<Scene>,
+}
+fn prepare_finish(finishing_scene: &Scene, stack: &[ComponentEditSession], undo: &[Scene], redo: &[Scene]) -> Result<FinishPlan,String> {
+        let session=stack.last().unwrap();
+        let (candidate,changed)=match component_candidate(session,&finishing_scene) {Ok(result)=>result,Err(error)=>return Err(error)};
+        // Lift target-tagged ordinary commands before changing either stack.
+        // Each snapshot receives the same source world/container publication
+        // as Finish, while retaining its individual global chronological slot.
+        let target=finishing_scene.history_context.clone();
+        let fold=session.fold_history && session.mesh_baseline!=finishing_scene.mesh;
+        let folded_snapshot=if fold {match shareback_snapshot(session,&candidate){Ok(mut scene)=>{
+            let mut targets:Vec<ingetrazo_core::bim::MetadataTarget>=Vec::new();
+            for entry in undo.iter().filter(|entry|entry.history_context.starts_with(&target)){if let Some(history)=&entry.history_bim{for patch in &history.targets{if let Some(old)=targets.iter_mut().find(|old|old.context==patch.context&&old.group==patch.group&&old.vertices==patch.vertices){old.expected=patch.expected.clone();}else{targets.push(patch.clone());}}}}
+            if !targets.is_empty(){scene.history_bim=Some(ingetrazo_core::bim::MetadataHistory{targets});}
+            Some(scene)},Err(error)=>return Err(error)}}else{None};
+        let mut lifted_undo=undo.to_vec();let mut lifted_redo=redo.to_vec();
+        if let Some(before)=lifted_undo.last_mut(){if before.history_images.0.is_none(){before.history_images.0=Some(ingetrazo_core::image_plane::ImageDelta::between(&before.image_planes,&finishing_scene.image_planes));}}
+        if let Some(before)=lifted_undo.last_mut(){if before.history_terrain.0.is_none(){before.history_terrain.0=Some(ingetrazo_core::georef::TerrainHistory::seal(&before.terrain,&finishing_scene.terrain));}}
+        if let Some(before)=lifted_undo.last_mut(){if before.history_layers.0.is_none(){before.history_layers.0=Some(ingetrazo_core::layers::LayerDelta::between(&before.layers,&finishing_scene.layers));}}
+        if let Some(before)=lifted_undo.last_mut(){if before.history_views.0.is_none(){before.history_views.0=Some(ingetrazo_core::saved_views::ViewMembershipDelta::between(&before.saved_views,&finishing_scene.saved_views));}}
+        if !fold || !changed {
+            for entry in lifted_undo.iter_mut().chain(lifted_redo.iter_mut()) {
+                if entry.history_context==target {
+                    *entry=match component_candidate(session,entry) {Ok((mut scene,_))=>{
+                        scene.selection=session.original_scene.selection.clone();scene.selection_order=session.original_scene.selection_order.clone();
+                        scene.version=session.original_scene.version;scene.view_version=session.original_scene.view_version;scene.history_shareback=entry.history_shareback;scene.history_bim=entry.history_bim.clone();scene.history_views.0=entry.history_views.0.clone();scene.history_terrain=entry.history_terrain.clone();scene.history_layers=entry.history_layers.clone();scene.history_images=entry.history_images.clone();scene
+                    },Err(error)=>return Err(error)};
+                }
+            }
+        }
+
+        // Apply this source entry bake to every older target view, including
+        // parked ancestors. Prior Move snapshots keep inverse deltas against
+        // the new mesh frame; their metadata and nested placement list survive.
+        // Older root snapshots need ancestor entry bakes first, exactly as
+        // the live source enters outer→inner. This preserves identity matrices
+        // and prevents an unentered local frame from being treated as world.
+        let bakes:Vec<_>=stack.iter().map(SourceEntryBake::from_session).collect();
+        for entry in lifted_undo.iter_mut().chain(lifted_redo.iter_mut()) {
+            for bake in &bakes {if let Err(error)=bake.apply(entry){return Err(error);}}
+        }
+        let mut parked_candidates:Vec<_>=stack[..stack.len()-1].iter().map(|parent|parent.original_scene.clone()).collect();
+        for parent in &mut parked_candidates {for bake in &bakes {if let Err(error)=bake.apply(parent){return Err(error);}}}
+        Ok(FinishPlan {candidate,changed,target,fold,folded_snapshot,lifted_undo,lifted_redo,parked_candidates})
+}
+fn publish_finish(plan: FinishPlan, scene: &mut Scene, stack: &mut Vec<ComponentEditSession>, undo: &mut Vec<Scene>, redo: &mut Vec<Scene>) {
+    let FinishPlan {candidate,changed,target,fold,folded_snapshot,lifted_undo,lifted_redo,parked_candidates}=plan;
+        let session=stack.pop().unwrap();
+        if !changed {
+            if let Some(parent)=stack.last_mut() {
+                // A child entry bake is outside the original command History.
+                // Retire only its representation delta from the parent's edit
+                // baseline. Never hide a parent command already changing that
+                // child, or an independently authored prototype/definition.
+                if let (Some(before),Some(after),Some(baseline))=(
+                    session.original_scene.groups.iter().find(|g|g.id==session.group_id),
+                    candidate.groups.iter().find(|g|g.id==session.group_id),
+                    parent.groups_baseline.iter_mut().find(|g|g.id==session.group_id)) {
+                    if baseline==before {*baseline=after.clone();}
+                }
+                for (token,mesh) in &candidate.mesh_shares {
+                    if parent.mesh_share_baseline.get(token)==session.original_scene.mesh_shares.get(token) {
+                        parent.mesh_share_baseline.insert(*token,mesh.clone());
+                    }
+                }
+                for (id,definition) in &candidate.component_definitions {
+                    if parent.definitions_baseline.get(id)==session.original_scene.component_definitions.get(id) {
+                        parent.definitions_baseline.insert(*id,definition.clone());
+                    }
+                }
+            }
+        }
+        for (parent,candidate) in stack.iter_mut().zip(parked_candidates){parent.original_scene=candidate;}
+        *scene=candidate;
+        *undo=lifted_undo;*redo=lifted_redo;
+        if fold && changed {
+            // Sharing leaves fold only commands targeting this edit mesh.
+            // Prior document commands retain their global positions.
+            undo.retain(|entry|!entry.history_context.starts_with(&target));
+            redo.retain(|entry|!entry.history_context.starts_with(&target));
+            if changed {undo.push(folded_snapshot.unwrap());redo.clear();}
+        }
+
+}
+
 
 #[derive(Clone)]
 struct SourceEntryBake {id:uuid::Uuid,matrix:Option<glam::DMat4>,axes:Option<glam::DMat4>,private:Option<uuid::Uuid>}
@@ -419,90 +525,45 @@ impl IngeTrazoApp {
     pub fn finish_component_edit(&mut self) {
         self.sync_document_presentation();
         if self.component_edit_stack.is_empty() {self.status_message="No group edit is active".into();return;}
-        // Validate the model after retiring transient preview without changing
-        // the live tool, Scene, inference state, or history on refusal.
         let preserve_global_preview=self.active_tool.preserves_global_preview_on_context_exit();
         let mut finishing_scene=self.scene.clone();
-        if !preserve_global_preview{self.active_tool.restore_transient_model(&mut finishing_scene);}
-        let session=self.component_edit_stack.last().unwrap();
-        let (candidate,changed)=match component_candidate(session,&finishing_scene) {Ok(result)=>result,Err(error)=>{self.status_message=error;return;}};
-        // Lift target-tagged ordinary commands before changing either stack.
-        // Each snapshot receives the same source world/container publication
-        // as Finish, while retaining its individual global chronological slot.
-        let target=self.scene.history_context.clone();
-        let fold=session.fold_history && session.mesh_baseline!=finishing_scene.mesh;
-        let folded_snapshot=if fold {match shareback_snapshot(session,&candidate){Ok(mut scene)=>{
-            let mut targets:Vec<ingetrazo_core::bim::MetadataTarget>=Vec::new();
-            for entry in self.undo_stack.iter().filter(|entry|entry.history_context.starts_with(&target)){if let Some(history)=&entry.history_bim{for patch in &history.targets{if let Some(old)=targets.iter_mut().find(|old|old.context==patch.context&&old.group==patch.group&&old.vertices==patch.vertices){old.expected=patch.expected.clone();}else{targets.push(patch.clone());}}}}
-            if !targets.is_empty(){scene.history_bim=Some(ingetrazo_core::bim::MetadataHistory{targets});}
-            Some(scene)},Err(error)=>{self.status_message=error;return;}}}else{None};
-        let mut lifted_undo=self.undo_stack.clone();let mut lifted_redo=self.redo_stack.clone();
-        if let Some(before)=lifted_undo.last_mut(){if before.history_images.0.is_none(){before.history_images.0=Some(ingetrazo_core::image_plane::ImageDelta::between(&before.image_planes,&finishing_scene.image_planes));}}
-        if let Some(before)=lifted_undo.last_mut(){if before.history_terrain.0.is_none(){before.history_terrain.0=Some(ingetrazo_core::georef::TerrainHistory::seal(&before.terrain,&finishing_scene.terrain));}}
-        if let Some(before)=lifted_undo.last_mut(){if before.history_layers.0.is_none(){before.history_layers.0=Some(ingetrazo_core::layers::LayerDelta::between(&before.layers,&finishing_scene.layers));}}
-        if let Some(before)=lifted_undo.last_mut(){if before.history_views.0.is_none(){before.history_views.0=Some(ingetrazo_core::saved_views::ViewMembershipDelta::between(&before.saved_views,&finishing_scene.saved_views));}}
-        if !fold || !changed {
-            for entry in lifted_undo.iter_mut().chain(lifted_redo.iter_mut()) {
-                if entry.history_context==target {
-                    *entry=match component_candidate(session,entry) {Ok((mut scene,_))=>{
-                        scene.selection=session.original_scene.selection.clone();scene.selection_order=session.original_scene.selection_order.clone();
-                        scene.version=session.original_scene.version;scene.view_version=session.original_scene.view_version;scene.history_shareback=entry.history_shareback;scene.history_bim=entry.history_bim.clone();scene.history_views.0=entry.history_views.0.clone();scene.history_terrain=entry.history_terrain.clone();scene.history_layers=entry.history_layers.clone();scene.history_images=entry.history_images.clone();scene
-                    },Err(error)=>{self.status_message=error;return;}};
-                }
-            }
-        }
+        if !preserve_global_preview {self.active_tool.restore_transient_model(&mut finishing_scene);}
+        let plan=match prepare_finish(&finishing_scene,&self.component_edit_stack,&self.undo_stack,&self.redo_stack) {
+            Ok(plan)=>plan,Err(error)=>{self.status_message=error;return;}
+        };
+        let changed=plan.changed;
+        let camera=self.component_edit_stack.last().unwrap().original_camera.clone();
+        if !preserve_global_preview {self.set_tool(ToolType::Select);}else{self.active_tool.detach_context_preview();}
+        publish_finish(plan,&mut self.scene,&mut self.component_edit_stack,&mut self.undo_stack,&mut self.redo_stack);
+        self.bump_model_revision();self.camera=camera;self.sync_bim_draw_activation();
+        self.status_message=if changed {"Committed group edit"}else{"Group edit unchanged; pending history targets validated"}.into();
+    }
 
-        // Apply this source entry bake to every older target view, including
-        // parked ancestors. Prior Move snapshots keep inverse deltas against
-        // the new mesh frame; their metadata and nested placement list survive.
-        // Older root snapshots need ancestor entry bakes first, exactly as
-        // the live source enters outer→inner. This preserves identity matrices
-        // and prevents an unentered local frame from being treated as world.
-        let bakes:Vec<_>=self.component_edit_stack.iter().map(SourceEntryBake::from_session).collect();
-        for entry in lifted_undo.iter_mut().chain(lifted_redo.iter_mut()) {
-            for bake in &bakes {if let Err(error)=bake.apply(entry){self.status_message=error;return;}}
+    /// Prepare the complete exit on model/history state only. No live context,
+    /// tool or inference state changes if any outer publication would refuse.
+    pub(crate) fn finish_contexts_for_save(&mut self) -> bool {
+        if self.component_edit_stack.is_empty() {return true;}
+        self.sync_document_presentation();
+        let mut scene=self.scene.clone();
+        let preserve=self.active_tool.preserves_global_preview_on_context_exit();
+        if !preserve {self.active_tool.restore_transient_model(&mut scene);}
+        let mut stack=self.component_edit_stack.iter().map(ComponentEditSession::finish_copy).collect::<Vec<_>>();
+        let first=match prepare_finish(&scene,&stack,&self.undo_stack,&self.redo_stack) {
+            Ok(plan)=>plan,Err(error)=>{self.status_message=error;return false;}
+        };
+        let mut undo=Vec::new();let mut redo=Vec::new();
+        publish_finish(first,&mut scene,&mut stack,&mut undo,&mut redo);
+        while !stack.is_empty() {
+            let plan=match prepare_finish(&scene,&stack,&undo,&redo) {
+                Ok(plan)=>plan,Err(error)=>{self.status_message=error;return false;}
+            };
+            publish_finish(plan,&mut scene,&mut stack,&mut undo,&mut redo);
         }
-        let mut parked_candidates:Vec<_>=self.component_edit_stack[..self.component_edit_stack.len()-1].iter().map(|parent|parent.original_scene.clone()).collect();
-        for parent in &mut parked_candidates {for bake in &bakes {if let Err(error)=bake.apply(parent){self.status_message=error;return;}}}
-        if !preserve_global_preview{self.set_tool(ToolType::Select);}else{self.active_tool.detach_context_preview();}
-        let session=self.component_edit_stack.pop().unwrap();
-        if !changed {
-            if let Some(parent)=self.component_edit_stack.last_mut() {
-                // A child entry bake is outside the original command History.
-                // Retire only its representation delta from the parent's edit
-                // baseline. Never hide a parent command already changing that
-                // child, or an independently authored prototype/definition.
-                if let (Some(before),Some(after),Some(baseline))=(
-                    session.original_scene.groups.iter().find(|g|g.id==session.group_id),
-                    candidate.groups.iter().find(|g|g.id==session.group_id),
-                    parent.groups_baseline.iter_mut().find(|g|g.id==session.group_id)) {
-                    if baseline==before {*baseline=after.clone();}
-                }
-                for (token,mesh) in &candidate.mesh_shares {
-                    if parent.mesh_share_baseline.get(token)==session.original_scene.mesh_shares.get(token) {
-                        parent.mesh_share_baseline.insert(*token,mesh.clone());
-                    }
-                }
-                for (id,definition) in &candidate.component_definitions {
-                    if parent.definitions_baseline.get(id)==session.original_scene.component_definitions.get(id) {
-                        parent.definitions_baseline.insert(*id,definition.clone());
-                    }
-                }
-            }
-        }
-        for (parent,candidate) in self.component_edit_stack.iter_mut().zip(parked_candidates){parent.original_scene=candidate;}
-        self.scene=candidate;self.bump_model_revision();self.camera=session.original_camera;
-        self.undo_stack=lifted_undo;self.redo_stack=lifted_redo;
-        if fold && changed {
-            // Sharing leaves fold only commands targeting this edit mesh.
-            // Prior document commands retain their global positions.
-            self.undo_stack.retain(|entry|!entry.history_context.starts_with(&target));
-            self.redo_stack.retain(|entry|!entry.history_context.starts_with(&target));
-            if changed {self.undo_stack.push(folded_snapshot.unwrap());self.redo_stack.clear();}
-        }
-
-        self.sync_bim_draw_activation();
-        self.status_message=if changed {"Committed group edit"} else {"Group edit unchanged; pending history targets validated"}.into();
+        // Retire context-bound acquisition only after every candidate passed.
+        // The selected tool and current camera stay active for the document.
+        if preserve {self.active_tool.detach_context_preview();}else{self.set_tool(self.active_tool_type);}
+        scene.clear_selection();self.scene=scene;self.undo_stack=undo;self.redo_stack=redo;
+        self.component_edit_stack.clear();self.bump_model_revision();self.sync_bim_draw_activation();true
     }
 
     pub fn cancel_component_edit(&mut self) {
@@ -580,13 +641,35 @@ mod tests {
         app.redo();let mut expected=committed;expected.version=app.scene.version;expected.view_version=app.scene.view_version;assert_eq!(app.scene,expected);assert!(app.scene.history_shareback.is_none());
     }
     #[test]
-    fn cancel_and_fragment_save_preserve_document_and_history() {
+    fn cancel_preserves_document_and_history() {
         let mut app=app();app.save_undo_state();let before=app.scene.clone();let depth=app.undo_stack.len();
         app.begin_component_edit();app.save_undo_state();app.scene.mesh.vertices[0].position.z=9.;
-        let path=std::env::temp_dir().join(format!("component-fragment-{}.igz",uuid::Uuid::new_v4()));
-        app.save_to_path(&path);assert!(!path.exists());assert!(app.status_message.contains("before saving"));
         app.cancel_component_edit();assert_eq!(app.scene,before);assert_eq!(app.undo_stack.len(),depth);
     }
+    #[test]
+    fn save_refusal_at_outer_level_preserves_all_contexts_history_and_tool_acquisition() {
+        let mut a=app();
+        let mut parent=Group::new("outer");parent.children.push(a.scene.groups[0].duplicate_instance());
+        a.scene.groups.push(parent);a.scene.clear_selection();a.scene.select(SelectionItem::Group(2));
+        a.begin_component_edit();a.scene.select(SelectionItem::Group(0));a.begin_component_edit();
+        a.save_undo_state();a.scene.mesh.vertices[0].position.z=2.;
+        a.set_tool(ToolType::Rectangle);
+        let ctx=ingetrazo_tools::base::ToolContext::new(DVec3::new(3.,4.,0.),ingetrazo_core::math::Ray::new(DVec3::new(3.,4.,10.),-DVec3::Z));
+        a.dispatch_tool_click(&ctx);
+        let anchor=a.active_tool.snap_anchor();assert!(anchor.is_some());
+        // Inner candidate is valid; only the later outer publication refuses.
+        a.component_edit_stack[0].original_scene.groups.clear();
+        assert!(prepare_finish(&a.scene,&a.component_edit_stack,&a.undo_stack,&a.redo_stack).is_ok());
+        let before=a.scene.clone();let undo=a.undo_stack.clone();let redo=a.redo_stack.clone();let camera=a.camera.clone();
+        let parents=a.component_edit_stack.iter().map(|s|(s.original_scene.clone(),s.cancel_scene.clone())).collect::<Vec<_>>();
+        let path=std::env::temp_dir().join(format!("outer-save-refusal-{}.igz",uuid::Uuid::new_v4()));
+        a.save_to_path(&path);
+        assert!(!path.exists());assert_eq!(a.component_edit_stack.len(),2);assert!(a.status_message.contains("no longer exists"));
+        assert_eq!(a.scene,before);assert_eq!(a.undo_stack,undo);assert_eq!(a.redo_stack,redo);assert_eq!(a.camera,camera);
+        assert_eq!(a.active_tool_type,ToolType::Rectangle);assert_eq!(a.active_tool.snap_anchor(),anchor);
+        assert_eq!(a.component_edit_stack.iter().map(|s|(s.original_scene.clone(),s.cancel_scene.clone())).collect::<Vec<_>>(),parents);
+    }
+
     #[test]
     fn paste_retains_link_but_creates_unique_instance_uids() {
         let mut app=app();app.copy_selection();app.paste_in_place();

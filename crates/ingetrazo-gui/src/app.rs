@@ -328,12 +328,19 @@ impl IngeTrazoApp {
         }
     }
 
+    pub fn save_document_as(&mut self) {
+        if !self.finish_contexts_for_save() { return; }
+        self.show_save_dialog = true;
+        self.dialog_path_input = self.current_file.as_ref()
+            .map(|p| p.to_string_lossy().into_owned())
+            .unwrap_or_else(|| "model.igz".into());
+    }
+
     pub fn save_document(&mut self) {
         if let Some(path) = self.current_file.clone().filter(|p|p.extension().and_then(|e|e.to_str()).map(|e|e.eq_ignore_ascii_case("igz")).unwrap_or(false)) {
             self.save_to_path(&path);
         } else {
-            self.show_save_dialog = true;
-            self.dialog_path_input = "model.igz".to_string();
+            self.save_document_as();
         }
     }
 
@@ -342,17 +349,15 @@ impl IngeTrazoApp {
             self.status_message=match self.export_bim_ifc(path){Ok(n)=>format!("{n} IFC elements exported to {}",path.display()),Err(error)=>format!("Export IFC failed: {error}")};
             return;
         }
-        if !self.component_edit_stack.is_empty() {
-            self.status_message = "Finish or cancel the component edit before saving the document".into();
-            return;
-        }
+        if !self.finish_contexts_for_save() { return; }
         if self.document_session.pending.is_some() && path.extension().and_then(|e|e.to_str()).map(|e|!e.eq_ignore_ascii_case("igz")).unwrap_or(true) {
             self.status_message="Save an .igz document before continuing".into();self.document_session.confirm_unsaved=true;return;
         }
         self.sync_document_presentation();
-        let mut document = self.scene.clone();
-        document.camera = self.camera.clone();
-        match save_file(&document, path) {
+        // Like the source camera_home update, synchronize before the write.
+        // Saving must not copy every mesh just to substitute the camera.
+        self.scene.camera = self.camera.clone();
+        match save_file(&self.scene, path) {
             Ok(()) => {
                 if !path.extension().and_then(|e|e.to_str()).map(|e|e.eq_ignore_ascii_case("igz")).unwrap_or(false) {
                     self.status_message=format!("Exported: {}",path.display());return;
@@ -1052,7 +1057,8 @@ impl IngeTrazoApp {
                 self.show_open_dialog = true;
             }
             if ctx.input(|i| i.key_pressed(egui::Key::S)) {
-                self.save_document();
+                if ctx.input(|i| i.modifiers.shift) { self.save_document_as(); }
+                else { self.save_document(); }
             }
             if ctx.input(|i| i.key_pressed(egui::Key::A)) {
                 self.select_all();

@@ -1,0 +1,1144 @@
+{
+  "rows": [
+    {
+      "case": "save",
+      "phases": [
+        {
+          "phase": "after",
+          "state": {
+            "root_points": [
+              [
+                0.0,
+                0.0,
+                -5.0
+              ],
+              [
+                0.0,
+                1.0,
+                -5.0
+              ],
+              [
+                1.0,
+                0.0,
+                -5.0
+              ]
+            ],
+            "groups": [
+              {
+                "name": "Parent",
+                "uid": "aaaaaaaaaaaaaaaa",
+                "points": [],
+                "ext": null
+              },
+              {
+                "name": "Leaf",
+                "uid": "0123456789abcdef",
+                "points": [
+                  [
+                    -9.0,
+                    3.0,
+                    6.0
+                  ],
+                  [
+                    -8.0,
+                    3.0,
+                    6.0
+                  ],
+                  [
+                    -8.0,
+                    5.0,
+                    6.0
+                  ]
+                ],
+                "ext": {
+                  "vendor": {
+                    "keep": [
+                      1,
+                      2,
+                      3
+                    ]
+                  }
+                }
+              },
+              {
+                "name": "Sibling",
+                "uid": "fedcba9876543210",
+                "points": [
+                  [
+                    0.0,
+                    10.0,
+                    2.0
+                  ],
+                  [
+                    0.0,
+                    11.0,
+                    2.0
+                  ],
+                  [
+                    1.0,
+                    10.0,
+                    2.0
+                  ]
+                ],
+                "ext": null
+              }
+            ]
+          },
+          "depth": 0,
+          "undo": 1,
+          "redo": 0,
+          "tool": "rectangle",
+          "camera_target": [
+            7.0,
+            8.0,
+            9.0
+          ],
+          "camera_distance": 23
+        },
+        {
+          "phase": "undo",
+          "state": {
+            "root_points": [
+              [
+                0.0,
+                0.0,
+                -5.0
+              ],
+              [
+                0.0,
+                1.0,
+                -5.0
+              ],
+              [
+                1.0,
+                0.0,
+                -5.0
+              ]
+            ],
+            "groups": [
+              {
+                "name": "Parent",
+                "uid": "aaaaaaaaaaaaaaaa",
+                "points": [],
+                "ext": null
+              },
+              {
+                "name": "Leaf",
+                "uid": "0123456789abcdef",
+                "points": [
+                  [
+                    -9.0,
+                    3.0,
+                    4.0
+                  ],
+                  [
+                    -8.0,
+                    3.0,
+                    4.0
+                  ],
+                  [
+                    -8.0,
+                    5.0,
+                    4.0
+                  ]
+                ],
+                "ext": {
+                  "vendor": {
+                    "keep": [
+                      1,
+                      2,
+                      3
+                    ]
+                  }
+                }
+              },
+              {
+                "name": "Sibling",
+                "uid": "fedcba9876543210",
+                "points": [
+                  [
+                    0.0,
+                    10.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    11.0,
+                    0.0
+                  ],
+                  [
+                    1.0,
+                    10.0,
+                    0.0
+                  ]
+                ],
+                "ext": null
+              }
+            ]
+          },
+          "depth": 0,
+          "undo": 0,
+          "redo": 1,
+          "tool": "rectangle",
+          "camera_target": [
+            7.0,
+            8.0,
+            9.0
+          ],
+          "camera_distance": 23
+        },
+        {
+          "phase": "redo",
+          "state": {
+            "root_points": [
+              [
+                0.0,
+                0.0,
+                -5.0
+              ],
+              [
+                0.0,
+                1.0,
+                -5.0
+              ],
+              [
+                1.0,
+                0.0,
+                -5.0
+              ]
+            ],
+            "groups": [
+              {
+                "name": "Parent",
+                "uid": "aaaaaaaaaaaaaaaa",
+                "points": [],
+                "ext": null
+              },
+              {
+                "name": "Leaf",
+                "uid": "0123456789abcdef",
+                "points": [
+                  [
+                    -9.0,
+                    3.0,
+                    6.0
+                  ],
+                  [
+                    -8.0,
+                    3.0,
+                    6.0
+                  ],
+                  [
+                    -8.0,
+                    5.0,
+                    6.0
+                  ]
+                ],
+                "ext": {
+                  "vendor": {
+                    "keep": [
+                      1,
+                      2,
+                      3
+                    ]
+                  }
+                }
+              },
+              {
+                "name": "Sibling",
+                "uid": "fedcba9876543210",
+                "points": [
+                  [
+                    0.0,
+                    10.0,
+                    2.0
+                  ],
+                  [
+                    0.0,
+                    11.0,
+                    2.0
+                  ],
+                  [
+                    1.0,
+                    10.0,
+                    2.0
+                  ]
+                ],
+                "ext": null
+              }
+            ]
+          },
+          "depth": 0,
+          "undo": 1,
+          "redo": 0,
+          "tool": "rectangle",
+          "camera_target": [
+            7.0,
+            8.0,
+            9.0
+          ],
+          "camera_distance": 23
+        }
+      ],
+      "file_exists": true,
+      "error": false,
+      "dialog_depths": []
+    },
+    {
+      "case": "save_as_cancel",
+      "phases": [
+        {
+          "phase": "after",
+          "state": {
+            "root_points": [
+              [
+                0.0,
+                0.0,
+                -5.0
+              ],
+              [
+                0.0,
+                1.0,
+                -5.0
+              ],
+              [
+                1.0,
+                0.0,
+                -5.0
+              ]
+            ],
+            "groups": [
+              {
+                "name": "Parent",
+                "uid": "aaaaaaaaaaaaaaaa",
+                "points": [],
+                "ext": null
+              },
+              {
+                "name": "Leaf",
+                "uid": "0123456789abcdef",
+                "points": [
+                  [
+                    -9.0,
+                    3.0,
+                    6.0
+                  ],
+                  [
+                    -8.0,
+                    3.0,
+                    6.0
+                  ],
+                  [
+                    -8.0,
+                    5.0,
+                    6.0
+                  ]
+                ],
+                "ext": {
+                  "vendor": {
+                    "keep": [
+                      1,
+                      2,
+                      3
+                    ]
+                  }
+                }
+              },
+              {
+                "name": "Sibling",
+                "uid": "fedcba9876543210",
+                "points": [
+                  [
+                    0.0,
+                    10.0,
+                    2.0
+                  ],
+                  [
+                    0.0,
+                    11.0,
+                    2.0
+                  ],
+                  [
+                    1.0,
+                    10.0,
+                    2.0
+                  ]
+                ],
+                "ext": null
+              }
+            ]
+          },
+          "depth": 0,
+          "undo": 1,
+          "redo": 0,
+          "tool": "rectangle",
+          "camera_target": [
+            7.0,
+            8.0,
+            9.0
+          ],
+          "camera_distance": 23
+        },
+        {
+          "phase": "undo",
+          "state": {
+            "root_points": [
+              [
+                0.0,
+                0.0,
+                -5.0
+              ],
+              [
+                0.0,
+                1.0,
+                -5.0
+              ],
+              [
+                1.0,
+                0.0,
+                -5.0
+              ]
+            ],
+            "groups": [
+              {
+                "name": "Parent",
+                "uid": "aaaaaaaaaaaaaaaa",
+                "points": [],
+                "ext": null
+              },
+              {
+                "name": "Leaf",
+                "uid": "0123456789abcdef",
+                "points": [
+                  [
+                    -9.0,
+                    3.0,
+                    4.0
+                  ],
+                  [
+                    -8.0,
+                    3.0,
+                    4.0
+                  ],
+                  [
+                    -8.0,
+                    5.0,
+                    4.0
+                  ]
+                ],
+                "ext": {
+                  "vendor": {
+                    "keep": [
+                      1,
+                      2,
+                      3
+                    ]
+                  }
+                }
+              },
+              {
+                "name": "Sibling",
+                "uid": "fedcba9876543210",
+                "points": [
+                  [
+                    0.0,
+                    10.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    11.0,
+                    0.0
+                  ],
+                  [
+                    1.0,
+                    10.0,
+                    0.0
+                  ]
+                ],
+                "ext": null
+              }
+            ]
+          },
+          "depth": 0,
+          "undo": 0,
+          "redo": 1,
+          "tool": "rectangle",
+          "camera_target": [
+            7.0,
+            8.0,
+            9.0
+          ],
+          "camera_distance": 23
+        },
+        {
+          "phase": "redo",
+          "state": {
+            "root_points": [
+              [
+                0.0,
+                0.0,
+                -5.0
+              ],
+              [
+                0.0,
+                1.0,
+                -5.0
+              ],
+              [
+                1.0,
+                0.0,
+                -5.0
+              ]
+            ],
+            "groups": [
+              {
+                "name": "Parent",
+                "uid": "aaaaaaaaaaaaaaaa",
+                "points": [],
+                "ext": null
+              },
+              {
+                "name": "Leaf",
+                "uid": "0123456789abcdef",
+                "points": [
+                  [
+                    -9.0,
+                    3.0,
+                    6.0
+                  ],
+                  [
+                    -8.0,
+                    3.0,
+                    6.0
+                  ],
+                  [
+                    -8.0,
+                    5.0,
+                    6.0
+                  ]
+                ],
+                "ext": {
+                  "vendor": {
+                    "keep": [
+                      1,
+                      2,
+                      3
+                    ]
+                  }
+                }
+              },
+              {
+                "name": "Sibling",
+                "uid": "fedcba9876543210",
+                "points": [
+                  [
+                    0.0,
+                    10.0,
+                    2.0
+                  ],
+                  [
+                    0.0,
+                    11.0,
+                    2.0
+                  ],
+                  [
+                    1.0,
+                    10.0,
+                    2.0
+                  ]
+                ],
+                "ext": null
+              }
+            ]
+          },
+          "depth": 0,
+          "undo": 1,
+          "redo": 0,
+          "tool": "rectangle",
+          "camera_target": [
+            7.0,
+            8.0,
+            9.0
+          ],
+          "camera_distance": 23
+        }
+      ],
+      "file_exists": false,
+      "error": false,
+      "dialog_depths": [
+        0
+      ]
+    },
+    {
+      "case": "save_as",
+      "phases": [
+        {
+          "phase": "after",
+          "state": {
+            "root_points": [
+              [
+                0.0,
+                0.0,
+                -5.0
+              ],
+              [
+                0.0,
+                1.0,
+                -5.0
+              ],
+              [
+                1.0,
+                0.0,
+                -5.0
+              ]
+            ],
+            "groups": [
+              {
+                "name": "Parent",
+                "uid": "aaaaaaaaaaaaaaaa",
+                "points": [],
+                "ext": null
+              },
+              {
+                "name": "Leaf",
+                "uid": "0123456789abcdef",
+                "points": [
+                  [
+                    -9.0,
+                    3.0,
+                    6.0
+                  ],
+                  [
+                    -8.0,
+                    3.0,
+                    6.0
+                  ],
+                  [
+                    -8.0,
+                    5.0,
+                    6.0
+                  ]
+                ],
+                "ext": {
+                  "vendor": {
+                    "keep": [
+                      1,
+                      2,
+                      3
+                    ]
+                  }
+                }
+              },
+              {
+                "name": "Sibling",
+                "uid": "fedcba9876543210",
+                "points": [
+                  [
+                    0.0,
+                    10.0,
+                    2.0
+                  ],
+                  [
+                    0.0,
+                    11.0,
+                    2.0
+                  ],
+                  [
+                    1.0,
+                    10.0,
+                    2.0
+                  ]
+                ],
+                "ext": null
+              }
+            ]
+          },
+          "depth": 0,
+          "undo": 1,
+          "redo": 0,
+          "tool": "rectangle",
+          "camera_target": [
+            7.0,
+            8.0,
+            9.0
+          ],
+          "camera_distance": 23
+        },
+        {
+          "phase": "undo",
+          "state": {
+            "root_points": [
+              [
+                0.0,
+                0.0,
+                -5.0
+              ],
+              [
+                0.0,
+                1.0,
+                -5.0
+              ],
+              [
+                1.0,
+                0.0,
+                -5.0
+              ]
+            ],
+            "groups": [
+              {
+                "name": "Parent",
+                "uid": "aaaaaaaaaaaaaaaa",
+                "points": [],
+                "ext": null
+              },
+              {
+                "name": "Leaf",
+                "uid": "0123456789abcdef",
+                "points": [
+                  [
+                    -9.0,
+                    3.0,
+                    4.0
+                  ],
+                  [
+                    -8.0,
+                    3.0,
+                    4.0
+                  ],
+                  [
+                    -8.0,
+                    5.0,
+                    4.0
+                  ]
+                ],
+                "ext": {
+                  "vendor": {
+                    "keep": [
+                      1,
+                      2,
+                      3
+                    ]
+                  }
+                }
+              },
+              {
+                "name": "Sibling",
+                "uid": "fedcba9876543210",
+                "points": [
+                  [
+                    0.0,
+                    10.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    11.0,
+                    0.0
+                  ],
+                  [
+                    1.0,
+                    10.0,
+                    0.0
+                  ]
+                ],
+                "ext": null
+              }
+            ]
+          },
+          "depth": 0,
+          "undo": 0,
+          "redo": 1,
+          "tool": "rectangle",
+          "camera_target": [
+            7.0,
+            8.0,
+            9.0
+          ],
+          "camera_distance": 23
+        },
+        {
+          "phase": "redo",
+          "state": {
+            "root_points": [
+              [
+                0.0,
+                0.0,
+                -5.0
+              ],
+              [
+                0.0,
+                1.0,
+                -5.0
+              ],
+              [
+                1.0,
+                0.0,
+                -5.0
+              ]
+            ],
+            "groups": [
+              {
+                "name": "Parent",
+                "uid": "aaaaaaaaaaaaaaaa",
+                "points": [],
+                "ext": null
+              },
+              {
+                "name": "Leaf",
+                "uid": "0123456789abcdef",
+                "points": [
+                  [
+                    -9.0,
+                    3.0,
+                    6.0
+                  ],
+                  [
+                    -8.0,
+                    3.0,
+                    6.0
+                  ],
+                  [
+                    -8.0,
+                    5.0,
+                    6.0
+                  ]
+                ],
+                "ext": {
+                  "vendor": {
+                    "keep": [
+                      1,
+                      2,
+                      3
+                    ]
+                  }
+                }
+              },
+              {
+                "name": "Sibling",
+                "uid": "fedcba9876543210",
+                "points": [
+                  [
+                    0.0,
+                    10.0,
+                    2.0
+                  ],
+                  [
+                    0.0,
+                    11.0,
+                    2.0
+                  ],
+                  [
+                    1.0,
+                    10.0,
+                    2.0
+                  ]
+                ],
+                "ext": null
+              }
+            ]
+          },
+          "depth": 0,
+          "undo": 1,
+          "redo": 0,
+          "tool": "rectangle",
+          "camera_target": [
+            7.0,
+            8.0,
+            9.0
+          ],
+          "camera_distance": 23
+        }
+      ],
+      "file_exists": true,
+      "error": false,
+      "dialog_depths": [
+        0
+      ]
+    },
+    {
+      "case": "failed",
+      "phases": [
+        {
+          "phase": "after",
+          "state": {
+            "root_points": [
+              [
+                0.0,
+                0.0,
+                -5.0
+              ],
+              [
+                0.0,
+                1.0,
+                -5.0
+              ],
+              [
+                1.0,
+                0.0,
+                -5.0
+              ]
+            ],
+            "groups": [
+              {
+                "name": "Parent",
+                "uid": "aaaaaaaaaaaaaaaa",
+                "points": [],
+                "ext": null
+              },
+              {
+                "name": "Leaf",
+                "uid": "0123456789abcdef",
+                "points": [
+                  [
+                    -9.0,
+                    3.0,
+                    6.0
+                  ],
+                  [
+                    -8.0,
+                    3.0,
+                    6.0
+                  ],
+                  [
+                    -8.0,
+                    5.0,
+                    6.0
+                  ]
+                ],
+                "ext": {
+                  "vendor": {
+                    "keep": [
+                      1,
+                      2,
+                      3
+                    ]
+                  }
+                }
+              },
+              {
+                "name": "Sibling",
+                "uid": "fedcba9876543210",
+                "points": [
+                  [
+                    0.0,
+                    10.0,
+                    2.0
+                  ],
+                  [
+                    0.0,
+                    11.0,
+                    2.0
+                  ],
+                  [
+                    1.0,
+                    10.0,
+                    2.0
+                  ]
+                ],
+                "ext": null
+              }
+            ]
+          },
+          "depth": 0,
+          "undo": 1,
+          "redo": 0,
+          "tool": "rectangle",
+          "camera_target": [
+            7.0,
+            8.0,
+            9.0
+          ],
+          "camera_distance": 23
+        },
+        {
+          "phase": "undo",
+          "state": {
+            "root_points": [
+              [
+                0.0,
+                0.0,
+                -5.0
+              ],
+              [
+                0.0,
+                1.0,
+                -5.0
+              ],
+              [
+                1.0,
+                0.0,
+                -5.0
+              ]
+            ],
+            "groups": [
+              {
+                "name": "Parent",
+                "uid": "aaaaaaaaaaaaaaaa",
+                "points": [],
+                "ext": null
+              },
+              {
+                "name": "Leaf",
+                "uid": "0123456789abcdef",
+                "points": [
+                  [
+                    -9.0,
+                    3.0,
+                    4.0
+                  ],
+                  [
+                    -8.0,
+                    3.0,
+                    4.0
+                  ],
+                  [
+                    -8.0,
+                    5.0,
+                    4.0
+                  ]
+                ],
+                "ext": {
+                  "vendor": {
+                    "keep": [
+                      1,
+                      2,
+                      3
+                    ]
+                  }
+                }
+              },
+              {
+                "name": "Sibling",
+                "uid": "fedcba9876543210",
+                "points": [
+                  [
+                    0.0,
+                    10.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    11.0,
+                    0.0
+                  ],
+                  [
+                    1.0,
+                    10.0,
+                    0.0
+                  ]
+                ],
+                "ext": null
+              }
+            ]
+          },
+          "depth": 0,
+          "undo": 0,
+          "redo": 1,
+          "tool": "rectangle",
+          "camera_target": [
+            7.0,
+            8.0,
+            9.0
+          ],
+          "camera_distance": 23
+        },
+        {
+          "phase": "redo",
+          "state": {
+            "root_points": [
+              [
+                0.0,
+                0.0,
+                -5.0
+              ],
+              [
+                0.0,
+                1.0,
+                -5.0
+              ],
+              [
+                1.0,
+                0.0,
+                -5.0
+              ]
+            ],
+            "groups": [
+              {
+                "name": "Parent",
+                "uid": "aaaaaaaaaaaaaaaa",
+                "points": [],
+                "ext": null
+              },
+              {
+                "name": "Leaf",
+                "uid": "0123456789abcdef",
+                "points": [
+                  [
+                    -9.0,
+                    3.0,
+                    6.0
+                  ],
+                  [
+                    -8.0,
+                    3.0,
+                    6.0
+                  ],
+                  [
+                    -8.0,
+                    5.0,
+                    6.0
+                  ]
+                ],
+                "ext": {
+                  "vendor": {
+                    "keep": [
+                      1,
+                      2,
+                      3
+                    ]
+                  }
+                }
+              },
+              {
+                "name": "Sibling",
+                "uid": "fedcba9876543210",
+                "points": [
+                  [
+                    0.0,
+                    10.0,
+                    2.0
+                  ],
+                  [
+                    0.0,
+                    11.0,
+                    2.0
+                  ],
+                  [
+                    1.0,
+                    10.0,
+                    2.0
+                  ]
+                ],
+                "ext": null
+              }
+            ]
+          },
+          "depth": 0,
+          "undo": 1,
+          "redo": 0,
+          "tool": "rectangle",
+          "camera_target": [
+            7.0,
+            8.0,
+            9.0
+          ],
+          "camera_distance": 23
+        }
+      ],
+      "file_exists": false,
+      "error": true,
+      "dialog_depths": []
+    }
+  ]
+}

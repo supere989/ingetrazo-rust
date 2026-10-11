@@ -1,0 +1,8 @@
+{
+  "base": "98a86ea790e34a6b6ccb1d8e9e99f939b41b6814",
+  "source": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "native_binary_sha256": "b476529094bd63b07cb89f00310ba462dde003c8fadb861b204c4522a3197803",
+  "scope": "Actual source MainWindow save handlers and native app save consumer. Unshown widgets; dialogs scripted; committed geometry edits. No OS gesture or rendered acceptance.",
+  "archive_byte_verified": true,
+  "review": "Independent source review accepted prepared ordinary Finish and whole-context Save transaction; late outer refusal and literal trace inventory controls added."
+}

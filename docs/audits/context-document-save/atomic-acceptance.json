@@ -1,0 +1,32 @@
+[
+  {
+    "step": "build",
+    "exit": 0,
+    "seconds": 15.555
+  },
+  {
+    "step": "native",
+    "exit": 0,
+    "seconds": 0.584
+  },
+  {
+    "step": "reopen",
+    "exit": 0,
+    "seconds": 3.284
+  },
+  {
+    "step": "compare",
+    "exit": 0,
+    "seconds": 0.028
+  },
+  {
+    "step": "component",
+    "exit": 0,
+    "seconds": 12.361
+  },
+  {
+    "step": "session",
+    "exit": 0,
+    "seconds": 0.918
+  }
+]
