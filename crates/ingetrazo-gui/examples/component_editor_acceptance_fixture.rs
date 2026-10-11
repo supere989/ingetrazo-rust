@@ -98,11 +98,24 @@ fn main() {
     let cancelbefore = app.scene.clone();
     app.begin_component_edit();
     app.scene.mesh.vertices[0].position.z = 9.;
-    let blocked = dir.join("fragment.igz");
-    app.save_to_path(&blocked);
-    assert!(!blocked.exists());
+    // Cancel remains an independent exact restoration control.
     app.cancel_component_edit();
     assert_eq!(app.scene, cancelbefore);
+    // Source Save finishes all contexts and writes the complete document.
+    let mut saving = IngeTrazoApp::new();
+    saving.scene = cancelbefore.clone();
+    let root_ids = saving.scene.groups.iter().map(|g|g.id).collect::<Vec<_>>();
+    let root_mesh = saving.scene.mesh.clone();
+    saving.begin_component_edit();
+    saving.scene.mesh.vertices[0].position.z = 9.;
+    saving.save_to_path(&dir.join("editor-context-save.igz"));
+    assert!(saving.component_edit_stack.is_empty());
+    assert_eq!(saving.scene.groups.iter().map(|g|g.id).collect::<Vec<_>>(),root_ids);
+    assert_eq!(saving.scene.mesh,root_mesh);
+    assert_eq!(saving.scene.groups.len(),5);
+    assert_eq!(saving.scene.groups[3].children.len(),1);
+    assert_eq!(saving.scene.groups[4].children.len(),1);
+    assert!(dir.join("editor-context-save.igz").exists());
     app.make_component_unique();
     app.begin_component_edit();
     app.scene.mesh.vertices[0].position.z = 7.;

@@ -1,0 +1,7 @@
+# Stale component Save CI guard correction
+
+Linux job114421462317 on6a921533 failed the old assertion that active-context Save must refuse a fragment. Current source-backed Save finishes every context and saves the complete document. The fixture preserves its exact Cancel restoration as an independent assertion. A separate application copied from cancelbefore enters the first component, edits its shared vertex toz9 and calls Save. It asserts every context exited, all5 root placement identities survived, root loose mesh stayed unchanged and both nested sibling trees remain present.
+
+The actual pinned Python reader reopens the saved document: all5 root groups/UIDs, shared edited meshes across first3 roots and nested children, root loose edge(-3,0,0)→(-2,0,0), opaque document/instance/face extensions are checked. Report wording now describes completecontextSave+Cancel rather than fragmentblocked. Existing shared/unique/clipboard and operative world-bake source assertions all remain. No runtime policy was changed.
+
+Only scripts/check-python-components.py was rerun, including its actual original source controls. Final exit0. First new input used an edge pair array where source requires a/b object; that setup failure is retained alongside corrected replay. Temporary input/output scenes are automatically removed by the existing fixture. The exact source/binary hashes and focused log are retained; no broad suite, assertion weakening, or tracker/push.
