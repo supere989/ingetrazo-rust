@@ -76,6 +76,11 @@ pub struct AnnotationLayers {grid:SourceSpans,direct:Arc<[std::ops::Range<u32>]>
 impl AnnotationLayers {
  pub fn translation(&self,pose:Pose,ppp:f32)->Result<[i32;2],String>{self.grid.translation(pose,ppp)}
  pub fn direct_ranges(&self)->&[std::ops::Range<u32>]{&self.direct}
+ pub fn overlaps_direct(&self,first:u32,count:u32)->bool{
+  if count==0{return false;}
+  let index=self.direct.partition_point(|range|range.end<=first);
+  self.direct.get(index).is_some_and(|range|range.start<first.saturating_add(count))
+ }
 }
 #[derive(Debug)]
 pub enum AnnotationLayer {
@@ -162,7 +167,7 @@ impl Geometry {
  pub fn id(&self)->u64{self.id}pub fn vertices(&self)->&[Vertex]{&self.vertices}pub fn indices(&self)->&[u32]{&self.indices}
  pub fn logical_bytes(&self)->u64{self.vertices.len()as u64*std::mem::size_of::<Vertex>()as u64+self.indices.len()as u64*4}
  pub fn validate_batches(&self,batches:&[Batch])->Result<(),String>{if self.premultiplied_palette.as_ref().is_some_and(|colors|colors.len()!=batches.len()){return Err("CAD2D exact palette batch count mismatch".into());}for (batch_index,b) in batches.iter().enumerate(){b.color.validate()?;if b.first%3!=0||b.count%3!=0||b.first.checked_add(b.count).is_none_or(|end|end as usize>self.indices.len()){return Err("CAD2D batch index bounds invalid".into());}
- if self.annotation_layers.as_ref().is_some_and(|layers|layers.direct.iter().any(|range|b.first<range.end&&range.start<b.first+b.count)){
+ if self.annotation_layers.as_ref().is_some_and(|layers|layers.overlaps_direct(b.first,b.count)){
   let alpha=self.premultiplied_palette.as_ref().map_or(b.color.0[3]==1.,|p|p[batch_index].bytes()[3]==255);
   if !alpha{return Err("Direct annotation batch must be opaque".into());}
  }

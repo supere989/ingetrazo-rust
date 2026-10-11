@@ -492,7 +492,7 @@ unsafe{context.device.create_descriptor_set_layout(&vk::DescriptorSetLayoutCreat
             admit_gates(state.gates.as_deref(),state.batches.len(),count)?;
             if let Some(layers)=state.geometry.annotation_layers(){
                 for (batch,draw) in state.batches.iter().zip(state.gates.as_ref().unwrap().iter()){
-                    if layers.direct_ranges().iter().any(|range|batch.first<range.end&&range.start<batch.first+batch.count)
+                    if layers.overlaps_direct(batch.first,batch.count)
                       &&draw.composition!=crate::annotation_overlay_geometry::Composition::SpanByte{return Err("Direct annotation operator must write opaque source".into());}
                 }
             }
