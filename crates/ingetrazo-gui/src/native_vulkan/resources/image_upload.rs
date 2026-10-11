@@ -156,7 +156,8 @@ impl Resources {
                         &[copy],
                     );
                     if offset + length == bytes {
-                        finish_mips(&self.device, command, image, &layout);self.stats.mip_barrier_commands+=2*u64::from(mip_levels)-1;
+                        generate_mips(&self.device, command, image, &layout);self.stats.mip_barrier_commands+=u64::from(mip_levels-1);
+                        let mut ready=ReadyMipBatch::new();self.stats.mip_barrier_commands+=ready.push(&self.device,command,image,mip_levels);self.stats.mip_barrier_commands+=ready.flush(&self.device,command);
                     }
                     self.device
                         .end_command_buffer(command)
@@ -227,14 +228,16 @@ impl Resources {
             unsafe{
                 self.device.reset_command_buffer(command,vk::CommandBufferResetFlags::empty()).map_err(|e|e.to_string())?;
                 self.device.begin_command_buffer(command,&vk::CommandBufferBeginInfo::default().flags(vk::CommandBufferUsageFlags::ONE_TIME_SUBMIT)).map_err(|e|e.to_string())?;
+                let mut ready=ReadyMipBatch::new();
                 for &(i,offset,start,length) in &pieces{
                     let image=inputs[i].0;let (_,bh,_)=image.format.block();let row=layouts[i].1;
                     if offset==0{transition(&self.device,command,image.image,0,image.mip_levels,vk::ImageLayout::UNDEFINED,vk::ImageLayout::TRANSFER_DST_OPTIMAL,vk::AccessFlags::empty(),vk::AccessFlags::TRANSFER_WRITE,vk::PipelineStageFlags::TOP_OF_PIPE,vk::PipelineStageFlags::TRANSFER);}
                     let y=offset/row*bh as u64;
                     let copy=vk::BufferImageCopy::default().buffer_offset(start).image_subresource(vk::ImageSubresourceLayers::default().aspect_mask(vk::ImageAspectFlags::COLOR).layer_count(1)).image_offset(vk::Offset3D{x:0,y:y as i32,z:0}).image_extent(vk::Extent3D{width:image.extent.width,height:(length/row*bh as u64).min(image.extent.height as u64-y)as u32,depth:1});
                     self.device.cmd_copy_buffer_to_image(command,host.handle,image.image,vk::ImageLayout::TRANSFER_DST_OPTIMAL,&[copy]);
-                    if offset+length==inputs[i].1.len()as u64{finish_mips(&self.device,command,image.image,&layouts[i].0);self.stats.mip_barrier_commands+=2*u64::from(image.mip_levels)-1;}
+                    if offset+length==inputs[i].1.len()as u64{generate_mips(&self.device,command,image.image,&layouts[i].0);self.stats.mip_barrier_commands+=u64::from(image.mip_levels-1);self.stats.mip_barrier_commands+=ready.push(&self.device,command,image.image,image.mip_levels);}
                 }
+                self.stats.mip_barrier_commands+=ready.flush(&self.device,command);
                 self.device.end_command_buffer(command).map_err(|e|e.to_string())?;self.device.reset_fences(&[fence]).map_err(|e|e.to_string())?;
                 self.device.queue_submit(context.graphics_queue,&[vk::SubmitInfo::default().command_buffers(&[command])],fence).map_err(|e|{self.lifetime.quarantine();e.to_string()})?;
             }
@@ -297,7 +300,7 @@ fn transition(
     }
 }
 
-fn finish_mips(
+fn generate_mips(
     device: &Device,
     command: vk::CommandBuffer,
     image: vk::Image,
@@ -359,34 +362,31 @@ fn finish_mips(
                 &[blit],
                 vk::Filter::LINEAR,
             );
-            transition(
-                device,
-                command,
-                image,
-                level - 1,
-                1,
-                vk::ImageLayout::TRANSFER_SRC_OPTIMAL,
-                vk::ImageLayout::SHADER_READ_ONLY_OPTIMAL,
-                vk::AccessFlags::TRANSFER_READ,
-                vk::AccessFlags::SHADER_READ,
-                vk::PipelineStageFlags::TRANSFER,
-                vk::PipelineStageFlags::ALL_GRAPHICS,
-            );
         }
-        transition(
-            device,
-            command,
-            image,
-            mip_levels - 1,
-            1,
-            vk::ImageLayout::TRANSFER_DST_OPTIMAL,
-            vk::ImageLayout::SHADER_READ_ONLY_OPTIMAL,
-            vk::AccessFlags::TRANSFER_WRITE,
-            vk::AccessFlags::SHADER_READ,
-            vk::PipelineStageFlags::TRANSFER,
-            vk::PipelineStageFlags::ALL_GRAPHICS,
-        );
+        // No shader consumer exists during this transfer transaction. Keep
+        // prior levels in TRANSFER_SRC until all dependent blits finish.
+
     }
+}
+
+
+// Two contiguous layout ranges per completed image, using bounded stack
+// storage. No allocation/failure can occur after transfer recording begins.
+// Flushing a full batch is legal; it never changes chain blits or sampling.
+struct ReadyMipBatch{barriers:[vk::ImageMemoryBarrier<'static>;256],len:usize}
+impl ReadyMipBatch{
+ fn new()->Self{Self{barriers:[vk::ImageMemoryBarrier::default();256],len:0}}
+ fn push(&mut self,device:&Device,command:vk::CommandBuffer,image:vk::Image,levels:u32)->u64{
+  let needed=if levels>1{2}else{1};let count=if self.len+needed>self.barriers.len(){self.flush(device,command)}else{0};
+  if levels>1{self.add(image,0,levels-1,vk::ImageLayout::TRANSFER_SRC_OPTIMAL,vk::AccessFlags::TRANSFER_READ|vk::AccessFlags::TRANSFER_WRITE);}
+  self.add(image,levels-1,1,vk::ImageLayout::TRANSFER_DST_OPTIMAL,vk::AccessFlags::TRANSFER_WRITE);count
+ }
+ fn add(&mut self,image:vk::Image,base:u32,count:u32,old:vk::ImageLayout,src:vk::AccessFlags){
+  self.barriers[self.len]=vk::ImageMemoryBarrier::default().image(image).subresource_range(vk::ImageSubresourceRange::default().aspect_mask(vk::ImageAspectFlags::COLOR).base_mip_level(base).level_count(count).layer_count(1)).old_layout(old).new_layout(vk::ImageLayout::SHADER_READ_ONLY_OPTIMAL).src_access_mask(src).dst_access_mask(vk::AccessFlags::SHADER_READ).src_queue_family_index(vk::QUEUE_FAMILY_IGNORED).dst_queue_family_index(vk::QUEUE_FAMILY_IGNORED);self.len+=1;
+ }
+ fn flush(&mut self,device:&Device,command:vk::CommandBuffer)->u64{
+  if self.len==0{return 0;}unsafe{device.cmd_pipeline_barrier(command,vk::PipelineStageFlags::TRANSFER,vk::PipelineStageFlags::ALL_GRAPHICS,vk::DependencyFlags::empty(),&[],&[],&self.barriers[..self.len]);}self.len=0;1
+ }
 }
 
 /// Fresh device-local sampled image. Owners must retain this resource until
