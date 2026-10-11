@@ -1,0 +1,19 @@
+{
+  "authenticated_removed_files": 2,
+  "released_bytes": 27245,
+  "records": [
+    {
+      "temporary": "/tmp/ingetrazo-metal-stage-check/check.log",
+      "canonical": "initial-freetype-build-refusal.log",
+      "bytes": 5370,
+      "sha256": "249f9a4e031629bf726105b59cc8dbe82e09082c7e38b64f1adaff58a581471e"
+    },
+    {
+      "temporary": "/tmp/ingetrazo-metal-stage-check/examples-check.log",
+      "canonical": "pre-contour-examples-check.log",
+      "bytes": 21875,
+      "sha256": "c641e00e4a966a57e200da40a440b817ee3b669d58ea90effb7ab0c0e70604c1"
+    }
+  ],
+  "preserved": "Reusable target, source and worktrees"
+}

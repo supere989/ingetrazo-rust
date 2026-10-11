@@ -19,6 +19,10 @@
     "pre-contour-examples-check.log": {
       "bytes": 21875,
       "sha256": "c641e00e4a966a57e200da40a440b817ee3b669d58ea90effb7ab0c0e70604c1"
+    },
+    "cleanup.json": {
+      "bytes": 625,
+      "sha256": "7bc01e39fc238fbc0dd9e39e5c67e247f818cefd9ae81e213fbe30a3ebf54e29"
     }
   }
 }
