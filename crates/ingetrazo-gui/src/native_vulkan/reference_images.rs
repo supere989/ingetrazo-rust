@@ -46,7 +46,6 @@ pub struct Candidate {
     images: Vec<PreparedTexture>,
 }
 impl Candidate {
-    pub(crate) fn empty()->Self{Self{pool:None,draws:Vec::new(),images:Vec::new()}}
     pub(crate) fn images(&self)->impl Iterator<Item=&PreparedTexture>{self.images.iter()}
     pub fn sampled(&self)->impl Iterator<Item=(AssetId,(vk::ImageView,vk::Sampler,bool))>+'_ {self.images.iter().map(|p|(p.id(),p.sampled()))}
 

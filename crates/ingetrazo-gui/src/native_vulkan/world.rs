@@ -310,6 +310,7 @@ impl World {
  }
  fn prepare_scene(&mut self,context:&VulkanContext,scene:&ingetrazo_core::scene::Scene,camera:&ingetrazo_core::camera::OrbitCamera,style:&ingetrazo_render::style::StyleConfig,fence:vk::Fence,completed_serial:u64,epoch:u64,shadow_extra:&[&ingetrazo_render::buffer::TextureBuffers],receivers:Option<&ingetrazo_render::buffer::TextureBuffers>)->Result<(),String> {
   let started=std::time::Instant::now();
+  let receiver_mode_changed=self.billboard_packet.as_ref().is_some_and(|p|!p.runs.is_empty())&&(matches!(self.style_mode,ingetrazo_render::style::VisualStyle::ShadedWithTextures|ingetrazo_render::style::VisualStyle::XRay)!=matches!(style.visual_style,ingetrazo_render::style::VisualStyle::ShadedWithTextures|ingetrazo_render::style::VisualStyle::XRay));
   self.show_edges=style.show_edges;self.style_mode=style.visual_style;self.style_front=style.front_color;self.style_back=style.back_color;
   self.background=style.background_color;self.background[3]=1.;
   self.eye=camera.eye().as_vec3().to_array();self.width_factor=(camera.fov_deg.to_radians()*0.5).tan() as f32*2.*1.25;self.edge_color=style.edge_color;self.edge_color[3]=1.;
@@ -328,10 +329,10 @@ impl World {
   let has_texture_sources=if self.revision==Some(revision){self.has_texture_sources}else{scene_has_textures(scene)};
   let texture_average=has_texture_sources&&!style.show_textures&&style.visual_style==ingetrazo_render::style::VisualStyle::ShadedWithTextures;
   let texture_enabled=texture_average||has_texture_sources&&(style.visual_style==ingetrazo_render::style::VisualStyle::XRay||(style.show_textures&&style.visual_style==ingetrazo_render::style::VisualStyle::ShadedWithTextures));
-  if self.revision==Some(revision)&&self.texture_enabled==texture_enabled&&self.texture_average==texture_average&&self.shadow_geometry==self.prepared_shadow_geometry&&self.shadow_extra_revision!=self.prepared_shadow_extra_revision&&!cap_changed{
+  if !receiver_mode_changed&&self.revision==Some(revision)&&self.texture_enabled==texture_enabled&&self.texture_average==texture_average&&self.shadow_geometry==self.prepared_shadow_geometry&&self.shadow_extra_revision!=self.prepared_shadow_extra_revision&&!cap_changed{
    let sprites=shadow_extra.last().ok_or("Sprite replacement sources absent")?;self.refresh_camera_packets(context,scene,receivers,Some(sprites),fence,completed_serial)?;self.prepared_shadow_extra_revision=self.shadow_extra_revision;return Ok(());
   }
-  if self.revision==Some(revision)&&self.texture_enabled==texture_enabled&&self.texture_average==texture_average&&self.shadow_geometry==self.prepared_shadow_geometry&&self.shadow_extra_revision==self.prepared_shadow_extra_revision{
+  if !receiver_mode_changed&&self.revision==Some(revision)&&self.texture_enabled==texture_enabled&&self.texture_average==texture_average&&self.shadow_geometry==self.prepared_shadow_geometry&&self.shadow_extra_revision==self.prepared_shadow_extra_revision{
    let next_cap=if cap_changed{Some(self.upload_cap(context,cap)?)}else{None};
    let cap_retirement=if let Some(next)=next_cap{
     match self.resources.publication_preflight(context,fence,completed_serial,self.cap_vertices.as_slice(),next.as_slice()){
