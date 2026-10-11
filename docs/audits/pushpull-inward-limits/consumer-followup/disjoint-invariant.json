@@ -1,0 +1,97 @@
+{
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "source_case": "disjoint-parallel",
+  "selected_cap_anchor": [
+    2.0,
+    2.0,
+    3.0
+  ],
+  "unaffected_authored_sheet": [
+    {
+      "vertices": [
+        [
+          5.0,
+          0.0,
+          2.0
+        ],
+        [
+          5.0,
+          4.0,
+          2.0
+        ],
+        [
+          9.0,
+          4.0,
+          2.0
+        ],
+        [
+          9.0,
+          0.0,
+          2.0
+        ]
+      ],
+      "holes": [],
+      "attrs": {},
+      "interior": false
+    }
+  ],
+  "original_result": [],
+  "native_result": [
+    {
+      "vertices": [
+        [
+          0.0,
+          4.0,
+          0.0
+        ],
+        [
+          4.0,
+          4.0,
+          0.0
+        ],
+        [
+          4.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "holes": [],
+      "attrs": {},
+      "interior": false
+    },
+    {
+      "vertices": [
+        [
+          5.0,
+          0.0,
+          2.0
+        ],
+        [
+          5.0,
+          4.0,
+          2.0
+        ],
+        [
+          9.0,
+          4.0,
+          2.0
+        ],
+        [
+          9.0,
+          0.0,
+          2.0
+        ]
+      ],
+      "holes": [],
+      "attrs": {},
+      "interior": false
+    }
+  ],
+  "classification": "Intentional preservation safeguard; disconnected authored sheet deletion is not copied.",
+  "history_cancel_exact": true
+}
