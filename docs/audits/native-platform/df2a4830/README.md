@@ -1,0 +1,7 @@
+Published `df2a48302c4b75df0e8bac444f468cb7145dcfe9` observed once: full38183879858, automatic ordered38183879793. No dispatch/retry/cancel/build/source capture. Remote main remains c73fe993.
+
+Linux PASS: all113 job steps successful, zero skips. Selected strict receipt binds27 unique named consumers and158 successful stage records including summary. New keyboard19/121/eight negatives, perspective35/five cameras/55App/fiveegui/seven negatives and rawOBJ3/15/three reopens/seven negatives pass. Both rendered drawing repairs and all later stages pass. Windows/cross/ordered all PASS. Overall full run fails only retained ARM section+CGL and Intel section+CGL+annotation+CLI sample-policy gates. Exact diagnostics and downstream Mac skips retained; no new platform regression.
+
+Canonical223members/102324291rawbytes, archive SHA93762dfd92c4ed74314ba7899cc0dcf498a7a3ac5ee04dbd0ab26c636de0e3c2. Archive/member bytes verified. Linux20,769,579-byte artifact selectively range-read692474bytes;18selected receipts/log/state records retained, no complete Linux ZIP or new source corpus extraction. Small platform artifacts decoded once.
+
+Six source captures39.576s, provider binding6.924s. Per-probe and whole-step timings retained; no measured speedup or isolated raster-time inference. Source generation remains fresh. Unique terminal failures/caches/worktrees retained; temporary duplicates await authorized cleanup.

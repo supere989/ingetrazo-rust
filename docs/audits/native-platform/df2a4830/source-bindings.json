@@ -1,0 +1,36 @@
+{
+  "revision": "df2a48302c4b75df0e8bac444f468cb7145dcfe9",
+  "original_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "files": [
+    {
+      "path": ".github/workflows/parity.yml",
+      "bytes": 53334,
+      "sha256": "cbf8f31cbdb5109367a62e47e02081db55402ea96ed39912aa9943595ed71f5e"
+    },
+    {
+      "path": ".github/workflows/metal-compute-consumer.yml",
+      "bytes": 4532,
+      "sha256": "bce24078146f16afab7cd9998386a03a0aa2b69c0a6954bfc517b009c452efb9"
+    },
+    {
+      "path": "scripts/check-document-axes-integration.py",
+      "bytes": 32939,
+      "sha256": "3ed4d01974f89d4d5974304731a4e921f9d497dab17dc668d62a596a7821745c"
+    },
+    {
+      "path": "scripts/check-p07-keyboard.py",
+      "bytes": 3491,
+      "sha256": "fa139c8b67f7c87332ff7fd1b7fabe1fec6385eb81a9a35676fbd4ba947122b9"
+    },
+    {
+      "path": "scripts/check-perspective-guides.py",
+      "bytes": 3515,
+      "sha256": "b44632f81bdbe713bb8c3f9874cf28f0d6ca358803a31e437d43da9520d5e9ad"
+    },
+    {
+      "path": "scripts/check-obj-raw-fusion.py",
+      "bytes": 2714,
+      "sha256": "9c9196e33f92d811c0c6392559573b236411fb8d090f5ee05ecbd927e3890f17"
+    }
+  ]
+}
