@@ -1,0 +1,318 @@
+{
+  "runtime_commit": "7277ac61b97e481d1f62f73b50a3797bafd7810c",
+  "checker_commit": "7277ac61b97e481d1f62f73b50a3797bafd7810c",
+  "source_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "archive": "records.zip",
+  "archive_sha256": "d5c204dc289a62d5d16fe2fd08e23d7c34c9405de756942756a16de0d7dea064",
+  "entries": [
+    {
+      "path": "attempts/affected-input-extraction/cause.json",
+      "bytes": 213,
+      "sha256": "fba148c88c595421ca4dc2f4671d55b6fd46fcd5b5f28c32139e02bfc99156cb"
+    },
+    {
+      "path": "attempts/affected-input-extraction/native-missing-threshold.log",
+      "bytes": 283,
+      "sha256": "bcd8aa942afc616b7ecf2ebc81b72663d0a67527d6f8cdd57fe63ff41ed056de"
+    },
+    {
+      "path": "attempts/initial-borrow-compile/build.log",
+      "bytes": 12824,
+      "sha256": "8b32851976f226235f7c60caf68fd108bbca0c2445179cadc73542717eb40341"
+    },
+    {
+      "path": "attempts/initial-parked-flags/check.log",
+      "bytes": 1082,
+      "sha256": "609facbaa088cda5275f369a12b4a3b2e67e76de8833f1cbd12349cd9451f2ec"
+    },
+    {
+      "path": "attempts/initial-parked-flags/native.json",
+      "bytes": 626823,
+      "sha256": "c3d17f9d03b33b3e338ffdf1baa30fe299d3d604201eb71f4256666847973bd9"
+    },
+    {
+      "path": "attempts/pre-global-closure-gate/check.log",
+      "bytes": 2069,
+      "sha256": "760c3bf3edb2c62e9ea15dff0920b57e4b849434dff1c47091e84a2d09963066"
+    },
+    {
+      "path": "attempts/pre-global-closure-gate/native.json",
+      "bytes": 648835,
+      "sha256": "7eaf51e53562cf374de45a3ed68b57b53b60fa6d78574a9706581f8b9b7d765f"
+    },
+    {
+      "path": "attempts/source-seed-import/stderr.log",
+      "bytes": 466,
+      "sha256": "5de5328ef970760a83e32091a27a56fa51b837e5d1230bbe09046a085c93784d"
+    },
+    {
+      "path": "closed-cube-leaf-native.igz",
+      "bytes": 10406,
+      "sha256": "9f3e3579081eb1ecbc5dd24087cd37dec404d86f6851b76f12ae79f0820d01c7"
+    },
+    {
+      "path": "closed-cube-root-native.igz",
+      "bytes": 4294,
+      "sha256": "352cd2469540105eed533cd34f291f4e1bdb9a287f0a41514889beb1d44bfc44"
+    },
+    {
+      "path": "explicit-smooth-root-native.igz",
+      "bytes": 2234,
+      "sha256": "2bad2c72a2bb5d6128387acad318ba95360472901055ebc8e11122cf27969210"
+    },
+    {
+      "path": "full-winding-diff.json",
+      "bytes": 10867,
+      "sha256": "29215cfc222bb7034a540b5dac2ddf76086b53a12ec6736a468174eae150bc0a"
+    },
+    {
+      "path": "hard-root-native.igz",
+      "bytes": 2212,
+      "sha256": "4c113e28e7a2e6e07ecbfaef201071b804e6fe45313376ce7832ee84e5f5c841"
+    },
+    {
+      "path": "large-reference-grid-native.igz",
+      "bytes": 19460,
+      "sha256": "c1734f46b2a4f42959e412d25bc558444f25e7c409ff813c7cc6f812fbca8c79"
+    },
+    {
+      "path": "logs/obj-fusion-build.log",
+      "bytes": 12824,
+      "sha256": "8b32851976f226235f7c60caf68fd108bbca0c2445179cadc73542717eb40341"
+    },
+    {
+      "path": "logs/obj-fusion-check.log",
+      "bytes": 1082,
+      "sha256": "609facbaa088cda5275f369a12b4a3b2e67e76de8833f1cbd12349cd9451f2ec"
+    },
+    {
+      "path": "logs/obj-fusion-closure-build.log",
+      "bytes": 20698,
+      "sha256": "5673daf91b773065aaf564246b9f62f11fe7f25a3302fc67c0ce0853a6741529"
+    },
+    {
+      "path": "logs/obj-fusion-final-build.log",
+      "bytes": 20698,
+      "sha256": "ad4372c122af8bc348a2640d1569bc790217d55c745098f338616a063f108246"
+    },
+    {
+      "path": "logs/obj-fusion-final-check.log",
+      "bytes": 181,
+      "sha256": "90d5b74376f72420d4c98467ff0925bd38a4833b8b21c0a6d5a56a3fe04ca915"
+    },
+    {
+      "path": "logs/obj-fusion-final-native.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "logs/obj-fusion-final-reopens.log",
+      "bytes": 32,
+      "sha256": "154dad2e32dd166d6a6160d2d2a08a0af79030366d83ea23deea066ae33bfca3"
+    },
+    {
+      "path": "logs/obj-fusion-full-strict-check.log",
+      "bytes": 2079,
+      "sha256": "209c90b6e4513f3f5bcb5ad6aefa607e55b4ced504244e199cc27bbf140a9179"
+    },
+    {
+      "path": "logs/obj-fusion-local-clean.log",
+      "bytes": 38,
+      "sha256": "d90a132e93a2f4aa2705bb5c1b90b986d41ac6828dc4992eaa544cf48f452524"
+    },
+    {
+      "path": "logs/obj-fusion-native.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "logs/obj-fusion-observer-build.log",
+      "bytes": 20606,
+      "sha256": "f65f9354c2ac7a148a30cd86b4e28a6ef967c938f61c214ea7621adc331a2251"
+    },
+    {
+      "path": "logs/obj-fusion-observer-check.log",
+      "bytes": 2069,
+      "sha256": "760c3bf3edb2c62e9ea15dff0920b57e4b849434dff1c47091e84a2d09963066"
+    },
+    {
+      "path": "logs/obj-fusion-old-mtl-check.log",
+      "bytes": 190,
+      "sha256": "2b92ea567127f533861dfe4594a03544b0d701b65faadfa5300e4f29915e0b59"
+    },
+    {
+      "path": "logs/obj-fusion-old-nested-check.log",
+      "bytes": 255,
+      "sha256": "3691256c6146a2c1d549850afa49edd144d1dcf8e3c713df3ae1af7d817d2a5f"
+    },
+    {
+      "path": "logs/obj-fusion-old-nested-final.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "logs/obj-fusion-repair-build.log",
+      "bytes": 20698,
+      "sha256": "feec66d6c0f72bc607c2baf8dbe0331847532da5a366f60083d4059f996bf1d3"
+    },
+    {
+      "path": "native-fusion-controls.json",
+      "bytes": 86,
+      "sha256": "8ca93cfa3de67d8fcf8204e58172ad465a53e8eb8a066147c687a870aec4eca6"
+    },
+    {
+      "path": "native-obj-fusion.json",
+      "bytes": 648835,
+      "sha256": "d28b56abf5ba8b98afb1734a9ab68d6d47e1394839ab571351b3746d02b99ef9"
+    },
+    {
+      "path": "nonfinite-fusion.obj",
+      "bytes": 34,
+      "sha256": "8b15c5c43ffae527c718b9a430f3dad3ee05662fdf90ba53a02276d11f8f1762"
+    },
+    {
+      "path": "reference-annulus-native.igz",
+      "bytes": 6313,
+      "sha256": "5f6351a474e34b688f1dcb06f9587429f6b2f12426b2f0e6f2d56c616b666734"
+    },
+    {
+      "path": "reference-auto-smooth-native.igz",
+      "bytes": 6095,
+      "sha256": "5e7b0aba654d3c37ccf3102d61df4af3438c1cdd5326215ecc2919e61dda0434"
+    },
+    {
+      "path": "reference-duplicates-native.igz",
+      "bytes": 5012,
+      "sha256": "aad08aa8a0bf3843a0bf906c9b34303e418fe81052447874ee4b9719d476bc8c"
+    },
+    {
+      "path": "reference-irregular-native.igz",
+      "bytes": 6232,
+      "sha256": "ba406e757d3bf6a9c288fb91e810ff813fc95a6b687785f731f85acc068934c5"
+    },
+    {
+      "path": "reference-paint-boundary-native.igz",
+      "bytes": 5834,
+      "sha256": "2dd45e3f3dc29df8751a3e383ce0d5c0bee40d920ac33931468f4e8fd0d595b1"
+    },
+    {
+      "path": "reference-patch-native.igz",
+      "bytes": 5007,
+      "sha256": "dd8bffd79ebd08c674ce6b2b60c5d1a5b62a2333eb4832d01fd9b3648e8dbfd3"
+    },
+    {
+      "path": "reference-smooth-native.igz",
+      "bytes": 6154,
+      "sha256": "daa02dd69376bfef8462827e318bb5d6ddee3d51cc8e8b37bf62cba3489b0a0d"
+    },
+    {
+      "path": "reopens-obj-fusion.json",
+      "bytes": 409834,
+      "sha256": "80c6599745f0b629983f5f08b9e868b46add9db6767dfad91be368c0d487c617"
+    }
+  ],
+  "sources": [
+    {
+      "path": "crates/ingetrazo-formats/src/obj.rs",
+      "bytes": 43251,
+      "sha256": "ab37650be988377df993795eacf9ec15f3e04a5f0375468babaaa1160255a00b",
+      "commit": "7277ac61b97e481d1f62f73b50a3797bafd7810c"
+    },
+    {
+      "path": "crates/ingetrazo-formats/src/obj_geometry.rs",
+      "bytes": 25851,
+      "sha256": "5459a0461e4a6569206012d3463b6d43ba0dab037e4b2466f19394c2cb066973",
+      "commit": "7277ac61b97e481d1f62f73b50a3797bafd7810c"
+    },
+    {
+      "path": "crates/ingetrazo-gui/examples/context_document_lifecycle.rs",
+      "bytes": 27313,
+      "sha256": "99890030795f9c4d9978ec5b46cd8fa7c90bc848425dee88399ace6c738618f9",
+      "commit": "7277ac61b97e481d1f62f73b50a3797bafd7810c"
+    },
+    {
+      "path": "crates/ingetrazo-gui/examples/context_document_lifecycle/nested_import.rs",
+      "bytes": 13395,
+      "sha256": "6a15d8ee656f3617fc50f486bbfed66d2c2345287d2c6fc3e331a15e3cb9ca49",
+      "commit": "7277ac61b97e481d1f62f73b50a3797bafd7810c"
+    },
+    {
+      "path": "crates/ingetrazo-gui/examples/context_document_lifecycle/obj_fusion.rs",
+      "bytes": 6199,
+      "sha256": "45ddc219100f75f2f30f5092efb0e1c200b06734a7eea6882a6a796db695faef",
+      "commit": "7277ac61b97e481d1f62f73b50a3797bafd7810c"
+    },
+    {
+      "path": "crates/ingetrazo-gui/examples/context_document_lifecycle/obj_mtl.rs",
+      "bytes": 10093,
+      "sha256": "d1ac560d0a08dda537a37386a386eca115ab78574e1879f4a79351a58bdfddeb",
+      "commit": "7277ac61b97e481d1f62f73b50a3797bafd7810c"
+    },
+    {
+      "path": "scripts/check-obj-fusion.py",
+      "bytes": 6030,
+      "sha256": "a2bff3e0656929c048d6e6ee406f157055f5a3685bee2bccbca835ef05ea7634",
+      "commit": "7277ac61b97e481d1f62f73b50a3797bafd7810c"
+    },
+    {
+      "path": "scripts/reference-obj-fusion-reopens.py",
+      "bytes": 1369,
+      "sha256": "aef9e34e55fdb497172ea806e811e5e2bfb6e93cab6143e21a88614936be2030",
+      "commit": "7277ac61b97e481d1f62f73b50a3797bafd7810c"
+    },
+    {
+      "path": "scripts/reference-obj-fusion.py",
+      "bytes": 5095,
+      "sha256": "19f3f564be902ad09beab33880fd0e3e8a6085f1cf37e0a31ad091dba8205719",
+      "commit": "7277ac61b97e481d1f62f73b50a3797bafd7810c"
+    }
+  ],
+  "binary": {
+    "path": "/tmp/ingetrazo-ai-registry-target/debug/examples/context_document_lifecycle",
+    "bytes": 64873008,
+    "sha256": "d2d8fe81fe8caeb2f6745fb4b0287ffb6b8221ccda8350cb8d3173d5967d88a2"
+  },
+  "accepted": {
+    "cases": 11,
+    "states": 55,
+    "unresolved_source_winding_case": "closed-cube-leaf",
+    "unresolved_winding_leaves": 16,
+    "negative_controls": 16,
+    "ownership_controls": 2,
+    "passed": true
+  },
+  "full_strict": "OPEN: expected nonzero retained, no source/tolerance normalization",
+  "unresolved_winding": {
+    "case": "closed-cube-leaf",
+    "leaves": 16,
+    "phases": {
+      "import": 4,
+      "redo": 4,
+      "finish": 4,
+      "reopen": 4
+    }
+  },
+  "affected_mtl": {
+    "cases": 15,
+    "states": 75,
+    "malformed_sidecar_controls": 2,
+    "asset_ownership_controls": 15,
+    "actual_original_reopens": 15,
+    "negative_controls": 11,
+    "uv_syntax_controls": 8,
+    "passed": true
+  },
+  "affected_nested": {
+    "source_states": 105,
+    "threshold_states": 8,
+    "loaded_repeat_naming_states": 5,
+    "piece_name_controls": 6,
+    "atomic_checkpoint_guards": 6,
+    "rejected_mutations": 10,
+    "retained_precision_failure_rejected": true,
+    "actual_original_reopens": 15,
+    "passed": true
+  },
+  "final_named_build_seconds": 6.92,
+  "scope": "Finite source-backed geometry controller subset, no full P22/GPU promotion. int/float JSON representation equivalence only; rings literal except independently classified explicit unresolved winding witness."
+}
