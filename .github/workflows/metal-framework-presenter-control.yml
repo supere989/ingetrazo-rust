@@ -1,4 +1,4 @@
-name: Manual native MetalKit presenter lifecycle control
+name: Isolated native AppKit Rust and Apple SDK reference
 on:
   push:
     branches: [review/metal-presenter-diagnostic]
@@ -28,19 +28,26 @@ jobs:
           sw_vers > framework-presenter-evidence/platform.txt
           uname -m >> framework-presenter-evidence/platform.txt
           xcodebuild -version > framework-presenter-evidence/sdk.txt
-      - name: Compile and link only the native framework control
-        run: cargo build --locked -j2 -p ingetrazo-metal --example metalkit_presenter_control --example custom_presenter_control --example appkit_presenter_control > framework-presenter-evidence/build.log 2>&1
-      - name: Run three bounded native presenter lifecycle controls
+          clang --version > framework-presenter-evidence/clang.txt
+      - name: Compile only Rust direct-AppKit control
+        id: rust_build
+        run: cargo build --locked -j2 -p ingetrazo-metal --example appkit_presenter_control > framework-presenter-evidence/rust-build.log 2>&1
+      - name: Compile literal Apple SDK Objective-C reference
+        id: sdk_build
+        run: clang -O0 -fobjc-arc -fblocks -std=gnu11 -Wall -Wextra -framework AppKit -framework Metal -framework MetalKit -framework QuartzCore scripts/native/appkit_objc_presenter_control.m -o framework-presenter-evidence/appkit_objc_presenter_control > framework-presenter-evidence/clang-build.log 2>&1
+      - name: Run two bounded same-session native AppKit controls
         run: |
           python3 - <<'PYTHON'
           import hashlib, json, pathlib, subprocess, time
           root=pathlib.Path('framework-presenter-evidence')
           pair={'scope':'Sequential same-runner/session diagnostic; distinct processes/eventloops, no production fallback','controls':{}}
-          for name in ('custom_presenter_control','metalkit_presenter_control','appkit_presenter_control'):
-              binary=pathlib.Path('target/debug/examples')/name
+          for name in ('appkit_presenter_control','appkit_objc_presenter_control'):
+              binary=(pathlib.Path('target/debug/examples')/name if name=='appkit_presenter_control' else root/name)
+              sources=([pathlib.Path('crates/ingetrazo-metal/examples/appkit_presenter_control.rs'),pathlib.Path('crates/ingetrazo-metal/examples/support/metalkit_frame.rs')] if name=='appkit_presenter_control' else [pathlib.Path('scripts/native/appkit_objc_presenter_control.m')])
               report=root/(name+'.json')
               evidence={'source_revision':(root/'revision.txt').read_text().strip(),
                         'binary_sha256':hashlib.sha256(binary.read_bytes()).hexdigest(),
+                        'source_file_sha256':{str(p):hashlib.sha256(p.read_bytes()).hexdigest() for p in sources},
                         'process_timeout_seconds':45,'fixture_deadline_seconds':15,'passed':False}
               started=time.monotonic()
               try:
@@ -62,23 +69,37 @@ jobs:
                           and type(fixture.get('pending')) is int and fixture['pending']==0
                           and type(fixture.get('queue_device')) is int
                           and fixture['queue_device']==fixture.get('device_registry_id'))
-                      if name in ('metalkit_presenter_control','appkit_presenter_control'):
+                      if name in ('appkit_presenter_control','appkit_objc_presenter_control'):
                           evidence['passed']=(evidence['passed']
                               and fixture.get('framework_timed_updates') is True
                               and fixture.get('framework_current_drawable') is True
                               and fixture['queue_device']==fixture.get('layer_device'))
-                      if name=='appkit_presenter_control':
+                      if name in ('appkit_presenter_control','appkit_objc_presenter_control'):
                           evidence['passed']=evidence['passed'] and fixture.get('winit_hosting') is False
+                      if name=='appkit_objc_presenter_control':
+                          evidence['passed']=evidence['passed'] and fixture.get('rust_bindings') is False
                   except (ValueError,TypeError,AttributeError,KeyError) as error:
                       evidence['fixture_report_error']=repr(error)
               pair['controls'][name]=evidence
               (root/'execution.json').write_text(json.dumps(pair,indent=2)+'\n')
           controls=pair['controls']
           ids=[c.get('fixture',{}).get('queue_device') for c in controls.values()]
-          pair['same_device']=len(ids)==3 and all(type(i) is int for i in ids) and len(set(ids))==1
+          pair['same_device']=len(ids)==2 and all(type(i) is int for i in ids) and len(set(ids))==1
           pair['passed']=pair['same_device'] and all(c['passed'] for c in controls.values())
           (root/'execution.json').write_text(json.dumps(pair,indent=2)+'\n')
           raise SystemExit(0 if pair['passed'] else 1)
+          PYTHON
+      - name: Always retain native build and runtime stage outcomes
+        if: always()
+        env:
+          RUST_BUILD_OUTCOME: ${{ steps.rust_build.outcome }}
+          SDK_BUILD_OUTCOME: ${{ steps.sdk_build.outcome }}
+        run: |
+          mkdir -p framework-presenter-evidence
+          python3 - <<'PYTHON'
+          import json, os, pathlib
+          p=pathlib.Path('framework-presenter-evidence')
+          (p/'stage-outcomes.json').write_text(json.dumps({'rust_build':os.environ['RUST_BUILD_OUTCOME'],'sdk_build':os.environ['SDK_BUILD_OUTCOME'],'execution_report_present':(p/'execution.json').exists()},indent=2)+'\n')
           PYTHON
       - uses: actions/upload-artifact@v4
         if: always()

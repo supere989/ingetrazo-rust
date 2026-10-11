@@ -1,0 +1,18 @@
+{
+  "workflow_sha256": "d145fc77454b1fbb74738c1c43ba7480ec79ff60a2254445a7280fbdc6b2e087",
+  "inventory": [
+    "appkit_presenter_control",
+    "appkit_objc_presenter_control"
+  ],
+  "scope": "Same-session RustnativeAppKit vsliteralAppleSDKreference, no custom/winit reruns",
+  "native_compile": "oneRustnamedexample plusclang SDK ARC literalreference; retainedlogs andstageoutcomes",
+  "source_binary_report_hashes": true,
+  "limits_each_seconds": {
+    "native": 15,
+    "outer_process": 45
+  },
+  "strict_gate": "errorNone,Completed+positivecallbacks>=2/pending0,actualqueue/device/layer,samebothdevice,noWinit;ObjCnoRustbindings",
+  "Python_AST": "PASS",
+  "branch_filters": "diagnostic only;parity/computeexactignore;rawotherbranch",
+  "dispatch": "One root-authorized push pending; noautomaticrerun"
+}
