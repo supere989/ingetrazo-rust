@@ -1,9 +1,18 @@
 use super::*;
 pub fn run() {
+    run_input(
+        "original-dxf-entities.json",
+        "native-dxf-entities.json",
+        false,
+    );
+}
+pub fn run_curves() {
+    run_input("original-dxf-curves.json", "native-dxf-curves.json", true);
+}
+fn run_input(source_name: &str, native_name: &str, curve_flags: bool) {
     let root = std::path::PathBuf::from(std::env::args().nth(1).expect("inputs"));
     let source: Value =
-        serde_json::from_slice(&std::fs::read(root.join("original-dxf-entities.json")).unwrap())
-            .unwrap();
+        serde_json::from_slice(&std::fs::read(root.join(source_name)).unwrap()).unwrap();
     let mut rows = Vec::new();
     for case in source["cases"].as_array().unwrap() {
         let name = case["name"].as_str().unwrap();
@@ -21,7 +30,11 @@ pub fn run() {
             app.begin_component_edit();
         }
         let record = |app: &IngeTrazoApp, phase: &str, rows: &mut Vec<Value>| {
-            rows.push(json!({"case":name,"phase":phase,"depth":app.component_edit_stack.len(),"undo":app.undo_stack.len(),"redo":app.redo_stack.len(),"scene":super::nested_import::source_scene(app)}))
+            let mut row = json!({"case":name,"phase":phase,"depth":app.component_edit_stack.len(),"undo":app.undo_stack.len(),"redo":app.redo_stack.len(),"scene":super::nested_import::source_scene(app)});
+            if curve_flags {
+                row["curves"] = curves(&super::nested_import::source_groups(app));
+            }
+            rows.push(row);
         };
         record(&app, "before", &mut rows);
         app.begin_unit_import(&root.join(case["file"].as_str().unwrap()))
@@ -91,8 +104,21 @@ pub fn run() {
     assert_eq!(app.scene.mesh, protected);
     std::fs::write(root.join("native-dxf-guards.json"),serde_json::to_vec_pretty(&json!({"cancel_preserves_document_history_revision":true,"malformed_sequence_preserves_document_history_revision":true,"native_f64_and_opaque_payload_preserved":true})).unwrap()).unwrap();
     std::fs::write(
-        root.join("native-dxf-entities.json"),
+        root.join(native_name),
         serde_json::to_vec_pretty(&json!({"cases":source["cases"],"states":rows})).unwrap(),
     )
     .unwrap();
+}
+
+fn curves(groups: &[Group]) -> Value {
+    fn group(g: &Group) -> Value {
+        let owners = g
+            .mesh
+            .edges
+            .iter()
+            .filter_map(|e| e.curve_id)
+            .collect::<std::collections::HashSet<_>>();
+        json!({"edges":g.mesh.edges.len(),"curved":g.mesh.edges.iter().filter(|e|e.curve_id.is_some()).count(),"owners":owners.len(),"children":g.children.iter().map(group).collect::<Vec<_>>()})
+    }
+    json!(groups.iter().map(group).collect::<Vec<_>>())
 }

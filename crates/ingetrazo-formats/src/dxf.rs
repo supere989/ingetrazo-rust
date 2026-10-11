@@ -3,6 +3,8 @@
 
 //! AutoCAD DXF format export and import.
 
+#[path = "dxf_curves.rs"]
+mod curves;
 use glam::DVec3;
 use ingetrazo_core::scene::Scene;
 use std::io::{BufRead, BufReader, Read, Write};
@@ -261,7 +263,7 @@ fn parse_dxf_options(
         }
         let attributes = &pairs[start..i];
         if kind == "POLYLINE" {
-            let (layer, mut points) = legacy_polyline(attributes, &pairs, &mut i, scale)?;
+            let (layer, mut points, curved) = legacy_polyline(attributes, &pairs, &mut i, scale)?;
             if points.is_empty() {
                 continue;
             }
@@ -277,7 +279,7 @@ fn parse_dxf_options(
                 layer,
                 points,
                 face: false,
-                curved: false,
+                curved,
             });
             continue;
         }
@@ -313,9 +315,10 @@ fn parse_dxf_options(
                         .ok_or_else(|| DxfError::Parse(format!("Invalid numeric field {code}")))
                 })
         };
-        if number(210, 0.)?.abs() > 1e-9
-            || number(220, 0.)?.abs() > 1e-9
-            || (number(230, 1.)? - 1.).abs() > 1e-9
+        if !matches!(kind.as_str(), "LWPOLYLINE" | "CIRCLE" | "ARC" | "ELLIPSE")
+            && (number(210, 0.)?.abs() > 1e-9
+                || number(220, 0.)?.abs() > 1e-9
+                || (number(230, 1.)? - 1.).abs() > 1e-9)
         {
             return Err(DxfError::Parse(
                 "Non-Z DXF entity coordinate systems require OCS conversion".into(),
@@ -354,7 +357,7 @@ fn parse_dxf_options(
                 points = vec![point(0)?, point(1)?];
             }
             "LWPOLYLINE" => {
-                let elevation = number(38, 0.)? * scale;
+                let elevation = number(38, 0.)?;
                 let mut vertices = Vec::<(DVec3, f64)>::new();
                 for (code, value) in attributes {
                     if *code == 10 {
@@ -363,7 +366,7 @@ fn parse_dxf_options(
                             .ok()
                             .filter(|v| v.is_finite())
                             .ok_or_else(|| DxfError::Parse("Invalid polyline X".into()))?;
-                        vertices.push((DVec3::new(x * scale, 0., elevation), 0.));
+                        vertices.push((DVec3::new(x, 0., 0.), 0.));
                     } else if *code == 20 || *code == 42 {
                         let v = value
                             .parse::<f64>()
@@ -374,89 +377,51 @@ fn parse_dxf_options(
                             DxfError::Parse("Polyline field without vertex".into())
                         })?;
                         if *code == 20 {
-                            last.0.y = v * scale;
+                            last.0.y = v;
                         } else {
                             last.1 = v;
                         }
                     }
                 }
-                if vertices.len() < 2 {
-                    return Err(DxfError::Parse("Polyline requires two vertices".into()));
-                }
-                if vertices.iter().any(|(p, _)| !p.is_finite()) {
-                    return Err(DxfError::Parse("Import coordinate overflow".into()));
-                }
-                let closed = (number(70, 0.)? as u32) & 1 != 0;
-                let segments = vertices.len() - usize::from(!closed);
-                for j in 0..segments {
-                    let (a, bulge) = vertices[j];
-                    let b = vertices[(j + 1) % vertices.len()].0;
-                    if j == 0 {
-                        points.push(a);
-                    }
-                    if bulge.abs() < 1e-12 {
-                        points.push(b);
-                    } else {
-                        curved = true;
-                        let delta = b - a;
-                        let chord = delta.length();
-                        if chord < 1e-12 {
-                            return Err(DxfError::Parse(
-                                "Zero-length curved polyline segment".into(),
-                            ));
-                        }
-                        let center = (a + b) / 2.
-                            + DVec3::new(-delta.y, delta.x, 0.)
-                                * ((1. - bulge * bulge) / (4. * bulge));
-                        let radius = a.distance(center);
-                        let begin = (a.y - center.y).atan2(a.x - center.x);
-                        let angle = 4. * bulge.atan();
-                        let step = 2. * (1. - (0.01 / radius).min(1.)).acos();
-                        let count = (angle.abs() / step.max(1e-6)).ceil().max(1.) as usize;
-                        if count > 1_000_000 {
-                            return Err(DxfError::Parse(
-                                "Curve tessellation limit exceeded".into(),
-                            ));
-                        }
-                        for k in 1..=count {
-                            let angle = begin + angle * k as f64 / count as f64;
-                            points.push(if k == count {
-                                b
-                            } else {
-                                center + DVec3::new(radius * angle.cos(), radius * angle.sin(), 0.)
-                            });
-                        }
-                    }
-                }
+                curved = vertices.iter().any(|(_, b)| *b != 0.);
+                let normal = DVec3::new(number(210, 0.)?, number(220, 0.)?, number(230, 1.)?);
+                points = curves::polyline(
+                    &vertices,
+                    (number(70, 0.)? as u32) & 1 != 0,
+                    normal,
+                    elevation,
+                    scale,
+                )?;
             }
             "CIRCLE" | "ARC" => {
-                let center = point(0)?;
-                let radius = number(40, 0.)? * scale;
-                if !radius.is_finite() || radius <= 0. {
-                    return Err(DxfError::Parse("Curve requires positive radius".into()));
-                }
-                let begin = if kind == "CIRCLE" {
+                let center = DVec3::new(number(10, 0.)?, number(20, 0.)?, number(30, 0.)?);
+                let normal = DVec3::new(number(210, 0.)?, number(220, 0.)?, number(230, 1.)?);
+                let start = if kind == "CIRCLE" {
                     0.
                 } else {
                     number(50, 0.)?.to_radians()
                 };
-                let angle = if kind == "CIRCLE" {
+                let end = if kind == "CIRCLE" {
                     std::f64::consts::TAU
                 } else {
-                    (number(51, 0.)?.to_radians() - begin).rem_euclid(std::f64::consts::TAU)
+                    number(51, 360.)?.to_radians()
                 };
-                let step = 2. * (1. - (0.01 / radius).min(1.)).acos();
-                let count =
-                    (angle / step.max(1e-6))
-                        .ceil()
-                        .max(if kind == "CIRCLE" { 8. } else { 1. }) as usize;
-                if count > 1_000_000 {
-                    return Err(DxfError::Parse("Curve tessellation limit exceeded".into()));
-                }
-                for k in 0..=count {
-                    let a = begin + angle * k as f64 / count as f64;
-                    points.push(center + DVec3::new(radius * a.cos(), radius * a.sin(), 0.));
-                }
+                points = curves::circle(center, number(40, 0.)?, normal, start, end, scale)?;
+                curved = true;
+            }
+            "ELLIPSE" => {
+                let center = DVec3::new(number(10, 0.)?, number(20, 0.)?, number(30, 0.)?);
+                let major = DVec3::new(number(11, 1.)?, number(21, 0.)?, number(31, 0.)?);
+                let normal = DVec3::new(number(210, 0.)?, number(220, 0.)?, number(230, 1.)?);
+                points = curves::ellipse(
+                    center,
+                    major,
+                    normal,
+                    number(40, 1.)?,
+                    number(41, 0.)?,
+                    number(42, std::f64::consts::TAU)?,
+                    scale,
+                )?;
                 curved = true;
             }
             _ => {
@@ -464,6 +429,9 @@ fn parse_dxf_options(
                     "DXF entity {kind} is not yet supported; document unchanged"
                 )))
             }
+        }
+        if points.len() < 2 && !face {
+            continue;
         }
         for point in &mut points {
             if source_points {
@@ -490,7 +458,7 @@ fn legacy_polyline(
     pairs: &[(i32, String)],
     cursor: &mut usize,
     scale: f64,
-) -> Result<(String, Vec<DVec3>), DxfError> {
+) -> Result<(String, Vec<DVec3>, bool), DxfError> {
     fn number(attrs: &[(i32, String)], code: i32, default: f64) -> Result<f64, DxfError> {
         attrs
             .iter()
@@ -537,64 +505,73 @@ fn legacy_polyline(
         if flags & (16 | 64) != 0 {
             continue;
         }
-        if number(attrs, 42, 0.)?.abs() > 1e-12 {
-            return Err(DxfError::Parse(
-                "Legacy polyline bulges are not yet supported; document unchanged".into(),
-            ));
-        }
+        let bulge = number(attrs, 42, 0.)?;
         let p = DVec3::new(
             number(attrs, 10, 0.)?,
             number(attrs, 20, 0.)?,
             number(attrs, 30, 0.)?,
         );
         first_z.get_or_insert(p.z);
-        points.push(p);
+        points.push((p, bulge));
     }
     if !ended {
         return Err(DxfError::Parse("POLYLINE missing SEQEND".into()));
     }
     if flags & (16 | 64) != 0 {
-        return Ok((layer, Vec::new()));
+        return Ok((layer, Vec::new(), false));
     }
     if points.len() < 2 {
-        return Ok((layer, Vec::new()));
+        return Ok((layer, Vec::new(), false));
     }
-    if flags & 8 == 0 {
+    let curved = points.iter().any(|(_, b)| b.abs() > 1e-12);
+    let points = if flags & 8 == 0 {
         let elevation = number(header, 30, first_z.unwrap_or(0.))?;
         let normal = DVec3::new(
             number(header, 210, 0.)?,
             number(header, 220, 0.)?,
             number(header, 230, 1.)?,
         );
-        if normal.length_squared() == 0. {
-            return Err(DxfError::Parse("Invalid polyline extrusion".into()));
-        }
-        let z = normal.normalize();
-        let x = if z.x.abs() < 1. / 64. && z.y.abs() < 1. / 64. {
-            DVec3::Y.cross(z)
-        } else {
-            DVec3::Z.cross(z)
-        }
-        .normalize();
-        let y = z.cross(x);
-        for p in &mut points {
-            *p = x * p.x + y * p.y + z * elevation;
-        }
-    }
-    for p in &mut points {
-        *p *= scale;
-        if !p.is_finite() {
+        curves::polyline(&points, flags & 1 != 0, normal, elevation, scale)?
+    } else {
+        let mut points = points
+            .into_iter()
+            .map(|(p, _)| p * scale)
+            .collect::<Vec<_>>();
+        if points.iter().any(|p| !p.is_finite()) {
             return Err(DxfError::Parse("Import coordinate overflow".into()));
         }
-    }
-    if flags & 1 != 0 && points.first() != points.last() {
-        points.push(points[0]);
-    }
-    Ok((layer, points))
+        if flags & 1 != 0 && points.first() != points.last() {
+            points.push(points[0]);
+        }
+        points
+    };
+    Ok((layer, points, curved))
 }
 
 #[cfg(test)]
 mod tests {
+    #[test]
+    fn exact_source_curve_paths() {
+        let source: serde_json::Value = serde_json::from_str(include_str!(
+            "../../../docs/audits/dxf-curves/source-paths.json"
+        ))
+        .unwrap();
+        for row in source.as_array().unwrap() {
+            let mut input = row["dxf"].as_str().unwrap().as_bytes();
+            let plan = super::parse_dxf_options(&mut input, 1., true).unwrap();
+            assert_eq!(plan.entities.len(), 1, "{}", row["case"]);
+            assert_eq!(
+                serde_json::json!(plan.entities[0]
+                    .points
+                    .iter()
+                    .map(|p| p.to_array())
+                    .collect::<Vec<_>>()),
+                row["points"],
+                "{}",
+                row["case"]
+            );
+        }
+    }
     use super::*;
     #[test]
     fn linework_layers_bulges_and_invalid_entities_are_transactional() {
@@ -617,10 +594,10 @@ mod tests {
         import_dxf(&mut std::io::Cursor::new(circle), &mut scene).unwrap();
         assert!(scene.mesh.edges.len() >= 8);
         assert!(scene.mesh.edges.iter().all(|e| e.curve_id == Some(0)));
-        assert!(scene
-            .mesh
-            .vertices
-            .iter()
-            .all(|v| (v.position.length() - 1.).abs() < 1e-10));
+        // Source uses cubic-Bezier circle approximation, whose intermediate
+        // samples intentionally do not all lie on the analytic circle.
+        // Exact source samples are covered by exact_source_curve_paths.
+        assert_eq!(scene.mesh.edges.len(), 32);
+        assert_eq!(scene.mesh.vertices[0].position, DVec3::X);
     }
 }

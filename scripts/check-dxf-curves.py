@@ -43,9 +43,16 @@ def main():
             else:doc.modelspace().add_circle((0,0),1,dxfattribs={"extrusion":(0,1,0)})
             source=directory/(kind+".dxf");doc.saveas(source);out=directory/(kind+".igz");out.write_bytes(b"retained-destination")
             result=subprocess.run(["target/debug/ingetrazo","convert",str(source),str(out)],capture_output=True,text=True)
-            assert result.returncode and out.read_bytes()==b"retained-destination",(kind,result.stderr)
-            rows.append({"case":kind,"explicit_refusal":result.stderr.strip(),"destination_preserved":True})
-    report={"provenance":context(),"passed":True,"cases":rows,"units_acceptance":units_match,"scope":"Circle/arc/bulge sampled spatial approximation to original within 2.1 cm; unsupported blocks/OCS refusal before destination mutation. Millimetre unit conversion remains open; refusal is not entity parity."}
+            if kind=="block":
+                assert result.returncode and out.read_bytes()==b"retained-destination",(kind,result.stderr)
+                rows.append({"case":kind,"explicit_refusal":result.stderr.strip(),"destination_preserved":True})
+            else:
+                assert result.returncode==0,result.stderr
+                original=Scene();dxf_in.load_dxf(original,source);rust=Scene();igz.load_into(rust,out)
+                delta=max(coverage(helpers.edge_segments(original),helpers.edge_segments(rust)),coverage(helpers.edge_segments(rust),helpers.edge_segments(original)))
+                assert delta<.021,(kind,delta)
+                rows.append({"case":kind,"source_coverage_delta":delta,"supported_ocs":True})
+    report={"provenance":context(),"passed":True,"cases":rows,"units_acceptance":units_match,"scope":"Circle/arc/bulge sampled spatial approximation to original within 2.1 cm; unsupported blocks refusal; supported OCS geometry before destination mutation. Millimetre unit conversion remains open; refusal is not entity parity."}
     Path("docs/audits/dxf-curve-evidence.json").write_text(json.dumps(report,indent=2)+"\n");print(json.dumps(report,indent=2))
 if __name__=="__main__":main()
 

@@ -1,0 +1,255 @@
+{
+  "source_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "ezdxf": "1.4.4",
+  "archive": "source-records.zip",
+  "archive_sha256": "d49936e1ebbda3af21f053f1d939cd5abd1cfa339ae83705ac49e701cfdd3d73",
+  "entries": [
+    {
+      "path": "2d-open-input.igz",
+      "bytes": 3552,
+      "sha256": "52003d496290656f79ef289568d3056598015ebad014f944b4f2eba11227e853"
+    },
+    {
+      "path": "2d-open.dxf",
+      "bytes": 15896,
+      "sha256": "af409cce414de370c5c77cb80ae450adc3f0dc265fcf75eb8ae019e80e8497c0"
+    },
+    {
+      "path": "arc-half-input.igz",
+      "bytes": 3552,
+      "sha256": "e7d76c18e792e70f457aba8d8e7863fda561631b14509f816239dd2c5a0d3021"
+    },
+    {
+      "path": "arc-half-original.igz",
+      "bytes": 9393,
+      "sha256": "d03fa26a9326bf5130d01cf2b115498ad293057bc973488058eb17d0bed93144"
+    },
+    {
+      "path": "arc-half.dxf",
+      "bytes": 15523,
+      "sha256": "387f2b8a0e3ba3524f612373d7b078cfa4600db1c8d06a1abbfd0729533f18fc"
+    },
+    {
+      "path": "arc-ocs-input.igz",
+      "bytes": 3552,
+      "sha256": "1b15caa1f402b65be4bdfe10e6c9091a9cc0a622ea07b0362fcd2ae129471ef2"
+    },
+    {
+      "path": "arc-ocs-original.igz",
+      "bytes": 9447,
+      "sha256": "6e43b2e54399a43a3148bf15cd714297571642cbef2e4cf87972bb4d3c0dda7c"
+    },
+    {
+      "path": "arc-ocs.dxf",
+      "bytes": 15548,
+      "sha256": "41023778f9756095e55fbc46b8f43ebbfe8119e667677a8479918b7cf6c04f00"
+    },
+    {
+      "path": "arc-wrap-input.igz",
+      "bytes": 3552,
+      "sha256": "ac7985475e83fb8a33a6f23d4f374a014a8b2d88af6ebe64d3876d6062d26721"
+    },
+    {
+      "path": "arc-wrap-original.igz",
+      "bytes": 6037,
+      "sha256": "3cf38197051a565862f88be6eebb8f023ef006274998f4a5a3e9be30e8a14656"
+    },
+    {
+      "path": "arc-wrap.dxf",
+      "bytes": 15524,
+      "sha256": "276276a6188c898298a7f0a2b17b2de170faa62cc0697532e6127643a43c6495"
+    },
+    {
+      "path": "attempts/initial-curve-observer/source.log",
+      "bytes": 2676,
+      "sha256": "c475a6bacfa011e03993b6123d4a2e6013dee62684a3f252d383b86b084a0804"
+    },
+    {
+      "path": "circle-input.igz",
+      "bytes": 3552,
+      "sha256": "57fd174a6b7ae816e97704126169769ac06b0c952074c662343eaf8f972e9478"
+    },
+    {
+      "path": "circle-large-input.igz",
+      "bytes": 3552,
+      "sha256": "03be838ffc0a68088543c1a1800dbd01b477382b0e3f8dbe1671a89c1e90fbd3"
+    },
+    {
+      "path": "circle-large-original.igz",
+      "bytes": 76648,
+      "sha256": "9974a112ba73120ac426caee9fd3099eed6396a380b23687d0b5b721ed5c7ebb"
+    },
+    {
+      "path": "circle-large.dxf",
+      "bytes": 15498,
+      "sha256": "de1270d1fc074bd67f7d3af29873cadc4eacc7c3ec18a1c56c8f22b6a58289d4"
+    },
+    {
+      "path": "circle-original.igz",
+      "bytes": 12704,
+      "sha256": "e0804eb44365c082c0a52ca1a1e6514ba8eaa8b0c892302fde328f4848d1c607"
+    },
+    {
+      "path": "circle.dxf",
+      "bytes": 15496,
+      "sha256": "601eb7a7ec78a1072634b90d00f81b6e0eff0b2aae46b98531a35208dcf17248"
+    },
+    {
+      "path": "ellipse-full-input.igz",
+      "bytes": 3552,
+      "sha256": "2c149c661d6da821292c2d646aeb57b671ed5d3a79787146e5246649fbf5dfba"
+    },
+    {
+      "path": "ellipse-full-original.igz",
+      "bytes": 18574,
+      "sha256": "792633c9c0a8341a93ef2d4343d7c0e1352beadf9835ee32aa6fac52fc30e719"
+    },
+    {
+      "path": "ellipse-full.dxf",
+      "bytes": 15552,
+      "sha256": "69706674e8fd24380687f00f523e4ddde66dd21f76a1643cf1bd76128018d8d6"
+    },
+    {
+      "path": "ellipse-partial-input.igz",
+      "bytes": 3552,
+      "sha256": "69d32fb59c268e3b4c37e871dff41de37106cd7beb3b55281634f7dfef1f900b"
+    },
+    {
+      "path": "ellipse-partial-original.igz",
+      "bytes": 10030,
+      "sha256": "fcd1fae6e05aff7eb0b27e5edbefe6948f55f2644ee77c1fd7ab35dc42f61ed3"
+    },
+    {
+      "path": "ellipse-partial.dxf",
+      "bytes": 15538,
+      "sha256": "1856463b76b4c21b419738b49c4d91b537cc75a3060fb92e990202fabca0e87a"
+    },
+    {
+      "path": "ellipse-tilted-input.igz",
+      "bytes": 3552,
+      "sha256": "e6981d0ef2d4ff0722d3cc5a9bcb36218bfe396771333c0ba31a9d26b10c8ba1"
+    },
+    {
+      "path": "ellipse-tilted-original.igz",
+      "bytes": 16258,
+      "sha256": "db6acb91f3052a227d23f40f22b002a20cc5ccc0ccb2ace82275d078ed801587"
+    },
+    {
+      "path": "ellipse-tilted.dxf",
+      "bytes": 15577,
+      "sha256": "1a5514c076cd89a81c341809bfa276fc801dcb53401fa1c699934025acdcd25e"
+    },
+    {
+      "path": "legacy-bulge-ocs-input.igz",
+      "bytes": 3552,
+      "sha256": "d31665d3e2152361fb49c47dd7178d6dce0b02e9d578d97ff6964684f48084ac"
+    },
+    {
+      "path": "legacy-bulge-ocs-original.igz",
+      "bytes": 11749,
+      "sha256": "3733b7436b204b3ff3434408d5f58923b84c39b76689e547a2815aa0325d17fc"
+    },
+    {
+      "path": "legacy-bulge-ocs.dxf",
+      "bytes": 15938,
+      "sha256": "ba0cc890d5153a20bbec54492c434867b513c2c9744382bb7a08a24ed194a017"
+    },
+    {
+      "path": "lw-negative-closed-input.igz",
+      "bytes": 3552,
+      "sha256": "bb410389eea6a077e19eacd057f432a9dd9bee445b3d3dc0e4c5305600eb91de"
+    },
+    {
+      "path": "lw-negative-closed-original.igz",
+      "bytes": 10539,
+      "sha256": "70634b0b3dc41da24f843593073fca4729dc1efe59ff2ce2e641427db7a4a694"
+    },
+    {
+      "path": "lw-negative-closed.dxf",
+      "bytes": 15548,
+      "sha256": "d8e30b46ec9d8192b12920365a8ce2b766312fe0edbd4848174e61370daab597"
+    },
+    {
+      "path": "lw-positive-input.igz",
+      "bytes": 3552,
+      "sha256": "196763be303fe026fee1200a3a23783c59cbc9919672bd5eaf41020ece131f11"
+    },
+    {
+      "path": "lw-positive-original.igz",
+      "bytes": 8528,
+      "sha256": "d9dd645cd445d3d02e42636fe9af33ecb36c9990dd7d219f8cabc22c11e718fe"
+    },
+    {
+      "path": "lw-positive.dxf",
+      "bytes": 15547,
+      "sha256": "0213abbb5c14fea778af3ba8c24e8ae9c9e5cced405162d640bd9c6113ef80e1"
+    },
+    {
+      "path": "lw-small-bulge-input.igz",
+      "bytes": 3552,
+      "sha256": "2096d0934b3c8de1e447e3b9cdc4f13d91cfcef08bfdb5590559dcb2eb11d1ed"
+    },
+    {
+      "path": "lw-small-bulge-original.igz",
+      "bytes": 4206,
+      "sha256": "e94f467cf8f6eb1dbb0bb98ff29fce0a64dd50b92bebf2d0f6d81121c5d190d8"
+    },
+    {
+      "path": "lw-small-bulge.dxf",
+      "bytes": 15549,
+      "sha256": "62eaf11972266a5920ae13cc3f86d86c17aa496e8cc6c95b452836d0f5acac1b"
+    },
+    {
+      "path": "original-dxf-curves.json",
+      "bytes": 1596443,
+      "sha256": "432a0af65b1d47aa94726d181703f56aba4d95e0e98d4bebb380ebea0c2516f2"
+    },
+    {
+      "path": "original-dxf-paths.json",
+      "bytes": 54278,
+      "sha256": "49fe8709fde05e75e56776197a3503b2c36f895c5e800080688f87b86fd9f651"
+    },
+    {
+      "path": "source.log",
+      "bytes": 685,
+      "sha256": "a7a6bb9aae6915042d4d8b79675b3434f73bf67ae82c58de8f306c6663c1c171"
+    }
+  ],
+  "source_helper_sha256": "bf3b96f397378f3e900fb3bbe19d76bc2ef4de20f74ad841ef37ea59cdb14799",
+  "dependency_files": [
+    {
+      "path": "path/tools.py",
+      "sha256": "a5078589f0e605ab86dcfc6e610379114daf70447e1334e54189850486a00324"
+    },
+    {
+      "path": "path/path.py",
+      "sha256": "94a69b57f0c08737d88a406621e915226f143e78716dbd13f89500ece6d92f01"
+    },
+    {
+      "path": "path/converter.py",
+      "sha256": "ce3f02f7ec059aad4a72d856c969f8bdb3f26743a36108afcd29ebd5f7b0d8f2"
+    },
+    {
+      "path": "math/_bezier4p.py",
+      "sha256": "23c5fe6a1a69192e2ab058ebf06f16eb6e8745175fb1561c52d618ac50aa5ba3"
+    },
+    {
+      "path": "math/bulge.py",
+      "sha256": "af18f1f45744539bddbc48e14430129661c35688e4496847bab7e8682c1866dd"
+    },
+    {
+      "path": "math/ellipse.py",
+      "sha256": "535685163b4e1e1fb4fc5833508d04c0857425d9a460240b7a5c484e794ffa08"
+    },
+    {
+      "path": "math/_construct.py",
+      "sha256": "ddeed16265db86f2351e48ca7f3dd47b4ed73d737b66bf76e64230bcf9726b9c"
+    },
+    {
+      "path": "acc/bezier4p.cpython-313-x86_64-linux-gnu.so",
+      "sha256": "e6de2e21d5337a1339f4bd230839cd7ba666958307ae7eebb25334aa90f55585"
+    }
+  ],
+  "cases": 12,
+  "states": 84
+}

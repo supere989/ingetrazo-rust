@@ -1,0 +1,7 @@
+# Source-faithful DXF curve path subset
+
+Pinned original6be29fe uses ezdxf1.4.4 `make_path`, then `.flattening(max(.01/scale,1e-6),segments=8)`. Circular/elliptical arcs become cubic Beziers with at least one per quarter and tangent4/3*tan(span/4). OCS transforms control points before adaptive flattening. Offset-relative cubic Bernstein evaluation and strict midpoint deviation `<distance` choose dyadic subdivisions. Units multiply only flattened points, before source Qt authored geometry conversion. Tiny bulges<1e-6 become line commands, while original entity curve-selection flags remain separate.
+
+Natural source12workflows/84states: Circle/sagitta subdivision, wrapped/half/OCS ARC, full/partial/tilted ELLIPSE, positive/negative/closed/tiny LWPOLYLINE bulges, legacy closed bulges with OCS/elevation. Existing straight inputs reused only for native Cancel/malformed/f64/opaque guards, no old controller capture. Exact dependency output fixture retains every emitted source Qt point and raw path controls; no tolerance/point normalization. Initial observer failure (Edge uses curve, notcurve_id) preserved.
+
+SPLINE rational/knot/periodic path construction and INSERT/MINSERT remain separate; broader face stitch/fusion stillopen. No P22 promotion, renderer/GPU proof or totalheap claim. New reusable --dxf-curves mode remains within existing contextconsumer. Existing old check-dxf-curves CI sampled test updates only its now-supported OCS expectation; strict newchecker is check-dxf-source-curves.py.
