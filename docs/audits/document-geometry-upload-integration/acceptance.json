@@ -1,0 +1,122 @@
+{
+  "runtime": "9cd398658b388d2201c4a3ac259869d106a56d71",
+  "steps": [
+    {
+      "name": "corrected-group-test",
+      "seconds": 9.437,
+      "exit": 0
+    },
+    {
+      "name": "remaining-tool-tests",
+      "seconds": 3.274,
+      "exit": 0
+    },
+    {
+      "name": "workspace-doctests",
+      "seconds": 12.947,
+      "exit": 0
+    },
+    {
+      "name": "workspace-examples",
+      "seconds": 22.959,
+      "exit": 0
+    },
+    {
+      "name": "named-build",
+      "seconds": 2.62,
+      "exit": 0
+    },
+    {
+      "name": "layer-native",
+      "seconds": 0.018,
+      "exit": 0
+    },
+    {
+      "name": "layer-check",
+      "seconds": 0.098,
+      "exit": 0
+    },
+    {
+      "name": "igz-native",
+      "seconds": 23.454,
+      "exit": 0
+    },
+    {
+      "name": "igz-source-reopen",
+      "seconds": 8.255,
+      "exit": 0
+    },
+    {
+      "name": "igz-check",
+      "seconds": 33.316,
+      "exit": 0
+    },
+    {
+      "name": "pushpull-native",
+      "seconds": 0.101,
+      "exit": 0
+    },
+    {
+      "name": "pushpull-check",
+      "seconds": 0.387,
+      "exit": 1
+    },
+    {
+      "name": "pushpull-app",
+      "seconds": 0.032,
+      "exit": 0
+    },
+    {
+      "name": "export-check",
+      "seconds": 12.212,
+      "exit": 0
+    }
+  ],
+  "known_pushpull_failures": [
+    "wedge0--0.4",
+    "ctrl-roof-0.2",
+    "ctrl-step0.5",
+    "ctrl-step-0.5"
+  ],
+  "complete": true,
+  "workspace_tests": {
+    "passed": 856,
+    "failed_remaining": 0,
+    "ignored_existing": 2,
+    "scope": "One combined suite, resumed only at corrected test and remaining targets; previous successful targets were not rerun."
+  },
+  "initial_attempt": {
+    "runtime": "2c0169c8f0d51cc73462373b596e1c5d7276c4bb",
+    "steps": [
+      {
+        "name": "invalidate-local",
+        "seconds": 0.504,
+        "exit": 0
+      },
+      {
+        "name": "workspace",
+        "seconds": 27.974,
+        "exit": 101
+      }
+    ]
+  },
+  "second_attempt": {
+    "runtime": "ba910e69bcf1ddaf06a25d76806ce6bcaacf225e",
+    "steps": [
+      {
+        "name": "workspace",
+        "seconds": 43.508,
+        "exit": 101
+      }
+    ]
+  },
+  "document_checker_optimization": {
+    "before_seconds": 33.316,
+    "seconds": 4.58,
+    "exit": 0,
+    "positive_cases": 9,
+    "negative_controls": 8
+  },
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "image_checks": "Independent compact evidence replay passed: 2 exact whole frames, 5 to 1 image submissions, no throughput claim."
+}

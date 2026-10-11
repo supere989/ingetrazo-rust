@@ -1,0 +1,82 @@
+{
+  "app.json": {
+    "bytes": 562,
+    "sha256": "282693092f60e43459322f798490c9d9f577a0e8e03d81c9595cf1f05f234fdd"
+  },
+  "baseline-comparison.json": {
+    "bytes": 3549,
+    "sha256": "e5e92c6ae5f82e118a317ffc91dba4d66e0fbd6a2d4afa19413bedef2262b89a"
+  },
+  "cap-comparison.json": {
+    "bytes": 3547,
+    "sha256": "b152ef0e15c5462339545cd726457870e975fced0eb3df817ebb5f76a0ec817a"
+  },
+  "complete-comparison.json": {
+    "bytes": 3936,
+    "sha256": "b26e28356592eabda5b6c12e7a92ac85b976d0afd2cccbddd8fcc594d2cba8f3"
+  },
+  "ctrl-expanded-comparison.json": {
+    "bytes": 5514,
+    "sha256": "7967c7843005e97ef882c8855ece4f348c28d830d4f2c4c42705da9171e8fd09"
+  },
+  "debug-ctrl.json": {
+    "bytes": 128048,
+    "sha256": "1ffb8c376453f4a31e177f88999d095e5c7d94b6f5ca1d6f5cbc0598a3f7a59d"
+  },
+  "freeze-build.log": {
+    "bytes": 17319,
+    "sha256": "5fad6967a21a261663491441851048ef846f325435364983776aef993de30d20"
+  },
+  "freeze-build2.log": {
+    "bytes": 16113,
+    "sha256": "512c6f6b5785b07c0635c4af5d7def644ec35b2e9f17a9566f699c4bfc2984a6"
+  },
+  "freeze-test.log": {
+    "bytes": 1577,
+    "sha256": "dfdc666f85ccaeecbdfcf21d9f40b8e416039a51f41a612ec0f33a70cc6574c5"
+  },
+  "native-baseline.json": {
+    "bytes": 87487,
+    "sha256": "403226c6a16a3331fa215f097f5d22ce9885898de128ea2a44f90524e4eea089"
+  },
+  "native-cap.json": {
+    "bytes": 81741,
+    "sha256": "1682fdd5d40ea19b86ec9359233b1ca4ea6a178a4cba0d524a177b5648a3574a"
+  },
+  "native-complete.json": {
+    "bytes": 96002,
+    "sha256": "31deac75d82312dc660790f2bec40cd6bb7d74bf732c06f5cc09a860f2cd7c37"
+  },
+  "native-ctrl-expanded.json": {
+    "bytes": 128048,
+    "sha256": "1d863cc4e48edf3d7750dfaebcb7737f58a8754de30d31a2f76a972ab33af7da"
+  },
+  "native-painted.json": {
+    "bytes": 90154,
+    "sha256": "64d3f3e0db2dcbfd22b929dae03394beb2709b0165d0aa962528619a5abf26a1"
+  },
+  "native-qt-authoring.json": {
+    "bytes": 91246,
+    "sha256": "de8a9fdeb2fbacf2e42e07d6ec422da7a9bc7f24d0d7887b8661848558362d8e"
+  },
+  "native-rims.json": {
+    "bytes": 79293,
+    "sha256": "3c656834727d1e92417586724dd56a0131fad27834b29c315a007b27982942f5"
+  },
+  "qt-comparison.json": {
+    "bytes": 3936,
+    "sha256": "b26e28356592eabda5b6c12e7a92ac85b976d0afd2cccbddd8fcc594d2cba8f3"
+  },
+  "rims-comparison.json": {
+    "bytes": 3544,
+    "sha256": "863927426a352967c8b3c3d591e286d7603aeffc00bc02a7ab808986283995e7"
+  },
+  "final-comparison.log": {
+    "bytes": 6742,
+    "sha256": "9d7fdba533a7606f940e594f7e17091d88601c2d541d3c2f67283baf8fa639cc"
+  },
+  "final-layer-test.log": {
+    "bytes": 1560,
+    "sha256": "8ddc54aa6ec73c4f273a2d1609f10066e308c167dd2f0f4f89402dba720cac7d"
+  }
+}

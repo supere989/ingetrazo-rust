@@ -44,17 +44,22 @@ def main():
     if sys.argv[1].endswith('.gz'):expected={k:{'after':v} for k,v in expected.items()}
     actual=json.loads(Path(sys.argv[2]).read_text())
     validate(expected,actual)
-    def reject(value):
-        try:validate(expected,value)
+    def reject(value,reference=expected):
+        try:validate(reference,value)
         except AssertionError:return
         raise AssertionError('mutated result accepted')
-    bad=copy.deepcopy(actual);bad.pop(next(iter(bad)));reject(bad)
+    bad=actual.copy();bad.pop(next(iter(bad)));reject(bad)
+    # Positive acceptance already covers every full document. Each mutation
+    # runs the same validator against its affected case only, avoiding eight
+    # deep copies and re-comparisons of the unchanged architectural models.
+    def altered(case):return {case:copy.deepcopy(actual[case])}
+    def reject_case(case,bad):reject(bad,{case:expected[case]})
     for field in ['texture','back','layer']:
-        bad=copy.deepcopy(actual);bad['fresh']['mesh']['faces'][-1].pop(field);reject(bad)
-    bad=copy.deepcopy(actual);bad['fresh']['images'].clear();reject(bad)
-    bad=copy.deepcopy(actual);bad['pbr-colors']['georef']=None;reject(bad)
-    bad=copy.deepcopy(actual);bad['nested-reflected']['groups'][0]['name']='wrong';reject(bad)
-    bad=copy.deepcopy(actual);bad['fresh']['mesh']['edges'][-1]['layer']=0;reject(bad)
+        bad=altered('fresh');bad['fresh']['mesh']['faces'][-1].pop(field);reject_case('fresh',bad)
+    bad=altered('fresh');bad['fresh']['images'].clear();reject_case('fresh',bad)
+    bad=altered('pbr-colors');bad['pbr-colors']['georef']=None;reject_case('pbr-colors',bad)
+    bad=altered('nested-reflected');bad['nested-reflected']['groups'][0]['name']='wrong';reject_case('nested-reflected',bad)
+    bad=altered('fresh');bad['fresh']['mesh']['edges'][-1]['layer']=0;reject_case('fresh',bad)
     report={'cases':len(actual),'negative_controls':8,'strict_reopen_equal':True}
     if len(sys.argv)>4:report['archive']=archive_controls(sys.argv[3],sys.argv[4])
     print(json.dumps(report))

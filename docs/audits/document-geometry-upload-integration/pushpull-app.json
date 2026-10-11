@@ -12,6 +12,11 @@
       "mesh_exact": true
     },
     {
+      "case": "nested-ctrl-release",
+      "same_as_normal": true,
+      "undo": 1
+    },
+    {
       "case": "nested-shared-finish-history",
       "undo": 1,
       "linked_meshes_exact": true,

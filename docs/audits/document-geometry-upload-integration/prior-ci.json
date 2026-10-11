@@ -1,0 +1,65 @@
+{
+  "commit": "a9cd0eea767c2c48214704d6103fb25a2778c53b",
+  "runs": [
+    {
+      "jobs": [
+        {
+          "name": "Native Metal compile (x86_64-apple-darwin)",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/supere989/ingetrazo-rust/actions/runs/38118894709/job/114409352364",
+          "failed_steps": []
+        },
+        {
+          "name": "Native Metal framework link (macos-15)",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/supere989/ingetrazo-rust/actions/runs/38118894709/job/114409352436",
+          "failed_steps": []
+        },
+        {
+          "name": "Native Metal compile (aarch64-apple-darwin)",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/supere989/ingetrazo-rust/actions/runs/38118894709/job/114409352446",
+          "failed_steps": []
+        },
+        {
+          "name": "compilation-and-tests",
+          "status": "completed",
+          "conclusion": "failure",
+          "url": "https://github.com/supere989/ingetrazo-rust/actions/runs/38118894709/job/114409352452",
+          "failed_steps": [
+            "Independent export buffer acceptance"
+          ]
+        },
+        {
+          "name": "Native Metal framework link (macos-15-intel)",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/supere989/ingetrazo-rust/actions/runs/38118894709/job/114409352466",
+          "failed_steps": []
+        }
+      ]
+    },
+    {
+      "jobs": [
+        {
+          "name": "Actual ordered UI and CAD compute (macos-15)",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/supere989/ingetrazo-rust/actions/runs/38118894727/job/114409352461",
+          "failed_steps": []
+        },
+        {
+          "name": "Actual ordered UI and CAD compute (macos-15-intel)",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/supere989/ingetrazo-rust/actions/runs/38118894727/job/114409352582",
+          "failed_steps": []
+        }
+      ]
+    }
+  ],
+  "failure_resolution": "The old export checker required +Y encoded normals and positive Z winding. Fresh pinned original exporter for the identical fixture gives -Y normals and negative Z winding. Corrected exact checker plus two mutations pass; no runtime tolerance changed."
+}

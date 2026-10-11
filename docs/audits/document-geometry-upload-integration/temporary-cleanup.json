@@ -1,0 +1,27 @@
+{
+  "verified_saved_archives_and_logs": true,
+  "observations_equal_complete_canonical_source_gzip": true,
+  "removed": [
+    {
+      "path": "/tmp/ingetrazo-combined-next",
+      "files": 39,
+      "bytes": 86491542
+    },
+    {
+      "path": "/tmp/ingetrazo-igz-integrated-inputs",
+      "files": 7,
+      "bytes": 4435
+    },
+    {
+      "path": "/tmp/ingetrazo-layer-original",
+      "files": 59,
+      "bytes": 122139
+    },
+    {
+      "path": "/tmp/ingetrazo-reflection-native",
+      "files": 4,
+      "bytes": 5428
+    }
+  ],
+  "dependency_targets_retained": true
+}

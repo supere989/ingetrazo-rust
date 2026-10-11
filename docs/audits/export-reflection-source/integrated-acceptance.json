@@ -1,0 +1,128 @@
+{
+  "provenance": {
+    "rust_commit": "9cd398658b388d2201c4a3ac259869d106a56d71",
+    "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+    "checker_python": "3.13.13",
+    "boundary": "Evidence from this checkout; retained baseline failures are historical, not current verdicts."
+  },
+  "passed": true,
+  "results": [
+    {
+      "format": ".gltf",
+      "encoded_y_up_points": [
+        [
+          12.0,
+          34.0,
+          -23.0
+        ],
+        [
+          11.0,
+          34.0,
+          -23.0
+        ],
+        [
+          12.0,
+          34.0,
+          -24.0
+        ]
+      ],
+      "decoded_world_z_up_points": [
+        [
+          12.0,
+          23.0,
+          34.0
+        ],
+        [
+          11.0,
+          23.0,
+          34.0
+        ],
+        [
+          12.0,
+          24.0,
+          34.0
+        ]
+      ],
+      "winding_z": -1.0
+    },
+    {
+      "format": ".glb",
+      "encoded_y_up_points": [
+        [
+          12.0,
+          34.0,
+          -23.0
+        ],
+        [
+          11.0,
+          34.0,
+          -23.0
+        ],
+        [
+          12.0,
+          34.0,
+          -24.0
+        ]
+      ],
+      "decoded_world_z_up_points": [
+        [
+          12.0,
+          23.0,
+          34.0
+        ],
+        [
+          11.0,
+          23.0,
+          34.0
+        ],
+        [
+          12.0,
+          24.0,
+          34.0
+        ]
+      ],
+      "winding_z": -1.0
+    }
+  ],
+  "source": {
+    "format": ".glb",
+    "encoded_y_up_points": [
+      [
+        12.0,
+        34.0,
+        -23.0
+      ],
+      [
+        11.0,
+        34.0,
+        -23.0
+      ],
+      [
+        12.0,
+        34.0,
+        -24.0
+      ]
+    ],
+    "decoded_world_z_up_points": [
+      [
+        12.0,
+        23.0,
+        34.0
+      ],
+      [
+        11.0,
+        23.0,
+        34.0
+      ],
+      [
+        12.0,
+        24.0,
+        34.0
+      ]
+    ],
+    "winding_z": -1.0
+  },
+  "source_sha256": "58becbf56cf2fb1d42165807288004c2bc8be78e6d8dd007b9898be90d5e1b25",
+  "negative_controls_rejected": 2,
+  "scope": "Single reflected nested triangle; no textures/material/hierarchy/full format acceptance."
+}

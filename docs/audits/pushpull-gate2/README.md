@@ -15,4 +15,4 @@ CARGO_TARGET_DIR=/tmp/ingetrazo-metal-world-target CARGO_PROFILE_TEST_DEBUG=0 CA
 /tmp/ingetrazo-metal-world-target/debug/examples/pushpull_gate2_app_fixture docs/audits/pushpull-gate2/source.json docs/audits/pushpull-gate2/app-final.json
 ```
 
-The strict geometry checker intentionally exits 1 until all four retained failures are resolved. Historical baseline/cap/rim/Qt artifacts retain earlier failures without tolerance changes. Source reconstruction recipes do not cover general GUI clamp behavior. The layer prerequisite is root-owned; see provenance.
+The strict geometry checker intentionally exits 1 until all four retained failures are resolved. `history.zip` retains byte-verified historical baseline/cap/rim/Qt artifacts and build logs; `history-members.json` records their original names and SHA256. No failure or tolerance was removed. Source reconstruction recipes do not cover general GUI clamp behavior. The layer prerequisite is root-owned; see provenance.

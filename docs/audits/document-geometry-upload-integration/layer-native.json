@@ -1,0 +1,578 @@
+{
+  "rows": [
+    {
+      "name": "face-default-open",
+      "face": 0,
+      "edge": null,
+      "group": null,
+      "selection": [],
+      "visible_faces": [
+        true
+      ]
+    },
+    {
+      "name": "face-default-locked",
+      "face": null,
+      "edge": null,
+      "group": null,
+      "selection": [],
+      "visible_faces": [
+        true
+      ]
+    },
+    {
+      "name": "face-default-hidden",
+      "face": null,
+      "edge": null,
+      "group": null,
+      "selection": [],
+      "visible_faces": [
+        false
+      ]
+    },
+    {
+      "name": "face-default-restored",
+      "face": 0,
+      "edge": null,
+      "group": null,
+      "selection": [],
+      "visible_faces": [
+        true
+      ]
+    },
+    {
+      "name": "face-empty-open",
+      "face": 0,
+      "edge": null,
+      "group": null,
+      "selection": [],
+      "visible_faces": [
+        true
+      ]
+    },
+    {
+      "name": "face-empty-locked",
+      "face": null,
+      "edge": null,
+      "group": null,
+      "selection": [],
+      "visible_faces": [
+        true
+      ]
+    },
+    {
+      "name": "face-empty-hidden",
+      "face": null,
+      "edge": null,
+      "group": null,
+      "selection": [],
+      "visible_faces": [
+        false
+      ]
+    },
+    {
+      "name": "face-empty-restored",
+      "face": 0,
+      "edge": null,
+      "group": null,
+      "selection": [],
+      "visible_faces": [
+        true
+      ]
+    },
+    {
+      "name": "face-named-open",
+      "face": 0,
+      "edge": null,
+      "group": null,
+      "selection": [],
+      "visible_faces": [
+        true
+      ]
+    },
+    {
+      "name": "face-named-locked",
+      "face": null,
+      "edge": null,
+      "group": null,
+      "selection": [
+        "edge",
+        "edge",
+        "edge",
+        "edge"
+      ],
+      "visible_faces": [
+        true
+      ]
+    },
+    {
+      "name": "face-named-hidden",
+      "face": null,
+      "edge": null,
+      "group": null,
+      "selection": [
+        "edge",
+        "edge",
+        "edge",
+        "edge"
+      ],
+      "visible_faces": [
+        false
+      ]
+    },
+    {
+      "name": "face-named-restored",
+      "face": 0,
+      "edge": null,
+      "group": null,
+      "selection": [
+        "edge",
+        "edge",
+        "edge",
+        "edge"
+      ],
+      "visible_faces": [
+        true
+      ]
+    },
+    {
+      "name": "face-unknown-open",
+      "face": 0,
+      "edge": null,
+      "group": null,
+      "selection": [],
+      "visible_faces": [
+        true
+      ]
+    },
+    {
+      "name": "face-unknown-locked",
+      "face": 0,
+      "edge": null,
+      "group": null,
+      "selection": [
+        "edge",
+        "edge",
+        "edge",
+        "edge",
+        "face"
+      ],
+      "visible_faces": [
+        true
+      ]
+    },
+    {
+      "name": "face-unknown-hidden",
+      "face": 0,
+      "edge": null,
+      "group": null,
+      "selection": [
+        "edge",
+        "edge",
+        "edge",
+        "edge",
+        "face"
+      ],
+      "visible_faces": [
+        true
+      ]
+    },
+    {
+      "name": "face-unknown-restored",
+      "face": 0,
+      "edge": null,
+      "group": null,
+      "selection": [
+        "edge",
+        "edge",
+        "edge",
+        "edge",
+        "face"
+      ],
+      "visible_faces": [
+        true
+      ]
+    },
+    {
+      "name": "face-rear-open",
+      "face": 0,
+      "edge": null,
+      "group": null,
+      "selection": [],
+      "visible_faces": [
+        true,
+        true
+      ]
+    },
+    {
+      "name": "face-rear-locked",
+      "face": 1,
+      "edge": null,
+      "group": null,
+      "selection": [
+        "edge",
+        "edge",
+        "edge",
+        "edge",
+        "edge",
+        "edge",
+        "edge",
+        "edge",
+        "face"
+      ],
+      "visible_faces": [
+        true,
+        true
+      ]
+    },
+    {
+      "name": "face-rear-hidden",
+      "face": 1,
+      "edge": null,
+      "group": null,
+      "selection": [
+        "edge",
+        "edge",
+        "edge",
+        "edge",
+        "edge",
+        "edge",
+        "edge",
+        "edge",
+        "face"
+      ],
+      "visible_faces": [
+        false,
+        true
+      ]
+    },
+    {
+      "name": "face-rear-restored",
+      "face": 0,
+      "edge": null,
+      "group": null,
+      "selection": [
+        "edge",
+        "edge",
+        "edge",
+        "edge",
+        "edge",
+        "edge",
+        "edge",
+        "edge",
+        "face"
+      ],
+      "visible_faces": [
+        true,
+        true
+      ]
+    },
+    {
+      "name": "edge-default-open",
+      "face": null,
+      "edge": 0,
+      "group": null,
+      "selection": [],
+      "visible_faces": []
+    },
+    {
+      "name": "edge-default-locked",
+      "face": null,
+      "edge": null,
+      "group": null,
+      "selection": [],
+      "visible_faces": []
+    },
+    {
+      "name": "edge-default-hidden",
+      "face": null,
+      "edge": null,
+      "group": null,
+      "selection": [],
+      "visible_faces": []
+    },
+    {
+      "name": "edge-default-restored",
+      "face": null,
+      "edge": 0,
+      "group": null,
+      "selection": [],
+      "visible_faces": []
+    },
+    {
+      "name": "edge-empty-open",
+      "face": null,
+      "edge": 0,
+      "group": null,
+      "selection": [],
+      "visible_faces": []
+    },
+    {
+      "name": "edge-empty-locked",
+      "face": null,
+      "edge": null,
+      "group": null,
+      "selection": [],
+      "visible_faces": []
+    },
+    {
+      "name": "edge-empty-hidden",
+      "face": null,
+      "edge": null,
+      "group": null,
+      "selection": [],
+      "visible_faces": []
+    },
+    {
+      "name": "edge-empty-restored",
+      "face": null,
+      "edge": 0,
+      "group": null,
+      "selection": [],
+      "visible_faces": []
+    },
+    {
+      "name": "edge-named-open",
+      "face": null,
+      "edge": 0,
+      "group": null,
+      "selection": [],
+      "visible_faces": []
+    },
+    {
+      "name": "edge-named-locked",
+      "face": null,
+      "edge": null,
+      "group": null,
+      "selection": [],
+      "visible_faces": []
+    },
+    {
+      "name": "edge-named-hidden",
+      "face": null,
+      "edge": null,
+      "group": null,
+      "selection": [],
+      "visible_faces": []
+    },
+    {
+      "name": "edge-named-restored",
+      "face": null,
+      "edge": 0,
+      "group": null,
+      "selection": [],
+      "visible_faces": []
+    },
+    {
+      "name": "group-default-open",
+      "face": null,
+      "edge": null,
+      "group": 0,
+      "selection": [],
+      "visible_faces": []
+    },
+    {
+      "name": "group-default-locked",
+      "face": null,
+      "edge": null,
+      "group": null,
+      "selection": [],
+      "visible_faces": []
+    },
+    {
+      "name": "group-default-hidden",
+      "face": null,
+      "edge": null,
+      "group": null,
+      "selection": [],
+      "visible_faces": []
+    },
+    {
+      "name": "group-default-restored",
+      "face": null,
+      "edge": null,
+      "group": 0,
+      "selection": [],
+      "visible_faces": []
+    },
+    {
+      "name": "group-named-open",
+      "face": null,
+      "edge": null,
+      "group": 0,
+      "selection": [],
+      "visible_faces": []
+    },
+    {
+      "name": "group-named-locked",
+      "face": null,
+      "edge": null,
+      "group": null,
+      "selection": [],
+      "visible_faces": []
+    },
+    {
+      "name": "group-named-hidden",
+      "face": null,
+      "edge": null,
+      "group": null,
+      "selection": [],
+      "visible_faces": []
+    },
+    {
+      "name": "group-named-restored",
+      "face": null,
+      "edge": null,
+      "group": 0,
+      "selection": [],
+      "visible_faces": []
+    },
+    {
+      "name": "group-face-named-open",
+      "face": null,
+      "edge": null,
+      "group": 0,
+      "selection": [],
+      "visible_faces": []
+    },
+    {
+      "name": "group-face-named-locked",
+      "face": null,
+      "edge": null,
+      "group": 0,
+      "selection": [
+        "group"
+      ],
+      "visible_faces": []
+    },
+    {
+      "name": "group-face-named-hidden",
+      "face": null,
+      "edge": null,
+      "group": 0,
+      "selection": [
+        "group"
+      ],
+      "visible_faces": []
+    },
+    {
+      "name": "group-face-named-restored",
+      "face": null,
+      "edge": null,
+      "group": 0,
+      "selection": [
+        "group"
+      ],
+      "visible_faces": []
+    },
+    {
+      "name": "child-named-open",
+      "face": null,
+      "edge": null,
+      "group": 0,
+      "selection": [],
+      "visible_faces": []
+    },
+    {
+      "name": "child-named-locked",
+      "face": null,
+      "edge": null,
+      "group": null,
+      "selection": [
+        "group"
+      ],
+      "visible_faces": []
+    },
+    {
+      "name": "child-named-hidden",
+      "face": null,
+      "edge": null,
+      "group": null,
+      "selection": [
+        "group"
+      ],
+      "visible_faces": []
+    },
+    {
+      "name": "child-named-restored",
+      "face": null,
+      "edge": null,
+      "group": 0,
+      "selection": [
+        "group"
+      ],
+      "visible_faces": []
+    },
+    {
+      "name": "parent-named-open",
+      "face": null,
+      "edge": null,
+      "group": 0,
+      "selection": [],
+      "visible_faces": []
+    },
+    {
+      "name": "parent-named-locked",
+      "face": null,
+      "edge": null,
+      "group": null,
+      "selection": [],
+      "visible_faces": []
+    },
+    {
+      "name": "parent-named-hidden",
+      "face": null,
+      "edge": null,
+      "group": null,
+      "selection": [],
+      "visible_faces": []
+    },
+    {
+      "name": "parent-named-restored",
+      "face": null,
+      "edge": null,
+      "group": 0,
+      "selection": [],
+      "visible_faces": []
+    },
+    {
+      "name": "line-group-named-open",
+      "face": null,
+      "edge": null,
+      "group": 0,
+      "selection": [],
+      "visible_faces": []
+    },
+    {
+      "name": "line-group-named-locked",
+      "face": null,
+      "edge": null,
+      "group": null,
+      "selection": [],
+      "visible_faces": []
+    },
+    {
+      "name": "line-group-named-hidden",
+      "face": null,
+      "edge": null,
+      "group": null,
+      "selection": [],
+      "visible_faces": []
+    },
+    {
+      "name": "line-group-named-restored",
+      "face": null,
+      "edge": null,
+      "group": 0,
+      "selection": [],
+      "visible_faces": []
+    }
+  ],
+  "consumer": {
+    "locked_select": true,
+    "locked_pushpull": true,
+    "unlock_commit": true,
+    "undo_redo": true,
+    "cancel": true
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "arco-yanque": {
+    "canonical_sha256": "3a82b8625aca269a7726ca5fd4735ee3bb746edd9e8c78e63160537a0ceb38a5",
+    "native_save_sha256": "9d1fa86b6ce1c7f8e6536409c6cd3e529a0c09f80a10592b202f380900227fb1"
+  },
+  "banca-pergola-yanque": {
+    "canonical_sha256": "b961f1f64df99a607067d1087751c7bd00e4a3e647afb8f008efdf3856d80654",
+    "native_save_sha256": "b4abbb6b6ec917029a127397cf13a8dac6acbb69a6f9a07005fa9f315bedbcf9"
+  },
+  "luminaria-solar-yanque": {
+    "canonical_sha256": "5663fa1733e41229d57ad5560069979de4e0ed4c7e7f04e2f02c902ef1f33316",
+    "native_save_sha256": "9132f8e68719071e9314dadd0a9d6ba63de386e2c8351790631cbaa7f61ed224"
+  },
+  "pileta-fuente-yanque": {
+    "canonical_sha256": "16f73dc440cc0938bbd8b01d22e6895b3a48fb0bd19c74cf69d62e57e818992b",
+    "native_save_sha256": "d79bb2679facd8dd44bf09f8f514dcab1bf5f2b4833a48844dc79588c02f33c0"
+  },
+  "nested-reflected": {
+    "canonical_sha256": "f6b29503999ddce634b707b0d5c573dbebe787860573e16ab7083d60ab0e989b",
+    "native_save_sha256": "bfe7d6700f88859b544667311d2f2e306176d545434be1697665cb6e81618f01"
+  },
+  "textures-alpha": {
+    "canonical_sha256": "0d867f6c3280d1552a621084b108e1086c49a9d0aeaf5986dadadb394a06e9c4",
+    "native_save_sha256": "d1b17b0ca6d31ff4b8716d30112fa6c86161ca5852ed55963dd3da3755f81a17"
+  },
+  "pbr-colors": {
+    "canonical_sha256": "5d9a7f29368d4caa67d39efcf4c382602580b134f6c448414e96c6c5d026d960",
+    "native_save_sha256": "77fdea0e4e8a8a8da1bccddeb2086c7694d18f6d0d7198b5f58225c82b7020bf"
+  },
+  "fresh": {
+    "canonical_sha256": "07ef2b9cb22ad182d7c1f6044a6012177346de9168f3a95d5b5cd0cc775d6c26",
+    "native_save_sha256": "94614ad984fb53c19c04c12fef0c8008b61974ae346b0f1cfcdced0a53991881"
+  },
+  "numeric-layers": {
+    "canonical_sha256": "f55f31552456f6e8d07231c5716d8eb1661607077fc2605582a1a166931c9ba8",
+    "native_save_sha256": "3731517a5c1021a6b5bc3a444c5fa71d9ce4902a07aa0344f0091e7d00c7cef6"
+  }
+}
