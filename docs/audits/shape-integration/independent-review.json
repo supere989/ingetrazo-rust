@@ -1,0 +1,12 @@
+{
+  "runtime_revision": "8063aca47ece406569cf61142b603d94a5aa65d2",
+  "archive_sha256": "009c2fb660a618360666101c2d705d0e9c3f29ff9558e7096374541c32eae8f2",
+  "members": 364,
+  "raw_bytes": 11071249,
+  "runtime_tree_lock_archives_checkers_bound": true,
+  "three_current_binary_hashes_bound": true,
+  "source_cohorts_owner_bytes_equal": true,
+  "runner_review": "23rd named target in existing joint build; three authenticated cohorts53/7/6 -> unique66recipes/488phases -> one consumer/checker with7egui controls once; complete archive/binary/runtime dependencies and summary.",
+  "scope": "P06 Freehand handler gap remains explicit. No raw-ID/whole-frame/desktop promotion.",
+  "verdict": "accepted; no rerun"
+}
