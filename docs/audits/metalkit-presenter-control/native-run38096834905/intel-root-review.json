@@ -1,0 +1,25 @@
+{
+  "run_id": 38096834905,
+  "zip_and_report_hashes_verified": true,
+  "controls": {
+    "custom_presenter_control": {
+      "submitted": 4,
+      "displayed": 4,
+      "skipped": 0,
+      "pending": 0
+    },
+    "metalkit_presenter_control": {
+      "submitted": 5,
+      "displayed": 3,
+      "skipped": 2,
+      "pending": 0
+    },
+    "appkit_presenter_control": {
+      "submitted": 5,
+      "displayed": 4,
+      "skipped": 1,
+      "pending": 0
+    }
+  },
+  "scope": "All three Intel controls pass strict presentation and drain; ARM and physical Mac acceptance remain open."
+}

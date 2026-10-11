@@ -1,0 +1,30 @@
+{
+  "run_id": 38096834905,
+  "source_revision": "3b1062ae8132c3a0d08f86935b2dc31626aebf4f",
+  "zip_and_all_report_hashes_verified": true,
+  "exact_three_control_inventory": true,
+  "controls": {
+    "custom_presenter_control": {
+      "submitted": 17,
+      "displayed": 0,
+      "skipped": 14,
+      "pending": 3,
+      "error": "Custom strict positive presentation deadline"
+    },
+    "metalkit_presenter_control": {
+      "submitted": 6,
+      "displayed": 0,
+      "skipped": 3,
+      "pending": 3,
+      "error": "Framework strict positive presentation deadline"
+    },
+    "appkit_presenter_control": {
+      "submitted": 55,
+      "displayed": 0,
+      "skipped": 52,
+      "pending": 3,
+      "error": "AppKit strict positive presentation deadline"
+    }
+  },
+  "conclusion": "Direct AppKit hosting does not restore positive presentation on this ARM runner. Winit-only cause is not supported. Root cause and physical Mac acceptance remain open."
+}
