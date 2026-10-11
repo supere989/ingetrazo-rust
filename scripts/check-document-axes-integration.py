@@ -252,7 +252,7 @@ run([binaries/(consumers[23]+suffix), freehand/"source-combined.json", freehand/
 run([sys.executable, repo/"scripts/check-freehand-workflows.py", freehand/"source-combined.json", freehand/"native.json", freehand/"acceptance.json"], "freehand-workflows/checker.log", requires=["freehand-workflows/runtime.log"])
 
 inference = out/"p07-inference"
-p07 = archive("p07-inference", "source-manifest.json", ["source.json", "source-app.json", "production-callback.json"], inference, archive_name="source-records.zip")
+p07 = archive("p07-inference", "ci-source-manifest.json", ["source.json", "source-app.json", "production-callback.json"], inference, archive_name="source-records.zip")
 run([binaries/(consumers[24]+suffix), inference/"source.json", inference/"source-app.json", inference/"native.json"], "p07-inference/runtime.log")
 run([sys.executable, repo/"scripts/check-p07-inference.py", inference/"source.json", inference/"source-app.json", inference/"native.json", inference/"acceptance.json"], "p07-inference/checker.log", requires=["p07-inference/runtime.log"])
 

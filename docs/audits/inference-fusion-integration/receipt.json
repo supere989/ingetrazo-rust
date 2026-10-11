@@ -1,0 +1,166 @@
+{
+  "build_runtime_commit": "f48c6778e07537d76ef4784e99fc3738082d78bd",
+  "evidence_checkout": "6a9ddfa46c93bd7de75bdfc7a2625e6073d9f644",
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "binaries": {
+    "context_document_lifecycle": "e496d2201b672c5fd0a16dd5ecb8d6667a6da363e4fcbbc0686255d3007ebae6",
+    "p07_inference_workflows": "bf72024bbdbba287acec8b28988fe06dd683a06cc8e7bb9cabf3df14a67689f0",
+    "drawing_reference_render_fixture": "0d5365b16c757bcc82500cfd959202b72b59ee8710722fdc728e632d91942535",
+    "shift_inference_render_fixture": "ae36992205a823334e015c9925d3117b4ab77001a074d06295726d00197fec94"
+  },
+  "build": {
+    "runtime_commit": "f48c6778e07537d76ef4784e99fc3738082d78bd",
+    "command": [
+      "cargo",
+      "build",
+      "--locked",
+      "-p",
+      "ingetrazo-gui",
+      "--example",
+      "context_document_lifecycle",
+      "--example",
+      "p07_inference_workflows",
+      "--example",
+      "drawing_reference_render_fixture",
+      "--example",
+      "shift_inference_render_fixture"
+    ],
+    "elapsed_seconds": 11.296945948968641,
+    "exit_code": 0
+  },
+  "p07": {
+    "build_runtime_commit": "f48c6778e07537d76ef4784e99fc3738082d78bd",
+    "checkout_commit": "dd905eb23f157d38a062f798b82343d73e9394ff",
+    "binary_sha256": "bf72024bbdbba287acec8b28988fe06dd683a06cc8e7bb9cabf3df14a67689f0",
+    "source_archive_sha256": "5e9fbeddbe466460a0c57849b487ed47e3babd37dd3f290f9a95dab55850b75e",
+    "checker_sha256": "bcffb13451fa5b25030475b2b8323a1c638ef0397f42b110fc987cbe711f60bc",
+    "stages": [
+      {
+        "command": [
+          "/tmp/ingetrazo-native-font-merge-target/debug/examples/p07_inference_workflows",
+          "/tmp/ingetrazo-inference-fusion-integration/p07-inference/source.json",
+          "/tmp/ingetrazo-inference-fusion-integration/p07-inference/source-app.json",
+          "/tmp/ingetrazo-inference-fusion-integration/p07-inference/native.json"
+        ],
+        "seconds": 0.047210703953169286,
+        "exit_code": 0
+      },
+      {
+        "command": [
+          "python3",
+          "scripts/check-p07-inference.py",
+          "/tmp/ingetrazo-inference-fusion-integration/p07-inference/source.json",
+          "/tmp/ingetrazo-inference-fusion-integration/p07-inference/source-app.json",
+          "/tmp/ingetrazo-inference-fusion-integration/p07-inference/native.json",
+          "/tmp/ingetrazo-inference-fusion-integration/p07-inference/check.json"
+        ],
+        "seconds": 0.03279966994887218,
+        "exit_code": 0
+      }
+    ]
+  },
+  "obj": {
+    "build_runtime": "f48c6778e07537d76ef4784e99fc3738082d78bd",
+    "checker_commit": "ddd464a600b0d083cb5a9af82b82e345a7417fb3",
+    "binary_sha256": "e496d2201b672c5fd0a16dd5ecb8d6667a6da363e4fcbbc0686255d3007ebae6",
+    "source_archive_sha256": "c97f4906db5f94097bacb41ca66dc64249182eea732d8576b43551c2f29092ab",
+    "fresh_source_acquisitions": 0,
+    "stages": [
+      {
+        "stage": "runtime",
+        "command": [
+          "/tmp/ingetrazo-native-font-merge-target/debug/examples/context_document_lifecycle",
+          "/tmp/ingetrazo-inference-fusion-integration/obj-fusion",
+          "--obj-fusion"
+        ],
+        "elapsed_seconds": 0.5610646179993637,
+        "exit_code": 0
+      },
+      {
+        "stage": "reopen",
+        "command": [
+          "/tmp/ingetrazo-parity-python/bin/python",
+          "scripts/reference-obj-fusion-reopens.py",
+          "/tmp/ingetrazo-inference-fusion-integration/obj-fusion"
+        ],
+        "elapsed_seconds": 0.15768233803100884,
+        "exit_code": 0
+      },
+      {
+        "stage": "acceptance",
+        "command": [
+          "python3",
+          "scripts/check-obj-fusion.py",
+          "/tmp/ingetrazo-inference-fusion-integration/obj-fusion",
+          "--deterministic"
+        ],
+        "elapsed_seconds": 0.12869705498451367,
+        "exit_code": 0
+      }
+    ]
+  },
+  "rendered": {
+    "rectangle-timing.json": {
+      "seconds": 5.69572679704288,
+      "exit_code": 0,
+      "builds": 0,
+      "source_captures": 0
+    },
+    "shift-timing.json": {
+      "seconds": 3.3254194680484943,
+      "exit_code": 0,
+      "builds": 0,
+      "source_captures": 0
+    },
+    "provenance.json": {
+      "runtime_revision": "f48c6778e07537d76ef4784e99fc3738082d78bd",
+      "crates_tree": "0366f3cf612f71484509f7adb3a665d24b772ee2",
+      "source_files": {
+        "scripts/check-rendered-drawing-reference.py": "eb76599f86b44ac6176eb09ae8f45179a34fb57d95646028e4c867584d4b3d8b",
+        "scripts/check-rendered-shift-inference.py": "c70a7a2fe7dcdadfc5de3db58de7fa9f6ccc8dd8dea348fdfc242a9f0f63a47f",
+        "crates/ingetrazo-gui/examples/drawing_reference_render_fixture.rs": "ab1a82d86f26c4896dfca2a378ee3df3d4937ac82c0c152176f59206ee5ac953",
+        "crates/ingetrazo-gui/examples/shift_inference_render_fixture.rs": "4f09c994cda92b65345bd2b056b0d8078c9328880c233266920a718210f692b8"
+      },
+      "binaries": {
+        "drawing_reference_render_fixture": "0d5365b16c757bcc82500cfd959202b72b59ee8710722fdc728e632d91942535",
+        "shift_inference_render_fixture": "ae36992205a823334e015c9925d3117b4ab77001a074d06295726d00197fec94"
+      },
+      "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+      "root_build_seconds": 11.297,
+      "fresh_builds_by_reviewer": 0,
+      "fresh_source_captures": 0,
+      "maximum_owned_lanes": 1,
+      "root_total_lanes_limit": 2,
+      "backend_scope": "Existing rendered native eframe software OpenGL/Xvfb engineering route; not nativeVulkan/Metal or hardware pixelparity",
+      "failed_run": {
+        "head": "80b838f8892641f4e754bd83dfc59425a0f235d5",
+        "run": 38179228100,
+        "stage": 51,
+        "canonical": "docs/audits/native-platform/80b838f8",
+        "reason": "stale empty-preview expectation; sourceRectangle idlecursor survives reset",
+        "failed_state_boundary": "Old upload retained PNGs/runtime/log only, notstate.json"
+      },
+      "static_downstream_scan": "OnlyRectangle idlecursor assumption changed. LineShift emptylines remainsliteral and was strengthened withpending/planeretirement; Offset unaffected."
+    }
+  },
+  "linked_rendered_archive": {
+    "path": "docs/audits/drawing-reference-cancellation/records.zip",
+    "sha256": "13924c3dd65365ede6a463864762a32844d188534455b52ded477c92e2ee707f",
+    "authenticated_members": 45
+  },
+  "review": {
+    "p07_owner_receipt_and_git_source_bindings": true,
+    "obj_owner_git_source_bindings": 9,
+    "new_archive_adapter_executed": true,
+    "python_ast_files": 3,
+    "yaml_validation": "static review only; no YAML parser",
+    "broad_ci": "pending stable publication"
+  },
+  "script_sha256": {
+    "scripts/check-document-axes-integration.py": "85a4db8070d45ac85130768d0c5d3daf2fd105b7c0fd1749322d2c1a76711133",
+    "scripts/check-p07-inference.py": "bcffb13451fa5b25030475b2b8323a1c638ef0397f42b110fc987cbe711f60bc",
+    "scripts/check-obj-fusion.py": "c9c22013f4ec184479b4610fa43ddaf3269ef2bc9299db6b4679d857a9cda3db",
+    "scripts/check-rendered-drawing-reference.py": "eb76599f86b44ac6176eb09ae8f45179a34fb57d95646028e4c867584d4b3d8b",
+    "scripts/check-rendered-shift-inference.py": "c70a7a2fe7dcdadfc5de3db58de7fa9f6ccc8dd8dea348fdfc242a9f0f63a47f"
+  }
+}
