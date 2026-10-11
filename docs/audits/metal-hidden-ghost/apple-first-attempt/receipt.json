@@ -1,0 +1,13 @@
+{
+  "source": "ebcc062f3b5da8b7f1db5b90613441445b8f93c0",
+  "run": 38129088021,
+  "arm_job": 114439486481,
+  "intel_job": 114439486308,
+  "artifacts": {
+    "arm-artifact.zip": "049805935c4b7210934e3ec345a777a941338d79d6fba62a8c0acc38cd97c4f3",
+    "intel-artifact.zip": "51a5a95c00fbe3009f39063b794e25ca61e40660be9e3dc8c3889e36a4a5d2ad"
+  },
+  "arm": "Named build PASS; classic and material checkers PASS; ghost additional ordinary width1 control mistakenly retained default1.5 and refused after first three frames.",
+  "intel": "Named build PASS; Apple Paravirtual device returns native MSAA texture size query0/0; ghost/material refuse; classic upload assertion follows refused preparation.",
+  "remaining": "No full ghost pixel proof; no guessed allocation-bound fallback."
+}
