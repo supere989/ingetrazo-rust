@@ -54,9 +54,9 @@ fn main(){
   app.dispatch_tool_cancel();let cancel=app.scene.mesh.clone();
   app.dispatch_tool_click(&ctx);let mut moved=ctx.clone();let requested=case["requested"].as_f64().unwrap();moved.world+=normal*requested/normal.length_squared();app.dispatch_tool_move(&moved);
   let preview=app.active_tool.face_sweep_preview().unwrap();
-  let outcome=app.dispatch_tool_vcb(&requested.to_string());let error=outcome.err();let result=app.scene.mesh.clone();let commit_undo=app.undo_stack.len();
+  let outcome=app.dispatch_tool_vcb(&requested.abs().to_string());let error=outcome.err();let result=app.scene.mesh.clone();let commit_undo=app.undo_stack.len();let commit_status=app.status_message.clone();
   let mut undo=result.clone();let mut redo=result.clone();if commit_undo>0{app.undo();undo=app.scene.mesh.clone();app.redo();redo=app.scene.mesh.clone();}
-  rows.push(json!({"name":case["name"],"normal":normal.to_array(),"acquired":snap(&acquired),"cancel":snap(&cancel),"result":snap(&result),"undo":snap(&undo),"redo":snap(&redo),"error":error,"acquisition_undo":acquisition_undo,"commit_undo":commit_undo,"acquisition_invalidated":invalidated,"offset":preview.offset.to_array()}));
+  rows.push(json!({"name":case["name"],"normal":normal.to_array(),"acquired":snap(&acquired),"cancel":snap(&cancel),"result":snap(&result),"undo":snap(&undo),"redo":snap(&redo),"error":error,"acquisition_undo":acquisition_undo,"commit_undo":commit_undo,"acquisition_invalidated":invalidated,"offset":preview.offset.to_array(),"vcb_positive_magnitude":requested.abs(),"status":commit_status}));
  }
  std::fs::write(&args[2],serde_json::to_vec_pretty(&json!({"cases":rows})).unwrap()).unwrap();
 }

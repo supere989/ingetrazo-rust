@@ -1,0 +1,6 @@
+{
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "binary_sha256": "7bc35e32c133bfa3a87008cb707f72cea59048d7953b9df5bb264d4ed0485fea",
+  "inputs_sha256": "6259e19c55000079914b27834381146de49566780a443bea6165464e280cebb1",
+  "scope": "Actual source on_value and native app dispatch, not OS/render gesture"
+}
