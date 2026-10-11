@@ -162,3 +162,5 @@ pub mod qt_line;
 pub mod scene_revision;
 
 pub mod block_compression;
+
+pub mod hidden_ghosts;

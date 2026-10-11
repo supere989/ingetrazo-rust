@@ -361,6 +361,11 @@ pub fn render_menu_bar(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
         // 3. Camera Menu
         // ==========================================
         ui.menu_button(tr("Camera"), |ui| {
+            let mut objects=app.scene.show_hidden_objects;
+            let mut geometry=app.scene.show_hidden_geometry;
+            if ui.checkbox(&mut objects,tr("Hidden Objects")).changed(){app.scene.set_hidden_view(true,objects);}
+            if ui.checkbox(&mut geometry,tr("Hidden Geometry")).changed(){app.scene.set_hidden_view(false,geometry);}
+            ui.separator();
             ui.menu_button(tr("Standard Views"), |ui| {
                 if ui.button(tr("Top")).clicked() {
                     app.camera.set_standard_view(StandardView::Top);

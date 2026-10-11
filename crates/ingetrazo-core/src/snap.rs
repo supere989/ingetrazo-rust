@@ -316,7 +316,7 @@ impl SnapEngine {
 
         // 3. Endpoint Snaps (Mesh Vertices, Groups, GeoPoints)
         for(id,v)in scene.mesh.vertices.iter().enumerate(){
-            if !scene.mesh_vertex_visible(&scene.mesh,id){continue;}
+            if !scene.mesh_vertex_selectable(&scene.mesh,id){continue;}
             let d = (v.position - cursor_work).length();
             if d < best_dist && scene.section_point_visible(v.position) {
                 best_dist = d;
@@ -330,7 +330,7 @@ impl SnapEngine {
                 };
             }
         }
-        fn group_points(groups:&[crate::groups::Group],parent:glam::DMat4,scene:&Scene,points:&mut Vec<DVec3>){for group in groups{if group.hidden||!scene.is_layer_visible(group.layer.as_deref()){continue;}let transform=parent*group.transform;points.extend(group.mesh.vertices.iter().enumerate().filter(|(id,_)|scene.mesh_vertex_visible(&group.mesh,*id)).map(|(_,v)|transform.transform_point3(v.position)));children(&group.children,transform,scene,points);}}
+        fn group_points(groups:&[crate::groups::Group],parent:glam::DMat4,scene:&Scene,points:&mut Vec<DVec3>){for group in groups{if !scene.group_selectable(group){continue;}let transform=parent*group.transform;points.extend(group.mesh.vertices.iter().enumerate().filter(|(id,_)|scene.mesh_vertex_visible(&group.mesh,*id)).map(|(_,v)|transform.transform_point3(v.position)));children(&group.children,transform,scene,points);}}
         fn children(children:&[crate::groups::Group],parent:glam::DMat4,scene:&Scene,points:&mut Vec<DVec3>){group_points(children,parent,scene,points)}
         let mut group_vertices=vec![];group_points(&scene.groups,glam::DMat4::IDENTITY,scene,&mut group_vertices);
         for wp in group_vertices{let d=(wp-cursor_work).length();if d<best_dist&&scene.section_point_visible(wp){best_dist=d;best_result=SnapResult{point:wp,kind:SnapKind::Endpoint,color:COLOR_ENDPOINT,label:"Endpoint in Group".into(),axis:None,guides:vec![]};}}
@@ -362,7 +362,7 @@ impl SnapEngine {
         // 4. Intersection Snaps (where mesh edges or guides cross)
         let mut edges = Vec::new();
         for(id,e)in scene.mesh.edges.iter().enumerate(){
-            if !scene.mesh_edge_visible(&scene.mesh,id){continue;}
+            if !scene.mesh_edge_selectable(&scene.mesh,id){continue;}
             edges.push((scene.mesh.vertices[e.v0].position, scene.mesh.vertices[e.v1].position));
         }
         for g in &scene.guides {
@@ -401,7 +401,7 @@ impl SnapEngine {
 
         // 5. Midpoint Snaps
         for(id,e)in scene.mesh.edges.iter().enumerate(){
-            if !scene.mesh_edge_visible(&scene.mesh,id){continue;}
+            if !scene.mesh_edge_selectable(&scene.mesh,id){continue;}
             let p0 = scene.mesh.vertices[e.v0].position;
             let p1 = scene.mesh.vertices[e.v1].position;
             let mid = (p0 + p1) * 0.5;
@@ -425,7 +425,7 @@ impl SnapEngine {
 
         // 6. Arc / Circle Center Snaps
         for(id,f)in scene.mesh.faces.iter().enumerate(){
-            if !scene.mesh_face_visible(&scene.mesh,id){continue;}
+            if !scene.mesh_face_selectable(&scene.mesh,id){continue;}
             if f.vertices.len() >= 6 {
                 let pts: Vec<DVec3> = f.vertices.iter().map(|&v| scene.mesh.vertices[v].position).collect();
                 if let Some(center) = fit_circle_center(&pts) {
@@ -505,7 +505,7 @@ impl SnapEngine {
 
         // 8. On Edge Snaps
         for(id,e)in scene.mesh.edges.iter().enumerate(){
-            if !scene.mesh_edge_visible(&scene.mesh,id){continue;}
+            if !scene.mesh_edge_selectable(&scene.mesh,id){continue;}
             let p0 = scene.mesh.vertices[e.v0].position;
             let p1 = scene.mesh.vertices[e.v1].position;
             let ab = p1 - p0;

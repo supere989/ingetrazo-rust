@@ -12,7 +12,7 @@ impl IngeTrazoApp {
         view.history_id=old.history_id;view.native_document=old.native_document;view.native_baseline=old.native_baseline;
         fn merge(old:Option<serde_json::Value>,new:Option<serde_json::Value>)->Option<serde_json::Value>{match(old,new){(Some(mut old),Some(new))if old.is_object()&&new.is_object()=>{for(k,v)in new.as_object().unwrap(){old[k]=v.clone();}Some(old)},(_,new)=>new}}
         view.style=merge(old.style,view.style);view.section=merge(old.section,view.section);view.shadows=merge(old.shadows,view.shadows);
-        view.georef=merge(old.georef,view.georef);view.hidden_shown=old.hidden_shown;
+        view.georef=merge(old.georef,view.georef);view.hidden_shown=merge(old.hidden_shown,view.hidden_shown);
         if view!=self.scene.saved_views[i]{self.seal_view_history();self.refresh_history_view(&view);self.scene.saved_views[i]=view;self.scene.bump_version();}
     }
     pub fn remove_selected_saved_view(&mut self){if let Some(i)=self.selected_saved_view.filter(|i|*i<self.scene.saved_views.len()){self.seal_view_history();self.scene.saved_views.remove(i);self.selected_saved_view=if self.scene.saved_views.is_empty(){None}else{Some(i.min(self.scene.saved_views.len()-1))};self.scene.bump_version();}}

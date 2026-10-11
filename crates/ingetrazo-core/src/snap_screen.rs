@@ -142,7 +142,7 @@ fn edges(scene: &Scene, ctx: &ScreenSnapContext, exclusions: Option<&SnapExclusi
         if exclusions.is_some_and(|exclude|path.iter().any(|id|exclude.groups.contains(id))){return;}
         for (id, e) in m.edges.iter().enumerate() {
             if !group && exclusions.is_some_and(|exclude|exclude.loose_edges.contains(&id)){continue;}
-            if scene.mesh_edge_visible(m, id) && (!group || !e.soft) {
+            if (if group {scene.mesh_edge_visible(m,id)} else {scene.mesh_edge_selectable(m,id)}) && (!group || !e.soft) {
                 append(
                     world.transform_point3(m.vertices[e.v0].position),
                     world.transform_point3(m.vertices[e.v1].position),

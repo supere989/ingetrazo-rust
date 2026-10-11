@@ -109,6 +109,8 @@ pub struct Scene {
     pub show_section_cuts: bool,
     pub show_section_planes: bool,
     pub show_section_fill: bool,
+    #[serde(default)] pub show_hidden_objects: bool,
+    #[serde(default)] pub show_hidden_geometry: bool,
     pub geo_datum: Option<crate::georef::SceneDatum>,
     pub geo_points: Vec<crate::georef::GeoPoint>,
     pub geo_paths: Vec<crate::georef::GeoPath>,
@@ -161,6 +163,8 @@ impl Scene {
             show_section_cuts: true,
             show_section_planes: true,
             show_section_fill: true,
+            show_hidden_objects: false,
+            show_hidden_geometry: false,
             geo_datum: None,
             geo_points: Vec::new(),
             geo_paths: Vec::new(),
@@ -280,15 +284,39 @@ impl Scene {
 
 
 impl Scene{
- pub fn mesh_face_visible(&self,mesh:&Mesh,id:usize)->bool{mesh.faces.get(id).is_some_and(|face|face.attrs.get("hidden").and_then(|v|v.as_bool())!=Some(true)&&self.is_layer_visible(face.layer.as_deref().or_else(||face.attrs.get("layer").and_then(|v|v.as_str()))))}
+ pub fn mesh_face_visible(&self,mesh:&Mesh,id:usize)->bool{mesh.faces.get(id).is_some_and(|face|!face.attrs.get("hidden").is_some_and(crate::presentation::truth)&&self.is_layer_visible(face.layer.as_deref().or_else(||face.attrs.get("layer").and_then(|v|v.as_str()))))}
  pub fn mesh_edge_visible(&self,mesh:&Mesh,id:usize)->bool{mesh.edges.get(id).is_some_and(|edge|!edge.hidden&&self.is_layer_visible(edge.layer.as_deref())&&(edge.faces.is_empty()||edge.faces.iter().any(|&id|self.mesh_face_visible(mesh,id))))}
  pub fn mesh_vertex_visible(&self,mesh:&Mesh,id:usize)->bool{mesh.vertices.get(id).is_some_and(|vertex|vertex.edges.is_empty()||vertex.edges.iter().any(|&id|self.mesh_edge_visible(mesh,id)))}
 }
 
 impl Scene {
+    /// Source hidden-view action: turning either switch off clears hidden selections.
+    pub fn set_hidden_view(&mut self,objects:bool,on:bool)->bool {
+        let flag=if objects {&mut self.show_hidden_objects}else{&mut self.show_hidden_geometry};
+        if *flag==on{return false;} *flag=on;
+        if !on {
+            fn group<'a>(groups:&'a [Group],id:uuid::Uuid)->Option<&'a Group>{
+                for g in groups {if g.id==id{return Some(g);}if let Some(found)=group(&g.children,id){return Some(found);}}None
+            }
+            let mesh=&self.mesh;let groups=&self.groups;
+            let hidden=|item:&SelectionItem|match item {
+                SelectionItem::Face(id)=>mesh.faces.get(*id).is_some_and(|f|f.attrs.get("hidden").is_some_and(crate::presentation::truth)),
+                SelectionItem::Edge(id)=>mesh.edges.get(*id).is_some_and(|e|e.hidden),
+                SelectionItem::Group(id)=>groups.get(*id).is_some_and(|g|g.hidden),
+                SelectionItem::ContextGroup{context,group:id}=>context.iter().any(|id|group(groups,*id).is_some_and(|g|g.hidden))||group(groups,*id).is_some_and(|g|g.hidden),
+                SelectionItem::ContextFace{context,face,..}=>context.last().and_then(|id|group(groups,*id)).and_then(|g|g.mesh.faces.get(*face)).is_some_and(|f|f.attrs.get("hidden").is_some_and(crate::presentation::truth)),
+                _=>false,
+            };
+            self.selection.retain(|item|!hidden(item));
+            self.selection_order.retain(|item|!hidden(item));
+        }
+        self.bump_version();true
+    }
+    pub fn mesh_vertex_selectable(&self,mesh:&Mesh,id:usize)->bool { mesh.vertices.get(id).is_some_and(|v|v.edges.is_empty()||v.edges.iter().any(|&e|self.mesh_edge_selectable(mesh,e))) }
+    pub fn group_selectable(&self, group:&Group)->bool { (!group.hidden || self.show_hidden_objects) && self.is_layer_selectable(group.layer.as_deref()) }
     pub fn mesh_face_selectable(&self, mesh: &Mesh, id: usize) -> bool {
         mesh.faces.get(id).is_some_and(|face| {
-            face.attrs.get("hidden").and_then(|v| v.as_bool()) != Some(true)
+            (self.show_hidden_geometry || !face.attrs.get("hidden").is_some_and(crate::presentation::truth))
                 && self.is_layer_selectable(face.layer.as_deref().or_else(|| {
                     face.attrs.get("layer").and_then(|v| v.as_str())
                 }))
@@ -297,8 +325,24 @@ impl Scene {
 
     pub fn mesh_edge_selectable(&self, mesh: &Mesh, id: usize) -> bool {
         mesh.edges.get(id).is_some_and(|edge| {
-            !edge.hidden && self.is_layer_selectable(edge.layer.as_deref())
-                && (edge.faces.is_empty() || edge.faces.iter().any(|&id| self.mesh_face_visible(mesh, id)))
+            (!edge.hidden || self.show_hidden_geometry) && self.is_layer_selectable(edge.layer.as_deref())
+                && (edge.faces.is_empty() || edge.faces.iter().any(|&id| self.mesh_face_selectable(mesh, id)))
         })
     }
+}
+
+#[cfg(test)] mod hidden_view_tests {
+ use super::*;
+ #[test] fn ghost_view_changes_selection_without_normal_visibility() {
+  let mut scene=Scene::new();let vertices=[glam::DVec3::ZERO,glam::DVec3::X,glam::DVec3::Y].map(|p|scene.mesh.add_vertex(p));
+  let face=scene.mesh.add_face(vertices.to_vec(),vec![]).unwrap();scene.mesh.faces[face].attrs.insert("hidden".into(),serde_json::json!(true));
+  let edge=scene.mesh.add_edge(vertices[0],vertices[1]).unwrap();scene.mesh.edges[edge].hidden=true;
+  let mut group=Group::new("hidden");group.hidden=true;
+  assert!(!scene.mesh_face_selectable(&scene.mesh,face));assert!(!scene.mesh_edge_selectable(&scene.mesh,edge));assert!(!scene.group_selectable(&group));
+  scene.show_hidden_geometry=true;scene.show_hidden_objects=true;
+  assert!(scene.mesh_face_selectable(&scene.mesh,face));assert!(scene.mesh_edge_selectable(&scene.mesh,edge));assert!(scene.group_selectable(&group));
+  assert!(!scene.mesh_face_visible(&scene.mesh,face));assert!(!scene.mesh_edge_visible(&scene.mesh,edge));
+  scene.layers[0].locked=true;assert!(!scene.mesh_face_selectable(&scene.mesh,face));assert!(!scene.group_selectable(&group));
+  scene.layers[0].locked=false;scene.layers[0].visible=false;assert!(!scene.mesh_edge_selectable(&scene.mesh,edge));assert!(!scene.group_selectable(&group));
+ }
 }

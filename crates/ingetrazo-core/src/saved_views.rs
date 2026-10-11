@@ -94,7 +94,7 @@ impl SavedView {
 
     /// Preserve raw identity/extension metadata when refreshing a view.
     pub fn capture_scene(name:impl Into<String>,scene:&crate::scene::Scene,camera:&OrbitCamera)->Self {
-        let mut view=Self::capture(name,camera,&scene.layers);view.two_point=camera.two_point;view.style=Some(serde_json::to_value(&scene.display_style).unwrap());view.shadows=Some(serde_json::to_value(&scene.shadows).unwrap());
+        let mut view=Self::capture(name,camera,&scene.layers);view.hidden_shown=Some(serde_json::json!({"objects":scene.show_hidden_objects,"geometry":scene.show_hidden_geometry}));view.two_point=camera.two_point;view.style=Some(serde_json::to_value(&scene.display_style).unwrap());view.shadows=Some(serde_json::to_value(&scene.shadows).unwrap());
         let identities = group_identities(&scene.groups);
         view.hidden_objects = Some(identities.into_iter().filter_map(|(id, _, hidden)| hidden.then_some(id)).collect());
         let active=scene.section_planes.iter().find(|s|s.active).map(|s|s.native_uid());
@@ -124,6 +124,10 @@ impl SavedView {
             scene.show_section_cuts=section.get("cuts_shown").and_then(|v|v.as_bool()).unwrap_or(true);
         }
         if let (Some(georef),Some(terrain))=(&self.georef,&mut scene.terrain){if let Some(visible)=georef.get("terrain").and_then(|v|v.as_bool()){terrain.visible=visible;}}
+        if let Some(shown)=&self.hidden_shown {
+            scene.show_hidden_objects=shown.get("objects").is_some_and(crate::presentation::truth);
+            scene.show_hidden_geometry=shown.get("geometry").is_some_and(crate::presentation::truth);
+        }
         scene.camera=camera.clone();scene.bump_view_version();
     }
 
@@ -183,4 +187,23 @@ pub struct GroupVisibilityCommand {
     pub targets: Vec<(uuid::Uuid, bool)>,
     pub hidden: bool,
     pub undo: bool,
+}
+
+#[cfg(test)] mod hidden_view_tests {
+ use super::*;
+ #[test] fn capture_apply_hidden_flags_and_legacy_absence() {
+  let mut scene=crate::scene::Scene::new(); let mut camera=scene.camera.clone();
+  scene.show_hidden_objects=true;
+  let view=SavedView::capture_scene("ghost",&scene,&camera);
+  assert_eq!(view.hidden_shown,Some(serde_json::json!({"objects":true,"geometry":false})));
+  scene.show_hidden_objects=false;scene.show_hidden_geometry=true;
+  view.apply_scene(&mut scene,&mut camera);
+  assert!(scene.show_hidden_objects);assert!(!scene.show_hidden_geometry);
+  let mut legacy=view.clone();legacy.hidden_shown=None;
+  scene.show_hidden_geometry=true;legacy.apply_scene(&mut scene,&mut camera);
+  assert!(scene.show_hidden_objects&&scene.show_hidden_geometry);
+  legacy.hidden_shown=Some(serde_json::json!({"geometry":"shown","future":7}));
+  legacy.apply_scene(&mut scene,&mut camera);
+  assert!(!scene.show_hidden_objects&&scene.show_hidden_geometry);
+ }
 }

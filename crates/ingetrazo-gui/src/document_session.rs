@@ -18,6 +18,7 @@ impl Default for DocumentSession {fn default()->Self {Self{store:None,preference
     autosaved:None,last_autosave:Instant::now(),pending:None,confirm_unsaved:false,close_allowed:false,open_dialog_revision:None,
     recovery:vec![],show_recovery:false,recovered_slot:None}}}
 fn same_model(a:&Scene,b:&Scene)->bool {
+    a.show_hidden_objects==b.show_hidden_objects && a.show_hidden_geometry==b.show_hidden_geometry &&
     a.image_planes==b.image_planes &&
     a.mesh==b.mesh &&
     a.groups==b.groups &&
@@ -162,6 +163,20 @@ mod tests {
     use super::*;use glam::DVec3;
     fn root()->PathBuf {std::env::temp_dir().join(format!("ingetrazo-lifecycle-{}",uuid::Uuid::new_v4()))}
     fn triangle(app:&mut IngeTrazoApp,p:DVec3) {let ids=[p,p+DVec3::X,p+DVec3::Y].map(|v|app.scene.mesh.add_vertex(v));app.scene.mesh.add_face(ids.to_vec(),vec![]).unwrap();}
+    #[test]
+    fn ghost_view_change_is_dirty_persisted_and_invalidates_chooser_consent() {
+        let directory=root();std::fs::create_dir_all(&directory).unwrap();
+        let path=directory.join("replacement.igz");ingetrazo_formats::igz::save_igz(&Scene::new(),&path).unwrap();
+        let mut app=IngeTrazoApp::new();app.mark_document_clean();let version=app.scene.version;
+        assert!(app.scene.set_hidden_view(true,true));assert_eq!(app.scene.version,version+1);assert!(app.document_dirty());
+        let saved=directory.join("ghost.igz");app.save_to_path(&saved);assert!(!app.document_dirty());
+        assert!(ingetrazo_formats::igz::load_igz(&saved).unwrap().show_hidden_objects);
+        app.begin_open_document();assert!(app.show_open_dialog);
+        app.scene.set_hidden_view(false,true);
+        app.open_chosen_document(&path);assert!(app.document_session.confirm_unsaved);assert!(app.scene.show_hidden_geometry);
+        app.cancel_document_action();assert!(app.scene.show_hidden_objects&&app.scene.show_hidden_geometry);
+        std::fs::remove_dir_all(directory).unwrap();
+    }
     #[test]
     fn open_picker_consent_is_consumed_and_intervening_edits_require_confirmation() {
         let directory=root();std::fs::create_dir_all(&directory).unwrap();

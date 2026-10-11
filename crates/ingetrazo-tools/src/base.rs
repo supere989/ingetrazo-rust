@@ -238,7 +238,7 @@ pub fn pick_scene_vertex(scene: &Scene, ray: &Ray, tolerance: f64) -> Option<usi
     let mut closest = None;
     let mut min_dist = tolerance;
     for (id, vertex) in scene.mesh.vertices.iter().enumerate() {
-        if !scene.mesh_vertex_visible(&scene.mesh,id){continue;}
+        if !scene.mesh_vertex_selectable(&scene.mesh,id){continue;}
         let p = vertex.position;
         if !scene.section_point_visible(p) {
             continue;
@@ -477,7 +477,7 @@ pub fn pick_scene_group(scene: &Scene, ray: &Ray, tolerance: f64) -> Option<(usi
         tolerance: f64,
         best: &mut f64,
     ) {
-        if group.hidden || !scene.is_layer_selectable(group.layer.as_deref()) {
+        if !scene.group_selectable(group) {
             return;
         }
         // The source closed-group picker applies the placement layer; internal

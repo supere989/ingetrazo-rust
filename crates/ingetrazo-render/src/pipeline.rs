@@ -1610,7 +1610,7 @@ fn source_group_has_placement(group:&ingetrazo_core::groups::Group)->bool {
 fn source_group_paint(group:&ingetrazo_core::groups::Group)->Option<&serde_json::Value> {
  group.native_document.get("material").filter(|v|v.as_object().is_some_and(|m|!m.is_empty()))
 }
-fn source_effective_face_attrs<'a>(attrs:&'a std::collections::HashMap<String,serde_json::Value>,paint:Option<&serde_json::Value>)->std::borrow::Cow<'a,std::collections::HashMap<String,serde_json::Value>> {
+pub(crate) fn source_effective_face_attrs<'a>(attrs:&'a std::collections::HashMap<String,serde_json::Value>,paint:Option<&serde_json::Value>)->std::borrow::Cow<'a,std::collections::HashMap<String,serde_json::Value>> {
  let Some(paint)=paint.and_then(|p|p.as_object()).filter(|p|!p.is_empty()) else{return std::borrow::Cow::Borrowed(attrs)};
  if ["color","texture"].iter().any(|k|attrs.get(*k).is_some_and(|v|!v.is_null())){return std::borrow::Cow::Borrowed(attrs)}
  let mut merged=attrs.clone();for key in ["color","texture","opacity","mat"]{if let Some(value)=paint.get(key).filter(|v|!v.is_null()){merged.insert(key.into(),value.clone());}}

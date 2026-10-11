@@ -678,6 +678,11 @@ fn scene_model(scene: &Scene) -> serde_json::Value {
         "planes_hidden": !scene.show_section_planes, "cuts_hidden": !scene.show_section_cuts,
         "fill_hidden": !scene.show_section_fill
     });
+    let mut shown=doc.get("hidden_view").and_then(|v|v.as_object()).cloned().unwrap_or_default();
+    for (key,enabled) in [("objects",scene.show_hidden_objects),("geometry",scene.show_hidden_geometry)] {
+        if enabled {shown.insert(key.into(),serde_json::Value::Bool(true));}else{shown.remove(key);}
+    }
+    if shown.is_empty(){doc.as_object_mut().unwrap().remove("hidden_view");}else{doc["hidden_view"]=serde_json::Value::Object(shown);}
     doc["georef"] = serde_json::json!({"datum": scene.geo_datum.as_ref().map(|d|
         serde_json::json!({"lat":d.lat,"lon":d.lon,"alt":d.alt,"north":d.north}))});
     doc["geo_points"] = serde_json::json!(scene.geo_points.iter().map(|p|
@@ -694,6 +699,13 @@ fn scene_model(scene: &Scene) -> serde_json::Value {
 pub fn scene_to_igz_document(scene: &Scene) -> serde_json::Value {
     let current = scene_model(scene);
     let mut doc = overlay(&scene.native_document, &scene.native_baseline, current.clone());
+    if scene.native_baseline.get("hidden_view")!=current.get("hidden_view") {
+        let mut shown=doc.get("hidden_view").and_then(|v|v.as_object()).cloned().unwrap_or_default();
+        for (key,enabled) in [("objects",scene.show_hidden_objects),("geometry",scene.show_hidden_geometry)] {
+            if enabled {shown.insert(key.into(),serde_json::Value::Bool(true));}else{shown.remove(key);}
+        }
+        if shown.is_empty(){doc.as_object_mut().unwrap().remove("hidden_view");}else{doc["hidden_view"]=serde_json::Value::Object(shown);}
+    }
     if scene.native_baseline.get("image_planes")!=current.get("image_planes"){doc["image_planes"]=current["image_planes"].clone();}
     if scene.native_baseline.get("groups") != current.get("groups") {
         let mut protos = doc.get("protos").and_then(|v| v.as_array()).cloned().unwrap_or_default();
@@ -1127,6 +1139,10 @@ pub fn load_igz(path: &Path) -> Result<Scene, IgzError> {
         scene.show_section_planes = !view.get("planes_hidden").and_then(|v| v.as_bool()).unwrap_or(false);
         scene.show_section_cuts = !view.get("cuts_hidden").and_then(|v| v.as_bool()).unwrap_or(false);
         scene.show_section_fill = !view.get("fill_hidden").and_then(|v| v.as_bool()).unwrap_or(false);
+    }
+    if let Some(shown)=s_val.get("hidden_view") {
+        scene.show_hidden_objects=shown.get("objects").is_some_and(|v| match v {serde_json::Value::Null=>false,serde_json::Value::Bool(b)=>*b,serde_json::Value::Number(n)=>n.as_f64()!=Some(0.),serde_json::Value::String(s)=>!s.is_empty(),serde_json::Value::Array(a)=>!a.is_empty(),serde_json::Value::Object(o)=>!o.is_empty()});
+        scene.show_hidden_geometry=shown.get("geometry").is_some_and(|v| match v {serde_json::Value::Null=>false,serde_json::Value::Bool(b)=>*b,serde_json::Value::Number(n)=>n.as_f64()!=Some(0.),serde_json::Value::String(s)=>!s.is_empty(),serde_json::Value::Array(a)=>!a.is_empty(),serde_json::Value::Object(o)=>!o.is_empty()});
     }
     macro_rules! load_field {
         ($field:ident, $key:literal) => {

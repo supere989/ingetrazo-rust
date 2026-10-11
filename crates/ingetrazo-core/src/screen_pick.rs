@@ -98,7 +98,7 @@ pub(crate) fn visit_placements<'a>(
         visit: &mut impl FnMut(&'a Mesh, DMat4, &[uuid::Uuid]),
     ) {
         for g in gs {
-            if g.hidden || !scene.is_layer_visible(g.layer.as_deref()) {
+            if !scene.group_selectable(g) {
                 continue;
             }
             let world = parent * g.transform;
@@ -162,7 +162,7 @@ fn hover_edge_placement_projected<'a>(
     let mut result = None;
     visit_placements(scene, |mesh, world, path| {
         for (id, e) in mesh.edges.iter().enumerate() {
-            if !scene.mesh_edge_visible(mesh, id) || (!path.is_empty() && e.soft) {
+            if !(if path.is_empty(){scene.mesh_edge_selectable(mesh,id)}else{scene.mesh_edge_visible(mesh,id)}) || (!path.is_empty() && e.soft) {
                 continue;
             }
             let a = world.transform_point3(mesh.vertices[e.v0].position);
@@ -192,7 +192,7 @@ pub fn hover_face_placement<'a>(scene: &'a Scene, ray: &Ray) -> Option<FacePlace
     let mut result = None;
     visit_placements(scene, |mesh, world, path| {
         for id in 0..mesh.faces.len() {
-            if !scene.mesh_face_visible(mesh, id) {
+            if !(if path.is_empty(){scene.mesh_face_selectable(mesh,id)}else{scene.mesh_face_visible(mesh,id)}) {
                 continue;
             }
             for (a, b, c) in mesh.triangulate_face(id) {
@@ -398,4 +398,24 @@ mod snap_projection_boundary_tests {
         scene.mesh.clear();let a=scene.mesh.add_vertex(behind);let b=scene.mesh.add_vertex(behind+DVec3::X*0.1);scene.mesh.add_edge(a,b);
         assert_eq!(SnapEngine::default().snap_screen(&ray,&scene,None,None,&context).kind,SnapKind::None);
     }
+}
+
+#[cfg(test)] mod hidden_ghost_pick_tests {
+ use super::*;
+ #[test] fn hidden_edge_and_nested_object_references_follow_flags_and_locks() {
+  let mut scene=Scene::new();let mut camera=OrbitCamera::new();
+  camera.set_standard_view(crate::camera::StandardView::Top);camera.perspective=false;camera.distance=4.;
+  let viewport=PixelViewport::new(&camera,800.,600.);let cursor=viewport.project(DVec3::ZERO).unwrap();
+  let a=scene.mesh.add_vertex(DVec3::new(-1.,0.,0.));let b=scene.mesh.add_vertex(DVec3::new(1.,0.,0.));
+  let edge=scene.mesh.add_edge(a,b).unwrap();scene.mesh.edges[edge].hidden=true;
+  assert!(hover_edge(&scene,&viewport,cursor,8.).is_none());
+  scene.show_hidden_geometry=true;assert!(hover_edge(&scene,&viewport,cursor,8.).is_some());
+  scene.layers[0].locked=true;assert!(hover_edge(&scene,&viewport,cursor,8.).is_none());
+  scene.layers[0].locked=false;scene.mesh=Mesh::new();
+  let mut mesh=Mesh::new();let a=mesh.add_vertex(DVec3::new(-1.,0.,0.));let b=mesh.add_vertex(DVec3::new(1.,0.,0.));mesh.add_edge(a,b);
+  let child=Group::with_mesh("child",mesh);let mut parent=Group::new("parent");parent.hidden=true;parent.children.push(child);scene.groups.push(parent);
+  assert!(hover_edge(&scene,&viewport,cursor,8.).is_none());
+  scene.show_hidden_objects=true;let picked=hover_edge_placement(&scene,&viewport,cursor,8.).unwrap();assert_eq!(picked.group_path.len(),2);
+  scene.layers[0].locked=true;assert!(hover_edge(&scene,&viewport,cursor,8.).is_none());
+ }
 }

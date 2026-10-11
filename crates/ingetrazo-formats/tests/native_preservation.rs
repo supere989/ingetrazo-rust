@@ -356,3 +356,21 @@ fn authored_f64_coordinates_survive_exact_native_document_reopen() {
     assert_eq!(scene_to_igz_document(&load_igz(&dst).unwrap()),original);
     std::fs::remove_file(src).unwrap();std::fs::remove_file(dst).unwrap();
 }
+
+#[test]
+fn ghost_flags_roundtrip_refresh_known_values_preserve_unknown_metadata() {
+ let src=temp("ghost.igz");let dst=temp("ghost-saved.igz");
+ let mut doc=native();doc["hidden_view"]=json!({"objects":true,"future":{"owner":9}});
+ doc["saved_views"][0]["hidden_shown"]=json!({"objects":true,"geometry":false,"future":7});
+ write_plain(&doc,&src);let mut scene=load_igz(&src).unwrap();
+ assert!(scene.show_hidden_objects);assert!(!scene.show_hidden_geometry);
+ assert_eq!(scene.saved_views[0].hidden_shown,Some(doc["saved_views"][0]["hidden_shown"].clone()));
+ scene.show_hidden_objects=false;scene.show_hidden_geometry=true;
+ let expected=json!({"geometry":true,"future":{"owner":9}});
+ assert_eq!(scene_to_igz_document(&scene)["hidden_view"],expected);
+ save_igz(&scene,&dst).unwrap();let reopened=load_igz(&dst).unwrap();
+ assert!(!reopened.show_hidden_objects&&reopened.show_hidden_geometry);
+ assert_eq!(scene_to_igz_document(&reopened)["hidden_view"],expected);
+ assert_eq!(scene_to_igz_document(&reopened)["saved_views"][0]["hidden_shown"],doc["saved_views"][0]["hidden_shown"]);
+ std::fs::remove_file(src).unwrap();std::fs::remove_file(dst).unwrap();
+}
