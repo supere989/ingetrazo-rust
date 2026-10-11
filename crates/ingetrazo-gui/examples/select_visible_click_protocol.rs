@@ -15,15 +15,17 @@ fn ui_frame(ctx:&egui::Context,app:&mut IngeTrazoApp,time:f64,events:Vec<egui::E
  let input=egui::RawInput{screen_rect:Some(egui::Rect::from_min_size(egui::Pos2::ZERO,egui::vec2(1000.,700.))),time:Some(time),events,..Default::default()};
  let _=ctx.run(input,|ctx|app.update_ui(ctx));
 }
-fn ui_click(kind:usize,point:DVec3,shown:bool)->Value {
+fn ui_click(kind:usize,point:DVec3,shown:bool)->Value {ui_click_modifiers(kind,point,shown,Default::default(),false)}
+fn ui_click_modifiers(kind:usize,point:DVec3,shown:bool,modifiers:egui::Modifiers,seed_edge:bool)->Value {
  let mut app=setup(kind);app.native_gpu_viewport_enabled=true;app.camera.set_standard_view(ingetrazo_core::camera::StandardView::Top);app.camera.target=DVec3::new(3.,3.,0.);app.camera.distance=12.;app.camera.perspective=false;
  if kind==0{app.scene.set_hidden_view(false,shown);}if kind==1{app.scene.set_hidden_view(true,shown);}if kind==2{app.scene.set_hidden_view(false,shown);}
+ if seed_edge{app.scene.select(SelectionItem::Edge(5));}
  let ctx=egui::Context::default();ui_frame(&ctx,&mut app,0.,vec![]);ui_frame(&ctx,&mut app,0.1,vec![]);
  let rect=app.native_gpu_viewport_rect.unwrap();let v=PixelViewport::new(&app.camera,rect.width() as f64,rect.height() as f64);let p=v.project_for_snapping(point).unwrap();let pos=egui::pos2(rect.min.x+p.x as f32,rect.min.y+p.y as f32);
- ui_frame(&ctx,&mut app,0.2,vec![egui::Event::PointerMoved(pos),egui::Event::PointerButton{pos,button:egui::PointerButton::Primary,pressed:true,modifiers:Default::default()}]);
- ui_frame(&ctx,&mut app,0.3,vec![egui::Event::PointerButton{pos,button:egui::PointerButton::Primary,pressed:false,modifiers:Default::default()}]);
+ ui_frame(&ctx,&mut app,0.2,vec![egui::Event::PointerMoved(pos),egui::Event::PointerButton{pos,button:egui::PointerButton::Primary,pressed:true,modifiers}]);
+ ui_frame(&ctx,&mut app,0.3,vec![egui::Event::PointerButton{pos,button:egui::PointerButton::Primary,pressed:false,modifiers}]);
  let mut selection=app.scene.selection.iter().map(|i|match i{SelectionItem::Edge(id)=>json!(["edge",id]),SelectionItem::Face(id)=>json!(["face",id]),SelectionItem::Group(id)=>json!(["group",id]),_=>panic!("Unexpected selection")}).collect::<Vec<_>>();selection.sort_by_key(|v|v.to_string());
- json!({"kind":kind,"shown":shown,"selection":selection,"viewport":[rect.min.x,rect.min.y,rect.max.x,rect.max.y]})
+ json!({"kind":kind,"shown":shown,"event_shift":modifiers.shift,"event_ctrl":modifiers.ctrl,"frame_final_modifiers_empty":true,"selection":selection,"viewport":[rect.min.x,rect.min.y,rect.max.x,rect.max.y]})
 }
 fn main()->Result<(),Box<dyn std::error::Error>> {
  let args=std::env::args().collect::<Vec<_>>();let source:Value=serde_json::from_slice(&std::fs::read(&args[1])?)?;
@@ -44,6 +46,9 @@ fn main()->Result<(),Box<dyn std::error::Error>> {
   let mut selection=app.scene.selection.iter().map(|i|match i{SelectionItem::Edge(id)=>json!(["edge",id]),SelectionItem::Face(id)=>json!(["face",id]),SelectionItem::Group(id)=>json!(["group",id]),_=>panic!("Unexpected selection")}).collect::<Vec<_>>();selection.sort_by_key(|v|v.to_string());
   rows.push(json!({"name":name,"edit":!app.component_edit_stack.is_empty(),"group_hidden":if app.component_edit_stack.is_empty(){json!(app.scene.groups.iter().map(|g|g.hidden).collect::<Vec<_>>())}else{Value::Null},"active_vertices":app.scene.mesh.vertices.iter().map(|v|v.position.to_array()).collect::<Vec<_>>(),"selection":selection,"objects":app.scene.show_hidden_objects,"geometry":app.scene.show_hidden_geometry}));
  }
- let ui=vec![ui_click(0,DVec3::new(1.2,1.,1.),false),ui_click(0,DVec3::new(1.,1.,1.),true),ui_click(0,DVec3::new(1.6,1.,0.),false),ui_click(1,DVec3::new(2.,2.,0.),false),ui_click(1,DVec3::new(2.,2.,0.),true),ui_click(2,DVec3::new(1.,1.,0.),false),ui_click(2,DVec3::new(1.,1.,0.),true)];
+ let mut ui=vec![ui_click(0,DVec3::new(1.2,1.,1.),false),ui_click(0,DVec3::new(1.,1.,1.),true),ui_click(0,DVec3::new(1.6,1.,0.),false),ui_click(1,DVec3::new(2.,2.,0.),false),ui_click(1,DVec3::new(2.,2.,0.),true),ui_click(2,DVec3::new(1.,1.,0.),false),ui_click(2,DVec3::new(1.,1.,0.),true)];
+ ui.push(ui_click_modifiers(0,DVec3::new(-0.5,1.,0.),false,egui::Modifiers{shift:true,..Default::default()},true));
+ ui.push(ui_click_modifiers(0,DVec3::new(-0.5,1.,0.),false,egui::Modifiers{ctrl:true,..Default::default()},false));
+ ui.push(ui_click_modifiers(0,DVec3::new(-0.5,1.,0.),false,egui::Modifiers{shift:true,ctrl:true,..Default::default()},true));
  std::fs::write(&args[2],serde_json::to_vec_pretty(&json!({"rows":rows,"ui_events":ui}))?)?;Ok(())
 }

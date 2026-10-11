@@ -171,7 +171,7 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
 
             app.active_tool.note_cursor_plane(plane_point,plane_normal);
             if app.active_tool_type==ToolType::Select {app.active_tool.note_pick_viewport(ingetrazo_core::screen_pick::PixelViewport::new(&app.camera,rect.width() as f64,rect.height() as f64),app.camera.eye());}
-            let tool_ctx = ToolContext {
+            let mut tool_ctx = ToolContext {
                 screen: Some(glam::DVec2::new(rel_x,rel_y)),
                 world: cursor_world_pos,
                 ray: cursor_ray,
@@ -179,6 +179,18 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
                 ctrl_held: ctrl_down,
                 alt_held: alt_down,
             };
+
+            // Qt Select receives the mouse event's modifier snapshot, even when
+            // a later modifier release shares this egui frame.
+            if app.active_tool_type==ToolType::Select&&(response.clicked()||response.double_clicked()) {
+                if let Some(modifiers)=ui.input(|input|input.events.iter().rev().find_map(|event|match event {
+                    egui::Event::PointerButton{button:egui::PointerButton::Primary,pressed:false,modifiers,..}=>Some(*modifiers),_=>None,
+                })) {
+                    tool_ctx.shift_held=modifiers.shift;
+                    tool_ctx.ctrl_held=modifiers.ctrl||modifiers.command;
+                    tool_ctx.alt_held=modifiers.alt;
+                }
+            }
 
             if response.clicked()&&!alt_down&&app.handle_blender_click(&tool_ctx,mouse_pos,rect,snap_res.kind==ingetrazo_core::snap::SnapKind::OnFace) {
                 // Light placement and picked bulbs own this click.
