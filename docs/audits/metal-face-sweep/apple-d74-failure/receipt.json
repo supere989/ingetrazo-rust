@@ -1,0 +1,66 @@
+{
+  "run": 38135216541,
+  "revision": "d74e0f4ca78320515adc9dbb7c66271d790c8cdc",
+  "jobs": [
+    {
+      "runner": "arm",
+      "job_id": 114457585071,
+      "artifact_id": 11700218947,
+      "artifact_sha256": "26b657589499525e314714f189957e967b572eeccc99ffd65117d581530475d4",
+      "source_hashes_verified": 160,
+      "sweep": "Invalid paper font before preview",
+      "classic": {
+        "passed": true,
+        "source_cases": 9,
+        "native_cases": 10,
+        "pixels": 250,
+        "scope": "Actual native app sampled classic own-mesh world shading/baked reflection/face-vs-group layer routing, no whole-image/OS gesture/presentation claim"
+      },
+      "material": {
+        "passed": true,
+        "source_cases": 25,
+        "native_cases": 75,
+        "pixels": 1950,
+        "scope": "Actual shared app update_ui/native Metal cached material sampled interiors; no full viewport, mip, edge, whole-image, user gesture or presentation parity claim"
+      },
+      "ghost_runtime": "passed",
+      "ghost_pixels": "strict failure retained",
+      "binary_hashes": [
+        "21d340953ae149e48e4058df3de0f3ccfb7765a1cb17732334103a034657d0f9  target/debug/examples/native_metal_hidden_ghost",
+        "08122bb3947eb5d38c2a44fe1067b1fc026cb7074512f7a5252e6376bbeec12a  target/debug/examples/native_metal_world_classic",
+        "1b076ca946530826efa3b651516b79927db49349a6955332207403c6a6c93211  target/debug/examples/native_metal_world_material",
+        "68d82f33003254ef6f552ca0d46ce7bda8ac5673aa72277f80463b8e949b459a  target/debug/examples/native_metal_face_sweep"
+      ]
+    },
+    {
+      "runner": "intel",
+      "job_id": 114457585198,
+      "artifact_id": 11700224208,
+      "artifact_sha256": "01f85b3af5682f2faf9530ebfce53fbcab9a657475b25efd6db1faf98d08ecea",
+      "source_hashes_verified": 160,
+      "sweep": "Invalid paper font before preview",
+      "classic": {
+        "passed": true,
+        "source_cases": 9,
+        "native_cases": 10,
+        "pixels": 250,
+        "scope": "Actual native app sampled classic own-mesh world shading/baked reflection/face-vs-group layer routing, no whole-image/OS gesture/presentation claim"
+      },
+      "material": {
+        "passed": true,
+        "source_cases": 25,
+        "native_cases": 75,
+        "pixels": 1950,
+        "scope": "Actual shared app update_ui/native Metal cached material sampled interiors; no full viewport, mip, edge, whole-image, user gesture or presentation parity claim"
+      },
+      "ghost_runtime": "passed",
+      "ghost_pixels": "strict failure retained",
+      "binary_hashes": [
+        "1100f27f0a67e37386b71f9640b9f428bc62f7421896dc725c9e94a1b2322515  target/debug/examples/native_metal_hidden_ghost",
+        "ef1aa186f7952a4abbfaae08935fd5b8eed1ed961a39224bd794d596007efe3e  target/debug/examples/native_metal_world_classic",
+        "311b1fcb21f19c895add1fc1259e27fcf97c8e2c01c05cede5efcb1bbdeb175b  target/debug/examples/native_metal_world_material",
+        "e0f3c5fca689af13763e56d97d36baefe6a7458f721569166d86279d7933f51f  target/debug/examples/native_metal_face_sweep"
+      ]
+    }
+  ]
+}
