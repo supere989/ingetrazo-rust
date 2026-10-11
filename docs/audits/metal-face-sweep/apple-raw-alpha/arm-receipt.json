@@ -1,0 +1,769 @@
+{
+  "revision": "854d64e529d7a0ed590913d0ddd75f1d53b9e25c",
+  "run": 38140730895,
+  "job": 114473891549,
+  "artifact": 11702617762,
+  "artifact_sha256": "9fda63dabb63c0e617cd9227ac02ec8d9fdad9c407b006f62451c02a7fa9fdb2",
+  "runner_source_hashes_verified": 170,
+  "binary_hashes": [
+    "76419ef99a05c0190fc8f6abdc497900c4fa35d8104ad2555c7956efeba06aee  target/debug/examples/native_metal_hidden_ghost",
+    "35bb63128fe86f4be569a0b24efdae39dd24550d51dba6766c777b7ade462e3d  target/debug/examples/native_metal_world_classic",
+    "9189fab49fb11601784095c8a2543c0bd1aa917783708a290649c963cb7ec899  target/debug/examples/native_metal_world_material",
+    "a450fca36a9b5658499bca23948f41ce98feaac96ed3e76c6ca69b8f1272cf8d  target/debug/examples/native_metal_face_sweep"
+  ],
+  "runtime_passed": true,
+  "strict_sweep": {
+    "functional_passed": true,
+    "strict_pixels_passed": false,
+    "frames": 24,
+    "negative_controls": 7,
+    "differences": [
+      {
+        "case": "reversed-door",
+        "phase": "base",
+        "different_pixels": 2587,
+        "maximum_channel_error": 226
+      },
+      {
+        "case": "reversed-door",
+        "phase": "preview",
+        "different_pixels": 24774,
+        "maximum_channel_error": 209
+      },
+      {
+        "case": "reversed-door",
+        "phase": "offset",
+        "different_pixels": 24104,
+        "maximum_channel_error": 211
+      },
+      {
+        "case": "reversed-door",
+        "phase": "cancel",
+        "different_pixels": 2587,
+        "maximum_channel_error": 226
+      },
+      {
+        "case": "lone-sheet",
+        "phase": "base",
+        "different_pixels": 917,
+        "maximum_channel_error": 215
+      },
+      {
+        "case": "lone-sheet",
+        "phase": "preview",
+        "different_pixels": 10380,
+        "maximum_channel_error": 215
+      },
+      {
+        "case": "lone-sheet",
+        "phase": "offset",
+        "different_pixels": 14677,
+        "maximum_channel_error": 211
+      },
+      {
+        "case": "lone-sheet",
+        "phase": "cancel",
+        "different_pixels": 917,
+        "maximum_channel_error": 215
+      },
+      {
+        "case": "front-recess",
+        "phase": "base",
+        "different_pixels": 1533,
+        "maximum_channel_error": 223
+      },
+      {
+        "case": "front-recess",
+        "phase": "preview",
+        "different_pixels": 17066,
+        "maximum_channel_error": 209
+      },
+      {
+        "case": "front-recess",
+        "phase": "offset",
+        "different_pixels": 16991,
+        "maximum_channel_error": 210
+      },
+      {
+        "case": "front-recess",
+        "phase": "cancel",
+        "different_pixels": 1533,
+        "maximum_channel_error": 223
+      },
+      {
+        "case": "back-recess",
+        "phase": "base",
+        "different_pixels": 18267,
+        "maximum_channel_error": 210
+      },
+      {
+        "case": "back-recess",
+        "phase": "preview",
+        "different_pixels": 18381,
+        "maximum_channel_error": 209
+      },
+      {
+        "case": "back-recess",
+        "phase": "offset",
+        "different_pixels": 18306,
+        "maximum_channel_error": 210
+      },
+      {
+        "case": "back-recess",
+        "phase": "cancel",
+        "different_pixels": 18267,
+        "maximum_channel_error": 210
+      },
+      {
+        "case": "front-texture-back-override",
+        "phase": "base",
+        "different_pixels": 3717,
+        "maximum_channel_error": 240
+      },
+      {
+        "case": "front-texture-back-override",
+        "phase": "preview",
+        "different_pixels": 7655,
+        "maximum_channel_error": 240
+      },
+      {
+        "case": "front-texture-back-override",
+        "phase": "offset",
+        "different_pixels": 9625,
+        "maximum_channel_error": 214
+      },
+      {
+        "case": "front-texture-back-override",
+        "phase": "cancel",
+        "different_pixels": 3717,
+        "maximum_channel_error": 240
+      },
+      {
+        "case": "ordinary-prism",
+        "phase": "base",
+        "different_pixels": 187930,
+        "maximum_channel_error": 229
+      },
+      {
+        "case": "ordinary-prism",
+        "phase": "preview",
+        "different_pixels": 210710,
+        "maximum_channel_error": 227
+      },
+      {
+        "case": "ordinary-prism",
+        "phase": "offset",
+        "different_pixels": 221122,
+        "maximum_channel_error": 232
+      },
+      {
+        "case": "ordinary-prism",
+        "phase": "cancel",
+        "different_pixels": 187930,
+        "maximum_channel_error": 229
+      }
+    ]
+  },
+  "material_policy": {
+    "diagnostic_passed": true,
+    "cases": 6,
+    "negative_controls": 5,
+    "front_back_pixels": [
+      [
+        "reversed-door",
+        70034,
+        23316
+      ],
+      [
+        "lone-sheet",
+        7697,
+        0
+      ],
+      [
+        "front-recess",
+        0,
+        140864
+      ],
+      [
+        "back-recess",
+        140864,
+        0
+      ],
+      [
+        "front-texture-back-override",
+        7697,
+        0
+      ],
+      [
+        "ordinary-prism",
+        0,
+        184744
+      ]
+    ]
+  },
+  "classic": {
+    "passed": true,
+    "source_cases": 9,
+    "native_cases": 10,
+    "pixels": 250,
+    "scope": "Actual native app sampled classic own-mesh world shading/baked reflection/face-vs-group layer routing, no whole-image/OS gesture/presentation claim"
+  },
+  "material_checker_passed": false,
+  "material_checker_error": "Traceback (most recent call last):\n  File \"/Users/runner/work/ingetrazo-rust/ingetrazo-rust/scripts/check-metal-world-material.py\", line 48, in <module>\n    else:print(json.dumps(check(pathlib.Path(sys.argv[1]),pathlib.Path(sys.argv[2])),indent=2))\n                          ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/runner/work/ingetrazo-rust/ingetrazo-rust/scripts/check-metal-world-material.py\", line 27, in check\n    assert all(data[4*(yy*1280+xx):4*(yy*1280+xx)+4]==expected for yy in range(y-2,y+3)for xx in range(x-2,x+3)),f['name']\n           ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: alpha-front\n",
+  "material_base_case_center_observations": [
+    {
+      "name": "opaque-front",
+      "expected": [
+        247,
+        0,
+        0,
+        255
+      ],
+      "actual": [
+        247,
+        0,
+        0,
+        255
+      ],
+      "equal": true
+    },
+    {
+      "name": "opaque-default-back",
+      "expected": [
+        158,
+        178,
+        199,
+        255
+      ],
+      "actual": [
+        158,
+        178,
+        199,
+        255
+      ],
+      "equal": true
+    },
+    {
+      "name": "opaque-painted-back",
+      "expected": [
+        0,
+        247,
+        0,
+        255
+      ],
+      "actual": [
+        0,
+        247,
+        0,
+        255
+      ],
+      "equal": true
+    },
+    {
+      "name": "alpha-front",
+      "expected": [
+        124,
+        0,
+        127,
+        255
+      ],
+      "actual": [
+        124,
+        0,
+        128,
+        255
+      ],
+      "equal": false
+    },
+    {
+      "name": "alpha-painted-back",
+      "expected": [
+        0,
+        62,
+        191,
+        255
+      ],
+      "actual": [
+        0,
+        62,
+        191,
+        255
+      ],
+      "equal": true
+    },
+    {
+      "name": "texture-blue",
+      "expected": [
+        0,
+        0,
+        247,
+        255
+      ],
+      "actual": [
+        0,
+        0,
+        247,
+        255
+      ],
+      "equal": true
+    },
+    {
+      "name": "dual-textures",
+      "expected": [
+        0,
+        0,
+        247,
+        255
+      ],
+      "actual": [
+        0,
+        0,
+        247,
+        255
+      ],
+      "equal": true
+    },
+    {
+      "name": "texture-red",
+      "expected": [
+        247,
+        0,
+        0,
+        255
+      ],
+      "actual": [
+        247,
+        0,
+        0,
+        255
+      ],
+      "equal": true
+    },
+    {
+      "name": "texture-repeat",
+      "expected": [
+        247,
+        0,
+        0,
+        255
+      ],
+      "actual": [
+        247,
+        0,
+        0,
+        255
+      ],
+      "equal": true
+    },
+    {
+      "name": "texture-default-back",
+      "expected": [
+        158,
+        178,
+        199,
+        255
+      ],
+      "actual": [
+        158,
+        178,
+        199,
+        255
+      ],
+      "equal": true
+    },
+    {
+      "name": "texture-alpha",
+      "expected": [
+        124,
+        0,
+        127,
+        255
+      ],
+      "actual": [
+        124,
+        0,
+        128,
+        255
+      ],
+      "equal": false
+    },
+    {
+      "name": "texture-shaded",
+      "expected": [
+        128,
+        128,
+        64,
+        255
+      ],
+      "actual": [
+        128,
+        128,
+        64,
+        255
+      ],
+      "equal": true
+    },
+    {
+      "name": "texture-shaded-back",
+      "expected": [
+        158,
+        178,
+        199,
+        255
+      ],
+      "actual": [
+        158,
+        178,
+        199,
+        255
+      ],
+      "equal": true
+    },
+    {
+      "name": "group-color",
+      "expected": [
+        247,
+        0,
+        0,
+        255
+      ],
+      "actual": [
+        247,
+        0,
+        0,
+        255
+      ],
+      "equal": true
+    },
+    {
+      "name": "group-texture",
+      "expected": [
+        0,
+        0,
+        247,
+        255
+      ],
+      "actual": [
+        0,
+        0,
+        247,
+        255
+      ],
+      "equal": true
+    },
+    {
+      "name": "group-reflected-texture",
+      "expected": [
+        0,
+        0,
+        247,
+        255
+      ],
+      "actual": [
+        0,
+        0,
+        247,
+        255
+      ],
+      "equal": true
+    },
+    {
+      "name": "group-alpha",
+      "expected": [
+        124,
+        0,
+        127,
+        255
+      ],
+      "actual": [
+        124,
+        0,
+        128,
+        255
+      ],
+      "equal": false
+    },
+    {
+      "name": "shaded-transparent-texture",
+      "expected": [
+        124,
+        0,
+        127,
+        255
+      ],
+      "actual": [
+        124,
+        0,
+        128,
+        255
+      ],
+      "equal": false
+    },
+    {
+      "name": "shaded-back-texture",
+      "expected": [
+        247,
+        0,
+        0,
+        255
+      ],
+      "actual": [
+        247,
+        0,
+        0,
+        255
+      ],
+      "equal": true
+    },
+    {
+      "name": "alpha-0.1",
+      "expected": [
+        25,
+        0,
+        229,
+        255
+      ],
+      "actual": [
+        25,
+        0,
+        229,
+        255
+      ],
+      "equal": true
+    },
+    {
+      "name": "alpha-0.25",
+      "expected": [
+        62,
+        0,
+        191,
+        255
+      ],
+      "actual": [
+        62,
+        0,
+        191,
+        255
+      ],
+      "equal": true
+    },
+    {
+      "name": "alpha-0.3",
+      "expected": [
+        74,
+        0,
+        179,
+        255
+      ],
+      "actual": [
+        74,
+        0,
+        178,
+        255
+      ],
+      "equal": false
+    },
+    {
+      "name": "alpha-0.5",
+      "expected": [
+        124,
+        0,
+        127,
+        255
+      ],
+      "actual": [
+        124,
+        0,
+        128,
+        255
+      ],
+      "equal": false
+    },
+    {
+      "name": "alpha-0.7",
+      "expected": [
+        172,
+        0,
+        77,
+        255
+      ],
+      "actual": [
+        173,
+        0,
+        77,
+        255
+      ],
+      "equal": false
+    },
+    {
+      "name": "alpha-0.9",
+      "expected": [
+        223,
+        0,
+        25,
+        255
+      ],
+      "actual": [
+        222,
+        0,
+        26,
+        255
+      ],
+      "equal": false
+    }
+  ],
+  "material_final_ledger": [
+    0,
+    0
+  ],
+  "native_prism_dominant": [
+    [
+      [
+        255,
+        255,
+        255,
+        255
+      ],
+      289816
+    ],
+    [
+      [
+        227,
+        151,
+        139,
+        255
+      ],
+      72485
+    ],
+    [
+      [
+        203,
+        147,
+        137,
+        255
+      ],
+      58129
+    ],
+    [
+      [
+        201,
+        145,
+        137,
+        255
+      ],
+      53809
+    ]
+  ],
+  "retained_font_reuse": {
+    "reused_run": 38139827943,
+    "reused_artifact": 11703145002,
+    "artifact_sha256": "9ba322be3499e3a3bdb1abc41db75b1c0fae1702cac8871e917cf1e85ace6a68",
+    "records": 5,
+    "font_table_hashes": [
+      [
+        "9f3082d96427967e93dc6e762791a19bd962876cbf611ff7a4074d97cf889f37",
+        "5dc366b59c6295f2386cd8461398c4981eb4d7325981b8d1507c4a168993acba"
+      ]
+    ],
+    "scope": "historical actual Qt glyph reference, matching OS/architecture; no current Qt execution or current font certification"
+  },
+  "integration_status": "rejected candidate; regresses accepted Mesa samples without improving targeted NVIDIA prism frames",
+  "same_source_guard_frame_comparison": [
+    {
+      "frame": "sweep/back-recess-base.rgba",
+      "identical_to_guard_1fa": true
+    },
+    {
+      "frame": "sweep/back-recess-cancel.rgba",
+      "identical_to_guard_1fa": true
+    },
+    {
+      "frame": "sweep/back-recess-offset.rgba",
+      "identical_to_guard_1fa": true
+    },
+    {
+      "frame": "sweep/back-recess-preview.rgba",
+      "identical_to_guard_1fa": true
+    },
+    {
+      "frame": "sweep/front-recess-base.rgba",
+      "identical_to_guard_1fa": true
+    },
+    {
+      "frame": "sweep/front-recess-cancel.rgba",
+      "identical_to_guard_1fa": true
+    },
+    {
+      "frame": "sweep/front-recess-offset.rgba",
+      "identical_to_guard_1fa": true
+    },
+    {
+      "frame": "sweep/front-recess-preview.rgba",
+      "identical_to_guard_1fa": true
+    },
+    {
+      "frame": "sweep/front-texture-back-override-base.rgba",
+      "identical_to_guard_1fa": false
+    },
+    {
+      "frame": "sweep/front-texture-back-override-cancel.rgba",
+      "identical_to_guard_1fa": false
+    },
+    {
+      "frame": "sweep/front-texture-back-override-offset.rgba",
+      "identical_to_guard_1fa": false
+    },
+    {
+      "frame": "sweep/front-texture-back-override-preview.rgba",
+      "identical_to_guard_1fa": false
+    },
+    {
+      "frame": "sweep/lone-sheet-base.rgba",
+      "identical_to_guard_1fa": true
+    },
+    {
+      "frame": "sweep/lone-sheet-cancel.rgba",
+      "identical_to_guard_1fa": true
+    },
+    {
+      "frame": "sweep/lone-sheet-offset.rgba",
+      "identical_to_guard_1fa": true
+    },
+    {
+      "frame": "sweep/lone-sheet-preview.rgba",
+      "identical_to_guard_1fa": true
+    },
+    {
+      "frame": "sweep/ordinary-prism-base.rgba",
+      "identical_to_guard_1fa": true
+    },
+    {
+      "frame": "sweep/ordinary-prism-cancel.rgba",
+      "identical_to_guard_1fa": true
+    },
+    {
+      "frame": "sweep/ordinary-prism-offset.rgba",
+      "identical_to_guard_1fa": true
+    },
+    {
+      "frame": "sweep/ordinary-prism-preview.rgba",
+      "identical_to_guard_1fa": true
+    },
+    {
+      "frame": "sweep/reversed-door-base.rgba",
+      "identical_to_guard_1fa": true
+    },
+    {
+      "frame": "sweep/reversed-door-cancel.rgba",
+      "identical_to_guard_1fa": true
+    },
+    {
+      "frame": "sweep/reversed-door-offset.rgba",
+      "identical_to_guard_1fa": true
+    },
+    {
+      "frame": "sweep/reversed-door-preview.rgba",
+      "identical_to_guard_1fa": true
+    }
+  ]
+}
