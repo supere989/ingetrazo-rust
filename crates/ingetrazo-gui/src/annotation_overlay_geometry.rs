@@ -119,7 +119,12 @@ impl Cache {
       else{ingetrazo_render::qt_line::rasterize(a.map(|v|v*density),b.map(|v|v*density),width*density,clip,self.limits.cells,self.limits.spans)?};
      writer.layer(spans,*color,operation.gate)?;
     }
-    Primitive::Polygon{points,color}=>{if placement==GlyphPlacement::OpenGl&&color[3]==255{let v=points.map(|p|p.map(|v|v as f32));
+    Primitive::Polygon{points,color}=>{
+     if placement==GlyphPlacement::OpenGl&&self.stencil_union&&color[3]!=255{
+      let v=points.map(|p|p.map(|x|x as f32));let bounds=[v.iter().map(|p|p[0]).fold(f32::INFINITY,f32::min),v.iter().map(|p|p[1]).fold(f32::INFINITY,f32::min),v.iter().map(|p|p[0]).fold(f32::NEG_INFINITY,f32::max),v.iter().map(|p|p[1]).fold(f32::NEG_INFINITY,f32::max)];
+      writer.stencil_union(&v,true,bounds,*color,operation.gate)?;continue;
+     }
+     if placement==GlyphPlacement::OpenGl&&color[3]==255{let v=points.map(|p|p.map(|v|v as f32));
       if self.analytic_boundary{
        if v.iter().flatten().any(|x|!x.is_finite()){return Err("Widget triangle source coordinates invalid".into());}
        let pad=(0.5/density)as f32;
@@ -171,6 +176,10 @@ impl Cache {
           while col<image.width&&image.coverage[(row*image.width+col)*3..(row*image.width+col)*3+3]==mask{col+=1;}
           if mask==[0;3]{continue;}
           writer.layer_with_composition(vec![Span{x:i32::try_from(left+start as i64).map_err(|_|"LCD glyph x outside domain")?,y:i32::try_from(top+row as i64).map_err(|_|"LCD glyph y outside domain")?,len:u32::try_from(col-start).map_err(|_|"LCD glyph span length overflow")?,coverage:255}],*color,operation.gate,Composition::GlyphLcd(mask))?;
+          // Source OpenGL A32 setup ignores constant-color alpha. Keep the
+          // authored alpha in Draw, but admit the actual opaque constant palette.
+          if let Some(batch)=writer.batches.last_mut(){let mut opaque=*color;opaque[3]=255;batch.color=EncodedRgba::from_bytes(opaque,1.)?;}
+
          }
         }
         // RGB runs are disjoint within one glyph. Preserve one source layer

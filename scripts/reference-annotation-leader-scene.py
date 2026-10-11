@@ -7,9 +7,11 @@ assert subprocess.check_output(['git','-C',str(source),'rev-parse','HEAD'],text=
 sys.path.insert(0,str(source))
 from core.scene import Scene
 from core.textlabel import TextLabel
+from core.dimension import Dimension
 from PySide6.QtGui import QVector3D
 from formats.igz import save_scene
 s=Scene();s.text_labels=[TextLabel(QVector3D(-1,0,0),QVector3D(1,1,0),'Alpha circle'),TextLabel(QVector3D(1,-1,0),QVector3D(.7,.5,0),'Second circle')]
+s.dimensions=[Dimension(QVector3D(-1,-1,0),QVector3D(1,-1,0),QVector3D(0,-.7,0),text='Alpha arrows')]
 s.dimension_style=dict(s.dimension_style,color=[37,93,157,128],font_size=11)
 save_scene(s,out/'scene.igz')
 camera=dict(target=[0,0,0],distance=5,yaw=-.7853981633974483,pitch=.5235987755982988,up=[0,0,1],fov_deg=45,aspect=4/3,znear=.1,zfar=10000,perspective=False,two_point=False)
