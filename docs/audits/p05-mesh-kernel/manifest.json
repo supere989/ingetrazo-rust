@@ -1,0 +1,17 @@
+{
+  "records_sha256": "c3dfb6722a59293e4e8d8d4394d439ae8c699f55bc77635431fbe97d123b9e3b",
+  "members": {
+    "initial-input.json": "91a1a902fc9a3e0bea5b3efb87705fe5146e0b092293664b86029c28bf1be8eb",
+    "initial-source.json": "291d90dd23b6596aadb5d9435299dfc3c4f1c98579d2c1140df7ca8a1b9a5cee",
+    "input.json": "9ccd0bf151f8d36f272ea5202a9cea02a39248f1a985bd2817d1c4f6909e5226",
+    "native.json": "f5bdfa074941effec54180cc72d32fd4bc3291cc0d088775e77a9cddd6693ad9",
+    "p05-kernel-build.log": "a6788956793de7764cc8ca40f6ae0afef6b10955f2348a729805cf3540bb5f76",
+    "p05-kernel-final-build.log": "48029ddf9ce3139e60660d3b51033c0a76c225ca64487e46647a1c4187a52a54",
+    "p05-kernel-reviewed-build.log": "9956f348322458725b275c41f3b1af0a6fd2b4649a4a8bfe31828d16e3063b33",
+    "provenance.json": "f314c607ea8c84917bc27bf88b60a757615d11e786b62d68b34c9ca711b221fc",
+    "report.json": "2db91aaedbb508c7c7a55fc4083fd8fde13ac8f58ad7bfeb01da1fd1267889b2",
+    "source.json": "8c26125981209062f0f133abb02ed1032479e2a1f180305a9d5d8ead56c58e56"
+  },
+  "runtime": "1353a564",
+  "original_pin": "6be29fe437a7cd992d4e079f71720821b25216b9"
+}

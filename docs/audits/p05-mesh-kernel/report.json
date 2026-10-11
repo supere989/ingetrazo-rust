@@ -1,0 +1,201 @@
+{
+  "delta_passed": true,
+  "p05_complete": false,
+  "raw_equal_cases": 11,
+  "case_count": 20,
+  "cases": [
+    {
+      "name": "cross-positive",
+      "raw_equal": true,
+      "states": 2,
+      "source_vertices": 1,
+      "source_edges": 0,
+      "native_edges": 0,
+      "remaining_gap": null
+    },
+    {
+      "name": "cross-negative",
+      "raw_equal": true,
+      "states": 2,
+      "source_vertices": 1,
+      "source_edges": 0,
+      "native_edges": 0,
+      "remaining_gap": null
+    },
+    {
+      "name": "distance-reject",
+      "raw_equal": true,
+      "states": 2,
+      "source_vertices": 2,
+      "source_edges": 0,
+      "native_edges": 0,
+      "remaining_gap": null
+    },
+    {
+      "name": "tie-and-order",
+      "raw_equal": true,
+      "states": 4,
+      "source_vertices": 3,
+      "source_edges": 0,
+      "native_edges": 0,
+      "remaining_gap": null
+    },
+    {
+      "name": "neighbor-first",
+      "raw_equal": true,
+      "states": 3,
+      "source_vertices": 1,
+      "source_edges": 0,
+      "native_edges": 0,
+      "remaining_gap": null
+    },
+    {
+      "name": "radial-2",
+      "raw_equal": true,
+      "states": 5,
+      "source_vertices": 7,
+      "source_edges": 8,
+      "native_edges": 8,
+      "remaining_gap": null
+    },
+    {
+      "name": "radial-3",
+      "raw_equal": true,
+      "states": 6,
+      "source_vertices": 9,
+      "source_edges": 11,
+      "native_edges": 11,
+      "remaining_gap": null
+    },
+    {
+      "name": "hole-split-weld",
+      "raw_equal": true,
+      "states": 3,
+      "source_vertices": 9,
+      "source_edges": 9,
+      "native_edges": 9,
+      "remaining_gap": null
+    },
+    {
+      "name": "bulk-seed-0",
+      "raw_equal": false,
+      "states": 1,
+      "source_vertices": 325,
+      "source_edges": 463,
+      "native_edges": 462,
+      "remaining_gap": "welded sliver source self-edge and triple radial incidence omitted"
+    },
+    {
+      "name": "bulk-seed-1",
+      "raw_equal": false,
+      "states": 1,
+      "source_vertices": 324,
+      "source_edges": 468,
+      "native_edges": 467,
+      "remaining_gap": "welded sliver source self-edge and triple radial incidence omitted"
+    },
+    {
+      "name": "bulk-seed-2",
+      "raw_equal": false,
+      "states": 1,
+      "source_vertices": 323,
+      "source_edges": 461,
+      "native_edges": 460,
+      "remaining_gap": "welded sliver source self-edge and triple radial incidence omitted"
+    },
+    {
+      "name": "bulk-seed-3",
+      "raw_equal": false,
+      "states": 1,
+      "source_vertices": 321,
+      "source_edges": 461,
+      "native_edges": 460,
+      "remaining_gap": "welded sliver source self-edge and triple radial incidence omitted"
+    },
+    {
+      "name": "bulk-seed-4",
+      "raw_equal": false,
+      "states": 1,
+      "source_vertices": 333,
+      "source_edges": 463,
+      "native_edges": 462,
+      "remaining_gap": "welded sliver source self-edge and triple radial incidence omitted"
+    },
+    {
+      "name": "bulk-seed-5",
+      "raw_equal": false,
+      "states": 1,
+      "source_vertices": 331,
+      "source_edges": 462,
+      "native_edges": 461,
+      "remaining_gap": "welded sliver source self-edge and triple radial incidence omitted"
+    },
+    {
+      "name": "bulk-seed-6",
+      "raw_equal": false,
+      "states": 1,
+      "source_vertices": 340,
+      "source_edges": 468,
+      "native_edges": 467,
+      "remaining_gap": "welded sliver source self-edge and triple radial incidence omitted"
+    },
+    {
+      "name": "bulk-seed-7",
+      "raw_equal": false,
+      "states": 1,
+      "source_vertices": 322,
+      "source_edges": 463,
+      "native_edges": 462,
+      "remaining_gap": "welded sliver source self-edge and triple radial incidence omitted"
+    },
+    {
+      "name": "large-grid-1200",
+      "raw_equal": false,
+      "states": 1,
+      "source_vertices": 3158,
+      "source_edges": 4577,
+      "native_edges": 4576,
+      "remaining_gap": "welded sliver source self-edge and triple radial incidence omitted"
+    },
+    {
+      "name": "same-cell-diagonal",
+      "raw_equal": true,
+      "states": 2,
+      "source_vertices": 1,
+      "source_edges": 0,
+      "native_edges": 0,
+      "remaining_gap": null
+    },
+    {
+      "name": "place-collision-owner",
+      "raw_equal": true,
+      "states": 4,
+      "source_vertices": 3,
+      "source_edges": 1,
+      "native_edges": 1,
+      "remaining_gap": null
+    },
+    {
+      "name": "exact-half-diagonal",
+      "raw_equal": true,
+      "states": 2,
+      "source_vertices": 2,
+      "source_edges": 0,
+      "native_edges": 0,
+      "remaining_gap": null
+    }
+  ],
+  "negative_controls": {
+    "empty": true,
+    "duplicate-case": true,
+    "missing-phase": true,
+    "wrong-weld": true,
+    "wrong-radial-order": true,
+    "wrong-welded-subedge-metadata": true,
+    "lost-large-edge": true,
+    "wrong-painted-face": true,
+    "boolean-id": true,
+    "wrong-half-tie-weld": true
+  },
+  "boundary": "No normalization of full source sliver mismatch; native f64/integrity guards execute in named binary."
+}
