@@ -1,5 +1,7 @@
 name: Native Metal hidden ghost consumer
 on:
+  push:
+    branches: [review/metal-hidden-ghost]
   workflow_dispatch:
 concurrency:
   group: metal-hidden-ghost-${{ github.ref }}
@@ -29,24 +31,59 @@ jobs:
         run: |
           mkdir -p metal-ghost-evidence
           git rev-parse HEAD > metal-ghost-evidence/revision.txt
-          git ls-files crates/ingetrazo-metal/src crates/ingetrazo-gui/src/native_metal crates/ingetrazo-gui/src/native_metal.rs scripts/check-metal-hidden-ghost.py | xargs shasum -a 256 > metal-ghost-evidence/source.sha256
-          python3 scripts/check-metal-hidden-ghost.py docs/audits/hidden-ghost-workflow metal-ghost-evidence/input --unpack
-      - name: Build only named native app consumer
+          git ls-files crates/ingetrazo-metal/src crates/ingetrazo-gui/src/native_metal crates/ingetrazo-gui/src/native_metal.rs scripts/check-metal-hidden-ghost.py scripts/check-metal-world-classic.py scripts/check-metal-world-material.py crates/ingetrazo-gui/examples/native_metal_hidden_ghost.rs crates/ingetrazo-gui/examples/native_metal_world_classic.rs crates/ingetrazo-gui/examples/native_metal_world_material.rs | xargs shasum -a 256 > metal-ghost-evidence/source.sha256
+          python3 scripts/check-metal-hidden-ghost.py docs/audits/hidden-ghost-workflow "$RUNNER_TEMP/metal-ghost-input" --unpack
+      - name: Joint build of only three affected native app consumers
         run: |
-          cargo build --locked -p ingetrazo-gui --example native_metal_hidden_ghost -j2 > metal-ghost-evidence/build.log 2>&1
-          shasum -a 256 target/debug/examples/native_metal_hidden_ghost > metal-ghost-evidence/binary.sha256
-      - name: Execute actual native Metal world GPU readback with outer deadline
+          cargo build --locked -p ingetrazo-gui --example native_metal_hidden_ghost --example native_metal_world_classic --example native_metal_world_material -j2 > metal-ghost-evidence/build.log 2>&1
+          shasum -a 256 target/debug/examples/native_metal_hidden_ghost target/debug/examples/native_metal_world_classic target/debug/examples/native_metal_world_material > metal-ghost-evidence/binary.sha256
+      - name: Execute only ghost and affected retained material/classic consumers
         run: |
           python3 - <<'PYTHON'
-          import subprocess
-          with open('metal-ghost-evidence/runtime.log','w') as log:
-              subprocess.run(['target/debug/examples/native_metal_hidden_ghost','metal-ghost-evidence/input','metal-ghost-evidence/native'],stdout=log,stderr=subprocess.STDOUT,timeout=120,check=True)
+          import json,os,subprocess
+          from pathlib import Path
+          jobs=[('ghost',['target/debug/examples/native_metal_hidden_ghost',os.environ['RUNNER_TEMP']+'/metal-ghost-input','metal-ghost-evidence/native']),('classic',['target/debug/examples/native_metal_world_classic','metal-ghost-evidence/classic']),('material',['target/debug/examples/native_metal_world_material','metal-ghost-evidence/material'])]
+          failed=False
+          for name,cmd in jobs:
+              try:
+                  with open('metal-ghost-evidence/'+name+'-runtime.log','w') as log:
+                      subprocess.run(cmd,stdout=log,stderr=subprocess.STDOUT,timeout=120,check=True)
+              except (subprocess.SubprocessError,OSError) as error:
+                  failed=True
+                  Path('metal-ghost-evidence/'+name+'-failure.json').write_text(json.dumps({'error_type':type(error).__name__,'error':str(error)}))
+          raise SystemExit(1 if failed else 0)
           PYTHON
-      - name: Check strict whole-frame source parity
+      - name: Check strict ghost pixels and retained material/classic regression controls
+        if: ${{ !cancelled() }}
         run: |
-          python3 -m venv metal-ghost-evidence/venv
-          metal-ghost-evidence/venv/bin/pip install pillow
-          metal-ghost-evidence/venv/bin/python scripts/check-metal-hidden-ghost.py docs/audits/hidden-ghost-workflow metal-ghost-evidence/native > metal-ghost-evidence/checker.log 2>&1
+          python3 -m venv "$RUNNER_TEMP/metal-ghost-check-venv"
+          "$RUNNER_TEMP/metal-ghost-check-venv/bin/pip" install pillow
+          "$RUNNER_TEMP/metal-ghost-check-venv/bin/python" - <<'PYTHON'
+          import subprocess,sys
+          jobs=[('ghost','scripts/check-metal-hidden-ghost.py','docs/audits/hidden-ghost-workflow','metal-ghost-evidence/native'),('classic','scripts/check-metal-world-classic.py','docs/audits/metal-world-scene/classic-source','metal-ghost-evidence/classic'),('material','scripts/check-metal-world-material.py','docs/audits/metal-world-scene/material-source','metal-ghost-evidence/material')]
+          failed=False
+          for name,checker,source,native in jobs:
+              with open('metal-ghost-evidence/'+name+'-checker.log','w') as log:
+                  result=subprocess.run([sys.executable,checker,source,native],stdout=log,stderr=subprocess.STDOUT,timeout=90)
+              failed=failed or result.returncode!=0
+          raise SystemExit(1 if failed else 0)
+          PYTHON
+      - name: Compact successful or failed native captures without dependency environments
+        if: always()
+        run: |
+          python3 - <<'PYTHON'
+          from pathlib import Path
+          import shutil,zipfile
+          root=Path('metal-ghost-evidence')
+          root.mkdir(exist_ok=True)
+          with zipfile.ZipFile(root/'native-captures.zip','w',zipfile.ZIP_DEFLATED) as z:
+              for name in ['native','classic','material']:
+                  directory=root/name
+                  if directory.exists():
+                      for path in sorted(directory.rglob('*')):
+                          if path.is_file():z.write(path,path.relative_to(root))
+                      shutil.rmtree(directory)
+          PYTHON
       - uses: actions/upload-artifact@v4
         if: always()
         with:
