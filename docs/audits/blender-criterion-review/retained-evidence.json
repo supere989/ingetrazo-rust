@@ -1,0 +1,34 @@
+{
+  "criterion": "Render a retained fixture in actual Blender; camera/material/lighting consistency, cancel, errors and output verification.",
+  "disposition": "Verified",
+  "evidence_directory": "../blender-document-follow",
+  "records": {
+    "manifest.json": {
+      "bytes": 5133,
+      "sha256": "1adb3fc9dd367582657407266221dba5ccbf50e011dc6c7b61364d80f5b9175b"
+    },
+    "application-result.json": {
+      "bytes": 782,
+      "sha256": "0b1b50ba5c89675a0b44abad3a64a401d6c6a0c4ab062ffcedfe7cee6fbfe2b3"
+    },
+    "application-run.json": {
+      "bytes": 41,
+      "sha256": "ae9013bf19f0b681aaba5e92002f61f3b7b873fa9812f6b79587005e6e9fd94b"
+    },
+    "application-strict-image-comparison.json": {
+      "bytes": 201,
+      "sha256": "6b8bc09145d988a0bb072a17de242c3342d2f3a7d9906a758af2842b3ed4fdf2"
+    },
+    "result.json": {
+      "bytes": 254,
+      "sha256": "d1b4dbe09eb3295fbd93a16f84e1dd40dcec33b14685388265d0b09e4ff2e228"
+    },
+    "cases.json": {
+      "bytes": 2363,
+      "sha256": "f8af386a8a474cceee14cb073fd85916a79cc9dd41c4b4af2dfc746bd518b584"
+    }
+  },
+  "independent_review": "validation independently authenticated17 application archive records and source archive digest; decoded both128x96 raw frames equal to source",
+  "new_render_test_builds": 0,
+  "root_review": "Retained actual consumer, source comparisons and remaining limitations inspected; no acceptance criterion changed"
+}
