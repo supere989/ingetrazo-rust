@@ -1,0 +1,9 @@
+{
+  "path": "/tmp/ingetrazo-vector-build-once-proof",
+  "verified_archive_sha256": "b4f2b107ada6b694c5c1708009703b557bc78d5d8cc92571310569070c611d4c",
+  "archived_files": 247,
+  "removed_apparent_bytes": 4477464,
+  "removed_files": 248,
+  "excluded_state": "Only this test-created config/cache; source, target, other workstreams retained.",
+  "removed": true
+}

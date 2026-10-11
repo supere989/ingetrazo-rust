@@ -1,0 +1,84 @@
+{
+  "checked_utc": "2026-10-11T08:57:11.108400+00:00",
+  "runtime_commit": "a158bf61",
+  "evidence_commit": "98d7da9e",
+  "review_scope": "Root reviewed indexed edge reattachment, bounded source flat-heal law and scope; replayed strict retained-output checker. Fresh combined runtime validation waits for complete next batch.",
+  "comparison": {
+    "passed": true,
+    "cases": [
+      {
+        "name": "diagonal-protected",
+        "exact_fields_and_vertex_ownership": true,
+        "faces": 3,
+        "vertices": 4,
+        "edges": 5,
+        "source_raw_incidence_excess": 5,
+        "atomic_invalid_output_refusal": false
+      },
+      {
+        "name": "ring-island-protected",
+        "exact_fields_and_vertex_ownership": true,
+        "faces": 2,
+        "vertices": 8,
+        "edges": 8,
+        "source_raw_incidence_excess": 0,
+        "atomic_invalid_output_refusal": false
+      },
+      {
+        "name": "annular-divisions",
+        "exact_fields_and_vertex_ownership": true,
+        "faces": 3,
+        "vertices": 8,
+        "edges": 10,
+        "source_raw_incidence_excess": 0,
+        "atomic_invalid_output_refusal": false
+      },
+      {
+        "name": "diagonal-wires",
+        "exact_fields_and_vertex_ownership": true,
+        "faces": 3,
+        "vertices": 7,
+        "edges": 7,
+        "source_raw_incidence_excess": 5,
+        "atomic_invalid_output_refusal": false
+      },
+      {
+        "name": "ring-island-empty",
+        "exact_fields_and_vertex_ownership": true,
+        "faces": 2,
+        "vertices": 8,
+        "edges": 8,
+        "source_raw_incidence_excess": 0,
+        "atomic_invalid_output_refusal": false
+      },
+      {
+        "name": "annular-tjunction-invalid",
+        "exact_fields_and_vertex_ownership": false,
+        "faces": 13,
+        "vertices": 20,
+        "edges": 32,
+        "source_raw_incidence_excess": 22,
+        "atomic_invalid_output_refusal": true
+      }
+    ],
+    "negatives": [
+      "lost_partition",
+      "wrong_winner",
+      "lost_empty_fallback",
+      "lost_hole",
+      "lost_wire",
+      "lost_wire_flags",
+      "changed_vertex_owner",
+      "wrong_winding",
+      "accepted_invalid_output"
+    ],
+    "nested": {
+      "depth": 2,
+      "integer_affine": true,
+      "local_history_exact": true,
+      "shared_publication_exact": true,
+      "folded_document_history_exact": true
+    },
+    "scope": "Five exact source planar face/attribute, vertex survivor and edge payload cases; one source-accepted invalid-loop atomic safeguard. Source cached duplicate face references are observed separately; native incidence stays unique. Actual app dispatch/VCB/Undo/Redo/Finish, no OS gesture claim."
+  }
+}
