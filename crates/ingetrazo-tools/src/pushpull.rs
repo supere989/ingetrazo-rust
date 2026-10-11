@@ -56,9 +56,10 @@ impl PushPullTool {
         }));
         if !clean{return None;}
         let origin=mesh.vertices[face.vertices[0]].position;
-        (0..mesh.faces.len()).filter(|&id|id!=face_id&&mesh.face_normal(id).dot(normal).abs()>0.999).filter_map(|id| {
+        let mut supports=Vec::<(f64,Vec<(DVec3,DVec3,DVec3)>)>::new();
+        for id in (0..mesh.faces.len()).filter(|&id|id!=face_id&&mesh.face_normal(id).dot(normal).abs()>0.999) {
             let distance=(origin-mesh.vertices[mesh.faces[id].vertices[0]].position).dot(normal);
-            if distance<=1e-6{return None;}
+            if distance<=1e-6{continue;}
             // Original loop_inside_face excludes a strictly contained
             // through-hole target even if it is an unrelated wider sheet.
             let (u,w)=ingetrazo_core::math::plane_basis(normal);
@@ -74,8 +75,13 @@ impl PushPullTool {
                 }
                 inside
             };
-            if face.vertices.iter().all(|&v|strictly_inside(project(mesh.vertices[v].position-normal*distance))){return None;}
+            if face.vertices.iter().all(|&v|strictly_inside(project(mesh.vertices[v].position-normal*distance))){continue;}
             let triangles=mesh.triangulate_face(id);
+            if let Some((_,existing))=supports.iter_mut().find(|(depth,_)|(*depth-distance).abs()<1e-6){existing.extend(triangles);}else{supports.push((distance,triangles));}
+        }
+        // A subdivided backing plane supports the cap jointly, not one
+        // partition at a time. Keep candidate containment/holes policy above.
+        supports.into_iter().filter_map(|(distance,triangles)| {
             face.vertices.iter().chain(face.holes.iter().flatten()).all(|&v| {
                 let ray=ingetrazo_core::math::Ray::new(mesh.vertices[v].position,-normal);
                 triangles.iter().any(|&(a,b,c)|ingetrazo_core::math::ray_triangle_intersect(&ray,a,b,c).is_some_and(|(t,_)|(t-distance).abs()<1e-6))
@@ -84,6 +90,78 @@ impl PushPullTool {
     }
     fn limited_distance(mesh:&ingetrazo_core::mesh::Mesh,face:usize,d:f64,keep:bool)->f64 {
         if !keep&&d<0. {Self::cap_limit(mesh,face).map_or(d,|limit|d.max(-limit))}else{d}
+    }
+
+    // Source run_stitch/dedupe_faces + flat heal: retain subdivision
+    // cycles, including an emptied mother represented by holes, rather than
+    // replacing the whole surface by a single cap or a Boolean region.
+    fn collapse_surface(translated:&ingetrazo_core::mesh::Mesh,faces:&std::collections::HashSet<usize>)->Result<ingetrazo_core::mesh::Mesh,String> {
+        use ingetrazo_core::{mesh::Mesh,math::{newell_vector,plane_basis}};
+        let mut out=Mesh::new();let mut cycles=std::collections::HashMap::new();
+        for id in (0..translated.faces.len()).filter(|id|faces.contains(id)) {
+            let source=&translated.faces[id];let mut loops=vec![];
+            for ring in std::iter::once(&source.vertices).chain(&source.holes) {
+                let mut ids=ring.iter().map(|&v|out.add_vertex(translated.vertices[v].position)).collect::<Vec<_>>();
+                ids.dedup();if ids.len()>1&&ids.first()==ids.last(){ids.pop();}
+                loops.push(ids);
+            }
+            if loops[0].iter().copied().collect::<std::collections::HashSet<_>>().len()<3 {continue;}
+            if loops.iter().any(|r|r.len()<3||r.iter().copied().collect::<std::collections::HashSet<_>>().len()!=r.len()) {return Err("Collapse would leave an invalid repeated-vertex surface; document unchanged".into());}
+            if newell_vector(&loops[0].iter().map(|&v|out.vertices[v].position).collect::<Vec<_>>()).length()<1e-9 {return Err("Collapse would leave a degenerate supporting face; document unchanged".into());}
+            let mut key=(0..loops[0].len()).map(|i|{let a=loops[0][i];let b=loops[0][(i+1)%loops[0].len()];(a.min(b),a.max(b))}).collect::<Vec<_>>();key.sort_unstable();key.dedup();
+            let mut face=source.clone();face.vertices=loops.remove(0);face.holes=loops;face.interior=false;
+            if let Some(&old)=cycles.get(&key) {
+                let previous:&mut ingetrazo_core::mesh::MeshFace=&mut out.faces[old];
+                if face.holes.len()>previous.holes.len(){if face.attrs.is_empty(){face.attrs=previous.attrs.clone();face.layer=previous.layer.clone();}*previous=face;}
+                else if previous.attrs.is_empty(){previous.attrs=face.attrs;previous.layer=face.layer;}
+            }else{let id=out.faces.len();out.faces.push(face);cycles.insert(key,id);}
+        }
+        if out.faces.is_empty(){return Err("Collapse has no surface boundary".into());}
+        // Source uses outer Newell area (holes are not subtracted) and
+        // float32 weighted-normal accumulation for flat winding consensus.
+        let areas=out.faces.iter().map(|f|newell_vector(&f.vertices.iter().map(|&v|out.vertices[v].position).collect::<Vec<_>>()).as_vec3().length()as f64*0.5).collect::<Vec<_>>();
+        let normals=(0..out.faces.len()).map(|id|out.face_normal(id)).collect::<Vec<_>>();
+        let dominant=normals.iter().zip(&areas).fold(glam::Vec3::ZERO,|sum,(n,a)|sum+n.as_vec3()*(*a as f32));
+        for (id,face) in out.faces.iter_mut().enumerate(){if normals[id].as_vec3().dot(dominant)<0.{face.vertices.reverse();}}
+        if out.faces.len()>3000 {return Self::relink_surface(&out);}
+        let n=normals.iter().copied().find(|n|n.length_squared()>0.5).ok_or("Collapse has no nondegenerate supporting plane")?;
+        let (u,w)=plane_basis(n);let project=|p:DVec3|glam::DVec2::new(p.dot(u),p.dot(w));
+        let rings=out.faces.iter().map(|f|std::iter::once(&f.vertices).chain(&f.holes).map(|r|r.iter().map(|&v|project(out.vertices[v].position)).collect::<Vec<_>>()).collect::<Vec<_>>()).collect::<Vec<_>>();
+        let inside=|p:glam::DVec2,r:&[glam::DVec2],strict:bool| {
+            let mut inside=false;for i in 0..r.len(){let a=r[i];let b=r[(i+1)%r.len()];let d=b-a;let rel=p-a;let dot=rel.dot(d);if strict&&(d.x*rel.y-d.y*rel.x).abs()<=1e-7&&dot>=-1e-7&&dot<=d.length_squared()+1e-7{return false;}
+                if (a.y>p.y)!=(b.y>p.y)&&p.x<a.x+(b.x-a.x)*(p.y-a.y)/(b.y-a.y){inside=!inside;}}
+            inside
+        };
+        let hole_probes=out.faces.iter().map(|face| {
+            let points=face.vertices.iter().map(|&v|out.vertices[v].position).collect::<Vec<_>>();
+            let mean=project((points.iter().copied().sum::<DVec3>()/points.len()as f64).as_vec3().as_dvec3());
+            let mut best=None;let mut area=0.;
+            for (a,b,c) in ingetrazo_core::triangulate::triangulate(&points,&[],Some(n)) {
+                let next=(b-a).as_vec3().cross((c-a).as_vec3()).length_squared();
+                if next>area {area=next;best=Some(project(((a.as_vec3()+b.as_vec3()+c.as_vec3())/3.).as_dvec3()));}
+            }
+            (mean,best)
+        }).collect::<Vec<_>>();
+        // _loop_inside_loop retries the largest outer triangle when a
+        // concave loop's vertex mean lies outside the prospective hole.
+        let in_hole=|i:usize,j:usize|rings[j][1..].iter().any(|hole|inside(hole_probes[i].0,hole,false)||hole_probes[i].1.is_some_and(|p|inside(p,hole,false)));
+        let mut removed=vec![false;out.faces.len()];
+        for i in 0..out.faces.len(){if areas[i]<1e-8{continue;}let covered=(0..out.faces.len()).filter(|&j|i!=j&&!removed[j]&&areas[j]<areas[i]&&rings[j][0].iter().all(|&p|inside(p,&rings[i][0],true))&&!in_hole(j,i)).map(|j|areas[j]).sum::<f64>();if covered>0.5*areas[i]{removed[i]=true;}}
+        let mut punch=vec![Vec::new();out.faces.len()];
+        for i in 0..out.faces.len(){if removed[i]{continue;}let tris=out.triangulate_face(i);if tris.is_empty(){continue;}
+            for j in 0..out.faces.len(){if i==j||removed[j]||areas[j]<=areas[i]||in_hole(i,j){continue;}
+                let count=tris.iter().filter(|&&(a,b,c)|{let p=project((a+b+c)/3.);inside(p,&rings[j][0],false)&&!rings[j][1..].iter().any(|hole|inside(p,hole,false))}).count();
+                if count*2>tris.len(){punch[j].push(i);break;}}
+        }
+        let snapshot=out.faces.clone();out.faces.clear();
+        for (id,face) in snapshot.iter().enumerate(){if !removed[id]&&punch[id].is_empty(){out.faces.push(face.clone());}}
+        for (id,face) in snapshot.iter().enumerate(){if !removed[id]&&!punch[id].is_empty(){let mut face=face.clone();for &small in &punch[id]{face.holes.push(snapshot[small].vertices.clone());}out.faces.push(face);}}
+        Self::relink_surface(&out)
+    }
+    fn relink_surface(source:&ingetrazo_core::mesh::Mesh)->Result<ingetrazo_core::mesh::Mesh,String> {
+        let mut out=ingetrazo_core::mesh::Mesh::new();for vertex in &source.vertices{out.add_vertex(vertex.position);}
+        for face in &source.faces{let id=out.add_face(face.vertices.clone(),face.holes.clone()).ok_or("Invalid collapsed surface")?;out.faces[id]=face.clone();}
+        Ok(out)
     }
 
     pub fn reset(&mut self) {
@@ -324,6 +402,7 @@ impl PushPullTool {
                 })
             })
         });
+        let mut collapsed_positions=None;
         let mut candidate = if prism_cap && was_solid && !keep_base {
             let mut result=mesh.clone();
             let moving=face.vertices.iter().chain(face.holes.iter().flatten()).copied().collect::<std::collections::HashSet<_>>();
@@ -331,15 +410,8 @@ impl PushPullTool {
             let end=origin+translation;
             let flat=component_faces.iter().all(|&id|result.faces[id].vertices.iter().chain(result.faces[id].holes.iter().flatten()).all(|&v|(result.vertices[v].position-end).dot(normal).abs()<1e-6));
             if flat {
-                // Full collapse is a valid surface endpoint, not an empty
-                // Boolean result. Preserve the authored cap and its holes/paint.
-                let mut collapsed=Mesh::new();
-                let mut flat_rings=shifted.clone();
-                let stationary_faces=component_faces.iter().copied().filter(|&id|!mesh.faces[id].vertices.iter().any(|v|moving.contains(v))&&mesh.face_normal(id).dot(normal).abs()>0.999).collect::<Vec<_>>();
-                if stationary_faces.len()!=1 {return Err("Full collapse with subdivided opposing faces is not yet supported; geometry and metadata left unchanged".into());}
-                let stationary=stationary_faces.first().copied();
-                if stationary.is_some_and(|id|mesh.face_normal(id).dot(normal)<0.) {for ring in &mut flat_rings {ring.reverse();}}
-                add_polygon(&mut collapsed,&flat_rings[0],&flat_rings[1..],face)?;
+                let mut collapsed=Self::collapse_surface(&result,&component_faces)?;
+                collapsed_positions=Some(moving.iter().map(|&v|(v,result.vertices[v].position)).collect::<std::collections::HashMap<_,_>>());
                 for (id,other) in mesh.faces.iter().enumerate() {
                     if component_faces.contains(&id){continue;}
                     let points=other.vertices.iter().map(|&v|mesh.vertices[v].position).collect::<Vec<_>>();
@@ -530,33 +602,54 @@ impl PushPullTool {
         }
         // Reattach original wire edges and preserve metadata wherever an original
         // edge survives. This also covers the kernel-generated solid branch.
-        for edge in &mesh.edges {
-            if !edge.faces.is_empty()
+        let collapsed_vertex_survivors=collapsed_positions.as_ref().map(|positions|{
+            let mut survivors=std::collections::HashMap::new();
+            for (id,v) in mesh.vertices.iter().enumerate(){let p=positions.get(&id).copied().unwrap_or(v.position);survivors.entry(ingetrazo_core::math::PointKey::from_vec3(p)).or_insert(id);}
+            survivors
+        });
+        let position=|id:usize|collapsed_positions.as_ref().and_then(|p|p.get(&id)).copied().unwrap_or(mesh.vertices[id].position);
+        let untouched=|edge:&ingetrazo_core::mesh::MeshEdge|collapsed_vertex_survivors.as_ref().is_none_or(|survivors|survivors.get(&ingetrazo_core::math::PointKey::from_vec3(position(edge.v0)))==Some(&edge.v0)&&survivors.get(&ingetrazo_core::math::PointKey::from_vec3(position(edge.v1)))==Some(&edge.v1));
+        // _weld_into reuses an edge between surviving vertices; recreated
+        // edges default their flags. Surviving edges take precedence even
+        // when face reconstruction changed the edge-vector order.
+        let mut collapsed_edge_survivors=std::collections::HashSet::new();
+        let ordered_edges = if collapsed_positions.is_some() {
+            let mut surviving = Vec::with_capacity(mesh.edges.len());
+            let mut recreated = Vec::new();
+            for edge in &mesh.edges { let keep = untouched(edge); if keep { surviving.push((edge, keep)); } else { recreated.push((edge, keep)); } }
+            surviving.extend(recreated); surviving
+        } else { mesh.edges.iter().map(|edge| (edge, true)).collect() };
+        let exact_position = |p:DVec3| [if p.x==0.0 {0} else {p.x.to_bits()},if p.y==0.0 {0} else {p.y.to_bits()},if p.z==0.0 {0} else {p.z.to_bits()}];
+        let mut vertex_indices=std::collections::HashMap::new();
+        for (id,v) in candidate.vertices.iter().enumerate(){vertex_indices.entry(exact_position(v.position)).or_insert(id);}
+        for (edge, untouched) in ordered_edges {
+            if collapsed_positions.is_none() && !edge.faces.is_empty()
                 && edge.attrs.is_empty()
                 && !edge.soft
                 && edge.curve_id.is_none()
                 && edge.layer.is_none()
                 && !edge.hidden
-            {
-                continue;
-            }
-            let a = mesh.vertices[edge.v0].position;
-            let b = mesh.vertices[edge.v1].position;
-            let va = candidate.vertices.iter().position(|v| v.position == a);
-            let vb = candidate.vertices.iter().position(|v| v.position == b);
+            {continue;}
+            let a=position(edge.v0);let b=position(edge.v1);
+            if a==b {continue;}
+            if collapsed_positions.is_some(){let mut ends=[ingetrazo_core::math::PointKey::from_vec3(a),ingetrazo_core::math::PointKey::from_vec3(b)];ends.sort_unstable();if !collapsed_edge_survivors.insert(ends){continue;}}
+            let va = vertex_indices.get(&exact_position(a)).copied();
+            let vb = vertex_indices.get(&exact_position(b)).copied();
             let id = if edge.faces.is_empty() {
                 let va = candidate.add_vertex(a);
                 let vb = candidate.add_vertex(b);
+                vertex_indices.entry(exact_position(a)).or_insert(va);
+                vertex_indices.entry(exact_position(b)).or_insert(vb);
                 candidate.add_edge(va, vb)
             } else {
                 va.zip(vb).and_then(|(a, b)| candidate.find_edge(a, b))
             };
             if let Some(id) = id {
                 candidate.edges[id].attrs = edge.attrs.clone();
-                candidate.edges[id].soft = edge.soft;
-                candidate.edges[id].curve_id = edge.curve_id;
-                candidate.edges[id].layer = edge.layer.clone();
-                candidate.edges[id].hidden = edge.hidden;
+                candidate.edges[id].soft = untouched&&edge.soft;
+                candidate.edges[id].curve_id = untouched.then_some(edge.curve_id).flatten();
+                candidate.edges[id].layer = untouched.then(||edge.layer.clone()).flatten();
+                candidate.edges[id].hidden = untouched&&edge.hidden;
             }
         }
         for vertex in &mesh.vertices {
@@ -565,6 +658,7 @@ impl PushPullTool {
             }
         }
         candidate.preserve_vertex_uids_from(mesh);
+        if let Some(survivors)=&collapsed_vertex_survivors {for vertex in &mut candidate.vertices {if let Some(&id)=survivors.get(&ingetrazo_core::math::PointKey::from_vec3(vertex.position)){vertex.uid=mesh.vertices[id].uid;}}}
         // Unchanged authored hole loops retain their source winding. The
         // kernel's canonical hole winding is only for newly cut contours.
         if mesh.faces.iter().any(|f|!f.holes.is_empty()) && candidate.faces.iter().any(|f|!f.holes.is_empty()) {
@@ -598,7 +692,7 @@ impl PushPullTool {
             }
         }
         // No partial mutation or version bump escapes a failed preparation.
-        ingetrazo_core::heal::refresh_interior(&mut candidate)?;
+        if collapsed_positions.is_none(){ingetrazo_core::heal::refresh_interior(&mut candidate)?;}
         if keep_base && was_solid {
             let seed = candidate
                 .faces
@@ -932,7 +1026,7 @@ mod tests {
     }
 
     #[test]
-    fn collapse_with_protected_base_subdivision_is_atomic() {
+    fn collapse_preserves_protected_base_subdivision() {
         let mut scene=make_test_square_scene();
         PushPullTool::extrude_face(&mut scene,0,1.).unwrap();
         let base=scene.mesh.faces.iter().position(|f|f.vertices.iter().all(|&v|scene.mesh.vertices[v].position.z==0.)).unwrap();
@@ -944,9 +1038,11 @@ mod tests {
             let id=scene.mesh.add_face(ring,vec![]).unwrap();scene.mesh.faces[id].attrs.insert("vendor".into(),serde_json::json!(71));
         }
         let cap=scene.mesh.faces.iter().position(|f|f.vertices.iter().all(|&v|scene.mesh.vertices[v].position.z==1.)).unwrap();
-        let before=scene.clone();
-        let error=PushPullTool::extrude_face(&mut scene,cap,-1.).unwrap_err();
-        assert!(error.contains("subdivided opposing"));assert_eq!(scene,before);
+        PushPullTool::extrude_face(&mut scene,cap,-1.).unwrap();
+        assert_eq!(scene.mesh.faces.len(),3);assert_eq!(scene.mesh.vertices.len(),4);assert_eq!(scene.mesh.edges.len(),5);
+        assert_eq!(scene.mesh.faces.iter().filter(|f|f.attrs.get("vendor")==Some(&serde_json::json!(71))).count(),2);
+        assert_eq!(scene.mesh.faces.iter().filter(|f|f.holes.len()==2).count(),1);
+        assert!(scene.mesh.faces.iter().all(|f|!f.interior));
     }
 
     #[test]
