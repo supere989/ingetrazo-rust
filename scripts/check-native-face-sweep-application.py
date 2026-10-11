@@ -102,14 +102,16 @@ try:
    nonce=3;previous,accepted=target_snapshot(nonce)
    for mode,extent in [("refuse-font",(900,650)),("refuse-cad",(950,675)),("refuse",(1000,700))]:
     nonce+=1
-    extra={"distance":1.2}if mode=="refuse"else{"text":"123456789mm"}
+    extra={"distance":1.2}if mode=="refuse"else{"text":"123456789mm"if mode=="refuse-font"else"987654321mm"}
     resize_action(nonce,mode,True,**extra)
     old=state();lib.XResizeWindow(d,window,*extent);lib.XFlush(d)
     wait(lambda:state()["screen_size"]==list(map(float,extent))and state()["prepare_error"])
+    resized_before=state()
     nonce+=1;retained,failed=target_snapshot(nonce,True)
     assert retained==previous,"Resize refusal changed retained complete World RGBA"
     assert failed["world"]["extent"]==accepted["world"]["extent"],"Refused resize replaced accepted target"
-    assert failed["committed_bytes"]==old["committed_bytes"],"Refused target left allocation charges"
+    assert failed["committed_bytes"]==resized_before["committed_bytes"],"Repeated refused target left allocation charges"
+    assert failed["world"]==old["world"],"Resize refusal mutated accepted World inventory"
     assert failed["submitted_serial"]==old["submitted_serial"],"Refused resize submitted candidate"
     if mode!="refuse":assert failed["old_label_owner_alive"],"Refused resize released accepted label owner"
     nonce+=1;retry=resize_action(nonce,"retry")

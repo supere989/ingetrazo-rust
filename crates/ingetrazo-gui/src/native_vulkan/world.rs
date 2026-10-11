@@ -166,7 +166,7 @@ impl World {
   self.target=Some(target);Ok(texture)
  }
  pub(crate) fn stage_resize(&mut self,context:&VulkanContext,renderer:&mut egui_ash_renderer::Renderer,extent:vk::Extent2D)->Result<Option<ResizeTransaction>,String>{
-  if self.target.as_ref().is_some_and(|t|t.extent==extent){return Ok(None);}
+  if self.target.as_ref().is_some_and(|t|t.extent==extent){return Ok(Some(ResizeTransaction{previous:None,display_scale:self.display_scale}));}
   let mut candidate=self.create_target(context,extent)?;
   let id=self.target.as_ref().and_then(|t|t.texture).ok_or("Transactional resize requires accepted UI target")?;
   renderer.update_user_texture(id,candidate.set).map_err(|e|e.to_string())?;candidate.texture=Some(id);
@@ -175,9 +175,10 @@ impl World {
  pub(crate) fn finish_resize(&mut self,renderer:&mut egui_ash_renderer::Renderer,transaction:Option<ResizeTransaction>,accepted:bool)->Result<(),String>{
   let Some(mut transaction)=transaction else{return Ok(());};
   if accepted{return Ok(());}
-  let previous=transaction.previous.take().expect("retained accepted resize target");
-  renderer.update_user_texture(previous.texture.expect("accepted UI texture"),previous.set).map_err(|e|e.to_string())?;
-  self.target=Some(previous);self.display_scale=transaction.display_scale;Ok(())
+  if let Some(previous)=transaction.previous.take(){
+   renderer.update_user_texture(previous.texture.expect("accepted UI texture"),previous.set).map_err(|e|e.to_string())?;self.target=Some(previous);
+  }
+  self.display_scale=transaction.display_scale;Ok(())
  }
  /// Headless target uses the identical image/render pass/pipeline owner without egui registration.
  /// Caller must complete the previous draw fence before replacing this target.
