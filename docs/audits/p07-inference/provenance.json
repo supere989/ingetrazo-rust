@@ -1,0 +1,49 @@
+{
+  "base": "a1ebd3b239cd2ad6d4784e3d1a942319532765f9",
+  "runtime": "11c8f85a",
+  "consumer": "37b11a4b",
+  "test_only_qualification": "c81d14bd",
+  "production_binary_build": "37b11a4b (c81 changes only cfg(test) qualification; no production binary rebuild needed)",
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "source_files_sha256": {
+    "crates/ingetrazo-core/src/drafting.rs": "268158005ae75e9f6b355d445c3bd8fa974493df2621012c1ed49554c6b7889c",
+    "crates/ingetrazo-core/src/snap_screen.rs": "c86687a2a53f61c72436792ba439c990e4fcea3a20a016adc2d7a44e3e16d893",
+    "crates/ingetrazo-core/src/units/vcb.rs": "ca4c74ed6ac328adf540be71eb623e3379a505ff7c5300615a4a57c9c198bac4",
+    "crates/ingetrazo-gui/src/tool_history.rs": "0995b855e0bbbb58f7502b2fc8cf460144f915564ee1340f252f45d0cb92f086",
+    "crates/ingetrazo-gui/src/viewport.rs": "d0c118f2e98d909546bd206f97d3d41a0677dfb4d12a740f6ece319f7fe64682",
+    "crates/ingetrazo-gui/examples/p07_inference_workflows.rs": "17a95cc868c1f3562defc5171322f146d9a9c2ff4f30eacffbdcfebab26dae4a",
+    "scripts/reference-p07-inference.py": "4c26abb92ce0c9acfe967808df5294ade2483891d6dab9bd6d92f59be8e1eda3",
+    "scripts/reference-p07-app.py": "4714ed8c87b7629388759e203757f1bd94c758fb107e03e7f8a5da43e738c7b3",
+    "scripts/check-p07-inference.py": "bcffb13451fa5b25030475b2b8323a1c638ef0397f42b110fc987cbe711f60bc",
+    "scripts/replay-p07-retained.py": "a5d207183ea5c4e7bb299f3f9a408983161cc4abfb88ff340738dde9ab720ff7"
+  },
+  "binary_sha256": {
+    "p07_inference_workflows": "94d47b432b2af914072647a7aeb6b49a704f396862d7f1cd58d2ea55865e913f",
+    "screen_snap_fixture": "8c87f6c6ffad89a6decc94f220efaf0aeff5ff2b882d9eff48999fc2bd208978",
+    "perspective_screen_fixture": "3e69aa29f023a162327ea94cc3b2b3f4e2be4c5815e4958b84fd65c58a95fc7f",
+    "line_command_history_fixture": "63bf93bc80d5c781a20cd2151a2e1e248cdff4935d5d84131fd771233d45ebf9"
+  },
+  "results": {
+    "guide_cases": 48,
+    "guide_endpoint_f32_bits_exact": true,
+    "unicode_rows": 286,
+    "unicode_decimal_blocks": 68,
+    "original_app_cases": 8,
+    "original_app_states": 56,
+    "actual_egui_control": 1,
+    "negative_controls": 8,
+    "retained_snap_cases": 29,
+    "retained_numeric_rows": 1168,
+    "retained_unit_app_cases": 15,
+    "native_double_projection_guard": 1
+  },
+  "retained_failures": [
+    "Source App observer first iterated Vertex as QVector3D; fixed observer only.",
+    "First new consumer used absent ToolContext.snap field; fixed consumer only.",
+    "First guide report7 real pixel/tie mismatches; source logical-pixel projection correction closes them.",
+    "First retained29 replay exposed generic linear-projection skew tie; source/native-double routing correction closes it.",
+    "First egui observer sampled Line anchor before release; fixed observer only.",
+    "First targeted unit compile missed DMat4 qualification; test-only correction passes."
+  ],
+  "scope": "New actual source records are fixed logical view matrices/handlers and Unicode grammar; native actual App and egui input included. All previous valid sources reused without recapture. Whole-frame glyph/render/OS pointer parity not claimed. Source-specific arithmetic is optional, exact-f32-domain-only; generic native-double camera/payload projection remains separate and guarded."
+}

@@ -1,0 +1,170 @@
+{
+  "attempts/ingetrazo-p07-app-source-corrected.log": {
+    "bytes": 76,
+    "sha256": "c36bfb40665fd1cd79bb4a14ae31cd23b5bed3efc8aaa3dd2d2321ae3ba9cbf8"
+  },
+  "attempts/ingetrazo-p07-app-source.log": {
+    "bytes": 1764,
+    "sha256": "59f67177da9950a649921dfa95071459236099dc9a5ac4553a90db38ec56e9d2"
+  },
+  "attempts/ingetrazo-p07-build-corrected.log": {
+    "bytes": 20698,
+    "sha256": "cf89e2aa595d916e41854a536d56a62c4b56870e26863bef3413e7ed6d832b8a"
+  },
+  "attempts/ingetrazo-p07-build-dual-projection.log": {
+    "bytes": 20978,
+    "sha256": "b33a543d0590905ebec4677a3f2bd345e3aa363d480f9937b1bde1943461af44"
+  },
+  "attempts/ingetrazo-p07-build-final.log": {
+    "bytes": 20978,
+    "sha256": "9f1daaf060cfd5c3ec200d70e9287fc7028cc556d8e677616f88f1a5ba4a0408"
+  },
+  "attempts/ingetrazo-p07-build-observer.log": {
+    "bytes": 20609,
+    "sha256": "20bdf73b8f8451176a73a4a5f71d2600c3ca06907bd5bff45219798fd3554d9e"
+  },
+  "attempts/ingetrazo-p07-build-source-pixels.log": {
+    "bytes": 20978,
+    "sha256": "9a809e24bf884549931d740220eed784657d953da4a10cf8a1604f24cff098d3"
+  },
+  "attempts/ingetrazo-p07-build.log": {
+    "bytes": 22207,
+    "sha256": "69ea9fea91c58fe734cad417aabd9bfb0455fa6048baa67ae020d09e3161e39c"
+  },
+  "attempts/ingetrazo-p07-check-accepted.json": {
+    "bytes": 541,
+    "sha256": "6b1a30f3e0a7ce5970c217221b6d897163dc49cfec21613a55ef887a6fa73f13"
+  },
+  "attempts/ingetrazo-p07-check-before-observer-fix.json": {
+    "bytes": 2175,
+    "sha256": "60c1b989100882c275d519da8e44d279c25bb35271bf5392e10b31d836cac378"
+  },
+  "attempts/ingetrazo-p07-check-before-observer-fix.log": {
+    "bytes": 676,
+    "sha256": "a9c22408cfd0b9ddcb11309116569716893b2db06ca04a5ed2fe03f6ac17393b"
+  },
+  "attempts/ingetrazo-p07-check-dual.json": {
+    "bytes": 541,
+    "sha256": "6b1a30f3e0a7ce5970c217221b6d897163dc49cfec21613a55ef887a6fa73f13"
+  },
+  "attempts/ingetrazo-p07-check-first.json": {
+    "bytes": 5236,
+    "sha256": "6078a2004a7a842c2010f1fae7e14ddae02753ea0879244fbb4d09d0c080c6e9"
+  },
+  "attempts/ingetrazo-p07-check-source-pixels.json": {
+    "bytes": 497,
+    "sha256": "ca43fdd353af1613b5219c9c2ff9bef77f7a4a9aea112ecba840a8f837e07d99"
+  },
+  "attempts/ingetrazo-p07-double-test-corrected.log": {
+    "bytes": 1345,
+    "sha256": "09f2458b0b7b85373306e1c529db0966364feb9a5e8a3fff3f5a1a6151bce866"
+  },
+  "attempts/ingetrazo-p07-double-test.log": {
+    "bytes": 1056,
+    "sha256": "a26f625fe178b3893a49059e4cfd2f5c32016abf251b2d97029c9a36a96b7f41"
+  },
+  "attempts/ingetrazo-p07-handoff.log": {
+    "bytes": 40,
+    "sha256": "ccdac12581d16a10d918c104e03a3cc871931b900054de573f0506da52d2b2ee"
+  },
+  "attempts/ingetrazo-p07-native-accepted.json": {
+    "bytes": 116481,
+    "sha256": "2cdca1838531e43b79e9eca720a3957e85c6375de4b075b1c8d22a63d2500a52"
+  },
+  "attempts/ingetrazo-p07-native-dual.json": {
+    "bytes": 116481,
+    "sha256": "2cdca1838531e43b79e9eca720a3957e85c6375de4b075b1c8d22a63d2500a52"
+  },
+  "attempts/ingetrazo-p07-native-final.json": {
+    "bytes": 116446,
+    "sha256": "f34b7e4654bc980928758544971d89bf58d6c6044ea59cce1b5760cd576c5221"
+  },
+  "attempts/ingetrazo-p07-native-first.json": {
+    "bytes": 115155,
+    "sha256": "3114c7d88f0bd9e4300800459bff909e851dcb752f388630c6cb493ebf2b8e32"
+  },
+  "attempts/ingetrazo-p07-native-source-pixels.json": {
+    "bytes": 115110,
+    "sha256": "ccccc480e594e6733efc55670931c010bf8b983632a16e4d46c3089ebee87b4b"
+  },
+  "attempts/ingetrazo-p07-replay-accepted.log": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "attempts/ingetrazo-p07-replay-dual.log": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "attempts/ingetrazo-p07-replay-final.log": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "attempts/ingetrazo-p07-replay-first.log": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "attempts/ingetrazo-p07-replay-source-pixels.log": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "attempts/ingetrazo-p07-retained-final.log": {
+    "bytes": 1152,
+    "sha256": "7da518041ff403141e13a4176d6e3e8914d1da792a54e3700f50c17b0c36ac74"
+  },
+  "attempts/ingetrazo-p07-source.log": {
+    "bytes": 79,
+    "sha256": "0d3b3c3117c1522c28855a3d4e7e697852577b33523104fdec52d0e2ee4b5cff"
+  },
+  "ingetrazo-p07-retained-final/app-measurement-workflows.json": {
+    "bytes": 87696,
+    "sha256": "2a4f7bcc8531a6dee83e832fd703c5369f6ea2dbd848835a1eb3161319cd7aa5"
+  },
+  "ingetrazo-p07-retained-final/measurements-check.log": {
+    "bytes": 513,
+    "sha256": "41280980ff1d7411ad60ba93bd66dc2ea82bb6c28ca2b624a8b7c1c65a375703"
+  },
+  "ingetrazo-p07-retained-final/native-measurements.json": {
+    "bytes": 201665,
+    "sha256": "783607eefa48bed7f89e25dbd5e8d3d238480b918f5ca8e9a00cd5abfe08cdb0"
+  },
+  "ingetrazo-p07-retained-final/original-measurements.json": {
+    "bytes": 201996,
+    "sha256": "2e6ccbfae20d0f9e67771d450023d871a10f40eae87079b0e98f20521a842d2b"
+  },
+  "ingetrazo-p07-retained-final/report.json": {
+    "bytes": 1212,
+    "sha256": "c6b05f330df6d9b3bc2206afa1d6c6440b535d50d3a9120cfa67a1ffc6249909"
+  },
+  "ingetrazo-p07-retained-final/snap29.json": {
+    "bytes": 16237,
+    "sha256": "2939cf2222fdc87b4997299e57f1da4dc2ea9d6d70a415223264ccf793ecb3ad"
+  },
+  "ingetrazo-p07-retained/app-measurement-workflows.json": {
+    "bytes": 87696,
+    "sha256": "2a4f7bcc8531a6dee83e832fd703c5369f6ea2dbd848835a1eb3161319cd7aa5"
+  },
+  "ingetrazo-p07-retained/measurements-check.log": {
+    "bytes": 513,
+    "sha256": "41280980ff1d7411ad60ba93bd66dc2ea82bb6c28ca2b624a8b7c1c65a375703"
+  },
+  "ingetrazo-p07-retained/measurements-replay.log": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "ingetrazo-p07-retained/native-measurements.json": {
+    "bytes": 201665,
+    "sha256": "783607eefa48bed7f89e25dbd5e8d3d238480b918f5ca8e9a00cd5abfe08cdb0"
+  },
+  "ingetrazo-p07-retained/original-measurements.json": {
+    "bytes": 201996,
+    "sha256": "2e6ccbfae20d0f9e67771d450023d871a10f40eae87079b0e98f20521a842d2b"
+  },
+  "ingetrazo-p07-retained/snap29.json": {
+    "bytes": 15603,
+    "sha256": "6409f4916aab2823b192e43328d779a0e91d9ecbd27d56f6c503c6667d0ef3d9"
+  },
+  "provenance.json": {
+    "bytes": 3322,
+    "sha256": "7ec466ce40eda451087eca0e4c57e788ae43750ac5d4b0a58c4147cdd254d068"
+  }
+}

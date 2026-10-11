@@ -1,0 +1,14 @@
+{
+  "production-callback.json": {
+    "bytes": 1240,
+    "sha256": "f7b6a6b876e0ac561100243fb6866f5347c5d9dc1cc47aaf86691f562dee5c23"
+  },
+  "source-app.json": {
+    "bytes": 55406,
+    "sha256": "15e48ea088b1eaafe67c4ae6f4eba7d8b3a5e734ec5a156c8f94a327b734d663"
+  },
+  "source.json": {
+    "bytes": 120965,
+    "sha256": "3fd0bd65ad1fc63e7bec1c497d8559781619510137b677f2ba64647530eee1f0"
+  }
+}

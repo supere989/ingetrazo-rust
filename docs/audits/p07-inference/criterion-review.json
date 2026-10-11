@@ -1,0 +1,60 @@
+{
+  "criterion": "Verify full 3D drawing planes, guide intersections, pixel tolerances and locale-specific input against baseline.",
+  "verdict": "Bounded guide/Unicode gaps closed; P07 remains incomplete pending concrete producer/caller and keyboard-buffer controls. No row promotion.",
+  "clauses": [
+    {
+      "clause": "Full 3D drawing planes",
+      "evidence": [
+        "docs/audits/shape-drafting/records.zip (66recipes/488states; all4Arc variants and oblique/vertical/reference/context planes)",
+        "docs/audits/component-rectangle-axes-source.json",
+        "docs/audits/component-snap-axes-source.json",
+        "docs/audits/component-snap-root-review/README.md"
+      ],
+      "assessment": "Existing actual drafting/axes/locks evidence remains accepted; do not carry generic broader-planes prose as a new requirement."
+    },
+    {
+      "clause": "Guide intersections",
+      "evidence": [
+        "docs/audits/p07-inference/source-records.zip:source.json",
+        "docs/audits/p07-inference/records.zip:attempts/ingetrazo-p07-native-dual.json",
+        "crates/ingetrazo-core/src/snap_screen.rs:guide_snap_segment,crossing"
+      ],
+      "assessment": "48fixed-matrixXY/XZ/YZ/oblique cases compare actual original clipped guide spans (endpoint float32bits), crossing/parallel/skew/occlusion/guide-model/guide-point decisions. All matrices in this new corpus have constant homogeneous w. Imported/source-exact rows are covered; freshly authored native diagonal guide producer normalization is not proved."
+    },
+    {
+      "clause": "Pixel tolerances",
+      "evidence": [
+        "docs/audits/p07-inference/source-records.zip:source.json",
+        "docs/audits/p07-inference/records.zip:ingetrazo-p07-retained-final/snap29.json"
+      ],
+      "assessment": "Exact9/14logical-pixel boundary decisions plus retained29orthographic/perspective/eye controls pass unchanged bounds. Actual egui guide acquisition proves the new caller route in Top view. The newly supplied source-camera matrix path is not yet paired with actual original perspective guide/variable-w sessions at the boundary."
+    },
+    {
+      "clause": "Locale-specific input",
+      "evidence": [
+        "docs/audits/p07-inference/source-records.zip:source.json,source-app.json",
+        "docs/audits/p07-inference/records.zip:attempts/ingetrazo-p07-native-dual.json",
+        "docs/audits/vcb-measurements/records.zip",
+        "docs/audits/preferences-units-integration/README.md"
+      ],
+      "assessment": "All68UCD15.1decimalblocks and source rejected numeric/punctuation forms compare;286newnumericrows and56source/nativeAppstates pass. Actual egui Arabic decimal Text/Enter/Undo/Redo passes. Existing1168typed measurements/eightdocument-unitmodes/15Appphysicalunit routes remain accepted. Original global key-buffer filtering/chords and native focusedTextEdit are distinct, not complete keyboard-sequence equivalence."
+    }
+  ],
+  "required_missing": [
+    {
+      "contract": "Actual original/native perspective guide producer-to-consumer session, including a freshly authored diagonal guide, a line crossing the eye (variable homogeneous w), and9/14px source-camera boundary acquisition.",
+      "why": "Current48guide records have constantw and source-f32 directions; legacy29perspective records cover model edges/centers, not the new source-matrix guide route. Native Guide::infinite_line normalizes f64 and Tape/Protractor can produce non-source-exact directions, which intentionally take the generic path.",
+      "next_action": "Capture only missing source guide creation/camera sessions, compare actual native producer\u2192snap\u2192Line/history and preserve f64 extension; do not repeat the accepted48/286."
+    },
+    {
+      "contract": "Original keyboard-buffer behavior for duplicate/unsupported decimal punctuation and chord keys, compared with native VCB ingress.",
+      "why": "Pinned Viewport._handle_value_key ignores repeated separators/unsupported characters and filters chord keys, whereas native statusbar TextEdit retains text for submission. Current numeric comparison proves complete-buffer parser law, and valid individual source keystrokes; it does not prove these distinct editing transitions.",
+      "next_action": "Bounded source/native actual input sequences such as repeated comma and Arabic decimal glyph, invalid input/Cancel/repeat, and Ctrl/Alt chord exclusion; port only demonstrated differences. Source parser refusal must remain distinct from keyboard character filtering."
+    }
+  ],
+  "separate_scope": [
+    "No whole-frame snap glyph or backend rendering acceptance inferred.",
+    "Native-double extension deliberately preserves authored coordinates and generic camera projection; it is not a source normalization requirement.",
+    "No arbitrary scene-size/inference corpus added beyond the unchanged finite criterion."
+  ]
+}
