@@ -1,0 +1,25 @@
+   Compiling ingetrazo-core v0.3.15 (/tmp/ingetrazo-pushpull-partition-collapse/crates/ingetrazo-core)
+warning: function `visit_meshes` is never used
+   --> crates/ingetrazo-core/src/screen_pick.rs:120:15
+    |
+120 | pub(crate) fn visit_meshes(scene: &Scene, mut visit: impl FnMut(&Mesh, DMat4, bool)) {
+    |               ^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+   Compiling ingetrazo-tools v0.3.15 (/tmp/ingetrazo-pushpull-partition-collapse/crates/ingetrazo-tools)
+warning: `ingetrazo-core` (lib) generated 1 warning
+    Finished `test` profile [unoptimized] target(s) in 4.00s
+     Running unittests src/lib.rs (/tmp/ingetrazo-metal-world-target/debug/deps/ingetrazo_tools-044bccb13005eaf0)
+
+running 1 test
+test pushpull::open_rebuild::tests::python_seed_54321_stream ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 90 filtered out; finished in 0.00s
+
+     Running tests/pushpull_history_identity.rs (/tmp/ingetrazo-metal-world-target/debug/deps/pushpull_history_identity-d5f83b32299727aa)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 3 filtered out; finished in 0.00s
+

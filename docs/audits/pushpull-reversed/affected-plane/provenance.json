@@ -1,0 +1,40 @@
+{
+  "runtime_commit": "e424277b5f4c0cf533b86a7aff82eff9a6b01f73",
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "source_hashes": {
+    "crates/ingetrazo-core/src/planar.rs": "ea6022427978eac8c02b08a1f4c6dfebae42df320caf49c45e6520aca10a20f8",
+    "crates/ingetrazo-tools/src/pushpull.rs": "c603634fd700ec74dcc1873419183282131d3e90361a91fb985c274d8819d474",
+    "crates/ingetrazo-tools/src/pushpull/open_rebuild.rs": "97a75067115ba06d86b85cadb0ec28d6ede41b7309ab9e4a6aea263a5e4dd84f",
+    "crates/ingetrazo-tools/tests/pushpull_history_identity.rs": "6cfd37158498a5f35be32c88be0ff4d4ddd890c204783c7f0ee5d131ed9050c5",
+    "scripts/check-pushpull-reversed.py": "b030afc19b3a37432f49eaae9cf588404d299446a29eba30278c9fb5454e7a89",
+    "docs/audits/pushpull-reversed/source.json": "402edd6f64504cb55ce7c2e75ac861277fe1f8380518a6213ebf9e34407d3f26"
+  },
+  "binaries": {
+    "pushpull_reversed": "f1a2b37b91113879268d66e41a6ee15f45665692c7cd3767e465c9c3e3b9b40e",
+    "pushpull_inward_limits": "36d865b4429377a686722d09dc788b307155e234cc58545d0349de7abe2605d8"
+  },
+  "commands": [
+    "cargo test -j2 -p ingetrazo-tools --lib open_rebuild",
+    "cargo test -j2 -p ingetrazo-tools --test pushpull_history_identity",
+    "cargo build -j2 -p ingetrazo-gui --example pushpull_reversed --example pushpull_inward_limits",
+    "pushpull_reversed docs/audits/pushpull-reversed/source.json native.json",
+    "python3 scripts/check-pushpull-reversed.py docs/audits/pushpull-reversed/source.json native.json docs/audits/pushpull-reversed/remaining-native.json comparison.json",
+    "pushpull_inward_limits docs/audits/pushpull-inward-limits/source.json inward-native.json",
+    "python3 scripts/check-pushpull-inward-limits.py docs/audits/pushpull-inward-limits/source.json inward-native.json docs/audits/pushpull-inward-limits/source-vcb.json docs/audits/pushpull-inward-limits/remaining-native.json inward-comparison.json"
+  ],
+  "environment": {
+    "CARGO_TARGET_DIR": "/tmp/ingetrazo-metal-world-target",
+    "CARGO_PROFILE_DEV_DEBUG": "0",
+    "CARGO_PROFILE_TEST_DEBUG": "0",
+    "CARGO_INCREMENTAL": "0"
+  },
+  "scope": "Four frozen actual pinned Python handler results versus actual native app handlers; CPU descriptor observation only, no native renderer or OS gesture claim. Existing affected 13-case inward consumer rerun, 12 exact final inventories plus unchanged safeguard divergence. Four identity controls and one CPython random stream control. No original recapture or broad suite.",
+  "remaining": [
+    "Native Vulkan/Metal borrowed FaceSweep suppression consumption and actual visible acquisition/drag proof.",
+    "Closed reversed-face entry orient and arbitrary-plane Qt/f64 precision beyond these four axis-aligned open cases.",
+    "Ambiguous branching or disconnected union outlines refuse atomically; full source DCEL union is not yet ported.",
+    "General non-Ctrl accepted top-out witness and source guide/edge inference/live prism/nested OS workflows."
+  ],
+  "retained_initial_failure": "docs/audits/pushpull-reversed/remaining-native.json and initial comparison.json retain seven-versus-eight floor/base ownership gap.",
+  "test_expectation_correction": "Initial new identity test incorrectly required unchanged front face identity; source apply_rebuild recreates every face on a changed plane, including geometric remnants. Corrected to fresh front/floor identities while remote objects retain identities."
+}

@@ -14,10 +14,9 @@ def check(n):
   sourcecap=[f for f in a['result'] if f['attrs'].get('vendor')==71 and any(p not in a['source'][a['face']]['vertices']for p in f['vertices'])]
   nativecap=[f for f in b['result'] if f['attrs'].get('vendor')==71 and any(p not in a['source'][a['face']]['vertices']for p in f['vertices'])]
   assert len(sourcecap)==len(nativecap)==1 and fields(sourcecap)==fields(nativecap)
-  if a['name']=='reversed-door':assert fields(a['result'])!=fields(b['result']) and b['result']==remaining
-  else:assert fields(a['result'])==fields(b['result'])
+  assert fields(a['result'])==fields(b['result'])
 check(n);rejected=[]
-for kind in ['empty','duplicate','wrong_normal','wrong_preview','wrong_commit_direction','lost_metadata','lost_history','lost_support_vertex']:
+for kind in ['empty','duplicate','wrong_normal','wrong_preview','wrong_commit_direction','lost_metadata','lost_history','lost_support_vertex','wrong_floor_paint','lost_new_base','old_floor_overlap']:
  b=copy.deepcopy(n)
  if kind=='empty':b['cases']=[]
  elif kind=='duplicate':b['cases'][1]=b['cases'][0]
@@ -27,11 +26,14 @@ for kind in ['empty','duplicate','wrong_normal','wrong_preview','wrong_commit_di
   for f in b['cases'][0]['result']:
    if f['attrs'].get('vendor')==71:
     for p in f['vertices']:p[1]*=-1
- elif kind=='lost_metadata':b['cases'][0]['result'][2]['attrs'].pop('vendor')
+ elif kind=='lost_metadata':next(f for f in b['cases'][0]['result'] if f['attrs'].get('vendor')==71)['attrs'].pop('vendor')
  elif kind=='lost_history':b['cases'][0]['history_exact']=False
- else:b['cases'][2]['result'][0]['vertices'].pop()
+ elif kind=='lost_support_vertex':b['cases'][2]['result'][0]['vertices'].pop()
+ elif kind=='wrong_floor_paint':next(f for f in b['cases'][0]['result'] if len(f['vertices'])==8 and all(p[2]==0 for p in f['vertices']))['attrs']['vendor']=71
+ elif kind=='lost_new_base':b['cases'][0]['result']=[f for f in b['cases'][0]['result'] if not(len(f['vertices'])==4 and all(p[1]==0 for p in f['vertices']) and not f['attrs'])]
+ else:next(f for f in b['cases'][0]['result'] if len(f['vertices'])==8 and all(p[2]==0 for p in f['vertices']))['vertices']=copy.deepcopy(s['cases'][0]['source'][1]['vertices'])
  try:check(b)
  except AssertionError:rejected.append(kind)
  else:raise AssertionError('accepted '+kind)
-report={'direction_preview_recipe_exact':4,'final_oriented_fields_exact':3,'negative_controls':rejected,'actual_app_history_cancel_exact':True,'native_visible_suppression_proved':False,'remaining':{'reversed-door':'Original rebuild modifies/paints floor and adds base face; native retains original support/floor (8 vs7 faces).','visible-preview':'Borrowed sweep descriptor is unconsumed by native Vulkan/Metal; source camera-aware suppression required.','closed-reversed-acquisition':'Original entry orientation and arbitrary Qt precision beyond these four open controls remain unproved.'}}
+report={'direction_preview_recipe_exact':4,'final_oriented_fields_exact':4,'negative_controls':rejected,'actual_app_history_cancel_exact':True,'native_visible_suppression_proved':False,'remaining':{'visible-preview':'Borrowed sweep descriptor is unconsumed by native Vulkan/Metal; source camera-aware suppression required.','closed-reversed-acquisition':'Original entry orientation and arbitrary Qt precision beyond these four open controls remain unproved.'}}
 Path(sys.argv[4]).write_text(json.dumps(report,indent=2)+'\n');print(json.dumps(report,indent=2))
