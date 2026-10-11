@@ -523,19 +523,19 @@ pub fn render_menu_bar(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
 
             ui.menu_button(tr("Arcs"), |ui| {
                 if ui.button(format!("{}\tA", tr("2-Point Arc"))).clicked() {
-                    app.set_tool(ToolType::Arc);
+                    app.activate_arc(ingetrazo_tools::ArcMode::TwoPoint);
                     ui.close_menu();
                 }
                 if ui.button(tr("3-Point Arc")).clicked() {
-                    app.set_tool(ToolType::Arc);
+                    app.activate_arc(ingetrazo_tools::ArcMode::ThreePoint);
                     ui.close_menu();
                 }
                 if ui.button(tr("Center Arc")).clicked() {
-                    app.set_tool(ToolType::Arc);
+                    app.activate_arc(ingetrazo_tools::ArcMode::Center);
                     ui.close_menu();
                 }
                 if ui.button(tr("Pie")).clicked() {
-                    app.set_tool(ToolType::Arc);
+                    app.activate_arc(ingetrazo_tools::ArcMode::Pie);
                     ui.close_menu();
                 }
             });

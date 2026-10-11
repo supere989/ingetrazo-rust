@@ -58,6 +58,9 @@ pub struct IngeTrazoApp {
     pub navigation: crate::navigation::Navigation,
     pub active_tool_type: ToolType,
     fillet_parameters:(f64,usize),
+    shape_segments:[usize;3],
+    arc_repeat_distance:Option<f64>,
+    last_shape_tool:Option<(ToolType,Option<ingetrazo_tools::ArcMode>)>,
     pub active_tool: Box<dyn Tool>,
     pub style: StyleConfig,
     pub snap_engine: SnapEngine,
@@ -174,6 +177,9 @@ impl IngeTrazoApp {
             navigation: Default::default(),
             active_tool_type: ToolType::Select,
             fillet_parameters:(0.1,8),
+            shape_segments:[24,6,16],
+            arc_repeat_distance:None,
+            last_shape_tool:None,
             active_tool: create_tool(ToolType::Select),
             style: StyleConfig::default_shaded(),
             snap_engine: SnapEngine::default(),
@@ -277,7 +283,16 @@ impl IngeTrazoApp {
         self.set_tool(ToolType::ChangeAxes);self.active_tool=Box::new(ingetrazo_tools::ChangeAxesTool::new(targets[0]));self.status_message="Click the new origin".into();true
     }
 
+    pub fn activate_arc(&mut self,mode:ingetrazo_tools::ArcMode){
+        self.set_tool(ToolType::Arc);
+        let mut tool=ingetrazo_tools::ArcTool::with_mode(mode);
+        if mode==ingetrazo_tools::ArcMode::TwoPoint{tool.segments=self.shape_segments[2];tool.set_repeat_distance(self.arc_repeat_distance);}
+        self.active_tool=Box::new(tool);self.active_tool.on_activate(&mut self.scene);
+        self.last_shape_tool=Some((ToolType::Arc,Some(mode)));
+    }
     pub fn set_tool(&mut self, tool_type: ToolType) {
+        if let Some(n)=self.active_tool.shape_segments(){match self.active_tool_type{ToolType::Circle=>self.shape_segments[0]=n,ToolType::Polygon=>self.shape_segments[1]=n,ToolType::Arc=>self.shape_segments[2]=n,_=>{}}}
+        if self.active_tool.arc_mode()==Some(ingetrazo_tools::ArcMode::TwoPoint){self.arc_repeat_distance=self.active_tool.arc_repeat_distance();}
         if let Some(parameters)=self.active_tool.fillet_parameters(){self.fillet_parameters=parameters;}
         self.cancel_blender_pick();
         self.navigation.cancel(); self.navigation.mode=None;self.cursor_navigation.cancel();
@@ -287,6 +302,12 @@ impl IngeTrazoApp {
         self.snap_engine.reset_operation_state();
         self.active_tool_type = tool_type;
         self.active_tool = if tool_type==ToolType::Fillet{Box::new(ingetrazo_tools::fillet::FilletTool::with_parameters(self.fillet_parameters.0,self.fillet_parameters.1))}else if tool_type==ToolType::Paint{let color=self.scene.materials.get(&self.active_material).map(|m|m.color).unwrap_or([0.8,0.8,0.8,1.]);Box::new(ingetrazo_tools::paint::PaintTool::with_material(self.active_material.clone(),color))}else{create_tool(tool_type)};
+        match tool_type{
+            ToolType::Circle=>self.active_tool=Box::new(ingetrazo_tools::CircleTool::with_segments(self.shape_segments[0])),
+            ToolType::Polygon=>{let mut t=ingetrazo_tools::PolygonTool::default();t.sides=self.shape_segments[1];self.active_tool=Box::new(t);},
+            ToolType::Arc=>{let mut t=ingetrazo_tools::ArcTool::with_segments(self.shape_segments[2]);t.set_repeat_distance(self.arc_repeat_distance);self.active_tool=Box::new(t);},_=>{}
+        }
+        if matches!(tool_type,ToolType::Circle|ToolType::Polygon|ToolType::Arc|ToolType::RotatedRectangle){self.last_shape_tool=Some((tool_type,(tool_type==ToolType::Arc).then_some(ingetrazo_tools::ArcMode::TwoPoint)));}else if tool_type!=ToolType::Select{self.last_shape_tool=None;}
         self.active_tool.on_activate(&mut self.scene);
         self.status_message.clear();
         self.vcb_text.clear();
@@ -702,6 +723,7 @@ impl IngeTrazoApp {
     pub fn paste_in_place(&mut self) {self.paste_preview=None;self.read_system_clipboard();if self.paste_internal(DVec3::ZERO){self.status_message="Pasted in place".into();}}
 
     pub fn repeat_last_command(&mut self) {
+        if let Some((tool,mode))=self.last_shape_tool{if let Some(mode)=mode{self.activate_arc(mode);}else{self.set_tool(tool);}}
         self.status_message = ingetrazo_core::i18n::tr("Repeated last command");
     }
 

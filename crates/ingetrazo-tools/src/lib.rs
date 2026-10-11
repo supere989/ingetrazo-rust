@@ -4,6 +4,7 @@
 pub mod arc;
 pub mod base;
 pub mod circle;
+mod shape_plane;
 pub mod change_axes;
 pub mod dimension;
 pub mod eraser;

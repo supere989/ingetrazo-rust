@@ -164,6 +164,10 @@ pub trait Tool: Send + Sync {
     fn scale_box_state(&self)->Option<ScaleBoxState>{None}
     fn uses_snap(&self)->bool{true}
     /// Session-local Fillet defaults survive switching to another tool.
+    /// Session settings of the original persistent shape-tool objects.
+    fn shape_segments(&self)->Option<usize>{None}
+    fn arc_mode(&self)->Option<crate::arc::ArcMode>{None}
+    fn arc_repeat_distance(&self)->Option<f64>{None}
     fn fillet_parameters(&self)->Option<(f64,usize)>{None}
     fn note_snap_result(&mut self,_result:&ingetrazo_core::snap::SnapResult){}
     fn note_shift_state(&mut self,_held:bool){}
@@ -283,6 +287,9 @@ pub trait Tool: Send + Sync {
     fn distance_label(&self) -> Option<(f64, DVec3)> {
         None
     }
+    /// Optional source tool preview color.
+    fn preview_color(&self) -> Option<[f32; 3]> { None }
+
     fn rubber_band_lines(&self) -> Vec<(DVec3, DVec3)> {
         self.rubber_band().into_iter().collect()
     }

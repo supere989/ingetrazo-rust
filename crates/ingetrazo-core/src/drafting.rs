@@ -27,6 +27,17 @@ fn qt_normalized(v: glam::Vec3) -> glam::Vec3 {
     }
     qt_divide(v, len)
 }
+// Literal arrangement.coplanar_plane, confined to exactly Qt-authorable rows.
+// None retains the generic native-double strict admission; positions never change.
+fn source_author_plane(points:impl Iterator<Item=DVec3>+Clone)->Option<(DVec3,DVec3)>{
+ if !points.clone().all(|p|p.is_finite()&&p.as_vec3().as_dvec3()==p){return None;}
+ let origin=points.clone().next()?.as_vec3();let axis=points.clone().find_map(|p|{let d=p.as_vec3()-origin;(qt_length(d)>1e-6).then(||qt_normalized(d))})?;
+ let n=points.clone().find_map(|p|{let c=axis.cross(p.as_vec3()-origin);(qt_length(c)>1e-6).then(||qt_normalized(c))})?;
+ points.clone().all(|p|{let d=p.as_vec3()-origin;((n.x*d.x+n.y*d.y)+n.z*d.z).abs()<=1e-4}).then_some((origin.as_dvec3(),n.as_dvec3()))
+}
+pub(crate) fn source_on_segment(point:DVec3,a:DVec3,b:DVec3)->bool{
+ let p=point.as_vec3();let a=a.as_vec3();let b=b.as_vec3();let d=b-a;let length=qt_length(d);if length<1e-4{return qt_length(p-a)<1e-4;}let q=p-a;let dot=(q.x*d.x+q.y*d.y)+q.z*d.z;let t=(dot as f64)/((length as f64)*(length as f64));t>=-1e-4&&t<=1.+1e-4&&qt_length(p-(a+d*(t as f32)))<1e-4
+}
 /// Original build_add_edge uses a bare AddEdgeCommand only when no extra
 /// split/face/rebuild command is required and no curve already exists.
 /// Such Undo removes the edge but keeps the endpoint Vertex objects.
@@ -1070,6 +1081,15 @@ pub fn add_segments_tagged_with_id(mesh:&Mesh,segments:&[(DVec3,DVec3)],explicit
             }
         }
     }
+    let source_rows=curve.is_some()&&mesh.vertices.iter().all(|v|v.position.as_vec3().as_dvec3()==v.position)&&segments.iter().flat_map(|&(a,b)|[a,b]).all(|p|p.as_vec3().as_dvec3()==p);
+    let source_flat=source_rows.then(||source_author_plane(out.vertices.iter().map(|v|v.position))).flatten();
+    let source_input=source_rows.then(||source_author_plane(segments.iter().flat_map(|&(a,b)|[a,b]))).flatten();
+    let source_virgin=source_flat.is_none()&&explicit.is_some()&&source_input.is_some_and(|(p,n)|!mesh.edges.iter().any(|e|[e.v0,e.v1].iter().all(|&i|{let d=mesh.vertices[i].position.as_vec3()-p.as_vec3();let n=n.as_vec3();((d.x*n.x+d.y*n.y)+d.z*n.z).abs()<1e-4})));
+
+    let source_rebuild_frame=source_flat.map(|(origin,normal)|{
+        let (origin,n)=if let Some(face)=mesh.faces.iter().find(|face|face.vertices.len()>=3){let points=planar::rings(mesh,face);let n=crate::math::newell_vector(&points[0]).as_vec3();let length=qt_length(n);(points[0][0],if length>1e-9{qt_divide(n,length)}else{glam::Vec3::Z})}else{(origin,normal.as_vec3())};
+        let n=qt_normalized(n);let reference=if n.x.abs()>0.9{glam::Vec3::Y}else{glam::Vec3::X};let u=qt_normalized(reference-n*n.dot(reference));let v=qt_normalized(n.cross(u));(origin,n.as_dvec3(),u.as_dvec3(),v.as_dvec3())
+    });
     let mut planes: Vec<(DVec3, DVec3)> = vec![];
     let mut remember = |point: DVec3, normal: DVec3| {
         if normal.length_squared() > 0.5
@@ -1080,6 +1100,7 @@ pub fn add_segments_tagged_with_id(mesh:&Mesh,segments:&[(DVec3,DVec3)],explicit
             planes.push((point, normal));
         }
     };
+    if source_virgin {}else if let Some((origin,normal))=source_flat {remember(origin,normal);}else{
     // A cycle through a new subedge must leave it through an incident edge.
     // Those neighbors enumerate its possible planes without scanning arbitrary
     // vertices throughout unrelated 3D content.
@@ -1141,6 +1162,7 @@ pub fn add_segments_tagged_with_id(mesh:&Mesh,segments:&[(DVec3,DVec3)],explicit
             }
         }
     }
+    }
     drop(remember);
     if planes.len() > 4096 {
         return Err("Drawing meets too many distinct planes for an interactive edit".into());
@@ -1179,10 +1201,11 @@ pub fn add_segments_tagged_with_id(mesh:&Mesh,segments:&[(DVec3,DVec3)],explicit
     for (point, normal) in planes {
         // The explicit footprint supplies coverage; it does not auto-face
         // unrelated cycles. Contained bands split their mother even in 3D.
+        let tolerance=if source_flat.is_some(){1e-4}else{1e-6};
         let flat = out
             .vertices
             .iter()
-            .all(|v| (v.position - point).dot(normal).abs() < 1e-6);
+            .all(|v| (v.position - point).dot(normal).abs() <= tolerance);
         let affected: Vec<_> = out
             .faces
             .iter()
@@ -1191,7 +1214,7 @@ pub fn add_segments_tagged_with_id(mesh:&Mesh,segments:&[(DVec3,DVec3)],explicit
                 planar::rings(&out, f)
                     .iter()
                     .flatten()
-                    .all(|p| (*p - point).dot(normal).abs() < 1e-6)
+                    .all(|p| (*p - point).dot(normal).abs() <= tolerance)
             })
             .map(|(i, _)| i)
             .collect();
@@ -1206,7 +1229,7 @@ pub fn add_segments_tagged_with_id(mesh:&Mesh,segments:&[(DVec3,DVec3)],explicit
         for e in &out.edges {
             let a = out.vertices[e.v0].position;
             let b = out.vertices[e.v1].position;
-            if (a - point).dot(normal).abs() < 1e-6 && (b - point).dot(normal).abs() < 1e-6 {
+            if (a - point).dot(normal).abs() <= tolerance && (b - point).dot(normal).abs() <= tolerance {
                 let a = plane.add_vertex(a);
                 let b = plane.add_vertex(b);
                 plane.add_edge(a, b);
@@ -1215,7 +1238,7 @@ pub fn add_segments_tagged_with_id(mesh:&Mesh,segments:&[(DVec3,DVec3)],explicit
         if plane.edges.len() < 3 {
             continue;
         }
-        let rebuilt = planar::rebuild_drawing_faces(&plane)?;
+        let mut rebuilt = if let Some((origin,normal,u,v))=source_rebuild_frame{planar::rebuild_source_drawing_faces(&plane,origin,normal,u,v)?}else{planar::rebuild_drawing_faces(&plane)?};
         // Source commit_arc disables auto-face planning on a flat drawing.
         // Rebuild-created curve cells therefore carry no newly active tag.
         // commit_arc places the busy-plane rebuild in extra BEFORE AutoTag.
@@ -1334,7 +1357,7 @@ pub fn add_segments_tagged_with_id(mesh:&Mesh,segments:&[(DVec3,DVec3)],explicit
                 planar::add_face(&mut result, &loops, &source)?;
             }
         }
-        planar::preserve_edges(&mut result, &out);
+        if source_rebuild_frame.is_some(){planar::preserve_source_edges(&mut result,&out);}else{planar::preserve_edges(&mut result, &out);}
         out = result;
     }
     if let Some(ring) = explicit {
@@ -1345,6 +1368,10 @@ pub fn add_segments_tagged_with_id(mesh:&Mesh,segments:&[(DVec3,DVec3)],explicit
     }
     if flat_rebuild || scoped_curve_rebuild {
         resplit_curves(&mut out)?;
+    }
+    if source_flat.is_some()&&flat_rebuild{
+        let mut used=vec![false;out.vertices.len()];for e in &out.edges{used[e.v0]=true;used[e.v1]=true;}for f in &out.faces{for &v in f.vertices.iter().chain(f.holes.iter().flatten()){used[v]=true;}}
+        if used.iter().any(|u|!*u){let mut map=vec![0;used.len()];let mut i=0;let mut next=0;out.vertices.retain(|_|{let keep=used[i];if keep{map[i]=next;next+=1;}i+=1;keep});for e in &mut out.edges{e.v0=map[e.v0];e.v1=map[e.v1];}for f in &mut out.faces{for v in f.vertices.iter_mut().chain(f.holes.iter_mut().flatten()){*v=map[*v];}}out.rebuild_spatial_index();out.rebuild_incidence();}
     }
     out.preserve_vertex_uids_from(mesh);
     planar::validate_mesh(&out)?;
@@ -1701,5 +1728,18 @@ mod bim_draw_tests {
   let out=add_segments_tagged(&m,&segments,None,Some(99),Some(&tag)).unwrap();
   assert_eq!(out.faces.len(),2);let lower=out.faces.iter().find(|f|f.vertices.iter().map(|&i|out.vertices[i].position.y).sum::<f64>()/(f.vertices.len()as f64)<2.).unwrap();
   assert!(!lower.attrs.contains_key("vendor"));assert_eq!(lower.attrs["color"],serde_json::json!([1,0,0]));assert!(!lower.attrs.contains_key("ifc"));
+ }
+}
+
+#[cfg(test)]
+mod source_shape_plane_tests {
+ use super::*;
+ #[test]
+ fn source_plane_admission_does_not_downcast_native_double_or_nonplanar_rows(){
+  let n=qt_normalized(glam::Vec3::ONE);let u=qt_normalized(glam::Vec3::X-n*n.x);let v=qt_normalized(n.cross(u));
+  let points=(0..24).map(|i|{let a=std::f64::consts::TAU*i as f64/24.;(u*(a.cos() as f32)+v*(a.sin() as f32)).as_dvec3()}).collect::<Vec<_>>();
+  assert!(source_author_plane(points.iter().copied()).is_some());
+  let mut nonplanar=points.clone();nonplanar[3]+=(n*0.001).as_dvec3();assert!(source_author_plane(nonplanar.iter().copied()).is_none());
+  let mut native=points.clone();native[0].x+=1e-10;let preserved=native[0].x.to_bits();assert!(source_author_plane(native.iter().copied()).is_none());assert_eq!(native[0].x.to_bits(),preserved);
  }
 }

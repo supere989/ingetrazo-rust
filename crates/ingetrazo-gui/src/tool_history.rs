@@ -252,7 +252,7 @@ impl IngeTrazoApp {
             Err(error) => {
                 // Parsing/admission refusal leaves the live preview and last
                 // command identity intact. Only an actual mutation needs rollback.
-                if self.active_tool_type!=ingetrazo_tools::base::ToolType::Scale
+                if !matches!(self.active_tool_type,ingetrazo_tools::base::ToolType::Scale|ingetrazo_tools::base::ToolType::Circle|ingetrazo_tools::base::ToolType::Polygon|ingetrazo_tools::base::ToolType::Arc|ingetrazo_tools::base::ToolType::RotatedRectangle)
                     ||self.scene.version!=version_at_entry||self.scene.image_planes.publication_revision()!=images_at_entry{
                     self.scene=before;self.active_tool.restore_current_preview_model(&mut self.scene);self.bump_model_revision();
                 }

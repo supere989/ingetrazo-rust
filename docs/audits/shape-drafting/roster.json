@@ -1,0 +1,80 @@
+{
+  "base": "c7f046d8",
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "criterion": "Interactive workflows on arbitrary planes; VCB input, cancel/repeat and inference match baseline.",
+  "reused_unchanged": [
+    "drafting-accepted-corpus.json",
+    "drafting-expanded-corpus.json",
+    "line-orphan-history",
+    "line-sweep-integration",
+    "component-rectangle-axes-source.json",
+    "screen-snap plane evidence"
+  ],
+  "missing_workflow_roster": {
+    "radial": [
+      "circle-default-click",
+      "polygon-default-click",
+      "circle-radius-hover-direction",
+      "polygon-radius-hover-direction",
+      "circle-sides-before-center",
+      "polygon-sides-during-radius",
+      "circle-oblique-view-plane",
+      "polygon-vertical-view-plane",
+      "circle-arrow-lock",
+      "polygon-reference-lock",
+      "circle-off-plane-snap",
+      "polygon-true-diagonal-project",
+      "circle-cancel-repeat",
+      "polygon-invalid-vcb-preservation",
+      "circle-crossing-existing-face"
+    ],
+    "arcs": [
+      "two-point-bulge-click",
+      "two-point-bulge-vcb",
+      "two-point-segments-retype",
+      "two-point-tangent-edge",
+      "two-point-corner-doubleclick",
+      "two-point-corner-repeat",
+      "three-point-click",
+      "three-point-collinear",
+      "three-point-off-plane",
+      "three-point-vcb-refusal",
+      "center-click",
+      "center-angle-vcb",
+      "center-negative-hover-sign",
+      "center-snapped-arm",
+      "pie-angle-vcb",
+      "pie-click",
+      "arc-arrow-lock",
+      "arc-cancel-repeat"
+    ],
+    "rotated_rectangle": [
+      "rotated-diagonal-click",
+      "rotated-wall-face",
+      "rotated-arrow-lock",
+      "rotated-base-length-vcb",
+      "rotated-base-length-angle-vcb",
+      "rotated-width-vcb-keeps-hover-angle",
+      "rotated-width-angle-vcb",
+      "rotated-shift-base",
+      "rotated-shift-width",
+      "rotated-protractor-15degree-near-vs-far",
+      "rotated-width-ray-vs-point-snap",
+      "rotated-zero-width-refusal",
+      "rotated-cancel-repeat"
+    ],
+    "app": [
+      "all-four-arc-menu-activation",
+      "each-variant-commit-undo-redo",
+      "nested-transformed-context-shapes",
+      "repeat-after-commit-and-cancel",
+      "unit-aware-length-vs-angle-vcb"
+    ]
+  },
+  "boundaries": [
+    "No existing Line/Rectangle/Freehand recapture",
+    "No rendered/GPU corpus or cloud",
+    "Actual source handler and App command delivery; screen-protractor metrics observed separately from model points",
+    "Entire P06 criterion remains subject to independent coverage review"
+  ]
+}
