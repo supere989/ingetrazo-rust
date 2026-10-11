@@ -1,0 +1,40 @@
+{
+  "original_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "original": "viewport.py2139 copies (0,0,w,h) to (0,0,w,h) GL_NEAREST, where w,h are scene _fb_size; does not stretch to Qt backing-store dimensions",
+  "native": "viewport.rs272 samples full normalized texture across the whole logical rect",
+  "measured_counterexamples": [
+    {
+      "logical": [
+        943,
+        611
+      ],
+      "dpr": 1.5,
+      "scene": [
+        1414,
+        916
+      ],
+      "widget": [
+        1415,
+        917
+      ]
+    },
+    {
+      "logical": [
+        942,
+        610
+      ],
+      "dpr": 1.25,
+      "scene": [
+        1178,
+        762
+      ],
+      "widget": [
+        1178,
+        763
+      ]
+    }
+  ],
+  "finding": "Scene extent rounding alone cannot close displayed-image parity. Original lower-left blit may leave a backing-store border while native full-rect sampling stretches the smaller scene texture.",
+  "required": "Observe actual framebuffer border/pixel placement and pointer-depth mapping at fractional DPR; preserve distinct scene extent, backing extent, display origin and overlay coordinate transforms. Do not infer undefined border colors or quantize egui logical layout without measured source behavior.",
+  "status": "OPEN; no native parity claim"
+}

@@ -21,6 +21,8 @@ Latest independent rendering diagnosis: [real layout](audits/annotation-real-ope
 
 ## Dated implementation and verification evidence
 
+Fractional-DPI display mismatch isolated (2026-10-11 UTC): source copies its scene target one-for-one with GL_NEAREST into the widget framebuffer, while Rust currently samples it across the full logical rect. In two measured cases scene and widget differ by one pixel, so corrected target rounding alone cannot establish displayed parity ([source/native review](audits/viewport-extent-merged-root/blit-review.json)). Actual border placement and pointer-depth mapping remain required before changing display coordinates.
+
 Expanded ARM native Metal job passes (2026-10-11 UTC): run 38099978920 source `f260c73a` completes its SDK build, GPU fixture and 18-frame checker successfully on ARM; Intel remains in SDK build ([direct job observation](audits/metal-world-root-review/material-run-observation.json)). Independent raw artifact verification is pending; packet-level samples do not close full viewport acceptance.
 
 Logical camera precision corrected (2026-10-11 UTC): Rust viewport now converts logical width/height to double precision before division, matching Python `camera.set_aspect`. All nine retained original observations match double division; the former float32 quotient differs in all nine ([review](audits/viewport-extent-merged-root/aspect-review.json)). Logical layout quantization and actual fractional-DPI frame/pointer acceptance remain OPEN.
