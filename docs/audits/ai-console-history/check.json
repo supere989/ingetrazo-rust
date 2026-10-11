@@ -1,0 +1,15 @@
+{
+  "states": 11,
+  "rejected": [
+    "position",
+    "attrs",
+    "undo",
+    "redo",
+    "identity",
+    "missing",
+    "order",
+    "native_exports",
+    "vm_history_steps",
+    "final_owner_charge"
+  ]
+}

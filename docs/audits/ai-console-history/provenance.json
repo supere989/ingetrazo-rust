@@ -1,0 +1,29 @@
+{
+  "implementation": "d7bbd486",
+  "base": "e102339e",
+  "original": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "binary": "/tmp/ingetrazo-ai-registry-target/debug/examples/engineering_console_history_fixture",
+  "binary_sha256": "b579665f6bd366d4f32b38731de84891144055d4eaecfad6e33714b28d674ac8",
+  "sources": {
+    "Cargo.toml": "f81d5372f395db89a47c3149e5a1f23f160c947525e632844179952aad9abfbf",
+    "Cargo.lock": "ffb8fc359a2b11928d5c6ee483520fe863b92887028fbab0dc91ad259d6b3bd5",
+    "crates/ingetrazo-core/src/scene.rs": "01f5481b17abce326af0b3926fd22c40f62816c78532e92d74d60559c8b6ce68",
+    "crates/ingetrazo-gui/Cargo.toml": "a64c263f71d393f41f79f9c849f6d43ff66995db569a0876e36bcafe0c154074",
+    "crates/ingetrazo-gui/src/app.rs": "13684eb5d99858a8a52574da0600802b53f56eac70604232e65ed73b0f62985d",
+    "crates/ingetrazo-gui/src/engineering_python.rs": "77b7c14b572129d79c043b0f1546cceaf2b0f6e1b1878ee48dd37f2975bc2715",
+    "crates/ingetrazo-gui/examples/engineering_console_history_fixture.rs": "535732156cf0f68c2a136fd7f40819531dc6f9cd50b9a03d8abd33d119e408f2",
+    "tools/ai-interpreter-proof/src/lib.rs": "3b7e1bcbe39306563e4c3661fee0c937c2e68cb079da372bdaefb7782463f68e",
+    "tools/ai-interpreter-proof/src/vm_mesh.rs": "9c3e1c6a1bb1264d1d8d1259417e51729d845c224ab2dfa5a09e4df56c13ca65",
+    "tools/ai-interpreter-proof/src/vm_hydrate.rs": "38224e91a89859e086182deb99a9cb0985b032e2a5956052d184e3377f23cd54",
+    "scripts/reference-ai-console-history.py": "33ae1772fee0febc7f5fd4fbda9a0edad0ac4c6818344a83daa041f7904ac15d",
+    "scripts/check-ai-console-history.py": "3de9973fefcc2f7acc1bd0da651049c07ce3f6f1972f75aceb7c284ecaa2c67a",
+    "docs/audits/ai-console-history/recipes.json": "59057e8c1e6dd5ee6d1a31722570bed660f98112fc6d1cb75441c5a8f9609125"
+  },
+  "controls": {
+    "states": 11,
+    "negative_mutations": 10,
+    "missing_owner_rejected": true,
+    "logical_budget_undo_redo_refusal": true
+  },
+  "scope": "optional application console; no production run_python or full Scene promotion"
+}

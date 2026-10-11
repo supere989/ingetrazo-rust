@@ -1,0 +1,313 @@
+{
+  "states": [
+    {
+      "name": "initial",
+      "positions": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "attrs": [
+        {}
+      ],
+      "undo": 0,
+      "redo": 0,
+      "identity_checked": false
+    },
+    {
+      "name": "first",
+      "positions": [
+        [
+          0.0,
+          0.0,
+          2.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "attrs": [
+        {
+          "mat": "First"
+        }
+      ],
+      "undo": 1,
+      "redo": 0,
+      "identity_checked": true
+    },
+    {
+      "name": "second",
+      "positions": [
+        [
+          0.0,
+          0.0,
+          2.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "attrs": [
+        {
+          "mat": "Second"
+        }
+      ],
+      "undo": 2,
+      "redo": 0,
+      "identity_checked": true
+    },
+    {
+      "name": "undo-second",
+      "positions": [
+        [
+          0.0,
+          0.0,
+          2.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "attrs": [
+        {
+          "mat": "First"
+        }
+      ],
+      "undo": 1,
+      "redo": 1,
+      "identity_checked": true
+    },
+    {
+      "name": "redo-second",
+      "positions": [
+        [
+          0.0,
+          0.0,
+          2.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "attrs": [
+        {
+          "mat": "Second"
+        }
+      ],
+      "undo": 2,
+      "redo": 0,
+      "identity_checked": true
+    },
+    {
+      "name": "undo-second-again",
+      "positions": [
+        [
+          0.0,
+          0.0,
+          2.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "attrs": [
+        {
+          "mat": "First"
+        }
+      ],
+      "undo": 1,
+      "redo": 1,
+      "identity_checked": true
+    },
+    {
+      "name": "undo-first",
+      "positions": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "attrs": [
+        {}
+      ],
+      "undo": 0,
+      "redo": 2,
+      "identity_checked": true
+    },
+    {
+      "name": "redo-first",
+      "positions": [
+        [
+          0.0,
+          0.0,
+          2.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "attrs": [
+        {
+          "mat": "First"
+        }
+      ],
+      "undo": 1,
+      "redo": 1,
+      "identity_checked": true
+    },
+    {
+      "name": "branch",
+      "positions": [
+        [
+          0.0,
+          0.0,
+          2.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "attrs": [
+        {
+          "mat": "Branch"
+        }
+      ],
+      "undo": 2,
+      "redo": 0,
+      "identity_checked": true
+    },
+    {
+      "name": "undo-branch",
+      "positions": [
+        [
+          0.0,
+          0.0,
+          2.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "attrs": [
+        {
+          "mat": "First"
+        }
+      ],
+      "undo": 1,
+      "redo": 1,
+      "identity_checked": true
+    },
+    {
+      "name": "redo-branch",
+      "positions": [
+        [
+          0.0,
+          0.0,
+          2.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "attrs": [
+        {
+          "mat": "Branch"
+        }
+      ],
+      "undo": 2,
+      "redo": 0,
+      "identity_checked": true
+    }
+  ],
+  "metrics": {
+    "native_exports": 3,
+    "vm_history_steps": 7,
+    "final_owner_charge": 0
+  }
+}
