@@ -73,6 +73,8 @@ fn prepare_finish(finishing_scene: &Scene, stack: &[ComponentEditSession], undo:
                 if entry.history_context==target {
                     *entry=match component_candidate(session,entry) {Ok((mut scene,_))=>{
                         scene.selection=session.original_scene.selection.clone();scene.selection_order=session.original_scene.selection_order.clone();
+                        scene.history_annotation_delete=entry.history_annotation_delete;
+                        if entry.history_annotation_delete{scene.clear_selection();}
                         scene.version=session.original_scene.version;scene.view_version=session.original_scene.view_version;scene.history_shareback=entry.history_shareback;scene.history_axes=entry.history_axes.clone();scene.history_bim=entry.history_bim.clone();scene.history_material=entry.history_material.clone();scene.history_views.0=entry.history_views.0.clone();scene.history_group_visibility=entry.history_group_visibility.clone();scene.history_terrain=entry.history_terrain.clone();scene.history_layers=entry.history_layers.clone();scene.history_images=entry.history_images.clone();scene
                     },Err(error)=>return Err(error)};
                 }
@@ -212,7 +214,30 @@ pub(crate) fn component_candidate(session:&ComponentEditSession,scene:&Scene)->R
             if let Some(inverse)=session.leaf_share_back {
                 // Original placed leaves edit a world copy, then inverse-map
                 // only that mesh into their shared local prototype on exit.
-                replacement.mesh=match ingetrazo_core::containers::source_shareback_mesh(&replacement.mesh,inverse) {Ok(mesh)=>mesh,Err(error)=>return Err(error)};
+                replacement.mesh=if session.mesh_baseline==scene.mesh {
+                    // Global annotation commands do not replace source leaf
+                    // vertices. Avoid inverse rounding of unchanged geometry.
+                    candidate.groups[group_index].mesh.clone()
+                } else {
+                    let original=&candidate.groups[group_index].mesh;
+                    let frame=session.original_scene.dimension_frame*candidate.groups[group_index].transform;
+                    let vertices:std::collections::HashMap<_,_>=original.vertices.iter().map(|v|(v.uid,v)).collect();
+                    let edges:std::collections::HashSet<_>=session.mesh_baseline.edges.iter().map(|e|e.history_id).collect();
+                    // Pure removals of Qt-authored rows retain source objects.
+                    // Native f64 points/frames retain the existing full precision path.
+                    let source_removal=frame==frame.as_mat4().as_dmat4()
+                        && original.vertices.iter().all(|v|v.position==v.position.as_vec3().as_dvec3())
+                        && replacement.mesh.vertices.iter().all(|v|vertices.get(&v.uid).is_some_and(|o|frame.transform_point3(o.position)==v.position))
+                        && replacement.mesh.edges.iter().all(|e|edges.contains(&e.history_id))
+                        && replacement.mesh.faces.is_empty();
+                    let inverse=if source_removal {
+                        for vertex in &mut replacement.mesh.vertices {
+                            vertex.position=ingetrazo_core::change_axes::map(frame,vertices[&vertex.uid].position);
+                        }
+                        ingetrazo_core::change_axes::inverse(frame)?
+                    } else {inverse};
+                    ingetrazo_core::containers::source_shareback_mesh(&replacement.mesh,inverse)?
+                };
             }
             if session.container_bake.is_some() {
                 // Original container bake happens outside History on entry.
@@ -382,7 +407,13 @@ impl IngeTrazoApp {
             }
         }
         crate::document_presentation::preserve(&self.scene,&mut replacement);
-        let mut previous=session.original_scene.clone();previous.history_shareback=next.history_shareback;
+        let annotation_delete=next.history_annotation_delete;
+        let mut previous=session.original_scene.clone();previous.history_shareback=next.history_shareback;previous.history_annotation_delete=annotation_delete;
+        if annotation_delete {
+            previous.guides=self.scene.guides.clone();previous.dimensions=self.scene.dimensions.clone();previous.text_labels=self.scene.text_labels.clone();previous.clear_selection();
+            self.scene.guides=replacement.guides.clone();self.scene.dimensions=replacement.dimensions.clone();self.scene.text_labels=replacement.text_labels.clone();self.scene.clear_selection();
+            replacement.history_annotation_delete=false;replacement.clear_selection();
+        }
         if next.history_shareback.is_none(){previous.layers=self.scene.layers.clone();previous.history_layers.0=crate::history_layers::restore(&self.scene,&mut replacement);self.scene.layers=replacement.layers.clone();previous.saved_views=self.scene.saved_views.clone();previous.history_views.0=crate::history_views::restore(&self.scene,&mut replacement);self.scene.saved_views=replacement.saved_views.clone();crate::history_terrain::restore(&mut self.scene,&mut replacement,&mut previous);self.scene.terrain=replacement.terrain.clone();previous.image_planes=self.scene.image_planes.clone();previous.history_images.0=crate::image_plane_actions::restore(&self.scene,&mut replacement);self.scene.image_planes=replacement.image_planes.clone();self.scene.image_objects=replacement.image_objects.clone();}
         if redo {self.redo_stack.pop();self.undo_stack.push(previous);} else {self.undo_stack.pop();self.redo_stack.push(previous);}
         let mut cancel_replacement=replacement.clone();
@@ -396,6 +427,11 @@ impl IngeTrazoApp {
         // with the obsolete pre-entry stacks. Exclude only this session's own
         // descendant commands from its cancellation checkpoint.
         for session in self.component_edit_stack.iter_mut().skip(index) {
+            if annotation_delete {
+                for scene in [&mut session.original_scene,&mut session.cancel_scene] {
+                    scene.guides=self.scene.guides.clone();scene.dimensions=self.scene.dimensions.clone();scene.text_labels=self.scene.text_labels.clone();
+                }
+            }
             let mut path=session.original_scene.history_context.clone();path.push(session.group_id);
             session.original_undo=self.undo_stack.iter().filter(|entry|!entry.history_context.starts_with(&path)).cloned().collect();
             session.original_redo=self.redo_stack.iter().filter(|entry|!entry.history_context.starts_with(&path)).cloned().collect();

@@ -519,7 +519,7 @@ impl IngeTrazoApp {
                     Err(error)=>{self.undo_stack.push(prev);self.status_message=error;false},
                 };
             }
-            let mut inverse=crate::history_terrain::inverse_snapshot(&mut self.scene);inverse.history_views.0=crate::history_views::restore(&self.scene,&mut prev);inverse.history_group_visibility=crate::history_visibility::restore(&self.scene,&mut prev,&mut self.visibility_owners);self.apply_context_visibility();inverse.history_layers.0=crate::history_layers::restore(&self.scene,&mut prev);crate::history_terrain::restore(&mut self.scene,&mut prev,&mut inverse);inverse.history_images.0=crate::image_plane_actions::restore(&self.scene,&mut prev);self.redo_stack.push(inverse);
+            let mut inverse=crate::history_terrain::inverse_snapshot(&mut self.scene);inverse.history_annotation_delete=prev.history_annotation_delete;prev.history_annotation_delete=false;inverse.history_views.0=crate::history_views::restore(&self.scene,&mut prev);inverse.history_group_visibility=crate::history_visibility::restore(&self.scene,&mut prev,&mut self.visibility_owners);self.apply_context_visibility();inverse.history_layers.0=crate::history_layers::restore(&self.scene,&mut prev);crate::history_terrain::restore(&mut self.scene,&mut prev,&mut inverse);inverse.history_images.0=crate::image_plane_actions::restore(&self.scene,&mut prev);self.redo_stack.push(inverse);
             // Model history cannot replace later independent composer edits.
             prev.camera=self.camera.clone();
             prev.sheets=self.scene.sheets.clone();prev.active_sheet_index=self.scene.active_sheet_index;
@@ -572,7 +572,7 @@ impl IngeTrazoApp {
                     Err(error)=>{self.redo_stack.push(next);self.status_message=error;false},
                 };
             }
-            let mut inverse=crate::history_terrain::inverse_snapshot(&mut self.scene);inverse.history_views.0=crate::history_views::restore(&self.scene,&mut next);inverse.history_group_visibility=crate::history_visibility::restore(&self.scene,&mut next,&mut self.visibility_owners);self.apply_context_visibility();inverse.history_layers.0=crate::history_layers::restore(&self.scene,&mut next);crate::history_terrain::restore(&mut self.scene,&mut next,&mut inverse);inverse.history_images.0=crate::image_plane_actions::restore(&self.scene,&mut next);self.undo_stack.push(inverse);
+            let mut inverse=crate::history_terrain::inverse_snapshot(&mut self.scene);inverse.history_annotation_delete=next.history_annotation_delete;next.history_annotation_delete=false;inverse.history_views.0=crate::history_views::restore(&self.scene,&mut next);inverse.history_group_visibility=crate::history_visibility::restore(&self.scene,&mut next,&mut self.visibility_owners);self.apply_context_visibility();inverse.history_layers.0=crate::history_layers::restore(&self.scene,&mut next);crate::history_terrain::restore(&mut self.scene,&mut next,&mut inverse);inverse.history_images.0=crate::image_plane_actions::restore(&self.scene,&mut next);self.undo_stack.push(inverse);
             next.camera=self.camera.clone();
             next.sheets=self.scene.sheets.clone();next.active_sheet_index=self.scene.active_sheet_index;
             next.tile_layer=self.scene.tile_layer.take();
@@ -590,7 +590,7 @@ impl IngeTrazoApp {
     }
 
     pub fn delete_selection(&mut self) {
-        if self.scene.selection.iter().any(|s|matches!(s,SelectionItem::Guide(_)|SelectionItem::Dimension(_)|SelectionItem::TextLabel(_))){self.status_message="Annotation deletion ownership is not yet supported".into();return;}
+        if self.scene.selection.iter().any(|s|matches!(s,SelectionItem::Guide(_)|SelectionItem::Dimension(_)|SelectionItem::TextLabel(_))){if let Err(error)=self.delete_annotation_selection(){self.status_message=error;}return;}
         if self.scene.selection.is_empty() {
             return;
         }

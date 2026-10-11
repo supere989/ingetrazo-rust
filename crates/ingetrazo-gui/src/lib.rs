@@ -195,3 +195,4 @@ pub mod text3d;
 
 mod box_selection;
 mod cursor_navigation;
+mod annotation_delete;

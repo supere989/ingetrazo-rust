@@ -247,7 +247,7 @@ mod tests {
         assert!(a.undo_stack.is_empty());
     }
     #[test]
-    fn annotation_delete_refuses_before_history_or_selection_mutation() {
+    fn annotation_delete_removes_mixed_targets_in_one_history_command() {
         let mut a = app();
         a.scene
             .guides
@@ -258,8 +258,7 @@ mod tests {
             .select(ingetrazo_core::scene::SelectionItem::Guide(0));
         let before = a.scene.clone();
         a.delete_selection();
-        assert_eq!(a.scene, before);
-        assert!(a.undo_stack.is_empty());
-        assert!(a.status_message.contains("not yet supported"));
+        assert!(a.scene.guides.is_empty());assert!(a.scene.mesh.faces.is_empty());assert_eq!(a.undo_stack.len(),1);
+        a.undo();assert_eq!(a.scene.guides,before.guides);assert_eq!(a.scene.mesh,before.mesh);
     }
 }

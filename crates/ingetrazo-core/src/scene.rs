@@ -60,6 +60,7 @@ pub struct Scene {
     #[serde(skip)]
     pub history_context: Vec<uuid::Uuid>,
     /// Command-specific prototype restore target, carried only by history snapshots.
+    #[serde(skip)] pub history_annotation_delete:bool,
     #[serde(skip)]
     pub history_shareback: Option<uuid::Uuid>,
     #[serde(skip)]pub history_axes:Option<crate::change_axes::Command>,
@@ -143,7 +144,7 @@ impl Scene {
             dimension_frame:glam::DMat4::IDENTITY,
             drawing_frame:None,
             history_context:vec![],
-            display_style:Default::default(),shadows:Default::default(),history_shareback:None,history_axes:None,history_bim:None,history_material:None,history_python:None,history_views:Default::default(),history_group_visibility:None,history_terrain:Default::default(),history_layers:Default::default(),
+            display_style:Default::default(),shadows:Default::default(),history_annotation_delete:false,history_shareback:None,history_axes:None,history_bim:None,history_material:None,history_python:None,history_views:Default::default(),history_group_visibility:None,history_terrain:Default::default(),history_layers:Default::default(),
             component_definitions: HashMap::new(),
             mesh_shares: HashMap::new(),
             native_document: serde_json::Value::Null,
