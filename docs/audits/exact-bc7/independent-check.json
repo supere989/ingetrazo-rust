@@ -1,0 +1,27 @@
+{
+  "archive_files": 117,
+  "runs": [
+    {
+      "backend": "nvidia-final",
+      "frames_exact": 4,
+      "rgba_pixels_checked": 262144,
+      "negative_controls": [
+        "pixel",
+        "allocation",
+        "fallback",
+        "ledger"
+      ]
+    },
+    {
+      "backend": "software-final",
+      "frames_exact": 4,
+      "rgba_pixels_checked": 262144,
+      "negative_controls": [
+        "pixel",
+        "allocation",
+        "fallback",
+        "ledger"
+      ]
+    }
+  ]
+}

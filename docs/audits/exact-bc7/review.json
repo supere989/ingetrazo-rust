@@ -1,0 +1,13 @@
+{
+  "reviewer": "document_integrity",
+  "mode": "read-only code review, no rebuild",
+  "checked": [
+    "mode5 endpoints and anchors",
+    "odd-edge compressed block row offsets",
+    "staging and fence retirement",
+    "format/extent/usage fallback"
+  ],
+  "finding": "Public mutable format metadata could diverge from immutable VkImage format during diagnostic transfer",
+  "resolution": "TextureImage.format is private; no behavior change",
+  "remaining_scope": "Existing public extent/mip metadata exposure predates this change; general compressed/mip/Metal and ray tracing scopes remain open"
+}

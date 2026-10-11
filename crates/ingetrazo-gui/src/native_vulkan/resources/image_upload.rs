@@ -347,7 +347,7 @@ pub struct TextureImage {
     memory: vk::DeviceMemory,
     pub extent: vk::Extent2D,
     pub mip_levels: u32,
-    pub format: ingetrazo_render::texture_layout::Format,
+    format: ingetrazo_render::texture_layout::Format,
     pub allocation_bytes: u64,
     readback_enabled: bool,
 }

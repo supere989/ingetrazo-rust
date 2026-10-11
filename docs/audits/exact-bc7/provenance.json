@@ -1,0 +1,30 @@
+{
+  "source_commit": "1b7da4e1e2f98f9afe9ecd2ac247b2075007171a",
+  "base": "77027f5deaeef49502dbd63cb2c4bb9afff0ff57",
+  "binary_path": "/tmp/ingetrazo-native-font-merge-target/debug/examples/native_vulkan_exact_bc7",
+  "binary_sha256": "65492ae058133c3ff5a5282d7f87f76b3fc1dd1a2607a4d60514024e63b94095",
+  "source_hashes": {
+    "crates/ingetrazo-gui/examples/native_vulkan_exact_bc7.rs": "8181351117f07664f43bfd0cc4037755b1ecd3009407a9efc4d65fef4c71b50b",
+    "crates/ingetrazo-gui/src/native_vulkan/headless.rs": "0d42cf4abcc7e5c0a358a46fbb955be5c235400bde02aec817422c1504fa0311",
+    "crates/ingetrazo-gui/src/native_vulkan/mod.rs": "866e4a8a8b2e79b88a8c7a03d1f401b875acfa045badda2c2390ac122a9df3ca",
+    "crates/ingetrazo-gui/src/native_vulkan/resources/image_upload.rs": "6aa252d3d787babfe7305c677086ed8432a59efeff8ab59fdaf7db83b7e31a4c",
+    "crates/ingetrazo-gui/src/native_vulkan/texture_cache.rs": "d381d768b0775ee596153472a23e329782a0da1312836ddf6e7e7f074b45029b",
+    "crates/ingetrazo-render/src/block_compression.rs": "83c28ad00832fd146c8482d85e9b3f3f6483da42add9f22729b6d93aa50b73ba",
+    "crates/ingetrazo-render/src/lib.rs": "c6c13e38c26f584edfe5293320b9f6a27c26c5d70da0c6d14665a4251b1ea6d4",
+    "Cargo.lock": "9534a36e4e5af7b4e4dc44dc5907eb8c8a8540f49ea0b67cf0fb930ac041e333"
+  },
+  "validation": {
+    "focused_encoder_tests": 3,
+    "cache_cases_per_device": 18,
+    "compressed_chunk_case_per_device": 1,
+    "rgba_vs_bc7_full_frames_per_device": 4,
+    "frame_extent": [
+      256,
+      256
+    ],
+    "gpu_decode_endpoint_mutation_rejected": true,
+    "real_image_budget_failures_per_device": 18,
+    "final_ledgers": 0,
+    "build_profile": "dev debug0 incremental0; no representative optimized throughput claim"
+  }
+}

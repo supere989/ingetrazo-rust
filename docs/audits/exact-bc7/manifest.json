@@ -1,0 +1,473 @@
+{
+  "archive_sha256": "235b86d0978c80da6ffae699455cec39999b095f25b9fbc7d4e877ba282b9ae0",
+  "entries": {
+    "nvidia-final/bc7/inexact.png": {
+      "sha256": "40993de1c268b46dd548dc808f6a226a36d6f19fdbc6ba80a3f64338a8eb2e6f",
+      "bytes": 145
+    },
+    "nvidia-final/bc7/large-mask.png": {
+      "sha256": "4de6bd282601803e821550e7526f432eef1488639505742dc8e8ada8902da557",
+      "bytes": 210204
+    },
+    "nvidia-final/bc7/odd-edge.png": {
+      "sha256": "17c114e791c698e53cfc8897c4fa26a2997c979f07769c15085581434c5af829",
+      "bytes": 156
+    },
+    "nvidia-final/bc7/opaque-mipped.png": {
+      "sha256": "74ebd720cee9a06ebbd6008d1ff58ce16c5dc062cbb69869741e1599a289497f",
+      "bytes": 140
+    },
+    "nvidia-final/bc7/rotation0.png": {
+      "sha256": "e2427a097280fd18065b8031c82c4da0165ab9b66bc5431257264b691ad571ab",
+      "bytes": 185
+    },
+    "nvidia-final/bc7/rotation1.png": {
+      "sha256": "88dfbe701e0a0db4576f5de667d21afc05de08bae5e18a2e3ca5b30232a6f81a",
+      "bytes": 179
+    },
+    "nvidia-final/bc7/rotation2.png": {
+      "sha256": "9866ddc1e43f7f5ff48fad3ddfd8541699b018d0f5ace143da053c2a9b5ac2f7",
+      "bytes": 181
+    },
+    "nvidia-final/bc7/rotation3.png": {
+      "sha256": "3447acc3e43eb7f2bcb247cc4a1575303767ea972ec136022d4c4885b6e59458",
+      "bytes": 183
+    },
+    "nvidia-final/bc7/tiny.png": {
+      "sha256": "08d944ad5d001e711dfdbdcd4a95fc5db38f7a7b1ad6e9981f8ba5dfe0cb1e7b",
+      "bytes": 73
+    },
+    "nvidia-final/bc7/world-0.png": {
+      "sha256": "cc3e3449633a6dfa5ba260a43648b990a62c7b09895f64b22591b2fe63f93b0c",
+      "bytes": 143675
+    },
+    "nvidia-final/bc7/world-1.png": {
+      "sha256": "fc02f3adc90fa34bbb20785aaa7a3be988dc3c206866f535ac0eeb4b20c532d2",
+      "bytes": 172595
+    },
+    "nvidia-final/bc7/world-2.png": {
+      "sha256": "dbf645e9f574d7841e32f1b8dcc2aaabe11da28814914d3c36fb866d463ec0b6",
+      "bytes": 55774
+    },
+    "nvidia-final/bc7/world-3.png": {
+      "sha256": "51a61019b723cb939e52c8ddc088db753f7d2a70d45c8876130d9f8728e1ce12",
+      "bytes": 84654
+    },
+    "nvidia-final/report.json": {
+      "sha256": "0c0cd3045a4a206f4148316a91b2f4a01bae002d336f9f94bff4ef6a7f6ad691",
+      "bytes": 10007
+    },
+    "nvidia-final/rgba/inexact.png": {
+      "sha256": "40993de1c268b46dd548dc808f6a226a36d6f19fdbc6ba80a3f64338a8eb2e6f",
+      "bytes": 145
+    },
+    "nvidia-final/rgba/large-mask.png": {
+      "sha256": "4de6bd282601803e821550e7526f432eef1488639505742dc8e8ada8902da557",
+      "bytes": 210204
+    },
+    "nvidia-final/rgba/odd-edge.png": {
+      "sha256": "17c114e791c698e53cfc8897c4fa26a2997c979f07769c15085581434c5af829",
+      "bytes": 156
+    },
+    "nvidia-final/rgba/opaque-mipped.png": {
+      "sha256": "74ebd720cee9a06ebbd6008d1ff58ce16c5dc062cbb69869741e1599a289497f",
+      "bytes": 140
+    },
+    "nvidia-final/rgba/rotation0.png": {
+      "sha256": "e2427a097280fd18065b8031c82c4da0165ab9b66bc5431257264b691ad571ab",
+      "bytes": 185
+    },
+    "nvidia-final/rgba/rotation1.png": {
+      "sha256": "88dfbe701e0a0db4576f5de667d21afc05de08bae5e18a2e3ca5b30232a6f81a",
+      "bytes": 179
+    },
+    "nvidia-final/rgba/rotation2.png": {
+      "sha256": "9866ddc1e43f7f5ff48fad3ddfd8541699b018d0f5ace143da053c2a9b5ac2f7",
+      "bytes": 181
+    },
+    "nvidia-final/rgba/rotation3.png": {
+      "sha256": "3447acc3e43eb7f2bcb247cc4a1575303767ea972ec136022d4c4885b6e59458",
+      "bytes": 183
+    },
+    "nvidia-final/rgba/tiny.png": {
+      "sha256": "08d944ad5d001e711dfdbdcd4a95fc5db38f7a7b1ad6e9981f8ba5dfe0cb1e7b",
+      "bytes": 73
+    },
+    "nvidia-final/rgba/world-0.png": {
+      "sha256": "cc3e3449633a6dfa5ba260a43648b990a62c7b09895f64b22591b2fe63f93b0c",
+      "bytes": 143675
+    },
+    "nvidia-final/rgba/world-1.png": {
+      "sha256": "fc02f3adc90fa34bbb20785aaa7a3be988dc3c206866f535ac0eeb4b20c532d2",
+      "bytes": 172595
+    },
+    "nvidia-final/rgba/world-2.png": {
+      "sha256": "dbf645e9f574d7841e32f1b8dcc2aaabe11da28814914d3c36fb866d463ec0b6",
+      "bytes": 55774
+    },
+    "nvidia-final/rgba/world-3.png": {
+      "sha256": "51a61019b723cb939e52c8ddc088db753f7d2a70d45c8876130d9f8728e1ce12",
+      "bytes": 84654
+    },
+    "nvidia-final/run.log": {
+      "sha256": "edcc915ff13b9dc5f320f34ae7cfd8609979d4c2e734cc97e726f00c6879a5d4",
+      "bytes": 11306
+    },
+    "nvidia-final/transport.json": {
+      "sha256": "d8f12c6be0212806d2b60b57a4f819827b839eddd5915cc850b4c2afe67ae414",
+      "bytes": 1304
+    },
+    "software-final/bc7/inexact.png": {
+      "sha256": "40993de1c268b46dd548dc808f6a226a36d6f19fdbc6ba80a3f64338a8eb2e6f",
+      "bytes": 145
+    },
+    "software-final/bc7/large-mask.png": {
+      "sha256": "4de6bd282601803e821550e7526f432eef1488639505742dc8e8ada8902da557",
+      "bytes": 210204
+    },
+    "software-final/bc7/odd-edge.png": {
+      "sha256": "17c114e791c698e53cfc8897c4fa26a2997c979f07769c15085581434c5af829",
+      "bytes": 156
+    },
+    "software-final/bc7/opaque-mipped.png": {
+      "sha256": "74ebd720cee9a06ebbd6008d1ff58ce16c5dc062cbb69869741e1599a289497f",
+      "bytes": 140
+    },
+    "software-final/bc7/rotation0.png": {
+      "sha256": "e2427a097280fd18065b8031c82c4da0165ab9b66bc5431257264b691ad571ab",
+      "bytes": 185
+    },
+    "software-final/bc7/rotation1.png": {
+      "sha256": "88dfbe701e0a0db4576f5de667d21afc05de08bae5e18a2e3ca5b30232a6f81a",
+      "bytes": 179
+    },
+    "software-final/bc7/rotation2.png": {
+      "sha256": "9866ddc1e43f7f5ff48fad3ddfd8541699b018d0f5ace143da053c2a9b5ac2f7",
+      "bytes": 181
+    },
+    "software-final/bc7/rotation3.png": {
+      "sha256": "3447acc3e43eb7f2bcb247cc4a1575303767ea972ec136022d4c4885b6e59458",
+      "bytes": 183
+    },
+    "software-final/bc7/tiny.png": {
+      "sha256": "08d944ad5d001e711dfdbdcd4a95fc5db38f7a7b1ad6e9981f8ba5dfe0cb1e7b",
+      "bytes": 73
+    },
+    "software-final/bc7/world-0.png": {
+      "sha256": "6e1c8556ee57b38582698667a1639eb26171094715c3177f47464a66e5180bef",
+      "bytes": 143782
+    },
+    "software-final/bc7/world-1.png": {
+      "sha256": "3b1815e638e42af1e46d7336a66aa05eec04e6739aa4b707f9c79a10a481664d",
+      "bytes": 172576
+    },
+    "software-final/bc7/world-2.png": {
+      "sha256": "b8cc04172d483aa7ae9fe4caff5e4617cd03f313f672b8999cdd97879e9cef38",
+      "bytes": 55817
+    },
+    "software-final/bc7/world-3.png": {
+      "sha256": "5c968ee3210056ecfc8e8fc60e693afd5faa44bc20caca5ff2fb2b56f3cf9f0f",
+      "bytes": 84565
+    },
+    "software-final/report.json": {
+      "sha256": "096f880b6059687852d69ab9580269b044b05d1b95d391c76b435242af74f43a",
+      "bytes": 10009
+    },
+    "software-final/rgba/inexact.png": {
+      "sha256": "40993de1c268b46dd548dc808f6a226a36d6f19fdbc6ba80a3f64338a8eb2e6f",
+      "bytes": 145
+    },
+    "software-final/rgba/large-mask.png": {
+      "sha256": "4de6bd282601803e821550e7526f432eef1488639505742dc8e8ada8902da557",
+      "bytes": 210204
+    },
+    "software-final/rgba/odd-edge.png": {
+      "sha256": "17c114e791c698e53cfc8897c4fa26a2997c979f07769c15085581434c5af829",
+      "bytes": 156
+    },
+    "software-final/rgba/opaque-mipped.png": {
+      "sha256": "74ebd720cee9a06ebbd6008d1ff58ce16c5dc062cbb69869741e1599a289497f",
+      "bytes": 140
+    },
+    "software-final/rgba/rotation0.png": {
+      "sha256": "e2427a097280fd18065b8031c82c4da0165ab9b66bc5431257264b691ad571ab",
+      "bytes": 185
+    },
+    "software-final/rgba/rotation1.png": {
+      "sha256": "88dfbe701e0a0db4576f5de667d21afc05de08bae5e18a2e3ca5b30232a6f81a",
+      "bytes": 179
+    },
+    "software-final/rgba/rotation2.png": {
+      "sha256": "9866ddc1e43f7f5ff48fad3ddfd8541699b018d0f5ace143da053c2a9b5ac2f7",
+      "bytes": 181
+    },
+    "software-final/rgba/rotation3.png": {
+      "sha256": "3447acc3e43eb7f2bcb247cc4a1575303767ea972ec136022d4c4885b6e59458",
+      "bytes": 183
+    },
+    "software-final/rgba/tiny.png": {
+      "sha256": "08d944ad5d001e711dfdbdcd4a95fc5db38f7a7b1ad6e9981f8ba5dfe0cb1e7b",
+      "bytes": 73
+    },
+    "software-final/rgba/world-0.png": {
+      "sha256": "6e1c8556ee57b38582698667a1639eb26171094715c3177f47464a66e5180bef",
+      "bytes": 143782
+    },
+    "software-final/rgba/world-1.png": {
+      "sha256": "3b1815e638e42af1e46d7336a66aa05eec04e6739aa4b707f9c79a10a481664d",
+      "bytes": 172576
+    },
+    "software-final/rgba/world-2.png": {
+      "sha256": "b8cc04172d483aa7ae9fe4caff5e4617cd03f313f672b8999cdd97879e9cef38",
+      "bytes": 55817
+    },
+    "software-final/rgba/world-3.png": {
+      "sha256": "5c968ee3210056ecfc8e8fc60e693afd5faa44bc20caca5ff2fb2b56f3cf9f0f",
+      "bytes": 84565
+    },
+    "software-final/run.log": {
+      "sha256": "375fc1bde50c29b614a896f53fcaa0ddca2dc626e6c2b78130099f36b3cb22ab",
+      "bytes": 11422
+    },
+    "nvidia-initial/bc7/inexact.png": {
+      "sha256": "40993de1c268b46dd548dc808f6a226a36d6f19fdbc6ba80a3f64338a8eb2e6f",
+      "bytes": 145
+    },
+    "nvidia-initial/bc7/large-mask.png": {
+      "sha256": "4de6bd282601803e821550e7526f432eef1488639505742dc8e8ada8902da557",
+      "bytes": 210204
+    },
+    "nvidia-initial/bc7/odd-edge.png": {
+      "sha256": "17c114e791c698e53cfc8897c4fa26a2997c979f07769c15085581434c5af829",
+      "bytes": 156
+    },
+    "nvidia-initial/bc7/opaque-mipped.png": {
+      "sha256": "74ebd720cee9a06ebbd6008d1ff58ce16c5dc062cbb69869741e1599a289497f",
+      "bytes": 140
+    },
+    "nvidia-initial/bc7/rotation0.png": {
+      "sha256": "e2427a097280fd18065b8031c82c4da0165ab9b66bc5431257264b691ad571ab",
+      "bytes": 185
+    },
+    "nvidia-initial/bc7/rotation1.png": {
+      "sha256": "88dfbe701e0a0db4576f5de667d21afc05de08bae5e18a2e3ca5b30232a6f81a",
+      "bytes": 179
+    },
+    "nvidia-initial/bc7/rotation2.png": {
+      "sha256": "9866ddc1e43f7f5ff48fad3ddfd8541699b018d0f5ace143da053c2a9b5ac2f7",
+      "bytes": 181
+    },
+    "nvidia-initial/bc7/rotation3.png": {
+      "sha256": "3447acc3e43eb7f2bcb247cc4a1575303767ea972ec136022d4c4885b6e59458",
+      "bytes": 183
+    },
+    "nvidia-initial/bc7/tiny.png": {
+      "sha256": "08d944ad5d001e711dfdbdcd4a95fc5db38f7a7b1ad6e9981f8ba5dfe0cb1e7b",
+      "bytes": 73
+    },
+    "nvidia-initial/bc7/world-0.png": {
+      "sha256": "cc3e3449633a6dfa5ba260a43648b990a62c7b09895f64b22591b2fe63f93b0c",
+      "bytes": 143675
+    },
+    "nvidia-initial/bc7/world-1.png": {
+      "sha256": "fc02f3adc90fa34bbb20785aaa7a3be988dc3c206866f535ac0eeb4b20c532d2",
+      "bytes": 172595
+    },
+    "nvidia-initial/bc7/world-2.png": {
+      "sha256": "dbf645e9f574d7841e32f1b8dcc2aaabe11da28814914d3c36fb866d463ec0b6",
+      "bytes": 55774
+    },
+    "nvidia-initial/bc7/world-3.png": {
+      "sha256": "51a61019b723cb939e52c8ddc088db753f7d2a70d45c8876130d9f8728e1ce12",
+      "bytes": 84654
+    },
+    "nvidia-initial/report.json": {
+      "sha256": "a2c081e44df8e46683a0ffe8149fab3f507da4c31bd749c2385cca5ac63b883c",
+      "bytes": 9766
+    },
+    "nvidia-initial/rgba/inexact.png": {
+      "sha256": "40993de1c268b46dd548dc808f6a226a36d6f19fdbc6ba80a3f64338a8eb2e6f",
+      "bytes": 145
+    },
+    "nvidia-initial/rgba/large-mask.png": {
+      "sha256": "4de6bd282601803e821550e7526f432eef1488639505742dc8e8ada8902da557",
+      "bytes": 210204
+    },
+    "nvidia-initial/rgba/odd-edge.png": {
+      "sha256": "17c114e791c698e53cfc8897c4fa26a2997c979f07769c15085581434c5af829",
+      "bytes": 156
+    },
+    "nvidia-initial/rgba/opaque-mipped.png": {
+      "sha256": "74ebd720cee9a06ebbd6008d1ff58ce16c5dc062cbb69869741e1599a289497f",
+      "bytes": 140
+    },
+    "nvidia-initial/rgba/rotation0.png": {
+      "sha256": "e2427a097280fd18065b8031c82c4da0165ab9b66bc5431257264b691ad571ab",
+      "bytes": 185
+    },
+    "nvidia-initial/rgba/rotation1.png": {
+      "sha256": "88dfbe701e0a0db4576f5de667d21afc05de08bae5e18a2e3ca5b30232a6f81a",
+      "bytes": 179
+    },
+    "nvidia-initial/rgba/rotation2.png": {
+      "sha256": "9866ddc1e43f7f5ff48fad3ddfd8541699b018d0f5ace143da053c2a9b5ac2f7",
+      "bytes": 181
+    },
+    "nvidia-initial/rgba/rotation3.png": {
+      "sha256": "3447acc3e43eb7f2bcb247cc4a1575303767ea972ec136022d4c4885b6e59458",
+      "bytes": 183
+    },
+    "nvidia-initial/rgba/tiny.png": {
+      "sha256": "08d944ad5d001e711dfdbdcd4a95fc5db38f7a7b1ad6e9981f8ba5dfe0cb1e7b",
+      "bytes": 73
+    },
+    "nvidia-initial/rgba/world-0.png": {
+      "sha256": "cc3e3449633a6dfa5ba260a43648b990a62c7b09895f64b22591b2fe63f93b0c",
+      "bytes": 143675
+    },
+    "nvidia-initial/rgba/world-1.png": {
+      "sha256": "fc02f3adc90fa34bbb20785aaa7a3be988dc3c206866f535ac0eeb4b20c532d2",
+      "bytes": 172595
+    },
+    "nvidia-initial/rgba/world-2.png": {
+      "sha256": "dbf645e9f574d7841e32f1b8dcc2aaabe11da28814914d3c36fb866d463ec0b6",
+      "bytes": 55774
+    },
+    "nvidia-initial/rgba/world-3.png": {
+      "sha256": "51a61019b723cb939e52c8ddc088db753f7d2a70d45c8876130d9f8728e1ce12",
+      "bytes": 84654
+    },
+    "nvidia-initial/run.log": {
+      "sha256": "bfab4fad5e0ee802e047fafcd392a38ac28254be37a19c38b393c53cc8f65602",
+      "bytes": 11065
+    },
+    "nvidia-initial/transport.json": {
+      "sha256": "ab89863d13fe10ac3e0936f456990bbb91701b6b81e073acc31fc7317bebd222",
+      "bytes": 1292
+    },
+    "software-initial/bc7/inexact.png": {
+      "sha256": "40993de1c268b46dd548dc808f6a226a36d6f19fdbc6ba80a3f64338a8eb2e6f",
+      "bytes": 145
+    },
+    "software-initial/bc7/large-mask.png": {
+      "sha256": "4de6bd282601803e821550e7526f432eef1488639505742dc8e8ada8902da557",
+      "bytes": 210204
+    },
+    "software-initial/bc7/odd-edge.png": {
+      "sha256": "17c114e791c698e53cfc8897c4fa26a2997c979f07769c15085581434c5af829",
+      "bytes": 156
+    },
+    "software-initial/bc7/opaque-mipped.png": {
+      "sha256": "74ebd720cee9a06ebbd6008d1ff58ce16c5dc062cbb69869741e1599a289497f",
+      "bytes": 140
+    },
+    "software-initial/bc7/rotation0.png": {
+      "sha256": "e2427a097280fd18065b8031c82c4da0165ab9b66bc5431257264b691ad571ab",
+      "bytes": 185
+    },
+    "software-initial/bc7/rotation1.png": {
+      "sha256": "88dfbe701e0a0db4576f5de667d21afc05de08bae5e18a2e3ca5b30232a6f81a",
+      "bytes": 179
+    },
+    "software-initial/bc7/rotation2.png": {
+      "sha256": "9866ddc1e43f7f5ff48fad3ddfd8541699b018d0f5ace143da053c2a9b5ac2f7",
+      "bytes": 181
+    },
+    "software-initial/bc7/rotation3.png": {
+      "sha256": "3447acc3e43eb7f2bcb247cc4a1575303767ea972ec136022d4c4885b6e59458",
+      "bytes": 183
+    },
+    "software-initial/bc7/tiny.png": {
+      "sha256": "08d944ad5d001e711dfdbdcd4a95fc5db38f7a7b1ad6e9981f8ba5dfe0cb1e7b",
+      "bytes": 73
+    },
+    "software-initial/bc7/world-0.png": {
+      "sha256": "6e1c8556ee57b38582698667a1639eb26171094715c3177f47464a66e5180bef",
+      "bytes": 143782
+    },
+    "software-initial/bc7/world-1.png": {
+      "sha256": "3b1815e638e42af1e46d7336a66aa05eec04e6739aa4b707f9c79a10a481664d",
+      "bytes": 172576
+    },
+    "software-initial/bc7/world-2.png": {
+      "sha256": "b8cc04172d483aa7ae9fe4caff5e4617cd03f313f672b8999cdd97879e9cef38",
+      "bytes": 55817
+    },
+    "software-initial/bc7/world-3.png": {
+      "sha256": "5c968ee3210056ecfc8e8fc60e693afd5faa44bc20caca5ff2fb2b56f3cf9f0f",
+      "bytes": 84565
+    },
+    "software-initial/report.json": {
+      "sha256": "a54e86eee99c552a7c2edd993d2e4df63d5c2677f3c14d9b19792473f5467859",
+      "bytes": 9702
+    },
+    "software-initial/rgba/inexact.png": {
+      "sha256": "40993de1c268b46dd548dc808f6a226a36d6f19fdbc6ba80a3f64338a8eb2e6f",
+      "bytes": 145
+    },
+    "software-initial/rgba/large-mask.png": {
+      "sha256": "4de6bd282601803e821550e7526f432eef1488639505742dc8e8ada8902da557",
+      "bytes": 210204
+    },
+    "software-initial/rgba/odd-edge.png": {
+      "sha256": "17c114e791c698e53cfc8897c4fa26a2997c979f07769c15085581434c5af829",
+      "bytes": 156
+    },
+    "software-initial/rgba/opaque-mipped.png": {
+      "sha256": "74ebd720cee9a06ebbd6008d1ff58ce16c5dc062cbb69869741e1599a289497f",
+      "bytes": 140
+    },
+    "software-initial/rgba/rotation0.png": {
+      "sha256": "e2427a097280fd18065b8031c82c4da0165ab9b66bc5431257264b691ad571ab",
+      "bytes": 185
+    },
+    "software-initial/rgba/rotation1.png": {
+      "sha256": "88dfbe701e0a0db4576f5de667d21afc05de08bae5e18a2e3ca5b30232a6f81a",
+      "bytes": 179
+    },
+    "software-initial/rgba/rotation2.png": {
+      "sha256": "9866ddc1e43f7f5ff48fad3ddfd8541699b018d0f5ace143da053c2a9b5ac2f7",
+      "bytes": 181
+    },
+    "software-initial/rgba/rotation3.png": {
+      "sha256": "3447acc3e43eb7f2bcb247cc4a1575303767ea972ec136022d4c4885b6e59458",
+      "bytes": 183
+    },
+    "software-initial/rgba/tiny.png": {
+      "sha256": "08d944ad5d001e711dfdbdcd4a95fc5db38f7a7b1ad6e9981f8ba5dfe0cb1e7b",
+      "bytes": 73
+    },
+    "software-initial/rgba/world-0.png": {
+      "sha256": "6e1c8556ee57b38582698667a1639eb26171094715c3177f47464a66e5180bef",
+      "bytes": 143782
+    },
+    "software-initial/rgba/world-1.png": {
+      "sha256": "3b1815e638e42af1e46d7336a66aa05eec04e6739aa4b707f9c79a10a481664d",
+      "bytes": 172576
+    },
+    "software-initial/rgba/world-2.png": {
+      "sha256": "b8cc04172d483aa7ae9fe4caff5e4617cd03f313f672b8999cdd97879e9cef38",
+      "bytes": 55817
+    },
+    "software-initial/rgba/world-3.png": {
+      "sha256": "5c968ee3210056ecfc8e8fc60e693afd5faa44bc20caca5ff2fb2b56f3cf9f0f",
+      "bytes": 84565
+    },
+    "software-initial/run.log": {
+      "sha256": "b6ec5d70c15e6d051c0ac18fb5565ad4366e063bed107f7c983f5b4746368af1",
+      "bytes": 11115
+    },
+    "adapter-refusal/run.log": {
+      "sha256": "4e99da9246967c6381d00877a52a946f2611d357e66c870cd4cc6df0aa8042fd",
+      "bytes": 407
+    },
+    "build/ingetrazo-exact-bc7-build.log": {
+      "sha256": "8b48d7c6589303b704f480291b786ffa5b10ff11cfad202eaf531a999430183f",
+      "bytes": 16065
+    },
+    "build/ingetrazo-exact-bc7-build-final.log": {
+      "sha256": "3d6545fc3109e4702e08566323bc4603888da89955ad5f59da4931eb95a2bf17",
+      "bytes": 15440
+    }
+  }
+}
