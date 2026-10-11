@@ -1,0 +1,87 @@
+{
+  "compiler": "shaderc 0.8.3; compile options None; entry main; ShaderKind from suffix",
+  "tool_sha256": "61e575f778907c65950640430a81cd7218f3df68e1cfb6c3d3b2ea04615169fa",
+  "command": "ingetrazo-image-shader-compiler INPUT OUTPUT",
+  "rows": [
+    {
+      "source": "crates/ingetrazo-gui/src/native_vulkan/shaders/shadow.frag",
+      "source_sha256": "a1ebb4d06e5f547585e43a77683c6c05e04d98411f3a82af55867598cde2f0e0",
+      "spirv_sha256": "dfdcaec8f7f774fc64753af4526f20cb2070dd8dd7fbc24b3c83ff3a6e9227fb"
+    },
+    {
+      "source": "crates/ingetrazo-gui/src/native_vulkan/shaders/shadow.vert",
+      "source_sha256": "dd8a60aefff58472731100df2ee943b0eac6dc69815c40724d4c38a8a12a1156",
+      "spirv_sha256": "5de89fa5af3e9caae6b0d9e79d2ea8718969abf07ecce71eff97768ec3d57363"
+    },
+    {
+      "source": "crates/ingetrazo-gui/src/native_vulkan/shaders/shadow_clip.vert",
+      "source_sha256": "e35489d4942f39a5953101353ba48016c16f39588b4df30451f56ffe557ee57e",
+      "spirv_sha256": "447e7ca3561a6c90e63a1b4a00dfe35b5f3cf77ecf67229a3234571cb0c1e9f7"
+    },
+    {
+      "source": "crates/ingetrazo-gui/src/native_vulkan/shaders/shadow_ground.frag",
+      "source_sha256": "870299781274ef65b811a8ab469ea51f53f6f85ff3fe5d3e6ca9422f6e1cf86d",
+      "spirv_sha256": "3af6bce807c2ea0bd00ad43a520849d3f3ad20e8af148d03a862a6491c87ec85"
+    },
+    {
+      "source": "crates/ingetrazo-gui/src/native_vulkan/shaders/shadow_plain.frag",
+      "source_sha256": "8c714418b82d7f6abc644e32609ad3652d03bcd4c020eda0bcc5dcad9435e65b",
+      "spirv_sha256": "7643a8593b5235a489e91422f5487f04f9be74be8bd4b27f41241e71d3cb601d"
+    },
+    {
+      "source": "crates/ingetrazo-gui/src/native_vulkan/shaders/shadow_plain.vert",
+      "source_sha256": "078ce8c9dcf35785c819bda4c7266197499a931b55f7952ffcf3c12ce32323ab",
+      "spirv_sha256": "589a5853bc060acbbd2593a108db4bcc09c86570bc98932c5673340f9438b314"
+    },
+    {
+      "source": "crates/ingetrazo-gui/src/native_vulkan/shaders/shadow_plain_clip.vert",
+      "source_sha256": "40695b3cf0e5326f07005fbdf59d477823c354f4bd1dce6d4ecf58e6e41c1c59",
+      "spirv_sha256": "f9f6369ad1f8fb1db361512eabbe453ab0b47b2af5f964d6ef9e86f09431c195"
+    },
+    {
+      "source": "crates/ingetrazo-gui/src/native_vulkan/shaders/texture.frag",
+      "source_sha256": "405db11ec2991192d652711556a80ee016048872c46dbe077ef4b82dd538ca81",
+      "spirv_sha256": "58387ec31948b6badb48697b9ad33bc2ab93b39e094c55058ae62ddfa90b7052"
+    },
+    {
+      "source": "crates/ingetrazo-gui/src/native_vulkan/shaders/texture_average.frag",
+      "source_sha256": "a9d9cbb1539f7f2c514c0ef93a600b8ae461c2fdeb7ebb8143809e46c5ee4f65",
+      "spirv_sha256": "3162f53a5f2b30691f76d676da0a128e1f1770d3cd0539ad60d887af01719fb8"
+    },
+    {
+      "source": "crates/ingetrazo-gui/src/native_vulkan/shaders/texture_average_shadow.frag",
+      "source_sha256": "97cdd497ba91e398897da631ad55b3f11277d2f3376efd2d96224b8061f71309",
+      "spirv_sha256": "76951c26d4a28aad372fca43f97560c5568b11001dd76f9b07c8df3d79269b1d"
+    },
+    {
+      "source": "crates/ingetrazo-gui/src/native_vulkan/shaders/texture_clip.vert",
+      "source_sha256": "bbd696491959ca058df43b5729f2e3f54969cb46afda1d4d30941ed83210f66b",
+      "spirv_sha256": "826a56d96717fdd121699d68e936e51826da3749bf2d22d0ae2c2cfa2f77d528"
+    },
+    {
+      "source": "crates/ingetrazo-gui/src/native_vulkan/shaders/texture_shadow.frag",
+      "source_sha256": "dc85d5bb592c5b2d61983521e0f8bc0e58166f82196a1ec69938965c095dac20",
+      "spirv_sha256": "ab0ab0b175f032b187f9b7a6b2cd7d27e205a259bf7937d60e81ec449996fc88"
+    },
+    {
+      "source": "crates/ingetrazo-gui/src/native_vulkan/shaders/transparent.frag",
+      "source_sha256": "3d231daf52313c1fb9d5c1c1ced1f2d98faa43e4f9b89cc5b370dcfd295b4ad9",
+      "spirv_sha256": "7ad53ab426278f834811ef11fa58615aa52b40974a04fd2b983165390aa2b2a5"
+    },
+    {
+      "source": "crates/ingetrazo-gui/src/native_vulkan/shaders/world.frag",
+      "source_sha256": "f0ff84b414da61d702b077baa77d2b4f7a3af1ec87706da646e076638aeb2e08",
+      "spirv_sha256": "d475e89f12805f14cee8786591cffc20d7e74b8c3b8c1f734256994f8b983680"
+    },
+    {
+      "source": "crates/ingetrazo-gui/src/native_vulkan/shaders/world_clip.vert",
+      "source_sha256": "57d616502130e9e632ca79af96e688cb33680f567d819496e8b0368265d3512c",
+      "spirv_sha256": "4c4c425dd4c8edc8999d1eeeb865ea8429dd3c75c32191e20a2899033b30f19c"
+    },
+    {
+      "source": "crates/ingetrazo-gui/src/native_vulkan/shaders/world_shadow.frag",
+      "source_sha256": "153c055da14c1e074620ffe08c212c9765798d6b1150067ccd70d3ce7f2ddbdc",
+      "spirv_sha256": "7e09240fc454e3d8427c114d2e8b3f348f5d86a743b6bf4af3dd00668726ee46"
+    }
+  ]
+}

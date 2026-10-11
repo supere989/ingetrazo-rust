@@ -1,0 +1,338 @@
+[
+  {
+    "case": "billboard-mesh-placement-order",
+    "phase": "on",
+    "pixels": 0,
+    "max": 0
+  },
+  {
+    "case": "billboard-mesh-placement-order",
+    "phase": "off",
+    "pixels": 0,
+    "max": 0
+  },
+  {
+    "case": "billboard-mesh-placement-order",
+    "phase": "restored",
+    "pixels": 0,
+    "max": 0
+  },
+  {
+    "case": "billboard-mesh-placement-order",
+    "phase": "depth",
+    "pixels": 0,
+    "max": 0
+  },
+  {
+    "case": "billboard-bitmap-empty-parent",
+    "phase": "on",
+    "pixels": 0,
+    "max": 0
+  },
+  {
+    "case": "billboard-bitmap-empty-parent",
+    "phase": "off",
+    "pixels": 0,
+    "max": 0
+  },
+  {
+    "case": "billboard-bitmap-empty-parent",
+    "phase": "restored",
+    "pixels": 0,
+    "max": 0
+  },
+  {
+    "case": "billboard-bitmap-empty-parent",
+    "phase": "depth",
+    "pixels": 0,
+    "max": 0
+  },
+  {
+    "case": "billboard-bitmap-nested-reflection",
+    "phase": "on",
+    "pixels": 0,
+    "max": 0
+  },
+  {
+    "case": "billboard-bitmap-nested-reflection",
+    "phase": "off",
+    "pixels": 0,
+    "max": 0
+  },
+  {
+    "case": "billboard-bitmap-nested-reflection",
+    "phase": "restored",
+    "pixels": 0,
+    "max": 0
+  },
+  {
+    "case": "billboard-bitmap-nested-reflection",
+    "phase": "depth",
+    "pixels": 0,
+    "max": 0
+  },
+  {
+    "case": "solid",
+    "phase": "on",
+    "pixels": 0,
+    "max": 0
+  },
+  {
+    "case": "solid",
+    "phase": "off",
+    "pixels": 0,
+    "max": 0
+  },
+  {
+    "case": "solid",
+    "phase": "restored",
+    "pixels": 0,
+    "max": 0
+  },
+  {
+    "case": "solid",
+    "phase": "depth",
+    "pixels": 0,
+    "max": 0
+  },
+  {
+    "case": "billboard-bitmap-hardcutout",
+    "phase": "on",
+    "pixels": 0,
+    "max": 0
+  },
+  {
+    "case": "billboard-bitmap-hardcutout",
+    "phase": "off",
+    "pixels": 0,
+    "max": 0
+  },
+  {
+    "case": "billboard-bitmap-hardcutout",
+    "phase": "restored",
+    "pixels": 0,
+    "max": 0
+  },
+  {
+    "case": "billboard-bitmap-hardcutout",
+    "phase": "depth",
+    "pixels": 0,
+    "max": 0
+  },
+  {
+    "case": "billboard-bitmap-perspective",
+    "phase": "on",
+    "pixels": 0,
+    "max": 0
+  },
+  {
+    "case": "billboard-bitmap-perspective",
+    "phase": "off",
+    "pixels": 0,
+    "max": 0
+  },
+  {
+    "case": "billboard-bitmap-perspective",
+    "phase": "restored",
+    "pixels": 0,
+    "max": 0
+  },
+  {
+    "case": "billboard-bitmap-perspective",
+    "phase": "depth",
+    "pixels": 0,
+    "max": 0
+  },
+  {
+    "case": "billboard-mesh-solid-perspective",
+    "phase": "on",
+    "pixels": 0,
+    "max": 0
+  },
+  {
+    "case": "billboard-mesh-solid-perspective",
+    "phase": "off",
+    "pixels": 0,
+    "max": 0
+  },
+  {
+    "case": "billboard-mesh-solid-perspective",
+    "phase": "restored",
+    "pixels": 0,
+    "max": 0
+  },
+  {
+    "case": "billboard-mesh-solid-perspective",
+    "phase": "depth",
+    "pixels": 0,
+    "max": 0
+  },
+  {
+    "case": "cutout",
+    "phase": "on",
+    "pixels": 441,
+    "max": 106
+  },
+  {
+    "case": "cutout",
+    "phase": "off",
+    "pixels": 306,
+    "max": 30
+  },
+  {
+    "case": "cutout",
+    "phase": "restored",
+    "pixels": 441,
+    "max": 106
+  },
+  {
+    "case": "cutout",
+    "phase": "depth",
+    "pixels": 0,
+    "max": 0
+  },
+  {
+    "case": "hidden-line-cutout",
+    "phase": "on",
+    "pixels": 0,
+    "max": 0
+  },
+  {
+    "case": "hidden-line-cutout",
+    "phase": "off",
+    "pixels": 0,
+    "max": 0
+  },
+  {
+    "case": "hidden-line-cutout",
+    "phase": "restored",
+    "pixels": 0,
+    "max": 0
+  },
+  {
+    "case": "hidden-line-cutout",
+    "phase": "depth",
+    "pixels": 0,
+    "max": 0
+  },
+  {
+    "case": "missing-texture",
+    "phase": "on",
+    "pixels": 0,
+    "max": 0
+  },
+  {
+    "case": "missing-texture",
+    "phase": "off",
+    "pixels": 0,
+    "max": 0
+  },
+  {
+    "case": "missing-texture",
+    "phase": "restored",
+    "pixels": 0,
+    "max": 0
+  },
+  {
+    "case": "missing-texture",
+    "phase": "depth",
+    "pixels": 0,
+    "max": 0
+  },
+  {
+    "case": "section",
+    "phase": "on",
+    "pixels": 0,
+    "max": 0
+  },
+  {
+    "case": "section",
+    "phase": "off",
+    "pixels": 0,
+    "max": 0
+  },
+  {
+    "case": "section",
+    "phase": "restored",
+    "pixels": 0,
+    "max": 0
+  },
+  {
+    "case": "section",
+    "phase": "depth",
+    "pixels": 0,
+    "max": 0
+  },
+  {
+    "case": "offscreen-instance",
+    "phase": "on",
+    "pixels": 0,
+    "max": 0
+  },
+  {
+    "case": "offscreen-instance",
+    "phase": "off",
+    "pixels": 0,
+    "max": 0
+  },
+  {
+    "case": "offscreen-instance",
+    "phase": "restored",
+    "pixels": 0,
+    "max": 0
+  },
+  {
+    "case": "offscreen-instance",
+    "phase": "depth",
+    "pixels": 0,
+    "max": 0
+  },
+  {
+    "case": "glass-69",
+    "phase": "on",
+    "pixels": 0,
+    "max": 0
+  },
+  {
+    "case": "glass-69",
+    "phase": "off",
+    "pixels": 0,
+    "max": 0
+  },
+  {
+    "case": "glass-69",
+    "phase": "restored",
+    "pixels": 0,
+    "max": 0
+  },
+  {
+    "case": "glass-69",
+    "phase": "depth",
+    "pixels": 0,
+    "max": 0
+  },
+  {
+    "case": "glass-70",
+    "phase": "on",
+    "pixels": 0,
+    "max": 0
+  },
+  {
+    "case": "glass-70",
+    "phase": "off",
+    "pixels": 0,
+    "max": 0
+  },
+  {
+    "case": "glass-70",
+    "phase": "restored",
+    "pixels": 0,
+    "max": 0
+  },
+  {
+    "case": "glass-70",
+    "phase": "depth",
+    "pixels": 0,
+    "max": 0
+  }
+]
