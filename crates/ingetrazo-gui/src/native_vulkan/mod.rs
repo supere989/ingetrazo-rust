@@ -150,6 +150,7 @@ impl<A: App> ApplicationHandler for AppWrapper<A> {
 }
 
 pub struct System {
+    solar_candidate:bool,
     command_buffer: vk::CommandBuffer,
     swapchain: Swapchain,
     image_available_semaphore: vk::Semaphore,
@@ -297,6 +298,7 @@ impl System {
         startup.command=None;startup.acquire=None;startup.fence=None;
         let pointer_modifiers=crate::pointer_modifiers::install(&egui_ctx);
         Ok(Self {
+            solar_candidate:std::env::var("INGETRAZO_VULKAN_SOLAR_CANDIDATE").as_deref()==Ok("1"),
             vulkan_context,
             command_buffer,
             swapchain:pending_swapchain.take(),
@@ -1441,7 +1443,11 @@ impl App for crate::IngeTrazoApp {
             // if extent is unchanged, with no allocation/upload/copy.
             let scale=system.egui_ctx.pixels_per_point();let [width,height]=crate::viewport_extent::scene_extent([rect.width() as f64,rect.height() as f64],scale as f64)?;let extent=vk::Extent2D{width,height};self.native_gpu_viewport_texture=Some(world.resize(&system.vulkan_context,&mut system.renderer,extent)?);
             world.set_display_scale(system.egui_ctx.pixels_per_point());
-            world.set_scene(&system.vulkan_context,&self.scene,&self.camera,&self.style,system.fence,system.draw_serial,self.native_geometry_revision)
+            if system.solar_candidate{
+                let sun=crate::solar_controls::scene_direction(self).unwrap_or(None);
+                let ground=self.scene.tile_layer.as_ref().is_none_or(|m|!m.visible)&&self.scene.terrain.as_ref().is_none_or(|t|!t.visible);
+                world.set_scene_with_sun(&system.vulkan_context,&self.scene,&self.camera,&self.style,system.fence,system.draw_serial,self.native_geometry_revision,sun,self.scene.shadows.darkness as f32,ground)
+            }else{world.set_scene(&system.vulkan_context,&self.scene,&self.camera,&self.style,system.fence,system.draw_serial,self.native_geometry_revision)}
         })();
         if let Err(error)=result {
             // The collected overlay may still reference the prior target/scene.

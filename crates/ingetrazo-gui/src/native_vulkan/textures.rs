@@ -5,7 +5,7 @@ use ash::{vk,Device};
 use ingetrazo_render::{buffer::TextureBuffers,native_textures::Geometry};
 use std::collections::{HashMap,HashSet};
 #[derive(Clone,Copy,Debug,PartialEq,Eq)]pub enum Phase{Opaque,BackOpaque,TransparentFront,TransparentBack,Mask,Depth}
-#[derive(Clone,Debug)]struct Draw{buffer:BufferId,set:vk::DescriptorSet,asset:AssetId,first:u32,count:u32,opacity:f32,shade:f32,cutout:bool,back:bool,cull:bool,opaque:bool,path:String,order:usize,mean:Option<[f32;3]>}
+#[derive(Clone,Debug)]struct Draw{buffer:BufferId,set:vk::DescriptorSet,asset:AssetId,first:u32,count:u32,opacity:f32,shade:f32,cutout:bool,back:bool,cull:bool,opaque:bool,path:String,order:usize,mean:Option<[f32;3]>,shadow_only:bool,missing:bool}
 struct Pool{device:Device,handle:vk::DescriptorPool}
 impl Drop for Pool{fn drop(&mut self){unsafe{self.device.destroy_descriptor_pool(self.handle,None)}}}
 pub(crate) struct Publication{retirement:super::resources::CompletedRetirement,active:HashSet<AssetId>}
@@ -13,6 +13,7 @@ pub struct Candidate{pool:Option<Pool>,buffers:Vec<BufferId>,draws:Vec<Draw>,ima
 #[derive(Default,Clone,Copy,Debug)]pub struct Stats{pub builds:u64,pub uploads:u64,pub vertex_bytes:u64,pub draws:u64,pub cache_hits:u64,pub rollbacks:u64,pub average_decodes:u64,pub average_hits:u64,pub average_entries:usize,pub sampled_entries:usize}
 pub struct Textures{references:super::reference_images::ReferenceImages,image_key:Option<(u64,u64)>,probe_pressure:bool,budget:std::sync::Arc<super::budget::VulkanBudget>,device:Device,layout:vk::PipelineLayout,descriptor_layout:vk::DescriptorSetLayout,pipelines:[vk::Pipeline;16],averages:super::texture_average::Cache,pool:Option<Pool>,buffers:Vec<BufferId>,draws:Vec<Draw>,cache:TextureCache,pub stats:Stats}
 impl Textures{
+ pub(crate) fn asset_layout(&self)->vk::DescriptorSetLayout{self.descriptor_layout}
  pub fn new(context:&VulkanContext,render_pass:vk::RenderPass,samples:vk::SampleCountFlags,budget:std::sync::Arc<super::budget::VulkanBudget>)->Result<Self,String>{
   let device=context.device.clone();let mut result=Self{references:super::reference_images::ReferenceImages::new(context,render_pass,samples)?,image_key:None,probe_pressure:false,budget,device,layout:vk::PipelineLayout::null(),descriptor_layout:vk::DescriptorSetLayout::null(),pipelines:[vk::Pipeline::null();16],averages:super::texture_average::Cache::new(ingetrazo_render::source_texture_decode::Limits::default(),65536),pool:None,buffers:vec![],draws:vec![],cache:TextureCache::default(),stats:Stats::default()};
   let bindings=[vk::DescriptorSetLayoutBinding::default().binding(0).descriptor_type(vk::DescriptorType::COMBINED_IMAGE_SAMPLER).descriptor_count(1).stage_flags(vk::ShaderStageFlags::FRAGMENT)];
@@ -24,25 +25,32 @@ impl Textures{
   self.prepare_mode(context,resources,buffers,assets,scene,fence,completed,storage_limit,false)
  }
  pub fn prepare_mode(&mut self,context:&VulkanContext,resources:&mut Resources,buffers:&TextureBuffers,assets:&HashMap<String,Vec<u8>>,scene:&ingetrazo_core::scene::Scene,fence:vk::Fence,completed:u64,storage_limit:u64,average:bool)->Result<Candidate,String>{
+  self.prepare_shadow_mode(context,resources,buffers,assets,scene,fence,completed,storage_limit,average,false,None)
+ }
+ pub(crate) fn prepare_shadow_mode(&mut self,context:&VulkanContext,resources:&mut Resources,buffers:&TextureBuffers,assets:&HashMap<String,Vec<u8>>,scene:&ingetrazo_core::scene::Scene,fence:vk::Fence,completed:u64,storage_limit:u64,average:bool,shadow:bool,extra:Option<&TextureBuffers>)->Result<Candidate,String>{
   if !unsafe{context.device.get_fence_status(fence)}.map_err(|e|e.to_string())?{return Err("Texture replacement requires completed draw fence".into());}
   let mut candidate=Candidate{pool:None,buffers:vec![],draws:vec![],images:vec![],references:None,contours:vec![],averages:super::texture_average::Candidate::default(),average_active:HashSet::new()};
   let prepare=(||->Result<(),String>{
    {let _pressure=if self.probe_pressure{let mut ledger=self.budget.ledger.lock().unwrap();let previous=ledger.total_limit;ledger.total_limit=Some(ledger.total_committed());Some(PressureRestore{budget:self.budget.clone(),previous})}else{None};candidate.references=Some(self.references.prepare(context,resources,&mut self.cache,scene,fence).map_err(|e|format!("Reference image admission: {e}"))?);}
-   if buffers.is_empty(){return Ok(());}
-   let count=u32::try_from(buffers.len()).map_err(|_|"Too many texture descriptors")?;
-   let mut paths=buffers.iter().collect::<Vec<_>>();paths.sort_by_key(|(_,b)|b.source_texture_runs.iter().map(|r|r.order).min().unwrap_or(usize::MAX));
+   if buffers.is_empty()&&extra.is_none_or(|b|b.is_empty()){return Ok(());}
+   let count=u32::try_from(buffers.len().checked_add(extra.map_or(0,|b|b.len())).ok_or("Shadow descriptor count overflow")?).map_err(|_|"Too many texture descriptors")?;
+   let mut paths=buffers.iter().map(|(p,b)|(p,b,false)).chain(extra.into_iter().flat_map(|b|b.iter().map(|(p,b)|(p,b,true)))).collect::<Vec<_>>();paths.sort_by_key(|(_,b,_)|b.source_texture_runs.iter().map(|r|r.order).min().unwrap_or(usize::MAX));
    let mut images=candidate.references.as_ref().unwrap().sampled().collect::<HashMap<AssetId,(vk::ImageView,vk::Sampler,bool)>>();
-   for(path,buffer)in paths{
+   for(path,buffer,shadow_only)in paths{
     let geometry=Geometry::prepare(buffer)?;if geometry.vertices.is_empty(){continue;}
     // viewport.py1612/1780: shaded opaque FRONTS use the Qt mean;
     // all back overrides and translucent fronts sample the original texture.
     // One asset can need both; retain one geometry upload and one sampled image.
-    let needs_mean=average&&geometry.draws.iter().any(|d|!d.source.back_side&&d.source.opacity>=0.999);
-    let needs_sampled=geometry.draws.iter().any(|d|!average||d.source.back_side||d.source.opacity<0.999);
-    let file;let encoded=if let Some(bytes)=assets.get(path){bytes.as_slice()}else{file=if needs_mean{read_average_file(path,self.averages.limits().encoded_bytes)?}else{std::fs::read(path).map_err(|e|format!("Texture {path}: {e}"))?};file.as_slice()};
+    let needs_mean=!shadow_only&&average&&geometry.draws.iter().any(|d|!d.source.back_side&&d.source.opacity>=0.999);
+    let needs_sampled=geometry.draws.iter().any(|d|!average||d.source.back_side||d.source.opacity<0.999||(shadow&&!d.source.back_side&&d.source.opacity>=0.7));
+    let file;let missing;
+    let encoded=if let Some(bytes)=assets.get(path){missing=false;bytes.as_slice()}else{
+     let read=if needs_mean{read_average_file(path,self.averages.limits().encoded_bytes)}else{match std::fs::read(path){Ok(bytes)=>Ok(bytes),Err(error)if shadow&&error.kind()==std::io::ErrorKind::NotFound=>Ok(Vec::new()),Err(error)=>Err(format!("Texture {path}: {error}"))}};
+     file=read?;missing=shadow&&!needs_mean&&file.is_empty();file.as_slice()
+    };
     let asset=self.cache.identify(encoded);let id=asset.id();
     let mean=if needs_mean{Some(self.averages.prepare(&mut candidate.averages,id,encoded)?)}else{None};
-    let (sampled,set)=if needs_sampled {
+    let (sampled,set)=if needs_sampled&&!missing {
      // Lazy pool creation keeps pure opaque shaded scenes free of sampled
      // image/descriptor allocations, including when changing render styles.
      if candidate.pool.is_none(){let handle=unsafe{self.device.create_descriptor_pool(&vk::DescriptorPoolCreateInfo::default().max_sets(count).pool_sizes(&[vk::DescriptorPoolSize{ty:vk::DescriptorType::COMBINED_IMAGE_SAMPLER,descriptor_count:count}]),None)}.map_err(|e|e.to_string())?;candidate.pool=Some(Pool{device:self.device.clone(),handle});}
@@ -53,11 +61,11 @@ impl Textures{
      (sampled,set)
     }else{((vk::ImageView::null(),vk::Sampler::null(),false),vk::DescriptorSet::null())};
     let vertex=resources.upload(context,geometry.upload_bytes(),vk::BufferUsageFlags::VERTEX_BUFFER|vk::BufferUsageFlags::STORAGE_BUFFER,false)?;candidate.buffers.push(vertex);self.stats.uploads+=1;self.stats.vertex_bytes+=geometry.upload_bytes().len()as u64;
-    if geometry.front_vertices>0 {
+    if !shadow_only&&geometry.front_vertices>0 {
      if geometry.upload_bytes().len()as u64<=storage_limit{candidate.contours.push((vertex,geometry.front_vertices/3,5));}
      else {let triangles=storage_limit.min(8*1024*1024)/36;if triangles==0{return Err("Texture contour storage range cannot hold one triangle".into());}for chunk in geometry.vertices[..geometry.front_vertices as usize].chunks(triangles as usize*3){let positions=chunk.iter().map(|v|v.position).collect::<Vec<_>>();let id=resources.upload(context,bytemuck::cast_slice(&positions),vk::BufferUsageFlags::STORAGE_BUFFER,false)?;candidate.buffers.push(id);candidate.contours.push((id,(positions.len()/3)as u32,3));}}
     }
-    for draw in geometry.draws{let source=draw.source;let opaque=source.opacity>=0.999;let mean=if opaque&&!source.back_side{mean}else{None};let opacity=if opaque{1.}else{format!("{:.3}",source.opacity).parse::<f32>().map_err(|e|e.to_string())?};candidate.draws.push(Draw{buffer:vertex,set,asset:id,first:draw.first,count:draw.count,opacity,shade:source.shade,cutout:sampled.2,back:source.back_side,cull:source.front_cull,opaque,path:path.clone(),order:source.order,mean});}
+    for draw in geometry.draws{let source=draw.source;let opaque=source.opacity>=0.999;let mean=if opaque&&!source.back_side{mean}else{None};let opacity=if opaque{1.}else{format!("{:.3}",source.opacity).parse::<f32>().map_err(|e|e.to_string())?};candidate.draws.push(Draw{buffer:vertex,set,asset:id,first:draw.first,count:draw.count,opacity,shade:source.shade,cutout:sampled.2,back:source.back_side,cull:source.front_cull,opaque,path:path.clone(),order:source.order,mean,shadow_only,missing});}
    }
    // Source front opaque first occurrence, then sorted back/transparent keys.
    candidate.average_active.try_reserve(candidate.draws.len()).map_err(|_|"Average active identity admission")?;
@@ -75,7 +83,7 @@ impl Textures{
   self.cache.preflight_publication(candidate.images.iter().chain(candidate.references.iter().flat_map(|r|r.images())))?;
   let mut active=HashSet::new();let count=candidate.draws.len().checked_add(candidate.references.as_ref().map_or(0,|r|r.assets().count())).ok_or("Active texture count overflow")?;
   active.try_reserve(count).map_err(|_|"Active texture identity admission")?;
-  active.extend(candidate.draws.iter().filter(|d|d.mean.is_none()).map(|d|d.asset).chain(candidate.references.iter().flat_map(|r|r.assets())));
+  active.extend(candidate.draws.iter().filter(|d|d.set!=vk::DescriptorSet::null()).map(|d|d.asset).chain(candidate.references.iter().flat_map(|r|r.assets())));
   let retirement=resources.publication_preflight(context,fence,completed,&old,&next)?;
   Ok(Publication{retirement,active})
  }
@@ -94,15 +102,31 @@ impl Textures{
 
  /// No allocation, geometry traversal, hashing, decoding, or transfer on draw.
  pub fn record(&mut self,resources:&mut Resources,command:vk::CommandBuffer,serial:u64,phase:Phase,mvp:&[f32;16],plane:&[f32;4],clip:u32,height:u32,xray:bool)->Result<(),String>{
-  for draw in self.draws.iter().filter(|d|match phase{Phase::Opaque=>d.opaque&&!d.back,Phase::BackOpaque=>d.opaque&&d.back,Phase::TransparentFront=>!d.opaque&&!d.back,Phase::TransparentBack=>!d.opaque&&d.back,Phase::Mask|Phase::Depth=>true}){
-   let buffer=resources.buffer(draw.buffer).ok_or("Cached texture buffer retired before draw")?;resources.mark_used(draw.buffer,serial)?;if draw.mean.is_none(){self.cache.mark_used(draw.asset,serial)?;}
+  self.record_receiver(resources,command,serial,phase,mvp,plane,clip,height,xray,None)
+ }
+ pub(crate) fn record_receiver(&mut self,resources:&mut Resources,command:vk::CommandBuffer,serial:u64,phase:Phase,mvp:&[f32;16],plane:&[f32;4],clip:u32,height:u32,xray:bool,shadow:Option<(vk::PipelineLayout,&[vk::Pipeline;16])>)->Result<(),String>{
+  let (layout,pipelines)=shadow.unwrap_or((self.layout,&self.pipelines));
+  for draw in self.draws.iter().filter(|d|!d.shadow_only&&(!d.missing||matches!(phase,Phase::Mask|Phase::Depth))).filter(|d|match phase{Phase::Opaque=>d.opaque&&!d.back,Phase::BackOpaque=>d.opaque&&d.back,Phase::TransparentFront=>!d.opaque&&!d.back,Phase::TransparentBack=>!d.opaque&&d.back,Phase::Mask|Phase::Depth=>true}){
+   let buffer=resources.buffer(draw.buffer).ok_or("Cached texture buffer retired before draw")?;resources.mark_used(draw.buffer,serial)?;if draw.set!=vk::DescriptorSet::null(){self.cache.mark_used(draw.asset,serial)?;}
    // viewport.py1652: XRay affects opaque fronts only; back and translucent
    // texture phases retain their paint opacity. _xray_face_depth uses all
    // texture positions without sampling alpha or writing colour.
    let index=if phase==Phase::Depth{7}else if phase==Phase::Mask{5}else if phase==Phase::Opaque&&xray{6}else if draw.opaque{if draw.back{1}else{0}}else if draw.back{4}else if draw.cull{3}else{2};
    let mut push=[0u8;112];push[..64].copy_from_slice(bytemuck::cast_slice(mvp));push[64..80].copy_from_slice(bytemuck::cast_slice(plane));push[80..84].copy_from_slice(bytemuck::bytes_of(&(clip|if matches!(phase,Phase::Mask|Phase::Depth){2}else{0})));push[84..88].copy_from_slice(bytemuck::bytes_of(&if phase==Phase::Opaque&&xray{0.6f32}else{draw.opacity}));push[88..92].copy_from_slice(bytemuck::bytes_of(&draw.shade));push[92..96].copy_from_slice(bytemuck::bytes_of(&(height<<1|u32::from(draw.cutout))));
    if let Some(mean)=draw.mean{push[96..108].copy_from_slice(bytemuck::cast_slice(&mean));}
-   unsafe{self.device.cmd_bind_pipeline(command,vk::PipelineBindPoint::GRAPHICS,self.pipelines[index+if draw.mean.is_some(){8}else{0}]);if draw.mean.is_none(){self.device.cmd_bind_descriptor_sets(command,vk::PipelineBindPoint::GRAPHICS,self.layout,0,&[draw.set],&[]);}self.device.cmd_bind_vertex_buffers(command,0,&[buffer],&[0]);self.device.cmd_push_constants(command,self.layout,vk::ShaderStageFlags::VERTEX|vk::ShaderStageFlags::FRAGMENT,0,&push);self.device.cmd_draw(command,draw.count,1,draw.first,0);}self.stats.draws+=1;
+   unsafe{self.device.cmd_bind_pipeline(command,vk::PipelineBindPoint::GRAPHICS,pipelines[index+if draw.mean.is_some()||draw.missing{8}else{0}]);if draw.mean.is_none()&&!draw.missing{self.device.cmd_bind_descriptor_sets(command,vk::PipelineBindPoint::GRAPHICS,layout,0,&[draw.set],&[]);}self.device.cmd_bind_vertex_buffers(command,0,&[buffer],&[0]);self.device.cmd_push_constants(command,layout,vk::ShaderStageFlags::VERTEX|vk::ShaderStageFlags::FRAGMENT,0,&push);self.device.cmd_draw(command,draw.count,1,draw.first,0);}self.stats.draws+=1;
+  }Ok(())
+ }
+ /// Front-only source casters; receiver averaging never removes alpha cutout.
+ pub(crate) fn preflight_shadow(&mut self,resources:&mut Resources,serial:u64)->Result<(),String>{for draw in self.draws.iter().filter(|d|!d.back&&d.opacity>=0.7){let id=*self.buffers.get(draw.buffer).ok_or("Shadow texture buffer identity")?;resources.mark_used(id,serial)?;if !draw.missing{self.cache.mark_used(draw.asset,serial)?;}}Ok(())}
+ pub(crate) fn record_shadow(&mut self,resources:&mut Resources,command:vk::CommandBuffer,serial:u64,pipeline:vk::Pipeline,layout:vk::PipelineLayout,fallback:vk::Pipeline,plain_layout:vk::PipelineLayout,parameters:&[u8])->Result<(),String>{
+  for draw in self.draws.iter().filter(|d|!d.back&&d.opacity>=0.7){
+   let buffer=resources.buffer(draw.buffer).ok_or("Shadow texture buffer retired")?;
+   if draw.set==vk::DescriptorSet::null()&&!draw.missing{return Err("Shadow caster sampled alpha was not admitted".into());}
+   resources.mark_used(draw.buffer,serial)?;
+   let mut push=[0u8;88];push.copy_from_slice(parameters);
+   let(pipeline,layout)=if draw.missing{push[84..88].copy_from_slice(&0u32.to_ne_bytes());(fallback,plain_layout)}else{self.cache.mark_used(draw.asset,serial)?;(pipeline,layout)};
+   unsafe{self.device.cmd_bind_pipeline(command,vk::PipelineBindPoint::GRAPHICS,pipeline);if !draw.missing{self.device.cmd_bind_descriptor_sets(command,vk::PipelineBindPoint::GRAPHICS,layout,0,&[draw.set],&[]);}self.device.cmd_bind_vertex_buffers(command,0,&[buffer],&[0]);self.device.cmd_push_constants(command,layout,vk::ShaderStageFlags::VERTEX|vk::ShaderStageFlags::FRAGMENT,0,&push);self.device.cmd_draw(command,draw.count,1,draw.first,0);}
   }Ok(())
  }
  pub fn refresh_images(&mut self,context:&VulkanContext,resources:&mut Resources,scene:&ingetrazo_core::scene::Scene,fence:vk::Fence,completed:u64)->Result<(),String>{
@@ -111,7 +135,7 @@ impl Textures{
   let candidate=self.references.prepare(context,resources,&mut self.cache,scene,fence)?;
   self.cache.preflight_publication(candidate.images())?;
   let mut active=HashSet::new();active.try_reserve(self.draws.len().checked_add(candidate.assets().count()).ok_or("Image refresh identity overflow")?).map_err(|_|"Image refresh identity admission")?;
-  active.extend(self.draws.iter().filter(|d|d.mean.is_none()).map(|d|d.asset).chain(candidate.assets()));
+  active.extend(self.draws.iter().filter(|d|d.set!=vk::DescriptorSet::null()).map(|d|d.asset).chain(candidate.assets()));
   let retirement=resources.publication_preflight(context,fence,completed,&[],&[])?;
   self.references.publish_admitted(&mut self.cache,candidate,scene.image_planes.publication_revision());
   resources.retire_completed(retirement);self.image_key=Some(key);self.cache.collect_unused_completed(&active,completed);self.stats.sampled_entries=self.cache.published_entries();Ok(())
@@ -126,8 +150,12 @@ impl Textures{
  pub fn buffers(&self)->&[BufferId]{&self.buffers}
 }
 impl Drop for Textures{fn drop(&mut self){drop(self.pool.take());unsafe{for p in self.pipelines{self.device.destroy_pipeline(p,None);}self.device.destroy_pipeline_layout(self.layout,None);self.device.destroy_descriptor_set_layout(self.descriptor_layout,None);}}}
+pub(crate) fn shadow_pipeline(device:&Device,pass:vk::RenderPass,layout:vk::PipelineLayout,samples:vk::SampleCountFlags,index:usize)->Result<vk::Pipeline,String>{pipeline_source(device,pass,layout,samples,index,true)}
 fn pipeline(device:&Device,pass:vk::RenderPass,layout:vk::PipelineLayout,samples:vk::SampleCountFlags,index:usize)->Result<vk::Pipeline,String>{
- let load=|bytes:&[u8]|ash::util::read_spv(&mut std::io::Cursor::new(bytes)).map_err(|e|e.to_string());let v=load(include_bytes!("shaders/texture.vert.spv"))?;let f=load(if index<8{include_bytes!("shaders/texture.frag.spv")}else{include_bytes!("shaders/texture_average.frag.spv")})?;let index=index%8;
+ pipeline_source(device,pass,layout,samples,index,false)
+}
+fn pipeline_source(device:&Device,pass:vk::RenderPass,layout:vk::PipelineLayout,samples:vk::SampleCountFlags,index:usize,shadow:bool)->Result<vk::Pipeline,String>{
+ let load=|bytes:&[u8]|ash::util::read_spv(&mut std::io::Cursor::new(bytes)).map_err(|e|e.to_string());let v=load(include_bytes!("shaders/texture.vert.spv"))?;let f=load(if shadow&&index%8==0{if index<8{include_bytes!("shaders/texture_shadow.frag.spv").as_slice()}else{include_bytes!("shaders/texture_average_shadow.frag.spv").as_slice()}}else if index<8{include_bytes!("shaders/texture.frag.spv").as_slice()}else{include_bytes!("shaders/texture_average.frag.spv").as_slice()})?;let index=index%8;
  let vertex=unsafe{device.create_shader_module(&vk::ShaderModuleCreateInfo::default().code(&v),None)}.map_err(|e|e.to_string())?;
  let fragment=match unsafe{device.create_shader_module(&vk::ShaderModuleCreateInfo::default().code(&f),None)}{Ok(f)=>f,Err(e)=>{unsafe{device.destroy_shader_module(vertex,None)};return Err(e.to_string());}};
  let stages=[vk::PipelineShaderStageCreateInfo::default().stage(vk::ShaderStageFlags::VERTEX).module(vertex).name(c"main"),vk::PipelineShaderStageCreateInfo::default().stage(vk::ShaderStageFlags::FRAGMENT).module(fragment).name(c"main")];
