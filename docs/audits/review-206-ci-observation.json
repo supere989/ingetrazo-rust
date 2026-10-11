@@ -1,0 +1,63 @@
+{
+  "source": "2063745484e11232d1175a4a6744a7cc991d6e10",
+  "runs": [
+    {
+      "id": 38099912446,
+      "jobs": [
+        {
+          "id": 114353523735,
+          "name": "Native Metal framework link (macos-15-intel)",
+          "status": "in_progress",
+          "conclusion": null,
+          "active_step": "Native paper font dependency build and library tests"
+        },
+        {
+          "id": 114353523859,
+          "name": "compilation-and-tests",
+          "status": "in_progress",
+          "conclusion": null,
+          "active_step": "Run cargo test --workspace --locked"
+        },
+        {
+          "id": 114353523877,
+          "name": "Native Metal compile (aarch64-apple-darwin)",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 114353523921,
+          "name": "Native Metal framework link (macos-15)",
+          "status": "in_progress",
+          "conclusion": null,
+          "active_step": "Build combined native macOS GUI with Apple SDK"
+        },
+        {
+          "id": 114353523924,
+          "name": "Native Metal compile (x86_64-apple-darwin)",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "id": 38099912424,
+      "jobs": [
+        {
+          "id": 114353523650,
+          "name": "Actual ordered UI and CAD compute (macos-15)",
+          "status": "in_progress",
+          "conclusion": null,
+          "active_step": "Complete job"
+        },
+        {
+          "id": 114353523929,
+          "name": "Actual ordered UI and CAD compute (macos-15-intel)",
+          "status": "in_progress",
+          "conclusion": null,
+          "active_step": "Build native compute consumer with source provenance"
+        }
+      ]
+    }
+  ],
+  "boundary": "Observation only; native and Linux jobs still active, not overall acceptance."
+}
