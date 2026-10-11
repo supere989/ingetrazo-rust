@@ -1,0 +1,31 @@
+{
+  "runtime_commit": "068fa107a81bd1eaa1a67e0e64bc701c38ec097b",
+  "base": "7b3afb0e370268ab6ec2f2a0d409ee9aff5243d5",
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "application_binary_sha256": "3e0e9dbba7d4414b03ac769cae0deaf2a976b429a5c7971a9311f9761bb46ef3",
+  "diagnostic_binary_sha256": "f038ac829223395833af885ffd9c0f3c47edae6608d426cd1b6d1926a87554ec",
+  "production_source_hashes": {
+    "crates/ingetrazo-gui/src/native_vulkan/world.rs": "9981fd516d8f68cc8576b12cd31c3f242496108f9ac2558d85eb05c06fb70e0b",
+    "crates/ingetrazo-gui/src/native_vulkan/mod.rs": "a3158e84c9dfdba035b801490d37cb5babdf298b48673e6a5e7010ab119fd0fe",
+    "crates/ingetrazo-gui/src/native_vulkan/source_depth.rs": "68906236863e83423a672c9a18c8a519b28f0e85c984f4ac8e512c4452007ae5",
+    "crates/ingetrazo-gui/src/navigation_ray.rs": "553d8cd4fbbf7f6d6b7b17b2546fbe73f16a8af44973ec5746c98a47a6499cd5",
+    "crates/ingetrazo-gui/src/native_vulkan/face_sweep_application_probe.rs": "497863f3a3d295d702259315130710e13d1c09c14d253fd66d22bd7a80906be1",
+    "crates/ingetrazo-gui/src/native_vulkan/world/face_sweep.rs": "087e4631cbef78a325c813f6e6a6e782df311d5e9be945b36fc1d3d49e6351fe",
+    "crates/ingetrazo-tools/src/pushpull.rs": "4c42e9b2d2fc04ebc6841b1ec70eca02ead775a6c7303c0ef7528d21da8b3920",
+    "crates/ingetrazo-render/src/face_sweep.rs": "7246824e230ba2bedc7db71b2ef1336c01f53cd565c8b9afc3b4c4749753c9ed",
+    "scripts/check-native-face-sweep-application.py": "2d890e1fa78565223b53f042d83b960a859866cdbefa319e08873e1beb1f8b6c"
+  },
+  "diagnostic_base_source_hashes": {
+    "crates/ingetrazo-gui/src/native_vulkan/world.rs": "d23a5e05b582b61a9bc4d967ed5f80c2260b7f938c923bf917ac4b4cdde2f448",
+    "crates/ingetrazo-gui/src/native_vulkan/mod.rs": "6552a2e458a1f0e5ebca472c68b3efa7cd66ac612c1bebbcec12f592496bff20",
+    "crates/ingetrazo-gui/src/native_vulkan/source_depth.rs": "68906236863e83423a672c9a18c8a519b28f0e85c984f4ac8e512c4452007ae5",
+    "crates/ingetrazo-gui/src/navigation_ray.rs": "553d8cd4fbbf7f6d6b7b17b2546fbe73f16a8af44973ec5746c98a47a6499cd5",
+    "crates/ingetrazo-gui/src/native_vulkan/face_sweep_application_probe.rs": "497863f3a3d295d702259315130710e13d1c09c14d253fd66d22bd7a80906be1",
+    "crates/ingetrazo-gui/src/native_vulkan/world/face_sweep.rs": "087e4631cbef78a325c813f6e6a6e782df311d5e9be945b36fc1d3d49e6351fe",
+    "crates/ingetrazo-tools/src/pushpull.rs": "4c42e9b2d2fc04ebc6841b1ec70eca02ead775a6c7303c0ef7528d21da8b3920",
+    "crates/ingetrazo-render/src/face_sweep.rs": "7246824e230ba2bedc7db71b2ef1336c01f53cd565c8b9afc3b4c4749753c9ed",
+    "scripts/check-native-face-sweep-application.py": "2d890e1fa78565223b53f042d83b960a859866cdbefa319e08873e1beb1f8b6c"
+  },
+  "diagnostic_source_sha256": "925d18ae4925b1ebaf49fd69af4d253410a46affe83b9f214ec7e13ab1894d55",
+  "diagnostic_initial_transport_metadata_failure": "Host direct read of Podman merged binary denied after ordinary GPU process completed; native.json/full frames retained. Subsequent transports hash through podman exec. No GPU retry inferred."
+}

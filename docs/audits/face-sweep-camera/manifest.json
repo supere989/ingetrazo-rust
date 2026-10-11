@@ -1,0 +1,670 @@
+{
+  "archive_sha256": "5b35e523af571fe90645f3fc91017ec77d3dc42b965bedfb197a55c6092bcaaf",
+  "records": [
+    {
+      "path": "final/back-recess/1-acquire.png",
+      "bytes": 4202,
+      "sha256": "ec45a835bdae562366469e11f49947b4decbe49545c3c0879f3dc46a022528a6"
+    },
+    {
+      "path": "final/back-recess/2-drag.png",
+      "bytes": 4358,
+      "sha256": "adf1ea0d39855800e5b1a7c0b23e709c8d71d6e6c41d3a9c047286c3603feb9e"
+    },
+    {
+      "path": "final/back-recess/3-drag.png",
+      "bytes": 4344,
+      "sha256": "58b6c159465a75eaedfedd74adff806906285ce8ce359f24dd8f1cde586a811b"
+    },
+    {
+      "path": "final/back-recess/4-drag.png",
+      "bytes": 4202,
+      "sha256": "ec45a835bdae562366469e11f49947b4decbe49545c3c0879f3dc46a022528a6"
+    },
+    {
+      "path": "final/back-recess/5-cancel.png",
+      "bytes": 891,
+      "sha256": "e5212f5bf8580bf43c48d3514882e68660959be99b7a8325beb275b5ce1d7cab"
+    },
+    {
+      "path": "final/back-recess/6-save.png",
+      "bytes": 891,
+      "sha256": "e5212f5bf8580bf43c48d3514882e68660959be99b7a8325beb275b5ce1d7cab"
+    },
+    {
+      "path": "final/back-recess/app-cleanup.json",
+      "bytes": 87,
+      "sha256": "002b2ad4378af24a2bf8ea97cf7dcaab0240aa0e2923218dec01245f4e59b3e4"
+    },
+    {
+      "path": "final/back-recess/baseline.png",
+      "bytes": 891,
+      "sha256": "e5212f5bf8580bf43c48d3514882e68660959be99b7a8325beb275b5ce1d7cab"
+    },
+    {
+      "path": "final/back-recess/config/ingetrazo-rust/settings.json",
+      "bytes": 499,
+      "sha256": "ad14dfdc6e70977cd277553e4bed192830279ae2c1f5971d893499963b57f8f6"
+    },
+    {
+      "path": "final/back-recess/control/request.json",
+      "bytes": 30,
+      "sha256": "69b2f69a4d991dade11c8a7ca92e9790b04e36c6d57c5c8141cf2310ce17e3ae"
+    },
+    {
+      "path": "final/back-recess/control/saved.igz",
+      "bytes": 3633,
+      "sha256": "775e2ad8a685d822a992c9e1ab7a0fb17e5b8a24c6e1efbac90d06d1eac52adc"
+    },
+    {
+      "path": "final/back-recess/control/state.json",
+      "bytes": 360,
+      "sha256": "161a75d98b70d3450bd68460ee8aae1c8bc9d45ed43e6be3415c21337bd00cc8"
+    },
+    {
+      "path": "final/back-recess/result.json",
+      "bytes": 7854,
+      "sha256": "1ea4ddab20665286c669eb0937598417cfccf71221ad892cb58ac8108271b1f0"
+    },
+    {
+      "path": "final/back-recess/runtime.log",
+      "bytes": 2939,
+      "sha256": "9b7c1dc7a97781b083cb3449b888c179259ea07df40eddbffbcc5b94cdef583f"
+    },
+    {
+      "path": "final/back-recess/source-comparison.json",
+      "bytes": 896,
+      "sha256": "11d078a15c4060e28754a4509fe96a08f3ba9dd13a9a59ce0216909acd888cf2"
+    },
+    {
+      "path": "final/back-recess/transport.json",
+      "bytes": 3200,
+      "sha256": "e7e7f9bf60813794d2b0f9348f06c1cf564710a2ce72749c058bcd84083b16b3"
+    },
+    {
+      "path": "final/back-recess/transport.log",
+      "bytes": 43,
+      "sha256": "0edeadb29bda5d91af73ead0657d44bb358958f12535c0fc19512882fb6168b6"
+    },
+    {
+      "path": "final/back-recess/xvfb-cleanup.json",
+      "bytes": 87,
+      "sha256": "ac3db790fb10744c5adcca88c62d290edc9c581201a89b7d5ecef1828bf1398e"
+    },
+    {
+      "path": "final/front-recess/1-acquire.png",
+      "bytes": 4205,
+      "sha256": "a3f69bb770664f583b77490692455b662c9fd31854d9853fba8b5f3f7f6a0b65"
+    },
+    {
+      "path": "final/front-recess/2-drag.png",
+      "bytes": 4350,
+      "sha256": "a71358cc8a8011bba7153edf7823a185cc90ffcd57855f1c15538bc6d5029782"
+    },
+    {
+      "path": "final/front-recess/3-drag.png",
+      "bytes": 4347,
+      "sha256": "6aa0bee6b3ae3d9f92a2f4663c035689541b05d01a4c701d6a10fd7da0ff49bf"
+    },
+    {
+      "path": "final/front-recess/4-drag.png",
+      "bytes": 4205,
+      "sha256": "a3f69bb770664f583b77490692455b662c9fd31854d9853fba8b5f3f7f6a0b65"
+    },
+    {
+      "path": "final/front-recess/5-cancel.png",
+      "bytes": 878,
+      "sha256": "6f5347ee0762ae47146de2c1cabf3d80438e9e5d5d424ac3195b19054d0074ac"
+    },
+    {
+      "path": "final/front-recess/6-save.png",
+      "bytes": 878,
+      "sha256": "6f5347ee0762ae47146de2c1cabf3d80438e9e5d5d424ac3195b19054d0074ac"
+    },
+    {
+      "path": "final/front-recess/app-cleanup.json",
+      "bytes": 87,
+      "sha256": "267bd7b83a444328a18a4c985667f68b1e980c665c573243913699a6ab118d1f"
+    },
+    {
+      "path": "final/front-recess/baseline.png",
+      "bytes": 878,
+      "sha256": "6f5347ee0762ae47146de2c1cabf3d80438e9e5d5d424ac3195b19054d0074ac"
+    },
+    {
+      "path": "final/front-recess/config/ingetrazo-rust/settings.json",
+      "bytes": 500,
+      "sha256": "008678c80ce1daa7095bc9bdb6299698909e09cd0e72c86c901c484b5f211317"
+    },
+    {
+      "path": "final/front-recess/control/request.json",
+      "bytes": 30,
+      "sha256": "69b2f69a4d991dade11c8a7ca92e9790b04e36c6d57c5c8141cf2310ce17e3ae"
+    },
+    {
+      "path": "final/front-recess/control/saved.igz",
+      "bytes": 3634,
+      "sha256": "d93c68d9ec4db7ad5589a83aac7cf3e02861b3f99d3aad3874f30314a6cb6460"
+    },
+    {
+      "path": "final/front-recess/control/state.json",
+      "bytes": 360,
+      "sha256": "08e23bc6703cce35cda0f057061ff851e2776e29fdc7fa80b239e4d2e6a3de98"
+    },
+    {
+      "path": "final/front-recess/result.json",
+      "bytes": 7856,
+      "sha256": "18858ed75466fc9f288a36b040e67068df8a67b9e771bb7f35fedb102bedd4fb"
+    },
+    {
+      "path": "final/front-recess/runtime.log",
+      "bytes": 2939,
+      "sha256": "99a3c58e41720a8abaf3ac02536be4b2ba20f66d5db9ead9ecc8cdb8b0cfa519"
+    },
+    {
+      "path": "final/front-recess/source-comparison.json",
+      "bytes": 897,
+      "sha256": "f2fd196fc3256083cdfb4c50ce6c114162a4da3e593b8218f28a5a0758c1750d"
+    },
+    {
+      "path": "final/front-recess/transport.json",
+      "bytes": 3202,
+      "sha256": "8da48f471a76d04095d74e5b268c1c52a1ca161ca07e3d04c13e97943a61bf7e"
+    },
+    {
+      "path": "final/front-recess/transport.log",
+      "bytes": 43,
+      "sha256": "0edeadb29bda5d91af73ead0657d44bb358958f12535c0fc19512882fb6168b6"
+    },
+    {
+      "path": "final/front-recess/xvfb-cleanup.json",
+      "bytes": 87,
+      "sha256": "046accd8b97c747674e7913c3f9dc1960e1f788e8e4bdde25e22a69b514d7dfc"
+    },
+    {
+      "path": "final/front-texture-back-override/1-acquire.png",
+      "bytes": 11373,
+      "sha256": "fb6767c47b43de6a3e288507442be22fdb700c27b28a2368d128ccc51cdb8c86"
+    },
+    {
+      "path": "final/front-texture-back-override/2-drag.png",
+      "bytes": 21255,
+      "sha256": "36e3ea72e1578ba101653fb0e2377a448b27ce27b7b17676d668710568521467"
+    },
+    {
+      "path": "final/front-texture-back-override/3-drag.png",
+      "bytes": 25181,
+      "sha256": "2351d256a96c7af881a06c22c309ba2925604b1541d706a1387b606aff7c767c"
+    },
+    {
+      "path": "final/front-texture-back-override/4-drag.png",
+      "bytes": 11373,
+      "sha256": "fb6767c47b43de6a3e288507442be22fdb700c27b28a2368d128ccc51cdb8c86"
+    },
+    {
+      "path": "final/front-texture-back-override/5-cancel.png",
+      "bytes": 10137,
+      "sha256": "d2fbae884b4893a7555dba886a125373994930bd7474ab18bab2ef54bb26103a"
+    },
+    {
+      "path": "final/front-texture-back-override/6-save.png",
+      "bytes": 10137,
+      "sha256": "d2fbae884b4893a7555dba886a125373994930bd7474ab18bab2ef54bb26103a"
+    },
+    {
+      "path": "final/front-texture-back-override/app-cleanup.json",
+      "bytes": 87,
+      "sha256": "002b2ad4378af24a2bf8ea97cf7dcaab0240aa0e2923218dec01245f4e59b3e4"
+    },
+    {
+      "path": "final/front-texture-back-override/baseline.png",
+      "bytes": 10137,
+      "sha256": "d2fbae884b4893a7555dba886a125373994930bd7474ab18bab2ef54bb26103a"
+    },
+    {
+      "path": "final/front-texture-back-override/config/ingetrazo-rust/settings.json",
+      "bytes": 515,
+      "sha256": "58890098f83b5446c2f978e3f8263ba2672d8f9efda4d7988afc4a17b5c91d00"
+    },
+    {
+      "path": "final/front-texture-back-override/control/request.json",
+      "bytes": 30,
+      "sha256": "69b2f69a4d991dade11c8a7ca92e9790b04e36c6d57c5c8141cf2310ce17e3ae"
+    },
+    {
+      "path": "final/front-texture-back-override/control/saved.igz",
+      "bytes": 1004,
+      "sha256": "e8058153b872124ccd89ff66ee770edb9ec10ddd7fc40104241703923ed7b298"
+    },
+    {
+      "path": "final/front-texture-back-override/control/state.json",
+      "bytes": 360,
+      "sha256": "77365409eca22e88aeb7f6f1a1b9f42907a6c96fdda9f0fd3c7df0273b828abf"
+    },
+    {
+      "path": "final/front-texture-back-override/result.json",
+      "bytes": 7852,
+      "sha256": "8167a53e314c0764ca410b5fe90372a1c62ea977aed322891a01ff4b17768a88"
+    },
+    {
+      "path": "final/front-texture-back-override/runtime.log",
+      "bytes": 2939,
+      "sha256": "36427c78ed6f644e55aec512e23a57618333d2843c1d2dc862ae6c778852175c"
+    },
+    {
+      "path": "final/front-texture-back-override/source-comparison.json",
+      "bytes": 912,
+      "sha256": "f8bf52934b556c44396df7d9de14211c84c3d5872ba051f5fab28e931ba26082"
+    },
+    {
+      "path": "final/front-texture-back-override/transport.json",
+      "bytes": 3247,
+      "sha256": "61ea7d8cdd5682aa5f39550255a096e060f4c5dd24a4539e25e798ae64181be0"
+    },
+    {
+      "path": "final/front-texture-back-override/transport.log",
+      "bytes": 43,
+      "sha256": "0edeadb29bda5d91af73ead0657d44bb358958f12535c0fc19512882fb6168b6"
+    },
+    {
+      "path": "final/front-texture-back-override/xvfb-cleanup.json",
+      "bytes": 87,
+      "sha256": "ac3db790fb10744c5adcca88c62d290edc9c581201a89b7d5ecef1828bf1398e"
+    },
+    {
+      "path": "final/lone-sheet/1-acquire.png",
+      "bytes": 1638,
+      "sha256": "e867021a932a287b93cf87137ddaf8966ba4793472f06d80a7f402d32b09d615"
+    },
+    {
+      "path": "final/lone-sheet/2-drag.png",
+      "bytes": 4175,
+      "sha256": "e1f11ece1534c842b2bd46ef6b1bc9b378bc47cc23db06452a477616532c39d1"
+    },
+    {
+      "path": "final/lone-sheet/3-drag.png",
+      "bytes": 4170,
+      "sha256": "cc520a985d4b8b16d07f4d7359a204d04ae6318243da774f14f090d3f1a3e03e"
+    },
+    {
+      "path": "final/lone-sheet/4-drag.png",
+      "bytes": 1638,
+      "sha256": "e867021a932a287b93cf87137ddaf8966ba4793472f06d80a7f402d32b09d615"
+    },
+    {
+      "path": "final/lone-sheet/5-cancel.png",
+      "bytes": 511,
+      "sha256": "2f1237454efbc71eb6b19e00b142cd20c9eccab84dba56ba3a9f576e3f44054c"
+    },
+    {
+      "path": "final/lone-sheet/6-save.png",
+      "bytes": 511,
+      "sha256": "2f1237454efbc71eb6b19e00b142cd20c9eccab84dba56ba3a9f576e3f44054c"
+    },
+    {
+      "path": "final/lone-sheet/app-cleanup.json",
+      "bytes": 87,
+      "sha256": "002b2ad4378af24a2bf8ea97cf7dcaab0240aa0e2923218dec01245f4e59b3e4"
+    },
+    {
+      "path": "final/lone-sheet/baseline.png",
+      "bytes": 511,
+      "sha256": "2f1237454efbc71eb6b19e00b142cd20c9eccab84dba56ba3a9f576e3f44054c"
+    },
+    {
+      "path": "final/lone-sheet/config/ingetrazo-rust/settings.json",
+      "bytes": 498,
+      "sha256": "e59e86da3c3d1b79fe589033c18c5934dda0004d11d0cc7d06d17c2fccc702f8"
+    },
+    {
+      "path": "final/lone-sheet/control/request.json",
+      "bytes": 30,
+      "sha256": "69b2f69a4d991dade11c8a7ca92e9790b04e36c6d57c5c8141cf2310ce17e3ae"
+    },
+    {
+      "path": "final/lone-sheet/control/saved.igz",
+      "bytes": 2269,
+      "sha256": "12731051dd698a5ec11a8cd9b355d7b8bbb0c618c3dbd2c699dc78fa7e565eb7"
+    },
+    {
+      "path": "final/lone-sheet/control/state.json",
+      "bytes": 360,
+      "sha256": "e6ba711b4278393e9a789d8fe4ad39cf29833a3f2c188b9672c34137e1e84a6d"
+    },
+    {
+      "path": "final/lone-sheet/result.json",
+      "bytes": 7856,
+      "sha256": "7e3788d6b2b3ea53c022e2b6f97384761932bcb9bde5e26c18148cefca2c04cd"
+    },
+    {
+      "path": "final/lone-sheet/runtime.log",
+      "bytes": 2939,
+      "sha256": "1b9a36c234b632c6a111ae84fd8660e9a3b39c4736860b131dac003ca2bf2682"
+    },
+    {
+      "path": "final/lone-sheet/source-comparison.json",
+      "bytes": 895,
+      "sha256": "1add902a5a5c32036d45d88e4ab7ecc2fdc81f54bcea8b1e0fa55d5dc187e787"
+    },
+    {
+      "path": "final/lone-sheet/transport.json",
+      "bytes": 3197,
+      "sha256": "7e5e9ac53288150cbf399fc82dce2dfc12e12e9f6148b88d2e673ea204974f9d"
+    },
+    {
+      "path": "final/lone-sheet/transport.log",
+      "bytes": 43,
+      "sha256": "0edeadb29bda5d91af73ead0657d44bb358958f12535c0fc19512882fb6168b6"
+    },
+    {
+      "path": "final/lone-sheet/xvfb-cleanup.json",
+      "bytes": 87,
+      "sha256": "ac3db790fb10744c5adcca88c62d290edc9c581201a89b7d5ecef1828bf1398e"
+    },
+    {
+      "path": "final/nvidia.json",
+      "bytes": 105,
+      "sha256": "559298238b82b7ef5db83f2674d7a3fe416158735a56302121b7f2e2d5c1f053"
+    },
+    {
+      "path": "final/ordinary-prism/1-acquire.png",
+      "bytes": 12079,
+      "sha256": "a8eebb42d926aaba85dd11926914b69a2f7ca01f1e02ce39c1dab4b76385ecd8"
+    },
+    {
+      "path": "final/ordinary-prism/2-drag.png",
+      "bytes": 11931,
+      "sha256": "9988d9ee786a2848c440446c00d8ac1fc2a4bc9a1a4ab2e346caba7cfec057f6"
+    },
+    {
+      "path": "final/ordinary-prism/3-drag.png",
+      "bytes": 11700,
+      "sha256": "eaff55b5e0aa873aeb7d640f5eb962d437d1cf8153f003574a9c6fe1436911be"
+    },
+    {
+      "path": "final/ordinary-prism/4-drag.png",
+      "bytes": 12079,
+      "sha256": "a8eebb42d926aaba85dd11926914b69a2f7ca01f1e02ce39c1dab4b76385ecd8"
+    },
+    {
+      "path": "final/ordinary-prism/5-cancel.png",
+      "bytes": 4835,
+      "sha256": "7265857f7ee1563ffc89a89cb121953864e2eabcfdda50b298e92f4a3bf8f3c8"
+    },
+    {
+      "path": "final/ordinary-prism/6-save.png",
+      "bytes": 4835,
+      "sha256": "7265857f7ee1563ffc89a89cb121953864e2eabcfdda50b298e92f4a3bf8f3c8"
+    },
+    {
+      "path": "final/ordinary-prism/app-cleanup.json",
+      "bytes": 87,
+      "sha256": "002b2ad4378af24a2bf8ea97cf7dcaab0240aa0e2923218dec01245f4e59b3e4"
+    },
+    {
+      "path": "final/ordinary-prism/baseline.png",
+      "bytes": 4835,
+      "sha256": "7265857f7ee1563ffc89a89cb121953864e2eabcfdda50b298e92f4a3bf8f3c8"
+    },
+    {
+      "path": "final/ordinary-prism/config/ingetrazo-rust/settings.json",
+      "bytes": 502,
+      "sha256": "ca55b6b4f868e973db8d97218596ac3d5023368779a0875c9004d8d6904f8486"
+    },
+    {
+      "path": "final/ordinary-prism/control/request.json",
+      "bytes": 30,
+      "sha256": "69b2f69a4d991dade11c8a7ca92e9790b04e36c6d57c5c8141cf2310ce17e3ae"
+    },
+    {
+      "path": "final/ordinary-prism/control/saved.igz",
+      "bytes": 6440,
+      "sha256": "684ff53be9bf425f1dc838781871fec1f799e1359dd91056f13d223f2e3cd386"
+    },
+    {
+      "path": "final/ordinary-prism/control/state.json",
+      "bytes": 360,
+      "sha256": "4b60bd449147743cf8ff576039f22d5a5504c3e7fbc9f40003aba9e15130549c"
+    },
+    {
+      "path": "final/ordinary-prism/result.json",
+      "bytes": 7865,
+      "sha256": "4a950060c016fccc1da0907f2f114496720629f0905aceb2a020d48cf6de692b"
+    },
+    {
+      "path": "final/ordinary-prism/runtime.log",
+      "bytes": 2939,
+      "sha256": "9dbf614bd22930bafaef97fb10c2ece1c725d9227a95de78ad0dc75f11ade78c"
+    },
+    {
+      "path": "final/ordinary-prism/source-comparison.json",
+      "bytes": 899,
+      "sha256": "383a9a286caee6455c4ebef87d36c31cb51bb2ab033a5ec245479c725d4c820e"
+    },
+    {
+      "path": "final/ordinary-prism/transport.json",
+      "bytes": 3208,
+      "sha256": "001fb88dbe5d01c3f4bc7374087af145fdc5c2ce442032d68d4b851e9ae9615a"
+    },
+    {
+      "path": "final/ordinary-prism/transport.log",
+      "bytes": 43,
+      "sha256": "0edeadb29bda5d91af73ead0657d44bb358958f12535c0fc19512882fb6168b6"
+    },
+    {
+      "path": "final/ordinary-prism/xvfb-cleanup.json",
+      "bytes": 87,
+      "sha256": "ac3db790fb10744c5adcca88c62d290edc9c581201a89b7d5ecef1828bf1398e"
+    },
+    {
+      "path": "final/reversed-door/1-acquire.png",
+      "bytes": 2246,
+      "sha256": "57ff6e30a7ed4b2819f2a51478449757e6dc1d28d55e2887947e86ae47c756d4"
+    },
+    {
+      "path": "final/reversed-door/2-drag.png",
+      "bytes": 4379,
+      "sha256": "8aac456f20e72f5ed05f166dfc7b35a84f0c512b3c2ce34921ae3d5088b6d6a5"
+    },
+    {
+      "path": "final/reversed-door/3-drag.png",
+      "bytes": 4339,
+      "sha256": "048b283eb14f08f1b17b9513f28335f7c8d07d2300f04f3c81fe69c7c1f75e7c"
+    },
+    {
+      "path": "final/reversed-door/4-drag.png",
+      "bytes": 2246,
+      "sha256": "57ff6e30a7ed4b2819f2a51478449757e6dc1d28d55e2887947e86ae47c756d4"
+    },
+    {
+      "path": "final/reversed-door/5-cancel.png",
+      "bytes": 837,
+      "sha256": "be526ec7fb99b83018bbebaf4360a4cd63a62f04a618bf898fc0e910e144074f"
+    },
+    {
+      "path": "final/reversed-door/6-save.png",
+      "bytes": 837,
+      "sha256": "be526ec7fb99b83018bbebaf4360a4cd63a62f04a618bf898fc0e910e144074f"
+    },
+    {
+      "path": "final/reversed-door/app-cleanup.json",
+      "bytes": 87,
+      "sha256": "002b2ad4378af24a2bf8ea97cf7dcaab0240aa0e2923218dec01245f4e59b3e4"
+    },
+    {
+      "path": "final/reversed-door/baseline.png",
+      "bytes": 837,
+      "sha256": "be526ec7fb99b83018bbebaf4360a4cd63a62f04a618bf898fc0e910e144074f"
+    },
+    {
+      "path": "final/reversed-door/config/ingetrazo-rust/settings.json",
+      "bytes": 501,
+      "sha256": "1290c26601ce0c04c2036ab6c450821f0dfb39200c6463fe16c9a38fe6e149ab"
+    },
+    {
+      "path": "final/reversed-door/control/request.json",
+      "bytes": 30,
+      "sha256": "69b2f69a4d991dade11c8a7ca92e9790b04e36c6d57c5c8141cf2310ce17e3ae"
+    },
+    {
+      "path": "final/reversed-door/control/saved.igz",
+      "bytes": 4663,
+      "sha256": "66caf47b43c78326a95bb3f924afb88faf95eb1ff883bf9c7046106296debad9"
+    },
+    {
+      "path": "final/reversed-door/control/state.json",
+      "bytes": 360,
+      "sha256": "c24e87cdc35bb969523306c8a7e576472393dc7a3658aece05e2d1d44291d2b5"
+    },
+    {
+      "path": "final/reversed-door/result.json",
+      "bytes": 7858,
+      "sha256": "74fbb5da08225bb09ca8e389bb00c93ca66a3a9bc44a907a01f75b76f3ac4228"
+    },
+    {
+      "path": "final/reversed-door/runtime.log",
+      "bytes": 2939,
+      "sha256": "6fa3665883df9a17c9996572d54cff5dfc856573b3639667eb4fd8abd9d6bbee"
+    },
+    {
+      "path": "final/reversed-door/source-comparison.json",
+      "bytes": 898,
+      "sha256": "939c2c70773731bda88e3b60bb9326c70ee677392a32e43713548dbb33ef0fe3"
+    },
+    {
+      "path": "final/reversed-door/transport.json",
+      "bytes": 3206,
+      "sha256": "6a19763eced6c775aa83d15fa65420e58e82c977b65f860edaa826bdf87721ee"
+    },
+    {
+      "path": "final/reversed-door/transport.log",
+      "bytes": 43,
+      "sha256": "0edeadb29bda5d91af73ead0657d44bb358958f12535c0fc19512882fb6168b6"
+    },
+    {
+      "path": "final/reversed-door/xvfb-cleanup.json",
+      "bytes": 87,
+      "sha256": "ac3db790fb10744c5adcca88c62d290edc9c581201a89b7d5ecef1828bf1398e"
+    },
+    {
+      "path": "diagnostic/nvidia.json",
+      "bytes": 105,
+      "sha256": "559298238b82b7ef5db83f2674d7a3fe416158735a56302121b7f2e2d5c1f053"
+    },
+    {
+      "path": "diagnostic/ordinary/native.json",
+      "bytes": 1420,
+      "sha256": "d9bdd00e9fd566429c86c17707c7adf8e653852e4e3a85b53b899616097d5f11"
+    },
+    {
+      "path": "diagnostic/ordinary/refused.png",
+      "bytes": 11331,
+      "sha256": "816a489c7b6fd8e68fe5bccda008843f56bd35e0313c870069edb8a175ae8e77"
+    },
+    {
+      "path": "diagnostic/ordinary/reversed-door-base.png",
+      "bytes": 11157,
+      "sha256": "89f73ac89a743fe78da77578f200cfc5a558b1f24b4bd8c62c74f991d36331dd"
+    },
+    {
+      "path": "diagnostic/ordinary/reversed-door-cancel.png",
+      "bytes": 11157,
+      "sha256": "89f73ac89a743fe78da77578f200cfc5a558b1f24b4bd8c62c74f991d36331dd"
+    },
+    {
+      "path": "diagnostic/ordinary/reversed-door-offset.png",
+      "bytes": 11386,
+      "sha256": "c17df00a4e2bfc5ff9a4fd27e00008752a6821b7febb613307acc2fbfc61e4d0"
+    },
+    {
+      "path": "diagnostic/ordinary/reversed-door-preview.png",
+      "bytes": 11331,
+      "sha256": "816a489c7b6fd8e68fe5bccda008843f56bd35e0313c870069edb8a175ae8e77"
+    },
+    {
+      "path": "diagnostic/ordinary/runtime.log",
+      "bytes": 514,
+      "sha256": "8525d6edc865449fd3162ca7ca53baf71400b5a895c586517e6f8932a235cb21"
+    },
+    {
+      "path": "diagnostic/qt-camera/native.json",
+      "bytes": 1420,
+      "sha256": "d9bdd00e9fd566429c86c17707c7adf8e653852e4e3a85b53b899616097d5f11"
+    },
+    {
+      "path": "diagnostic/qt-camera/refused.png",
+      "bytes": 11314,
+      "sha256": "c66de8c92a1a764059dd6f2955ba2d1b58e4de4fccd611cfdca992af1af7ae82"
+    },
+    {
+      "path": "diagnostic/qt-camera/reversed-door-base.png",
+      "bytes": 11157,
+      "sha256": "89f73ac89a743fe78da77578f200cfc5a558b1f24b4bd8c62c74f991d36331dd"
+    },
+    {
+      "path": "diagnostic/qt-camera/reversed-door-cancel.png",
+      "bytes": 11157,
+      "sha256": "89f73ac89a743fe78da77578f200cfc5a558b1f24b4bd8c62c74f991d36331dd"
+    },
+    {
+      "path": "diagnostic/qt-camera/reversed-door-offset.png",
+      "bytes": 11306,
+      "sha256": "53b07c726db52256905ccf8f09ebbcddd98361164b21e842121069c3f2019bb1"
+    },
+    {
+      "path": "diagnostic/qt-camera/reversed-door-preview.png",
+      "bytes": 11314,
+      "sha256": "c66de8c92a1a764059dd6f2955ba2d1b58e4de4fccd611cfdca992af1af7ae82"
+    },
+    {
+      "path": "diagnostic/qt-camera/runtime.log",
+      "bytes": 514,
+      "sha256": "8525d6edc865449fd3162ca7ca53baf71400b5a895c586517e6f8932a235cb21"
+    },
+    {
+      "path": "diagnostic/qt-camera/transport.json",
+      "bytes": 1616,
+      "sha256": "bb582c2aca92a6ab35349951b7ada9f0b685a8414de7a130566ddff98e4b7e59"
+    },
+    {
+      "path": "diagnostic/qt-portable/native.json",
+      "bytes": 1420,
+      "sha256": "d9bdd00e9fd566429c86c17707c7adf8e653852e4e3a85b53b899616097d5f11"
+    },
+    {
+      "path": "diagnostic/qt-portable/refused.png",
+      "bytes": 11331,
+      "sha256": "816a489c7b6fd8e68fe5bccda008843f56bd35e0313c870069edb8a175ae8e77"
+    },
+    {
+      "path": "diagnostic/qt-portable/reversed-door-base.png",
+      "bytes": 11157,
+      "sha256": "89f73ac89a743fe78da77578f200cfc5a558b1f24b4bd8c62c74f991d36331dd"
+    },
+    {
+      "path": "diagnostic/qt-portable/reversed-door-cancel.png",
+      "bytes": 11157,
+      "sha256": "89f73ac89a743fe78da77578f200cfc5a558b1f24b4bd8c62c74f991d36331dd"
+    },
+    {
+      "path": "diagnostic/qt-portable/reversed-door-offset.png",
+      "bytes": 11386,
+      "sha256": "c17df00a4e2bfc5ff9a4fd27e00008752a6821b7febb613307acc2fbfc61e4d0"
+    },
+    {
+      "path": "diagnostic/qt-portable/reversed-door-preview.png",
+      "bytes": 11331,
+      "sha256": "816a489c7b6fd8e68fe5bccda008843f56bd35e0313c870069edb8a175ae8e77"
+    },
+    {
+      "path": "diagnostic/qt-portable/runtime.log",
+      "bytes": 514,
+      "sha256": "8525d6edc865449fd3162ca7ca53baf71400b5a895c586517e6f8932a235cb21"
+    },
+    {
+      "path": "diagnostic/qt-portable/transport.json",
+      "bytes": 1682,
+      "sha256": "8dc8d9ad65eeaef63ee86e23bf5803d48d7b0b44edfe75f32bb7a45a6a683ff2"
+    }
+  ]
+}

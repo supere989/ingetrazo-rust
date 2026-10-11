@@ -1,0 +1,226 @@
+{
+  "source_parity": true,
+  "exact_frames": 24,
+  "negative_controls": 72,
+  "rows": [
+    {
+      "case": "reversed-door",
+      "phase": "base",
+      "different_pixels": 0,
+      "maximum": 0
+    },
+    {
+      "case": "reversed-door",
+      "phase": "preview",
+      "different_pixels": 0,
+      "maximum": 0
+    },
+    {
+      "case": "reversed-door",
+      "phase": "offset",
+      "different_pixels": 0,
+      "maximum": 0
+    },
+    {
+      "case": "reversed-door",
+      "phase": "cancel",
+      "different_pixels": 0,
+      "maximum": 0
+    },
+    {
+      "case": "lone-sheet",
+      "phase": "base",
+      "different_pixels": 0,
+      "maximum": 0
+    },
+    {
+      "case": "lone-sheet",
+      "phase": "preview",
+      "different_pixels": 0,
+      "maximum": 0
+    },
+    {
+      "case": "lone-sheet",
+      "phase": "offset",
+      "different_pixels": 0,
+      "maximum": 0
+    },
+    {
+      "case": "lone-sheet",
+      "phase": "cancel",
+      "different_pixels": 0,
+      "maximum": 0
+    },
+    {
+      "case": "front-recess",
+      "phase": "base",
+      "different_pixels": 0,
+      "maximum": 0
+    },
+    {
+      "case": "front-recess",
+      "phase": "preview",
+      "different_pixels": 0,
+      "maximum": 0
+    },
+    {
+      "case": "front-recess",
+      "phase": "offset",
+      "different_pixels": 0,
+      "maximum": 0
+    },
+    {
+      "case": "front-recess",
+      "phase": "cancel",
+      "different_pixels": 0,
+      "maximum": 0
+    },
+    {
+      "case": "back-recess",
+      "phase": "base",
+      "different_pixels": 0,
+      "maximum": 0
+    },
+    {
+      "case": "back-recess",
+      "phase": "preview",
+      "different_pixels": 0,
+      "maximum": 0
+    },
+    {
+      "case": "back-recess",
+      "phase": "offset",
+      "different_pixels": 0,
+      "maximum": 0
+    },
+    {
+      "case": "back-recess",
+      "phase": "cancel",
+      "different_pixels": 0,
+      "maximum": 0
+    },
+    {
+      "case": "front-texture-back-override",
+      "phase": "base",
+      "different_pixels": 0,
+      "maximum": 0
+    },
+    {
+      "case": "front-texture-back-override",
+      "phase": "preview",
+      "different_pixels": 0,
+      "maximum": 0
+    },
+    {
+      "case": "front-texture-back-override",
+      "phase": "offset",
+      "different_pixels": 0,
+      "maximum": 0
+    },
+    {
+      "case": "front-texture-back-override",
+      "phase": "cancel",
+      "different_pixels": 0,
+      "maximum": 0
+    },
+    {
+      "case": "ordinary-prism",
+      "phase": "base",
+      "different_pixels": 0,
+      "maximum": 0
+    },
+    {
+      "case": "ordinary-prism",
+      "phase": "preview",
+      "different_pixels": 0,
+      "maximum": 0
+    },
+    {
+      "case": "ordinary-prism",
+      "phase": "offset",
+      "different_pixels": 0,
+      "maximum": 0
+    },
+    {
+      "case": "ordinary-prism",
+      "phase": "cancel",
+      "different_pixels": 0,
+      "maximum": 0
+    }
+  ],
+  "causal": [
+    {
+      "mode": "ordinary",
+      "phase": "base",
+      "different_pixels": 0,
+      "maximum": 0
+    },
+    {
+      "mode": "ordinary",
+      "phase": "preview",
+      "different_pixels": 539,
+      "maximum": 81
+    },
+    {
+      "mode": "ordinary",
+      "phase": "offset",
+      "different_pixels": 1079,
+      "maximum": 122
+    },
+    {
+      "mode": "ordinary",
+      "phase": "cancel",
+      "different_pixels": 0,
+      "maximum": 0
+    },
+    {
+      "mode": "qt-camera",
+      "phase": "base",
+      "different_pixels": 0,
+      "maximum": 0
+    },
+    {
+      "mode": "qt-camera",
+      "phase": "preview",
+      "different_pixels": 0,
+      "maximum": 0
+    },
+    {
+      "mode": "qt-camera",
+      "phase": "offset",
+      "different_pixels": 0,
+      "maximum": 0
+    },
+    {
+      "mode": "qt-camera",
+      "phase": "cancel",
+      "different_pixels": 0,
+      "maximum": 0
+    },
+    {
+      "mode": "qt-portable",
+      "phase": "base",
+      "different_pixels": 0,
+      "maximum": 0
+    },
+    {
+      "mode": "qt-portable",
+      "phase": "preview",
+      "different_pixels": 539,
+      "maximum": 81
+    },
+    {
+      "mode": "qt-portable",
+      "phase": "offset",
+      "different_pixels": 1079,
+      "maximum": 122
+    },
+    {
+      "mode": "qt-portable",
+      "phase": "cancel",
+      "different_pixels": 0,
+      "maximum": 0
+    }
+  ],
+  "scope": "RTX5090 actual App/World/label complete frames; portable fallback remains a strict failure"
+}
