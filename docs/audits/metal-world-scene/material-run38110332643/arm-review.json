@@ -1,0 +1,14 @@
+{
+  "run": 38110332643,
+  "source": "cf6e6ffa1a37747e1434419f7c03d8155e9473c4",
+  "platform": "arm",
+  "archive_sha256": "b67b604481297b0645194574b14422d23fadcb6e6774f6d1f59694dea3ca5685",
+  "verified_source_files": 44,
+  "binary_sha256": "ca3c07e6b62967552f880827a8b04da77e3414eec90677b3be1f16e95e53f4bf  target/debug/examples/native_metal_world_material",
+  "runtime": "Material frame texture-blue was not accepted: Some(\"Metal viewport paused: Metal sampled allocation exceeded native preallocation admission: requested_bytes=20, queried_size=256, queried_align=256, allocated_size=16384, extent=2x2, levels=2, format=MTLPixelFormat(70), storage=MTLStorageMode(2), usage=MTLTextureUsage(1), device=Apple Paravirtual device\")\n",
+  "scope": "Actual sampled app frames only; full material workflow refused before completion.",
+  "actual_frames": 15,
+  "exact_prior_samples": 375,
+  "refusal": "texture-blue: requested20/query256 align256/standalone allocated16384; prior frame retained",
+  "independently_recomputed_exact_samples": 375
+}
