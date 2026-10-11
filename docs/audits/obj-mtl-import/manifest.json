@@ -1,8 +1,8 @@
 {
-  "runtime_commit": "050b79437e5d2fb0eb99a56e911fd4bacce655a0",
+  "runtime_commit": "2e97391c45d5a006f1a9d1df6e20dc25df5922f9",
   "source_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
   "archive": "records.zip",
-  "archive_sha256": "6d8bf63c05acde446362c8ffc2eaa1e0b0b43a0147b9872c254176d491723a45",
+  "archive_sha256": "aa8fa344052a9f505de94e10b1f2f3c7e0054887ec6dca878b3c2fd3426cd9fe",
   "entries": [
     {
       "path": "attempts/initial-raw-unit-observer/check.log",
@@ -31,8 +31,8 @@
     },
     {
       "path": "cancel-resource-native.igz",
-      "bytes": 1405,
-      "sha256": "54deafa2ac629ab95f0a3d759373bfac3fcd1dfbd441131092109ef8fa51e1dc"
+      "bytes": 1404,
+      "sha256": "fea5b2554bffb6aabb5e2e9847b2b3691aaa1fb7bb3abe7d7a963afca7db0be5"
     },
     {
       "path": "color-leaf-native.igz",
@@ -42,7 +42,7 @@
     {
       "path": "color-root-native.igz",
       "bytes": 1402,
-      "sha256": "0a178a5803db8166b452a6bbbf5149fce8099f6df669c767b1f4cb208bcccdce"
+      "sha256": "a35f6d788ed9a8487354dd2abea55beea805021f3b0d590204bd3d3c428116bb"
     },
     {
       "path": "cream-root-native.igz",
@@ -51,8 +51,8 @@
     },
     {
       "path": "invalid-image-root-native.igz",
-      "bytes": 683,
-      "sha256": "0614915e000b784707616ebabec06578fe5e91a54effcc941be9c6065400b933"
+      "bytes": 682,
+      "sha256": "ecbff33773199841f923cd3667351a00ff022d18f2192261a2cd21cb854d0773"
     },
     {
       "path": "logs/obj-mtl-build.log",
@@ -115,6 +115,26 @@
       "sha256": "d97606f85169a4d2bc778cacc1c6ace1de7248e8f43a565fc1a1f7a26f1aefb2"
     },
     {
+      "path": "logs/obj-uv-lexical-build.log",
+      "bytes": 20219,
+      "sha256": "57b980f5bf740ef7dfdc1cb663f901a4852960589d3adf72ce85fccdf5fc408f"
+    },
+    {
+      "path": "logs/obj-uv-lexical-check.log",
+      "bytes": 190,
+      "sha256": "2b92ea567127f533861dfe4594a03544b0d701b65faadfa5300e4f29915e0b59"
+    },
+    {
+      "path": "logs/obj-uv-lexical-native.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "logs/obj-uv-lexical-reopens.log",
+      "bytes": 32,
+      "sha256": "a5e1e162626aa4e3aba5a5edca86b1c05c67dbab076a21835caf987d54b50895"
+    },
+    {
       "path": "logs/obj-uv-native.log",
       "bytes": 0,
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
@@ -137,7 +157,7 @@
     {
       "path": "missing-map-root-native.igz",
       "bytes": 1402,
-      "sha256": "a35f6d788ed9a8487354dd2abea55beea805021f3b0d590204bd3d3c428116bb"
+      "sha256": "0a178a5803db8166b452a6bbbf5149fce8099f6df669c767b1f4cb208bcccdce"
     },
     {
       "path": "missing-sidecar-root-native.igz",
@@ -146,13 +166,13 @@
     },
     {
       "path": "multipart-leaf-native.igz",
-      "bytes": 1415,
-      "sha256": "ffbcf41d880c2a10c30fefa58bfc5f612c1637b6823f887e52cf167cc4aa9cc2"
+      "bytes": 1418,
+      "sha256": "e3f1099dd32b6b362bf2b979022bcbd8820611435a71b095f3296f0f124dc6ac"
     },
     {
       "path": "multipart-root-native.igz",
-      "bytes": 1120,
-      "sha256": "d4556bfb3b6fde2b6785d4ab37cc482575eea8c9849eada6c8f9ce6dec57a83d"
+      "bytes": 1126,
+      "sha256": "b3d0cd930fcc134ed08a8be55c24892dd58ce403b673b124ee0e5a1d0857c2ac"
     },
     {
       "path": "native-asset-controls.json",
@@ -162,12 +182,12 @@
     {
       "path": "native-obj-mtl.json",
       "bytes": 360336,
-      "sha256": "6b7289ba5c69ed5046f1c2fdebcbb27be85d82aa6ce20a6f6c6b4ac4c1c918d3"
+      "sha256": "ca0eb3dfcad6140b386ccbf425b716d715b3f4109a06282950736660391346ef"
     },
     {
       "path": "native-uv-syntax.json",
-      "bytes": 281,
-      "sha256": "4e02ded54454976c889a041a8f381318916380c880310c32c9d3fd5b3e8a7be3"
+      "bytes": 745,
+      "sha256": "b020540e8efbfda879af168ab0f101a620902baab283e235ee23d977dba7ff64"
     },
     {
       "path": "negative-uv-root-native.igz",
@@ -177,12 +197,12 @@
     {
       "path": "partial-uv-root-native.igz",
       "bytes": 732,
-      "sha256": "c046407a2d0829c6b414add347738f58e593153c6a94180e5db6626bb1d0b3dd"
+      "sha256": "7ccbc1f33e07d43223d9470679ad550585b07a0542434d97391c0edc388ae30b"
     },
     {
       "path": "quoted-planar-root-native.igz",
       "bytes": 732,
-      "sha256": "c046407a2d0829c6b414add347738f58e593153c6a94180e5db6626bb1d0b3dd"
+      "sha256": "7ccbc1f33e07d43223d9470679ad550585b07a0542434d97391c0edc388ae30b"
     },
     {
       "path": "reopens-obj-mtl.json",
@@ -192,7 +212,7 @@
     {
       "path": "reset-library-root-native.igz",
       "bytes": 1402,
-      "sha256": "0a178a5803db8166b452a6bbbf5149fce8099f6df669c767b1f4cb208bcccdce"
+      "sha256": "a35f6d788ed9a8487354dd2abea55beea805021f3b0d590204bd3d3c428116bb"
     },
     {
       "path": "resource-lifetime-controls.json",
@@ -206,8 +226,8 @@
     },
     {
       "path": "windows-options-leaf-native.igz",
-      "bytes": 1206,
-      "sha256": "82f0ab648b955c155d65c7efb2084de03f10172eeea2113c6ab6f63605e2f455"
+      "bytes": 1203,
+      "sha256": "0d93beb1bb5614eeacf59dfc993379ff1d70559978a9059716563457794acff8"
     },
     {
       "path": "windows-options-root-native.igz",
@@ -219,78 +239,92 @@
     {
       "path": "Cargo.lock",
       "bytes": 139919,
-      "sha256": "78e71fbc665418f7508a52274bf60aee0a30729fbf3e29e65829b32e503c1d39"
+      "sha256": "78e71fbc665418f7508a52274bf60aee0a30729fbf3e29e65829b32e503c1d39",
+      "commit": "2e97391c45d5a006f1a9d1df6e20dc25df5922f9"
     },
     {
       "path": "crates/ingetrazo-formats/src/igz.rs",
       "bytes": 70553,
-      "sha256": "5d0e1e8c711101da85cf5e3190a45fc18ec4043f0fbfcb28b05c0b4b8a0c7165"
+      "sha256": "5d0e1e8c711101da85cf5e3190a45fc18ec4043f0fbfcb28b05c0b4b8a0c7165",
+      "commit": "2e97391c45d5a006f1a9d1df6e20dc25df5922f9"
     },
     {
       "path": "crates/ingetrazo-formats/src/igz/assets.rs",
       "bytes": 8879,
-      "sha256": "e137e8393f08a3b10347b32a3665644f0100918abd9e6d80afcb1d8130ff197b"
+      "sha256": "e137e8393f08a3b10347b32a3665644f0100918abd9e6d80afcb1d8130ff197b",
+      "commit": "2e97391c45d5a006f1a9d1df6e20dc25df5922f9"
     },
     {
       "path": "crates/ingetrazo-formats/src/obj.rs",
-      "bytes": 38726,
-      "sha256": "81d1b91c3270a8e53da9297e63e89cc0746f0f0cca8735e9025e28a399019f89"
+      "bytes": 40934,
+      "sha256": "7d335bd3227b07d191837eafd772cb7b10aceb7d6f99de94f268b8fadd795ad5",
+      "commit": "2e97391c45d5a006f1a9d1df6e20dc25df5922f9"
     },
     {
       "path": "crates/ingetrazo-formats/src/obj_material.rs",
       "bytes": 7680,
-      "sha256": "262472dd31467f5a8c4cd8045e50ac5e7d4bf6ae3ae8f0f0c6b3f68ba1851491"
+      "sha256": "262472dd31467f5a8c4cd8045e50ac5e7d4bf6ae3ae8f0f0c6b3f68ba1851491",
+      "commit": "2e97391c45d5a006f1a9d1df6e20dc25df5922f9"
     },
     {
       "path": "crates/ingetrazo-gui/Cargo.toml",
       "bytes": 2681,
-      "sha256": "68d23e2247dea79d38ca50731562afb0501d7bb2b34a316d550cb0b6de1142c6"
+      "sha256": "68d23e2247dea79d38ca50731562afb0501d7bb2b34a316d550cb0b6de1142c6",
+      "commit": "2e97391c45d5a006f1a9d1df6e20dc25df5922f9"
     },
     {
       "path": "crates/ingetrazo-gui/examples/context_document_lifecycle.rs",
       "bytes": 27168,
-      "sha256": "5d0b5cbda92457f2c7ab77a936f0fa6e8ed71c74d0214e1a7bff8c6e4dc81752"
+      "sha256": "5d0b5cbda92457f2c7ab77a936f0fa6e8ed71c74d0214e1a7bff8c6e4dc81752",
+      "commit": "2e97391c45d5a006f1a9d1df6e20dc25df5922f9"
     },
     {
       "path": "crates/ingetrazo-gui/examples/context_document_lifecycle/nested_import.rs",
       "bytes": 13176,
-      "sha256": "7969f734ac4fc6a0d9c89ae1257e9f08b46d92173cb31acbb9905743ef4ac705"
+      "sha256": "7969f734ac4fc6a0d9c89ae1257e9f08b46d92173cb31acbb9905743ef4ac705",
+      "commit": "2e97391c45d5a006f1a9d1df6e20dc25df5922f9"
     },
     {
       "path": "crates/ingetrazo-gui/examples/context_document_lifecycle/obj_mtl.rs",
       "bytes": 10082,
-      "sha256": "ec0e6eff27b0fa5a3aa7c82fc603bc07d97ef8bfda3ba466cf2263e202d3d3c9"
+      "sha256": "ec0e6eff27b0fa5a3aa7c82fc603bc07d97ef8bfda3ba466cf2263e202d3d3c9",
+      "commit": "2e97391c45d5a006f1a9d1df6e20dc25df5922f9"
     },
     {
       "path": "crates/ingetrazo-gui/src/import_units.rs",
       "bytes": 21456,
-      "sha256": "03ee7ee2497a5cde95bf97859776e6c85a5b15698899e90611cc160501e21a0e"
+      "sha256": "03ee7ee2497a5cde95bf97859776e6c85a5b15698899e90611cc160501e21a0e",
+      "commit": "2e97391c45d5a006f1a9d1df6e20dc25df5922f9"
     },
     {
       "path": "scripts/check-obj-mtl-import.py",
-      "bytes": 3580,
-      "sha256": "fefbec69db9f4e192191cad9ae6f446f469b18fa4d2e626e40e1ededcda06732"
+      "bytes": 3737,
+      "sha256": "7cfea4916a2d7a90befe84e270178250242ae49f8d1433416edcc756d73975b4",
+      "commit": "2e97391c45d5a006f1a9d1df6e20dc25df5922f9"
     },
     {
       "path": "scripts/reference-obj-mtl-import.py",
       "bytes": 5653,
-      "sha256": "6642dc0f07fe0fe964e3af5eadaa0d15823d225436d7f7893bee6eda8000f0a6"
+      "sha256": "6642dc0f07fe0fe964e3af5eadaa0d15823d225436d7f7893bee6eda8000f0a6",
+      "commit": "2e97391c45d5a006f1a9d1df6e20dc25df5922f9"
     },
     {
       "path": "scripts/reference-obj-mtl-reopens.py",
       "bytes": 1797,
-      "sha256": "0fb6833f2674e563ed41cbf5c26dc3e03800241e2ac14fcd3b6a214216d6c707"
+      "sha256": "0fb6833f2674e563ed41cbf5c26dc3e03800241e2ac14fcd3b6a214216d6c707",
+      "commit": "2e97391c45d5a006f1a9d1df6e20dc25df5922f9"
     },
     {
       "path": "scripts/reference-obj-uv-syntax.py",
-      "bytes": 1047,
-      "sha256": "c2f43c366b2c8a71326e1e59c66513b6e4f48c6c6d23204cad747014c8f7d04a"
+      "bytes": 1182,
+      "sha256": "1cdb55e68e6f8525cd14a1794672dbb624ab0081def5fd3ac9a23059c279568f",
+      "commit": "2e97391c45d5a006f1a9d1df6e20dc25df5922f9"
     }
   ],
   "binary": {
     "path": "/tmp/ingetrazo-ai-registry-target/debug/examples/context_document_lifecycle",
-    "bytes": 63865896,
-    "sha256": "237e94c66f2752a11178584ad9517b33e2311c25f6dd010f0d0e6e60b3859bb4"
+    "bytes": 63880168,
+    "sha256": "8ba893e5ac2750fdddef0b014c4958370eec026f429f6213e2df034027e0beef"
   },
   "results": {
     "cases": 15,
@@ -300,7 +334,83 @@
     "actual_original_reopens": 15,
     "negative_controls": 11,
     "passed": true,
-    "uv_syntax_controls": 3
+    "uv_syntax_controls": 8
   },
-  "scope": "numeric int/float representation equivalence only; no GPU or full P22 claim; native malformed controls independently assert refusal/state preservation, source exception class label is descriptive metadata"
+  "scope": "numeric int/float representation equivalence only; no GPU or full P22 claim; native malformed controls independently assert refusal/state preservation, source exception class label is descriptive metadata",
+  "checker_commit": "2e97391c45d5a006f1a9d1df6e20dc25df5922f9",
+  "uv_lexical_runtime": {
+    "python": "3.13.13 | packaged by conda-forge | (main, Apr  8 2026, 02:00:33) [GCC 14.3.0]",
+    "unicode_version": "15.1.0",
+    "int_max_str_digits": 4300,
+    "decimal_zero_blocks": [
+      48,
+      1632,
+      1776,
+      1984,
+      2406,
+      2534,
+      2662,
+      2790,
+      2918,
+      3046,
+      3174,
+      3302,
+      3430,
+      3558,
+      3664,
+      3792,
+      3872,
+      4160,
+      4240,
+      6112,
+      6160,
+      6470,
+      6608,
+      6784,
+      6800,
+      6992,
+      7088,
+      7232,
+      7248,
+      42528,
+      43216,
+      43264,
+      43472,
+      43504,
+      43600,
+      44016,
+      65296,
+      66720,
+      68912,
+      69734,
+      69872,
+      69942,
+      70096,
+      70384,
+      70736,
+      70864,
+      71248,
+      71360,
+      71472,
+      71904,
+      72016,
+      72784,
+      73040,
+      73120,
+      73552,
+      92768,
+      92864,
+      93008,
+      120782,
+      120792,
+      120802,
+      120812,
+      120822,
+      123200,
+      123632,
+      124144,
+      125264,
+      130032
+    ]
+  }
 }

@@ -1,7 +1,7 @@
 {
   "source_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
   "archive": "source-records.zip",
-  "archive_sha256": "22c8088637b4cdfd757466524e0a5d17e526a7518646c46009ddd67c90ac33de",
+  "archive_sha256": "020f863980b2d6f8da64291f39d8a280c67d3a62ca4618648d08bb1205f71f8b",
   "entries": [
     {
       "path": "bad-color.mtl",
@@ -210,8 +210,8 @@
     },
     {
       "path": "original-uv-syntax.json",
-      "bytes": 282,
-      "sha256": "84e16cd1e739e99976de9b04079db50adc45e6ab9af9f80fed0836819a05a697"
+      "bytes": 746,
+      "sha256": "e8cccf1443193757f6d44424f7a6532b2467385023ebdea27bc90fe9022e422d"
     },
     {
       "path": "paint with spaces.png",
@@ -329,6 +329,21 @@
       "sha256": "d209e34677ffc9c52fd23b383adf65f04a94e4d8697afdb044e506ef6f89e752"
     },
     {
+      "path": "uv-lexical-runtime.json",
+      "bytes": 630,
+      "sha256": "afc93ddb650461ff9a781c068b5300319e74d2e31fce20c91d491d7a7bb107f9"
+    },
+    {
+      "path": "uv-lexical-source.log",
+      "bytes": 568,
+      "sha256": "596e954b22d4ad3e226a3cc0f6e968898d09530f59e359367f23157260eb0dc4"
+    },
+    {
+      "path": "uv-lexical-source.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
       "path": "uv-source.log",
       "bytes": 214,
       "sha256": "65d6f9884688819b2ccd0678ffb0e652707a6c367bbc1f6e2777f31d00a98ddb"
@@ -339,19 +354,44 @@
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
     },
     {
+      "path": "uv-syntax-bad-underscore.obj",
+      "bytes": 94,
+      "sha256": "9bb2dc0452c8a546cedb200d894a0476b8843d7488aadd221bbc643bb42ec870"
+    },
+    {
       "path": "uv-syntax-missing.obj",
-      "bytes": 76,
-      "sha256": "2606582a97703835a7ee8ff115152426011980ed149a5e1a2594923387b1eaed"
+      "bytes": 90,
+      "sha256": "3ccd00805e21f2c48d60f9d33d93f5bfc3610fac9d003d27cdb63a055eaf8083"
+    },
+    {
+      "path": "uv-syntax-nondecimal.obj",
+      "bytes": 92,
+      "sha256": "619d1eec088066ba7af13d4cf382b084b3f0813c8e7184cb4f99ded096b2e47f"
     },
     {
       "path": "uv-syntax-noninteger.obj",
-      "bytes": 80,
-      "sha256": "0f04bebbb7ea07c6d2790561d29c4c6b23fdee40a2ae67e28da4204a4732d61b"
+      "bytes": 94,
+      "sha256": "c3d399b6dc3f221a3d7c2573c5f872cfda8780467a181ebd423af3d286820f6b"
     },
     {
       "path": "uv-syntax-out-of-range.obj",
-      "bytes": 78,
-      "sha256": "5aecdf92d011add1193587d42d2556bccce2ffcc7238c274da0d7623dc075e46"
+      "bytes": 92,
+      "sha256": "e2573266b56b397af4d4e9f3d25cc1639fcd17503ff56dbcf64187726071a7bc"
+    },
+    {
+      "path": "uv-syntax-overflow.obj",
+      "bytes": 109,
+      "sha256": "1dc1f7ebb48ef80f2ba6c549ef25b305f627468ecf704154b5d74e2436e5ce58"
+    },
+    {
+      "path": "uv-syntax-underscore.obj",
+      "bytes": 93,
+      "sha256": "c4fbd132363496bbab111bfcdd0042a684af2ad4f47fcf2c45a4edfbd4b8e6ea"
+    },
+    {
+      "path": "uv-syntax-unicode.obj",
+      "bytes": 92,
+      "sha256": "8679c0010087a6e18a6118a940c2c2659044c9df2657c665c120b6322e3b528a"
     },
     {
       "path": "uv-syntax.mtl",
@@ -406,5 +446,82 @@
     "malformed_sidecar_controls": 2
   },
   "capture": "13 missing cases once plus root and nested multipart resource-owner addenda; no accepted corpus recapture",
-  "scope": "Actual original SnapshotImport, loaders, context history and saves; no new GPU claim"
+  "scope": "Actual original SnapshotImport, loaders, context history and saves; no new GPU claim",
+  "uv_lexical_runtime": {
+    "python": "3.13.13 | packaged by conda-forge | (main, Apr  8 2026, 02:00:33) [GCC 14.3.0]",
+    "unicode_version": "15.1.0",
+    "int_max_str_digits": 4300,
+    "decimal_zero_blocks": [
+      48,
+      1632,
+      1776,
+      1984,
+      2406,
+      2534,
+      2662,
+      2790,
+      2918,
+      3046,
+      3174,
+      3302,
+      3430,
+      3558,
+      3664,
+      3792,
+      3872,
+      4160,
+      4240,
+      6112,
+      6160,
+      6470,
+      6608,
+      6784,
+      6800,
+      6992,
+      7088,
+      7232,
+      7248,
+      42528,
+      43216,
+      43264,
+      43472,
+      43504,
+      43600,
+      44016,
+      65296,
+      66720,
+      68912,
+      69734,
+      69872,
+      69942,
+      70096,
+      70384,
+      70736,
+      70864,
+      71248,
+      71360,
+      71472,
+      71904,
+      72016,
+      72784,
+      73040,
+      73120,
+      73552,
+      92768,
+      92864,
+      93008,
+      120782,
+      120792,
+      120802,
+      120812,
+      120822,
+      123200,
+      123632,
+      124144,
+      125264,
+      130032
+    ]
+  },
+  "uv_lexical_helper_sha256": "1cdb55e68e6f8525cd14a1794672dbb624ab0081def5fd3ac9a23059c279568f",
+  "uv_syntax_controls": 8
 }
