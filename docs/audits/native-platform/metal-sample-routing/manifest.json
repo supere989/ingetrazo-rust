@@ -1,0 +1,534 @@
+{
+  "source": "86cf1a2f3722593aa55e3c3d61e4244a28fab988",
+  "run": 38158321257,
+  "records": [
+    {
+      "archive": "job-logs.zip",
+      "path": "arm.log",
+      "bytes": 62104,
+      "sha256": "7e1780f9aac12c139b3d551491d6fa46c925cdc2ae73e315fcb379f14d5e46b1"
+    },
+    {
+      "archive": "job-logs.zip",
+      "path": "intel.log",
+      "bytes": 64074,
+      "sha256": "b1787e8141d17e0a896922195e4a100b9e682dc53c79eee8e1101a461b3c8c70"
+    },
+    {
+      "archive": "intel.zip",
+      "path": "metal-combined-gui-ci/apple-gl-depth-resolve.json",
+      "bytes": 37,
+      "sha256": "574706717f33363bcf4886d8f94a41986321935bf687f55afb9457e21e56b908"
+    },
+    {
+      "archive": "intel.zip",
+      "path": "metal-combined-gui-ci/billboards/baseline.rgba",
+      "bytes": 1920000,
+      "sha256": "f80885c6328995cfa3d42381433e15621aa0bd427d128b52b197ba9f4bd89712"
+    },
+    {
+      "archive": "intel.zip",
+      "path": "metal-combined-gui-ci/billboards/hidden.rgba",
+      "bytes": 1920000,
+      "sha256": "8e75966d0f3d1040d588a2bfc4ccca90dc788dbc16195625d0f1bf9994163de6"
+    },
+    {
+      "archive": "intel.zip",
+      "path": "metal-combined-gui-ci/apple-gl-depth-resolve.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "archive": "intel.zip",
+      "path": "metal-combined-gui-ci/billboards/report.json",
+      "bytes": 499,
+      "sha256": "d9a39b8da54b807644a2e8325f8a7cf7e758d58eb1e594d069d5cd5f94275a87"
+    },
+    {
+      "archive": "intel.zip",
+      "path": "metal-combined-gui-ci/billboards/turned.rgba",
+      "bytes": 1920000,
+      "sha256": "f0950ed46171e495f4e3acaef93e4824431b6123c2673030703f29190481bb9b"
+    },
+    {
+      "archive": "intel.zip",
+      "path": "metal-combined-gui-ci/build.log",
+      "bytes": 91915,
+      "sha256": "f8fb49561aebe576717d5740f91e2a7c0cb257e9b1cbdfd387939061226c7769"
+    },
+    {
+      "archive": "intel.zip",
+      "path": "metal-combined-gui-ci/defaults/camera.rgba",
+      "bytes": 16384,
+      "sha256": "7de348a0cc857a0a58f237f3a376d220caa643743fc2e19f053bf9a5122d0620"
+    },
+    {
+      "archive": "intel.zip",
+      "path": "metal-combined-gui-ci/defaults/default.rgba",
+      "bytes": 16384,
+      "sha256": "a7d25bf8c4c403c83ba48b0564ef7a75d3fffacc8cd3097832183dd14010f078"
+    },
+    {
+      "archive": "intel.zip",
+      "path": "metal-combined-gui-ci/defaults/profiles-off.rgba",
+      "bytes": 16384,
+      "sha256": "a7d25bf8c4c403c83ba48b0564ef7a75d3fffacc8cd3097832183dd14010f078"
+    },
+    {
+      "archive": "intel.zip",
+      "path": "metal-combined-gui-ci/defaults/report.json",
+      "bytes": 616,
+      "sha256": "b5921b36d5e043b8b7ddc6850145cfb09876875d9079a8f98ac34ae2fc361878"
+    },
+    {
+      "archive": "intel.zip",
+      "path": "metal-combined-gui-ci/defaults/section.rgba",
+      "bytes": 16384,
+      "sha256": "f2f06dca16a6dea68071e7dd4edde5012f9ed34da83d93cf1c0b09d729ecda39"
+    },
+    {
+      "archive": "intel.zip",
+      "path": "metal-combined-gui-ci/defaults/soft-edited.rgba",
+      "bytes": 16384,
+      "sha256": "7de348a0cc857a0a58f237f3a376d220caa643743fc2e19f053bf9a5122d0620"
+    },
+    {
+      "archive": "intel.zip",
+      "path": "metal-combined-gui-ci/defaults/startup.rgba",
+      "bytes": 16384,
+      "sha256": "da26ce1d4c22dd4d893635953027326a4e915f07dfa5896ce47055c3c6785019"
+    },
+    {
+      "archive": "intel.zip",
+      "path": "metal-combined-gui-ci/document-annotations/sample-diagnostics.json",
+      "bytes": 713,
+      "sha256": "ff73b2d805dbf9ce59d28e5655bdf8b74ce5218923f52d10a8d51c56fdcf3b62"
+    },
+    {
+      "archive": "intel.zip",
+      "path": "metal-combined-gui-ci/launcher/runtime.log",
+      "bytes": 770,
+      "sha256": "df3d7fb00781a0912e5ab2a1eaa4f6dd45f63b7950adb472e08753d5eca436db"
+    },
+    {
+      "archive": "intel.zip",
+      "path": "metal-combined-gui-ci/launcher/session/config/settings.json",
+      "bytes": 538,
+      "sha256": "50447b28c8af8d9c55060389a910c910cd4bdbcc43a8d3bd0dc54c28c02a0791"
+    },
+    {
+      "archive": "intel.zip",
+      "path": "metal-combined-gui-ci/section-fill/closed-disabled.rgba",
+      "bytes": 1920000,
+      "sha256": "47a2d725134186de65b15e615152e5e0cd6916446360fce8ebd82a446a34250d"
+    },
+    {
+      "archive": "intel.zip",
+      "path": "metal-combined-gui-ci/section-fill/closed-front-disabled.rgba",
+      "bytes": 1920000,
+      "sha256": "16ab57e7bb32f63f653367d75e9cdbe1a0a8157c242f5353fa7070562526c5a8"
+    },
+    {
+      "archive": "intel.zip",
+      "path": "metal-combined-gui-ci/section-fill/closed-front.rgba",
+      "bytes": 1920000,
+      "sha256": "16ab57e7bb32f63f653367d75e9cdbe1a0a8157c242f5353fa7070562526c5a8"
+    },
+    {
+      "archive": "intel.zip",
+      "path": "metal-combined-gui-ci/section-fill/closed-iso-disabled.rgba",
+      "bytes": 1920000,
+      "sha256": "cfae262504b16306ec53ae48d46e6fe95160d6e142310071b247ac9daa5d855b"
+    },
+    {
+      "archive": "intel.zip",
+      "path": "metal-combined-gui-ci/section-fill/closed-iso.rgba",
+      "bytes": 1920000,
+      "sha256": "4ce916cc6fd0a26bcc8a27a9f22b97e555bebb68b24457c8b9ef8862a5aea144"
+    },
+    {
+      "archive": "intel.zip",
+      "path": "metal-combined-gui-ci/section-fill/closed.rgba",
+      "bytes": 1920000,
+      "sha256": "6a3c34c071c82b9f73e39a633345f98a631a1430779b291fea61b51f83c7b1ea"
+    },
+    {
+      "archive": "intel.zip",
+      "path": "metal-combined-gui-ci/section-fill/comparison.json",
+      "bytes": 3059,
+      "sha256": "731bcaafa433b29b1be9d001a053fc5b29b51e93c6f925a6302deed9407e0357"
+    },
+    {
+      "archive": "intel.zip",
+      "path": "metal-combined-gui-ci/section-fill/coplanar-backface-disabled.rgba",
+      "bytes": 1920000,
+      "sha256": "29d1ae1afe6a5c938a33fcbf365c9440abe0dd81e93504e8c6b6ce2b381a0284"
+    },
+    {
+      "archive": "intel.zip",
+      "path": "metal-combined-gui-ci/section-fill/coplanar-backface.rgba",
+      "bytes": 1920000,
+      "sha256": "29d1ae1afe6a5c938a33fcbf365c9440abe0dd81e93504e8c6b6ce2b381a0284"
+    },
+    {
+      "archive": "intel.zip",
+      "path": "metal-combined-gui-ci/section-fill/duplicate-disabled.rgba",
+      "bytes": 1920000,
+      "sha256": "47a2d725134186de65b15e615152e5e0cd6916446360fce8ebd82a446a34250d"
+    },
+    {
+      "archive": "intel.zip",
+      "path": "metal-combined-gui-ci/section-fill/duplicate.rgba",
+      "bytes": 1920000,
+      "sha256": "6a3c34c071c82b9f73e39a633345f98a631a1430779b291fea61b51f83c7b1ea"
+    },
+    {
+      "archive": "intel.zip",
+      "path": "metal-combined-gui-ci/section-fill/report.json",
+      "bytes": 8865,
+      "sha256": "823622fe4dbe3542e8d7c3e2d77abc7003d5fdb10ebec829edbb2540c54388b9"
+    },
+    {
+      "archive": "intel.zip",
+      "path": "metal-combined-gui-ci/section-fill/shared-slab-disabled.rgba",
+      "bytes": 1920000,
+      "sha256": "3e5c89b8c4797b22d3509874f9267ab6fbe240602574ef79ef6b86f62da8e5a5"
+    },
+    {
+      "archive": "intel.zip",
+      "path": "metal-combined-gui-ci/section-fill/shared-slab-iso-disabled.rgba",
+      "bytes": 1920000,
+      "sha256": "7f80d55d0aa746f45e1ca0658d4e79addbfbadb3dd8e29ede915fa083c9b3d91"
+    },
+    {
+      "archive": "intel.zip",
+      "path": "metal-combined-gui-ci/section-fill/shared-slab-iso.rgba",
+      "bytes": 1920000,
+      "sha256": "8d0c36c455555b1af4a750264647ea0bbaa3516051b9ff11296851c6d5e8158d"
+    },
+    {
+      "archive": "intel.zip",
+      "path": "metal-combined-gui-ci/section-fill/shared-slab-reversed-disabled.rgba",
+      "bytes": 1920000,
+      "sha256": "47a2d725134186de65b15e615152e5e0cd6916446360fce8ebd82a446a34250d"
+    },
+    {
+      "archive": "intel.zip",
+      "path": "metal-combined-gui-ci/section-fill/shared-slab-reversed-iso-disabled.rgba",
+      "bytes": 1920000,
+      "sha256": "cfae262504b16306ec53ae48d46e6fe95160d6e142310071b247ac9daa5d855b"
+    },
+    {
+      "archive": "intel.zip",
+      "path": "metal-combined-gui-ci/section-fill/shared-slab-reversed-iso.rgba",
+      "bytes": 1920000,
+      "sha256": "4ce916cc6fd0a26bcc8a27a9f22b97e555bebb68b24457c8b9ef8862a5aea144"
+    },
+    {
+      "archive": "intel.zip",
+      "path": "metal-combined-gui-ci/section-fill/shared-slab-reversed.rgba",
+      "bytes": 1920000,
+      "sha256": "6a3c34c071c82b9f73e39a633345f98a631a1430779b291fea61b51f83c7b1ea"
+    },
+    {
+      "archive": "intel.zip",
+      "path": "metal-combined-gui-ci/section-fill/shared-slab.rgba",
+      "bytes": 1920000,
+      "sha256": "3e5c89b8c4797b22d3509874f9267ab6fbe240602574ef79ef6b86f62da8e5a5"
+    },
+    {
+      "archive": "intel.zip",
+      "path": "metal-combined-gui-ci/section-fill/transparent-disabled.rgba",
+      "bytes": 1920000,
+      "sha256": "cb464c7a67b4acf25ce7aaf9c9331f2630f950dc06ff0a52e7e4d31e4f92e31b"
+    },
+    {
+      "archive": "intel.zip",
+      "path": "metal-combined-gui-ci/section-fill/transparent.rgba",
+      "bytes": 1920000,
+      "sha256": "cb464c7a67b4acf25ce7aaf9c9331f2630f950dc06ff0a52e7e4d31e4f92e31b"
+    },
+    {
+      "archive": "arm.zip",
+      "path": "metal-combined-gui-ci/apple-gl-depth-resolve.json",
+      "bytes": 37,
+      "sha256": "574706717f33363bcf4886d8f94a41986321935bf687f55afb9457e21e56b908"
+    },
+    {
+      "archive": "arm.zip",
+      "path": "metal-combined-gui-ci/apple-gl-depth-resolve.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "archive": "arm.zip",
+      "path": "metal-combined-gui-ci/billboards/baseline.rgba",
+      "bytes": 1920000,
+      "sha256": "22b9391975a5725e483aba58a5a85e120da531815308510c58b423d7081e7bb6"
+    },
+    {
+      "archive": "arm.zip",
+      "path": "metal-combined-gui-ci/billboards/hidden.rgba",
+      "bytes": 1920000,
+      "sha256": "7ed864b7bb420fb5e728b1101ef54e827b3c925055de4e0bc050a9c96965c07d"
+    },
+    {
+      "archive": "arm.zip",
+      "path": "metal-combined-gui-ci/billboards/report.json",
+      "bytes": 499,
+      "sha256": "d9a39b8da54b807644a2e8325f8a7cf7e758d58eb1e594d069d5cd5f94275a87"
+    },
+    {
+      "archive": "arm.zip",
+      "path": "metal-combined-gui-ci/billboards/turned.rgba",
+      "bytes": 1920000,
+      "sha256": "2ca224c522cf0b09660d54a94ecc0368e80c4a6a0a92f873fcec946c5ee6bce0"
+    },
+    {
+      "archive": "arm.zip",
+      "path": "metal-combined-gui-ci/build.log",
+      "bytes": 91825,
+      "sha256": "f7ade449f1e83584cf1e10fd5c0b33ccb31986b5e986c74a9d75621d4c047ca1"
+    },
+    {
+      "archive": "arm.zip",
+      "path": "metal-combined-gui-ci/defaults/camera.rgba",
+      "bytes": 16384,
+      "sha256": "3822473f0c512a08e72e1595655566b230f9bca9834182e95ff859c07e3a38e5"
+    },
+    {
+      "archive": "arm.zip",
+      "path": "metal-combined-gui-ci/defaults/default.rgba",
+      "bytes": 16384,
+      "sha256": "7c73703768f727e0efbc4dc4e52baf9338068dd39baacce16beeb1d418fa5304"
+    },
+    {
+      "archive": "arm.zip",
+      "path": "metal-combined-gui-ci/defaults/profiles-off.rgba",
+      "bytes": 16384,
+      "sha256": "7c73703768f727e0efbc4dc4e52baf9338068dd39baacce16beeb1d418fa5304"
+    },
+    {
+      "archive": "arm.zip",
+      "path": "metal-combined-gui-ci/defaults/report.json",
+      "bytes": 616,
+      "sha256": "b5921b36d5e043b8b7ddc6850145cfb09876875d9079a8f98ac34ae2fc361878"
+    },
+    {
+      "archive": "arm.zip",
+      "path": "metal-combined-gui-ci/defaults/section.rgba",
+      "bytes": 16384,
+      "sha256": "d8e089a22f1d0e6422485219b39f5ce172cc02170aad7502bd7c0878c5719e84"
+    },
+    {
+      "archive": "arm.zip",
+      "path": "metal-combined-gui-ci/defaults/soft-edited.rgba",
+      "bytes": 16384,
+      "sha256": "3822473f0c512a08e72e1595655566b230f9bca9834182e95ff859c07e3a38e5"
+    },
+    {
+      "archive": "arm.zip",
+      "path": "metal-combined-gui-ci/defaults/startup.rgba",
+      "bytes": 16384,
+      "sha256": "b5b4a41a6621393a22fba108714b7a33c9cdbc9c58fc6aa36088059ea2149ca7"
+    },
+    {
+      "archive": "arm.zip",
+      "path": "metal-combined-gui-ci/document-annotations/depth-hidden.rgba",
+      "bytes": 1920000,
+      "sha256": "58d3840e89fe2653d11e8832de4ceca1d8075e794536533a92ed221223982add"
+    },
+    {
+      "archive": "arm.zip",
+      "path": "metal-combined-gui-ci/document-annotations/depth-off.rgba",
+      "bytes": 1920000,
+      "sha256": "58d3840e89fe2653d11e8832de4ceca1d8075e794536533a92ed221223982add"
+    },
+    {
+      "archive": "arm.zip",
+      "path": "metal-combined-gui-ci/document-annotations/depth-visible.rgba",
+      "bytes": 1920000,
+      "sha256": "4004f48f0671cf575b2e2216a1822545ce233e8152724f69563226b6217efb60"
+    },
+    {
+      "archive": "arm.zip",
+      "path": "metal-combined-gui-ci/document-annotations/dimensions-off.rgba",
+      "bytes": 1920000,
+      "sha256": "22b9391975a5725e483aba58a5a85e120da531815308510c58b423d7081e7bb6"
+    },
+    {
+      "archive": "arm.zip",
+      "path": "metal-combined-gui-ci/document-annotations/pergola.rgba",
+      "bytes": 1920000,
+      "sha256": "1113eb4ffc7f980a74178a29ebed2911f8127f6dd509afe67d6356ffbad2d544"
+    },
+    {
+      "archive": "arm.zip",
+      "path": "metal-combined-gui-ci/document-annotations/report.json",
+      "bytes": 480,
+      "sha256": "c996f97ad367a945ca79e2b71bec4a4f43463bfc942bf88df6b09773c3f222c1"
+    },
+    {
+      "archive": "arm.zip",
+      "path": "metal-combined-gui-ci/document-annotations/sample-diagnostics.json",
+      "bytes": 666,
+      "sha256": "04eb8243e89a010925aff2861e6a541a179142d8ecc545efc4a678cb156c4431"
+    },
+    {
+      "archive": "arm.zip",
+      "path": "metal-combined-gui-ci/document-annotations/section-off.rgba",
+      "bytes": 1920000,
+      "sha256": "1113eb4ffc7f980a74178a29ebed2911f8127f6dd509afe67d6356ffbad2d544"
+    },
+    {
+      "archive": "arm.zip",
+      "path": "metal-combined-gui-ci/launcher/result.json",
+      "bytes": 444,
+      "sha256": "48e0f4d38cc2ae3a47abeaf441afdac66db59d8d4e4484dacd61b272080abf01"
+    },
+    {
+      "archive": "arm.zip",
+      "path": "metal-combined-gui-ci/launcher/runtime.log",
+      "bytes": 836,
+      "sha256": "663bdfaa519ac7fae1463c1b063e8f946412e9064f5874d9ed942324a586c2c7"
+    },
+    {
+      "archive": "arm.zip",
+      "path": "metal-combined-gui-ci/launcher/session/config/settings.json",
+      "bytes": 538,
+      "sha256": "50447b28c8af8d9c55060389a910c910cd4bdbcc43a8d3bd0dc54c28c02a0791"
+    },
+    {
+      "archive": "arm.zip",
+      "path": "metal-combined-gui-ci/section-fill/closed-disabled.rgba",
+      "bytes": 1920000,
+      "sha256": "cb76f01769419c5263ac5b22fe2cfba6efcc75d963c3117cb776bc7ff5d427f0"
+    },
+    {
+      "archive": "arm.zip",
+      "path": "metal-combined-gui-ci/section-fill/closed-front-disabled.rgba",
+      "bytes": 1920000,
+      "sha256": "d101696911c8ab8474adeb8d2d10fce28bad9bb3f46492291266a7300758a77c"
+    },
+    {
+      "archive": "arm.zip",
+      "path": "metal-combined-gui-ci/section-fill/closed-front.rgba",
+      "bytes": 1920000,
+      "sha256": "d101696911c8ab8474adeb8d2d10fce28bad9bb3f46492291266a7300758a77c"
+    },
+    {
+      "archive": "arm.zip",
+      "path": "metal-combined-gui-ci/section-fill/closed-iso-disabled.rgba",
+      "bytes": 1920000,
+      "sha256": "80a76f91b01c4c3e2d776de2476b5bf6663b5a5317763ccc5c3af06cafbee28a"
+    },
+    {
+      "archive": "arm.zip",
+      "path": "metal-combined-gui-ci/section-fill/closed-iso.rgba",
+      "bytes": 1920000,
+      "sha256": "6d39d59705cd28d52dba0cb2f76f8c265d6eca25993a9247761a0a11a9a6ffb9"
+    },
+    {
+      "archive": "arm.zip",
+      "path": "metal-combined-gui-ci/section-fill/closed.rgba",
+      "bytes": 1920000,
+      "sha256": "51240eb95fcca70ce939c4fd0f0311076ac0ee6007553e5ce5c650f94631d451"
+    },
+    {
+      "archive": "arm.zip",
+      "path": "metal-combined-gui-ci/section-fill/comparison.json",
+      "bytes": 3049,
+      "sha256": "899a56f29ef467830ad8d8265b9f203bc873039bebba8b0996c8779e0047ba8e"
+    },
+    {
+      "archive": "arm.zip",
+      "path": "metal-combined-gui-ci/section-fill/coplanar-backface-disabled.rgba",
+      "bytes": 1920000,
+      "sha256": "2df1e68b0a0501c7783c7a4d26de58224f5dc65eff6f1b03dc13c78f14c9c042"
+    },
+    {
+      "archive": "arm.zip",
+      "path": "metal-combined-gui-ci/section-fill/coplanar-backface.rgba",
+      "bytes": 1920000,
+      "sha256": "2df1e68b0a0501c7783c7a4d26de58224f5dc65eff6f1b03dc13c78f14c9c042"
+    },
+    {
+      "archive": "arm.zip",
+      "path": "metal-combined-gui-ci/section-fill/duplicate-disabled.rgba",
+      "bytes": 1920000,
+      "sha256": "cb76f01769419c5263ac5b22fe2cfba6efcc75d963c3117cb776bc7ff5d427f0"
+    },
+    {
+      "archive": "arm.zip",
+      "path": "metal-combined-gui-ci/section-fill/duplicate.rgba",
+      "bytes": 1920000,
+      "sha256": "51240eb95fcca70ce939c4fd0f0311076ac0ee6007553e5ce5c650f94631d451"
+    },
+    {
+      "archive": "arm.zip",
+      "path": "metal-combined-gui-ci/section-fill/report.json",
+      "bytes": 11020,
+      "sha256": "8288a102ea902d1f2f0bfb03eb2d6973862b0a99e47a90d622ccb6c1a1f60088"
+    },
+    {
+      "archive": "arm.zip",
+      "path": "metal-combined-gui-ci/section-fill/shared-slab-disabled.rgba",
+      "bytes": 1920000,
+      "sha256": "e2192af4946875a82a31aca38d1d2d53471c8e340bc9449c0ccd6c83a09174fe"
+    },
+    {
+      "archive": "arm.zip",
+      "path": "metal-combined-gui-ci/section-fill/shared-slab-iso-disabled.rgba",
+      "bytes": 1920000,
+      "sha256": "dfa8d28407afa243b90d7c8b34d8e1d8c5a169547b7d35e7578e2a232b5977d5"
+    },
+    {
+      "archive": "arm.zip",
+      "path": "metal-combined-gui-ci/section-fill/shared-slab-iso.rgba",
+      "bytes": 1920000,
+      "sha256": "4f21629c05f434f34424d1dc3cf8d96b37b71fec2b658eb9f9a789171b3eaba2"
+    },
+    {
+      "archive": "arm.zip",
+      "path": "metal-combined-gui-ci/section-fill/shared-slab-reversed-disabled.rgba",
+      "bytes": 1920000,
+      "sha256": "cb76f01769419c5263ac5b22fe2cfba6efcc75d963c3117cb776bc7ff5d427f0"
+    },
+    {
+      "archive": "arm.zip",
+      "path": "metal-combined-gui-ci/section-fill/shared-slab-reversed-iso-disabled.rgba",
+      "bytes": 1920000,
+      "sha256": "80a76f91b01c4c3e2d776de2476b5bf6663b5a5317763ccc5c3af06cafbee28a"
+    },
+    {
+      "archive": "arm.zip",
+      "path": "metal-combined-gui-ci/section-fill/shared-slab-reversed-iso.rgba",
+      "bytes": 1920000,
+      "sha256": "6d39d59705cd28d52dba0cb2f76f8c265d6eca25993a9247761a0a11a9a6ffb9"
+    },
+    {
+      "archive": "arm.zip",
+      "path": "metal-combined-gui-ci/section-fill/shared-slab-reversed.rgba",
+      "bytes": 1920000,
+      "sha256": "51240eb95fcca70ce939c4fd0f0311076ac0ee6007553e5ce5c650f94631d451"
+    },
+    {
+      "archive": "arm.zip",
+      "path": "metal-combined-gui-ci/section-fill/shared-slab.rgba",
+      "bytes": 1920000,
+      "sha256": "e2192af4946875a82a31aca38d1d2d53471c8e340bc9449c0ccd6c83a09174fe"
+    },
+    {
+      "archive": "arm.zip",
+      "path": "metal-combined-gui-ci/section-fill/transparent-disabled.rgba",
+      "bytes": 1920000,
+      "sha256": "484125684b32c79de0be0af75116817c897a4245221fb35915890ae5f229cba2"
+    },
+    {
+      "archive": "arm.zip",
+      "path": "metal-combined-gui-ci/section-fill/transparent.rgba",
+      "bytes": 1920000,
+      "sha256": "484125684b32c79de0be0af75116817c897a4245221fb35915890ae5f229cba2"
+    }
+  ]
+}
