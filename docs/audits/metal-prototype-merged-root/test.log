@@ -1,0 +1,20 @@
+warning: function `visit_meshes` is never used
+   --> crates/ingetrazo-core/src/screen_pick.rs:120:15
+    |
+120 | pub(crate) fn visit_meshes(scene: &Scene, mut visit: impl FnMut(&Mesh, DMat4, bool)) {
+    |               ^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-core` (lib) generated 1 warning
+   Compiling ingetrazo-render v0.3.15 (/tmp/ingetrazo-next-integration/crates/ingetrazo-render)
+    Finished `test` profile [unoptimized] target(s) in 1.07s
+     Running unittests src/lib.rs (/tmp/ingetrazo-native-font-merge-target/debug/deps/ingetrazo_render-10e3f22f08ca23e0)
+
+running 3 tests
+test pipeline::placement_prototype_controls::classic_group_refuses_local_normal_shading_substitution ... ok
+test pipeline::placement_prototype_controls::nested_child_is_independent_binding_and_inherited_paint_applies_to_own_mesh ... ok
+test pipeline::placement_prototype_controls::local_packet_excludes_reflected_scaled_root_pose_without_inverse_roundtrip ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 78 filtered out; finished in 0.00s
+

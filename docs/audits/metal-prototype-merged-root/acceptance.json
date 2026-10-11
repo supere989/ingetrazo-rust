@@ -1,0 +1,13 @@
+{
+  "source": "7c3b20c1",
+  "command": "cargo test -p ingetrazo-render --locked --lib placement_prototype_controls -j2",
+  "result": "3 passed; 0 failed",
+  "log_sha256": "8062a91b65458b0cad3d9b17fdff5f3964efc7b95f124d26cd38c480cb863e8b",
+  "review": "Original viewport.py _proto_base_chunk collects own mesh with effective paint. Root reviewed local identity override, independent child binding and unchanged ordinary recursive traversal.",
+  "remaining": [
+    "Native prototype cache and placement consumer",
+    "Actual original/native transformed image comparison",
+    "Warm pose update upload and allocation counters",
+    "Reflected winding native acceptance"
+  ]
+}
