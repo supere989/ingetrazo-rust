@@ -26,6 +26,8 @@ pub struct MoveTool {
     pub target_vertices: Vec<usize>,
     pub target_groups: Vec<usize>,
     annotations:annotations::Annotations,
+    annotation_hits:crate::base::AnnotationHits,
+    annotation_pick_error:Option<String>,
     pub target_planes:Vec<usize>,
     pub target_images:Vec<usize>,
     original_images:Vec<(usize,ingetrazo_core::image_plane::ImagePlane)>,
@@ -81,6 +83,7 @@ impl MoveTool {
 
     /// Resolve targets from selection or mouse click.
     pub fn gather_targets(&mut self, scene: &Scene, ctx: &ToolContext) {
+        if scene.selection.is_empty(){if let Some(error)=self.annotation_pick_error.clone(){self.last_error=Some(error);self.target_vertices.clear();self.target_groups.clear();self.target_planes.clear();self.target_images.clear();self.annotations=Default::default();return;}}
         self.last_error=None;self.image_command=None;
         self.target_images=crate::base::gather_image_targets(scene,ctx);
         self.original_images=self.target_images.iter().map(|&id|(id,scene.image_planes[id].clone())).collect();
@@ -132,6 +135,9 @@ impl MoveTool {
             }
         }
 
+        if scene.selection.is_empty() && (self.annotation_hits.label.is_some() || self.annotation_hits.dimension.is_some()) {
+            vert_set.clear();group_set.clear();copy_edges.clear();copy_faces.clear();isolated.clear();
+        }
         let mut face_sides=HashSet::new();
         for &id in &copy_faces{let face=&scene.mesh.faces[id];for ring in std::iter::once(&face.vertices).chain(&face.holes){for i in 0..ring.len(){let (a,b)=(ring[i],ring[(i+1)%ring.len()]);face_sides.insert(if a<b{(a,b)}else{(b,a)});}}}
         let mut plain=vec![];
@@ -159,7 +165,7 @@ impl MoveTool {
         self.exclusions.groups=group_set.iter().filter_map(|&id|scene.groups.get(id).map(|g|g.id)).collect();
         self.target_vertices = vert_set.into_iter().collect();
         self.target_groups = group_set.into_iter().collect();self.target_planes=plane_set.into_iter().collect();
-        if let Err(error)=self.annotations.gather(scene,&self.target_vertices,&self.target_groups){self.last_error=Some(error);self.target_vertices.clear();self.target_groups.clear();self.target_planes.clear();self.target_images.clear();self.annotations=Default::default();}
+        if let Err(error)=self.annotations.gather(scene,&self.target_vertices,&self.target_groups,self.annotation_hits){self.last_error=Some(error);self.target_vertices.clear();self.target_groups.clear();self.target_planes.clear();self.target_images.clear();self.annotations=Default::default();}
         self.original_version=scene.version;self.preview_version=scene.version;
         self.original_positions=self.target_vertices.iter().map(|&id|(id,scene.mesh.vertices[id].position)).collect();
         self.original_groups=self.target_groups.iter().filter_map(|&id|scene.groups.get(id).map(|g|(id,g.transform))).collect();
@@ -274,6 +280,10 @@ impl MoveTool {
 }
 
 impl Tool for MoveTool {
+    fn note_annotation_pick_error(&mut self,error:String){self.annotation_pick_error=Some(error);}
+    fn wants_annotation_hits(&self)->bool { self.start_point.is_none() }
+    fn note_annotation_hits(&mut self, hits:crate::base::AnnotationHits) { self.annotation_hits=hits;self.annotation_pick_error=None; }
+
     fn visit_image_metadata_roots(&self,visit:&mut dyn FnMut(&ingetrazo_core::image_plane::ImagePlane)){for(_,image)in &self.original_images{visit(image);}}
     fn preserves_global_preview_on_context_exit(&self)->bool{self.start_point.is_some()&&!self.is_copy_mode&&!self.target_images.is_empty()&&self.target_groups.is_empty()&&self.target_planes.is_empty()}
     fn detach_context_preview(&mut self){self.detached_vertices=true;}

@@ -1,0 +1,45 @@
+{
+  "source_files": {
+    "crates/ingetrazo-gui/src/annotation_pick.rs": "328ed68f6fe23e3a32ff47fb9d3daea29ca4772197bbd0daf6bf2e9590b9990b",
+    "crates/ingetrazo-gui/src/annotation_overlay_geometry.rs": "478a335b1e3bed4deb44b3933fba207df1f83e20d0ab4dec57853a9332d12226",
+    "crates/ingetrazo-gui/src/app.rs": "c35ded91fa879c115bc34a88da8d7f1d303fe9568bf19633abb3c9c5a093a7d7",
+    "crates/ingetrazo-gui/src/lib.rs": "651929849b505aefb67b3dd548792f67b2ae2027f916111dfdca0b64aa812436",
+    "crates/ingetrazo-gui/src/viewport.rs": "5741319736c20fb251a904f65baa62d23936a7b29988663722a82a90ddc5a982",
+    "crates/ingetrazo-tools/src/base.rs": "cc40bcd37380d7005edf6352a544babbeeda75bad85671879229a4ee54474daf",
+    "crates/ingetrazo-tools/src/move_tool.rs": "1a20d4e27ca88279b567eed15d9c02b8b9296933fba6ecdeed5bf2e173b3c353",
+    "crates/ingetrazo-tools/src/move_tool/annotations.rs": "258f21b5e47a3d0a4810f403a16da83203cc6829cea3fe0ccf94d7dbe4a873e2",
+    "crates/ingetrazo-render/src/annotations.rs": "12a90f8f1d53f98e934f4d1364e2e7ce12e7f001d367990c771af91c25874e29",
+    "crates/ingetrazo-gui/examples/annotation_acquisition_fixture.rs": "783c90a6872473e0c5e8cde36966e4d65d8c0e638d2d88badac200e538d3dfb4",
+    "scripts/reference-annotation-acquisition.py": "b5b6118d0b7a5b5306fb62ea20d9c2f9fb13ebe062c5be92a0eb21c6b6820f67",
+    "scripts/check-annotation-acquisition.py": "e5e9a9464c9eb5f613c3578b348b9b446a2d33897857857fcbb11bd8ca4d8244"
+  },
+  "original_files": {
+    "tools/move.py": "67ba58b7f01f84dd5654fd31c1f4ae217296efcfab05ad21b4c61e43d7c87acd",
+    "views/viewport.py": "1fb62f55b8f559deb3676924ee69a9a444397faa28c49651111cea44e420c724"
+  },
+  "binary": {
+    "path": "/tmp/ingetrazo-ai-registry-target/debug/examples/annotation_acquisition_fixture",
+    "sha256": "01ac3b4b6afb265747efaacf47ddc848dcc18babbf6d822e3d2207f730985104"
+  },
+  "records": {
+    "source-first-failure.log": "28153b68963a8ea28b9bb94d000b53230112d3329d96126b46cebf510ebeaab1",
+    "input.igz": "c9ce01d930fff89d9af94b5580093f6f82626b75d6ce690482e32fd787d4a87b",
+    "original.json": "a92b9c1cb85aa7ceccf2ca29d8aba1f0af99b4e75bb3b095632f9a2f8986f380",
+    "native.json": "0b194564e1eb9eb41639d6a2391ea00476c2dd8992b2ac72b51106dfb5b2d055",
+    "threshold-first-failure.json": "508a032a9c750eb71a71579e13b7edf77025b3fe226ec6b057fd608190005772",
+    "check.json": "3bdc451c035418df5d271dc081f6e59a3c22795d5dcc55da75e8a78769ca4041",
+    "annotation-acquisition-check.log": "f85e527be6ceb774201fc2379750f2a31b5fd348ef33b36e8915b499a47fa608",
+    "annotation-acquisition-check-final.log": "44b2373ad90077c80c87ab20e50cf7382556112e61971a8ec79bbedffb8c87db",
+    "annotation-acquisition-tests.log": "4cc2c3ffb70103e5a2b5c85967e0ebac617a9cb51f5b9258a7f3808728ce4a0b",
+    "annotation-acquisition-original.log": "28153b68963a8ea28b9bb94d000b53230112d3329d96126b46cebf510ebeaab1",
+    "annotation-acquisition-original-final.log": "699a86a4b805c91946f7fcea050cfb8b6121927380e7088fa59d694fa1fea872",
+    "annotation-acquisition-build.log": "80b7e029a9699a8b3461fc61e9b5eb02801935d78dd07cf23ffc4d2388de5516",
+    "annotation-acquisition-build-final.log": "63f39d26de90eeeb26a777fceeddbc7e5239af009b492766ebff96e6f997aa15",
+    "annotation-acquisition-build-source-camera.log": "9138d56a5011c7bda2498b012b992464a4badcbfda833446c6135e02830476dc",
+    "annotation-acquisition-build-source-camera-final.log": "5afe0bc38d18cdb4f78ca26bde7fd6ff84e12cc5aa81d73365ec7663ed4bbfa5",
+    "annotation-acquisition-tests-final.log": "7534ce31b04df21a4b8532780c23891c7a1923556c8170e171179e2bf3f60f0e",
+    "annotation-acquisition-build-frozen.log": "7fe1be24006676ef1f26f77c765a85034a74908f6ccd4053e30ea69e89c89b88",
+    "annotation-acquisition-build-frozen-final.log": "3aadb6ed62c21627e35b012f46359c756f1006ddaeee8da90d723aede44ff6e7",
+    "annotation-acquisition-build-admission.log": "ed2f31262531be08353f117b4dbceee7bcb836dcd189eacf799a64249538f9cb"
+  }
+}

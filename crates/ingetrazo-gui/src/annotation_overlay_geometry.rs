@@ -29,6 +29,15 @@ impl Cache {
   let line=self.fonts.shape(&request,text,size as u32)?;
   Ok((((line.ascent_26_6+63)/64+(line.descent_26_6+63)/64)as f64,(line.advance_26_6 as f64/64.+0.5).floor()))
  }
+ pub(crate) fn leader_pick_metrics(&mut self,text:&str,point_size:i32,dpi:f64)->Result<[f64;4],String>{
+  let size=(f64::from(point_size)*dpi/72.+0.5).floor();
+  if !size.is_finite()||!(1. ..=4096.).contains(&size){return Err("Annotation metric size outside admission".into());}
+  let request=Request{family:"Sans Serif".into(),bold:true,italic:false,required_chars:vec![]};
+  let line=self.fonts.shape(&request,text,size as u32)?;
+  let ascent=((line.ascent_26_6+63)/64)as f64;
+  let descent=((line.descent_26_6+63)/64)as f64;
+  Ok([ascent,descent,ascent+descent,(line.advance_26_6 as f64/64.+0.5).floor()])
+ }
  /// Configure once from the actual native renderpass capability, before preparing
  /// any source widget operations. Default portable/QImage producers are unchanged.
  pub(crate) fn enable_source_stencil(&mut self){self.stencil_union=true;self.current=None;}

@@ -37,6 +37,13 @@ pub enum ToolType {
     ChangeAxes,
 }
 
+/// Immutable annotation identities from the source screen-pick producer.
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+pub struct AnnotationHits {
+    pub label: Option<u64>,
+    pub dimension: Option<uuid::Uuid>,
+}
+
 #[derive(Debug, Clone)]
 pub struct ToolContext {
     pub world: DVec3,
@@ -187,6 +194,9 @@ pub trait Tool: Send + Sync {
     }
     fn on_activate(&mut self, _scene: &mut Scene) {}
     fn on_deactivate(&mut self, _scene: &mut Scene) {}
+    fn wants_annotation_hits(&self) -> bool { false }
+    fn note_annotation_hits(&mut self, _hits: AnnotationHits) {}
+    fn note_annotation_pick_error(&mut self, _error: String) {}
     fn on_click(&mut self, _scene: &mut Scene, _ctx: &ToolContext) {}
     fn on_double_click(&mut self, scene: &mut Scene, ctx: &ToolContext) {
         self.on_click(scene, ctx);

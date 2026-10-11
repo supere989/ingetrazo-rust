@@ -42,9 +42,22 @@ impl Annotations {
         scene: &Scene,
         vertices: &[usize],
         groups: &[usize],
+        hits: crate::base::AnnotationHits,
     ) -> Result<(), String> {
         *self = Self::default();
-        for item in &scene.selection {
+        let mut picked = Vec::new();
+        if scene.selection.is_empty() {
+            if let Some(token)=hits.label {
+                let id=scene.text_labels.iter().position(|t|t.history_id==token).ok_or("Stale text hit")?;
+                picked.push(SelectionItem::TextLabel(id));
+            }
+            if let Some(token)=hits.dimension {
+                let id=scene.dimensions.iter().position(|d|d.id==token).ok_or("Stale dimension hit")?;
+                picked.push(SelectionItem::Dimension(id));
+            }
+        }
+        let items:Vec<_>=if scene.selection.is_empty(){picked}else{scene.selection.iter().cloned().collect()};
+        for item in &items {
             match item {
                 SelectionItem::TextLabel(i) => {
                     let t = scene.text_labels.get(*i).ok_or("Stale text selection")?;

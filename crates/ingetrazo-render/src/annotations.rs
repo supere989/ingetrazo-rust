@@ -444,6 +444,10 @@ fn linear_frame(a: Vec3, b: Vec3, axis: Option<&str>) -> Option<(Vec3, Vec3)> {
     }
     Some((u, e / n))
 }
+/// Exact source float32 extension and dimension line endpoints for screen picking.
+pub fn dimension_line_points(input: DimensionInput<'_>) -> (Vec3,Vec3) {
+    let(a,b,_)=dimension_geometry(input);(a,b)
+}
 fn dimension_geometry(input: DimensionInput<'_>) -> (Vec3, Vec3, f32) {
     let a = input.a;
     let b = input.b;
@@ -487,7 +491,7 @@ fn replace_measurement(template: &str, measured: &str, limit: usize) -> Result<S
     }
     Ok(result)
 }
-fn splitlines(text: &str, limit: usize) -> Result<Vec<&str>, String> {
+pub fn splitlines(text: &str, limit: usize) -> Result<Vec<&str>, String> {
     let mut result = Vec::new();
     let mut start = 0;
     let mut chars = text.char_indices().peekable();

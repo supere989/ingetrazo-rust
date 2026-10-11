@@ -186,6 +186,7 @@ mod history_edges;
 
 mod annotation_overlay_geometry;
 mod annotation_plan;
+mod annotation_pick;
 
 mod bim_history;
 

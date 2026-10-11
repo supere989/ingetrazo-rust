@@ -1,0 +1,13 @@
+# Empty-selection Move acquisition
+
+Actual original Viewport picks and MoveTool lifecycle match native App's production acquisition route in42states (sixcases×sevenphases), with42rejectedmutations and mandatory rejection of the retained wrong-camera threshold candidate. Three focused ownership tests passed: strict8pixel nearest/source-order rules, actual annotation-only dispatcher commit/Undo/Redo over geometry without selection/history at grab, and warm metric reuse plus hidden/locked dimensions. The selected77state source corpus is unchanged; root can reuse it in joint integration.
+
+Runtime: cached Qt-float screen projection,3dimension line segments, source per-line padded text blocks using the existing native bold font provider. Typed annotation identities feed Tool directly; empty selection stays empty. Independent label+dimension hits match original gathers. No Guide acquisition. Annotation hits outrank geometry as source does; image/section target semantics otherwise unchanged. Failed metric preparation records refusal rather than falling through to geometry behind text. No renderer/GPU/depth readback introduced.
+
+The first candidate used a narrowed native float64 camera product; at the literal8pixel boundary it incorrectly admitted a dimension. The canonical Qt-float camera snapshot fixes this without tolerances. Original missingQMainWindow harness failure and compiler corrections are retained.
+
+Named consumer: `annotation_acquisition_fixture DIR`; checker: `python3 scripts/check-annotation-acquisition.py DIR`. Extract records.zip to a freshDIR. Both use actual source-picked screen coordinates; native computes hits itself via the production App route and executes dispatcher Move/Cancel/Undo/Redo. No injected descriptor or selected-target workaround. Original renderer never runs; source QWidget/font metrics/pick methods run offscreen.
+
+Bounds: warm hit lookup scans cached rectangles/segments; cold layout scans annotations and cached font shaping can allocate. It has its own bounded native font owner rather than borrowing the platform renderer owner's mutable cache. Model/version/camera/extent publication controls invalidation; direct external Scene mutation must publish revision. No totalVM/nativeheap claim. FullP15 remainsOPEN for value/style editing, wider glyph/depth/platform acceptance and remaining transforms. Accepted selected-Move precision/refusal corpus remains canonical. No source recapture of it, broad suite orGPU rerun.
+
+Final native output/inputs/logs remain at /tmp/ingetrazo-annotation-acquisition-proof until rootrelease. Source/binarySHA and everyarchivedentry are inmanifest.json.

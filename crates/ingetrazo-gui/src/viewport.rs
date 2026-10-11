@@ -158,6 +158,7 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
 
             app.active_tool.note_cursor_plane(plane_point,plane_normal);
             if matches!(app.active_tool_type,ToolType::Select|ToolType::Scale) {app.active_tool.note_pick_viewport(ingetrazo_core::screen_pick::PixelViewport::new(&app.camera,rect.width() as f64,rect.height() as f64),app.camera.eye(),app.model_revision);}
+            if let Err(error)=app.update_move_annotation_hits([rect.width(),rect.height()],glam::DVec2::new(rel_x,rel_y)){app.status_message=error;}
             let mut tool_ctx = ToolContext {
                 screen: Some(glam::DVec2::new(rel_x,rel_y)),
                 world: cursor_world_pos,
