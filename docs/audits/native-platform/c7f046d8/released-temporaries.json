@@ -1,0 +1,114 @@
+{
+  "canonical_archive_sha256": "92ec0c840a180a83655b7f923f2f8f02f031f80bf77aaeea0d12f4a30abfb3d2",
+  "release_authorized_by": "parent after canonical c7f intake8f3072dc",
+  "files": [
+    {
+      "path": "/tmp/c7f-arm.zip",
+      "bytes": 841585,
+      "sha256": "875617a87c45ef081fcdae22924a55e9df6e1f6b16a7dbc4be4f087d0034971d"
+    },
+    {
+      "path": "/tmp/c7f-intel.zip",
+      "bytes": 452896,
+      "sha256": "13392ae1bb2087338173ef5042a53da0917d6ee8db1b8a2c559a42e4c1fb2fbb"
+    },
+    {
+      "path": "/tmp/c7f-windows.zip",
+      "bytes": 19159,
+      "sha256": "ebd900d94f13bc94fb42ee7a1694bf0c044f1c34fc828fcfb3f3c05f6130f1a2"
+    },
+    {
+      "path": "/tmp/c7f-cross-arm.zip",
+      "bytes": 10773,
+      "sha256": "91819a33f442f897e8f7df802a73dffa03e72d32d33bc7327167cde0afad6cc9"
+    },
+    {
+      "path": "/tmp/c7f-cross-intel.zip",
+      "bytes": 10915,
+      "sha256": "5baeb5c7a3055ac591448e63870a42db702242ca01331fcec9b7f923bd15e276"
+    },
+    {
+      "path": "/tmp/c7f-full.json",
+      "bytes": 37054,
+      "sha256": "0e30544fafdf60da5b2381b16be82d6f45f870815c3b9b138afa2f16d3c3da1a"
+    },
+    {
+      "path": "/tmp/c7f-artifacts.json",
+      "bytes": 4391,
+      "sha256": "c4227cd83d88e0309abe40a26ab9f60fe9fba2bb1680d4081b26250cea7e4116"
+    },
+    {
+      "path": "/tmp/c7f-linux.log",
+      "bytes": 6510380,
+      "sha256": "68c29d0e7bd2a9cf81be27cfb691f4f72af3b662b16e302e755475af83ba7f2c"
+    },
+    {
+      "path": "/tmp/c7f-arm.log",
+      "bytes": 60488,
+      "sha256": "973601f7105c5bd7e9b0698dbf0764f94acf0880ff12119e4fab5ea8582e5262"
+    },
+    {
+      "path": "/tmp/c7f-intel.log",
+      "bytes": 62823,
+      "sha256": "02facbb951721d73d23b09867870d69c4e35ebbafaa3e20acd4da2e8592693cf"
+    },
+    {
+      "path": "/tmp/c7f-step-timings.json",
+      "bytes": 45431,
+      "sha256": "eb43c129e22623122f9fe02f14e2a32c5bb250cd408e4264a69dd1523689715a"
+    },
+    {
+      "path": "/tmp/c7f-selected-linux/range-receipt.json",
+      "bytes": 4241,
+      "sha256": "3712637892e595814711910604006f935e74edab9f16688dece203450becaf51"
+    },
+    {
+      "path": "/tmp/c7f-selected-linux/python-shareback-annotations-current.json",
+      "bytes": 812,
+      "sha256": "050d347f7b100f25cd3fb61e14c1b32ad6c0f14bb111599aa2fcd60c22d901cf"
+    },
+    {
+      "path": "/tmp/c7f-selected-linux/shareback-annotations-ci/result.json",
+      "bytes": 507,
+      "sha256": "bd18572006df46ab47da7ccbbf8ff1015135910d3ca613476c50959b5de5ebf2"
+    },
+    {
+      "path": "/tmp/c7f-selected-linux/shareback-annotations-ci/original.json",
+      "bytes": 11800,
+      "sha256": "533d90725f307e938c1ffacdd68d2e1cfefbc98979aa13875b5309ca0439e370"
+    },
+    {
+      "path": "/tmp/c7f-selected-linux/document-axes-ci/stages.json",
+      "bytes": 17938,
+      "sha256": "5cb6803d62977352d1907c22fb34cae564555dfd1e4faafff35978cc1bbd1ad6"
+    },
+    {
+      "path": "/tmp/c7f-selected-linux/document-axes-ci/result.json",
+      "bytes": 65461,
+      "sha256": "3ffed11f28fe62db5ff23d97d7e1358e864726712f6675a6b7b52d58504c8f78"
+    },
+    {
+      "path": "/tmp/c7f-selected-linux/shareback-annotations-ci/old-snapshot/native.json",
+      "bytes": 4188,
+      "sha256": "7dddeb8552f2d453752e5a4e585bc7699fbe18065e07faa1ce829b206d671699"
+    },
+    {
+      "path": "/tmp/c7f-selected-linux/shareback-annotations-ci/native/native.json",
+      "bytes": 11494,
+      "sha256": "d5c3efbf25473a51af881cb7061263095122485472adabc06a8e2db1e278bb17"
+    },
+    {
+      "path": "/tmp/c7f-retained/records.zip",
+      "bytes": 2619467,
+      "sha256": "92ec0c840a180a83655b7f923f2f8f02f031f80bf77aaeea0d12f4a30abfb3d2"
+    },
+    {
+      "path": "/tmp/c7f-retained/manifest.json",
+      "bytes": 25859,
+      "sha256": "e52de516d008c0b741f7ef13910a05330d1871b596bd423f95c2b7a98e28d68a"
+    }
+  ],
+  "file_count": 21,
+  "released_bytes": 10817662,
+  "scope": "All bytes matched canonical members or verified enclosing artifact ZIP members before removal. Canonical archives, worktrees, targets, unique earlier failures and private GPU bundle preserved. No builds/tests/captures."
+}
