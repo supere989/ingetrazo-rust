@@ -8,7 +8,7 @@ use ingetrazo_render::{annotations::{Plan,Primitive,Gate},cad2d::{Geometry,Verte
 use ingetrazo_formats::{annotation_font, paper_font_resolver::Request};
 /// Source operator selected before palette premultiplication; immutable with its batch.
 #[derive(Clone,Copy,Debug,PartialEq,Eq)]
-pub enum Composition { SpanByte, GlyphRgba64Opaque, GlyphLcd([u8;3]) }
+pub enum Composition { SpanByte, GlyphRgba64Opaque, GlyphLcd([u8;3]), WidgetTriangle([u32;6]) }
 #[derive(Clone,Copy,Debug,PartialEq)]
 pub struct Draw {pub gate:Gate,pub composition:Composition,pub straight_rgba:[u8;4]}
 impl Draw {pub fn span(gate:Gate)->Self{Self{gate,composition:Composition::SpanByte,straight_rgba:[0;4]}}}
@@ -16,9 +16,10 @@ pub struct Mesh {pub geometry:Arc<Geometry>,pub batches:Arc<[Batch]>,pub gates:A
 #[derive(Clone,Copy)]pub struct Limits {pub cells:usize,pub spans:usize,pub geometry_bytes:usize,pub glyphs:usize,pub glyph_bytes:usize}
 #[derive(Clone,Copy,PartialEq,Eq,Hash)]struct GlyphKey{font:ingetrazo_formats::paper_font::FontKey,pixels:u32,glyph:u32,density:u64,phase:[u8;2],lcd:bool}
 #[derive(Clone,Copy,PartialEq,Eq)]enum GlyphPlacement{Raster,OpenGl}
-pub struct Cache {glyph_order:VecDeque<GlyphKey>,glyphs:HashMap<GlyphKey,Arc<ingetrazo_formats::paper_text::RasterGlyph>>,glyph_bytes:usize,glyph_builds:u64,fonts:annotation_font::Cache,current:Option<(Arc<Plan>,u64,u64,[i32;4],GlyphPlacement,Arc<Mesh>)>,builds:u64,limits:Limits}
+pub struct Cache {analytic_boundary:bool,glyph_order:VecDeque<GlyphKey>,glyphs:HashMap<GlyphKey,Arc<ingetrazo_formats::paper_text::RasterGlyph>>,glyph_bytes:usize,glyph_builds:u64,fonts:annotation_font::Cache,current:Option<(Arc<Plan>,u64,u64,[i32;4],GlyphPlacement,Arc<Mesh>)>,builds:u64,limits:Limits}
 impl Cache {
- pub fn new(fonts:annotation_font::Limits,limits:Limits)->Result<Self,String>{if limits.cells==0||limits.spans==0||limits.geometry_bytes==0||limits.glyphs==0||limits.glyph_bytes==0{return Err("Annotation geometry budget must be positive".into());}Ok(Self{glyph_order:VecDeque::new(),glyphs:HashMap::new(),glyph_bytes:0,glyph_builds:0,fonts:annotation_font::Cache::new(fonts)?,current:None,builds:0,limits})}
+ pub fn new(fonts:annotation_font::Limits,limits:Limits)->Result<Self,String>{if limits.cells==0||limits.spans==0||limits.geometry_bytes==0||limits.glyphs==0||limits.glyph_bytes==0{return Err("Annotation geometry budget must be positive".into());}Ok(Self{analytic_boundary:false,glyph_order:VecDeque::new(),glyphs:HashMap::new(),glyph_bytes:0,glyph_builds:0,fonts:annotation_font::Cache::new(fonts)?,current:None,builds:0,limits})}
+ pub(crate) fn enable_analytic_boundary_for_probe(&mut self){self.analytic_boundary=true;self.current=None;}
  pub fn glyph_stats(&self)->(usize,usize,u64){(self.glyphs.len(),self.glyph_bytes,self.glyph_builds)}
  pub fn stats(&self)->(u64,(usize,usize,u64)){(self.builds,self.fonts.stats())}
  pub(crate) fn leader_metrics(&mut self,text:&str,point_size:i32,dpi:f64)->Result<(f64,f64),String>{
@@ -100,7 +101,16 @@ impl Cache {
       else{ingetrazo_render::qt_line::rasterize(a.map(|v|v*density),b.map(|v|v*density),width*density,clip,self.limits.cells,self.limits.spans)?};
      writer.layer(spans,*color,operation.gate)?;
     }
-    Primitive::Polygon{points,color}=>{if placement==GlyphPlacement::OpenGl&&color[3]==255{let v=points.map(|p|p.map(|v|v as f32));writer.direct(&v,&[0,1,2],*color,operation.gate)?;continue;}let contour=points.map(|p|[p[0]*density,p[1]*density]);writer.layer(qt_gray::rasterize(&[contour.to_vec()],self.limits.cells,self.limits.spans)?,*color,operation.gate)?;}
+    Primitive::Polygon{points,color}=>{if placement==GlyphPlacement::OpenGl&&color[3]==255{let v=points.map(|p|p.map(|v|v as f32));
+      if self.analytic_boundary{
+       if v.iter().flatten().any(|x|!x.is_finite()){return Err("Widget triangle source coordinates invalid".into());}
+       let pad=(0.5/density)as f32;
+       let min=[v.iter().map(|p|p[0]).fold(f32::INFINITY,f32::min)-pad,v.iter().map(|p|p[1]).fold(f32::INFINITY,f32::min)-pad];
+       let max=[v.iter().map(|p|p[0]).fold(f32::NEG_INFINITY,f32::max)+pad,v.iter().map(|p|p[1]).fold(f32::NEG_INFINITY,f32::max)+pad];
+       let vertices=[[min[0],min[1]],[max[0],min[1]],[min[0],max[1]],[max[0],max[1]]];
+       writer.direct(&vertices,&[0,1,2,2,1,3],*color,operation.gate)?;
+       writer.gates.last_mut().unwrap().composition=Composition::WidgetTriangle([v[0][0].to_bits(),v[0][1].to_bits(),v[1][0].to_bits(),v[1][1].to_bits(),v[2][0].to_bits(),v[2][1].to_bits()]);
+      }else{writer.direct(&v,&[0,1,2],*color,operation.gate)?;}continue;}let contour=points.map(|p|[p[0]*density,p[1]*density]);writer.layer(qt_gray::rasterize(&[contour.to_vec()],self.limits.cells,self.limits.spans)?,*color,operation.gate)?;}
     Primitive::Ellipse{center,radius,width,color}=>{
      let size=DVec2::from_array(*radius)*2.;let mut path=crate::composer_cad::source_closed_curve(&ingetrazo_core::sheet_shape::ShapePath::Ellipse{size}).ok_or("Annotation ellipse path absent")?;
      translate_path(&mut path,[center[0]-radius[0],center[1]-radius[1]]);

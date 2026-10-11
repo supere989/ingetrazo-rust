@@ -1,0 +1,12 @@
+{
+  "base_commit": "36360cf285a5d93556a73eb51b72fea9738d8b0a",
+  "candidate_source_sha256": {
+    "crates/ingetrazo-gui/src/annotation_overlay_geometry.rs": "41fc0613327a294b5e0359278cc84913522957b3f95f61b2d6d1862c64e826de",
+    "crates/ingetrazo-gui/src/native_vulkan/cad2d.rs": "314d062c17d34778ef070a2a8e3148c4e569ce45bc49852a58d7446cab079e8c",
+    "crates/ingetrazo-gui/src/native_vulkan/annotation_overlay_probe.rs": "88bfa1c3929d67889ee0ec86ee58a1e87702a8d51791832e524bc66b356a1183",
+    "crates/ingetrazo-gui/src/native_vulkan/shaders/annotation_overlay.frag": "03e2cba08948f074b805fa2542c754b3bf6aa9585c2d0f30611a678f72f2efc8",
+    "crates/ingetrazo-gui/src/native_vulkan/shaders/annotation_overlay.frag.spv": "1b4187fd363892d05e993fe6e74fdc9afab032a4e7454a78cfadcb053468adf4"
+  },
+  "binary_sha256": "35857bb038ef9958cf413cbb396010184bc19209d69e65dbc0fb52f5bd27943d",
+  "scope": "Probe-only candidate. Historical inherited source fields in transports are not candidate build provenance; use this source hash inventory. Runtime source was dirty against base; all five files captured here unchanged after executions."
+}

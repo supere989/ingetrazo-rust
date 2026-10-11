@@ -2,14 +2,28 @@
 layout(location=0) in float edge_coverage;
 layout(location=0) out vec4 output_color;
 layout(input_attachment_index=0,set=0,binding=0) uniform subpassInput destination;
-layout(push_constant) uniform Push {vec2 scale;vec2 translation;vec2 screen;uvec2 gates;vec4 rgba;uint composition;} push;
+layout(push_constant) uniform Push {vec2 scale;vec2 translation;vec2 screen;uvec2 gates;vec4 rgba;uint composition;float ax;float ay;float bx;float by;float cx;float cy;} push;
 uvec4 byte_mul(uvec4 pixel,uint coverage){uvec4 t=pixel*coverage;return (t+(t>>8u)+128u)>>8u;}
 layout(set=0,binding=1,std430) readonly buffer Visibility {uint hidden[];};
 // Qt6.12 QRgba64 multiplyAlpha65535: exact integer intermediates, no float blend.
 uvec4 mul16(uvec4 value,uint alpha){uvec4 t=value*alpha+32768u;return (t+(t>>16u))>>16u;}
 uvec4 store8(uvec4 value){uvec4 t=value+128u;return (t-(t>>8u))>>8u;}
+bool source_edge(vec2 a,vec2 b,vec2 sample_point){
+ vec2 d=b-a;vec2 q=sample_point-a;
+ precise float edge=d.x*q.y-d.y*q.x;
+ return edge>0.0||(edge==0.0&&(d.y<0.0||(d.y==0.0&&d.x<0.0)));
+}
 void main(){
  if((push.gates.x!=0xffffffffu&&hidden[push.gates.x]!=0u)||(push.gates.y!=0xffffffffu&&hidden[push.gates.y]!=0u)){discard;}
+ if(push.composition==3u){
+  vec2 a=vec2(push.ax,push.ay);vec2 b=vec2(push.bx,push.by);vec2 c=vec2(push.cx,push.cy);
+  vec2 ab=b-a;vec2 ac=c-a;precise float area=ab.x*ac.y-ab.y*ac.x;
+  if(area==0.0){discard;}
+  if(area<0.0){vec2 temporary=b;b=c;c=temporary;}
+  vec2 sample_point=floor(gl_FragCoord.xy)+vec2(0.5);
+  if(!source_edge(a,b,sample_point)||!source_edge(b,c,sample_point)||!source_edge(c,a,sample_point)){discard;}
+  output_color=push.rgba;return;
+ }
  uint coverage=uint(floor(clamp(edge_coverage,0,1)*255.0+0.5));
  uvec4 color=uvec4(floor(clamp(push.rgba,0,1)*255.0+0.5));
  if((push.composition&255u)==2u){

@@ -271,8 +271,13 @@ fn record_ready<'a>(info:&egui::PaintCallbackInfo,device:&Device,command:vk::Com
                     if selected==vk::Pipeline::null(){return Err(egui_ash_renderer::RendererError::Init("Annotation LCD pipeline not prepared".into()));}
                     if selected!=bound_pipeline{device.cmd_bind_pipeline(command,vk::PipelineBindPoint::GRAPHICS,selected);bound_pipeline=selected;}
                     if lcd{device.cmd_set_blend_constants(command,&gate.straight_rgba.map(|v|f32::from(v)/255.));}
-                    let operator=match gate.composition{crate::annotation_overlay_geometry::Composition::SpanByte=>0u32,crate::annotation_overlay_geometry::Composition::GlyphRgba64Opaque=>1u32,crate::annotation_overlay_geometry::Composition::GlyphLcd(mask)=>2u32|(u32::from(mask[0])<<8)|(u32::from(mask[1])<<16)|(u32::from(mask[2])<<24)};
+                    let operator=match gate.composition{crate::annotation_overlay_geometry::Composition::SpanByte=>0u32,crate::annotation_overlay_geometry::Composition::WidgetTriangle(_)=>3u32,crate::annotation_overlay_geometry::Composition::GlyphRgba64Opaque=>1u32,crate::annotation_overlay_geometry::Composition::GlyphLcd(mask)=>2u32|(u32::from(mask[0])<<8)|(u32::from(mask[1])<<16)|(u32::from(mask[2])<<24)};
                     device.cmd_push_constants(command,p.layout,vk::ShaderStageFlags::VERTEX|vk::ShaderStageFlags::FRAGMENT,48,bytemuck::bytes_of(&operator));
+                    if let crate::annotation_overlay_geometry::Composition::WidgetTriangle(bits)=gate.composition{
+                        let mut points=bits.map(f32::from_bits);
+                        for point in points.chunks_exact_mut(2){point[0]=(point[0]*pose.scale[0]+pose.translation[0])*scale;point[1]=(point[1]*pose.scale[1]+pose.translation[1])*scale;}
+                        device.cmd_push_constants(command,p.layout,vk::ShaderStageFlags::VERTEX|vk::ShaderStageFlags::FRAGMENT,52,bytemuck::cast_slice(&points));
+                    }
                 }
                 device.cmd_push_constants(
                     command,
@@ -324,6 +329,9 @@ fn admit_gates(gates:Option<&[crate::annotation_overlay_geometry::Draw]>,batches
 fn admit_draw_colors(draws:&[crate::annotation_overlay_geometry::Draw],batches:&[Batch])->Result<(),String>{
  if draws.len()!=batches.len(){return Err("Annotation material/batch inventory mismatch".into());}
  for (draw,batch) in draws.iter().zip(batches){
+  if let crate::annotation_overlay_geometry::Composition::WidgetTriangle(bits)=draw.composition{
+   if draw.straight_rgba[3]!=255||bits.iter().any(|v|!f32::from_bits(*v).is_finite()){return Err("Widget triangle immutable metadata invalid".into());}
+  }
   if draw.composition!=crate::annotation_overlay_geometry::Composition::SpanByte
    &&batch.color.0!=draw.straight_rgba.map(|v|f32::from(v)/255.){
    return Err("Annotation straight glyph palette differs from admitted batch".into());
@@ -425,7 +433,7 @@ unsafe{context.device.create_descriptor_set_layout(&vk::DescriptorSetLayoutCreat
         let ranges = [vk::PushConstantRange {
             stage_flags: vk::ShaderStageFlags::VERTEX | vk::ShaderStageFlags::FRAGMENT,
             offset: 0,
-            size: if annotations{52}else{48},
+            size: if annotations{76}else{48},
         }];
         let layout = match unsafe {
             context.device.create_pipeline_layout(&vk::PipelineLayoutCreateInfo::default().push_constant_ranges(&ranges).set_layouts(&set_layouts),None)
@@ -493,7 +501,7 @@ unsafe{context.device.create_descriptor_set_layout(&vk::DescriptorSetLayoutCreat
             if let Some(layers)=state.geometry.annotation_layers(){
                 for (batch,draw) in state.batches.iter().zip(state.gates.as_ref().unwrap().iter()){
                     if layers.overlaps_direct(batch.first,batch.count)
-                      &&draw.composition!=crate::annotation_overlay_geometry::Composition::SpanByte{return Err("Direct annotation operator must write opaque source".into());}
+                      &&!matches!(draw.composition,crate::annotation_overlay_geometry::Composition::SpanByte|crate::annotation_overlay_geometry::Composition::WidgetTriangle(_)){return Err("Direct annotation operator must write opaque source".into());}
                 }
             }
             let opaque=state.geometry.is_opaque(&state.batches)&&state.gates.as_ref().is_none_or(|gates|gates.iter().all(|g|!matches!(g.composition,crate::annotation_overlay_geometry::Composition::GlyphLcd(mask) if mask!=[255;3])));
