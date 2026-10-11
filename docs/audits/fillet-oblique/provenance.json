@@ -1,0 +1,32 @@
+{
+  "base": "e866ccb7",
+  "consumer": "15a6f6a6c0284dcef8c8de65c63611de6370ad5f",
+  "original": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "binary_sha256": "08be6099bfca4295280f89366adf173fe54eb66e2bff6758f4a70f63d16e2dff",
+  "source": {
+    "scripts/reference-fillet-oblique.py": "2af1aeebe1659088ee480a26c47ae31d6ef974141a39bdcd534866f535706f3e",
+    "scripts/reference-fillet-scoped.py": "5eaab5ad9831c439f8cb2ed012a226b248e9f5155777a5903c1ba4e80555b908",
+    "scripts/check-fillet-oblique.py": "b7e6b0a47e73ee321869fdf0f6ddbe6a8f3bc9a4d455c63bc27e04bd2489a921",
+    "scripts/check-fillet-scoped.py": "7ad060c77b7704195029b93ba9b9006f7a21446428438b842964c1762b4b25ae",
+    "crates/ingetrazo-gui/examples/fillet_oblique.rs": "2d6db1ae8cb0440c999a2a3d124de3cdd6b368b08b6ac17c7cde6af6f2b09830",
+    "crates/ingetrazo-tools/src/fillet.rs": "75dd6c9677bd4a2d030b9feb069c8cafd64335c28a7e9841e6fb3ff2c2ef72cc",
+    "crates/ingetrazo-gui/src/tool_history.rs": "3a08cc9d4a0823f717c33ee36526e835a51c111e8e240fb83d8afa2525830b58",
+    "crates/ingetrazo-gui/src/app.rs": "1f65bd7a3c7d1dd1ab97294c942c8bd763ad2ee7886911c729c806e78d9e8bee"
+  },
+  "records": {
+    "source-fixed.json": "cd04f87be62db6b0bd066c1402bcd9e007f1531c62d5fed65099ac4b965084d4",
+    "native.json": "a0710b6a17306d57041221c3d2af1902244d515fd68d14f2a3489a7e05338295",
+    "source-invalid-registry.json": "8eff9f683b07ad4103f5f5d38b34dc108288b7937c83534a849b4a93d7376263",
+    "fillet-oblique-source-two.log": "85c6cf6bf1f858b3a75272df711ca9ab0fbf9a55a30725e60b754acc709d79a9",
+    "fillet-oblique-native-two.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "fillet-oblique-build.log": "cc008ff8aa61494259c6c9961e06c8ea0a5ac6a8e57465eaf1bc91fbe7fcb876"
+  },
+  "build": {
+    "package": "ingetrazo-gui",
+    "example": "fillet_oblique",
+    "profile": "dev debug=0 incremental=0",
+    "jobs": 2
+  },
+  "runtime_changed": false,
+  "scope": "repaired actual source authoring registry, two source model recipes and ten native App handler/history states"
+}

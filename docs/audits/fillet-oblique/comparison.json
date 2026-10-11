@@ -1,0 +1,57 @@
+{
+  "scope": "Two affected source constructors corrected with actual Mesh.place_vertex. Full oriented topology/metadata/old identity and ten real App handler/history phases; no rendered pointer acceptance. Existing1e-6 Qt/f64 boundary, new curve IDs compare partitions.",
+  "cases": [
+    {
+      "name": "oblique-cap",
+      "counts": [
+        26,
+        36,
+        14
+      ],
+      "phases": [
+        "activate",
+        "sizing",
+        "commit",
+        "undo",
+        "redo"
+      ],
+      "passed": true
+    },
+    {
+      "name": "turned-squashed",
+      "counts": [
+        128,
+        300,
+        182
+      ],
+      "phases": [
+        "activate",
+        "sizing",
+        "commit",
+        "undo",
+        "redo"
+      ],
+      "passed": true
+    }
+  ],
+  "invalid_original_registry_fixture": {
+    "counts": [
+      27,
+      38,
+      14
+    ],
+    "closed": false,
+    "boundary_edges": 4,
+    "reason": "open or nonmanifold boundary"
+  },
+  "negatives": [
+    "invalid-old-registry",
+    "removed-edge",
+    "reversed-face",
+    "wrong-paint",
+    "wrong-interior",
+    "lost-old-identity",
+    "hidden-edge",
+    "old-vertex-identity"
+  ]
+}
