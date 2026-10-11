@@ -34,3 +34,15 @@ fragment float4 world_texture_fragment(TextureOut in [[stage_in]],texture2d<floa
  if(paint.opacity>.999&&texel.a<.5){if(paint.hard_cutout!=0)discard_fragment();uint x=uint(in.position.x)%4;uint y=uint(float(paint.height)-in.position.y)%4;if(texel.a<source_bayer[y*4+x])discard_fragment();return float4(texel.rgb*paint.shade,1.);}
  return float4(texel.rgb*paint.shade,source_blend_alpha(texel.a*paint.opacity));
 }
+
+// World-space ghosts deliberately omit section clipping and ordinary paint policy.
+struct GhostVertex {packed_float3 position;packed_float3 color;};
+vertex Out world_ghost_vertex(uint id [[vertex_id]],const device GhostVertex* v [[buffer(0)]],constant float4x4& camera [[buffer(2)]]) {
+ Out o;o.position=camera*float4(v[id].position,1.);o.position.z=(o.position.z+o.position.w)*.5;o.color=float4(v[id].color,1.);return o;
+}
+struct GhostPaint {float4 edge;uint height;uint mode;uint padding1;uint padding2;};
+fragment float4 world_ghost_fragment(Out in [[stage_in]],constant GhostPaint& paint [[buffer(0)]]) {
+ float x=in.position.x,y=float(paint.height)-in.position.y;
+ if(paint.mode==0){if(fmod(x,4.)>=1.&&fmod(y,4.)>=1.)discard_fragment();return float4(in.color.rgb,1.);}
+ if(paint.mode==1&&fmod(x+y,6.)>=3.)discard_fragment();return float4(paint.edge.rgb,1.);
+}

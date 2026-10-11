@@ -45,3 +45,5 @@ pub mod world_surface;
 
 #[cfg(target_os="macos")]
 mod world_texture;
+
+mod world_ghost;

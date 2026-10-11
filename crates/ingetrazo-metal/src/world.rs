@@ -55,6 +55,8 @@ impl Drop for Image {
     }
 }
 struct Target {
+    multisample: Option<Image>,
+    samples: usize,
     color: Image,
     depth: Image,
     extent: (u32, u32),
@@ -89,6 +91,7 @@ struct PlacementMeshes {
 struct MaterialDraws{operations:Vec<MaterialDraw>,retained_payload_bytes:usize}
 struct MaterialPipeline {colored_alpha:Retained<ProtocolObject<dyn MTLRenderPipelineState>>,textured:Retained<ProtocolObject<dyn MTLRenderPipelineState>>,textured_alpha:Retained<ProtocolObject<dyn MTLRenderPipelineState>>,depth:Retained<ProtocolObject<dyn MTLDepthStencilState>>}
 struct Pipeline {
+    ghost: Retained<ProtocolObject<dyn MTLRenderPipelineState>>,
     color: Retained<ProtocolObject<dyn MTLRenderPipelineState>>,
     depth: Retained<ProtocolObject<dyn MTLDepthStencilState>>,
     depth_disabled: Retained<ProtocolObject<dyn MTLDepthStencilState>>,
@@ -96,6 +99,11 @@ struct Pipeline {
 }
 #[derive(Default, Debug, Clone, Copy)]
 pub struct Stats {
+    pub ghost_uploads: u64,
+    pub wire_uploads:u64,
+    pub wire_upload_bytes:u64,
+    pub ghost_upload_bytes: u64,
+    pub ghost_builds: u64,
     pub geometry_uploads: u64,
     pub texture_uploads:u64,
     pub material_order_builds:u64,
@@ -123,6 +131,8 @@ pub struct Stats {
 }
 #[derive(Default)]
 pub struct World {
+    samples: usize,
+    pub(crate) ghosts: Option<Arc<super::world_ghost::Ghosts>>,
     owner: Option<Arc<Owner>>,
     mesh: Option<Arc<Mesh>>,
     key: Option<u64>,
@@ -133,6 +143,8 @@ pub struct World {
     pub stats: Stats,
 }
 pub struct Prepared {
+    pub(crate) ghosts: Option<Arc<super::world_ghost::Ghosts>>,
+    pub(crate) ghost_edge: [f32;4],
     placements: Option<Arc<PlacementMeshes>>,
     owner: Arc<Owner>,
     mesh: Option<Arc<Mesh>>,
@@ -153,6 +165,15 @@ struct PaintUniform {
 }
 #[repr(C)]struct TexturePaint{opacity:f32,shade:f32,hard_cutout:u32,height:u32,mean:[f32;4]}
 impl World {
+    /// Cold sample policy; old Prepared owners retain their matching targets/pipelines.
+    pub fn set_sample_count(&mut self,metal:&NativeMetal,samples:usize)->Result<(),String>{
+        self.validate_context_owner(metal)?;
+        if self.samples.max(1)==samples{return Ok(());}
+        if !matches!(samples,1|4)||!metal.device.supportsTextureSampleCount(samples){return Err("Metal world sample count unsupported".into());}
+        if self.samples.max(1)!=samples{self.samples=samples;self.pipeline=None;}
+        Ok(())
+    }
+
     /// `collect` runs only on a changed immutable geometry identity. Pose always validates.
     /// Caller must change key on any geometry/material/visibility change; transform-only
     /// per-placement caching will use independently keyed meshes, never suppress revisions.
@@ -196,11 +217,11 @@ impl World {
             return Ok(None);
         }
         self.targets
-            .retain(|t| Arc::strong_count(t) > 1 || t.extent == extent);
+            .retain(|t| Arc::strong_count(t) > 1 || (t.extent == extent && t.samples==self.samples.max(1)));
         let cached = self
             .targets
             .iter()
-            .find(|t| t.extent == extent && Arc::strong_count(t) == 1)
+            .find(|t| (t.extent == extent && t.samples==self.samples.max(1)) && Arc::strong_count(t) == 1)
             .cloned();
         if cached.is_none() && self.targets.len() >= 3 {
             return Ok(None);
@@ -226,13 +247,15 @@ impl World {
         let pipeline = if let Some(p) = &self.pipeline {
             p.clone()
         } else {
-            Arc::new(pipeline(metal,false)?)
+            Arc::new(pipeline(metal,false,self.samples.max(1))?)
         };
         let allocated = cached.is_none();
         let target = if let Some(t) = cached {
             t
         } else {
             Arc::new(Target {
+                samples:self.samples.max(1),
+                multisample:if self.samples.max(1)>1{Some(image_samples(metal,extent,MTLPixelFormat::RGBA8Unorm,MTLTextureUsage::RenderTarget,4,self.samples.max(1))?)}else{None},
                 color: image(
                     metal,
                     extent,
@@ -240,13 +263,7 @@ impl World {
                     MTLTextureUsage::RenderTarget | MTLTextureUsage::ShaderRead,
                     4,
                 )?,
-                depth: image(
-                    metal,
-                    extent,
-                    MTLPixelFormat::Depth32Float,
-                    MTLTextureUsage::RenderTarget,
-                    4,
-                )?,
+                depth: image_samples(metal,extent,MTLPixelFormat::Depth32Float,MTLTextureUsage::RenderTarget,4,self.samples.max(1))?,
                 extent,
                 poses: Vec::new(),
                 instance_matrices: None,
@@ -289,6 +306,7 @@ impl World {
         self.stats.prepared += 1;
         Ok(Some(Arc::new(Prepared {
             placements: None,
+            ghosts: None, ghost_edge: [0.;4],
             owner,
             mesh,
             pipeline,
@@ -369,11 +387,11 @@ impl World {
             return Ok(None);
         }
         self.targets
-            .retain(|t| Arc::strong_count(t) > 1 || t.extent == extent);
+            .retain(|t| Arc::strong_count(t) > 1 || (t.extent == extent && t.samples==self.samples.max(1)));
         let idle = self
             .targets
             .iter()
-            .position(|t| t.extent == extent && Arc::strong_count(t) == 1);
+            .position(|t| (t.extent == extent && t.samples==self.samples.max(1)) && Arc::strong_count(t) == 1);
         if idle.is_none() && self.targets.len() >= 3 {
             return Ok(None);
         }
@@ -456,9 +474,11 @@ impl World {
             })
         };
         let needs_materials=placements.has_materials;
-        let pipeline=if let Some(p)=&self.pipeline{if !needs_materials||p.material.is_some(){p.clone()}else{Arc::new(pipeline(metal,true)? )}}else{Arc::new(pipeline(metal,needs_materials)?)};
+        let pipeline=if let Some(p)=&self.pipeline{if !needs_materials||p.material.is_some(){p.clone()}else{Arc::new(pipeline(metal,true,self.samples.max(1))? )}}else{Arc::new(pipeline(metal,needs_materials,self.samples.max(1))?)};
         let mut new_target = if idle.is_none() {
             Some(Arc::new(Target {
+                samples:self.samples.max(1),
+                multisample:if self.samples.max(1)>1{Some(image_samples(metal,extent,MTLPixelFormat::RGBA8Unorm,MTLTextureUsage::RenderTarget,4,self.samples.max(1))?)}else{None},
                 color: image(
                     metal,
                     extent,
@@ -466,13 +486,7 @@ impl World {
                     MTLTextureUsage::RenderTarget | MTLTextureUsage::ShaderRead,
                     4,
                 )?,
-                depth: image(
-                    metal,
-                    extent,
-                    MTLPixelFormat::Depth32Float,
-                    MTLTextureUsage::RenderTarget,
-                    4,
-                )?,
+                depth: image_samples(metal,extent,MTLPixelFormat::Depth32Float,MTLTextureUsage::RenderTarget,4,self.samples.max(1))?,
                 extent,
                 poses: Vec::new(),
                 instance_matrices: None,
@@ -645,6 +659,7 @@ impl World {
         self.pipeline = Some(pipeline.clone());
         Ok(Some(Arc::new(Prepared {
             placements: Some(placements),
+            ghosts: None, ghost_edge: [0.;4],
             owner,
             mesh: None,
             pipeline,
@@ -665,6 +680,7 @@ impl World {
     pub fn clear_idle(&mut self) {
         self.targets.retain(|t| Arc::strong_count(t) > 1);
         self.mesh = None;
+        self.ghosts = None;
         self.placements = None;
         self.texture_assets.clear();
         self.stats.texture_identity_payload_bytes = self.texture_assets.capacity()*std::mem::size_of::<Arc<super::world_texture::Asset>>();
@@ -681,6 +697,8 @@ impl World {
     }
 }
 impl Prepared {
+    pub fn ghost_counts(&self)->[usize;3]{self.ghosts.as_ref().map_or([0;3],|g|g.counts)}
+    pub fn sample_count(&self)->usize{self.target.samples}
     /// Admitted contiguous instanced draw groups, observed by diagnostics only.
     pub fn instance_run_count(&self) -> usize {
         if self.placements.is_none() {
@@ -729,9 +747,10 @@ impl Prepared {
         }
         let pass = MTLRenderPassDescriptor::new();
         let color = unsafe { pass.colorAttachments().objectAtIndexedSubscript(0) };
-        color.setTexture(Some(&self.target.color.raw));
+        color.setTexture(Some(self.target.multisample.as_ref().map_or(&*self.target.color.raw,|i|&*i.raw)));
+        if self.target.multisample.is_some(){color.setResolveTexture(Some(&self.target.color.raw));}
         color.setLoadAction(MTLLoadAction::Clear);
-        color.setStoreAction(MTLStoreAction::Store);
+        color.setStoreAction(if self.target.multisample.is_some(){MTLStoreAction::MultisampleResolve}else{MTLStoreAction::Store});
         color.setClearColor(MTLClearColor {
             red: self.clear[0],
             green: self.clear[1],
@@ -789,6 +808,28 @@ impl Prepared {
             }
         } else if let Some(mesh) = &self.mesh {
             encode_mesh(&encoder, mesh, &self.mvp, self.policy);
+        }
+        if let Some(ghosts)=&self.ghosts {
+            encoder.setRenderPipelineState(&self.pipeline.ghost);
+            encoder.setDepthStencilState(Some(if depth_enabled{&self.pipeline.depth}else{&self.pipeline.depth_disabled}));
+            encoder.setCullMode(MTLCullMode::None);
+            unsafe { encoder.setVertexBytes_length_atIndex(std::ptr::NonNull::from(&self.mvp).cast(),64,2); }
+            if let Some(buffer)=&ghosts.wire {
+                encoder.setDepthBias_slopeScale_clamp(0.,0.,0.);
+                let uniform=super::world_ghost::Uniform{edge:self.ghost_edge,height:self.extent().1,mode:2,padding:[0;2]};
+                unsafe{encoder.setVertexBuffer_offset_atIndex(Some(&buffer.raw),0,0);encoder.setFragmentBytes_length_atIndex(std::ptr::NonNull::from(&uniform).cast(),32,0);encoder.drawPrimitives_vertexStart_vertexCount(MTLPrimitiveType::Line,0,ghosts.wire_count);}
+            }
+            for i in 0..3 {
+                if let Some(buffer)=&ghosts.buffers[i] {
+                    encoder.setDepthBias_slopeScale_clamp(if i==2{0.}else{1.},if i==2{0.}else{1.},0.);
+                    let uniform=super::world_ghost::Uniform{edge:self.ghost_edge,height:self.extent().1,mode:u32::from(i==2),padding:[0;2]};
+                    unsafe {
+                        encoder.setVertexBuffer_offset_atIndex(Some(&buffer.raw),0,0);
+                        encoder.setFragmentBytes_length_atIndex(std::ptr::NonNull::from(&uniform).cast(),32,0);
+                        encoder.drawPrimitives_vertexStart_vertexCount(if i==2{MTLPrimitiveType::Line}else{MTLPrimitiveType::Triangle},0,ghosts.counts[i]);
+                    }
+                }
+            }
         }
         encoder.endEncoding();
         Ok(())
@@ -941,7 +982,7 @@ where G:FnMut(&str)->Result<std::borrow::Cow<'a,[u8]>,String>{
     Ok(Some(Arc::new(Mesh{vertices,indices,count:data.indices.len(),plan,materials})))
 }
 
-fn pipeline(metal: &NativeMetal, rich:bool) -> Result<Pipeline, String> {
+fn pipeline(metal: &NativeMetal, rich:bool, samples:usize) -> Result<Pipeline, String> {
     let lib = metal
         .device
         .newLibraryWithSource_options_error(
@@ -958,7 +999,7 @@ fn pipeline(metal: &NativeMetal, rich:bool) -> Result<Pipeline, String> {
     let d = MTLRenderPipelineDescriptor::new();
     d.setVertexFunction(Some(&vertex));
     d.setFragmentFunction(Some(&fragment));
-    d.setDepthAttachmentPixelFormat(MTLPixelFormat::Depth32Float);
+    d.setDepthAttachmentPixelFormat(MTLPixelFormat::Depth32Float);d.setRasterSampleCount(samples);
     unsafe { d.colorAttachments().objectAtIndexedSubscript(0) }
         .setPixelFormat(MTLPixelFormat::RGBA8Unorm);
     let color = metal
@@ -973,9 +1014,10 @@ fn pipeline(metal: &NativeMetal, rich:bool) -> Result<Pipeline, String> {
     disabled.setDepthWriteEnabled(false);
     let material=if rich{
         let alpha=MTLDepthStencilDescriptor::new();alpha.setDepthCompareFunction(MTLCompareFunction::LessEqual);alpha.setDepthWriteEnabled(false);
-        Some(MaterialPipeline{colored_alpha:material_pipeline(metal,&lib,"world_vertex","world_fragment",true)?,textured:material_pipeline(metal,&lib,"world_texture_vertex","world_texture_fragment",true)?,textured_alpha:material_pipeline(metal,&lib,"world_texture_vertex","world_texture_fragment",true)?,depth:metal.device.newDepthStencilStateWithDescriptor(&alpha).ok_or("Metal material depth state unavailable")?})
+        Some(MaterialPipeline{colored_alpha:material_pipeline(metal,&lib,"world_vertex","world_fragment",true,samples)?,textured:material_pipeline(metal,&lib,"world_texture_vertex","world_texture_fragment",true,samples)?,textured_alpha:material_pipeline(metal,&lib,"world_texture_vertex","world_texture_fragment",true,samples)?,depth:metal.device.newDepthStencilStateWithDescriptor(&alpha).ok_or("Metal material depth state unavailable")?})
     }else{None};
     Ok(Pipeline {
+        ghost: material_pipeline(metal,&lib,"world_ghost_vertex","world_ghost_fragment",false,samples)?,
         color,material,
         depth_disabled: metal
             .device
@@ -987,8 +1029,8 @@ fn pipeline(metal: &NativeMetal, rich:bool) -> Result<Pipeline, String> {
             .ok_or("World depth state missing")?,
     })
 }
-fn material_pipeline(metal:&NativeMetal,lib:&ProtocolObject<dyn MTLLibrary>,vertex:&str,fragment:&str,alpha:bool)->Result<Retained<ProtocolObject<dyn MTLRenderPipelineState>>,String>{
- let vertex=lib.newFunctionWithName(&NSString::from_str(vertex)).ok_or("Metal material vertex function missing")?;let fragment=lib.newFunctionWithName(&NSString::from_str(fragment)).ok_or("Metal material fragment function missing")?;let d=MTLRenderPipelineDescriptor::new();d.setVertexFunction(Some(&vertex));d.setFragmentFunction(Some(&fragment));d.setDepthAttachmentPixelFormat(MTLPixelFormat::Depth32Float);let color=unsafe{d.colorAttachments().objectAtIndexedSubscript(0)};color.setPixelFormat(MTLPixelFormat::RGBA8Unorm);color.setBlendingEnabled(alpha);
+fn material_pipeline(metal:&NativeMetal,lib:&ProtocolObject<dyn MTLLibrary>,vertex:&str,fragment:&str,alpha:bool,samples:usize)->Result<Retained<ProtocolObject<dyn MTLRenderPipelineState>>,String>{
+ let vertex=lib.newFunctionWithName(&NSString::from_str(vertex)).ok_or("Metal material vertex function missing")?;let fragment=lib.newFunctionWithName(&NSString::from_str(fragment)).ok_or("Metal material fragment function missing")?;let d=MTLRenderPipelineDescriptor::new();d.setVertexFunction(Some(&vertex));d.setFragmentFunction(Some(&fragment));d.setDepthAttachmentPixelFormat(MTLPixelFormat::Depth32Float);d.setRasterSampleCount(samples);let color=unsafe{d.colorAttachments().objectAtIndexedSubscript(0)};color.setPixelFormat(MTLPixelFormat::RGBA8Unorm);color.setBlendingEnabled(alpha);
  if alpha{color.setSourceRGBBlendFactor(MTLBlendFactor::SourceAlpha);color.setDestinationRGBBlendFactor(MTLBlendFactor::OneMinusSourceAlpha);color.setRgbBlendOperation(MTLBlendOperation::Add);color.setSourceAlphaBlendFactor(MTLBlendFactor::Zero);color.setDestinationAlphaBlendFactor(MTLBlendFactor::One);color.setAlphaBlendOperation(MTLBlendOperation::Add);}
  metal.device.newRenderPipelineStateWithDescriptor_error(&d).map_err(|e|format!("Metal material pipeline:{e:?}"))
 }
@@ -999,7 +1041,10 @@ fn image(
     usage: MTLTextureUsage,
     bpp: u64,
 ) -> Result<Image, String> {
-    let requested = u64::from(extent.0) * u64::from(extent.1) * bpp;
+    image_samples(metal,extent,format,usage,bpp,1)
+}
+fn image_samples(metal:&NativeMetal,extent:(u32,u32),format:MTLPixelFormat,usage:MTLTextureUsage,bpp:u64,samples:usize)->Result<Image,String>{
+    let requested = u64::from(extent.0).checked_mul(u64::from(extent.1)).and_then(|n|n.checked_mul(bpp)).and_then(|n|n.checked_mul(samples as u64)).ok_or("Metal sample target size overflow")?;
     let d = unsafe {
         MTLTextureDescriptor::texture2DDescriptorWithPixelFormat_width_height_mipmapped(
             format,
@@ -1008,6 +1053,7 @@ fn image(
             false,
         )
     };
+    if samples>1 {d.setTextureType(MTLTextureType::Type2DMultisample);unsafe {d.setSampleCount(samples);}}
     d.setStorageMode(MTLStorageMode::Private);
     d.setHazardTrackingMode(MTLHazardTrackingMode::Tracked);
     d.setUsage(usage);
