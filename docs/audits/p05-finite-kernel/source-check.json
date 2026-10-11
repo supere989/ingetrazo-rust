@@ -1,0 +1,9 @@
+{
+  "source_save_load_cases": 9,
+  "source_triangulation_cases": 16,
+  "negative_controls": 9,
+  "native_compared": false,
+  "exact": null,
+  "first_mismatch": null,
+  "p05_complete": false
+}
