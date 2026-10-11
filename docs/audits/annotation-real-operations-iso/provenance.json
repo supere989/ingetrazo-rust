@@ -1,0 +1,15 @@
+{
+  "source_commit": "17bf5fe7b543f694fbfc5a166e520a9528d6372f",
+  "binary_sha256": "d9fecf0ad3949dc6dc48ea69d27651c9ce17f1cbb9f73ceb87691da50027f5f9",
+  "scene_sha256": "55ed6e9302e0c11279498fd35fd727d87e33abdf53c7ec9603e35abe071071f7",
+  "camera_sha256": "c9a6bf0d69b66ec163100a8b2a75e20a9c4a2e9a06fa592b477669682b04949f",
+  "source_operations": 1352,
+  "native_operations": 1352,
+  "compared_operation_field_differences": 0,
+  "query_count": 1404,
+  "query_world_coordinate_differences": 0,
+  "source_occluded_queries": 0,
+  "scope": "exact production CPU plan comparison against actual original bound-method post-capture diagnostic; no native GPU visibility assertion",
+  "recorder_sha256": "7a119ad8c419d5b59dfbfc0fee4ba76c1ea2f08cfe353876dfab89079b54ae01",
+  "recorder_pin_note": "recorded retrospectively for81b replay; recorder file unchanged between81b and17bf"
+}

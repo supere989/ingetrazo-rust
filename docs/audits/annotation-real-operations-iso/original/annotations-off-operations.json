@@ -1,0 +1,22 @@
+{
+  "scope": "post-capture original bound methods; actual retained-depth decisions and separate all-visible layout diagnostic; accepted framebuffer unchanged",
+  "actual_operations": [],
+  "all_visible_operations": [],
+  "font_metrics": [],
+  "visibility_queries": [],
+  "style": {
+    "decimals": 2,
+    "units": "m",
+    "font_size": 9,
+    "color": [
+      45,
+      55,
+      75
+    ],
+    "norma": "iso",
+    "base_step_mm": 8.0,
+    "ends": "arrow"
+  },
+  "dimensions": [],
+  "leaders": []
+}
