@@ -1,0 +1,18 @@
+{
+  "run": 38111448432,
+  "source": "4effad9d3eabbab55e79adedda1a5e48aa36bb5f",
+  "platform": "Intel",
+  "archive_sha256": "650c16e19bd78601a24a3d1352687adf4678f46f5678662fce4a436b48fff68f",
+  "verified_source_files": 47,
+  "binary_sha256": "a89d6d1609366047968beb19777d2458c2653707e8a75c82885d1942d7890dcc  target/debug/examples/native_metal_world_material",
+  "runtime": "Material frame opaque-front was not accepted: Some(\"Metal viewport paused: World native texture size query unavailable: requested_bytes=2646880, queried_size=0, queried_align=0, extent=932x710, format=MTLPixelFormat(70), storage=MTLStorageMode(2), hazard=MTLHazardTrackingMode(2), usage=MTLTextureUsage(5), device=Apple Paravirtual device\")\n",
+  "refusal": {
+    "passed": false,
+    "phase": "opaque-front",
+    "frame_present": false,
+    "route_reason": "Metal viewport paused: World native texture size query unavailable: requested_bytes=2646880, queried_size=0, queried_align=0, extent=932x710, format=MTLPixelFormat(70), storage=MTLStorageMode(2), hazard=MTLHazardTrackingMode(2), usage=MTLTextureUsage(5), device=Apple Paravirtual device",
+    "scope": "Actual shared UI route refusal; no native frame acceptance"
+  },
+  "actual_frames": 0,
+  "scope": "SDK build passes; Apple Paravirtual target query returns0/0, strict preallocation refusal remains. No Intel material rendering or full platform acceptance."
+}

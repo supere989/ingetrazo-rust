@@ -1,0 +1,17 @@
+{
+  "actual": {
+    "passed": true,
+    "source_cases": 25,
+    "native_cases": 75,
+    "pixels": 1950,
+    "scope": "Actual shared app update_ui/native Metal cached material sampled interiors; no full viewport, mip, edge, whole-image, user gesture or presentation parity claim"
+  },
+  "negative_controls": {
+    "one-pixel": "rejected",
+    "blank": "rejected",
+    "stale-back": "rejected",
+    "missing-warm": "rejected",
+    "uncleared-ledger": "rejected",
+    "heap-owner-budget": "rejected"
+  }
+}

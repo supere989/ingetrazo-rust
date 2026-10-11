@@ -1,0 +1,55 @@
+{
+  "run": 38111448432,
+  "source": "4effad9d3eabbab55e79adedda1a5e48aa36bb5f",
+  "platform": "ARM",
+  "archive_sha256": "41dccd85de52ed597b43dd38b374747e8e9426d695ced8a6a5889766fb0f7754",
+  "verified_source_files": 47,
+  "binary_sha256": "1495af4e0fccad1b306cc2e8154cb01b16790e896fa3464becab0920c930ea2b  target/debug/examples/native_metal_world_material",
+  "actual_frames": 75,
+  "checker": {
+    "actual": {
+      "passed": true,
+      "source_cases": 25,
+      "native_cases": 75,
+      "pixels": 1950,
+      "scope": "Actual shared app update_ui/native Metal cached material sampled interiors; no full viewport, mip, edge, whole-image, user gesture or presentation parity claim"
+    },
+    "negative_controls": {
+      "one-pixel": "rejected",
+      "blank": "rejected",
+      "stale-back": "rejected",
+      "missing-warm": "rejected",
+      "uncleared-ledger": "rejected",
+      "heap-owner-budget": "rejected"
+    }
+  },
+  "texture_uploads": 2,
+  "heap_dual": [
+    [
+      [
+        4194304,
+        4194304,
+        512
+      ]
+    ],
+    [
+      [
+        4194304,
+        4194304,
+        512
+      ]
+    ],
+    [
+      [
+        4194304,
+        4194304,
+        512
+      ]
+    ]
+  ],
+  "ledger": [
+    0,
+    0
+  ],
+  "scope": "Actual update_ui cached material sampled interiors only; no full-image/mips/edge/presentation/platform release equivalence."
+}
