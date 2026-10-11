@@ -1869,6 +1869,7 @@ dependencies = [
  "image",
  "ingetrazo-core",
  "libloading",
+ "libm",
  "log",
  "pdf-writer",
  "roxmltree",

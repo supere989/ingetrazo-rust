@@ -76,15 +76,15 @@ fn ellipse_controls(
     }
     let count = (delta / PI * 2.).ceil().max(1.) as usize;
     let step = delta / count as f64;
-    let tangent = (4. / 3.) * (step / 4.).tan();
+    let tangent = (4. / 3.) * libm::tan(step / 4.);
     let mut angle = start.rem_euclid(TAU);
-    let mut last = DVec3::new(angle.cos(), angle.sin(), 0.);
+    let mut last = DVec3::new(libm::cos(angle), libm::sin(angle), 0.);
     let transform = |p: DVec3| center + major * p.x + minor * p.y;
     let mut curves = Vec::with_capacity(count);
     for _ in 0..count {
         let first = last;
         angle += step;
-        last = DVec3::new(angle.cos(), angle.sin(), 0.);
+        last = DVec3::new(libm::cos(angle), libm::sin(angle), 0.);
         let c1 = first + DVec3::new(-first.y * tangent, first.x * tangent, 0.);
         let c2 = last + DVec3::new(last.y * tangent, -last.x * tangent, 0.);
         curves.push([
@@ -256,7 +256,7 @@ pub(super) fn ellipse(
         return Err(error("Invalid ellipse axes"));
     }
     let minor = cross * (major.length() * ratio / len);
-    let first = center + major * start.cos() + minor * start.sin();
+    let first = center + major * libm::cos(start) + minor * libm::sin(start);
     let mut path = Path::new(first);
     path.beziers(ellipse_controls(center, major, minor, start, end));
     path.flatten(scale)
@@ -312,11 +312,15 @@ pub(super) fn polyline(
         ) {
             continue;
         }
-        let radius = ((b.x - a.x).hypot(b.y - a.y)) * (1. + bulge * bulge) / 4. / bulge;
-        let angle = (b.y - a.y).atan2(b.x - a.x) + (PI / 2. - bulge.atan() * 2.);
-        let center = DVec3::new(a.x + radius * angle.cos(), a.y + radius * angle.sin(), 0.);
-        let angle_a = (a.y - center.y).atan2(a.x - center.x);
-        let angle_b = (b.y - center.y).atan2(b.x - center.x);
+        let radius = libm::hypot(b.x - a.x, b.y - a.y) * (1. + bulge * bulge) / 4. / bulge;
+        let angle = libm::atan2(b.y - a.y, b.x - a.x) + (PI / 2. - libm::atan(bulge) * 2.);
+        let center = DVec3::new(
+            a.x + radius * libm::cos(angle),
+            a.y + radius * libm::sin(angle),
+            0.,
+        );
+        let angle_a = libm::atan2(a.y - center.y, a.x - center.x);
+        let angle_b = libm::atan2(b.y - center.y, b.x - center.x);
         let (start, end) = if bulge < 0. {
             (angle_b, angle_a)
         } else {
@@ -357,4 +361,62 @@ pub(super) fn bezier_path(
     let mut path = Path::new(start);
     path.beziers(curves);
     path.flatten(scale)
+}
+
+#[cfg(test)]
+mod math_diagnostic {
+    use super::*;
+    fn trace(portable: bool) -> serde_json::Value {
+        let sin: fn(f64) -> f64 = if portable { libm::sin } else { f64::sin };
+        let cos: fn(f64) -> f64 = if portable { libm::cos } else { f64::cos };
+        let atan: fn(f64) -> f64 = if portable { libm::atan } else { f64::atan };
+        let atan2: fn(f64, f64) -> f64 = if portable { libm::atan2 } else { f64::atan2 };
+        let radius = 1.25;
+        let angle = PI / 2. - atan(0.5) * 2.;
+        let center = DVec3::new(radius * cos(angle), radius * sin(angle), 0.);
+        let raw_start = atan2(-center.y, -center.x);
+        let raw_end = atan2(-center.y, 2. - center.x);
+        let start = raw_start.rem_euclid(TAU);
+        let mut end = raw_end.rem_euclid(TAU);
+        if start > end {
+            end += TAU;
+        }
+        let ellipse_start = start.to_degrees().to_radians();
+        let ellipse_end = end.to_degrees().to_radians();
+        let delta = span(ellipse_start, ellipse_end);
+        let count = (delta / PI * 2.).ceil().max(1.) as usize;
+        let step = delta / count as f64;
+        let mut final_angle = ellipse_start.rem_euclid(TAU);
+        for _ in 0..count {
+            final_angle += step;
+        }
+        let last_cp = if portable {
+            ellipse_controls(
+                center,
+                DVec3::X * radius,
+                DVec3::Y * radius,
+                ellipse_start,
+                ellipse_end,
+            )
+            .last()
+            .unwrap()[3]
+        } else {
+            center + DVec3::X * (radius * cos(final_angle)) + DVec3::Y * (radius * sin(final_angle))
+        };
+        serde_json::json!({"center":[center.x,center.y],"radius":radius,"raw_start":raw_start,"raw_end":raw_end,"normalized_start":start,"normalized_end":end,"ellipse_start":ellipse_start,"ellipse_end":ellipse_end,"span":delta,"step":step,"final_accumulated_angle":final_angle,"sin_final":sin(final_angle),"cos_final":cos(final_angle),"last_cp":last_cp.to_array()})
+    }
+    #[test]
+    fn portable_bulge_intermediates_match_source() {
+        let portable = trace(true);
+        let native = trace(false);
+        println!(
+            "{}",
+            serde_json::json!({"portable_curve_math":portable,"platform_curve_math":native})
+        );
+        let source: serde_json::Value = serde_json::from_str(include_str!(
+            "../../../docs/audits/dxf-curves/lw-positive-math-source.json"
+        ))
+        .unwrap();
+        assert_eq!(portable, source);
+    }
 }

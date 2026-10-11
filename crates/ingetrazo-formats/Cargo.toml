@@ -6,6 +6,7 @@ authors.workspace = true
 license.workspace = true
 
 [dependencies]
+libm = { version = "=0.2.16", default-features = false, features = ["force-soft-floats"] }
 pdf-writer = "=0.15.0"
 ingetrazo-core = { path = "../ingetrazo-core" }
 glam.workspace = true
