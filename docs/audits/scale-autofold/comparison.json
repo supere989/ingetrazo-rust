@@ -1,0 +1,12 @@
+{
+  "exact_cases": 3,
+  "warped_hole": "Exact lifted pieces, count, metadata and projected coverage; planar partition order is original set-identity nondeterministic",
+  "negative_controls": [
+    "empty",
+    "lost_fold",
+    "lost_metadata",
+    "wrong_lift",
+    "hole_fill",
+    "replaced_identity"
+  ]
+}

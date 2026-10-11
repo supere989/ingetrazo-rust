@@ -1,0 +1,8 @@
+{
+  "runtime_commit": "e68be5e9",
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "binary_sha256": "488f534e71698adc42f7bf84f98e4fb1d1612b018dad0e578c25881fabe618d1",
+  "source_sha256": "2c7a07588468cb8f3d305b8dbf6c39bc29db8f641c1ac138bdb3d9ea316fafd8",
+  "source_function_sha256": "f16d136706d0a7ce4f5c382c9318126e45639a38d969f13f0196f852df858c0e",
+  "binary_source_note": "Built before rustfmt-only source formatting; focused tests include final finite guard"
+}

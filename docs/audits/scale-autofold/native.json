@@ -1,0 +1,431 @@
+{
+  "cases": [
+    {
+      "name": "lifted-quad",
+      "needed": true,
+      "folded": 1,
+      "result": [
+        {
+          "vertices": [
+            [
+              10.0,
+              0.0,
+              0.0
+            ],
+            [
+              11.0,
+              0.0,
+              0.0
+            ],
+            [
+              11.0,
+              1.0,
+              0.0
+            ]
+          ],
+          "holes": [],
+          "attrs": {
+            "untouched": true
+          },
+          "interior": false
+        },
+        {
+          "vertices": [
+            [
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              4.0,
+              0.0,
+              0.0
+            ],
+            [
+              4.0,
+              4.0,
+              1.0
+            ]
+          ],
+          "holes": [],
+          "attrs": {
+            "vendor": 71,
+            "color": [
+              0.2,
+              0.4,
+              0.6
+            ]
+          },
+          "interior": false
+        },
+        {
+          "vertices": [
+            [
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              4.0,
+              4.0,
+              1.0
+            ],
+            [
+              0.0,
+              4.0,
+              0.0
+            ]
+          ],
+          "holes": [],
+          "attrs": {
+            "vendor": 71,
+            "color": [
+              0.2,
+              0.4,
+              0.6
+            ]
+          },
+          "interior": false
+        }
+      ],
+      "untouched_identity": true,
+      "original_edges_survive": true
+    },
+    {
+      "name": "gentle-hex",
+      "needed": true,
+      "folded": 1,
+      "result": [
+        {
+          "vertices": [
+            [
+              10.0,
+              0.0,
+              0.0
+            ],
+            [
+              11.0,
+              0.0,
+              0.0
+            ],
+            [
+              11.0,
+              1.0,
+              0.0
+            ]
+          ],
+          "holes": [],
+          "attrs": {
+            "untouched": true
+          },
+          "interior": false
+        },
+        {
+          "vertices": [
+            [
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              2.0,
+              0.0,
+              0.0
+            ],
+            [
+              4.0,
+              0.0,
+              0.0
+            ],
+            [
+              4.0,
+              4.0,
+              0.05000000074505806
+            ],
+            [
+              2.0,
+              4.0,
+              0.05000000074505806
+            ],
+            [
+              0.0,
+              4.0,
+              0.0
+            ]
+          ],
+          "holes": [],
+          "attrs": {
+            "color": [
+              0.2,
+              0.4,
+              0.6
+            ],
+            "vendor": 71
+          },
+          "interior": false
+        }
+      ],
+      "untouched_identity": true,
+      "original_edges_survive": true
+    },
+    {
+      "name": "warped-hole",
+      "needed": true,
+      "folded": 1,
+      "result": [
+        {
+          "vertices": [
+            [
+              10.0,
+              0.0,
+              0.0
+            ],
+            [
+              11.0,
+              0.0,
+              0.0
+            ],
+            [
+              11.0,
+              1.0,
+              0.0
+            ]
+          ],
+          "holes": [],
+          "attrs": {
+            "untouched": true
+          },
+          "interior": false
+        },
+        {
+          "vertices": [
+            [
+              6.0,
+              6.0,
+              1.0
+            ],
+            [
+              0.0,
+              6.0,
+              0.0
+            ],
+            [
+              4.0,
+              4.0,
+              0.0
+            ]
+          ],
+          "holes": [],
+          "attrs": {
+            "color": [
+              0.2,
+              0.4,
+              0.6
+            ],
+            "vendor": 71
+          },
+          "interior": false
+        },
+        {
+          "vertices": [
+            [
+              6.0,
+              0.0,
+              0.0
+            ],
+            [
+              6.0,
+              6.0,
+              1.0
+            ],
+            [
+              4.0,
+              4.0,
+              0.0
+            ]
+          ],
+          "holes": [],
+          "attrs": {
+            "color": [
+              0.2,
+              0.4,
+              0.6
+            ],
+            "vendor": 71
+          },
+          "interior": false
+        },
+        {
+          "vertices": [
+            [
+              6.0,
+              0.0,
+              0.0
+            ],
+            [
+              4.0,
+              4.0,
+              0.0
+            ],
+            [
+              4.0,
+              2.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              0.0
+            ]
+          ],
+          "holes": [],
+          "attrs": {
+            "color": [
+              0.2,
+              0.4,
+              0.6
+            ],
+            "vendor": 71
+          },
+          "interior": false
+        },
+        {
+          "vertices": [
+            [
+              2.0,
+              2.0,
+              0.0
+            ],
+            [
+              2.0,
+              4.0,
+              0.0
+            ],
+            [
+              4.0,
+              4.0,
+              0.0
+            ],
+            [
+              0.0,
+              6.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              4.0,
+              2.0,
+              0.0
+            ]
+          ],
+          "holes": [],
+          "attrs": {
+            "color": [
+              0.2,
+              0.4,
+              0.6
+            ],
+            "vendor": 71
+          },
+          "interior": false
+        }
+      ],
+      "untouched_identity": true,
+      "original_edges_survive": true
+    },
+    {
+      "name": "planar-hole",
+      "needed": false,
+      "folded": 0,
+      "result": [
+        {
+          "vertices": [
+            [
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              6.0,
+              0.0,
+              0.0
+            ],
+            [
+              6.0,
+              6.0,
+              0.0
+            ],
+            [
+              0.0,
+              6.0,
+              0.0
+            ]
+          ],
+          "holes": [
+            [
+              [
+                2.0,
+                2.0,
+                0.0
+              ],
+              [
+                2.0,
+                4.0,
+                0.0
+              ],
+              [
+                4.0,
+                4.0,
+                0.0
+              ],
+              [
+                4.0,
+                2.0,
+                0.0
+              ]
+            ]
+          ],
+          "attrs": {
+            "color": [
+              0.2,
+              0.4,
+              0.6
+            ],
+            "vendor": 71
+          },
+          "interior": false
+        },
+        {
+          "vertices": [
+            [
+              10.0,
+              0.0,
+              0.0
+            ],
+            [
+              11.0,
+              0.0,
+              0.0
+            ],
+            [
+              11.0,
+              1.0,
+              0.0
+            ]
+          ],
+          "holes": [],
+          "attrs": {
+            "untouched": true
+          },
+          "interior": false
+        }
+      ],
+      "untouched_identity": true,
+      "original_edges_survive": true
+    }
+  ]
+}
