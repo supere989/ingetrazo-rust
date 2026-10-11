@@ -227,7 +227,7 @@ impl Profiles {
         });
         Ok(())
     }
-    pub fn select(&self, eye: DVec3) -> Result<Vec<[f32; 3]>, String> {
+    pub fn selection(&self, eye: DVec3, out: &mut Vec<(usize, usize)>) -> Result<(), String> {
         if !eye.is_finite() {
             return Err("Metal profile eye nonfinite".into());
         }
@@ -235,8 +235,30 @@ impl Profiles {
             .placements
             .iter()
             .try_fold(0usize, |n, p| n.checked_add(p.edges.len()))
-            .ok_or("Metal profile endpoint count overflow")?;
-        let capacity = count
+            .filter(|n| {
+                n.checked_mul(std::mem::size_of::<(usize, usize)>())
+                    .is_some_and(|bytes| bytes <= MAX_BYTES)
+            })
+            .ok_or("Metal profile selection exceeds64MiB")?;
+        out.clear();
+        out.try_reserve_exact(count)
+            .map_err(|_| "Metal profile selection allocation refused")?;
+        for (placement, p) in self.placements.iter().enumerate() {
+            let eye = p.inverse.transform_point3(eye);
+            for (edge, e) in p.edges.iter().enumerate() {
+                let side = |i: usize| {
+                    e.normals[i].dot(DVec3::from_array(e.anchors[i].map(f64::from)) - eye)
+                };
+                if e.single || (side(0) < 0.) != (side(1) < 0.) {
+                    out.push((placement, edge));
+                }
+            }
+        }
+        Ok(())
+    }
+    pub fn endpoints(&self, selection: &[(usize, usize)]) -> Result<Vec<[f32; 3]>, String> {
+        let capacity = selection
+            .len()
             .checked_mul(2)
             .filter(|n| n.checked_mul(12).is_some_and(|bytes| bytes <= MAX_BYTES))
             .ok_or("Metal profile endpoints exceed64MiB")?;
@@ -244,27 +266,33 @@ impl Profiles {
         positions
             .try_reserve_exact(capacity)
             .map_err(|_| "Metal profile endpoints allocation refused")?;
-        for p in &self.placements {
-            let eye = p.inverse.transform_point3(eye);
-            for e in p.edges.iter() {
-                let side = |i: usize| {
-                    e.normals[i].dot(DVec3::from_array(e.anchors[i].map(f64::from)) - eye)
-                };
-                if e.single || (side(0) < 0.) != (side(1) < 0.) {
-                    for v in e.points {
-                        let v = p
-                            .world
-                            .transform_point3(DVec3::from_array(v.map(f64::from)))
-                            .as_vec3();
-                        if !v.is_finite() {
-                            return Err("Metal profile world endpoint overflow".into());
-                        }
-                        positions.push(v.to_array());
-                    }
+        for &(placement, edge) in selection {
+            let p = self
+                .placements
+                .get(placement)
+                .ok_or("Metal profile placement identity invalid")?;
+            let e = p
+                .edges
+                .get(edge)
+                .ok_or("Metal profile edge identity invalid")?;
+            for v in e.points {
+                let v = p
+                    .world
+                    .transform_point3(DVec3::from_array(v.map(f64::from)))
+                    .as_vec3();
+                if !v.is_finite() {
+                    return Err("Metal profile world endpoint overflow".into());
                 }
+                positions.push(v.to_array());
             }
         }
         Ok(positions)
+    }
+    #[cfg(test)]
+    pub fn select(&self, eye: DVec3) -> Result<Vec<[f32; 3]>, String> {
+        let mut selected = Vec::new();
+        self.selection(eye, &mut selected)?;
+        self.endpoints(&selected)
     }
 }
 #[cfg(test)]

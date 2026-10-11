@@ -10,17 +10,17 @@
     {
       "path": "focused.log",
       "bytes": 5545,
-      "sha256": "6bef59af976749887a82a6d76e880cb79848caa3c3797e18f918eb9b5a5fba2e"
+      "sha256": "aa61d9481dd58335f643e594057c443fb67171c6167d83aee8e0a6d1c4598e87"
     },
     {
       "path": "arm-all-targets.log",
       "bytes": 1951,
-      "sha256": "464f5c4b31ece2647df887a29bdb9bb2bbecfde791f188dba7e4225452138fd7"
+      "sha256": "437b2274f39d2f80a21c366b48f30bf8f6abd45b07f8dab37187e0363b50700f"
     },
     {
       "path": "intel-all-targets.log",
       "bytes": 1951,
-      "sha256": "d076a42321e748a187fa6d6557fc41d081b2d445e2860e2e2877c1c7d3b06a87"
+      "sha256": "437b2274f39d2f80a21c366b48f30bf8f6abd45b07f8dab37187e0363b50700f"
     },
     {
       "path": "gui-cross-setup-refusal.log",
@@ -28,13 +28,14 @@
       "sha256": "22c72dde1addc7948302014efd72f2237c139b3bd75ca561d9f39d0c52279fc7"
     }
   ],
-  "archive_sha256": "2c3262832c282263642717613fbdf18ab503ed64ea165c23425f9b6857ca559c",
+  "archive_sha256": "bfaaca24845ccec085a20f2b88d980b9f1d0365fd6a13f9357eebe7cc50ec7e1",
   "acceptance": {
     "focused_world_tests": 43,
     "arm_metal_all_targets": "PASS",
     "intel_metal_all_targets": "PASS",
     "gui_cross": "unsupported local Apple C compiler for libz-sys",
     "native_gpu": "PENDING root Apple CI",
-    "normal_launcher": "PENDING root Apple CI"
+    "normal_launcher": "PENDING root Apple CI",
+    "unchanged_selection_camera_owner": "source + native control included; actual Apple execution pending"
   }
 }

@@ -872,7 +872,8 @@ pub struct Adapter {
     preview: Option<Arc<super::world_preview::Preview>>,
     preview_poses: Vec<Pose>,
     #[cfg(target_os="macos")] base_lines:[Option<(Revisions,Option<u64>,Vec<usize>,Arc<super::world_preview::Lines>)>;2],
-    #[cfg(target_os="macos")] profiles:Option<(Revisions,Option<u64>,Vec<usize>,Arc<super::world_profile::Profiles>,[u64;3],Arc<super::world_preview::Lines>,usize)>,
+    #[cfg(target_os="macos")] profiles:Option<(Revisions,Option<u64>,Vec<usize>,Arc<super::world_profile::Profiles>,[u64;3],Arc<super::world_preview::Lines>,usize,Vec<(usize,usize)>)>,
+    #[cfg(target_os="macos")] profile_selection_scratch:Vec<(usize,usize)>,
     #[cfg(target_os="macos")] preview_lines:Option<(ingetrazo_render::face_sweep::Key,Arc<super::world_preview::Lines>)>,
 }
 impl Adapter {
@@ -880,7 +881,7 @@ impl Adapter {
         cold || revision.is_none() || self.accepted_pose_revision != revision
     }
     fn profile_payload_bytes(&self)->usize {
-        #[cfg(target_os="macos")] {self.profiles.as_ref().map_or(0,|p|p.2.capacity()*std::mem::size_of::<usize>()+p.3.retained_bytes())}
+        #[cfg(target_os="macos")] {self.profiles.as_ref().map_or(0,|p|p.2.capacity()*std::mem::size_of::<usize>()+p.3.retained_bytes()+p.7.capacity()*std::mem::size_of::<(usize,usize)>())+self.profile_selection_scratch.capacity()*std::mem::size_of::<(usize,usize)>()}
         #[cfg(not(target_os="macos"))] {0}
     }
     pub fn retained_payload_bytes(&self) -> usize {
@@ -1045,12 +1046,14 @@ impl crate::world::World {
         let profile_owner=Arc::as_ptr(&metal.budget) as usize;
         let profile_cold=profile_enabled&&!adapter.profiles.as_ref().is_some_and(|p|p.0==revisions&&pose_revision.is_some()&&p.1==pose_revision&&p.2==suppressed&&p.6==profile_owner);
         let profile_changed=profile_enabled&&(profile_cold||adapter.profiles.as_ref().is_none_or(|p|p.4!=eye_key));
+        let mut profile_upload_changed=false;
         let profile_candidate=if !profile_enabled{None}else if profile_changed {
             let topology=if profile_cold{Arc::new(super::world_profile::Profiles::build(scene,suppressed)?)}else{adapter.profiles.as_ref().unwrap().3.clone()};
-            let endpoints=topology.select(eye)?;
-            let lines=Arc::new(super::world_preview::Lines::prepare(metal,&endpoints)?);
+            topology.selection(eye,&mut adapter.profile_selection_scratch)?;
+            profile_upload_changed=profile_cold||adapter.profiles.as_ref().is_none_or(|p|p.7!=adapter.profile_selection_scratch);
+            let lines=if profile_upload_changed{let endpoints=topology.endpoints(&adapter.profile_selection_scratch)?;Arc::new(super::world_preview::Lines::prepare(metal,&endpoints)?)}else{adapter.profiles.as_ref().unwrap().5.clone()};
             let mut ids=Vec::new();ids.try_reserve_exact(suppressed.len()).map_err(|_|"Metal profile membership allocation refused")?;ids.extend_from_slice(suppressed);
-            Some((revisions,pose_revision,ids,topology,eye_key,lines,profile_owner))
+            Some((revisions,pose_revision,ids,topology,eye_key,lines,profile_owner,std::mem::take(&mut adapter.profile_selection_scratch)))
         }else{None};
         let profiles=if !profile_enabled{None}else{Some(profile_candidate.as_ref().or(adapter.profiles.as_ref()).unwrap().5.clone())};
         let background=if style.show_sky {Some(super::world_background::Background::prepare(eye,camera.target,camera_matrix,style.sky_color,style.ground_color)?)}else{None};
@@ -1086,7 +1089,7 @@ impl crate::world::World {
             prepared.lines=[base_lines.clone(),preview_lines.clone()];
             prepared.profiles=profiles;
             prepared.background=background;
-            if let Some(candidate)=profile_candidate{self.stats.profile_builds+=u64::from(profile_cold);self.stats.profile_uploads+=u64::from(candidate.5.buffer.is_some());self.stats.profile_upload_bytes+=candidate.5.bytes as u64;adapter.profiles=Some(candidate);}
+            if let Some(candidate)=profile_candidate{self.stats.profile_builds+=u64::from(profile_cold);self.stats.profile_uploads+=u64::from(profile_upload_changed&&candidate.5.buffer.is_some());if profile_upload_changed{self.stats.profile_upload_bytes+=candidate.5.bytes as u64;}if let Some(old)=adapter.profiles.replace(candidate){adapter.profile_selection_scratch=old.7;}}
 
             prepared.overlay=active_preview.filter(|p|p.sweep.kind==ingetrazo_render::face_sweep::Kind::Overlay).map(|p|p.preview_key);
             if base_line_changed{self.stats.base_line_uploads+=u64::from(base_lines.as_ref().unwrap().buffer.is_some());self.stats.base_line_upload_bytes+=base_lines.as_ref().unwrap().bytes as u64;adapter.base_lines[base_line_slot]=Some((revisions,pose_revision,line_ids,base_lines.as_ref().unwrap().clone()));}

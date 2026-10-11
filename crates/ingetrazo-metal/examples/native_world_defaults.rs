@@ -132,6 +132,20 @@ fn run() -> Result<(), String> {
         assert_eq!(world.stats.profile_builds, before.profile_builds);
         assert_eq!(world.stats.geometry_uploads, before.geometry_uploads);
         assert!(world.stats.profile_uploads > before.profile_uploads);
+        let changed_uploads = world.stats.profile_uploads;
+        read(prepare(
+            &mut world,
+            &mut adapter,
+            &scene,
+            rev,
+            &style,
+            DVec3::new(0., -3., 2.),
+        )?)?;
+        assert_eq!(
+            world.stats.profile_uploads, changed_uploads,
+            "Orbit without membership change reuploaded profile endpoints"
+        );
+        assert_eq!(world.stats.geometry_uploads, before.geometry_uploads);
         style.show_profiles = false;
         rev.style += 1;
         let off = read(prepare(
@@ -191,7 +205,7 @@ fn run() -> Result<(), String> {
         let committed: u64 = budget.heaps.iter().map(|h| h.committed).sum();
         let reserved: u64 = budget.heaps.iter().map(|h| h.reserved).sum();
         assert_eq!((committed, reserved), (0, 0));
-        std::fs::write(out.join("report.json"),serde_json::to_vec_pretty(&serde_json::json!({"passed":true,"extent":[64,64],"samples":4,"default_style":true,"warm_extra_profile_uploads":0,"warm_extra_geometry_uploads":0,"camera_extra_base_uploads":0,"profile_builds":accepted.profile_builds,"profile_uploads":accepted.profile_uploads,"profile_upload_bytes":accepted.profile_upload_bytes,"unsupported_grid_refusal":error,"ledger_committed":committed,"ledger_reserved":reserved})).unwrap()).map_err(|e|e.to_string())?;
+        std::fs::write(out.join("report.json"),serde_json::to_vec_pretty(&serde_json::json!({"passed":true,"extent":[64,64],"samples":4,"default_style":true,"warm_extra_profile_uploads":0,"warm_extra_geometry_uploads":0,"camera_extra_base_uploads":0,"unchanged_selection_camera_extra_profile_uploads":0,"profile_builds":accepted.profile_builds,"profile_uploads":accepted.profile_uploads,"profile_upload_bytes":accepted.profile_upload_bytes,"unsupported_grid_refusal":error,"ledger_committed":committed,"ledger_reserved":reserved})).unwrap()).map_err(|e|e.to_string())?;
         Ok(())
     })
 }
