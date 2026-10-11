@@ -1,0 +1,5 @@
+{
+  "archive": "retained-failures.zip",
+  "sha256": "0d68055eaf55191ae33bf4d623d8902f40a3ed44c39f4baab8f034af604fd224",
+  "scope": "Historical setup and dirty-close harness failures, preserved separately from final acceptance"
+}
