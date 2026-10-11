@@ -1,0 +1,126 @@
+{
+  "source": "bbc3ffa62eab33b1b090c987e4e4c3daa19f6e3a",
+  "artifact": 11711941125,
+  "archive_sha256": "e6d07dbbf7d27c1d845037152ad01912034450c2fb5107e557723bf2d48d2d9d",
+  "authenticated_source_files": 53,
+  "cells": {
+    "reused-native": {
+      "seed_sha256": "6a3c34c071c82b9f73e39a633345f98a631a1430779b291fea61b51f83c7b1ea",
+      "frame_sha256": [
+        "6a3c34c071c82b9f73e39a633345f98a631a1430779b291fea61b51f83c7b1ea",
+        "6a3c34c071c82b9f73e39a633345f98a631a1430779b291fea61b51f83c7b1ea",
+        "6a3c34c071c82b9f73e39a633345f98a631a1430779b291fea61b51f83c7b1ea",
+        "6a3c34c071c82b9f73e39a633345f98a631a1430779b291fea61b51f83c7b1ea"
+      ],
+      "changed_from_seed": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "changed_from_first": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "zero_alpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "seed_equals_prior9302_reference": true
+    },
+    "reused-compute": {
+      "seed_sha256": "6a3c34c071c82b9f73e39a633345f98a631a1430779b291fea61b51f83c7b1ea",
+      "frame_sha256": [
+        "f8ea0cb36172248de46ec250bc387f60c2283bb1d1dd24cdba0daafb897460bd",
+        "f8ea0cb36172248de46ec250bc387f60c2283bb1d1dd24cdba0daafb897460bd",
+        "f8ea0cb36172248de46ec250bc387f60c2283bb1d1dd24cdba0daafb897460bd",
+        "f8ea0cb36172248de46ec250bc387f60c2283bb1d1dd24cdba0daafb897460bd"
+      ],
+      "changed_from_seed": [
+        288,
+        288,
+        288,
+        288
+      ],
+      "changed_from_first": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "zero_alpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "seed_equals_prior9302_reference": true
+    },
+    "fresh-native": {
+      "seed_sha256": "6a3c34c071c82b9f73e39a633345f98a631a1430779b291fea61b51f83c7b1ea",
+      "frame_sha256": [
+        "6a3c34c071c82b9f73e39a633345f98a631a1430779b291fea61b51f83c7b1ea",
+        "6a3c34c071c82b9f73e39a633345f98a631a1430779b291fea61b51f83c7b1ea",
+        "6a3c34c071c82b9f73e39a633345f98a631a1430779b291fea61b51f83c7b1ea",
+        "6a3c34c071c82b9f73e39a633345f98a631a1430779b291fea61b51f83c7b1ea"
+      ],
+      "changed_from_seed": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "changed_from_first": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "zero_alpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "seed_equals_prior9302_reference": true
+    },
+    "fresh-compute": {
+      "seed_sha256": "6a3c34c071c82b9f73e39a633345f98a631a1430779b291fea61b51f83c7b1ea",
+      "frame_sha256": [
+        "f8ea0cb36172248de46ec250bc387f60c2283bb1d1dd24cdba0daafb897460bd",
+        "f8ea0cb36172248de46ec250bc387f60c2283bb1d1dd24cdba0daafb897460bd",
+        "f8ea0cb36172248de46ec250bc387f60c2283bb1d1dd24cdba0daafb897460bd",
+        "f8ea0cb36172248de46ec250bc387f60c2283bb1d1dd24cdba0daafb897460bd"
+      ],
+      "changed_from_seed": [
+        288,
+        288,
+        288,
+        288
+      ],
+      "changed_from_first": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "zero_alpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "seed_equals_prior9302_reference": true
+    }
+  },
+  "conclusion": "Blank not reproduced; native fresh/reused both equal prior reference and stable. Compute differs by288pixels and remains diagnostic-only. No root cause established.",
+  "run": 38164613793,
+  "binary_sha256": "e15c81dfe8c97db92fb462a7c910fc153961c786807318f264cdd80e9811680b",
+  "observation_limitations": [
+    "resolve_destination and readback.identity are wrapper addresses because their retained owners were not fully dereferenced; no native ownership inference is made from those fields. Texture closure and contents pointer observations remain separately recorded."
+  ]
+}
