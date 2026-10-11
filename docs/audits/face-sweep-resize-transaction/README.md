@@ -8,4 +8,4 @@ The archive retains two failed harness attempts: the first incorrectly compared 
 
 Read-only replay: `python3 scripts/check-face-sweep-resize-transaction.py docs/audits/face-sweep-resize-transaction`.
 
-Final captures and frozen binaries remain outside the repository until parent release. Original captures were reused without recapture; no broad suite was run.
+Parent authenticated the archive/checker and granted release. Covered terminal captures and frozen binaries are removed after byte-for-byte archive and binary-hash verification; exact paths/bytes are in released-temporaries.json. Source, original inputs, transport helpers and reusable target remain. Original captures were reused without recapture; no broad suite was run.

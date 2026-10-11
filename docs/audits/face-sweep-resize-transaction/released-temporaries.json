@@ -1,0 +1,45 @@
+{
+  "authorization": "Parent authenticated archive/checker and granted terminal resize duplicate release",
+  "canonical_archive_sha256": "8075c3973600c78a801442414ab312856d304a4230262828cdaea37d10f6a318",
+  "released": [
+    {
+      "path": "/tmp/face-sweep-app-resize-final",
+      "bytes": 15052905,
+      "files": 21
+    },
+    {
+      "path": "/tmp/face-sweep-app-resize-1",
+      "bytes": 4768556,
+      "files": 15
+    },
+    {
+      "path": "/tmp/face-sweep-app-resize-2",
+      "bytes": 6659124,
+      "files": 16
+    },
+    {
+      "path": "/tmp/face-sweep-app-resize-3",
+      "bytes": 15053859,
+      "files": 21
+    },
+    {
+      "path": "/tmp/face-sweep-app-frozen-resize",
+      "bytes": 75359368,
+      "files": 1,
+      "sha256": "991ed3b0987bee63886e4e2af5720dbb6f0ffd5948c72dc42f787da96d33b4af"
+    },
+    {
+      "path": "/tmp/face-sweep-app-frozen-resize-final",
+      "bytes": 75359360,
+      "files": 1,
+      "sha256": "667f2a3206b67d0e443ee54fa60fd06923a49c809e9f6db38720025ddc8c2fdf"
+    },
+    {
+      "path": "/tmp/face-sweep-resize-proof",
+      "bytes": 872126,
+      "files": 2
+    }
+  ],
+  "total_bytes": 193125298,
+  "preserved": "Source worktree, canonical archive, original source inputs, transport helper scripts and reusable target"
+}
