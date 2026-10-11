@@ -1,0 +1,249 @@
+{
+  "run": 38166949746,
+  "job": 114551371939,
+  "source": "7ac1ca0d4176b4005cdbb6ee2287fb5b83372202",
+  "artifact": 11712991294,
+  "archive_sha256": "c4aab4f3e3dcfa920cd0d14c8757f8816bb84248990729c16953f40a8c66bc18",
+  "source_files_authenticated": 152,
+  "binary_receipt": "e40208ff4e4c82e1b3b5f545add3d354eb7303bc426c59e09387cb61a4fb97a7  target/debug/examples/native_metal_section_iso_samples",
+  "entire_original_and_observed_native_equal_retained": true,
+  "whole_source_native_mismatch_pixels": 134,
+  "camera_16bits_equal": true,
+  "actual_source_depth_format": "GL_DEPTH24_STENCIL8",
+  "actual_native_depth_format": "MTLPixelFormat(260)",
+  "sample_comparison": {
+    "whole_source_native_mismatches_preserved": 134,
+    "observed_native_frame_unchanged": true,
+    "source_depth_attachment": {
+      "type": 36161,
+      "name": 3,
+      "format": 35056,
+      "samples": 4
+    },
+    "native_depth_attachment": {
+      "identity": "0x15260b850",
+      "storage": "MTLStorageMode(2)",
+      "usage": "MTLTextureUsage(5)",
+      "format": "MTLPixelFormat(260)",
+      "extent": [
+        800,
+        600
+      ],
+      "samples": 4
+    },
+    "points": [
+      {
+        "point": [
+          297,
+          329
+        ],
+        "source_rgba8": [
+          [
+            230,
+            232,
+            235,
+            255
+          ],
+          [
+            175,
+            175,
+            171,
+            255
+          ],
+          [
+            230,
+            232,
+            235,
+            255
+          ],
+          [
+            175,
+            175,
+            171,
+            255
+          ]
+        ],
+        "native_rgba8": [
+          [
+            230,
+            232,
+            235,
+            255
+          ],
+          [
+            175,
+            175,
+            171,
+            255
+          ],
+          [
+            230,
+            232,
+            235,
+            255
+          ],
+          [
+            158,
+            178,
+            199,
+            255
+          ]
+        ],
+        "source_depth_bits": [
+          1065353216,
+          1056968908,
+          1065353216,
+          1056968907
+        ],
+        "native_depth_bits": [
+          1065353216,
+          1056968906,
+          1065353216,
+          1056968906
+        ]
+      },
+      {
+        "point": [
+          297,
+          328
+        ],
+        "source_rgba8": [
+          [
+            230,
+            232,
+            235,
+            255
+          ],
+          [
+            175,
+            175,
+            171,
+            255
+          ],
+          [
+            230,
+            232,
+            235,
+            255
+          ],
+          [
+            175,
+            175,
+            171,
+            255
+          ]
+        ],
+        "native_rgba8": [
+          [
+            230,
+            232,
+            235,
+            255
+          ],
+          [
+            175,
+            175,
+            171,
+            255
+          ],
+          [
+            230,
+            232,
+            235,
+            255
+          ],
+          [
+            175,
+            175,
+            171,
+            255
+          ]
+        ],
+        "source_depth_bits": [
+          1065353216,
+          1056968904,
+          1065353216,
+          1056968904
+        ],
+        "native_depth_bits": [
+          1065353216,
+          1056968902,
+          1065353216,
+          1056968902
+        ]
+      },
+      {
+        "point": [
+          298,
+          303
+        ],
+        "source_rgba8": [
+          [
+            175,
+            175,
+            171,
+            255
+          ],
+          [
+            175,
+            175,
+            171,
+            255
+          ],
+          [
+            255,
+            0,
+            255,
+            255
+          ],
+          [
+            175,
+            175,
+            171,
+            255
+          ]
+        ],
+        "native_rgba8": [
+          [
+            175,
+            175,
+            171,
+            255
+          ],
+          [
+            175,
+            175,
+            171,
+            255
+          ],
+          [
+            175,
+            175,
+            171,
+            255
+          ],
+          [
+            175,
+            175,
+            171,
+            255
+          ]
+        ],
+        "source_depth_bits": [
+          1056968818,
+          1056968814,
+          1056968791,
+          1056968814
+        ],
+        "native_depth_bits": [
+          1056968816,
+          1056968812,
+          1056968816,
+          1056968812
+        ]
+      }
+    ],
+    "scope": "Measured final samples; no cause or release acceptance implied"
+  },
+  "conclusion": "Bad body slot3 is default-back before resolve; neighbor colors match; cap slot2 is front instead of cap. Depth/draw ownership discrepancy established, not a bias or raster repair."
+}
