@@ -1,0 +1,162 @@
+{
+  "runtime_commit": "042824bc",
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "entries": {
+    "away-back-native.igz": {
+      "bytes": 482,
+      "sha256": "54751bdbfa121b7de5ec6e7c6df7db4c96b9b0f81ef1e197f61e878485b84330"
+    },
+    "build.log": {
+      "bytes": 20535,
+      "sha256": "e6ff7d711a50ac63c920ee6c27c1b9a76420c88637fc128abb1a87841ac5bdb1"
+    },
+    "check.log": {
+      "bytes": 53,
+      "sha256": "2311f657c69ba69c232558f5e8181f9fa4350c05e9306e53e54f8370de7d3948"
+    },
+    "cm-native.igz": {
+      "bytes": 476,
+      "sha256": "bddb2ded110d1234ae5323100e7a53a1bf097d1c202076814c5cb7d1b9cb07c0"
+    },
+    "cm.igz": {
+      "bytes": 475,
+      "sha256": "88073b2f2debf11180786fd64375ba3dfe88b82ab9492380252c4dce5e12dc82"
+    },
+    "ft-in-frac-native.igz": {
+      "bytes": 492,
+      "sha256": "e01de7ee04c16ce305de808a779b40edb79e02afff3ab1ceec09853215132a5d"
+    },
+    "ft-in-frac.igz": {
+      "bytes": 491,
+      "sha256": "cbeee29ce595cb9b88edd860a05b07dd362e0eb1a867a96fc578f9bce81d20bb"
+    },
+    "ft-in-native.igz": {
+      "bytes": 482,
+      "sha256": "b193730fecfe510eea51e59c0155a087ad6bf746bb55f91adf391221203c66d9"
+    },
+    "ft-in.igz": {
+      "bytes": 481,
+      "sha256": "165b606257207b8c68ce3fa91f1cbc543befacf0c81538657fa6313948a42a9c"
+    },
+    "ft-native.igz": {
+      "bytes": 476,
+      "sha256": "9cf17959ade549ba7a68387d02c4875d384b45ae38cf834cf12ee96999dde39b"
+    },
+    "ft.igz": {
+      "bytes": 475,
+      "sha256": "2ed80d6254b9ada66a45224673f73c9066938c58bc22f8c6d219842c5d39129c"
+    },
+    "in-frac-native.igz": {
+      "bytes": 486,
+      "sha256": "323025505df28275ce6bae85e2ad766967e002b5785eaf158192c3863233ca72"
+    },
+    "in-frac.igz": {
+      "bytes": 485,
+      "sha256": "df16987f4f616afc9d1223f7de43fc3b15437c61f7bbebba753017e725243df4"
+    },
+    "in-native.igz": {
+      "bytes": 476,
+      "sha256": "c054d33b8063975dc496e85e6d4d96750dd0ae62dc49734c998a52cd691e7713"
+    },
+    "in.igz": {
+      "bytes": 475,
+      "sha256": "6eca735a721b7723d15b55044f7b909a458b7933cb6d0dd7dafd2077664a6e6c"
+    },
+    "input.igz": {
+      "bytes": 524,
+      "sha256": "f1ac3ca0c478367b1580632780c2db85e68a63b1e9dc771b9aea1d347df7293f"
+    },
+    "m-native.igz": {
+      "bytes": 474,
+      "sha256": "0640f321b3c676062fafdf0ae02983f08293dfbe7dbfada2729c5c7ec4cc64b5"
+    },
+    "m.igz": {
+      "bytes": 473,
+      "sha256": "fe6ad571171da47550d7ca58e87ce962645f51c49d4e480903834e16d203405f"
+    },
+    "mm-native.igz": {
+      "bytes": 476,
+      "sha256": "389e59c7db2ffed65cb2c3378b61e99310233d627f086f84e3b273ff9cbd292a"
+    },
+    "mm.igz": {
+      "bytes": 475,
+      "sha256": "cc61ebf0355a5ad96af75d0cb164eeed7387183865e50a50f742f9b03021fd0c"
+    },
+    "native-unit-settings/config/settings.json": {
+      "bytes": 1025,
+      "sha256": "42361b7fca4382aeca3dd43561af1e74a86493967cdb797abd518dcad7d7f406"
+    },
+    "native-units.json": {
+      "bytes": 5940,
+      "sha256": "5ac6d27410d41acb194b1c12d13c172090ae5a1392b83318abd872f2834f33a4"
+    },
+    "native.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "original-units.json": {
+      "bytes": 5940,
+      "sha256": "5ac6d27410d41acb194b1c12d13c172090ae5a1392b83318abd872f2834f33a4"
+    },
+    "reopen-units.json": {
+      "bytes": 3624,
+      "sha256": "b1c3b53627097595ed9f6582dfbf86b8ef2a23bbd6f5d3c717c12d5675db8ae6"
+    },
+    "reopen.log": {
+      "bytes": 47,
+      "sha256": "ca9c766fe52a192887daca1556dcbda3d6bb14c470405e66a1416b9ad481af66"
+    },
+    "source-settings/UnitsProof/UnitsProof.ini": {
+      "bytes": 567,
+      "sha256": "54316d72891a6cdeb42e9d787c7e0656f2874ef686d02c098ea9de64ad17898e"
+    },
+    "source.log": {
+      "bytes": 53,
+      "sha256": "381d6c6e47c0de5dbb951ab99f86d8b67d273dfea2aee764a8aab31dccdc148a"
+    },
+    "ui-test.log": {
+      "bytes": 19529,
+      "sha256": "05badc71fa171d4ea3c5120c4699f6e7b52f03b80c3aeefa4cb98fe25f98605d"
+    },
+    "vendor-input.igz": {
+      "bytes": 294,
+      "sha256": "e139158d0d2726a75eb39e4680da67e88093b353004f8e08079bfb212bc0b9d7"
+    },
+    "vendor-noop-native.igz": {
+      "bytes": 515,
+      "sha256": "3826f896a021bc451798cb1f589b18d9df560a243eb469b729abfa387c887443"
+    }
+  },
+  "runtime": {
+    "crates/ingetrazo-core/src/scene.rs": "fcb099e05039984a853bffbc6c4c1c1d70cbcb1d0b25fccf30cffc43b45ac5e2",
+    "crates/ingetrazo-core/src/units.rs": "b97abdf8299fb9918534e4b7a4702d1b6ee5f21bb18eca03f78dee4489cb6f55",
+    "crates/ingetrazo-formats/src/igz.rs": "74a64d0d657a77fa611521edf16de021f30bc76b46ec1b580593a9bdc1737ae0",
+    "crates/ingetrazo-gui/examples/context_document_lifecycle.rs": "412a230473f97d103bf013ca73750a90518cb3282f90eb5d2343d764f0f2f0d1",
+    "crates/ingetrazo-gui/src/annotation_plan.rs": "0124e3b3c8e78350339af0927a36bbc0424a08c32c4869d3a6ae7bb0ded8d0e6",
+    "crates/ingetrazo-gui/src/app.rs": "1945eac293a3d147312f606df252c50b328b394e773ecaf0eb7d4384c106826d",
+    "crates/ingetrazo-gui/src/component_edit.rs": "ecc39a1089f812011df547050feeca2d6e6e5f9fc5bf032646b67040da5c7254",
+    "crates/ingetrazo-gui/src/document_presentation.rs": "58957f688a1e1121dddd5b3bbe38df1473f143c6b8a9baa8e16e1b296eee63a9",
+    "crates/ingetrazo-gui/src/document_session.rs": "ae308e23168521bb8790ceec1d2c9185bae471c6b5bd4f4923bff50d8be560ac",
+    "crates/ingetrazo-gui/src/native_metal/distance_label.rs": "0db8e402fc36eb15defef9fa55c0409107104db853df2f356ec89346a9943990",
+    "crates/ingetrazo-gui/src/preferences_editor.rs": "2398df40214ed70f68164a97f52d9f8d6b341b0fb7c6758a4ef9d7543ff6467e",
+    "crates/ingetrazo-gui/src/session_state.rs": "7379a1ae4a646a427781dac2e061a989f2eeb8a2e29edc8137bd3be0c3060b65",
+    "scripts/check-units-preferences.py": "d1e5395191dda5522d70cc7986982a1514a24ffca6860bfcf34a2e6ff92ae91a",
+    "scripts/reference-units-preferences.py": "74587f533bcc0abc1b4f81de7e798beeddd373187fb3c2a1b308cf0e26892d61",
+    "scripts/reopen-units-preferences.py": "d3a10f8092cc62bf124f464a9f9f6fc79c7c225b70ed158a62f888820e3de2bb"
+  },
+  "original": {
+    "core/units.py": "5885b9f52b2394c21bb5421af482cf40c6273818fd70e2a85b5670c10914b1ea",
+    "views/preferences_dialog.py": "9d9c97b35cd9dbd19c7cbb85652f670c3a85549021af853d027418557d7129ab",
+    "views/main_window.py": "ea02be3e439c80731d0f5b5fde3d92d9b3f62e8ad10cd44ad305c3261b7786fa",
+    "core/history.py": "2eb66a1d557099b51383988a7819145289fc4ce2c37fc7de3a92ed35b5830559",
+    "formats/igz.py": "f318d685830c49c2fede7fd5a238ac7a1469ee0b0226cf48cab3751e194a9576"
+  },
+  "binary": {
+    "path": "/tmp/ingetrazo-ai-registry-target/debug/examples/context_document_lifecycle",
+    "sha256": "f63266c5e825040425ec62240342dfc76e2c13d65a8626776f083fe9c792dc17"
+  },
+  "test_binary": {
+    "path": "/tmp/ingetrazo-ai-registry-target/debug/deps/ingetrazo_gui-134b3c2a4f97972a",
+    "sha256": "378b1349a2893fe03cf04b3bc3c48ddab00595af51c5f45489a939608f37748c"
+  }
+}
