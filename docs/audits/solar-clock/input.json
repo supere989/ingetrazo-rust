@@ -1,0 +1,4567 @@
+[
+  {
+    "name": "season--90.0-3-0",
+    "lat": -90.0,
+    "lon": 0.0,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 3,
+      "day": 20,
+      "hour": 0,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 3,
+      "day": 20,
+      "hour": 0,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season--90.0-3-5",
+    "lat": -90.0,
+    "lon": 0.0,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 3,
+      "day": 20,
+      "hour": 5,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 3,
+      "day": 20,
+      "hour": 5,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season--90.0-3-6",
+    "lat": -90.0,
+    "lon": 0.0,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 3,
+      "day": 20,
+      "hour": 6,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 3,
+      "day": 20,
+      "hour": 6,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season--90.0-3-12",
+    "lat": -90.0,
+    "lon": 0.0,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 3,
+      "day": 20,
+      "hour": 12,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 3,
+      "day": 20,
+      "hour": 12,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season--90.0-3-18",
+    "lat": -90.0,
+    "lon": 0.0,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 3,
+      "day": 20,
+      "hour": 18,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 3,
+      "day": 20,
+      "hour": 18,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season--90.0-3-23",
+    "lat": -90.0,
+    "lon": 0.0,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 3,
+      "day": 20,
+      "hour": 23,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 3,
+      "day": 20,
+      "hour": 23,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season--90.0-6-0",
+    "lat": -90.0,
+    "lon": 0.0,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 6,
+      "day": 21,
+      "hour": 0,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 6,
+      "day": 21,
+      "hour": 0,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season--90.0-6-5",
+    "lat": -90.0,
+    "lon": 0.0,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 6,
+      "day": 21,
+      "hour": 5,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 6,
+      "day": 21,
+      "hour": 5,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season--90.0-6-6",
+    "lat": -90.0,
+    "lon": 0.0,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 6,
+      "day": 21,
+      "hour": 6,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 6,
+      "day": 21,
+      "hour": 6,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season--90.0-6-12",
+    "lat": -90.0,
+    "lon": 0.0,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 6,
+      "day": 21,
+      "hour": 12,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 6,
+      "day": 21,
+      "hour": 12,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season--90.0-6-18",
+    "lat": -90.0,
+    "lon": 0.0,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 6,
+      "day": 21,
+      "hour": 18,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 6,
+      "day": 21,
+      "hour": 18,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season--90.0-6-23",
+    "lat": -90.0,
+    "lon": 0.0,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 6,
+      "day": 21,
+      "hour": 23,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 6,
+      "day": 21,
+      "hour": 23,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season--90.0-9-0",
+    "lat": -90.0,
+    "lon": 0.0,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 9,
+      "day": 22,
+      "hour": 0,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 9,
+      "day": 22,
+      "hour": 0,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season--90.0-9-5",
+    "lat": -90.0,
+    "lon": 0.0,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 9,
+      "day": 22,
+      "hour": 5,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 9,
+      "day": 22,
+      "hour": 5,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season--90.0-9-6",
+    "lat": -90.0,
+    "lon": 0.0,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 9,
+      "day": 22,
+      "hour": 6,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 9,
+      "day": 22,
+      "hour": 6,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season--90.0-9-12",
+    "lat": -90.0,
+    "lon": 0.0,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 9,
+      "day": 22,
+      "hour": 12,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 9,
+      "day": 22,
+      "hour": 12,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season--90.0-9-18",
+    "lat": -90.0,
+    "lon": 0.0,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 9,
+      "day": 22,
+      "hour": 18,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 9,
+      "day": 22,
+      "hour": 18,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season--90.0-9-23",
+    "lat": -90.0,
+    "lon": 0.0,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 9,
+      "day": 22,
+      "hour": 23,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 9,
+      "day": 22,
+      "hour": 23,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season--90.0-12-0",
+    "lat": -90.0,
+    "lon": 0.0,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 12,
+      "day": 21,
+      "hour": 0,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 12,
+      "day": 21,
+      "hour": 0,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season--90.0-12-5",
+    "lat": -90.0,
+    "lon": 0.0,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 12,
+      "day": 21,
+      "hour": 5,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 12,
+      "day": 21,
+      "hour": 5,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season--90.0-12-6",
+    "lat": -90.0,
+    "lon": 0.0,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 12,
+      "day": 21,
+      "hour": 6,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 12,
+      "day": 21,
+      "hour": 6,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season--90.0-12-12",
+    "lat": -90.0,
+    "lon": 0.0,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 12,
+      "day": 21,
+      "hour": 12,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 12,
+      "day": 21,
+      "hour": 12,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season--90.0-12-18",
+    "lat": -90.0,
+    "lon": 0.0,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 12,
+      "day": 21,
+      "hour": 18,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 12,
+      "day": 21,
+      "hour": 18,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season--90.0-12-23",
+    "lat": -90.0,
+    "lon": 0.0,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 12,
+      "day": 21,
+      "hour": 23,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 12,
+      "day": 21,
+      "hour": 23,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season--66.5-3-0",
+    "lat": -66.5,
+    "lon": 151.2,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 3,
+      "day": 20,
+      "hour": 0,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 3,
+      "day": 20,
+      "hour": 0,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season--66.5-3-5",
+    "lat": -66.5,
+    "lon": 151.2,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 3,
+      "day": 20,
+      "hour": 5,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 3,
+      "day": 20,
+      "hour": 5,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season--66.5-3-6",
+    "lat": -66.5,
+    "lon": 151.2,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 3,
+      "day": 20,
+      "hour": 6,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 3,
+      "day": 20,
+      "hour": 6,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season--66.5-3-12",
+    "lat": -66.5,
+    "lon": 151.2,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 3,
+      "day": 20,
+      "hour": 12,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 3,
+      "day": 20,
+      "hour": 12,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season--66.5-3-18",
+    "lat": -66.5,
+    "lon": 151.2,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 3,
+      "day": 20,
+      "hour": 18,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 3,
+      "day": 20,
+      "hour": 18,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season--66.5-3-23",
+    "lat": -66.5,
+    "lon": 151.2,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 3,
+      "day": 20,
+      "hour": 23,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 3,
+      "day": 20,
+      "hour": 23,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season--66.5-6-0",
+    "lat": -66.5,
+    "lon": 151.2,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 6,
+      "day": 21,
+      "hour": 0,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 6,
+      "day": 21,
+      "hour": 0,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season--66.5-6-5",
+    "lat": -66.5,
+    "lon": 151.2,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 6,
+      "day": 21,
+      "hour": 5,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 6,
+      "day": 21,
+      "hour": 5,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season--66.5-6-6",
+    "lat": -66.5,
+    "lon": 151.2,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 6,
+      "day": 21,
+      "hour": 6,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 6,
+      "day": 21,
+      "hour": 6,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season--66.5-6-12",
+    "lat": -66.5,
+    "lon": 151.2,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 6,
+      "day": 21,
+      "hour": 12,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 6,
+      "day": 21,
+      "hour": 12,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season--66.5-6-18",
+    "lat": -66.5,
+    "lon": 151.2,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 6,
+      "day": 21,
+      "hour": 18,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 6,
+      "day": 21,
+      "hour": 18,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season--66.5-6-23",
+    "lat": -66.5,
+    "lon": 151.2,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 6,
+      "day": 21,
+      "hour": 23,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 6,
+      "day": 21,
+      "hour": 23,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season--66.5-9-0",
+    "lat": -66.5,
+    "lon": 151.2,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 9,
+      "day": 22,
+      "hour": 0,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 9,
+      "day": 22,
+      "hour": 0,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season--66.5-9-5",
+    "lat": -66.5,
+    "lon": 151.2,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 9,
+      "day": 22,
+      "hour": 5,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 9,
+      "day": 22,
+      "hour": 5,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season--66.5-9-6",
+    "lat": -66.5,
+    "lon": 151.2,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 9,
+      "day": 22,
+      "hour": 6,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 9,
+      "day": 22,
+      "hour": 6,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season--66.5-9-12",
+    "lat": -66.5,
+    "lon": 151.2,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 9,
+      "day": 22,
+      "hour": 12,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 9,
+      "day": 22,
+      "hour": 12,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season--66.5-9-18",
+    "lat": -66.5,
+    "lon": 151.2,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 9,
+      "day": 22,
+      "hour": 18,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 9,
+      "day": 22,
+      "hour": 18,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season--66.5-9-23",
+    "lat": -66.5,
+    "lon": 151.2,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 9,
+      "day": 22,
+      "hour": 23,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 9,
+      "day": 22,
+      "hour": 23,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season--66.5-12-0",
+    "lat": -66.5,
+    "lon": 151.2,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 12,
+      "day": 21,
+      "hour": 0,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 12,
+      "day": 21,
+      "hour": 0,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season--66.5-12-5",
+    "lat": -66.5,
+    "lon": 151.2,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 12,
+      "day": 21,
+      "hour": 5,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 12,
+      "day": 21,
+      "hour": 5,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season--66.5-12-6",
+    "lat": -66.5,
+    "lon": 151.2,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 12,
+      "day": 21,
+      "hour": 6,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 12,
+      "day": 21,
+      "hour": 6,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season--66.5-12-12",
+    "lat": -66.5,
+    "lon": 151.2,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 12,
+      "day": 21,
+      "hour": 12,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 12,
+      "day": 21,
+      "hour": 12,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season--66.5-12-18",
+    "lat": -66.5,
+    "lon": 151.2,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 12,
+      "day": 21,
+      "hour": 18,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 12,
+      "day": 21,
+      "hour": 18,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season--66.5-12-23",
+    "lat": -66.5,
+    "lon": 151.2,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 12,
+      "day": 21,
+      "hour": 23,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 12,
+      "day": 21,
+      "hour": 23,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season--16.409-3-0",
+    "lat": -16.409,
+    "lon": -71.537,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 3,
+      "day": 20,
+      "hour": 0,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 3,
+      "day": 20,
+      "hour": 0,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season--16.409-3-5",
+    "lat": -16.409,
+    "lon": -71.537,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 3,
+      "day": 20,
+      "hour": 5,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 3,
+      "day": 20,
+      "hour": 5,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season--16.409-3-6",
+    "lat": -16.409,
+    "lon": -71.537,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 3,
+      "day": 20,
+      "hour": 6,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 3,
+      "day": 20,
+      "hour": 6,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season--16.409-3-12",
+    "lat": -16.409,
+    "lon": -71.537,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 3,
+      "day": 20,
+      "hour": 12,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 3,
+      "day": 20,
+      "hour": 12,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season--16.409-3-18",
+    "lat": -16.409,
+    "lon": -71.537,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 3,
+      "day": 20,
+      "hour": 18,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 3,
+      "day": 20,
+      "hour": 18,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season--16.409-3-23",
+    "lat": -16.409,
+    "lon": -71.537,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 3,
+      "day": 20,
+      "hour": 23,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 3,
+      "day": 20,
+      "hour": 23,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season--16.409-6-0",
+    "lat": -16.409,
+    "lon": -71.537,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 6,
+      "day": 21,
+      "hour": 0,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 6,
+      "day": 21,
+      "hour": 0,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season--16.409-6-5",
+    "lat": -16.409,
+    "lon": -71.537,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 6,
+      "day": 21,
+      "hour": 5,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 6,
+      "day": 21,
+      "hour": 5,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season--16.409-6-6",
+    "lat": -16.409,
+    "lon": -71.537,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 6,
+      "day": 21,
+      "hour": 6,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 6,
+      "day": 21,
+      "hour": 6,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season--16.409-6-12",
+    "lat": -16.409,
+    "lon": -71.537,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 6,
+      "day": 21,
+      "hour": 12,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 6,
+      "day": 21,
+      "hour": 12,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season--16.409-6-18",
+    "lat": -16.409,
+    "lon": -71.537,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 6,
+      "day": 21,
+      "hour": 18,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 6,
+      "day": 21,
+      "hour": 18,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season--16.409-6-23",
+    "lat": -16.409,
+    "lon": -71.537,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 6,
+      "day": 21,
+      "hour": 23,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 6,
+      "day": 21,
+      "hour": 23,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season--16.409-9-0",
+    "lat": -16.409,
+    "lon": -71.537,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 9,
+      "day": 22,
+      "hour": 0,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 9,
+      "day": 22,
+      "hour": 0,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season--16.409-9-5",
+    "lat": -16.409,
+    "lon": -71.537,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 9,
+      "day": 22,
+      "hour": 5,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 9,
+      "day": 22,
+      "hour": 5,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season--16.409-9-6",
+    "lat": -16.409,
+    "lon": -71.537,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 9,
+      "day": 22,
+      "hour": 6,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 9,
+      "day": 22,
+      "hour": 6,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season--16.409-9-12",
+    "lat": -16.409,
+    "lon": -71.537,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 9,
+      "day": 22,
+      "hour": 12,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 9,
+      "day": 22,
+      "hour": 12,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season--16.409-9-18",
+    "lat": -16.409,
+    "lon": -71.537,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 9,
+      "day": 22,
+      "hour": 18,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 9,
+      "day": 22,
+      "hour": 18,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season--16.409-9-23",
+    "lat": -16.409,
+    "lon": -71.537,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 9,
+      "day": 22,
+      "hour": 23,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 9,
+      "day": 22,
+      "hour": 23,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season--16.409-12-0",
+    "lat": -16.409,
+    "lon": -71.537,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 12,
+      "day": 21,
+      "hour": 0,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 12,
+      "day": 21,
+      "hour": 0,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season--16.409-12-5",
+    "lat": -16.409,
+    "lon": -71.537,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 12,
+      "day": 21,
+      "hour": 5,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 12,
+      "day": 21,
+      "hour": 5,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season--16.409-12-6",
+    "lat": -16.409,
+    "lon": -71.537,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 12,
+      "day": 21,
+      "hour": 6,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 12,
+      "day": 21,
+      "hour": 6,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season--16.409-12-12",
+    "lat": -16.409,
+    "lon": -71.537,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 12,
+      "day": 21,
+      "hour": 12,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 12,
+      "day": 21,
+      "hour": 12,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season--16.409-12-18",
+    "lat": -16.409,
+    "lon": -71.537,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 12,
+      "day": 21,
+      "hour": 18,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 12,
+      "day": 21,
+      "hour": 18,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season--16.409-12-23",
+    "lat": -16.409,
+    "lon": -71.537,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 12,
+      "day": 21,
+      "hour": 23,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 12,
+      "day": 21,
+      "hour": 23,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season-0.0-3-0",
+    "lat": 0.0,
+    "lon": 0.0,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 3,
+      "day": 20,
+      "hour": 0,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 3,
+      "day": 20,
+      "hour": 0,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season-0.0-3-5",
+    "lat": 0.0,
+    "lon": 0.0,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 3,
+      "day": 20,
+      "hour": 5,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 3,
+      "day": 20,
+      "hour": 5,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season-0.0-3-6",
+    "lat": 0.0,
+    "lon": 0.0,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 3,
+      "day": 20,
+      "hour": 6,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 3,
+      "day": 20,
+      "hour": 6,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season-0.0-3-12",
+    "lat": 0.0,
+    "lon": 0.0,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 3,
+      "day": 20,
+      "hour": 12,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 3,
+      "day": 20,
+      "hour": 12,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season-0.0-3-18",
+    "lat": 0.0,
+    "lon": 0.0,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 3,
+      "day": 20,
+      "hour": 18,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 3,
+      "day": 20,
+      "hour": 18,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season-0.0-3-23",
+    "lat": 0.0,
+    "lon": 0.0,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 3,
+      "day": 20,
+      "hour": 23,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 3,
+      "day": 20,
+      "hour": 23,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season-0.0-6-0",
+    "lat": 0.0,
+    "lon": 0.0,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 6,
+      "day": 21,
+      "hour": 0,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 6,
+      "day": 21,
+      "hour": 0,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season-0.0-6-5",
+    "lat": 0.0,
+    "lon": 0.0,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 6,
+      "day": 21,
+      "hour": 5,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 6,
+      "day": 21,
+      "hour": 5,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season-0.0-6-6",
+    "lat": 0.0,
+    "lon": 0.0,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 6,
+      "day": 21,
+      "hour": 6,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 6,
+      "day": 21,
+      "hour": 6,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season-0.0-6-12",
+    "lat": 0.0,
+    "lon": 0.0,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 6,
+      "day": 21,
+      "hour": 12,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 6,
+      "day": 21,
+      "hour": 12,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season-0.0-6-18",
+    "lat": 0.0,
+    "lon": 0.0,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 6,
+      "day": 21,
+      "hour": 18,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 6,
+      "day": 21,
+      "hour": 18,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season-0.0-6-23",
+    "lat": 0.0,
+    "lon": 0.0,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 6,
+      "day": 21,
+      "hour": 23,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 6,
+      "day": 21,
+      "hour": 23,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season-0.0-9-0",
+    "lat": 0.0,
+    "lon": 0.0,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 9,
+      "day": 22,
+      "hour": 0,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 9,
+      "day": 22,
+      "hour": 0,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season-0.0-9-5",
+    "lat": 0.0,
+    "lon": 0.0,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 9,
+      "day": 22,
+      "hour": 5,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 9,
+      "day": 22,
+      "hour": 5,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season-0.0-9-6",
+    "lat": 0.0,
+    "lon": 0.0,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 9,
+      "day": 22,
+      "hour": 6,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 9,
+      "day": 22,
+      "hour": 6,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season-0.0-9-12",
+    "lat": 0.0,
+    "lon": 0.0,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 9,
+      "day": 22,
+      "hour": 12,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 9,
+      "day": 22,
+      "hour": 12,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season-0.0-9-18",
+    "lat": 0.0,
+    "lon": 0.0,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 9,
+      "day": 22,
+      "hour": 18,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 9,
+      "day": 22,
+      "hour": 18,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season-0.0-9-23",
+    "lat": 0.0,
+    "lon": 0.0,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 9,
+      "day": 22,
+      "hour": 23,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 9,
+      "day": 22,
+      "hour": 23,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season-0.0-12-0",
+    "lat": 0.0,
+    "lon": 0.0,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 12,
+      "day": 21,
+      "hour": 0,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 12,
+      "day": 21,
+      "hour": 0,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season-0.0-12-5",
+    "lat": 0.0,
+    "lon": 0.0,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 12,
+      "day": 21,
+      "hour": 5,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 12,
+      "day": 21,
+      "hour": 5,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season-0.0-12-6",
+    "lat": 0.0,
+    "lon": 0.0,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 12,
+      "day": 21,
+      "hour": 6,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 12,
+      "day": 21,
+      "hour": 6,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season-0.0-12-12",
+    "lat": 0.0,
+    "lon": 0.0,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 12,
+      "day": 21,
+      "hour": 12,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 12,
+      "day": 21,
+      "hour": 12,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season-0.0-12-18",
+    "lat": 0.0,
+    "lon": 0.0,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 12,
+      "day": 21,
+      "hour": 18,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 12,
+      "day": 21,
+      "hour": 18,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season-0.0-12-23",
+    "lat": 0.0,
+    "lon": 0.0,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 12,
+      "day": 21,
+      "hour": 23,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 12,
+      "day": 21,
+      "hour": 23,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season-40.71-3-0",
+    "lat": 40.71,
+    "lon": -74.0,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 3,
+      "day": 20,
+      "hour": 0,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 3,
+      "day": 20,
+      "hour": 0,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season-40.71-3-5",
+    "lat": 40.71,
+    "lon": -74.0,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 3,
+      "day": 20,
+      "hour": 5,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 3,
+      "day": 20,
+      "hour": 5,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season-40.71-3-6",
+    "lat": 40.71,
+    "lon": -74.0,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 3,
+      "day": 20,
+      "hour": 6,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 3,
+      "day": 20,
+      "hour": 6,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season-40.71-3-12",
+    "lat": 40.71,
+    "lon": -74.0,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 3,
+      "day": 20,
+      "hour": 12,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 3,
+      "day": 20,
+      "hour": 12,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season-40.71-3-18",
+    "lat": 40.71,
+    "lon": -74.0,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 3,
+      "day": 20,
+      "hour": 18,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 3,
+      "day": 20,
+      "hour": 18,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season-40.71-3-23",
+    "lat": 40.71,
+    "lon": -74.0,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 3,
+      "day": 20,
+      "hour": 23,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 3,
+      "day": 20,
+      "hour": 23,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season-40.71-6-0",
+    "lat": 40.71,
+    "lon": -74.0,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 6,
+      "day": 21,
+      "hour": 0,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 6,
+      "day": 21,
+      "hour": 0,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season-40.71-6-5",
+    "lat": 40.71,
+    "lon": -74.0,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 6,
+      "day": 21,
+      "hour": 5,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 6,
+      "day": 21,
+      "hour": 5,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season-40.71-6-6",
+    "lat": 40.71,
+    "lon": -74.0,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 6,
+      "day": 21,
+      "hour": 6,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 6,
+      "day": 21,
+      "hour": 6,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season-40.71-6-12",
+    "lat": 40.71,
+    "lon": -74.0,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 6,
+      "day": 21,
+      "hour": 12,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 6,
+      "day": 21,
+      "hour": 12,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season-40.71-6-18",
+    "lat": 40.71,
+    "lon": -74.0,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 6,
+      "day": 21,
+      "hour": 18,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 6,
+      "day": 21,
+      "hour": 18,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season-40.71-6-23",
+    "lat": 40.71,
+    "lon": -74.0,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 6,
+      "day": 21,
+      "hour": 23,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 6,
+      "day": 21,
+      "hour": 23,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season-40.71-9-0",
+    "lat": 40.71,
+    "lon": -74.0,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 9,
+      "day": 22,
+      "hour": 0,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 9,
+      "day": 22,
+      "hour": 0,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season-40.71-9-5",
+    "lat": 40.71,
+    "lon": -74.0,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 9,
+      "day": 22,
+      "hour": 5,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 9,
+      "day": 22,
+      "hour": 5,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season-40.71-9-6",
+    "lat": 40.71,
+    "lon": -74.0,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 9,
+      "day": 22,
+      "hour": 6,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 9,
+      "day": 22,
+      "hour": 6,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season-40.71-9-12",
+    "lat": 40.71,
+    "lon": -74.0,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 9,
+      "day": 22,
+      "hour": 12,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 9,
+      "day": 22,
+      "hour": 12,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season-40.71-9-18",
+    "lat": 40.71,
+    "lon": -74.0,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 9,
+      "day": 22,
+      "hour": 18,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 9,
+      "day": 22,
+      "hour": 18,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season-40.71-9-23",
+    "lat": 40.71,
+    "lon": -74.0,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 9,
+      "day": 22,
+      "hour": 23,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 9,
+      "day": 22,
+      "hour": 23,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season-40.71-12-0",
+    "lat": 40.71,
+    "lon": -74.0,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 12,
+      "day": 21,
+      "hour": 0,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 12,
+      "day": 21,
+      "hour": 0,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season-40.71-12-5",
+    "lat": 40.71,
+    "lon": -74.0,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 12,
+      "day": 21,
+      "hour": 5,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 12,
+      "day": 21,
+      "hour": 5,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season-40.71-12-6",
+    "lat": 40.71,
+    "lon": -74.0,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 12,
+      "day": 21,
+      "hour": 6,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 12,
+      "day": 21,
+      "hour": 6,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season-40.71-12-12",
+    "lat": 40.71,
+    "lon": -74.0,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 12,
+      "day": 21,
+      "hour": 12,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 12,
+      "day": 21,
+      "hour": 12,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season-40.71-12-18",
+    "lat": 40.71,
+    "lon": -74.0,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 12,
+      "day": 21,
+      "hour": 18,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 12,
+      "day": 21,
+      "hour": 18,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season-40.71-12-23",
+    "lat": 40.71,
+    "lon": -74.0,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 12,
+      "day": 21,
+      "hour": 23,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 12,
+      "day": 21,
+      "hour": 23,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season-66.5-3-0",
+    "lat": 66.5,
+    "lon": 25.7,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 3,
+      "day": 20,
+      "hour": 0,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 3,
+      "day": 20,
+      "hour": 0,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season-66.5-3-5",
+    "lat": 66.5,
+    "lon": 25.7,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 3,
+      "day": 20,
+      "hour": 5,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 3,
+      "day": 20,
+      "hour": 5,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season-66.5-3-6",
+    "lat": 66.5,
+    "lon": 25.7,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 3,
+      "day": 20,
+      "hour": 6,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 3,
+      "day": 20,
+      "hour": 6,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season-66.5-3-12",
+    "lat": 66.5,
+    "lon": 25.7,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 3,
+      "day": 20,
+      "hour": 12,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 3,
+      "day": 20,
+      "hour": 12,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season-66.5-3-18",
+    "lat": 66.5,
+    "lon": 25.7,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 3,
+      "day": 20,
+      "hour": 18,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 3,
+      "day": 20,
+      "hour": 18,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season-66.5-3-23",
+    "lat": 66.5,
+    "lon": 25.7,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 3,
+      "day": 20,
+      "hour": 23,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 3,
+      "day": 20,
+      "hour": 23,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season-66.5-6-0",
+    "lat": 66.5,
+    "lon": 25.7,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 6,
+      "day": 21,
+      "hour": 0,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 6,
+      "day": 21,
+      "hour": 0,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season-66.5-6-5",
+    "lat": 66.5,
+    "lon": 25.7,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 6,
+      "day": 21,
+      "hour": 5,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 6,
+      "day": 21,
+      "hour": 5,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season-66.5-6-6",
+    "lat": 66.5,
+    "lon": 25.7,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 6,
+      "day": 21,
+      "hour": 6,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 6,
+      "day": 21,
+      "hour": 6,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season-66.5-6-12",
+    "lat": 66.5,
+    "lon": 25.7,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 6,
+      "day": 21,
+      "hour": 12,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 6,
+      "day": 21,
+      "hour": 12,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season-66.5-6-18",
+    "lat": 66.5,
+    "lon": 25.7,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 6,
+      "day": 21,
+      "hour": 18,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 6,
+      "day": 21,
+      "hour": 18,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season-66.5-6-23",
+    "lat": 66.5,
+    "lon": 25.7,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 6,
+      "day": 21,
+      "hour": 23,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 6,
+      "day": 21,
+      "hour": 23,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season-66.5-9-0",
+    "lat": 66.5,
+    "lon": 25.7,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 9,
+      "day": 22,
+      "hour": 0,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 9,
+      "day": 22,
+      "hour": 0,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season-66.5-9-5",
+    "lat": 66.5,
+    "lon": 25.7,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 9,
+      "day": 22,
+      "hour": 5,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 9,
+      "day": 22,
+      "hour": 5,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season-66.5-9-6",
+    "lat": 66.5,
+    "lon": 25.7,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 9,
+      "day": 22,
+      "hour": 6,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 9,
+      "day": 22,
+      "hour": 6,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season-66.5-9-12",
+    "lat": 66.5,
+    "lon": 25.7,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 9,
+      "day": 22,
+      "hour": 12,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 9,
+      "day": 22,
+      "hour": 12,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season-66.5-9-18",
+    "lat": 66.5,
+    "lon": 25.7,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 9,
+      "day": 22,
+      "hour": 18,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 9,
+      "day": 22,
+      "hour": 18,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season-66.5-9-23",
+    "lat": 66.5,
+    "lon": 25.7,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 9,
+      "day": 22,
+      "hour": 23,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 9,
+      "day": 22,
+      "hour": 23,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season-66.5-12-0",
+    "lat": 66.5,
+    "lon": 25.7,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 12,
+      "day": 21,
+      "hour": 0,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 12,
+      "day": 21,
+      "hour": 0,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season-66.5-12-5",
+    "lat": 66.5,
+    "lon": 25.7,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 12,
+      "day": 21,
+      "hour": 5,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 12,
+      "day": 21,
+      "hour": 5,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season-66.5-12-6",
+    "lat": 66.5,
+    "lon": 25.7,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 12,
+      "day": 21,
+      "hour": 6,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 12,
+      "day": 21,
+      "hour": 6,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season-66.5-12-12",
+    "lat": 66.5,
+    "lon": 25.7,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 12,
+      "day": 21,
+      "hour": 12,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 12,
+      "day": 21,
+      "hour": 12,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season-66.5-12-18",
+    "lat": 66.5,
+    "lon": 25.7,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 12,
+      "day": 21,
+      "hour": 18,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 12,
+      "day": 21,
+      "hour": 18,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season-66.5-12-23",
+    "lat": 66.5,
+    "lon": 25.7,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 12,
+      "day": 21,
+      "hour": 23,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 12,
+      "day": 21,
+      "hour": 23,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season-90.0-3-0",
+    "lat": 90.0,
+    "lon": 0.0,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 3,
+      "day": 20,
+      "hour": 0,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 3,
+      "day": 20,
+      "hour": 0,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season-90.0-3-5",
+    "lat": 90.0,
+    "lon": 0.0,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 3,
+      "day": 20,
+      "hour": 5,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 3,
+      "day": 20,
+      "hour": 5,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season-90.0-3-6",
+    "lat": 90.0,
+    "lon": 0.0,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 3,
+      "day": 20,
+      "hour": 6,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 3,
+      "day": 20,
+      "hour": 6,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season-90.0-3-12",
+    "lat": 90.0,
+    "lon": 0.0,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 3,
+      "day": 20,
+      "hour": 12,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 3,
+      "day": 20,
+      "hour": 12,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season-90.0-3-18",
+    "lat": 90.0,
+    "lon": 0.0,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 3,
+      "day": 20,
+      "hour": 18,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 3,
+      "day": 20,
+      "hour": 18,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season-90.0-3-23",
+    "lat": 90.0,
+    "lon": 0.0,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 3,
+      "day": 20,
+      "hour": 23,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 3,
+      "day": 20,
+      "hour": 23,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season-90.0-6-0",
+    "lat": 90.0,
+    "lon": 0.0,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 6,
+      "day": 21,
+      "hour": 0,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 6,
+      "day": 21,
+      "hour": 0,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season-90.0-6-5",
+    "lat": 90.0,
+    "lon": 0.0,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 6,
+      "day": 21,
+      "hour": 5,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 6,
+      "day": 21,
+      "hour": 5,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season-90.0-6-6",
+    "lat": 90.0,
+    "lon": 0.0,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 6,
+      "day": 21,
+      "hour": 6,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 6,
+      "day": 21,
+      "hour": 6,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season-90.0-6-12",
+    "lat": 90.0,
+    "lon": 0.0,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 6,
+      "day": 21,
+      "hour": 12,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 6,
+      "day": 21,
+      "hour": 12,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season-90.0-6-18",
+    "lat": 90.0,
+    "lon": 0.0,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 6,
+      "day": 21,
+      "hour": 18,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 6,
+      "day": 21,
+      "hour": 18,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season-90.0-6-23",
+    "lat": 90.0,
+    "lon": 0.0,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 6,
+      "day": 21,
+      "hour": 23,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 6,
+      "day": 21,
+      "hour": 23,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season-90.0-9-0",
+    "lat": 90.0,
+    "lon": 0.0,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 9,
+      "day": 22,
+      "hour": 0,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 9,
+      "day": 22,
+      "hour": 0,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season-90.0-9-5",
+    "lat": 90.0,
+    "lon": 0.0,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 9,
+      "day": 22,
+      "hour": 5,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 9,
+      "day": 22,
+      "hour": 5,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season-90.0-9-6",
+    "lat": 90.0,
+    "lon": 0.0,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 9,
+      "day": 22,
+      "hour": 6,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 9,
+      "day": 22,
+      "hour": 6,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season-90.0-9-12",
+    "lat": 90.0,
+    "lon": 0.0,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 9,
+      "day": 22,
+      "hour": 12,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 9,
+      "day": 22,
+      "hour": 12,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season-90.0-9-18",
+    "lat": 90.0,
+    "lon": 0.0,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 9,
+      "day": 22,
+      "hour": 18,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 9,
+      "day": 22,
+      "hour": 18,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season-90.0-9-23",
+    "lat": 90.0,
+    "lon": 0.0,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 9,
+      "day": 22,
+      "hour": 23,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 9,
+      "day": 22,
+      "hour": 23,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season-90.0-12-0",
+    "lat": 90.0,
+    "lon": 0.0,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 12,
+      "day": 21,
+      "hour": 0,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 12,
+      "day": 21,
+      "hour": 0,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season-90.0-12-5",
+    "lat": 90.0,
+    "lon": 0.0,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 12,
+      "day": 21,
+      "hour": 5,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 12,
+      "day": 21,
+      "hour": 5,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season-90.0-12-6",
+    "lat": 90.0,
+    "lon": 0.0,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 12,
+      "day": 21,
+      "hour": 6,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 12,
+      "day": 21,
+      "hour": 6,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season-90.0-12-12",
+    "lat": 90.0,
+    "lon": 0.0,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 12,
+      "day": 21,
+      "hour": 12,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 12,
+      "day": 21,
+      "hour": 12,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season-90.0-12-18",
+    "lat": 90.0,
+    "lon": 0.0,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 12,
+      "day": 21,
+      "hour": 18,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 12,
+      "day": 21,
+      "hour": 18,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "season-90.0-12-23",
+    "lat": 90.0,
+    "lon": 0.0,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 12,
+      "day": 21,
+      "hour": 23,
+      "minute": 7,
+      "second": 31
+    },
+    "settings": {
+      "enabled": true,
+      "month": 12,
+      "day": 21,
+      "hour": 23,
+      "minute": 7,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "half-even--37.5",
+    "lat": -16.409,
+    "lon": -37.5,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 3,
+      "day": 21,
+      "hour": 12,
+      "minute": 0,
+      "second": 0
+    },
+    "settings": {
+      "enabled": true,
+      "month": 3,
+      "day": 21,
+      "hour": 12,
+      "minute": 0,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "half-even--22.5",
+    "lat": -16.409,
+    "lon": -22.5,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 3,
+      "day": 21,
+      "hour": 12,
+      "minute": 0,
+      "second": 0
+    },
+    "settings": {
+      "enabled": true,
+      "month": 3,
+      "day": 21,
+      "hour": 12,
+      "minute": 0,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "half-even--7.5",
+    "lat": -16.409,
+    "lon": -7.5,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 3,
+      "day": 21,
+      "hour": 12,
+      "minute": 0,
+      "second": 0
+    },
+    "settings": {
+      "enabled": true,
+      "month": 3,
+      "day": 21,
+      "hour": 12,
+      "minute": 0,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "half-even-7.5",
+    "lat": -16.409,
+    "lon": 7.5,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 3,
+      "day": 21,
+      "hour": 12,
+      "minute": 0,
+      "second": 0
+    },
+    "settings": {
+      "enabled": true,
+      "month": 3,
+      "day": 21,
+      "hour": 12,
+      "minute": 0,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "half-even-22.5",
+    "lat": -16.409,
+    "lon": 22.5,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 3,
+      "day": 21,
+      "hour": 12,
+      "minute": 0,
+      "second": 0
+    },
+    "settings": {
+      "enabled": true,
+      "month": 3,
+      "day": 21,
+      "hour": 12,
+      "minute": 0,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "half-even-37.5",
+    "lat": -16.409,
+    "lon": 37.5,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 3,
+      "day": 21,
+      "hour": 12,
+      "minute": 0,
+      "second": 0
+    },
+    "settings": {
+      "enabled": true,
+      "month": 3,
+      "day": 21,
+      "hour": 12,
+      "minute": 0,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "rollover-2024-2",
+    "lat": -16.409,
+    "lon": -71.537,
+    "year": 2024,
+    "utc": {
+      "year": 2024,
+      "month": 2,
+      "day": 29,
+      "hour": 0,
+      "minute": 0,
+      "second": 0
+    },
+    "settings": {
+      "enabled": true,
+      "month": 2,
+      "day": 29,
+      "hour": 0,
+      "minute": 0,
+      "darkness": 0.55,
+      "utc_offset": 1
+    },
+    "north": 0.0
+  },
+  {
+    "name": "rollover-2026-1",
+    "lat": -16.409,
+    "lon": -71.537,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 1,
+      "day": 1,
+      "hour": 0,
+      "minute": 0,
+      "second": 0
+    },
+    "settings": {
+      "enabled": true,
+      "month": 1,
+      "day": 1,
+      "hour": 0,
+      "minute": 0,
+      "darkness": 0.55,
+      "utc_offset": 23
+    },
+    "north": 0.0
+  },
+  {
+    "name": "rollover-2026-12",
+    "lat": -16.409,
+    "lon": -71.537,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 12,
+      "day": 31,
+      "hour": 23,
+      "minute": 0,
+      "second": 0
+    },
+    "settings": {
+      "enabled": true,
+      "month": 12,
+      "day": 31,
+      "hour": 23,
+      "minute": 0,
+      "darkness": 0.55,
+      "utc_offset": -23
+    },
+    "north": 0.0
+  },
+  {
+    "name": "rollover-1900-3",
+    "lat": -16.409,
+    "lon": -71.537,
+    "year": 1900,
+    "utc": {
+      "year": 1900,
+      "month": 3,
+      "day": 1,
+      "hour": 0,
+      "minute": 0,
+      "second": 0
+    },
+    "settings": {
+      "enabled": true,
+      "month": 3,
+      "day": 1,
+      "hour": 0,
+      "minute": 0,
+      "darkness": 0.55,
+      "utc_offset": 1
+    },
+    "north": 0.0
+  },
+  {
+    "name": "rollover-2000-2",
+    "lat": -16.409,
+    "lon": -71.537,
+    "year": 2000,
+    "utc": {
+      "year": 2000,
+      "month": 2,
+      "day": 29,
+      "hour": 0,
+      "minute": 0,
+      "second": 0
+    },
+    "settings": {
+      "enabled": true,
+      "month": 2,
+      "day": 29,
+      "hour": 0,
+      "minute": 0,
+      "darkness": 0.55,
+      "utc_offset": 1
+    },
+    "north": 0.0
+  },
+  {
+    "name": "rollover-2100-3",
+    "lat": -16.409,
+    "lon": -71.537,
+    "year": 2100,
+    "utc": {
+      "year": 2100,
+      "month": 3,
+      "day": 1,
+      "hour": 0,
+      "minute": 0,
+      "second": 0
+    },
+    "settings": {
+      "enabled": true,
+      "month": 3,
+      "day": 1,
+      "hour": 0,
+      "minute": 0,
+      "darkness": 0.55,
+      "utc_offset": 1
+    },
+    "north": 0.0
+  },
+  {
+    "name": "nonleap",
+    "lat": -16.409,
+    "lon": -71.537,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 3,
+      "day": 21,
+      "hour": 12,
+      "minute": 0,
+      "second": 0
+    },
+    "settings": {
+      "enabled": true,
+      "month": 2,
+      "day": 29,
+      "hour": 12,
+      "minute": 0,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "short-month",
+    "lat": -16.409,
+    "lon": -71.537,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 3,
+      "day": 21,
+      "hour": 12,
+      "minute": 0,
+      "second": 0
+    },
+    "settings": {
+      "enabled": true,
+      "month": 4,
+      "day": 31,
+      "hour": 12,
+      "minute": 0,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "positive-offset",
+    "lat": -16.409,
+    "lon": -71.537,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 3,
+      "day": 21,
+      "hour": 12,
+      "minute": 0,
+      "second": 0
+    },
+    "settings": {
+      "enabled": true,
+      "month": 3,
+      "day": 21,
+      "hour": 12,
+      "minute": 0,
+      "darkness": 0.55,
+      "utc_offset": 24
+    },
+    "north": 0.0
+  },
+  {
+    "name": "negative-offset",
+    "lat": -16.409,
+    "lon": -71.537,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 3,
+      "day": 21,
+      "hour": 12,
+      "minute": 0,
+      "second": 0
+    },
+    "settings": {
+      "enabled": true,
+      "month": 3,
+      "day": 21,
+      "hour": 12,
+      "minute": 0,
+      "darkness": 0.55,
+      "utc_offset": -24
+    },
+    "north": 0.0
+  },
+  {
+    "name": "huge-offset",
+    "lat": -16.409,
+    "lon": -71.537,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 3,
+      "day": 21,
+      "hour": 12,
+      "minute": 0,
+      "second": 0
+    },
+    "settings": {
+      "enabled": true,
+      "month": 3,
+      "day": 21,
+      "hour": 12,
+      "minute": 0,
+      "darkness": 0.55,
+      "utc_offset": 2147483648
+    },
+    "north": 0.0
+  },
+  {
+    "name": "min-year-underflow",
+    "lat": -16.409,
+    "lon": -71.537,
+    "year": 1,
+    "utc": {
+      "year": 2026,
+      "month": 3,
+      "day": 21,
+      "hour": 12,
+      "minute": 0,
+      "second": 0
+    },
+    "settings": {
+      "enabled": true,
+      "month": 1,
+      "day": 1,
+      "hour": 0,
+      "minute": 0,
+      "darkness": 0.55,
+      "utc_offset": 1
+    },
+    "north": 0.0
+  },
+  {
+    "name": "max-year-overflow",
+    "lat": -16.409,
+    "lon": -71.537,
+    "year": 9999,
+    "utc": {
+      "year": 2026,
+      "month": 3,
+      "day": 21,
+      "hour": 12,
+      "minute": 0,
+      "second": 0
+    },
+    "settings": {
+      "enabled": true,
+      "month": 12,
+      "day": 31,
+      "hour": 23,
+      "minute": 0,
+      "darkness": 0.55,
+      "utc_offset": -1
+    },
+    "north": 0.0
+  },
+  {
+    "name": "north--450.0",
+    "lat": -16.409,
+    "lon": -71.537,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 3,
+      "day": 21,
+      "hour": 12,
+      "minute": 0,
+      "second": 0
+    },
+    "settings": {
+      "enabled": true,
+      "month": 3,
+      "day": 21,
+      "hour": 12,
+      "minute": 0,
+      "darkness": 0.55
+    },
+    "north": -450.0
+  },
+  {
+    "name": "north--180.0",
+    "lat": -16.409,
+    "lon": -71.537,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 3,
+      "day": 21,
+      "hour": 12,
+      "minute": 0,
+      "second": 0
+    },
+    "settings": {
+      "enabled": true,
+      "month": 3,
+      "day": 21,
+      "hour": 12,
+      "minute": 0,
+      "darkness": 0.55
+    },
+    "north": -180.0
+  },
+  {
+    "name": "north--90.0",
+    "lat": -16.409,
+    "lon": -71.537,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 3,
+      "day": 21,
+      "hour": 12,
+      "minute": 0,
+      "second": 0
+    },
+    "settings": {
+      "enabled": true,
+      "month": 3,
+      "day": 21,
+      "hour": 12,
+      "minute": 0,
+      "darkness": 0.55
+    },
+    "north": -90.0
+  },
+  {
+    "name": "north-30.0",
+    "lat": -16.409,
+    "lon": -71.537,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 3,
+      "day": 21,
+      "hour": 12,
+      "minute": 0,
+      "second": 0
+    },
+    "settings": {
+      "enabled": true,
+      "month": 3,
+      "day": 21,
+      "hour": 12,
+      "minute": 0,
+      "darkness": 0.55
+    },
+    "north": 30.0
+  },
+  {
+    "name": "north-90.0",
+    "lat": -16.409,
+    "lon": -71.537,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 3,
+      "day": 21,
+      "hour": 12,
+      "minute": 0,
+      "second": 0
+    },
+    "settings": {
+      "enabled": true,
+      "month": 3,
+      "day": 21,
+      "hour": 12,
+      "minute": 0,
+      "darkness": 0.55
+    },
+    "north": 90.0
+  },
+  {
+    "name": "north-180.0",
+    "lat": -16.409,
+    "lon": -71.537,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 3,
+      "day": 21,
+      "hour": 12,
+      "minute": 0,
+      "second": 0
+    },
+    "settings": {
+      "enabled": true,
+      "month": 3,
+      "day": 21,
+      "hour": 12,
+      "minute": 0,
+      "darkness": 0.55
+    },
+    "north": 180.0
+  },
+  {
+    "name": "north-360.0",
+    "lat": -16.409,
+    "lon": -71.537,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 3,
+      "day": 21,
+      "hour": 12,
+      "minute": 0,
+      "second": 0
+    },
+    "settings": {
+      "enabled": true,
+      "month": 3,
+      "day": 21,
+      "hour": 12,
+      "minute": 0,
+      "darkness": 0.55
+    },
+    "north": 360.0
+  },
+  {
+    "name": "north-450.0",
+    "lat": -16.409,
+    "lon": -71.537,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 3,
+      "day": 21,
+      "hour": 12,
+      "minute": 0,
+      "second": 0
+    },
+    "settings": {
+      "enabled": true,
+      "month": 3,
+      "day": 21,
+      "hour": 12,
+      "minute": 0,
+      "darkness": 0.55
+    },
+    "north": 450.0
+  },
+  {
+    "name": "fallback-site",
+    "lat": 40.0,
+    "lon": 25.0,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 3,
+      "day": 21,
+      "hour": 12,
+      "minute": 0,
+      "second": 0
+    },
+    "settings": {
+      "enabled": true,
+      "month": 3,
+      "day": 21,
+      "hour": 12,
+      "minute": 0,
+      "darkness": 0.55
+    },
+    "north": null
+  },
+  {
+    "name": "disabled",
+    "lat": -16.409,
+    "lon": -71.537,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 3,
+      "day": 21,
+      "hour": 12,
+      "minute": 0,
+      "second": 0
+    },
+    "settings": {
+      "enabled": false,
+      "month": 3,
+      "day": 21,
+      "hour": 12,
+      "minute": 0,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  },
+  {
+    "name": "disabled-invalid",
+    "lat": -16.409,
+    "lon": -71.537,
+    "year": 2026,
+    "utc": {
+      "year": 2026,
+      "month": 3,
+      "day": 21,
+      "hour": 12,
+      "minute": 0,
+      "second": 0
+    },
+    "settings": {
+      "enabled": false,
+      "month": 2,
+      "day": 29,
+      "hour": 12,
+      "minute": 0,
+      "darkness": 0.55
+    },
+    "north": 0.0
+  }
+]

@@ -1,0 +1,9 @@
+{
+  "commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "files": {
+    "core/sun.py": "fffbb40113d9afbc09a98a399edc7aea3e03754a926d5b85078c3fcb24e883c7",
+    "georef/datum.py": "2fa474d5f3a9ad49317aeb52dafb4eb499f6d1d874117f4885286f9760a281a9"
+  },
+  "cases": 198,
+  "acceptance": "Exact numeric and discrete equality; no tolerances"
+}
