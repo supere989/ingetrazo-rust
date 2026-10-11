@@ -201,6 +201,8 @@ pub trait Tool: Send + Sync {
     fn note_annotation_hits(&mut self, _hits: AnnotationHits) {}
     fn note_annotation_leader_hit(&mut self,_hit:Option<u64>) {}
     fn take_annotation_edit_request(&mut self)->Option<AnnotationEditTarget>{None}
+    /// Select admission query opens a dialog without cloning a model/history snapshot.
+    fn annotation_edit_target(&mut self,_scene:&Scene,_ctx:&ToolContext)->Option<AnnotationEditTarget>{None}
     fn note_annotation_pick_error(&mut self, _error: String) {}
     fn on_click(&mut self, _scene: &mut Scene, _ctx: &ToolContext) {}
     fn on_double_click(&mut self, scene: &mut Scene, ctx: &ToolContext) {

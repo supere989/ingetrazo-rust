@@ -26,11 +26,17 @@ for malformed in [dict(states=[]),dict(states=observed['states'][:-1]),dict(stat
  else:raise AssertionError('Malformed corpus accepted')
 reopen=json.loads((p/'reopen.json').read_text());assert len(reopen['cases'])==4
 def validate_reopens(value):
- if not isinstance(value,dict) or len(value.get('cases',[]))!=4 or any(not exact(c['original'],c['native'])for c in value['cases']):raise ValueError('Original-reader reopen differs')
+ if not isinstance(value,dict) or [c.get('case')for c in value.get('cases',[])]!=['label-root','label-nested','dimension-root','dimension-nested'] or any(not exact(c['original'],c['native'])for c in value['cases']):raise ValueError('Original-reader reopen differs')
 validate_reopens(reopen)
 for field in ['style','labels','dimensions']:
  bad=copy.deepcopy(reopen);bad['cases'][0]['native'][field]=None
  try:validate_reopens(bad)
  except ValueError:negative+=1
  else:raise AssertionError('Mutated reopen accepted')
+for names in [['label-root']*4,['dimension-root','label-nested','label-root','dimension-nested']]:
+ bad=copy.deepcopy(reopen)
+ for case,name in zip(bad['cases'],names):case['case']=name
+ try:validate_reopens(bad)
+ except ValueError:negative+=1
+ else:raise AssertionError('Malformed reopen inventory accepted')
 report={'states':44,'actual_original_reopens':4,'rejected_controls':negative,'result':'PASS'};(p/'check.json').write_text(json.dumps(report,indent=2));print(json.dumps(report))

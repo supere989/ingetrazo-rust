@@ -6,6 +6,7 @@ pub struct Editor {
     pub target: AnnotationEditTarget,
     pub text: String,
     pub measured: Option<String>,
+    focus_pending: bool,
 }
 impl IngeTrazoApp {
     pub fn begin_annotation_edit(&mut self, target: AnnotationEditTarget) -> Result<(), String> {
@@ -46,6 +47,7 @@ impl IngeTrazoApp {
             target,
             text,
             measured,
+            focus_pending: true,
         });
         Ok(())
     }
@@ -134,31 +136,40 @@ pub(crate) fn render(app: &mut IngeTrazoApp, ctx: &egui::Context) {
         return;
     };
     let label = matches!(editor.target, AnnotationEditTarget::Label(_));
-    let mut open = true;
     let mut accept = false;
     let mut cancel = false;
-    egui::Window::new(if label { "Text" } else { "Dimension" })
-        .id(egui::Id::new("annotation_text_editor"))
-        .collapsible(false)
-        .resizable(label)
-        .open(&mut open)
-        .show(ctx, |ui| {
-            ui.label(if label {
-                "Label text:"
-            } else {
-                "Dimension text (<> = measured value):"
-            });
-            if label {
-                ui.text_edit_multiline(&mut editor.text);
-            } else {
-                ui.text_edit_singleline(&mut editor.text);
-            }
-            ui.horizontal(|ui| {
-                accept = ui.button("OK").clicked();
-                cancel = ui.button("Cancel").clicked();
-            });
+    egui::Modal::new(egui::Id::new("annotation_text_editor")).show(ctx, |ui| {
+        ui.heading(if label { "Text" } else { "Dimension" });
+        ui.label(if label {
+            "Label text:"
+        } else {
+            "Dimension text (<> = measured value):"
         });
-    if cancel || !open || ctx.input(|i| i.key_pressed(egui::Key::Escape)) {
+        let edit = if label {
+            egui::TextEdit::multiline(&mut editor.text).desired_rows(4)
+        } else {
+            egui::TextEdit::singleline(&mut editor.text)
+        };
+        let response = ui.add(
+            edit.id(egui::Id::new("annotation_editor_text"))
+                .desired_width(320.),
+        );
+        if editor.focus_pending {
+            response.request_focus();
+            editor.focus_pending = false;
+        }
+        if !label
+            && (response.has_focus() || response.lost_focus())
+            && ui.input(|i| i.key_pressed(egui::Key::Enter))
+        {
+            accept = true;
+        }
+        ui.horizontal(|ui| {
+            accept |= ui.button("OK").clicked();
+            cancel = ui.button("Cancel").clicked();
+        });
+    });
+    if cancel || ctx.input(|i| i.key_pressed(egui::Key::Escape)) {
         app.cancel_annotation_edit();
     } else if accept {
         if let Err(error) = app.accept_annotation_edit() {
@@ -217,5 +228,155 @@ mod tests {
         let loaded = ingetrazo_formats::igz::load_igz(&p).unwrap();
         std::fs::remove_file(p).unwrap();
         assert_eq!(loaded.dimension_style(), a.scene.dimension_style());
+    }
+    #[test]
+    fn actual_modal_owns_viewport_escape_navigation_and_dimension_enter() {
+        use ingetrazo_tools::base::{Tool, ToolContext, ToolType};
+        use std::sync::{
+            atomic::{AtomicUsize, Ordering},
+            Arc,
+        };
+        #[derive(Debug)]
+        struct Count(Arc<AtomicUsize>);
+        impl Tool for Count {
+            fn tool_type(&self) -> ToolType {
+                ToolType::Move
+            }
+            fn name(&self) -> &'static str {
+                "modal witness"
+            }
+            fn on_move(&mut self, _: &mut ingetrazo_core::scene::Scene, _: &ToolContext) {
+                self.0.fetch_add(1, Ordering::Relaxed);
+            }
+            fn on_click(&mut self, _: &mut ingetrazo_core::scene::Scene, _: &ToolContext) {
+                self.0.fetch_add(1, Ordering::Relaxed);
+            }
+            fn on_release(
+                &mut self,
+                _: &mut ingetrazo_core::scene::Scene,
+                _: &ToolContext,
+                _: f64,
+            ) {
+                self.0.fetch_add(1, Ordering::Relaxed);
+            }
+            fn on_cancel(&mut self, _: &mut ingetrazo_core::scene::Scene) {
+                self.0.fetch_add(1, Ordering::Relaxed);
+            }
+            fn on_control_state(&mut self, _: &mut ingetrazo_core::scene::Scene, _: bool) {
+                self.0.fetch_add(1, Ordering::Relaxed);
+            }
+        }
+        let mut a = IngeTrazoApp::new();
+        a.system_clipboard = None;
+        a.scene
+            .dimensions
+            .push(ingetrazo_core::dimensions::Dimension::new(
+                glam::DVec3::ZERO,
+                glam::DVec3::X,
+                glam::DVec3::Y,
+            ));
+        a.begin_annotation_edit(AnnotationEditTarget::Dimension(a.scene.dimensions[0].id))
+            .unwrap();
+        a.annotation_editor.as_mut().unwrap().text = "authored".into();
+        let count = Arc::new(AtomicUsize::new(0));
+        a.active_tool = Box::new(Count(count.clone()));
+        a.active_tool_type = ToolType::Move;
+        a.navigation.mode = None;
+        assert!(a.navigation_suspended());
+        let eye = a.camera.eye();
+        let ctx = egui::Context::default();
+        let key = |key| egui::Event::Key {
+            key,
+            physical_key: None,
+            pressed: true,
+            repeat: false,
+            modifiers: egui::Modifiers::NONE,
+        };
+        let frame = |a: &mut IngeTrazoApp, events: Vec<egui::Event>, editor: bool| {
+            let _ = ctx.run(
+                egui::RawInput {
+                    screen_rect: Some(egui::Rect::from_min_size(
+                        egui::Pos2::ZERO,
+                        egui::vec2(800., 600.),
+                    )),
+                    events,
+                    ..Default::default()
+                },
+                |ctx| {
+                    egui::CentralPanel::default()
+                        .show(ctx, |ui| crate::viewport::render_viewport(a, ui));
+                    if editor {
+                        render(a, ctx);
+                    }
+                },
+            );
+        };
+        frame(
+            &mut a,
+            vec![
+                egui::Event::PointerMoved(egui::pos2(100., 100.)),
+                egui::Event::PointerButton {
+                    pos: egui::pos2(100., 100.),
+                    button: egui::PointerButton::Primary,
+                    pressed: true,
+                    modifiers: egui::Modifiers::NONE,
+                },
+                egui::Event::PointerButton {
+                    pos: egui::pos2(120., 120.),
+                    button: egui::PointerButton::Primary,
+                    pressed: false,
+                    modifiers: egui::Modifiers::NONE,
+                },
+                key(egui::Key::W),
+                key(egui::Key::Escape),
+            ],
+            false,
+        );
+        assert_eq!(count.load(Ordering::Relaxed), 0);
+        assert_eq!(a.camera.eye(), eye);
+        assert!(a.annotation_editor.is_some());
+        assert!(a.undo_stack.is_empty());
+        a.navigation.activate(crate::navigation::Mode::FirstPerson);
+        frame(&mut a, vec![key(egui::Key::W)], false);
+        frame(&mut a, vec![], false);
+        assert_eq!(a.camera.eye(), eye);
+        assert_eq!(count.load(Ordering::Relaxed), 0);
+        a.navigation.mode = None;
+        frame(&mut a, vec![], true);
+        assert_eq!(
+            ctx.memory(|m| m.focused()),
+            Some(egui::Id::new("annotation_editor_text"))
+        );
+        frame(&mut a, vec![key(egui::Key::Enter)], true);
+        assert!(a.annotation_editor.is_none());
+        assert_eq!(
+            a.scene.dimensions[0].text_override.as_deref(),
+            Some("authored")
+        );
+        assert_eq!(a.undo_stack.len(), 1);
+        assert_eq!(count.load(Ordering::Relaxed), 0);
+        a.scene
+            .text_labels
+            .push(ingetrazo_core::textlabel::TextLabel::new(
+                glam::DVec3::ZERO,
+                glam::DVec3::Y,
+                "old",
+            ));
+        a.begin_annotation_edit(AnnotationEditTarget::Label(
+            a.scene.text_labels[0].history_id,
+        ))
+        .unwrap();
+        frame(&mut a, vec![], true);
+        frame(&mut a, vec![key(egui::Key::Enter)], true);
+        assert!(
+            a.annotation_editor.is_some(),
+            "multiline Enter must not accept"
+        );
+        assert_eq!(a.undo_stack.len(), 1);
+        frame(&mut a, vec![key(egui::Key::Escape)], true);
+        assert!(a.annotation_editor.is_none());
+        assert_eq!(a.scene.text_labels[0].text, "old");
+        assert_eq!(a.undo_stack.len(), 1);
+        assert_eq!(count.load(Ordering::Relaxed), 0);
     }
 }

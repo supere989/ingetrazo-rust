@@ -23,6 +23,7 @@ pub(crate) fn input(
     if !ui.is_enabled() || app.active_tool_type != ToolType::Select
         || app.paste_preview.is_some()
         || app.navigation.mode.is_some()
+        || app.annotation_editor.is_some()
         || app.text3d_dialog.is_some()
     {
         ui.ctx().data_mut(|d| d.remove::<egui::Pos2>(key));

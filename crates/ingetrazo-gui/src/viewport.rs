@@ -25,6 +25,8 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
     }
 
     let painter = ui.painter_at(rect);
+    if app.annotation_editor.is_some() {ui.ctx().data_mut(|data| {data.remove::<egui::Pos2>(response.id.with("followme_press"));data.remove::<ToolContext>(response.id.with("followme_context"));});}
+    let tool_input_admitted=ui.is_enabled()&&app.text3d_dialog.is_none()&&app.annotation_editor.is_none();
     let box_release=crate::box_selection::input(app,ui,rect,response.id,response.contains_pointer());
 
     // 1. Mouse Navigation (Orbit, Pan, Zoom)
@@ -36,7 +38,7 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
     let scale_modifiers=if app.active_tool_type==ToolType::Scale{crate::pointer_modifiers::get(ui.ctx())}else{None};
     let mut scale_modifier_cursor=0;
     let scale_input_admitted=scale_modifiers.as_ref().is_none_or(|handle|handle.lock().unwrap().admitted());
-    if app.text3d_dialog.is_none() {
+    if tool_input_admitted {
     app.snap_engine.sync_drawing_frame(app.scene.drawing_frame);
     if !scale_input_admitted{app.status_message="Native modifier batch exceeded bounded admission".into();}
     if app.active_tool_type == ToolType::Scale {
@@ -53,7 +55,7 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
     let mut active_center_hint = None;
     let mut navigation_preview_stroke=egui::Stroke::new(2.,egui::Color32::from_rgba_unmultiplied(242,115,41,217));
 
-    if app.text3d_dialog.is_none() {
+    if tool_input_admitted {
     if app.navigation.mode.is_some() {
         if let Some(result)=crate::navigation::input(app,ui,rect,&response){
             active_snap_glyph=SnapGlyph::from_snap_result(&result,None);

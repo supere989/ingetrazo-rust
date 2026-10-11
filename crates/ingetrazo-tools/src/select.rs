@@ -529,6 +529,15 @@ impl Tool for SelectTool {
     fn note_annotation_leader_hit(&mut self,hit:Option<u64>){self.annotation_leader=hit;}
     fn note_annotation_pick_error(&mut self,_error:String){self.annotation_hits=crate::base::AnnotationHits::default();self.annotation_leader=None;}
     fn take_annotation_edit_request(&mut self)->Option<crate::base::AnnotationEditTarget>{self.annotation_edit.take()}
+    fn annotation_edit_target(&mut self,scene:&Scene,ctx:&ToolContext)->Option<crate::base::AnnotationEditTarget>{
+        use crate::base::AnnotationEditTarget;
+        if let Some(id)=self.annotation_hits.label.filter(|id|scene.text_labels.iter().any(|t|t.history_id==*id&&scene.is_layer_selectable(t.layer.as_deref()))){return Some(AnnotationEditTarget::Label(id));}
+        let edge=if let(Some((viewport,eye)),Some(cursor))=(self.pick_viewport,ctx.screen){self.click_index.edge(scene,viewport,cursor,eye)}else{crate::base::pick_scene_edge(scene,&ctx.ray,0.2)};
+        if edge.is_some()||crate::base::pick_scene_group(scene,&ctx.ray,0.2).is_some(){return None;}
+        if let Some(id)=self.annotation_hits.dimension.filter(|id|scene.dimensions.iter().any(|d|d.id==*id&&scene.is_layer_selectable(d.layer.as_deref()))){return Some(AnnotationEditTarget::Dimension(id));}
+        self.annotation_leader.filter(|id|scene.text_labels.iter().any(|t|t.history_id==*id&&scene.is_layer_selectable(t.layer.as_deref()))).map(AnnotationEditTarget::Label)
+    }
+
 
     fn box_select(&mut self, selection:&crate::base::BoxSelection,scene:&mut Scene)->Result<(),String>{Self::select_pixels(selection,scene)}
     fn tool_type(&self) -> ToolType {
@@ -587,9 +596,7 @@ impl Tool for SelectTool {
     }
 
     fn on_double_click(&mut self, scene: &mut Scene, ctx: &ToolContext) {
-        if let Some(token)=self.annotation_hits.label {
-            if scene.text_labels.iter().any(|t|t.history_id==token&&scene.is_layer_selectable(t.layer.as_deref())){self.annotation_edit=Some(crate::base::AnnotationEditTarget::Label(token));return;}
-        }
+        if let Some(target)=self.annotation_edit_target(scene,ctx){self.annotation_edit=Some(target);return;}
 
         let hit_plane=crate::base::pick_section_plane(scene,&ctx.ray,0.2);
         let hit_edge = if let (Some((viewport,eye)),Some(cursor))=(self.pick_viewport,ctx.screen){self.click_index.edge(scene,viewport,cursor,eye)}else{crate::base::pick_scene_edge(scene, &ctx.ray, 0.2)};
@@ -598,10 +605,6 @@ impl Tool for SelectTool {
 
         if let Some(id)=hit_plane{scene.clear_selection();scene.select(SelectionItem::SectionPlane(id));return;}
         if let Some(id)=hit_group.filter(|_|hit_edge.is_none()){scene.clear_selection();scene.select(SelectionItem::Group(id));return;}
-        if hit_group.is_none()&&hit_edge.is_none(){
-            if let Some(token)=self.annotation_hits.dimension {if scene.dimensions.iter().any(|d|d.id==token&&scene.is_layer_selectable(d.layer.as_deref())){self.annotation_edit=Some(crate::base::AnnotationEditTarget::Dimension(token));return;}}
-            if let Some(token)=self.annotation_leader {if scene.text_labels.iter().any(|t|t.history_id==token&&scene.is_layer_selectable(t.layer.as_deref())){self.annotation_edit=Some(crate::base::AnnotationEditTarget::Label(token));return;}}
-        }
         let target=hit_edge.map(SelectionItem::Edge).or_else(||hit_face.map(SelectionItem::Face));
         if let Some(target)=target {
             let mut targets=Self::expanded(scene,target.clone());

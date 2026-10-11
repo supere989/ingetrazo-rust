@@ -204,7 +204,8 @@ impl IngeTrazoApp {
     }
 
     pub fn dispatch_tool_double_click(&mut self, context: &ToolContext) {
-        if self.section_name_prompt.is_some(){return;}
+        if self.annotation_editor.is_some()||self.section_name_prompt.is_some(){return;}
+        if let Some(target)=self.active_tool.annotation_edit_target(&self.scene,context){if let Err(error)=self.begin_annotation_edit(target){self.status_message=error;}return;}
         if self.prepare_bim_draw_commit().is_err(){return;}
         let before = self.tool_snapshot();
         self.active_tool.on_double_click(&mut self.scene, context);
