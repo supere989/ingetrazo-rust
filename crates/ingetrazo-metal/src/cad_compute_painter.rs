@@ -15,11 +15,12 @@ struct Plan {
 }
 struct Palette {
     owner: Arc<[Batch]>,
+    _glyphs: Option<Arc<[ingetrazo_render::cad_callback::GlyphOperator]>>,
     buffer: Buffer,
 }
 #[derive(Default, Clone, Copy, Debug)]
 pub struct Stats {
-    pub deep_admissions:u64,
+    pub deep_admissions: u64,
     pub plan_uploads: u64,
     pub palette_uploads: u64,
     pub warm_hits: u64,
@@ -29,7 +30,7 @@ pub struct Stats {
 pub struct Painter {
     pipeline: Option<Arc<Retained<ProtocolObject<dyn MTLComputePipelineState>>>>,
     plans: HashMap<u64, Arc<Plan>>,
-    palettes: HashMap<(u64,usize), Arc<Palette>>,
+    palettes: HashMap<(u64, usize, usize), Arc<Palette>>,
     pub stats: Stats,
 }
 pub struct Prepared {
@@ -49,7 +50,10 @@ struct Push {
 }
 impl Painter {
     pub fn supported(metal: &NativeMetal) -> bool {
-        matches!(metal.device.readWriteTextureSupport(), MTLReadWriteTextureTier::Tier1 | MTLReadWriteTextureTier::Tier2)
+        matches!(
+            metal.device.readWriteTextureSupport(),
+            MTLReadWriteTextureTier::Tier1 | MTLReadWriteTextureTier::Tier2
+        )
     }
     pub fn prepare(
         &mut self,
@@ -60,6 +64,14 @@ impl Painter {
         if !Self::supported(metal) {
             return Err("Exact Metal R32Uint read/write composition requires texture tier1".into());
         }
+        if let Some(glyphs) = &snapshot.glyphs {
+            if glyphs.len() != snapshot.batches.len() {
+                return Err("Metal glyph batch inventory mismatch".into());
+            }
+            for glyph in glyphs.iter() {
+                glyph.validate()?;
+            }
+        }
         snapshot
             .geometry
             .validate_ordered_pose(snapshot.pose, density)?;
@@ -68,13 +80,16 @@ impl Painter {
         let id = snapshot.geometry.id();
         // Immutable Arc identity is the admitted layout signature. Replacing
         // batches is a cold admission even if its lengths happen to match.
-        let cached = self.plans.get(&id)
-            .filter(|p| Arc::ptr_eq(&p.batches, &snapshot.batches)).cloned();
+        let cached = self
+            .plans
+            .get(&id)
+            .filter(|p| Arc::ptr_eq(&p.batches, &snapshot.batches))
+            .cloned();
         let mut plan_bytes = 0;
         let plan = if let Some(plan) = cached {
             plan
         } else {
-            self.stats.deep_admissions+=1;
+            self.stats.deep_admissions += 1;
             let p = crate::span_plan::compile_source(&snapshot.geometry, &snapshot.batches)?;
             let upload = |bytes: &[u8]| -> Result<Buffer, String> {
                 let mut b = metal.buffer(bytes.len(), true)?;
@@ -95,20 +110,54 @@ impl Painter {
                 batches: snapshot.batches.clone(),
             })
         };
-        let key = (snapshot.geometry.palette_cache_identity(), Arc::as_ptr(&snapshot.batches) as *const Batch as usize);
+        let key = (
+            snapshot.geometry.palette_cache_identity(),
+            Arc::as_ptr(&snapshot.batches) as *const Batch as usize,
+            snapshot
+                .glyphs
+                .as_ref()
+                .map(|g| {
+                    Arc::as_ptr(g) as *const ingetrazo_render::cad_callback::GlyphOperator as usize
+                })
+                .unwrap_or(0),
+        );
         let existing = self.palettes.get(&key).cloned();
         let mut palette_bytes = 0;
         let palette = if let Some(p) = existing {
             p
         } else {
-            let colors = snapshot.geometry.resolve_batch_colors(&snapshot.batches)?
-                .into_iter().map(|c|c.map(|v|(v*255.).round()as u32)).collect::<Vec<_>>();
+            let colors = snapshot
+                .geometry
+                .resolve_batch_colors(&snapshot.batches)?
+                .into_iter()
+                .enumerate()
+                .map(|(ordinal, c)| {
+                    let color = c.map(|v| (v * 255.).round() as u32);
+                    let op = snapshot.glyphs.as_ref().map(|g| g[ordinal]);
+                    let straight = op.map(|g| g.straight_rgba.map(u32::from)).unwrap_or([0; 4]);
+                    [
+                        color[0],
+                        color[1],
+                        color[2],
+                        color[3],
+                        op.map(|g| g.composition).unwrap_or(0),
+                        straight[0],
+                        straight[1],
+                        straight[2],
+                        straight[3],
+                        0,
+                        0,
+                        0,
+                    ]
+                })
+                .collect::<Vec<_>>();
             let bytes = bytemuck::cast_slice(&colors);
             let mut buffer = metal.buffer(bytes.len(), true)?;
             buffer.write(bytes)?;
             palette_bytes = bytes.len() as u64;
             Arc::new(Palette {
                 owner: snapshot.batches.clone(),
+                _glyphs: snapshot.glyphs.clone(),
                 buffer,
             })
         };
@@ -134,7 +183,9 @@ impl Painter {
                     .map_err(|e| format!("Exact Metal canvas pipeline:{e:?}"))?,
             )
         };
-        if pipeline.maxTotalThreadsPerThreadgroup()<64{return Err("Metal compute pipeline cannot admit8x8 source tile workgroup".into());}
+        if pipeline.maxTotalThreadsPerThreadgroup() < 64 {
+            return Err("Metal compute pipeline cannot admit8x8 source tile workgroup".into());
+        }
         // Publish only after all allocations/compiler admission succeed. Earlier frames
         // retain their immutable plan/palette even if cache eviction occurs.
         if self.plans.len() >= 64 && !self.plans.contains_key(&id) {
@@ -166,7 +217,11 @@ impl Prepared {
         canvas: &ProtocolObject<dyn MTLTexture>,
         clip: [u32; 4],
     ) -> Result<(), String> {
-        if canvas.textureType()!=MTLTextureType::Type2D||canvas.sampleCount()!=1||canvas.width()==0||canvas.height()==0||canvas.pixelFormat() != MTLPixelFormat::R32Uint
+        if canvas.textureType() != MTLTextureType::Type2D
+            || canvas.sampleCount() != 1
+            || canvas.width() == 0
+            || canvas.height() == 0
+            || canvas.pixelFormat() != MTLPixelFormat::R32Uint
             || !canvas
                 .usage()
                 .contains(MTLTextureUsage::ShaderRead | MTLTextureUsage::ShaderWrite)

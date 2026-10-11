@@ -1,7 +1,7 @@
 //! Native Apple framebuffer-fetch consumption of frozen CAD producers.
 //! Intel/AMD exact span-compute presentation remains an explicit boundary.
 use crate::{Buffer, NativeMetal};
-use ingetrazo_render::{cad_callback::Snapshot, cad2d::Batch};
+use ingetrazo_render::{cad2d::Batch, cad_callback::Snapshot};
 use objc2::{rc::Retained, runtime::ProtocolObject};
 use objc2_foundation::NSString;
 use objc2_metal::*;
@@ -14,6 +14,7 @@ struct Push {
     screen: [f32; 2],
     pad: [f32; 2],
     rgba: [f32; 4],
+    glyph: [u32; 4],
 }
 struct Cached {
     vertices: Buffer,
@@ -22,7 +23,7 @@ struct Cached {
 }
 #[derive(Default, Clone, Copy, Debug)]
 pub struct Stats {
-    pub deep_admissions:u64,
+    pub deep_admissions: u64,
     pub uploads: u64,
     pub warm_hits: u64,
     pub palette_preparations: u64,
@@ -31,7 +32,7 @@ pub struct Stats {
 pub struct Painter {
     pipeline: Option<Arc<Retained<ProtocolObject<dyn MTLRenderPipelineState>>>>,
     geometry: HashMap<u64, Arc<Cached>>,
-    palette: HashMap<(u64,usize), (Arc<[Batch]>, Arc<[[f32; 4]]>)>,
+    palette: HashMap<(u64, usize), (Arc<[Batch]>, Arc<[[f32; 4]]>)>,
     pub stats: Stats,
 }
 impl Default for Painter {
@@ -60,6 +61,14 @@ impl Painter {
         if !crate::cad2d::MetalCad2d::supported(metal) {
             return Err("Metal CAD callback exact Apple framebuffer-fetch unsupported; Intel/AMD span-compute presentation still required".into());
         }
+        if let Some(glyphs) = &snapshot.glyphs {
+            if glyphs.len() != snapshot.batches.len() {
+                return Err("Metal glyph batch inventory mismatch".into());
+            }
+            for glyph in glyphs.iter() {
+                glyph.validate()?;
+            }
+        }
         if snapshot.batches.len() > 4096 {
             return Err("Metal CAD palette exceeds4096 batch admission".into());
         }
@@ -81,13 +90,22 @@ impl Painter {
             b
         };
         validate_pose(bounds, &snapshot, density)?;
-        let palette_key = (snapshot.geometry.palette_cache_identity(), Arc::as_ptr(&snapshot.batches) as *const Batch as usize);
+        let palette_key = (
+            snapshot.geometry.palette_cache_identity(),
+            Arc::as_ptr(&snapshot.batches) as *const Batch as usize,
+        );
         let palette_changed = !self.palette.contains_key(&palette_key);
-        if cached.is_none() || palette_changed { self.stats.deep_admissions+=1; snapshot.geometry.validate_batches(&snapshot.batches)?; }
+        if cached.is_none() || palette_changed {
+            self.stats.deep_admissions += 1;
+            snapshot.geometry.validate_batches(&snapshot.batches)?;
+        }
         let colors: Arc<[[f32; 4]]> = if let Some((_, colors)) = self.palette.get(&palette_key) {
             colors.clone()
         } else {
-            snapshot.geometry.resolve_batch_colors(&snapshot.batches)?.into()
+            snapshot
+                .geometry
+                .resolve_batch_colors(&snapshot.batches)?
+                .into()
         };
         let pipeline = if let Some(p) = &self.pipeline {
             p.clone()
@@ -203,13 +221,28 @@ impl Prepared {
         unsafe {
             encoder.setVertexBuffer_offset_atIndex(Some(&self.geometry.vertices.raw), 0, 0);
         }
-        for (batch, color) in self.snapshot.batches.iter().zip(self.colors.iter()) {
+        for (ordinal, (batch, color)) in self
+            .snapshot
+            .batches
+            .iter()
+            .zip(self.colors.iter())
+            .enumerate()
+        {
             let push = Push {
                 scale: self.snapshot.pose.scale,
                 translation: self.snapshot.pose.translation,
                 screen,
                 pad: [0.; 2],
                 rgba: *color,
+                glyph: self
+                    .snapshot
+                    .glyphs
+                    .as_ref()
+                    .map(|g| {
+                        let op = g[ordinal];
+                        [op.composition, u32::from_le_bytes(op.straight_rgba), 0, 0]
+                    })
+                    .unwrap_or([0; 4]),
             };
             unsafe {
                 encoder.setVertexBytes_length_atIndex(

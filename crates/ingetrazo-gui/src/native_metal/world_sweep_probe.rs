@@ -13,10 +13,18 @@ fn vector(v: &serde_json::Value) -> Result<DVec3, String> {
         a[2].as_f64().ok_or("Vector z")?,
     ))
 }
-fn frame(app: &mut IngeTrazoApp, metal: &NativeMetal) -> Result<Vec<u8>, String> {
+fn frame(
+    app: &mut IngeTrazoApp,
+    metal: &NativeMetal,
+    ctx: &egui::Context,
+    painter: &mut ingetrazo_metal::egui_painter::EguiPainter,
+    route: bool,
+) -> Result<Vec<u8>, String> {
     let rect = egui::Rect::from_min_size(egui::Pos2::ZERO, egui::vec2(800., 600.));
-    if let Some(e) = world_viewport::route(app, rect, 1.) {
-        return Err(e);
+    if route {
+        if let Some(error) = world_viewport::route(app, rect, 1.) {
+            return Err(error);
+        }
     }
     let f = app
         .native_metal_world
@@ -26,7 +34,32 @@ fn frame(app: &mut IngeTrazoApp, metal: &NativeMetal) -> Result<Vec<u8>, String>
     if f.sample_count() != 4 {
         return Err("Sweep requires4samples".into());
     }
-    f.submit_diagnostic(metal)?.readback(Duration::from_secs(5))
+    let output = ctx.run(
+        egui::RawInput {
+            screen_rect: Some(rect),
+            ..Default::default()
+        },
+        |ctx| {
+            let painter = ctx.layer_painter(egui::LayerId::background());
+            painter.image(
+                world_viewport::TEXTURE,
+                rect,
+                egui::Rect::from_min_max(egui::Pos2::ZERO, egui::pos2(1., 1.)),
+                egui::Color32::WHITE,
+            );
+            if let Some(shape) = &app.native_gpu_annotation_shape {
+                painter.add(shape.clone());
+            }
+        },
+    );
+    painter.update_textures(metal, &output.textures_delta)?;
+    world_viewport::install(painter, metal, app)?;
+    let primitives = ctx.tessellate(output.shapes, output.pixels_per_point);
+    let paint = painter.prepare(metal, &primitives, output.pixels_per_point)?;
+    painter.free_textures(&output.textures_delta.free);
+    painter
+        .submit_diagnostic(metal, paint, 800, 600, false)?
+        .wait_readback(Duration::from_secs(5))
 }
 pub(crate) fn run(input: PathBuf, output: PathBuf) -> Result<(), String> {
     std::fs::create_dir_all(&output).map_err(|e| e.to_string())?;
@@ -45,6 +78,12 @@ pub(crate) fn run(input: PathBuf, output: PathBuf) -> Result<(), String> {
     let mut results = Vec::new();
     for c in source["cases"].as_array().ok_or("Sweep cases")? {
         let name = c["name"].as_str().ok_or("Sweep name")?;
+        let ctx = egui::Context::default();
+        let mut painter = if ingetrazo_metal::MetalCad2d::supported(&metal) {
+            ingetrazo_metal::egui_painter::EguiPainter::new(&metal)?
+        } else {
+            ingetrazo_metal::egui_painter::EguiPainter::new_compute(&metal)?
+        };
         let mut app = IngeTrazoApp::new();
         app.scene = ingetrazo_formats::igz::load_igz(&input.join(c["igz"].as_str().ok_or("IGZ")?))
             .map_err(|e| e.to_string())?;
@@ -127,19 +166,14 @@ pub(crate) fn run(input: PathBuf, output: PathBuf) -> Result<(), String> {
                 if reason.is_none() || !retained {
                     return Err("Preview pressure did not preserve charge".into());
                 }
-                let old = app
-                    .native_metal_world
-                    .as_ref()
-                    .and_then(|v| v.frame.as_ref())
-                    .ok_or("Refusal lost old frame")?
-                    .submit_diagnostic(&metal)?
-                    .readback(Duration::from_secs(5))?;
+                let old = frame(&mut app, &metal, &ctx, &mut painter, false)?;
                 if previous.as_ref() != Some(&old) {
                     return Err("Refusal changed old preview pixels".into());
                 }
                 refusal = true;
             }
-            let rgba = frame(&mut app, &metal).map_err(|e| format!("{name}/{phase}: {e}"))?;
+            let rgba = frame(&mut app, &metal, &ctx, &mut painter, true)
+                .map_err(|e| format!("{name}/{phase}: {e}"))?;
             if phase == "base" {
                 base = Some(rgba.clone());
             }
@@ -147,7 +181,16 @@ pub(crate) fn run(input: PathBuf, output: PathBuf) -> Result<(), String> {
                 return Err(format!("{name} Cancel changed base pixels"));
             }
             let stats = app.native_metal_world.as_ref().unwrap().sweep_stats();
-            if frame(&mut app, &metal)? != rgba
+            let label_uploads = painter.cad_stats().uploads;
+            let label_compute = painter
+                .compute_stats()
+                .map(|s| (s.plan_uploads, s.palette_uploads));
+            if frame(&mut app, &metal, &ctx, &mut painter, true)? != rgba
+                || painter.cad_stats().uploads != label_uploads
+                || painter
+                    .compute_stats()
+                    .map(|s| (s.plan_uploads, s.palette_uploads))
+                    != label_compute
                 || app
                     .native_metal_world
                     .as_ref()
@@ -190,14 +233,15 @@ pub(crate) fn run(input: PathBuf, output: PathBuf) -> Result<(), String> {
                     return Err("Cancel failed cached base restore".into());
                 }
             }
-            previous = Some(frame(&mut app, &metal)?);
+            previous = Some(frame(&mut app, &metal, &ctx, &mut painter, true)?);
             previous_stats = Some(stats);
-            phases.push(serde_json::json!({"phase":phase,"geometry_uploads":stats.geometry_uploads,"preview_builds":stats.preview_builds,"preview_line_uploads":stats.preview_line_uploads,"base_line_uploads":stats.base_line_uploads}));
+            phases.push(serde_json::json!({"phase":phase,"geometry_uploads":stats.geometry_uploads,"preview_builds":stats.preview_builds,"preview_line_uploads":stats.preview_line_uploads,"base_line_uploads":stats.base_line_uploads,"label_uploads":label_uploads,"label_compute_uploads":label_compute}));
         }
         if app.scene.mesh != mesh_before || app.undo_stack.len() != history_before {
             return Err("Preview mutated model/history".into());
         }
         drop(app);
+        drop(painter);
         results.push(serde_json::json!({"name":name,"phases":phases,"model_unchanged":true,"warm_uploads_zero":true,"pressure_old_pixels_charge_retry":refusal}));
     }
     let ledger = metal

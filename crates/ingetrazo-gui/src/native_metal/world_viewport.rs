@@ -12,6 +12,7 @@ pub(crate) struct Viewport {
     metal: Arc<NativeMetal>,
     world: World,
     adapter: Adapter,
+    labels: Option<super::distance_label::Labels>,
     pub(crate) frame: Option<Arc<Prepared>>,
     pub(crate) last_route_reason: Option<String>,
     unsupported: Option<(ingetrazo_render::scene_revision::Revisions, u16, String)>,
@@ -23,6 +24,7 @@ impl Viewport {
             metal,
             world: World::default(),
             adapter: Adapter::default(),
+            labels: None,
             frame: None,
             unsupported: None,
             last_route_reason: None,
@@ -137,6 +139,13 @@ pub(crate) fn route(app: &mut IngeTrazoApp, rect: egui::Rect, density: f32) -> O
             })
         }
     };
+    if app.native_gpu_viewport_enabled && reason.is_none() {
+        let labels = (|| -> Result<Option<egui::Shape>,String> {
+            if viewport.labels.is_none() { viewport.labels=Some(super::distance_label::Labels::new()?); }
+            viewport.labels.as_mut().unwrap().prepare(app,rect,density)
+        })();
+        match labels { Ok(shape)=>app.native_gpu_annotation_shape=shape, Err(error)=>{viewport.last_route_reason=Some(error.clone());app.native_metal_world=Some(viewport);return Some(error)} }
+    } else if !app.native_gpu_viewport_enabled { app.native_gpu_annotation_shape=None; }
     viewport.last_route_reason = reason.clone();
     app.native_metal_world = Some(viewport);
     reason
