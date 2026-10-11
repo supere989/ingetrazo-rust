@@ -77,3 +77,5 @@ pub mod ai_protocol;
 pub mod ai_bridge;
 
 pub mod sun;
+
+pub mod autofold;
