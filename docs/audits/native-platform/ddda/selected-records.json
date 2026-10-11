@@ -1,0 +1,32 @@
+{
+  "artifact_id": 11706906275,
+  "artifact_bytes": 18740885,
+  "artifact_sha256": "sha256:d55f0598f51b2220df6973e7071958b72f18add886e64fab003b7ed23d74ad5d",
+  "records": {
+    "document-axes-ci/result.json": {
+      "sha256": "e5acba55c586b576c890a909e624e1ed14cc36165d1535b9b9036ff5a971cee9",
+      "bytes": 8091
+    },
+    "document-axes-ci/fillet/volume.json": {
+      "sha256": "e773c643a8c8bc0c1cc338977842ad5d67e9253ac6bec9a4cc19cca31098ff6a",
+      "bytes": 3880
+    },
+    "python-followme-evidence.json": {
+      "sha256": "5cdc63a0d16532caa6c4d6d89a32551674e81e922ad397419b7a3064c1a86500",
+      "bytes": 4242
+    },
+    "python-heal-evidence.json": {
+      "sha256": "5eb5b8688a5fe57553b9b809980a3766b11c8fba2c7b405cb68c1fa84065e6f4",
+      "bytes": 1815
+    },
+    "python-intersect-evidence.json": {
+      "sha256": "0e568892249fe692db5d4734308d088f4c2529a8af17c148b69731e0212c4905",
+      "bytes": 2613
+    },
+    "python-pieces-evidence.json": {
+      "sha256": "eb588188a63095aa4a81bb687383837251c90e07497923dabf04d25eec06d642",
+      "bytes": 1223
+    }
+  },
+  "full_artifact_storage": "Retained by GitHub Actions; download authenticated in memory; no duplicate on disk"
+}
