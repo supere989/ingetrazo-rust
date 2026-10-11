@@ -4,4 +4,4 @@ Linux PASS: all113 job steps successful, zero skips. Selected strict receipt bin
 
 Canonical223members/102324291rawbytes, archive SHA93762dfd92c4ed74314ba7899cc0dcf498a7a3ac5ee04dbd0ab26c636de0e3c2. Archive/member bytes verified. Linux20,769,579-byte artifact selectively range-read692474bytes;18selected receipts/log/state records retained, no complete Linux ZIP or new source corpus extraction. Small platform artifacts decoded once.
 
-Six source captures39.576s, provider binding6.924s. Per-probe and whole-step timings retained; no measured speedup or isolated raster-time inference. Source generation remains fresh. Unique terminal failures/caches/worktrees retained; temporary duplicates await authorized cleanup.
+Six source captures39.576s, provider binding6.924s. Per-probe and whole-step timings retained; no measured speedup or isolated raster-time inference. Source generation remains fresh. Unique terminal failures/caches/worktrees retained; authorized terminal duplicates were subsequently byte-verified and released (259 files,107955478bytes); exact paths/digests in cleanup.json.
