@@ -44,8 +44,17 @@ pub(crate) struct BackRun {
 }
 #[derive(Debug, Default)]
 pub(crate) struct Plan {
+    pub retained_payload_bytes: usize,
     pub default_back: Vec<(usize, usize)>,
     pub overrides: Vec<BackRun>,
+}
+const MAX_POLICY_PAYLOAD: usize = 8 * 1024 * 1024;
+fn payload_bound(defaults: usize, paints: usize) -> Result<usize, String> {
+    defaults.checked_mul(std::mem::size_of::<(usize,usize)>())
+        .and_then(|n| paints.checked_mul(std::mem::size_of::<BackRun>() + std::mem::size_of::<(usize, &ingetrazo_render::buffer::SourceBackPaint)>()).and_then(|p|n.checked_add(p)))
+        .and_then(|n|n.checked_add(std::mem::size_of::<Plan>() + std::mem::size_of::<Vec<(usize, &ingetrazo_render::buffer::SourceBackPaint)>>()))
+        .filter(|n|*n<=MAX_POLICY_PAYLOAD)
+        .ok_or_else(||"Metal world cold paint metadata exceeds8MiB payload admission".into())
 }
 impl Plan {
     pub(crate) fn from_packet(p: &MeshRenderBuffer) -> Result<Self, String> {
@@ -54,6 +63,7 @@ impl Plan {
                 "Metal world translucent back/front-cull policy requires alpha stage".into(),
             );
         }
+        payload_bound(p.source_default_back.len(),p.source_back_paints.len())?;
         let mut end = 0;
         for &(first, count) in &p.source_default_back {
             range(first, count, p.indices.len())?;
@@ -75,24 +85,30 @@ impl Plan {
                 return Err("Metal world back paint invalid or requires alpha stage".into());
             }
         }
-        let mut ordered: Vec<_> = p.source_back_paints.iter().collect();
-        ordered.sort_by_key(|p| p.order);
-        Ok(Self {
-            default_back: p.source_default_back.clone(),
-            overrides: ordered
-                .into_iter()
-                .map(|p| BackRun {
-                    first: p.first,
-                    count: p.count,
-                    color: [
-                        quantize(p.color[0]),
-                        quantize(p.color[1]),
-                        quantize(p.color[2]),
-                        1.,
-                    ],
-                })
-                .collect(),
-        })
+        let mut ordered = Vec::new();
+        ordered.try_reserve_exact(p.source_back_paints.len()).map_err(|_|"Metal world paint ordering allocation refused")?;
+        ordered.extend(p.source_back_paints.iter().enumerate());
+        // Explicit original position tie-break preserves source order without
+        // stable-sort scratch allocation. Only this bounded cold vector sorts.
+        ordered.sort_unstable_by_key(|(index,p)| (p.order,*index));
+        let mut default_back=Vec::new();
+        default_back.try_reserve_exact(p.source_default_back.len()).map_err(|_|"Metal world default-back allocation refused")?;
+        default_back.extend_from_slice(&p.source_default_back);
+        let mut overrides=Vec::new();
+        overrides.try_reserve_exact(ordered.len()).map_err(|_|"Metal world back override allocation refused")?;
+        // Allocator metadata is excluded; account actual retained capacities and
+        // simultaneous ordering payload before immutable plan publication.
+        let retained_payload_bytes=default_back.capacity().checked_mul(std::mem::size_of::<(usize,usize)>())
+            .and_then(|n|overrides.capacity().checked_mul(std::mem::size_of::<BackRun>()).and_then(|m|n.checked_add(m)))
+            .and_then(|n|n.checked_add(std::mem::size_of::<Plan>())).ok_or("Metal world retained paint capacity overflow")?;
+        let temporary=ordered.capacity().checked_mul(std::mem::size_of::<(usize,&ingetrazo_render::buffer::SourceBackPaint)>())
+            .and_then(|n|n.checked_add(std::mem::size_of_val(&ordered))).ok_or("Metal world ordering capacity overflow")?;
+        if retained_payload_bytes.checked_add(temporary).is_none_or(|n|n>MAX_POLICY_PAYLOAD) {
+            return Err("Metal world actual paint capacities exceed8MiB payload admission".into());
+        }
+        overrides.extend(ordered.into_iter().map(|(_,p)|BackRun {first:p.first,count:p.count,
+            color:[quantize(p.color[0]),quantize(p.color[1]),quantize(p.color[2]),1.]}));
+        Ok(Self {retained_payload_bytes,default_back,overrides})
     }
 }
 fn quantize(c: f32) -> f32 {
@@ -143,6 +159,18 @@ mod tests {
             plan.overrides[1].color,
             [13. / 64., 26. / 64., 38. / 64., 1.]
         );
+    }
+    #[test]
+    fn metadata_admits_before_allocation_and_accounts_retained_capacity() {
+        assert!(payload_bound(usize::MAX,0).is_err());
+        assert!(payload_bound(0,MAX_POLICY_PAYLOAD).is_err());
+        let mut p=MeshRenderBuffer::default();p.indices=vec![0;3];p.source_default_back=vec![(0,3)];
+        let prior=Plan::from_packet(&p).unwrap();
+        assert_eq!(prior.retained_payload_bytes,std::mem::size_of::<Plan>()+std::mem::size_of::<(usize,usize)>());
+        p.source_back_paints=vec![ingetrazo_render::buffer::SourceBackPaint { first:0,count:3,order:0,color:[1.,0.,0.],opacity:1. }; MAX_POLICY_PAYLOAD / (std::mem::size_of::<BackRun>() + std::mem::size_of::<(usize,&ingetrazo_render::buffer::SourceBackPaint)>())+1];
+        assert!(Plan::from_packet(&p).unwrap_err().contains("metadata exceeds"));
+        p.source_back_paints.clear();p.source_default_back=vec![(0,4)];assert!(Plan::from_packet(&p).is_err());
+        assert_eq!(prior.default_back,vec![(0,3)]);
     }
     #[test]
     fn malformed_and_alpha_back_policies_refuse() {

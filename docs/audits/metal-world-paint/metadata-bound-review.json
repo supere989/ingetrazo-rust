@@ -1,0 +1,10 @@
+{
+  "admission": "checked8MiB length-based cold payload preflight before any allocation; all vectors fallible try_reserve_exact; source-order unstable sort by(order,index) has no heap scratch",
+  "publication": "checked actual retained vector capacities plus simultaneously held ordering temporary before returning plan; allocator headers/shared/GPU/stacks excluded explicitly",
+  "focused": "five policy tests PASS incl oversized repeated metadata and prior immutable plan intact; Apple Rust metadata PASS",
+  "remaining": "actual native policy refusal preserving prior GPU frame and source back-face/winding pixels required",
+  "logs": {
+    "metal-world-policy-bound-check.log": "3064fb9f6d8ac78ab5ed8dcb7fd8eecf67d3534e3b6a80a42f84403665710637",
+    "metal-world-policy-bound-apple-check.log": "4c5f83e1fbd22b4bb88c01fc9394e57ccc380bb81d83ecaf0e9af11a5cd912eb"
+  }
+}
