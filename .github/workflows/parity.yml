@@ -290,7 +290,7 @@ jobs:
           python scripts/check-ai-bridge-query.py docs/audits/ai-bridge-ci --require-full > docs/audits/ai-bridge-ci/comparison.json
       - name: Integrated document axes PushPull and nested Fillet workflows using retained source fixtures
         run: |
-          cargo build --locked -p ingetrazo-gui --example change_axes_fixture --example document_preservation_workflow --example pushpull_solid_workflows --example fillet_scoped --example pushpull_finite_workflows --example paste_save_workflow --example box_selection_fixture --example material_restamp_workflow --example material_tray_egui --example cursor_navigation_workflow --example annotation_delete_fixture --example zoom_extents_workflow --example annotation_move_fixture --example annotation_acquisition_fixture
+          cargo build --locked -p ingetrazo-core -p ingetrazo-gui --example change_axes_fixture --example document_preservation_workflow --example pushpull_solid_workflows --example fillet_scoped --example pushpull_finite_workflows --example paste_save_workflow --example box_selection_fixture --example material_restamp_workflow --example material_tray_egui --example cursor_navigation_workflow --example annotation_delete_fixture --example zoom_extents_workflow --example annotation_move_fixture --example annotation_acquisition_fixture --example mesh_kernel_acceptance --example annotation_edit_style_fixture
           python scripts/check-document-axes-integration.py target/debug/examples docs/audits/document-axes-ci
       - name: Pinned original and native legacy SKP primitive parity
         run: |

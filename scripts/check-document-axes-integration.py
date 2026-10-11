@@ -20,7 +20,7 @@ out.mkdir(parents=True, exist_ok=True)
 pin = "6be29fe437a7cd992d4e079f71720821b25216b9"
 assert subprocess.check_output(["git", "-C", str(repo/"ingetrazo"), "rev-parse", "HEAD"], text=True).strip() == pin
 suffix = ".exe" if os.name == "nt" else ""
-consumers = ["change_axes_fixture", "document_preservation_workflow", "pushpull_solid_workflows", "fillet_scoped", "pushpull_finite_workflows", "paste_save_workflow", "box_selection_fixture", "material_restamp_workflow", "material_tray_egui", "cursor_navigation_workflow", "annotation_delete_fixture", "zoom_extents_workflow", "annotation_move_fixture", "annotation_acquisition_fixture"]
+consumers = ["change_axes_fixture", "document_preservation_workflow", "pushpull_solid_workflows", "fillet_scoped", "pushpull_finite_workflows", "paste_save_workflow", "box_selection_fixture", "material_restamp_workflow", "material_tray_egui", "cursor_navigation_workflow", "annotation_delete_fixture", "zoom_extents_workflow", "annotation_move_fixture", "annotation_acquisition_fixture", "mesh_kernel_acceptance", "annotation_edit_style_fixture"]
 identities = {name: hashlib.sha256((binaries/(name+suffix)).read_bytes()).hexdigest() for name in consumers}
 env = dict(os.environ, QT_QPA_PLATFORM="offscreen", INGETRAZO_STATE_DIR=str(out/"state"),
            XDG_CONFIG_HOME=str(out/"config"), XDG_DATA_HOME=str(out/"data"), XDG_CACHE_HOME=str(out/"cache"))
@@ -28,12 +28,17 @@ env = dict(os.environ, QT_QPA_PLATFORM="offscreen", INGETRAZO_STATE_DIR=str(out/
 def archive(name, manifest_name, selected, destination, preserve_paths=False, archive_name="records.zip"):
     folder = repo/"docs/audits"/name
     manifest = json.loads((folder/manifest_name).read_text())
-    records = manifest.get("records", manifest.get("entries"))
+    records = manifest.get("records", manifest.get("entries", manifest.get("members")))
     assert records is not None, name
+    if isinstance(records, list):
+        rows = records
+        records = {entry["path"]: entry for entry in rows}
+        assert len(records) == len(rows), "Duplicate archive member: " + name
     raw = (folder/archive_name).read_bytes()
     digest = hashlib.sha256(raw).hexdigest()
-    if "archive_sha256" in manifest:
-        assert digest == manifest["archive_sha256"], name
+    expected_archive = manifest.get("archive_sha256", manifest.get("records_sha256"))
+    if expected_archive is not None:
+        assert digest == expected_archive, name
     destination.mkdir(parents=True, exist_ok=True)
     with zipfile.ZipFile(folder/archive_name) as z:
         assert set(z.namelist()) == set(records), name
@@ -117,11 +122,20 @@ acquisition = out/"annotation-acquisition"
 aa = archive("annotation-acquisition/riding-order", "manifest.json", ["input.igz", "riding-input.igz", "original.json", "threshold-first-failure.json", "source-first-failure.log"], acquisition, archive_name="source-records.zip")
 run([binaries/(consumers[13]+suffix), acquisition], "annotation-acquisition/runtime.log")
 run([sys.executable, repo/"scripts/check-annotation-acquisition.py", acquisition], "annotation-acquisition/acceptance.json")
+mesh = out/"mesh-kernel"
+mk = archive("p05-mesh-kernel", "manifest.json", ["input.json", "source.json"], mesh)
+run([binaries/(consumers[14]+suffix), mesh/"input.json"], "mesh-kernel/native.json")
+run([sys.executable, repo/"scripts/check-mesh-kernel.py", mesh/"source.json", mesh/"native.json"], "mesh-kernel/acceptance.json")
+annotation_edit = out/"annotation-edit-style"
+ae = archive("annotation-edit-style", "manifest.json", ["input.igz", "original.json", "failed-nested-style.json", "source-label-priority.json"] + [kind+"-"+context+".igz" for kind in ["label", "dimension"] for context in ["root", "nested"]], annotation_edit)
+run([binaries/(consumers[15]+suffix), annotation_edit], "annotation-edit-style/runtime.log")
+run([sys.executable, repo/"scripts/reopen-annotation-edit-style.py", annotation_edit], "annotation-edit-style/reopen.log")
+run([sys.executable, repo/"scripts/check-annotation-edit-style.py", annotation_edit], "annotation-edit-style/acceptance.json")
 rows = json.loads((doc/"native.json").read_text())["rows"]
 assert [(x["fixture"],x["phase"]) for x in rows] == [(f,p) for f in ["retained","nested-leaves"] for p in ["edited","undo","redo"]]
 assert all(x["saved"] and x["clean"] for x in rows)
 result = {"revision":subprocess.check_output(["git","rev-parse","HEAD"],cwd=repo,text=True).strip(),
-          "source_pin":pin,"binary_sha256":identities,"source_archives":{"axes":a,"documents":d,"fillet":f,"pushpull_finite":p,"paste_save":ps,"box_selection":bs,"materials":mr,"cursor":cn,"annotations":ad,"zoom_extents":ze,"annotation_move":am,"annotation_acquisition":aa},
+          "source_pin":pin,"binary_sha256":identities,"source_archives":{"axes":a,"documents":d,"fillet":f,"pushpull_finite":p,"paste_save":ps,"box_selection":bs,"materials":mr,"cursor":cn,"annotations":ad,"zoom_extents":ze,"annotation_move":am,"annotation_acquisition":aa,"mesh_kernel":mk,"annotation_edit_style":ae},
           "axes":json.loads((axes/"check.json").read_text()),"documents":{"actual_app_saves":len(rows),"exact_original_reopens":6,"leaf_record_types":15,"negative_controls":5},
           "fillet":json.loads((fillet/"check.json").read_text()),"fillet_volume":json.loads((fillet/"volume.json").read_text()),"pushpull":json.loads((out/"pushpull-comparison.json").read_text()),
           "pushpull_finite":json.loads((finite/"comparison.json").read_text()),
@@ -134,6 +148,8 @@ result = {"revision":subprocess.check_output(["git","rev-parse","HEAD"],cwd=repo
           "zoom_extents":json.loads((zoom/"acceptance.json").read_text()),
           "annotation_move":json.loads((move/"acceptance.json").read_text()),
           "annotation_acquisition":json.loads((acquisition/"acceptance.json").read_text()),
+          "mesh_kernel":json.loads((mesh/"acceptance.json").read_text()),
+          "annotation_edit_style":json.loads((annotation_edit/"acceptance.json").read_text()),
           "fresh_source_acquisitions":0,"result":"pass"}
 (out/"result.json").write_text(json.dumps(result,indent=2)+"\n")
 print(json.dumps(result))
