@@ -1,0 +1,6 @@
+{
+  "immediate_equals_baseline": true,
+  "settled_frames_equal": true,
+  "settled_changed_pixels": 1824,
+  "scope": "Independent retained pixel comparison supports capture-order diagnosis; merged lifecycle independently executed separately."
+}
