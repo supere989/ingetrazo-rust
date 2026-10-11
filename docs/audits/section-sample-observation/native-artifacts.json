@@ -1,0 +1,16 @@
+{
+  "run_id": 38159920876,
+  "artifacts": {
+    "arm": {
+      "archive_sha256": "eeb06fcc3f0fbc990aba4175312e11ee07090e8260029a7599805431b7342f00",
+      "source_commit": "ef96e8ae9bfa23d4c0a32d13a80f9dc84ef52894",
+      "source_files_authenticated": 52
+    },
+    "intel": {
+      "archive_sha256": "86785286d50b89827f943de8c3b9edb604b58009e0ba345b0ae670f05ca0308e",
+      "source_commit": "ef96e8ae9bfa23d4c0a32d13a80f9dc84ef52894",
+      "source_files_authenticated": 52
+    }
+  },
+  "scope": "SDK/MSL and per-sample observation only; production pixels remain unchanged and strict section failures remain"
+}
