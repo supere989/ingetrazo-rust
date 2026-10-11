@@ -1,0 +1,28 @@
+{
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "source_script_sha256": "454b05f658da8e74f9d5fba0c6454245359dbf76ad8c2a40837ea978955464a2",
+  "observed_rgba": {
+    "red": [
+      247,
+      0,
+      0,
+      255
+    ],
+    "yellow": [
+      247,
+      247,
+      0,
+      255
+    ],
+    "hidden_removed": [
+      0,
+      0,
+      255,
+      255
+    ]
+  },
+  "literal_cases": 7,
+  "retained_initial_failure": "Initial requested256x256 viewport rejected width/height assertion; actual original minimum widget size requires800x600. Source dimension recipe corrected; no pixel threshold changed.",
+  "native_state": "SDK/runtime pending; no native acceptance claim",
+  "scope": "Actual frozen original Qt software OpenGL/MSAA framebuffer interior samples; not whole-widget/usergesture parity"
+}
