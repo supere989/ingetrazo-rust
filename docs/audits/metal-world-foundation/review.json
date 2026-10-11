@@ -1,0 +1,29 @@
+{
+  "base": "1108ab44348ab4453315180944a09b48b7e285d3",
+  "scope": "Native Metal opaque world-space/depth backend foundation; not active production viewport and not GPU runtime proof",
+  "focused_tests": {
+    "passed": 3,
+    "command": "cargo test -p ingetrazo-metal --lib world_admission -j2"
+  },
+  "apple_metadata": {
+    "passed": true,
+    "command": "cargo check -p ingetrazo-metal --lib --example native_world_depth --target aarch64-apple-darwin -j2",
+    "scope": "Rust target metadata; MSL compilation, Apple SDK link and native GPU execution still pending"
+  },
+  "gpu_fixture": "two draw orders exact near-green/far-red occlusion, literal depth-disabled negative red, exact outside clear, three warm frames no collection/upload/target allocation, invalid-pose refusal",
+  "remaining": [
+    "actual native SDK link/MSL compilation/GPU execution",
+    "direct UI texture ingress retaining complete PreparedWorld until sampling completion",
+    "per-placement frozen geometry/pose cache",
+    "full source materials/textures/front/back/alpha/sections/images/annotations",
+    "ARM positive presentation separate unresolved"
+  ],
+  "ownership": "Prepared retains Arc mesh/pipeline/color/depth target; max3 target owners; unknown diagnostic completion quarantines command/readback/frame and poisons admission",
+  "allocation_limit": "native heapTextureSizeAndAlign query precedes standalone allocation; actual allocatedSize above query refuses publication. Heap estimate is not asserted a universal standalone transient-allocation bound. Immutable geometry payload cap256MiB; Metal memory budget separately admits actual resources.",
+  "hashes": {
+    "crates/ingetrazo-metal/src/world.rs": "b8bb9d779220e64108c97414c5e147877e738a41d7c5f87521c3f0d36ba7fc4c",
+    "crates/ingetrazo-metal/src/world_admission.rs": "db47f53eecc9ec8db00e1ecfbbebca4fe835a5789e4055937206f60c5ae86ed7",
+    "crates/ingetrazo-metal/src/shaders/world.metal": "d5d4193adebf315b74503fdbb0d8b6b1abfeb036354010c091a0ffa02799ec6e",
+    "crates/ingetrazo-metal/examples/native_world_depth.rs": "bb0f665f9e7ad06f39335b875d767b2a7f004075d56adc4bc5caf240814c5c8e"
+  }
+}

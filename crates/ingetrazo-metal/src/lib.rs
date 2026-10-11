@@ -31,3 +31,7 @@ pub mod cad_compute_painter;
 
 #[cfg(target_os = "macos")]
 pub mod compute_canvas;
+
+mod world_admission;
+#[cfg(target_os = "macos")]
+pub mod world;

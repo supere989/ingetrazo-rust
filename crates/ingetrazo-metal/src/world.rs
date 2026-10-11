@@ -1,0 +1,427 @@
+//! Direct native world-space surface rendering. No CPU projection or submission.
+//! Prepared frames retain buffers and color/depth targets through GPU completion.
+//! This first opaque stage deliberately rejects paint policies not implemented here.
+use crate::{Buffer, NativeMetal};
+use ingetrazo_core::gpu_memory::MemoryBudget;
+use ingetrazo_render::buffer::MeshRenderBuffer;
+use objc2::{rc::Retained, runtime::ProtocolObject};
+use objc2_foundation::NSString;
+use objc2_metal::*;
+use std::{
+    mem::ManuallyDrop,
+    sync::{Arc, Mutex},
+};
+struct Image {
+    raw: ManuallyDrop<Retained<ProtocolObject<dyn MTLTexture>>>,
+    budget: Arc<Mutex<MemoryBudget>>,
+    handle: u64,
+}
+impl Drop for Image {
+    fn drop(&mut self) {
+        unsafe { ManuallyDrop::drop(&mut self.raw) };
+        if let Ok(mut b) = self.budget.lock() {
+            let _ = b.freed(self.handle);
+        }
+    }
+}
+struct Target {
+    color: Image,
+    depth: Image,
+    extent: (u32, u32),
+}
+struct Mesh {
+    vertices: Buffer,
+    indices: Buffer,
+    count: usize,
+}
+struct Pipeline {
+    color: Retained<ProtocolObject<dyn MTLRenderPipelineState>>,
+    depth: Retained<ProtocolObject<dyn MTLDepthStencilState>>,
+}
+#[derive(Default, Debug, Clone, Copy)]
+pub struct Stats {
+    pub geometry_uploads: u64,
+    pub target_allocations: u64,
+    pub prepared: u64,
+    pub warm_geometry_hits: u64,
+}
+#[derive(Default)]
+pub struct World {
+    mesh: Option<Arc<Mesh>>,
+    key: Option<u64>,
+    pipeline: Option<Arc<Pipeline>>,
+    targets: Vec<Arc<Target>>,
+    pub stats: Stats,
+}
+pub struct Prepared {
+    mesh: Option<Arc<Mesh>>,
+    pipeline: Arc<Pipeline>,
+    target: Arc<Target>,
+    mvp: [[f32; 4]; 4],
+    clear: [f64; 4],
+}
+impl World {
+    /// `collect` runs only on a changed immutable geometry identity. Pose always validates.
+    /// Caller must change key on any geometry/material/visibility change; transform-only
+    /// per-placement caching will use independently keyed meshes, never suppress revisions.
+    pub fn prepare<F>(
+        &mut self,
+        metal: &NativeMetal,
+        key: u64,
+        mvp: [[f32; 4]; 4],
+        extent: (u32, u32),
+        clear: [f64; 4],
+        collect: F,
+    ) -> Result<Option<Arc<Prepared>>, String>
+    where
+        F: FnOnce() -> Result<MeshRenderBuffer, String>,
+    {
+        super::world_admission::pose(mvp, extent, clear)?;
+        if metal.poisoned.load(std::sync::atomic::Ordering::Acquire) {
+            return Err("Metal world admission poisoned".into());
+        }
+        if extent.0 == 0 || extent.1 == 0 {
+            return Ok(None);
+        }
+        self.targets
+            .retain(|t| Arc::strong_count(t) > 1 || t.extent == extent);
+        let cached = self
+            .targets
+            .iter()
+            .find(|t| t.extent == extent && Arc::strong_count(t) == 1)
+            .cloned();
+        if cached.is_none() && self.targets.len() >= 3 {
+            return Ok(None);
+        }
+        let mesh = if self.key == Some(key) {
+            self.stats.warm_geometry_hits += 1;
+            self.mesh.clone()
+        } else {
+            let data = collect()?;
+            super::world_admission::opaque(&data)?;
+            if data.indices.is_empty() {
+                None
+            } else {
+                Some(Arc::new(Mesh {
+                    vertices: upload(metal, bytemuck::cast_slice(&data.vertices))?,
+                    indices: upload(metal, bytemuck::cast_slice(&data.indices))?,
+                    count: data.indices.len(),
+                }))
+            }
+        };
+        let pipeline = if let Some(p) = &self.pipeline {
+            p.clone()
+        } else {
+            Arc::new(pipeline(metal)?)
+        };
+        let allocated = cached.is_none();
+        let target = if let Some(t) = cached {
+            t
+        } else {
+            Arc::new(Target {
+                color: image(
+                    metal,
+                    extent,
+                    MTLPixelFormat::RGBA8Unorm,
+                    MTLTextureUsage::RenderTarget | MTLTextureUsage::ShaderRead,
+                    4,
+                )?,
+                depth: image(
+                    metal,
+                    extent,
+                    MTLPixelFormat::Depth32Float,
+                    MTLTextureUsage::RenderTarget,
+                    4,
+                )?,
+                extent,
+            })
+        };
+        // Publish only after all fallible resource admission succeeds.
+        if allocated {
+            self.targets.push(target.clone());
+            self.stats.target_allocations += 1;
+        }
+        if self.key != Some(key) {
+            self.stats.geometry_uploads += u64::from(mesh.is_some());
+        }
+        self.key = Some(key);
+        self.mesh = mesh.clone();
+        self.pipeline = Some(pipeline.clone());
+        self.stats.prepared += 1;
+        Ok(Some(Arc::new(Prepared {
+            mesh,
+            pipeline,
+            target,
+            mvp,
+            clear,
+        })))
+    }
+    pub fn clear_idle(&mut self) {
+        self.targets.retain(|t| Arc::strong_count(t) > 1);
+        self.mesh = None;
+        self.key = None;
+    }
+}
+impl Prepared {
+    pub fn texture(&self) -> &ProtocolObject<dyn MTLTexture> {
+        &self.target.color.raw
+    }
+    pub fn extent(&self) -> (u32, u32) {
+        self.target.extent
+    }
+    /// Encode before the UI samples texture(), retaining this Prepared until completion.
+    pub fn encode(&self, command: &ProtocolObject<dyn MTLCommandBuffer>) -> Result<(), String> {
+        self.encode_inner(command, true)
+    }
+    fn encode_inner(
+        &self,
+        command: &ProtocolObject<dyn MTLCommandBuffer>,
+        depth_enabled: bool,
+    ) -> Result<(), String> {
+        let pass = MTLRenderPassDescriptor::new();
+        let color = unsafe { pass.colorAttachments().objectAtIndexedSubscript(0) };
+        color.setTexture(Some(&self.target.color.raw));
+        color.setLoadAction(MTLLoadAction::Clear);
+        color.setStoreAction(MTLStoreAction::Store);
+        color.setClearColor(MTLClearColor {
+            red: self.clear[0],
+            green: self.clear[1],
+            blue: self.clear[2],
+            alpha: self.clear[3],
+        });
+        let depth = pass.depthAttachment();
+        depth.setTexture(Some(&self.target.depth.raw));
+        depth.setLoadAction(MTLLoadAction::Clear);
+        depth.setStoreAction(MTLStoreAction::DontCare);
+        depth.setClearDepth(1.);
+        let encoder = command
+            .renderCommandEncoderWithDescriptor(&pass)
+            .ok_or("Metal world encoder unavailable")?;
+        encoder.setRenderPipelineState(&self.pipeline.color);
+        encoder.setDepthStencilState(if depth_enabled {
+            Some(&self.pipeline.depth)
+        } else {
+            None
+        });
+        encoder.setCullMode(MTLCullMode::None);
+        if let Some(mesh) = &self.mesh {
+            unsafe {
+                encoder.setVertexBuffer_offset_atIndex(Some(&mesh.vertices.raw), 0, 0);
+                encoder.setVertexBytes_length_atIndex(
+                    std::ptr::NonNull::from(&self.mvp).cast(),
+                    64,
+                    1,
+                );
+                encoder.drawIndexedPrimitives_indexCount_indexType_indexBuffer_indexBufferOffset(
+                    MTLPrimitiveType::Triangle,
+                    mesh.count,
+                    MTLIndexType::UInt32,
+                    &mesh.indices.raw,
+                    0,
+                );
+            }
+        }
+        encoder.endEncoding();
+        Ok(())
+    }
+}
+fn pipeline(metal: &NativeMetal) -> Result<Pipeline, String> {
+    let lib = metal
+        .device
+        .newLibraryWithSource_options_error(
+            &NSString::from_str(include_str!("shaders/world.metal")),
+            None,
+        )
+        .map_err(|e| format!("Metal world shader:{e:?}"))?;
+    let vertex = lib
+        .newFunctionWithName(&NSString::from_str("world_vertex"))
+        .ok_or("World vertex missing")?;
+    let fragment = lib
+        .newFunctionWithName(&NSString::from_str("world_fragment"))
+        .ok_or("World fragment missing")?;
+    let d = MTLRenderPipelineDescriptor::new();
+    d.setVertexFunction(Some(&vertex));
+    d.setFragmentFunction(Some(&fragment));
+    d.setDepthAttachmentPixelFormat(MTLPixelFormat::Depth32Float);
+    unsafe { d.colorAttachments().objectAtIndexedSubscript(0) }
+        .setPixelFormat(MTLPixelFormat::RGBA8Unorm);
+    let color = metal
+        .device
+        .newRenderPipelineStateWithDescriptor_error(&d)
+        .map_err(|e| format!("Metal world pipeline:{e:?}"))?;
+    let depth = MTLDepthStencilDescriptor::new();
+    depth.setDepthCompareFunction(MTLCompareFunction::LessEqual);
+    depth.setDepthWriteEnabled(true);
+    Ok(Pipeline {
+        color,
+        depth: metal
+            .device
+            .newDepthStencilStateWithDescriptor(&depth)
+            .ok_or("World depth state missing")?,
+    })
+}
+fn image(
+    metal: &NativeMetal,
+    extent: (u32, u32),
+    format: MTLPixelFormat,
+    usage: MTLTextureUsage,
+    bpp: u64,
+) -> Result<Image, String> {
+    let requested = u64::from(extent.0) * u64::from(extent.1) * bpp;
+    let d = unsafe {
+        MTLTextureDescriptor::texture2DDescriptorWithPixelFormat_width_height_mipmapped(
+            format,
+            extent.0 as usize,
+            extent.1 as usize,
+            false,
+        )
+    };
+    d.setStorageMode(MTLStorageMode::Private);
+    d.setHazardTrackingMode(MTLHazardTrackingMode::Tracked);
+    d.setUsage(usage);
+    // Query native layout before allocation. This is a heap-size estimate for a
+    // standalone texture: verify allocatedSize before publication, never admit a
+    // larger allocation by silently increasing the ticket after allocation.
+    let native = metal.device.heapTextureSizeAndAlignWithDescriptor(&d);
+    let admitted = u64::try_from(native.size).map_err(|_| "World native texture size overflow")?;
+    if admitted < requested || native.align == 0 {
+        return Err("World native texture size query unavailable".into());
+    }
+    let ticket = metal
+        .budget
+        .lock()
+        .map_err(|_| "Metal budget poisoned")?
+        .reserve(0, admitted)?;
+    let Some(raw) = metal.device.newTextureWithDescriptor(&d) else {
+        metal
+            .budget
+            .lock()
+            .map_err(|_| "Metal budget poisoned")?
+            .cancel(ticket)?;
+        return Err("Metal world target allocation failed".into());
+    };
+    let handle = (&*raw as *const ProtocolObject<dyn MTLTexture>).cast::<()>() as usize as u64;
+    let actual = MTLResource::allocatedSize(&*raw) as u64;
+    let mut budget = metal.budget.lock().map_err(|_| "Metal budget poisoned")?;
+    if actual > admitted {
+        budget.cancel(ticket)?;
+        return Err("World standalone texture exceeds preallocation native estimate".into());
+    }
+    if admitted != actual {
+        budget.cancel(ticket)?;
+        let ticket = budget.reserve(0, actual)?;
+        budget.commit(ticket, handle)?;
+    } else {
+        budget.commit(ticket, handle)?;
+    }
+    drop(budget);
+    Ok(Image {
+        raw: ManuallyDrop::new(raw),
+        budget: metal.budget.clone(),
+        handle,
+    })
+}
+
+fn upload(metal: &NativeMetal, bytes: &[u8]) -> Result<Buffer, String> {
+    let mut buffer = metal.buffer(bytes.len(), true)?;
+    buffer.write(bytes)?;
+    Ok(buffer)
+}
+
+/// Offscreen acceptance only. Production hosts encode in their existing command.
+/// Completion-unknown drops quarantine all owners; no unbounded GPU wait.
+pub struct Diagnostic {
+    command: ManuallyDrop<Retained<ProtocolObject<dyn MTLCommandBuffer>>>,
+    frame: ManuallyDrop<Arc<Prepared>>,
+    readback: ManuallyDrop<Buffer>,
+    row: usize,
+    poison: Arc<std::sync::atomic::AtomicBool>,
+}
+impl Prepared {
+    pub fn submit_diagnostic(self: &Arc<Self>, metal: &NativeMetal) -> Result<Diagnostic, String> {
+        self.submit_diagnostic_inner(metal, true)
+    }
+    /// Negative control only: literal disabled depth state must fail the near-first oracle.
+    pub fn submit_diagnostic_without_depth(
+        self: &Arc<Self>,
+        metal: &NativeMetal,
+    ) -> Result<Diagnostic, String> {
+        self.submit_diagnostic_inner(metal, false)
+    }
+    fn submit_diagnostic_inner(
+        self: &Arc<Self>,
+        metal: &NativeMetal,
+        depth_enabled: bool,
+    ) -> Result<Diagnostic, String> {
+        let (w, h) = self.extent();
+        if w > 4096 || h > 4096 {
+            return Err("World diagnostic extent exceeds4096".into());
+        }
+        let row = (w as usize * 4 + 255) & !255;
+        let readback = metal.buffer(row * h as usize, true)?;
+        let command = metal
+            .queue
+            .commandBuffer()
+            .ok_or("World diagnostic command unavailable")?;
+        self.encode_inner(&command, depth_enabled)?;
+        let blit = command
+            .blitCommandEncoder()
+            .ok_or("World diagnostic blit unavailable")?;
+        unsafe {
+            blit.copyFromTexture_sourceSlice_sourceLevel_sourceOrigin_sourceSize_toBuffer_destinationOffset_destinationBytesPerRow_destinationBytesPerImage(self.texture(),0,0,MTLOrigin{x:0,y:0,z:0},MTLSize{width:w as usize,height:h as usize,depth:1},&readback.raw,0,row,row*h as usize);
+        }
+        blit.endEncoding();
+        command.commit();
+        Ok(Diagnostic {
+            command: ManuallyDrop::new(command),
+            frame: ManuallyDrop::new(self.clone()),
+            readback: ManuallyDrop::new(readback),
+            row,
+            poison: metal.poisoned.clone(),
+        })
+    }
+}
+impl Diagnostic {
+    pub fn readback(&self, timeout: std::time::Duration) -> Result<Vec<u8>, String> {
+        if timeout > std::time::Duration::from_secs(5) {
+            return Err("World diagnostic deadline exceeds5s".into());
+        }
+        let start = std::time::Instant::now();
+        while self.command.status() != MTLCommandBufferStatus::Completed {
+            if self.command.status() == MTLCommandBufferStatus::Error || start.elapsed() >= timeout
+            {
+                self.poison
+                    .store(true, std::sync::atomic::Ordering::Release);
+                return Err("World diagnostic completion unknown; owners quarantined".into());
+            }
+            std::thread::sleep(std::time::Duration::from_millis(1));
+        }
+        let (w, h) = self.frame.extent();
+        let bytes = unsafe {
+            std::slice::from_raw_parts(
+                self.readback.raw.contents().as_ptr().cast::<u8>(),
+                self.row * h as usize,
+            )
+        };
+        let mut rgba = Vec::with_capacity(w as usize * h as usize * 4);
+        for y in 0..h as usize {
+            rgba.extend_from_slice(&bytes[y * self.row..y * self.row + w as usize * 4]);
+        }
+        Ok(rgba)
+    }
+}
+impl Drop for Diagnostic {
+    fn drop(&mut self) {
+        if self.command.status() == MTLCommandBufferStatus::Completed {
+            unsafe {
+                ManuallyDrop::drop(&mut self.readback);
+                ManuallyDrop::drop(&mut self.frame);
+                ManuallyDrop::drop(&mut self.command)
+            }
+        } else {
+            self.poison
+                .store(true, std::sync::atomic::Ordering::Release);
+            eprintln!("World diagnostic owner quarantined: completion unknown");
+        }
+    }
+}
