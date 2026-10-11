@@ -1,0 +1,44 @@
+{
+  "runtime": "ab271ec2",
+  "base": "f90106ca",
+  "original_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "source_sha256": {
+    "crates/ingetrazo-tools/src/pushpull.rs": "7586381e25dac291e001acb0f97d2e108bbe995d2ead2e5313141bb09d222f66",
+    "crates/ingetrazo-gui/examples/pushpull_solid_workflows.rs": "e8cbd66d3e1c8315731c869402090cfba46eb2575044e27cfc859055529eb249",
+    "scripts/reference-pushpull-solid-workflows.py": "4b1a532e804a7b0ab811e28b3f413dba840b3ed23ee41d00ab0a5921688e58de",
+    "scripts/reference-pushpull-holed-operative.py": "e57242e3c965038b457b214e05ba42351bc337e54e6b72de49a80066e7326f63",
+    "scripts/check-pushpull-solid-workflows.py": "29cd6ebf06de688260e0c9badb010759a3980b78b0fb02c45dfc420b39a54218",
+    "scripts/check-pushpull-solid-shape.py": "e08ed74be93b565a7c4c253ae2ab043899db590895e3e279b050a24dc0bbb2df"
+  },
+  "record_sha256": {
+    "source.json": "159381922f79316805da668151180acf7276e9c02800eaf103d789588302c7a5",
+    "operative-holed-source.json": "de2f10b11a18520065ae1788ef243a3e6559be3cd581d15f80f6403ff339298b",
+    "app-input.json": "135b1d0d7debcb5210ec3e88f1ae5a271a99f4163fce7025be2202c0580c65d2",
+    "app-native.json": "878b24febd3eb0a8eebec8076d494b3ee35576aff4330a8b20d0033b6126fe90",
+    "native.json": "aa353bf65b238573c878ecb3c5e6e718a470b41bf16b6ec538d47f9eeb5171b4",
+    "gate2-native.json": "bfc40f96faab8be3ec1215923b8668830c50454837fa828edec31b366b4e430f",
+    "initial-native.json": "ecfafb6e336314d5228e49afab83bd17fb066ef151bcf438bc74cc3dfbd5ee60",
+    "repaired-failed-candidate.json": "cb7f20c54de3ba1cdb7d04627666914199e42a43ef11da6a3bb453431e1fc78a",
+    "comparison.json": "30b8e47cfda77cf14ed48ec8d4b883586d558426fb9e861636da911ca0fcca4e",
+    "shape-review.json": "6975a49d8d6d64b235ae31b44ff857264d409da59f0f9d770d7720e185fe9e91"
+  },
+  "binary_sha256": {
+    "pushpull_solid_workflows": "b1d441433318c48232c13897a1a2b6995a46893220668dd3be2bd234c0a5030c",
+    "pushpull_gate2_fixture": "dc3dac50d9537d2b2ae757415503fb78554298985c167c57556c6a34fdea30c8"
+  },
+  "original_test_sha256": {
+    "test_pushpull_subtractive.py": "2b46a4314023d3779063dfbcdc7adfae973fa41d54c042487753bbae7a12b923",
+    "test_pushpull_ux.py": "9cc4395a1d3c32222c3158e39cfd75e281aa5d7ec2d777e3779d1ea14eecc027"
+  },
+  "focused_checks": {
+    "pushpull_module_tests": 12,
+    "actual_app_controls": 6,
+    "exact_private_model_operations": 8,
+    "independent_exact_shapes": 9,
+    "checker_corruptions": 13,
+    "triangle_admission_corruptions": 4
+  },
+  "initial_build_failures": [
+    "Standalone helper initially lacked qualified Mesh import; fixed before successful build."
+  ]
+}

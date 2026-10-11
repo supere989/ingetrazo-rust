@@ -1,0 +1,27 @@
+{
+  "passed": true,
+  "scope": "Eight exact pinned private regression operations; six exact actual App consumers including nested shared history. Direct helper holed-winding discrepancy retained; no full P03 promotion.",
+  "exact_model_cases": 8,
+  "actual_app_cases": 6,
+  "source_private_helper_discrepancy": "test_repush_top_extends_holed_wall_keeping_opening-2",
+  "negative_controls": [
+    "empty",
+    "missing_case",
+    "duplicate_case",
+    "removed_face",
+    "reversed_boundary",
+    "wrong_interior",
+    "wrong_paint",
+    "lost_hole",
+    "coordinate_drift",
+    "wrong_undo",
+    "lost_cancel",
+    "missing_history",
+    "lost_linked_finish"
+  ],
+  "retained_invalid_original_atomic_refusals": [
+    "ctrl-roof-0.2",
+    "ctrl-step-0.5"
+  ],
+  "retained_wedge_policy": "Unchanged zero-limit no-op; literal invalid-source result not copied"
+}

@@ -1,0 +1,649 @@
+{
+  "vertices": [
+    {
+      "uid": "52e7f131-0227-4aa5-a673-7b77158d7409",
+      "position": [
+        0.0,
+        4.0,
+        0.0
+      ],
+      "edges": [
+        0,
+        3,
+        15
+      ]
+    },
+    {
+      "uid": "6b3b50ef-da87-4eae-9818-b4a01a091907",
+      "position": [
+        4.0,
+        4.0,
+        0.0
+      ],
+      "edges": [
+        0,
+        1,
+        14
+      ]
+    },
+    {
+      "uid": "2310d496-7e74-4b91-9d34-5ca3302f091b",
+      "position": [
+        4.0,
+        0.0,
+        0.0
+      ],
+      "edges": [
+        1,
+        2,
+        12
+      ]
+    },
+    {
+      "uid": "9e1cb2fc-d5c1-46dd-8721-800d17d21429",
+      "position": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "edges": [
+        2,
+        3,
+        13
+      ]
+    },
+    {
+      "uid": "66470cc1-a681-4109-9d31-862c832b59cd",
+      "position": [
+        0.0,
+        0.0,
+        3.0
+      ],
+      "edges": [
+        4,
+        8,
+        9,
+        13,
+        21
+      ]
+    },
+    {
+      "uid": "e4da0e1b-1b76-4aad-865e-5ceefdd07342",
+      "position": [
+        4.0,
+        0.0,
+        3.0
+      ],
+      "edges": [
+        4,
+        5,
+        12
+      ]
+    },
+    {
+      "uid": "77757934-0c4a-430c-81b4-838f6e395dca",
+      "position": [
+        4.0,
+        4.0,
+        3.0
+      ],
+      "edges": [
+        5,
+        6,
+        14
+      ]
+    },
+    {
+      "uid": "989fa026-5da8-4fa5-84b2-d6b9256abbde",
+      "position": [
+        0.0,
+        4.0,
+        3.0
+      ],
+      "edges": [
+        6,
+        7,
+        15
+      ]
+    },
+    {
+      "uid": "390c46d0-302e-4dc2-94c1-4c374a825bc4",
+      "position": [
+        0.0,
+        3.0,
+        3.0
+      ],
+      "edges": [
+        7,
+        8,
+        11,
+        23
+      ]
+    },
+    {
+      "uid": "d09314c2-376e-4253-8fa3-3a534d207dd5",
+      "position": [
+        3.0,
+        0.0,
+        3.0
+      ],
+      "edges": [
+        9,
+        10,
+        20
+      ]
+    },
+    {
+      "uid": "207ad7c2-756d-4bac-a85e-e6fb6d0518f9",
+      "position": [
+        3.0,
+        3.0,
+        3.0
+      ],
+      "edges": [
+        10,
+        11,
+        22
+      ]
+    },
+    {
+      "uid": "543c8c83-d8a2-4aee-8de2-4a12a5ed5cde",
+      "position": [
+        0.0,
+        0.0,
+        5.0
+      ],
+      "edges": [
+        16,
+        19,
+        21
+      ]
+    },
+    {
+      "uid": "9899e9b5-8346-439c-9ec8-2c2c20c743c8",
+      "position": [
+        3.0,
+        0.0,
+        5.0
+      ],
+      "edges": [
+        16,
+        17,
+        20
+      ]
+    },
+    {
+      "uid": "6f845b83-4bcc-4f71-bc97-d60a5d0cecab",
+      "position": [
+        3.0,
+        3.0,
+        5.0
+      ],
+      "edges": [
+        17,
+        18,
+        22
+      ]
+    },
+    {
+      "uid": "a976c322-d12e-434b-987f-a642a61ce002",
+      "position": [
+        0.0,
+        3.0,
+        5.0
+      ],
+      "edges": [
+        18,
+        19,
+        23
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "attrs": {},
+      "v0": 0,
+      "v1": 1,
+      "faces": [
+        0,
+        4
+      ],
+      "soft": false,
+      "curve_id": null,
+      "layer": null,
+      "hidden": false
+    },
+    {
+      "attrs": {},
+      "v0": 1,
+      "v1": 2,
+      "faces": [
+        0,
+        3
+      ],
+      "soft": false,
+      "curve_id": null,
+      "layer": null,
+      "hidden": false
+    },
+    {
+      "attrs": {},
+      "v0": 2,
+      "v1": 3,
+      "faces": [
+        0,
+        2
+      ],
+      "soft": false,
+      "curve_id": null,
+      "layer": null,
+      "hidden": false
+    },
+    {
+      "attrs": {},
+      "v0": 3,
+      "v1": 0,
+      "faces": [
+        0,
+        5
+      ],
+      "soft": false,
+      "curve_id": null,
+      "layer": null,
+      "hidden": false
+    },
+    {
+      "attrs": {},
+      "v0": 4,
+      "v1": 5,
+      "faces": [
+        1,
+        2
+      ],
+      "soft": false,
+      "curve_id": null,
+      "layer": null,
+      "hidden": false
+    },
+    {
+      "attrs": {},
+      "v0": 5,
+      "v1": 6,
+      "faces": [
+        1,
+        3
+      ],
+      "soft": false,
+      "curve_id": null,
+      "layer": null,
+      "hidden": false
+    },
+    {
+      "attrs": {},
+      "v0": 6,
+      "v1": 7,
+      "faces": [
+        1,
+        4
+      ],
+      "soft": false,
+      "curve_id": null,
+      "layer": null,
+      "hidden": false
+    },
+    {
+      "attrs": {},
+      "v0": 7,
+      "v1": 8,
+      "faces": [
+        1,
+        5
+      ],
+      "soft": false,
+      "curve_id": null,
+      "layer": null,
+      "hidden": false
+    },
+    {
+      "attrs": {},
+      "v0": 8,
+      "v1": 4,
+      "faces": [
+        1,
+        5,
+        10
+      ],
+      "soft": false,
+      "curve_id": null,
+      "layer": null,
+      "hidden": false
+    },
+    {
+      "attrs": {},
+      "v0": 4,
+      "v1": 9,
+      "faces": [
+        1,
+        7
+      ],
+      "soft": false,
+      "curve_id": null,
+      "layer": null,
+      "hidden": false
+    },
+    {
+      "attrs": {},
+      "v0": 9,
+      "v1": 10,
+      "faces": [
+        1,
+        8
+      ],
+      "soft": false,
+      "curve_id": null,
+      "layer": null,
+      "hidden": false
+    },
+    {
+      "attrs": {},
+      "v0": 10,
+      "v1": 8,
+      "faces": [
+        1,
+        9
+      ],
+      "soft": false,
+      "curve_id": null,
+      "layer": null,
+      "hidden": false
+    },
+    {
+      "attrs": {},
+      "v0": 2,
+      "v1": 5,
+      "faces": [
+        2,
+        3
+      ],
+      "soft": false,
+      "curve_id": null,
+      "layer": null,
+      "hidden": false
+    },
+    {
+      "attrs": {},
+      "v0": 4,
+      "v1": 3,
+      "faces": [
+        2,
+        5
+      ],
+      "soft": false,
+      "curve_id": null,
+      "layer": null,
+      "hidden": false
+    },
+    {
+      "attrs": {},
+      "v0": 1,
+      "v1": 6,
+      "faces": [
+        3,
+        4
+      ],
+      "soft": false,
+      "curve_id": null,
+      "layer": null,
+      "hidden": false
+    },
+    {
+      "attrs": {},
+      "v0": 0,
+      "v1": 7,
+      "faces": [
+        4,
+        5
+      ],
+      "soft": false,
+      "curve_id": null,
+      "layer": null,
+      "hidden": false
+    },
+    {
+      "attrs": {},
+      "v0": 11,
+      "v1": 12,
+      "faces": [
+        6,
+        7
+      ],
+      "soft": false,
+      "curve_id": null,
+      "layer": null,
+      "hidden": false
+    },
+    {
+      "attrs": {},
+      "v0": 12,
+      "v1": 13,
+      "faces": [
+        6,
+        8
+      ],
+      "soft": false,
+      "curve_id": null,
+      "layer": null,
+      "hidden": false
+    },
+    {
+      "attrs": {},
+      "v0": 13,
+      "v1": 14,
+      "faces": [
+        6,
+        9
+      ],
+      "soft": false,
+      "curve_id": null,
+      "layer": null,
+      "hidden": false
+    },
+    {
+      "attrs": {},
+      "v0": 14,
+      "v1": 11,
+      "faces": [
+        6,
+        10
+      ],
+      "soft": false,
+      "curve_id": null,
+      "layer": null,
+      "hidden": false
+    },
+    {
+      "attrs": {},
+      "v0": 9,
+      "v1": 12,
+      "faces": [
+        7,
+        8
+      ],
+      "soft": false,
+      "curve_id": null,
+      "layer": null,
+      "hidden": false
+    },
+    {
+      "attrs": {},
+      "v0": 11,
+      "v1": 4,
+      "faces": [
+        7,
+        10
+      ],
+      "soft": false,
+      "curve_id": null,
+      "layer": null,
+      "hidden": false
+    },
+    {
+      "attrs": {},
+      "v0": 10,
+      "v1": 13,
+      "faces": [
+        8,
+        9
+      ],
+      "soft": false,
+      "curve_id": null,
+      "layer": null,
+      "hidden": false
+    },
+    {
+      "attrs": {},
+      "v0": 8,
+      "v1": 14,
+      "faces": [
+        9,
+        10
+      ],
+      "soft": false,
+      "curve_id": null,
+      "layer": null,
+      "hidden": false
+    }
+  ],
+  "faces": [
+    {
+      "vertices": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "holes": [],
+      "attrs": {},
+      "layer": null
+    },
+    {
+      "vertices": [
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "holes": [
+        [
+          4,
+          9,
+          10,
+          8
+        ]
+      ],
+      "attrs": {},
+      "layer": null
+    },
+    {
+      "vertices": [
+        3,
+        2,
+        5,
+        4
+      ],
+      "holes": [],
+      "attrs": {},
+      "layer": null
+    },
+    {
+      "vertices": [
+        2,
+        1,
+        6,
+        5
+      ],
+      "holes": [],
+      "attrs": {},
+      "layer": null
+    },
+    {
+      "vertices": [
+        1,
+        0,
+        7,
+        6
+      ],
+      "holes": [],
+      "attrs": {},
+      "layer": null
+    },
+    {
+      "vertices": [
+        0,
+        3,
+        4,
+        8,
+        7
+      ],
+      "holes": [],
+      "attrs": {},
+      "layer": null
+    },
+    {
+      "vertices": [
+        11,
+        12,
+        13,
+        14
+      ],
+      "holes": [],
+      "attrs": {},
+      "layer": null
+    },
+    {
+      "vertices": [
+        4,
+        9,
+        12,
+        11
+      ],
+      "holes": [],
+      "attrs": {},
+      "layer": null
+    },
+    {
+      "vertices": [
+        9,
+        10,
+        13,
+        12
+      ],
+      "holes": [],
+      "attrs": {},
+      "layer": null
+    },
+    {
+      "vertices": [
+        10,
+        8,
+        14,
+        13
+      ],
+      "holes": [],
+      "attrs": {},
+      "layer": null
+    },
+    {
+      "vertices": [
+        8,
+        4,
+        11,
+        14
+      ],
+      "holes": [],
+      "attrs": {},
+      "layer": null
+    }
+  ]
+}

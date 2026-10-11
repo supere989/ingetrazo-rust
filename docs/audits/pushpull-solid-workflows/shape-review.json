@@ -1,0 +1,60 @@
+{
+  "passed": true,
+  "scope": "Independent original manifold reader; exact physical shapes, does not normalize the separate oriented metadata gate.",
+  "cases": [
+    {
+      "name": "test_repush_top_extends_holed_wall_keeping_opening-0",
+      "source_volume": 48.0,
+      "native_volume": 48.0,
+      "symmetric_difference": 0.0
+    },
+    {
+      "name": "test_repush_top_extends_holed_wall_keeping_opening-1",
+      "source_volume": 49.0,
+      "native_volume": 49.0,
+      "symmetric_difference": 0.0
+    },
+    {
+      "name": "test_repush_top_extends_holed_wall_keeping_opening-2",
+      "source_volume": 81.0,
+      "native_volume": 81.0,
+      "symmetric_difference": 0.0
+    },
+    {
+      "name": "test_stacked_block_side_pushes_stay_clean-0",
+      "source_volume": 48.0,
+      "native_volume": 48.0,
+      "symmetric_difference": 0.0
+    },
+    {
+      "name": "test_stacked_block_side_pushes_stay_clean-1",
+      "source_volume": 56.0,
+      "native_volume": 56.0,
+      "symmetric_difference": 0.0
+    },
+    {
+      "name": "test_stacked_block_side_pushes_stay_clean-2",
+      "source_volume": 60.0,
+      "native_volume": 60.0,
+      "symmetric_difference": 0.0
+    },
+    {
+      "name": "test_stacked_block_side_pushes_stay_clean-3",
+      "source_volume": 66.0,
+      "native_volume": 66.0,
+      "symmetric_difference": 0.0
+    },
+    {
+      "name": "test_push_through_wall_makes_a_real_hole-0",
+      "source_volume": 3.6000001430511475,
+      "native_volume": 3.6000001430511475,
+      "symmetric_difference": 0.0
+    },
+    {
+      "name": "test_push_through_wall_makes_a_real_hole-1",
+      "source_volume": 3.0000001192092896,
+      "native_volume": 3.0000001192092896,
+      "symmetric_difference": 0.0
+    }
+  ]
+}
