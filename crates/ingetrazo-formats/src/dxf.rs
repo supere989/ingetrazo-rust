@@ -260,6 +260,27 @@ fn parse_dxf_options(
             i += 1;
         }
         let attributes = &pairs[start..i];
+        if kind == "POLYLINE" {
+            let (layer, mut points) = legacy_polyline(attributes, &pairs, &mut i, scale)?;
+            if points.is_empty() {
+                continue;
+            }
+            for p in &mut points {
+                if source_points {
+                    *p = p.as_vec3().as_dvec3();
+                }
+                if !p.is_finite() {
+                    return Err(DxfError::Parse("Import coordinate overflow".into()));
+                }
+            }
+            plan.entities.push(DxfEntity {
+                layer,
+                points,
+                face: false,
+                curved: false,
+            });
+            continue;
+        }
         // Preserve the baseline's deliberate omissions, rather than treating
         // annotations as broken modelling geometry.
         if [
@@ -460,6 +481,116 @@ fn parse_dxf_options(
         });
     }
     Ok(plan)
+}
+
+/// Legacy POLYLINE owns a VERTEX sequence, terminated by SEQEND. Parse it once
+/// into the existing immutable entity plan; no document geometry is touched.
+fn legacy_polyline(
+    header: &[(i32, String)],
+    pairs: &[(i32, String)],
+    cursor: &mut usize,
+    scale: f64,
+) -> Result<(String, Vec<DVec3>), DxfError> {
+    fn number(attrs: &[(i32, String)], code: i32, default: f64) -> Result<f64, DxfError> {
+        attrs
+            .iter()
+            .find(|(c, _)| *c == code)
+            .map_or(Ok(default), |(_, v)| {
+                v.parse::<f64>()
+                    .ok()
+                    .filter(|v| v.is_finite())
+                    .ok_or_else(|| DxfError::Parse("Invalid legacy polyline field".into()))
+            })
+    }
+    let flags = number(header, 70, 0.)? as u32;
+    let layer = header
+        .iter()
+        .find(|(c, _)| *c == 8)
+        .map_or("0", |(_, v)| v.as_str())
+        .to_owned();
+    let mut points = Vec::new();
+    let mut first_z = None;
+    let mut ended = false;
+    while *cursor < pairs.len() {
+        if pairs[*cursor].0 != 0 {
+            return Err(DxfError::Parse("Malformed POLYLINE sequence".into()));
+        }
+        let kind = &pairs[*cursor].1;
+        if kind == "SEQEND" {
+            *cursor += 1;
+            while *cursor < pairs.len() && pairs[*cursor].0 != 0 {
+                *cursor += 1;
+            }
+            ended = true;
+            break;
+        }
+        if kind != "VERTEX" {
+            break;
+        }
+        *cursor += 1;
+        let begin = *cursor;
+        while *cursor < pairs.len() && pairs[*cursor].0 != 0 {
+            *cursor += 1;
+        }
+        let attrs = &pairs[begin..*cursor];
+        // Source make_path skips polygon/polyface meshes, not their records.
+        if flags & (16 | 64) != 0 {
+            continue;
+        }
+        if number(attrs, 42, 0.)?.abs() > 1e-12 {
+            return Err(DxfError::Parse(
+                "Legacy polyline bulges are not yet supported; document unchanged".into(),
+            ));
+        }
+        let p = DVec3::new(
+            number(attrs, 10, 0.)?,
+            number(attrs, 20, 0.)?,
+            number(attrs, 30, 0.)?,
+        );
+        first_z.get_or_insert(p.z);
+        points.push(p);
+    }
+    if !ended {
+        return Err(DxfError::Parse("POLYLINE missing SEQEND".into()));
+    }
+    if flags & (16 | 64) != 0 {
+        return Ok((layer, Vec::new()));
+    }
+    if points.len() < 2 {
+        return Ok((layer, Vec::new()));
+    }
+    if flags & 8 == 0 {
+        let elevation = number(header, 30, first_z.unwrap_or(0.))?;
+        let normal = DVec3::new(
+            number(header, 210, 0.)?,
+            number(header, 220, 0.)?,
+            number(header, 230, 1.)?,
+        );
+        if normal.length_squared() == 0. {
+            return Err(DxfError::Parse("Invalid polyline extrusion".into()));
+        }
+        let z = normal.normalize();
+        let x = if z.x.abs() < 1. / 64. && z.y.abs() < 1. / 64. {
+            DVec3::Y.cross(z)
+        } else {
+            DVec3::Z.cross(z)
+        }
+        .normalize();
+        let y = z.cross(x);
+        for p in &mut points {
+            *p = x * p.x + y * p.y + z * elevation;
+        }
+    }
+    for p in &mut points {
+        *p *= scale;
+        if !p.is_finite() {
+            return Err(DxfError::Parse("Import coordinate overflow".into()));
+        }
+    }
+    if flags & 1 != 0 && points.first() != points.last() {
+        points.push(points[0]);
+    }
+    Ok((layer, points))
 }
 
 #[cfg(test)]

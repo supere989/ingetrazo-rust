@@ -1,0 +1,141 @@
+{
+  "source_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "archive": "source-records.zip",
+  "archive_sha256": "21a7482725fe5f5605aafa8adf469b2ceaeda676ea74bba2f6e27a6ab282ac35",
+  "entries": [
+    {
+      "path": "2d-closed-input.igz",
+      "bytes": 3552,
+      "sha256": "6916767b8d56690fc7604c5300844db8cc98e98ff89fc2ae8b066a318cacd85a"
+    },
+    {
+      "path": "2d-closed-original.igz",
+      "bytes": 4360,
+      "sha256": "f3c3fb1b766034996331302c1065c05000ee989b3e6a6e160f534a14536e4a8b"
+    },
+    {
+      "path": "2d-closed.dxf",
+      "bytes": 15896,
+      "sha256": "4ad9085d0221868572e9b41a2d7f70fbffda758120349bb2259281346b129b9e"
+    },
+    {
+      "path": "2d-elevation-input.igz",
+      "bytes": 3552,
+      "sha256": "9f6e2820f68f05276dbfe531ab4c92fa486639167c11d902e923c1b662c9409f"
+    },
+    {
+      "path": "2d-elevation-original.igz",
+      "bytes": 4156,
+      "sha256": "c7ab262b071884db5eba4d2574db22bc85e8608a9c6603e1340bb1fb3263949c"
+    },
+    {
+      "path": "2d-elevation.dxf",
+      "bytes": 15896,
+      "sha256": "a48b836930f679aadb4748bf252f5e8829d1de612a3f2a770d4851535a61a9b0"
+    },
+    {
+      "path": "2d-open-input.igz",
+      "bytes": 3552,
+      "sha256": "52003d496290656f79ef289568d3056598015ebad014f944b4f2eba11227e853"
+    },
+    {
+      "path": "2d-open-original.igz",
+      "bytes": 4156,
+      "sha256": "1a8bcf8e37a3fbf32c6619083d426179188b03682e37eaf77ae5cff3afb2ddae"
+    },
+    {
+      "path": "2d-open.dxf",
+      "bytes": 15896,
+      "sha256": "af409cce414de370c5c77cb80ae450adc3f0dc265fcf75eb8ae019e80e8497c0"
+    },
+    {
+      "path": "3d-closed-input.igz",
+      "bytes": 3552,
+      "sha256": "67363d1e1db4d793120b3873cd60d5fbcb860cc6ac159d35da50dc61c0093c64"
+    },
+    {
+      "path": "3d-closed-original.igz",
+      "bytes": 4360,
+      "sha256": "2bc69ba81e2e40b59a963e4b39ac2c23c92b0df53a5d496d937e53c58c120789"
+    },
+    {
+      "path": "3d-closed.dxf",
+      "bytes": 15923,
+      "sha256": "da9b697b3689e0bc497668860c06efc457d00d93bfcaf53072ef809f603281ed"
+    },
+    {
+      "path": "3d-open-input.igz",
+      "bytes": 3552,
+      "sha256": "655634736d4292bf3d06deca2690e94bcc6bacaa15741da7202b4e6ba61f5c18"
+    },
+    {
+      "path": "3d-open-original.igz",
+      "bytes": 4156,
+      "sha256": "b4b083e5ccd261eb1096190091d9fa0c40aa647fd0c1514443fc1ea101e59448"
+    },
+    {
+      "path": "3d-open.dxf",
+      "bytes": 15923,
+      "sha256": "5b25a8136d98b7dd2112882fee0780b99b00230a8540ef980420209495e6f6d0"
+    },
+    {
+      "path": "leaf-3d-input.igz",
+      "bytes": 3552,
+      "sha256": "893ec1e294f453e8d44c9388d0f506f1e677230cc8013c46c0cdf5fe3ed648fd"
+    },
+    {
+      "path": "leaf-3d-original.igz",
+      "bytes": 4632,
+      "sha256": "fdff8d10eb2a3e0bf2cd0ea921fb3edb8e41aedde340b77c13733f7c3daca506"
+    },
+    {
+      "path": "leaf-3d.dxf",
+      "bytes": 15923,
+      "sha256": "afa6672cbae02d8206abe8dfb8648da5da338eab471d2da22d1a57dda45a5037"
+    },
+    {
+      "path": "ocs-negative-input.igz",
+      "bytes": 3552,
+      "sha256": "42b065e2e9a7b5d605f1df6d6c3b62429a475188301e1758b1ab02dc09965a1c"
+    },
+    {
+      "path": "ocs-negative-original.igz",
+      "bytes": 4370,
+      "sha256": "3d97f97a2372925513d3aef4e57a0f0914d4468aaf3a784b254f2c2fb4631ab7"
+    },
+    {
+      "path": "ocs-negative.dxf",
+      "bytes": 15921,
+      "sha256": "9e3c35b935872ae6b947312dbdb0407b0627ebef95c55f1229ef49378273009e"
+    },
+    {
+      "path": "ocs-oblique-input.igz",
+      "bytes": 3552,
+      "sha256": "172b733badd12edb9ab6f768fbc9eeac113494a368a37da696e9184628cf3ba7"
+    },
+    {
+      "path": "ocs-oblique-original.igz",
+      "bytes": 4339,
+      "sha256": "73d987ec49fb1c0f489bab089412966e5e77c6ebd6b15383997eb5bea9d76f1c"
+    },
+    {
+      "path": "ocs-oblique.dxf",
+      "bytes": 15920,
+      "sha256": "b3b13c677b28be5d2674f7070562be14e886bd3e66afa6eeb0f32c6ddc8f5e74"
+    },
+    {
+      "path": "original-dxf-entities.json",
+      "bytes": 428432,
+      "sha256": "ae49994c2866df6359531652aa66b0c503e5b94981b1ad0113ff98721340b657"
+    },
+    {
+      "path": "source.log",
+      "bytes": 470,
+      "sha256": "bf1ee01bf2782609e6034b666dacde922c8454bda90e5f3af28e21f9784d203a"
+    }
+  ],
+  "source_helper": "scripts/reference-dxf-entities.py",
+  "source_helper_sha256": "500dfc216e7b92bd2653036438f3841695b92531a34de1b8342eb00c5159fc05",
+  "cases": 8,
+  "states": 56
+}
