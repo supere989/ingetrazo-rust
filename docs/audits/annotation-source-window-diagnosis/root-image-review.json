@@ -1,0 +1,13 @@
+{
+  "full_image_differences": {
+    "annotations-on": 3868,
+    "annotations-off": 963,
+    "annotations-restored": 3868
+  },
+  "source_annotation_pixels": 3138,
+  "native_annotation_pixels": 3054,
+  "annotation_mask_xor": 494,
+  "source_restore_exact": true,
+  "native_restore_exact": true,
+  "scope": "Admitted Chapel asymmetric camera snapshots; strict image and annotation mask parity FAIL. No threshold relaxed."
+}
