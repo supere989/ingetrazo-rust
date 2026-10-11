@@ -1,0 +1,46 @@
+{
+  "runtime_commit": "d180d469",
+  "source_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "archive": "connected-trace-records.zip",
+  "archive_sha256": "36bef12f5868be253eb594166cecc18c7593ab975c09e3c89d80bb6f30e4111a",
+  "entries": [
+    {
+      "path": "trace-source.json",
+      "bytes": 1259,
+      "sha256": "c429d05079092ef7dc3eccf55ad2a3e5e46629912f1a42b43ea443ac3d5a1e31"
+    },
+    {
+      "path": "source.log",
+      "bytes": 74,
+      "sha256": "e81b15e1e685e75b5ae469241ae54076477313b8813d178adfe0d4599810106f"
+    },
+    {
+      "path": "pre-fix-failure.log",
+      "bytes": 15561,
+      "sha256": "9cde108ae8605e2e5a819f8d6f39c076edd0195d0115ddba47b0721fd5a9139b"
+    },
+    {
+      "path": "corrected-test.log",
+      "bytes": 13411,
+      "sha256": "c8064a4b680fa0bf20f869474e10213c9d92f48124d3e4f08fda5634c776c362"
+    }
+  ],
+  "sources": [
+    {
+      "path": "scripts/reference-obj-raw-trace.py",
+      "sha256": "5cf630521e310d2ed08c47e7d0c2cbde2e6f08ffc241fc17d64c85c9d3437267"
+    },
+    {
+      "path": "crates/ingetrazo-formats/src/obj_geometry.rs",
+      "sha256": "e782a99c4b34f7c82807ff53cd85c4c501028e7ae45fc7f2765e278c8fc51983"
+    }
+  ],
+  "result": {
+    "source_observed_region_size": 2,
+    "source_trace_refused": true,
+    "original_attrs_distinct": 2,
+    "pre_fix_test_failed": true,
+    "corrected_tests_passed": 2
+  },
+  "supersedes": "62710b9a trace witness did not exercise traceNone: incidence3 excluded union, singleton records were insufficient branch evidence. Historical archive retained unchanged."
+}
