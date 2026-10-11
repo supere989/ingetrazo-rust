@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 // Copyright (C) 2026 Marco Sumari Tellez and IngeTrazo contributors.
 
+pub mod grips;
+
 use std::collections::HashSet;
 use glam::DVec3;
 use ingetrazo_core::math::BoundingBox;

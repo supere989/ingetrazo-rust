@@ -1,0 +1,16 @@
+{
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "source_scale_sha256": "6b696f01a44e4cb22c16f236151c79407a62f91667775aa6ae12d35f6095b564",
+  "archive_sha256": "608af16fefa917d309809bd8806b83894f9c6e55146cc90d6fa5e95097e60cd2",
+  "files": {
+    "build.log": "db74dbd3140c34fb8d94e481214e79d61c54777c11fbabc2a7e86df01b72a6ec",
+    "initial-build.log": "be5e1a79cdc823758fda8b2574e95862bfe623c3813dda7839a3df62e1e71a23",
+    "initial-differences.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+    "native.json": "02e63383183f640678942c9f83baa2a587ff39be301305d1c1ead49f1c4d4107",
+    "source.json": "e941d6824ff6e9394db49b865a4fcfc568e8a1e37ac374c96f1fcc708b0ae1ac"
+  },
+  "binary_sha256": "f8337c61b2de6e4c08b713df914a3fe82092f4583959b0efc081e1c88bba95a4",
+  "controller_sha256": "ba3febaf07f824a934a2ff5f75a4fc5e384622458568a8767c1d5ef531fb854d",
+  "scope": "Six original Scale controller boxes, 288 grip/modifier controls, exact positions/anchors/segments/ray and snapped factors/typed values; native tool target publication, UI and rendering still pending.",
+  "reclaimed_duplicate_bytes": 2116047
+}
