@@ -1,9 +1,9 @@
 //! Opt-in UI-thread engineering consumer; full Scene scripting remains incomplete.
 //! Hydrates only once; external document changes refuse instead of discarding scope.
 use ingetrazo_ai_interpreter_proof::{
-    Controller,
     native_publication::{NativePublication, PublicationMetrics},
     vm_mesh::scene::GroupPublication,
+    Controller,
 };
 #[derive(Default)]
 pub(crate) struct Engine {
@@ -406,6 +406,60 @@ impl crate::IngeTrazoApp {
 mod tests {
     use super::Engine;
     #[test]
+    fn native_component_identity_hydration_and_refusal() {
+        let mut app = crate::IngeTrazoApp::new();
+        let group = ingetrazo_core::groups::Group::new("Native");
+        let id = group.id;
+        app.scene.groups.push(group);
+        let definition = app.scene.make_component(id).unwrap();
+        let mut second = app.scene.groups[0].clone();
+        second.id = uuid::Uuid::new_v4();
+        app.scene.groups.push(second);
+        assert!(app.scene.groups[0].native_document.get("xform").is_none());
+        app.engineering_python_enabled = true;
+        app.run_script("a,b=groups; held=a.mesh; assert held is b.mesh; assert a.xform.isIdentity(); a.mesh.add_face([QVector3D(0,0,0),QVector3D(1,0,0),QVector3D(0,1,0)])");
+        assert!(
+            !app.console_logs.last().unwrap().contains("refused"),
+            "{:?}",
+            app.console_logs
+        );
+        assert_eq!(app.scene.groups[0].component_definition, Some(definition));
+        assert_eq!(app.scene.groups[1].component_definition, Some(definition));
+        app.run_script("groups.append(Group(held,name='Third'))");
+        assert_eq!(app.scene.groups.len(), 3);
+        app.undo();
+        assert_eq!(app.scene.groups.len(), 2);
+        assert_eq!(app.scene.groups[0].mesh.faces.len(), 1);
+        app.redo();
+        assert_eq!(app.scene.groups.len(), 3);
+        app.run_script("assert held is groups[0].mesh is groups[1].mesh is groups[2].mesh; assert len(held.faces)==1");
+        assert!(!app.console_logs.last().unwrap().contains("refused"));
+        drop(app);
+        for stale in [false, true] {
+            let mut app = crate::IngeTrazoApp::new();
+            let group = ingetrazo_core::groups::Group::new("Native");
+            let id = group.id;
+            app.scene.groups.push(group);
+            let definition = app.scene.make_component(id).unwrap();
+            if stale {
+                app.scene
+                    .component_definitions
+                    .get_mut(&definition)
+                    .unwrap()
+                    .mesh
+                    .add_vertex(glam::DVec3::X);
+            } else {
+                app.scene.component_definitions.remove(&definition);
+            }
+            let before = app.scene.clone();
+            app.engineering_python_enabled = true;
+            app.run_script("groups[0].name='Wrong'");
+            assert_eq!(app.scene, before);
+            assert!(app.console_logs.last().unwrap().contains("refused"));
+            assert!(app.undo_stack.is_empty());
+        }
+    }
+    #[test]
     fn imported_mesh_reassignment_refusal_preserves_registry_and_redo() {
         let path = std::env::temp_dir().join(format!(
             "ingetrazo-imported-mesh-{}.igz",
@@ -760,12 +814,11 @@ mod tests {
         app.run_script("f.loop[0].position.setZ(99); raise ValueError('refuse')");
         assert_eq!(app.scene.mesh, edited);
         assert_eq!(app.undo_stack.len(), 2);
-        assert!(
-            app.console_logs
-                .last()
-                .unwrap()
-                .starts_with("Engineering Python refused:")
-        );
+        assert!(app
+            .console_logs
+            .last()
+            .unwrap()
+            .starts_with("Engineering Python refused:"));
         app.run_script("inspection=1");
         assert_eq!(app.undo_stack.len(), 2);
         assert_eq!(app.scene.mesh, edited);
@@ -777,9 +830,8 @@ mod tests {
         app.run_script("mesh.vertices.clear()");
         assert_eq!(app.scene.mesh, before);
         assert_eq!(app.redo_stack.len(), 2);
-        assert!(
-            app.status_message
-                .contains("external document/history synchronization")
-        );
+        assert!(app
+            .status_message
+            .contains("external document/history synchronization"));
     }
 }

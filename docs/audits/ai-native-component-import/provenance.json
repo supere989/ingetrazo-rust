@@ -1,0 +1,9 @@
+{
+  "base": "e7808f52",
+  "source_sha256": {
+    "tools/ai-interpreter-proof/src/vm_scene.rs": "e18cbc6ab8704d39a73ea3334aa0bd2ac762a97c2ad24c1f667da5e8d90f6f82",
+    "crates/ingetrazo-gui/src/engineering_python.rs": "867d6d631748d70c490ea4408377f236442ad359ab8f9d66a21b007b685ef534"
+  },
+  "binary_sha256": "2e079821ea0e5e5737f5896efdb81ca8aedbdd12d688516e3f88b1b9f1941c0a",
+  "original_replay": "unchanged accepted imported-mesh source corpus reused"
+}

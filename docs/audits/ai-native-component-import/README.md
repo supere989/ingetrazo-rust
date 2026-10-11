@@ -1,0 +1,9 @@
+# Native-created identity component console hydration
+
+Follow-up to e7808f52, restricted to flat identity components already supported by the engineering consumer. `Scene::make_component` creates authoritative definition/share identity without requiring raw `native_document.xform`. Import now derives the identity placement from that metadata, validates referenced definition mesh/share/empty children and contradictory raw component flags before mutation, and preserves an unchanged component definition UUID during publication. Reassigning the genuine Mesh retains the prior new-owner behavior.
+
+Focused actual application check: native make_component, two aliased instances, held genuine Mesh, shared face publication, appended Group membership Undo/Redo, and missing/stale definition refusal preserving visible Scene and empty history. PASS one test. No full suite or fresh original replay: membership history expectations reuse the accepted imported ownership corpus; native component construction is a Rust API coherence control. Nested/transformed definitions, arbitrary component truth semantics and production scripting admission remain open.
+
+Retained development observations: first build refused missing source-resource link (fixed by read-only frozen-source link). Two incorrect draft assertions expected Group name or held Mesh edits to roll back under membership history; these were removed in favor of already-proven membership ownership. One attempted text edit missed rustfmt's multiline block and repeated the latter failure; no implementation conclusion was drawn. The final checked source uses appended membership Undo/Redo and preserves the held Mesh edit.
+
+Command: CARGO_TARGET_DIR=/tmp/ingetrazo-ai-registry-target CARGO_PROFILE_DEV_DEBUG=0 CARGO_PROFILE_TEST_DEBUG=0 CARGO_INCREMENTAL=0 cargo test -j2 -p ingetrazo-gui --features engineering-python --lib native_component_identity_hydration_and_refusal -- --nocapture

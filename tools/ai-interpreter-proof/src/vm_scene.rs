@@ -1,8 +1,8 @@
 //! Persistent Scene/group aliases for the opt-in application console.
 //! Classic group membership is command-owned; existing group contents are not.
-use super::{RootRestore, editable_mesh, hydrate, packed};
+use super::{editable_mesh, hydrate, packed, RootRestore};
 use crate::owner_budget::{Kind, Lease, OwnerBudget};
-use rustpython_vm::{AsObject, PyObjectRef, PyPayload, PyRef, VirtualMachine, builtins::PyListRef};
+use rustpython_vm::{builtins::PyListRef, AsObject, PyObjectRef, PyPayload, PyRef, VirtualMachine};
 use std::sync::atomic::{AtomicU64, Ordering};
 static GROUP_NUMBER: AtomicU64 = AtomicU64::new(1);
 
@@ -10,11 +10,11 @@ static GROUP_NUMBER: AtomicU64 = AtomicU64::new(1);
 pub(super) mod console_scene {
     use super::*;
     use rustpython_vm::{
-        FromArgs, Py, PyResult, Traverse,
         builtins::{PyDictRef, PyType},
         common::lock::PyRwLock,
         pyclass,
         types::Constructor,
+        FromArgs, Py, PyResult, Traverse,
     };
     /// Genuine native identity placement object. Arbitrary matrix construction
     /// and mutation remain required; no Python None alias for placed groups.
@@ -609,10 +609,15 @@ pub(super) fn publication(
         }
         native.component_definition = if !vm.is_none(&placement) && component.is(&vm.ctx.true_value)
         {
-            if !definitions.contains_key(&token) {
+            let definition_id = if group.baseline.mesh_share == Some(token) {
+                group.baseline.component_definition.unwrap_or(token)
+            } else {
+                token
+            };
+            if !definitions.contains_key(&definition_id) {
                 charge.merge(budget.reserve(Kind::Preparation, share_bytes)?)?;
                 definitions.insert(
-                    token,
+                    definition_id,
                     ingetrazo_core::components::ComponentDefinition {
                         mesh_share: Some(token),
                         mesh: native.mesh.clone(),
@@ -620,7 +625,7 @@ pub(super) fn publication(
                     },
                 );
             }
-            Some(token)
+            Some(definition_id)
         } else {
             None
         };
@@ -701,6 +706,21 @@ pub(super) fn import(
         if !g.children.is_empty() || g.transform != glam::DMat4::IDENTITY {
             return Err("Placed/nested Group hydration remains required".into());
         }
+        if let Some(id) = g.component_definition {
+            let definition = scene
+                .component_definitions
+                .get(&id)
+                .ok_or("Imported component definition is missing")?;
+            if definition.mesh_share != g.mesh_share
+                || definition.mesh != g.mesh
+                || !definition.children.is_empty()
+                || g.native_document
+                    .get("component")
+                    .is_some_and(|v| v != &serde_json::Value::Bool(true))
+            {
+                return Err("Imported component definition is not coherent".into());
+            }
+        }
         let mesh = if let Some(token) = g.mesh_share {
             if scene.mesh_shares.get(&token) != Some(&g.mesh) {
                 return Err("Imported shared Mesh registry is not coherent".into());
@@ -764,7 +784,9 @@ pub(super) fn import(
                 .set_item("material", hydrate::value(material, vm)?, vm)
                 .map_err(|_| "Group paint import refused")?;
         }
-        if g.native_document.get("xform").is_some_and(|v| !v.is_null()) {
+        if g.component_definition.is_some()
+            || g.native_document.get("xform").is_some_and(|v| !v.is_null())
+        {
             fields
                 .set_item(
                     "xform",
