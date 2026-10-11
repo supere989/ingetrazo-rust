@@ -1,0 +1,1327 @@
+{
+  "states": [
+    {
+      "name": "initial",
+      "vertices": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "edges": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "faces": [
+        0,
+        1
+      ],
+      "incidence": [
+        [
+          0,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          4
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          3,
+          4
+        ]
+      ],
+      "radial": [
+        [
+          0,
+          1
+        ],
+        [
+          0
+        ],
+        [
+          0
+        ],
+        [
+          1
+        ],
+        [
+          1
+        ]
+      ],
+      "endpoints": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          0,
+          3
+        ],
+        [
+          3,
+          1
+        ]
+      ],
+      "persistent_lists": [
+        true,
+        true,
+        true
+      ],
+      "held_incidence_original": true,
+      "held_radial_original": true,
+      "soft_tag_identity": false,
+      "layer_tag_identity": false,
+      "curve_tag_identity": false,
+      "undo": 1,
+      "redo": 0
+    },
+    {
+      "name": "fields-edited",
+      "vertices": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "edges": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "faces": [
+        0,
+        1
+      ],
+      "incidence": [
+        [
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          4
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          3,
+          4
+        ]
+      ],
+      "radial": [
+        [
+          1,
+          0
+        ],
+        [
+          0
+        ],
+        [
+          0
+        ],
+        [
+          1
+        ],
+        [
+          1
+        ]
+      ],
+      "endpoints": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          0,
+          3
+        ],
+        [
+          3,
+          1
+        ]
+      ],
+      "persistent_lists": [
+        true,
+        true,
+        true
+      ],
+      "held_incidence_original": true,
+      "held_radial_original": true,
+      "soft_tag_identity": true,
+      "layer_tag_identity": true,
+      "curve_tag_identity": true,
+      "undo": 2,
+      "redo": 0
+    },
+    {
+      "name": "fields-undone",
+      "vertices": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "edges": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "faces": [
+        0,
+        1
+      ],
+      "incidence": [
+        [
+          0,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          4
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          3,
+          4
+        ]
+      ],
+      "radial": [
+        [
+          0,
+          1
+        ],
+        [
+          0
+        ],
+        [
+          0
+        ],
+        [
+          1
+        ],
+        [
+          1
+        ]
+      ],
+      "endpoints": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          0,
+          3
+        ],
+        [
+          3,
+          1
+        ]
+      ],
+      "persistent_lists": [
+        true,
+        true,
+        true
+      ],
+      "held_incidence_original": false,
+      "held_radial_original": false,
+      "soft_tag_identity": false,
+      "layer_tag_identity": false,
+      "curve_tag_identity": false,
+      "undo": 1,
+      "redo": 1
+    },
+    {
+      "name": "fields-redone",
+      "vertices": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "edges": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "faces": [
+        0,
+        1
+      ],
+      "incidence": [
+        [
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          4
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          3,
+          4
+        ]
+      ],
+      "radial": [
+        [
+          1,
+          0
+        ],
+        [
+          0
+        ],
+        [
+          0
+        ],
+        [
+          1
+        ],
+        [
+          1
+        ]
+      ],
+      "endpoints": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          0,
+          3
+        ],
+        [
+          3,
+          1
+        ]
+      ],
+      "persistent_lists": [
+        true,
+        true,
+        true
+      ],
+      "held_incidence_original": false,
+      "held_radial_original": false,
+      "soft_tag_identity": true,
+      "layer_tag_identity": true,
+      "curve_tag_identity": true,
+      "undo": 2,
+      "redo": 0
+    },
+    {
+      "name": "error-restored",
+      "vertices": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "edges": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "faces": [
+        0,
+        1
+      ],
+      "incidence": [
+        [
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          4
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          3,
+          4
+        ]
+      ],
+      "radial": [
+        [
+          1,
+          0
+        ],
+        [
+          0
+        ],
+        [
+          0
+        ],
+        [
+          1
+        ],
+        [
+          1
+        ]
+      ],
+      "endpoints": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          0,
+          3
+        ],
+        [
+          3,
+          1
+        ]
+      ],
+      "persistent_lists": [
+        true,
+        true,
+        true
+      ],
+      "held_incidence_original": false,
+      "held_radial_original": false,
+      "soft_tag_identity": true,
+      "layer_tag_identity": true,
+      "curve_tag_identity": true,
+      "undo": 2,
+      "redo": 0
+    },
+    {
+      "name": "repeat-undone",
+      "vertices": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "edges": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "faces": [
+        0,
+        1
+      ],
+      "incidence": [
+        [
+          0,
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          4
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          3,
+          4
+        ]
+      ],
+      "radial": [
+        [
+          0,
+          1
+        ],
+        [
+          0
+        ],
+        [
+          0
+        ],
+        [
+          1
+        ],
+        [
+          1
+        ]
+      ],
+      "endpoints": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          0,
+          3
+        ],
+        [
+          3,
+          1
+        ]
+      ],
+      "persistent_lists": [
+        true,
+        true,
+        true
+      ],
+      "held_incidence_original": false,
+      "held_radial_original": false,
+      "soft_tag_identity": false,
+      "layer_tag_identity": false,
+      "curve_tag_identity": false,
+      "undo": 1,
+      "redo": 1
+    },
+    {
+      "name": "repeat-redone",
+      "vertices": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "edges": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "faces": [
+        0,
+        1
+      ],
+      "incidence": [
+        [
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          4
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          3,
+          4
+        ]
+      ],
+      "radial": [
+        [
+          1,
+          0
+        ],
+        [
+          0
+        ],
+        [
+          0
+        ],
+        [
+          1
+        ],
+        [
+          1
+        ]
+      ],
+      "endpoints": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          0,
+          3
+        ],
+        [
+          3,
+          1
+        ]
+      ],
+      "persistent_lists": [
+        true,
+        true,
+        true
+      ],
+      "held_incidence_original": false,
+      "held_radial_original": false,
+      "soft_tag_identity": true,
+      "layer_tag_identity": true,
+      "curve_tag_identity": true,
+      "undo": 2,
+      "redo": 0
+    },
+    {
+      "name": "append-shared",
+      "vertices": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "edges": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "faces": [
+        0,
+        1,
+        2
+      ],
+      "incidence": [
+        [
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          4,
+          5
+        ],
+        [
+          1,
+          2,
+          6
+        ],
+        [
+          3,
+          4
+        ],
+        [
+          5,
+          6
+        ]
+      ],
+      "radial": [
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          0
+        ],
+        [
+          1
+        ],
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          2
+        ]
+      ],
+      "endpoints": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          0,
+          3
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          1,
+          4
+        ],
+        [
+          4,
+          2
+        ]
+      ],
+      "persistent_lists": [
+        true,
+        true,
+        true
+      ],
+      "held_incidence_original": false,
+      "held_radial_original": false,
+      "soft_tag_identity": true,
+      "layer_tag_identity": true,
+      "curve_tag_identity": true,
+      "undo": 3,
+      "redo": 0
+    },
+    {
+      "name": "append-undone-detached-held",
+      "vertices": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "edges": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "faces": [
+        0,
+        1
+      ],
+      "incidence": [
+        [
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          4
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          3,
+          4
+        ],
+        [
+          5,
+          6
+        ]
+      ],
+      "radial": [
+        [
+          1,
+          0
+        ],
+        [
+          0
+        ],
+        [
+          0
+        ],
+        [
+          1
+        ],
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          2
+        ]
+      ],
+      "endpoints": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          0,
+          3
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          1,
+          4
+        ],
+        [
+          4,
+          2
+        ]
+      ],
+      "persistent_lists": [
+        true,
+        true,
+        true
+      ],
+      "held_incidence_original": false,
+      "held_radial_original": false,
+      "soft_tag_identity": true,
+      "layer_tag_identity": true,
+      "curve_tag_identity": true,
+      "undo": 2,
+      "redo": 1
+    },
+    {
+      "name": "append-redone",
+      "vertices": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "edges": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "faces": [
+        0,
+        1,
+        2
+      ],
+      "incidence": [
+        [
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          4,
+          5
+        ],
+        [
+          1,
+          2,
+          6
+        ],
+        [
+          3,
+          4
+        ],
+        [
+          5,
+          6
+        ]
+      ],
+      "radial": [
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          0
+        ],
+        [
+          1
+        ],
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          2
+        ]
+      ],
+      "endpoints": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          0,
+          3
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          1,
+          4
+        ],
+        [
+          4,
+          2
+        ]
+      ],
+      "persistent_lists": [
+        true,
+        true,
+        true
+      ],
+      "held_incidence_original": false,
+      "held_radial_original": false,
+      "soft_tag_identity": true,
+      "layer_tag_identity": true,
+      "curve_tag_identity": true,
+      "undo": 3,
+      "redo": 0
+    },
+    {
+      "name": "endpoint-error-retained",
+      "vertices": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "edges": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "faces": [
+        0,
+        1,
+        2
+      ],
+      "incidence": [
+        [
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          4,
+          5
+        ],
+        [
+          1,
+          2,
+          6
+        ],
+        [
+          3,
+          4
+        ],
+        [
+          5,
+          6
+        ]
+      ],
+      "radial": [
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          0
+        ],
+        [
+          1
+        ],
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          2
+        ]
+      ],
+      "endpoints": [
+        [
+          2,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          0,
+          3
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          1,
+          4
+        ],
+        [
+          4,
+          2
+        ]
+      ],
+      "persistent_lists": [
+        true,
+        true,
+        true
+      ],
+      "held_incidence_original": false,
+      "held_radial_original": false,
+      "soft_tag_identity": true,
+      "layer_tag_identity": true,
+      "curve_tag_identity": true,
+      "undo": 3,
+      "redo": 0
+    },
+    {
+      "name": "endpoint-undo-retained",
+      "vertices": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "edges": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "faces": [
+        0,
+        1
+      ],
+      "incidence": [
+        [
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          4
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          3,
+          4
+        ],
+        [
+          5,
+          6
+        ]
+      ],
+      "radial": [
+        [
+          1,
+          0
+        ],
+        [
+          0
+        ],
+        [
+          0
+        ],
+        [
+          1
+        ],
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          2
+        ]
+      ],
+      "endpoints": [
+        [
+          2,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          0,
+          3
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          1,
+          4
+        ],
+        [
+          4,
+          2
+        ]
+      ],
+      "persistent_lists": [
+        true,
+        true,
+        true
+      ],
+      "held_incidence_original": false,
+      "held_radial_original": false,
+      "soft_tag_identity": true,
+      "layer_tag_identity": true,
+      "curve_tag_identity": true,
+      "undo": 2,
+      "redo": 1
+    },
+    {
+      "name": "endpoint-redo-retained",
+      "vertices": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "edges": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "faces": [
+        0,
+        1,
+        2
+      ],
+      "incidence": [
+        [
+          2,
+          3
+        ],
+        [
+          0,
+          1,
+          4,
+          5
+        ],
+        [
+          1,
+          2,
+          6
+        ],
+        [
+          3,
+          4
+        ],
+        [
+          5,
+          6
+        ]
+      ],
+      "radial": [
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          0
+        ],
+        [
+          1
+        ],
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          2
+        ]
+      ],
+      "endpoints": [
+        [
+          2,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          0,
+          3
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          1,
+          4
+        ],
+        [
+          4,
+          2
+        ]
+      ],
+      "persistent_lists": [
+        true,
+        true,
+        true
+      ],
+      "held_incidence_original": false,
+      "held_radial_original": false,
+      "soft_tag_identity": true,
+      "layer_tag_identity": true,
+      "curve_tag_identity": true,
+      "undo": 3,
+      "redo": 0
+    }
+  ],
+  "production_enabled": false
+}

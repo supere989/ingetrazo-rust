@@ -1,0 +1,7 @@
+<editable_mesh.Face object at 0x564f91d42110>
+<editable_mesh.Face object at 0x564f91e8e590>
+<editable_mesh.Face object at 0x564f91fd8b40>
+<editable_mesh.Face object at 0x564f92124ff0>
+<editable_mesh.Face object at 0x564f922722b0>
+<editable_mesh.Face object at 0x564f923c93c0>
+{"cases":[{"mode":"false","result":{"Ok":true},"state":{"calls":1,"undo":2,"redo":0,"payload_is_old":false,"payload_is_new":true,"hidden":false}},{"mode":"true","result":{"Ok":false},"state":{"calls":1,"undo":1,"redo":1,"payload_is_old":false,"payload_is_new":true,"hidden":false}},{"mode":"raise","result":{"Err":"History state equality refused"},"state":{"calls":1,"undo":1,"redo":1,"payload_is_old":true,"payload_is_new":false,"hidden":false}},{"mode":"mutating-same","result":{"Ok":true},"state":{"calls":1,"undo":2,"redo":0,"payload_is_old":false,"payload_is_new":true,"hidden":false}},{"mode":"mutating-field","result":{"Err":"History equality changed geometry after snapshot preparation"},"state":{"calls":1,"undo":1,"redo":1,"payload_is_old":true,"payload_is_new":false,"hidden":false}},{"mode":"geometry-short-circuit","result":{"Ok":true},"state":{"calls":0,"undo":2,"redo":0,"payload_is_old":false,"payload_is_new":true,"hidden":false}}],"production_enabled":false}
