@@ -118,7 +118,10 @@ impl Cache {
       for glyph in &run.glyphs {
        let x=position[0]*density+(advance+i64::from(glyph.offset[0]))as f64/64.*density;
        let y=position[1]*density+f64::from(glyph.offset[1])/64.*density;
-       let (x,y,phase)=device_position_for_target(x,y,placement)?;
+       let (x,y,phase)=match placement{
+        GlyphPlacement::Raster=>device_position(x,y)?,
+        GlyphPlacement::OpenGl=>opengl_device_position(*position,[advance+i64::from(glyph.offset[0]),i64::from(glyph.offset[1])],density)?,
+       };
        let image=self.glyph(&run.font,glyph.id,density,phase)?;
        let left=x.checked_add(i64::from(image.left)).ok_or("Annotation glyph position overflow")?;
        let top=y.checked_sub(i64::from(image.top)).ok_or("Annotation glyph position overflow")?;
@@ -139,6 +142,18 @@ impl Cache {
   }
   writer.finish()
  }
+}
+// Qt getGlyphPositions converts the logical origin to QFixed before adding
+// glyph offsets; drawCachedGlyphs then scales and floors that fixed position.
+fn opengl_device_position(origin:[f64;2],offset:[i64;2],density:f64)->Result<(i64,i64,[u8;2]),String>{
+ if !origin.iter().all(|v|v.is_finite()&&v.abs()<=1_000_000.)||!density.is_finite()||density<=0.||density>40.{return Err("Annotation widget glyph arithmetic outside domain".into());}
+ let fixed=[((origin[0]*64.)as i64).checked_add(offset[0]).ok_or("Annotation widget glyph x overflow")?,((origin[1]*64.)as i64).checked_add(offset[1]).ok_or("Annotation widget glyph y overflow")?];
+ let x=fixed[0]as f64/64.*density;let y=fixed[1]as f64/64.*density;
+ if !x.is_finite()||!y.is_finite()||x.abs()>1_000_000.||y.abs()>1_000_000.{return Err("Annotation widget glyph physical position outside domain".into());}
+ // Cache subpixel position is quantized after scaling. Phase1.0 translates
+ // the bitmap by one pixel; normalize it to phase0 with that same translation.
+ let phase=(((x*64.)as i64).rem_euclid(64)+1)/16*16;
+ Ok((x.floor()as i64+phase/64,y.floor()as i64,[(phase%64)as u8,0]))
 }
 fn device_position(x:f64,y:f64)->Result<(i64,i64,[u8;2]),String>{device_position_for_target(x,y,GlyphPlacement::Raster)}
 fn device_position_for_target(x:f64,y:f64,placement:GlyphPlacement)->Result<(i64,i64,[u8;2]),String>{
@@ -252,6 +267,16 @@ mod tests {
 
 #[cfg(test)]mod widget_placement_tests{
  use super::*;
+ #[test]fn widget_fixed_origin_precedes_fractional_density(){
+  for(y,density,expected)in[(-24.015,1.25,-30),(-24.677,1.5,-38),(0.805,1.25,0)]{
+   let actual=opengl_device_position([10.25,y],[0,0],density).unwrap().1;
+   let old=device_position_for_target(10.25*density,y*density,GlyphPlacement::OpenGl).unwrap().1;
+   assert_eq!(actual,expected);assert_ne!(actual,old);
+  }
+  assert_eq!(opengl_device_position([0.,-0.001],[0,0],1.).unwrap().1,0);
+  assert_eq!(opengl_device_position([0.,-22.001],[0,0],1.).unwrap().1,-22);
+  assert!(opengl_device_position([0.,f64::INFINITY],[0,0],1.).is_err());
+ }
  #[test]fn widget_baseline_floor_preserves_raster_default(){
   for(y,raster,widget)in[(22.75,23,22),(-22.25,-22,-23),(22.25,22,22)]{
    assert_eq!(device_position(10.25,y).unwrap().1,raster);
