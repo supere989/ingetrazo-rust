@@ -1,0 +1,24 @@
+{
+  "source_commit": "e2886f91424953431feee6da7897d6de94aad73e",
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "files": {
+    "crates/ingetrazo-gui/src/vcb_input.rs": "abf685226a82a0644dc17ed7bd9d70523756c307bdf497d43bc4c86e4412e3a4",
+    "crates/ingetrazo-gui/src/app.rs": "9d6a13d6dbfc7701ef4a93925461adc74dafac64d42d118ceecdbb2048f37652",
+    "crates/ingetrazo-gui/src/lib.rs": "430ca2419a055f90017e2dda6cc6ac4be41c7674751e339a1bf39600fe0d95a2",
+    "crates/ingetrazo-gui/src/statusbar.rs": "e40f00419070369a267555ea68e171b43251cdcfefa866b65a2721ff4dd06829",
+    "crates/ingetrazo-gui/examples/p07_keyboard_workflows.rs": "f5bfa13ff77f5b1fbe82f650f33148fba7b19d1ebc1b0e1d7c2d0e825c2d4d0b",
+    "crates/ingetrazo-gui/examples/p07_inference_workflows.rs": "24500578ae11b4f276a766fa81c41c67b95204f26724943795158b804ac867f0",
+    "scripts/reference-p07-keyboard.py": "e95ca41af78a37c8361011d8fd5813dee7988d310ca4cdcfd2229f8402529ed9",
+    "scripts/check-p07-keyboard.py": "fa139c8b67f7c87332ff7fd1b7fabe1fec6385eb81a9a35676fbd4ba947122b9"
+  },
+  "binaries": {
+    "p07_keyboard_workflows": "1b4b18cfb5dd94cceaf905a53816fe230f10f7c14e4cba66d6b5ac780b5d136a",
+    "p07_inference_workflows": "b934fea26994dfecf1491ec35cc42b18c4408214f84a53d61c55a26f7893bc37"
+  },
+  "inherited_source_archive": {
+    "path": "docs/audits/p07-inference/source-records.zip",
+    "sha256": "5e9fbeddbe466460a0c57849b487ed47e3babd37dd3f290f9a95dab55850b75e"
+  },
+  "scope": "Keyboard-only model VCB; no perspective producer, compiler/GPU or OS QAction delivery claim. Actual egui one-frame chord and editor/modal payload guards are native consumer proof; original handler/MainWindow state recipe is frozen.",
+  "retained_legacy_replay": "Prior shared runtime 9401ae74, binary hashes in prior-shared-replay-provenance.json. Uppercase X correction affects no captured legacy operation; no redundant replay."
+}
