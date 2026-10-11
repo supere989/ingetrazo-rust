@@ -1,0 +1,28 @@
+{
+  "source": "314eb6566b6694652361ab948a5d02f02cf71eb9",
+  "artifact_id": 11687260741,
+  "zip_sha256": "ea24d84d3018e2e190b919f614ccbad122bbca8fcb59d866eeb7268f31982e1c",
+  "native_sdk_build": "PASS",
+  "runtime": {
+    "exit_code": 1,
+    "outer_timeout": false
+  },
+  "runtime_log": "World native texture size query unavailable: requested_bytes=16384, queried_size=0, queried_align=0, extent=64x64, format=MTLPixelFormat(70), storage=MTLStorageMode(2), hazard=MTLHazardTrackingMode(2), usage=MTLTextureUsage(5), device=Apple Paravirtual device\n",
+  "inventory": [
+    "binary.sha256",
+    "build.log",
+    "os.txt",
+    "pixel-review.json",
+    "pixel-review.log",
+    "revision.txt",
+    "runtime-result.json",
+    "runtime.log",
+    "sdk.txt",
+    "source.sha256"
+  ],
+  "binary_sha256": "71d791749539229808a9e0cd49004f5d0ce8f6c8b76af5fcb5f154811499dcc4  target/debug/examples/native_world_depth",
+  "source_sha256_manifest": "6eda814bece7f025a375b3845b7ec667041cd2fca52b1dfced92bffb041b3f6f  crates/ingetrazo-metal/src/world.rs\ndb47f53eecc9ec8db00e1ecfbbebca4fe835a5789e4055937206f60c5ae86ed7  crates/ingetrazo-metal/src/world_admission.rs\nd5d4193adebf315b74503fdbb0d8b6b1abfeb036354010c091a0ffa02799ec6e  crates/ingetrazo-metal/src/shaders/world.metal\na14eb0361c482e20f0e19598d0e2b1ca070b68970bfa19e778a42019e7494de1  crates/ingetrazo-metal/src/egui_painter.rs\n0bf380cb141c712c1654eb895c1c0a5465f2133e43db9ba6420ce1c324e4f87d  crates/ingetrazo-metal/src/presentation.rs\n513337cf12d71a1ae69b06bb5b999bd89ac55c6677c630406ad0aec6289ab484  crates/ingetrazo-metal/examples/native_world_depth.rs\n04848668e02328bff4ebc4dce90df325760217cda1bf6e9dfe3c8301226ec3cb  scripts/check-metal-world-depth.py\n",
+  "cause_boundary": "heap native query returns size0 align0 for first RGBA8Unorm private tracked RenderTarget|ShaderRead target. No allocation or draw attempted; unsupported query cause not yet distinguished. Admission unchanged.",
+  "required_full_nine_frame_gate": "FAIL preframe; ARM same source9/9PASS; no claim Intel native world compatibility",
+  "next_boundary": "determine actual family/heap descriptor support and supported bounded allocation route; no guessed postallocation reservation/ceiling fallback"
+}
