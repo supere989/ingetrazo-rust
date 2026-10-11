@@ -212,6 +212,7 @@ jobs:
         run: |
           mkdir -p docs/audits/metal-cross-ci
           cargo check --locked -p ingetrazo-metal --all-targets --target ${{ matrix.target }} > docs/audits/metal-cross-ci/check.log 2>&1
+          scripts/check-metal-gui-metadata.sh ${{ matrix.target }} > docs/audits/metal-cross-ci/gui-examples.log 2>&1
       - name: Retain compile evidence
         if: always()
         uses: actions/upload-artifact@v4
