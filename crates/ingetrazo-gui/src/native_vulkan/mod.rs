@@ -1486,7 +1486,7 @@ impl App for crate::IngeTrazoApp {
         // Marking mesh/query buffers for the next serial here would prevent a
         // same-frame deletion from retiring them at the completed prior fence.
         if _resize{return;}
-        {
+        if system.annotation_sample.is_some()||self.active_tool.distance_label().is_some()||system.annotation_ready_shape.is_some(){
             // Floating tool text is always visible and never samples depth.
             // Its publication must not depend on the independently admitted
             // source MSAA depth policy for scene dimensions and leaders.
