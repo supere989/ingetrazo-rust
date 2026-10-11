@@ -1,0 +1,27 @@
+{
+  "source_batch": "9d825a65ad435d43583b27cbe228c8471b732abd",
+  "integrated_as": "9bb578bb",
+  "root_replay": {
+    "source_hashes_verified": 17,
+    "binary_hashes_verified_before_and_after": 3,
+    "source_states": 14,
+    "row_publications": 5,
+    "native_exports": 0,
+    "history_steps": 7,
+    "checker_negatives": 17,
+    "refusal_negatives": 9,
+    "prior_history_states": 11,
+    "prior_history_negatives": 11,
+    "real_allocator_refusals": 1,
+    "retired_document_history_restored": true,
+    "final_owner_charge": 0
+  },
+  "limits": [
+    "Default-off engineering console; production bridge run_python still refuses",
+    "Two O(base) row comparisons; one full application Scene Undo snapshot",
+    "Mixed append and history prepare clone all existing Face attrs/layers",
+    "Pose/topology prepare a full coordinate index",
+    "Complete Scene/groups, external-history synchronization, arbitrary Python semantics and total bounds remain open"
+  ],
+  "independent_replay_archive": "independent-replay.zip"
+}

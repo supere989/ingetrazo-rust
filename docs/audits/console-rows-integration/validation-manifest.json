@@ -1,0 +1,42 @@
+{
+  "budget-build.log": {
+    "bytes": 15843,
+    "sha256": "333ecf84676ae805179b95e86200860cf3f7cc9c0cd7beaa25f5df968f18d477"
+  },
+  "budget-runtime/resize-1100x700.png": {
+    "bytes": 71951,
+    "sha256": "4057355d5fdd321ddbcaa8249738c67f10d65cbed0bbdca7bfca12903e805284"
+  },
+  "budget-runtime/resize-800x600.png": {
+    "bytes": 63524,
+    "sha256": "485117dc1d6ac18cecf43da0450d39c61d8a4e5a24256cc2c3fb4608092552e0"
+  },
+  "budget-runtime/startup.log": {
+    "bytes": 2427,
+    "sha256": "35eec01180701dbf4efc2aa33d09a9cb901c2e5bae9130852249cc565d97b35e"
+  },
+  "budget-runtime/startup.png": {
+    "bytes": 81514,
+    "sha256": "d2e6729832922a3aa50ff71eef282e5e42b44dabd96bbf28a8d9afd736d947e0"
+  },
+  "budget-runtime/xvfb-cleanup.json": {
+    "bytes": 92,
+    "sha256": "1fbb73026255a62c45277b74ba95549ae1ce763e283c122a6f883561cdaa6b8f"
+  },
+  "budget-runtime.log": {
+    "bytes": 162,
+    "sha256": "7a237354b3cf48c642c45a1468bf516b52c04087e82f2cfdb5d3521b8eb5e50e"
+  },
+  "commands.json": {
+    "bytes": 1123,
+    "sha256": "fa69773ded7b9d97da516632e28ce34e2a8b818cafe438e37625eca7c02c479c"
+  },
+  "console-tests.log": {
+    "bytes": 91786,
+    "sha256": "5425b15980577681a2010475396f991511f2fd749436c4146dc2d7a0c4689446"
+  },
+  "workspace.log": {
+    "bytes": 141254,
+    "sha256": "44ba8433857fa032147385d66a80540ba692e5d29df11475a79196f0ffc65287"
+  }
+}

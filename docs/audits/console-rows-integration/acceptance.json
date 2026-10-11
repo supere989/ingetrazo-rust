@@ -1,0 +1,87 @@
+{
+  "integrated_source": "c68073879a0f6b15e879389b4a57ab8ca3364fee",
+  "workspace": {
+    "passed": 801,
+    "failed": 0,
+    "ignored": 2,
+    "test_doc_targets": 35,
+    "enabled_examples_checked": true
+  },
+  "console_tests": {
+    "passed": 8,
+    "failed": 0
+  },
+  "budget_runtime": {
+    "actual_image_then_staging_refusal": true,
+    "startup_per_heap_ownership_preserved": true,
+    "resizes": [
+      [
+        800,
+        600
+      ],
+      [
+        1100,
+        700
+      ]
+    ],
+    "clean_close": true,
+    "final_committed_bytes": 0,
+    "device": "llvmpipe software Vulkan"
+  },
+  "commands": [
+    {
+      "name": "workspace",
+      "command": [
+        "bash",
+        "scripts/check-rust-workspace.sh",
+        "-j2"
+      ],
+      "returncode": 0,
+      "elapsed_seconds": 74.72339412602014
+    },
+    {
+      "name": "console-tests",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "-p",
+        "ingetrazo-gui",
+        "--features",
+        "engineering-python",
+        "--lib",
+        "engineering_python::tests",
+        "-j2"
+      ],
+      "returncode": 0,
+      "elapsed_seconds": 179.80268374300795
+    },
+    {
+      "name": "budget-build",
+      "command": [
+        "cargo",
+        "build",
+        "--locked",
+        "-p",
+        "ingetrazo-gui",
+        "--example",
+        "native_vulkan_budget_probe",
+        "-j2"
+      ],
+      "returncode": 0,
+      "elapsed_seconds": 2.08261842300999
+    },
+    {
+      "name": "budget-runtime",
+      "command": [
+        "python3",
+        "scripts/check-native-vulkan-startup.py",
+        "/tmp/ingetrazo-native-font-merge-target/debug/examples/native_vulkan_budget_probe",
+        "/tmp/ingetrazo-console-rows-integration/budget-runtime"
+      ],
+      "returncode": 0,
+      "elapsed_seconds": 5.455340820015408
+    }
+  ],
+  "scope": "One combined workspace run plus changed optional consumer tests and actual allocation probe. Original replay binaries source-verified separately; no repeated unchanged renderer image suite."
+}
