@@ -97,14 +97,26 @@ try:
   assert state()["committed_bytes"]==before["committed_bytes"] and state()["world"]==before["world"]
   retry=action(5,"retry");assert np.any(roi(retry)!=roi(offset))
   typed=action(6,"typed",text="600mm");assert np.any(roi(typed)!=roi(retry))
-  cancelled=action(7,"cancel");assert state()["label"] is None and np.array_equal(roi(cancelled),base_roi)
+  before=state();font_refused=action(7,"refuse-font",True,text="123456789mm")
+  assert "font" in state()["prepare_error"].lower()
+  assert np.array_equal(font_refused,typed) and state()["committed_bytes"]==before["committed_bytes"] and state()["world"]==before["world"]
+  assert state()["old_label_owner_alive"],"Font refusal dropped old complete label owner"
+  font_retry=action(8,"retry");assert np.any(roi(font_retry)!=roi(typed))
+  wait(lambda:state()["old_label_owner_alive"] is False)
+  before=state();cad_refused=action(9,"refuse-cad",True,text="987654321mm")
+  assert "budget" in state()["prepare_error"].lower()
+  assert np.array_equal(cad_refused,font_retry) and state()["committed_bytes"]==before["committed_bytes"] and state()["world"]==before["world"]
+  assert state()["old_label_owner_alive"],"CAD refusal dropped old complete label owner"
+  cad_retry=action(10,"retry");assert np.any(roi(cad_retry)!=roi(font_retry))
+  wait(lambda:state()["old_label_owner_alive"] is False)
+  cancelled=action(11,"cancel");assert state()["label"] is None and np.array_equal(roi(cancelled),base_roi)
   before=state()["submitted_serial"];lib.XResizeWindow(d,window,900,650);lib.XFlush(d);wait(lambda:state()["screen_size"]==[900.0,650.0] and state()["completed_present_serial"]>before)
   before=state()["submitted_serial"];lib.XResizeWindow(d,window,1000,700);lib.XFlush(d);wait(lambda:state()["screen_size"]==[1000.0,700.0] and state()["completed_present_serial"]>before)
   assert np.array_equal(roi(take("resize-restored")),base_roi)
-  action(8,"acquire");action(9,"drag",distance=.6);committed=action(10,"commit",text="0.6")
+  action(12,"acquire");action(13,"drag",distance=.6);committed=action(14,"commit",text="0.6")
   assert state()["dirty"] and state()["label"] is None and np.any(roi(committed)!=base_roi)
-  undone=action(11,"undo");assert np.array_equal(roi(undone),base_roi)
-  action(12,"save");assert not state()["dirty"] and (control/"saved.igz").exists()
+  undone=action(15,"undo");assert np.array_equal(roi(undone),base_roi)
+  action(16,"save");assert not state()["dirty"] and (control/"saved.igz").exists()
   event=XEvent();event.client.type=33;event.client.send_event=1;event.client.display=d;event.client.window=window;event.client.message_type=lib.XInternAtom(d,b"WM_PROTOCOLS",0);event.client.format=32;event.client.data.l[0]=lib.XInternAtom(d,b"WM_DELETE_WINDOW",0);assert lib.XSendEvent(d,window,0,0,C.byref(event));lib.XFlush(d);assert p.wait(timeout=5)==0
  log=(out/"runtime.log").read_text();assert "committed_bytes=0"in log
  report=dict(source_sha=args.source,binary_sha256=hashlib.sha256(Path(args.binary).read_bytes()).hexdigest(),rows=rows,passed=True,scope="Actual App and Tool acquisition/move/VCB dispatcher, native preview+label, offset-only/warm uploads, full-frame refusal/retry/cancel/resize and Undo. Control invokes production methods, not mouse event proof; source whole-image comparison separate")

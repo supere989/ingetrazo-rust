@@ -218,6 +218,11 @@ impl World {
  pub(crate) fn prepare_annotation_overlay(&mut self,renderer:&mut super::cad2d::Renderer,handle:&super::cad2d::Handle,
   context:&VulkanContext,queries:Arc<[super::annotation_visibility::Query]>,
   inverse:[f32;16],eye:[f32;3],forward:[f32;3],sample:u32,fence:vk::Fence,completed:u64,next:u64,density:f32)->Result<(),String>{
+  self.prepare_annotation_overlay_transaction(renderer,handle,context,queries,inverse,eye,forward,sample,fence,completed,next,density,|_|Ok(()))
+ }
+ pub(crate) fn prepare_annotation_overlay_transaction<F:FnOnce(&mut Self)->Result<(),String>>(&mut self,renderer:&mut super::cad2d::Renderer,handle:&super::cad2d::Handle,
+  context:&VulkanContext,queries:Arc<[super::annotation_visibility::Query]>,
+  inverse:[f32;16],eye:[f32;3],forward:[f32;3],sample:u32,fence:vk::Fence,completed:u64,next:u64,density:f32,prepare_world:F)->Result<(),String>{
   self.resources.publication_preflight(context,fence,completed,&[],&[])?;
   let target=self.target.as_ref().ok_or("Annotation target absent")?;
   let view=target._depth.sampled_depth_view.ok_or("Annotation sampled depth absent")?;
@@ -225,10 +230,17 @@ impl World {
   if sample>=samples||queries.is_empty(){return Err("Annotation depth/query policy absent".into());}
   if !inverse.iter().chain(eye.iter()).chain(forward.iter()).all(|v|v.is_finite()){return Err("Nonfinite annotation inverse snapshot".into());}
   let parameters=super::annotation_visibility_gpu::Parameters{inverse,eye:[eye[0],eye[1],eye[2],0.],forward:[forward[0],forward[1],forward[2],0.],extent_count_sample:[target.extent.width,target.extent.height,queries.len() as u32,sample]};
-  if self.annotation_visibility.is_none(){self.annotation_visibility=Some(super::annotation_visibility_gpu::Evaluator::new(context,self.budget.clone(),samples>1)?);}
-  let staged=self.annotation_visibility.as_mut().unwrap().stage_shared(context,queries,view,&target.identity,fence,completed)?;
-  renderer.prepare_annotation(context,handle,staged,fence,completed,next,density)?;
-  self.annotation_depth_binding=Some(target.identity.clone());self.annotation_parameters=Some(parameters);Ok(())
+  let identity=target.identity.clone();
+  // Detach only the evaluator owner while the mesh/query candidates borrow it.
+  // Its old descriptors remain intact until the coordinated publication.
+  let mut evaluator=match self.annotation_visibility.take(){Some(owner)=>owner,None=>super::annotation_visibility_gpu::Evaluator::new(context,self.budget.clone(),samples>1)?};
+  let result=(||{
+   let staged=evaluator.stage_shared(context,queries,view,&identity,fence,completed)?;
+   renderer.prepare_annotation_transaction(context,handle,staged,fence,completed,next,density,||prepare_world(self))
+  })();
+  self.annotation_visibility=Some(evaluator);
+  result?;
+  self.annotation_depth_binding=Some(identity);self.annotation_parameters=Some(parameters);Ok(())
  }
  pub(crate) fn clear_annotation_overlay(&mut self,renderer:&mut super::cad2d::Renderer,context:&VulkanContext,fence:vk::Fence,completed:u64)->Result<(),String>{
   self.resources.publication_preflight(context,fence,completed,&[],&[])?;

@@ -1,0 +1,1 @@
+Default native World routing at `9f1b622a`: actual NVIDIA application workflow PASS without integer-mode override. Full source-image parity and coordinated World/label ownership refusal remain separate pending controls. Transport, compiled-source/binary/checker hashes, whole images and actual presentation/refusal observations are retained byte-for-byte in records.zip.

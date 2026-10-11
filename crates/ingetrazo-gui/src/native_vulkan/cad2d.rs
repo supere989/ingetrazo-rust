@@ -657,6 +657,15 @@ unsafe{context.device.create_descriptor_set_layout(&vk::DescriptorSetLayoutCreat
         queries:super::annotation_visibility_gpu::PreparedVisibility<'_>,
         fence:vk::Fence,completed:u64,next:u64,pixels_per_point:f32,
     )->Result<(),String>{
+        self.prepare_annotation_transaction(context,handle,queries,fence,completed,next,pixels_per_point,||Ok(()))
+    }
+    /// Admit private mesh/query owners, then execute the coordinated World
+    /// preparation before the infallible annotation publication section.
+    pub(crate) fn prepare_annotation_transaction<F:FnOnce()->Result<(),String>>(
+        &mut self,context:&VulkanContext,handle:&Handle,
+        queries:super::annotation_visibility_gpu::PreparedVisibility<'_>,
+        fence:vk::Fence,completed:u64,next:u64,pixels_per_point:f32,prepare_world:F,
+    )->Result<(),String>{
         if next<=completed{return Err("Annotation submission serial must advance".into());}
         if !Arc::ptr_eq(&handle.inner.pipeline,&self.pipeline){return Err("Annotation callback belongs to another pipeline".into());}
         self.resources.publication_preflight(context,fence,completed,&[],&[])?;
@@ -732,7 +741,6 @@ unsafe{context.device.create_descriptor_set_layout(&vk::DescriptorSetLayoutCreat
             let ready=if let Some(buffers)=candidate{
                 let vertex=self.resources.buffer(buffers.vertex).ok_or("Annotation vertex owner missing")?;
                 let index=self.resources.buffer(buffers.index).ok_or("Annotation index owner missing")?;
-                self.resources.mark_used(buffers.vertex,next)?;self.resources.mark_used(buffers.index,next)?;
                 Some(Ready{gates:state.gates.clone(),id,vertex,index,first_index:0,base_vertex:0,marker_offset:(pipeline.stencil_mark!=vk::Pipeline::null()&&!admitted.marker_groups.is_empty()).then_some((state.geometry.vertices().len()*12)as u64),marker_groups:self.batch_stencil_markers.then(||admitted.marker_groups.clone()),
                     batches:state.batches.clone(),premultiplied:state.premultiplied.clone(),pose:state.pose,
                     ordered_draws:state.geometry.ordered_draws(),opaque})
@@ -745,8 +753,21 @@ unsafe{context.device.create_descriptor_set_layout(&vk::DescriptorSetLayoutCreat
             }
             self.resources.collect(fence,completed)?;return Err(error);
         }};
+        if let Err(error)=prepare_world(){
+            // Candidate buffers have not been submitted or marked for the
+            // next serial; old Ready/query/descriptor
+            // ownership is untouched and PreparedVisibility rolls back on Drop.
+            if let Some(buffers)=fresh.take(){
+                self.resources.retire(buffers.vertex)?;self.resources.retire(buffers.index)?;
+                self.rolled_back_buffers+=2;
+            }
+            self.resources.collect(fence,completed)?;return Err(error);
+        }
         // No recoverable operation below. In-flight old uses were acknowledged
         // before staging. Query commit never exposes a new inventory to old Ready.
+        if let Some(buffers)=if warm{self.annotation_buffers.as_ref().map(|(_,b)|b)}else{fresh.as_ref()}{
+            self.resources.mark_used(buffers.vertex,next)?;self.resources.mark_used(buffers.index,next)?;
+        }
         queries.commit();
         if !pipeline.visibility.as_ref().is_some_and(|old|old.0==visibility&&old.1==count&&Arc::ptr_eq(&old.2,&identity)){
             let info=[vk::DescriptorBufferInfo::default().buffer(visibility).offset(0).range(range)];

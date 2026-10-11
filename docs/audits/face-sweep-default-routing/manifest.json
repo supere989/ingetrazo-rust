@@ -1,0 +1,110 @@
+{
+  "archive_sha256": "2733208418a5ad2479e9405c135ea990997fc9732df7f5cb7a321401e0b4626e",
+  "records": [
+    {
+      "path": "1-acquire.png",
+      "bytes": 50606,
+      "sha256": "7064231e28339db3897f7658140f96f9be75f20d31b11530cc546dbd25759ae5"
+    },
+    {
+      "path": "10-commit.png",
+      "bytes": 49828,
+      "sha256": "935da0e823801f6ff156a39cb137a2f7b63cabcfbfad93d760eb516586c05792"
+    },
+    {
+      "path": "11-undo.png",
+      "bytes": 47438,
+      "sha256": "b46975a90ae6d67ef4699e7c2057d107a4b62865d7caba76a4c7be2639eed9c8"
+    },
+    {
+      "path": "12-save.png",
+      "bytes": 49060,
+      "sha256": "79b98938aa1d295800ad1e5e76ebd2c41c4cd878175805359f626d2fdb74947d"
+    },
+    {
+      "path": "2-drag.png",
+      "bytes": 50929,
+      "sha256": "b23ae17864a50687bc2e52ac4031970aee2d333074791bdd7fc20af6a0211300"
+    },
+    {
+      "path": "3-drag.png",
+      "bytes": 50320,
+      "sha256": "5989acfb34f126fc8e0fdbac8f2861335db3221e4f59e82b0212906e053c3dc2"
+    },
+    {
+      "path": "4-refuse.png",
+      "bytes": 50320,
+      "sha256": "5989acfb34f126fc8e0fdbac8f2861335db3221e4f59e82b0212906e053c3dc2"
+    },
+    {
+      "path": "5-retry.png",
+      "bytes": 52185,
+      "sha256": "3fc69ce92eecce74efb38668144db0b67dedcc3d8621d172874f647be0229661"
+    },
+    {
+      "path": "6-typed.png",
+      "bytes": 52525,
+      "sha256": "11bfc6d074117680370c4aa26b6329972b1c8f1cd3e7b3c3bcddaa7dc96fcc56"
+    },
+    {
+      "path": "7-cancel.png",
+      "bytes": 51985,
+      "sha256": "962ecb96bc54c89a5e6c0baadc232e49de9c6f5f3c2da519d4637bfe10e3d696"
+    },
+    {
+      "path": "8-acquire.png",
+      "bytes": 50606,
+      "sha256": "7064231e28339db3897f7658140f96f9be75f20d31b11530cc546dbd25759ae5"
+    },
+    {
+      "path": "9-drag.png",
+      "bytes": 50929,
+      "sha256": "b23ae17864a50687bc2e52ac4031970aee2d333074791bdd7fc20af6a0211300"
+    },
+    {
+      "path": "app-cleanup.json",
+      "bytes": 87,
+      "sha256": "002b2ad4378af24a2bf8ea97cf7dcaab0240aa0e2923218dec01245f4e59b3e4"
+    },
+    {
+      "path": "baseline.png",
+      "bytes": 50958,
+      "sha256": "c83359a7e7110f78659b07531b76ad667a88037860f63c0358a28d280ad2d105"
+    },
+    {
+      "path": "nvidia.json",
+      "bytes": 105,
+      "sha256": "559298238b82b7ef5db83f2674d7a3fe416158735a56302121b7f2e2d5c1f053"
+    },
+    {
+      "path": "resize-restored.png",
+      "bytes": 51985,
+      "sha256": "962ecb96bc54c89a5e6c0baadc232e49de9c6f5f3c2da519d4637bfe10e3d696"
+    },
+    {
+      "path": "result.json",
+      "bytes": 15711,
+      "sha256": "6fa78d100b27088db26ff0ceec920a482c6a703e513a222f1ea59cc43b8ec902"
+    },
+    {
+      "path": "runtime.log",
+      "bytes": 35951,
+      "sha256": "0bca24c854b01af48019ea98ec8930c38ba1f4c94c26be6449784687a3d51081"
+    },
+    {
+      "path": "transport.json",
+      "bytes": 2870,
+      "sha256": "4e557d77bab98a4b5c448df45649b89127b6dc0bcb92952e722bac86efd767e7"
+    },
+    {
+      "path": "transport.log",
+      "bytes": 43,
+      "sha256": "0edeadb29bda5d91af73ead0657d44bb358958f12535c0fc19512882fb6168b6"
+    },
+    {
+      "path": "xvfb-cleanup.json",
+      "bytes": 87,
+      "sha256": "ac3db790fb10744c5adcca88c62d290edc9c581201a89b7d5ecef1828bf1398e"
+    }
+  ]
+}

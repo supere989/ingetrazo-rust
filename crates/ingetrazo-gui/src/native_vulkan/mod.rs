@@ -177,6 +177,7 @@ pub struct System {
     annotation_cad:Option<cad2d::Renderer>,
     annotation_viewport:Option<annotation_viewport::ViewportAnnotations>,
     annotation_prepare_error:Option<String>,
+    annotation_font_refusal_for_probe:bool,
     annotation_ready_shape:Option<egui::Shape>,
     annotation_timing:Option<annotation_timing::Timing>,
     annotation_sample:Option<u32>,
@@ -321,7 +322,7 @@ impl System {
             pointer_modifiers,
             renderer:std::mem::ManuallyDrop::new(renderer.take()),
             memory_budget,
-            annotation_timing,world:None,cad2d:None,annotation_cad:None,annotation_viewport:None,annotation_prepare_error:None,annotation_ready_shape:None,annotation_sample,draw_serial:0,completed_present_serial_for_probe:0,
+            annotation_timing,world:None,cad2d:None,annotation_cad:None,annotation_viewport:None,annotation_prepare_error:None,annotation_font_refusal_for_probe:false,annotation_ready_shape:None,annotation_sample,draw_serial:0,completed_present_serial_for_probe:0,
             textures_to_free: None,
             close_requested: false,
             repaint_at: std::time::Instant::now(),
@@ -1465,7 +1466,7 @@ impl App for crate::IngeTrazoApp {
             return;
         }
         let Some(rect)=self.native_gpu_viewport_rect else {return;};
-        let result=(|| {
+        let result:Result<(),String>=(|| {
             if system.world.is_none(){system.world=Some(world::World::new(&system.vulkan_context,system.memory_budget.clone())?);}
             let world=system.world.as_mut().unwrap();
             // Layout can change independently of OS resize; the current rect
@@ -1473,15 +1474,9 @@ impl App for crate::IngeTrazoApp {
             // if extent is unchanged, with no allocation/upload/copy.
             let scale=system.egui_ctx.pixels_per_point();let [width,height]=crate::viewport_extent::scene_extent([rect.width() as f64,rect.height() as f64],scale as f64)?;let extent=vk::Extent2D{width,height};self.native_gpu_viewport_texture=Some(world.resize(&system.vulkan_context,&mut system.renderer,extent)?);
             world.set_display_scale(system.egui_ctx.pixels_per_point());
-            let sun=crate::solar_controls::scene_direction(self).unwrap_or(None);
-            let sweep=world.prepare_face_sweep(&system.vulkan_context,&self.scene,&self.camera,&self.style,self.active_tool.face_sweep_preview(),self.model_revision,system.fence,system.draw_serial)?;
-            let scene_result=
-            if sun.is_some()||world.has_shadow_owner(){
-                let ground=world::World::solar_ground_receiver_for_scene(&self.scene);
-                world.set_scene_with_sun(&system.vulkan_context,&self.scene,&self.camera,&self.style,system.fence,system.draw_serial,self.native_geometry_revision,sun,self.scene.shadows.darkness as f32,ground)
-            }else{world.set_scene(&system.vulkan_context,&self.scene,&self.camera,&self.style,system.fence,system.draw_serial,self.native_geometry_revision)};
-            if let Err(error)=scene_result{world.abort_face_sweep(sweep,system.fence,system.draw_serial)?;return Err(error);}
-            world.publish_face_sweep(sweep,&self.scene,system.draw_serial);Ok(())
+            // Pre-UI prepares layout only. Content ownership is coordinated
+            // with the post-UI label candidate below.
+            Ok(())
         })();
         if let Err(error)=result {
             // The collected overlay may still reference the prior target/scene.
@@ -1501,21 +1496,48 @@ impl App for crate::IngeTrazoApp {
             let sample=system.annotation_sample.unwrap_or(0);
             let result=(||{
                 let factory=system.annotation_factory()?;
-                let mut state=match system.annotation_viewport.take(){Some(state)=>state,None=>annotation_viewport::ViewportAnnotations::new(system.swapchain.stencil_enabled)?};
+                let mut state=if system.annotation_font_refusal_for_probe{
+                    annotation_viewport::ViewportAnnotations::with_font_limits(system.swapchain.stencil_enabled,ingetrazo_formats::annotation_font::Limits{faces:1,retained_font_bytes:1})?
+                }else{match system.annotation_viewport.take(){Some(state)=>state,None=>annotation_viewport::ViewportAnnotations::new(system.swapchain.stencil_enabled)?}};
                 let candidate=state.prepare(self,&factory,rect,system.egui_ctx.pixels_per_point(),include_annotations).map(|value|value.map(|value|(value.handle.clone(),value.queries.clone(),value.inverse,value.eye,value.forward)));
-                system.annotation_viewport=Some(state);
+                if !system.annotation_font_refusal_for_probe{system.annotation_viewport=Some(state);}
                 match candidate?{
-                    Some((handle,queries,inverse,eye,forward))=>{system.prepare_annotation_overlay(&handle,queries,inverse,eye,forward,sample)?;system.annotation_ready_shape=Some(handle.shape(rect));},
-                    None=>{system.clear_annotation_overlay()?;system.annotation_ready_shape=None;},
+                    Some((handle,queries,inverse,eye,forward))=>{
+                        let renderer=system.annotation_cad.as_mut().ok_or("Annotation renderer absent")?;
+                        let world=system.world.as_mut().ok_or("Annotation World absent")?;
+                        world.prepare_annotation_overlay_transaction(renderer,&handle,&system.vulkan_context,queries,inverse,eye,forward,sample,system.fence,system.draw_serial,system.draw_serial+1,system.egui_ctx.pixels_per_point(),|world|prepare_app_world(self,world,&system.vulkan_context,system.fence,system.draw_serial))?;
+                        system.annotation_ready_shape=Some(handle.shape(rect));
+                    },
+                    None=>{
+                        // Clearing cannot require new font/CAD allocations.
+                        // Keep old callback ownership until World succeeds.
+                        prepare_app_world(self,system.world.as_mut().ok_or("World absent")?,&system.vulkan_context,system.fence,system.draw_serial)?;
+                        system.clear_annotation_overlay()?;system.annotation_ready_shape=None;
+                    },
                 }
                 Ok::<(),String>(())
             })();
+            system.annotation_prepare_error=result.as_ref().err().cloned();
+            if let Err(error)=result{self.gpu_error(&error);}
+        }else{
+            let result=prepare_app_world(self,system.world.as_mut().expect("prepared World"),&system.vulkan_context,system.fence,system.draw_serial);
             system.annotation_prepare_error=result.as_ref().err().cloned();
             if let Err(error)=result{self.gpu_error(&error);}
         }
     }
     fn build_ui(&mut self,ctx:&Context) { self.update_ui(ctx); }
     fn gpu_error(&mut self,error:&str) {self.status_message=format!("GPU rendering paused: {error}");eprintln!("{}",self.status_message);}
+}
+
+fn prepare_app_world(app:&crate::IngeTrazoApp,world:&mut world::World,context:&VulkanContext,fence:vk::Fence,serial:u64)->Result<(),String>{
+ let sun=crate::solar_controls::scene_direction(app).unwrap_or(None);
+ let sweep=world.prepare_face_sweep(context,&app.scene,&app.camera,&app.style,app.active_tool.face_sweep_preview(),app.model_revision,fence,serial)?;
+ let result=if sun.is_some()||world.has_shadow_owner(){
+  let ground=world::World::solar_ground_receiver_for_scene(&app.scene);
+  world.set_scene_with_sun(context,&app.scene,&app.camera,&app.style,fence,serial,app.native_geometry_revision,sun,app.scene.shadows.darkness as f32,ground)
+ }else{world.set_scene(context,&app.scene,&app.camera,&app.style,fence,serial,app.native_geometry_revision)};
+ if let Err(error)=result{world.abort_face_sweep(sweep,fence,serial)?;return Err(error);}
+ world.publish_face_sweep(sweep,&app.scene,serial);Ok(())
 }
 
 impl VulkanContext {
