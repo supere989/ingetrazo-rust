@@ -1,0 +1,33 @@
+{
+  "owner_proof_commit": "e8aef223",
+  "runtime_chain": [
+    "cc7a1070",
+    "9401ae74",
+    "e2886f91"
+  ],
+  "method": "Read-only source/runtime/checker review plus canonical member/Git/current-binary authentication and direct archived state comparison; no checker/process replay, build or source capture.",
+  "authenticated": {
+    "proof_members": 34,
+    "proof_raw_bytes": 766547,
+    "proof_sha256": "b7dc9fbbd4fc5ba7ee18e140fcb8dbaaddea9c9b78c2e09eb44eb35b62998084",
+    "source_members": 2,
+    "source_raw_bytes": 66981,
+    "source_sha256": "2050f802fcdba29cf7b156723d7c5c60223bd42225cb65b0278acb5fd0f71548",
+    "git_file_bindings": 8,
+    "current_binaries": 2,
+    "cases": 19,
+    "literal_matching_states": 121,
+    "reported_rejecting_controls": 8
+  },
+  "runtime_review": "No blocking defect found after whole-Text filtering and uppercase X correction. Enter/Backspace precede chord filtering as original; first Escape clears buffer without cancelling pending tool. Per-event modifier ownership preserves Ctrl/Alt shortcuts and source AltGr; unrelated focused editors/modal guards are explicit. Model buffer display is separated from existing composer/navigation editors. Same-frame chord record is now required, not ignored. Repeat adds only safe Move/Rotate identities.",
+  "retained_failures": "Invalid source scene/history binding and direct-History Undo attempts remain distinguished from actual MainWindow Undo; stale-binary/editor-fixture failures retained. Prior affected inference replay is bound separately from uppercase-only final delta.",
+  "criterion": "Verify full 3D drawing planes, guide intersections, pixel tolerances and locale-specific input against baseline.",
+  "criterion_disposition": "Recommend Verified for the unchanged finite P07 criterion after root integrates the reviewed perspective and keyboard batches and runs its planned affected consumer check. No additional named-criterion gap demonstrated by this review.",
+  "criterion_map": {
+    "full_3d_planes": "Retained 66 shape recipes/488 phases plus component/oblique/vertical drawing-plane and axes controls; prior drafting/snap reference sessions.",
+    "guide_intersections": "Retained48 guide controls plus independently accepted perspective-guide35 cases/five actual camera modes/55App states/five egui sessions, exact producers/matrices/clipped spans and source acquisition.",
+    "pixel_tolerances": "Retained29 screen/eye snap sessions and nine/fourteen-pixel boundary controls in perspective guide corpus; repaired rendered Rectangle/Shift consumers also passed published990.",
+    "locale_input": "Retained1168 numeric grammar rows,286 Unicode controls/eight-unit/15physical-App routing plus new19 actual keyboard recipes/121states, same-frame chords and focused-editor/modal guards."
+  },
+  "scope": "Finite semantic criterion recommendation only. No whole-frame/glyph/backend/OS QAction delivery/performance/all-tool equivalence claim; release gates remain independent."
+}
