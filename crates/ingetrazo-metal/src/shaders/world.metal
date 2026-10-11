@@ -8,16 +8,16 @@ vertex Out world_vertex(uint id [[vertex_id]],uint instance [[instance_id]],cons
  o.position.z=(o.position.z+o.position.w)*0.5; o.color=float4(v[id].color); return o;
 }
 struct Paint {float4 front;float4 back;uint mode;float opacity;uint padding1;uint padding2;};
-// Frozen source RGBA8 blend factor conversion uses nearest-even UNORM8.
-// Preserve straight RGB; only the attachment blend factor is encoded here.
-float source_blend_alpha(float alpha){return rint(clamp(alpha,0.,1.)*255.)/255.;}
+// Original basic.frag emits raw float uniform/sample alpha. Attachment
+// conversion is driver behavior, not a universal shader-side UNORM8 rule.
+float source_fragment_alpha(float alpha){return clamp(alpha,0.,1.);}
 fragment float4 world_fragment(Out in [[stage_in]],bool front [[front_facing]],constant Paint& paint [[buffer(0)]]) {
  if(paint.padding1==1)return front?float4(0.,1.,0.,1.):float4(1.,0.,0.,1.);
  if(paint.mode==1||paint.mode==3)return paint.front;
  if(paint.mode==4)return front?in.color:paint.back;
  if(paint.mode==2)return front?paint.front:paint.back;
  // Source u_opacity is uniform per run, not perspective-interpolated alpha.
- return float4(in.color.rgb,source_blend_alpha(paint.opacity));
+ return float4(in.color.rgb,source_fragment_alpha(paint.opacity));
 }
 
 // Source basic.frag sampled policy: bottom-up UV asset rows, linear repeat,
@@ -31,10 +31,10 @@ struct TexturePaint {float opacity;float shade;uint hard_cutout;uint height;floa
 constant float source_bayer[16]={0.5/16.,8.5/16.,2.5/16.,10.5/16.,12.5/16.,4.5/16.,14.5/16.,6.5/16.,3.5/16.,11.5/16.,1.5/16.,9.5/16.,15.5/16.,7.5/16.,13.5/16.,5.5/16.};
 fragment float4 world_texture_fragment(TextureOut in [[stage_in]],texture2d<float> image [[texture(0)]],sampler filter [[sampler(0)]],constant TexturePaint& paint [[buffer(0)]],bool front [[front_facing]]) {
  if(paint.mean.w<0.)return front?float4(0.,1.,0.,1.):float4(1.,0.,0.,1.);
- if(paint.mean.w!=0.)return float4(paint.mean.rgb,source_blend_alpha(paint.opacity));
+ if(paint.mean.w!=0.)return float4(paint.mean.rgb,source_fragment_alpha(paint.opacity));
  float4 texel=image.sample(filter,in.uv);
  if(paint.opacity>.999&&texel.a<.5){if(paint.hard_cutout!=0)discard_fragment();uint x=uint(in.position.x)%4;uint y=uint(float(paint.height)-in.position.y)%4;if(texel.a<source_bayer[y*4+x])discard_fragment();return float4(texel.rgb*paint.shade,1.);}
- return float4(texel.rgb*paint.shade,source_blend_alpha(texel.a*paint.opacity));
+ return float4(texel.rgb*paint.shade,source_fragment_alpha(texel.a*paint.opacity));
 }
 
 // World-space ghosts deliberately omit section clipping and ordinary paint policy.
