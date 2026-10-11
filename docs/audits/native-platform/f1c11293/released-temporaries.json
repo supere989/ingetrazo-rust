@@ -1,0 +1,65 @@
+{
+  "authorization": "Parent release after fd7dbcad canonical133 member authentication",
+  "canonical_commit": "fd7dbcad",
+  "archive_sha256": "3b832209a7e2329b57ab285377211ac119e0e7d9e5ae8e8ec119f6c574835227",
+  "released": [
+    {
+      "path": "/tmp/f1c-arm.zip",
+      "bytes": 841519,
+      "sha256": "8f9e9a2417950e19ebd52536a8a8dc1b3ad5504cc3e6662c095cddf49a67343e"
+    },
+    {
+      "path": "/tmp/f1c-intel.zip",
+      "bytes": 452894,
+      "sha256": "40255008482174ace5196779f22d5b5106b9a1c0ae483cab104a9ca47583c59d"
+    },
+    {
+      "path": "/tmp/f1c-windows.zip",
+      "bytes": 19155,
+      "sha256": "b9829517ccd7f3321294b34e4ba0a9084e579ff72d44e2a91d57829b2d7f4117"
+    },
+    {
+      "path": "/tmp/f1c-cross-arm.zip",
+      "bytes": 10780,
+      "sha256": "23e668723c94d18150bfafcc718791903c37424d774bb8663e23bbd1b3907dc3"
+    },
+    {
+      "path": "/tmp/f1c-cross-intel.zip",
+      "bytes": 10905,
+      "sha256": "26a74a44d968a996afc1a0d4f901b2630dc105a5925c4259862c1eea4bcd94e7"
+    },
+    {
+      "path": "/tmp/f1c-full.json",
+      "bytes": 37054,
+      "sha256": "10ec9c0d6c8f74a1ec8477f9407112a9d6225803ac4a559c46fccc21c3e94467"
+    },
+    {
+      "path": "/tmp/f1c-linux.log",
+      "bytes": 11442946,
+      "sha256": "ff6a09e1e29abf6b1e35250f1d05188eb9396d3c39a0d274a0a308acc1df4be6"
+    },
+    {
+      "path": "/tmp/f1c-intel.log",
+      "bytes": 130495,
+      "sha256": "a0905849a10bbb63f179a2e08638c008c33a5101a7ba34bc157d6ed0f88cce27"
+    },
+    {
+      "path": "/tmp/f1c-joint-result.json",
+      "bytes": 59997,
+      "sha256": "06809517c416d9cb7cc4d287c422f2f4d0e46785eeca626ba59b3fadb02492c1"
+    },
+    {
+      "path": "/tmp/f1c-retained/records.zip",
+      "bytes": 2223356,
+      "sha256": "3b832209a7e2329b57ab285377211ac119e0e7d9e5ae8e8ec119f6c574835227"
+    },
+    {
+      "path": "/tmp/f1c-retained/manifest.json",
+      "bytes": 23073,
+      "sha256": "96b7348ed9f49255545636328104c75d923afb1a90714b31377f214b4cd9273a"
+    }
+  ],
+  "preserved": "All worktrees, targets, private GPU bundle, source archives and prior failure captures",
+  "total_bytes": 15252174,
+  "files": 11
+}
