@@ -38,10 +38,11 @@ manifest=json.loads((select/'manifest.json').read_text())
 archive=select/manifest['archive']
 assert hashlib.sha256(archive.read_bytes()).hexdigest()==manifest['archive_sha256']
 with zipfile.ZipFile(archive) as z:
- data=z.read('original.json')
- assert hashlib.sha256(data).hexdigest()==manifest['files']['original.json']
- (work/'select-original.json').write_bytes(data)
-if run('select-native',[str(bin/'select_visible_click_protocol'),str(work/'select-original.json'),str(work/'select-native.json')]):
+ for name in ['original.json','original-group-priority.json']:
+  data=z.read(name)
+  assert hashlib.sha256(data).hexdigest()==manifest['files'][name]
+  (work/('select-'+name)).write_bytes(data)
+if run('select-native',[str(bin/'select_visible_click_protocol'),str(work/'select-original.json'),str(work/'select-native.json'),str(work/'select-original-group-priority.json')]):
  run('select-check',['python3','scripts/check-select-visible-click.py',str(select),str(work/'select-native.json')])
 partition=audit/'pushpull-partition-collapse/source.json'
 if run('partition-native',[str(bin/'pushpull_partition_collapse'),str(partition),str(work/'partition-native.json')]):
