@@ -1,0 +1,87 @@
+{
+  "source": "314eb6566b6694652361ab948a5d02f02cf71eb9",
+  "artifact_id": 11686654610,
+  "zip_sha256": "ee0f69e41d74322ef381ff3fb7b40467eaa69332dcea2cec55f0acb13b4aecc7",
+  "runtime": {
+    "exit_code": 0,
+    "outer_timeout": false
+  },
+  "binary_sha256": "f5ab47dce9c7e6d9144b31de71071292ff42437644f0900a56c55413d902435a  target/debug/examples/native_world_depth",
+  "source_sha256_manifest": "6eda814bece7f025a375b3845b7ec667041cd2fca52b1dfced92bffb041b3f6f  crates/ingetrazo-metal/src/world.rs\ndb47f53eecc9ec8db00e1ecfbbebca4fe835a5789e4055937206f60c5ae86ed7  crates/ingetrazo-metal/src/world_admission.rs\nd5d4193adebf315b74503fdbb0d8b6b1abfeb036354010c091a0ffa02799ec6e  crates/ingetrazo-metal/src/shaders/world.metal\na14eb0361c482e20f0e19598d0e2b1ca070b68970bfa19e778a42019e7494de1  crates/ingetrazo-metal/src/egui_painter.rs\n0bf380cb141c712c1654eb895c1c0a5465f2133e43db9ba6420ce1c324e4f87d  crates/ingetrazo-metal/src/presentation.rs\n513337cf12d71a1ae69b06bb5b999bd89ac55c6677c630406ad0aec6289ab484  crates/ingetrazo-metal/examples/native_world_depth.rs\n04848668e02328bff4ebc4dce90df325760217cda1bf6e9dfe3c8301226ec3cb  scripts/check-metal-world-depth.py\n",
+  "independent_frames": {
+    "far-then-near": {
+      "interior_pixels": 1152,
+      "background_pixels": 2584,
+      "sha256": "1098d6c1ffe5069f7869f1b825ee662fd75895e60d5c28863985a46dc4e1a634"
+    },
+    "near-then-far": {
+      "interior_pixels": 1152,
+      "background_pixels": 2584,
+      "sha256": "1098d6c1ffe5069f7869f1b825ee662fd75895e60d5c28863985a46dc4e1a634"
+    },
+    "depth-disabled-negative": {
+      "interior_pixels": 1152,
+      "background_pixels": 2584,
+      "sha256": "14de66263d5782b33cfecce68a97f2e146ba8bc625c4bff14a68c1ce2e357de0"
+    },
+    "warm-0": {
+      "interior_pixels": 1152,
+      "background_pixels": 2584,
+      "sha256": "1098d6c1ffe5069f7869f1b825ee662fd75895e60d5c28863985a46dc4e1a634"
+    },
+    "warm-1": {
+      "interior_pixels": 1152,
+      "background_pixels": 2584,
+      "sha256": "1098d6c1ffe5069f7869f1b825ee662fd75895e60d5c28863985a46dc4e1a634"
+    },
+    "warm-2": {
+      "interior_pixels": 1152,
+      "background_pixels": 2584,
+      "sha256": "1098d6c1ffe5069f7869f1b825ee662fd75895e60d5c28863985a46dc4e1a634"
+    },
+    "owner-refusal-preserved": {
+      "interior_pixels": 1152,
+      "background_pixels": 2584,
+      "sha256": "1098d6c1ffe5069f7869f1b825ee662fd75895e60d5c28863985a46dc4e1a634"
+    },
+    "map-free-old-green": {
+      "interior_pixels": 1152,
+      "background_pixels": 2584,
+      "sha256": "1098d6c1ffe5069f7869f1b825ee662fd75895e60d5c28863985a46dc4e1a634"
+    },
+    "map-free-new-red": {
+      "interior_pixels": 1152,
+      "background_pixels": 2584,
+      "sha256": "14de66263d5782b33cfecce68a97f2e146ba8bc625c4bff14a68c1ce2e357de0"
+    }
+  },
+  "counters": {
+    "passed": true,
+    "device": "Apple Paravirtual device",
+    "width": 64,
+    "height": 64,
+    "pixel_encoding": "RGBA8Unorm opaque",
+    "frames": [
+      "far-then-near",
+      "near-then-far",
+      "depth-disabled-negative",
+      "warm-0",
+      "warm-1",
+      "warm-2",
+      "owner-refusal-preserved",
+      "map-free-old-green",
+      "map-free-new-red"
+    ],
+    "geometry_uploads_before_warm": 2,
+    "targets_before_warm": 1,
+    "geometry_uploads_after_warm": 2,
+    "targets_after_warm": 1,
+    "ledger_committed_after_drop": 0,
+    "ledger_reserved_after_drop": 0,
+    "wrong_owner_refused": true,
+    "invalid_pose_refused": true
+  },
+  "negative_controls": "blank and depth-disabled-as-positive rejected",
+  "scope": "9 actual offscreen native GPU sampled interiors/backgrounds plus retained UI sampling; no presentation/full materials/edges/MSAA/host parity claim",
+  "original_failure": "run38098691387 retained; corrected explicitAlways/noWrite passes. Missing original NSError prevents claiming nil state root cause."
+}
