@@ -2,7 +2,7 @@
 """Reuse authenticated 28-field corpus, acquire only missing nested records."""
 import sys,json,zipfile,hashlib,dataclasses,importlib.util,subprocess
 from pathlib import Path
-sys.path.insert(0,'/work/ingetrazo')
+sys.path.insert(0,str((Path(__file__).resolve().parents[1]/'ingetrazo').resolve()))
 spec=importlib.util.spec_from_file_location('prior',Path(__file__).with_name('reference-igz-complete-fields.py'));prior=importlib.util.module_from_spec(spec);spec.loader.exec_module(prior)
 from core.scene import Scene
 from core import composition as c

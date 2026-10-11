@@ -1,0 +1,238 @@
+{
+  "runtime_revision": "54d1153e261f2a749fc2195bb929ebaf26670c92",
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "integrated_doc_revision": "6e3b8c4af8c26705680c51ce84adbb6da0beac0f",
+  "joint_build_seconds": 9.64,
+  "build_command": "cargo build --locked -p ingetrazo-cli -p ingetrazo-gui --bin ingetrazo --example change_axes_fixture --example document_preservation_workflow --example pushpull_solid_workflows -j2",
+  "build_env": {
+    "CARGO_PROFILE_DEV_DEBUG": "0",
+    "CARGO_PROFILE_TEST_DEBUG": "0",
+    "CARGO_INCREMENTAL": "0",
+    "CARGO_TARGET_DIR": "/tmp/ingetrazo-native-font-merge-target"
+  },
+  "binary_sha256": {
+    "ingetrazo": "25a59c984a9c0bdef1ecc5fc15ec83fe506ea1086bb87a127e955262fb83a053",
+    "examples/change_axes_fixture": "a9b8e88e47aef5e479325628d316c027c9853fbeae5aae97956e860c313b4497",
+    "examples/document_preservation_workflow": "43d41721fcfd102bd1ceee50f70e696cefdb3997eeff7226ca9d2acb42ab0bbd",
+    "examples/pushpull_solid_workflows": "8f900ebce578e49f79c0d73998f9a9588362cf7ce1b0f7e85df7cc9092c59278"
+  },
+  "changed_rust_files": {
+    "crates/ingetrazo-core/src/change_axes.rs": "18640dd3f08947822926ab2006463abc51c317563249df3725208895c923c49e",
+    "crates/ingetrazo-core/src/lib.rs": "d1159223b91e78cbfe0c99598c2f5afbd10f5984223c878315946f549da71a1a",
+    "crates/ingetrazo-core/src/scene.rs": "cd883b2934e0575008e26e39b62ae362b6bf1e1e6fd86df736b1c2d30fdf2e96",
+    "crates/ingetrazo-formats/src/igz.rs": "ef4a41178d2c22ef6a7d32d9e9423f69f14a7f4d4d2bf18985d2141587ea4ed0",
+    "crates/ingetrazo-gui/examples/change_axes_fixture.rs": "7789423fa98098ccfa173723acdc90f055b90edc5b03979acddd1c1d00cef4ef",
+    "crates/ingetrazo-gui/examples/document_preservation_workflow.rs": "e0668fccab80db8d785d075f06bbeea3d3efc0bb4cb8e6b75503217a339de505",
+    "crates/ingetrazo-gui/examples/pushpull_solid_workflows.rs": "e8cbd66d3e1c8315731c869402090cfba46eb2575044e27cfc859055529eb249",
+    "crates/ingetrazo-gui/src/app.rs": "3080f17b7ca0ab201c40db5b573ae7bc66773cc24b0c2d46f90d6cb37e372fe5",
+    "crates/ingetrazo-gui/src/component_edit.rs": "e4888a85f9415a4b6a894e3fe6178ae822fde7155be9f0d11f22bfbe0fdc7056",
+    "crates/ingetrazo-gui/src/tool_history.rs": "b6a04bff230efb3c4ae5d8703108f195a18812f6ad1f6bca3172403a57de15c0",
+    "crates/ingetrazo-gui/src/viewport.rs": "992bb130c28ab2669847e7968308d767334458aafde197b911ebb3706dc149bd",
+    "crates/ingetrazo-tools/src/base.rs": "f874940e84faf8b6dde7fd7ffdba2e0c9b3e2737ddd2d2a85b604a03a2342a47",
+    "crates/ingetrazo-tools/src/change_axes.rs": "ec362a3a1fdf9c34a4bbda15d3e5f9ec9efd3d5ea3ece819916fe0bebfadd8a2",
+    "crates/ingetrazo-tools/src/lib.rs": "973bd13462342bdea999771c14ea0a6654ef4822bd266a84a3e2595763513d6a",
+    "crates/ingetrazo-tools/src/pushpull.rs": "7586381e25dac291e001acb0f97d2e108bbe995d2ead2e5313141bb09d222f66"
+  },
+  "runner_sha256": {
+    "scripts/check-document-axes-integration.py": "f1c392958b366777067ac55a409f4a080a55043baad42a3e309bca338f028180",
+    "scripts/reference-document-preservation-workflow.py": "a951c9dcc8cb821b723031b3f9f84d6a977fc32089e7d3ce40a06ad9c5b981a3",
+    "scripts/check-pushpull-solid-workflows.py": "29cd6ebf06de688260e0c9badb010759a3980b78b0fb02c45dfc420b39a54218"
+  },
+  "archive_sha256": "d3e5f11ce75f2ec3c61cbf1d4ac63cff491215e6d9e66e0d2b99bbe876313e4e",
+  "records": {
+    "build.log": {
+      "bytes": 19164,
+      "sha256": "bb2d67ddca4276c664b54a37413d4b44c438b87bb1e144754457a6c3d65a06be"
+    },
+    "document-axes/axes/check.json": {
+      "bytes": 140,
+      "sha256": "f25be830fb2b46f3df276fa41e153bdcc89984af6ddd79ded80dd1066e433b97"
+    },
+    "document-axes/axes/check.json.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "document-axes/axes/classic.input.igz": {
+      "bytes": 2125,
+      "sha256": "57850fdf92a8f65f1a71b003005f1946bb1f3e6076deadc933799ca015ecedb6"
+    },
+    "document-axes/axes/classic.native.igz": {
+      "bytes": 2396,
+      "sha256": "4ad37c03305ff5795a30cb8b5c4b4ed895db62bd57aa3b76304100accec1930a"
+    },
+    "document-axes/axes/context.input.igz": {
+      "bytes": 3477,
+      "sha256": "f14e56bae1bf6c044560ae98a120dded3212505bafaa6ba07d5737c407d0779d"
+    },
+    "document-axes/axes/context.native.igz": {
+      "bytes": 5395,
+      "sha256": "a86ec128ed2c89526f92d2418e2e9f94e1f391d8ae65a5b403b5c07824521cfd"
+    },
+    "document-axes/axes/native.json": {
+      "bytes": 101776,
+      "sha256": "9c6a164fd2af69aa5ff16d15c6a650973719dd59a26dece5ba9a470759932211"
+    },
+    "document-axes/axes/native.json.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "document-axes/axes/nested.input.igz": {
+      "bytes": 5604,
+      "sha256": "ebd5a1a7fd73910f8e0b72545df73986c29f78de6ede2a7c5c8bf4125d915899"
+    },
+    "document-axes/axes/nested.native.igz": {
+      "bytes": 7247,
+      "sha256": "acb385c0ff45378b011b5f4bd1918c477d11e043f7eb4b8f0730a60e939d02e1"
+    },
+    "document-axes/axes/oblique.input.igz": {
+      "bytes": 2875,
+      "sha256": "f77e18c64e4f08cee167d8507d55c0a690b128c8d74596cdf07687f6632220b2"
+    },
+    "document-axes/axes/oblique.native.igz": {
+      "bytes": 5514,
+      "sha256": "4d9381e9eb3af13af44c711979104278cec695257e6bddf75009d0bdd221b927"
+    },
+    "document-axes/axes/original.json": {
+      "bytes": 101779,
+      "sha256": "011e1f864cc4acce2b60d74aaa8bc1fa2a8baae8e006606bfb76d4b8cbb04aa7"
+    },
+    "document-axes/axes/reopened.json": {
+      "bytes": 5474,
+      "sha256": "3a3d7c8a645271d21c722d8412b92234ee094310b7d63cc21d5e1b3f2bca12f8"
+    },
+    "document-axes/axes/reopened.json.stderr": {
+      "bytes": 49,
+      "sha256": "9148e145e58b87c50fd49ce7410b6e547365bef08a9b8c91d92465a27f1fa848"
+    },
+    "document-axes/axes/shared.input.igz": {
+      "bytes": 2875,
+      "sha256": "f77e18c64e4f08cee167d8507d55c0a690b128c8d74596cdf07687f6632220b2"
+    },
+    "document-axes/axes/shared.native.igz": {
+      "bytes": 4516,
+      "sha256": "adcabda38b5d12bd74310e6ef0615026552dc2b21b9c7e0780d13ccb6faec25b"
+    },
+    "document-axes/config/Unknown Organization/reference-change-axes.py.conf": {
+      "bytes": 1775,
+      "sha256": "ed7b9c859ba8e39ddb10a90548d9f6583ae4e2df4f60a59093a6b20009d63ea7"
+    },
+    "document-axes/data/IngeTrazo/textures/embedded/2ce724eba3f26125-\u00c1rbol \u65e5\u672c .png": {
+      "bytes": 98,
+      "sha256": "2755c59556dc3baa37c383457b9095850b567a0ca962275f16ee9509b156b748"
+    },
+    "document-axes/documents/check.log": {
+      "bytes": 109,
+      "sha256": "a20b0878e1ed14bd43bc3963e27062ce16ee20101cc059e25c44f21a36e3d5d3"
+    },
+    "document-axes/documents/check.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "document-axes/documents/compare.json": {
+      "bytes": 158,
+      "sha256": "2c6a80629b2880eb5296cb1770c5973fcbafeec3cc144fed5c8ddb5e54dc5b5d"
+    },
+    "document-axes/documents/compare.json.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "document-axes/documents/differences.json": {
+      "bytes": 172,
+      "sha256": "4d5c3613ce0ce8b37d63ed48668fb75694be40dc2391660d927e1a995d07349a"
+    },
+    "document-axes/documents/expected.json": {
+      "bytes": 144164,
+      "sha256": "7934adb8d982a5547db8403de43040b1035dcb3514ec98f6b073800986b8fa72"
+    },
+    "document-axes/documents/native.json": {
+      "bytes": 564,
+      "sha256": "2d00f5f58921876782813eff4e6385a7e996ccbb4b68defda214e8aebd4fcce9"
+    },
+    "document-axes/documents/native.json.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "document-axes/documents/nested-leaves-edited.native.igz": {
+      "bytes": 5501,
+      "sha256": "38420350663571fa33315871f4f1f6a3da7b4f5f557be7d94de623189a6f08e7"
+    },
+    "document-axes/documents/nested-leaves-edited.python-reopen.igz": {
+      "bytes": 6050,
+      "sha256": "40e2b4f2ba773e2b5f41d89282cb1cd6ed07e51586b669c50cc6fb3da3c3c479"
+    },
+    "document-axes/documents/nested-leaves-redo.native.igz": {
+      "bytes": 5501,
+      "sha256": "38420350663571fa33315871f4f1f6a3da7b4f5f557be7d94de623189a6f08e7"
+    },
+    "document-axes/documents/nested-leaves-redo.python-reopen.igz": {
+      "bytes": 6050,
+      "sha256": "40e2b4f2ba773e2b5f41d89282cb1cd6ed07e51586b669c50cc6fb3da3c3c479"
+    },
+    "document-axes/documents/nested-leaves-undo.native.igz": {
+      "bytes": 5537,
+      "sha256": "1608a0e41c3931722f56fa89783b763045163a947206db9aa2c81c25b3a009bc"
+    },
+    "document-axes/documents/nested-leaves-undo.python-reopen.igz": {
+      "bytes": 6088,
+      "sha256": "49c48f10d43f990ffe3b09e9e50469d48e41f1dc9b99814d49123b96fa18a768"
+    },
+    "document-axes/documents/nested-leaves.igz": {
+      "bytes": 6088,
+      "sha256": "49c48f10d43f990ffe3b09e9e50469d48e41f1dc9b99814d49123b96fa18a768"
+    },
+    "document-axes/documents/observed.json": {
+      "bytes": 125245,
+      "sha256": "6f65628b592599a98f565fe717b2c82f3c5d66136b9640a984d67fc50a2fe142"
+    },
+    "document-axes/documents/retained-edited.native.igz": {
+      "bytes": 3788,
+      "sha256": "547670f59eeed9a1151e39551955d672d8ffa1345e997fdd7f31c7a75524a065"
+    },
+    "document-axes/documents/retained-edited.python-reopen.igz": {
+      "bytes": 4321,
+      "sha256": "c751407737fc009d7a360a5753af9587d2842f0140b68be99fd27bc40c8aff3a"
+    },
+    "document-axes/documents/retained-redo.native.igz": {
+      "bytes": 3788,
+      "sha256": "547670f59eeed9a1151e39551955d672d8ffa1345e997fdd7f31c7a75524a065"
+    },
+    "document-axes/documents/retained-redo.python-reopen.igz": {
+      "bytes": 4321,
+      "sha256": "c751407737fc009d7a360a5753af9587d2842f0140b68be99fd27bc40c8aff3a"
+    },
+    "document-axes/documents/retained-undo.native.igz": {
+      "bytes": 3827,
+      "sha256": "af6f3d54ebd6b7f87f4b7c2950d6546cd9598b4ed2c069921b1d237d5f6080e3"
+    },
+    "document-axes/documents/retained-undo.python-reopen.igz": {
+      "bytes": 4359,
+      "sha256": "8575055bff26e1767bd3fa1d1d7d7d633a0ef91cbe327d0a814708440f2f2cb8"
+    },
+    "document-axes/documents/retained.igz": {
+      "bytes": 4316,
+      "sha256": "ccb223f71da070a55a82166d84d96e8d51a948184cbd418a5529b30a80d4c92f"
+    },
+    "document-axes/result.json": {
+      "bytes": 910,
+      "sha256": "054a0ae67f470c617d7665eba988e1a2c22258dbd85ea24a0e8be454bc5de229"
+    },
+    "document-axes.log": {
+      "bytes": 820,
+      "sha256": "9016608fed1376bcaa8ff5a89171f3b84d1c6dae568712cc499dc2ced1488d72"
+    },
+    "pushpull-app.json": {
+      "bytes": 173202,
+      "sha256": "878b24febd3eb0a8eebec8076d494b3ee35576aff4330a8b20d0033b6126fe90"
+    },
+    "pushpull-comparison.json": {
+      "bytes": 859,
+      "sha256": "30b8e47cfda77cf14ed48ec8d4b883586d558426fb9e861636da911ca0fcca4e"
+    },
+    "pushpull-runtime.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "fresh_original_acquisitions": 0,
+  "broad_local_runs": 0
+}

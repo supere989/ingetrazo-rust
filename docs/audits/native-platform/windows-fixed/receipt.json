@@ -1,0 +1,27 @@
+{
+  "revision": "9b8e9091fda6ae989161761414962f512072d186",
+  "run": 38144420256,
+  "url": "https://github.com/supere989/ingetrazo-rust/actions/runs/38144420256",
+  "job": {
+    "id": 114484677527,
+    "name": "Native Windows compile and isolated recovery",
+    "status": "completed",
+    "conclusion": "success",
+    "started_at": "2026-10-11T13:45:08Z",
+    "completed_at": "2026-10-11T13:49:10Z"
+  },
+  "artifact": {
+    "id": 11704445752,
+    "bytes": 21892,
+    "sha256": "743ecc3cfe8df8ea4a15e1d0c85adc48cdd94afd955594e99f5ba56d57bb8945"
+  },
+  "acceptance": {
+    "msvc_cli_build": "pass",
+    "cli_check": "pass",
+    "cli_version": "pass",
+    "independent_process_app_states": 7,
+    "rejecting_controls": 12,
+    "source_file_bytes_unchanged": true
+  },
+  "scope": "Actual Windows MSVC compiled CLI and isolated session process recovery; no Windows Vulkan GUI/pixel claim."
+}

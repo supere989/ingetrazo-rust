@@ -1,0 +1,56 @@
+{
+  "revision": "f90106ca2a74e21f6d9cca50d02324fce32ea1f9",
+  "run": 38143497282,
+  "url": "https://github.com/supere989/ingetrazo-rust/actions/runs/38143497282",
+  "jobs": [
+    {
+      "id": 114481963915,
+      "name": "Native Windows compile and isolated recovery",
+      "status": "completed",
+      "conclusion": "failure",
+      "started_at": "2026-10-11T13:31:13Z",
+      "completed_at": "2026-10-11T13:33:52Z"
+    },
+    {
+      "id": 114481964103,
+      "name": "Native Metal compile (x86_64-apple-darwin)",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-11T13:31:13Z",
+      "completed_at": "2026-10-11T13:31:52Z"
+    },
+    {
+      "id": 114481964109,
+      "name": "Native Metal compile (aarch64-apple-darwin)",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-11T13:31:13Z",
+      "completed_at": "2026-10-11T13:31:41Z"
+    },
+    {
+      "id": 114481964122,
+      "name": "Native Metal framework link (macos-15-intel)",
+      "status": "completed",
+      "conclusion": "failure",
+      "started_at": "2026-10-11T13:31:14Z",
+      "completed_at": "2026-10-11T13:38:20Z"
+    },
+    {
+      "id": 114481964155,
+      "name": "Native Metal framework link (macos-15)",
+      "status": "completed",
+      "conclusion": "failure",
+      "started_at": "2026-10-11T13:31:20Z",
+      "completed_at": "2026-10-11T13:34:42Z"
+    },
+    {
+      "id": 114481964187,
+      "name": "compilation-and-tests",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-11T13:31:13Z",
+      "completed_at": "2026-10-11T13:44:47Z"
+    }
+  ],
+  "interpretation": "Linux semantic suite and both Metal cross-compiles pass. Windows runtime first-save flush and both actual Apple production launcher startup checks fail; these are unresolved at this source revision."
+}

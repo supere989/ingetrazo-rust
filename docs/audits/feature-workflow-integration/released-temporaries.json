@@ -1,0 +1,7 @@
+{
+  "root": "/tmp/ingetrazo-workflow-integration",
+  "files": 48,
+  "bytes": 788017,
+  "verified_archive_sha256": "d3e5f11ce75f2ec3c61cbf1d4ac63cff491215e6d9e66e0d2b99bbe876313e4e",
+  "policy": "All file bytes verified against canonical archive before deleting terminal copies; targets, worktrees and source preserved."
+}
