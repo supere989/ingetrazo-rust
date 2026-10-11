@@ -1,0 +1,17 @@
+{
+  "archive_sha256": "c5120f87c79159417acc5f6c60c0cbd04047c03de6f7b191d17a46f50dd9b700",
+  "records": {
+    "focused-test.log": {
+      "bytes": 18735,
+      "sha256": "181fa08059afe372eebeeb9fc9dd66ecd581bfb0adfb4dc9b33ee79efce8d5df"
+    },
+    "setup-failure.log": {
+      "bytes": 2305,
+      "sha256": "8baba3df958d2a59069e74a4dd48fcbe9069c809225172be015f60f9151f7d98"
+    },
+    "provenance.json": {
+      "bytes": 433,
+      "sha256": "f46fe6b76d9e71416a83ee8f125a1df2b908a78724790995b3b6d0e6f19512a9"
+    }
+  }
+}

@@ -1,0 +1,7 @@
+# Native viewport egui texture ownership
+
+Metal route runs before CPU texture-consumer selection. Native-only viewport performs no scene asset iteration/decode/upload and no texture-map population. Native plus paste visits only paste assets and corresponding cached handles. CPU compatibility keeps prior texture aliases and renders textured faces. Existing shared app.textures handles are preserved for other consumers; no global clearing or lifetime policy change. This removes redundant eager egui copies while native World retains its independent immutable GPU images.
+
+Focused actual render_viewport test passes: fresh native scene allocates zero egui scene handles; CPU compatibility emits a textured mesh and its new image delta; native paste emits only its preview delta/mesh; cancel/warm emits no new scene/preview image delta and preserves existing shared handles; fresh native+paste allocates exactly one preview handle. No native GPU/window/Metal execution claim; Metal ordering is source-reviewed, test runs on Linux. One initial build failed solely because the new worktree oracle symlink was absent; retained setup log. Corrected frozen source compiled and test exited0.
+
+Command: `CARGO_TARGET_DIR=/tmp/ingetrazo-skp-native-target CARGO_PROFILE_DEV_DEBUG=0 CARGO_PROFILE_TEST_DEBUG=0 CARGO_INCREMENTAL=0 cargo test --locked -p ingetrazo-gui --lib native_texture_consumer_tests -j2`. No broad suite or source capture. records.zip preserves exact logs and execution hashes.
