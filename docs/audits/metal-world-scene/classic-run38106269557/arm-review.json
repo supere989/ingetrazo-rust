@@ -1,0 +1,99 @@
+{
+  "run": 38106269557,
+  "source": "0a6760974cacca7c3dade991bb92758dc09f54ea",
+  "manifest_files": 30,
+  "manifest_verified": true,
+  "arm_artifact_sha256": "2076c5bf0f84fcfa356b2cd30e2690b71ded769b5935aec3af18c732e6d31ca5",
+  "positive": {
+    "passed": true,
+    "source_cases": 9,
+    "native_cases": 10,
+    "pixels": 250,
+    "scope": "Actual native app sampled classic own-mesh world shading/baked reflection/face-vs-group layer routing, no whole-image/OS gesture/presentation claim"
+  },
+  "negatives": {
+    "blank-initial": "rejected",
+    "stale-pose": "rejected",
+    "stale-paint": "rejected",
+    "stale-reflection": "rejected",
+    "stale-group-layer": "rejected"
+  },
+  "frames": [
+    {
+      "name": "classic-initial",
+      "catalog_builds": 1,
+      "geometry_uploads": 2,
+      "model_refreshes": 1,
+      "matrix_bytes": 256
+    },
+    {
+      "name": "classic-warm",
+      "catalog_builds": 1,
+      "geometry_uploads": 2,
+      "model_refreshes": 1,
+      "matrix_bytes": 384
+    },
+    {
+      "name": "classic-warm2",
+      "catalog_builds": 1,
+      "geometry_uploads": 2,
+      "model_refreshes": 1,
+      "matrix_bytes": 384
+    },
+    {
+      "name": "classic-pose",
+      "catalog_builds": 2,
+      "geometry_uploads": 3,
+      "model_refreshes": 2,
+      "matrix_bytes": 384
+    },
+    {
+      "name": "classic-paint",
+      "catalog_builds": 3,
+      "geometry_uploads": 5,
+      "model_refreshes": 3,
+      "matrix_bytes": 384
+    },
+    {
+      "name": "classic-layer-hidden",
+      "catalog_builds": 4,
+      "geometry_uploads": 7,
+      "model_refreshes": 4,
+      "matrix_bytes": 384
+    },
+    {
+      "name": "classic-layer-restored",
+      "catalog_builds": 5,
+      "geometry_uploads": 9,
+      "model_refreshes": 5,
+      "matrix_bytes": 384
+    },
+    {
+      "name": "classic-reflected",
+      "catalog_builds": 6,
+      "geometry_uploads": 10,
+      "model_refreshes": 6,
+      "matrix_bytes": 384
+    },
+    {
+      "name": "classic-group-hidden",
+      "catalog_builds": 7,
+      "geometry_uploads": 11,
+      "model_refreshes": 7,
+      "matrix_bytes": 384
+    },
+    {
+      "name": "classic-group-restored",
+      "catalog_builds": 8,
+      "geometry_uploads": 13,
+      "model_refreshes": 8,
+      "matrix_bytes": 384
+    }
+  ],
+  "ledger": [
+    0,
+    0
+  ],
+  "extra_pipeline_sha256": "d35f13369ca1d90183ce9c66a5771296340d663945fe10299e71dfb5e5650110",
+  "scope": "Actual shared application offscreen sampled classic pipeline; no OS gesture/window/presentation/full viewport acceptance"
+}
