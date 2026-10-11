@@ -1,0 +1,19 @@
+{
+  "transport.json": "51ae3c8eddefeb09729c67705fed70c8b7df139d7d6f57e1f2fcb883112d3349",
+  "source.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "comparison.json": "161ee63babe530745c37c8cccb63a3e30a0fc2adf3fea7fa0ff5fe39d6ed3cce",
+  "build.log": "4f95e36067eea16191219056ff30e4be54451e3ce084ab89f914bc69d1252521",
+  "scope.json": "b8514c269a6fa4a9d5a806ed9be4033c29da14f61d2eb2ddd4878a42fe2420ff",
+  "native/annotations-off-window.png": "d1ee7d5c264ed373ec91da85c8a50b2968d45b71080e0127655f34b60c47d509",
+  "native/annotations-off.png": "d1ee7d5c264ed373ec91da85c8a50b2968d45b71080e0127655f34b60c47d509",
+  "native/annotations-on-window.png": "202293ccbdd006165d57c3305db29e0965a7f54563677dc27e16aec6a14a978e",
+  "native/annotations-on.png": "202293ccbdd006165d57c3305db29e0965a7f54563677dc27e16aec6a14a978e",
+  "native/annotations-restored-window.png": "202293ccbdd006165d57c3305db29e0965a7f54563677dc27e16aec6a14a978e",
+  "native/annotations-restored.png": "202293ccbdd006165d57c3305db29e0965a7f54563677dc27e16aec6a14a978e",
+  "native/capture.json": "a3f3431b8af2111d7bc1c3f5efa70d90fb2b46f2f920c9cc3dfabddde0d17626",
+  "native/runtime.log": "8cc82a29d2b850cc30ee43dd95289ffd21e074c9da64e5ce8a62a14f00cb2383",
+  "native/visibility.json": "bcac307436081858e30b60fe8c7f93bace1a9240fca7b88af20c7cc4b2417e61",
+  "native/control/request.json": "3d39700ad9520bf49fbaceae05eec73427913c1f5310084301c7231bb4502c0c",
+  "native/control/state.json": "baa3d6450f9280ab9055316a572bb65edaa5cde6e9adccff2e2f0c1b6f185bfe",
+  "native/control/visibility.json": "bcac307436081858e30b60fe8c7f93bace1a9240fca7b88af20c7cc4b2417e61"
+}
