@@ -52,8 +52,9 @@ impl MeshJournal {
   Ok(endpoints)
  }
  fn position(&self,id:usize)->DVec3{if id<self.base_vertices{match &self.registry{Some(r)=>r.position(id),None=>self.base_positions[id]}}else{self.added_vertices[id-self.base_vertices]}}
- fn vertex(&mut self,key:SourceKey,p:DVec3)->Result<usize,String> {
-  if let Some(id)=self.lookup_vertex(&key){return Ok(id);}
+ pub(crate) fn lookup_position(&self,p:DVec3)->Result<Option<usize>,String> {
+  if let Some(r)=&self.registry{r.check()?;}let p=p.as_vec3().as_dvec3();let key=SourceKey::new(p);
+  if let Some(id)=self.lookup_vertex(&key){return Ok(Some(id));}
   // Original registry probes neighbouring cells in dx/dy/dz order,
   // with Qt float32 subtraction and squared-length, strictly below step².
   for dx in -1..=1{for dy in -1..=1{for dz in -1..=1{
@@ -61,9 +62,13 @@ impl MeshJournal {
    let neighbour=SourceKey([&key.0[0]+dx,&key.0[1]+dy,&key.0[2]+dz]);
    if let Some(id)=self.lookup_vertex(&neighbour){
     let d=self.position(id).as_vec3()-p.as_vec3();
-    if (d.length_squared() as f64)<1e-8{return Ok(id);}
+    if (d.length_squared() as f64)<1e-8{return Ok(Some(id));}
    }
   }}}
+  Ok(None)
+ }
+ fn vertex(&mut self,key:SourceKey,p:DVec3)->Result<usize,String> {
+  if let Some(id)=self.lookup_position(p)?{return Ok(id);}
   let preparation=(||{if self.vertex_limit.is_some_and(|n|self.added_vertices.len()>=n){return Err("Append vertex staging admission denied".into());}self.vertices.try_reserve(1).map_err(|_|"Append vertex lookup admission refused")?;self.added_vertices.try_reserve(1).map_err(|_|"Append vertex staging allocation refused")?;self.base_vertices.checked_add(self.added_vertices.len()).ok_or_else(||"Append vertex extent overflow".into())})();let id=self.admission(preparation)?;self.vertices.insert(key,id);self.added_vertices.push(p);Ok(id)
  }
  /// UI owner admission precedes every mutation. Version must cover all writers.

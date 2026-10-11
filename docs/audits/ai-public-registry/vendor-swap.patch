@@ -1,0 +1,44 @@
+diff --git a/tools/ai-interpreter-proof/vendor/rustpython-vm/src/builtins/dict.rs b/tools/ai-interpreter-proof/vendor/rustpython-vm/src/builtins/dict.rs
+index d709521e..adff8e9f 100644
+--- a/tools/ai-interpreter-proof/vendor/rustpython-vm/src/builtins/dict.rs
++++ b/tools/ai-interpreter-proof/vendor/rustpython-vm/src/builtins/dict.rs
+@@ -432,6 +432,13 @@ impl PyDict {
+     pub fn clear(&self) {
+         self.entries.clear()
+     }
++    /// Host-owned prepared restore: preserve this dict object's identity, invalidate
++    /// cached key indices, and move displaced references into `prepared`. Neither
++    /// table drops values while locked; the caller must drop `prepared` unlocked.
++    /// Preparation/allocation and callback admission belong to the host journal.
++    pub fn swap_prepared_contents(&self, prepared: &Self) {
++        self.entries.swap_prepared_contents(&prepared.entries);
++    }
+     #[must_use]
+     pub fn copy(&self) -> Self {
+         Self {
+diff --git a/tools/ai-interpreter-proof/vendor/rustpython-vm/src/dict_inner.rs b/tools/ai-interpreter-proof/vendor/rustpython-vm/src/dict_inner.rs
+index 4a901bfb..cdb2eac6 100644
+--- a/tools/ai-interpreter-proof/vendor/rustpython-vm/src/dict_inner.rs
++++ b/tools/ai-interpreter-proof/vendor/rustpython-vm/src/dict_inner.rs
+@@ -882,6 +882,21 @@ impl<T: Clone> Dict<T> {
+         };
+     }
+ 
++    /// Swap a host-private prepared table without allocating or releasing payloads.
++    /// Both cache versions are invalidated. The caller releases the displaced
++    /// table only after leaving all of its own VM/native borrow scopes.
++    pub(crate) fn swap_prepared_contents(&self, prepared: &Self) {
++        if core::ptr::eq(self, prepared) { return; }
++        let (first, second) = if (self as *const Self as usize) < (prepared as *const Self as usize) {
++            (self, prepared)
++        } else { (prepared, self) };
++        let mut a = first.write();
++        let mut b = second.write();
++        self.invalidate_keys_version();
++        prepared.invalidate_keys_version();
++        core::mem::swap(&mut *a, &mut *b);
++    }
++
+     /// Install an owned table, releasing the old entries after unlocking.
+     pub(crate) fn replace_contents(&self, other: Self) {
+         let replacement = other.inner.into_inner();

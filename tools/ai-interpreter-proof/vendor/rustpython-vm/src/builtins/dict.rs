@@ -432,6 +432,13 @@ impl PyDict {
     pub fn clear(&self) {
         self.entries.clear()
     }
+    /// Host-owned prepared restore: preserve this dict object's identity, invalidate
+    /// cached key indices, and move displaced references into `prepared`. Neither
+    /// table drops values while locked; the caller must drop `prepared` unlocked.
+    /// Preparation/allocation and callback admission belong to the host journal.
+    pub fn swap_prepared_contents(&self, prepared: &Self) {
+        self.entries.swap_prepared_contents(&prepared.entries);
+    }
     #[must_use]
     pub fn copy(&self) -> Self {
         Self {

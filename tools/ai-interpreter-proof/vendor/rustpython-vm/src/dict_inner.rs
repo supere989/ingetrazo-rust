@@ -882,6 +882,21 @@ impl<T: Clone> Dict<T> {
         };
     }
 
+    /// Swap a host-private prepared table without allocating or releasing payloads.
+    /// Both cache versions are invalidated. The caller releases the displaced
+    /// table only after leaving all of its own VM/native borrow scopes.
+    pub(crate) fn swap_prepared_contents(&self, prepared: &Self) {
+        if core::ptr::eq(self, prepared) { return; }
+        let (first, second) = if (self as *const Self as usize) < (prepared as *const Self as usize) {
+            (self, prepared)
+        } else { (prepared, self) };
+        let mut a = first.write();
+        let mut b = second.write();
+        self.invalidate_keys_version();
+        prepared.invalidate_keys_version();
+        core::mem::swap(&mut *a, &mut *b);
+    }
+
     /// Install an owned table, releasing the old entries after unlocking.
     pub(crate) fn replace_contents(&self, other: Self) {
         let replacement = other.inner.into_inner();

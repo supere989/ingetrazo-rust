@@ -1,0 +1,11 @@
+{
+  "original_revision": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "native_parent_revision": "7545744def74cc58924be4fb260d69326cd99436",
+  "binary_sha256": "3dc5098d92c54040e81b866693f5b06478e1690ef91de683cea15da054d96c03",
+  "vendor_files": {
+    "tools/ai-interpreter-proof/vendor/rustpython-vm/src/builtins/dict.rs": "694b06353e9136d2bc28f298f69e8cb29e3ef36914685b5220af90dc649b145e",
+    "tools/ai-interpreter-proof/vendor/rustpython-vm/src/dict_inner.rs": "4308f40a10c22cef8552c766f7ff51567a1ae4fc431ac2665c9d67afc4525c27"
+  },
+  "vendor_license_sha256": "385e274c083706f04b7079c878385785b772cdf5fc90ed85b1d13f190b5880c9",
+  "production_enabled": false
+}

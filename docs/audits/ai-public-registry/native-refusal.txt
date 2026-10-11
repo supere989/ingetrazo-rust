@@ -1,0 +1,2 @@
+ValueError: restore
+ValueError: Public registry weld requires identity-owned staging

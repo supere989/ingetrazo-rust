@@ -382,6 +382,7 @@ impl FaceTransaction {
     }
 
     // Immutable graph-adapter view of already-staged native identities.
+    pub(crate) fn lookup_position(&self,p:glam::DVec3)->Result<Option<usize>,String>{self.edge.journal.lookup_position(p)}
     // No endpoint coordinate lookup or Mesh clone is needed to build actual VM Edges.
     pub(crate) fn staged_face_edges(&self, id: usize) -> Result<&[usize], String> {
         self.drafts.get(id.checked_sub(self.base_faces).ok_or("Face is not staged")?)

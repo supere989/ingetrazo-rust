@@ -19,6 +19,7 @@ pub(super) struct GraphState {
     incidence: Vec<(PyRef<Vertex>, PyObjectRef)>,
     fields: Vec<EdgeFields>,
     charge: Option<Lease>,
+    registry: Option<rustpython_vm::builtins::PyDictRef>,
 }
 fn list_copy(list: &PyListRef, vm: &VirtualMachine) -> Result<PyListRef, String> {
     let values = list.borrow_vec();
@@ -115,6 +116,7 @@ impl GraphState {
             incidence: vec![],
             fields: vec![],
             charge: None,
+            registry:None,
         }
     }
     pub(super) fn capture(
@@ -132,6 +134,7 @@ impl GraphState {
                     .and_then(|v| b.checked_add(v))
             })
             .ok_or("Graph snapshot extent overflow")?;
+        bytes=bytes.checked_add(mesh.registry.__len__().checked_mul(std::mem::size_of::<PyObjectRef>()*2).ok_or("Registry snapshot extent overflow")?).ok_or("Registry snapshot extent overflow")?;
         let mut charge = budget.reserve(Kind::Preparation, bytes)?;
         let _member_preparation = budget.reserve(
             Kind::Preparation,
@@ -177,6 +180,7 @@ impl GraphState {
             incidence: vec![],
             fields: vec![],
             charge: Some(charge),
+            registry:Some(mesh.registry.copy().into_ref(&vm.ctx)),
         };
         state
             .members
@@ -237,6 +241,7 @@ impl GraphState {
                 Kind::Preparation,
                 self.charge.as_ref().map_or(0, |c| c.bytes()),
             )?),
+            registry:self.registry.as_ref().map(|registry|registry.copy().into_ref(&vm.ctx)),
         };
         state
             .members
@@ -432,6 +437,29 @@ impl GraphState {
                 .zip(&other.members)
                 .all(|(a, b)| a.is(b))
     }
+    // Callback-free integrity check. Snapshot keys/values retain their actual identities.
+    pub(super) fn registry_identity_live(&self,mesh:&PyRef<Mesh>)->bool{
+        let Some(snapshot)=&self.registry else{return mesh.registry.is_empty()};
+        snapshot.__len__()==mesh.registry.__len__()&&snapshot.into_iter().zip((&mesh.registry).into_iter()).all(|((a,b),(c,d))|a.is(&c)&&b.is(&d))
+    }
+    pub(super) fn registry_append_live(&self,mesh:&PyRef<Mesh>,created:&[PyRef<Vertex>])->bool{
+        let Some(snapshot)=&self.registry else{return false};
+        if snapshot.__len__().checked_add(created.len())!=Some(mesh.registry.__len__()){return false;}
+        let mut live=(&mesh.registry).into_iter();
+        for (key,value) in snapshot{let Some((k,v))=live.next() else{return false};if !key.is(&k)||!value.is(&v){return false;}}
+        // New keys are produced only by add_face; key mutation/reinsertion is not yet admitted.
+        created.iter().all(|vertex|live.next().is_some_and(|(key,value)|{
+            let Some(tuple)=key.downcast_ref::<rustpython_vm::builtins::PyTuple>() else{return false};
+            let xyz=vertex.position.read().coordinates();let expected=crate::journal::SourceKey::new(glam::DVec3::new(xyz[0]as f64,xyz[1]as f64,xyz[2]as f64));
+            value.is(vertex)&&tuple.as_slice().len()==3&&tuple.as_slice().iter().zip(expected.0).all(|(cell,want)|cell.downcast_ref::<rustpython_vm::builtins::PyInt>().is_some_and(|n|n.as_bigint().to_string()==want.to_string()))
+        }))
+    }
+    pub(super) fn registry_equivalent(&self,other:&Self,vm:&VirtualMachine)->PyResult<bool>{
+        match (&self.registry,&other.registry){
+            (Some(a),Some(b))=>vm.bool_eq(a.as_object(),b.as_object()),
+            (None,None)=>Ok(true),_=>Ok(false),
+        }
+    }
     pub(super) fn equivalent(&self, other: &Self, vm: &VirtualMachine) -> PyResult<bool> {
         if !self.members_equivalent(other)
             || self.incidence.len() != other.incidence.len()
@@ -466,6 +494,7 @@ impl GraphState {
         Ok(true)
     }
     pub(super) fn restore(&mut self, mesh: &PyRef<Mesh>) {
+        if let Some(registry)=self.registry.take(){mesh.registry.swap_prepared_contents(&registry);drop(registry);}
         let old = std::mem::replace(
             &mut *mesh.edges.borrow_vec_mut(),
             std::mem::take(&mut self.members),

@@ -28,6 +28,13 @@ fn discard_tail(list: &rustpython_vm::builtins::PyListRef, keep: usize) {
         drop(removed);
     }
 }
+fn source_registry_key(position:glam::DVec3,vm:&rustpython_vm::VirtualMachine)->rustpython_vm::PyResult<rustpython_vm::builtins::PyTupleRef>{
+ vm.host_budget_tick()?;
+ if !position.is_finite()||!(position*10000.).is_finite(){return Err(vm.new_value_error("Nonfinite registry coordinate"));}
+ let key=crate::journal::SourceKey::new(position);
+ let cells=key.0.into_iter().map(|cell|{let text=cell.to_string();rustpython_vm::common::int::bytes_to_int(text.as_bytes(),10,0).map(|n|vm.ctx.new_int(n).into()).map_err(|_|vm.new_value_error("Registry integer conversion refused"))}).collect::<rustpython_vm::PyResult<Vec<_>>>()?;
+ Ok(vm.ctx.new_tuple(cells))
+}
 struct Entry {
     mesh: PyRef<editable_mesh::Mesh>,
     transaction: Option<FaceTransaction>,
@@ -79,6 +86,7 @@ impl Entry {
                 return Err("Staged Edge endpoint modification requires packed projection".into());
             }
         }
+        if !self.graph_before.as_ref().is_some_and(|g|g.registry_append_live(&self.mesh,&self.vertices_created)){return Err("Modified public registry with append requires identity-owned lookup publication".into());}
         for (i, v) in self.vertices_created.iter().enumerate() {
             let incidence = v
                 .edges
@@ -584,6 +592,7 @@ pub mod editable_mesh {
         pub(super) faces: PyListRef,
         pub(super) vertices: PyListRef,
         pub(super) edges: PyListRef,
+        pub(super) registry: rustpython_vm::builtins::PyDictRef,
         #[pytraverse(skip)]
         pub(super) managed: std::cell::Cell<bool>,
     }
@@ -610,12 +619,15 @@ pub mod editable_mesh {
                 faces: vm.ctx.new_list(vec![]),
                 vertices: vm.ctx.new_list(vec![]),
                 edges: vm.ctx.new_list(vec![]),
+                registry:vm.ctx.new_dict(),
                 managed: std::cell::Cell::new(false),
             })
         }
     }
     #[pyclass(with(Constructor))]
     impl Mesh {
+        #[pygetset(name="_registry")]
+        fn registry(zelf:&Py<Self>)->rustpython_vm::builtins::PyDictRef {zelf.registry.clone()}
         #[pygetset]
         fn edges(zelf: &Py<Self>) -> PyListRef { zelf.edges.clone() }
         #[pygetset]
@@ -626,6 +638,34 @@ pub mod editable_mesh {
         fn vertices(zelf: &Py<Self>) -> PyListRef {
             zelf.vertices.clone()
         }
+        #[pymethod]
+        fn _probe_neighbours(zelf:&Py<Self>,key:rustpython_vm::builtins::PyTupleRef,position:PyRef<QVector3D>,vm:&VirtualMachine)->PyResult<PyObjectRef>{
+            use rustpython_vm::builtins::PyInt;
+            vm.host_budget_tick()?;
+            if key.as_slice().len()!=3{return Err(vm.new_value_error("Registry key requires three cells"));}
+            let cells=key.as_slice().iter().map(|v|v.downcast_ref::<PyInt>().map(|n|n.as_bigint().clone()).ok_or_else(||vm.new_type_error("Registry cells require int"))).collect::<PyResult<Vec<_>>>()?;
+            let query=glam::Vec3::from_array(position.coordinates());
+            for dx in -1..=1 {for dy in -1..=1 {for dz in -1..=1 {
+                if dx==0&&dy==0&&dz==0{continue;}
+                vm.host_budget_tick()?;
+                let neighbour=vm.ctx.new_tuple(vec![vm.ctx.new_int(&cells[0]+dx).into(),vm.ctx.new_int(&cells[1]+dy).into(),vm.ctx.new_int(&cells[2]+dz).into()]);
+                if let Some(value)=zelf.registry.get_item_opt(neighbour.as_object(),vm)?{
+                    if value.is(&vm.ctx.none()){continue;}
+                    let point=value.get_attr("position",vm)?.downcast::<QVector3D>().map_err(|_|vm.new_type_error("Registry position requires QVector3D"))?;
+                    let difference=glam::Vec3::from_array(point.coordinates())-query;
+                    if (difference.length_squared()as f64)<1e-8{return Ok(value);}
+                }
+            }}}
+            Ok(vm.ctx.none())
+        }
+        #[pymethod]
+        fn _lookup(zelf:&Py<Self>,position:PyRef<QVector3D>,vm:&VirtualMachine)->PyResult<PyObjectRef>{
+            let key=source_registry_key(glam::DVec3::from_array(position.coordinates().map(f64::from)),vm)?;
+            if let Some(value)=zelf.registry.get_item_opt(key.as_object(),vm)?{if !value.is(&vm.ctx.none()){return Ok(value);}}
+            Self::_probe_neighbours(zelf,key,position,vm)
+        }
+        #[pymethod]
+        fn vertex_at(zelf:&Py<Self>,position:PyRef<QVector3D>,vm:&VirtualMachine)->PyResult<PyObjectRef>{Self::_lookup(zelf,position,vm)}
         #[pymethod]
         fn find_edge(zelf: &Py<Self>, v0: PyRef<Vertex>, v1: PyRef<Vertex>, vm: &VirtualMachine) -> PyResult<PyObjectRef> {
             vm.host_budget_tick()?;
@@ -773,6 +813,15 @@ pub mod editable_mesh {
                     }
                     let entry = stage.entries.get_mut(&key).unwrap();
                     let transaction = entry.transaction.as_mut().unwrap();
+                    // Admission only: until public registry owns native staging, never
+                    // publish a weld decision that disagrees with its genuine lookup.
+                    for p in outer.iter().chain(holes.iter().flatten()){
+                        let q=QVector3D::from_coordinates(p.as_vec3().to_array()).into_ref(&vm.ctx);
+                        let found=Self::_lookup(zelf,q,vm)?;
+                        let expected=transaction.lookup_position(*p).map_err(|e|vm.new_value_error(e))?;
+                        let agrees=if let Some(id)=expected{let value={zelf.vertices.borrow_vec().get(id).cloned()};value.is_some_and(|v|v.is(&found))}else{vm.is_none(&found)};
+                        if !agrees{return Err(vm.new_value_error("Public registry weld requires identity-owned staging"));}
+                    }
                     let id = transaction
                         .add_face(&outer, &holes)
                         .map_err(|e| vm.new_value_error(e))?;
@@ -866,6 +915,11 @@ pub mod editable_mesh {
                     }
                     .into_ref(&vm.ctx);
                     drop(vertices);
+                    for vertex in &entry.vertices_created[entry.vertices_created.len()-growth..]{
+                        let coordinates=vertex.position.read().coordinates().map(f64::from);
+                        let key=source_registry_key(glam::DVec3::from_array(coordinates),vm)?;
+                        zelf.registry.set_item(key.as_object(),vertex.clone().into(),vm)?;
+                    }
                     let mut edges=zelf.edges.borrow_vec_mut();
                     if edges.len()!=transaction.base_edge_extent()+entry.edges_created.len(){return Err(vm.new_value_error("Edge list ownership mismatch"));}
                     edges.try_reserve(new_edges).map_err(|_|vm.new_value_error("Edge list reservation refused"))?;
@@ -1639,6 +1693,7 @@ impl RootRestore<'_> {
         if self.vertices.len()!=other.vertices.len()||self.vertices.iter().zip(&other.vertices).any(|(a,b)|!a.is(b)){return Ok(false);}
         if !self.graph.members_equivalent(&other.graph){return Ok(false);}
         if self.faces.len()!=other.faces.len()||self.faces.iter().zip(&other.faces).any(|(a,b)|!a.is(b)){return Ok(false);}
+        if !self.graph.registry_equivalent(&other.graph,self.vm)?{return Ok(false);}
         for (a,b) in self.positions.iter().zip(&other.positions){if a.position.coordinates()!=b.position.coordinates(){return Ok(false);}}
         if !self.graph.equivalent(&other.graph,self.vm)?{return Ok(false);}
         // Source groups field families by snapshot dictionary key, not by Face record.
@@ -1808,6 +1863,7 @@ impl Controller {
                         entry.validate_created()?;
                     }
                     if let Some(before) = &baseline {
+                        for entry in &entries {if rustpython_vm::AsObject::is(&entry.mesh,&before.mesh)&&!before.graph.registry_append_live(&before.mesh,&entry.vertices_created){return Err("Modified public registry with append requires identity-owned lookup publication".into());}}
                         history_packed_edges=entries.is_empty()&&(before.graph.requires_replacement(&before.mesh,&self.budget)?||requires_identity_replacement(&before.mesh.faces.borrow_vec(),&before.faces,&self.budget)?);
                         if history_packed_edges {
                             use rustpython_vm::AsObject;
@@ -1835,7 +1891,7 @@ impl Controller {
                         history_changed = !before
                             .equivalent(&after)
                             .map_err(|_| "History state equality refused")?;
-                        if after.validate_live(false)? || !after.graph.identity_live(&after.mesh,&self.budget,vm)? {
+                        if !after.graph.registry_identity_live(&after.mesh)||after.validate_live(false)? || !after.graph.identity_live(&after.mesh,&self.budget,vm)? {
                             return Err(
                                 "History equality changed geometry after snapshot preparation"
                                     .into(),
