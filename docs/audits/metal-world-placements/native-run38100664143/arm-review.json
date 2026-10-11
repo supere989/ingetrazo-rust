@@ -1,0 +1,46 @@
+{
+  "passed": true,
+  "frames": {
+    "shared-prototype-reflected": {
+      "interior_pixels": 182,
+      "background_pixels": 3754
+    },
+    "warm-left": {
+      "interior_pixels": 189,
+      "background_pixels": 3763
+    },
+    "warm-center": {
+      "interior_pixels": 182,
+      "background_pixels": 3754
+    },
+    "warm-right": {
+      "interior_pixels": 189,
+      "background_pixels": 3763
+    },
+    "winding-disabled-negative": {
+      "interior_pixels": 182,
+      "background_pixels": 3754
+    },
+    "old-retained-green": {
+      "interior_pixels": 182,
+      "background_pixels": 3754
+    },
+    "new-revision-red": {
+      "interior_pixels": 182,
+      "background_pixels": 3754
+    },
+    "binding-only-reuse": {
+      "interior_pixels": 91,
+      "background_pixels": 3925
+    },
+    "refusal-preserved": {
+      "interior_pixels": 91,
+      "background_pixels": 3925
+    }
+  },
+  "negatives": "blank/winding-disabled-as-positive/new-as-old rejected",
+  "scope": "Nine-frame initial per-binding cache/pose consumer only; instancing followup not in this artifact; no presentation or fullscene claim",
+  "source_commit": "36023b0ecdebdd403b575f75ad970b7a0b1d2081",
+  "artifact_id": 11687905939,
+  "zip_sha256": "d11e84ecdddf158214edde37c7b460a731c21af8a473bcab520efbd51745a9d6"
+}
