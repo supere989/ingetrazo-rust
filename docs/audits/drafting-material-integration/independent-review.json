@@ -1,0 +1,30 @@
+{
+  "reviewed_head": "fc272ac0",
+  "runtime_revision": "2f2773f017e7359d481a614e5ce58b1a3d697ec9",
+  "runner_workflow_git_binding": "fc272ac0",
+  "archive_sha256": "842a5e1268e6c33cfbada6e0b0f85aae5c6fab4bc8b142892bb66451e44828aa",
+  "members": 462,
+  "raw_bytes": 11460386,
+  "current_binaries_verified": 5,
+  "checker_runner_workflow_git_bindings": 12,
+  "literal_owner_source_members_equal": 284,
+  "independent_raw_directory_comparison": false,
+  "raw_cleanup_boundary": "Root alone authenticated all462 rawproducer files before deletion, retained cleanupa1ebd3b2. Independent review authenticates canonical members/source/binaries only.",
+  "result": {
+    "lanes": 7,
+    "stages": 30,
+    "passed": 30,
+    "failed": 0,
+    "skipped": 0,
+    "fresh_source_acquisitions": 0
+  },
+  "tracker": {
+    "criteria_cells_unchanged_against3195": 37,
+    "Verified": 14,
+    "Implemented": 5,
+    "Partial": 18,
+    "release_gates_open": 5
+  },
+  "criterion_disposition": "P06 unchanged finite interactive arbitrary-plane/VCB/cancel-repeat/inference criterion satisfied by combined shape66/488, actualFreehand15/152+3egui/11negatives, retained22drawing and priorLine/Rectangle/context evidence. Wholeframe/desktop/rawidentity and P07 broader inference remain separate. P22Implemented/P23Partial retained.",
+  "verdict": "accepted without execution"
+}
