@@ -3,6 +3,7 @@
 
 pub mod bim;
 pub mod camera;
+pub mod source_camera;
 pub mod change_axes;
 pub mod composition;
 pub mod dimensions;

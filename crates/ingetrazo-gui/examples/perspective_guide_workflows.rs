@@ -161,7 +161,10 @@ fn main() {
         let mut a = make(r);
         let authored = guides(&a);
         let mut states = vec![json!({"phase":"guides","state":state(&a)})];
-        if name.contains("-point-") {
+        if ["point-inside9", "point-exact9", "point-outside9"]
+            .iter()
+            .any(|label| name.ends_with(label))
+        {
             a.scene.guides = vec![Guide::point(DVec3::new(3., 2., 1.))];
         } else if name.contains("-line-") {
             a.scene.guides.truncate(1);

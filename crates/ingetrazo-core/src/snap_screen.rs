@@ -10,7 +10,6 @@ use crate::{
     snap::*,
 };
 use glam::{DVec2, DVec3};
-mod source_camera;
 
 #[derive(Debug, Clone, Copy)]
 pub struct ScreenSnapContext {
@@ -62,11 +61,28 @@ fn result(point: DVec3, kind: SnapKind, color: [f32; 3], label: &str) -> SnapRes
 /// viewport is confined to inference; render/picking and generic double
 /// projection protocols retain their existing camera representation.
 pub fn source_camera_matrix(camera:&crate::camera::OrbitCamera)->glam::Mat4{
-    source_camera::matrix(camera)
+    crate::source_camera::camera_snapshot(camera).map(|s|glam::Mat4::from_cols_array_2d(&s.matrix)).unwrap_or(glam::Mat4::NAN)
 }
-struct ProjectedContext<'a>{ctx:&'a ScreenSnapContext,source:Option<glam::Mat4>}
+struct ProjectedContext<'a>{ctx:&'a ScreenSnapContext,source:Option<glam::Mat4>,source_ray:std::cell::OnceCell<Option<Ray>>}
 impl std::ops::Deref for ProjectedContext<'_>{type Target=ScreenSnapContext;fn deref(&self)->&ScreenSnapContext{self.ctx}}
-impl ProjectedContext<'_>{fn project(&self,p:DVec3)->Option<DVec2>{source_pixel(&self.viewport,p,self.source)}}
+impl ProjectedContext<'_>{
+    fn project(&self,p:DVec3)->Option<DVec2>{source_pixel(&self.viewport,p,self.source)}
+    fn source_line(&self,origin:DVec3,dir:DVec3)->Option<DVec3>{
+        if self.source.is_none() || ![origin,dir].into_iter().all(|p|p.is_finite()&&p.as_vec3().as_dvec3()==p){return None;}
+        let ray=self.source_ray.get_or_init(||{
+            let m=self.source?;let affine=m.x_axis.w==0.&&m.y_axis.w==0.&&m.z_axis.w==0.&&m.w_axis.w==1.;
+            crate::source_camera::matrix_ray(m.to_cols_array_2d(),affine,self.cursor.x,self.cursor.y,self.viewport.width,self.viewport.height)
+        }).as_ref()?;
+        let start=origin.as_vec3();let d1=crate::math::source_normalized(dir.as_vec3());let d2=ray.dir.as_vec3();let r=start-ray.origin.as_vec3();
+        let dot=|a:glam::Vec3,b:glam::Vec3|((a.x*b.x+a.y*b.y)+a.z*b.z)as f64;
+        let b=dot(d1,d2);let d=dot(d1,r);let e=dot(d2,r);let denom=1.-b*b;
+        let t=if denom.abs()<1e-6{-d}else{(b*e-d)/denom};
+        Some((start+d1*(t as f32)).as_dvec3())
+    }
+    fn project_line(&self,ray:&Ray,origin:DVec3,dir:DVec3)->DVec3{
+        self.source_line(origin,dir).unwrap_or_else(||project_line(ray,origin,dir))
+    }
+}
 fn source_pixel(viewport:&PixelViewport,p:DVec3,source:Option<glam::Mat4>)->Option<DVec2>{
     if !p.is_finite()||p.as_vec3().as_dvec3()!=p{return viewport.project_for_snapping(p);}
     let matrix=source.or_else(||(viewport.matrix.as_mat4().as_dmat4()==viewport.matrix).then(||viewport.matrix.as_mat4()));
@@ -597,7 +613,7 @@ impl SnapEngine {
     pub fn snap_screen_with_policy(
         &mut self,ray:&Ray,scene:&Scene,start:Option<DVec3>,close:Option<DVec3>,ctx:&ScreenSnapContext,policy:&ScreenSnapPolicy,
     )->SnapResult{
-        let ctx=&ProjectedContext{ctx,source:policy.source_matrix};
+        let ctx=&ProjectedContext{ctx,source:policy.source_matrix,source_ray:std::cell::OnceCell::new()};
         self.sync_drawing_frame(scene.drawing_frame);
         self.update_center(scene, ray, ctx);
         let edges = edges(scene, ctx, policy.exclusions);
@@ -702,7 +718,7 @@ impl SnapEngine {
             ) {
                 return r;
             }
-            let p = project_line(ray, origin, dir);
+            let p = ctx.project_line(ray, origin, dir);
             let color = match axis {
                 Some('x') => COLOR_AXIS_X,
                 Some('y') => COLOR_AXIS_Y,
@@ -770,7 +786,16 @@ impl SnapEngine {
         on_edges.sort_by(|a, b| a.distance.total_cmp(&b.distance));
         for e in on_edges {
             let ab = e.b - e.a;
-            let p = if ab.length_squared() > 1e-18 {
+            let source_segment=ctx.source.is_some()&&[e.a,e.b].into_iter().all(|p|p.is_finite()&&p.as_vec3().as_dvec3()==p);
+            let source_point=if source_segment&&(e.b.as_vec3()-e.a.as_vec3()).length_squared()>1e-18 {
+                let a=e.a.as_vec3();let delta=e.b.as_vec3()-a;
+                ctx.source_line(e.a,delta.as_dvec3()).map(|q|{
+                    let d=q.as_vec3()-a;let dot=|u:glam::Vec3,v:glam::Vec3|((u.x*v.x+u.y*v.y)+u.z*v.z)as f64;
+                    let t=(dot(d,delta)/dot(delta,delta)).clamp(0.,1.)as f32;
+                    (a+delta*t).as_dvec3()
+                })
+            }else{None};
+            let p = if let Some(p)=source_point {p} else if ab.length_squared() > 1e-18 {
                 let q = project_line(ray, e.a, ab);
                 let t = ((q - e.a).dot(ab) / ab.length_squared()).clamp(0., 1.);
                 e.a + ab * t
@@ -801,7 +826,7 @@ impl SnapEngine {
                 if direction.length() > 1e-9
                     && draw.dot(direction).abs() >= 3_f64.to_radians().cos()
                 {
-                    let point = project_line(ray, start, direction);
+                    let point = ctx.project_line(ray, start, direction);
                     let mut r = result(point, SnapKind::Reference, COLOR_REFERENCE, label);
                     r.guides.push((start, point, COLOR_REFERENCE));
                     return r;
@@ -820,7 +845,7 @@ impl SnapEngine {
                 let axes=[('x',self.drawing_axes.x,COLOR_AXIS_X),('y',self.drawing_axes.y,COLOR_AXIS_Y),('z',self.drawing_axes.z,COLOR_AXIS_Z)];
                 if let Some(angle)=policy.magnetic_axis_deg {
                     if let Some(&(axis,dir,color))=axes.iter().find(|(_,dir,_)|n.dot(*dir).abs()>=angle.to_radians().cos()){
-                        let point=project_line(ray,start,dir);
+                        let point=ctx.project_line(ray,start,dir);
                         let mut r=result(point,SnapKind::AxisLock,color,"Axis");r.axis=Some(axis);r.guides.push((start,point,color));return r;
                     }
                 }
@@ -833,7 +858,7 @@ impl SnapEngine {
                         if distance<=threshold&&best.is_none_or(|(old,_,_,_)|distance<old){best=Some((distance,axis,dir,color));}
                     }
                     if let Some((_,axis,dir,color))=best{
-                        let point=project_line(ray,start,dir);
+                        let point=ctx.project_line(ray,start,dir);
                         if point.distance(start)<=5.*d.length(){let mut r=result(point,SnapKind::AxisLock,color,"Axis");r.axis=Some(axis);r.guides.push((start,point,color));return r;}
                     }
                 }
