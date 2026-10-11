@@ -195,12 +195,17 @@ fn run() -> Result<(), String> {
             drop(frame);
             let before = world.stats;
             let mut repeated = None;
-            for _ in 0..3 {
+            for iteration in 0..3 {
                 let frame = prepare(&mut world, &mut adapter, &scene)?;
                 let pixels = frame
                     .submit_diagnostic(&metal)?
                     .readback(std::time::Duration::from_secs(5))?;
                 if pixels != bytes {
+                    // Failure-only evidence; preserve exact bytes before refusal.
+                    std::fs::write(out.join(format!("{name}-warm-{iteration}-expected.rgba")),&bytes).map_err(|e|e.to_string())?;
+                    std::fs::write(out.join(format!("{name}-warm-{iteration}-actual.rgba")),&pixels).map_err(|e|e.to_string())?;
+                    let evidence=serde_json::json!({"case":name,"iteration":iteration,"production_mode":production_mode,"extent":frame.extent(),"samples":frame.sample_count(),"first_route":&resolve_diagnostics,"warm_route":frame.source_resolve_diagnostic(),"first_programmed_sample_positions":programmed_positions,"warm_programmed_sample_positions":frame.programmed_sample_positions(),"before_counters":format!("{:?}",before),"warm_counters":format!("{:?}",world.stats),"changed_pixels":bytes.chunks_exact(4).zip(pixels.chunks_exact(4)).filter(|(a,b)|a!=b).count()});
+                    std::fs::write(out.join(format!("{name}-warm-{iteration}-failure.json")),serde_json::to_vec_pretty(&evidence).map_err(|e|e.to_string())?).map_err(|e|e.to_string())?;
                     return Err(format!("Warm pixels changed: {name}"));
                 }
                 repeated = Some(pixels);

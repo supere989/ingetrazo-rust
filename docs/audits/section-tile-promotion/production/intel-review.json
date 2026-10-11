@@ -53,5 +53,6 @@
     "ledger_reserved": 0
   },
   "document_refusal": "Native Metal viewport route: Metal default sample positions cannot admit measured source annotation resolve\nMetal default sample positions cannot admit measured source annotation resolve",
-  "scope": "Ineligible Intel retains native resolve; cold equality observed, actual warm pixel stability failed before ten-case report. No unsupported annotation acceptance."
+  "scope": "Ineligible Intel retains native resolve policy; actual candidate cold frame is entirely zero RGBA and warm pixels differ. No ten-case or unsupported annotation acceptance.",
+  "candidate_zero_rgba_pixels": 480000
 }
