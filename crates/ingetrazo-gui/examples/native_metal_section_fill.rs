@@ -165,6 +165,7 @@ fn run() -> Result<(), String> {
                     .ok_or("Frame unavailable".into())
             };
             let frame = prepare(&mut world, &mut adapter, &scene)?;
+            if !frame.section_contours_enabled(){return Err(format!("Contour route missing: {name}"));}
             let bytes = frame
                 .submit_diagnostic(&metal)?
                 .readback(std::time::Duration::from_secs(5))?;
@@ -185,24 +186,35 @@ fn run() -> Result<(), String> {
             }
             let after = world.stats;
             if before.target_allocations != after.target_allocations
+                || before.section_contour_pipeline_builds!=after.section_contour_pipeline_builds
                 || before.geometry_uploads != after.geometry_uploads || before.section_fill_uploads!=after.section_fill_uploads || before.section_fill_upload_bytes!=after.section_fill_upload_bytes
             {
                 return Err(format!("Warm allocation changed: {name}"));
             }
             scene.show_section_fill = false;
             let off = prepare(&mut world, &mut adapter, &scene)?;
+            if !off.section_contours_enabled(){return Err(format!("Fill-off disabled contours: {name}"));}
             let disabled = off
                 .submit_diagnostic(&metal)?
                 .readback(std::time::Duration::from_secs(5))?;
             std::fs::write(out.join(format!("{name}-disabled.rgba")), disabled)
                 .map_err(|e| e.to_string())?;
             drop(off);
+            let fill_off=world.stats;
+            scene.show_section_cuts=false;
+            let cuts_off=prepare(&mut world,&mut adapter,&scene)?;
+            if cuts_off.section_contours_enabled(){return Err(format!("Cuts-off retains contour route: {name}"));}
+            let _=cuts_off.submit_diagnostic(&metal)?.readback(std::time::Duration::from_secs(5))?;
+            drop(cuts_off);
+            let cuts_off_stats=world.stats;
+            if cuts_off_stats.section_contour_pipeline_builds!=fill_off.section_contour_pipeline_builds||cuts_off_stats.geometry_uploads!=fill_off.geometry_uploads||cuts_off_stats.target_allocations!=fill_off.target_allocations{return Err(format!("Cuts-off rebuilt geometry/target/pipeline: {name}"));}
+
             drop(repeated);
-            rows.push(serde_json::json!({"case":name,"width":800,"height":600,"warm_frames":3,"target_allocations_before":before.target_allocations,"target_allocations_after":after.target_allocations,"geometry_uploads_before":before.geometry_uploads,"geometry_uploads_after":after.geometry_uploads,"section_fill_uploads_before":before.section_fill_uploads,"section_fill_uploads_after":after.section_fill_uploads,"section_fill_upload_bytes_before":before.section_fill_upload_bytes,"section_fill_upload_bytes_after":after.section_fill_upload_bytes}));
+            rows.push(serde_json::json!({"case":name,"width":800,"height":600,"warm_frames":3,"contours_enabled":true,"fill_off_contours_enabled":true,"cuts_off_contours_enabled":false,"section_contour_pipeline_builds_before":before.section_contour_pipeline_builds,"section_contour_pipeline_builds_after":after.section_contour_pipeline_builds,"fill_off_contour_pipeline_builds":fill_off.section_contour_pipeline_builds,"cuts_off_contour_pipeline_builds":cuts_off_stats.section_contour_pipeline_builds,"target_allocations_before":before.target_allocations,"target_allocations_after":after.target_allocations,"geometry_uploads_before":before.geometry_uploads,"geometry_uploads_after":after.geometry_uploads,"section_fill_uploads_before":before.section_fill_uploads,"section_fill_uploads_after":after.section_fill_uploads,"section_fill_upload_bytes_before":before.section_fill_upload_bytes,"section_fill_upload_bytes_after":after.section_fill_upload_bytes}));
             drop(adapter);
             drop(world);
         }
-        std::fs::write(out.join("report.json"),serde_json::to_vec_pretty(&serde_json::json!({"cases":rows,"scope":"Production native Metal stencil, no contour pass; strict source cap-mask comparison separate from full frame color parity"})).map_err(|e|e.to_string())?).map_err(|e|e.to_string())?;
+        std::fs::write(out.join("report.json"),serde_json::to_vec_pretty(&serde_json::json!({"cases":rows,"scope":"Production native Metal stencil and direct GPU contours; strict all-source RGBA pixels plus fill-off and cuts-off routing/warm controls"})).map_err(|e|e.to_string())?).map_err(|e|e.to_string())?;
         Ok(())
     })
 }
