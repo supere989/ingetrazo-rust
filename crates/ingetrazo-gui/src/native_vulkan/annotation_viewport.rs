@@ -54,7 +54,7 @@ fn build_plan(app:&crate::IngeTrazoApp,rect:egui::Rect,matrix:&[f32;16],cache:&m
   };
   let mut builder=Builder::new(project,annotations::Limits{queries:200_000,operations:200_000,text_bytes:16*1024*1024});
   let mut style=annotations::Style::default();
-  if let Some(v)=raw["color"].as_array(){if v.len()>=3{for(i,c)in style.color[..v.len().min(4)].iter_mut().enumerate(){*c=v[i].as_u64().and_then(|x|u8::try_from(x).ok()).ok_or("Invalid annotation style color")?;}}}
+  if let Some(v)=raw["color"].as_array(){if v.len()>=3{for(i,c)in style.color[..3].iter_mut().enumerate(){*c=v[i].as_u64().and_then(|x|u8::try_from(x).ok()).ok_or("Invalid annotation style color")?;}}}
   if let Some(v)=raw["font_size"].as_i64(){style.font_size=i32::try_from(v).map_err(|_|"Annotation style size overflow")?;}
   if let Some(v)=raw["ends"].as_str(){style.ends=v.into();}
   if let Some(v)=raw["units"].as_str(){style.units=v.into();}

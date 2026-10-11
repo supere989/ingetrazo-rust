@@ -176,9 +176,6 @@ impl Cache {
           while col<image.width&&image.coverage[(row*image.width+col)*3..(row*image.width+col)*3+3]==mask{col+=1;}
           if mask==[0;3]{continue;}
           writer.layer_with_composition(vec![Span{x:i32::try_from(left+start as i64).map_err(|_|"LCD glyph x outside domain")?,y:i32::try_from(top+row as i64).map_err(|_|"LCD glyph y outside domain")?,len:u32::try_from(col-start).map_err(|_|"LCD glyph span length overflow")?,coverage:255}],*color,operation.gate,Composition::GlyphLcd(mask))?;
-          // Source OpenGL A32 setup ignores constant-color alpha. Keep the
-          // authored alpha in Draw, but admit the actual opaque constant palette.
-          if let Some(batch)=writer.batches.last_mut(){let mut opaque=*color;opaque[3]=255;batch.color=EncodedRgba::from_bytes(opaque,1.)?;}
 
          }
         }

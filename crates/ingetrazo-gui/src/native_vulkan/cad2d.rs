@@ -404,10 +404,8 @@ fn admit_draw_colors(draws:&[crate::annotation_overlay_geometry::Draw],batches:&
   if let crate::annotation_overlay_geometry::Composition::WidgetTriangle(bits)=draw.composition{
    if draw.straight_rgba[3]!=255||bits.iter().any(|v|!f32::from_bits(*v).is_finite()){return Err("Widget triangle immutable metadata invalid".into());}
   }
-  let mut actual_color=draw.straight_rgba;
-  if matches!(draw.composition,crate::annotation_overlay_geometry::Composition::GlyphLcd(_)){actual_color[3]=255;}
   if draw.composition!=crate::annotation_overlay_geometry::Composition::SpanByte
-   &&batch.color.0!=actual_color.map(|v|f32::from(v)/255.){
+   &&batch.color.0!=draw.straight_rgba.map(|v|f32::from(v)/255.){
    return Err("Annotation straight glyph palette differs from admitted batch".into());
   }
  }
