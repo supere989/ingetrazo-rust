@@ -78,6 +78,7 @@ pub fn sample_diagnostics(metal: &NativeMetal) -> serde_json::Value {
     let policy = source_sample_policy(metal, 4);
     serde_json::json!({
         "device_name": metal.info.name,
+        "supports_family_apple4": metal.device.supportsFamily(MTLGPUFamily::Apple4),
         "registry_id": metal.device.registryID(),
         "samples": 4,
         "programmable": metal.programmable_sample_positions,

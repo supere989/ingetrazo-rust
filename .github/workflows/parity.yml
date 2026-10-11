@@ -1,7 +1,7 @@
 name: Rust and semantic acceptance
 on:
   push:
-    branches-ignore: [review/metal-raw-canvas, review/metal-world-classic, review/metal-world-material, review/metal-hidden-ghost, review/metal-tile-resolve]
+    branches-ignore: [review/metal-world-cold, review/metal-raw-canvas, review/metal-world-classic, review/metal-world-material, review/metal-hidden-ghost, review/metal-tile-resolve]
     paths-ignore:
       - docs/**
   pull_request:

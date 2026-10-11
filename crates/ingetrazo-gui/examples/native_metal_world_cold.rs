@@ -31,8 +31,9 @@ fn run() -> Result<(), String> {
 
         let metal = NativeMetal::new()?;
         let sample_diagnostics = ingetrazo_metal::annotation::sample_diagnostics(&metal);
+        if sample_diagnostics["supports_family_apple4"] == true || metal.info.unified_memory { return Err("Intel-only diagnostic refuses Apple/unified device".into()); }
         let mut rows = vec![];
-        for name in ["closed"] {
+        for _name in ["closed"] {
             let mut scene = Scene::new();
             let mut layers = vec![];
             for z in [0., 1., 2.] {
@@ -66,40 +67,6 @@ fn run() -> Result<(), String> {
                         .ok_or("Source section fixture face insertion refused")?;
                 }
             }
-            if name.starts_with("shared-slab") {
-                let mut ring = layers[1].to_vec();
-                if name.contains("reversed") {
-                    ring.reverse();
-                }
-                let id = scene
-                    .mesh
-                    .add_face(ring, vec![])
-                    .ok_or("Source section fixture face insertion refused")?;
-                scene.mesh.faces[id].interior = true;
-            }
-            if name == "transparent" {
-                for f in &mut scene.mesh.faces {
-                    f.attrs.insert("opacity".into(), serde_json::json!(0.5));
-                }
-            }
-            if name == "duplicate" {
-                let faces = scene.mesh.faces.clone();
-                for f in faces {
-                    scene
-                        .mesh
-                        .add_face(f.vertices, vec![])
-                        .ok_or("Source section fixture face insertion refused")?;
-                }
-            }
-            if name == "coplanar-backface" {
-                scene.mesh = Default::default();
-                let ids = [[0., 1., 1.5], [1., 1., 1.5], [1., 0., 1.5], [0., 0., 1.5]]
-                    .map(|p| scene.mesh.add_vertex(DVec3::from_array(p)));
-                scene
-                    .mesh
-                    .add_face(ids.to_vec(), vec![])
-                    .ok_or("Source section fixture face insertion refused")?;
-            }
             scene.section_planes.push(SectionPlane::new(
                 DVec3::new(0., 0., 1.5),
                 DVec3::Z,
@@ -109,13 +76,7 @@ fn run() -> Result<(), String> {
             scene.show_section_cuts = true;
             scene.show_section_fill = true;
             let mut camera = OrbitCamera::default();
-            camera.set_standard_view(if name.ends_with("iso") {
-                StandardView::Iso
-            } else if name.ends_with("front") {
-                StandardView::Front
-            } else {
-                StandardView::Top
-            });
+            camera.set_standard_view(StandardView::Top);
             camera.perspective = false;
             camera.target = DVec3::new(0.5, 0.5, 1.5);
             camera.distance = 5.;
@@ -158,20 +119,24 @@ fn run() -> Result<(), String> {
                 let mut adapter=Adapter::default(); let mut seed=World::default();
                 seed.use_native_resolve_reference()?; seed.set_sample_count(&metal,4)?;
                 let frame=prepare(&mut seed,&mut adapter,&scene)?;
+                if !frame.section_contours_enabled(){return Err("Closed seed contours absent".into());}
                 let submission=frame.submit_diagnostic(&metal)?;
                 let seed_bytes=submission.readback(std::time::Duration::from_secs(5))?;
+                if seed_bytes.len()!=1_920_000{return Err("Seed frame length mismatch".into());}
                 std::fs::write(out.join(format!("{cell}-seed.rgba")),&seed_bytes).map_err(|e|e.to_string())?;
                 let seed_snapshot=submission.resource_observation();
                 drop(submission);drop(frame);drop(seed);
                 if !reuse {adapter=Adapter::default();}
-                let mut world=World::default();world.use_native_resolve_reference()?;world.set_sample_count(&metal,4)?;
+                let mut world=World::default();if compute {world.use_native_resolve_reference()?;}world.set_sample_count(&metal,4)?;
                 if compute {world.enable_source_resolve_prototype(&metal)?;}
                 let mut first:Option<Vec<u8>>=None;
                 for iteration in 0..4 {
                     let frame=prepare(&mut world,&mut adapter,&scene)?;
                     if compute && frame.source_resolve_diagnostic()["path"]!="compute" {return Err("Intel compute required; Apple tile outside probe".into());}
+                    if !frame.section_contours_enabled(){return Err("Closed candidate contours absent".into());}
                     let submission=frame.submit_diagnostic(&metal)?;
                     let bytes=submission.readback(std::time::Duration::from_secs(5))?;
+                    if bytes.len()!=1_920_000{return Err("Candidate frame length mismatch".into());}
                     std::fs::write(out.join(format!("{cell}-{iteration}.rgba")),&bytes).map_err(|e|e.to_string())?;
                     let changed=|a:&[u8],b:&[u8]|a.chunks_exact(4).zip(b.chunks_exact(4)).filter(|(a,b)|a!=b).count();
                     let row=serde_json::json!({"cell":cell,"iteration":iteration,"seed":seed_snapshot,
