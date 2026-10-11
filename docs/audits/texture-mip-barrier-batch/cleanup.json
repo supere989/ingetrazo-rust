@@ -1,0 +1,67 @@
+{
+  "authorization": "Parent release after independent archive replay; no builds or captures",
+  "archive_sha256": "a3aa439e4a66d5c0e3bb9294c0c7d62a2eb74fee508d93b97d493a734d7177af",
+  "released": [
+    {
+      "path": "/tmp/odd-mip-gpu",
+      "bytes": 23200940,
+      "files": 90
+    },
+    {
+      "path": "/tmp/odd-mip-single-gpu",
+      "bytes": 11585002,
+      "files": 42
+    },
+    {
+      "path": "/tmp/ingetrazo-mip-reciprocal",
+      "bytes": 118008,
+      "files": 4
+    },
+    {
+      "path": "/tmp/ingetrazo-mip-reciprocal-initial-failure",
+      "bytes": 1934,
+      "files": 2
+    },
+    {
+      "path": "/tmp/odd-mip-baseline-native_vulkan_texture_mips",
+      "bytes": 8327968,
+      "sha256": "7fa73ac84549d99370c3e6514833119e07f055659a9494ca77e53b1ea84ef02c"
+    },
+    {
+      "path": "/tmp/odd-mip-baseline-native_vulkan_texture_batch_probe",
+      "bytes": 15194376,
+      "sha256": "6749aa677b32bff8bfd60af5a85da46c685b320f51c0898618dfde886817faad"
+    },
+    {
+      "path": "/tmp/odd-mip-baseline-native_vulkan_texture_cold_perf",
+      "bytes": 14955240,
+      "sha256": "1c16be5208e8d35f9853da730cb372a9b5540c1ffaef974fc95d540386519a45"
+    },
+    {
+      "path": "/tmp/odd-mip-candidate-native_vulkan_texture_mips",
+      "bytes": 8330800,
+      "sha256": "319249d299225815e5fcf1883604b34d0719fbc266cd738ef4987c7f6edea94f"
+    },
+    {
+      "path": "/tmp/odd-mip-candidate-native_vulkan_texture_batch_probe",
+      "bytes": 15197184,
+      "sha256": "7bdb3631f89f43983302668e646ad7b272fc3ec26dffbd1095e3593be3f21020"
+    },
+    {
+      "path": "/tmp/odd-mip-candidate-native_vulkan_texture_cold_perf",
+      "bytes": 14957552,
+      "sha256": "b48477d38aab569d171c1027cbbd1cd383a84dc7f6f734315411f1cb890be0c7"
+    },
+    {
+      "path": "/tmp/odd-mip-final-native_vulkan_texture_mips",
+      "bytes": 8330560,
+      "sha256": "e1a7c97239a7ff8d560e4f76b2dddd2a97b53a348f15839adb9bc07df23c145b"
+    }
+  ],
+  "total_bytes": 120199564,
+  "preserved": [
+    "canonical archive/manifest/reference assets",
+    "source worktree",
+    "/tmp/ingetrazo-skp-native-target"
+  ]
+}
