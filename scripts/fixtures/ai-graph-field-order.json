@@ -1,0 +1,5 @@
+[
+  "m=mesh\nf=m.add_face([QVector3D(),QVector3D(1,0,0),QVector3D(0,1,0)])\ne0=m.edges[0]\ne1=m.edges[1]\nevents=[]\nclass Ordered:\n def __init__(self,name):self.name=name\n def __eq__(self,other):\n  events.append(self.name)\n  m.edges[:]=list(m.edges)\n  return True\nfor field,prefix in [('soft','s'),('hidden','h'),('layer','l'),('curve','c')]:\n setattr(e0,field,Ordered(prefix+'0'))\n setattr(e1,field,Ordered(prefix+'1'))",
+  "assert events==[]\nfor field,prefix in [('soft','s'),('hidden','h'),('layer','l'),('curve','c')]:\n setattr(e0,field,Ordered('new-'+prefix+'0'))\n setattr(e1,field,Ordered('new-'+prefix+'1'))",
+  "assert events==['s0','s1','h0','h1','l0','l1','c0','c1'],events"
+]

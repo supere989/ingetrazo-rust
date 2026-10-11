@@ -381,6 +381,17 @@ impl FaceTransaction {
         &self.edge.journal.added_vertices
     }
 
+    // Immutable graph-adapter view of already-staged native identities.
+    // No endpoint coordinate lookup or Mesh clone is needed to build actual VM Edges.
+    pub(crate) fn staged_face_edges(&self, id: usize) -> Result<&[usize], String> {
+        self.drafts.get(id.checked_sub(self.base_faces).ok_or("Face is not staged")?)
+            .map(|draft| draft.edges.as_slice()).ok_or("Missing staged face".into())
+    }
+    pub(crate) fn added_edge_endpoints(&self) -> &[(usize, usize)] {
+        &self.edge.journal.added_edges
+    }
+    pub(crate) fn base_edge_extent(&self) -> usize { self.base_edges }
+
     /// Takes an already-created native JSON map. Arbitrary VM objects/keys remain
     /// a separate required adapter; this API never recursively clones Value.
     pub fn set_face_attributes(

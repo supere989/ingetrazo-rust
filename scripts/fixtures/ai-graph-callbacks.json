@@ -1,0 +1,9 @@
+[
+  "m=mesh\nf=m.add_face([QVector3D(),QVector3D(1,0,0),QVector3D(0,1,0)])\nv=m.vertices[0]\ne=m.edges[0]",
+  "hash_calls=[]\nclass HashPayload:\n def __hash__(self):\n  hash_calls.append('hash')\n  m.edges[:]=list(m.edges)\n  return 17\nhash_payload=HashPayload()\nv.edges.add(hash_payload)",
+  "assert hash_calls==['hash']",
+  "assert hash_payload in v.edges\nassert hash_calls==['hash','hash']",
+  "eq_calls=[]\nclass EqualPayload:\n def __eq__(self,other):\n  eq_calls.append('eq')\n  m.edges[:]=list(m.edges)\n  return False\ne.soft=EqualPayload()",
+  "observed_first=len(eq_calls)\neq_calls.clear()\ne.soft=EqualPayload()",
+  "observed_second=len(eq_calls)"
+]

@@ -41,7 +41,7 @@ fn main() {
         slot_cases.push(field);
     }
     c.assert_script("private=Mesh()\nf=private.add_face([QVector3D(),QVector3D(1,0,0),QVector3D(0,1,0)])\na=f.loop[0]\nb=f.loop[1]\ne=Edge(a,b)\na.edges.add(e)\nb.edges.add(e)\ne.faces.append(f)\ndel private,f,a,b,e");
-    assert_eq!(vm_mesh::graph_payload_lifetimes(),(3,1));
+    assert_eq!(vm_mesh::graph_payload_lifetimes(),(3,4));
     c.collect_proof_gc(); assert_eq!(vm_mesh::graph_payload_lifetimes(),(0,0));
     let mut other = vm_mesh::Controller::new();
     other.proof_automatic_gc(false);
