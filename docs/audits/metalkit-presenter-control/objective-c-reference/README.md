@@ -1,0 +1,5 @@
+This diagnostic compiles only with the native Apple SDK. It removes Rust bindings, Block2, the shared diagnostic State and Rust atomics. The Objective-C frame owns its command, signal and copied native handler; the handler captures only the signal. A bounded terminal proof records actual drawable IDs, command completion and callback timestamps.
+
+Compile with the exact command in review.json. Run once in the same runner/session/device as the other controls, supervised by a 45-second outer process deadline. The source uses a 15-second deadline, at most three pending frames, at least two positive callbacks and complete terminal drain. A zero timestamp is skipped, never visible proof. Preserve all outcome reports, build/runtime logs and source/binary/SDK provenance.
+
+No native SDK check or cloud execution has occurred. This is not a production fallback. Both prior ARM framework controls failed despite actual drawing; this reference tests the remaining shared Rust implementation boundary without assuming a VM limitation.

@@ -1,0 +1,19 @@
+{
+  "source_sha256": "b40ad63ed040118788629f312f5ca06348d1f199b9670a95f1d48f8329f90157",
+  "scope": "Diagnostic standalone literal Objective-C Apple SDK AppKit/MTKView; no productionbinding/fallback",
+  "isolates": "Remaining sharedRust objc2/Block2/State/atomics eliminated; sameMetalDefaultDevice,newCommandQueue,systemMTKView,NSApp/NSWindow create andtimed draw contract",
+  "native_build_command": "clang -O0 -fobjc-arc -fblocks -std=gnu11 -Wall -Wextra -framework AppKit -framework Metal -framework MetalKit -framework QuartzCore scripts/native/appkit_objc_presenter_control.m -o appkit_objc_presenter_control",
+  "native_runtime_command": "appkit_objc_presenter_control report.json (outer45s supervisor REQUIRED)",
+  "strict_admission": "native15s;max3pending;Completed+seen;finitepositive presentedTime;zero skippednotproof;atleast2positive anddrain;callback drawableIDmustmatchexpected",
+  "ownership": "Frame retainscommand,signal,copyofliteralSDKhandler;blockcapturessignalonly,noFrame/commandcycle;@synchronized immutableterminalpublication;ARC drawpool releaseslocaldrawable;pendingcompletepresenter ownersquarantinedbybridgeRetained untilprocessend;timerinvalidatedbeforeexit",
+  "provenance": "nativecommandstatus,actualcallbackdrawableID,time,GPUStart/End;last16terminalproofbounded;actualqueue/layer/deviceregistry IDs;active/key/windowvisible;source/executable/SDKhashesmustbesupervisorrecords",
+  "apple_contracts": [
+    "https://developer.apple.com/documentation/metal/mtldrawablepresentedhandler",
+    "https://developer.apple.com/documentation/metal/mtldrawable/addpresentedhandler(_:)",
+    "https://developer.apple.com/documentation/metal/mtldrawable/presentedtime"
+  ],
+  "local_checks": "focusedsourceguardinventory PASS; localclang/AppleSDK unavailable, noSDKcompile/link/runtimeclaim",
+  "native_validation": "PENDING reviewedcoordinatedcloud; noautomaticdispatch",
+  "interpretation": "ObjectiveCpositivevsRustnativeAppKitfail narrowssharedimplementationboundary; bothfail leavesplatform/session/device orcommonAPIcontract unresolved, noVMlimitationclaim",
+  "production_changes": false
+}
