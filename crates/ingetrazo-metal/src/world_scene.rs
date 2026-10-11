@@ -1080,7 +1080,11 @@ impl crate::world::World {
         let billboard_frame=if billboard_changed{Arc::new(super::world_billboard::Prepared::prepare(metal,scene,&billboard_topology,camera,eye.as_vec3(),billboard_key,adapter.billboards.as_ref().map(|p|p.1.as_ref()),!billboard_topology_changed,self.sampled_assets())?)}else{adapter.billboards.as_ref().unwrap().1.clone()};
         let candidate_billboard_bytes=billboard_topology.retained_bytes()+billboard_frame.retained_bytes();
         if adapter.retained_payload_bytes().saturating_sub(adapter.billboard_payload_bytes()).checked_add(candidate_billboard_bytes).is_none_or(|n|n>MAX_BYTES*3){return Err("Metal adapter billboard storage exceeds24MiB".into());}
-        let sample_positions=if !scene.dimensions.is_empty(){super::annotation::source_sample_policy(metal,self.configured_sample_count())?.1}else if self.configured_sample_count()==4{self.annotation_positions}else{None};
+        let sample_positions=if !scene.dimensions.is_empty(){
+            super::annotation::source_sample_policy(metal,self.configured_sample_count())?.1
+        }else{
+            super::annotation::source_raster_sample_positions(metal,self.configured_sample_count())
+        };
         if let Some((_,fill))=&adapter.fill{fill.validate(metal)?;}
         let fill_key=super::world_section::FillKey::from_scene(scene,style,revisions,pose_revision);
         let fill_changed=fill_key.is_some_and(|key|pose_revision.is_none()||adapter.fill.as_ref().is_none_or(|p|p.0!=key));
@@ -1133,7 +1137,6 @@ impl crate::world::World {
             if fill_changed{self.stats.section_fill_uploads+=1;self.stats.section_fill_upload_bytes+=(6*std::mem::size_of::<ingetrazo_render::buffer::Vertex>())as u64;}
             adapter.fill=fill_candidate;
             prepared.source_sample_positions=sample_positions;
-            self.annotation_positions=sample_positions;
             if let Some(candidate)=profile_candidate{self.stats.profile_builds+=u64::from(profile_cold);self.stats.profile_uploads+=u64::from(profile_upload_changed&&candidate.5.buffer.is_some());if profile_upload_changed{self.stats.profile_upload_bytes+=candidate.5.bytes as u64;}if let Some(old)=adapter.profiles.replace(candidate){adapter.profile_selection_scratch=old.7;}}
 
             prepared.overlay=active_preview.filter(|p|p.sweep.kind==ingetrazo_render::face_sweep::Kind::Overlay).map(|p|p.preview_key);

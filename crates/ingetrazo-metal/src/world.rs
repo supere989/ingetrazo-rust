@@ -155,7 +155,6 @@ pub struct Stats {
 }
 #[derive(Default)]
 pub struct World {
-    pub(crate) annotation_positions:Option<[MTLSamplePosition;4]>,
     samples: usize,
     pub(crate) ghosts: Option<Arc<super::world_ghost::Ghosts>>,
     owner: Option<Arc<Owner>>,
@@ -805,6 +804,10 @@ impl World {
 impl Prepared {
     pub fn ghost_counts(&self)->[usize;3]{self.ghosts.as_ref().map_or([0;3],|g|g.counts)}
     pub fn sample_count(&self)->usize{self.target.samples}
+    /// Programmed raster positions retained by this exact immutable frame.
+    pub fn programmed_sample_positions(&self)->Option<[[f32;2];4]>{
+        self.source_sample_positions.map(|positions|positions.map(|p|[p.x,p.y]))
+    }
     pub(crate) fn depth_texture(&self)->&ProtocolObject<dyn MTLTexture>{&self.target.depth.raw}
     /// Admitted contiguous instanced draw groups, observed by diagnostics only.
     pub fn instance_run_count(&self) -> usize {

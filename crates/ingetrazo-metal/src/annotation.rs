@@ -42,32 +42,47 @@ impl Visibility {
  }
 }
 
+/// Source NVIDIA GL 4x positions reflected once from bottom-origin to Metal rows.
+const SOURCE_SAMPLE_POSITIONS: [MTLSamplePosition; 4] = [
+    MTLSamplePosition { x: 0.375, y: 0.875 },
+    MTLSamplePosition { x: 0.875, y: 0.625 },
+    MTLSamplePosition { x: 0.125, y: 0.375 },
+    MTLSamplePosition { x: 0.625, y: 0.125 },
+];
+
+/// Raster coverage uses the same pattern whether annotations are present or absent.
+/// Devices without programmable positions retain their defaults; this alone does
+/// not admit the source annotation depth selector on those devices.
+pub(crate) fn source_raster_sample_positions(
+    metal: &NativeMetal,
+    samples: usize,
+) -> Option<[MTLSamplePosition; 4]> {
+    (samples == 4 && metal.programmable_sample_positions)
+        .then_some(SOURCE_SAMPLE_POSITIONS)
+}
+
 /// Source GL 4x resolve selects the physical sample at (.375,.125) in
 /// bottom-origin coordinates. Metal rows are top-origin: reflect Y once.
 /// Program the full measured pattern, or require a literal default match.
 pub fn source_sample_policy(metal:&NativeMetal,samples:usize)->Result<(u32,Option<[MTLSamplePosition;4]>),String>{
  if samples==1{return Ok((0,None));}
  if samples!=4{return Err("Metal source annotation sample policy requires1/4 samples".into());}
- let positions=[MTLSamplePosition{x:0.375,y:0.875},MTLSamplePosition{x:0.875,y:0.625},MTLSamplePosition{x:0.125,y:0.375},MTLSamplePosition{x:0.625,y:0.125}];
- unsafe {if metal.device.areProgrammableSamplePositionsSupported(){return Ok((0,Some(positions)));}}
- let mut defaults=[MTLSamplePosition{x:0.,y:0.};4];unsafe{metal.device.getDefaultSamplePositions_count(std::ptr::NonNull::from(&mut defaults[0]),4);}
- if positions.iter().all(|p|defaults.iter().any(|d|d.x==p.x&&d.y==p.y)){let selected=defaults.iter().position(|p|p.x==positions[0].x&&p.y==positions[0].y).unwrap();return Ok((selected as u32,None));}
+ let defaults=metal.default_sample_positions_4.as_ref().ok_or("Metal device does not support source4x samples")?;
+ if let Some(positions)=source_raster_sample_positions(metal,samples){return Ok((0,Some(positions)));}
+ if SOURCE_SAMPLE_POSITIONS.iter().all(|p|defaults.iter().any(|d|d.x==p.x&&d.y==p.y)){let selected=defaults.iter().position(|p|p.x==SOURCE_SAMPLE_POSITIONS[0].x&&p.y==SOURCE_SAMPLE_POSITIONS[0].y).unwrap();return Ok((selected as u32,None));}
  Err("Metal default sample positions cannot admit measured source annotation resolve".into())
 }
 
 /// Observations only: these do not authorize a depth-resolve selector.
 pub fn sample_diagnostics(metal: &NativeMetal) -> serde_json::Value {
-    let mut defaults = [MTLSamplePosition { x: 0., y: 0. }; 4];
-    unsafe {
-        metal.device.getDefaultSamplePositions_count(std::ptr::NonNull::from(&mut defaults[0]), 4);
-    }
     let policy = source_sample_policy(metal, 4);
     serde_json::json!({
-        "device_name": metal.device.name().to_string(),
+        "device_name": metal.info.name,
         "registry_id": metal.device.registryID(),
         "samples": 4,
-        "programmable": metal.device.areProgrammableSamplePositionsSupported(),
-        "default_positions_top_origin": defaults.iter().map(|p| [p.x,p.y]).collect::<Vec<_>>(),
+        "programmable": metal.programmable_sample_positions,
+        "default_positions_top_origin": metal.default_sample_positions_4.map(|positions| positions.map(|p| [p.x,p.y])),
+        "source_positions_top_origin": SOURCE_SAMPLE_POSITIONS.map(|p| [p.x,p.y]),
         "strict_nvidia_reference_policy": match policy {
             Ok((sample, programmed)) => serde_json::json!({"admitted":true,"selected_sample":sample,"programmed":programmed.is_some()}),
             Err(error) => serde_json::json!({"admitted":false,"error":error}),

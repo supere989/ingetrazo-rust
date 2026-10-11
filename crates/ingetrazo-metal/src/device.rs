@@ -2,7 +2,7 @@ use ingetrazo_core::gpu_memory::MemoryBudget;
 use objc2::{rc::Retained, runtime::ProtocolObject};
 use objc2_metal::{
     MTLBuffer, MTLCommandQueue, MTLCreateSystemDefaultDevice, MTLDevice, MTLResource,
-    MTLResourceOptions,
+    MTLResourceOptions, MTLSamplePosition,
 };
 use std::{
     mem::ManuallyDrop,
@@ -31,6 +31,8 @@ pub struct NativeMetal {
     pub info: DeviceInfo,
     pub budget: Arc<Mutex<MemoryBudget>>,
     pub(crate) poisoned: Arc<AtomicBool>,
+    pub(crate) programmable_sample_positions: bool,
+    pub(crate) default_sample_positions_4: Option<[MTLSamplePosition; 4]>,
 }
 impl NativeMetal {
     pub fn new() -> Result<Self, String> {
@@ -50,6 +52,17 @@ impl NativeMetal {
             ray_tracing_advertised: device.supportsRaytracing(),
             bc_compression_advertised: device.supportsBCTextureCompression(),
         };
+        // Device capabilities are immutable; query once, never on the frame path.
+        let programmable_sample_positions = device.areProgrammableSamplePositionsSupported();
+        let default_sample_positions_4 = if device.supportsTextureSampleCount(4) {
+            let mut positions = [MTLSamplePosition { x: 0., y: 0. }; 4];
+            unsafe {
+                device.getDefaultSamplePositions_count(std::ptr::NonNull::from(&mut positions[0]), 4);
+            }
+            Some(positions)
+        } else {
+            None
+        };
         let limit = recommended / 5 * 4;
         Ok(Self {
             device,
@@ -57,6 +70,8 @@ impl NativeMetal {
             info,
             budget: Arc::new(Mutex::new(MemoryBudget::new([(recommended, limit)]))),
             poisoned: Arc::new(AtomicBool::new(false)),
+            programmable_sample_positions,
+            default_sample_positions_4,
         })
     }
     /// Shared storage is directly CPU accessible and requires no staging copy
