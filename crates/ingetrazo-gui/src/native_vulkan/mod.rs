@@ -174,6 +174,7 @@ pub struct System {
     annotation_ready_shape:Option<egui::Shape>,
     annotation_sample:Option<u32>,
     draw_serial:u64,
+    completed_present_serial_for_probe:u64,
 
     textures_to_free: Option<Vec<TextureId>>,
     close_requested: bool,
@@ -307,7 +308,7 @@ impl System {
             pointer_modifiers,
             renderer:std::mem::ManuallyDrop::new(renderer.take()),
             memory_budget,
-            world:None,cad2d:None,annotation_cad:None,annotation_viewport:None,annotation_prepare_error:None,annotation_ready_shape:None,annotation_sample,draw_serial:0,
+            world:None,cad2d:None,annotation_cad:None,annotation_viewport:None,annotation_prepare_error:None,annotation_ready_shape:None,annotation_sample,draw_serial:0,completed_present_serial_for_probe:0,
             textures_to_free: None,
             close_requested: false,
             repaint_at: std::time::Instant::now(),
@@ -560,7 +561,7 @@ impl System {
         }
         if let Some(cad)=&mut self.annotation_cad{if let Err(error)=cad.set_input_image(image_index as usize){self.vulkan_context.lifetime.quarantine();egui_app.gpu_error(&error);return;}}
         if let Some(present)=self.present_fences.get_mut(image_index as usize){
-            if present.used{if let Err(error)=self.vulkan_context.lifetime.wait(present.fence,lifetime::WAIT_NS){egui_app.gpu_error(&format!("Previous presentation completion unknown: {error}"));return;}present.used=false;}
+            if present.used{if let Err(error)=self.vulkan_context.lifetime.wait(present.fence,lifetime::WAIT_NS){egui_app.gpu_error(&format!("Previous presentation completion unknown: {error}"));return;}self.completed_present_serial_for_probe=self.completed_present_serial_for_probe.max(present.serial);present.used=false;}
             if let Err(error)=unsafe{self.vulkan_context.device.reset_fences(&[present.fence])}{self.vulkan_context.lifetime.quarantine();egui_app.gpu_error(&error.to_string());return;}
         }
         if let Err(error)=unsafe{self.vulkan_context.device.reset_fences(&[self.fence])}{self.vulkan_context.lifetime.quarantine();egui_app.gpu_error(&error.to_string());return;}
@@ -605,7 +606,7 @@ impl System {
             .image_indices(&images_indices);
 
         if !present_handles.is_empty(){present_info=present_info.push_next(&mut present_fence_info);}
-        if let Some(p)=self.present_fences.get_mut(image_index as usize){p.used=true;}else{self.presented_without_fence=true;}
+        if let Some(p)=self.present_fences.get_mut(image_index as usize){p.used=true;p.serial=self.draw_serial;}else{self.presented_without_fence=true;}
         let present_result = unsafe {
             self.swapchain
                 .loader
@@ -760,10 +761,10 @@ impl Drop for UnpublishedStartup{fn drop(&mut self){unsafe{
 struct UnpublishedSync{device:Device,semaphores:Vec<vk::Semaphore>,present_fences:Vec<PresentFence>,control:resize::Control}
 impl Drop for UnpublishedSync{fn drop(&mut self){let sem=self.semaphores.len();let fences=self.present_fences.len();unsafe{for semaphore in self.semaphores.drain(..){self.device.destroy_semaphore(semaphore,None);}for fence in self.present_fences.drain(..){self.device.destroy_fence(fence.fence,None);}}self.control.destroyed(resize::Kind::Semaphore,sem as u64);self.control.destroyed(resize::Kind::PresentFence,fences as u64);}}
 
-struct PresentFence{fence:vk::Fence,used:bool}
+struct PresentFence{fence:vk::Fence,used:bool,serial:u64}
 fn create_present_fences(context:&VulkanContext,count:usize)->Result<Vec<PresentFence>,vk::Result>{
  if !context.present_fences_enabled{return Ok(Vec::new());}
- let mut fences=Vec::new();for _ in 0..count{match unsafe{context.device.create_fence(&vk::FenceCreateInfo::default(),None)}{Ok(fence)=>fences.push(PresentFence{fence,used:false}),Err(error)=>{unsafe{for p in fences{context.device.destroy_fence(p.fence,None);}}return Err(error);}}}Ok(fences)
+ let mut fences=Vec::new();for _ in 0..count{match unsafe{context.device.create_fence(&vk::FenceCreateInfo::default(),None)}{Ok(fence)=>fences.push(PresentFence{fence,used:false,serial:0}),Err(error)=>{unsafe{for p in fences{context.device.destroy_fence(p.fence,None);}}return Err(error);}}}Ok(fences)
 }
 
 fn create_present_semaphores(device:&Device,count:usize)->Result<Vec<vk::Semaphore>,vk::Result> {

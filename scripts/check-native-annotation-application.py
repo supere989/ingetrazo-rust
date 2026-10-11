@@ -72,7 +72,12 @@ try:
   base=take("baseline");base_roi=roi(base);assert base_roi.size>0 and np.any(base_roi[:,:,:3]!=0),"Black startup cannot prove empty viewport"
   def action(nonce,name,held=False):
    previous=state();request=control/"request.tmp";request.write_text(json.dumps(dict(nonce=nonce,action=name)));request.rename(control/"request.json")
-   value=wait(lambda:(v if(v:=state())and v["nonce"]==nonce and(held or v["submitted_serial"]>previous["submitted_serial"])else None))
+   first=wait(lambda:(v if(v:=state())and v["nonce"]==nonce else None))
+   # The nonce is observed before this frame submits. Only acknowledgment of a
+   # presentation serial strictly beyond that observation can admit capture.
+   value=first if held else wait(lambda:(v if(v:=state())and v["nonce"]==nonce and v["completed_present_serial"]>first["submitted_serial"] else None))
+   assert value["annotation_prepare_error"]is None or held
+   if not held:assert value["annotation_ready"]==(value["dimensions"]+value["leaders"]>0)
    if held:
     time.sleep(.1);assert state()["submitted_serial"]==value["submitted_serial"]
    image=take(str(nonce)+"-"+name);rows.append(dict(name=name,state=state(),image_sha256=hashlib.sha256((out/(str(nonce)+"-"+name+".png")).read_bytes()).hexdigest()));return image

@@ -69,7 +69,7 @@ impl Probe{
    };self.control_nonce=nonce;
   }}
   let stats=system.annotation_cad.as_ref().ok_or("Annotation renderer absent")?.stats();
-  let row=serde_json::json!({"nonce":self.control_nonce,"submitted_serial":system.draw_serial,"cleared":self.cleared,"held_refusal":self.hold,"geometry_uploads":stats.uploads,"cached_bytes":stats.cached_bytes,"rollback_buffers":stats.rolled_back_buffers,"query_uploads":system.world.as_ref().map_or(0,|world|world.annotation_query_uploads_for_probe()),"committed_bytes":system.memory_budget.ledger.lock().unwrap().total_committed()});
+  let row=serde_json::json!({"nonce":self.control_nonce,"submitted_serial":system.draw_serial,"completed_present_serial":system.completed_present_serial_for_probe,"cleared":self.cleared,"held_refusal":self.hold,"geometry_uploads":stats.uploads,"cached_bytes":stats.cached_bytes,"rollback_buffers":stats.rolled_back_buffers,"query_uploads":system.world.as_ref().map_or(0,|world|world.annotation_query_uploads_for_probe()),"committed_bytes":system.memory_budget.ledger.lock().unwrap().total_committed()});
   let temporary=dir.join("state.tmp");std::fs::write(&temporary,serde_json::to_vec(&row).map_err(|e|e.to_string())?).map_err(|e|e.to_string())?;std::fs::rename(temporary,dir.join("state.json")).map_err(|e|e.to_string())?;Ok(())
  }
 }
@@ -114,7 +114,7 @@ impl App for Probe{
 }
 pub fn run()->Result<(),Box<dyn Error>>{if std::env::var_os("INGETRAZO_ANNOTATION_APP_CONTROL").is_some(){run_app::<ApplicationProbe>(None)}else{run_app::<Probe>(None)}}
 
-struct ApplicationProbe{app:crate::IngeTrazoApp,nonce:u64,held:bool,pressure:bool,texture:Option<egui::TextureHandle>}
+struct ApplicationProbe{app:crate::IngeTrazoApp,nonce:u64,held:bool,pressure:bool,texture:Option<egui::TextureHandle>,saved_annotations:Option<(Vec<ingetrazo_core::dimensions::Dimension>,Vec<ingetrazo_core::textlabel::TextLabel>)>}
 impl App for ApplicationProbe{
  fn title()->&'static str{"IngeTrazo actual application annotation probe"}
  fn new(_: &mut System,_:Option<std::path::PathBuf>)->Self{
@@ -129,7 +129,7 @@ impl App for ApplicationProbe{
    app.style.show_textures=false;app.style.background_color=[1.;4];app.style.show_sky=false;app.style.show_profiles=false;
    app.mark_document_clean();
   }
-  Self{app,nonce:0,held:false,pressure:false,texture:None}
+  Self{app,nonce:0,held:false,pressure:false,texture:None,saved_annotations:None}
  }
  fn build_ui(&mut self,ctx:&Context){
   self.app.update_ui(ctx);ctx.request_repaint_after(std::time::Duration::from_millis(16));
@@ -137,6 +137,8 @@ impl App for ApplicationProbe{
   let dir=std::path::PathBuf::from(std::env::var_os("INGETRAZO_ANNOTATION_CONTROL_DIR").unwrap());
   if let Ok(file)=std::fs::File::open(dir.join("request.json")){use std::io::Read;let mut bytes=Vec::new();file.take(257).read_to_end(&mut bytes).unwrap();assert!(bytes.len()<=256);let row:serde_json::Value=serde_json::from_slice(&bytes).unwrap();let nonce=row["nonce"].as_u64().unwrap();if nonce>self.nonce{
    match row["action"].as_str().unwrap(){
+    "annotations-off"=>{assert!(self.saved_annotations.is_none());self.saved_annotations=Some((std::mem::take(&mut self.app.scene.dimensions),std::mem::take(&mut self.app.scene.text_labels)));self.app.scene.bump_version();},
+    "annotations-on"=>{let(dimensions,labels)=self.saved_annotations.take().expect("Annotations baseline must precede restoration");self.app.scene.dimensions=dimensions;self.app.scene.text_labels=labels;self.app.scene.bump_version();},
     "add"=>{self.app.save_undo_state();self.app.scene.dimensions.push(ingetrazo_core::dimensions::Dimension::new(glam::DVec3::new(-1.,0.,0.),glam::DVec3::new(1.,0.,0.),glam::DVec3::Y));self.app.scene.bump_version();},
     "delete"=>{assert!(self.app.remove_dimension(0));},
     "refuse"=>{assert!(self.app.edit_dimension(0,Some("replacement <>".into()),None,None));self.pressure=true;self.texture=Some(ctx.load_texture("refused-new-managed-image",egui::ColorImage::new([2,2],egui::Color32::RED),egui::TextureOptions::NEAREST));},
@@ -153,7 +155,7 @@ impl App for ApplicationProbe{
    App::prepare_gpu(&mut self.app,system,resize);
    if self.pressure{assert!(system.annotation_prepare_error.is_some(),"Actual app pressure unexpectedly published");self.pressure=false;self.held=true;}
   }
-  let row=serde_json::json!({"nonce":self.nonce,"submitted_serial":system.draw_serial,"held_refusal":self.held,"dimensions":self.app.scene.dimensions.len(),"leaders":self.app.scene.text_labels.len(),"camera":self.app.camera,"camera_snapshot":crate::navigation_ray::camera_snapshot(&self.app.camera).map(|s|serde_json::json!({"matrix":s.matrix.concat(),"inverse":s.inverse().map(|m|m.concat()),"eye":s.eye,"forward":s.forward})),"screen_size":[system.egui_ctx.screen_rect().width(),system.egui_ctx.screen_rect().height()],"viewport":self.app.native_gpu_viewport_rect.map(|r|[r.min.x,r.min.y,r.max.x,r.max.y]),"cached_bytes":system.annotation_cad.as_ref().map_or(0,|r|r.stats().cached_bytes),"pending_textures":system.pending_texture_updates.len()});
+  let row=serde_json::json!({"nonce":self.nonce,"submitted_serial":system.draw_serial,"completed_present_serial":system.completed_present_serial_for_probe,"held_refusal":self.held,"dimensions":self.app.scene.dimensions.len(),"leaders":self.app.scene.text_labels.len(),"camera":self.app.camera,"camera_snapshot":crate::navigation_ray::camera_snapshot(&self.app.camera).map(|s|serde_json::json!({"matrix":s.matrix.concat(),"inverse":s.inverse().map(|m|m.concat()),"eye":s.eye,"forward":s.forward})),"screen_size":[system.egui_ctx.screen_rect().width(),system.egui_ctx.screen_rect().height()],"viewport":self.app.native_gpu_viewport_rect.map(|r|[r.min.x,r.min.y,r.max.x,r.max.y]),"cached_bytes":system.annotation_cad.as_ref().map_or(0,|r|r.stats().cached_bytes),"pending_textures":system.pending_texture_updates.len(),"annotation_prepare_error":system.annotation_prepare_error,"annotation_ready":system.annotation_ready_shape.is_some()});
   let dir=std::path::PathBuf::from(std::env::var_os("INGETRAZO_ANNOTATION_CONTROL_DIR").unwrap());let temp=dir.join("state.tmp");std::fs::write(&temp,serde_json::to_vec(&row).unwrap()).unwrap();std::fs::rename(temp,dir.join("state.json")).unwrap();
  }
  fn gpu_error(&mut self,error:&str){eprintln!("Actual annotation app refusal: {error}");}
