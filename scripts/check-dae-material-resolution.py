@@ -34,7 +34,6 @@ def make_fixture(folder, name, h):
     (folder/'broken.png').write_bytes(b'original accepts undecodable authored image bytes\n')
     (folder/'image-directory').mkdir()
     tree=ET.parse('docs/audits/dae-import-corpus/textured-uv.dae');root=tree.getroot()
-    find=lambda path:root.find(path.replace('/', '/'+NS) if False else path)
     image_el=root.find('.//'+NS+'image');uri=image_el.find(NS+'init_from')
     effect=root.find('.//'+NS+'effect');tech=effect.find('.//'+NS+'technique')
     diffuse=root.find('.//'+NS+'diffuse');binding=root.find('.//'+NS+'instance_material')
@@ -101,11 +100,11 @@ def replay(root,output,binary,h):
         result={'case':name,'returncode':run.returncode,'stdout':run.stdout,'stderr':run.stderr}
         if run.returncode==0:
             scene=h.Scene();h.igz.load_into(scene,out);observed=canonical(h,scene)
-            with zipfile.ZipFile(out) as z:assets=[n for n in z.namelist() if n.startswith('textures/') and not n.endswith('/')]
+            assets=[]
+            if zipfile.is_zipfile(out):
+                with zipfile.ZipFile(out) as z:assets=[n for n in z.namelist() if n.startswith('textures/') and not n.endswith('/')]
             expected_assets=1 if row['source']['textures'] else 0
-            # Byte ownership may retain an image used only for representative color.
-            if name=='invalid-image-no-uv':expected_assets=1
-            result.update(native=observed,match=observed==row['source'],owned_assets=len(assets),asset_match=len(assets)==expected_assets)
+            result.update(native=observed,match=observed==row['source'],owned_assets=len(assets),prepared_assets=json.loads(run.stdout)['embedded_images'],asset_match=len(assets)==expected_assets)
         else:result.update(match=False,asset_match=False)
         rows.append(result)
     controls=[]

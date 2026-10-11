@@ -440,6 +440,7 @@ struct MaterialResources {
     images: HashMap<String, DaeMaterial>,
     files: HashMap<std::path::PathBuf, DaeMaterial>,
     assets: HashMap<String, Vec<u8>>,
+    used: std::collections::HashSet<String>,
 }
 impl MaterialResources {
     fn image(&mut self, image: Node<'_, '_>, base: Option<&std::path::Path>) -> DaeMaterial {
@@ -817,6 +818,7 @@ pub(crate) fn scene_from_xml_at(
         world: DMat4,
         name: &str,
         colors: &HashMap<String, DaeMaterial>,
+        used: &mut std::collections::HashSet<String>,
     ) -> Result<Group> {
         let mut mesh = Mesh::new();
         for polygon in geometry(node)? {
@@ -850,6 +852,7 @@ pub(crate) fn scene_from_xml_at(
                 }
                 if let (Some(image), Some(uv)) = (&material.image, &polygon.uv) {
                     let map = affine_uv(&points, uv)?;
+                    if !used.contains(image) { used.insert(image.clone()); }
                     let gu = DVec3::new(map[0], map[1], map[2]).length();
                     let gv = DVec3::new(map[4], map[5], map[6]).length();
                     mesh.faces[id].attrs.insert("texture".into(),serde_json::json!({"embed":image,"uvw":map,"sw":if gu>1e-9{1./gu}else{1.},"sh":if gv>1e-9{1./gv}else{1.}}));
@@ -941,7 +944,7 @@ pub(crate) fn scene_from_xml_at(
                     let mesh =
                         child(*target, "mesh").ok_or_else(|| invalid("geometry has no mesh"))?;
                     let colors = material_colors(el, ids, base, resources)?;
-                    let group = mesh_group(mesh, world, name, &colors)?;
+                    let group = mesh_group(mesh, world, name, &colors, &mut resources.used)?;
                     if !group.mesh.faces.is_empty() {
                         scene.groups.push(group);
                     }
@@ -977,6 +980,7 @@ pub(crate) fn scene_from_xml_at(
                         .attribute("name")
                         .unwrap_or("COLLADA geometry"),
                     &HashMap::new(),
+                    &mut resources.used,
                 )?;
                 if !group.mesh.faces.is_empty() {
                     scene.groups.push(group);
@@ -1063,6 +1067,9 @@ pub(crate) fn scene_from_xml_at(
             );
         }
     }
+    // Representative colors need decoded bytes only while importing. Keep
+    // document ownership only for resources actually referenced by geometry.
+    resources.assets.retain(|key, _| resources.used.contains(key));
     scene.embedded_textures = resources.assets;
     scene.bump_version();
     Ok(scene)
