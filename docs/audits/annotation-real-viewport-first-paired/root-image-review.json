@@ -1,0 +1,34 @@
+{
+  "rows": [
+    {
+      "case": "gondola_v20-iso",
+      "native_toggle_pixels": 0,
+      "native_restore_pixels": 0,
+      "source_pair_admitted": true,
+      "source_difference_pixels": {
+        "annotations-on": 78,
+        "annotations-off": 78,
+        "annotations-restored": 78
+      }
+    },
+    {
+      "case": "gondola_v20-asymmetric",
+      "native_toggle_pixels": 0,
+      "native_restore_pixels": 0,
+      "source_pair_admitted": false
+    },
+    {
+      "case": "capilla_quiroz_v17-iso",
+      "native_toggle_pixels": 3737,
+      "native_restore_pixels": 0,
+      "source_pair_admitted": false
+    },
+    {
+      "case": "capilla_quiroz_v17-asymmetric",
+      "native_toggle_pixels": 3054,
+      "native_restore_pixels": 0,
+      "source_pair_admitted": false
+    }
+  ],
+  "scope": "Actual RTX native toggle/restoration verified. Gondola iso source pair retains78pixel residual. Other source pairs are unadmitted due exact camera snapshot failures; no annotation/source parity claim."
+}
