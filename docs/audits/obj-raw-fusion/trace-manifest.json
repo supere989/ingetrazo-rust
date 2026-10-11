@@ -1,0 +1,45 @@
+{
+  "runtime_commit": "b778c183",
+  "source_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "archive": "trace-records.zip",
+  "archive_sha256": "6ca6a3db29358577f4d694363c4815c0339007aa0580da8f5d4683add844c73c",
+  "entries": [
+    {
+      "path": "trace-source.json",
+      "bytes": 1230,
+      "sha256": "cc5f034105b69a6f5f999417eb296ef03ee9e82c9a8d319b9d6e087f1fdafb08"
+    },
+    {
+      "path": "source.log",
+      "bytes": 74,
+      "sha256": "b21193229b840b81728008290fa1ad66b8bc5e915ba98177ff4ee5fed3a326cb"
+    },
+    {
+      "path": "test.log",
+      "bytes": 13411,
+      "sha256": "b2656692a4dbea03837de7ffcd601dad372952b23c4687bf0aa3ecfc4089f9b2"
+    },
+    {
+      "path": "initial-observer-failure.txt",
+      "bytes": 163,
+      "sha256": "2d14984b287468cb0f99646f9d381591e938e4903c7a64cea083256bcbadc5ba"
+    }
+  ],
+  "sources": [
+    {
+      "path": "crates/ingetrazo-formats/src/obj_geometry.rs",
+      "sha256": "9d70260191300eedc01e2c76d307ac15855471d3636980474a68a3780c2bff9e"
+    },
+    {
+      "path": "scripts/reference-obj-raw-trace.py",
+      "sha256": "54ef6019be3f7c01978f1da9c5db556bd93f09ac29b97e4d4a63852a14a384c3"
+    }
+  ],
+  "result": {
+    "natural_trace_refusal_faces": 3,
+    "distinct_original_attrs": 3,
+    "focused_tests_passed": 2,
+    "build_seconds": 3.04
+  },
+  "scope": "Previous consumer binary proves736ab5c0, not thisfollowup; root jointbuild validatesb778c183. No broadreplay."
+}
