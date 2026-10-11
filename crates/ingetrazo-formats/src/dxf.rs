@@ -634,6 +634,17 @@ fn legacy_polyline(
 #[cfg(test)]
 mod tests {
     #[test]
+    fn oversized_spline_degree_preserves_document() {
+        let input="0\nSECTION\n2\nENTITIES\n0\nSPLINE\n71\n1e308\n10\n0\n20\n0\n10\n1\n20\n1\n10\n2\n20\n0\n10\n3\n20\n1\n0\nENDSEC\n0\nEOF\n";
+        let mut scene = Scene::new();
+        scene
+            .mesh
+            .add_vertex(DVec3::new(1. + 2f64.powi(-40), 2., 3.));
+        let before = scene.clone();
+        assert!(import_dxf(&mut std::io::Cursor::new(input), &mut scene).is_err());
+        assert_eq!(scene, before);
+    }
+    #[test]
     fn exact_source_spline_paths() {
         let source: serde_json::Value = serde_json::from_str(include_str!(
             "../../../docs/audits/dxf-splines/source-paths.json"

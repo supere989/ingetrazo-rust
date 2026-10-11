@@ -21,11 +21,11 @@ impl Spline {
         mut knots: Vec<f64>,
         weights: Vec<f64>,
     ) -> Result<Self, DxfError> {
-        let order = degree + 1;
         let count = points.len();
         if count > 10000 || degree > 32 {
             return Err(error("Spline admission limit exceeded"));
         }
+        let order = degree + 1;
         if degree == 0 || count < order {
             return Err(error("Invalid spline control count/order"));
         }
@@ -243,28 +243,131 @@ fn interpolation(points: &[DVec3]) -> Result<Vec<[DVec3; 4]>, DxfError> {
         .collect())
 }
 /// Solve only the narrow nonzero coefficient bands; no dense O(n²) matrix.
+fn subtract_fused(value: DVec3, a: f64, b: DVec3) -> DVec3 {
+    DVec3::new(
+        (-a).mul_add(b.x, value.x),
+        (-a).mul_add(b.y, value.y),
+        (-a).mul_add(b.z, value.z),
+    )
+}
+fn solve_banded(
+    rows: Vec<BTreeMap<usize, f64>>,
+    mut rhs: Vec<DVec3>,
+) -> Result<Vec<DVec3>, DxfError> {
+    let n = rows.len();
+    let m1 = rows
+        .iter()
+        .enumerate()
+        .flat_map(|(i, r)| r.keys().map(move |&j| i.saturating_sub(j)))
+        .max()
+        .unwrap_or(0);
+    let m2 = rows
+        .iter()
+        .enumerate()
+        .flat_map(|(i, r)| r.keys().map(move |&j| j.saturating_sub(i)))
+        .max()
+        .unwrap_or(0);
+    let width = m1 + m2 + 1;
+    let mut upper = vec![vec![0.; width]; n];
+    let mut lower = vec![vec![0.; m1]; n];
+    let mut pivots = vec![0; n];
+    for (i, row) in rows.into_iter().enumerate() {
+        for (j, v) in row {
+            upper[i][(j as isize - i as isize + m1 as isize) as usize] = v;
+        }
+    }
+    let mut l = m1;
+    for i in 0..m1 {
+        for j in m1 - i..width {
+            upper[i][j - l] = upper[i][j];
+        }
+        l -= 1;
+        for j in width - l - 1..width {
+            upper[i][j] = 0.;
+        }
+    }
+    l = m1;
+    for k in 0..n {
+        let mut value = upper[k][0];
+        let mut pivot = k;
+        if l < n {
+            l += 1;
+        }
+        for j in k + 1..l {
+            if upper[j][0].abs() > value.abs() {
+                value = upper[j][0];
+                pivot = j;
+            }
+        }
+        pivots[k] = pivot;
+        upper.swap(k, pivot);
+        if upper[k][0] == 0. {
+            return Err(error("Singular spline fit"));
+        }
+        for i in k + 1..l {
+            let factor = upper[i][0] / upper[k][0];
+            lower[k][i - k - 1] = factor;
+            for j in 1..width {
+                upper[i][j - 1] = upper[i][j] - factor * upper[k][j];
+            }
+            upper[i][width - 1] = 0.;
+        }
+    }
+    l = m1;
+    for k in 0..n {
+        rhs.swap(k, pivots[k]);
+        if l < n {
+            l += 1;
+        }
+        let value = rhs[k];
+        for j in k + 1..l {
+            rhs[j] -= value * lower[k][j - k - 1];
+        }
+    }
+    l = 1;
+    for i in (0..n).rev() {
+        let mut value = rhs[i];
+        for k in 1..l {
+            value -= rhs[k + i] * upper[i][k];
+        }
+        rhs[i] = value / upper[i][0];
+        if l < width {
+            l += 1;
+        }
+        if !rhs[i].is_finite() {
+            return Err(error("Spline fit overflow"));
+        }
+    }
+    Ok(rhs)
+}
 fn solve(mut rows: Vec<BTreeMap<usize, f64>>, mut rhs: Vec<DVec3>) -> Result<Vec<DVec3>, DxfError> {
     let n = rows.len();
+    if n >= 20 {
+        return solve_banded(rows, rhs);
+    }
     let lower = rows
         .iter()
         .enumerate()
         .flat_map(|(i, r)| r.keys().map(move |&j| i.saturating_sub(j)))
         .max()
         .unwrap_or(0);
+    let mut pivots = Vec::with_capacity(n);
+    // Measured pinned NumPy/OpenBLAS small-matrix law: reciprocal column/
+    // diagonal scaling and fused updates, after factorization independent of B.
+    // Large matrices use the original's separate compact-banded solver above.
+    // LAPACK ownership law: factor A independently of B, retain L multipliers,
+    // then apply row pivots and solve L/U. Updating B during factorization changes
+    // endpoint rounding, even when the mathematical solution is identical.
     for k in 0..n {
         let end = (k + lower + 1).min(n);
-        let pivot = (k..end)
-            .max_by(|&a, &b| {
-                rows[a]
-                    .get(&k)
-                    .unwrap_or(&0.)
-                    .abs()
-                    .partial_cmp(&rows[b].get(&k).unwrap_or(&0.).abs())
-                    .unwrap()
-            })
-            .unwrap();
+        let mut pivot = k;
+        for i in k + 1..end {
+            if rows[i].get(&k).unwrap_or(&0.).abs() > rows[pivot].get(&k).unwrap_or(&0.).abs() {
+                pivot = i;
+            }
+        }
         rows.swap(k, pivot);
-        rhs.swap(k, pivot);
+        pivots.push(pivot);
         let diagonal = *rows[k].get(&k).unwrap_or(&0.);
         if diagonal == 0. || !diagonal.is_finite() {
             return Err(error("Singular spline fit"));
@@ -273,32 +376,41 @@ fn solve(mut rows: Vec<BTreeMap<usize, f64>>, mut rhs: Vec<DVec3>) -> Result<Vec
             .range(k + 1..)
             .map(|(&j, &v)| (j, v))
             .collect::<Vec<_>>();
-        let value = rhs[k];
         for i in k + 1..end {
-            let factor = rows[i].remove(&k).unwrap_or(0.) / diagonal;
+            let factor = rows[i].get(&k).copied().unwrap_or(0.) * (1. / diagonal);
+            rows[i].insert(k, factor);
             if factor == 0. {
                 continue;
             }
             for &(j, v) in &entries {
                 let x = rows[i].entry(j).or_default();
-                *x -= factor * v;
+                *x = (-factor).mul_add(v, *x);
             }
-            rhs[i] -= value * factor;
         }
     }
-    let mut output = vec![DVec3::ZERO; n];
+    for (i, pivot) in pivots.into_iter().enumerate() {
+        rhs.swap(i, pivot);
+    }
+    for i in 0..n {
+        let mut value = rhs[i];
+        for (&j, &v) in rows[i].range(..i) {
+            value = subtract_fused(value, v, rhs[j]);
+        }
+        rhs[i] = value;
+    }
     for i in (0..n).rev() {
         let mut value = rhs[i];
-        for (&j, &v) in rows[i].range(i + 1..) {
-            value -= output[j] * v;
+        for (&j, &v) in rows[i].range(i + 1..).rev() {
+            value = subtract_fused(value, v, rhs[j]);
         }
-        output[i] = value / rows[i][&i];
-        if !output[i].is_finite() {
+        rhs[i] = value * (1. / rows[i][&i]);
+        if !rhs[i].is_finite() {
             return Err(error("Spline fit overflow"));
         }
     }
-    Ok(output)
+    Ok(rhs)
 }
+
 fn fit(points: Vec<DVec3>, tangents: Option<[DVec3; 2]>) -> Result<Spline, DxfError> {
     if points.len() > 10000 {
         return Err(error("Spline admission limit exceeded"));
