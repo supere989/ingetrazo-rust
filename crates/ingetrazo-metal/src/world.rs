@@ -129,7 +129,7 @@ pub struct World {
     placements: Option<Arc<PlacementMeshes>>,
     pipeline: Option<Arc<Pipeline>>,
     targets: Vec<Arc<Target>>,
-    texture_assets:Vec<std::sync::Weak<super::world_texture::Asset>>,
+    texture_assets:Vec<Arc<super::world_texture::Asset>>,
     pub stats: Stats,
 }
 pub struct Prepared {
@@ -543,7 +543,7 @@ impl World {
         // Failed layout/target admission must not mutate its capacity/accounting.
         let mut candidate_lookup=None;
         if !candidate_assets.is_empty(){
-            if candidate_assets.len()+self.texture_assets.iter().filter(|a|a.strong_count()>0).count()>4096{return Err("Metal sampled identity publication admission exceeded".into());}
+            if candidate_assets.len()+self.texture_assets.len()>4096{return Err("Metal sampled identity publication admission exceeded".into());}
             let needed=self.texture_assets.len().checked_add(candidate_assets.len()).ok_or("Metal texture lookup size overflow")?;
             if needed>self.texture_assets.capacity(){let mut entries=Vec::new();entries.try_reserve_exact(needed).map_err(|_|"Metal texture lookup publication allocation refused")?;entries.extend(self.texture_assets.iter().cloned());candidate_lookup=Some(entries);}
         }
@@ -636,8 +636,8 @@ impl World {
             .map(|t| t.poses.capacity() * std::mem::size_of::<PlacementPose>())
             .sum();
         if let Some(entries)=candidate_lookup{self.texture_assets=entries;}
-        if uploaded>0{self.texture_assets.retain(|a|a.strong_count()>0);self.texture_assets.extend(candidate_assets.iter().map(Arc::downgrade));}
-        self.stats.texture_identity_payload_bytes=self.texture_assets.capacity()*std::mem::size_of::<std::sync::Weak<super::world_texture::Asset>>();
+        if uploaded>0{self.texture_assets.extend(candidate_assets.iter().cloned());}
+        self.stats.texture_identity_payload_bytes=self.texture_assets.capacity()*std::mem::size_of::<Arc<super::world_texture::Asset>>();
         self.owner = Some(owner.clone());
         self.mesh = None;
         self.key = None;
@@ -659,13 +659,15 @@ impl World {
         let mut seen=Vec::new();let mut rows=Vec::new();
         seen.try_reserve_exact(self.texture_assets.len()).map_err(|_|"Metal sampled observation allocation refused")?;
         rows.try_reserve_exact(self.texture_assets.len()).map_err(|_|"Metal sampled observation allocation refused")?;
-        for asset in self.texture_assets.iter().filter_map(std::sync::Weak::upgrade){let(id,row)=asset.heap_observation();if !seen.contains(&id){seen.push(id);rows.push(row);}}
+        for asset in self.texture_assets.iter(){let(id,row)=asset.heap_observation();if !seen.contains(&id){seen.push(id);rows.push(row);}}
         Ok(rows)
     }
     pub fn clear_idle(&mut self) {
         self.targets.retain(|t| Arc::strong_count(t) > 1);
         self.mesh = None;
         self.placements = None;
+        self.texture_assets.clear();
+        self.stats.texture_identity_payload_bytes = self.texture_assets.capacity()*std::mem::size_of::<Arc<super::world_texture::Asset>>();
         self.stats.policy_retained_payload_bytes = 0;
         self.stats.material_order_payload_bytes=self.targets.iter().filter_map(|t|t.material_draws.as_ref()).map(|p|p.retained_payload_bytes).sum();
         self.stats.placement_cache_payload_bytes = 0;
@@ -906,7 +908,7 @@ fn material_draws(placements:&PlacementMeshes,order:&super::world_placement::Ord
     records.sort_unstable_by_key(|r|r.0);let mut operations=Vec::new();operations.try_reserve_exact(records.len()).map_err(|_|"Metal retained material operations allocation refused")?;operations.extend(records.into_iter().map(|r|r.1));let retained_payload_bytes=operations.capacity().checked_mul(std::mem::size_of::<MaterialDraw>()).and_then(|n|n.checked_add(std::mem::size_of::<MaterialDraws>())).ok_or("Metal material operation capacity overflow")?;if retained_payload_bytes>CAP{return Err("Metal retained material operations exceeds8MiB".into());}Ok(MaterialDraws{operations,retained_payload_bytes})
 }
 
-fn build_material_mesh<'a,G>(metal:&NativeMetal,collection:Collection,resolve:&mut G,published:&[std::sync::Weak<super::world_texture::Asset>],candidates:&mut Vec<Arc<super::world_texture::Asset>>)->Result<Option<Arc<Mesh>>,String>
+fn build_material_mesh<'a,G>(metal:&NativeMetal,collection:Collection,resolve:&mut G,published:&[Arc<super::world_texture::Asset>],candidates:&mut Vec<Arc<super::world_texture::Asset>>)->Result<Option<Arc<Mesh>>,String>
 where G:FnMut(&str)->Result<std::borrow::Cow<'a,[u8]>,String>{
     let (data,materials)=match collection {
         Collection::Opaque(data)=>(data,None),
@@ -921,8 +923,8 @@ where G:FnMut(&str)->Result<std::borrow::Cow<'a,[u8]>,String>{
             let mut textures=Vec::new();textures.try_reserve_exact(packet.textures.len()).map_err(|_|"Metal sampled mesh allocation refused")?;
             for texture in packet.textures {
                 let encoded=resolve(&texture.path)?;let id=super::world_texture::identity(&encoded)?;
-                let asset=candidates.iter().find(|a|a.id==id).cloned().or_else(||published.iter().filter_map(std::sync::Weak::upgrade).find(|a|a.id==id));
-                let asset=if let Some(asset)=asset{asset}else{if candidates.len()+published.iter().filter(|a|a.strong_count()>0).count()>=4096{return Err("Metal retained sampled asset identities exceed4096".into());}candidates.try_reserve(1).map_err(|_|"Metal sampled asset publication allocation refused")?;let asset=super::world_texture::upload(metal,id,&encoded,published,candidates)?;candidates.push(asset.clone());asset};
+                let asset=candidates.iter().find(|a|a.id==id).cloned().or_else(||published.iter().find(|a|a.id==id).cloned());
+                let asset=if let Some(asset)=asset{asset}else{if candidates.len()+published.len()>=4096{return Err("Metal retained sampled asset identities exceed4096".into());}candidates.try_reserve(1).map_err(|_|"Metal sampled asset publication allocation refused")?;let asset=super::world_texture::upload(metal,id,&encoded,published,candidates)?;candidates.push(asset.clone());asset};
                 textures.push(SampledMesh{vertices:upload(metal,texture.geometry.upload_bytes())?,asset,draws:texture.geometry.draws});
             }
             let retained_payload_bytes=std::mem::size_of::<Materials>()+packet.runs.capacity()*std::mem::size_of::<super::world_surface::Run>()+opaque_runs.capacity()*std::mem::size_of::<(usize,usize,bool)>()+textures.capacity()*std::mem::size_of::<SampledMesh>()+textures.iter().map(|t|t.draws.capacity()*std::mem::size_of::<ingetrazo_render::native_textures::Draw>()).sum::<usize>();
