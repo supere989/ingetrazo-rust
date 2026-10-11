@@ -1,0 +1,591 @@
+{
+  "archive_sha256": "6b99e23141dfcf4ae1e5b2641d07be08535b7d4124f6e9c9e6c6cee3f3340705",
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "records": [
+    {
+      "path": "fallback-config/back-recess-base-gl-only.png",
+      "bytes": 3022,
+      "sha256": "ae20a12a956cf2971700082ac1252ac90e99e4ad596e574bae4b478c5958a979"
+    },
+    {
+      "path": "fallback-config/back-recess-base.png",
+      "bytes": 4649,
+      "sha256": "8a7b6956b17e4cd213642ce08e74fed529af7b326669cf1116f7f0e7e5587320"
+    },
+    {
+      "path": "fallback-config/back-recess-cancel-gl-only.png",
+      "bytes": 3022,
+      "sha256": "ae20a12a956cf2971700082ac1252ac90e99e4ad596e574bae4b478c5958a979"
+    },
+    {
+      "path": "fallback-config/back-recess-cancel.png",
+      "bytes": 4649,
+      "sha256": "8a7b6956b17e4cd213642ce08e74fed529af7b326669cf1116f7f0e7e5587320"
+    },
+    {
+      "path": "fallback-config/back-recess-offset-gl-only.png",
+      "bytes": 3163,
+      "sha256": "033db6eb99352ed6f3ca315ad9ad0a0029a35347025689b3660187ed7530616a"
+    },
+    {
+      "path": "fallback-config/back-recess-offset.png",
+      "bytes": 4804,
+      "sha256": "e0fe93ee2bdb71cc7d188fea82bd60a8329a9a329022fc204c41f3e8daea60a3"
+    },
+    {
+      "path": "fallback-config/back-recess-preview-gl-only.png",
+      "bytes": 3178,
+      "sha256": "d5eb928a83849b869968fa63764c97bada790af51bd81a1f17457238ddd00d13"
+    },
+    {
+      "path": "fallback-config/back-recess-preview.png",
+      "bytes": 4810,
+      "sha256": "4a8fb0b919cce783f848c2c7aa6c64b884995c299f1ce1ccf197c4e32629944a"
+    },
+    {
+      "path": "fallback-config/back-recess.igz",
+      "bytes": 3417,
+      "sha256": "79123ea660b6def5750f919a38b2719ea490ca6b389d4ca625fc3318cea6e22e"
+    },
+    {
+      "path": "fallback-config/front-recess-base-gl-only.png",
+      "bytes": 3004,
+      "sha256": "69583cc369a40ab472559904549e92df291db691cd4618cde218515ad041d640"
+    },
+    {
+      "path": "fallback-config/front-recess-base.png",
+      "bytes": 4684,
+      "sha256": "a3f3164696fa91df8ddcc18b9541b2c0ce372712fdced8f5ca5142c1444237b9"
+    },
+    {
+      "path": "fallback-config/front-recess-cancel-gl-only.png",
+      "bytes": 3004,
+      "sha256": "69583cc369a40ab472559904549e92df291db691cd4618cde218515ad041d640"
+    },
+    {
+      "path": "fallback-config/front-recess-cancel.png",
+      "bytes": 4684,
+      "sha256": "a3f3164696fa91df8ddcc18b9541b2c0ce372712fdced8f5ca5142c1444237b9"
+    },
+    {
+      "path": "fallback-config/front-recess-offset-gl-only.png",
+      "bytes": 3169,
+      "sha256": "fcbb4acd9311184ac4bf87406eb4d1b4db7bef55653974e23d4f1d50723d493f"
+    },
+    {
+      "path": "fallback-config/front-recess-offset.png",
+      "bytes": 4809,
+      "sha256": "2db2f280d8aba46d14cfa9d43454b748f31054a26ffa2b72f3bc7a724ae3cce7"
+    },
+    {
+      "path": "fallback-config/front-recess-preview-gl-only.png",
+      "bytes": 3184,
+      "sha256": "4a6e79441e894c066058126f18526d527ce3e285f5b30916acd3b043028bd7aa"
+    },
+    {
+      "path": "fallback-config/front-recess-preview.png",
+      "bytes": 4822,
+      "sha256": "6d8f80409f5b1e4dac56a632064f38c8095ea54828ba4a03146e64528af3f50e"
+    },
+    {
+      "path": "fallback-config/front-recess.igz",
+      "bytes": 3417,
+      "sha256": "79123ea660b6def5750f919a38b2719ea490ca6b389d4ca625fc3318cea6e22e"
+    },
+    {
+      "path": "fallback-config/front-texture-back-override-base-gl-only.png",
+      "bytes": 10091,
+      "sha256": "2584f445fe05110a07aa3448c41740baaae531e2415d6919855860ea9710d6da"
+    },
+    {
+      "path": "fallback-config/front-texture-back-override-base.png",
+      "bytes": 11403,
+      "sha256": "4a527ad1dacd1131a364f827f84ecb27e605a6505c7dabc193d408e5a64f1991"
+    },
+    {
+      "path": "fallback-config/front-texture-back-override-cancel-gl-only.png",
+      "bytes": 10091,
+      "sha256": "2584f445fe05110a07aa3448c41740baaae531e2415d6919855860ea9710d6da"
+    },
+    {
+      "path": "fallback-config/front-texture-back-override-cancel.png",
+      "bytes": 11403,
+      "sha256": "4a527ad1dacd1131a364f827f84ecb27e605a6505c7dabc193d408e5a64f1991"
+    },
+    {
+      "path": "fallback-config/front-texture-back-override-offset-gl-only.png",
+      "bytes": 24219,
+      "sha256": "0b129929c538513eabe80df7f5293f274f3b828edc0cb69694ed8e7d9005e38e"
+    },
+    {
+      "path": "fallback-config/front-texture-back-override-offset.png",
+      "bytes": 25362,
+      "sha256": "1267cb28ed6d76898849e16229fea111c447430cb72ac6158a84d5c08e32cffc"
+    },
+    {
+      "path": "fallback-config/front-texture-back-override-preview-gl-only.png",
+      "bytes": 20064,
+      "sha256": "0b521ad6830981ece916e2df6ce8aef31093e422c45952447e2f433e40b27899"
+    },
+    {
+      "path": "fallback-config/front-texture-back-override-preview.png",
+      "bytes": 21513,
+      "sha256": "e2627d68e65e6606955297495208aaf41c028b5065e68f6c1bcf01e6d51b8180"
+    },
+    {
+      "path": "fallback-config/front-texture-back-override.igz",
+      "bytes": 932,
+      "sha256": "b47fa0469f027aab5c619996f53c85ca8d822576e10b5806f9ba8ba161aa6cd5"
+    },
+    {
+      "path": "fallback-config/lone-sheet-base-gl-only.png",
+      "bytes": 2942,
+      "sha256": "f56563815ebb5d410532b8adc8736dd86d86c6f0509498890031a216caf072bc"
+    },
+    {
+      "path": "fallback-config/lone-sheet-base.png",
+      "bytes": 4554,
+      "sha256": "bb193f57720c7843194146f9fa45273cf06d353947aa7ad08da0fd38fc3ef5bd"
+    },
+    {
+      "path": "fallback-config/lone-sheet-cancel-gl-only.png",
+      "bytes": 2942,
+      "sha256": "f56563815ebb5d410532b8adc8736dd86d86c6f0509498890031a216caf072bc"
+    },
+    {
+      "path": "fallback-config/lone-sheet-cancel.png",
+      "bytes": 4554,
+      "sha256": "bb193f57720c7843194146f9fa45273cf06d353947aa7ad08da0fd38fc3ef5bd"
+    },
+    {
+      "path": "fallback-config/lone-sheet-offset-gl-only.png",
+      "bytes": 2993,
+      "sha256": "d2a2a774ed8a0e6c0eb7fbd779689dab240c24dc052a335e8247cd71e4ca0d0e"
+    },
+    {
+      "path": "fallback-config/lone-sheet-offset.png",
+      "bytes": 4620,
+      "sha256": "2f79e051007af2de7d293ba4be1ddd2c57499bf3db8626ed43adcf1d0ade2002"
+    },
+    {
+      "path": "fallback-config/lone-sheet-preview-gl-only.png",
+      "bytes": 2996,
+      "sha256": "96c3519fcfc9ac3374aacb292502fa2accc0c1d00b39c320d50f6f9c6cefa114"
+    },
+    {
+      "path": "fallback-config/lone-sheet-preview.png",
+      "bytes": 4638,
+      "sha256": "d2f20ceacabc619b9bda4a26ccb10a7ed5258b481ebc6f240d5059b43102b11e"
+    },
+    {
+      "path": "fallback-config/lone-sheet.igz",
+      "bytes": 2052,
+      "sha256": "938312ad1393bdfe5a650804e0431b81111b63ae990ae505409345ede781be9c"
+    },
+    {
+      "path": "fallback-config/ordinary-prism-base-gl-only.png",
+      "bytes": 10839,
+      "sha256": "0570068a58f6d961fc3552f5941c8ef442f7fbd4a035a65197833942fc5a459d"
+    },
+    {
+      "path": "fallback-config/ordinary-prism-base.png",
+      "bytes": 12592,
+      "sha256": "1c5613088cc4eb1924b00669c88c900077e3bc508c8aaf3c4d47c85f2cf9279a"
+    },
+    {
+      "path": "fallback-config/ordinary-prism-cancel-gl-only.png",
+      "bytes": 10839,
+      "sha256": "0570068a58f6d961fc3552f5941c8ef442f7fbd4a035a65197833942fc5a459d"
+    },
+    {
+      "path": "fallback-config/ordinary-prism-cancel.png",
+      "bytes": 12592,
+      "sha256": "1c5613088cc4eb1924b00669c88c900077e3bc508c8aaf3c4d47c85f2cf9279a"
+    },
+    {
+      "path": "fallback-config/ordinary-prism-offset-gl-only.png",
+      "bytes": 10424,
+      "sha256": "afa8700bba3383dd8b64f62c72cb6c247ab7b234470484aa29e9eeb1f00d996c"
+    },
+    {
+      "path": "fallback-config/ordinary-prism-offset.png",
+      "bytes": 12314,
+      "sha256": "b427e6495e070948ffd7379a9b7566fecbde04fac9fd66972dbcde33e9fc383f"
+    },
+    {
+      "path": "fallback-config/ordinary-prism-preview-gl-only.png",
+      "bytes": 10711,
+      "sha256": "2214affe0bde93124da485e49ee30fa4dfffe80fb777bd9d182630937fca7bc3"
+    },
+    {
+      "path": "fallback-config/ordinary-prism-preview.png",
+      "bytes": 12670,
+      "sha256": "40f11504e41608bc959eba943c32496a122d1cffb6eabc121697fc006bdad9da"
+    },
+    {
+      "path": "fallback-config/ordinary-prism.igz",
+      "bytes": 6238,
+      "sha256": "dd666894b1c4399dc0036e53d75e08bfad94fd4d5ae64e86eda76a7365a87769"
+    },
+    {
+      "path": "fallback-config/original.json",
+      "bytes": 33681,
+      "sha256": "7534dccc796819a0c9d314a686e1c4d10a416016ed711424649d499ae7ec3bb9"
+    },
+    {
+      "path": "fallback-config/original.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "fallback-config/preview-checker.png",
+      "bytes": 117,
+      "sha256": "2601893f2d01a79c99cbb9920536d9c0552ec975f6cc61bdc5b5e34884eb929f"
+    },
+    {
+      "path": "fallback-config/reversed-door-base-gl-only.png",
+      "bytes": 3020,
+      "sha256": "c66767d00a8ac2c37987de5f0b2a3d9fb0e2f54a381505785e2d59f194c1ce3e"
+    },
+    {
+      "path": "fallback-config/reversed-door-base.png",
+      "bytes": 4704,
+      "sha256": "447a70bde7ff09e2a369f956baa0a92964ce00998b2d7931c181640539c626fe"
+    },
+    {
+      "path": "fallback-config/reversed-door-cancel-gl-only.png",
+      "bytes": 3020,
+      "sha256": "c66767d00a8ac2c37987de5f0b2a3d9fb0e2f54a381505785e2d59f194c1ce3e"
+    },
+    {
+      "path": "fallback-config/reversed-door-cancel.png",
+      "bytes": 4704,
+      "sha256": "447a70bde7ff09e2a369f956baa0a92964ce00998b2d7931c181640539c626fe"
+    },
+    {
+      "path": "fallback-config/reversed-door-offset-gl-only.png",
+      "bytes": 3177,
+      "sha256": "79e0671c802aeae44c89f5eb523af019e380c59c0c46e6eed2ab0d47e6fdb239"
+    },
+    {
+      "path": "fallback-config/reversed-door-offset.png",
+      "bytes": 4809,
+      "sha256": "5e73cd74ec0e93906590fbbe4b8ef891765053d803dd6b7afb06260335cbaf6c"
+    },
+    {
+      "path": "fallback-config/reversed-door-preview-gl-only.png",
+      "bytes": 3205,
+      "sha256": "49f9a27e180681a97f5671830747e5b06db52b982c85cb7e06f6de735ec8c9d5"
+    },
+    {
+      "path": "fallback-config/reversed-door-preview.png",
+      "bytes": 4835,
+      "sha256": "b0eef608542f289033c7df396a58485ba3698ec2b6b915d2d47297386f86e027"
+    },
+    {
+      "path": "fallback-config/reversed-door.igz",
+      "bytes": 4446,
+      "sha256": "359115643cdc4481b63607be1cdef5f0b34604c9b32e3c55b10966e551828a86"
+    },
+    {
+      "path": "fallback-config/transport.json",
+      "bytes": 2896,
+      "sha256": "ee6285692086c4894200d69c2a334ea5e8adff0ab6e6a09e084b6cae99e8f5e0"
+    },
+    {
+      "path": "complete-config/back-recess-base-gl-only.png",
+      "bytes": 3022,
+      "sha256": "ae20a12a956cf2971700082ac1252ac90e99e4ad596e574bae4b478c5958a979"
+    },
+    {
+      "path": "complete-config/back-recess-base.png",
+      "bytes": 4208,
+      "sha256": "29b7aa8d5b48ab2e24adcea7e27587c786877555b06959ae9293da2b22942110"
+    },
+    {
+      "path": "complete-config/back-recess-cancel-gl-only.png",
+      "bytes": 3022,
+      "sha256": "ae20a12a956cf2971700082ac1252ac90e99e4ad596e574bae4b478c5958a979"
+    },
+    {
+      "path": "complete-config/back-recess-cancel.png",
+      "bytes": 4208,
+      "sha256": "29b7aa8d5b48ab2e24adcea7e27587c786877555b06959ae9293da2b22942110"
+    },
+    {
+      "path": "complete-config/back-recess-offset-gl-only.png",
+      "bytes": 3163,
+      "sha256": "033db6eb99352ed6f3ca315ad9ad0a0029a35347025689b3660187ed7530616a"
+    },
+    {
+      "path": "complete-config/back-recess-offset.png",
+      "bytes": 4363,
+      "sha256": "3bcf974056c1083c8f698c4e1fff7802c7ca965ed3387af89ddcc46c14ba9f4e"
+    },
+    {
+      "path": "complete-config/back-recess-preview-gl-only.png",
+      "bytes": 3178,
+      "sha256": "d5eb928a83849b869968fa63764c97bada790af51bd81a1f17457238ddd00d13"
+    },
+    {
+      "path": "complete-config/back-recess-preview.png",
+      "bytes": 4377,
+      "sha256": "62cbeb39dc5e4ccd5db46c45f07028883cb2e9d756cd5c94e5247b818e2cc9f5"
+    },
+    {
+      "path": "complete-config/back-recess.igz",
+      "bytes": 3417,
+      "sha256": "79123ea660b6def5750f919a38b2719ea490ca6b389d4ca625fc3318cea6e22e"
+    },
+    {
+      "path": "complete-config/front-recess-base-gl-only.png",
+      "bytes": 3004,
+      "sha256": "69583cc369a40ab472559904549e92df291db691cd4618cde218515ad041d640"
+    },
+    {
+      "path": "complete-config/front-recess-base.png",
+      "bytes": 4194,
+      "sha256": "53efb576117136e23ab4437ef1636602b4c6e2e372ef4ddfb60d9143ddce7e66"
+    },
+    {
+      "path": "complete-config/front-recess-cancel-gl-only.png",
+      "bytes": 3004,
+      "sha256": "69583cc369a40ab472559904549e92df291db691cd4618cde218515ad041d640"
+    },
+    {
+      "path": "complete-config/front-recess-cancel.png",
+      "bytes": 4194,
+      "sha256": "53efb576117136e23ab4437ef1636602b4c6e2e372ef4ddfb60d9143ddce7e66"
+    },
+    {
+      "path": "complete-config/front-recess-offset-gl-only.png",
+      "bytes": 3169,
+      "sha256": "fcbb4acd9311184ac4bf87406eb4d1b4db7bef55653974e23d4f1d50723d493f"
+    },
+    {
+      "path": "complete-config/front-recess-offset.png",
+      "bytes": 4368,
+      "sha256": "1db81053102166ef2ac6371c90d0160da464dbc5116deed269276b7e9daa74fd"
+    },
+    {
+      "path": "complete-config/front-recess-preview-gl-only.png",
+      "bytes": 3184,
+      "sha256": "4a6e79441e894c066058126f18526d527ce3e285f5b30916acd3b043028bd7aa"
+    },
+    {
+      "path": "complete-config/front-recess-preview.png",
+      "bytes": 4376,
+      "sha256": "82d2b06080873778c796fff864879d0506cbe1cc9cbf692e72a21f9cb7948b04"
+    },
+    {
+      "path": "complete-config/front-recess.igz",
+      "bytes": 3417,
+      "sha256": "79123ea660b6def5750f919a38b2719ea490ca6b389d4ca625fc3318cea6e22e"
+    },
+    {
+      "path": "complete-config/front-texture-back-override-base-gl-only.png",
+      "bytes": 10091,
+      "sha256": "2584f445fe05110a07aa3448c41740baaae531e2415d6919855860ea9710d6da"
+    },
+    {
+      "path": "complete-config/front-texture-back-override-base.png",
+      "bytes": 11333,
+      "sha256": "74f8e6a15093cdfe2c749213ee0cbed724d71e1d75c9ed4b175ad19b72cdd146"
+    },
+    {
+      "path": "complete-config/front-texture-back-override-cancel-gl-only.png",
+      "bytes": 10091,
+      "sha256": "2584f445fe05110a07aa3448c41740baaae531e2415d6919855860ea9710d6da"
+    },
+    {
+      "path": "complete-config/front-texture-back-override-cancel.png",
+      "bytes": 11333,
+      "sha256": "74f8e6a15093cdfe2c749213ee0cbed724d71e1d75c9ed4b175ad19b72cdd146"
+    },
+    {
+      "path": "complete-config/front-texture-back-override-offset-gl-only.png",
+      "bytes": 24219,
+      "sha256": "0b129929c538513eabe80df7f5293f274f3b828edc0cb69694ed8e7d9005e38e"
+    },
+    {
+      "path": "complete-config/front-texture-back-override-offset.png",
+      "bytes": 25227,
+      "sha256": "d59f946aba418663057f36622c49aed4594eb9f4a7b016b7d9b6c97e15aa0a77"
+    },
+    {
+      "path": "complete-config/front-texture-back-override-preview-gl-only.png",
+      "bytes": 20064,
+      "sha256": "0b521ad6830981ece916e2df6ce8aef31093e422c45952447e2f433e40b27899"
+    },
+    {
+      "path": "complete-config/front-texture-back-override-preview.png",
+      "bytes": 21211,
+      "sha256": "272549353c7f702813b774344d51e429580bde60b77c8b7d7603e79b4b71aadf"
+    },
+    {
+      "path": "complete-config/front-texture-back-override.igz",
+      "bytes": 932,
+      "sha256": "b47fa0469f027aab5c619996f53c85ca8d822576e10b5806f9ba8ba161aa6cd5"
+    },
+    {
+      "path": "complete-config/gl-only-comparison.json",
+      "bytes": 4087,
+      "sha256": "23f64eed0ac653d2468106e37bbc5ee055feed03f785412ec1bc48bfe23cc085"
+    },
+    {
+      "path": "complete-config/lone-sheet-base-gl-only.png",
+      "bytes": 2942,
+      "sha256": "f56563815ebb5d410532b8adc8736dd86d86c6f0509498890031a216caf072bc"
+    },
+    {
+      "path": "complete-config/lone-sheet-base.png",
+      "bytes": 3803,
+      "sha256": "8c6d2b5ab39fa25e1d64520d8969f8a41ace75bbad627781b409593ca231ec9f"
+    },
+    {
+      "path": "complete-config/lone-sheet-cancel-gl-only.png",
+      "bytes": 2942,
+      "sha256": "f56563815ebb5d410532b8adc8736dd86d86c6f0509498890031a216caf072bc"
+    },
+    {
+      "path": "complete-config/lone-sheet-cancel.png",
+      "bytes": 3803,
+      "sha256": "8c6d2b5ab39fa25e1d64520d8969f8a41ace75bbad627781b409593ca231ec9f"
+    },
+    {
+      "path": "complete-config/lone-sheet-offset-gl-only.png",
+      "bytes": 2993,
+      "sha256": "d2a2a774ed8a0e6c0eb7fbd779689dab240c24dc052a335e8247cd71e4ca0d0e"
+    },
+    {
+      "path": "complete-config/lone-sheet-offset.png",
+      "bytes": 4151,
+      "sha256": "4f6de6a56637db64b6e184cde71b8fa1b330580c2ed28f16fb032c0650eb867f"
+    },
+    {
+      "path": "complete-config/lone-sheet-preview-gl-only.png",
+      "bytes": 2996,
+      "sha256": "96c3519fcfc9ac3374aacb292502fa2accc0c1d00b39c320d50f6f9c6cefa114"
+    },
+    {
+      "path": "complete-config/lone-sheet-preview.png",
+      "bytes": 4173,
+      "sha256": "d12c3a58d380f12a01a3b9326790cb389f299b07e02f5d1c545beb50fbee8bd8"
+    },
+    {
+      "path": "complete-config/lone-sheet.igz",
+      "bytes": 2052,
+      "sha256": "938312ad1393bdfe5a650804e0431b81111b63ae990ae505409345ede781be9c"
+    },
+    {
+      "path": "complete-config/ordinary-prism-base-gl-only.png",
+      "bytes": 10839,
+      "sha256": "0570068a58f6d961fc3552f5941c8ef442f7fbd4a035a65197833942fc5a459d"
+    },
+    {
+      "path": "complete-config/ordinary-prism-base.png",
+      "bytes": 12108,
+      "sha256": "52edf092f28e935ad9c5983bb6fcb1952bbf48e0ec4afd1396aef42d13e9d121"
+    },
+    {
+      "path": "complete-config/ordinary-prism-cancel-gl-only.png",
+      "bytes": 10839,
+      "sha256": "0570068a58f6d961fc3552f5941c8ef442f7fbd4a035a65197833942fc5a459d"
+    },
+    {
+      "path": "complete-config/ordinary-prism-cancel.png",
+      "bytes": 12108,
+      "sha256": "52edf092f28e935ad9c5983bb6fcb1952bbf48e0ec4afd1396aef42d13e9d121"
+    },
+    {
+      "path": "complete-config/ordinary-prism-offset-gl-only.png",
+      "bytes": 10424,
+      "sha256": "afa8700bba3383dd8b64f62c72cb6c247ab7b234470484aa29e9eeb1f00d996c"
+    },
+    {
+      "path": "complete-config/ordinary-prism-offset.png",
+      "bytes": 11736,
+      "sha256": "6f6ba5ad9293586121ea6c3aa617031283e60f7d59fe53b9405e0332bfc6845a"
+    },
+    {
+      "path": "complete-config/ordinary-prism-preview-gl-only.png",
+      "bytes": 10711,
+      "sha256": "2214affe0bde93124da485e49ee30fa4dfffe80fb777bd9d182630937fca7bc3"
+    },
+    {
+      "path": "complete-config/ordinary-prism-preview.png",
+      "bytes": 11970,
+      "sha256": "cd602f1cd8b4a2f4aff671ffc0c067c3651a15f87ca95b5c1404def2509d4c6e"
+    },
+    {
+      "path": "complete-config/ordinary-prism.igz",
+      "bytes": 6238,
+      "sha256": "dd666894b1c4399dc0036e53d75e08bfad94fd4d5ae64e86eda76a7365a87769"
+    },
+    {
+      "path": "complete-config/original.json",
+      "bytes": 33609,
+      "sha256": "0e62bee951c644840ef352d875169d245ecbf8735e920e961f411638b5b0db05"
+    },
+    {
+      "path": "complete-config/original.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "complete-config/preview-checker.png",
+      "bytes": 117,
+      "sha256": "2601893f2d01a79c99cbb9920536d9c0552ec975f6cc61bdc5b5e34884eb929f"
+    },
+    {
+      "path": "complete-config/reversed-door-base-gl-only.png",
+      "bytes": 3020,
+      "sha256": "c66767d00a8ac2c37987de5f0b2a3d9fb0e2f54a381505785e2d59f194c1ce3e"
+    },
+    {
+      "path": "complete-config/reversed-door-base.png",
+      "bytes": 3986,
+      "sha256": "7c83e64f0e8973141d5a64ca948017363e684304d10e08f50c17424e85885400"
+    },
+    {
+      "path": "complete-config/reversed-door-cancel-gl-only.png",
+      "bytes": 3020,
+      "sha256": "c66767d00a8ac2c37987de5f0b2a3d9fb0e2f54a381505785e2d59f194c1ce3e"
+    },
+    {
+      "path": "complete-config/reversed-door-cancel.png",
+      "bytes": 3986,
+      "sha256": "7c83e64f0e8973141d5a64ca948017363e684304d10e08f50c17424e85885400"
+    },
+    {
+      "path": "complete-config/reversed-door-offset-gl-only.png",
+      "bytes": 3177,
+      "sha256": "79e0671c802aeae44c89f5eb523af019e380c59c0c46e6eed2ab0d47e6fdb239"
+    },
+    {
+      "path": "complete-config/reversed-door-offset.png",
+      "bytes": 4361,
+      "sha256": "f23fece3958217e846b110c2cbca75d2a3ac33da4710f5c26312e2e9f7683c7a"
+    },
+    {
+      "path": "complete-config/reversed-door-preview-gl-only.png",
+      "bytes": 3205,
+      "sha256": "49f9a27e180681a97f5671830747e5b06db52b982c85cb7e06f6de735ec8c9d5"
+    },
+    {
+      "path": "complete-config/reversed-door-preview.png",
+      "bytes": 4393,
+      "sha256": "06d24592111a38747f5e85f46a1006db76c2f1f39956422f1fdbfa912af6aa71"
+    },
+    {
+      "path": "complete-config/reversed-door.igz",
+      "bytes": 4446,
+      "sha256": "359115643cdc4481b63607be1cdef5f0b34604c9b32e3c55b10966e551828a86"
+    },
+    {
+      "path": "complete-config/transport.json",
+      "bytes": 3086,
+      "sha256": "a2540b426bbf35316f2f6e959d7edfbbb564e4c9c7fb073e37df89c3cdcb841d"
+    }
+  ]
+}
