@@ -1,0 +1,9 @@
+{
+  "verified_manifest_files": 17,
+  "glyph_union_pixels_different": 0,
+  "source_mask_pixels": 3351,
+  "native_mask_pixels": 3351,
+  "mask_xor": 0,
+  "whole_frame_pixels_different": 1295,
+  "scope": "Actual isolated Chapel iso glyph family only; model baseline and combined annotation geometry remain strict failures. Other cameras/fonts/DPI remain unverified."
+}
