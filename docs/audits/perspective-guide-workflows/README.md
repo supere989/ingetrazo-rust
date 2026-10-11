@@ -15,4 +15,4 @@ EXAMPLES/perspective_guide_workflows SOURCE/source.json OUTPUT/native.json
 python3 scripts/check-perspective-guides.py SOURCE/source.json OUTPUT/native.json OUTPUT/check.json
 ```
 
-This closes the bounded perspective-guide contract pending independent review and combined integration. P07 remains Implemented until the separate keyboard-buffer work and full unchanged criterion review are accepted. No complete Protractor/Tape, whole-frame, OS-pointer or platform acceptance is inferred.
+[Independent read-only review](independent-review.json) accepts the bounded perspective-guide contract; combined integration remains pending. P07 remains Implemented until the separate keyboard-buffer work and full unchanged criterion review are accepted. No complete Protractor/Tape, whole-frame, OS-pointer or platform acceptance is inferred.
