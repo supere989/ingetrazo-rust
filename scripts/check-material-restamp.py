@@ -32,11 +32,12 @@ def validate(source,native,tray,reopened,expected):
   for f in state["loose"]:assert "back" in f and "texture" not in f
  return {"exact_source_states":exact,"explicit_source_integrity_divergences":2,"tray_phases":5,"original_archive_reopens":5}
 def main():
- p=argparse.ArgumentParser();p.add_argument("--archive",type=Path,default=Path("docs/audits/material-edit-restamp/records.zip"));p.add_argument("--native",type=Path);p.add_argument("--tray",type=Path);a=p.parse_args()
+ p=argparse.ArgumentParser();p.add_argument("--archive",type=Path,default=Path("docs/audits/material-edit-restamp/records.zip"));p.add_argument("--native",type=Path);p.add_argument("--tray",type=Path);p.add_argument("--reopened",type=Path);a=p.parse_args()
  with zipfile.ZipFile(a.archive) as z:
   get=lambda n:json.loads(z.read(n));s=get("source.json");n=get("native.json");t=get("tray.json");r=get("reopened.json");expected={"native":copy.deepcopy(n),"tray":copy.deepcopy(t),"reopened":copy.deepcopy(r)}
  if a.native:n=json.loads(a.native.read_text())
  if a.tray:t=json.loads(a.tray.read_text())
+ if a.reopened:r=json.loads(a.reopened.read_text())
  result=validate(s,n,t,r,expected)
  negatives=[]
  for name,mutate in [("empty",lambda x:x["cases"].clear()),("color-drift",lambda x:x["cases"][0]["phases"][1]["active"][0]["color"].__setitem__(0,.61)),("lost-back",lambda x:x["cases"][0]["phases"][1]["active"][0].pop("back")),("lost-opaque",lambda x:x["cases"][0]["phases"][1]["active"][0].pop("vendor")),("retained-old-texture",lambda x:x["cases"][0]["phases"][1]["active"][0].__setitem__("texture",{})),("missing-phase",lambda x:x["cases"][1]["phases"].pop())]:

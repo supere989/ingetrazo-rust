@@ -4,11 +4,12 @@ import json,sys,subprocess,os
 from pathlib import Path
 from importlib.machinery import SourceFileLoader
 os.environ.setdefault("QT_QPA_PLATFORM","offscreen")
-sys.path.insert(0,"/work/ingetrazo")
+SOURCE=Path(__file__).resolve().parents[1]/"ingetrazo"
+sys.path.insert(0,str(SOURCE))
 from core.scene import Scene
 from formats.igz import load_into
 reference=SourceFileLoader("material_reference",str(Path(__file__).with_name("reference-material-restamp.py"))).load_module()
-assert subprocess.check_output(["git","-C","/work/ingetrazo","rev-parse","HEAD"],text=True).strip()==reference.PIN
+assert subprocess.check_output(["git","-C",str(SOURCE),"rev-parse","HEAD"],text=True).strip()==reference.PIN
 out=[]
 for name in ["root","classic","placed","nested","tray"]:
  scene=Scene();path=Path(sys.argv[1])/(name+".igz");load_into(scene,path)

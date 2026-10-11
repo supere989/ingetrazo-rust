@@ -3,7 +3,8 @@
 import os,sys,json,subprocess,copy
 from pathlib import Path
 os.environ.setdefault("QT_QPA_PLATFORM","offscreen")
-sys.path.insert(0,"/work/ingetrazo")
+SOURCE=Path(__file__).resolve().parents[1]/"ingetrazo"
+sys.path.insert(0,str(SOURCE))
 from PySide6.QtGui import QVector3D as V,QMatrix4x4 as M
 from core.scene import Scene
 from core.mesh import Mesh
@@ -20,7 +21,7 @@ def state(s,phase):
  def gs(groups):return [{"name":g.name,"faces":[f.attrs for f in g.mesh.faces],"material":g.material,"children":gs(g.children)} for g in groups]
  return copy.deepcopy({"phase":phase,"registry":{k:v.to_dict() for k,v in s.materials.items()},"active":[f.attrs for f in s.mesh.faces],"loose":[f.attrs for f in s.loose_mesh.faces],"groups":gs(s.groups)})
 def main():
- assert subprocess.check_output(["git","-C","/work/ingetrazo","rev-parse","HEAD"],text=True).strip()==PIN
+ assert subprocess.check_output(["git","-C",str(SOURCE),"rev-parse","HEAD"],text=True).strip()==PIN
  cases=[]
  for case in ["root","classic","placed","nested"]:
   s=Scene();s.mesh=mesh();s.materials["Oak"]=Material("Oak",color=(.1,.2,.3),texture={"path":"old.png","sw":2.,"sh":3.},opacity=.4,finish="wood")
