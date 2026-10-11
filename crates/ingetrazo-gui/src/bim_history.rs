@@ -25,7 +25,7 @@ fn same_ring(a:&[uuid::Uuid],b:&[uuid::Uuid])->bool{
 }
 fn face_index(mesh:&Mesh,vertices:&[uuid::Uuid])->Result<usize,String>{
     let mut found=None;
-    for (i,f)in mesh.faces.iter().enumerate(){let ids=f.vertices.iter().map(|&v|mesh.vertices[v].uid).collect::<Vec<_>>();if same_ring(&ids,vertices){if found.is_some(){return Err("BIM face identity is ambiguous; no tags changed".into());}found=Some(i);}}
+    for (i,f)in mesh.faces.iter().enumerate(){let ids=f.vertices.iter().map(|&v|mesh.vertices.get(v).map(|v|v.uid).ok_or("BIM face references a missing vertex; no tags changed")).collect::<Result<Vec<_>,_>>()?;if same_ring(&ids,vertices){if found.is_some(){return Err("BIM face identity is ambiguous; no tags changed".into());}found=Some(i);}}
     found.ok_or_else(||"BIM face target no longer resolves; no tags changed".into())
 }
 fn missing_face_target(error:&str)->bool{error=="BIM face target no longer resolves; no tags changed"}
@@ -63,7 +63,7 @@ impl IngeTrazoApp{
                 let (context,group,vertices)=match selected{
                     SelectionItem::ContextFace{context,vertices,..}=>(context.clone(),None,vertices.clone()),
                     SelectionItem::ContextGroup{context,group}=>(context.clone(),Some(*group),vec![]),
-                    SelectionItem::Face(face)=>{let face=self.scene.mesh.faces.get(*face).ok_or("BIM face target no longer resolves")?;(self.scene.history_context.clone(),None,face.vertices.iter().map(|&v|self.scene.mesh.vertices[v].uid).collect())},
+                    SelectionItem::Face(face)=>{let face=self.scene.mesh.faces.get(*face).ok_or("BIM face target no longer resolves")?;(self.scene.history_context.clone(),None,face.vertices.iter().map(|&v|self.scene.mesh.vertices.get(v).map(|v|v.uid).ok_or("BIM face references a missing vertex; no tags changed")).collect::<Result<Vec<_>,_>>()?)},
                     SelectionItem::Group(index)=>(self.scene.history_context.clone(),Some(self.scene.groups.get(*index).ok_or("BIM group target no longer resolves")?.id),vec![]),
                     _=>return Err("Select only BIM faces/groups to tag mixed contexts".into()),
                 };
