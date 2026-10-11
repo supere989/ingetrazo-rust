@@ -1,0 +1,26 @@
+{
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "source_script_sha256": "4d847dc896841ce061e04180bb167fcd6a936c737997491f7baf3cc96286eff9",
+  "source_capture_cases": 16,
+  "source_image_bytes_verified": true,
+  "source_retained_warning": "QOpenGLTexturePrivate destruction without current context at original viewport teardown; captures completed first.",
+  "focused_checks": [
+    "world_surface three tests PASS",
+    "inherited opacity/catalog refusal PASS",
+    "aarch64-apple-darwin metal library metadata PASS; not Apple SDK link/MSL execution"
+  ],
+  "initial_development_failures": [
+    "Inherited-opacity test selected prototype by Vec index instead of effective signature; corrected selection.",
+    "Missing DefaultBack enum variant introduced during additional source side rule; compilation caught and corrected.",
+    "Default-back synthetic texture test used generic MeshRenderBuffer::append which does not retain texture classification; changed fixture to direct classified buffer.",
+    "Native fixture decimal literal normalization accidentally rewrote tuple .0 access; rustfmt parser caught and corrected."
+  ],
+  "remaining": [
+    "Native SDK/runtime and actual Metal sampled proof pending",
+    "Mip generation and minification parity open",
+    "Multi-prototype coplanar/transparent source grouping and instancing performance require further controls",
+    "Plan-style mixed alpha policies explicitly route to prior usable renderer; XRay remains open",
+    "Full edges/profiles/sections/shadows/images/annotations/terrain viewport remains open"
+  ],
+  "scope": "Frozen actual original Qt viewport color/alpha/front/back/constant and repeat UV/image average/source reflected placement interiors. No whole-image/mip/presentation parity claim."
+}

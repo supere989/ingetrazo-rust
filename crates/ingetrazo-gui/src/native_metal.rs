@@ -17,6 +17,8 @@ mod lifecycle_probe;
 pub(crate) mod world_viewport;
 mod world_app_probe;
 mod world_classic_probe;
+mod world_material_probe;
+pub fn run_world_material_probe(root:PathBuf)->Result<(),String>{world_material_probe::run(root)}
 pub fn run_world_classic_probe(root:PathBuf)->Result<(),String>{world_classic_probe::run(root)}
 mod world_loose_probe;
 pub fn run_world_loose_probe(root:PathBuf)->Result<(),String>{world_loose_probe::run(root)}
