@@ -1,0 +1,21 @@
+{
+  "passed": true,
+  "workflows": 26,
+  "exact_primitive_operations": 65,
+  "exact_persistent_app_operations": 65,
+  "negative_controls": [
+    "empty",
+    "truncated",
+    "duplicate",
+    "removed_face",
+    "reversed_face",
+    "wrong_paint",
+    "wrong_interior",
+    "coordinate_2^-22",
+    "wrong_undo",
+    "lost_cancel",
+    "collapsed_history",
+    "wrong_workflow"
+  ],
+  "scope": "Finite valid slanted roof, all wedge permutations, side-wall permutations and repeated pushes; exact source geometry/metadata and actual App VCB/Cancel/Undo/Redo. Not full P03 or renderer acceptance."
+}

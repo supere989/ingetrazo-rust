@@ -1,0 +1,28 @@
+{
+  "runtime_commit": "7dcd52a7",
+  "base": "6e3b8c4a",
+  "original_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "records": {
+    "source.json": "d56003f907dd01afaf2d3c4576bb505bce4f81cf71ccc77ad6ed5e2471b89f47",
+    "native-initial.json": "f13b52933a462af01093f4685b44b0249fd0426614b81e4b616d68bd2cdaf684",
+    "native.json": "68a5c845de49773df951e9490ec75317da7ea9150ed32689877234c1dfed3183",
+    "app-native.json": "949268c4af7f89579d04d8f0a4dbf2c219399036f691f1efc55c47aa432907f5",
+    "prior9-native.json": "aa353bf65b238573c878ecb3c5e6e718a470b41bf16b6ec538d47f9eeb5171b4",
+    "build.log": "c282e6d95ae5eb6318ea402ab9203317479b2fc298e1ef617a5d489475971058",
+    "test.log": "e08782c2f7a486a9aa5e291545658ce0212bd22a467d482993f87ff10792c4e3"
+  },
+  "binaries": {
+    "pushpull_gate2_fixture": "e58dec419cb9caafac4eb89e99c01b99fc171ffa2dfab64fd37854b8e65a8a08",
+    "pushpull_finite_workflows": "a55b8296056c8ccbde2a5465aa995ade6028d29f8cb23c6a044ad7799c873c68"
+  },
+  "runtime_commits": [
+    "7dcd52a7",
+    "5e0c62d3"
+  ],
+  "source_files": {
+    "tests/test_pushpull_slanted.py": "94a2329f3bf967ea041c8c7c46f71e0e63c4a42a07986c446297ff5dc1b89e80",
+    "tests/test_pushpull_orient.py": "b6b43bb36388df9367b79b511af86174b87c71da5c9dc33201f296d2516eec66",
+    "core/mesh.py": "5f2c1625e6dd717db029ba39a9de337e75beec06bd0df28a592a8a34875ca22c",
+    "core/history.py": "2eb66a1d557099b51383988a7819145289fc4ce2c37fc7de3a92ed35b5830559"
+  }
+}
