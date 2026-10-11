@@ -1,0 +1,3 @@
+RuntimeError: Host bytecode budget exhausted
+RuntimeError: Host bytecode budget exhausted
+{"identity_refusals":["created-edge-order","created-edge-replacement","created-edge-endpoint"],"real_caught_reentry_controls":2,"redo_preserved":true,"final_charge":0,"production_enabled":false,"source_parity_claim":false}

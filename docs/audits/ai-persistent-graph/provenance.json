@@ -1,0 +1,32 @@
+{
+  "source_commit": "c74bf789c3a90344818ed7c847af0d4b6c66a63f",
+  "original_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "production_enabled": false,
+  "binary_sha256": {
+    "vm_persistent_graph": "fdcde55febe9eeb394cce6be06c81f8f78cdbb9ed89c3d1741829f036326fe82",
+    "vm_graph_eq_outcomes": "1ea5797b5af2e85bc488608b82aacf5c57a30a5641995a155ab79438a4f2d57b",
+    "vm_graph_callbacks": "ad74c616791d6def3c2680ec4180bd6dc91c70021bc610900b27158a42203b3f",
+    "vm_graph_field_order": "5bf6db48e6db520ec0023afa4a2779f869c84258f1d0842b9a1e579801600a25",
+    "vm_graph_safety": "792b32509d7a82f7e1872dcb418008c9cc6a17f93cb9099b476b93880eac92c8",
+    "vm_graph_cycle": "09e581c7db34d52aaae4242b47dd29f138f52939b6278717329ee4042c613e47"
+  },
+  "artifact_sha256": {
+    "original-13.json": "47c5bccc0006f561603581b066f9b3a1fe8fd4b9415432c3572253d9563210f2",
+    "native-13.log": "637f5af2390773446fa0e819b0d6dbac5aa1622651339145266a85bcd0dd10b9",
+    "original-equality-6.json": "1369931993f93fd3aa764b35356c7a6c38323b1218a105bbfd5c65c018c2344b",
+    "native-equality-6.log": "a30a4d9ad2d52170a8aa2f66b10a1c402706c8bc7679edba6f582b9d90cf373d",
+    "original-callbacks.log": "8599909b23d96b7876981f7bf5ef89898078fde1ccdc8e0e0852de14b0f29349",
+    "native-callbacks.log": "8599909b23d96b7876981f7bf5ef89898078fde1ccdc8e0e0852de14b0f29349",
+    "old-callbacks-3.log": "8ac42c0f1e8f82b05a540d27ff4cb8a8546e00697238abc16523c30eec53ed0a",
+    "original-field-order.json": "40cb15ce9f0f1e82f22bea1af3d858588be6f1b2a67cad19ddc837d90f14c65e",
+    "native-field-order.log": "c2d12688fd1c9fcd3cbc377981a0dc416f6236469160fff1e10cb94d625ad6b1",
+    "native-safety.log": "4e19b4fa71b3ad7ec4e31f6fcac3948099b693f98bfc083d2dc3ece951e41540",
+    "native-generated-cycle.log": "921bc3d98414fe215370b3e30beec4d0c5b838b6ade036283ed38e8db531198c",
+    "checker.json": "919ad61fbf68c62d7c67d7004462181ff18f1a46aa645d8e6ec534d0b04c17f6",
+    "safety-checker.json": "96711f0ae0e3d1915539c36c2d3fc55c2e5b9a615077e85a4d28b74020c6825c",
+    "initial-api-build-failure.log": "f98538e141ad1e4631667103536a5ab9673e3b970b8ecc2b8b29df39d0cc40c9",
+    "focused-build.log": "98e139c213ec19312c4602538a13bcfeda25e9de4f03441d16db9b5200c38dc1",
+    "field-observer-build.log": "a43009954bb9c937da39f1b4b2cfd09ab463011ea7b7b4e5cee7d2da397ae458"
+  },
+  "binary_source_note": "All graph behavior compiled in focused-build.log; field observer getter added and compiled separately in field-observer-build.log. Final trailing-whitespace removal has no semantic effect. Generated-cycle binary predates reentry/identity admission guards and only proves the unchanged cycle consumer."
+}

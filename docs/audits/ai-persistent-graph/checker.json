@@ -1,0 +1,88 @@
+{
+  "complete_graph_states": 13,
+  "recursive_mutations_rejected": [
+    "missing-shared-radial",
+    "wrong-incidence",
+    "missing-public-edge",
+    "wrong-wrapper-identity",
+    "wrong-endpoint-restoration",
+    "lost-history",
+    "production-claim",
+    "empty-inventory",
+    "bool-as-number"
+  ],
+  "callback_positive_cases_exact": [
+    "false",
+    "true",
+    "mutating-same",
+    "geometry-short-circuit"
+  ],
+  "hash_callback_control": true,
+  "literal_old_callback_count_rejected": true,
+  "required_open_boundaries": [
+    {
+      "mode": "raise",
+      "source": {
+        "mode": "raise",
+        "result": {
+          "Err": "ValueError: eq-failure"
+        },
+        "state": {
+          "calls": 1,
+          "undo": 2,
+          "redo": 0,
+          "payload_is_old": false,
+          "payload_is_new": true,
+          "hidden": false
+        }
+      },
+      "native": {
+        "mode": "raise",
+        "result": {
+          "Err": "History state equality refused"
+        },
+        "state": {
+          "calls": 1,
+          "undo": 1,
+          "redo": 1,
+          "payload_is_old": true,
+          "payload_is_new": false,
+          "hidden": false
+        }
+      }
+    },
+    {
+      "mode": "mutating-field",
+      "source": {
+        "mode": "mutating-field",
+        "result": {
+          "Ok": true
+        },
+        "state": {
+          "calls": 1,
+          "undo": 2,
+          "redo": 0,
+          "payload_is_old": false,
+          "payload_is_new": true,
+          "hidden": true
+        }
+      },
+      "native": {
+        "mode": "mutating-field",
+        "result": {
+          "Err": "History equality changed geometry after snapshot preparation"
+        },
+        "state": {
+          "calls": 1,
+          "undo": 1,
+          "redo": 1,
+          "payload_is_old": true,
+          "payload_is_new": false,
+          "hidden": false
+        }
+      }
+    }
+  ],
+  "full_callback_parity": false,
+  "production_enabled": false
+}

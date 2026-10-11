@@ -1,0 +1,1415 @@
+   Compiling rustpython-vm v0.6.0 (/tmp/ingetrazo-ai-interpreter/tools/ai-interpreter-proof/vendor/rustpython-vm)
+warning: function `visit_meshes` is never used
+   --> /tmp/ingetrazo-ai-interpreter/crates/ingetrazo-core/src/screen_pick.rs:120:15
+    |
+120 | pub(crate) fn visit_meshes(scene: &Scene, mut visit: impl FnMut(&Mesh, DMat4, bool)) {
+    |               ^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-core` (lib) generated 1 warning
+warning: unused import: `_testinternalcapi::module_def`
+ --> vendor/rustpython-vm/src/stdlib/_testinternalcapi.rs:1:16
+  |
+1 | pub(crate) use _testinternalcapi::module_def;
+  |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused import: `_interpchannels::module_def`
+ --> vendor/rustpython-vm/src/stdlib/_interpchannels.rs:7:16
+  |
+7 | pub(crate) use _interpchannels::module_def;
+  |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `module_def`
+ --> vendor/rustpython-vm/src/stdlib/_interpqueues.rs:6:24
+  |
+6 |     is_external_queue, module_def, queue_from_xid, queue_id_from_object, queue_xid_decref,
+  |                        ^^^^^^^^^^
+
+warning: unused import: `module_def`
+ --> vendor/rustpython-vm/src/stdlib/_interpreters.rs:5:69
+  |
+5 | pub(crate) use _interpreters::{config_from_pyobject, init_xi_types, module_def};
+  |                                                                     ^^^^^^^^^^
+
+warning: method `assign_specific_version` is never used
+   --> vendor/rustpython-vm/src/builtins/type.rs:747:19
+    |
+654 | impl PyType {
+    | ----------- method in this implementation
+...
+747 |     pub(crate) fn assign_specific_version(&self, version: u32) {
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: function `peek_next_keys_version` is never used
+  --> vendor/rustpython-vm/src/dict_inner.rs:62:15
+   |
+62 | pub(crate) fn peek_next_keys_version() -> u32 {
+   |               ^^^^^^^^^^^^^^^^^^^^^^
+
+warning: struct `ArgSpec` is never constructed
+ --> vendor/rustpython-vm/src/function/getargs.rs:9:19
+  |
+9 | pub(crate) struct ArgSpec<'a> {
+  |                   ^^^^^^^
+
+warning: methods `parse` and `parse_with` are never used
+  --> vendor/rustpython-vm/src/function/getargs.rs:23:19
+   |
+22 | impl ArgSpec<'_> {
+   | ---------------- methods in this implementation
+23 |     pub(crate) fn parse(
+   |                   ^^^^^
+...
+33 |     pub(crate) fn parse_with(
+   |                   ^^^^^^^^^^
+
+warning: struct `RustModFromObject` is never constructed
+    --> vendor/rustpython-vm/src/stdlib/_ast.rs:2450:19
+     |
+2450 | pub(crate) struct RustModFromObject {
+     |                   ^^^^^^^^^^^^^^^^^
+
+warning: function `rust_mod_from_object` is never used
+    --> vendor/rustpython-vm/src/stdlib/_ast.rs:2456:15
+     |
+2456 | pub(crate) fn rust_mod_from_object(
+     |               ^^^^^^^^^^^^^^^^^^^^
+
+warning: static `RARE_SET_EVAL_FRAME_FUNC` is never used
+ --> vendor/rustpython-vm/src/stdlib/_testinternalcapi.rs:7:8
+  |
+7 | static RARE_SET_EVAL_FRAME_FUNC: AtomicUsize = AtomicUsize::new(0);
+  |        ^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `clean_doc` is never used
+    --> vendor/rustpython-vm/src/stdlib/_testinternalcapi.rs:1074:4
+     |
+1074 | fn clean_doc(doc: &str) -> String {
+     |    ^^^^^^^^^
+
+warning: function `expandtabs` is never used
+    --> vendor/rustpython-vm/src/stdlib/_testinternalcapi.rs:1100:4
+     |
+1100 | fn expandtabs(input: &str, tab_size: usize) -> String {
+     |    ^^^^^^^^^^
+
+warning: type alias `CodeNamespaces` is never used
+    --> vendor/rustpython-vm/src/stdlib/_testinternalcapi.rs:1128:6
+     |
+1128 | type CodeNamespaces = (PyRef<PyCode>, Option<PyRef<PyDict>>, Option<PyRef<PyDict>>);
+     |      ^^^^^^^^^^^^^^
+
+warning: function `code_or_function` is never used
+    --> vendor/rustpython-vm/src/stdlib/_testinternalcapi.rs:1130:4
+     |
+1130 | fn code_or_function(obj: &PyObject, vm: &VirtualMachine) -> PyResult<CodeNamespaces> {
+     |    ^^^^^^^^^^^^^^^^
+
+warning: function `optional_dict` is never used
+    --> vendor/rustpython-vm/src/stdlib/_testinternalcapi.rs:1145:4
+     |
+1145 | fn optional_dict(
+     |    ^^^^^^^^^^^^^
+
+warning: struct `ArgsCounts` is never constructed
+    --> vendor/rustpython-vm/src/stdlib/_testinternalcapi.rs:1163:8
+     |
+1163 | struct ArgsCounts {
+     |        ^^^^^^^^^^
+
+warning: struct `CellCounts` is never constructed
+    --> vendor/rustpython-vm/src/stdlib/_testinternalcapi.rs:1173:8
+     |
+1173 | struct CellCounts {
+     |        ^^^^^^^^^^
+
+warning: struct `HiddenCounts` is never constructed
+    --> vendor/rustpython-vm/src/stdlib/_testinternalcapi.rs:1180:8
+     |
+1180 | struct HiddenCounts {
+     |        ^^^^^^^^^^^^
+
+warning: struct `LocalsCounts` is never constructed
+    --> vendor/rustpython-vm/src/stdlib/_testinternalcapi.rs:1187:8
+     |
+1187 | struct LocalsCounts {
+     |        ^^^^^^^^^^^^
+
+warning: struct `GlobalCounts` is never constructed
+    --> vendor/rustpython-vm/src/stdlib/_testinternalcapi.rs:1196:8
+     |
+1196 | struct GlobalCounts {
+     |        ^^^^^^^^^^^^
+
+warning: struct `UnboundCounts` is never constructed
+    --> vendor/rustpython-vm/src/stdlib/_testinternalcapi.rs:1204:8
+     |
+1204 | struct UnboundCounts {
+     |        ^^^^^^^^^^^^^
+
+warning: struct `VarCounts` is never constructed
+    --> vendor/rustpython-vm/src/stdlib/_testinternalcapi.rs:1212:8
+     |
+1212 | struct VarCounts {
+     |        ^^^^^^^^^
+
+warning: function `var_counts` is never used
+    --> vendor/rustpython-vm/src/stdlib/_testinternalcapi.rs:1219:4
+     |
+1219 | fn var_counts(code: &Py<PyCode>) -> VarCounts {
+     |    ^^^^^^^^^^
+
+warning: function `set_unbound_var_counts` is never used
+    --> vendor/rustpython-vm/src/stdlib/_testinternalcapi.rs:1278:4
+     |
+1278 | fn set_unbound_var_counts(
+     |    ^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `optional_set` is never used
+    --> vendor/rustpython-vm/src/stdlib/_testinternalcapi.rs:1300:4
+     |
+1300 | fn optional_set(
+     |    ^^^^^^^^^^^^
+
+warning: function `identify_unbound_names` is never used
+    --> vendor/rustpython-vm/src/stdlib/_testinternalcapi.rs:1316:4
+     |
+1316 | fn identify_unbound_names(
+     |    ^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `name_already_seen` is never used
+    --> vendor/rustpython-vm/src/stdlib/_testinternalcapi.rs:1373:4
+     |
+1373 | fn name_already_seen(
+     |    ^^^^^^^^^^^^^^^^^
+
+warning: function `name_key` is never used
+    --> vendor/rustpython-vm/src/stdlib/_testinternalcapi.rs:1388:4
+     |
+1388 | fn name_key(name: &'static PyStrInterned) -> usize {
+     |    ^^^^^^^^
+
+warning: function `check_no_external_state` is never used
+    --> vendor/rustpython-vm/src/stdlib/_testinternalcapi.rs:1392:4
+     |
+1392 | fn check_no_external_state(counts: &VarCounts) -> Option<&'static str> {
+     |    ^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `counts_to_dict` is never used
+    --> vendor/rustpython-vm/src/stdlib/_testinternalcapi.rs:1404:4
+     |
+1404 | fn counts_to_dict(counts: &VarCounts, vm: &VirtualMachine) -> PyResult<PyDictRef> {
+     |    ^^^^^^^^^^^^^^
+
+warning: function `set_count` is never used
+    --> vendor/rustpython-vm/src/stdlib/_testinternalcapi.rs:1463:4
+     |
+1463 | fn set_count(dict: &Py<PyDict>, name: &str, value: i32, vm: &VirtualMachine) -> PyResult<()> {
+     |    ^^^^^^^^^
+
+warning: function `locale_error_handler` is never used
+    --> vendor/rustpython-vm/src/stdlib/_testinternalcapi.rs:1467:4
+     |
+1467 | fn locale_error_handler(errors: Option<PyStrRef>, vm: &VirtualMachine) -> PyResult<PyStrRef> {
+     |    ^^^^^^^^^^^^^^^^^^^^
+
+warning: function `locale_codec` is never used
+    --> vendor/rustpython-vm/src/stdlib/_testinternalcapi.rs:1477:4
+     |
+1477 | fn locale_codec(
+     |    ^^^^^^^^^^^^
+
+warning: function `normpath` is never used
+    --> vendor/rustpython-vm/src/stdlib/_testinternalcapi.rs:1521:4
+     |
+1521 | fn normpath(path: &str) -> String {
+     |    ^^^^^^^^
+
+warning: function `skiproot` is never used
+    --> vendor/rustpython-vm/src/stdlib/_testinternalcapi.rs:1611:4
+     |
+1611 | fn skiproot(path: &[char]) -> (usize, usize) {
+     |    ^^^^^^^^
+
+warning: function `sep_or_end` is never used
+    --> vendor/rustpython-vm/src/stdlib/_testinternalcapi.rs:1624:4
+     |
+1624 | fn sep_or_end(path: &[char], idx: usize, size: usize) -> bool {
+     |    ^^^^^^^^^^
+
+warning: function `filename_to_string` is never used
+    --> vendor/rustpython-vm/src/stdlib/_testinternalcapi.rs:1688:4
+     |
+1688 | fn filename_to_string(filename: &PyObject, vm: &VirtualMachine) -> PyResult<String> {
+     |    ^^^^^^^^^^^^^^^^^^
+
+warning: function `constant_data_to_py` is never used
+    --> vendor/rustpython-vm/src/stdlib/_testinternalcapi.rs:1709:4
+     |
+1709 | fn constant_data_to_py(
+     |    ^^^^^^^^^^^^^^^^^^^
+
+warning: function `py_to_constant_data` is never used
+    --> vendor/rustpython-vm/src/stdlib/_testinternalcapi.rs:1753:4
+     |
+1753 | fn py_to_constant_data(
+     |    ^^^^^^^^^^^^^^^^^^^
+
+warning: function `metadata_to_code_unit` is never used
+    --> vendor/rustpython-vm/src/stdlib/_testinternalcapi.rs:1817:4
+     |
+1817 | fn metadata_to_code_unit(
+     |    ^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `dict_str` is never used
+    --> vendor/rustpython-vm/src/stdlib/_testinternalcapi.rs:1858:4
+     |
+1858 | fn dict_str(metadata: &Py<PyDict>, key: &str, vm: &VirtualMachine) -> PyResult<Option<String>> {
+     |    ^^^^^^^^
+
+warning: function `dict_nonneg_int` is never used
+    --> vendor/rustpython-vm/src/stdlib/_testinternalcapi.rs:1869:4
+     |
+1869 | fn dict_nonneg_int(metadata: &Py<PyDict>, key: &str, vm: &VirtualMachine) -> PyResult<u32> {
+     |    ^^^^^^^^^^^^^^^
+
+warning: function `dict_keys_inorder` is never used
+    --> vendor/rustpython-vm/src/stdlib/_testinternalcapi.rs:1878:4
+     |
+1878 | fn dict_keys_inorder(
+     |    ^^^^^^^^^^^^^^^^^
+
+warning: function `dict_consts` is never used
+    --> vendor/rustpython-vm/src/stdlib/_testinternalcapi.rs:1910:4
+     |
+1910 | fn dict_consts(
+     |    ^^^^^^^^^^^
+
+warning: constant `SPECIALIZATION_THRESHOLD` is never used
+  --> vendor/rustpython-vm/src/stdlib/_testinternalcapi.rs:52:11
+   |
+52 |     const SPECIALIZATION_THRESHOLD: usize = 2;
+   |           ^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: constant `SPECIALIZATION_COOLDOWN` is never used
+  --> vendor/rustpython-vm/src/stdlib/_testinternalcapi.rs:56:11
+   |
+56 |     const SPECIALIZATION_COOLDOWN: usize = 53;
+   |           ^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: constant `SHARED_KEYS_MAX_SIZE` is never used
+  --> vendor/rustpython-vm/src/stdlib/_testinternalcapi.rs:59:11
+   |
+59 |     const SHARED_KEYS_MAX_SIZE: usize = crate::object::SHARED_KEYS_MAX_SIZE;
+   |           ^^^^^^^^^^^^^^^^^^^^
+
+warning: constant `SIZEOF_PYGC_HEAD` is never used
+  --> vendor/rustpython-vm/src/stdlib/_testinternalcapi.rs:63:11
+   |
+63 |     const SIZEOF_PYGC_HEAD: usize = 0;
+   |           ^^^^^^^^^^^^^^^^
+
+warning: constant `SIZEOF_MANAGED_PRE_HEADER` is never used
+  --> vendor/rustpython-vm/src/stdlib/_testinternalcapi.rs:66:11
+   |
+66 |     const SIZEOF_MANAGED_PRE_HEADER: usize = 2 * core::mem::size_of::<*const ()>();
+   |           ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: constant `SIZEOF_PYOBJECT` is never used
+  --> vendor/rustpython-vm/src/stdlib/_testinternalcapi.rs:69:11
+   |
+69 |     const SIZEOF_PYOBJECT: usize = core::mem::size_of::<crate::PyObject>();
+   |           ^^^^^^^^^^^^^^^
+
+warning: constant `SIZEOF_TIME_T` is never used
+  --> vendor/rustpython-vm/src/stdlib/_testinternalcapi.rs:72:11
+   |
+72 |     const SIZEOF_TIME_T: usize = 8;
+   |           ^^^^^^^^^^^^^
+
+warning: constant `TIER2_THRESHOLD` is never used
+  --> vendor/rustpython-vm/src/stdlib/_testinternalcapi.rs:76:11
+   |
+76 |     const TIER2_THRESHOLD: usize = 4096;
+   |           ^^^^^^^^^^^^^^^
+
+warning: function `has_inline_values` is never used
+  --> vendor/rustpython-vm/src/stdlib/_testinternalcapi.rs:79:8
+   |
+79 |     fn has_inline_values(obj: PyObjectRef, _vm: &VirtualMachine) -> bool {
+   |        ^^^^^^^^^^^^^^^^^
+
+warning: function `get_recursion_depth` is never used
+  --> vendor/rustpython-vm/src/stdlib/_testinternalcapi.rs:84:8
+   |
+84 |     fn get_recursion_depth(vm: &VirtualMachine) -> usize {
+   |        ^^^^^^^^^^^^^^^^^^^
+
+warning: function `reset_rare_event_counters` is never used
+  --> vendor/rustpython-vm/src/stdlib/_testinternalcapi.rs:89:8
+   |
+89 |     fn reset_rare_event_counters() {
+   |        ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `get_rare_event_counters` is never used
+  --> vendor/rustpython-vm/src/stdlib/_testinternalcapi.rs:98:8
+   |
+98 |     fn get_rare_event_counters(vm: &VirtualMachine) -> PyResult<PyDictRef> {
+   |        ^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `set_eval_frame_record` is never used
+   --> vendor/rustpython-vm/src/stdlib/_testinternalcapi.rs:139:8
+    |
+139 |     fn set_eval_frame_record(_recorder: PyObjectRef) {
+    |        ^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `set_eval_frame_default` is never used
+   --> vendor/rustpython-vm/src/stdlib/_testinternalcapi.rs:144:8
+    |
+144 |     fn set_eval_frame_default() {}
+    |        ^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `code_returns_only_none` is never used
+   --> vendor/rustpython-vm/src/stdlib/_testinternalcapi.rs:147:8
+    |
+147 |     fn code_returns_only_none(code: PyRef<PyCode>, _vm: &VirtualMachine) -> bool {
+    |        ^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `get_co_localskinds` is never used
+   --> vendor/rustpython-vm/src/stdlib/_testinternalcapi.rs:152:8
+    |
+152 |     fn get_co_localskinds(code: PyRef<PyCode>, vm: &VirtualMachine) -> PyResult<PyDictRef> {
+    |        ^^^^^^^^^^^^^^^^^^
+
+warning: struct `GetCodeVarCountsArgs` is never constructed
+   --> vendor/rustpython-vm/src/stdlib/_testinternalcapi.rs:165:12
+    |
+165 |     struct GetCodeVarCountsArgs {
+    |            ^^^^^^^^^^^^^^^^^^^^
+
+warning: function `get_code_var_counts` is never used
+   --> vendor/rustpython-vm/src/stdlib/_testinternalcapi.rs:178:8
+    |
+178 |     fn get_code_var_counts(args: GetCodeVarCountsArgs, vm: &VirtualMachine) -> PyResult<PyDictRef> {
+    |        ^^^^^^^^^^^^^^^^^^^
+
+warning: struct `VerifyStatelessCodeArgs` is never constructed
+   --> vendor/rustpython-vm/src/stdlib/_testinternalcapi.rs:196:12
+    |
+196 |     struct VerifyStatelessCodeArgs {
+    |            ^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `verify_stateless_code` is never used
+   --> vendor/rustpython-vm/src/stdlib/_testinternalcapi.rs:207:8
+    |
+207 |     fn verify_stateless_code(args: VerifyStatelessCodeArgs, vm: &VirtualMachine) -> PyResult<()> {
+    |        ^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `normalize_path` is never used
+   --> vendor/rustpython-vm/src/stdlib/_testinternalcapi.rs:233:8
+    |
+233 |     fn normalize_path(filename: PyStrRef, _vm: &VirtualMachine) -> String {
+    |        ^^^^^^^^^^^^^^
+
+warning: function `encode_locale_ex` is never used
+   --> vendor/rustpython-vm/src/stdlib/_testinternalcapi.rs:238:8
+    |
+238 |     fn encode_locale_ex(
+    |        ^^^^^^^^^^^^^^^^
+
+warning: function `decode_locale_ex` is never used
+   --> vendor/rustpython-vm/src/stdlib/_testinternalcapi.rs:254:8
+    |
+254 |     fn decode_locale_ex(
+    |        ^^^^^^^^^^^^^^^^
+
+warning: function `run_in_subinterp_with_config` is never used
+   --> vendor/rustpython-vm/src/stdlib/_testinternalcapi.rs:270:8
+    |
+270 |     fn run_in_subinterp_with_config(
+    |        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `compiler_cleandoc` is never used
+   --> vendor/rustpython-vm/src/stdlib/_testinternalcapi.rs:296:8
+    |
+296 |     fn compiler_cleandoc(doc: PyStrRef) -> String {
+    |        ^^^^^^^^^^^^^^^^^
+
+warning: function `dict_getitem_knownhash` is never used
+   --> vendor/rustpython-vm/src/stdlib/_testinternalcapi.rs:301:8
+    |
+301 |     fn dict_getitem_knownhash(
+    |        ^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `pymem_getallocatorsname` is never used
+   --> vendor/rustpython-vm/src/stdlib/_testinternalcapi.rs:315:8
+    |
+315 |     fn pymem_getallocatorsname() -> &'static str {
+    |        ^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `get_c_recursion_remaining` is never used
+   --> vendor/rustpython-vm/src/stdlib/_testinternalcapi.rs:324:8
+    |
+324 |     fn get_c_recursion_remaining(vm: &VirtualMachine) -> usize {
+    |        ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `get_stack_pointer` is never used
+   --> vendor/rustpython-vm/src/stdlib/_testinternalcapi.rs:331:8
+    |
+331 |     fn get_stack_pointer() -> usize {
+    |        ^^^^^^^^^^^^^^^^^
+
+warning: function `get_stack_margin` is never used
+   --> vendor/rustpython-vm/src/stdlib/_testinternalcapi.rs:337:8
+    |
+337 |     fn get_stack_margin() -> usize {
+    |        ^^^^^^^^^^^^^^^^
+
+warning: function `get_next_dict_keys_version` is never used
+   --> vendor/rustpython-vm/src/stdlib/_testinternalcapi.rs:342:8
+    |
+342 |     fn get_next_dict_keys_version() -> u32 {
+    |        ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `type_assign_specific_version_unsafe` is never used
+   --> vendor/rustpython-vm/src/stdlib/_testinternalcapi.rs:348:8
+    |
+348 |     fn type_assign_specific_version_unsafe(ty: PyTypeRef, version: u32) {
+    |        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `get_tracked_heap_size` is never used
+   --> vendor/rustpython-vm/src/stdlib/_testinternalcapi.rs:353:8
+    |
+353 |     fn get_tracked_heap_size(vm: &VirtualMachine) -> usize {
+    |        ^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `get_long_lived_total` is never used
+   --> vendor/rustpython-vm/src/stdlib/_testinternalcapi.rs:358:8
+    |
+358 |     fn get_long_lived_total(vm: &VirtualMachine) -> usize {
+    |        ^^^^^^^^^^^^^^^^^^^^
+
+warning: function `get_co_framesize` is never used
+   --> vendor/rustpython-vm/src/stdlib/_testinternalcapi.rs:363:8
+    |
+363 |     fn get_co_framesize(code: PyRef<PyCode>) -> usize {
+    |        ^^^^^^^^^^^^^^^^
+
+warning: function `iframe_getcode` is never used
+   --> vendor/rustpython-vm/src/stdlib/_testinternalcapi.rs:368:8
+    |
+368 |     fn iframe_getcode(frame: PyRef<FrameObject>) -> PyRef<PyCode> {
+    |        ^^^^^^^^^^^^^^
+
+warning: function `iframe_getline` is never used
+   --> vendor/rustpython-vm/src/stdlib/_testinternalcapi.rs:373:8
+    |
+373 |     fn iframe_getline(frame: PyRef<FrameObject>) -> i32 {
+    |        ^^^^^^^^^^^^^^
+
+warning: function `iframe_getlasti` is never used
+   --> vendor/rustpython-vm/src/stdlib/_testinternalcapi.rs:378:8
+    |
+378 |     fn iframe_getlasti(frame: PyObjectRef, vm: &VirtualMachine) -> PyResult {
+    |        ^^^^^^^^^^^^^^^
+
+warning: function `get_static_builtin_types` is never used
+   --> vendor/rustpython-vm/src/stdlib/_testinternalcapi.rs:383:8
+    |
+383 |     fn get_static_builtin_types(vm: &VirtualMachine) -> Vec<PyObjectRef> {
+    |        ^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `identify_type_slot_wrappers` is never used
+   --> vendor/rustpython-vm/src/stdlib/_testinternalcapi.rs:408:8
+    |
+408 |     fn identify_type_slot_wrappers(vm: &VirtualMachine) -> Vec<PyObjectRef> {
+    |        ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `get_configs` is never used
+   --> vendor/rustpython-vm/src/stdlib/_testinternalcapi.rs:419:8
+    |
+419 |     fn get_configs(vm: &VirtualMachine) -> PyResult<PyDictRef> {
+    |        ^^^^^^^^^^^
+
+warning: function `get_interp_settings` is never used
+   --> vendor/rustpython-vm/src/stdlib/_testinternalcapi.rs:448:8
+    |
+448 |     fn get_interp_settings(id: OptionalArg<i32>, vm: &VirtualMachine) -> PyResult<PyDictRef> {
+    |        ^^^^^^^^^^^^^^^^^^^
+
+warning: function `create_interpreter` is never used
+   --> vendor/rustpython-vm/src/stdlib/_testinternalcapi.rs:465:8
+    |
+465 |     fn create_interpreter(
+    |        ^^^^^^^^^^^^^^^^^^
+
+warning: function `pytime_as_timespec` is never used
+   --> vendor/rustpython-vm/src/stdlib/_testinternalcapi.rs:490:8
+    |
+490 |     fn pytime_as_timespec(ns: i64) -> (i64, i64) {
+    |        ^^^^^^^^^^^^^^^^^^
+
+warning: function `pytime_as_timespec_clamp` is never used
+   --> vendor/rustpython-vm/src/stdlib/_testinternalcapi.rs:497:8
+    |
+497 |     fn pytime_as_timespec_clamp(ns: i64) -> (i64, i64) {
+    |        ^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `pytime_as_timeval_clamp` is never used
+   --> vendor/rustpython-vm/src/stdlib/_testinternalcapi.rs:502:8
+    |
+502 |     fn pytime_as_timeval_clamp(ns: i64, _rnd: OptionalArg<i32>) -> (i64, i64) {
+    |        ^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `test_edit_cost` is never used
+   --> vendor/rustpython-vm/src/stdlib/_testinternalcapi.rs:510:8
+    |
+510 |     fn test_edit_cost() {}
+    |        ^^^^^^^^^^^^^^
+
+warning: function `hamt` is never used
+   --> vendor/rustpython-vm/src/stdlib/_testinternalcapi.rs:513:8
+    |
+513 |     fn hamt(vm: &VirtualMachine) -> PyRef<Hamt> {
+    |        ^^^^
+
+warning: function `new_instruction_sequence` is never used
+   --> vendor/rustpython-vm/src/stdlib/_testinternalcapi.rs:810:8
+    |
+810 |     fn new_instruction_sequence(vm: &VirtualMachine) -> PyRef<PyInstructionSequence> {
+    |        ^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `compiler_codegen` is never used
+   --> vendor/rustpython-vm/src/stdlib/_testinternalcapi.rs:821:8
+    |
+821 |     fn compiler_codegen(
+    |        ^^^^^^^^^^^^^^^^
+
+warning: function `optimize_cfg` is never used
+   --> vendor/rustpython-vm/src/stdlib/_testinternalcapi.rs:875:8
+    |
+875 |     fn optimize_cfg(
+    |        ^^^^^^^^^^^^
+
+warning: function `assemble_code_object` is never used
+   --> vendor/rustpython-vm/src/stdlib/_testinternalcapi.rs:913:8
+    |
+913 |     fn assemble_code_object(
+    |        ^^^^^^^^^^^^^^^^^^^^
+
+warning: associated functions `empty` and `from_rust` are never used
+    --> vendor/rustpython-vm/src/stdlib/_testinternalcapi.rs:1035:12
+     |
+1034 |     impl PyInstructionSequence {
+     |     -------------------------- associated functions in this implementation
+1035 |         fn empty() -> Self {
+     |            ^^^^^
+...
+1044 |         fn from_rust(
+     |            ^^^^^^^^^
+
+warning: variants `Closed`, `ClosedWaiting`, `InterpClosed`, `Empty`, and `NotEmpty` are never constructed
+   --> vendor/rustpython-vm/src/stdlib/_interpchannels.rs:100:9
+    |
+ 98 |     pub(crate) enum ChanErr {
+    |                     ------- variants in this enum
+ 99 |         NotFound,
+100 |         Closed,
+    |         ^^^^^^
+101 |         ClosedWaiting,
+    |         ^^^^^^^^^^^^^
+102 |         InterpClosed,
+    |         ^^^^^^^^^^^^
+103 |         Empty,
+    |         ^^^^^
+104 |         NotEmpty,
+    |         ^^^^^^^^
+    |
+    = note: `ChanErr` has derived impls for the traits `Clone` and `Debug`, but these are intentionally ignored during dead code analysis
+
+warning: associated function `new` is never used
+   --> vendor/rustpython-vm/src/stdlib/_interpchannels.rs:154:12
+    |
+153 |     impl Waiting {
+    |     ------------ associated function in this implementation
+154 |         fn new() -> Arc<Self> {
+    |            ^^^
+
+warning: function `release_waiters` is never used
+   --> vendor/rustpython-vm/src/stdlib/_interpchannels.rs:173:8
+    |
+173 |     fn release_waiters(waiters: Vec<(Arc<Waiting>, bool)>, vm: &VirtualMachine) {
+    |        ^^^^^^^^^^^^^^^
+
+warning: methods `add`, `associate`, `release_interpreter`, and `release_all` are never used
+   --> vendor/rustpython-vm/src/stdlib/_interpchannels.rs:218:12
+    |
+208 |     impl ChannelEnds {
+    |     ---------------- methods in this implementation
+...
+218 |         fn add(&mut self, interpid: i64, send: bool) {
+    |            ^^^
+...
+227 |         fn associate(&mut self, interpid: i64, send: bool) -> ChanResult<()> {
+    |            ^^^^^^^^^
+...
+264 |         fn release_interpreter(&mut self, interpid: i64, which: i32) {
+    |            ^^^^^^^^^^^^^^^^^^^
+...
+281 |         fn release_all(&mut self) {
+    |            ^^^^^^^^^^^
+
+warning: fields `unboundop`, `fallback`, and `closing` are never read
+   --> vendor/rustpython-vm/src/stdlib/_interpchannels.rs:301:9
+    |
+298 |     struct ChannelState {
+    |            ------------ fields in this struct
+...
+301 |         unboundop: UnboundOp,
+    |         ^^^^^^^^^
+302 |         fallback: i32,
+    |         ^^^^^^^^
+...
+305 |         closing: bool,
+    |         ^^^^^^^
+
+warning: field `next_id` is never read
+   --> vendor/rustpython-vm/src/stdlib/_interpchannels.rs:319:9
+    |
+318 |     struct Channels {
+    |            -------- field in this struct
+319 |         next_id: i64,
+    |         ^^^^^^^
+
+warning: function `channels_lookup` is never used
+   --> vendor/rustpython-vm/src/stdlib/_interpchannels.rs:334:8
+    |
+334 |     fn channels_lookup(cid: i64) -> ChanResult<Arc<Channel>> {
+    |        ^^^^^^^^^^^^^^^
+
+warning: function `channel_create` is never used
+   --> vendor/rustpython-vm/src/stdlib/_interpchannels.rs:344:8
+    |
+344 |     fn channel_create(unboundop: UnboundOp, fallback: i32) -> i64 {
+    |        ^^^^^^^^^^^^^^
+
+warning: function `channel_destroy` is never used
+   --> vendor/rustpython-vm/src/stdlib/_interpchannels.rs:368:8
+    |
+368 |     fn channel_destroy(cid: i64) -> ChanResult<Vec<(Arc<Waiting>, bool)>> {
+    |        ^^^^^^^^^^^^^^^
+
+warning: function `finish_closing` is never used
+   --> vendor/rustpython-vm/src/stdlib/_interpchannels.rs:413:8
+    |
+413 |     fn finish_closing(cid: i64) {
+    |        ^^^^^^^^^^^^^^
+
+warning: function `channel_close` is never used
+   --> vendor/rustpython-vm/src/stdlib/_interpchannels.rs:437:8
+    |
+437 |     fn channel_close(cid: i64, end: i32, force: bool) -> ChanResult<Vec<(Arc<Waiting>, bool)>> {
+    |        ^^^^^^^^^^^^^
+
+warning: function `channel_release` is never used
+   --> vendor/rustpython-vm/src/stdlib/_interpchannels.rs:468:8
+    |
+468 |     fn channel_release(cid: i64, interpid: i64, send: bool, recv: bool) -> ChanResult<()> {
+    |        ^^^^^^^^^^^^^^^
+
+warning: function `resolve_unboundop` is never used
+   --> vendor/rustpython-vm/src/stdlib/_interpchannels.rs:517:8
+    |
+517 |     fn resolve_unboundop(arg: i32, default: UnboundOp, vm: &VirtualMachine) -> PyResult<UnboundOp> {
+    |        ^^^^^^^^^^^^^^^^^
+
+warning: function `resolve_fallback` is never used
+   --> vendor/rustpython-vm/src/stdlib/_interpchannels.rs:526:8
+    |
+526 |     fn resolve_fallback(arg: i32, default: i32, vm: &VirtualMachine) -> PyResult<Fallback> {
+    |        ^^^^^^^^^^^^^^^^
+
+warning: function `parse_cid` is never used
+   --> vendor/rustpython-vm/src/stdlib/_interpchannels.rs:533:8
+    |
+533 |     fn parse_cid(obj: &PyObject, vm: &VirtualMachine) -> PyResult<(i64, i32)> {
+    |        ^^^^^^^^^
+
+warning: function `cid_arg` is never used
+   --> vendor/rustpython-vm/src/stdlib/_interpchannels.rs:558:8
+    |
+558 |     fn cid_arg(args: &FuncArgs, func: &'static str, vm: &VirtualMachine) -> PyResult<i64> {
+    |        ^^^^^^^
+
+warning: function `end_args` is never used
+   --> vendor/rustpython-vm/src/stdlib/_interpchannels.rs:571:8
+    |
+571 |     fn end_args(
+    |        ^^^^^^^^
+
+warning: function `flag` is never used
+   --> vendor/rustpython-vm/src/stdlib/_interpchannels.rs:593:8
+    |
+593 |     fn flag(slot: Option<&PyObject>, vm: &VirtualMachine) -> PyResult<bool> {
+    |        ^^^^
+
+warning: function `int_arg` is never used
+   --> vendor/rustpython-vm/src/stdlib/_interpchannels.rs:601:8
+    |
+601 |     fn int_arg(slot: Option<&PyObject>, vm: &VirtualMachine) -> PyResult<Option<i32>> {
+    |        ^^^^^^^
+
+warning: function `channel_id_new` is never used
+   --> vendor/rustpython-vm/src/stdlib/_interpchannels.rs:753:8
+    |
+753 |     fn channel_id_new(args: FuncArgs, vm: &VirtualMachine) -> PyResult {
+    |        ^^^^^^^^^^^^^^
+
+warning: struct `ChannelInfoData` is never constructed
+   --> vendor/rustpython-vm/src/stdlib/_interpchannels.rs:789:12
+    |
+789 |     struct ChannelInfoData {
+    |            ^^^^^^^^^^^^^^^
+
+warning: function `create` is never used
+   --> vendor/rustpython-vm/src/stdlib/_interpchannels.rs:828:8
+    |
+828 |     fn create(args: FuncArgs, vm: &VirtualMachine) -> PyResult {
+    |        ^^^^^^
+
+warning: function `destroy` is never used
+   --> vendor/rustpython-vm/src/stdlib/_interpchannels.rs:845:8
+    |
+845 |     fn destroy(args: FuncArgs, vm: &VirtualMachine) -> PyResult<()> {
+    |        ^^^^^^^
+
+warning: function `list_all` is never used
+   --> vendor/rustpython-vm/src/stdlib/_interpchannels.rs:853:8
+    |
+853 |     fn list_all(vm: &VirtualMachine) -> PyResult {
+    |        ^^^^^^^^
+
+warning: function `list_interpreters` is never used
+   --> vendor/rustpython-vm/src/stdlib/_interpchannels.rs:879:8
+    |
+879 |     fn list_interpreters(args: FuncArgs, vm: &VirtualMachine) -> PyResult {
+    |        ^^^^^^^^^^^^^^^^^
+
+warning: function `send_begin` is never used
+   --> vendor/rustpython-vm/src/stdlib/_interpchannels.rs:918:8
+    |
+918 |     fn send_begin(cid: i64, vm: &VirtualMachine) -> PyResult<Arc<Channel>> {
+    |        ^^^^^^^^^^
+
+warning: function `module_exec` is never used
+   --> vendor/rustpython-vm/src/stdlib/_interpchannels.rs:927:19
+    |
+927 |     pub(crate) fn module_exec(vm: &VirtualMachine, module: &Py<PyModule>) -> PyResult<()> {
+    |                   ^^^^^^^^^^^
+
+warning: function `do_send` is never used
+   --> vendor/rustpython-vm/src/stdlib/_interpchannels.rs:934:8
+    |
+934 |     fn do_send(
+    |        ^^^^^^^
+
+warning: function `send_args` is never used
+    --> vendor/rustpython-vm/src/stdlib/_interpchannels.rs:1011:8
+     |
+1011 |     fn send_args(
+     |        ^^^^^^^^^
+
+warning: function `send` is never used
+    --> vendor/rustpython-vm/src/stdlib/_interpchannels.rs:1061:8
+     |
+1061 |     fn send(args: FuncArgs, vm: &VirtualMachine) -> PyResult<()> {
+     |        ^^^^
+
+warning: function `send_buffer` is never used
+    --> vendor/rustpython-vm/src/stdlib/_interpchannels.rs:1070:8
+     |
+1070 |     fn send_buffer(args: FuncArgs, vm: &VirtualMachine) -> PyResult<()> {
+     |        ^^^^^^^^^^^
+
+warning: function `parse_timeout` is never used
+    --> vendor/rustpython-vm/src/stdlib/_interpchannels.rs:1081:8
+     |
+1081 |     fn parse_timeout(
+     |        ^^^^^^^^^^^^^
+
+warning: function `recv` is never used
+    --> vendor/rustpython-vm/src/stdlib/_interpchannels.rs:1100:8
+     |
+1100 |     fn recv(args: FuncArgs, vm: &VirtualMachine) -> PyResult {
+     |        ^^^^
+
+warning: function `channel_next` is never used
+    --> vendor/rustpython-vm/src/stdlib/_interpchannels.rs:1140:8
+     |
+1140 |     fn channel_next(
+     |        ^^^^^^^^^^^^
+
+warning: function `close` is never used
+    --> vendor/rustpython-vm/src/stdlib/_interpchannels.rs:1165:8
+     |
+1165 |     fn close(args: FuncArgs, vm: &VirtualMachine) -> PyResult<()> {
+     |        ^^^^^
+
+warning: function `release` is never used
+    --> vendor/rustpython-vm/src/stdlib/_interpchannels.rs:1178:8
+     |
+1178 |     fn release(args: FuncArgs, vm: &VirtualMachine) -> PyResult<()> {
+     |        ^^^^^^^
+
+warning: function `get_count` is never used
+    --> vendor/rustpython-vm/src/stdlib/_interpchannels.rs:1191:8
+     |
+1191 |     fn get_count(args: FuncArgs, vm: &VirtualMachine) -> PyResult<usize> {
+     |        ^^^^^^^^^
+
+warning: function `get_info` is never used
+    --> vendor/rustpython-vm/src/stdlib/_interpchannels.rs:1199:8
+     |
+1199 |     fn get_info(args: FuncArgs, vm: &VirtualMachine) -> PyResult<ChannelInfoData> {
+     |        ^^^^^^^^
+
+warning: function `get_channel_defaults` is never used
+    --> vendor/rustpython-vm/src/stdlib/_interpchannels.rs:1285:8
+     |
+1285 |     fn get_channel_defaults(args: FuncArgs, vm: &VirtualMachine) -> PyResult {
+     |        ^^^^^^^^^^^^^^^^^^^^
+
+warning: variant `NoNextId` is never constructed
+  --> vendor/rustpython-vm/src/stdlib/_interpqueues.rs:47:9
+   |
+46 |     enum QueueErr {
+   |          -------- variant in this enum
+47 |         NoNextId,
+   |         ^^^^^^^^
+   |
+   = note: `QueueErr` has derived impls for the traits `Clone` and `Debug`, but these are intentionally ignored during dead code analysis
+
+warning: method `into_py` is never used
+  --> vendor/rustpython-vm/src/stdlib/_interpqueues.rs:53:12
+   |
+52 |     impl QueueErr {
+   |     ------------- method in this implementation
+53 |         fn into_py(self, qid: i64, vm: &VirtualMachine) -> PyBaseExceptionRef {
+   |            ^^^^^^^
+
+warning: function `queue_empty_error` is never used
+  --> vendor/rustpython-vm/src/stdlib/_interpqueues.rs:74:8
+   |
+74 |     fn queue_empty_error(qid: i64, vm: &VirtualMachine) -> PyResult<PyBaseExceptionRef> {
+   |        ^^^^^^^^^^^^^^^^^
+
+warning: function `queue_full_error` is never used
+  --> vendor/rustpython-vm/src/stdlib/_interpqueues.rs:81:8
+   |
+81 |     fn queue_full_error(qid: i64, vm: &VirtualMachine) -> PyResult<PyBaseExceptionRef> {
+   |        ^^^^^^^^^^^^^^^^
+
+warning: fields `empty` and `full` are never read
+  --> vendor/rustpython-vm/src/stdlib/_interpqueues.rs:91:9
+   |
+89 |     struct ExternalTypes {
+   |            ------------- fields in this struct
+90 |         queue: PyTypeRef,
+91 |         empty: PyTypeRef,
+   |         ^^^^^
+92 |         full: PyTypeRef,
+   |         ^^^^
+   |
+   = note: `ExternalTypes` has a derived impl for the trait `Clone`, but this is intentionally ignored during dead code analysis
+
+warning: function `set_external_types` is never used
+   --> vendor/rustpython-vm/src/stdlib/_interpqueues.rs:118:8
+    |
+118 |     fn set_external_types(interpid: i64, types: ExternalTypes) {
+    |        ^^^^^^^^^^^^^^^^^^
+
+warning: fields `maxsize`, `unboundop`, and `fallback` are never read
+   --> vendor/rustpython-vm/src/stdlib/_interpqueues.rs:168:9
+    |
+166 |     struct Queue {
+    |            ----- fields in this struct
+167 |         alive: bool,
+168 |         maxsize: isize,
+    |         ^^^^^^^
+169 |         items: VecDeque<QueueItem>,
+170 |         unboundop: UnboundOp,
+    |         ^^^^^^^^^
+171 |         fallback: Fallback,
+    |         ^^^^^^^^
+
+warning: method `is_full` is never used
+   --> vendor/rustpython-vm/src/stdlib/_interpqueues.rs:175:12
+    |
+174 |     impl Queue {
+    |     ---------- method in this implementation
+175 |         fn is_full(&self) -> bool {
+    |            ^^^^^^^
+
+warning: field `next_id` is never read
+   --> vendor/rustpython-vm/src/stdlib/_interpqueues.rs:187:9
+    |
+185 |     struct Queues {
+    |            ------ field in this struct
+186 |         refs: BTreeMap<i64, QueueRef>,
+187 |         next_id: i64,
+    |         ^^^^^^^
+
+warning: function `queue_lookup` is never used
+   --> vendor/rustpython-vm/src/stdlib/_interpqueues.rs:200:8
+    |
+200 |     fn queue_lookup(qid: i64) -> QueueResult<Arc<Mutex<Queue>>> {
+    |        ^^^^^^^^^^^^
+
+warning: function `queue_create` is never used
+   --> vendor/rustpython-vm/src/stdlib/_interpqueues.rs:209:8
+    |
+209 |     fn queue_create(maxsize: isize, unboundop: UnboundOp, fallback: Fallback) -> QueueResult<i64> {
+    |        ^^^^^^^^^^^^
+
+warning: function `queue_destroy` is never used
+   --> vendor/rustpython-vm/src/stdlib/_interpqueues.rs:236:8
+    |
+236 |     fn queue_destroy(qid: i64) -> QueueResult<()> {
+    |        ^^^^^^^^^^^^^
+
+warning: function `queue_defaults` is never used
+   --> vendor/rustpython-vm/src/stdlib/_interpqueues.rs:247:8
+    |
+247 |     fn queue_defaults(qid: i64) -> QueueResult<(UnboundOp, Fallback)> {
+    |        ^^^^^^^^^^^^^^
+
+warning: function `resolve_unboundop` is never used
+   --> vendor/rustpython-vm/src/stdlib/_interpqueues.rs:284:8
+    |
+284 |     fn resolve_unboundop(arg: i32, default: UnboundOp, vm: &VirtualMachine) -> PyResult<UnboundOp> {
+    |        ^^^^^^^^^^^^^^^^^
+
+warning: function `resolve_fallback` is never used
+   --> vendor/rustpython-vm/src/stdlib/_interpqueues.rs:292:8
+    |
+292 |     fn resolve_fallback(arg: i32, default: i32, vm: &VirtualMachine) -> PyResult<Fallback> {
+    |        ^^^^^^^^^^^^^^^^
+
+warning: function `int_arg` is never used
+   --> vendor/rustpython-vm/src/stdlib/_interpqueues.rs:298:8
+    |
+298 |     fn int_arg(obj: &PyObject, vm: &VirtualMachine) -> PyResult<i32> {
+    |        ^^^^^^^
+
+warning: function `ssize_arg` is never used
+   --> vendor/rustpython-vm/src/stdlib/_interpqueues.rs:313:8
+    |
+313 |     fn ssize_arg(obj: &PyObject, vm: &VirtualMachine) -> PyResult<isize> {
+    |        ^^^^^^^^^
+
+warning: function `qid_arg` is never used
+   --> vendor/rustpython-vm/src/stdlib/_interpqueues.rs:342:8
+    |
+342 |     fn qid_arg(args: &FuncArgs, func: &'static str, vm: &VirtualMachine) -> PyResult<i64> {
+    |        ^^^^^^^
+
+warning: function `module_exec` is never used
+   --> vendor/rustpython-vm/src/stdlib/_interpqueues.rs:362:19
+    |
+362 |     pub(crate) fn module_exec(vm: &VirtualMachine, module: &Py<PyModule>) -> PyResult<()> {
+    |                   ^^^^^^^^^^^
+
+warning: function `create` is never used
+   --> vendor/rustpython-vm/src/stdlib/_interpqueues.rs:369:8
+    |
+369 |     fn create(args: FuncArgs, vm: &VirtualMachine) -> PyResult<i64> {
+    |        ^^^^^^
+
+warning: function `destroy` is never used
+   --> vendor/rustpython-vm/src/stdlib/_interpqueues.rs:399:8
+    |
+399 |     fn destroy(args: FuncArgs, vm: &VirtualMachine) -> PyResult<()> {
+    |        ^^^^^^^
+
+warning: function `list_all` is never used
+   --> vendor/rustpython-vm/src/stdlib/_interpqueues.rs:405:8
+    |
+405 |     fn list_all(vm: &VirtualMachine) -> crate::builtins::PyListRef {
+    |        ^^^^^^^^
+
+warning: function `put` is never used
+   --> vendor/rustpython-vm/src/stdlib/_interpqueues.rs:432:8
+    |
+432 |     fn put(args: FuncArgs, vm: &VirtualMachine) -> PyResult<()> {
+    |        ^^^
+
+warning: function `get` is never used
+   --> vendor/rustpython-vm/src/stdlib/_interpqueues.rs:487:8
+    |
+487 |     fn get(args: FuncArgs, vm: &VirtualMachine) -> PyResult {
+    |        ^^^
+
+warning: function `bind` is never used
+   --> vendor/rustpython-vm/src/stdlib/_interpqueues.rs:514:8
+    |
+514 |     fn bind(args: FuncArgs, vm: &VirtualMachine) -> PyResult<()> {
+    |        ^^^^
+
+warning: function `release` is never used
+   --> vendor/rustpython-vm/src/stdlib/_interpqueues.rs:520:8
+    |
+520 |     fn release(args: FuncArgs, vm: &VirtualMachine) -> PyResult<()> {
+    |        ^^^^^^^
+
+warning: function `get_maxsize` is never used
+   --> vendor/rustpython-vm/src/stdlib/_interpqueues.rs:526:8
+    |
+526 |     fn get_maxsize(args: FuncArgs, vm: &VirtualMachine) -> PyResult<isize> {
+    |        ^^^^^^^^^^^
+
+warning: function `get_queue_defaults` is never used
+   --> vendor/rustpython-vm/src/stdlib/_interpqueues.rs:537:8
+    |
+537 |     fn get_queue_defaults(args: FuncArgs, vm: &VirtualMachine) -> PyResult {
+    |        ^^^^^^^^^^^^^^^^^^
+
+warning: function `is_full` is never used
+   --> vendor/rustpython-vm/src/stdlib/_interpqueues.rs:550:8
+    |
+550 |     fn is_full(args: FuncArgs, vm: &VirtualMachine) -> PyResult<bool> {
+    |        ^^^^^^^
+
+warning: function `get_count` is never used
+   --> vendor/rustpython-vm/src/stdlib/_interpqueues.rs:561:8
+    |
+561 |     fn get_count(args: FuncArgs, vm: &VirtualMachine) -> PyResult<usize> {
+    |        ^^^^^^^^^
+
+warning: constant `WHENCE_UNKNOWN` is never used
+  --> vendor/rustpython-vm/src/stdlib/_interpreters.rs:30:22
+   |
+30 |     pub(crate) const WHENCE_UNKNOWN: i32 = InterpreterWhence::Unknown as i32;
+   |                      ^^^^^^^^^^^^^^
+
+warning: constant `WHENCE_RUNTIME` is never used
+  --> vendor/rustpython-vm/src/stdlib/_interpreters.rs:32:22
+   |
+32 |     pub(crate) const WHENCE_RUNTIME: i32 = InterpreterWhence::Runtime as i32;
+   |                      ^^^^^^^^^^^^^^
+
+warning: constant `WHENCE_LEGACY_CAPI` is never used
+  --> vendor/rustpython-vm/src/stdlib/_interpreters.rs:34:22
+   |
+34 |     pub(crate) const WHENCE_LEGACY_CAPI: i32 = InterpreterWhence::LegacyCapi as i32;
+   |                      ^^^^^^^^^^^^^^^^^^
+
+warning: constant `WHENCE_CAPI` is never used
+  --> vendor/rustpython-vm/src/stdlib/_interpreters.rs:36:22
+   |
+36 |     pub(crate) const WHENCE_CAPI: i32 = InterpreterWhence::Capi as i32;
+   |                      ^^^^^^^^^^^
+
+warning: constant `WHENCE_XI` is never used
+  --> vendor/rustpython-vm/src/stdlib/_interpreters.rs:38:22
+   |
+38 |     pub(crate) const WHENCE_XI: i32 = InterpreterWhence::Xi as i32;
+   |                      ^^^^^^^^^
+
+warning: constant `WHENCE_STDLIB` is never used
+  --> vendor/rustpython-vm/src/stdlib/_interpreters.rs:40:22
+   |
+40 |     pub(crate) const WHENCE_STDLIB: i32 = InterpreterWhence::Stdlib as i32;
+   |                      ^^^^^^^^^^^^^
+
+warning: function `init_xi_types` is never used
+   --> vendor/rustpython-vm/src/stdlib/_interpreters.rs:107:19
+    |
+107 |     pub(crate) fn init_xi_types(vm: &VirtualMachine) {
+    |                   ^^^^^^^^^^^^^
+
+warning: function `module_exec` is never used
+   --> vendor/rustpython-vm/src/stdlib/_interpreters.rs:119:19
+    |
+119 |     pub(crate) fn module_exec(vm: &VirtualMachine, module: &Py<PyModule>) -> PyResult<()> {
+    |                   ^^^^^^^^^^^
+
+warning: function `interpreter_error` is never used
+   --> vendor/rustpython-vm/src/stdlib/_interpreters.rs:127:19
+    |
+127 |     pub(crate) fn interpreter_error(
+    |                   ^^^^^^^^^^^^^^^^^
+
+warning: function `interpreter_not_found` is never used
+   --> vendor/rustpython-vm/src/stdlib/_interpreters.rs:137:19
+    |
+137 |     pub(crate) fn interpreter_not_found(vm: &VirtualMachine, id: i64) -> PyBaseExceptionRef {
+    |                   ^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `bad_argument` is never used
+   --> vendor/rustpython-vm/src/stdlib/_interpreters.rs:155:8
+    |
+155 |     fn bad_argument(
+    |        ^^^^^^^^^^^^
+
+warning: function `parse_id` is never used
+   --> vendor/rustpython-vm/src/stdlib/_interpreters.rs:173:8
+    |
+173 |     fn parse_id(obj: &PyObject, vm: &VirtualMachine) -> PyResult<i64> {
+    |        ^^^^^^^^
+
+warning: function `resolve_interp` is never used
+   --> vendor/rustpython-vm/src/stdlib/_interpreters.rs:195:8
+    |
+195 |     fn resolve_interp(
+    |        ^^^^^^^^^^^^^^
+
+warning: function `require_dict` is never used
+   --> vendor/rustpython-vm/src/stdlib/_interpreters.rs:225:8
+    |
+225 |     fn require_dict<'a>(
+    |        ^^^^^^^^^^^^
+
+warning: function `flag` is never used
+   --> vendor/rustpython-vm/src/stdlib/_interpreters.rs:236:8
+    |
+236 |     fn flag(slot: Option<&PyObject>, vm: &VirtualMachine) -> PyResult<bool> {
+    |        ^^^^
+
+warning: function `check_dict` is never used
+   --> vendor/rustpython-vm/src/stdlib/_interpreters.rs:244:8
+    |
+244 |     fn check_dict(obj: &PyObject, func: &str, pos: &str, vm: &VirtualMachine) -> PyResult<()> {
+    |        ^^^^^^^^^^
+
+warning: function `config_bool` is never used
+   --> vendor/rustpython-vm/src/stdlib/_interpreters.rs:249:8
+    |
+249 |     fn config_bool(value: &PyObject, name: &str, vm: &VirtualMachine) -> PyResult<bool> {
+    |        ^^^^^^^^^^^
+
+warning: function `config_gil` is never used
+   --> vendor/rustpython-vm/src/stdlib/_interpreters.rs:259:8
+    |
+259 |     fn config_gil(value: &PyObject, vm: &VirtualMachine) -> PyResult<InterpreterGil> {
+    |        ^^^^^^^^^^
+
+warning: function `config_from_dict` is never used
+   --> vendor/rustpython-vm/src/stdlib/_interpreters.rs:270:8
+    |
+270 |     fn config_from_dict(
+    |        ^^^^^^^^^^^^^^^^
+
+warning: function `named_config` is never used
+   --> vendor/rustpython-vm/src/stdlib/_interpreters.rs:339:8
+    |
+339 |     fn named_config(name: Option<&str>, vm: &VirtualMachine) -> PyResult<InterpreterConfig> {
+    |        ^^^^^^^^^^^^
+
+warning: function `config_from_pyobject` is never used
+   --> vendor/rustpython-vm/src/stdlib/_interpreters.rs:346:19
+    |
+346 |     pub(crate) fn config_from_pyobject(
+    |                   ^^^^^^^^^^^^^^^^^^^^
+
+warning: function `parse_config` is never used
+   --> vendor/rustpython-vm/src/stdlib/_interpreters.rs:354:8
+    |
+354 |     fn parse_config(obj: Option<&PyObject>, vm: &VirtualMachine) -> PyResult<InterpreterConfig> {
+    |        ^^^^^^^^^^^^
+
+warning: function `config_namespace` is never used
+   --> vendor/rustpython-vm/src/stdlib/_interpreters.rs:376:8
+    |
+376 |     fn config_namespace(cfg: InterpreterConfig, vm: &VirtualMachine) -> PyObjectRef {
+    |        ^^^^^^^^^^^^^^^^
+
+warning: function `summary` is never used
+   --> vendor/rustpython-vm/src/stdlib/_interpreters.rs:389:8
+    |
+389 |     fn summary(id: i64, whence: InterpreterWhence, vm: &VirtualMachine) -> PyObjectRef {
+    |        ^^^^^^^
+
+warning: function `new_config` is never used
+   --> vendor/rustpython-vm/src/stdlib/_interpreters.rs:399:8
+    |
+399 |     fn new_config(args: FuncArgs, vm: &VirtualMachine) -> PyResult {
+    |        ^^^^^^^^^^
+
+warning: function `create` is never used
+   --> vendor/rustpython-vm/src/stdlib/_interpreters.rs:429:8
+    |
+429 |     fn create(args: FuncArgs, vm: &VirtualMachine) -> PyResult {
+    |        ^^^^^^
+
+warning: function `new_interpreter` is never used
+   --> vendor/rustpython-vm/src/stdlib/_interpreters.rs:464:8
+    |
+464 |     fn new_interpreter(
+    |        ^^^^^^^^^^^^^^^
+
+warning: function `destroy` is never used
+   --> vendor/rustpython-vm/src/stdlib/_interpreters.rs:473:8
+    |
+473 |     fn destroy(args: FuncArgs, vm: &VirtualMachine) -> PyResult<()> {
+    |        ^^^^^^^
+
+warning: function `list_all` is never used
+   --> vendor/rustpython-vm/src/stdlib/_interpreters.rs:505:8
+    |
+505 |     fn list_all(args: FuncArgs, vm: &VirtualMachine) -> PyResult {
+    |        ^^^^^^^^
+
+warning: function `get_current` is never used
+   --> vendor/rustpython-vm/src/stdlib/_interpreters.rs:528:8
+    |
+528 |     fn get_current(vm: &VirtualMachine) -> PyObjectRef {
+    |        ^^^^^^^^^^^
+
+warning: function `get_main` is never used
+   --> vendor/rustpython-vm/src/stdlib/_interpreters.rs:533:8
+    |
+533 |     fn get_main(vm: &VirtualMachine) -> PyObjectRef {
+    |        ^^^^^^^^
+
+warning: function `is_running` is never used
+   --> vendor/rustpython-vm/src/stdlib/_interpreters.rs:539:8
+    |
+539 |     fn is_running(args: FuncArgs, vm: &VirtualMachine) -> PyResult {
+    |        ^^^^^^^^^^
+
+warning: function `whence` is never used
+   --> vendor/rustpython-vm/src/stdlib/_interpreters.rs:554:8
+    |
+554 |     fn whence(args: FuncArgs, vm: &VirtualMachine) -> PyResult {
+    |        ^^^^^^
+
+warning: function `get_config` is never used
+   --> vendor/rustpython-vm/src/stdlib/_interpreters.rs:568:8
+    |
+568 |     fn get_config(args: FuncArgs, vm: &VirtualMachine) -> PyResult {
+    |        ^^^^^^^^^^
+
+warning: function `is_shareable` is never used
+   --> vendor/rustpython-vm/src/stdlib/_interpreters.rs:589:8
+    |
+589 |     fn is_shareable(args: FuncArgs, vm: &VirtualMachine) -> PyResult<bool> {
+    |        ^^^^^^^^^^^^
+
+warning: function `run_code_in` is never used
+   --> vendor/rustpython-vm/src/stdlib/_interpreters.rs:646:8
+    |
+646 |     fn run_code_in(
+    |        ^^^^^^^^^^^
+
+warning: function `script_args` is never used
+   --> vendor/rustpython-vm/src/stdlib/_interpreters.rs:657:8
+    |
+657 |     fn script_args(
+    |        ^^^^^^^^^^^
+
+warning: function `exec` is never used
+   --> vendor/rustpython-vm/src/stdlib/_interpreters.rs:688:8
+    |
+688 |     fn exec(args: FuncArgs, vm: &VirtualMachine) -> PyResult {
+    |        ^^^^
+
+warning: function `run_string` is never used
+   --> vendor/rustpython-vm/src/stdlib/_interpreters.rs:698:8
+    |
+698 |     fn run_string(args: FuncArgs, vm: &VirtualMachine) -> PyResult {
+    |        ^^^^^^^^^^
+
+warning: function `run_func` is never used
+   --> vendor/rustpython-vm/src/stdlib/_interpreters.rs:718:8
+    |
+718 |     fn run_func(args: FuncArgs, vm: &VirtualMachine) -> PyResult {
+    |        ^^^^^^^^
+
+warning: function `call` is never used
+   --> vendor/rustpython-vm/src/stdlib/_interpreters.rs:743:8
+    |
+743 |     fn call(args: FuncArgs, vm: &VirtualMachine) -> PyResult {
+    |        ^^^^
+
+warning: function `call_in` is never used
+   --> vendor/rustpython-vm/src/stdlib/_interpreters.rs:891:8
+    |
+891 |     fn call_in(
+    |        ^^^^^^^
+
+warning: function `set_main_attrs` is never used
+   --> vendor/rustpython-vm/src/stdlib/_interpreters.rs:902:8
+    |
+902 |     fn set_main_attrs(args: FuncArgs, vm: &VirtualMachine) -> PyResult<()> {
+    |        ^^^^^^^^^^^^^^
+
+warning: function `bind_main_attrs` is never used
+   --> vendor/rustpython-vm/src/stdlib/_interpreters.rs:954:8
+    |
+954 |     fn bind_main_attrs(
+    |        ^^^^^^^^^^^^^^^
+
+warning: function `incref` is never used
+   --> vendor/rustpython-vm/src/stdlib/_interpreters.rs:963:8
+    |
+963 |     fn incref(args: FuncArgs, vm: &VirtualMachine) -> PyResult<()> {
+    |        ^^^^^^
+
+warning: function `decref` is never used
+   --> vendor/rustpython-vm/src/stdlib/_interpreters.rs:985:8
+    |
+985 |     fn decref(args: FuncArgs, vm: &VirtualMachine) -> PyResult<()> {
+    |        ^^^^^^
+
+warning: function `capture_exception` is never used
+    --> vendor/rustpython-vm/src/stdlib/_interpreters.rs:1010:8
+     |
+1010 |     fn capture_exception(args: FuncArgs, vm: &VirtualMachine) -> PyResult {
+     |        ^^^^^^^^^^^^^^^^^
+
+warning: function `register_memoryview_xid` is never used
+  --> vendor/rustpython-vm/src/vm/crossinterp.rs:30:15
+   |
+30 | pub(crate) fn register_memoryview_xid() {
+   |               ^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: `rustpython-vm` (lib) generated 215 warnings (run `cargo fix --lib -p rustpython-vm` to apply 4 suggestions)
+   Compiling ingetrazo-ai-interpreter-proof v0.1.0 (/tmp/ingetrazo-ai-interpreter/tools/ai-interpreter-proof)
+warning: unused import: `PyPayload`
+ --> src/bin/../vm_graph.rs:7:28
+  |
+7 |     AsObject, PyObjectRef, PyPayload, PyRef, PyResult, VirtualMachine,
+  |                            ^^^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+error[E0599]: no method named `get_attribute` found for reference `&VirtualMachine` in the current scope
+   --> src/bin/../vm_mesh.rs:808:48
+    |
+808 | ...                   let constructor=vm.get_attribute(zelf.as_object(), "__class__")?;
+    |                                          ^^^^^^^^^^^^^
+    |
+help: there is a method `get_attribute_opt` with a similar name
+    |
+808 |                             let constructor=vm.get_attribute_opt(zelf.as_object(), "__class__")?;
+    |                                                             ++++
+
+warning: unused variable: `edge_total`
+   --> src/bin/../owner.rs:469:13
+    |
+469 |         let edge_total = base_edges
+    |             ^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_edge_total`
+    |
+    = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+For more information about this error, try `rustc --explain E0599`.
+warning: `ingetrazo-ai-interpreter-proof` (bin "vm_graph_field_order") generated 2 warnings (1 duplicate)
+error: could not compile `ingetrazo-ai-interpreter-proof` (bin "vm_graph_field_order") due to 1 previous error; 2 warnings emitted
+warning: build failed, waiting for other jobs to finish...
+warning: `ingetrazo-ai-interpreter-proof` (bin "vm_persistent_graph") generated 2 warnings (1 duplicate)
+error: could not compile `ingetrazo-ai-interpreter-proof` (bin "vm_persistent_graph") due to 1 previous error; 2 warnings emitted

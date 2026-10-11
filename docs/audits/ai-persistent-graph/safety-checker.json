@@ -1,0 +1,1 @@
+{"ordered_source_callbacks_exact": 8, "defensive_identity_controls": 3, "caught_poison_reentry_controls": 2, "negative_controls_rejected": ["field-order", "missing-reentry", "lost-redo", "retained-charge", "false-completion"], "production_enabled": false}
