@@ -532,6 +532,9 @@ fn units_acceptance() {
 fn import_preferences_acceptance() {
     let root = std::path::PathBuf::from(std::env::args().nth(1).unwrap());
     let store = root.join("native-import-settings");
+    if store.exists() {
+        std::fs::remove_dir_all(&store).unwrap();
+    }
     let mut a = IngeTrazoApp::new();
     a.attach_session_store(ingetrazo_gui::session_state::SessionStore::isolated(&store));
     let mut prefs = Vec::new();
