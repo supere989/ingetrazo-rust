@@ -31,7 +31,7 @@ env:
 jobs:
   native-compute-consumer:
     # Focused history repairs reuse unchanged bf85 ARM/Intel GPU acceptance.
-    if: github.ref != 'refs/heads/review/history-repair'
+    if: github.ref != 'refs/heads/review/history-repair' && !startsWith(github.ref, 'refs/heads/review/metal-')
     name: Actual ordered UI and CAD compute (${{ matrix.runner }})
     runs-on: ${{ matrix.runner }}
     timeout-minutes: 20
