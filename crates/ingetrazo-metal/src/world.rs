@@ -156,7 +156,10 @@ pub struct Stats {
 }
 #[derive(Default)]
 pub struct World {
-    resolve_prototype:Option<Arc<super::world_resolve::Pipeline>>,    samples: usize,
+    resolve_prototype:Option<Arc<super::world_resolve::Pipeline>>,
+    source_tile:Option<Arc<super::world_resolve::Pipeline>>,
+    diagnostic_native_resolve:bool,
+    samples: usize,
     diagnostic_samples: bool,
     pub(crate) ghosts: Option<Arc<super::world_ghost::Ghosts>>,
     owner: Option<Arc<Owner>>,
@@ -206,6 +209,14 @@ struct PaintUniform {
 }
 #[repr(C)]struct TexturePaint{opacity:f32,shade:f32,hard_cutout:u32,height:u32,mean:[f32;4]}
 impl World {
+    /// Cold diagnostic reference only: preserve the untouched native resolve.
+    pub fn use_native_resolve_reference(&mut self)->Result<(),String>{
+        if !self.targets.is_empty()||self.source_tile.is_some()||self.resolve_prototype.is_some(){return Err("Native resolve reference requires an unconfigured cold World".into());}
+        self.diagnostic_native_resolve=true;Ok(())
+    }
+    fn active_resolve(&self)->Option<Arc<super::world_resolve::Pipeline>>{
+        self.resolve_prototype.clone().or_else(||(self.samples.max(1)==4).then(||self.source_tile.clone()).flatten())
+    }
     /// Cold diagnostic configuration only. Does not alter the production default.
     pub fn enable_source_resolve_prototype(&mut self,metal:&NativeMetal)->Result<(),String>{
         if !self.targets.is_empty(){return Err("Source resolve prototype requires no existing targets".into());}
@@ -257,6 +268,13 @@ impl World {
         if self.resolve_prototype.is_some()&&samples!=4{return Err("Source resolve prototype is four-sample only".into());}
         if self.samples.max(1)==samples{return Ok(());}
         if !matches!(samples,1|4)||!metal.device.supportsTextureSampleCount(samples){return Err("Metal world sample count unsupported".into());}
+        // Compile once, before publishing the new sample policy. Intel compute
+        // remains diagnostic-only; source ordering requires programmable slots.
+        let tile=if samples==4 && !self.diagnostic_native_resolve && self.source_tile.is_none()
+            && metal.programmable_sample_positions && metal.device.supportsFamily(MTLGPUFamily::Apple4){
+            Some(super::world_resolve::Pipeline::new(metal)?)
+        }else{None};
+        if let Some(tile)=tile{self.owner=Some(tile.owner.clone());self.source_tile=Some(tile);self.stats.source_resolve_pipeline_builds+=1;}
         if self.samples.max(1)!=samples{self.samples=samples;self.pipeline=None;self.section_pipeline=None;}
         Ok(())
     }
@@ -394,11 +412,11 @@ impl World {
         self.stats.prepared += 1;
         Ok(Some(Arc::new(Prepared {
             diagnostic_samples:self.diagnostic_samples,
-            resolve_prototype:self.resolve_prototype.clone(),
+            resolve_prototype:self.active_resolve(),
             section: Section::OFF,
             contour:None,contour_eye_width:[0.;4],
             fill:None,
-            source_sample_positions:None,
+            source_sample_positions:super::annotation::source_raster_sample_positions(metal,self.samples.max(1)),
             billboards:None,
             placements: None,
             ghosts: None, ghost_edge: [0.;4], lines:[None,None],profiles:None,background:None,overlay:None,
@@ -769,11 +787,11 @@ impl World {
         if fill.is_some(){self.section_pipeline=Some(pipeline.clone());}else{self.pipeline=Some(pipeline.clone());}
         Ok(Some(Arc::new(Prepared {
             diagnostic_samples:self.diagnostic_samples,
-            resolve_prototype:self.resolve_prototype.clone(),
+            resolve_prototype:self.active_resolve(),
             section: Section::OFF,
             contour:None,contour_eye_width:[0.;4],
             fill,
-            source_sample_positions:None,
+            source_sample_positions:super::annotation::source_raster_sample_positions(metal,self.samples.max(1)),
             billboards:None,
             placements: Some(placements),
             ghosts: None, ghost_edge: [0.;4], lines:[None,None],profiles:None,background:None,overlay:None,

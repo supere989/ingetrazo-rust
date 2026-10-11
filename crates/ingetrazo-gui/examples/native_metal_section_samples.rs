@@ -128,6 +128,7 @@ fn run() -> Result<(), String> {
             style.show_grid = false;
             style.section_fill_color = [1., 0., 1., 1.];
             let mut world = World::default();
+            world.use_native_resolve_reference()?;
             world.set_sample_count(&metal, 4)?;
             world.enable_sample_observation()?;
             let mut adapter = Adapter::default();
