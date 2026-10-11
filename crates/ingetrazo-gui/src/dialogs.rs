@@ -148,14 +148,13 @@ pub fn render_dialogs(app: &mut IngeTrazoApp, ctx: &egui::Context) {
                     if ui.button(tr("Open")).clicked() {
                         let path = PathBuf::from(app.dialog_path_input.trim());
                         if path.exists() {
-                            app.open_document(&path);
-                            app.show_open_dialog = false;
+                            app.open_chosen_document(&path);
                         } else {
                             app.status_message = format!("{}: {}", tr("File not found"), path.display());
                         }
                     }
                     if ui.button(tr("Cancel")).clicked() {
-                        app.show_open_dialog = false;
+                        app.cancel_open_document();
                     }
                 });
             });

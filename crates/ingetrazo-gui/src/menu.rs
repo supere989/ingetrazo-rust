@@ -26,12 +26,7 @@ pub fn render_menu_bar(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
                 ui.close_menu();
             }
             if ui.button(format!("{}\tCtrl+O", tr("Open…"))).clicked() {
-                if let Some(path) = crate::dialogs::pick_open_file(&tr("Open Document"), "*.igz *.obj *.stl *.skp *.dae *.glb|Supported 3D formats") {
-                    app.open_document(&path);
-                } else {
-                    app.show_open_dialog = true;
-                    app.dialog_path_input.clear();
-                }
+                app.begin_open_document();
                 ui.close_menu();
             }
 

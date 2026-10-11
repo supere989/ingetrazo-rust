@@ -280,7 +280,6 @@ impl IngeTrazoApp {
             self.status_message = "Finish or cancel the component edit before creating a document".into();
             return;
         }
-        self.save_undo_state();
         self.retire_current_recovery();
         self.scene = Scene::new();self.bim_active_tag_mode=false;self.apply_document_presentation();self.bump_model_revision();
         self.composer_state=Default::default();
@@ -296,6 +295,23 @@ impl IngeTrazoApp {
 
     pub fn open_document(&mut self, path: &Path) {self.request_document_action(crate::document_session::DocumentAction::Open(path.to_path_buf()));}
 
+    pub fn begin_open_document(&mut self) {
+        self.request_document_action(crate::document_session::DocumentAction::ChooseOpen);
+    }
+
+    pub fn open_chosen_document(&mut self,path:&Path) {
+        self.show_open_dialog=false;
+        // File/Open has already resolved unsaved changes before the chooser.
+        // Import callers and intervening edits still need their own guard.
+        if self.document_session.open_dialog_revision.take()==Some((self.model_revision,self.scene.version)) {
+            self.open_document_unchecked(path);
+        } else {self.open_document(path);}
+    }
+
+    pub fn cancel_open_document(&mut self) {
+        self.show_open_dialog=false;self.document_session.open_dialog_revision=None;
+    }
+
     pub(crate) fn open_document_unchecked(&mut self, path: &Path) {
         if !self.component_edit_stack.is_empty() {
             self.status_message = "Finish or cancel the component edit before opening a document".into();
@@ -303,7 +319,6 @@ impl IngeTrazoApp {
         }
         match load_file(path) {
             Ok(loaded_scene) => {
-                self.save_undo_state();
                 if let Some(capture)=&loaded_scene.tile_layer{self.base_map_requested_zoom=capture.zoom.clamp(1,21) as u8;self.base_map_requested_visible=capture.visible;}
                 self.camera = loaded_scene.camera.clone();
                 self.retire_current_recovery();
@@ -329,7 +344,7 @@ impl IngeTrazoApp {
     }
 
     pub fn save_document_as(&mut self) {
-        if !self.finish_contexts_for_save() { return; }
+        if !self.finish_contexts_for_document() { return; }
         self.show_save_dialog = true;
         self.dialog_path_input = self.current_file.as_ref()
             .map(|p| p.to_string_lossy().into_owned())
@@ -349,7 +364,7 @@ impl IngeTrazoApp {
             self.status_message=match self.export_bim_ifc(path){Ok(n)=>format!("{n} IFC elements exported to {}",path.display()),Err(error)=>format!("Export IFC failed: {error}")};
             return;
         }
-        if !self.finish_contexts_for_save() { return; }
+        if !self.finish_contexts_for_document() { return; }
         if self.document_session.pending.is_some() && path.extension().and_then(|e|e.to_str()).map(|e|!e.eq_ignore_ascii_case("igz")).unwrap_or(true) {
             self.status_message="Save an .igz document before continuing".into();self.document_session.confirm_unsaved=true;return;
         }
@@ -371,7 +386,10 @@ impl IngeTrazoApp {
                 self.status_message = format!("Saved: {}", path.display());
             }
             Err(err) => {
-                self.document_session.confirm_unsaved=self.document_session.pending.is_some();
+                // A failed Save aborts the requesting New/Open/Close action.
+                // The source prompt has returned by this point; retry is a
+                // fresh user action, never a deferred document replacement.
+                self.cancel_document_action();
                 self.status_message = format!("Save failed: {err}");
             }
         }
@@ -1054,7 +1072,7 @@ impl IngeTrazoApp {
                 self.new_document();
             }
             if ctx.input(|i| i.key_pressed(egui::Key::O)) {
-                self.show_open_dialog = true;
+                self.begin_open_document();
             }
             if ctx.input(|i| i.key_pressed(egui::Key::S)) {
                 if ctx.input(|i| i.modifiers.shift) { self.save_document_as(); }

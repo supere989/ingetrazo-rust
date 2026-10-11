@@ -4,16 +4,18 @@ use crate::{app::IngeTrazoApp,session_state::{SessionStore,Preferences,RecoveryR
 use ingetrazo_core::scene::Scene;
 use ingetrazo_render::style::VisualStyle;
 #[derive(Clone,Debug)]
-pub enum DocumentAction {New,Open(PathBuf),Close,Recover(RecoveryRecord)}
+pub enum DocumentAction {New,Open(PathBuf),ChooseOpen,Close,Recover(RecoveryRecord)}
 pub struct DocumentSession {
     pub store:Option<SessionStore>,pub preferences:Preferences,
     pub clean:Option<Scene>,pub autosaved:Option<Scene>,
     pub last_autosave:Instant,pub pending:Option<DocumentAction>,
     pub confirm_unsaved:bool,pub close_allowed:bool,
+    /// One file-choice transaction, invalidated by intervening model edits.
+    pub open_dialog_revision:Option<(u64,u64)>,
     pub recovery:Vec<RecoveryRecord>,pub show_recovery:bool,pub recovered_slot:Option<PathBuf>,
 }
 impl Default for DocumentSession {fn default()->Self {Self{store:None,preferences:Preferences::default(),clean:None,
-    autosaved:None,last_autosave:Instant::now(),pending:None,confirm_unsaved:false,close_allowed:false,
+    autosaved:None,last_autosave:Instant::now(),pending:None,confirm_unsaved:false,close_allowed:false,open_dialog_revision:None,
     recovery:vec![],show_recovery:false,recovered_slot:None}}}
 fn same_model(a:&Scene,b:&Scene)->bool {
     a.image_planes==b.image_planes &&
@@ -67,17 +69,28 @@ impl IngeTrazoApp {
         if let Some(store)=&self.document_session.store {if let Err(e)=store.save_preferences(p){self.status_message=e;}}
     }
     pub fn request_document_action(&mut self,action:DocumentAction) {
-        if !self.component_edit_stack.is_empty(){self.status_message="Finish or cancel the component edit first".into();return;}
+        // Original New/Open exits every context before asking. Close asks in
+        // place: Cancel must retain the live edit, and Save performs the exit.
+        if matches!(action,DocumentAction::New|DocumentAction::Open(_)|DocumentAction::ChooseOpen) {
+            if !self.finish_contexts_for_document() {return;}
+        } else if matches!(action,DocumentAction::Recover(_)) && !self.component_edit_stack.is_empty() {
+            self.status_message="Finish or cancel the component edit first".into();return;
+        }
+        self.document_session.open_dialog_revision=None;
         self.document_session.pending=Some(action);
         if self.document_dirty(){self.document_session.confirm_unsaved=true;}else{self.finish_document_action();}
     }
-    pub fn cancel_document_action(&mut self) {self.document_session.pending=None;self.document_session.confirm_unsaved=false;}
+    pub fn cancel_document_action(&mut self) {self.document_session.pending=None;self.document_session.confirm_unsaved=false;self.document_session.open_dialog_revision=None;}
     pub fn discard_document_action(&mut self) {self.retire_current_recovery();self.finish_document_action();}
     pub fn finish_document_action(&mut self) {
         self.document_session.confirm_unsaved=false;
         match self.document_session.pending.take() {
             Some(DocumentAction::New)=>self.new_document_unchecked(),
             Some(DocumentAction::Open(path))=>self.open_document_unchecked(&path),
+            Some(DocumentAction::ChooseOpen)=>{
+                self.show_open_dialog=true;self.dialog_path_input.clear();
+                self.document_session.open_dialog_revision=Some((self.model_revision,self.scene.version));
+            },
             Some(DocumentAction::Close)=>{self.retire_current_recovery();self.persist_preferences();self.document_session.close_allowed=true;},
             Some(DocumentAction::Recover(record))=>match ingetrazo_formats::igz::load_igz(&record.slot){
                 Ok(scene)=>{self.retire_current_recovery();self.composer_state=Default::default();self.scene=scene;self.apply_document_presentation();self.bump_model_revision();self.clipboard_document=uuid::Uuid::new_v4();self.clipboard_mesh_share_imports.clear();self.camera=self.scene.camera.clone();self.current_file=None;self.undo_stack.clear();self.redo_stack.clear();self.textures.clear();
@@ -149,6 +162,41 @@ mod tests {
     fn root()->PathBuf {std::env::temp_dir().join(format!("ingetrazo-lifecycle-{}",uuid::Uuid::new_v4()))}
     fn triangle(app:&mut IngeTrazoApp,p:DVec3) {let ids=[p,p+DVec3::X,p+DVec3::Y].map(|v|app.scene.mesh.add_vertex(v));app.scene.mesh.add_face(ids.to_vec(),vec![]).unwrap();}
     #[test]
+    fn open_picker_consent_is_consumed_and_intervening_edits_require_confirmation() {
+        let directory=root();std::fs::create_dir_all(&directory).unwrap();
+        let path=directory.join("replacement.igz");ingetrazo_formats::igz::save_igz(&Scene::new(),&path).unwrap();
+        let mut app=IngeTrazoApp::new();triangle(&mut app,DVec3::ZERO);
+        app.begin_open_document();assert!(app.document_session.confirm_unsaved);assert!(!app.show_open_dialog);
+        app.discard_document_action();assert!(app.show_open_dialog);assert!(!app.document_session.confirm_unsaved);
+        app.cancel_open_document();assert!(app.document_session.open_dialog_revision.is_none());assert!(app.document_dirty());
+        app.begin_open_document();app.discard_document_action();app.save_undo_state();triangle(&mut app,DVec3::Z);
+        app.open_chosen_document(&path);assert!(app.document_session.confirm_unsaved);assert_eq!(app.scene.mesh.faces.len(),2);
+        app.cancel_document_action();app.begin_open_document();app.discard_document_action();app.open_chosen_document(&path);
+        assert!(!app.document_session.confirm_unsaved);assert!(app.scene.mesh.faces.is_empty());assert!(app.document_session.open_dialog_revision.is_none());
+        std::fs::remove_dir_all(directory).unwrap();
+    }
+    #[test]
+    fn document_replacement_refuses_invalid_active_mesh_without_prompt_or_context_loss() {
+        for action in [DocumentAction::New,DocumentAction::ChooseOpen,DocumentAction::Open(root())] {
+            let mut app=IngeTrazoApp::new();triangle(&mut app,DVec3::ZERO);
+            let mesh=std::mem::take(&mut app.scene.mesh);app.scene.groups.push(ingetrazo_core::groups::Group::with_mesh("active",mesh));
+            app.scene.select(ingetrazo_core::scene::SelectionItem::Group(0));app.begin_component_edit();app.scene.mesh.vertices[0].position.x=f64::NAN;
+            let history=app.undo_stack.len();app.request_document_action(action);
+            assert_eq!(app.component_edit_stack.len(),1);assert!(app.scene.mesh.vertices[0].position.x.is_nan());assert_eq!(app.undo_stack.len(),history);
+            assert!(app.document_session.pending.is_none());assert!(!app.document_session.confirm_unsaved);assert!(!app.show_open_dialog);
+        }
+    }
+    #[test]
+    fn control_o_exits_context_before_showing_unsaved_prompt() {
+        let mut app=IngeTrazoApp::new();app.system_clipboard=None;triangle(&mut app,DVec3::ZERO);
+        let mesh=std::mem::take(&mut app.scene.mesh);app.scene.groups.push(ingetrazo_core::groups::Group::with_mesh("active",mesh));
+        app.scene.select(ingetrazo_core::scene::SelectionItem::Group(0));app.begin_component_edit();app.save_undo_state();app.scene.mesh.vertices[0].position.z=2.;
+        let ctx=egui::Context::default();let mut input=egui::RawInput::default();input.modifiers=egui::Modifiers::CTRL;
+        input.events.push(egui::Event::Key{key:egui::Key::O,physical_key:None,pressed:true,repeat:false,modifiers:egui::Modifiers::CTRL});
+        let _=ctx.run(input,|ctx|app.update_ui(ctx));assert!(app.component_edit_stack.is_empty());assert!(app.document_session.confirm_unsaved);assert!(!app.show_open_dialog);
+        assert_eq!(app.scene.groups[0].mesh.vertices[0].position.z,2.);
+    }
+    #[test]
     fn foreign_mesh_import_cache_retires_only_after_document_replacement() {
         let mut app=IngeTrazoApp::default();
         let key=(app.clipboard_document,uuid::Uuid::new_v4(),uuid::Uuid::new_v4(),7);
@@ -192,7 +240,8 @@ mod tests {
         app.cancel_document_action();assert!(app.document_dirty());assert_eq!(app.scene.mesh.vertices.len(),3);
         app.request_document_action(DocumentAction::Close);
         app.save_to_path(&root.join("missing/failed.igz"));
-        assert!(!app.document_session.close_allowed);assert!(app.document_session.confirm_unsaved);assert!(app.document_dirty());
+        assert!(!app.document_session.close_allowed);assert!(!app.document_session.confirm_unsaved);assert!(app.document_session.pending.is_none());assert!(app.document_dirty());
+        app.request_document_action(DocumentAction::Close);
         app.save_to_path(&root.join("blocked.obj"));assert!(!root.join("blocked.obj").exists());assert!(!app.document_session.close_allowed);
         app.save_to_path(&root.join("saved.igz"));assert!(app.document_session.close_allowed);assert!(!app.document_dirty());
         let loaded=ingetrazo_formats::igz::load_igz(&root.join("saved.igz")).unwrap();assert_eq!(loaded.mesh.vertices[0].position,DVec3::new(7.,8.,9.));

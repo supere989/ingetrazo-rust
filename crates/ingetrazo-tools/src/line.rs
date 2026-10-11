@@ -59,6 +59,10 @@ impl LineTool {
 }
 
 impl Tool for LineTool {
+    // Acquisition and committed chain points are world coordinates. The source
+    // retains this same tool across Save/New/Open context exit; subsequent
+    // segments belong to the newly active root mesh.
+    fn preserves_global_preview_on_context_exit(&self)->bool{true}
     fn error_message(&self)->Option<&str>{self.error.as_deref()}
     fn drawing_plane(&self)->Option<(DVec3,DVec3)>{self.work_plane}
     fn snap_close(&self)->Option<DVec3>{self.chain_first_point}

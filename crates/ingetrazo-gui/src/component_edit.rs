@@ -541,7 +541,7 @@ impl IngeTrazoApp {
 
     /// Prepare the complete exit on model/history state only. No live context,
     /// tool or inference state changes if any outer publication would refuse.
-    pub(crate) fn finish_contexts_for_save(&mut self) -> bool {
+    pub(crate) fn finish_contexts_for_document(&mut self) -> bool {
         if self.component_edit_stack.is_empty() {return true;}
         self.sync_document_presentation();
         let mut scene=self.scene.clone();
