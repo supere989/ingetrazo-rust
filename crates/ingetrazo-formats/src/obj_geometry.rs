@@ -733,8 +733,12 @@ pub(super) fn editable(mesh: &mut Mesh, first_new: usize, seed: &[DVec3]) -> Res
         for f in &mut mesh.faces {
             f.interior = false;
         }
-    } else {
+    } else if mesh.edges.iter().all(|edge| edge.faces.len() >= 2) {
+        // Original orientation flips only when the entire active mesh is
+        // closed, including free wires and other disconnected components.
         ingetrazo_core::heal::orient_boundary_candidate(mesh)?;
+    } else {
+        ingetrazo_core::heal::refresh_interior(mesh)?;
     }
     soften(mesh, false);
     Ok(())
