@@ -191,3 +191,5 @@ mod bim_history;
 pub mod scale_overlay;
 
 pub mod text3d;
+
+mod box_selection;

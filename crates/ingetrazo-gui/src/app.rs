@@ -585,6 +585,7 @@ impl IngeTrazoApp {
     }
 
     pub fn delete_selection(&mut self) {
+        if self.scene.selection.iter().any(|s|matches!(s,SelectionItem::Guide(_)|SelectionItem::Dimension(_)|SelectionItem::TextLabel(_))){self.status_message="Annotation deletion ownership is not yet supported".into();return;}
         if self.scene.selection.is_empty() {
             return;
         }

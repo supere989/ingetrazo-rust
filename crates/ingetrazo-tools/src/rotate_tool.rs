@@ -128,7 +128,7 @@ impl RotateTool {
                     SelectionItem::SectionPlane(id) => {
                         plane_set.insert(*id);
                     }
-                    SelectionItem::ContextFace{..} | SelectionItem::ContextGroup{..} | SelectionItem::ImagePlane(_)
+                    SelectionItem::Guide(_) | SelectionItem::Dimension(_) | SelectionItem::TextLabel(_) | SelectionItem::ContextFace{..} | SelectionItem::ContextGroup{..} | SelectionItem::ImagePlane(_)
                     | SelectionItem::GeoPoint(_)
                     | SelectionItem::GeoPath(_) => {}
                 }

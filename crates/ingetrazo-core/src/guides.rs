@@ -18,12 +18,21 @@ pub enum GuideType {
 pub struct Guide {
     pub id: Uuid,
     pub kind: GuideType,
+    #[serde(default)]
+    pub origin: Option<DVec3>,
+    #[serde(default)]
+    pub native_document: serde_json::Value,
+    #[serde(default)]
+    pub native_baseline: serde_json::Value,
 }
 
 impl Guide {
     pub fn point(p: DVec3) -> Self {
         Self {
             id: Uuid::new_v4(),
+            origin: None,
+            native_document: serde_json::Value::Null,
+            native_baseline: serde_json::Value::Null,
             kind: GuideType::Point(p),
         }
     }
@@ -31,6 +40,9 @@ impl Guide {
     pub fn infinite_line(point: DVec3, dir: DVec3) -> Self {
         Self {
             id: Uuid::new_v4(),
+            origin: None,
+            native_document: serde_json::Value::Null,
+            native_baseline: serde_json::Value::Null,
             kind: GuideType::InfiniteLine {
                 point,
                 dir: dir.normalize_or_zero(),
@@ -41,6 +53,9 @@ impl Guide {
     pub fn segment(a: DVec3, b: DVec3) -> Self {
         Self {
             id: Uuid::new_v4(),
+            origin: None,
+            native_document: serde_json::Value::Null,
+            native_baseline: serde_json::Value::Null,
             kind: GuideType::Segment { a, b },
         }
     }

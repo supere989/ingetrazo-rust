@@ -625,6 +625,16 @@ fn image_plane_to_json(scene:&Scene,p:&ingetrazo_core::image_plane::ImagePlane)-
     raw
 }
 
+fn guide_model(guide:&Guide)->serde_json::Value {
+    use ingetrazo_core::guides::GuideType;
+    match guide.kind {
+        GuideType::Point(point)=>{let mut v=serde_json::json!({"point":point.to_array()});if let Some(origin)=guide.origin{v["origin"]=serde_json::json!(origin.to_array());}v},
+        GuideType::InfiniteLine{point,dir}=>serde_json::json!({"point":point.to_array(),"direction":dir.to_array()}),
+        // Retain the native-only finite segment representation unchanged.
+        GuideType::Segment{..}=>serde_json::json!({"id":guide.id,"kind":guide.kind}),
+    }
+}
+
 fn scene_model(scene: &Scene) -> serde_json::Value {
     let loose = mesh_to_json(&scene.mesh);
     let groups_json: Vec<_> = scene.groups.iter().map(group_model).collect();
@@ -663,7 +673,7 @@ fn scene_model(scene: &Scene) -> serde_json::Value {
     });
     doc["dimensions"] = serde_json::json!(scene.dimensions.iter().map(|d|{let mut live=d.clone();(live.start,live.end)=scene.dimension_points(d);overlay(&d.native_document,&d.native_baseline,dimension_model(&live))}).collect::<Vec<_>>());
     doc["image_planes"]=serde_json::json!(scene.image_planes.iter().map(|p|image_plane_to_json(scene,p)).collect::<Vec<_>>());
-    doc["guides"] = serde_json::to_value(&scene.guides).unwrap_or(serde_json::json!([]));
+    doc["guides"] = serde_json::json!(scene.guides.iter().map(|g|overlay(&g.native_document,&g.native_baseline,guide_model(g))).collect::<Vec<_>>());
     doc["text_labels"] = serde_json::to_value(&scene.text_labels).unwrap_or(serde_json::json!([]));
     let unit = match scene.unit {
         LengthUnit::Meters => "m", LengthUnit::Centimeters => "cm",
@@ -1118,9 +1128,15 @@ pub fn load_igz(path: &Path) -> Result<Scene, IgzError> {
 
     scene.bind_dimensions();
 
-    if let Some(guides_val) = s_val.get("guides") {
-        if let Ok(guides) = serde_json::from_value::<Vec<Guide>>(guides_val.clone()) {
-            scene.guides = guides;
+    if let Some(items) = s_val.get("guides").and_then(|v|v.as_array()) {
+        for raw in items {
+            let parse_point=|v:&serde_json::Value|->Option<glam::DVec3>{let a=v.as_array()?;if a.len()!=3{return None;}let p=glam::DVec3::new(a[0].as_f64()?,a[1].as_f64()?,a[2].as_f64()?);p.is_finite().then_some(p)};
+            let guide=if let Some(point)=raw.get("point").and_then(parse_point){
+                let direction=raw.get("direction").and_then(parse_point).filter(|d|d.length()>1e-12);
+                let mut g=Guide::point(point);if let Some(dir)=direction{g.kind=ingetrazo_core::guides::GuideType::InfiniteLine{point,dir:dir.as_vec3().normalize().as_dvec3()};}
+                if direction.is_none(){g.origin=raw.get("origin").and_then(parse_point);}Some(g)
+            }else{serde_json::from_value::<Guide>(raw.clone()).ok()};
+            if let Some(mut g)=guide{g.native_document=raw.clone();g.native_baseline=guide_model(&g);scene.guides.push(g);}
         }
     }
 

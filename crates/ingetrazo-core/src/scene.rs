@@ -21,6 +21,9 @@ use crate::units::LengthUnit;
 #[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub enum SelectionItem {
     Vertex(VertexId),
+    Guide(usize),
+    Dimension(usize),
+    TextLabel(usize),
     Edge(EdgeId),
     Face(FaceId),
     /// Face selected from a parked mesh while another immutable edit target is active.

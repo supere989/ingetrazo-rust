@@ -60,6 +60,7 @@ pub fn build_selection_buffers(scene: &Scene, style: &StyleConfig) -> SelectionR
 
     for item in &scene.selection {
         match item {
+            SelectionItem::Guide(_) | SelectionItem::Dimension(_) | SelectionItem::TextLabel(_) => {},
             // Reference-image drawing/picking is a separate native renderer stage.
             SelectionItem::ImagePlane(_)|SelectionItem::ContextFace{..} | SelectionItem::ContextGroup{..}=>{}
             SelectionItem::SectionPlane(id)=>{if scene.show_section_planes{if let Some(frame)=scene.section_frame(*id){for edge in 0..4{data.outline_lines.push_line(frame[edge],frame[(edge+1)%4],highlight_color,3.,LineStyle::Solid);}}}}

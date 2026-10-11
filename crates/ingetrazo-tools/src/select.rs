@@ -45,6 +45,291 @@ impl SelectTool {
             else{scene.select(target);}
         }
     }
+    pub fn select_pixels(
+        selection: &crate::base::BoxSelection,
+        scene: &mut Scene,
+    ) -> Result<(), String> {
+        use glam::{DMat4, DVec2};
+        let r = selection.bounds();
+        if !selection.start.is_finite()
+            || !selection.end.is_finite()
+            || !selection.viewport.matrix.is_finite()
+            || !selection.viewport.width.is_finite()
+            || !selection.viewport.height.is_finite()
+            || selection.viewport.width <= 0.
+            || selection.viewport.height <= 0.
+        {
+            return Err("Invalid selection rectangle".into());
+        }
+        let inside = |p: DVec2| p.x >= r[0] && p.x <= r[2] && p.y >= r[1] && p.y <= r[3];
+        let segment = |a: DVec2, b: DVec2| {
+            if inside(a) || inside(b) {
+                return true;
+            }
+            let ccw = |a: DVec2, b: DVec2, c: DVec2| {
+                (c.y - a.y) * (b.x - a.x) - (b.y - a.y) * (c.x - a.x)
+            };
+            let corners = [
+                DVec2::new(r[0], r[1]),
+                DVec2::new(r[2], r[1]),
+                DVec2::new(r[2], r[3]),
+                DVec2::new(r[0], r[3]),
+            ];
+            (0..4).any(|i| {
+                let p = corners[i];
+                let q = corners[(i + 1) % 4];
+                (ccw(p, q, a) > 0.) != (ccw(p, q, b) > 0.)
+                    && (ccw(a, b, p) > 0.) != (ccw(a, b, q) > 0.)
+            })
+        };
+        let project = |p| selection.viewport.project_for_snapping(p);
+        let hit_segment = |a, b| match (project(a), project(b)) {
+            (Some(a), Some(b)) => {
+                if selection.crossing() {
+                    segment(a, b)
+                } else {
+                    inside(a) && inside(b)
+                }
+            }
+            _ => false,
+        };
+        for f in &scene.mesh.faces {
+            for &vertex in f.vertices.iter().chain(f.holes.iter().flatten()) {
+                if vertex >= scene.mesh.vertices.len() {
+                    return Err("Invalid face vertex".into());
+                }
+            }
+        }
+        let mut picked = Vec::new();
+        // Operative Viewport uses its loose-edge projection index. Faces are
+        // admitted from radial edges, including hole boundaries, rather than
+        // polygon-area overlap (a box wholly inside a face does not catch it).
+        let mut face_edges = vec![0usize; scene.mesh.faces.len()];
+        let mut face_hits = vec![0usize; scene.mesh.faces.len()];
+        for (id, e) in scene.mesh.edges.iter().enumerate() {
+            let (a, b) = (
+                scene
+                    .mesh
+                    .vertices
+                    .get(e.v0)
+                    .ok_or("Invalid edge endpoint")?,
+                scene
+                    .mesh
+                    .vertices
+                    .get(e.v1)
+                    .ok_or("Invalid edge endpoint")?,
+            );
+            let hit = hit_segment(a.position, b.position);
+            for &face in &e.faces {
+                let count = face_edges.get_mut(face).ok_or("Invalid edge radial face")?;
+                *count += 1;
+                if hit {
+                    face_hits[face] += 1;
+                }
+            }
+            if hit && !e.hidden && scene.is_layer_selectable(e.layer.as_deref()) {
+                picked.push(SelectionItem::Edge(id));
+            }
+        }
+        for (id, _) in scene.mesh.faces.iter().enumerate() {
+            if !scene.mesh_face_selectable(&scene.mesh, id) {
+                continue;
+            }
+            if face_edges[id] > 0
+                && if selection.crossing() {
+                    face_hits[id] > 0
+                } else {
+                    face_hits[id] == face_edges[id]
+                }
+            {
+                picked.push(SelectionItem::Face(id));
+            }
+        }
+        fn placements<'a>(
+            g: &'a ingetrazo_core::groups::Group,
+            parent: DMat4,
+            out: &mut Vec<(&'a ingetrazo_core::mesh::Mesh, DMat4)>,
+        ) {
+            let m = ingetrazo_core::change_axes::multiply(parent, g.transform);
+            if !g.mesh.vertices.is_empty() {
+                out.push((&g.mesh, m));
+            }
+            for c in &g.children {
+                placements(c, m, out);
+            }
+        }
+        for (id, g) in scene.groups.iter().enumerate() {
+            if !scene.group_selectable(g) {
+                continue;
+            }
+            let mut places = Vec::new();
+            placements(g, DMat4::IDENTITY, &mut places);
+            if places.is_empty() {
+                continue;
+            }
+            // The operative group chunk contains triangle corners and ordinary
+            // hard-edge pairs, not orphan vertices. Only an empty chunk falls
+            // back to the source's complete per-vertex placement walk.
+            let mut packet = Vec::new();
+            let mut pairs = Vec::new();
+            for &(mesh, m) in &places {
+                for (face, f) in mesh.faces.iter().enumerate() {
+                    for &v in f.vertices.iter().chain(f.holes.iter().flatten()) {
+                        if v >= mesh.vertices.len() {
+                            return Err("Invalid group face vertex".into());
+                        }
+                    }
+                    if f.attrs
+                        .get("hidden")
+                        .and_then(|v| v.as_bool())
+                        .unwrap_or(false)
+                    {
+                        continue;
+                    }
+                    for (a, b, c) in mesh.triangulate_face(face) {
+                        for point in [a, b, c] {
+                            packet.push(ingetrazo_core::change_axes::map(m, point));
+                        }
+                    }
+                }
+                for e in &mesh.edges {
+                    let (a, b) = (
+                        mesh.vertices.get(e.v0).ok_or("Invalid group edge")?,
+                        mesh.vertices.get(e.v1).ok_or("Invalid group edge")?,
+                    );
+                    if e.hidden || e.soft {
+                        continue;
+                    }
+                    let (a, b) = (
+                        ingetrazo_core::change_axes::map(m, a.position),
+                        ingetrazo_core::change_axes::map(m, b.position),
+                    );
+                    packet.extend([a, b]);
+                    pairs.push((a, b));
+                }
+            }
+            let mut hit = !selection.crossing();
+            if !packet.is_empty() {
+                hit = if selection.crossing() {
+                    packet.iter().any(|&p| project(p).is_some_and(&inside))
+                        || pairs.iter().any(|&(a, b)| hit_segment(a, b))
+                } else {
+                    packet.iter().all(|&p| project(p).is_some_and(&inside))
+                };
+            } else {
+                'places: for (mesh, m) in places {
+                    for v in &mesh.vertices {
+                        let p = project(ingetrazo_core::change_axes::map(m, v.position));
+                        if selection.crossing() {
+                            if p.is_some_and(&inside) {
+                                hit = true;
+                                break 'places;
+                            }
+                        } else if !p.is_some_and(&inside) {
+                            hit = false;
+                            break 'places;
+                        }
+                    }
+                    if selection.crossing() {
+                        for e in &mesh.edges {
+                            let (a, b) = (
+                                mesh.vertices.get(e.v0).ok_or("Invalid group edge")?,
+                                mesh.vertices.get(e.v1).ok_or("Invalid group edge")?,
+                            );
+                            if hit_segment(
+                                ingetrazo_core::change_axes::map(m, a.position),
+                                ingetrazo_core::change_axes::map(m, b.position),
+                            ) {
+                                hit = true;
+                                break 'places;
+                            }
+                        }
+                    }
+                }
+            }
+            if hit {
+                picked.push(SelectionItem::Group(id));
+            }
+        }
+        let guide_segment = |a: DVec3, b: DVec3| {
+            let m = selection.viewport.matrix.as_mat4();
+            let wa = (m * a.as_vec3().extend(1.)).w;
+            let wb = (m * b.as_vec3().extend(1.)).w;
+            if wa <= 1e-3 && wb <= 1e-3 {
+                return false;
+            }
+            let (a, b) = if wa <= 1e-3 || wb <= 1e-3 {
+                let t = (1e-3 - wa) / (wb - wa);
+                let cut = (a.as_vec3() + (b.as_vec3() - a.as_vec3()) * t).as_dvec3();
+                if wa <= 1e-3 {
+                    (cut, b)
+                } else {
+                    (a, cut)
+                }
+            } else {
+                (a, b)
+            };
+            hit_segment(a, b)
+        };
+        for (id, g) in scene.guides.iter().enumerate() {
+            if !scene.is_layer_selectable(None) {
+                continue;
+            }
+            use ingetrazo_core::guides::GuideType;
+            let hit = match g.kind {
+                GuideType::Point(p) => project(p).is_some_and(&inside),
+                GuideType::InfiniteLine { point, dir } => {
+                    selection.crossing()
+                        && guide_segment(
+                            (point.as_vec3() - dir.as_vec3() * 1e4).as_dvec3(),
+                            (point.as_vec3() + dir.as_vec3() * 1e4).as_dvec3(),
+                        )
+                }
+                GuideType::Segment { a, b } => selection.crossing() && hit_segment(a, b),
+            };
+            if hit {
+                picked.push(SelectionItem::Guide(id));
+            }
+        }
+        for (id, d) in scene.dimensions.iter().enumerate() {
+            if scene.is_layer_selectable(d.layer.as_deref()) {
+                let (a, b) = d.line_points();
+                if hit_segment(a, b) {
+                    picked.push(SelectionItem::Dimension(id));
+                }
+            }
+        }
+        for (id, l) in scene.text_labels.iter().enumerate() {
+            if !scene.is_layer_selectable(l.layer.as_deref()) {
+                continue;
+            }
+            let (a, p) = (project(l.anchor), project(l.position()));
+            let hit = p.is_some_and(|p| {
+                if selection.crossing() {
+                    inside(p) || a.is_some_and(|a| segment(a, p))
+                } else {
+                    inside(p) && a.is_none_or(&inside)
+                }
+            });
+            if hit {
+                picked.push(SelectionItem::TextLabel(id));
+            }
+        }
+        if !selection.shift && !selection.ctrl {
+            scene.clear_selection();
+        }
+        for target in picked {
+            if selection.shift && selection.ctrl {
+                scene.deselect(&target);
+            } else if selection.shift && scene.is_selected(&target) {
+                scene.deselect(&target);
+            } else {
+                scene.select(target);
+            }
+        }
+        Ok(())
+    }
+
     pub fn reset(&mut self) {
         self.box_start = None;
         self.box_end = None;
@@ -58,6 +343,7 @@ impl SelectTool {
 
         // Seed queue from start item
         match start_item {
+            SelectionItem::Guide(_) | SelectionItem::Dimension(_) | SelectionItem::TextLabel(_) => {scene.select(start_item);return;}
             SelectionItem::ContextGroup{context,group}=>{scene.select(SelectionItem::ContextGroup{context,group});return;}
             SelectionItem::ContextFace{context,face,vertices}=>{scene.select(SelectionItem::ContextFace{context,face,vertices});return;}
             SelectionItem::ImagePlane(id)=>{scene.select(SelectionItem::ImagePlane(id));return;}
@@ -232,6 +518,7 @@ impl SelectTool {
 }
 
 impl Tool for SelectTool {
+    fn box_select(&mut self, selection:&crate::base::BoxSelection,scene:&mut Scene)->Result<(),String>{Self::select_pixels(selection,scene)}
     fn tool_type(&self) -> ToolType {
         ToolType::Select
     }

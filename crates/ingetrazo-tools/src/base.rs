@@ -115,7 +115,29 @@ pub struct ScaleBoxState {
     pub grips: Vec<(DVec3, bool)>,
 }
 
+/// Release-owned pixel rectangle for source window/crossing selection.
+#[derive(Debug, Clone, Copy)]
+pub struct BoxSelection {
+    pub viewport: ingetrazo_core::screen_pick::PixelViewport,
+    pub eye: DVec3,
+    pub start: glam::DVec2,
+    pub end: glam::DVec2,
+    pub shift: bool,
+    pub ctrl: bool,
+}
+impl BoxSelection {
+    pub fn crossing(&self) -> bool { self.end.x < self.start.x }
+    pub fn bounds(&self) -> [f64;4] {
+        let lo=self.start.min(self.end);let hi=self.start.max(self.end);
+        [lo.x,lo.y,hi.x,hi.y]
+    }
+}
+
 pub trait Tool: Send + Sync {
+    fn box_select(&mut self, _selection: &BoxSelection, _scene: &mut Scene) -> Result<(), String> {
+        Err("Active tool does not support box selection".into())
+    }
+
     /// A live model transform has no history entry until the tool commits it.
     fn pending_model_preview(&self)->bool{false}
     fn scale_box_state(&self)->Option<ScaleBoxState>{None}

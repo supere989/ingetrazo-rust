@@ -25,6 +25,7 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
     }
 
     let painter = ui.painter_at(rect);
+    let box_release=crate::box_selection::input(app,ui,rect,response.id,response.contains_pointer());
 
     // 1. Mouse Navigation (Orbit, Pan, Zoom)
     let pointer = ui.input(|i| i.pointer.clone());
@@ -263,7 +264,7 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
                 }
                 if !follow_me && response.double_clicked() && !alt_down {
                     app.dispatch_tool_double_click(&tool_ctx);
-                } else if !follow_me && response.clicked() && !alt_down {
+                } else if !follow_me && response.clicked() && !alt_down && !box_release {
                     app.dispatch_tool_click(&tool_ctx);
                 }
             }
@@ -482,6 +483,8 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
     }
 
     if app.navigation.mode!=Some(crate::navigation::Mode::FirstPerson){response.context_menu(|ui|{if app.scene.selection.len()==1 && app.scene.selection.iter().any(|s|matches!(s,ingetrazo_core::scene::SelectionItem::Group(_))) && ui.button("Change Axes").clicked(){app.start_change_axes();ui.close_menu();}if app.selected_text3d().is_some() && ui.button("Edit 3D Text…").clicked(){app.open_edit_text3d();ui.close_menu();}if app.scene.selection.iter().any(|item|matches!(item,ingetrazo_core::scene::SelectionItem::SectionPlane(_))){crate::section_actions::render_section_controls(app,ui);}});}
+
+    crate::box_selection::paint(ui,rect,response.id);
 
     // 5. Render Section Planes (cutting frames and symbol tags)
     if app.scene.show_section_planes {

@@ -163,6 +163,10 @@ impl IngeTrazoApp {
     }
 
     pub fn dispatch_tool_click(&mut self, context: &ToolContext) {
+        if matches!(self.active_tool_type,ingetrazo_tools::base::ToolType::Move|ingetrazo_tools::base::ToolType::Rotate|ingetrazo_tools::base::ToolType::Scale)
+            && self.scene.selection.iter().any(|s|matches!(s,ingetrazo_core::scene::SelectionItem::Guide(_)|ingetrazo_core::scene::SelectionItem::Dimension(_)|ingetrazo_core::scene::SelectionItem::TextLabel(_))) {
+            self.status_message="Annotation transform ownership is not yet supported".into();return;
+        }
         if self.section_name_prompt.is_some(){return;}
         let plane_count=self.scene.section_planes.len();
         if self.prepare_bim_draw_commit().is_err(){return;}
