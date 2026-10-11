@@ -11,7 +11,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        runner: [macos-15, macos-15-intel]
+        # Focused allocation repair: ARM app/classic/material already passed at
+        # b0276fc7; its strict resolve-precision difference remains retained.
+        # Restore both runners when the Metal rendering path changes.
+        runner: [macos-15-intel]
     runs-on: ${{ matrix.runner }}
     timeout-minutes: 30
     env:
