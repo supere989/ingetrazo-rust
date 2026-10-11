@@ -1,0 +1,16 @@
+{
+  "reference_sessions_exact": 10,
+  "camera_states_exact": 20,
+  "atomic_refusals": 3,
+  "model_history_unchanged": 10,
+  "rejected_controls": [
+    "empty-corpus",
+    "missing-case",
+    "duplicate-case",
+    "target",
+    "distance",
+    "mode",
+    "history",
+    "missing-refusal"
+  ]
+}
