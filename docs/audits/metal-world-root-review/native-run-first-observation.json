@@ -1,0 +1,19 @@
+{
+  "run_id": 38098691387,
+  "source": "4a1a0395900bdb9e19003ef40a9abd4403d7ec61",
+  "arm": {
+    "job_id": 114349888353,
+    "sdk_build": "success",
+    "runtime": "failure",
+    "pixel_checker": "failure",
+    "artifact_upload": "success",
+    "artifact_id": 11687038341,
+    "artifact_zip_sha256_from_job_log": "2e81ff205f16c0ee5485e44385960a9ecd52b4a6738d8952db04134830341ba4"
+  },
+  "intel": {
+    "job_id": 114349888460,
+    "observed_status": "in_progress",
+    "step": "Apple SDK build"
+  },
+  "scope": "Live GitHub jobs and ARM job log inspected; artifact failure cause not yet reviewed; no retry authorized"
+}
