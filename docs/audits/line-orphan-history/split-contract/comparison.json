@@ -1,0 +1,22 @@
+{
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "cases": [
+    "metadata-split-weld",
+    "long-skew-accepted",
+    "long-skew-refused"
+  ],
+  "exact_before_after_flags_and_old_object_identities": 3,
+  "negative_controls": [
+    "empty",
+    "duplicate",
+    "copied_hidden",
+    "copied_layer",
+    "stamped_weld",
+    "replaced_weld",
+    "lost_remote",
+    "raw_f64_point",
+    "missed_long_skew",
+    "admitted_far_skew"
+  ],
+  "scope": "Actual pinned build_add_edge/History versus native core planner. Existing nine-case app History replay supplies separate consumer evidence; no OS gesture claim."
+}

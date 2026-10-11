@@ -1,0 +1,42 @@
+{
+  "runtime_commit": "e8f7360a2121ee92bf673560cac6d4e80ae00417",
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "source_hashes": {
+    "crates/ingetrazo-core/src/drafting.rs": "fc4906f6d99e2684e60a4d39e68871d7f2a9542afa6814b7799038dd1f7cb7b7",
+    "crates/ingetrazo-core/tests/drafting_record_order.rs": "18cf62bbc80b036c2e26416a9f8892f961c2fe65f9c631ff7b6ed5ee8a11d986",
+    "crates/ingetrazo-core/examples/line_split_contract.rs": "a7f0f228757461c415f8d875b9ab87f96d21f1a800ca811fb757eef1319f027c",
+    "scripts/reference-line-split-contract.py": "4de7a0007315f2ed4817323ffb1230aad6e7a0372e748677788805d739b745cc",
+    "scripts/check-line-split-contract.py": "62e5a303537aaaa658ba7c2490cfceb3e61dee4e6d8e0c2f1fef9c3a0d44ae2b",
+    "scripts/check-line-command-history.py": "4395a7ab725949919e00bc52ab60913871372b5d14be42f3f5e71fe19bf67c2e"
+  },
+  "binary_hashes": {
+    "line_split_contract": "479bc08313c16ddfc7ae949614da4e5b0bde0f6d236686f157723c28c2a70700",
+    "line_command_history_fixture": "8faea76b3cc3bcb16e9a5bad75b73b14398b2f93e91cd879d0e9f71a86a34e95",
+    "drafting_acceptance_fixture": "13be28bd1433cb82741cd5ecc8839b6616f69c5619327fee26249214fefe6cd6"
+  },
+  "commands": [
+    "cargo test -j2 -p ingetrazo-core --test drafting_record_order",
+    "cargo build -j2 -p ingetrazo-core --example line_split_contract --example drafting_acceptance_fixture -p ingetrazo-gui --example line_command_history_fixture",
+    "line_split_contract docs/audits/line-orphan-history/split-contract/original.json native.json",
+    "python3 scripts/check-line-split-contract.py docs/audits/line-orphan-history/split-contract/original.json native.json comparison.json",
+    "python3 scripts/check-line-command-history.py docs/audits/line-orphan-history/split-contract/nine"
+  ],
+  "environment": {
+    "CARGO_TARGET_DIR": "/tmp/ingetrazo-metal-world-target",
+    "CARGO_PROFILE_DEV_DEBUG": "0",
+    "CARGO_PROFILE_TEST_DEBUG": "0",
+    "CARGO_INCREMENTAL": "0"
+  },
+  "outcome": {
+    "exact_new_source_controls": 3,
+    "new_checker_negatives": 10,
+    "exact_existing_raw_app_histories": 9,
+    "existing_raw_negatives": 14,
+    "unchanged_frozen_drafting_comparisons": 22,
+    "ownership_tests": 4
+  },
+  "source_capture": "Only three new controls captured once via actual pinned build_add_edge/History; existing 9 command and 22 drafting originals reused unchanged.",
+  "precision_policy": "Qt float endpoint differences and lengths, double unit-direction closest points with length-scaled gap tolerance, float32 returned point; near-anchor snap and decimal same_position, distance-deduplicated source ordering. Existing authoritative vertex positions/UIDs remain unchanged.",
+  "remaining_scope": "These are bounded actual planner/core and app-history controls, not OS gesture or full-row parity. Existing 22 comparator retains its unchanged cyclic five-decimal policy. Curve rebuild path is unchanged.",
+  "retained_failure": "Initial native control stamped an already-existing welded edge soft=true; actual original skips that subedge command and leaves soft=false. Initial JSON retained. Earlier all-metadata/raw-f64 runtime is preserved at b9753ab5 for review, superseded by correction."
+}
