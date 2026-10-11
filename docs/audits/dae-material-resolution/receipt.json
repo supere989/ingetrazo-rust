@@ -1,0 +1,18 @@
+{
+  "source-records.zip": {
+    "sha256": "d277badefaf8f4a5b9d10b882b8d20612d26213ac492c541b5ef865cd5908060",
+    "bytes": 65293
+  },
+  "source-manifest.json": {
+    "sha256": "d619494dda72ed382e98ad93da30eeee588992c953adf4ec81c84435d0cd0ac1",
+    "bytes": 20730
+  },
+  "proofrecords.zip": {
+    "sha256": "1349009efc4b2c71c60c0c8fab0e680a9cae1b56c666ef38a4ee0c84abc96cff",
+    "bytes": 205349
+  },
+  "manifest.json": {
+    "sha256": "47e638fdc5b547038d6530507102f783a9d664c75e87418bedc056be3490845e",
+    "bytes": 23750
+  }
+}

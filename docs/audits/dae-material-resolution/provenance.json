@@ -1,0 +1,32 @@
+{
+  "runtime": "78425642cf9e3affe527fa2c386a9f08f9f115c9",
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "source_sha256": {
+    "crates/ingetrazo-formats/src/dae_import.rs": "c31e7e2788a926a4e52ae900bb9e657c6200a89c065432c909d583204ab1515d",
+    "crates/ingetrazo-formats/src/dae_import/source_color.rs": "2fc347c3fd89fce87332c216e71f7b29f6778c84244f29523847cd8d336ba399",
+    "scripts/check-dae-material-resolution.py": "ff623277d9f63a0e5bafb43a2714bd66c01e7c44f532c948b3bdb0641a9e38cb",
+    "scripts/replay-dae-legacy.py": "e555e2777360d5d2f704d6b6dcad6e0590f06fea3f9c7d6e2079309f0d08f5fb",
+    "crates/ingetrazo-formats/examples/dae_import_acceptance_fixture.rs": "db98e736ad966aaabd98ab2c97df0f36424ff5f5be40626604e7c64b12adc2e8"
+  },
+  "original_dae_sha256": "9082599e1130b1d70af23cf3715a1566b18908f41fc0498d28b235baef7331dc",
+  "binary": "/tmp/ingetrazo-skp-native-target/debug/examples/dae_import_acceptance_fixture",
+  "binary_sha256": "b8349255ac0ecf061fa0a8ad57b4d60c9f50d4799870c117e94086bfe9203aea",
+  "hash_seed": 0,
+  "independent_results": {
+    "new_cases": 21,
+    "new_negatives": 4,
+    "legacy_small": 12,
+    "legacy_reference": 7,
+    "legacy_uv": 4,
+    "all_passed": true
+  },
+  "prior_tests": "13 DAE tests including18hash vectors passed before narrow unused-asset prune; retained log; not repeated by independent owner",
+  "asset_restoration": "Corresponding retained IGZ members authenticated against source texture hashes when present. Missing-UV color-only inputs reconstructed from literal frozen QImage recipe; no absent historical image hash is claimed. Legacy report records every restored/reconstructed asset hash and method.",
+  "limitations": [
+    "Process-random original fallback colors require matched hash seed for literal equality; this proof pins0.",
+    "Duplicate effect SID precedence remains preexisting and outside this corpus.",
+    "Legacy open-ring nondeterministic winding boundary unchanged; closed-cube oriented rings remain strict.",
+    "No FACEME/complex arbitrary hierarchy/UI import Undo completion claim from this material batch."
+  ],
+  "review": "Read-only original material law/runtime/checker inspection and prebuilt independent replay; no production edits, Rust build or original recapture."
+}
