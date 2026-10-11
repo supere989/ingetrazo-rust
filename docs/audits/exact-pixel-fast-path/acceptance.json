@@ -1,0 +1,33 @@
+{
+  "exact_same_26_page_report": true,
+  "dpi": 300,
+  "different_pixels": 0,
+  "rendered_pngs_byte_equal_to_retained_archive": 52,
+  "old_seconds": 24.40431773799355,
+  "new_seconds": 8.341240634996211,
+  "scope": "One sequential local paired measurement of unchanged retained original/native PDFs including Qt loading, rendering, PNG writes and exact pixel check. Cache/load sensitive; not an overall CI or release speed benchmark.",
+  "change": "Use whole-buffer bytes equality on the all-equal path; differing images retain the identical per-pixel count. Inventory, source blank, text, dimensions and existing negative checks unchanged.",
+  "source_archive_sha256": "b4f2b107ada6b694c5c1708009703b557bc78d5d8cc92571310569070c611d4c",
+  "archive": "measurement.zip",
+  "archive_sha256": "7d5a24e1ade390fb9118e61838124195dbd63aede976e158b46c7e0050632b47",
+  "files": {
+    "old-reader.py": "9e11cafb6d657abea943778c3ce47aed4cf8e2b86413fa7741f491040af165a7",
+    "archive-source.json": "dce6d5634f99e8f090ca02a374f95bdd334f72b6be9fed333b31f17cd1ae4f87",
+    "run.py": "b0ff2805b476e43aba1f946403f595d3795330b5aa85f91387ed7ab8a7476160",
+    "timing-tool-setup-failure.log": "b1f38d7acd4f96b00e8dff3bcebc2bd96cf993208567d470a9f91ddc9fc076a5",
+    "old.log": "d54140658be70934360491e8e7b649b7f34ca64c872b9a673d469d8df33a1c4d",
+    "old-timing.json": "47a989950848e8737b5e1d0a3a6d9284eaf6938d99919ec08101d8aa280093be",
+    "old-result.json": "4f84537316fa372fd3b4f2cef2d88b802a3ee3818af2662bd0f2171c10fe2558",
+    "new.log": "d54140658be70934360491e8e7b649b7f34ca64c872b9a673d469d8df33a1c4d",
+    "new-timing.json": "9a7bebb93a92265c04f335900d0cb2858a3df2f0fbd2e975de0a4d0eb34db01e",
+    "new-result.json": "4f84537316fa372fd3b4f2cef2d88b802a3ee3818af2662bd0f2171c10fe2558"
+  },
+  "checker_sources": {
+    "check-sheet-view-vector-pdf.py": "fef0dba76252e87e03af160bbf562b6c7f984b05a7469cc37f05d4ce546f2a27",
+    "check-paper-text-pages.py": "b8e90f9aa0016dc17c03166ca087c859fc04b2c490eabcf0cbcdbb0ea0b5a7e8",
+    "check-paper-text-layout-pages.py": "068e4bb4da2aab738cbbe5f4476ede7e84e4039ffd2a50a4d549beb1d3016fdc",
+    "check-paper-text-background-pages.py": "3a047a54da76d3edbf8d91e96706e8a55fda30f5c3cafe15834aa40682aa75da",
+    "check-paper-text-field-pages.py": "39c3fe34521492420c23b7b4b088d7b7f2798d9b24a1ac0e05fb6c82f51a784b"
+  },
+  "released_apparent_bytes": 2848218
+}

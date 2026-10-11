@@ -108,6 +108,11 @@ pub trait Tool: Send + Sync {
         None
     }
 
+    /// Informational source tool status, separate from a refused operation.
+    fn status_message(&self) -> Option<&str> { None }
+    /// Consume one informational event after an actual tool call.
+    fn take_status_message(&mut self)->Option<String>{None}
+
     fn tool_type(&self) -> ToolType;
     fn name(&self) -> &'static str;
     fn shortcut(&self) -> Option<&'static str> {
@@ -136,6 +141,7 @@ pub trait Tool: Send + Sync {
     fn take_history_replacement(&mut self)->bool{false}
     /// Application transaction identity, independent of restored Scene.version.
     fn note_history_revision(&mut self,_revision:u64,_committed:bool){}
+    fn note_pick_viewport(&mut self,_viewport:ingetrazo_core::screen_pick::PixelViewport,_eye:DVec3,_model_revision:u64){}
     fn note_cursor_plane(&mut self,_point:DVec3,_normal:DVec3){}
     fn snap_anchor(&self)->Option<DVec3>{self.rubber_band().map(|(a,_)|a)}
     fn snap_exclusions(&self)->Option<&ingetrazo_core::snap_screen::SnapExclusions>{None}

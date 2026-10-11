@@ -16,7 +16,7 @@ for name in names:
  for role,path in [('original',original/(name+'.original.pdf')),('native',out/(name+'.native.pdf'))]:
   doc=QPdfDocument();assert doc.load(str(path))==QPdfDocument.Error.None_;assert doc.pageCount()==1;texts.append(doc.getAllText(0).text());size=doc.pagePointSize(0);sizes.append(size);raw=doc.render(0,QSize(round(size.width()*dpi/72),round(size.height()*dpi/72)));assert not raw.isNull();image=QImage(raw.size(),QImage.Format.Format_RGB32);image.fill(0xffffffff);p=QPainter(image);p.drawImage(0,0,raw);p.end();image=image.convertToFormat(QImage.Format.Format_RGBA8888);image.save(str(out/(name+'.'+role+'.'+str(dpi)+'.png')));images.append(bytes(image.constBits()))
  assert sizes[0]==sizes[1] and texts[0]==texts[1],(name,texts);a,b=images;assert any(a[i:i+3]!=b'\xff\xff\xff'for i in range(0,len(a),4)),name+' source blank'
- changed=sum(a[i:i+4]!=b[i:i+4]for i in range(0,len(a),4));rows.append({'case':name,'changed_pixels':changed,'passed':changed==0})
+ changed=0 if a==b else sum(a[i:i+4]!=b[i:i+4]for i in range(0,len(a),4));rows.append({'case':name,'changed_pixels':changed,'passed':changed==0})
 negative=None
 if os.environ.get('INGETRAZO_FIELD_CALLER')=='1':
  raw=(out/'equal_text_only.native.pdf').read_bytes();assert b'<0001> <0031>' in raw and b'<0003> <0032>' in raw

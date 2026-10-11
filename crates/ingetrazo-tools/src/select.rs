@@ -11,6 +11,8 @@ use crate::base::{Tool, ToolContext, ToolType};
 /// Interactive Selection tool for picking single entities, face+bounds, and connected components.
 #[derive(Debug, Default, Clone)]
 pub struct SelectTool {
+    pick_viewport:Option<(ingetrazo_core::screen_pick::PixelViewport,DVec3)>,
+    click_index:crate::select_pick::ClickIndex,
     pub box_start: Option<DVec3>,
     pub box_end: Option<DVec3>,
     pub is_box_selecting: bool,
@@ -21,6 +23,28 @@ impl SelectTool {
         Self::default()
     }
 
+    fn expanded(scene:&Scene,target:SelectionItem)->Vec<SelectionItem> {
+        match target {
+                SelectionItem::Face(id)=>{
+                    let mut faces=vec![id];let mut seen=HashSet::from([id]);let mut index=0;
+                    while index<faces.len(){
+                        let face=faces[index];index+=1;
+                        for &v in &scene.mesh.faces[face].vertices {for &e in &scene.mesh.vertices[v].edges {let edge=&scene.mesh.edges[e];if edge.soft&&edge.faces.contains(&face){for &next in &edge.faces {if seen.insert(next){faces.push(next);}}}}}
+                    }
+                    faces.into_iter().map(SelectionItem::Face).collect::<Vec<_>>()
+                },
+                SelectionItem::Edge(id)=>if let Some(curve)=scene.mesh.edges[id].curve_id {scene.mesh.edges.iter().enumerate().filter(|(_,e)|e.curve_id==Some(curve)).map(|(id,_)|SelectionItem::Edge(id)).collect()}else{vec![target]},
+                _=>vec![target],
+            }
+    }
+    fn apply_selection(scene:&mut Scene,ctx:&ToolContext,targets:Vec<SelectionItem>){
+        if !ctx.shift_held&&!ctx.ctrl_held{scene.clear_selection();}
+        for target in targets {
+            if ctx.shift_held&&ctx.ctrl_held{scene.deselect(&target);}
+            else if ctx.shift_held&&scene.is_selected(&target){scene.deselect(&target);}
+            else{scene.select(target);}
+        }
+    }
     pub fn reset(&mut self) {
         self.box_start = None;
         self.box_end = None;
@@ -236,36 +260,25 @@ impl Tool for SelectTool {
         self.reset();
     }
 
+    fn note_pick_viewport(&mut self,viewport:ingetrazo_core::screen_pick::PixelViewport,eye:DVec3,model_revision:u64){self.pick_viewport=Some((viewport,eye));self.click_index.note_model_revision(model_revision);}
+
     fn on_click(&mut self, scene: &mut Scene, ctx: &ToolContext) {
         let hit_plane=crate::base::pick_section_plane(scene,&ctx.ray,0.2);
-        let hit_edge = crate::base::pick_scene_edge(scene, &ctx.ray, 0.2);
+        let hit_edge = if let (Some((viewport,eye)),Some(cursor))=(self.pick_viewport,ctx.screen){self.click_index.edge(scene,viewport,cursor,eye)}else{crate::base::pick_scene_edge(scene, &ctx.ray, 0.2)};
         let face_hit=crate::base::pick_scene_face(scene,&ctx.ray);let hit_face=face_hit.map(|(id,_,_)|id);
-        let hit_group=crate::base::pick_scene_group(scene,&ctx.ray,0.2).filter(|(_,t)|face_hit.is_none_or(|(_,distance,_)|*t<distance)).map(|(id,_)|id);
+        let hit_group=crate::base::pick_scene_group(scene,&ctx.ray,0.2).map(|(id,_)|id);
 
-        let item = if let Some(id)=hit_plane{Some(SelectionItem::SectionPlane(id))}else if let Some(id)=hit_group{Some(SelectionItem::Group(id))}else if let Some(eid) = hit_edge {
+        let item = if let Some(id)=hit_plane{Some(SelectionItem::SectionPlane(id))}else if let Some(eid) = hit_edge {
             Some(SelectionItem::Edge(eid))
-        } else if let Some(fid) = hit_face {
+        } else if let Some(id)=hit_group {Some(SelectionItem::Group(id))} else if let Some(fid) = hit_face {
             Some(SelectionItem::Face(fid))
         } else {
             scene.image_plane_hit(&ctx.ray,ingetrazo_core::image_plane::ImagePickMode::Selectable).map(|(i,_)|SelectionItem::ImagePlane(i))
         };
 
         if let Some(target) = item {
-            if ctx.shift_held && ctx.ctrl_held {
-                scene.deselect(&target);
-            } else if ctx.shift_held {
-                // Toggle
-                if scene.is_selected(&target) {
-                    scene.deselect(&target);
-                } else {
-                    scene.select(target);
-                }
-            } else if ctx.ctrl_held {
-                scene.select(target);
-            } else {
-                scene.clear_selection();
-                scene.select(target);
-            }
+            let targets=Self::expanded(scene,target);
+            Self::apply_selection(scene,ctx,targets);
         } else if !ctx.shift_held && !ctx.ctrl_held {
             scene.clear_selection();
         }
@@ -273,44 +286,32 @@ impl Tool for SelectTool {
 
     fn on_double_click(&mut self, scene: &mut Scene, ctx: &ToolContext) {
         let hit_plane=crate::base::pick_section_plane(scene,&ctx.ray,0.2);
-        let hit_edge = crate::base::pick_scene_edge(scene, &ctx.ray, 0.2);
+        let hit_edge = if let (Some((viewport,eye)),Some(cursor))=(self.pick_viewport,ctx.screen){self.click_index.edge(scene,viewport,cursor,eye)}else{crate::base::pick_scene_edge(scene, &ctx.ray, 0.2)};
         let face_hit=crate::base::pick_scene_face(scene,&ctx.ray);let hit_face=face_hit.map(|(id,_,_)|id);
-        let hit_group=crate::base::pick_scene_group(scene,&ctx.ray,0.2).filter(|(_,t)|face_hit.is_none_or(|(_,distance,_)|*t<distance)).map(|(id,_)|id);
+        let hit_group=crate::base::pick_scene_group(scene,&ctx.ray,0.2).map(|(id,_)|id);
 
         if let Some(id)=hit_plane{scene.clear_selection();scene.select(SelectionItem::SectionPlane(id));return;}
-        if let Some(id)=hit_group{scene.clear_selection();scene.select(SelectionItem::Group(id));return;}
-        if let Some(fid) = hit_face {
-            let mut bounding_edges = Vec::new();
-            let f = &scene.mesh.faces[fid];
-            let n = f.vertices.len();
-            for i in 0..n {
-                let v0 = f.vertices[i];
-                let v1 = f.vertices[(i + 1) % n];
-                if let Some(eid) = scene.mesh.find_edge(v0, v1) {
-                    bounding_edges.push(eid);
+        if let Some(id)=hit_group.filter(|_|hit_edge.is_none()){scene.clear_selection();scene.select(SelectionItem::Group(id));return;}
+        let target=hit_edge.map(SelectionItem::Edge).or_else(||hit_face.map(SelectionItem::Face));
+        if let Some(target)=target {
+            let mut targets=Self::expanded(scene,target.clone());
+            for item in targets.clone() {
+                match item {
+                    SelectionItem::Face(id)=>{let f=&scene.mesh.faces[id];for ring in std::iter::once(&f.vertices).chain(f.holes.iter()){for i in 0..ring.len(){if let Some(edge)=scene.mesh.find_edge(ring[i],ring[(i+1)%ring.len()]){targets.push(SelectionItem::Edge(edge));}}}},
+                    SelectionItem::Edge(id)=>targets.extend(scene.mesh.edges[id].faces.iter().copied().map(SelectionItem::Face)),
+                    _=>(),
                 }
             }
-
-            scene.select(SelectionItem::Face(fid));
-            for eid in bounding_edges {
-                scene.select(SelectionItem::Edge(eid));
-            }
-        } else if let Some(eid) = hit_edge {
-            let incident_faces = scene.mesh.edges[eid].faces.clone();
-            scene.select(SelectionItem::Edge(eid));
-            for f in incident_faces {
-                scene.select(SelectionItem::Face(f));
-            }
-        } else {
-            self.on_click(scene, ctx);
-        }
+            let mut seen=HashSet::new();targets.retain(|t|seen.insert(t.clone()));
+            Self::apply_selection(scene,ctx,targets);
+        }else{self.on_click(scene,ctx);}
     }
 
     fn on_triple_click(&mut self, scene: &mut Scene, ctx: &ToolContext) {
         let hit_plane=crate::base::pick_section_plane(scene,&ctx.ray,0.2);
-        let hit_edge = crate::base::pick_scene_edge(scene, &ctx.ray, 0.2);
+        let hit_edge = if let (Some((viewport,eye)),Some(cursor))=(self.pick_viewport,ctx.screen){self.click_index.edge(scene,viewport,cursor,eye)}else{crate::base::pick_scene_edge(scene, &ctx.ray, 0.2)};
         let face_hit=crate::base::pick_scene_face(scene,&ctx.ray);let hit_face=face_hit.map(|(id,_,_)|id);
-        let hit_group=crate::base::pick_scene_group(scene,&ctx.ray,0.2).filter(|(_,t)|face_hit.is_none_or(|(_,distance,_)|*t<distance)).map(|(id,_)|id);
+        let hit_group=crate::base::pick_scene_group(scene,&ctx.ray,0.2).map(|(id,_)|id);
 
         if let Some(id)=hit_plane{scene.clear_selection();scene.select(SelectionItem::SectionPlane(id));return;}
         if let Some(id)=hit_group{scene.clear_selection();scene.select(SelectionItem::Group(id));return;}

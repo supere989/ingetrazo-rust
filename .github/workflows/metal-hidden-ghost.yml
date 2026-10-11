@@ -11,7 +11,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        runner: [macos-15, macos-15-intel]
+        # Focused allocation repair: ARM app/classic/material already passed at
+        # b0276fc7; its strict resolve-precision difference remains retained.
+        # Restore both runners when the Metal rendering path changes.
+        runner: [macos-15-intel]
     runs-on: ${{ matrix.runner }}
     timeout-minutes: 30
     env:
@@ -64,8 +67,12 @@ jobs:
           failed=False
           for name,checker,source,native in jobs:
               with open('metal-ghost-evidence/'+name+'-checker.log','w') as log:
-                  result=subprocess.run([sys.executable,checker,source,native],stdout=log,stderr=subprocess.STDOUT,timeout=90)
-              failed=failed or result.returncode!=0
+                  try:
+                      result=subprocess.run([sys.executable,checker,source,native],stdout=log,stderr=subprocess.STDOUT,timeout=90)
+                      failed=failed or result.returncode!=0
+                  except (subprocess.SubprocessError,OSError) as error:
+                      failed=True
+                      log.write(str(error)+'\n')
           raise SystemExit(1 if failed else 0)
           PYTHON
       - name: Compact successful or failed native captures without dependency environments
@@ -76,13 +83,15 @@ jobs:
           import shutil,zipfile
           root=Path('metal-ghost-evidence')
           root.mkdir(exist_ok=True)
-          with zipfile.ZipFile(root/'native-captures.zip','w',zipfile.ZIP_DEFLATED) as z:
-              for name in ['native','classic','material']:
-                  directory=root/name
-                  if directory.exists():
-                      for path in sorted(directory.rglob('*')):
-                          if path.is_file():z.write(path,path.relative_to(root))
-                      shutil.rmtree(directory)
+          directories=[root/name for name in ['native','classic','material'] if (root/name).exists()]
+          files=[p for directory in directories for p in sorted(directory.rglob('*')) if p.is_file()]
+          archive=root/'native-captures.zip'
+          with zipfile.ZipFile(archive,'w',zipfile.ZIP_DEFLATED) as z:
+              for path in files:z.write(path,path.relative_to(root))
+          with zipfile.ZipFile(archive) as z:
+              for path in files:
+                  assert z.read(path.relative_to(root).as_posix())==path.read_bytes()
+          for directory in directories:shutil.rmtree(directory)
           PYTHON
       - uses: actions/upload-artifact@v4
         if: always()

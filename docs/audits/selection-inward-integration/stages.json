@@ -1,0 +1,197 @@
+[
+  {
+    "name": "workspace-tests",
+    "command": [
+      "cargo",
+      "test",
+      "--workspace",
+      "--locked",
+      "--tests",
+      "--no-fail-fast",
+      "-j2"
+    ],
+    "source_commit": "162032126b1a108f920f1c2b3f9c6b58981de0b7",
+    "exit": 0,
+    "seconds": 19.579
+  },
+  {
+    "name": "doctests",
+    "command": [
+      "cargo",
+      "test",
+      "--workspace",
+      "--locked",
+      "--doc",
+      "--no-fail-fast",
+      "-j2"
+    ],
+    "source_commit": "162032126b1a108f920f1c2b3f9c6b58981de0b7",
+    "exit": 0,
+    "seconds": 0.957
+  },
+  {
+    "name": "examples-check",
+    "command": [
+      "cargo",
+      "check",
+      "--workspace",
+      "--locked",
+      "--examples",
+      "-j2"
+    ],
+    "source_commit": "162032126b1a108f920f1c2b3f9c6b58981de0b7",
+    "exit": 0,
+    "seconds": 4.916
+  },
+  {
+    "name": "named-build",
+    "command": [
+      "cargo",
+      "build",
+      "--locked",
+      "-j2",
+      "-p",
+      "ingetrazo-gui",
+      "--example",
+      "pushpull_inward_limits",
+      "--example",
+      "select_visible_click_protocol",
+      "--example",
+      "pushpull_partition_collapse",
+      "--example",
+      "pushpull_endpoints_app",
+      "-p",
+      "ingetrazo-tools",
+      "--example",
+      "pushpull_gate2_fixture"
+    ],
+    "source_commit": "162032126b1a108f920f1c2b3f9c6b58981de0b7",
+    "exit": 0,
+    "seconds": 0.985
+  },
+  {
+    "name": "inward-native",
+    "command": [
+      "/tmp/ingetrazo-native-font-merge-target/debug/examples/pushpull_inward_limits",
+      "/tmp/ingetrazo-next-integration/docs/audits/pushpull-inward-limits/source.json",
+      "/tmp/ingetrazo-selection-inward-integration/inward-native.json"
+    ],
+    "source_commit": "162032126b1a108f920f1c2b3f9c6b58981de0b7",
+    "exit": 0,
+    "seconds": 0.035
+  },
+  {
+    "name": "inward-check",
+    "command": [
+      "python3",
+      "scripts/check-pushpull-inward-limits.py",
+      "/tmp/ingetrazo-next-integration/docs/audits/pushpull-inward-limits/source.json",
+      "/tmp/ingetrazo-selection-inward-integration/inward-native.json",
+      "/tmp/ingetrazo-next-integration/docs/audits/pushpull-inward-limits/source-vcb.json",
+      "/tmp/ingetrazo-next-integration/docs/audits/pushpull-inward-limits/remaining-native.json",
+      "/tmp/ingetrazo-selection-inward-integration/inward-comparison.json"
+    ],
+    "source_commit": "162032126b1a108f920f1c2b3f9c6b58981de0b7",
+    "exit": 0,
+    "seconds": 0.023
+  },
+  {
+    "name": "select-native",
+    "command": [
+      "/tmp/ingetrazo-native-font-merge-target/debug/examples/select_visible_click_protocol",
+      "/tmp/ingetrazo-selection-inward-integration/select-original.json",
+      "/tmp/ingetrazo-selection-inward-integration/select-native.json",
+      "/tmp/ingetrazo-selection-inward-integration/select-original-group-priority.json"
+    ],
+    "source_commit": "162032126b1a108f920f1c2b3f9c6b58981de0b7",
+    "exit": 0,
+    "seconds": 0.186
+  },
+  {
+    "name": "select-check",
+    "command": [
+      "python3",
+      "scripts/check-select-visible-click.py",
+      "/tmp/ingetrazo-next-integration/docs/audits/select-visible-click",
+      "/tmp/ingetrazo-selection-inward-integration/select-native.json"
+    ],
+    "source_commit": "162032126b1a108f920f1c2b3f9c6b58981de0b7",
+    "exit": 0,
+    "seconds": 0.019
+  },
+  {
+    "name": "partition-native",
+    "command": [
+      "/tmp/ingetrazo-native-font-merge-target/debug/examples/pushpull_partition_collapse",
+      "/tmp/ingetrazo-next-integration/docs/audits/pushpull-partition-collapse/source.json",
+      "/tmp/ingetrazo-selection-inward-integration/partition-native.json"
+    ],
+    "source_commit": "162032126b1a108f920f1c2b3f9c6b58981de0b7",
+    "exit": 0,
+    "seconds": 0.016
+  },
+  {
+    "name": "partition-check",
+    "command": [
+      "python3",
+      "scripts/check-pushpull-partition-collapse.py",
+      "/tmp/ingetrazo-next-integration/docs/audits/pushpull-partition-collapse/source.json",
+      "/tmp/ingetrazo-selection-inward-integration/partition-native.json",
+      "/tmp/ingetrazo-selection-inward-integration/partition-comparison.json"
+    ],
+    "source_commit": "162032126b1a108f920f1c2b3f9c6b58981de0b7",
+    "exit": 0,
+    "seconds": 0.016
+  },
+  {
+    "name": "endpoint-native",
+    "command": [
+      "/tmp/ingetrazo-native-font-merge-target/debug/examples/pushpull_gate2_fixture",
+      "/tmp/ingetrazo-next-integration/docs/audits/pushpull-endpoints/source.json",
+      "/tmp/ingetrazo-selection-inward-integration/endpoint-native.json"
+    ],
+    "source_commit": "162032126b1a108f920f1c2b3f9c6b58981de0b7",
+    "exit": 0,
+    "seconds": 0.013
+  },
+  {
+    "name": "endpoint-app",
+    "command": [
+      "/tmp/ingetrazo-native-font-merge-target/debug/examples/pushpull_endpoints_app",
+      "/tmp/ingetrazo-next-integration/docs/audits/pushpull-endpoints/source.json",
+      "/tmp/ingetrazo-selection-inward-integration/endpoint-app.json"
+    ],
+    "source_commit": "162032126b1a108f920f1c2b3f9c6b58981de0b7",
+    "exit": 0,
+    "seconds": 0.018
+  },
+  {
+    "name": "endpoint-check",
+    "command": [
+      "/tmp/ingetrazo-parity-python/bin/python",
+      "scripts/check-pushpull-endpoints.py",
+      "/tmp/ingetrazo-next-integration/docs/audits/pushpull-endpoints/source.json",
+      "/tmp/ingetrazo-selection-inward-integration/endpoint-native.json",
+      "/tmp/ingetrazo-selection-inward-integration/endpoint-comparison.json",
+      "/tmp/ingetrazo-selection-inward-integration/endpoint-app.json"
+    ],
+    "source_commit": "162032126b1a108f920f1c2b3f9c6b58981de0b7",
+    "exit": 1,
+    "seconds": 0.016
+  },
+  {
+    "name": "endpoint-check-environment-corrected",
+    "command": [
+      "/tmp/ingetrazo-parity-python/bin/python",
+      "scripts/check-pushpull-endpoints.py",
+      "/tmp/ingetrazo-next-integration/docs/audits/pushpull-endpoints/source.json",
+      "/tmp/ingetrazo-selection-inward-integration/endpoint-native.json",
+      "/tmp/ingetrazo-selection-inward-integration/endpoint-comparison.json",
+      "/tmp/ingetrazo-selection-inward-integration/endpoint-app.json"
+    ],
+    "source_commit": "162032126b1a108f920f1c2b3f9c6b58981de0b7",
+    "exit": 0,
+    "seconds": 0.116,
+    "correction": "Use existing Qt Python environment; original failed checker log retained. No binaries or tests repeated."
+  }
+]

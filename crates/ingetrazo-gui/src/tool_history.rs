@@ -139,6 +139,7 @@ impl IngeTrazoApp {
     pub fn dispatch_tool_move(&mut self,context:&ToolContext){
         let placement_before=self.active_tool.placement_preview().is_some();let version=self.scene.version;let images=self.scene.image_planes.publication_revision();self.active_tool.on_move(&mut self.scene,context);
         if self.scene.version!=version{if placement_before||self.active_tool.placement_preview().is_some(){self.bump_placement_revision();}else{self.bump_model_revision();}}else if self.scene.image_planes.publication_revision()!=images{self.bump_image_presentation_revision();}
+        if self.active_tool.error_message().is_none(){if let Some(status)=self.active_tool.take_status_message(){self.status_message=status;}}
     }
 
     pub fn dispatch_tool_click(&mut self, context: &ToolContext) {
@@ -152,6 +153,7 @@ impl IngeTrazoApp {
             .error_message()
             .map(|error| format!("Tool error: {error}"))
             .unwrap_or_default();
+        if self.active_tool.error_message().is_none(){if let Some(status)=self.active_tool.take_status_message(){self.status_message=status;}}
         if self.active_tool.error_message().is_some(){
             self.scene=before;self.active_tool.restore_current_preview_model(&mut self.scene);self.bump_model_revision();return;
         }
@@ -164,6 +166,7 @@ impl IngeTrazoApp {
         let before = self.tool_snapshot();
         self.active_tool.on_release(&mut self.scene, context, drag_distance);
         self.status_message = self.active_tool.error_message().map(|e| format!("Tool error: {e}")).unwrap_or_default();
+        if self.active_tool.error_message().is_none(){if let Some(status)=self.active_tool.take_status_message(){self.status_message=status;}}
         let _ = self.record_tool_commit(before);
     }
 
@@ -177,6 +180,7 @@ impl IngeTrazoApp {
             .error_message()
             .map(|error| format!("Tool error: {error}"))
             .unwrap_or_default();
+        if self.active_tool.error_message().is_none(){if let Some(status)=self.active_tool.take_status_message(){self.status_message=status;}}
         if self.record_tool_commit(before).is_ok()&&self.active_tool_type==ingetrazo_tools::base::ToolType::Select&&self.scene.selection.len()==1&&self.scene.selection.iter().any(|item|matches!(item,ingetrazo_core::scene::SelectionItem::Group(_))){self.begin_component_edit();}
     }
 
@@ -188,6 +192,7 @@ impl IngeTrazoApp {
         self.active_tool.note_history_revision(self.model_revision,false);
         match self.active_tool.on_vcb_input(&mut self.scene, text) {
             Ok(()) => {
+                if let Some(status)=self.active_tool.take_status_message(){self.status_message=status;}
                 self.record_tool_commit(before)
             }
             Err(error) => {

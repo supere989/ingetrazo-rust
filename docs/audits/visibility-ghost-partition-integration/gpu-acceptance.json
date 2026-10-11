@@ -1,0 +1,30 @@
+{
+  "source_sha": "a96bb645120a3720c3c831d445f644d767e9d8ee",
+  "verdict": "PASS",
+  "whole_rgba_frames_exact": 12,
+  "application_actions": 21,
+  "negative_controls": [
+    "disabled ghost substituted for enabled frame rejected",
+    "missing frame rejected"
+  ],
+  "source_not_recaptured": true,
+  "archive_sha256": "847f8d355b71f1c6cc74bedf01059f7a1f537bee2a98f917072c17f59f57dd05",
+  "replay_command": "podman unshare bash replay.sh a96bb645120a3720c3c831d445f644d767e9d8ee FRESH_ABSOLUTE_OUTPUT",
+  "checker_command": "/tmp/ingetrazo-parity-python/bin/python scripts/check-hidden-ghost-acceptance.py docs/audits/visibility-ghost-partition-integration/gpu",
+  "released_temporary_paths": [
+    {
+      "path": "/tmp/visibility-ghost-integration-a96bb645",
+      "bytes": 91497421
+    },
+    {
+      "path": "/tmp/visibility-ghost-integrated-archive",
+      "bytes": 790696
+    }
+  ],
+  "preserved": [
+    "root dependency target and its binaries",
+    "original source proof archive",
+    "source worktrees"
+  ],
+  "scope": "Production API-driven application workflow; not mouse-input proof or complete picking parity."
+}

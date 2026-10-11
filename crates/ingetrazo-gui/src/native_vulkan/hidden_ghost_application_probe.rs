@@ -26,6 +26,10 @@ impl App for Probe {
      "objects-off"=>{self.app.scene.set_hidden_view(true,false);},
      "geometry-on"=>{self.app.scene.set_hidden_view(false,true);},
      "geometry-off"=>{self.app.scene.set_hidden_view(false,false);},
+     "select-group"=>{assert!(self.app.scene.group_selectable(&self.app.scene.groups[0]));self.app.scene.select(ingetrazo_core::scene::SelectionItem::Group(0));},
+     "unhide-selected"=>self.app.unhide_selected(),
+     "undo"=>self.app.undo(),
+     "clear-selection"=>self.app.scene.clear_selection(),
      "capture"=>self.app.add_saved_view("ghost-view".into()),
      "update"=>self.app.update_selected_saved_view(),
      "recall"=>self.app.apply_saved_view(0),
@@ -51,7 +55,7 @@ impl App for Probe {
   App::prepare_gpu(&mut self.app,system,resize);
   let row=serde_json::json!({"nonce":self.nonce,"objects":self.app.scene.show_hidden_objects,
    "geometry":self.app.scene.show_hidden_geometry,"dirty":self.app.document_dirty(),
-   "scene_version":self.app.scene.version,"view_version":self.app.scene.view_version,
+   "selection_count":self.app.scene.selection.len(),"group_hidden":self.app.scene.groups.first().map(|g|g.hidden),"scene_version":self.app.scene.version,"view_version":self.app.scene.view_version,
    "views":self.app.scene.saved_views.iter().map(|v|v.hidden_shown.clone()).collect::<Vec<_>>(),
    "screen_size":[system.egui_ctx.screen_rect().width(),system.egui_ctx.screen_rect().height()],"viewport":self.app.native_gpu_viewport_rect.map(|r|[r.min.x,r.min.y,r.max.x,r.max.y]),
    "gpu":system.hidden_ghost_observation_for_probe()});

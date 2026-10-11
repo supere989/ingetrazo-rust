@@ -16,3 +16,11 @@ fn collapsed_cap_preserves_surviving_face_and_edge_objects() {
     assert_eq!(scene.mesh.faces.len(),1);assert_eq!(scene.mesh.faces[0].history_id,token);
     for (a,b,token) in edges {let edge=scene.mesh.edges.iter().find(|e| {let p=scene.mesh.vertices[e.v0].position;let q=scene.mesh.vertices[e.v1].position;(p==a&&q==b)||(p==b&&q==a)}).unwrap();assert_eq!(edge.history_id,token);}
 }
+
+#[test]
+fn punched_mother_is_new_but_protected_partitions_keep_identity(){
+    let mut scene=Scene::new();let ring=[DVec3::ZERO,DVec3::X,DVec3::X+DVec3::Y,DVec3::Y].map(|p|scene.mesh.add_vertex(p));let id=scene.mesh.add_face(ring.to_vec(),vec![]).unwrap();PushPullTool::extrude_face(&mut scene,id,3.).unwrap();
+    let base=scene.mesh.faces.iter().position(|f|f.vertices.iter().all(|&v|scene.mesh.vertices[v].position.z==0.)).unwrap();scene.mesh.faces.remove(base);scene.mesh.rebuild_incidence();let vertices=[DVec3::ZERO,DVec3::Y,DVec3::X+DVec3::Y,DVec3::X].map(|p|scene.mesh.add_vertex(p));
+    let a=scene.mesh.add_face(vec![vertices[0],vertices[1],vertices[2]],vec![]).unwrap();let b=scene.mesh.add_face(vec![vertices[0],vertices[2],vertices[3]],vec![]).unwrap();let tokens=[scene.mesh.faces[a].history_id,scene.mesh.faces[b].history_id];
+    let cap=scene.mesh.faces.iter().position(|f|f.vertices.iter().all(|&v|scene.mesh.vertices[v].position.z==3.)).unwrap();let mother=scene.mesh.faces[cap].history_id;PushPullTool::extrude_face(&mut scene,cap,-3.).unwrap();let replacement=scene.mesh.faces.iter().find(|f|f.holes.len()==2).unwrap();assert_ne!(replacement.history_id,mother);for token in tokens {assert!(scene.mesh.faces.iter().any(|f|f.history_id==token));}
+}

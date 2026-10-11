@@ -1,0 +1,143 @@
+{
+  "bounded_gate_passed": true,
+  "full_pushpull_parity": false,
+  "cases": [
+    {
+      "name": "cube-cap",
+      "limit_exact": true,
+      "preview_distance_exact": true,
+      "source_faces": 1,
+      "native_faces": 1,
+      "full_oriented_fields_exact": true,
+      "history_cancel_exact": true
+    },
+    {
+      "name": "triangle-long-wall",
+      "limit_exact": true,
+      "preview_distance_exact": true,
+      "source_faces": 5,
+      "native_faces": 5,
+      "full_oriented_fields_exact": true,
+      "history_cancel_exact": true
+    },
+    {
+      "name": "triangle-axis-wall",
+      "limit_exact": true,
+      "preview_distance_exact": true,
+      "source_faces": 5,
+      "native_faces": 5,
+      "full_oriented_fields_exact": true,
+      "history_cancel_exact": true
+    },
+    {
+      "name": "triangle-end",
+      "limit_exact": true,
+      "preview_distance_exact": true,
+      "source_faces": 1,
+      "native_faces": 1,
+      "full_oriented_fields_exact": true,
+      "history_cancel_exact": true
+    },
+    {
+      "name": "wedge-roof",
+      "limit_exact": true,
+      "preview_distance_exact": true,
+      "source_faces": 6,
+      "native_faces": 6,
+      "full_oriented_fields_exact": true,
+      "history_cancel_exact": true
+    },
+    {
+      "name": "wedge-xwall",
+      "limit_exact": true,
+      "preview_distance_exact": true,
+      "source_faces": 6,
+      "native_faces": 6,
+      "full_oriented_fields_exact": true,
+      "history_cancel_exact": true
+    },
+    {
+      "name": "wedge-ywall",
+      "limit_exact": true,
+      "preview_distance_exact": true,
+      "source_faces": 1,
+      "native_faces": 1,
+      "full_oriented_fields_exact": true,
+      "history_cancel_exact": true
+    },
+    {
+      "name": "gable-roof",
+      "limit_exact": true,
+      "preview_distance_exact": true,
+      "source_faces": 9,
+      "native_faces": 9,
+      "full_oriented_fields_exact": true,
+      "history_cancel_exact": true
+    },
+    {
+      "name": "step-mouth",
+      "limit_exact": true,
+      "preview_distance_exact": true,
+      "source_faces": 11,
+      "native_faces": 11,
+      "full_oriented_fields_exact": true,
+      "history_cancel_exact": true
+    },
+    {
+      "name": "unattached-sheet",
+      "limit_exact": true,
+      "preview_distance_exact": true,
+      "source_faces": 7,
+      "native_faces": 7,
+      "full_oriented_fields_exact": true,
+      "history_cancel_exact": true
+    },
+    {
+      "name": "partial-parallel",
+      "limit_exact": true,
+      "preview_distance_exact": true,
+      "source_faces": 7,
+      "native_faces": 7,
+      "full_oriented_fields_exact": true,
+      "history_cancel_exact": true
+    },
+    {
+      "name": "disjoint-parallel",
+      "limit_exact": true,
+      "preview_distance_exact": true,
+      "source_faces": 0,
+      "native_faces": 2,
+      "full_oriented_fields_exact": false,
+      "history_cancel_exact": true
+    },
+    {
+      "name": "ctrl-cap",
+      "limit_exact": true,
+      "preview_distance_exact": true,
+      "source_faces": 11,
+      "native_faces": 11,
+      "full_oriented_fields_exact": true,
+      "history_cancel_exact": true
+    }
+  ],
+  "negative_controls": [
+    "missing_inventory",
+    "wrong_lateral_limit",
+    "missing_zero_exit",
+    "unclamped_ctrl",
+    "lost_face",
+    "reversed_cap",
+    "wrong_interior",
+    "lost_history",
+    "wrong_status",
+    "wrong_attributes",
+    "missing_vcb_direction",
+    "lost_unrelated_sheet"
+  ],
+  "signed_vcb_cases": 2,
+  "nested_history_exact": true,
+  "remaining_gaps": {
+    "disjoint-parallel": "Intentional data-integrity safeguard: original mixed open-plane rebuild deletes every face, including the unaffected z2 sheet; native preserves collapsed cap and disconnected authored sheet."
+  },
+  "scope": "13 exact source inward-limit/preview/status decisions, 12 exact final oriented face/holes/attrs/interior inventories, 1 explicit safeguard divergence; actual app handlers/VCB/Cancel/Undo/Redo/nested Finish. No OS gesture or full algorithm corpus claim."
+}

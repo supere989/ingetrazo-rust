@@ -1,0 +1,142 @@
+{
+  "passed": true,
+  "runtime_commit": "7bed16d5",
+  "named_binary_source_commit": "a96bb645120a3720c3c831d445f644d767e9d8ee",
+  "original_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "original_clean": true,
+  "unique_test_passes": 883,
+  "existing_ignores": 2,
+  "remaining_test_failures": 0,
+  "retained_initial_failure": "Line nested Undo test still expected removal of source-retained endpoint objects; only expectation changed. Full failure log is archived.",
+  "repeated_tests": [
+    "component_global_history::line_chain_then_pending_point_take_priority_over_make_unique_ancestor"
+  ],
+  "completed_stages": 24,
+  "stages_after_correction_passed": true,
+  "doctests": true,
+  "examples_checked": true,
+  "named_build_seconds": 2.148,
+  "timing_scope": "Cached build duration only; no cold-build or runtime speedup claim.",
+  "strict_lifecycle": {
+    "passed": true,
+    "lifecycle_workflows": 11,
+    "lifecycle_passed": true,
+    "pending_workflows": 3,
+    "pending_full_parity": true,
+    "state_history_phases": 41,
+    "original_reopens": 4,
+    "negative_controls": [
+      "prompt_depth",
+      "scene",
+      "history",
+      "camera",
+      "anchor",
+      "continued",
+      "empty",
+      "missing",
+      "duplicate",
+      "missing_phase"
+    ],
+    "strict_failures": []
+  },
+  "line": {
+    "cases": 9,
+    "exact_bare_history_cases": 5,
+    "exact_command_and_undo_cases": 9,
+    "negative_controls": 11,
+    "compound_forward_raw_differences": [
+      "snapshot-plane-face",
+      "snapshot-crossing",
+      "snapshot-closing"
+    ]
+  },
+  "views": {
+    "cases": 2,
+    "exact_states": 60,
+    "rejected_controls": 21
+  },
+  "unhide": {
+    "states": 34,
+    "negative_controls": 19,
+    "result": "PASS"
+  },
+  "partition": {
+    "passed": true,
+    "cases": [
+      {
+        "name": "diagonal-protected",
+        "exact_fields_and_vertex_ownership": true,
+        "faces": 3,
+        "vertices": 4,
+        "edges": 5,
+        "source_raw_incidence_excess": 5,
+        "atomic_invalid_output_refusal": false
+      },
+      {
+        "name": "ring-island-protected",
+        "exact_fields_and_vertex_ownership": true,
+        "faces": 2,
+        "vertices": 8,
+        "edges": 8,
+        "source_raw_incidence_excess": 0,
+        "atomic_invalid_output_refusal": false
+      },
+      {
+        "name": "annular-divisions",
+        "exact_fields_and_vertex_ownership": true,
+        "faces": 3,
+        "vertices": 8,
+        "edges": 10,
+        "source_raw_incidence_excess": 0,
+        "atomic_invalid_output_refusal": false
+      },
+      {
+        "name": "diagonal-wires",
+        "exact_fields_and_vertex_ownership": true,
+        "faces": 3,
+        "vertices": 7,
+        "edges": 7,
+        "source_raw_incidence_excess": 5,
+        "atomic_invalid_output_refusal": false
+      },
+      {
+        "name": "ring-island-empty",
+        "exact_fields_and_vertex_ownership": true,
+        "faces": 2,
+        "vertices": 8,
+        "edges": 8,
+        "source_raw_incidence_excess": 0,
+        "atomic_invalid_output_refusal": false
+      },
+      {
+        "name": "annular-tjunction-invalid",
+        "exact_fields_and_vertex_ownership": false,
+        "faces": 13,
+        "vertices": 20,
+        "edges": 32,
+        "source_raw_incidence_excess": 22,
+        "atomic_invalid_output_refusal": true
+      }
+    ],
+    "negatives": [
+      "lost_partition",
+      "wrong_winner",
+      "lost_empty_fallback",
+      "lost_hole",
+      "lost_wire",
+      "lost_wire_flags",
+      "changed_vertex_owner",
+      "wrong_winding",
+      "accepted_invalid_output"
+    ],
+    "nested": {
+      "depth": 2,
+      "integer_affine": true,
+      "local_history_exact": true,
+      "shared_publication_exact": true,
+      "folded_document_history_exact": true
+    },
+    "scope": "Five exact source planar face/attribute, vertex survivor and edge payload cases; one source-accepted invalid-loop atomic safeguard. Source cached duplicate face references are observed separately; native incidence stays unique. Actual app dispatch/VCB/Undo/Redo/Finish, no OS gesture claim."
+  },
+  "scope": "One integrated test suite with failed and unfinished targets resumed only; semantic app controller consumers, not OS input gesture acceptance."
+}

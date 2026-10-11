@@ -1,0 +1,11 @@
+{
+  "path": "/tmp/ingetrazo-visibility-ghost-partition-integration",
+  "released_apparent_bytes": 1449538,
+  "condition": "Archive SHA, complete file roster and every byte matched before removing terminal integration outputs/state.",
+  "preserved": [
+    "canonical semantic and GPU archives",
+    "original source inputs",
+    "active worktrees",
+    "exclusive reused build targets"
+  ]
+}
