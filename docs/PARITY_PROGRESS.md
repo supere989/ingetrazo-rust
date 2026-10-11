@@ -19,6 +19,8 @@ Latest independent rendering diagnosis: [real layout](audits/annotation-real-ope
 
 ## Dated implementation and verification evidence
 
+Revised ARM world job passes (2026-10-11 UTC): direct job inspection confirms source `314eb656` passes native SDK build, GPU execution and the unchanged nine-frame checker in run 38099162740. Intel remains building at this observation. [Job observation](audits/metal-world-root-review/revised-run-observation.json). Independent artifact verification is pending; full materials, application activation and platform acceptance remain OPEN.
+
 Actual fractional-DPI extent correction (2026-10-11 UTC): nine original Qt viewport observations at DPR 1/1.25/1.5 show resizeGL receives logical dimensions, contrary to its source comment. Camera aspect follows logical dimensions; two cases show Python _fb_size rounding differs from actual captured framebuffer dimensions. [Retained measurements](audits/viewport-extent-original-root/review.json). Native extent policy must preserve these distinct observed quantities; the earlier proposal to force camera aspect to physical target ratio is not justified.
 
 Floor-only actual viewport failure retained (2026-10-11 UTC): root verifies source `5716c95d` native captures still differ by 4,765 pixels with annotations and 1,297 without; annotation-mask XOR is 460 and restoration is exact. All 1,404 flags remain visible. [Independent review](audits/annotation-widget-floor-negative/root-review.json). Placement improves the earlier discrepancy but strict parity remains FAIL; later fractional-DPI arithmetic is not covered by this capture.

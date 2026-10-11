@@ -1,0 +1,14 @@
+{
+  "run_id": 38099162740,
+  "source": "314eb6566b6694652361ab948a5d02f02cf71eb9",
+  "arm_job": 114351299441,
+  "arm_steps": {
+    "sdk_build": "success",
+    "gpu_runtime": "success",
+    "nine_frame_checker": "success",
+    "artifact_upload": "success"
+  },
+  "intel_job": 114351299269,
+  "intel_observed_step": "SDK build in_progress",
+  "scope": "Direct GitHub job observation; root artifact/pixel/counter review pending; not full Metal viewport acceptance"
+}
