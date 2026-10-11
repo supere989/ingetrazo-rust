@@ -1,0 +1,12 @@
+{
+  "compiler_package": "shaderc0.8.3",
+  "compiler_sha256": "61e575f778907c65950640430a81cd7218f3df68e1cfb6c3d3b2ea04615169fa",
+  "command": [
+    "/tmp/ingetrazo-skp-native-target/debug/ingetrazo-image-shader-compiler",
+    "/tmp/ingetrazo-skp-native-import/crates/ingetrazo-gui/src/native_vulkan/shaders/annotation_overlay.frag",
+    "/tmp/annotation-lcd-recompiled.spv"
+  ],
+  "source_sha256": "db6688a2506656331dd004d23c2d34edaee7058258196d0e290fb5c0929e2041",
+  "spv_sha256": "9b1d6ef2665b837a6eaaefc5eb8fdfd1738074ace67259f8ebe72c2038f70eb8",
+  "byte_identical_recompile": true
+}

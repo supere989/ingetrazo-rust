@@ -1,4 +1,6 @@
 {
+  "annotation-lcd-fixed-blend-check.log": "fc1f863ae6c580a4a68893e101d57786a73004f7284998752b0189d7f02e800a",
+  "annotation-widget-lcd-fixed-build.log": "c36492c8cbf8cdda424b85933784a113cb7fbcc5c21e0a793d30460c639189f9",
   "capilla_quiroz_v17-iso/native/annotations-off-window.png": "d1ee7d5c264ed373ec91da85c8a50b2968d45b71080e0127655f34b60c47d509",
   "capilla_quiroz_v17-iso/native/annotations-off.png": "d1ee7d5c264ed373ec91da85c8a50b2968d45b71080e0127655f34b60c47d509",
   "capilla_quiroz_v17-iso/native/annotations-on-window.png": "5befce05f7757649858293df2131e8cd8e808f9ed21ca826e6a4e126660e582e",
@@ -13,6 +15,7 @@
   "capilla_quiroz_v17-iso/native/visibility.json": "35649ad3f15bd32b15e0c6c2cc13c7f35d599b71e79d5802cd238ccfe57603a0",
   "comparison.json": "5c6873650729dec65cdc155a2abda05636c08ef49644b75f8a89d79aa6b520bf",
   "nvidia-glx-icd.json": "580e00d71b7aee371c54e277aed4c9ef114a686688bfd8406d567233cd8d9357",
+  "shader-reproduction.json": "a22a6e4c6f9333435cb530c83ad321824e806e689d6173cf69b0a0d9d17357d5",
   "source.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
   "transport.json": "052a93c9d9454636f68236ed54106a3fb7f106292d68c0a8ad19867c885c9cba",
   "verdict.json": "e271e7ba23aec3e2a3a9bc1ebbd9d354800a6cb2a0e583280512c740780c9adf"
