@@ -34,7 +34,11 @@ impl LengthUnit {
 
     /// Conversion factor from this unit to internal units (Meters).
     pub fn from_unit_scale(self) -> f64 {
-        1.0 / self.to_unit_scale()
+        match self { Self::Meters=>1., Self::Centimeters=>0.01, Self::Millimeters=>0.001, Self::Inches=>0.0254, Self::Feet=>0.3048 }
+    }
+
+    pub fn code(self) -> &'static str {
+        match self {Self::Meters=>"m",Self::Centimeters=>"cm",Self::Millimeters=>"mm",Self::Inches=>"in",Self::Feet=>"ft"}
     }
 
     pub fn suffix(self) -> &'static str {
@@ -48,38 +52,32 @@ impl LengthUnit {
     }
 }
 
-/// Parse a length string typed in the VCB (e.g. "1.5m", "1500mm", "25cm", "12\"", "3'") into meters.
+pub mod vcb;
+
+/// Parse one source VCB measurement, including fractions and decimal commas.
 pub fn parse_length(text: &str, default_unit: LengthUnit) -> Result<f64, String> {
-    let s = text.trim();
-    if s.is_empty() {
-        return Err("Empty input".to_string());
-    }
+    vcb::parse_single(text, default_unit.from_unit_scale())
+}
 
-    // Check unit suffix
-    if let Some(rest) = s.strip_suffix("mm") {
-        let val: f64 = rest.trim().parse().map_err(|e| format!("Invalid number: {e}"))?;
-        return Ok(val * LengthUnit::Millimeters.from_unit_scale());
+/// Document units retain composite imperial modes in the original payload.
+/// A modeled unit change takes precedence over the loaded five-unit projection.
+pub fn model_unit(scene: &crate::scene::Scene) -> &str {
+    let raw=scene.native_document["units"]["length"].as_str();
+    let projected=match raw {Some("cm")=>LengthUnit::Centimeters,Some("mm")=>LengthUnit::Millimeters,Some("in")=>LengthUnit::Inches,Some("ft")=>LengthUnit::Feet,_=>LengthUnit::Meters};
+    if scene.unit==projected {
+        if let Some(code @ ("m"|"cm"|"mm"|"in"|"ft"|"ft-in"|"in-frac"|"ft-in-frac"))=raw {return code;}
     }
-    if let Some(rest) = s.strip_suffix("cm") {
-        let val: f64 = rest.trim().parse().map_err(|e| format!("Invalid number: {e}"))?;
-        return Ok(val * LengthUnit::Centimeters.from_unit_scale());
-    }
-    if let Some(rest) = s.strip_suffix('m') {
-        let val: f64 = rest.trim().parse().map_err(|e| format!("Invalid number: {e}"))?;
-        return Ok(val * LengthUnit::Meters.from_unit_scale());
-    }
-    if let Some(rest) = s.strip_suffix('"').or_else(|| s.strip_suffix("in")) {
-        let val: f64 = rest.trim().parse().map_err(|e| format!("Invalid number: {e}"))?;
-        return Ok(val * LengthUnit::Inches.from_unit_scale());
-    }
-    if let Some(rest) = s.strip_suffix('\'').or_else(|| s.strip_suffix("ft")) {
-        let val: f64 = rest.trim().parse().map_err(|e| format!("Invalid number: {e}"))?;
-        return Ok(val * LengthUnit::Feet.from_unit_scale());
-    }
-
-    // No suffix: use default unit
-    let val: f64 = s.parse().map_err(|e| format!("Invalid number: {e}"))?;
-    Ok(val * default_unit.from_unit_scale())
+    scene.unit.code()
+}
+pub const MODEL_UNIT_CODES: [&str;8]=["m","cm","mm","in","ft","ft-in","in-frac","ft-in-frac"];
+/// Authored document precision; display formatters clamp it separately.
+pub fn model_precision(scene:&crate::scene::Scene)->i64 {
+    if scene.native_document["units"]["length"].as_str().is_some_and(|u|MODEL_UNIT_CODES.contains(&u)) {
+        scene.native_document["units"]["precision"].as_i64().unwrap_or(2)
+    }else{2}
+}
+pub fn model_scale(scene: &crate::scene::Scene)->f64 {
+    match model_unit(scene) {"cm"=>0.01,"mm"=>0.001,"in"|"ft-in"|"in-frac"|"ft-in-frac"=>0.0254,"ft"=>0.3048,_=>1.}
 }
 
 /// Format length in meters into string according to specified unit and precision.

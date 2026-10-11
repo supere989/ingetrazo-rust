@@ -472,10 +472,7 @@ impl Tool for RotateTool {
     }
 
     fn on_vcb_input(&mut self, scene: &mut Scene, text: &str) -> Result<(), String> {
-        let deg: f64 = text
-            .trim()
-            .parse()
-            .map_err(|e| format!("Invalid angle in degrees: {e}"))?;
+        let deg=ingetrazo_core::units::vcb::parse_angle(text)?;
         let rad = deg * PI / 180.0;
         self.execute_rotation(rad, scene);
         self.reset();

@@ -130,28 +130,17 @@ impl Tool for LineTool {
             return Err("No active start point".into());
         };
 
-        let trimmed = text.trim();
-        // Check for 3D delta format: "dx;dy;dz" or "dx,dy,dz" or "dx dy dz"
-        let parts: Vec<&str> = if trimmed.contains(';') {
-            trimmed.split(';').collect()
-        } else if trimmed.contains(',') {
-            trimmed.split(',').collect()
-        } else {
-            trimmed.split_whitespace().collect()
-        };
-
-        if parts.len() == 3 {
-            let dx: f64 = parts[0].trim().parse().map_err(|e| format!("Invalid dx: {e}"))?;
-            let dy: f64 = parts[1].trim().parse().map_err(|e| format!("Invalid dy: {e}"))?;
-            let dz: f64 = parts[2].trim().parse().map_err(|e| format!("Invalid dz: {e}"))?;
-            let target = start + DVec3::new(dx, dy, dz);
+        let values=ingetrazo_core::units::vcb::parse_values(text,ingetrazo_core::units::model_scale(scene),false)?;
+        if let [dx,dy,dz]=values.as_slice() {
+            let target = start + DVec3::new(*dx, *dy, *dz);
             self.commit_segment(target, scene,false)?;
             self.hover_point = Some(target);
             return Ok(());
         }
 
         // Otherwise length along current hover direction
-        let length: f64 = trimmed.parse().map_err(|e| format!("Invalid length: {e}"))?;
+        let [length]=values.as_slice() else{return Err("Line expects one length or three deltas".into());};
+        let length=*length;
         if !length.is_finite()||length.abs()<1e-9{return Err("Length must be finite and nonzero".into());}
         let Some(hover) = self.hover_point else {
             return Err("No direction available for length input".into());

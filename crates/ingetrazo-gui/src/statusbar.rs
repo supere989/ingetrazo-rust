@@ -91,7 +91,7 @@ pub fn render_status_bar(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
 
         // Right side: Measurements / VCB
         ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
-            ui.label(tr("Units: Meters"));
+            ui.label(format!("{}: {}",tr("Units"),ingetrazo_core::units::model_unit(&app.scene)));
             ui.separator();
 
             let vcb_label = match app.navigation.mode {Some(crate::navigation::Mode::Position)=>"Height offset",Some(_)=>"Eye height",None=>app.active_tool.vcb_label()};

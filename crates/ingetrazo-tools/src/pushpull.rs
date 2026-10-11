@@ -1108,7 +1108,7 @@ impl Tool for PushPullTool {
     }
 
     fn on_vcb_input(&mut self, scene: &mut Scene, text: &str) -> Result<(), String> {
-        let value=ingetrazo_core::units::parse_length(text,ingetrazo_core::units::LengthUnit::Meters)?;
+        let value=ingetrazo_core::units::vcb::parse_single(text,ingetrazo_core::units::model_scale(scene))?;
         let requested=if self.extrusion_distance<0. {-value}else{value};
         if requested.abs()<Self::MIN_EXTRUDE {return Err("Push/Pull distance is below the minimum extrusion".into());}
         let dist=if requested<0.&&self.selected_face.is_some(){self.inward_limit.map_or(requested,|limit|requested.max(-limit))}else{self.selected_face.or(self.hovered_face).map_or(requested,|id|Self::limited_distance(&scene.mesh,id,requested,self.keep_base))};

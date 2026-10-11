@@ -81,7 +81,7 @@ impl crate::IngeTrazoApp {
 
  pub fn navigation_height(&mut self,text:&str)->Result<(),String>{
   let mode=self.navigation.mode.ok_or("Camera navigation is inactive")?;
-  let height=ingetrazo_core::units::parse_length(text,self.scene.unit)?;
+  let height=ingetrazo_core::units::vcb::parse_single(text,ingetrazo_core::units::model_scale(&self.scene))?;
   if !height.is_finite() || (mode==Mode::Position && height<=0.) {return Err("Invalid camera height".into());}
   let eye=self.camera.eye();
   let new_eye=if mode==Mode::Position {

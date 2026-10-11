@@ -217,22 +217,10 @@ impl Tool for RectangleTool {
             return Err("No active start point for rectangle dimensions".into());
         };
 
-        let trimmed = text.trim();
-        let mut parts: Vec<&str> = if trimmed.contains(';') {
-            trimmed.split(';').collect()
-        } else if trimmed.contains(',') {
-            trimmed.split(',').collect()
-        } else {
-            trimmed.split_whitespace().collect()
-        };
-
-        if parts.len()==1&&(self.square_lock||self.arrow_square_lock){parts.push(parts[0]);}
-        if parts.len() != 2 {
-            return Err("Rectangle dimensions format: 'width, height'".into());
-        }
-
-        let w: f64 = parts[0].trim().parse().map_err(|e| format!("Invalid width: {e}"))?;
-        let h: f64 = parts[1].trim().parse().map_err(|e| format!("Invalid height: {e}"))?;
+        let mut values=ingetrazo_core::units::vcb::parse_values(text,ingetrazo_core::units::model_scale(scene),true)?;
+        if values.len()==1&&(self.square_lock||self.arrow_square_lock){values.push(values[0]);}
+        let [w,h]=values.as_slice() else{return Err("Rectangle expects width and height".into());};
+        let (w,h)=(*w,*h);
 
         if !w.is_finite()||!h.is_finite()||w <= 0. || h <= 0. {
             return Err("Dimensions must be finite and positive".into());

@@ -971,9 +971,7 @@ impl Tool for FilletTool {
                 .map_err(|_| "Enter a segment count followed by s")?;
             return self.set_segments(scene, count);
         }
-        let radius = text
-            .parse::<f64>()
-            .map_err(|_| "Enter a valid positive radius")?;
+        let radius=ingetrazo_core::units::vcb::parse_single(text,ingetrazo_core::units::model_scale(scene))?;
         if !radius.is_finite() || radius <= 0. {
             return Err("Enter a finite radius >0".into());
         }

@@ -161,7 +161,8 @@ impl Tool for CircleTool {
 
         // Before center is placed, integer sets segment count
         if self.start_point.is_none() {
-            if let Ok(segs) = trimmed.parse::<usize>() {
+            if let Ok(value) = ingetrazo_core::units::vcb::parse_single(trimmed,1.) {
+                let segs=value.round_ties_even() as usize;
                 if segs >= 3 {
                     self.segments = segs;
                     return Ok(());
@@ -171,7 +172,7 @@ impl Tool for CircleTool {
         }
 
         // Radius input
-        let radius: f64 = trimmed.parse().map_err(|e| format!("Invalid radius: {e}"))?;
+        let radius=ingetrazo_core::units::vcb::parse_single(trimmed,ingetrazo_core::units::model_scale(scene))?;
         if radius <= 0.0 {
             return Err("Radius must be positive".into());
         }

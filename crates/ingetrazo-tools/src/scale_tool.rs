@@ -237,23 +237,8 @@ impl ScaleTool {
     }
     fn parse(text: &str) -> Result<(Vec<f64>, bool), String> {
         let text = text.trim();
-        let absolute = text.ends_with(['m', 't', 'n', '"', '\'']);
-        let values = text
-            .split(';')
-            .map(|s| {
-                if absolute {
-                    ingetrazo_core::units::parse_length(
-                        s,
-                        ingetrazo_core::units::LengthUnit::Meters,
-                    )
-                } else {
-                    s.trim()
-                        .replace(',', ".")
-                        .parse::<f64>()
-                        .map_err(|_| "Invalid scale factor".into())
-                }
-            })
-            .collect::<Result<Vec<_>, _>>()?;
+        let absolute = ingetrazo_core::units::vcb::has_explicit_unit(text);
+        let values=ingetrazo_core::units::vcb::parse_values(text,1.,false)?;
         Ok((values, absolute))
     }
     fn axes_caption(&self) -> &'static str {

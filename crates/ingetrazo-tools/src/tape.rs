@@ -134,7 +134,7 @@ impl Tool for TapeTool {
     }
 
     fn on_vcb_input(&mut self, scene: &mut Scene, text: &str) -> Result<(), String> {
-        let dist: f64 = text.trim().parse().map_err(|e| format!("Invalid distance: {e}"))?;
+        let dist=ingetrazo_core::units::vcb::parse_single(text,ingetrazo_core::units::model_scale(scene))?;
         let Some(start) = self.start_point else {
             return Err("No active start point for tape measure".into());
         };

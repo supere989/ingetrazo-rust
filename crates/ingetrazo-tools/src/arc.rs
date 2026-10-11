@@ -277,7 +277,7 @@ impl Tool for ArcTool {
         }
 
         if let (Some(s), Some(e)) = (self.start_point, self.second_point) {
-            let bulge: f64 = trimmed.parse().map_err(|e| format!("Invalid bulge: {e}"))?;
+            let bulge=ingetrazo_core::units::vcb::parse_single(trimmed,ingetrazo_core::units::model_scale(scene))?;
             let pts = self.compute_2pt_arc_with_bulge(s, e, bulge);
             self.commit_arc_polyline(pts, scene);
             Ok(())

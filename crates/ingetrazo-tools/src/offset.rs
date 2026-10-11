@@ -270,7 +270,7 @@ impl Tool for OffsetTool {
         }
     }
     fn on_vcb_input(&mut self, scene: &mut Scene, text: &str) -> Result<(), String> {
-        let d: f64 = text.trim().parse().map_err(|_| "Invalid Offset distance")?;
+        let d=ingetrazo_core::units::vcb::parse_single(text,ingetrazo_core::units::model_scale(scene))?;
         if !d.is_finite() || d <= 0. {
             return Err("Enter a finite positive Offset distance".into());
         }

@@ -434,7 +434,7 @@ impl Tool for MoveTool {
         if let Some((number,mode,spacing))=array {
             let count:usize=number.trim().parse().map_err(|_|"Invalid array count")?;
             if count==0{return Err("Count must be greater than zero".into());}
-            let step=spacing.map(|s|ingetrazo_core::units::parse_length(&s.trim().replace(',',"."),ingetrazo_core::units::LengthUnit::Meters)).transpose()?;
+            let step=spacing.map(|s|ingetrazo_core::units::vcb::parse_single(s,ingetrazo_core::units::model_scale(scene))).transpose()?;
             if step.is_some_and(|s|!s.is_finite()||s<=0.){return Err("Array spacing must be positive and finite".into());}
             let active=self.start_point.is_some();
             let (base_mesh,group_count,delta)=if active {
@@ -477,26 +477,16 @@ impl Tool for MoveTool {
             return Err("No active move drag in progress".into());
         };
 
-        let parts: Vec<&str> = if trimmed.contains(';') {
-            trimmed.split(';').collect()
-        } else if trimmed.contains(',') {
-            trimmed.split(',').collect()
+        let values=ingetrazo_core::units::vcb::parse_values(text,ingetrazo_core::units::model_scale(scene),false)?;
+        let delta = if let [dx,dy,dz]=values.as_slice() {
+            DVec3::new(*dx,*dy,*dz)
         } else {
-            trimmed.split_whitespace().collect()
-        };
-
-        let delta = if parts.len() == 3 {
-            let dx: f64 = parts[0].trim().parse().map_err(|e| format!("Invalid dx: {e}"))?;
-            let dy: f64 = parts[1].trim().parse().map_err(|e| format!("Invalid dy: {e}"))?;
-            let dz: f64 = parts[2].trim().parse().map_err(|e| format!("Invalid dz: {e}"))?;
-            DVec3::new(dx, dy, dz)
-        } else {
-            let dist: f64 = trimmed.parse().map_err(|e| format!("Invalid distance: {e}"))?;
+            let [dist]=values.as_slice() else{return Err("Move expects one distance or three deltas".into());};
             let dir = self
                 .hover_point
                 .map(|h| (h - start).normalize_or_zero())
                 .unwrap_or(DVec3::X);
-            dir * dist
+            dir * *dist
         };
 
         self.execute_move(delta, scene);
