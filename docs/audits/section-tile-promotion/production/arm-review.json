@@ -1,0 +1,128 @@
+{
+  "run": 38162764055,
+  "source": "9302b810df84e44477b8a39de381bcecb469fb37",
+  "artifact_id": 11710899262,
+  "zip_sha256": "2569145928864b000e07e9d44d46e59bacffb9a88e45755de870e26bda1ef784",
+  "authenticated_source_members": 74,
+  "independent_qimage_rgba_counts": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    134,
+    152,
+    134,
+    0
+  ],
+  "independent_newly_wrong_pixels": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "production_toggle": {
+    "samples": [
+      4,
+      1,
+      4
+    ],
+    "cached_pipeline_builds": 1,
+    "retained_old_frame_equal": true,
+    "restored_equal": true,
+    "single_sample_has_resolve": false,
+    "route": {
+      "supports_family_apple4": true,
+      "path": "same-pass-tile",
+      "source_decode_table_bytes": 1024,
+      "logical_sample_read_bytes": 0,
+      "logical_output_write_bytes": 1920000,
+      "extra_output_images": 0,
+      "extra_full_frame_passes": 0,
+      "uniform_samples_preserved": true,
+      "fast_math": false,
+      "srgb_linearization": false,
+      "quantization": "ordered binary32, rint ties-even encoded RGBA8"
+    }
+  },
+  "reports": {
+    "defaults/report.json": {
+      "passed": true,
+      "extent": [
+        64,
+        64
+      ],
+      "samples": 4,
+      "default_style": true,
+      "section_clipping_without_fill": true,
+      "section_pixel_contrast": true,
+      "section_restore_exact": true,
+      "section_extra_geometry_uploads": 0,
+      "warm_extra_profile_uploads": 0,
+      "warm_extra_geometry_uploads": 0,
+      "camera_extra_base_uploads": 0,
+      "unchanged_selection_camera_extra_profile_uploads": 0,
+      "profile_builds": 3,
+      "profile_uploads": 1,
+      "profile_upload_bytes": 24,
+      "unsupported_grid_refusal": "Metal Scene adapter needs soft/back-edge/grid passes",
+      "ledger_committed": 0,
+      "ledger_reserved": 0
+    },
+    "billboards/report.json": {
+      "passed": true,
+      "extent": [
+        800,
+        600
+      ],
+      "dimensions_omitted_for_stage_probe": 4,
+      "billboard_uploads": 1,
+      "warm_extra_billboard_uploads": 0,
+      "camera_extra_ordinary_uploads": 0,
+      "camera_extra_image_uploads": 0,
+      "hide_contrast_restore_exact": true,
+      "quota_refusal": "Metal viewport paused: GPU allocation 120 exceeds global application budget 0",
+      "shared_ordinary_billboard_image_owners": 1,
+      "shared_image_uploads": 1,
+      "ledger_committed": 0,
+      "ledger_reserved": 0
+    },
+    "document/report.json": {
+      "passed": true,
+      "extent": [
+        800,
+        600
+      ],
+      "samples": 4,
+      "dimensions": 4,
+      "active_section": false,
+      "inactive_section_toggle_exact": true,
+      "font_refusal": "Annotation retained font bytes exceeded",
+      "gpu_refusal": "GPU allocation 6912 exceeds global application budget 0",
+      "warm_extra_annotation_uploads": 0,
+      "warm_extra_world_uploads": 0,
+      "depth_hidden_exact": true,
+      "depth_visible_contrast": true,
+      "ledger_committed": 0,
+      "ledger_reserved": 0
+    },
+    "launcher/result.json": {
+      "passed": true,
+      "world_submitted": true,
+      "opt_in_flags": false,
+      "binary_sha256": "bdc2a881c0cc2e73229929f96c5e0e33e615916dfa4bc65dd1e74b2ffc9b14a5",
+      "document": "banca-pergola-yanque.igz",
+      "document_sha256": "24b814ee07c6bc0178e2ce4c4d739d54ff98457e1ae8fcacedf595d0c3988d6c",
+      "termination": "owned process terminated after startup observation",
+      "scope": "native packaged CLI world submission, no pixel or clean-close claim"
+    }
+  },
+  "scope": "Actual promoted ARM tile path; strict full-image criterion remains failed in three retained isometric cases"
+}
