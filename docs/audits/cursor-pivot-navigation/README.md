@@ -78,6 +78,8 @@ Actual retained-frame depth acquisition, platform-native wheel translation and
 cursor image are unproved here. Existing saved-view/projection evidence remains
 separate. No literal retained zoom-extents source session was located; native
 fit_to tests or composer paper fit do not close that P16 acceptance requirement.
-No P16 classification/tracker change is made. Temporary raw copies and frozen
-binaries remain owned until parent archive review/release; reusable target and
-source worktree are preserved.
+No P16 classification/tracker change is made. After parent archive review/release, all 13 logical archive records and three
+frozen executable digests were byte-verified. Seventeen terminal duplicate files
+(95,706,148 bytes) and the empty isolated reference config directory were removed;
+`released-temporaries.json` records each path/digest/source. The reusable target,
+canonical archive and source worktree are preserved.
