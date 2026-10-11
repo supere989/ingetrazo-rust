@@ -29,6 +29,14 @@ impl App for Probe {
      "capture"=>self.app.add_saved_view("ghost-view".into()),
      "update"=>self.app.update_selected_saved_view(),
      "recall"=>self.app.apply_saved_view(0),
+     "geometry-load"=>{
+      let source=PathBuf::from(std::env::var_os("INGETRAZO_GHOST_SCENE").unwrap());
+      self.app.open_document(&source.parent().unwrap().join("face-off.igz"));
+      self.app.camera.set_standard_view(ingetrazo_core::camera::StandardView::Top);
+      self.app.camera.target=glam::DVec3::ZERO;self.app.camera.distance=4.;self.app.camera.perspective=false;
+      self.app.style.background_color=[1.;4];self.app.style.show_sky=false;self.app.style.show_edges=false;self.app.style.show_profiles=false;
+      self.app.mark_document_clean();
+     },
      "refuse"=>{self.app.scene.set_hidden_view(true,true);self.refuse=true;},
      "retry"=>self.refuse=false,
      "save"=>self.app.save_to_path(&self.dir.join("saved.igz")),
