@@ -1,0 +1,1002 @@
+{
+  "states": [
+    {
+      "name": "empty/edited",
+      "positions": [],
+      "endpoints": [],
+      "incidence": [],
+      "radial": [],
+      "faces": [
+        {
+          "loop": [],
+          "holes": []
+        }
+      ],
+      "native_radial": [],
+      "undo": 1,
+      "redo": 0
+    },
+    {
+      "name": "empty/undone",
+      "positions": [],
+      "endpoints": [],
+      "incidence": [],
+      "radial": [],
+      "faces": [],
+      "native_radial": [],
+      "undo": 0,
+      "redo": 1
+    },
+    {
+      "name": "empty/redone",
+      "positions": [],
+      "endpoints": [],
+      "incidence": [],
+      "radial": [],
+      "faces": [
+        {
+          "loop": [],
+          "holes": []
+        }
+      ],
+      "native_radial": [],
+      "undo": 1,
+      "redo": 0
+    },
+    {
+      "name": "singleton/edited",
+      "positions": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "endpoints": [
+        [
+          0,
+          0
+        ]
+      ],
+      "incidence": [
+        [
+          0
+        ]
+      ],
+      "radial": [
+        [
+          0
+        ]
+      ],
+      "faces": [
+        {
+          "loop": [
+            0
+          ],
+          "holes": []
+        }
+      ],
+      "native_radial": [
+        [
+          0
+        ]
+      ],
+      "undo": 1,
+      "redo": 0
+    },
+    {
+      "name": "singleton/undone",
+      "positions": [],
+      "endpoints": [],
+      "incidence": [],
+      "radial": [],
+      "faces": [],
+      "native_radial": [],
+      "undo": 0,
+      "redo": 1
+    },
+    {
+      "name": "singleton/redone",
+      "positions": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "endpoints": [
+        [
+          0,
+          0
+        ]
+      ],
+      "incidence": [
+        [
+          0
+        ]
+      ],
+      "radial": [
+        [
+          0
+        ]
+      ],
+      "faces": [
+        {
+          "loop": [
+            0
+          ],
+          "holes": []
+        }
+      ],
+      "native_radial": [
+        [
+          0
+        ]
+      ],
+      "undo": 1,
+      "redo": 0
+    },
+    {
+      "name": "two-points/edited",
+      "positions": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "endpoints": [
+        [
+          0,
+          1
+        ]
+      ],
+      "incidence": [
+        [
+          0
+        ],
+        [
+          0
+        ]
+      ],
+      "radial": [
+        [
+          0,
+          0
+        ]
+      ],
+      "faces": [
+        {
+          "loop": [
+            0,
+            1
+          ],
+          "holes": []
+        }
+      ],
+      "native_radial": [
+        [
+          0,
+          0
+        ]
+      ],
+      "undo": 1,
+      "redo": 0
+    },
+    {
+      "name": "two-points/undone",
+      "positions": [],
+      "endpoints": [],
+      "incidence": [],
+      "radial": [],
+      "faces": [],
+      "native_radial": [],
+      "undo": 0,
+      "redo": 1
+    },
+    {
+      "name": "two-points/redone",
+      "positions": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "endpoints": [
+        [
+          0,
+          1
+        ]
+      ],
+      "incidence": [
+        [
+          0
+        ],
+        [
+          0
+        ]
+      ],
+      "radial": [
+        [
+          0,
+          0
+        ]
+      ],
+      "faces": [
+        {
+          "loop": [
+            0,
+            1
+          ],
+          "holes": []
+        }
+      ],
+      "native_radial": [
+        [
+          0,
+          0
+        ]
+      ],
+      "undo": 1,
+      "redo": 0
+    },
+    {
+      "name": "alternating/edited",
+      "positions": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "endpoints": [
+        [
+          0,
+          1
+        ]
+      ],
+      "incidence": [
+        [
+          0
+        ],
+        [
+          0
+        ]
+      ],
+      "radial": [
+        [
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "faces": [
+        {
+          "loop": [
+            0,
+            1,
+            0,
+            1
+          ],
+          "holes": []
+        }
+      ],
+      "native_radial": [
+        [
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "undo": 1,
+      "redo": 0
+    },
+    {
+      "name": "alternating/undone",
+      "positions": [],
+      "endpoints": [],
+      "incidence": [],
+      "radial": [],
+      "faces": [],
+      "native_radial": [],
+      "undo": 0,
+      "redo": 1
+    },
+    {
+      "name": "alternating/redone",
+      "positions": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "endpoints": [
+        [
+          0,
+          1
+        ]
+      ],
+      "incidence": [
+        [
+          0
+        ],
+        [
+          0
+        ]
+      ],
+      "radial": [
+        [
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "faces": [
+        {
+          "loop": [
+            0,
+            1,
+            0,
+            1
+          ],
+          "holes": []
+        }
+      ],
+      "native_radial": [
+        [
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "undo": 1,
+      "redo": 0
+    },
+    {
+      "name": "closing-repeat/edited",
+      "positions": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "endpoints": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "incidence": [
+        [
+          0,
+          2,
+          3
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ]
+      ],
+      "radial": [
+        [
+          0
+        ],
+        [
+          0
+        ],
+        [
+          0
+        ],
+        [
+          0
+        ]
+      ],
+      "faces": [
+        {
+          "loop": [
+            0,
+            1,
+            2,
+            0
+          ],
+          "holes": []
+        }
+      ],
+      "native_radial": [
+        [
+          0
+        ],
+        [
+          0
+        ],
+        [
+          0
+        ],
+        [
+          0
+        ]
+      ],
+      "undo": 1,
+      "redo": 0
+    },
+    {
+      "name": "closing-repeat/undone",
+      "positions": [],
+      "endpoints": [],
+      "incidence": [],
+      "radial": [],
+      "faces": [],
+      "native_radial": [],
+      "undo": 0,
+      "redo": 1
+    },
+    {
+      "name": "closing-repeat/redone",
+      "positions": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "endpoints": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "incidence": [
+        [
+          0,
+          2,
+          3
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ]
+      ],
+      "radial": [
+        [
+          0
+        ],
+        [
+          0
+        ],
+        [
+          0
+        ],
+        [
+          0
+        ]
+      ],
+      "faces": [
+        {
+          "loop": [
+            0,
+            1,
+            2,
+            0
+          ],
+          "holes": []
+        }
+      ],
+      "native_radial": [
+        [
+          0
+        ],
+        [
+          0
+        ],
+        [
+          0
+        ],
+        [
+          0
+        ]
+      ],
+      "undo": 1,
+      "redo": 0
+    },
+    {
+      "name": "shared-hole/edited",
+      "positions": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "endpoints": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "incidence": [
+        [
+          0,
+          2
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ]
+      ],
+      "radial": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "faces": [
+        {
+          "loop": [
+            0,
+            1,
+            2
+          ],
+          "holes": [
+            [
+              0,
+              1,
+              2
+            ]
+          ]
+        }
+      ],
+      "native_radial": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "undo": 1,
+      "redo": 0
+    },
+    {
+      "name": "shared-hole/undone",
+      "positions": [],
+      "endpoints": [],
+      "incidence": [],
+      "radial": [],
+      "faces": [],
+      "native_radial": [],
+      "undo": 0,
+      "redo": 1
+    },
+    {
+      "name": "shared-hole/redone",
+      "positions": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "endpoints": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "incidence": [
+        [
+          0,
+          2
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ]
+      ],
+      "radial": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "faces": [
+        {
+          "loop": [
+            0,
+            1,
+            2
+          ],
+          "holes": [
+            [
+              0,
+              1,
+              2
+            ]
+          ]
+        }
+      ],
+      "native_radial": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "undo": 1,
+      "redo": 0
+    },
+    {
+      "name": "two-equal-holes/edited",
+      "positions": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "endpoints": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "incidence": [
+        [
+          0,
+          2
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ]
+      ],
+      "radial": [
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ]
+      ],
+      "faces": [
+        {
+          "loop": [
+            0,
+            1,
+            2
+          ],
+          "holes": [
+            [
+              0,
+              1,
+              2
+            ],
+            [
+              0,
+              1,
+              2
+            ]
+          ]
+        }
+      ],
+      "native_radial": [
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ]
+      ],
+      "undo": 1,
+      "redo": 0
+    },
+    {
+      "name": "two-equal-holes/undone",
+      "positions": [],
+      "endpoints": [],
+      "incidence": [],
+      "radial": [],
+      "faces": [],
+      "native_radial": [],
+      "undo": 0,
+      "redo": 1
+    },
+    {
+      "name": "two-equal-holes/redone",
+      "positions": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "endpoints": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "incidence": [
+        [
+          0,
+          2
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ]
+      ],
+      "radial": [
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ]
+      ],
+      "faces": [
+        {
+          "loop": [
+            0,
+            1,
+            2
+          ],
+          "holes": [
+            [
+              0,
+              1,
+              2
+            ],
+            [
+              0,
+              1,
+              2
+            ]
+          ]
+        }
+      ],
+      "native_radial": [
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ]
+      ],
+      "undo": 1,
+      "redo": 0
+    }
+  ],
+  "production_enabled": false
+}

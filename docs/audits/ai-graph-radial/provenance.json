@@ -1,0 +1,14 @@
+{
+  "source_commit": "7036a420",
+  "original_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "binary_sha256": "66661956b9b812a549d92767b667b141f4524581a87154e936a6b84dada421bb",
+  "artifact_sha256": {
+    "original.json": "99f371698daa44d85b32dbc4c40d4d90fbbd045d979b3108c56838eef282d8d0",
+    "native.json": "2b93034038697c03283ffe6970e9ad4306d304e177b0cc52b7a207e0abe58f30",
+    "old-native.json": "5cf3cccd2b22d008e0a2727b52f05d4817e3c9a728469d9f198888333f5b4507",
+    "checker.json": "57623454fee3eb66def6069f1fa400d64f21b5412b2bcdc673cce6679b814d84",
+    "fixed-build.log": "d845af3272d173f9df09fd03ac57a6e21aa576c15788cad70a603db8bedc01c0",
+    "initial-observer-build-failure.log": "a796ceb3e6ed842c109b8a19b2418eddf661ce7ce8b66bb87a13a1d4d1d4ec16"
+  },
+  "production_enabled": false
+}
