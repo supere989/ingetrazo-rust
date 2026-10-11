@@ -227,6 +227,20 @@ pub fn upload(
             )
             .ok_or("Metal texture mip bytes overflow")?;
     }
+    let sd = MTLSamplerDescriptor::new();
+    sd.setMinFilter(MTLSamplerMinMagFilter::Linear);
+    sd.setMagFilter(MTLSamplerMinMagFilter::Linear);
+    sd.setMipFilter(if cutout {
+        MTLSamplerMipFilter::NotMipmapped
+    } else {
+        MTLSamplerMipFilter::Linear
+    });
+    sd.setSAddressMode(MTLSamplerAddressMode::Repeat);
+    sd.setTAddressMode(MTLSamplerAddressMode::Repeat);
+    let sampler = metal
+        .device
+        .newSamplerStateWithDescriptor(&sd)
+        .ok_or("Metal sampled sampler allocation failed")?;
     let (raw, backing) = if native.size == 0 && native.align == 0 {
         standalone(metal, &d, minimum as u64)?
     } else {
@@ -271,20 +285,6 @@ pub fn upload(
         }
         (raw, Backing::Heap(heap))
     };
-    let sd = MTLSamplerDescriptor::new();
-    sd.setMinFilter(MTLSamplerMinMagFilter::Linear);
-    sd.setMagFilter(MTLSamplerMinMagFilter::Linear);
-    sd.setMipFilter(if cutout {
-        MTLSamplerMipFilter::NotMipmapped
-    } else {
-        MTLSamplerMipFilter::Linear
-    });
-    sd.setSAddressMode(MTLSamplerAddressMode::Repeat);
-    sd.setTAddressMode(MTLSamplerAddressMode::Repeat);
-    let sampler = metal
-        .device
-        .newSamplerStateWithDescriptor(&sd)
-        .ok_or("Metal sampled sampler allocation failed")?;
     let asset = Arc::new(Asset {
         id,
         image: ManuallyDrop::new(raw),
