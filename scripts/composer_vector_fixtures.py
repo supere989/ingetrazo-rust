@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Build named native paper consumers together; reuse only explicit caller builds."""
+import argparse
 import hashlib
 import json
 import os
@@ -7,15 +8,16 @@ from pathlib import Path
 import subprocess
 
 EXAMPLES = ("sheet_view_pdf_fixture", "paper_boundary_fixture", "qt_paper_numeral_fixture")
+TEXT_EXAMPLES = ("paper_font_resolver_fixture", "paper_paragraph_fixture", "composer_text_pdf_fixture", "composer_pdf_ui_fixture")
 WORKER = "ingetrazo-render-worker"
 
 
-def consumers(directory, *, include_section=False):
+def consumers(directory, *, include_section=False, include_text=False):
     if os.environ.get("CARGO_BUILD_TARGET") or os.environ.get("CARGO_PROFILE"):
         raise ValueError("Paper acceptance requires native debug executables; unset CARGO_BUILD_TARGET/CARGO_PROFILE")
     directory = Path(directory).resolve()
     suffix = ".exe" if os.name == "nt" else ""
-    names = EXAMPLES + (("paper_section_fixture",) if include_section else ())
+    names = EXAMPLES + (("paper_section_fixture",) if include_section else ()) + (TEXT_EXAMPLES if include_text else ())
     paths = {name: directory / "examples" / (name + suffix) for name in names}
     paths[WORKER] = directory / (WORKER + suffix)
     return paths
@@ -28,9 +30,9 @@ def require_consumers(paths):
     return paths
 
 
-def build(*, include_section=False):
+def build(*, include_section=False, include_text=False):
     target = Path(os.environ.get("CARGO_TARGET_DIR", "target")).resolve()
-    paths = consumers(target / "debug", include_section=include_section)
+    paths = consumers(target / "debug", include_section=include_section, include_text=include_text)
     command = ["cargo", "build", "--locked", "--message-format=json-render-diagnostics", "-j2", "--target-dir", str(target)]
     for package in ("ingetrazo-gui", "ingetrazo-render", "ingetrazo-formats"):
         command += ["-p", package]
@@ -56,4 +58,7 @@ def provenance(paths):
 
 
 if __name__ == "__main__":
-    print(json.dumps({"consumers": provenance(build(include_section=True)), "cargo_builds": 1}, indent=2))
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--include-text", action="store_true", help="Build the font, paragraph and composer UI consumers in the same Cargo invocation")
+    args = parser.parse_args()
+    print(json.dumps({"consumers": provenance(build(include_section=True, include_text=args.include_text)), "cargo_builds": 1}, indent=2))

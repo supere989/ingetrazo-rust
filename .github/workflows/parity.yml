@@ -302,25 +302,25 @@ jobs:
           mkdir -p docs/audits/skp-legacy-ci
           cargo build --locked -p ingetrazo-formats --example skp_import_acceptance_fixture > docs/audits/skp-legacy-ci/build.log 2>&1
           QT_QPA_PLATFORM=offscreen python scripts/check-native-skp-legacy.py "$oracle_dir" target/debug/examples/skp_import_acceptance_fixture docs/audits/skp-native-legacy/controls docs/audits/skp-legacy-ci > docs/audits/skp-legacy-ci/check.log 2>&1
+      - name: Build paper vector, text and UI consumers once
+        run: |
+          mkdir -p docs/audits/vector-fixtures-ci
+          CARGO_TARGET_DIR=target python scripts/composer_vector_fixtures.py --include-text > docs/audits/vector-fixtures-ci/build.json
       - name: Original native Fontconfig request matching and ownership
         run: |
           mkdir -p docs/audits/font-resolver-ci
           python scripts/probe-python-paper-text.py docs/audits/font-resolver-ci/original
-          cargo run --locked -p ingetrazo-formats --example paper_font_resolver_fixture -- docs/audits/font-resolver-ci/original/font-observations.json docs/audits/font-resolver-ci/native.json
+          target/debug/examples/paper_font_resolver_fixture docs/audits/font-resolver-ci/original/font-observations.json docs/audits/font-resolver-ci/native.json
       - name: Actual original paragraph layout and direct PDF text
         run: |
           mkdir -p docs/audits/paragraph-ci
           INGETRAZO_TEXT_EXPANDED=1 INGETRAZO_TEXT_PARAGRAPHS=1 python scripts/probe-python-paper-text.py docs/audits/paragraph-ci/original
-          cargo run --locked -p ingetrazo-formats --example paper_paragraph_fixture -- docs/audits/paragraph-ci/original/font-observations.json docs/audits/paragraph-ci/native
+          target/debug/examples/paper_paragraph_fixture docs/audits/paragraph-ci/original/font-observations.json docs/audits/paragraph-ci/native
           INGETRAZO_TEXT_PARAGRAPHS=1 python scripts/check-paper-text-layout-pages.py docs/audits/paragraph-ci/original docs/audits/paragraph-ci/native 72
           INGETRAZO_TEXT_PARAGRAPHS=1 python scripts/check-paper-text-layout-pages.py docs/audits/paragraph-ci/original docs/audits/paragraph-ci/native 144
           INGETRAZO_TEXT_PARAGRAPHS=1 python scripts/check-paper-text-layout-pages.py docs/audits/paragraph-ci/original docs/audits/paragraph-ci/native 300
           INGETRAZO_TEXT_PARAGRAPHS=1 python scripts/check-paper-text-layout-unicode.py docs/audits/paragraph-ci/original docs/audits/paragraph-ci/native
           INGETRAZO_TEXT_PARAGRAPHS=1 python scripts/check-paper-text-layout-negatives.py docs/audits/paragraph-ci/original docs/audits/paragraph-ci/native
-      - name: Build paper vector consumers once
-        run: |
-          mkdir -p docs/audits/vector-fixtures-ci
-          CARGO_TARGET_DIR=target python scripts/composer_vector_fixtures.py > docs/audits/vector-fixtures-ci/build.json
       - name: Original and native strict vector View PDF pages
         run: QT_QPA_PLATFORM=offscreen CARGO_TARGET_DIR=target python scripts/check-composer-vector-view-pdf.py docs/audits/vector-view-ci --prebuilt-dir target/debug
       - name: Original and native saved-view PDF state against opposed live state
@@ -345,13 +345,12 @@ jobs:
         run: INGETRAZO_VIEW_PDF_GRID=0.3317 INGETRAZO_VIEW_PDF_FILL=solid INGETRAZO_VIEW_PDF_SAVED=1 INGETRAZO_VIEW_PDF_SECTION_TILT=1 QT_QPA_PLATFORM=offscreen CARGO_TARGET_DIR=target python scripts/check-composer-vector-view-pdf.py docs/audits/grid-heldout-ci --prebuilt-dir target/debug
       - name: Actual composer PDF save dialogs and refusal preservation
         run: |
-          cargo build --locked -p ingetrazo-gui --example composer_pdf_ui_fixture
           QT_QPA_PLATFORM=offscreen CARGO_TARGET_DIR=target python scripts/check-composer-pdf-ui.py
           QT_QPA_PLATFORM=offscreen INGETRAZO_PDF_UI_UNSUPPORTED=1 CARGO_TARGET_DIR=target python scripts/check-composer-pdf-ui.py
       - name: Actual Text composer export source pages and save dialogs
         run: |
           mkdir -p docs/audits/composer-text-ci
-          cargo run --locked -p ingetrazo-gui --example composer_text_pdf_fixture -- docs/audits/paragraph-ci/original/font-observations.json docs/audits/composer-text-ci/native
+          target/debug/examples/composer_text_pdf_fixture docs/audits/paragraph-ci/original/font-observations.json docs/audits/composer-text-ci/native
           for dpi in 72 144 300; do INGETRAZO_TEXT_PARAGRAPHS=1 python scripts/check-paper-text-layout-pages.py docs/audits/paragraph-ci/original docs/audits/composer-text-ci/native "$dpi"; done
           INGETRAZO_TEXT_PARAGRAPHS=1 python scripts/check-paper-text-layout-unicode.py docs/audits/paragraph-ci/original docs/audits/composer-text-ci/native
           INGETRAZO_TEXT_PARAGRAPHS=1 python scripts/check-paper-text-layout-negatives.py docs/audits/paragraph-ci/original docs/audits/composer-text-ci/native
@@ -362,7 +361,7 @@ jobs:
             export INGETRAZO_TEXT_${family}=1
             out=docs/audits/text-boundaries-ci/$family
             QT_QPA_PLATFORM=offscreen python scripts/probe-python-paper-text.py "$out/original"
-            cargo run --locked -p ingetrazo-formats --example paper_paragraph_fixture -- "$out/original/font-observations.json" "$out/native"
+            target/debug/examples/paper_paragraph_fixture "$out/original/font-observations.json" "$out/native"
             for dpi in 72 144 300; do QT_QPA_PLATFORM=offscreen python scripts/check-paper-text-layout-pages.py "$out/original" "$out/native" "$dpi"; done
             unset INGETRAZO_TEXT_${family}
           done
@@ -370,7 +369,7 @@ jobs:
         run: |
           mkdir -p docs/audits/composer-background-ci/original
           INGETRAZO_TEXT_BACKGROUNDS=1 QT_QPA_PLATFORM=offscreen python scripts/probe-python-paper-text.py docs/audits/composer-background-ci/original
-          cargo run --locked -p ingetrazo-gui --example composer_text_pdf_fixture -- docs/audits/composer-background-ci/original/font-observations.json docs/audits/composer-background-ci/native
+          target/debug/examples/composer_text_pdf_fixture docs/audits/composer-background-ci/original/font-observations.json docs/audits/composer-background-ci/native
           for dpi in 72 144 300; do QT_QPA_PLATFORM=offscreen python scripts/check-paper-text-background-pages.py docs/audits/composer-background-ci/original docs/audits/composer-background-ci/native "$dpi"; done
           QT_QPA_PLATFORM=offscreen INGETRAZO_PDF_UI_TEXT_OBSERVATIONS=docs/audits/composer-background-ci/original/font-observations.json INGETRAZO_PDF_UI_EVIDENCE=docs/audits/composer-background-ci/ui CARGO_TARGET_DIR=target python scripts/check-composer-pdf-ui.py
       - name: Exact original Qt and production CAD color protocol
