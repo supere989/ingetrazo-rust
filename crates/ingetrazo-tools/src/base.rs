@@ -105,7 +105,22 @@ pub struct PlacementPreview<'a> {
     pub world_delta: DVec3,
 }
 
+/// Screen-overlay geometry for the source Scale grip box.
+#[derive(Debug, Clone)]
+pub struct ScaleBoxState {
+    pub segments: Vec<(DVec3, DVec3)>,
+    /// True denotes hover, active or anchor (red); false denotes idle (green).
+    pub grips: Vec<(DVec3, bool)>,
+}
+
 pub trait Tool: Send + Sync {
+    /// A live model transform has no history entry until the tool commits it.
+    fn pending_model_preview(&self)->bool{false}
+    fn scale_box_state(&self)->Option<ScaleBoxState>{None}
+    fn uses_snap(&self)->bool{true}
+    fn note_snap_result(&mut self,_result:&ingetrazo_core::snap::SnapResult){}
+    fn note_shift_state(&mut self,_held:bool){}
+
     /// Consume source bare AddEdge ownership; compound tools keep full snapshots.
     fn take_bare_edge_command(&mut self)->Option<(DVec3,DVec3)>{None}
 
@@ -186,6 +201,8 @@ pub trait Tool: Send + Sync {
     /// Pure placement translation only, not mixed geometry, planes or copy.
     /// This borrowed descriptor allocates no model snapshot.
     fn placement_preview(&self) -> Option<PlacementPreview<'_>> { None }
+    /// Model preview changes placements only; no prototype geometry changed.
+    fn placement_only_preview(&self)->bool{self.placement_preview().is_some()}
     fn face_sweep_preview(&self)->Option<FaceSweepPreview>{None}
     fn preview_mesh(&self) -> Option<&Mesh> {
         None

@@ -494,6 +494,7 @@ impl ImageFrameCommand {
 }
 // f32 scalar arithmetic mirrors QVector3D/QMatrix4x4; world placement images
 // remain global and are never inverse-fit to a component local frame.
+#[derive(Debug, Clone)]
 struct ImageFrameMatrix {
     cols: [[f32; 3]; 3],
     translation: [f32; 3],
@@ -665,6 +666,41 @@ impl ImagePlane {
         ImageRotation::new(centre, axis, degrees).frame(self)
     }
 }
+/// One source Qt-f32 affine scale, shared by geometry, placements and images.
+/// Preview always supplies tuple factors; command callers can omit axes for
+/// packed uniform factors, as the original Scale command does.
+#[derive(Debug, Clone)]
+pub struct ScaleMatrix(ImageFrameMatrix);
+impl ScaleMatrix {
+    pub fn new(anchor: DVec3, factors: DVec3, axes: Option<[DVec3; 3]>) -> Self {
+        Self(ImageFrameMatrix::scale(anchor, factors, axes))
+    }
+    pub fn point(&self, point: DVec3) -> DVec3 { self.0.map(point, true) }
+    pub fn vector(&self, vector: DVec3) -> DVec3 { self.0.map(vector, false) }
+    pub fn frame(&self, image: &ImagePlane) -> [DVec3; 3] {
+        [self.point(image.origin), self.vector(image.u), self.vector(image.v)]
+    }
+    pub fn matrix(&self) -> glam::DMat4 {
+        glam::DMat4::from_cols(
+            glam::Vec3::from_array(self.0.cols[0]).as_dvec3().extend(0.),
+            glam::Vec3::from_array(self.0.cols[1]).as_dvec3().extend(0.),
+            glam::Vec3::from_array(self.0.cols[2]).as_dvec3().extend(0.),
+            glam::Vec3::from_array(self.0.translation).as_dvec3().extend(1.))
+    }
+    pub fn compose(&self, rhs: glam::DMat4) -> glam::DMat4 {
+        // Affine QMatrix4x4 multiplication: scalar float operations, no f64
+        // accumulation or reassociation by a SIMD matrix implementation.
+        let a = self.matrix().to_cols_array_2d().map(|c| c.map(|v| v as f32));
+        let b = rhs.to_cols_array_2d().map(|c| c.map(|v| v as f32));
+        let mut c = [[0.; 4]; 4];
+        for col in 0..4 { for row in 0..4 {
+            c[col][row] = (a[0][row]*b[col][0] + a[1][row]*b[col][1]
+                + a[2][row]*b[col][2] + a[3][row]*b[col][3]) as f64;
+        }}
+        glam::DMat4::from_cols_array_2d(&c)
+    }
+}
+
 /// One source Qt-f32 matrix shared by all images in a Rotate preview.
 pub struct ImageRotation(ImageFrameMatrix);
 impl ImageRotation {

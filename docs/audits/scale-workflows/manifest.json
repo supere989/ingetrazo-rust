@@ -1,0 +1,52 @@
+{
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "native_source_blobs": {
+    "crates/ingetrazo-core/src/image_plane.rs": "6cf4960eec225b38b5d4c0130cc7f878814958790cae955fcb6dfbc520eca84f",
+    "crates/ingetrazo-core/src/mesh.rs": "7b9f902e320ecd5524938ce7715d8ca2d616525d7f77f3e411edb5487b469d86",
+    "crates/ingetrazo-core/src/autofold.rs": "bd60cdd4ea4e843863a1dd75d2e7978362081e9c13094a28a34d4ff3514247f1",
+    "crates/ingetrazo-tools/src/base.rs": "babebe5d260cabeb016cca85283f60685e8cff1247136a58f9da7c21cd003674",
+    "crates/ingetrazo-tools/src/scale_tool.rs": "6018356c5c3dac24047282224df0b3753c82ee87bb9171fb7646f9c27b9a2afb",
+    "crates/ingetrazo-tools/src/scale_tool/grips.rs": "ba3febaf07f824a934a2ff5f75a4fc5e384622458568a8767c1d5ef531fb854d",
+    "crates/ingetrazo-tools/src/scale_tool/targets.rs": "33eba2ed32a29810d984abeda601de0be0a42837048e471e1836b6b9ee62a5bf",
+    "crates/ingetrazo-gui/src/tool_history.rs": "da6d573a143089b41c9f99c66e0c24c955d2f9141f5c9ada631a3f09912bdcfd",
+    "crates/ingetrazo-gui/src/viewport.rs": "cf2e67a05462ae619ed061508fe52719ecf75a0e0713acffcd934cc679a23d1a",
+    "crates/ingetrazo-gui/examples/scale_workflows.rs": "a6a380ff0cb6242eb2f0037e33d75b26a77465d2738f26b53e25387ca8a4254d"
+  },
+  "binary_sha256": "975f839de42b5461ede32f630cf18312209df885668e65c245e655fb86de5d67",
+  "workspace_parent": "a32ee0a0ba9269782d4d7e010fd24ce2bf299041",
+  "source_inputs": [
+    "source.json",
+    "warp-source.json",
+    "../scale-shared/source.json"
+  ],
+  "exact_base_states": 74,
+  "exact_shared_app_states": 30,
+  "shared_repeats_base_control_states": 10,
+  "intentional_registry_integrity_difference": 1,
+  "focused_app_tests": 7,
+  "scope": "Model/controller/history checkpoint. Scale still requires actual egui ingress/render/context acceptance and final integration.",
+  "archive_sha256": "3f50b7c528a4382e9abdfa36f3a88bc967da269f4dd836bcbd4af1435c1cec26",
+  "archive_bytes": 41445,
+  "files": {
+    "app-tests-2.log": "13d530ad47d6a8ac95b51b6da36912996e965dbdd02bb3ee4d177582a4a264e3",
+    "app-tests-3.log": "0650cd48856fb08951239601a1c36d29b5a0bd6359da539558abc39a32597835",
+    "app-tests.log": "bf3df13fcd6aa829cfeb79812fe8c18d3d419b8aff8713431178c9be32d75c2c",
+    "build-final.log": "40d7f0a134f68f6876c9ab79e738f6f9d11ea66a47f02b9b68c65afa0f16d3c5",
+    "build-shared.log": "d840a1109467108148692c9dc915ad365cba9f9ba16443adab2f42038c19588b",
+    "build.log": "3d675b25619e1a076602e043be3052c589cc995d2103715759a8457c2184b77e",
+    "comparison-1.json": "167e528e766c528cdb16bdea64784e450774f82a6ebc601a8d3f151d93c8f0f0",
+    "comparison-2.json": "c1da5111a2331cd081af1afcf537ab0c0570702ab7767b61aecf9810837f403f",
+    "comparison-3.json": "c1da5111a2331cd081af1afcf537ab0c0570702ab7767b61aecf9810837f403f",
+    "diagnose-selection.py": "526bbeb9a260da60fe6485002129f86a55f88bf62e461e82e6ed65da47808262",
+    "native-1.json": "bf94c6de1eceed474cf0af6b2d5ae19c855c023144e123cfb2391eb2676e82fd",
+    "native-2.json": "4844c5240dcb36d8d2228bc97b7d06a29990232f862a715b43445ad209eb293d",
+    "native-3.json": "db8076087920cb5b71154c195e52a4754499e74ce0ec88953ba542eefabe8c24",
+    "provenance.json": "07175118f1003219c58cdbde1f24e67e38a55123ac282444132ad0b327c84e10",
+    "selection-diagnosis.json": "fe1aa32a830a296a8d63e8cc2dd1cce70f382b91ff52e527ad29282a977be060",
+    "selection-diagnosis.log": "58de88f2218ad9c87b50acb884bc2c36027d5779b3171c1b8e6e56f34c19ac7a",
+    "shared-app-comparison.json": "0dc5da11b892767bde8f236105a108b23061c0df223841aa4496d86c7e30311c",
+    "shared-app-native.json": "5e5778a20ae0acb1975240629f27a8a352abe3b8c86b10228fa6199a1756fe5f",
+    "source.json": "0efc759c2f7473467cd0badd9890c371e1feabc8b579ca98875d3f357f831302",
+    "warp-source.json": "4fa671850ad74c38bcc44916c59bddc205737f7cc8918158cef62f0c909b2fa7"
+  }
+}

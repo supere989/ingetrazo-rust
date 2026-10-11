@@ -228,6 +228,25 @@ impl Mesh {
     }
     pub fn reserve_spatial_append(&mut self,delta:&PreparedSpatialDelta)->Result<(),&'static str>{self.validate_spatial_append(delta)?;self.spatial_index.try_reserve(delta.changes.len()).map_err(|_|"Spatial redo reservation refused")}
 
+    /// Publish a frozen transform in two passes over only its owned vertices.
+    /// Retiring old keys before assigning new ones preserves both endpoints
+    /// when a mirror exchanges their cells. No model-wide rebuild is needed.
+    pub fn place_vertices<I>(&mut self, positions:I)->bool
+    where I:Iterator<Item=(VertexId,u128,DVec3)>+Clone {
+        let mut changed=false;
+        for (id,identity,position) in positions.clone() {
+            let Some(vertex)=self.vertices.get(id).filter(|v|v.uid.as_u128()==identity)else{continue;};
+            changed|=vertex.position!=position;
+            let old=PointKey::from_vec3(vertex.position);let new=PointKey::from_vec3(position);
+            if old!=new&&self.spatial_index.get(&old)==Some(&id){self.spatial_index.remove(&old);}
+        }
+        for (id,identity,position) in positions {
+            let Some(vertex)=self.vertices.get_mut(id).filter(|v|v.uid.as_u128()==identity)else{continue;};
+            vertex.position=position;self.spatial_index.entry(PointKey::from_vec3(position)).or_insert(id);
+        }
+        changed
+    }
+
     /// Rebuild the spatial lookup table (e.g. after deserialization).
     pub fn rebuild_spatial_index(&mut self) {
         self.spatial_index.clear();

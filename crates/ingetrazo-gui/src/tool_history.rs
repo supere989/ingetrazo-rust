@@ -80,6 +80,9 @@ impl IngeTrazoApp {
     }
 
     fn record_tool_commit(&mut self, mut before: Scene) -> Result<(),String> {
+        // Grab and in-place release can leave a Scale preview live. Publishing
+        // that preview as a commit would add an undo entry before acceptance.
+        if self.active_tool.pending_model_preview() { return Ok(()); }
         for (id,face) in self.active_tool.take_history_acquisition_faces() {
             if let Some(before_face)=before.mesh.faces.get_mut(id) {
                 if before_face.history_id==face.history_id { *before_face=face; }
@@ -99,6 +102,7 @@ impl IngeTrazoApp {
             }
         }
         let image_command=self.active_tool.take_image_frame_command();
+        let replacing=self.active_tool.take_history_replacement();
         let transient_changed=before.version!=self.scene.version;
         let committed=changed_model(&before,&self.scene) || bare_edge.is_some();
         if committed {
@@ -122,7 +126,12 @@ impl IngeTrazoApp {
             else if only_mesh_domain(&before,&self.scene,true){self.bump_render_paint_revision();}
             else if only_mesh_domain(&before,&self.scene,false){self.bump_render_geometry_revision();}
             else{self.bump_model_revision();}
-            if !self.active_tool.take_history_replacement()||self.undo_stack.is_empty(){self.undo_stack.push(before);}
+            if !replacing||self.undo_stack.is_empty(){self.undo_stack.push(before);}
+            else if let Some(command)=before.history_images.0.as_ref().and_then(|d|d.frame_command.clone()){
+                // Hot retype retains the original undo base, but the relative
+                // image operation must describe the newly accepted factor.
+                if let Some(delta)=self.undo_stack.last_mut().and_then(|s|s.history_images.0.as_mut()){delta.frame_command=Some(command);}
+            }
             self.active_tool.note_history_revision(self.model_revision,true);
             self.redo_stack.clear();
             if self.undo_stack.len() > 50 {
@@ -134,16 +143,16 @@ impl IngeTrazoApp {
     }
 
     pub fn dispatch_tool_control_state(&mut self,held:bool){
-        let placement_before=self.active_tool.placement_preview().is_some();let version=self.scene.version;let images=self.scene.image_planes.publication_revision();self.active_tool.on_control_state(&mut self.scene,held);
-        if self.scene.version!=version{if placement_before||self.active_tool.placement_preview().is_some(){self.bump_placement_revision();}else{self.bump_model_revision();}}else if self.scene.image_planes.publication_revision()!=images{self.bump_image_presentation_revision();}
+        let placement_before=self.active_tool.placement_only_preview();let version=self.scene.version;let images=self.scene.image_planes.publication_revision();self.active_tool.on_control_state(&mut self.scene,held);
+        if self.scene.version!=version{if placement_before||self.active_tool.placement_only_preview(){self.bump_placement_revision();}else{self.bump_model_revision();}}else if self.scene.image_planes.publication_revision()!=images{self.bump_image_presentation_revision();}
     }
     pub fn dispatch_tool_cancel(&mut self){
-        let placement_before=self.active_tool.placement_preview().is_some();let version=self.scene.version;let images=self.scene.image_planes.publication_revision();self.active_tool.on_cancel(&mut self.scene);
-        if self.scene.version!=version{if placement_before||self.active_tool.placement_preview().is_some(){self.bump_placement_revision();}else{self.bump_model_revision();}}else if self.scene.image_planes.publication_revision()!=images{self.bump_image_presentation_revision();}
+        let placement_before=self.active_tool.placement_only_preview();let version=self.scene.version;let images=self.scene.image_planes.publication_revision();self.active_tool.on_cancel(&mut self.scene);
+        if self.scene.version!=version{if placement_before||self.active_tool.placement_only_preview(){self.bump_placement_revision();}else{self.bump_model_revision();}}else if self.scene.image_planes.publication_revision()!=images{self.bump_image_presentation_revision();}
     }
     pub fn dispatch_tool_move(&mut self,context:&ToolContext){
-        let placement_before=self.active_tool.placement_preview().is_some();let version=self.scene.version;let images=self.scene.image_planes.publication_revision();self.active_tool.on_move(&mut self.scene,context);
-        if self.scene.version!=version{if placement_before||self.active_tool.placement_preview().is_some(){self.bump_placement_revision();}else{self.bump_model_revision();}}else if self.scene.image_planes.publication_revision()!=images{self.bump_image_presentation_revision();}
+        let placement_before=self.active_tool.placement_only_preview();let version=self.scene.version;let images=self.scene.image_planes.publication_revision();self.active_tool.on_move(&mut self.scene,context);
+        if self.scene.version!=version{if placement_before||self.active_tool.placement_only_preview(){self.bump_placement_revision();}else{self.bump_model_revision();}}else if self.scene.image_planes.publication_revision()!=images{self.bump_image_presentation_revision();}
         if self.active_tool.error_message().is_none(){if let Some(status)=self.active_tool.take_status_message(){self.status_message=status;}}
     }
 
@@ -194,6 +203,8 @@ impl IngeTrazoApp {
         if self.section_name_prompt.is_some(){return Err("Finish the section naming dialog first".into());}
         self.prepare_bim_draw_commit()?;
         let before = self.tool_snapshot();
+        let version_at_entry=self.scene.version;
+        let images_at_entry=self.scene.image_planes.publication_revision();
         self.active_tool.note_history_revision(self.model_revision,false);
         match self.active_tool.on_vcb_input(&mut self.scene, text) {
             Ok(()) => {
@@ -201,7 +212,12 @@ impl IngeTrazoApp {
                 self.record_tool_commit(before)
             }
             Err(error) => {
-                self.scene = before;self.active_tool.restore_current_preview_model(&mut self.scene);self.bump_model_revision();
+                // Parsing/admission refusal leaves the live preview and last
+                // command identity intact. Only an actual mutation needs rollback.
+                if self.active_tool_type!=ingetrazo_tools::base::ToolType::Scale
+                    ||self.scene.version!=version_at_entry||self.scene.image_planes.publication_revision()!=images_at_entry{
+                    self.scene=before;self.active_tool.restore_current_preview_model(&mut self.scene);self.bump_model_revision();
+                }
                 Err(error)
             }
         }
@@ -442,16 +458,21 @@ mod tests {
             app.active_tool_type = tool_type;
             app.scene.select(SelectionItem::Face(0));
             let before = app.scene.mesh.clone();
-            app.dispatch_tool_click(&context(0.));
-            app.active_tool.on_move(&mut app.scene, &context(1.));
+            let grab=if tool_type==ToolType::Scale{ToolContext::new(DVec3::new(1.,1.,0.),Ray::new(DVec3::new(1.,1.,5.),-DVec3::Z))}else{context(0.)};
+            app.dispatch_tool_click(&grab);
+            let hover=if tool_type==ToolType::Scale{ToolContext::new(DVec3::new(2.,2.,0.),Ray::new(DVec3::new(2.,2.,5.),-DVec3::Z))}else{context(1.)};
+            app.active_tool.on_move(&mut app.scene, &hover);
             if tool_type==ToolType::Move {
                 assert!(app.scene.mesh.vertices.iter().zip(&before.vertices).all(|(v,old)|v.position==old.position+DVec3::Z));
                 assert!(app.undo_stack.is_empty(),"live preview must not create undo entries");
+            }else if tool_type==ToolType::Scale {
+                assert!(app.scene.mesh.vertices.iter().zip(&before.vertices).all(|(v,old)|v.position==old.position*2.));
+                assert!(app.undo_stack.is_empty());
             }else{assert_eq!(app.scene.mesh,before,"{tool_type:?} preview mutated model");}
             app.active_tool.on_cancel(&mut app.scene);
             assert_eq!(app.scene.mesh, before);
             assert!(app.undo_stack.is_empty());
-            app.dispatch_tool_click(&context(0.));
+            app.dispatch_tool_click(&grab);
             if tool_type == ToolType::Rotate {
                 let arm = ToolContext::new(DVec3::X, Ray::new(DVec3::X, DVec3::Z));
                 app.dispatch_tool_click(&arm);
@@ -469,6 +490,103 @@ mod tests {
             assert_eq!(app.scene.mesh, after);
         }
     }
+    #[test]
+    fn scale_grip_live_release_cancel_and_hot_retype_own_one_transaction() {
+        let mut app=app();app.scene.select(SelectionItem::Face(0));app.set_tool(ToolType::Scale);
+        let original=app.scene.mesh.clone();let p=|x,y|ToolContext::new(DVec3::new(x,y,0.),Ray::new(DVec3::new(x,y,5.),-DVec3::Z));
+        assert_eq!(app.active_tool.scale_box_state().unwrap().grips.len(),8);
+        app.dispatch_tool_click(&p(1.,1.));app.dispatch_tool_move(&p(2.,2.));
+        assert!(app.undo_stack.is_empty());assert!(app.active_tool.pending_model_preview());
+        // A release in place keeps click-move-click alive without recording it.
+        app.dispatch_tool_release(&p(2.,2.),0.);assert!(app.undo_stack.is_empty());
+        app.dispatch_tool_cancel();assert_eq!(app.scene.mesh,original);
+        app.dispatch_tool_click(&p(1.,1.));app.dispatch_tool_move(&p(2.,2.));
+        app.dispatch_tool_release(&p(2.,2.),8.);assert_eq!(app.undo_stack.len(),1);
+        assert!(!app.active_tool.pending_model_preview());
+        app.dispatch_tool_vcb("3").unwrap();assert_eq!(app.undo_stack.len(),1);
+        assert_eq!(app.scene.mesh.vertices[2].position,DVec3::new(3.,3.,0.));
+        app.undo();assert_eq!(app.scene.mesh,original);app.redo();
+        assert_eq!(app.scene.mesh.vertices[2].position,DVec3::new(3.,3.,0.));
+        assert!(app.dispatch_tool_vcb("4").is_err(),"Redo closed the original retype window");
+    }
+    #[test]
+    fn scale_modifier_taps_reanchor_and_invalid_values_preserve_live_preview() {
+        let mut app=app();app.scene.select(SelectionItem::Face(0));app.set_tool(ToolType::Scale);
+        let p=|x,y|ToolContext::new(DVec3::new(x,y,0.),Ray::new(DVec3::new(x,y,5.),-DVec3::Z));
+        app.dispatch_tool_click(&p(1.,0.5));assert_eq!(app.active_tool.vcb_label(),"Red Scale");
+        app.dispatch_tool_move(&p(2.,0.5));assert_eq!(app.scene.mesh.vertices[2].position,DVec3::new(2.,1.,0.));
+        app.dispatch_tool_control_state(true);let centered=app.scene.mesh.clone();
+        assert_eq!(centered.vertices[0].position,DVec3::new(-0.5,0.,0.));
+        app.dispatch_tool_control_state(true);assert_eq!(app.scene.mesh,centered);
+        assert!(app.dispatch_tool_vcb("0").is_err());assert_eq!(app.scene.mesh,centered);assert!(app.undo_stack.is_empty());
+        app.active_tool.note_shift_state(true);app.active_tool.note_shift_state(false);
+        assert_eq!(app.active_tool.vcb_label(),"Scale");
+        app.dispatch_tool_vcb("2m").unwrap();assert_eq!(app.undo_stack.len(),1);
+        assert_eq!(app.scene.mesh.vertices[0].position,DVec3::new(-0.5,-0.5,0.));
+    }
+    #[test]
+    fn scale_loose_partial_warp_autofolds_and_retype_restores_mother_before_folding() {
+        let mut app=app();let other=app.scene.mesh.add_vertex(DVec3::new(2.,0.,1.));
+        let edge=app.scene.mesh.add_edge(0,other).unwrap();app.scene.select(SelectionItem::Edge(edge));
+        app.scene.mesh.faces[0].attrs.insert("vendor".into(),serde_json::json!(71));
+        let before=app.scene.mesh.clone();app.set_tool(ToolType::Scale);
+        app.dispatch_tool_click(&ToolContext::new(DVec3::ZERO,Ray::new(DVec3::Z,-DVec3::Z)));
+        app.dispatch_tool_vcb("2").unwrap();assert_eq!(app.scene.mesh.faces.len(),2);
+        assert!(app.scene.mesh.faces.iter().all(|f|f.attrs.get("vendor")==Some(&serde_json::json!(71))));
+        app.dispatch_tool_vcb("3").unwrap();assert_eq!(app.scene.mesh.faces.len(),2);assert_eq!(app.undo_stack.len(),1);
+        assert_eq!(app.scene.mesh.vertices[0].position,DVec3::new(-4.,0.,-2.));
+        let after=app.scene.mesh.clone();app.undo();assert_eq!(app.scene.mesh,before);app.redo();assert_eq!(app.scene.mesh,after);
+    }
+
+    #[test]
+    fn scale_refused_hot_value_preserves_command_and_next_transaction() {
+        let mut app=app();app.scene.select(SelectionItem::Face(0));app.set_tool(ToolType::Scale);
+        let p=|x|ToolContext::new(DVec3::new(x,x,0.),Ray::new(DVec3::Z,-DVec3::Z));
+        app.dispatch_tool_click(&p(1.));app.dispatch_tool_vcb("2").unwrap();
+        let revision=app.model_revision;assert!(app.dispatch_tool_vcb("0").is_err());assert_eq!(app.model_revision,revision);
+        app.dispatch_tool_vcb("3").unwrap();assert_eq!(app.undo_stack.len(),1);
+        app.dispatch_tool_vcb("3").unwrap(); // same value must retire replacement flag
+        app.dispatch_tool_click(&p(3.));app.dispatch_tool_vcb("2").unwrap();
+        assert_eq!(app.undo_stack.len(),2);assert_eq!(app.scene.mesh.vertices[2].position,DVec3::new(6.,6.,0.));
+    }
+    #[test]
+    fn scale_placed_group_preview_changes_pose_revision_only() {
+        let mut app=app();let mesh=std::mem::take(&mut app.scene.mesh);
+        let mut group=ingetrazo_core::groups::Group::with_mesh("placed",mesh.clone());
+        group.native_document=serde_json::json!({"xform":glam::DMat4::IDENTITY.to_cols_array()});
+        app.scene.groups.push(group);app.scene.select(SelectionItem::Group(0));app.set_tool(ToolType::Scale);
+        app.dispatch_tool_click(&ToolContext::new(DVec3::new(1.,1.,0.),Ray::new(DVec3::Z,-DVec3::Z)));
+        let before=app.native_render_revisions;
+        app.dispatch_tool_move(&ToolContext::new(DVec3::new(2.,2.,0.),Ray::new(DVec3::Z,-DVec3::Z)));
+        assert_eq!(app.native_render_revisions.static_domains.geometry,before.static_domains.geometry);
+        assert!(app.native_render_revisions.poses>before.poses);assert_eq!(app.scene.groups[0].mesh,mesh);
+        app.dispatch_tool_control_state(true);app.dispatch_tool_cancel();
+        assert_eq!(app.native_render_revisions.static_domains.geometry,before.static_domains.geometry);
+        assert_eq!(app.scene.groups[0].transform,glam::DMat4::IDENTITY);
+    }
+
+    #[test]
+    fn scale_mirror_rekeys_exchanged_vertices_without_losing_lookup_owners() {
+        let mut app=app();app.scene.select(SelectionItem::Face(0));app.set_tool(ToolType::Scale);
+        app.dispatch_tool_click(&ToolContext::new(DVec3::new(1.,1.,0.),Ray::new(DVec3::Z,-DVec3::Z)));
+        app.dispatch_tool_control_state(true);app.dispatch_tool_vcb("-1").unwrap();
+        for (i,v) in app.scene.mesh.vertices.iter().enumerate(){assert_eq!(app.scene.mesh.vertex_at_position(v.position),Some(i));}
+        app.undo();app.redo();
+        for (i,v) in app.scene.mesh.vertices.iter().enumerate(){assert_eq!(app.scene.mesh.vertex_at_position(v.position),Some(i));}
+    }
+
+    #[test]
+    fn scale_image_hot_retype_updates_relative_undo_factor() {
+        let mut app=IngeTrazoApp::new();app.scene=Scene::new();
+        app.scene.image_planes.push(ingetrazo_core::image_plane::ImagePlane::new("scan",DVec3::ZERO,DVec3::X,DVec3::Y));
+        app.scene.select(SelectionItem::ImagePlane(0));app.set_tool(ToolType::Scale);
+        let image=app.scene.image_planes[0].clone();
+        app.dispatch_tool_click(&ToolContext::new(DVec3::new(1.,1.,0.),Ray::new(DVec3::Z,-DVec3::Z)));
+        app.dispatch_tool_vcb("2").unwrap();app.dispatch_tool_vcb("3").unwrap();
+        assert_eq!(app.undo_stack.len(),1);assert_eq!(app.scene.image_planes[0].u,DVec3::X*3.);
+        app.undo();assert_eq!(app.scene.image_planes[0].u,image.u);app.redo();assert_eq!(app.scene.image_planes[0].u,DVec3::X*3.);
+    }
+
     #[test]
     fn failed_path_sweep_reports_error_without_document_or_history_mutation() {
         let mut app = app();

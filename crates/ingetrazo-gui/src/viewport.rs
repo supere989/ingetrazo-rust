@@ -34,7 +34,10 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
     let ctrl_down = ui.input(|i| i.modifiers.command || i.modifiers.ctrl);
     // Modifier release must retire the temporary lock even outside the canvas.
     app.snap_engine.sync_drawing_frame(app.scene.drawing_frame);
-    app.snap_engine.update_shift_state(shift_down,app.active_tool.snap_anchor());
+    if app.active_tool_type == ToolType::Scale {
+        app.snap_engine.update_shift_state(false, None);
+        app.active_tool.note_shift_state(shift_down);
+    } else { app.snap_engine.update_shift_state(shift_down,app.active_tool.snap_anchor()); }
     app.dispatch_tool_control_state(ui.input(|i| i.modifiers.ctrl));
 
     // Zoom on wheel
@@ -148,9 +151,9 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
                 .as_ref()
                 .map(|p| p.reference)
                 .or_else(|| app.active_tool.snap_anchor());
-            let screen_drawing=app.blender_is_picking()||matches!(app.active_tool_type,ToolType::Line|ToolType::Rectangle|ToolType::Move);
+            let screen_drawing=app.blender_is_picking()||matches!(app.active_tool_type,ToolType::Line|ToolType::Rectangle|ToolType::Move|ToolType::Scale);
             app.snap_engine.note_model_revision(app.model_revision);
-            let snap_res=if screen_drawing{
+            let snap_res=if !app.active_tool.uses_snap(){ingetrazo_core::snap::SnapResult::default()}else if screen_drawing{
                 let context=ingetrazo_core::snap_screen::ScreenSnapContext{
                     viewport:ingetrazo_core::screen_pick::PixelViewport::new(&app.camera,rect.width() as f64,rect.height() as f64),
                     cursor:glam::DVec2::new(rel_x,rel_y),candidate:cursor_world_pos,plane_normal,
@@ -167,10 +170,11 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
                 active_snap_glyph = SnapGlyph::from_snap_result(&snap_res, start_pt);
 
             }
+            app.active_tool.note_snap_result(&snap_res);
             app.snap_engine.note_inference_result(&snap_res);
 
             app.active_tool.note_cursor_plane(plane_point,plane_normal);
-            if app.active_tool_type==ToolType::Select {app.active_tool.note_pick_viewport(ingetrazo_core::screen_pick::PixelViewport::new(&app.camera,rect.width() as f64,rect.height() as f64),app.camera.eye(),app.model_revision);}
+            if matches!(app.active_tool_type,ToolType::Select|ToolType::Scale) {app.active_tool.note_pick_viewport(ingetrazo_core::screen_pick::PixelViewport::new(&app.camera,rect.width() as f64,rect.height() as f64),app.camera.eye(),app.model_revision);}
             let mut tool_ctx = ToolContext {
                 screen: Some(glam::DVec2::new(rel_x,rel_y)),
                 world: cursor_world_pos,
@@ -200,7 +204,7 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
                     app.commit_paste_preview();
                 }
             } else {
-                let follow_me = matches!(app.active_tool_type,ToolType::FollowMe|ToolType::Freehand);
+                let follow_me = matches!(app.active_tool_type,ToolType::FollowMe|ToolType::Freehand|ToolType::Scale);
                 if follow_me && !alt_down && pointer.button_pressed(egui::PointerButton::Primary) {
                     ui.ctx().data_mut(|data| {
                         data.insert_temp(response.id.with("followme_press"), mouse_pos)
@@ -223,7 +227,7 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
     }
     // Observe release beyond the viewport, without committing a tool during paste.
     if app.paste_preview.is_none()
-        && matches!(app.active_tool_type,ToolType::FollowMe|ToolType::Freehand)
+        && matches!(app.active_tool_type,ToolType::FollowMe|ToolType::Freehand|ToolType::Scale)
         && pointer.button_released(egui::PointerButton::Primary)
     {
         let origin = ui
@@ -402,6 +406,20 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
         if let Some(egui::Shape::Callback(callback))=&app.native_gpu_annotation_shape{
             let mut callback=callback.clone();callback.rect=rect;painter.add(egui::Shape::Callback(callback));
         }
+    }
+
+    if let Some(state)=app.active_tool.scale_box_state() {
+        let viewport=ingetrazo_core::screen_pick::PixelViewport::new(&app.camera,rect.width() as f64,rect.height() as f64);
+        let project=|p|viewport.project_for_snapping(p).map(|p|rect.min+egui::vec2(p.x as f32,p.y as f32));
+        for (a,b) in state.segments {if let (Some(a),Some(b))=(project(a),project(b)){
+            painter.line_segment([a,b],egui::Stroke::new(1.,egui::Color32::from_rgb(214,174,0)));
+        }}
+        for (p,active) in state.grips {if let Some(p)=project(p){
+            let color=if active{egui::Color32::from_rgb(220,40,40)}else{egui::Color32::from_rgb(60,160,60)};
+            let square=egui::Rect::from_center_size(p,egui::Vec2::splat(if active{10.}else{8.}));
+            painter.rect_filled(square,0.,color);
+            painter.rect_stroke(square,0.,egui::Stroke::new(1.,egui::Color32::from_rgb(30,30,30)));
+        }}
     }
 
     if let Some((label, point)) = app.active_tool.value_label() {
