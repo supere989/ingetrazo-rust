@@ -14,7 +14,7 @@ use rustpython_vm::{
     builtins::{PyList, PySet},
     common::lock::PyRwLock,
 };
-fn value(v: &serde_json::Value, vm: &VirtualMachine) -> Result<PyObjectRef, String> {
+pub(super) fn value(v: &serde_json::Value, vm: &VirtualMachine) -> Result<PyObjectRef, String> {
     Ok(match v {
         serde_json::Value::Null => vm.ctx.none(),
         serde_json::Value::Bool(v) => vm.ctx.new_bool(*v).into(),

@@ -1,0 +1,27 @@
+{
+  "base": "9d825a65",
+  "original_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "sources": {
+    "tools/ai-interpreter-proof/src/vm_scene.rs": "169057c31056af360f6e6e15945cc1fc250adbff55ec7c77d1b15be66c4f3ca4",
+    "tools/ai-interpreter-proof/src/vm_mesh.rs": "8a4100837a99fe05e7d0fb6206172b5956d60e88a7ab6fbdf7d34e9d26411a83",
+    "tools/ai-interpreter-proof/src/vm_packed.rs": "de05df6dd3b548a72e38d59559b9209f9f1ad0f8c4143c0ea4b110ef74242d12",
+    "tools/ai-interpreter-proof/src/vm_hydrate.rs": "1afc0e132e0ac2ecdf86aa2959b4a6e5e529ba80d6a67c4b588ee24d06acaa95",
+    "crates/ingetrazo-gui/src/engineering_python.rs": "423b10d49979f4496d45f31e82c245d5350cbbf9e55a6550cc58d04897d5707b",
+    "crates/ingetrazo-gui/src/app.rs": "af091041784a4768654ee4f590f3f172a984e38b466383639af3216a8ab56674",
+    "crates/ingetrazo-gui/examples/engineering_console_groups_fixture.rs": "1171d7765c9beeb8598894aa5ed8fe43ee76fcaf40775ae0d1fbfdb35f7b9d78",
+    "scripts/reference-ai-console-groups.py": "614be244808febd953d969782d33c44169b4842af870fb15f3e9febd5c414de3",
+    "scripts/check-ai-console-groups.py": "da858e3b8bee7537ed0f7471c59985340002ee5232124b3621a32123652a6a96",
+    "docs/audits/ai-console-groups/recipes.json": "00a05e81fa848486565a3a8cd287219728cc228fe8840487798bccddce558d01"
+  },
+  "original_sources": {
+    "core/ai.py": "6208a5c3e7773d27f028b9d7460f317693bab107705d6efdcd598ef048a82678",
+    "core/history.py": "2eb66a1d557099b51383988a7819145289fc4ce2c37fc7de3a92ed35b5830559",
+    "core/group.py": "9ba6a20eca241cb4969a545a3784fcff25566166606d5447a18780747d4f11c5",
+    "core/mesh.py": "5f2c1625e6dd717db029ba39a9de337e75beec06bd0df28a592a8a34875ca22c",
+    "core/scene.py": "9dfcd32f1ff5b1445180eafd8df36eafb92fa08ed3597bb90eac09554899d2e0"
+  },
+  "binary_path": "/tmp/ingetrazo-ai-registry-target/debug/examples/engineering_console_groups_fixture",
+  "binary_sha256": "bcf4212945ebc7e38bc1809941ca3f6544eeb9ee2d56a70d80484463fbddc346",
+  "tests": "9 focused console tests; 10 immediate source/native states; five validator negatives",
+  "build": "CARGO_TARGET_DIR=/tmp/ingetrazo-ai-registry-target CARGO_PROFILE_DEV_DEBUG=0 CARGO_PROFILE_TEST_DEBUG=0 CARGO_INCREMENTAL=0 -j2"
+}

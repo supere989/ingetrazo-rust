@@ -470,7 +470,7 @@ impl IngeTrazoApp {
             if let Some(inverse)=self.redo_stack.last_mut() {inverse.history_python=python_marker;}
             self.scene = prev;self.bump_model_revision();
             #[cfg(feature="engineering-python")]
-            if python_step {self.engineering_python.published(self.model_revision);}
+            if python_step {self.apply_engineering_python_history_groups();self.engineering_python.published(self.model_revision);}
             self.camera = self.scene.camera.clone();
             self.status_message = "Undo".to_string();
             return true;
@@ -508,7 +508,7 @@ impl IngeTrazoApp {
             if let Some(inverse)=self.undo_stack.last_mut() {inverse.history_python=python_marker;}
             self.scene = next;self.bump_model_revision();
             #[cfg(feature="engineering-python")]
-            if python_step {self.engineering_python.published(self.model_revision);}
+            if python_step {self.apply_engineering_python_history_groups();self.engineering_python.published(self.model_revision);}
             self.camera = self.scene.camera.clone();
             self.status_message = "Redo".to_string();
             return true;

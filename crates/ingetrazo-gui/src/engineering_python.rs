@@ -1,8 +1,9 @@
 //! Opt-in UI-thread engineering consumer; full Scene scripting remains incomplete.
 //! Hydrates only once; external document changes refuse instead of discarding scope.
 use ingetrazo_ai_interpreter_proof::{
-    native_publication::{NativePublication, PublicationMetrics},
     Controller,
+    native_publication::{NativePublication, PublicationMetrics},
+    vm_mesh::scene::GroupPublication,
 };
 #[derive(Default)]
 pub(crate) struct Engine {
@@ -15,22 +16,23 @@ pub(crate) struct Engine {
     row_publications: usize,
     last_publication: Option<PublicationMetrics>,
     before_publication_probe: Option<fn()>,
+    pending_groups: Option<GroupPublication>,
     #[cfg(test)]
     export_pressure: bool,
 }
 impl Engine {
     pub fn execute(
         &mut self,
-        mesh: &ingetrazo_core::mesh::Mesh,
+        scene: &ingetrazo_core::scene::Scene,
         revision: u64,
         code: &str,
-    ) -> Result<(bool, Option<NativePublication>), String> {
+    ) -> Result<(bool, Option<NativePublication>, Option<GroupPublication>), String> {
         if self.revision.is_some_and(|r| r != revision) {
             return Err("Engineering Python scope needs external document/history synchronization; session retained".into());
         }
         if self.controller.is_none() {
             let mut controller = Controller::new();
-            controller.import_native_mesh(mesh)?;
+            controller.import_native_scene(scene)?;
             controller.enable_history();
             self.session = Some(uuid::Uuid::new_v4());
             self.controller = Some(controller);
@@ -66,7 +68,7 @@ impl Engine {
                 let budget = controller.budget();
                 budget.set_limit(Some(budget.snapshot().total()));
             }
-            match controller.native_mesh_publication(mesh) {
+            match controller.native_mesh_publication(&scene.mesh) {
                 Ok(native) => Some(native),
                 Err(error) => {
                     self.controller.take();
@@ -79,12 +81,28 @@ impl Engine {
         } else {
             None
         };
-        self.command_depth = if changed && native.is_some() {
+        #[cfg(test)]
+        if self.export_pressure {
+            let budget = controller.budget();
+            budget.set_limit(Some(budget.snapshot().total()));
+        }
+        let groups = match controller.native_groups_publication() {
+            Ok(Some(receipt)) if receipt.groups != scene.groups => Some(receipt),
+            Ok(_) => None,
+            Err(error) => {
+                self.controller.take();
+                self.revision = None;
+                return Err(format!(
+                    "Group publication refused; interpreter scope retired: {error}"
+                ));
+            }
+        };
+        self.command_depth = if changed && (native.is_some() || groups.is_some()) {
             Some(controller.history_counts().0)
         } else {
             None
         };
-        Ok((changed, native))
+        Ok((changed, native, groups))
     }
     fn command_marker(&self) -> Option<(uuid::Uuid, usize)> {
         Some((self.session?, self.command_depth?))
@@ -124,6 +142,27 @@ impl Engine {
             }) {
                 return Err("Interpreter command missing".into());
             }
+            let groups = match controller.native_groups_publication() {
+                Ok(groups) => groups,
+                Err(error) => {
+                    let restored = if redo {
+                        controller.undo()
+                    } else {
+                        controller.redo()
+                    };
+                    if restored != Ok(true) {
+                        self.controller.take();
+                        self.revision = None;
+                        return Err(format!(
+                            "Group history publication refused; scope retired: {error}"
+                        ));
+                    }
+                    return Err(format!(
+                        "Group history publication refused; original history retained: {error}"
+                    ));
+                }
+            };
+            self.pending_groups = groups;
             self.history_steps += 1;
             Ok(())
         })())
@@ -197,6 +236,12 @@ impl crate::IngeTrazoApp {
             None => Ok(false),
         }
     }
+    pub(crate) fn apply_engineering_python_history_groups(&mut self) {
+        if let Some(groups) = self.engineering_python.pending_groups.take() {
+            self.scene.groups = groups.groups;
+            drop(groups.charge);
+        }
+    }
     pub(crate) fn run_engineering_python(&mut self, code: &str) {
         if self.undo_stack.try_reserve(1).is_err() {
             self.console_logs
@@ -205,17 +250,20 @@ impl crate::IngeTrazoApp {
         }
         match self
             .engineering_python
-            .execute(&self.scene.mesh, self.model_revision, code)
+            .execute(&self.scene, self.model_revision, code)
         {
-            Ok((changed, native)) => {
-                let published = native.is_some();
-                if let Some(publication) = native {
-                    // One existing application Undo snapshot; no final full-Mesh export.
+            Ok((changed, native, groups)) => {
+                let published = native.is_some() || groups.is_some();
+                if published {
+                    // One existing application Undo snapshot, including group membership.
                     let before = changed.then(|| self.scene.clone());
                     if let Some(probe) = self.engineering_python.before_publication_probe.take() {
                         probe();
                     }
-                    let prepared = match publication.prepare(&mut self.scene.mesh) {
+                    let prepared = match native
+                        .map(|publication| publication.prepare(&mut self.scene.mesh))
+                        .transpose()
+                    {
                         Ok(prepared) => prepared,
                         Err(error) => {
                             self.engineering_python.controller.take();
@@ -230,9 +278,15 @@ impl crate::IngeTrazoApp {
                             return;
                         }
                     };
-                    let metrics = prepared.publish();
-                    self.engineering_python.row_publications += 1;
-                    self.engineering_python.last_publication = Some(metrics);
+                    if let Some(prepared) = prepared {
+                        let metrics = prepared.publish();
+                        self.engineering_python.row_publications += 1;
+                        self.engineering_python.last_publication = Some(metrics);
+                    }
+                    if let Some(groups) = groups {
+                        self.scene.groups = groups.groups;
+                        drop(groups.charge);
+                    }
                     if let Some(before) = before {
                         self.save_prepared_undo_state(before);
                         self.undo_stack.last_mut().unwrap().history_python =
@@ -268,6 +322,28 @@ impl crate::IngeTrazoApp {
 #[cfg(test)]
 mod tests {
     use super::Engine;
+    #[test]
+    fn group_publication_refusal_retains_document_redo_and_retries() {
+        let mut app = crate::IngeTrazoApp::new();
+        app.engineering_python_enabled = true;
+        app.run_script("groups.append(Group(name='First'))");
+        assert_eq!(app.scene.groups.len(), 1);
+        app.undo();
+        assert!(app.scene.groups.is_empty());
+        assert_eq!(app.redo_stack.len(), 1);
+        app.engineering_python.export_pressure = true;
+        app.run_script("groups.append(Group(name='Refused'))");
+        assert!(app.scene.groups.is_empty());
+        assert_eq!(app.redo_stack.len(), 1);
+        assert!(app.undo_stack.is_empty());
+        assert!(app.status_message.contains("scope retired"));
+        assert!(app.engineering_python.controller.is_none());
+        app.redo();
+        assert_eq!(app.scene.groups[0].name, "First");
+        app.engineering_python.export_pressure = false;
+        app.run_script("groups.append(Group(name='Retry'))");
+        assert_eq!(app.scene.groups.len(), 2);
+    }
     #[test]
     fn changed_row_prepare_refuses_stale_unchanged_coordinate_before_writes() {
         let mut target = ingetrazo_core::mesh::Mesh::new();
@@ -538,11 +614,12 @@ mod tests {
         app.run_script("f.loop[0].position.setZ(99); raise ValueError('refuse')");
         assert_eq!(app.scene.mesh, edited);
         assert_eq!(app.undo_stack.len(), 2);
-        assert!(app
-            .console_logs
-            .last()
-            .unwrap()
-            .starts_with("Engineering Python refused:"));
+        assert!(
+            app.console_logs
+                .last()
+                .unwrap()
+                .starts_with("Engineering Python refused:")
+        );
         app.run_script("inspection=1");
         assert_eq!(app.undo_stack.len(), 2);
         assert_eq!(app.scene.mesh, edited);
@@ -554,8 +631,9 @@ mod tests {
         app.run_script("mesh.vertices.clear()");
         assert_eq!(app.scene.mesh, before);
         assert_eq!(app.redo_stack.len(), 2);
-        assert!(app
-            .status_message
-            .contains("external document/history synchronization"));
+        assert!(
+            app.status_message
+                .contains("external document/history synchronization")
+        );
     }
 }

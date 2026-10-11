@@ -1750,6 +1750,8 @@ fn seed_packed_uids(mesh: &PyRef<editable_mesh::Mesh>) -> Result<(), String> {
 mod face_fields;
 #[path = "vm_hydrate.rs"]
 mod hydrate;
+#[path = "vm_scene.rs"]
+pub mod scene;
 #[path = "vm_packed.rs"]
 mod packed;
 struct VertexRestore {
@@ -2040,6 +2042,7 @@ struct HistoryCommand {
     after: RootSnapshot,
     append: bool,
     packed_edges: bool,
+    groups: Option<scene::Membership>,
 }
 struct HistoryCapacity {
     values: Vec<HistoryCommand>,
@@ -2299,6 +2302,7 @@ impl RootRestore<'_> {
 
 pub struct Controller {
     history_enabled: bool,
+    scene: Option<PyRef<scene::console_scene::Scene>>,
     undo: Vec<HistoryCommand>,
     redo: Vec<HistoryCommand>,
     undo_slots: Lease,
@@ -2318,18 +2322,21 @@ impl Controller {
         let builder = InterpreterBuilder::new();
         let vectors = crate::vm_groups::native_groups::module_def(&builder.ctx);
         let meshes = editable_mesh::module_def(&builder.ctx);
+        let scenes = scene::console_scene::module_def(&builder.ctx);
         let interpreter = builder
             .add_native_module(vectors)
             .add_native_module(meshes)
+            .add_native_module(scenes)
             .interpreter();
         let interpreter = std::rc::Rc::new(interpreter);
         let vertex_runtime = identity_registry::Runtime::new(interpreter.clone());
-        let scope=interpreter.enter(|vm|{let s=vm.new_scope_with_builtins();vm.run_code_obj(vm.compile("from native_groups import QVector3D\nfrom editable_mesh import Mesh,Vertex,Edge,Face",Mode::Exec,"<setup>").unwrap(),s.clone()).unwrap();s});
+        let scope=interpreter.enter(|vm|{let s=vm.new_scope_with_builtins();vm.run_code_obj(vm.compile("from native_groups import QVector3D\nfrom editable_mesh import Mesh,Vertex,Edge,Face\nfrom console_scene import Group",Mode::Exec,"<setup>").unwrap(),s.clone()).unwrap();s});
         let budget = OwnerBudget::new(None);
         let mut controller = Self {
             undo_slots: budget.reserve(Kind::History, 0).unwrap(),
             redo_slots: budget.reserve(Kind::History, 0).unwrap(),
             history_enabled: false,
+            scene: None,
             undo: Vec::new(),
             redo: Vec::new(),
             interpreter,
@@ -2423,12 +2430,14 @@ impl Controller {
                 Ok(value) => {let mesh=value.downcast::<editable_mesh::Mesh>().map_err(|_|"Root binding requires Mesh")?;seed_packed_uids(&mesh)?;Some(RootRestore::prepare(mesh,&self.budget,vm)?)},
                 Err(_) => None,
             };
+            let group_before = self.scene.as_ref().map(|scene| scene::members(scene, &self.budget)).transpose()?;
             let executed = session::execute(vm, &self.scope, source);
             if self.panic_after_execution {
                 panic!("Engineering unwind after VM mutation");
             }
             if self.pressure_after_script { self.budget.set_limit(Some(self.budget.snapshot().total())); }
             let mut stage = STAGED.with(|s| s.borrow_mut().take().unwrap());
+            let mut group_command = None;
             let mut history_after = None;
             let mut history_capacity = None;
             let mut history_changed = false;
@@ -2483,6 +2492,11 @@ impl Controller {
                         history_changed = !before
                             .equivalent(&after)
                             .map_err(|_| "History state equality refused")?;
+                        if let (Some(scene), Some((members, _))) = (&self.scene, &group_before) {
+                            let command = scene::Membership::prepare(scene.clone(), members, &self.budget)?;
+                            history_changed |= !command.added.is_empty();
+                            group_command = Some(command);
+                        }
                         if !after.graph.registry_identity_live(&after.mesh)||after.validate_live(false)? || !after.graph.identity_live(&after.mesh,&self.budget,vm)? {
                             return Err(
                                 "History equality changed geometry after snapshot preparation"
@@ -2655,6 +2669,12 @@ impl Controller {
                 }
                 publish
             };
+            if result.is_err() {
+                if let (Some(scene), Some((mut members, _))) = (&self.scene, group_before) {
+                    let old = { std::mem::swap(&mut *scene.groups.borrow_vec_mut(), &mut members); members };
+                    drop(old);
+                }
+            }
             if let Some(before) = baseline.take() {
                 if result.is_err() {
                     before.restore();
@@ -2671,6 +2691,7 @@ impl Controller {
                         after,
                         append: history_append,
                         packed_edges: history_packed_edges,
+                        groups: group_command.take(),
                     });
                 } else {
                     before.dismiss();
@@ -2729,6 +2750,7 @@ impl Controller {
             &command.before
         };
         let result = self.interpreter.enter(|vm| {
+            if let Some(groups) = &command.groups { groups.prepare_history(redo)?; }
             seed_packed_uids(&target.mesh)?;
             let restore = target.thaw(vm, &self.budget)?;
             let native_rows = if command.append {
@@ -2812,6 +2834,7 @@ impl Controller {
                 drop(old);
             }
             restore.restore();
+            if let Some(groups) = &command.groups { groups.apply(redo); }
             vm.host_budget_reset_after_discard();
             Ok::<_, String>(true)
         });
@@ -2869,6 +2892,25 @@ impl Controller {
             drop(prepared);
             Ok(())
         })
+    }
+    pub fn import_native_scene(&mut self, native: &ingetrazo_core::scene::Scene) -> Result<(), String> {
+        self.import_native_mesh(&native.mesh)?;
+        let scene = self.interpreter.enter(|vm| {
+            let root = self.scope.globals.get_item("mesh", vm).map_err(|_|"Native Scene root missing")?
+                .downcast::<editable_mesh::Mesh>().map_err(|_|"Native Scene requires Mesh")?;
+            let scene = scene::import(native, root, &self.budget, vm)?;
+            let prepared = rustpython_vm::PyPayload::into_ref(self.scope.globals.copy(), &vm.ctx);
+            prepared.set_item("scene", scene.clone().into(), vm).map_err(|_|"Scene scope refused")?;
+            prepared.set_item("model", scene.clone().into(), vm).map_err(|_|"Model alias refused")?;
+            prepared.set_item("groups", scene.groups.clone().into(), vm).map_err(|_|"Groups alias refused")?;
+            self.scope.globals.swap_prepared_contents(&prepared);
+            Ok::<_,String>(scene)
+        })?;
+        self.scene = Some(scene);
+        Ok(())
+    }
+    pub fn native_groups_publication(&self) -> Result<Option<scene::GroupPublication>,String> {
+        self.interpreter.enter(|vm|self.scene.as_ref().map(|s|scene::publication(s,&self.budget,vm)).transpose())
     }
     pub fn native_mesh_revision(&self) -> Result<u64, String> {
         self.interpreter.enter(|vm| {
@@ -3204,6 +3246,7 @@ impl Drop for Controller {
             self.redo = Vec::new();
             self.undo_slots.resize(0).expect("History slot release");
             self.redo_slots.resize(0).expect("History slot release");
+            self.scene = None;
             self.scope.globals.clear();
             vm.state.gc.collect_force(2);
         });

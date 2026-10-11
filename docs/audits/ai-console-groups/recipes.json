@@ -1,0 +1,62 @@
+[
+  {
+    "name": "aliases",
+    "code": "held=groups; assert scene is model and scene.mesh is mesh and scene.groups is groups; existing=groups[0]; ef=existing.mesh.faces[0]",
+    "history": null,
+    "check": ""
+  },
+  {
+    "name": "create",
+    "code": "m=Mesh(); f=m.add_face([QVector3D(),QVector3D(2,0,0),QVector3D(0,2,0)]); g=Group(m,name='Shell'); groups.append(g)",
+    "history": null,
+    "check": "assert groups[-1] is g and g.mesh is m and m.faces[0] is f"
+  },
+  {
+    "name": "edit",
+    "code": "g.name='Edited'; g.layer='Authored'; g.hidden=True; f.attrs['mat']='Copper'; m.vertices[0].position.setZ(3)",
+    "history": null,
+    "check": ""
+  },
+  {
+    "name": "undo",
+    "code": "",
+    "history": false,
+    "check": "assert g not in groups and g.mesh is m and m.faces[0] is f"
+  },
+  {
+    "name": "detached",
+    "code": "g.hidden=False; g.name='Detached'; f.attrs['mat']='Silver'; m.vertices[0].position.setZ(4)",
+    "history": null,
+    "check": ""
+  },
+  {
+    "name": "redo",
+    "code": "",
+    "history": true,
+    "check": "assert groups[-1] is g and held is groups and g.mesh is m"
+  },
+  {
+    "name": "shared",
+    "code": "g2=Group(m,name='Shared'); groups.append(g2); existing.name='ChangedExisting'; ef.attrs['mat']='Persistent'",
+    "history": null,
+    "check": "assert g2.mesh is g.mesh"
+  },
+  {
+    "name": "undo-shared",
+    "code": "",
+    "history": false,
+    "check": "assert g2 not in groups and g in groups"
+  },
+  {
+    "name": "remove",
+    "code": "groups.remove(g)",
+    "history": null,
+    "check": ""
+  },
+  {
+    "name": "redo-shared",
+    "code": "",
+    "history": true,
+    "check": "assert g not in groups and g2 in groups and g2.mesh is m"
+  }
+]

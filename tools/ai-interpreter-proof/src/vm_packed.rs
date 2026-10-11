@@ -22,6 +22,12 @@ pub(super) struct Candidate {
     opaque_fields: usize,
 }
 impl Candidate {
+    /// Scene publication retains both packed storage and typed field leases until
+    /// the fresh native receipt is installed. This does not mutate the VM owner.
+    pub(super) fn into_mesh_receipt(mut self) -> Result<(ingetrazo_core::mesh::Mesh, Lease), String> {
+        self.charge.merge(self.field_charge)?;
+        Ok((self.mesh, self.charge))
+    }
     pub fn fields_changed(&self, live: &PyRef<Mesh>) -> Result<bool, String> {
         let owner = live.owner.read();
         let native = owner.mesh();

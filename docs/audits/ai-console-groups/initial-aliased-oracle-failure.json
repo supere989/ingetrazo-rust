@@ -1,0 +1,259 @@
+{
+  "states": [
+    {
+      "name": "aliases",
+      "groups": [],
+      "undo": 0,
+      "redo": 0
+    },
+    {
+      "name": "create",
+      "groups": [
+        {
+          "name": "Shell",
+          "layer": null,
+          "hidden": false,
+          "positions": [
+            [
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              2.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              2.0,
+              0.0
+            ]
+          ],
+          "attrs": [
+            {
+              "mat": "Silver"
+            }
+          ]
+        }
+      ],
+      "undo": 1,
+      "redo": 0
+    },
+    {
+      "name": "edit",
+      "groups": [
+        {
+          "name": "Edited",
+          "layer": "Authored",
+          "hidden": true,
+          "positions": [
+            [
+              0.0,
+              0.0,
+              3.0
+            ],
+            [
+              2.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              2.0,
+              0.0
+            ]
+          ],
+          "attrs": [
+            {
+              "mat": "Silver"
+            }
+          ]
+        }
+      ],
+      "undo": 1,
+      "redo": 0
+    },
+    {
+      "name": "undo",
+      "groups": [],
+      "undo": 0,
+      "redo": 1
+    },
+    {
+      "name": "detached",
+      "groups": [],
+      "undo": 0,
+      "redo": 1
+    },
+    {
+      "name": "redo",
+      "groups": [
+        {
+          "name": "Detached",
+          "layer": "Authored",
+          "hidden": false,
+          "positions": [
+            [
+              0.0,
+              0.0,
+              4.0
+            ],
+            [
+              2.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              2.0,
+              0.0
+            ]
+          ],
+          "attrs": [
+            {
+              "mat": "Silver"
+            }
+          ]
+        }
+      ],
+      "undo": 1,
+      "redo": 0
+    },
+    {
+      "name": "shared",
+      "groups": [
+        {
+          "name": "Detached",
+          "layer": "Authored",
+          "hidden": false,
+          "positions": [
+            [
+              0.0,
+              0.0,
+              4.0
+            ],
+            [
+              2.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              2.0,
+              0.0
+            ]
+          ],
+          "attrs": [
+            {
+              "mat": "Silver"
+            }
+          ]
+        },
+        {
+          "name": "Shared",
+          "layer": null,
+          "hidden": false,
+          "positions": [
+            [
+              0.0,
+              0.0,
+              4.0
+            ],
+            [
+              2.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              2.0,
+              0.0
+            ]
+          ],
+          "attrs": [
+            {
+              "mat": "Silver"
+            }
+          ]
+        }
+      ],
+      "undo": 2,
+      "redo": 0
+    },
+    {
+      "name": "undo-shared",
+      "groups": [
+        {
+          "name": "Detached",
+          "layer": "Authored",
+          "hidden": false,
+          "positions": [
+            [
+              0.0,
+              0.0,
+              4.0
+            ],
+            [
+              2.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              2.0,
+              0.0
+            ]
+          ],
+          "attrs": [
+            {
+              "mat": "Silver"
+            }
+          ]
+        }
+      ],
+      "undo": 1,
+      "redo": 1
+    },
+    {
+      "name": "remove",
+      "groups": [],
+      "undo": 1,
+      "redo": 1
+    },
+    {
+      "name": "redo-shared",
+      "groups": [
+        {
+          "name": "Shared",
+          "layer": null,
+          "hidden": false,
+          "positions": [
+            [
+              0.0,
+              0.0,
+              4.0
+            ],
+            [
+              2.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              2.0,
+              0.0
+            ]
+          ],
+          "attrs": [
+            {
+              "mat": "Silver"
+            }
+          ]
+        }
+      ],
+      "undo": 2,
+      "redo": 0
+    }
+  ]
+}

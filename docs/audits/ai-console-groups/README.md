@@ -1,0 +1,15 @@
+# Optional application Scene/group ownership prerequisite
+
+Pinned source: `6be29fe437a7cd992d4e079f71720821b25216b9`, operative `core.ai.run_transactional`, `SnapshotImport`, real `Scene`, `Group`, `Mesh` and application console.
+
+The Rust application binds genuine persistent `scene`/`model`, `groups`, `mesh`, Group/Mesh/Face objects. It hydrates an existing classic group, publishes fresh prepared native group receipts before visible mutation, and routes console-owned membership Undo/Redo through the VM. Added Group objects are removed/reinserted by identity. Existing group edits and detached held-object edits are not snapshots of the membership command, matching the source. After app snapshot history restores, current VM groups are installed so earlier snapshots cannot erase those later edits. Shared Mesh references remain genuine in Python and publish one mesh-share identity.
+
+Ten immediate source/native document states include imported existing-group mutation, group creation, nonhistory field/mesh edits, detached edits, shared Mesh ownership, later removal and chronological Undo/Redo. Alias assertions run only after native observations; they cannot repair delayed publication. Five checker mutations exercise the same strict validator. A focused post-execution group-receipt budget refusal retires the interpreter before any visible mutation, preserves the prior document and Redo, and permits a new session retry. No live external provider/bridge enabled.
+
+The first source recording accidentally retained `attrs` references in old observations. The strict comparison rejected it. `initial-aliased-oracle-failure.json` retains that failed oracle; corrected observations are frozen immediately with JSON copying. This was a harness defect, not a relaxed comparison.
+
+## Required remaining scope and costs
+
+This is a classic Group vertical slice, not full scripting parity. Transforms, nested/component placements, complete Group slots and helper recipes, full Scene selection/layers/bim/globals, nonstring native names/layers, arbitrary Python callbacks/subclasses and whole-document atomicity remain required. New/existing group mutations on a failed standalone controller command are not generally rollback covered; the app retires its private session and does not publish the refused candidate. Full unrelated live-VM synchronization is not enabled.
+
+Native group publication currently repacks all live group geometry and compares the complete list, including on alias inspections. It is O(group geometry), not sparse O(changed). Source membership matching is linear scanning per member; full root history and one app Scene snapshot remain. Existing cold hydration and baseline clones precede comprehensive logical admission. Logical leases cover reference slots, prepared packed geometry/typed fields and fixed wrapper accounting; VM heap/capacity slack, arbitrary payload sizes and infallible Rust/Python allocation are not an allocator-enforced total-memory cap. These costs must be removed/bounded before broad production promotion. No rendering/backend parity claim.
