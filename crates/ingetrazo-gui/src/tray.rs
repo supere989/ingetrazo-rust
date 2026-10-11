@@ -625,10 +625,6 @@ fn render_render_panel(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
             });
         ui.end_row();
 
-        ui.label(tr("Shadows:"));
-        ui.checkbox(&mut app.shadows_enabled, tr("Enable"));
-        ui.end_row();
-
         ui.label(tr("Profile edges:"));
         ui.add(egui::Slider::new(&mut app.style.profile_width, 1.0..=6.0).text("px"));
         ui.end_row();
@@ -638,6 +634,7 @@ fn render_render_panel(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
         ui.end_row();
     });
 
+    crate::solar_controls::show(app, ui);
     ui.separator();
     ui.collapsing(tr("Viewport Display"), |ui| {
         if ui.button(tr("Export Viewport Image (PNG)…")).clicked() {

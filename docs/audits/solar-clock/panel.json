@@ -1,0 +1,334 @@
+{
+  "source": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "panel_sha256": "717b597ee7c0d1747ce77931f5f6027a5b35b2bae97a0e4b393eb0973c1ab00b",
+  "rows": [
+    {
+      "name": "default",
+      "lat": -16.409,
+      "lon": -71.537,
+      "before": {
+        "enabled": false,
+        "month": 3,
+        "day": 21,
+        "hour": 2,
+        "minute": 3,
+        "darkness": 0.537
+      },
+      "controls": {
+        "enabled": true,
+        "month": 3,
+        "day": 21,
+        "hour": 12,
+        "minute": 0,
+        "darkness": 0.55
+      },
+      "after": {
+        "enabled": true,
+        "month": 3,
+        "day": 21,
+        "hour": 12,
+        "minute": 0,
+        "darkness": 0.55
+      },
+      "range": [
+        355,
+        1074
+      ]
+    },
+    {
+      "name": "afternoon",
+      "lat": -16.409,
+      "lon": -71.537,
+      "before": {
+        "enabled": false,
+        "month": 3,
+        "day": 21,
+        "hour": 2,
+        "minute": 3,
+        "darkness": 0.537
+      },
+      "controls": {
+        "enabled": true,
+        "month": 6,
+        "day": 21,
+        "hour": 15,
+        "minute": 30,
+        "darkness": 0.4
+      },
+      "after": {
+        "enabled": true,
+        "month": 6,
+        "day": 21,
+        "hour": 15,
+        "minute": 30,
+        "darkness": 0.4
+      },
+      "range": [
+        380,
+        1039
+      ]
+    },
+    {
+      "name": "zone-shift",
+      "lat": -16.409,
+      "lon": -71.537,
+      "before": {
+        "enabled": false,
+        "month": 3,
+        "day": 21,
+        "hour": 2,
+        "minute": 3,
+        "darkness": 0.537
+      },
+      "controls": {
+        "enabled": true,
+        "month": 3,
+        "day": 21,
+        "hour": 12,
+        "minute": 0,
+        "darkness": 0.55,
+        "utc_offset": -10
+      },
+      "after": {
+        "enabled": true,
+        "month": 3,
+        "day": 21,
+        "hour": 12,
+        "minute": 0,
+        "darkness": 0.55,
+        "utc_offset": -10
+      },
+      "range": [
+        55,
+        774
+      ]
+    },
+    {
+      "name": "polar-night",
+      "lat": 80.0,
+      "lon": 0.0,
+      "before": {
+        "enabled": false,
+        "month": 3,
+        "day": 21,
+        "hour": 2,
+        "minute": 3,
+        "darkness": 0.537
+      },
+      "controls": {
+        "enabled": true,
+        "month": 12,
+        "day": 21,
+        "hour": 12,
+        "minute": 0,
+        "darkness": 0.30000000000000004
+      },
+      "after": {
+        "enabled": true,
+        "month": 12,
+        "day": 21,
+        "hour": 12,
+        "minute": 0,
+        "darkness": 0.30000000000000004
+      },
+      "range": [
+        0,
+        1439
+      ]
+    },
+    {
+      "name": "polar-day",
+      "lat": 80.0,
+      "lon": 0.0,
+      "before": {
+        "enabled": false,
+        "month": 3,
+        "day": 21,
+        "hour": 2,
+        "minute": 3,
+        "darkness": 0.537
+      },
+      "controls": {
+        "enabled": true,
+        "month": 6,
+        "day": 21,
+        "hour": 12,
+        "minute": 0,
+        "darkness": 0.8
+      },
+      "after": {
+        "enabled": true,
+        "month": 6,
+        "day": 21,
+        "hour": 12,
+        "minute": 0,
+        "darkness": 0.8
+      },
+      "range": [
+        0,
+        1439
+      ]
+    },
+    {
+      "name": "jan-zone",
+      "lat": 40.71,
+      "lon": -74.0,
+      "before": {
+        "enabled": false,
+        "month": 3,
+        "day": 21,
+        "hour": 2,
+        "minute": 3,
+        "darkness": 0.537
+      },
+      "controls": {
+        "enabled": true,
+        "month": 1,
+        "day": 1,
+        "hour": 18,
+        "minute": 4,
+        "darkness": 0.44999999999999996,
+        "utc_offset": 14
+      },
+      "after": {
+        "enabled": true,
+        "month": 1,
+        "day": 1,
+        "hour": 11,
+        "minute": 34,
+        "darkness": 0.44999999999999996,
+        "utc_offset": 14
+      },
+      "range": [
+        150,
+        694
+      ]
+    },
+    {
+      "name": "june-zone",
+      "lat": 40.71,
+      "lon": -74.0,
+      "before": {
+        "enabled": false,
+        "month": 3,
+        "day": 21,
+        "hour": 2,
+        "minute": 3,
+        "darkness": 0.537
+      },
+      "controls": {
+        "enabled": true,
+        "month": 6,
+        "day": 21,
+        "hour": 6,
+        "minute": 40,
+        "darkness": 0.9,
+        "utc_offset": -12
+      },
+      "after": {
+        "enabled": true,
+        "month": 6,
+        "day": 21,
+        "hour": 6,
+        "minute": 40,
+        "darkness": 0.9,
+        "utc_offset": -12
+      },
+      "range": [
+        0,
+        1439
+      ]
+    },
+    {
+      "name": "half-even",
+      "lat": 0.0,
+      "lon": 22.5,
+      "before": {
+        "enabled": false,
+        "month": 3,
+        "day": 21,
+        "hour": 2,
+        "minute": 3,
+        "darkness": 0.537
+      },
+      "controls": {
+        "enabled": true,
+        "month": 9,
+        "day": 22,
+        "hour": 12,
+        "minute": 0,
+        "darkness": 0.19999999999999996
+      },
+      "after": {
+        "enabled": true,
+        "month": 9,
+        "day": 22,
+        "hour": 12,
+        "minute": 0,
+        "darkness": 0.19999999999999996
+      },
+      "range": [
+        385,
+        1104
+      ]
+    }
+  ],
+  "day_of_year": [
+    {
+      "day": 1,
+      "month_day": [
+        1,
+        1
+      ]
+    },
+    {
+      "day": 31,
+      "month_day": [
+        1,
+        31
+      ]
+    },
+    {
+      "day": 32,
+      "month_day": [
+        2,
+        1
+      ]
+    },
+    {
+      "day": 59,
+      "month_day": [
+        2,
+        28
+      ]
+    },
+    {
+      "day": 60,
+      "month_day": [
+        3,
+        1
+      ]
+    },
+    {
+      "day": 80,
+      "month_day": [
+        3,
+        21
+      ]
+    },
+    {
+      "day": 181,
+      "month_day": [
+        6,
+        30
+      ]
+    },
+    {
+      "day": 365,
+      "month_day": [
+        12,
+        31
+      ]
+    }
+  ]
+}

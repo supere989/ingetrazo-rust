@@ -42,6 +42,7 @@ fn source_scale(n: f64) -> String {
 #[derive(Debug,Clone,Copy,PartialEq,Eq)]
 pub(crate) struct CalendarDate {year:i32,month:i32,day:i32}
 impl CalendarDate {
+    pub(crate) fn year(self)->i32 {self.year}
     pub(crate) fn new(year:i32,month:i32,day:i32)->Result<Self,String>{
         let leap=year%4==0&&(year%100!=0||year%400==0);
         let days=match month{2=>if leap{29}else{28},4|6|9|11=>30,_=>31};
