@@ -7,7 +7,7 @@ meta=json.loads((reference/'transport.json').read_text());row=next(r for r in me
 command[command.index(str(reference)+':/out:rw')]=str(out)+':/out:rw'
 tree=Path(__file__).resolve().parents[1];helper=tree/'scripts/reference-skp-application-annotations.py'
 def digest(path):return hashlib.sha256(path.read_bytes()).hexdigest()
-provenance=dict(worktree=str(tree),worktree_commit=subprocess.check_output(['git','-C',str(tree),'rev-parse','HEAD'],text=True).strip(),diagnostic_script_sha256=digest(Path(__file__)),source_script_sha256=digest(helper),source_pin='6be29fe437a7cd992d4e079f71720821b25216b9',parser_pin='291700bc213655a00461838de71e5f206311e619',native_files={str(p.relative_to(out/case/'native')):digest(p)for p in sorted((out/case/'native').rglob('*'))if p.is_file()})
+provenance=dict(worktree=str(tree),worktree_commit=subprocess.check_output(['podman','exec','ingetrazo-publish','git','-C','/tmp/ingetrazo-skp-native-import','rev-parse','HEAD'],text=True).strip(),diagnostic_script_sha256=digest(Path(__file__)),source_script_sha256=digest(helper),source_pin='6be29fe437a7cd992d4e079f71720821b25216b9',parser_pin='291700bc213655a00461838de71e5f206311e619',native_files={str(p.relative_to(out/case/'native')):digest(p)for p in sorted((out/case/'native').rglob('*'))if p.is_file()})
 started=time.monotonic();record=dict(command=command,retained_native_reference=str(reference),timeout_seconds=60,execution_provenance=provenance)
 try:
  with(out/'source.log').open('w')as stream:record['returncode']=subprocess.run(command,stdout=stream,stderr=subprocess.STDOUT,timeout=60).returncode
