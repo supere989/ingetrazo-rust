@@ -1,0 +1,15 @@
+{
+  "passed": true,
+  "cases": [
+    "scene-source-global",
+    "scene-camera-only",
+    "scene-single-placement-move",
+    "scene-refused-alpha-retains-old"
+  ],
+  "matched_pixels": 475,
+  "negatives": [
+    "blank",
+    "stale-model"
+  ],
+  "scope": "Borrowed actualScene producer/native Metal instance consumer, sampled interior/sourcecolor grouping, one64byte pose write and priorframe alpha refusal; host/edges/textures/sections/annotations/MSAA excluded"
+}
