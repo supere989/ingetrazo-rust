@@ -34,3 +34,17 @@ impl IngeTrazoApp {
         let history=app.undo_stack.len();app.remove_selected_saved_view();assert_eq!(app.scene.saved_views.len(),1);app.undo();assert_eq!(app.scene.saved_views.len(),1);assert_eq!(app.undo_stack.len(),history);
     }
 }
+
+#[cfg(test)]mod ghost_view_tests {
+ use super::*;
+ #[test]fn ghost_saved_view_update_keeps_unknown_fields_and_recalls_current_flags(){
+  let mut app=IngeTrazoApp::new();app.scene.set_hidden_view(true,true);
+  app.add_saved_view("ghost".into());
+  app.scene.saved_views[0].hidden_shown.as_mut().unwrap()["future"]=serde_json::json!({"owner":7});
+  app.scene.set_hidden_view(true,false);app.scene.set_hidden_view(false,true);
+  app.update_selected_saved_view();
+  assert_eq!(app.scene.saved_views[0].hidden_shown,Some(serde_json::json!({"objects":false,"geometry":true,"future":{"owner":7}})));
+  app.scene.set_hidden_view(true,true);app.scene.set_hidden_view(false,false);app.apply_saved_view(0);
+  assert!(!app.scene.show_hidden_objects&&app.scene.show_hidden_geometry);
+ }
+}

@@ -44,7 +44,7 @@ for kind in ['face','edge','object','textured-object','nested-object','occluded-
   end=time.monotonic()+.4
   while time.monotonic()<end:app.processEvents();time.sleep(.005)
   image=vp.grabFramebuffer();assert image.size().width()==800 and image.size().height()==600
-  if os.environ.get('INGETRAZO_REQUIRE_NVIDIA')=='1':assert 'NVIDIA GeForce RTX 5090' in vp.gl_info['renderer']
+  if os.environ.get('INGETRAZO_REQUIRE_NVIDIA')=='1':assert vp.gl_info['vendor']=='NVIDIA Corporation' and 'NVIDIA GeForce RTX 5090' in vp.gl_info['renderer']
   image.save(str(root/(name+'.png')));save_scene(scene,root/(name+'.igz'))
   points=[(340,240),(460,240),(340,360),(460,360),(400,300)];samples=[[image.pixelColor(x,y).red(),image.pixelColor(x,y).green(),image.pixelColor(x,y).blue(),image.pixelColor(x,y).alpha()]for x,y in points]
   rows.append({'case':name,'background':[1,1,1],'show_edges':False,'points':points,'samples':samples,'ghost_samples':vp.ghost_samples,'gl_info':vp.gl_info,'native_input_sha256':hashlib.sha256((root/(name+'.igz')).read_bytes()).hexdigest()})

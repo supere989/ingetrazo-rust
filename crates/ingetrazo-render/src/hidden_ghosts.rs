@@ -1,5 +1,8 @@
 //! Separate source Hidden Objects/Geometry packet; ordinary surfaces stay hidden.
-use crate::buffer::Vertex;
+#[repr(C)]
+#[derive(Clone,Copy,bytemuck::Pod,bytemuck::Zeroable)]
+pub struct Vertex {pub position:[f32;3],pub color:[f32;3]}
+impl Vertex {fn new(position:DVec3,color:[f32;3])->Self{Self{position:position.as_vec3().to_array(),color}}}
 use ingetrazo_core::{scene::Scene,groups::Group,mesh::Mesh};
 use glam::{DMat4,DVec3};
 #[derive(Default)]pub struct Packet {pub faces:Vec<Vertex>,pub textured:Vec<Vertex>,pub edges:Vec<Vertex>}
@@ -37,14 +40,16 @@ impl Packet {
    let shade=crate::pipeline::shade_factor(mesh.face_normal(id)) as f64;
    let base=if object{attr("color")}else{face.attrs.get("color")}.and_then(|v|v.as_array());
    let default=[0.96,0.95,0.925];let rgb=std::array::from_fn::<_,3,_>(|i|((base.and_then(|b|b.get(i)).and_then(|v|v.as_f64()).unwrap_or(default[i])*shade).min(1.)*64.).round_ties_even() as f32/64.);
-   let color=if texture{[0.62,0.62,0.62,1.]}else{[rgb[0],rgb[1],rgb[2],1.]};
+   let color=if texture{[0.62,0.62,0.62]}else{rgb};
    let target=if texture{&mut self.textured}else{&mut self.faces};
-   for(a,b,c)in mesh.triangulate_face(id){target.try_reserve(3).map_err(|_|"Hidden face packet admission")?;for p in [a,b,c]{target.push(Vertex::from_dvec3(point(transform,p)?,DVec3::ZERO,color,[0.;2]));}}
+   for(a,b,c)in mesh.triangulate_face(id){target.try_reserve(3).map_err(|_|"Hidden face packet admission")?;for p in [a,b,c]{target.push(Vertex::new(point(transform,p)?,color));}}
   }
   for edge in &mesh.edges{
    if object&&(edge.hidden||edge.soft)||!object&&(!edge.hidden||!scene.is_layer_visible(edge.layer.as_deref())){continue;}
    self.edges.try_reserve(2).map_err(|_|"Hidden edge packet admission")?;
-   for id in [edge.v0,edge.v1]{self.edges.push(Vertex::from_dvec3(point(transform,mesh.vertices[id].position)?,DVec3::ZERO,[1.;4],[0.;2]));}
+   for id in [edge.v0,edge.v1]{self.edges.push(Vertex::new(point(transform,mesh.vertices[id].position)?,[1.;3]));}
   }Ok(())
  }
 }
+
+#[cfg(test)]mod layout_tests{#[test]fn packed_position_rgb_is_twenty_four_bytes(){assert_eq!(std::mem::size_of::<super::Vertex>(),24);assert_eq!(std::mem::align_of::<super::Vertex>(),4);}}
