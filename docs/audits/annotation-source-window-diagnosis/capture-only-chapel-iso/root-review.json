@@ -1,0 +1,13 @@
+{
+  "whole_image_differences": {
+    "annotations-on": 4891,
+    "annotations-off": 1297,
+    "annotations-restored": 4891
+  },
+  "source_mask_pixels": 3830,
+  "native_mask_pixels": 3737,
+  "mask_xor_pixels": 609,
+  "source_restore_exact": true,
+  "native_restore_exact": true,
+  "scope": "Matched-camera RTX Chapel iso; strict rendered parity fails."
+}
