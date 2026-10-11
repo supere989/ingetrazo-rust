@@ -1,0 +1,8 @@
+{
+  "scope": "Actual original Qt widget neutral glyph diagnostic; acceptance images remain unchanged strict oracle",
+  "white_baseline_changed_pixels": 3158,
+  "unequal_rgb_on_white_pixels": 3044,
+  "inference": "Scalar black glyph coverage over white cannot produce unequal RGB; source OpenGL A32 branch is selected by realized alphaBufferSize=0, inferred from pinned source rather than private glyph cache introspection",
+  "placement": "Logical origin QFixed conversion precedes glyph offset and density scaling; focused tests retain negative origin and fractional DPR counterexamples",
+  "remaining": "Full source widget parity remains FAIL; partial floor-only native replay has4765 whole-image differences and460 annotation mask differences"
+}
