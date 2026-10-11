@@ -1,3 +1,4 @@
+mod annotations;
 // SPDX-License-Identifier: GPL-3.0-or-later
 // Copyright (C) 2026 Marco Sumari Tellez and IngeTrazo contributors.
 
@@ -24,6 +25,7 @@ pub struct MoveTool {
     pub is_copy_mode: bool,
     pub target_vertices: Vec<usize>,
     pub target_groups: Vec<usize>,
+    annotations:annotations::Annotations,
     pub target_planes:Vec<usize>,
     pub target_images:Vec<usize>,
     original_images:Vec<(usize,ingetrazo_core::image_plane::ImagePlane)>,
@@ -71,6 +73,7 @@ impl MoveTool {
         self.hover_point = None;
         self.is_copy_mode = false;
         self.exclusions=Default::default();
+        self.annotations=Default::default();
         self.target_vertices.clear();
         self.target_groups.clear();self.target_planes.clear();self.target_images.clear();self.original_images.clear();self.preview_images.clear();
         self.detached_vertices=false;self.original_positions.clear();self.original_groups.clear();self.original_planes.clear();self.preview_delta=DVec3::ZERO;
@@ -156,6 +159,7 @@ impl MoveTool {
         self.exclusions.groups=group_set.iter().filter_map(|&id|scene.groups.get(id).map(|g|g.id)).collect();
         self.target_vertices = vert_set.into_iter().collect();
         self.target_groups = group_set.into_iter().collect();self.target_planes=plane_set.into_iter().collect();
+        if let Err(error)=self.annotations.gather(scene,&self.target_vertices,&self.target_groups){self.last_error=Some(error);self.target_vertices.clear();self.target_groups.clear();self.target_planes.clear();self.target_images.clear();self.annotations=Default::default();}
         self.original_version=scene.version;self.preview_version=scene.version;
         self.original_positions=self.target_vertices.iter().map(|&id|(id,scene.mesh.vertices[id].position)).collect();
         self.original_groups=self.target_groups.iter().filter_map(|&id|scene.groups.get(id).map(|g|(id,g.transform))).collect();
@@ -178,6 +182,7 @@ impl MoveTool {
     }
     fn apply_preview(&mut self,scene:&mut Scene,delta:DVec3){
         if !delta.is_finite()||delta==self.preview_delta{return;}
+        if self.target_vertices.is_empty()&&self.target_groups.is_empty()&&self.target_planes.is_empty()&&self.target_images.is_empty()&&(delta.as_vec3()-self.preview_delta.as_vec3()).length()<1e-12{return;}
         self.refresh_image_membership(scene);
         if !self.detached_vertices{for &(id,point) in &self.original_positions{if let Some(v)=scene.mesh.vertices.get_mut(id){v.position=point+delta;}}}
         for &(id,transform) in &self.original_groups{if let Some(g)=scene.groups.get_mut(id){g.transform=DMat4::from_translation(delta)*transform;}}
@@ -189,7 +194,8 @@ impl MoveTool {
             *origin=(current.as_vec3()+(delta.as_vec3()-self.preview_delta.as_vec3())).as_dvec3();
             if let Some(index)=index{*preferred=index;scene.image_planes.pose_mut(index).unwrap().set_origin(*origin);}else{scene.image_objects.set_held_origin(image,*origin);}
         }
-        self.preview_delta=delta;if (!self.detached_vertices&&!self.target_vertices.is_empty())||!self.target_groups.is_empty()||!self.target_planes.is_empty(){scene.bump_version();}self.preview_version=scene.version;
+        self.annotations.step(scene,(delta.as_vec3()-self.preview_delta.as_vec3()).as_dvec3());
+        self.preview_delta=delta;if !self.annotations.is_empty()|| (!self.detached_vertices&&!self.target_vertices.is_empty())||!self.target_groups.is_empty()||!self.target_planes.is_empty(){scene.bump_version();}self.preview_version=scene.version;
     }
     fn revert_preview(&mut self,scene:&mut Scene){
         if self.preview_delta!=DVec3::ZERO{
@@ -199,11 +205,12 @@ impl MoveTool {
                 (current.as_vec3()-self.preview_delta.as_vec3()).as_dvec3()
             }).collect::<Vec<_>>();
             self.restore_positions(scene);
+            self.annotations.step(scene,-self.preview_delta);
             for (((preferred,image),(_,origin)),current) in self.original_images.iter_mut().zip(&mut self.preview_images).zip(image_origins){
                 *origin=current;
                 if let Some(&index)=self.image_indices.get(&image.id.as_u128()){*preferred=index;scene.image_planes.pose_mut(index).unwrap().set_origin(current);}else{scene.image_objects.set_held_origin(image,current);}
             }
-            self.preview_delta=DVec3::ZERO;if (!self.detached_vertices&&!self.target_vertices.is_empty())||!self.target_groups.is_empty()||!self.target_planes.is_empty(){scene.bump_version();}self.preview_version=scene.version;}
+            self.preview_delta=DVec3::ZERO;if !self.annotations.is_empty()|| (!self.detached_vertices&&!self.target_vertices.is_empty())||!self.target_groups.is_empty()||!self.target_planes.is_empty(){scene.bump_version();}self.preview_version=scene.version;}
     }
     /// Execute translation or copy.
     pub fn execute_move(&mut self, delta: DVec3, scene: &mut Scene) {
@@ -219,7 +226,8 @@ impl MoveTool {
             self.target_vertices=scene.mesh.vertices.iter().enumerate().filter_map(|(id,v)|positions.contains(&source_move_position_key(v.position).unwrap().map(f64::to_bits)).then_some(id)).collect();
         }
         if self.is_copy_mode&&self.target_vertices.is_empty()&&self.target_groups.is_empty(){return;}
-        if delta.length_squared() < 1e-12 && (self.target_images.is_empty() || delta.as_vec3().length() <= 1e-9) {
+        if !self.annotations.is_empty()&&delta.as_vec3().length()<=1e-9{return;}
+        if delta.length_squared() < 1e-12 && self.annotations.is_empty() && (self.target_images.is_empty() || delta.as_vec3().length() <= 1e-9) {
             return;
         }
 
@@ -248,6 +256,7 @@ impl MoveTool {
             self.last_moved_verts = self.target_vertices.clone();
         }
 
+        if !self.is_copy_mode{self.annotations.step(scene,delta);}
         // Original copy builders stamp geometry only; reference images stay put.
         if !self.is_copy_mode&&!self.original_images.is_empty(){
             let command=ingetrazo_core::image_plane::ImageFrameCommand{images:self.original_images.iter().map(|(_,image)|image.clone()).collect(),operation:ingetrazo_core::image_plane::ImageFrameOperation::Move(delta)};
@@ -290,11 +299,13 @@ impl Tool for MoveTool {
 
     fn restore_transient_model(&self,scene:&mut Scene){if self.start_point.is_some(){
         let origins=self.original_images.iter().filter_map(|(id,image)|Self::image_index(scene,*id,image).map(|index|(index,(scene.image_planes[index].origin.as_vec3()-self.preview_delta.as_vec3()).as_dvec3()))).collect::<Vec<_>>();
-        self.restore_positions(scene);for(id,origin)in origins{scene.image_planes.pose_mut(id).unwrap().set_origin(origin);}scene.version=self.original_version;
+        self.restore_positions(scene);
+        self.annotations.restore_baseline(scene,self.preview_delta);for(id,origin)in origins{scene.image_planes.pose_mut(id).unwrap().set_origin(origin);}scene.version=self.original_version;
     }}
     fn end_transient_before_history(&mut self,scene:&mut Scene){if self.start_point.is_some(){self.on_cancel(scene);}}
     fn restore_current_preview_model(&self,scene:&mut Scene){
         if self.start_point.is_none(){return;}
+        self.annotations.restore_current(scene);
         scene.version=self.preview_version;
         // The exact accumulated float32 pose cannot be reconstructed from its inverse.
         for((id,image),(_,origin))in self.original_images.iter().zip(&self.preview_images){if let Some(index)=Self::image_index(scene,*id,image){scene.image_planes.pose_mut(index).unwrap().set_origin(*origin);}}
@@ -383,7 +394,7 @@ impl Tool for MoveTool {
 
         if self.start_point.is_none() {
             self.gather_targets(scene, ctx);
-            if !self.target_vertices.is_empty() || !self.target_groups.is_empty() || !self.target_planes.is_empty() || !self.target_images.is_empty() {
+            if !self.target_vertices.is_empty() || !self.target_groups.is_empty() || !self.target_planes.is_empty() || !self.target_images.is_empty() || !self.annotations.is_empty() {
                 self.start_point = Some(ctx.world);
             }
         } else {

@@ -108,6 +108,7 @@ impl IngeTrazoApp {
         let transient_changed=before.version!=self.scene.version;
         let committed=changed_model(&before,&self.scene) || bare_edge.is_some();
         if committed {
+            before.history_annotation_move=self.active_tool_type==ingetrazo_tools::base::ToolType::Move && (before.dimensions!=self.scene.dimensions||before.text_labels!=self.scene.text_labels);
             before.history_axes=axes_command.map(|c|c.inverse());
             // Source Fillet SnapshotMutation owns mesh only; undo does not restore selection.
             if self.active_tool_type==ingetrazo_tools::base::ToolType::Fillet { before.selection=self.scene.selection.clone(); }
@@ -163,7 +164,7 @@ impl IngeTrazoApp {
     }
 
     pub fn dispatch_tool_click(&mut self, context: &ToolContext) {
-        if matches!(self.active_tool_type,ingetrazo_tools::base::ToolType::Move|ingetrazo_tools::base::ToolType::Rotate|ingetrazo_tools::base::ToolType::Scale)
+        if matches!(self.active_tool_type,ingetrazo_tools::base::ToolType::Rotate|ingetrazo_tools::base::ToolType::Scale)
             && self.scene.selection.iter().any(|s|matches!(s,ingetrazo_core::scene::SelectionItem::Guide(_)|ingetrazo_core::scene::SelectionItem::Dimension(_)|ingetrazo_core::scene::SelectionItem::TextLabel(_))) {
             self.status_message="Annotation transform ownership is not yet supported".into();return;
         }
@@ -179,7 +180,8 @@ impl IngeTrazoApp {
             .unwrap_or_default();
         if self.active_tool.error_message().is_none(){if let Some(status)=self.active_tool.take_status_message(){self.status_message=status;}}
         if self.active_tool.error_message().is_some(){
-            self.scene=before;self.active_tool.restore_current_preview_model(&mut self.scene);self.bump_model_revision();return;
+            let unchanged_move=self.active_tool_type==ingetrazo_tools::base::ToolType::Move&&self.scene==before;
+            self.scene=before;self.active_tool.restore_current_preview_model(&mut self.scene);if !unchanged_move{self.bump_model_revision();}return;
         }
         if self.record_tool_commit(before).is_ok() {
             if self.scene.section_planes.len()>plane_count { self.queue_section_name_prompt(); }
@@ -680,4 +682,78 @@ mod tests {
   let document=app.model_revision;app.dispatch_tool_move(&ctx(glam::DVec3::X));assert_eq!(app.model_revision,document);
   app.scene.mesh.add_vertex(glam::DVec3::ZERO);app.scene.clear_selection();app.scene.select(SelectionItem::Vertex(0));app.set_tool(ToolType::Move);app.dispatch_tool_click(&ctx(glam::DVec3::ZERO));let geometry=app.native_geometry_revision;app.dispatch_tool_move(&ctx(glam::DVec3::Y));assert!(app.native_geometry_revision>geometry);
  }
+}
+
+#[cfg(test)]
+mod annotation_move_tests {
+    use crate::IngeTrazoApp;
+    use glam::DVec3;
+    use ingetrazo_core::{guides::Guide, scene::SelectionItem, textlabel::TextLabel};
+    use ingetrazo_tools::base::{ToolContext, ToolType};
+    fn context() -> ToolContext {
+        ToolContext::new(
+            DVec3::ZERO,
+            ingetrazo_core::math::Ray::new(DVec3::Z, -DVec3::Z),
+        )
+    }
+    #[test]
+    fn annotation_move_refuses_stale_or_locked_before_mutation() {
+        for stale in [false, true] {
+            let mut a = IngeTrazoApp::new();
+            a.system_clipboard = None;
+            a.scene
+                .text_labels
+                .push(TextLabel::new(DVec3::ZERO, DVec3::X, "held"));
+            a.scene.select(SelectionItem::TextLabel(0));
+            if stale {
+                a.scene.select(SelectionItem::Dimension(99));
+            } else {
+                a.scene.layers[0].locked = true;
+            }
+            a.set_tool(ToolType::Move);
+            let before = a.scene.clone();
+            let revision = a.model_revision;
+            a.dispatch_tool_click(&context());
+            assert_eq!(a.scene, before);
+            assert_eq!(a.model_revision, revision);
+            assert!(a.undo_stack.is_empty());
+            assert!(a.active_tool.snap_anchor().is_none());
+            assert!(!a.status_message.is_empty());
+        }
+    }
+    #[test]
+    fn annotation_move_guide_only_is_source_no_acquisition() {
+        let mut a = IngeTrazoApp::new();
+        a.system_clipboard = None;
+        a.scene.guides.push(Guide::point(DVec3::ZERO));
+        a.scene.select(SelectionItem::Guide(0));
+        a.set_tool(ToolType::Move);
+        let before = a.scene.clone();
+        a.dispatch_tool_click(&context());
+        let mut hover = context();
+        hover.world = DVec3::X;
+        a.dispatch_tool_move(&hover);
+        a.dispatch_tool_click(&hover);
+        assert_eq!(a.scene, before);
+        assert!(a.undo_stack.is_empty());
+        assert!(a.active_tool.snap_anchor().is_none());
+    }
+    #[test]
+    fn annotation_move_subthreshold_commit_has_no_history() {
+        let mut a = IngeTrazoApp::new();
+        a.system_clipboard = None;
+        a.scene
+            .text_labels
+            .push(TextLabel::new(DVec3::ZERO, DVec3::ZERO, "tiny"));
+        a.scene.select(SelectionItem::TextLabel(0));
+        a.set_tool(ToolType::Move);
+        let before = a.scene.text_labels.clone();
+        a.dispatch_tool_click(&context());
+        let mut end = context();
+        end.world = DVec3::new(1e-10, 0., 0.);
+        a.dispatch_tool_move(&end);
+        a.dispatch_tool_click(&end);
+        assert_eq!(a.scene.text_labels, before);
+        assert!(a.undo_stack.is_empty());
+    }
 }
