@@ -85,7 +85,9 @@ jobs:
         run: |
           mkdir -p docs/audits/metal-combined-gui-ci
           cargo check --locked -p ingetrazo-gui --all-targets > docs/audits/metal-combined-gui-ci/check.log 2>&1
-          cargo build --locked -p ingetrazo-cli -p ingetrazo-gui --bin ingetrazo --example native_metal --example native_metal_document_probe --example session_recovery_process > docs/audits/metal-combined-gui-ci/build.log 2>&1
+          cargo build --locked -p ingetrazo-cli -p ingetrazo-gui -p ingetrazo-metal --bin ingetrazo --example native_metal --example native_metal_document_probe --example session_recovery_process --example native_world_defaults --example device_probe --example submission_probe --example cad2d_probe > docs/audits/metal-combined-gui-ci/build.log 2>&1
+      - name: Native default sky profile cache refusal and ownership
+        run: target/debug/examples/native_world_defaults docs/audits/metal-combined-gui-ci/defaults
       - name: Actual packaged CLI native Metal world startup
         run: python3 scripts/check-native-metal-launcher.py target/debug/ingetrazo ingetrazo/examples/banca-pergola-yanque.igz docs/audits/metal-combined-gui-ci/launcher
       - name: Native isolated session lease crash and app recovery
@@ -97,10 +99,10 @@ jobs:
           cargo run --locked -p ingetrazo-gui --example walk_native_modifier_ingress > docs/audits/metal-combined-gui-ci/modifier-ingress.json 2> docs/audits/metal-combined-gui-ci/modifier-ingress.log
           python3 scripts/check-walk-modifier-ingress.py docs/audits/navigation-walk-modifier-ingress/navigation-ingress-source.json docs/audits/metal-combined-gui-ci/modifier-ingress.json > docs/audits/metal-combined-gui-ci/modifier-ingress-check.json
           INGETRAZO_INGRESS_MISSING_CONTROL=1 cargo run --locked -p ingetrazo-gui --example walk_native_modifier_ingress > docs/audits/metal-combined-gui-ci/modifier-missing.json 2> docs/audits/metal-combined-gui-ci/modifier-missing.log
-      - name: Link native device probe against Apple frameworks
+      - name: Inspect prebuilt native probe Apple framework linkage
         run: |
           mkdir -p docs/audits/metal-native-link-ci
-          cargo build --locked -p ingetrazo-metal --example device_probe --example submission_probe --example cad2d_probe > docs/audits/metal-native-link-ci/build.log 2>&1
+          cp docs/audits/metal-combined-gui-ci/build.log docs/audits/metal-native-link-ci/build.log
           file target/debug/examples/device_probe > docs/audits/metal-native-link-ci/binary.txt
           otool -L target/debug/examples/device_probe > docs/audits/metal-native-link-ci/frameworks.txt
       - name: Execute native Metal device and allocation probe
@@ -251,12 +253,10 @@ jobs:
           QT_QPA_PLATFORM=offscreen python scripts/reference-ai-bridge-query.py docs/audits/ai-bridge-ci > docs/audits/ai-bridge-ci/original.json
           cargo run --locked -p ingetrazo-gui --example ai_bridge_query_acceptance -- docs/audits/ai-bridge-ci > docs/audits/ai-bridge-ci/native.json 2> docs/audits/ai-bridge-ci/build.log
           python scripts/check-ai-bridge-query.py docs/audits/ai-bridge-ci --require-full > docs/audits/ai-bridge-ci/comparison.json
-      - name: Integrated document Change Axes and PushPull workflows using retained source fixtures
+      - name: Integrated document axes PushPull and nested Fillet workflows using retained source fixtures
         run: |
-          cargo build --locked -p ingetrazo-gui --example change_axes_fixture --example document_preservation_workflow --example pushpull_solid_workflows
+          cargo build --locked -p ingetrazo-gui --example change_axes_fixture --example document_preservation_workflow --example pushpull_solid_workflows --example fillet_scoped --example pushpull_finite_workflows
           python scripts/check-document-axes-integration.py target/debug/examples docs/audits/document-axes-ci
-          target/debug/examples/pushpull_solid_workflows docs/audits/pushpull-solid-workflows/app-input.json docs/audits/document-axes-ci/pushpull-app.json
-          python scripts/check-pushpull-solid-workflows.py docs/audits/pushpull-solid-workflows docs/audits/document-axes-ci/pushpull-comparison.json docs/audits/document-axes-ci/pushpull-app.json
       - name: Pinned original and native legacy SKP primitive parity
         run: |
           oracle_dir="$RUNNER_TEMP/ingetrazo-openskp-oracle"

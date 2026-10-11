@@ -1,0 +1,86 @@
+{
+  "revision": "e5549f3b6abb32dc78346a88873d20504e111034",
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "binary_sha256": {
+    "change_axes_fixture": "f4f324c118bee7e5b26a93ee01b8245a40e68e8cf51cd3ce11f0cde2e2335e5f",
+    "document_preservation_workflow": "18b7bcdd3d22f7c5b71f1cc0f1b684755fdb88048549ccbc2feacfea0badf678",
+    "pushpull_solid_workflows": "1242f7abcf08f34b417b4d4c1be421161db2103101faba781bb03eb5a5f2695b",
+    "fillet_scoped": "1e65e7cdf8b27124733e61208a9c22eac07655dd0d36e9a316ffa5f14e5d377e",
+    "pushpull_finite_workflows": "83c6c68bd81cc4f232b610881ab54d490eac00b5cc8115156c9ad19fe61d817f"
+  },
+  "source_archives": {
+    "axes": "2a8653e4589f38ad6355c15f280451990643d5188852e28b56111e5a1d909c1f",
+    "documents": "f381a13f523ff6b3a0d7e237309b8276d633fa1cfeced420c88b856ece786926",
+    "fillet": "c7aa6d9ec54ec63ef30233df30750ac13abde941edf7d9e917deae81a72dcff8",
+    "pushpull_finite": "df498d377eab877dee2c1031181dcf95d1514fbecbc4d087fc4d7756c633991c"
+  },
+  "axes": {
+    "retained_failures_rejected": 3,
+    "states": 33,
+    "actual_python_reopens": 5,
+    "rejecting_controls": 8,
+    "literal_uid_cases": 5,
+    "exact": true
+  },
+  "documents": {
+    "actual_app_saves": 6,
+    "exact_original_reopens": 6,
+    "leaf_record_types": 15,
+    "negative_controls": 5
+  },
+  "fillet": {
+    "exact_app_states": 28,
+    "old_candidate_rejected": true,
+    "negative_controls": 4
+  },
+  "pushpull": {
+    "passed": true,
+    "scope": "Eight exact pinned private regression operations; six exact actual App consumers including nested shared history. Direct helper holed-winding discrepancy retained; no full P03 promotion.",
+    "exact_model_cases": 8,
+    "actual_app_cases": 6,
+    "source_private_helper_discrepancy": "test_repush_top_extends_holed_wall_keeping_opening-2",
+    "negative_controls": [
+      "empty",
+      "missing_case",
+      "duplicate_case",
+      "removed_face",
+      "reversed_boundary",
+      "wrong_interior",
+      "wrong_paint",
+      "lost_hole",
+      "coordinate_drift",
+      "wrong_undo",
+      "lost_cancel",
+      "missing_history",
+      "lost_linked_finish"
+    ],
+    "retained_invalid_original_atomic_refusals": [
+      "ctrl-roof-0.2",
+      "ctrl-step-0.5"
+    ],
+    "retained_wedge_policy": "Unchanged zero-limit no-op; literal invalid-source result not copied"
+  },
+  "pushpull_finite": {
+    "passed": true,
+    "workflows": 26,
+    "exact_primitive_operations": 65,
+    "exact_persistent_app_operations": 65,
+    "negative_controls": [
+      "empty",
+      "truncated",
+      "duplicate",
+      "removed_face",
+      "reversed_face",
+      "wrong_paint",
+      "wrong_interior",
+      "coordinate_2^-22",
+      "wrong_undo",
+      "lost_cancel",
+      "collapsed_history",
+      "wrong_workflow"
+    ],
+    "scope": "Finite valid slanted roof, all wedge permutations, side-wall permutations and repeated pushes; exact source geometry/metadata and actual App VCB/Cancel/Undo/Redo. Not full P03 or renderer acceptance."
+  },
+  "fresh_source_acquisitions": 0,
+  "result": "pass"
+}

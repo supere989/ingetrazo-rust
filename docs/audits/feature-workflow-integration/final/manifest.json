@@ -1,0 +1,314 @@
+{
+  "runtime_revision": "e5549f3b6abb32dc78346a88873d20504e111034",
+  "joint_build_seconds": 5.94,
+  "binary_cli_sha256": "dcfbf497a8836fc25c9272d99f04853f539cca450f3eb26cd8ffd114f7822197",
+  "app_binaries": {
+    "change_axes_fixture": "f4f324c118bee7e5b26a93ee01b8245a40e68e8cf51cd3ce11f0cde2e2335e5f",
+    "document_preservation_workflow": "18b7bcdd3d22f7c5b71f1cc0f1b684755fdb88048549ccbc2feacfea0badf678",
+    "pushpull_solid_workflows": "1242f7abcf08f34b417b4d4c1be421161db2103101faba781bb03eb5a5f2695b",
+    "fillet_scoped": "1e65e7cdf8b27124733e61208a9c22eac07655dd0d36e9a316ffa5f14e5d377e",
+    "pushpull_finite_workflows": "83c6c68bd81cc4f232b610881ab54d490eac00b5cc8115156c9ad19fe61d817f"
+  },
+  "changed_rust_files": {
+    "crates/ingetrazo-core/src/change_axes.rs": "a8d430ac8dc8fce80ae61a6ecaa8786be087505d87bda470efb008f51bcc9fa4",
+    "crates/ingetrazo-core/src/containers.rs": "73b06d4e76502af8b4ed30d80bffc19feb6d55f608aebc6a7fc967038a9cc58f",
+    "crates/ingetrazo-core/src/lib.rs": "d1159223b91e78cbfe0c99598c2f5afbd10f5984223c878315946f549da71a1a",
+    "crates/ingetrazo-core/src/scene.rs": "cd883b2934e0575008e26e39b62ae362b6bf1e1e6fd86df736b1c2d30fdf2e96",
+    "crates/ingetrazo-formats/src/igz.rs": "ef4a41178d2c22ef6a7d32d9e9423f69f14a7f4d4d2bf18985d2141587ea4ed0",
+    "crates/ingetrazo-gui/examples/change_axes_fixture.rs": "7789423fa98098ccfa173723acdc90f055b90edc5b03979acddd1c1d00cef4ef",
+    "crates/ingetrazo-gui/examples/document_preservation_workflow.rs": "e0668fccab80db8d785d075f06bbeea3d3efc0bb4cb8e6b75503217a339de505",
+    "crates/ingetrazo-gui/examples/pushpull_finite_workflows.rs": "f454f99e7096531d7072283b664efc3d3c93237cee0db744454c69b02dcc5535",
+    "crates/ingetrazo-gui/examples/pushpull_solid_workflows.rs": "e8cbd66d3e1c8315731c869402090cfba46eb2575044e27cfc859055529eb249",
+    "crates/ingetrazo-gui/src/app.rs": "3080f17b7ca0ab201c40db5b573ae7bc66773cc24b0c2d46f90d6cb37e372fe5",
+    "crates/ingetrazo-gui/src/component_edit.rs": "93dca34c68dff9ae49e7ea33b48a86045c603e6d06d668a754eacb68c98c42a2",
+    "crates/ingetrazo-gui/src/native_metal/world_viewport.rs": "2a3ee841278a6a733efba96cb6c4c57747f60f11c5145b8072a5bcc6b7d4c109",
+    "crates/ingetrazo-gui/src/tool_history.rs": "b6a04bff230efb3c4ae5d8703108f195a18812f6ad1f6bca3172403a57de15c0",
+    "crates/ingetrazo-gui/src/viewport.rs": "992bb130c28ab2669847e7968308d767334458aafde197b911ebb3706dc149bd",
+    "crates/ingetrazo-metal/examples/native_world_defaults.rs": "067b3cd9a711f430de8813b08b83fac4916287c169a82d84ab14469c84bdca5f",
+    "crates/ingetrazo-metal/src/lib.rs": "1180662af9d4d5325b81978ee6203d49d72a9b652c148fc0dd308f6574fc049e",
+    "crates/ingetrazo-metal/src/shaders/world.metal": "2cf2a85534dfefe9ad1b0cc2375554120fd772a585fbd6e304f0da9429ba5c25",
+    "crates/ingetrazo-metal/src/world.rs": "b4130763551fbcc3cd5cfb2c6c4ae5c783e14a4057fabd3a51ee1edeb6c74e91",
+    "crates/ingetrazo-metal/src/world_background.rs": "95983524dc97c442bc952bb0647b6017496e2ae5477e9eab2312e925ff2b0318",
+    "crates/ingetrazo-metal/src/world_profile.rs": "caedf189c192fb4f18e09925d30f5de79d0ae71e38199b6e139780ea9a83ce61",
+    "crates/ingetrazo-metal/src/world_scene.rs": "e8f0a463049690c252728905e46786ab6c5b18fcb28170f46ce973afc0f6f2cb",
+    "crates/ingetrazo-tools/src/base.rs": "f874940e84faf8b6dde7fd7ffdba2e0c9b3e2737ddd2d2a85b604a03a2342a47",
+    "crates/ingetrazo-tools/src/change_axes.rs": "ec362a3a1fdf9c34a4bbda15d3e5f9ec9efd3d5ea3ece819916fe0bebfadd8a2",
+    "crates/ingetrazo-tools/src/lib.rs": "973bd13462342bdea999771c14ea0a6654ef4822bd266a84a3e2595763513d6a",
+    "crates/ingetrazo-tools/src/pushpull.rs": "1dd33cd606afadb4ef106e61a433897be3e1be64fe5faa18b4cb02eab8912c58"
+  },
+  "runner_sha256": "eb2f74774033b35aa160a3b9a27e5e915546a426067ca68f3c1fce2d8108150f",
+  "archive_sha256": "f2fecbd682d1cec48473ce58ad6dcc6ab4f475b2171548c13f28e532582ee1d8",
+  "records": {
+    "axes/check.json": {
+      "bytes": 140,
+      "sha256": "f25be830fb2b46f3df276fa41e153bdcc89984af6ddd79ded80dd1066e433b97"
+    },
+    "axes/check.json.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "axes/classic.input.igz": {
+      "bytes": 2125,
+      "sha256": "57850fdf92a8f65f1a71b003005f1946bb1f3e6076deadc933799ca015ecedb6"
+    },
+    "axes/classic.native.igz": {
+      "bytes": 2396,
+      "sha256": "4ad37c03305ff5795a30cb8b5c4b4ed895db62bd57aa3b76304100accec1930a"
+    },
+    "axes/context.input.igz": {
+      "bytes": 3477,
+      "sha256": "f14e56bae1bf6c044560ae98a120dded3212505bafaa6ba07d5737c407d0779d"
+    },
+    "axes/context.native.igz": {
+      "bytes": 5395,
+      "sha256": "a86ec128ed2c89526f92d2418e2e9f94e1f391d8ae65a5b403b5c07824521cfd"
+    },
+    "axes/native.json": {
+      "bytes": 101776,
+      "sha256": "9c6a164fd2af69aa5ff16d15c6a650973719dd59a26dece5ba9a470759932211"
+    },
+    "axes/native.json.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "axes/nested.input.igz": {
+      "bytes": 5604,
+      "sha256": "ebd5a1a7fd73910f8e0b72545df73986c29f78de6ede2a7c5c8bf4125d915899"
+    },
+    "axes/nested.native.igz": {
+      "bytes": 7247,
+      "sha256": "acb385c0ff45378b011b5f4bd1918c477d11e043f7eb4b8f0730a60e939d02e1"
+    },
+    "axes/oblique.input.igz": {
+      "bytes": 2875,
+      "sha256": "f77e18c64e4f08cee167d8507d55c0a690b128c8d74596cdf07687f6632220b2"
+    },
+    "axes/oblique.native.igz": {
+      "bytes": 5514,
+      "sha256": "4d9381e9eb3af13af44c711979104278cec695257e6bddf75009d0bdd221b927"
+    },
+    "axes/original.json": {
+      "bytes": 101779,
+      "sha256": "011e1f864cc4acce2b60d74aaa8bc1fa2a8baae8e006606bfb76d4b8cbb04aa7"
+    },
+    "axes/reopened.json": {
+      "bytes": 5474,
+      "sha256": "3a3d7c8a645271d21c722d8412b92234ee094310b7d63cc21d5e1b3f2bca12f8"
+    },
+    "axes/reopened.json.stderr": {
+      "bytes": 49,
+      "sha256": "9148e145e58b87c50fd49ce7410b6e547365bef08a9b8c91d92465a27f1fa848"
+    },
+    "axes/shared.input.igz": {
+      "bytes": 2875,
+      "sha256": "f77e18c64e4f08cee167d8507d55c0a690b128c8d74596cdf07687f6632220b2"
+    },
+    "axes/shared.native.igz": {
+      "bytes": 4516,
+      "sha256": "adcabda38b5d12bd74310e6ef0615026552dc2b21b9c7e0780d13ccb6faec25b"
+    },
+    "build.log": {
+      "bytes": 19165,
+      "sha256": "91c1b157afde38814fe46e325d517c1ff0c20f4b387949532177f4b6e84b94ac"
+    },
+    "config/Unknown Organization/reference-change-axes.py.conf": {
+      "bytes": 1775,
+      "sha256": "ed7b9c859ba8e39ddb10a90548d9f6583ae4e2df4f60a59093a6b20009d63ea7"
+    },
+    "data/IngeTrazo/textures/embedded/2ce724eba3f26125-\u00c1rbol \u65e5\u672c .png": {
+      "bytes": 98,
+      "sha256": "2755c59556dc3baa37c383457b9095850b567a0ca962275f16ee9509b156b748"
+    },
+    "documents/check.log": {
+      "bytes": 109,
+      "sha256": "a20b0878e1ed14bd43bc3963e27062ce16ee20101cc059e25c44f21a36e3d5d3"
+    },
+    "documents/check.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "documents/compare.json": {
+      "bytes": 158,
+      "sha256": "2c6a80629b2880eb5296cb1770c5973fcbafeec3cc144fed5c8ddb5e54dc5b5d"
+    },
+    "documents/compare.json.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "documents/differences.json": {
+      "bytes": 172,
+      "sha256": "4d5c3613ce0ce8b37d63ed48668fb75694be40dc2391660d927e1a995d07349a"
+    },
+    "documents/expected.json": {
+      "bytes": 144164,
+      "sha256": "7934adb8d982a5547db8403de43040b1035dcb3514ec98f6b073800986b8fa72"
+    },
+    "documents/native.json": {
+      "bytes": 564,
+      "sha256": "2d00f5f58921876782813eff4e6385a7e996ccbb4b68defda214e8aebd4fcce9"
+    },
+    "documents/native.json.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "documents/nested-leaves-edited.native.igz": {
+      "bytes": 5501,
+      "sha256": "38420350663571fa33315871f4f1f6a3da7b4f5f557be7d94de623189a6f08e7"
+    },
+    "documents/nested-leaves-edited.python-reopen.igz": {
+      "bytes": 6050,
+      "sha256": "40e2b4f2ba773e2b5f41d89282cb1cd6ed07e51586b669c50cc6fb3da3c3c479"
+    },
+    "documents/nested-leaves-redo.native.igz": {
+      "bytes": 5501,
+      "sha256": "38420350663571fa33315871f4f1f6a3da7b4f5f557be7d94de623189a6f08e7"
+    },
+    "documents/nested-leaves-redo.python-reopen.igz": {
+      "bytes": 6050,
+      "sha256": "40e2b4f2ba773e2b5f41d89282cb1cd6ed07e51586b669c50cc6fb3da3c3c479"
+    },
+    "documents/nested-leaves-undo.native.igz": {
+      "bytes": 5537,
+      "sha256": "1608a0e41c3931722f56fa89783b763045163a947206db9aa2c81c25b3a009bc"
+    },
+    "documents/nested-leaves-undo.python-reopen.igz": {
+      "bytes": 6088,
+      "sha256": "49c48f10d43f990ffe3b09e9e50469d48e41f1dc9b99814d49123b96fa18a768"
+    },
+    "documents/nested-leaves.igz": {
+      "bytes": 6088,
+      "sha256": "49c48f10d43f990ffe3b09e9e50469d48e41f1dc9b99814d49123b96fa18a768"
+    },
+    "documents/observed.json": {
+      "bytes": 125245,
+      "sha256": "6f65628b592599a98f565fe717b2c82f3c5d66136b9640a984d67fc50a2fe142"
+    },
+    "documents/retained-edited.native.igz": {
+      "bytes": 3788,
+      "sha256": "547670f59eeed9a1151e39551955d672d8ffa1345e997fdd7f31c7a75524a065"
+    },
+    "documents/retained-edited.python-reopen.igz": {
+      "bytes": 4321,
+      "sha256": "c751407737fc009d7a360a5753af9587d2842f0140b68be99fd27bc40c8aff3a"
+    },
+    "documents/retained-redo.native.igz": {
+      "bytes": 3788,
+      "sha256": "547670f59eeed9a1151e39551955d672d8ffa1345e997fdd7f31c7a75524a065"
+    },
+    "documents/retained-redo.python-reopen.igz": {
+      "bytes": 4321,
+      "sha256": "c751407737fc009d7a360a5753af9587d2842f0140b68be99fd27bc40c8aff3a"
+    },
+    "documents/retained-undo.native.igz": {
+      "bytes": 3827,
+      "sha256": "af6f3d54ebd6b7f87f4b7c2950d6546cd9598b4ed2c069921b1d237d5f6080e3"
+    },
+    "documents/retained-undo.python-reopen.igz": {
+      "bytes": 4359,
+      "sha256": "8575055bff26e1767bd3fa1d1d7d7d633a0ef91cbe327d0a814708440f2f2cb8"
+    },
+    "documents/retained.igz": {
+      "bytes": 4316,
+      "sha256": "ccb223f71da070a55a82166d84d96e8d51a948184cbd418a5529b30a80d4c92f"
+    },
+    "fillet/check.json": {
+      "bytes": 81,
+      "sha256": "d1f4832cf973b36bad57bbe08153e7d0438d8165dc62fafb43e184008cede64b"
+    },
+    "fillet/check.json.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "fillet/native.json": {
+      "bytes": 542360,
+      "sha256": "3bd10ef48c42bc21357e0ea7d54b5e7a9633da20537e441c915acfe039f4f02f"
+    },
+    "fillet/old-native.json": {
+      "bytes": 542942,
+      "sha256": "647ead956b519103798e4876aac5098176b6b0409e09fca15b6f9bafe968e69a"
+    },
+    "fillet/runtime.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "fillet/runtime.log.stderr": {
+      "bytes": 152,
+      "sha256": "39df69fc0443eb5881f2caea0b5d6be9b1d8b69c283bcba083ffc2a5aba7fe61"
+    },
+    "fillet/source-app.json": {
+      "bytes": 268505,
+      "sha256": "3f975fa3fba86a1278534723e92c78f6cb7acfb46a000bda42790dd4b0971ce8"
+    },
+    "fillet/source.json": {
+      "bytes": 282266,
+      "sha256": "8eff9f683b07ad4103f5f5d38b34dc108288b7937c83534a849b4a93d7376263"
+    },
+    "final-build.log": {
+      "bytes": 18878,
+      "sha256": "ad89c57f12a3330d9e4b471386a05340bf51271cc554999d433d381b24b33791"
+    },
+    "finite/check.log": {
+      "bytes": 531,
+      "sha256": "1ecbca13397397e9cac9ea412ade2f7b078120d779167a4978a315947afa6748"
+    },
+    "finite/check.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "finite/comparison.json": {
+      "bytes": 597,
+      "sha256": "765c92912a3a141428d2f96bb3ef835ee69c816b3413d320915393b7d19ebad7"
+    },
+    "finite/native.json": {
+      "bytes": 1414981,
+      "sha256": "949268c4af7f89579d04d8f0a4dbf2c219399036f691f1efc55c47aa432907f5"
+    },
+    "finite/runtime.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "finite/runtime.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "finite/source.json": {
+      "bytes": 587013,
+      "sha256": "d56003f907dd01afaf2d3c4576bb505bce4f81cf71ccc77ad6ed5e2471b89f47"
+    },
+    "pushpull-app.json": {
+      "bytes": 173202,
+      "sha256": "878b24febd3eb0a8eebec8076d494b3ee35576aff4330a8b20d0033b6126fe90"
+    },
+    "pushpull-check.log": {
+      "bytes": 859,
+      "sha256": "30b8e47cfda77cf14ed48ec8d4b883586d558426fb9e861636da911ca0fcca4e"
+    },
+    "pushpull-check.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "pushpull-comparison.json": {
+      "bytes": 859,
+      "sha256": "30b8e47cfda77cf14ed48ec8d4b883586d558426fb9e861636da911ca0fcca4e"
+    },
+    "pushpull-runtime.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "pushpull-runtime.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "result.json": {
+      "bytes": 3068,
+      "sha256": "bf317de162a119405261ca73f91bb60e6a6c5f253628494d7bc3ad6846c9c55c"
+    },
+    "runner.log": {
+      "bytes": 2692,
+      "sha256": "c9f58ce9e8fbb3e638e5290aae8de3c31ec44fa120b12a078464234af96535c7"
+    }
+  },
+  "fresh_source_acquisitions": 0,
+  "broad_local_runs": 0,
+  "scope": "Fresh combined Linux application consumers after nested shareback and finite PushPull changes; Metal owner host tests/cross-checks retained separately, actual Apple CI pending."
+}
