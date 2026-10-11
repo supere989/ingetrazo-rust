@@ -21,6 +21,7 @@ pub struct RectangleTool {
     plane_lock: Option<DVec3>,
     plane_reference: Option<ingetrazo_core::screen_pick::ReferenceKind>,
     axes: ingetrazo_core::drawing_axes::DrawingAxes,
+    viewport: Option<ingetrazo_core::screen_pick::PixelViewport>,
 }
 
 impl Default for RectangleTool {
@@ -37,6 +38,7 @@ impl Default for RectangleTool {
             plane_lock: None,
             plane_reference: None,
             axes: Default::default(),
+            viewport: None,
         }
     }
 }
@@ -55,7 +57,6 @@ impl RectangleTool {
 
     pub fn reset(&mut self) {
         self.start_point = None;
-        self.hover_point = None;
         self.plane_normal=self.axes.z;self.square_lock=false;self.arrow_square_lock=false;self.error=None;self.plane_lock=None;self.plane_reference=None;
     }
 
@@ -97,7 +98,14 @@ impl RectangleTool {
     /// Preview the 4 corners during hover.
     pub fn preview_corners(&self) -> Option<[DVec3; 4]> {
         match (self.start_point, self.hover_point) {
-            (Some(s), Some(h)) => self.inferred_corners(s, h),
+            (Some(s), Some(h)) => self.inferred_corners(s, h).or_else(|| {
+                // Source preview retains degenerate sides; commit still refuses them.
+                let (u,v)=self.axes.plane_axes(self.plane_normal);
+                let d=h-s; let du=d.dot(u); let dv=d.dot(v);
+                let a=if self.from_center {s-u*du.abs()-v*dv.abs()} else {s};
+                let (du,dv)=if self.from_center {(2.*du.abs(),2.*dv.abs())} else {(du,dv)};
+                Some([a,a+u*du,a+u*du+v*dv,a+v*dv])
+            }),
             _ => None,
         }
     }
@@ -149,7 +157,21 @@ impl Tool for RectangleTool {
         if self.start_point.is_some(){return false;}let had_reference=self.plane_reference.take().is_some();self.plane_lock=if !had_reference&&self.plane_lock.is_some_and(|n|n.dot(normal).abs()>0.999){None}else{Some(normal.normalize_or_zero())};self.plane_normal=self.plane_lock.unwrap_or(self.axes.z);true
     }
     fn drawing_plane(&self)->Option<(DVec3,DVec3)>{self.start_point.or_else(||self.plane_lock.map(|_|self.hover_point.unwrap_or(self.axes.origin))).map(|p|(p,self.plane_normal))}
-    fn rubber_band_lines(&self)->Vec<(DVec3,DVec3)>{let Some(c)=self.preview_corners()else{return vec![];};let mut edges=(0..4).map(|i|(c[i],c[(i+1)%4])).collect::<Vec<_>>();if (c[0].distance(c[1])-c[1].distance(c[2])).abs()<1e-6{edges.push((c[0],c[2]));}edges}
+    fn note_pick_viewport(&mut self,viewport:ingetrazo_core::screen_pick::PixelViewport,_eye:DVec3,_revision:u64){self.viewport=Some(viewport);}
+    fn rubber_band_lines(&self)->Vec<(DVec3,DVec3)>{
+        use crate::shape_plane::{add,sub,mul};
+        let (c,cursor)=if let Some(c)=self.preview_corners(){(c,false)} else {
+            let (Some(p),Some(vp))=(self.hover_point,self.viewport) else{return vec![];};
+            let (u,v)=self.axes.plane_axes(self.plane_normal);
+            let (Some(a),Some(b))=(vp.project(p),vp.project(add(p,mul(u,0.25)))) else{return vec![];};
+            let pixels=a.distance(b);if pixels<=1e-9{return vec![];}
+            let h=11.*0.25/pixels;
+            ([add(add(p,mul(u,h)),mul(v,h)),add(sub(p,mul(u,h)),mul(v,h)),sub(sub(p,mul(u,h)),mul(v,h)),sub(add(p,mul(u,h)),mul(v,h))],true)
+        };
+        let mut edges=(0..4).map(|i|(c[i],c[(i+1)%4])).collect::<Vec<_>>();
+        let a=c[0].distance(c[1]);let b=c[1].distance(c[2]);
+        if !cursor && a>1e-6 && b>1e-6 && (a-b).abs()<1e-6{edges.push((c[0],c[2]));}edges
+    }
     fn value_label(&self)->Option<(String,DVec3)>{let c=self.preview_corners()?;Some((format!("{:.3} × {:.3}",c[0].distance(c[1]),c[1].distance(c[2])),c[2]))}
 
     fn tool_type(&self) -> ToolType {
@@ -180,6 +202,7 @@ impl Tool for RectangleTool {
 
     fn on_deactivate(&mut self, _scene: &mut Scene) {
         self.reset();
+        self.hover_point=None;
     }
 
     fn on_cancel(&mut self, _scene: &mut Scene) {

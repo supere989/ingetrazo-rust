@@ -1,0 +1,55 @@
+{
+  "cases": 15,
+  "phases": 152,
+  "matching": 152,
+  "failures": [],
+  "egui_sessions": 3,
+  "egui_error": null,
+  "negative_controls": [
+    {
+      "name": "missing-case",
+      "rejected": true
+    },
+    {
+      "name": "wrong-typed-history",
+      "rejected": true
+    },
+    {
+      "name": "lost-seam-face",
+      "rejected": true
+    },
+    {
+      "name": "lost-curve",
+      "rejected": true
+    },
+    {
+      "name": "lost-sampling-preview",
+      "rejected": true
+    },
+    {
+      "name": "inert-egui",
+      "rejected": true
+    },
+    {
+      "name": "cancel-committed",
+      "rejected": true
+    },
+    {
+      "name": "snapped-egui-vertex",
+      "rejected": true
+    },
+    {
+      "name": "repeat-stayed-select",
+      "rejected": true
+    },
+    {
+      "name": "jointly-empty",
+      "rejected": true
+    },
+    {
+      "name": "jointly-truncated",
+      "rejected": true
+    }
+  ],
+  "scope": "Pinned original Freehand handlers versus actual native App dispatch;3nativeegui raw pixel-to-plane press/held-motion/release/cancel/repeat/Undo/Redo and nearby unsnapped geometry; accepted5decimal model boundary, no rendered/desktop/rawUUID claim."
+}

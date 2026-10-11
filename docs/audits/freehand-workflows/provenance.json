@@ -1,0 +1,38 @@
+{
+  "runtime_commit": "cdbcc31b",
+  "consumer_commit": "c2a385cb",
+  "base_runtime": "5312e4cc",
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "source_files": {
+    "crates/ingetrazo-tools/src/freehand.rs": "7ceca321e44a1612dd721561e533432a1ad41b0faedfa21092f287b0659ede5e",
+    "crates/ingetrazo-tools/src/rectangle.rs": "de687acf9efae27f9c8cb74fc82a253e3e9d906c20e7a88dbb4dda192f6424a5",
+    "crates/ingetrazo-core/src/drafting.rs": "5d05acc3c67f0cfe5750c2b97d72c58412e767eb2b56674be3e032dba5f1c1ba",
+    "crates/ingetrazo-gui/src/app.rs": "23aec1f893491144e00a6645f87b0a0aec10dbeca7c5b9842ef46bd5fd566c96",
+    "crates/ingetrazo-gui/src/viewport.rs": "719619afc91aa8dde27e399f1e1fb3b5545c33e3622ce226974218eeaacebce3",
+    "crates/ingetrazo-gui/examples/freehand_workflows.rs": "47ffeb83d8833b70f3b7072bd774c29553ae73aa8312cc5e62c82efb3a2dc409",
+    "scripts/reference-freehand-workflows.py": "380afc86fa16f94224fa4c7c4aa1e6b1cd8135e506d9d059f1fdcbc4ad2531c6",
+    "scripts/check-freehand-workflows.py": "b2b4309a5b467968ac31fdb7c986577c9e661ce4a21b50a61b19ffbdef1b863d",
+    "docs/audits/freehand-workflows/roster.json": "1f92c09f03c2aba3d45e8abf46e66724d3b067b275b5154444bf4c159a37fb32"
+  },
+  "binary": "/tmp/ingetrazo-native-font-merge-target/debug/examples/freehand_workflows",
+  "binary_sha256": "3a922ee99395c24f23a2a7896e464eb24dc1de910ff27daa02e010e34213226c",
+  "results": {
+    "cases": 15,
+    "phases": 152,
+    "egui": 3,
+    "negative_controls": 11,
+    "rectangle_tests": 10,
+    "freehand_tests": 2,
+    "affected_shape_cases": 66,
+    "affected_shape_states": 488,
+    "legacy_drafting_cases": 22
+  },
+  "retained_failures": [
+    "source.log import helper",
+    "build-first.log literals",
+    "native-first.json closure curve resplit",
+    "native-repeat-command.json 142/152 inconsistent source projection and missing Rectangle preview",
+    "source-repeat-command-projection.log wrong interpreter"
+  ],
+  "scope": "Finite handler/App semantics; source coordinates canonically compared at accepted five-decimal boundary. No whole-frame desktop/renderer or raw entity UUID claim."
+}

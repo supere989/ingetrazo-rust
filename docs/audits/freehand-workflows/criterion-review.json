@@ -1,0 +1,63 @@
+{
+  "criterion": "Interactive workflows on arbitrary planes; VCB input, cancel/repeat and inference match baseline.",
+  "audit_runtime": "5312e4cc + cdbcc31b; actual consumer c2a385cb",
+  "verdict": "Finite P06 criterion satisfied by combined retained evidence, conditional on integrated named replay. Root owns disposition.",
+  "clauses": [
+    {
+      "clause": "Interactive workflows and arbitrary planes",
+      "evidence": [
+        "docs/audits/shape-drafting/records.zip:source.json,source-addendum.json,source-remaining.json and native-plane-policy*.json",
+        "docs/audits/component-rectangle-axes-source.json",
+        "docs/audits/rectangle-context-root-review/result.json",
+        "docs/audits/line-sweep-integration/evidence.zip",
+        "docs/audits/drafting-accepted-corpus.json",
+        "docs/audits/freehand-workflows/records.zip:source-combined.json,native-repeat-projection.json,check-repeat-projection.json"
+      ],
+      "assessment": "66 new shape workflows include oblique/vertical/axis/reference planes, nested axes and all4Arc modes;7nativeegui activation recipes. Existing22shared model cases include nonprincipal/holed Line/Rectangle/Freehand construction, and9raw Line histories. Freehand actual sampling and arbitrary-plane handler baseline remain unproved. Followup closes original Freehand sampling/RDP/seam/arbitrary-plane/Cancel/repeat/history handler contract and three legacy Select-to-Repeat workflows: all15/152 states,3actualegui sessions and11negative controls pass."
+    },
+    {
+      "clause": "VCB input",
+      "evidence": [
+        "docs/audits/shape-drafting/records.zip:source.json,source-addendum.json,check-plane-policy*.json",
+        "docs/audits/component-rectangle-axes-source.json",
+        "docs/audits/context-document-lifecycle/README.md",
+        "docs/audits/preferences-units-integration/README.md",
+        "docs/audits/freehand-workflows/records.zip:source-combined.json,native-repeat-projection.json,check-repeat-projection.json"
+      ],
+      "assessment": "Radius, rounded/suffixed segments, Arc bulge/radius/angle, RotRectangle base/width/angle and source-supported refusal states compare; existingLine/Rectangle continuation and unit routing evidence retained. Freehand source exposes no tool-specific VCB, so do not invent a missing numeric mode. Followup closes original Freehand sampling/RDP/seam/arbitrary-plane/Cancel/repeat/history handler contract and three legacy Select-to-Repeat workflows: all15/152 states,3actualegui sessions and11negative controls pass."
+    },
+    {
+      "clause": "Cancel/repeat and history",
+      "evidence": [
+        "docs/audits/shape-drafting/records.zip:all3source/nativecohorts",
+        "docs/audits/line-sweep-integration/README.md",
+        "docs/audits/line-orphan-history/README.md",
+        "docs/audits/context-document-lifecycle/README.md",
+        "docs/audits/drafting-rendered/evidence.json",
+        "docs/audits/freehand-workflows/records.zip:source-combined.json,native-repeat-projection.json,check-repeat-projection.json"
+      ],
+      "assessment": "New shapes compare Cancel/restart/repeat, Undo/Redo, hotArc retype and correctly delivered corner repeat. Line compound/bare9complete histories and pendingLine/Rectangle history controls retained. Freehand rendered native release/Undo/Redo observation is not an original-handler Cancel/repeat comparison. Followup closes original Freehand sampling/RDP/seam/arbitrary-plane/Cancel/repeat/history handler contract and three legacy Select-to-Repeat workflows: all15/152 states,3actualegui sessions and11negative controls pass."
+    },
+    {
+      "clause": "Inference match baseline",
+      "evidence": [
+        "docs/audits/shape-drafting/records.zip:reference-edge,off-plane,diagonal,tangent,semicircle,curve-continuation,corner,protractor,snaprecipes",
+        "docs/audits/component-snap-axes-source.json",
+        "docs/audits/component-snap-root-review/README.md",
+        "docs/audits/python-screen-snap-evidence.json",
+        "docs/audits/python-snap-heldout-depth-evidence.json",
+        "docs/audits/python-snap-eye-boundary-evidence.json",
+        "docs/audits/freehand-workflows/records.zip:source-combined.json,native-repeat-projection.json,check-repeat-projection.json"
+      ],
+      "assessment": "Actual newshape handler inference states and35context locks/Shift/magnetic controls plus boundedpixel/depthsnaprecords provide finite semantic evidence. Freehand deliberately uses_snap=False in original; missing proof is sampling/plane handler behavior, not a newmagnet requirement. Broad guides/full3D inference/locale remains P07. Followup closes original Freehand sampling/RDP/seam/arbitrary-plane/Cancel/repeat/history handler contract and three legacy Select-to-Repeat workflows: all15/152 states,3actualegui sessions and11negative controls pass."
+    }
+  ],
+  "required_missing": [],
+  "separate_scope": [
+    "Desktop and whole-frame overlay/render parity is not added to this finite semantic criterion.",
+    "P07 broaderguideintersections,pixeltolerance/locale/fullinference criterion remains separate.",
+    "Five-decimal geometric canonicalization does not assert rawUUID/pointer identity.",
+    "Other non-drafting command-repeat activation contracts remain P04/P08; no all-command Repeat assertion."
+  ],
+  "execution": "Retained source/model proof plus new bounded missing Freehand and three legacy Repeat sessions. No recapture of accepted66 shape or22 drafting originals."
+}

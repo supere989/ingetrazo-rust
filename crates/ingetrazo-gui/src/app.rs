@@ -307,7 +307,7 @@ impl IngeTrazoApp {
             ToolType::Polygon=>{let mut t=ingetrazo_tools::PolygonTool::default();t.sides=self.shape_segments[1];self.active_tool=Box::new(t);},
             ToolType::Arc=>{let mut t=ingetrazo_tools::ArcTool::with_segments(self.shape_segments[2]);t.set_repeat_distance(self.arc_repeat_distance);self.active_tool=Box::new(t);},_=>{}
         }
-        if matches!(tool_type,ToolType::Circle|ToolType::Polygon|ToolType::Arc|ToolType::RotatedRectangle){self.last_shape_tool=Some((tool_type,(tool_type==ToolType::Arc).then_some(ingetrazo_tools::ArcMode::TwoPoint)));}else if tool_type!=ToolType::Select{self.last_shape_tool=None;}
+        if matches!(tool_type,ToolType::Line|ToolType::Rectangle|ToolType::Freehand|ToolType::Circle|ToolType::Polygon|ToolType::Arc|ToolType::RotatedRectangle){self.last_shape_tool=Some((tool_type,(tool_type==ToolType::Arc).then_some(ingetrazo_tools::ArcMode::TwoPoint)));}else if tool_type!=ToolType::Select{self.last_shape_tool=None;}
         self.active_tool.on_activate(&mut self.scene);
         self.status_message.clear();
         self.vcb_text.clear();
