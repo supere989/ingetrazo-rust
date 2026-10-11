@@ -9,7 +9,10 @@ use ingetrazo_core::{
     scene::{Scene, SelectionItem},
     snap_screen::SnapExclusions,
 };
-use std::collections::{BTreeSet, HashMap};
+use std::{
+    collections::{BTreeSet, HashMap},
+    hash::{Hash, Hasher},
+};
 
 #[derive(Debug, Clone)]
 struct Vertex {
@@ -53,12 +56,26 @@ struct SharedOwner {
     owner: Owner,
     vertices: Vec<Vertex>,
     textures: Vec<(usize, Option<serde_json::Value>)>,
+    payload: usize,
+    uv_payloads: Vec<Option<usize>>,
+}
+#[derive(Debug, Clone)]
+struct SharedCoordinates {
+    leader: usize,
+    mapped: Vec<DVec3>,
+}
+#[derive(Debug, Clone)]
+struct SharedUv {
+    original: [f64; 8],
+    mapped: [f64; 8],
 }
 #[derive(Debug, Clone)]
 struct SharedSeed {
     token: uuid::Uuid,
     commands: usize,
     owners: Vec<SharedOwner>,
+    coordinates: Vec<SharedCoordinates>,
+    uvs: Vec<SharedUv>,
 }
 fn textures(mesh: &Mesh) -> Vec<(usize, Option<serde_json::Value>)> {
     mesh.faces
@@ -101,6 +118,8 @@ fn capture_share(scene: &Scene, token: uuid::Uuid, commands: usize) -> SharedSee
             owner,
             vertices: (0..m.vertices.len()).map(|i| vertex(m, i)).collect(),
             textures: textures(m),
+            payload: 0,
+            uv_payloads: Vec::new(),
         });
     }
     fn walk(
@@ -137,10 +156,61 @@ fn capture_share(scene: &Scene, token: uuid::Uuid, commands: usize) -> SharedSee
         }
         walk(&d.children, Some(*id), &mut Vec::new(), token, &mut owners);
     }
+    // Hash only accelerates cold grouping; bytewise coordinate comparison
+    // resolves collisions and never equates divergent owners by token alone.
+    let mut buckets: HashMap<u64, Vec<usize>> = HashMap::new();
+    let mut coordinates: Vec<SharedCoordinates> = Vec::new();
+    let mut uv_lookup: HashMap<[u64; 8], usize> = HashMap::new();
+    let mut uvs: Vec<SharedUv> = Vec::new();
+    for index in 0..owners.len() {
+        let vertices = &owners[index].vertices;
+        let mut hash = std::collections::hash_map::DefaultHasher::new();
+        vertices.len().hash(&mut hash);
+        for v in vertices {
+            v.position.to_array().map(f64::to_bits).hash(&mut hash);
+        }
+        let bucket = buckets.entry(hash.finish()).or_default();
+        let same = bucket.iter().copied().find(|&id| {
+            let leader = &owners[coordinates[id].leader].vertices;
+            leader.len() == vertices.len()
+                && leader.iter().zip(vertices).all(|(a, b)| {
+                    a.position.to_array().map(f64::to_bits)
+                        == b.position.to_array().map(f64::to_bits)
+                })
+        });
+        let payload = same.unwrap_or_else(|| {
+            let id = coordinates.len();
+            coordinates.push(SharedCoordinates {
+                leader: index,
+                mapped: vec![DVec3::ZERO; vertices.len()],
+            });
+            bucket.push(id);
+            id
+        });
+        owners[index].payload = payload;
+        owners[index].uv_payloads = owners[index]
+            .textures
+            .iter()
+            .map(|(_, texture)| {
+                let values = uv_values(texture.as_ref()?)?;
+                let key = values.map(f64::to_bits);
+                Some(*uv_lookup.entry(key).or_insert_with(|| {
+                    let id = uvs.len();
+                    uvs.push(SharedUv {
+                        original: values,
+                        mapped: values,
+                    });
+                    id
+                }))
+            })
+            .collect();
+    }
     SharedSeed {
         token,
         commands,
         owners,
+        coordinates,
+        uvs,
     }
 }
 fn selected_vertices(scene: &Scene) -> BTreeSet<usize> {
@@ -413,22 +483,59 @@ impl Targets {
     /// Source shared groups repeat one command per selected owner on commit.
     /// Admit the complete repeated mapping before touching any live owner.
     pub fn shared_commit_finite(&self, matrix: &ScaleMatrix) -> bool {
-        self.shared.iter().all(|shared| shared.owners.iter().all(|owner| {
-            owner.vertices.iter().all(|seed| {
-                let mut point = seed.position;
-                for _ in 0..shared.commands {
-                    point = matrix.point(point);
-                    if !point.is_finite() { return false; }
-                }
-                true
+        self.shared.iter().all(|shared| {
+            shared.coordinates.iter().all(|payload| {
+                shared.owners[payload.leader].vertices.iter().all(|seed| {
+                    let mut point = seed.position;
+                    for _ in 0..shared.commands {
+                        point = matrix.point(point);
+                        if !point.is_finite() {
+                            return false;
+                        }
+                    }
+                    true
+                })
             })
-        }))
+        })
     }
     /// The matrix is None for an exact grab-time restore. Commit metadata is
     /// derived from originals once; previews never reauthor texture maps/axes.
     pub fn apply(&mut self, scene: &mut Scene, matrix: Option<&ScaleMatrix>, commit: bool) {
         self.refresh_images(scene);
-        self.apply_with_indices(scene, matrix, commit, &self.image_indices);
+        let uv = commit.then(|| matrix.and_then(UvTransform::new)).flatten();
+        for shared in &mut self.shared {
+            let count = if commit { shared.commands } else { 1 };
+            for payload in &mut shared.coordinates {
+                for (mapped, seed) in payload
+                    .mapped
+                    .iter_mut()
+                    .zip(&shared.owners[payload.leader].vertices)
+                {
+                    *mapped = seed.position;
+                    if let Some(matrix) = matrix {
+                        for _ in 0..count {
+                            *mapped = matrix.point(*mapped);
+                        }
+                    }
+                }
+            }
+            if let Some(uv) = &uv {
+                for payload in &mut shared.uvs {
+                    payload.mapped = payload.original;
+                    for _ in 0..count {
+                        uv.apply(&mut payload.mapped);
+                    }
+                }
+            }
+        }
+        self.apply_with_indices(
+            scene,
+            matrix,
+            commit,
+            &self.image_indices,
+            true,
+            uv.as_ref(),
+        );
     }
     pub fn apply_cold(&self, scene: &mut Scene, matrix: Option<&ScaleMatrix>, commit: bool) {
         let indices = scene
@@ -437,7 +544,8 @@ impl Targets {
             .enumerate()
             .map(|(i, p)| (p.id.as_u128(), i))
             .collect();
-        self.apply_with_indices(scene, matrix, commit, &indices);
+        let uv = commit.then(|| matrix.and_then(UvTransform::new)).flatten();
+        self.apply_with_indices(scene, matrix, commit, &indices, false, uv.as_ref());
     }
     fn apply_with_indices(
         &self,
@@ -445,6 +553,8 @@ impl Targets {
         matrix: Option<&ScaleMatrix>,
         commit: bool,
         indices: &HashMap<u128, usize>,
+        shared_prepared: bool,
+        uv: Option<&UvTransform>,
     ) {
         let mut changed = false;
         fn map_vertices(
@@ -467,23 +577,33 @@ impl Targets {
                 let Some(mesh) = owner_mesh(scene, &owned.owner, shared.token) else {
                     continue;
                 };
-                changed |= mesh.place_vertices(owned.vertices.iter().map(|seed| {
-                    let mut p = seed.position;
-                    if let Some(m) = matrix {
-                        for _ in 0..count {
-                            p = m.point(p);
+                changed |=
+                    mesh.place_vertices(owned.vertices.iter().enumerate().map(|(i, seed)| {
+                        let mut p = seed.position;
+                        if shared_prepared {
+                            p = shared.coordinates[owned.payload].mapped[i];
+                        } else if let Some(m) = matrix {
+                            for _ in 0..count {
+                                p = m.point(p);
+                            }
                         }
-                    }
-                    (seed.index, seed.identity, p)
-                }));
+                        (seed.index, seed.identity, p)
+                    }));
                 if commit {
-                    for (id, t) in &owned.textures {
+                    for ((id, t), payload) in owned.textures.iter().zip(&owned.uv_payloads) {
                         if let Some(f) = mesh.faces.get_mut(*id) {
                             if let Some(t) = t {
                                 let mut t = t.clone();
-                                if let Some(m) = matrix {
-                                    for _ in 0..count {
-                                        remap_uv(&mut t, m);
+                                if let Some(uv) = uv {
+                                    if shared_prepared {
+                                        if let Some(payload) = payload {
+                                            t["uvw"] =
+                                                serde_json::json!(shared.uvs[*payload].mapped);
+                                        }
+                                    } else {
+                                        for _ in 0..count {
+                                            remap_uv(&mut t, uv);
+                                        }
                                     }
                                 }
                                 f.attrs.insert("texture".into(), t);
@@ -523,9 +643,9 @@ impl Targets {
                         if !g.native_document.is_object() {
                             g.native_document = serde_json::json!({});
                         }
-                        g.native_document["axes"] = serde_json::json!(m
-                            .compose(axes.unwrap_or(DMat4::IDENTITY))
-                            .to_cols_array());
+                        g.native_document["axes"] = serde_json::json!(
+                            m.compose(axes.unwrap_or(DMat4::IDENTITY)).to_cols_array()
+                        );
                     } else if let Some(object) = g.native_document.as_object_mut() {
                         if let Some(axes) = &seed.axes {
                             object.insert("axes".into(), axes.clone());
@@ -539,8 +659,8 @@ impl Targets {
                         };
                         if let Some(t) = texture {
                             let mut t = t.clone();
-                            if let Some(m) = matrix {
-                                remap_uv(&mut t, m);
+                            if let Some(uv) = uv {
+                                remap_uv(&mut t, uv);
                             }
                             f.attrs.insert("texture".into(), t);
                         } else {
@@ -563,42 +683,161 @@ impl Targets {
         }
     }
 }
-fn remap_uv(texture: &mut serde_json::Value, matrix: &ScaleMatrix) {
-    let Some(values) = texture
-        .get("uvw")
-        .and_then(|v| v.as_array())
-        .filter(|a| a.len() == 8)
-    else {
-        return;
-    };
-    let Some(mut values) = values
-        .iter()
-        .map(|v| v.as_f64())
-        .collect::<Option<Vec<_>>>()
-    else {
-        return;
-    };
-    let m = matrix.matrix();
-    let inv = m.inverse().as_mat4().as_dmat4();
-    if !inv.is_finite() {
-        return;
+fn uv_values(texture: &serde_json::Value) -> Option<[f64; 8]> {
+    let values = texture.get("uvw")?.as_array()?;
+    if values.len() != 8 {
+        return None;
     }
-    let translation = m.w_axis.truncate();
-    for base in [0, 4] {
-        let g = inv.transpose().transform_vector3(DVec3::new(
-            values[base],
-            values[base + 1],
-            values[base + 2],
-        ));
-        let c = values[base + 3] - g.dot(translation);
-        values[base..base + 4].copy_from_slice(&[g.x, g.y, g.z, c]);
+    let mut result = [0.; 8];
+    for (out, value) in result.iter_mut().zip(values) {
+        *out = value.as_f64()?;
     }
-    texture["uvw"] = serde_json::json!(values);
+    Some(result)
+}
+struct UvTransform {
+    inverse_transpose: DMat4,
+    translation: DVec3,
+}
+impl UvTransform {
+    fn new(matrix: &ScaleMatrix) -> Option<Self> {
+        let m = matrix.matrix();
+        let inverse = m.inverse().as_mat4().as_dmat4();
+        inverse.is_finite().then(|| Self {
+            inverse_transpose: inverse.transpose(),
+            translation: m.w_axis.truncate(),
+        })
+    }
+    fn apply(&self, values: &mut [f64; 8]) {
+        for base in [0, 4] {
+            let g = self.inverse_transpose.transform_vector3(DVec3::new(
+                values[base],
+                values[base + 1],
+                values[base + 2],
+            ));
+            let c = values[base + 3] - g.dot(self.translation);
+            values[base..base + 4].copy_from_slice(&[g.x, g.y, g.z, c]);
+        }
+    }
+}
+fn remap_uv(texture: &mut serde_json::Value, transform: &UvTransform) {
+    if let Some(mut values) = uv_values(texture) {
+        transform.apply(&mut values);
+        texture["uvw"] = serde_json::json!(values);
+    }
 }
 
 #[cfg(test)]
 mod share_tests {
     use super::*;
+    #[test]
+    fn shared_cohorts_preserve_sequential_rounding_identity_and_owner_metadata() {
+        let mut scene = Scene::new();
+        let mut mesh = Mesh::new();
+        let ids = [DVec3::ZERO, DVec3::X, DVec3::Y].map(|p| mesh.add_vertex(p));
+        mesh.add_face(ids.to_vec(), vec![]);
+        mesh.faces[0].attrs.insert(
+            "texture".into(),
+            serde_json::json!({"path":"registry","uvw":[0.25,0,0,0.1,0,0.5,0,0.2],"vendor":7}),
+        );
+        let token = uuid::Uuid::new_v4();
+        scene.register_mesh_share(token, mesh.clone()).unwrap();
+        for i in 0..16 {
+            let mut m = mesh.clone();
+            for v in &mut m.vertices {
+                v.uid = uuid::Uuid::new_v4();
+            }
+            if i == 14 {
+                m.vertices[0].position.x = -0.;
+            }
+            if i == 15 {
+                m.vertices[1].position.x = f64::from_bits(1f64.to_bits() + 1);
+            }
+            m.faces[0].attrs.get_mut("texture").unwrap()["path"] =
+                serde_json::json!(format!("owner-{i}"));
+            if i == 15 {
+                m.faces[0].attrs.get_mut("texture").unwrap()["uvw"][0] = serde_json::json!(0.75);
+            }
+            let mut g = Group::with_mesh("owner", m);
+            g.mesh_share = Some(token);
+            scene.groups.push(g);
+            scene.select(SelectionItem::Group(i));
+        }
+        let original = scene.clone();
+        let mut targets = Targets::capture(&scene);
+        assert_eq!(
+            targets.shared[0].coordinates.len(),
+            3,
+            "Signed zero and one-bit differences stay separate"
+        );
+        assert_eq!(targets.shared[0].uvs.len(), 2);
+        let capacities = targets.shared[0]
+            .coordinates
+            .iter()
+            .map(|p| (p.mapped.as_ptr(), p.mapped.capacity()))
+            .collect::<Vec<_>>();
+        let matrix = ScaleMatrix::new(
+            DVec3::new(0.125, -0.25, 0.),
+            DVec3::new(1.05, 0.95, 1.),
+            None,
+        );
+        targets.apply(&mut scene, Some(&matrix), true);
+        for (g, old) in scene.groups.iter().zip(&original.groups) {
+            for (v, seed) in g.mesh.vertices.iter().zip(&old.mesh.vertices) {
+                let mut expected = seed.position;
+                for _ in 0..16 {
+                    expected = matrix.point(expected);
+                }
+                assert_eq!(
+                    v.position.to_array().map(f64::to_bits),
+                    expected.to_array().map(f64::to_bits)
+                );
+                assert_eq!(v.uid, seed.uid);
+            }
+            let mut expected = old.mesh.faces[0].attrs["texture"].clone();
+            for _ in 0..16 {
+                // Literal pre-optimization cold remap: independently recompute
+                // the inverse and apply each coefficient step, never matrix power.
+                let mut values = uv_values(&expected).unwrap();
+                let m = matrix.matrix();
+                let inv = m.inverse().as_mat4().as_dmat4();
+                for base in [0, 4] {
+                    let g = inv.transpose().transform_vector3(DVec3::new(
+                        values[base],
+                        values[base + 1],
+                        values[base + 2],
+                    ));
+                    let c = values[base + 3] - g.dot(m.w_axis.truncate());
+                    values[base..base + 4].copy_from_slice(&[g.x, g.y, g.z, c]);
+                }
+                expected["uvw"] = serde_json::json!(values);
+            }
+            assert_eq!(g.mesh.faces[0].attrs["texture"], expected);
+        }
+        targets.apply(&mut scene, None, true);
+        for (g, old) in scene.groups.iter().zip(&original.groups) {
+            assert_eq!(g.mesh, old.mesh);
+            for (v, old) in g.mesh.vertices.iter().zip(&old.mesh.vertices) {
+                assert_eq!(
+                    v.position.to_array().map(f64::to_bits),
+                    old.position.to_array().map(f64::to_bits)
+                );
+            }
+        }
+        for _ in 0..32 {
+            targets.apply(&mut scene, Some(&matrix), false);
+            targets.apply(&mut scene, None, false);
+        }
+        assert_eq!(
+            targets.shared[0]
+                .coordinates
+                .iter()
+                .map(|p| (p.mapped.as_ptr(), p.mapped.capacity()))
+                .collect::<Vec<_>>(),
+            capacities,
+            "Warm motion and restore reuse captured scratch"
+        );
+    }
+
     #[test]
     fn nested_and_definition_owners_share_geometry_without_carrying_axes() {
         let mut scene = Scene::new();

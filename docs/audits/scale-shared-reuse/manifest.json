@@ -1,0 +1,32 @@
+{
+  "archive_sha256": "4767de26cf448b7ef5392c7586804bc3ce39a45973a326c3028e1fe3e6a38c7d",
+  "archive_bytes": 22511,
+  "files": {
+    "base-comparison.json": "c1da5111a2331cd081af1afcf537ab0c0570702ab7767b61aecf9810837f403f",
+    "baseline-benchmark.log": "6d82b7359a3afb3874e5f303d459c98da5b44bc0964524a3d11c9bb62e4b5ecc",
+    "baseline-build.log": "816e2341c35175856776d142084d0fcd51026241673c350d5f262a2cfb37a07d",
+    "check-base.log": "c1da5111a2331cd081af1afcf537ab0c0570702ab7767b61aecf9810837f403f",
+    "check-shared.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "comparison.json": "92242603a7a0174be6247e0af460b3776aeb1e5c6690a2bc0d8a95cf605666a6",
+    "joint-build.log": "8bdb0bf6c869b9ec73aab24792a2056276fbc7171da1a4d21e8c4d58b996725e",
+    "native-base.json": "b9c755892e529982118bcf2da1402c933550c117fd86c417b783d0de486c9934",
+    "native-base.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "native-shared.json": "5e5778a20ae0acb1975240629f27a8a352abe3b8c86b10228fa6199a1756fe5f",
+    "native-shared.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "new-binary-sha256.json": "3b7ad029d28b5010a0a477011497e5d178b0ad1acf0fdb74f5a08baa16f72c2c",
+    "optimized-benchmark.log": "1277779641c50ebb14f965135cd0310cad46b894d25daa51a73e72ef91ed51e9",
+    "provenance.json": "8c4782bff3d5fc25c8818fbf62193ba80681f71d45af81be41dffe8835da693b",
+    "shared-comparison.json": "0dc5da11b892767bde8f236105a108b23061c0df223841aa4496d86c7e30311c",
+    "source.json": "0efc759c2f7473467cd0badd9890c371e1feabc8b579ca98875d3f357f831302",
+    "tests.log": "f2b2ffded908682de16d666ef6d19dd0cc59bc2839957b89cd480bdfa76bbca5",
+    "warp-source.json": "4fa671850ad74c38bcc44916c59bddc205737f7cc8918158cef62f0c909b2fa7"
+  },
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "source_sha256": {
+    "crates/ingetrazo-tools/src/scale_tool/targets.rs": "4084bdcdb93701f2d857b724ebd65ca5829c2da22354218db888d5985715e975",
+    "crates/ingetrazo-tools/examples/scale_shared_reuse.rs": "db3c70a2ab80560476dc367c1a6d27591c6400481f8dbe0cb8f8a33d7b0cef3a",
+    "crates/ingetrazo-core/src/image_plane.rs": "6cf4960eec225b38b5d4c0130cc7f878814958790cae955fcb6dfbc520eca84f",
+    "crates/ingetrazo-core/src/mesh.rs": "7b9f902e320ecd5524938ce7715d8ca2d616525d7f77f3e411edb5487b469d86"
+  },
+  "baseline_commit": "39cb1522ea13c50eefae598285e6a52d2ad34452"
+}

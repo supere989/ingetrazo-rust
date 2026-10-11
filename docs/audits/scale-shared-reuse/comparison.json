@@ -1,0 +1,39 @@
+{
+  "baseline_commit": "39cb1522ea13c50eefae598285e6a52d2ad34452",
+  "baseline": {
+    "owners": 65,
+    "selected_commands": 64,
+    "vertices_per_payload": 256,
+    "textured_faces_per_payload": 225,
+    "iterations": 4,
+    "capture_seconds": 0.019375781,
+    "commit_seconds": 5.933107423,
+    "state_digest": 1271273197373852386
+  },
+  "optimized": {
+    "owners": 65,
+    "selected_commands": 64,
+    "vertices_per_payload": 256,
+    "textured_faces_per_payload": 225,
+    "iterations": 4,
+    "capture_seconds": 0.029536855,
+    "commit_seconds": 0.143321211,
+    "state_digest": 1271273197373852386
+  },
+  "identical_state_digest": true,
+  "observed_commit_ratio": 41.39727386897393,
+  "profile": "dev debug=0 incremental=0; bounded single observation, not general application performance",
+  "baseline_binary_sha256": "7201f464759fdd2c193b17069968f0e24cab4cf6ee5553a0af68066acbf137e0",
+  "baseline_blobs": {
+    "crates/ingetrazo-tools/src/scale_tool/targets.rs": "f69b816e2f1d3f18151b4145517e4fe80f3a9653cd530b65e9d6573afc4f3543",
+    "crates/ingetrazo-tools/examples/scale_shared_reuse.rs": "db3c70a2ab80560476dc367c1a6d27591c6400481f8dbe0cb8f8a33d7b0cef3a",
+    "crates/ingetrazo-core/src/image_plane.rs": "6cf4960eec225b38b5d4c0130cc7f878814958790cae955fcb6dfbc520eca84f",
+    "crates/ingetrazo-core/src/mesh.rs": "7b9f902e320ecd5524938ce7715d8ca2d616525d7f77f3e411edb5487b469d86"
+  },
+  "optimized_blobs": {
+    "crates/ingetrazo-tools/src/scale_tool/targets.rs": "4084bdcdb93701f2d857b724ebd65ca5829c2da22354218db888d5985715e975",
+    "crates/ingetrazo-tools/examples/scale_shared_reuse.rs": "db3c70a2ab80560476dc367c1a6d27591c6400481f8dbe0cb8f8a33d7b0cef3a",
+    "crates/ingetrazo-core/src/image_plane.rs": "6cf4960eec225b38b5d4c0130cc7f878814958790cae955fcb6dfbc520eca84f",
+    "crates/ingetrazo-core/src/mesh.rs": "7b9f902e320ecd5524938ce7715d8ca2d616525d7f77f3e411edb5487b469d86"
+  }
+}
