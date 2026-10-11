@@ -1,0 +1,66 @@
+{
+  "source": "0fcadf72672fd0d46597e959d099b22d2526182b",
+  "runs": [
+    {
+      "id": 38107974383,
+      "url": "https://github.com/supere989/ingetrazo-rust/actions/runs/38107974383",
+      "jobs": [
+        {
+          "name": "Native Metal framework link (macos-15)",
+          "status": "completed",
+          "conclusion": "success",
+          "started_at": "2026-10-11T03:19:30Z",
+          "completed_at": "2026-10-11T03:21:45Z"
+        },
+        {
+          "name": "compilation-and-tests",
+          "status": "completed",
+          "conclusion": "success",
+          "started_at": "2026-10-11T03:19:26Z",
+          "completed_at": "2026-10-11T03:34:15Z"
+        },
+        {
+          "name": "Native Metal compile (aarch64-apple-darwin)",
+          "status": "completed",
+          "conclusion": "success",
+          "started_at": "2026-10-11T03:19:26Z",
+          "completed_at": "2026-10-11T03:20:04Z"
+        },
+        {
+          "name": "Native Metal compile (x86_64-apple-darwin)",
+          "status": "completed",
+          "conclusion": "success",
+          "started_at": "2026-10-11T03:19:26Z",
+          "completed_at": "2026-10-11T03:20:07Z"
+        },
+        {
+          "name": "Native Metal framework link (macos-15-intel)",
+          "status": "completed",
+          "conclusion": "success",
+          "started_at": "2026-10-11T03:19:27Z",
+          "completed_at": "2026-10-11T03:24:21Z"
+        }
+      ]
+    },
+    {
+      "id": 38107974390,
+      "url": "https://github.com/supere989/ingetrazo-rust/actions/runs/38107974390",
+      "jobs": [
+        {
+          "name": "Actual ordered UI and CAD compute (macos-15)",
+          "status": "completed",
+          "conclusion": "success",
+          "started_at": "2026-10-11T03:19:02Z",
+          "completed_at": "2026-10-11T03:20:49Z"
+        },
+        {
+          "name": "Actual ordered UI and CAD compute (macos-15-intel)",
+          "status": "completed",
+          "conclusion": "success",
+          "started_at": "2026-10-11T03:18:55Z",
+          "completed_at": "2026-10-11T03:20:55Z"
+        }
+      ]
+    }
+  ]
+}

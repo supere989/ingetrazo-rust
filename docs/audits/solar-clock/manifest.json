@@ -1,21 +1,28 @@
 {
   "sha256": {
-    "README.md": "fe641af0b29627f4b4486b0209db1ffb7217098ac843de2584b061b31f62f580",
+    "README.md": "1d47b868ee15328752fd2b0f1677587a4cb3215c11937bbadaeab6fcbf63de9b",
     "focused-log.zip": "b2765441e797a0b485ca6f63edc26dc9ee1d72fc9bcafb915b4fc334aee8490b",
     "initial-fixture-failure.zip": "978a1f78a532b074d3e995e8999be709de3708f6a3b723224cf2c1a780a40605",
     "input.json": "66ef9f29f4e3351afbc5f32808d1e12d139318009060a215fda06940f44beb8f",
     "native.json": "22c9e440b1c8dec06d0e880f99604481044264fd8d86796d21fa493f0df8ca04",
     "original.json": "d54086fee3360abdf65cb11dc1719d0abdca2db71862303b5c3527b5ebd39d6e",
+    "panel-focused-log.zip": "180ecf825df00801d2f5e87a96dc84b4d2585483f4abeb206c9e0133b502434f",
+    "panel.json": "3da2f21071d701c83422b8039aab279cda6694181aca243afdd225869182220b",
     "source.json": "ce5a4674fcf564f87ee57d615439d72dc56f3e882a077a4c9ab37a51ddd0c882"
   },
   "rust_source_sha256": {
     "crates/ingetrazo-core/src/sun.rs": "be7a439016bb467efc11889a64c59844b0aa039d9393d34d864f56d8bdc60dfa",
-    "crates/ingetrazo-core/examples/solar_clock_fixture.rs": "b8af9502c689c34485b090e768909a91eba974de0f1f2bc3d5abc451689cc908"
+    "crates/ingetrazo-core/examples/solar_clock_fixture.rs": "b8af9502c689c34485b090e768909a91eba974de0f1f2bc3d5abc451689cc908",
+    "crates/ingetrazo-gui/src/solar_controls.rs": "06b0cdf69559e5ef3fb7cd8442571cee14302f733bbffadd3581cbfafecdea66",
+    "crates/ingetrazo-gui/src/composer_text_fields.rs": "49249f76973517976c0fea75eefcb986d484354a18f8bf15593119cdecf9e723"
   },
   "acceptance": {
     "exact_cases": 198,
     "rejected_corruptions": 6,
     "focused_tests": 2,
-    "rendering": false
+    "rendering": false,
+    "source_panel_states": 8,
+    "gui_focused_tests": 2,
+    "integrated_runtime": "3d71ea3e"
   }
 }

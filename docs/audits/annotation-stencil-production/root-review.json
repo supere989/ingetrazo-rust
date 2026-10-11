@@ -1,0 +1,33 @@
+{
+  "review": "root independent source and retained-artifact review",
+  "runtime_source": "6f7cb7f7b18fe1653089337f30adab8e46b1a1e9",
+  "ownership_fix_source": "89ab785de4f088fdda2d7240bfae5b2325e46588",
+  "reviewed_integration": "9ae102b1",
+  "strict_checker": {
+    "application_images": 3,
+    "triangle_images": 8,
+    "timing_images": 4,
+    "negative_images": 2,
+    "archive_hashes_verified": true
+  },
+  "ownership_archive": {
+    "files_verified": 19,
+    "application_phases": 6,
+    "refused_frame_exact": true,
+    "timing_destroyed_before_context": true,
+    "final_ledger_bytes": 0
+  },
+  "source_review_corrections": [
+    "Move fallible timing constructor before disarming unpublished startup owners",
+    "Destroy or quarantine timing query while Vulkan context lives",
+    "Quarantine DEVICE_LOST query create/read errors",
+    "Select annotation raster mode from actual admitted target, ignoring stale probe environment"
+  ],
+  "integration_resolution": "Preserved root production constructor without unrelated diagnostic primitive-filter field; matched selected stencil capability. Actual captured controls did not use that unrelated diagnostic.",
+  "boundaries": [
+    "Archived captures retain their frozen source hashes",
+    "Device-loss branches reviewed but not hardware-injected",
+    "Finite timing workload excludes World pass; no blanket speed claim",
+    "Full model depth, DPI, fonts and Metal annotations remain open"
+  ]
+}

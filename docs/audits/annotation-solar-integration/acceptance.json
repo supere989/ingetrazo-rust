@@ -1,0 +1,45 @@
+{
+  "source": "3d71ea3e33176f531d495bf1a1def10578b36ddf",
+  "workspace": {
+    "targets": 35,
+    "passed": 801,
+    "failed": 0,
+    "ignored": 2,
+    "source": "3d71ea3e33176f531d495bf1a1def10578b36ddf",
+    "command": [
+      "bash",
+      "scripts/check-rust-workspace.sh"
+    ],
+    "exit": 0,
+    "seconds": 22.05627466700389,
+    "examples": "all enabled examples compile checked; diagnostic examples not all linked"
+  },
+  "solar_merged_exact": {
+    "states": 198,
+    "native_sha256": "22c9e440b1c8dec06d0e880f99604481044264fd8d86796d21fa493f0df8ca04",
+    "build": {
+      "source": "3d71ea3e33176f531d495bf1a1def10578b36ddf",
+      "command": [
+        "cargo",
+        "build",
+        "-p",
+        "ingetrazo-core",
+        "--example",
+        "solar_clock_fixture"
+      ],
+      "exit": 0,
+      "seconds": 2.925505319988588
+    },
+    "original_pin": "6be29fe437a7cd992d4e079f71720821b25216b9"
+  },
+  "gui_solar_focused": {
+    "tests": 2,
+    "source_panel_states": 8,
+    "compile_seconds": 9.44,
+    "actual_repaint_preserves_document": true
+  },
+  "annotation": "../annotation-stencil-production/root-review.json",
+  "previous_review_ci": "preceding-ci.json",
+  "optional_console": "Unchanged this batch; 263690f8 five-test and11-state evidence retained, not rerun",
+  "release_gates": "all five OPEN"
+}

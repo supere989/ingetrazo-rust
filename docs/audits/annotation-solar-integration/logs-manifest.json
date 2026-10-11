@@ -1,0 +1,10 @@
+{
+  "sha256": "9303301f487b25461e3c495c5258a62dda1ae7b1592800b1f9fbec0033253a65",
+  "files": {
+    "solar-build.json": "519f7833a9d1c97affcafcfbe128318a6972241a7ad748e4ca68592f2b10b1eb",
+    "solar-build.log": "a3aab2269d1f8e122bb0e857fc844ded17f6ef0accb10833bbf9a02fd4d93e16",
+    "solar-native.json": "22c9e440b1c8dec06d0e880f99604481044264fd8d86796d21fa493f0df8ca04",
+    "workspace.json": "f1b72d66ebc93bb7cc2c69942596572a693d27f561662f48e96ed5f0beb63ceb",
+    "workspace.log": "c8b168b2ec14a4193d33332f0d9f8230b88e74e1e8d89c115a170cbc38dbdb2a"
+  }
+}

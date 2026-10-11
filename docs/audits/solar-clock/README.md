@@ -8,4 +8,8 @@ The native Rust solar clock follows pinned original `6be29fe437a7cd992d4e079f717
 
 Replay the original with `scripts/reference-solar-clock.py --source <pinned original> --output <directory>`, pipe `input.json` through the core `solar_clock_fixture` example into `native.json`, then run `scripts/check-solar-clock.py <directory>`.
 
-Actual local system year selection, date/time UI and Vulkan/Metal shadow consumers remain separate open integration work. The caller supplies the year; no hardcoded runtime year or external process is used here.
+The integrated Render tray now exposes date, annual study, local time, daylight range, darkness and UTC zone. Eight actual original ShadowsPanel apply states match the native document controller exactly. Two focused GUI tests pass, including actual egui repaints that preserve loaded night time, non-rounded brightness and an offset outside the dropdown. Opening the panel does not rewrite document data. Daylight range is cached by site/date/zone.
+
+The rendering helper reuses the existing native local calendar provider, honors disabled/sheet/kill-switch policy, and uses the scene datum/north. The source panel intentionally uses a fixed 2026 day-of-year/daylight study while the renderer uses the current local year; this split is preserved. No external process or added dependency is used.
+
+Vulkan/Metal shadow pixels, complete panel gestures/visual fidelity and the location picker remain OPEN. These core/controller checks do not claim rendered shadow acceptance.
