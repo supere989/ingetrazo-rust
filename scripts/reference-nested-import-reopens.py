@@ -19,9 +19,9 @@ for case in source['cases']:
   meshes=[];kinds=[];entity_layers=[]
   def layers(mesh,path):
    for e in mesh.edges:
-    entity_layers.append({'path':list(path),'kind':'edge','points':sorted([vec(e.a.position),vec(e.b.position)]),'layer':getattr(e,'layer',None)})
+    entity_layers.append({'path':list(path),'kind':'edge','points':sorted([vec(e.a),vec(e.b)]),'layer':getattr(e,'layer',None)})
    for f in mesh.faces:
-    entity_layers.append({'path':list(path),'kind':'face','points':sorted(vec(v.position)for v in f.vertices),'layer':getattr(f,'layer',None)})
+    entity_layers.append({'path':list(path),'kind':'face','points':sorted(vec(v)for v in f.vertices),'layer':getattr(f,'layer',None)})
   layers(s.mesh,())
   def walk(groups,path=()):
    for i,g in enumerate(groups):

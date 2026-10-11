@@ -296,6 +296,7 @@ impl IngeTrazoApp {
                 .map_err(|_| "Import history allocation refused")?;
             self.save_undo_state();
             self.scene = candidate;
+            if !root {if let Some(session)=self.component_edit_stack.last_mut(){session.note_source_mesh_import();}}
             self.bump_model_revision();
         }
         self.status_message = format!("Imported {}", confirmed.path.display());

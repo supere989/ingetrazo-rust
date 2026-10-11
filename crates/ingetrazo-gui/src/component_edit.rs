@@ -15,6 +15,7 @@ pub struct ComponentEditSession {
     container_bake: Option<glam::DMat4>,
     container_axes: Option<glam::DMat4>,
     leaf_share_back: Option<glam::DMat4>,
+    source_import_mesh: bool,
     mesh_baseline: ingetrazo_core::mesh::Mesh,
     groups_baseline: Vec<ingetrazo_core::groups::Group>,
     mesh_share_baseline: std::collections::HashMap<uuid::Uuid,ingetrazo_core::mesh::Mesh>,
@@ -28,12 +29,13 @@ impl ComponentEditSession {
     /// Read-only parked owner for document-global consumers while an edit is active.
     pub fn parked_scene(&self)->&Scene {&self.original_scene}
     pub fn edited_group_id(&self)->uuid::Uuid {self.group_id}
+    pub(crate) fn note_source_mesh_import(&mut self) {self.source_import_mesh=true;}
     fn finish_copy(&self) -> Self {
         Self {
             original_scene:self.original_scene.clone(),cancel_scene:Scene::new(),original_camera:self.original_camera.clone(),
             original_undo:Vec::new(),original_redo:Vec::new(),group_id:self.group_id,fold_history:self.fold_history,
             private_container_mesh:self.private_container_mesh,container_bake:self.container_bake,container_axes:self.container_axes,
-            leaf_share_back:self.leaf_share_back,mesh_baseline:self.mesh_baseline.clone(),groups_baseline:self.groups_baseline.clone(),
+            leaf_share_back:self.leaf_share_back,source_import_mesh:self.source_import_mesh,mesh_baseline:self.mesh_baseline.clone(),groups_baseline:self.groups_baseline.clone(),
             mesh_share_baseline:self.mesh_share_baseline.clone(),definitions_baseline:self.definitions_baseline.clone(),
             editing_definition:self.editing_definition,dimension_baseline:self.dimension_baseline.clone(),section_baseline:self.section_baseline.clone(),
         }
@@ -233,12 +235,16 @@ pub(crate) fn component_candidate(session:&ComponentEditSession,scene:&Scene)->R
                         && replacement.mesh.vertices.iter().all(|v|vertices.get(&v.uid).is_some_and(|o|frame.transform_point3(o.position)==v.position))
                         && replacement.mesh.edges.iter().all(|e|edges.contains(&e.history_id))
                         && replacement.mesh.faces.is_empty();
+                    let source_import=session.source_import_mesh
+                        && frame==frame.as_mat4().as_dmat4()
+                        && original.vertices.iter().all(|v|v.position==v.position.as_vec3().as_dvec3())
+                        && replacement.mesh.vertices.iter().all(|v|v.position==v.position.as_vec3().as_dvec3());
                     let inverse=if source_removal {
                         for vertex in &mut replacement.mesh.vertices {
                             vertex.position=ingetrazo_core::change_axes::map(frame,vertices[&vertex.uid].position);
                         }
                         ingetrazo_core::change_axes::inverse(frame)?
-                    } else {inverse};
+                    } else if source_import {ingetrazo_core::change_axes::inverse(frame)?} else {inverse};
                     ingetrazo_core::containers::source_shareback_mesh(&replacement.mesh,inverse)?
                 };
             }
@@ -552,6 +558,7 @@ impl IngeTrazoApp {
             container_axes:if !group.children.is_empty() && (group.component_definition.is_some() || group.transform!=glam::DMat4::IDENTITY || group.axes_matrix().is_some() || group.native_document.get("xform").is_some_and(|value|value.is_array())) {Some(self.scene.dimension_frame*group.transform*group.axes_matrix().unwrap_or(glam::DMat4::IDENTITY))} else {None},
             container_bake:if !group.children.is_empty() && self.scene.dimension_frame*group.transform!=glam::DMat4::IDENTITY {Some(self.scene.dimension_frame*group.transform)} else {None},
             leaf_share_back:if group.children.is_empty() {Some(world_frame.inverse())} else {None},
+            source_import_mesh:false,
             mesh_baseline:world_mesh.clone(),groups_baseline:world_children.clone(),
             mesh_share_baseline:self.scene.mesh_shares.clone(),definitions_baseline:self.scene.component_definitions.clone(),
             editing_definition:component,
