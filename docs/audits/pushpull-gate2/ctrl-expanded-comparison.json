@@ -1,0 +1,262 @@
+[
+  {
+    "name": "roof0.3",
+    "pass": true,
+    "source_closed": true,
+    "source_faces": 9,
+    "native_faces": 9,
+    "difference": 0.0,
+    "error": null,
+    "source_status": null
+  },
+  {
+    "name": "roof-0.2",
+    "pass": true,
+    "source_closed": true,
+    "source_faces": 9,
+    "native_faces": 9,
+    "difference": 0.0,
+    "error": null,
+    "source_status": null
+  },
+  {
+    "name": "gable-extend",
+    "pass": true,
+    "source_closed": true,
+    "source_faces": 7,
+    "native_faces": 7,
+    "difference": 0.0,
+    "error": null,
+    "source_status": null
+  },
+  {
+    "name": "slanted-pocket",
+    "pass": true,
+    "source_closed": true,
+    "source_faces": 12,
+    "native_faces": 12,
+    "difference": 0.0,
+    "error": null,
+    "source_status": null
+  },
+  {
+    "name": "wedge0-0.6",
+    "pass": true,
+    "source_closed": true,
+    "source_faces": 8,
+    "native_faces": 8,
+    "difference": 0.0,
+    "error": null,
+    "source_status": null
+  },
+  {
+    "name": "wedge0--0.4",
+    "pass": false,
+    "source_closed": true,
+    "source_faces": 10,
+    "native_faces": 7,
+    "difference": "not manifold",
+    "error": null,
+    "source_status": null
+  },
+  {
+    "name": "wedge1-0.6",
+    "pass": true,
+    "source_closed": true,
+    "source_faces": 7,
+    "native_faces": 7,
+    "difference": 0.0,
+    "error": null,
+    "source_status": null
+  },
+  {
+    "name": "wedge1--0.4",
+    "pass": true,
+    "source_closed": true,
+    "source_faces": 7,
+    "native_faces": 7,
+    "difference": 0.0,
+    "error": null,
+    "source_status": null
+  },
+  {
+    "name": "wedge2-0.6",
+    "pass": true,
+    "source_closed": true,
+    "source_faces": 6,
+    "native_faces": 6,
+    "difference": 0.0,
+    "error": null,
+    "source_status": null
+  },
+  {
+    "name": "wedge2--0.4",
+    "pass": true,
+    "source_closed": true,
+    "source_faces": 6,
+    "native_faces": 6,
+    "difference": 0.0,
+    "error": null,
+    "source_status": null
+  },
+  {
+    "name": "wedge3-0.6",
+    "pass": true,
+    "source_closed": true,
+    "source_faces": 6,
+    "native_faces": 6,
+    "difference": 0.0,
+    "error": null,
+    "source_status": null
+  },
+  {
+    "name": "wedge3--0.4",
+    "pass": true,
+    "source_closed": true,
+    "source_faces": 6,
+    "native_faces": 6,
+    "difference": 0.0,
+    "error": null,
+    "source_status": null
+  },
+  {
+    "name": "step0.5",
+    "pass": true,
+    "source_closed": true,
+    "source_faces": 12,
+    "native_faces": 12,
+    "difference": 0.0,
+    "error": null,
+    "source_status": null
+  },
+  {
+    "name": "step1.0",
+    "pass": true,
+    "source_closed": true,
+    "source_faces": 12,
+    "native_faces": 12,
+    "difference": 0.0,
+    "error": null,
+    "source_status": null
+  },
+  {
+    "name": "step1.5",
+    "pass": true,
+    "source_closed": true,
+    "source_faces": 14,
+    "native_faces": 14,
+    "difference": 0.0,
+    "error": null,
+    "source_status": null
+  },
+  {
+    "name": "step-0.5",
+    "pass": true,
+    "source_closed": true,
+    "source_faces": 12,
+    "native_faces": 12,
+    "difference": 0.0,
+    "error": null,
+    "source_status": null
+  },
+  {
+    "name": "open-pocket1.0",
+    "pass": true,
+    "source_closed": false,
+    "source_faces": 6,
+    "native_faces": 6,
+    "difference": null,
+    "error": null,
+    "source_status": null
+  },
+  {
+    "name": "open-pocket-1.0",
+    "pass": true,
+    "source_closed": false,
+    "source_faces": 6,
+    "native_faces": 6,
+    "difference": null,
+    "error": null,
+    "source_status": null
+  },
+  {
+    "name": "painted-free-ctrlFalse",
+    "pass": true,
+    "source_closed": true,
+    "source_faces": 6,
+    "native_faces": 6,
+    "difference": 0.0,
+    "error": null,
+    "source_status": null
+  },
+  {
+    "name": "painted-free-ctrlTrue",
+    "pass": true,
+    "source_closed": true,
+    "source_faces": 6,
+    "native_faces": 6,
+    "difference": 0.0,
+    "error": null,
+    "source_status": null
+  },
+  {
+    "name": "ctrl-roof0.3",
+    "pass": true,
+    "source_closed": true,
+    "source_faces": 12,
+    "native_faces": 12,
+    "difference": 0.0,
+    "error": null,
+    "source_status": null
+  },
+  {
+    "name": "ctrl-roof-0.2",
+    "pass": false,
+    "source_closed": true,
+    "source_faces": 12,
+    "native_faces": 7,
+    "difference": null,
+    "error": "Ctrl copy would leave an invalid solid: Both targets must be closed manifold solids. Use a normal Push/Pull or a smaller copy.",
+    "source_status": null
+  },
+  {
+    "name": "ctrl-step0.5",
+    "pass": false,
+    "source_closed": true,
+    "source_faces": 14,
+    "native_faces": 9,
+    "difference": null,
+    "error": "Ctrl copy would leave an invalid solid: Both targets must be closed manifold solids. Use a normal Push/Pull or a smaller copy.",
+    "source_status": null
+  },
+  {
+    "name": "ctrl-step-0.5",
+    "pass": false,
+    "source_closed": true,
+    "source_faces": 14,
+    "native_faces": 9,
+    "difference": null,
+    "error": "Ctrl copy would leave an invalid solid: Both targets must be closed manifold solids. Use a normal Push/Pull or a smaller copy.",
+    "source_status": null
+  },
+  {
+    "name": "ctrl-holed-free1.0",
+    "pass": true,
+    "source_closed": true,
+    "source_faces": 10,
+    "native_faces": 10,
+    "difference": 0.0,
+    "error": null,
+    "source_status": null
+  },
+  {
+    "name": "ctrl-holed-free-1.0",
+    "pass": true,
+    "source_closed": true,
+    "source_faces": 10,
+    "native_faces": 10,
+    "difference": 0.0,
+    "error": null,
+    "source_status": null
+  }
+]

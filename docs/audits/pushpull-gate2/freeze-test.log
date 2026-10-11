@@ -1,0 +1,27 @@
+   Compiling ingetrazo-core v0.3.15 (/tmp/ingetrazo-pushpull-gate2/crates/ingetrazo-core)
+warning: function `visit_meshes` is never used
+   --> crates/ingetrazo-core/src/screen_pick.rs:120:15
+    |
+120 | pub(crate) fn visit_meshes(scene: &Scene, mut visit: impl FnMut(&Mesh, DMat4, bool)) {
+    |               ^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-core` (lib) generated 1 warning
+   Compiling ingetrazo-tools v0.3.15 (/tmp/ingetrazo-pushpull-gate2/crates/ingetrazo-tools)
+    Finished `test` profile [unoptimized] target(s) in 9.18s
+     Running unittests src/lib.rs (/tmp/ingetrazo-metal-world-target/debug/deps/ingetrazo_tools-98034c3646f0a3be)
+
+running 9 tests
+test pushpull::tests::invalid_or_sub_weld_extrusion_is_atomic ... ok
+test pushpull::tests::scoped_authoring_rounding_retains_unrelated_f64_vertices_and_atomic_tag_refusal ... ok
+test pushpull::tests::source_wall_paint_drops_vendor_and_plane_map_but_caps_keep_them ... ok
+test pushpull::tests::test_pushpull_vcb_and_repeat ... ok
+test pushpull::tests::repeated_cap_pushes_keep_whole_polygon_and_metadata ... ok
+test pushpull::tests::test_pushpull_extrude_cube ... ok
+test pushpull::tests::ctrl_copy_validates_its_body_and_retains_unrelated_open_geometry ... ok
+test pushpull::tests::repeated_ctrl_invalid_source_classification_is_rejected_atomically ... ok
+test pushpull::tests::ctrl_cap_copy_retains_slab_belts_and_inward_material ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 79 filtered out; finished in 0.01s
+
