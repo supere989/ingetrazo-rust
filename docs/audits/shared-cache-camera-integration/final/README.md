@@ -1,0 +1,9 @@
+# Focused final native depth and resize integration
+
+Runtime **5e3f46c738ae88ddc33fe7b0f1d0383840c33c8d** combines the already accepted shared Scale/cache/camera/native-font batch with portable post-MVP depth mapping and transactional target resize. The preceding broad checkpoint passed 919 tests. This changed native Vulkan consumer then passed **48 focused tests**, one named app build and 15 actual NVIDIA runs; no second broad suite.
+
+All **24 original whole frames are exact in both native depth-control and forced portable configurations**. Independent source/archive authentication and raw RGBA equality check every image. The two ordinary/textured workflows retain 32 actions; the resize workflow covers three actual OS extent changes with font, CAD and World refusal, accepted-target RGBA and owner retention, no candidate submission or repeated-failure charge growth, and successful retries. All final ledgers are zero. WSI extent and its charges are distinct from the retained World target.
+
+Root review caught a missing portable depth bit in the hidden-ghost draw. The correction and three routing tests are included; this corpus does not claim portable hidden-ghost GPU pixels or physical extension-less hardware coverage. Broader solar/section/image checks remain separately scoped. The resize transaction received independent read-only ownership/fence review before intake.
+
+The first transport attempt returned OCI127 before app execution after host NVIDIA userspace changed to615.78 while the loaded module stayed615.71. Failure metadata remains retained. A read-only test container used cached matching615.71 libraries through a task-private CDI spec; no host driver installation, restart or reboot. Same-binary GPU execution then passed. Package hashes, mount provenance, commands, logs and raw results remain in evidence.zip, authenticated by acceptance.json.

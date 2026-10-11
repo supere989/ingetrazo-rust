@@ -1,5 +1,7 @@
 # Shared Scale, Vulkan cache/camera and native font integration
 
+Latest follow-up: [5e3f46c7 native depth and transactional resize](final/README.md). It adds 48 focused tests and exact native/forced-portable frames without repeating this broad suite.
+
 Tested runtime **feeaa59eb51e640a3c488e6fcfd2676108c4cc13**. One combined suite passes **919 tests**, zero failures and two existing clipboard ignores across 32 binaries; doctests and examples pass. Five affected consumers were linked together once. No broad suite was repeated.
 
 Scale reuses identical shared-owner arithmetic while preserving every sequential Qt rounding step, owner identity and texture metadata. Fresh application comparisons retain 74 exact base states, 30 shared states (ten duplicate base controls), seven egui sequences, four clip controls and 17/23 exact context phases plus the six explicit source-integrity divergences. Closed Push/Pull acquisition/history controls remain accepted. [Bounded Scale A/B observation](../scale-shared-reuse/README.md).

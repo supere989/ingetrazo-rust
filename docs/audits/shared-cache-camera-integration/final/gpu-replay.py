@@ -8,9 +8,10 @@ query=lambda *a:subprocess.check_output(a,text=True).strip()
 root='/tmp/ingetrazo-next-integration'
 work='/tmp/ingetrazo-shared-cache-camera-integration'
 binary='/tmp/ingetrazo-native-font-merge-target/debug/examples/native_vulkan_face_sweep_application_probe'
-sha=query('podman','exec','ingetrazo-publish','git','-C',root,'rev-parse','HEAD')
+build=json.loads(query('podman','exec','ingetrazo-publish','cat','/tmp/ingetrazo-shared-cache-camera-final/build-provenance.json'));sha=build['source']
 assert not query('podman','exec','ingetrazo-publish','git','-C',root,'diff',sha,'--','crates','Cargo.toml','Cargo.lock'),'Runtime tree differs from tested revision'
 binarysha=query('podman','exec','ingetrazo-publish','sha256sum',binary).split()[0]
+assert binarysha==build['binary_sha256']
 merged=query('podman','inspect','ingetrazo-publish','--format','{{.GraphDriver.Data.MergedDir}}')
 image=query('podman','inspect','ingetrazo-publish','--format','{{.Image}}')
 out=Path('/tmp/ingetrazo-shared-cache-camera-final-gpu');out.mkdir(mode=0o700)
@@ -20,7 +21,9 @@ checks += [(('portable-' if portable else 'native-')+name,name,True,portable,Fal
 rows=[]
 for label,case,source_frames,portable,resize_refusal in checks:
  d=out/label;d.mkdir();name='ingetrazo-integrated-gpu-'+str(os.getpid())+'-'+label
- args=['podman','run','--rm','--name',name,'--read-only','--network','none','--device','nvidia.com/gpu=0','--userns','keep-id:uid=1000,gid=1000','--user','1000:1000','--security-opt','label=disable','--tmpfs','/tmp:rw']
+ podman=['podman']
+ if os.environ.get('INGETRAZO_TEST_CDI_DIR'):podman+=['--cdi-spec-dir',os.environ['INGETRAZO_TEST_CDI_DIR']]
+ args=podman+['run','--rm','--name',name,'--read-only','--network','none','--device','nvidia.com/gpu=0','--userns','keep-id:uid=1000,gid=1000','--user','1000:1000','--security-opt','label=disable','--tmpfs','/tmp:rw']
  for left,right in [('/usr/lib/libEGL.so.1','/usr/lib/libEGL.so.1'),('/usr/lib/libGLdispatch.so.0','/usr/lib/libGLdispatch.so.0'),(merged+'/tmp/ingetrazo-parity-python','/tmp/ingetrazo-parity-python'),(merged+'/usr/lib/x86_64-linux-gnu','/usr/lib/x86_64-linux-gnu'),(merged+'/usr/bin','/usr/bin'),(merged+'/usr/share','/usr/share'),(merged+'/etc/alternatives','/etc/alternatives'),(merged+'/etc/fonts','/etc/fonts'),(merged+'/etc/ImageMagick-6','/etc/ImageMagick-6'),(merged+root+'/scripts','/probe'),(merged+binary,'/app'),(merged+work+'/sweep-input','/input')]:args+=['-v',left+':'+right+':ro']
  if portable:args+=['-e','INGETRAZO_DIAGNOSTIC_PORTABLE_SOURCE_DEPTH=1']
  args+=['-v',str(d)+':/out:rw','-v',str(out/'nvidia.json')+':/nvidia.json:ro','-e','VK_DRIVER_FILES=/nvidia.json','-e','XDG_CACHE_HOME=/tmp/cache',image,'/tmp/ingetrazo-parity-python/bin/python','/probe/check-native-face-sweep-application.py','/app','/out','--source',sha,'--source-dir','/input','--case',case]

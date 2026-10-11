@@ -1,0 +1,27 @@
+[
+  {
+    "path": "/tmp/ingetrazo-shared-cache-camera-gpu",
+    "bytes": 2311394,
+    "files": 166
+  },
+  {
+    "path": "/tmp/ingetrazo-shared-cache-camera-final-gpu",
+    "bytes": 17760551,
+    "files": 294
+  },
+  {
+    "path": "/tmp/ingetrazo-shared-cache-camera-final-gpu-driver-mismatch",
+    "bytes": 3563,
+    "files": 3
+  },
+  {
+    "path": "/tmp/ingetrazo-shared-cache-camera-gpu-replay.py",
+    "bytes": 3994,
+    "files": 1
+  },
+  {
+    "path": "/tmp/ingetrazo-shared-cache-camera-final-gpu-replay.py",
+    "bytes": 4704,
+    "files": 1
+  }
+]

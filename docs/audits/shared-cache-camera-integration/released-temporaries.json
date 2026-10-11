@@ -1,0 +1,17 @@
+{
+  "container": [
+    {
+      "path": "/tmp/ingetrazo-shared-cache-camera-integration",
+      "files": 466,
+      "bytes": 8535834
+    },
+    {
+      "path": "/tmp/ingetrazo-shared-cache-camera-final",
+      "files": 305,
+      "bytes": 17834118
+    }
+  ],
+  "shared_scale_proof_released_bytes": 474034,
+  "reusable_targets_and_originals": "preserved",
+  "driver_compatibility_bundle": "retained while validation agent uses it"
+}
