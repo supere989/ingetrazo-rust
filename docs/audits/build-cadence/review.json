@@ -27,5 +27,19 @@
     "failed": 0,
     "ignored": 2
   },
-  "local_path_target_handoff_requires_invalidation": true
+  "local_path_target_handoff_requires_invalidation": true,
+  "push_concurrency": "finish running; replace older pending with newest push",
+  "pull_request_concurrency": "cancel superseded",
+  "latest_observed_warm_workspace_run": {
+    "source": "263690f86f79e1c4c9d9a4e4e49d58df14ee6f6a",
+    "command": "scripts/check-rust-workspace.sh -j2",
+    "exit_code": 0,
+    "elapsed_seconds": 29.302,
+    "totals": [
+      795,
+      0,
+      2
+    ],
+    "targets": 35
+  }
 }

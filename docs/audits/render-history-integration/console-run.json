@@ -1,0 +1,46 @@
+{
+  "source": "263690f86f79e1c4c9d9a4e4e49d58df14ee6f6a",
+  "commands": [
+    [
+      "cargo",
+      "test",
+      "--locked",
+      "-p",
+      "ingetrazo-gui",
+      "--features",
+      "engineering-python",
+      "--lib",
+      "engineering_python::tests",
+      "-j2"
+    ],
+    [
+      "cargo",
+      "build",
+      "--locked",
+      "-p",
+      "ingetrazo-gui",
+      "--features",
+      "engineering-python",
+      "--example",
+      "engineering_console_history_fixture",
+      "-j2"
+    ]
+  ],
+  "exit_code": 0,
+  "elapsed_seconds": 53.519,
+  "checker": {
+    "states": 11,
+    "rejected": [
+      "position",
+      "attrs",
+      "undo",
+      "redo",
+      "identity",
+      "missing",
+      "order",
+      "native_exports",
+      "vm_history_steps",
+      "final_owner_charge"
+    ]
+  }
+}

@@ -1,0 +1,61 @@
+{
+  "runtime_source": "263690f86f79e1c4c9d9a4e4e49d58df14ee6f6a",
+  "workspace": {
+    "source": "263690f86f79e1c4c9d9a4e4e49d58df14ee6f6a",
+    "command": "scripts/check-rust-workspace.sh -j2",
+    "exit_code": 0,
+    "elapsed_seconds": 29.302,
+    "totals": [
+      795,
+      0,
+      2
+    ],
+    "targets": 35
+  },
+  "optional_console_focused_tests": 5,
+  "optional_console": {
+    "states": 11,
+    "rejected": [
+      "position",
+      "attrs",
+      "undo",
+      "redo",
+      "identity",
+      "missing",
+      "order",
+      "native_exports",
+      "vm_history_steps",
+      "final_owner_charge"
+    ]
+  },
+  "metal_classic": "Independent source0a676097 review: 250 interior samples, five rejected negatives, both30-file manifests and extra pipeline source hash verified. Intel query refusal remains explicit.",
+  "annotation_union": "Retained source1df25818:28 exact full images with refusal/resize/warm/zero-ledger controls.",
+  "annotation_packed_key": {
+    "runtime_source": "891d82869277328f1f518c8f4b52152a76313503",
+    "independent_root_replay": {
+      "same_geometry_id": true,
+      "uploads": [
+        2,
+        3,
+        4
+      ],
+      "whole_images_exact": 3,
+      "changed_pixels": 5000,
+      "stale_image_negative": true,
+      "final_ledger_zero": true
+    },
+    "scope": "Frozen actual NVIDIA same-geometry changed-payload replacement proof; no relabeling as integrated source or default production activation."
+  },
+  "default_stencil_enabled": false,
+  "default_interpreter_enabled": false,
+  "setup_error": "Initial target cleanup used an abbreviated interpreter package name and exited before compilation. Correct full package name then used; external dependencies retained. Raw error preserved.",
+  "prebatch_ci": {
+    "source": "e102339ed4fa5c7a385070dc3fcff196d58ca141",
+    "broad_run": 38107126549,
+    "apple_compile_sdk_jobs_passed": 4,
+    "linux": "running at observation; all completed steps passed",
+    "ordered_compute_run": 38107126473,
+    "ordered_compute_jobs_passed": 2
+  },
+  "release_gates": "All five OPEN;37 areas,10 Implemented,27 Partial,0 Verified"
+}

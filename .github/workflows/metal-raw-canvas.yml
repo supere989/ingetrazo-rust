@@ -3,10 +3,11 @@ on:
   push:
     branches: [review/metal-raw-canvas]
   workflow_dispatch:
-# New commits supersede unfinished acceptance for this workflow and ref.
+# Finish active pushes and save caches; keep the latest queued push.
+# Pull-request updates still cancel superseded checks.
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 jobs:
   raw-texture:
     runs-on: ${{ matrix.runner }}

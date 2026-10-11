@@ -1,0 +1,31 @@
+{
+  "archive": "logs.zip",
+  "sha256": "2b2b6c2d7f5c79ea446c9a909a1ddd6b6994a052cd86c05701f0eb92cdfafdc1",
+  "files": [
+    {
+      "path": "console-build.log",
+      "bytes": 83124,
+      "sha256": "75ac6fa6e76784554dc43262d71a222f952250900c2aaf4511c4bab24092cb2a"
+    },
+    {
+      "path": "console-tests.log",
+      "bytes": 83368,
+      "sha256": "d0700d0943223976300fb76a3e7dfdb3ba18bacc0cd1c01217a9d2efea7fd347"
+    },
+    {
+      "path": "retained-clean-package-name-error.log",
+      "bytes": 134,
+      "sha256": "ca284e453150bf0bf2110000e8c1405e140e9fec8c88f9e4536d9e2b42074a32"
+    },
+    {
+      "path": "target-handoff.log",
+      "bytes": 38,
+      "sha256": "27c5ea933e95bc40e3618da30bb1ccc1bdf4f7b4c2be4a40968a0fb379412c30"
+    },
+    {
+      "path": "workspace.log",
+      "bytes": 139254,
+      "sha256": "e1a5f37b9ce3814867bbaa79c08a620ba20d6ee379517e1d4f4a173b433332e2"
+    }
+  ]
+}

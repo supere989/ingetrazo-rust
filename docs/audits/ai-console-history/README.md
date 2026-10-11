@@ -25,3 +25,5 @@ Focused refusal check uses `cargo test -p ingetrazo-gui --features engineering-p
 ## Explicit remaining scope
 
 Full Scene/group/global bindings, unrelated external-edit synchronization, component context routing, VM-only command chronology and arbitrary callback semantics remain required. Successful forward publication still performs the admitted cold full-mesh export and existing application full-Scene history snapshot; this is not the final delta architecture. Existing VM command snapshots also retain O(root × history) temporary costs. Application snapshot allocation, native/global heap, compiler/builtin deadlines and complete callback/error rollback are not hard bounded by the logical owner budget. No GPU/Metal or rendered-console proof is claimed by these controller observations.
+
+Original focused-refusal and missing-owner failure logs are retained unchanged in `logs.zip`, verified against `logs-manifest.json`. Root independently refreshed both operative Python and frozen native execution in `root-review/`.

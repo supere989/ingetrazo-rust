@@ -7,6 +7,6 @@
     "scope": "Actual strict RTX 28-image batched marker prototype and allocation refusal/resize lifecycle. Non-default. GPU throughput and tighter conservative triangle coverage still open."
   },
   "analytic_previous_files_verified_before_compaction": 165,
-  "current_source_key_scope": "Later source-key correction is separate from these 28 GPU images; fresh actual-GPU replacement control pending intake.",
+  "current_source_key_scope": "Later source-key correction has separately checked actual-GPU replacement controls at891d8286; see ../annotation-packed-key/root-review.json. These 28 images retain source1df25818.",
   "production_enabled": false
 }

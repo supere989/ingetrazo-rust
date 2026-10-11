@@ -1,0 +1,23 @@
+{
+  "frozen_source": "d7bbd486",
+  "source_files_verified": 13,
+  "binary_sha256": "b579665f6bd366d4f32b38731de84891144055d4eaecfad6e33714b28d674ac8",
+  "fresh_original_and_native": true,
+  "positive": {
+    "states": 11,
+    "rejected": [
+      "position",
+      "attrs",
+      "undo",
+      "redo",
+      "identity",
+      "missing",
+      "order",
+      "native_exports",
+      "vm_history_steps",
+      "final_owner_charge"
+    ]
+  },
+  "missing_owner_negative_exit": 101,
+  "scope": "optional application console; no production run_python or full Scene promotion"
+}

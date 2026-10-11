@@ -1,0 +1,16 @@
+{
+  "archive": "logs.zip",
+  "sha256": "1135ea17bc16050c996b5c4f975505af224d14ee8abd7e58eeb4f3bcce127dc0",
+  "files": [
+    {
+      "path": "focused-refusal-test.log",
+      "bytes": 1100,
+      "sha256": "2d2615e7c3b295f1b077f69234d89ec6a17258735dc0b66b6a25a6f480bcdff5"
+    },
+    {
+      "path": "retained-missing-owner-failure.log",
+      "bytes": 263,
+      "sha256": "03b6da5e643c7303bd5bc03bc84722eb38f55ab12c67c1f26b22c3e78e6cbc68"
+    }
+  ]
+}

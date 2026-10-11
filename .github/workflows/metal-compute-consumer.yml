@@ -18,10 +18,11 @@ on:
       - 'scripts/check-metal-*.py'
   pull_request:
   workflow_dispatch:
-# New commits supersede unfinished acceptance for this workflow and ref.
+# Finish active pushes and save caches; keep the latest queued push.
+# Pull-request updates still cancel superseded checks.
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 # CI needs executable checks, not retained debug/incremental build trees.
 env:
   CARGO_PROFILE_DEV_DEBUG: 0

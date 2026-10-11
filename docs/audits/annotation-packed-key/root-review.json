@@ -1,0 +1,16 @@
+{
+  "runtime_source": "891d82869277328f1f518c8f4b52152a76313503",
+  "independent_root_replay": {
+    "same_geometry_id": true,
+    "uploads": [
+      2,
+      3,
+      4
+    ],
+    "whole_images_exact": 3,
+    "changed_pixels": 5000,
+    "stale_image_negative": true,
+    "final_ledger_zero": true
+  },
+  "scope": "Frozen actual NVIDIA same-geometry changed-payload replacement proof; no relabeling as integrated source or default production activation."
+}
