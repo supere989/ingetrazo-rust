@@ -142,5 +142,6 @@
       "path": "/tmp/ingetrazo-ai-registry-target/debug/deps/ingetrazo_gui-134b3c2a4f97972a",
       "sha256": "b6ebf37be016d275ee79880c5c0d74c963edb015cd9d5b567065cc3b0b1881ed"
     }
-  ]
+  ],
+  "archive_sha256": "5ce4bacdfa2fada9c5c0751f8549b66709a5d3b207993b88e82f0c3b1537ae0c"
 }

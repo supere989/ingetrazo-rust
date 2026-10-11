@@ -20,7 +20,7 @@ out.mkdir(parents=True, exist_ok=True)
 pin = "6be29fe437a7cd992d4e079f71720821b25216b9"
 assert subprocess.check_output(["git", "-C", str(repo/"ingetrazo"), "rev-parse", "HEAD"], text=True).strip() == pin
 suffix = ".exe" if os.name == "nt" else ""
-consumers = ["change_axes_fixture", "document_preservation_workflow", "pushpull_solid_workflows", "fillet_scoped", "pushpull_finite_workflows", "paste_save_workflow", "box_selection_fixture", "material_restamp_workflow", "material_tray_egui", "cursor_navigation_workflow", "annotation_delete_fixture", "zoom_extents_workflow", "annotation_move_fixture", "annotation_acquisition_fixture", "mesh_kernel_acceptance", "annotation_edit_style_fixture", "annotation_text_create_fixture", "mesh_finite_kernel_fixture", "annotation_hover_fixture", "dimension_anchor_acceptance_fixture"]
+consumers = ["change_axes_fixture", "document_preservation_workflow", "pushpull_solid_workflows", "fillet_scoped", "pushpull_finite_workflows", "paste_save_workflow", "box_selection_fixture", "material_restamp_workflow", "material_tray_egui", "cursor_navigation_workflow", "annotation_delete_fixture", "zoom_extents_workflow", "annotation_move_fixture", "annotation_acquisition_fixture", "mesh_kernel_acceptance", "annotation_edit_style_fixture", "annotation_text_create_fixture", "mesh_finite_kernel_fixture", "annotation_hover_fixture", "dimension_anchor_acceptance_fixture", "context_document_lifecycle"]
 identities = {name: hashlib.sha256((binaries/(name+suffix)).read_bytes()).hexdigest() for name in consumers}
 env = dict(os.environ, QT_QPA_PLATFORM="offscreen", INGETRAZO_STATE_DIR=str(out/"state"),
            XDG_CONFIG_HOME=str(out/"config"), XDG_DATA_HOME=str(out/"data"), XDG_CACHE_HOME=str(out/"cache"))
@@ -161,11 +161,15 @@ dp = archive("dimension-preview", "manifest.json", [name+ending for name in prev
 run([binaries/(consumers[19]+suffix), dimension_preview, "--preview"], "dimension-preview/runtime.log")
 run([sys.executable, repo/"scripts/check-dimension-preview.py", dimension_preview], "dimension-preview/acceptance.json")
 run([sys.executable, repo/"scripts/reopen-dimension-preview.py", dimension_preview], "dimension-preview/reopen-acceptance.json")
+recent = out/"open-recent"
+rr = archive("open-recent", "manifest.json", ["original-recent.json"], recent)
+run([binaries/(consumers[20]+suffix), recent, "--recent"], "open-recent/runtime.log")
+run([sys.executable, repo/"scripts/check-open-recent.py", recent], "open-recent/acceptance.json")
 rows = json.loads((doc/"native.json").read_text())["rows"]
 assert [(x["fixture"],x["phase"]) for x in rows] == [(f,p) for f in ["retained","nested-leaves"] for p in ["edited","undo","redo"]]
 assert all(x["saved"] and x["clean"] for x in rows)
 result = {"revision":subprocess.check_output(["git","rev-parse","HEAD"],cwd=repo,text=True).strip(),
-          "source_pin":pin,"binary_sha256":identities,"source_archives":{"axes":a,"documents":d,"fillet":f,"pushpull_finite":p,"paste_save":ps,"box_selection":bs,"materials":mr,"cursor":cn,"annotations":ad,"annotation_hover_delete":ahd,"zoom_extents":ze,"annotation_move":am,"annotation_acquisition":aa,"mesh_kernel":mk,"annotation_edit_style":ae,"annotation_text_create":at,"finite_kernel":mf,"finite_kernel_initial":mfa,"annotation_hover":ah,"dimension_anchor_admission":da,"dimension_preview":dp},
+          "source_pin":pin,"binary_sha256":identities,"source_archives":{"axes":a,"documents":d,"fillet":f,"pushpull_finite":p,"paste_save":ps,"box_selection":bs,"materials":mr,"cursor":cn,"annotations":ad,"annotation_hover_delete":ahd,"zoom_extents":ze,"annotation_move":am,"annotation_acquisition":aa,"mesh_kernel":mk,"annotation_edit_style":ae,"annotation_text_create":at,"finite_kernel":mf,"finite_kernel_initial":mfa,"annotation_hover":ah,"dimension_anchor_admission":da,"dimension_preview":dp,"open_recent":rr},
           "axes":json.loads((axes/"check.json").read_text()),"documents":{"actual_app_saves":len(rows),"exact_original_reopens":6,"leaf_record_types":15,"negative_controls":5},
           "fillet":json.loads((fillet/"check.json").read_text()),"fillet_volume":json.loads((fillet/"volume.json").read_text()),"pushpull":json.loads((out/"pushpull-comparison.json").read_text()),
           "pushpull_finite":json.loads((finite/"comparison.json").read_text()),
@@ -187,6 +191,7 @@ result = {"revision":subprocess.check_output(["git","rev-parse","HEAD"],cwd=repo
           "dimension_anchor_reopens":json.loads((dimension_anchors/"reopen-acceptance.json").read_text()),
           "dimension_preview":json.loads((dimension_preview/"acceptance.json").read_text()),
           "dimension_preview_reopens":json.loads((dimension_preview/"reopen-acceptance.json").read_text()),
+          "open_recent":json.loads((recent/"acceptance.json").read_text()),
           "fresh_source_acquisitions":0,"result":"pass"}
 (out/"result.json").write_text(json.dumps(result,indent=2)+"\n")
 print(json.dumps(result))
