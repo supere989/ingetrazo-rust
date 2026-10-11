@@ -72,3 +72,5 @@ pub use objc2::rc::autoreleasepool;
 
 #[cfg(target_os="macos")]
 mod world_resolve;
+
+mod world_iso_observation;

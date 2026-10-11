@@ -996,6 +996,16 @@ impl Prepared {
         front_probe: bool,
         retain_depth: bool,
     ) -> Result<(), String> {
+        self.encode_inner_observed(command,depth_enabled,front_probe,retain_depth,None)
+    }
+    fn encode_inner_observed(
+        &self,
+        command: &ProtocolObject<dyn MTLCommandBuffer>,
+        depth_enabled: bool,
+        front_probe: bool,
+        retain_depth: bool,
+        observation:Option<&super::world_iso_observation::Observation>,
+    ) -> Result<(), String> {
         if !std::ptr::eq(&*command.commandQueue(), &*self.owner.queue) {
             return Err("Metal world command queue mismatch".into());
         }
@@ -1076,6 +1086,7 @@ impl Prepared {
         if self.target.material_draws.is_none(){self.encode_fill(&encoder)?;self.encode_aux(&encoder,depth_enabled,false);}
         self.encode_contours(&encoder)?;
         self.encode_aux(&encoder,depth_enabled,true);
+        if let Some(observation)=observation {observation.tile(&encoder);}
         if let Some(resolve)=&self.resolve_prototype {resolve.tile(&encoder);}
         encoder.endEncoding();
         if let Some(resolve)=&self.resolve_prototype {resolve.compute(command,&self.target.multisample.as_ref().ok_or("Resolve prototype requires multisample target")?.raw,&self.target.color.raw)?;}
@@ -1379,6 +1390,7 @@ pub struct Diagnostic {
     readback: ManuallyDrop<Buffer>,
     row: usize,
     sample_owner: ManuallyDrop<Option<(Buffer, Retained<ProtocolObject<dyn MTLComputePipelineState>>)>>,
+    iso_owner:ManuallyDrop<Option<super::world_iso_observation::Observation>>,
     poison: Arc<std::sync::atomic::AtomicBool>,
 }
 impl Prepared {
@@ -1389,7 +1401,7 @@ impl Prepared {
         if self.target.material_draws.as_ref().is_none_or(|d|d.operations.iter().any(|op|matches!(op.kind,MaterialKind::Legacy))) {
             return Err("Front-facing diagnostic requires explicit material runs".into());
         }
-        self.submit_diagnostic_inner(metal, true, true, None)
+        self.submit_diagnostic_inner(metal, true, true, None,None)
     }
     /// Cold bounded receipt of actual admitted commands, not recomputed Scene metadata.
     pub fn material_diagnostic(&self) -> Result<serde_json::Value, String> {
@@ -1411,14 +1423,14 @@ impl Prepared {
         Ok(serde_json::json!({"depth_compare":"less_equal","sample_count":self.sample_count(),"operations":rows}))
     }
     pub fn submit_diagnostic(self: &Arc<Self>, metal: &NativeMetal) -> Result<Diagnostic, String> {
-        self.submit_diagnostic_inner(metal, true, false, None)
+        self.submit_diagnostic_inner(metal, true, false, None,None)
     }
     /// Negative control only: literal disabled depth state must fail the near-first oracle.
     pub fn submit_diagnostic_without_depth(
         self: &Arc<Self>,
         metal: &NativeMetal,
     ) -> Result<Diagnostic, String> {
-        self.submit_diagnostic_inner(metal, false, false, None)
+        self.submit_diagnostic_inner(metal, false, false, None,None)
     }
     pub fn source_resolve_diagnostic(&self)->serde_json::Value{
         self.resolve_prototype.as_ref().map_or(serde_json::json!({"path":"untouched-native-reference"}),|r|r.diagnostic(self.extent()))
@@ -1427,7 +1439,13 @@ impl Prepared {
     pub fn submit_sample_diagnostic(self:&Arc<Self>,metal:&NativeMetal,points:[[u32;2];4])->Result<Diagnostic,String>{
         if !self.diagnostic_samples || self.sample_count()!=4 || self.target.multisample.is_none(){return Err("Cold four-sample observation opt-in required".into());}
         if points.iter().any(|p|p[0]>=self.extent().0||p[1]>=self.extent().1){return Err("Sample observation pixel outside target".into());}
-        self.submit_diagnostic_inner(metal,true,false,Some(points))
+        self.submit_diagnostic_inner(metal,true,false,Some(points),None)
+    }
+    /// Probe only, final color before tile normalization and final post-cap depth.
+    pub fn submit_iso_observation(self:&Arc<Self>,metal:&NativeMetal,points:[[u32;2];3])->Result<Diagnostic,String>{
+        if self.sample_count()!=4 || self.source_resolve_diagnostic()["path"]!="same-pass-tile" {return Err("Iso observation requires production four-sample tile resolve".into());}
+        if points.iter().any(|p|p[0]>=self.extent().0||p[1]>=self.extent().1){return Err("Iso point outside admitted target".into());}
+        self.submit_diagnostic_inner(metal,true,false,None,Some(points))
     }
     fn submit_diagnostic_inner(
         self: &Arc<Self>,
@@ -1435,6 +1453,7 @@ impl Prepared {
         depth_enabled: bool,
         front_probe: bool,
         points:Option<[[u32;2];4]>,
+        iso_points:Option<[[u32;2];3]>,
     ) -> Result<Diagnostic, String> {
         self.owner.validate(metal)?;
         let (w, h) = self.extent();
@@ -1454,7 +1473,14 @@ impl Prepared {
         } else {
             "World explicit Always/no-write negative diagnostic"
         })));
-        self.encode_inner(&command, depth_enabled, front_probe, false)?;
+        let iso_owner=iso_points.map(|p|super::world_iso_observation::Observation::new(metal,p)).transpose()?;
+        if let Some(o)=&iso_owner {
+            o.owner.validate(metal)?;
+            let Some(resolve)=&self.resolve_prototype else{return Err("Iso production resolve owner absent".into());};
+            let super::world_resolve::Kind::Tile(p)=&resolve.kind else{return Err("Iso production tile owner absent".into());};
+            if o.sample_length()>p.imageblockSampleLength(){return Err("Iso observer exceeds admitted imageblock sample length".into());}
+        }
+        self.encode_inner_observed(&command, depth_enabled, front_probe, iso_owner.is_some(),iso_owner.as_ref())?;
         let blit = command
             .blitCommandEncoder()
             .ok_or("World diagnostic blit unavailable")?;
@@ -1474,6 +1500,7 @@ impl Prepared {
             unsafe {encoder.setTexture_atIndex(Some(&self.target.multisample.as_ref().unwrap().raw),0);encoder.setBytes_length_atIndex(std::ptr::NonNull::from(&points).cast(),std::mem::size_of_val(&points),0);encoder.setBuffer_offset_atIndex(Some(&output.raw),0,1);}
             encoder.dispatchThreads_threadsPerThreadgroup(MTLSize{width:16,height:1,depth:1},MTLSize{width:16,height:1,depth:1});encoder.endEncoding();Some((output,pipeline))
         }else{None};
+        if let Some(o)=&iso_owner{o.depth(&command,&self.target.depth.raw)?;}
         command.commit();
         Ok(Diagnostic {
             command: ManuallyDrop::new(command),
@@ -1481,11 +1508,21 @@ impl Prepared {
             readback: ManuallyDrop::new(readback),
             row,
             sample_owner:ManuallyDrop::new(sample_owner),
+            iso_owner:ManuallyDrop::new(iso_owner),
             poison: metal.poisoned.clone(),
         })
     }
 }
 impl Diagnostic {
+    pub fn iso_values(&self)->Result<([[f32;4];12],[f32;12]),String>{
+        if self.command.status()!=MTLCommandBufferStatus::Completed{return Err("Iso completion not acknowledged".into());}
+        let o=self.iso_owner.as_ref().ok_or("No iso observation submitted")?;
+        let colors=unsafe{std::ptr::read(o.colors.raw.contents().as_ptr().cast::<[[f32;4];12]>())};
+        let depths=unsafe{std::ptr::read(o.depths.raw.contents().as_ptr().cast::<[f32;12]>())};
+        if colors.iter().flatten().chain(depths.iter()).any(|v|!v.is_finite()){return Err("Iso observer left nonfinite/unwritten samples".into());}
+        Ok((colors,depths))
+    }
+
     /// Read-only metadata; readback itself remains gated on Completed.
     pub fn resource_observation(&self)->serde_json::Value {
         let f=&self.frame;
@@ -1494,6 +1531,7 @@ impl Diagnostic {
         serde_json::json!({"command":format!("{:p}",&**self.command),"status":format!("{:?}",self.command.status()),"error":format!("{:?}",self.command.error()),
             "device":format!("{:p}",&*f.owner.device),"queue":format!("{:p}",&*f.owner.queue),
             "color":texture(&f.target.color.raw),"multisample":f.target.multisample.as_ref().map(|i|texture(&i.raw)),"depth":texture(&f.target.depth.raw),
+            "camera_column_major_f32_bits":f.mvp.map(|v|v.map(f32::to_bits)),
             "clear_f64_bits":f.clear.map(f64::to_bits),"load":"Clear",
             "store":if compute{"Store"}else if f.target.multisample.is_some(){if f.diagnostic_samples{"StoreAndMultisampleResolve"}else{"MultisampleResolve"}}else{"Store"},
             "resolve_destination":if compute{None}else{f.target.multisample.as_ref().map(|_|format!("{:p}",&**f.target.color.raw))},
@@ -1539,6 +1577,7 @@ impl Drop for Diagnostic {
     fn drop(&mut self) {
         if self.command.status() == MTLCommandBufferStatus::Completed {
             unsafe {
+                ManuallyDrop::drop(&mut self.iso_owner);
                 ManuallyDrop::drop(&mut self.sample_owner);
                 ManuallyDrop::drop(&mut self.readback);
                 ManuallyDrop::drop(&mut self.frame);
