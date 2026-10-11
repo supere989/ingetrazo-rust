@@ -1,7 +1,0 @@
-{
-  "raw_alpha_routes": 3,
-  "rejected_shader_mutations": 3,
-  "retained_mesa_cases": 6,
-  "mesa_raw_prediction_disagreements": 5,
-  "scope": "static source fragment law only; prior Mesa pixel oracle remains unchanged and may reject actual native frames; incoming RGB/attachment/resolve precision unproven"
-}
