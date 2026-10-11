@@ -1,0 +1,138 @@
+{
+  "cases": [
+    {
+      "case": "painted-line-chord",
+      "faces": true,
+      "edges": true,
+      "curves": true
+    },
+    {
+      "case": "crossing-wires",
+      "faces": true,
+      "edges": true,
+      "curves": true
+    },
+    {
+      "case": "line-bowtie",
+      "faces": true,
+      "edges": true,
+      "curves": true
+    },
+    {
+      "case": "rectangle-band",
+      "faces": true,
+      "edges": true,
+      "curves": true
+    },
+    {
+      "case": "rectangle-overlap",
+      "faces": true,
+      "edges": true,
+      "curves": true
+    },
+    {
+      "case": "freehand-closed",
+      "faces": true,
+      "edges": true,
+      "curves": true
+    },
+    {
+      "case": "freehand-open-chord",
+      "faces": true,
+      "edges": true,
+      "curves": true
+    },
+    {
+      "case": "old-curve-global-rebuild",
+      "faces": true,
+      "edges": true,
+      "curves": true
+    },
+    {
+      "case": "rectangle-3d-step-band",
+      "faces": true,
+      "edges": true,
+      "curves": true
+    },
+    {
+      "case": "holed-line-chord",
+      "faces": true,
+      "edges": true,
+      "curves": true
+    },
+    {
+      "case": "holed-rectangle-band",
+      "faces": true,
+      "edges": true,
+      "curves": true
+    },
+    {
+      "case": "holed-freehand-chord",
+      "faces": true,
+      "edges": true,
+      "curves": true
+    },
+    {
+      "case": "angled-painted-line-chord",
+      "faces": true,
+      "edges": true,
+      "curves": true
+    },
+    {
+      "case": "angled-rectangle-band",
+      "faces": true,
+      "edges": true,
+      "curves": true
+    },
+    {
+      "case": "angled-holed-line-chord",
+      "faces": true,
+      "edges": true,
+      "curves": true
+    },
+    {
+      "case": "angled-holed-rectangle-band",
+      "faces": true,
+      "edges": true,
+      "curves": true
+    },
+    {
+      "case": "angled-holed-freehand-chord",
+      "faces": true,
+      "edges": true,
+      "curves": true
+    },
+    {
+      "case": "holed-outside-void-chord",
+      "faces": true,
+      "edges": true,
+      "curves": true
+    },
+    {
+      "case": "two-hole-chord-locality",
+      "faces": true,
+      "edges": true,
+      "curves": true
+    },
+    {
+      "case": "angled-holed-outside-void-chord",
+      "faces": true,
+      "edges": true,
+      "curves": true
+    },
+    {
+      "case": "holed-sequential-chords",
+      "faces": true,
+      "edges": true,
+      "curves": true
+    },
+    {
+      "case": "old-curve-holed-chord",
+      "faces": true,
+      "edges": true,
+      "curves": true
+    }
+  ],
+  "source_recaptured": false,
+  "scope": "Existing unchanged oriented cyclic/5-decimal fields, edge topology and curve membership comparator."
+}

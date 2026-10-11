@@ -1,0 +1,20 @@
+   Compiling ingetrazo-core v0.3.15 (/tmp/ingetrazo-pushpull-partition-collapse/crates/ingetrazo-core)
+warning: function `visit_meshes` is never used
+   --> crates/ingetrazo-core/src/screen_pick.rs:120:15
+    |
+120 | pub(crate) fn visit_meshes(scene: &Scene, mut visit: impl FnMut(&Mesh, DMat4, bool)) {
+    |               ^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-core` (lib) generated 1 warning
+    Finished `test` profile [unoptimized] target(s) in 2.31s
+     Running tests/drafting_record_order.rs (/tmp/ingetrazo-metal-world-target/debug/deps/drafting_record_order-589db089d15b92db)
+
+running 3 tests
+test source_cut_order_is_existing_edge_order_not_coordinate_order ... ok
+test scoped_plane_faces_are_fresh_but_reuse_existing_edge_objects ... ok
+test scoped_graph_start_ignores_an_earlier_off_plane_edge ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
