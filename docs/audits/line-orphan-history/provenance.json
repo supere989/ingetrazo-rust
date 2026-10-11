@@ -1,0 +1,71 @@
+{
+  "runtime_commit": "bec06215fd5382dbf7b0af0448616ca791f4fa69",
+  "base_commit": "d32d11e9",
+  "original_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "runtime_sha256": {
+    "crates/ingetrazo-core/src/drafting.rs": "655e9ed0f5a2ebb355bf94efd62f925fc6432e86d82382cc50611f29c263696a",
+    "crates/ingetrazo-core/src/mesh.rs": "a5ea4680c80771bf7c76bd4dfbe07182d75996a064f79bcdf283ee6c0b8e508d",
+    "crates/ingetrazo-gui/examples/line_command_history_fixture.rs": "0057916bd840233e0c26ba38174262c96621ccae25c56f92c47268beb088cdc2",
+    "crates/ingetrazo-gui/src/tool_history.rs": "30579a79330cb7bf09d12bf4331e11f942b507dd789fe96c1c07681d6f7d4aa8",
+    "crates/ingetrazo-tools/src/base.rs": "230008ed86cb36f5c5e771c00063c85ce79bf4a579c8cacae5a41e53ae03234c",
+    "crates/ingetrazo-tools/src/line.rs": "d360820398c5a984a7113c731d8afedd346586fd7e3535ada1d82367011eaab5",
+    "scripts/check-context-document-lifecycle.py": "f5626ac2407a31c5c0cfef079c816e60048fee57a04f787c3a67b79539d32e4a",
+    "scripts/check-line-command-history.py": "6ed2d4e6170e3abb62080d01987fb49ebf362948b5939cda25899d65583c4b7d",
+    "scripts/reference-line-command-history.py": "fcc8e1b2aa9cda7b4e61427cbf55b0bf05d468ee6d08374fb55a4225491dc026"
+  },
+  "original_sha256": {
+    "tools/line.py": "a9d9d0710cfc2ef5fa280c9cfd4523f86449fa4b88af1427ed2141de6c8d3730",
+    "core/edits.py": "7a49737a5acfb23331459c503a85b7e37a21e304a8a4050f444410badabbe20e",
+    "core/history.py": "2eb66a1d557099b51383988a7819145289fc4ce2c37fc7de3a92ed35b5830559",
+    "core/mesh.py": "5f2c1625e6dd717db029ba39a9de337e75beec06bd0df28a592a8a34875ca22c",
+    "core/arrangement.py": "83bc84789b336deceaa92ae50d7f0e347febca5267b525822b2e4ba04622e743"
+  },
+  "binary_sha256": {
+    "context_document_lifecycle": "9269d8d5d254e3e8060366aa37ac870e6d099831cbf6ab67e30b776286138c61",
+    "line_command_history_fixture": "d6b43380ba593c42e2f06f44978a4971458964c9864257af3cda8963aecd364a"
+  },
+  "reused_lifecycle_source_sha256": {
+    "input.igz": "46881377594d29355932883f2b452d9193ed3950f9ecc8d9bd89c18757c53c93",
+    "replacement.igz": "36638329e2f0299b3f5045f6884316eafcc15033e788dbddc7e56cba6daf9857",
+    "original.json": "c9fc8ae5cef6e34cc1c2bea2edd92143fbbbdee742dbd089fac5a9e5cf8d9990",
+    "original-pending.json": "5c09cc49431f9860283599a57cf98fda640f22bfa60dcad10c6780d30ae1c9bd"
+  },
+  "results": {
+    "lifecycle": {
+      "passed": true,
+      "lifecycle_workflows": 11,
+      "lifecycle_passed": true,
+      "pending_workflows": 3,
+      "pending_full_parity": true,
+      "state_history_phases": 41,
+      "original_reopens": 4,
+      "negative_controls": [
+        "prompt_depth",
+        "scene",
+        "history",
+        "camera",
+        "anchor",
+        "continued",
+        "empty",
+        "missing",
+        "duplicate",
+        "missing_phase"
+      ],
+      "strict_failures": []
+    },
+    "commands": {
+      "cases": 9,
+      "exact_bare_history_cases": 5,
+      "exact_command_and_undo_cases": 9,
+      "negative_controls": 11,
+      "compound_forward_raw_differences": [
+        "snapshot-plane-face",
+        "snapshot-crossing",
+        "snapshot-closing"
+      ]
+    },
+    "focused_gui_tests": 2,
+    "focused_tool_tests": 3
+  },
+  "retained_directory": "/tmp/ingetrazo-line-orphan-history-proof"
+}
