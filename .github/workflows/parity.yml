@@ -223,28 +223,32 @@ jobs:
           INGETRAZO_TEXT_PARAGRAPHS=1 python scripts/check-paper-text-layout-pages.py docs/audits/paragraph-ci/original docs/audits/paragraph-ci/native 300
           INGETRAZO_TEXT_PARAGRAPHS=1 python scripts/check-paper-text-layout-unicode.py docs/audits/paragraph-ci/original docs/audits/paragraph-ci/native
           INGETRAZO_TEXT_PARAGRAPHS=1 python scripts/check-paper-text-layout-negatives.py docs/audits/paragraph-ci/original docs/audits/paragraph-ci/native
+      - name: Build paper vector consumers once
+        run: |
+          mkdir -p docs/audits/vector-fixtures-ci
+          CARGO_TARGET_DIR=target python scripts/composer_vector_fixtures.py > docs/audits/vector-fixtures-ci/build.json
       - name: Original and native strict vector View PDF pages
-        run: QT_QPA_PLATFORM=offscreen CARGO_TARGET_DIR=target python scripts/check-composer-vector-view-pdf.py docs/audits/vector-view-ci
+        run: QT_QPA_PLATFORM=offscreen CARGO_TARGET_DIR=target python scripts/check-composer-vector-view-pdf.py docs/audits/vector-view-ci --prebuilt-dir target/debug
       - name: Original and native saved-view PDF state against opposed live state
-        run: INGETRAZO_VIEW_PDF_SAVED=1 QT_QPA_PLATFORM=offscreen CARGO_TARGET_DIR=target python scripts/check-composer-vector-view-pdf.py docs/audits/saved-vector-view-ci
+        run: INGETRAZO_VIEW_PDF_SAVED=1 QT_QPA_PLATFORM=offscreen CARGO_TARGET_DIR=target python scripts/check-composer-vector-view-pdf.py docs/audits/saved-vector-view-ci --prebuilt-dir target/debug
       - name: Exact source section loops clipping and plane axes
         run: |
           mkdir -p docs/audits/section-numerics-ci
           python scripts/probe-python-paper-section.py docs/audits/section-numerics-ci/source.json
-          cargo run --locked -p ingetrazo-render --example paper_section_fixture -- docs/audits/section-numerics-ci/source.json
+          target/debug/examples/paper_section_fixture docs/audits/section-numerics-ci/source.json
       - name: Original and native strict solid section PDF pages
-        run: INGETRAZO_VIEW_PDF_FILL=solid QT_QPA_PLATFORM=offscreen CARGO_TARGET_DIR=target python scripts/check-composer-vector-view-pdf.py docs/audits/section-solid-ci
+        run: INGETRAZO_VIEW_PDF_FILL=solid QT_QPA_PLATFORM=offscreen CARGO_TARGET_DIR=target python scripts/check-composer-vector-view-pdf.py docs/audits/section-solid-ci --prebuilt-dir target/debug
       - name: Original and native saved tilted cropped colored hatch PDF pages
-        run: INGETRAZO_VIEW_PDF_FILL=hatch INGETRAZO_VIEW_PDF_SAVED=1 INGETRAZO_VIEW_PDF_SECTION_TILT=1 INGETRAZO_VIEW_PDF_SCALE=20 INGETRAZO_VIEW_PDF_HATCH=0.7 INGETRAZO_VIEW_PDF_FILL_COLOR="#dc9b4e" QT_QPA_PLATFORM=offscreen CARGO_TARGET_DIR=target python scripts/check-composer-vector-view-pdf.py docs/audits/section-heldout-hatch-ci
+        run: INGETRAZO_VIEW_PDF_FILL=hatch INGETRAZO_VIEW_PDF_SAVED=1 INGETRAZO_VIEW_PDF_SECTION_TILT=1 INGETRAZO_VIEW_PDF_SCALE=20 INGETRAZO_VIEW_PDF_HATCH=0.7 INGETRAZO_VIEW_PDF_FILL_COLOR="#dc9b4e" QT_QPA_PLATFORM=offscreen CARGO_TARGET_DIR=target python scripts/check-composer-vector-view-pdf.py docs/audits/section-heldout-hatch-ci --prebuilt-dir target/debug
       - name: Actual source grid cutoff spacing and perspective suppression
         run: |
           mkdir -p docs/audits/grid-source-ci
           python scripts/probe-python-paper-grid.py docs/audits/grid-source-ci/source.json
           python -c "import json; assert json.load(open('docs/audits/grid-source-ci/source.json')) == json.load(open('docs/audits/sheet-view-grid-pdf/source-grid-controls.json'))"
       - name: Original and native strict physical grid and hatch pages
-        run: INGETRAZO_VIEW_PDF_GRID=0.7 INGETRAZO_VIEW_PDF_FILL=hatch QT_QPA_PLATFORM=offscreen CARGO_TARGET_DIR=target python scripts/check-composer-vector-view-pdf.py docs/audits/grid-default-ci
+        run: INGETRAZO_VIEW_PDF_GRID=0.7 INGETRAZO_VIEW_PDF_FILL=hatch QT_QPA_PLATFORM=offscreen CARGO_TARGET_DIR=target python scripts/check-composer-vector-view-pdf.py docs/audits/grid-default-ci --prebuilt-dir target/debug
       - name: Original and native noninteger grid saved tilted solid pages
-        run: INGETRAZO_VIEW_PDF_GRID=0.3317 INGETRAZO_VIEW_PDF_FILL=solid INGETRAZO_VIEW_PDF_SAVED=1 INGETRAZO_VIEW_PDF_SECTION_TILT=1 QT_QPA_PLATFORM=offscreen CARGO_TARGET_DIR=target python scripts/check-composer-vector-view-pdf.py docs/audits/grid-heldout-ci
+        run: INGETRAZO_VIEW_PDF_GRID=0.3317 INGETRAZO_VIEW_PDF_FILL=solid INGETRAZO_VIEW_PDF_SAVED=1 INGETRAZO_VIEW_PDF_SECTION_TILT=1 QT_QPA_PLATFORM=offscreen CARGO_TARGET_DIR=target python scripts/check-composer-vector-view-pdf.py docs/audits/grid-heldout-ci --prebuilt-dir target/debug
       - name: Actual composer PDF save dialogs and refusal preservation
         run: |
           cargo build --locked -p ingetrazo-gui --example composer_pdf_ui_fixture
