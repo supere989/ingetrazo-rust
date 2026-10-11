@@ -25,6 +25,7 @@ pub mod dialogs;
 pub mod icons;
 pub mod menu;
 mod recent_files;
+pub mod preferences_editor;
 pub mod statusbar;
 pub mod toolbar;
 mod tool_history;

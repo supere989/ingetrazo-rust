@@ -1,0 +1,92 @@
+{
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "entries": {
+    "build.log": {
+      "bytes": 20131,
+      "sha256": "f7d3ae9489ce1c3a1e545594b26d3ba36aec0265411f5fbdd7e069962c0f4415"
+    },
+    "check.log": {
+      "bytes": 51,
+      "sha256": "4ccb4e4082d4ee138718d12e771313711c9fc944bb438c829472109989bac68d"
+    },
+    "composer-test-corrected.log": {
+      "bytes": 19442,
+      "sha256": "0353106e08a6f344d49c2272a1df0490e6fb6fa221b07b441568e82179fe708b"
+    },
+    "composer-test.log": {
+      "bytes": 19426,
+      "sha256": "695d07d8a530f8b7203ac1a2173b17c56b0cc17dbc48e4683fbf0b529aeeb970"
+    },
+    "final-build.log": {
+      "bytes": 20131,
+      "sha256": "a92661f5c391b915342099f026d0c449299f2e137a9199665a8d432e319d03e4"
+    },
+    "final-check.log": {
+      "bytes": 51,
+      "sha256": "4ccb4e4082d4ee138718d12e771313711c9fc944bb438c829472109989bac68d"
+    },
+    "final-native.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "initial-dialog-reopen.json": {
+      "bytes": 2111,
+      "sha256": "8873f5e55d865a624ffd61fb66c9a30a3b5ee7338ba801dbf6abdf13f1970a39"
+    },
+    "initial-source.log": {
+      "bytes": 113,
+      "sha256": "bc26872d4958b364740b85d290b7bcfb66ab73e577011c125fc8c5031f4430ae"
+    },
+    "native-preferences.json": {
+      "bytes": 2111,
+      "sha256": "3894d5776eae97b0b29f86b3d20b01b485771f384b0a6b73f1ab5ab1c758b17d"
+    },
+    "native-settings/config/settings.json": {
+      "bytes": 560,
+      "sha256": "99515629cb88aef567bef69d9daa0c3bbabb91a8eecd9bd9070f0dbbfad0e80e"
+    },
+    "native.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "original-preferences.json": {
+      "bytes": 2111,
+      "sha256": "3894d5776eae97b0b29f86b3d20b01b485771f384b0a6b73f1ab5ab1c758b17d"
+    },
+    "source-final.log": {
+      "bytes": 113,
+      "sha256": "bc26872d4958b364740b85d290b7bcfb66ab73e577011c125fc8c5031f4430ae"
+    },
+    "source-settings/PreferencesProof/PreferencesProof.ini": {
+      "bytes": 670,
+      "sha256": "27ea3b42c6090c072bcf8e95bb92fa06800c4a3d201cc920f6bb425a3c576189"
+    },
+    "source.log": {
+      "bytes": 113,
+      "sha256": "bc26872d4958b364740b85d290b7bcfb66ab73e577011c125fc8c5031f4430ae"
+    },
+    "ui-test.log": {
+      "bytes": 19519,
+      "sha256": "e9a4c5b3deb1bd1c9663297984b628f6df77653701a52b5df6d9f68bff516de0"
+    }
+  },
+  "runtime": {
+    "crates/ingetrazo-gui/src/preferences_editor.rs": "229a2f2ec2a0b2ab72c1dcec5393c1dcd78fc1cdf644f82d98bdd36b23e8c558",
+    "crates/ingetrazo-gui/src/app.rs": "821a115beef0800086bba6149de04525e1bf167848dbd4d1f9f8c2b91341db7d",
+    "crates/ingetrazo-gui/src/composer.rs": "f8cd962daa895a84757f6add2938e7bb16ccafe9c4db073dce6de10551950896",
+    "crates/ingetrazo-gui/src/dialogs.rs": "78e7a19315e622ce1bf10462c37c71506b78f65bbb930e3c63f68c1f20fa9c97",
+    "crates/ingetrazo-gui/src/document_session.rs": "1a5187806c51acffd5d98c54676291d5e22e0c66ec48805411fbfcbf73abaabd",
+    "crates/ingetrazo-gui/src/lib.rs": "56338171cf026836605cbcfe43aaa76c271e34648031e870d7c7be1defe7c26b",
+    "crates/ingetrazo-gui/src/session_state.rs": "cefdb65c039beff41c719dd2e47d4f03896963745319af0d28d57bf6bb1673bd",
+    "crates/ingetrazo-gui/examples/context_document_lifecycle.rs": "f57226408b5b6b2e6af7bc29511f6bc920dd5711b7ff9463e76ed961b501233b",
+    "scripts/reference-general-preferences.py": "cbef30e568e03a9e063cf737f7a401539adbe5207382e84423808877d61896a7",
+    "scripts/check-general-preferences.py": "8f9a8d9fc02ae991e6b045435347494f26934e77c8b581ea464ae92b391d7819"
+  },
+  "original": {
+    "views/preferences_dialog.py": "9d9c97b35cd9dbd19c7cbb85652f670c3a85549021af853d027418557d7129ab",
+    "views/main_window.py": "ea02be3e439c80731d0f5b5fde3d92d9b3f62e8ad10cd44ad305c3261b7786fa",
+    "core/history.py": "2eb66a1d557099b51383988a7819145289fc4ce2c37fc7de3a92ed35b5830559",
+    "core/composition.py": "24aa8327d1c6a0b4afbaab0d153743f28c3deb557f44a66c467d5aed4dd65da9"
+  },
+  "binary": "6a7c12775e4501b59cdf15b3ae0f80804d6cf9e8dbffaf38f66f6bcd11515639"
+}

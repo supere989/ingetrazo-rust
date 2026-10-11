@@ -13,12 +13,13 @@ pub struct DocumentSession {
     /// One file-choice transaction, invalidated by intervening model edits.
     pub open_dialog_revision:Option<(u64,u64,ingetrazo_core::presentation::DocumentStyle,ingetrazo_core::presentation::ShadowSettings)>,
     pub recent_missing:Option<PathBuf>,
+    pub preferences_draft:Option<crate::preferences_editor::Draft>,
     pub(crate) recent_menu:crate::recent_files::MenuCache,
     pub recovery:Vec<RecoveryRecord>,pub show_recovery:bool,pub recovered_slot:Option<PathBuf>,
 }
 impl Default for DocumentSession {fn default()->Self {Self{store:None,preferences:Preferences::default(),clean:None,
     autosaved:None,last_autosave:Instant::now(),pending:None,confirm_unsaved:false,close_allowed:false,open_dialog_revision:None,
-    recent_missing:None,recent_menu:Default::default(),recovery:vec![],show_recovery:false,recovered_slot:None}}}
+    recent_missing:None,preferences_draft:None,recent_menu:Default::default(),recovery:vec![],show_recovery:false,recovered_slot:None}}}
 fn same_model(a:&Scene,b:&Scene)->bool {
     a.show_hidden_objects==b.show_hidden_objects && a.show_hidden_geometry==b.show_hidden_geometry &&
     a.image_planes==b.image_planes &&

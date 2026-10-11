@@ -33,7 +33,7 @@ impl Preferences {
     pub fn clamp(&mut self) {
         if !self.walk_eye_height.is_finite() || !(0.05..=100.).contains(&self.walk_eye_height) { self.walk_eye_height=1.68; }
         if !(1..=100).contains(&self.look_sensitivity) { self.look_sensitivity=25; }
-        self.autosave_minutes=self.autosave_minutes.clamp(1,60);self.undo_steps=self.undo_steps.clamp(1,1000);
+        self.autosave_minutes=self.autosave_minutes.clamp(1,60);self.undo_steps=self.undo_steps.min(5000);
         self.profile_width=if self.profile_width.is_finite(){self.profile_width.clamp(1.,6.)}else{2.};
         self.line_width=if self.line_width.is_finite(){self.line_width.clamp(0.5,4.)}else{1.};
         self.recent_files.truncate(10);

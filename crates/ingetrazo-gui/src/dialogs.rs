@@ -13,8 +13,6 @@
 
 use std::path::PathBuf;
 use ingetrazo_core::i18n::tr;
-use ingetrazo_core::units::LengthUnit;
-use ingetrazo_render::style::VisualStyle;
 use ingetrazo_tools::base::ToolType;
 use crate::app::IngeTrazoApp;
 
@@ -192,86 +190,8 @@ pub fn render_dialogs(app: &mut IngeTrazoApp, ctx: &egui::Context) {
             });
     }
 
-    // 4. Preferences Dialog
-    if app.show_preferences_dialog {
-        egui::Window::new(tr("Preferences"))
-            .collapsible(false)
-            .resizable(true)
-            .default_size(egui::vec2(440.0, 360.0))
-            .anchor(egui::Align2::CENTER_CENTER, egui::vec2(0.0, 0.0))
-            .show(ctx, |ui| {
-                ui.heading(tr("Application Preferences"));
-                let mut ask=app.document_session.preferences.extra.get("section_ask_name").and_then(|v|v.as_bool()).unwrap_or(true);if ui.checkbox(&mut ask,tr("Ask for section name after placement")).changed(){app.document_session.preferences.extra.insert("section_ask_name".into(),serde_json::json!(ask));}
-                ui.separator();
-
-                egui::Grid::new("pref_grid").spacing([12.0, 8.0]).show(ui, |ui| {
-                    ui.strong(tr("Language"));
-                    egui::ComboBox::from_id_salt("pref_lang_combo")
-                        .selected_text(app.language.clone())
-                        .show_ui(ui, |ui| {
-                            for &(code, name) in ingetrazo_core::i18n::LANGUAGE_NAMES {
-                                if ui.selectable_value(&mut app.language, code.to_string(), name).clicked() {
-                                    app.set_language(code);
-                                }
-                            }
-                        });
-                    ui.end_row();
-
-                    ui.strong(tr("Length units"));
-                    egui::ComboBox::from_id_salt("pref_units_combo")
-                        .selected_text(format!("{:?}", app.scene.unit))
-                        .show_ui(ui, |ui| {
-                            ui.selectable_value(&mut app.scene.unit, LengthUnit::Meters, "Meters (m)");
-                            ui.selectable_value(&mut app.scene.unit, LengthUnit::Centimeters, "Centimeters (cm)");
-                            ui.selectable_value(&mut app.scene.unit, LengthUnit::Millimeters, "Millimeters (mm)");
-                            ui.selectable_value(&mut app.scene.unit, LengthUnit::Feet, "Feet (ft)");
-                            ui.selectable_value(&mut app.scene.unit, LengthUnit::Inches, "Inches (in)");
-                        });
-                    ui.end_row();
-
-                    ui.strong(tr("Visual style"));
-                    egui::ComboBox::from_id_salt("pref_style_combo")
-                        .selected_text(format!("{:?}", app.style.visual_style))
-                        .show_ui(ui, |ui| {
-                            ui.selectable_value(&mut app.style.visual_style, VisualStyle::ShadedWithTextures, tr("Shaded with Textures"));
-                            ui.selectable_value(&mut app.style.visual_style, VisualStyle::Wireframe, tr("Wireframe"));
-                            ui.selectable_value(&mut app.style.visual_style, VisualStyle::HiddenLine, tr("Hidden line"));
-                            ui.selectable_value(&mut app.style.visual_style, VisualStyle::Monochrome, tr("Monochrome"));
-                            ui.selectable_value(&mut app.style.visual_style, VisualStyle::XRay, tr("X-Ray"));
-                        });
-                    ui.end_row();
-
-                    ui.strong(tr("Profile edges"));
-                    ui.add(egui::Slider::new(&mut app.style.profile_width, 1.0..=6.0).text("px"));
-                    ui.end_row();
-
-                    ui.strong(tr("Line width"));
-                    ui.add(egui::Slider::new(&mut app.style.line_width, 0.5..=4.0).text("px"));
-                    ui.end_row();
-
-                    ui.strong("Autosave");
-                    ui.checkbox(&mut app.document_session.preferences.autosave,"Enable recovery copies");ui.end_row();
-                    ui.strong("Autosave interval");
-                    ui.add(egui::Slider::new(&mut app.document_session.preferences.autosave_minutes,1..=60).text("minutes"));ui.end_row();
-                    ui.strong("First-person look sensitivity");
-                    ui.add(egui::Slider::new(&mut app.document_session.preferences.look_sensitivity,1..=100));ui.end_row();
-                    ui.strong("Undo steps");
-                    ui.add(egui::Slider::new(&mut app.document_session.preferences.undo_steps,1..=1000));ui.end_row();
-
-                    ui.strong(tr("Shadows"));
-                    ui.checkbox(&mut app.shadows_enabled, tr("Enable real-time solar shading"));
-                    ui.end_row();
-                });
-
-                ui.separator();
-                ui.horizontal(|ui| {
-                    if ui.button(tr("Close")).clicked() {
-                        app.show_preferences_dialog = false;
-                        app.persist_preferences();
-                    }
-                });
-            });
-    }
+    // 4. Preferences: one cold draft, source OK/Cancel ownership.
+    crate::preferences_editor::render(app,ctx);
 
     // 5. Command Search Dialog (F3)
     if app.show_command_search {

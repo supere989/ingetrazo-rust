@@ -127,6 +127,10 @@ fn click(a: &mut IngeTrazoApp, ctx: &egui::Context, label: &str) {
     }
 }
 fn main() {
+    if std::env::args().any(|a| a == "--preferences") {
+        preferences_acceptance();
+        return;
+    }
     if std::env::args().any(|a| a == "--recent") {
         recent_acceptance();
         return;
@@ -328,6 +332,96 @@ fn recent_acceptance() {
             &json!({"rows":rows,"restart":restarted.recent_files,"app_preservation":true}),
         )
         .unwrap(),
+    )
+    .unwrap();
+}
+
+fn preferences_acceptance() {
+    let root = std::path::PathBuf::from(std::env::args().nth(1).unwrap());
+    let store = root.join("native-settings");
+    let mut a = IngeTrazoApp::new();
+    a.set_language("en");
+    a.attach_session_store(ingetrazo_gui::session_state::SessionStore::isolated(&store));
+    a.document_session.preferences = Default::default();
+    a.document_session
+        .preferences
+        .extra
+        .insert("proof/opaque".into(), json!("vendor-preserved"));
+    a.persist_preferences();
+    for _ in 0..3 {
+        a.save_undo_state();
+    }
+    let mut rows = vec![];
+    let mut arms = 0;
+    let record = |a: &IngeTrazoApp, phase: &str, arms: usize| {
+        let p = &a.document_session.preferences;
+        json!({"phase":phase,"autosave":p.autosave,"minutes":p.autosave_minutes,"undo_cap":p.undo_steps,"look":p.look_sensitivity,"wheel":p.extra.get("nav/invert_wheel").and_then(Value::as_bool).unwrap_or(false),"orbit":p.extra.get("nav/invert_orbit_y").and_then(Value::as_bool).unwrap_or(false),"section":p.extra.get("section_ask_name").and_then(Value::as_bool).unwrap_or(true),"opaque":p.extra.get("proof/opaque"),"undo":a.undo_stack.len(),"arms":arms})
+    };
+    let configure = |a: &mut IngeTrazoApp, cap| {
+        let p = &mut a
+            .document_session
+            .preferences_draft
+            .as_mut()
+            .unwrap()
+            .preferences;
+        p.autosave = false;
+        p.autosave_minutes = 7;
+        p.undo_steps = cap;
+        p.look_sensitivity = 47;
+        for (key, value) in [
+            ("nav/invert_wheel", true),
+            ("nav/invert_orbit_y", true),
+            ("section_ask_name", false),
+        ] {
+            p.extra.insert(key.into(), json!(value));
+        }
+    };
+    rows.push(record(&a, "before", arms));
+    let before = a.scene.clone();
+    let settings = std::fs::read(store.join("config/settings.json")).unwrap();
+    let timer = a.document_session.last_autosave;
+    a.begin_preferences();
+    configure(&mut a, 0);
+    rows.push(record(&a, "draft", arms));
+    a.cancel_preferences();
+    assert_eq!(a.scene, before);
+    assert_eq!(
+        std::fs::read(store.join("config/settings.json")).unwrap(),
+        settings
+    );
+    assert_eq!(a.document_session.last_autosave, timer);
+    rows.push(record(&a, "cancel", arms));
+    a.begin_preferences();
+    configure(&mut a, 0);
+    a.accept_preferences();
+    arms += usize::from(a.document_session.last_autosave != timer);
+    rows.push(record(&a, "accept", arms));
+    for _ in 0..2 {
+        a.save_undo_state();
+    }
+    rows.push(record(&a, "unlimited", arms));
+    let timer = a.document_session.last_autosave;
+    a.begin_preferences();
+    a.document_session
+        .preferences_draft
+        .as_mut()
+        .unwrap()
+        .preferences
+        .undo_steps = 2;
+    a.accept_preferences();
+    arms += usize::from(a.document_session.last_autosave != timer);
+    rows.push(record(&a, "lower-no-prune", arms));
+    a.save_undo_state();
+    rows.push(record(&a, "next-command-pruned", arms));
+    let mut restarted = IngeTrazoApp::new();
+    restarted.attach_session_store(ingetrazo_gui::session_state::SessionStore::isolated(&store));
+    restarted.begin_preferences();
+    configure(&mut restarted, 0);
+    restarted.cancel_preferences();
+    rows.push(record(&restarted, "restart-cancel", 0));
+    std::fs::write(
+        root.join("native-preferences.json"),
+        serde_json::to_vec_pretty(&json!({"rows":rows})).unwrap(),
     )
     .unwrap();
 }

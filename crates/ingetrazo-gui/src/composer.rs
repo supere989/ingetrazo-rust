@@ -120,7 +120,7 @@ impl IngeTrazoApp {
   for before in sheets {if let Some(current)=self.scene.sheets.iter().find(|s|s.id==before.id){
    if sheet_model_equal(std::slice::from_ref(&before),std::slice::from_ref(current)){continue;}
    let history=self.composer_state.sheet_history.entry(before.id).or_default();history.0.push(before);history.1.clear();
-   if history.0.len()>self.document_session.preferences.undo_steps{history.0.remove(0);}
+   // Original ComposerHistory is independent of General undo_steps and unlimited.
   }}self.scene.bump_version();
  }
  pub fn undo_composer_edit(&mut self){self.finish_composer_edit();
@@ -1079,6 +1079,22 @@ fn render_selection_box(painter: &egui::Painter, rect: Rect) {
   app.save_undo_state();app.scene.mesh.add_vertex(DVec3::new(4.,5.,6.));let model=app.scene.mesh.clone();let geometry_history=app.undo_stack.len();
   app.scene.sheets.push(Sheet::new("Neighbor",PaperSize::A4,Orientation::Portrait));app.scene.active_sheet_index=Some(1);let neighbor=app.scene.sheets[1].clone();app.undo();assert_eq!(app.scene.sheets[1],neighbor);assert_eq!(app.scene.mesh,model);assert_eq!(app.undo_stack.len(),geometry_history);
   app.scene.active_sheet_index=Some(0);app.undo();assert_eq!(app.scene.mesh,model);assert_eq!(app.scene.sheets[1],neighbor);assert_eq!(app.undo_stack.len(),geometry_history);
+  // General history limits never evict the independent ComposerHistory.
+  app.composer_state.sheet_history.clear();
+  let baseline=app.scene.sheets[0].clone();
+  for (cap,x) in [(0,110.),(1,120.),(1,130.)] {
+   app.document_session.preferences.undo_steps=cap;
+   app.begin_composer_edit();app.scene.sheets[0].items[0].set_pos(x,140.);app.finish_composer_edit();
+  }
+  assert_eq!(app.composer_state.sheet_history[&id].0.len(),3);
+  for _ in 0..3 {app.undo_composer_edit();}
+  assert_eq!(app.scene.sheets[0],baseline);
+  assert_eq!(app.composer_state.sheet_history[&id].1.len(),3);
+  for _ in 0..3 {app.redo_composer_edit();}
+  assert_eq!(app.scene.sheets[0].items[0].rect().x,130.);
+  assert_eq!(app.composer_state.sheet_history[&id].0.len(),3);
+  assert_eq!(app.scene.mesh,model);assert_eq!(app.scene.sheets[1],neighbor);
+
  }
  #[test]fn raster_frame_style_uses_saved_snapshot_and_paper_without_live_mutation(){
   use ingetrazo_render::style::{StyleConfig,VisualStyle};

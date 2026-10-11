@@ -442,8 +442,9 @@ impl IngeTrazoApp {
         self.undo_stack.push(before);
         let mut reclaim_images = !self.redo_stack.is_empty();
         self.redo_stack.clear();
-        if self.undo_stack.len() > self.document_session.preferences.undo_steps {
-            self.undo_stack.remove(0);
+        let cap=self.document_session.preferences.undo_steps;
+        if cap>0 && self.undo_stack.len()>cap {
+            self.undo_stack.drain(..self.undo_stack.len()-cap);
             reclaim_images = true;
         }
         if reclaim_images { self.collect_image_metadata(); }
@@ -984,6 +985,7 @@ impl IngeTrazoApp {
     /// Backend-independent application UI and document lifecycle.
     pub fn update_ui(&mut self, ctx: &egui::Context) {
         let recent_warning_owns_input = self.document_session.recent_missing.is_some();
+        let preferences_owns_input = self.show_preferences_dialog;
         self.sync_document_presentation();
         self.begin_document_frame(ctx);
         self.poll_ai_bridge();
@@ -1016,7 +1018,7 @@ impl IngeTrazoApp {
         self.blender_state.poll_events(ctx);
         self.tick_blender_follow(ctx);
 
-        if !recent_warning_owns_input&&self.document_session.recent_missing.is_none()&&self.annotation_editor.is_none()&&self.text3d_dialog.is_none()&&!self.show_material_edit_dialog {
+        if !preferences_owns_input&&!self.show_preferences_dialog&&!recent_warning_owns_input&&self.document_session.recent_missing.is_none()&&self.annotation_editor.is_none()&&self.text3d_dialog.is_none()&&!self.show_material_edit_dialog {
         // A complete Ctrl chord can arrive in one frame; the final modifier
         // snapshot is then released. Use the key event's captured modifiers.
         let (undo_pressed,redo_pressed)=ctx.input(|i|i.events.iter().fold((false,false),|mut flags,event|{
@@ -1089,21 +1091,21 @@ impl IngeTrazoApp {
 
         // 1. Menu Bar Panel
         egui::TopBottomPanel::top("menu_bar").show(ctx, |ui| {
-            ui.set_enabled(!recent_warning_owns_input&&self.document_session.recent_missing.is_none()&&self.annotation_editor.is_none()&&self.text3d_dialog.is_none()&&!self.show_material_edit_dialog);
+            ui.set_enabled(!preferences_owns_input&&!self.show_preferences_dialog&&!recent_warning_owns_input&&self.document_session.recent_missing.is_none()&&self.annotation_editor.is_none()&&self.text3d_dialog.is_none()&&!self.show_material_edit_dialog);
             render_menu_bar(self, ui);
         });
 
         // 2. Toolbar Panel
         if self.show_toolbar {
             egui::TopBottomPanel::top("toolbar").show(ctx, |ui| {
-                ui.set_enabled(!recent_warning_owns_input&&self.document_session.recent_missing.is_none()&&self.annotation_editor.is_none()&&self.text3d_dialog.is_none()&&!self.show_material_edit_dialog);
+                ui.set_enabled(!preferences_owns_input&&!self.show_preferences_dialog&&!recent_warning_owns_input&&self.document_session.recent_missing.is_none()&&self.annotation_editor.is_none()&&self.text3d_dialog.is_none()&&!self.show_material_edit_dialog);
             render_top_toolbar(self, ui);
             });
         }
 
         // 3. Status Bar Panel
         egui::TopBottomPanel::bottom("status_bar").show(ctx, |ui| {
-            ui.set_enabled(!recent_warning_owns_input&&self.document_session.recent_missing.is_none()&&self.annotation_editor.is_none()&&self.text3d_dialog.is_none()&&!self.show_material_edit_dialog);
+            ui.set_enabled(!preferences_owns_input&&!self.show_preferences_dialog&&!recent_warning_owns_input&&self.document_session.recent_missing.is_none()&&self.annotation_editor.is_none()&&self.text3d_dialog.is_none()&&!self.show_material_edit_dialog);
             render_status_bar(self, ui);
         });
 
@@ -1112,7 +1114,7 @@ impl IngeTrazoApp {
             .exact_width(42.0)
             .resizable(false)
             .show(ctx, |ui| {
-                ui.set_enabled(!recent_warning_owns_input&&self.document_session.recent_missing.is_none()&&self.annotation_editor.is_none()&&self.text3d_dialog.is_none()&&!self.show_material_edit_dialog);
+                ui.set_enabled(!preferences_owns_input&&!self.show_preferences_dialog&&!recent_warning_owns_input&&self.document_session.recent_missing.is_none()&&self.annotation_editor.is_none()&&self.text3d_dialog.is_none()&&!self.show_material_edit_dialog);
             render_left_cad_palette(self, ui);
             });
 
@@ -1123,14 +1125,14 @@ impl IngeTrazoApp {
                 .min_width(200.0)
                 .max_width(400.0)
                 .show(ctx, |ui| {
-                    ui.set_enabled(!recent_warning_owns_input&&self.document_session.recent_missing.is_none()&&self.annotation_editor.is_none()&&self.text3d_dialog.is_none()&&!self.show_material_edit_dialog);
+                    ui.set_enabled(!preferences_owns_input&&!self.show_preferences_dialog&&!recent_warning_owns_input&&self.document_session.recent_missing.is_none()&&self.annotation_editor.is_none()&&self.text3d_dialog.is_none()&&!self.show_material_edit_dialog);
             render_side_tray(self, ui);
                 });
         }
 
         // 6. Central 3D Viewport or 2D Sheet Composer Canvas
         egui::CentralPanel::default().show(ctx, |ui| {
-            ui.set_enabled(!recent_warning_owns_input&&self.document_session.recent_missing.is_none()&&self.annotation_editor.is_none()&&self.text3d_dialog.is_none()&&!self.show_material_edit_dialog);
+            ui.set_enabled(!preferences_owns_input&&!self.show_preferences_dialog&&!recent_warning_owns_input&&self.document_session.recent_missing.is_none()&&self.annotation_editor.is_none()&&self.text3d_dialog.is_none()&&!self.show_material_edit_dialog);
             if let Some(sheet_idx) = self.scene.active_sheet_index {
                 crate::composer::render_sheet_composer(self, ui, sheet_idx);
             } else {
