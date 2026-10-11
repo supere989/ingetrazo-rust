@@ -1,0 +1,215 @@
+{
+  "zip_sha256": "2ea66eb20d46b486be5ec846f2e775b77a8bc6225382cd70c716487dda5a3f2d",
+  "files": [
+    {
+      "path": "solar-native-extra-frozen/billboard-bitmap/depth.png",
+      "sha256": "085494bee43a5a9d70b6c6641bc08dea7695957fa3b3ee313d1d1c802fe0ea2f",
+      "bytes": 86134
+    },
+    {
+      "path": "solar-native-extra-frozen/billboard-bitmap/off.png",
+      "sha256": "fcd78e126cb6c5f75bb0fd2c7f2114f8dbd5497bd404e7854d233211039fd505",
+      "bytes": 11972
+    },
+    {
+      "path": "solar-native-extra-frozen/billboard-bitmap/on.png",
+      "sha256": "ba9467849721546e151f9b12411ea00302cd3c7fe7714ebd1edca4da6c561ae0",
+      "bytes": 12095
+    },
+    {
+      "path": "solar-native-extra-frozen/billboard-bitmap/restored.png",
+      "sha256": "ba9467849721546e151f9b12411ea00302cd3c7fe7714ebd1edca4da6c561ae0",
+      "bytes": 12095
+    },
+    {
+      "path": "solar-native-extra-frozen/billboard-bitmap/result.json",
+      "sha256": "17677fa54ced8e9d86252e657e1f60cb9211e5ba999d44413727e7014da38b5a",
+      "bytes": 1044
+    },
+    {
+      "path": "solar-native-extra-frozen/billboard-bitmap/runtime.log",
+      "sha256": "55e8655b9786a7925f18a7813b4a3e5732c85bb3eb109c0d465cb37b281a06e9",
+      "bytes": 514
+    },
+    {
+      "path": "solar-native-extra-frozen/billboard-mesh/depth.png",
+      "sha256": "085494bee43a5a9d70b6c6641bc08dea7695957fa3b3ee313d1d1c802fe0ea2f",
+      "bytes": 86134
+    },
+    {
+      "path": "solar-native-extra-frozen/billboard-mesh/off.png",
+      "sha256": "fcd78e126cb6c5f75bb0fd2c7f2114f8dbd5497bd404e7854d233211039fd505",
+      "bytes": 11972
+    },
+    {
+      "path": "solar-native-extra-frozen/billboard-mesh/on.png",
+      "sha256": "ba9467849721546e151f9b12411ea00302cd3c7fe7714ebd1edca4da6c561ae0",
+      "bytes": 12095
+    },
+    {
+      "path": "solar-native-extra-frozen/billboard-mesh/restored.png",
+      "sha256": "ba9467849721546e151f9b12411ea00302cd3c7fe7714ebd1edca4da6c561ae0",
+      "bytes": 12095
+    },
+    {
+      "path": "solar-native-extra-frozen/billboard-mesh/result.json",
+      "sha256": "c3a4f0da6fb8cabea9491de31caa5fdcd0b9077ebed80d6c39faaac4681ff434",
+      "bytes": 1042
+    },
+    {
+      "path": "solar-native-extra-frozen/billboard-mesh/runtime.log",
+      "sha256": "55e8655b9786a7925f18a7813b4a3e5732c85bb3eb109c0d465cb37b281a06e9",
+      "bytes": 514
+    },
+    {
+      "path": "solar-native-extra-frozen/comparison.json",
+      "sha256": "a6d47c45dd60fccca5019d26c7e3cc0418877a8d47fc517b09391bb1793d4a2b",
+      "bytes": 8641
+    },
+    {
+      "path": "solar-native-extra-frozen/ground-photo/depth.png",
+      "sha256": "0c9634d05791a3da9fa49db3649b69fd8472642203a38a21dcd62eb9aeefcf74",
+      "bytes": 115814
+    },
+    {
+      "path": "solar-native-extra-frozen/ground-photo/off.png",
+      "sha256": "6d5e289416555023fef16ec19da6b7e1d03ec22510afc526fc21c44ac91d813b",
+      "bytes": 11011
+    },
+    {
+      "path": "solar-native-extra-frozen/ground-photo/on.png",
+      "sha256": "c1ef67ca153d4019369f9d3851cb8c7b878f7bc9bae84402a1964d066ffccecf",
+      "bytes": 12605
+    },
+    {
+      "path": "solar-native-extra-frozen/ground-photo/restored.png",
+      "sha256": "c1ef67ca153d4019369f9d3851cb8c7b878f7bc9bae84402a1964d066ffccecf",
+      "bytes": 12605
+    },
+    {
+      "path": "solar-native-extra-frozen/ground-photo/result.json",
+      "sha256": "f2e1535dcef6eeb99ebace3494c0858af88a7bd802585f47dc4eded7eb026fe2",
+      "bytes": 1040
+    },
+    {
+      "path": "solar-native-extra-frozen/ground-photo/runtime.log",
+      "sha256": "55e8655b9786a7925f18a7813b4a3e5732c85bb3eb109c0d465cb37b281a06e9",
+      "bytes": 514
+    },
+    {
+      "path": "solar-native-extra-frozen/ground-terrain/depth.png",
+      "sha256": "0c9634d05791a3da9fa49db3649b69fd8472642203a38a21dcd62eb9aeefcf74",
+      "bytes": 115814
+    },
+    {
+      "path": "solar-native-extra-frozen/ground-terrain/off.png",
+      "sha256": "6d5e289416555023fef16ec19da6b7e1d03ec22510afc526fc21c44ac91d813b",
+      "bytes": 11011
+    },
+    {
+      "path": "solar-native-extra-frozen/ground-terrain/on.png",
+      "sha256": "c1ef67ca153d4019369f9d3851cb8c7b878f7bc9bae84402a1964d066ffccecf",
+      "bytes": 12605
+    },
+    {
+      "path": "solar-native-extra-frozen/ground-terrain/restored.png",
+      "sha256": "c1ef67ca153d4019369f9d3851cb8c7b878f7bc9bae84402a1964d066ffccecf",
+      "bytes": 12605
+    },
+    {
+      "path": "solar-native-extra-frozen/ground-terrain/result.json",
+      "sha256": "524910b88403bf244af60ea6045b351406ccaabe612541883fc80e173d18c3eb",
+      "bytes": 1042
+    },
+    {
+      "path": "solar-native-extra-frozen/ground-terrain/runtime.log",
+      "sha256": "55e8655b9786a7925f18a7813b4a3e5732c85bb3eb109c0d465cb37b281a06e9",
+      "bytes": 514
+    },
+    {
+      "path": "solar-native-extra-frozen/ground-tiles/depth.png",
+      "sha256": "0c9634d05791a3da9fa49db3649b69fd8472642203a38a21dcd62eb9aeefcf74",
+      "bytes": 115814
+    },
+    {
+      "path": "solar-native-extra-frozen/ground-tiles/off.png",
+      "sha256": "6d5e289416555023fef16ec19da6b7e1d03ec22510afc526fc21c44ac91d813b",
+      "bytes": 11011
+    },
+    {
+      "path": "solar-native-extra-frozen/ground-tiles/on.png",
+      "sha256": "12003a7ea4176194e9193646dec4aa70029fd5124fa0fedab841736a3224ba6a",
+      "bytes": 11012
+    },
+    {
+      "path": "solar-native-extra-frozen/ground-tiles/restored.png",
+      "sha256": "12003a7ea4176194e9193646dec4aa70029fd5124fa0fedab841736a3224ba6a",
+      "bytes": 11012
+    },
+    {
+      "path": "solar-native-extra-frozen/ground-tiles/result.json",
+      "sha256": "e41d994f505464d514ea1ad0d665ba14008fb43803199de34bd84b0635faa20c",
+      "bytes": 1041
+    },
+    {
+      "path": "solar-native-extra-frozen/ground-tiles/runtime.log",
+      "sha256": "55e8655b9786a7925f18a7813b4a3e5732c85bb3eb109c0d465cb37b281a06e9",
+      "bytes": 514
+    },
+    {
+      "path": "solar-native-extra-frozen/icd.json",
+      "sha256": "88fd93f6476f1db453dbbc2a7f0c5af40e6eb3cdf4c20758bdaf4eba79f79131",
+      "bytes": 108
+    },
+    {
+      "path": "solar-native-extra-frozen/transport.json",
+      "sha256": "d122011dee0055a2bb4c9de0d1352c9bb84bb1b784ec72518371c96348e2bc12",
+      "bytes": 7635
+    },
+    {
+      "path": "solar-native-bitmap-embed/billboard-bitmap/depth.png",
+      "sha256": "eb4be84b5e7b8a6c23a49356b0172990785e16fa5ac98db7af17fbfd7d0542c0",
+      "bytes": 93502
+    },
+    {
+      "path": "solar-native-bitmap-embed/billboard-bitmap/off.png",
+      "sha256": "fcd78e126cb6c5f75bb0fd2c7f2114f8dbd5497bd404e7854d233211039fd505",
+      "bytes": 11972
+    },
+    {
+      "path": "solar-native-bitmap-embed/billboard-bitmap/on.png",
+      "sha256": "e4e60c2830def315e51c3c7310b97de67c06089d80ace8d93aef4d20cffc4bb9",
+      "bytes": 19689
+    },
+    {
+      "path": "solar-native-bitmap-embed/billboard-bitmap/restored.png",
+      "sha256": "e4e60c2830def315e51c3c7310b97de67c06089d80ace8d93aef4d20cffc4bb9",
+      "bytes": 19689
+    },
+    {
+      "path": "solar-native-bitmap-embed/billboard-bitmap/result.json",
+      "sha256": "ac66359912559f375b6398c5f513adec6869efcbd6c0d6965b556e78211e8288",
+      "bytes": 1044
+    },
+    {
+      "path": "solar-native-bitmap-embed/billboard-bitmap/runtime.log",
+      "sha256": "55e8655b9786a7925f18a7813b4a3e5732c85bb3eb109c0d465cb37b281a06e9",
+      "bytes": 514
+    },
+    {
+      "path": "solar-native-bitmap-embed/comparison.json",
+      "sha256": "dea6103e46a3da7ac2ffdbd4c7fdb5b6483f2b7f8a4a32d2922de6827a489824",
+      "bytes": 133
+    },
+    {
+      "path": "solar-native-bitmap-embed/icd.json",
+      "sha256": "88fd93f6476f1db453dbbc2a7f0c5af40e6eb3cdf4c20758bdaf4eba79f79131",
+      "bytes": 108
+    },
+    {
+      "path": "solar-native-bitmap-embed/transport.json",
+      "sha256": "3cdac872149bf52b3b6de15ba3b6a1e6a69c2c71f824c3fe2a70621af6c73869",
+      "bytes": 1747
+    }
+  ]
+}
