@@ -1,0 +1,52 @@
+{
+  "scope": "Direct native Metal section contour runtime; Apple execution and strict pixels pending",
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "source_law": {
+    "path": "ingetrazo/views/viewport.py",
+    "segment_lines": [
+      6517,
+      6563
+    ],
+    "quad_lines": [
+      6631,
+      6686
+    ],
+    "unclipped_draw_line": 2095,
+    "logical_height": "viewport.py6662: max(1,self.height()), passed directly from real egui route rect.height()",
+    "order": "viewport.py2095 contour draw occurs before rubber-band preview; Metal contours precede preview-only aux lines"
+  },
+  "runtime_commits": [
+    "b36d2568",
+    "d0533049",
+    "1bbd6d4f",
+    "2b4e620f"
+  ],
+  "sha256": {
+    "crates/ingetrazo-metal/src/shaders/contour.metal": "ccae8eb749285711880f568aabb73e7a13b53dcdc266d15c461c032df5575186",
+    "crates/ingetrazo-metal/src/world_contour.rs": "ca0a674321bb80549c5097ce80267942e70a045ab6695307423cfb1828a43dff",
+    "crates/ingetrazo-metal/src/world.rs": "159721c32ae9a5bf55b5bae115706523c910050fecd00cafe7016abad1c5e10c",
+    "crates/ingetrazo-metal/src/world_scene.rs": "ba388d0e5ffefe4cae58dfe8aa03f2efcc50f12e6dea4c79ddc4a860edbffa66",
+    "crates/ingetrazo-metal/src/world_section.rs": "e1940d43f947b3d45e759254ec52814654e46025c98c3c0774bb777b3c01e0dc",
+    "crates/ingetrazo-gui/src/native_vulkan/shaders/contour.vert": "e0b219be1ade23f83fc1c1713071f41cca82c4e4c339901bd92c121c02415727",
+    "crates/ingetrazo-gui/src/native_vulkan/shaders/contour.frag": "ccba686f0577e3af4723c3b81f8f92150ac7be537b94d6bd77ce45ff5adb70af",
+    "crates/ingetrazo-gui/examples/native_metal_section_fill.rs": "3408b40c5de0a030f6c60f990d8d81b6dcd94759e237937ffc7671d9e67112b0",
+    "scripts/check-metal-section-fill.py": "b05b7d1a3420149c4c5fd380b9e739175399ccc7b496becdb95dccb28f69a12c",
+    "crates/ingetrazo-gui/src/native_metal/world_viewport.rs": "bea6d5f4daf9632aaebd4eb4dbb82478e03c1cdd0e8c31f848b7bdcbf705b5c7"
+  },
+  "checks": {
+    "linux_command": "CARGO_TARGET_DIR=/tmp/ingetrazo-metal-world-target CARGO_PROFILE_DEV_DEBUG=0 CARGO_INCREMENTAL=0 cargo check -p ingetrazo-metal --lib -j2",
+    "result": "PASS; macOS cfg encoder/shader not compiled on Linux",
+    "initial_failure": "Rust float literal *.5 lacks integer part in world_scene.rs; corrected to *0.5; no runtime executed",
+    "consumer_static": "rustfmt parser and Python py_compile PASS; no extra Rust build after parent requested batching"
+  },
+  "acceptance": "Reuse native_metal_section_fill ten frozen recipes and check-metal-section-fill.py whole RGBA exact comparisons, unchanged",
+  "remaining": [
+    "Actual Apple SDK/shader link and ten-scene GPU readback",
+    "Post-cap annotation depth and wider rendering scopes remain separately tracked"
+  ],
+  "ownership": "Prepared retains existing mesh/model/image buffers and the contour pipeline through completion; no new contour geometry owner/upload",
+  "consumer_commit": "5f0bea30",
+  "compile_repair_prerequisite": "065f4314 (local cherry 70c21f75; root already owns)",
+  "precision_boundary": "MSL and reviewed Vulkan shader compute float32 intermediates; original NumPy intersections and quads compute float64 before published float32. Native pixels remain unproved until strict existing checker executes.",
+  "native_replay": "native_metal_section_fill OUT followed by python3 scripts/check-metal-section-fill.py OUT --reference docs/audits/section-original-gl --output OUT/check.json"
+}

@@ -1,0 +1,381 @@
+warning: function `visit_meshes` is never used
+   --> crates/ingetrazo-core/src/screen_pick.rs:120:15
+    |
+120 | pub(crate) fn visit_meshes(scene: &Scene, mut visit: impl FnMut(&Mesh, DMat4, bool)) {
+    |               ^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `ingetrazo-core` (lib) generated 1 warning
+    Checking ingetrazo-metal v0.3.15 (/tmp/ingetrazo-metal-section-contours/crates/ingetrazo-metal)
+warning: struct `SpanPlan` is never constructed
+  --> crates/ingetrazo-metal/src/span_plan.rs:21:19
+   |
+21 | pub(crate) struct SpanPlan {
+   |                   ^^^^^^^^
+   |
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: function `compile` is never used
+  --> crates/ingetrazo-metal/src/span_plan.rs:26:15
+   |
+26 | pub(crate) fn compile(geometry: &Geometry, batches: &[Batch]) -> Result<SpanPlan, String> {
+   |               ^^^^^^^
+
+warning: function `compile_source` is never used
+  --> crates/ingetrazo-metal/src/span_plan.rs:74:15
+   |
+74 | pub(crate) fn compile_source(geometry: &Geometry, batches: &[Batch]) -> Result<SpanPlan, String> {
+   |               ^^^^^^^^^^^^^^
+
+warning: function `bin` is never used
+  --> crates/ingetrazo-metal/src/span_plan.rs:89:4
+   |
+89 | fn bin(spans:Vec<Span>)->Result<SpanPlan,String>{
+   |    ^^^
+
+warning: function `compile_annotation` is never used
+   --> crates/ingetrazo-metal/src/span_plan.rs:327:15
+    |
+327 | pub(crate) fn compile_annotation(geometry:&Geometry,batches:&[Batch],density:f32)->Result<(Vec<AnnotationSpan>,Vec<Tile>,Vec<u32>),...
+    |               ^^^^^^^^^^^^^^^^^^
+
+warning: struct `Cache` is never constructed
+ --> crates/ingetrazo-metal/src/glyph_admission.rs:5:19
+  |
+5 | pub(crate) struct Cache {
+  |                   ^^^^^
+
+warning: method `admit` is never used
+  --> crates/ingetrazo-metal/src/glyph_admission.rs:10:12
+   |
+ 9 | impl Cache {
+   | ---------- method in this implementation
+10 |     pub fn admit(
+   |            ^^^^^
+
+warning: function `pose` is never used
+ --> crates/ingetrazo-metal/src/world_admission.rs:3:15
+  |
+3 | pub(crate) fn pose(mvp: [[f32; 4]; 4], extent: (u32, u32), clear: [f64; 4]) -> Result<(), String> {
+  |               ^^^^
+
+warning: function `opaque` is never used
+  --> crates/ingetrazo-metal/src/world_admission.rs:15:15
+   |
+15 | pub(crate) fn opaque(data: &MeshRenderBuffer) -> Result<super::world_policy::Plan, String> {
+   |               ^^^^^^
+
+warning: function `standalone_capacity` is never used
+   --> crates/ingetrazo-metal/src/world_admission.rs:108:15
+    |
+108 | pub(crate) fn standalone_capacity(b: &ingetrazo_core::gpu_memory::MemoryBudget) -> Result<u64, String> {
+    |               ^^^^^^^^^^^^^^^^^^^
+
+warning: method `texture_mean` is never used
+  --> crates/ingetrazo-metal/src/world_policy.rs:14:19
+   |
+11 | impl Mode {
+   | --------- method in this implementation
+...
+14 |     pub(crate) fn texture_mean(self,opacity:f64,back_side:bool)->bool {
+   |                   ^^^^^^^^^^^^
+
+warning: method `validate` is never used
+  --> crates/ingetrazo-metal/src/world_policy.rs:34:19
+   |
+33 | impl Policy {
+   | ----------- method in this implementation
+34 |     pub(crate) fn validate(self) -> Result<(), String> {
+   |                   ^^^^^^^^
+
+warning: struct `BackRun` is never constructed
+  --> crates/ingetrazo-metal/src/world_policy.rs:49:19
+   |
+49 | pub(crate) struct BackRun {
+   |                   ^^^^^^^
+
+warning: struct `Plan` is never constructed
+  --> crates/ingetrazo-metal/src/world_policy.rs:55:19
+   |
+55 | pub(crate) struct Plan {
+   |                   ^^^^
+
+warning: constant `MAX_POLICY_PAYLOAD` is never used
+  --> crates/ingetrazo-metal/src/world_policy.rs:60:7
+   |
+60 | const MAX_POLICY_PAYLOAD: usize = 8 * 1024 * 1024;
+   |       ^^^^^^^^^^^^^^^^^^
+
+warning: function `payload_bound` is never used
+  --> crates/ingetrazo-metal/src/world_policy.rs:61:4
+   |
+61 | fn payload_bound(defaults: usize, paints: usize) -> Result<usize, String> {
+   |    ^^^^^^^^^^^^^
+
+warning: associated function `from_packet` is never used
+  --> crates/ingetrazo-metal/src/world_policy.rs:69:19
+   |
+68 | impl Plan {
+   | --------- associated function in this implementation
+69 |     pub(crate) fn from_packet(p: &MeshRenderBuffer) -> Result<Self, String> {
+   |                   ^^^^^^^^^^^
+
+warning: function `quantize` is never used
+   --> crates/ingetrazo-metal/src/world_policy.rs:123:4
+    |
+123 | fn quantize(c: f32) -> f32 {
+    |    ^^^^^^^^
+
+warning: function `range` is never used
+   --> crates/ingetrazo-metal/src/world_policy.rs:126:4
+    |
+126 | fn range(first: usize, count: usize, len: usize) -> Result<(), String> {
+    |    ^^^^^
+
+warning: constant `MAX_POSE_BYTES` is never used
+  --> crates/ingetrazo-metal/src/world_placement.rs:93:18
+   |
+93 | pub(crate) const MAX_POSE_BYTES: usize = 8 * 1024 * 1024;
+   |                  ^^^^^^^^^^^^^^
+
+warning: function `validate_poses` is never used
+  --> crates/ingetrazo-metal/src/world_placement.rs:94:15
+   |
+94 | pub(crate) fn validate_poses(packet: &Packet, poses: &[Pose]) -> Result<(), String> {
+   |               ^^^^^^^^^^^^^^
+
+warning: struct `Run` is never constructed
+   --> crates/ingetrazo-metal/src/world_placement.rs:195:19
+    |
+195 | pub(crate) struct Run {
+    |                   ^^^
+
+warning: struct `Order` is never constructed
+   --> crates/ingetrazo-metal/src/world_placement.rs:202:19
+    |
+202 | pub(crate) struct Order {
+    |                   ^^^^^
+
+warning: associated function `new` is never used
+   --> crates/ingetrazo-metal/src/world_placement.rs:208:12
+    |
+207 | impl Order {
+    | ---------- associated function in this implementation
+208 |     pub fn new(packet: &Packet, poses: &[Pose]) -> Result<Self, String> {
+    |            ^^^
+
+warning: function `packed_matrix_changed` is never used
+   --> crates/ingetrazo-metal/src/world_placement.rs:386:15
+    |
+386 | pub(crate) fn packed_matrix_changed(
+    |               ^^^^^^^^^^^^^^^^^^^^^
+
+warning: method `classic_models_changed` is never used
+   --> crates/ingetrazo-metal/src/world_scene.rs:453:8
+    |
+186 | impl Catalog {
+    | ------------ method in this implementation
+...
+453 |     fn classic_models_changed(&self, scene: &Scene) -> Result<bool, String> {
+    |        ^^^^^^^^^^^^^^^^^^^^^^
+
+warning: fields `accepted_pose_revision`, `preview`, and `preview_poses` are never read
+   --> crates/ingetrazo-metal/src/world_scene.rs:873:5
+    |
+864 | pub struct Adapter {
+    |            ------- fields in this struct
+...
+873 |     accepted_pose_revision: Option<u64>,
+    |     ^^^^^^^^^^^^^^^^^^^^^^
+874 |     preview: Option<Arc<super::world_preview::Preview>>,
+    |     ^^^^^^^
+875 |     preview_poses: Vec<Pose>,
+    |     ^^^^^^^^^^^^^
+
+warning: method `needs_model_refresh` is never used
+   --> crates/ingetrazo-metal/src/world_scene.rs:882:8
+    |
+881 | impl Adapter {
+    | ------------ method in this implementation
+882 |     fn needs_model_refresh(&self,cold:bool,revision:Option<u64>)->bool {
+    |        ^^^^^^^^^^^^^^^^^^^
+
+warning: struct `FaceGuard` is never constructed
+ --> crates/ingetrazo-metal/src/world_face_guard.rs:4:19
+  |
+4 | pub(crate) struct FaceGuard<K>([Option<K>; 2]);
+  |                   ^^^^^^^^^
+
+warning: associated items `new`, `add`, and `open` are never used
+  --> crates/ingetrazo-metal/src/world_face_guard.rs:6:19
+   |
+ 5 | impl<K: Copy + Eq> FaceGuard<K> {
+   | ------------------------------- associated items in this implementation
+ 6 |     pub(crate) fn new() -> Self {
+   |                   ^^^
+...
+ 9 |     pub(crate) fn add(&mut self, key: K) {
+   |                   ^^^
+...
+17 |     pub(crate) fn open(&self, overlay: Option<K>) -> bool {
+   |                   ^^^^
+
+warning: struct `Key` is never constructed
+ --> crates/ingetrazo-metal/src/world_ghost.rs:4:19
+  |
+4 | pub(crate) struct Key {
+  |                   ^^^
+
+warning: method `reusable` is never used
+  --> crates/ingetrazo-metal/src/world_ghost.rs:12:19
+   |
+11 | impl Key {
+   | -------- method in this implementation
+12 |     pub(crate) fn reusable(self, old: Option<Self>) -> bool {
+   |                   ^^^^^^^^
+
+warning: multiple fields are never read
+  --> crates/ingetrazo-metal/src/world_preview.rs:9:9
+   |
+ 8 | pub(crate) struct Preview {
+   |                   ------- fields in this struct
+ 9 |     pub key: Key,
+   |         ^^^
+10 |     pub sweep: SweepPacket,
+   |         ^^^^^
+11 |     pub packet: Arc<Packet>,
+   |         ^^^^^^
+12 |     pub base_packet: Arc<Packet>,
+   |         ^^^^^^^^^^^
+13 |     pub preview_key: PrototypeKey,
+   |         ^^^^^^^^^^^
+14 |     pub base: Option<(PrototypeKey, PrototypeKey)>,
+   |         ^^^^
+15 |     pub base_ids: Vec<usize>,
+   |         ^^^^^^^^
+16 |     pub uses_variant: bool,
+   |         ^^^^^^^^^^^^
+17 |     pub generation: u64,
+   |         ^^^^^^^^^^
+18 |     pub namespace: [u128; 2],
+   |         ^^^^^^^^^
+
+warning: associated items `reusable` and `prepare` are never used
+  --> crates/ingetrazo-metal/src/world_preview.rs:21:12
+   |
+20 | impl Preview {
+   | ------------ associated items in this implementation
+21 |     pub fn reusable(&self, input: Input, publication: u64, eye: DVec3, base: &Arc<Packet>) -> bool {
+   |            ^^^^^^^^
+...
+24 |     pub fn prepare(
+   |            ^^^^^^^
+
+warning: associated function `prepare` is never used
+  --> crates/ingetrazo-metal/src/world_background.rs:12:12
+   |
+11 | impl Background {
+   | --------------- associated function in this implementation
+12 |     pub fn prepare(
+   |            ^^^^^^^
+
+warning: constant `MAX_BYTES` is never used
+ --> crates/ingetrazo-metal/src/world_profile.rs:6:7
+  |
+6 | const MAX_BYTES: usize = 64 * 1024 * 1024;
+  |       ^^^^^^^^^
+
+warning: struct `Edge` is never constructed
+ --> crates/ingetrazo-metal/src/world_profile.rs:8:8
+  |
+8 | struct Edge {
+  |        ^^^^
+
+warning: struct `Placement` is never constructed
+  --> crates/ingetrazo-metal/src/world_profile.rs:15:8
+   |
+15 | struct Placement {
+   |        ^^^^^^^^^
+
+warning: struct `Profiles` is never constructed
+  --> crates/ingetrazo-metal/src/world_profile.rs:21:19
+   |
+21 | pub(crate) struct Profiles {
+   |                   ^^^^^^^^
+
+warning: associated items `retained_bytes`, `build`, `walk`, `append`, `selection`, and `endpoints` are never used
+   --> crates/ingetrazo-metal/src/world_profile.rs:26:12
+    |
+ 25 | impl Profiles {
+    | ------------- associated items in this implementation
+ 26 |     pub fn retained_bytes(&self) -> usize {
+    |            ^^^^^^^^^^^^^^
+...
+ 29 |     pub fn build(scene: &Scene, suppressed: &[usize]) -> Result<Self, String> {
+    |            ^^^^^
+...
+ 45 |     fn walk(
+    |        ^^^^
+...
+ 75 |     fn append(
+    |        ^^^^^^
+...
+230 |     pub fn selection(&self, eye: DVec3, out: &mut Vec<(usize, usize)>) -> Result<(), String> {
+    |            ^^^^^^^^^
+...
+259 |     pub fn endpoints(&self, selection: &[(usize, usize)]) -> Result<Vec<[f32; 3]>, String> {
+    |            ^^^^^^^^^
+
+warning: associated items `enabled`, `OFF`, and `from_scene` are never used
+ --> crates/ingetrazo-metal/src/world_section.rs:6:19
+  |
+5 | impl Section {
+  | ------------ associated items in this implementation
+6 |     pub(crate) fn enabled(&self)->bool{self.enabled!=0}
+  |                   ^^^^^^^
+7 |     pub(crate) const OFF: Self = Self { plane:[0.;4], enabled:0, padding:[0;3] };
+  |                      ^^^
+8 |     pub(crate) fn from_scene(scene:&ingetrazo_core::scene::Scene)->Result<Self,String>{
+  |                   ^^^^^^^^^^
+
+warning: struct `FillKey` is never constructed
+  --> crates/ingetrazo-metal/src/world_section.rs:42:19
+   |
+42 | pub(crate) struct FillKey {
+   |                   ^^^^^^^
+
+warning: associated function `from_scene` is never used
+  --> crates/ingetrazo-metal/src/world_section.rs:49:19
+   |
+48 | impl FillKey {
+   | ------------ associated function in this implementation
+49 |     pub(crate) fn from_scene(
+   |                   ^^^^^^^^^^
+
+warning: function `dot` is never used
+   --> crates/ingetrazo-metal/src/world_section.rs:108:4
+    |
+108 | fn dot(a: glam::Vec3, b: glam::Vec3) -> f32 {
+    |    ^^^
+
+warning: function `length` is never used
+   --> crates/ingetrazo-metal/src/world_section.rs:111:4
+    |
+111 | fn length(p:glam::Vec3)->f32{let m=p.abs().max_element();if m==0.{0.}else{let q=glam::Vec3::new(p.x/m,p.y/m,p.z/m);m*(q.x*q.x+q.y*q...
+    |    ^^^^^^
+
+warning: function `normalize` is never used
+   --> crates/ingetrazo-metal/src/world_section.rs:112:4
+    |
+112 | fn normalize(p:glam::Vec3)->glam::Vec3{let n=length(p);if (n-1.).abs()<=1e-5{p}else if n.abs()<=1e-5{glam::Vec3::ZERO}else{glam::Ve...
+    |    ^^^^^^^^^
+
+warning: function `frame` is never used
+   --> crates/ingetrazo-metal/src/world_section.rs:114:4
+    |
+114 | fn frame(scene: &ingetrazo_core::scene::Scene) -> Result<[glam::Vec3; 4], String> {
+    |    ^^^^^
+
+warning: `ingetrazo-metal` (lib) generated 47 warnings
+    Finished `dev` profile [unoptimized] target(s) in 0.20s
