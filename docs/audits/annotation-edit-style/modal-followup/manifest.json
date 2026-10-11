@@ -1,0 +1,77 @@
+{
+  "runtime_commit": "c444bc8c451a9b1c956c034bb350859fdc752eb2",
+  "source": [
+    {
+      "path": "crates/ingetrazo-gui/src/annotation_editor.rs",
+      "sha256": "74041cc23d732051f50be8153d36b0375ad2f0b3f5ec52290adf72be55ffe16b"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/box_selection.rs",
+      "sha256": "a566f8d4ad7b7bea89e75ebea4142f3e4cf58f93ff2a9903cac84614ad18f16a"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/navigation.rs",
+      "sha256": "23ebdde493e38abd9a9ce62344e42717bbe54f8790215a8ffcb9a190ee5553d2"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/tool_history.rs",
+      "sha256": "d64462e275bbd617b10c1f78b0a88670fc2ca374ce78d1e6a040c3293b938e7d"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/viewport.rs",
+      "sha256": "7fc66ebbecbdf2b5e2f58ee0a8f44fda0fcfa3fe21f5210b5794832f01b966a2"
+    },
+    {
+      "path": "crates/ingetrazo-tools/src/base.rs",
+      "sha256": "a69d19b12657b5340f614a51c118a36097e3ebba5dc5c588867b64a4452bfbfb"
+    },
+    {
+      "path": "crates/ingetrazo-tools/src/select.rs",
+      "sha256": "9b803a2b113f00d736616baf57f15781f06a9696de78687a67d10b8eda90f22d"
+    },
+    {
+      "path": "scripts/check-annotation-edit-style.py",
+      "sha256": "bcba0c3cc9425eecb2caf378290f3678c51931787fa45ac10f10be0727f6dfe2"
+    }
+  ],
+  "binary_sha256": "6959ffa867a2d8fe6d5decbf448791bc5141bf6e32256f46d99eca0041f4936f",
+  "reused_source_archive_sha256": "f61cb46019e559d3c4cf8edcd8359d3d37628e4094edfac11a89c03ed88c32e3",
+  "entries": [
+    {
+      "path": "modal-focused.log",
+      "sha256": "c8512de0e67aa992dbf37adc8e6d5800e81cdd14403574981250e89caee773b1",
+      "bytes": 19693
+    },
+    {
+      "path": "modal-raw-focused.log",
+      "sha256": "ba975c3e5d9afde0eedacf897204ea8d48a470184bd878034c50291ba06bba37",
+      "bytes": 19399
+    },
+    {
+      "path": "modal-ingress-final.log",
+      "sha256": "2259f8ea0494a7069d7664bd59a85558dee8edf0f5b5e28e4ec4e43ff24b645d",
+      "bytes": 19399
+    },
+    {
+      "path": "modal-frozen-build.log",
+      "sha256": "62cb79c111402658bd0d521c769826113e7def772cbc2763e5e64eaf5a53ec4e",
+      "bytes": 20144
+    },
+    {
+      "path": "modal-frozen-native.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "native.json",
+      "sha256": "b66379974cf981577d92eae464a5672cfa4826b957d9122dd41e449a86ffbe7b",
+      "bytes": 31842
+    },
+    {
+      "path": "check.json",
+      "sha256": "c492db91619ec9ec4a2a47d8df9d1e0c2e89f5110b92848be5ae10b320b0e140",
+      "bytes": 97
+    }
+  ],
+  "archive_sha256": "49294fe5ae71453a77b3511f36a4c916add3ba0dd4b463f2f9e0894317b49b5a"
+}
