@@ -43,6 +43,11 @@ pub(super) mod _recipe_math {
         Ok(v.tan())
     }
     #[pyfunction]
+    fn atan(v: PyObjectRef, vm: &VirtualMachine) -> PyResult<f64> {
+        vm.host_budget_tick()?;
+        Ok(v.try_float(vm)?.to_f64().atan())
+    }
+    #[pyfunction]
     fn hypot(a: PyObjectRef, b: PyObjectRef, vm: &VirtualMachine) -> PyResult<f64> {
         vm.host_budget_tick()?;
         Ok(a.try_float(vm)?.to_f64().hypot(b.try_float(vm)?.to_f64()))
@@ -192,7 +197,130 @@ def _recipes(scene):
         mesh = Mesh()
         _wall_mesh(mesh, a, b, height, thickness, openings, z0, peak)
         return _finish(mesh, color, name)
-    return {'extrude':extrude,'prism':prism,'revolve':revolve,'wall':wall}
+    def house(width=6.0, depth=4.0, wall_height=3.0, thickness=0.2,
+              roof="gable", ridge_height=None, overhang=0.4, ridge="x",
+              doors=(), windows=(), origin=(0.0, 0.0), name="Casa",
+              wall_color=(0.90, 0.87, 0.80, 1.0),
+              roof_color=(0.55, 0.27, 0.20, 1.0),
+              door_color=(0.45, 0.28, 0.15, 1.0),
+              glass_color=(0.60, 0.80, 0.95, 1.0)):
+        """A whole house in one call: four walls with thickness, doors and
+        windows cut through them (with a door leaf and a glass pane), and
+        a roof — ``"gable"`` (two slopes, ridge along ``"x"`` or ``"y"``),
+        ``"hip"`` (four slopes) or ``"flat"``. Sides are ``"S"`` (y = y0,
+        the front), ``"E"``, ``"N"``, ``"W"``; an opening's ``offset`` runs
+        along the wall counter-clockwise from its first corner (S from
+        x0, E from y0, N from x1 back, W from y1 back). ``doors=[(side,
+        offset, width, height)]``, ``windows=[(side, offset, sill, width,
+        height)]``. Returns the groups: walls, floor, carpentry, roof."""
+        x0, y0 = float(origin[0]), float(origin[1])
+        x1, y1 = x0 + float(width), y0 + float(depth)
+        H, t = float(wall_height), float(thickness)
+        if ridge_height is None:
+            half = (depth if ridge == "x" else width) / 2.0
+            ridge_height = half * math.tan(math.radians(30.0))
+        rh = float(ridge_height)
+        lines = {"S": ((x0, y0), (x1, y0)), "E": ((x1, y0), (x1, y1)),
+                 "N": ((x1, y1), (x0, y1)), "W": ((x0, y1), (x0, y0))}
+        # E and W sit between S and N, so the corners are not doubled.
+        lines["E"] = ((x1, y0 + t), (x1, y1 - t))
+        lines["W"] = ((x0, y1 - t), (x0, y0 + t))
+        shift = {"S": 0.0, "N": 0.0, "E": -t, "W": -t}
+        ops: dict = {k: [] for k in lines}
+        leaves: list = []          # (side, offset, sill, w, h, kind)
+        for side, off, w, h in doors:
+            ops[side.upper()].append((off + shift[side.upper()], 0.0, w, h))
+            leaves.append((side.upper(), off + shift[side.upper()], 0.0, w, h, "door"))
+        for side, off, sill, w, h in windows:
+            ops[side.upper()].append((off + shift[side.upper()], sill, w, h))
+            leaves.append((side.upper(), off + shift[side.upper()], sill, w, h, "glass"))
+        gable_sides = ()
+        if roof == "gable":
+            gable_sides = ("E", "W") if ridge == "x" else ("S", "N")
+        walls_mesh = Mesh()
+        for side, (a, b) in lines.items():
+            peak = None
+            if side in gable_sides:
+                seg = math.hypot(b[0] - a[0], b[1] - a[1])
+                peak = (seg / 2.0, rh)
+            _wall_mesh(walls_mesh, a, b, H, t, ops[side], 0.0, peak)
+        out = [_finish(walls_mesh, wall_color, f"{name} · Paredes")]
+        # A floor slab just inside the walls (a hair short of them, so no
+        # two faces share a plane), or the house reads hollow from below.
+        floor = Mesh()
+        e = t + 0.01
+        _prism_mesh(floor, [QVector3D(x0 + e, y0 + e, 0.0), QVector3D(x1 - e, y0 + e, 0.0),
+                            QVector3D(x1 - e, y1 - e, 0.0), QVector3D(x0 + e, y1 - e, 0.0)],
+                    (0.0, 0.0, 0.1))
+        out.append(_finish(floor, (0.75, 0.72, 0.66, 1.0), f"{name} · Piso"))
+        # Carpentry: a door leaf and a glass pane in every opening.
+        carp = Mesh()
+        for side, off, sill, w, h, kind in leaves:
+            a, b = lines[side]
+            length = math.hypot(b[0] - a[0], b[1] - a[1])
+            ux, uy = (b[0] - a[0]) / length, (b[1] - a[1]) / length
+            nx, ny = -uy, ux
+            d = t * 0.5
+            s0, s1 = off, off + w
+            base = [QVector3D(a[0] + ux * s0 + nx * d, a[1] + uy * s0 + ny * d, sill),
+                    QVector3D(a[0] + ux * s1 + nx * d, a[1] + uy * s1 + ny * d, sill),
+                    QVector3D(a[0] + ux * s1 + nx * d, a[1] + uy * s1 + ny * d, sill + h),
+                    QVector3D(a[0] + ux * s0 + nx * d, a[1] + uy * s0 + ny * d, sill + h)]
+            if kind == "door":
+                _prism_mesh(carp, base, (nx * 0.04, ny * 0.04, 0.0))
+                for f in carp.faces:
+                    f.attrs.setdefault("color", tuple(door_color))
+            else:
+                f = carp.add_face(base)
+                f.attrs["color"] = tuple(glass_color)
+                f.attrs["opacity"] = 0.4
+        if carp.faces:
+            out.append(_finish(carp, None, f"{name} · Carpintería"))
+        # Roof.
+        roof_mesh = Mesh()
+        ov = float(overhang)
+        if roof == "flat":
+            _prism_mesh(roof_mesh, [QVector3D(x0 - ov, y0 - ov, H), QVector3D(x1 + ov, y0 - ov, H),
+                                    QVector3D(x1 + ov, y1 + ov, H), QVector3D(x0 - ov, y1 + ov, H)],
+                        (0.0, 0.0, 0.2))
+        elif roof == "hip":
+            L, W = x1 - x0, y1 - y0
+            cx, cy = (x0 + x1) / 2.0, (y0 + y1) / 2.0
+            s = rh / (min(L, W) / 2.0)
+            ze = H - s * ov
+            b0, b1, b2, b3 = (QVector3D(x0 - ov, y0 - ov, ze), QVector3D(x1 + ov, y0 - ov, ze),
+                              QVector3D(x1 + ov, y1 + ov, ze), QVector3D(x0 - ov, y1 + ov, ze))
+            if L >= W:
+                r0, r1 = QVector3D(cx - (L - W) / 2.0, cy, H + rh), QVector3D(cx + (L - W) / 2.0, cy, H + rh)
+                faces = [[b0, b1, r1, r0], [b2, b3, r0, r1], [b1, b2, r1], [b3, b0, r0]]
+            else:
+                r0, r1 = QVector3D(cx, cy - (W - L) / 2.0, H + rh), QVector3D(cx, cy + (W - L) / 2.0, H + rh)
+                faces = [[b1, b2, r1, r0], [b3, b0, r0, r1], [b0, b1, r0], [b2, b3, r1]]
+            for f in faces:
+                roof_mesh.add_face(f)
+            roof_mesh.add_face([b3, b2, b1, b0])
+        else:                                   # gable: a bent slab
+            th = 0.15
+            if ridge == "x":
+                s = rh / ((y1 - y0) / 2.0)
+                ze, yc = H - s * ov, (y0 + y1) / 2.0
+                dz = th / math.cos(math.atan(s))
+                sec = [QVector3D(x0 - ov, y0 - ov, ze), QVector3D(x0 - ov, yc, H + rh),
+                       QVector3D(x0 - ov, y1 + ov, ze), QVector3D(x0 - ov, y1 + ov, ze - dz),
+                       QVector3D(x0 - ov, yc, H + rh - dz), QVector3D(x0 - ov, y0 - ov, ze - dz)]
+                _prism_mesh(roof_mesh, sec, (x1 - x0 + 2 * ov, 0.0, 0.0))
+            else:
+                s = rh / ((x1 - x0) / 2.0)
+                ze, xc = H - s * ov, (x0 + x1) / 2.0
+                dz = th / math.cos(math.atan(s))
+                sec = [QVector3D(x0 - ov, y0 - ov, ze), QVector3D(xc, y0 - ov, H + rh),
+                       QVector3D(x1 + ov, y0 - ov, ze), QVector3D(x1 + ov, y0 - ov, ze - dz),
+                       QVector3D(xc, y0 - ov, H + rh - dz), QVector3D(x0 - ov, y0 - ov, ze - dz)]
+                _prism_mesh(roof_mesh, sec, (0.0, y1 - y0 + 2 * ov, 0.0))
+        out.append(_finish(roof_mesh, roof_color, f"{name} · Techo"))
+        return out
+
+    return {'extrude':extrude,'prism':prism,'revolve':revolve,'wall':wall,'house':house}
 "#;
 pub(super) fn prepare(scene: PyRef<Scene>, vm: &VirtualMachine) -> Result<PyDictRef, String> {
     let scope = vm.new_scope_with_builtins();

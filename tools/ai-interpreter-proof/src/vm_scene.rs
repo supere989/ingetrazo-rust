@@ -439,6 +439,7 @@ pub(super) fn members(
 /// O(group geometry), not O(changed); all candidates precede application writes.
 pub struct GroupPublication {
     pub groups: Vec<ingetrazo_core::groups::Group>,
+    pub shares: std::collections::HashMap<uuid::Uuid, ingetrazo_core::mesh::Mesh>,
     pub charge: Lease,
 }
 fn str_value(
@@ -471,6 +472,10 @@ pub(super) fn publication(
             .checked_mul(2048)
             .ok_or("Group receipt extent overflow")?,
     )?;
+    let mut shares = std::collections::HashMap::new();
+    shares
+        .try_reserve(values.len())
+        .map_err(|_| "Group shares capacity refused")?;
     let mut groups = Vec::new();
     groups
         .try_reserve_exact(values.len())
@@ -510,6 +515,7 @@ pub(super) fn publication(
             vm,
         )?;
         let (mesh_receipt, receipt_charge) = candidate.into_mesh_receipt()?;
+        let share_bytes = receipt_charge.bytes();
         charge.merge(receipt_charge)?;
         let name = str_value(
             group
@@ -549,6 +555,21 @@ pub(super) fn publication(
                 scene.get_id() as u128 ^ ((mesh.get_id() as u128) << 64),
             ))
         };
+        if let Some(token) = native.mesh_share {
+            if let Some(existing) = shares.get(&token) {
+                if existing != &native.mesh {
+                    return Err(
+                        "Shared Group mesh identity requires coherent native geometry".into(),
+                    );
+                }
+            } else {
+                // Registry owns an independent packed native mesh until the core
+                // scene gains shared immutable storage. Admit before cloning.
+                charge
+                    .merge(budget.reserve(crate::owner_budget::Kind::Preparation, share_bytes)?)?;
+                shares.insert(token, native.mesh.clone());
+            }
+        }
         native.ifc_tag = group.baseline.ifc_tag.clone();
         native.billboard = group.baseline.billboard;
         native.billboard_texture = group.baseline.billboard_texture.clone();
@@ -583,7 +604,11 @@ pub(super) fn publication(
         );
         groups.push(native);
     }
-    Ok(GroupPublication { groups, charge })
+    Ok(GroupPublication {
+        groups,
+        shares,
+        charge,
+    })
 }
 
 pub(super) fn import(

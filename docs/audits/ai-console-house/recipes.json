@@ -1,0 +1,74 @@
+[
+  {
+    "name": "gable-openings",
+    "code": "hs=house(width=6,depth=4,doors=[('S',1,0.8,2)],windows=[('N',1,1,1,1)],name='Home'); held=hs[0]; held_mesh=held.mesh; held_faces=held_mesh.faces",
+    "history": null,
+    "check": "assert len(hs)==4 and hs[0] is held and held.mesh is held_mesh and held_mesh.faces is held_faces and groups[0] is held"
+  },
+  {
+    "name": "undo-house",
+    "code": "",
+    "history": false,
+    "check": "assert not groups and hs[0] is held"
+  },
+  {
+    "name": "detached-edit",
+    "code": "held.name='Detached'; held.mesh.faces[0].attrs['vendor']={'tag':[1,2]}",
+    "history": null,
+    "check": ""
+  },
+  {
+    "name": "redo-house",
+    "code": "",
+    "history": true,
+    "check": "assert groups[0] is held and held.name=='Detached' and held.mesh.faces[0].attrs['vendor']['tag']==[1,2]"
+  },
+  {
+    "name": "hip-long",
+    "code": "hip=house(width=7,depth=3,roof='hip',origin=(10,0),name='Hip')",
+    "history": null,
+    "check": "assert len(hip)==3 and groups[-1] is hip[-1]"
+  },
+  {
+    "name": "hip-wide",
+    "code": "wide=house(width=3,depth=7,roof='hip',origin=(20,0),name='Wide')",
+    "history": null,
+    "check": ""
+  },
+  {
+    "name": "gable-y",
+    "code": "gy=house(width=4,depth=6,ridge='y',origin=(30,0),name='Y')",
+    "history": null,
+    "check": ""
+  },
+  {
+    "name": "flat",
+    "code": "flat=house(roof='flat',origin=(40,0),name='Flat')",
+    "history": null,
+    "check": ""
+  },
+  {
+    "name": "shared-mesh",
+    "code": "twin=Group(held.mesh,name='Twin'); groups.append(twin)",
+    "history": null,
+    "check": "assert twin.mesh is held_mesh and groups[-1] is twin"
+  },
+  {
+    "name": "shared-edit",
+    "code": "held.mesh.faces[0].attrs['vendor']['tag'].append(3); held.mesh.faces[0].attrs['opacity']=0.625",
+    "history": null,
+    "check": "assert twin.mesh.faces[0].attrs['vendor']['tag']==[1,2,3]"
+  },
+  {
+    "name": "undo-twin",
+    "code": "",
+    "history": false,
+    "check": "assert twin not in groups and twin.mesh is held_mesh"
+  },
+  {
+    "name": "redo-twin",
+    "code": "",
+    "history": true,
+    "check": "assert groups[-1] is twin and twin.mesh is held_mesh"
+  }
+]

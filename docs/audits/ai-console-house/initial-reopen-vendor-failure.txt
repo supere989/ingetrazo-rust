@@ -1,0 +1,1 @@
+Actual pinned Python IGZ reopen preserves shared Mesh identity but discards arbitrary vendor Face attribute: KeyError vendor. Original IGZ face codec only models supported paint fields. Runtime attribute proof remains; reopen acceptance uses supported color/opacity.

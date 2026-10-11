@@ -1,0 +1,27 @@
+{
+  "base": "f4570d4fddee7cafaa32ba64d939d16ea60546b3",
+  "original": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "source_hashes": {
+    "tools/ai-interpreter-proof/src/vm_recipes.rs": "78fbf384610794f9bda6fe8c9009e3e8d357b88bfc832fe1bf0fbffaeb2a119f",
+    "tools/ai-interpreter-proof/src/vm_scene.rs": "35a29a159da58209aadec689566c78b71f51811093a0d7cce3c114d3507c317a",
+    "tools/ai-interpreter-proof/src/vm_mesh.rs": "8baa311ecee828e290a8fa31d2dbc337817ee800129041859c9c08777d5ffbdc",
+    "tools/ai-interpreter-proof/src/vm_packed.rs": "de05df6dd3b548a72e38d59559b9209f9f1ad0f8c4143c0ea4b110ef74242d12",
+    "tools/ai-interpreter-proof/src/owner_budget.rs": "69b3ebef1841e2b0da6570af352b89e581837c3a0382ed01c3c69428829eaff4",
+    "crates/ingetrazo-gui/src/engineering_python.rs": "5c7a4b424b2ea7f77405e6c6dbf9fa0c261f63eec98eff9a45929eba46741eb9",
+    "crates/ingetrazo-gui/src/app.rs": "af091041784a4768654ee4f590f3f172a984e38b466383639af3216a8ab56674",
+    "crates/ingetrazo-formats/src/igz.rs": "66e0eb3f8ff5e18b5e7c645b94071c2704691949ef0a43599ac5063249abd811",
+    "crates/ingetrazo-gui/examples/engineering_console_house_fixture.rs": "30aff07db679185789dc191b3b7ed19459482e20e4d35d704a6b8751dd3b5946",
+    "scripts/reference-ai-console-house.py": "301474de65ce4efb2df672f97839dade96b302a34a6e862f7137c55509cd6867",
+    "scripts/check-ai-console-house.py": "773d93de7950cf40df8fb38767c1466161cc6df81ac47d87fe95362a9641bd1c",
+    "scripts/check-ai-house-shared-reopen.py": "2a36ebe7a61ad1425ca48b0223a348bcc5f9d9d6d0535dd5f680896a255c00b5"
+  },
+  "original_hashes": {
+    "core/ai.py": "6208a5c3e7773d27f028b9d7460f317693bab107705d6efdcd598ef048a82678",
+    "core/mesh.py": "5f2c1625e6dd717db029ba39a9de337e75beec06bd0df28a592a8a34875ca22c",
+    "core/orient.py": "115ab0f1aeeed51b40ef32153826c7e6e6997b4db2e612eb42c0719d056bcaa6",
+    "core/history.py": "2eb66a1d557099b51383988a7819145289fc4ce2c37fc7de3a92ed35b5830559",
+    "formats/igz.py": "f318d685830c49c2fede7fd5a238ac7a1469ee0b0226cf48cab3751e194a9576"
+  },
+  "binary_path": "/tmp/ingetrazo-ai-registry-target/debug/examples/engineering_console_house_fixture",
+  "binary_sha256": "3f29e6ea66add2602648aadeb091b58b727261c1bd520ad86356dc6774c25ecd"
+}

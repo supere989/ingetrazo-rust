@@ -87,7 +87,15 @@ impl Engine {
             budget.set_limit(Some(budget.snapshot().total()));
         }
         let groups = match controller.native_groups_publication() {
-            Ok(Some(receipt)) if receipt.groups != scene.groups => Some(receipt),
+            Ok(Some(receipt))
+                if receipt.groups != scene.groups
+                    || receipt
+                        .shares
+                        .iter()
+                        .any(|(id, mesh)| scene.mesh_shares.get(id) != Some(mesh)) =>
+            {
+                Some(receipt)
+            }
             Ok(_) => None,
             Err(error) => {
                 self.controller.take();
@@ -228,16 +236,41 @@ impl crate::IngeTrazoApp {
             self.redo_stack.try_reserve(1)
         }
         .map_err(|_| "Interpreter application history capacity refused".to_string())?;
-        match self
+        let restored = self
             .engineering_python
-            .restore_owned(marker, self.model_revision, redo)
-        {
-            Some(result) => result.map(|()| true),
+            .restore_owned(marker, self.model_revision, redo);
+        match restored {
+            Some(Ok(())) => {
+                let count = self
+                    .engineering_python
+                    .pending_groups
+                    .as_ref()
+                    .map_or(0, |g| g.shares.len());
+                // Reserve the snapshot that will actually become visible, not the
+                // current scene that app Undo/Redo is about to replace.
+                let target = if redo {
+                    self.redo_stack.last_mut()
+                } else {
+                    self.undo_stack.last_mut()
+                };
+                if target.unwrap().mesh_shares.try_reserve(count).is_err() {
+                    self.engineering_python.pending_groups.take();
+                    self.engineering_python.controller.take();
+                    self.engineering_python.revision = None;
+                    return Err(
+                        "Group share history capacity refused; interpreter scope retired".into(),
+                    );
+                }
+                Ok(true)
+            }
+            Some(Err(error)) => Err(error),
             None => Ok(false),
         }
     }
+
     pub(crate) fn apply_engineering_python_history_groups(&mut self) {
         if let Some(groups) = self.engineering_python.pending_groups.take() {
+            self.scene.mesh_shares.extend(groups.shares);
             self.scene.groups = groups.groups;
             drop(groups.charge);
         }
@@ -255,6 +288,22 @@ impl crate::IngeTrazoApp {
             Ok((changed, native, groups)) => {
                 let published = native.is_some() || groups.is_some();
                 if published {
+                    if let Some(receipt) = &groups {
+                        if self
+                            .scene
+                            .mesh_shares
+                            .try_reserve(receipt.shares.len())
+                            .is_err()
+                        {
+                            self.engineering_python.controller.take();
+                            self.engineering_python.revision = None;
+                            self.status_message =
+                                "Group shares publication refused; interpreter scope retired"
+                                    .into();
+                            self.console_logs.push(self.status_message.clone());
+                            return;
+                        }
+                    }
                     // One existing application Undo snapshot, including group membership.
                     let before = changed.then(|| self.scene.clone());
                     if let Some(probe) = self.engineering_python.before_publication_probe.take() {
@@ -284,6 +333,7 @@ impl crate::IngeTrazoApp {
                         self.engineering_python.last_publication = Some(metrics);
                     }
                     if let Some(groups) = groups {
+                        self.scene.mesh_shares.extend(groups.shares);
                         self.scene.groups = groups.groups;
                         drop(groups.charge);
                     }
@@ -346,8 +396,10 @@ mod tests {
         app.undo();
         assert!(app.scene.groups.is_empty());
         assert_eq!(app.redo_stack.len(), 1);
+        let before = app.scene.clone();
         app.engineering_python.export_pressure = true;
         app.run_script("groups.append(Group(name='Refused'))");
+        assert_eq!(app.scene, before);
         assert!(app.scene.groups.is_empty());
         assert_eq!(app.redo_stack.len(), 1);
         assert!(app.undo_stack.is_empty());

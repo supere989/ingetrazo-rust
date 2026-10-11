@@ -1,0 +1,7 @@
+cargo check engineering-python PASS
+group_publication_refusal_retains_document_redo_and_retries: 1 PASS
+12 full typed source/app states + 8 mutations rejected PASS
+Actual pinned original IGZ shared Mesh identity/current paint + 2 mutations rejected PASS
+Literal old absent-registry persisted alias failure rejected PASS
+Every collected owner budget zero after teardown; unrelated registry entry preserved.
+No broad suite.
