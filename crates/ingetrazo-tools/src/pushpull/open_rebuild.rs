@@ -373,6 +373,13 @@ pub(super) fn rebuild(
     component: &HashSet<usize>,
     removing: bool,
 ) -> Result<Mesh, String> {
+    rebuild_marked(mesh,original,component,removing,&HashSet::new())
+}
+/// Source prism translation treats existing faces touching either old or new
+/// cap positions as fresh, rather than only newly constructed face objects.
+pub(super) fn rebuild_marked(
+    mesh:&Mesh,original:&Mesh,component:&HashSet<usize>,removing:bool,marked:&HashSet<u64>,
+)->Result<Mesh,String> {
     let original_ids = original
         .faces
         .iter()
@@ -394,7 +401,7 @@ pub(super) fn rebuild(
     let mut fresh = domain
         .faces
         .iter()
-        .filter(|f| !original_ids.contains(&f.history_id))
+        .filter(|f| !original_ids.contains(&f.history_id) || marked.contains(&f.history_id))
         .map(|f| f.history_id)
         .collect::<HashSet<_>>();
     let mut rims = domain

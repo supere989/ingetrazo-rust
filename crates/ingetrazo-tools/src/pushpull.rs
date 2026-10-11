@@ -223,6 +223,27 @@ impl PushPullTool {
         Ok(out)
     }
 
+    fn weld_translated_surface(source:&ingetrazo_core::mesh::Mesh,scope:&std::collections::HashSet<usize>)->Result<ingetrazo_core::mesh::Mesh,String>{
+        use ingetrazo_core::{mesh::Mesh,math::newell_vector};
+        let mut out=Mesh::new();let mut remap=Vec::with_capacity(source.vertices.len());
+        for v in &source.vertices {let before=out.vertices.len();let id=out.add_vertex(v.position);if id==before{out.vertices[id].uid=v.uid;}remap.push(id);}
+        let mut cycles=std::collections::HashMap::new();
+        for (id,f) in source.faces.iter().enumerate() {
+            if !scope.contains(&id){continue;}
+            let mut rings=std::iter::once(&f.vertices).chain(&f.holes).map(|r|{let mut ids=r.iter().map(|&v|remap[v]).collect::<Vec<_>>();ids.dedup();if ids.len()>1&&ids.first()==ids.last(){ids.pop();}ids}).collect::<Vec<_>>();
+            if rings[0].iter().copied().collect::<std::collections::HashSet<_>>().len()<3 {continue;}
+            if rings.iter().any(|r|r.len()<3||r.iter().copied().collect::<std::collections::HashSet<_>>().len()!=r.len()){return Err("Translated endpoint leaves an invalid repeated-vertex surface; document unchanged".into());}
+            if newell_vector(&rings[0].iter().map(|&v|out.vertices[v].position).collect::<Vec<_>>()).length()<1e-9{return Err("Translated endpoint leaves a degenerate surface; document unchanged".into());}
+            let mut key=(0..rings[0].len()).map(|i|{let a=rings[0][i];let b=rings[0][(i+1)%rings[0].len()];(a.min(b),a.max(b))}).collect::<Vec<_>>();key.sort_unstable();key.dedup();
+            let mut face=f.clone();face.vertices=rings.remove(0);face.holes=rings;
+            if let Some(&old)=cycles.get(&key){let previous:&mut ingetrazo_core::mesh::MeshFace=&mut out.faces[old];if face.holes.len()>previous.holes.len(){if face.attrs.is_empty(){face.attrs=previous.attrs.clone();face.layer=previous.layer.clone();}*previous=face;}else if previous.attrs.is_empty(){previous.attrs=face.attrs;previous.layer=face.layer;}}
+            else{let id=out.add_face(face.vertices.clone(),face.holes.clone()).ok_or("Invalid translated endpoint surface")?;out.faces[id]=face;cycles.insert(key,id);}
+        }
+        // Duplicate replacement may change hole incidence; refresh without
+        // replacing surviving rows or runtime entity identities.
+        out.rebuild_incidence();Ok(out)
+    }
+
     fn relink_surface(source:&ingetrazo_core::mesh::Mesh)->Result<ingetrazo_core::mesh::Mesh,String> {
         let mut out=ingetrazo_core::mesh::Mesh::new();for vertex in &source.vertices{out.add_vertex(vertex.position);}
         for face in &source.faces{let id=out.add_face(face.vertices.clone(),face.holes.clone()).ok_or("Invalid collapsed surface")?;out.faces[id]=face.clone();}
@@ -497,31 +518,22 @@ impl PushPullTool {
             }else{
             if component_faces.iter().any(|&id|result.face_area(id)<1e-12) {
                 // Landing a raised cap flush consumes its side walls. Repair
-                // the closed boundary with the actual swept subtraction,
+                // the translated boundary with source weld and affected-plane repair,
                 // rather than rejecting a legitimate endpoint or retaining fins.
-                let mut repaired=perform_solid_op(SolidOp::Subtract,&component,&prism)?;
+                // Source prism path translates existing shared cap vertices,
+                // welds coincident endpoints/removes slivers, then classifies
+                // affected planes. A swept subtraction is wrong for an outward
+                // annulus landing on an already-raised neighbour.
+                let mut repaired=Self::weld_translated_surface(&result,&component_faces)?;
+                let seeds=face.vertices.iter().chain(face.holes.iter().flatten()).flat_map(|&v|[ingetrazo_core::math::PointKey::from_vec3(mesh.vertices[v].position),ingetrazo_core::math::PointKey::from_vec3(result.vertices[v].position)]).collect::<std::collections::HashSet<_>>();
+                let marked=repaired.faces.iter().filter(|f|f.vertices.iter().any(|&v|seeds.contains(&ingetrazo_core::math::PointKey::from_vec3(repaired.vertices[v].position)))).map(|f|f.history_id).collect();
+                repaired=open_rebuild::rebuild_marked(&repaired,mesh,&component_faces,distance<0.,&marked)?;
+                collapsed_positions=Some(moving.iter().map(|&v|(v,result.vertices[v].position)).collect());
                 if repaired.faces.is_empty(){return Err("Endpoint has no valid surface boundary".into());}
-                // Source endpoint rebuild gives the translated cap ownership
-                // of the restored coplanar surface. Fuse only that swept plane.
-                let plane_ids=(0..repaired.faces.len()).filter(|&id|repaired.face_normal(id).dot(normal)>0.999&&repaired.faces[id].vertices.iter().all(|&v|(repaired.vertices[v].position-end).dot(normal).abs()<1e-6)).collect::<Vec<_>>();
-                if plane_ids.len()>1 {
-                    let mut plane=ingetrazo_core::pieces::copy_part(&repaired,&ingetrazo_core::pieces::Piece{faces:plane_ids.clone(),edges:vec![]})?;
-                    for f in &mut plane.faces {f.attrs=face.attrs.clone();f.layer=face.layer.clone();}
-                    let mut triangles=Mesh::new();
-                    for id in 0..plane.faces.len() {
-                        for (a,b,c) in plane.triangulate_face(id) {add_polygon(&mut triangles,&[a,b,c],&[],&plane.faces[id])?;}
-                    }
-                    plane=triangles;
-                    let (plane,_)=ingetrazo_core::simplify::simplify_mesh(&plane,0.,false)?;
-                    let mut joined=Mesh::new();
-                    for (source,ids) in [(&repaired,(0..repaired.faces.len()).filter(|id|!plane_ids.contains(id)).collect::<Vec<_>>()),(&plane,(0..plane.faces.len()).collect())] {
-                        for id in ids {
-                            let f=&source.faces[id];let points=f.vertices.iter().map(|&v|source.vertices[v].position).collect::<Vec<_>>();let holes=f.holes.iter().map(|r|r.iter().map(|&v|source.vertices[v].position).collect()).collect::<Vec<Vec<_>>>();add_polygon(&mut joined,&points,&holes,f)?;
-                        }
-                    }
-                    repaired=ingetrazo_core::planar::stitch_boundaries(&joined)?;
-                    ingetrazo_core::solids::validate_solid_mesh(&repaired)?;
-                }
+                // A formerly internal retained slab can become the new outer
+                // cap after welding. Source reclassifies it on prism exit.
+                ingetrazo_core::heal::orient_boundary_candidate(&mut repaired)?;
+                ingetrazo_core::solids::validate_solid_mesh(&repaired)?;
                 for (id,other) in mesh.faces.iter().enumerate() {
                     if component_faces.contains(&id){continue;}
                     let points=other.vertices.iter().map(|&v|mesh.vertices[v].position).collect::<Vec<_>>();
