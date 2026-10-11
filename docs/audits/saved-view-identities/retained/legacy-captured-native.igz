@@ -1,0 +1,151 @@
+{
+  "igz_format": 1,
+  "app_version": "0.3.15",
+  "scene": {
+    "edges": [],
+    "faces": [],
+    "protos": [
+      {
+        "edges": [],
+        "faces": []
+      }
+    ],
+    "groups": [
+      {
+        "name": "placement",
+        "component": false,
+        "proto": 0,
+        "xform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1
+        ],
+        "hidden": true,
+        "vendor_group": {
+          "keep": 7
+        },
+        "children": [
+          {
+            "name": "placement",
+            "component": false,
+            "proto": 0,
+            "xform": [
+              1,
+              0,
+              0,
+              0,
+              0,
+              1,
+              0,
+              0,
+              0,
+              0,
+              1,
+              0,
+              0,
+              0,
+              0,
+              1
+            ],
+            "hidden": false,
+            "vendor_group": {
+              "keep": 7
+            },
+            "uid": "9bf54769312b464b84f0f8e1e90ebc7f"
+          }
+        ],
+        "uid": "7ca48152e01f40a7aef6b9d25dd0c8e4"
+      }
+    ],
+    "saved_views": [
+      {
+        "name": "capture",
+        "target": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "distance": 20.0,
+        "yaw": -0.7853981633974483,
+        "pitch": 0.5235987755982988,
+        "fov": 45.0,
+        "parallel": false,
+        "hidden_layers": [],
+        "two_point": false,
+        "hidden_objects": [
+          "7ca48152e01f40a7aef6b9d25dd0c8e4"
+        ],
+        "style": {
+          "name": "Default",
+          "face_mode": "textures",
+          "edges": true,
+          "profiles": true,
+          "back_edges": false,
+          "edge_color": [
+            0.13,
+            0.17,
+            0.23
+          ],
+          "front_color": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "back_color": null,
+          "background": [
+            0.9,
+            0.91,
+            0.92
+          ],
+          "sky": true,
+          "sky_color": [
+            0.925,
+            0.935,
+            0.945
+          ],
+          "ground_color": [
+            0.815,
+            0.82,
+            0.815
+          ],
+          "section_fill": true,
+          "section_fill_color": [
+            0.35,
+            0.37,
+            0.41
+          ]
+        },
+        "section": {
+          "active": null,
+          "planes_shown": true,
+          "cuts_shown": true
+        },
+        "georef": {
+          "terrain": false
+        },
+        "shadows": {
+          "enabled": false,
+          "month": 3,
+          "day": 21,
+          "hour": 12,
+          "minute": 0,
+          "darkness": 0.55
+        },
+        "hidden_shown": null
+      }
+    ]
+  }
+}

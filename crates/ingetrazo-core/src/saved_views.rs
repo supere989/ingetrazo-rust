@@ -95,8 +95,8 @@ impl SavedView {
     /// Preserve raw identity/extension metadata when refreshing a view.
     pub fn capture_scene(name:impl Into<String>,scene:&crate::scene::Scene,camera:&OrbitCamera)->Self {
         let mut view=Self::capture(name,camera,&scene.layers);view.two_point=camera.two_point;view.style=Some(serde_json::to_value(&scene.display_style).unwrap());view.shadows=Some(serde_json::to_value(&scene.shadows).unwrap());
-        fn hidden(groups:&[crate::groups::Group],ids:&mut Vec<String>){for group in groups{if group.hidden{ids.push(group.native_uid());}hidden(&group.children,ids);}}
-        let mut ids=vec![];hidden(&scene.groups,&mut ids);view.hidden_objects=Some(ids);
+        let identities = group_identities(&scene.groups);
+        view.hidden_objects = Some(identities.into_iter().filter_map(|(id, _, hidden)| hidden.then_some(id)).collect());
         let active=scene.section_planes.iter().find(|s|s.active).map(|s|s.native_uid());
         view.section=Some(serde_json::json!({"active":active,"planes_shown":scene.show_section_planes,"cuts_shown":scene.show_section_cuts}));
         view.georef=Some(serde_json::json!({"terrain":scene.terrain.as_ref().map(|t|t.visible).unwrap_or(false)}));view
@@ -106,8 +106,16 @@ impl SavedView {
         if let Some(style)=&self.style{scene.display_style=crate::presentation::DocumentStyle::from_json(style);scene.show_section_fill=scene.display_style.section_fill;}
         if let Some(shadows)=&self.shadows{scene.shadows=crate::presentation::ShadowSettings::from_json(shadows);}
         if let Some(ids)=&self.hidden_objects {
-            fn apply(groups:&mut [crate::groups::Group],ids:&[String]){for group in groups{let id=group.native_uid();group.hidden=ids.contains(&id);apply(&mut group.children,ids);}}
-            apply(&mut scene.groups,ids);
+            let winners = group_identities(&scene.groups).into_iter().map(|(_, ordinal, _)| ordinal).collect::<std::collections::HashSet<_>>();
+            let hidden = ids.iter().map(String::as_str).collect::<std::collections::HashSet<_>>();
+            fn apply(groups: &mut [crate::groups::Group], winners: &std::collections::HashSet<usize>, hidden: &std::collections::HashSet<&str>, next: &mut usize) {
+                for group in groups {
+                    let ordinal = *next; *next += 1;
+                    if winners.contains(&ordinal) { group.hidden = hidden.contains(group.native_uid().as_str()); }
+                    apply(&mut group.children, winners, hidden, next);
+                }
+            }
+            apply(&mut scene.groups, &winners, &hidden, &mut 0);
         }
         if let Some(section)=&self.section {
             let active=section.get("active");
@@ -151,3 +159,19 @@ impl ViewMembershipDelta {
 #[derive(Debug,Clone,Default)]
 pub struct ViewHistory(pub Option<ViewMembershipDelta>);
 impl PartialEq for ViewHistory {fn eq(&self,other:&Self)->bool{match(&self.0,&other.0){(None,Some(d))|(Some(d),None)=>d.added.is_empty()&&d.removed.is_empty(),(a,b)=>a==b}}}
+
+/// Python dictionary order and last-placement resolution, using literal disk IDs.
+fn group_identities(groups: &[crate::groups::Group]) -> Vec<(String, usize, bool)> {
+    fn visit(groups: &[crate::groups::Group], next: &mut usize, slots: &mut std::collections::HashMap<String, usize>, result: &mut Vec<(String, usize, bool)>) {
+        for g in groups {
+            let ordinal = *next; *next += 1;
+            let id = g.native_uid();
+            if let Some(&slot) = slots.get(&id) { result[slot].1 = ordinal; result[slot].2 = g.hidden; }
+            else { slots.insert(id.clone(), result.len()); result.push((id, ordinal, g.hidden)); }
+            visit(&g.children, next, slots, result);
+        }
+    }
+    let mut result = Vec::new();
+    visit(groups, &mut 0, &mut std::collections::HashMap::new(), &mut result);
+    result
+}

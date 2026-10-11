@@ -695,7 +695,12 @@ pub fn scene_to_igz_document(scene: &Scene) -> serde_json::Value {
     let current = scene_model(scene);
     let mut doc = overlay(&scene.native_document, &scene.native_baseline, current.clone());
     if scene.native_baseline.get("image_planes")!=current.get("image_planes"){doc["image_planes"]=current["image_planes"].clone();}
-    if scene.native_baseline.get("groups") != current.get("groups") {
+    // Capturing a view can publish a generated ID without changing geometry.
+    fn missing_uid(groups: &[Group]) -> bool {
+        groups.iter().any(|g| g.native_document.get("uid").and_then(serde_json::Value::as_str).map_or(true, str::is_empty) || missing_uid(&g.children))
+    }
+    if scene.native_baseline.get("groups") != current.get("groups")
+        || (!scene.saved_views.is_empty() && missing_uid(&scene.groups)) {
         let mut protos = doc.get("protos").and_then(|v| v.as_array()).cloned().unwrap_or_default();
         let mut shared=std::collections::HashMap::new();
         doc["groups"] = serde_json::json!(scene.groups.iter().map(|g| group_to_json(g, &mut protos, &mut shared, &scene.mesh_shares)).collect::<Vec<_>>());
@@ -905,7 +910,7 @@ pub fn load_igz(path: &Path) -> Result<Scene, IgzError> {
         if let Some(id)=v.get("uid").and_then(|v|v.as_str()).filter(|s|!s.is_empty()) {
             // Original UIDs are commonly 16 hex characters, not UUID32. Keep
             // their preserved on-disk string and a deterministic runtime key.
-            g.id=uuid::Uuid::parse_str(id).unwrap_or_else(|_|uuid::Uuid::new_v5(&uuid::Uuid::NAMESPACE_URL,id.as_bytes()));
+            g.id=ingetrazo_core::groups::source_uid_key(id);
         }
         if v.get("component").and_then(|v|v.as_bool())==Some(true) {
             if let Some(idx)=v.get("proto").and_then(|v|v.as_u64()) {

@@ -9,6 +9,14 @@ use uuid::Uuid;
 
 use crate::mesh::Mesh;
 
+/// Keep source spellings distinct; only canonical native UUID32 is its own key.
+pub fn source_uid_key(id: &str) -> Uuid {
+    match Uuid::parse_str(id) {
+        Ok(key) if key.simple().to_string() == id => key,
+        _ => Uuid::new_v5(&Uuid::NAMESPACE_URL, id.as_bytes()),
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Group {
     /// Mesh prototype identity, independent of component flags and child placement lists.
