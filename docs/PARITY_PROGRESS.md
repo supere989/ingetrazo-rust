@@ -18,7 +18,9 @@ P12 now satisfies its unchanged criterion after an independently reviewed Save r
 
 ## Current workstreams
 
-Native Mac dimensions and clipping are integrated for actual SDK/MSL/GPU acceptance, including direct World-depth queries and immutable annotation cache reuse. Depth is stored only for frames with active annotation queries. Rubber-band selection and transactional named-material edit/restamp remain isolated implementation lanes. Frozen Python inputs are authenticated and reused, owner targets persist, and external dependencies survive semantic failures. Focused checks cover edits; application consumers build together once. Full integration and PR platform checks remain intact. [Mac candidate](audits/metal-pergola-stages/README.md).
+The latest reviewed batch passes one **10.34-second** cached CLI/seven-consumer build, with all seven actual application workflows and zero fresh source acquisitions. The full native platform matrix is the next acceptance boundary. [Combined proof](audits/platform-selection-integration/README.md).
+
+Native Mac dimensions and clipping are integrated for actual SDK/MSL/GPU acceptance, including direct World-depth queries and immutable annotation cache reuse. Depth is stored only for frames with active annotation queries. Rubber-band selection and original Guide record preservation are integrated. Transactional named-material editing, cursor-pinned camera navigation and annotation deletion continue in isolated lanes for the next batch. Frozen Python inputs are authenticated and reused, owner targets persist, and external dependencies survive semantic failures. Focused checks cover edits; application consumers build together once. Full integration and PR platform checks remain intact. [Mac candidate](audits/metal-pergola-stages/README.md).
 
 
 ## Status and priorities

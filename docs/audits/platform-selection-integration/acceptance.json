@@ -1,0 +1,218 @@
+{
+  "revision": "f64c832c3fe17557c2fe4f2f4f607675b2617276",
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "binary_sha256": {
+    "change_axes_fixture": "f1ca1a2d3b32e02a5cc3f793869a382941fbee28df30a7ff010af34159e6ec4e",
+    "document_preservation_workflow": "89943e941f83e04b3d1669a04450bbc3b3f62eae44935398e9dd18a4f576031c",
+    "pushpull_solid_workflows": "34e8260588a3455aa8e109deffdc5465746f4b8c82181862b5d73a823f334234",
+    "fillet_scoped": "f7c1684e86b3377509da7c4693e85451c864d80198d345ce474f51a449635039",
+    "pushpull_finite_workflows": "72f0a95b2dbe39d0158f8430b0429c20498ef08acf081c8cf2712025405bf1a6",
+    "paste_save_workflow": "a4191a9522ab56c043c65be93f1c8daeb3b75c80c0f48d9290cbf670b7e13ad0",
+    "box_selection_fixture": "9c1edbd55b20d9794e677d9848c71f1c7f65baf6715ff3b844a2c052a4aabefd"
+  },
+  "source_archives": {
+    "axes": "2a8653e4589f38ad6355c15f280451990643d5188852e28b56111e5a1d909c1f",
+    "documents": "f381a13f523ff6b3a0d7e237309b8276d633fa1cfeced420c88b856ece786926",
+    "fillet": "c7aa6d9ec54ec63ef30233df30750ac13abde941edf7d9e917deae81a72dcff8",
+    "pushpull_finite": "df498d377eab877dee2c1031181dcf95d1514fbecbc4d087fc4d7756c633991c",
+    "paste_save": "796bc67d4ee7b1f69fa1e72b205037074d7244d91f568b078fe8cb3805ea6b79",
+    "box_selection": "6ccc86c7dabe3b2a672906e795de61e6db171d6394447fd7ca988f833b2c16c7"
+  },
+  "axes": {
+    "retained_failures_rejected": 3,
+    "states": 33,
+    "actual_python_reopens": 5,
+    "rejecting_controls": 8,
+    "literal_uid_cases": 5,
+    "exact": true
+  },
+  "documents": {
+    "actual_app_saves": 6,
+    "exact_original_reopens": 6,
+    "leaf_record_types": 15,
+    "negative_controls": 5
+  },
+  "fillet": {
+    "exact_app_states": 28,
+    "old_candidate_rejected": true,
+    "negative_controls": 4
+  },
+  "fillet_volume": {
+    "passed": true,
+    "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+    "method": "Exact rational oriented polygon boundary determinant; Qt binary32 rounding-cell interval propagation, no fitted volume percentage. Analytic discrete quarter-circle corner checked against binary64 rounding-cell interval.",
+    "cases": [
+      {
+        "name": "endpoint-free-wire",
+        "source_volume": 1.9824289020188646,
+        "native_volume": 1.982428903045161,
+        "source_exact_fraction": "2232016516105165/1125899906842624",
+        "native_exact_fraction": "643334960346877129393548614170775/324518553658426726783156020576256",
+        "source_qt_rounding_interval": [
+          1.9824284895829667,
+          1.982429481986966
+        ],
+        "open_faces_excluded": 0
+      },
+      {
+        "name": "open-neighbor",
+        "source_volume": 1.9824289020188646,
+        "native_volume": 1.982428903045161,
+        "source_exact_fraction": "2232016516105165/1125899906842624",
+        "native_exact_fraction": "643334960346877129393548614170775/324518553658426726783156020576256",
+        "source_qt_rounding_interval": [
+          1.9824284895829667,
+          1.982429481986966
+        ],
+        "open_faces_excluded": 1
+      },
+      {
+        "name": "paint-first-rim",
+        "source_volume": 1.9504719673263495,
+        "native_volume": 1.9504719630236553,
+        "source_exact_fraction": "589493980433841302932757/302231454903657293676544",
+        "native_exact_fraction": "547318649765201808156845906878844705232701581025561/280608314367533360295107487881526339773939048251392",
+        "source_qt_rounding_interval": [
+          1.9504694886718017,
+          1.950474574898503
+        ],
+        "open_faces_excluded": 0
+      },
+      {
+        "name": "oblique-cap",
+        "source_volume": 2.2282352206538545,
+        "native_volume": 2.228235207174462,
+        "source_exact_fraction": "21045086643930819538789/9444732965739290427392",
+        "native_exact_fraction": "4884854105465759968317938086223753471291120092457/2192252455996354377305527249074424529483898814464",
+        "source_qt_rounding_interval": [
+          2.2282347214570857,
+          2.2282358680759393
+        ],
+        "open_faces_excluded": 0
+      },
+      {
+        "name": "concave",
+        "source_volume": 3.008785543111216,
+        "native_volume": 3.0087855484774195,
+        "source_exact_fraction": "211724460168647/70368744177664",
+        "native_exact_fraction": "61025420903766771092587589660455/20282409603651670423947251286016",
+        "source_qt_rounding_interval": [
+          3.0087834616213835,
+          3.0087878823258287
+        ],
+        "open_faces_excluded": 0
+      },
+      {
+        "name": "turned-squashed",
+        "source_volume": 5.931071730952756,
+        "native_volume": 5.931071572075336,
+        "source_exact_fraction": "109408962303699014573/18446744073709551616",
+        "native_exact_fraction": "67720865732147464285651225361277085913365235141/11417981541647679048466287755595961091061972992",
+        "source_qt_rounding_interval": [
+          5.93098975289979,
+          5.931153631649375
+        ],
+        "open_faces_excluded": 0
+      }
+    ],
+    "analytic": {
+      "case": "endpoint-free-wire",
+      "radius": 0.2,
+      "segments": 8,
+      "edge_length": 2.0,
+      "box_dimensions": [
+        2.0,
+        1.0,
+        1.0
+      ],
+      "formula": "abc-L*r^2*(1-N*sin(pi/(2*N))/2)",
+      "expected_volume": 1.982428903045161,
+      "native_binary64_volume_interval": [
+        1.9824289030451603,
+        1.982428903045162
+      ]
+    },
+    "negative_controls": [
+      "topology_preserving_scale",
+      "topology_preserving_vertex_displacement",
+      "reversed_boundary",
+      "removed_face",
+      "invalid_old_oblique"
+    ],
+    "scope": "Six retained closed fillet bodies, two corrected oblique/turned production models. Open neighbor faces excluded explicitly; no new geometry, app run or full P09 claim.",
+    "fresh_native_sha256": "2686523fd556a97a833b305ae8ab7cc5bbb53ec53aff8488eed3c5fd02205f11"
+  },
+  "pushpull": {
+    "passed": true,
+    "scope": "Eight exact pinned private regression operations; six exact actual App consumers including nested shared history. Direct helper holed-winding discrepancy retained; no full P03 promotion.",
+    "exact_model_cases": 8,
+    "actual_app_cases": 6,
+    "source_private_helper_discrepancy": "test_repush_top_extends_holed_wall_keeping_opening-2",
+    "negative_controls": [
+      "empty",
+      "missing_case",
+      "duplicate_case",
+      "removed_face",
+      "reversed_boundary",
+      "wrong_interior",
+      "wrong_paint",
+      "lost_hole",
+      "coordinate_drift",
+      "wrong_undo",
+      "lost_cancel",
+      "missing_history",
+      "lost_linked_finish"
+    ],
+    "retained_invalid_original_atomic_refusals": [
+      "ctrl-roof-0.2",
+      "ctrl-step-0.5"
+    ],
+    "retained_wedge_policy": "Unchanged zero-limit no-op; literal invalid-source result not copied"
+  },
+  "pushpull_finite": {
+    "passed": true,
+    "workflows": 26,
+    "exact_primitive_operations": 65,
+    "exact_persistent_app_operations": 65,
+    "negative_controls": [
+      "empty",
+      "truncated",
+      "duplicate",
+      "removed_face",
+      "reversed_face",
+      "wrong_paint",
+      "wrong_interior",
+      "coordinate_2^-22",
+      "wrong_undo",
+      "lost_cancel",
+      "collapsed_history",
+      "wrong_workflow"
+    ],
+    "scope": "Finite valid slanted roof, all wedge permutations, side-wall permutations and repeated pushes; exact source geometry/metadata and actual App VCB/Cancel/Undo/Redo. Not full P03 or renderer acceptance."
+  },
+  "paste_save": {
+    "passed": true,
+    "workflows": 8,
+    "source_states": 24,
+    "original_reopens": 4,
+    "invalid_finish_preserves_pending_owner": true,
+    "immutable_preview_owner": true,
+    "negative_controls": [
+      "lost_preview",
+      "moved_preview",
+      "extra_history",
+      "fragment_save",
+      "missing_workflow"
+    ]
+  },
+  "box_selection": {
+    "states": 41,
+    "negative_controls": 41,
+    "exact": true,
+    "guide_reopens": 2,
+    "guide_negative_controls": 3,
+    "retained_failed_candidates_rejected": 2
+  },
+  "fresh_source_acquisitions": 0,
+  "result": "pass"
+}
