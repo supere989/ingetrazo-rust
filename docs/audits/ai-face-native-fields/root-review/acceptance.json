@@ -1,0 +1,19 @@
+{
+  "frozen_source": "9598fa8b",
+  "source_files_verified": 5,
+  "binary_sha256": "730947e89d036310720656ea461e576c97b01e65ef48407779d5a631ccb9e020",
+  "fresh_original_and_native": true,
+  "checker": {
+    "states": 9,
+    "rejected": [
+      "color",
+      "layer",
+      "nested",
+      "history",
+      "missing",
+      "production"
+    ],
+    "scope": "typed Face attrs/layer projection, production disabled"
+  },
+  "scope": "Frozen standalone interpreter prerequisite; not full Scene/console production acceptance."
+}

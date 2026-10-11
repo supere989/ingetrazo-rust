@@ -1,0 +1,42 @@
+{
+  "source": "2382fe33976bb1b022a521a168bd39202579dc38",
+  "artifacts": {
+    "macos-15": {
+      "archive_sha256": "6e967b65096f8f4df1a094072c354df14a419c2e48bd01e8e99fa25791920d53",
+      "frozen_source_hashes_verified": 29
+    },
+    "macos-15-intel": {
+      "archive_sha256": "13f1eb81351669941d77758d558988162a1c6d45706e92baa666719fb6fe3cdc",
+      "frozen_source_hashes_verified": 29
+    }
+  },
+  "root_positive": {
+    "passed": true,
+    "native_cases": 8,
+    "source_cases": 7,
+    "pixels": 225,
+    "scope": "Actual shared native app consumer; exact Qt framebuffer interior samples and cache invalidation, not whole-image/OS gesture/presentation parity"
+  },
+  "negative_controls": [
+    {
+      "changed": "loose-initial",
+      "rejected": true
+    },
+    {
+      "changed": "loose-geometry",
+      "rejected": true
+    },
+    {
+      "changed": "loose-paint",
+      "rejected": true
+    },
+    {
+      "changed": "loose-layer-hidden",
+      "rejected": true
+    },
+    {
+      "changed": "loose-topology-removed",
+      "rejected": true
+    }
+  ]
+}

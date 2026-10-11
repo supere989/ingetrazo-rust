@@ -1,0 +1,18 @@
+{
+  "frozen_source": "4eebe15a",
+  "source_files_verified": 4,
+  "binary_sha256": "5bd603d1e033ffd861e19fe918e794057ba3223dcd95d0d6c075655f2e93bf25",
+  "fresh_original_and_native": true,
+  "checker": {
+    "states": 4,
+    "rejected": [
+      "attrs",
+      "undo",
+      "id",
+      "missing",
+      "charge"
+    ],
+    "production_enabled": false
+  },
+  "scope": "Frozen standalone interpreter prerequisite; not full Scene/console production acceptance."
+}

@@ -1,0 +1,26 @@
+{
+  "runtime_source": "f8cf94b912498e6afdf543ac632e72725cdfe060",
+  "arm": {
+    "sdk_build": "PASS",
+    "eleven_state_app_protocol": "PASS",
+    "source_files_verified": 28,
+    "literal_interior_pixels": 175,
+    "camera_matrix_upload_bytes": 0,
+    "one_moved_frame_matrix_upload_bytes": 64,
+    "cold_seed_ring_total_bytes": 384,
+    "later_ring_catchup_total_bytes": 512,
+    "ledger_final": [
+      0,
+      0
+    ]
+  },
+  "checker_source": "0cfdcd6b8de7d8d1b7f7160734226a31ff82881c",
+  "independent_negatives_rejected": [
+    "blank",
+    "stale_model",
+    "clearpress_native",
+    "warm_matrix"
+  ],
+  "arm_zip_sha256": "0c8f4034204558471527fc282227af723fb2f7f3bc36e937e7c0225da292dfae",
+  "scope": "Actual update_ui/viewport/native-texture ingress and Metal readback; synthetic pointer events,175 literal interior pixels and stale-position patch; not complete original renderer/window/physical-Mac acceptance."
+}
