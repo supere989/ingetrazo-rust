@@ -1,0 +1,103 @@
+{
+  "passed": true,
+  "cases": [
+    {
+      "name": "zero",
+      "exact_fields": true,
+      "faces": 6,
+      "difference": 0.0
+    },
+    {
+      "name": "subminimum",
+      "exact_fields": true,
+      "faces": 6,
+      "difference": 0.0
+    },
+    {
+      "name": "exact-minimum",
+      "exact_fields": true,
+      "faces": 6,
+      "difference": 0.0
+    },
+    {
+      "name": "collapse",
+      "exact_fields": true,
+      "faces": 1,
+      "difference": null
+    },
+    {
+      "name": "past-collapse",
+      "exact_fields": true,
+      "faces": 1,
+      "difference": null
+    },
+    {
+      "name": "painted-collapse",
+      "exact_fields": true,
+      "faces": 1,
+      "difference": null
+    },
+    {
+      "name": "holed-collapse",
+      "exact_fields": true,
+      "faces": 1,
+      "difference": null
+    },
+    {
+      "name": "holed-near-endpoint",
+      "exact_fields": true,
+      "faces": 10,
+      "difference": 0.0
+    },
+    {
+      "name": "bump-flush",
+      "exact_fields": true,
+      "faces": 6,
+      "difference": 0.0
+    },
+    {
+      "name": "corner-through",
+      "exact_fields": true,
+      "faces": 8,
+      "difference": 0.0
+    },
+    {
+      "name": "mouth-through",
+      "exact_fields": true,
+      "faces": 10,
+      "difference": 0.0
+    },
+    {
+      "name": "repeat-after-collapse",
+      "exact_fields": true,
+      "faces": 6,
+      "difference": 0.0
+    }
+  ],
+  "negative_controls": [
+    "empty_collapse",
+    "duplicate_flat_cap",
+    "lost_hole",
+    "lost_paint",
+    "unclamped_endpoint",
+    "orientation"
+  ],
+  "app_cases": [
+    "zero",
+    "subminimum",
+    "exact-minimum",
+    "collapse",
+    "past-collapse",
+    "painted-collapse",
+    "holed-collapse",
+    "holed-near-endpoint",
+    "bump-flush",
+    "corner-through",
+    "mouth-through",
+    "repeat-after-collapse",
+    "nested-clamped-collapse-repeat",
+    "wider-punchable-sheet",
+    "annular-support"
+  ],
+  "scope": "12 exact source geometric/attribute inventories; closed shape oracle tolerance unchanged1e-6"
+}

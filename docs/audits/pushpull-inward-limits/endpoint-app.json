@@ -1,0 +1,105 @@
+{
+  "passed": true,
+  "cases": [
+    {
+      "case": "zero",
+      "no_op_exact": true,
+      "no_undo_before_real_commit": true,
+      "acquisition_retained": true
+    },
+    {
+      "case": "subminimum",
+      "no_op_exact": true,
+      "no_undo_before_real_commit": true,
+      "acquisition_retained": true
+    },
+    {
+      "case": "exact-minimum",
+      "preview_cancel_exact": true,
+      "commit_undo_redo_exact": true,
+      "untouched_f64_exact": true
+    },
+    {
+      "case": "collapse",
+      "preview_cancel_exact": true,
+      "commit_undo_redo_exact": true,
+      "untouched_f64_exact": true
+    },
+    {
+      "case": "past-collapse",
+      "preview_cancel_exact": true,
+      "commit_undo_redo_exact": true,
+      "untouched_f64_exact": true
+    },
+    {
+      "case": "painted-collapse",
+      "preview_cancel_exact": true,
+      "commit_undo_redo_exact": true,
+      "untouched_f64_exact": true
+    },
+    {
+      "case": "holed-collapse",
+      "preview_cancel_exact": true,
+      "commit_undo_redo_exact": true,
+      "untouched_f64_exact": true
+    },
+    {
+      "case": "holed-near-endpoint",
+      "preview_cancel_exact": true,
+      "commit_undo_redo_exact": true,
+      "untouched_f64_exact": true
+    },
+    {
+      "case": "bump-flush",
+      "preview_cancel_exact": true,
+      "commit_undo_redo_exact": true,
+      "untouched_f64_exact": true
+    },
+    {
+      "case": "corner-through",
+      "preview_cancel_exact": true,
+      "commit_undo_redo_exact": true,
+      "untouched_f64_exact": true
+    },
+    {
+      "case": "mouth-through",
+      "preview_cancel_exact": true,
+      "commit_undo_redo_exact": true,
+      "untouched_f64_exact": true
+    },
+    {
+      "case": "repeat-after-collapse",
+      "preview_cancel_exact": true,
+      "commit_undo_redo_exact": true,
+      "untouched_f64_exact": true
+    },
+    {
+      "case": "nested-clamped-collapse-repeat",
+      "depth": 2,
+      "integer_affine": true,
+      "flat_counts": [
+        1,
+        4,
+        4
+      ],
+      "repeat_uses_clamped_distance": true,
+      "local_undo_steps": 2,
+      "folded_document_undo_steps": 1,
+      "shared_publication_exact": true,
+      "invalid_vcb_atomic": true
+    },
+    {
+      "case": "wider-punchable-sheet",
+      "clamped_distance": -3.0,
+      "source_limit_exact": true,
+      "preview_model_exact": true
+    },
+    {
+      "case": "annular-support",
+      "clamped_distance": -1.0,
+      "source_limit_exact": true,
+      "preview_model_exact": true
+    }
+  ],
+  "scope": "Actual app pointer handlers/VCB/Undo/cancel/Finish; no OS-rendered gesture claim"
+}

@@ -1,0 +1,2451 @@
+{
+  "cases": [
+    {
+      "name": "cube-cap",
+      "limit": 3.0,
+      "distance": -3.0,
+      "error": null,
+      "result": [
+        {
+          "vertices": [
+            [
+              0.0,
+              4.0,
+              0.0
+            ],
+            [
+              4.0,
+              4.0,
+              0.0
+            ],
+            [
+              4.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              0.0
+            ]
+          ],
+          "holes": [],
+          "attrs": {},
+          "interior": false
+        }
+      ],
+      "changed": true,
+      "status": "Push limited to 3.00 m — deeper would leave the solid",
+      "preview_status": "Push limited to 3.00 m — deeper would leave the solid",
+      "preview_cancel_exact": true,
+      "app_history_exact": true,
+      "primitive_error": null,
+      "primitive_atomic_on_error": null
+    },
+    {
+      "name": "triangle-long-wall",
+      "limit": 0.0,
+      "distance": -0.0,
+      "error": null,
+      "result": [
+        {
+          "vertices": [
+            [
+              0.0,
+              4.0,
+              0.0
+            ],
+            [
+              4.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              0.0
+            ]
+          ],
+          "holes": [],
+          "attrs": {},
+          "interior": false
+        },
+        {
+          "vertices": [
+            [
+              0.0,
+              0.0,
+              3.0
+            ],
+            [
+              4.0,
+              0.0,
+              3.0
+            ],
+            [
+              0.0,
+              4.0,
+              3.0
+            ]
+          ],
+          "holes": [],
+          "attrs": {},
+          "interior": false
+        },
+        {
+          "vertices": [
+            [
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              4.0,
+              0.0,
+              0.0
+            ],
+            [
+              4.0,
+              0.0,
+              3.0
+            ],
+            [
+              0.0,
+              0.0,
+              3.0
+            ]
+          ],
+          "holes": [],
+          "attrs": {},
+          "interior": false
+        },
+        {
+          "vertices": [
+            [
+              4.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              4.0,
+              0.0
+            ],
+            [
+              0.0,
+              4.0,
+              3.0
+            ],
+            [
+              4.0,
+              0.0,
+              3.0
+            ]
+          ],
+          "holes": [],
+          "attrs": {},
+          "interior": false
+        },
+        {
+          "vertices": [
+            [
+              0.0,
+              4.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              3.0
+            ],
+            [
+              0.0,
+              4.0,
+              3.0
+            ]
+          ],
+          "holes": [],
+          "attrs": {},
+          "interior": false
+        }
+      ],
+      "changed": false,
+      "status": "Push limited to 0.00 m — deeper would leave the solid",
+      "preview_status": "Push limited to 0.00 m — deeper would leave the solid",
+      "preview_cancel_exact": true,
+      "app_history_exact": true,
+      "primitive_error": null,
+      "primitive_atomic_on_error": null
+    },
+    {
+      "name": "triangle-axis-wall",
+      "limit": 0.0,
+      "distance": -0.0,
+      "error": null,
+      "result": [
+        {
+          "vertices": [
+            [
+              0.0,
+              4.0,
+              0.0
+            ],
+            [
+              4.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              0.0
+            ]
+          ],
+          "holes": [],
+          "attrs": {},
+          "interior": false
+        },
+        {
+          "vertices": [
+            [
+              0.0,
+              0.0,
+              3.0
+            ],
+            [
+              4.0,
+              0.0,
+              3.0
+            ],
+            [
+              0.0,
+              4.0,
+              3.0
+            ]
+          ],
+          "holes": [],
+          "attrs": {},
+          "interior": false
+        },
+        {
+          "vertices": [
+            [
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              4.0,
+              0.0,
+              0.0
+            ],
+            [
+              4.0,
+              0.0,
+              3.0
+            ],
+            [
+              0.0,
+              0.0,
+              3.0
+            ]
+          ],
+          "holes": [],
+          "attrs": {},
+          "interior": false
+        },
+        {
+          "vertices": [
+            [
+              4.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              4.0,
+              0.0
+            ],
+            [
+              0.0,
+              4.0,
+              3.0
+            ],
+            [
+              4.0,
+              0.0,
+              3.0
+            ]
+          ],
+          "holes": [],
+          "attrs": {},
+          "interior": false
+        },
+        {
+          "vertices": [
+            [
+              0.0,
+              4.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              3.0
+            ],
+            [
+              0.0,
+              4.0,
+              3.0
+            ]
+          ],
+          "holes": [],
+          "attrs": {},
+          "interior": false
+        }
+      ],
+      "changed": false,
+      "status": "Push limited to 0.00 m — deeper would leave the solid",
+      "preview_status": "Push limited to 0.00 m — deeper would leave the solid",
+      "preview_cancel_exact": true,
+      "app_history_exact": true,
+      "primitive_error": null,
+      "primitive_atomic_on_error": null
+    },
+    {
+      "name": "triangle-end",
+      "limit": 3.0,
+      "distance": -3.0,
+      "error": null,
+      "result": [
+        {
+          "vertices": [
+            [
+              0.0,
+              4.0,
+              0.0
+            ],
+            [
+              4.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              0.0
+            ]
+          ],
+          "holes": [],
+          "attrs": {},
+          "interior": false
+        }
+      ],
+      "changed": true,
+      "status": "Push limited to 3.00 m — deeper would leave the solid",
+      "preview_status": "Push limited to 3.00 m — deeper would leave the solid",
+      "preview_cancel_exact": true,
+      "app_history_exact": true,
+      "primitive_error": null,
+      "primitive_atomic_on_error": null
+    },
+    {
+      "name": "wedge-roof",
+      "limit": 0.0,
+      "distance": -0.0,
+      "error": null,
+      "result": [
+        {
+          "vertices": [
+            [
+              0.0,
+              4.0,
+              0.0
+            ],
+            [
+              4.0,
+              4.0,
+              0.0
+            ],
+            [
+              4.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              0.0
+            ]
+          ],
+          "holes": [],
+          "attrs": {},
+          "interior": false
+        },
+        {
+          "vertices": [
+            [
+              0.0,
+              0.0,
+              1.0
+            ],
+            [
+              4.0,
+              0.0,
+              3.0
+            ],
+            [
+              4.0,
+              4.0,
+              3.0
+            ],
+            [
+              0.0,
+              4.0,
+              1.0
+            ]
+          ],
+          "holes": [],
+          "attrs": {},
+          "interior": false
+        },
+        {
+          "vertices": [
+            [
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              4.0,
+              0.0,
+              0.0
+            ],
+            [
+              4.0,
+              0.0,
+              3.0
+            ],
+            [
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "holes": [],
+          "attrs": {},
+          "interior": false
+        },
+        {
+          "vertices": [
+            [
+              4.0,
+              0.0,
+              0.0
+            ],
+            [
+              4.0,
+              4.0,
+              0.0
+            ],
+            [
+              4.0,
+              4.0,
+              3.0
+            ],
+            [
+              4.0,
+              0.0,
+              3.0
+            ]
+          ],
+          "holes": [],
+          "attrs": {},
+          "interior": false
+        },
+        {
+          "vertices": [
+            [
+              4.0,
+              4.0,
+              0.0
+            ],
+            [
+              0.0,
+              4.0,
+              0.0
+            ],
+            [
+              0.0,
+              4.0,
+              1.0
+            ],
+            [
+              4.0,
+              4.0,
+              3.0
+            ]
+          ],
+          "holes": [],
+          "attrs": {},
+          "interior": false
+        },
+        {
+          "vertices": [
+            [
+              0.0,
+              4.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              1.0
+            ],
+            [
+              0.0,
+              4.0,
+              1.0
+            ]
+          ],
+          "holes": [],
+          "attrs": {},
+          "interior": false
+        }
+      ],
+      "changed": false,
+      "status": "Push limited to 0.00 m — deeper would leave the solid",
+      "preview_status": "Push limited to 0.00 m — deeper would leave the solid",
+      "preview_cancel_exact": true,
+      "app_history_exact": true,
+      "primitive_error": null,
+      "primitive_atomic_on_error": null
+    },
+    {
+      "name": "wedge-xwall",
+      "limit": 0.0,
+      "distance": -0.0,
+      "error": null,
+      "result": [
+        {
+          "vertices": [
+            [
+              0.0,
+              4.0,
+              0.0
+            ],
+            [
+              4.0,
+              4.0,
+              0.0
+            ],
+            [
+              4.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              0.0
+            ]
+          ],
+          "holes": [],
+          "attrs": {},
+          "interior": false
+        },
+        {
+          "vertices": [
+            [
+              0.0,
+              0.0,
+              1.0
+            ],
+            [
+              4.0,
+              0.0,
+              3.0
+            ],
+            [
+              4.0,
+              4.0,
+              3.0
+            ],
+            [
+              0.0,
+              4.0,
+              1.0
+            ]
+          ],
+          "holes": [],
+          "attrs": {},
+          "interior": false
+        },
+        {
+          "vertices": [
+            [
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              4.0,
+              0.0,
+              0.0
+            ],
+            [
+              4.0,
+              0.0,
+              3.0
+            ],
+            [
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "holes": [],
+          "attrs": {},
+          "interior": false
+        },
+        {
+          "vertices": [
+            [
+              4.0,
+              0.0,
+              0.0
+            ],
+            [
+              4.0,
+              4.0,
+              0.0
+            ],
+            [
+              4.0,
+              4.0,
+              3.0
+            ],
+            [
+              4.0,
+              0.0,
+              3.0
+            ]
+          ],
+          "holes": [],
+          "attrs": {},
+          "interior": false
+        },
+        {
+          "vertices": [
+            [
+              4.0,
+              4.0,
+              0.0
+            ],
+            [
+              0.0,
+              4.0,
+              0.0
+            ],
+            [
+              0.0,
+              4.0,
+              1.0
+            ],
+            [
+              4.0,
+              4.0,
+              3.0
+            ]
+          ],
+          "holes": [],
+          "attrs": {},
+          "interior": false
+        },
+        {
+          "vertices": [
+            [
+              0.0,
+              4.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              1.0
+            ],
+            [
+              0.0,
+              4.0,
+              1.0
+            ]
+          ],
+          "holes": [],
+          "attrs": {},
+          "interior": false
+        }
+      ],
+      "changed": false,
+      "status": "Push limited to 0.00 m — deeper would leave the solid",
+      "preview_status": "Push limited to 0.00 m — deeper would leave the solid",
+      "preview_cancel_exact": true,
+      "app_history_exact": true,
+      "primitive_error": null,
+      "primitive_atomic_on_error": null
+    },
+    {
+      "name": "wedge-ywall",
+      "limit": 4.0,
+      "distance": -4.0,
+      "error": null,
+      "result": [
+        {
+          "vertices": [
+            [
+              0.0,
+              4.0,
+              0.0
+            ],
+            [
+              4.0,
+              4.0,
+              0.0
+            ],
+            [
+              4.0,
+              4.0,
+              3.0
+            ],
+            [
+              0.0,
+              4.0,
+              1.0
+            ]
+          ],
+          "holes": [],
+          "attrs": {},
+          "interior": false
+        }
+      ],
+      "changed": true,
+      "status": "Push limited to 4.00 m — deeper would leave the solid",
+      "preview_status": "Push limited to 4.00 m — deeper would leave the solid",
+      "preview_cancel_exact": true,
+      "app_history_exact": true,
+      "primitive_error": null,
+      "primitive_atomic_on_error": null
+    },
+    {
+      "name": "gable-roof",
+      "limit": 3.353660982894973,
+      "distance": -3.353660982894973,
+      "error": null,
+      "result": [
+        {
+          "vertices": [
+            [
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              4.0,
+              0.0
+            ],
+            [
+              4.0,
+              4.0,
+              0.0
+            ],
+            [
+              4.0,
+              0.0,
+              0.0
+            ]
+          ],
+          "holes": [],
+          "attrs": {},
+          "interior": false
+        },
+        {
+          "vertices": [
+            [
+              4.0,
+              4.0,
+              0.0
+            ],
+            [
+              4.0,
+              4.0,
+              3.0
+            ],
+            [
+              4.0,
+              0.0,
+              3.0
+            ],
+            [
+              4.0,
+              0.0,
+              0.0
+            ]
+          ],
+          "holes": [],
+          "attrs": {},
+          "interior": false
+        },
+        {
+          "vertices": [
+            [
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              3.0
+            ],
+            [
+              0.0,
+              4.0,
+              3.0
+            ],
+            [
+              0.0,
+              4.0,
+              0.0
+            ]
+          ],
+          "holes": [],
+          "attrs": {},
+          "interior": false
+        },
+        {
+          "vertices": [
+            [
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              4.0,
+              0.0,
+              0.0
+            ],
+            [
+              4.0,
+              0.0,
+              3.0
+            ],
+            [
+              2.500197172164917,
+              0.0,
+              0.0003943443298339844
+            ],
+            [
+              0.500197172164917,
+              0.0,
+              1.000394344329834
+            ],
+            [
+              2.0,
+              0.0,
+              4.0
+            ],
+            [
+              0.0,
+              0.0,
+              3.0
+            ]
+          ],
+          "holes": [],
+          "attrs": {},
+          "interior": false
+        },
+        {
+          "vertices": [
+            [
+              0.0,
+              4.0,
+              0.0
+            ],
+            [
+              0.0,
+              4.0,
+              3.0
+            ],
+            [
+              2.0,
+              4.0,
+              4.0
+            ],
+            [
+              0.500197172164917,
+              4.0,
+              1.000394344329834
+            ],
+            [
+              2.500197172164917,
+              4.0,
+              0.0003943443298339844
+            ],
+            [
+              4.0,
+              4.0,
+              3.0
+            ],
+            [
+              4.0,
+              4.0,
+              0.0
+            ]
+          ],
+          "holes": [],
+          "attrs": {},
+          "interior": false
+        },
+        {
+          "vertices": [
+            [
+              0.0,
+              0.0,
+              3.0
+            ],
+            [
+              2.0,
+              0.0,
+              4.0
+            ],
+            [
+              2.0,
+              4.0,
+              4.0
+            ],
+            [
+              0.0,
+              4.0,
+              3.0
+            ]
+          ],
+          "holes": [],
+          "attrs": {},
+          "interior": false
+        },
+        {
+          "vertices": [
+            [
+              2.500197172164917,
+              0.0,
+              0.0003943443298339844
+            ],
+            [
+              2.500197172164917,
+              4.0,
+              0.0003943443298339844
+            ],
+            [
+              0.500197172164917,
+              4.0,
+              1.000394344329834
+            ],
+            [
+              0.500197172164917,
+              0.0,
+              1.000394344329834
+            ]
+          ],
+          "holes": [],
+          "attrs": {},
+          "interior": false
+        },
+        {
+          "vertices": [
+            [
+              4.0,
+              4.0,
+              3.0
+            ],
+            [
+              2.500197172164917,
+              4.0,
+              0.0003943443298339844
+            ],
+            [
+              2.500197172164917,
+              0.0,
+              0.0003943443298339844
+            ],
+            [
+              4.0,
+              0.0,
+              3.0
+            ]
+          ],
+          "holes": [],
+          "attrs": {},
+          "interior": false
+        },
+        {
+          "vertices": [
+            [
+              0.500197172164917,
+              0.0,
+              1.000394344329834
+            ],
+            [
+              0.500197172164917,
+              4.0,
+              1.000394344329834
+            ],
+            [
+              2.0,
+              4.0,
+              4.0
+            ],
+            [
+              2.0,
+              0.0,
+              4.0
+            ]
+          ],
+          "holes": [],
+          "attrs": {},
+          "interior": false
+        }
+      ],
+      "changed": true,
+      "status": "Push limited to 3.35 m — deeper would leave the solid",
+      "preview_status": "Push limited to 3.35 m — deeper would leave the solid",
+      "preview_cancel_exact": true,
+      "app_history_exact": true,
+      "primitive_error": null,
+      "primitive_atomic_on_error": null
+    },
+    {
+      "name": "step-mouth",
+      "limit": null,
+      "distance": -99.0,
+      "error": null,
+      "result": [
+        {
+          "vertices": [
+            [
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              4.0,
+              0.0
+            ],
+            [
+              4.0,
+              4.0,
+              0.0
+            ],
+            [
+              4.0,
+              0.0,
+              0.0
+            ]
+          ],
+          "holes": [
+            [
+              [
+                1.0,
+                1.0,
+                0.0
+              ],
+              [
+                2.0,
+                1.0,
+                0.0
+              ],
+              [
+                2.0,
+                2.0,
+                0.0
+              ],
+              [
+                1.0,
+                2.0,
+                0.0
+              ]
+            ]
+          ],
+          "attrs": {},
+          "interior": false
+        },
+        {
+          "vertices": [
+            [
+              0.0,
+              4.0,
+              0.0
+            ],
+            [
+              0.0,
+              4.0,
+              3.0
+            ],
+            [
+              4.0,
+              4.0,
+              3.0
+            ],
+            [
+              4.0,
+              4.0,
+              0.0
+            ]
+          ],
+          "holes": [],
+          "attrs": {},
+          "interior": false
+        },
+        {
+          "vertices": [
+            [
+              0.0,
+              4.0,
+              3.0
+            ],
+            [
+              0.0,
+              2.0,
+              3.0
+            ],
+            [
+              4.0,
+              2.0,
+              3.0
+            ],
+            [
+              4.0,
+              4.0,
+              3.0
+            ]
+          ],
+          "holes": [],
+          "attrs": {},
+          "interior": false
+        },
+        {
+          "vertices": [
+            [
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              4.0,
+              0.0,
+              0.0
+            ],
+            [
+              4.0,
+              0.0,
+              2.0
+            ],
+            [
+              0.0,
+              0.0,
+              2.0
+            ]
+          ],
+          "holes": [],
+          "attrs": {},
+          "interior": false
+        },
+        {
+          "vertices": [
+            [
+              0.0,
+              4.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              2.0
+            ],
+            [
+              0.0,
+              2.0,
+              2.0
+            ],
+            [
+              0.0,
+              2.0,
+              3.0
+            ],
+            [
+              0.0,
+              4.0,
+              3.0
+            ]
+          ],
+          "holes": [],
+          "attrs": {},
+          "interior": false
+        },
+        {
+          "vertices": [
+            [
+              4.0,
+              4.0,
+              3.0
+            ],
+            [
+              4.0,
+              2.0,
+              3.0
+            ],
+            [
+              4.0,
+              2.0,
+              2.0
+            ],
+            [
+              4.0,
+              0.0,
+              2.0
+            ],
+            [
+              4.0,
+              0.0,
+              0.0
+            ],
+            [
+              4.0,
+              4.0,
+              0.0
+            ]
+          ],
+          "holes": [],
+          "attrs": {},
+          "interior": false
+        },
+        {
+          "vertices": [
+            [
+              0.0,
+              2.0,
+              3.0
+            ],
+            [
+              0.0,
+              2.0,
+              2.0
+            ],
+            [
+              1.0,
+              2.0,
+              2.0
+            ],
+            [
+              1.0,
+              2.0,
+              0.0
+            ],
+            [
+              2.0,
+              2.0,
+              0.0
+            ],
+            [
+              2.0,
+              2.0,
+              2.0
+            ],
+            [
+              4.0,
+              2.0,
+              2.0
+            ],
+            [
+              4.0,
+              2.0,
+              3.0
+            ]
+          ],
+          "holes": [],
+          "attrs": {},
+          "interior": false
+        },
+        {
+          "vertices": [
+            [
+              4.0,
+              0.0,
+              2.0
+            ],
+            [
+              4.0,
+              2.0,
+              2.0
+            ],
+            [
+              2.0,
+              2.0,
+              2.0
+            ],
+            [
+              2.0,
+              1.0,
+              2.0
+            ],
+            [
+              1.0,
+              1.0,
+              2.0
+            ],
+            [
+              1.0,
+              2.0,
+              2.0
+            ],
+            [
+              0.0,
+              2.0,
+              2.0
+            ],
+            [
+              0.0,
+              0.0,
+              2.0
+            ]
+          ],
+          "holes": [],
+          "attrs": {},
+          "interior": false
+        },
+        {
+          "vertices": [
+            [
+              2.0,
+              1.0,
+              2.0
+            ],
+            [
+              2.0,
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              1.0,
+              2.0
+            ]
+          ],
+          "holes": [],
+          "attrs": {},
+          "interior": false
+        },
+        {
+          "vertices": [
+            [
+              2.0,
+              2.0,
+              2.0
+            ],
+            [
+              2.0,
+              2.0,
+              0.0
+            ],
+            [
+              2.0,
+              1.0,
+              0.0
+            ],
+            [
+              2.0,
+              1.0,
+              2.0
+            ]
+          ],
+          "holes": [],
+          "attrs": {},
+          "interior": false
+        },
+        {
+          "vertices": [
+            [
+              1.0,
+              2.0,
+              2.0
+            ],
+            [
+              1.0,
+              1.0,
+              2.0
+            ],
+            [
+              1.0,
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              2.0,
+              0.0
+            ]
+          ],
+          "holes": [],
+          "attrs": {},
+          "interior": false
+        }
+      ],
+      "changed": true,
+      "status": "",
+      "preview_status": null,
+      "preview_cancel_exact": true,
+      "app_history_exact": true,
+      "primitive_error": null,
+      "primitive_atomic_on_error": null
+    },
+    {
+      "name": "unattached-sheet",
+      "limit": null,
+      "distance": -0.25,
+      "error": null,
+      "result": [
+        {
+          "vertices": [
+            [
+              -1.0,
+              -1.0,
+              -1.0
+            ],
+            [
+              -1.0,
+              3.0,
+              -1.0
+            ],
+            [
+              3.0,
+              3.0,
+              -1.0
+            ],
+            [
+              3.0,
+              -1.0,
+              -1.0
+            ]
+          ],
+          "holes": [],
+          "attrs": {},
+          "interior": false
+        },
+        {
+          "vertices": [
+            [
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              2.0,
+              0.0,
+              0.0
+            ],
+            [
+              2.0,
+              2.0,
+              0.0
+            ],
+            [
+              0.0,
+              2.0,
+              0.0
+            ]
+          ],
+          "holes": [],
+          "attrs": {},
+          "interior": false
+        },
+        {
+          "vertices": [
+            [
+              0.0,
+              2.0,
+              -0.25
+            ],
+            [
+              2.0,
+              2.0,
+              -0.25
+            ],
+            [
+              2.0,
+              0.0,
+              -0.25
+            ],
+            [
+              0.0,
+              0.0,
+              -0.25
+            ]
+          ],
+          "holes": [],
+          "attrs": {},
+          "interior": false
+        },
+        {
+          "vertices": [
+            [
+              0.0,
+              0.0,
+              -0.25
+            ],
+            [
+              2.0,
+              0.0,
+              -0.25
+            ],
+            [
+              2.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              0.0
+            ]
+          ],
+          "holes": [],
+          "attrs": {},
+          "interior": false
+        },
+        {
+          "vertices": [
+            [
+              2.0,
+              0.0,
+              -0.25
+            ],
+            [
+              2.0,
+              2.0,
+              -0.25
+            ],
+            [
+              2.0,
+              2.0,
+              0.0
+            ],
+            [
+              2.0,
+              0.0,
+              0.0
+            ]
+          ],
+          "holes": [],
+          "attrs": {},
+          "interior": false
+        },
+        {
+          "vertices": [
+            [
+              2.0,
+              2.0,
+              -0.25
+            ],
+            [
+              0.0,
+              2.0,
+              -0.25
+            ],
+            [
+              0.0,
+              2.0,
+              0.0
+            ],
+            [
+              2.0,
+              2.0,
+              0.0
+            ]
+          ],
+          "holes": [],
+          "attrs": {},
+          "interior": false
+        },
+        {
+          "vertices": [
+            [
+              0.0,
+              2.0,
+              -0.25
+            ],
+            [
+              0.0,
+              0.0,
+              -0.25
+            ],
+            [
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              2.0,
+              0.0
+            ]
+          ],
+          "holes": [],
+          "attrs": {},
+          "interior": false
+        }
+      ],
+      "changed": true,
+      "status": "",
+      "preview_status": null,
+      "preview_cancel_exact": true,
+      "app_history_exact": true,
+      "primitive_error": null,
+      "primitive_atomic_on_error": null
+    },
+    {
+      "name": "partial-parallel",
+      "limit": 1.0,
+      "distance": -1.0,
+      "error": null,
+      "result": [
+        {
+          "vertices": [
+            [
+              0.0,
+              4.0,
+              0.0
+            ],
+            [
+              4.0,
+              4.0,
+              0.0
+            ],
+            [
+              4.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              0.0
+            ]
+          ],
+          "holes": [],
+          "attrs": {},
+          "interior": false
+        },
+        {
+          "vertices": [
+            [
+              0.0,
+              0.0,
+              2.0
+            ],
+            [
+              4.0,
+              0.0,
+              2.0
+            ],
+            [
+              4.0,
+              4.0,
+              2.0
+            ],
+            [
+              0.0,
+              4.0,
+              2.0
+            ]
+          ],
+          "holes": [],
+          "attrs": {},
+          "interior": false
+        },
+        {
+          "vertices": [
+            [
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              4.0,
+              0.0,
+              0.0
+            ],
+            [
+              4.0,
+              0.0,
+              2.0
+            ],
+            [
+              0.0,
+              0.0,
+              2.0
+            ]
+          ],
+          "holes": [],
+          "attrs": {},
+          "interior": false
+        },
+        {
+          "vertices": [
+            [
+              4.0,
+              0.0,
+              0.0
+            ],
+            [
+              4.0,
+              4.0,
+              0.0
+            ],
+            [
+              4.0,
+              4.0,
+              2.0
+            ],
+            [
+              4.0,
+              0.0,
+              2.0
+            ]
+          ],
+          "holes": [],
+          "attrs": {},
+          "interior": false
+        },
+        {
+          "vertices": [
+            [
+              4.0,
+              4.0,
+              0.0
+            ],
+            [
+              0.0,
+              4.0,
+              0.0
+            ],
+            [
+              0.0,
+              4.0,
+              2.0
+            ],
+            [
+              4.0,
+              4.0,
+              2.0
+            ]
+          ],
+          "holes": [],
+          "attrs": {},
+          "interior": false
+        },
+        {
+          "vertices": [
+            [
+              0.0,
+              4.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              2.0
+            ],
+            [
+              0.0,
+              4.0,
+              2.0
+            ]
+          ],
+          "holes": [],
+          "attrs": {},
+          "interior": false
+        },
+        {
+          "vertices": [
+            [
+              2.0,
+              -1.0,
+              2.0
+            ],
+            [
+              2.0,
+              5.0,
+              2.0
+            ],
+            [
+              5.0,
+              5.0,
+              2.0
+            ],
+            [
+              5.0,
+              -1.0,
+              2.0
+            ]
+          ],
+          "holes": [],
+          "attrs": {},
+          "interior": false
+        }
+      ],
+      "changed": true,
+      "status": "Push limited to 1.00 m — deeper would leave the solid",
+      "preview_status": "Push limited to 1.00 m — deeper would leave the solid",
+      "preview_cancel_exact": true,
+      "app_history_exact": true,
+      "primitive_error": null,
+      "primitive_atomic_on_error": null
+    },
+    {
+      "name": "disjoint-parallel",
+      "limit": 3.0,
+      "distance": -3.0,
+      "error": null,
+      "result": [
+        {
+          "vertices": [
+            [
+              0.0,
+              4.0,
+              0.0
+            ],
+            [
+              4.0,
+              4.0,
+              0.0
+            ],
+            [
+              4.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              0.0
+            ]
+          ],
+          "holes": [],
+          "attrs": {},
+          "interior": false
+        },
+        {
+          "vertices": [
+            [
+              5.0,
+              0.0,
+              2.0
+            ],
+            [
+              5.0,
+              4.0,
+              2.0
+            ],
+            [
+              9.0,
+              4.0,
+              2.0
+            ],
+            [
+              9.0,
+              0.0,
+              2.0
+            ]
+          ],
+          "holes": [],
+          "attrs": {},
+          "interior": false
+        }
+      ],
+      "changed": true,
+      "status": "Push limited to 3.00 m — deeper would leave the solid",
+      "preview_status": "Push limited to 3.00 m — deeper would leave the solid",
+      "preview_cancel_exact": true,
+      "app_history_exact": true,
+      "primitive_error": null,
+      "primitive_atomic_on_error": null
+    },
+    {
+      "name": "ctrl-cap",
+      "limit": 3.0,
+      "distance": -3.0,
+      "error": null,
+      "result": [
+        {
+          "vertices": [
+            [
+              0.0,
+              4.0,
+              0.0
+            ],
+            [
+              4.0,
+              4.0,
+              0.0
+            ],
+            [
+              4.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              0.0
+            ]
+          ],
+          "holes": [],
+          "attrs": {},
+          "interior": false
+        },
+        {
+          "vertices": [
+            [
+              0.0,
+              0.0,
+              3.0
+            ],
+            [
+              4.0,
+              0.0,
+              3.0
+            ],
+            [
+              4.0,
+              4.0,
+              3.0
+            ],
+            [
+              0.0,
+              4.0,
+              3.0
+            ]
+          ],
+          "holes": [],
+          "attrs": {},
+          "interior": false
+        },
+        {
+          "vertices": [
+            [
+              0.0,
+              0.0,
+              0.046875
+            ],
+            [
+              4.0,
+              0.0,
+              0.046875
+            ],
+            [
+              4.0,
+              4.0,
+              0.046875
+            ],
+            [
+              0.0,
+              4.0,
+              0.046875
+            ]
+          ],
+          "holes": [],
+          "attrs": {},
+          "interior": true
+        },
+        {
+          "vertices": [
+            [
+              4.0,
+              0.0,
+              3.0
+            ],
+            [
+              0.0,
+              0.0,
+              3.0
+            ],
+            [
+              0.0,
+              0.0,
+              0.046875
+            ],
+            [
+              4.0,
+              0.0,
+              0.046875
+            ]
+          ],
+          "holes": [],
+          "attrs": {},
+          "interior": false
+        },
+        {
+          "vertices": [
+            [
+              4.0,
+              0.0,
+              0.046875
+            ],
+            [
+              0.0,
+              0.0,
+              0.046875
+            ],
+            [
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              4.0,
+              0.0,
+              0.0
+            ]
+          ],
+          "holes": [],
+          "attrs": {},
+          "interior": false
+        },
+        {
+          "vertices": [
+            [
+              4.0,
+              4.0,
+              3.0
+            ],
+            [
+              4.0,
+              0.0,
+              3.0
+            ],
+            [
+              4.0,
+              0.0,
+              0.046875
+            ],
+            [
+              4.0,
+              4.0,
+              0.046875
+            ]
+          ],
+          "holes": [],
+          "attrs": {},
+          "interior": false
+        },
+        {
+          "vertices": [
+            [
+              4.0,
+              4.0,
+              0.046875
+            ],
+            [
+              4.0,
+              0.0,
+              0.046875
+            ],
+            [
+              4.0,
+              0.0,
+              0.0
+            ],
+            [
+              4.0,
+              4.0,
+              0.0
+            ]
+          ],
+          "holes": [],
+          "attrs": {},
+          "interior": false
+        },
+        {
+          "vertices": [
+            [
+              0.0,
+              4.0,
+              3.0
+            ],
+            [
+              4.0,
+              4.0,
+              3.0
+            ],
+            [
+              4.0,
+              4.0,
+              0.046875
+            ],
+            [
+              0.0,
+              4.0,
+              0.046875
+            ]
+          ],
+          "holes": [],
+          "attrs": {},
+          "interior": false
+        },
+        {
+          "vertices": [
+            [
+              0.0,
+              4.0,
+              0.046875
+            ],
+            [
+              4.0,
+              4.0,
+              0.046875
+            ],
+            [
+              4.0,
+              4.0,
+              0.0
+            ],
+            [
+              0.0,
+              4.0,
+              0.0
+            ]
+          ],
+          "holes": [],
+          "attrs": {},
+          "interior": false
+        },
+        {
+          "vertices": [
+            [
+              0.0,
+              0.0,
+              3.0
+            ],
+            [
+              0.0,
+              4.0,
+              3.0
+            ],
+            [
+              0.0,
+              4.0,
+              0.046875
+            ],
+            [
+              0.0,
+              0.0,
+              0.046875
+            ]
+          ],
+          "holes": [],
+          "attrs": {},
+          "interior": false
+        },
+        {
+          "vertices": [
+            [
+              0.0,
+              0.0,
+              0.046875
+            ],
+            [
+              0.0,
+              4.0,
+              0.046875
+            ],
+            [
+              0.0,
+              4.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              0.0
+            ]
+          ],
+          "holes": [],
+          "attrs": {},
+          "interior": false
+        }
+      ],
+      "changed": true,
+      "status": "Push stopped at 2.95 m: going further would break the solid",
+      "preview_status": "Push limited to 3.00 m — deeper would leave the solid",
+      "preview_cancel_exact": true,
+      "app_history_exact": true,
+      "primitive_error": "Ctrl copy would leave an invalid solid: Both targets must be closed manifold solids. Use a normal Push/Pull or a smaller copy.",
+      "primitive_atomic_on_error": true
+    }
+  ],
+  "nested_history_exact": true,
+  "vcb": [
+    {
+      "value": 99.0,
+      "status": "Push limited to 3.00 m — deeper would leave the solid",
+      "result": [
+        {
+          "vertices": [
+            [
+              0.0,
+              4.0,
+              0.0
+            ],
+            [
+              4.0,
+              4.0,
+              0.0
+            ],
+            [
+              4.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              0.0
+            ]
+          ],
+          "holes": [],
+          "attrs": {},
+          "interior": false
+        }
+      ],
+      "history_exact": true
+    },
+    {
+      "value": -99.0,
+      "status": "",
+      "result": [
+        {
+          "vertices": [
+            [
+              0.0,
+              4.0,
+              0.0
+            ],
+            [
+              4.0,
+              4.0,
+              0.0
+            ],
+            [
+              4.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              0.0
+            ]
+          ],
+          "holes": [],
+          "attrs": {},
+          "interior": false
+        },
+        {
+          "vertices": [
+            [
+              0.0,
+              0.0,
+              102.0
+            ],
+            [
+              4.0,
+              0.0,
+              102.0
+            ],
+            [
+              4.0,
+              4.0,
+              102.0
+            ],
+            [
+              0.0,
+              4.0,
+              102.0
+            ]
+          ],
+          "holes": [],
+          "attrs": {},
+          "interior": false
+        },
+        {
+          "vertices": [
+            [
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              4.0,
+              0.0,
+              0.0
+            ],
+            [
+              4.0,
+              0.0,
+              102.0
+            ],
+            [
+              0.0,
+              0.0,
+              102.0
+            ]
+          ],
+          "holes": [],
+          "attrs": {},
+          "interior": false
+        },
+        {
+          "vertices": [
+            [
+              4.0,
+              0.0,
+              0.0
+            ],
+            [
+              4.0,
+              4.0,
+              0.0
+            ],
+            [
+              4.0,
+              4.0,
+              102.0
+            ],
+            [
+              4.0,
+              0.0,
+              102.0
+            ]
+          ],
+          "holes": [],
+          "attrs": {},
+          "interior": false
+        },
+        {
+          "vertices": [
+            [
+              4.0,
+              4.0,
+              0.0
+            ],
+            [
+              0.0,
+              4.0,
+              0.0
+            ],
+            [
+              0.0,
+              4.0,
+              102.0
+            ],
+            [
+              4.0,
+              4.0,
+              102.0
+            ]
+          ],
+          "holes": [],
+          "attrs": {},
+          "interior": false
+        },
+        {
+          "vertices": [
+            [
+              0.0,
+              4.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              102.0
+            ],
+            [
+              0.0,
+              4.0,
+              102.0
+            ]
+          ],
+          "holes": [],
+          "attrs": {},
+          "interior": false
+        }
+      ],
+      "history_exact": true
+    }
+  ],
+  "reused_limit_controls": [
+    {
+      "name": "wider-punchable-sheet",
+      "limit": 3.0,
+      "distance": -3.0,
+      "preview_model_exact": true
+    },
+    {
+      "name": "annular-support",
+      "limit": 1.0,
+      "distance": -1.0,
+      "preview_model_exact": true
+    }
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "base": "0d762417",
+  "runtime": "e7ac63de",
+  "identity_seam": "210740b6",
+  "skip_schema_prerequisite": "b72fa139",
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "source_sha256": {
+    "crates/ingetrazo-tools/src/pushpull.rs": "0f60e525b6ba5decadd55bbf7c629676f31db921d54701cfc0b15dc1d73edd15",
+    "crates/ingetrazo-tools/src/pushpull/inward_limit.rs": "01a5ab706d4aeb49cf1d376ab666969a758b3a597f28f3a3ea7fa1851157ff51",
+    "crates/ingetrazo-tools/src/base.rs": "db694ebb18dc24a4fe184f966dd290b2cc7007d200e310a187d5c79e2b621ff9",
+    "crates/ingetrazo-gui/src/tool_history.rs": "b17a84928a381ba5e5d8c7a033ecd7c43475e9c63089b9f7a01c4e5dd0683ce5",
+    "crates/ingetrazo-gui/examples/pushpull_inward_limits.rs": "a3902d07dad67b4ca3ad5976ee32f3f0902bbedf38b6ad94286cb40222c7b025",
+    "scripts/reference-pushpull-inward-limits.py": "298a13d82b958bd4e36cc5389a19a660c1cc6b78ee2cef0f873b90c7afe646e7",
+    "scripts/reference-pushpull-inward-vcb.py": "a4d71ff24c092fd9ea5665c48485bfe0e0f2e5d71c686980b9e0165c0d603d3e",
+    "scripts/check-pushpull-inward-limits.py": "169a6f2579badb8846e6cfbea9a3e98bdc0bc55572626485bf2dad8bea6b05e9"
+  },
+  "reused_source_sha256": "67232c772e2e9c9734738e3e75a4d6f60e03d78abd75b0313073f427dbbe1bea",
+  "binary_sha256": {
+    "pushpull_inward_limits": "2fe25d94de3f4d69f9810634f85420d339a274587df19c0c0372cd08c77c5ff3",
+    "pushpull_endpoints_app": "6cfc43322f39ff58da45965829235fae3c67b1f519ffcacb6bb98eb594337f65",
+    "pushpull_gate2_fixture": "6e7c77a12f50430175e1e14d647ecb651ff4a704e1213becc1a6a730368dbb48"
+  },
+  "artifacts_sha256": {
+    "README.md": "9803b0a5582063bcc0007ab56e2ae8d6a79583524268f2d57e18ae51976f4bb1",
+    "app.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "build.log": "c84d04a13d2f36d831d5f0ff26fe2943ce7d9b32af4b09c708c11b2e1e8a6051",
+    "comparison.json": "dc8f2971bfddf803423b1f31f42c9e4be30c1fe999d2b348d99f03ae9ac51c42",
+    "endpoint-app.json": "acf76b888f19c360a0e179f089fb2e6e7bd76f8ef2bd12762035acbd5beff823",
+    "endpoint-check.log": "127626162da4b9a89a51415e9d47cb94428e9c5ef2b008dde60d816822dc6505",
+    "endpoint-comparison.json": "127626162da4b9a89a51415e9d47cb94428e9c5ef2b008dde60d816822dc6505",
+    "endpoint-native.json": "5dd9520f169d72acc3867c11d2bc2ae6ad2545bfe6d8171ca9ba3f7ecd4b4fc7",
+    "identity-tests.log": "26dddfe07e5c62524b2db3010232ec5bc4cb24619b0df0097d4ee645fb6757b0",
+    "native.json": "f0daf26a4f834741ebfba474c4a834284b66693aa9d727f73b1b0c690e53e343",
+    "remaining-native.json": "5df02df1ea01292e6cd14bd3c77c61654d4f27379cd82e3df77e67662ffef076",
+    "source-vcb.json": "7f294dba67669a6e20868d5befddd6dad0cc6362348e83674f67b92b575500cd",
+    "source.json": "7fb0544f479887646b175c417778c15ccc887f4c7515545926b98a655fa075a2",
+    "tests.log": "03393db181dfe414e02a348d30616a5d0349a55e3913579ec554e0a156873387"
+  },
+  "checks": {
+    "exact_limits_and_status": 13,
+    "exact_final_face_inventories": 11,
+    "remaining_mismatches": 2,
+    "reused_source_limits": 2,
+    "signed_vcb": 2,
+    "checker_negatives": 11,
+    "earlier_endpoint_cases": 12,
+    "focused_unit_tests": 11,
+    "token_identity_test": 1
+  },
+  "active_handles": []
+}
