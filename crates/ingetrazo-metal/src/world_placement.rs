@@ -148,3 +148,40 @@ mod tests {
         assert!(validate_poses(&p, &[]).is_err());
     }
 }
+
+/// Only adjacent equal prototype/winding instances coalesce; no depth-order sort.
+pub(crate) fn compatible_run_end(bindings: &[u32], poses: &[Pose], first: usize) -> usize {
+    let mut end = first + 1;
+    while end < poses.len()
+        && bindings[end] == bindings[first]
+        && poses[end].reflected == poses[first].reflected
+    {
+        end += 1;
+    }
+    end
+}
+#[cfg(test)]
+#[test]
+fn instance_runs_preserve_prototype_winding_and_original_order() {
+    let pose = |reflected| Pose {
+        mvp: [[0.; 4]; 4],
+        reflected,
+    };
+    let poses = [
+        pose(false),
+        pose(false),
+        pose(true),
+        pose(true),
+        pose(true),
+        pose(false),
+    ];
+    let bindings = [0, 0, 0, 1, 1, 0];
+    let mut first = 0;
+    let mut runs = Vec::new();
+    while first < poses.len() {
+        let end = compatible_run_end(&bindings, &poses, first);
+        runs.push((first, end));
+        first = end;
+    }
+    assert_eq!(runs, vec![(0, 2), (2, 3), (3, 5), (5, 6)]);
+}
