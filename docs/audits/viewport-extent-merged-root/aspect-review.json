@@ -1,0 +1,97 @@
+{
+  "source": "Pinned core/camera.py set_aspect; nine actual Qt observations",
+  "rows": [
+    {
+      "logical": [
+        942,
+        610
+      ],
+      "dpr": 1.25,
+      "source_aspect": 1.544262295081967,
+      "old_f32_aspect": 1.5442622900009155,
+      "old_matches": false
+    },
+    {
+      "logical": [
+        943,
+        611
+      ],
+      "dpr": 1.25,
+      "source_aspect": 1.5433715220949265,
+      "old_f32_aspect": 1.543371558189392,
+      "old_matches": false
+    },
+    {
+      "logical": [
+        801,
+        601
+      ],
+      "dpr": 1.25,
+      "source_aspect": 1.3327787021630615,
+      "old_f32_aspect": 1.3327786922454834,
+      "old_matches": false
+    },
+    {
+      "logical": [
+        942,
+        610
+      ],
+      "dpr": 1.5,
+      "source_aspect": 1.544262295081967,
+      "old_f32_aspect": 1.5442622900009155,
+      "old_matches": false
+    },
+    {
+      "logical": [
+        943,
+        611
+      ],
+      "dpr": 1.5,
+      "source_aspect": 1.5433715220949265,
+      "old_f32_aspect": 1.543371558189392,
+      "old_matches": false
+    },
+    {
+      "logical": [
+        801,
+        601
+      ],
+      "dpr": 1.5,
+      "source_aspect": 1.3327787021630615,
+      "old_f32_aspect": 1.3327786922454834,
+      "old_matches": false
+    },
+    {
+      "logical": [
+        942,
+        610
+      ],
+      "dpr": 1.0,
+      "source_aspect": 1.544262295081967,
+      "old_f32_aspect": 1.5442622900009155,
+      "old_matches": false
+    },
+    {
+      "logical": [
+        943,
+        611
+      ],
+      "dpr": 1.0,
+      "source_aspect": 1.5433715220949265,
+      "old_f32_aspect": 1.543371558189392,
+      "old_matches": false
+    },
+    {
+      "logical": [
+        801,
+        601
+      ],
+      "dpr": 1.0,
+      "source_aspect": 1.3327787021630615,
+      "old_f32_aspect": 1.3327786922454834,
+      "old_matches": false
+    }
+  ],
+  "correction": "Convert logical width and height to f64 before division, preserving Python precision",
+  "boundary": "No integer logical widget layout or fractional-DPI full-frame/pointer acceptance claim"
+}

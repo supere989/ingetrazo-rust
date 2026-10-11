@@ -21,6 +21,8 @@ Latest independent rendering diagnosis: [real layout](audits/annotation-real-ope
 
 ## Dated implementation and verification evidence
 
+Logical camera precision corrected (2026-10-11 UTC): Rust viewport now converts logical width/height to double precision before division, matching Python `camera.set_aspect`. All nine retained original observations match double division; the former float32 quotient differs in all nine ([review](audits/viewport-extent-merged-root/aspect-review.json)). Logical layout quantization and actual fractional-DPI frame/pointer acceptance remain OPEN.
+
 Source scene extent rounding corrected (2026-10-11 UTC): Vulkan world allocation and annotation depth queries now share Python `_fb_size` ties-to-even rounding using double-precision multiplication. One focused test covers all nine retained actual Qt logical-size/DPR cases plus invalid inputs ([test log](audits/viewport-extent-merged-root/test.log)). Camera logical extent and Qt backing-store/blit policy remain separate; actual fractional-DPI rendered and pointer parity are still OPEN.
 
 Expanded native Metal protocol reviewed (2026-10-11 UTC): isolated source `f260c73a` adds authored front/back colors, back override, hidden-line/monochrome, reflected winding and metadata-refusal frame preservation to a literal 18-frame gate. Root verifies all 18 blank controls reject and admission remains unchanged ([protocol review](audits/metal-world-root-review/material-protocol-review.json)). One changed-source ARM/Intel run is authorized; execution remains pending. This remains sampled packet-level acceptance, not full source viewport parity.

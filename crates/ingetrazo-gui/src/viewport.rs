@@ -20,7 +20,8 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
 
     // Update camera aspect ratio
     if rect.width() > 1.0 && rect.height() > 1.0 {
-        app.camera.aspect = (rect.width() / rect.height()) as f64;
+        // Python camera.set_aspect divides in double precision.
+        app.camera.aspect = f64::from(rect.width()) / f64::from(rect.height());
     }
 
     let painter = ui.painter_at(rect);
