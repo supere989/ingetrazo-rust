@@ -1,0 +1,54 @@
+name: Native Metal classic Scene consumer
+on:
+  push:
+    branches: [review/metal-world-classic]
+  workflow_dispatch:
+concurrency:
+  group: metal-world-classic-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  app-consumer:
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        runner: [macos-15, macos-15-intel]
+    env:
+      CARGO_PROFILE_DEV_DEBUG: 0
+      CARGO_PROFILE_TEST_DEBUG: 0
+      CARGO_INCREMENTAL: 0
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Reuse compiled Cargo dependencies
+        uses: Swatinem/rust-cache@49a0bdc70d2e1b713ca9e2869b211fcce03d3c1c # v2
+        with:
+          cache-bin: "false"
+          cache-workspace-crates: "false"
+          save-if: ${{ github.event_name != 'pull_request' }}
+      - name: Build only actual application viewport probe
+        run: |
+          mkdir -p world-classic-evidence
+          git rev-parse HEAD > world-classic-evidence/revision.txt
+          git ls-files crates/ingetrazo-gui/src/native_metal crates/ingetrazo-gui/src/native_metal.rs crates/ingetrazo-gui/src/viewport.rs crates/ingetrazo-metal/src crates/ingetrazo-gui/examples/native_metal_world_classic.rs scripts/check-metal-world-classic.py | xargs shasum -a 256 > world-classic-evidence/source.sha256
+          cargo build --locked -p ingetrazo-gui --example native_metal_world_classic -j2 > world-classic-evidence/build.log 2>&1
+          shasum -a 256 target/debug/examples/native_metal_world_classic > world-classic-evidence/binary.sha256
+      - name: Execute bounded actual app offscreen pipeline
+        run: |
+          python3 - <<'PYTHON'
+          import subprocess
+          with open('world-classic-evidence/runtime.log','w') as log:
+              subprocess.run(['target/debug/examples/native_metal_world_classic','world-classic-evidence/native'],stdout=log,stderr=subprocess.STDOUT,timeout=90,check=True)
+          PYTHON
+      - name: Validate exact frame inventory and changed behavior
+        if: ${{ !cancelled() }}
+        run: python3 scripts/check-metal-world-classic.py docs/audits/metal-world-scene/classic-source world-classic-evidence/native > world-classic-evidence/checker.log 2>&1
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: world-classic-${{ matrix.runner }}
+          path: world-classic-evidence/
+          if-no-files-found: error

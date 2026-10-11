@@ -1,0 +1,133 @@
+{
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "passed": true,
+  "cases": [
+    {
+      "name": "classic-initial",
+      "rgba": [
+        159,
+        0,
+        0,
+        255
+      ],
+      "pixel": [
+        400,
+        318
+      ],
+      "png_sha256": "2a05004371b14441670bc17aa99f0c78efde370c1e740b06493a1ba1abe6b762"
+    },
+    {
+      "name": "classic-warm",
+      "rgba": [
+        159,
+        0,
+        0,
+        255
+      ],
+      "pixel": [
+        400,
+        318
+      ],
+      "png_sha256": "2a05004371b14441670bc17aa99f0c78efde370c1e740b06493a1ba1abe6b762"
+    },
+    {
+      "name": "classic-pose",
+      "rgba": [
+        207,
+        0,
+        0,
+        255
+      ],
+      "pixel": [
+        472,
+        318
+      ],
+      "png_sha256": "635d10fc9052aa604d19239aba2be461e9ffb102c0e870c2cdf931736bc8cea1"
+    },
+    {
+      "name": "classic-paint",
+      "rgba": [
+        207,
+        207,
+        0,
+        255
+      ],
+      "pixel": [
+        472,
+        318
+      ],
+      "png_sha256": "e693d0a2fbb342c26c744baeae2c8d2ddb44640fcd3efe390e0169081fb0d835"
+    },
+    {
+      "name": "classic-layer-hidden",
+      "rgba": [
+        207,
+        207,
+        0,
+        255
+      ],
+      "pixel": [
+        472,
+        318
+      ],
+      "png_sha256": "e693d0a2fbb342c26c744baeae2c8d2ddb44640fcd3efe390e0169081fb0d835"
+    },
+    {
+      "name": "classic-layer-restored",
+      "rgba": [
+        207,
+        207,
+        0,
+        255
+      ],
+      "pixel": [
+        472,
+        318
+      ],
+      "png_sha256": "e693d0a2fbb342c26c744baeae2c8d2ddb44640fcd3efe390e0169081fb0d835"
+    },
+    {
+      "name": "classic-reflected",
+      "rgba": [
+        158,
+        178,
+        199,
+        255
+      ],
+      "pixel": [
+        472,
+        318
+      ],
+      "png_sha256": "cee659d6c7778a7d715fb60e733e50deaba7ab7290ffdff21e50e45f2b8aa71c"
+    },
+    {
+      "name": "classic-group-hidden",
+      "rgba": [
+        0,
+        0,
+        255,
+        255
+      ],
+      "pixel": [
+        472,
+        318
+      ],
+      "png_sha256": "4b5f0b3e34e2b3f2574b07bc1155a14b334edb24c39c73eeb2777392d22b6d41"
+    },
+    {
+      "name": "classic-group-restored",
+      "rgba": [
+        158,
+        178,
+        199,
+        255
+      ],
+      "pixel": [
+        472,
+        318
+      ],
+      "png_sha256": "cee659d6c7778a7d715fb60e733e50deaba7ab7290ffdff21e50e45f2b8aa71c"
+    }
+  ],
+  "scope": "Actual original Qt classic baked-world groups; seven initial controls plus two changed group-layer controls. No native GPU proof."
+}

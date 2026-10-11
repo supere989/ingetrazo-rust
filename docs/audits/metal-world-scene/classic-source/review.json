@@ -1,0 +1,15 @@
+{
+  "focused_tests": "cargo test --locked -p ingetrazo-metal --lib classic_ -j2",
+  "result": "3 passed, 0 failed",
+  "apple_metadata": "cargo check --locked -p ingetrazo-metal --example native_world_scene --target aarch64-apple-darwin -j2 passed before final layer correction; SDK/link/runtime pending",
+  "retained_failure": "New face-layer test initially found group collector still filtered face layers; scoped classic override corrected, normal Vulkan path unchanged.",
+  "remaining": [
+    "Native classic app GPU fixture not executed",
+    "Full materials/textures/alpha/edges/sections/images/annotations remain open"
+  ],
+  "scripts": {
+    "reference-metal-world-classic.py": "b00052f3e187143be978b8b92c64e8d39a3ec40a50bb412e974cd5764539a16a",
+    "reference-metal-classic-group-layer.py": "af210a900042cbeaee420aac1daab96946209378e538acb96e39ba33c014b44a",
+    "check-metal-world-classic.py": "077e83f9c45273bf0a2bf550cbaca403091fb8054e79107621f51dca16f6a7c4"
+  }
+}

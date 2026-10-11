@@ -347,6 +347,44 @@ pub fn build_loose_world_surfaces(scene:&Scene,style:&StyleConfig)->SceneRenderD
     data
 }
 
+/// Borrowed classic own-mesh collection with source world-dependent shading.
+/// Children are separate catalog records; baked vertices use identity GPU pose.
+pub fn build_classic_own_surfaces(
+    group: &ingetrazo_core::groups::Group,
+    inherited_paint: Option<&serde_json::Value>,
+    world: DMat4,
+    scene: &Scene,
+    camera: &OrbitCamera,
+    style: &StyleConfig,
+) -> Result<SceneRenderData, String> {
+    if !world.is_finite() {
+        return Err("Classic own mesh world matrix invalid".into());
+    }
+    let mut data = SceneRenderData::default();
+    if style.visual_style != VisualStyle::Wireframe {
+        build_group_buffers(
+            group,
+            inherited_paint,
+            &DMat4::IDENTITY,
+            scene,
+            camera,
+            style,
+            &mut data.opaque_mesh,
+            &mut data.transparent_mesh,
+            &mut data.visible_edges,
+            &mut data.billboards,
+            &mut data.textured_meshes,
+            false,
+            true,
+            Some((world, false)),
+        );
+    }
+    if !data.billboards.is_empty() {
+        return Err("Billboard prototype requires camera-dependent placement stage".into());
+    }
+    Ok(data)
+}
+
 /// Cold source-placement prototype collection. The caller retains its placement
 /// matrix separately; children are independent bindings, never folded into this
 /// own-mesh prototype. No Scene clone, inverse/cancellation or CPU projection.
@@ -378,7 +416,7 @@ pub fn build_inherited_placement_prototype_surfaces(
         build_group_buffers(group, inherited_paint, &DMat4::IDENTITY,
             scene, camera, style, &mut data.opaque_mesh, &mut data.transparent_mesh,
             &mut data.visible_edges, &mut data.billboards, &mut data.textured_meshes,
-            false, true, Some(DMat4::IDENTITY));
+            false, true, Some((DMat4::IDENTITY,true)));
     }
     if !data.billboards.is_empty() {
         return Err("Billboard prototype requires camera-dependent placement stage".into());
@@ -495,17 +533,17 @@ fn build_group_buffers(
     textured_meshes: &mut crate::buffer::TextureBuffers,
     include_edges: bool,
     native_texture_sides: bool,
-    root_world_override: Option<DMat4>,
+    root_world_override: Option<(DMat4,bool)>,
 ) {
     if group.hidden || !scene.is_layer_visible(group.layer.as_deref()) {
         return;
     }
 
-    let world_t = root_world_override.unwrap_or_else(|| *parent_transform * group.transform);
+    let world_t = root_world_override.map(|v|v.0).unwrap_or_else(|| *parent_transform * group.transform);
     // Original viewport._instance_entry.tp32 preserves painted front winding
     // under reflected placements. Reorder local corners before UV evaluation.
-    let reflected = world_t.determinant() < 0.0;
-    let source_placement = source_group_has_placement(group) || root_world_override.is_some();
+    let reflected = world_t.determinant() < 0.0 && root_world_override.map_or(true,|v|v.1);
+    let source_placement = root_world_override.map_or_else(||source_group_has_placement(group),|v|v.1);
     let paint = source_group_paint(group).or(owner_paint);
 
     // Billboard / Face-Me cutout figures
@@ -549,7 +587,7 @@ fn build_group_buffers(
     let local_start=(opaque.indices.len(),transparent.indices.len(),opaque.source_front_cull.len(),opaque.source_back_override_count+transparent.source_back_override_count);
     for (f_id, face) in group.mesh.faces.iter().enumerate() {
         let face_layer = face.layer.as_deref().or_else(|| face.attrs.get("layer").and_then(|v| v.as_str()));
-        if !scene.is_layer_visible(face_layer) {
+        if !root_world_override.is_some_and(|v|!v.1) && !scene.is_layer_visible(face_layer) {
             continue;
         }
         if face.attrs.get("hidden").and_then(|v| v.as_bool()) == Some(true) {
