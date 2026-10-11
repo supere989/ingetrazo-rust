@@ -1,0 +1,11 @@
+{
+  "source_sha": "6e22d578a851c5b5bee059ff1452f74b10f4d141",
+  "run_id": 38131536725,
+  "job_id": 114446703804,
+  "artifact_id": 11699855851,
+  "artifact_sha256": "ff9addb73fdde25cd6531c9195ead76932ddb7dd21f1788c2fa5ee25a973bf93",
+  "verified_source_files": 38,
+  "classic_checker_passed": true,
+  "ghost_material_failure": "sampled Private texture heap query size0 align0; requested20bytes2x2mips2",
+  "scope": "Framebuffers and classic now execute; sampled textures and strict ghost pixels remain open"
+}
