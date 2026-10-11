@@ -31,7 +31,7 @@ The integration branch is `review/next-integration`; main remains `c73fe993`, an
 - **Missing**: no operative implementation found for the required behavior.
 - **P0**: document integrity or geometry correctness blockers. **P1**: core parity/release requirements. **P2**: remaining integration and platform polish.
 
-P01, P02, P03, P05, P09, P10, P11, P12, P13, P14, P16, P17 and P30 are Verified against their stated finite acceptance criteria. Other rows remain open until their criteria are met; Implemented is not a completed checkbox.
+P01, P02, P03, P05, P06, P09, P10, P11, P12, P13, P14, P16, P17 and P30 are Verified against their stated finite acceptance criteria. Other rows remain open until their criteria are met; Implemented is not a completed checkbox.
 
 ## Feature inventory
 

@@ -1,5 +1,5 @@
 {
-  "runtime_commit": "ffe3510a",
+  "runtime_commit": "ffe3510a47a1f9a0125aa90887ddd36e82d5aedc",
   "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
   "accepted": true,
   "checks": 34,
@@ -70,5 +70,9 @@
       "bytes": 3770,
       "sha256": "29a4d437fb10e848a43d6cabbe080ce776a41cd0046cf08c9d229c893e1efff3"
     }
-  }
+  },
+  "runtime_files": {
+    "crates/ingetrazo-gui/src/composer.rs": "1ce9dfec3f05d18900458317a708a7b89c1613fe1008f7eb84429f337cb9b59e"
+  },
+  "integration_commit": "176b5dd6806d239552ffe437d89c3d180319b253"
 }
