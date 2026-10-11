@@ -37,6 +37,38 @@ fn normalized(mut value: Value, app: &IngeTrazoApp) -> Value {
         }
     }
     walk(&mut value, &app.scene.embedded_textures);
+    fn ordered(v: &Value) -> Value {
+        match v {
+            Value::Object(o) => {
+                let mut keys = o.keys().collect::<Vec<_>>();
+                keys.sort();
+                let mut sorted = serde_json::Map::new();
+                for key in keys {
+                    sorted.insert(key.clone(), ordered(&o[key]));
+                }
+                Value::Object(sorted)
+            }
+            Value::Array(a) => Value::Array(a.iter().map(ordered).collect()),
+            _ => v.clone(),
+        }
+    }
+    fn sort_faces(v: &mut Value) {
+        if let Some(o) = v.as_object_mut() {
+            for (key, v) in o {
+                if key == "faces" {
+                    if let Some(f) = v.as_array_mut() {
+                        f.sort_by_key(|f| ordered(f).to_string());
+                    }
+                }
+                sort_faces(v)
+            }
+        } else if let Some(a) = v.as_array_mut() {
+            for v in a {
+                sort_faces(v)
+            }
+        }
+    }
+    sort_faces(&mut value);
     value
 }
 fn sha256(bytes: &[u8]) -> String {
