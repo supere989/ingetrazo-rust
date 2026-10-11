@@ -1,0 +1,294 @@
+{
+  "revision": "1fa6c83a5f8c69becc11a9cb81427020b2cbaa5f",
+  "run": 38139827943,
+  "job": 114471208486,
+  "artifact": 11703145002,
+  "artifact_sha256": "9ba322be3499e3a3bdb1abc41db75b1c0fae1702cac8871e917cf1e85ace6a68",
+  "runner_source_hashes_verified": 168,
+  "binary_hashes": [
+    "a76d5c8f0112d12248a890c62227e263a20cebf387deb2133ada9fc43495f51b  target/debug/examples/native_metal_hidden_ghost",
+    "9feb654c654815c335e3e106780ac972aa09dcc86970f81ea031b806d44b5b12  target/debug/examples/native_metal_world_classic",
+    "5fcebcf98b7fb78383d6f1301d0066ad32089adf1231dfd552c26e9c3d2de816  target/debug/examples/native_metal_world_material",
+    "4edf72184537522a72db3454440f637150785147fd848a8ff7d29d4e87573c8b  target/debug/examples/native_metal_face_sweep"
+  ],
+  "sweep_runtime": "passed",
+  "strict_sweep": {
+    "functional_passed": true,
+    "strict_pixels_passed": false,
+    "frames": 24,
+    "negative_controls": 7,
+    "differences": [
+      {
+        "case": "reversed-door",
+        "phase": "base",
+        "different_pixels": 2587,
+        "maximum_channel_error": 226
+      },
+      {
+        "case": "reversed-door",
+        "phase": "preview",
+        "different_pixels": 24774,
+        "maximum_channel_error": 209
+      },
+      {
+        "case": "reversed-door",
+        "phase": "offset",
+        "different_pixels": 24104,
+        "maximum_channel_error": 211
+      },
+      {
+        "case": "reversed-door",
+        "phase": "cancel",
+        "different_pixels": 2587,
+        "maximum_channel_error": 226
+      },
+      {
+        "case": "lone-sheet",
+        "phase": "base",
+        "different_pixels": 917,
+        "maximum_channel_error": 215
+      },
+      {
+        "case": "lone-sheet",
+        "phase": "preview",
+        "different_pixels": 10380,
+        "maximum_channel_error": 215
+      },
+      {
+        "case": "lone-sheet",
+        "phase": "offset",
+        "different_pixels": 14677,
+        "maximum_channel_error": 211
+      },
+      {
+        "case": "lone-sheet",
+        "phase": "cancel",
+        "different_pixels": 917,
+        "maximum_channel_error": 215
+      },
+      {
+        "case": "front-recess",
+        "phase": "base",
+        "different_pixels": 1533,
+        "maximum_channel_error": 223
+      },
+      {
+        "case": "front-recess",
+        "phase": "preview",
+        "different_pixels": 17066,
+        "maximum_channel_error": 209
+      },
+      {
+        "case": "front-recess",
+        "phase": "offset",
+        "different_pixels": 16991,
+        "maximum_channel_error": 210
+      },
+      {
+        "case": "front-recess",
+        "phase": "cancel",
+        "different_pixels": 1533,
+        "maximum_channel_error": 223
+      },
+      {
+        "case": "back-recess",
+        "phase": "base",
+        "different_pixels": 18267,
+        "maximum_channel_error": 210
+      },
+      {
+        "case": "back-recess",
+        "phase": "preview",
+        "different_pixels": 18381,
+        "maximum_channel_error": 209
+      },
+      {
+        "case": "back-recess",
+        "phase": "offset",
+        "different_pixels": 18306,
+        "maximum_channel_error": 210
+      },
+      {
+        "case": "back-recess",
+        "phase": "cancel",
+        "different_pixels": 18267,
+        "maximum_channel_error": 210
+      },
+      {
+        "case": "front-texture-back-override",
+        "phase": "base",
+        "different_pixels": 3641,
+        "maximum_channel_error": 240
+      },
+      {
+        "case": "front-texture-back-override",
+        "phase": "preview",
+        "different_pixels": 7500,
+        "maximum_channel_error": 240
+      },
+      {
+        "case": "front-texture-back-override",
+        "phase": "offset",
+        "different_pixels": 9423,
+        "maximum_channel_error": 214
+      },
+      {
+        "case": "front-texture-back-override",
+        "phase": "cancel",
+        "different_pixels": 3641,
+        "maximum_channel_error": 240
+      },
+      {
+        "case": "ordinary-prism",
+        "phase": "base",
+        "different_pixels": 187930,
+        "maximum_channel_error": 229
+      },
+      {
+        "case": "ordinary-prism",
+        "phase": "preview",
+        "different_pixels": 210710,
+        "maximum_channel_error": 227
+      },
+      {
+        "case": "ordinary-prism",
+        "phase": "offset",
+        "different_pixels": 221122,
+        "maximum_channel_error": 232
+      },
+      {
+        "case": "ordinary-prism",
+        "phase": "cancel",
+        "different_pixels": 187930,
+        "maximum_channel_error": 229
+      }
+    ]
+  },
+  "material_policy": {
+    "diagnostic_passed": true,
+    "cases": 6,
+    "negative_controls": 5,
+    "front_back_pixels": [
+      [
+        "reversed-door",
+        70034,
+        23316
+      ],
+      [
+        "lone-sheet",
+        7697,
+        0
+      ],
+      [
+        "front-recess",
+        0,
+        140864
+      ],
+      [
+        "back-recess",
+        140864,
+        0
+      ],
+      [
+        "front-texture-back-override",
+        7697,
+        0
+      ],
+      [
+        "ordinary-prism",
+        0,
+        184744
+      ]
+    ]
+  },
+  "classic": {
+    "passed": true,
+    "source_cases": 9,
+    "native_cases": 10,
+    "pixels": 250,
+    "scope": "Actual native app sampled classic own-mesh world shading/baked reflection/face-vs-group layer routing, no whole-image/OS gesture/presentation claim"
+  },
+  "material": {
+    "passed": true,
+    "source_cases": 25,
+    "native_cases": 75,
+    "pixels": 1950,
+    "scope": "Actual shared app update_ui/native Metal cached material sampled interiors; no full viewport, mip, edge, whole-image, user gesture or presentation parity claim"
+  },
+  "source_prism_dominant": [
+    [
+      [
+        255,
+        255,
+        255,
+        255
+      ],
+      289760
+    ],
+    [
+      [
+        227,
+        152,
+        140,
+        255
+      ],
+      72414
+    ],
+    [
+      [
+        203,
+        148,
+        138,
+        255
+      ],
+      58085
+    ],
+    [
+      [
+        201,
+        146,
+        138,
+        255
+      ],
+      53656
+    ]
+  ],
+  "native_prism_dominant": [
+    [
+      [
+        255,
+        255,
+        255,
+        255
+      ],
+      289816
+    ],
+    [
+      [
+        227,
+        151,
+        139,
+        255
+      ],
+      72485
+    ],
+    [
+      [
+        203,
+        147,
+        137,
+        255
+      ],
+      58129
+    ],
+    [
+      [
+        201,
+        145,
+        137,
+        255
+      ],
+      53809
+    ]
+  ]
+}
