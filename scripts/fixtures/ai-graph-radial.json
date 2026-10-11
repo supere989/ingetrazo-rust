@@ -1,0 +1,30 @@
+[
+  {
+    "name": "empty",
+    "recipe": "m=mesh\nf=m.add_face([],[])"
+  },
+  {
+    "name": "singleton",
+    "recipe": "m=mesh\nf=m.add_face([QVector3D()],[])"
+  },
+  {
+    "name": "two-points",
+    "recipe": "m=mesh\nf=m.add_face([QVector3D(),QVector3D(1,0,0)],[])"
+  },
+  {
+    "name": "alternating",
+    "recipe": "m=mesh\nf=m.add_face([QVector3D(),QVector3D(1,0,0),QVector3D(),QVector3D(1,0,0)],[])"
+  },
+  {
+    "name": "closing-repeat",
+    "recipe": "m=mesh\nf=m.add_face([QVector3D(),QVector3D(1,0,0),QVector3D(0,1,0),QVector3D()],[])"
+  },
+  {
+    "name": "shared-hole",
+    "recipe": "m=mesh\nf=m.add_face([QVector3D(),QVector3D(1,0,0),QVector3D(0,1,0)],[[QVector3D(),QVector3D(1,0,0),QVector3D(0,1,0)]])"
+  },
+  {
+    "name": "two-equal-holes",
+    "recipe": "m=mesh\nf=m.add_face([QVector3D(),QVector3D(1,0,0),QVector3D(0,1,0)],[[QVector3D(),QVector3D(1,0,0),QVector3D(0,1,0)],[QVector3D(),QVector3D(1,0,0),QVector3D(0,1,0)]])"
+  }
+]

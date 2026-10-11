@@ -838,7 +838,8 @@ pub mod editable_mesh {
                     for &edge_id in transaction.staged_face_edges(id).map_err(|e|vm.new_value_error(e))? {
                         let edge={let edges=zelf.edges.borrow_vec(); edges.get(edge_id).ok_or_else(||vm.new_value_error("Face Edge outside membership"))?.clone().downcast::<Edge>().map_err(|_|vm.new_value_error("Face Edge requires Edge"))?};
                         let radial=edge.faces.read().clone().ok_or_else(||vm.new_value_error("Cleared Edge radial"))?.downcast::<rustpython_vm::builtins::PyList>().map_err(|_|vm.new_value_error("Edge faces requires list"))?;
-                        let mut values=radial.borrow_vec_mut();if !values.iter().any(|v|v.is(&face)){values.try_reserve(1).map_err(|_|vm.new_value_error("Edge radial reservation refused"))?;values.push(face.clone().into());}
+                        // add_face registers every segment, unlike relink_face/add_hole deduplication.
+                        let mut values=radial.borrow_vec_mut();values.try_reserve(1).map_err(|_|vm.new_value_error("Edge radial reservation refused"))?;values.push(face.clone().into());
                     }
 
                     let mut faces = zelf.faces.borrow_vec_mut();
@@ -2015,6 +2016,21 @@ impl Controller {
        let mesh=self.scope.globals.get_item("m",vm).unwrap().downcast::<editable_mesh::Mesh>().unwrap();let f=self.scope.globals.get_item("held",vm).unwrap().downcast::<editable_mesh::Face>().unwrap();let v=self.scope.globals.get_item("v",vm).unwrap().downcast::<editable_mesh::Vertex>().unwrap();let oldloop=self.scope.globals.get_item("oldloop",vm).unwrap();let oldattrs=self.scope.globals.get_item("oldattrs",vm).unwrap();let oldposition=self.scope.globals.get_item("oldposition",vm).unwrap().downcast::<crate::vm_groups::native_groups::QVector3D>().unwrap();let shared=self.scope.globals.get_item("shared",vm).unwrap();let attrs=f.attrs.read().clone().downcast::<rustpython_vm::builtins::PyDict>().unwrap();let value=attrs.get_item("shared",vm).unwrap();let strings=value.downcast_ref::<rustpython_vm::builtins::PyList>().unwrap().borrow_vec().iter().map(|x|x.downcast_ref::<rustpython_vm::builtins::PyStr>().unwrap().as_utf8().unwrap().as_str().to_owned()).collect::<Vec<_>>();let owner=mesh.owner.read();let native=owner.mesh();let faces=mesh.faces.borrow_vec();let vertices=mesh.vertices.borrow_vec();
        serde_json::json!({"name":name,"positions":native.vertices.iter().map(|v|v.position.to_array()).collect::<Vec<_>>(),"faces":native.faces.iter().map(|f|f.vertices.clone()).collect::<Vec<_>>(),"face_live":faces.iter().any(|x|x.is(&f)),"vertex_live":vertices.iter().any(|x|x.is(&v)),"loop_original":f.r#loop.read().is(&oldloop),"position_original":v.position.read().is(&oldposition),"attrs_original":f.attrs.read().is(&oldattrs),"shared_value":strings,"shared_identity":value.is(&shared),"held_position":oldposition.coordinates(),"undo":self.undo.len(),"redo":self.redo.len()})
       })
+    }
+    pub fn observe_mesh_incidence(&self,name:&str)->serde_json::Value {
+        self.interpreter.enter(|vm| {
+            use rustpython_vm::{AsObject,builtins::{PyList,PySet}};
+            let mesh=self.scope.globals.get_item("m",vm).unwrap().downcast::<editable_mesh::Mesh>().unwrap();
+            let vertices=mesh.vertices.borrow_vec();let edges=mesh.edges.borrow_vec();let faces=mesh.faces.borrow_vec();
+            let id=|value:&rustpython_vm::PyObject,items:&[rustpython_vm::PyObjectRef]|items.iter().position(|x|x.is(value));
+            let positions=vertices.iter().map(|v|v.downcast_ref::<editable_mesh::Vertex>().unwrap().position.read().coordinates()).collect::<Vec<_>>();
+            let endpoints=edges.iter().map(|e|{let e=e.downcast_ref::<editable_mesh::Edge>().unwrap();[id(e.v0.read().as_ref().unwrap().as_object(),&vertices),id(e.v1.read().as_ref().unwrap().as_object(),&vertices)]}).collect::<Vec<_>>();
+            let incidence=vertices.iter().map(|v|{let v=v.downcast_ref::<editable_mesh::Vertex>().unwrap();let set=v.edges.read().clone().unwrap().downcast::<PySet>().unwrap();let mut ids=set.elements().iter().map(|e|id(e,&edges)).collect::<Vec<_>>();ids.sort();ids}).collect::<Vec<_>>();
+            let radial=edges.iter().map(|e|{let e=e.downcast_ref::<editable_mesh::Edge>().unwrap();let values=e.faces.read().clone().unwrap().downcast::<PyList>().unwrap();let result=values.borrow_vec().iter().map(|f|id(f,&faces)).collect::<Vec<_>>();result}).collect::<Vec<_>>();
+            let rings=faces.iter().map(|f|{let f=f.downcast_ref::<editable_mesh::Face>().unwrap();let outer=f.r#loop.read().clone();let outer=outer.borrow_vec().iter().map(|v|id(v,&vertices)).collect::<Vec<_>>();let holes=f.hole_loops.read().clone();let holes=holes.borrow_vec().iter().map(|h|h.downcast_ref::<PyList>().unwrap().borrow_vec().iter().map(|v|id(v,&vertices)).collect::<Vec<_>>()).collect::<Vec<_>>();serde_json::json!({"loop":outer,"holes":holes})}).collect::<Vec<_>>();
+            let owner=mesh.owner.read();let native=owner.mesh();
+            serde_json::json!({"name":name,"positions":positions,"endpoints":endpoints,"incidence":incidence,"radial":radial,"faces":rings,"native_radial":native.edges.iter().map(|e|e.faces.clone()).collect::<Vec<_>>(),"undo":self.undo.len(),"redo":self.redo.len()})
+        })
     }
     pub fn observe_graph_order(&self)->serde_json::Value {
         self.interpreter.enter(|vm| {
