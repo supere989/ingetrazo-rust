@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""One stable integrated suite and affected consumers, with frozen source inputs."""
+"""One stable integrated suite and software Vulkan app controls; hardware replay separate."""
 import hashlib,json,os,subprocess,time,zipfile
 from pathlib import Path
 root=Path(__file__).resolve().parents[3]
@@ -56,14 +56,7 @@ if run('sweep-unpack',['python3','scripts/check-metal-face-sweep.py',str(audit/'
     run('vulkan-app',['/tmp/ingetrazo-parity-python/bin/python','scripts/check-native-face-sweep-application.py',str(binary/'native_vulkan_face_sweep_application_probe'),str(work/'vulkan-app'),'--source-dir',str(work/'sweep-input'),'--source',sha])
 # Cache and source-camera changes are jointly exercised by this freshly built app.
 run('vulkan-textured-app',['/tmp/ingetrazo-parity-python/bin/python','scripts/check-native-face-sweep-application.py',str(binary/'native_vulkan_face_sweep_application_probe'),str(work/'vulkan-textured-app'),'--source-dir',str(work/'sweep-input'),'--source',sha,'--case','front-texture-back-override'])
-recipes=json.loads((work/'sweep-input/original.json').read_text())['cases']
-frames=[]
-for recipe in recipes:
-    name=recipe['name']; out=work/'source-frames'/name
-    if run('source-frame-'+name,['/tmp/ingetrazo-parity-python/bin/python','scripts/check-native-face-sweep-application.py',str(binary/'native_vulkan_face_sweep_application_probe'),str(out),'--source-dir',str(work/'sweep-input'),'--source',sha,'--case',name,'--source-frames']):
-        result=json.loads((out/'source-comparison.json').read_text()); frames.append(result)
-(work/'source-frame-summary.json').write_text(json.dumps(frames,indent=2)+'\n')
-assert len(frames)==len(recipes)==6 and all(r['passed'] and len(r['comparisons'])==4 for r in frames),'Strict source frame failure retained'
+# Hardware exact-frame checks run through gpu-replay.py in the owned NVIDIA devbox.
 inputs=[shared,clips,context,closed,archive,audit/'face-sweep-label-source/records.zip']
 (work/'input-sha256.json').write_text(json.dumps({str(p.relative_to(root)):hashlib.sha256(p.read_bytes()).hexdigest() for p in inputs},indent=2)+'\n')
 raise SystemExit(any(s['exit'] for s in stages))

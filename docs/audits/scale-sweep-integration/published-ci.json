@@ -1,0 +1,90 @@
+{
+  "commit": "39cb1522ea13c50eefae598285e6a52d2ad34452",
+  "observed_at": "2026-10-11 11:49:12 UTC",
+  "runs": [
+    {
+      "kind": "semantic",
+      "id": 38135748435,
+      "url": "https://github.com/supere989/ingetrazo-rust/actions/runs/38135748435",
+      "jobs": [
+        {
+          "id": 114459134513,
+          "name": "compilation-and-tests",
+          "head_sha": "39cb1522ea13c50eefae598285e6a52d2ad34452",
+          "status": "completed",
+          "conclusion": "success",
+          "started_at": "2026-10-11T11:29:34Z",
+          "completed_at": "2026-10-11T11:44:54Z",
+          "url": "https://github.com/supere989/ingetrazo-rust/actions/runs/38135748435/job/114459134513"
+        },
+        {
+          "id": 114459134576,
+          "name": "Native Metal compile (x86_64-apple-darwin)",
+          "head_sha": "39cb1522ea13c50eefae598285e6a52d2ad34452",
+          "status": "completed",
+          "conclusion": "success",
+          "started_at": "2026-10-11T11:29:34Z",
+          "completed_at": "2026-10-11T11:30:18Z",
+          "url": "https://github.com/supere989/ingetrazo-rust/actions/runs/38135748435/job/114459134576"
+        },
+        {
+          "id": 114459134631,
+          "name": "Native Metal compile (aarch64-apple-darwin)",
+          "head_sha": "39cb1522ea13c50eefae598285e6a52d2ad34452",
+          "status": "completed",
+          "conclusion": "success",
+          "started_at": "2026-10-11T11:29:34Z",
+          "completed_at": "2026-10-11T11:30:18Z",
+          "url": "https://github.com/supere989/ingetrazo-rust/actions/runs/38135748435/job/114459134631"
+        },
+        {
+          "id": 114459134668,
+          "name": "Native Metal framework link (macos-15-intel)",
+          "head_sha": "39cb1522ea13c50eefae598285e6a52d2ad34452",
+          "status": "completed",
+          "conclusion": "success",
+          "started_at": "2026-10-11T11:29:37Z",
+          "completed_at": "2026-10-11T11:37:21Z",
+          "url": "https://github.com/supere989/ingetrazo-rust/actions/runs/38135748435/job/114459134668"
+        },
+        {
+          "id": 114459134686,
+          "name": "Native Metal framework link (macos-15)",
+          "head_sha": "39cb1522ea13c50eefae598285e6a52d2ad34452",
+          "status": "completed",
+          "conclusion": "success",
+          "started_at": "2026-10-11T11:29:39Z",
+          "completed_at": "2026-10-11T11:32:34Z",
+          "url": "https://github.com/supere989/ingetrazo-rust/actions/runs/38135748435/job/114459134686"
+        }
+      ]
+    },
+    {
+      "kind": "metal_compute",
+      "id": 38135748449,
+      "url": "https://github.com/supere989/ingetrazo-rust/actions/runs/38135748449",
+      "jobs": [
+        {
+          "id": 114459134496,
+          "name": "Actual ordered UI and CAD compute (macos-15)",
+          "head_sha": "39cb1522ea13c50eefae598285e6a52d2ad34452",
+          "status": "completed",
+          "conclusion": "success",
+          "started_at": "2026-10-11T11:29:42Z",
+          "completed_at": "2026-10-11T11:31:30Z",
+          "url": "https://github.com/supere989/ingetrazo-rust/actions/runs/38135748449/job/114459134496"
+        },
+        {
+          "id": 114459134689,
+          "name": "Actual ordered UI and CAD compute (macos-15-intel)",
+          "head_sha": "39cb1522ea13c50eefae598285e6a52d2ad34452",
+          "status": "completed",
+          "conclusion": "success",
+          "started_at": "2026-10-11T11:29:35Z",
+          "completed_at": "2026-10-11T11:33:34Z",
+          "url": "https://github.com/supere989/ingetrazo-rust/actions/runs/38135748449/job/114459134689"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,350 @@
+[
+  {
+    "name": "workspace-tests",
+    "command": [
+      "cargo",
+      "test",
+      "--workspace",
+      "--locked",
+      "--tests",
+      "--no-fail-fast",
+      "-j2"
+    ],
+    "source_commit": "feeaa59eb51e640a3c488e6fcfd2676108c4cc13",
+    "exit": 0,
+    "seconds": 26.602
+  },
+  {
+    "name": "doctests",
+    "command": [
+      "cargo",
+      "test",
+      "--workspace",
+      "--locked",
+      "--doc",
+      "--no-fail-fast",
+      "-j2"
+    ],
+    "source_commit": "feeaa59eb51e640a3c488e6fcfd2676108c4cc13",
+    "exit": 0,
+    "seconds": 1.021
+  },
+  {
+    "name": "examples-check",
+    "command": [
+      "cargo",
+      "check",
+      "--workspace",
+      "--locked",
+      "--examples",
+      "-j2"
+    ],
+    "source_commit": "feeaa59eb51e640a3c488e6fcfd2676108c4cc13",
+    "exit": 0,
+    "seconds": 5.786
+  },
+  {
+    "name": "named-build",
+    "command": [
+      "cargo",
+      "build",
+      "--locked",
+      "-j2",
+      "-p",
+      "ingetrazo-gui",
+      "--example",
+      "scale_workflows",
+      "--example",
+      "scale_egui_input",
+      "--example",
+      "scale_context",
+      "--example",
+      "pushpull_closed_acquisition",
+      "--example",
+      "native_vulkan_face_sweep_application_probe"
+    ],
+    "source_commit": "feeaa59eb51e640a3c488e6fcfd2676108c4cc13",
+    "exit": 0,
+    "seconds": 1.198
+  },
+  {
+    "name": "scale-native",
+    "command": [
+      "/tmp/ingetrazo-native-font-merge-target/debug/examples/scale_workflows",
+      "/tmp/ingetrazo-shared-cache-camera-integration/source.json",
+      "/tmp/ingetrazo-shared-cache-camera-integration/scale-native.json"
+    ],
+    "source_commit": "feeaa59eb51e640a3c488e6fcfd2676108c4cc13",
+    "exit": 0,
+    "seconds": 0.012
+  },
+  {
+    "name": "scale-check",
+    "command": [
+      "python3",
+      "scripts/check-scale-workflows.py",
+      "/tmp/ingetrazo-shared-cache-camera-integration/source.json",
+      "/tmp/ingetrazo-shared-cache-camera-integration/warp-source.json",
+      "/tmp/ingetrazo-shared-cache-camera-integration/scale-native.json",
+      "/tmp/ingetrazo-shared-cache-camera-integration/scale-comparison.json"
+    ],
+    "source_commit": "feeaa59eb51e640a3c488e6fcfd2676108c4cc13",
+    "exit": 0,
+    "seconds": 0.025
+  },
+  {
+    "name": "shared-native",
+    "command": [
+      "/tmp/ingetrazo-native-font-merge-target/debug/examples/scale_workflows",
+      "/tmp/ingetrazo-next-integration/docs/audits/scale-shared/source.json",
+      "/tmp/ingetrazo-shared-cache-camera-integration/shared-native.json"
+    ],
+    "source_commit": "feeaa59eb51e640a3c488e6fcfd2676108c4cc13",
+    "exit": 0,
+    "seconds": 0.011
+  },
+  {
+    "name": "shared-check",
+    "command": [
+      "python3",
+      "scripts/check-scale-shared.py",
+      "/tmp/ingetrazo-next-integration/docs/audits/scale-shared/source.json",
+      "/tmp/ingetrazo-shared-cache-camera-integration/shared-native.json",
+      "/tmp/ingetrazo-shared-cache-camera-integration/shared-comparison.json"
+    ],
+    "source_commit": "feeaa59eb51e640a3c488e6fcfd2676108c4cc13",
+    "exit": 0,
+    "seconds": 0.024
+  },
+  {
+    "name": "egui-native",
+    "command": [
+      "/tmp/ingetrazo-native-font-merge-target/debug/examples/scale_egui_input",
+      "/tmp/ingetrazo-shared-cache-camera-integration/egui-native.json",
+      "/tmp/ingetrazo-next-integration/docs/audits/scale-egui-ingress/source-eye-clip.json"
+    ],
+    "source_commit": "feeaa59eb51e640a3c488e6fcfd2676108c4cc13",
+    "exit": 0,
+    "seconds": 0.136
+  },
+  {
+    "name": "egui-check",
+    "command": [
+      "python3",
+      "scripts/check-scale-egui-input.py",
+      "/tmp/ingetrazo-next-integration/docs/audits/scale-egui-ingress/source-eye-clip.json",
+      "/tmp/ingetrazo-shared-cache-camera-integration/egui-native.json"
+    ],
+    "source_commit": "feeaa59eb51e640a3c488e6fcfd2676108c4cc13",
+    "exit": 0,
+    "seconds": 0.013
+  },
+  {
+    "name": "context-native",
+    "command": [
+      "/tmp/ingetrazo-native-font-merge-target/debug/examples/scale_context",
+      "/tmp/ingetrazo-next-integration/docs/audits/scale-context-lifetime/source.json",
+      "/tmp/ingetrazo-shared-cache-camera-integration/context-native.json"
+    ],
+    "source_commit": "feeaa59eb51e640a3c488e6fcfd2676108c4cc13",
+    "exit": 0,
+    "seconds": 0.006
+  },
+  {
+    "name": "context-check",
+    "command": [
+      "python3",
+      "scripts/check-scale-context.py",
+      "/tmp/ingetrazo-next-integration/docs/audits/scale-context-lifetime/source.json",
+      "/tmp/ingetrazo-shared-cache-camera-integration/context-native.json"
+    ],
+    "source_commit": "feeaa59eb51e640a3c488e6fcfd2676108c4cc13",
+    "exit": 0,
+    "seconds": 0.014
+  },
+  {
+    "name": "endpoint-native",
+    "command": [
+      "/tmp/ingetrazo-native-font-merge-target/debug/examples/pushpull_closed_acquisition",
+      "/tmp/ingetrazo-next-integration/docs/audits/pushpull-endpoint-vcb/source.json",
+      "/tmp/ingetrazo-shared-cache-camera-integration/endpoint-native.json"
+    ],
+    "source_commit": "feeaa59eb51e640a3c488e6fcfd2676108c4cc13",
+    "exit": 0,
+    "seconds": 0.016
+  },
+  {
+    "name": "endpoint-check",
+    "command": [
+      "python3",
+      "scripts/check-pushpull-closed-vcb.py",
+      "/tmp/ingetrazo-next-integration/docs/audits/pushpull-endpoint-vcb/source.json",
+      "/tmp/ingetrazo-shared-cache-camera-integration/endpoint-native.json",
+      "/tmp/ingetrazo-shared-cache-camera-integration/endpoint-comparison.json"
+    ],
+    "source_commit": "feeaa59eb51e640a3c488e6fcfd2676108c4cc13",
+    "exit": 0,
+    "seconds": 0.031
+  },
+  {
+    "name": "sweep-unpack",
+    "command": [
+      "python3",
+      "scripts/check-metal-face-sweep.py",
+      "/tmp/ingetrazo-next-integration/docs/audits/face-sweep-label-source",
+      "/tmp/ingetrazo-shared-cache-camera-integration/sweep-input",
+      "--unpack"
+    ],
+    "source_commit": "feeaa59eb51e640a3c488e6fcfd2676108c4cc13",
+    "exit": 0,
+    "seconds": 0.03
+  },
+  {
+    "name": "vulkan-app",
+    "command": [
+      "/tmp/ingetrazo-parity-python/bin/python",
+      "scripts/check-native-face-sweep-application.py",
+      "/tmp/ingetrazo-native-font-merge-target/debug/examples/native_vulkan_face_sweep_application_probe",
+      "/tmp/ingetrazo-shared-cache-camera-integration/vulkan-app",
+      "--source-dir",
+      "/tmp/ingetrazo-shared-cache-camera-integration/sweep-input",
+      "--source",
+      "feeaa59eb51e640a3c488e6fcfd2676108c4cc13"
+    ],
+    "source_commit": "feeaa59eb51e640a3c488e6fcfd2676108c4cc13",
+    "exit": 0,
+    "seconds": 3.923
+  },
+  {
+    "name": "vulkan-textured-app",
+    "command": [
+      "/tmp/ingetrazo-parity-python/bin/python",
+      "scripts/check-native-face-sweep-application.py",
+      "/tmp/ingetrazo-native-font-merge-target/debug/examples/native_vulkan_face_sweep_application_probe",
+      "/tmp/ingetrazo-shared-cache-camera-integration/vulkan-textured-app",
+      "--source-dir",
+      "/tmp/ingetrazo-shared-cache-camera-integration/sweep-input",
+      "--source",
+      "feeaa59eb51e640a3c488e6fcfd2676108c4cc13",
+      "--case",
+      "front-texture-back-override"
+    ],
+    "source_commit": "feeaa59eb51e640a3c488e6fcfd2676108c4cc13",
+    "exit": 0,
+    "seconds": 3.584
+  },
+  {
+    "name": "source-frame-reversed-door",
+    "command": [
+      "/tmp/ingetrazo-parity-python/bin/python",
+      "scripts/check-native-face-sweep-application.py",
+      "/tmp/ingetrazo-native-font-merge-target/debug/examples/native_vulkan_face_sweep_application_probe",
+      "/tmp/ingetrazo-shared-cache-camera-integration/source-frames/reversed-door",
+      "--source-dir",
+      "/tmp/ingetrazo-shared-cache-camera-integration/sweep-input",
+      "--source",
+      "feeaa59eb51e640a3c488e6fcfd2676108c4cc13",
+      "--case",
+      "reversed-door",
+      "--source-frames"
+    ],
+    "source_commit": "feeaa59eb51e640a3c488e6fcfd2676108c4cc13",
+    "exit": 0,
+    "seconds": 1.342
+  },
+  {
+    "name": "source-frame-lone-sheet",
+    "command": [
+      "/tmp/ingetrazo-parity-python/bin/python",
+      "scripts/check-native-face-sweep-application.py",
+      "/tmp/ingetrazo-native-font-merge-target/debug/examples/native_vulkan_face_sweep_application_probe",
+      "/tmp/ingetrazo-shared-cache-camera-integration/source-frames/lone-sheet",
+      "--source-dir",
+      "/tmp/ingetrazo-shared-cache-camera-integration/sweep-input",
+      "--source",
+      "feeaa59eb51e640a3c488e6fcfd2676108c4cc13",
+      "--case",
+      "lone-sheet",
+      "--source-frames"
+    ],
+    "source_commit": "feeaa59eb51e640a3c488e6fcfd2676108c4cc13",
+    "exit": 0,
+    "seconds": 1.33
+  },
+  {
+    "name": "source-frame-front-recess",
+    "command": [
+      "/tmp/ingetrazo-parity-python/bin/python",
+      "scripts/check-native-face-sweep-application.py",
+      "/tmp/ingetrazo-native-font-merge-target/debug/examples/native_vulkan_face_sweep_application_probe",
+      "/tmp/ingetrazo-shared-cache-camera-integration/source-frames/front-recess",
+      "--source-dir",
+      "/tmp/ingetrazo-shared-cache-camera-integration/sweep-input",
+      "--source",
+      "feeaa59eb51e640a3c488e6fcfd2676108c4cc13",
+      "--case",
+      "front-recess",
+      "--source-frames"
+    ],
+    "source_commit": "feeaa59eb51e640a3c488e6fcfd2676108c4cc13",
+    "exit": 0,
+    "seconds": 1.339
+  },
+  {
+    "name": "source-frame-back-recess",
+    "command": [
+      "/tmp/ingetrazo-parity-python/bin/python",
+      "scripts/check-native-face-sweep-application.py",
+      "/tmp/ingetrazo-native-font-merge-target/debug/examples/native_vulkan_face_sweep_application_probe",
+      "/tmp/ingetrazo-shared-cache-camera-integration/source-frames/back-recess",
+      "--source-dir",
+      "/tmp/ingetrazo-shared-cache-camera-integration/sweep-input",
+      "--source",
+      "feeaa59eb51e640a3c488e6fcfd2676108c4cc13",
+      "--case",
+      "back-recess",
+      "--source-frames"
+    ],
+    "source_commit": "feeaa59eb51e640a3c488e6fcfd2676108c4cc13",
+    "exit": 0,
+    "seconds": 1.329
+  },
+  {
+    "name": "source-frame-front-texture-back-override",
+    "command": [
+      "/tmp/ingetrazo-parity-python/bin/python",
+      "scripts/check-native-face-sweep-application.py",
+      "/tmp/ingetrazo-native-font-merge-target/debug/examples/native_vulkan_face_sweep_application_probe",
+      "/tmp/ingetrazo-shared-cache-camera-integration/source-frames/front-texture-back-override",
+      "--source-dir",
+      "/tmp/ingetrazo-shared-cache-camera-integration/sweep-input",
+      "--source",
+      "feeaa59eb51e640a3c488e6fcfd2676108c4cc13",
+      "--case",
+      "front-texture-back-override",
+      "--source-frames"
+    ],
+    "source_commit": "feeaa59eb51e640a3c488e6fcfd2676108c4cc13",
+    "exit": 0,
+    "seconds": 1.409
+  },
+  {
+    "name": "source-frame-ordinary-prism",
+    "command": [
+      "/tmp/ingetrazo-parity-python/bin/python",
+      "scripts/check-native-face-sweep-application.py",
+      "/tmp/ingetrazo-native-font-merge-target/debug/examples/native_vulkan_face_sweep_application_probe",
+      "/tmp/ingetrazo-shared-cache-camera-integration/source-frames/ordinary-prism",
+      "--source-dir",
+      "/tmp/ingetrazo-shared-cache-camera-integration/sweep-input",
+      "--source",
+      "feeaa59eb51e640a3c488e6fcfd2676108c4cc13",
+      "--case",
+      "ordinary-prism",
+      "--source-frames"
+    ],
+    "source_commit": "feeaa59eb51e640a3c488e6fcfd2676108c4cc13",
+    "exit": 0,
+    "seconds": 1.37
+  }
+]
