@@ -264,7 +264,7 @@ fn record_ready<'a>(info:&egui::PaintCallbackInfo,device:&Device,command:vk::Com
                     let gate=r.gates.as_ref().and_then(|g|g.get(batch_index)).copied().ok_or_else(||egui_ash_renderer::RendererError::Init("Annotation draw gate absent".into()))?;
                     let ids=gate_ids(gate.gate,count).map_err(egui_ash_renderer::RendererError::Init)?;
                     device.cmd_push_constants(command,p.layout,vk::ShaderStageFlags::VERTEX|vk::ShaderStageFlags::FRAGMENT,24,bytemuck::cast_slice(&ids));
-                    let operator=match gate.composition{crate::annotation_overlay_geometry::Composition::SpanByte=>0u32,crate::annotation_overlay_geometry::Composition::GlyphRgba64Opaque=>1u32};
+                    let operator=match gate.composition{crate::annotation_overlay_geometry::Composition::SpanByte=>0u32,crate::annotation_overlay_geometry::Composition::GlyphRgba64Opaque=>1u32,crate::annotation_overlay_geometry::Composition::GlyphLcd(mask)=>2u32|(u32::from(mask[0])<<8)|(u32::from(mask[1])<<16)|(u32::from(mask[2])<<24)};
                     device.cmd_push_constants(command,p.layout,vk::ShaderStageFlags::VERTEX|vk::ShaderStageFlags::FRAGMENT,48,bytemuck::bytes_of(&operator));
                 }
                 device.cmd_push_constants(
@@ -272,7 +272,7 @@ fn record_ready<'a>(info:&egui::PaintCallbackInfo,device:&Device,command:vk::Com
                     p.layout,
                     vk::ShaderStageFlags::VERTEX | vk::ShaderStageFlags::FRAGMENT,
                     32,
-                    bytemuck::cast_slice(&if p.annotations && r.gates.as_ref().unwrap()[batch_index].composition==crate::annotation_overlay_geometry::Composition::GlyphRgba64Opaque{r.gates.as_ref().unwrap()[batch_index].straight_rgba.map(|v|f32::from(v)/255.)}else{*rgba}),
+                    bytemuck::cast_slice(&if p.annotations && r.gates.as_ref().unwrap()[batch_index].composition!=crate::annotation_overlay_geometry::Composition::SpanByte{r.gates.as_ref().unwrap()[batch_index].straight_rgba.map(|v|f32::from(v)/255.)}else{*rgba}),
                 );
                 if p.integer&&!r.opaque{
                     let ranges=r.ordered_draws.as_ref().ok_or_else(||egui_ash_renderer::RendererError::Init("CAD2D disjoint draw metadata absent".into()))?;
@@ -317,7 +317,7 @@ fn admit_gates(gates:Option<&[crate::annotation_overlay_geometry::Draw]>,batches
 fn admit_draw_colors(draws:&[crate::annotation_overlay_geometry::Draw],batches:&[Batch])->Result<(),String>{
  if draws.len()!=batches.len(){return Err("Annotation material/batch inventory mismatch".into());}
  for (draw,batch) in draws.iter().zip(batches){
-  if draw.composition==crate::annotation_overlay_geometry::Composition::GlyphRgba64Opaque
+  if draw.composition!=crate::annotation_overlay_geometry::Composition::SpanByte
    &&batch.color.0!=draw.straight_rgba.map(|v|f32::from(v)/255.){
    return Err("Annotation straight glyph palette differs from admitted batch".into());
   }
@@ -482,7 +482,7 @@ unsafe{context.device.create_descriptor_set_layout(&vk::DescriptorSetLayoutCreat
         let opaque=if already_admitted{self.annotation_admission.as_ref().unwrap().opaque}else{
             state.geometry.validate_batches(&state.batches)?;
             admit_gates(state.gates.as_deref(),state.batches.len(),count)?;
-            let opaque=state.geometry.is_opaque(&state.batches);
+            let opaque=state.geometry.is_opaque(&state.batches)&&state.gates.as_ref().is_none_or(|gates|gates.iter().all(|g|!matches!(g.composition,crate::annotation_overlay_geometry::Composition::GlyphLcd(mask) if mask!=[255;3])));
             if !opaque{
                 state.geometry.ordered_draws().ok_or("Annotation ordered span metadata absent")?;
                 let mut end=0;

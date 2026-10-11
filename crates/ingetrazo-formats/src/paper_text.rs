@@ -221,6 +221,9 @@ unsafe extern "C" fn release_advances(data: *mut c_void) {
 /// Device-resolution antialiased coverage, with FreeType baseline bearings.
 /// The font owner remains immutable; each operation restores the face transform.
 #[derive(Debug,Clone)]
+pub struct RasterLcdGlyph {pub left:i32,pub top:i32,pub width:usize,pub height:usize,pub coverage:Vec<u8>}
+
+#[derive(Debug,Clone)]
 pub struct RasterGlyph {pub left:i32,pub top:i32,pub width:usize,pub height:usize,pub coverage:Vec<u8>}
 struct RestoreFaceTransform(ft::FT_Face);
 impl Drop for RestoreFaceTransform {fn drop(&mut self){unsafe{ft::FT_Set_Transform(self.0,std::ptr::null_mut(),std::ptr::null_mut());}}}
@@ -428,6 +431,43 @@ impl PaperFont {
                 for y in 0..height{let row=bitmap.buffer.offset((y as isize)*(bitmap.pitch as isize));coverage[y*width..(y+1)*width].copy_from_slice(std::slice::from_raw_parts(row,width));}
             }
             Ok(RasterGlyph{left:(*slot).bitmap_left,top:(*slot).bitmap_top,width,height,coverage})
+        }
+    }
+    /// Source OpenGL RGB-horizontal A32 glyph coverage. This opt-in path
+    /// preserves the existing grayscale renderer and admits the full RGB bytes.
+    pub fn rasterize_lcd_glyph(&self,glyph:u32,scale:f64,phase:[u8;2],italic_shear:f64)->Result<RasterLcdGlyph,String>{
+        if !scale.is_finite()||scale<=0.||scale>40.||phase.iter().any(|&p|p>=64)||!italic_shear.is_finite()||italic_shear.abs()>1.{return Err("Canvas glyph transform outside domain".into());}
+        unsafe{
+            let geometry=self.data.as_ref().geometry.as_ref().ok_or("Canvas glyph requires native font geometry")?;
+            let face=geometry.face.raw();if glyph>=(*face).num_glyphs as u32{return Err("Canvas glyph index outside font".into());}
+            let mut matrix=ft::FT_Matrix{xx:(scale*65536.)as _,xy:(scale*italic_shear*65536.)as _,yx:0,yy:(scale*65536.)as _};
+            let mut delta=ft::FT_Vector{x:phase[0]as _,y:-(phase[1]as ft::FT_Pos)};
+            ft::FT_Set_Transform(face,&mut matrix,&mut delta);let _restore=RestoreFaceTransform(face);
+            // Qt 6.12 loadGlyphFor disables hinting for scaled nonrotation glyphs.
+            // Keep the pixel100 layout/face size; only this device raster load is unhinted.
+            let flags=geometry.flags|ft::FT_LOAD_NO_BITMAP|if scale!=1. {ft::FT_LOAD_NO_HINTING}else{0};
+            if ft::FT_Load_Glyph(face,glyph,flags)!=0||(*face).glyph.is_null(){return Err("Canvas glyph load failed".into());}
+            let slot=(*face).glyph;
+            if (*slot).format!=ft::FT_GLYPH_FORMAT_OUTLINE{return Err("Canvas glyph outline format unavailable".into());}
+            let mut bbox:ft::FT_BBox=std::mem::zeroed();ft::FT_Outline_Get_CBox(&(*slot).outline,&mut bbox);
+            let w=bbox.xMax.checked_sub(bbox.xMin).and_then(|v|v.checked_add(127)).map(|v|v/64+2).filter(|&v|(0..=4096).contains(&v)).ok_or("Canvas glyph dimension exceeded")?;
+            let h=bbox.yMax.checked_sub(bbox.yMin).and_then(|v|v.checked_add(127)).map(|v|v/64+2).filter(|&v|(0..=4096).contains(&v)).ok_or("Canvas glyph dimension exceeded")?;
+            if w.checked_mul(h).is_none_or(|n|n>4*1024*1024){return Err("Canvas glyph coverage budget exceeded".into());}
+            // Qt6.12 QFontEngineFT A32 uses the default LCD filter, then resets
+            // the library filter. Layout/load flags remain shared with the gray path.
+            if ft::FT_Library_SetLcdFilter((*slot).library,ft::FT_LCD_FILTER_DEFAULT)!=0{return Err("LCD glyph filter unavailable".into());}
+            let rendered=ft::FT_Render_Glyph(slot,ft::FT_RENDER_MODE_LCD);
+            ft::FT_Library_SetLcdFilter((*slot).library,ft::FT_LCD_FILTER_NONE);
+            if rendered!=0{return Err("LCD glyph raster failed".into());}
+            let bitmap=&(*slot).bitmap;if bitmap.width%3!=0{return Err("Invalid LCD glyph width".into());}let width=bitmap.width as usize/3;let height=bitmap.rows as usize;
+            let bytes=width.checked_mul(height).and_then(|n|n.checked_mul(3)).filter(|&n|n<=4*1024*1024).ok_or("Canvas glyph coverage budget exceeded")?;
+            if width>4096||height>4096{return Err("Canvas glyph dimension exceeded".into());}
+            let mut coverage=Vec::new();coverage.try_reserve_exact(bytes).map_err(|_|"Canvas glyph coverage allocation failed")?;coverage.resize(bytes,0);
+            if bytes>0{
+                if bitmap.buffer.is_null()||bitmap.pixel_mode as u32!=ft::FT_PIXEL_MODE_LCD||bitmap.num_grays!=256||(bitmap.pitch.unsigned_abs()as usize)<width*3{return Err("Invalid canvas glyph bitmap".into());}
+                for y in 0..height{let row=bitmap.buffer.offset((y as isize)*(bitmap.pitch as isize));coverage[y*width*3..(y+1)*width*3].copy_from_slice(std::slice::from_raw_parts(row,width*3));}
+            }
+            Ok(RasterLcdGlyph{left:(*slot).bitmap_left,top:(*slot).bitmap_top,width,height,coverage})
         }
     }
     /// Cached outline points/glyphs, useful for warm font-publication accounting.

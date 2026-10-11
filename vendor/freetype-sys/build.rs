@@ -43,6 +43,10 @@ fn main() {
         .define("FT2_BUILD_LIBRARY", None)
         .define("FT_CONFIG_OPTION_USE_PNG", None);
 
+    if std::env::var_os("CARGO_FEATURE_SOURCE_LCD").is_some() {
+        build.define("FT_CONFIG_OPTION_SUBPIXEL_RENDERING", None);
+    }
+
     add_sources(
         &mut build,
         "freetype2/src",

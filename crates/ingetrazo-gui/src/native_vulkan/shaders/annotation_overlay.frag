@@ -12,6 +12,14 @@ void main(){
  if((push.gates.x!=0xffffffffu&&hidden[push.gates.x]!=0u)||(push.gates.y!=0xffffffffu&&hidden[push.gates.y]!=0u)){discard;}
  uint coverage=uint(floor(clamp(edge_coverage,0,1)*255.0+0.5));
  uvec4 color=uvec4(floor(clamp(push.rgba,0,1)*255.0+0.5));
+ if((push.composition&255u)==2u){
+  vec3 mask=vec3((push.composition>>8u)&255u,(push.composition>>16u)&255u,(push.composition>>24u)&255u)/255.0;
+  if(all(equal(mask,vec3(1)))){output_color=vec4(push.rgba.rgb,1.);return;}
+  // Source OpenGL A32 solid brush: CONSTANT_COLOR, ONE_MINUS_SRC_COLOR.
+  // Source alphaBufferSize=0 discards alpha; the retained target remains opaque.
+  vec4 dst=subpassLoad(destination);
+  output_color=vec4(push.rgba.rgb*mask+dst.rgb*(vec3(1)-mask),1.);return;
+ }
  if(push.composition==1u){
   if(color.a==255u&&coverage==255u){output_color=vec4(color)/255.0;return;}
   // The native annotation pass targets the opaque retained framebuffer.

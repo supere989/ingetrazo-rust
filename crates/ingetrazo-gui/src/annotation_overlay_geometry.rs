@@ -7,13 +7,13 @@ use ingetrazo_render::{annotations::{Plan,Primitive,Gate},cad2d::{Geometry,Verte
 use ingetrazo_formats::{annotation_font, paper_font_resolver::Request};
 /// Source operator selected before palette premultiplication; immutable with its batch.
 #[derive(Clone,Copy,Debug,PartialEq,Eq)]
-pub enum Composition { SpanByte, GlyphRgba64Opaque }
+pub enum Composition { SpanByte, GlyphRgba64Opaque, GlyphLcd([u8;3]) }
 #[derive(Clone,Copy,Debug,PartialEq)]
 pub struct Draw {pub gate:Gate,pub composition:Composition,pub straight_rgba:[u8;4]}
 impl Draw {pub fn span(gate:Gate)->Self{Self{gate,composition:Composition::SpanByte,straight_rgba:[0;4]}}}
 pub struct Mesh {pub geometry:Arc<Geometry>,pub batches:Arc<[Batch]>,pub gates:Arc<[Draw]>}
 #[derive(Clone,Copy)]pub struct Limits {pub cells:usize,pub spans:usize,pub geometry_bytes:usize,pub glyphs:usize,pub glyph_bytes:usize}
-#[derive(Clone,Copy,PartialEq,Eq,Hash)]struct GlyphKey{font:ingetrazo_formats::paper_font::FontKey,pixels:u32,glyph:u32,density:u64,phase:[u8;2]}
+#[derive(Clone,Copy,PartialEq,Eq,Hash)]struct GlyphKey{font:ingetrazo_formats::paper_font::FontKey,pixels:u32,glyph:u32,density:u64,phase:[u8;2],lcd:bool}
 #[derive(Clone,Copy,PartialEq,Eq)]enum GlyphPlacement{Raster,OpenGl}
 pub struct Cache {glyph_order:VecDeque<GlyphKey>,glyphs:HashMap<GlyphKey,Arc<ingetrazo_formats::paper_text::RasterGlyph>>,glyph_bytes:usize,glyph_builds:u64,fonts:annotation_font::Cache,current:Option<(Arc<Plan>,u64,u64,[i32;4],GlyphPlacement,Arc<Mesh>)>,builds:u64,limits:Limits}
 impl Cache {
@@ -51,14 +51,14 @@ impl Cache {
   let mesh=Arc::new(self.build(&plan,density,font_dpi,clip,placement)?);
   self.current=Some((plan,density.to_bits(),font_dpi.to_bits(),clip,placement,mesh.clone()));self.builds+=1;Ok(mesh)
  }
- fn glyph(&mut self,face:&ingetrazo_formats::annotation_font::Face,glyph:u32,density:f64,phase:[u8;2])->Result<Arc<ingetrazo_formats::paper_text::RasterGlyph>,String>{
-  let key=GlyphKey{font:face.key(),pixels:face.pixels(),glyph,density:density.to_bits(),phase};
+ fn glyph(&mut self,face:&ingetrazo_formats::annotation_font::Face,glyph:u32,density:f64,phase:[u8;2],lcd:bool)->Result<Arc<ingetrazo_formats::paper_text::RasterGlyph>,String>{
+  let key=GlyphKey{font:face.key(),pixels:face.pixels(),glyph,density:density.to_bits(),phase,lcd};
   if let Some(image)=self.glyphs.get(&key){return Ok(image.clone());}
   self.glyphs.try_reserve(1).map_err(|_|"Annotation glyph cache allocation failed")?;
   self.glyph_order.try_reserve(1).map_err(|_|"Annotation glyph order allocation failed")?;
   // One bounded cold raster candidate (the provider separately caps each mask)
   // is admitted before eviction. Failed candidates never evict existing masks.
-  let image=face.rasterize(glyph,density,phase)?;
+  let image=if lcd{let m=face.rasterize_lcd(glyph,density,phase)?;ingetrazo_formats::paper_text::RasterGlyph{left:m.left,top:m.top,width:m.width,height:m.height,coverage:m.coverage}}else{face.rasterize(glyph,density,phase)?};
   let bytes=image.coverage.len();
   if bytes>self.limits.glyph_bytes{return Err("Annotation retained glyph bytes exceeded".into());}
   let mut remaining_bytes=self.glyph_bytes.checked_add(bytes).ok_or("Annotation glyph byte overflow")?;
@@ -122,9 +122,28 @@ impl Cache {
         GlyphPlacement::Raster=>device_position(x,y)?,
         GlyphPlacement::OpenGl=>opengl_device_position(*position,[advance+i64::from(glyph.offset[0]),i64::from(glyph.offset[1])],density)?,
        };
-       let image=self.glyph(&run.font,glyph.id,density,phase)?;
+       let lcd=placement==GlyphPlacement::OpenGl;
+       let image=self.glyph(&run.font,glyph.id,density,phase,lcd)?;
        let left=x.checked_add(i64::from(image.left)).ok_or("Annotation glyph position overflow")?;
        let top=y.checked_sub(i64::from(image.top)).ok_or("Annotation glyph position overflow")?;
+       if lcd{
+        let glyph_first=writer.indices.len()as u32;let glyph_ranges=writer.ranges.len();
+        for row in 0..image.height{
+         let mut col=0;
+         while col<image.width{
+          let n=(row*image.width+col)*3;let mask:[u8;3]=image.coverage[n..n+3].try_into().unwrap();let start=col;
+          while col<image.width&&image.coverage[(row*image.width+col)*3..(row*image.width+col)*3+3]==mask{col+=1;}
+          if mask==[0;3]{continue;}
+          writer.layer_with_composition(vec![Span{x:i32::try_from(left+start as i64).map_err(|_|"LCD glyph x outside domain")?,y:i32::try_from(top+row as i64).map_err(|_|"LCD glyph y outside domain")?,len:u32::try_from(col-start).map_err(|_|"LCD glyph span length overflow")?,coverage:255}],*color,operation.gate,Composition::GlyphLcd(mask))?;
+         }
+        }
+        // RGB runs are disjoint within one glyph. Preserve one source layer
+        // barrier per glyph, rather than introducing a barrier per color run.
+        writer.ranges.truncate(glyph_ranges);
+        if writer.indices.len()as u32>glyph_first{writer.ranges.push(glyph_first..writer.indices.len()as u32);}
+        advance=advance.checked_add(i64::from(glyph.advance[0])).ok_or("Annotation text advance overflow")?;
+        continue;
+       }
        let mut spans=Vec::new();
        for row in 0..image.height{
         let mut col=0;
@@ -226,6 +245,14 @@ mod tests {
   assert_eq!(first.gates[0].gate,Gate::Point(0));
   for _ in 0..8{let warm=cache.prepare(plan.clone(),1.,96.).unwrap();assert!(Arc::ptr_eq(&first,&warm));assert_eq!(cache.stats(),counts);assert_eq!(cache.glyph_stats(),glyph_counts);}
   let changed=cache.prepare(plan.clone(),1.5,96.).unwrap();assert!(!Arc::ptr_eq(&first,&changed));assert_ne!(first.geometry.id(),changed.geometry.id());
+ }
+ #[test]fn widget_rgb_masks_are_cached_without_changing_raster_default(){
+  let mut cache=cache();let plan=plan();let raster=cache.prepare(plan.clone(),1.,96.).unwrap();
+  assert!(raster.gates.iter().all(|g|!matches!(g.composition,Composition::GlyphLcd(_))));
+  let lcd=cache.prepare_widget_clipped(plan.clone(),1.,96.,[0,0,800,600]).unwrap();
+  assert!(lcd.gates.iter().any(|g|matches!(g.composition,Composition::GlyphLcd(m) if m[0]!=m[1]||m[1]!=m[2])));
+  let counts=cache.glyph_stats();let warm=cache.prepare_widget_clipped(plan,1.,96.,[0,0,800,600]).unwrap();
+  assert!(Arc::ptr_eq(&lcd,&warm));assert_eq!(counts,cache.glyph_stats());
  }
  #[test]fn glyph_capacity_refusal_keeps_previous_mesh_and_cached_mask(){
   let mut cache=cache();cache.limits.glyphs=1;

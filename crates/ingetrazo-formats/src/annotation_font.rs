@@ -24,6 +24,10 @@ impl Face {
     ) -> Result<RasterGlyph, String> {
         self.font.rasterize_glyph(glyph, density, phase, 0.)
     }
+    pub fn rasterize_lcd(&self,glyph:u32,density:f64,phase:[u8;2])->Result<crate::paper_text::RasterLcdGlyph,String>{
+        self.font.rasterize_lcd_glyph(glyph,density,phase,0.)
+    }
+
 }
 impl LayoutFont for Face {
     fn key(&self) -> FontKey {

@@ -45,3 +45,5 @@ version = "0.3.11"
 
 [features]
 bundled = []
+# Qt desktop A32 coverage needs the filtered LCD rasterizer; gray paths unchanged.
+source-lcd = []
