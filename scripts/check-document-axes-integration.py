@@ -106,6 +106,7 @@ with (cursor/"old-dispatch-rejection.log").open("w") as failure:
 assert rejected.returncode != 0, "Compiled original cursor dispatcher unexpectedly passed"
 annotations = out/"annotation-delete"
 ad = archive("annotation-delete", "manifest.json", ["delete-input.igz", "original.json"]+[name+"-original.igz" for name in ["root", "nested-annotations", "nested-mixed", "parked"]], annotations)
+ahd = archive("annotation-hover-delete", "manifest.json", ["hover-input.igz", "hover-delete-original.json"], annotations)
 run([binaries/(consumers[10]+suffix), annotations], "annotation-delete/runtime.log")
 run([sys.executable, repo/"scripts/check-annotation-delete.py", annotations], "annotation-delete/acceptance.json")
 run([sys.executable, repo/"scripts/check-annotation-delete-reopen.py", annotations], "annotation-delete/reopen-acceptance.json")
@@ -152,7 +153,7 @@ rows = json.loads((doc/"native.json").read_text())["rows"]
 assert [(x["fixture"],x["phase"]) for x in rows] == [(f,p) for f in ["retained","nested-leaves"] for p in ["edited","undo","redo"]]
 assert all(x["saved"] and x["clean"] for x in rows)
 result = {"revision":subprocess.check_output(["git","rev-parse","HEAD"],cwd=repo,text=True).strip(),
-          "source_pin":pin,"binary_sha256":identities,"source_archives":{"axes":a,"documents":d,"fillet":f,"pushpull_finite":p,"paste_save":ps,"box_selection":bs,"materials":mr,"cursor":cn,"annotations":ad,"zoom_extents":ze,"annotation_move":am,"annotation_acquisition":aa,"mesh_kernel":mk,"annotation_edit_style":ae,"annotation_text_create":at,"finite_kernel":mf,"finite_kernel_initial":mfa,"annotation_hover":ah},
+          "source_pin":pin,"binary_sha256":identities,"source_archives":{"axes":a,"documents":d,"fillet":f,"pushpull_finite":p,"paste_save":ps,"box_selection":bs,"materials":mr,"cursor":cn,"annotations":ad,"annotation_hover_delete":ahd,"zoom_extents":ze,"annotation_move":am,"annotation_acquisition":aa,"mesh_kernel":mk,"annotation_edit_style":ae,"annotation_text_create":at,"finite_kernel":mf,"finite_kernel_initial":mfa,"annotation_hover":ah},
           "axes":json.loads((axes/"check.json").read_text()),"documents":{"actual_app_saves":len(rows),"exact_original_reopens":6,"leaf_record_types":15,"negative_controls":5},
           "fillet":json.loads((fillet/"check.json").read_text()),"fillet_volume":json.loads((fillet/"volume.json").read_text()),"pushpull":json.loads((out/"pushpull-comparison.json").read_text()),
           "pushpull_finite":json.loads((finite/"comparison.json").read_text()),

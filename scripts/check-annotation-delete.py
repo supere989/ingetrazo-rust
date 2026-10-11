@@ -13,7 +13,7 @@ for i in range(len(actual['states'])):
  try:validate(bad)
  except AssertionError:pass
  else:raise AssertionError('mutation accepted')
-print(json.dumps({'states':len(actual['states']),'negative_controls':len(actual['states']),'exact':True}))
+result={'states':len(actual['states']),'negative_controls':len(actual['states']),'exact':True}
 
 hover_expected=json.loads((p/'hover-delete-original.json').read_text());hover_actual=json.loads((p/'hover-delete-native.json').read_text())
 order=[(case,phase)for case in ['hover-label-root','hover-dimension-root','hover-label-nested','hover-dimension-nested','selection-priority']for phase in (['before','delete','undo','redo','finish','finish-undo','finish-redo']if case.endswith('nested')else ['before','delete','undo','redo'])]
@@ -41,4 +41,5 @@ for case in ['hover-label-root','hover-dimension-root','selection-priority']:
  assert r['selection']==0 and r['undo']==1
  r=next(r for r in hover_actual['states']if r['case']==case and r['phase']=='undo')
  assert r['selection']==0
-print(json.dumps({'hover_delete_states':len(order),'hover_delete_negatives':len(order),'typed_exact':True}))
+result.update(hover_delete_states=len(order),hover_delete_negatives=len(order),typed_exact=True)
+print(json.dumps(result))
