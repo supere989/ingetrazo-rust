@@ -132,7 +132,7 @@ impl App for ApplicationProbe{
   Self{app,viewport_only:std::env::var_os("INGETRAZO_ANNOTATION_VIEWPORT_ONLY").is_some(),nonce:0,held:false,pressure:false,texture:None,saved_annotations:None}
  }
  fn build_ui(&mut self,ctx:&Context){
-  if self.viewport_only{egui::CentralPanel::default().frame(egui::Frame::NONE).show(ctx,|ui|crate::viewport::render_viewport(&mut self.app,ui));}else{self.app.update_ui(ctx);}
+  if self.viewport_only{egui::CentralPanel::default().frame(egui::Frame::none()).show(ctx,|ui|crate::viewport::render_viewport(&mut self.app,ui));}else{self.app.update_ui(ctx);}
   ctx.request_repaint_after(std::time::Duration::from_millis(16));
   // Mutate AFTER production render_viewport has collected the old membership.
   let dir=std::path::PathBuf::from(std::env::var_os("INGETRAZO_ANNOTATION_CONTROL_DIR").unwrap());
