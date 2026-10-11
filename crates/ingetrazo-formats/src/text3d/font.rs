@@ -8,6 +8,21 @@ const MAX_RINGS: usize = 1024;
 const MAX_AGGREGATE_POINTS: usize = 262_144;
 // Logical cold geometry admission, separate from the bounded font resolver cache.
 // This caps total flattened points across block measurement and all letters.
+const MAX_PREFIX_SHAPING_BYTES: usize = 8 * 1024 * 1024;
+fn admit_prefix_work(text: &str) -> Result<(), String> {
+    let work = text
+        .char_indices()
+        .filter(|(_, c)| !whitespace(*c))
+        .try_fold(0usize, |total, (offset, _)| {
+            total
+                .checked_add(offset)
+                .ok_or("Text3D prefix work overflow")
+        })?;
+    if work > MAX_PREFIX_SHAPING_BYTES {
+        return Err("Text3D prefix shaping work budget exceeded".into());
+    }
+    Ok(())
+}
 fn whitespace(c: char) -> bool {
     c.is_whitespace() || ('\u{1c}'..='\u{1f}').contains(&c)
 }
@@ -473,6 +488,7 @@ pub(super) fn letters(
     {
         return Err("Text3D parameter admission refused".into());
     }
+    admit_prefix_work(&params.text)?;
     if params.text.is_empty() {
         return Ok(Vec::new());
     }
@@ -568,6 +584,9 @@ mod tests {
     use super::*;
     #[test]
     fn allocation_and_coordinate_admission() {
+        assert!(admit_prefix_work(&"a".repeat(4096)).is_ok());
+        assert!(admit_prefix_work(&"a".repeat(4097)).is_err());
+        assert!(admit_prefix_work(&" ".repeat(16_384)).is_ok());
         let mut used = MAX_AGGREGATE_POINTS;
         let mut rings = Vec::new();
         assert!(extend_rings(&mut rings, vec![vec![[0., 0.]]], &mut used).is_err());
