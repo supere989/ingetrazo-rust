@@ -1249,31 +1249,34 @@ fn hit(app: &IngeTrazoApp, owner: Owner, point: DVec2) -> bool {
         return false;
     };
     let p = point - DVec2::new(number(v, "x_mm", 0.), number(v, "y_mm", 0.));
-    if owner.family == 4 {
-        let sz = number(v, "size_mm", 2.5);
-        let symbol = (sz * 1.2).max(1.5);
-        let h = sz * 1.4;
-        let sign = if v.get("mirror").and_then(Value::as_bool) == Some(true) {
-            -1.
+    if owner.family == 0 {
+        let d = DVec2::new(number(v, "dx_mm", 40.), number(v, "dy_mm", 0.));
+        let sep = number(v, "sep_mm", 0.);
+        let n = if d.length() < 1e-9 {
+            DVec2::new(0., -1.)
         } else {
-            1.
+            DVec2::new(-d.y, d.x) / d.length()
         };
-        let line = number(v, "line_mm", 14.);
-        let ax = number(v, "ax_mm", 0.);
-        let ay = number(v, "ay_mm", 0.);
-        let x0 = (-symbol / 2.).min(sign * (line + 0.5)).min(ax).min(0.) - 0.5;
-        let x1 = (symbol / 2.).max(sign * (line + 0.5)).max(ax).max(0.) + 0.5;
-        let circle = v.get("symbol").and_then(Value::as_str) == Some("circle");
-        let y0 = (if circle {
-            -symbol / 2. - h
-        } else {
-            -symbol - h
-        })
-        .min(ay)
-            - 0.5;
-        let y1 = (if circle { symbol / 2. } else { 0.5_f64 }).max(ay) + 0.5;
-        if p.x >= x0 && p.x <= x1 && p.y >= y0 && p.y <= y1 {
+        let axis = v.get("axis").and_then(Value::as_str).unwrap_or("");
+        let (a, b) = match axis {
+            "h" => (DVec2::new(0., sep), DVec2::new(d.x, sep)),
+            "v" => (DVec2::new(sep, 0.), DVec2::new(sep, d.y)),
+            _ => (n * sep, d + n * sep),
+        };
+        // Source CotaCanvasItem.shape strokes the FULL extension lines, before
+        // painting trims their first0.6mm to leave a measurement-point gap.
+        if distance(p, DVec2::ZERO, a) <= 3. || distance(p, d, b) <= 3. || distance(p, a, b) <= 3. {
             return true;
+        }
+    }
+    if owner.family == 4 {
+        if let Ok([x, y, w, h]) = crate::composer_annotations::authoring_level_bounds(
+            v,
+            &mut app.composer_state.paper_text.borrow_mut(),
+        ) {
+            if p.x >= x && p.x <= x + w && p.y >= y && p.y <= y + h {
+                return true;
+            }
         }
     }
     let Some(layout) = app
@@ -1615,6 +1618,13 @@ pub(super) fn input(
                             number(&before, "y_mm", 0.),
                         );
                         let handle = special(&before, f, local);
+                        let source_size = match source_size(app, s, f, &before) {
+                            Ok(size) => size,
+                            Err(e) => {
+                                app.status_message = e;
+                                break;
+                            }
+                        };
                         if let Err(e) = app.composer_select_annotation(f, Some(index)) {
                             app.status_message = e;
                             break;
@@ -1630,7 +1640,7 @@ pub(super) fn input(
                                     app.composer_state.annotation_authoring.grab = Some(Grab {
                                         owner,
                                         press: p,
-                                        size: size(&before, f),
+                                        size: source_size,
                                         before,
                                         targets,
                                     })
@@ -1866,4 +1876,27 @@ fn normalize_property_draft(f: usize, v: &mut Value) {
     if f == 0 {
         v["text_pos"] = json!("above");
     }
+}
+
+fn source_size(app: &IngeTrazoApp, s: usize, f: usize, v: &Value) -> Result<[f64; 2], String> {
+    let sheet = &app.scene.sheets[s];
+    let index = crate::composer_text_fields::source_indices(
+        &app.scene.sheets,
+        std::slice::from_ref(sheet),
+    )?;
+    let date = crate::composer_text_fields::today()?;
+    let context = crate::composer_text_fields::Context {
+        index: index.get(&(sheet as *const _)).copied(),
+        total: app.scene.sheets.len(),
+        path: app.current_file.as_deref(),
+        date: &date,
+    };
+    Ok(crate::composer_annotations::authoring_size(
+        sheet,
+        FAMILIES[f],
+        v,
+        &mut app.composer_state.paper_text.borrow_mut(),
+        &context,
+    )?
+    .unwrap_or_else(|| size(v, f)))
 }

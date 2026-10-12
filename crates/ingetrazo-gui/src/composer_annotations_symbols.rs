@@ -153,7 +153,7 @@ pub(super) fn label(
     )
 }
 
-fn level_label(value: &Value) -> Result<String, String> {
+pub(super) fn level_label(value: &Value) -> Result<String, String> {
     let anchor = s(value, "anchor_uid", "")?;
     let world = value.get("a_world").and_then(Value::as_array);
     let z = if !anchor.is_empty() && world.is_some_and(|v| v.len() > 2) {

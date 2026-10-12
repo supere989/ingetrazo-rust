@@ -817,3 +817,80 @@ fn radial(o: &mut Output, v: &Value, p: &mut Painter, pdf: bool) -> Result<(), S
         deg,
     )
 }
+
+/// Source canvas item sizes used by _SheetItem.itemChange snapping. They differ
+/// from the painted/control hull and from the legacy label dataclass height.
+pub(crate) fn authoring_size(
+    sheet: &Sheet,
+    key: &str,
+    v: &Value,
+    p: &mut Painter,
+    context: &Context<'_>,
+) -> Result<Option<[f64; 2]>, String> {
+    if key == "etiquetas" {
+        let content = expanded(sheet, s(v, "text", "Texto")?, context, "")?;
+        let sz = n(v, "size_pt", 11.)? * 25.4 / 72.;
+        let width = n(v, "w_mm", 50.)?;
+        let bold = b(v, "bold", false)?;
+        let style = style(
+            &content,
+            [0., 0., width.max(0.5), 1_000_000.],
+            sz,
+            bold,
+            false,
+            false,
+            Alignment::Left,
+            [0., 0., 0., 1.],
+        );
+        let [asc, desc, leading, _] = p.font_metrics_mm(&style)?;
+        let line = asc + desc;
+        let count = if content.is_empty() {
+            0.
+        } else {
+            (p.measure_box(&style)?[1] / line.max(1e-6))
+                .round_ties_even()
+                .max(1.)
+        };
+        let laid = if count == 0. {
+            0.
+        } else {
+            line + (count - 1.) * (line + leading)
+        };
+        return Ok(Some([width, (sz * 1.15).max(laid)]));
+    }
+    if key == "niveles" {
+        let r = authoring_level_bounds(v, p)?;
+        return Ok(Some([r[2], r[3]]));
+    }
+    Ok(None)
+}
+pub(crate) fn authoring_level_bounds(v: &Value, p: &mut Painter) -> Result<[f64; 4], String> {
+    let sz = n(v, "size_mm", 2.5)?;
+    let symbol = (sz * 1.2).max(1.5);
+    let content = symbols::level_label(v)?;
+    let advance = p.measure_advance(&style(
+        &content,
+        [0., 0., 80., sz],
+        sz,
+        false,
+        false,
+        false,
+        Alignment::Left,
+        [0., 0., 0., 1.],
+    ))?;
+    let line = n(v, "line_mm", 14.)?.max(symbol / 2. + 0.6 + advance + 1.);
+    let sign = if b(v, "mirror", false)? { -1. } else { 1. };
+    let ax = n(v, "ax_mm", 0.)?;
+    let ay = n(v, "ay_mm", 0.)?;
+    let x0 = (-symbol / 2.).min(sign * (line + 0.5)).min(ax).min(0.);
+    let x1 = (symbol / 2.).max(sign * (line + 0.5)).max(ax).max(0.);
+    let circle = s(v, "symbol", "triangle")? == "circle";
+    let y0 = (if circle {
+        -symbol / 2. - sz * 1.4
+    } else {
+        -symbol - sz * 1.4
+    })
+    .min(ay);
+    let y1 = (if circle { symbol / 2. } else { 0.5 }).max(ay);
+    Ok([x0 - 0.5, y0 - 0.5, x1 - x0 + 1., y1 - y0 + 1.])
+}
