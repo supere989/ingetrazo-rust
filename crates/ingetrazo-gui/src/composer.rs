@@ -131,7 +131,7 @@ impl IngeTrazoApp {
  }
  pub fn enter_composer_sheet(&mut self,index:usize){
   let Some(id)=self.scene.sheets.get(index).map(|s|s.id)else{return;};
-  if self.composer_state.interaction_sheet!=Some(id){let run_mode=(self.composer_state.annotation_authoring.runs.armed,self.composer_state.annotation_authoring.runs.baseline);self.finish_composer_edit();self.retire_composer_specialized();self.composer_state.annotation_authoring.runs.armed=run_mode.0;self.composer_state.annotation_authoring.runs.baseline=run_mode.1;self.composer_state.picture_authoring.clear();self.composer_state.legend_authoring=Default::default();self.composer_state.annotation_authoring.selected=None;self.composer_state.annotation_authoring.ignore_release=false;self.composer_state.annotation_authoring.armed=None;self.composer_state.annotation_authoring.points.clear();self.composer_state.annotation_authoring.snap_hits.clear();self.composer_state.annotation_authoring.draft=None;self.composer_state.annotation_authoring.coalesce=None;self.composer_state.annotation_authoring.layouts=Default::default();self.composer_state.annotation_authoring.canvas.clear();self.composer_state.shape_start=None;self.composer_state.interaction_sheet=Some(id);}
+  if self.composer_state.interaction_sheet!=Some(id){self.finish_composer_edit();self.retire_composer_specialized(true);self.composer_state.picture_authoring.clear();self.composer_state.legend_authoring=Default::default();self.composer_state.annotation_authoring.selected=None;self.composer_state.annotation_authoring.ignore_release=false;self.composer_state.annotation_authoring.armed=None;self.composer_state.annotation_authoring.points.clear();self.composer_state.annotation_authoring.snap_hits.clear();self.composer_state.annotation_authoring.draft=None;self.composer_state.annotation_authoring.coalesce=None;self.composer_state.annotation_authoring.layouts=Default::default();self.composer_state.annotation_authoring.canvas.clear();self.composer_state.shape_start=None;self.composer_state.interaction_sheet=Some(id);}
  }
  pub fn begin_composer_edit(&mut self){
   if let Some(sheet)=self.scene.active_sheet_index.and_then(|i|self.scene.sheets.get(i)){
@@ -458,6 +458,7 @@ pub fn render_sheet_composer(app: &mut IngeTrazoApp, ui: &mut egui::Ui, sheet_id
     let mut export_pdf = false;
     let mut export_image = false;
     let mut add_picture=false;let mut add_legend=false;
+    let mut arm_text=false;let mut arm_shape=None;
     let mut export_all_pdf = false;
 
     let toolbar = ui.allocate_new_ui(egui::UiBuilder::new().max_rect(toolbar_rect), |ui| {
@@ -515,11 +516,11 @@ pub fn render_sheet_composer(app: &mut IngeTrazoApp, ui: &mut egui::Ui, sheet_id
                 if std::env::var_os("INGETRAZO_PDF_UI_OBSERVE").is_some(){ui.ctx().data_mut(|d|d.insert_temp(egui::Id::new("picture-ui-add"),add_picture_button.rect));}
                 // Add Items Menu
                 app.composer_state.tool_switch_rects=[egui::Rect::NOTHING;8];
-                let text_button=crate::icons::render_icon_button(ui,text_icon.as_ref(),"T",false,&tr("Add a text block"));app.composer_state.tool_switch_rects[0]=text_button.rect;if text_button.clicked(){app.composer_state.arm_text();app.native_composer.clear_preview();}
+                let text_button=crate::icons::render_icon_button(ui,text_icon.as_ref(),"T",false,&tr("Add a text block"));app.composer_state.tool_switch_rects[0]=text_button.rect;if text_button.clicked(){arm_text=true;}
                 if std::env::var_os("INGETRAZO_PDF_UI_OBSERVE").is_some(){ui.ctx().data_mut(|d|d.insert_temp(egui::Id::new("composer-add-text"),text_button.rect));}
                 let shape_menu=ui.menu_button(tr("+ Shape"),|ui|{
                     for (n,(kind,label)) in [("rect","Rectangle"),("elipse","Ellipse"),("poligono","Polygon"),("linea","Line"),("flecha","Arrow"),("terreno","Terrain")].into_iter().enumerate() {
-                        let button=ui.button(tr(label));app.composer_state.tool_switch_rects[n+2]=button.rect;if std::env::var_os("INGETRAZO_PDF_UI_OBSERVE").is_some()&&kind=="rect"{ui.ctx().data_mut(|d|d.insert_temp(egui::Id::new("composer-shape-rect"),button.rect));}if button.clicked(){app.composer_state.arm_shape(kind);app.native_composer.clear_preview();ui.close_menu();}
+                        let button=ui.button(tr(label));app.composer_state.tool_switch_rects[n+2]=button.rect;if std::env::var_os("INGETRAZO_PDF_UI_OBSERVE").is_some()&&kind=="rect"{ui.ctx().data_mut(|d|d.insert_temp(egui::Id::new("composer-shape-rect"),button.rect));}if button.clicked(){arm_shape=Some(kind);ui.close_menu();}
                     }
                 });
                 app.composer_state.tool_switch_rects[1]=shape_menu.response.rect;
@@ -659,6 +660,11 @@ pub fn render_sheet_composer(app: &mut IngeTrazoApp, ui: &mut egui::Ui, sheet_id
     // Wrapped controls own every rendered row; paper projection stays unchanged.
     let toolbar_rect = toolbar.response.rect;
 
+    if arm_text||arm_shape.is_some()||add_legend||add_picture {
+        if let Err(e)=app.finish_composer_annotation_run_for_tool(){app.status_message=e;arm_text=false;arm_shape=None;add_legend=false;add_picture=false;}
+    }
+    if arm_text {app.composer_state.arm_text();app.native_composer.clear_preview();}
+    if let Some(kind)=arm_shape {app.composer_state.arm_shape(kind);app.native_composer.clear_preview();}
     for (frame,fields) in frame_changes {let sid=app.scene.sheets[sheet_idx].id;if let Err(e)=app.apply_composer_frame_fields(sid,frame,fields,false){app.status_message=e;}}
     if add_legend{if let Err(e)=app.activate_composer_legend(){app.status_message=e;}}
     if add_picture {let path=crate::dialogs::pick_open_file(&tr("Choose image…"),"Images (*.png *.jpg *.jpeg)");if let Err(e)=app.composer_add_picture(path.as_deref()){app.status_message=e;}}

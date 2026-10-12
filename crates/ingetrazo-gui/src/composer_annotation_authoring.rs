@@ -195,9 +195,18 @@ impl IngeTrazoApp {
         }
         true
     }
-    pub(super) fn retire_composer_specialized(&mut self) {
-        self.composer_state.annotation_authoring.runs = Default::default();
+    pub(super) fn retire_composer_specialized(&mut self, keep_mode: bool) {
+        let state = &mut self.composer_state.annotation_authoring.runs;
+        let mode = (state.armed && keep_mode, state.baseline);
+        *state = Default::default();
+        state.armed = mode.0;
+        state.baseline = mode.1;
         multi::clear(self);
+    }
+    pub(super) fn finish_composer_annotation_run_for_tool(&mut self) -> Result<(), String> {
+        runs::finish(self)?;
+        self.composer_state.annotation_authoring.runs.armed = false;
+        Ok(())
     }
     pub fn composer_annotation_selection_set(&self) -> Vec<(usize, usize)> {
         let mut owners = self
