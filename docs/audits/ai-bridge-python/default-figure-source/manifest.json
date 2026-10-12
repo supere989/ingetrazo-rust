@@ -1,0 +1,127 @@
+{
+  "scope": "Missing-only source capture; no native acceptance",
+  "capture": {
+    "revision": "f80dea25db186aa44bd6275a0ce2fc6c38cf7c7f",
+    "returncode": 0,
+    "seconds": 0.6284058740129694,
+    "output": "/tmp/ingetrazo-default-figure-source-r1"
+  },
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "archive_sha256": "79189e245cb4ab1d188ffb5de9120ab39b97ed0a039de7d1b6c7695ddeb27cfe",
+  "members": [
+    {
+      "path": "source/assets/be7b463c8b2eec4e7635b2f1efbc1705267ff39ada6a0e4935eebe2e13799e13.png",
+      "size": 372245,
+      "sha256": "be7b463c8b2eec4e7635b2f1efbc1705267ff39ada6a0e4935eebe2e13799e13",
+      "origin": "/tmp/ingetrazo-default-figure-source-r1/assets/be7b463c8b2eec4e7635b2f1efbc1705267ff39ada6a0e4935eebe2e13799e13.png"
+    },
+    {
+      "path": "source/assets/be7b463c8b2eec4e7635b2f1efbc1705267ff39ada6a0e4935eebe2e13799e13.rgba",
+      "size": 2046000,
+      "sha256": "076c0bcacdf99c2c8305f18fc9955f9369d9cf683a11b1def63ea8ecb6f1e792",
+      "origin": "/tmp/ingetrazo-default-figure-source-r1/assets/be7b463c8b2eec4e7635b2f1efbc1705267ff39ada6a0e4935eebe2e13799e13.rgba"
+    },
+    {
+      "path": "source/bool-false-saved.igz",
+      "size": 372994,
+      "sha256": "2903e90d9e8cfd5c956e25130f9568e152a754d3df30ab5622d6bde36a059d04",
+      "origin": "/tmp/ingetrazo-default-figure-source-r1/bool-false-saved.igz"
+    },
+    {
+      "path": "source/default-saved.igz",
+      "size": 372995,
+      "sha256": "4eb0f42580989ca2520fe3c5bdc303d6a9fcb1d79fa4a76dc9d3bb480bc764d0",
+      "origin": "/tmp/ingetrazo-default-figure-source-r1/default-saved.igz"
+    },
+    {
+      "path": "source/disabled-string-saved.igz",
+      "size": 325,
+      "sha256": "fa9c2cb30d4f8afe1b3ec1c99587362006d5da0d620cfb3d0663a617138b1f20",
+      "origin": "/tmp/ingetrazo-default-figure-source-r1/disabled-string-saved.igz"
+    },
+    {
+      "path": "source/original-default-figure.json",
+      "size": 8066,
+      "sha256": "4ca96f6609165f9b2f08ddfedfb159d6e186f35f1708106c6ff97c420fbe8e64",
+      "origin": "/tmp/ingetrazo-default-figure-source-r1/original-default-figure.json"
+    },
+    {
+      "path": "source/original-default-figure.partial.json",
+      "size": 8066,
+      "sha256": "4ca96f6609165f9b2f08ddfedfb159d6e186f35f1708106c6ff97c420fbe8e64",
+      "origin": "/tmp/ingetrazo-default-figure-source-r1/original-default-figure.partial.json"
+    },
+    {
+      "path": "attempt/receipt.json",
+      "size": 167,
+      "sha256": "5e467c5fe8c24d603df2e4771d62b93eb9ea0693671c9a15ea9716011039a33b",
+      "origin": "/tmp/ingetrazo-default-figure-source-attempt-1/receipt.json"
+    },
+    {
+      "path": "attempt/stderr",
+      "size": 147,
+      "sha256": "c0cf3de7adfde67e063969f6c3dfce3bc40a7a3694cb8d645ebf5409bed17591",
+      "origin": "/tmp/ingetrazo-default-figure-source-attempt-1/stderr"
+    },
+    {
+      "path": "attempt/stdout",
+      "size": 52,
+      "sha256": "f6310f49d8660f6d9b761231f2920683f3624d101bcb59ed90bb111177675432",
+      "origin": "/tmp/ingetrazo-default-figure-source-attempt-1/stdout"
+    },
+    {
+      "path": "capture-tools/reference-default-scale-figure.py",
+      "size": 4332,
+      "sha256": "8c39446f7dbb5c9446a4f95dfaa6a04f6b93c08b4dc46d3b61b57324865caabc",
+      "revision": "f80dea25db186aa44bd6275a0ce2fc6c38cf7c7f",
+      "git_path": "scripts/reference-default-scale-figure.py"
+    },
+    {
+      "path": "capture-tools/default-figure-contract.json",
+      "size": 1762,
+      "sha256": "921c6587d68a834328025e53ebd373a292611176f7d1b9782a721a2cf24f6934",
+      "revision": "f80dea25db186aa44bd6275a0ce2fc6c38cf7c7f",
+      "git_path": "docs/audits/ai-bridge-python/default-figure-contract.json"
+    }
+  ],
+  "original_sources": [
+    {
+      "path": "views/main_window.py",
+      "sha256": "ea02be3e439c80731d0f5b5fde3d92d9b3f62e8ad10cd44ad305c3261b7786fa",
+      "revision": "6be29fe437a7cd992d4e079f71720821b25216b9",
+      "inspection": "postcapture current and pinned Git byte equality; original precapture authentication retained in invocation"
+    },
+    {
+      "path": "core/group.py",
+      "sha256": "9ba6a20eca241cb4969a545a3784fcff25566166606d5447a18780747d4f11c5",
+      "revision": "6be29fe437a7cd992d4e079f71720821b25216b9",
+      "inspection": "postcapture current and pinned Git byte equality; original precapture authentication retained in invocation"
+    },
+    {
+      "path": "core/mesh.py",
+      "sha256": "5f2c1625e6dd717db029ba39a9de337e75beec06bd0df28a592a8a34875ca22c",
+      "revision": "6be29fe437a7cd992d4e079f71720821b25216b9",
+      "inspection": "postcapture current and pinned Git byte equality; original precapture authentication retained in invocation"
+    },
+    {
+      "path": "core/scene.py",
+      "sha256": "9dfcd32f1ff5b1445180eafd8df36eafb92fa08ed3597bb90eac09554899d2e0",
+      "revision": "6be29fe437a7cd992d4e079f71720821b25216b9",
+      "inspection": "postcapture current and pinned Git byte equality; original precapture authentication retained in invocation"
+    },
+    {
+      "path": "formats/igz.py",
+      "sha256": "f318d685830c49c2fede7fd5a238ac7a1469ee0b0226cf48cab3751e194a9576",
+      "revision": "6be29fe437a7cd992d4e079f71720821b25216b9",
+      "inspection": "postcapture current and pinned Git byte equality; original precapture authentication retained in invocation"
+    },
+    {
+      "path": "core/i18n.py",
+      "sha256": "827c103da11a2e1fd676ba53d32f18b2b11a606a7e51308ed07cb4b71cd61dba",
+      "revision": "6be29fe437a7cd992d4e079f71720821b25216b9",
+      "inspection": "postcapture current and pinned Git byte equality; original precapture authentication retained in invocation"
+    }
+  ],
+  "prior_bridge_source_archive": "../source-records.zip",
+  "prior_bridge_source_archive_sha256": "46d5606f24327b2ec195f86ab97681c14116fae8ba908768604a1a0923dbb452"
+}
