@@ -18,6 +18,7 @@ def equal(a,b,path='$'):
   for i,(x,y)in enumerate(zip(a,b)):equal(x,y,path+f'[{i}]')
  else:assert a==b,(path,a,b)
 def verify(s,n,sr,nr):
+ assert s['source_pin']=='6be29fe437a7cd992d4e079f71720821b25216b9'
  assert [c['name']for c in s['cases']]==NAMES
  assert [c['name']for c in n['cases']]==NAMES
  expected=[(c['name'],a['phase'])for c in s['cases']for a in c['actions']]
