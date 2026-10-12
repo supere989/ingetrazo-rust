@@ -1,0 +1,15 @@
+# Physical ViewFrame captions and empty views
+
+Frozen source: `source-records.zip` / `source-manifest.json` (42 authenticated members). Thirteen actual pinned ComposerWindow image/PDF sessions reuse the existing front-box model; nine new Qt horizontal-advance observations supplement them. Original product Python is unchanged.
+
+Runtime: `31dde8cf` introduces shared physical title layout/simple/bar, upright numbered bubbles, field ownership, above/below/aligned titles, under/inside scale captions with clipped alpha220 halo, and empty-vector placeholder. PDF and direct GPU image exporters consume the same cached font/Draw resources. Explicit owning-sheet callbacks and one source dataclass-equality context map preserve field indices. No full-scene copy, subprocess, extra output target or shader change.
+
+First failure is retained: scale0.1 projected strokes exhausted Gray work before clipping. Conservative culling operates only on complete already-stroked control hulls outside page/intersected hard rectangle, retaining cap/join reach and1pixel AA fringe. Intersecting coordinates remain untouched. Rule/divider differences were source primitive identity, not font offsets: Qt's LinesHint/non-complex SquareCap pass selects16.16 QRasterizer area×255; explicit caption indices route only literal drawLine primitives to existing qt_line. General two-point drawPath retains Gray. Pinned primary Qt sources inspected are retained in records.
+
+Compiled owner31dde8cf: named build6.270s; llvmpipe and actual RTX5090 both13/13 exact PNG and13/13 exact paired QtPdf-rendered pages, nine26.6 measurements, ten meaningful rejection controls, GPU ledger drain. Earlier failed outputs/logs and their partial comparison remain immutable. Exact first uncommitted source/binary was not retained; no source authentication claim is made for that attempt.
+
+Final typed-title correction `6c26faac`: authoritative frame.title_text overrides its stale imported header. Root runtime `1a9c055c` / binary d8eb885c… checks the first existing recipe with a stale raw title and passes13PNG/13PDF plus11 negatives. Its authenticated proof is `docs/audits/view-caption-integration/final-title-owner/records.zip`, SHA a288371a62dfa850e89892c11f52e23642ea8f06b2909b19d74f0aa3818a3153. Earlier RTX execution is explicitly31, not this later owner correction. The final receipt binds each checker to its actual Git version.
+
+Replay: extract source ZIP flat, run prebuilt `examples/view_frame_caption_workflows SOURCE OUT --software` (omit software for strict NVIDIA hardware), then `/tmp/ingetrazo-parity-python/bin/python scripts/check-view-frame-captions.py SOURCE OUT OUT/check.json`. Existing old11 image and12 symbol consumers were replayed by root once; symbols retain their unrelated two chamfer pixels/max1.
+
+Scope remains physical orthographic vector views and these font-bound Linux sessions. Raster/perspective/model annotations, other unsupported sheet painters, complete editor appearance and Mac font pixels remain separate. This is no full P29 promotion.
