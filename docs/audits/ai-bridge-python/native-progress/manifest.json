@@ -1,6 +1,6 @@
 {
   "scope": "Partial actual socket/UI bridge progress, not full parity",
-  "archive_sha256": "da259a7b307831552f95c97e033d260d4a71f4e1774d5d5c9fba213d3841e801",
+  "archive_sha256": "817ba84c7d0ce554c455df416f6dca774f8a59971bd802240fa196b91891807e",
   "members": [
     {
       "path": "native-r3/comparison.json",
@@ -156,6 +156,34 @@
       "git_path": "tools/ai-interpreter-proof/src/session.rs",
       "size": 8731,
       "sha256": "561bf496673c43deef95d9b9e428229f1aaa4b5d0b0ee2444c1b749545063bf7"
+    },
+    {
+      "path": "executed-code/crates/ingetrazo-gui/src/default_scale_figure.rs",
+      "revision": "6c313d0903ff11349453a1a49051c279b426115e",
+      "git_path": "crates/ingetrazo-gui/src/default_scale_figure.rs",
+      "size": 4963,
+      "sha256": "ef43b61e0540d3d8bcf1b2e17ffbf76ea364bfc1cef0ed4cc290b9a7557443d6"
+    },
+    {
+      "path": "executed-code/tools/ai-interpreter-proof/src/vm_mesh.rs",
+      "revision": "6c313d0903ff11349453a1a49051c279b426115e",
+      "git_path": "tools/ai-interpreter-proof/src/vm_mesh.rs",
+      "size": 150788,
+      "sha256": "4b2fd413e3c91f0d97f5be282680a7cb24d7072894804d6c8feb70645dff985d"
+    },
+    {
+      "path": "executed-code/tools/ai-interpreter-proof/src/vm_scene.rs",
+      "revision": "6c313d0903ff11349453a1a49051c279b426115e",
+      "git_path": "tools/ai-interpreter-proof/src/vm_scene.rs",
+      "size": 47517,
+      "sha256": "bfbd90f66d70bb3e2a8e1060e46b4a81553f41afe6737abaabc525301b57976e"
+    },
+    {
+      "path": "executed-code/tools/ai-interpreter-proof/src/vm_packed.rs",
+      "revision": "6c313d0903ff11349453a1a49051c279b426115e",
+      "git_path": "tools/ai-interpreter-proof/src/vm_packed.rs",
+      "size": 17861,
+      "sha256": "de05df6dd3b548a72e38d59559b9209f9f1ad0f8c4143c0ea4b110ef74242d12"
     }
   ]
 }
