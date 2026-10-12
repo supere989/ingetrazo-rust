@@ -3,7 +3,7 @@
 import json,sys,copy
 from pathlib import Path
 p=Path(sys.argv[1]);a=json.loads((p/'original-profile.json').read_text());b=json.loads((p/'native-profile.json').read_text())
-expected=['long-sloped','closed-selected','highest-gaps','hidden-survey-layer','ambiguous','no-datum','empty-survey','no-path','zero-span']
+expected=['long-sloped','closed-selected','highest-gaps','hidden-survey-layer','ambiguous','no-datum','vertical-only','no-path','zero-span']
 def strict(a,b,path=''):
  if type(a)is not type(b):assert type(a)in(int,float)and type(b)in(int,float),(path,'type')
  if isinstance(a,dict):
@@ -24,6 +24,7 @@ caches=json.loads((p/'profile-cache.json').read_text());assert [c['case']for c i
 for c in caches:assert c['decoded']==(0 if c['case']in['ambiguous','no-datum','no-path']else 1)
 assert json.loads((p/'dem-boundary.json').read_text())==dict(visible_photo_first=True,hidden_photo_selects_dem=True,network_not_started=True)
 assert json.loads((p/"profile-guards.json").read_text())==[dict(guard=n,unchanged=True)for n in ["budget-refusal","missing-malformed-resource","hidden-photo-dem-open","equal-version-history-refresh"]]
+boundary=json.loads((p/'omitted-empty-boundary.json').read_text());assert boundary['source_writer_triangle_count_guard'] and boundary['zero_triangle_IGZ_omits_photo_mesh'] and boundary['reopened_native_no_photo_refuses_DEM']
 count=0
 for i,row in enumerate(b['states']):
  c=copy.deepcopy(b);c['states'][i]['undo']+=1

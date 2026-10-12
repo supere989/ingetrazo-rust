@@ -23,9 +23,10 @@ recipes=[
  ('hidden-survey-layer',rect,tris,[[[1,1,0],[9,1,0]]],False,[],True,'dem'),
  ('ambiguous',rect,tris,[[[1,1,0],[7,1,0]],[[2,2,0],[3,2,0]]],False,[],True,'local'),
  ('no-datum',rect,tris,[[[1,1,0],[7,1,0]]],False,[],False,'odm'),
- ('empty-survey',[],[],[[[1,1,0],[7,1,0]]],False,[],True,'odm'),
+ ('vertical-only',[[1,1,0],[1,1,5],[1,7,3]],[[0,1,2]],[[[1,1,0],[7,1,0]]],False,[],True,'odm'),
  ('no-path',rect,tris,[],False,[],True,'local'),
  ('zero-span',rect,tris,[[[1,1,0],[1,1,5]]],False,[],True,'local')]
+if len(sys.argv)>2:recipes=[r for r in recipes if r[0]==sys.argv[2]]
 def profile(p):
  if p is None:return None
  return dict(samples=[dict(station=s.station,x=s.x,y=s.y,elevation=s.elevation)for s in p.samples],length=p.length,complete=p.complete,min=p.min_elevation(),max=p.max_elevation(),gain=p.total_gain(),slopes=[list(v)for v in p.slopes()])
@@ -39,6 +40,9 @@ for name,vertices,triangles,paths,closed,selected,datum,vertical in recipes:
  s.geo_paths=[GeoPath([V(*p)for p in ps],closed=closed and i==0,name='Route '+str(i))for i,ps in enumerate(paths)]
  for i in selected:s.selection.add(s.geo_paths[i])
  igz.save_scene(s,out/(name+'-input.igz'))
+ if name=='vertical-only':
+  igz.load_into(s,out/(name+'-input.igz'))
+  assert s.photo_mesh is not None and s.photo_mesh.triangle_count==1
  dock=ProfileDock(win);win.addDockWidget(__import__('PySide6.QtCore',fromlist=['Qt']).Qt.BottomDockWidgetArea,dock);dock.show()
  before=(len(vp.history.undo_stack),len(vp.history.redo_stack),s.version)
  next(b for b in dock.findChildren(QPushButton)if b.text()=='Profile selection').click();app.processEvents()

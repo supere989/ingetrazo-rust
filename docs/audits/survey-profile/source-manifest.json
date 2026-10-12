@@ -1,19 +1,15 @@
 {
   "source_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
   "numpy": "2.5.3",
-  "archive_sha256": "7c4f14124c362ce88bce803b8484a59c05893ccab6d5cca2f84449ef8fc6e093",
+  "archive_sha256": "b2551314382799c9f92caabdad78f3a024ce36371ae42f8ba496d17be423a94c",
   "members": {
-    "long-sloped-input.igz": {
-      "bytes": 1247,
-      "sha256": "e7b2bb29437d4fd5e069b851eadc642df567c282085428f906fd5f8cf25c9cfa"
+    "ambiguous-input.igz": {
+      "bytes": 1261,
+      "sha256": "aa4b329a72547b3aeb383b78814b8ebf2cc3914df1e2d9bd0c6557a895dae2a3"
     },
-    "long-sloped-original.csv": {
-      "bytes": 7952,
-      "sha256": "0c6c8cd5e4411c3c0b9226034dbc93ea6b239211bdadfb7ef79273e2dbd5159b"
-    },
-    "long-sloped-original.igz": {
-      "bytes": 1247,
-      "sha256": "e7b2bb29437d4fd5e069b851eadc642df567c282085428f906fd5f8cf25c9cfa"
+    "ambiguous-original.igz": {
+      "bytes": 1261,
+      "sha256": "aa4b329a72547b3aeb383b78814b8ebf2cc3914df1e2d9bd0c6557a895dae2a3"
     },
     "closed-selected-input.igz": {
       "bytes": 1278,
@@ -26,18 +22,6 @@
     "closed-selected-original.igz": {
       "bytes": 1278,
       "sha256": "b4a5bd8011b737b9229e025897c943d10b9898544ca3257052cfc8a0d047674c"
-    },
-    "highest-gaps-input.igz": {
-      "bytes": 1272,
-      "sha256": "d45bc7c746a90a9f643795fe07f46fc5f626ebf6d20c52ae9391252b9498b082"
-    },
-    "highest-gaps-original.csv": {
-      "bytes": 713,
-      "sha256": "5fdc472b868faeb3f9aa50c4ff62fb0aba47aad9da98c67546f094148990b975"
-    },
-    "highest-gaps-original.igz": {
-      "bytes": 1272,
-      "sha256": "d45bc7c746a90a9f643795fe07f46fc5f626ebf6d20c52ae9391252b9498b082"
     },
     "dem-boundary.json": {
       "bytes": 92,
@@ -55,13 +39,33 @@
       "bytes": 1272,
       "sha256": "3fd527eb7119d9f7312dfe591436266af4820d0d7abb1e02d853fd1eb7cdbf38"
     },
-    "ambiguous-input.igz": {
-      "bytes": 1261,
-      "sha256": "aa4b329a72547b3aeb383b78814b8ebf2cc3914df1e2d9bd0c6557a895dae2a3"
+    "highest-gaps-input.igz": {
+      "bytes": 1272,
+      "sha256": "d45bc7c746a90a9f643795fe07f46fc5f626ebf6d20c52ae9391252b9498b082"
     },
-    "ambiguous-original.igz": {
-      "bytes": 1261,
-      "sha256": "aa4b329a72547b3aeb383b78814b8ebf2cc3914df1e2d9bd0c6557a895dae2a3"
+    "highest-gaps-original.csv": {
+      "bytes": 713,
+      "sha256": "5fdc472b868faeb3f9aa50c4ff62fb0aba47aad9da98c67546f094148990b975"
+    },
+    "highest-gaps-original.igz": {
+      "bytes": 1272,
+      "sha256": "d45bc7c746a90a9f643795fe07f46fc5f626ebf6d20c52ae9391252b9498b082"
+    },
+    "logs/source.log": {
+      "bytes": 545,
+      "sha256": "b972607127b51418829fd8b24bd9ab5666662a8fbfabcd42ca6a05afe7aa7c4c"
+    },
+    "long-sloped-input.igz": {
+      "bytes": 1247,
+      "sha256": "e7b2bb29437d4fd5e069b851eadc642df567c282085428f906fd5f8cf25c9cfa"
+    },
+    "long-sloped-original.csv": {
+      "bytes": 7952,
+      "sha256": "0c6c8cd5e4411c3c0b9226034dbc93ea6b239211bdadfb7ef79273e2dbd5159b"
+    },
+    "long-sloped-original.igz": {
+      "bytes": 1247,
+      "sha256": "e7b2bb29437d4fd5e069b851eadc642df567c282085428f906fd5f8cf25c9cfa"
     },
     "no-datum-input.igz": {
       "bytes": 1193,
@@ -71,18 +75,6 @@
       "bytes": 1193,
       "sha256": "3ca38b0df739d351f11d9794ade907fca8d234e364d80b2c9f8e89c750fa044c"
     },
-    "empty-survey-input.igz": {
-      "bytes": 779,
-      "sha256": "fb544aeeda72291aca55db0d0a45961c017d8035ebc4ed1348e243654e3a6791"
-    },
-    "empty-survey-original.csv": {
-      "bytes": 338,
-      "sha256": "81db3611aa627173141724c782b26ea45202d80a49e5649c79ccf34a112f2de5"
-    },
-    "empty-survey-original.igz": {
-      "bytes": 779,
-      "sha256": "fb544aeeda72291aca55db0d0a45961c017d8035ebc4ed1348e243654e3a6791"
-    },
     "no-path-input.igz": {
       "bytes": 1180,
       "sha256": "2c26d4820c5187e6774f5a7fbcdb5c32403c26502b7b7d7953372cf8a8842321"
@@ -90,6 +82,10 @@
     "no-path-original.igz": {
       "bytes": 1180,
       "sha256": "2c26d4820c5187e6774f5a7fbcdb5c32403c26502b7b7d7953372cf8a8842321"
+    },
+    "original-profile.json": {
+      "bytes": 138940,
+      "sha256": "7e3065a7ea5660a4cd59ccbbaea1f91fbc74996a024af75f5b7c47993198d05a"
     },
     "zero-span-input.igz": {
       "bytes": 1238,
@@ -103,19 +99,47 @@
       "bytes": 1238,
       "sha256": "ddd74bcdc6fa3342ed34ad231091d514a3b5432c6f646a961c62948e47dd52e2"
     },
-    "original-profile.json": {
-      "bytes": 138937,
-      "sha256": "2a1df6a37dd1d580881c1e836b6481081c124e9a25eb2a54ce4a7b41e5ce5cf3"
+    "vertical-only-input.igz": {
+      "bytes": 1234,
+      "sha256": "46aa39ed3524d9a0009af934392b378ec970234c668f38f6c84541b92ff42580"
     },
-    "logs/source.log": {
-      "bytes": 545,
-      "sha256": "b972607127b51418829fd8b24bd9ab5666662a8fbfabcd42ca6a05afe7aa7c4c"
+    "vertical-only-original.csv": {
+      "bytes": 338,
+      "sha256": "81db3611aa627173141724c782b26ea45202d80a49e5649c79ccf34a112f2de5"
+    },
+    "vertical-only-original.igz": {
+      "bytes": 1234,
+      "sha256": "46aa39ed3524d9a0009af934392b378ec970234c668f38f6c84541b92ff42580"
+    },
+    "omitted-empty-boundary.json": {
+      "bytes": 308,
+      "sha256": "13b83d4b1b8096d59f4c72a3dea9f1f397e3cd14761f6d296b13cdcd55339836"
+    },
+    "vertical-only-source.log": {
+      "bytes": 152,
+      "sha256": "7324c7b71eb17d8c2e90c4fbda95a505b9f18effa832359f0544a38a5c14fb0b"
     }
   },
-  "capture_helper_sha256": "12513797cf1488a7ce18e178207df9e9f75b018eef536e84ea8dca6d0f1bd06a",
+  "capture_helper_sha256": "f811d33357867f2b1550d4ed38c2005e16e14eef93c2a5295b5b0f27bbee385b",
   "cases": 9,
   "states": 18,
   "actual_source": "clicked ProfileDock controls, actual PhotoMeshSampler and profile CSV handler",
   "DEM_boundary": "actual DEMSampler selected only; no fetcher instantiated/network",
-  "no_GPU_claim": true
+  "no_GPU_claim": true,
+  "first_source_archive_sha256": "7c4f14124c362ce88bce803b8484a59c05893ccab6d5cca2f84449ef8fc6e093",
+  "corrected_case": "vertical-only",
+  "replacement_command": "/tmp/ingetrazo-parity-python/bin/python scripts/reference-survey-profile.py /tmp/ingetrazo-survey-profile-vertical-source vertical-only",
+  "reference_helper_sha256": "f811d33357867f2b1550d4ed38c2005e16e14eef93c2a5295b5b0f27bbee385b",
+  "unchanged_cases": [
+    "long-sloped",
+    "closed-selected",
+    "highest-gaps",
+    "hidden-survey-layer",
+    "ambiguous",
+    "no-datum",
+    "no-path",
+    "zero-span"
+  ],
+  "first_capture_helper_sha256": "12513797cf1488a7ce18e178207df9e9f75b018eef536e84ea8dca6d0f1bd06a",
+  "first_capture_helper_commit": "fe9d095709d31ddd79688743d4f94c0582dd0c17"
 }
