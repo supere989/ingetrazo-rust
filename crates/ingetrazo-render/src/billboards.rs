@@ -32,7 +32,8 @@ fn uv_axes(tex:&serde_json::Value,normal:Vec3,m:&[f32;16])->(Vec3,f64,Vec3,f64){
 }
 impl Packet {
  pub fn retained_bytes(&self)->usize{std::mem::size_of::<Self>()+self.runs.capacity()*std::mem::size_of::<Run>()+self.runs.iter().map(|r|r.positions.capacity()*std::mem::size_of::<([f32;3],[f32;2])>()+r.path.as_ref().map_or(0,String::capacity)).sum::<usize>()}
- pub fn build(scene:&Scene)->Result<Self,String>{
+ pub fn build(scene:&Scene)->Result<Self,String>{Self::build_borrowed_groups(scene,scene.groups.iter())}
+ pub fn build_borrowed_groups<'a>(scene:&Scene,groups:impl IntoIterator<Item=&'a Group>)->Result<Self,String>{
   let mut runs=Vec::new();
   fn visit(g:&Group,parent:DMat4,scene:&Scene,runs:&mut Vec<Run>)->Result<(),String>{
    if g.hidden||!scene.is_layer_visible(g.layer.as_deref()){return Ok(());}
@@ -67,7 +68,7 @@ impl Packet {
    })()?; }
    for c in &g.children{visit(c,world,scene,runs)?;}Ok(())
   }
-  for g in &scene.groups{visit(g,DMat4::IDENTITY,scene,&mut runs)?;}
+  for g in groups{visit(g,DMat4::IDENTITY,scene,&mut runs)?;}
   for r in &runs{if !r.color.iter().all(|v|v.is_finite())||!r.positions.iter().all(|(p,uv)|p.iter().chain(uv).all(|v|v.is_finite())){return Err("Billboard final packet arithmetic admission".into());}}
   Ok(Self{runs})
  }
