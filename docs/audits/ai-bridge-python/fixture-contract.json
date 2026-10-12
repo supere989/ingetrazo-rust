@@ -32,5 +32,56 @@
     "full arbitrary Python/Scene API coverage",
     "remote network authorization",
     "external runtime process"
-  ]
+  ],
+  "stdio_scope": {
+    "supported": "bounded actual write (Unicode scalar return count), flush, isatty false, writable true, encoding null; actual interpreter traceback retained",
+    "open": "StringIO seek/tell/truncate/getvalue and broad stdlib stream compatibility remain unproved"
+  },
+  "strict_traceback": "No synthesized CPython traceback; retain raw CPython and RustPython output differences as strict open if present",
+  "original_sources": [
+    {
+      "path": "plugins/ai_bridge.py",
+      "sha256": "01c4cdcaeee19840980018636378e29f090c02abb0263a3a2c71a091ed145aeb"
+    },
+    {
+      "path": "core/ai.py",
+      "sha256": "6208a5c3e7773d27f028b9d7460f317693bab107705d6efdcd598ef048a82678"
+    },
+    {
+      "path": "core/history.py",
+      "sha256": "2eb66a1d557099b51383988a7819145289fc4ce2c37fc7de3a92ed35b5830559"
+    },
+    {
+      "path": "core/mesh.py",
+      "sha256": "5f2c1625e6dd717db029ba39a9de337e75beec06bd0df28a592a8a34875ca22c"
+    },
+    {
+      "path": "views/main_window.py",
+      "sha256": "ea02be3e439c80731d0f5b5fde3d92d9b3f62e8ad10cd44ad305c3261b7786fa"
+    },
+    {
+      "path": "views/viewport.py",
+      "sha256": "1fb62f55b8f559deb3676924ee69a9a444397faa28c49651111cea44e420c724"
+    },
+    {
+      "path": "tests/test_ai_bridge.py",
+      "sha256": "2eb255f45c242dba53fb062abd2c2c232afc8cfade15116bc79765fd1eff4902"
+    }
+  ],
+  "source_cases": [
+    "fragmented-and-ordered-requests",
+    "stdout-stderr-eval-persistent-scope",
+    "geometry-history",
+    "noop-preserves-redo",
+    "mutation-error-rollback",
+    "syntax-type-dispatch-errors"
+  ],
+  "source_states": 20,
+  "native_only_controls": [
+    "caught-output-overflow-must-abort",
+    "default-off-execution-refusal",
+    "modal-execution-refusal",
+    "owned-socket-reader-join"
+  ],
+  "protocol_input_scope": "String code uses genuine compiler/eval/exec. Nonstring code is retained original protocol evidence; native typed admission may remain strict discrepancy, never fabricated Python error."
 }

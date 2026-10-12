@@ -311,7 +311,12 @@ impl crate::IngeTrazoApp {
         }
     }
     pub(crate) fn run_engineering_python(&mut self, code: &str) {
-        let _ = self.execute_engineering_python(code);
+        if let Ok(receipt) = self.execute_engineering_python(code) {
+            if let Some(error) = receipt.error {
+                self.status_message = error.clone();
+                self.console_logs.push(format!("Engineering Python refused: {error}"));
+            }
+        }
     }
     pub(crate) fn execute_engineering_python(&mut self, code: &str)
         -> Result<ingetrazo_ai_interpreter_proof::vm_mesh::ExecutionReceipt, String>
@@ -326,6 +331,11 @@ impl crate::IngeTrazoApp {
             .execute(&self.scene, self.model_revision, code)
         {
             Ok((changed, native, groups)) => {
+                let Some(mut execution_receipt) = self.engineering_python.receipt.take() else {
+                    self.engineering_python.controller.take();
+                    self.engineering_python.revision = None;
+                    return Err("Missing genuine execution receipt; publication refused".into());
+                };
                 let published = native.is_some() || groups.is_some();
                 if published {
                     if let Some(receipt) = &groups {
@@ -405,11 +415,10 @@ impl crate::IngeTrazoApp {
                     }
                     .into(),
                 );
-                let mut receipt = self.engineering_python.receipt.take().unwrap_or_default();
-                receipt.changed = published && changed;
-                if !receipt.stdout.is_empty() { self.console_logs.push(receipt.stdout.clone()); }
-                if !receipt.stderr.is_empty() { self.console_logs.push(receipt.stderr.clone()); }
-                Ok(receipt)
+                execution_receipt.changed = published && changed;
+                if !execution_receipt.stdout.is_empty() { self.console_logs.push(execution_receipt.stdout.clone()); }
+                if !execution_receipt.stderr.is_empty() { self.console_logs.push(execution_receipt.stderr.clone()); }
+                Ok(execution_receipt)
             }
             Err(error) => {
                 self.status_message = error.clone();

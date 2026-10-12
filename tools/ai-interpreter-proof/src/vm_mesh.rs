@@ -2307,6 +2307,7 @@ impl RootRestore<'_> {
 }
 
 pub struct Controller {
+    capture_requested: bool,
     last_execution: Option<session::ExecutionReceipt>,
     execution_rolled_back: bool,
     history_enabled: bool,
@@ -2345,6 +2346,7 @@ impl Controller {
         let scope=interpreter.enter(|vm|{let s=vm.new_scope_with_builtins();vm.run_code_obj(vm.compile("from native_groups import QVector3D\nfrom editable_mesh import Mesh,Vertex,Edge,Face\nfrom console_scene import Group",Mode::Exec,"<setup>").unwrap(),s.clone()).unwrap();s});
         let budget = OwnerBudget::new(None);
         let mut controller = Self {
+            capture_requested: false,
             last_execution: None,
             execution_rolled_back: false,
             undo_slots: budget.reserve(Kind::History, 0).unwrap(),
@@ -2423,11 +2425,16 @@ impl Controller {
         });
     }
     pub fn execute_receipt(&mut self, source: &str) -> Result<session::ExecutionReceipt, String> {
+        self.capture_requested = true;
         let result = self.execute(source);
-        let mut receipt = self.last_execution.take().unwrap_or_default();
+        self.capture_requested = false;
         match result {
-            Ok(changed) => { receipt.changed = changed; Ok(receipt) }
-            Err(_) if self.execution_rolled_back && receipt.error.is_some() => Ok(receipt),
+            Ok(changed) => {
+                let mut receipt = self.last_execution.take().ok_or("Missing genuine VM execution receipt")?;
+                receipt.changed = changed;
+                Ok(receipt)
+            }
+            Err(_) if self.execution_rolled_back => self.last_execution.take().ok_or_else(|| "Missing rolled-back execution receipt".into()),
             Err(error) => Err(error),
         }
     }
@@ -2456,11 +2463,12 @@ impl Controller {
                 Err(_) => None,
             };
             let group_before = self.scene.as_ref().map(|scene| scene::members(scene, &self.budget)).transpose()?;
-            let captured = session::execute_captured(vm, &self.scope, source);
-            let executed = match captured {
-                Ok((outcome, receipt)) => { self.last_execution = Some(receipt); outcome }
-                Err(error) => { vm.host_budget_abort(); Err(vm.new_runtime_error(error)) }
-            };
+            let executed = if self.capture_requested {
+                match session::execute_captured(vm, &self.scope, source) {
+                    Ok((outcome, receipt)) => { self.last_execution = Some(receipt); outcome }
+                    Err(error) => { vm.host_budget_abort(); Err(vm.new_runtime_error(error)) }
+                }
+            } else { session::execute(vm, &self.scope, source) };
             if self.panic_after_execution {
                 panic!("Engineering unwind after VM mutation");
             }
@@ -2474,7 +2482,7 @@ impl Controller {
             let mut history_packed_edges = false;
             let clean_python_error = executed.is_err() && !vm.host_budget_poisoned() && !stage.failed && self.last_execution.as_ref().is_some_and(|r| r.error.is_some());
             let result = if let Err(error) = executed {
-                let _ = error;
+                if !self.capture_requested { vm.print_exception(&error); }
                 vm.host_budget_abort();
                 stage.rollback();
                 Err("Python execution refused".into())
