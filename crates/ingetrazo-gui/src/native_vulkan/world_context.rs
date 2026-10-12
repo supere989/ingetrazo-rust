@@ -162,9 +162,14 @@ pub(super) fn collect(
             };
             let cull = contains(&mesh.source_front_cull, &mut front_cursor);
             let back = contains(&mesh.source_default_back, &mut back_cursor);
-            let mode = if cull {
+            let mode = if app.style.visual_style == ingetrazo_render::style::VisualStyle::HiddenLine
+            {
+                6
+            } else if app.style.visual_style == ingetrazo_render::style::VisualStyle::Monochrome {
+                7
+            } else if cull {
                 9
-            } else if back || flat {
+            } else if back {
                 7
             } else {
                 6
@@ -217,7 +222,13 @@ pub(super) fn collect(
                 });
             }
         }
-        for paint in &mesh.source_back_paints {
+        for paint in mesh.source_back_paints.iter().filter(|_| {
+            !matches!(
+                app.style.visual_style,
+                ingetrazo_render::style::VisualStyle::HiddenLine
+                    | ingetrazo_render::style::VisualStyle::Monochrome
+            )
+        }) {
             let offset = faces.len() as u32;
             let end = paint
                 .first
