@@ -594,7 +594,6 @@ fn read_sheet(raw: &serde_json::Value) -> ingetrazo_core::composition::Sheet {
     fn num(v:&serde_json::Value,k:&str,d:f64)->f64 { v.get(k).and_then(|v|v.as_f64()).unwrap_or(d) }
     fn txt(v:&serde_json::Value,k:&str,d:&str)->String { v.get(k).and_then(|v|v.as_str()).unwrap_or(d).into() }
     fn flag(v:&serde_json::Value,k:&str,d:bool)->bool { v.get(k).and_then(|v|v.as_bool()).unwrap_or(d) }
-    fn rect(v:&serde_json::Value,d:RectMm)->RectMm {RectMm::new(num(v,"x_mm",d.x),num(v,"y_mm",d.y),num(v,"w_mm",d.w),num(v,"h_mm",d.h))}
     let paper=raw.get("paper").and_then(|v|serde_json::from_value(v.clone()).ok()).unwrap_or(PaperSize::A4);
     let mut sheet=Sheet::new(txt(raw,"name","Lámina 1"),paper,
         if flag(raw,"landscape",true) {Orientation::Landscape} else {Orientation::Portrait});
