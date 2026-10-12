@@ -180,7 +180,7 @@ impl Targets {
                                 .max(2.),
                         ),
                         "cotas_rad" => {
-                            let d = (2. * n("radius_mm", 20.)?).max(2.);
+                            let d = (2. * n("radius_mm", 15.)?).max(2.);
                             (d, d)
                         }
                         _ => (
@@ -193,8 +193,8 @@ impl Targets {
                         category,
                         index,
                         ingetrazo_core::composition::RectMm::new(
-                            n("x_mm", if key == "cotas_ang" { 0. } else { 20. })?,
-                            n("y_mm", if key == "cotas_ang" { 0. } else { 20. })?,
+                            n("x_mm", if matches!(key,"cotas_ang"|"cotas_rad") { 0. } else { 20. })?,
+                            n("y_mm", if matches!(key,"cotas_ang"|"cotas_rad") { 0. } else { 20. })?,
                             w,
                             h,
                         ),
