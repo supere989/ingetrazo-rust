@@ -122,8 +122,8 @@
     },
     {
       "path": "scripts/check-frame-annotation-sync.py",
-      "commit": "94510b2a2739d1b56628270d842d5e6f8134467b",
-      "sha256": "446dd1cc9b7ad7c673a1bdfc76f8228e22a2a3aed031b61ea3f5c1eac6ec5bc2"
+      "commit": "308d81596eafbea2f4accb868d2b8645a55b4f13",
+      "sha256": "db449beb3a8de938b6e59a35a2140b9f9f05ee2f97028b0acceabff7da23f886"
     },
     {
       "path": "docs/audits/frame-annotation-sync/fixture-contract.json",
