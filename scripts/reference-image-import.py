@@ -84,7 +84,7 @@ for name,actions,edit_path in roster:
  for p in points:mesh.add_edge(V(*p),V(p[0]+.05,p[1]+.03,p[2]))
  if edit_path:
   g=Group(mesh,'Context');g.xform=M();g.xform.translate(0,0,0);s.groups=[g]
- else:s.mesh=mesh;s.loose_mesh=mesh
+ else:s.mesh=mesh
  initial=name+'-input.igz';igz.save_scene(s,out/initial)
  if edit_path:vp.begin_group_edit(s.groups[0])
  # Oblique fixture uses its declared second endpoint; all actual contexts remain observed.
