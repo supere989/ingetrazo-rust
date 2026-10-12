@@ -1,0 +1,3460 @@
+{
+  "head": "ae0cead0d5da4c7c703742afa5d2eb765df86980",
+  "archive_sha256": "465c366296cd679fd2726440ca419b695d5cb25eeeb1001baba7fe2dab0851c4",
+  "members": {
+    "api/ae0c-artifacts.json": {
+      "bytes": 4393,
+      "sha256": "e2830ab5d4ed9e4491a63a51b2e40a10c08457e49ed5bf793459bc10991f7407"
+    },
+    "api/ae0c-full-jobs.json": {
+      "bytes": 47206,
+      "sha256": "e9d616c1afa403251d38ddfb8949130c2c0912ca19b0276b7a8824e697d5e65a"
+    },
+    "api/ae0c-full-run.json": {
+      "bytes": 12692,
+      "sha256": "471bdc6f2316d3350bc62983c100443b056a7d5f78221665b374e086e14cbdef"
+    },
+    "api/ae0c-main-ref.json": {
+      "bytes": 346,
+      "sha256": "45ca5886d0a57e251e4198d27f958e464734e43281fbdecff3a5ccb9fc428759"
+    },
+    "api/ae0c-ordered-artifacts.json": {
+      "bytes": 1489,
+      "sha256": "9c2d17e51619cbaf43a13d111527d3f556c1c6054e18662e7b0ec3e93c5a9f95"
+    },
+    "api/ae0c-ordered-jobs.json": {
+      "bytes": 6924,
+      "sha256": "ac3e9b0d683b30b4ef4a12988621f4f40168c9019baaf861f36c737c1585bddc"
+    },
+    "api/ae0c-ordered-run.json": {
+      "bytes": 12725,
+      "sha256": "34f829a1911fb9286364318b770359db2898524d31940eb28dad4335520dce82"
+    },
+    "api/ae0c-step-timings.json": {
+      "bytes": 41185,
+      "sha256": "849c9bafe1104e89ea96a1b1352571d43c1e6381985ee9faeb17113453e65837"
+    },
+    "artifacts/11731971685/build.log": {
+      "bytes": 26397,
+      "sha256": "5eeb765a0633e1c4689246444d66b1662a2ea00255b0cb2ae797d212f5d88adf"
+    },
+    "artifacts/11731971685/execution.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/11731971685/frameworks.txt": {
+      "bytes": 2190,
+      "sha256": "e11d32567317ccf27595f8294716b7cdf208b9c1bd8cbb9c86055fb26f64447c"
+    },
+    "artifacts/11731971685/native/result.json": {
+      "bytes": 491,
+      "sha256": "eb1b09f5bf4d649db7629c8afe5890a6394d64f9b31709759b07d236f8bbc557"
+    },
+    "artifacts/11731971685/qt-alpha.log": {
+      "bytes": 36,
+      "sha256": "d36157ef904350c50d628f39820fdb62464efea195f0e69cce4848e71d440f93"
+    },
+    "artifacts/11731971685/qt-mixed.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/11731971685/reference/alpha/reference.json": {
+      "bytes": 1033,
+      "sha256": "af9f9702e0cefb65f975ed82e8764759889e2d05ee22b6567d7afa095d7e00bb"
+    },
+    "artifacts/11731971685/reference/mixed/source.json": {
+      "bytes": 315,
+      "sha256": "3a947a54fe870ba639678ebb114b3d2a6b495b701bae0cd9b408930cfafda552"
+    },
+    "artifacts/11731971685/revision.txt": {
+      "bytes": 41,
+      "sha256": "bc50f66a1f9d479c1c76611371567780ff15ffd32dcc42019c426beed7134908"
+    },
+    "artifacts/11731971685/strict-check.json": {
+      "bytes": 970,
+      "sha256": "9f91f859edb83aec66c0a5c39e4f4e6884bd7282080f3455bc8fac1e9ee0f1e6"
+    },
+    "artifacts/11731971685/toolchain.txt": {
+      "bytes": 192,
+      "sha256": "352d6857968e80a6357a926ac685b9b07f77c479aaafde33e73a53945e802909"
+    },
+    "artifacts/11732001493/check.log": {
+      "bytes": 26481,
+      "sha256": "080e054dcf8cadc2495ae91758141dfbc9951301823544bc058c284d616b95c6"
+    },
+    "artifacts/11732001493/gui-examples.log": {
+      "bytes": 80775,
+      "sha256": "def1b0ac8a78f53bebf52f0deace5e1cd8d192338bc3a000fdc88490d533c505"
+    },
+    "artifacts/11732146720/build.log": {
+      "bytes": 26397,
+      "sha256": "eb962dff4fbd138cb104f8277fa134d4e7028a9423c88ef2d49178b40cdd0527"
+    },
+    "artifacts/11732146720/execution.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/11732146720/frameworks.txt": {
+      "bytes": 2065,
+      "sha256": "d422e338a8c69a2fd5b10c652e31e8aea3d99ad02e634b03bc56af7e2d4c1083"
+    },
+    "artifacts/11732146720/native/result.json": {
+      "bytes": 491,
+      "sha256": "6ef0778f30abc492572f6463044dcad3471a213b9687d6ffa4d36684151766f7"
+    },
+    "artifacts/11732146720/qt-alpha.log": {
+      "bytes": 36,
+      "sha256": "d36157ef904350c50d628f39820fdb62464efea195f0e69cce4848e71d440f93"
+    },
+    "artifacts/11732146720/qt-mixed.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/11732146720/reference/alpha/reference.json": {
+      "bytes": 1033,
+      "sha256": "af9f9702e0cefb65f975ed82e8764759889e2d05ee22b6567d7afa095d7e00bb"
+    },
+    "artifacts/11732146720/reference/mixed/source.json": {
+      "bytes": 315,
+      "sha256": "3a947a54fe870ba639678ebb114b3d2a6b495b701bae0cd9b408930cfafda552"
+    },
+    "artifacts/11732146720/revision.txt": {
+      "bytes": 41,
+      "sha256": "bc50f66a1f9d479c1c76611371567780ff15ffd32dcc42019c426beed7134908"
+    },
+    "artifacts/11732146720/strict-check.json": {
+      "bytes": 970,
+      "sha256": "9f91f859edb83aec66c0a5c39e4f4e6884bd7282080f3455bc8fac1e9ee0f1e6"
+    },
+    "artifacts/11732146720/toolchain.txt": {
+      "bytes": 191,
+      "sha256": "b1184c1aecf3182548f3bbdd91e5043e464821b1dcbf6d5ca8246339bd0be84a"
+    },
+    "artifacts/11732166762/build.log": {
+      "bytes": 58641,
+      "sha256": "d842f6f04659a33a72e77fc8357a5ecc01ea01cb3f69134b0bf1a5cbf76f69bb"
+    },
+    "artifacts/11732166762/recovery-check.json": {
+      "bytes": 126,
+      "sha256": "124dfaa42372337d6ed6a1188ec77110200f086ec330947cd01a5d8768e0fe61"
+    },
+    "artifacts/11732166762/recovery-check.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/11732166762/recovery-run.log": {
+      "bytes": 61,
+      "sha256": "5150e5544f715f442282efaf055233c151f021d8f5f3a27fe8f3b6a7f083aa56"
+    },
+    "artifacts/11732166762/self-check.log": {
+      "bytes": 560,
+      "sha256": "05ac283238e28a6b08ea80aba920cea2376f07f19136b59e7624b4dab1231cee"
+    },
+    "artifacts/11732166762/session-recovery/init-0.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/11732166762/session-recovery/recover-6.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/11732166762/session-recovery/result.json": {
+      "bytes": 3467,
+      "sha256": "3424f35ad064b1ff3de3b7c05f44af170c80fedd88faab63c5e3208267558dde"
+    },
+    "artifacts/11732166762/session-recovery/scan-0.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/11732166762/session-recovery/scan-1.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/11732166762/session-recovery/scan-2.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/11732166762/session-recovery/scan-3.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/11732166762/session-recovery/scan-4.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/11732166762/session-recovery/scan-5.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/11732166762/session-recovery/writer.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/11732166762/version.log": {
+      "bytes": 32,
+      "sha256": "1b2dd62f50384c39fd4e0df9b1067fa5bb89930b5b7e037c3cf2e30949765df9"
+    },
+    "artifacts/11732406384/check.log": {
+      "bytes": 26481,
+      "sha256": "9515cf2a7e1105b2d72d446ef7629c21e653ff2fba6330b8d86aabf616adcf78"
+    },
+    "artifacts/11732406384/gui-examples.log": {
+      "bytes": 80136,
+      "sha256": "194ca711efc1766a12faafa8852d881768f3b6cb7e657557c4de853f00782084"
+    },
+    "artifacts/arm/metal-combined-gui-ci/apple-gl-depth-resolve.json": {
+      "bytes": 37,
+      "sha256": "574706717f33363bcf4886d8f94a41986321935bf687f55afb9457e21e56b908"
+    },
+    "artifacts/arm/metal-combined-gui-ci/apple-gl-depth-resolve.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/arm/metal-combined-gui-ci/billboards/report.json": {
+      "bytes": 499,
+      "sha256": "d9a39b8da54b807644a2e8325f8a7cf7e758d58eb1e594d069d5cd5f94275a87"
+    },
+    "artifacts/arm/metal-combined-gui-ci/build.log": {
+      "bytes": 80525,
+      "sha256": "ed61226a471ad1bacfee1671c56a8bf293177f03474618232e3b94342dc69241"
+    },
+    "artifacts/arm/metal-combined-gui-ci/check.log": {
+      "bytes": 86524,
+      "sha256": "9044ad9b57fe35d43df03adfc9cf9c7dc2e2bf686d2824fd6e848f7e0d515bbf"
+    },
+    "artifacts/arm/metal-combined-gui-ci/defaults/report.json": {
+      "bytes": 616,
+      "sha256": "b5921b36d5e043b8b7ddc6850145cfb09876875d9079a8f98ac34ae2fc361878"
+    },
+    "artifacts/arm/metal-combined-gui-ci/document-annotations/report.json": {
+      "bytes": 480,
+      "sha256": "c996f97ad367a945ca79e2b71bec4a4f43463bfc942bf88df6b09773c3f222c1"
+    },
+    "artifacts/arm/metal-combined-gui-ci/document-annotations/sample-diagnostics.json": {
+      "bytes": 700,
+      "sha256": "6a9474a16266168825609cf3cc1254b31b38ec2898b6c91cf60ff767a7b25f93"
+    },
+    "artifacts/arm/metal-combined-gui-ci/gltf-figures-replay.log": {
+      "bytes": 721,
+      "sha256": "67d0876c8c7dbbb96536bcdd0487a98a65856b4949da1952cd03b0a04a666788"
+    },
+    "artifacts/arm/metal-combined-gui-ci/gltf-figures/affine-nested-rich.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/arm/metal-combined-gui-ci/gltf-figures/affine-nested-rich.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/arm/metal-combined-gui-ci/gltf-figures/bitmap-no-texture-camera.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/arm/metal-combined-gui-ci/gltf-figures/bitmap-no-texture-camera.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/arm/metal-combined-gui-ci/gltf-figures/bitmap-no-texture-ordinary.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/arm/metal-combined-gui-ci/gltf-figures/bitmap-no-texture-ordinary.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/arm/metal-combined-gui-ci/gltf-figures/bitmap-perspective-camera.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/arm/metal-combined-gui-ci/gltf-figures/bitmap-perspective-camera.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/arm/metal-combined-gui-ci/gltf-figures/bitmap-perspective-ordinary.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/arm/metal-combined-gui-ci/gltf-figures/bitmap-perspective-ordinary.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/arm/metal-combined-gui-ci/gltf-figures/default-rich.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/arm/metal-combined-gui-ci/gltf-figures/default-rich.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/arm/metal-combined-gui-ci/gltf-figures/empty-rich.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/arm/metal-combined-gui-ci/gltf-figures/empty-rich.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/arm/metal-combined-gui-ci/gltf-figures/figure-only-camera.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/arm/metal-combined-gui-ci/gltf-figures/figure-only-camera.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/arm/metal-combined-gui-ci/gltf-figures/figure-only-ordinary.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/arm/metal-combined-gui-ci/gltf-figures/figure-only-ordinary.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/arm/metal-combined-gui-ci/gltf-figures/figures-check.json": {
+      "bytes": 154,
+      "sha256": "a53832f751788014f18836bd567cdc6e484424ef822b6b686eb9d42b93d93126"
+    },
+    "artifacts/arm/metal-combined-gui-ci/gltf-figures/figures-check.json.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/arm/metal-combined-gui-ci/gltf-figures/hidden-top-camera.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/arm/metal-combined-gui-ci/gltf-figures/hidden-top-camera.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/arm/metal-combined-gui-ci/gltf-figures/hidden-top-ordinary.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/arm/metal-combined-gui-ci/gltf-figures/hidden-top-ordinary.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/arm/metal-combined-gui-ci/gltf-figures/hole-rich.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/arm/metal-combined-gui-ci/gltf-figures/hole-rich.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/arm/metal-combined-gui-ci/gltf-figures/identity-orphan-camera.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/arm/metal-combined-gui-ci/gltf-figures/identity-orphan-camera.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/arm/metal-combined-gui-ci/gltf-figures/identity-orphan-ordinary.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/arm/metal-combined-gui-ci/gltf-figures/identity-orphan-ordinary.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/arm/metal-combined-gui-ci/gltf-figures/mesh-perspective-camera.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/arm/metal-combined-gui-ci/gltf-figures/mesh-perspective-camera.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/arm/metal-combined-gui-ci/gltf-figures/mesh-perspective-ordinary.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/arm/metal-combined-gui-ci/gltf-figures/mesh-perspective-ordinary.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/arm/metal-combined-gui-ci/gltf-figures/mixed-first-material-camera.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/arm/metal-combined-gui-ci/gltf-figures/mixed-first-material-camera.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/arm/metal-combined-gui-ci/gltf-figures/mixed-first-material-ordinary.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/arm/metal-combined-gui-ci/gltf-figures/mixed-first-material-ordinary.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/arm/metal-combined-gui-ci/gltf-figures/native/collapse-refusal.json": {
+      "bytes": 130,
+      "sha256": "534f144987fc573f51c113f6300f191216e4cd9c48158fa9b11c12281e097cfa"
+    },
+    "artifacts/arm/metal-combined-gui-ci/gltf-figures/native/collapse-refusal.json.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/arm/metal-combined-gui-ci/gltf-figures/native/initial-decoded-failure.json": {
+      "bytes": 82218,
+      "sha256": "925f22c1fdba62d764ffe2d9a707f182a927862d5fa8622daba5d7eac464aa62"
+    },
+    "artifacts/arm/metal-combined-gui-ci/gltf-figures/native/path-only-candidate-failure.json": {
+      "bytes": 82372,
+      "sha256": "1f3e88bf3550b243b92360829d229f17345e61e726eefcd5b2f72d159dbc68dc"
+    },
+    "artifacts/arm/metal-combined-gui-ci/gltf-figures/nested-hidden-child-camera.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/arm/metal-combined-gui-ci/gltf-figures/nested-hidden-child-camera.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/arm/metal-combined-gui-ci/gltf-figures/nested-hidden-child-ordinary.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/arm/metal-combined-gui-ci/gltf-figures/nested-hidden-child-ordinary.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/arm/metal-combined-gui-ci/gltf-figures/nested-reflected-rich.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/arm/metal-combined-gui-ci/gltf-figures/nested-reflected-rich.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/arm/metal-combined-gui-ci/gltf-figures/pbr-colors-rich.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/arm/metal-combined-gui-ci/gltf-figures/pbr-colors-rich.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/arm/metal-combined-gui-ci/gltf-figures/result.json": {
+      "bytes": 12205,
+      "sha256": "a04b12aecf8895669949121ed147a7be1256e4d9adee944cd935d1b0f25d4975"
+    },
+    "artifacts/arm/metal-combined-gui-ci/gltf-figures/rich-check.log": {
+      "bytes": 102,
+      "sha256": "2c4a55ce0af15822d9abaa2a9d4cffa0bc0a59d1632c4c27717a42e6bd271105"
+    },
+    "artifacts/arm/metal-combined-gui-ci/gltf-figures/rich-check.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/arm/metal-combined-gui-ci/gltf-figures/slanted-rich.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/arm/metal-combined-gui-ci/gltf-figures/slanted-rich.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/arm/metal-combined-gui-ci/gltf-figures/source/bitmap-no-texture.camera.json": {
+      "bytes": 121,
+      "sha256": "cb0a4a686b175e1e93deb552703278b85475d9a8140a8842bcf2765775e035f6"
+    },
+    "artifacts/arm/metal-combined-gui-ci/gltf-figures/source/bitmap-perspective.camera.json": {
+      "bytes": 120,
+      "sha256": "5b768981c6f74f8087f07ed7f8223b022cf3c2c69f941eca2816cdf6204bee0c"
+    },
+    "artifacts/arm/metal-combined-gui-ci/gltf-figures/source/cases.json": {
+      "bytes": 4839,
+      "sha256": "5c88dbfac9a117ca4c85990e4a2550f3bfe0cbe885dc421c3c8f5db37e9ad3d8"
+    },
+    "artifacts/arm/metal-combined-gui-ci/gltf-figures/source/collapse.camera.json": {
+      "bytes": 79,
+      "sha256": "643735b8f62eec09c7280a5db915894ad86d860a633a3c0f674745a1087e973d"
+    },
+    "artifacts/arm/metal-combined-gui-ci/gltf-figures/source/figure-only.camera.json": {
+      "bytes": 121,
+      "sha256": "cb0a4a686b175e1e93deb552703278b85475d9a8140a8842bcf2765775e035f6"
+    },
+    "artifacts/arm/metal-combined-gui-ci/gltf-figures/source/hidden-top.camera.json": {
+      "bytes": 120,
+      "sha256": "5b768981c6f74f8087f07ed7f8223b022cf3c2c69f941eca2816cdf6204bee0c"
+    },
+    "artifacts/arm/metal-combined-gui-ci/gltf-figures/source/identity-orphan.camera.json": {
+      "bytes": 120,
+      "sha256": "5b768981c6f74f8087f07ed7f8223b022cf3c2c69f941eca2816cdf6204bee0c"
+    },
+    "artifacts/arm/metal-combined-gui-ci/gltf-figures/source/mesh-perspective.camera.json": {
+      "bytes": 120,
+      "sha256": "5b768981c6f74f8087f07ed7f8223b022cf3c2c69f941eca2816cdf6204bee0c"
+    },
+    "artifacts/arm/metal-combined-gui-ci/gltf-figures/source/mixed-first-material.camera.json": {
+      "bytes": 120,
+      "sha256": "5b768981c6f74f8087f07ed7f8223b022cf3c2c69f941eca2816cdf6204bee0c"
+    },
+    "artifacts/arm/metal-combined-gui-ci/gltf-figures/source/nested-hidden-child.camera.json": {
+      "bytes": 121,
+      "sha256": "cb0a4a686b175e1e93deb552703278b85475d9a8140a8842bcf2765775e035f6"
+    },
+    "artifacts/arm/metal-combined-gui-ci/gltf-figures/textures-alpha-rich.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/arm/metal-combined-gui-ci/gltf-figures/textures-alpha-rich.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/arm/metal-combined-gui-ci/gltf-figures/visibility-rich.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/arm/metal-combined-gui-ci/gltf-figures/visibility-rich.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/arm/metal-combined-gui-ci/launcher/result.json": {
+      "bytes": 444,
+      "sha256": "50ceb03a7cf95d66a84038147a5b92959c21050625f48b3ed478d9bb90c9e8f8"
+    },
+    "artifacts/arm/metal-combined-gui-ci/launcher/runtime.log": {
+      "bytes": 836,
+      "sha256": "663bdfaa519ac7fae1463c1b063e8f946412e9064f5874d9ed942324a586c2c7"
+    },
+    "artifacts/arm/metal-combined-gui-ci/legend-authoring-replay.log": {
+      "bytes": 2080,
+      "sha256": "f536a192fc5b5e47d9b82eaf8ed05dd7fe5d1fa451d191c4d3ccdd85ac4a6f8a"
+    },
+    "artifacts/arm/metal-combined-gui-ci/legend-authoring/checker.log": {
+      "bytes": 1000,
+      "sha256": "c72635d2981f0c211af38b255bbf7a57cf7b913cbbb4ace0f7cc0eadd7f34aec"
+    },
+    "artifacts/arm/metal-combined-gui-ci/legend-authoring/checker.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/arm/metal-combined-gui-ci/legend-authoring/comparison.json": {
+      "bytes": 1128,
+      "sha256": "6aa19359a29c608ef3a5fd2fd0f86e2a194adaba11df19f9a3dbe0e3a7c8fb15"
+    },
+    "artifacts/arm/metal-combined-gui-ci/legend-authoring/native.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/arm/metal-combined-gui-ci/legend-authoring/native.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/arm/metal-combined-gui-ci/legend-authoring/native/empty-visible-cancel-native.igz": {
+      "bytes": 1033,
+      "sha256": "0d23289a41badeda3f2c9b2d49afc0721b0bdf8a9f3bdb64cd394e02d61d57b4"
+    },
+    "artifacts/arm/metal-combined-gui-ci/legend-authoring/native/lifecycle-native.igz": {
+      "bytes": 1866,
+      "sha256": "688ae1a62376c1bcde0867b12f7430a016132d596cb0a39096aeb9e3c3452296"
+    },
+    "artifacts/arm/metal-combined-gui-ci/legend-authoring/native/loaded-delete-native.igz": {
+      "bytes": 923,
+      "sha256": "94147728f0161b4c37672e770c10ecc7f1d71b7864e87872325f5166ee9d4c1c"
+    },
+    "artifacts/arm/metal-combined-gui-ci/legend-authoring/native/loaded-locked-native.igz": {
+      "bytes": 1514,
+      "sha256": "16238402a88cf3e82b628ebba27c34a7401130dcfb0beafea549c1c373a232d8"
+    },
+    "artifacts/arm/metal-combined-gui-ci/legend-authoring/native/native-deleted-reopen.json": {
+      "bytes": 407,
+      "sha256": "069da4d0fdb413205b7d0698bc4dc59bf097221b2b004b4fdf7507cbcc4ca7bc"
+    },
+    "artifacts/arm/metal-combined-gui-ci/legend-authoring/native/native-legend.json": {
+      "bytes": 80243,
+      "sha256": "8bd6d64cab12a4ea680918d94a5e2b605ca1eafc3141ff94f5727da304d80222"
+    },
+    "artifacts/arm/metal-combined-gui-ci/legend-authoring/native/native-legend.partial.json": {
+      "bytes": 80045,
+      "sha256": "6732d443d5d39fb26648da9aec8c186b5cb00a49af7d279e49b2eb618668dc39"
+    },
+    "artifacts/arm/metal-combined-gui-ci/legend-authoring/native/native-reopens.json": {
+      "bytes": 3656,
+      "sha256": "07dc85b0b161dfd67661511e481517982fbf3e683bde8d200db9af7bf52894d9"
+    },
+    "artifacts/arm/metal-combined-gui-ci/legend-authoring/native/single-legend-gestures-native.igz": {
+      "bytes": 1182,
+      "sha256": "02da09951f7088b1f1ef941878fc73fc905846192a066d80e710772b1d4a7ced"
+    },
+    "artifacts/arm/metal-combined-gui-ci/legend-authoring/reader.log": {
+      "bytes": 78,
+      "sha256": "ea417cb808bd8ef5766f511093a29b9af719bca96868ef75f43a7a006c10c2a0"
+    },
+    "artifacts/arm/metal-combined-gui-ci/legend-authoring/reader.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/arm/metal-combined-gui-ci/legend-authoring/result.json": {
+      "bytes": 2322,
+      "sha256": "807534e758665b0692dbff997806d75d2e8830fb4cd387b9de054fb89e056301"
+    },
+    "artifacts/arm/metal-combined-gui-ci/legend-authoring/source/authoring.log": {
+      "bytes": 46,
+      "sha256": "e901cb58c9c7f5c8a951f8b278a0e6a8c25ddbb790cf03d8d6c26344db155f35"
+    },
+    "artifacts/arm/metal-combined-gui-ci/legend-authoring/source/authoring.stderr": {
+      "bytes": 447,
+      "sha256": "c69054c257642487233ff22cc9beb0fe60ae319c8269d0105562fca6f1e50850"
+    },
+    "artifacts/arm/metal-combined-gui-ci/legend-authoring/source/first-gesture-hard-failure.partial.json": {
+      "bytes": 7744,
+      "sha256": "00e98b2380c63e1f9988bb7fcdbe9ce787a072a04e3f91000be448fb3492ca38"
+    },
+    "artifacts/arm/metal-combined-gui-ci/legend-authoring/source/gesture-hard-failure.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/arm/metal-combined-gui-ci/legend-authoring/source/gesture-hard-failure.stderr": {
+      "bytes": 2822,
+      "sha256": "a9d7d246a65da8a3a44d9b005440040e41734ce6354392d95355fd75ae78696f"
+    },
+    "artifacts/arm/metal-combined-gui-ci/legend-authoring/source/gesture-observed.log": {
+      "bytes": 46,
+      "sha256": "1b4d8ec4615cc5784bdc74dc40bd261ff247ea8bf967a531102326d05e4519fc"
+    },
+    "artifacts/arm/metal-combined-gui-ci/legend-authoring/source/gesture-observed.stderr": {
+      "bytes": 299,
+      "sha256": "e15cc28e49c7dc0e894f1fabf2d7c02bb534179a206788cf956ea5cc78f299e7"
+    },
+    "artifacts/arm/metal-combined-gui-ci/legend-authoring/source/native-gesture-expectations.json": {
+      "bytes": 17552,
+      "sha256": "a888c5ca02fb0a9a115316862fb9c4d9d5d5b24f5119b02c890ad0eb87c2bd39"
+    },
+    "artifacts/arm/metal-combined-gui-ci/legend-authoring/source/original-legend.json": {
+      "bytes": 105424,
+      "sha256": "f947d3eacc8340326ff497169572969067ec5350bc1fd288fb8e3fb48f3dea8d"
+    },
+    "artifacts/arm/metal-combined-gui-ci/legend-authoring/source/original-reopens.json": {
+      "bytes": 3656,
+      "sha256": "07dc85b0b161dfd67661511e481517982fbf3e683bde8d200db9af7bf52894d9"
+    },
+    "artifacts/arm/metal-combined-gui-ci/picture-authoring-replay.log": {
+      "bytes": 2090,
+      "sha256": "b9fb5ef418b5d0a3b91b61f131d0847f4ce12df5e09c3c7d2a1afc80bc1a78fd"
+    },
+    "artifacts/arm/metal-combined-gui-ci/picture-authoring/checker.log": {
+      "bytes": 663,
+      "sha256": "693834818a1698fac75051beaa7d6d99f4c3b2597d2c14bbf2d473f1f2e11d9b"
+    },
+    "artifacts/arm/metal-combined-gui-ci/picture-authoring/checker.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/arm/metal-combined-gui-ci/picture-authoring/comparison.json": {
+      "bytes": 747,
+      "sha256": "2f6d045e7dc371eb9553d1b5251c4b283347103ac89c6368341d78e0ae701e40"
+    },
+    "artifacts/arm/metal-combined-gui-ci/picture-authoring/native.log": {
+      "bytes": 530,
+      "sha256": "656b75279bd0f870ec61095716964750565249c5a5adc9b7c664f5a03896dd8e"
+    },
+    "artifacts/arm/metal-combined-gui-ci/picture-authoring/native.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/arm/metal-combined-gui-ci/picture-authoring/native/aspect-selection-native.igz": {
+      "bytes": 1679,
+      "sha256": "ac896af094a953e6cde8811ee474c18901c69b5321b005625d92bb8433b5619c"
+    },
+    "artifacts/arm/metal-combined-gui-ci/picture-authoring/native/authoring-native.igz": {
+      "bytes": 12095,
+      "sha256": "e82c06c33f5306fb66bbb56a05ba7420de09aac57637061304583c45f1c89e0a"
+    },
+    "artifacts/arm/metal-combined-gui-ci/picture-authoring/native/missing-fallback-native.igz": {
+      "bytes": 1110,
+      "sha256": "3021e3dbc322fa112d4b5c63a18eefdb84d9ee68106258627bd9c02387b0afce"
+    },
+    "artifacts/arm/metal-combined-gui-ci/picture-authoring/native/native-reopens.json": {
+      "bytes": 12765,
+      "sha256": "054117bf25f392eb31be0b70c0fe753356f9e4b44176ed03b6c7469836bf0667"
+    },
+    "artifacts/arm/metal-combined-gui-ci/picture-authoring/native/native.json": {
+      "bytes": 339607,
+      "sha256": "698ffb599c7c6ad14eb04456d7d63a0ce20b2156de1f40460949fb9e6d7e0e7f"
+    },
+    "artifacts/arm/metal-combined-gui-ci/picture-authoring/native/picker-calls.txt": {
+      "bytes": 24,
+      "sha256": "c16040f9f3694eb53cdddb917b85623297eff22429c94b64589010bab795dc9a"
+    },
+    "artifacts/arm/metal-combined-gui-ci/picture-authoring/native/z-input-cajetin.igz": {
+      "bytes": 5644,
+      "sha256": "f64fdc7933a4e030af7fe359b4c951f85ae7864953972c7e16d18e102a104bd4"
+    },
+    "artifacts/arm/metal-combined-gui-ci/picture-authoring/native/z-input-cotas.igz": {
+      "bytes": 5645,
+      "sha256": "daff08ccad52da5bbf61522e5ab3597053edc53cf1a48988285512c61fe972ed"
+    },
+    "artifacts/arm/metal-combined-gui-ci/picture-authoring/native/z-input-cotas_ang.igz": {
+      "bytes": 5645,
+      "sha256": "c483e32d43ddb683a2e0a9ba62aa132099eccb13fbf787fb7fc754172429e419"
+    },
+    "artifacts/arm/metal-combined-gui-ci/picture-authoring/native/z-input-cotas_rad.igz": {
+      "bytes": 5644,
+      "sha256": "c11818fc6785132013bd3a09cc080f5744db2454aa828335d4e37e2363921fee"
+    },
+    "artifacts/arm/metal-combined-gui-ci/picture-authoring/native/z-input-etiquetas.igz": {
+      "bytes": 5644,
+      "sha256": "f5b16f9d537852f327480bf4ccb7ca07fe001e2e57af152b65055f20aca3a1b6"
+    },
+    "artifacts/arm/metal-combined-gui-ci/picture-authoring/native/z-input-frames.igz": {
+      "bytes": 5645,
+      "sha256": "a05774bcc0dc3ca36aef1383a87ade8e02139d11c5a4ad5b1d9235cb559dd599"
+    },
+    "artifacts/arm/metal-combined-gui-ci/picture-authoring/native/z-input-images.igz": {
+      "bytes": 5645,
+      "sha256": "34cd7b72f86883b4dfa6a7d7815284405b35d7ee0cd2e26adc7c21a2cfde3ff9"
+    },
+    "artifacts/arm/metal-combined-gui-ci/picture-authoring/native/z-input-leyendas.igz": {
+      "bytes": 5644,
+      "sha256": "165bcd9771145df799f8ff094e75d5a944dba471d4e6c598c57ef01d09131d2a"
+    },
+    "artifacts/arm/metal-combined-gui-ci/picture-authoring/native/z-input-llamadas.igz": {
+      "bytes": 5644,
+      "sha256": "f1816af6720aa6a412f9e20345aed4876bc7217976026cb71fa68394da6ec828"
+    },
+    "artifacts/arm/metal-combined-gui-ci/picture-authoring/native/z-input-niveles.igz": {
+      "bytes": 5644,
+      "sha256": "9a2627e5b997840ffd8a3d2e45d9c5bf6402f20c90c1f34612bc44f101d2346d"
+    },
+    "artifacts/arm/metal-combined-gui-ci/picture-authoring/native/z-input-nortes.igz": {
+      "bytes": 5645,
+      "sha256": "5d615da72dab248f51e9a83fffddb883aac54f510e06c994f59fae0969a0229c"
+    },
+    "artifacts/arm/metal-combined-gui-ci/picture-authoring/native/z-input-perfiles.igz": {
+      "bytes": 5644,
+      "sha256": "c57bd9c4e6ea285635d7000d21740cd4557de19862ff746ad435dbaaa0919b50"
+    },
+    "artifacts/arm/metal-combined-gui-ci/picture-authoring/native/z-input-scalebars.igz": {
+      "bytes": 5645,
+      "sha256": "3e4cd7fc753674eb13f861d273f1f5f4853508596f38746df0fcf1a98fb9f9c5"
+    },
+    "artifacts/arm/metal-combined-gui-ci/picture-authoring/native/z-input-shapes.igz": {
+      "bytes": 5645,
+      "sha256": "d06f5d895954f4f51ea7d7b049da07931c5eedeac53e53b61e6c01507e4af1cd"
+    },
+    "artifacts/arm/metal-combined-gui-ci/picture-authoring/native/z-input-texts.igz": {
+      "bytes": 5645,
+      "sha256": "787d6fe6cd67a9e9e664946c53998ef9d7c3373c812241cb985fce5317485d18"
+    },
+    "artifacts/arm/metal-combined-gui-ci/picture-authoring/reader.log": {
+      "bytes": 20,
+      "sha256": "722dd5b5d8247e8abf8cfa830c0b8d74ba9a46e1a7d07cf7b8a5b316ecee5213"
+    },
+    "artifacts/arm/metal-combined-gui-ci/picture-authoring/reader.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/arm/metal-combined-gui-ci/picture-authoring/result.json": {
+      "bytes": 2332,
+      "sha256": "6fe3b4d8436d11fae364d4bd0651f7cb0e5947826f0fbca34c4d3fef0bade3a1"
+    },
+    "artifacts/arm/metal-combined-gui-ci/picture-authoring/source/original-picture-authoring.json": {
+      "bytes": 336182,
+      "sha256": "e33218841a40cb38c5951aad0ed07c9509aaad711272563c32b3acabb626b6af"
+    },
+    "artifacts/arm/metal-combined-gui-ci/picture-authoring/source/original-reopens.json": {
+      "bytes": 12765,
+      "sha256": "054117bf25f392eb31be0b70c0fe753356f9e4b44176ed03b6c7469836bf0667"
+    },
+    "artifacts/arm/metal-combined-gui-ci/picture-authoring/source/original-z-controls.json": {
+      "bytes": 3365,
+      "sha256": "438ac8c15ec47c1d206014173a25ef36e092e8b799d4d0f945319016b8b1e975"
+    },
+    "artifacts/arm/metal-combined-gui-ci/picture-authoring/source/provenance.json": {
+      "bytes": 454,
+      "sha256": "01679c68cc4b850b01d257e8e7138e1dc13f4436924f9c3cc5c11ca748ae6573"
+    },
+    "artifacts/arm/metal-combined-gui-ci/picture-authoring/source/source-run.log": {
+      "bytes": 41,
+      "sha256": "2771ef84a046f1714d6a15a269f0f692288df45c0979c8265b4e26342e3bd44d"
+    },
+    "artifacts/arm/metal-combined-gui-ci/picture-authoring/source/source-run.stderr": {
+      "bytes": 147,
+      "sha256": "c0cf3de7adfde67e063969f6c3dfce3bc40a7a3694cb8d645ebf5409bed17591"
+    },
+    "artifacts/arm/metal-combined-gui-ci/picture-authoring/source/source-z-run.log": {
+      "bytes": 19,
+      "sha256": "4c9baf1366386f0fe5ce3447779d02ecbd710740ea4daa64be087dde32fec544"
+    },
+    "artifacts/arm/metal-combined-gui-ci/picture-authoring/source/source-z-run.stderr": {
+      "bytes": 49,
+      "sha256": "9148e145e58b87c50fd49ce7410b6e547365bef08a9b8c91d92465a27f1fa848"
+    },
+    "artifacts/arm/metal-combined-gui-ci/picture-gestures-replay.log": {
+      "bytes": 2079,
+      "sha256": "f2f220f190d4a53edf541294e5835d5e508c91dcc0ce59f0301d8dba3e6eb911"
+    },
+    "artifacts/arm/metal-combined-gui-ci/picture-gestures/checker.log": {
+      "bytes": 600,
+      "sha256": "7321fa1f50fbdcc655782fca80138f5299ba603a6fcc377a462c140af3b38639"
+    },
+    "artifacts/arm/metal-combined-gui-ci/picture-gestures/checker.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/arm/metal-combined-gui-ci/picture-gestures/comparison.json": {
+      "bytes": 692,
+      "sha256": "31bfdbcaf76c2f494f7838dc8c242690fddc69662922a9d87511c30b0ebca102"
+    },
+    "artifacts/arm/metal-combined-gui-ci/picture-gestures/native.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/arm/metal-combined-gui-ci/picture-gestures/native.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/arm/metal-combined-gui-ci/picture-gestures/native/click-only-native.igz": {
+      "bytes": 1119,
+      "sha256": "9b10f0bcecedcc45b5830c320484ccae817527054f8000c1894027bbe0342f70"
+    },
+    "artifacts/arm/metal-combined-gui-ci/picture-gestures/native/ctrl-toggle-native.igz": {
+      "bytes": 1120,
+      "sha256": "21f8dc374be455bfbadbcabdcaee4e93b9756e3ca2d5c4e6fb3f765bcef28fc1"
+    },
+    "artifacts/arm/metal-combined-gui-ci/picture-gestures/native/drag-page-guide-native.igz": {
+      "bytes": 1248,
+      "sha256": "9a7f5e22ca0e32192b5cddae70bdd40e2816271f53a25e5bc0950411e344c971"
+    },
+    "artifacts/arm/metal-combined-gui-ci/picture-gestures/native/drag-sibling-native.igz": {
+      "bytes": 1686,
+      "sha256": "7a322d1787c26775002489e87ce0bfb71c1763d770b0f66fbf45131ef41aef9f"
+    },
+    "artifacts/arm/metal-combined-gui-ci/picture-gestures/native/drawing-endpoint-native.igz": {
+      "bytes": 3028,
+      "sha256": "b2db7395aafaea724c1d5e3f9eae7d66e8c13296a536fe936329b152a099a5bf"
+    },
+    "artifacts/arm/metal-combined-gui-ci/picture-gestures/native/drawing-midpoint-native.igz": {
+      "bytes": 3028,
+      "sha256": "f8be94f9e19af1ad9960dea2f99ae16db07905e072843aebdc9b835d226966bd"
+    },
+    "artifacts/arm/metal-combined-gui-ci/picture-gestures/native/equal-z-native.igz": {
+      "bytes": 1677,
+      "sha256": "7c70f4469a4c7936846742aadbb837fce93c9f9fb3bfe38fd91d32e2995d75c5"
+    },
+    "artifacts/arm/metal-combined-gui-ci/picture-gestures/native/escape-drag-native.igz": {
+      "bytes": 1120,
+      "sha256": "e26871b7cbc50e38f1df3f1c3816f0f694443805724134644f878b800f20ae94"
+    },
+    "artifacts/arm/metal-combined-gui-ci/picture-gestures/native/hidden-only-native.igz": {
+      "bytes": 1119,
+      "sha256": "fc9c17dab4670b29fe3cab3f17d7029ec201dde707fde2878301397e9e89b5ad"
+    },
+    "artifacts/arm/metal-combined-gui-ci/picture-gestures/native/hidden-overlay-native.igz": {
+      "bytes": 1683,
+      "sha256": "23053c1ebe40590367745025afc7e93d6ad83f6323f37fc17ae0fcc3af48516d"
+    },
+    "artifacts/arm/metal-combined-gui-ci/picture-gestures/native/higher-z-native.igz": {
+      "bytes": 1678,
+      "sha256": "8eaa5276b167f0f590702447238f617ec61afc390301fc307d56ffc5e96d5d33"
+    },
+    "artifacts/arm/metal-combined-gui-ci/picture-gestures/native/large-first-move-native.igz": {
+      "bytes": 1125,
+      "sha256": "6049f30073e184babf9518076610c2ef945197843a55afde1c566c1f2d625890"
+    },
+    "artifacts/arm/metal-combined-gui-ci/picture-gestures/native/locked-only-native.igz": {
+      "bytes": 1119,
+      "sha256": "cea47c462be35eee01fb9a7e377ac4292fb201027b4a20d59a1d46d9171bb2e5"
+    },
+    "artifacts/arm/metal-combined-gui-ci/picture-gestures/native/locked-overlay-native.igz": {
+      "bytes": 1683,
+      "sha256": "675ec4171ddd8962278a7e9e7d52331c0c0f4d8a6f1903803b374f109ebe3ea8"
+    },
+    "artifacts/arm/metal-combined-gui-ci/picture-gestures/native/native-gestures.json": {
+      "bytes": 202733,
+      "sha256": "a3aaf804962fc240b5afb58dfb82adfda7a33d256533aa7270d219617d5a8c4b"
+    },
+    "artifacts/arm/metal-combined-gui-ci/picture-gestures/native/native-gestures.partial.json": {
+      "bytes": 201602,
+      "sha256": "07215bbf4321c242f4bbcce26e362e1dd86dc68e459081a180565ef2a93dd56f"
+    },
+    "artifacts/arm/metal-combined-gui-ci/picture-gestures/native/native-reopens.json": {
+      "bytes": 21586,
+      "sha256": "b9d85ffef02185131a08b3c96f4879f4f85dcb904438b894b3f85f52452220bb"
+    },
+    "artifacts/arm/metal-combined-gui-ci/picture-gestures/native/out-and-back-native.igz": {
+      "bytes": 1121,
+      "sha256": "1b2f6dd11c530eadfca23e581777a93d07bae051272bae569ea9771e485984a2"
+    },
+    "artifacts/arm/metal-combined-gui-ci/picture-gestures/native/resize-free-shift-native.igz": {
+      "bytes": 1126,
+      "sha256": "857e9dbee0f5f0e965b42489727cb909aaab608833603ff4e7af01f000a32ef8"
+    },
+    "artifacts/arm/metal-combined-gui-ci/picture-gestures/native/resize-guide-native.igz": {
+      "bytes": 1245,
+      "sha256": "7e2fac93929772ddc7924dad8b37a31ddb1cbc65b948e397e2b3b1dfcc972137"
+    },
+    "artifacts/arm/metal-combined-gui-ci/picture-gestures/native/resize-minimum-native.igz": {
+      "bytes": 1122,
+      "sha256": "2e6952b0a432723267d1a7bde5d6e86b7b8390d9fa3893a64fb04e346df3c06f"
+    },
+    "artifacts/arm/metal-combined-gui-ci/picture-gestures/native/resize-minimum-snapped-native.igz": {
+      "bytes": 1253,
+      "sha256": "c075e452dc04dc056b67ef47bbf0efc9a127c1dc97fa9133373701e7e6fd81b9"
+    },
+    "artifacts/arm/metal-combined-gui-ci/picture-gestures/native/selected-drag-native.igz": {
+      "bytes": 1122,
+      "sha256": "fabf64ed6a5818de096ff4135cc40187aafb43870bccffc8868611b057cdeaf1"
+    },
+    "artifacts/arm/metal-combined-gui-ci/picture-gestures/native/unselected-drag-native.igz": {
+      "bytes": 1430,
+      "sha256": "ef44b998809a7c89d4a55c1c94db1d34ddcbc4756de659bf65c8ee260389706f"
+    },
+    "artifacts/arm/metal-combined-gui-ci/picture-gestures/reader.log": {
+      "bytes": 74,
+      "sha256": "3503d651f03f357f116c785f340ece6c638f60861a75c987f95ef5af89f75068"
+    },
+    "artifacts/arm/metal-combined-gui-ci/picture-gestures/reader.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/arm/metal-combined-gui-ci/picture-gestures/result.json": {
+      "bytes": 2321,
+      "sha256": "22acc9b06e15e53f2fed31194445523b2819652288f893e6223e59600e6adf7e"
+    },
+    "artifacts/arm/metal-combined-gui-ci/picture-gestures/source/first-original-gestures-guide-fixture.json": {
+      "bytes": 231625,
+      "sha256": "6f2f61e51be5eec9b830538c947020f5a7601d4c4179c130083b2b6e9e2267e4"
+    },
+    "artifacts/arm/metal-combined-gui-ci/picture-gestures/source/guide-correction.log": {
+      "bytes": 41,
+      "sha256": "c450603a50977c87d3b43045c331b00ec88b32ccded7d372203b039023160c2d"
+    },
+    "artifacts/arm/metal-combined-gui-ci/picture-gestures/source/guide-correction.stderr": {
+      "bytes": 597,
+      "sha256": "9c2d0f6153fafe1c85f9a720e7c8aa2072ea3013b40f824be9d9122253ff9c6c"
+    },
+    "artifacts/arm/metal-combined-gui-ci/picture-gestures/source/initial.log": {
+      "bytes": 44,
+      "sha256": "d9ed9844a9ef2171f45c190958d5e0290a5180062f8467e405e3733d4a2548c4"
+    },
+    "artifacts/arm/metal-combined-gui-ci/picture-gestures/source/initial.stderr": {
+      "bytes": 4079,
+      "sha256": "a535d4a1cba2c5c726fa4ab57a8c1c62e41ccc7c5d203783aca5679789aac830"
+    },
+    "artifacts/arm/metal-combined-gui-ci/picture-gestures/source/opaque-guards.json": {
+      "bytes": 470,
+      "sha256": "a8e61623b7e056d35d72bd2fdcf6d203d1f226a805ad123888363dc038e58d68"
+    },
+    "artifacts/arm/metal-combined-gui-ci/picture-gestures/source/opaque-original-reader-control.json": {
+      "bytes": 233,
+      "sha256": "8def04cb8f054b9aa4b704d826973eb5c49c323e82645bbdb61f5ef9e0fc0f94"
+    },
+    "artifacts/arm/metal-combined-gui-ci/picture-gestures/source/original-gestures.json": {
+      "bytes": 234349,
+      "sha256": "444ec367cbaac4999a4325cfa3c7959c7e4ede951ab7978d3dfe0397d34da87f"
+    },
+    "artifacts/arm/metal-combined-gui-ci/picture-gestures/source/original-reopens.json": {
+      "bytes": 21586,
+      "sha256": "b9d85ffef02185131a08b3c96f4879f4f85dcb904438b894b3f85f52452220bb"
+    },
+    "artifacts/arm/metal-combined-gui-ci/platform-sheet-text-replay.log": {
+      "bytes": 943,
+      "sha256": "d33cab6e785db8d47a84d958bd6d8ab5dbca8c1a3c3024053be62c5a33d29774"
+    },
+    "artifacts/arm/metal-combined-gui-ci/platform-sheet-text-replay/font.json": {
+      "bytes": 1083,
+      "sha256": "cae001f28f5d9713c1066c57445071b754da014b0a3afc396bea19a934730a33"
+    },
+    "artifacts/arm/metal-combined-gui-ci/platform-sheet-text-replay/font.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/arm/metal-combined-gui-ci/platform-sheet-text-replay/layout.log": {
+      "bytes": 46,
+      "sha256": "a8ac9c025154de80e12d08536274ab2acea0491d8c4f7eb7d8728542dce23326"
+    },
+    "artifacts/arm/metal-combined-gui-ci/platform-sheet-text-replay/layout.stderr": {
+      "bytes": 149,
+      "sha256": "7f1765ff58d53544a65ebd0ff9e5da7f58141c4ba714014718293d93caf015a8"
+    },
+    "artifacts/arm/metal-combined-gui-ci/platform-sheet-text-replay/native/native.json": {
+      "bytes": 2388,
+      "sha256": "40a9cccfd30ff2778ab4666522beae7ac535b45c59e87a32bf1dfc67e9980b58"
+    },
+    "artifacts/arm/metal-combined-gui-ci/platform-sheet-text-replay/native/text-placement.json": {
+      "bytes": 21853,
+      "sha256": "324d8394bf2ae1d0771b11ebc5ef792c4901675019a9043b59df073f8eac9cf3"
+    },
+    "artifacts/arm/metal-combined-gui-ci/platform-sheet-text-replay/placement-comparison.json": {
+      "bytes": 1863,
+      "sha256": "b220a84013d64cd9c45d29ce71351b289c99b4278005f5771b7b4d47b4b247d5"
+    },
+    "artifacts/arm/metal-combined-gui-ci/platform-sheet-text-replay/result.json": {
+      "bytes": 993,
+      "sha256": "da8bc9b5dcbd6b4effaf9ea16ec06f83fd3568fe4aea125a0df8170e125abb7d"
+    },
+    "artifacts/arm/metal-combined-gui-ci/platform-sheet-text-replay/runtime.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/arm/metal-combined-gui-ci/platform-sheet-text-replay/runtime.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/arm/metal-combined-gui-ci/platform-sheet-text-replay/source-layout.json": {
+      "bytes": 8500,
+      "sha256": "ef1c549cfe02c3e25a5091e44fcd17b3648f3d1b43869a5668885f128740590e"
+    },
+    "artifacts/arm/metal-combined-gui-ci/platform-sheet-text-replay/source/receipt.json": {
+      "bytes": 3559,
+      "sha256": "edbe15520458024ebdb92fefee52b5ee647a09aa0d1d4f434fa32ff7e6318585"
+    },
+    "artifacts/arm/metal-combined-gui-ci/platform-sheet-text-replay/source/source.json": {
+      "bytes": 407,
+      "sha256": "857966e5f3bc9a1094d13ce1620a01dd6fd4984849c1dcc01e0d91101de6b0df"
+    },
+    "artifacts/arm/metal-combined-gui-ci/section-fill/comparison.json": {
+      "bytes": 3041,
+      "sha256": "df0f40018af3fcd896802a5cbf5815089e2d1c6e2395c8a7dcf99da81efaacf4"
+    },
+    "artifacts/arm/metal-combined-gui-ci/section-fill/report.json": {
+      "bytes": 11056,
+      "sha256": "f8b222fca1b62bb9d50162497fc44d355be0cd32e62794acca761b8f693b47dc"
+    },
+    "artifacts/arm/metal-combined-gui-ci/sheet-images-replay.log": {
+      "bytes": 3914,
+      "sha256": "10a9fa297744e2154d3451953d8f85b08d2c6856a7eb32eec726c35349dbdb68"
+    },
+    "artifacts/arm/metal-combined-gui-ci/sheet-images/checker.log": {
+      "bytes": 3126,
+      "sha256": "87efca61bb41bf7d8cea7032676dd6ede953b4dbcbb294cba59a1ba07ee15601"
+    },
+    "artifacts/arm/metal-combined-gui-ci/sheet-images/checker.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/arm/metal-combined-gui-ci/sheet-images/comparison.json": {
+      "bytes": 3902,
+      "sha256": "3cc0cfb9cf0299a38d312738cc8f08fb2bb9660183b5e8c724a539b6bd044fe3"
+    },
+    "artifacts/arm/metal-combined-gui-ci/sheet-images/native/native.json": {
+      "bytes": 5100,
+      "sha256": "9fccf6563d252211943e1438f681687249300530585df3fc0a5dbe9126684423"
+    },
+    "artifacts/arm/metal-combined-gui-ci/sheet-images/result.json": {
+      "bytes": 6265,
+      "sha256": "47a5e34de33eefe1398cdfea2cb6e839fd2f171ec90d35e3a2bdacb2c6b03683"
+    },
+    "artifacts/arm/metal-combined-gui-ci/sheet-images/runtime.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/arm/metal-combined-gui-ci/sheet-images/runtime.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/arm/metal-combined-gui-ci/sheet-images/source/capture.log": {
+      "bytes": 53,
+      "sha256": "092a07b530f92a59d98637037c99b662460dc6eca8ab59f9215f772d0b18cddb"
+    },
+    "artifacts/arm/metal-combined-gui-ci/sheet-images/source/source.json": {
+      "bytes": 8829,
+      "sha256": "c365180873a2f3c9df6ee55121dfd327b9d2d249b215590a70c42f2807332b52"
+    },
+    "artifacts/arm/metal-combined-gui-ci/sheet-images/views/capture.log": {
+      "bytes": 287,
+      "sha256": "1f5be4ae69f49b3f1a8ea45a71980963d5071f4ca8f3126a3d093ed2ca047be0"
+    },
+    "artifacts/arm/metal-combined-gui-ci/sheet-images/views/source-receipt.json": {
+      "bytes": 308,
+      "sha256": "62dc3460e7b482f42bf1e70b0b0bdb8042b5494b43a7a26311ac83ff1ad2135a"
+    },
+    "artifacts/arm/metal-combined-gui-ci/sheet-images/views/source.json": {
+      "bytes": 4153,
+      "sha256": "d9c4d15e61b7862b366db0397871e4fb888419ed4c8147647f0d25a46405d0b2"
+    },
+    "artifacts/arm/metal-combined-gui-ci/sheet-pictures-replay.log": {
+      "bytes": 12041,
+      "sha256": "b01fbbc2e6e97c3d02bf2d1823c81ac3c8967faa175be7c0994848c45c2d0afe"
+    },
+    "artifacts/arm/metal-combined-gui-ci/sheet-pictures/checker.log": {
+      "bytes": 10056,
+      "sha256": "5b5fc2c3d7715ec844f87e3fa3077c3bf08bfd42fd196e765ba9be63b4722e7b"
+    },
+    "artifacts/arm/metal-combined-gui-ci/sheet-pictures/checker.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/arm/metal-combined-gui-ci/sheet-pictures/comparison.json": {
+      "bytes": 13212,
+      "sha256": "1bef2d54a34788f3b4922e923efe0bca16c19883e4d71450dda630accd56df64"
+    },
+    "artifacts/arm/metal-combined-gui-ci/sheet-pictures/native/duplicate.pdf": {
+      "bytes": 2669,
+      "sha256": "8c00b5cf30d0a181ad34b9723b892f22608001329c33c530a63a8bef1842c4f4"
+    },
+    "artifacts/arm/metal-combined-gui-ci/sheet-pictures/native/duplicate.png": {
+      "bytes": 9618,
+      "sha256": "6b89dd146652dd0ca4258e3b07ad7709b8c3bb596dba7f71ede1019c5546cf7e"
+    },
+    "artifacts/arm/metal-combined-gui-ci/sheet-pictures/native/native.json": {
+      "bytes": 8872,
+      "sha256": "66fdc66f17647be0123b4721ce5ecea7d9a0a5a04173cf7152a7dcd2a1895b7f"
+    },
+    "artifacts/arm/metal-combined-gui-ci/sheet-pictures/native/picture-contain-warm.png": {
+      "bytes": 6935,
+      "sha256": "944041d869b7ed21c8d5dc2755740b35b02293135d4c5b9d2f9235a12292eead"
+    },
+    "artifacts/arm/metal-combined-gui-ci/sheet-pictures/native/picture-contain.igz": {
+      "bytes": 1308,
+      "sha256": "0f3844d680e15700fad3d2c116421a8ab52e92a3fb7326e670a6038f584d1d7a"
+    },
+    "artifacts/arm/metal-combined-gui-ci/sheet-pictures/native/picture-contain.jpg": {
+      "bytes": 33760,
+      "sha256": "f2415decbe68dce8174223637506b905f47dfc8a8330d6ee1f02fd22847a680d"
+    },
+    "artifacts/arm/metal-combined-gui-ci/sheet-pictures/native/picture-contain.pdf": {
+      "bytes": 5908,
+      "sha256": "e192d41606299df992eb510291b3c6f458178ae59a25ec8fd8851e8fa40d857a"
+    },
+    "artifacts/arm/metal-combined-gui-ci/sheet-pictures/native/picture-contain.png": {
+      "bytes": 6935,
+      "sha256": "944041d869b7ed21c8d5dc2755740b35b02293135d4c5b9d2f9235a12292eead"
+    },
+    "artifacts/arm/metal-combined-gui-ci/sheet-pictures/native/picture-cover-warm.png": {
+      "bytes": 7048,
+      "sha256": "837c29946670c8459879ec41af234f301d4186711200f03d5b28261861f5dd53"
+    },
+    "artifacts/arm/metal-combined-gui-ci/sheet-pictures/native/picture-cover.igz": {
+      "bytes": 1304,
+      "sha256": "4102a289155a4ed49e96b057ff7511c66cc32325fac71ff54050d1a2b65c0774"
+    },
+    "artifacts/arm/metal-combined-gui-ci/sheet-pictures/native/picture-cover.jpg": {
+      "bytes": 33618,
+      "sha256": "4928d3067cb5d350d805ca4a94d491a451ba65a7bb45aa444589d6e0617598af"
+    },
+    "artifacts/arm/metal-combined-gui-ci/sheet-pictures/native/picture-cover.pdf": {
+      "bytes": 3844,
+      "sha256": "4d34618cc2755029ba76cf5440e7b3da16d8b77f05760ce27252ba77fdef506b"
+    },
+    "artifacts/arm/metal-combined-gui-ci/sheet-pictures/native/picture-cover.png": {
+      "bytes": 7048,
+      "sha256": "837c29946670c8459879ec41af234f301d4186711200f03d5b28261861f5dd53"
+    },
+    "artifacts/arm/metal-combined-gui-ci/sheet-pictures/native/picture-ellipse-feather-opacity-warm.png": {
+      "bytes": 11709,
+      "sha256": "76bb5cc64fc7fc7e2c4a4a46c12c31fe97a4d426756b7bdb434b5ce185b60b8e"
+    },
+    "artifacts/arm/metal-combined-gui-ci/sheet-pictures/native/picture-ellipse-feather-opacity.igz": {
+      "bytes": 1325,
+      "sha256": "eafe6581bd1e53a3a94d3cf6649d5ae2bde324e5e8fadd2168c1f69085738297"
+    },
+    "artifacts/arm/metal-combined-gui-ci/sheet-pictures/native/picture-ellipse-feather-opacity.jpg": {
+      "bytes": 30107,
+      "sha256": "c2d03ab3be17198a6340b76f4d4ada5a84bcedd5305510a715ad5ec71b854073"
+    },
+    "artifacts/arm/metal-combined-gui-ci/sheet-pictures/native/picture-ellipse-feather-opacity.pdf": {
+      "bytes": 24892,
+      "sha256": "e8df6abe6652960bae00b88b92f10a5d280bd5f1796238dbc141e18aec14092b"
+    },
+    "artifacts/arm/metal-combined-gui-ci/sheet-pictures/native/picture-ellipse-feather-opacity.png": {
+      "bytes": 11709,
+      "sha256": "76bb5cc64fc7fc7e2c4a4a46c12c31fe97a4d426756b7bdb434b5ce185b60b8e"
+    },
+    "artifacts/arm/metal-combined-gui-ci/sheet-pictures/native/picture-hidden-warm.png": {
+      "bytes": 5395,
+      "sha256": "25685b31d4f7547984e1fb60a89d619c1541384edb0a8aa59eecc91b913d44cd"
+    },
+    "artifacts/arm/metal-combined-gui-ci/sheet-pictures/native/picture-hidden.igz": {
+      "bytes": 1306,
+      "sha256": "d1825baf43c7caf8bd009b6931b97a51431c872faba57fe494912b750afcfdfe"
+    },
+    "artifacts/arm/metal-combined-gui-ci/sheet-pictures/native/picture-hidden.jpg": {
+      "bytes": 27381,
+      "sha256": "a795976dde1881d4e8b6117ea4b509d77bcbd4855b0c223d4a2ff5da2d25ba61"
+    },
+    "artifacts/arm/metal-combined-gui-ci/sheet-pictures/native/picture-hidden.pdf": {
+      "bytes": 521,
+      "sha256": "cfab9913df089e65134be2ce7e43d6e5c430afe5f1487cef22dc399583944eb1"
+    },
+    "artifacts/arm/metal-combined-gui-ci/sheet-pictures/native/picture-hidden.png": {
+      "bytes": 5395,
+      "sha256": "25685b31d4f7547984e1fb60a89d619c1541384edb0a8aa59eecc91b913d44cd"
+    },
+    "artifacts/arm/metal-combined-gui-ci/sheet-pictures/native/picture-import-plain-warm.png": {
+      "bytes": 7842,
+      "sha256": "954f900dec7586485e1550fa86752ffc59bb5bf0692c7feb4243c5bb8ca0ccb8"
+    },
+    "artifacts/arm/metal-combined-gui-ci/sheet-pictures/native/picture-import-plain.igz": {
+      "bytes": 1313,
+      "sha256": "5a77a4603cfd5acca311a386bfa5c8f071e33b56ee5201b0c6cc4ac33666cf20"
+    },
+    "artifacts/arm/metal-combined-gui-ci/sheet-pictures/native/picture-import-plain.jpg": {
+      "bytes": 37879,
+      "sha256": "bf8af31fd3dc49b483e4b0de6018b4a6f9720f88e903704e6bdb44a1d5bef31b"
+    },
+    "artifacts/arm/metal-combined-gui-ci/sheet-pictures/native/picture-import-plain.pdf": {
+      "bytes": 2464,
+      "sha256": "901ce90ad303231dfaf569197c8e2a2af506af77abb437515ae7ba644bc6ad36"
+    },
+    "artifacts/arm/metal-combined-gui-ci/sheet-pictures/native/picture-import-plain.png": {
+      "bytes": 7842,
+      "sha256": "954f900dec7586485e1550fa86752ffc59bb5bf0692c7feb4243c5bb8ca0ccb8"
+    },
+    "artifacts/arm/metal-combined-gui-ci/sheet-pictures/native/picture-jpeg-stretch-warm.png": {
+      "bytes": 42276,
+      "sha256": "c45274be1b3065e42aa8033b9a8d2db0ecaf68751c19758649160b27b408f29f"
+    },
+    "artifacts/arm/metal-combined-gui-ci/sheet-pictures/native/picture-jpeg-stretch.igz": {
+      "bytes": 1311,
+      "sha256": "2ba65fe5ecdf3c421ae39fed7cddd79da0affed7257224cf51a53750227c17fd"
+    },
+    "artifacts/arm/metal-combined-gui-ci/sheet-pictures/native/picture-jpeg-stretch.jpg": {
+      "bytes": 33224,
+      "sha256": "ee5a5126b79ad636b68daf111bc2c8fde7f64b44ed1e09543146769d0891e44f"
+    },
+    "artifacts/arm/metal-combined-gui-ci/sheet-pictures/native/picture-jpeg-stretch.pdf": {
+      "bytes": 33576,
+      "sha256": "ce30cd91e9edff3240e7af1cdf867f3313b70bd16e17cea7cf197d345182e31d"
+    },
+    "artifacts/arm/metal-combined-gui-ci/sheet-pictures/native/picture-jpeg-stretch.png": {
+      "bytes": 42276,
+      "sha256": "c45274be1b3065e42aa8033b9a8d2db0ecaf68751c19758649160b27b408f29f"
+    },
+    "artifacts/arm/metal-combined-gui-ci/sheet-pictures/native/picture-missing-warm.png": {
+      "bytes": 10050,
+      "sha256": "ba4c02a26861976535d8c424e3951cfbf7787c35edece7e5be0307816992606f"
+    },
+    "artifacts/arm/metal-combined-gui-ci/sheet-pictures/native/picture-missing.igz": {
+      "bytes": 1308,
+      "sha256": "80a5d5d15d15b4d879239d049cb96bf4c0370e8d23fc70960884ce5f76cc5f53"
+    },
+    "artifacts/arm/metal-combined-gui-ci/sheet-pictures/native/picture-missing.jpg": {
+      "bytes": 30584,
+      "sha256": "06d63ccc9400560f88b28fbd427975bc9fa95d9c9824afae9cacd78ec140fe62"
+    },
+    "artifacts/arm/metal-combined-gui-ci/sheet-pictures/native/picture-missing.pdf": {
+      "bytes": 1569,
+      "sha256": "01b7874410f2c117156b1add4090e6d6aa09cf3fa5414fe6d907dfb663f8554c"
+    },
+    "artifacts/arm/metal-combined-gui-ci/sheet-pictures/native/picture-missing.png": {
+      "bytes": 10050,
+      "sha256": "ba4c02a26861976535d8c424e3951cfbf7787c35edece7e5be0307816992606f"
+    },
+    "artifacts/arm/metal-combined-gui-ci/sheet-pictures/native/picture-opacity-rect-warm.png": {
+      "bytes": 7474,
+      "sha256": "b7c9e0c3df707bdb2fab500118a5466869070b508522d4aa812cb7db3db113b9"
+    },
+    "artifacts/arm/metal-combined-gui-ci/sheet-pictures/native/picture-opacity-rect.igz": {
+      "bytes": 1314,
+      "sha256": "55d5aa9e031da3d66fb59bf5adce6d4ec42bd2f4190d3dd3cb4f63c7f793875d"
+    },
+    "artifacts/arm/metal-combined-gui-ci/sheet-pictures/native/picture-opacity-rect.jpg": {
+      "bytes": 32017,
+      "sha256": "382fab77a49fba48a79dc3239b88f8fd12f46689eea1c9b975847e5ab9adcf27"
+    },
+    "artifacts/arm/metal-combined-gui-ci/sheet-pictures/native/picture-opacity-rect.pdf": {
+      "bytes": 4586,
+      "sha256": "0291e63d2f2d6f229e1f027184a6912158b892efd32c3de3074d453bd5918ad5"
+    },
+    "artifacts/arm/metal-combined-gui-ci/sheet-pictures/native/picture-opacity-rect.png": {
+      "bytes": 7474,
+      "sha256": "b7c9e0c3df707bdb2fab500118a5466869070b508522d4aa812cb7db3db113b9"
+    },
+    "artifacts/arm/metal-combined-gui-ci/sheet-pictures/native/picture-overlap-warm.png": {
+      "bytes": 12698,
+      "sha256": "b82d1f0ec3189f4880bd2fbe4cc086535c20f98e819c77556f09b85f2c6e4a86"
+    },
+    "artifacts/arm/metal-combined-gui-ci/sheet-pictures/native/picture-overlap.igz": {
+      "bytes": 4142,
+      "sha256": "ae929ea90ad6da0144d1c4a178a2c216a0227a387b05464182400506e1156f59"
+    },
+    "artifacts/arm/metal-combined-gui-ci/sheet-pictures/native/picture-overlap.jpg": {
+      "bytes": 37505,
+      "sha256": "1a00c2fe8c737adb3f653918dd70e817492426c3b0350e2d504ef9edf04e2b36"
+    },
+    "artifacts/arm/metal-combined-gui-ci/sheet-pictures/native/picture-overlap.pdf": {
+      "bytes": 97176,
+      "sha256": "a2de8df6f0e9ad1174667280495a772a6b3928162378149a04f512df7b2e70bc"
+    },
+    "artifacts/arm/metal-combined-gui-ci/sheet-pictures/native/picture-overlap.png": {
+      "bytes": 12698,
+      "sha256": "b82d1f0ec3189f4880bd2fbe4cc086535c20f98e819c77556f09b85f2c6e4a86"
+    },
+    "artifacts/arm/metal-combined-gui-ci/sheet-pictures/native/picture-rounded-border-warm.png": {
+      "bytes": 9929,
+      "sha256": "47ac7aa41f9f03067112148f08c1de35ef2fa66bc1668b08bd855b5eb5856a90"
+    },
+    "artifacts/arm/metal-combined-gui-ci/sheet-pictures/native/picture-rounded-border.igz": {
+      "bytes": 1318,
+      "sha256": "c2710c293975618e45d1d83a54b0651411d65d90ec6aa9590adbc20642f16e67"
+    },
+    "artifacts/arm/metal-combined-gui-ci/sheet-pictures/native/picture-rounded-border.jpg": {
+      "bytes": 34973,
+      "sha256": "01dd74aba1468ad9cd12c8698215de5818c817113352dd1d7a554bc235905fd7"
+    },
+    "artifacts/arm/metal-combined-gui-ci/sheet-pictures/native/picture-rounded-border.pdf": {
+      "bytes": 5226,
+      "sha256": "6178783db0c505014c03d32f9c859ab3dbadff25fef91ae396d8414b27ba1cde"
+    },
+    "artifacts/arm/metal-combined-gui-ci/sheet-pictures/native/picture-rounded-border.png": {
+      "bytes": 9929,
+      "sha256": "47ac7aa41f9f03067112148f08c1de35ef2fa66bc1668b08bd855b5eb5856a90"
+    },
+    "artifacts/arm/metal-combined-gui-ci/sheet-pictures/native/picture-rounded-feather-warm.png": {
+      "bytes": 10295,
+      "sha256": "7a4656bde5f22e603d5239817c21522e4a60073de9983e4e884f9018bffa581a"
+    },
+    "artifacts/arm/metal-combined-gui-ci/sheet-pictures/native/picture-rounded-feather.igz": {
+      "bytes": 1319,
+      "sha256": "61ac8659f7dfcd2795ed81fbee6cba364fffe6e4e3b1e6304e3f082483ce659e"
+    },
+    "artifacts/arm/metal-combined-gui-ci/sheet-pictures/native/picture-rounded-feather.jpg": {
+      "bytes": 33800,
+      "sha256": "c6fb00f5be577726ac5c13a1878c7dc50aaeb74dd8776985d9f80eb48a54d4d1"
+    },
+    "artifacts/arm/metal-combined-gui-ci/sheet-pictures/native/picture-rounded-feather.pdf": {
+      "bytes": 4850,
+      "sha256": "3b1882d204bd1f4239b34488902aad0873216e64e122b1cc90291d2f3eb4ab96"
+    },
+    "artifacts/arm/metal-combined-gui-ci/sheet-pictures/native/picture-rounded-feather.png": {
+      "bytes": 10295,
+      "sha256": "7a4656bde5f22e603d5239817c21522e4a60073de9983e4e884f9018bffa581a"
+    },
+    "artifacts/arm/metal-combined-gui-ci/sheet-pictures/native/refusal.pdf": {
+      "bytes": 21,
+      "sha256": "2d20d7adba57f23f8d0fd87604a7b2534945fd99a40beeed0a011c5c7bf32ad3"
+    },
+    "artifacts/arm/metal-combined-gui-ci/sheet-pictures/native/refusal.png": {
+      "bytes": 21,
+      "sha256": "bc64c9f4cbb9a58acefdae6fd2cd3a5a27cfd8ceef1ef7d7708055377b5ac54f"
+    },
+    "artifacts/arm/metal-combined-gui-ci/sheet-pictures/result.json": {
+      "bytes": 16185,
+      "sha256": "826fc85ff22170723670965398ad3715d4967a9c68065ed70c761e74d91c921d"
+    },
+    "artifacts/arm/metal-combined-gui-ci/sheet-pictures/runtime.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/arm/metal-combined-gui-ci/sheet-pictures/runtime.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/arm/metal-combined-gui-ci/sheet-pictures/source/source.json": {
+      "bytes": 15996,
+      "sha256": "20a12aca3562c53e6ce110f29c9e4a7494b5b011a6534ffdde84d4fe6d58329a"
+    },
+    "artifacts/arm/paper-font-native-ci/font-resource.log": {
+      "bytes": 24777,
+      "sha256": "9372b36f21c1ce7cc9883ccbe0e9ecbf859d2a343e8a542ddd299c0d651b4069"
+    },
+    "artifacts/arm/paper-font-native-ci/tests.log": {
+      "bytes": 32311,
+      "sha256": "575b195cf27f22112ec189b77d9eb3404759f1f36f4910866e54d4a0690cd873"
+    },
+    "artifacts/intel/metal-combined-gui-ci/apple-gl-depth-resolve.json": {
+      "bytes": 37,
+      "sha256": "574706717f33363bcf4886d8f94a41986321935bf687f55afb9457e21e56b908"
+    },
+    "artifacts/intel/metal-combined-gui-ci/apple-gl-depth-resolve.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/intel/metal-combined-gui-ci/billboards/report.json": {
+      "bytes": 499,
+      "sha256": "d9a39b8da54b807644a2e8325f8a7cf7e758d58eb1e594d069d5cd5f94275a87"
+    },
+    "artifacts/intel/metal-combined-gui-ci/build.log": {
+      "bytes": 79886,
+      "sha256": "19117e34d4203672ac4f18df2b09e17db7ab9e07713658b75cc941d11a059c13"
+    },
+    "artifacts/intel/metal-combined-gui-ci/check.log": {
+      "bytes": 85885,
+      "sha256": "20b3198f80a5eab5362648349ff81a35db2e5a6e20280201295f29dbf12e51c4"
+    },
+    "artifacts/intel/metal-combined-gui-ci/defaults/report.json": {
+      "bytes": 616,
+      "sha256": "b5921b36d5e043b8b7ddc6850145cfb09876875d9079a8f98ac34ae2fc361878"
+    },
+    "artifacts/intel/metal-combined-gui-ci/document-annotations/sample-diagnostics.json": {
+      "bytes": 748,
+      "sha256": "a93addaf15b11614383fcdaf6772c969d7ed57d9f4fbef2698873492eecea5d7"
+    },
+    "artifacts/intel/metal-combined-gui-ci/gltf-figures-replay.log": {
+      "bytes": 721,
+      "sha256": "2808979a2c3dfff5caed27fba75c34523904a23d8aaf93acb9c459ea3726e355"
+    },
+    "artifacts/intel/metal-combined-gui-ci/gltf-figures/affine-nested-rich.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/intel/metal-combined-gui-ci/gltf-figures/affine-nested-rich.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/intel/metal-combined-gui-ci/gltf-figures/bitmap-no-texture-camera.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/intel/metal-combined-gui-ci/gltf-figures/bitmap-no-texture-camera.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/intel/metal-combined-gui-ci/gltf-figures/bitmap-no-texture-ordinary.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/intel/metal-combined-gui-ci/gltf-figures/bitmap-no-texture-ordinary.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/intel/metal-combined-gui-ci/gltf-figures/bitmap-perspective-camera.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/intel/metal-combined-gui-ci/gltf-figures/bitmap-perspective-camera.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/intel/metal-combined-gui-ci/gltf-figures/bitmap-perspective-ordinary.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/intel/metal-combined-gui-ci/gltf-figures/bitmap-perspective-ordinary.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/intel/metal-combined-gui-ci/gltf-figures/default-rich.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/intel/metal-combined-gui-ci/gltf-figures/default-rich.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/intel/metal-combined-gui-ci/gltf-figures/empty-rich.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/intel/metal-combined-gui-ci/gltf-figures/empty-rich.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/intel/metal-combined-gui-ci/gltf-figures/figure-only-camera.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/intel/metal-combined-gui-ci/gltf-figures/figure-only-camera.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/intel/metal-combined-gui-ci/gltf-figures/figure-only-ordinary.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/intel/metal-combined-gui-ci/gltf-figures/figure-only-ordinary.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/intel/metal-combined-gui-ci/gltf-figures/figures-check.json": {
+      "bytes": 154,
+      "sha256": "a53832f751788014f18836bd567cdc6e484424ef822b6b686eb9d42b93d93126"
+    },
+    "artifacts/intel/metal-combined-gui-ci/gltf-figures/figures-check.json.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/intel/metal-combined-gui-ci/gltf-figures/hidden-top-camera.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/intel/metal-combined-gui-ci/gltf-figures/hidden-top-camera.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/intel/metal-combined-gui-ci/gltf-figures/hidden-top-ordinary.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/intel/metal-combined-gui-ci/gltf-figures/hidden-top-ordinary.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/intel/metal-combined-gui-ci/gltf-figures/hole-rich.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/intel/metal-combined-gui-ci/gltf-figures/hole-rich.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/intel/metal-combined-gui-ci/gltf-figures/identity-orphan-camera.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/intel/metal-combined-gui-ci/gltf-figures/identity-orphan-camera.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/intel/metal-combined-gui-ci/gltf-figures/identity-orphan-ordinary.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/intel/metal-combined-gui-ci/gltf-figures/identity-orphan-ordinary.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/intel/metal-combined-gui-ci/gltf-figures/mesh-perspective-camera.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/intel/metal-combined-gui-ci/gltf-figures/mesh-perspective-camera.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/intel/metal-combined-gui-ci/gltf-figures/mesh-perspective-ordinary.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/intel/metal-combined-gui-ci/gltf-figures/mesh-perspective-ordinary.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/intel/metal-combined-gui-ci/gltf-figures/mixed-first-material-camera.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/intel/metal-combined-gui-ci/gltf-figures/mixed-first-material-camera.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/intel/metal-combined-gui-ci/gltf-figures/mixed-first-material-ordinary.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/intel/metal-combined-gui-ci/gltf-figures/mixed-first-material-ordinary.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/intel/metal-combined-gui-ci/gltf-figures/native/collapse-refusal.json": {
+      "bytes": 130,
+      "sha256": "534f144987fc573f51c113f6300f191216e4cd9c48158fa9b11c12281e097cfa"
+    },
+    "artifacts/intel/metal-combined-gui-ci/gltf-figures/native/collapse-refusal.json.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/intel/metal-combined-gui-ci/gltf-figures/native/initial-decoded-failure.json": {
+      "bytes": 82218,
+      "sha256": "925f22c1fdba62d764ffe2d9a707f182a927862d5fa8622daba5d7eac464aa62"
+    },
+    "artifacts/intel/metal-combined-gui-ci/gltf-figures/native/path-only-candidate-failure.json": {
+      "bytes": 82372,
+      "sha256": "1f3e88bf3550b243b92360829d229f17345e61e726eefcd5b2f72d159dbc68dc"
+    },
+    "artifacts/intel/metal-combined-gui-ci/gltf-figures/nested-hidden-child-camera.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/intel/metal-combined-gui-ci/gltf-figures/nested-hidden-child-camera.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/intel/metal-combined-gui-ci/gltf-figures/nested-hidden-child-ordinary.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/intel/metal-combined-gui-ci/gltf-figures/nested-hidden-child-ordinary.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/intel/metal-combined-gui-ci/gltf-figures/nested-reflected-rich.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/intel/metal-combined-gui-ci/gltf-figures/nested-reflected-rich.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/intel/metal-combined-gui-ci/gltf-figures/pbr-colors-rich.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/intel/metal-combined-gui-ci/gltf-figures/pbr-colors-rich.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/intel/metal-combined-gui-ci/gltf-figures/result.json": {
+      "bytes": 12205,
+      "sha256": "fb7c5a2250febf0a63bb78aec91d110ead94ec10bdfd504ea8430352bc8fa751"
+    },
+    "artifacts/intel/metal-combined-gui-ci/gltf-figures/rich-check.log": {
+      "bytes": 102,
+      "sha256": "2c4a55ce0af15822d9abaa2a9d4cffa0bc0a59d1632c4c27717a42e6bd271105"
+    },
+    "artifacts/intel/metal-combined-gui-ci/gltf-figures/rich-check.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/intel/metal-combined-gui-ci/gltf-figures/slanted-rich.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/intel/metal-combined-gui-ci/gltf-figures/slanted-rich.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/intel/metal-combined-gui-ci/gltf-figures/source/bitmap-no-texture.camera.json": {
+      "bytes": 121,
+      "sha256": "cb0a4a686b175e1e93deb552703278b85475d9a8140a8842bcf2765775e035f6"
+    },
+    "artifacts/intel/metal-combined-gui-ci/gltf-figures/source/bitmap-perspective.camera.json": {
+      "bytes": 120,
+      "sha256": "5b768981c6f74f8087f07ed7f8223b022cf3c2c69f941eca2816cdf6204bee0c"
+    },
+    "artifacts/intel/metal-combined-gui-ci/gltf-figures/source/cases.json": {
+      "bytes": 4839,
+      "sha256": "5c88dbfac9a117ca4c85990e4a2550f3bfe0cbe885dc421c3c8f5db37e9ad3d8"
+    },
+    "artifacts/intel/metal-combined-gui-ci/gltf-figures/source/collapse.camera.json": {
+      "bytes": 79,
+      "sha256": "643735b8f62eec09c7280a5db915894ad86d860a633a3c0f674745a1087e973d"
+    },
+    "artifacts/intel/metal-combined-gui-ci/gltf-figures/source/figure-only.camera.json": {
+      "bytes": 121,
+      "sha256": "cb0a4a686b175e1e93deb552703278b85475d9a8140a8842bcf2765775e035f6"
+    },
+    "artifacts/intel/metal-combined-gui-ci/gltf-figures/source/hidden-top.camera.json": {
+      "bytes": 120,
+      "sha256": "5b768981c6f74f8087f07ed7f8223b022cf3c2c69f941eca2816cdf6204bee0c"
+    },
+    "artifacts/intel/metal-combined-gui-ci/gltf-figures/source/identity-orphan.camera.json": {
+      "bytes": 120,
+      "sha256": "5b768981c6f74f8087f07ed7f8223b022cf3c2c69f941eca2816cdf6204bee0c"
+    },
+    "artifacts/intel/metal-combined-gui-ci/gltf-figures/source/mesh-perspective.camera.json": {
+      "bytes": 120,
+      "sha256": "5b768981c6f74f8087f07ed7f8223b022cf3c2c69f941eca2816cdf6204bee0c"
+    },
+    "artifacts/intel/metal-combined-gui-ci/gltf-figures/source/mixed-first-material.camera.json": {
+      "bytes": 120,
+      "sha256": "5b768981c6f74f8087f07ed7f8223b022cf3c2c69f941eca2816cdf6204bee0c"
+    },
+    "artifacts/intel/metal-combined-gui-ci/gltf-figures/source/nested-hidden-child.camera.json": {
+      "bytes": 121,
+      "sha256": "cb0a4a686b175e1e93deb552703278b85475d9a8140a8842bcf2765775e035f6"
+    },
+    "artifacts/intel/metal-combined-gui-ci/gltf-figures/textures-alpha-rich.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/intel/metal-combined-gui-ci/gltf-figures/textures-alpha-rich.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/intel/metal-combined-gui-ci/gltf-figures/visibility-rich.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/intel/metal-combined-gui-ci/gltf-figures/visibility-rich.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/intel/metal-combined-gui-ci/launcher/runtime.log": {
+      "bytes": 770,
+      "sha256": "df3d7fb00781a0912e5ab2a1eaa4f6dd45f63b7950adb472e08753d5eca436db"
+    },
+    "artifacts/intel/metal-combined-gui-ci/legend-authoring-replay.log": {
+      "bytes": 2079,
+      "sha256": "9c1c745b3f83c0df69ad11c00e611038d81bac7ccf01802620487f48e53cbb40"
+    },
+    "artifacts/intel/metal-combined-gui-ci/legend-authoring/checker.log": {
+      "bytes": 1000,
+      "sha256": "c72635d2981f0c211af38b255bbf7a57cf7b913cbbb4ace0f7cc0eadd7f34aec"
+    },
+    "artifacts/intel/metal-combined-gui-ci/legend-authoring/checker.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/intel/metal-combined-gui-ci/legend-authoring/comparison.json": {
+      "bytes": 1128,
+      "sha256": "6aa19359a29c608ef3a5fd2fd0f86e2a194adaba11df19f9a3dbe0e3a7c8fb15"
+    },
+    "artifacts/intel/metal-combined-gui-ci/legend-authoring/native.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/intel/metal-combined-gui-ci/legend-authoring/native.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/intel/metal-combined-gui-ci/legend-authoring/native/empty-visible-cancel-native.igz": {
+      "bytes": 1033,
+      "sha256": "0d23289a41badeda3f2c9b2d49afc0721b0bdf8a9f3bdb64cd394e02d61d57b4"
+    },
+    "artifacts/intel/metal-combined-gui-ci/legend-authoring/native/lifecycle-native.igz": {
+      "bytes": 1866,
+      "sha256": "688ae1a62376c1bcde0867b12f7430a016132d596cb0a39096aeb9e3c3452296"
+    },
+    "artifacts/intel/metal-combined-gui-ci/legend-authoring/native/loaded-delete-native.igz": {
+      "bytes": 923,
+      "sha256": "94147728f0161b4c37672e770c10ecc7f1d71b7864e87872325f5166ee9d4c1c"
+    },
+    "artifacts/intel/metal-combined-gui-ci/legend-authoring/native/loaded-locked-native.igz": {
+      "bytes": 1514,
+      "sha256": "16238402a88cf3e82b628ebba27c34a7401130dcfb0beafea549c1c373a232d8"
+    },
+    "artifacts/intel/metal-combined-gui-ci/legend-authoring/native/native-deleted-reopen.json": {
+      "bytes": 407,
+      "sha256": "069da4d0fdb413205b7d0698bc4dc59bf097221b2b004b4fdf7507cbcc4ca7bc"
+    },
+    "artifacts/intel/metal-combined-gui-ci/legend-authoring/native/native-legend.json": {
+      "bytes": 80243,
+      "sha256": "8bd6d64cab12a4ea680918d94a5e2b605ca1eafc3141ff94f5727da304d80222"
+    },
+    "artifacts/intel/metal-combined-gui-ci/legend-authoring/native/native-legend.partial.json": {
+      "bytes": 80045,
+      "sha256": "6732d443d5d39fb26648da9aec8c186b5cb00a49af7d279e49b2eb618668dc39"
+    },
+    "artifacts/intel/metal-combined-gui-ci/legend-authoring/native/native-reopens.json": {
+      "bytes": 3656,
+      "sha256": "07dc85b0b161dfd67661511e481517982fbf3e683bde8d200db9af7bf52894d9"
+    },
+    "artifacts/intel/metal-combined-gui-ci/legend-authoring/native/single-legend-gestures-native.igz": {
+      "bytes": 1182,
+      "sha256": "02da09951f7088b1f1ef941878fc73fc905846192a066d80e710772b1d4a7ced"
+    },
+    "artifacts/intel/metal-combined-gui-ci/legend-authoring/reader.log": {
+      "bytes": 78,
+      "sha256": "ea417cb808bd8ef5766f511093a29b9af719bca96868ef75f43a7a006c10c2a0"
+    },
+    "artifacts/intel/metal-combined-gui-ci/legend-authoring/reader.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/intel/metal-combined-gui-ci/legend-authoring/result.json": {
+      "bytes": 2321,
+      "sha256": "58106c34fec81788efe6f4b0a4b38574cc1b708357994368aeba180d1067068e"
+    },
+    "artifacts/intel/metal-combined-gui-ci/legend-authoring/source/authoring.log": {
+      "bytes": 46,
+      "sha256": "e901cb58c9c7f5c8a951f8b278a0e6a8c25ddbb790cf03d8d6c26344db155f35"
+    },
+    "artifacts/intel/metal-combined-gui-ci/legend-authoring/source/authoring.stderr": {
+      "bytes": 447,
+      "sha256": "c69054c257642487233ff22cc9beb0fe60ae319c8269d0105562fca6f1e50850"
+    },
+    "artifacts/intel/metal-combined-gui-ci/legend-authoring/source/first-gesture-hard-failure.partial.json": {
+      "bytes": 7744,
+      "sha256": "00e98b2380c63e1f9988bb7fcdbe9ce787a072a04e3f91000be448fb3492ca38"
+    },
+    "artifacts/intel/metal-combined-gui-ci/legend-authoring/source/gesture-hard-failure.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/intel/metal-combined-gui-ci/legend-authoring/source/gesture-hard-failure.stderr": {
+      "bytes": 2822,
+      "sha256": "a9d7d246a65da8a3a44d9b005440040e41734ce6354392d95355fd75ae78696f"
+    },
+    "artifacts/intel/metal-combined-gui-ci/legend-authoring/source/gesture-observed.log": {
+      "bytes": 46,
+      "sha256": "1b4d8ec4615cc5784bdc74dc40bd261ff247ea8bf967a531102326d05e4519fc"
+    },
+    "artifacts/intel/metal-combined-gui-ci/legend-authoring/source/gesture-observed.stderr": {
+      "bytes": 299,
+      "sha256": "e15cc28e49c7dc0e894f1fabf2d7c02bb534179a206788cf956ea5cc78f299e7"
+    },
+    "artifacts/intel/metal-combined-gui-ci/legend-authoring/source/native-gesture-expectations.json": {
+      "bytes": 17552,
+      "sha256": "a888c5ca02fb0a9a115316862fb9c4d9d5d5b24f5119b02c890ad0eb87c2bd39"
+    },
+    "artifacts/intel/metal-combined-gui-ci/legend-authoring/source/original-legend.json": {
+      "bytes": 105424,
+      "sha256": "f947d3eacc8340326ff497169572969067ec5350bc1fd288fb8e3fb48f3dea8d"
+    },
+    "artifacts/intel/metal-combined-gui-ci/legend-authoring/source/original-reopens.json": {
+      "bytes": 3656,
+      "sha256": "07dc85b0b161dfd67661511e481517982fbf3e683bde8d200db9af7bf52894d9"
+    },
+    "artifacts/intel/metal-combined-gui-ci/picture-authoring-replay.log": {
+      "bytes": 2090,
+      "sha256": "40d03ff80a179cb9870d56ac7da3e01aa8a41ed13061ce6e2a40fdce5c4f9000"
+    },
+    "artifacts/intel/metal-combined-gui-ci/picture-authoring/checker.log": {
+      "bytes": 663,
+      "sha256": "693834818a1698fac75051beaa7d6d99f4c3b2597d2c14bbf2d473f1f2e11d9b"
+    },
+    "artifacts/intel/metal-combined-gui-ci/picture-authoring/checker.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/intel/metal-combined-gui-ci/picture-authoring/comparison.json": {
+      "bytes": 747,
+      "sha256": "2f6d045e7dc371eb9553d1b5251c4b283347103ac89c6368341d78e0ae701e40"
+    },
+    "artifacts/intel/metal-combined-gui-ci/picture-authoring/native.log": {
+      "bytes": 530,
+      "sha256": "656b75279bd0f870ec61095716964750565249c5a5adc9b7c664f5a03896dd8e"
+    },
+    "artifacts/intel/metal-combined-gui-ci/picture-authoring/native.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/intel/metal-combined-gui-ci/picture-authoring/native/aspect-selection-native.igz": {
+      "bytes": 1679,
+      "sha256": "ac896af094a953e6cde8811ee474c18901c69b5321b005625d92bb8433b5619c"
+    },
+    "artifacts/intel/metal-combined-gui-ci/picture-authoring/native/authoring-native.igz": {
+      "bytes": 12095,
+      "sha256": "e82c06c33f5306fb66bbb56a05ba7420de09aac57637061304583c45f1c89e0a"
+    },
+    "artifacts/intel/metal-combined-gui-ci/picture-authoring/native/missing-fallback-native.igz": {
+      "bytes": 1110,
+      "sha256": "3021e3dbc322fa112d4b5c63a18eefdb84d9ee68106258627bd9c02387b0afce"
+    },
+    "artifacts/intel/metal-combined-gui-ci/picture-authoring/native/native-reopens.json": {
+      "bytes": 12765,
+      "sha256": "054117bf25f392eb31be0b70c0fe753356f9e4b44176ed03b6c7469836bf0667"
+    },
+    "artifacts/intel/metal-combined-gui-ci/picture-authoring/native/native.json": {
+      "bytes": 339607,
+      "sha256": "698ffb599c7c6ad14eb04456d7d63a0ce20b2156de1f40460949fb9e6d7e0e7f"
+    },
+    "artifacts/intel/metal-combined-gui-ci/picture-authoring/native/picker-calls.txt": {
+      "bytes": 24,
+      "sha256": "c16040f9f3694eb53cdddb917b85623297eff22429c94b64589010bab795dc9a"
+    },
+    "artifacts/intel/metal-combined-gui-ci/picture-authoring/native/z-input-cajetin.igz": {
+      "bytes": 5644,
+      "sha256": "f64fdc7933a4e030af7fe359b4c951f85ae7864953972c7e16d18e102a104bd4"
+    },
+    "artifacts/intel/metal-combined-gui-ci/picture-authoring/native/z-input-cotas.igz": {
+      "bytes": 5645,
+      "sha256": "daff08ccad52da5bbf61522e5ab3597053edc53cf1a48988285512c61fe972ed"
+    },
+    "artifacts/intel/metal-combined-gui-ci/picture-authoring/native/z-input-cotas_ang.igz": {
+      "bytes": 5645,
+      "sha256": "c483e32d43ddb683a2e0a9ba62aa132099eccb13fbf787fb7fc754172429e419"
+    },
+    "artifacts/intel/metal-combined-gui-ci/picture-authoring/native/z-input-cotas_rad.igz": {
+      "bytes": 5644,
+      "sha256": "c11818fc6785132013bd3a09cc080f5744db2454aa828335d4e37e2363921fee"
+    },
+    "artifacts/intel/metal-combined-gui-ci/picture-authoring/native/z-input-etiquetas.igz": {
+      "bytes": 5644,
+      "sha256": "f5b16f9d537852f327480bf4ccb7ca07fe001e2e57af152b65055f20aca3a1b6"
+    },
+    "artifacts/intel/metal-combined-gui-ci/picture-authoring/native/z-input-frames.igz": {
+      "bytes": 5645,
+      "sha256": "a05774bcc0dc3ca36aef1383a87ade8e02139d11c5a4ad5b1d9235cb559dd599"
+    },
+    "artifacts/intel/metal-combined-gui-ci/picture-authoring/native/z-input-images.igz": {
+      "bytes": 5645,
+      "sha256": "34cd7b72f86883b4dfa6a7d7815284405b35d7ee0cd2e26adc7c21a2cfde3ff9"
+    },
+    "artifacts/intel/metal-combined-gui-ci/picture-authoring/native/z-input-leyendas.igz": {
+      "bytes": 5644,
+      "sha256": "165bcd9771145df799f8ff094e75d5a944dba471d4e6c598c57ef01d09131d2a"
+    },
+    "artifacts/intel/metal-combined-gui-ci/picture-authoring/native/z-input-llamadas.igz": {
+      "bytes": 5644,
+      "sha256": "f1816af6720aa6a412f9e20345aed4876bc7217976026cb71fa68394da6ec828"
+    },
+    "artifacts/intel/metal-combined-gui-ci/picture-authoring/native/z-input-niveles.igz": {
+      "bytes": 5644,
+      "sha256": "9a2627e5b997840ffd8a3d2e45d9c5bf6402f20c90c1f34612bc44f101d2346d"
+    },
+    "artifacts/intel/metal-combined-gui-ci/picture-authoring/native/z-input-nortes.igz": {
+      "bytes": 5645,
+      "sha256": "5d615da72dab248f51e9a83fffddb883aac54f510e06c994f59fae0969a0229c"
+    },
+    "artifacts/intel/metal-combined-gui-ci/picture-authoring/native/z-input-perfiles.igz": {
+      "bytes": 5644,
+      "sha256": "c57bd9c4e6ea285635d7000d21740cd4557de19862ff746ad435dbaaa0919b50"
+    },
+    "artifacts/intel/metal-combined-gui-ci/picture-authoring/native/z-input-scalebars.igz": {
+      "bytes": 5645,
+      "sha256": "3e4cd7fc753674eb13f861d273f1f5f4853508596f38746df0fcf1a98fb9f9c5"
+    },
+    "artifacts/intel/metal-combined-gui-ci/picture-authoring/native/z-input-shapes.igz": {
+      "bytes": 5645,
+      "sha256": "d06f5d895954f4f51ea7d7b049da07931c5eedeac53e53b61e6c01507e4af1cd"
+    },
+    "artifacts/intel/metal-combined-gui-ci/picture-authoring/native/z-input-texts.igz": {
+      "bytes": 5645,
+      "sha256": "787d6fe6cd67a9e9e664946c53998ef9d7c3373c812241cb985fce5317485d18"
+    },
+    "artifacts/intel/metal-combined-gui-ci/picture-authoring/reader.log": {
+      "bytes": 20,
+      "sha256": "722dd5b5d8247e8abf8cfa830c0b8d74ba9a46e1a7d07cf7b8a5b316ecee5213"
+    },
+    "artifacts/intel/metal-combined-gui-ci/picture-authoring/reader.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/intel/metal-combined-gui-ci/picture-authoring/result.json": {
+      "bytes": 2332,
+      "sha256": "cb315c778228113dd5232184f72e1e29e8316a259cf7ff3d890dd58e0218d825"
+    },
+    "artifacts/intel/metal-combined-gui-ci/picture-authoring/source/original-picture-authoring.json": {
+      "bytes": 336182,
+      "sha256": "e33218841a40cb38c5951aad0ed07c9509aaad711272563c32b3acabb626b6af"
+    },
+    "artifacts/intel/metal-combined-gui-ci/picture-authoring/source/original-reopens.json": {
+      "bytes": 12765,
+      "sha256": "054117bf25f392eb31be0b70c0fe753356f9e4b44176ed03b6c7469836bf0667"
+    },
+    "artifacts/intel/metal-combined-gui-ci/picture-authoring/source/original-z-controls.json": {
+      "bytes": 3365,
+      "sha256": "438ac8c15ec47c1d206014173a25ef36e092e8b799d4d0f945319016b8b1e975"
+    },
+    "artifacts/intel/metal-combined-gui-ci/picture-authoring/source/provenance.json": {
+      "bytes": 454,
+      "sha256": "01679c68cc4b850b01d257e8e7138e1dc13f4436924f9c3cc5c11ca748ae6573"
+    },
+    "artifacts/intel/metal-combined-gui-ci/picture-authoring/source/source-run.log": {
+      "bytes": 41,
+      "sha256": "2771ef84a046f1714d6a15a269f0f692288df45c0979c8265b4e26342e3bd44d"
+    },
+    "artifacts/intel/metal-combined-gui-ci/picture-authoring/source/source-run.stderr": {
+      "bytes": 147,
+      "sha256": "c0cf3de7adfde67e063969f6c3dfce3bc40a7a3694cb8d645ebf5409bed17591"
+    },
+    "artifacts/intel/metal-combined-gui-ci/picture-authoring/source/source-z-run.log": {
+      "bytes": 19,
+      "sha256": "4c9baf1366386f0fe5ce3447779d02ecbd710740ea4daa64be087dde32fec544"
+    },
+    "artifacts/intel/metal-combined-gui-ci/picture-authoring/source/source-z-run.stderr": {
+      "bytes": 49,
+      "sha256": "9148e145e58b87c50fd49ce7410b6e547365bef08a9b8c91d92465a27f1fa848"
+    },
+    "artifacts/intel/metal-combined-gui-ci/picture-gestures-replay.log": {
+      "bytes": 2078,
+      "sha256": "3ca9a3255a0076373e8c16bbbc4e75b3e371861177ac262bf854b46c61c1f27b"
+    },
+    "artifacts/intel/metal-combined-gui-ci/picture-gestures/checker.log": {
+      "bytes": 600,
+      "sha256": "7321fa1f50fbdcc655782fca80138f5299ba603a6fcc377a462c140af3b38639"
+    },
+    "artifacts/intel/metal-combined-gui-ci/picture-gestures/checker.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/intel/metal-combined-gui-ci/picture-gestures/comparison.json": {
+      "bytes": 692,
+      "sha256": "31bfdbcaf76c2f494f7838dc8c242690fddc69662922a9d87511c30b0ebca102"
+    },
+    "artifacts/intel/metal-combined-gui-ci/picture-gestures/native.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/intel/metal-combined-gui-ci/picture-gestures/native.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/intel/metal-combined-gui-ci/picture-gestures/native/click-only-native.igz": {
+      "bytes": 1119,
+      "sha256": "9b10f0bcecedcc45b5830c320484ccae817527054f8000c1894027bbe0342f70"
+    },
+    "artifacts/intel/metal-combined-gui-ci/picture-gestures/native/ctrl-toggle-native.igz": {
+      "bytes": 1120,
+      "sha256": "21f8dc374be455bfbadbcabdcaee4e93b9756e3ca2d5c4e6fb3f765bcef28fc1"
+    },
+    "artifacts/intel/metal-combined-gui-ci/picture-gestures/native/drag-page-guide-native.igz": {
+      "bytes": 1248,
+      "sha256": "9a7f5e22ca0e32192b5cddae70bdd40e2816271f53a25e5bc0950411e344c971"
+    },
+    "artifacts/intel/metal-combined-gui-ci/picture-gestures/native/drag-sibling-native.igz": {
+      "bytes": 1686,
+      "sha256": "7a322d1787c26775002489e87ce0bfb71c1763d770b0f66fbf45131ef41aef9f"
+    },
+    "artifacts/intel/metal-combined-gui-ci/picture-gestures/native/drawing-endpoint-native.igz": {
+      "bytes": 3028,
+      "sha256": "b2db7395aafaea724c1d5e3f9eae7d66e8c13296a536fe936329b152a099a5bf"
+    },
+    "artifacts/intel/metal-combined-gui-ci/picture-gestures/native/drawing-midpoint-native.igz": {
+      "bytes": 3028,
+      "sha256": "f8be94f9e19af1ad9960dea2f99ae16db07905e072843aebdc9b835d226966bd"
+    },
+    "artifacts/intel/metal-combined-gui-ci/picture-gestures/native/equal-z-native.igz": {
+      "bytes": 1677,
+      "sha256": "7c70f4469a4c7936846742aadbb837fce93c9f9fb3bfe38fd91d32e2995d75c5"
+    },
+    "artifacts/intel/metal-combined-gui-ci/picture-gestures/native/escape-drag-native.igz": {
+      "bytes": 1120,
+      "sha256": "e26871b7cbc50e38f1df3f1c3816f0f694443805724134644f878b800f20ae94"
+    },
+    "artifacts/intel/metal-combined-gui-ci/picture-gestures/native/hidden-only-native.igz": {
+      "bytes": 1119,
+      "sha256": "fc9c17dab4670b29fe3cab3f17d7029ec201dde707fde2878301397e9e89b5ad"
+    },
+    "artifacts/intel/metal-combined-gui-ci/picture-gestures/native/hidden-overlay-native.igz": {
+      "bytes": 1683,
+      "sha256": "23053c1ebe40590367745025afc7e93d6ad83f6323f37fc17ae0fcc3af48516d"
+    },
+    "artifacts/intel/metal-combined-gui-ci/picture-gestures/native/higher-z-native.igz": {
+      "bytes": 1678,
+      "sha256": "8eaa5276b167f0f590702447238f617ec61afc390301fc307d56ffc5e96d5d33"
+    },
+    "artifacts/intel/metal-combined-gui-ci/picture-gestures/native/large-first-move-native.igz": {
+      "bytes": 1125,
+      "sha256": "6049f30073e184babf9518076610c2ef945197843a55afde1c566c1f2d625890"
+    },
+    "artifacts/intel/metal-combined-gui-ci/picture-gestures/native/locked-only-native.igz": {
+      "bytes": 1119,
+      "sha256": "cea47c462be35eee01fb9a7e377ac4292fb201027b4a20d59a1d46d9171bb2e5"
+    },
+    "artifacts/intel/metal-combined-gui-ci/picture-gestures/native/locked-overlay-native.igz": {
+      "bytes": 1683,
+      "sha256": "675ec4171ddd8962278a7e9e7d52331c0c0f4d8a6f1903803b374f109ebe3ea8"
+    },
+    "artifacts/intel/metal-combined-gui-ci/picture-gestures/native/native-gestures.json": {
+      "bytes": 202733,
+      "sha256": "a3aaf804962fc240b5afb58dfb82adfda7a33d256533aa7270d219617d5a8c4b"
+    },
+    "artifacts/intel/metal-combined-gui-ci/picture-gestures/native/native-gestures.partial.json": {
+      "bytes": 201602,
+      "sha256": "07215bbf4321c242f4bbcce26e362e1dd86dc68e459081a180565ef2a93dd56f"
+    },
+    "artifacts/intel/metal-combined-gui-ci/picture-gestures/native/native-reopens.json": {
+      "bytes": 21586,
+      "sha256": "b9d85ffef02185131a08b3c96f4879f4f85dcb904438b894b3f85f52452220bb"
+    },
+    "artifacts/intel/metal-combined-gui-ci/picture-gestures/native/out-and-back-native.igz": {
+      "bytes": 1121,
+      "sha256": "1b2f6dd11c530eadfca23e581777a93d07bae051272bae569ea9771e485984a2"
+    },
+    "artifacts/intel/metal-combined-gui-ci/picture-gestures/native/resize-free-shift-native.igz": {
+      "bytes": 1126,
+      "sha256": "857e9dbee0f5f0e965b42489727cb909aaab608833603ff4e7af01f000a32ef8"
+    },
+    "artifacts/intel/metal-combined-gui-ci/picture-gestures/native/resize-guide-native.igz": {
+      "bytes": 1245,
+      "sha256": "7e2fac93929772ddc7924dad8b37a31ddb1cbc65b948e397e2b3b1dfcc972137"
+    },
+    "artifacts/intel/metal-combined-gui-ci/picture-gestures/native/resize-minimum-native.igz": {
+      "bytes": 1122,
+      "sha256": "2e6952b0a432723267d1a7bde5d6e86b7b8390d9fa3893a64fb04e346df3c06f"
+    },
+    "artifacts/intel/metal-combined-gui-ci/picture-gestures/native/resize-minimum-snapped-native.igz": {
+      "bytes": 1253,
+      "sha256": "c075e452dc04dc056b67ef47bbf0efc9a127c1dc97fa9133373701e7e6fd81b9"
+    },
+    "artifacts/intel/metal-combined-gui-ci/picture-gestures/native/selected-drag-native.igz": {
+      "bytes": 1122,
+      "sha256": "fabf64ed6a5818de096ff4135cc40187aafb43870bccffc8868611b057cdeaf1"
+    },
+    "artifacts/intel/metal-combined-gui-ci/picture-gestures/native/unselected-drag-native.igz": {
+      "bytes": 1430,
+      "sha256": "ef44b998809a7c89d4a55c1c94db1d34ddcbc4756de659bf65c8ee260389706f"
+    },
+    "artifacts/intel/metal-combined-gui-ci/picture-gestures/reader.log": {
+      "bytes": 74,
+      "sha256": "3503d651f03f357f116c785f340ece6c638f60861a75c987f95ef5af89f75068"
+    },
+    "artifacts/intel/metal-combined-gui-ci/picture-gestures/reader.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/intel/metal-combined-gui-ci/picture-gestures/result.json": {
+      "bytes": 2320,
+      "sha256": "f502b95b54683b03541e7b9c66e1e737959f398a3a7e4f3a80da146cf56f2f09"
+    },
+    "artifacts/intel/metal-combined-gui-ci/picture-gestures/source/first-original-gestures-guide-fixture.json": {
+      "bytes": 231625,
+      "sha256": "6f2f61e51be5eec9b830538c947020f5a7601d4c4179c130083b2b6e9e2267e4"
+    },
+    "artifacts/intel/metal-combined-gui-ci/picture-gestures/source/guide-correction.log": {
+      "bytes": 41,
+      "sha256": "c450603a50977c87d3b43045c331b00ec88b32ccded7d372203b039023160c2d"
+    },
+    "artifacts/intel/metal-combined-gui-ci/picture-gestures/source/guide-correction.stderr": {
+      "bytes": 597,
+      "sha256": "9c2d0f6153fafe1c85f9a720e7c8aa2072ea3013b40f824be9d9122253ff9c6c"
+    },
+    "artifacts/intel/metal-combined-gui-ci/picture-gestures/source/initial.log": {
+      "bytes": 44,
+      "sha256": "d9ed9844a9ef2171f45c190958d5e0290a5180062f8467e405e3733d4a2548c4"
+    },
+    "artifacts/intel/metal-combined-gui-ci/picture-gestures/source/initial.stderr": {
+      "bytes": 4079,
+      "sha256": "a535d4a1cba2c5c726fa4ab57a8c1c62e41ccc7c5d203783aca5679789aac830"
+    },
+    "artifacts/intel/metal-combined-gui-ci/picture-gestures/source/opaque-guards.json": {
+      "bytes": 470,
+      "sha256": "a8e61623b7e056d35d72bd2fdcf6d203d1f226a805ad123888363dc038e58d68"
+    },
+    "artifacts/intel/metal-combined-gui-ci/picture-gestures/source/opaque-original-reader-control.json": {
+      "bytes": 233,
+      "sha256": "8def04cb8f054b9aa4b704d826973eb5c49c323e82645bbdb61f5ef9e0fc0f94"
+    },
+    "artifacts/intel/metal-combined-gui-ci/picture-gestures/source/original-gestures.json": {
+      "bytes": 234349,
+      "sha256": "444ec367cbaac4999a4325cfa3c7959c7e4ede951ab7978d3dfe0397d34da87f"
+    },
+    "artifacts/intel/metal-combined-gui-ci/picture-gestures/source/original-reopens.json": {
+      "bytes": 21586,
+      "sha256": "b9d85ffef02185131a08b3c96f4879f4f85dcb904438b894b3f85f52452220bb"
+    },
+    "artifacts/intel/metal-combined-gui-ci/platform-sheet-text-replay.log": {
+      "bytes": 944,
+      "sha256": "962af3c121512b077fb833141bb73a460f9ee7af345975a604e6f13146486132"
+    },
+    "artifacts/intel/metal-combined-gui-ci/platform-sheet-text-replay/font.json": {
+      "bytes": 1083,
+      "sha256": "cae001f28f5d9713c1066c57445071b754da014b0a3afc396bea19a934730a33"
+    },
+    "artifacts/intel/metal-combined-gui-ci/platform-sheet-text-replay/font.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/intel/metal-combined-gui-ci/platform-sheet-text-replay/layout.log": {
+      "bytes": 46,
+      "sha256": "a8ac9c025154de80e12d08536274ab2acea0491d8c4f7eb7d8728542dce23326"
+    },
+    "artifacts/intel/metal-combined-gui-ci/platform-sheet-text-replay/layout.stderr": {
+      "bytes": 149,
+      "sha256": "805048a55862f9155d628a8d8f1ef0e2107b8ac5d4733451dc2db50bbfd3799e"
+    },
+    "artifacts/intel/metal-combined-gui-ci/platform-sheet-text-replay/native/native.json": {
+      "bytes": 2388,
+      "sha256": "40a9cccfd30ff2778ab4666522beae7ac535b45c59e87a32bf1dfc67e9980b58"
+    },
+    "artifacts/intel/metal-combined-gui-ci/platform-sheet-text-replay/native/text-placement.json": {
+      "bytes": 21853,
+      "sha256": "b60bc781afaa60fccf05c0dd166611e41c00f9d9ea8e2f3147c73e7e7a32c3f6"
+    },
+    "artifacts/intel/metal-combined-gui-ci/platform-sheet-text-replay/placement-comparison.json": {
+      "bytes": 1863,
+      "sha256": "b220a84013d64cd9c45d29ce71351b289c99b4278005f5771b7b4d47b4b247d5"
+    },
+    "artifacts/intel/metal-combined-gui-ci/platform-sheet-text-replay/result.json": {
+      "bytes": 994,
+      "sha256": "db4fec459e01645d346437f930eff509448ff4a30497117ff7caa4e42ad833cc"
+    },
+    "artifacts/intel/metal-combined-gui-ci/platform-sheet-text-replay/runtime.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/intel/metal-combined-gui-ci/platform-sheet-text-replay/runtime.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/intel/metal-combined-gui-ci/platform-sheet-text-replay/source-layout.json": {
+      "bytes": 8501,
+      "sha256": "f7126b02e9c5087b8dcf0abb26c1c2b261cf342a2cb0ec1dbe1b25d49c21810a"
+    },
+    "artifacts/intel/metal-combined-gui-ci/platform-sheet-text-replay/source/receipt.json": {
+      "bytes": 3562,
+      "sha256": "bf7b0f176d41ee91c3025ac8132b7a03b214d9d12cefb7f88bdf575d6f69a792"
+    },
+    "artifacts/intel/metal-combined-gui-ci/platform-sheet-text-replay/source/source.json": {
+      "bytes": 407,
+      "sha256": "857966e5f3bc9a1094d13ce1620a01dd6fd4984849c1dcc01e0d91101de6b0df"
+    },
+    "artifacts/intel/metal-combined-gui-ci/section-fill/comparison.json": {
+      "bytes": 3059,
+      "sha256": "731bcaafa433b29b1be9d001a053fc5b29b51e93c6f925a6302deed9407e0357"
+    },
+    "artifacts/intel/metal-combined-gui-ci/section-fill/report.json": {
+      "bytes": 8902,
+      "sha256": "b3d1c3c4a26f9fa0477957cdb086fa49966bf9aef69dabd6b2d3ebd25909037e"
+    },
+    "artifacts/intel/metal-combined-gui-ci/sheet-images-replay.log": {
+      "bytes": 3914,
+      "sha256": "fce9b0f7b0f05a99a26a34bf17ff83cd7c8a25470a77e0f01f2ee3b7e500a76e"
+    },
+    "artifacts/intel/metal-combined-gui-ci/sheet-images/checker.log": {
+      "bytes": 3126,
+      "sha256": "87efca61bb41bf7d8cea7032676dd6ede953b4dbcbb294cba59a1ba07ee15601"
+    },
+    "artifacts/intel/metal-combined-gui-ci/sheet-images/checker.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/intel/metal-combined-gui-ci/sheet-images/comparison.json": {
+      "bytes": 3902,
+      "sha256": "3cc0cfb9cf0299a38d312738cc8f08fb2bb9660183b5e8c724a539b6bd044fe3"
+    },
+    "artifacts/intel/metal-combined-gui-ci/sheet-images/native/native.json": {
+      "bytes": 5100,
+      "sha256": "9fccf6563d252211943e1438f681687249300530585df3fc0a5dbe9126684423"
+    },
+    "artifacts/intel/metal-combined-gui-ci/sheet-images/result.json": {
+      "bytes": 6265,
+      "sha256": "3690494e8d8734acfd5200a02f436bfcc1d5e2a496e277c216c01aeffacdf67e"
+    },
+    "artifacts/intel/metal-combined-gui-ci/sheet-images/runtime.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/intel/metal-combined-gui-ci/sheet-images/runtime.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/intel/metal-combined-gui-ci/sheet-images/source/capture.log": {
+      "bytes": 53,
+      "sha256": "092a07b530f92a59d98637037c99b662460dc6eca8ab59f9215f772d0b18cddb"
+    },
+    "artifacts/intel/metal-combined-gui-ci/sheet-images/source/source.json": {
+      "bytes": 8829,
+      "sha256": "c365180873a2f3c9df6ee55121dfd327b9d2d249b215590a70c42f2807332b52"
+    },
+    "artifacts/intel/metal-combined-gui-ci/sheet-images/views/capture.log": {
+      "bytes": 287,
+      "sha256": "1f5be4ae69f49b3f1a8ea45a71980963d5071f4ca8f3126a3d093ed2ca047be0"
+    },
+    "artifacts/intel/metal-combined-gui-ci/sheet-images/views/source-receipt.json": {
+      "bytes": 308,
+      "sha256": "62dc3460e7b482f42bf1e70b0b0bdb8042b5494b43a7a26311ac83ff1ad2135a"
+    },
+    "artifacts/intel/metal-combined-gui-ci/sheet-images/views/source.json": {
+      "bytes": 4153,
+      "sha256": "d9c4d15e61b7862b366db0397871e4fb888419ed4c8147647f0d25a46405d0b2"
+    },
+    "artifacts/intel/metal-combined-gui-ci/sheet-pictures-replay.log": {
+      "bytes": 12040,
+      "sha256": "1223bcfbad3c35daf655222e6dd817493fb26e217d2c67062e89a9edcca9106e"
+    },
+    "artifacts/intel/metal-combined-gui-ci/sheet-pictures/checker.log": {
+      "bytes": 10055,
+      "sha256": "4c1e25f82e0cdccd446da1d94a299343c060447c5851e0014136ec07488e62ea"
+    },
+    "artifacts/intel/metal-combined-gui-ci/sheet-pictures/checker.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/intel/metal-combined-gui-ci/sheet-pictures/comparison.json": {
+      "bytes": 13211,
+      "sha256": "399dd9ab61d32f5a98ef51a139363355a27a45f85d0889b3604c993af51352f3"
+    },
+    "artifacts/intel/metal-combined-gui-ci/sheet-pictures/native/duplicate.pdf": {
+      "bytes": 2669,
+      "sha256": "8c00b5cf30d0a181ad34b9723b892f22608001329c33c530a63a8bef1842c4f4"
+    },
+    "artifacts/intel/metal-combined-gui-ci/sheet-pictures/native/duplicate.png": {
+      "bytes": 9618,
+      "sha256": "6b89dd146652dd0ca4258e3b07ad7709b8c3bb596dba7f71ede1019c5546cf7e"
+    },
+    "artifacts/intel/metal-combined-gui-ci/sheet-pictures/native/native.json": {
+      "bytes": 8872,
+      "sha256": "66fdc66f17647be0123b4721ce5ecea7d9a0a5a04173cf7152a7dcd2a1895b7f"
+    },
+    "artifacts/intel/metal-combined-gui-ci/sheet-pictures/native/picture-contain-warm.png": {
+      "bytes": 6935,
+      "sha256": "944041d869b7ed21c8d5dc2755740b35b02293135d4c5b9d2f9235a12292eead"
+    },
+    "artifacts/intel/metal-combined-gui-ci/sheet-pictures/native/picture-contain.igz": {
+      "bytes": 1308,
+      "sha256": "0f3844d680e15700fad3d2c116421a8ab52e92a3fb7326e670a6038f584d1d7a"
+    },
+    "artifacts/intel/metal-combined-gui-ci/sheet-pictures/native/picture-contain.jpg": {
+      "bytes": 33760,
+      "sha256": "f2415decbe68dce8174223637506b905f47dfc8a8330d6ee1f02fd22847a680d"
+    },
+    "artifacts/intel/metal-combined-gui-ci/sheet-pictures/native/picture-contain.pdf": {
+      "bytes": 5908,
+      "sha256": "e192d41606299df992eb510291b3c6f458178ae59a25ec8fd8851e8fa40d857a"
+    },
+    "artifacts/intel/metal-combined-gui-ci/sheet-pictures/native/picture-contain.png": {
+      "bytes": 6935,
+      "sha256": "944041d869b7ed21c8d5dc2755740b35b02293135d4c5b9d2f9235a12292eead"
+    },
+    "artifacts/intel/metal-combined-gui-ci/sheet-pictures/native/picture-cover-warm.png": {
+      "bytes": 7048,
+      "sha256": "837c29946670c8459879ec41af234f301d4186711200f03d5b28261861f5dd53"
+    },
+    "artifacts/intel/metal-combined-gui-ci/sheet-pictures/native/picture-cover.igz": {
+      "bytes": 1304,
+      "sha256": "4102a289155a4ed49e96b057ff7511c66cc32325fac71ff54050d1a2b65c0774"
+    },
+    "artifacts/intel/metal-combined-gui-ci/sheet-pictures/native/picture-cover.jpg": {
+      "bytes": 33618,
+      "sha256": "4928d3067cb5d350d805ca4a94d491a451ba65a7bb45aa444589d6e0617598af"
+    },
+    "artifacts/intel/metal-combined-gui-ci/sheet-pictures/native/picture-cover.pdf": {
+      "bytes": 3844,
+      "sha256": "4d34618cc2755029ba76cf5440e7b3da16d8b77f05760ce27252ba77fdef506b"
+    },
+    "artifacts/intel/metal-combined-gui-ci/sheet-pictures/native/picture-cover.png": {
+      "bytes": 7048,
+      "sha256": "837c29946670c8459879ec41af234f301d4186711200f03d5b28261861f5dd53"
+    },
+    "artifacts/intel/metal-combined-gui-ci/sheet-pictures/native/picture-ellipse-feather-opacity-warm.png": {
+      "bytes": 11709,
+      "sha256": "76bb5cc64fc7fc7e2c4a4a46c12c31fe97a4d426756b7bdb434b5ce185b60b8e"
+    },
+    "artifacts/intel/metal-combined-gui-ci/sheet-pictures/native/picture-ellipse-feather-opacity.igz": {
+      "bytes": 1325,
+      "sha256": "eafe6581bd1e53a3a94d3cf6649d5ae2bde324e5e8fadd2168c1f69085738297"
+    },
+    "artifacts/intel/metal-combined-gui-ci/sheet-pictures/native/picture-ellipse-feather-opacity.jpg": {
+      "bytes": 30107,
+      "sha256": "c2d03ab3be17198a6340b76f4d4ada5a84bcedd5305510a715ad5ec71b854073"
+    },
+    "artifacts/intel/metal-combined-gui-ci/sheet-pictures/native/picture-ellipse-feather-opacity.pdf": {
+      "bytes": 24933,
+      "sha256": "9e5a89e740efa5f140a9f1da313a1383aa1ece8dba9fe4c4307dcecbbcbe65f8"
+    },
+    "artifacts/intel/metal-combined-gui-ci/sheet-pictures/native/picture-ellipse-feather-opacity.png": {
+      "bytes": 11709,
+      "sha256": "76bb5cc64fc7fc7e2c4a4a46c12c31fe97a4d426756b7bdb434b5ce185b60b8e"
+    },
+    "artifacts/intel/metal-combined-gui-ci/sheet-pictures/native/picture-hidden-warm.png": {
+      "bytes": 5395,
+      "sha256": "25685b31d4f7547984e1fb60a89d619c1541384edb0a8aa59eecc91b913d44cd"
+    },
+    "artifacts/intel/metal-combined-gui-ci/sheet-pictures/native/picture-hidden.igz": {
+      "bytes": 1306,
+      "sha256": "d1825baf43c7caf8bd009b6931b97a51431c872faba57fe494912b750afcfdfe"
+    },
+    "artifacts/intel/metal-combined-gui-ci/sheet-pictures/native/picture-hidden.jpg": {
+      "bytes": 27381,
+      "sha256": "a795976dde1881d4e8b6117ea4b509d77bcbd4855b0c223d4a2ff5da2d25ba61"
+    },
+    "artifacts/intel/metal-combined-gui-ci/sheet-pictures/native/picture-hidden.pdf": {
+      "bytes": 521,
+      "sha256": "cfab9913df089e65134be2ce7e43d6e5c430afe5f1487cef22dc399583944eb1"
+    },
+    "artifacts/intel/metal-combined-gui-ci/sheet-pictures/native/picture-hidden.png": {
+      "bytes": 5395,
+      "sha256": "25685b31d4f7547984e1fb60a89d619c1541384edb0a8aa59eecc91b913d44cd"
+    },
+    "artifacts/intel/metal-combined-gui-ci/sheet-pictures/native/picture-import-plain-warm.png": {
+      "bytes": 7842,
+      "sha256": "954f900dec7586485e1550fa86752ffc59bb5bf0692c7feb4243c5bb8ca0ccb8"
+    },
+    "artifacts/intel/metal-combined-gui-ci/sheet-pictures/native/picture-import-plain.igz": {
+      "bytes": 1313,
+      "sha256": "5a77a4603cfd5acca311a386bfa5c8f071e33b56ee5201b0c6cc4ac33666cf20"
+    },
+    "artifacts/intel/metal-combined-gui-ci/sheet-pictures/native/picture-import-plain.jpg": {
+      "bytes": 37879,
+      "sha256": "bf8af31fd3dc49b483e4b0de6018b4a6f9720f88e903704e6bdb44a1d5bef31b"
+    },
+    "artifacts/intel/metal-combined-gui-ci/sheet-pictures/native/picture-import-plain.pdf": {
+      "bytes": 2464,
+      "sha256": "901ce90ad303231dfaf569197c8e2a2af506af77abb437515ae7ba644bc6ad36"
+    },
+    "artifacts/intel/metal-combined-gui-ci/sheet-pictures/native/picture-import-plain.png": {
+      "bytes": 7842,
+      "sha256": "954f900dec7586485e1550fa86752ffc59bb5bf0692c7feb4243c5bb8ca0ccb8"
+    },
+    "artifacts/intel/metal-combined-gui-ci/sheet-pictures/native/picture-jpeg-stretch-warm.png": {
+      "bytes": 42276,
+      "sha256": "c45274be1b3065e42aa8033b9a8d2db0ecaf68751c19758649160b27b408f29f"
+    },
+    "artifacts/intel/metal-combined-gui-ci/sheet-pictures/native/picture-jpeg-stretch.igz": {
+      "bytes": 1311,
+      "sha256": "2ba65fe5ecdf3c421ae39fed7cddd79da0affed7257224cf51a53750227c17fd"
+    },
+    "artifacts/intel/metal-combined-gui-ci/sheet-pictures/native/picture-jpeg-stretch.jpg": {
+      "bytes": 33224,
+      "sha256": "ee5a5126b79ad636b68daf111bc2c8fde7f64b44ed1e09543146769d0891e44f"
+    },
+    "artifacts/intel/metal-combined-gui-ci/sheet-pictures/native/picture-jpeg-stretch.pdf": {
+      "bytes": 33576,
+      "sha256": "ce30cd91e9edff3240e7af1cdf867f3313b70bd16e17cea7cf197d345182e31d"
+    },
+    "artifacts/intel/metal-combined-gui-ci/sheet-pictures/native/picture-jpeg-stretch.png": {
+      "bytes": 42276,
+      "sha256": "c45274be1b3065e42aa8033b9a8d2db0ecaf68751c19758649160b27b408f29f"
+    },
+    "artifacts/intel/metal-combined-gui-ci/sheet-pictures/native/picture-missing-warm.png": {
+      "bytes": 10050,
+      "sha256": "ba4c02a26861976535d8c424e3951cfbf7787c35edece7e5be0307816992606f"
+    },
+    "artifacts/intel/metal-combined-gui-ci/sheet-pictures/native/picture-missing.igz": {
+      "bytes": 1308,
+      "sha256": "80a5d5d15d15b4d879239d049cb96bf4c0370e8d23fc70960884ce5f76cc5f53"
+    },
+    "artifacts/intel/metal-combined-gui-ci/sheet-pictures/native/picture-missing.jpg": {
+      "bytes": 30584,
+      "sha256": "06d63ccc9400560f88b28fbd427975bc9fa95d9c9824afae9cacd78ec140fe62"
+    },
+    "artifacts/intel/metal-combined-gui-ci/sheet-pictures/native/picture-missing.pdf": {
+      "bytes": 1569,
+      "sha256": "01b7874410f2c117156b1add4090e6d6aa09cf3fa5414fe6d907dfb663f8554c"
+    },
+    "artifacts/intel/metal-combined-gui-ci/sheet-pictures/native/picture-missing.png": {
+      "bytes": 10050,
+      "sha256": "ba4c02a26861976535d8c424e3951cfbf7787c35edece7e5be0307816992606f"
+    },
+    "artifacts/intel/metal-combined-gui-ci/sheet-pictures/native/picture-opacity-rect-warm.png": {
+      "bytes": 7474,
+      "sha256": "b7c9e0c3df707bdb2fab500118a5466869070b508522d4aa812cb7db3db113b9"
+    },
+    "artifacts/intel/metal-combined-gui-ci/sheet-pictures/native/picture-opacity-rect.igz": {
+      "bytes": 1314,
+      "sha256": "55d5aa9e031da3d66fb59bf5adce6d4ec42bd2f4190d3dd3cb4f63c7f793875d"
+    },
+    "artifacts/intel/metal-combined-gui-ci/sheet-pictures/native/picture-opacity-rect.jpg": {
+      "bytes": 32017,
+      "sha256": "382fab77a49fba48a79dc3239b88f8fd12f46689eea1c9b975847e5ab9adcf27"
+    },
+    "artifacts/intel/metal-combined-gui-ci/sheet-pictures/native/picture-opacity-rect.pdf": {
+      "bytes": 4586,
+      "sha256": "0291e63d2f2d6f229e1f027184a6912158b892efd32c3de3074d453bd5918ad5"
+    },
+    "artifacts/intel/metal-combined-gui-ci/sheet-pictures/native/picture-opacity-rect.png": {
+      "bytes": 7474,
+      "sha256": "b7c9e0c3df707bdb2fab500118a5466869070b508522d4aa812cb7db3db113b9"
+    },
+    "artifacts/intel/metal-combined-gui-ci/sheet-pictures/native/picture-overlap-warm.png": {
+      "bytes": 12698,
+      "sha256": "b82d1f0ec3189f4880bd2fbe4cc086535c20f98e819c77556f09b85f2c6e4a86"
+    },
+    "artifacts/intel/metal-combined-gui-ci/sheet-pictures/native/picture-overlap.igz": {
+      "bytes": 4142,
+      "sha256": "ae929ea90ad6da0144d1c4a178a2c216a0227a387b05464182400506e1156f59"
+    },
+    "artifacts/intel/metal-combined-gui-ci/sheet-pictures/native/picture-overlap.jpg": {
+      "bytes": 37505,
+      "sha256": "1a00c2fe8c737adb3f653918dd70e817492426c3b0350e2d504ef9edf04e2b36"
+    },
+    "artifacts/intel/metal-combined-gui-ci/sheet-pictures/native/picture-overlap.pdf": {
+      "bytes": 97168,
+      "sha256": "887b7d4bd8da3676d648d47b99a6a884a484eac80520993d14822530406ab64c"
+    },
+    "artifacts/intel/metal-combined-gui-ci/sheet-pictures/native/picture-overlap.png": {
+      "bytes": 12698,
+      "sha256": "b82d1f0ec3189f4880bd2fbe4cc086535c20f98e819c77556f09b85f2c6e4a86"
+    },
+    "artifacts/intel/metal-combined-gui-ci/sheet-pictures/native/picture-rounded-border-warm.png": {
+      "bytes": 9929,
+      "sha256": "47ac7aa41f9f03067112148f08c1de35ef2fa66bc1668b08bd855b5eb5856a90"
+    },
+    "artifacts/intel/metal-combined-gui-ci/sheet-pictures/native/picture-rounded-border.igz": {
+      "bytes": 1318,
+      "sha256": "c2710c293975618e45d1d83a54b0651411d65d90ec6aa9590adbc20642f16e67"
+    },
+    "artifacts/intel/metal-combined-gui-ci/sheet-pictures/native/picture-rounded-border.jpg": {
+      "bytes": 34973,
+      "sha256": "01dd74aba1468ad9cd12c8698215de5818c817113352dd1d7a554bc235905fd7"
+    },
+    "artifacts/intel/metal-combined-gui-ci/sheet-pictures/native/picture-rounded-border.pdf": {
+      "bytes": 5226,
+      "sha256": "6178783db0c505014c03d32f9c859ab3dbadff25fef91ae396d8414b27ba1cde"
+    },
+    "artifacts/intel/metal-combined-gui-ci/sheet-pictures/native/picture-rounded-border.png": {
+      "bytes": 9929,
+      "sha256": "47ac7aa41f9f03067112148f08c1de35ef2fa66bc1668b08bd855b5eb5856a90"
+    },
+    "artifacts/intel/metal-combined-gui-ci/sheet-pictures/native/picture-rounded-feather-warm.png": {
+      "bytes": 10295,
+      "sha256": "7a4656bde5f22e603d5239817c21522e4a60073de9983e4e884f9018bffa581a"
+    },
+    "artifacts/intel/metal-combined-gui-ci/sheet-pictures/native/picture-rounded-feather.igz": {
+      "bytes": 1319,
+      "sha256": "61ac8659f7dfcd2795ed81fbee6cba364fffe6e4e3b1e6304e3f082483ce659e"
+    },
+    "artifacts/intel/metal-combined-gui-ci/sheet-pictures/native/picture-rounded-feather.jpg": {
+      "bytes": 33800,
+      "sha256": "c6fb00f5be577726ac5c13a1878c7dc50aaeb74dd8776985d9f80eb48a54d4d1"
+    },
+    "artifacts/intel/metal-combined-gui-ci/sheet-pictures/native/picture-rounded-feather.pdf": {
+      "bytes": 4850,
+      "sha256": "3b1882d204bd1f4239b34488902aad0873216e64e122b1cc90291d2f3eb4ab96"
+    },
+    "artifacts/intel/metal-combined-gui-ci/sheet-pictures/native/picture-rounded-feather.png": {
+      "bytes": 10295,
+      "sha256": "7a4656bde5f22e603d5239817c21522e4a60073de9983e4e884f9018bffa581a"
+    },
+    "artifacts/intel/metal-combined-gui-ci/sheet-pictures/native/refusal.pdf": {
+      "bytes": 21,
+      "sha256": "2d20d7adba57f23f8d0fd87604a7b2534945fd99a40beeed0a011c5c7bf32ad3"
+    },
+    "artifacts/intel/metal-combined-gui-ci/sheet-pictures/native/refusal.png": {
+      "bytes": 21,
+      "sha256": "bc64c9f4cbb9a58acefdae6fd2cd3a5a27cfd8ceef1ef7d7708055377b5ac54f"
+    },
+    "artifacts/intel/metal-combined-gui-ci/sheet-pictures/result.json": {
+      "bytes": 16184,
+      "sha256": "4c9685fc3ec1c240e2789e719ec6624f484fc7a767d6309c9f183232135411dc"
+    },
+    "artifacts/intel/metal-combined-gui-ci/sheet-pictures/runtime.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/intel/metal-combined-gui-ci/sheet-pictures/runtime.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "artifacts/intel/metal-combined-gui-ci/sheet-pictures/source/source.json": {
+      "bytes": 15996,
+      "sha256": "20a12aca3562c53e6ce110f29c9e4a7494b5b011a6534ffdde84d4fe6d58329a"
+    },
+    "artifacts/intel/paper-font-native-ci/font-resource.log": {
+      "bytes": 24778,
+      "sha256": "72a4328b9eb46df95f05efbb4a0243bbdb0cc7ab38bfce5d6d90fe016c5359bc"
+    },
+    "artifacts/intel/paper-font-native-ci/tests.log": {
+      "bytes": 32311,
+      "sha256": "6cd330a19c685c602aa82b0c7b8b191c98cd56a4f9bae421570a1714a65296d3"
+    },
+    "linux-selected/dem-profile-ci/replay.log": {
+      "bytes": 1999,
+      "sha256": "e0c7a9606686c61d23a3cbdeb874e5565f5f124b095b052a4c93b2ece17386eb"
+    },
+    "linux-selected/dem-profile-ci/replay/checker.log": {
+      "bytes": 181,
+      "sha256": "92ad4d386670c640f695b36e28572a2c4ece3acb605ae86ffd5642128c840b6f"
+    },
+    "linux-selected/dem-profile-ci/replay/checker.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "linux-selected/dem-profile-ci/replay/comparison.json": {
+      "bytes": 195,
+      "sha256": "20d8243e9621e56a6ad8fa0ca0d94e4e7a4ce30c81cd62a5357a3169df147370"
+    },
+    "linux-selected/dem-profile-ci/replay/result.json": {
+      "bytes": 2281,
+      "sha256": "161e2380292b09130d4a19c91592ca5891b37e5764bb68d8e0712512886c3450"
+    },
+    "linux-selected/dem-profile-ci/replay/runtime.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "linux-selected/dem-profile-ci/replay/runtime.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "linux-selected/document-axes-ci/result.json": {
+      "bytes": 169648,
+      "sha256": "b4d8935b10b7f9d76fd6484bd1b36fc18073633432a529e46382c0a40c2271ff"
+    },
+    "linux-selected/document-axes-ci/stages.json": {
+      "bytes": 29418,
+      "sha256": "01dd436c430abaadf248dcafb83b418958a85a24872e8f2a680dc8ae961c1a6d"
+    },
+    "linux-selected/grid-default-ci/source-generation.json": {
+      "bytes": 89712,
+      "sha256": "5a922bfc0b55a71ad368b9892419b21819044321632845d8ff5b46ec9b787bf0"
+    },
+    "linux-selected/grid-heldout-ci/source-generation.json": {
+      "bytes": 89714,
+      "sha256": "ff5dfee2a75c837306b35356a87f6f69689a820956fa08b89753d9dd802b9a5c"
+    },
+    "linux-selected/legend-authoring-ci/replay.log": {
+      "bytes": 1922,
+      "sha256": "aae1adf2760b8c7791bce4e1762795c9b0fef8296d1acc2eefa8f417c01a0459"
+    },
+    "linux-selected/legend-authoring-ci/replay/checker.log": {
+      "bytes": 1000,
+      "sha256": "c72635d2981f0c211af38b255bbf7a57cf7b913cbbb4ace0f7cc0eadd7f34aec"
+    },
+    "linux-selected/legend-authoring-ci/replay/comparison.json": {
+      "bytes": 1128,
+      "sha256": "6aa19359a29c608ef3a5fd2fd0f86e2a194adaba11df19f9a3dbe0e3a7c8fb15"
+    },
+    "linux-selected/legend-authoring-ci/replay/result.json": {
+      "bytes": 2164,
+      "sha256": "77c2eed8abd501fdf2a250c0ca50a40f3e154b9846be54b8964ca6cacf46c678"
+    },
+    "linux-selected/picture-authoring-ci/replay.log": {
+      "bytes": 1934,
+      "sha256": "e4a8a0a5b9539b0ffbd3f895e7c8389e66c953c4bab0bab011bdd42165fdb18b"
+    },
+    "linux-selected/picture-authoring-ci/replay/checker.log": {
+      "bytes": 663,
+      "sha256": "693834818a1698fac75051beaa7d6d99f4c3b2597d2c14bbf2d473f1f2e11d9b"
+    },
+    "linux-selected/picture-authoring-ci/replay/comparison.json": {
+      "bytes": 747,
+      "sha256": "2f6d045e7dc371eb9553d1b5251c4b283347103ac89c6368341d78e0ae701e40"
+    },
+    "linux-selected/picture-authoring-ci/replay/result.json": {
+      "bytes": 2176,
+      "sha256": "0697858cde39f844ab3704946ffb678c8e27209d29311decfa7f80b651e64907"
+    },
+    "linux-selected/picture-gestures-ci/replay.log": {
+      "bytes": 1919,
+      "sha256": "7f68f8102b03875b2a27e889e9a33fbf29c30111fda6b8e26484a04c3d3e881c"
+    },
+    "linux-selected/picture-gestures-ci/replay/checker.log": {
+      "bytes": 600,
+      "sha256": "7321fa1f50fbdcc655782fca80138f5299ba603a6fcc377a462c140af3b38639"
+    },
+    "linux-selected/picture-gestures-ci/replay/comparison.json": {
+      "bytes": 692,
+      "sha256": "31bfdbcaf76c2f494f7838dc8c242690fddc69662922a9d87511c30b0ebca102"
+    },
+    "linux-selected/picture-gestures-ci/replay/result.json": {
+      "bytes": 2161,
+      "sha256": "4b4701a5079d3a530daaed767bf7183189e8c5d2c691ab15303d06784c46a435"
+    },
+    "linux-selected/range-receipt.json": {
+      "bytes": 29538,
+      "sha256": "648d76eba732f339207ce95d9ad06891d63478f65b0d88fa8a4a3f50ba876b53"
+    },
+    "linux-selected/saved-vector-view-ci/source-generation.json": {
+      "bytes": 89716,
+      "sha256": "d56e50d412d15a74d5aa9a07f1d318bfc013d1459797bebf97eed4814187762e"
+    },
+    "linux-selected/section-heldout-hatch-ci/source-generation.json": {
+      "bytes": 89716,
+      "sha256": "75a724cf6ac833458d5adaaa84c4071a7eabbe23a5f905a0461c872ed090aaa1"
+    },
+    "linux-selected/section-solid-ci/source-generation.json": {
+      "bytes": 89712,
+      "sha256": "c175614fc3c1537bfb418ed1b7701c688d6f0055e026b7be012af9a2f85efaee"
+    },
+    "linux-selected/sheet-legends-ci/replay.log": {
+      "bytes": 5524,
+      "sha256": "a490a92f2c09e2bcaccad166c96d19ac5865c7f3bdc33673ab483487b53f41e6"
+    },
+    "linux-selected/sheet-legends-ci/replay/checker.log": {
+      "bytes": 4748,
+      "sha256": "55684a2bd63891b170cedcd8eedfc3a96aaf4f118aa813079e66b2663c93d056"
+    },
+    "linux-selected/sheet-legends-ci/replay/checker.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "linux-selected/sheet-legends-ci/replay/comparison.json": {
+      "bytes": 4747,
+      "sha256": "f7f5c3268888a6a2ebd1a064df0a73f72e30539e1296690e86f5dad1501a3856"
+    },
+    "linux-selected/sheet-legends-ci/replay/result.json": {
+      "bytes": 6794,
+      "sha256": "096a7011b9d48a2c0901d2b3afe59226eec34dc4e916c788804e88a066d9dc6a"
+    },
+    "linux-selected/sheet-legends-ci/replay/runtime.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "linux-selected/sheet-legends-ci/replay/runtime.log.stderr": {
+      "bytes": 325,
+      "sha256": "22141616c94b5ca7520fcc25fa7c774c3aed4a978fe6ab763b87a03cdaa5abf7"
+    },
+    "linux-selected/sheet-pictures-ci/replay.log": {
+      "bytes": 11888,
+      "sha256": "22ae9da33c9a2cb5205fcc152b0a3a8f7195db6e8897bef1e4fb693a99564f85"
+    },
+    "linux-selected/sheet-pictures-ci/replay/checker.log": {
+      "bytes": 10046,
+      "sha256": "ab3059a62456a7302308ea235730e89c5b181bbf46099ae5697327fea859a11c"
+    },
+    "linux-selected/sheet-pictures-ci/replay/checker.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "linux-selected/sheet-pictures-ci/replay/comparison.json": {
+      "bytes": 13202,
+      "sha256": "36278ccba8abdf33900b3676afd120e7a738687fb7532903ee7a4187fd6926c2"
+    },
+    "linux-selected/sheet-pictures-ci/replay/result.json": {
+      "bytes": 16040,
+      "sha256": "0eec16fc0c112e058a21f90dee997618189339cd30a9f5ccd91fe5dfbfae6432"
+    },
+    "linux-selected/sheet-pictures-ci/replay/runtime.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "linux-selected/sheet-pictures-ci/replay/runtime.log.stderr": {
+      "bytes": 325,
+      "sha256": "22141616c94b5ca7520fcc25fa7c774c3aed4a978fe6ab763b87a03cdaa5abf7"
+    },
+    "linux-selected/sheet-symbols-ci/replay.log": {
+      "bytes": 7749,
+      "sha256": "f4c630332d7f98801dfae698e8c600982352189f69429ccca59d9c1e908a3dc7"
+    },
+    "linux-selected/sheet-symbols-ci/replay/checker.log": {
+      "bytes": 7474,
+      "sha256": "7d38978904fde07ad1d87ab1412c362c8af9027c689937f6ec9291b0802e828c"
+    },
+    "linux-selected/sheet-symbols-ci/replay/checker.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "linux-selected/sheet-symbols-ci/replay/comparison.json": {
+      "bytes": 7473,
+      "sha256": "415213febfc4217cd47130acc91a18cf7f2ab4e658e971af5651d5090e327c76"
+    },
+    "linux-selected/sheet-symbols-ci/replay/result.json": {
+      "bytes": 9651,
+      "sha256": "df898ea2841d5e9fed52cae7803f4ea67983274cb5b4ec8158b74872019a5242"
+    },
+    "linux-selected/sheet-symbols-ci/replay/runtime.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "linux-selected/sheet-symbols-ci/replay/runtime.log.stderr": {
+      "bytes": 325,
+      "sha256": "22141616c94b5ca7520fcc25fa7c774c3aed4a978fe6ab763b87a03cdaa5abf7"
+    },
+    "linux-selected/vector-view-ci/source-generation.json": {
+      "bytes": 89711,
+      "sha256": "395de3a6b4d59a27e438b264824893069df4970f4887432d0417c412e1a52b81"
+    },
+    "linux-selected/view-frame-captions-ci/replay.log": {
+      "bytes": 7905,
+      "sha256": "777f86fe3bdf29587851ae59749138d5379941b8016cfe24b96954867c59e596"
+    },
+    "linux-selected/view-frame-captions-ci/replay/checker.log": {
+      "bytes": 8188,
+      "sha256": "46ce631826b0a124537206b138665abce3076c56e206e9a4b5b02ffe9089d4f3"
+    },
+    "linux-selected/view-frame-captions-ci/replay/checker.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "linux-selected/view-frame-captions-ci/replay/comparison.json": {
+      "bytes": 8187,
+      "sha256": "ec816111b86472d698ae70302ab32d766753deb9ca347c25f924360d3d21341f"
+    },
+    "linux-selected/view-frame-captions-ci/replay/result.json": {
+      "bytes": 9955,
+      "sha256": "0ea82c25cab640c49f8f39b4ec1fce2ccaf590fd29092bdb9f50fa25f741fdab"
+    },
+    "linux-selected/view-frame-captions-ci/replay/runtime.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "linux-selected/view-frame-captions-ci/replay/runtime.log.stderr": {
+      "bytes": 325,
+      "sha256": "22141616c94b5ca7520fcc25fa7c774c3aed4a978fe6ab763b87a03cdaa5abf7"
+    },
+    "logs/ae0c-job-114698380963.log": {
+      "bytes": 57257,
+      "sha256": "dadcfeecab7f4eaa02f7459e5deb7f44d17f02fbfb9b87d7f11f5f9c134e16a8"
+    },
+    "logs/ae0c-job-114698381137.log": {
+      "bytes": 58308,
+      "sha256": "79937d44ecc20bda9ce2a959e27dc39a0769655f3b58d2ae51b5a14911a37d94"
+    },
+    "logs/ae0c-job-114698381295.log": {
+      "bytes": 47385,
+      "sha256": "b5cfc49cac6e9e69ba9549a9317a302bf81e2687d8fab379256732dfaafc23a2"
+    },
+    "logs/ae0c-job-114698381368.log": {
+      "bytes": 82299,
+      "sha256": "f3464975805a5e488df4b5be7bb604e6a88f3cc6ec0eb64978a2b2f0ef2d016b"
+    },
+    "logs/ae0c-job-114698381401.log": {
+      "bytes": 6551421,
+      "sha256": "277c6116b4e9fdbcf3a633f58021e6873408365de1118a43a212dab4e428692e"
+    },
+    "logs/ae0c-job-114698381403.log": {
+      "bytes": 42972,
+      "sha256": "3da8c49efc5ed749b5e22b1433a95918fdfc88d3f30d8949658361c8e10253f0"
+    },
+    "logs/ae0c-job-114698381464.log": {
+      "bytes": 79336,
+      "sha256": "df22c8d574f8fd1a45d9e656f25c0d4e6be3d0c43103ffb8a861e3b04b5ba5a6"
+    },
+    "logs/ae0c-job-114698381473.log": {
+      "bytes": 42725,
+      "sha256": "4d77ced42fc05526baa840f9430a2f769b1a3b19248345bd282535c6a3d9f013"
+    },
+    "summary.json": {
+      "bytes": 79590,
+      "sha256": "c733dcd8d7cca6ccab5c8827accda1a989246f9f349ff9733b55c54549711ab9"
+    },
+    "timing-review.json": {
+      "bytes": 1307,
+      "sha256": "d9dcfddbcbcc29681ae4744b3da221baa2c9945801dfba09afa93eb571cf15de"
+    }
+  },
+  "downloaded_artifacts": {
+    "arm": {
+      "archive_bytes": 2187189,
+      "archive_sha256": "a63bfa87ef96c3a2673e570a4d26418611628c7a40e839c38c7d976a852916f5",
+      "selected_members": [
+        "paper-font-native-ci/font-resource.log",
+        "paper-font-native-ci/tests.log",
+        "metal-combined-gui-ci/apple-gl-depth-resolve.log",
+        "metal-combined-gui-ci/apple-gl-depth-resolve.json",
+        "metal-combined-gui-ci/billboards/report.json",
+        "metal-combined-gui-ci/build.log",
+        "metal-combined-gui-ci/check.log",
+        "metal-combined-gui-ci/defaults/report.json",
+        "metal-combined-gui-ci/document-annotations/report.json",
+        "metal-combined-gui-ci/document-annotations/sample-diagnostics.json",
+        "metal-combined-gui-ci/gltf-figures/affine-nested-rich.log",
+        "metal-combined-gui-ci/gltf-figures/affine-nested-rich.log.stderr",
+        "metal-combined-gui-ci/gltf-figures/bitmap-no-texture-camera.log",
+        "metal-combined-gui-ci/gltf-figures/bitmap-no-texture-camera.log.stderr",
+        "metal-combined-gui-ci/gltf-figures/bitmap-no-texture-ordinary.log",
+        "metal-combined-gui-ci/gltf-figures/bitmap-no-texture-ordinary.log.stderr",
+        "metal-combined-gui-ci/gltf-figures/bitmap-perspective-camera.log",
+        "metal-combined-gui-ci/gltf-figures/bitmap-perspective-camera.log.stderr",
+        "metal-combined-gui-ci/gltf-figures/bitmap-perspective-ordinary.log",
+        "metal-combined-gui-ci/gltf-figures/bitmap-perspective-ordinary.log.stderr",
+        "metal-combined-gui-ci/gltf-figures/default-rich.log",
+        "metal-combined-gui-ci/gltf-figures/default-rich.log.stderr",
+        "metal-combined-gui-ci/gltf-figures/empty-rich.log",
+        "metal-combined-gui-ci/gltf-figures/empty-rich.log.stderr",
+        "metal-combined-gui-ci/gltf-figures/figure-only-camera.log",
+        "metal-combined-gui-ci/gltf-figures/figure-only-camera.log.stderr",
+        "metal-combined-gui-ci/gltf-figures/figure-only-ordinary.log",
+        "metal-combined-gui-ci/gltf-figures/figure-only-ordinary.log.stderr",
+        "metal-combined-gui-ci/gltf-figures/figures-check.json",
+        "metal-combined-gui-ci/gltf-figures/figures-check.json.stderr",
+        "metal-combined-gui-ci/gltf-figures/hidden-top-camera.log",
+        "metal-combined-gui-ci/gltf-figures/hidden-top-camera.log.stderr",
+        "metal-combined-gui-ci/gltf-figures/hidden-top-ordinary.log",
+        "metal-combined-gui-ci/gltf-figures/hidden-top-ordinary.log.stderr",
+        "metal-combined-gui-ci/gltf-figures/hole-rich.log",
+        "metal-combined-gui-ci/gltf-figures/identity-orphan-camera.log.stderr",
+        "metal-combined-gui-ci/gltf-figures/hole-rich.log.stderr",
+        "metal-combined-gui-ci/gltf-figures/identity-orphan-ordinary.log",
+        "metal-combined-gui-ci/gltf-figures/identity-orphan-ordinary.log.stderr",
+        "metal-combined-gui-ci/gltf-figures/identity-orphan-camera.log",
+        "metal-combined-gui-ci/gltf-figures/mesh-perspective-camera.log",
+        "metal-combined-gui-ci/gltf-figures/mesh-perspective-camera.log.stderr",
+        "metal-combined-gui-ci/gltf-figures/mesh-perspective-ordinary.log",
+        "metal-combined-gui-ci/gltf-figures/mesh-perspective-ordinary.log.stderr",
+        "metal-combined-gui-ci/gltf-figures/mixed-first-material-camera.log",
+        "metal-combined-gui-ci/gltf-figures/mixed-first-material-camera.log.stderr",
+        "metal-combined-gui-ci/gltf-figures/mixed-first-material-ordinary.log",
+        "metal-combined-gui-ci/gltf-figures/mixed-first-material-ordinary.log.stderr",
+        "metal-combined-gui-ci/gltf-figures/native/collapse-refusal.json",
+        "metal-combined-gui-ci/gltf-figures/native/collapse-refusal.json.stderr",
+        "metal-combined-gui-ci/gltf-figures/native/initial-decoded-failure.json",
+        "metal-combined-gui-ci/gltf-figures/native/path-only-candidate-failure.json",
+        "metal-combined-gui-ci/gltf-figures/nested-hidden-child-camera.log",
+        "metal-combined-gui-ci/gltf-figures/nested-hidden-child-camera.log.stderr",
+        "metal-combined-gui-ci/gltf-figures/nested-hidden-child-ordinary.log",
+        "metal-combined-gui-ci/gltf-figures/nested-reflected-rich.log",
+        "metal-combined-gui-ci/gltf-figures/nested-reflected-rich.log.stderr",
+        "metal-combined-gui-ci/gltf-figures/nested-hidden-child-ordinary.log.stderr",
+        "metal-combined-gui-ci/gltf-figures/pbr-colors-rich.log",
+        "metal-combined-gui-ci/gltf-figures/pbr-colors-rich.log.stderr",
+        "metal-combined-gui-ci/gltf-figures/result.json",
+        "metal-combined-gui-ci/gltf-figures/rich-check.log",
+        "metal-combined-gui-ci/gltf-figures/rich-check.log.stderr",
+        "metal-combined-gui-ci/gltf-figures/slanted-rich.log",
+        "metal-combined-gui-ci/gltf-figures/slanted-rich.log.stderr",
+        "metal-combined-gui-ci/gltf-figures/source/bitmap-no-texture.camera.json",
+        "metal-combined-gui-ci/gltf-figures/source/bitmap-perspective.camera.json",
+        "metal-combined-gui-ci/gltf-figures/source/cases.json",
+        "metal-combined-gui-ci/gltf-figures/source/collapse.camera.json",
+        "metal-combined-gui-ci/gltf-figures/source/figure-only.camera.json",
+        "metal-combined-gui-ci/gltf-figures/source/hidden-top.camera.json",
+        "metal-combined-gui-ci/gltf-figures/source/identity-orphan.camera.json",
+        "metal-combined-gui-ci/gltf-figures/source/mesh-perspective.camera.json",
+        "metal-combined-gui-ci/gltf-figures/source/mixed-first-material.camera.json",
+        "metal-combined-gui-ci/gltf-figures/source/nested-hidden-child.camera.json",
+        "metal-combined-gui-ci/gltf-figures/textures-alpha-rich.log",
+        "metal-combined-gui-ci/gltf-figures/textures-alpha-rich.log.stderr",
+        "metal-combined-gui-ci/gltf-figures/visibility-rich.log",
+        "metal-combined-gui-ci/gltf-figures/visibility-rich.log.stderr",
+        "metal-combined-gui-ci/gltf-figures-replay.log",
+        "metal-combined-gui-ci/launcher/result.json",
+        "metal-combined-gui-ci/launcher/runtime.log",
+        "metal-combined-gui-ci/legend-authoring/checker.log",
+        "metal-combined-gui-ci/legend-authoring/checker.stderr",
+        "metal-combined-gui-ci/legend-authoring/comparison.json",
+        "metal-combined-gui-ci/legend-authoring/native/empty-visible-cancel-native.igz",
+        "metal-combined-gui-ci/legend-authoring/native/lifecycle-native.igz",
+        "metal-combined-gui-ci/legend-authoring/native/loaded-delete-native.igz",
+        "metal-combined-gui-ci/legend-authoring/native/loaded-locked-native.igz",
+        "metal-combined-gui-ci/legend-authoring/native/native-deleted-reopen.json",
+        "metal-combined-gui-ci/legend-authoring/native/native-legend.json",
+        "metal-combined-gui-ci/legend-authoring/native/native-legend.partial.json",
+        "metal-combined-gui-ci/legend-authoring/native/native-reopens.json",
+        "metal-combined-gui-ci/legend-authoring/native/single-legend-gestures-native.igz",
+        "metal-combined-gui-ci/legend-authoring/native.log",
+        "metal-combined-gui-ci/legend-authoring/native.stderr",
+        "metal-combined-gui-ci/legend-authoring/reader.log",
+        "metal-combined-gui-ci/legend-authoring/reader.stderr",
+        "metal-combined-gui-ci/legend-authoring/result.json",
+        "metal-combined-gui-ci/legend-authoring/source/authoring.log",
+        "metal-combined-gui-ci/legend-authoring/source/authoring.stderr",
+        "metal-combined-gui-ci/legend-authoring/source/first-gesture-hard-failure.partial.json",
+        "metal-combined-gui-ci/legend-authoring/source/gesture-hard-failure.log",
+        "metal-combined-gui-ci/legend-authoring/source/gesture-hard-failure.stderr",
+        "metal-combined-gui-ci/legend-authoring/source/gesture-observed.log",
+        "metal-combined-gui-ci/legend-authoring/source/gesture-observed.stderr",
+        "metal-combined-gui-ci/legend-authoring/source/native-gesture-expectations.json",
+        "metal-combined-gui-ci/legend-authoring/source/original-legend.json",
+        "metal-combined-gui-ci/legend-authoring/source/original-reopens.json",
+        "metal-combined-gui-ci/legend-authoring-replay.log",
+        "metal-combined-gui-ci/picture-authoring/checker.log",
+        "metal-combined-gui-ci/picture-authoring/checker.stderr",
+        "metal-combined-gui-ci/picture-authoring/comparison.json",
+        "metal-combined-gui-ci/picture-authoring/native/aspect-selection-native.igz",
+        "metal-combined-gui-ci/picture-authoring/native/authoring-native.igz",
+        "metal-combined-gui-ci/picture-authoring/native/missing-fallback-native.igz",
+        "metal-combined-gui-ci/picture-authoring/native/native-reopens.json",
+        "metal-combined-gui-ci/picture-authoring/native/native.json",
+        "metal-combined-gui-ci/picture-authoring/native/picker-calls.txt",
+        "metal-combined-gui-ci/picture-authoring/native/z-input-cajetin.igz",
+        "metal-combined-gui-ci/picture-authoring/native/z-input-cotas.igz",
+        "metal-combined-gui-ci/picture-authoring/native/z-input-cotas_ang.igz",
+        "metal-combined-gui-ci/picture-authoring/native/z-input-cotas_rad.igz",
+        "metal-combined-gui-ci/picture-authoring/native/z-input-etiquetas.igz",
+        "metal-combined-gui-ci/picture-authoring/native/z-input-frames.igz",
+        "metal-combined-gui-ci/picture-authoring/native/z-input-images.igz",
+        "metal-combined-gui-ci/picture-authoring/native/z-input-leyendas.igz",
+        "metal-combined-gui-ci/picture-authoring/native/z-input-llamadas.igz",
+        "metal-combined-gui-ci/picture-authoring/native/z-input-niveles.igz",
+        "metal-combined-gui-ci/picture-authoring/native/z-input-nortes.igz",
+        "metal-combined-gui-ci/picture-authoring/native/z-input-perfiles.igz",
+        "metal-combined-gui-ci/picture-authoring/native/z-input-scalebars.igz",
+        "metal-combined-gui-ci/picture-authoring/native/z-input-shapes.igz",
+        "metal-combined-gui-ci/picture-authoring/native/z-input-texts.igz",
+        "metal-combined-gui-ci/picture-authoring/native.log",
+        "metal-combined-gui-ci/picture-authoring/native.stderr",
+        "metal-combined-gui-ci/picture-authoring/reader.log",
+        "metal-combined-gui-ci/picture-authoring/reader.stderr",
+        "metal-combined-gui-ci/picture-authoring/result.json",
+        "metal-combined-gui-ci/picture-authoring/source/original-picture-authoring.json",
+        "metal-combined-gui-ci/picture-authoring/source/original-reopens.json",
+        "metal-combined-gui-ci/picture-authoring/source/original-z-controls.json",
+        "metal-combined-gui-ci/picture-authoring/source/provenance.json",
+        "metal-combined-gui-ci/picture-authoring/source/source-run.log",
+        "metal-combined-gui-ci/picture-authoring/source/source-run.stderr",
+        "metal-combined-gui-ci/picture-authoring/source/source-z-run.log",
+        "metal-combined-gui-ci/picture-authoring/source/source-z-run.stderr",
+        "metal-combined-gui-ci/picture-authoring-replay.log",
+        "metal-combined-gui-ci/picture-gestures/checker.log",
+        "metal-combined-gui-ci/picture-gestures/checker.stderr",
+        "metal-combined-gui-ci/picture-gestures/comparison.json",
+        "metal-combined-gui-ci/picture-gestures/native/click-only-native.igz",
+        "metal-combined-gui-ci/picture-gestures/native/ctrl-toggle-native.igz",
+        "metal-combined-gui-ci/picture-gestures/native/drag-page-guide-native.igz",
+        "metal-combined-gui-ci/picture-gestures/native/drag-sibling-native.igz",
+        "metal-combined-gui-ci/picture-gestures/native/drawing-endpoint-native.igz",
+        "metal-combined-gui-ci/picture-gestures/native/drawing-midpoint-native.igz",
+        "metal-combined-gui-ci/picture-gestures/native/equal-z-native.igz",
+        "metal-combined-gui-ci/picture-gestures/native/escape-drag-native.igz",
+        "metal-combined-gui-ci/picture-gestures/native/hidden-only-native.igz",
+        "metal-combined-gui-ci/picture-gestures/native/hidden-overlay-native.igz",
+        "metal-combined-gui-ci/picture-gestures/native/higher-z-native.igz",
+        "metal-combined-gui-ci/picture-gestures/native/large-first-move-native.igz",
+        "metal-combined-gui-ci/picture-gestures/native/locked-only-native.igz",
+        "metal-combined-gui-ci/picture-gestures/native/locked-overlay-native.igz",
+        "metal-combined-gui-ci/picture-gestures/native/native-gestures.json",
+        "metal-combined-gui-ci/picture-gestures/native/native-gestures.partial.json",
+        "metal-combined-gui-ci/picture-gestures/native/native-reopens.json",
+        "metal-combined-gui-ci/picture-gestures/native/out-and-back-native.igz",
+        "metal-combined-gui-ci/picture-gestures/native/resize-free-shift-native.igz",
+        "metal-combined-gui-ci/picture-gestures/native/resize-guide-native.igz",
+        "metal-combined-gui-ci/picture-gestures/native/resize-minimum-native.igz",
+        "metal-combined-gui-ci/picture-gestures/native/resize-minimum-snapped-native.igz",
+        "metal-combined-gui-ci/picture-gestures/native/selected-drag-native.igz",
+        "metal-combined-gui-ci/picture-gestures/native/unselected-drag-native.igz",
+        "metal-combined-gui-ci/picture-gestures/native.log",
+        "metal-combined-gui-ci/picture-gestures/native.stderr",
+        "metal-combined-gui-ci/picture-gestures/reader.log",
+        "metal-combined-gui-ci/picture-gestures/reader.stderr",
+        "metal-combined-gui-ci/picture-gestures/result.json",
+        "metal-combined-gui-ci/picture-gestures/source/first-original-gestures-guide-fixture.json",
+        "metal-combined-gui-ci/picture-gestures/source/guide-correction.log",
+        "metal-combined-gui-ci/picture-gestures/source/guide-correction.stderr",
+        "metal-combined-gui-ci/picture-gestures/source/initial.log",
+        "metal-combined-gui-ci/picture-gestures/source/initial.stderr",
+        "metal-combined-gui-ci/picture-gestures/source/opaque-guards.json",
+        "metal-combined-gui-ci/picture-gestures/source/opaque-original-reader-control.json",
+        "metal-combined-gui-ci/picture-gestures/source/original-gestures.json",
+        "metal-combined-gui-ci/picture-gestures/source/original-reopens.json",
+        "metal-combined-gui-ci/picture-gestures-replay.log",
+        "metal-combined-gui-ci/platform-sheet-text-replay/font.json",
+        "metal-combined-gui-ci/platform-sheet-text-replay/font.stderr",
+        "metal-combined-gui-ci/platform-sheet-text-replay/layout.log",
+        "metal-combined-gui-ci/platform-sheet-text-replay/layout.stderr",
+        "metal-combined-gui-ci/platform-sheet-text-replay/native/native.json",
+        "metal-combined-gui-ci/platform-sheet-text-replay/native/text-placement.json",
+        "metal-combined-gui-ci/platform-sheet-text-replay/placement-comparison.json",
+        "metal-combined-gui-ci/platform-sheet-text-replay/result.json",
+        "metal-combined-gui-ci/platform-sheet-text-replay/runtime.log",
+        "metal-combined-gui-ci/platform-sheet-text-replay/runtime.stderr",
+        "metal-combined-gui-ci/platform-sheet-text-replay/source/receipt.json",
+        "metal-combined-gui-ci/platform-sheet-text-replay/source/source.json",
+        "metal-combined-gui-ci/platform-sheet-text-replay/source-layout.json",
+        "metal-combined-gui-ci/platform-sheet-text-replay.log",
+        "metal-combined-gui-ci/section-fill/comparison.json",
+        "metal-combined-gui-ci/section-fill/report.json",
+        "metal-combined-gui-ci/sheet-images/checker.log",
+        "metal-combined-gui-ci/sheet-images/checker.log.stderr",
+        "metal-combined-gui-ci/sheet-images/comparison.json",
+        "metal-combined-gui-ci/sheet-images/native/native.json",
+        "metal-combined-gui-ci/sheet-images/result.json",
+        "metal-combined-gui-ci/sheet-images/runtime.log",
+        "metal-combined-gui-ci/sheet-images/runtime.log.stderr",
+        "metal-combined-gui-ci/sheet-images/source/capture.log",
+        "metal-combined-gui-ci/sheet-images/source/source.json",
+        "metal-combined-gui-ci/sheet-images/views/capture.log",
+        "metal-combined-gui-ci/sheet-images/views/source-receipt.json",
+        "metal-combined-gui-ci/sheet-images/views/source.json",
+        "metal-combined-gui-ci/sheet-images-replay.log",
+        "metal-combined-gui-ci/sheet-pictures/checker.log",
+        "metal-combined-gui-ci/sheet-pictures/checker.log.stderr",
+        "metal-combined-gui-ci/sheet-pictures/comparison.json",
+        "metal-combined-gui-ci/sheet-pictures/native/duplicate.pdf",
+        "metal-combined-gui-ci/sheet-pictures/native/duplicate.png",
+        "metal-combined-gui-ci/sheet-pictures/native/native.json",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-contain-warm.png",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-contain.igz",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-contain.jpg",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-contain.pdf",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-contain.png",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-cover-warm.png",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-cover.igz",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-cover.jpg",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-cover.pdf",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-cover.png",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-ellipse-feather-opacity-warm.png",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-ellipse-feather-opacity.igz",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-ellipse-feather-opacity.jpg",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-ellipse-feather-opacity.pdf",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-ellipse-feather-opacity.png",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-hidden-warm.png",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-hidden.igz",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-hidden.jpg",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-hidden.pdf",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-hidden.png",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-import-plain-warm.png",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-import-plain.igz",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-import-plain.jpg",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-import-plain.pdf",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-jpeg-stretch-warm.png",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-jpeg-stretch.igz",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-jpeg-stretch.jpg",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-import-plain.png",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-jpeg-stretch.pdf",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-jpeg-stretch.png",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-missing-warm.png",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-missing.igz",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-missing.jpg",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-missing.pdf",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-missing.png",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-opacity-rect-warm.png",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-opacity-rect.igz",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-opacity-rect.jpg",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-opacity-rect.pdf",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-opacity-rect.png",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-overlap-warm.png",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-overlap.igz",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-overlap.jpg",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-overlap.pdf",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-overlap.png",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-rounded-border-warm.png",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-rounded-border.igz",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-rounded-border.jpg",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-rounded-border.pdf",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-rounded-border.png",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-rounded-feather-warm.png",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-rounded-feather.igz",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-rounded-feather.jpg",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-rounded-feather.pdf",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-rounded-feather.png",
+        "metal-combined-gui-ci/sheet-pictures/native/refusal.pdf",
+        "metal-combined-gui-ci/sheet-pictures/native/refusal.png",
+        "metal-combined-gui-ci/sheet-pictures/result.json",
+        "metal-combined-gui-ci/sheet-pictures/runtime.log",
+        "metal-combined-gui-ci/sheet-pictures/runtime.log.stderr",
+        "metal-combined-gui-ci/sheet-pictures/source/source.json",
+        "metal-combined-gui-ci/sheet-pictures-replay.log"
+      ]
+    },
+    "intel": {
+      "archive_bytes": 1797585,
+      "archive_sha256": "719fc7c45f3d75f82623654d6b958c4752f6d610c803458e09ca458d42882765",
+      "selected_members": [
+        "paper-font-native-ci/font-resource.log",
+        "paper-font-native-ci/tests.log",
+        "metal-combined-gui-ci/apple-gl-depth-resolve.json",
+        "metal-combined-gui-ci/apple-gl-depth-resolve.log",
+        "metal-combined-gui-ci/billboards/report.json",
+        "metal-combined-gui-ci/build.log",
+        "metal-combined-gui-ci/check.log",
+        "metal-combined-gui-ci/defaults/report.json",
+        "metal-combined-gui-ci/document-annotations/sample-diagnostics.json",
+        "metal-combined-gui-ci/gltf-figures/affine-nested-rich.log",
+        "metal-combined-gui-ci/gltf-figures/affine-nested-rich.log.stderr",
+        "metal-combined-gui-ci/gltf-figures/bitmap-no-texture-camera.log",
+        "metal-combined-gui-ci/gltf-figures/bitmap-no-texture-camera.log.stderr",
+        "metal-combined-gui-ci/gltf-figures/bitmap-no-texture-ordinary.log",
+        "metal-combined-gui-ci/gltf-figures/bitmap-no-texture-ordinary.log.stderr",
+        "metal-combined-gui-ci/gltf-figures/bitmap-perspective-camera.log",
+        "metal-combined-gui-ci/gltf-figures/bitmap-perspective-camera.log.stderr",
+        "metal-combined-gui-ci/gltf-figures/bitmap-perspective-ordinary.log",
+        "metal-combined-gui-ci/gltf-figures/bitmap-perspective-ordinary.log.stderr",
+        "metal-combined-gui-ci/gltf-figures/default-rich.log",
+        "metal-combined-gui-ci/gltf-figures/default-rich.log.stderr",
+        "metal-combined-gui-ci/gltf-figures/empty-rich.log",
+        "metal-combined-gui-ci/gltf-figures/empty-rich.log.stderr",
+        "metal-combined-gui-ci/gltf-figures/figure-only-camera.log",
+        "metal-combined-gui-ci/gltf-figures/figure-only-camera.log.stderr",
+        "metal-combined-gui-ci/gltf-figures/figure-only-ordinary.log",
+        "metal-combined-gui-ci/gltf-figures/figure-only-ordinary.log.stderr",
+        "metal-combined-gui-ci/gltf-figures/figures-check.json",
+        "metal-combined-gui-ci/gltf-figures/figures-check.json.stderr",
+        "metal-combined-gui-ci/gltf-figures/hidden-top-camera.log",
+        "metal-combined-gui-ci/gltf-figures/hidden-top-camera.log.stderr",
+        "metal-combined-gui-ci/gltf-figures/hidden-top-ordinary.log.stderr",
+        "metal-combined-gui-ci/gltf-figures/hidden-top-ordinary.log",
+        "metal-combined-gui-ci/gltf-figures/hole-rich.log",
+        "metal-combined-gui-ci/gltf-figures/hole-rich.log.stderr",
+        "metal-combined-gui-ci/gltf-figures/identity-orphan-camera.log",
+        "metal-combined-gui-ci/gltf-figures/identity-orphan-camera.log.stderr",
+        "metal-combined-gui-ci/gltf-figures/identity-orphan-ordinary.log",
+        "metal-combined-gui-ci/gltf-figures/identity-orphan-ordinary.log.stderr",
+        "metal-combined-gui-ci/gltf-figures/mesh-perspective-camera.log",
+        "metal-combined-gui-ci/gltf-figures/mesh-perspective-camera.log.stderr",
+        "metal-combined-gui-ci/gltf-figures/mesh-perspective-ordinary.log",
+        "metal-combined-gui-ci/gltf-figures/mesh-perspective-ordinary.log.stderr",
+        "metal-combined-gui-ci/gltf-figures/mixed-first-material-camera.log",
+        "metal-combined-gui-ci/gltf-figures/mixed-first-material-camera.log.stderr",
+        "metal-combined-gui-ci/gltf-figures/mixed-first-material-ordinary.log",
+        "metal-combined-gui-ci/gltf-figures/mixed-first-material-ordinary.log.stderr",
+        "metal-combined-gui-ci/gltf-figures/native/collapse-refusal.json",
+        "metal-combined-gui-ci/gltf-figures/native/collapse-refusal.json.stderr",
+        "metal-combined-gui-ci/gltf-figures/native/initial-decoded-failure.json",
+        "metal-combined-gui-ci/gltf-figures/native/path-only-candidate-failure.json",
+        "metal-combined-gui-ci/gltf-figures/nested-hidden-child-camera.log",
+        "metal-combined-gui-ci/gltf-figures/nested-hidden-child-camera.log.stderr",
+        "metal-combined-gui-ci/gltf-figures/nested-hidden-child-ordinary.log",
+        "metal-combined-gui-ci/gltf-figures/nested-hidden-child-ordinary.log.stderr",
+        "metal-combined-gui-ci/gltf-figures/nested-reflected-rich.log",
+        "metal-combined-gui-ci/gltf-figures/nested-reflected-rich.log.stderr",
+        "metal-combined-gui-ci/gltf-figures/pbr-colors-rich.log",
+        "metal-combined-gui-ci/gltf-figures/pbr-colors-rich.log.stderr",
+        "metal-combined-gui-ci/gltf-figures/result.json",
+        "metal-combined-gui-ci/gltf-figures/rich-check.log",
+        "metal-combined-gui-ci/gltf-figures/rich-check.log.stderr",
+        "metal-combined-gui-ci/gltf-figures/slanted-rich.log",
+        "metal-combined-gui-ci/gltf-figures/slanted-rich.log.stderr",
+        "metal-combined-gui-ci/gltf-figures/source/bitmap-no-texture.camera.json",
+        "metal-combined-gui-ci/gltf-figures/source/bitmap-perspective.camera.json",
+        "metal-combined-gui-ci/gltf-figures/source/cases.json",
+        "metal-combined-gui-ci/gltf-figures/source/collapse.camera.json",
+        "metal-combined-gui-ci/gltf-figures/source/figure-only.camera.json",
+        "metal-combined-gui-ci/gltf-figures/source/hidden-top.camera.json",
+        "metal-combined-gui-ci/gltf-figures/source/identity-orphan.camera.json",
+        "metal-combined-gui-ci/gltf-figures/source/mesh-perspective.camera.json",
+        "metal-combined-gui-ci/gltf-figures/source/mixed-first-material.camera.json",
+        "metal-combined-gui-ci/gltf-figures/source/nested-hidden-child.camera.json",
+        "metal-combined-gui-ci/gltf-figures/textures-alpha-rich.log",
+        "metal-combined-gui-ci/gltf-figures/textures-alpha-rich.log.stderr",
+        "metal-combined-gui-ci/gltf-figures/visibility-rich.log",
+        "metal-combined-gui-ci/gltf-figures/visibility-rich.log.stderr",
+        "metal-combined-gui-ci/gltf-figures-replay.log",
+        "metal-combined-gui-ci/launcher/runtime.log",
+        "metal-combined-gui-ci/legend-authoring/checker.log",
+        "metal-combined-gui-ci/legend-authoring/checker.stderr",
+        "metal-combined-gui-ci/legend-authoring/comparison.json",
+        "metal-combined-gui-ci/legend-authoring/native/empty-visible-cancel-native.igz",
+        "metal-combined-gui-ci/legend-authoring/native/lifecycle-native.igz",
+        "metal-combined-gui-ci/legend-authoring/native/loaded-delete-native.igz",
+        "metal-combined-gui-ci/legend-authoring/native/loaded-locked-native.igz",
+        "metal-combined-gui-ci/legend-authoring/native/native-deleted-reopen.json",
+        "metal-combined-gui-ci/legend-authoring/native/native-legend.json",
+        "metal-combined-gui-ci/legend-authoring/native/native-legend.partial.json",
+        "metal-combined-gui-ci/legend-authoring/native/native-reopens.json",
+        "metal-combined-gui-ci/legend-authoring/native/single-legend-gestures-native.igz",
+        "metal-combined-gui-ci/legend-authoring/native.log",
+        "metal-combined-gui-ci/legend-authoring/native.stderr",
+        "metal-combined-gui-ci/legend-authoring/reader.log",
+        "metal-combined-gui-ci/legend-authoring/result.json",
+        "metal-combined-gui-ci/legend-authoring/reader.stderr",
+        "metal-combined-gui-ci/legend-authoring/source/authoring.log",
+        "metal-combined-gui-ci/legend-authoring/source/authoring.stderr",
+        "metal-combined-gui-ci/legend-authoring/source/first-gesture-hard-failure.partial.json",
+        "metal-combined-gui-ci/legend-authoring/source/gesture-hard-failure.log",
+        "metal-combined-gui-ci/legend-authoring/source/gesture-hard-failure.stderr",
+        "metal-combined-gui-ci/legend-authoring/source/gesture-observed.log",
+        "metal-combined-gui-ci/legend-authoring/source/gesture-observed.stderr",
+        "metal-combined-gui-ci/legend-authoring/source/native-gesture-expectations.json",
+        "metal-combined-gui-ci/legend-authoring/source/original-legend.json",
+        "metal-combined-gui-ci/legend-authoring/source/original-reopens.json",
+        "metal-combined-gui-ci/legend-authoring-replay.log",
+        "metal-combined-gui-ci/picture-authoring/checker.log",
+        "metal-combined-gui-ci/picture-authoring/checker.stderr",
+        "metal-combined-gui-ci/picture-authoring/comparison.json",
+        "metal-combined-gui-ci/picture-authoring/native/aspect-selection-native.igz",
+        "metal-combined-gui-ci/picture-authoring/native/authoring-native.igz",
+        "metal-combined-gui-ci/picture-authoring/native/missing-fallback-native.igz",
+        "metal-combined-gui-ci/picture-authoring/native/native-reopens.json",
+        "metal-combined-gui-ci/picture-authoring/native/native.json",
+        "metal-combined-gui-ci/picture-authoring/native/picker-calls.txt",
+        "metal-combined-gui-ci/picture-authoring/native/z-input-cajetin.igz",
+        "metal-combined-gui-ci/picture-authoring/native/z-input-cotas.igz",
+        "metal-combined-gui-ci/picture-authoring/native/z-input-cotas_ang.igz",
+        "metal-combined-gui-ci/picture-authoring/native/z-input-cotas_rad.igz",
+        "metal-combined-gui-ci/picture-authoring/native/z-input-etiquetas.igz",
+        "metal-combined-gui-ci/picture-authoring/native/z-input-frames.igz",
+        "metal-combined-gui-ci/picture-authoring/native/z-input-images.igz",
+        "metal-combined-gui-ci/picture-authoring/native/z-input-leyendas.igz",
+        "metal-combined-gui-ci/picture-authoring/native/z-input-llamadas.igz",
+        "metal-combined-gui-ci/picture-authoring/native/z-input-niveles.igz",
+        "metal-combined-gui-ci/picture-authoring/native/z-input-nortes.igz",
+        "metal-combined-gui-ci/picture-authoring/native/z-input-perfiles.igz",
+        "metal-combined-gui-ci/picture-authoring/native/z-input-scalebars.igz",
+        "metal-combined-gui-ci/picture-authoring/native/z-input-shapes.igz",
+        "metal-combined-gui-ci/picture-authoring/native/z-input-texts.igz",
+        "metal-combined-gui-ci/picture-authoring/native.log",
+        "metal-combined-gui-ci/picture-authoring/native.stderr",
+        "metal-combined-gui-ci/picture-authoring/reader.log",
+        "metal-combined-gui-ci/picture-authoring/reader.stderr",
+        "metal-combined-gui-ci/picture-authoring/result.json",
+        "metal-combined-gui-ci/picture-authoring/source/original-picture-authoring.json",
+        "metal-combined-gui-ci/picture-authoring/source/original-reopens.json",
+        "metal-combined-gui-ci/picture-authoring/source/original-z-controls.json",
+        "metal-combined-gui-ci/picture-authoring/source/provenance.json",
+        "metal-combined-gui-ci/picture-authoring/source/source-run.log",
+        "metal-combined-gui-ci/picture-authoring/source/source-run.stderr",
+        "metal-combined-gui-ci/picture-authoring/source/source-z-run.log",
+        "metal-combined-gui-ci/picture-authoring/source/source-z-run.stderr",
+        "metal-combined-gui-ci/picture-authoring-replay.log",
+        "metal-combined-gui-ci/picture-gestures/checker.log",
+        "metal-combined-gui-ci/picture-gestures/checker.stderr",
+        "metal-combined-gui-ci/picture-gestures/comparison.json",
+        "metal-combined-gui-ci/picture-gestures/native/click-only-native.igz",
+        "metal-combined-gui-ci/picture-gestures/native/ctrl-toggle-native.igz",
+        "metal-combined-gui-ci/picture-gestures/native/drag-page-guide-native.igz",
+        "metal-combined-gui-ci/picture-gestures/native/drag-sibling-native.igz",
+        "metal-combined-gui-ci/picture-gestures/native/drawing-endpoint-native.igz",
+        "metal-combined-gui-ci/picture-gestures/native/drawing-midpoint-native.igz",
+        "metal-combined-gui-ci/picture-gestures/native/escape-drag-native.igz",
+        "metal-combined-gui-ci/picture-gestures/native/equal-z-native.igz",
+        "metal-combined-gui-ci/picture-gestures/native/hidden-only-native.igz",
+        "metal-combined-gui-ci/picture-gestures/native/hidden-overlay-native.igz",
+        "metal-combined-gui-ci/picture-gestures/native/higher-z-native.igz",
+        "metal-combined-gui-ci/picture-gestures/native/large-first-move-native.igz",
+        "metal-combined-gui-ci/picture-gestures/native/locked-only-native.igz",
+        "metal-combined-gui-ci/picture-gestures/native/locked-overlay-native.igz",
+        "metal-combined-gui-ci/picture-gestures/native/native-gestures.json",
+        "metal-combined-gui-ci/picture-gestures/native/native-gestures.partial.json",
+        "metal-combined-gui-ci/picture-gestures/native/native-reopens.json",
+        "metal-combined-gui-ci/picture-gestures/native/out-and-back-native.igz",
+        "metal-combined-gui-ci/picture-gestures/native/resize-free-shift-native.igz",
+        "metal-combined-gui-ci/picture-gestures/native/resize-guide-native.igz",
+        "metal-combined-gui-ci/picture-gestures/native/resize-minimum-native.igz",
+        "metal-combined-gui-ci/picture-gestures/native/resize-minimum-snapped-native.igz",
+        "metal-combined-gui-ci/picture-gestures/native/selected-drag-native.igz",
+        "metal-combined-gui-ci/picture-gestures/native/unselected-drag-native.igz",
+        "metal-combined-gui-ci/picture-gestures/native.log",
+        "metal-combined-gui-ci/picture-gestures/native.stderr",
+        "metal-combined-gui-ci/picture-gestures/reader.log",
+        "metal-combined-gui-ci/picture-gestures/reader.stderr",
+        "metal-combined-gui-ci/picture-gestures/result.json",
+        "metal-combined-gui-ci/picture-gestures/source/first-original-gestures-guide-fixture.json",
+        "metal-combined-gui-ci/picture-gestures/source/guide-correction.log",
+        "metal-combined-gui-ci/picture-gestures/source/guide-correction.stderr",
+        "metal-combined-gui-ci/picture-gestures/source/initial.log",
+        "metal-combined-gui-ci/picture-gestures/source/initial.stderr",
+        "metal-combined-gui-ci/picture-gestures/source/opaque-guards.json",
+        "metal-combined-gui-ci/picture-gestures/source/opaque-original-reader-control.json",
+        "metal-combined-gui-ci/picture-gestures/source/original-gestures.json",
+        "metal-combined-gui-ci/picture-gestures/source/original-reopens.json",
+        "metal-combined-gui-ci/picture-gestures-replay.log",
+        "metal-combined-gui-ci/platform-sheet-text-replay/font.json",
+        "metal-combined-gui-ci/platform-sheet-text-replay/font.stderr",
+        "metal-combined-gui-ci/platform-sheet-text-replay/layout.log",
+        "metal-combined-gui-ci/platform-sheet-text-replay/layout.stderr",
+        "metal-combined-gui-ci/platform-sheet-text-replay/native/native.json",
+        "metal-combined-gui-ci/platform-sheet-text-replay/native/text-placement.json",
+        "metal-combined-gui-ci/platform-sheet-text-replay/placement-comparison.json",
+        "metal-combined-gui-ci/platform-sheet-text-replay/result.json",
+        "metal-combined-gui-ci/platform-sheet-text-replay/runtime.log",
+        "metal-combined-gui-ci/platform-sheet-text-replay/runtime.stderr",
+        "metal-combined-gui-ci/platform-sheet-text-replay/source/receipt.json",
+        "metal-combined-gui-ci/platform-sheet-text-replay/source/source.json",
+        "metal-combined-gui-ci/platform-sheet-text-replay/source-layout.json",
+        "metal-combined-gui-ci/platform-sheet-text-replay.log",
+        "metal-combined-gui-ci/section-fill/comparison.json",
+        "metal-combined-gui-ci/section-fill/report.json",
+        "metal-combined-gui-ci/sheet-images/checker.log",
+        "metal-combined-gui-ci/sheet-images/checker.log.stderr",
+        "metal-combined-gui-ci/sheet-images/comparison.json",
+        "metal-combined-gui-ci/sheet-images/native/native.json",
+        "metal-combined-gui-ci/sheet-images/result.json",
+        "metal-combined-gui-ci/sheet-images/runtime.log",
+        "metal-combined-gui-ci/sheet-images/runtime.log.stderr",
+        "metal-combined-gui-ci/sheet-images/source/capture.log",
+        "metal-combined-gui-ci/sheet-images/source/source.json",
+        "metal-combined-gui-ci/sheet-images/views/capture.log",
+        "metal-combined-gui-ci/sheet-images/views/source-receipt.json",
+        "metal-combined-gui-ci/sheet-images/views/source.json",
+        "metal-combined-gui-ci/sheet-images-replay.log",
+        "metal-combined-gui-ci/sheet-pictures/checker.log",
+        "metal-combined-gui-ci/sheet-pictures/checker.log.stderr",
+        "metal-combined-gui-ci/sheet-pictures/comparison.json",
+        "metal-combined-gui-ci/sheet-pictures/native/duplicate.pdf",
+        "metal-combined-gui-ci/sheet-pictures/native/duplicate.png",
+        "metal-combined-gui-ci/sheet-pictures/native/native.json",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-contain-warm.png",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-contain.igz",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-contain.jpg",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-contain.pdf",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-contain.png",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-cover-warm.png",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-cover.igz",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-cover.jpg",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-cover.pdf",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-cover.png",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-ellipse-feather-opacity-warm.png",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-ellipse-feather-opacity.igz",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-ellipse-feather-opacity.jpg",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-ellipse-feather-opacity.pdf",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-ellipse-feather-opacity.png",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-hidden.igz",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-hidden-warm.png",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-hidden.jpg",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-hidden.pdf",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-import-plain-warm.png",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-hidden.png",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-import-plain.igz",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-import-plain.jpg",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-import-plain.pdf",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-import-plain.png",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-jpeg-stretch-warm.png",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-jpeg-stretch.igz",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-jpeg-stretch.jpg",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-jpeg-stretch.pdf",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-missing-warm.png",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-missing.igz",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-jpeg-stretch.png",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-missing.jpg",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-missing.pdf",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-missing.png",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-opacity-rect-warm.png",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-opacity-rect.igz",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-opacity-rect.jpg",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-opacity-rect.pdf",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-opacity-rect.png",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-overlap-warm.png",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-overlap.igz",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-overlap.jpg",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-overlap.pdf",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-overlap.png",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-rounded-border-warm.png",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-rounded-border.igz",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-rounded-border.jpg",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-rounded-border.pdf",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-rounded-border.png",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-rounded-feather-warm.png",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-rounded-feather.igz",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-rounded-feather.jpg",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-rounded-feather.pdf",
+        "metal-combined-gui-ci/sheet-pictures/native/picture-rounded-feather.png",
+        "metal-combined-gui-ci/sheet-pictures/native/refusal.pdf",
+        "metal-combined-gui-ci/sheet-pictures/native/refusal.png",
+        "metal-combined-gui-ci/sheet-pictures/result.json",
+        "metal-combined-gui-ci/sheet-pictures/runtime.log",
+        "metal-combined-gui-ci/sheet-pictures/runtime.log.stderr",
+        "metal-combined-gui-ci/sheet-pictures/source/source.json",
+        "metal-combined-gui-ci/sheet-pictures-replay.log"
+      ]
+    },
+    "11732406384": {
+      "archive_bytes": 11568,
+      "archive_sha256": "6c4398ec61508762125c999ac50a6640625749156a3890ea4edbcd0eebf0a590",
+      "selected_members": [
+        "check.log",
+        "gui-examples.log"
+      ]
+    },
+    "11732166762": {
+      "archive_bytes": 19974,
+      "archive_sha256": "7ae25aec5536f622be646026d0e16d45df62f1a0bd113e286d05d63e94472d40",
+      "selected_members": [
+        "build.log",
+        "recovery-check.json",
+        "recovery-check.log",
+        "recovery-run.log",
+        "self-check.log",
+        "session-recovery/init-0.stderr",
+        "session-recovery/recover-6.stderr",
+        "session-recovery/result.json",
+        "session-recovery/scan-0.stderr",
+        "session-recovery/scan-1.stderr",
+        "session-recovery/scan-2.stderr",
+        "session-recovery/scan-3.stderr",
+        "session-recovery/scan-4.stderr",
+        "session-recovery/scan-5.stderr",
+        "session-recovery/writer.stderr",
+        "version.log"
+      ]
+    },
+    "11732001493": {
+      "archive_bytes": 11720,
+      "archive_sha256": "0e22c5c383d55766677f56e0538dc25319adf48ac3335ef113339d54610f598a",
+      "selected_members": [
+        "check.log",
+        "gui-examples.log"
+      ]
+    },
+    "11732146720": {
+      "archive_bytes": 12412,
+      "archive_sha256": "75804e6b264b0cccd27db5d5ea27ecbe49311026127f63532d1767ee25aca9a3",
+      "selected_members": [
+        "execution.log",
+        "build.log",
+        "frameworks.txt",
+        "native/result.json",
+        "qt-alpha.log",
+        "qt-mixed.log",
+        "reference/alpha/reference.json",
+        "reference/mixed/source.json",
+        "revision.txt",
+        "strict-check.json",
+        "toolchain.txt"
+      ]
+    },
+    "11731971685": {
+      "archive_bytes": 12437,
+      "archive_sha256": "64332d965ce55172017d366ec8146fb8bed9d7e75b58f254085169af32d1c129",
+      "selected_members": [
+        "build.log",
+        "execution.log",
+        "frameworks.txt",
+        "native/result.json",
+        "qt-alpha.log",
+        "qt-mixed.log",
+        "reference/alpha/reference.json",
+        "reference/mixed/source.json",
+        "revision.txt",
+        "strict-check.json",
+        "toolchain.txt"
+      ]
+    }
+  },
+  "raw_bytes": 15443716,
+  "authentication": "SelectedZIPCRC and member bytes verified; literalAPI/log files retained. Linuxrange receipt proves874995bytesdownloaded instead ofwhole28.8MBZIP. Noobserverbuild/replay/capture/retry.",
+  "source_files": {
+    ".github/workflows/parity.yml": {
+      "commit": "ae0cead0d5da4c7c703742afa5d2eb765df86980",
+      "bytes": 61602,
+      "sha256": "d5cdcc43344d91c1a0010694cb03365b1b6795bcc942200ffef6481b7b3cf5d2"
+    },
+    ".github/workflows/metal-compute-consumer.yml": {
+      "commit": "ae0cead0d5da4c7c703742afa5d2eb765df86980",
+      "bytes": 4532,
+      "sha256": "bce24078146f16afab7cd9998386a03a0aa2b69c0a6954bfc517b009c452efb9"
+    },
+    "scripts/check-sheet-pictures.py": {
+      "commit": "ae0cead0d5da4c7c703742afa5d2eb765df86980",
+      "bytes": 8752,
+      "sha256": "705ed88d2c7ea5699ec5961b15e3de0c0943c9174d1e9cad6d20a034339c0e8f"
+    },
+    "scripts/replay-sheet-pictures.py": {
+      "commit": "ae0cead0d5da4c7c703742afa5d2eb765df86980",
+      "bytes": 3492,
+      "sha256": "fb665b2a3f98cd96e79e44931f3dcfc7449fcba43eb5231202c3b83a3013f0f3"
+    },
+    "scripts/check-legend-authoring.py": {
+      "commit": "ae0cead0d5da4c7c703742afa5d2eb765df86980",
+      "bytes": 7866,
+      "sha256": "5f117ed2a20f9c46d37f784775064a9e16a0f5d802daf59ba213ee3e09edda43"
+    },
+    "scripts/replay-legend-authoring.py": {
+      "commit": "ae0cead0d5da4c7c703742afa5d2eb765df86980",
+      "bytes": 3026,
+      "sha256": "4aa3ea287f3a333569f121fecb3e301f38d2d611a5c0ea8aa6d72383595023d9"
+    },
+    "scripts/reference-legend-authoring-reopens.py": {
+      "commit": "ae0cead0d5da4c7c703742afa5d2eb765df86980",
+      "bytes": 1880,
+      "sha256": "d0337e6fac986e0bec87d37fbcd0918a543fcc05d174c72e32980e57d31cc44c"
+    },
+    "crates/ingetrazo-render/src/paper_picture.rs": {
+      "commit": "ae0cead0d5da4c7c703742afa5d2eb765df86980",
+      "bytes": 8006,
+      "sha256": "954429eb501f540cca6d8e1557a1295ff4b6d892bec75604cc5852ef72f40257"
+    }
+  }
+}
