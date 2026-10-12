@@ -70,10 +70,19 @@ impl Sampling {
         let end = ((fixed[2] + 65535) >> 16).max(left).min(i64::from(page[0]));
         let top = (fixed[1] >> 16).max(0).min(i64::from(page[1]));
         let last = ((fixed[3] + 65535) >> 16).max(top).min(i64::from(page[1]));
-        let mx = 1. / (r[2] / f64::from(picture.image.width()));
-        let my = 1. / (r[3] / f64::from(picture.image.height()));
-        let dx = -r[0] * mx;
-        let dy = -r[1] * my;
+        // Source painter scales the page, translates the item, then scales
+        // image pixels into millimetres. Keep this multiplication order and
+        // QSpanData::setupMatrix's source-space 16.16 bias before inversion.
+        let sx = (picture.rect_mm[2] / f64::from(picture.image.width())) * density;
+        let sy = (picture.rect_mm[3] / f64::from(picture.image.height())) * density;
+        let mx = 1. / sx;
+        let my = 1. / sy;
+        let transformed = density != 1.
+            || picture.rect_mm[2] != f64::from(picture.image.width())
+            || picture.rect_mm[3] != f64::from(picture.image.height());
+        let delta = if transformed { 1. / 65536. } else { 0. };
+        let dx = -(delta * sx + r[0]) * mx;
+        let dy = -(delta * sy + r[1]) * my;
         let checked = |value: f64| -> Result<i32, String> {
             if !value.is_finite() || value < i32::MIN as f64 + 32768. || value > i32::MAX as f64 {
                 return Err("Paper picture requires unsupported slow sampling domain".into());
