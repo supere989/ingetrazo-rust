@@ -1,0 +1,50 @@
+{
+  "result": "strict_pixel_failure",
+  "cases": 2,
+  "replies": 6,
+  "typed_states_exact": 6,
+  "strict_images": 0,
+  "pixel_differences": [
+    {
+      "case": "startup-billboard-context",
+      "index": 0,
+      "different_pixels": 2695,
+      "max_channel_error": 188
+    },
+    {
+      "case": "startup-billboard-context",
+      "index": 1,
+      "different_pixels": 2502,
+      "max_channel_error": 188
+    },
+    {
+      "case": "startup-billboard-context",
+      "index": 2,
+      "different_pixels": 2826,
+      "max_channel_error": 182
+    },
+    {
+      "case": "shared-texture-context",
+      "index": 0,
+      "different_pixels": 2854,
+      "max_channel_error": 178
+    },
+    {
+      "case": "shared-texture-context",
+      "index": 1,
+      "different_pixels": 2619,
+      "max_channel_error": 171
+    },
+    {
+      "case": "shared-texture-context",
+      "index": 2,
+      "different_pixels": 2848,
+      "max_channel_error": 182
+    }
+  ],
+  "negative_controls_accepted": 0,
+  "component_edit_tests_passed": 10,
+  "image_sharing_allocation_measured": false,
+  "gpu_cleanup_committed_bytes": 0,
+  "scope": "Finite Vulkan host execution and typed/source boundaries; no native pixel-parity, image-sharing allocation/performance, Metal or full P32 acceptance."
+}

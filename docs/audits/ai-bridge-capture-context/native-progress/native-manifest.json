@@ -1,0 +1,759 @@
+{
+  "archive_sha256": "ee9280310118cd3cc042ba0634b6849e4302b828f7f2998b71793995434a9aa3",
+  "members": {
+    "checks/context-finish-build-r1.log": {
+      "size": 27852,
+      "sha256": "facacc1c52eef739cd1a0487e988318784d8e2169dfa20a40b9af73c94b3c6ec"
+    },
+    "checks/context-finish-tests-r1.log": {
+      "size": 27090,
+      "sha256": "1fe45fe5040c6d8f222c355064447a06eaf63eb6557f04ba3057502a2d2ce74b"
+    },
+    "checks/context-supplement-build-r1.log": {
+      "size": 28054,
+      "sha256": "2ca4c6fb3fc2ca4cd5638277ef4e6b880e28b74c5f4a9efc6d985a2e001bb03e"
+    },
+    "checks/context-supplement-build-r2.log": {
+      "size": 27852,
+      "sha256": "894f03a0c78bb517786b801a288f52d1d5d4e1af16d6f7be64f21af0f1fac0bb"
+    },
+    "executed/r1/crates/ingetrazo-gui/examples/ai_bridge_capture_workflows.rs": {
+      "size": 27975,
+      "sha256": "9f54f37565b30ea51613842f79ea2aa15cf77b329899521bdf902788f7d3ddd8"
+    },
+    "executed/r1/crates/ingetrazo-gui/src/component_edit.rs": {
+      "size": 71736,
+      "sha256": "713e6b7125e1c8d94697bc6f5d59ce1caf6d0bd671c1e49b6aa895795089d255"
+    },
+    "executed/r1/crates/ingetrazo-gui/src/native_vulkan/textures.rs": {
+      "size": 41755,
+      "sha256": "7302d4e0932a82d9065632984f0e03c0f36245adbe0895a8eb895c6f85ed0868"
+    },
+    "executed/r1/crates/ingetrazo-gui/src/native_vulkan/world.rs": {
+      "size": 124222,
+      "sha256": "b4db50a6f3f5101e0ba487b811261240eeec3463775ff079b1ded2bc364f0c3c"
+    },
+    "executed/r1/crates/ingetrazo-gui/src/native_vulkan/world_context.rs": {
+      "size": 11419,
+      "sha256": "a251169565ada098ef626af53094c5fb405edecf145fdbdb8f5631653f49f387"
+    },
+    "executed/r1/scripts/check-ai-bridge-capture-context.py": {
+      "size": 3750,
+      "sha256": "8b1b52f6ed579af97c83aee4f9b61c0e99eef9fba3c36ce2c59cd4e035e43b44"
+    },
+    "executed/r1/scripts/check-ai-bridge-capture.py": {
+      "size": 6516,
+      "sha256": "0f9aa2db91dcc3c0df1ed9c30a0d096fe69fcbd2cc16cf2b9bb17008f2034afc"
+    },
+    "executed/r2/crates/ingetrazo-gui/examples/ai_bridge_capture_workflows.rs": {
+      "size": 28414,
+      "sha256": "7238f2b00999ec2b01e724f41c0bbbbfc0388d41c22ed77d099045e3afb7c15b"
+    },
+    "executed/r2/crates/ingetrazo-gui/src/component_edit.rs": {
+      "size": 71736,
+      "sha256": "713e6b7125e1c8d94697bc6f5d59ce1caf6d0bd671c1e49b6aa895795089d255"
+    },
+    "executed/r2/crates/ingetrazo-gui/src/native_vulkan/textures.rs": {
+      "size": 41755,
+      "sha256": "7302d4e0932a82d9065632984f0e03c0f36245adbe0895a8eb895c6f85ed0868"
+    },
+    "executed/r2/crates/ingetrazo-gui/src/native_vulkan/world.rs": {
+      "size": 124222,
+      "sha256": "b4db50a6f3f5101e0ba487b811261240eeec3463775ff079b1ded2bc364f0c3c"
+    },
+    "executed/r2/crates/ingetrazo-gui/src/native_vulkan/world_context.rs": {
+      "size": 11419,
+      "sha256": "a251169565ada098ef626af53094c5fb405edecf145fdbdb8f5631653f49f387"
+    },
+    "executed/r2/scripts/check-ai-bridge-capture-context.py": {
+      "size": 3750,
+      "sha256": "8b1b52f6ed579af97c83aee4f9b61c0e99eef9fba3c36ce2c59cd4e035e43b44"
+    },
+    "executed/r2/scripts/check-ai-bridge-capture.py": {
+      "size": 6516,
+      "sha256": "0f9aa2db91dcc3c0df1ed9c30a0d096fe69fcbd2cc16cf2b9bb17008f2034afc"
+    },
+    "executed/r3/crates/ingetrazo-gui/examples/ai_bridge_capture_workflows.rs": {
+      "size": 28414,
+      "sha256": "7238f2b00999ec2b01e724f41c0bbbbfc0388d41c22ed77d099045e3afb7c15b"
+    },
+    "executed/r3/crates/ingetrazo-gui/src/component_edit.rs": {
+      "size": 72565,
+      "sha256": "b9799534e664a6eff344777a33911c1977f6735ece8ecade4f55089bd70301f2"
+    },
+    "executed/r3/crates/ingetrazo-gui/src/native_vulkan/textures.rs": {
+      "size": 41755,
+      "sha256": "7302d4e0932a82d9065632984f0e03c0f36245adbe0895a8eb895c6f85ed0868"
+    },
+    "executed/r3/crates/ingetrazo-gui/src/native_vulkan/world.rs": {
+      "size": 124222,
+      "sha256": "b4db50a6f3f5101e0ba487b811261240eeec3463775ff079b1ded2bc364f0c3c"
+    },
+    "executed/r3/crates/ingetrazo-gui/src/native_vulkan/world_context.rs": {
+      "size": 11419,
+      "sha256": "a251169565ada098ef626af53094c5fb405edecf145fdbdb8f5631653f49f387"
+    },
+    "executed/r3/scripts/check-ai-bridge-capture-context.py": {
+      "size": 3750,
+      "sha256": "8b1b52f6ed579af97c83aee4f9b61c0e99eef9fba3c36ce2c59cd4e035e43b44"
+    },
+    "executed/r3/scripts/check-ai-bridge-capture.py": {
+      "size": 6516,
+      "sha256": "0f9aa2db91dcc3c0df1ed9c30a0d096fe69fcbd2cc16cf2b9bb17008f2034afc"
+    },
+    "r1/receipt/receipt.json": {
+      "size": 250,
+      "sha256": "da99cc31eef148b3faa957306ec478c700f5c5798a7af7bd5fdab3575e0376cb"
+    },
+    "r1/receipt/stderr": {
+      "size": 1063,
+      "sha256": "cbb212f6bada50bb4b3c7b7e45e7e15d1cc55f984eb0ee1c87cd6e3185908bd6"
+    },
+    "r1/receipt/stdout": {
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "r1/receipt/xvfb.log": {
+      "size": 2868,
+      "sha256": "79f76d3feb971128222a296e2312dc34d25ca06e0d465bddf909dff5a09f2ef0"
+    },
+    "r2/native/checker.log": {
+      "size": 937,
+      "sha256": "5309ac5a26c7c3447ec519c8a603212269c926bc509e672f93c8dc854d0a09ed"
+    },
+    "r2/native/comparison.json": {
+      "size": 1161,
+      "sha256": "929ce0e2efbed9fac47378abf1a48514fc9016fc60b36a9e88aec86a5c0a5605"
+    },
+    "r2/native/independent-diagnostic.json": {
+      "size": 7453,
+      "sha256": "28896c966570502c480a97430c94302a4b1ac5f45fee85505ca4f9aaf3f70b8a"
+    },
+    "r2/native/native-ai-bridge-capture.json": {
+      "size": 241427,
+      "sha256": "738906bf7e8c1f06be01710f5a38d7232febbc3f5d4841ac297488d23914f102"
+    },
+    "r2/native/native-ai-bridge-capture.partial.json": {
+      "size": 241227,
+      "sha256": "a4844a94801a1f2ef5e6ab6c359a8e1e35d07b2797918985cecd298528674224"
+    },
+    "r2/native/shared-texture-context-2.png": {
+      "size": 33665,
+      "sha256": "610f29e652b38a637a79eecc352efeedac2d21dbf69055e682e3cda38b20c056"
+    },
+    "r2/native/shared-texture-context-2.rgba": {
+      "size": 1228800,
+      "sha256": "79c00dfac25a21df99224c4363c07faf6c3c323e3854514818e14e47ad421542"
+    },
+    "r2/native/startup-billboard-context-2.png": {
+      "size": 21181,
+      "sha256": "662618d12b5327a659e6ec292afecfde7282e6a590218fa8569574263dcd5a72"
+    },
+    "r2/native/startup-billboard-context-2.rgba": {
+      "size": 1228800,
+      "sha256": "5f7600f33021884246b6462c10ba445d2cdb2e28456fc578046f898531bfa236"
+    },
+    "r2/receipt/receipt.json": {
+      "size": 247,
+      "sha256": "d9d8c536121339202e3d0d7dd49780fa4a23b0fc1063e7990d4d0a106cc9ce63"
+    },
+    "r2/receipt/stderr": {
+      "size": 2616,
+      "sha256": "9865ab638c7e37b46c32fc7c0dba91500ce2c0036ca0fe54b2c07b90333efe5b"
+    },
+    "r2/receipt/stdout": {
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "r2/receipt/xvfb.log": {
+      "size": 2868,
+      "sha256": "79f76d3feb971128222a296e2312dc34d25ca06e0d465bddf909dff5a09f2ef0"
+    },
+    "r3/native/checker.log": {
+      "size": 939,
+      "sha256": "aa193ecf3287e3d7ece97e43fe64a3c838809142d159364de4babcfa608bfd84"
+    },
+    "r3/native/comparison.json": {
+      "size": 1163,
+      "sha256": "146e8c2e1081b0a932bd1470c797fe3010bff746fbfa0192d5977f6af5eceb18"
+    },
+    "r3/native/independent-r2-r3-diagnostic.json": {
+      "size": 19217,
+      "sha256": "d289b260906ac9e23943d9a286f593862eed1f6ed578dc0d9f9f42619bc016a3"
+    },
+    "r3/native/native-ai-bridge-capture.json": {
+      "size": 241427,
+      "sha256": "8f93a9845d3d79f6815bca8a0116c224d050639dbd1a5b590fcb5cdcc430d30b"
+    },
+    "r3/native/native-ai-bridge-capture.partial.json": {
+      "size": 241227,
+      "sha256": "9fbb3d8381fd5d47bd3a4664ab5e632c38873212166e728187f1117787400032"
+    },
+    "r3/native/shared-texture-context-0.png": {
+      "size": 30833,
+      "sha256": "73a3a9bb898b4501957f0911dd8ab2d179f432fb91c401436a6bc5775a0fe3bb"
+    },
+    "r3/native/shared-texture-context-0.rgba": {
+      "size": 1228800,
+      "sha256": "29208eaef0bf9d11245871e93e1abc255967cb00405353be76eb517c6e6fef38"
+    },
+    "r3/native/shared-texture-context-1.png": {
+      "size": 30170,
+      "sha256": "aee6b09030c361d0dc9da0f82c8506e0893b045139b6b3431203c83102be5923"
+    },
+    "r3/native/shared-texture-context-1.rgba": {
+      "size": 1228800,
+      "sha256": "dc665a2b0c22422ed4f072ffd4af75e720ff59f3b31410b73205199ddbb57d38"
+    },
+    "r3/native/shared-texture-context-2.png": {
+      "size": 33962,
+      "sha256": "087d7da5f134f90c85d79f4859dc29b3de36d956ada49d6a3425298df3f8a2e9"
+    },
+    "r3/native/shared-texture-context-2.rgba": {
+      "size": 1228800,
+      "sha256": "deacef98781448820855dbdcf3fd00503e4ba7d6e12246fbee4a1639bf4b8a81"
+    },
+    "r3/native/startup-billboard-context-0.png": {
+      "size": 20088,
+      "sha256": "871f1daf001da04ede21a41276d118a7b839b44c067a0558adc3523862c5686f"
+    },
+    "r3/native/startup-billboard-context-0.rgba": {
+      "size": 1228800,
+      "sha256": "a5dfd3ed1b6ac2fce927385283125d3443af30ee05d60ce7ac919fb69c7bfbfe"
+    },
+    "r3/native/startup-billboard-context-1.png": {
+      "size": 16084,
+      "sha256": "d416aa97a44352c8578f95b0bcecf20ce5278c7d999c5cfc435a8e93377bb345"
+    },
+    "r3/native/startup-billboard-context-1.rgba": {
+      "size": 1228800,
+      "sha256": "bcdc7487d921c3cf780a10d2c158d8826ce2567f03c7f1a67471f185738a1096"
+    },
+    "r3/native/startup-billboard-context-2.png": {
+      "size": 16993,
+      "sha256": "ab8c505a495f36ac3d4129c7bf71044159d8c6d0ba4e948413687b11e6a26397"
+    },
+    "r3/native/startup-billboard-context-2.rgba": {
+      "size": 1228800,
+      "sha256": "9c2baa7dabdd17fd696d2d75bc8f7b6a346fae4c2e3edf887491d9db6395afca"
+    },
+    "r3/receipt/receipt.json": {
+      "size": 247,
+      "sha256": "47cb730e3c852e0ca62e6dfff71af21eaad2435215945e8df5dcf9951a9c6047"
+    },
+    "r3/receipt/stderr": {
+      "size": 2616,
+      "sha256": "bf7405585170ccc9a2e37e5d29cf415a23702d16b98f36f93f705163b04c84e1"
+    },
+    "r3/receipt/stdout": {
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "r3/receipt/xvfb.log": {
+      "size": 2868,
+      "sha256": "79f76d3feb971128222a296e2312dc34d25ca06e0d465bddf909dff5a09f2ef0"
+    },
+    "result.json": {
+      "size": 1278,
+      "sha256": "1e61def61ebd88f0184f7dde5b193189022335825e074012f41d50a08d7555c6"
+    }
+  },
+  "git_bindings": [
+    {
+      "path": "crates/ingetrazo-gui/examples/ai_bridge_capture_workflows.rs",
+      "git_commit": "b59feab472f7c58243def0afbc82f854864f0ac7",
+      "size": 27975,
+      "sha256": "9f54f37565b30ea51613842f79ea2aa15cf77b329899521bdf902788f7d3ddd8",
+      "retained_member": "executed/r1/crates/ingetrazo-gui/examples/ai_bridge_capture_workflows.rs"
+    },
+    {
+      "path": "scripts/check-ai-bridge-capture-context.py",
+      "git_commit": "b59feab472f7c58243def0afbc82f854864f0ac7",
+      "size": 3750,
+      "sha256": "8b1b52f6ed579af97c83aee4f9b61c0e99eef9fba3c36ce2c59cd4e035e43b44",
+      "retained_member": "executed/r1/scripts/check-ai-bridge-capture-context.py"
+    },
+    {
+      "path": "scripts/check-ai-bridge-capture.py",
+      "git_commit": "b59feab472f7c58243def0afbc82f854864f0ac7",
+      "size": 6516,
+      "sha256": "0f9aa2db91dcc3c0df1ed9c30a0d096fe69fcbd2cc16cf2b9bb17008f2034afc",
+      "retained_member": "executed/r1/scripts/check-ai-bridge-capture.py"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/component_edit.rs",
+      "git_commit": "b59feab472f7c58243def0afbc82f854864f0ac7",
+      "size": 71736,
+      "sha256": "713e6b7125e1c8d94697bc6f5d59ce1caf6d0bd671c1e49b6aa895795089d255",
+      "retained_member": "executed/r1/crates/ingetrazo-gui/src/component_edit.rs"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/native_vulkan/world.rs",
+      "git_commit": "b59feab472f7c58243def0afbc82f854864f0ac7",
+      "size": 124222,
+      "sha256": "b4db50a6f3f5101e0ba487b811261240eeec3463775ff079b1ded2bc364f0c3c",
+      "retained_member": "executed/r1/crates/ingetrazo-gui/src/native_vulkan/world.rs"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/native_vulkan/world_context.rs",
+      "git_commit": "b59feab472f7c58243def0afbc82f854864f0ac7",
+      "size": 11419,
+      "sha256": "a251169565ada098ef626af53094c5fb405edecf145fdbdb8f5631653f49f387",
+      "retained_member": "executed/r1/crates/ingetrazo-gui/src/native_vulkan/world_context.rs"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/native_vulkan/textures.rs",
+      "git_commit": "b59feab472f7c58243def0afbc82f854864f0ac7",
+      "size": 41755,
+      "sha256": "7302d4e0932a82d9065632984f0e03c0f36245adbe0895a8eb895c6f85ed0868",
+      "retained_member": "executed/r1/crates/ingetrazo-gui/src/native_vulkan/textures.rs"
+    },
+    {
+      "path": "crates/ingetrazo-gui/examples/ai_bridge_capture_workflows.rs",
+      "git_commit": "f4844650d332a86fc50f870ee559dcc81cc6cb90",
+      "size": 28414,
+      "sha256": "7238f2b00999ec2b01e724f41c0bbbbfc0388d41c22ed77d099045e3afb7c15b",
+      "retained_member": "executed/r2/crates/ingetrazo-gui/examples/ai_bridge_capture_workflows.rs"
+    },
+    {
+      "path": "scripts/check-ai-bridge-capture-context.py",
+      "git_commit": "f4844650d332a86fc50f870ee559dcc81cc6cb90",
+      "size": 3750,
+      "sha256": "8b1b52f6ed579af97c83aee4f9b61c0e99eef9fba3c36ce2c59cd4e035e43b44",
+      "retained_member": "executed/r2/scripts/check-ai-bridge-capture-context.py"
+    },
+    {
+      "path": "scripts/check-ai-bridge-capture.py",
+      "git_commit": "f4844650d332a86fc50f870ee559dcc81cc6cb90",
+      "size": 6516,
+      "sha256": "0f9aa2db91dcc3c0df1ed9c30a0d096fe69fcbd2cc16cf2b9bb17008f2034afc",
+      "retained_member": "executed/r2/scripts/check-ai-bridge-capture.py"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/component_edit.rs",
+      "git_commit": "f4844650d332a86fc50f870ee559dcc81cc6cb90",
+      "size": 71736,
+      "sha256": "713e6b7125e1c8d94697bc6f5d59ce1caf6d0bd671c1e49b6aa895795089d255",
+      "retained_member": "executed/r2/crates/ingetrazo-gui/src/component_edit.rs"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/native_vulkan/world.rs",
+      "git_commit": "f4844650d332a86fc50f870ee559dcc81cc6cb90",
+      "size": 124222,
+      "sha256": "b4db50a6f3f5101e0ba487b811261240eeec3463775ff079b1ded2bc364f0c3c",
+      "retained_member": "executed/r2/crates/ingetrazo-gui/src/native_vulkan/world.rs"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/native_vulkan/world_context.rs",
+      "git_commit": "f4844650d332a86fc50f870ee559dcc81cc6cb90",
+      "size": 11419,
+      "sha256": "a251169565ada098ef626af53094c5fb405edecf145fdbdb8f5631653f49f387",
+      "retained_member": "executed/r2/crates/ingetrazo-gui/src/native_vulkan/world_context.rs"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/native_vulkan/textures.rs",
+      "git_commit": "f4844650d332a86fc50f870ee559dcc81cc6cb90",
+      "size": 41755,
+      "sha256": "7302d4e0932a82d9065632984f0e03c0f36245adbe0895a8eb895c6f85ed0868",
+      "retained_member": "executed/r2/crates/ingetrazo-gui/src/native_vulkan/textures.rs"
+    },
+    {
+      "path": "crates/ingetrazo-gui/examples/ai_bridge_capture_workflows.rs",
+      "git_commit": "8816a1f008de8d13a98ccf89753020d7a9430d41",
+      "size": 28414,
+      "sha256": "7238f2b00999ec2b01e724f41c0bbbbfc0388d41c22ed77d099045e3afb7c15b",
+      "retained_member": "executed/r3/crates/ingetrazo-gui/examples/ai_bridge_capture_workflows.rs"
+    },
+    {
+      "path": "scripts/check-ai-bridge-capture-context.py",
+      "git_commit": "8816a1f008de8d13a98ccf89753020d7a9430d41",
+      "size": 3750,
+      "sha256": "8b1b52f6ed579af97c83aee4f9b61c0e99eef9fba3c36ce2c59cd4e035e43b44",
+      "retained_member": "executed/r3/scripts/check-ai-bridge-capture-context.py"
+    },
+    {
+      "path": "scripts/check-ai-bridge-capture.py",
+      "git_commit": "8816a1f008de8d13a98ccf89753020d7a9430d41",
+      "size": 6516,
+      "sha256": "0f9aa2db91dcc3c0df1ed9c30a0d096fe69fcbd2cc16cf2b9bb17008f2034afc",
+      "retained_member": "executed/r3/scripts/check-ai-bridge-capture.py"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/component_edit.rs",
+      "git_commit": "8816a1f008de8d13a98ccf89753020d7a9430d41",
+      "size": 72565,
+      "sha256": "b9799534e664a6eff344777a33911c1977f6735ece8ecade4f55089bd70301f2",
+      "retained_member": "executed/r3/crates/ingetrazo-gui/src/component_edit.rs"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/native_vulkan/world.rs",
+      "git_commit": "8816a1f008de8d13a98ccf89753020d7a9430d41",
+      "size": 124222,
+      "sha256": "b4db50a6f3f5101e0ba487b811261240eeec3463775ff079b1ded2bc364f0c3c",
+      "retained_member": "executed/r3/crates/ingetrazo-gui/src/native_vulkan/world.rs"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/native_vulkan/world_context.rs",
+      "git_commit": "8816a1f008de8d13a98ccf89753020d7a9430d41",
+      "size": 11419,
+      "sha256": "a251169565ada098ef626af53094c5fb405edecf145fdbdb8f5631653f49f387",
+      "retained_member": "executed/r3/crates/ingetrazo-gui/src/native_vulkan/world_context.rs"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/native_vulkan/textures.rs",
+      "git_commit": "8816a1f008de8d13a98ccf89753020d7a9430d41",
+      "size": 41755,
+      "sha256": "7302d4e0932a82d9065632984f0e03c0f36245adbe0895a8eb895c6f85ed0868",
+      "retained_member": "executed/r3/crates/ingetrazo-gui/src/native_vulkan/textures.rs"
+    }
+  ],
+  "raw_origins": {
+    "r1/receipt/xvfb.log": {
+      "path": "/tmp/ingetrazo-context-native-attempt-1/xvfb.log",
+      "size": 2868,
+      "sha256": "79f76d3feb971128222a296e2312dc34d25ca06e0d465bddf909dff5a09f2ef0"
+    },
+    "r1/receipt/stdout": {
+      "path": "/tmp/ingetrazo-context-native-attempt-1/stdout",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "r1/receipt/stderr": {
+      "path": "/tmp/ingetrazo-context-native-attempt-1/stderr",
+      "size": 1063,
+      "sha256": "cbb212f6bada50bb4b3c7b7e45e7e15d1cc55f984eb0ee1c87cd6e3185908bd6"
+    },
+    "r1/receipt/receipt.json": {
+      "path": "/tmp/ingetrazo-context-native-attempt-1/receipt.json",
+      "size": 250,
+      "sha256": "da99cc31eef148b3faa957306ec478c700f5c5798a7af7bd5fdab3575e0376cb"
+    },
+    "r2/receipt/xvfb.log": {
+      "path": "/tmp/ingetrazo-context-native-attempt-2/xvfb.log",
+      "size": 2868,
+      "sha256": "79f76d3feb971128222a296e2312dc34d25ca06e0d465bddf909dff5a09f2ef0"
+    },
+    "r2/receipt/stdout": {
+      "path": "/tmp/ingetrazo-context-native-attempt-2/stdout",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "r2/receipt/stderr": {
+      "path": "/tmp/ingetrazo-context-native-attempt-2/stderr",
+      "size": 2616,
+      "sha256": "9865ab638c7e37b46c32fc7c0dba91500ce2c0036ca0fe54b2c07b90333efe5b"
+    },
+    "r2/receipt/receipt.json": {
+      "path": "/tmp/ingetrazo-context-native-attempt-2/receipt.json",
+      "size": 247,
+      "sha256": "d9d8c536121339202e3d0d7dd49780fa4a23b0fc1063e7990d4d0a106cc9ce63"
+    },
+    "r2/native/native-ai-bridge-capture.partial.json": {
+      "path": "/tmp/ingetrazo-context-native-r2/native-ai-bridge-capture.partial.json",
+      "size": 241227,
+      "sha256": "a4844a94801a1f2ef5e6ab6c359a8e1e35d07b2797918985cecd298528674224"
+    },
+    "r2/native/startup-billboard-context-2.png": {
+      "path": "/tmp/ingetrazo-context-native-r2/startup-billboard-context-2.png",
+      "size": 21181,
+      "sha256": "662618d12b5327a659e6ec292afecfde7282e6a590218fa8569574263dcd5a72"
+    },
+    "r2/native/startup-billboard-context-2.rgba": {
+      "path": "/tmp/ingetrazo-context-native-r2/startup-billboard-context-2.rgba",
+      "size": 1228800,
+      "sha256": "5f7600f33021884246b6462c10ba445d2cdb2e28456fc578046f898531bfa236"
+    },
+    "r2/native/shared-texture-context-2.png": {
+      "path": "/tmp/ingetrazo-context-native-r2/shared-texture-context-2.png",
+      "size": 33665,
+      "sha256": "610f29e652b38a637a79eecc352efeedac2d21dbf69055e682e3cda38b20c056"
+    },
+    "r2/native/shared-texture-context-2.rgba": {
+      "path": "/tmp/ingetrazo-context-native-r2/shared-texture-context-2.rgba",
+      "size": 1228800,
+      "sha256": "79c00dfac25a21df99224c4363c07faf6c3c323e3854514818e14e47ad421542"
+    },
+    "r2/native/native-ai-bridge-capture.json": {
+      "path": "/tmp/ingetrazo-context-native-r2/native-ai-bridge-capture.json",
+      "size": 241427,
+      "sha256": "738906bf7e8c1f06be01710f5a38d7232febbc3f5d4841ac297488d23914f102"
+    },
+    "r2/native/checker.log": {
+      "path": "/tmp/ingetrazo-context-native-r2/checker.log",
+      "size": 937,
+      "sha256": "5309ac5a26c7c3447ec519c8a603212269c926bc509e672f93c8dc854d0a09ed"
+    },
+    "r2/native/comparison.json": {
+      "path": "/tmp/ingetrazo-context-native-r2/comparison.json",
+      "size": 1161,
+      "sha256": "929ce0e2efbed9fac47378abf1a48514fc9016fc60b36a9e88aec86a5c0a5605"
+    },
+    "r2/native/independent-diagnostic.json": {
+      "path": "/tmp/ingetrazo-context-native-r2/independent-diagnostic.json",
+      "size": 7453,
+      "sha256": "28896c966570502c480a97430c94302a4b1ac5f45fee85505ca4f9aaf3f70b8a"
+    },
+    "r3/receipt/xvfb.log": {
+      "path": "/tmp/ingetrazo-context-native-attempt-3/xvfb.log",
+      "size": 2868,
+      "sha256": "79f76d3feb971128222a296e2312dc34d25ca06e0d465bddf909dff5a09f2ef0"
+    },
+    "r3/receipt/stdout": {
+      "path": "/tmp/ingetrazo-context-native-attempt-3/stdout",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "r3/receipt/stderr": {
+      "path": "/tmp/ingetrazo-context-native-attempt-3/stderr",
+      "size": 2616,
+      "sha256": "bf7405585170ccc9a2e37e5d29cf415a23702d16b98f36f93f705163b04c84e1"
+    },
+    "r3/receipt/receipt.json": {
+      "path": "/tmp/ingetrazo-context-native-attempt-3/receipt.json",
+      "size": 247,
+      "sha256": "47cb730e3c852e0ca62e6dfff71af21eaad2435215945e8df5dcf9951a9c6047"
+    },
+    "r3/native/native-ai-bridge-capture.partial.json": {
+      "path": "/tmp/ingetrazo-context-native-r3/native-ai-bridge-capture.partial.json",
+      "size": 241227,
+      "sha256": "9fbb3d8381fd5d47bd3a4664ab5e632c38873212166e728187f1117787400032"
+    },
+    "r3/native/startup-billboard-context-0.png": {
+      "path": "/tmp/ingetrazo-context-native-r3/startup-billboard-context-0.png",
+      "size": 20088,
+      "sha256": "871f1daf001da04ede21a41276d118a7b839b44c067a0558adc3523862c5686f"
+    },
+    "r3/native/startup-billboard-context-0.rgba": {
+      "path": "/tmp/ingetrazo-context-native-r3/startup-billboard-context-0.rgba",
+      "size": 1228800,
+      "sha256": "a5dfd3ed1b6ac2fce927385283125d3443af30ee05d60ce7ac919fb69c7bfbfe"
+    },
+    "r3/native/startup-billboard-context-1.png": {
+      "path": "/tmp/ingetrazo-context-native-r3/startup-billboard-context-1.png",
+      "size": 16084,
+      "sha256": "d416aa97a44352c8578f95b0bcecf20ce5278c7d999c5cfc435a8e93377bb345"
+    },
+    "r3/native/startup-billboard-context-1.rgba": {
+      "path": "/tmp/ingetrazo-context-native-r3/startup-billboard-context-1.rgba",
+      "size": 1228800,
+      "sha256": "bcdc7487d921c3cf780a10d2c158d8826ce2567f03c7f1a67471f185738a1096"
+    },
+    "r3/native/startup-billboard-context-2.png": {
+      "path": "/tmp/ingetrazo-context-native-r3/startup-billboard-context-2.png",
+      "size": 16993,
+      "sha256": "ab8c505a495f36ac3d4129c7bf71044159d8c6d0ba4e948413687b11e6a26397"
+    },
+    "r3/native/startup-billboard-context-2.rgba": {
+      "path": "/tmp/ingetrazo-context-native-r3/startup-billboard-context-2.rgba",
+      "size": 1228800,
+      "sha256": "9c2baa7dabdd17fd696d2d75bc8f7b6a346fae4c2e3edf887491d9db6395afca"
+    },
+    "r3/native/shared-texture-context-0.png": {
+      "path": "/tmp/ingetrazo-context-native-r3/shared-texture-context-0.png",
+      "size": 30833,
+      "sha256": "73a3a9bb898b4501957f0911dd8ab2d179f432fb91c401436a6bc5775a0fe3bb"
+    },
+    "r3/native/shared-texture-context-0.rgba": {
+      "path": "/tmp/ingetrazo-context-native-r3/shared-texture-context-0.rgba",
+      "size": 1228800,
+      "sha256": "29208eaef0bf9d11245871e93e1abc255967cb00405353be76eb517c6e6fef38"
+    },
+    "r3/native/shared-texture-context-1.png": {
+      "path": "/tmp/ingetrazo-context-native-r3/shared-texture-context-1.png",
+      "size": 30170,
+      "sha256": "aee6b09030c361d0dc9da0f82c8506e0893b045139b6b3431203c83102be5923"
+    },
+    "r3/native/shared-texture-context-1.rgba": {
+      "path": "/tmp/ingetrazo-context-native-r3/shared-texture-context-1.rgba",
+      "size": 1228800,
+      "sha256": "dc665a2b0c22422ed4f072ffd4af75e720ff59f3b31410b73205199ddbb57d38"
+    },
+    "r3/native/shared-texture-context-2.png": {
+      "path": "/tmp/ingetrazo-context-native-r3/shared-texture-context-2.png",
+      "size": 33962,
+      "sha256": "087d7da5f134f90c85d79f4859dc29b3de36d956ada49d6a3425298df3f8a2e9"
+    },
+    "r3/native/shared-texture-context-2.rgba": {
+      "path": "/tmp/ingetrazo-context-native-r3/shared-texture-context-2.rgba",
+      "size": 1228800,
+      "sha256": "deacef98781448820855dbdcf3fd00503e4ba7d6e12246fbee4a1639bf4b8a81"
+    },
+    "r3/native/native-ai-bridge-capture.json": {
+      "path": "/tmp/ingetrazo-context-native-r3/native-ai-bridge-capture.json",
+      "size": 241427,
+      "sha256": "8f93a9845d3d79f6815bca8a0116c224d050639dbd1a5b590fcb5cdcc430d30b"
+    },
+    "r3/native/checker.log": {
+      "path": "/tmp/ingetrazo-context-native-r3/checker.log",
+      "size": 939,
+      "sha256": "aa193ecf3287e3d7ece97e43fe64a3c838809142d159364de4babcfa608bfd84"
+    },
+    "r3/native/comparison.json": {
+      "path": "/tmp/ingetrazo-context-native-r3/comparison.json",
+      "size": 1163,
+      "sha256": "146e8c2e1081b0a932bd1470c797fe3010bff746fbfa0192d5977f6af5eceb18"
+    },
+    "r3/native/independent-r2-r3-diagnostic.json": {
+      "path": "/tmp/ingetrazo-context-native-r3/independent-r2-r3-diagnostic.json",
+      "size": 19217,
+      "sha256": "d289b260906ac9e23943d9a286f593862eed1f6ed578dc0d9f9f42619bc016a3"
+    },
+    "checks/context-supplement-build-r1.log": {
+      "path": "/tmp/ingetrazo-context-supplement-build-r1.log",
+      "size": 28054,
+      "sha256": "2ca4c6fb3fc2ca4cd5638277ef4e6b880e28b74c5f4a9efc6d985a2e001bb03e"
+    },
+    "checks/context-supplement-build-r2.log": {
+      "path": "/tmp/ingetrazo-context-supplement-build-r2.log",
+      "size": 27852,
+      "sha256": "894f03a0c78bb517786b801a288f52d1d5d4e1af16d6f7be64f21af0f1fac0bb"
+    },
+    "checks/context-finish-build-r1.log": {
+      "path": "/tmp/ingetrazo-context-finish-build-r1.log",
+      "size": 27852,
+      "sha256": "facacc1c52eef739cd1a0487e988318784d8e2169dfa20a40b9af73c94b3c6ec"
+    },
+    "checks/context-finish-tests-r1.log": {
+      "path": "/tmp/ingetrazo-context-finish-tests-r1.log",
+      "size": 27090,
+      "sha256": "1fe45fe5040c6d8f222c355064447a06eaf63eb6557f04ba3057502a2d2ce74b"
+    }
+  },
+  "identical_file_aliases": {
+    "r2/native/startup-billboard-context-0.png": {
+      "retained_member": "r3/native/startup-billboard-context-0.png",
+      "size": 20088,
+      "sha256": "871f1daf001da04ede21a41276d118a7b839b44c067a0558adc3523862c5686f",
+      "origin_path": "/tmp/ingetrazo-context-native-r2/startup-billboard-context-0.png"
+    },
+    "r2/native/startup-billboard-context-0.rgba": {
+      "retained_member": "r3/native/startup-billboard-context-0.rgba",
+      "size": 1228800,
+      "sha256": "a5dfd3ed1b6ac2fce927385283125d3443af30ee05d60ce7ac919fb69c7bfbfe",
+      "origin_path": "/tmp/ingetrazo-context-native-r2/startup-billboard-context-0.rgba"
+    },
+    "r2/native/startup-billboard-context-1.png": {
+      "retained_member": "r3/native/startup-billboard-context-1.png",
+      "size": 16084,
+      "sha256": "d416aa97a44352c8578f95b0bcecf20ce5278c7d999c5cfc435a8e93377bb345",
+      "origin_path": "/tmp/ingetrazo-context-native-r2/startup-billboard-context-1.png"
+    },
+    "r2/native/startup-billboard-context-1.rgba": {
+      "retained_member": "r3/native/startup-billboard-context-1.rgba",
+      "size": 1228800,
+      "sha256": "bcdc7487d921c3cf780a10d2c158d8826ce2567f03c7f1a67471f185738a1096",
+      "origin_path": "/tmp/ingetrazo-context-native-r2/startup-billboard-context-1.rgba"
+    },
+    "r2/native/shared-texture-context-0.png": {
+      "retained_member": "r3/native/shared-texture-context-0.png",
+      "size": 30833,
+      "sha256": "73a3a9bb898b4501957f0911dd8ab2d179f432fb91c401436a6bc5775a0fe3bb",
+      "origin_path": "/tmp/ingetrazo-context-native-r2/shared-texture-context-0.png"
+    },
+    "r2/native/shared-texture-context-0.rgba": {
+      "retained_member": "r3/native/shared-texture-context-0.rgba",
+      "size": 1228800,
+      "sha256": "29208eaef0bf9d11245871e93e1abc255967cb00405353be76eb517c6e6fef38",
+      "origin_path": "/tmp/ingetrazo-context-native-r2/shared-texture-context-0.rgba"
+    },
+    "r2/native/shared-texture-context-1.png": {
+      "retained_member": "r3/native/shared-texture-context-1.png",
+      "size": 30170,
+      "sha256": "aee6b09030c361d0dc9da0f82c8506e0893b045139b6b3431203c83102be5923",
+      "origin_path": "/tmp/ingetrazo-context-native-r2/shared-texture-context-1.png"
+    },
+    "r2/native/shared-texture-context-1.rgba": {
+      "retained_member": "r3/native/shared-texture-context-1.rgba",
+      "size": 1228800,
+      "sha256": "dc665a2b0c22422ed4f072ffd4af75e720ff59f3b31410b73205199ddbb57d38",
+      "origin_path": "/tmp/ingetrazo-context-native-r2/shared-texture-context-1.rgba"
+    }
+  },
+  "source_archive": {
+    "path": "docs/audits/ai-bridge-capture-context/source-records.zip",
+    "sha256": "081497ebe1743ef8eefd9bc1efe2c4a21327bffa2b4145eb8942e37e1188fdd6",
+    "source_revision": "b59feab472f7c58243def0afbc82f854864f0ac7"
+  },
+  "executed_binaries": [
+    {
+      "run": 1,
+      "revision": "b59feab472f7c58243def0afbc82f854864f0ac7",
+      "binary_sha256": "8f69a614f8696a2d74dbfc7682c495612f64915aa44ef655d03758d85f2f0461",
+      "returncode": 101,
+      "seconds": 0.11365782201755792,
+      "output": "/tmp/ingetrazo-context-native-r1"
+    },
+    {
+      "run": 2,
+      "revision": "f4844650d332a86fc50f870ee559dcc81cc6cb90",
+      "binary_sha256": "36178a13811333309fd691488e616280e7eca5aacd9088e40a63c5f3eb8fddc1",
+      "returncode": 0,
+      "seconds": 1.9677554210065864,
+      "output": "/tmp/ingetrazo-context-native-r2"
+    },
+    {
+      "run": 3,
+      "revision": "8816a1f008de8d13a98ccf89753020d7a9430d41",
+      "binary_sha256": "c5f4dc7366fe6416597b9ce6688db0d21c7cc80a95f3de83e9c469f9b2e2d5d7",
+      "returncode": 0,
+      "seconds": 1.9700779980048537,
+      "output": "/tmp/ingetrazo-context-native-r3"
+    }
+  ],
+  "result": {
+    "result": "strict_pixel_failure",
+    "cases": 2,
+    "replies": 6,
+    "typed_states_exact": 6,
+    "strict_images": 0,
+    "pixel_differences": [
+      {
+        "case": "startup-billboard-context",
+        "index": 0,
+        "different_pixels": 2695,
+        "max_channel_error": 188
+      },
+      {
+        "case": "startup-billboard-context",
+        "index": 1,
+        "different_pixels": 2502,
+        "max_channel_error": 188
+      },
+      {
+        "case": "startup-billboard-context",
+        "index": 2,
+        "different_pixels": 2826,
+        "max_channel_error": 182
+      },
+      {
+        "case": "shared-texture-context",
+        "index": 0,
+        "different_pixels": 2854,
+        "max_channel_error": 178
+      },
+      {
+        "case": "shared-texture-context",
+        "index": 1,
+        "different_pixels": 2619,
+        "max_channel_error": 171
+      },
+      {
+        "case": "shared-texture-context",
+        "index": 2,
+        "different_pixels": 2848,
+        "max_channel_error": 182
+      }
+    ],
+    "negative_controls_accepted": 0,
+    "component_edit_tests_passed": 10,
+    "image_sharing_allocation_measured": false,
+    "gpu_cleanup_committed_bytes": 0,
+    "scope": "Finite Vulkan host execution and typed/source boundaries; no native pixel-parity, image-sharing allocation/performance, Metal or full P32 acceptance."
+  },
+  "exclusions": [
+    "config/data/cache",
+    "native binaries",
+    "duplicate first-four unchanged R2 images"
+  ],
+  "cleanup_performed": false
+}
