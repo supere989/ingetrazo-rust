@@ -1,0 +1,11 @@
+# Frozen exchange-import original source evidence
+
+Thirteen COLLADA/glTF cohorts retain 61 literal original states and eleven original saved IGZ documents. The unchanged Python source pin and all seventeen source/support hashes were authenticated before packaging. Input assets, original saves/readers and both exact producer revisions are retained. This packet establishes source observations only; it claims no native acceptance.
+
+The first capture at `be8b1a34` took 3.470 seconds and completed the first twelve cohorts (59 states) before its final fixture assumption rejected the absent error popup. Its partial report already observed the final two states. Original `History.execute` swallowed the failed import command, recorded `last_error`, and MainWindow continued an Imported status/title without a critical dialog; newly adopted datum leaked. Those literal defects, callback errors and partial records remain archived. Native atomic failure and operative error UI are separately declared corrections, never fabricated source success.
+
+The reviewed missing-only capture at `d48d7f7c` took 0.415 seconds and passed for the final cohort. Its two states exactly equal the original first partial. All 61 assembled states equal that partial, the first twelve case records are unchanged, and every accepted asset/document payload was byte-authenticated against its retained producer copy. The accepted report adds explicit capture-segment provenance. No completed cohort was recaptured.
+
+The corrected fixture contract remains bound to the root Git revision and current bytes. Source archive members are stored once; identical historical/input payloads are explicitly mapped to retained members in the manifest. The original source matrix/resource ownership, finite unit/up-axis and 400/401 branches, nested/root publication, chooser Cancel, history and saved ownership are bounded to these cohorts. Source pixels, general format/version coverage, complete layer metadata and broad sharing semantics are outside this proof.
+
+Disposable state/config/cache/xdg/session and picker executables are excluded. Cleanup candidates are inventoried only; nothing has been deleted. Root must authenticate the packet before any purge.
