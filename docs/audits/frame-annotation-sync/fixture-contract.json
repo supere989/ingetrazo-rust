@@ -168,7 +168,8 @@
           "frame": "main",
           "fields": {
             "w_mm": 20.0,
-            "h_mm": 20.0
+            "h_mm": 20.0,
+            "scale_n": 10.0
           }
         },
         {
@@ -184,7 +185,12 @@
           "phase": "save",
           "op": "save"
         }
-      ]
+      ],
+      "fixture_requirements": {
+        "model_width_m": 10.0,
+        "scale_n": 1000.0,
+        "note": "Long edge prevents closer midpoints from hiding the .5m cap boundary."
+      }
     },
     {
       "name": "label-leaders-and-level",
@@ -396,7 +402,8 @@
         },
         {
           "phase": "refresh-perspective",
-          "op": "refresh"
+          "op": "observe",
+          "scope": "Semantic original compute_annotations/projector only; no full GL Update success claim"
         },
         {
           "phase": "repeat",
@@ -444,7 +451,8 @@
     "snap": "Actual source exact HLR snap ordering/page-world pairs for small fixtures; fast20k path separate resource branch, not silently claimed.",
     "restoration": "Camera/visibility/section/style/shadow/geographic state restored around source frame operations.",
     "errors": "Literal source exceptions/swallowed projection failures identified and retained; no invented source successes.",
-    "terrain": "Paths use actual Viewport.drape; no photomesh/DEM fixture means source ground-height no-op. Relief-backed overlay is separate unless agreed."
+    "terrain": "Paths use actual Viewport.drape; no photomesh/DEM fixture means source ground-height no-op. Relief-backed overlay is separate unless agreed.",
+    "creation": "Record literal acquired cota anchors, including empty failure outcome; never force success or inject source anchors."
   },
   "capture_gate": "One capture after producer/checker prereview by geometry and validator; no original code edits, no accepted prior corpus rerender."
 }
