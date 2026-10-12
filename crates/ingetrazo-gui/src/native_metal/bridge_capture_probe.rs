@@ -293,7 +293,7 @@ impl Probe {
                     row["reply"]["id"] == "poisoned-backend"
                         && row["reply"]["ok"] == false
                         && row["reply"]["error"]
-                            == "Native viewport capture requires an admitted live backend"
+                            == "Native viewport capture is not yet supported on this backend"
                         && row["seconds"].as_f64().is_some_and(|s| s < 2.)
                 });
                 let live_depth = inventory
