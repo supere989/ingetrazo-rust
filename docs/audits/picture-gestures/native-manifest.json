@@ -1,0 +1,655 @@
+{
+  "archive_sha256": "b56cde6cd50e709793583e179ac3465bd3393c730a92b41c4e29ec38551535eb",
+  "members": {
+    "accepted/authoring-replay.log": {
+      "size": 1578,
+      "sha256": "8fbffdfda15297f1651c35412f7c2635931eeeca00c8a3dfa3c0cb7810d0e13c"
+    },
+    "accepted/authoring/checker.log": {
+      "size": 663,
+      "sha256": "693834818a1698fac75051beaa7d6d99f4c3b2597d2c14bbf2d473f1f2e11d9b"
+    },
+    "accepted/authoring/checker.stderr": {
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "accepted/authoring/comparison.json": {
+      "size": 747,
+      "sha256": "2f6d045e7dc371eb9553d1b5251c4b283347103ac89c6368341d78e0ae701e40"
+    },
+    "accepted/authoring/native.log": {
+      "size": 530,
+      "sha256": "656b75279bd0f870ec61095716964750565249c5a5adc9b7c664f5a03896dd8e"
+    },
+    "accepted/authoring/native.stderr": {
+      "size": 6636,
+      "sha256": "81aa8fc20a90ecf8bd8d21dd88ad33f1645095db60824f3f5f00e51528b22d81"
+    },
+    "accepted/authoring/native/aspect-selection-native.igz": {
+      "size": 1679,
+      "sha256": "ac896af094a953e6cde8811ee474c18901c69b5321b005625d92bb8433b5619c"
+    },
+    "accepted/authoring/native/authoring-native.igz": {
+      "size": 12095,
+      "sha256": "e82c06c33f5306fb66bbb56a05ba7420de09aac57637061304583c45f1c89e0a"
+    },
+    "accepted/authoring/native/missing-fallback-native.igz": {
+      "size": 1110,
+      "sha256": "3021e3dbc322fa112d4b5c63a18eefdb84d9ee68106258627bd9c02387b0afce"
+    },
+    "accepted/authoring/native/native-reopens.json": {
+      "size": 12765,
+      "sha256": "054117bf25f392eb31be0b70c0fe753356f9e4b44176ed03b6c7469836bf0667"
+    },
+    "accepted/authoring/native/native.json": {
+      "size": 339607,
+      "sha256": "698ffb599c7c6ad14eb04456d7d63a0ce20b2156de1f40460949fb9e6d7e0e7f"
+    },
+    "accepted/authoring/native/owned-picker/kdialog": {
+      "size": 197,
+      "sha256": "c207d8d60df115a1025c08d35b6984c2d184f4647d38527d0a330ec9b2793b85"
+    },
+    "accepted/authoring/native/owned-picker/zenity": {
+      "size": 197,
+      "sha256": "c207d8d60df115a1025c08d35b6984c2d184f4647d38527d0a330ec9b2793b85"
+    },
+    "accepted/authoring/native/picker-calls.txt": {
+      "size": 24,
+      "sha256": "c16040f9f3694eb53cdddb917b85623297eff22429c94b64589010bab795dc9a"
+    },
+    "accepted/authoring/native/z-input-cajetin.igz": {
+      "size": 5644,
+      "sha256": "f64fdc7933a4e030af7fe359b4c951f85ae7864953972c7e16d18e102a104bd4"
+    },
+    "accepted/authoring/native/z-input-cotas.igz": {
+      "size": 5645,
+      "sha256": "daff08ccad52da5bbf61522e5ab3597053edc53cf1a48988285512c61fe972ed"
+    },
+    "accepted/authoring/native/z-input-cotas_ang.igz": {
+      "size": 5645,
+      "sha256": "c483e32d43ddb683a2e0a9ba62aa132099eccb13fbf787fb7fc754172429e419"
+    },
+    "accepted/authoring/native/z-input-cotas_rad.igz": {
+      "size": 5644,
+      "sha256": "c11818fc6785132013bd3a09cc080f5744db2454aa828335d4e37e2363921fee"
+    },
+    "accepted/authoring/native/z-input-etiquetas.igz": {
+      "size": 5644,
+      "sha256": "f5b16f9d537852f327480bf4ccb7ca07fe001e2e57af152b65055f20aca3a1b6"
+    },
+    "accepted/authoring/native/z-input-frames.igz": {
+      "size": 5645,
+      "sha256": "a05774bcc0dc3ca36aef1383a87ade8e02139d11c5a4ad5b1d9235cb559dd599"
+    },
+    "accepted/authoring/native/z-input-images.igz": {
+      "size": 5645,
+      "sha256": "34cd7b72f86883b4dfa6a7d7815284405b35d7ee0cd2e26adc7c21a2cfde3ff9"
+    },
+    "accepted/authoring/native/z-input-leyendas.igz": {
+      "size": 5644,
+      "sha256": "165bcd9771145df799f8ff094e75d5a944dba471d4e6c598c57ef01d09131d2a"
+    },
+    "accepted/authoring/native/z-input-llamadas.igz": {
+      "size": 5644,
+      "sha256": "f1816af6720aa6a412f9e20345aed4876bc7217976026cb71fa68394da6ec828"
+    },
+    "accepted/authoring/native/z-input-niveles.igz": {
+      "size": 5644,
+      "sha256": "9a2627e5b997840ffd8a3d2e45d9c5bf6402f20c90c1f34612bc44f101d2346d"
+    },
+    "accepted/authoring/native/z-input-nortes.igz": {
+      "size": 5645,
+      "sha256": "5d615da72dab248f51e9a83fffddb883aac54f510e06c994f59fae0969a0229c"
+    },
+    "accepted/authoring/native/z-input-perfiles.igz": {
+      "size": 5644,
+      "sha256": "c57bd9c4e6ea285635d7000d21740cd4557de19862ff746ad435dbaaa0919b50"
+    },
+    "accepted/authoring/native/z-input-scalebars.igz": {
+      "size": 5645,
+      "sha256": "3e4cd7fc753674eb13f861d273f1f5f4853508596f38746df0fcf1a98fb9f9c5"
+    },
+    "accepted/authoring/native/z-input-shapes.igz": {
+      "size": 5645,
+      "sha256": "d06f5d895954f4f51ea7d7b049da07931c5eedeac53e53b61e6c01507e4af1cd"
+    },
+    "accepted/authoring/native/z-input-texts.igz": {
+      "size": 5645,
+      "sha256": "787d6fe6cd67a9e9e664946c53998ef9d7c3373c812241cb985fce5317485d18"
+    },
+    "accepted/authoring/reader.log": {
+      "size": 20,
+      "sha256": "722dd5b5d8247e8abf8cfa830c0b8d74ba9a46e1a7d07cf7b8a5b316ecee5213"
+    },
+    "accepted/authoring/reader.stderr": {
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "accepted/authoring/result.json": {
+      "size": 1820,
+      "sha256": "a1a36a205d5126b0fab70152cfb3ce9ae5c7c0802afd5e946fad466da3d921e6"
+    },
+    "accepted/build-authoring.json": {
+      "size": 357,
+      "sha256": "0bfc6edb12955773b6059c77f5c0f9ce65d75f9ba9aa2e5bb23ebeb49f24d7b4"
+    },
+    "accepted/build-authoring.log": {
+      "size": 21761,
+      "sha256": "28d20ffa0748df445567486530b2eaf6bea960616c2d85b14bc18a1303aa78c1"
+    },
+    "accepted/build-native.json": {
+      "size": 842,
+      "sha256": "bae7354810aa549c99220641c987e54fc69f4ac12245bf46cca425c5e353c95b"
+    },
+    "accepted/build-native.log": {
+      "size": 21761,
+      "sha256": "e6463aa1bd7385a64f74084ba604dcfa9e4d172c383610383fea6345eee386ff"
+    },
+    "accepted/gestures-replay.log": {
+      "size": 1562,
+      "sha256": "a191517d6a85b6149bb39b441e3ed2644a32e65c6559764c8d277e3986f1be25"
+    },
+    "accepted/gestures/checker.log": {
+      "size": 600,
+      "sha256": "7321fa1f50fbdcc655782fca80138f5299ba603a6fcc377a462c140af3b38639"
+    },
+    "accepted/gestures/checker.stderr": {
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "accepted/gestures/comparison.json": {
+      "size": 692,
+      "sha256": "31bfdbcaf76c2f494f7838dc8c242690fddc69662922a9d87511c30b0ebca102"
+    },
+    "accepted/gestures/native.log": {
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "accepted/gestures/native.stderr": {
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "accepted/gestures/native/click-only-native.igz": {
+      "size": 1119,
+      "sha256": "9b10f0bcecedcc45b5830c320484ccae817527054f8000c1894027bbe0342f70"
+    },
+    "accepted/gestures/native/ctrl-toggle-native.igz": {
+      "size": 1120,
+      "sha256": "21f8dc374be455bfbadbcabdcaee4e93b9756e3ca2d5c4e6fb3f765bcef28fc1"
+    },
+    "accepted/gestures/native/drag-page-guide-native.igz": {
+      "size": 1248,
+      "sha256": "9a7f5e22ca0e32192b5cddae70bdd40e2816271f53a25e5bc0950411e344c971"
+    },
+    "accepted/gestures/native/drag-sibling-native.igz": {
+      "size": 1686,
+      "sha256": "7a322d1787c26775002489e87ce0bfb71c1763d770b0f66fbf45131ef41aef9f"
+    },
+    "accepted/gestures/native/drawing-endpoint-native.igz": {
+      "size": 3028,
+      "sha256": "b2db7395aafaea724c1d5e3f9eae7d66e8c13296a536fe936329b152a099a5bf"
+    },
+    "accepted/gestures/native/drawing-midpoint-native.igz": {
+      "size": 3028,
+      "sha256": "f8be94f9e19af1ad9960dea2f99ae16db07905e072843aebdc9b835d226966bd"
+    },
+    "accepted/gestures/native/equal-z-native.igz": {
+      "size": 1677,
+      "sha256": "7c70f4469a4c7936846742aadbb837fce93c9f9fb3bfe38fd91d32e2995d75c5"
+    },
+    "accepted/gestures/native/escape-drag-native.igz": {
+      "size": 1120,
+      "sha256": "e26871b7cbc50e38f1df3f1c3816f0f694443805724134644f878b800f20ae94"
+    },
+    "accepted/gestures/native/hidden-only-native.igz": {
+      "size": 1119,
+      "sha256": "fc9c17dab4670b29fe3cab3f17d7029ec201dde707fde2878301397e9e89b5ad"
+    },
+    "accepted/gestures/native/hidden-overlay-native.igz": {
+      "size": 1683,
+      "sha256": "23053c1ebe40590367745025afc7e93d6ad83f6323f37fc17ae0fcc3af48516d"
+    },
+    "accepted/gestures/native/higher-z-native.igz": {
+      "size": 1678,
+      "sha256": "8eaa5276b167f0f590702447238f617ec61afc390301fc307d56ffc5e96d5d33"
+    },
+    "accepted/gestures/native/large-first-move-native.igz": {
+      "size": 1125,
+      "sha256": "6049f30073e184babf9518076610c2ef945197843a55afde1c566c1f2d625890"
+    },
+    "accepted/gestures/native/locked-only-native.igz": {
+      "size": 1119,
+      "sha256": "cea47c462be35eee01fb9a7e377ac4292fb201027b4a20d59a1d46d9171bb2e5"
+    },
+    "accepted/gestures/native/locked-overlay-native.igz": {
+      "size": 1683,
+      "sha256": "675ec4171ddd8962278a7e9e7d52331c0c0f4d8a6f1903803b374f109ebe3ea8"
+    },
+    "accepted/gestures/native/native-gestures.json": {
+      "size": 202733,
+      "sha256": "a3aaf804962fc240b5afb58dfb82adfda7a33d256533aa7270d219617d5a8c4b"
+    },
+    "accepted/gestures/native/native-gestures.partial.json": {
+      "size": 201602,
+      "sha256": "07215bbf4321c242f4bbcce26e362e1dd86dc68e459081a180565ef2a93dd56f"
+    },
+    "accepted/gestures/native/native-reopens.json": {
+      "size": 21586,
+      "sha256": "b9d85ffef02185131a08b3c96f4879f4f85dcb904438b894b3f85f52452220bb"
+    },
+    "accepted/gestures/native/out-and-back-native.igz": {
+      "size": 1121,
+      "sha256": "1b2f6dd11c530eadfca23e581777a93d07bae051272bae569ea9771e485984a2"
+    },
+    "accepted/gestures/native/resize-free-shift-native.igz": {
+      "size": 1126,
+      "sha256": "857e9dbee0f5f0e965b42489727cb909aaab608833603ff4e7af01f000a32ef8"
+    },
+    "accepted/gestures/native/resize-guide-native.igz": {
+      "size": 1245,
+      "sha256": "7e2fac93929772ddc7924dad8b37a31ddb1cbc65b948e397e2b3b1dfcc972137"
+    },
+    "accepted/gestures/native/resize-minimum-native.igz": {
+      "size": 1122,
+      "sha256": "2e6952b0a432723267d1a7bde5d6e86b7b8390d9fa3893a64fb04e346df3c06f"
+    },
+    "accepted/gestures/native/resize-minimum-snapped-native.igz": {
+      "size": 1253,
+      "sha256": "c075e452dc04dc056b67ef47bbf0efc9a127c1dc97fa9133373701e7e6fd81b9"
+    },
+    "accepted/gestures/native/selected-drag-native.igz": {
+      "size": 1122,
+      "sha256": "fabf64ed6a5818de096ff4135cc40187aafb43870bccffc8868611b057cdeaf1"
+    },
+    "accepted/gestures/native/unselected-drag-native.igz": {
+      "size": 1430,
+      "sha256": "ef44b998809a7c89d4a55c1c94db1d34ddcbc4756de659bf65c8ee260389706f"
+    },
+    "accepted/gestures/reader.log": {
+      "size": 74,
+      "sha256": "3503d651f03f357f116c785f340ece6c638f60861a75c987f95ef5af89f75068"
+    },
+    "accepted/gestures/reader.stderr": {
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "accepted/gestures/result.json": {
+      "size": 1804,
+      "sha256": "916eb9ad0e07d7d9b6f9217a4efdc8a17c225b4483a1ab877baf78f3bb2af19d"
+    },
+    "accepted/pointer/checker.log": {
+      "size": 65,
+      "sha256": "884ee0eae3f2afebf308637220ff05a9cb392f8198fd31e519571e9c2d8ca4e7"
+    },
+    "accepted/pointer/comparison.json": {
+      "size": 722,
+      "sha256": "43d4e8b673d420156aff773615a053ad4429b75a6e177cda6720a9945d1b5daa"
+    },
+    "accepted/pointer/native.json": {
+      "size": 63387,
+      "sha256": "3bb60a06934736aaef169ec40e62025a6d19a2f9eee7c4a77fecdd516d71cfa0"
+    },
+    "accepted/pointer/native.log": {
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "accepted/pointer/result.json": {
+      "size": 1132,
+      "sha256": "529dbd327447d4d1accd225282dc79255904751d9ee55be751de4b9095d5df74"
+    },
+    "apple-metadata/aarch64-apple-darwin.log": {
+      "size": 23776,
+      "sha256": "471220e52fdd826c39687447a0e1adf22a885f928ff8d63824e8df9218a37df4"
+    },
+    "apple-metadata/result.json": {
+      "size": 611,
+      "sha256": "b99b67c0a3511e78e05ebcee4c88d9ef538b9e8175dd006338955d73651e204b"
+    },
+    "apple-metadata/x86_64-apple-darwin.log": {
+      "size": 23387,
+      "sha256": "f1c20a4ffa01b2fe195ce03ca5062fda6cc76ef81ef7f867d5b4b247e1338a27"
+    },
+    "diagnostic/authoring/native.log": {
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "diagnostic/authoring/native.stderr": {
+      "size": 3692,
+      "sha256": "54e02989298e034e359d7c3ccf003f51a1c879153389337ef9a8f2f9d83ce241"
+    },
+    "diagnostic/authoring/native/aspect-selection-native.igz": {
+      "size": 1679,
+      "sha256": "ac896af094a953e6cde8811ee474c18901c69b5321b005625d92bb8433b5619c"
+    },
+    "diagnostic/authoring/native/authoring-native.igz": {
+      "size": 12095,
+      "sha256": "e82c06c33f5306fb66bbb56a05ba7420de09aac57637061304583c45f1c89e0a"
+    },
+    "diagnostic/authoring/native/missing-fallback-native.igz": {
+      "size": 1110,
+      "sha256": "3021e3dbc322fa112d4b5c63a18eefdb84d9ee68106258627bd9c02387b0afce"
+    },
+    "diagnostic/authoring/native/native.json": {
+      "size": 338990,
+      "sha256": "0dbdf821efba53cfdba233b006020ab2c7883b5a97b6f1b4d5b477cfafd19046"
+    },
+    "diagnostic/authoring/native/owned-picker/kdialog": {
+      "size": 197,
+      "sha256": "c207d8d60df115a1025c08d35b6984c2d184f4647d38527d0a330ec9b2793b85"
+    },
+    "diagnostic/authoring/native/owned-picker/zenity": {
+      "size": 197,
+      "sha256": "c207d8d60df115a1025c08d35b6984c2d184f4647d38527d0a330ec9b2793b85"
+    },
+    "diagnostic/authoring/native/picker-calls.txt": {
+      "size": 16,
+      "sha256": "d891e903cb47af5687768920e43ca1c3fcb0fb4b48f098271dcf3157cb5d5e16"
+    },
+    "diagnostic/authoring/native/z-input-cajetin.igz": {
+      "size": 5644,
+      "sha256": "f64fdc7933a4e030af7fe359b4c951f85ae7864953972c7e16d18e102a104bd4"
+    },
+    "diagnostic/authoring/native/z-input-cotas.igz": {
+      "size": 5645,
+      "sha256": "daff08ccad52da5bbf61522e5ab3597053edc53cf1a48988285512c61fe972ed"
+    },
+    "diagnostic/authoring/native/z-input-cotas_ang.igz": {
+      "size": 5645,
+      "sha256": "c483e32d43ddb683a2e0a9ba62aa132099eccb13fbf787fb7fc754172429e419"
+    },
+    "diagnostic/authoring/native/z-input-cotas_rad.igz": {
+      "size": 5644,
+      "sha256": "c11818fc6785132013bd3a09cc080f5744db2454aa828335d4e37e2363921fee"
+    },
+    "diagnostic/authoring/native/z-input-etiquetas.igz": {
+      "size": 5644,
+      "sha256": "f5b16f9d537852f327480bf4ccb7ca07fe001e2e57af152b65055f20aca3a1b6"
+    },
+    "diagnostic/authoring/native/z-input-frames.igz": {
+      "size": 5645,
+      "sha256": "a05774bcc0dc3ca36aef1383a87ade8e02139d11c5a4ad5b1d9235cb559dd599"
+    },
+    "diagnostic/authoring/native/z-input-images.igz": {
+      "size": 5645,
+      "sha256": "34cd7b72f86883b4dfa6a7d7815284405b35d7ee0cd2e26adc7c21a2cfde3ff9"
+    },
+    "diagnostic/authoring/native/z-input-leyendas.igz": {
+      "size": 5644,
+      "sha256": "165bcd9771145df799f8ff094e75d5a944dba471d4e6c598c57ef01d09131d2a"
+    },
+    "diagnostic/authoring/native/z-input-llamadas.igz": {
+      "size": 5644,
+      "sha256": "f1816af6720aa6a412f9e20345aed4876bc7217976026cb71fa68394da6ec828"
+    },
+    "diagnostic/authoring/native/z-input-niveles.igz": {
+      "size": 5644,
+      "sha256": "9a2627e5b997840ffd8a3d2e45d9c5bf6402f20c90c1f34612bc44f101d2346d"
+    },
+    "diagnostic/authoring/native/z-input-nortes.igz": {
+      "size": 5645,
+      "sha256": "5d615da72dab248f51e9a83fffddb883aac54f510e06c994f59fae0969a0229c"
+    },
+    "diagnostic/authoring/native/z-input-perfiles.igz": {
+      "size": 5644,
+      "sha256": "c57bd9c4e6ea285635d7000d21740cd4557de19862ff746ad435dbaaa0919b50"
+    },
+    "diagnostic/authoring/native/z-input-scalebars.igz": {
+      "size": 5645,
+      "sha256": "3e4cd7fc753674eb13f861d273f1f5f4853508596f38746df0fcf1a98fb9f9c5"
+    },
+    "diagnostic/authoring/native/z-input-shapes.igz": {
+      "size": 5645,
+      "sha256": "d06f5d895954f4f51ea7d7b049da07931c5eedeac53e53b61e6c01507e4af1cd"
+    },
+    "diagnostic/authoring/native/z-input-texts.igz": {
+      "size": 5645,
+      "sha256": "787d6fe6cd67a9e9e664946c53998ef9d7c3373c812241cb985fce5317485d18"
+    },
+    "diagnostic/authoring/result.json": {
+      "size": 1108,
+      "sha256": "c6c143c35bab91cb5127946bb88ded9512663196d897d865371f9fbf34d26d77"
+    },
+    "diagnostic/build.json": {
+      "size": 357,
+      "sha256": "5201f4df9957ecad25cff75bfd40b835dc023febe392ab6d22c2b98e33b765b6"
+    },
+    "diagnostic/build.log": {
+      "size": 21761,
+      "sha256": "9f4b5fe192be70cfdf72f9cdd328c22f7b52bc919a7cccbe59eaa0d043273640"
+    },
+    "diagnostic/replay.log": {
+      "size": 1020,
+      "sha256": "5f82fe702e493d39d738846db56275f69c0b91cc60cb68a38b9283a972e032f4"
+    },
+    "first-attempt-auth.json": {
+      "size": 1522,
+      "sha256": "1c2eef18b0d8e6d722bcc4753ab815932c3c7d8ea27833d51ef9754f1535f055"
+    },
+    "first-attempt/authoring-replay.log": {
+      "size": 965,
+      "sha256": "6b0ac0bda862284862f132588d1855c917153ef19a557e2d761c8f72d34c1356"
+    },
+    "first-attempt/authoring/native.log": {
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "first-attempt/authoring/native.stderr": {
+      "size": 254,
+      "sha256": "b77975cbeab00c4fbc873d6583e99d2868ea8b716e4eb4f5650a17da54e59c69"
+    },
+    "first-attempt/authoring/native/authoring-native.igz": {
+      "size": 12095,
+      "sha256": "e82c06c33f5306fb66bbb56a05ba7420de09aac57637061304583c45f1c89e0a"
+    },
+    "first-attempt/authoring/native/picker-calls.txt": {
+      "size": 16,
+      "sha256": "d891e903cb47af5687768920e43ca1c3fcb0fb4b48f098271dcf3157cb5d5e16"
+    },
+    "first-attempt/authoring/result.json": {
+      "size": 1053,
+      "sha256": "47d8b277fe1367e72f4b6dbb2e7e95e0bde453900eb7223e89c1d32031c8acc4"
+    },
+    "first-attempt/build.json": {
+      "size": 842,
+      "sha256": "8b9fd883fd1bab6b7a7a00f8bea47ef439bd4e4f3aec129ca4e32d93b251f2c8"
+    },
+    "first-attempt/build.log": {
+      "size": 21761,
+      "sha256": "499eed29e71280218827da9d33d7601a390ecf14304691d0d5786f003706a77c"
+    },
+    "first-attempt/integration.json": {
+      "size": 2099,
+      "sha256": "b5e7f8ab43bfe45eae891579800167b6dd46e687217dc01e44e07516a868fedc"
+    },
+    "review.json": {
+      "size": 4083,
+      "sha256": "b109cf8692f28ac6e0154451e7494e1cd841813ef815612003e35188bf67eeea"
+    },
+    "second-attempt-auth.json": {
+      "size": 1529,
+      "sha256": "fd977dd7e9b74c4dd646368eaae4a813d03f3c2668610aaddf887eca3cdcac67"
+    },
+    "second-attempt/authoring-replay.log": {
+      "size": 995,
+      "sha256": "8ca89aa64ff592d84c91fce0677d035aaf26a86d295758b97fa82e061a4a72b5"
+    },
+    "second-attempt/authoring/native.log": {
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "second-attempt/authoring/native.stderr": {
+      "size": 254,
+      "sha256": "d39fbfb86c8f265d9ecef1af0bb09109f214640343831e0b069fcf9845b86cc5"
+    },
+    "second-attempt/authoring/native/authoring-native.igz": {
+      "size": 12095,
+      "sha256": "e82c06c33f5306fb66bbb56a05ba7420de09aac57637061304583c45f1c89e0a"
+    },
+    "second-attempt/authoring/native/picker-calls.txt": {
+      "size": 16,
+      "sha256": "d891e903cb47af5687768920e43ca1c3fcb0fb4b48f098271dcf3157cb5d5e16"
+    },
+    "second-attempt/authoring/result.json": {
+      "size": 1083,
+      "sha256": "53862e3470977caac76bc5f68743455a55b9316f6d1f508e441153149bbed4e4"
+    },
+    "second-attempt/build.json": {
+      "size": 842,
+      "sha256": "bae7354810aa549c99220641c987e54fc69f4ac12245bf46cca425c5e353c95b"
+    },
+    "second-attempt/build.log": {
+      "size": 21761,
+      "sha256": "e6463aa1bd7385a64f74084ba604dcfa9e4d172c383610383fea6345eee386ff"
+    },
+    "second-attempt/integration.json": {
+      "size": 2140,
+      "sha256": "bd2cc906e120758ffa6a3f36b147df9493141c70dcffb8d21a2f6d060ff6b37c"
+    }
+  },
+  "original_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "source_archives": {
+    "picture-gestures": {
+      "manifest_path": "docs/audits/picture-gestures/source-manifest.json",
+      "manifest_sha256": "55b00e567d9ac2c82c067df5d2162f5450a6a790e3716994bb679be37d47d572",
+      "archive_path": "docs/audits/picture-gestures/source-records.zip",
+      "archive_sha256": "c3a5a0f36df94fdf1da12df10a5d81cca7a14b30902d915ab575d2e39b870374",
+      "members": 52,
+      "original_commit": "6be29fe437a7cd992d4e079f71720821b25216b9"
+    },
+    "picture-authoring": {
+      "manifest_path": "docs/audits/picture-authoring/source-manifest.json",
+      "manifest_sha256": "ad97d1e1330332f110ff5c66eb321b73225f8e893bf03767b993f513ce2fd7e6",
+      "archive_path": "docs/audits/picture-authoring/source-records.zip",
+      "archive_sha256": "088bed7516672c72db29942eb8a475d7829bc225749a2c96a0d643750e8be5f1",
+      "members": 17,
+      "original_commit": "6be29fe437a7cd992d4e079f71720821b25216b9"
+    }
+  },
+  "compiled_owners": {
+    "gestures": {
+      "revision": "febcf5b72b5fe9f34e0ddaa53388912355775cb3",
+      "binary_sha256": "20bdae1cb8247506b43de2f74a6696ad8f4a705b639fbb6d219ec5fef5af0d7e"
+    },
+    "pointer": {
+      "revision": "febcf5b72b5fe9f34e0ddaa53388912355775cb3",
+      "binary_sha256": "e38eedc2616836ce0d8121445a9b102cd35a65af876d5a6ba2076367c4765955"
+    },
+    "authoring": {
+      "revision": "d28b5edc25b220f69f64e6d5bbf200437781193c",
+      "binary_sha256": "26affd7d5ca17813e851216536590c950ceabdce0d4d6428a06457707581951e"
+    }
+  },
+  "git_bindings": {
+    "crates/ingetrazo-gui/src/composer.rs": {
+      "commit": "febcf5b72b5fe9f34e0ddaa53388912355775cb3",
+      "sha256": "d0666c2be31a24fa8f52c633a58e18ad0050c879102da1a626cb46bc277f5146"
+    },
+    "crates/ingetrazo-gui/src/composer_pointer.rs": {
+      "commit": "febcf5b72b5fe9f34e0ddaa53388912355775cb3",
+      "sha256": "fdce5a91f669b7dc74c425a95a858d8f9911118239c28a42b7205c2c6b2df7e5"
+    },
+    "crates/ingetrazo-gui/src/composer_picture_gestures.rs": {
+      "commit": "febcf5b72b5fe9f34e0ddaa53388912355775cb3",
+      "sha256": "bb0e85eec8fb84ec4eecacf9ff57a4b37eace017f813102b0283e97cbee34c77"
+    },
+    "crates/ingetrazo-gui/src/composer_picture_authoring.rs": {
+      "commit": "febcf5b72b5fe9f34e0ddaa53388912355775cb3",
+      "sha256": "17f7476a66ac303605d496ae7093bc9fdca9a7b4929d856fe3d3913b1b8c28e3"
+    },
+    "crates/ingetrazo-gui/examples/composer_picture_gestures.rs": {
+      "commit": "febcf5b72b5fe9f34e0ddaa53388912355775cb3",
+      "sha256": "55cb820f1cd9de8575b4f044445af64cc399d58a63a736cbb347bd5771786ac3"
+    },
+    "crates/ingetrazo-gui/examples/composer_pointer_workflows.rs": {
+      "commit": "febcf5b72b5fe9f34e0ddaa53388912355775cb3",
+      "sha256": "12782141d433c9d30cbdaa4c7359ff01cb5091906e8d7bf2658f5150073291f3"
+    },
+    "crates/ingetrazo-render/src/paper_scene.rs": {
+      "commit": "febcf5b72b5fe9f34e0ddaa53388912355775cb3",
+      "sha256": "0756cf36286862463b4467d451c131760694ca7b4f88991344cb30008343029c"
+    },
+    "crates/ingetrazo-gui/examples/composer_picture_authoring.rs": {
+      "commit": "d28b5edc25b220f69f64e6d5bbf200437781193c",
+      "sha256": "362bb59010a0d9f12aae914220d67fd4f9c97994252d5264b712c73b120bc0ec"
+    },
+    "scripts/replay-picture-gestures.py": {
+      "commit": "d28b5edc25b220f69f64e6d5bbf200437781193c",
+      "sha256": "529656c85a751033252786230dd8e170f73594e8c48b868fd60f8f8c7698a236"
+    },
+    "scripts/reference-picture-gesture-reopens.py": {
+      "commit": "d28b5edc25b220f69f64e6d5bbf200437781193c",
+      "sha256": "b7dec1ab448c0b7dda7128c9caa3326beba58d90ed94d5faf4c6e1ab0c22acc1"
+    },
+    "scripts/check-picture-gestures.py": {
+      "commit": "d28b5edc25b220f69f64e6d5bbf200437781193c",
+      "sha256": "1e5275761627b1721f3ba8f38d4b91c4bb09c690316c42c8e918517a95ce7c4c"
+    },
+    "scripts/replay-picture-authoring.py": {
+      "commit": "d28b5edc25b220f69f64e6d5bbf200437781193c",
+      "sha256": "a6ad959eb9c2880f0c4c164570692fe8a0abb4b34ec5618d850884cdd24c9705"
+    },
+    "scripts/reference-picture-authoring-reopens.py": {
+      "commit": "d28b5edc25b220f69f64e6d5bbf200437781193c",
+      "sha256": "2b7585ca63e7c65037cb2f4a96a06f59c2fc55b5094b65dbcc599556cfab31b6"
+    },
+    "scripts/check-picture-authoring.py": {
+      "commit": "d28b5edc25b220f69f64e6d5bbf200437781193c",
+      "sha256": "1f4f44a2c400efc0ea0c9c455e680b381d3b3bb5aa94c48a2a32988f110158cc"
+    },
+    "scripts/check-composer-pointer.py": {
+      "commit": "d28b5edc25b220f69f64e6d5bbf200437781193c",
+      "sha256": "aa98762c0dcf493217628fa5566c005a88157879407c1c2b93814fce6f987ca6"
+    },
+    "scripts/check-metal-gui-metadata.sh": {
+      "commit": "d28b5edc25b220f69f64e6d5bbf200437781193c",
+      "sha256": "784e9f83db85fe08704f851e0a668f0832cc4c5dcb559771bb2afe184560639b"
+    }
+  },
+  "results": {
+    "gestures": {
+      "cases": 21,
+      "states": 167,
+      "original_reader_pairs": 21,
+      "rejected_controls": 18
+    },
+    "authoring": {
+      "states": 44,
+      "stacking_categories": 15,
+      "reader_pairs": 3,
+      "rejected_controls": 16
+    },
+    "pointer": {
+      "passed": true,
+      "recipes": 13,
+      "states": 89,
+      "mismatches": [],
+      "negative_controls": [
+        "foreground-took-underlying-item",
+        "lost-capture-not-undoable",
+        "outside-paper-position-drift",
+        "coalesced-packet-transactions",
+        "missing-intermediate-packet-undo",
+        "truncated-roster",
+        "unselected-drag-inert",
+        "press-origin-drift",
+        "press-selection-deferred",
+        "z-order-wrong-winner",
+        "hidden-object-moved",
+        "escape-incorrect-rollback",
+        "missing-release-history",
+        "wrong-type-lock",
+        "eager-press-snapshot"
+      ],
+      "scope": "Actual QtTest viewport and native App egui pointer transactions; source model drawing omitted, no pixel/frame-rate/multiitem/resize proof."
+    }
+  },
+  "scope": "Read-only review and archival of terminal native evidence. No builds, comparator/reader/native reruns or source captures by archiver.",
+  "limits": [
+    "Single picture manipulation only; no multi-item proof.",
+    "Drawing source endpoints and midpoint are covered; label/elevation font-metric snapping remains open.",
+    "Native explicit Cancel and PointerGone are ownership controls, separate from literal source Escape clearing selection and retaining grab.",
+    "Actual App/egui frames and owned picker protocol do not establish physical desktop/OS coalesced input equivalence.",
+    "Apple metadata checks do not prove C ABI, linking, native execution or GPU acceptance.",
+    "Physical PNG/JPEG/PDF picture parity remains separately open."
+  ]
+}
