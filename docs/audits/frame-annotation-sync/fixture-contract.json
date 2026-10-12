@@ -1,0 +1,450 @@
+{
+  "original_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "paths": {
+    "anchored_sheet_sync": "Derived stored sheet cota/primary-label/extra-leader/level reprojection; imported anchors and actual cota creation kept separate. No extra composer Undo.",
+    "model_frame_overlay": "Original compute_annotations typed tuple sequence: poly paths always, optional chainage/section marks, opt-in dimensions and leader text. Semantic plan; physical pixels separately open."
+  },
+  "report": "original-frame-annotations.json",
+  "native_report": "native-frame-annotations.json",
+  "reader_report": "native-reopens.json",
+  "cases": [
+    {
+      "name": "anchored-frame-transforms",
+      "paths": [
+        "anchored_sheet_sync",
+        "model_frame_overlay"
+      ],
+      "actions": [
+        {
+          "phase": "initial",
+          "op": "observe"
+        },
+        {
+          "phase": "created-anchored-cota",
+          "op": "create_anchored_cota",
+          "frame": "main",
+          "world_points": [
+            [
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0,
+              0.0
+            ]
+          ],
+          "offset_mm": 8.0
+        },
+        {
+          "phase": "frame-move",
+          "op": "frame_move",
+          "frame": "main",
+          "delta_mm": [
+            13.0,
+            17.0
+          ]
+        },
+        {
+          "phase": "undo-move",
+          "op": "sheet_undo"
+        },
+        {
+          "phase": "redo-move",
+          "op": "sheet_redo"
+        },
+        {
+          "phase": "scale",
+          "op": "frame_properties",
+          "frame": "main",
+          "fields": {
+            "scale_n": 50.0
+          }
+        },
+        {
+          "phase": "roll",
+          "op": "frame_properties",
+          "frame": "main",
+          "fields": {
+            "rot_deg": 30.0
+          }
+        },
+        {
+          "phase": "front",
+          "op": "frame_properties",
+          "frame": "main",
+          "fields": {
+            "view_key": "std:front"
+          }
+        },
+        {
+          "phase": "refresh",
+          "op": "refresh"
+        },
+        {
+          "phase": "save",
+          "op": "save"
+        }
+      ]
+    },
+    {
+      "name": "anchored-model-history",
+      "paths": [
+        "anchored_sheet_sync"
+      ],
+      "actions": [
+        {
+          "phase": "initial",
+          "op": "observe"
+        },
+        {
+          "phase": "model-near-move",
+          "op": "model_move",
+          "vertices": [
+            1
+          ],
+          "delta_m": [
+            0.02,
+            0.0,
+            0.03
+          ]
+        },
+        {
+          "phase": "refresh",
+          "op": "refresh"
+        },
+        {
+          "phase": "model-undo",
+          "op": "model_undo"
+        },
+        {
+          "phase": "model-redo",
+          "op": "model_redo"
+        },
+        {
+          "phase": "repeat",
+          "op": "observe"
+        },
+        {
+          "phase": "save",
+          "op": "save"
+        }
+      ]
+    },
+    {
+      "name": "anchor-tolerance-and-orphans",
+      "paths": [
+        "anchored_sheet_sync"
+      ],
+      "actions": [
+        {
+          "phase": "initial",
+          "op": "observe"
+        },
+        {
+          "phase": "world-tolerance-cap",
+          "op": "model_move",
+          "vertices": [
+            1
+          ],
+          "delta_m": [
+            0.51,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "phase": "refresh",
+          "op": "refresh"
+        },
+        {
+          "phase": "undo",
+          "op": "model_undo"
+        },
+        {
+          "phase": "clipped-frame",
+          "op": "frame_properties",
+          "frame": "main",
+          "fields": {
+            "w_mm": 20.0,
+            "h_mm": 20.0
+          }
+        },
+        {
+          "phase": "delete-frame",
+          "op": "frame_delete",
+          "frame": "main"
+        },
+        {
+          "phase": "undo-frame",
+          "op": "sheet_undo"
+        },
+        {
+          "phase": "save",
+          "op": "save"
+        }
+      ]
+    },
+    {
+      "name": "label-leaders-and-level",
+      "paths": [
+        "anchored_sheet_sync"
+      ],
+      "actions": [
+        {
+          "phase": "initial",
+          "op": "observe"
+        },
+        {
+          "phase": "model-z-near",
+          "op": "model_move",
+          "vertices": [
+            1
+          ],
+          "delta_m": [
+            0.0,
+            0.0,
+            0.04
+          ]
+        },
+        {
+          "phase": "refresh",
+          "op": "refresh"
+        },
+        {
+          "phase": "frame-move",
+          "op": "frame_move",
+          "frame": "main",
+          "delta_mm": [
+            11.0,
+            9.0
+          ]
+        },
+        {
+          "phase": "model-undo",
+          "op": "model_undo"
+        },
+        {
+          "phase": "repeat",
+          "op": "observe"
+        },
+        {
+          "phase": "save",
+          "op": "save"
+        }
+      ]
+    },
+    {
+      "name": "model-dimensions-and-text",
+      "paths": [
+        "model_frame_overlay"
+      ],
+      "actions": [
+        {
+          "phase": "initial-opt-out",
+          "op": "observe"
+        },
+        {
+          "phase": "opt-in",
+          "op": "frame_properties",
+          "frame": "main",
+          "fields": {
+            "annotations": true
+          }
+        },
+        {
+          "phase": "tick-style",
+          "op": "fixture_style",
+          "style": {
+            "ends": "tick"
+          }
+        },
+        {
+          "phase": "refresh-tick",
+          "op": "refresh"
+        },
+        {
+          "phase": "none-style",
+          "op": "fixture_style",
+          "style": {
+            "ends": "none"
+          }
+        },
+        {
+          "phase": "refresh-none",
+          "op": "refresh"
+        },
+        {
+          "phase": "text-size",
+          "op": "frame_properties",
+          "frame": "main",
+          "fields": {
+            "annot_text_mm": 4.0
+          }
+        },
+        {
+          "phase": "save",
+          "op": "save"
+        }
+      ]
+    },
+    {
+      "name": "paths-and-chainage",
+      "paths": [
+        "model_frame_overlay"
+      ],
+      "actions": [
+        {
+          "phase": "initial-opt-out-paths",
+          "op": "observe"
+        },
+        {
+          "phase": "chainage",
+          "op": "frame_properties",
+          "frame": "main",
+          "fields": {
+            "km_marks": true,
+            "km_step_m": 0.25
+          }
+        },
+        {
+          "phase": "refresh-chainage",
+          "op": "refresh"
+        },
+        {
+          "phase": "repeat",
+          "op": "observe"
+        },
+        {
+          "phase": "save",
+          "op": "save"
+        }
+      ]
+    },
+    {
+      "name": "section-traces",
+      "paths": [
+        "model_frame_overlay"
+      ],
+      "actions": [
+        {
+          "phase": "initial",
+          "op": "observe"
+        },
+        {
+          "phase": "section-marks",
+          "op": "frame_properties",
+          "frame": "main",
+          "fields": {
+            "section_marks": true
+          }
+        },
+        {
+          "phase": "refresh",
+          "op": "refresh"
+        },
+        {
+          "phase": "roll",
+          "op": "frame_properties",
+          "frame": "main",
+          "fields": {
+            "rot_deg": 25.0
+          }
+        },
+        {
+          "phase": "refresh-roll",
+          "op": "refresh"
+        },
+        {
+          "phase": "save",
+          "op": "save"
+        }
+      ]
+    },
+    {
+      "name": "saved-view-and-perspective",
+      "paths": [
+        "anchored_sheet_sync",
+        "model_frame_overlay"
+      ],
+      "actions": [
+        {
+          "phase": "initial",
+          "op": "observe"
+        },
+        {
+          "phase": "saved-view",
+          "op": "frame_properties",
+          "frame": "main",
+          "fields": {
+            "view_key": "scene:Hidden layer detail"
+          }
+        },
+        {
+          "phase": "refresh-hidden",
+          "op": "refresh"
+        },
+        {
+          "phase": "perspective",
+          "op": "frame_properties",
+          "frame": "main",
+          "fields": {
+            "perspective": true,
+            "cam_fov": 45.0
+          }
+        },
+        {
+          "phase": "refresh-perspective",
+          "op": "refresh"
+        },
+        {
+          "phase": "repeat",
+          "op": "observe"
+        },
+        {
+          "phase": "save",
+          "op": "save"
+        }
+      ],
+      "fixture_requirements": {
+        "cam_distance": 4.0,
+        "note": "Authored in input frame; no nonexistent distance property widget is claimed."
+      }
+    }
+  ],
+  "state_keys": [
+    "case",
+    "phase",
+    "composition",
+    "model_geometry",
+    "model_annotations",
+    "overlay_by_frame",
+    "snap_by_frame",
+    "sheet_undo",
+    "sheet_redo",
+    "model_undo",
+    "model_redo",
+    "viewport_restored",
+    "source_errors"
+  ],
+  "action_rules": {
+    "frame_properties": "Actual original enabled property widget signals; source widget projection admitted and recorded. fields declared above are product keys, not direct setattr claims.",
+    "frame_move": "Actual Qt body press/move/release, effective page coordinates recorded; excludes ViewFrame resize controls.",
+    "model_move": "Original MoveVerticesCommand via viewport History.execute; positions admitted from existing vertex identity. Source-native geometric command observation, not model OS picking proof.",
+    "fixture_style": "Explicit source fixture publication of dimension style; not styling UI claim.",
+    "layer_visibility": "Explicit fixture/saved-view publication, not layer dialog proof.",
+    "refresh": "Actual composer Update action invokes full frame refresh; tuple probes use unchanged source methods.",
+    "frame_delete": "Actual selected frame Delete action; imported anchor UID/data must remain preserved while missing.",
+    "save": "Actual original writer and loader; derived synchronization results preserved without fabricated history.",
+    "create_anchored_cota": "Actual cota toolbar and three Qt canvas clicks; first two effective points acquire real source frame snaps, third chooses line offset. Record effective page points, acquired anchor_uid/a_world/b_world and actual pending/history."
+  },
+  "observation_rules": {
+    "strict": "Exact typed numeric tuples/records and signed-zero bit observations; no tolerance/rounding normalization.",
+    "snap": "Actual source exact HLR snap ordering/page-world pairs for small fixtures; fast20k path separate resource branch, not silently claimed.",
+    "restoration": "Camera/visibility/section/style/shadow/geographic state restored around source frame operations.",
+    "errors": "Literal source exceptions/swallowed projection failures identified and retained; no invented source successes.",
+    "terrain": "Paths use actual Viewport.drape; no photomesh/DEM fixture means source ground-height no-op. Relief-backed overlay is separate unless agreed."
+  },
+  "capture_gate": "One capture after producer/checker prereview by geometry and validator; no original code edits, no accepted prior corpus rerender."
+}
