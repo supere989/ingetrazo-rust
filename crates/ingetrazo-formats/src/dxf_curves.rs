@@ -261,6 +261,172 @@ pub(super) fn ellipse(
     path.beziers(ellipse_controls(center, major, minor, start, end));
     path.flatten(scale)
 }
+/// Preserve Circle/Arc.transform's uniform OCS law; only nonuniform
+/// transformed XY lengths use the source Ellipse.from_arc fallback.
+pub(super) fn transformed_circle(
+    center: DVec3,
+    radius: f64,
+    normal: DVec3,
+    start: f64,
+    end: f64,
+    m: glam::DMat4,
+    scale: f64,
+) -> Result<Vec<DVec3>, DxfError> {
+    let old = ocs(normal)?;
+    let x = m.transform_vector3(old.x);
+    let y = m.transform_vector3(old.y);
+    if !close_scalar(x.length_squared(), y.length_squared(), 1e-9, 1e-9) {
+        return transformed_ellipse(
+            old.map(center),
+            old.x * radius.abs(),
+            normal,
+            1.,
+            start,
+            end,
+            m,
+            scale,
+        );
+    }
+    let n = x.cross(y);
+    let len = n.length();
+    if len == 0. || !len.is_finite() {
+        return Err(error("Invalid transformed circle axes"));
+    }
+    let n = n / len;
+    let new = ocs(n)?;
+    let local = |p: DVec3| DVec3::new(new.x.dot(p), new.y.dot(p), new.z.dot(p));
+    let center = local(m.transform_point3(old.map(center)));
+    let radius = m
+        .transform_vector3(old.map(DVec3::new(radius, 0., 0.)))
+        .length();
+    let old_span = span(start, end);
+    // Arc.transform guards full360 before calling transform_ccw_arc_angles;
+    // preserve its authored seam too (not the unused helper's rotated seam).
+    let (start, end) = if close_scalar(old_span, TAU, 1e-9, 0.) {
+        (start, end)
+    } else {
+        let angle = |a: f64| {
+            let d = local(m.transform_vector3(old.map(DVec3::new(libm::cos(a), libm::sin(a), 0.))));
+            libm::atan2(d.y, d.x)
+        };
+        let mut s = angle(start);
+        let mut e = angle(end);
+        let semicircle = close_scalar(old_span, PI, 1e-9, 0.);
+        let old_check = if semicircle { 1. } else { old_span };
+        let new_check = span(s, if semicircle { angle(start + 1.) } else { e });
+        if !close_scalar(old_check, new_check, 1e-8, 0.) {
+            std::mem::swap(&mut s, &mut e);
+        }
+        // Arc's DXF degrees are stored before make_path converts back to radians.
+        (s.to_degrees().to_radians(), e.to_degrees().to_radians())
+    };
+    circle(center, radius, n, start, end, scale)
+}
+/// ezdxf ConstructionEllipse.transform: transformed analytic axes/parameters
+/// precede make_path and sagitta subdivision (not transformed sample points).
+pub(super) fn transformed_ellipse(
+    center: DVec3,
+    major: DVec3,
+    normal: DVec3,
+    ratio: f64,
+    mut start: f64,
+    mut end: f64,
+    m: glam::DMat4,
+    scale: f64,
+) -> Result<Vec<DVec3>, DxfError> {
+    let normalized = |v: DVec3, length: f64| -> Result<DVec3, DxfError> {
+        let n = v.length();
+        if n == 0. || !n.is_finite() {
+            Err(error("Invalid transformed ellipse axes"))
+        } else {
+            Ok(v * (length / n))
+        }
+    };
+    let original_minor = normalized(normal.cross(major), major.length() * ratio)?;
+    let transformed_center = m.transform_point3(center);
+    let mut a = m.transform_vector3(major);
+    let mut b = m.transform_vector3(original_minor);
+    let adjust = normalized(a, 1.)?.dot(normalized(b, 1.)?).abs() > 1e-6;
+    let authored_ratio = ratio;
+    let mut ratio;
+    if adjust {
+        let q = a;
+        let p = if a.z.abs() <= 1e-9 && b.z.abs() <= 1e-9 {
+            DVec3::new(b.y, -b.x, 0.)
+        } else {
+            normalized(a.cross(b).cross(b), b.length())?
+        };
+        let d = p + (q - p) * 0.5;
+        let rv = normalized(q - p, d.length())?;
+        let aa = d - rv;
+        let bb = d + rv;
+        let major_len = (aa - q).length();
+        let minor_len = (bb - q).length();
+        if major_len == 0. || minor_len == 0. {
+            return Err(error("Invalid transformed ellipse axes"));
+        }
+        ratio = minor_len / major_len;
+        a = normalized(bb, major_len)?;
+        b = normalized(aa, minor_len)?;
+    } else {
+        ratio = b.length() / a.length();
+    }
+    let extrusion = normalized(a.cross(b), 1.)?;
+    if !adjust {
+        b = normalized(extrusion.cross(a), a.length() * ratio)?;
+    }
+    if adjust && !close_scalar(start, end, 1e-9, 1e-9) {
+        let old_span = (end - start).rem_euclid(TAU);
+        let x = normalized(a, 1.)?;
+        let y = normalized(b, 1.)?;
+        // The old vertex uses the authored ratio, not the transformed ratio.
+        let old_vertex = |t: f64| {
+            center
+                + normalized(major, 1.).unwrap() * (libm::cos(t) * major.length())
+                + normalized(original_minor, 1.).unwrap()
+                    * (libm::sin(t) * major.length() * authored_ratio)
+        };
+        let param = |p: DVec3| libm::atan2(y.dot(p) / ratio, x.dot(p)).rem_euclid(TAU);
+        let old_start = start;
+        let old_end = end;
+        start = param(m.transform_point3(old_vertex(start)) - transformed_center);
+        end = param(m.transform_point3(old_vertex(end)) - transformed_center);
+        let swap = if !close_scalar(old_span, PI, 1e-9, 1e-9) {
+            !close_scalar(old_span, (end - start).rem_euclid(TAU), 1e-9, 1e-9)
+        } else {
+            let mid = |s: f64, mut e: f64| {
+                if e < s {
+                    e += TAU;
+                }
+                (s + e) / 2.
+            };
+            let old = m.transform_point3(old_vertex(mid(old_start, old_end)));
+            let t = mid(start, end);
+            let new = transformed_center
+                + normalized(a, 1.)? * (libm::cos(t) * a.length())
+                + normalized(b, 1.)? * (libm::sin(t) * a.length() * ratio);
+            !close(old, new, 1e-9, 1e-9)
+        };
+        if swap {
+            std::mem::swap(&mut start, &mut end);
+        }
+    }
+    if ratio > 1. {
+        a = normalized(extrusion.cross(a), a.length() * ratio)?;
+        ratio = 1. / ratio;
+        if !(close_scalar(start, 0., 1e-9, 0.) && close_scalar(end, TAU, 1e-9, 0.)) {
+            start -= PI / 2.;
+            end -= PI / 2.;
+        }
+    }
+    start = start.rem_euclid(TAU);
+    end = end.rem_euclid(TAU);
+    if close_scalar(start, end, 1e-9, 0.) {
+        start = 0.;
+        end = TAU;
+    }
+    ellipse(transformed_center, a, extrusion, ratio, start, end, scale)
+}
 pub(super) fn circle(
     center: DVec3,
     radius: f64,

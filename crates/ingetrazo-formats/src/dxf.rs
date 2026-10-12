@@ -3,6 +3,8 @@
 
 //! AutoCAD DXF format export and import.
 
+#[path = "dxf_blocks.rs"]
+mod blocks;
 #[path = "dxf_curves.rs"]
 mod curves;
 #[path = "dxf_spline.rs"]
@@ -87,6 +89,8 @@ fn prepare_dxf_options(
 /// Parsed dimensional entities, independent of document ownership.
 pub struct DxfPlan {
     entities: Vec<DxfEntity>,
+    block_owners: Vec<blocks::Prototype>,
+    placements: Vec<blocks::Placement>,
 }
 struct DxfEntity {
     layer: String,
@@ -171,6 +175,7 @@ impl DxfPlan {
                 false,
             )?;
         }
+        blocks::publish(self.block_owners, self.placements, scene)?;
         Ok(())
     }
     /// Every source DXF layer is a fresh document-root group, including layer zero.
@@ -179,7 +184,7 @@ impl DxfPlan {
         for entity in self.entities {
             layers.entry(entity.layer.clone()).or_default().push(entity);
         }
-        if layers.is_empty() {
+        if layers.is_empty() && self.placements.is_empty() {
             return Err(DxfError::Parse("No importable DXF geometry".into()));
         }
         for (layer, entities) in layers {
@@ -200,6 +205,7 @@ impl DxfPlan {
             crate::obj::source_group_kind(&mut group, false);
             scene.groups.push(group);
         }
+        blocks::publish(self.block_owners, self.placements, scene)?;
         scene.bump_version();
         Ok(())
     }
@@ -233,305 +239,296 @@ fn parse_dxf_options(
             ))
         })
         .collect::<Result<Vec<_>, DxfError>>()?;
-    let mut plan = DxfPlan {
-        entities: Vec::new(),
-    };
-    let mut section = String::new();
-    let mut i = 0;
-    while i < pairs.len() {
-        if pairs[i].0 == 0 && pairs[i].1 == "SECTION" {
-            i += 1;
-            if i >= pairs.len() || pairs[i].0 != 2 {
-                return Err(DxfError::Parse("Missing section name".into()));
+    blocks::parse(&pairs, scale, source_points)
+}
+
+fn parse_entity(
+    kind: &str,
+    attributes: &[(i32, String)],
+    pairs: &[(i32, String)],
+    cursor: &mut usize,
+    scale: f64,
+    source_points: bool,
+    spline_transform: glam::DMat4,
+) -> Result<Option<DxfEntity>, DxfError> {
+    if kind == "POLYLINE" {
+        let (layer, mut points, curved) = legacy_polyline(attributes, pairs, cursor, scale)?;
+        if points.is_empty() {
+            return Ok(None);
+        }
+        for p in &mut points {
+            if source_points {
+                *p = p.as_vec3().as_dvec3();
             }
-            section = pairs[i].1.clone();
-            i += 1;
-            continue;
-        }
-        if pairs[i].0 == 0 && pairs[i].1 == "ENDSEC" {
-            section.clear();
-            i += 1;
-            continue;
-        }
-        if section != "ENTITIES" || pairs[i].0 != 0 {
-            i += 1;
-            continue;
-        }
-        let kind = pairs[i].1.clone();
-        i += 1;
-        let start = i;
-        while i < pairs.len() && pairs[i].0 != 0 {
-            i += 1;
-        }
-        let attributes = &pairs[start..i];
-        if kind == "POLYLINE" {
-            let (layer, mut points, curved) = legacy_polyline(attributes, &pairs, &mut i, scale)?;
-            if points.is_empty() {
-                continue;
+            if !p.is_finite() {
+                return Err(DxfError::Parse("Import coordinate overflow".into()));
             }
-            for p in &mut points {
-                if source_points {
-                    *p = p.as_vec3().as_dvec3();
-                }
-                if !p.is_finite() {
-                    return Err(DxfError::Parse("Import coordinate overflow".into()));
-                }
-            }
-            plan.entities.push(DxfEntity {
-                layer,
-                points,
-                face: false,
-                curved,
-            });
-            continue;
         }
-        // Preserve the baseline's deliberate omissions, rather than treating
-        // annotations as broken modelling geometry.
-        if [
-            "TEXT",
-            "MTEXT",
-            "DIMENSION",
-            "HATCH",
-            "POINT",
-            "ATTDEF",
-            "VIEWPORT",
-            "XLINE",
-            "RAY",
-        ]
-        .contains(&kind.as_str())
-        {
-            continue;
-        }
-        let layer = attributes
+        return Ok(Some(DxfEntity {
+            layer,
+            points,
+            face: false,
+            curved,
+        }));
+    }
+    // Preserve the baseline's deliberate omissions, rather than treating
+    // annotations as broken modelling geometry.
+    if [
+        "TEXT",
+        "MTEXT",
+        "DIMENSION",
+        "HATCH",
+        "POINT",
+        "ATTDEF",
+        "VIEWPORT",
+        "XLINE",
+        "RAY",
+    ]
+    .contains(&kind)
+    {
+        return Ok(None);
+    }
+    let layer = attributes
+        .iter()
+        .find(|(c, _)| *c == 8)
+        .map_or("0", |(_, v)| v.as_str());
+    let number = |code, default| -> Result<f64, DxfError> {
+        attributes
             .iter()
-            .find(|(c, _)| *c == 8)
-            .map_or("0", |(_, v)| v.as_str());
-        let number = |code, default| -> Result<f64, DxfError> {
-            attributes
-                .iter()
-                .find(|(c, _)| *c == code)
-                .map_or(Ok(default), |(_, v)| {
-                    v.parse::<f64>()
-                        .ok()
-                        .filter(|n| n.is_finite())
-                        .ok_or_else(|| DxfError::Parse(format!("Invalid numeric field {code}")))
-                })
-        };
-        if !matches!(
-            kind.as_str(),
-            "LWPOLYLINE" | "CIRCLE" | "ARC" | "ELLIPSE" | "SPLINE"
-        ) && (number(210, 0.)?.abs() > 1e-9
+            .find(|(c, _)| *c == code)
+            .map_or(Ok(default), |(_, v)| {
+                v.parse::<f64>()
+                    .ok()
+                    .filter(|n| n.is_finite())
+                    .ok_or_else(|| DxfError::Parse(format!("Invalid numeric field {code}")))
+            })
+    };
+    if !matches!(kind, "LWPOLYLINE" | "CIRCLE" | "ARC" | "ELLIPSE" | "SPLINE")
+        && (number(210, 0.)?.abs() > 1e-9
             || number(220, 0.)?.abs() > 1e-9
             || (number(230, 1.)? - 1.).abs() > 1e-9)
-        {
-            return Err(DxfError::Parse(
-                "Non-Z DXF entity coordinate systems require OCS conversion".into(),
-            ));
+    {
+        return Err(DxfError::Parse(
+            "Non-Z DXF entity coordinate systems require OCS conversion".into(),
+        ));
+    }
+    let point = |n| -> Result<DVec3, DxfError> {
+        let point = DVec3::new(
+            number(10 + n, 0.)?,
+            number(20 + n, 0.)?,
+            number(30 + n, 0.)?,
+        ) * scale;
+        if !point.is_finite() {
+            return Err(DxfError::Parse("Import coordinate overflow".into()));
         }
-        let point = |n| -> Result<DVec3, DxfError> {
-            let point = DVec3::new(
-                number(10 + n, 0.)?,
-                number(20 + n, 0.)?,
-                number(30 + n, 0.)?,
-            ) * scale;
-            if !point.is_finite() {
-                return Err(DxfError::Parse("Import coordinate overflow".into()));
+        Ok(point)
+    };
+    let mut points = Vec::new();
+    let mut face = false;
+    let mut curved = false;
+    match kind {
+        "3DFACE" | "SOLID" | "TRACE" => {
+            points = vec![point(0)?, point(1)?, point(2)?];
+            let fourth = point(3)?;
+            if attributes.iter().any(|(c, _)| *c == 13)
+                && fourth != points[2]
+                && fourth != points[0]
+            {
+                points.push(fourth);
             }
-            Ok(point)
-        };
-        let mut points = Vec::new();
-        let mut face = false;
-        let mut curved = false;
-        match kind.as_str() {
-            "3DFACE" | "SOLID" | "TRACE" => {
-                points = vec![point(0)?, point(1)?, point(2)?];
-                let fourth = point(3)?;
-                if attributes.iter().any(|(c, _)| *c == 13)
-                    && fourth != points[2]
-                    && fourth != points[0]
-                {
-                    points.push(fourth);
+            if kind != "3DFACE" && points.len() == 4 {
+                points.swap(2, 3);
+            }
+            face = true;
+        }
+        "LINE" => {
+            points = vec![point(0)?, point(1)?];
+        }
+        "LWPOLYLINE" => {
+            let elevation = number(38, 0.)?;
+            let mut vertices = Vec::<(DVec3, f64)>::new();
+            for (code, value) in attributes {
+                if *code == 10 {
+                    let x = value
+                        .parse::<f64>()
+                        .ok()
+                        .filter(|v| v.is_finite())
+                        .ok_or_else(|| DxfError::Parse("Invalid polyline X".into()))?;
+                    vertices.push((DVec3::new(x, 0., 0.), 0.));
+                } else if *code == 20 || *code == 42 {
+                    let v = value
+                        .parse::<f64>()
+                        .ok()
+                        .filter(|v| v.is_finite())
+                        .ok_or_else(|| DxfError::Parse("Invalid polyline field".into()))?;
+                    let last = vertices
+                        .last_mut()
+                        .ok_or_else(|| DxfError::Parse("Polyline field without vertex".into()))?;
+                    if *code == 20 {
+                        last.0.y = v;
+                    } else {
+                        last.1 = v;
+                    }
                 }
-                if kind != "3DFACE" && points.len() == 4 {
-                    points.swap(2, 3);
-                }
-                face = true;
             }
-            "LINE" => {
-                points = vec![point(0)?, point(1)?];
-            }
-            "LWPOLYLINE" => {
-                let elevation = number(38, 0.)?;
-                let mut vertices = Vec::<(DVec3, f64)>::new();
-                for (code, value) in attributes {
-                    if *code == 10 {
-                        let x = value
-                            .parse::<f64>()
-                            .ok()
-                            .filter(|v| v.is_finite())
-                            .ok_or_else(|| DxfError::Parse("Invalid polyline X".into()))?;
-                        vertices.push((DVec3::new(x, 0., 0.), 0.));
-                    } else if *code == 20 || *code == 42 {
-                        let v = value
-                            .parse::<f64>()
-                            .ok()
-                            .filter(|v| v.is_finite())
-                            .ok_or_else(|| DxfError::Parse("Invalid polyline field".into()))?;
-                        let last = vertices.last_mut().ok_or_else(|| {
-                            DxfError::Parse("Polyline field without vertex".into())
+            curved = vertices.iter().any(|(_, b)| *b != 0.);
+            let normal = DVec3::new(number(210, 0.)?, number(220, 0.)?, number(230, 1.)?);
+            points = curves::polyline(
+                &vertices,
+                (number(70, 0.)? as u32) & 1 != 0,
+                normal,
+                elevation,
+                scale,
+            )?;
+        }
+        "CIRCLE" | "ARC" => {
+            let center = DVec3::new(number(10, 0.)?, number(20, 0.)?, number(30, 0.)?);
+            let normal = DVec3::new(number(210, 0.)?, number(220, 0.)?, number(230, 1.)?);
+            let start = if kind == "CIRCLE" {
+                0.
+            } else {
+                number(50, 0.)?.to_radians()
+            };
+            let end = if kind == "CIRCLE" {
+                std::f64::consts::TAU
+            } else {
+                number(51, 360.)?.to_radians()
+            };
+            points = curves::circle(center, number(40, 0.)?, normal, start, end, scale)?;
+            curved = true;
+        }
+        "ELLIPSE" => {
+            let center = DVec3::new(number(10, 0.)?, number(20, 0.)?, number(30, 0.)?);
+            let major = DVec3::new(number(11, 1.)?, number(21, 0.)?, number(31, 0.)?);
+            let normal = DVec3::new(number(210, 0.)?, number(220, 0.)?, number(230, 1.)?);
+            points = curves::ellipse(
+                center,
+                major,
+                normal,
+                number(40, 1.)?,
+                number(41, 0.)?,
+                number(42, std::f64::consts::TAU)?,
+                scale,
+            )?;
+            curved = true;
+        }
+        "SPLINE" => {
+            let mut controls = Vec::<DVec3>::new();
+            let mut fits = Vec::<DVec3>::new();
+            let mut knots = Vec::new();
+            let mut weights = Vec::new();
+            for (code, value) in attributes {
+                let scalar = || {
+                    value
+                        .parse::<f64>()
+                        .ok()
+                        .filter(|v| v.is_finite())
+                        .ok_or_else(|| DxfError::Parse("Invalid spline numeric field".into()))
+                };
+                match *code {
+                    10 => controls.push(DVec3::new(scalar()?, 0., 0.)),
+                    20 | 30 => {
+                        let p = controls.last_mut().ok_or_else(|| {
+                            DxfError::Parse("Spline coordinate without control".into())
                         })?;
                         if *code == 20 {
-                            last.0.y = v;
+                            p.y = scalar()?;
                         } else {
-                            last.1 = v;
+                            p.z = scalar()?;
+                        }
+                    }
+                    11 => fits.push(DVec3::new(scalar()?, 0., 0.)),
+                    21 | 31 => {
+                        let p = fits.last_mut().ok_or_else(|| {
+                            DxfError::Parse("Spline coordinate without fit point".into())
+                        })?;
+                        if *code == 21 {
+                            p.y = scalar()?;
+                        } else {
+                            p.z = scalar()?;
+                        }
+                    }
+                    40 => knots.push(scalar()?),
+                    41 => weights.push(scalar()?),
+                    _ => {}
+                }
+            }
+            if spline_transform != glam::DMat4::IDENTITY {
+                for p in controls.iter_mut().chain(&mut fits) {
+                    *p = spline_transform.transform_point3(*p);
+                    if !p.is_finite() {
+                        return Err(DxfError::Parse("Block spline coordinate overflow".into()));
+                    }
+                }
+            }
+            let mut tangents = if attributes.iter().any(|(c, _)| *c == 12)
+                && attributes.iter().any(|(c, _)| *c == 13)
+            {
+                Some([
+                    DVec3::new(number(12, 0.)?, number(22, 0.)?, number(32, 0.)?),
+                    DVec3::new(number(13, 0.)?, number(23, 0.)?, number(33, 0.)?),
+                ])
+            } else {
+                None
+            };
+            if spline_transform != glam::DMat4::IDENTITY {
+                if let Some(tangents) = &mut tangents {
+                    for tangent in tangents {
+                        *tangent = spline_transform.transform_vector3(*tangent);
+                        if !tangent.is_finite() {
+                            return Err(DxfError::Parse("Block spline tangent overflow".into()));
                         }
                     }
                 }
-                curved = vertices.iter().any(|(_, b)| *b != 0.);
-                let normal = DVec3::new(number(210, 0.)?, number(220, 0.)?, number(230, 1.)?);
-                points = curves::polyline(
-                    &vertices,
-                    (number(70, 0.)? as u32) & 1 != 0,
-                    normal,
-                    elevation,
-                    scale,
-                )?;
             }
-            "CIRCLE" | "ARC" => {
-                let center = DVec3::new(number(10, 0.)?, number(20, 0.)?, number(30, 0.)?);
-                let normal = DVec3::new(number(210, 0.)?, number(220, 0.)?, number(230, 1.)?);
-                let start = if kind == "CIRCLE" {
-                    0.
-                } else {
-                    number(50, 0.)?.to_radians()
-                };
-                let end = if kind == "CIRCLE" {
-                    std::f64::consts::TAU
-                } else {
-                    number(51, 360.)?.to_radians()
-                };
-                points = curves::circle(center, number(40, 0.)?, normal, start, end, scale)?;
-                curved = true;
-            }
-            "ELLIPSE" => {
-                let center = DVec3::new(number(10, 0.)?, number(20, 0.)?, number(30, 0.)?);
-                let major = DVec3::new(number(11, 1.)?, number(21, 0.)?, number(31, 0.)?);
-                let normal = DVec3::new(number(210, 0.)?, number(220, 0.)?, number(230, 1.)?);
-                points = curves::ellipse(
-                    center,
-                    major,
-                    normal,
-                    number(40, 1.)?,
-                    number(41, 0.)?,
-                    number(42, std::f64::consts::TAU)?,
-                    scale,
-                )?;
-                curved = true;
-            }
-            "SPLINE" => {
-                let mut controls = Vec::<DVec3>::new();
-                let mut fits = Vec::<DVec3>::new();
-                let mut knots = Vec::new();
-                let mut weights = Vec::new();
-                for (code, value) in attributes {
-                    let scalar = || {
-                        value
-                            .parse::<f64>()
-                            .ok()
-                            .filter(|v| v.is_finite())
-                            .ok_or_else(|| DxfError::Parse("Invalid spline numeric field".into()))
-                    };
-                    match *code {
-                        10 => controls.push(DVec3::new(scalar()?, 0., 0.)),
-                        20 | 30 => {
-                            let p = controls.last_mut().ok_or_else(|| {
-                                DxfError::Parse("Spline coordinate without control".into())
-                            })?;
-                            if *code == 20 {
-                                p.y = scalar()?;
-                            } else {
-                                p.z = scalar()?;
-                            }
-                        }
-                        11 => fits.push(DVec3::new(scalar()?, 0., 0.)),
-                        21 | 31 => {
-                            let p = fits.last_mut().ok_or_else(|| {
-                                DxfError::Parse("Spline coordinate without fit point".into())
-                            })?;
-                            if *code == 21 {
-                                p.y = scalar()?;
-                            } else {
-                                p.z = scalar()?;
-                            }
-                        }
-                        40 => knots.push(scalar()?),
-                        41 => weights.push(scalar()?),
-                        _ => {}
-                    }
-                }
-                let tangents = if attributes.iter().any(|(c, _)| *c == 12)
-                    && attributes.iter().any(|(c, _)| *c == 13)
+            match spline::flatten(
+                controls,
+                fits,
+                number(71, 3.)? as usize,
+                knots,
+                weights,
+                number(42, 1e-10)?,
+                tangents,
+                scale,
+            ) {
+                Ok(p) => points = p,
+                // Original _entity_segments catches invalid make_path
+                // construction and skips just that entity. Admission limits
+                // and nonfinite output still refuse the native transaction.
+                Err(DxfError::Parse(message))
+                    if message.starts_with("Invalid spline")
+                        || message.starts_with("Singular spline")
+                        || message.starts_with("Degenerate spline") =>
                 {
-                    Some([
-                        DVec3::new(number(12, 0.)?, number(22, 0.)?, number(32, 0.)?),
-                        DVec3::new(number(13, 0.)?, number(23, 0.)?, number(33, 0.)?),
-                    ])
-                } else {
-                    None
-                };
-                match spline::flatten(
-                    controls,
-                    fits,
-                    number(71, 3.)? as usize,
-                    knots,
-                    weights,
-                    number(42, 1e-10)?,
-                    tangents,
-                    scale,
-                ) {
-                    Ok(p) => points = p,
-                    // Original _entity_segments catches invalid make_path
-                    // construction and skips just that entity. Admission limits
-                    // and nonfinite output still refuse the native transaction.
-                    Err(DxfError::Parse(message))
-                        if message.starts_with("Invalid spline")
-                            || message.starts_with("Singular spline")
-                            || message.starts_with("Degenerate spline") =>
-                    {
-                        continue
-                    }
-                    Err(error) => return Err(error),
+                    return Ok(None);
                 }
-                curved = true;
+                Err(error) => return Err(error),
             }
-            _ => {
-                return Err(DxfError::Parse(format!(
-                    "DXF entity {kind} is not yet supported; document unchanged"
-                )))
-            }
+            curved = true;
         }
-        if points.len() < 2 && !face {
-            continue;
+        _ => {
+            return Err(DxfError::Parse(format!(
+                "DXF entity {kind} is not yet supported; document unchanged"
+            )))
         }
-        for point in &mut points {
-            if source_points {
-                *point = point.as_vec3().as_dvec3();
-            }
-            if !point.is_finite() {
-                return Err(DxfError::Parse("Import coordinate overflow".into()));
-            }
-        }
-        plan.entities.push(DxfEntity {
-            layer: layer.into(),
-            points,
-            face,
-            curved,
-        });
     }
-    if plan.entities.is_empty() {
-        return Err(DxfError::Parse("No importable DXF geometry".into()));
+    if points.len() < 2 && !face {
+        return Ok(None);
     }
-    Ok(plan)
+    for point in &mut points {
+        if source_points {
+            *point = point.as_vec3().as_dvec3();
+        }
+        if !point.is_finite() {
+            return Err(DxfError::Parse("Import coordinate overflow".into()));
+        }
+    }
+    Ok(Some(DxfEntity {
+        layer: layer.into(),
+        points,
+        face,
+        curved,
+    }))
 }
 
 /// Legacy POLYLINE owns a VERTEX sequence, terminated by SEQEND. Parse it once

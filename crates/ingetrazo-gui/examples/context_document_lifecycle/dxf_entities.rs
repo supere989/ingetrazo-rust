@@ -9,6 +9,12 @@ pub fn run() {
 pub fn run_curves() {
     run_input("original-dxf-curves.json", "native-dxf-curves.json", true);
 }
+pub fn run_blocks() {
+    run_input("original-dxf-blocks.json", "native-dxf-blocks.json", true);
+}
+pub fn run_blocks_addendum() {
+    run_input("original-dxf-blocks-addendum-all.json", "native-dxf-blocks-addendum.json", true);
+}
 pub fn run_splines() {
     run_input("original-dxf-splines.json", "native-dxf-splines.json", true);
 }
@@ -35,14 +41,19 @@ fn run_input(source_name: &str, native_name: &str, curve_flags: bool) {
         let record = |app: &IngeTrazoApp, phase: &str, rows: &mut Vec<Value>| {
             let mut row = json!({"case":name,"phase":phase,"depth":app.component_edit_stack.len(),"undo":app.undo_stack.len(),"redo":app.redo_stack.len(),"scene":super::nested_import::source_scene(app)});
             if curve_flags {
-                row["curves"] = curves(&super::nested_import::source_groups(app));
+                let groups = super::nested_import::source_groups(app);
+                row["curves"] = curves(&groups);
+                if source_name.starts_with("original-dxf-blocks") {
+                    row["owners"] = owners(app, &groups);
+                }
             }
             rows.push(row);
         };
         record(&app, "before", &mut rows);
         app.begin_unit_import(&root.join(case["file"].as_str().unwrap()))
             .unwrap();
-        app.document_session.unit_import.as_mut().unwrap().code = "m".into();
+        app.document_session.unit_import.as_mut().unwrap().code =
+            case["unit"].as_str().unwrap_or("m").into();
         app.accept_unit_import().unwrap();
         record(&app, "import", &mut rows);
         app.undo();
@@ -125,6 +136,47 @@ fn run_input(source_name: &str, native_name: &str, curve_flags: bool) {
         )
         .unwrap();
     }
+    if source_name == "original-dxf-blocks.json" {
+        let mut app = IngeTrazoApp::new();
+        app.system_clipboard = None;
+        app.attach_session_store(ingetrazo_gui::session_state::SessionStore::isolated(
+            &root.join("settings-block-cancel"),
+        ));
+        app.open_document(&root.join("shared-leaf-input.igz"));
+        app.current_file = None;
+        app.scene.select(SelectionItem::Group(0));
+        app.begin_component_edit();
+        app.scene.select(SelectionItem::Group(0));
+        app.begin_component_edit();
+        app.begin_unit_import(&root.join("shared-leaf.dxf"))
+            .unwrap();
+        app.document_session.unit_import.as_mut().unwrap().code = "m".into();
+        app.accept_unit_import().unwrap();
+        while !app.component_edit_stack.is_empty() {
+            let old = app.component_edit_stack.len();
+            app.cancel_component_edit();
+            assert_eq!(app.component_edit_stack.len(), old - 1);
+        }
+        let added = &app.scene.groups[2..];
+        assert_eq!(added.len(), 2);
+        assert_eq!(added[0].mesh_share, added[1].mesh_share);
+        for g in added {
+            assert_eq!(&app.scene.mesh_shares[&g.mesh_share.unwrap()], &g.mesh);
+            assert_eq!(
+                &app.scene.component_definitions[&g.component_definition.unwrap()].mesh,
+                &g.mesh
+            );
+        }
+        app.save_to_path(&root.join("cancel-native.igz"));
+        std::fs::write(
+            root.join("native-block-cancel.json"),
+            serde_json::to_vec_pretty(
+                &json!({"cancel_keeps_root_import_sharing_and_registries":true}),
+            )
+            .unwrap(),
+        )
+        .unwrap();
+    }
     std::fs::write(
         root.join(native_name),
         serde_json::to_vec_pretty(&json!({"cases":source["cases"],"states":rows})).unwrap(),
@@ -143,4 +195,65 @@ fn curves(groups: &[Group]) -> Value {
         json!({"edges":g.mesh.edges.len(),"curved":g.mesh.edges.iter().filter(|e|e.curve_id.is_some()).count(),"owners":owners.len(),"children":g.children.iter().map(group).collect::<Vec<_>>()})
     }
     json!(groups.iter().map(group).collect::<Vec<_>>())
+}
+
+fn owners(app: &IngeTrazoApp, groups: &[Group]) -> Value {
+    let edited = app
+        .component_edit_stack
+        .iter()
+        .map(|s| s.edited_group_id())
+        .collect::<std::collections::HashSet<_>>();
+    let current = app.component_edit_stack.last().map(|s| s.edited_group_id());
+    let mut rows = Vec::new();
+    let mut shares = Vec::new();
+    fn walk(
+        groups: &[Group],
+        prefix: &[usize],
+        edited: &std::collections::HashSet<uuid::Uuid>,
+        current: Option<uuid::Uuid>,
+        rows: &mut Vec<Value>,
+        shares: &mut Vec<(Vec<usize>, Option<uuid::Uuid>)>,
+    ) {
+        for (i, g) in groups.iter().enumerate() {
+            let mut path = prefix.to_vec();
+            path.push(i);
+            let component = g
+                .native_document
+                .get("component")
+                .and_then(Value::as_bool)
+                .unwrap_or(g.component_definition.is_some());
+            let xform = if current == Some(g.id) && g.children.is_empty() {
+                Value::Null
+            } else if g.transform == DMat4::IDENTITY
+                && g.component_definition.is_none()
+                && !g.native_document.get("xform").is_some_and(Value::is_array)
+            {
+                Value::Null
+            } else {
+                json!(g.transform.as_mat4().to_cols_array())
+            };
+            rows.push(json!({"path":path,"name":g.name,"component":component,"is_component":component&&!xform.is_null(),"xform":xform}));
+            shares.push((
+                path.clone(),
+                if edited.contains(&g.id) {
+                    None
+                } else {
+                    g.mesh_share
+                },
+            ));
+            walk(&g.children, &path, edited, current, rows, shares);
+        }
+    }
+    walk(groups, &[], &edited, current, &mut rows, &mut shares);
+    let mut pairs = Vec::new();
+    for (i, (a, ma)) in shares.iter().enumerate() {
+        if let Some(id) = ma {
+            for (b, mb) in &shares[i + 1..] {
+                if mb == &Some(*id) {
+                    pairs.push(json!([a, b]));
+                }
+            }
+        }
+    }
+    json!({"groups":rows,"shared_mesh_pairs":pairs})
 }

@@ -321,6 +321,8 @@ impl IngeTrazoApp {
         if candidate.groups.len() < old_count {
             return Err("Import did not append root groups".into());
         }
+        let new_shares = candidate.mesh_shares.iter().filter(|(id,_)| !root.original_scene.mesh_shares.contains_key(*id)).map(|(id,mesh)| (*id,mesh.clone())).collect::<Vec<_>>();
+        let new_definitions = candidate.component_definitions.iter().filter(|(id,_)| !root.original_scene.component_definitions.contains_key(*id)).map(|(id,definition)| (*id,definition.clone())).collect::<Vec<_>>();
         let mut before = root.original_scene.clone();
         before.layers = self.scene.layers.clone();
         before.embedded_textures = self.scene.embedded_textures.clone();
@@ -345,6 +347,10 @@ impl IngeTrazoApp {
             undo: Vec<ingetrazo_core::scene::Scene>,
             original_assets: std::collections::HashMap<String, Vec<u8>>,
             cancel_assets: std::collections::HashMap<String, Vec<u8>>,
+            original_shares: Vec<(uuid::Uuid,ingetrazo_core::mesh::Mesh)>,
+            cancel_shares: Vec<(uuid::Uuid,ingetrazo_core::mesh::Mesh)>,
+            original_definitions: Vec<(uuid::Uuid,ingetrazo_core::components::ComponentDefinition)>,
+            cancel_definitions: Vec<(uuid::Uuid,ingetrazo_core::components::ComponentDefinition)>,
         }
         let mut checkpoints = Vec::new();
         checkpoints
@@ -382,10 +388,23 @@ impl IngeTrazoApp {
                 undo: checkpoint_undo,
                 original_assets: candidate.embedded_textures.clone(),
                 cancel_assets: candidate.embedded_textures.clone(),
+                original_shares: if index==0 {Vec::new()}else{new_shares.clone()},
+                cancel_shares: new_shares.clone(),
+                original_definitions: if index==0 {Vec::new()}else{new_definitions.clone()},
+                cancel_definitions: new_definitions.clone(),
             });
         }
         let live_layers = candidate.layers.clone();
         let live_assets = candidate.embedded_textures.clone();
+        // Reserve destination registry slots without replacing old prototype owners.
+        for session in &mut self.component_edit_stack {
+            for scene in [&mut session.original_scene,&mut session.cancel_scene] {
+                scene.mesh_shares.try_reserve(new_shares.len()).map_err(|_| "Import shared mesh registry allocation refused")?;
+                scene.component_definitions.try_reserve(new_definitions.len()).map_err(|_| "Import component registry allocation refused")?;
+            }
+        }
+        self.scene.mesh_shares.try_reserve(new_shares.len()).map_err(|_| "Import live mesh registry allocation refused")?;
+        self.scene.component_definitions.try_reserve(new_definitions.len()).map_err(|_| "Import live component registry allocation refused")?;
         // No fallible parsing/emission/preparation remains beyond this point.
         self.component_edit_stack[0].original_scene = candidate;
         for (session, checkpoint) in self.component_edit_stack.iter_mut().zip(checkpoints) {
@@ -396,11 +415,17 @@ impl IngeTrazoApp {
             session.cancel_scene.layers = checkpoint.cancel_layers;
             session.original_scene.embedded_textures = checkpoint.original_assets;
             session.cancel_scene.embedded_textures = checkpoint.cancel_assets;
+            session.original_scene.mesh_shares.extend(checkpoint.original_shares);
+            session.cancel_scene.mesh_shares.extend(checkpoint.cancel_shares);
+            session.original_scene.component_definitions.extend(checkpoint.original_definitions);
+            session.cancel_scene.component_definitions.extend(checkpoint.cancel_definitions);
             session.original_undo = checkpoint.undo;
             session.original_redo.clear();
         }
         self.scene.layers = live_layers;
         self.scene.embedded_textures = live_assets;
+        self.scene.mesh_shares.extend(new_shares);
+        self.scene.component_definitions.extend(new_definitions);
         self.push_prepared_undo_snapshot(before);
         self.bump_model_revision();
         Ok(())

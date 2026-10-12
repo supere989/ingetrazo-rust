@@ -1,0 +1,120 @@
+{
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "cases": 7,
+  "states": 49,
+  "archive_sha256": "d9a5253099f01e1d12ef035f9e314fbe5ae4a13f9eb416ed556328b628569ddf",
+  "members": {
+    "uniform/attributed-insert-input.igz": {
+      "bytes": 3552,
+      "sha256": "42b85d264ae1dc8ef32d4537ff45e867cc3565cdfc0d380355cfc26269a8115b"
+    },
+    "uniform/attributed-insert-original.igz": {
+      "bytes": 4247,
+      "sha256": "db8e0bb688cd04353daf212708e0cb15c86dc27c4bc88a4004a768c82757a940"
+    },
+    "uniform/attributed-insert.dxf": {
+      "bytes": 16817,
+      "sha256": "7b6bb8596e4c50be955f3015894fbd68c64b6e7822baa0f594d3c97307eb5518"
+    },
+    "uniform/original-dxf-blocks-addendum.json": {
+      "bytes": 415709,
+      "sha256": "74e022a834508b47592cbd8492e8b7b76827a8792a8c44863a3a75d542e72780"
+    },
+    "uniform/uniform-arc-input.igz": {
+      "bytes": 3552,
+      "sha256": "0da9af629231f89d7b1da54fc1f8723ddababac77336c646be2b7749a526ca97"
+    },
+    "uniform/uniform-arc-original.igz": {
+      "bytes": 17793,
+      "sha256": "3f153631820741d76812f7920666ca0c64612dea8f2817dc36a8416e17dd0790"
+    },
+    "uniform/uniform-arc.dxf": {
+      "bytes": 16239,
+      "sha256": "396c30ca8dcfd72fbb263b5bd9131b7829800ec367911c52b624d73054985e88"
+    },
+    "uniform/uniform-circle-input.igz": {
+      "bytes": 3552,
+      "sha256": "aa4007466bd77d1bfc21816fd8619184a8b16ace64bd884f199bad783ea3e576"
+    },
+    "uniform/uniform-circle-original.igz": {
+      "bytes": 22335,
+      "sha256": "a725b4c391570c1b43d42faaa4c1753820acd27325258d56dffb3d465f42105a"
+    },
+    "uniform/uniform-circle.dxf": {
+      "bytes": 16211,
+      "sha256": "2c6b72ab3013e502847268824557e3e4f8adb3a078d0ddb5a73736c3268bcaec"
+    },
+    "curves/anisotropic-legacy-bulge-input.igz": {
+      "bytes": 3552,
+      "sha256": "7299c4e374b8833c59e104267f7c5a22c7676af259454ec80501aa7d001b1693"
+    },
+    "curves/anisotropic-legacy-bulge-original.igz": {
+      "bytes": 11833,
+      "sha256": "c860a2eb24d285dad671c9ebc71d4545211423c5b5580661a7840ef78fbe8be8"
+    },
+    "curves/anisotropic-legacy-bulge.dxf": {
+      "bytes": 16630,
+      "sha256": "ea61f1fe3cd334c1930050d884667b05347bf0072a2263f6c1299e97fb3a8352"
+    },
+    "curves/anisotropic-lw-bulge-input.igz": {
+      "bytes": 3552,
+      "sha256": "98c9dcef5d6e363e3b97b23cfb0ad11a995b740aea13f4afdc8d7d08915f61f6"
+    },
+    "curves/anisotropic-lw-bulge-original.igz": {
+      "bytes": 11467,
+      "sha256": "3065e3e67c267fc611512f668aa8aa59be047232d17d4bc9fa2e958302be7ea6"
+    },
+    "curves/anisotropic-lw-bulge.dxf": {
+      "bytes": 16268,
+      "sha256": "d659bd0cf4b2d19f50dcc0b518ec0858ddbada530ec0cb21f99c9fffad25153f"
+    },
+    "curves/original-dxf-blocks-curve-addendum.json": {
+      "bytes": 705110,
+      "sha256": "3de1f12ef7db7d8ea1c88861bcb53d086cf9c2220fd537a4add51583c5f3626e"
+    },
+    "curves/unit-nested-spline-input.igz": {
+      "bytes": 3552,
+      "sha256": "543d8934dcbd6a4a2d550e533e667e37f1c670e9c330b0b056ee0782942c8964"
+    },
+    "curves/unit-nested-spline-original.igz": {
+      "bytes": 67387,
+      "sha256": "508a8e9df6054da876a0627bcbeeb37b6e880bac5efcee078382d999929fd705"
+    },
+    "curves/unit-nested-spline.dxf": {
+      "bytes": 16399,
+      "sha256": "5a7b218ac48e6dc093da72ae4674e4a988cc1d2c36c760a841fc27cfab9ab01e"
+    },
+    "full-arc/original-dxf-blocks-full-arc-addendum.json": {
+      "bytes": 186453,
+      "sha256": "6cd4e18a6de26d1491dbdbc66ba121ed9693bcec93149e2f6b6d6b772e3f66ca"
+    },
+    "full-arc/uniform-full-arc-input.igz": {
+      "bytes": 3552,
+      "sha256": "b00b49194c20fb35f2aa87bcaf2408226a41cf856e956cb104f040168e9a9a5c"
+    },
+    "full-arc/uniform-full-arc-original.igz": {
+      "bytes": 22313,
+      "sha256": "534fa2a994735a032cbe5b81630e19cad38d904562894ad81a2636120a6531f0"
+    },
+    "full-arc/uniform-full-arc.dxf": {
+      "bytes": 16239,
+      "sha256": "f75ffac6262661fbf967b8189bb4bbf2d139f250a8f6eb55dc529bf476321aa4"
+    },
+    "original-dxf-blocks-addendum-all.json": {
+      "bytes": 1307196,
+      "sha256": "05e39e6a85d4a67fb96bc7ee573c23190ff52222899cea7dcd1bf9d5fc3d5f1d"
+    },
+    "logs/ingetrazo-dxf-blocks-addendum-source.log": {
+      "bytes": 232,
+      "sha256": "af369ffe77f59f632b4b4f5b3a2e6fbd9caebe635dfda9d297c6606c356f385f"
+    },
+    "logs/ingetrazo-dxf-blocks-curve-addendum-source.log": {
+      "bytes": 232,
+      "sha256": "af369ffe77f59f632b4b4f5b3a2e6fbd9caebe635dfda9d297c6606c356f385f"
+    },
+    "logs/ingetrazo-dxf-blocks-full-arc-addendum-source.log": {
+      "bytes": 133,
+      "sha256": "ece42cd38cdd550dace34a8663638b9505abbbd9d88dad7f6a80433ded92f1e1"
+    }
+  }
+}
