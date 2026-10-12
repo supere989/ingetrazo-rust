@@ -15,6 +15,6 @@ for i in range(3126):
  if src!=dst:position_differences.append({'vertex':i,'source_bits':src,'native_bits':dst})
  color=struct.unpack_from('<3I',nb,i*24+12);row=next(x for x in rows if x['first']<=i<x['first']+x['count'])
  if tuple(row['color']['bits'][:3])!=color:color_differences.append({'vertex':i,'source_bits':row['color']['bits'][:3],'native_bits':color})
-report={'diagnostic_only':True,'position_differences':len(position_differences),'position_examples':position_differences[:32],'color_differences':len(color_differences),'color_examples':color_differences[:8],'source_mvp_bits':rows[0]['mvp']['bits'],'native_mvp_bits':n['mvp_bits'],'matrix_bits_equal':rows[0]['mvp']['bits']==n['mvp_bits'],'source_viewport':rows[0]['viewport'],'native_extent':n['extent'],'source_clip_enable':[x['clip_enabled'] for x in rows],'native_draw_flags':n['draw_flags']}
+report={'diagnostic_only':True,'position_differences':len(position_differences),'position_examples':position_differences[:32],'color_differences':len(color_differences),'color_examples':color_differences[:8],'source_mvp_bits':rows[0]['mvp']['bits'],'native_mvp_bits':n['mvp_bits'],'matrix_bits_equal':rows[0]['mvp']['bits']==n['mvp_bits'],'source_viewport':rows[0]['viewport'],'native_extent':n['extent'],'source_clip_enable':[x['clip_enabled'] for x in rows],'native_draw_flags':n['draw_flags'],'source_raster_states':[x['raster_state'] for x in rows],'native_pipeline_recipe':n['pipeline_recipe']}
 (a.native/'axis-transport-comparison.json').write_text(json.dumps(report,indent=2)+'\n')
 print(json.dumps(report))

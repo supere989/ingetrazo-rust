@@ -13,3 +13,5 @@ python scripts/compare-axis-transport.py SOURCE_AXIS_OUTPUT NATIVE_AXIS_OUTPUT
 ```
 
 Comparison is diagnostic only: positions, per-axis colors, matrix bits, clip flags and extent. A differing report does not authorize geometry fitting or establish pixel parity. Existing six-case screenshot behavior and frozen inputs remain unchanged.
+
+The follow-on records actual GL state at each delegated axes draw (depth function/write, blend equation/factors, line width/smoothing, multisample/coverage and scissor). Native pipeline state is explicitly labeled the pipeline creation recipe; it is not a driver query. The source and native matrix transport already matched in the retained initial run; this diagnostic tests raster-state hypotheses without changing rendering. Diagnostic admission is cached once at World creation.
