@@ -1429,7 +1429,14 @@ impl IngeTrazoApp {
         let mut annotations=|sheet:&Sheet,key:&str,value:&serde_json::Value|{
             let date=crate::composer_text_fields::today()?;
             let fields=crate::composer_text_fields::Context{index:Some(*indices.get(&(sheet as *const _)).ok_or("Annotation sheet context lost")?),total:scene.sheets.len(),path:current_file,date:&date};
-            let output=crate::composer_annotations::draws(sheet,key,value,&mut text_resources.borrow_mut(),&fields,true)?;
+            let mut output=crate::composer_annotations::draws(sheet,key,value,&mut text_resources.borrow_mut(),&fields,true)?;
+            // QPdfEngine closes a source drawLine whose endpoints coincide. A literal
+            // zero line instead paints a projecting-cap dot in PDF readers.
+            for index in output.source_points {
+                let path=&mut output.draws.get_mut(index).ok_or("Lost annotation point provenance")?.path;
+                if !matches!(path.as_slice(),[ingetrazo_formats::sheet_pdf::PathOp::Move(a),ingetrazo_formats::sheet_pdf::PathOp::Line(b)]if a==b){return Err("Invalid annotation PDF point".into());}
+                path[1]=ingetrazo_formats::sheet_pdf::PathOp::Close;
+            }
             emitted_annotation|=!output.draws.is_empty();Ok(output.draws)
         };
         let pages=ingetrazo_formats::sheet_pdf_shapes::prepare_all_with_annotations(sheets,&mut painter,&mut texts,&mut symbols,&mut legends,&mut pictures,&mut annotations)?;

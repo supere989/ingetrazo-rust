@@ -390,8 +390,8 @@
       "sha256": "ac5f09303d54ad9ba6aab27da74d271cbab447d4e4b72ded88ff8ab55cf89c60"
     },
     "scripts/check-sheet-annotations.py": {
-      "commit": "f6463f435570bc8176e31100c83c522e6d74b63b",
-      "sha256": "1287ab75bc334c816a7d66e43b70a3e035dd1668ed0e9550b290f824c21067d4"
+      "commit": "1fd654ca93961f515857bf40a4d5ac26b5596786",
+      "sha256": "291f9dca047a5180a06a30385fb5aa3666ca490906e11568187d1e83374b5cde"
     },
     "scripts/replay-sheet-annotations.py": {
       "commit": "a69c8d031bcc20a9d5750b8564dd58fcd8ba8f34",

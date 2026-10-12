@@ -85,14 +85,15 @@ const FAMILIES: [&str; 6] = [
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let args: Vec<_> = std::env::args().skip(1).collect();
     if args.len() < 2 {
-        return Err("Usage: sheet_annotation_workflows SOURCE NATIVE [--software]".into());
+        return Err(
+            "Usage: sheet_annotation_workflows SOURCE NATIVE [--software|--pdf-only]".into(),
+        );
     }
     let source = Path::new(&args[0]);
     let out = Path::new(&args[1]);
     std::fs::create_dir_all(out)?;
     let reference: serde_json::Value =
         serde_json::from_slice(&std::fs::read(source.join("source.json"))?)?;
-    let mut renderer = Renderer::new(args.iter().any(|a| a == "--software"))?;
     let context = egui::Context::default();
     let _ = context.run(Default::default(), |_| {});
     let mut app = ingetrazo_gui::IngeTrazoApp::new();
@@ -100,6 +101,35 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         &out.join("session"),
     ));
     app.set_language("en");
+    // PDF-only repairs need no GPU replay. This distinct report cannot masquerade
+    // as the full native image/reader/refusal inventory.
+    if args.iter().any(|a| a == "--pdf-only") {
+        let mut reports = Vec::new();
+        for row in reference["images"]
+            .as_array()
+            .ok_or("Missing annotation cases")?
+        {
+            let sheet = row["sheet_index"].as_u64().ok_or("sheet_index")? as usize;
+            app.mark_document_clean();
+            app.open_document(&source.join(row["scene"].as_str().ok_or("scene")?));
+            assert!(!app.document_session.confirm_unsaved);
+            assert_eq!(app.scene.sheets.len(), sheet + 1);
+            app.current_file = Some("fixture-project.igz".into());
+            let before = app.scene.clone();
+            app.export_composer_pdf(Some(sheet), &out.join(row["pdf"].as_str().ok_or("pdf")?))?;
+            assert_eq!(app.scene, before, "PDF replay mutated authored document");
+            reports
+                .push(serde_json::json!({"case":row["case"],"pdf":row["pdf"],"nonmutating":true}));
+        }
+        std::fs::write(
+            out.join("native.pdf-only.json"),
+            serde_json::to_vec_pretty(
+                &serde_json::json!({"pdfs":reports,"scope":"Actual App PDF export only; no GPU, image, save or refusal replay"}),
+            )?,
+        )?;
+        return Ok(());
+    }
+    let mut renderer = Renderer::new(args.iter().any(|a| a == "--software"))?;
     let mut records = Vec::new();
     let mut failures = Vec::new();
     for row in reference["images"]
