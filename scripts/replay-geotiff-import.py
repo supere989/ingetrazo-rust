@@ -21,7 +21,8 @@ def main():
         for key,base in [('sources',repo),('original_sources',original)]:
             for v in m[key]:assert sha(base/v['path'])==v['sha256'],v['path']
         for v in m['capture_sources']:
-            assert sha(repo/v['retained_path'])==v['sha256'],v['retained_path']
+            path=v.get('retained_path',v['path'])
+            assert sha(repo/path)==v['sha256'],path
         source=out/'source';source.mkdir();native=out/'native';native.mkdir()
         with zipfile.ZipFile(archive) as z:
             assert len(z.namelist())==len(m['members']) and set(z.namelist())==set(m['members'])
