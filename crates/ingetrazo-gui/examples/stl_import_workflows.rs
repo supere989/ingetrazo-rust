@@ -264,6 +264,10 @@ fn run(source: &Path, out: &Path) -> Result<(), String> {
         trace(out, name, "load-start", 0., &a, &ctx)?;
         a.open_document(&source.join(case["input"].as_str().ok_or("input")?));
         a.current_file = None;
+        // This headless fixture exercises the real App modal/controller, not
+        // the unrelated software viewport fallback. No GPU texture is attached
+        // and the existing native-viewport route paints its placeholder.
+        a.native_gpu_viewport_enabled = true;
         if case["context"] == "leaf" {
             a.scene.select(SelectionItem::Group(0));
             a.begin_component_edit();
