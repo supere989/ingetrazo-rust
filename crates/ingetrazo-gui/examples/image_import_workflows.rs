@@ -289,6 +289,7 @@ fn run(source: &Path, out: &Path) -> Result<(), String> {
         states.push(record(&a, name, "before")?);
         let ext = out.join("external").join(name);
         std::fs::create_dir_all(&ext).map_err(|e| e.to_string())?;
+        let initial_resources = a.scene.embedded_textures.len();
         let mut keys = Vec::new();
         for action in c["actions"].as_array().ok_or("Actions")? {
             let op = action["op"].as_str().ok_or("Action op")?;
@@ -393,7 +394,7 @@ fn run(source: &Path, out: &Path) -> Result<(), String> {
         if keys.len() >= 3 {
             assert_eq!(keys[0], keys[1]);
             assert_ne!(keys[0], keys[2]);
-            assert_eq!(a.scene.embedded_textures.len(), 2);
+            assert_eq!(a.scene.embedded_textures.len(), initial_resources + 2);
             guards["resource_reuse"] = json!(true);
         }
         cases.push(json!({"name":name,"saved":saved,"phases":states.iter().filter(|r|r["case"]==name).map(|r|r["phase"].clone()).collect::<Vec<_>>(),"cache_reuse":{"same_name_equal":keys.len()<2||keys[0]==keys[1],"renamed_distinct":keys.len()<3||keys[0]!=keys[2]}}));
