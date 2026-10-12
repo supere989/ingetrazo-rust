@@ -1,3 +1,6 @@
+#ifndef SOURCE_REFLECT_Y
+#define SOURCE_REFLECT_Y 0
+#endif
 #include <metal_stdlib>
 using namespace metal;
 struct Vertex { packed_float3 position; packed_float3 normal; packed_float4 color; packed_float2 uv; };
@@ -7,7 +10,11 @@ struct Out { float4 position [[position]]; float4 color; float clip [[clip_dista
 vertex Out world_vertex(uint id [[vertex_id]],uint instance [[instance_id]],const device Vertex* v [[buffer(0)]],const device float4x4* model [[buffer(1)]],constant float4x4& camera [[buffer(2)]],constant Section& section [[buffer(3)]]) {
  Out o;float4 world=model[instance]*float4(v[id].position,1.0);o.clip=section_distance(world,section);o.position=camera*world;
  // OrbitCamera uses OpenGL clip depth; Metal raster depth is [0,w].
- o.position.z=(o.position.z+o.position.w)*0.5; o.color=float4(v[id].color); return o;
+ o.position.z=(o.position.z+o.position.w)*0.5; o.color=float4(v[id].color);
+#if SOURCE_REFLECT_Y
+ o.position.y=-o.position.y;
+#endif
+ return o;
 }
 struct Paint {float4 front;float4 back;uint mode;float opacity;uint padding1;uint padding2;};
 // Frozen source RGBA8 blend factor conversion uses nearest-even UNORM8.
@@ -27,7 +34,11 @@ fragment float4 world_fragment(Out in [[stage_in]],bool front [[front_facing]],c
 struct TextureVertex {packed_float3 position;packed_float2 uv;};
 struct TextureOut {float4 position [[position]];float2 uv;float clip [[clip_distance]];};
 vertex TextureOut world_texture_vertex(uint id [[vertex_id]],uint instance [[instance_id]],const device TextureVertex* v [[buffer(0)]],const device float4x4* model [[buffer(1)]],constant float4x4& camera [[buffer(2)]],constant Section& section [[buffer(3)]]) {
- TextureOut o;float4 world=model[instance]*float4(v[id].position,1.);o.clip=section_distance(world,section);o.position=camera*world;o.position.z=(o.position.z+o.position.w)*.5;o.uv=float2(v[id].uv);return o;
+ TextureOut o;float4 world=model[instance]*float4(v[id].position,1.);o.clip=section_distance(world,section);o.position=camera*world;o.position.z=(o.position.z+o.position.w)*.5;o.uv=float2(v[id].uv);
+#if SOURCE_REFLECT_Y
+ o.position.y=-o.position.y;
+#endif
+ return o;
 }
 struct TexturePaint {float opacity;float shade;uint hard_cutout;uint height;float4 mean;};
 constant float source_bayer[16]={0.5/16.,8.5/16.,2.5/16.,10.5/16.,12.5/16.,4.5/16.,14.5/16.,6.5/16.,3.5/16.,11.5/16.,1.5/16.,9.5/16.,15.5/16.,7.5/16.,13.5/16.,5.5/16.};
@@ -35,25 +46,33 @@ fragment float4 world_texture_fragment(TextureOut in [[stage_in]],texture2d<floa
  if(paint.mean.w<0.)return front?float4(0.,1.,0.,1.):float4(1.,0.,0.,1.);
  if(paint.mean.w!=0.)return float4(paint.mean.rgb,source_blend_alpha(paint.opacity));
  float4 texel=image.sample(filter,in.uv);
- if(paint.opacity>.999&&texel.a<.5){if(paint.hard_cutout!=0)discard_fragment();uint x=uint(in.position.x)%4;uint y=uint(float(paint.height)-in.position.y)%4;if(texel.a<source_bayer[y*4+x])discard_fragment();return float4(texel.rgb*paint.shade,1.);}
+ if(paint.opacity>.999&&texel.a<.5){if(paint.hard_cutout!=0)discard_fragment();uint x=uint(in.position.x)%4;uint y=uint((SOURCE_REFLECT_Y ? in.position.y : float(paint.height)-in.position.y))%4;if(texel.a<source_bayer[y*4+x])discard_fragment();return float4(texel.rgb*paint.shade,1.);}
  return float4(texel.rgb*paint.shade,source_blend_alpha(texel.a*paint.opacity));
 }
 
 // World-space ghosts deliberately omit section clipping and ordinary paint policy.
 struct GhostVertex {packed_float3 position;packed_float3 color;};
 vertex Out world_ghost_vertex(uint id [[vertex_id]],const device GhostVertex* v [[buffer(0)]],constant float4x4& camera [[buffer(2)]]) {
- Out o;o.clip=1.;o.position=camera*float4(v[id].position,1.);o.position.z=(o.position.z+o.position.w)*.5;o.color=float4(v[id].color,1.);return o;
+ Out o;o.clip=1.;o.position=camera*float4(v[id].position,1.);o.position.z=(o.position.z+o.position.w)*.5;o.color=float4(v[id].color,1.);
+#if SOURCE_REFLECT_Y
+ o.position.y=-o.position.y;
+#endif
+ return o;
 }
 struct GhostPaint {float4 edge;uint height;uint mode;uint padding1;uint padding2;};
 fragment float4 world_ghost_fragment(Out in [[stage_in]],constant GhostPaint& paint [[buffer(0)]]) {
- float x=in.position.x,y=float(paint.height)-in.position.y;
+ float x=in.position.x,y=(SOURCE_REFLECT_Y ? in.position.y : float(paint.height)-in.position.y);
  if(paint.mode==0){if(fmod(x,4.)>=1.&&fmod(y,4.)>=1.)discard_fragment();return float4(in.color.rgb,1.);}
  if(paint.mode==1&&fmod(x+y,6.)>=3.)discard_fragment();return float4(paint.edge.rgb,1.);
 }
 
 // Frozen GL_LINES path has default width1; no authoring-style width remap.
 vertex Out world_line_vertex(uint id [[vertex_id]],const device packed_float3* v [[buffer(0)]],constant float4x4& camera [[buffer(2)]],constant Section& section [[buffer(3)]]) {
- Out o;o.clip=section_distance(float4(v[id],1.),section);o.position=camera*float4(v[id],1.);o.position.z=(o.position.z+o.position.w)*.5;o.color=float4(1.);return o;
+ Out o;o.clip=section_distance(float4(v[id],1.),section);o.position=camera*float4(v[id],1.);o.position.z=(o.position.z+o.position.w)*.5;o.color=float4(1.);
+#if SOURCE_REFLECT_Y
+ o.position.y=-o.position.y;
+#endif
+ return o;
 }
 
 struct Background {float4 colors[5];float horizon;float padding[3];};
@@ -61,7 +80,11 @@ vertex Out world_background_vertex(uint id [[vertex_id]],constant Background& b 
  Out o;o.clip=1.;uint q=id%6;bool upper=id<6;float x=(q==0||q==3||q==5)?-1.:1.;
  bool top=(q==2||q==4||q==5);float y=upper?(top?1.:b.horizon):(top?b.horizon:-1.);
  if(id>=12){x=id==12?-1.:1.;y=b.horizon;}
- o.position=float4(x,y,.5,1.);o.color=id>=12?b.colors[4]:(upper?(top?b.colors[1]:b.colors[0]):(top?b.colors[2]:b.colors[3]));return o;
+ o.position=float4(x,y,.5,1.);o.color=id>=12?b.colors[4]:(upper?(top?b.colors[1]:b.colors[0]):(top?b.colors[2]:b.colors[3]));
+#if SOURCE_REFLECT_Y
+ o.position.y=-o.position.y;
+#endif
+ return o;
 }
 fragment float4 world_background_fragment(Out in [[stage_in]]) {return in.color;}
 
@@ -70,6 +93,10 @@ fragment float4 world_billboard_color(TextureOut in [[stage_in]],constant float4
 // Source section mask is geometry-only, including textured vertex records.
 // Existing visible-surface depth already includes source texture cutout policy.
 vertex Out world_texture_mask_vertex(uint id [[vertex_id]],uint instance [[instance_id]],const device TextureVertex* v [[buffer(0)]],const device float4x4* model [[buffer(1)]],constant float4x4& camera [[buffer(2)]],constant Section& section [[buffer(3)]]) {
- Out o;float4 world=model[instance]*float4(v[id].position,1.);o.clip=section_distance(world,section);o.position=camera*world;o.position.z=(o.position.z+o.position.w)*.5;o.color=float4(1.);return o;
+ Out o;float4 world=model[instance]*float4(v[id].position,1.);o.clip=section_distance(world,section);o.position=camera*world;o.position.z=(o.position.z+o.position.w)*.5;o.color=float4(1.);
+#if SOURCE_REFLECT_Y
+ o.position.y=-o.position.y;
+#endif
+ return o;
 }
 fragment float4 world_mask_fragment(Out in [[stage_in]]) {return float4(0.);}

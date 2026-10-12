@@ -1,0 +1,35 @@
+{
+  "status": "Draft diagnostic only; production admission unchanged; no execution",
+  "base_commit": "4dc38657",
+  "original_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "eligibility": "fixed four-sample defaults equal index-preserving Y reflection of measured source pattern",
+  "mapping": {
+    "clip_y": "negate final homogeneous vertex Y",
+    "resolved_pixel": "input[x,height-1-y]",
+    "sample_index": "unchanged",
+    "source_depth_query": "reflect existing texture row; inverse and normalized source query unchanged",
+    "front_facing": "XOR placement reflection with diagnostic raster reflection"
+  },
+  "required_actual_native_observations": [
+    "per-sample RGBA at four asymmetric fixed pixels",
+    "per-sample depth and selected source sample0",
+    "ordered binary32 resolved RGBA versus frozen source",
+    "asymmetric edge and overlapping opaque geometry",
+    "clipping, winding/front-back and texture/overlay orientation",
+    "target budget refusal and cache/foreign owner rejection"
+  ],
+  "frozen_inputs": "Reuse canonical document-annotation and native section/CGL source fixtures; exact member inventory pending consumer review",
+  "remaining_draft_work": [
+    "native consumer and per-sample depth readback",
+    "cold compatibility guard between resolve prototype/native-reference configurations",
+    "review fill/stencil and billboard screen-phase orientation",
+    "original source pixel comparator and rejecting controls"
+  ],
+  "prohibited": [
+    "production policy waiver",
+    "tolerance or zero snapping",
+    "CPU rendering fallback",
+    "wgpu/MoltenVK/backend wrapper",
+    "new source capture before existing corpus inspected"
+  ]
+}

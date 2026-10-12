@@ -14,11 +14,11 @@ uint occluded(Query q,float depth,constant Parameters& p){
 }
 kernel void visibility_single(uint id [[thread_position_in_grid]],const device Query* queries [[buffer(0)]],device uint* hidden [[buffer(1)]],constant Parameters& p [[buffer(2)]],depth2d<float,access::read> depth [[texture(0)]]){
  if(id>=p.extent_count_sample.z)return;Query q=queries[id];float maximum=0.;
- if(q.active){for(int y=max(q.pixel.y-1,0);y<=min(q.pixel.y+1,int(p.extent_count_sample.y)-1);y++){for(int x=max(q.pixel.x-1,0);x<=min(q.pixel.x+1,int(p.extent_count_sample.x)-1);x++){maximum=max(maximum,depth.read(uint2(x,int(p.extent_count_sample.y)-1-y)));}}}
+ if(q.active){for(int y=max(q.pixel.y-1,0);y<=min(q.pixel.y+1,int(p.extent_count_sample.y)-1);y++){for(int x=max(q.pixel.x-1,0);x<=min(q.pixel.x+1,int(p.extent_count_sample.x)-1);x++){maximum=max(maximum,depth.read(uint2(x,((p.extent_count_sample.w&0x80000000u)?y:int(p.extent_count_sample.y)-1-y))));}}}
  hidden[id]=occluded(q,maximum,p);
 }
 kernel void visibility_ms(uint id [[thread_position_in_grid]],const device Query* queries [[buffer(0)]],device uint* hidden [[buffer(1)]],constant Parameters& p [[buffer(2)]],depth2d_ms<float,access::read> depth [[texture(0)]]){
  if(id>=p.extent_count_sample.z)return;Query q=queries[id];float maximum=0.;
- if(q.active){for(int y=max(q.pixel.y-1,0);y<=min(q.pixel.y+1,int(p.extent_count_sample.y)-1);y++){for(int x=max(q.pixel.x-1,0);x<=min(q.pixel.x+1,int(p.extent_count_sample.x)-1);x++){maximum=max(maximum,depth.read(uint2(x,int(p.extent_count_sample.y)-1-y),p.extent_count_sample.w));}}}
+ if(q.active){for(int y=max(q.pixel.y-1,0);y<=min(q.pixel.y+1,int(p.extent_count_sample.y)-1);y++){for(int x=max(q.pixel.x-1,0);x<=min(q.pixel.x+1,int(p.extent_count_sample.x)-1);x++){maximum=max(maximum,depth.read(uint2(x,((p.extent_count_sample.w&0x80000000u)?y:int(p.extent_count_sample.y)-1-y)),p.extent_count_sample.w&0x7fffffffu));}}}
  hidden[id]=occluded(q,maximum,p);
 }

@@ -24,6 +24,10 @@ vertex Out section_contour(uint corner [[vertex_id]],uint instance [[instance_id
  float3 lift=normal*(.6*width);
  float3 quad[4]={hits[0]-side*width+lift,hits[1]-side*width+lift,hits[1]+side*width+lift,hits[0]+side*width+lift};
  const uint order[6]={0,1,2,0,2,3};out.position=camera*float4(quad[order[corner]],1.);
- out.position.z=(out.position.z+out.position.w)*.5;return out;
+ out.position.z=(out.position.z+out.position.w)*.5;
+#if SOURCE_REFLECT_Y
+ out.position.y=-out.position.y;
+#endif
+ return out;
 }
 fragment float4 section_contour_color(Out in [[stage_in]]){return in.color;}

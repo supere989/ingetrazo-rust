@@ -161,6 +161,7 @@ pub struct World {
     resolve_prototype:Option<Arc<super::world_resolve::Pipeline>>,
     source_tile:Option<Arc<super::world_resolve::Pipeline>>,
     diagnostic_native_resolve:bool,
+    pub(crate) reflected_diagnostic:bool,
     samples: usize,
     diagnostic_samples: bool,
     pub(crate) ghosts: Option<Arc<super::world_ghost::Ghosts>>,
@@ -178,6 +179,7 @@ pub struct World {
     pub stats: Stats,
 }
 pub struct Prepared {
+    pub(crate) reflected_diagnostic:bool,
     resolve_prototype:Option<Arc<super::world_resolve::Pipeline>>,    diagnostic_samples: bool,
     pub(crate) billboards:Option<Arc<super::world_billboard::Prepared>>,
     pub(crate) section: Section,
@@ -226,6 +228,15 @@ impl World {
         if self.samples.max(1)!=4{return Err("Source resolve prototype requires configured four samples".into());}
         let pipeline=super::world_resolve::Pipeline::new(metal)?;
         self.owner=Some(pipeline.owner.clone());self.resolve_prototype=Some(pipeline);self.stats.source_resolve_pipeline_builds+=1;Ok(())
+    }
+    /// Opt-in fixed-pattern experiment; the ordinary source admission stays unchanged.
+    pub fn enable_reflected_sample_diagnostic(&mut self,metal:&NativeMetal)->Result<(),String>{
+        if !self.targets.is_empty()||self.pipeline.is_some()||self.resolve_prototype.is_some(){return Err("Reflected diagnostic requires cold World".into());}
+        self.validate_context_owner(metal)?;
+        if self.samples.max(1)!=4{return Err("Reflected diagnostic requires four configured samples".into());}
+        let pipeline=super::world_resolve::Pipeline::reflected(metal)?;
+        self.owner=Some(pipeline.owner.clone());self.resolve_prototype=Some(pipeline);
+        self.reflected_diagnostic=true;self.stats.source_resolve_pipeline_builds+=1;Ok(())
     }
     /// Probe-only cold opt-in. Ordinary targets retain their original usage/store policy.
     pub fn enable_sample_observation(&mut self)->Result<(),String>{
@@ -354,7 +365,7 @@ impl World {
         let pipeline = if let Some(p) = self.pipeline.as_ref().filter(|p|p.fill.is_none()) {
             p.clone()
         } else {
-            Arc::new(pipeline(metal,false,self.samples.max(1),false)?)
+            Arc::new(pipeline(metal,false,self.samples.max(1),false,self.reflected_diagnostic)?)
         };
         let allocated = cached.is_none();
         let target = if let Some(t) = cached {
@@ -414,6 +425,7 @@ impl World {
         self.stats.prepared += 1;
         Ok(Some(Arc::new(Prepared {
             diagnostic_samples:self.diagnostic_samples,
+            reflected_diagnostic:self.reflected_diagnostic,
             resolve_prototype:self.active_resolve(),
             section: Section::OFF,
             contour:None,contour_eye_width:[0.;4],
@@ -603,7 +615,7 @@ impl World {
         };
         let needs_materials=placements.has_materials;
         let cached_pipeline=if fill.is_some(){&self.section_pipeline}else{&self.pipeline};
-        let pipeline=if let Some(p)=cached_pipeline{if (!needs_materials||p.material.is_some()) && p.fill.is_some()==fill.is_some(){p.clone()}else{Arc::new(pipeline(metal,true,self.samples.max(1),fill.is_some())? )}}else{Arc::new(pipeline(metal,needs_materials,self.samples.max(1),fill.is_some())?)};
+        let pipeline=if let Some(p)=cached_pipeline{if (!needs_materials||p.material.is_some()) && p.fill.is_some()==fill.is_some(){p.clone()}else{Arc::new(pipeline(metal,true,self.samples.max(1),fill.is_some(),self.reflected_diagnostic)? )}}else{Arc::new(pipeline(metal,needs_materials,self.samples.max(1),fill.is_some(),self.reflected_diagnostic)?)};
         let mut new_target = if idle.is_none() {
             Some(Arc::new(Target {
                 samples:self.samples.max(1),
@@ -789,6 +801,7 @@ impl World {
         if fill.is_some(){self.section_pipeline=Some(pipeline.clone());}else{self.pipeline=Some(pipeline.clone());}
         Ok(Some(Arc::new(Prepared {
             diagnostic_samples:self.diagnostic_samples,
+            reflected_diagnostic:self.reflected_diagnostic,
             resolve_prototype:self.active_resolve(),
             section: Section::OFF,
             contour:None,contour_eye_width:[0.;4],
@@ -888,7 +901,7 @@ impl Prepared {
             // Original fvcol draw is inside the global _faces_count>0 block.
             if !overlay && matches!(op.kind,MaterialKind::Opaque{cull:true,..}) && !draws.guard.open(self.overlay) {continue;}
             let mesh=placements.meshes[op.prototype].as_ref().ok_or("Metal admitted material prototype unavailable")?;
-            encoder.setFrontFacingWinding(if op.reflected{MTLWinding::Clockwise}else{MTLWinding::CounterClockwise});
+            encoder.setFrontFacingWinding(if op.reflected ^ self.reflected_diagnostic{MTLWinding::Clockwise}else{MTLWinding::CounterClockwise});
             let depth=if depth_enabled{&self.pipeline.depth}else{&self.pipeline.depth_disabled};
             encoder.setDepthStencilState(Some(depth));encoder.setRenderPipelineState(&self.pipeline.color);
             let paint=PaintUniform{front:self.policy.front,back:self.policy.back,mode:if overlay{0}else{match self.policy.mode{Mode::Material|Mode::MaterialAverage=>0,Mode::HiddenLine=>1,Mode::Monochrome=>2}},opacity:1.,padding:[u32::from(front_probe),0]};
@@ -1040,7 +1053,7 @@ impl Prepared {
             &self.pipeline.depth_disabled
         }));
         encoder.setCullMode(MTLCullMode::None);
-        encoder.setFrontFacingWinding(MTLWinding::CounterClockwise);
+        encoder.setFrontFacingWinding(if self.reflected_diagnostic {MTLWinding::Clockwise}else{MTLWinding::CounterClockwise});
         let camera = if self.placements.is_some() {
             &self.mvp
         } else {
@@ -1055,7 +1068,7 @@ impl Prepared {
                 if let Err(error)=self.encode_material_draws(&encoder,placements,draws,depth_enabled,front_probe){encoder.endEncoding();return Err(error);}
             }else{
             for run in &self.target.order.as_ref().unwrap().runs {
-                encoder.setFrontFacingWinding(if run.reflected {
+                encoder.setFrontFacingWinding(if run.reflected ^ self.reflected_diagnostic {
                     MTLWinding::Clockwise
                 } else {
                     MTLWinding::CounterClockwise
@@ -1233,11 +1246,11 @@ where G:FnMut(&str)->Result<std::borrow::Cow<'a,[u8]>,String>{
     Ok(Some(Arc::new(Mesh{vertices,indices,count:data.indices.len(),plan,materials})))
 }
 
-fn pipeline(metal: &NativeMetal, rich:bool, samples:usize, fill:bool) -> Result<Pipeline, String> {
+fn pipeline(metal: &NativeMetal, rich:bool, samples:usize, fill:bool, reflected:bool) -> Result<Pipeline, String> {
     let lib = metal
         .device
         .newLibraryWithSource_options_error(
-            &NSString::from_str(include_str!("shaders/world.metal")),
+            &NSString::from_str(&format!("#define SOURCE_REFLECT_Y {}\n{}",u8::from(reflected),include_str!("shaders/world.metal"))),
             None,
         )
         .map_err(|e| format!("Metal world shader:{e:?}"))?;
@@ -1464,7 +1477,8 @@ impl Prepared {
             blit.copyFromTexture_sourceSlice_sourceLevel_sourceOrigin_sourceSize_toBuffer_destinationOffset_destinationBytesPerRow_destinationBytesPerImage(self.texture(),0,0,MTLOrigin{x:0,y:0,z:0},MTLSize{width:w as usize,height:h as usize,depth:1},&readback.raw,0,row,row*h as usize);
         }
         blit.endEncoding();
-        let sample_owner=if let Some(points)=points {
+        let sample_owner=if let Some(mut points)=points {
+            if self.reflected_diagnostic {for point in &mut points {point[1]=h-1-point[1];}}
             let source="#include <metal_stdlib>\nusing namespace metal; kernel void observe(texture2d_ms<float,access::read> image [[texture(0)]], constant uint2* points [[buffer(0)]], device float4* output [[buffer(1)]], uint id [[thread_position_in_grid]]) { if(id<16) output[id]=image.read(points[id/4],id%4); }";
             let options=MTLCompileOptions::new();options.setFastMathEnabled(false);
             let library=metal.device.newLibraryWithSource_options_error(&NSString::from_str(source),Some(&options)).map_err(|e|format!("Sample observation shader: {e:?}"))?;
@@ -1711,7 +1725,7 @@ impl Prepared {
                 let Some(mesh) = &placements.meshes[run.prototype as usize] else {
                     continue;
                 };
-                encoder.setFrontFacingWinding(if run.reflected {
+                encoder.setFrontFacingWinding(if run.reflected ^ self.reflected_diagnostic {
                     MTLWinding::Clockwise
                 } else {
                     MTLWinding::CounterClockwise
@@ -1783,7 +1797,7 @@ impl Prepared {
             }
         }
         encoder.setCullMode(MTLCullMode::None);
-        encoder.setFrontFacingWinding(MTLWinding::CounterClockwise);
+        encoder.setFrontFacingWinding(if self.reflected_diagnostic {MTLWinding::Clockwise}else{MTLWinding::CounterClockwise});
         encoder.setDepthStencilState(Some(&pipelines.cap_depth));
         encoder.setRenderPipelineState(&self.pipeline.color);
         encoder.setDepthBias_slopeScale_clamp(2., 2., 0.);

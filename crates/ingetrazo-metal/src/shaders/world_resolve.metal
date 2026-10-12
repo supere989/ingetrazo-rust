@@ -50,7 +50,11 @@ inline float4 ordered_resolve(float4 a,float4 b,float4 c,float4 d){
 }
 kernel void source_resolve_compute(texture2d_ms<float,access::read> input [[texture(0)]],texture2d<float,access::write> output [[texture(1)]],uint2 p [[thread_position_in_grid]]){
  if(p.x>=output.get_width()||p.y>=output.get_height())return;
- output.write(ordered_resolve(input.read(p,0),input.read(p,1),input.read(p,2),input.read(p,3)),p);
+  uint2 q=p;
+#if SOURCE_REFLECT_Y
+ q.y=input.get_height()-1-p.y;
+#endif
+ output.write(ordered_resolve(input.read(q,0),input.read(q,1),input.read(q,2),input.read(q,3)),p);
 }
 
 #if SOURCE_TILE

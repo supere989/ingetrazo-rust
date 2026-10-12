@@ -35,9 +35,11 @@ impl Visibility {
   let samples=world.sample_count();let [width,height,count,sample]=self.parameters.extent_count_sample;
   if world.extent()!=(width,height)||sample>=samples as u32{return Err("Metal annotation depth target/sample mismatch".into());}
   if count==0{return Ok(());}
+  let mut parameters=self.parameters;
+  if world.reflected_diagnostic {parameters.extent_count_sample[3]|=0x80000000;}
   let encoder=command.computeCommandEncoder().ok_or("Metal annotation compute encoder unavailable")?;
   let pipeline=&self.pipeline[usize::from(samples>1)];encoder.setComputePipelineState(pipeline);
-  unsafe {encoder.setBuffer_offset_atIndex(Some(&self.queries.raw),0,0);encoder.setBuffer_offset_atIndex(Some(&self.hidden.raw),0,1);encoder.setBytes_length_atIndex(std::ptr::NonNull::from(&self.parameters).cast(),std::mem::size_of::<Parameters>(),2);encoder.setTexture_atIndex(Some(world.depth_texture()),0);}
+  unsafe {encoder.setBuffer_offset_atIndex(Some(&self.queries.raw),0,0);encoder.setBuffer_offset_atIndex(Some(&self.hidden.raw),0,1);encoder.setBytes_length_atIndex(std::ptr::NonNull::from(&parameters).cast(),std::mem::size_of::<Parameters>(),2);encoder.setTexture_atIndex(Some(world.depth_texture()),0);}
   let threads=pipeline.threadExecutionWidth().min(pipeline.maxTotalThreadsPerThreadgroup());encoder.dispatchThreads_threadsPerThreadgroup(MTLSize{width:count as usize,height:1,depth:1},MTLSize{width:threads,height:1,depth:1});encoder.endEncoding();Ok(())
  }
 }
@@ -90,4 +92,12 @@ pub fn sample_diagnostics(metal: &NativeMetal) -> serde_json::Value {
         },
         "resolve_selector_measured_on_this_device": false
     })
+}
+
+/// Diagnostic eligibility only; never authorizes the production sample selector.
+pub fn reflected_sample_diagnostic_policy(metal:&NativeMetal)->Result<u32,String>{
+ if metal.programmable_sample_positions{return Err("Reflected diagnostic requires fixed sample positions".into());}
+ let defaults=metal.default_sample_positions_4.as_ref().ok_or("Reflected diagnostic requires four samples")?;
+ if defaults.iter().zip(SOURCE_SAMPLE_POSITIONS).all(|(d,s)|d.x==s.x && 1.0-d.y==s.y){Ok(0)}
+ else{Err("Fixed sample positions are not the index-preserving source Y reflection".into())}
 }
