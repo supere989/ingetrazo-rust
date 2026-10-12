@@ -1,13 +1,14 @@
 //! Cached physical sheet CAD target; shares the host device and allocation ledger.
 use super::{
     budget::VulkanBudget,
-    cad2d,
+    cad2d, paper_picture,
     resources::{BufferId, Resources, TextureImage},
     VulkanContext,
 };
 use ash::{vk, Device};
 use ingetrazo_render::cad2d::Pose;
 use std::sync::Arc;
+enum Handle { Cad(cad2d::Handle), Picture(Option<usize>) }
 pub struct Exporter {
     device: Device,
     lifetime: Arc<super::lifetime::Lifetime>,
@@ -15,6 +16,7 @@ pub struct Exporter {
     target: Option<TextureImage>,
     readback: Option<BufferId>,
     cad: Option<cad2d::Renderer>,
+    pictures: Option<paper_picture::Renderer>,
     pass: vk::RenderPass,
     framebuffer: vk::Framebuffer,
     pool: vk::CommandPool,
@@ -23,7 +25,9 @@ pub struct Exporter {
     extent: vk::Extent2D,
     serial: u64,
 }
+pub use super::paper_picture::Stats as PictureStats;
 impl Exporter {
+    pub fn picture_stats(&self) -> PictureStats { self.pictures.as_ref().map_or_else(PictureStats::default, |renderer| renderer.stats()) }
     pub fn new(context: &VulkanContext, budget: Arc<VulkanBudget>) -> Result<Self, String> {
         context.lifetime.check()?;
         let limit = unsafe {
@@ -47,6 +51,7 @@ impl Exporter {
             target: None,
             readback: None,
             cad: None,
+            pictures: None,
             pass: vk::RenderPass::null(),
             framebuffer: vk::Framebuffer::null(),
             pool: vk::CommandPool::null(),
@@ -123,8 +128,8 @@ impl Exporter {
     fn tile(
         &mut self,
         context: &VulkanContext,
-        records: &[crate::sheet_image::Records],
-        handles: &[cad2d::Handle],
+        records: &[crate::sheet_image::Record],
+        handles: &[Handle],
         origin: [u32; 2],
     ) -> Result<Vec<u8>, String> {
         if !Arc::ptr_eq(&context.lifetime, &self.lifetime) {
@@ -143,7 +148,8 @@ impl Exporter {
         primitives
             .try_reserve_exact(handles.len())
             .map_err(|_| "Paper callback allocation failed")?;
-        for (handle, (geometry, batches)) in handles.iter().zip(records) {
+        for (handle, record) in handles.iter().zip(records) {
+            let (Handle::Cad(handle), crate::sheet_image::Record::Cad((geometry, batches))) = (handle, record) else { continue; };
             handle.update(geometry.clone(), batches.clone(), pose)?;
             let egui::Shape::Callback(callback) = handle.shape(rect) else {
                 unreachable!()
@@ -194,7 +200,11 @@ impl Exporter {
             screen_size_px: [self.extent.width, self.extent.height],
         };
         for handle in handles {
-            handle.record_paper(&info, &self.device, self.command)?;
+            match handle {
+                Handle::Cad(handle) => handle.record_paper(&info, &self.device, self.command)?,
+                Handle::Picture(Some(index)) => self.pictures.as_ref().unwrap().record(*index, self.command, self.extent, origin),
+                Handle::Picture(None) => {},
+            }
         }
         unsafe {
             self.device.cmd_end_render_pass(self.command);
@@ -253,6 +263,7 @@ impl Exporter {
             self.device
                 .end_command_buffer(self.command)
                 .map_err(|e| e.to_string())?;
+            if let Some(pictures) = &self.pictures { pictures.mark_used(&mut self.resources, next)?; }
             self.device
                 .reset_fences(&[self.fence])
                 .map_err(|e| e.to_string())?;
@@ -288,20 +299,25 @@ impl Exporter {
         path: &std::path::Path,
     ) -> Result<(), String> {
         let factory = self.cad.as_ref().unwrap().factory();
-        let handles = plan
-            .records
-            .iter()
-            .map(|(g, b)| {
-                factory.handle(
-                    g.clone(),
-                    b.clone(),
-                    Pose {
-                        scale: [1.; 2],
-                        translation: [0.; 2],
-                    },
-                )
-            })
-            .collect::<Result<Vec<_>, _>>()?;
+        let mut pictures = Vec::new();
+        for record in &plan.records {
+            if let crate::sheet_image::Record::Picture(callback) = record { pictures.push(callback.snapshot()?.sampling); }
+        }
+        if self.pictures.is_none() && !pictures.is_empty() {
+            self.pictures = Some(paper_picture::Renderer::new(context, self.pass)?);
+        }
+        let picture_handles = if let Some(renderer) = &mut self.pictures {
+            renderer.prepare(context, &mut self.resources, &pictures, self.target.as_ref().unwrap().view, self.fence, self.serial)?
+        } else { Vec::new() };
+        let mut picture_handles = picture_handles.into_iter();
+        let mut handles = Vec::new();
+        handles.try_reserve_exact(plan.records.len()).map_err(|_| "Paper handle inventory allocation failed")?;
+        for record in &plan.records {
+            handles.push(match record {
+                crate::sheet_image::Record::Cad((geometry, batches)) => Handle::Cad(factory.handle(geometry.clone(), batches.clone(), Pose { scale: [1.; 2], translation: [0.; 2] })?),
+                crate::sheet_image::Record::Picture(_) => Handle::Picture(picture_handles.next().ok_or("Paper picture handle inventory mismatch")?),
+            });
+        }
         let [width, height] = plan.metrics.pixels();
         let band_bytes = (width as usize)
             .checked_mul(self.extent.height as usize)
@@ -339,6 +355,7 @@ impl Exporter {
 impl Drop for Exporter {
     fn drop(&mut self) {
         self.cad.take();
+        self.pictures.take();
         if self.lifetime.uncertain() {
             self.lifetime.retain((
                 self.pass,

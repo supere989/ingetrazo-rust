@@ -1,5 +1,6 @@
 pub mod cad2d;
 pub mod sheet_image;
+mod paper_picture;
 pub mod resize;
 pub mod headless;
 mod source_depth;

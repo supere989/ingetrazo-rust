@@ -1,0 +1,36 @@
+{
+  "compiler_path": "/tmp/ingetrazo-root-mip-shader-compiler",
+  "compiler_sha256": "61e575f778907c65950640430a81cd7218f3df68e1cfb6c3d3b2ea04615169fa",
+  "commands": [
+    {
+      "argv": [
+        "/tmp/ingetrazo-root-mip-shader-compiler",
+        "/tmp/ingetrazo-sheet-pictures/crates/ingetrazo-gui/src/native_vulkan/shaders/paper_picture.vert",
+        "/tmp/ingetrazo-sheet-pictures/crates/ingetrazo-gui/src/native_vulkan/shaders/paper_picture.vert.spv"
+      ],
+      "exit_code": 0,
+      "source_sha256": "234037aec7e7249baba7ad15113350aff46e0ac2af38d4ac17821d1f096c8626",
+      "spirv_sha256": "4f69782d6d538b6551d63470aed0ac420a221d3fb87da5781e4fdbf231e6894a"
+    },
+    {
+      "argv": [
+        "/tmp/ingetrazo-root-mip-shader-compiler",
+        "/tmp/ingetrazo-sheet-pictures/crates/ingetrazo-gui/src/native_vulkan/shaders/paper_picture.frag",
+        "/tmp/ingetrazo-sheet-pictures/crates/ingetrazo-gui/src/native_vulkan/shaders/paper_picture.frag.spv"
+      ],
+      "exit_code": 0,
+      "source_sha256": "a45910df519cf449f2e83fe509480cf5a73a004579861043f25ff46b7b7d1282",
+      "spirv_sha256": "64235d0b9ca879aa31ff12a11efb02f11355469d7afe12ad59f746affbee3b7f"
+    }
+  ],
+  "rust_builds": 0,
+  "native_execution": "pending coherent runtime and integrated consumer",
+  "static_review": {
+    "pdf_commit": "479920f6",
+    "pdf_blockers": [],
+    "vulkan_initial_finding": "Accepted descriptor/row owners retired before fallible candidate allocation",
+    "vulkan_resolution": "Keep old owners until candidate upload/descriptor success, publish then retire with completed-fence proof",
+    "vulkan_recheck": "Original issue closed; no remaining blocker in scoped static review",
+    "reviewer": "independent validation agent"
+  }
+}
