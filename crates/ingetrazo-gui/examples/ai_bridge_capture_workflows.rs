@@ -149,6 +149,7 @@ mod fixture {
         failed: Option<String>,
         resize_attempts: usize,
         resize_pending: Option<(egui::Vec2, egui::Vec2, Instant)>,
+        actions_applied: Option<usize>,
     }
     impl Fixture {
         fn load_case(&mut self) -> Result<(), String> {
@@ -195,6 +196,7 @@ mod fixture {
             }
             self.warm = 0;
             self.next = 0;
+            self.actions_applied = None;
             self.resize_attempts = 0;
             self.resize_pending = None;
             self.started = Instant::now();
@@ -261,6 +263,57 @@ mod fixture {
             let requests = case["requests"].as_array().ok_or("requests")?;
             if self.next >= requests.len() {
                 return Ok(());
+            }
+            if self.actions_applied != Some(self.next) {
+                let actions = case.get("actions_before").and_then(Value::as_array);
+                if let Some(actions) = actions {
+                    if actions.len() != requests.len() {
+                        return Err("Action/request inventory mismatch".into());
+                    }
+                    for action in actions[self.next].as_array().ok_or("Action list")? {
+                        match action["op"].as_str().ok_or("Action op")? {
+                            "camera_angles" => {
+                                let yaw = action["yaw"]
+                                    .as_f64()
+                                    .filter(|v| v.is_finite())
+                                    .ok_or("Camera yaw")?;
+                                let pitch = action["pitch"]
+                                    .as_f64()
+                                    .filter(|v| v.is_finite())
+                                    .ok_or("Camera pitch")?;
+                                let before = observe(&self.app)?;
+                                self.app.camera.yaw = yaw;
+                                self.app.camera.pitch = pitch;
+                                let after = observe(&self.app)?;
+                                if before["scene"] != after["scene"]
+                                    || before["undo"] != after["undo"]
+                                    || before["redo"] != after["redo"]
+                                {
+                                    return Err(
+                                        "Camera-only action mutated geometry/history".into()
+                                    );
+                                }
+                            }
+                            "finish_edit" => {
+                                if self.app.component_edit_stack.is_empty() {
+                                    return Err("No actual edit context to finish".into());
+                                }
+                                self.app.finish_component_edit();
+                                if !self.app.component_edit_stack.is_empty() {
+                                    return Err("Actual finish retained context".into());
+                                }
+                            }
+                            _ => return Err("Unsupported fixture action".into()),
+                        }
+                    }
+                    self.actions_applied = Some(self.next);
+                    if !actions[self.next].as_array().unwrap().is_empty() {
+                        self.warm = 0;
+                        return Ok(());
+                    }
+                } else {
+                    self.actions_applied = Some(self.next);
+                }
             }
             let request = json!({"id":format!("{}-{}",case["name"].as_str().unwrap(),self.next),"tool":"screenshot","args":requests[self.next]});
             self.before = Some(observe(&self.app)?);
@@ -383,6 +436,7 @@ mod fixture {
                 failed: None,
                 resize_attempts: 0,
                 resize_pending: None,
+                actions_applied: None,
             };
             f.load_case().unwrap();
             f

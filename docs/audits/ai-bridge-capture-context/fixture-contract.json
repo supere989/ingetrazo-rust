@@ -1,0 +1,118 @@
+{
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "roster": [
+    {
+      "name": "startup-billboard-context",
+      "requests": 3,
+      "images": 3
+    },
+    {
+      "name": "shared-texture-context",
+      "requests": 3,
+      "images": 3
+    }
+  ],
+  "original_sources": [
+    {
+      "path": "plugins/ai_bridge.py",
+      "sha256": "01c4cdcaeee19840980018636378e29f090c02abb0263a3a2c71a091ed145aeb"
+    },
+    {
+      "path": "views/viewport.py",
+      "sha256": "1fb62f55b8f559deb3676924ee69a9a444397faa28c49651111cea44e420c724"
+    },
+    {
+      "path": "views/main_window.py",
+      "sha256": "ea02be3e439c80731d0f5b5fde3d92d9b3f62e8ad10cd44ad305c3261b7786fa"
+    },
+    {
+      "path": "core/scene.py",
+      "sha256": "9dfcd32f1ff5b1445180eafd8df36eafb92fa08ed3597bb90eac09554899d2e0"
+    },
+    {
+      "path": "core/mesh.py",
+      "sha256": "5f2c1625e6dd717db029ba39a9de337e75beec06bd0df28a592a8a34875ca22c"
+    },
+    {
+      "path": "core/group.py",
+      "sha256": "9ba6a20eca241cb4969a545a3784fcff25566166606d5447a18780747d4f11c5"
+    },
+    {
+      "path": "core/camera.py",
+      "sha256": "cae35d8adfe33f3da22b85de74cc0779c0d2697fa8fa09d0112933d6d3e26a52"
+    },
+    {
+      "path": "core/dimension.py",
+      "sha256": "2253da1bb8e186f786c8fcfb780d91ca48460926a1641f8c42913473109f2ce6"
+    },
+    {
+      "path": "core/textlabel.py",
+      "sha256": "7ef512a89a591baa3149ec71b6d5e733f2831783091fe800323a003d449424bf"
+    },
+    {
+      "path": "core/guide.py",
+      "sha256": "a95d0ec873c58c34bd14e23c5e34d56d14bc38cdcd0b0008678be7eb2966d4f6"
+    },
+    {
+      "path": "core/section.py",
+      "sha256": "ace64d908292afdf1e79263117a2c7e1a752ecf4f096aa6a106d4adef98a9826"
+    },
+    {
+      "path": "core/history.py",
+      "sha256": "2eb66a1d557099b51383988a7819145289fc4ce2c37fc7de3a92ed35b5830559"
+    },
+    {
+      "path": "georef/geopath.py",
+      "sha256": "bf164fb5c53c4e621f03d103c75416823a71892461b425aec1946cacce45c348"
+    },
+    {
+      "path": "georef/points.py",
+      "sha256": "e04c08759c30aa62e78557613cd81dd4e454eabf871fe3f78207a22d6c0b4c9a"
+    },
+    {
+      "path": "formats/igz.py",
+      "sha256": "f318d685830c49c2fede7fd5a238ac7a1469ee0b0226cf48cab3751e194a9576"
+    },
+    {
+      "path": "tools/select.py",
+      "sha256": "baa33a660666cbc78a25ca291e0b40a4b2bd88755393ebce08295e1de6327916"
+    },
+    {
+      "path": "resources/components/ingeniero.png",
+      "sha256": "be7b463c8b2eec4e7635b2f1efbc1705267ff39ada6a0e4935eebe2e13799e13"
+    },
+    {
+      "path": "resources/textures/brick.png",
+      "sha256": "71036781abb039e653861f31fa72660b1c8013ea52064cc854c15cb831a80bda"
+    },
+    {
+      "path": "resources/shaders/basic.frag",
+      "sha256": "dbc25d2462913ed1dca727e50af194b2fd81534a20ed91e225e14e66f9c93112"
+    },
+    {
+      "path": "core/paths.py",
+      "sha256": "a669d5f0dd2c235ae372377dc669598bf9613b8c361c513d473df856cdd9ebae"
+    }
+  ],
+  "support_sources": [
+    {
+      "path": "scripts/reference-ai-bridge-capture.py",
+      "sha256": "afe6924e6e8264ab88da2e18009b20ebc9a2f9656def3d0b38fbe73fb4276b8e"
+    },
+    {
+      "path": "scripts/exchange_import_observations.py",
+      "sha256": "48c12bffd82e9c431ce8784174112a78c7ab09de529fabc1e5f0f8445bf94142"
+    },
+    {
+      "path": "scripts/reference-ai-bridge-capture-context.py",
+      "sha256": "78b5b0ade96f00e8593770fca8fa1aa511ffc8ef388c777aa60cceb4d1300088"
+    },
+    {
+      "path": "scripts/check-ai-bridge-capture.py",
+      "sha256": "0f9aa2db91dcc3c0df1ed9c30a0d096fe69fcbd2cc16cf2b9bb17008f2034afc"
+    }
+  ],
+  "scope": "Missing-only actual Qt GPU/TCP screenshot supplement: actual fresh MainWindow engineer retained in parked context; original brick asset shared by active and parked quads; entry/camera-angle-only/actual Finish captures. Fixture pose changes use declared camera fields, not OS pointer ingress. Full per-request model/history/camera/live-target/depth readonly and strict decoded RGBA; original six cases/source bytes unchanged. Expanded geometry/material/local-transform projection follows existing observer. No encoded PNG byte equivalence, performance, arbitrary style/platform/scene coverage claim.",
+  "native_consumer": "crates/ingetrazo-gui/examples/ai_bridge_capture_workflows.rs",
+  "checker": "scripts/check-ai-bridge-capture-context.py"
+}
