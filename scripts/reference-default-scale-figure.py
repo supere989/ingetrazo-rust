@@ -32,7 +32,7 @@ def observe(scene):
    attrs=copy.deepcopy(face.attrs)
    if 'texture'in attrs and'path'in attrs['texture']:attrs['texture']['path']=resource(attrs['texture']['path'])
    faces.append({'outer':[[p.x(),p.y(),p.z()]for p in face.vertices],'holes':[[[p.x(),p.y(),p.z()]for p in h]for h in face.holes],'attrs':attrs})
-  groups.append({'name':g.name,'component':g.component,'is_component':g.is_component,'billboard':g.billboard,'hidden':g.hidden,'layer':g.layer,'children':len(g.children),'faces':faces})
+  groups.append({'name':g.name,'component':g.component,'is_component':g.is_component(),'billboard':g.billboard,'hidden':g.hidden,'layer':g.layer,'children':len(g.children),'faces':faces})
  return {'groups':groups,'loose_faces':len(scene.mesh.faces),'images':len(scene.image_planes)}
 try:
  for recipe in c['cases']:

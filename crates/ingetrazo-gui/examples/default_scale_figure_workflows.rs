@@ -91,6 +91,31 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         assert!(!app.document_dirty());
         assert!(app.undo_stack.is_empty() && app.redo_stack.is_empty());
         let state = observe(&app, &out, &mut resources)?;
+        app.engineering_python_enabled = true;
+        let history_before = (app.undo_stack.len(), app.redo_stack.len());
+        let dirty_before = app.document_dirty();
+        let log_start = app.console_logs.len();
+        app.run_script("print([(g.component, g.is_component()) for g in groups])");
+        let query_logs = app.console_logs[log_start..].to_vec();
+        assert!(
+            !query_logs.iter().any(|line| line.contains("refused")),
+            "Actual component query refused: {query_logs:?}"
+        );
+        assert_eq!((app.undo_stack.len(), app.redo_stack.len()), history_before);
+        assert_eq!(
+            app.document_dirty(),
+            dirty_before,
+            "Read-only component query changed clean state"
+        );
+        let expected_query = if app.scene.groups.is_empty() {
+            "[]\n"
+        } else {
+            "[(True, False)]\n"
+        };
+        assert!(
+            query_logs.iter().any(|line| line == expected_query),
+            "Actual component query: {query_logs:?}"
+        );
         let saved = format!("{name}-saved.igz");
         app.save_to_path(&out.join(&saved));
         assert!(out.join(&saved).is_file());
@@ -98,7 +123,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         reopened.open_document(&out.join(&saved));
         assert!(reopened.current_file.is_some());
         let reopen = observe(&reopened, &out, &mut resources)?;
-        cases.push(json!({"name":name,"setting":recipe["setting"],"state":state,"clean":!app.document_dirty(),"undo":app.undo_stack.len(),"redo":app.redo_stack.len(),"saved":saved,"reopen":reopen,"identity_diagnostic":app.scene.groups.iter().map(|g|g.id.to_string()).collect::<Vec<_>>()}));
+        cases.push(json!({"name":name,"setting":recipe["setting"],"state":state,"clean":!app.document_dirty(),"undo":app.undo_stack.len(),"redo":app.redo_stack.len(),"saved":saved,"reopen":reopen,"component_query":query_logs,"identity_diagnostic":app.scene.groups.iter().map(|g|g.id.to_string()).collect::<Vec<_>>()}));
     }
     // Native controls use actual constructor, durable preference reload and New.
     let mut edited = IngeTrazoApp::new();
