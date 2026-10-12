@@ -1,0 +1,46 @@
+{
+  "head_sha": "9222bad37b3ae72bead49d3ed7c5379766827b9e",
+  "original_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "files": [
+    {
+      "path": ".github/workflows/parity.yml",
+      "bytes": 53371,
+      "sha256": "86a1b9a1ed5361ca5cff6c88c9f1c957c7ae954882ed02d25c0ad7b511fa74db"
+    },
+    {
+      "path": ".github/workflows/metal-compute-consumer.yml",
+      "bytes": 4532,
+      "sha256": "bce24078146f16afab7cd9998386a03a0aa2b69c0a6954bfc517b009c452efb9"
+    },
+    {
+      "path": "scripts/check-document-axes-integration.py",
+      "bytes": 34980,
+      "sha256": "a5423bc6b291b9ae952f6f5c492ceb9432ef0f7cc08a391b8dc44d6b84536a2b"
+    },
+    {
+      "path": "crates/ingetrazo-formats/src/dxf.rs",
+      "bytes": 26177,
+      "sha256": "deb957d2d992c4276de56270121d82b26b441506254caccb72ca122ee79b8372"
+    },
+    {
+      "path": "crates/ingetrazo-formats/src/dxf_curves.rs",
+      "bytes": 13324,
+      "sha256": "928cd90f7c1421c24c59683f6a79cb00bde1eb9013c797b3f530a34ffd670fb8"
+    },
+    {
+      "path": "crates/ingetrazo-formats/src/dxf_spline.rs",
+      "bytes": 17269,
+      "sha256": "8e90f87b47a513b3933e7fe119700ad840881cbbe7e13d3ed54862f80c447077"
+    },
+    {
+      "path": "crates/ingetrazo-formats/Cargo.toml",
+      "bytes": 1040,
+      "sha256": "c89fc6496454e37bd8fe529006f9950d4a46b5ad8a4a3d807521b4c031479791"
+    },
+    {
+      "path": "Cargo.lock",
+      "bytes": 139942,
+      "sha256": "0eae96a71003d88b1327eacdf3c45564aceb082a9c9ccc324471982634dea45d"
+    }
+  ]
+}

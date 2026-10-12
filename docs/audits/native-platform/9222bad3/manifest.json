@@ -1,0 +1,1126 @@
+{
+  "head_sha": "9222bad37b3ae72bead49d3ed7c5379766827b9e",
+  "archive_sha256": "86abc0dd9d15fc0bb7d4d9de8ad0da8cc1129f55f55ac5fbc486a06d808b745e",
+  "entries": [
+    {
+      "path": "9222-arm.log",
+      "bytes": 63395,
+      "sha256": "14eb2e7704b9030aedb6438ca9b5b1bf3a05703164cb17fce4d2a2b48e3930c1"
+    },
+    {
+      "path": "9222-intel.log",
+      "bytes": 68071,
+      "sha256": "4fd4a97acbc2e68bb073da8c7b37834f8ddebabc40cc53d6629f73c5ac45e80d"
+    },
+    {
+      "path": "artifacts/arm/metal-combined-gui-ci/apple-gl-depth-resolve.json",
+      "bytes": 37,
+      "sha256": "574706717f33363bcf4886d8f94a41986321935bf687f55afb9457e21e56b908"
+    },
+    {
+      "path": "artifacts/arm/metal-combined-gui-ci/apple-gl-depth-resolve.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/arm/metal-combined-gui-ci/billboards/baseline.rgba",
+      "bytes": 1920000,
+      "sha256": "ad0427ab58b576535709a441c36f155944fb2d664a837be6a6db6a2bf2fd6874"
+    },
+    {
+      "path": "artifacts/arm/metal-combined-gui-ci/billboards/hidden.rgba",
+      "bytes": 1920000,
+      "sha256": "0fd41f87e0279ce0bbe1bbe5107fdba2d0db7f6f7658e8a5cd9666bd63c470dc"
+    },
+    {
+      "path": "artifacts/arm/metal-combined-gui-ci/billboards/report.json",
+      "bytes": 499,
+      "sha256": "d9a39b8da54b807644a2e8325f8a7cf7e758d58eb1e594d069d5cd5f94275a87"
+    },
+    {
+      "path": "artifacts/arm/metal-combined-gui-ci/billboards/turned.rgba",
+      "bytes": 1920000,
+      "sha256": "b6db443eb61ed6ba5a8a7eec1730bacb2e8a321dde1fe6e963a0374e6f901985"
+    },
+    {
+      "path": "artifacts/arm/metal-combined-gui-ci/build.log",
+      "bytes": 75470,
+      "sha256": "d7291198fecaa33dff3ee00ac78fae79b31b115f8c53673818c7ad10ddd78e0d"
+    },
+    {
+      "path": "artifacts/arm/metal-combined-gui-ci/check.log",
+      "bytes": 82118,
+      "sha256": "9c7dc12fefa854cea81d19049d3ad782e71a2a829b14037eb074e43f1cdb9f2d"
+    },
+    {
+      "path": "artifacts/arm/metal-combined-gui-ci/defaults/camera.rgba",
+      "bytes": 16384,
+      "sha256": "3822473f0c512a08e72e1595655566b230f9bca9834182e95ff859c07e3a38e5"
+    },
+    {
+      "path": "artifacts/arm/metal-combined-gui-ci/defaults/default.rgba",
+      "bytes": 16384,
+      "sha256": "e804a96c0c0e2ffa108dcfa233d3e453e70eef76e289a50814406cbde0fc900b"
+    },
+    {
+      "path": "artifacts/arm/metal-combined-gui-ci/defaults/profiles-off.rgba",
+      "bytes": 16384,
+      "sha256": "e804a96c0c0e2ffa108dcfa233d3e453e70eef76e289a50814406cbde0fc900b"
+    },
+    {
+      "path": "artifacts/arm/metal-combined-gui-ci/defaults/report.json",
+      "bytes": 616,
+      "sha256": "b5921b36d5e043b8b7ddc6850145cfb09876875d9079a8f98ac34ae2fc361878"
+    },
+    {
+      "path": "artifacts/arm/metal-combined-gui-ci/defaults/section.rgba",
+      "bytes": 16384,
+      "sha256": "d8e089a22f1d0e6422485219b39f5ce172cc02170aad7502bd7c0878c5719e84"
+    },
+    {
+      "path": "artifacts/arm/metal-combined-gui-ci/defaults/soft-edited.rgba",
+      "bytes": 16384,
+      "sha256": "3822473f0c512a08e72e1595655566b230f9bca9834182e95ff859c07e3a38e5"
+    },
+    {
+      "path": "artifacts/arm/metal-combined-gui-ci/defaults/startup.rgba",
+      "bytes": 16384,
+      "sha256": "b5b4a41a6621393a22fba108714b7a33c9cdbc9c58fc6aa36088059ea2149ca7"
+    },
+    {
+      "path": "artifacts/arm/metal-combined-gui-ci/document-annotations/depth-hidden.rgba",
+      "bytes": 1920000,
+      "sha256": "58d3840e89fe2653d11e8832de4ceca1d8075e794536533a92ed221223982add"
+    },
+    {
+      "path": "artifacts/arm/metal-combined-gui-ci/document-annotations/depth-off.rgba",
+      "bytes": 1920000,
+      "sha256": "58d3840e89fe2653d11e8832de4ceca1d8075e794536533a92ed221223982add"
+    },
+    {
+      "path": "artifacts/arm/metal-combined-gui-ci/document-annotations/depth-visible.rgba",
+      "bytes": 1920000,
+      "sha256": "4004f48f0671cf575b2e2216a1822545ce233e8152724f69563226b6217efb60"
+    },
+    {
+      "path": "artifacts/arm/metal-combined-gui-ci/document-annotations/dimensions-off.rgba",
+      "bytes": 1920000,
+      "sha256": "ad0427ab58b576535709a441c36f155944fb2d664a837be6a6db6a2bf2fd6874"
+    },
+    {
+      "path": "artifacts/arm/metal-combined-gui-ci/document-annotations/pergola.rgba",
+      "bytes": 1920000,
+      "sha256": "e0a7de57ea6ed3ee7c87408a7a615d57eef76330cba5d3df2359af62a5dae2e2"
+    },
+    {
+      "path": "artifacts/arm/metal-combined-gui-ci/document-annotations/report.json",
+      "bytes": 480,
+      "sha256": "c996f97ad367a945ca79e2b71bec4a4f43463bfc942bf88df6b09773c3f222c1"
+    },
+    {
+      "path": "artifacts/arm/metal-combined-gui-ci/document-annotations/sample-diagnostics.json",
+      "bytes": 700,
+      "sha256": "6a9474a16266168825609cf3cc1254b31b38ec2898b6c91cf60ff767a7b25f93"
+    },
+    {
+      "path": "artifacts/arm/metal-combined-gui-ci/document-annotations/section-off.rgba",
+      "bytes": 1920000,
+      "sha256": "e0a7de57ea6ed3ee7c87408a7a615d57eef76330cba5d3df2359af62a5dae2e2"
+    },
+    {
+      "path": "artifacts/arm/metal-combined-gui-ci/launcher/result.json",
+      "bytes": 444,
+      "sha256": "416dc43a3acb86ab39cfe57c38623f5d3ebeed927f4307ca2926db1e810dd57a"
+    },
+    {
+      "path": "artifacts/arm/metal-combined-gui-ci/launcher/runtime.log",
+      "bytes": 836,
+      "sha256": "663bdfaa519ac7fae1463c1b063e8f946412e9064f5874d9ed942324a586c2c7"
+    },
+    {
+      "path": "artifacts/arm/metal-combined-gui-ci/launcher/session/config/settings.json",
+      "bytes": 538,
+      "sha256": "50447b28c8af8d9c55060389a910c910cd4bdbcc43a8d3bd0dc54c28c02a0791"
+    },
+    {
+      "path": "artifacts/arm/metal-combined-gui-ci/section-fill/closed-disabled.rgba",
+      "bytes": 1920000,
+      "sha256": "cb76f01769419c5263ac5b22fe2cfba6efcc75d963c3117cb776bc7ff5d427f0"
+    },
+    {
+      "path": "artifacts/arm/metal-combined-gui-ci/section-fill/closed-front-disabled.rgba",
+      "bytes": 1920000,
+      "sha256": "d101696911c8ab8474adeb8d2d10fce28bad9bb3f46492291266a7300758a77c"
+    },
+    {
+      "path": "artifacts/arm/metal-combined-gui-ci/section-fill/closed-front.rgba",
+      "bytes": 1920000,
+      "sha256": "d101696911c8ab8474adeb8d2d10fce28bad9bb3f46492291266a7300758a77c"
+    },
+    {
+      "path": "artifacts/arm/metal-combined-gui-ci/section-fill/closed-iso-disabled.rgba",
+      "bytes": 1920000,
+      "sha256": "543dd170292584095a25145044adf828b0dd0aa1006561d18b4748e359ee5b81"
+    },
+    {
+      "path": "artifacts/arm/metal-combined-gui-ci/section-fill/closed-iso.rgba",
+      "bytes": 1920000,
+      "sha256": "9fabf645e1f3518902a2cfebbbae600663d48e8caf3980391d44a12313e88e55"
+    },
+    {
+      "path": "artifacts/arm/metal-combined-gui-ci/section-fill/closed.rgba",
+      "bytes": 1920000,
+      "sha256": "8c26de0511beb04b4e04b909deaf04bf40006c7b73d0a57bf8011a8a821b70ed"
+    },
+    {
+      "path": "artifacts/arm/metal-combined-gui-ci/section-fill/comparison.json",
+      "bytes": 3041,
+      "sha256": "df0f40018af3fcd896802a5cbf5815089e2d1c6e2395c8a7dcf99da81efaacf4"
+    },
+    {
+      "path": "artifacts/arm/metal-combined-gui-ci/section-fill/coplanar-backface-disabled.rgba",
+      "bytes": 1920000,
+      "sha256": "2df1e68b0a0501c7783c7a4d26de58224f5dc65eff6f1b03dc13c78f14c9c042"
+    },
+    {
+      "path": "artifacts/arm/metal-combined-gui-ci/section-fill/coplanar-backface.rgba",
+      "bytes": 1920000,
+      "sha256": "2df1e68b0a0501c7783c7a4d26de58224f5dc65eff6f1b03dc13c78f14c9c042"
+    },
+    {
+      "path": "artifacts/arm/metal-combined-gui-ci/section-fill/duplicate-disabled.rgba",
+      "bytes": 1920000,
+      "sha256": "cb76f01769419c5263ac5b22fe2cfba6efcc75d963c3117cb776bc7ff5d427f0"
+    },
+    {
+      "path": "artifacts/arm/metal-combined-gui-ci/section-fill/duplicate.rgba",
+      "bytes": 1920000,
+      "sha256": "8c26de0511beb04b4e04b909deaf04bf40006c7b73d0a57bf8011a8a821b70ed"
+    },
+    {
+      "path": "artifacts/arm/metal-combined-gui-ci/section-fill/report.json",
+      "bytes": 11056,
+      "sha256": "f8b222fca1b62bb9d50162497fc44d355be0cd32e62794acca761b8f693b47dc"
+    },
+    {
+      "path": "artifacts/arm/metal-combined-gui-ci/section-fill/shared-slab-disabled.rgba",
+      "bytes": 1920000,
+      "sha256": "e13bc7db9454ef0534a389dea38104ac59bac24edb97e51f17349c8296c3f797"
+    },
+    {
+      "path": "artifacts/arm/metal-combined-gui-ci/section-fill/shared-slab-iso-disabled.rgba",
+      "bytes": 1920000,
+      "sha256": "fb6e8adb2095a7840ccd799e3c279ebaf7ff6f233dde2c66a95881002f910e8d"
+    },
+    {
+      "path": "artifacts/arm/metal-combined-gui-ci/section-fill/shared-slab-iso.rgba",
+      "bytes": 1920000,
+      "sha256": "cc072ed6f3d9b8ac955de3165dd35d20aa9bf06fecfe8cfb29fbd27c60eb00f7"
+    },
+    {
+      "path": "artifacts/arm/metal-combined-gui-ci/section-fill/shared-slab-reversed-disabled.rgba",
+      "bytes": 1920000,
+      "sha256": "cb76f01769419c5263ac5b22fe2cfba6efcc75d963c3117cb776bc7ff5d427f0"
+    },
+    {
+      "path": "artifacts/arm/metal-combined-gui-ci/section-fill/shared-slab-reversed-iso-disabled.rgba",
+      "bytes": 1920000,
+      "sha256": "543dd170292584095a25145044adf828b0dd0aa1006561d18b4748e359ee5b81"
+    },
+    {
+      "path": "artifacts/arm/metal-combined-gui-ci/section-fill/shared-slab-reversed-iso.rgba",
+      "bytes": 1920000,
+      "sha256": "9fabf645e1f3518902a2cfebbbae600663d48e8caf3980391d44a12313e88e55"
+    },
+    {
+      "path": "artifacts/arm/metal-combined-gui-ci/section-fill/shared-slab-reversed.rgba",
+      "bytes": 1920000,
+      "sha256": "8c26de0511beb04b4e04b909deaf04bf40006c7b73d0a57bf8011a8a821b70ed"
+    },
+    {
+      "path": "artifacts/arm/metal-combined-gui-ci/section-fill/shared-slab.rgba",
+      "bytes": 1920000,
+      "sha256": "e13bc7db9454ef0534a389dea38104ac59bac24edb97e51f17349c8296c3f797"
+    },
+    {
+      "path": "artifacts/arm/metal-combined-gui-ci/section-fill/transparent-disabled.rgba",
+      "bytes": 1920000,
+      "sha256": "484125684b32c79de0be0af75116817c897a4245221fb35915890ae5f229cba2"
+    },
+    {
+      "path": "artifacts/arm/metal-combined-gui-ci/section-fill/transparent.rgba",
+      "bytes": 1920000,
+      "sha256": "484125684b32c79de0be0af75116817c897a4245221fb35915890ae5f229cba2"
+    },
+    {
+      "path": "artifacts/arm/paper-font-native-ci/font-resource.log",
+      "bytes": 22529,
+      "sha256": "1d992cde32564f5f2846504d139484b6d8a2d98b7ca2fdbb08008b78ab543572"
+    },
+    {
+      "path": "artifacts/arm/paper-font-native-ci/tests.log",
+      "bytes": 29337,
+      "sha256": "a25a69eb29ce4730f553215e0b27378b5f2c4a1942d3562130bfe272af2852a6"
+    },
+    {
+      "path": "artifacts/cross-arm/check.log",
+      "bytes": 23858,
+      "sha256": "f780081cf5bbbc034a076672cb46c7752216505137551d19c6566b032df7d742"
+    },
+    {
+      "path": "artifacts/cross-arm/gui-examples.log",
+      "bytes": 75614,
+      "sha256": "d6caa873438224874dd32566eb8cd4f57e3b77f9c7b270e35b4fec3e3a204f5e"
+    },
+    {
+      "path": "artifacts/cross-intel/check.log",
+      "bytes": 23858,
+      "sha256": "5410870a92da7bc95287d029d094d18c01c9f0db69f8ff31ec88d60d80ec9af8"
+    },
+    {
+      "path": "artifacts/cross-intel/gui-examples.log",
+      "bytes": 75614,
+      "sha256": "62ea35eb414b2b67e9488e81fbd1f6e83f6e520085daae505e0765541eda0c53"
+    },
+    {
+      "path": "artifacts/intel/metal-combined-gui-ci/apple-gl-depth-resolve.json",
+      "bytes": 37,
+      "sha256": "574706717f33363bcf4886d8f94a41986321935bf687f55afb9457e21e56b908"
+    },
+    {
+      "path": "artifacts/intel/metal-combined-gui-ci/apple-gl-depth-resolve.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/intel/metal-combined-gui-ci/billboards/baseline.rgba",
+      "bytes": 1920000,
+      "sha256": "f80885c6328995cfa3d42381433e15621aa0bd427d128b52b197ba9f4bd89712"
+    },
+    {
+      "path": "artifacts/intel/metal-combined-gui-ci/billboards/hidden.rgba",
+      "bytes": 1920000,
+      "sha256": "8e75966d0f3d1040d588a2bfc4ccca90dc788dbc16195625d0f1bf9994163de6"
+    },
+    {
+      "path": "artifacts/intel/metal-combined-gui-ci/billboards/report.json",
+      "bytes": 499,
+      "sha256": "d9a39b8da54b807644a2e8325f8a7cf7e758d58eb1e594d069d5cd5f94275a87"
+    },
+    {
+      "path": "artifacts/intel/metal-combined-gui-ci/billboards/turned.rgba",
+      "bytes": 1920000,
+      "sha256": "f0950ed46171e495f4e3acaef93e4824431b6123c2673030703f29190481bb9b"
+    },
+    {
+      "path": "artifacts/intel/metal-combined-gui-ci/build.log",
+      "bytes": 75470,
+      "sha256": "aad17ab5df647d77fcb3e933c7fb61fb77f63f4b5ddb8948336ee6c5f64d88dc"
+    },
+    {
+      "path": "artifacts/intel/metal-combined-gui-ci/check.log",
+      "bytes": 82118,
+      "sha256": "c54640d207e38d9899c11c6371f76f45cac814b2db588de919e862832660561e"
+    },
+    {
+      "path": "artifacts/intel/metal-combined-gui-ci/defaults/camera.rgba",
+      "bytes": 16384,
+      "sha256": "7de348a0cc857a0a58f237f3a376d220caa643743fc2e19f053bf9a5122d0620"
+    },
+    {
+      "path": "artifacts/intel/metal-combined-gui-ci/defaults/default.rgba",
+      "bytes": 16384,
+      "sha256": "a7d25bf8c4c403c83ba48b0564ef7a75d3fffacc8cd3097832183dd14010f078"
+    },
+    {
+      "path": "artifacts/intel/metal-combined-gui-ci/defaults/profiles-off.rgba",
+      "bytes": 16384,
+      "sha256": "a7d25bf8c4c403c83ba48b0564ef7a75d3fffacc8cd3097832183dd14010f078"
+    },
+    {
+      "path": "artifacts/intel/metal-combined-gui-ci/defaults/report.json",
+      "bytes": 616,
+      "sha256": "b5921b36d5e043b8b7ddc6850145cfb09876875d9079a8f98ac34ae2fc361878"
+    },
+    {
+      "path": "artifacts/intel/metal-combined-gui-ci/defaults/section.rgba",
+      "bytes": 16384,
+      "sha256": "f2f06dca16a6dea68071e7dd4edde5012f9ed34da83d93cf1c0b09d729ecda39"
+    },
+    {
+      "path": "artifacts/intel/metal-combined-gui-ci/defaults/soft-edited.rgba",
+      "bytes": 16384,
+      "sha256": "7de348a0cc857a0a58f237f3a376d220caa643743fc2e19f053bf9a5122d0620"
+    },
+    {
+      "path": "artifacts/intel/metal-combined-gui-ci/defaults/startup.rgba",
+      "bytes": 16384,
+      "sha256": "da26ce1d4c22dd4d893635953027326a4e915f07dfa5896ce47055c3c6785019"
+    },
+    {
+      "path": "artifacts/intel/metal-combined-gui-ci/document-annotations/sample-diagnostics.json",
+      "bytes": 748,
+      "sha256": "5c9e035e1985cc238c34a3fd306fd46ec059608298a47235a128f002a7cf76f2"
+    },
+    {
+      "path": "artifacts/intel/metal-combined-gui-ci/launcher/runtime.log",
+      "bytes": 770,
+      "sha256": "df3d7fb00781a0912e5ab2a1eaa4f6dd45f63b7950adb472e08753d5eca436db"
+    },
+    {
+      "path": "artifacts/intel/metal-combined-gui-ci/launcher/session/config/settings.json",
+      "bytes": 538,
+      "sha256": "50447b28c8af8d9c55060389a910c910cd4bdbcc43a8d3bd0dc54c28c02a0791"
+    },
+    {
+      "path": "artifacts/intel/metal-combined-gui-ci/section-fill/closed-disabled.rgba",
+      "bytes": 1920000,
+      "sha256": "47a2d725134186de65b15e615152e5e0cd6916446360fce8ebd82a446a34250d"
+    },
+    {
+      "path": "artifacts/intel/metal-combined-gui-ci/section-fill/closed-front-disabled.rgba",
+      "bytes": 1920000,
+      "sha256": "16ab57e7bb32f63f653367d75e9cdbe1a0a8157c242f5353fa7070562526c5a8"
+    },
+    {
+      "path": "artifacts/intel/metal-combined-gui-ci/section-fill/closed-front.rgba",
+      "bytes": 1920000,
+      "sha256": "16ab57e7bb32f63f653367d75e9cdbe1a0a8157c242f5353fa7070562526c5a8"
+    },
+    {
+      "path": "artifacts/intel/metal-combined-gui-ci/section-fill/closed-iso-disabled.rgba",
+      "bytes": 1920000,
+      "sha256": "cfae262504b16306ec53ae48d46e6fe95160d6e142310071b247ac9daa5d855b"
+    },
+    {
+      "path": "artifacts/intel/metal-combined-gui-ci/section-fill/closed-iso.rgba",
+      "bytes": 1920000,
+      "sha256": "4ce916cc6fd0a26bcc8a27a9f22b97e555bebb68b24457c8b9ef8862a5aea144"
+    },
+    {
+      "path": "artifacts/intel/metal-combined-gui-ci/section-fill/closed.rgba",
+      "bytes": 1920000,
+      "sha256": "6a3c34c071c82b9f73e39a633345f98a631a1430779b291fea61b51f83c7b1ea"
+    },
+    {
+      "path": "artifacts/intel/metal-combined-gui-ci/section-fill/comparison.json",
+      "bytes": 3059,
+      "sha256": "731bcaafa433b29b1be9d001a053fc5b29b51e93c6f925a6302deed9407e0357"
+    },
+    {
+      "path": "artifacts/intel/metal-combined-gui-ci/section-fill/coplanar-backface-disabled.rgba",
+      "bytes": 1920000,
+      "sha256": "29d1ae1afe6a5c938a33fcbf365c9440abe0dd81e93504e8c6b6ce2b381a0284"
+    },
+    {
+      "path": "artifacts/intel/metal-combined-gui-ci/section-fill/coplanar-backface.rgba",
+      "bytes": 1920000,
+      "sha256": "29d1ae1afe6a5c938a33fcbf365c9440abe0dd81e93504e8c6b6ce2b381a0284"
+    },
+    {
+      "path": "artifacts/intel/metal-combined-gui-ci/section-fill/duplicate-disabled.rgba",
+      "bytes": 1920000,
+      "sha256": "47a2d725134186de65b15e615152e5e0cd6916446360fce8ebd82a446a34250d"
+    },
+    {
+      "path": "artifacts/intel/metal-combined-gui-ci/section-fill/duplicate.rgba",
+      "bytes": 1920000,
+      "sha256": "6a3c34c071c82b9f73e39a633345f98a631a1430779b291fea61b51f83c7b1ea"
+    },
+    {
+      "path": "artifacts/intel/metal-combined-gui-ci/section-fill/report.json",
+      "bytes": 8902,
+      "sha256": "6baf12bf41c0413f9bad17343dda90616e87c8159c504398161a943d57940108"
+    },
+    {
+      "path": "artifacts/intel/metal-combined-gui-ci/section-fill/shared-slab-disabled.rgba",
+      "bytes": 1920000,
+      "sha256": "3e5c89b8c4797b22d3509874f9267ab6fbe240602574ef79ef6b86f62da8e5a5"
+    },
+    {
+      "path": "artifacts/intel/metal-combined-gui-ci/section-fill/shared-slab-iso-disabled.rgba",
+      "bytes": 1920000,
+      "sha256": "7f80d55d0aa746f45e1ca0658d4e79addbfbadb3dd8e29ede915fa083c9b3d91"
+    },
+    {
+      "path": "artifacts/intel/metal-combined-gui-ci/section-fill/shared-slab-iso.rgba",
+      "bytes": 1920000,
+      "sha256": "8d0c36c455555b1af4a750264647ea0bbaa3516051b9ff11296851c6d5e8158d"
+    },
+    {
+      "path": "artifacts/intel/metal-combined-gui-ci/section-fill/shared-slab-reversed-disabled.rgba",
+      "bytes": 1920000,
+      "sha256": "47a2d725134186de65b15e615152e5e0cd6916446360fce8ebd82a446a34250d"
+    },
+    {
+      "path": "artifacts/intel/metal-combined-gui-ci/section-fill/shared-slab-reversed-iso-disabled.rgba",
+      "bytes": 1920000,
+      "sha256": "cfae262504b16306ec53ae48d46e6fe95160d6e142310071b247ac9daa5d855b"
+    },
+    {
+      "path": "artifacts/intel/metal-combined-gui-ci/section-fill/shared-slab-reversed-iso.rgba",
+      "bytes": 1920000,
+      "sha256": "4ce916cc6fd0a26bcc8a27a9f22b97e555bebb68b24457c8b9ef8862a5aea144"
+    },
+    {
+      "path": "artifacts/intel/metal-combined-gui-ci/section-fill/shared-slab-reversed.rgba",
+      "bytes": 1920000,
+      "sha256": "6a3c34c071c82b9f73e39a633345f98a631a1430779b291fea61b51f83c7b1ea"
+    },
+    {
+      "path": "artifacts/intel/metal-combined-gui-ci/section-fill/shared-slab.rgba",
+      "bytes": 1920000,
+      "sha256": "3e5c89b8c4797b22d3509874f9267ab6fbe240602574ef79ef6b86f62da8e5a5"
+    },
+    {
+      "path": "artifacts/intel/metal-combined-gui-ci/section-fill/transparent-disabled.rgba",
+      "bytes": 1920000,
+      "sha256": "cb464c7a67b4acf25ce7aaf9c9331f2630f950dc06ff0a52e7e4d31e4f92e31b"
+    },
+    {
+      "path": "artifacts/intel/metal-combined-gui-ci/section-fill/transparent.rgba",
+      "bytes": 1920000,
+      "sha256": "cb464c7a67b4acf25ce7aaf9c9331f2630f950dc06ff0a52e7e4d31e4f92e31b"
+    },
+    {
+      "path": "artifacts/intel/paper-font-native-ci/font-resource.log",
+      "bytes": 22530,
+      "sha256": "df71acb1400d9a4e8e87a48de19dbe31bd8d149c3eab8465e62f302068f4167d"
+    },
+    {
+      "path": "artifacts/intel/paper-font-native-ci/tests.log",
+      "bytes": 29337,
+      "sha256": "8c558cb732af228c034c756281fd784b126864a5e5c7c17713f07d2c4067b8a6"
+    },
+    {
+      "path": "artifacts/metal-compute-consumer-macos-15/binary.sha256",
+      "bytes": 115,
+      "sha256": "3c4919b377ca36fb8e6269c7a9971360f25407f086331f4922984dde396c04a3"
+    },
+    {
+      "path": "artifacts/metal-compute-consumer-macos-15/build.log",
+      "bytes": 23774,
+      "sha256": "a774270ef280ead95543163cfd1586f1c804f53b445bdfb5118f6f6b6ebeabb9"
+    },
+    {
+      "path": "artifacts/metal-compute-consumer-macos-15/execution.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/metal-compute-consumer-macos-15/frameworks.txt",
+      "bytes": 2190,
+      "sha256": "e11d32567317ccf27595f8294716b7cdf208b9c1bd8cbb9c86055fb26f64447c"
+    },
+    {
+      "path": "artifacts/metal-compute-consumer-macos-15/native/alpha-0.rgba",
+      "bytes": 16384,
+      "sha256": "081d832e8a3c7d824a89ffb5399e32db6cb4571141a4a65a8ab5da5ab769a42a"
+    },
+    {
+      "path": "artifacts/metal-compute-consumer-macos-15/native/alpha-1.rgba",
+      "bytes": 16384,
+      "sha256": "5122a685f9e60f40ff357f4965567fe4a06cfe9c88db5d1d5ec9751def3ca562"
+    },
+    {
+      "path": "artifacts/metal-compute-consumer-macos-15/native/alpha-127.rgba",
+      "bytes": 16384,
+      "sha256": "38fc8224c9332f838a4ef6e4fdc3a83902b5f71b5fc06706bb9c91a830567355"
+    },
+    {
+      "path": "artifacts/metal-compute-consumer-macos-15/native/alpha-128.rgba",
+      "bytes": 16384,
+      "sha256": "38fc8224c9332f838a4ef6e4fdc3a83902b5f71b5fc06706bb9c91a830567355"
+    },
+    {
+      "path": "artifacts/metal-compute-consumer-macos-15/native/alpha-254.rgba",
+      "bytes": 16384,
+      "sha256": "3d91e047b39b8a33002c66d7f0b407810d323d4f2b6493b5f8a4565ac95bd61c"
+    },
+    {
+      "path": "artifacts/metal-compute-consumer-macos-15/native/alpha-255.rgba",
+      "bytes": 16384,
+      "sha256": "2ef505cf0184482d8c20d94839098d4e23ce8d8ec0d3053d7c18f31ba1e504cf"
+    },
+    {
+      "path": "artifacts/metal-compute-consumer-macos-15/native/missing-final-ui.rgba",
+      "bytes": 16384,
+      "sha256": "d6b12b0e578095d128855ed2a01ed2a29583cd0a7f6be4078f942446de174657"
+    },
+    {
+      "path": "artifacts/metal-compute-consumer-macos-15/native/mixed-ui-cad.rgba",
+      "bytes": 16384,
+      "sha256": "baf63a069d505d7ebf3261c540e94d808969599559ca34e00f432ca1b910cb4c"
+    },
+    {
+      "path": "artifacts/metal-compute-consumer-macos-15/native/result.json",
+      "bytes": 491,
+      "sha256": "eb1b09f5bf4d649db7629c8afe5890a6394d64f9b31709759b07d236f8bbc557"
+    },
+    {
+      "path": "artifacts/metal-compute-consumer-macos-15/native/reversed-order.rgba",
+      "bytes": 16384,
+      "sha256": "419ab6f16e78245a4371cb552643fb96192c85d4aa9e3ecf9388a3a47df80ba1"
+    },
+    {
+      "path": "artifacts/metal-compute-consumer-macos-15/qt-alpha.log",
+      "bytes": 36,
+      "sha256": "d36157ef904350c50d628f39820fdb62464efea195f0e69cce4848e71d440f93"
+    },
+    {
+      "path": "artifacts/metal-compute-consumer-macos-15/qt-mixed.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/metal-compute-consumer-macos-15/reference/alpha/alpha-0.png",
+      "bytes": 203,
+      "sha256": "fd753eac314b3860f9aa9b3fd60674035f7c2bcc54052df43bb4fe18dd1b6cef"
+    },
+    {
+      "path": "artifacts/metal-compute-consumer-macos-15/reference/alpha/alpha-0.rgba",
+      "bytes": 16384,
+      "sha256": "081d832e8a3c7d824a89ffb5399e32db6cb4571141a4a65a8ab5da5ab769a42a"
+    },
+    {
+      "path": "artifacts/metal-compute-consumer-macos-15/reference/alpha/alpha-1.png",
+      "bytes": 227,
+      "sha256": "8772229c487f5626f53c768437aa589368c6d327b417b6d8549d8fbcbeb22ead"
+    },
+    {
+      "path": "artifacts/metal-compute-consumer-macos-15/reference/alpha/alpha-1.rgba",
+      "bytes": 16384,
+      "sha256": "5122a685f9e60f40ff357f4965567fe4a06cfe9c88db5d1d5ec9751def3ca562"
+    },
+    {
+      "path": "artifacts/metal-compute-consumer-macos-15/reference/alpha/alpha-127.png",
+      "bytes": 237,
+      "sha256": "c45521942a8a112a9a575012ae3911001dae0c6e36ef16d3a83cf90d6380681f"
+    },
+    {
+      "path": "artifacts/metal-compute-consumer-macos-15/reference/alpha/alpha-127.rgba",
+      "bytes": 16384,
+      "sha256": "38fc8224c9332f838a4ef6e4fdc3a83902b5f71b5fc06706bb9c91a830567355"
+    },
+    {
+      "path": "artifacts/metal-compute-consumer-macos-15/reference/alpha/alpha-128.png",
+      "bytes": 237,
+      "sha256": "c45521942a8a112a9a575012ae3911001dae0c6e36ef16d3a83cf90d6380681f"
+    },
+    {
+      "path": "artifacts/metal-compute-consumer-macos-15/reference/alpha/alpha-128.rgba",
+      "bytes": 16384,
+      "sha256": "38fc8224c9332f838a4ef6e4fdc3a83902b5f71b5fc06706bb9c91a830567355"
+    },
+    {
+      "path": "artifacts/metal-compute-consumer-macos-15/reference/alpha/alpha-254.png",
+      "bytes": 239,
+      "sha256": "7249408c6b04ca9beb4ebc45b5fbce3d5373fd02b5ce6afa06d0e2c7467fb4dc"
+    },
+    {
+      "path": "artifacts/metal-compute-consumer-macos-15/reference/alpha/alpha-254.rgba",
+      "bytes": 16384,
+      "sha256": "3d91e047b39b8a33002c66d7f0b407810d323d4f2b6493b5f8a4565ac95bd61c"
+    },
+    {
+      "path": "artifacts/metal-compute-consumer-macos-15/reference/alpha/alpha-255.png",
+      "bytes": 239,
+      "sha256": "f797a8178f78ce5590346fa2d6f3b8a51ea4070b0d3c37acdb675fdf2d35cb96"
+    },
+    {
+      "path": "artifacts/metal-compute-consumer-macos-15/reference/alpha/alpha-255.rgba",
+      "bytes": 16384,
+      "sha256": "2ef505cf0184482d8c20d94839098d4e23ce8d8ec0d3053d7c18f31ba1e504cf"
+    },
+    {
+      "path": "artifacts/metal-compute-consumer-macos-15/reference/alpha/reference.json",
+      "bytes": 1033,
+      "sha256": "af9f9702e0cefb65f975ed82e8764759889e2d05ee22b6567d7afa095d7e00bb"
+    },
+    {
+      "path": "artifacts/metal-compute-consumer-macos-15/reference/mixed/mixed-ui-cad.rgba",
+      "bytes": 16384,
+      "sha256": "baf63a069d505d7ebf3261c540e94d808969599559ca34e00f432ca1b910cb4c"
+    },
+    {
+      "path": "artifacts/metal-compute-consumer-macos-15/reference/mixed/source.json",
+      "bytes": 315,
+      "sha256": "3a947a54fe870ba639678ebb114b3d2a6b495b701bae0cd9b408930cfafda552"
+    },
+    {
+      "path": "artifacts/metal-compute-consumer-macos-15/revision.txt",
+      "bytes": 41,
+      "sha256": "0d6265382e1b23e6aa5ca6f45cd8e791b478673c12330ddf554c214a49a85ade"
+    },
+    {
+      "path": "artifacts/metal-compute-consumer-macos-15/strict-check.json",
+      "bytes": 970,
+      "sha256": "9f91f859edb83aec66c0a5c39e4f4e6884bd7282080f3455bc8fac1e9ee0f1e6"
+    },
+    {
+      "path": "artifacts/metal-compute-consumer-macos-15/toolchain.txt",
+      "bytes": 192,
+      "sha256": "352d6857968e80a6357a926ac685b9b07f77c479aaafde33e73a53945e802909"
+    },
+    {
+      "path": "artifacts/metal-compute-consumer-macos-15-intel/binary.sha256",
+      "bytes": 115,
+      "sha256": "8df885e310f045f9f54813097916ce32b08b7b00ee1a3750672e5cb108c75cd1"
+    },
+    {
+      "path": "artifacts/metal-compute-consumer-macos-15-intel/build.log",
+      "bytes": 23774,
+      "sha256": "a4dd2a4db4b51801063071d9f5547abf8cd767f7502465e54615ba43d5f53895"
+    },
+    {
+      "path": "artifacts/metal-compute-consumer-macos-15-intel/execution.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/metal-compute-consumer-macos-15-intel/frameworks.txt",
+      "bytes": 2065,
+      "sha256": "d422e338a8c69a2fd5b10c652e31e8aea3d99ad02e634b03bc56af7e2d4c1083"
+    },
+    {
+      "path": "artifacts/metal-compute-consumer-macos-15-intel/native/alpha-0.rgba",
+      "bytes": 16384,
+      "sha256": "081d832e8a3c7d824a89ffb5399e32db6cb4571141a4a65a8ab5da5ab769a42a"
+    },
+    {
+      "path": "artifacts/metal-compute-consumer-macos-15-intel/native/alpha-1.rgba",
+      "bytes": 16384,
+      "sha256": "5122a685f9e60f40ff357f4965567fe4a06cfe9c88db5d1d5ec9751def3ca562"
+    },
+    {
+      "path": "artifacts/metal-compute-consumer-macos-15-intel/native/alpha-127.rgba",
+      "bytes": 16384,
+      "sha256": "38fc8224c9332f838a4ef6e4fdc3a83902b5f71b5fc06706bb9c91a830567355"
+    },
+    {
+      "path": "artifacts/metal-compute-consumer-macos-15-intel/native/alpha-128.rgba",
+      "bytes": 16384,
+      "sha256": "38fc8224c9332f838a4ef6e4fdc3a83902b5f71b5fc06706bb9c91a830567355"
+    },
+    {
+      "path": "artifacts/metal-compute-consumer-macos-15-intel/native/alpha-254.rgba",
+      "bytes": 16384,
+      "sha256": "3d91e047b39b8a33002c66d7f0b407810d323d4f2b6493b5f8a4565ac95bd61c"
+    },
+    {
+      "path": "artifacts/metal-compute-consumer-macos-15-intel/native/alpha-255.rgba",
+      "bytes": 16384,
+      "sha256": "2ef505cf0184482d8c20d94839098d4e23ce8d8ec0d3053d7c18f31ba1e504cf"
+    },
+    {
+      "path": "artifacts/metal-compute-consumer-macos-15-intel/native/missing-final-ui.rgba",
+      "bytes": 16384,
+      "sha256": "d6b12b0e578095d128855ed2a01ed2a29583cd0a7f6be4078f942446de174657"
+    },
+    {
+      "path": "artifacts/metal-compute-consumer-macos-15-intel/native/mixed-ui-cad.rgba",
+      "bytes": 16384,
+      "sha256": "baf63a069d505d7ebf3261c540e94d808969599559ca34e00f432ca1b910cb4c"
+    },
+    {
+      "path": "artifacts/metal-compute-consumer-macos-15-intel/native/result.json",
+      "bytes": 491,
+      "sha256": "6ef0778f30abc492572f6463044dcad3471a213b9687d6ffa4d36684151766f7"
+    },
+    {
+      "path": "artifacts/metal-compute-consumer-macos-15-intel/native/reversed-order.rgba",
+      "bytes": 16384,
+      "sha256": "419ab6f16e78245a4371cb552643fb96192c85d4aa9e3ecf9388a3a47df80ba1"
+    },
+    {
+      "path": "artifacts/metal-compute-consumer-macos-15-intel/qt-alpha.log",
+      "bytes": 36,
+      "sha256": "d36157ef904350c50d628f39820fdb62464efea195f0e69cce4848e71d440f93"
+    },
+    {
+      "path": "artifacts/metal-compute-consumer-macos-15-intel/qt-mixed.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/metal-compute-consumer-macos-15-intel/reference/alpha/alpha-0.png",
+      "bytes": 203,
+      "sha256": "fd753eac314b3860f9aa9b3fd60674035f7c2bcc54052df43bb4fe18dd1b6cef"
+    },
+    {
+      "path": "artifacts/metal-compute-consumer-macos-15-intel/reference/alpha/alpha-0.rgba",
+      "bytes": 16384,
+      "sha256": "081d832e8a3c7d824a89ffb5399e32db6cb4571141a4a65a8ab5da5ab769a42a"
+    },
+    {
+      "path": "artifacts/metal-compute-consumer-macos-15-intel/reference/alpha/alpha-1.png",
+      "bytes": 227,
+      "sha256": "8772229c487f5626f53c768437aa589368c6d327b417b6d8549d8fbcbeb22ead"
+    },
+    {
+      "path": "artifacts/metal-compute-consumer-macos-15-intel/reference/alpha/alpha-1.rgba",
+      "bytes": 16384,
+      "sha256": "5122a685f9e60f40ff357f4965567fe4a06cfe9c88db5d1d5ec9751def3ca562"
+    },
+    {
+      "path": "artifacts/metal-compute-consumer-macos-15-intel/reference/alpha/alpha-127.png",
+      "bytes": 237,
+      "sha256": "c45521942a8a112a9a575012ae3911001dae0c6e36ef16d3a83cf90d6380681f"
+    },
+    {
+      "path": "artifacts/metal-compute-consumer-macos-15-intel/reference/alpha/alpha-127.rgba",
+      "bytes": 16384,
+      "sha256": "38fc8224c9332f838a4ef6e4fdc3a83902b5f71b5fc06706bb9c91a830567355"
+    },
+    {
+      "path": "artifacts/metal-compute-consumer-macos-15-intel/reference/alpha/alpha-128.png",
+      "bytes": 237,
+      "sha256": "c45521942a8a112a9a575012ae3911001dae0c6e36ef16d3a83cf90d6380681f"
+    },
+    {
+      "path": "artifacts/metal-compute-consumer-macos-15-intel/reference/alpha/alpha-128.rgba",
+      "bytes": 16384,
+      "sha256": "38fc8224c9332f838a4ef6e4fdc3a83902b5f71b5fc06706bb9c91a830567355"
+    },
+    {
+      "path": "artifacts/metal-compute-consumer-macos-15-intel/reference/alpha/alpha-254.png",
+      "bytes": 239,
+      "sha256": "7249408c6b04ca9beb4ebc45b5fbce3d5373fd02b5ce6afa06d0e2c7467fb4dc"
+    },
+    {
+      "path": "artifacts/metal-compute-consumer-macos-15-intel/reference/alpha/alpha-254.rgba",
+      "bytes": 16384,
+      "sha256": "3d91e047b39b8a33002c66d7f0b407810d323d4f2b6493b5f8a4565ac95bd61c"
+    },
+    {
+      "path": "artifacts/metal-compute-consumer-macos-15-intel/reference/alpha/alpha-255.png",
+      "bytes": 239,
+      "sha256": "f797a8178f78ce5590346fa2d6f3b8a51ea4070b0d3c37acdb675fdf2d35cb96"
+    },
+    {
+      "path": "artifacts/metal-compute-consumer-macos-15-intel/reference/alpha/alpha-255.rgba",
+      "bytes": 16384,
+      "sha256": "2ef505cf0184482d8c20d94839098d4e23ce8d8ec0d3053d7c18f31ba1e504cf"
+    },
+    {
+      "path": "artifacts/metal-compute-consumer-macos-15-intel/reference/alpha/reference.json",
+      "bytes": 1033,
+      "sha256": "af9f9702e0cefb65f975ed82e8764759889e2d05ee22b6567d7afa095d7e00bb"
+    },
+    {
+      "path": "artifacts/metal-compute-consumer-macos-15-intel/reference/mixed/mixed-ui-cad.rgba",
+      "bytes": 16384,
+      "sha256": "baf63a069d505d7ebf3261c540e94d808969599559ca34e00f432ca1b910cb4c"
+    },
+    {
+      "path": "artifacts/metal-compute-consumer-macos-15-intel/reference/mixed/source.json",
+      "bytes": 315,
+      "sha256": "3a947a54fe870ba639678ebb114b3d2a6b495b701bae0cd9b408930cfafda552"
+    },
+    {
+      "path": "artifacts/metal-compute-consumer-macos-15-intel/revision.txt",
+      "bytes": 41,
+      "sha256": "0d6265382e1b23e6aa5ca6f45cd8e791b478673c12330ddf554c214a49a85ade"
+    },
+    {
+      "path": "artifacts/metal-compute-consumer-macos-15-intel/strict-check.json",
+      "bytes": 970,
+      "sha256": "9f91f859edb83aec66c0a5c39e4f4e6884bd7282080f3455bc8fac1e9ee0f1e6"
+    },
+    {
+      "path": "artifacts/metal-compute-consumer-macos-15-intel/toolchain.txt",
+      "bytes": 191,
+      "sha256": "b1184c1aecf3182548f3bbdd91e5043e464821b1dcbf6d5ca8246339bd0be84a"
+    },
+    {
+      "path": "artifacts/windows/build.log",
+      "bytes": 56306,
+      "sha256": "50188739b499360e51ca503a60518cf19fb80b3abf0079529c3ff5cffa01a241"
+    },
+    {
+      "path": "artifacts/windows/recovery-check.json",
+      "bytes": 126,
+      "sha256": "124dfaa42372337d6ed6a1188ec77110200f086ec330947cd01a5d8768e0fe61"
+    },
+    {
+      "path": "artifacts/windows/recovery-check.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/windows/recovery-run.log",
+      "bytes": 61,
+      "sha256": "5150e5544f715f442282efaf055233c151f021d8f5f3a27fe8f3b6a7f083aa56"
+    },
+    {
+      "path": "artifacts/windows/self-check.log",
+      "bytes": 560,
+      "sha256": "05ac283238e28a6b08ea80aba920cea2376f07f19136b59e7624b4dab1231cee"
+    },
+    {
+      "path": "artifacts/windows/session-recovery/init-0.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/windows/session-recovery/init-0.stdout",
+      "bytes": 22,
+      "sha256": "a646a1e7a7b006c7e41f2ac46694b5c387dd4fbdfe1c3a673431e5a498f8a6f5"
+    },
+    {
+      "path": "artifacts/windows/session-recovery/original-after.igz",
+      "bytes": 2595,
+      "sha256": "ddc519bdcc8b3a40d3c18e15ae638eb147cf254e17d2a22f609787d8100d74dd"
+    },
+    {
+      "path": "artifacts/windows/session-recovery/original-before.igz",
+      "bytes": 2595,
+      "sha256": "ddc519bdcc8b3a40d3c18e15ae638eb147cf254e17d2a22f609787d8100d74dd"
+    },
+    {
+      "path": "artifacts/windows/session-recovery/recover-6.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/windows/session-recovery/recover-6.stdout",
+      "bytes": 1076,
+      "sha256": "e6ce6d59cc0cea36e8f60d070f02b368e7dacf46141428e4adc1bb1145a06252"
+    },
+    {
+      "path": "artifacts/windows/session-recovery/recovered.igz",
+      "bytes": 2595,
+      "sha256": "8de878386b45967031237efcc6611f43a2c3c1a2281390dab67aac22c526e87b"
+    },
+    {
+      "path": "artifacts/windows/session-recovery/result.json",
+      "bytes": 3468,
+      "sha256": "54cc360654180afff93ae21898b7b86c9fec24a8c9b9b42d0c1b421716b144c2"
+    },
+    {
+      "path": "artifacts/windows/session-recovery/scan-0.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/windows/session-recovery/scan-0.stdout",
+      "bytes": 71,
+      "sha256": "59edc2b86cf57a40ead82b36bb80b1b934149c9900427b31af31d95c4561cb6e"
+    },
+    {
+      "path": "artifacts/windows/session-recovery/scan-1.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/windows/session-recovery/scan-1.stdout",
+      "bytes": 71,
+      "sha256": "36612b421f09e5978f4635d54ee3b37fe4089bb1b07ae68e0b71987708923b87"
+    },
+    {
+      "path": "artifacts/windows/session-recovery/scan-2.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/windows/session-recovery/scan-2.stdout",
+      "bytes": 71,
+      "sha256": "f7c48c6b1f78966160a248ff35218ffa6ab02579370fa6e8cf22810eda8f227c"
+    },
+    {
+      "path": "artifacts/windows/session-recovery/scan-3.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/windows/session-recovery/scan-3.stdout",
+      "bytes": 70,
+      "sha256": "53d258f96701a11f415f61d5a3a7461d56aae2b2bb0dfe9f4ffd256ad4e8a5c5"
+    },
+    {
+      "path": "artifacts/windows/session-recovery/scan-4.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/windows/session-recovery/scan-4.stdout",
+      "bytes": 70,
+      "sha256": "8551365072df1a0422a4ae3bbf2617e8a927ea20cb5edb7f802ee879b006ca70"
+    },
+    {
+      "path": "artifacts/windows/session-recovery/scan-5.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/windows/session-recovery/scan-5.stdout",
+      "bytes": 214,
+      "sha256": "05667d1e07f6c0076b2349417a3971143d34c1bff76ba5e95c808d010454319d"
+    },
+    {
+      "path": "artifacts/windows/session-recovery/state/config/settings.json",
+      "bytes": 739,
+      "sha256": "cc7d4aea02ff626e31a7d4bfefab5c1c70e333d84771b6cc7856332efc2f867e"
+    },
+    {
+      "path": "artifacts/windows/session-recovery/state/data/autosave/discarded/retired-1791763668704-5311ea65-f11f-4d00-b1ba-36ce73926798.igz",
+      "bytes": 2595,
+      "sha256": "8de878386b45967031237efcc6611f43a2c3c1a2281390dab67aac22c526e87b"
+    },
+    {
+      "path": "artifacts/windows/session-recovery/state/data/autosave/discarded/retired-1791763668704-5311ea65-f11f-4d00-b1ba-36ce73926798.json",
+      "bytes": 423,
+      "sha256": "dd5a91962e35e2bda926e792dc271f60000196ee46cd3b14d433f26c2cf74980"
+    },
+    {
+      "path": "artifacts/windows/session-recovery/state/original.igz",
+      "bytes": 2595,
+      "sha256": "ddc519bdcc8b3a40d3c18e15ae638eb147cf254e17d2a22f609787d8100d74dd"
+    },
+    {
+      "path": "artifacts/windows/session-recovery/state/recovered.igz",
+      "bytes": 2595,
+      "sha256": "8de878386b45967031237efcc6611f43a2c3c1a2281390dab67aac22c526e87b"
+    },
+    {
+      "path": "artifacts/windows/session-recovery/writer.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/windows/version.log",
+      "bytes": 32,
+      "sha256": "1b2dd62f50384c39fd4e0df9b1067fa5bb89930b5b7e037c3cf2e30949765df9"
+    },
+    {
+      "path": "artifacts.json",
+      "bytes": 4391,
+      "sha256": "72c12d0a44adb27f8fbf0d357d810c5821ff655d7c0b247d81d432ab34e6a3c8"
+    },
+    {
+      "path": "full-jobs.json",
+      "bytes": 41613,
+      "sha256": "a05681ea697d7fc9fc0be555784efe715a7d88b27784639e8c47035e55dec57e"
+    },
+    {
+      "path": "mac-library-repair.json",
+      "bytes": 1139,
+      "sha256": "4e656188d4b1844c6e5795672f5e6852b1132480e62844488f2510b0f531ebac"
+    },
+    {
+      "path": "observation.json",
+      "bytes": 16340,
+      "sha256": "cabb73d51c724c70b03616ff59de3d9603c8cbe9286b8d927756b3444336ae13"
+    },
+    {
+      "path": "ordered-artifacts.json",
+      "bytes": 1489,
+      "sha256": "c62ac8d5e3b9b9fdb6627e32f61ff78e9695df33d4d4421936cb1b7d9dee7ac4"
+    },
+    {
+      "path": "ordered-jobs.json",
+      "bytes": 6924,
+      "sha256": "589768ca1a54a7ae2e07050eae08692ce8958ec0cb7173fc8d0af96fa5de99e0"
+    },
+    {
+      "path": "selected-linux/document-axes-ci/result.json",
+      "bytes": 146100,
+      "sha256": "3e313113de3dd95650d3fce4e08878cdcf93e321fbbd676dd77379c05fe826e7"
+    },
+    {
+      "path": "selected-linux/document-axes-ci/stages.json",
+      "bytes": 27862,
+      "sha256": "ed0efc9974ac6f14a6d1b9dff2f481ff3f32633759080d489811bf425273d429"
+    },
+    {
+      "path": "selected-linux/drawing-reference-render/runtime.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "selected-linux/drawing-reference-render/state.json",
+      "bytes": 1069,
+      "sha256": "edcfb4db2d1f9805970f04abbb426ac37c8df6d0cd768486bd1925ef272ae93a"
+    },
+    {
+      "path": "selected-linux/grid-default-ci/fresh-gate.json",
+      "bytes": 1486,
+      "sha256": "51e45391addd8012118278b38f2fa0ff4459dd99c9627be088ce3965640c272c"
+    },
+    {
+      "path": "selected-linux/grid-default-ci/source-generation.json",
+      "bytes": 89582,
+      "sha256": "a0781e9432b9d2273687074f8ea6b7144f030e59650ecaf11678f01bc9f4415b"
+    },
+    {
+      "path": "selected-linux/grid-heldout-ci/fresh-gate.json",
+      "bytes": 1487,
+      "sha256": "25b12cd34feff8901ea987e9827c86d9c88035e8b7bebc08f93bda807428c6d2"
+    },
+    {
+      "path": "selected-linux/grid-heldout-ci/source-generation.json",
+      "bytes": 89585,
+      "sha256": "81b11a4a2ae580f4d131502c186312cb0aa8d270fa55c84ecdcc81bba53a85cb"
+    },
+    {
+      "path": "selected-linux/range-receipt.json",
+      "bytes": 10014,
+      "sha256": "d776a8d85ba5f8c22db9b201b89327ad3b96b2669ca82075b0f491f5b3b9b5e0"
+    },
+    {
+      "path": "selected-linux/saved-vector-view-ci/fresh-gate.json",
+      "bytes": 1482,
+      "sha256": "5bc40d4399834877ba6b1c23e997e5de193ade287ea5f65a62fcdd5d37dbc6b4"
+    },
+    {
+      "path": "selected-linux/saved-vector-view-ci/source-generation.json",
+      "bytes": 89582,
+      "sha256": "f3674123919396534069c72921997102ee720964f92f95784fa429f11b44f2dd"
+    },
+    {
+      "path": "selected-linux/section-heldout-hatch-ci/fresh-gate.json",
+      "bytes": 1482,
+      "sha256": "c517c63279ae241817cf4897f45fa65ee845f157031ab15baaedd1c5db5a80c9"
+    },
+    {
+      "path": "selected-linux/section-heldout-hatch-ci/source-generation.json",
+      "bytes": 89584,
+      "sha256": "6a6aabc665921e7aa1ebba6fafc6d7da0f2ed0d31abad49213993e5879d91d6f"
+    },
+    {
+      "path": "selected-linux/section-solid-ci/fresh-gate.json",
+      "bytes": 1484,
+      "sha256": "a14f987ea3dc506e097f6d504bfa8f96d0e3f0990c0038ee3ec363dc7304032b"
+    },
+    {
+      "path": "selected-linux/section-solid-ci/source-generation.json",
+      "bytes": 89581,
+      "sha256": "925a61c1665e09fb8badaf9672120d39cc6f92c2b5ff1495ac56d86f7ca01426"
+    },
+    {
+      "path": "selected-linux/shift-inference-render/runtime.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "selected-linux/shift-inference-render/state.json",
+      "bytes": 226,
+      "sha256": "9785347fab8e33d5a04c3c5e8188ac00319ff9129fa8b63bff3e1f2c0828ab2f"
+    },
+    {
+      "path": "selected-linux/vector-view-ci/fresh-gate.json",
+      "bytes": 1483,
+      "sha256": "8349191c186e9f243e4276354e75ec71878273e0dea7a3dab613f889337f16f1"
+    },
+    {
+      "path": "selected-linux/vector-view-ci/source-generation.json",
+      "bytes": 89577,
+      "sha256": "7d68d83e6945aad5c8df356ad64a3d988993ca8b222015ac64d08e584ce29da3"
+    },
+    {
+      "path": "step-timings.json",
+      "bytes": 58446,
+      "sha256": "113a0bcc68100f09885ff97238722c8418aa116c0239dccf17e84b77223ea268"
+    }
+  ]
+}
