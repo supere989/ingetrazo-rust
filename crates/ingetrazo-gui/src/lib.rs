@@ -12,6 +12,8 @@ pub mod app;
 #[cfg(feature="engineering-python")]
 mod engineering_python;
 mod ai_bridge;
+mod ai_bridge_capture;
+mod capture_presentation;
 mod geographic_import;
 pub mod import_units;
 pub mod survey_points;

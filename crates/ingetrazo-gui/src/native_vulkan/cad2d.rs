@@ -99,6 +99,7 @@ impl DescriptorOwnerWeakForProbe {
     }
     pub fn strong_count(&self)->usize{self.0.strong_count()}
 }
+pub(crate) struct CapturePass {previous:PreparedRenderPass,active:Option<vk::DescriptorSet>,visibility:Option<(vk::Buffer,u32,Arc<()>)>}
 pub(crate) struct PreparedRenderPass {
     device:Device,pipeline:vk::Pipeline,lcd_pipeline:vk::Pipeline,widget_pipeline:vk::Pipeline,stencil_mark:vk::Pipeline,stencil_composite:vk::Pipeline,pool:vk::DescriptorPool,sets:Vec<vk::DescriptorSet>,
 }
@@ -826,6 +827,27 @@ unsafe{context.device.create_descriptor_set_layout(&vk::DescriptorSetLayoutCreat
     }
     pub fn descriptor_owner_weak_for_probe(&self)->DescriptorOwnerWeakForProbe{
         DescriptorOwnerWeakForProbe(Arc::downgrade(&self.pipeline))
+    }
+    /// Swap already prepared pass objects without destroying the accepted live
+    /// ones. Capture restores this token only after its submission completes.
+    pub(crate) fn stage_capture_pass(&mut self,mut prepared:PreparedRenderPass)->Result<CapturePass,String>{
+        self.lifetime.check()?;
+        let mut p=self.pipeline.lock().map_err(|_|"CAD2D pipeline poisoned")?;
+        std::mem::swap(&mut p.pipeline,&mut prepared.pipeline);
+        std::mem::swap(&mut p.lcd_pipeline,&mut prepared.lcd_pipeline);
+        std::mem::swap(&mut p.widget_pipeline,&mut prepared.widget_pipeline);
+        std::mem::swap(&mut p.stencil_mark,&mut prepared.stencil_mark);
+        std::mem::swap(&mut p.stencil_composite,&mut prepared.stencil_composite);
+        std::mem::swap(&mut p.descriptor_pool,&mut prepared.pool);
+        std::mem::swap(&mut p.descriptor_sets,&mut prepared.sets);
+        Ok(CapturePass{previous:prepared,active:p.active_set.take(),visibility:p.visibility.take()})
+    }
+    pub(crate) fn restore_capture_pass(&mut self,pass:CapturePass)->Result<PreparedRenderPass,String>{
+        let active=pass.active;let visibility=pass.visibility;
+        let current=self.stage_capture_pass(pass.previous)?;
+        let mut p=self.pipeline.lock().map_err(|_|"CAD2D pipeline poisoned")?;
+        p.active_set=active;p.visibility=visibility;
+        Ok(current.previous)
     }
     pub fn set_render_pass(&mut self,pass:vk::RenderPass,views:&[vk::ImageView])->Result<(),String>{
         let prepared=self.prepare_render_pass(pass,views).map_err(|e|{if e.device_lost(){self.lifetime.quarantine();}e.to_string()})?;self.commit_render_pass(prepared)

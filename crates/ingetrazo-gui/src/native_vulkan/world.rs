@@ -7,9 +7,9 @@ use ash::{vk,Device};
 use egui_ash_renderer::MemoryObserver;
 use std::sync::Arc;
 use super::{budget::VulkanBudget,resources::{Resources,BufferId},VulkanContext};
-struct Image {device:Device,budget:Arc<VulkanBudget>,handle:vk::Image,memory:vk::DeviceMemory,view:vk::ImageView,sampled_depth_view:Option<vk::ImageView>}
+pub(super) struct Image {device:Device,budget:Arc<VulkanBudget>,handle:vk::Image,memory:vk::DeviceMemory,view:vk::ImageView,sampled_depth_view:Option<vk::ImageView>}
 impl Image {
- fn new(context:&VulkanContext,budget:Arc<VulkanBudget>,extent:vk::Extent2D,format:vk::Format,usage:vk::ImageUsageFlags,aspect:vk::ImageAspectFlags)->Result<Self,String> {
+ pub(super) fn new(context:&VulkanContext,budget:Arc<VulkanBudget>,extent:vk::Extent2D,format:vk::Format,usage:vk::ImageUsageFlags,aspect:vk::ImageAspectFlags)->Result<Self,String> {
   Self::new_samples(context,budget,extent,format,usage,aspect,vk::SampleCountFlags::TYPE_1)
  }
  fn new_samples(context:&VulkanContext,budget:Arc<VulkanBudget>,extent:vk::Extent2D,format:vk::Format,usage:vk::ImageUsageFlags,aspect:vk::ImageAspectFlags,samples:vk::SampleCountFlags)->Result<Self,String> {
@@ -45,8 +45,10 @@ impl Image {
   match result {Ok((memory,view,sampled_depth_view))=>Ok(Self{device,budget,handle,memory,view,sampled_depth_view}),Err(e)=>{unsafe {device.destroy_image(handle,None)};if let Some(memory)=bound_memory {unsafe {device.free_memory(memory,None)};budget.freed(memory);}Err(e)}}
  }
 }
+impl Image {pub(super) fn handle(&self)->vk::Image{self.handle} pub(super) fn view(&self)->vk::ImageView{self.view}}
 impl Drop for Image {fn drop(&mut self){unsafe {if let Some(view)=self.sampled_depth_view{self.device.destroy_image_view(view,None);}self.device.destroy_image_view(self.view,None);self.device.destroy_image(self.handle,None);self.device.free_memory(self.memory,None)};self.budget.freed(self.memory);}}
 struct Target {identity:Arc<()>,device:Device,pool:vk::DescriptorPool,_color:Image,_msaa:Option<Image>,_depth:Image,framebuffer:vk::Framebuffer,sampler:vk::Sampler,set:vk::DescriptorSet,extent:vk::Extent2D,texture:Option<egui::TextureId>}
+pub(super) struct CaptureTarget {previous:Option<Target>,display_scale:f32}
 pub(crate) struct ResizeTransaction { previous:Option<Target>, display_scale:f32 }
 impl Drop for Target {fn drop(&mut self){unsafe {self.device.destroy_framebuffer(self.framebuffer,None);self.device.destroy_sampler(self.sampler,None);let _=self.device.free_descriptor_sets(self.pool,&[self.set]);}}}
 #[derive(Default,Clone,Copy,Debug)]pub struct ContourMetrics {pub additional_position_bytes:u64,pub batches:usize,pub cold_build_ms:f64,pub compact_preprocess_ms:f64,pub warm_cache_ms:f64,pub cache_hits:u64,pub failed_prepared_chunks:usize,pub rollbacks:u64,pub edge_buffer_uploads:u64,pub failed_prepared_edge_bytes:u64}
@@ -180,12 +182,28 @@ impl World {
   }
   self.display_scale=transaction.display_scale;Ok(())
  }
+ /// The preceding host fence is acknowledged before staging. No live
+ /// descriptor is replaced; caller restores only after completion is known.
+ pub(super) fn stage_capture_target(&mut self,context:&VulkanContext,extent:vk::Extent2D)->Result<CaptureTarget,String>{
+  context.lifetime.check()?;
+  if !(64..=4096).contains(&extent.width)||!(64..=4096).contains(&extent.height){return Err("Capture extent must be64..4096".into());}
+  let candidate=self.create_target(context,extent)?;
+  Ok(CaptureTarget{previous:self.target.replace(candidate),display_scale:self.display_scale})
+ }
+ pub(super) fn finish_capture_target(&mut self,context:&VulkanContext,mut capture:CaptureTarget)->Result<(),String>{
+  if context.lifetime.uncertain(){
+   if let Some(previous)=capture.previous.take(){context.lifetime.retain(previous);}
+   return Err("Capture completion unknown; targets quarantined".into());
+  }
+  self.target=capture.previous.take();self.display_scale=capture.display_scale;Ok(())
+ }
  /// Headless target uses the identical image/render pass/pipeline owner without egui registration.
  /// Caller must complete the previous draw fence before replacing this target.
  pub fn resize_offscreen(&mut self,context:&VulkanContext,extent:vk::Extent2D)->Result<(),String> {
   if let Some(target)=&self.target {if target.texture.is_some(){return Err("Cannot replace a registered UI target without its renderer".into());}if target.extent==extent{return Ok(());}}
   let target=self.create_target(context,extent)?;self.target=Some(target);Ok(())
  }
+ pub(super) fn capture_descriptor(&self)->Result<vk::DescriptorSet,String>{self.target.as_ref().map(|target|target.set).ok_or_else(||"Capture world target absent".into())}
  pub fn readback(&mut self,context:&VulkanContext)->Result<Vec<u8>,String> {
   let target=self.target.as_ref().ok_or("No world target for readback")?;
   // GPU attachment has GL-compatible bottom-origin MSAA locations. Only

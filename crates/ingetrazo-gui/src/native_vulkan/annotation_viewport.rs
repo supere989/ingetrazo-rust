@@ -6,21 +6,28 @@ use ingetrazo_render::annotations;
 use crate::annotation_plan::{build_plan,label_units};
 #[cfg(test)] use crate::annotation_plan::typed_distance_text;
 use crate::annotation_overlay_geometry::{Cache,Limits};
-#[derive(PartialEq)]struct Key{hover:Option<ingetrazo_tools::base::AnnotationEditTarget>,revision:u64,scene_version:u64,factory:usize,view:u64,matrix:[f32;16],rect:[f32;4],density:f32,selected:Option<usize>,bypass_depth:bool,include_annotations:bool,distance:Option<(f64,[f64;3])>,units:(&'static str,i32)}
+#[derive(PartialEq)]struct Key{hover:Option<ingetrazo_tools::base::AnnotationEditTarget>,revision:u64,scene_version:u64,factory:usize,view:u64,matrix:[f32;16],rect:[f32;4],density:f32,selected:Option<usize>,bypass_depth:bool,include_annotations:bool,presentation:bool,capture_scale:[u32;2],distance:Option<(f64,[f64;3])>,units:(&'static str,i32)}
 pub(crate) struct Prepared{pub handle:Handle,pub queries:Arc<[Query]>,pub inverse:[f32;16],pub eye:[f32;3],pub forward:[f32;3]}
 pub(crate) struct ViewportAnnotations{cache:Cache,current:Option<(Key,Prepared)>,empty:Option<Key>,style:serde_json::Value,vcb:String}
 impl ViewportAnnotations{
  pub fn new(stencil:bool)->Result<Self,String>{Self::with_font_limits(stencil,ingetrazo_formats::annotation_font::Limits{faces:32,retained_font_bytes:32*1024*1024})}
  pub(crate) fn with_font_limits(stencil:bool,fonts:ingetrazo_formats::annotation_font::Limits)->Result<Self,String>{let mut result=Self{cache:Cache::new(fonts,Limits{cells:2_000_000,spans:200_000,geometry_bytes:32*1024*1024,glyphs:4096,glyph_bytes:16*1024*1024})?,current:None,empty:None,style:serde_json::Value::Null,vcb:String::new()};if stencil{result.cache.enable_source_stencil();}Ok(result)}
+ pub(crate) fn presentation_text(&mut self,text:&[crate::annotation_overlay_geometry::PresentationText])->Result<Arc<crate::annotation_overlay_geometry::Mesh>,String>{self.cache.prepare_presentation_text(text,1.,96.)}
  pub fn prepare<'a>(&'a mut self,app:&crate::IngeTrazoApp,factory:&Factory,rect:egui::Rect,density:f32,include_annotations:bool)->Result<Option<&'a Prepared>,String>{
+  self.prepare_mode(app,factory,rect,density,include_annotations,false,[1.;2])
+ }
+ pub(crate) fn prepare_presentation<'a>(&'a mut self,app:&crate::IngeTrazoApp,factory:&Factory,rect:egui::Rect,density:f32,scale:[f32;2])->Result<Option<&'a Prepared>,String>{
+  self.prepare_mode(app,factory,rect,density,true,true,scale)
+ }
+ fn prepare_mode<'a>(&'a mut self,app:&crate::IngeTrazoApp,factory:&Factory,rect:egui::Rect,density:f32,include_annotations:bool,presentation:bool,scale:[f32;2])->Result<Option<&'a Prepared>,String>{
   if !density.is_finite()||density<=0.||!rect.min.is_finite()||!rect.max.is_finite()||rect.width()<=0.||rect.height()<=0.{return Err("Annotation viewport/density outside admission".into());}
   let bypass_depth=matches!(app.style.visual_style,ingetrazo_render::style::VisualStyle::XRay|ingetrazo_render::style::VisualStyle::Wireframe);
   let snapshot=crate::navigation_ray::camera_snapshot(&app.camera).ok_or("Annotation camera arithmetic outside admission")?;
   let matrix=std::array::from_fn(|i|snapshot.matrix[i/4][i%4]);
   let units=label_units(&app.scene)?;
-  let distance=app.active_tool.distance_label().map(|(value,point)|(value,point.to_array()));
+  let distance=if presentation{None}else{app.active_tool.distance_label()}.map(|(value,point)|(value,point.to_array()));
   if distance.is_some_and(|(value,point)|!value.is_finite()||point.iter().any(|p|!p.is_finite())){return Err("Tool label outside finite admission".into());}
-  let key=Key{hover:app.active_tool.annotation_hover_target(&app.scene),revision:app.native_geometry_revision,scene_version:app.scene.version,factory:factory.cache_identity(),view:app.scene.view_version,matrix,rect:[rect.min.x,rect.min.y,rect.max.x,rect.max.y],density,selected:app.selected_dimension,bypass_depth,include_annotations,distance,units};
+  let key=Key{hover:app.active_tool.annotation_hover_target(&app.scene),revision:app.native_geometry_revision,scene_version:app.scene.version,factory:factory.cache_identity(),view:app.scene.view_version,matrix,rect:[rect.min.x,rect.min.y,rect.max.x,rect.max.y],density,selected:app.selected_dimension,bypass_depth,include_annotations,presentation,capture_scale:scale.map(f32::to_bits),distance,units};
   let raw=app.scene.dimension_style();
   let style_unchanged=self.style==*raw&&self.vcb==app.vcb_text;
   if style_unchanged&&self.empty.as_ref()==Some(&key){return Ok(None);}
@@ -28,7 +35,7 @@ impl ViewportAnnotations{
   // Invert only on a changed immutable camera key, before changing any ready owner.
   let inverse_columns=snapshot.inverse().ok_or("Annotation camera inverse is singular")?;
   let inverse=std::array::from_fn(|i|inverse_columns[i/4][i%4]);
-  let plan=Arc::new(build_plan(app,rect,&matrix,&mut self.cache,include_annotations)?);
+  let plan=Arc::new(if presentation{crate::annotation_plan::build_presentation_plan(app,rect,&matrix,&mut self.cache)?}else{build_plan(app,rect,&matrix,&mut self.cache,include_annotations)?});
   if plan.operations.is_empty(){self.style=raw.clone();self.vcb=app.vcb_text.clone();self.current=None;self.empty=Some(key);return Ok(None);}
   self.empty=None;
   let clip=[(rect.min.x*density).floor()as i32,(rect.min.y*density).floor()as i32,(rect.max.x*density).ceil()as i32,(rect.max.y*density).ceil()as i32];
@@ -42,7 +49,7 @@ impl ViewportAnnotations{
   if queries.is_empty(){queries.push(Query{pixel:[0;2],normalized:[0.;2],threshold:0.,active:0,_padding:[0;2]});}
   // Changed plans receive a private immutable handle. Updating the accepted
   // handle here would mutate the previous callback before GPU/World admission.
-  let handle=factory.annotation_handle(mesh.geometry.clone(),mesh.batches.clone(),ingetrazo_render::cad2d::Pose::default(),mesh.gates.clone())?;
+  let handle=factory.annotation_handle(mesh.geometry.clone(),mesh.batches.clone(),ingetrazo_render::cad2d::Pose{scale,translation:[0.;2]},mesh.gates.clone())?;
   self.style=raw.clone();self.vcb=app.vcb_text.clone();
   self.current=Some((key,Prepared{handle,queries:queries.into(),inverse,eye,forward}));
   Ok(self.current.as_ref().map(|(_,ready)|ready))

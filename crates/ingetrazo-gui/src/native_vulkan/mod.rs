@@ -6,6 +6,8 @@ pub mod headless;
 mod source_depth;
 mod source_discard;
 pub mod world;
+mod capture;
+mod capture_target;
 mod annotation_visibility;
 pub mod annotation_viewport;
 pub mod annotation_overlay_probe;
@@ -72,6 +74,8 @@ pub trait App {
     fn new(app: &mut System, initial_file: Option<std::path::PathBuf>) -> Self;
     fn build_ui(&mut self, ctx: &Context);
     fn prepare_gpu(&mut self,_:&mut System,_resize:bool) {}
+    /// Render-owner deferred jobs run before ordinary post-UI preparation.
+    fn after_ui_gpu(&mut self,_:&mut System) {}
     fn gpu_error(&mut self,error:&str) {eprintln!("GPU rendering paused: {error}");}
     fn clean(&mut self, vulkan_ctx: &VulkanContext) {
         let _ = vulkan_ctx;
@@ -543,6 +547,7 @@ impl System {
         // ctx.run has transferred texture ownership to this host. Retain it even
         // when the subsequent World/annotation transaction refuses this frame.
         retain_frame_texture_deltas(&mut self.pending_texture_updates,&mut self.textures_to_free,textures_delta.set,&textures_delta.free);
+        egui_app.after_ui_gpu(self);
         egui_app.prepare_gpu(self,false);
         self.egui_winit.handle_platform_output(&window, platform_output);
         if let Some(output)=viewport_output.get(&ViewportId::ROOT) {
@@ -1558,6 +1563,14 @@ impl App for crate::IngeTrazoApp {
             if let Err(error)=result{self.gpu_error(&error);}
         }
         if let Err(error)=system.world.as_mut().unwrap().finish_resize(&mut system.renderer,resize_transaction,system.annotation_prepare_error.is_none()){system.annotation_prepare_error=Some(error.clone());self.gpu_error(&error);}
+    }
+    fn after_ui_gpu(&mut self,system:&mut System){
+        let Some(pending)=self.ai_bridge_capture.take() else{return;};
+        let id=pending.request().id;
+        let result=if pending.is_live(self){system.capture_viewport(self,&pending)}else{Err("Capture cancelled before render-owner dispatch".into())};
+        // capture_viewport has acknowledged or quarantined every submission and
+        // restored its accepted live owners before a reply can release the job.
+        if let Err(error)=self.finish_ai_bridge_capture(pending,crate::ai_bridge_capture::CaptureResult{id,result}){self.gpu_error(&error);}
     }
     fn build_ui(&mut self,ctx:&Context) { self.update_ui(ctx); }
     fn gpu_error(&mut self,error:&str) {self.status_message=format!("GPU rendering paused: {error}");eprintln!("{}",self.status_message);}

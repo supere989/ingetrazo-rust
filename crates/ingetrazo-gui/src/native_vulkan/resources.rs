@@ -234,8 +234,14 @@ impl Resources {
  }
  /// Read a resolved RGBA8 image, restoring its sampled layout after every chunk.
  pub fn readback_image(&mut self,context:&super::VulkanContext,image:vk::Image,extent:vk::Extent2D)->Result<Vec<u8>,String> {
+  self.readback_image_deadline(context,image,extent,None)
+ }
+ pub(crate) fn readback_image_until(&mut self,context:&super::VulkanContext,image:vk::Image,extent:vk::Extent2D,deadline:std::time::Instant)->Result<Vec<u8>,String>{
+  self.readback_image_deadline(context,image,extent,Some(deadline))
+ }
+ fn readback_image_deadline(&mut self,context:&super::VulkanContext,image:vk::Image,extent:vk::Extent2D,deadline:Option<std::time::Instant>)->Result<Vec<u8>,String>{
   let row=extent.width as u64*4;let bytes=row.checked_mul(extent.height as u64).ok_or("Readback image size overflow")?;
-  self.read_chunks(context,bytes,row,|device,command,destination,offset,length|unsafe {
+  self.read_chunks_deadline(context,bytes,row,deadline,|device,command,destination,offset,length|unsafe {
    let range=vk::ImageSubresourceRange::default().aspect_mask(vk::ImageAspectFlags::COLOR).level_count(1).layer_count(1);
    let mut barrier=vk::ImageMemoryBarrier::default().image(image).subresource_range(range).src_queue_family_index(vk::QUEUE_FAMILY_IGNORED).dst_queue_family_index(vk::QUEUE_FAMILY_IGNORED).old_layout(vk::ImageLayout::SHADER_READ_ONLY_OPTIMAL).new_layout(vk::ImageLayout::TRANSFER_SRC_OPTIMAL).src_access_mask(vk::AccessFlags::MEMORY_WRITE|vk::AccessFlags::SHADER_READ).dst_access_mask(vk::AccessFlags::TRANSFER_READ);
    device.cmd_pipeline_barrier(command,vk::PipelineStageFlags::ALL_COMMANDS,vk::PipelineStageFlags::TRANSFER,vk::DependencyFlags::empty(),&[],&[],&[barrier]);
@@ -245,7 +251,10 @@ impl Resources {
    device.cmd_pipeline_barrier(command,vk::PipelineStageFlags::TRANSFER,vk::PipelineStageFlags::FRAGMENT_SHADER,vk::DependencyFlags::empty(),&[],&[],&[barrier]);
   })
  }
- fn read_chunks(&mut self,context:&super::VulkanContext,bytes:u64,row:u64,mut record:impl FnMut(&Device,vk::CommandBuffer,vk::Buffer,u64,u64))->Result<Vec<u8>,String> {
+ fn read_chunks(&mut self,context:&super::VulkanContext,bytes:u64,row:u64,record:impl FnMut(&Device,vk::CommandBuffer,vk::Buffer,u64,u64))->Result<Vec<u8>,String>{
+  self.read_chunks_deadline(context,bytes,row,None,record)
+ }
+ fn read_chunks_deadline(&mut self,context:&super::VulkanContext,bytes:u64,row:u64,deadline:Option<std::time::Instant>,mut record:impl FnMut(&Device,vk::CommandBuffer,vk::Buffer,u64,u64))->Result<Vec<u8>,String> {
   self.admit_context(context)?;
   if bytes==0||row==0||row>UPLOAD_CHUNK||bytes%row!=0{return Err("Invalid GPU readback extent".into());}
   let chunk=(UPLOAD_CHUNK/row*row).min(bytes);
@@ -256,7 +265,7 @@ impl Resources {
   let fence=match unsafe {self.device.create_fence(&vk::FenceCreateInfo::default(),None)} {Ok(f)=>f,Err(e)=>{unsafe {self.device.free_command_buffers(context.command_pool,&[command])};self.destroy(staging);return Err(e.to_string());}};
   let mut submitted=false;
   let result=(|| {
-   let mut output=Vec::with_capacity(usize::try_from(bytes).map_err(|_|"GPU readback does not fit host address space")?);let mut offset=0;
+   let mut output=Vec::new();output.try_reserve_exact(usize::try_from(bytes).map_err(|_|"GPU readback does not fit host address space")?).map_err(|_|"GPU readback host admission refused")?;let mut offset=0;
    while offset<bytes {
     let length=chunk.min(bytes-offset);let host=&self.buffers[&staging];
     unsafe {
@@ -267,8 +276,9 @@ impl Resources {
      self.device.cmd_pipeline_barrier(command,vk::PipelineStageFlags::TRANSFER,vk::PipelineStageFlags::HOST,vk::DependencyFlags::empty(),&[],&[barrier],&[]);
      self.device.end_command_buffer(command).map_err(|e|e.to_string())?;
      self.device.reset_fences(&[fence]).map_err(|e|e.to_string())?;
+     let wait=match deadline{Some(deadline)=>u64::try_from(deadline.checked_duration_since(std::time::Instant::now()).ok_or("Capture deadline expired before readback submission")?.as_nanos()).unwrap_or(u64::MAX).min(context.transfer_timeout_ns),None=>context.transfer_timeout_ns};
      self.device.queue_submit(context.graphics_queue,&[vk::SubmitInfo::default().command_buffers(&[command])],fence).map_err(|e|{self.lifetime.quarantine();e.to_string()})?;submitted=true;
-     context.wait_transfer(fence).map_err(|e|e.to_string())?;submitted=false;
+     context.lifetime.wait(fence,wait).map_err(|e|e.to_string())?;submitted=false;
     }
     let host=&self.buffers[&staging];let pointer=unsafe {self.device.map_memory(host.memory,0,host.allocation_bytes,vk::MemoryMapFlags::empty())}.map_err(|e|e.to_string())?;
     let read=(|| {

@@ -5,6 +5,13 @@ use crate::annotation_overlay_geometry::Cache;
 fn map(matrix:&[f32;16],v:[f32;4])->[f32;4]{std::array::from_fn(|row|matrix[row]*v[0]+matrix[4+row]*v[1]+matrix[8+row]*v[2]+matrix[12+row]*v[3])}
 // One planner shared by production and bounded CPU-only engineering inspection.
 pub(crate) fn build_plan(app:&crate::IngeTrazoApp,rect:egui::Rect,matrix:&[f32;16],cache:&mut Cache,include_annotations:bool)->Result<annotations::Plan,String>{
+ build_plan_policy(app,rect,matrix,cache,include_annotations,true)
+}
+/// Screenshot/export presentation retains committed annotation ink, excluding tool labels.
+pub(crate) fn build_presentation_plan(app:&crate::IngeTrazoApp,rect:egui::Rect,matrix:&[f32;16],cache:&mut Cache)->Result<annotations::Plan,String>{
+ build_plan_policy(app,rect,matrix,cache,true,false)
+}
+fn build_plan_policy(app:&crate::IngeTrazoApp,rect:egui::Rect,matrix:&[f32;16],cache:&mut Cache,include_annotations:bool,interactive:bool)->Result<annotations::Plan,String>{
  let raw=app.scene.dimension_style();
  let hover=app.active_tool.annotation_hover_target(&app.scene);
   let project=|point:glam::Vec3|{
@@ -32,7 +39,7 @@ pub(crate) fn build_plan(app:&crate::IngeTrazoApp,rect:egui::Rect,matrix:&[f32;1
   }
   }
   let mut plan=builder.finish()?;
-  if let Some((distance,point))=app.active_tool.distance_label(){
+  if let Some((distance,point))=interactive.then(||app.active_tool.distance_label()).flatten(){
    if !distance.is_finite()||!point.is_finite(){return Err("Tool label outside finite admission".into());}
    if let Some(pixel)=project(point.as_vec3()){
     let(unit,precision)=label_units(&app.scene)?;
