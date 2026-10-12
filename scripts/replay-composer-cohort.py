@@ -6,7 +6,7 @@ PIN="6be29fe437a7cd992d4e079f71720821b25216b9"
 WORKFLOWS={
  "mixed":("composer-mixed-selection","composer_mixed_workflows","original-mixed.json","native-mixed.json","reference-composer-mixed-reopens.py","check-composer-mixed.py",8,105),
  "clipboard":("composer-clipboard","composer_clipboard_workflows","original-clipboard.json","native-clipboard.json","reopen-composer-clipboard.py","check-composer-clipboard-parity.py",6,68),
- "previews":("composer-run-previews","composer_specialized_workflows","original-run-previews.json","native-run-previews.json","reference-composer-run-preview-reopens.py","check-composer-run-previews.py",5,106),
+ "run-previews":("composer-run-previews","composer_specialized_workflows","original-run-previews.json","native-run-previews.json","reference-composer-run-preview-reopens.py","check-composer-run-previews.py",5,106),
 }
 def digest(path):
  with Path(path).open("rb") as stream:return hashlib.file_digest(stream,"sha256").hexdigest()
@@ -35,7 +35,7 @@ def run_one(repo,binaries,out,kind,revision):
   if "capture_revision_binding" in manifest:result["capture_revision_binding"]=manifest["capture_revision_binding"]
   _,example,source_name,native_name,reader,checker,cases,count=WORKFLOWS[kind];native=out/"native";native.mkdir();binary=(binaries/example).resolve();assert binary.is_file();result["binary_sha256"]=digest(binary)
   env=dict(os.environ,QT_QPA_PLATFORM="offscreen",INGETRAZO_STATE_DIR=str(out/"state"),XDG_CONFIG_HOME=str(out/"config"),XDG_DATA_HOME=str(out/"data"),XDG_CACHE_HOME=str(out/"cache"))
-  commands=[("native",[binary,source,native,*(["--run-previews"] if kind=="previews" else [])]),("reader",[sys.executable,repo/"scripts"/reader,source,native]),("checker",[sys.executable,repo/"scripts"/checker,source,native,out/"comparison.json"])]
+  commands=[("native",[binary,source,native,*(["--run-previews"] if kind=="run-previews" else [])]),("reader",[sys.executable,repo/"scripts"/reader,source,native]),("checker",[sys.executable,repo/"scripts"/checker,source,native,out/"comparison.json"])]
   result["tool_sha256"]={name:digest(repo/"scripts"/name) for name in (reader,checker)}
   for label,argv in commands:
    start=time.monotonic();argv=list(map(str,argv))
@@ -54,7 +54,7 @@ def run_one(repo,binaries,out,kind,revision):
    for key in ("order_parametric_source_law","literal_all_state_history","traversal_residual_classification"):assert comparison[key]["ok"] is True,(key,comparison.get(key))
    assert len(comparison["traversal_residual_classification"]["rejected_controls"])==4
    result["gate_scope"]="Finite order-parametric clipboard transitions, all literal history counters, residual classifier and six readers; exact ordered parity remains separate"
-  elif kind=="previews":
+  elif kind=="run-previews":
    assert comparison["semantic_ok"] is True
    result["gate_scope"]="Strict 106 state/path/style/pose/control and five reader semantics; primitive pixels remain independently strict"
    result["strict_pixels_ok"]=comparison.get("strict_pixels_ok") is True
