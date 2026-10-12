@@ -1,0 +1,76 @@
+{
+  "runtime_revision": "62adff376a3ceb9e3af906a34b86a52a4244fc5b",
+  "archive_sha256": "e5a4cdcd610832fd471b36305827c1d17622741c2fc17f82d3ca7f42f59dc120",
+  "members": [
+    {
+      "member": "general/receipt.json",
+      "origin": "/tmp/ingetrazo-dae-general-reflection-check-r1/receipt.json",
+      "size": 199,
+      "sha256": "5e69877162f08a4a2da021d479ce360b806673b40823cdf0ef38171f3036395f"
+    },
+    {
+      "member": "general/evidence.json",
+      "origin": "/tmp/ingetrazo-dae-general-reflection-check-r1/evidence.json",
+      "size": 997,
+      "sha256": "0f4e30e50ce21b9dfeac9bd6cd76177655476244b3a0c814e2d66e594be22a7b"
+    },
+    {
+      "member": "general/checker.log",
+      "origin": "/tmp/ingetrazo-dae-general-reflection-check-r1/checker.log",
+      "size": 997,
+      "sha256": "0f4e30e50ce21b9dfeac9bd6cd76177655476244b3a0c814e2d66e594be22a7b"
+    },
+    {
+      "member": "focused-test.log",
+      "origin": "/tmp/ingetrazo-dae-reflection-test-r1.log",
+      "size": 14535,
+      "sha256": "66050b5e5daa219d117eca4411de865884dec4641e5519d6c658bccd40fa20ff"
+    },
+    {
+      "member": "build.log",
+      "origin": "/tmp/ingetrazo-context-dae-build-r1.log",
+      "size": 35088,
+      "sha256": "3ec2b754f10cbc42dbde654aafd98d88bb4299d8bcf2517933153fb1461b08f7"
+    },
+    {
+      "member": "app/result.json",
+      "origin": "/tmp/ingetrazo-dae-reflection-app-replay-r1/result.json",
+      "size": 3393,
+      "sha256": "bd4fbf0fc3eda14768a4628d6567871debdf5f89a1b53a8d112ed40ba62520c1"
+    },
+    {
+      "member": "app/comparison.json",
+      "origin": "/tmp/ingetrazo-dae-reflection-app-replay-r1/comparison.json",
+      "size": 397,
+      "sha256": "dbd2384c8cc4ebf8034efeebe541fa7e567938121526bed2be2f09ce58624892"
+    },
+    {
+      "member": "executed-code/crates/ingetrazo-formats/src/dae.rs",
+      "git_path": "crates/ingetrazo-formats/src/dae.rs",
+      "revision": "62adff376a3ceb9e3af906a34b86a52a4244fc5b",
+      "size": 14391,
+      "sha256": "07641b03fc858878e725573b65f0d0cf11fe16ed989c3c9d6239542450f0dff8"
+    },
+    {
+      "member": "executed-code/crates/ingetrazo-formats/src/gltf/rich.rs",
+      "git_path": "crates/ingetrazo-formats/src/gltf/rich.rs",
+      "revision": "62adff376a3ceb9e3af906a34b86a52a4244fc5b",
+      "size": 35427,
+      "sha256": "965f8f7e76d10f62fabe24ad2d49c5cd3e43832cc8d8625ee518376ef955e739"
+    },
+    {
+      "member": "executed-code/scripts/check-python-dae-export.py",
+      "git_path": "scripts/check-python-dae-export.py",
+      "revision": "62adff376a3ceb9e3af906a34b86a52a4244fc5b",
+      "size": 4137,
+      "sha256": "4fd617a1f5bbb28d2e9d0ec8cf7cdd78fa16ab21b2c02374c09a2a59dc7f6b75"
+    },
+    {
+      "member": "executed-code/scripts/check-exchange-exports.py",
+      "git_path": "scripts/check-exchange-exports.py",
+      "revision": "62adff376a3ceb9e3af906a34b86a52a4244fc5b",
+      "size": 11661,
+      "sha256": "7dc7bd4f077f5cd0785d66f5e12b5ea604702a762d9a9f9cec3a8ff2d3d2ba7a"
+    }
+  ]
+}
