@@ -188,6 +188,25 @@ fn temps() -> BTreeSet<PathBuf> {
         })
         .collect()
 }
+fn partial(
+    out: &Path,
+    a: &IngeTrazoApp,
+    name: &str,
+    stage: &str,
+    states: &[Value],
+) -> Result<(), String> {
+    let dialog = a
+        .document_session
+        .unit_import
+        .as_ref()
+        .map(|d| json!({"code":d.code,"kind":d.kind,"bytes":d.bytes.len(),"path":d.path}));
+    let value = json!({"complete":false,"case":name,"stage":stage,"states":states,"status_message":a.status_message,"pending_unit_dialog":dialog,"scene":source_scene(a),"undo":a.undo_stack.len(),"redo":a.redo_stack.len()});
+    std::fs::write(
+        out.join("native-dwg.partial.json"),
+        serde_json::to_vec_pretty(&value).unwrap(),
+    )
+    .map_err(|e| e.to_string())
+}
 fn record(a: &IngeTrazoApp, name: &str, phase: &str, outcome: &str) -> Value {
     json!({"case":name,"phase":phase,"scene":source_scene(a),"undo":a.undo_stack.len(),"redo":a.redo_stack.len(),"outcome":outcome,"camera":{"distance":a.camera.distance}})
 }
@@ -279,6 +298,7 @@ fn run(source: &Path, out: &Path) -> Result<(), String> {
             assert_eq!(a.component_edit_stack.len(), 2);
         }
         states.push(record(&a, name, "before", "idle"));
+        partial(out, &a, name, "before-chooser", &states)?;
         let before = source_scene(&a);
         let history = (a.undo_stack.len(), a.redo_stack.len());
         let camera_before = (a.camera.target, a.camera.distance);
@@ -294,6 +314,7 @@ fn run(source: &Path, out: &Path) -> Result<(), String> {
             },
         );
         a.choose_dwg_import();
+        partial(out, &a, name, "after-chooser-conversion", &states)?;
         let ctx = egui::Context::default();
         if name != "chooser-cancel" {
             assert!(
@@ -311,7 +332,9 @@ fn run(source: &Path, out: &Path) -> Result<(), String> {
                     "m",
                     "actual unit option click did not select metres"
                 );
+                partial(out, &a, name, "before-unit-accept", &states)?;
                 click(&mut a, &ctx, "import-unit-accept")?;
+                partial(out, &a, name, "after-unit-accept", &states)?;
             }
             assert!(
                 a.document_session.unit_import.is_none(),
@@ -324,13 +347,22 @@ fn run(source: &Path, out: &Path) -> Result<(), String> {
             &a,
             name,
             "import",
-            if cancelled { "cancel" } else { "accepted" },
+            if cancelled {
+                "cancel"
+            } else if source_scene(&a) == before {
+                "failed"
+            } else {
+                "accepted"
+            },
         ));
+        partial(out, &a, name, "import-result", &states)?;
         if cancelled {
             assert_eq!(source_scene(&a), before);
             assert_eq!((a.undo_stack.len(), a.redo_stack.len()), history);
         } else {
-            assert_ne!(source_scene(&a), before);
+            if source_scene(&a) == before {
+                return Err(format!("DWG {name}: actual Import produced no model change; status={}; pending_unit={}",a.status_message,a.document_session.unit_import.is_some()));
+            }
             assert_eq!(a.undo_stack.len(), history.0 + 1);
             fit &= a.camera.distance.is_finite()
                 && a.camera.distance > 0.
@@ -458,6 +490,13 @@ fn main() {
     let source = PathBuf::from(args.first().expect("SOURCE"));
     let out = PathBuf::from(args.get(1).expect("OUTPUT"));
     if let Err(e) = run(&source, &out) {
+        let _ = std::fs::write(
+            out.join("result.json"),
+            serde_json::to_vec_pretty(
+                &json!({"ok":false,"error":e,"native_output_complete":false}),
+            )
+            .unwrap(),
+        );
         eprintln!("{e}");
         std::process::exit(1)
     }
