@@ -1,0 +1,30 @@
+{
+  "source_commit": "cc7468fff36d029053bfdba217810a987947493f",
+  "archive_sha256": "fdd729bcef6a31da23600ac8c3c792330f385e1827fd8672f3eaf42e3a0d7bfe",
+  "members": {
+    "linux.log": {
+      "bytes": 347886,
+      "sha256": "0a7912fb7543562b56a2e8df73656fb72535766a8c2c515d77465f987e6cdbdc"
+    },
+    "full-jobs.json": {
+      "bytes": 43526,
+      "sha256": "dad1f534dff32c09d4fb0522aaba10109f32c3e4422fa7d7e5331492eba8d719"
+    },
+    "ordered-jobs.json": {
+      "bytes": 6924,
+      "sha256": "df7d569ee044a40e0a3229ca0c6a74926e3a1c185865decda07ad6458280f613"
+    },
+    "artifacts.json": {
+      "bytes": 4386,
+      "sha256": "929aea7edf15c09855b1dd70e246dd35b40f1674985ef89903633a02af0d0424"
+    },
+    "arm/paper-font-native-ci/tests.log": {
+      "bytes": 30374,
+      "sha256": "36a703b074d76c7ec97a4c1d849d2cd291816f15900ba24409df687e717cd8c9"
+    },
+    "intel/paper-font-native-ci/tests.log": {
+      "bytes": 30374,
+      "sha256": "d5efe3638a562525b5e08e738fa201fee8784597dc1ff1d3c11f7a9712d223d7"
+    }
+  }
+}
