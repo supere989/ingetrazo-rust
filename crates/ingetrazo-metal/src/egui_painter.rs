@@ -184,11 +184,35 @@ pub struct PreparedPaint {
     density: f32,
     canvas: bool,
     world: Option<Arc<crate::world::Prepared>>,
+    capture_source_depth: Option<Arc<crate::world::Prepared>>,
 }
 impl PreparedPaint {
     /// Encode world targets before any UI sampling in the same native command.
     /// The PreparedPaint owner retains the complete world frame through completion.
-    pub fn encode_world(&self,command:&ProtocolObject<dyn MTLCommandBuffer>)->Result<(),String>{if let Some(world)=&self.world{let retain_depth=self.order.iter().any(|item|match item{PaintOrder::Cad(p,_)=>p.annotation.as_ref().is_some_and(|a|a.reads_depth()),PaintOrder::Compute(p,_)=>p.annotation.as_ref().is_some_and(|a|a.reads_depth()),_=>false});world.encode_with_annotation_depth(command,retain_depth)?;for item in &self.order {let annotation=match item {PaintOrder::Cad(p,_)=>p.annotation.as_ref(),PaintOrder::Compute(p,_)=>p.annotation.as_ref(),_=>None};if let Some(annotation)=annotation{annotation.encode(command,world)?;}}}else if self.order.iter().any(|item|match item{PaintOrder::Cad(p,_)=>p.annotation.is_some(),PaintOrder::Compute(p,_)=>p.annotation.is_some(),_=>false}){return Err("Metal document annotations require retained World depth".into());}Ok(())}
+    pub fn encode_world(&self,command:&ProtocolObject<dyn MTLCommandBuffer>)->Result<(),String>{
+        let annotations = || self.order.iter().filter_map(|item|match item {
+            PaintOrder::Cad(p,_)=>p.annotation.as_ref(),
+            PaintOrder::Compute(p,_)=>p.annotation.as_ref(),_=>None,
+        });
+        if let Some(world)=&self.world {
+            if let Some(source)=&self.capture_source_depth {
+                // Source screenshot overlays inspect the retained ordinary
+                // framebuffer before requested-size rendering. Queue order
+                // preserves its preceding depth store; retain both owners.
+                for annotation in annotations(){annotation.encode(command,source)?;}
+                world.encode_with_annotation_depth(command,false)?;
+            } else {
+                // The original ordinary framebuffer retains depth for a later
+                // screenshot even when that frame had no annotation callback.
+                world.encode_with_annotation_depth(command,true)?;
+                for annotation in annotations(){annotation.encode(command,world)?;}
+            }
+        } else if annotations().next().is_some(){
+            return Err("Metal document annotations require retained World depth".into());
+        }
+        Ok(())
+    }
+
 
     pub(crate) fn encode(
         &self,
@@ -891,6 +915,17 @@ impl EguiPainter {
         }
     }
     pub fn picture_stats(&self)->crate::paper_picture::Stats{self.pictures.stats}
+    /// Same painter and callback admission, with an independently retained
+    /// ordinary depth owner for source screenshot visibility queries.
+    pub fn prepare_viewport_capture(
+        &mut self, metal:&NativeMetal, primitives:&[egui::ClippedPrimitive],
+        density:f32, source_depth:Arc<crate::world::Prepared>,
+    )->Result<Arc<PreparedPaint>,String>{
+        let mut paint=self.prepare(metal,primitives,density)?;
+        Arc::get_mut(&mut paint).ok_or("Metal capture paint owner unexpectedly shared")?
+            .capture_source_depth=Some(source_depth);
+        Ok(paint)
+    }
     pub fn prepare(
         &mut self,
         metal: &NativeMetal,
@@ -1022,6 +1057,7 @@ impl EguiPainter {
             density,
             canvas:self.compute.is_some(),
             world,
+            capture_source_depth: None,
         }))
     }
 }

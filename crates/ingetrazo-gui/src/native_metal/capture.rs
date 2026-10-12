@@ -26,6 +26,11 @@ pub(super) struct Owner {
     callback: Option<Arc<AdmittedCallback>>,
     canvas: ingetrazo_metal::compute_canvas::Pool,
     attachments: SheetReadbackPool,
+    flight: Option<Flight>,
+}
+struct Flight {
+    pending: PendingCapture,
+    submission: ingetrazo_metal::egui_painter::DiagnosticPaint,
 }
 impl Default for Owner {
     fn default() -> Self {
@@ -35,6 +40,7 @@ impl Default for Owner {
             callback: None,
             canvas: Default::default(),
             attachments: Default::default(),
+            flight: None,
         }
     }
 }
@@ -54,6 +60,8 @@ impl Owner {
         ctx: &egui::Context,
         pending: &PendingCapture,
         metal: Arc<NativeMetal>,
+        live_extent: [u32; 2],
+        live_samples: usize,
     ) -> Result<
         (
             Vec<egui::epaint::ClippedShape>,
@@ -118,7 +126,7 @@ impl Owner {
                 point,
                 camera.eye,
                 camera.forward,
-                [request.width, request.height],
+                live_extent,
             )?;
             if bypass {
                 q.active = 0;
@@ -167,7 +175,7 @@ impl Owner {
             });
         }
         let sample = if queries.iter().any(|q| q.active != 0) {
-            ingetrazo_metal::annotation::source_sample_policy(&metal, 4)?.0
+            ingetrazo_metal::annotation::source_sample_policy(&metal, live_samples)?.0
         } else {
             0
         };
@@ -175,7 +183,7 @@ impl Owner {
             inverse: std::array::from_fn(|i| inverse[i / 4][i % 4]),
             eye: [camera.eye[0], camera.eye[1], camera.eye[2], 0.],
             forward: [camera.forward[0], camera.forward[1], camera.forward[2], 0.],
-            extent_count_sample: [request.width, request.height, queries.len() as u32, sample],
+            extent_count_sample: [live_extent[0], live_extent[1], queries.len() as u32, sample],
         };
         let visibility = Visibility::prepare(
             &metal,
@@ -203,24 +211,72 @@ impl Owner {
         Ok((presentation.shapes, Some(callback)))
     }
 }
+/// Deadline/cancellation cannot free the serial bridge slot while an actual
+/// Metal submission is outstanding. Poll even if ordinary presentation pauses.
+pub(super) fn outstanding(state: &State) -> bool {
+    state.capture.flight.is_some()
+}
+pub(super) fn poll(state: &mut State) -> Result<(), String> {
+    if !state
+        .capture
+        .flight
+        .as_ref()
+        .is_some_and(|f| f.submission.completed())
+    {
+        return Ok(());
+    }
+    let mut flight = state.capture.flight.take().unwrap();
+    let request = flight.pending.request();
+    let id = request.id;
+    let result = if flight.pending.is_live(&state.app) {
+        flight
+            .submission
+            .wait_readback(Duration::ZERO)
+            .map(|rgba| CapturedRgba {
+                width: request.width,
+                height: request.height,
+                rgba,
+            })
+    } else {
+        Err("Metal capture cancelled or expired after actual completion".into())
+    };
+    state
+        .app
+        .finish_ai_bridge_capture(flight.pending, CaptureResult { id, result })?;
+    Ok(())
+}
 pub(super) fn after_ui(state: &mut State, ctx: &egui::Context) -> Result<(), String> {
+    if state.capture.flight.is_some() {
+        return Ok(());
+    }
     let Some(pending) = state.app.ai_bridge_capture.take() else {
         return Ok(());
     };
-    let id = pending.request().id;
-    let result = capture(state, ctx, &pending);
-    // Readback completed, or the Metal submission quarantined its retained
-    // owners; only now acknowledge the serial deferred bridge slot.
-    state
-        .app
-        .finish_ai_bridge_capture(pending, CaptureResult { id, result })?;
+    match capture(state, ctx, &pending) {
+        Ok(submission) => {
+            state.capture.flight = Some(Flight {
+                pending,
+                submission,
+            });
+        }
+        Err(error) => {
+            let id = pending.request().id;
+            state.app.finish_ai_bridge_capture(
+                pending,
+                CaptureResult {
+                    id,
+                    result: Err(error),
+                },
+            )?;
+        }
+    }
     Ok(())
 }
 fn capture(
     state: &mut State,
     ctx: &egui::Context,
     pending: &PendingCapture,
-) -> Result<CapturedRgba, String> {
+) -> Result<ingetrazo_metal::egui_painter::DiagnosticPaint, String> {
     if !pending.is_live(&state.app) {
         return Err("Metal capture cancelled before preparation".into());
     }
@@ -247,6 +303,9 @@ fn capture(
     {
         return Err("Metal capture terrain/tile/line-guide route unsupported".into());
     }
+    if !state.app.component_edit_stack.is_empty() {
+        return Err("Metal capture parked edit-context pass is not yet supported".into());
+    }
     let request = pending.request();
     let logical = request.stamp.logical_size();
     let metal = state.gpu.shared_metal();
@@ -255,13 +314,22 @@ fn capture(
         .native_metal_world
         .take()
         .ok_or("Metal capture has no live World owner")?;
+    let Some(live_depth) = viewport.frame.as_ref().cloned() else {
+        state.app.native_metal_world = Some(viewport);
+        return Err("Metal capture live depth owner absent".into());
+    };
     let prepared =
         viewport.prepare_capture(&state.app, (request.width, request.height), logical[1]);
     state.app.native_metal_world = Some(viewport);
     let frame = prepared?;
-    let (shapes, callback) = state
-        .capture
-        .overlays(&state.app, ctx, pending, metal.clone())?;
+    let (shapes, callback) = state.capture.overlays(
+        &state.app,
+        ctx,
+        pending,
+        metal.clone(),
+        [live_depth.extent().0, live_depth.extent().1],
+        live_depth.sample_count(),
+    )?;
     let output = Rect::from_min_size(
         Pos2::ZERO,
         egui::vec2(request.width as f32, request.height as f32),
@@ -314,32 +382,26 @@ fn capture(
                 }),
             });
         }
-        let paint = state.painter.prepare(&metal, &primitives, 1.)?;
-        if !pending.is_live(&state.app) {
-            return Err("Metal capture cancelled before submission".into());
-        }
-        remaining(pending)?;
-        let mut submission = state.painter.submit_sheet_readback(
-            &metal,
-            paint,
-            request.width as usize,
-            request.height as usize,
-            &mut state.capture.canvas,
-            &mut state.capture.attachments,
-        )?;
-        let rgba = submission.wait_readback(remaining(pending)?)?;
-        if !pending.is_live(&state.app) {
-            return Err("Metal capture cancelled after completion".into());
-        }
-        Ok(CapturedRgba {
-            width: request.width,
-            height: request.height,
-            rgba,
-        })
+        let paint = state
+            .painter
+            .prepare_viewport_capture(&metal, &primitives, 1., live_depth)?;
+        Ok(paint)
     })();
     let restored = super::world_viewport::install(&mut state.painter, &metal, &state.app);
-    match (transaction, restored) {
-        (result, Ok(())) => result,
-        (_, Err(e)) => Err(format!("Metal capture live owner restoration failed: {e}")),
+    let paint = match (transaction, restored) {
+        (result, Ok(())) => result?,
+        (_, Err(e)) => return Err(format!("Metal capture live owner restoration failed: {e}")),
+    };
+    if !pending.is_live(&state.app) {
+        return Err("Metal capture cancelled before submission".into());
     }
+    remaining(pending)?;
+    state.painter.submit_sheet_readback(
+        &metal,
+        paint,
+        request.width as usize,
+        request.height as usize,
+        &mut state.capture.canvas,
+        &mut state.capture.attachments,
+    )
 }

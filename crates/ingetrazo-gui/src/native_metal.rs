@@ -102,6 +102,7 @@ impl Host {
         let Some(state) = self.state.as_mut() else {
             return;
         };
+        if let Err(e)=capture::poll(state){state.app.status_message=e;}
         if let Err(e) = state.gpu.poll() {
             state.app.status_message = format!("Native Metal painting paused: {e}");
             state.window.set_title(&state.app.status_message);
@@ -392,6 +393,9 @@ impl ApplicationHandler for Host {
                     ev.exit();
                 }
                 self.repaint = self.repaint.min(Instant::now() + Duration::from_millis(16));
+            }
+            if capture::outstanding(state) {
+                self.repaint=self.repaint.min(Instant::now()+Duration::from_millis(8));
             }
             if Instant::now() >= self.repaint {
                 state.window.request_redraw();
