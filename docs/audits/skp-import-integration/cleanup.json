@@ -1,0 +1,43 @@
+{
+  "authentication": "Canonical archives and every exact directory inventory/file size/SHA rechecked before purge",
+  "directories": [
+    "/tmp/ingetrazo-skp-native-r1/native/picker",
+    "/tmp/ingetrazo-skp-native-r1/native/state",
+    "/tmp/ingetrazo-skp-native-r2/native/picker",
+    "/tmp/ingetrazo-skp-native-r2/native/state",
+    "/tmp/ingetrazo-skp-native-r3/native/picker",
+    "/tmp/ingetrazo-skp-native-r3/native/state",
+    "/tmp/ingetrazo-skp-source-proof-r1/settings",
+    "/tmp/ingetrazo-skp-source-proof-r1/xdg-data",
+    "/tmp/ingetrazo-skp-source-proof-r2/settings",
+    "/tmp/ingetrazo-skp-source-proof-r2/xdg-data",
+    "/tmp/ingetrazo-skp-affected-imports-r1/image/source",
+    "/tmp/ingetrazo-skp-affected-imports-r1/stl/source",
+    "/tmp/ingetrazo-skp-wrapper-preflight/source"
+  ],
+  "files": 215,
+  "logical_bytes": 931948334,
+  "physical_reclaimed_bytes_claimed": false,
+  "preserved": [
+    "/tmp/ingetrazo-skp-source-accepted",
+    "/tmp/ingetrazo-skp-native-accepted",
+    "All raw reports/states/IGZs/failure logs outside the exact listed generated/extraction roots",
+    "All canonical ZIPs/manifests, shared Cargo targets, OpenSKP checkout and Git worktrees"
+  ],
+  "time_utc": "2026-10-12T17:57:54Z",
+  "deleted": [
+    "/tmp/ingetrazo-skp-native-r1/native/picker",
+    "/tmp/ingetrazo-skp-native-r1/native/state",
+    "/tmp/ingetrazo-skp-native-r2/native/picker",
+    "/tmp/ingetrazo-skp-native-r2/native/state",
+    "/tmp/ingetrazo-skp-native-r3/native/picker",
+    "/tmp/ingetrazo-skp-native-r3/native/state",
+    "/tmp/ingetrazo-skp-source-proof-r1/settings",
+    "/tmp/ingetrazo-skp-source-proof-r1/xdg-data",
+    "/tmp/ingetrazo-skp-source-proof-r2/settings",
+    "/tmp/ingetrazo-skp-source-proof-r2/xdg-data",
+    "/tmp/ingetrazo-skp-affected-imports-r1/image/source",
+    "/tmp/ingetrazo-skp-affected-imports-r1/stl/source",
+    "/tmp/ingetrazo-skp-wrapper-preflight/source"
+  ]
+}
