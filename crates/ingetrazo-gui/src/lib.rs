@@ -239,3 +239,4 @@ mod image_import;
 mod dae_export;
 
 mod default_scale_figure;
+mod edit_context_view;

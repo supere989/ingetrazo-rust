@@ -14,6 +14,8 @@ pub fn build_hard_edges_suppressed(scene:&Scene,suppressed:&[usize])->HardEdges{
   if let(Some(a),Some(b))=(scene.mesh.vertices.get(edge.v0),scene.mesh.vertices.get(edge.v1)){output.positions.extend([a.position.as_vec3().to_array(),b.position.as_vec3().to_array()]);}}
  for group in &scene.groups{walk(group,DMat4::IDENTITY,scene,&mut output);}output
 }
+pub fn append_borrowed_mesh(mesh:&Mesh,scene:&Scene,out:&mut HardEdges){append(mesh,DMat4::IDENTITY,scene,out);}
+pub fn append_borrowed_group(group:&Group,scene:&Scene,out:&mut HardEdges){walk(group,DMat4::IDENTITY,scene,out);}
 fn walk(group:&Group,parent:DMat4,scene:&Scene,out:&mut HardEdges){
  if group.hidden||!scene.is_layer_visible(group.layer.as_deref()){return;}
  let world=parent*group.transform;append(&group.mesh,world,scene,out);for child in &group.children{walk(child,world,scene,out);}

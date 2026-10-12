@@ -342,6 +342,13 @@ pub fn build_loose_world_surfaces_suppressed(scene:&Scene,style:&StyleConfig,sup
  if style.visual_style!=VisualStyle::Wireframe {build_mesh_buffers_filtered(&scene.mesh,scene,style,&mut data.opaque_mesh,&mut data.transparent_mesh,&mut data.textured_meshes,true,suppressed,false);}
  data
 }
+/// Borrowed parked-context collection reuses the ordinary material/placement policy.
+pub fn append_borrowed_context_mesh(mesh:&Mesh,scene:&Scene,style:&StyleConfig,data:&mut SceneRenderData){
+ if style.visual_style!=VisualStyle::Wireframe{build_mesh_buffers(mesh,scene,style,&mut data.opaque_mesh,&mut data.transparent_mesh,&mut data.textured_meshes,true);}
+}
+pub fn append_borrowed_context_group(group:&ingetrazo_core::groups::Group,scene:&Scene,camera:&OrbitCamera,style:&StyleConfig,data:&mut SceneRenderData){
+ if style.visual_style!=VisualStyle::Wireframe{build_group_buffers(group,source_group_paint(group),&DMat4::IDENTITY,scene,camera,style,&mut data.opaque_mesh,&mut data.transparent_mesh,&mut data.visible_edges,&mut data.billboards,&mut data.textured_meshes,false,true,None,false);}
+}
 pub fn build_borrowed_mesh_world_surfaces(mesh:&Mesh,scene:&Scene,style:&StyleConfig)->SceneRenderData{let mut data=SceneRenderData::default();if style.visual_style!=VisualStyle::Wireframe{build_mesh_buffers(mesh,scene,style,&mut data.opaque_mesh,&mut data.transparent_mesh,&mut data.textured_meshes,true);}data}
 /// Tool-authored bounded mesh borrows scene materials/assets; no Scene clone.
 pub fn build_preview_mesh_surfaces(mesh:&Mesh,scene:&Scene)->SceneRenderData {
