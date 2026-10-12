@@ -34,6 +34,7 @@ pub enum ToolType {
     Text,
     SectionPlane,
     PlaceGroup,
+    Image,
     ChangeAxes,
 }
 
@@ -154,6 +155,11 @@ impl BoxSelection {
     }
 }
 
+/// Borrowed transient Image import state; observation never allocates model data.
+pub struct ImagePlacementState<'a> {
+ pub path:Option<&'a str>, pub aspect:f64, pub start:Option<DVec3>,pub hover:Option<DVec3>,
+ pub work_plane:Option<(DVec3,DVec3)>,pub free_aspect:bool,
+}
 pub trait Tool: Send + Sync {
     fn box_select(&mut self, _selection: &BoxSelection, _scene: &mut Scene) -> Result<(), String> {
         Err("Active tool does not support box selection".into())
@@ -186,6 +192,10 @@ pub trait Tool: Send + Sync {
     fn visit_image_metadata_roots(&self,_visit:&mut dyn FnMut(&ingetrazo_core::image_plane::ImagePlane)){}
     /// Consume the source relative image command after an actual tool commit.
     fn take_image_frame_command(&mut self)->Option<ingetrazo_core::image_plane::ImageFrameCommand>{None}
+    fn take_image_creation(&mut self)->Option<ingetrazo_core::image_plane::ImagePlane>{None}
+    fn finish_image_creation(&mut self){}
+    fn image_placement_state(&self)->Option<ImagePlacementState<'_>>{None}
+    fn image_size_label(&self)->Option<(f64,f64,DVec3,bool)>{None}
     /// Actionable preparation error from the last pointer commit, if any.
     fn error_message(&self) -> Option<&str> {
         None
@@ -480,6 +490,7 @@ pub fn create_tool(tool_type: ToolType) -> Box<dyn Tool> {
         ToolType::SectionPlane => Box::new(crate::section::SectionPlaneTool::default()),
         ToolType::ChangeAxes => Box::new(crate::change_axes::ChangeAxesTool::default()),
         ToolType::PlaceGroup => Box::new(crate::place_group::PlaceGroupTool::default()),
+        ToolType::Image => Box::new(crate::image::ImageTool::default()),
     }
 }
 

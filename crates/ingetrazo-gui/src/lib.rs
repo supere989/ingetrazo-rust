@@ -231,3 +231,4 @@ mod composer_picture;
 mod dwg_import;
 mod geotiff_import;
 mod stl_import;
+mod image_import;

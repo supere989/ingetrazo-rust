@@ -26,7 +26,7 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
 
     let painter = ui.painter_at(rect);
     if app.geotiff_import.owns_input()||app.annotation_editor.is_some() {ui.ctx().data_mut(|data| {data.remove::<egui::Pos2>(response.id.with("followme_press"));data.remove::<ToolContext>(response.id.with("followme_context"));});}
-    let tool_input_admitted=ui.is_enabled()&&app.text3d_dialog.is_none()&&app.annotation_editor.is_none()&&!app.geotiff_import.owns_input();
+    let tool_input_admitted=ui.is_enabled()&&app.text3d_dialog.is_none()&&app.annotation_editor.is_none()&&!app.geotiff_import.owns_input()&&!app.image_import.owns_input();
     // Source leaveEvent clears hover; a modal freezes it until actual departure.
     if ui.input(|i|i.pointer.hover_pos().is_none_or(|p|!rect.contains(p))){app.active_tool.clear_annotation_hover();}
     let box_release=crate::box_selection::input(app,ui,rect,response.id,response.contains_pointer());
@@ -192,12 +192,15 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
                     app.commit_paste_preview();
                 }
             } else {
-                let follow_me = matches!(app.active_tool_type,ToolType::FollowMe|ToolType::Freehand|ToolType::Scale);
+                let image_press=app.active_tool_type==ToolType::Image;
+                let follow_me = matches!(app.active_tool_type,ToolType::FollowMe|ToolType::Freehand|ToolType::Scale|ToolType::Image);
+                let image_owned_release=pointer.button_released(egui::PointerButton::Primary)&&ui.ctx().data_mut(|d|d.remove_temp::<bool>(response.id.with("image_placement_press"))).unwrap_or(false);
                 if follow_me && scale_input_admitted && !alt_down && pointer.button_pressed(egui::PointerButton::Primary) {
                     ui.ctx().data_mut(|data| {
                         data.insert_temp(response.id.with("followme_press"), mouse_pos)
                     });
-                    if app.active_tool_type == ToolType::Scale {
+                    if matches!(app.active_tool_type,ToolType::Scale|ToolType::Image) {
+                        if image_press {ui.ctx().data_mut(|d|d.insert_temp(response.id.with("image_placement_press"),true));}
                         // Acquisition belongs to the press event, not the final
                         // hover position after coalesced pointer motion.
                         let press = ui.input(|input| input.events.iter().enumerate().find_map(|(index,event)| match event {
@@ -214,7 +217,7 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
                             press_ctx.alt_held = modifiers.alt;
                             let screen = press_ctx.screen.unwrap();
                             press_ctx.ray = app.camera.screen_to_ray(screen.x,screen.y,rect.width() as f64,rect.height() as f64);
-                            if pos != mouse_pos && (app.active_tool.pending_model_preview() || matches!(app.active_tool_type,ToolType::Circle|ToolType::Polygon|ToolType::Arc|ToolType::RotatedRectangle)) {
+                            if pos != mouse_pos && (app.active_tool.pending_model_preview() || matches!(app.active_tool_type,ToolType::Circle|ToolType::Polygon|ToolType::Arc|ToolType::RotatedRectangle|ToolType::Image)) {
                                 let (point,normal)=cursor_work_plane(app,&press_ctx.ray);
                                 let candidate=Plane::new(point,normal).intersect_ray(&press_ctx.ray).filter(|t| *t>0.).map_or(point,|t|press_ctx.ray.at(t));
                                 let context=ingetrazo_core::snap_screen::ScreenSnapContext {viewport:ingetrazo_core::screen_pick::PixelViewport::new(&app.camera,rect.width() as f64,rect.height() as f64),cursor:screen,candidate,plane_normal:normal};
@@ -234,25 +237,25 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
                     let press = input.events.iter().rposition(|event| matches!(event, egui::Event::PointerButton { button: egui::PointerButton::Primary, pressed: true, .. }));
                     input.events.iter().enumerate().any(|(index,event)| matches!(event,egui::Event::PointerMoved(_)) && press.is_none_or(|press| index > press))
                 });
-                if app.active_tool_type != ToolType::Scale || (scale_input_admitted && scale_motion) {
+                if (app.active_tool_type != ToolType::Scale || (scale_input_admitted && scale_motion)) && (app.active_tool_type!=ToolType::Image || ui.input(|i|i.events.iter().any(|e|matches!(e,egui::Event::PointerMoved(_))))) {
                     if app.active_tool_type==ToolType::Scale{let index=ui.input(|i|i.events.iter().rposition(|e|matches!(e,egui::Event::PointerMoved(_))).unwrap_or(0));scale_modifier_changes(app,scale_modifiers.as_ref(),index,&mut scale_modifier_cursor);}
                     app.dispatch_tool_move(&tool_ctx);
                 }
-                if follow_me {
+                if follow_me && !image_press {
                     ui.ctx().data_mut(|data| {
                         data.insert_temp(response.id.with("followme_context"), tool_ctx.clone())
                     });
                 }
-                if !follow_me && response.double_clicked() && !alt_down {
+                if !follow_me && !image_owned_release && response.double_clicked() && !alt_down {
                     app.dispatch_tool_double_click(&tool_ctx);
-                } else if !follow_me && response.clicked() && !alt_down && !box_release {
+                } else if !follow_me && !image_owned_release && response.clicked() && !alt_down && !box_release {
                     app.dispatch_tool_click(&tool_ctx);
                 }
             }
         }
     }
     // Observe release beyond the viewport, without committing a tool during paste.
-    if app.annotation_editor.is_none()&&!app.geotiff_import.owns_input() && scale_input_admitted && app.paste_preview.is_none()
+    if app.annotation_editor.is_none()&&!app.geotiff_import.owns_input()&&!app.image_import.owns_input() && scale_input_admitted && app.paste_preview.is_none()
         && matches!(app.active_tool_type,ToolType::FollowMe|ToolType::Freehand|ToolType::Scale)
         && pointer.button_released(egui::PointerButton::Primary)
     {
@@ -268,10 +271,10 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
         }
     }
 
-    if app.annotation_editor.is_none()&&!app.geotiff_import.owns_input(){scale_modifier_changes(app,scale_modifiers.as_ref(),usize::MAX,&mut scale_modifier_cursor);}
+    if app.annotation_editor.is_none()&&!app.geotiff_import.owns_input()&&!app.image_import.owns_input(){scale_modifier_changes(app,scale_modifiers.as_ref(),usize::MAX,&mut scale_modifier_cursor);}
 
     // Handle Esc to cancel active tool and clear locks
-    if app.annotation_editor.is_none()&&!app.geotiff_import.owns_input() && ui.input(|i| i.key_pressed(egui::Key::Escape)) {
+    if app.annotation_editor.is_none()&&!app.geotiff_import.owns_input()&&!app.image_import.owns_input() && ui.input(|i| i.key_pressed(egui::Key::Escape)) {
         app.snap_engine.reset_operation_state();
         if app.cancel_blender_pick() {
         } else if app.paste_preview.is_some() {
@@ -451,7 +454,7 @@ pub fn render_viewport(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
         }}
     }
 
-    if let Some((label, point)) = app.active_tool.value_label() {
+    if let Some((label, point)) = app.image_placement_label().or_else(||app.active_tool.value_label()) {
         let view_proj = app.camera.projection_matrix() * app.camera.view_matrix();
         if let Some((position, _)) = project_point(point, &view_proj, rect) {
             painter.text(

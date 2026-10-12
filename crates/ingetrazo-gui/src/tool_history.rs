@@ -165,6 +165,11 @@ impl IngeTrazoApp {
     }
 
     pub fn dispatch_tool_click(&mut self, context: &ToolContext) {
+        if self.active_tool_type==ingetrazo_tools::ToolType::Image {
+            self.active_tool.on_click(&mut self.scene,context);
+            if let Err(error)=self.publish_image_tool_request(){self.status_message=error;}
+            return;
+        }
         if self.active_tool_type==ingetrazo_tools::base::ToolType::Dimension {self.active_tool.note_camera_forward((self.camera.target.as_vec3()-self.camera.eye().as_vec3()).as_dvec3());}
         // Text acquisition and its dialog are transient; only OK owns a model snapshot.
         if self.active_tool_type == ingetrazo_tools::base::ToolType::Text {
@@ -210,6 +215,7 @@ impl IngeTrazoApp {
     }
 
     pub fn dispatch_tool_release(&mut self, context: &ToolContext, drag_distance: f64) {
+        if self.active_tool_type==ingetrazo_tools::ToolType::Image{return;}
         if self.section_name_prompt.is_some(){return;}
         if self.prepare_bim_draw_commit().is_err(){return;}
         let before = self.tool_snapshot();
@@ -220,6 +226,7 @@ impl IngeTrazoApp {
     }
 
     pub fn dispatch_tool_double_click(&mut self, context: &ToolContext) {
+        if self.active_tool_type==ingetrazo_tools::ToolType::Image{self.dispatch_tool_click(context);return;}
         if self.annotation_editor.is_some()||self.section_name_prompt.is_some(){return;}
         if let Some(target)=self.active_tool.annotation_edit_target(&self.scene,context){if let Err(error)=self.begin_annotation_edit(target){self.status_message=error;}return;}
         if self.prepare_bim_draw_commit().is_err(){return;}
@@ -237,6 +244,10 @@ impl IngeTrazoApp {
     }
 
     pub fn dispatch_tool_vcb(&mut self, text: &str) -> Result<(), String> {
+        if self.active_tool_type==ingetrazo_tools::ToolType::Image {
+            self.active_tool.on_vcb_input(&mut self.scene,text)?;
+            return self.publish_image_tool_request();
+        }
         // Original Viewport parses Unicode decimal fields before dispatching
         // numeric/segment/radius/array tags. Preserve the visible entered text.
         let normalized=ingetrazo_core::units::vcb::normalize_source_numeric(text);

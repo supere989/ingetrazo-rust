@@ -79,6 +79,7 @@ pub struct IngeTrazoApp {
     pub survey_profile:crate::survey_profile::State,
     pub geotiff_import:crate::geotiff_import::State,
     pub stl_import:crate::stl_import::State,
+    pub image_import:crate::image_import::State,
     pub base_map_requested_zoom:u8,
     pub base_map_requested_visible:bool,
     pub show_save_dialog: bool,
@@ -203,6 +204,7 @@ impl IngeTrazoApp {
             survey_profile:Default::default(),
             geotiff_import:Default::default(),
             stl_import:Default::default(),
+            image_import:Default::default(),
             base_map_requested_zoom:16,
             base_map_requested_visible:true,
             show_save_dialog: false,
@@ -309,6 +311,7 @@ impl IngeTrazoApp {
         let version=self.scene.version;let images=self.scene.image_planes.publication_revision();self.active_tool.on_deactivate(&mut self.scene);
         if self.scene.version!=version{self.bump_model_revision();}else if self.scene.image_planes.publication_revision()!=images{self.bump_image_presentation_revision();}
         self.snap_engine.reset_operation_state();
+        if tool_type!=ToolType::Image {self.image_import.retire();}
         self.active_tool_type = tool_type;
         self.active_tool = if tool_type==ToolType::Fillet{Box::new(ingetrazo_tools::fillet::FilletTool::with_parameters(self.fillet_parameters.0,self.fillet_parameters.1))}else if tool_type==ToolType::Paint{let color=self.scene.materials.get(&self.active_material).map(|m|m.color).unwrap_or([0.8,0.8,0.8,1.]);Box::new(ingetrazo_tools::paint::PaintTool::with_material(self.active_material.clone(),color))}else{create_tool(tool_type)};
         match tool_type{
@@ -1016,7 +1019,7 @@ impl IngeTrazoApp {
     /// Backend-independent application UI and document lifecycle.
     pub fn update_ui(&mut self, ctx: &egui::Context) {
         crate::appearance_preferences::apply(&self.document_session.preferences,ctx);
-        let geotiff_owns_input=self.geotiff_import.owns_input();
+        let geotiff_owns_input=self.geotiff_import.owns_input()||self.image_import.owns_input();
         let stl_owns_input=self.stl_import.owns_input();
         self.poll_stl_import();
         self.poll_geotiff_import();
@@ -1024,7 +1027,7 @@ impl IngeTrazoApp {
         crate::sheet_image::dialog(self,ctx);
         let recent_warning_owns_input = self.document_session.recent_missing.is_some();
         let preferences_owns_input = self.show_preferences_dialog;
-        let import_owns_input=stl_owns_input||self.stl_import.owns_input()||geotiff_owns_input||self.geotiff_import.owns_input()||self.document_session.unit_import.is_some()||self.document_session.survey_import.is_some();
+        let import_owns_input=stl_owns_input||self.stl_import.owns_input()||geotiff_owns_input||self.geotiff_import.owns_input()||self.image_import.owns_input()||self.document_session.unit_import.is_some()||self.document_session.survey_import.is_some();
         self.sync_document_presentation();
         self.begin_document_frame(ctx);
         self.poll_ai_bridge();
@@ -1057,7 +1060,7 @@ impl IngeTrazoApp {
         self.blender_state.poll_events(ctx);
         self.tick_blender_follow(ctx);
 
-        if !image_owns_input&&self.sheet_image.dialog.is_none()&&!import_owns_input&&!self.geotiff_import.owns_input()&&self.document_session.unit_import.is_none()&&self.document_session.survey_import.is_none()&&!preferences_owns_input&&!self.show_preferences_dialog&&!recent_warning_owns_input&&self.document_session.recent_missing.is_none()&&self.annotation_editor.is_none()&&self.text3d_dialog.is_none()&&!self.show_material_edit_dialog {
+        if !image_owns_input&&self.sheet_image.dialog.is_none()&&!import_owns_input&&!self.geotiff_import.owns_input()&&!self.image_import.owns_input()&&self.document_session.unit_import.is_none()&&self.document_session.survey_import.is_none()&&!preferences_owns_input&&!self.show_preferences_dialog&&!recent_warning_owns_input&&self.document_session.recent_missing.is_none()&&self.annotation_editor.is_none()&&self.text3d_dialog.is_none()&&!self.show_material_edit_dialog {
         crate::vcb_input::route(self,ctx);
         // A complete Ctrl chord can arrive in one frame; the final modifier
         // snapshot is then released. Use the key event's captured modifiers.
@@ -1138,21 +1141,21 @@ impl IngeTrazoApp {
 
         // 1. Menu Bar Panel
         egui::TopBottomPanel::top("menu_bar").show(ctx, |ui| {
-            ui.set_enabled(!image_owns_input&&self.sheet_image.dialog.is_none()&&!import_owns_input&&!self.geotiff_import.owns_input()&&self.document_session.unit_import.is_none()&&self.document_session.survey_import.is_none()&&!preferences_owns_input&&!self.show_preferences_dialog&&!recent_warning_owns_input&&self.document_session.recent_missing.is_none()&&self.annotation_editor.is_none()&&self.text3d_dialog.is_none()&&!self.show_material_edit_dialog);
+            ui.set_enabled(!image_owns_input&&self.sheet_image.dialog.is_none()&&!import_owns_input&&!self.geotiff_import.owns_input()&&!self.image_import.owns_input()&&self.document_session.unit_import.is_none()&&self.document_session.survey_import.is_none()&&!preferences_owns_input&&!self.show_preferences_dialog&&!recent_warning_owns_input&&self.document_session.recent_missing.is_none()&&self.annotation_editor.is_none()&&self.text3d_dialog.is_none()&&!self.show_material_edit_dialog);
             render_menu_bar(self, ui);
         });
 
         // 2. Toolbar Panel
         if self.show_toolbar {
             egui::TopBottomPanel::top("toolbar").show(ctx, |ui| {
-                ui.set_enabled(!image_owns_input&&self.sheet_image.dialog.is_none()&&!import_owns_input&&!self.geotiff_import.owns_input()&&self.document_session.unit_import.is_none()&&self.document_session.survey_import.is_none()&&!preferences_owns_input&&!self.show_preferences_dialog&&!recent_warning_owns_input&&self.document_session.recent_missing.is_none()&&self.annotation_editor.is_none()&&self.text3d_dialog.is_none()&&!self.show_material_edit_dialog);
+                ui.set_enabled(!image_owns_input&&self.sheet_image.dialog.is_none()&&!import_owns_input&&!self.geotiff_import.owns_input()&&!self.image_import.owns_input()&&self.document_session.unit_import.is_none()&&self.document_session.survey_import.is_none()&&!preferences_owns_input&&!self.show_preferences_dialog&&!recent_warning_owns_input&&self.document_session.recent_missing.is_none()&&self.annotation_editor.is_none()&&self.text3d_dialog.is_none()&&!self.show_material_edit_dialog);
             render_top_toolbar(self, ui);
             });
         }
 
         // 3. Status Bar Panel
         egui::TopBottomPanel::bottom("status_bar").show(ctx, |ui| {
-            ui.set_enabled(!image_owns_input&&self.sheet_image.dialog.is_none()&&!import_owns_input&&!self.geotiff_import.owns_input()&&self.document_session.unit_import.is_none()&&self.document_session.survey_import.is_none()&&!preferences_owns_input&&!self.show_preferences_dialog&&!recent_warning_owns_input&&self.document_session.recent_missing.is_none()&&self.annotation_editor.is_none()&&self.text3d_dialog.is_none()&&!self.show_material_edit_dialog);
+            ui.set_enabled(!image_owns_input&&self.sheet_image.dialog.is_none()&&!import_owns_input&&!self.geotiff_import.owns_input()&&!self.image_import.owns_input()&&self.document_session.unit_import.is_none()&&self.document_session.survey_import.is_none()&&!preferences_owns_input&&!self.show_preferences_dialog&&!recent_warning_owns_input&&self.document_session.recent_missing.is_none()&&self.annotation_editor.is_none()&&self.text3d_dialog.is_none()&&!self.show_material_edit_dialog);
             render_status_bar(self, ui);
         });
 
@@ -1161,7 +1164,7 @@ impl IngeTrazoApp {
             .exact_width(crate::appearance_preferences::current_toolbar_size(ctx)+20.0)
             .resizable(false)
             .show(ctx, |ui| {
-                ui.set_enabled(!image_owns_input&&self.sheet_image.dialog.is_none()&&!import_owns_input&&!self.geotiff_import.owns_input()&&self.document_session.unit_import.is_none()&&self.document_session.survey_import.is_none()&&!preferences_owns_input&&!self.show_preferences_dialog&&!recent_warning_owns_input&&self.document_session.recent_missing.is_none()&&self.annotation_editor.is_none()&&self.text3d_dialog.is_none()&&!self.show_material_edit_dialog);
+                ui.set_enabled(!image_owns_input&&self.sheet_image.dialog.is_none()&&!import_owns_input&&!self.geotiff_import.owns_input()&&!self.image_import.owns_input()&&self.document_session.unit_import.is_none()&&self.document_session.survey_import.is_none()&&!preferences_owns_input&&!self.show_preferences_dialog&&!recent_warning_owns_input&&self.document_session.recent_missing.is_none()&&self.annotation_editor.is_none()&&self.text3d_dialog.is_none()&&!self.show_material_edit_dialog);
             render_left_cad_palette(self, ui);
             });
 
@@ -1172,14 +1175,14 @@ impl IngeTrazoApp {
                 .min_width(200.0)
                 .max_width(400.0)
                 .show(ctx, |ui| {
-                    ui.set_enabled(!image_owns_input&&self.sheet_image.dialog.is_none()&&!import_owns_input&&!self.geotiff_import.owns_input()&&self.document_session.unit_import.is_none()&&self.document_session.survey_import.is_none()&&!preferences_owns_input&&!self.show_preferences_dialog&&!recent_warning_owns_input&&self.document_session.recent_missing.is_none()&&self.annotation_editor.is_none()&&self.text3d_dialog.is_none()&&!self.show_material_edit_dialog);
+                    ui.set_enabled(!image_owns_input&&self.sheet_image.dialog.is_none()&&!import_owns_input&&!self.geotiff_import.owns_input()&&!self.image_import.owns_input()&&self.document_session.unit_import.is_none()&&self.document_session.survey_import.is_none()&&!preferences_owns_input&&!self.show_preferences_dialog&&!recent_warning_owns_input&&self.document_session.recent_missing.is_none()&&self.annotation_editor.is_none()&&self.text3d_dialog.is_none()&&!self.show_material_edit_dialog);
             render_side_tray(self, ui);
                 });
         }
 
         // 6. Central 3D Viewport or 2D Sheet Composer Canvas
         egui::CentralPanel::default().show(ctx, |ui| {
-            ui.set_enabled(!image_owns_input&&self.sheet_image.dialog.is_none()&&!import_owns_input&&!self.geotiff_import.owns_input()&&self.document_session.unit_import.is_none()&&self.document_session.survey_import.is_none()&&!preferences_owns_input&&!self.show_preferences_dialog&&!recent_warning_owns_input&&self.document_session.recent_missing.is_none()&&self.annotation_editor.is_none()&&self.text3d_dialog.is_none()&&!self.show_material_edit_dialog);
+            ui.set_enabled(!image_owns_input&&self.sheet_image.dialog.is_none()&&!import_owns_input&&!self.geotiff_import.owns_input()&&!self.image_import.owns_input()&&self.document_session.unit_import.is_none()&&self.document_session.survey_import.is_none()&&!preferences_owns_input&&!self.show_preferences_dialog&&!recent_warning_owns_input&&self.document_session.recent_missing.is_none()&&self.annotation_editor.is_none()&&self.text3d_dialog.is_none()&&!self.show_material_edit_dialog);
             if let Some(sheet_idx) = self.scene.active_sheet_index {
                 crate::composer::render_sheet_composer(self, ui, sheet_idx);
             } else {
@@ -1190,6 +1193,7 @@ impl IngeTrazoApp {
 
         crate::geotiff_import::render(self,ctx);
         crate::stl_import::render(self,ctx);
+        crate::image_import::render(self,ctx);
         // 7. Modal Dialogs
         render_dialogs(self, ctx);
         crate::text3d::render_dialog(self, ctx);
