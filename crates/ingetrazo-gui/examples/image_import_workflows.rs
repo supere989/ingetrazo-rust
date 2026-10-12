@@ -288,6 +288,7 @@ fn run(source: &Path, out: &Path) -> Result<(), String> {
         let mut keys = Vec::new();
         for action in c["actions"].as_array().ok_or("Actions")? {
             let op = action["op"].as_str().ok_or("Action op")?;
+            let before_vcb = (a.scene.image_planes.len(), a.undo_stack.len());
             match op {
                 "import" => {
                     let previous = a.scene.clone();
@@ -344,6 +345,8 @@ fn run(source: &Path, out: &Path) -> Result<(), String> {
                 _ => return Err(format!("Unknown Image action {op}")),
             }
             if op == "vcb" {
+                assert_eq!(a.scene.image_planes.len(), before_vcb.0 + 1, "Typed image placement must publish one image");
+                assert_eq!(a.undo_stack.len(), before_vcb.1 + 1, "Typed image placement must publish one Add command");
                 guards["actual_vcb"] = json!(true);
             }
             if op == "press"
