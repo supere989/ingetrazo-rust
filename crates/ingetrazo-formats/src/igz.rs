@@ -537,6 +537,58 @@ fn sheet_to_json(sheet: &ingetrazo_core::composition::Sheet) -> serde_json::Valu
     result
 }
 
+/// Decode one typed paper record with the same field policy as original IGZ loading.
+/// The caller owns metadata and resource admission; no unrelated sheet is cloned.
+pub fn paper_item_from_record(key: &str, value: &serde_json::Value) -> Result<ingetrazo_core::composition::SheetItem, String> {
+    if !matches!(key,"frames"|"texts"|"nortes"|"scalebars"|"shapes"|"cajetin") || !value.is_object() {
+        return Err("Unsupported typed paper record".into());
+    }
+    Ok(read_paper_item(key,value))
+}
+
+fn read_paper_item(key: &str, v: &serde_json::Value) -> ingetrazo_core::composition::SheetItem {
+    use ingetrazo_core::composition::*;
+    fn num(v:&serde_json::Value,k:&str,d:f64)->f64 { v.get(k).and_then(|v|v.as_f64()).unwrap_or(d) }
+    fn txt(v:&serde_json::Value,k:&str,d:&str)->String { v.get(k).and_then(|v|v.as_str()).unwrap_or(d).into() }
+    fn flag(v:&serde_json::Value,k:&str,d:bool)->bool { v.get(k).and_then(|v|v.as_bool()).unwrap_or(d) }
+    fn rect(v:&serde_json::Value,d:RectMm)->RectMm {RectMm::new(num(v,"x_mm",d.x),num(v,"y_mm",d.y),num(v,"w_mm",d.w),num(v,"h_mm",d.h))}
+    let id=v.get("uid").and_then(|v|v.as_str()).and_then(|s|uuid::Uuid::parse_str(s).ok()).unwrap_or_else(uuid::Uuid::new_v4);
+    let item=match key {
+        "frames" => {
+            let mut f=ViewFrame::default();f.id=id;f.rect=rect(v,RectMm::new(20.,20.,170.,170.));
+            f.scale_n=num(v,"scale_n",100.);f.view_key=txt(v,"view_key","__current__");
+            f.style=txt(v,"style","sombreado");f.show_title=flag(v,"show_title",false);
+            f.title_text=txt(v,"title_text","");f.border=flag(v,"border",false);
+            f.perspective=flag(v,"perspective",false);f.rot_deg=num(v,"rot_deg",0.);
+            f.cam_target=v.get("cam_target").and_then(|v|serde_json::from_value(v.clone()).ok());
+            f.cam_yaw=v.get("cam_yaw").and_then(|v|v.as_f64());f.cam_pitch=v.get("cam_pitch").and_then(|v|v.as_f64());
+            f.cam_distance=v.get("cam_distance").and_then(|v|v.as_f64());f.cam_fov=v.get("cam_fov").and_then(|v|v.as_f64());
+            f.paper_bg=flag(v,"paper_bg",false);
+            f.cut_fill=txt(v,"cut_fill","solid");f.cut_fill_color=txt(v,"cut_fill_color","#595e69");f.cut_hatch_mm=num(v,"cut_hatch_mm",1.5);
+            f.pen_cut_mm=num(v,"pen_cut_mm",0.5);f.pen_profile_mm=num(v,"pen_profile_mm",0.35);f.pen_edge_mm=num(v,"pen_edge_mm",0.18);f.profiles=flag(v,"profiles",true);f.hidden_lines=flag(v,"hidden_lines",false);
+            f.annot_text_mm=num(v,"annot_text_mm",2.8);f.km_marks=flag(v,"km_marks",false);f.km_step_m=num(v,"km_step_m",0.);
+            f.annotations=flag(v,"annotations",false);f.section_marks=flag(v,"section_marks",false);
+            SheetItem::ViewFrame(f)
+        },
+        "cajetin" => {
+            let mut f=TitleBlock::default();f.id=id;f.rect=rect(v,RectMm::new(0.,0.,180.,33.));
+            fn field(v:&serde_json::Value,label:&str,key:&str)->String {
+                v.get("campos").and_then(|v|v.as_array()).and_then(|rows|rows.iter().find(|r|
+                    r.get(0).and_then(|v|v.as_str()).map(|s|s.trim().to_uppercase()==label).unwrap_or(false)))
+                    .and_then(|r|r.get(1)).and_then(|v|v.as_str()).unwrap_or_else(||v.get(key).and_then(|v|v.as_str()).unwrap_or("")).into()
+            }
+            f.project_name=field(v,"PROYECTO","proyecto");f.author=field(v,"AUTOR","autor");
+            f.date=field(v,"FECHA","fecha");f.scale_text=field(v,"ESCALA","escala");f.sheet_number=field(v,"LÁMINA","lamina");
+            f.drawing_title=field(v,"TÍTULO","drawing_title");SheetItem::TitleBlock(f)
+        },
+        "shapes" => SheetItem::Shape(ShapeItem{id,shape:serde_json::from_value(v.clone()).unwrap_or_default()}),
+        "texts" => SheetItem::Text(TextItem{id,pos:(num(v,"x_mm",20.),num(v,"y_mm",20.)),text:txt(v,"text",""),font_size_pt:num(v,"size_pt",14.),bold:flag(v,"bold",false)}),
+        "nortes" => SheetItem::NorthArrow(NorthArrowItem{id,pos:(num(v,"x_mm",20.),num(v,"y_mm",20.)),size_mm:num(v,"size_mm",18.),rot_deg:num(v,"angle_deg",0.)}),
+        _ => SheetItem::GraphicScale(GraphicScaleItem{id,pos:(num(v,"x_mm",20.),num(v,"y_mm",20.)),scale_n:num(v,"scale_n",100.),length_mm:scale_bar_width(num(v,"scale_n",100.),v.get("segments").and_then(|v|v.as_u64()).unwrap_or(4) as usize),divisions:v.get("segments").and_then(|v|v.as_u64()).unwrap_or(4) as usize})
+    };
+    item
+}
+
 fn read_sheet(raw: &serde_json::Value) -> ingetrazo_core::composition::Sheet {
     use ingetrazo_core::composition::*;
     fn num(v:&serde_json::Value,k:&str,d:f64)->f64 { v.get(k).and_then(|v|v.as_f64()).unwrap_or(d) }
@@ -551,40 +603,8 @@ fn read_sheet(raw: &serde_json::Value) -> ingetrazo_core::composition::Sheet {
         let entries:Vec<_>=if key=="cajetin" {raw.get(key).filter(|v|v.is_object()).into_iter().collect()}
             else {raw.get(key).and_then(|v|v.as_array()).map(|v|v.iter().collect()).unwrap_or_default()};
         for v in entries {
-            let id=v.get("uid").and_then(|v|v.as_str()).and_then(|s|uuid::Uuid::parse_str(s).ok()).unwrap_or_else(uuid::Uuid::new_v4);
-            let item=match key {
-                "frames" => {
-                    let mut f=ViewFrame::default();f.id=id;f.rect=rect(v,RectMm::new(20.,20.,170.,170.));
-                    f.scale_n=num(v,"scale_n",100.);f.view_key=txt(v,"view_key","__current__");
-                    f.style=txt(v,"style","sombreado");f.show_title=flag(v,"show_title",false);
-                    f.title_text=txt(v,"title_text","");f.border=flag(v,"border",false);
-                    f.perspective=flag(v,"perspective",false);f.rot_deg=num(v,"rot_deg",0.);
-                    f.cam_target=v.get("cam_target").and_then(|v|serde_json::from_value(v.clone()).ok());
-                    f.cam_yaw=v.get("cam_yaw").and_then(|v|v.as_f64());f.cam_pitch=v.get("cam_pitch").and_then(|v|v.as_f64());
-                    f.cam_distance=v.get("cam_distance").and_then(|v|v.as_f64());f.cam_fov=v.get("cam_fov").and_then(|v|v.as_f64());
-                    f.paper_bg=flag(v,"paper_bg",false);
-                    f.cut_fill=txt(v,"cut_fill","solid");f.cut_fill_color=txt(v,"cut_fill_color","#595e69");f.cut_hatch_mm=num(v,"cut_hatch_mm",1.5);
-                    f.pen_cut_mm=num(v,"pen_cut_mm",0.5);f.pen_profile_mm=num(v,"pen_profile_mm",0.35);f.pen_edge_mm=num(v,"pen_edge_mm",0.18);f.profiles=flag(v,"profiles",true);f.hidden_lines=flag(v,"hidden_lines",false);
-                    f.annot_text_mm=num(v,"annot_text_mm",2.8);f.km_marks=flag(v,"km_marks",false);f.km_step_m=num(v,"km_step_m",0.);
-                    f.annotations=flag(v,"annotations",false);f.section_marks=flag(v,"section_marks",false);
-                    SheetItem::ViewFrame(f)
-                },
-                "cajetin" => {
-                    let mut f=TitleBlock::default();f.id=id;f.rect=rect(v,RectMm::new(0.,0.,180.,33.));
-                    fn field(v:&serde_json::Value,label:&str,key:&str)->String {
-                        v.get("campos").and_then(|v|v.as_array()).and_then(|rows|rows.iter().find(|r|
-                            r.get(0).and_then(|v|v.as_str()).map(|s|s.trim().to_uppercase()==label).unwrap_or(false)))
-                            .and_then(|r|r.get(1)).and_then(|v|v.as_str()).unwrap_or_else(||v.get(key).and_then(|v|v.as_str()).unwrap_or("")).into()
-                    }
-                    f.project_name=field(v,"PROYECTO","proyecto");f.author=field(v,"AUTOR","autor");
-                    f.date=field(v,"FECHA","fecha");f.scale_text=field(v,"ESCALA","escala");f.sheet_number=field(v,"LÁMINA","lamina");
-                    f.drawing_title=field(v,"TÍTULO","drawing_title");SheetItem::TitleBlock(f)
-                },
-                "shapes" => SheetItem::Shape(ShapeItem{id,shape:serde_json::from_value(v.clone()).unwrap_or_default()}),
-                "texts" => SheetItem::Text(TextItem{id,pos:(num(v,"x_mm",20.),num(v,"y_mm",20.)),text:txt(v,"text",""),font_size_pt:num(v,"size_pt",14.),bold:flag(v,"bold",false)}),
-                "nortes" => SheetItem::NorthArrow(NorthArrowItem{id,pos:(num(v,"x_mm",20.),num(v,"y_mm",20.)),size_mm:num(v,"size_mm",18.),rot_deg:num(v,"angle_deg",0.)}),
-                _ => SheetItem::GraphicScale(GraphicScaleItem{id,pos:(num(v,"x_mm",20.),num(v,"y_mm",20.)),scale_n:num(v,"scale_n",100.),length_mm:scale_bar_width(num(v,"scale_n",100.),v.get("segments").and_then(|v|v.as_u64()).unwrap_or(4) as usize),divisions:v.get("segments").and_then(|v|v.as_u64()).unwrap_or(4) as usize})
-            };
+            let item=read_paper_item(key,v);
+            let id=item.id();
             sheet.native_items.insert(id,v.clone());
             sheet.native_item_baselines.insert(id,sheet_item_model(&item).2);
             sheet.items.push(item);
