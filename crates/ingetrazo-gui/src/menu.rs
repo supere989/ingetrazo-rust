@@ -88,7 +88,7 @@ pub fn render_menu_bar(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
                     ui.close_menu();
                 }
                 if ui.button(tr("AutoCAD DWG (.dwg)…")).clicked() {
-                    app.show_open_dialog = true;
+                    app.choose_dwg_import();
                     ui.close_menu();
                 }
                 if ui.button(tr("AutoCAD DXF (.dxf)…")).clicked() {

@@ -357,6 +357,7 @@ impl IngeTrazoApp {
                 self.scene.sheets[s].selected_item = None;
                 self.composer_state.picture_authoring.selected = None;
                 self.composer_state.legend_authoring.selected = None;
+                super::selection::clear(self);
                 return Ok(());
             }
         }
@@ -369,6 +370,11 @@ impl IngeTrazoApp {
             self.scene.sheets[s].selected_item = None;
             self.composer_state.picture_authoring.selected = None;
             self.composer_state.legend_authoring.selected = None;
+        }
+        if let Some(owner) = owner {
+            super::selection::force_select(self, [7, 8, 9, 10, 12, 13][owner.family], owner.index, false)?;
+        } else if super::selection::primary(self).is_some_and(|o| matches!(o.category, 7 | 8 | 9 | 10 | 12 | 13)) {
+            super::selection::clear(self);
         }
         Ok(())
     }
@@ -891,6 +897,7 @@ impl IngeTrazoApp {
         self.composer_state.annotation_authoring.snap_hits.clear();
         self.composer_state.annotation_authoring.axis = "";
         self.finish_composer_edit();
+        super::selection::force_select(self, [7, 8, 9, 10, 12, 13][family], count, false)?;
         Ok(true)
     }
 }

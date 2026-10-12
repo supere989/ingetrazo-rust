@@ -1166,6 +1166,11 @@ fn motion(app: &mut IngeTrazoApp, point: DVec2) -> Result<(), String> {
         {
             return Err("Group document owner changed".into());
         }
+        // Escape drops selection, while Qt retains the accepted item capture.
+        // Its next motion/release selects the pressed item again.
+        if !is_selected(app, group.pressed) {
+            set(app, vec![group.pressed], Some(group.pressed))?;
+        }
         let delta = point - group.press;
         let pressed = group
             .peers
@@ -1275,7 +1280,7 @@ fn finish_grab(app: &mut IngeTrazoApp) -> Result<(), String> {
         }
     }
     let unmoved=group.peers.iter().all(|p|p.at==p.current);
-    if unmoved {set(app,vec![group.pressed],Some(group.pressed))?;}
+    if unmoved || !is_selected(app,group.pressed) {set(app,vec![group.pressed],Some(group.pressed))?;}
     app.finish_composer_edit();
     revalidate(app);
     Ok(())
