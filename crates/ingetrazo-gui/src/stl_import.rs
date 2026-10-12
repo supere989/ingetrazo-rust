@@ -20,6 +20,7 @@ struct Service {
     receiver: mpsc::Receiver<Result<StlPlan, String>>,
     worker: Option<thread::JoinHandle<()>>,
     parses: Arc<AtomicU64>,
+    parse_ns: Arc<AtomicU64>,
 }
 impl Service {
     fn new() -> Result<Self, String> {
@@ -27,13 +28,20 @@ impl Service {
         let (done, result) = mpsc::sync_channel(1);
         let parses = Arc::new(AtomicU64::new(0));
         let count = parses.clone();
+        let parse_ns = Arc::new(AtomicU64::new(0));
+        let elapsed = parse_ns.clone();
         let worker = thread::Builder::new()
             .name("stl-import".into())
             .spawn(move || {
                 while let Ok(job) = rx.recv() {
                     count.fetch_add(1, Ordering::Relaxed);
+                    let started = std::time::Instant::now();
                     let answer = stl::parse_stl_path(&job.path, job.scale, job.mode)
                         .map_err(|e| e.to_string());
+                    elapsed.store(
+                        started.elapsed().as_nanos().min(u64::MAX as u128) as u64,
+                        Ordering::Release,
+                    );
                     if done.send(answer).is_err() {
                         break;
                     }
@@ -45,6 +53,7 @@ impl Service {
             receiver: result,
             worker: Some(worker),
             parses,
+            parse_ns,
         })
     }
 }
@@ -158,6 +167,13 @@ impl IngeTrazoApp {
                 .map_or(0, |s| s.parses.load(Ordering::Relaxed)),
             self.stl_import.completed,
         )
+    }
+    /// Cold diagnostic for the accepted worker job; no geometry/timing policy change.
+    pub fn stl_worker_seconds(&self) -> f64 {
+        self.stl_import
+            .service
+            .as_ref()
+            .map_or(0., |s| s.parse_ns.load(Ordering::Acquire) as f64 / 1e9)
     }
     pub fn poll_stl_import(&mut self) {
         if self.stl_import.running.is_none() {

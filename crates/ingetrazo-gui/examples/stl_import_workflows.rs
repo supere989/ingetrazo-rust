@@ -139,8 +139,15 @@ fn frame(a: &mut IngeTrazoApp, c: &egui::Context, events: Vec<egui::Event>) {
     });
     input.time = Some(tick as f64 * 0.1);
     input.events = events;
+    let started = std::time::Instant::now();
     let _ = c.run(input, |ctx| {
         a.update_ui(ctx);
+    });
+    let elapsed = started.elapsed().as_nanos().min(u64::MAX as u128) as u64;
+    c.data_mut(|d| {
+        let id = egui::Id::new("stl-frame-timing");
+        let (n, total, max) = d.get_temp::<(u64, u64, u64)>(id).unwrap_or_default();
+        d.insert_temp(id, (n + 1, total.saturating_add(elapsed), max.max(elapsed)));
     });
 }
 fn click(a: &mut IngeTrazoApp, c: &egui::Context, id: &str) -> Result<(), String> {
@@ -181,6 +188,26 @@ fn prefs(a: &IngeTrazoApp) -> Value {
 fn record(a: &IngeTrazoApp, name: &str, phase: &str, outcome: &str) -> Value {
     json!({"case":name,"phase":phase,"scene":source_scene(a),"undo":a.undo_stack.len(),"redo":a.redo_stack.len(),"preferences":prefs(a),"outcome":outcome,"camera":{"distance":a.camera.distance}})
 }
+fn trace(
+    out: &Path,
+    name: &str,
+    stage: &str,
+    seconds: f64,
+    a: &IngeTrazoApp,
+    c: &egui::Context,
+) -> Result<(), String> {
+    use std::io::Write;
+    let (frames, total, max) = c
+        .data(|d| d.get_temp::<(u64, u64, u64)>(egui::Id::new("stl-frame-timing")))
+        .unwrap_or_default();
+    let row = json!({"case":name,"stage":stage,"seconds":seconds,"worker_seconds":a.stl_worker_seconds(),"ui_frames":frames,"ui_total_seconds":total as f64/1e9,"ui_max_seconds":max as f64/1e9,"status":a.status_message});
+    let mut f = std::fs::OpenOptions::new()
+        .create(true)
+        .append(true)
+        .open(out.join("phase-timings.jsonl"))
+        .map_err(|e| e.to_string())?;
+    writeln!(f, "{row}").map_err(|e| e.to_string())
+}
 fn checkpoint(out: &Path, a: &IngeTrazoApp, name: &str, states: &[Value]) -> Result<(), String> {
     std::fs::write(out.join("native-stl.partial.json"),serde_json::to_vec_pretty(&json!({"case":name,"states":states,"status":a.status_message,"error":a.stl_import.error})).unwrap()).map_err(|e|e.to_string())
 }
@@ -215,7 +242,17 @@ fn run(source: &Path, out: &Path) -> Result<(), String> {
     let mut total_parses = 0;
     for case in input["cases"].as_array().ok_or("cases")? {
         let name = case["name"].as_str().ok_or("name")?;
+        let ctx = egui::Context::default();
+        let new_started = std::time::Instant::now();
         let mut a = IngeTrazoApp::new();
+        trace(
+            out,
+            name,
+            "app-new",
+            new_started.elapsed().as_secs_f64(),
+            &a,
+            &ctx,
+        )?;
         a.system_clipboard = None;
         a.set_language("en");
         let mut store = ingetrazo_gui::session_state::SessionStore::isolated(
@@ -223,6 +260,8 @@ fn run(source: &Path, out: &Path) -> Result<(), String> {
         );
         store.config_dir = out.join("shared-config");
         a.attach_session_store(store);
+        let load_started = std::time::Instant::now();
+        trace(out, name, "load-start", 0., &a, &ctx)?;
         a.open_document(&source.join(case["input"].as_str().ok_or("input")?));
         a.current_file = None;
         if case["context"] == "leaf" {
@@ -232,6 +271,15 @@ fn run(source: &Path, out: &Path) -> Result<(), String> {
             a.begin_component_edit();
             assert_eq!(a.component_edit_stack.len(), 2);
         }
+        trace(
+            out,
+            name,
+            "load-context-end",
+            load_started.elapsed().as_secs_f64(),
+            &a,
+            &ctx,
+        )?;
+        let before_started = std::time::Instant::now();
         states.push(record(&a, name, "before", "idle"));
         checkpoint(out, &a, name, &states)?;
         let before = source_scene(&a);
@@ -249,10 +297,28 @@ fn run(source: &Path, out: &Path) -> Result<(), String> {
                     .into_owned()
             },
         );
+        trace(
+            out,
+            name,
+            "before-observation-end",
+            before_started.elapsed().as_secs_f64(),
+            &a,
+            &ctx,
+        )?;
+        trace(out, name, "chooser-start", 0., &a, &ctx)?;
+        let chooser_started = std::time::Instant::now();
         a.choose_stl_import();
-        let ctx = egui::Context::default();
+        trace(
+            out,
+            name,
+            "chooser-end",
+            chooser_started.elapsed().as_secs_f64(),
+            &a,
+            &ctx,
+        )?;
         if name != "chooser-cancel" {
             assert!(a.stl_import.dialog.is_some(), "{}", a.status_message);
+            let options_started = std::time::Instant::now();
             if name == "unit-cancel" {
                 click(&mut a, &ctx, "stl-ui-cancel")?;
             } else {
@@ -264,7 +330,17 @@ fn run(source: &Path, out: &Path) -> Result<(), String> {
                 click(&mut a, &ctx, &format!("stl-ui-mode-{mode}"))?;
                 assert_eq!(a.stl_import.dialog.as_ref().unwrap().unit, unit);
                 assert_eq!(a.stl_import.dialog.as_ref().unwrap().simplify, mode);
+                trace(
+                    out,
+                    name,
+                    "options-ready",
+                    options_started.elapsed().as_secs_f64(),
+                    &a,
+                    &ctx,
+                )?;
                 click(&mut a, &ctx, "stl-ui-import")?;
+                let wait_started = std::time::Instant::now();
+                trace(out, name, "worker-wait-start", 0., &a, &ctx)?;
                 let deadline = std::time::Instant::now() + Duration::from_secs(30);
                 while a.stl_import.dialog.is_none()
                     && a.stl_import.owns_input()
@@ -276,8 +352,18 @@ fn run(source: &Path, out: &Path) -> Result<(), String> {
                     frame(&mut a, &ctx, vec![]);
                     std::thread::sleep(Duration::from_millis(1));
                 }
+                trace(
+                    out,
+                    name,
+                    "worker-wait-end",
+                    wait_started.elapsed().as_secs_f64(),
+                    &a,
+                    &ctx,
+                )?;
             }
         }
+        trace(out, name, "import-observation-start", 0., &a, &ctx)?;
+        let observation_started = std::time::Instant::now();
         let outcome = if name == "chooser-cancel" || name == "unit-cancel" {
             "cancel"
         } else if a.stl_import.error.is_some() {
@@ -289,6 +375,14 @@ fn run(source: &Path, out: &Path) -> Result<(), String> {
         };
         states.push(record(&a, name, "import", outcome));
         checkpoint(out, &a, name, &states)?;
+        trace(
+            out,
+            name,
+            "import-observation-end",
+            observation_started.elapsed().as_secs_f64(),
+            &a,
+            &ctx,
+        )?;
         assert_eq!(
             (a.camera.target, a.camera.distance),
             camera,
@@ -296,6 +390,8 @@ fn run(source: &Path, out: &Path) -> Result<(), String> {
         );
         let (parses, completed) = a.stl_import_stats();
         total_parses += parses;
+        let final_started = std::time::Instant::now();
+        trace(out, name, "history-save-start", 0., &a, &ctx)?;
         let saved = if outcome == "accepted" {
             assert_eq!(parses, 1);
             assert_eq!(completed, 1);
@@ -327,6 +423,14 @@ fn run(source: &Path, out: &Path) -> Result<(), String> {
             }
             None
         };
+        trace(
+            out,
+            name,
+            "history-save-end",
+            final_started.elapsed().as_secs_f64(),
+            &a,
+            &ctx,
+        )?;
         cases.push(json!({"name":name,"saved":saved,"phases":states.iter().filter(|v|v["case"]==name).map(|v|v["phase"].clone()).collect::<Vec<_>>() }));
         checkpoint(out, &a, name, &states)?;
     }
