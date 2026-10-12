@@ -169,5 +169,22 @@
     "core/composition.py": "24aa8327d1c6a0b4afbaab0d153743f28c3deb557f44a66c467d5aed4dd65da9",
     "formats/igz.py": "f318d685830c49c2fede7fd5a238ac7a1469ee0b0226cf48cab3751e194a9576"
   },
-  "scope": "Actual original authoring observations with retained fixture failures and exact original radial UI exception; native corrected properties require separate controls. Specialized handles/chains/physical pixels not captured."
+  "scope": "Actual original authoring observations with retained fixture failures and exact original radial UI exception; native corrected properties require separate controls. Specialized handles/chains/physical pixels not captured.",
+  "acceptance_helpers": {
+    "scripts/check-sheet-annotation-authoring.py": {
+      "commit": "9235fcdecad8cc2b47fcf4c13d13d7117c66c96a",
+      "sha256": "3f714f9a0869d4477c5a45455d775d54587d35642a1e239f83d97adc7080e73c"
+    },
+    "scripts/reference-sheet-annotation-authoring-reopens.py": {
+      "commit": "9235fcdecad8cc2b47fcf4c13d13d7117c66c96a",
+      "sha256": "6e4f515f146d088a33ef17914af3b47a4b0044a0717a5ba06d57edd9557116c7"
+    }
+  },
+  "acceptance_scope": {
+    "literal_source_states": 161,
+    "native_corrected_radial_states": 13,
+    "saved_reader_pairs": 10,
+    "delete_control_reader_pairs": 9,
+    "rejecting_controls": 39
+  }
 }
