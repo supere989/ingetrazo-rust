@@ -11,6 +11,7 @@ pub fn render_status_bar(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
         // Sheet Tabs
         let is_model_active = app.scene.active_sheet_index.is_none();
         if ui.selectable_label(is_model_active, tr("Model")).clicked() {
+            app.invalidate_composer_frame_entry();
             app.scene.active_sheet_index = None;
         }
 

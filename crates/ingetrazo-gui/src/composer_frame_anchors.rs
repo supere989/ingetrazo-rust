@@ -455,6 +455,9 @@ impl IngeTrazoApp {
     pub fn composer_frame_anchor_stats(&self) -> SyncStats {
         self.composer_state.frame_anchors.stats.clone()
     }
+    pub(crate) fn invalidate_composer_frame_entry(&mut self) {
+        self.composer_state.frame_anchors.initialized = None;
+    }
     pub(crate) fn ensure_composer_frame_anchors(&mut self) -> Result<SyncStats, String> {
         if self.composer_state.frame_anchors.document != Some(self.clipboard_document) {
             let c = &mut self.composer_state.frame_anchors;
