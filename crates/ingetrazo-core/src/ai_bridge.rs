@@ -33,10 +33,25 @@ struct Job {
     cancelled: Arc<AtomicBool>,
     reply: SyncSender<Value>,
 }
+/// Cancellation/deadline owner shared with a deferred renderer request.
+#[derive(Clone)]
+pub struct DeferredContext {
+    pub deadline: Instant,
+    cancelled: Arc<AtomicBool>,
+    stopped: Arc<AtomicBool>,
+}
+impl DeferredContext {
+    pub fn is_live(&self) -> bool {
+        !self.cancelled.load(Ordering::Acquire)
+            && !self.stopped.load(Ordering::Acquire)
+            && Instant::now() < self.deadline
+    }
+}
 pub struct Bridge {
     address: SocketAddr,
     owner: ThreadId,
     jobs: Receiver<Job>,
+    active: Option<Job>,
     stop: Arc<AtomicBool>,
     worker: Option<JoinHandle<()>>,
 }
@@ -154,6 +169,7 @@ impl Bridge {
             address,
             owner: thread::current().id(),
             jobs,
+            active: None,
             stop,
             worker: Some(worker),
         })
@@ -163,23 +179,66 @@ impl Bridge {
     }
     /// At most one pending operation; caller remains the sole document owner.
     pub fn poll(&mut self, execute: impl FnOnce(&Value) -> Value) -> Result<bool, &'static str> {
+        self.poll_deferred(|request, _| Some(execute(request)))
+    }
+    /// None retains this operation. No subsequent bridge job dispatches until
+    /// the renderer acknowledges retirement, including deadline/cancellation failure.
+    pub fn poll_deferred(
+        &mut self,
+        execute: impl FnOnce(&Value, DeferredContext) -> Option<Value>,
+    ) -> Result<bool, &'static str> {
         if thread::current().id() != self.owner {
             return Err("bridge dispatch requires its owning UI thread");
+        }
+        if let Some(job) = &self.active {
+            if !self.context(job).is_live() {
+                job.cancelled.store(true, Ordering::Release);
+            }
+            // Cancellation stops publication, not GPU ownership. The renderer
+            // must retire/quarantine the submission before completing this slot.
+            return Ok(false);
         }
         let Ok(job) = self.jobs.try_recv() else {
             return Ok(false);
         };
-        if self.stop.load(Ordering::Acquire)
-            || job.cancelled.load(Ordering::Acquire)
-            || Instant::now() >= job.deadline
-        {
+        let context = self.context(&job);
+        if !context.is_live() {
             return Ok(false);
         }
-        let reply = execute(&job.request);
-        let _ = job.reply.try_send(reply);
+        match execute(&job.request, context) {
+            Some(reply) => {
+                let _ = job.reply.try_send(reply);
+            }
+            None => self.active = Some(job),
+        }
         Ok(true)
     }
+    fn context(&self, job: &Job) -> DeferredContext {
+        DeferredContext {
+            deadline: job.deadline,
+            cancelled: job.cancelled.clone(),
+            stopped: self.stop.clone(),
+        }
+    }
+    /// Returns false when no live operation can accept the completion. The
+    /// frontend must also validate its context before publishing output files.
+    pub fn complete_deferred(&mut self, reply: Value) -> Result<bool, &'static str> {
+        if thread::current().id() != self.owner {
+            return Err("bridge completion requires its owning UI thread");
+        }
+        let Some(job) = self.active.take() else {
+            return Ok(false);
+        };
+        if !self.context(&job).is_live() {
+            job.cancelled.store(true, Ordering::Release);
+            return Ok(false);
+        }
+        Ok(job.reply.try_send(reply).is_ok())
+    }
     pub fn stop(&mut self) {
+        if let Some(job) = self.active.take() {
+            job.cancelled.store(true, Ordering::Release);
+        }
         self.stop.store(true, Ordering::Release);
         if let Some(worker) = self.worker.take() {
             let _ = worker.join();
@@ -472,5 +531,69 @@ mod tests {
             })
             .unwrap());
         assert_eq!(executions, 0);
+    }
+    #[test]
+    fn deferred_operation_blocks_other_clients_until_backend_retirement() {
+        let mut bridge = Bridge::start(
+            0,
+            Limits {
+                ui_timeout: Duration::from_millis(300),
+                max_frame_bytes: 1024,
+            },
+            || {},
+        )
+        .unwrap();
+        let mut first = TcpStream::connect(bridge.address()).unwrap();
+        first
+            .set_read_timeout(Some(Duration::from_secs(2)))
+            .unwrap();
+        first.write_all(b"{\"id\":1}\n").unwrap();
+        let until = Instant::now() + Duration::from_secs(1);
+        let mut token = None;
+        while !bridge
+            .poll_deferred(|_, context| {
+                token = Some(context);
+                None
+            })
+            .unwrap()
+        {
+            assert!(Instant::now() < until);
+            thread::sleep(Duration::from_millis(1));
+        }
+        let mut second = TcpStream::connect(bridge.address()).unwrap();
+        second
+            .set_read_timeout(Some(Duration::from_secs(2)))
+            .unwrap();
+        second.write_all(b"{\"id\":2}\n").unwrap();
+        assert!(!bridge
+            .poll(|_| panic!("request overtook active capture"))
+            .unwrap());
+        assert_eq!(read_line(&mut first)["error"], "timed out on the UI thread");
+        assert!(!token.unwrap().is_live());
+        assert!(!bridge
+            .poll(|_| panic!("deadline freed GPU ownership early"))
+            .unwrap());
+        assert_eq!(
+            read_line(&mut second)["error"],
+            "timed out on the UI thread"
+        );
+        assert!(!bridge.complete_deferred(json!({"id":1,"ok":true})).unwrap());
+        // Start a fresh request after retirement. Both expired operations must
+        // remain cancelled, including the queued request from another client.
+        second.write_all(b"{\"id\":3}\n").unwrap();
+        let until = Instant::now() + Duration::from_secs(1);
+        let mut executed = None;
+        while executed.is_none() {
+            bridge
+                .poll(|request| {
+                    executed = Some(request["id"].clone());
+                    json!({"id":request["id"],"ok":true})
+                })
+                .unwrap();
+            assert!(Instant::now() < until);
+            thread::sleep(Duration::from_millis(1));
+        }
+        assert_eq!(executed, Some(json!(3)));
+        bridge.stop();
     }
 }
