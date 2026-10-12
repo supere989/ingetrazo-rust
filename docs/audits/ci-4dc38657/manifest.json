@@ -1,9 +1,9 @@
 {
   "revision": "4dc386573276eecb181b55f6e98512326afa119e",
   "run": 38270313945,
-  "observed_status": "in_progress",
-  "observed_conclusion": null,
-  "terminal": false,
+  "observed_status": "completed",
+  "observed_conclusion": "failure",
+  "terminal": true,
   "files": [
     {
       "path": "11755759988.zip",
@@ -12134,13 +12134,13 @@
     },
     {
       "path": "jobs.json",
-      "bytes": 50679,
-      "sha256": "b347566a54b4d14ceb540e35bab6b34f33e5342d4adafb25d9a9ff1791f3c2eb"
+      "bytes": 50918,
+      "sha256": "158d660cee3d8fc171a3171e895927725d89cbbdce1239cdd06cb1aab004fde1"
     },
     {
       "path": "run.json",
-      "bytes": 12703,
-      "sha256": "e675d6d9268576802981a19b7ba9da26e0fb6f77e440396744e267e40c3dd972"
+      "bytes": 12706,
+      "sha256": "2cf1c01098b1e77b2e6296ce0b2faa13eaeeb4b07a66eeb8acf9e0b4a0f5245b"
     }
   ],
   "specialized_passed_jobs": [
