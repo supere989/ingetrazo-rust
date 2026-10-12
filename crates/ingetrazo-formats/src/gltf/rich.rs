@@ -266,13 +266,13 @@ fn add_mesh(
                 }
                 let pp = yup(p);
                 let nn = yup(normal);
-                let vertex_key = vertex_key(pp, nn, uv.unwrap_or([0., 0.]));
-                let vertex = if let Some(&i) = prim.vertices.get(&vertex_key).filter(|_| !unindexed) {
+                let vertex_key = (!unindexed).then(||vertex_key(pp,nn,uv.unwrap_or([0.,0.])));
+                let vertex = if let Some(&i) = vertex_key.as_ref().and_then(|key|prim.vertices.get(key)) {
                     i
                 } else {
                     let i = u32::try_from(prim.positions.len())
                         .map_err(|_| GltfError::Invalid("Too many glTF vertices".into()))?;
-                    if !unindexed { prim.vertices.insert(vertex_key, i); }
+                    if let Some(key)=vertex_key {prim.vertices.insert(key,i);}
                     prim.positions.push(pp);
                     prim.normals.push(nn);
                     if let Some(uv) = uv {
