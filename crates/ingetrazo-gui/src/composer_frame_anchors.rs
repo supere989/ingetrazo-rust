@@ -8,10 +8,7 @@ use ingetrazo_core::{
     composition::{SheetItem, ViewFrame},
 };
 use serde_json::{json, Value};
-use std::{
-    collections::{HashMap, HashSet},
-    sync::Arc,
-};
+use std::{collections::HashMap, sync::Arc};
 use uuid::Uuid;
 #[derive(Clone, Debug)]
 pub struct SnapPair {
@@ -38,9 +35,9 @@ pub(super) struct Cache {
     stamp: Option<(Uuid, u64, u64, OrbitCamera)>,
     retained_bytes: usize,
     document: Option<Uuid>,
-    initialized: HashSet<Uuid>,
+    initialized: Option<Uuid>,
     pub(super) defer_rebuild: bool,
-    coalesce: Option<(Uuid, Uuid, &'static str, usize)>,
+    coalesce: HashMap<(Uuid, usize), (Uuid, &'static str)>,
     pending_edit: Option<(Uuid, Uuid, &'static str, usize, bool)>,
     entries: HashMap<Uuid, Entry>,
     pub stats: SyncStats,
@@ -234,8 +231,12 @@ impl IngeTrazoApp {
             .sheet_history
             .get(&sheet)
             .map_or(0, |h| h.0.len());
-        let merge = self.composer_state.frame_anchors.coalesce
-            == Some((sheet, frame, signature, history_len))
+        let merge = self
+            .composer_state
+            .frame_anchors
+            .coalesce
+            .get(&(sheet, history_len))
+            == Some(&(frame, signature))
             && history_len > 0;
         self.begin_composer_edit();
         self.scene.sheets[s].items[index] = SheetItem::ViewFrame(candidate);
@@ -460,10 +461,10 @@ impl IngeTrazoApp {
         if self.composer_state.frame_anchors.document != Some(self.clipboard_document) {
             let c = &mut self.composer_state.frame_anchors;
             c.document = Some(self.clipboard_document);
-            c.initialized.clear();
+            c.initialized = None;
             c.entries.clear();
             c.retained_bytes = 0;
-            c.coalesce = None;
+            c.coalesce.clear();
         }
         let Some(s) = self
             .scene
@@ -473,21 +474,41 @@ impl IngeTrazoApp {
             return Ok(self.composer_frame_anchor_stats());
         };
         let id = self.scene.sheets[s].id;
-        if self.composer_state.frame_anchors.initialized.contains(&id) {
+        if self.composer_state.frame_anchors.initialized == Some(id) {
             return Ok(self.composer_frame_anchor_stats());
         }
         self.sync_composer_frame_anchors()
     }
-    pub(crate) fn composer_frame_rebuild_boundary(&mut self) {
-        if let Some((sheet, frame, signature, n, merge)) =
-            self.composer_state.frame_anchors.pending_edit.take()
-        {
-            if let Some(h) = self.composer_state.sheet_history.get_mut(&sheet) {
-                if merge && h.0.len() == n + 1 {
-                    h.0.pop();
+    pub(crate) fn composer_frame_rebuild_boundary(&mut self, committed: bool) {
+        // Signatures belong to history entries, so Undo/Redo expose the same top
+        // command as the source. A new branch retires only its replaced tail.
+        if committed {
+            let pending = self.composer_state.frame_anchors.pending_edit.take();
+            if let Some((sheet, _, _, n, true)) = pending {
+                if let Some(h) = self.composer_state.sheet_history.get_mut(&sheet) {
+                    if h.0.len() == n + 1 {
+                        h.0.pop();
+                    }
                 }
-                self.composer_state.frame_anchors.coalesce =
-                    Some((sheet, frame, signature, h.0.len()));
+            }
+            if let Some(s) = self
+                .scene
+                .active_sheet_index
+                .filter(|&s| s < self.scene.sheets.len())
+            {
+                let sheet = self.scene.sheets[s].id;
+                let n = self
+                    .composer_state
+                    .sheet_history
+                    .get(&sheet)
+                    .map_or(0, |h| h.0.len());
+                let signatures = &mut self.composer_state.frame_anchors.coalesce;
+                signatures.retain(|&(owner, depth), _| owner != sheet || depth < n);
+                if let Some((owner, frame, signature, _, _)) = pending {
+                    if owner == sheet && n > 0 {
+                        signatures.insert((sheet, n), (frame, signature));
+                    }
+                }
             }
         }
         if std::mem::take(&mut self.composer_state.frame_anchors.defer_rebuild) {
@@ -632,10 +653,7 @@ impl IngeTrazoApp {
             .active_sheet_index
             .filter(|&s| s < self.scene.sheets.len())
         {
-            self.composer_state
-                .frame_anchors
-                .initialized
-                .insert(self.scene.sheets[s].id);
+            self.composer_state.frame_anchors.initialized = Some(self.scene.sheets[s].id);
         }
         Ok(self.composer_frame_anchor_stats())
     }
