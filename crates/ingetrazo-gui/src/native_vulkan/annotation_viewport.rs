@@ -12,7 +12,7 @@ pub(crate) struct ViewportAnnotations{cache:Cache,current:Option<(Key,Prepared)>
 impl ViewportAnnotations{
  pub fn new(stencil:bool)->Result<Self,String>{Self::with_font_limits(stencil,ingetrazo_formats::annotation_font::Limits{faces:32,retained_font_bytes:32*1024*1024})}
  pub(crate) fn with_font_limits(stencil:bool,fonts:ingetrazo_formats::annotation_font::Limits)->Result<Self,String>{let mut result=Self{cache:Cache::new(fonts,Limits{cells:2_000_000,spans:200_000,geometry_bytes:32*1024*1024,glyphs:4096,glyph_bytes:16*1024*1024})?,current:None,empty:None,style:serde_json::Value::Null,vcb:String::new()};if stencil{result.cache.enable_source_stencil();}Ok(result)}
- pub(crate) fn presentation_text(&mut self,text:&[crate::annotation_overlay_geometry::PresentationText])->Result<Arc<crate::annotation_overlay_geometry::Mesh>,String>{self.cache.prepare_presentation_text(text,1.,96.)}
+ pub(crate) fn presentation_text(&mut self,text:&[crate::annotation_overlay_geometry::PresentationText],scale:[f32;2])->Result<Arc<crate::annotation_overlay_geometry::Mesh>,String>{self.cache.prepare_capture(&ingetrazo_render::annotations::Plan{queries:vec![],operations:vec![]},text,scale,96.,[0,0,4096,4096])}
  pub fn prepare<'a>(&'a mut self,app:&crate::IngeTrazoApp,factory:&Factory,rect:egui::Rect,density:f32,include_annotations:bool)->Result<Option<&'a Prepared>,String>{
   self.prepare_mode(app,factory,rect,density,include_annotations,false,[1.;2])
  }
@@ -39,7 +39,7 @@ impl ViewportAnnotations{
   if plan.operations.is_empty(){self.style=raw.clone();self.vcb=app.vcb_text.clone();self.current=None;self.empty=Some(key);return Ok(None);}
   self.empty=None;
   let clip=[(rect.min.x*density).floor()as i32,(rect.min.y*density).floor()as i32,(rect.max.x*density).ceil()as i32,(rect.max.y*density).ceil()as i32];
-  let mesh=self.cache.prepare_widget_clipped(plan.clone(),density,96.,clip)?;
+  let mesh=if presentation{self.cache.prepare_capture(&plan,&[],scale,96.,clip)?}else{self.cache.prepare_widget_clipped(plan.clone(),density,96.,clip)?};
   let extent=crate::viewport_extent::scene_extent([rect.width() as f64,rect.height() as f64],density as f64)?;
   let eye=snapshot.eye;let forward=snapshot.forward;
   let mut queries=Vec::new();queries.try_reserve_exact(plan.queries.len().max(1)).map_err(|_|"Annotation query CPU admission failed")?;
@@ -49,7 +49,7 @@ impl ViewportAnnotations{
   if queries.is_empty(){queries.push(Query{pixel:[0;2],normalized:[0.;2],threshold:0.,active:0,_padding:[0;2]});}
   // Changed plans receive a private immutable handle. Updating the accepted
   // handle here would mutate the previous callback before GPU/World admission.
-  let handle=factory.annotation_handle(mesh.geometry.clone(),mesh.batches.clone(),ingetrazo_render::cad2d::Pose{scale,translation:[0.;2]},mesh.gates.clone())?;
+  let handle=factory.annotation_handle(mesh.geometry.clone(),mesh.batches.clone(),ingetrazo_render::cad2d::Pose{scale:if presentation{[1.;2]}else{scale},translation:[0.;2]},mesh.gates.clone())?;
   self.style=raw.clone();self.vcb=app.vcb_text.clone();
   self.current=Some((key,Prepared{handle,queries:queries.into(),inverse,eye,forward}));
   Ok(self.current.as_ref().map(|(_,ready)|ready))

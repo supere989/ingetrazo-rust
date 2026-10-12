@@ -180,12 +180,12 @@ impl System {
                 )?,
             };
             if !presentation.text.is_empty() {
-                let mesh = owner.presentation_text(&presentation.text)?;
+                let mesh = owner.presentation_text(&presentation.text,scale)?;
                 styled_text = Some(factory.annotation_handle(
                     mesh.geometry.clone(),
                     mesh.batches.clone(),
                     ingetrazo_render::cad2d::Pose {
-                        scale,
+                        scale: [1.;2],
                         translation: [0.; 2],
                     },
                     mesh.gates.clone(),

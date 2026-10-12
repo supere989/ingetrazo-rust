@@ -144,7 +144,10 @@ impl Cache {
         }
         Ok(Arc::new(writer.finish()?))
     }
-    fn write_text(
+    fn write_text(&mut self, writer:&mut Writer, position:&[f64;2], text:&str, size_pt:f64, bold:bool, center:bool, color:&[u8;4], gate:Gate, density:f64, font_dpi:f64, placement:GlyphPlacement)->Result<(),String>{
+        self.write_text_transformed(writer,position,text,size_pt,bold,center,color,gate,density,font_dpi,placement,None)
+    }
+    fn write_text_transformed(
         &mut self,
         writer: &mut Writer,
         position: &[f64; 2],
@@ -157,6 +160,7 @@ impl Cache {
         density: f64,
         font_dpi: f64,
         placement: GlyphPlacement,
+        capture_scale: Option<[f64;2]>,
     ) -> Result<(), String> {
         let pixel_size = (size_pt * font_dpi / 72. + 0.5).floor();
         if !pixel_size.is_finite() || !(1. ..=4096.).contains(&pixel_size) {
@@ -178,9 +182,10 @@ impl Cache {
         for run in &line.runs {
             let mut advance = run.x_26_6;
             for glyph in &run.glyphs {
-                let x = position[0] * density
-                    + (advance + i64::from(glyph.offset[0])) as f64 / 64. * density;
-                let y = position[1] * density + f64::from(glyph.offset[1]) / 64. * density;
+                let axis_scale=capture_scale.unwrap_or([density;2]);
+                let x = position[0] * axis_scale[0]
+                    + (advance + i64::from(glyph.offset[0])) as f64 / 64. * axis_scale[0];
+                let y = position[1] * axis_scale[1] + f64::from(glyph.offset[1]) / 64. * axis_scale[1];
                 let (x, y, phase) = match placement {
                     GlyphPlacement::Raster => device_position(x, y)?,
                     GlyphPlacement::OpenGl => opengl_device_position(
@@ -193,7 +198,7 @@ impl Cache {
                     )?,
                 };
                 let lcd = placement == GlyphPlacement::OpenGl;
-                let image = self.glyph(&run.font, glyph.id, density, phase, lcd)?;
+                let image = if let Some(scale)=capture_scale {Arc::new(run.font.rasterize_anisotropic(glyph.id,scale,phase)?)}else{self.glyph(&run.font, glyph.id, density, phase, lcd)?};
                 let left = x
                     .checked_add(i64::from(image.left))
                     .ok_or("Annotation glyph position overflow")?;
@@ -292,6 +297,36 @@ impl Cache {
     }
 
 
+
+    pub(crate) fn prepare_capture(&mut self, plan:&Plan, records:&[PresentationText], scale:[f32;2], font_dpi:f64, _clip:[i32;4])->Result<Arc<Mesh>,String>{
+        let scale=scale.map(f64::from);
+        if scale.iter().any(|v|!v.is_finite()||*v<=0.||*v>40.){return Err("Capture annotation scale outside admission".into());}
+        let mut writer=Writer::new(1.,self.limits);
+        let map=|p:[f64;2]|[p[0]*scale[0],p[1]*scale[1]];
+        for op in &plan.operations {
+            match &op.primitive {
+                Primitive::Line{a,b,width,color}=>{
+                    if *width==0.{let path=PathContour{start:map(*a),segments:vec![Segment::Line(map(*b))]};writer.layer(ingetrazo_render::qt_cosmetic::rasterize_path(&path,false,1.,self.limits.spans)?,*color,op.gate)?;continue;}
+                    let dx=b[0]-a[0];let dy=b[1]-a[1];let length=dx.hypot(dy);if length==0.{continue;}
+                    let r=width/2.;let tangent=[dx/length*r,dy/length*r];let normal=[-tangent[1],tangent[0]];
+                    let points=[[a[0]-tangent[0]+normal[0],a[1]-tangent[1]+normal[1]],[b[0]+tangent[0]+normal[0],b[1]+tangent[1]+normal[1]],[b[0]+tangent[0]-normal[0],b[1]+tangent[1]-normal[1]],[a[0]-tangent[0]-normal[0],a[1]-tangent[1]-normal[1]]].map(map);
+                    writer.layer(qt_gray::rasterize(&[points.to_vec()],self.limits.cells,self.limits.spans)?,*color,op.gate)?;
+                },
+                Primitive::Polygon{points,color}=>writer.layer(qt_gray::rasterize(&[points.map(map).to_vec()],self.limits.cells,self.limits.spans)?,*color,op.gate)?,
+                Primitive::Ellipse{center,radius,width,color}=>{
+                    let mut path=crate::composer_cad::source_closed_curve(&ingetrazo_core::sheet_shape::ShapePath::Ellipse{size:DVec2::from_array(*radius)*2.}).ok_or("Capture ellipse absent")?;
+                    translate_path(&mut path,[center[0]-radius[0],center[1]-radius[1]]);
+                    let mut fill=path.clone();scale_capture_path(&mut fill,scale);
+                    writer.layer(qt_gray::rasterize_transformed_paths(&[fill],1.,[0.;2],self.limits.cells,self.limits.spans)?,*color,op.gate)?;
+                    if *width>0.{let mut outlines=crate::composer_cad::source_curve_stroke(&path,width/2.)?;for path in &mut outlines{scale_capture_path(path,scale);}writer.layer(qt_gray::rasterize_transformed_paths(&outlines,1.,[0.;2],self.limits.cells,self.limits.spans)?,*color,op.gate)?;}
+                },
+                Primitive::Text{position,text,size_pt,color}=>self.write_text_transformed(&mut writer,position,text,f64::from(*size_pt),true,false,color,op.gate,1.,font_dpi,GlyphPlacement::Raster,Some(scale))?,
+            }
+        }
+        for text in records{self.write_text_transformed(&mut writer,&text.position,&text.text,text.size_pt,text.bold,text.center,&text.color,Gate::Always,1.,font_dpi,GlyphPlacement::Raster,Some(scale))?;}
+        // Query ownership is retained separately; target renderpass clips final pixels.
+        Ok(Arc::new(writer.finish()?))
+    }
  fn build(&mut self,plan:&Plan,density:f64,font_dpi:f64,clip:[i32;4],placement:GlyphPlacement)->Result<Mesh,String>{
   let mut writer=Writer::new(density,self.limits);
   for operation in &plan.operations {
@@ -598,3 +633,5 @@ mod tests {
   }
  }
 }
+
+fn scale_capture_path(path:&mut PathContour,scale:[f64;2]){let map=|p:&mut[f64;2]|{p[0]*=scale[0];p[1]*=scale[1];};map(&mut path.start);for segment in &mut path.segments{match segment{Segment::Line(to)=>map(to),Segment::Cubic{control1,control2,to}=>{map(control1);map(control2);map(to);}}}}
