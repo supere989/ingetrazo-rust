@@ -8,6 +8,7 @@ pub(super) fn label(
     value: &Value,
     painter: &mut Painter,
     context: &Context<'_>,
+    pdf: bool,
 ) -> Result<(), String> {
     let content = expanded(sheet, s(value, "text", "Texto")?, context, "")?;
     let size = n(value, "size_pt", 11.)? * 25.4 / 72.;
