@@ -1162,5 +1162,21 @@
   "source_qt": "6.12.0",
   "scope": "Actual Qt/egui pointer and modifier lifecycle plus strict source preview item-paint primitive pixels; no full UI/GPU framebuffer claim.",
   "capture_boundary": "First attempt stopped at an overstrong modifier-only assertion. Actual source _ortho_anchor excludes chain points, making Shift-only changes inert. Corrected five-cohort capture uses actual Shift-bearing viewport mouse events and retains key-only inert phases. No source implementation changed.",
-  "raw_bytes": 1255752
+  "raw_bytes": 1255752,
+  "capture_attempts": [
+    {
+      "producer_commit": "928353e36c9784810e9ab812ce4746d0de71f4a5",
+      "producer_sha256": "08396422f074da7b3d42a1ea78572815ab633ee6a5a1fde1403b4637fd0436fa",
+      "outcome": "failed operative modifier-only assertion",
+      "observations": "evidence/first-failed-observations.json",
+      "log": "evidence/first-capture.log"
+    },
+    {
+      "producer_commit": "e5e428c5accb76e0edb2c8b5f1c91c88ce3c2926",
+      "producer_sha256": "bd2fa9d2b6fa1d3e19545097df2e184d6fcbcd50544cc14e4f06db2705bc0579",
+      "outcome": "five cohorts completed with literal key-only source behavior",
+      "observations": "original-run-previews.json",
+      "log": "evidence/final-capture.log"
+    }
+  ]
 }
