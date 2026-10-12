@@ -4,6 +4,7 @@
 use super::*;
 use std::io::{Cursor, Read};
 mod annotations;
+mod scenes;
 const MAX_FILE: usize = 512 * 1024 * 1024;
 const MAX_MODEL: usize = 256 * 1024 * 1024;
 const MAX_NODES: usize = 2_000_000;
@@ -396,17 +397,10 @@ fn inspect(n: &Node<'_>, p: &mut Payload) -> Result<(), SkpError> {
             }
         }
         [7, 2] => {
-            for a in raw_nodes(n.body)? {
-                if a.tag == [0x60, 0x6d] {
-                    for b in raw_nodes(a.body)? {
-                        if b.tag == [0x61, 0x6d]
-                            && raw_nodes(b.body)?.iter().any(|n| n.tag == [0x48, 0x71])
-                        {
-                            p.unsupported.insert("saved scenes".into());
-                        }
-                    }
-                }
-            }
+            let parsed=scenes::parse(n.body)?;
+            if !parsed.is_empty(){p.unsupported.insert("saved scenes".into());}
+            if p.saved_scenes.len().checked_add(parsed.len()).is_none_or(|n|n>10000){return Err(SkpError::Invalid("Saved scene inventory exceeded".into()));}
+            p.saved_scenes.extend(parsed);
         }
         _ => {}
     }

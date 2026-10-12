@@ -232,4 +232,5 @@ mod dwg_import;
 mod geotiff_import;
 mod stl_import;
 pub mod exchange_import;
+mod skp_import;
 mod image_import;

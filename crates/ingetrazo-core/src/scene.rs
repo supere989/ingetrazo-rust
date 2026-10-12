@@ -63,6 +63,10 @@ pub struct Scene {
     #[serde(skip)]
     pub history_context: Vec<uuid::Uuid>,
     #[serde(skip)] pub history_file_import:Option<FileImportHistory>,
+    /// SKP SnapshotImport owns geometry/list additions, not materials/back style.
+    #[serde(skip)] pub history_skp_import:bool,
+    /// Source SKP registries/cache/style outlive import and older geometry Undo.
+    #[serde(skip)] pub skp_registry_persistent:bool,
     /// Command-specific prototype restore target, carried only by history snapshots.
     #[serde(skip)] pub history_annotation_delete:bool,
     #[serde(skip)] pub history_annotation_move:bool,
@@ -161,7 +165,7 @@ impl Scene {
             image_planes:Default::default(),image_objects:Default::default(),history_images:Default::default(),
             dimension_frame:glam::DMat4::IDENTITY,
             drawing_frame:None,
-            history_context:vec![],history_file_import:None,
+            history_context:vec![],history_file_import:None,history_skp_import:false,skp_registry_persistent:false,
             display_style:Default::default(),shadows:Default::default(),history_annotation_delete:false,history_annotation_move:false,history_annotation_edit:false,history_survey:false,history_annotation_create:None,dimension_style_override:None,model_units_override:None,history_shareback:None,history_axes:None,history_bim:None,history_material:None,history_python:None,history_views:Default::default(),history_group_visibility:None,history_terrain:Default::default(),history_layers:Default::default(),
             component_definitions: HashMap::new(),
             mesh_shares: HashMap::new(),

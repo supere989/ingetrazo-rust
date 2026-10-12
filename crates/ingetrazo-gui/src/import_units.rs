@@ -320,6 +320,9 @@ impl IngeTrazoApp {
         candidate: ingetrazo_core::scene::Scene,
         active_mesh:Option<ingetrazo_core::mesh::Mesh>,
     ) -> Result<(), String> {
+        self.publish_root_import_policy(candidate,active_mesh,false)
+    }
+    pub(crate) fn publish_root_import_policy(&mut self,candidate:ingetrazo_core::scene::Scene,active_mesh:Option<ingetrazo_core::mesh::Mesh>,skp:bool)->Result<(),String>{
         // Imported groups are document-global in the original; active Scene.groups
         // is only the native local child view. Prepare every checkpoint first.
         let root = &self.component_edit_stack[0];
@@ -330,11 +333,13 @@ impl IngeTrazoApp {
         let new_shares = candidate.mesh_shares.iter().filter(|(id,_)| !root.original_scene.mesh_shares.contains_key(*id)).map(|(id,mesh)| (*id,mesh.clone())).collect::<Vec<_>>();
         let new_definitions = candidate.component_definitions.iter().filter(|(id,_)| !root.original_scene.component_definitions.contains_key(*id)).map(|(id,definition)| (*id,definition.clone())).collect::<Vec<_>>();
         let mut before = root.original_scene.clone();
-        if active_mesh.is_some(){before.history_file_import=Some(ingetrazo_core::scene::FileImportHistory{context:self.scene.history_context.clone(),mesh:self.scene.mesh.clone()});}
+        if active_mesh.is_some() || skp{before.history_file_import=Some(ingetrazo_core::scene::FileImportHistory{context:self.scene.history_context.clone(),mesh:self.scene.mesh.clone()});}
         // Original SnapshotImport does not own adoption of geographic datum.
         before.geo_datum=candidate.geo_datum.clone();
+        before.history_skp_import=skp;
+        if skp{crate::skp_import::persistent_registry(&candidate,&mut before);before.dimensions=self.scene.dimensions.clone();before.text_labels=self.scene.text_labels.clone();before.saved_views=self.scene.saved_views.clone();before.history_views.0=Some(ingetrazo_core::saved_views::ViewMembershipDelta::between(&before.saved_views,&candidate.saved_views));}
         before.layers = self.scene.layers.clone();
-        before.embedded_textures = self.scene.embedded_textures.clone();
+        if !skp{before.embedded_textures = self.scene.embedded_textures.clone();}
         before.history_layers.0 = Some(ingetrazo_core::layers::LayerDelta::between(
             &before.layers,
             &candidate.layers,
@@ -351,6 +356,7 @@ impl IngeTrazoApp {
         };
         struct Checkpoint {
             cancel_groups: Option<Vec<ingetrazo_core::groups::Group>>,
+            skp_metadata:Option<(std::collections::HashMap<String,ingetrazo_core::materials::Material>,Vec<ingetrazo_core::dimensions::Dimension>,Vec<ingetrazo_core::textlabel::TextLabel>,Vec<ingetrazo_core::saved_views::SavedView>,serde_json::Value)>,
             original_layers: Vec<ingetrazo_core::layers::Layer>,
             cancel_layers: Vec<ingetrazo_core::layers::Layer>,
             undo: Vec<ingetrazo_core::scene::Scene>,
@@ -392,6 +398,7 @@ impl IngeTrazoApp {
             };
             checkpoints.push(Checkpoint {
                 cancel_groups,
+                skp_metadata:skp.then(||(candidate.materials.clone(),candidate.dimensions.clone(),candidate.text_labels.clone(),candidate.saved_views.clone(),candidate.native_document.get("back_face_color").cloned().unwrap_or_default())),
                 original_layers: candidate.layers.clone(),
                 cancel_layers: candidate.layers.clone(),
                 undo: checkpoint_undo,
@@ -403,6 +410,7 @@ impl IngeTrazoApp {
                 cancel_definitions: new_definitions.clone(),
             });
         }
+        let live_skp=skp.then(||(candidate.materials.clone(),candidate.dimensions.clone(),candidate.text_labels.clone(),candidate.saved_views.clone(),candidate.native_document.get("back_face_color").cloned().unwrap_or_default()));
         let live_layers = candidate.layers.clone();
         let live_assets = candidate.embedded_textures.clone();
         // Reserve destination registry slots without replacing old prototype owners.
@@ -420,6 +428,14 @@ impl IngeTrazoApp {
             if let Some(groups) = checkpoint.cancel_groups {
                 session.cancel_scene.groups = groups;
             }
+            if let Some((materials,dimensions,texts,views,back))=checkpoint.skp_metadata {
+                session.original_scene.skp_registry_persistent=true;session.cancel_scene.skp_registry_persistent=true;
+                session.original_scene.materials=materials.clone();session.cancel_scene.materials=materials;
+                session.original_scene.dimensions=dimensions.clone();session.cancel_scene.dimensions=dimensions;
+                session.original_scene.text_labels=texts.clone();session.cancel_scene.text_labels=texts;
+                session.original_scene.saved_views=views.clone();session.cancel_scene.saved_views=views;
+                session.original_scene.native_document["back_face_color"]=back.clone();session.cancel_scene.native_document["back_face_color"]=back;
+            }
             session.original_scene.layers = checkpoint.original_layers;
             session.cancel_scene.layers = checkpoint.cancel_layers;
             session.original_scene.embedded_textures = checkpoint.original_assets;
@@ -431,8 +447,12 @@ impl IngeTrazoApp {
             session.original_undo = checkpoint.undo;
             session.original_redo.clear();
         }
+        self.scene.skp_registry_persistent=self.component_edit_stack[0].original_scene.skp_registry_persistent;
         self.scene.geo_datum=self.component_edit_stack[0].original_scene.geo_datum.clone();
         if let Some(mesh)=active_mesh{self.scene.mesh=mesh;if let Some(session)=self.component_edit_stack.last_mut(){session.note_source_mesh_import();}}
+        if let Some((materials,dimensions,texts,views,back))=live_skp {
+            self.scene.materials=materials;self.scene.dimensions=dimensions;self.scene.text_labels=texts;self.scene.saved_views=views;self.scene.native_document["back_face_color"]=back;
+        }
         self.scene.layers = live_layers;
         self.scene.embedded_textures = live_assets;
         self.scene.mesh_shares.extend(new_shares);

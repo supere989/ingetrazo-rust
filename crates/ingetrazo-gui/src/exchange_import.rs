@@ -13,12 +13,14 @@ use std::{
 pub enum Kind {
     Dae,
     Gltf,
+    Skp,
 }
 impl Kind {
     fn label(self) -> &'static str {
         match self {
             Self::Dae => "DAE",
             Self::Gltf => "glTF/GLB",
+            Self::Skp => "SKP",
         }
     }
 }
@@ -26,9 +28,13 @@ struct Job {
     path: PathBuf,
     kind: Kind,
 }
+enum Prepared {
+    Exchange(FileImportPlan),
+    Skp(ingetrazo_formats::skp::app_import::Plan),
+}
 struct Service {
     send: Option<mpsc::SyncSender<Job>>,
-    done: mpsc::Receiver<Result<FileImportPlan, String>>,
+    done: mpsc::Receiver<Result<Prepared, String>>,
     thread: Option<thread::JoinHandle<()>>,
     parses: Arc<AtomicU64>,
 }
@@ -45,8 +51,13 @@ impl Service {
                     count.fetch_add(1, Ordering::Relaxed);
                     let result = match job.kind {
                         Kind::Dae => ingetrazo_formats::parse_dae_import(&job.path)
+                            .map(Prepared::Exchange)
                             .map_err(|e| e.to_string()),
                         Kind::Gltf => ingetrazo_formats::gltf_import::parse_gltf_import(&job.path)
+                            .map(Prepared::Exchange)
+                            .map_err(|e| e.to_string()),
+                        Kind::Skp => ingetrazo_formats::skp::app_import::Plan::from_path(&job.path)
+                            .map(Prepared::Skp)
                             .map_err(|e| e.to_string()),
                     };
                     if out.send(result).is_err() {
@@ -78,6 +89,7 @@ pub struct State {
     service: Option<Service>,
     running: Option<(PathBuf, Kind, uuid::Uuid, u64, Vec<uuid::Uuid>)>,
     pub error: Option<String>,
+    pub warning: bool,
     pub completed: u64,
     pub label: Option<(uuid::Uuid, String)>,
 }
@@ -87,6 +99,9 @@ impl State {
     }
 }
 impl IngeTrazoApp {
+    pub fn choose_skp_import(&mut self) {
+        self.choose_exchange(Kind::Skp);
+    }
     pub fn choose_dae_import(&mut self) {
         self.choose_exchange(Kind::Dae);
     }
@@ -97,6 +112,7 @@ impl IngeTrazoApp {
         let filter = match kind {
             Kind::Dae => "*.dae|COLLADA (*.dae)",
             Kind::Gltf => "*.glb *.gltf|glTF/GLB (*.glb *.gltf)",
+            Kind::Skp => "*.skp|SKP (*.skp)\n*|All files",
         };
         if let Some(path) =
             crate::dialogs::pick_open_file(&format!("Import {}", kind.label()), filter)
@@ -109,6 +125,15 @@ impl IngeTrazoApp {
     pub fn begin_exchange_import(&mut self, path: &Path, kind: Kind) -> Result<(), String> {
         if self.exchange_import.owns_input() {
             return Err("An exchange import already owns input".into());
+        }
+        if kind == Kind::Skp && !ingetrazo_formats::skp::app_import::recognises(path) {
+            self.exchange_import.warning = true;
+            self.exchange_import.error = Some(format!(
+                "Could not read {} with the built-in SketchUp reader",
+                path.display()
+            ));
+            self.status_message = "Could not read SketchUp file".into();
+            return Ok(());
         }
         if self.exchange_import.service.is_none() {
             self.exchange_import.service = Some(Service::new()?);
@@ -170,8 +195,15 @@ impl IngeTrazoApp {
             self.status_message = "Import result retired after document/model change".into();
             return;
         }
-        match result.and_then(|plan| self.publish_exchange_import(plan)) {
-            Ok(()) => {
+        let read_failed = result.is_err();
+        match result.and_then(|plan| match plan {
+            Prepared::Exchange(plan) => self.publish_exchange_import(plan).map(|()| false),
+            Prepared::Skp(plan) => {
+                let empty = plan.empty;
+                self.publish_skp_import(plan).map(|()| empty)
+            }
+        }) {
+            Ok(empty) => {
                 self.exchange_import.completed += 1;
                 let name = path
                     .file_name()
@@ -179,10 +211,15 @@ impl IngeTrazoApp {
                     .to_string_lossy()
                     .into_owned();
                 self.exchange_import.label = Some((document, name.clone()));
-                self.status_message = format!("Imported {name}");
+                self.status_message = if empty {
+                    format!("{name} has no geometry — nothing to import.")
+                } else {
+                    format!("Imported {name}")
+                };
             }
             Err(e) => {
                 self.status_message = format!("Import {} failed: {e}", kind.label());
+                self.exchange_import.warning = kind == Kind::Skp && read_failed;
                 self.exchange_import.error = Some(e);
             }
         }
@@ -267,6 +304,7 @@ pub fn render(app: &mut IngeTrazoApp, ctx: &egui::Context) {
     } else if let Some(error) = app.exchange_import.error.clone() {
         let mut close = false;
         egui::Modal::new(egui::Id::new("exchange-import-error")).show(ctx, |ui| {
+            if app.exchange_import.warning{ui.heading("Import SKP");ui.label("The built-in SketchUp reader could not read this file. Export a supported exchange format from the authoring application.");}
             ui.label(error);
             let response = ui.button("OK");
             if std::env::var_os("INGETRAZO_PDF_UI_OBSERVE").is_some() {

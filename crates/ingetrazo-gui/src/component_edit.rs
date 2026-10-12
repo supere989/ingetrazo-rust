@@ -30,6 +30,8 @@ impl ComponentEditSession {
     /// Read-only parked owner for document-global consumers while an edit is active.
     pub fn parked_scene(&self)->&Scene {&self.original_scene}
     pub fn edited_group_id(&self)->uuid::Uuid {self.group_id}
+    /// Source container axes retained while its placement is baked for editing.
+    pub fn edited_container_axes(&self)->Option<glam::DMat4>{self.container_axes}
     pub(crate) fn note_source_mesh_import(&mut self) {self.source_import_mesh=true;}
     /// Survey fitting is global camera presentation, outside AddGeoPoints history.
     pub(crate) fn note_survey_camera(&mut self){self.survey_camera_live=true;}
@@ -442,13 +444,20 @@ impl IngeTrazoApp {
         }
         crate::document_presentation::preserve(&self.scene,&mut replacement);
         let file_mesh=next.history_file_import.as_ref().filter(|h|h.context==self.scene.history_context).map(|h|h.mesh.clone());
+        let skp=next.history_skp_import;
+        if self.scene.skp_registry_persistent || skp{crate::skp_import::persistent_registry(&self.scene,&mut replacement);}
         let survey=next.history_survey;
         let annotation_create=next.history_annotation_create;
         let annotation_delete=next.history_annotation_delete||next.history_annotation_move||next.history_annotation_edit;
-        let mut previous=session.original_scene.clone();previous.history_survey=survey;previous.history_shareback=next.history_shareback;previous.history_annotation_delete=next.history_annotation_delete;previous.history_annotation_move=next.history_annotation_move;previous.history_annotation_edit=next.history_annotation_edit;previous.history_annotation_create=annotation_create;
+        let mut previous=session.original_scene.clone();previous.history_skp_import=skp;previous.history_survey=survey;previous.history_shareback=next.history_shareback;previous.history_annotation_delete=next.history_annotation_delete;previous.history_annotation_move=next.history_annotation_move;previous.history_annotation_edit=next.history_annotation_edit;previous.history_annotation_create=annotation_create;
         if let Some(mesh)=file_mesh{
             previous.history_file_import=Some(ingetrazo_core::scene::FileImportHistory{context:self.scene.history_context.clone(),mesh:std::mem::replace(&mut self.scene.mesh,mesh)});
             replacement.history_file_import=None;
+        }
+        if skp {
+            previous.dimensions=self.scene.dimensions.clone();previous.text_labels=self.scene.text_labels.clone();
+            self.scene.dimensions=replacement.dimensions.clone();self.scene.text_labels=replacement.text_labels.clone();
+            replacement.history_skp_import=false;
         }
         if survey {
             previous.geo_points=self.scene.geo_points.clone();previous.geo_datum=self.scene.geo_datum.clone();
@@ -604,7 +613,7 @@ impl IngeTrazoApp {
         let mut edit=Scene::new();
         edit.mesh=world_mesh;edit.groups=world_children;
         edit.history_context=self.scene.history_context.clone();edit.history_context.push(group.id);
-        edit.materials=self.scene.materials.clone();edit.layers=self.scene.layers.clone();
+        edit.skp_registry_persistent=self.scene.skp_registry_persistent;edit.materials=self.scene.materials.clone();edit.layers=self.scene.layers.clone();
         edit.unit=self.scene.unit;edit.embedded_textures=self.scene.embedded_textures.clone();
         // Original begin_group_edit swaps mesh and placements only; these are
         // document-global entities in the same world frame.

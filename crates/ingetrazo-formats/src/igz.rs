@@ -617,7 +617,7 @@ fn dimension_model(d:&Dimension)->serde_json::Value {
     serde_json::json!({"a":d.start,"b":d.end,"offset":d.offset,"axis":d.axis,"layer":d.layer,"text":d.text_override})
 }
 
-fn view_model(v: &ingetrazo_core::saved_views::SavedView) -> serde_json::Value {
+pub(crate) fn view_model(v: &ingetrazo_core::saved_views::SavedView) -> serde_json::Value {
     serde_json::json!({
         "name":v.name, "target":v.target, "distance":v.distance, "yaw":v.yaw,
         "pitch":v.pitch, "fov":v.fov_deg, "parallel":!v.perspective || v.parallel,

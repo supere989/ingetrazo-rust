@@ -11,7 +11,7 @@ use std::{
 fn sha(bytes: &[u8]) -> String {
     format!("{:x}", Sha256::digest(bytes))
 }
-fn mesh_state(
+pub(crate) fn mesh_state(
     mesh: &Mesh,
     m: DMat4,
     assets: &std::collections::HashMap<String, Vec<u8>>,
@@ -62,7 +62,7 @@ fn mesh_state(
     faces.sort_by_key(|f| f.to_string());
     Ok(json!({"points":points,"edges":edges,"faces":faces}))
 }
-fn source_groups(app: &IngeTrazoApp) -> Vec<Group> {
+pub(crate) fn source_groups(app: &IngeTrazoApp) -> Vec<Group> {
     let mut groups = app.component_edit_stack.first().map_or_else(
         || app.scene.groups.clone(),
         |s| s.parked_scene().groups.clone(),
@@ -85,6 +85,8 @@ fn source_groups(app: &IngeTrazoApp) -> Vec<Group> {
             .map_or(&app.scene, |s| s.parked_scene());
         let g = find(&mut groups, session.edited_group_id()).unwrap();
         g.mesh = owner.mesh.clone();
+        g.mesh_share = None;
+        if let Some(axes)=session.edited_container_axes(){g.native_document["axes"]=json!(axes.to_cols_array());}
         g.children = owner.groups.clone();
         g.transform = DMat4::IDENTITY;
     }
@@ -130,7 +132,7 @@ fn record(app: &IngeTrazoApp, name: &str, phase: &str, outcome: &str) -> Result<
         json!({"case":name,"phase":phase,"scene":scene(app)?,"undo":app.undo_stack.len(),"redo":app.redo_stack.len(),"depth":app.component_edit_stack.len(),"outcome":outcome,"camera":{"distance":app.camera.distance}}),
     )
 }
-fn frame(app: &mut IngeTrazoApp, ctx: &egui::Context, events: Vec<egui::Event>) {
+pub(crate) fn frame(app: &mut IngeTrazoApp, ctx: &egui::Context, events: Vec<egui::Event>) {
     let mut raw = egui::RawInput::default();
     raw.screen_rect = Some(egui::Rect::from_min_size(
         egui::Pos2::ZERO,
@@ -139,7 +141,7 @@ fn frame(app: &mut IngeTrazoApp, ctx: &egui::Context, events: Vec<egui::Event>) 
     raw.events = events;
     let _ = ctx.run(raw, |c| app.update_ui(c));
 }
-fn click(app: &mut IngeTrazoApp, ctx: &egui::Context, id: &str) -> Result<(), String> {
+pub(crate) fn click(app: &mut IngeTrazoApp, ctx: &egui::Context, id: &str) -> Result<(), String> {
     for _ in 0..3 {
         frame(app, ctx, vec![]);
     }

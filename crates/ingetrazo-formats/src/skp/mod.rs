@@ -1,7 +1,7 @@
-pub mod app_import;
 // SPDX-License-Identifier: GPL-3.0-or-later
 //! Rust-only SketchUp import. Parse a neutral payload before preparing/applying a scene.
 //! VFF record interpretation ports the pinned MIT OpenSKP reader; see OPENSKP-LICENSE.
+pub mod app_import;
 mod legacy;
 mod placements;
 mod reader;
@@ -92,6 +92,8 @@ pub struct TextureRecord {
 }
 #[derive(Debug, Clone, Default, Serialize, Deserialize)]
 pub struct Payload {
+    #[serde(default,skip_serializing_if="Vec::is_empty")]
+    pub saved_scenes: Vec<SavedScene>,
     #[serde(default)]
     pub legacy_pages: Vec<LegacyPage>,
     #[serde(default)]
@@ -107,6 +109,11 @@ pub struct Payload {
     pub materials: BTreeMap<String, MaterialRecord>,
     pub back_color: Option<[f64; 3]>,
     pub unsupported: BTreeSet<String>,
+}
+#[derive(Debug,Clone,Serialize,Deserialize)]
+pub struct SavedScene {
+    pub name:String,pub eye:[f64;3],pub target:[f64;3],pub up:Option<[f64;3]>,
+    pub fov:f64,pub parallel:bool,pub ortho_height:f64,pub hidden_layer_ids:Vec<u64>,
 }
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct LegacyPage {
