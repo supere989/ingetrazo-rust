@@ -314,7 +314,7 @@ impl IngeTrazoApp {
         self.status_message = format!("Imported {}", confirmed.path.display());
         Ok(())
     }
-    fn publish_root_import(
+    pub(crate) fn publish_root_import(
         &mut self,
         candidate: ingetrazo_core::scene::Scene,
     ) -> Result<(), String> {

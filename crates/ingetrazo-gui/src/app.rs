@@ -78,6 +78,7 @@ pub struct IngeTrazoApp {
     pub show_geographic_import_dialog: bool,
     pub survey_profile:crate::survey_profile::State,
     pub geotiff_import:crate::geotiff_import::State,
+    pub stl_import:crate::stl_import::State,
     pub base_map_requested_zoom:u8,
     pub base_map_requested_visible:bool,
     pub show_save_dialog: bool,
@@ -201,6 +202,7 @@ impl IngeTrazoApp {
             show_geographic_import_dialog: false,
             survey_profile:Default::default(),
             geotiff_import:Default::default(),
+            stl_import:Default::default(),
             base_map_requested_zoom:16,
             base_map_requested_visible:true,
             show_save_dialog: false,
@@ -1015,12 +1017,14 @@ impl IngeTrazoApp {
     pub fn update_ui(&mut self, ctx: &egui::Context) {
         crate::appearance_preferences::apply(&self.document_session.preferences,ctx);
         let geotiff_owns_input=self.geotiff_import.owns_input();
+        let stl_owns_input=self.stl_import.owns_input();
+        self.poll_stl_import();
         self.poll_geotiff_import();
         let image_owns_input=self.sheet_image.dialog.is_some();
         crate::sheet_image::dialog(self,ctx);
         let recent_warning_owns_input = self.document_session.recent_missing.is_some();
         let preferences_owns_input = self.show_preferences_dialog;
-        let import_owns_input=geotiff_owns_input||self.geotiff_import.owns_input()||self.document_session.unit_import.is_some()||self.document_session.survey_import.is_some();
+        let import_owns_input=stl_owns_input||self.stl_import.owns_input()||geotiff_owns_input||self.geotiff_import.owns_input()||self.document_session.unit_import.is_some()||self.document_session.survey_import.is_some();
         self.sync_document_presentation();
         self.begin_document_frame(ctx);
         self.poll_ai_bridge();
@@ -1185,6 +1189,7 @@ impl IngeTrazoApp {
         });
 
         crate::geotiff_import::render(self,ctx);
+        crate::stl_import::render(self,ctx);
         // 7. Modal Dialogs
         render_dialogs(self, ctx);
         crate::text3d::render_dialog(self, ctx);
