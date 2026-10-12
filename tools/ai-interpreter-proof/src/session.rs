@@ -180,6 +180,10 @@ pub fn execute_captured(
     source: CodeInput<'_>,
 ) -> Result<(PyResult<()>, ExecutionReceipt), String> {
     use rustpython_vm::PyPayload;
+    // Registration alone does not initialize a native payload's static class.
+    // Import the actual module before constructing Stream; warm calls use sys.modules.
+    rustpython_vm::import::import_builtin(vm, "transcript")
+        .map_err(|_| "Native transcript module initialization refused")?;
     let streams = Streams {
         vm,
         stdout: vm

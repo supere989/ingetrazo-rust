@@ -46,7 +46,9 @@ pub fn render_side_tray(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
         ];
         for (tab_val, label) in tabs {
             let is_sel = app.active_tray_tab == tab_val;
-            if ui.selectable_label(is_sel, tr(label)).clicked() {
+            let response=ui.selectable_label(is_sel, tr(label));
+            if tab_val==TrayTab::Ai {ui.ctx().data_mut(|d|d.insert_temp(egui::Id::new("ai-bridge-tray-tab"),response.rect));}
+            if response.clicked() {
                 app.active_tray_tab = tab_val;
             }
         }
@@ -567,8 +569,13 @@ fn render_ai_panel(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
     }
     if ui.button("Clear conversation").clicked() {ai.messages.clear();ai.status.clear();}
     ui.label(&ai.status);
-    ui.label("Provider transport and Python recipe execution are pending.");
+    ui.label("Provider transport is pending.");
     ui.separator();
+    #[cfg(feature="engineering-python")]
+    {
+        let authorization=ui.checkbox(&mut app.engineering_python_enabled, "Allow local Python execution");
+        ui.ctx().data_mut(|d|d.insert_temp(egui::Id::new("ai-bridge-python-authorization"),authorization.rect));
+    }
     if let Some(bridge)=&app.ai_bridge {
         ui.label(format!("Local document bridge: {}",bridge.address()));
         if ui.button("Stop local bridge").clicked(){app.stop_ai_bridge();}

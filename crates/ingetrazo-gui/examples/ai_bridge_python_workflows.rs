@@ -9,6 +9,14 @@ use std::{
     time::{Duration, Instant},
 };
 fn frame(app: &mut IngeTrazoApp, ctx: &egui::Context, tick: &mut f64) {
+    frame_events(app, ctx, tick, Vec::new());
+}
+fn frame_events(
+    app: &mut IngeTrazoApp,
+    ctx: &egui::Context,
+    tick: &mut f64,
+    events: Vec<egui::Event>,
+) {
     *tick += 0.01;
     let raw = egui::RawInput {
         screen_rect: Some(egui::Rect::from_min_size(
@@ -16,9 +24,47 @@ fn frame(app: &mut IngeTrazoApp, ctx: &egui::Context, tick: &mut f64) {
             egui::vec2(1280., 800.),
         )),
         time: Some(*tick),
+        events,
         ..Default::default()
     };
     let _ = ctx.run(raw, |ctx| app.update_ui(ctx));
+}
+fn click_ui(
+    app: &mut IngeTrazoApp,
+    ctx: &egui::Context,
+    tick: &mut f64,
+    id: &str,
+) -> Result<(), String> {
+    frame(app, ctx, tick);
+    frame(app, ctx, tick);
+    let rect = ctx
+        .data(|d| d.get_temp::<egui::Rect>(egui::Id::new(id)))
+        .ok_or("Actual bridge control missing")?;
+    let point = rect.center();
+    if !ctx.screen_rect().contains(point) {
+        return Err("Actual bridge control outside viewport".into());
+    }
+    frame_events(app, ctx, tick, vec![egui::Event::PointerMoved(point)]);
+    let stable = ctx
+        .data(|d| d.get_temp::<egui::Rect>(egui::Id::new(id)))
+        .ok_or("Actual bridge control disappeared")?;
+    if stable != rect {
+        return Err("Bridge control moved during hover".into());
+    }
+    for pressed in [true, false] {
+        frame_events(
+            app,
+            ctx,
+            tick,
+            vec![egui::Event::PointerButton {
+                pos: point,
+                button: egui::PointerButton::Primary,
+                pressed,
+                modifiers: egui::Modifiers::NONE,
+            }],
+        );
+    }
+    Ok(())
 }
 fn receive(
     app: &mut IngeTrazoApp,
@@ -136,10 +182,13 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         assert_eq!(overflow["ok"], false);
         assert_eq!(app.scene, before);
         assert_eq!((app.undo_stack.len(), app.redo_stack.len()), (undo, redo));
-        #[cfg(feature = "engineering-python")]
-        {
-            app.engineering_python_enabled = false;
-        }
+        app.show_tray = true;
+        click_ui(&mut app, &ctx, &mut tick, "ai-bridge-tray-tab")?;
+        click_ui(&mut app, &ctx, &mut tick, "ai-bridge-python-authorization")?;
+        assert!(
+            !app.engineering_python_enabled,
+            "Actual authorization checkbox did not disable Python"
+        );
         let request = json!({"id":"disabled","tool":"run_python","args":{"code":"1"}});
         socket.write_all(&serde_json::to_vec(&request)?)?;
         socket.write_all(b"\n")?;
@@ -147,10 +196,13 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         assert_eq!(disabled["ok"], false);
         assert_eq!(app.scene, before);
         assert_eq!((app.undo_stack.len(), app.redo_stack.len()), (undo, redo));
-        #[cfg(feature = "engineering-python")]
-        {
-            app.engineering_python_enabled = true;
-        }
+        click_ui(&mut app, &ctx, &mut tick, "ai-bridge-python-authorization")?;
+        assert!(
+            app.engineering_python_enabled,
+            "Actual authorization checkbox did not enable Python"
+        );
+        assert_eq!(app.scene, before);
+        assert_eq!((app.undo_stack.len(), app.redo_stack.len()), (undo, redo));
         app.show_save_dialog = true;
         socket.write_all(&serde_json::to_vec(&request)?)?;
         socket.write_all(b"\n")?;
@@ -159,7 +211,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         assert_eq!(app.scene, before);
         assert_eq!((app.undo_stack.len(), app.redo_stack.len()), (undo, redo));
         app.show_save_dialog = false;
-        report["controls"] = json!({"actual_socket":true,"actual_ui_poll":true,"caught_overflow_atomic":true,"disabled_refused":true,"modal_refused":true,"worker_joined":false});
+        report["controls"] = json!({"actual_socket":true,"actual_ui_poll":true,"caught_overflow_atomic":true,"disabled_refused":true,"modal_refused":true,"actual_authorization_checkbox":true,"worker_joined":false});
         report["control_replies"] = json!({"overflow":overflow,"disabled":disabled,"modal":modal});
         Ok(report)
     })();
