@@ -1182,6 +1182,8 @@
   "prior_checker_binding": {
     "path": "scripts/check-composer-run-previews.py",
     "commit": "e5e428c5accb76e0edb2c8b5f1c91c88ce3c2926",
-    "sha256": "9e816704b06379c6f06516b8ca46085868c1349ef7853da9916e02500b40b58e"
-  }
+    "sha256": "9e816704b06379c6f06516b8ca46085868c1349ef7853da9916e02500b40b58e",
+    "retained_path": "docs/audits/composer-run-previews/historical-checker.py"
+  },
+  "checker_change_scope": "Current replay checker only separates semantic acceptance from strict pixel verdict and executes the unchanged semantic negative controls despite pixel residuals. Source expectations and verify() remain unchanged. The prior exact checker is retained in the repository for shallow CI authentication without fetching the owner commit."
 }
