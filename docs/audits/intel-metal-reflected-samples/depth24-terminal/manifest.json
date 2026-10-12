@@ -1,0 +1,1457 @@
+{
+  "schema": 1,
+  "archive_sha256": "3733083ac24a48e5d86fe4c8cef47100d9b2f19ad9e59abccf1f85f2ea12b0c1",
+  "members": {
+    "af1d6226/records.zip": {
+      "size": 13239,
+      "sha256": "ebbe7f705c18ffb8f074d8ff9dd8c275fdcb529634a73ae4cc436a1588bfc604"
+    },
+    "af1d6226/run.json": {
+      "size": 12753,
+      "sha256": "6b9589e8d0e0a586b0eb1960a6d600621f0b162ab9f06e53d71ec634274bfe7e"
+    },
+    "af1d6226/jobs.json": {
+      "size": 2994,
+      "sha256": "e4b8caa91f5f49c6fa8fa741ad268e8d1cbb646fd4f4379dc14ddab6cdeab7ac"
+    },
+    "af1d6226/artifacts.json": {
+      "size": 772,
+      "sha256": "f03074a960a3fa0c8ea9c36d17c2cb65f933aca2d088f65b4b7a7ccdbf881547"
+    },
+    "801409f8/records.zip": {
+      "size": 13403,
+      "sha256": "d78e32f8041973003bbdf81a57a0b3d48fed4916b048b2caa16fd2e8c9eac4d3"
+    },
+    "801409f8/run.json": {
+      "size": 12729,
+      "sha256": "53c7a4344fb2b8f2345d8eb3787ec2e461d43ca1dca2bfc3c6329660eea7ef5e"
+    },
+    "801409f8/jobs.json": {
+      "size": 2994,
+      "sha256": "931c9ca4e689b7face2c118ff6c33d9fa6e42373c31a272e51f8ff9e1b4c63fd"
+    },
+    "801409f8/artifacts.json": {
+      "size": 772,
+      "sha256": "c558a421059baeb5be5c34f8896c19330dc0b3804d938a1465683ce17e3cbe00"
+    },
+    "2b956161/records.zip": {
+      "size": 16146,
+      "sha256": "f880a199560e637f1a978a13ef201b0ebe4751531eb1328602aa0b924f856ca8"
+    },
+    "2b956161/run.json": {
+      "size": 12743,
+      "sha256": "cbd3d6b0a8e11176e176467fa30cf36d13e5b6d586daf0c133178bff5d107722"
+    },
+    "2b956161/jobs.json": {
+      "size": 2994,
+      "sha256": "b87318c2c98357eaac2aa1ca76462b7a594b584ebceee857cf919645be234671"
+    },
+    "2b956161/artifacts.json": {
+      "size": 772,
+      "sha256": "3f0b3d3469880b07346b3d66636f837f1693e305074dc588028a30d9f42ac28a"
+    },
+    "summary.json": {
+      "size": 922,
+      "sha256": "2cf784ea3cf07e511c836ad60e8a3342086823e970bbe5808a63389e8cda2acf"
+    }
+  },
+  "stages": [
+    {
+      "label": "af1d6226",
+      "run_id": 38276048523,
+      "artifact_id": 11758758601,
+      "runtime_revision": "af1d62266ae770282a190afa4b4477ffb5f268b5",
+      "artifact_sha256": "ebbe7f705c18ffb8f074d8ff9dd8c275fdcb529634a73ae4cc436a1588bfc604",
+      "members": {
+        "build.log": {
+          "size": 89366,
+          "sha256": "646ce1c80301ec2d0be06248b56c1358509396cdc4a2a60077c977fc52fcf53c"
+        },
+        "revision.txt": {
+          "size": 41,
+          "sha256": "7b729168edba358ebc98b8d6715133f662a51f01803c0f893fee53c9fbb670b6"
+        },
+        "source.sha256": {
+          "size": 8348,
+          "sha256": "f35439f38fa8e3623d9321339af393d63111a78b7816110ec40c583af23da769"
+        }
+      },
+      "git_bindings": [
+        {
+          "path": "crates/ingetrazo-gui/examples/native_metal_section_resolve.rs",
+          "commit": "af1d62266ae770282a190afa4b4477ffb5f268b5",
+          "sha256": "e544bec74e2d2d3f31ade8794fbb466785fbab68c182156040105ed6da1009ab"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/annotation.rs",
+          "commit": "af1d62266ae770282a190afa4b4477ffb5f268b5",
+          "sha256": "a77196b3cdc71fd72da1cbdee577ffe71c1d9c95c306892e32acb96f6ad4f015"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/cad2d.rs",
+          "commit": "af1d62266ae770282a190afa4b4477ffb5f268b5",
+          "sha256": "c5b40bc760c97c5d4ecd9514f13fb7d0def9a867543f819c873f6261c3bbea36"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/cad_abi.rs",
+          "commit": "af1d62266ae770282a190afa4b4477ffb5f268b5",
+          "sha256": "bdc8c4200289e8acadce9254dc483844d2a3b211b2f3f3ca288dde570adbfe7d"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/cad_callback_painter.rs",
+          "commit": "af1d62266ae770282a190afa4b4477ffb5f268b5",
+          "sha256": "c59fcf75fecfa79cd5bad4c8e2d7d80b8e1687630e7b26ed868b6644143241e8"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/cad_compute_painter.rs",
+          "commit": "af1d62266ae770282a190afa4b4477ffb5f268b5",
+          "sha256": "31432d2d59c6ee56a7866485b923a8800222b147e6c638167d7fe17de7d91882"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/compute_canvas.rs",
+          "commit": "af1d62266ae770282a190afa4b4477ffb5f268b5",
+          "sha256": "bf08dfee2474f6b568190d475b6b292951837a2de81ba43860a1d87c9d043678"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/device.rs",
+          "commit": "af1d62266ae770282a190afa4b4477ffb5f268b5",
+          "sha256": "2ae1e1094c27eb86ce405650ba9ded16e9b8858ed8c1e6af36c6e253032b31c3"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/egui_painter.rs",
+          "commit": "af1d62266ae770282a190afa4b4477ffb5f268b5",
+          "sha256": "a2736af20a641b2437ba934e317a302409ef74075612ae2778e1cde7a9db4d1d"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/glyph_admission.rs",
+          "commit": "af1d62266ae770282a190afa4b4477ffb5f268b5",
+          "sha256": "8e0538c550278f3d964d229f397af6dfed364f82cb821f65f8bbbc0222fef40b"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/lib.rs",
+          "commit": "af1d62266ae770282a190afa4b4477ffb5f268b5",
+          "sha256": "374a9bd95c4b6830bd1033524812dc0452b52be4d8dfc71a87eee84de9106a65"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/native_input.rs",
+          "commit": "af1d62266ae770282a190afa4b4477ffb5f268b5",
+          "sha256": "472b8637bda07a100f636825f2438f757947f31ee67aab5b2b23c1279e25f26d"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/paper_picture.rs",
+          "commit": "af1d62266ae770282a190afa4b4477ffb5f268b5",
+          "sha256": "67fdf0fd44516b3ed0ed8aa9614c87b720515506cf4294e3569e6a9e765d0505"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/presentation.rs",
+          "commit": "af1d62266ae770282a190afa4b4477ffb5f268b5",
+          "sha256": "9ed865b8b3be972043394b0f14d99631f6eff61b69339f7554e4a549a178d18f"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/shaders/annotation_draw.metal",
+          "commit": "af1d62266ae770282a190afa4b4477ffb5f268b5",
+          "sha256": "38e01f5d7b570efa95d057b0a9d331d61d25a2274a06f31ed1bf12a2facf0d3d"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/shaders/annotation_visibility.metal",
+          "commit": "af1d62266ae770282a190afa4b4477ffb5f268b5",
+          "sha256": "3635b99c9723daf0c9dab586dc06fd3548625522449dc16bd162afaa76ed256c"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/shaders/cad2d.metal",
+          "commit": "af1d62266ae770282a190afa4b4477ffb5f268b5",
+          "sha256": "bd2ae060a4aad9226e8b8f32a3254669cde5f8805c71ab810143d82867d99882"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/shaders/cad2d_compose.metal",
+          "commit": "af1d62266ae770282a190afa4b4477ffb5f268b5",
+          "sha256": "a8d85edac66aedef4dd490471c73f97b17cf5257cb978d1e80582cb2ea9a2246"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/shaders/cad2d_spans.metal",
+          "commit": "af1d62266ae770282a190afa4b4477ffb5f268b5",
+          "sha256": "bbb9826c30b9da782aabb726a035676a7822e3b70adb992e7853d2655c5f36ea"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/shaders/compute_canvas.metal",
+          "commit": "af1d62266ae770282a190afa4b4477ffb5f268b5",
+          "sha256": "c3affe7ad3506414be3874750e17d1d89e8696bd2a2415a46a38a7a22c29480d"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/shaders/contour.metal",
+          "commit": "af1d62266ae770282a190afa4b4477ffb5f268b5",
+          "sha256": "58996f2bd0b9201a106c6e9cd9148783b40d0fabd256167796e608b9c7f0703a"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/shaders/paper_picture.metal",
+          "commit": "af1d62266ae770282a190afa4b4477ffb5f268b5",
+          "sha256": "180e3a66a163610ec8e378f494d1813f066fd2595eddceb267a2d3788a8a0336"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/shaders/world.metal",
+          "commit": "af1d62266ae770282a190afa4b4477ffb5f268b5",
+          "sha256": "dc92eb4450131a9b6305320d1d28eb854d39e0e5cd1be40523088a1be6090161"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/shaders/world_resolve.metal",
+          "commit": "af1d62266ae770282a190afa4b4477ffb5f268b5",
+          "sha256": "21fdb48f284b825422eb04e65d0b45decf013b918e066b83625231c4a60286e8"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/span_plan.rs",
+          "commit": "af1d62266ae770282a190afa4b4477ffb5f268b5",
+          "sha256": "3b1d4d0bb056a6ac84f22769a3720c92430d4aa937dbd0a49519216d78081b35"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/submission.rs",
+          "commit": "af1d62266ae770282a190afa4b4477ffb5f268b5",
+          "sha256": "7d821df89fa61c9aa48a2f68e12a6889f73f229db7085da9d563b9067debf3a6"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/world.rs",
+          "commit": "af1d62266ae770282a190afa4b4477ffb5f268b5",
+          "sha256": "a36d10f915097a6454b19de407a23a39add0efbe7032443ce106beaca7890f0d"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/world_admission.rs",
+          "commit": "af1d62266ae770282a190afa4b4477ffb5f268b5",
+          "sha256": "ddb2823428f93f627a7eb1f34709391082caf11a05b2ffee0f9dd27a19eb13d7"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/world_background.rs",
+          "commit": "af1d62266ae770282a190afa4b4477ffb5f268b5",
+          "sha256": "c59e48439f9e31153bf59a4871e7de82cd17c19b02bb7f40b664d4693f4bece8"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/world_billboard.rs",
+          "commit": "af1d62266ae770282a190afa4b4477ffb5f268b5",
+          "sha256": "8954dc568622a958a53268304b9ccffc72ce28f16ff5570a28a8fe6e1768f3b1"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/world_contour.rs",
+          "commit": "af1d62266ae770282a190afa4b4477ffb5f268b5",
+          "sha256": "0831c3ec0c67433c053bc7cc6cf08db1529417b53acfa0b3259424c936f71758"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/world_face_guard.rs",
+          "commit": "af1d62266ae770282a190afa4b4477ffb5f268b5",
+          "sha256": "3018d8970adc7fbe33ff30c7e592cdaaa265e421cefba3882037f2e406864f2a"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/world_ghost.rs",
+          "commit": "af1d62266ae770282a190afa4b4477ffb5f268b5",
+          "sha256": "4671d7c0ba9f8ee42c09c459ef18d2b9d084435801e5f1d03e6502603ee3ff5c"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/world_placement.rs",
+          "commit": "af1d62266ae770282a190afa4b4477ffb5f268b5",
+          "sha256": "6394c6106d878ceed67588a824ff413194e8c6feb5efa2e7a17e0e95ae5fa8f8"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/world_policy.rs",
+          "commit": "af1d62266ae770282a190afa4b4477ffb5f268b5",
+          "sha256": "c7314df61948a2d1847f537c155aa24a6daaef30936f961dcab1c1a5e90fc446"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/world_preview.rs",
+          "commit": "af1d62266ae770282a190afa4b4477ffb5f268b5",
+          "sha256": "907b10859287e453edeeb29a3d5dec0ab340386a0f8968bd3345d10c1cc8e0c9"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/world_profile.rs",
+          "commit": "af1d62266ae770282a190afa4b4477ffb5f268b5",
+          "sha256": "93888991c1154bb290f5a40d0ce556abc5511352b4d92d57068ba1255093e190"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/world_resolve.rs",
+          "commit": "af1d62266ae770282a190afa4b4477ffb5f268b5",
+          "sha256": "35fc9a72f1edbadc17707e0da680769b5e73bf28ee8b7f35835c791e8721bba9"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/world_scene.rs",
+          "commit": "af1d62266ae770282a190afa4b4477ffb5f268b5",
+          "sha256": "4779144a6456b64bad5a6112fab215e7fccdea339bccc9926366b1f680a354b1"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/world_section.rs",
+          "commit": "af1d62266ae770282a190afa4b4477ffb5f268b5",
+          "sha256": "e1940d43f947b3d45e759254ec52814654e46025c98c3c0774bb777b3c01e0dc"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/world_surface.rs",
+          "commit": "af1d62266ae770282a190afa4b4477ffb5f268b5",
+          "sha256": "977bd9a4b4c5433db7252c0f62ed6fa2a3806157dd76843cf7276516d18daf5b"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/world_texture.rs",
+          "commit": "af1d62266ae770282a190afa4b4477ffb5f268b5",
+          "sha256": "4c56c324e6d1eb4ce617deab28e1faad675a870876dc3d09ad6f3b9687b1e3e9"
+        },
+        {
+          "path": "docs/audits/intel-metal-reflected-samples/README.md",
+          "commit": "af1d62266ae770282a190afa4b4477ffb5f268b5",
+          "sha256": "2d3882a3b3fcc1b0c62ef15e6846ee147ca7d92b5b35040e61c722aa26365401"
+        },
+        {
+          "path": "docs/audits/intel-metal-reflected-samples/draft-contract.json",
+          "commit": "af1d62266ae770282a190afa4b4477ffb5f268b5",
+          "sha256": "124b0629cbc3fb31b489d09464e4da3d956322f64ab5d96f016e5fe6f123b1fb"
+        },
+        {
+          "path": "docs/audits/intel-metal-reflected-samples/metadata-preflight.json",
+          "commit": "af1d62266ae770282a190afa4b4477ffb5f268b5",
+          "sha256": "de93046534b6a5da192c54a5760e4754bc053698c5b9bd65b428fc8055a7d3a6"
+        },
+        {
+          "path": "docs/audits/intel-metal-reflected-samples/metadata-preflight.zip",
+          "commit": "af1d62266ae770282a190afa4b4477ffb5f268b5",
+          "sha256": "a3a6828aab75dab42a8003e582152955c9569d774c5ec1a418afa70820ce6ab1"
+        },
+        {
+          "path": "docs/audits/intel-metal-reflected-samples/result-e2b0f213/README.md",
+          "commit": "af1d62266ae770282a190afa4b4477ffb5f268b5",
+          "sha256": "499d605fb48a185e22c49b28e4e132c547c6ff517bc585fc5312cc9f878e819a"
+        },
+        {
+          "path": "docs/audits/intel-metal-reflected-samples/result-e2b0f213/artifacts.json",
+          "commit": "af1d62266ae770282a190afa4b4477ffb5f268b5",
+          "sha256": "d3a24dc913191f45f7ab34a330ab441e1ef9013ca52b05c548a9d5e190a62d5f"
+        },
+        {
+          "path": "docs/audits/intel-metal-reflected-samples/result-e2b0f213/diagnosis.json",
+          "commit": "af1d62266ae770282a190afa4b4477ffb5f268b5",
+          "sha256": "2e8b10f6faa9d69506f66d88fbb23211db91eda35f341374df9c4e41b0f72c12"
+        },
+        {
+          "path": "docs/audits/intel-metal-reflected-samples/result-e2b0f213/jobs.json",
+          "commit": "af1d62266ae770282a190afa4b4477ffb5f268b5",
+          "sha256": "8d6c46b2627f85df5f44e92003af59dd3e7317fff4146bf460d5693ef706a132"
+        },
+        {
+          "path": "docs/audits/intel-metal-reflected-samples/result-e2b0f213/manifest.json",
+          "commit": "af1d62266ae770282a190afa4b4477ffb5f268b5",
+          "sha256": "87b907eef5376b5e1aad579ba66d2b28ccd60eecd0c34d5cdc989d1b71811d32"
+        },
+        {
+          "path": "docs/audits/intel-metal-reflected-samples/result-e2b0f213/records.zip",
+          "commit": "af1d62266ae770282a190afa4b4477ffb5f268b5",
+          "sha256": "1fe99f9c2f29a5276c088f309132c65bb43330ccea14c54d7dcb1f74f3b2c837"
+        },
+        {
+          "path": "docs/audits/intel-metal-reflected-samples/result-e2b0f213/run.json",
+          "commit": "af1d62266ae770282a190afa4b4477ffb5f268b5",
+          "sha256": "1fb18b3cee6f0266e79c948dee00940de32da7bf2b901e877f41cc1ec0346c0f"
+        },
+        {
+          "path": "docs/audits/intel-metal-reflected-samples/source-bindings.json",
+          "commit": "af1d62266ae770282a190afa4b4477ffb5f268b5",
+          "sha256": "5b136a93c8547ec561df3fdf2b5c5b3215e709407ea8258e7874daa941ab6836"
+        },
+        {
+          "path": "docs/audits/section-iso-samples/source.zip",
+          "commit": "af1d62266ae770282a190afa4b4477ffb5f268b5",
+          "sha256": "17547dfb9a567858230325b83795dd534f0175c463300174a053c7e687e02499"
+        },
+        {
+          "path": "docs/audits/section-original-gl/README.md",
+          "commit": "af1d62266ae770282a190afa4b4477ffb5f268b5",
+          "sha256": "70c390c4bd7f9855d7c29fbe7102c79814bc05beed66f0fb17e33a802bf1347d"
+        },
+        {
+          "path": "docs/audits/section-original-gl/closed-front.png",
+          "commit": "af1d62266ae770282a190afa4b4477ffb5f268b5",
+          "sha256": "5f65284cff129561d3ab57bedef1cb8f7bf0af986babba03b3025b32316db30c"
+        },
+        {
+          "path": "docs/audits/section-original-gl/closed-iso.png",
+          "commit": "af1d62266ae770282a190afa4b4477ffb5f268b5",
+          "sha256": "fcdee03b04a63553a9f1a5b559236e23e2b2daccfa4f7c6b4c6732804fc73a43"
+        },
+        {
+          "path": "docs/audits/section-original-gl/closed.png",
+          "commit": "af1d62266ae770282a190afa4b4477ffb5f268b5",
+          "sha256": "e7f530222073ba086a69553f51a5411f57443f75fd2a0bef99173c6b5d2556b2"
+        },
+        {
+          "path": "docs/audits/section-original-gl/coplanar-backface.png",
+          "commit": "af1d62266ae770282a190afa4b4477ffb5f268b5",
+          "sha256": "59bbcb49e97a48fa31094a94f5c75a59ea70bb5b14ffd3d974fdbec0f8361cda"
+        },
+        {
+          "path": "docs/audits/section-original-gl/duplicate.png",
+          "commit": "af1d62266ae770282a190afa4b4477ffb5f268b5",
+          "sha256": "e7f530222073ba086a69553f51a5411f57443f75fd2a0bef99173c6b5d2556b2"
+        },
+        {
+          "path": "docs/audits/section-original-gl/original-gl-results.json",
+          "commit": "af1d62266ae770282a190afa4b4477ffb5f268b5",
+          "sha256": "9426c71edec4733d097f858455b5110259cba30249398a05784b828107d3d5f7"
+        },
+        {
+          "path": "docs/audits/section-original-gl/shared-slab-iso.png",
+          "commit": "af1d62266ae770282a190afa4b4477ffb5f268b5",
+          "sha256": "11c42541978707faba5c92a700263e566251d7a9ea6842749b53519758aa9715"
+        },
+        {
+          "path": "docs/audits/section-original-gl/shared-slab-reversed-iso.png",
+          "commit": "af1d62266ae770282a190afa4b4477ffb5f268b5",
+          "sha256": "fcdee03b04a63553a9f1a5b559236e23e2b2daccfa4f7c6b4c6732804fc73a43"
+        },
+        {
+          "path": "docs/audits/section-original-gl/shared-slab-reversed.png",
+          "commit": "af1d62266ae770282a190afa4b4477ffb5f268b5",
+          "sha256": "e7f530222073ba086a69553f51a5411f57443f75fd2a0bef99173c6b5d2556b2"
+        },
+        {
+          "path": "docs/audits/section-original-gl/shared-slab.png",
+          "commit": "af1d62266ae770282a190afa4b4477ffb5f268b5",
+          "sha256": "4c015223933c68e795eca43e078db5c62fe5b7075cd0b8486d88cf2ed7d5b587"
+        },
+        {
+          "path": "docs/audits/section-original-gl/transparent.png",
+          "commit": "af1d62266ae770282a190afa4b4477ffb5f268b5",
+          "sha256": "af874c1eb986ea19be4d3a8358b25294db39f6146414449b167a8521f169c468"
+        },
+        {
+          "path": "docs/audits/section-sample-observation/records.zip",
+          "commit": "af1d62266ae770282a190afa4b4477ffb5f268b5",
+          "sha256": "0d97d34af31736f99215b4f710fe05ae87d0f7a8da4e78cb8f43b682a02af7c1"
+        },
+        {
+          "path": "docs/audits/source-gl-depth-resolve/resolve.json",
+          "commit": "af1d62266ae770282a190afa4b4477ffb5f268b5",
+          "sha256": "be61b6d42bea9e6504a37161741ebe43bfb2dcfcc16fb0fc4f40a6c7844a01da"
+        },
+        {
+          "path": "scripts/check-metal-reflected-samples.py",
+          "commit": "af1d62266ae770282a190afa4b4477ffb5f268b5",
+          "sha256": "b1e8be0975ade1aa477b92e7b7018470a95633e23e38d83260c7153489d03b1e"
+        },
+        {
+          "path": "scripts/check-metal-section-fill.py",
+          "commit": "af1d62266ae770282a190afa4b4477ffb5f268b5",
+          "sha256": "b05b7d1a3420149c4c5fd380b9e739175399ccc7b496becdb95dccb28f69a12c"
+        },
+        {
+          "path": "scripts/check-metal-section-resolve.py",
+          "commit": "af1d62266ae770282a190afa4b4477ffb5f268b5",
+          "sha256": "c1336f020922af4848bf7e7fe85d3af49f02ac9c869dba6823afb9d0e6a47def"
+        },
+        {
+          "path": ".github/workflows/metal-reflected-samples-diagnostic.yml",
+          "commit": "af1d62266ae770282a190afa4b4477ffb5f268b5",
+          "sha256": "d604ae6182829520dde98ea1fedc995b58842ffcafdd5bc5e7a6507eb4d59462"
+        }
+      ],
+      "binary_sha256": null,
+      "native_error": null,
+      "disposition": "consumer_compile_failure",
+      "jobs": [
+        {
+          "id": 114901673396,
+          "name": "diagnostic",
+          "conclusion": "failure",
+          "steps": [
+            {
+              "number": 1,
+              "name": "Set up job",
+              "conclusion": "success"
+            },
+            {
+              "number": 2,
+              "name": "Run actions/checkout@v4",
+              "conclusion": "success"
+            },
+            {
+              "number": 3,
+              "name": "Run dtolnay/rust-toolchain@stable",
+              "conclusion": "success"
+            },
+            {
+              "number": 4,
+              "name": "Run Swatinem/rust-cache@49a0bdc70d2e1b713ca9e2869b211fcce03d3c1c",
+              "conclusion": "success"
+            },
+            {
+              "number": 5,
+              "name": "Build the single opt-in native diagnostic consumer",
+              "conclusion": "failure"
+            },
+            {
+              "number": 6,
+              "name": "Execute real fixed-sample Metal raster and ordered GPU resolve",
+              "conclusion": "skipped"
+            },
+            {
+              "number": 7,
+              "name": "Retain strict frozen source image and sample/depth verdict",
+              "conclusion": "skipped"
+            },
+            {
+              "number": 8,
+              "name": "Run actions/upload-artifact@v4",
+              "conclusion": "success"
+            },
+            {
+              "number": 15,
+              "name": "Post Run Swatinem/rust-cache@49a0bdc70d2e1b713ca9e2869b211fcce03d3c1c",
+              "conclusion": "success"
+            },
+            {
+              "number": 16,
+              "name": "Post Run actions/checkout@v4",
+              "conclusion": "success"
+            },
+            {
+              "number": 17,
+              "name": "Complete job",
+              "conclusion": "success"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "label": "801409f8",
+      "run_id": 38278045013,
+      "artifact_id": 11759723585,
+      "runtime_revision": "801409f8a7cd320f9e76712e7009a65d77e611be",
+      "artifact_sha256": "d78e32f8041973003bbdf81a57a0b3d48fed4916b048b2caa16fd2e8c9eac4d3",
+      "members": {
+        "build.log": {
+          "size": 89956,
+          "sha256": "b1358f17ba387c05e4b572cbd7b4ddcf10f08ee0c53036e8dfefafb77ea90df8"
+        },
+        "revision.txt": {
+          "size": 41,
+          "sha256": "69877c81d4b3f51480fd11b4c97cd5d95928252ec5d57991375e415550d7e58b"
+        },
+        "source.sha256": {
+          "size": 8348,
+          "sha256": "e8865788190ffd1584db1734d2e4d93208f5165f3099b8d30dac3ece0b27ac63"
+        }
+      },
+      "git_bindings": [
+        {
+          "path": "crates/ingetrazo-gui/examples/native_metal_section_resolve.rs",
+          "commit": "801409f8a7cd320f9e76712e7009a65d77e611be",
+          "sha256": "beae598d17be80ab2577176a50ce9cc0c4651e1bf2c65ff8f9ebf05701c6863f"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/annotation.rs",
+          "commit": "801409f8a7cd320f9e76712e7009a65d77e611be",
+          "sha256": "a77196b3cdc71fd72da1cbdee577ffe71c1d9c95c306892e32acb96f6ad4f015"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/cad2d.rs",
+          "commit": "801409f8a7cd320f9e76712e7009a65d77e611be",
+          "sha256": "c5b40bc760c97c5d4ecd9514f13fb7d0def9a867543f819c873f6261c3bbea36"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/cad_abi.rs",
+          "commit": "801409f8a7cd320f9e76712e7009a65d77e611be",
+          "sha256": "bdc8c4200289e8acadce9254dc483844d2a3b211b2f3f3ca288dde570adbfe7d"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/cad_callback_painter.rs",
+          "commit": "801409f8a7cd320f9e76712e7009a65d77e611be",
+          "sha256": "c59fcf75fecfa79cd5bad4c8e2d7d80b8e1687630e7b26ed868b6644143241e8"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/cad_compute_painter.rs",
+          "commit": "801409f8a7cd320f9e76712e7009a65d77e611be",
+          "sha256": "31432d2d59c6ee56a7866485b923a8800222b147e6c638167d7fe17de7d91882"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/compute_canvas.rs",
+          "commit": "801409f8a7cd320f9e76712e7009a65d77e611be",
+          "sha256": "bf08dfee2474f6b568190d475b6b292951837a2de81ba43860a1d87c9d043678"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/device.rs",
+          "commit": "801409f8a7cd320f9e76712e7009a65d77e611be",
+          "sha256": "2ae1e1094c27eb86ce405650ba9ded16e9b8858ed8c1e6af36c6e253032b31c3"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/egui_painter.rs",
+          "commit": "801409f8a7cd320f9e76712e7009a65d77e611be",
+          "sha256": "a2736af20a641b2437ba934e317a302409ef74075612ae2778e1cde7a9db4d1d"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/glyph_admission.rs",
+          "commit": "801409f8a7cd320f9e76712e7009a65d77e611be",
+          "sha256": "8e0538c550278f3d964d229f397af6dfed364f82cb821f65f8bbbc0222fef40b"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/lib.rs",
+          "commit": "801409f8a7cd320f9e76712e7009a65d77e611be",
+          "sha256": "374a9bd95c4b6830bd1033524812dc0452b52be4d8dfc71a87eee84de9106a65"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/native_input.rs",
+          "commit": "801409f8a7cd320f9e76712e7009a65d77e611be",
+          "sha256": "472b8637bda07a100f636825f2438f757947f31ee67aab5b2b23c1279e25f26d"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/paper_picture.rs",
+          "commit": "801409f8a7cd320f9e76712e7009a65d77e611be",
+          "sha256": "67fdf0fd44516b3ed0ed8aa9614c87b720515506cf4294e3569e6a9e765d0505"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/presentation.rs",
+          "commit": "801409f8a7cd320f9e76712e7009a65d77e611be",
+          "sha256": "9ed865b8b3be972043394b0f14d99631f6eff61b69339f7554e4a549a178d18f"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/shaders/annotation_draw.metal",
+          "commit": "801409f8a7cd320f9e76712e7009a65d77e611be",
+          "sha256": "38e01f5d7b570efa95d057b0a9d331d61d25a2274a06f31ed1bf12a2facf0d3d"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/shaders/annotation_visibility.metal",
+          "commit": "801409f8a7cd320f9e76712e7009a65d77e611be",
+          "sha256": "3635b99c9723daf0c9dab586dc06fd3548625522449dc16bd162afaa76ed256c"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/shaders/cad2d.metal",
+          "commit": "801409f8a7cd320f9e76712e7009a65d77e611be",
+          "sha256": "bd2ae060a4aad9226e8b8f32a3254669cde5f8805c71ab810143d82867d99882"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/shaders/cad2d_compose.metal",
+          "commit": "801409f8a7cd320f9e76712e7009a65d77e611be",
+          "sha256": "a8d85edac66aedef4dd490471c73f97b17cf5257cb978d1e80582cb2ea9a2246"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/shaders/cad2d_spans.metal",
+          "commit": "801409f8a7cd320f9e76712e7009a65d77e611be",
+          "sha256": "bbb9826c30b9da782aabb726a035676a7822e3b70adb992e7853d2655c5f36ea"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/shaders/compute_canvas.metal",
+          "commit": "801409f8a7cd320f9e76712e7009a65d77e611be",
+          "sha256": "c3affe7ad3506414be3874750e17d1d89e8696bd2a2415a46a38a7a22c29480d"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/shaders/contour.metal",
+          "commit": "801409f8a7cd320f9e76712e7009a65d77e611be",
+          "sha256": "58996f2bd0b9201a106c6e9cd9148783b40d0fabd256167796e608b9c7f0703a"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/shaders/paper_picture.metal",
+          "commit": "801409f8a7cd320f9e76712e7009a65d77e611be",
+          "sha256": "180e3a66a163610ec8e378f494d1813f066fd2595eddceb267a2d3788a8a0336"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/shaders/world.metal",
+          "commit": "801409f8a7cd320f9e76712e7009a65d77e611be",
+          "sha256": "dc92eb4450131a9b6305320d1d28eb854d39e0e5cd1be40523088a1be6090161"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/shaders/world_resolve.metal",
+          "commit": "801409f8a7cd320f9e76712e7009a65d77e611be",
+          "sha256": "21fdb48f284b825422eb04e65d0b45decf013b918e066b83625231c4a60286e8"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/span_plan.rs",
+          "commit": "801409f8a7cd320f9e76712e7009a65d77e611be",
+          "sha256": "3b1d4d0bb056a6ac84f22769a3720c92430d4aa937dbd0a49519216d78081b35"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/submission.rs",
+          "commit": "801409f8a7cd320f9e76712e7009a65d77e611be",
+          "sha256": "7d821df89fa61c9aa48a2f68e12a6889f73f229db7085da9d563b9067debf3a6"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/world.rs",
+          "commit": "801409f8a7cd320f9e76712e7009a65d77e611be",
+          "sha256": "a36d10f915097a6454b19de407a23a39add0efbe7032443ce106beaca7890f0d"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/world_admission.rs",
+          "commit": "801409f8a7cd320f9e76712e7009a65d77e611be",
+          "sha256": "ddb2823428f93f627a7eb1f34709391082caf11a05b2ffee0f9dd27a19eb13d7"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/world_background.rs",
+          "commit": "801409f8a7cd320f9e76712e7009a65d77e611be",
+          "sha256": "c59e48439f9e31153bf59a4871e7de82cd17c19b02bb7f40b664d4693f4bece8"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/world_billboard.rs",
+          "commit": "801409f8a7cd320f9e76712e7009a65d77e611be",
+          "sha256": "8954dc568622a958a53268304b9ccffc72ce28f16ff5570a28a8fe6e1768f3b1"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/world_contour.rs",
+          "commit": "801409f8a7cd320f9e76712e7009a65d77e611be",
+          "sha256": "0831c3ec0c67433c053bc7cc6cf08db1529417b53acfa0b3259424c936f71758"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/world_face_guard.rs",
+          "commit": "801409f8a7cd320f9e76712e7009a65d77e611be",
+          "sha256": "3018d8970adc7fbe33ff30c7e592cdaaa265e421cefba3882037f2e406864f2a"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/world_ghost.rs",
+          "commit": "801409f8a7cd320f9e76712e7009a65d77e611be",
+          "sha256": "4671d7c0ba9f8ee42c09c459ef18d2b9d084435801e5f1d03e6502603ee3ff5c"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/world_placement.rs",
+          "commit": "801409f8a7cd320f9e76712e7009a65d77e611be",
+          "sha256": "6394c6106d878ceed67588a824ff413194e8c6feb5efa2e7a17e0e95ae5fa8f8"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/world_policy.rs",
+          "commit": "801409f8a7cd320f9e76712e7009a65d77e611be",
+          "sha256": "c7314df61948a2d1847f537c155aa24a6daaef30936f961dcab1c1a5e90fc446"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/world_preview.rs",
+          "commit": "801409f8a7cd320f9e76712e7009a65d77e611be",
+          "sha256": "907b10859287e453edeeb29a3d5dec0ab340386a0f8968bd3345d10c1cc8e0c9"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/world_profile.rs",
+          "commit": "801409f8a7cd320f9e76712e7009a65d77e611be",
+          "sha256": "93888991c1154bb290f5a40d0ce556abc5511352b4d92d57068ba1255093e190"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/world_resolve.rs",
+          "commit": "801409f8a7cd320f9e76712e7009a65d77e611be",
+          "sha256": "35fc9a72f1edbadc17707e0da680769b5e73bf28ee8b7f35835c791e8721bba9"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/world_scene.rs",
+          "commit": "801409f8a7cd320f9e76712e7009a65d77e611be",
+          "sha256": "4779144a6456b64bad5a6112fab215e7fccdea339bccc9926366b1f680a354b1"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/world_section.rs",
+          "commit": "801409f8a7cd320f9e76712e7009a65d77e611be",
+          "sha256": "e1940d43f947b3d45e759254ec52814654e46025c98c3c0774bb777b3c01e0dc"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/world_surface.rs",
+          "commit": "801409f8a7cd320f9e76712e7009a65d77e611be",
+          "sha256": "977bd9a4b4c5433db7252c0f62ed6fa2a3806157dd76843cf7276516d18daf5b"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/world_texture.rs",
+          "commit": "801409f8a7cd320f9e76712e7009a65d77e611be",
+          "sha256": "4c56c324e6d1eb4ce617deab28e1faad675a870876dc3d09ad6f3b9687b1e3e9"
+        },
+        {
+          "path": "docs/audits/intel-metal-reflected-samples/README.md",
+          "commit": "801409f8a7cd320f9e76712e7009a65d77e611be",
+          "sha256": "2d3882a3b3fcc1b0c62ef15e6846ee147ca7d92b5b35040e61c722aa26365401"
+        },
+        {
+          "path": "docs/audits/intel-metal-reflected-samples/draft-contract.json",
+          "commit": "801409f8a7cd320f9e76712e7009a65d77e611be",
+          "sha256": "124b0629cbc3fb31b489d09464e4da3d956322f64ab5d96f016e5fe6f123b1fb"
+        },
+        {
+          "path": "docs/audits/intel-metal-reflected-samples/metadata-preflight.json",
+          "commit": "801409f8a7cd320f9e76712e7009a65d77e611be",
+          "sha256": "de93046534b6a5da192c54a5760e4754bc053698c5b9bd65b428fc8055a7d3a6"
+        },
+        {
+          "path": "docs/audits/intel-metal-reflected-samples/metadata-preflight.zip",
+          "commit": "801409f8a7cd320f9e76712e7009a65d77e611be",
+          "sha256": "a3a6828aab75dab42a8003e582152955c9569d774c5ec1a418afa70820ce6ab1"
+        },
+        {
+          "path": "docs/audits/intel-metal-reflected-samples/result-e2b0f213/README.md",
+          "commit": "801409f8a7cd320f9e76712e7009a65d77e611be",
+          "sha256": "499d605fb48a185e22c49b28e4e132c547c6ff517bc585fc5312cc9f878e819a"
+        },
+        {
+          "path": "docs/audits/intel-metal-reflected-samples/result-e2b0f213/artifacts.json",
+          "commit": "801409f8a7cd320f9e76712e7009a65d77e611be",
+          "sha256": "d3a24dc913191f45f7ab34a330ab441e1ef9013ca52b05c548a9d5e190a62d5f"
+        },
+        {
+          "path": "docs/audits/intel-metal-reflected-samples/result-e2b0f213/diagnosis.json",
+          "commit": "801409f8a7cd320f9e76712e7009a65d77e611be",
+          "sha256": "2e8b10f6faa9d69506f66d88fbb23211db91eda35f341374df9c4e41b0f72c12"
+        },
+        {
+          "path": "docs/audits/intel-metal-reflected-samples/result-e2b0f213/jobs.json",
+          "commit": "801409f8a7cd320f9e76712e7009a65d77e611be",
+          "sha256": "8d6c46b2627f85df5f44e92003af59dd3e7317fff4146bf460d5693ef706a132"
+        },
+        {
+          "path": "docs/audits/intel-metal-reflected-samples/result-e2b0f213/manifest.json",
+          "commit": "801409f8a7cd320f9e76712e7009a65d77e611be",
+          "sha256": "87b907eef5376b5e1aad579ba66d2b28ccd60eecd0c34d5cdc989d1b71811d32"
+        },
+        {
+          "path": "docs/audits/intel-metal-reflected-samples/result-e2b0f213/records.zip",
+          "commit": "801409f8a7cd320f9e76712e7009a65d77e611be",
+          "sha256": "1fe99f9c2f29a5276c088f309132c65bb43330ccea14c54d7dcb1f74f3b2c837"
+        },
+        {
+          "path": "docs/audits/intel-metal-reflected-samples/result-e2b0f213/run.json",
+          "commit": "801409f8a7cd320f9e76712e7009a65d77e611be",
+          "sha256": "1fb18b3cee6f0266e79c948dee00940de32da7bf2b901e877f41cc1ec0346c0f"
+        },
+        {
+          "path": "docs/audits/intel-metal-reflected-samples/source-bindings.json",
+          "commit": "801409f8a7cd320f9e76712e7009a65d77e611be",
+          "sha256": "5b136a93c8547ec561df3fdf2b5c5b3215e709407ea8258e7874daa941ab6836"
+        },
+        {
+          "path": "docs/audits/section-iso-samples/source.zip",
+          "commit": "801409f8a7cd320f9e76712e7009a65d77e611be",
+          "sha256": "17547dfb9a567858230325b83795dd534f0175c463300174a053c7e687e02499"
+        },
+        {
+          "path": "docs/audits/section-original-gl/README.md",
+          "commit": "801409f8a7cd320f9e76712e7009a65d77e611be",
+          "sha256": "70c390c4bd7f9855d7c29fbe7102c79814bc05beed66f0fb17e33a802bf1347d"
+        },
+        {
+          "path": "docs/audits/section-original-gl/closed-front.png",
+          "commit": "801409f8a7cd320f9e76712e7009a65d77e611be",
+          "sha256": "5f65284cff129561d3ab57bedef1cb8f7bf0af986babba03b3025b32316db30c"
+        },
+        {
+          "path": "docs/audits/section-original-gl/closed-iso.png",
+          "commit": "801409f8a7cd320f9e76712e7009a65d77e611be",
+          "sha256": "fcdee03b04a63553a9f1a5b559236e23e2b2daccfa4f7c6b4c6732804fc73a43"
+        },
+        {
+          "path": "docs/audits/section-original-gl/closed.png",
+          "commit": "801409f8a7cd320f9e76712e7009a65d77e611be",
+          "sha256": "e7f530222073ba086a69553f51a5411f57443f75fd2a0bef99173c6b5d2556b2"
+        },
+        {
+          "path": "docs/audits/section-original-gl/coplanar-backface.png",
+          "commit": "801409f8a7cd320f9e76712e7009a65d77e611be",
+          "sha256": "59bbcb49e97a48fa31094a94f5c75a59ea70bb5b14ffd3d974fdbec0f8361cda"
+        },
+        {
+          "path": "docs/audits/section-original-gl/duplicate.png",
+          "commit": "801409f8a7cd320f9e76712e7009a65d77e611be",
+          "sha256": "e7f530222073ba086a69553f51a5411f57443f75fd2a0bef99173c6b5d2556b2"
+        },
+        {
+          "path": "docs/audits/section-original-gl/original-gl-results.json",
+          "commit": "801409f8a7cd320f9e76712e7009a65d77e611be",
+          "sha256": "9426c71edec4733d097f858455b5110259cba30249398a05784b828107d3d5f7"
+        },
+        {
+          "path": "docs/audits/section-original-gl/shared-slab-iso.png",
+          "commit": "801409f8a7cd320f9e76712e7009a65d77e611be",
+          "sha256": "11c42541978707faba5c92a700263e566251d7a9ea6842749b53519758aa9715"
+        },
+        {
+          "path": "docs/audits/section-original-gl/shared-slab-reversed-iso.png",
+          "commit": "801409f8a7cd320f9e76712e7009a65d77e611be",
+          "sha256": "fcdee03b04a63553a9f1a5b559236e23e2b2daccfa4f7c6b4c6732804fc73a43"
+        },
+        {
+          "path": "docs/audits/section-original-gl/shared-slab-reversed.png",
+          "commit": "801409f8a7cd320f9e76712e7009a65d77e611be",
+          "sha256": "e7f530222073ba086a69553f51a5411f57443f75fd2a0bef99173c6b5d2556b2"
+        },
+        {
+          "path": "docs/audits/section-original-gl/shared-slab.png",
+          "commit": "801409f8a7cd320f9e76712e7009a65d77e611be",
+          "sha256": "4c015223933c68e795eca43e078db5c62fe5b7075cd0b8486d88cf2ed7d5b587"
+        },
+        {
+          "path": "docs/audits/section-original-gl/transparent.png",
+          "commit": "801409f8a7cd320f9e76712e7009a65d77e611be",
+          "sha256": "af874c1eb986ea19be4d3a8358b25294db39f6146414449b167a8521f169c468"
+        },
+        {
+          "path": "docs/audits/section-sample-observation/records.zip",
+          "commit": "801409f8a7cd320f9e76712e7009a65d77e611be",
+          "sha256": "0d97d34af31736f99215b4f710fe05ae87d0f7a8da4e78cb8f43b682a02af7c1"
+        },
+        {
+          "path": "docs/audits/source-gl-depth-resolve/resolve.json",
+          "commit": "801409f8a7cd320f9e76712e7009a65d77e611be",
+          "sha256": "be61b6d42bea9e6504a37161741ebe43bfb2dcfcc16fb0fc4f40a6c7844a01da"
+        },
+        {
+          "path": "scripts/check-metal-reflected-samples.py",
+          "commit": "801409f8a7cd320f9e76712e7009a65d77e611be",
+          "sha256": "b1e8be0975ade1aa477b92e7b7018470a95633e23e38d83260c7153489d03b1e"
+        },
+        {
+          "path": "scripts/check-metal-section-fill.py",
+          "commit": "801409f8a7cd320f9e76712e7009a65d77e611be",
+          "sha256": "b05b7d1a3420149c4c5fd380b9e739175399ccc7b496becdb95dccb28f69a12c"
+        },
+        {
+          "path": "scripts/check-metal-section-resolve.py",
+          "commit": "801409f8a7cd320f9e76712e7009a65d77e611be",
+          "sha256": "c1336f020922af4848bf7e7fe85d3af49f02ac9c869dba6823afb9d0e6a47def"
+        },
+        {
+          "path": ".github/workflows/metal-reflected-samples-diagnostic.yml",
+          "commit": "801409f8a7cd320f9e76712e7009a65d77e611be",
+          "sha256": "d604ae6182829520dde98ea1fedc995b58842ffcafdd5bc5e7a6507eb4d59462"
+        }
+      ],
+      "binary_sha256": null,
+      "native_error": null,
+      "disposition": "consumer_compile_failure",
+      "jobs": [
+        {
+          "id": 114908236903,
+          "name": "diagnostic",
+          "conclusion": "failure",
+          "steps": [
+            {
+              "number": 1,
+              "name": "Set up job",
+              "conclusion": "success"
+            },
+            {
+              "number": 2,
+              "name": "Run actions/checkout@v4",
+              "conclusion": "success"
+            },
+            {
+              "number": 3,
+              "name": "Run dtolnay/rust-toolchain@stable",
+              "conclusion": "success"
+            },
+            {
+              "number": 4,
+              "name": "Run Swatinem/rust-cache@49a0bdc70d2e1b713ca9e2869b211fcce03d3c1c",
+              "conclusion": "success"
+            },
+            {
+              "number": 5,
+              "name": "Build the single opt-in native diagnostic consumer",
+              "conclusion": "failure"
+            },
+            {
+              "number": 6,
+              "name": "Execute real fixed-sample Metal raster and ordered GPU resolve",
+              "conclusion": "skipped"
+            },
+            {
+              "number": 7,
+              "name": "Retain strict frozen source image and sample/depth verdict",
+              "conclusion": "skipped"
+            },
+            {
+              "number": 8,
+              "name": "Run actions/upload-artifact@v4",
+              "conclusion": "success"
+            },
+            {
+              "number": 15,
+              "name": "Post Run Swatinem/rust-cache@49a0bdc70d2e1b713ca9e2869b211fcce03d3c1c",
+              "conclusion": "success"
+            },
+            {
+              "number": 16,
+              "name": "Post Run actions/checkout@v4",
+              "conclusion": "success"
+            },
+            {
+              "number": 17,
+              "name": "Complete job",
+              "conclusion": "success"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "label": "2b956161",
+      "run_id": 38280805920,
+      "artifact_id": 11761162831,
+      "runtime_revision": "2b95616120b24dc7dbc9639ed334be21b1a952d8",
+      "artifact_sha256": "f880a199560e637f1a978a13ef201b0ebe4751531eb1328602aa0b924f856ca8",
+      "members": {
+        "binary.sha256": {
+          "size": 117,
+          "sha256": "8d432172ad7b9511a3ec7aee41a610153d869174bdc3148f62ece6f65b7d58b8"
+        },
+        "build.log": {
+          "size": 88157,
+          "sha256": "c0a10d8997d40f296e230d51c4d78be4f2e4954c065243a973d382f558c8ff92"
+        },
+        "native/closed.rgba": {
+          "size": 1920000,
+          "sha256": "6a3c34c071c82b9f73e39a633345f98a631a1430779b291fea61b51f83c7b1ea"
+        },
+        "native.log": {
+          "size": 58,
+          "sha256": "6e8322dafaafd2050179b330d1d1f33384dcb0aeef7fe5b6c75d3f6d804975e3"
+        },
+        "revision.txt": {
+          "size": 41,
+          "sha256": "a71412ae20d1f0e1d1f57dfed763eed2f9813b672ab9b58210880b1b7efa7b08"
+        },
+        "source.sha256": {
+          "size": 8786,
+          "sha256": "40c347131561c135734fdb5003b38c57d8b0471a082f3ac6f99abde65194ce26"
+        }
+      },
+      "git_bindings": [
+        {
+          "path": "crates/ingetrazo-gui/examples/native_metal_section_resolve.rs",
+          "commit": "2b95616120b24dc7dbc9639ed334be21b1a952d8",
+          "sha256": "5aa6c6b8c88593224b2e23d0180cf517a0a34b91dde7f75b49d38accebf5a593"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/annotation.rs",
+          "commit": "2b95616120b24dc7dbc9639ed334be21b1a952d8",
+          "sha256": "a77196b3cdc71fd72da1cbdee577ffe71c1d9c95c306892e32acb96f6ad4f015"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/cad2d.rs",
+          "commit": "2b95616120b24dc7dbc9639ed334be21b1a952d8",
+          "sha256": "c5b40bc760c97c5d4ecd9514f13fb7d0def9a867543f819c873f6261c3bbea36"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/cad_abi.rs",
+          "commit": "2b95616120b24dc7dbc9639ed334be21b1a952d8",
+          "sha256": "bdc8c4200289e8acadce9254dc483844d2a3b211b2f3f3ca288dde570adbfe7d"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/cad_callback_painter.rs",
+          "commit": "2b95616120b24dc7dbc9639ed334be21b1a952d8",
+          "sha256": "c59fcf75fecfa79cd5bad4c8e2d7d80b8e1687630e7b26ed868b6644143241e8"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/cad_compute_painter.rs",
+          "commit": "2b95616120b24dc7dbc9639ed334be21b1a952d8",
+          "sha256": "31432d2d59c6ee56a7866485b923a8800222b147e6c638167d7fe17de7d91882"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/compute_canvas.rs",
+          "commit": "2b95616120b24dc7dbc9639ed334be21b1a952d8",
+          "sha256": "bf08dfee2474f6b568190d475b6b292951837a2de81ba43860a1d87c9d043678"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/device.rs",
+          "commit": "2b95616120b24dc7dbc9639ed334be21b1a952d8",
+          "sha256": "2ae1e1094c27eb86ce405650ba9ded16e9b8858ed8c1e6af36c6e253032b31c3"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/egui_painter.rs",
+          "commit": "2b95616120b24dc7dbc9639ed334be21b1a952d8",
+          "sha256": "a2736af20a641b2437ba934e317a302409ef74075612ae2778e1cde7a9db4d1d"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/glyph_admission.rs",
+          "commit": "2b95616120b24dc7dbc9639ed334be21b1a952d8",
+          "sha256": "8e0538c550278f3d964d229f397af6dfed364f82cb821f65f8bbbc0222fef40b"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/lib.rs",
+          "commit": "2b95616120b24dc7dbc9639ed334be21b1a952d8",
+          "sha256": "5ca8a5c6fd59a4699c9d6e974f226e8ce0b06fa3d77f3f6d68d6a0be14148d1a"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/native_input.rs",
+          "commit": "2b95616120b24dc7dbc9639ed334be21b1a952d8",
+          "sha256": "472b8637bda07a100f636825f2438f757947f31ee67aab5b2b23c1279e25f26d"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/paper_picture.rs",
+          "commit": "2b95616120b24dc7dbc9639ed334be21b1a952d8",
+          "sha256": "67fdf0fd44516b3ed0ed8aa9614c87b720515506cf4294e3569e6a9e765d0505"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/presentation.rs",
+          "commit": "2b95616120b24dc7dbc9639ed334be21b1a952d8",
+          "sha256": "9ed865b8b3be972043394b0f14d99631f6eff61b69339f7554e4a549a178d18f"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/shaders/annotation_draw.metal",
+          "commit": "2b95616120b24dc7dbc9639ed334be21b1a952d8",
+          "sha256": "38e01f5d7b570efa95d057b0a9d331d61d25a2274a06f31ed1bf12a2facf0d3d"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/shaders/annotation_visibility.metal",
+          "commit": "2b95616120b24dc7dbc9639ed334be21b1a952d8",
+          "sha256": "3635b99c9723daf0c9dab586dc06fd3548625522449dc16bd162afaa76ed256c"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/shaders/cad2d.metal",
+          "commit": "2b95616120b24dc7dbc9639ed334be21b1a952d8",
+          "sha256": "bd2ae060a4aad9226e8b8f32a3254669cde5f8805c71ab810143d82867d99882"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/shaders/cad2d_compose.metal",
+          "commit": "2b95616120b24dc7dbc9639ed334be21b1a952d8",
+          "sha256": "a8d85edac66aedef4dd490471c73f97b17cf5257cb978d1e80582cb2ea9a2246"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/shaders/cad2d_spans.metal",
+          "commit": "2b95616120b24dc7dbc9639ed334be21b1a952d8",
+          "sha256": "bbb9826c30b9da782aabb726a035676a7822e3b70adb992e7853d2655c5f36ea"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/shaders/compute_canvas.metal",
+          "commit": "2b95616120b24dc7dbc9639ed334be21b1a952d8",
+          "sha256": "c3affe7ad3506414be3874750e17d1d89e8696bd2a2415a46a38a7a22c29480d"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/shaders/contour.metal",
+          "commit": "2b95616120b24dc7dbc9639ed334be21b1a952d8",
+          "sha256": "58996f2bd0b9201a106c6e9cd9148783b40d0fabd256167796e608b9c7f0703a"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/shaders/paper_picture.metal",
+          "commit": "2b95616120b24dc7dbc9639ed334be21b1a952d8",
+          "sha256": "180e3a66a163610ec8e378f494d1813f066fd2595eddceb267a2d3788a8a0336"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/shaders/world.metal",
+          "commit": "2b95616120b24dc7dbc9639ed334be21b1a952d8",
+          "sha256": "dc92eb4450131a9b6305320d1d28eb854d39e0e5cd1be40523088a1be6090161"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/shaders/world_resolve.metal",
+          "commit": "2b95616120b24dc7dbc9639ed334be21b1a952d8",
+          "sha256": "21fdb48f284b825422eb04e65d0b45decf013b918e066b83625231c4a60286e8"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/span_plan.rs",
+          "commit": "2b95616120b24dc7dbc9639ed334be21b1a952d8",
+          "sha256": "3b1d4d0bb056a6ac84f22769a3720c92430d4aa937dbd0a49519216d78081b35"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/submission.rs",
+          "commit": "2b95616120b24dc7dbc9639ed334be21b1a952d8",
+          "sha256": "7d821df89fa61c9aa48a2f68e12a6889f73f229db7085da9d563b9067debf3a6"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/world.rs",
+          "commit": "2b95616120b24dc7dbc9639ed334be21b1a952d8",
+          "sha256": "a36d10f915097a6454b19de407a23a39add0efbe7032443ce106beaca7890f0d"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/world_admission.rs",
+          "commit": "2b95616120b24dc7dbc9639ed334be21b1a952d8",
+          "sha256": "ddb2823428f93f627a7eb1f34709391082caf11a05b2ffee0f9dd27a19eb13d7"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/world_background.rs",
+          "commit": "2b95616120b24dc7dbc9639ed334be21b1a952d8",
+          "sha256": "c59e48439f9e31153bf59a4871e7de82cd17c19b02bb7f40b664d4693f4bece8"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/world_billboard.rs",
+          "commit": "2b95616120b24dc7dbc9639ed334be21b1a952d8",
+          "sha256": "8954dc568622a958a53268304b9ccffc72ce28f16ff5570a28a8fe6e1768f3b1"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/world_contour.rs",
+          "commit": "2b95616120b24dc7dbc9639ed334be21b1a952d8",
+          "sha256": "0831c3ec0c67433c053bc7cc6cf08db1529417b53acfa0b3259424c936f71758"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/world_face_guard.rs",
+          "commit": "2b95616120b24dc7dbc9639ed334be21b1a952d8",
+          "sha256": "3018d8970adc7fbe33ff30c7e592cdaaa265e421cefba3882037f2e406864f2a"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/world_ghost.rs",
+          "commit": "2b95616120b24dc7dbc9639ed334be21b1a952d8",
+          "sha256": "4671d7c0ba9f8ee42c09c459ef18d2b9d084435801e5f1d03e6502603ee3ff5c"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/world_placement.rs",
+          "commit": "2b95616120b24dc7dbc9639ed334be21b1a952d8",
+          "sha256": "6394c6106d878ceed67588a824ff413194e8c6feb5efa2e7a17e0e95ae5fa8f8"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/world_policy.rs",
+          "commit": "2b95616120b24dc7dbc9639ed334be21b1a952d8",
+          "sha256": "c7314df61948a2d1847f537c155aa24a6daaef30936f961dcab1c1a5e90fc446"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/world_preview.rs",
+          "commit": "2b95616120b24dc7dbc9639ed334be21b1a952d8",
+          "sha256": "907b10859287e453edeeb29a3d5dec0ab340386a0f8968bd3345d10c1cc8e0c9"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/world_profile.rs",
+          "commit": "2b95616120b24dc7dbc9639ed334be21b1a952d8",
+          "sha256": "93888991c1154bb290f5a40d0ce556abc5511352b4d92d57068ba1255093e190"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/world_resolve.rs",
+          "commit": "2b95616120b24dc7dbc9639ed334be21b1a952d8",
+          "sha256": "35fc9a72f1edbadc17707e0da680769b5e73bf28ee8b7f35835c791e8721bba9"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/world_scene.rs",
+          "commit": "2b95616120b24dc7dbc9639ed334be21b1a952d8",
+          "sha256": "4779144a6456b64bad5a6112fab215e7fccdea339bccc9926366b1f680a354b1"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/world_section.rs",
+          "commit": "2b95616120b24dc7dbc9639ed334be21b1a952d8",
+          "sha256": "e1940d43f947b3d45e759254ec52814654e46025c98c3c0774bb777b3c01e0dc"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/world_surface.rs",
+          "commit": "2b95616120b24dc7dbc9639ed334be21b1a952d8",
+          "sha256": "977bd9a4b4c5433db7252c0f62ed6fa2a3806157dd76843cf7276516d18daf5b"
+        },
+        {
+          "path": "crates/ingetrazo-metal/src/world_texture.rs",
+          "commit": "2b95616120b24dc7dbc9639ed334be21b1a952d8",
+          "sha256": "4c56c324e6d1eb4ce617deab28e1faad675a870876dc3d09ad6f3b9687b1e3e9"
+        },
+        {
+          "path": "docs/audits/intel-metal-reflected-samples/README.md",
+          "commit": "2b95616120b24dc7dbc9639ed334be21b1a952d8",
+          "sha256": "2d3882a3b3fcc1b0c62ef15e6846ee147ca7d92b5b35040e61c722aa26365401"
+        },
+        {
+          "path": "docs/audits/intel-metal-reflected-samples/device-protocol-preflight/README.md",
+          "commit": "2b95616120b24dc7dbc9639ed334be21b1a952d8",
+          "sha256": "1506c4da4c8212ba50798d6040d63f7bb807a618db88a084ed76de09911ed57d"
+        },
+        {
+          "path": "docs/audits/intel-metal-reflected-samples/device-protocol-preflight/manifest.json",
+          "commit": "2b95616120b24dc7dbc9639ed334be21b1a952d8",
+          "sha256": "9779c0717412295dda1b675bc9343003dc1670bbed66e21f2952bc707f3efaf1"
+        },
+        {
+          "path": "docs/audits/intel-metal-reflected-samples/device-protocol-preflight/records.zip",
+          "commit": "2b95616120b24dc7dbc9639ed334be21b1a952d8",
+          "sha256": "3e45b164ccd0338fab00cdbbaf7faf95e86a9f3fd85a3fc2262839b4c26965e2"
+        },
+        {
+          "path": "docs/audits/intel-metal-reflected-samples/draft-contract.json",
+          "commit": "2b95616120b24dc7dbc9639ed334be21b1a952d8",
+          "sha256": "124b0629cbc3fb31b489d09464e4da3d956322f64ab5d96f016e5fe6f123b1fb"
+        },
+        {
+          "path": "docs/audits/intel-metal-reflected-samples/metadata-preflight.json",
+          "commit": "2b95616120b24dc7dbc9639ed334be21b1a952d8",
+          "sha256": "de93046534b6a5da192c54a5760e4754bc053698c5b9bd65b428fc8055a7d3a6"
+        },
+        {
+          "path": "docs/audits/intel-metal-reflected-samples/metadata-preflight.zip",
+          "commit": "2b95616120b24dc7dbc9639ed334be21b1a952d8",
+          "sha256": "a3a6828aab75dab42a8003e582152955c9569d774c5ec1a418afa70820ce6ab1"
+        },
+        {
+          "path": "docs/audits/intel-metal-reflected-samples/result-e2b0f213/README.md",
+          "commit": "2b95616120b24dc7dbc9639ed334be21b1a952d8",
+          "sha256": "499d605fb48a185e22c49b28e4e132c547c6ff517bc585fc5312cc9f878e819a"
+        },
+        {
+          "path": "docs/audits/intel-metal-reflected-samples/result-e2b0f213/artifacts.json",
+          "commit": "2b95616120b24dc7dbc9639ed334be21b1a952d8",
+          "sha256": "d3a24dc913191f45f7ab34a330ab441e1ef9013ca52b05c548a9d5e190a62d5f"
+        },
+        {
+          "path": "docs/audits/intel-metal-reflected-samples/result-e2b0f213/diagnosis.json",
+          "commit": "2b95616120b24dc7dbc9639ed334be21b1a952d8",
+          "sha256": "2e8b10f6faa9d69506f66d88fbb23211db91eda35f341374df9c4e41b0f72c12"
+        },
+        {
+          "path": "docs/audits/intel-metal-reflected-samples/result-e2b0f213/jobs.json",
+          "commit": "2b95616120b24dc7dbc9639ed334be21b1a952d8",
+          "sha256": "8d6c46b2627f85df5f44e92003af59dd3e7317fff4146bf460d5693ef706a132"
+        },
+        {
+          "path": "docs/audits/intel-metal-reflected-samples/result-e2b0f213/manifest.json",
+          "commit": "2b95616120b24dc7dbc9639ed334be21b1a952d8",
+          "sha256": "87b907eef5376b5e1aad579ba66d2b28ccd60eecd0c34d5cdc989d1b71811d32"
+        },
+        {
+          "path": "docs/audits/intel-metal-reflected-samples/result-e2b0f213/records.zip",
+          "commit": "2b95616120b24dc7dbc9639ed334be21b1a952d8",
+          "sha256": "1fe99f9c2f29a5276c088f309132c65bb43330ccea14c54d7dcb1f74f3b2c837"
+        },
+        {
+          "path": "docs/audits/intel-metal-reflected-samples/result-e2b0f213/run.json",
+          "commit": "2b95616120b24dc7dbc9639ed334be21b1a952d8",
+          "sha256": "1fb18b3cee6f0266e79c948dee00940de32da7bf2b901e877f41cc1ec0346c0f"
+        },
+        {
+          "path": "docs/audits/intel-metal-reflected-samples/source-bindings.json",
+          "commit": "2b95616120b24dc7dbc9639ed334be21b1a952d8",
+          "sha256": "5b136a93c8547ec561df3fdf2b5c5b3215e709407ea8258e7874daa941ab6836"
+        },
+        {
+          "path": "docs/audits/section-iso-samples/source.zip",
+          "commit": "2b95616120b24dc7dbc9639ed334be21b1a952d8",
+          "sha256": "17547dfb9a567858230325b83795dd534f0175c463300174a053c7e687e02499"
+        },
+        {
+          "path": "docs/audits/section-original-gl/README.md",
+          "commit": "2b95616120b24dc7dbc9639ed334be21b1a952d8",
+          "sha256": "70c390c4bd7f9855d7c29fbe7102c79814bc05beed66f0fb17e33a802bf1347d"
+        },
+        {
+          "path": "docs/audits/section-original-gl/closed-front.png",
+          "commit": "2b95616120b24dc7dbc9639ed334be21b1a952d8",
+          "sha256": "5f65284cff129561d3ab57bedef1cb8f7bf0af986babba03b3025b32316db30c"
+        },
+        {
+          "path": "docs/audits/section-original-gl/closed-iso.png",
+          "commit": "2b95616120b24dc7dbc9639ed334be21b1a952d8",
+          "sha256": "fcdee03b04a63553a9f1a5b559236e23e2b2daccfa4f7c6b4c6732804fc73a43"
+        },
+        {
+          "path": "docs/audits/section-original-gl/closed.png",
+          "commit": "2b95616120b24dc7dbc9639ed334be21b1a952d8",
+          "sha256": "e7f530222073ba086a69553f51a5411f57443f75fd2a0bef99173c6b5d2556b2"
+        },
+        {
+          "path": "docs/audits/section-original-gl/coplanar-backface.png",
+          "commit": "2b95616120b24dc7dbc9639ed334be21b1a952d8",
+          "sha256": "59bbcb49e97a48fa31094a94f5c75a59ea70bb5b14ffd3d974fdbec0f8361cda"
+        },
+        {
+          "path": "docs/audits/section-original-gl/duplicate.png",
+          "commit": "2b95616120b24dc7dbc9639ed334be21b1a952d8",
+          "sha256": "e7f530222073ba086a69553f51a5411f57443f75fd2a0bef99173c6b5d2556b2"
+        },
+        {
+          "path": "docs/audits/section-original-gl/original-gl-results.json",
+          "commit": "2b95616120b24dc7dbc9639ed334be21b1a952d8",
+          "sha256": "9426c71edec4733d097f858455b5110259cba30249398a05784b828107d3d5f7"
+        },
+        {
+          "path": "docs/audits/section-original-gl/shared-slab-iso.png",
+          "commit": "2b95616120b24dc7dbc9639ed334be21b1a952d8",
+          "sha256": "11c42541978707faba5c92a700263e566251d7a9ea6842749b53519758aa9715"
+        },
+        {
+          "path": "docs/audits/section-original-gl/shared-slab-reversed-iso.png",
+          "commit": "2b95616120b24dc7dbc9639ed334be21b1a952d8",
+          "sha256": "fcdee03b04a63553a9f1a5b559236e23e2b2daccfa4f7c6b4c6732804fc73a43"
+        },
+        {
+          "path": "docs/audits/section-original-gl/shared-slab-reversed.png",
+          "commit": "2b95616120b24dc7dbc9639ed334be21b1a952d8",
+          "sha256": "e7f530222073ba086a69553f51a5411f57443f75fd2a0bef99173c6b5d2556b2"
+        },
+        {
+          "path": "docs/audits/section-original-gl/shared-slab.png",
+          "commit": "2b95616120b24dc7dbc9639ed334be21b1a952d8",
+          "sha256": "4c015223933c68e795eca43e078db5c62fe5b7075cd0b8486d88cf2ed7d5b587"
+        },
+        {
+          "path": "docs/audits/section-original-gl/transparent.png",
+          "commit": "2b95616120b24dc7dbc9639ed334be21b1a952d8",
+          "sha256": "af874c1eb986ea19be4d3a8358b25294db39f6146414449b167a8521f169c468"
+        },
+        {
+          "path": "docs/audits/section-sample-observation/records.zip",
+          "commit": "2b95616120b24dc7dbc9639ed334be21b1a952d8",
+          "sha256": "0d97d34af31736f99215b4f710fe05ae87d0f7a8da4e78cb8f43b682a02af7c1"
+        },
+        {
+          "path": "docs/audits/source-gl-depth-resolve/resolve.json",
+          "commit": "2b95616120b24dc7dbc9639ed334be21b1a952d8",
+          "sha256": "be61b6d42bea9e6504a37161741ebe43bfb2dcfcc16fb0fc4f40a6c7844a01da"
+        },
+        {
+          "path": "scripts/check-metal-reflected-samples.py",
+          "commit": "2b95616120b24dc7dbc9639ed334be21b1a952d8",
+          "sha256": "b1e8be0975ade1aa477b92e7b7018470a95633e23e38d83260c7153489d03b1e"
+        },
+        {
+          "path": "scripts/check-metal-section-fill.py",
+          "commit": "2b95616120b24dc7dbc9639ed334be21b1a952d8",
+          "sha256": "b05b7d1a3420149c4c5fd380b9e739175399ccc7b496becdb95dccb28f69a12c"
+        },
+        {
+          "path": "scripts/check-metal-section-resolve.py",
+          "commit": "2b95616120b24dc7dbc9639ed334be21b1a952d8",
+          "sha256": "c1336f020922af4848bf7e7fe85d3af49f02ac9c869dba6823afb9d0e6a47def"
+        },
+        {
+          "path": ".github/workflows/metal-reflected-samples-diagnostic.yml",
+          "commit": "2b95616120b24dc7dbc9639ed334be21b1a952d8",
+          "sha256": "d604ae6182829520dde98ea1fedc995b58842ffcafdd5bc5e7a6507eb4d59462"
+        }
+      ],
+      "binary_sha256": "64582f4fec6c64acfea4cdfce86c9977c06622835163835b7f5281da95992a3b",
+      "native_error": "Native Metal device does not support Depth24UnormStencil8",
+      "disposition": "explicit_device_capability_refusal",
+      "jobs": [
+        {
+          "id": 114917343008,
+          "name": "diagnostic",
+          "conclusion": "failure",
+          "steps": [
+            {
+              "number": 1,
+              "name": "Set up job",
+              "conclusion": "success"
+            },
+            {
+              "number": 2,
+              "name": "Run actions/checkout@v4",
+              "conclusion": "success"
+            },
+            {
+              "number": 3,
+              "name": "Run dtolnay/rust-toolchain@stable",
+              "conclusion": "success"
+            },
+            {
+              "number": 4,
+              "name": "Run Swatinem/rust-cache@49a0bdc70d2e1b713ca9e2869b211fcce03d3c1c",
+              "conclusion": "success"
+            },
+            {
+              "number": 5,
+              "name": "Build the single opt-in native diagnostic consumer",
+              "conclusion": "success"
+            },
+            {
+              "number": 6,
+              "name": "Execute real fixed-sample Metal raster and ordered GPU resolve",
+              "conclusion": "failure"
+            },
+            {
+              "number": 7,
+              "name": "Retain strict frozen source image and sample/depth verdict",
+              "conclusion": "skipped"
+            },
+            {
+              "number": 8,
+              "name": "Run actions/upload-artifact@v4",
+              "conclusion": "success"
+            },
+            {
+              "number": 15,
+              "name": "Post Run Swatinem/rust-cache@49a0bdc70d2e1b713ca9e2869b211fcce03d3c1c",
+              "conclusion": "success"
+            },
+            {
+              "number": 16,
+              "name": "Post Run actions/checkout@v4",
+              "conclusion": "success"
+            },
+            {
+              "number": 17,
+              "name": "Complete job",
+              "conclusion": "success"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "original_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "production_admitted": false,
+  "strict_source_acceptance": false,
+  "network_retention": "Nine terminal API responses fetched once; existing af1/801 ZIPs reused; only missing11761162831 ZIP downloaded",
+  "new_builds_native_or_source_executions": 0
+}
