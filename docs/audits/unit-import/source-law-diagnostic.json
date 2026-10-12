@@ -1,0 +1,64 @@
+{
+  "scope": "Supplemental source-law inspection AFTER frozen capture, not a precapture admission claim. Original report/inputs/expectations remain unchanged.",
+  "original_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "dependencies": [
+    {
+      "base": "installed-ezdxf-1.4.4",
+      "path": "entities/insert.py",
+      "sha256": "511f29c6ec9642803c122fcb1ddb6d2c3347c0d2ba668197ce330c607862544a",
+      "size": 28458,
+      "lines": [
+        507,
+        539
+      ]
+    },
+    {
+      "base": "installed-ezdxf-1.4.4",
+      "path": "acc/matrix44.pyx",
+      "sha256": "8cc1b0f5483ae02cf8e1ce9d2c1dbfdbd38a2b615c27da500faf50348b5dd5bf",
+      "size": 23027,
+      "lines": [
+        360,
+        382
+      ]
+    },
+    {
+      "base": "installed-ezdxf-1.4.4",
+      "path": "math/ucs.py",
+      "sha256": "a4d710808959a3a503ad379a40c4d1d54d57671087834ba12ac733357aabf4ec",
+      "size": 16599,
+      "lines": [
+        27,
+        48
+      ]
+    },
+    {
+      "base": "original-pinned",
+      "path": "core/camera.py",
+      "sha256": "cae35d8adfe33f3da22b85de74cc0779c0d2697fa8fa09d0112933d6d3e26a52",
+      "size": 20829,
+      "lines": [
+        30,
+        38
+      ]
+    },
+    {
+      "base": "original-pinned",
+      "path": "views/viewport.py",
+      "sha256": "1fb62f55b8f559deb3676924ee69a9a444397faa28c49651111cea44e420c724",
+      "size": 622724,
+      "lines": [
+        1238,
+        1244
+      ]
+    }
+  ],
+  "capture_log": {
+    "sha256": "ebc98d4dd019bb45e344e3581db35c73804fa6a817976e8b749b48013382189a",
+    "size": 5321,
+    "failed_gl_context_observed": true
+  },
+  "matrix_law": "Source INSERT matrix44 UCS * axis_rotate includes the fourth homogeneous m1[3]*m2[12..14] direction term. Source-only branch restores omitted0*0; no final zero normalization.",
+  "camera_pose_law": "OrbitCamera starts at aspect1; failed offscreen GL initialization prevents resizeGL calibration. Consumer runs actual unit modal frames without viewport and asserts finite aspect1. No viewport/GPU pixel acceptance.",
+  "camera_lifetime": "Accepted DXF fit is global presentation outside import history; original _leave_group_edit does not restore camera. Existing global presentation flag is marked on every active edit session only after admitted camera publication."
+}

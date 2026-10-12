@@ -126,7 +126,7 @@ fn source_scene_from_groups(app: &IngeTrazoApp, groups: &[Group]) -> Value {
     json!({"active":mesh_state(&app.scene.mesh,DMat4::IDENTITY),"loose":mesh_state(loose,DMat4::IDENTITY),"groups":groups.iter().map(|g|group(g,DMat4::IDENTITY)).collect::<Vec<_>>(),"layers":app.scene.layers.iter().map(|l|&l.name).collect::<Vec<_>>(),"units":app.scene.model_units()})
 }
 
-fn frame(a: &mut IngeTrazoApp, c: &egui::Context, events: Vec<egui::Event>) {
+pub(crate) fn frame(a: &mut IngeTrazoApp, c: &egui::Context, events: Vec<egui::Event>) {
     let mut input = egui::RawInput::default();
     input.screen_rect = Some(egui::Rect::from_min_size(
         egui::Pos2::ZERO,
@@ -145,7 +145,7 @@ fn frame(a: &mut IngeTrazoApp, c: &egui::Context, events: Vec<egui::Event>) {
         ingetrazo_gui::dialogs::render_dialogs(a, ctx);
     });
 }
-fn click(a: &mut IngeTrazoApp, c: &egui::Context, id: &str) -> Result<(), String> {
+pub(crate) fn click(a: &mut IngeTrazoApp, c: &egui::Context, id: &str) -> Result<(), String> {
     // Modal/popup layout is measured on its first frame and positioned next frame.
     // Warm the actual UI before reading its observed rectangle, then hover first.
     for _ in 0..3 {

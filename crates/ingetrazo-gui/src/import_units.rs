@@ -329,7 +329,12 @@ impl IngeTrazoApp {
             }
             self.bump_model_revision();
         }
-        if confirmed.kind == "dxf" { self.zoom_extents(); }
+        if confirmed.kind == "dxf" {
+            let fitted=self.source_zoom_extents_applied();
+            // Source camera fit is global presentation, outside SnapshotImport.
+            // Both nested exits keep this accepted fit (same owner as surveys).
+            if fitted {for session in &mut self.component_edit_stack {session.note_survey_camera();}}
+        }
         self.status_message = format!("Imported {}", confirmed.path.display());
         Ok(())
     }

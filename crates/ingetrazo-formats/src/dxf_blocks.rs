@@ -95,7 +95,7 @@ fn record(pairs: &[Pair], begin: usize) -> Record {
 fn attrs(p: &[Pair], r: Record) -> &[Pair] {
     &p[r.begin + 1..r.attrs_end]
 }
-fn matrix(a: &[Pair], base: DVec3) -> Result<DMat4, DxfError> {
+fn matrix(a: &[Pair], base: DVec3, source_points: bool) -> Result<DMat4, DxfError> {
     let normal = DVec3::new(
         number(a, 210, 0.)?,
         number(a, 220, 0.)?,
@@ -112,7 +112,7 @@ fn matrix(a: &[Pair], base: DVec3) -> Result<DMat4, DxfError> {
         }
         let n = ocs.z;
         let one = 1. - c;
-        DVec3::new(
+        let xyz = DVec3::new(
             (one * n.x * n.x + c) * v.x
                 + (one * n.x * n.y - s * n.z) * v.y
                 + (one * n.x * n.z + s * n.y) * v.z,
@@ -122,7 +122,13 @@ fn matrix(a: &[Pair], base: DVec3) -> Result<DMat4, DxfError> {
             (one * n.x * n.z - s * n.y) * v.x
                 + (one * n.y * n.z + s * n.x) * v.y
                 + (one * n.z * n.z + c) * v.z,
-        )
+        );
+        if source_points {
+            // INSERT.matrix44 multiplies UCS by a homogeneous axis-rotation
+            // matrix. Each direction row includes the fourth 0*0 term;
+            // omitting it changes signed zero for rotated negative scales.
+            DVec3::new(xyz.x + 0. * 0., xyz.y + 0. * 0., xyz.z + 0. * 0.)
+        } else { xyz }
     };
     let x = rotate(ocs.x * number(a, 41, 1.)?);
     let y = rotate(ocs.y * number(a, 42, 1.)?);
@@ -394,6 +400,7 @@ fn contents(
     parent: DMat4,
     depth: usize,
     scale: f64,
+    source_points: bool,
     out: &mut Vec<DxfEntity>,
 ) -> Result<(), DxfError> {
     for &r in records {
@@ -403,8 +410,8 @@ fn contents(
             }
             let a = attrs(p, r);
             if let Some(def) = defs.get(&value(a, 2, "").to_uppercase()) {
-                let local = matrix(a, def.base)?;
-                contents(p, defs, &def.records, parent * local, depth + 1, scale, out)?;
+                let local = matrix(a, def.base, source_points)?;
+                contents(p, defs, &def.records, parent * local, depth + 1, scale, source_points, out)?;
             }
             continue;
         }
@@ -483,13 +490,13 @@ pub(super) fn parse(p: &[Pair], scale: f64, source_points: bool) -> Result<DxfPl
             let def = defs.get(&name.to_uppercase());
             placements.push(Placement {
                 name: name.clone(),
-                matrix: matrix(a, def.map_or(DVec3::ZERO, |d| d.base))?,
+                matrix: matrix(a, def.map_or(DVec3::ZERO, |d| d.base), source_points)?,
                 layer: value(a, 8, "0").into(),
             });
             if names.insert(name.clone()) {
                 if let Some(def) = def {
                     let mut rows = Vec::new();
-                    contents(p, &defs, &def.records, DMat4::IDENTITY, 0, scale, &mut rows)?;
+                    contents(p, &defs, &def.records, DMat4::IDENTITY, 0, scale, source_points, &mut rows)?;
                     if source_points {
                         for e in &mut rows {
                             for v in &mut e.points {

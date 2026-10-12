@@ -1,17 +1,64 @@
 //! Missing actual OBJ/DXF chooser, unit, face cleanup and saved-document workflow.
 #[path = "exchange_import_workflows.rs"]
 mod base;
+#[path = "dwg_import_workflows.rs"]
+mod dialog_ui;
+#[path = "skp_import_workflows.rs"]
+mod source_json;
 use glam::DVec3;
 use ingetrazo_core::scene::SelectionItem;
 use ingetrazo_gui::IngeTrazoApp;
 use serde_json::{json, Value};
+use sha2::{Digest, Sha256};
 use std::path::{Path, PathBuf};
 fn camera(a: &IngeTrazoApp) -> Value {
     json!({"target":a.camera.target.to_array(),"distance":a.camera.distance,"yaw":a.camera.yaw,"pitch":a.camera.pitch,"projection":if a.camera.perspective{"perspective"}else{"parallel"},"fov":a.camera.fov_deg})
 }
+fn scene(a: &IngeTrazoApp) -> Result<Value, String> {
+    fn walk(
+        v: &mut Value,
+        assets: &std::collections::HashMap<String, Vec<u8>>,
+    ) -> Result<(), String> {
+        match v {
+            Value::Object(object) => {
+                if let Some(texture) = object.get_mut("texture").and_then(Value::as_object_mut) {
+                    if let Some(Value::String(path)) = texture.get("path") {
+                        // OBJ uses an owned portable path key; resolve its actual
+                        // admitted bytes, preserving every UV/style field.
+                        let bytes = assets
+                            .get(path)
+                            .ok_or_else(|| format!("Owned texture path missing: {path}"))?;
+                        let digest = format!("{:x}", Sha256::digest(bytes));
+                        texture.remove("path");
+                        texture.insert("resource".into(), json!({"encoded_sha256":digest}));
+                    }
+                }
+                for value in object.values_mut() {
+                    walk(value, assets)?;
+                }
+                if let Some(Value::Array(faces)) = object.get_mut("faces") {
+                    faces.sort_by_cached_key(source_json::source_json_key);
+                }
+            }
+            Value::Array(values) => {
+                for value in values {
+                    walk(value, assets)?;
+                }
+            }
+            _ => {}
+        }
+        Ok(())
+    }
+    let mut value = base::scene(a)?;
+    walk(&mut value, &a.scene.embedded_textures)?;
+    Ok(value)
+}
 fn record(a: &IngeTrazoApp, name: &str, phase: &str) -> Result<Value, String> {
+    if !a.camera.aspect.is_finite() || a.camera.aspect != 1. {
+        return Err("Dialog-only source pose lost aspect1".into());
+    }
     Ok(
-        json!({"case":name,"phase":phase,"scene":base::scene(a)?,"camera":camera(a),"depth":a.component_edit_stack.len(),"undo":a.undo_stack.len(),"redo":a.redo_stack.len(),"preferences":{"obj":a.document_session.preferences.extra.get("import/obj_unit"),"dxf":a.document_session.preferences.extra.get("import/dxf_unit")}}),
+        json!({"case":name,"phase":phase,"scene":scene(a)?,"camera":camera(a),"depth":a.component_edit_stack.len(),"undo":a.undo_stack.len(),"redo":a.redo_stack.len(),"preferences":{"obj":a.document_session.preferences.extra.get("import/obj_unit"),"dxf":a.document_session.preferences.extra.get("import/dxf_unit")}}),
     )
 }
 fn write(out: &Path, input: &Value, states: &[Value], controls: Value) -> Result<(), String> {
@@ -21,7 +68,7 @@ fn write(out: &Path, input: &Value, states: &[Value], controls: Value) -> Result
         .iter()
         .map(|c| json!({"name":c["name"],"saved":c["saved"],"phases":c["phases"]}))
         .collect::<Vec<_>>();
-    std::fs::write(out.join("native-unit-import.partial.json"),serde_json::to_vec_pretty(&json!({"source_pin":input["source_pin"],"cases":cases,"states":states,"controls":controls})).map_err(|e|e.to_string())?).map_err(|e|e.to_string())
+    std::fs::write(out.join("native-unit-import.partial.json"),serde_json::to_vec_pretty(&json!({"source_pin":input["source_pin"],"cases":cases,"states":states,"controls":controls,"source_pose":{"aspect":1.0,"law":"Pinned OrbitCamera default; offscreen GL resize failed","frames":"actual unit modal only","viewport_pixel_claim":false}})).map_err(|e|e.to_string())?).map_err(|e|e.to_string())
 }
 fn run(source: &Path, out: &Path) -> Result<(), String> {
     std::fs::create_dir_all(out).map_err(|e| e.to_string())?;
@@ -76,6 +123,7 @@ fn run(source: &Path, out: &Path) -> Result<(), String> {
         a.camera.pitch = c["pitch"].as_f64().ok_or("pitch")?;
         a.camera.perspective = c["projection"] == "perspective";
         a.camera.fov_deg = c["fov"].as_f64().ok_or("fov")?;
+        a.camera.aspect = 1.;
         if case["context"] == "leaf" {
             for _ in 0..2 {
                 a.scene.select(SelectionItem::Group(0));
@@ -106,7 +154,7 @@ fn run(source: &Path, out: &Path) -> Result<(), String> {
             a.choose_dxf_import()
         }
         let ctx = egui::Context::default();
-        base::frame(&mut a, &ctx, vec![]);
+        dialog_ui::frame(&mut a, &ctx, vec![]);
         let expects_unit = mode != "chooser-cancel" && !(kind == "dxf" && mode == "failure");
         if a.document_session.unit_import.is_some() != expects_unit {
             return Err(format!(
@@ -116,11 +164,11 @@ fn run(source: &Path, out: &Path) -> Result<(), String> {
         }
         if a.document_session.unit_import.is_some() {
             if mode == "unit-cancel" {
-                base::click(&mut a, &ctx, "import-unit-cancel")?;
+                dialog_ui::click(&mut a, &ctx, "import-unit-cancel")?;
             } else {
-                base::click(&mut a, &ctx, "import-unit-combo")?;
-                base::click(&mut a, &ctx, "import-unit-option-m")?;
-                base::click(&mut a, &ctx, "import-unit-accept")?;
+                dialog_ui::click(&mut a, &ctx, "import-unit-combo")?;
+                dialog_ui::click(&mut a, &ctx, "import-unit-option-m")?;
+                dialog_ui::click(&mut a, &ctx, "import-unit-accept")?;
             }
         }
         if a.document_session.unit_import.is_some() {
@@ -170,7 +218,7 @@ fn run(source: &Path, out: &Path) -> Result<(), String> {
         }
         let idle = record(&a, name, "idle")?;
         for _ in 0..8 {
-            base::frame(&mut a, &ctx, vec![]);
+            dialog_ui::frame(&mut a, &ctx, vec![]);
         }
         if record(&a, name, "idle")? != idle {
             return Err("idle mutated document/history/camera".into());

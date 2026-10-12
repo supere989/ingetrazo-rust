@@ -16,7 +16,7 @@ use std::{
 // not serde_json's compact Ryu notation. This key never alters observed values,
 // directed rings or paint. Debug float notation uses shortest round-trip digits;
 // Python's exponent spelling pads two digits and includes a positive sign.
-fn source_json_key(value: &Value) -> String {
+pub(crate) fn source_json_key(value: &Value) -> String {
     match value {
         Value::Array(values) => format!(
             "[{}]",

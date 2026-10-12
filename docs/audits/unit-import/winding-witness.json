@@ -1,0 +1,187 @@
+{
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "source_report_sha256": "1695c6e113c3ddf8a45764786d0bac50ea8bbf4c2e2cbd1b9e28b31cbcfd7853",
+  "inputs": [
+    {
+      "file": "assets/3dface.dxf",
+      "sha256": "2e58fe4518fa9d36c4e4434e7bb709181e0a8c3c6eb73e77f45a934e58c078a8",
+      "ordered_face_loops": [
+        [
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            4.0,
+            0.0,
+            0.0
+          ],
+          [
+            2.0,
+            2.0,
+            0.0
+          ]
+        ],
+        [
+          [
+            4.0,
+            0.0,
+            0.0
+          ],
+          [
+            4.0,
+            4.0,
+            0.0
+          ],
+          [
+            2.0,
+            2.0,
+            0.0
+          ]
+        ],
+        [
+          [
+            4.0,
+            4.0,
+            0.0
+          ],
+          [
+            0.0,
+            4.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            2.0,
+            2.0,
+            0.0
+          ]
+        ]
+      ]
+    },
+    {
+      "file": "assets/face-block.dxf",
+      "sha256": "c23bcb350074f729fe08a867ef4d67e22c00de5e081f3bf844b5878cdee83a4f",
+      "ordered_face_loops": [
+        [
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            4.0,
+            0.0,
+            0.0
+          ],
+          [
+            2.0,
+            2.0,
+            0.0
+          ]
+        ],
+        [
+          [
+            4.0,
+            0.0,
+            0.0
+          ],
+          [
+            4.0,
+            4.0,
+            0.0
+          ],
+          [
+            2.0,
+            2.0,
+            0.0
+          ]
+        ],
+        [
+          [
+            4.0,
+            4.0,
+            0.0
+          ],
+          [
+            0.0,
+            4.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            2.0,
+            2.0,
+            0.0
+          ]
+        ]
+      ]
+    }
+  ],
+  "original_outputs": {
+    "root": {
+      "outer": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          4.0,
+          0.0
+        ],
+        [
+          4.0,
+          4.0,
+          0.0
+        ],
+        [
+          4.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "holes": [],
+      "attrs": {}
+    },
+    "block": {
+      "outer": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          4.0,
+          0.0,
+          0.0
+        ],
+        [
+          4.0,
+          4.0,
+          0.0
+        ],
+        [
+          0.0,
+          4.0,
+          0.0
+        ]
+      ],
+      "holes": [],
+      "attrs": {}
+    }
+  },
+  "ordered_authored_loops_identical": true,
+  "original_merged_rings_opposite": true,
+  "scope": "Retained-source witness only. Object-identity set traversal in original coplanar trace chooses directed open winding. No ring normalization, golden fit or strict parity acceptance. General source winding remains OPEN."
+}

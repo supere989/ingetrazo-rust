@@ -231,6 +231,10 @@ fn fit(c: &mut OrbitCamera, lo: DVec3, hi: DVec3) -> Result<(), String> {
 }
 impl IngeTrazoApp {
     pub(crate) fn source_zoom_extents(&mut self) {
+        self.source_zoom_extents_applied();
+    }
+    /// Whether this invocation admitted and published a camera candidate.
+    pub(crate) fn source_zoom_extents_applied(&mut self) -> bool {
         let result = (|| {
             let Some((lo, hi)) = bounds(self)? else {
                 return Ok(None);
@@ -240,9 +244,9 @@ impl IngeTrazoApp {
             Ok::<_, String>(Some(candidate))
         })();
         match result {
-            Ok(Some(camera)) => self.camera = camera,
-            Ok(None) => {}
-            Err(error) => self.status_message = error,
+            Ok(Some(camera)) => {self.camera = camera;true},
+            Ok(None) => false,
+            Err(error) => {self.status_message = error;false},
         }
     }
 }
