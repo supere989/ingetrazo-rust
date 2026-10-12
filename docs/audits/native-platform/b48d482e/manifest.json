@@ -1,0 +1,2786 @@
+{
+  "head_sha": "b48d482e5772494a38ab8cec4e6038053197a46d",
+  "archive_sha256": "61ab955909ccdedf38f61109808caa9161457b12992df1bed46b8ad62e190f5f",
+  "entries": [
+    {
+      "path": "artifacts/indows/build.log",
+      "bytes": 56846,
+      "sha256": "194dcafe2ae9977ed0f48786a4020c696b4ea14b82c2e34491fad8b16c774a27"
+    },
+    {
+      "path": "artifacts/indows/recovery-check.json",
+      "bytes": 126,
+      "sha256": "124dfaa42372337d6ed6a1188ec77110200f086ec330947cd01a5d8768e0fe61"
+    },
+    {
+      "path": "artifacts/indows/recovery-check.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/indows/recovery-run.log",
+      "bytes": 61,
+      "sha256": "5150e5544f715f442282efaf055233c151f021d8f5f3a27fe8f3b6a7f083aa56"
+    },
+    {
+      "path": "artifacts/indows/self-check.log",
+      "bytes": 560,
+      "sha256": "05ac283238e28a6b08ea80aba920cea2376f07f19136b59e7624b4dab1231cee"
+    },
+    {
+      "path": "artifacts/indows/session-recovery/init-0.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/indows/session-recovery/init-0.stdout",
+      "bytes": 22,
+      "sha256": "a646a1e7a7b006c7e41f2ac46694b5c387dd4fbdfe1c3a673431e5a498f8a6f5"
+    },
+    {
+      "path": "artifacts/indows/session-recovery/original-after.igz",
+      "bytes": 2595,
+      "sha256": "ddc519bdcc8b3a40d3c18e15ae638eb147cf254e17d2a22f609787d8100d74dd"
+    },
+    {
+      "path": "artifacts/indows/session-recovery/original-before.igz",
+      "bytes": 2595,
+      "sha256": "ddc519bdcc8b3a40d3c18e15ae638eb147cf254e17d2a22f609787d8100d74dd"
+    },
+    {
+      "path": "artifacts/indows/session-recovery/recover-6.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/indows/session-recovery/recover-6.stdout",
+      "bytes": 1076,
+      "sha256": "2ba3525ffcbcec2e9dbe902e64f31650ea5c22545b521d6e59628540648abfbc"
+    },
+    {
+      "path": "artifacts/indows/session-recovery/recovered.igz",
+      "bytes": 2595,
+      "sha256": "8de878386b45967031237efcc6611f43a2c3c1a2281390dab67aac22c526e87b"
+    },
+    {
+      "path": "artifacts/indows/session-recovery/result.json",
+      "bytes": 3468,
+      "sha256": "dbf765cf857a567c6474432162760532d2b3f687d58e59b076e172c715acbff7"
+    },
+    {
+      "path": "artifacts/indows/session-recovery/scan-0.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/indows/session-recovery/scan-0.stdout",
+      "bytes": 71,
+      "sha256": "d862c20cc48565d4703fa5bce623894990403771e9427f479859f8ace9b90a50"
+    },
+    {
+      "path": "artifacts/indows/session-recovery/scan-1.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/indows/session-recovery/scan-1.stdout",
+      "bytes": 71,
+      "sha256": "38e46c3afbdfc2809427e5c575c63a13b0ce2e0bfc561c39f6901beeb403e03f"
+    },
+    {
+      "path": "artifacts/indows/session-recovery/scan-2.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/indows/session-recovery/scan-2.stdout",
+      "bytes": 71,
+      "sha256": "153ca5ec378ad4ca25317183a4ac0178d36a2fde381f508112aa98994b94b356"
+    },
+    {
+      "path": "artifacts/indows/session-recovery/scan-3.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/indows/session-recovery/scan-3.stdout",
+      "bytes": 70,
+      "sha256": "40ec79107c941ef2f33f85981a6d4a3ec7dcc820d7dbeec6bbd40eb870660f3f"
+    },
+    {
+      "path": "artifacts/indows/session-recovery/scan-4.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/indows/session-recovery/scan-4.stdout",
+      "bytes": 70,
+      "sha256": "b4d7fa028e9ce92a582c2d44a8887c1f575f434168434533ef5a825e6cc19d32"
+    },
+    {
+      "path": "artifacts/indows/session-recovery/scan-5.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/indows/session-recovery/scan-5.stdout",
+      "bytes": 214,
+      "sha256": "b8c6874f806012a0f1c8582f0119cacb30f3e19efa0b292b0669722805082b36"
+    },
+    {
+      "path": "artifacts/indows/session-recovery/state/config/settings.json",
+      "bytes": 739,
+      "sha256": "cc7d4aea02ff626e31a7d4bfefab5c1c70e333d84771b6cc7856332efc2f867e"
+    },
+    {
+      "path": "artifacts/indows/session-recovery/state/data/autosave/discarded/retired-1791766884387-207e3423-9a3a-43da-b6bb-40ad91fe9140.igz",
+      "bytes": 2595,
+      "sha256": "8de878386b45967031237efcc6611f43a2c3c1a2281390dab67aac22c526e87b"
+    },
+    {
+      "path": "artifacts/indows/session-recovery/state/data/autosave/discarded/retired-1791766884387-207e3423-9a3a-43da-b6bb-40ad91fe9140.json",
+      "bytes": 423,
+      "sha256": "9a44d701461e5e5fbdb12ad7e657ad4157ff6159817b872d6c0b23b9df3231e4"
+    },
+    {
+      "path": "artifacts/indows/session-recovery/state/original.igz",
+      "bytes": 2595,
+      "sha256": "ddc519bdcc8b3a40d3c18e15ae638eb147cf254e17d2a22f609787d8100d74dd"
+    },
+    {
+      "path": "artifacts/indows/session-recovery/state/recovered.igz",
+      "bytes": 2595,
+      "sha256": "8de878386b45967031237efcc6611f43a2c3c1a2281390dab67aac22c526e87b"
+    },
+    {
+      "path": "artifacts/indows/session-recovery/writer.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/indows/version.log",
+      "bytes": 32,
+      "sha256": "1b2dd62f50384c39fd4e0df9b1067fa5bb89930b5b7e037c3cf2e30949765df9"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/apple-gl-depth-resolve.json",
+      "bytes": 37,
+      "sha256": "574706717f33363bcf4886d8f94a41986321935bf687f55afb9457e21e56b908"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/apple-gl-depth-resolve.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/billboards/baseline.rgba",
+      "bytes": 1920000,
+      "sha256": "f80885c6328995cfa3d42381433e15621aa0bd427d128b52b197ba9f4bd89712"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/billboards/hidden.rgba",
+      "bytes": 1920000,
+      "sha256": "8e75966d0f3d1040d588a2bfc4ccca90dc788dbc16195625d0f1bf9994163de6"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/billboards/report.json",
+      "bytes": 499,
+      "sha256": "d9a39b8da54b807644a2e8325f8a7cf7e758d58eb1e594d069d5cd5f94275a87"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/billboards/turned.rgba",
+      "bytes": 1920000,
+      "sha256": "f0950ed46171e495f4e3acaef93e4824431b6123c2673030703f29190481bb9b"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/build.log",
+      "bytes": 75470,
+      "sha256": "6ce73395c4ea93357b452afb5de469d6f2a460233b037b08b1c1cf4cb8841ed4"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/check.log",
+      "bytes": 82126,
+      "sha256": "08b4ab847097a11d81166bbe34c207884efd76b09bd938188c2d58e8a138e4c9"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/defaults/camera.rgba",
+      "bytes": 16384,
+      "sha256": "7de348a0cc857a0a58f237f3a376d220caa643743fc2e19f053bf9a5122d0620"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/defaults/default.rgba",
+      "bytes": 16384,
+      "sha256": "a7d25bf8c4c403c83ba48b0564ef7a75d3fffacc8cd3097832183dd14010f078"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/defaults/profiles-off.rgba",
+      "bytes": 16384,
+      "sha256": "a7d25bf8c4c403c83ba48b0564ef7a75d3fffacc8cd3097832183dd14010f078"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/defaults/report.json",
+      "bytes": 616,
+      "sha256": "b5921b36d5e043b8b7ddc6850145cfb09876875d9079a8f98ac34ae2fc361878"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/defaults/section.rgba",
+      "bytes": 16384,
+      "sha256": "f2f06dca16a6dea68071e7dd4edde5012f9ed34da83d93cf1c0b09d729ecda39"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/defaults/soft-edited.rgba",
+      "bytes": 16384,
+      "sha256": "7de348a0cc857a0a58f237f3a376d220caa643743fc2e19f053bf9a5122d0620"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/defaults/startup.rgba",
+      "bytes": 16384,
+      "sha256": "da26ce1d4c22dd4d893635953027326a4e915f07dfa5896ce47055c3c6785019"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/document-annotations/sample-diagnostics.json",
+      "bytes": 748,
+      "sha256": "9b9c9695a746b7b723adbfaa92602a7ecef9948634e62d188876549d91706a35"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/affine-nested-rich.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/affine-nested-rich.log.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/bitmap-no-texture-camera.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/bitmap-no-texture-camera.log.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/bitmap-no-texture-ordinary.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/bitmap-no-texture-ordinary.log.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/bitmap-perspective-camera.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/bitmap-perspective-camera.log.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/bitmap-perspective-ordinary.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/bitmap-perspective-ordinary.log.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/default-rich.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/default-rich.log.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/empty-rich.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/empty-rich.log.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/figure-only-camera.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/figure-only-camera.log.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/figure-only-ordinary.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/figure-only-ordinary.log.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/figures-check.json",
+      "bytes": 154,
+      "sha256": "a53832f751788014f18836bd567cdc6e484424ef822b6b686eb9d42b93d93126"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/figures-check.json.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/hidden-top-camera.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/hidden-top-camera.log.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/hidden-top-ordinary.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/hidden-top-ordinary.log.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/hole-rich.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/hole-rich.log.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/identity-orphan-camera.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/identity-orphan-camera.log.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/identity-orphan-ordinary.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/identity-orphan-ordinary.log.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/mesh-perspective-camera.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/mesh-perspective-camera.log.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/mesh-perspective-ordinary.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/mesh-perspective-ordinary.log.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/mixed-first-material-camera.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/mixed-first-material-camera.log.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/mixed-first-material-ordinary.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/mixed-first-material-ordinary.log.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/native/bitmap-no-texture.glb",
+      "bytes": 1216,
+      "sha256": "9cc0bb596d124a1cfdc8ca67e79c37e588fd0347b93cb8f4ddf7386a9718688c"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/native/bitmap-no-texture.ordinary.glb",
+      "bytes": 140,
+      "sha256": "fdafc2ed8c2ee84cf19ed071bddad77292f9806b6b2c0d1dd796f6426a8976c5"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/native/bitmap-perspective.glb",
+      "bytes": 1756,
+      "sha256": "03d290f59ca33adebd6be825ef2633399dad39f4e78db4149e7f63fef3249d96"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/native/bitmap-perspective.ordinary.glb",
+      "bytes": 140,
+      "sha256": "fdafc2ed8c2ee84cf19ed071bddad77292f9806b6b2c0d1dd796f6426a8976c5"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/native/collapse-refusal.json",
+      "bytes": 130,
+      "sha256": "534f144987fc573f51c113f6300f191216e4cd9c48158fa9b11c12281e097cfa"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/native/collapse-refusal.json.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/native/collapse-unused.glb",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/native/figure-only.glb",
+      "bytes": 2728,
+      "sha256": "f0b5023e20350665347d4bdccf46f72ff5471fbf4db840c369ccf31c1889952d"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/native/figure-only.ordinary.glb",
+      "bytes": 140,
+      "sha256": "fdafc2ed8c2ee84cf19ed071bddad77292f9806b6b2c0d1dd796f6426a8976c5"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/native/hidden-top.glb",
+      "bytes": 140,
+      "sha256": "fdafc2ed8c2ee84cf19ed071bddad77292f9806b6b2c0d1dd796f6426a8976c5"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/native/hidden-top.ordinary.glb",
+      "bytes": 140,
+      "sha256": "fdafc2ed8c2ee84cf19ed071bddad77292f9806b6b2c0d1dd796f6426a8976c5"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/native/identity-orphan.glb",
+      "bytes": 1220,
+      "sha256": "1a5cbb2d17b44840904907345a4e438c337618604f054b53cbb1ad0eb417bdcf"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/native/identity-orphan.ordinary.glb",
+      "bytes": 140,
+      "sha256": "fdafc2ed8c2ee84cf19ed071bddad77292f9806b6b2c0d1dd796f6426a8976c5"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/native/initial-decoded-failure.json",
+      "bytes": 82218,
+      "sha256": "925f22c1fdba62d764ffe2d9a707f182a927862d5fa8622daba5d7eac464aa62"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/native/mesh-perspective.glb",
+      "bytes": 1220,
+      "sha256": "1a5cbb2d17b44840904907345a4e438c337618604f054b53cbb1ad0eb417bdcf"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/native/mesh-perspective.ordinary.glb",
+      "bytes": 140,
+      "sha256": "fdafc2ed8c2ee84cf19ed071bddad77292f9806b6b2c0d1dd796f6426a8976c5"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/native/mixed-first-material.glb",
+      "bytes": 4380,
+      "sha256": "df9554494025b8677f0f579256a97df921e5caa926a588b1e03beea7bb3553af"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/native/mixed-first-material.ordinary.glb",
+      "bytes": 1104,
+      "sha256": "fffc0f0f85038736c22771e25eef21c68d8598ceb17de22e51d36e39126f1fda"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/native/nested-hidden-child.glb",
+      "bytes": 2068,
+      "sha256": "74426b11d1987ed59cf0c8ed170a2b32ff0c58d4549c979692c284b30f4d095e"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/native/nested-hidden-child.ordinary.glb",
+      "bytes": 1880,
+      "sha256": "b9d4dd55a33450fb34b74f8ed66e90ab80168d7695ebe704858199b8fb7c80fe"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/native/path-only-candidate-failure.json",
+      "bytes": 82372,
+      "sha256": "1f3e88bf3550b243b92360829d229f17345e61e726eefcd5b2f72d159dbc68dc"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/nested-hidden-child-camera.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/nested-hidden-child-camera.log.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/nested-hidden-child-ordinary.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/nested-hidden-child-ordinary.log.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/nested-reflected-rich.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/nested-reflected-rich.log.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/ordinary-rich/affine-nested.glb",
+      "bytes": 2208,
+      "sha256": "a85a9c1c84a5f29002860dac9e0237e4716223843289237831fd43ac5eaf07bc"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/ordinary-rich/default.glb",
+      "bytes": 1096,
+      "sha256": "c7c2c34fa845f950621e3b970995fee8c22be10753930532cba1bbc32869529d"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/ordinary-rich/empty.glb",
+      "bytes": 140,
+      "sha256": "fdafc2ed8c2ee84cf19ed071bddad77292f9806b6b2c0d1dd796f6426a8976c5"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/ordinary-rich/hole.glb",
+      "bytes": 1264,
+      "sha256": "4e8ccfa74ebf8e4eba6586e6a3541c7b2990dd649504fcf55159715fcb738082"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/ordinary-rich/nested-reflected.glb",
+      "bytes": 2112,
+      "sha256": "1a733ecb5ca77f18daab463aa678b992da29c7b7ae85049fe383e5f5c6051872"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/ordinary-rich/pbr-colors.glb",
+      "bytes": 5388,
+      "sha256": "90b2465e6c6f4625d039c3b4d8107aab39daafc38324a53e0cf9f45447c4f22d"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/ordinary-rich/slanted.glb",
+      "bytes": 2112,
+      "sha256": "9b9bf2e750bda766d11634a3716d68d929ee04e69270cb9fba03f1737e4246a1"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/ordinary-rich/textures-alpha.glb",
+      "bytes": 5540,
+      "sha256": "ca1ed23950eee99a1cdd88c429b08c2b633d0738dd0562a7750df08325dc2f34"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/ordinary-rich/visibility.glb",
+      "bytes": 1880,
+      "sha256": "7143d4fd4166271d31c0d1ecd856def6fe9a81caa44d515207ac59dfa0f33568"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/pbr-colors-rich.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/pbr-colors-rich.log.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/result.json",
+      "bytes": 12205,
+      "sha256": "e7b84ffe18a85b39e34f4a9c46423bf65caa6fcb38250c6ad203540eb5ec4c67"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/rich-check.log",
+      "bytes": 102,
+      "sha256": "2c4a55ce0af15822d9abaa2a9d4cffa0bc0a59d1632c4c27717a42e6bd271105"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/rich-check.log.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/slanted-rich.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/slanted-rich.log.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/source/bitmap-no-texture.camera.json",
+      "bytes": 121,
+      "sha256": "cb0a4a686b175e1e93deb552703278b85475d9a8140a8842bcf2765775e035f6"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/source/bitmap-no-texture.glb",
+      "bytes": 1216,
+      "sha256": "30c0f9b08864bdb90cf9dff2a79445d28b1651bc6ca0d9bc6b0aac1ab6d4578a"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/source/bitmap-no-texture.igz",
+      "bytes": 1898,
+      "sha256": "17a9ee6a269a3676fcc7956b6094cf3fbda15d4a5f03c749db760d5f68ecb6c9"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/source/bitmap-no-texture.ordinary.glb",
+      "bytes": 140,
+      "sha256": "3d0af7155093f52b3cca1a95c499b55a09dc5e1ddc759c7384a102cc62e1f3a2"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/source/bitmap-perspective.camera.json",
+      "bytes": 120,
+      "sha256": "5b768981c6f74f8087f07ed7f8223b022cf3c2c69f941eca2816cdf6204bee0c"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/source/bitmap-perspective.glb",
+      "bytes": 1756,
+      "sha256": "6959b0d9bd00b8192dc8dfcb5eec2de3e133f16f564e23273c8287f7401ec062"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/source/bitmap-perspective.igz",
+      "bytes": 827,
+      "sha256": "8320e63feb0fbe7a5b155a73bc0ce1d21858b9136df23401b21bfbc7a830c024"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/source/bitmap-perspective.ordinary.glb",
+      "bytes": 140,
+      "sha256": "3d0af7155093f52b3cca1a95c499b55a09dc5e1ddc759c7384a102cc62e1f3a2"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/source/cases.json",
+      "bytes": 4839,
+      "sha256": "5c88dbfac9a117ca4c85990e4a2550f3bfe0cbe885dc421c3c8f5db37e9ad3d8"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/source/collapse.camera.json",
+      "bytes": 79,
+      "sha256": "643735b8f62eec09c7280a5db915894ad86d860a633a3c0f674745a1087e973d"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/source/collapse.glb",
+      "bytes": 1096,
+      "sha256": "9fe2dfc06bb2e06181cc15e2438a3b53f2f1b70537ea8bc671ee82fd5e4080fc"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/source/collapse.igz",
+      "bytes": 2134,
+      "sha256": "9e0e476cdd122704343ad4bc8a6ad8262543ab5a603ace2a699e92e6758f2488"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/source/figure-only.camera.json",
+      "bytes": 121,
+      "sha256": "cb0a4a686b175e1e93deb552703278b85475d9a8140a8842bcf2765775e035f6"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/source/figure-only.glb",
+      "bytes": 2728,
+      "sha256": "3529163bb8f6854ed592304deec12749f1698532b647e4c4aa8b6c9705fe382a"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/source/figure-only.igz",
+      "bytes": 925,
+      "sha256": "fccd024c1bc7af2eca1abcfa84ba6547b9ebd0ab60fe42033b46a396876eec9c"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/source/figure-only.ordinary.glb",
+      "bytes": 140,
+      "sha256": "3d0af7155093f52b3cca1a95c499b55a09dc5e1ddc759c7384a102cc62e1f3a2"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/source/figure.png",
+      "bytes": 115,
+      "sha256": "8c772cebc1995f0e3a626820b396c006f81e4911780e52605a3ae73cbc1c1d27"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/source/hidden-top.camera.json",
+      "bytes": 120,
+      "sha256": "5b768981c6f74f8087f07ed7f8223b022cf3c2c69f941eca2816cdf6204bee0c"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/source/hidden-top.glb",
+      "bytes": 140,
+      "sha256": "3d0af7155093f52b3cca1a95c499b55a09dc5e1ddc759c7384a102cc62e1f3a2"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/source/hidden-top.igz",
+      "bytes": 3631,
+      "sha256": "125ad5519ce9d6440136be954ee1c0f79a89b31d5765e5ccc7877f227e239b51"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/source/hidden-top.ordinary.glb",
+      "bytes": 140,
+      "sha256": "3d0af7155093f52b3cca1a95c499b55a09dc5e1ddc759c7384a102cc62e1f3a2"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/source/identity-orphan.camera.json",
+      "bytes": 120,
+      "sha256": "5b768981c6f74f8087f07ed7f8223b022cf3c2c69f941eca2816cdf6204bee0c"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/source/identity-orphan.glb",
+      "bytes": 1220,
+      "sha256": "ab5ac6e2d57307ab3673d8c948a25d55042984cfb1f5f38af05526d0b584bac2"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/source/identity-orphan.igz",
+      "bytes": 2254,
+      "sha256": "5fced6cbfee4c4f25a203a261bd68dddd5b2a3586f7d01fa518ab1e5a32765ec"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/source/identity-orphan.ordinary.glb",
+      "bytes": 140,
+      "sha256": "3d0af7155093f52b3cca1a95c499b55a09dc5e1ddc759c7384a102cc62e1f3a2"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/source/mesh-perspective.camera.json",
+      "bytes": 120,
+      "sha256": "5b768981c6f74f8087f07ed7f8223b022cf3c2c69f941eca2816cdf6204bee0c"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/source/mesh-perspective.glb",
+      "bytes": 1220,
+      "sha256": "ab5ac6e2d57307ab3673d8c948a25d55042984cfb1f5f38af05526d0b584bac2"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/source/mesh-perspective.igz",
+      "bytes": 1900,
+      "sha256": "4aefd79c55f6d81fd20ca7e038d57c31694d64ab0f72be974c1e766c68a2ab03"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/source/mesh-perspective.ordinary.glb",
+      "bytes": 140,
+      "sha256": "3d0af7155093f52b3cca1a95c499b55a09dc5e1ddc759c7384a102cc62e1f3a2"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/source/mixed-first-material.camera.json",
+      "bytes": 120,
+      "sha256": "5b768981c6f74f8087f07ed7f8223b022cf3c2c69f941eca2816cdf6204bee0c"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/source/mixed-first-material.glb",
+      "bytes": 4380,
+      "sha256": "4d736b03248baea4ddb9dcc0e5da484581bc09920eb7da847b5a0dffc8ae858b"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/source/mixed-first-material.igz",
+      "bytes": 1224,
+      "sha256": "45fe823c933ea42b5bdd5230e295f6629ad6a4528f73966f3ed40252d7735e71"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/source/mixed-first-material.ordinary.glb",
+      "bytes": 1104,
+      "sha256": "461667e4f46fc4d6ed0d30a9b688d48d1b941d450ba38f100c6c4c3d154dd492"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/source/nested-hidden-child.camera.json",
+      "bytes": 121,
+      "sha256": "cb0a4a686b175e1e93deb552703278b85475d9a8140a8842bcf2765775e035f6"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/source/nested-hidden-child.glb",
+      "bytes": 2068,
+      "sha256": "ec82bf98c6a6e7361413ee43d4bfc3773203c5e9c358846cf9126b4d9db5f2b5"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/source/nested-hidden-child.igz",
+      "bytes": 4401,
+      "sha256": "472c94a0a003dccf0072d5fff249f3141e17e2b962d85fd4a960e40d7e437493"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/source/nested-hidden-child.ordinary.glb",
+      "bytes": 1880,
+      "sha256": "6a18db043e4483454aeb5ae6316389ccd4be2e4feaa197fafd650824066238cd"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/textures-alpha-rich.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/textures-alpha-rich.log.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/visibility-rich.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures/visibility-rich.log.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/gltf-figures-replay.log",
+      "bytes": 721,
+      "sha256": "f1abb4886c32235d5754530ca12a0af03c08a7e4e81b1f191f3970929a3af5ba"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/launcher/runtime.log",
+      "bytes": 770,
+      "sha256": "df3d7fb00781a0912e5ab2a1eaa4f6dd45f63b7950adb472e08753d5eca436db"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/launcher/session/config/settings.json",
+      "bytes": 538,
+      "sha256": "50447b28c8af8d9c55060389a910c910cd4bdbcc43a8d3bd0dc54c28c02a0791"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/section-fill/closed-disabled.rgba",
+      "bytes": 1920000,
+      "sha256": "47a2d725134186de65b15e615152e5e0cd6916446360fce8ebd82a446a34250d"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/section-fill/closed-front-disabled.rgba",
+      "bytes": 1920000,
+      "sha256": "16ab57e7bb32f63f653367d75e9cdbe1a0a8157c242f5353fa7070562526c5a8"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/section-fill/closed-front.rgba",
+      "bytes": 1920000,
+      "sha256": "16ab57e7bb32f63f653367d75e9cdbe1a0a8157c242f5353fa7070562526c5a8"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/section-fill/closed-iso-disabled.rgba",
+      "bytes": 1920000,
+      "sha256": "cfae262504b16306ec53ae48d46e6fe95160d6e142310071b247ac9daa5d855b"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/section-fill/closed-iso.rgba",
+      "bytes": 1920000,
+      "sha256": "4ce916cc6fd0a26bcc8a27a9f22b97e555bebb68b24457c8b9ef8862a5aea144"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/section-fill/closed.rgba",
+      "bytes": 1920000,
+      "sha256": "6a3c34c071c82b9f73e39a633345f98a631a1430779b291fea61b51f83c7b1ea"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/section-fill/comparison.json",
+      "bytes": 3059,
+      "sha256": "731bcaafa433b29b1be9d001a053fc5b29b51e93c6f925a6302deed9407e0357"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/section-fill/coplanar-backface-disabled.rgba",
+      "bytes": 1920000,
+      "sha256": "29d1ae1afe6a5c938a33fcbf365c9440abe0dd81e93504e8c6b6ce2b381a0284"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/section-fill/coplanar-backface.rgba",
+      "bytes": 1920000,
+      "sha256": "29d1ae1afe6a5c938a33fcbf365c9440abe0dd81e93504e8c6b6ce2b381a0284"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/section-fill/duplicate-disabled.rgba",
+      "bytes": 1920000,
+      "sha256": "47a2d725134186de65b15e615152e5e0cd6916446360fce8ebd82a446a34250d"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/section-fill/duplicate.rgba",
+      "bytes": 1920000,
+      "sha256": "6a3c34c071c82b9f73e39a633345f98a631a1430779b291fea61b51f83c7b1ea"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/section-fill/report.json",
+      "bytes": 8902,
+      "sha256": "ed9ab845754736a25d0be3ea7793604e07a9cc1d1df49a57fa5effae4521f8a6"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/section-fill/shared-slab-disabled.rgba",
+      "bytes": 1920000,
+      "sha256": "3e5c89b8c4797b22d3509874f9267ab6fbe240602574ef79ef6b86f62da8e5a5"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/section-fill/shared-slab-iso-disabled.rgba",
+      "bytes": 1920000,
+      "sha256": "7f80d55d0aa746f45e1ca0658d4e79addbfbadb3dd8e29ede915fa083c9b3d91"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/section-fill/shared-slab-iso.rgba",
+      "bytes": 1920000,
+      "sha256": "8d0c36c455555b1af4a750264647ea0bbaa3516051b9ff11296851c6d5e8158d"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/section-fill/shared-slab-reversed-disabled.rgba",
+      "bytes": 1920000,
+      "sha256": "47a2d725134186de65b15e615152e5e0cd6916446360fce8ebd82a446a34250d"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/section-fill/shared-slab-reversed-iso-disabled.rgba",
+      "bytes": 1920000,
+      "sha256": "cfae262504b16306ec53ae48d46e6fe95160d6e142310071b247ac9daa5d855b"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/section-fill/shared-slab-reversed-iso.rgba",
+      "bytes": 1920000,
+      "sha256": "4ce916cc6fd0a26bcc8a27a9f22b97e555bebb68b24457c8b9ef8862a5aea144"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/section-fill/shared-slab-reversed.rgba",
+      "bytes": 1920000,
+      "sha256": "6a3c34c071c82b9f73e39a633345f98a631a1430779b291fea61b51f83c7b1ea"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/section-fill/shared-slab.rgba",
+      "bytes": 1920000,
+      "sha256": "3e5c89b8c4797b22d3509874f9267ab6fbe240602574ef79ef6b86f62da8e5a5"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/section-fill/transparent-disabled.rgba",
+      "bytes": 1920000,
+      "sha256": "cb464c7a67b4acf25ce7aaf9c9331f2630f950dc06ff0a52e7e4d31e4f92e31b"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/section-fill/transparent.rgba",
+      "bytes": 1920000,
+      "sha256": "cb464c7a67b4acf25ce7aaf9c9331f2630f950dc06ff0a52e7e4d31e4f92e31b"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/sheet-images/native/session/config/settings.json",
+      "bytes": 464,
+      "sha256": "cf2f0ec77f85828cd224aa411768e89bb61b2d8bd42591e75b9ab82ac2984deb"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/sheet-images/runtime.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/sheet-images/runtime.log.stderr",
+      "bytes": 55,
+      "sha256": "0664543edcf8282d31bd16283c65fd60e8b09948071ca938916e8b198fc1fcc0"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/sheet-images/source/blank-a3.jpg",
+      "bytes": 28267,
+      "sha256": "ae985c24dba8023a838eb993ee105dd008a6e6c9d8f72e588510bb204b5dff61"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/sheet-images/source/blank-landscape.PNG",
+      "bytes": 14905,
+      "sha256": "afa006e446dc3d3c6dad16126b12ea5e62aaf6a420ff96d72431fe588f7faa30"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/sheet-images/source/blank-portrait.png",
+      "bytes": 2009,
+      "sha256": "0b9264f46b206976777f93b46d43727bf6365565f2227acbf1d8162c378e95b7"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/sheet-images/source/capture.log",
+      "bytes": 53,
+      "sha256": "092a07b530f92a59d98637037c99b662460dc6eca8ab59f9215f772d0b18cddb"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/sheet-images/source/chosen-jpeg.jpg",
+      "bytes": 32747,
+      "sha256": "5f5f79bfabad49034910bdf29f095ded03d317711d4c2d8521406aa501ddcfc7"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/sheet-images/source/chosen.png",
+      "bytes": 3923,
+      "sha256": "b8fe55c3549c631f957b5dd8536c71e2eea533d9b11b7f704a0afb306406e338"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/sheet-images/source/shapes-jpeg.jpeg",
+      "bytes": 68236,
+      "sha256": "c0c5555fc1c81df8d3d67fd962e4616b564cc5d9ad1b0aec5d41c9e63a28116d"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/sheet-images/source/shapes-portrait.png",
+      "bytes": 17805,
+      "sha256": "1b972bea7772e0ebf83db1265fc8e840cab8b45c1183092dd4e269e42b5e7d42"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/sheet-images/source/shapes.png",
+      "bytes": 18269,
+      "sha256": "e1b9af8ec1132a6da00cb67b2c4404ab3d9df0a8bb570926cca361dbf0681fcd"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/sheet-images/source/source.json",
+      "bytes": 8829,
+      "sha256": "c365180873a2f3c9df6ee55121dfd327b9d2d249b215590a70c42f2807332b52"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/sheet-images/source/text.png",
+      "bytes": 10220,
+      "sha256": "b35852cb1d072201ac3f4ab726998b57ce559dee6a5c3de4023fd0969b9cca86"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/sheet-images/source/upper.JPG",
+      "bytes": 38819,
+      "sha256": "4e599f16ad8c474c7d23c109c8eb9abf69346cff869407179640595ef85adedb"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/sheet-images/views/capture.log",
+      "bytes": 287,
+      "sha256": "1f5be4ae69f49b3f1a8ea45a71980963d5071f4ca8f3126a3d093ed2ca047be0"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/sheet-images/views/source-receipt.json",
+      "bytes": 308,
+      "sha256": "62dc3460e7b482f42bf1e70b0b0bdb8042b5494b43a7a26311ac83ff1ad2135a"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/sheet-images/views/source.json",
+      "bytes": 4153,
+      "sha256": "d9c4d15e61b7862b366db0397871e4fb888419ed4c8147647f0d25a46405d0b2"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/sheet-images/views/view-cropped.igz",
+      "bytes": 6196,
+      "sha256": "2176da22da29dd6b64295adb9dbf6883a3b5348f976cc81de0253cd958844f54"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/sheet-images/views/view-cropped.png",
+      "bytes": 6194,
+      "sha256": "b7963da2d9fdb75861c55b9a19416f41fada6128e5040c09a9520bbb834be392"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/sheet-images/views/view-current.igz",
+      "bytes": 6198,
+      "sha256": "9c20ace75b5eabfb8acca63f4ed6f31a79b7edc4e91041b270e3a3760b2f62e6"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/sheet-images/views/view-current.png",
+      "bytes": 5886,
+      "sha256": "6f130c09715490b35ae4ce0bafd8337c9a3ace681a895e9981368aad3d2a398b"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/sheet-images/views/view-hidden-thin.igz",
+      "bytes": 6201,
+      "sha256": "fb0ca2cb743971db71af8c079f417ccf8c4c6ef88e1db24c8f074eb96f2a9a15"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/sheet-images/views/view-hidden-thin.png",
+      "bytes": 3191,
+      "sha256": "9823c94890aea903d5b00679e986c2eb1574b1fdd65a7d0a3538027a53f4f07a"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/sheet-images/views/view-saved.igz",
+      "bytes": 7932,
+      "sha256": "2b150599bd148c410376c4c629276456a0219838d9c482b93741a91282a0a276"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/sheet-images/views/view-saved.png",
+      "bytes": 6623,
+      "sha256": "b2d56fb9bd41400db6af35b4c58a0e4a6ee48ae0d96fbb924853721163bc56d0"
+    },
+    {
+      "path": "artifacts/ntel/metal-combined-gui-ci/sheet-images-replay.log",
+      "bytes": 1728,
+      "sha256": "4c48612de32b2dd523f28758189761ece3257d03ca3ad096b9360a4c60f4136d"
+    },
+    {
+      "path": "artifacts/ntel/paper-font-native-ci/font-resource.log",
+      "bytes": 22530,
+      "sha256": "81b4f05fe6d7888ac6d949a3d97ed756a1f6b2ca587305d2283f9fd7241f463b"
+    },
+    {
+      "path": "artifacts/ntel/paper-font-native-ci/tests.log",
+      "bytes": 29840,
+      "sha256": "ac027b7ca3b5055679b81147f68df038eae4e476a7f09dc2bcd21d86b9d2358d"
+    },
+    {
+      "path": "artifacts/rdered-arm/binary.sha256",
+      "bytes": 115,
+      "sha256": "25b26b317310c9d309996d37451bafff2c538c101b09dbb3ec2ff1173afbb3d1"
+    },
+    {
+      "path": "artifacts/rdered-arm/build.log",
+      "bytes": 23774,
+      "sha256": "f326c86c36a7e37ba464dee7a58eb74159c8135848a240ae7d7bfb28c0957f60"
+    },
+    {
+      "path": "artifacts/rdered-arm/execution.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/rdered-arm/frameworks.txt",
+      "bytes": 2190,
+      "sha256": "e11d32567317ccf27595f8294716b7cdf208b9c1bd8cbb9c86055fb26f64447c"
+    },
+    {
+      "path": "artifacts/rdered-arm/native/alpha-0.rgba",
+      "bytes": 16384,
+      "sha256": "081d832e8a3c7d824a89ffb5399e32db6cb4571141a4a65a8ab5da5ab769a42a"
+    },
+    {
+      "path": "artifacts/rdered-arm/native/alpha-1.rgba",
+      "bytes": 16384,
+      "sha256": "5122a685f9e60f40ff357f4965567fe4a06cfe9c88db5d1d5ec9751def3ca562"
+    },
+    {
+      "path": "artifacts/rdered-arm/native/alpha-127.rgba",
+      "bytes": 16384,
+      "sha256": "38fc8224c9332f838a4ef6e4fdc3a83902b5f71b5fc06706bb9c91a830567355"
+    },
+    {
+      "path": "artifacts/rdered-arm/native/alpha-128.rgba",
+      "bytes": 16384,
+      "sha256": "38fc8224c9332f838a4ef6e4fdc3a83902b5f71b5fc06706bb9c91a830567355"
+    },
+    {
+      "path": "artifacts/rdered-arm/native/alpha-254.rgba",
+      "bytes": 16384,
+      "sha256": "3d91e047b39b8a33002c66d7f0b407810d323d4f2b6493b5f8a4565ac95bd61c"
+    },
+    {
+      "path": "artifacts/rdered-arm/native/alpha-255.rgba",
+      "bytes": 16384,
+      "sha256": "2ef505cf0184482d8c20d94839098d4e23ce8d8ec0d3053d7c18f31ba1e504cf"
+    },
+    {
+      "path": "artifacts/rdered-arm/native/missing-final-ui.rgba",
+      "bytes": 16384,
+      "sha256": "d6b12b0e578095d128855ed2a01ed2a29583cd0a7f6be4078f942446de174657"
+    },
+    {
+      "path": "artifacts/rdered-arm/native/mixed-ui-cad.rgba",
+      "bytes": 16384,
+      "sha256": "baf63a069d505d7ebf3261c540e94d808969599559ca34e00f432ca1b910cb4c"
+    },
+    {
+      "path": "artifacts/rdered-arm/native/result.json",
+      "bytes": 491,
+      "sha256": "eb1b09f5bf4d649db7629c8afe5890a6394d64f9b31709759b07d236f8bbc557"
+    },
+    {
+      "path": "artifacts/rdered-arm/native/reversed-order.rgba",
+      "bytes": 16384,
+      "sha256": "419ab6f16e78245a4371cb552643fb96192c85d4aa9e3ecf9388a3a47df80ba1"
+    },
+    {
+      "path": "artifacts/rdered-arm/qt-alpha.log",
+      "bytes": 36,
+      "sha256": "d36157ef904350c50d628f39820fdb62464efea195f0e69cce4848e71d440f93"
+    },
+    {
+      "path": "artifacts/rdered-arm/qt-mixed.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/rdered-arm/reference/alpha/alpha-0.png",
+      "bytes": 203,
+      "sha256": "fd753eac314b3860f9aa9b3fd60674035f7c2bcc54052df43bb4fe18dd1b6cef"
+    },
+    {
+      "path": "artifacts/rdered-arm/reference/alpha/alpha-0.rgba",
+      "bytes": 16384,
+      "sha256": "081d832e8a3c7d824a89ffb5399e32db6cb4571141a4a65a8ab5da5ab769a42a"
+    },
+    {
+      "path": "artifacts/rdered-arm/reference/alpha/alpha-1.png",
+      "bytes": 227,
+      "sha256": "8772229c487f5626f53c768437aa589368c6d327b417b6d8549d8fbcbeb22ead"
+    },
+    {
+      "path": "artifacts/rdered-arm/reference/alpha/alpha-1.rgba",
+      "bytes": 16384,
+      "sha256": "5122a685f9e60f40ff357f4965567fe4a06cfe9c88db5d1d5ec9751def3ca562"
+    },
+    {
+      "path": "artifacts/rdered-arm/reference/alpha/alpha-127.png",
+      "bytes": 237,
+      "sha256": "c45521942a8a112a9a575012ae3911001dae0c6e36ef16d3a83cf90d6380681f"
+    },
+    {
+      "path": "artifacts/rdered-arm/reference/alpha/alpha-127.rgba",
+      "bytes": 16384,
+      "sha256": "38fc8224c9332f838a4ef6e4fdc3a83902b5f71b5fc06706bb9c91a830567355"
+    },
+    {
+      "path": "artifacts/rdered-arm/reference/alpha/alpha-128.png",
+      "bytes": 237,
+      "sha256": "c45521942a8a112a9a575012ae3911001dae0c6e36ef16d3a83cf90d6380681f"
+    },
+    {
+      "path": "artifacts/rdered-arm/reference/alpha/alpha-128.rgba",
+      "bytes": 16384,
+      "sha256": "38fc8224c9332f838a4ef6e4fdc3a83902b5f71b5fc06706bb9c91a830567355"
+    },
+    {
+      "path": "artifacts/rdered-arm/reference/alpha/alpha-254.png",
+      "bytes": 239,
+      "sha256": "7249408c6b04ca9beb4ebc45b5fbce3d5373fd02b5ce6afa06d0e2c7467fb4dc"
+    },
+    {
+      "path": "artifacts/rdered-arm/reference/alpha/alpha-254.rgba",
+      "bytes": 16384,
+      "sha256": "3d91e047b39b8a33002c66d7f0b407810d323d4f2b6493b5f8a4565ac95bd61c"
+    },
+    {
+      "path": "artifacts/rdered-arm/reference/alpha/alpha-255.png",
+      "bytes": 239,
+      "sha256": "f797a8178f78ce5590346fa2d6f3b8a51ea4070b0d3c37acdb675fdf2d35cb96"
+    },
+    {
+      "path": "artifacts/rdered-arm/reference/alpha/alpha-255.rgba",
+      "bytes": 16384,
+      "sha256": "2ef505cf0184482d8c20d94839098d4e23ce8d8ec0d3053d7c18f31ba1e504cf"
+    },
+    {
+      "path": "artifacts/rdered-arm/reference/alpha/reference.json",
+      "bytes": 1033,
+      "sha256": "af9f9702e0cefb65f975ed82e8764759889e2d05ee22b6567d7afa095d7e00bb"
+    },
+    {
+      "path": "artifacts/rdered-arm/reference/mixed/mixed-ui-cad.rgba",
+      "bytes": 16384,
+      "sha256": "baf63a069d505d7ebf3261c540e94d808969599559ca34e00f432ca1b910cb4c"
+    },
+    {
+      "path": "artifacts/rdered-arm/reference/mixed/source.json",
+      "bytes": 315,
+      "sha256": "3a947a54fe870ba639678ebb114b3d2a6b495b701bae0cd9b408930cfafda552"
+    },
+    {
+      "path": "artifacts/rdered-arm/revision.txt",
+      "bytes": 41,
+      "sha256": "58fc0ef17790c43d8ddc10b458153e2f5a9cfc0356bcad244ff450ce2e4ea9a8"
+    },
+    {
+      "path": "artifacts/rdered-arm/strict-check.json",
+      "bytes": 970,
+      "sha256": "9f91f859edb83aec66c0a5c39e4f4e6884bd7282080f3455bc8fac1e9ee0f1e6"
+    },
+    {
+      "path": "artifacts/rdered-arm/toolchain.txt",
+      "bytes": 192,
+      "sha256": "352d6857968e80a6357a926ac685b9b07f77c479aaafde33e73a53945e802909"
+    },
+    {
+      "path": "artifacts/rdered-intel/binary.sha256",
+      "bytes": 115,
+      "sha256": "767eb8723c05a3b1cb893637852c0e21e0ed3223fcc4bedc67b3bd9fe83f6e32"
+    },
+    {
+      "path": "artifacts/rdered-intel/build.log",
+      "bytes": 23774,
+      "sha256": "95abc3cc61988e29706d1739be1b91660d5df073ac40fe3594cdcf665be6bff9"
+    },
+    {
+      "path": "artifacts/rdered-intel/execution.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/rdered-intel/frameworks.txt",
+      "bytes": 2065,
+      "sha256": "d422e338a8c69a2fd5b10c652e31e8aea3d99ad02e634b03bc56af7e2d4c1083"
+    },
+    {
+      "path": "artifacts/rdered-intel/native/alpha-0.rgba",
+      "bytes": 16384,
+      "sha256": "081d832e8a3c7d824a89ffb5399e32db6cb4571141a4a65a8ab5da5ab769a42a"
+    },
+    {
+      "path": "artifacts/rdered-intel/native/alpha-1.rgba",
+      "bytes": 16384,
+      "sha256": "5122a685f9e60f40ff357f4965567fe4a06cfe9c88db5d1d5ec9751def3ca562"
+    },
+    {
+      "path": "artifacts/rdered-intel/native/alpha-127.rgba",
+      "bytes": 16384,
+      "sha256": "38fc8224c9332f838a4ef6e4fdc3a83902b5f71b5fc06706bb9c91a830567355"
+    },
+    {
+      "path": "artifacts/rdered-intel/native/alpha-128.rgba",
+      "bytes": 16384,
+      "sha256": "38fc8224c9332f838a4ef6e4fdc3a83902b5f71b5fc06706bb9c91a830567355"
+    },
+    {
+      "path": "artifacts/rdered-intel/native/alpha-254.rgba",
+      "bytes": 16384,
+      "sha256": "3d91e047b39b8a33002c66d7f0b407810d323d4f2b6493b5f8a4565ac95bd61c"
+    },
+    {
+      "path": "artifacts/rdered-intel/native/alpha-255.rgba",
+      "bytes": 16384,
+      "sha256": "2ef505cf0184482d8c20d94839098d4e23ce8d8ec0d3053d7c18f31ba1e504cf"
+    },
+    {
+      "path": "artifacts/rdered-intel/native/missing-final-ui.rgba",
+      "bytes": 16384,
+      "sha256": "d6b12b0e578095d128855ed2a01ed2a29583cd0a7f6be4078f942446de174657"
+    },
+    {
+      "path": "artifacts/rdered-intel/native/mixed-ui-cad.rgba",
+      "bytes": 16384,
+      "sha256": "baf63a069d505d7ebf3261c540e94d808969599559ca34e00f432ca1b910cb4c"
+    },
+    {
+      "path": "artifacts/rdered-intel/native/result.json",
+      "bytes": 491,
+      "sha256": "6ef0778f30abc492572f6463044dcad3471a213b9687d6ffa4d36684151766f7"
+    },
+    {
+      "path": "artifacts/rdered-intel/native/reversed-order.rgba",
+      "bytes": 16384,
+      "sha256": "419ab6f16e78245a4371cb552643fb96192c85d4aa9e3ecf9388a3a47df80ba1"
+    },
+    {
+      "path": "artifacts/rdered-intel/qt-alpha.log",
+      "bytes": 36,
+      "sha256": "d36157ef904350c50d628f39820fdb62464efea195f0e69cce4848e71d440f93"
+    },
+    {
+      "path": "artifacts/rdered-intel/qt-mixed.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/rdered-intel/reference/alpha/alpha-0.png",
+      "bytes": 203,
+      "sha256": "fd753eac314b3860f9aa9b3fd60674035f7c2bcc54052df43bb4fe18dd1b6cef"
+    },
+    {
+      "path": "artifacts/rdered-intel/reference/alpha/alpha-0.rgba",
+      "bytes": 16384,
+      "sha256": "081d832e8a3c7d824a89ffb5399e32db6cb4571141a4a65a8ab5da5ab769a42a"
+    },
+    {
+      "path": "artifacts/rdered-intel/reference/alpha/alpha-1.png",
+      "bytes": 227,
+      "sha256": "8772229c487f5626f53c768437aa589368c6d327b417b6d8549d8fbcbeb22ead"
+    },
+    {
+      "path": "artifacts/rdered-intel/reference/alpha/alpha-1.rgba",
+      "bytes": 16384,
+      "sha256": "5122a685f9e60f40ff357f4965567fe4a06cfe9c88db5d1d5ec9751def3ca562"
+    },
+    {
+      "path": "artifacts/rdered-intel/reference/alpha/alpha-127.png",
+      "bytes": 237,
+      "sha256": "c45521942a8a112a9a575012ae3911001dae0c6e36ef16d3a83cf90d6380681f"
+    },
+    {
+      "path": "artifacts/rdered-intel/reference/alpha/alpha-127.rgba",
+      "bytes": 16384,
+      "sha256": "38fc8224c9332f838a4ef6e4fdc3a83902b5f71b5fc06706bb9c91a830567355"
+    },
+    {
+      "path": "artifacts/rdered-intel/reference/alpha/alpha-128.png",
+      "bytes": 237,
+      "sha256": "c45521942a8a112a9a575012ae3911001dae0c6e36ef16d3a83cf90d6380681f"
+    },
+    {
+      "path": "artifacts/rdered-intel/reference/alpha/alpha-128.rgba",
+      "bytes": 16384,
+      "sha256": "38fc8224c9332f838a4ef6e4fdc3a83902b5f71b5fc06706bb9c91a830567355"
+    },
+    {
+      "path": "artifacts/rdered-intel/reference/alpha/alpha-254.png",
+      "bytes": 239,
+      "sha256": "7249408c6b04ca9beb4ebc45b5fbce3d5373fd02b5ce6afa06d0e2c7467fb4dc"
+    },
+    {
+      "path": "artifacts/rdered-intel/reference/alpha/alpha-254.rgba",
+      "bytes": 16384,
+      "sha256": "3d91e047b39b8a33002c66d7f0b407810d323d4f2b6493b5f8a4565ac95bd61c"
+    },
+    {
+      "path": "artifacts/rdered-intel/reference/alpha/alpha-255.png",
+      "bytes": 239,
+      "sha256": "f797a8178f78ce5590346fa2d6f3b8a51ea4070b0d3c37acdb675fdf2d35cb96"
+    },
+    {
+      "path": "artifacts/rdered-intel/reference/alpha/alpha-255.rgba",
+      "bytes": 16384,
+      "sha256": "2ef505cf0184482d8c20d94839098d4e23ce8d8ec0d3053d7c18f31ba1e504cf"
+    },
+    {
+      "path": "artifacts/rdered-intel/reference/alpha/reference.json",
+      "bytes": 1033,
+      "sha256": "af9f9702e0cefb65f975ed82e8764759889e2d05ee22b6567d7afa095d7e00bb"
+    },
+    {
+      "path": "artifacts/rdered-intel/reference/mixed/mixed-ui-cad.rgba",
+      "bytes": 16384,
+      "sha256": "baf63a069d505d7ebf3261c540e94d808969599559ca34e00f432ca1b910cb4c"
+    },
+    {
+      "path": "artifacts/rdered-intel/reference/mixed/source.json",
+      "bytes": 315,
+      "sha256": "3a947a54fe870ba639678ebb114b3d2a6b495b701bae0cd9b408930cfafda552"
+    },
+    {
+      "path": "artifacts/rdered-intel/revision.txt",
+      "bytes": 41,
+      "sha256": "58fc0ef17790c43d8ddc10b458153e2f5a9cfc0356bcad244ff450ce2e4ea9a8"
+    },
+    {
+      "path": "artifacts/rdered-intel/strict-check.json",
+      "bytes": 970,
+      "sha256": "9f91f859edb83aec66c0a5c39e4f4e6884bd7282080f3455bc8fac1e9ee0f1e6"
+    },
+    {
+      "path": "artifacts/rdered-intel/toolchain.txt",
+      "bytes": 191,
+      "sha256": "b1184c1aecf3182548f3bbdd91e5043e464821b1dcbf6d5ca8246339bd0be84a"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/apple-gl-depth-resolve.json",
+      "bytes": 37,
+      "sha256": "574706717f33363bcf4886d8f94a41986321935bf687f55afb9457e21e56b908"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/apple-gl-depth-resolve.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/billboards/baseline.rgba",
+      "bytes": 1920000,
+      "sha256": "ad0427ab58b576535709a441c36f155944fb2d664a837be6a6db6a2bf2fd6874"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/billboards/hidden.rgba",
+      "bytes": 1920000,
+      "sha256": "0fd41f87e0279ce0bbe1bbe5107fdba2d0db7f6f7658e8a5cd9666bd63c470dc"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/billboards/report.json",
+      "bytes": 499,
+      "sha256": "d9a39b8da54b807644a2e8325f8a7cf7e758d58eb1e594d069d5cd5f94275a87"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/billboards/turned.rgba",
+      "bytes": 1920000,
+      "sha256": "b6db443eb61ed6ba5a8a7eec1730bacb2e8a321dde1fe6e963a0374e6f901985"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/build.log",
+      "bytes": 75470,
+      "sha256": "260cf6707a72b1c1a65fa6b26b600bec5ce667749ff094965241ee078360a13c"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/check.log",
+      "bytes": 82126,
+      "sha256": "198208a8d24dc9546ca61b57b9b1aa4f3066a674a903d8c2c0e8ea79c9a9b3d8"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/defaults/camera.rgba",
+      "bytes": 16384,
+      "sha256": "3822473f0c512a08e72e1595655566b230f9bca9834182e95ff859c07e3a38e5"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/defaults/default.rgba",
+      "bytes": 16384,
+      "sha256": "e804a96c0c0e2ffa108dcfa233d3e453e70eef76e289a50814406cbde0fc900b"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/defaults/profiles-off.rgba",
+      "bytes": 16384,
+      "sha256": "e804a96c0c0e2ffa108dcfa233d3e453e70eef76e289a50814406cbde0fc900b"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/defaults/report.json",
+      "bytes": 616,
+      "sha256": "b5921b36d5e043b8b7ddc6850145cfb09876875d9079a8f98ac34ae2fc361878"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/defaults/section.rgba",
+      "bytes": 16384,
+      "sha256": "d8e089a22f1d0e6422485219b39f5ce172cc02170aad7502bd7c0878c5719e84"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/defaults/soft-edited.rgba",
+      "bytes": 16384,
+      "sha256": "3822473f0c512a08e72e1595655566b230f9bca9834182e95ff859c07e3a38e5"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/defaults/startup.rgba",
+      "bytes": 16384,
+      "sha256": "b5b4a41a6621393a22fba108714b7a33c9cdbc9c58fc6aa36088059ea2149ca7"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/document-annotations/depth-hidden.rgba",
+      "bytes": 1920000,
+      "sha256": "58d3840e89fe2653d11e8832de4ceca1d8075e794536533a92ed221223982add"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/document-annotations/depth-off.rgba",
+      "bytes": 1920000,
+      "sha256": "58d3840e89fe2653d11e8832de4ceca1d8075e794536533a92ed221223982add"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/document-annotations/depth-visible.rgba",
+      "bytes": 1920000,
+      "sha256": "4004f48f0671cf575b2e2216a1822545ce233e8152724f69563226b6217efb60"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/document-annotations/dimensions-off.rgba",
+      "bytes": 1920000,
+      "sha256": "ad0427ab58b576535709a441c36f155944fb2d664a837be6a6db6a2bf2fd6874"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/document-annotations/pergola.rgba",
+      "bytes": 1920000,
+      "sha256": "e0a7de57ea6ed3ee7c87408a7a615d57eef76330cba5d3df2359af62a5dae2e2"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/document-annotations/report.json",
+      "bytes": 480,
+      "sha256": "c996f97ad367a945ca79e2b71bec4a4f43463bfc942bf88df6b09773c3f222c1"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/document-annotations/sample-diagnostics.json",
+      "bytes": 700,
+      "sha256": "6a9474a16266168825609cf3cc1254b31b38ec2898b6c91cf60ff767a7b25f93"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/document-annotations/section-off.rgba",
+      "bytes": 1920000,
+      "sha256": "e0a7de57ea6ed3ee7c87408a7a615d57eef76330cba5d3df2359af62a5dae2e2"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/affine-nested-rich.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/affine-nested-rich.log.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/bitmap-no-texture-camera.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/bitmap-no-texture-camera.log.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/bitmap-no-texture-ordinary.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/bitmap-no-texture-ordinary.log.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/bitmap-perspective-camera.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/bitmap-perspective-camera.log.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/bitmap-perspective-ordinary.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/bitmap-perspective-ordinary.log.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/default-rich.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/default-rich.log.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/empty-rich.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/empty-rich.log.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/figure-only-camera.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/figure-only-camera.log.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/figure-only-ordinary.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/figure-only-ordinary.log.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/figures-check.json",
+      "bytes": 154,
+      "sha256": "a53832f751788014f18836bd567cdc6e484424ef822b6b686eb9d42b93d93126"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/figures-check.json.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/hidden-top-camera.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/hidden-top-camera.log.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/hidden-top-ordinary.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/hidden-top-ordinary.log.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/hole-rich.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/hole-rich.log.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/identity-orphan-camera.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/identity-orphan-camera.log.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/identity-orphan-ordinary.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/identity-orphan-ordinary.log.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/mesh-perspective-camera.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/mesh-perspective-camera.log.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/mesh-perspective-ordinary.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/mesh-perspective-ordinary.log.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/mixed-first-material-camera.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/mixed-first-material-camera.log.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/mixed-first-material-ordinary.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/mixed-first-material-ordinary.log.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/native/bitmap-no-texture.glb",
+      "bytes": 1216,
+      "sha256": "9cc0bb596d124a1cfdc8ca67e79c37e588fd0347b93cb8f4ddf7386a9718688c"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/native/bitmap-no-texture.ordinary.glb",
+      "bytes": 140,
+      "sha256": "fdafc2ed8c2ee84cf19ed071bddad77292f9806b6b2c0d1dd796f6426a8976c5"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/native/bitmap-perspective.glb",
+      "bytes": 1756,
+      "sha256": "03d290f59ca33adebd6be825ef2633399dad39f4e78db4149e7f63fef3249d96"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/native/bitmap-perspective.ordinary.glb",
+      "bytes": 140,
+      "sha256": "fdafc2ed8c2ee84cf19ed071bddad77292f9806b6b2c0d1dd796f6426a8976c5"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/native/collapse-refusal.json",
+      "bytes": 130,
+      "sha256": "534f144987fc573f51c113f6300f191216e4cd9c48158fa9b11c12281e097cfa"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/native/collapse-refusal.json.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/native/collapse-unused.glb",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/native/figure-only.glb",
+      "bytes": 2728,
+      "sha256": "f0b5023e20350665347d4bdccf46f72ff5471fbf4db840c369ccf31c1889952d"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/native/figure-only.ordinary.glb",
+      "bytes": 140,
+      "sha256": "fdafc2ed8c2ee84cf19ed071bddad77292f9806b6b2c0d1dd796f6426a8976c5"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/native/hidden-top.glb",
+      "bytes": 140,
+      "sha256": "fdafc2ed8c2ee84cf19ed071bddad77292f9806b6b2c0d1dd796f6426a8976c5"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/native/hidden-top.ordinary.glb",
+      "bytes": 140,
+      "sha256": "fdafc2ed8c2ee84cf19ed071bddad77292f9806b6b2c0d1dd796f6426a8976c5"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/native/identity-orphan.glb",
+      "bytes": 1220,
+      "sha256": "1a5cbb2d17b44840904907345a4e438c337618604f054b53cbb1ad0eb417bdcf"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/native/identity-orphan.ordinary.glb",
+      "bytes": 140,
+      "sha256": "fdafc2ed8c2ee84cf19ed071bddad77292f9806b6b2c0d1dd796f6426a8976c5"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/native/initial-decoded-failure.json",
+      "bytes": 82218,
+      "sha256": "925f22c1fdba62d764ffe2d9a707f182a927862d5fa8622daba5d7eac464aa62"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/native/mesh-perspective.glb",
+      "bytes": 1220,
+      "sha256": "1a5cbb2d17b44840904907345a4e438c337618604f054b53cbb1ad0eb417bdcf"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/native/mesh-perspective.ordinary.glb",
+      "bytes": 140,
+      "sha256": "fdafc2ed8c2ee84cf19ed071bddad77292f9806b6b2c0d1dd796f6426a8976c5"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/native/mixed-first-material.glb",
+      "bytes": 4380,
+      "sha256": "df9554494025b8677f0f579256a97df921e5caa926a588b1e03beea7bb3553af"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/native/mixed-first-material.ordinary.glb",
+      "bytes": 1104,
+      "sha256": "fffc0f0f85038736c22771e25eef21c68d8598ceb17de22e51d36e39126f1fda"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/native/nested-hidden-child.glb",
+      "bytes": 2068,
+      "sha256": "74426b11d1987ed59cf0c8ed170a2b32ff0c58d4549c979692c284b30f4d095e"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/native/nested-hidden-child.ordinary.glb",
+      "bytes": 1880,
+      "sha256": "b9d4dd55a33450fb34b74f8ed66e90ab80168d7695ebe704858199b8fb7c80fe"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/native/path-only-candidate-failure.json",
+      "bytes": 82372,
+      "sha256": "1f3e88bf3550b243b92360829d229f17345e61e726eefcd5b2f72d159dbc68dc"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/nested-hidden-child-camera.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/nested-hidden-child-camera.log.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/nested-hidden-child-ordinary.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/nested-hidden-child-ordinary.log.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/nested-reflected-rich.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/nested-reflected-rich.log.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/ordinary-rich/affine-nested.glb",
+      "bytes": 2208,
+      "sha256": "a85a9c1c84a5f29002860dac9e0237e4716223843289237831fd43ac5eaf07bc"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/ordinary-rich/default.glb",
+      "bytes": 1096,
+      "sha256": "c7c2c34fa845f950621e3b970995fee8c22be10753930532cba1bbc32869529d"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/ordinary-rich/empty.glb",
+      "bytes": 140,
+      "sha256": "fdafc2ed8c2ee84cf19ed071bddad77292f9806b6b2c0d1dd796f6426a8976c5"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/ordinary-rich/hole.glb",
+      "bytes": 1264,
+      "sha256": "4e8ccfa74ebf8e4eba6586e6a3541c7b2990dd649504fcf55159715fcb738082"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/ordinary-rich/nested-reflected.glb",
+      "bytes": 2112,
+      "sha256": "1a733ecb5ca77f18daab463aa678b992da29c7b7ae85049fe383e5f5c6051872"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/ordinary-rich/pbr-colors.glb",
+      "bytes": 5388,
+      "sha256": "90b2465e6c6f4625d039c3b4d8107aab39daafc38324a53e0cf9f45447c4f22d"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/ordinary-rich/slanted.glb",
+      "bytes": 2112,
+      "sha256": "9b9bf2e750bda766d11634a3716d68d929ee04e69270cb9fba03f1737e4246a1"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/ordinary-rich/textures-alpha.glb",
+      "bytes": 5540,
+      "sha256": "ca1ed23950eee99a1cdd88c429b08c2b633d0738dd0562a7750df08325dc2f34"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/ordinary-rich/visibility.glb",
+      "bytes": 1880,
+      "sha256": "7143d4fd4166271d31c0d1ecd856def6fe9a81caa44d515207ac59dfa0f33568"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/pbr-colors-rich.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/pbr-colors-rich.log.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/result.json",
+      "bytes": 12205,
+      "sha256": "78a96d3d061ee23c708f3d11f51e89c0b7a88dcb300a00cc1c6dd57faebd6dfa"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/rich-check.log",
+      "bytes": 102,
+      "sha256": "2c4a55ce0af15822d9abaa2a9d4cffa0bc0a59d1632c4c27717a42e6bd271105"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/rich-check.log.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/slanted-rich.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/slanted-rich.log.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/source/bitmap-no-texture.camera.json",
+      "bytes": 121,
+      "sha256": "cb0a4a686b175e1e93deb552703278b85475d9a8140a8842bcf2765775e035f6"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/source/bitmap-no-texture.glb",
+      "bytes": 1216,
+      "sha256": "30c0f9b08864bdb90cf9dff2a79445d28b1651bc6ca0d9bc6b0aac1ab6d4578a"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/source/bitmap-no-texture.igz",
+      "bytes": 1898,
+      "sha256": "17a9ee6a269a3676fcc7956b6094cf3fbda15d4a5f03c749db760d5f68ecb6c9"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/source/bitmap-no-texture.ordinary.glb",
+      "bytes": 140,
+      "sha256": "3d0af7155093f52b3cca1a95c499b55a09dc5e1ddc759c7384a102cc62e1f3a2"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/source/bitmap-perspective.camera.json",
+      "bytes": 120,
+      "sha256": "5b768981c6f74f8087f07ed7f8223b022cf3c2c69f941eca2816cdf6204bee0c"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/source/bitmap-perspective.glb",
+      "bytes": 1756,
+      "sha256": "6959b0d9bd00b8192dc8dfcb5eec2de3e133f16f564e23273c8287f7401ec062"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/source/bitmap-perspective.igz",
+      "bytes": 827,
+      "sha256": "8320e63feb0fbe7a5b155a73bc0ce1d21858b9136df23401b21bfbc7a830c024"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/source/bitmap-perspective.ordinary.glb",
+      "bytes": 140,
+      "sha256": "3d0af7155093f52b3cca1a95c499b55a09dc5e1ddc759c7384a102cc62e1f3a2"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/source/cases.json",
+      "bytes": 4839,
+      "sha256": "5c88dbfac9a117ca4c85990e4a2550f3bfe0cbe885dc421c3c8f5db37e9ad3d8"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/source/collapse.camera.json",
+      "bytes": 79,
+      "sha256": "643735b8f62eec09c7280a5db915894ad86d860a633a3c0f674745a1087e973d"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/source/collapse.glb",
+      "bytes": 1096,
+      "sha256": "9fe2dfc06bb2e06181cc15e2438a3b53f2f1b70537ea8bc671ee82fd5e4080fc"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/source/collapse.igz",
+      "bytes": 2134,
+      "sha256": "9e0e476cdd122704343ad4bc8a6ad8262543ab5a603ace2a699e92e6758f2488"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/source/figure-only.camera.json",
+      "bytes": 121,
+      "sha256": "cb0a4a686b175e1e93deb552703278b85475d9a8140a8842bcf2765775e035f6"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/source/figure-only.glb",
+      "bytes": 2728,
+      "sha256": "3529163bb8f6854ed592304deec12749f1698532b647e4c4aa8b6c9705fe382a"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/source/figure-only.igz",
+      "bytes": 925,
+      "sha256": "fccd024c1bc7af2eca1abcfa84ba6547b9ebd0ab60fe42033b46a396876eec9c"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/source/figure-only.ordinary.glb",
+      "bytes": 140,
+      "sha256": "3d0af7155093f52b3cca1a95c499b55a09dc5e1ddc759c7384a102cc62e1f3a2"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/source/figure.png",
+      "bytes": 115,
+      "sha256": "8c772cebc1995f0e3a626820b396c006f81e4911780e52605a3ae73cbc1c1d27"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/source/hidden-top.camera.json",
+      "bytes": 120,
+      "sha256": "5b768981c6f74f8087f07ed7f8223b022cf3c2c69f941eca2816cdf6204bee0c"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/source/hidden-top.glb",
+      "bytes": 140,
+      "sha256": "3d0af7155093f52b3cca1a95c499b55a09dc5e1ddc759c7384a102cc62e1f3a2"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/source/hidden-top.igz",
+      "bytes": 3631,
+      "sha256": "125ad5519ce9d6440136be954ee1c0f79a89b31d5765e5ccc7877f227e239b51"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/source/hidden-top.ordinary.glb",
+      "bytes": 140,
+      "sha256": "3d0af7155093f52b3cca1a95c499b55a09dc5e1ddc759c7384a102cc62e1f3a2"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/source/identity-orphan.camera.json",
+      "bytes": 120,
+      "sha256": "5b768981c6f74f8087f07ed7f8223b022cf3c2c69f941eca2816cdf6204bee0c"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/source/identity-orphan.glb",
+      "bytes": 1220,
+      "sha256": "ab5ac6e2d57307ab3673d8c948a25d55042984cfb1f5f38af05526d0b584bac2"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/source/identity-orphan.igz",
+      "bytes": 2254,
+      "sha256": "5fced6cbfee4c4f25a203a261bd68dddd5b2a3586f7d01fa518ab1e5a32765ec"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/source/identity-orphan.ordinary.glb",
+      "bytes": 140,
+      "sha256": "3d0af7155093f52b3cca1a95c499b55a09dc5e1ddc759c7384a102cc62e1f3a2"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/source/mesh-perspective.camera.json",
+      "bytes": 120,
+      "sha256": "5b768981c6f74f8087f07ed7f8223b022cf3c2c69f941eca2816cdf6204bee0c"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/source/mesh-perspective.glb",
+      "bytes": 1220,
+      "sha256": "ab5ac6e2d57307ab3673d8c948a25d55042984cfb1f5f38af05526d0b584bac2"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/source/mesh-perspective.igz",
+      "bytes": 1900,
+      "sha256": "4aefd79c55f6d81fd20ca7e038d57c31694d64ab0f72be974c1e766c68a2ab03"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/source/mesh-perspective.ordinary.glb",
+      "bytes": 140,
+      "sha256": "3d0af7155093f52b3cca1a95c499b55a09dc5e1ddc759c7384a102cc62e1f3a2"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/source/mixed-first-material.camera.json",
+      "bytes": 120,
+      "sha256": "5b768981c6f74f8087f07ed7f8223b022cf3c2c69f941eca2816cdf6204bee0c"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/source/mixed-first-material.glb",
+      "bytes": 4380,
+      "sha256": "4d736b03248baea4ddb9dcc0e5da484581bc09920eb7da847b5a0dffc8ae858b"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/source/mixed-first-material.igz",
+      "bytes": 1224,
+      "sha256": "45fe823c933ea42b5bdd5230e295f6629ad6a4528f73966f3ed40252d7735e71"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/source/mixed-first-material.ordinary.glb",
+      "bytes": 1104,
+      "sha256": "461667e4f46fc4d6ed0d30a9b688d48d1b941d450ba38f100c6c4c3d154dd492"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/source/nested-hidden-child.camera.json",
+      "bytes": 121,
+      "sha256": "cb0a4a686b175e1e93deb552703278b85475d9a8140a8842bcf2765775e035f6"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/source/nested-hidden-child.glb",
+      "bytes": 2068,
+      "sha256": "ec82bf98c6a6e7361413ee43d4bfc3773203c5e9c358846cf9126b4d9db5f2b5"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/source/nested-hidden-child.igz",
+      "bytes": 4401,
+      "sha256": "472c94a0a003dccf0072d5fff249f3141e17e2b962d85fd4a960e40d7e437493"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/source/nested-hidden-child.ordinary.glb",
+      "bytes": 1880,
+      "sha256": "6a18db043e4483454aeb5ae6316389ccd4be2e4feaa197fafd650824066238cd"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/textures-alpha-rich.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/textures-alpha-rich.log.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/visibility-rich.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures/visibility-rich.log.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/gltf-figures-replay.log",
+      "bytes": 721,
+      "sha256": "163c8c2b0b439b9c34f12aa7bd1e622f8fe20f9f99f3f50fcbea51dadeff2d52"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/launcher/result.json",
+      "bytes": 444,
+      "sha256": "1e47a98500b4f82afa8aafb719b9aeae24ca02ec6dfb8d001b37eaf60df5fb6c"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/launcher/runtime.log",
+      "bytes": 836,
+      "sha256": "663bdfaa519ac7fae1463c1b063e8f946412e9064f5874d9ed942324a586c2c7"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/launcher/session/config/settings.json",
+      "bytes": 538,
+      "sha256": "50447b28c8af8d9c55060389a910c910cd4bdbcc43a8d3bd0dc54c28c02a0791"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/section-fill/closed-disabled.rgba",
+      "bytes": 1920000,
+      "sha256": "cb76f01769419c5263ac5b22fe2cfba6efcc75d963c3117cb776bc7ff5d427f0"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/section-fill/closed-front-disabled.rgba",
+      "bytes": 1920000,
+      "sha256": "d101696911c8ab8474adeb8d2d10fce28bad9bb3f46492291266a7300758a77c"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/section-fill/closed-front.rgba",
+      "bytes": 1920000,
+      "sha256": "d101696911c8ab8474adeb8d2d10fce28bad9bb3f46492291266a7300758a77c"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/section-fill/closed-iso-disabled.rgba",
+      "bytes": 1920000,
+      "sha256": "543dd170292584095a25145044adf828b0dd0aa1006561d18b4748e359ee5b81"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/section-fill/closed-iso.rgba",
+      "bytes": 1920000,
+      "sha256": "9fabf645e1f3518902a2cfebbbae600663d48e8caf3980391d44a12313e88e55"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/section-fill/closed.rgba",
+      "bytes": 1920000,
+      "sha256": "8c26de0511beb04b4e04b909deaf04bf40006c7b73d0a57bf8011a8a821b70ed"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/section-fill/comparison.json",
+      "bytes": 3041,
+      "sha256": "df0f40018af3fcd896802a5cbf5815089e2d1c6e2395c8a7dcf99da81efaacf4"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/section-fill/coplanar-backface-disabled.rgba",
+      "bytes": 1920000,
+      "sha256": "2df1e68b0a0501c7783c7a4d26de58224f5dc65eff6f1b03dc13c78f14c9c042"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/section-fill/coplanar-backface.rgba",
+      "bytes": 1920000,
+      "sha256": "2df1e68b0a0501c7783c7a4d26de58224f5dc65eff6f1b03dc13c78f14c9c042"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/section-fill/duplicate-disabled.rgba",
+      "bytes": 1920000,
+      "sha256": "cb76f01769419c5263ac5b22fe2cfba6efcc75d963c3117cb776bc7ff5d427f0"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/section-fill/duplicate.rgba",
+      "bytes": 1920000,
+      "sha256": "8c26de0511beb04b4e04b909deaf04bf40006c7b73d0a57bf8011a8a821b70ed"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/section-fill/report.json",
+      "bytes": 11056,
+      "sha256": "f8b222fca1b62bb9d50162497fc44d355be0cd32e62794acca761b8f693b47dc"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/section-fill/shared-slab-disabled.rgba",
+      "bytes": 1920000,
+      "sha256": "e13bc7db9454ef0534a389dea38104ac59bac24edb97e51f17349c8296c3f797"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/section-fill/shared-slab-iso-disabled.rgba",
+      "bytes": 1920000,
+      "sha256": "fb6e8adb2095a7840ccd799e3c279ebaf7ff6f233dde2c66a95881002f910e8d"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/section-fill/shared-slab-iso.rgba",
+      "bytes": 1920000,
+      "sha256": "cc072ed6f3d9b8ac955de3165dd35d20aa9bf06fecfe8cfb29fbd27c60eb00f7"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/section-fill/shared-slab-reversed-disabled.rgba",
+      "bytes": 1920000,
+      "sha256": "cb76f01769419c5263ac5b22fe2cfba6efcc75d963c3117cb776bc7ff5d427f0"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/section-fill/shared-slab-reversed-iso-disabled.rgba",
+      "bytes": 1920000,
+      "sha256": "543dd170292584095a25145044adf828b0dd0aa1006561d18b4748e359ee5b81"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/section-fill/shared-slab-reversed-iso.rgba",
+      "bytes": 1920000,
+      "sha256": "9fabf645e1f3518902a2cfebbbae600663d48e8caf3980391d44a12313e88e55"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/section-fill/shared-slab-reversed.rgba",
+      "bytes": 1920000,
+      "sha256": "8c26de0511beb04b4e04b909deaf04bf40006c7b73d0a57bf8011a8a821b70ed"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/section-fill/shared-slab.rgba",
+      "bytes": 1920000,
+      "sha256": "e13bc7db9454ef0534a389dea38104ac59bac24edb97e51f17349c8296c3f797"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/section-fill/transparent-disabled.rgba",
+      "bytes": 1920000,
+      "sha256": "484125684b32c79de0be0af75116817c897a4245221fb35915890ae5f229cba2"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/section-fill/transparent.rgba",
+      "bytes": 1920000,
+      "sha256": "484125684b32c79de0be0af75116817c897a4245221fb35915890ae5f229cba2"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/sheet-images/checker.log",
+      "bytes": 3126,
+      "sha256": "87efca61bb41bf7d8cea7032676dd6ede953b4dbcbb294cba59a1ba07ee15601"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/sheet-images/checker.log.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/sheet-images/comparison.json",
+      "bytes": 3902,
+      "sha256": "3cc0cfb9cf0299a38d312738cc8f08fb2bb9660183b5e8c724a539b6bd044fe3"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/sheet-images/native/blank-a3.jpg",
+      "bytes": 28267,
+      "sha256": "ae985c24dba8023a838eb993ee105dd008a6e6c9d8f72e588510bb204b5dff61"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/sheet-images/native/blank-a3.rgba",
+      "bytes": 4011288,
+      "sha256": "98ac28fe36991d84fa8a975f8b42a9c51684dfe2a92d05bb18696ca91545bde8"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/sheet-images/native/blank-landscape.PNG",
+      "bytes": 14870,
+      "sha256": "58271c0d0f46a74cc8b5a8884706317671a7f04997e6b3935ee12de59220b349"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/sheet-images/native/blank-landscape.rgba",
+      "bytes": 15474824,
+      "sha256": "eb5603225181a65611c305384d31ff9bd9c201fa59312429ef3cb5dce77195eb"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/sheet-images/native/blank-portrait.png",
+      "bytes": 1950,
+      "sha256": "86b93815a391309a42781e531ae6b2bb7898b668266023cd9f1b236be4bff577"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/sheet-images/native/blank-portrait.rgba",
+      "bytes": 966420,
+      "sha256": "89ad6c93d90fc720d38f14cf1b4f9815e94f57e07472c4063a63fd602a255c0d"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/sheet-images/native/chosen-jpeg.jpg",
+      "bytes": 32747,
+      "sha256": "5f5f79bfabad49034910bdf29f095ded03d317711d4c2d8521406aa501ddcfc7"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/sheet-images/native/chosen.png",
+      "bytes": 3843,
+      "sha256": "524acfe0e11e427e19108e75e9eac60712923e1529c4dcf543c72c5c5de78d9f"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/sheet-images/native/lazy-failure.jpg",
+      "bytes": 17,
+      "sha256": "bfc4668bda0fa79af37afecbd00615118d71004f462fd761e0ee581c279785c0"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/sheet-images/native/native.json",
+      "bytes": 5100,
+      "sha256": "9fccf6563d252211943e1438f681687249300530585df3fc0a5dbe9126684423"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/sheet-images/native/session/config/settings.json",
+      "bytes": 973,
+      "sha256": "997b9d97c9f5face16346192253f347dbe2774cbfeb87cc7368a1beeafb940c1"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/sheet-images/native/shapes-jpeg.jpeg",
+      "bytes": 68236,
+      "sha256": "c0c5555fc1c81df8d3d67fd962e4616b564cc5d9ad1b0aec5d41c9e63a28116d"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/sheet-images/native/shapes-jpeg.rgba",
+      "bytes": 3867052,
+      "sha256": "ea027e6318b3eb4c0636dcfebfc26b3bd1351ff1416b633cd95fa80a02a92f9f"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/sheet-images/native/shapes-portrait.png",
+      "bytes": 17041,
+      "sha256": "ecc70e81f28771f7d3d5e112e41757a93bbcabe2d188b9bff9b187dd27185010"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/sheet-images/native/shapes-portrait.rgba",
+      "bytes": 3566648,
+      "sha256": "32aae1d9a81d2ac6902c626fe19146326ba0f1bc6fbce785e5861781e0eae677"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/sheet-images/native/shapes.png",
+      "bytes": 17392,
+      "sha256": "471f5616c56c50145e922d6766f1365e4ae33ac207a3c5db170905205692b482"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/sheet-images/native/shapes.rgba",
+      "bytes": 3867052,
+      "sha256": "bb3ca21c91ef09bfb89da7f2232966d93d32fd93aa08a35b2c93f2a9904de898"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/sheet-images/native/upper.JPG",
+      "bytes": 38819,
+      "sha256": "4e599f16ad8c474c7d23c109c8eb9abf69346cff869407179640595ef85adedb"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/sheet-images/native/view-cropped.png",
+      "bytes": 6179,
+      "sha256": "ddace77d7863fbd1109dd91c4103daf51e616ba848a1dd2ba1ecea00e56248cf"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/sheet-images/native/view-cropped.rgba",
+      "bytes": 3867052,
+      "sha256": "8f1a57dc80199b20d5a608fdeb2bdf2a9182f6c231dac5989651f1b396b8bfc5"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/sheet-images/native/view-current.png",
+      "bytes": 5866,
+      "sha256": "e196e706ec7c70483eda153a5d49ec79022d2262ee90e4049e64c3e8c35de759"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/sheet-images/native/view-current.rgba",
+      "bytes": 3867052,
+      "sha256": "0bf0dd3e3646ed962731bc305a03ced3b4522d27cfcb0c4dd8b5a42d027607ae"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/sheet-images/native/view-hidden-thin.png",
+      "bytes": 3107,
+      "sha256": "848d4ee49f540401682f0b238365720a5e0810f90f25eb51c405da066a91532e"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/sheet-images/native/view-hidden-thin.rgba",
+      "bytes": 966420,
+      "sha256": "f39ac0d32943073b240ebfd38deaeeb22c21018ee6cfe1ac9f1e00e9439f0cb2"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/sheet-images/native/view-saved.png",
+      "bytes": 6581,
+      "sha256": "dca68a68443ed7e581f95d2063bec85daa0bc8d1580d2d05d65b0689ce42d64c"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/sheet-images/native/view-saved.rgba",
+      "bytes": 3867052,
+      "sha256": "e35a9ad2492a15b0c43697b81f58006af19999eb8ce49e03d9104cd82964284a"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/sheet-images/result.json",
+      "bytes": 6265,
+      "sha256": "593016c0f662de67abf13aab5c67c97e6ac69ae492e619a4624533833e5f8da6"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/sheet-images/runtime.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/sheet-images/runtime.log.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/sheet-images/source/blank-a3.jpg",
+      "bytes": 28267,
+      "sha256": "ae985c24dba8023a838eb993ee105dd008a6e6c9d8f72e588510bb204b5dff61"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/sheet-images/source/blank-landscape.PNG",
+      "bytes": 14905,
+      "sha256": "afa006e446dc3d3c6dad16126b12ea5e62aaf6a420ff96d72431fe588f7faa30"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/sheet-images/source/blank-portrait.png",
+      "bytes": 2009,
+      "sha256": "0b9264f46b206976777f93b46d43727bf6365565f2227acbf1d8162c378e95b7"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/sheet-images/source/capture.log",
+      "bytes": 53,
+      "sha256": "092a07b530f92a59d98637037c99b662460dc6eca8ab59f9215f772d0b18cddb"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/sheet-images/source/chosen-jpeg.jpg",
+      "bytes": 32747,
+      "sha256": "5f5f79bfabad49034910bdf29f095ded03d317711d4c2d8521406aa501ddcfc7"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/sheet-images/source/chosen.png",
+      "bytes": 3923,
+      "sha256": "b8fe55c3549c631f957b5dd8536c71e2eea533d9b11b7f704a0afb306406e338"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/sheet-images/source/shapes-jpeg.jpeg",
+      "bytes": 68236,
+      "sha256": "c0c5555fc1c81df8d3d67fd962e4616b564cc5d9ad1b0aec5d41c9e63a28116d"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/sheet-images/source/shapes-portrait.png",
+      "bytes": 17805,
+      "sha256": "1b972bea7772e0ebf83db1265fc8e840cab8b45c1183092dd4e269e42b5e7d42"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/sheet-images/source/shapes.png",
+      "bytes": 18269,
+      "sha256": "e1b9af8ec1132a6da00cb67b2c4404ab3d9df0a8bb570926cca361dbf0681fcd"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/sheet-images/source/source.json",
+      "bytes": 8829,
+      "sha256": "c365180873a2f3c9df6ee55121dfd327b9d2d249b215590a70c42f2807332b52"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/sheet-images/source/text.png",
+      "bytes": 10220,
+      "sha256": "b35852cb1d072201ac3f4ab726998b57ce559dee6a5c3de4023fd0969b9cca86"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/sheet-images/source/upper.JPG",
+      "bytes": 38819,
+      "sha256": "4e599f16ad8c474c7d23c109c8eb9abf69346cff869407179640595ef85adedb"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/sheet-images/views/capture.log",
+      "bytes": 287,
+      "sha256": "1f5be4ae69f49b3f1a8ea45a71980963d5071f4ca8f3126a3d093ed2ca047be0"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/sheet-images/views/source-receipt.json",
+      "bytes": 308,
+      "sha256": "62dc3460e7b482f42bf1e70b0b0bdb8042b5494b43a7a26311ac83ff1ad2135a"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/sheet-images/views/source.json",
+      "bytes": 4153,
+      "sha256": "d9c4d15e61b7862b366db0397871e4fb888419ed4c8147647f0d25a46405d0b2"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/sheet-images/views/view-cropped.igz",
+      "bytes": 6196,
+      "sha256": "2176da22da29dd6b64295adb9dbf6883a3b5348f976cc81de0253cd958844f54"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/sheet-images/views/view-cropped.png",
+      "bytes": 6194,
+      "sha256": "b7963da2d9fdb75861c55b9a19416f41fada6128e5040c09a9520bbb834be392"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/sheet-images/views/view-current.igz",
+      "bytes": 6198,
+      "sha256": "9c20ace75b5eabfb8acca63f4ed6f31a79b7edc4e91041b270e3a3760b2f62e6"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/sheet-images/views/view-current.png",
+      "bytes": 5886,
+      "sha256": "6f130c09715490b35ae4ce0bafd8337c9a3ace681a895e9981368aad3d2a398b"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/sheet-images/views/view-hidden-thin.igz",
+      "bytes": 6201,
+      "sha256": "fb0ca2cb743971db71af8c079f417ccf8c4c6ef88e1db24c8f074eb96f2a9a15"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/sheet-images/views/view-hidden-thin.png",
+      "bytes": 3191,
+      "sha256": "9823c94890aea903d5b00679e986c2eb1574b1fdd65a7d0a3538027a53f4f07a"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/sheet-images/views/view-saved.igz",
+      "bytes": 7932,
+      "sha256": "2b150599bd148c410376c4c629276456a0219838d9c482b93741a91282a0a276"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/sheet-images/views/view-saved.png",
+      "bytes": 6623,
+      "sha256": "b2d56fb9bd41400db6af35b4c58a0e4a6ee48ae0d96fbb924853721163bc56d0"
+    },
+    {
+      "path": "artifacts/rm/metal-combined-gui-ci/sheet-images-replay.log",
+      "bytes": 3914,
+      "sha256": "e9d828671765009597305d27d9637e436635afd2a723787818d32e34d3ad88af"
+    },
+    {
+      "path": "artifacts/rm/paper-font-native-ci/font-resource.log",
+      "bytes": 22529,
+      "sha256": "2e130d263d24f7cacd423e0b2a67ce8a1c13ea75ed696ae46811f69b9496f122"
+    },
+    {
+      "path": "artifacts/rm/paper-font-native-ci/tests.log",
+      "bytes": 29840,
+      "sha256": "60560d905fd8231080c03a715ead1719fe7573d1fbae5a1226b03f8c77abda7b"
+    },
+    {
+      "path": "artifacts/ross-arm/check.log",
+      "bytes": 23858,
+      "sha256": "6c3ecfa4b783838ba0fae5d65a5e17592d5373baf0c08b60c2de609feb47e226"
+    },
+    {
+      "path": "artifacts/ross-arm/gui-examples.log",
+      "bytes": 75932,
+      "sha256": "9e1e3c52ac7fea91b9db5fac1df728461cd4d03d4b04a503fb71d1e7094e0425"
+    },
+    {
+      "path": "artifacts/ross-intel/check.log",
+      "bytes": 23858,
+      "sha256": "4745c4cf59bd6c4c3a326e75018c912709564e3e1c3c8553d8681a5add0ea6e2"
+    },
+    {
+      "path": "artifacts/ross-intel/gui-examples.log",
+      "bytes": 75932,
+      "sha256": "c465d7b90f77a75194fac8d47462499361d48e7c18b0d17fb1bad7065d2a1a20"
+    },
+    {
+      "path": "artifacts.json",
+      "bytes": 4392,
+      "sha256": "6e00e5b78c50634f9d4c1c2e5599df377f860a5a30cafd18264f6d33bf29c17b"
+    },
+    {
+      "path": "b48-intel.log",
+      "bytes": 215,
+      "sha256": "3a67c8a77109ad9fe97f6200bb90c769acf496e5b84725b8d3c255b27521323f"
+    },
+    {
+      "path": "full-jobs.json",
+      "bytes": 43083,
+      "sha256": "803b3c6669dbef2483748468df040b957dcac82355f24a42fbccc19e296d3a91"
+    },
+    {
+      "path": "linux-top-step-timings.json",
+      "bytes": 1044,
+      "sha256": "8e377a915c2df0a54e040fd9e756b3700d98c73d3cd2690dc0b619c81b44f931"
+    },
+    {
+      "path": "mac-library-repair.json",
+      "bytes": 1139,
+      "sha256": "9b591cf58a33b902bad52e069d09eaf905a5e2bb55ecd665dbfcdafd14d49d5a"
+    },
+    {
+      "path": "observation.json",
+      "bytes": 18292,
+      "sha256": "8831d8ca66dc77a2dd5f7eb6c924f86603c79fb2fa01bfbe6efaf60731675931"
+    },
+    {
+      "path": "ordered-artifacts.json",
+      "bytes": 1489,
+      "sha256": "76295a9827d2261bf3020ce392afb7101a50f43d2d85ac8296b8628d155285ef"
+    },
+    {
+      "path": "ordered-jobs.json",
+      "bytes": 6924,
+      "sha256": "43e0ec58072c7d7299aef05b7485ae78faf4715656c871e91eec3af860371349"
+    },
+    {
+      "path": "selected-linux/document-axes-ci/gltf-figures/result.json",
+      "bytes": 11813,
+      "sha256": "c3f16d58944d0a4438216ac8d7e14a243507efa1a3e4d29929cb35dc64d5e781"
+    },
+    {
+      "path": "selected-linux/document-axes-ci/result.json",
+      "bytes": 165369,
+      "sha256": "b392f2712385cc0f4a6211372c25660f763a4da955856f102bc11cc083a31c0f"
+    },
+    {
+      "path": "selected-linux/document-axes-ci/sheet-images/comparison.json",
+      "bytes": 4234,
+      "sha256": "2a89d749f69971219100ecf02c69be92b30c7a48fd4221e3cd5b422a51645b4a"
+    },
+    {
+      "path": "selected-linux/document-axes-ci/sheet-images/result.json",
+      "bytes": 6540,
+      "sha256": "f412ec0ddbd05991e7d84c062bd34edca6d964173ea65d72a5f933c9d4c97ab0"
+    },
+    {
+      "path": "selected-linux/document-axes-ci/stages.json",
+      "bytes": 28348,
+      "sha256": "fc5fe3067dc56c6f60178dc7964561af77808dbdd9376baa4b8e531b414121f7"
+    },
+    {
+      "path": "selected-linux/drawing-reference-render/runtime.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "selected-linux/drawing-reference-render/state.json",
+      "bytes": 1069,
+      "sha256": "edcfb4db2d1f9805970f04abbb426ac37c8df6d0cd768486bd1925ef272ae93a"
+    },
+    {
+      "path": "selected-linux/grid-default-ci/fresh-gate.json",
+      "bytes": 1486,
+      "sha256": "d255b096aa6e1230609b99786bee2026a47aecf105911ee90aa374a9db2fab40"
+    },
+    {
+      "path": "selected-linux/grid-default-ci/source-generation.json",
+      "bytes": 89582,
+      "sha256": "4210b0efd8de473a0d36aeae7eaebdbba8828d69f83a46a624b6f9c955f5f1e9"
+    },
+    {
+      "path": "selected-linux/grid-heldout-ci/fresh-gate.json",
+      "bytes": 1487,
+      "sha256": "04eaa5b26d15d461c968947d0ffec2cac3f6d28c293044139ffa2ba737de25a9"
+    },
+    {
+      "path": "selected-linux/grid-heldout-ci/source-generation.json",
+      "bytes": 89586,
+      "sha256": "552bab1b2d4ddc356d5aff7e5fa57b13ad9977a50b7a19d38015d29db8ac9b80"
+    },
+    {
+      "path": "selected-linux/range-receipt.json",
+      "bytes": 11610,
+      "sha256": "a52c74040db16c7e1b0988cb618610edae102825f98cffdf1a82d08450f26a9b"
+    },
+    {
+      "path": "selected-linux/saved-vector-view-ci/fresh-gate.json",
+      "bytes": 1482,
+      "sha256": "8f2009098d914fb94f902cc5fe9e55f645339450999bc1139f41f3ef945b2810"
+    },
+    {
+      "path": "selected-linux/saved-vector-view-ci/source-generation.json",
+      "bytes": 89579,
+      "sha256": "c8d25ce6b89f6d791677245c27625c9266b4a8f84b18c2d37196109e5d7f7f92"
+    },
+    {
+      "path": "selected-linux/section-heldout-hatch-ci/fresh-gate.json",
+      "bytes": 1482,
+      "sha256": "7199867a875e416580339fd57ab48bec46f865a364f214e3aa6378ad1c5cb14c"
+    },
+    {
+      "path": "selected-linux/section-heldout-hatch-ci/source-generation.json",
+      "bytes": 89585,
+      "sha256": "d935c6d0ecd77a6f99fd8dced313f7c1aad328e6b8307208ef77206a666d8f6a"
+    },
+    {
+      "path": "selected-linux/section-solid-ci/fresh-gate.json",
+      "bytes": 1484,
+      "sha256": "9992966c023d3cac97d6a063991a256f3aae787dfe8dfaa3f184647f93141ab3"
+    },
+    {
+      "path": "selected-linux/section-solid-ci/source-generation.json",
+      "bytes": 89580,
+      "sha256": "604fd5a02d39cea286b007e84b36b28be1907a9b09af54196ca322324369214e"
+    },
+    {
+      "path": "selected-linux/shift-inference-render/runtime.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "selected-linux/shift-inference-render/state.json",
+      "bytes": 226,
+      "sha256": "9785347fab8e33d5a04c3c5e8188ac00319ff9129fa8b63bff3e1f2c0828ab2f"
+    },
+    {
+      "path": "selected-linux/vector-view-ci/fresh-gate.json",
+      "bytes": 1483,
+      "sha256": "98eb9ee21a4960dba24a5eb515c4f85b9401456c5a5e493d4eb133e41a06c5ad"
+    },
+    {
+      "path": "selected-linux/vector-view-ci/source-generation.json",
+      "bytes": 89580,
+      "sha256": "ead35489f33978dad509e0f3487151a56b5c2709a538d2fa4601ceb1a676a4e7"
+    },
+    {
+      "path": "step-timings.json",
+      "bytes": 60561,
+      "sha256": "3e9e814d290080f79b87eb00752b5a1e05d293484f3f501912e959af10536def"
+    }
+  ]
+}

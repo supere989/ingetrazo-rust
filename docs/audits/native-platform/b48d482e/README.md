@@ -1,0 +1,9 @@
+# b48d482e automatic CI observation
+
+Exact head b48d482e5772494a38ab8cec4e6038053197a46d. Full run38190079632 failed only native Mac jobs; ordered38190079629 passed both devices. Linux all113steps passed, zero skips; authenticated shared receipt has30binaries/178stages, allpass. New figures8camera+8ordinary/28negative/7retained failures and old9/7negative pass. Linux sheet11/11 and6handler controls pass. Windows actual process recovery and both cross jobs pass. Main remained c73fe993cdd4ab6e9e820f25e72613982afaa904. No manual dispatch/retry/cancel, builds or local replay.
+
+Both actual native Mac libraries pass78tests, including curve/spline/portable-math controls. Both figure replays pass. ARM sheet diagnostic10/10 exact with text explicitly excluded. Intel new diagnostic refuses before pixels: Native paper texture size query returned zero. This first failure is retained and distinct from known section/CGL plus Intel annotation/CLI gates. ARM section differences0,0,0,0,0,0,134,152,134,0; Intel292,434,292,576,292,4,1433,1506,1433,436. No weakened image comparison or font closure claim.
+
+Canonical manifest authenticates556records/147,978,877rawbytes, ZIP SHA25661ab955909ccdedf38f61109808caa9161457b12992df1bed46b8ad62e190f5f. Platform artifacts retained once. Linux23,674,257-byte artifact was range-selected:742,868downloadedbytes/21records, CRC/size/hash verified; whole Linux ZIP was not downloaded. Source-generation receipts retain six recipe identities, actual capture38.504173794999474seconds plus binding6.769827532000022seconds; no reuse/speed claim.
+
+Top measured Linux step durations derive existing terminal job metadata: workspace151s, shared integrated workflows151s, Text composer64s, paragraph47s, Vulkan stencil45s. These whole-step durations include their respective compilation/execution/IO; they are not isolated renderer timings. Exact top10 and all step times are archived.
