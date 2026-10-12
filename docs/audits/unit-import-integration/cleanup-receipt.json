@@ -1,0 +1,19 @@
+{
+  "utc": "2026-10-12T18:38:16.542209+00:00",
+  "action": "Removed only authenticated disposable directory roots",
+  "directory_roots": [
+    "/tmp/ingetrazo-unit-source-r1/cache",
+    "/tmp/ingetrazo-unit-source-r1/data",
+    "/tmp/ingetrazo-unit-source-r1/settings",
+    "/tmp/ingetrazo-unit-native-r1/native/picker",
+    "/tmp/ingetrazo-unit-native-r1/native/shared-config",
+    "/tmp/ingetrazo-unit-native-r2/native/picker",
+    "/tmp/ingetrazo-unit-native-r2/native/shared-config",
+    "/tmp/ingetrazo-unit-wrapper-preflight/source"
+  ],
+  "removed_files": 47,
+  "logical_bytes": 149763071,
+  "canonical_archives_reauthenticated_after": true,
+  "physical_reclaimed_bytes_measured": false,
+  "raw_evidence_and_shared_target_preserved": true
+}
