@@ -1,0 +1,276 @@
+{
+  "source_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "runtime_commit": "ed1a70d9562ab9b11eea009634e0f2607dea30e8",
+  "binary": {
+    "path": "/tmp/ingetrazo-ai-registry-target/debug/examples/context_document_lifecycle",
+    "sha256": "17e9adba20e2ee8fb3e917beafba088667916fb4b1ccba205d2dc8dcc7f4bef0"
+  },
+  "archive_sha256": "7d801b52795efcdd732287312d818b6fa28a52f8c24c4b3dd44a75d7b483bbea",
+  "members": {
+    "logs/ingetrazo-dxf-blocks-addendum-native.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "logs/ingetrazo-dxf-blocks-addendum-reopen.log": {
+      "bytes": 31,
+      "sha256": "3700a445186bdc8fb9153b6d1076ff3ee7bc7386d90a7a8e95855438a8713ef2"
+    },
+    "logs/ingetrazo-dxf-blocks-addendum-source.log": {
+      "bytes": 232,
+      "sha256": "af369ffe77f59f632b4b4f5b3a2e6fbd9caebe635dfda9d297c6606c356f385f"
+    },
+    "logs/ingetrazo-dxf-blocks-build.log": {
+      "bytes": 21547,
+      "sha256": "e5d10a26542dec92210de449c1a70e9e632b2171ace2180ec788fd34c35ae5fd"
+    },
+    "logs/ingetrazo-dxf-blocks-curve-addendum-source.log": {
+      "bytes": 232,
+      "sha256": "af369ffe77f59f632b4b4f5b3a2e6fbd9caebe635dfda9d297c6606c356f385f"
+    },
+    "logs/ingetrazo-dxf-blocks-final-addendum-reopen.log": {
+      "bytes": 31,
+      "sha256": "3700a445186bdc8fb9153b6d1076ff3ee7bc7386d90a7a8e95855438a8713ef2"
+    },
+    "logs/ingetrazo-dxf-blocks-final-addendum.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "logs/ingetrazo-dxf-blocks-final-build.log": {
+      "bytes": 21191,
+      "sha256": "017782b9adb28f95012935c7129fbdaa014b5a0f6d98a9ddab725d0d57634d7c"
+    },
+    "logs/ingetrazo-dxf-blocks-final-native.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "logs/ingetrazo-dxf-blocks-final-reopen.log": {
+      "bytes": 32,
+      "sha256": "024619dcaf7994f8a08e70ad23cd066d71904f068128af9911e78f535dd29065"
+    },
+    "logs/ingetrazo-dxf-blocks-focused-tests.log": {
+      "bytes": 27694,
+      "sha256": "70034cb8a20eff921644bd4c7fd41306e98d6c30cb8cc8224cadfd34aa9add71"
+    },
+    "logs/ingetrazo-dxf-blocks-full-arc-addendum-source.log": {
+      "bytes": 133,
+      "sha256": "ece42cd38cdd550dace34a8663638b9505abbbd9d88dad7f6a80433ded92f1e1"
+    },
+    "logs/ingetrazo-dxf-blocks-native.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "logs/ingetrazo-dxf-blocks-old-curves.log": {
+      "bytes": 32,
+      "sha256": "154dad2e32dd166d6a6160d2d2a08a0af79030366d83ea23deea066ae33bfca3"
+    },
+    "logs/ingetrazo-dxf-blocks-old-entities.log": {
+      "bytes": 31,
+      "sha256": "da86a87a94e59e2cafdc81a62146beb0b1849f1877acc89a6238a498db8795dc"
+    },
+    "logs/ingetrazo-dxf-blocks-old-splines.log": {
+      "bytes": 32,
+      "sha256": "a5e1e162626aa4e3aba5a5edca86b1c05c67dbab076a21835caf987d54b50895"
+    },
+    "logs/ingetrazo-dxf-blocks-reopen.log": {
+      "bytes": 32,
+      "sha256": "024619dcaf7994f8a08e70ad23cd066d71904f068128af9911e78f535dd29065"
+    },
+    "native/anisotropic-legacy-bulge-native.igz": {
+      "bytes": 12289,
+      "sha256": "7d4d6033c61575b1af4903cb1ebb56e20a5bac668aa9c429cc2fbbbc890b754f"
+    },
+    "native/anisotropic-lw-bulge-native.igz": {
+      "bytes": 11923,
+      "sha256": "fa45e2b3bf8f5ac9f14a6adc960820a79ef435ee950c79dbfe5a6d60005fb386"
+    },
+    "native/attributed-insert-native.igz": {
+      "bytes": 4703,
+      "sha256": "4e6090b7ff77aab779b1092af39395c2e8781c8528646848dc62f4b004f725d1"
+    },
+    "native/block-face-native.igz": {
+      "bytes": 6395,
+      "sha256": "135747a06fb87ee6293266edfba971353fcad210d67a27c2925610458c8ec55b"
+    },
+    "native/cancel-block-reopen.json": {
+      "bytes": 24536,
+      "sha256": "715cc5ac9bbdcafdf6eb2ec88fc4b3144882a4dbde1a7ba4652f593ba057347d"
+    },
+    "native/cancel-native.igz": {
+      "bytes": 5813,
+      "sha256": "1c93f5515707ea72bc3468afe1cefb1cbf60ca558583d0cd17591b2c8e16f47b"
+    },
+    "native/case-sensitive-prototypes-native.igz": {
+      "bytes": 6743,
+      "sha256": "704137be3ec85e7c6ca8934088e69f785d250becb786d2ef3b00e1e73d6228dc"
+    },
+    "native/depth-limit-native.igz": {
+      "bytes": 6303,
+      "sha256": "aacdf8f549c9b655ccd0860228abe556ed0f99184e83005726909eeac82d0c14"
+    },
+    "native/first-native-dxf-blocks-addendum.json": {
+      "bytes": 1307256,
+      "sha256": "5394edd7feb69452a21deeb65d79762ab7606fb138e2b9426e649f33da3aec36"
+    },
+    "native/first-native-dxf-blocks.json": {
+      "bytes": 1204171,
+      "sha256": "47d6c21633407291789869e197c804462eca2861f9ad87ab809f4eec30446ff9"
+    },
+    "native/initial-diff-addendum.json": {
+      "bytes": 4206,
+      "sha256": "17f5c504d66edb14f5f6a51f0045e2362e6a96b98ea7f7a26ad8b89c9e2678fb"
+    },
+    "native/initial-diff.json": {
+      "bytes": 7818,
+      "sha256": "950dd17e8b57e50fd629f76f2e1b6deca79737904f21f0bf0a84ac5dbe69d1f0"
+    },
+    "native/minsert-first-placement-native.igz": {
+      "bytes": 4934,
+      "sha256": "032c74f9b7e8a56250a33360b5b390fef30b342cc21dec6c1f3a271d371921b0"
+    },
+    "native/missing-annotation-mixed-native.igz": {
+      "bytes": 4873,
+      "sha256": "2857924e6680b39195c6cc6f21cba10b3d2c9736d55c5a128795ccce194f0e06"
+    },
+    "native/mixed-order-native.igz": {
+      "bytes": 6748,
+      "sha256": "39c1fc96a2a21b858cec4232c2507b661e344cadf980bd3adbd6c0b63251dcb8"
+    },
+    "native/native-block-cancel.json": {
+      "bytes": 61,
+      "sha256": "990666a4c51ce8533c513ca1e26fc167e3e86d84d8953a50ec8a9d892e71c666"
+    },
+    "native/native-dxf-blocks-addendum.json": {
+      "bytes": 1307207,
+      "sha256": "3761a83066e1ca8a5252ee862b889cebcbd44fceba114ad78eba0142c04599cc"
+    },
+    "native/native-dxf-blocks.json": {
+      "bytes": 1204080,
+      "sha256": "4e90a7f4a1ab8f35f372b6c8c12323da3e137ec739d7352735333da8d003d181"
+    },
+    "native/native-dxf-guards.json": {
+      "bytes": 173,
+      "sha256": "89b49795723ba45284deb4df57e8b8215d0ff1f7499fdefc74bef312c67cd6ac"
+    },
+    "native/nested-curves-native.igz": {
+      "bytes": 27493,
+      "sha256": "85f6aa7dfaf1bca7c94eefb1c06ab8465be5d5c902f8886bcb5bab3556b4ca6c"
+    },
+    "native/nested-lines-native.igz": {
+      "bytes": 5418,
+      "sha256": "ec03e3adb8886cfc0371762f92ec9c4afe9b4a5a52180b5ba75474ab57684ec3"
+    },
+    "native/oblique-insert-native.igz": {
+      "bytes": 5061,
+      "sha256": "174b1d1444e5373040f0bda541f2ed8500cc3a3c4554c55e300e2df3f6fc7c0e"
+    },
+    "native/reopens-dxf-blocks-addendum.json": {
+      "bytes": 553443,
+      "sha256": "8e5d2d6dca727b1331cc36eedc93c77023d2ec1c120ff7ac3fb41afdc35ed0b3"
+    },
+    "native/reopens-dxf-blocks.json": {
+      "bytes": 415143,
+      "sha256": "02382afe13ede205357e426cf757fbfb1b6cf910c2c64eeb9bfc18d5ca3cf48d"
+    },
+    "native/shared-base-native.igz": {
+      "bytes": 5813,
+      "sha256": "5e4d75388f4ad58fee31123770d08434b50c8438a7fce35269a99f7545d4bae6"
+    },
+    "native/shared-leaf-native.igz": {
+      "bytes": 6087,
+      "sha256": "d5349dd3ae719dc3e891cb8c4dcdb7db9be588beebaa781362f19fbebe86c6b5"
+    },
+    "native/uniform-arc-native.igz": {
+      "bytes": 18249,
+      "sha256": "4debf872ca5de7a774afae3e67a8c7de0f8ab15d8f9bc25b9466ac9918fb3671"
+    },
+    "native/uniform-circle-native.igz": {
+      "bytes": 22791,
+      "sha256": "25df55393bebb2a46373060c535777e44d55d9b064786912efcc330daa555b3b"
+    },
+    "native/uniform-full-arc-native.igz": {
+      "bytes": 22769,
+      "sha256": "03749e7d1c87fc54ed0030329bbf95bfcbb3250ac94bbbfe9b40646e91324ed3"
+    },
+    "native/unit-centimetres-native.igz": {
+      "bytes": 5957,
+      "sha256": "2c5807d5ce068457d0b72ded1dd390500c62e3ac8407d7b03cac75c2a1ac4977"
+    },
+    "native/unit-nested-spline-native.igz": {
+      "bytes": 67845,
+      "sha256": "6d58cda15064818ed1e95855f318121c4d16070354f3b2974e7945c063868695"
+    },
+    "native/utm-recenter-native.igz": {
+      "bytes": 6150,
+      "sha256": "c04fbc762a55accc83198f149b9ed88a567e24b016687c2bc0538b75fc254948"
+    },
+    "regression/native-dxf-curves.json": {
+      "bytes": 1596442,
+      "sha256": "965a230893f8f827131697067c5f4d1bd93a97bb74dab69bd64022866c6f8c1c"
+    },
+    "regression/native-dxf-entities.json": {
+      "bytes": 428431,
+      "sha256": "22e20e901b8e7e590533bb1d7f9ace1e398819f4f93c8ccdf8ae4fb34a5bc1d0"
+    },
+    "regression/native-dxf-guards.json": {
+      "bytes": 173,
+      "sha256": "89b49795723ba45284deb4df57e8b8215d0ff1f7499fdefc74bef312c67cd6ac"
+    },
+    "regression/native-dxf-splines.json": {
+      "bytes": 5114826,
+      "sha256": "b2ffa57ebbcb4bdf746a8ac4e801d78b719bf7486ea1e1a030f815cbce0212bc"
+    },
+    "regression/native-spline-errors.json": {
+      "bytes": 53,
+      "sha256": "c54a4fff63d2a041926e7654fe8f48b1ccea37238f493c72ab3f899d43814ed2"
+    },
+    "regression/reopens-dxf-curves.json": {
+      "bytes": 1140600,
+      "sha256": "4065eedff0c2fd1d2a17db0751ea0c42b3e6233e03133d5b5459f0a24a3c4527"
+    },
+    "regression/reopens-dxf-entities.json": {
+      "bytes": 218547,
+      "sha256": "e45cfa9925e7ca00e26f4b2aca67be9faddefbea5d23e9f31f484d2d9a3348e9"
+    },
+    "regression/reopens-dxf-splines.json": {
+      "bytes": 4143117,
+      "sha256": "c24d566401c315ce53ba653f0e17483f6936ac5fb03d216fdc512b5d935fbe5a"
+    },
+    "logs/ingetrazo-dxf-blocks-final-checker.log": {
+      "bytes": 177,
+      "sha256": "5fde4c3e22215c82657d6e5475b819b09b1d6d88c032533eaf30188c98e5fa90"
+    },
+    "logs/ingetrazo-dxf-blocks-old-checker.log": {
+      "bytes": 368,
+      "sha256": "fe6e1d2d3fa234620db59aefc8d3098fd717c0e47cb59d4a95a35e9e39077bac"
+    }
+  },
+  "sources": {
+    "crates/ingetrazo-formats/src/dxf.rs": "ae8999ece6fcb86450ecb7c32c37617e334103bf98113389c5976cd6145711bc",
+    "crates/ingetrazo-formats/src/dxf_blocks.rs": "dc59d4427fe04aadbac6337a703b01c053c3e8c341108a0643946b1d3501ef40",
+    "crates/ingetrazo-formats/src/dxf_curves.rs": "3447faa06624b44d396ca1ae941716f149c525b9ca14e2cc2f63350f9f5775f0",
+    "crates/ingetrazo-gui/src/import_units.rs": "0d8a7ada767aa13bfd77c97eff56d4c9d09c70826c8e6fc0e9e846aa1f49bf21",
+    "crates/ingetrazo-gui/examples/context_document_lifecycle.rs": "2fa75b0e360507c4183fb7668df26572949071cd754d430b64bd10eff764cbac",
+    "crates/ingetrazo-gui/examples/context_document_lifecycle/dxf_entities.rs": "3df0f25aea7eb46472d1ef4a2d57dd38bb5bdc31478f3811feec8807f3792ab2",
+    "scripts/check-dxf-blocks.py": "d256846d8020c71fb03704546ae186e80e8bba337a0d355293ed1edc4233e245",
+    "scripts/reference-dxf-blocks-reopen.py": "7d29b64f1f41ed12d178a442fa609eefed76185d8070aad31f91e44ca67b506d",
+    "scripts/check-dxf-curves.py": "d6ec79944b6c5bb2aef9fed248bc3aba4eb006a8abb7a0ec1193095f44b06b61"
+  },
+  "acceptance": {
+    "new_cases": 20,
+    "new_states": 140,
+    "new_reader_pairs": 20,
+    "cancel_reader_pair": 1,
+    "negative_controls": 80,
+    "retained_observer_failures_rejected": 2,
+    "ownership_guards": 4,
+    "old_straight_states": 56,
+    "old_curve_states": 84,
+    "old_spline_states": 105,
+    "old_reader_pairs": 35,
+    "focused_tests": 5
+  },
+  "build_seconds": {
+    "first": 13.04,
+    "corrected": 8.72
+  }
+}
