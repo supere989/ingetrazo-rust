@@ -304,6 +304,9 @@ run([sys.executable, repo/"scripts/replay-gltf-figures.py", binaries/("gltf_rich
 sheet_images = out/"sheet-images"
 run([sys.executable, repo/"scripts/replay-sheet-images.py", binaries/("sheet_image_workflows"+suffix), binaries.parent/("ingetrazo-render-worker"+suffix), sheet_images, "--software"], "sheet-images-replay.json", requires=["binary:sheet_image_workflows"])
 
+dxf_blocks = out/"dxf-blocks"
+run([sys.executable, repo/"scripts/replay-dxf-blocks.py", binaries/("context_document_lifecycle"+suffix), dxf_blocks], "dxf-blocks-replay.json", requires=["binary:context_document_lifecycle"])
+
 def summarize():
     rows = json.loads((doc/"native.json").read_text())["rows"]
     assert [(x["fixture"],x["phase"]) for x in rows] == [(f,p) for f in ["retained","nested-leaves"] for p in ["edited","undo","redo"]]
@@ -351,6 +354,7 @@ def summarize():
               "dxf_source_archives":dxf_archives,"dxf":{lane:json.loads(path.read_text()) for lane,path in dxf_results.items()},
               "gltf_figures":json.loads((gltf_figures/"result.json").read_text()),
               "sheet_images":json.loads((sheet_images/"result.json").read_text()),
+              "dxf_blocks":json.loads((dxf_blocks/"result.json").read_text()),
               "fresh_source_acquisitions":0,"result":"pass"}
     return result
 
