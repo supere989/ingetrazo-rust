@@ -77,6 +77,11 @@ pub(super) fn collect(
 > {
     let view = crate::edit_context_view::ContextView::new(app);
     let scene = view.active_scene();
+    // viewport.DEFAULT_FACE_COLOR owns unpainted shaded surfaces; style front
+    // color belongs to flat style overrides below, not this material fallback.
+    // Keep the same source policy as ordinary World surface collection.
+    let mut surface_style = app.style.clone();
+    surface_style.front_color = [0.96, 0.95, 0.925, 1.];
     let groups = RefCell::new(Vec::new());
     let group_error = RefCell::new(None);
     let data = RefCell::new(ingetrazo_render::pipeline::SceneRenderData::default());
@@ -86,7 +91,7 @@ pub(super) fn collect(
             ingetrazo_render::pipeline::append_borrowed_context_mesh(
                 mesh,
                 scene,
-                &app.style,
+                &surface_style,
                 &mut data.borrow_mut(),
             );
             ingetrazo_render::native_edges::append_borrowed_mesh(
@@ -105,7 +110,7 @@ pub(super) fn collect(
                 group,
                 scene,
                 &app.camera,
-                &app.style,
+                &surface_style,
                 &mut data.borrow_mut(),
             );
             ingetrazo_render::native_edges::append_borrowed_group(
