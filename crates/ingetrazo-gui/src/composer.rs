@@ -21,6 +21,7 @@ use crate::app::IngeTrazoApp;
 #[path="composer_text_canvas.rs"] pub(crate) mod text_canvas;
 #[path="composer_text_authoring.rs"] mod text_authoring;
 #[path="composer_pointer.rs"] mod pointer_transactions;
+#[path="composer_clipboard.rs"] pub(crate) mod clipboard;
 #[path="composer_picture_gestures.rs"] mod picture_gestures;
 #[path="composer_picture_authoring.rs"] mod picture_authoring;
 #[path="composer_legend_authoring.rs"] mod legend_authoring;
