@@ -1,0 +1,44 @@
+{
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "qt_version": "6.12.0",
+  "case": "llamadas-default",
+  "source_archive": {
+    "path": "docs/audits/sheet-annotations/source-records.zip",
+    "sha256": "6bd1016cfd82f10ff194730faf4904252bfc688562662153418b827f5ccf3be8",
+    "members": [
+      "llamadas-default.igz",
+      "llamadas-default.png"
+    ]
+  },
+  "producer": {
+    "path": "scripts/reference-callout-coverage.py",
+    "sha256": "31de2f2d7a42dc0826e131a1e7d47e1b19200078fc8fbf776bf48bcadb7a6556",
+    "argv": [
+      "OUTPUT"
+    ]
+  },
+  "consumer": {
+    "example": "callout_coverage",
+    "argv": [
+      "SOURCE",
+      "OUTPUT",
+      "[--software]"
+    ]
+  },
+  "operation": "actual QPainter.drawRoundedRect overload; original NoBrush, FlatCap, dashedpattern6/3, inherited transform/clip/hints/opacity/composition",
+  "source_observations": [
+    "ordinary-before/observed equal frozen wholeRGBA",
+    "actual pre/post operation destination",
+    "same-call public transparent ARGB32 premultiplied and white/black originalRGB32 paint",
+    "complete operative painter state",
+    "unchanged actual composition and separate model/sheet histories",
+    "no callback errors"
+  ],
+  "native_observations": [
+    "actual App prepared records",
+    "actual dashed geometry postmask source_spans, batch/color metadata",
+    "actual immutable Arc prefix GPU paint",
+    "observer/ordinary equality and model/history invariance"
+  ],
+  "scope": "One frozen case only, public mask-paint observation not private QSpan interception. No source or pixel golden fit, no inferred unique coverage from final RGB. Original corpus remains immutable; root sole capture/build/executor."
+}
