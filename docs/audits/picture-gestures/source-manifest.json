@@ -1,0 +1,226 @@
+{
+  "original_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "archive_sha256": "60c7b80fe8f67dd77c5e60a60b27b0fad30be38d78fec62594ae5ad6fa84d5e8",
+  "members": {
+    "assets/checker.png": {
+      "size": 431,
+      "sha256": "22dd51f90a74a4e4a93f82fe5f6601544f20e1c779b4c884cdc83c21c97dc8e3"
+    },
+    "click-only-input.igz": {
+      "size": 1089,
+      "sha256": "138031f1c5a6ae62fbd1a28fedbb142cfc334df359df558af23a28d187ced577"
+    },
+    "click-only-original.igz": {
+      "size": 1089,
+      "sha256": "138031f1c5a6ae62fbd1a28fedbb142cfc334df359df558af23a28d187ced577"
+    },
+    "ctrl-toggle-input.igz": {
+      "size": 1090,
+      "sha256": "b5dd3385c5c566e5fc4f0ba99b4a1056736fa342d7d22d6398014eb52cca7400"
+    },
+    "ctrl-toggle-original.igz": {
+      "size": 1090,
+      "sha256": "b5dd3385c5c566e5fc4f0ba99b4a1056736fa342d7d22d6398014eb52cca7400"
+    },
+    "drag-page-guide-input.igz": {
+      "size": 1218,
+      "sha256": "579ba95d557223ef6090984be8f4bc0b31ceb100d462a1d306295015387b6cdc"
+    },
+    "drag-page-guide-original.igz": {
+      "size": 1218,
+      "sha256": "5a00585e5a5279d1403a49b9f7068e97527ce4b9e9607826f6849b6292d4e605"
+    },
+    "drag-sibling-input.igz": {
+      "size": 1656,
+      "sha256": "8b60ea8ed33ad7d467d5c8343d4ec2d488a705bb708a2371b9155cc5df7c6a9e"
+    },
+    "drag-sibling-original.igz": {
+      "size": 1656,
+      "sha256": "3b6f5ba062e0d7751b6ce7b3a31c53f2dea09ecb28a7d456aec8198efedc6f33"
+    },
+    "drawing-endpoint-input.igz": {
+      "size": 2998,
+      "sha256": "249b56dc3a508aae5c84b5a1cdd201223afb14c9549ffdc8b94bae10d0ebf59b"
+    },
+    "drawing-endpoint-original.igz": {
+      "size": 2998,
+      "sha256": "1f122e7e34c94bf301b01159bdff5ec5af3c779fc549bcb3b4fc4b2745800889"
+    },
+    "drawing-midpoint-input.igz": {
+      "size": 2998,
+      "sha256": "32a9ec2311ea39684d39be52ed0e2e6457c5d713dfba83ba2d5b8d9fd74fc638"
+    },
+    "drawing-midpoint-original.igz": {
+      "size": 2998,
+      "sha256": "ac82533d2c6232b4d0e82877b982548c7c05bc2e3eb4c8b03822d8a177988f7c"
+    },
+    "equal-z-input.igz": {
+      "size": 1647,
+      "sha256": "e0ba7fec160fd36075b798105fe1cd1bad16319b93740e95988065a3e810e448"
+    },
+    "equal-z-original.igz": {
+      "size": 1647,
+      "sha256": "1754b2431c9f3a359fb67d455f2ace88d6fe6b26c6de1feb57660a80fc42d3e0"
+    },
+    "escape-drag-input.igz": {
+      "size": 1090,
+      "sha256": "3ca3c9f95fed5e2860ac2ff2e6a915d8b9a754ae7faf330608789bbc1a33cc3e"
+    },
+    "escape-drag-original.igz": {
+      "size": 1090,
+      "sha256": "41c7befa8974ef88d631751134ca8a05d7e2e00bda8e5dfd425f4cf4028fd9e1"
+    },
+    "first-original-gestures-guide-fixture.json": {
+      "size": 231625,
+      "sha256": "6f2f61e51be5eec9b830538c947020f5a7601d4c4179c130083b2b6e9e2267e4"
+    },
+    "guide-correction.log": {
+      "size": 41,
+      "sha256": "c450603a50977c87d3b43045c331b00ec88b32ccded7d372203b039023160c2d"
+    },
+    "guide-correction.stderr": {
+      "size": 597,
+      "sha256": "9c2d0f6153fafe1c85f9a720e7c8aa2072ea3013b40f824be9d9122253ff9c6c"
+    },
+    "hidden-only-input.igz": {
+      "size": 1089,
+      "sha256": "8f92f290db789a66ee51a08648e12d41620b8f89d521eaaa1f4ab176c243234f"
+    },
+    "hidden-only-original.igz": {
+      "size": 1089,
+      "sha256": "8f92f290db789a66ee51a08648e12d41620b8f89d521eaaa1f4ab176c243234f"
+    },
+    "hidden-overlay-input.igz": {
+      "size": 1653,
+      "sha256": "1c3cbf1452b8a956b12073b868350cddb4bc5499c1fbdc8a9ee9b2ad4265de05"
+    },
+    "hidden-overlay-original.igz": {
+      "size": 1653,
+      "sha256": "2f04db0147bedbfc6a36c457f18005aba8fe700382a257cd170546a4658c1b57"
+    },
+    "higher-z-input.igz": {
+      "size": 1648,
+      "sha256": "a14c990256a15c9bf485603cba2717e3166bcc450ee71fa73311e5ad767c0183"
+    },
+    "higher-z-original.igz": {
+      "size": 1648,
+      "sha256": "c939fa0d5ab0e72a3c4f31a7ebd4d7a59019ab27f176295dc490edc70830d645"
+    },
+    "initial.log": {
+      "size": 44,
+      "sha256": "d9ed9844a9ef2171f45c190958d5e0290a5180062f8467e405e3733d4a2548c4"
+    },
+    "initial.stderr": {
+      "size": 4079,
+      "sha256": "a535d4a1cba2c5c726fa4ab57a8c1c62e41ccc7c5d203783aca5679789aac830"
+    },
+    "large-first-move-input.igz": {
+      "size": 1095,
+      "sha256": "40707fff6bdf82a6213bf37da3affeedef7955704a803a455db6507f08f402c0"
+    },
+    "large-first-move-original.igz": {
+      "size": 1095,
+      "sha256": "6630b9e31c0eb9b08a7d50b7753480604d07abe2da13cf06b994503b88252816"
+    },
+    "locked-only-input.igz": {
+      "size": 1089,
+      "sha256": "503405ccf89fd9e09c94524f6ae052f8da0c667114d6c7f4736cfd76b1b1d9d3"
+    },
+    "locked-only-original.igz": {
+      "size": 1089,
+      "sha256": "503405ccf89fd9e09c94524f6ae052f8da0c667114d6c7f4736cfd76b1b1d9d3"
+    },
+    "locked-overlay-input.igz": {
+      "size": 1653,
+      "sha256": "759a4f9ab4f52aa73efe23ab8091e7f6a164c4a8a73e2452ea63c22f7a613347"
+    },
+    "locked-overlay-original.igz": {
+      "size": 1653,
+      "sha256": "6a291d35cb931b9522770f00b1c91554a51001b5dd58f0768176e3b6b0797a99"
+    },
+    "original-gestures.json": {
+      "size": 234349,
+      "sha256": "444ec367cbaac4999a4325cfa3c7959c7e4ede951ab7978d3dfe0397d34da87f"
+    },
+    "original-reopens.json": {
+      "size": 21586,
+      "sha256": "b9d85ffef02185131a08b3c96f4879f4f85dcb904438b894b3f85f52452220bb"
+    },
+    "out-and-back-input.igz": {
+      "size": 1091,
+      "sha256": "fa6a8216602fa2f0d4a8d7f0cdf5dbfffe5e4db3f1053d6ceb3e03e96216ccee"
+    },
+    "out-and-back-original.igz": {
+      "size": 1091,
+      "sha256": "bd82954fcd998e305b7bf7a7a5de59934b00c5972a61b5feae18a51cedfaef8f"
+    },
+    "resize-free-shift-input.igz": {
+      "size": 1096,
+      "sha256": "0d994bab8ba85624ebada247c5c85d155c0d1512f7aff3851aec625ce5d713fe"
+    },
+    "resize-free-shift-original.igz": {
+      "size": 1096,
+      "sha256": "e8850b0289fdd393231134208cca9aa3588533c06d5ac1d38a7c89d3a0288714"
+    },
+    "resize-guide-input.igz": {
+      "size": 1215,
+      "sha256": "44b765a66bba63be007fce4a579ed79f016a8bfa0c32cd9e30105608b60e152d"
+    },
+    "resize-guide-original.igz": {
+      "size": 1215,
+      "sha256": "3c7b6b6528e9fcc3788bb1f1a30fffc31f3a146db123d3759aaa14560e1ff37f"
+    },
+    "resize-minimum-input.igz": {
+      "size": 1093,
+      "sha256": "1b525966874404793fd54cba76db27cc8870a93c48d40be8a475d2e36713e919"
+    },
+    "resize-minimum-original.igz": {
+      "size": 1092,
+      "sha256": "b38bc7fccc1aa8258de23836cfed5acd2a2a6cb1bb2dee6aaf3e4c5ffb9a9d25"
+    },
+    "resize-minimum-snapped-input.igz": {
+      "size": 1225,
+      "sha256": "ef83b52e4b3270eef353f0a6f453220448f128631363e7bcee04abd5d57aa1b6"
+    },
+    "resize-minimum-snapped-original.igz": {
+      "size": 1223,
+      "sha256": "b7383505fcb0651becc36ddca51e8b9f3d9025475b0f0a3ead7ff30c6c6ca7d0"
+    },
+    "selected-drag-input.igz": {
+      "size": 1092,
+      "sha256": "c2ac5d68b5eac4330f150a833aadcef42b459efc004d392873ae7626310ef2f1"
+    },
+    "selected-drag-original.igz": {
+      "size": 1092,
+      "sha256": "f5d4bc6ece87edee88a109719313dd19d436a1da6af1a223c1ff421871c72c4f"
+    },
+    "unselected-drag-input.igz": {
+      "size": 1094,
+      "sha256": "01ee483577cc972e354c1529fbc6ac2968a5ea310a3f2e074f69b1b668c45846"
+    },
+    "unselected-drag-original.igz": {
+      "size": 1094,
+      "sha256": "de0245eee35bab0e5dfb76fdcd707dcc20d77e1c2a6ae9428e5660c1c7af22a1"
+    }
+  },
+  "producer_commit": "1763f59cf19ca50fcd6c42ba7d7044c8bc5401c6",
+  "producers": {
+    "scripts/reference-picture-gestures.py": "cd5e2e4c3d1d37aa5eb307639865ec765522988d6f3bffd4e57e18c7c9c524fc",
+    "scripts/reference-picture-gesture-reopens.py": "b7dec1ab448c0b7dda7128c9caa3326beba58d90ed94d5faf4c6e1ab0c22acc1",
+    "scripts/check-picture-gestures.py": "505cb414eab517ce587f075fd0cc5e39ac37ba69017425db17533a5312b88126",
+    "scripts/replay-picture-gestures.py": "5efcc49dc71ec03f35228345e5a2f7fc6c1de8e9f22425eb915e5660f8893366"
+  },
+  "source_hashes": {
+    "views/composer.py": "aeb7676d7a7a1b2704c0f108f5d8ab7861836c74648838c545bcce454ac248af",
+    "core/composition.py": "24aa8327d1c6a0b4afbaab0d153743f28c3deb557f44a66c467d5aed4dd65da9",
+    "formats/igz.py": "f318d685830c49c2fede7fd5a238ac7a1469ee0b0226cf48cab3751e194a9576"
+  },
+  "counts": {
+    "cases": 21,
+    "states": 167,
+    "original_reader_pairs": 21,
+    "changed_guide_cases": 3,
+    "unchanged_cases": 18
+  },
+  "scope": "Actual original Qt pointer/history/reader; no native runtime acceptance or multi-item/rendered parity."
+}

@@ -1,0 +1,27 @@
+{
+  "pass_": true,
+  "cases": 21,
+  "states": 167,
+  "original_reader_pairs": 21,
+  "rejected_controls": 16,
+  "negative_names": [
+    "missing-state",
+    "extra-state",
+    "reordered-state",
+    "bool-history",
+    "false-selection",
+    "changed-width",
+    "changed-position",
+    "changed-opacity",
+    "lost-path",
+    "bool-hidden",
+    "missing-reader",
+    "reordered-reader",
+    "reader-width",
+    "wrong-case",
+    "synthetic-input",
+    "raw-loss"
+  ],
+  "scope": "Checker-only source-to-source synthetic input proves16 rejecting mutations; NOT native/App/GPU acceptance.",
+  "checker_sha256": "505cb414eab517ce587f075fd0cc5e39ac37ba69017425db17533a5312b88126"
+}
