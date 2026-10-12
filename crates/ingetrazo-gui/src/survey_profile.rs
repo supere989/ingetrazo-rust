@@ -185,7 +185,6 @@ struct StationCursor<'a> {
     segment: usize,
     prefix: f64,
     length: Option<f64>,
-    advances: usize,
 }
 impl<'a> StationCursor<'a> {
     fn new(points: &'a [DVec3]) -> Self {
@@ -194,7 +193,6 @@ impl<'a> StationCursor<'a> {
             segment: 0,
             prefix: 0.,
             length: None,
-            advances: 0,
         }
     }
     fn at(&mut self, station: f64) -> (f64, f64) {
@@ -221,7 +219,6 @@ impl<'a> StationCursor<'a> {
             self.prefix += length;
             self.segment += 1;
             self.length = None;
-            self.advances += 1;
         }
         let last = self.points.last().unwrap();
         (last.x, last.y)
@@ -871,7 +868,7 @@ mod tests {
                 (expected.0.to_bits(), expected.1.to_bits())
             );
         }
-        assert_eq!(cursor.advances, points.len() - 1);
+        assert_eq!(cursor.segment, points.len() - 1);
         assert_eq!(StationCursor::new(&[]).at(1.), (0., 0.));
     }
     fn loaded() -> IngeTrazoApp {
