@@ -249,7 +249,7 @@ impl Probe {
                     return Ok(false);
                 }
                 self.rows.extend(rows);
-                let events = state.capture.diagnostics();
+                let events = state.capture.diagnostics().to_vec();
                 let timeout = events
                     .iter()
                     .any(|e| e["blocked_gate"] == true && e["retirement"] == "Quarantined");

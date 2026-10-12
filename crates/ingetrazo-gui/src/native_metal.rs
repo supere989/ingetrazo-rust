@@ -55,7 +55,6 @@ impl HostOptions {
 fn run_inner(
     initial_file: Option<PathBuf>,
     probe: Option<lifecycle_probe::Probe>,
-    bridge_probe: Option<bridge_capture_probe::Probe>,
     options: HostOptions,
     bridge_probe: Option<bridge_capture_probe::Probe>,
 ) -> Result<(), Box<dyn std::error::Error>> {
@@ -104,6 +103,7 @@ struct Host {
     repaint: Instant,
     error: Option<String>,
     probe: Option<lifecycle_probe::Probe>,
+    bridge_probe: Option<bridge_capture_probe::Probe>,
     options: HostOptions,
 }
 impl Host {
@@ -429,7 +429,8 @@ impl ApplicationHandler for Host {
         ev.set_control_flow(ControlFlow::WaitUntil(self.repaint));
     }
     fn exiting(&mut self, _: &ActiveEventLoop) {
-        if let Some(state) = self.state.take() {
+        if let Some(mut state) = self.state.take() {
+            if self.bridge_probe.is_some(){state.capture.release_gate_for_probe();state.app.stop_ai_bridge();}
             if let Some(probe)=self.bridge_probe.as_mut(){if let Err(e)=probe.finish(){self.error=Some(e);}}
             if let Some(probe) = self.probe.as_mut() {
                 if let Err(e) = probe.finish(&state.app, &state.gpu, self.error.as_deref()) {
