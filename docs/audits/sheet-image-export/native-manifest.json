@@ -1,0 +1,997 @@
+{
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "archive": "native-records.zip",
+  "archive_sha256": "14033539530c0bafa67495b12ec3e5586b9a3cb6be87212b97be756ee89895b6",
+  "entries": [
+    {
+      "path": "attempts/import/capture.log",
+      "bytes": 308,
+      "sha256": "5b5e440febb6f48e1c5f9475393c883f2d0fef3626e6b4f93641141751ae9d6d"
+    },
+    {
+      "path": "attempts/import/reference-sheet-image.py",
+      "bytes": 5765,
+      "sha256": "df420fe4368046e3dacb6d23cf8e10c70ea345d340e723f3d7cb76f6037c1e23"
+    },
+    {
+      "path": "build.json",
+      "bytes": 670,
+      "sha256": "f13de041e4f3d7f5c1cfb6ac12284b5991cbac8bd74361b9d774239f4928572e"
+    },
+    {
+      "path": "codec-build.log",
+      "bytes": 13339,
+      "sha256": "f41ca74f98801f9fbc11bfeb1f624c491310ca2371c949b783168930bbd4370f"
+    },
+    {
+      "path": "codec.json",
+      "bytes": 282,
+      "sha256": "b804102d71058f82989181dcdebe630ae7f7fa53edaaebe68054b2e673c95a18"
+    },
+    {
+      "path": "codec.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "device-clip-build.jsonl",
+      "bytes": 225466,
+      "sha256": "c00d4089714b07c26daf942368d7aa9a5dfab75be10cb732261d37c8f33ca5e2"
+    },
+    {
+      "path": "device-clip-build.log",
+      "bytes": 20719,
+      "sha256": "258ca725e156387d81a46f42dd108098bbabc6881d6efeefdbc4c74d00508e14"
+    },
+    {
+      "path": "first-generation/build.log",
+      "bytes": 12956,
+      "sha256": "276d41a809b570656e1acd4398b8a8e2eef99a43ec3de5db400b933ea4e7d5d5"
+    },
+    {
+      "path": "first-generation/check.json",
+      "bytes": 496,
+      "sha256": "a94924887e0ea895acf1455dd809cea9602a87cca608009ebdf347eef8cc61c9"
+    },
+    {
+      "path": "first-generation/jpeg-headers.json",
+      "bytes": 1366,
+      "sha256": "f296582aeb16a6ad3e53f67ed8bce16ba5e3e97c911e166fd9f0a064f17bad9b"
+    },
+    {
+      "path": "first-generation/native/native.json",
+      "bytes": 827,
+      "sha256": "e50a086063d78d1a37daee4ce8e629c85e091de82d378ed631295f6c64df1c9c"
+    },
+    {
+      "path": "first-generation/native/preserve.png",
+      "bytes": 20,
+      "sha256": "f6d322e962168f1aa0f69887fe429c6e90fa22961dad4099fe9a89c9cadba86c"
+    },
+    {
+      "path": "first-generation/native/shapes-jpeg.jpeg",
+      "bytes": 68143,
+      "sha256": "b43a46e37c53b6dd215d4e4bb9e3070cd3da5e73c927024b1cdbed5c09a026af"
+    },
+    {
+      "path": "first-generation/receipt.json",
+      "bytes": 692,
+      "sha256": "bbc921ec2273c90c2762d55efa3aef509b6642aa368b6bfb5f7ada09493ab60f"
+    },
+    {
+      "path": "first-generation/runtime.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "hardware/check.json",
+      "bytes": 4206,
+      "sha256": "71ed6c7814247064a3eb28a4a98ca63d15aae478abc99abcf9fa120abdbea1a0"
+    },
+    {
+      "path": "hardware/check.log",
+      "bytes": 3356,
+      "sha256": "0647349f78b7334a29f30ec878e7b90e41b6fb5d82953e007b65e9527218a287"
+    },
+    {
+      "path": "hardware/native/blank-a3.jpg",
+      "bytes": 28267,
+      "sha256": "ae985c24dba8023a838eb993ee105dd008a6e6c9d8f72e588510bb204b5dff61"
+    },
+    {
+      "path": "hardware/native/blank-a3.rgba",
+      "bytes": 4011288,
+      "sha256": "98ac28fe36991d84fa8a975f8b42a9c51684dfe2a92d05bb18696ca91545bde8"
+    },
+    {
+      "path": "hardware/native/blank-landscape.PNG",
+      "bytes": 14870,
+      "sha256": "58271c0d0f46a74cc8b5a8884706317671a7f04997e6b3935ee12de59220b349"
+    },
+    {
+      "path": "hardware/native/blank-landscape.rgba",
+      "bytes": 15474824,
+      "sha256": "eb5603225181a65611c305384d31ff9bd9c201fa59312429ef3cb5dce77195eb"
+    },
+    {
+      "path": "hardware/native/blank-portrait.png",
+      "bytes": 1950,
+      "sha256": "86b93815a391309a42781e531ae6b2bb7898b668266023cd9f1b236be4bff577"
+    },
+    {
+      "path": "hardware/native/blank-portrait.rgba",
+      "bytes": 966420,
+      "sha256": "89ad6c93d90fc720d38f14cf1b4f9815e94f57e07472c4063a63fd602a255c0d"
+    },
+    {
+      "path": "hardware/native/chosen-jpeg.jpg",
+      "bytes": 32747,
+      "sha256": "5f5f79bfabad49034910bdf29f095ded03d317711d4c2d8521406aa501ddcfc7"
+    },
+    {
+      "path": "hardware/native/chosen.png",
+      "bytes": 3843,
+      "sha256": "524acfe0e11e427e19108e75e9eac60712923e1529c4dcf543c72c5c5de78d9f"
+    },
+    {
+      "path": "hardware/native/lazy-failure.jpg",
+      "bytes": 17,
+      "sha256": "bfc4668bda0fa79af37afecbd00615118d71004f462fd761e0ee581c279785c0"
+    },
+    {
+      "path": "hardware/native/native.json",
+      "bytes": 5329,
+      "sha256": "8cca73596b0f1ec64c57dc70f3372c76a3128f671f9a95ab2c3a1366e7d85e7a"
+    },
+    {
+      "path": "hardware/native/session/config/settings.json",
+      "bytes": 593,
+      "sha256": "50c2d347e18be92ad2dfb4cb04aec81ec1c68fdf8b89f27b7a408c1967e086ee"
+    },
+    {
+      "path": "hardware/native/shapes-jpeg.jpeg",
+      "bytes": 68236,
+      "sha256": "c0c5555fc1c81df8d3d67fd962e4616b564cc5d9ad1b0aec5d41c9e63a28116d"
+    },
+    {
+      "path": "hardware/native/shapes-jpeg.rgba",
+      "bytes": 3867052,
+      "sha256": "ea027e6318b3eb4c0636dcfebfc26b3bd1351ff1416b633cd95fa80a02a92f9f"
+    },
+    {
+      "path": "hardware/native/shapes-portrait.png",
+      "bytes": 17041,
+      "sha256": "ecc70e81f28771f7d3d5e112e41757a93bbcabe2d188b9bff9b187dd27185010"
+    },
+    {
+      "path": "hardware/native/shapes-portrait.rgba",
+      "bytes": 3566648,
+      "sha256": "32aae1d9a81d2ac6902c626fe19146326ba0f1bc6fbce785e5861781e0eae677"
+    },
+    {
+      "path": "hardware/native/shapes.png",
+      "bytes": 17392,
+      "sha256": "471f5616c56c50145e922d6766f1365e4ae33ac207a3c5db170905205692b482"
+    },
+    {
+      "path": "hardware/native/shapes.rgba",
+      "bytes": 3867052,
+      "sha256": "bb3ca21c91ef09bfb89da7f2232966d93d32fd93aa08a35b2c93f2a9904de898"
+    },
+    {
+      "path": "hardware/native/text.png",
+      "bytes": 9967,
+      "sha256": "7d9976f2a7073017a3fbe1498568b8147c5ecd0bace222b78ff827076b939f17"
+    },
+    {
+      "path": "hardware/native/text.rgba",
+      "bytes": 3867052,
+      "sha256": "91b99265fcf6284cfe94ac89c1b1f9f2cc6a1218bc46cf5618468975847a42ba"
+    },
+    {
+      "path": "hardware/native/upper.JPG",
+      "bytes": 38819,
+      "sha256": "4e599f16ad8c474c7d23c109c8eb9abf69346cff869407179640595ef85adedb"
+    },
+    {
+      "path": "hardware/native/view-cropped.png",
+      "bytes": 6179,
+      "sha256": "ddace77d7863fbd1109dd91c4103daf51e616ba848a1dd2ba1ecea00e56248cf"
+    },
+    {
+      "path": "hardware/native/view-cropped.rgba",
+      "bytes": 3867052,
+      "sha256": "8f1a57dc80199b20d5a608fdeb2bdf2a9182f6c231dac5989651f1b396b8bfc5"
+    },
+    {
+      "path": "hardware/native/view-current.png",
+      "bytes": 5866,
+      "sha256": "e196e706ec7c70483eda153a5d49ec79022d2262ee90e4049e64c3e8c35de759"
+    },
+    {
+      "path": "hardware/native/view-current.rgba",
+      "bytes": 3867052,
+      "sha256": "0bf0dd3e3646ed962731bc305a03ced3b4522d27cfcb0c4dd8b5a42d027607ae"
+    },
+    {
+      "path": "hardware/native/view-hidden-thin.png",
+      "bytes": 3107,
+      "sha256": "848d4ee49f540401682f0b238365720a5e0810f90f25eb51c405da066a91532e"
+    },
+    {
+      "path": "hardware/native/view-hidden-thin.rgba",
+      "bytes": 966420,
+      "sha256": "f39ac0d32943073b240ebfd38deaeeb22c21018ee6cfe1ac9f1e00e9439f0cb2"
+    },
+    {
+      "path": "hardware/native/view-saved.png",
+      "bytes": 6581,
+      "sha256": "dca68a68443ed7e581f95d2063bec85daa0bc8d1580d2d05d65b0689ce42d64c"
+    },
+    {
+      "path": "hardware/native/view-saved.rgba",
+      "bytes": 3867052,
+      "sha256": "e35a9ad2492a15b0c43697b81f58006af19999eb8ce49e03d9104cd82964284a"
+    },
+    {
+      "path": "hardware/nvidia.json",
+      "bytes": 105,
+      "sha256": "559298238b82b7ef5db83f2674d7a3fe416158735a56302121b7f2e2d5c1f053"
+    },
+    {
+      "path": "hardware/transport.json",
+      "bytes": 2905,
+      "sha256": "adf7f0a69b71de79a59dff57cbe38d66d74170c3aeb5069a116d91df1d0530ea"
+    },
+    {
+      "path": "hardware/transport.log",
+      "bytes": 309,
+      "sha256": "10d9f3846ae0dbb6a9f070ec30efd8449e5be03f7615bfd4a882db3d7e6fa95f"
+    },
+    {
+      "path": "initial-check.json",
+      "bytes": 1192,
+      "sha256": "5c21964be70ec766fc172ffe32fd4b8405740c3757305750d9786e74e28da8b9"
+    },
+    {
+      "path": "local-clean.log",
+      "bytes": 38,
+      "sha256": "53810c6ffc91d0413399a734bb51bfea421e5ad6b589de1265c86a9aecdf0e80"
+    },
+    {
+      "path": "local-handoff-clean.log",
+      "bytes": 38,
+      "sha256": "2fd83eaba884c829d74121ac2e8c5243497b02f430e45f30f8d4b71db4a88aa9"
+    },
+    {
+      "path": "material-metadata.json",
+      "bytes": 2290158,
+      "sha256": "8a4e86bd58708825d27cc2419e3bef6d5d9e278d4b005b12ffdc20836452b26b"
+    },
+    {
+      "path": "metadata.log",
+      "bytes": 110664,
+      "sha256": "5724970d2564dc4a0b28f14db59f6abad35862c802ee6f14abda0bba4a650656"
+    },
+    {
+      "path": "native-build.jsonl",
+      "bytes": 226192,
+      "sha256": "d1679453438657685b11c8c3478f9d1b02352c40aec65c365edce55b7af8c689"
+    },
+    {
+      "path": "native-build.log",
+      "bytes": 20903,
+      "sha256": "f9758894eeec2d436d70cf5955c46b60e8ec5afc75d381abbd5df510a0bb517d"
+    },
+    {
+      "path": "native-gpu-device-clip/blank-a3.jpg",
+      "bytes": 28267,
+      "sha256": "ae985c24dba8023a838eb993ee105dd008a6e6c9d8f72e588510bb204b5dff61"
+    },
+    {
+      "path": "native-gpu-device-clip/blank-a3.rgba",
+      "bytes": 4011288,
+      "sha256": "98ac28fe36991d84fa8a975f8b42a9c51684dfe2a92d05bb18696ca91545bde8"
+    },
+    {
+      "path": "native-gpu-device-clip/blank-landscape.PNG",
+      "bytes": 14870,
+      "sha256": "58271c0d0f46a74cc8b5a8884706317671a7f04997e6b3935ee12de59220b349"
+    },
+    {
+      "path": "native-gpu-device-clip/blank-landscape.rgba",
+      "bytes": 15474824,
+      "sha256": "eb5603225181a65611c305384d31ff9bd9c201fa59312429ef3cb5dce77195eb"
+    },
+    {
+      "path": "native-gpu-device-clip/blank-portrait.png",
+      "bytes": 1950,
+      "sha256": "86b93815a391309a42781e531ae6b2bb7898b668266023cd9f1b236be4bff577"
+    },
+    {
+      "path": "native-gpu-device-clip/blank-portrait.rgba",
+      "bytes": 966420,
+      "sha256": "89ad6c93d90fc720d38f14cf1b4f9815e94f57e07472c4063a63fd602a255c0d"
+    },
+    {
+      "path": "native-gpu-device-clip/check.json",
+      "bytes": 4206,
+      "sha256": "71ed6c7814247064a3eb28a4a98ca63d15aae478abc99abcf9fa120abdbea1a0"
+    },
+    {
+      "path": "native-gpu-device-clip/check.log",
+      "bytes": 3356,
+      "sha256": "0647349f78b7334a29f30ec878e7b90e41b6fb5d82953e007b65e9527218a287"
+    },
+    {
+      "path": "native-gpu-device-clip/chosen-jpeg.jpg",
+      "bytes": 32747,
+      "sha256": "5f5f79bfabad49034910bdf29f095ded03d317711d4c2d8521406aa501ddcfc7"
+    },
+    {
+      "path": "native-gpu-device-clip/chosen.png",
+      "bytes": 3843,
+      "sha256": "524acfe0e11e427e19108e75e9eac60712923e1529c4dcf543c72c5c5de78d9f"
+    },
+    {
+      "path": "native-gpu-device-clip/lazy-failure.jpg",
+      "bytes": 17,
+      "sha256": "bfc4668bda0fa79af37afecbd00615118d71004f462fd761e0ee581c279785c0"
+    },
+    {
+      "path": "native-gpu-device-clip/native.json",
+      "bytes": 5329,
+      "sha256": "8cca73596b0f1ec64c57dc70f3372c76a3128f671f9a95ab2c3a1366e7d85e7a"
+    },
+    {
+      "path": "native-gpu-device-clip/runtime.log",
+      "bytes": 501,
+      "sha256": "0318a0e41e413e04b57885f429717f239dbc7f3e34fc76b978fc16a1e401fbc7"
+    },
+    {
+      "path": "native-gpu-device-clip/session/config/settings.json",
+      "bytes": 721,
+      "sha256": "172238f274a3d6692eb93764e3f1c7ed0afb76350751d2303e0c766cda203f3f"
+    },
+    {
+      "path": "native-gpu-device-clip/shapes-jpeg.jpeg",
+      "bytes": 68236,
+      "sha256": "c0c5555fc1c81df8d3d67fd962e4616b564cc5d9ad1b0aec5d41c9e63a28116d"
+    },
+    {
+      "path": "native-gpu-device-clip/shapes-jpeg.rgba",
+      "bytes": 3867052,
+      "sha256": "ea027e6318b3eb4c0636dcfebfc26b3bd1351ff1416b633cd95fa80a02a92f9f"
+    },
+    {
+      "path": "native-gpu-device-clip/shapes-portrait.png",
+      "bytes": 17041,
+      "sha256": "ecc70e81f28771f7d3d5e112e41757a93bbcabe2d188b9bff9b187dd27185010"
+    },
+    {
+      "path": "native-gpu-device-clip/shapes-portrait.rgba",
+      "bytes": 3566648,
+      "sha256": "32aae1d9a81d2ac6902c626fe19146326ba0f1bc6fbce785e5861781e0eae677"
+    },
+    {
+      "path": "native-gpu-device-clip/shapes.png",
+      "bytes": 17392,
+      "sha256": "471f5616c56c50145e922d6766f1365e4ae33ac207a3c5db170905205692b482"
+    },
+    {
+      "path": "native-gpu-device-clip/shapes.rgba",
+      "bytes": 3867052,
+      "sha256": "bb3ca21c91ef09bfb89da7f2232966d93d32fd93aa08a35b2c93f2a9904de898"
+    },
+    {
+      "path": "native-gpu-device-clip/text.png",
+      "bytes": 9967,
+      "sha256": "7d9976f2a7073017a3fbe1498568b8147c5ecd0bace222b78ff827076b939f17"
+    },
+    {
+      "path": "native-gpu-device-clip/text.rgba",
+      "bytes": 3867052,
+      "sha256": "91b99265fcf6284cfe94ac89c1b1f9f2cc6a1218bc46cf5618468975847a42ba"
+    },
+    {
+      "path": "native-gpu-device-clip/upper.JPG",
+      "bytes": 38819,
+      "sha256": "4e599f16ad8c474c7d23c109c8eb9abf69346cff869407179640595ef85adedb"
+    },
+    {
+      "path": "native-gpu-device-clip/view-cropped.png",
+      "bytes": 6179,
+      "sha256": "ddace77d7863fbd1109dd91c4103daf51e616ba848a1dd2ba1ecea00e56248cf"
+    },
+    {
+      "path": "native-gpu-device-clip/view-cropped.rgba",
+      "bytes": 3867052,
+      "sha256": "8f1a57dc80199b20d5a608fdeb2bdf2a9182f6c231dac5989651f1b396b8bfc5"
+    },
+    {
+      "path": "native-gpu-device-clip/view-current.png",
+      "bytes": 5866,
+      "sha256": "e196e706ec7c70483eda153a5d49ec79022d2262ee90e4049e64c3e8c35de759"
+    },
+    {
+      "path": "native-gpu-device-clip/view-current.rgba",
+      "bytes": 3867052,
+      "sha256": "0bf0dd3e3646ed962731bc305a03ced3b4522d27cfcb0c4dd8b5a42d027607ae"
+    },
+    {
+      "path": "native-gpu-device-clip/view-hidden-thin.png",
+      "bytes": 3107,
+      "sha256": "848d4ee49f540401682f0b238365720a5e0810f90f25eb51c405da066a91532e"
+    },
+    {
+      "path": "native-gpu-device-clip/view-hidden-thin.rgba",
+      "bytes": 966420,
+      "sha256": "f39ac0d32943073b240ebfd38deaeeb22c21018ee6cfe1ac9f1e00e9439f0cb2"
+    },
+    {
+      "path": "native-gpu-device-clip/view-saved.png",
+      "bytes": 6581,
+      "sha256": "dca68a68443ed7e581f95d2063bec85daa0bc8d1580d2d05d65b0689ce42d64c"
+    },
+    {
+      "path": "native-gpu-device-clip/view-saved.rgba",
+      "bytes": 3867052,
+      "sha256": "e35a9ad2492a15b0c43697b81f58006af19999eb8ce49e03d9104cd82964284a"
+    },
+    {
+      "path": "native-gpu-first/blank-a3.jpg",
+      "bytes": 28267,
+      "sha256": "ae985c24dba8023a838eb993ee105dd008a6e6c9d8f72e588510bb204b5dff61"
+    },
+    {
+      "path": "native-gpu-first/blank-a3.rgba",
+      "bytes": 4011288,
+      "sha256": "98ac28fe36991d84fa8a975f8b42a9c51684dfe2a92d05bb18696ca91545bde8"
+    },
+    {
+      "path": "native-gpu-first/blank-landscape.PNG",
+      "bytes": 14870,
+      "sha256": "58271c0d0f46a74cc8b5a8884706317671a7f04997e6b3935ee12de59220b349"
+    },
+    {
+      "path": "native-gpu-first/blank-landscape.rgba",
+      "bytes": 15474824,
+      "sha256": "eb5603225181a65611c305384d31ff9bd9c201fa59312429ef3cb5dce77195eb"
+    },
+    {
+      "path": "native-gpu-first/blank-portrait.png",
+      "bytes": 1950,
+      "sha256": "86b93815a391309a42781e531ae6b2bb7898b668266023cd9f1b236be4bff577"
+    },
+    {
+      "path": "native-gpu-first/blank-portrait.rgba",
+      "bytes": 966420,
+      "sha256": "89ad6c93d90fc720d38f14cf1b4f9815e94f57e07472c4063a63fd602a255c0d"
+    },
+    {
+      "path": "native-gpu-first/check-qt.log",
+      "bytes": 3379,
+      "sha256": "0eb87cf1a35cd1627194f225596b08470c5362a2d824d84e2ceb968464d9b4d7"
+    },
+    {
+      "path": "native-gpu-first/check.json",
+      "bytes": 4229,
+      "sha256": "e607effefbcc27c81aa794b5a09f331108004ca410987243808730c016a2a3a7"
+    },
+    {
+      "path": "native-gpu-first/check.log",
+      "bytes": 197,
+      "sha256": "18fd8b47f857ac81ff355c58e91143726036c1963268d93b01c94d44efd6a03f"
+    },
+    {
+      "path": "native-gpu-first/chosen-jpeg.jpg",
+      "bytes": 32747,
+      "sha256": "5f5f79bfabad49034910bdf29f095ded03d317711d4c2d8521406aa501ddcfc7"
+    },
+    {
+      "path": "native-gpu-first/chosen.png",
+      "bytes": 3843,
+      "sha256": "524acfe0e11e427e19108e75e9eac60712923e1529c4dcf543c72c5c5de78d9f"
+    },
+    {
+      "path": "native-gpu-first/lazy-failure.jpg",
+      "bytes": 17,
+      "sha256": "bfc4668bda0fa79af37afecbd00615118d71004f462fd761e0ee581c279785c0"
+    },
+    {
+      "path": "native-gpu-first/native.json",
+      "bytes": 5329,
+      "sha256": "8cca73596b0f1ec64c57dc70f3372c76a3128f671f9a95ab2c3a1366e7d85e7a"
+    },
+    {
+      "path": "native-gpu-first/runtime.log",
+      "bytes": 501,
+      "sha256": "0318a0e41e413e04b57885f429717f239dbc7f3e34fc76b978fc16a1e401fbc7"
+    },
+    {
+      "path": "native-gpu-first/session/config/settings.json",
+      "bytes": 465,
+      "sha256": "a7bf7fdbef277353c157a41d2d67485351a8db19c830d5cf4b0374be3071f00c"
+    },
+    {
+      "path": "native-gpu-first/shapes-jpeg.jpeg",
+      "bytes": 68236,
+      "sha256": "c0c5555fc1c81df8d3d67fd962e4616b564cc5d9ad1b0aec5d41c9e63a28116d"
+    },
+    {
+      "path": "native-gpu-first/shapes-jpeg.rgba",
+      "bytes": 3867052,
+      "sha256": "ea027e6318b3eb4c0636dcfebfc26b3bd1351ff1416b633cd95fa80a02a92f9f"
+    },
+    {
+      "path": "native-gpu-first/shapes-portrait.png",
+      "bytes": 17041,
+      "sha256": "ecc70e81f28771f7d3d5e112e41757a93bbcabe2d188b9bff9b187dd27185010"
+    },
+    {
+      "path": "native-gpu-first/shapes-portrait.rgba",
+      "bytes": 3566648,
+      "sha256": "32aae1d9a81d2ac6902c626fe19146326ba0f1bc6fbce785e5861781e0eae677"
+    },
+    {
+      "path": "native-gpu-first/shapes.png",
+      "bytes": 17392,
+      "sha256": "471f5616c56c50145e922d6766f1365e4ae33ac207a3c5db170905205692b482"
+    },
+    {
+      "path": "native-gpu-first/shapes.rgba",
+      "bytes": 3867052,
+      "sha256": "bb3ca21c91ef09bfb89da7f2232966d93d32fd93aa08a35b2c93f2a9904de898"
+    },
+    {
+      "path": "native-gpu-first/text.png",
+      "bytes": 9967,
+      "sha256": "7d9976f2a7073017a3fbe1498568b8147c5ecd0bace222b78ff827076b939f17"
+    },
+    {
+      "path": "native-gpu-first/text.rgba",
+      "bytes": 3867052,
+      "sha256": "91b99265fcf6284cfe94ac89c1b1f9f2cc6a1218bc46cf5618468975847a42ba"
+    },
+    {
+      "path": "native-gpu-first/upper.JPG",
+      "bytes": 38819,
+      "sha256": "4e599f16ad8c474c7d23c109c8eb9abf69346cff869407179640595ef85adedb"
+    },
+    {
+      "path": "native-gpu-first/view-cropped.png",
+      "bytes": 9967,
+      "sha256": "7d9976f2a7073017a3fbe1498568b8147c5ecd0bace222b78ff827076b939f17"
+    },
+    {
+      "path": "native-gpu-first/view-cropped.rgba",
+      "bytes": 3867052,
+      "sha256": "91b99265fcf6284cfe94ac89c1b1f9f2cc6a1218bc46cf5618468975847a42ba"
+    },
+    {
+      "path": "native-gpu-first/view-current.png",
+      "bytes": 9967,
+      "sha256": "7d9976f2a7073017a3fbe1498568b8147c5ecd0bace222b78ff827076b939f17"
+    },
+    {
+      "path": "native-gpu-first/view-current.rgba",
+      "bytes": 3867052,
+      "sha256": "91b99265fcf6284cfe94ac89c1b1f9f2cc6a1218bc46cf5618468975847a42ba"
+    },
+    {
+      "path": "native-gpu-first/view-hidden-thin.png",
+      "bytes": 3833,
+      "sha256": "53c0d0584af057ea143431abadd762feae7742352bd544ce0f0902be89abeba8"
+    },
+    {
+      "path": "native-gpu-first/view-hidden-thin.rgba",
+      "bytes": 966420,
+      "sha256": "36b0ba23445d528645f03b6c641d03159b271934e5ef93e3a768b0fc4671dfb5"
+    },
+    {
+      "path": "native-gpu-first/view-saved.png",
+      "bytes": 9967,
+      "sha256": "7d9976f2a7073017a3fbe1498568b8147c5ecd0bace222b78ff827076b939f17"
+    },
+    {
+      "path": "native-gpu-first/view-saved.rgba",
+      "bytes": 3867052,
+      "sha256": "91b99265fcf6284cfe94ac89c1b1f9f2cc6a1218bc46cf5618468975847a42ba"
+    },
+    {
+      "path": "native-gpu-raster-policy/blank-a3.jpg",
+      "bytes": 28267,
+      "sha256": "ae985c24dba8023a838eb993ee105dd008a6e6c9d8f72e588510bb204b5dff61"
+    },
+    {
+      "path": "native-gpu-raster-policy/blank-a3.rgba",
+      "bytes": 4011288,
+      "sha256": "98ac28fe36991d84fa8a975f8b42a9c51684dfe2a92d05bb18696ca91545bde8"
+    },
+    {
+      "path": "native-gpu-raster-policy/blank-landscape.PNG",
+      "bytes": 14870,
+      "sha256": "58271c0d0f46a74cc8b5a8884706317671a7f04997e6b3935ee12de59220b349"
+    },
+    {
+      "path": "native-gpu-raster-policy/blank-landscape.rgba",
+      "bytes": 15474824,
+      "sha256": "eb5603225181a65611c305384d31ff9bd9c201fa59312429ef3cb5dce77195eb"
+    },
+    {
+      "path": "native-gpu-raster-policy/blank-portrait.png",
+      "bytes": 1950,
+      "sha256": "86b93815a391309a42781e531ae6b2bb7898b668266023cd9f1b236be4bff577"
+    },
+    {
+      "path": "native-gpu-raster-policy/blank-portrait.rgba",
+      "bytes": 966420,
+      "sha256": "89ad6c93d90fc720d38f14cf1b4f9815e94f57e07472c4063a63fd602a255c0d"
+    },
+    {
+      "path": "native-gpu-raster-policy/check.json",
+      "bytes": 4208,
+      "sha256": "dc48bfd0d734972de1e08a60b07096af1359fecde2294a4235d3a3622de6da95"
+    },
+    {
+      "path": "native-gpu-raster-policy/check.log",
+      "bytes": 3358,
+      "sha256": "7534594dacf9da217cfce0f6c451deb475a7f67b4b56b284e65a8a078ca88f4c"
+    },
+    {
+      "path": "native-gpu-raster-policy/chosen-jpeg.jpg",
+      "bytes": 32747,
+      "sha256": "5f5f79bfabad49034910bdf29f095ded03d317711d4c2d8521406aa501ddcfc7"
+    },
+    {
+      "path": "native-gpu-raster-policy/chosen.png",
+      "bytes": 3843,
+      "sha256": "524acfe0e11e427e19108e75e9eac60712923e1529c4dcf543c72c5c5de78d9f"
+    },
+    {
+      "path": "native-gpu-raster-policy/lazy-failure.jpg",
+      "bytes": 17,
+      "sha256": "bfc4668bda0fa79af37afecbd00615118d71004f462fd761e0ee581c279785c0"
+    },
+    {
+      "path": "native-gpu-raster-policy/native.json",
+      "bytes": 5329,
+      "sha256": "8cca73596b0f1ec64c57dc70f3372c76a3128f671f9a95ab2c3a1366e7d85e7a"
+    },
+    {
+      "path": "native-gpu-raster-policy/runtime.log",
+      "bytes": 501,
+      "sha256": "0318a0e41e413e04b57885f429717f239dbc7f3e34fc76b978fc16a1e401fbc7"
+    },
+    {
+      "path": "native-gpu-raster-policy/session/config/settings.json",
+      "bytes": 721,
+      "sha256": "172238f274a3d6692eb93764e3f1c7ed0afb76350751d2303e0c766cda203f3f"
+    },
+    {
+      "path": "native-gpu-raster-policy/shapes-jpeg.jpeg",
+      "bytes": 68236,
+      "sha256": "c0c5555fc1c81df8d3d67fd962e4616b564cc5d9ad1b0aec5d41c9e63a28116d"
+    },
+    {
+      "path": "native-gpu-raster-policy/shapes-jpeg.rgba",
+      "bytes": 3867052,
+      "sha256": "ea027e6318b3eb4c0636dcfebfc26b3bd1351ff1416b633cd95fa80a02a92f9f"
+    },
+    {
+      "path": "native-gpu-raster-policy/shapes-portrait.png",
+      "bytes": 17041,
+      "sha256": "ecc70e81f28771f7d3d5e112e41757a93bbcabe2d188b9bff9b187dd27185010"
+    },
+    {
+      "path": "native-gpu-raster-policy/shapes-portrait.rgba",
+      "bytes": 3566648,
+      "sha256": "32aae1d9a81d2ac6902c626fe19146326ba0f1bc6fbce785e5861781e0eae677"
+    },
+    {
+      "path": "native-gpu-raster-policy/shapes.png",
+      "bytes": 17392,
+      "sha256": "471f5616c56c50145e922d6766f1365e4ae33ac207a3c5db170905205692b482"
+    },
+    {
+      "path": "native-gpu-raster-policy/shapes.rgba",
+      "bytes": 3867052,
+      "sha256": "bb3ca21c91ef09bfb89da7f2232966d93d32fd93aa08a35b2c93f2a9904de898"
+    },
+    {
+      "path": "native-gpu-raster-policy/text.png",
+      "bytes": 9967,
+      "sha256": "7d9976f2a7073017a3fbe1498568b8147c5ecd0bace222b78ff827076b939f17"
+    },
+    {
+      "path": "native-gpu-raster-policy/text.rgba",
+      "bytes": 3867052,
+      "sha256": "91b99265fcf6284cfe94ac89c1b1f9f2cc6a1218bc46cf5618468975847a42ba"
+    },
+    {
+      "path": "native-gpu-raster-policy/upper.JPG",
+      "bytes": 38819,
+      "sha256": "4e599f16ad8c474c7d23c109c8eb9abf69346cff869407179640595ef85adedb"
+    },
+    {
+      "path": "native-gpu-raster-policy/view-cropped.png",
+      "bytes": 6157,
+      "sha256": "3b326240b5022002926d4365f269f3edef915025cf27b46c0a8854b73d17c247"
+    },
+    {
+      "path": "native-gpu-raster-policy/view-cropped.rgba",
+      "bytes": 3867052,
+      "sha256": "dadc63ca69d9d8335656008ac83f0086508af252d4261ca04c70846041bc85b6"
+    },
+    {
+      "path": "native-gpu-raster-policy/view-current.png",
+      "bytes": 5866,
+      "sha256": "e196e706ec7c70483eda153a5d49ec79022d2262ee90e4049e64c3e8c35de759"
+    },
+    {
+      "path": "native-gpu-raster-policy/view-current.rgba",
+      "bytes": 3867052,
+      "sha256": "0bf0dd3e3646ed962731bc305a03ced3b4522d27cfcb0c4dd8b5a42d027607ae"
+    },
+    {
+      "path": "native-gpu-raster-policy/view-hidden-thin.png",
+      "bytes": 3107,
+      "sha256": "848d4ee49f540401682f0b238365720a5e0810f90f25eb51c405da066a91532e"
+    },
+    {
+      "path": "native-gpu-raster-policy/view-hidden-thin.rgba",
+      "bytes": 966420,
+      "sha256": "f39ac0d32943073b240ebfd38deaeeb22c21018ee6cfe1ac9f1e00e9439f0cb2"
+    },
+    {
+      "path": "native-gpu-raster-policy/view-saved.png",
+      "bytes": 6581,
+      "sha256": "dca68a68443ed7e581f95d2063bec85daa0bc8d1580d2d05d65b0689ce42d64c"
+    },
+    {
+      "path": "native-gpu-raster-policy/view-saved.rgba",
+      "bytes": 3867052,
+      "sha256": "e35a9ad2492a15b0c43697b81f58006af19999eb8ce49e03d9104cd82964284a"
+    },
+    {
+      "path": "native-gpu-views-fixed/blank-a3.jpg",
+      "bytes": 28267,
+      "sha256": "ae985c24dba8023a838eb993ee105dd008a6e6c9d8f72e588510bb204b5dff61"
+    },
+    {
+      "path": "native-gpu-views-fixed/blank-a3.rgba",
+      "bytes": 4011288,
+      "sha256": "98ac28fe36991d84fa8a975f8b42a9c51684dfe2a92d05bb18696ca91545bde8"
+    },
+    {
+      "path": "native-gpu-views-fixed/blank-landscape.PNG",
+      "bytes": 14870,
+      "sha256": "58271c0d0f46a74cc8b5a8884706317671a7f04997e6b3935ee12de59220b349"
+    },
+    {
+      "path": "native-gpu-views-fixed/blank-landscape.rgba",
+      "bytes": 15474824,
+      "sha256": "eb5603225181a65611c305384d31ff9bd9c201fa59312429ef3cb5dce77195eb"
+    },
+    {
+      "path": "native-gpu-views-fixed/blank-portrait.png",
+      "bytes": 1950,
+      "sha256": "86b93815a391309a42781e531ae6b2bb7898b668266023cd9f1b236be4bff577"
+    },
+    {
+      "path": "native-gpu-views-fixed/blank-portrait.rgba",
+      "bytes": 966420,
+      "sha256": "89ad6c93d90fc720d38f14cf1b4f9815e94f57e07472c4063a63fd602a255c0d"
+    },
+    {
+      "path": "native-gpu-views-fixed/check.json",
+      "bytes": 4218,
+      "sha256": "f3dfd51477102e1917ca78384342ead862a875111bfeac527a0c54d0d080e0fe"
+    },
+    {
+      "path": "native-gpu-views-fixed/check.log",
+      "bytes": 3368,
+      "sha256": "cfb886b797ea2ad2a6d438507fcd7e339a589717aefdf9111df7ed2a228ba959"
+    },
+    {
+      "path": "native-gpu-views-fixed/chosen-jpeg.jpg",
+      "bytes": 32747,
+      "sha256": "5f5f79bfabad49034910bdf29f095ded03d317711d4c2d8521406aa501ddcfc7"
+    },
+    {
+      "path": "native-gpu-views-fixed/chosen.png",
+      "bytes": 3843,
+      "sha256": "524acfe0e11e427e19108e75e9eac60712923e1529c4dcf543c72c5c5de78d9f"
+    },
+    {
+      "path": "native-gpu-views-fixed/lazy-failure.jpg",
+      "bytes": 17,
+      "sha256": "bfc4668bda0fa79af37afecbd00615118d71004f462fd761e0ee581c279785c0"
+    },
+    {
+      "path": "native-gpu-views-fixed/native.json",
+      "bytes": 5329,
+      "sha256": "8cca73596b0f1ec64c57dc70f3372c76a3128f671f9a95ab2c3a1366e7d85e7a"
+    },
+    {
+      "path": "native-gpu-views-fixed/runtime.log",
+      "bytes": 501,
+      "sha256": "0318a0e41e413e04b57885f429717f239dbc7f3e34fc76b978fc16a1e401fbc7"
+    },
+    {
+      "path": "native-gpu-views-fixed/session/config/settings.json",
+      "bytes": 721,
+      "sha256": "172238f274a3d6692eb93764e3f1c7ed0afb76350751d2303e0c766cda203f3f"
+    },
+    {
+      "path": "native-gpu-views-fixed/shapes-jpeg.jpeg",
+      "bytes": 68236,
+      "sha256": "c0c5555fc1c81df8d3d67fd962e4616b564cc5d9ad1b0aec5d41c9e63a28116d"
+    },
+    {
+      "path": "native-gpu-views-fixed/shapes-jpeg.rgba",
+      "bytes": 3867052,
+      "sha256": "ea027e6318b3eb4c0636dcfebfc26b3bd1351ff1416b633cd95fa80a02a92f9f"
+    },
+    {
+      "path": "native-gpu-views-fixed/shapes-portrait.png",
+      "bytes": 17041,
+      "sha256": "ecc70e81f28771f7d3d5e112e41757a93bbcabe2d188b9bff9b187dd27185010"
+    },
+    {
+      "path": "native-gpu-views-fixed/shapes-portrait.rgba",
+      "bytes": 3566648,
+      "sha256": "32aae1d9a81d2ac6902c626fe19146326ba0f1bc6fbce785e5861781e0eae677"
+    },
+    {
+      "path": "native-gpu-views-fixed/shapes.png",
+      "bytes": 17392,
+      "sha256": "471f5616c56c50145e922d6766f1365e4ae33ac207a3c5db170905205692b482"
+    },
+    {
+      "path": "native-gpu-views-fixed/shapes.rgba",
+      "bytes": 3867052,
+      "sha256": "bb3ca21c91ef09bfb89da7f2232966d93d32fd93aa08a35b2c93f2a9904de898"
+    },
+    {
+      "path": "native-gpu-views-fixed/text.png",
+      "bytes": 9967,
+      "sha256": "7d9976f2a7073017a3fbe1498568b8147c5ecd0bace222b78ff827076b939f17"
+    },
+    {
+      "path": "native-gpu-views-fixed/text.rgba",
+      "bytes": 3867052,
+      "sha256": "91b99265fcf6284cfe94ac89c1b1f9f2cc6a1218bc46cf5618468975847a42ba"
+    },
+    {
+      "path": "native-gpu-views-fixed/upper.JPG",
+      "bytes": 38819,
+      "sha256": "4e599f16ad8c474c7d23c109c8eb9abf69346cff869407179640595ef85adedb"
+    },
+    {
+      "path": "native-gpu-views-fixed/view-cropped.png",
+      "bytes": 6170,
+      "sha256": "865b6be3f5328f79058bac445b39201e6e3c2f7dc7668fdef96d8e5c57a17bc6"
+    },
+    {
+      "path": "native-gpu-views-fixed/view-cropped.rgba",
+      "bytes": 3867052,
+      "sha256": "e2328fea1b645dfa7f68baa5df8fbe1517c9fc82bb861450830df99b235406fc"
+    },
+    {
+      "path": "native-gpu-views-fixed/view-current.png",
+      "bytes": 5871,
+      "sha256": "77561d4dd14da651ce5c0bf24fd8405c05ee3ae19bacc4be1035dea28de04ad4"
+    },
+    {
+      "path": "native-gpu-views-fixed/view-current.rgba",
+      "bytes": 3867052,
+      "sha256": "dfb9586e118779d5a0d777615c345de4edbd41a103e88b857158fa52e6eb3132"
+    },
+    {
+      "path": "native-gpu-views-fixed/view-hidden-thin.png",
+      "bytes": 3060,
+      "sha256": "28d273a30fef0f489bca88fb41007183d6141fef124fd37f2ea44bc8b6bdec16"
+    },
+    {
+      "path": "native-gpu-views-fixed/view-hidden-thin.rgba",
+      "bytes": 966420,
+      "sha256": "95ea259da01b59d4c8f837775e71b89223a41e9f1e5f9c8687ec391c4c8e16d6"
+    },
+    {
+      "path": "native-gpu-views-fixed/view-saved.png",
+      "bytes": 6609,
+      "sha256": "ab783ee6781ca2ea9cc4c796d658e9c6819083d4c6b12ccfa685089a81e4765f"
+    },
+    {
+      "path": "native-gpu-views-fixed/view-saved.rgba",
+      "bytes": 3867052,
+      "sha256": "c18a946de2ea99103ea98f58ccf422298f8e85a7c591b6277ea27131cf724b71"
+    },
+    {
+      "path": "native/blank-a3.jpg",
+      "bytes": 28267,
+      "sha256": "a1558f7d74355f4dd8c485ea031797162f2190435ef3ed6fecc33b1c28f7c1d6"
+    },
+    {
+      "path": "native/blank-landscape.PNG",
+      "bytes": 14870,
+      "sha256": "58271c0d0f46a74cc8b5a8884706317671a7f04997e6b3935ee12de59220b349"
+    },
+    {
+      "path": "native/blank-portrait.png",
+      "bytes": 1950,
+      "sha256": "86b93815a391309a42781e531ae6b2bb7898b668266023cd9f1b236be4bff577"
+    },
+    {
+      "path": "native/native.json",
+      "bytes": 2071,
+      "sha256": "5e0ad777be840028c33b7b5dc0832b421e12b4825dd3161f540afc12c0fd9694"
+    },
+    {
+      "path": "native/preserve.png",
+      "bytes": 20,
+      "sha256": "f6d322e962168f1aa0f69887fe429c6e90fa22961dad4099fe9a89c9cadba86c"
+    },
+    {
+      "path": "native/shapes-jpeg.jpeg",
+      "bytes": 68051,
+      "sha256": "d94da7a51fe95a5d1da66f0740c1bae5b7b40e3f40aa6af0b5c0cff3bcfe5cd0"
+    },
+    {
+      "path": "native/shapes-portrait.png",
+      "bytes": 17041,
+      "sha256": "ecc70e81f28771f7d3d5e112e41757a93bbcabe2d188b9bff9b187dd27185010"
+    },
+    {
+      "path": "native/shapes.png",
+      "bytes": 17392,
+      "sha256": "471f5616c56c50145e922d6766f1365e4ae33ac207a3c5db170905205692b482"
+    },
+    {
+      "path": "native/text.png",
+      "bytes": 9967,
+      "sha256": "7d9976f2a7073017a3fbe1498568b8147c5ecd0bace222b78ff827076b939f17"
+    },
+    {
+      "path": "provenance-final.json",
+      "bytes": 4098,
+      "sha256": "da7450c8ed548b5c1686d301abf072edde59ef3f2d95dea0626a77334348b186"
+    },
+    {
+      "path": "raster-policy-build.jsonl",
+      "bytes": 224000,
+      "sha256": "10cb42be3abdcbb735087df934dce517033180250f66ad2aebb0612d92aff337"
+    },
+    {
+      "path": "raster-policy-build.log",
+      "bytes": 16468,
+      "sha256": "598185702fe30d22aa19744e0a075e507f33605c6694c16bb65d5e167ae75c4b"
+    },
+    {
+      "path": "raster-policy-fixed-build.jsonl",
+      "bytes": 225465,
+      "sha256": "cdb0bc6b12a14cd45b429990b4104f3163427fe2c81a3f053743c29c82d95b11"
+    },
+    {
+      "path": "raster-policy-fixed-build.log",
+      "bytes": 20628,
+      "sha256": "1e4c1d8f2e14e2ce1fe37d9ef077e7b89918a4fad69779faa0cc8aab51a45842"
+    },
+    {
+      "path": "turbojpeg-build-output.log",
+      "bytes": 26109,
+      "sha256": "6c82cc5890a7bf9c982c0bcbd393200ff00d33ad845bf048868a1d25ee36290d"
+    },
+    {
+      "path": "views-fix-build.jsonl",
+      "bytes": 225464,
+      "sha256": "05eb384844c6d369ddcb23e4fb47ab773a21d5213c7c8be0341d14b3c4548481"
+    },
+    {
+      "path": "views-fix-build.log",
+      "bytes": 20628,
+      "sha256": "74bd8b4c54881a5a2df06ba20f075c811ca28d9d743958d1ab87579684d51d96"
+    }
+  ]
+}
