@@ -1,0 +1,513 @@
+{
+  "revision": "2815b0fc8d6cbedaee779fe13a66d80ee77a75fc",
+  "archive": "records.zip",
+  "archive_sha256": "44bb845ec1deeb61ad6ae3540d8b43d9d32f4370b9fd4c5b32ba4d67c8db09ef",
+  "members": [
+    {
+      "path": "capture-tools/scripts/reference-picture-overlap-coverage.py",
+      "size": 7600,
+      "sha256": "e4eec983bb26be4dc4e5a88b6d9d87fe0e3bbd5973ce81b80e07494314a36248"
+    },
+    {
+      "path": "overlap-build-r1/build.log",
+      "size": 27293,
+      "sha256": "641d95c4fd9d0b96a9d6440c97448850d7bfb2a60f4fae987c3dae7f53adcadf"
+    },
+    {
+      "path": "overlap-build-r1/receipt.json",
+      "size": 113,
+      "sha256": "c40e4cb1f01dbe2606cf46eaabbf718cf2813244b8a7849bab8e91f1983b1c97"
+    },
+    {
+      "path": "overlap-native-attempt-1/native.log",
+      "size": 501,
+      "sha256": "0318a0e41e413e04b57885f429717f239dbc7f3e34fc76b978fc16a1e401fbc7"
+    },
+    {
+      "path": "overlap-native-attempt-1/receipt.json",
+      "size": 200,
+      "sha256": "48d3f98a3416ae5cd3e30e2286c316d80cfeb4fe8427df67f75eb23adbba0faf"
+    },
+    {
+      "path": "overlap-native-r1/native-picture-overlap.json",
+      "size": 198586,
+      "sha256": "638dd4186b7060d7bd287e1a534b9bcac7e98c2f1b785e7a43a54e80af9c9739"
+    },
+    {
+      "path": "overlap-native-r1/ordinary-before.png",
+      "size": 12610,
+      "sha256": "f73fd832a7b4fbe75f1909cb0a32255b3b753947edb3c1497fdbc512cb6754e9"
+    },
+    {
+      "path": "overlap-native-r1/ordinary-before.rgba",
+      "size": 3867052,
+      "sha256": "7006dd75217e67b981faeda102ad2b39dcac35edfe456ae3b55fc0cdea478e7b"
+    },
+    {
+      "path": "overlap-native-r1/ordinary-observed.png",
+      "size": 12610,
+      "sha256": "f73fd832a7b4fbe75f1909cb0a32255b3b753947edb3c1497fdbc512cb6754e9"
+    },
+    {
+      "path": "overlap-native-r1/ordinary-observed.rgba",
+      "size": 3867052,
+      "sha256": "7006dd75217e67b981faeda102ad2b39dcac35edfe456ae3b55fc0cdea478e7b"
+    },
+    {
+      "path": "overlap-native-r1/prefix.png",
+      "size": 10482,
+      "sha256": "8ee1ee994128b30999a3b16930484338af3e919f0fedb0540f734b84b041f5b1"
+    },
+    {
+      "path": "overlap-native-r1/prefix.rgba",
+      "size": 3867052,
+      "sha256": "7177f89d1387a16f0e34a98ab51182916e65c99ac39dfb83fcb05eea076c9f55"
+    },
+    {
+      "path": "overlap-source-attempt-1/capture.log",
+      "size": 105,
+      "sha256": "60c49e380f88e3b51e168bd05dbe8ec2620bda0b8e1ac96f9951fd63350ca92b"
+    },
+    {
+      "path": "overlap-source-attempt-1/receipt.json",
+      "size": 202,
+      "sha256": "cf8e0e3017d974796b5ceca9a004b6f6d4c1f99e92ddfc6ebeb932b25800293d"
+    },
+    {
+      "path": "source/after-heavy.png",
+      "size": 9037,
+      "sha256": "d780630029f358522b3da74a4607f71dacc051099bbb2d7c23059ba78013a6a7"
+    },
+    {
+      "path": "source/after-heavy.rgba",
+      "size": 3867052,
+      "sha256": "6637d804c8a44857664cfd743b3cec8de6935e9dbf895daf3d1a5c555f33f6b2"
+    },
+    {
+      "path": "source/assets/checker.png",
+      "size": 431,
+      "sha256": "22dd51f90a74a4e4a93f82fe5f6601544f20e1c779b4c884cdc83c21c97dc8e3"
+    },
+    {
+      "path": "source/assets/person.png",
+      "size": 33171,
+      "sha256": "ff8bb7835734149c0b6f71ec6fb5c607583ba2b8940be42c458ce3c6eaa0b49d"
+    },
+    {
+      "path": "source/heavy-black.png",
+      "size": 3215,
+      "sha256": "a95248b72c5554e0b470d4ef7f851d02f87d757efbf3e26b82bf44526afae11c"
+    },
+    {
+      "path": "source/heavy-black.rgba",
+      "size": 3867052,
+      "sha256": "19d8145e00e8cd63558ce126a9b597a5c90f34a6203581f2041a086a09b5a44b"
+    },
+    {
+      "path": "source/heavy-transparent.png",
+      "size": 4202,
+      "sha256": "cd4e25cb543c2770ec6dfec2db75498ed2d3558d80937533b77e00aa2b0e16a4"
+    },
+    {
+      "path": "source/heavy-transparent.rgba",
+      "size": 3867052,
+      "sha256": "eca5c394c219c4dbaca055e434a7884704ba08bef771a53d1fc53964ff089c6f"
+    },
+    {
+      "path": "source/heavy-white.png",
+      "size": 5706,
+      "sha256": "3ae02a3fc06d673d0e9c241a31d1c9024da2bbbbc3bc613c583bf78148c0a719"
+    },
+    {
+      "path": "source/heavy-white.rgba",
+      "size": 3867052,
+      "sha256": "81e1895dc0276d58ba35d7c84a156ec30eedaca7c1ee7a42438e6bad93b5ce7a"
+    },
+    {
+      "path": "source/ordinary-before.png",
+      "size": 13071,
+      "sha256": "4032fef95e149c698cb9baa2c1d1dcb2bf617aed301da052b1d9b174b2d22225"
+    },
+    {
+      "path": "source/ordinary-observed.png",
+      "size": 13071,
+      "sha256": "4032fef95e149c698cb9baa2c1d1dcb2bf617aed301da052b1d9b174b2d22225"
+    },
+    {
+      "path": "source/ordinary.png",
+      "size": 13071,
+      "sha256": "4032fef95e149c698cb9baa2c1d1dcb2bf617aed301da052b1d9b174b2d22225"
+    },
+    {
+      "path": "source/ordinary.rgba",
+      "size": 3867052,
+      "sha256": "8e1d9ea3ab9013d8170ed52766bbf4907bd4445410cddf30ec305b2bd885e4e2"
+    },
+    {
+      "path": "source/original-picture-overlap.json",
+      "size": 3592,
+      "sha256": "7c67b8b65579a9651066df7f3b421a87f67bf2a6107f00fc345b494bed726cc5"
+    },
+    {
+      "path": "source/picture-overlap.igz",
+      "size": 3481,
+      "sha256": "7f15b209807718c965a505dbad334b608e15b688371f4f459b1771e38d9500c3"
+    },
+    {
+      "path": "source/picture-overlap.png",
+      "size": 13071,
+      "sha256": "4032fef95e149c698cb9baa2c1d1dcb2bf617aed301da052b1d9b174b2d22225"
+    },
+    {
+      "path": "source/prefix.png",
+      "size": 10791,
+      "sha256": "dcb6ab9f1d18679f08bedd7626dbf389b514abd93f5b340b5b061a4b68e260da"
+    },
+    {
+      "path": "source/prefix.rgba",
+      "size": 3867052,
+      "sha256": "7177f89d1387a16f0e34a98ab51182916e65c99ac39dfb83fcb05eea076c9f55"
+    },
+    {
+      "path": "source/source.json",
+      "size": 15996,
+      "sha256": "20a12aca3562c53e6ce110f29c9e4a7494b5b011a6534ffdde84d4fe6d58329a"
+    }
+  ],
+  "origins": [
+    {
+      "path": "source/picture-overlap.igz",
+      "origin": "/tmp/ingetrazo-overlap-source-r1/picture-overlap.igz",
+      "sha256": "7f15b209807718c965a505dbad334b608e15b688371f4f459b1771e38d9500c3",
+      "size": 3481
+    },
+    {
+      "path": "source/picture-overlap.png",
+      "origin": "/tmp/ingetrazo-overlap-source-r1/picture-overlap.png",
+      "sha256": "4032fef95e149c698cb9baa2c1d1dcb2bf617aed301da052b1d9b174b2d22225",
+      "size": 13071
+    },
+    {
+      "path": "source/source.json",
+      "origin": "/tmp/ingetrazo-overlap-source-r1/source.json",
+      "sha256": "20a12aca3562c53e6ce110f29c9e4a7494b5b011a6534ffdde84d4fe6d58329a",
+      "size": 15996
+    },
+    {
+      "path": "source/ordinary-before.png",
+      "origin": "/tmp/ingetrazo-overlap-source-r1/ordinary-before.png",
+      "sha256": "4032fef95e149c698cb9baa2c1d1dcb2bf617aed301da052b1d9b174b2d22225",
+      "size": 13071
+    },
+    {
+      "path": "source/prefix.png",
+      "origin": "/tmp/ingetrazo-overlap-source-r1/prefix.png",
+      "sha256": "dcb6ab9f1d18679f08bedd7626dbf389b514abd93f5b340b5b061a4b68e260da",
+      "size": 10791
+    },
+    {
+      "path": "source/prefix.rgba",
+      "origin": "/tmp/ingetrazo-overlap-source-r1/prefix.rgba",
+      "sha256": "7177f89d1387a16f0e34a98ab51182916e65c99ac39dfb83fcb05eea076c9f55",
+      "size": 3867052
+    },
+    {
+      "path": "source/heavy-transparent.png",
+      "origin": "/tmp/ingetrazo-overlap-source-r1/heavy-transparent.png",
+      "sha256": "cd4e25cb543c2770ec6dfec2db75498ed2d3558d80937533b77e00aa2b0e16a4",
+      "size": 4202
+    },
+    {
+      "path": "source/heavy-transparent.rgba",
+      "origin": "/tmp/ingetrazo-overlap-source-r1/heavy-transparent.rgba",
+      "sha256": "eca5c394c219c4dbaca055e434a7884704ba08bef771a53d1fc53964ff089c6f",
+      "size": 3867052
+    },
+    {
+      "path": "source/heavy-white.png",
+      "origin": "/tmp/ingetrazo-overlap-source-r1/heavy-white.png",
+      "sha256": "3ae02a3fc06d673d0e9c241a31d1c9024da2bbbbc3bc613c583bf78148c0a719",
+      "size": 5706
+    },
+    {
+      "path": "source/heavy-white.rgba",
+      "origin": "/tmp/ingetrazo-overlap-source-r1/heavy-white.rgba",
+      "sha256": "81e1895dc0276d58ba35d7c84a156ec30eedaca7c1ee7a42438e6bad93b5ce7a",
+      "size": 3867052
+    },
+    {
+      "path": "source/heavy-black.png",
+      "origin": "/tmp/ingetrazo-overlap-source-r1/heavy-black.png",
+      "sha256": "a95248b72c5554e0b470d4ef7f851d02f87d757efbf3e26b82bf44526afae11c",
+      "size": 3215
+    },
+    {
+      "path": "source/heavy-black.rgba",
+      "origin": "/tmp/ingetrazo-overlap-source-r1/heavy-black.rgba",
+      "sha256": "19d8145e00e8cd63558ce126a9b597a5c90f34a6203581f2041a086a09b5a44b",
+      "size": 3867052
+    },
+    {
+      "path": "source/after-heavy.png",
+      "origin": "/tmp/ingetrazo-overlap-source-r1/after-heavy.png",
+      "sha256": "d780630029f358522b3da74a4607f71dacc051099bbb2d7c23059ba78013a6a7",
+      "size": 9037
+    },
+    {
+      "path": "source/after-heavy.rgba",
+      "origin": "/tmp/ingetrazo-overlap-source-r1/after-heavy.rgba",
+      "sha256": "6637d804c8a44857664cfd743b3cec8de6935e9dbf895daf3d1a5c555f33f6b2",
+      "size": 3867052
+    },
+    {
+      "path": "source/ordinary-observed.png",
+      "origin": "/tmp/ingetrazo-overlap-source-r1/ordinary-observed.png",
+      "sha256": "4032fef95e149c698cb9baa2c1d1dcb2bf617aed301da052b1d9b174b2d22225",
+      "size": 13071
+    },
+    {
+      "path": "source/ordinary.png",
+      "origin": "/tmp/ingetrazo-overlap-source-r1/ordinary.png",
+      "sha256": "4032fef95e149c698cb9baa2c1d1dcb2bf617aed301da052b1d9b174b2d22225",
+      "size": 13071
+    },
+    {
+      "path": "source/ordinary.rgba",
+      "origin": "/tmp/ingetrazo-overlap-source-r1/ordinary.rgba",
+      "sha256": "8e1d9ea3ab9013d8170ed52766bbf4907bd4445410cddf30ec305b2bd885e4e2",
+      "size": 3867052
+    },
+    {
+      "path": "source/original-picture-overlap.json",
+      "origin": "/tmp/ingetrazo-overlap-source-r1/original-picture-overlap.json",
+      "sha256": "7c67b8b65579a9651066df7f3b421a87f67bf2a6107f00fc345b494bed726cc5",
+      "size": 3592
+    },
+    {
+      "path": "source/assets/checker.png",
+      "origin": "/tmp/ingetrazo-overlap-source-r1/assets/checker.png",
+      "sha256": "22dd51f90a74a4e4a93f82fe5f6601544f20e1c779b4c884cdc83c21c97dc8e3",
+      "size": 431
+    },
+    {
+      "path": "source/assets/person.png",
+      "origin": "/tmp/ingetrazo-overlap-source-r1/assets/person.png",
+      "sha256": "ff8bb7835734149c0b6f71ec6fb5c607583ba2b8940be42c458ce3c6eaa0b49d",
+      "size": 33171
+    },
+    {
+      "path": "overlap-native-r1/ordinary-before.png",
+      "origin": "/tmp/ingetrazo-overlap-native-r1/ordinary-before.png",
+      "sha256": "f73fd832a7b4fbe75f1909cb0a32255b3b753947edb3c1497fdbc512cb6754e9",
+      "size": 12610
+    },
+    {
+      "path": "overlap-native-r1/ordinary-before.rgba",
+      "origin": "/tmp/ingetrazo-overlap-native-r1/ordinary-before.rgba",
+      "sha256": "7006dd75217e67b981faeda102ad2b39dcac35edfe456ae3b55fc0cdea478e7b",
+      "size": 3867052
+    },
+    {
+      "path": "overlap-native-r1/prefix.png",
+      "origin": "/tmp/ingetrazo-overlap-native-r1/prefix.png",
+      "sha256": "8ee1ee994128b30999a3b16930484338af3e919f0fedb0540f734b84b041f5b1",
+      "size": 10482
+    },
+    {
+      "path": "overlap-native-r1/prefix.rgba",
+      "origin": "/tmp/ingetrazo-overlap-native-r1/prefix.rgba",
+      "sha256": "7177f89d1387a16f0e34a98ab51182916e65c99ac39dfb83fcb05eea076c9f55",
+      "size": 3867052
+    },
+    {
+      "path": "overlap-native-r1/ordinary-observed.png",
+      "origin": "/tmp/ingetrazo-overlap-native-r1/ordinary-observed.png",
+      "sha256": "f73fd832a7b4fbe75f1909cb0a32255b3b753947edb3c1497fdbc512cb6754e9",
+      "size": 12610
+    },
+    {
+      "path": "overlap-native-r1/ordinary-observed.rgba",
+      "origin": "/tmp/ingetrazo-overlap-native-r1/ordinary-observed.rgba",
+      "sha256": "7006dd75217e67b981faeda102ad2b39dcac35edfe456ae3b55fc0cdea478e7b",
+      "size": 3867052
+    },
+    {
+      "path": "overlap-native-r1/native-picture-overlap.json",
+      "origin": "/tmp/ingetrazo-overlap-native-r1/native-picture-overlap.json",
+      "sha256": "638dd4186b7060d7bd287e1a534b9bcac7e98c2f1b785e7a43a54e80af9c9739",
+      "size": 198586
+    },
+    {
+      "path": "overlap-source-attempt-1/capture.log",
+      "origin": "/tmp/ingetrazo-overlap-source-attempt-1/capture.log",
+      "sha256": "60c49e380f88e3b51e168bd05dbe8ec2620bda0b8e1ac96f9951fd63350ca92b",
+      "size": 105
+    },
+    {
+      "path": "overlap-source-attempt-1/receipt.json",
+      "origin": "/tmp/ingetrazo-overlap-source-attempt-1/receipt.json",
+      "sha256": "cf8e0e3017d974796b5ceca9a004b6f6d4c1f99e92ddfc6ebeb932b25800293d",
+      "size": 202
+    },
+    {
+      "path": "overlap-native-attempt-1/native.log",
+      "origin": "/tmp/ingetrazo-overlap-native-attempt-1/native.log",
+      "sha256": "0318a0e41e413e04b57885f429717f239dbc7f3e34fc76b978fc16a1e401fbc7",
+      "size": 501
+    },
+    {
+      "path": "overlap-native-attempt-1/receipt.json",
+      "origin": "/tmp/ingetrazo-overlap-native-attempt-1/receipt.json",
+      "sha256": "48d3f98a3416ae5cd3e30e2286c316d80cfeb4fe8427df67f75eb23adbba0faf",
+      "size": 200
+    },
+    {
+      "path": "overlap-build-r1/build.log",
+      "origin": "/tmp/ingetrazo-overlap-build-r1/build.log",
+      "sha256": "641d95c4fd9d0b96a9d6440c97448850d7bfb2a60f4fae987c3dae7f53adcadf",
+      "size": 27293
+    },
+    {
+      "path": "overlap-build-r1/receipt.json",
+      "origin": "/tmp/ingetrazo-overlap-build-r1/receipt.json",
+      "sha256": "c40e4cb1f01dbe2606cf46eaabbf718cf2813244b8a7849bab8e91f1983b1c97",
+      "size": 113
+    }
+  ],
+  "git_bindings": [
+    {
+      "path": "crates/ingetrazo-formats/src/sheet_image.rs",
+      "revision": "2815b0fc8d6cbedaee779fe13a66d80ee77a75fc",
+      "sha256": "21f5822e815fdfec1036df0371ea88d2eca3d84d5dacda48b77b18bceeb9760c"
+    },
+    {
+      "path": "crates/ingetrazo-gui/examples/chamfer_coverage.rs",
+      "revision": "2815b0fc8d6cbedaee779fe13a66d80ee77a75fc",
+      "sha256": "17bb87579adfe269651a6d1748796449946f857d341419b2e4014b641f76e848"
+    },
+    {
+      "path": "crates/ingetrazo-gui/examples/picture_overlap_coverage.rs",
+      "revision": "2815b0fc8d6cbedaee779fe13a66d80ee77a75fc",
+      "sha256": "6d21747ed57a104d4b426d938f12280737dbcfd8777c6b99cd5ed2ef0f3e8ffe"
+    },
+    {
+      "path": "crates/ingetrazo-gui/examples/sheet_symbols_workflows.rs",
+      "revision": "2815b0fc8d6cbedaee779fe13a66d80ee77a75fc",
+      "sha256": "15059582a4bd811abef8c5a301798625fb299fd90e165f5cf36e851862fcf885"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/composer.rs",
+      "revision": "2815b0fc8d6cbedaee779fe13a66d80ee77a75fc",
+      "sha256": "65dffb7308c156ce42d52839e0e440c200c1ec45531ae15a323d196ad63a6db0"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/composer_picture.rs",
+      "revision": "2815b0fc8d6cbedaee779fe13a66d80ee77a75fc",
+      "sha256": "88656e33b10a6acd665049b0d02e9f9b81eafbbcddbee761bb09be67053072ea"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/native_vulkan/cad2d.rs",
+      "revision": "2815b0fc8d6cbedaee779fe13a66d80ee77a75fc",
+      "sha256": "3d4d273af7a5d16fd0bedd526ed5b24ce7bc794504331516ad229e5580ec0d91"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/native_vulkan/shaders/cad2d.frag",
+      "revision": "2815b0fc8d6cbedaee779fe13a66d80ee77a75fc",
+      "sha256": "57528d0398047f15c809cb6d6c17641bdcf46ae77542279250abae99f62e0465"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/native_vulkan/shaders/cad2d.vert",
+      "revision": "2815b0fc8d6cbedaee779fe13a66d80ee77a75fc",
+      "sha256": "6cba5de6ad6a64ab41b672e0ad3794ee34b0c5465d09576fced04d1a20acf5c3"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/native_vulkan/sheet_image.rs",
+      "revision": "2815b0fc8d6cbedaee779fe13a66d80ee77a75fc",
+      "sha256": "15294c1bae2f37415ad01fbd7c9f3224a24072311ef4d2fb726499f00e71d9c5"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/sheet_image.rs",
+      "revision": "2815b0fc8d6cbedaee779fe13a66d80ee77a75fc",
+      "sha256": "fb5a227e2172e86622e733e861709756cbf84beca60ce9ce16de1f231302ef76"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/sheet_image_paths.rs",
+      "revision": "2815b0fc8d6cbedaee779fe13a66d80ee77a75fc",
+      "sha256": "6015e079cea8816240cc81820a2b85f3384f6d3670d2e0844076d484fa6c88c8"
+    },
+    {
+      "path": "crates/ingetrazo-render/src/cad2d.rs",
+      "revision": "2815b0fc8d6cbedaee779fe13a66d80ee77a75fc",
+      "sha256": "fc03edfa65da6095f2b783aa562d1f682abe05daefadf33e27f9c7be155026f7"
+    },
+    {
+      "path": "crates/ingetrazo-render/src/qt_cosmetic.rs",
+      "revision": "2815b0fc8d6cbedaee779fe13a66d80ee77a75fc",
+      "sha256": "e3dc6970764d5a9a0150523cfe51dbfecb015c264f2abeda564f51feb515b700"
+    },
+    {
+      "path": "crates/ingetrazo-render/src/qt_gl_image_line.rs",
+      "revision": "2815b0fc8d6cbedaee779fe13a66d80ee77a75fc",
+      "sha256": "2606ae4aaa84750e4b0e3c61c0c2a37b6e010652e87c07abca6d92d6f9273047"
+    },
+    {
+      "path": "crates/ingetrazo-render/src/qt_gray.rs",
+      "revision": "2815b0fc8d6cbedaee779fe13a66d80ee77a75fc",
+      "sha256": "a3cfdf5971a10b70c3988b1d5745f4dda91ac84dbded971643d12a36431268a9"
+    },
+    {
+      "path": "crates/ingetrazo-render/src/qt_line.rs",
+      "revision": "2815b0fc8d6cbedaee779fe13a66d80ee77a75fc",
+      "sha256": "dd6290ea808e0a3a58bcaab0bdf64fe0c1818a320d37dcac9ad66b45da5b004f"
+    },
+    {
+      "path": "crates/ingetrazo-render/src/qt_selected_line.rs",
+      "revision": "2815b0fc8d6cbedaee779fe13a66d80ee77a75fc",
+      "sha256": "157c2bc18894cc94c0891a33156315c23ee07a50edd7d6eeb4a12f0240e42a12"
+    },
+    {
+      "path": "scripts/reference-picture-overlap-coverage.py",
+      "revision": "2815b0fc8d6cbedaee779fe13a66d80ee77a75fc",
+      "sha256": "e4eec983bb26be4dc4e5a88b6d9d87fe0e3bbd5973ce81b80e07494314a36248"
+    }
+  ],
+  "producer_hash_timing": "Read after capture; no preoperative hash claim",
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "qt_version": "6.12.0 from actual captured assertion/record",
+  "parent_archive": "docs/audits/sheet-pictures/source-records.zip",
+  "parent_archive_sha256": "360f5aeba21057e30348f57cee37c214e6760c71d7ed975e06ff062dac664191",
+  "reused_members": [
+    {
+      "member": "picture-overlap.igz",
+      "sha256": "7f15b209807718c965a505dbad334b608e15b688371f4f459b1771e38d9500c3",
+      "size": 3481
+    },
+    {
+      "member": "picture-overlap.png",
+      "sha256": "4032fef95e149c698cb9baa2c1d1dcb2bf617aed301da052b1d9b174b2d22225",
+      "size": 13071
+    },
+    {
+      "member": "source.json",
+      "sha256": "20a12aca3562c53e6ce110f29c9e4a7494b5b011a6534ffdde84d4fe6d58329a",
+      "size": 15996
+    },
+    {
+      "member": "assets/checker.png",
+      "sha256": "22dd51f90a74a4e4a93f82fe5f6601544f20e1c779b4c884cdc83c21c97dc8e3",
+      "size": 431
+    },
+    {
+      "member": "assets/person.png",
+      "sha256": "ff8bb7835734149c0b6f71ec6fb5c607583ba2b8940be42c458ce3c6eaa0b49d",
+      "size": 33171
+    }
+  ],
+  "binary_sha256": "86c4aa31c7812eaac9a98f890ee2476c8f5af3a682f901cffbb7497822657396",
+  "strict_pixel_pass": false,
+  "residual_pixels": 1,
+  "prefix_causal_site_exact": true,
+  "combined_shape_exact": false,
+  "public_probe_scope": "Public QPainter paints; transparent probe uses ARGB premultiplied versus ordinary RGB32, not private span oracle",
+  "cleanup_performed": false
+}
