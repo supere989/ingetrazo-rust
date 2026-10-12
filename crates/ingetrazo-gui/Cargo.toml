@@ -102,3 +102,7 @@ zip.workspace = true
 [[example]]
 name = "ai_bridge_python_workflows"
 required-features = ["engineering-python"]
+
+[[example]]
+name = "default_scale_figure_workflows"
+required-features = ["engineering-python"]
