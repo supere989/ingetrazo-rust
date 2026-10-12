@@ -1,0 +1,111 @@
+{
+  "runtime_commit": "1388e3cce6287aa43d5fe4d910b84e0aa14ff727",
+  "original_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "full_run": 38237300870,
+  "ordered_run": 38237300910,
+  "archive_sha256": "39a1f0acbcf597f397135251b73e29256f92759f693d9b1fd9d9757c4c34d26c",
+  "members": {
+    "114771017115.log": {
+      "bytes": 87902,
+      "sha256": "d14e5bb90e12c622ed93e71d3327bc220c7eb4d58643b84021ac72debfee8e42"
+    },
+    "114771017427.log": {
+      "bytes": 85288,
+      "sha256": "c0a3082c8469a0ca9ccb125c8c9a2dee3a79f2193f24e8f27e81a1ede8b64efa"
+    },
+    "114771017439.log": {
+      "bytes": 6567961,
+      "sha256": "499adbe4271b008fd5b78fe2e1a5171992f645a3043838654ac52fb6c9b6da56"
+    },
+    "11740613836/metal-combined-gui-ci/document-annotations/sample-diagnostics.json": {
+      "bytes": 700,
+      "sha256": "6a9474a16266168825609cf3cc1254b31b38ec2898b6c91cf60ff767a7b25f93"
+    },
+    "11740613836/metal-combined-gui-ci/frame-annotation-sync/checker.stderr": {
+      "bytes": 1813,
+      "sha256": "310ef00c459e391ec6a9a972159a36e44c0dcfc121f8f275ae4e5dc43676393c"
+    },
+    "11740613836/metal-combined-gui-ci/frame-annotation-sync/comparison.json": {
+      "bytes": 2470,
+      "sha256": "bb6916400db4f498cc2d4cbd42f08412cdfb5335d722f8b5547758e8aa9bbd5c"
+    },
+    "11740613836/metal-combined-gui-ci/frame-annotation-sync/native.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "11740613836/metal-combined-gui-ci/frame-annotation-sync/result.json": {
+      "bytes": 2947,
+      "sha256": "7044c8e5b072cb78cd8108804520ef8f403e149258de4d83c314f162faefb37c"
+    },
+    "11740613836/metal-combined-gui-ci/launcher/result.json": {
+      "bytes": 444,
+      "sha256": "de1cabe5c892b6dd143b2e8fdb6c84415b8f5dee82dccdc087f63cd542479f74"
+    },
+    "11741739746/metal-combined-gui-ci/document-annotations/sample-diagnostics.json": {
+      "bytes": 748,
+      "sha256": "f81b484dfc66bba7859e0ce77184d146fc971f28768cc1fe95904ef8f866ab6c"
+    },
+    "11741739746/metal-combined-gui-ci/frame-annotation-sync/checker.stderr": {
+      "bytes": 1810,
+      "sha256": "35b64b15e64f0e73db87dc3544ee70d046f695fa6ce8e8d13f7681079d149d77"
+    },
+    "11741739746/metal-combined-gui-ci/frame-annotation-sync/comparison.json": {
+      "bytes": 2458,
+      "sha256": "94be14460d2cccd414230afbb75b2e293390b09fcdd7cba840a68c2e9f60f38b"
+    },
+    "11741739746/metal-combined-gui-ci/frame-annotation-sync/native.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "11741739746/metal-combined-gui-ci/frame-annotation-sync/result.json": {
+      "bytes": 2947,
+      "sha256": "e071fe0974ae435ff1b4b1d7fca6d9d11805b84326a4befc6f8ae4d59df08a5a"
+    },
+    "artifacts.json": {
+      "bytes": 4393,
+      "sha256": "ee61e8d68d42645497bb0df8dbc0d6a27479cb27c2a86eca5610c5f341439bf6"
+    },
+    "full-jobs.json": {
+      "bytes": 49071,
+      "sha256": "a875f2b4012b6bbbce22238bcd48d2b4d433b51e422ccd8e0bb052b2ca87ce94"
+    },
+    "full.json": {
+      "bytes": 12730,
+      "sha256": "de8420699eef307019d29753926b8ccdafdcb1f784d0ac4b53c3a2c397b6d491"
+    },
+    "mac-artifact-inventories.json": {
+      "bytes": 347156,
+      "sha256": "739f633b2a918aa2e5d5fefa160ff1c32ac9276ff839b664896f87b361cbc5fe"
+    },
+    "ordered-jobs.json": {
+      "bytes": 6924,
+      "sha256": "613d5deb43fe85c01ddd4c78076804f74c118320dd692e690c5db5261d841dfa"
+    },
+    "summary.json": {
+      "bytes": 1758,
+      "sha256": "bd162001aa6954c4fc019792e53488c9675607b647b2a6877c79b3d2c53608fd"
+    }
+  },
+  "sources": {
+    ".github/workflows/parity.yml": {
+      "commit": "1388e3cce6287aa43d5fe4d910b84e0aa14ff727",
+      "bytes": 65517,
+      "sha256": "566d064ceeb3655e817a8028efa6c763cd9f89253a4f7e5956c2fe490d955803"
+    },
+    ".github/workflows/metal-compute-consumer.yml": {
+      "commit": "1388e3cce6287aa43d5fe4d910b84e0aa14ff727",
+      "bytes": 4532,
+      "sha256": "bce24078146f16afab7cd9998386a03a0aa2b69c0a6954bfc517b009c452efb9"
+    },
+    "scripts/replay-frame-annotation-sync.py": {
+      "commit": "1388e3cce6287aa43d5fe4d910b84e0aa14ff727",
+      "bytes": 3348,
+      "sha256": "6cffbcd03c8eee35f3cb94483acdfc2f1325a63a411f2f4c26de85cf2e30eba4"
+    },
+    "scripts/check-frame-annotation-sync.py": {
+      "commit": "1388e3cce6287aa43d5fe4d910b84e0aa14ff727",
+      "bytes": 5283,
+      "sha256": "db449beb3a8de938b6e59a35a2140b9f9f05ee2f97028b0acceabff7da23f886"
+    }
+  }
+}
