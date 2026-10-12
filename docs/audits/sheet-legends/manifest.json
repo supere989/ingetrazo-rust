@@ -1,0 +1,331 @@
+{
+  "archive_sha256": "b32a7201c37a78010a955e46426b81d470fec0264b5bf5dbae5e0701237b7e0b",
+  "members": {
+    "compiled-scripts/check-sheet-legends.py": {
+      "size": 5745,
+      "sha256": "6a2180e5c763674010e460b9b946ae44b26c6650d9c882373ea29e0c89ef787f"
+    },
+    "compiled-scripts/replay-sheet-legends.py": {
+      "size": 3467,
+      "sha256": "32f9c58fbf636fac412b7340a5c46f5f46a0479eae87ab9a74a4271715b75004"
+    },
+    "final-receipt.json": {
+      "size": 3608,
+      "sha256": "d5a48ad33416723af26da7e6c2e16d0e731fb42129d9f1849fae144cd3d16b1a"
+    },
+    "nvidia-3a43/comparison.json": {
+      "size": 4747,
+      "sha256": "f7f5c3268888a6a2ebd1a064df0a73f72e30539e1296690e86f5dad1501a3856"
+    },
+    "nvidia-3a43/native/legend-empty-en.igz": {
+      "size": 1075,
+      "sha256": "9c0016f1e6e1d60d3f4bcf0604588ffde76448b3e665206bcf54f7c9e1d2b76d"
+    },
+    "nvidia-3a43/native/legend-empty-en.pdf": {
+      "size": 39597,
+      "sha256": "b74627663ce884e16cba1ca5814eecb6eccfa3e5d3ae99124eea1e181e670fdf"
+    },
+    "nvidia-3a43/native/legend-empty-en.png": {
+      "size": 7602,
+      "sha256": "25d39a1d55409d3350bb4ce073ab93e7313e834e0e27572b84c7217f9b996e2d"
+    },
+    "nvidia-3a43/native/legend-empty-en.rgba": {
+      "size": 3867052,
+      "sha256": "8a690a2d5894ac8f2ca28f5b7d3ad95c95955f7d1697db0ac3efe0b224df74ae"
+    },
+    "nvidia-3a43/native/legend-empty-es.igz": {
+      "size": 1075,
+      "sha256": "b687eaf3e37486f2538de3791cb632a7b139e970c4d22fdd8971fb5976f869b9"
+    },
+    "nvidia-3a43/native/legend-empty-es.pdf": {
+      "size": 39350,
+      "sha256": "a85157949f72701409905168f97beeadf88b1139886cf379b9b72785cedcd735"
+    },
+    "nvidia-3a43/native/legend-empty-es.png": {
+      "size": 7609,
+      "sha256": "474615a5661f69c6b1406fb8572274993ff8a63c7c39e4ce5abfeea54bbe26cc"
+    },
+    "nvidia-3a43/native/legend-empty-es.rgba": {
+      "size": 3867052,
+      "sha256": "521b973069305d36b5520ebdc03a6303d9bbb0e084041c05bfd71886a83be0c8"
+    },
+    "nvidia-3a43/native/legend-hidden.igz": {
+      "size": 1129,
+      "sha256": "a22b4fd2c844f969ace6f424d59b8262fc35521e638117f40b9bb8ee00187579"
+    },
+    "nvidia-3a43/native/legend-hidden.pdf": {
+      "size": 521,
+      "sha256": "cfab9913df089e65134be2ce7e43d6e5c430afe5f1487cef22dc399583944eb1"
+    },
+    "nvidia-3a43/native/legend-hidden.png": {
+      "size": 5395,
+      "sha256": "25685b31d4f7547984e1fb60a89d619c1541384edb0a8aa59eecc91b913d44cd"
+    },
+    "nvidia-3a43/native/legend-hidden.rgba": {
+      "size": 3867052,
+      "sha256": "f8d8690b08a772b4b3c809d15ffc99b9c4c45992cefca9040d71dade921621a0"
+    },
+    "nvidia-3a43/native/legend-high-z.igz": {
+      "size": 2769,
+      "sha256": "8a16c4672779e7e50b6bcf015b8b688fe9a545c1d2a2788601dd123cf0b168fa"
+    },
+    "nvidia-3a43/native/legend-high-z.pdf": {
+      "size": 45206,
+      "sha256": "d1a12a925bc67d37d07ac415caaff7739ed3490eb892d294aac7276b050c774c"
+    },
+    "nvidia-3a43/native/legend-high-z.png": {
+      "size": 10500,
+      "sha256": "a2dad83376f809204810c073b45f26ce0f676dee763fc703f0d7b24ceaf0e3d6"
+    },
+    "nvidia-3a43/native/legend-high-z.rgba": {
+      "size": 3867052,
+      "sha256": "53d433bc054f3b5f4ca4b7fa267a4d944f2e029a1f4c4e93f78b919e81a2cca3"
+    },
+    "nvidia-3a43/native/legend-rows.igz": {
+      "size": 1152,
+      "sha256": "4873d02d3e4ee84fef47665c692dbda333a1f454d7c660981a3726957c2b3345"
+    },
+    "nvidia-3a43/native/legend-rows.pdf": {
+      "size": 41361,
+      "sha256": "322f2e435473af78175f97d5836afb5eaeb2956ba5b64aa54eafba2fecf79714"
+    },
+    "nvidia-3a43/native/legend-rows.png": {
+      "size": 8478,
+      "sha256": "bc77b0cea087f0a27ae836e7d17972387980e278535ac48737230cf2764f8787"
+    },
+    "nvidia-3a43/native/legend-rows.rgba": {
+      "size": 3867052,
+      "sha256": "ea0537b4fd72028a38a440ae49192ef2e6d2806b0eb2926fcf9ba3299fb9c01f"
+    },
+    "nvidia-3a43/native/legend-same-z.igz": {
+      "size": 2769,
+      "sha256": "1c3fcf0d82e8f88e7684383b1c13a631ca66ca0949e398c80fe78ed1efacd479"
+    },
+    "nvidia-3a43/native/legend-same-z.pdf": {
+      "size": 45206,
+      "sha256": "de7215d2fb70d86fb6b15ba185458a8c0eb451b5e290634b39c7206a204d4a87"
+    },
+    "nvidia-3a43/native/legend-same-z.png": {
+      "size": 10009,
+      "sha256": "af93b2a74ca1220249c5dd6798e0da5baab90636f5fefbb6adfe4d3a45e617ab"
+    },
+    "nvidia-3a43/native/legend-same-z.rgba": {
+      "size": 3867052,
+      "sha256": "9e5e186ad7bf6234dddf1f2495cf9f7cab5ee5f43750a13f17307d14f3ec7332"
+    },
+    "nvidia-3a43/native/legend-wrapped.igz": {
+      "size": 1214,
+      "sha256": "a4ac955a5b4122037efb7b9eceb7462cdda02ce09a402c108817b27057e83d13"
+    },
+    "nvidia-3a43/native/legend-wrapped.pdf": {
+      "size": 46537,
+      "sha256": "011fb12facb925f9fddc0efac4cf53d1bf15395cc076b631de2a3301f578a5e3"
+    },
+    "nvidia-3a43/native/legend-wrapped.png": {
+      "size": 11392,
+      "sha256": "d44ffc559b29147160c44a4e4adbfe64f95afe5db10b0bed4d7a34e5e3b9751e"
+    },
+    "nvidia-3a43/native/legend-wrapped.rgba": {
+      "size": 3867052,
+      "sha256": "48c226d50a4cfb2f861bbb8baaee0ba4e8cd8e572d5d55cc5d3e34f9d043d24f"
+    },
+    "nvidia-3a43/native/native.json": {
+      "size": 2011,
+      "sha256": "b8b3bdfab572a2b780f26d7d29705608e96763a061d77be2c1eb41721cfa4b47"
+    },
+    "nvidia-3a43/native/refusal.png": {
+      "size": 17,
+      "sha256": "bfc4668bda0fa79af37afecbd00615118d71004f462fd761e0ee581c279785c0"
+    },
+    "nvidia-3a43/native/session/config/settings.json": {
+      "size": 815,
+      "sha256": "69e7959b6fc2e83286c3fea9a84c0f74c3e17c221de0d676036dd54aabd38bef"
+    },
+    "nvidia-3a43/nvidia.json": {
+      "size": 105,
+      "sha256": "559298238b82b7ef5db83f2674d7a3fe416158735a56302121b7f2e2d5c1f053"
+    },
+    "nvidia-3a43/transport.json": {
+      "size": 2653,
+      "sha256": "cccb0c1685de35fe4b93b449dc75b7ca14a42b498fafe0e975a0d0d424f72ad6"
+    },
+    "nvidia-3a43/transport.log": {
+      "size": 309,
+      "sha256": "10d9f3846ae0dbb6a9f070ec30efd8449e5be03f7615bfd4a882db3d7e6fa95f"
+    },
+    "software-checker.log": {
+      "size": 4748,
+      "sha256": "55684a2bd63891b170cedcd8eedfc3a96aaf4f118aa813079e66b2663c93d056"
+    },
+    "software-checker.stderr": {
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "software-comparison.json": {
+      "size": 4747,
+      "sha256": "f7f5c3268888a6a2ebd1a064df0a73f72e30539e1296690e86f5dad1501a3856"
+    },
+    "software-native/legend-empty-en.igz": {
+      "size": 1075,
+      "sha256": "9c0016f1e6e1d60d3f4bcf0604588ffde76448b3e665206bcf54f7c9e1d2b76d"
+    },
+    "software-native/legend-empty-en.pdf": {
+      "size": 39597,
+      "sha256": "b74627663ce884e16cba1ca5814eecb6eccfa3e5d3ae99124eea1e181e670fdf"
+    },
+    "software-native/legend-empty-en.png": {
+      "size": 7602,
+      "sha256": "25d39a1d55409d3350bb4ce073ab93e7313e834e0e27572b84c7217f9b996e2d"
+    },
+    "software-native/legend-empty-en.rgba": {
+      "size": 3867052,
+      "sha256": "8a690a2d5894ac8f2ca28f5b7d3ad95c95955f7d1697db0ac3efe0b224df74ae"
+    },
+    "software-native/legend-empty-es.igz": {
+      "size": 1075,
+      "sha256": "b687eaf3e37486f2538de3791cb632a7b139e970c4d22fdd8971fb5976f869b9"
+    },
+    "software-native/legend-empty-es.pdf": {
+      "size": 39350,
+      "sha256": "a85157949f72701409905168f97beeadf88b1139886cf379b9b72785cedcd735"
+    },
+    "software-native/legend-empty-es.png": {
+      "size": 7609,
+      "sha256": "474615a5661f69c6b1406fb8572274993ff8a63c7c39e4ce5abfeea54bbe26cc"
+    },
+    "software-native/legend-empty-es.rgba": {
+      "size": 3867052,
+      "sha256": "521b973069305d36b5520ebdc03a6303d9bbb0e084041c05bfd71886a83be0c8"
+    },
+    "software-native/legend-hidden.igz": {
+      "size": 1129,
+      "sha256": "a22b4fd2c844f969ace6f424d59b8262fc35521e638117f40b9bb8ee00187579"
+    },
+    "software-native/legend-hidden.pdf": {
+      "size": 521,
+      "sha256": "cfab9913df089e65134be2ce7e43d6e5c430afe5f1487cef22dc399583944eb1"
+    },
+    "software-native/legend-hidden.png": {
+      "size": 5395,
+      "sha256": "25685b31d4f7547984e1fb60a89d619c1541384edb0a8aa59eecc91b913d44cd"
+    },
+    "software-native/legend-hidden.rgba": {
+      "size": 3867052,
+      "sha256": "f8d8690b08a772b4b3c809d15ffc99b9c4c45992cefca9040d71dade921621a0"
+    },
+    "software-native/legend-high-z.igz": {
+      "size": 2769,
+      "sha256": "8a16c4672779e7e50b6bcf015b8b688fe9a545c1d2a2788601dd123cf0b168fa"
+    },
+    "software-native/legend-high-z.pdf": {
+      "size": 45206,
+      "sha256": "d1a12a925bc67d37d07ac415caaff7739ed3490eb892d294aac7276b050c774c"
+    },
+    "software-native/legend-high-z.png": {
+      "size": 10500,
+      "sha256": "a2dad83376f809204810c073b45f26ce0f676dee763fc703f0d7b24ceaf0e3d6"
+    },
+    "software-native/legend-high-z.rgba": {
+      "size": 3867052,
+      "sha256": "53d433bc054f3b5f4ca4b7fa267a4d944f2e029a1f4c4e93f78b919e81a2cca3"
+    },
+    "software-native/legend-rows.igz": {
+      "size": 1152,
+      "sha256": "4873d02d3e4ee84fef47665c692dbda333a1f454d7c660981a3726957c2b3345"
+    },
+    "software-native/legend-rows.pdf": {
+      "size": 41361,
+      "sha256": "322f2e435473af78175f97d5836afb5eaeb2956ba5b64aa54eafba2fecf79714"
+    },
+    "software-native/legend-rows.png": {
+      "size": 8478,
+      "sha256": "bc77b0cea087f0a27ae836e7d17972387980e278535ac48737230cf2764f8787"
+    },
+    "software-native/legend-rows.rgba": {
+      "size": 3867052,
+      "sha256": "ea0537b4fd72028a38a440ae49192ef2e6d2806b0eb2926fcf9ba3299fb9c01f"
+    },
+    "software-native/legend-same-z.igz": {
+      "size": 2769,
+      "sha256": "1c3fcf0d82e8f88e7684383b1c13a631ca66ca0949e398c80fe78ed1efacd479"
+    },
+    "software-native/legend-same-z.pdf": {
+      "size": 45206,
+      "sha256": "de7215d2fb70d86fb6b15ba185458a8c0eb451b5e290634b39c7206a204d4a87"
+    },
+    "software-native/legend-same-z.png": {
+      "size": 10009,
+      "sha256": "af93b2a74ca1220249c5dd6798e0da5baab90636f5fefbb6adfe4d3a45e617ab"
+    },
+    "software-native/legend-same-z.rgba": {
+      "size": 3867052,
+      "sha256": "9e5e186ad7bf6234dddf1f2495cf9f7cab5ee5f43750a13f17307d14f3ec7332"
+    },
+    "software-native/legend-wrapped.igz": {
+      "size": 1214,
+      "sha256": "a4ac955a5b4122037efb7b9eceb7462cdda02ce09a402c108817b27057e83d13"
+    },
+    "software-native/legend-wrapped.pdf": {
+      "size": 46537,
+      "sha256": "011fb12facb925f9fddc0efac4cf53d1bf15395cc076b631de2a3301f578a5e3"
+    },
+    "software-native/legend-wrapped.png": {
+      "size": 11392,
+      "sha256": "d44ffc559b29147160c44a4e4adbfe64f95afe5db10b0bed4d7a34e5e3b9751e"
+    },
+    "software-native/legend-wrapped.rgba": {
+      "size": 3867052,
+      "sha256": "48c226d50a4cfb2f861bbb8baaee0ba4e8cd8e572d5d55cc5d3e34f9d043d24f"
+    },
+    "software-native/native.json": {
+      "size": 2011,
+      "sha256": "b8b3bdfab572a2b780f26d7d29705608e96763a061d77be2c1eb41721cfa4b47"
+    },
+    "software-native/refusal.png": {
+      "size": 17,
+      "sha256": "bfc4668bda0fa79af37afecbd00615118d71004f462fd761e0ee581c279785c0"
+    },
+    "software-native/session/config/settings.json": {
+      "size": 1205,
+      "sha256": "5ed0ad7a91a985d907940208bd104cb42154a3493ab34d9f38ca86989e1b7ce8"
+    },
+    "software-result.json": {
+      "size": 6389,
+      "sha256": "944e657bb4168ab834f643a7bd1d5b62660e19b867dfcd1e22d5f24b00c8e394"
+    },
+    "software-runtime.log": {
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "software-runtime.stderr": {
+      "size": 501,
+      "sha256": "0318a0e41e413e04b57885f429717f239dbc7f3e34fc76b978fc16a1e401fbc7"
+    },
+    "source-capture-2.json": {
+      "size": 275,
+      "sha256": "bd9fcc784bffb9faf7b9c23dc6487d4c94b1ffdd11f8ee310d59e3e722630bc0"
+    },
+    "source-capture-2.log": {
+      "size": 293,
+      "sha256": "2f1133ef54dcf18ca79b5fcc1eaa9f0e9755e89ca608c5f66a9aec65181a7f15"
+    },
+    "source-capture-2.py": {
+      "size": 3535,
+      "sha256": "8bf5575e13be27bf8ca3204363cfbae359056082bf8ea92e37c48239238c5aad"
+    },
+    "source-capture-attempt-1.json": {
+      "size": 452,
+      "sha256": "f66efd13c8c5a941440f8b2e9a1fab53153c54e27e265d2828e174db00b80354"
+    },
+    "source-capture-attempt-1.py": {
+      "size": 3006,
+      "sha256": "ca02b090d99eec995c8bf3e80c164d91f106a3fb8787487db42902854afa54eb"
+    },
+    "source-provenance.json": {
+      "size": 1385,
+      "sha256": "86c6ebcbd826dcd1c4fc1dda5da9dd7874cde37ed4bdd8f87a5404634c711b24"
+    }
+  },
+  "runtime_commit": "3a43b9e9d504311008607ce43b37e200d2d0bf37",
+  "source_archive_sha256": "487648f12afa9f9b73d0bbcf459d56486ceeb843ed3fac8e5110206f84db6cd0"
+}
