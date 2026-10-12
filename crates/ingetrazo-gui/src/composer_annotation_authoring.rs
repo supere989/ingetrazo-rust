@@ -868,18 +868,134 @@ struct Layout {
     epoch: u64,
     draws: std::sync::Arc<crate::composer_annotations::Draws>,
     bytes: usize,
+    fonts: Vec<(ingetrazo_formats::paper_font::FontKey, usize)>,
 }
 #[derive(Clone, Default)]
 pub(super) struct LayoutCache {
     sheet: Option<Uuid>,
     entries: std::collections::HashMap<(usize, usize), Layout>,
     builds: u64,
+    payload_bytes: usize,
+    font_bytes: usize,
+    fonts: std::collections::HashMap<ingetrazo_formats::paper_font::FontKey, (usize, usize)>,
+    entry_order: std::collections::VecDeque<(usize, usize)>,
     order: std::sync::Arc<Vec<(u8, usize, usize)>>,
     pointer_order: std::sync::Arc<Vec<(u8, usize)>>,
     version: u64,
     order_ready: bool,
     context_version: Option<u64>,
     context_key: u64,
+}
+
+impl LayoutCache {
+    const RETAINED_LIMIT: usize = 64 * 1024 * 1024;
+    const ENTRY_LIMIT: usize = 10000;
+    fn projected(&self, key: (usize, usize), candidate: &Layout) -> Result<usize, String> {
+        let old = self.entries.get(&key);
+        let payload = self
+            .payload_bytes
+            .checked_sub(old.map_or(0, |e| e.bytes))
+            .and_then(|n| n.checked_add(candidate.bytes))
+            .ok_or("Annotation cache payload accounting overflow")?;
+        let mut fonts = self.font_bytes;
+        if let Some(old) = old {
+            for &(key, bytes) in &old.fonts {
+                if self.fonts.get(&key).is_some_and(|v| v.0 == 1)
+                    && !candidate.fonts.iter().any(|v| v.0 == key)
+                {
+                    fonts = fonts
+                        .checked_sub(bytes)
+                        .ok_or("Annotation cache font accounting underflow")?;
+                }
+            }
+        }
+        for &(key, bytes) in &candidate.fonts {
+            match self.fonts.get(&key) {
+                Some((_, old)) if *old != bytes => {
+                    return Err("Annotation font identity changed byte size".into())
+                }
+                Some(_) => {}
+                None => {
+                    fonts = fonts
+                        .checked_add(bytes)
+                        .ok_or("Annotation font cache accounting overflow")?;
+                }
+            }
+        }
+        payload
+            .checked_add(fonts)
+            .ok_or_else(|| "Annotation cache accounting overflow".into())
+    }
+    fn remove(&mut self, key: (usize, usize)) {
+        if let Some(old) = self.entries.remove(&key) {
+            self.payload_bytes -= old.bytes;
+            for (font, bytes) in old.fonts {
+                let count = &mut self
+                    .fonts
+                    .get_mut(&font)
+                    .expect("admitted layout font owner")
+                    .0;
+                *count -= 1;
+                if *count == 0 {
+                    self.fonts.remove(&font);
+                    self.font_bytes -= bytes;
+                }
+            }
+        }
+    }
+    fn insert(&mut self, key: (usize, usize), candidate: Layout) -> Result<(), String> {
+        let full = candidate
+            .fonts
+            .iter()
+            .try_fold(candidate.bytes, |n, (_, bytes)| n.checked_add(*bytes))
+            .ok_or("Annotation entry budget overflow")?;
+        if full > 32 * 1024 * 1024 {
+            return Err("Annotation layout budget exceeded".into());
+        }
+        // Candidate geometry/font owners already exist, bounded by32MiB. Reserve
+        // bookkeeping before retiring any accepted owners on replacement/eviction.
+        self.projected(key, &candidate)?;
+        self.entries
+            .try_reserve(1)
+            .map_err(|_| "Annotation layout allocation refused")?;
+        self.fonts
+            .try_reserve(candidate.fonts.len())
+            .map_err(|_| "Annotation font ledger allocation refused")?;
+        let replacing = self.entries.contains_key(&key);
+        if !replacing {
+            self.entry_order
+                .try_reserve(1)
+                .map_err(|_| "Annotation eviction ledger allocation refused")?;
+        }
+        while self.entries.len() + usize::from(!replacing) > Self::ENTRY_LIMIT
+            || self.projected(key, &candidate)? > Self::RETAINED_LIMIT
+        {
+            let evicted = self
+                .entry_order
+                .pop_front()
+                .ok_or("Annotation cache cannot admit candidate")?;
+            if evicted == key {
+                self.entry_order.push_back(evicted);
+                continue;
+            }
+            self.remove(evicted);
+        }
+        self.remove(key);
+        self.payload_bytes += candidate.bytes;
+        for &(font, bytes) in &candidate.fonts {
+            let owner = self.fonts.entry(font).or_insert_with(|| {
+                self.font_bytes += bytes;
+                (0, bytes)
+            });
+            owner.0 += 1;
+        }
+        if !replacing {
+            self.entry_order.push_back(key);
+        }
+        self.entries.insert(key, candidate);
+        self.builds += 1;
+        Ok(())
+    }
 }
 fn pixel_same(a: &Value, b: &Value) -> bool {
     let Some(a) = a.as_object() else { return false };
@@ -1042,7 +1158,8 @@ pub(super) fn paint(
             &context_fields,
             false,
         )?;
-        let mut bytes = raw_bytes;
+        let mut bytes = raw_bytes + std::mem::size_of::<Layout>() + 128;
+        let mut font_owners = Vec::new();
         let mut fonts = std::collections::HashSet::new();
         for d in &draws.draws {
             bytes = bytes
@@ -1074,41 +1191,33 @@ pub(super) fn paint(
                     )
                     .ok_or("Annotation glyph budget overflow")?;
                 if fonts.insert(t.font.key()) {
-                    bytes = bytes
-                        .checked_add(t.font.shared_bytes().len())
-                        .ok_or("Annotation font budget overflow")?;
+                    font_owners
+                        .try_reserve(1)
+                        .map_err(|_| "Annotation font reference allocation refused")?;
+                    font_owners.push((t.font.key(), t.font.shared_bytes().len()));
                 }
             }
         }
-        if bytes > 32 * 1024 * 1024 {
-            return Err("Annotation layout budget exceeded".into());
-        }
-        let cache = &mut app.composer_state.annotation_authoring.layouts;
-        while cache.entries.len() >= 128
-            || cache.entries.values().map(|p| p.bytes).sum::<usize>() + bytes > 64 * 1024 * 1024
-        {
-            let Some(k) = cache.entries.keys().copied().find(|k| *k != (f, index)) else {
-                break;
-            };
-            cache.entries.remove(&k);
-        }
-        cache
-            .entries
-            .try_reserve(1)
-            .map_err(|_| "Annotation layout allocation refused")?;
-        cache.entries.insert(
-            (f, index),
-            Layout {
-                value: local,
-                context,
-                language,
-                version: app.scene.version,
-                epoch: app.composer_state.annotation_authoring.geometry_epoch,
-                draws: std::sync::Arc::new(draws),
-                bytes,
-            },
-        );
-        cache.builds += 1;
+        bytes = bytes
+            .checked_add(
+                font_owners.capacity()
+                    * std::mem::size_of::<(ingetrazo_formats::paper_font::FontKey, usize)>(),
+            )
+            .ok_or("Annotation font metadata budget overflow")?;
+        let layout = Layout {
+            value: local,
+            context,
+            language,
+            version: app.scene.version,
+            epoch: app.composer_state.annotation_authoring.geometry_epoch,
+            draws: std::sync::Arc::new(draws),
+            bytes,
+            fonts: font_owners,
+        };
+        app.composer_state
+            .annotation_authoring
+            .layouts
+            .insert((f, index), layout)?;
     }
     if let Some(entry) = app
         .composer_state
@@ -1901,4 +2010,117 @@ fn source_size(app: &IngeTrazoApp, s: usize, f: usize, v: &Value) -> Result<[f64
         &context,
     )?
     .unwrap_or_else(|| size(v, f)))
+}
+
+#[cfg(test)]
+mod layout_cache_tests {
+    use super::*;
+    #[test]
+    fn dense_same_font_annotations_keep_warm_owners_and_unique_font_accounting() {
+        let sheet = ingetrazo_core::composition::Sheet::default();
+        let context = crate::composer_text_fields::Context {
+            index: Some(0),
+            total: 1,
+            path: None,
+            date: "01/01/2026",
+        };
+        let mut painter = ingetrazo_formats::paper_text_painter::Painter::default();
+        let value = json!({"text":"Ordinary repeated annotation","size_pt":11.});
+        let draws = std::sync::Arc::new(
+            crate::composer_annotations::draws(
+                &sheet,
+                "etiquetas",
+                &value,
+                &mut painter,
+                &context,
+                false,
+            )
+            .unwrap(),
+        );
+        let mut font_uses = std::collections::HashMap::new();
+        for d in &draws.draws {
+            if let Some(t) = &d.text {
+                font_uses.insert(t.font.key(), t.font.shared_bytes().len());
+            }
+        }
+        assert_eq!(
+            font_uses.len(),
+            1,
+            "Ordinary Latin labels share the resolver's primary font"
+        );
+        let (font, font_bytes) = font_uses.into_iter().next().unwrap();
+        let entry = |bytes| Layout {
+            value: value.clone(),
+            context: 0,
+            language: "en".into(),
+            version: 0,
+            epoch: 0,
+            draws: draws.clone(),
+            bytes,
+            fonts: vec![(font, font_bytes)],
+        };
+        let mut cache = LayoutCache::default();
+        for index in 0..256 {
+            cache.insert((3, index), entry(1024)).unwrap();
+        }
+        assert_eq!(cache.entries.len(), 256);
+        assert_eq!(cache.fonts[&font], (256, font_bytes));
+        assert_eq!(cache.payload_bytes, 256 * 1024);
+        assert_eq!(cache.font_bytes, font_bytes);
+        let builds = cache.builds;
+        for _ in 0..4 {
+            for index in 0..256 {
+                assert!(std::sync::Arc::ptr_eq(
+                    &cache.entries[&(3, index)].draws,
+                    &draws
+                ));
+            }
+        }
+        assert_eq!(
+            cache.builds, builds,
+            "Warm lookup keeps all owners beyond the old128-item cap"
+        );
+        cache.insert((3, 0), entry(2048)).unwrap();
+        assert_eq!(cache.fonts[&font].0, 256);
+        assert_eq!(cache.font_bytes, font_bytes);
+        assert_eq!(cache.payload_bytes, 257 * 1024);
+        assert_eq!(cache.entry_order.len(), 256);
+        // Byte-budget eviction retires many small payloads and then one large
+        // owner; the immutable font remains charged exactly once throughout.
+        cache.insert((3, 256), entry(31 * 1024 * 1024)).unwrap();
+        cache.insert((3, 257), entry(31 * 1024 * 1024)).unwrap();
+        cache.insert((3, 258), entry(31 * 1024 * 1024)).unwrap();
+        assert_eq!(cache.entries.len(), 2);
+        assert_eq!(cache.payload_bytes, 62 * 1024 * 1024);
+        assert_eq!(cache.fonts[&font], (2, font_bytes));
+        assert_eq!(cache.font_bytes, font_bytes);
+        let old = cache.entries[&(3, 258)].draws.clone();
+        let before = (
+            cache.payload_bytes,
+            cache.font_bytes,
+            cache.builds,
+            cache.entry_order.len(),
+        );
+        let mut invalid = entry(1024);
+        invalid.fonts[0].1 += 1;
+        assert!(cache.insert((3, 258), invalid).is_err());
+        assert_eq!(
+            before,
+            (
+                cache.payload_bytes,
+                cache.font_bytes,
+                cache.builds,
+                cache.entry_order.len()
+            )
+        );
+        assert!(std::sync::Arc::ptr_eq(
+            &old,
+            &cache.entries[&(3, 258)].draws
+        ));
+        cache.remove((3, 257));
+        assert_eq!(cache.fonts[&font].0, 1);
+        cache.remove((3, 258));
+        assert!(cache.fonts.is_empty());
+        assert_eq!((cache.payload_bytes, cache.font_bytes), (0, 0));
+    }
 }
