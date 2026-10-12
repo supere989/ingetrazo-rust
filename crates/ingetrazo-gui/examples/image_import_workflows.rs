@@ -45,6 +45,7 @@ struct Ui {
     time: f64,
     size: egui::Vec2,
     modifiers: egui::Modifiers,
+    projection_transport: Vec<Value>,
 }
 impl Ui {
     fn new() -> Self {
@@ -53,6 +54,7 @@ impl Ui {
             time: 0.,
             size: egui::vec2(1280., 800.),
             modifiers: Default::default(),
+            projection_transport: Vec::new(),
         }
     }
     fn frame(&mut self, a: &mut IngeTrazoApp, events: Vec<egui::Event>) {
@@ -93,7 +95,24 @@ impl Ui {
         if (r.width() - 800.).abs() > 0.1 || (r.height() - 600.).abs() > 0.1 {
             return Err(format!("Actual viewport mismatch {r:?}"));
         }
-        let pos = r.min + egui::vec2(x as f32, y as f32);
+        // The pinned offscreen Qt fixture never reaches resizeGL's set_aspect:
+        // its camera retains the constructor aspect 1.0. Transport that input
+        // projection to the actual native viewport without changing either camera.
+        let source_aspect = 1.0_f64;
+        let native_aspect = a.camera.aspect;
+        if !native_aspect.is_finite() || native_aspect <= 0. {
+            return Err("Invalid actual viewport camera aspect".into());
+        }
+        let mapped_x = 400. + (x - 400.) * source_aspect / native_aspect;
+        let pos = r.min + egui::vec2(mapped_x as f32, y as f32);
+        let camera_before = retained::camera(a);
+        self.projection_transport.push(json!({
+            "op":op,"raw_pixel":pixel,"source_viewport":[800,600],
+            "source_aspect":source_aspect,"native_aspect":native_aspect,
+            "native_viewport":[r.width(),r.height()],
+            "effective_pixel":[pos.x-r.min.x,pos.y-r.min.y],
+            "basis":"Inferred pinned camera default and failed-GL resize early return"
+        }));
         self.modifiers.shift = shift;
         let events = match op {
             "move" => vec![egui::Event::PointerMoved(pos)],
@@ -106,6 +125,11 @@ impl Ui {
             _ => return Err("pointer action".into()),
         };
         self.frame(a, events);
+        assert_eq!(retained::camera(a), camera_before);
+        assert_eq!(a.camera.aspect, native_aspect);
+        assert_eq!(a.native_gpu_viewport_rect, Some(r));
+        assert!(((f64::from(pos.x-r.min.x)-400.)*native_aspect
+            -(x-400.)*source_aspect).abs() < 0.0001);
         Ok(())
     }
     fn key(&mut self, a: &mut IngeTrazoApp, key: egui::Key) {
@@ -397,6 +421,10 @@ fn run(source: &Path, out: &Path) -> Result<(), String> {
             assert_eq!(a.scene.embedded_textures.len(), initial_resources + 2);
             guards["resource_reuse"] = json!(true);
         }
+        std::fs::write(out.join(format!("{name}-projection-transport.json")),
+            serde_json::to_vec_pretty(&json!({"camera_viewport_invariant":true,
+                "scope":"Consumer-only offscreen projection transport; no rendered viewport claim",
+                "events":ui.projection_transport})).unwrap()).map_err(|e|e.to_string())?;
         cases.push(json!({"name":name,"saved":saved,"phases":states.iter().filter(|r|r["case"]==name).map(|r|r["phase"].clone()).collect::<Vec<_>>(),"cache_reuse":{"same_name_equal":keys.len()<2||keys[0]==keys[1],"renamed_distinct":keys.len()<3||keys[0]!=keys[2]}}));
         std::fs::write(out.join("native-image-import.partial.json"),serde_json::to_vec_pretty(&json!({"source_pin":PIN,"cases":cases,"states":states,"headers":headers,"guards":guards})).unwrap()).map_err(|e|e.to_string())?;
     }
