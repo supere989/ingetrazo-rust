@@ -1,0 +1,9 @@
+# Terminal CI at 6fe9c26e
+
+Full run 38286472334 finished with failure. Separate ordered Metal run 38286472346 passed on both Apple ARM and Intel. All eight downloaded artifacts match the terminal API size and SHA256; their complete nested member inventories are retained. No jobs were retried and no local builds, source captures or native executions were performed.
+
+The Linux frozen native SKP stage succeeded with a fresh whole native run, followed by original readers and the strict checker: 15 cases, 71 states, 12 readers, eight operative guards and 25 rejected controls. The replay receipt records revision `6fe9c26e`, executed binary digest, helper hashes and canonical source archive digest. Native execution took 129.372 seconds, readers 11.000 seconds and checking 10.750 seconds. This is independent whole-run CI evidence, unlike the earlier split local acceptance. The actual controller/chooser stage is proved; the later File-menu wiring repair at `4d64e0d3` was not in this run.
+
+Linux physical symbol, legend, picture and six-family sheet annotation checks failed. Native Apple jobs retained picture, annotation, authoring, frame, section, CGL and text failures, with later ownership/device stages skipped. Intel additionally failed document dimensions and packaged startup; ARM passed those two steps. Windows and both Apple cross-compilation jobs passed. Full per-step conclusions are authoritative in the retained terminal APIs; stale files from skipped stages are not fresh passes. The ordered jobs prove their separate bounded consumer scope, not the failed broad workflow.
+
+The local unit-import source and native attempts are outside this CI run. No full-format, GPU portability, File-menu or complete release-gate promotion is claimed. Canonical source proofs are referenced without additional copies.
