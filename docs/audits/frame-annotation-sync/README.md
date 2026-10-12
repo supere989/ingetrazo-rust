@@ -6,7 +6,7 @@ Stored sheet anchors and model ViewFrame overlay tuples are separate observation
 
 The source callbacks reported no errors. Every state is independently JSON-owned, and frame observation verifies camera, layer, section, geographic visibility, display style and shadow restoration. Geographic objects are absent in these fixtures, so that visibility check records the literal empty inventory.
 
-The strict checker requires the exact eight-case/58-phase inventory, source/native records and tuple order, history counts and eight original-reader pairs. JSON numeric integer/float spelling is equivalent; values, signed zero, booleans, other types, keys and list order remain strict. The native idle/invalidation and actual ingress flags are required literal true and must be supported by the native consumer. Native acceptance remains pending the shared build and replay.
+The strict checker requires the exact eight-case/58-phase inventory, source/native records and tuple order, history counts and eight original-reader pairs. JSON numeric integer/float spelling is equivalent; values, signed zero, booleans, other types, keys and list order remain strict. The native idle/invalidation and actual ingress flags are required literal true and must be supported by the native consumer. Native finite semantic acceptance now passes 58 states/eight reopens/21 rejecting controls in the [integrated runtime](../frame-annotation-sync-integration/README.md).
 
 Run the prebuilt native consumer as `frame_annotation_sync SOURCE NATIVE`, then the pinned source Python reader `scripts/reference-frame-annotation-sync-reopens.py SOURCE NATIVE` and checker `scripts/check-frame-annotation-sync.py SOURCE NATIVE COMPARISON`. Replay authenticates this archive and never reruns the producer.
 

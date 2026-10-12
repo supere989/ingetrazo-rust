@@ -1,0 +1,292 @@
+{
+  "runtime_commit": "7b7fd50ac20d26df7df2339b978e8334b3cf6dca",
+  "source_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "source_archive_sha256": "58129332210e10503c48b77806fa54b2e2738388d0c7eb427d04ae65f191d463",
+  "archive_sha256": "d1451af4063b451af264226a1bdb78171186127d90e68fb0660d923f58f1af3b",
+  "raw_bytes": 1912466,
+  "members": {
+    "r2/anchor-tolerance-and-orphans-native.igz": {
+      "bytes": 9175,
+      "sha256": "8f43cfb64b2d1969cf2bbd00deee61203c7e935ec4cb16a9026683467617b0ff"
+    },
+    "r2/anchored-frame-transforms-native.igz": {
+      "bytes": 10391,
+      "sha256": "ae87e5daad8a6d67aa8e9ac74d20b9768636158e1664f2aaed984f38fce98ca1"
+    },
+    "r2/anchored-model-history-native.igz": {
+      "bytes": 9425,
+      "sha256": "dffd5724bbb2f51995a2b4e5e631ad1141bc7b87cc436220d6886a1507299e71"
+    },
+    "r2/build.json": {
+      "bytes": 327,
+      "sha256": "d2d34567c7a63ac78eefcf2808af8830fe8c399c99dc6905bcae507a52c35407"
+    },
+    "r2/build.log": {
+      "bytes": 22520,
+      "sha256": "c728cabf2d4d71af376bc362699d61c2caabbda2d12f380fd0131324f1cdeda4"
+    },
+    "r2/checker-result.json": {
+      "bytes": 72,
+      "sha256": "032482f6c0f467d25a147f515c648671f81c4916a5157f11c0b6ece71ba6ccf6"
+    },
+    "r2/checker.log": {
+      "bytes": 1170,
+      "sha256": "fe9e90ce2b754a256cd39f4ddff59512a9bc321f103da0da586fb51251bbc999"
+    },
+    "r2/comparison.json": {
+      "bytes": 11099,
+      "sha256": "3b8a41677510d99a4692455ff8e91c22789a11ab9bba9b905a8ae19ccd6f9d95"
+    },
+    "r2/label-leaders-and-level-native.igz": {
+      "bytes": 9138,
+      "sha256": "37473ccc5803093e1516c709b5b22a6fbd82bb6f6e3ca3cdbbd5f3aa6b8a2de8"
+    },
+    "r2/model-dimensions-and-text-native.igz": {
+      "bytes": 5139,
+      "sha256": "b7ae6a108031e7f9806aa4785602602af6d296d0eb2788b56b05e002cc128245"
+    },
+    "r2/native-frame-annotations.json": {
+      "bytes": 780204,
+      "sha256": "1e0ee681db7204b238b4817a154e6f4338236fa1908d6b8ea985a338f8a2da36"
+    },
+    "r2/native-reopens.json": {
+      "bytes": 67223,
+      "sha256": "505b34302d7af4ae0f59d9441aa39c1b66ff38a008a7a1f1ecc9ef5568e38852"
+    },
+    "r2/native-result.json": {
+      "bytes": 69,
+      "sha256": "2d5ce93b81457c1cd87312d228cca3b23b94d5272dec55765f4e8739696404cf"
+    },
+    "r2/native.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "r2/paths-and-chainage-native.igz": {
+      "bytes": 5869,
+      "sha256": "046649644e3cfbd216b1aecf156298016fd9fec26dca3c5ea689f03262374f7e"
+    },
+    "r2/reader-result.json": {
+      "bytes": 71,
+      "sha256": "d37a5236876407a8c6f628495d339473cdaf5cc63a5c3ed2fcb32976e2718a80"
+    },
+    "r2/reader.log": {
+      "bytes": 29,
+      "sha256": "1d61315c5ff57560ac2a212c80af837b6d632ec6b2480fdd32f752575dfca167"
+    },
+    "r2/roll-arithmetic.json": {
+      "bytes": 2151,
+      "sha256": "34e0761a121a208390f4afdfbb91460f2bae3c9d235e2e633d9c036347d6fbb3"
+    },
+    "r2/saved-view-and-perspective-native.igz": {
+      "bytes": 9920,
+      "sha256": "d4239c3540ae04d90f94fc6ba206961fd22bdaafbc347fda00d2b1feea5736c7"
+    },
+    "r2/section-traces-native.igz": {
+      "bytes": 6022,
+      "sha256": "14b4d986b6ff87e0c542ab9f03358f10f4b37d4ce56e78950dbf8a734c7bb944"
+    },
+    "r3/build-result.json": {
+      "bytes": 262,
+      "sha256": "45e06129c05c58f3cab4e56fedd410ba68186908b24d241676c3c70bb953f72d"
+    },
+    "r3/build.log": {
+      "bytes": 18398,
+      "sha256": "78b209d882e7b48da5c0ae03e161742924b7bfe28eb49340f4361d558ea9597e"
+    },
+    "r4/build-result.json": {
+      "bytes": 347,
+      "sha256": "69e03490f400dbc5b0daeafc12f584a02f65626810366f6c314b236d68580467"
+    },
+    "r4/replay-result.json": {
+      "bytes": 386,
+      "sha256": "075c2da0caabd361bdc10721e26d51b78d9e617264cbae2d3b9593483480db07"
+    },
+    "r4/replay/comparison.json": {
+      "bytes": 841,
+      "sha256": "edce36dc4b893c0e5ba6eabe5b32038ed7c28d472a15c1211cd037aa15a1d1b8"
+    },
+    "r4/replay/result.json": {
+      "bytes": 1821,
+      "sha256": "8b0f7a035b84f5dd446afc03938dc5031762687233b01bb5d87b312a891f584f"
+    },
+    "r5/build-result.json": {
+      "bytes": 347,
+      "sha256": "8bc714832ac7357dc6a79008eb7e29946b4a3c5656841d7c3e567c19204e7934"
+    },
+    "r5/build.log": {
+      "bytes": 22358,
+      "sha256": "c22952921a94c3acd06fb2b2b72160a6fe5bf88e2c6137e7fe927385778e0665"
+    },
+    "r5/replay-result.json": {
+      "bytes": 386,
+      "sha256": "1fcd464794c2d5fc808079e5613cc3e4896881ec0780fb4d779c97095ab0b8dd"
+    },
+    "r5/replay.log": {
+      "bytes": 1581,
+      "sha256": "44bcf708b3907009bd2ddab587a311dc63e7f16f454a256d1d9719182bc12389"
+    },
+    "r5/replay/checker.log": {
+      "bytes": 735,
+      "sha256": "b71c643812f62081aafd2b01dd18d8ac171d1b989c440209c187d49b23e8a26f"
+    },
+    "r5/replay/checker.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "r5/replay/comparison.json": {
+      "bytes": 841,
+      "sha256": "edce36dc4b893c0e5ba6eabe5b32038ed7c28d472a15c1211cd037aa15a1d1b8"
+    },
+    "r5/replay/native.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "r5/replay/native.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "r5/replay/native/anchor-tolerance-and-orphans-native.igz": {
+      "bytes": 9175,
+      "sha256": "8f43cfb64b2d1969cf2bbd00deee61203c7e935ec4cb16a9026683467617b0ff"
+    },
+    "r5/replay/native/anchored-frame-transforms-native.igz": {
+      "bytes": 10392,
+      "sha256": "6472403f5ab614834d4ada62e197a396d8dd8043188387ce525b3620246f77cc"
+    },
+    "r5/replay/native/anchored-model-history-native.igz": {
+      "bytes": 9425,
+      "sha256": "dffd5724bbb2f51995a2b4e5e631ad1141bc7b87cc436220d6886a1507299e71"
+    },
+    "r5/replay/native/label-leaders-and-level-native.igz": {
+      "bytes": 9186,
+      "sha256": "eb9202ce7f3e02432ae855bc6e12c801376f829f26db103276a9233d8548ed11"
+    },
+    "r5/replay/native/model-dimensions-and-text-native.igz": {
+      "bytes": 5139,
+      "sha256": "b7ae6a108031e7f9806aa4785602602af6d296d0eb2788b56b05e002cc128245"
+    },
+    "r5/replay/native/native-frame-annotations.json": {
+      "bytes": 779899,
+      "sha256": "2854cb5294b0a407d472c102415c595fb83353cbf50d5539d9279a54e0da1911"
+    },
+    "r5/replay/native/native-reopens.json": {
+      "bytes": 67271,
+      "sha256": "3f287a18489843802a58a108a3b45ad7e34fcd0ca25bf9cebe86a9165acb2c03"
+    },
+    "r5/replay/native/paths-and-chainage-native.igz": {
+      "bytes": 5868,
+      "sha256": "898cb7d9575f0d2c360b73e7c419b8f96222ebb302c646998be8538a629a786b"
+    },
+    "r5/replay/native/saved-view-and-perspective-native.igz": {
+      "bytes": 9920,
+      "sha256": "d4239c3540ae04d90f94fc6ba206961fd22bdaafbc347fda00d2b1feea5736c7"
+    },
+    "r5/replay/native/section-traces-native.igz": {
+      "bytes": 6022,
+      "sha256": "14b4d986b6ff87e0c542ab9f03358f10f4b37d4ce56e78950dbf8a734c7bb944"
+    },
+    "r5/replay/reader.log": {
+      "bytes": 29,
+      "sha256": "1d61315c5ff57560ac2a212c80af837b6d632ec6b2480fdd32f752575dfca167"
+    },
+    "r5/replay/reader.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "r5/replay/result.json": {
+      "bytes": 1823,
+      "sha256": "e3b03e845f25ad48d2f360402462a73eb0dec18e7f6c30716d6dc356ea34eacb"
+    }
+  },
+  "runtime_bindings": [
+    {
+      "path": "crates/ingetrazo-core/src/composition.rs",
+      "sha256": "03ff55a57b4cfb236144c27c2fb11a944ac4b1a3aa071a46c677bdd2ad3f26d9"
+    },
+    {
+      "path": "crates/ingetrazo-formats/src/igz.rs",
+      "sha256": "f56a7fdadfc165765275348cb3a2035985b5dcad113c68199a7cf805279234da"
+    },
+    {
+      "path": "crates/ingetrazo-gui/examples/frame_annotation_sync.rs",
+      "sha256": "af4e1cae0e9008ba589d86c33964566cdd6d140dc42d003dbf639ae5581a1374"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/app.rs",
+      "sha256": "56ba0cfc4e76b09d84b8ff078bb10f0e6913a635f4e0a7d8b73c5cac4458d22c"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/composer.rs",
+      "sha256": "55ae2d61fb1cc52c8962770d0d35318f6fe2cf4d80fdb9341fcc3b7a21199991"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/composer_annotation_authoring.rs",
+      "sha256": "19915cc647c44e4ee32aa16bc81666a6de3c74d833e53966fb28c19fff1e1b98"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/composer_annotations.rs",
+      "sha256": "83223b0edace4969ce9446c01dfa9ad62870eb845f98b12a27c39caef185189e"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/composer_compute.rs",
+      "sha256": "6cfe09447b054bf668f5f92205e125199572a08307ec1f7fafe044a7043a1bfb"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/composer_frame_anchors.rs",
+      "sha256": "35072da8c2e26e27eaf78d0cc8c18746ef1b3e3d028a5e82f5af292fa594baca"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/composer_frame_annotations.rs",
+      "sha256": "6e0e57c886b8023f962334ca7fd750097851b9625bd6585941a2e4556722d83b"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/composer_frame_overlay_cache.rs",
+      "sha256": "1c633b0a92e18975dedc229101feaad723a71623648dc1507e77a36373ff0102"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/composer_frame_overlay_paint.rs",
+      "sha256": "8a2ce3e35b0b8f8dd17277ac0396aadf5d936ff5ab37453de4fae5803110c0de"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/composer_frame_projection.rs",
+      "sha256": "26a1d6c75bc00dad56e03bcb484491ad5b85506fafbf7450bb5e843378ea2fc4"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/composer_pdf.rs",
+      "sha256": "6434203091c2ed0afa5c070017681297a2d05a6fe654e7cb1bcc2a11fbbc46f3"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/composer_picture_gestures.rs",
+      "sha256": "d9762988a3f567c9f944042d0094d48f5b1063a52857e2a957fb5f3b7644e63e"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/frame_annotation_sync_consumer.rs",
+      "sha256": "257b1d3b62c394d12951a8530b29354c3150579d3e9e28eea6213036f993b745"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/lib.rs",
+      "sha256": "01624c5584598885611a89b58d4040f1d2f59107bc89a83c496f391d0e92b5e2"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/sheet_image.rs",
+      "sha256": "7086580bef48e47c9e721bcabfb7fc193c519365fa04916a1ee05cb631c09169"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/statusbar.rs",
+      "sha256": "51d7de4f301d2ef7dafa21fca9d8d31cebdb1ddd87f9e7fe647e3828e9e4f16a"
+    },
+    {
+      "path": "crates/ingetrazo-render/src/annotations.rs",
+      "sha256": "251c1c7ac8ee553214eb322ba562242a9b11442ec7f5fad3a76abd467434d010"
+    },
+    {
+      "path": "crates/ingetrazo-render/src/vector_hlr.rs",
+      "sha256": "23005a40196cd54f9c1c1cd9663d7dd51cdc27d206323d8aeb5373da11bfd135"
+    }
+  ],
+  "source_captures": 1,
+  "cases": 8,
+  "states": 58,
+  "original_reader_pairs": 8,
+  "rejected_controls": 21
+}
