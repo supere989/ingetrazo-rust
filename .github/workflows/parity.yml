@@ -79,6 +79,7 @@ jobs:
           cache-on-failure: "true"
           save-if: ${{ github.event_name != 'pull_request' }}
       - name: Native paper font dependency build and library tests
+        id: nativefonttests
         if: ${{ !startsWith(github.ref, 'refs/heads/review/metal-') }}
         run: |
           mkdir -p docs/audits/paper-font-native-ci
@@ -91,11 +92,19 @@ jobs:
           if [[ "$GITHUB_REF" != refs/heads/review/metal-* ]]; then
             cargo check --locked -p ingetrazo-gui --all-targets > docs/audits/metal-combined-gui-ci/check.log 2>&1
           fi
-          cargo build --locked -p ingetrazo-cli -p ingetrazo-gui -p ingetrazo-metal -p ingetrazo-formats -p ingetrazo-render --bin ingetrazo --bin ingetrazo-render-worker --example gltf_rich --example sheet_image_workflows --example sheet_picture_workflows --example sheet_annotation_workflows --example sheet_annotation_authoring --example frame_annotation_sync --example composer_specialized_workflows --example composer_mixed_workflows --example composer_clipboard_workflows --example composer_picture_authoring --example composer_picture_gestures --example composer_legend_authoring --example paper_system_font_probe --example native_metal --example native_metal_document_probe --example session_recovery_process --example native_world_defaults --example native_metal_document_annotations --example native_metal_billboards --example native_metal_section_fill --example device_probe --example submission_probe --example cad2d_probe > docs/audits/metal-combined-gui-ci/build.log 2>&1
+          cargo build --locked -p ingetrazo-cli -p ingetrazo-gui -p ingetrazo-metal -p ingetrazo-formats -p ingetrazo-render --bin ingetrazo --bin ingetrazo-render-worker --example gltf_rich --example sheet_image_workflows --example sheet_picture_workflows --example sheet_annotation_workflows --example sheet_annotation_authoring --example frame_annotation_sync --example composer_specialized_workflows --example composer_mixed_workflows --example composer_clipboard_workflows --example composer_picture_authoring --example composer_picture_gestures --example composer_legend_authoring --example paper_system_font_probe --example native_metal --example native_metal_document_probe --example native_metal_bridge_capture --example session_recovery_process --example native_world_defaults --example native_metal_document_annotations --example native_metal_billboards --example native_metal_section_fill --example device_probe --example submission_probe --example cad2d_probe > docs/audits/metal-combined-gui-ci/build.log 2>&1
       - uses: actions/setup-python@v5
         if: ${{ !cancelled() && steps.nativebuild.outcome == 'success' }}
         with:
           python-version: "3.13"
+      - name: Native Metal actual Host TCP capture lifecycle
+        if: ${{ !cancelled() && steps.nativebuild.outcome == 'success' }}
+        timeout-minutes: 3
+        run: python3 scripts/replay-metal-bridge-capture.py target/debug/examples/native_metal_bridge_capture docs/audits/metal-combined-gui-ci/bridge-capture
+      - name: Native CoreText anisotropic capture face ownership guard
+        if: ${{ !cancelled() && steps.nativebuild.outcome == 'success' && steps.nativefonttests.outcome == 'skipped' }}
+        timeout-minutes: 5
+        run: cargo test --locked -p ingetrazo-formats --lib annotation_font::capture_tests::coretext_anisotropic_capture_keeps_native_face_immutable -- --exact > docs/audits/metal-combined-gui-ci/coretext-anisotropic.log 2>&1
       - name: Replay frozen figure exports on native macOS
         if: ${{ !cancelled() && steps.nativebuild.outcome == 'success' }}
         run: python3 scripts/replay-gltf-figures.py target/debug/examples/gltf_rich docs/audits/metal-combined-gui-ci/gltf-figures > docs/audits/metal-combined-gui-ci/gltf-figures-replay.log 2>&1

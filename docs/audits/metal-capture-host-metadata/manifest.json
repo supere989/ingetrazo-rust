@@ -1,0 +1,300 @@
+{
+  "scope": "Compile-only metadata evidence; no actual Mac runtime/pixel acceptance",
+  "revision": "77a4547033e926164c5fbb61d79d313260b81405",
+  "archive_sha256": "d15699f6589249e0b999bac113617ddeae49f05641c97a2767496ff27987ba70",
+  "members": {
+    "arm-metadata-r1.log": {
+      "size": 25144,
+      "sha256": "d27ff71d52166e95eda571b5d99fcdd9f2446e126379cb4bee7c8d91466a99db",
+      "origin": "/tmp/ingetrazo-metal-host-arm-metadata-r1.log"
+    },
+    "arm-metadata-r2.log": {
+      "size": 25543,
+      "sha256": "0caa64664a0ccd5d2091803ccf01d9d9f291ed8730f06d73679fd9c31d548c0c",
+      "origin": "/tmp/ingetrazo-metal-host-arm-metadata-r2.log"
+    },
+    "arm-metadata-r3.log": {
+      "size": 31433,
+      "sha256": "f40dcafd8e5fa09542a95a6199a15c2777eb9fa7578615e5ed96482f0094f2f0",
+      "origin": "/tmp/ingetrazo-metal-host-arm-metadata-r3.log"
+    },
+    "intel-metadata-r1.log": {
+      "size": 31044,
+      "sha256": "d9b8d233178763ea00ad76a2540c40a438201b00cb165ecf89072e0d08b58e98",
+      "origin": "/tmp/ingetrazo-metal-host-intel-metadata-r1.log"
+    }
+  },
+  "git_bindings": [
+    {
+      "stage": "arm-metadata-r1",
+      "path": "crates/ingetrazo-gui/src/native_metal.rs",
+      "revision": "94db7e26aa440941b3fe17ba91479f9eac8f1b9a",
+      "sha256": "6a87e720f9d821f3de6bad05fe8d53a2ee80f075573ed844f4f7610f087e77f1"
+    },
+    {
+      "stage": "arm-metadata-r1",
+      "path": "crates/ingetrazo-gui/src/native_metal/bridge_capture_probe.rs",
+      "revision": "94db7e26aa440941b3fe17ba91479f9eac8f1b9a",
+      "sha256": "43850137364e8b9a5120d0ebfc8d53d8993b96ad4e0b1e21c593a19d5e7ad075"
+    },
+    {
+      "stage": "arm-metadata-r1",
+      "path": "crates/ingetrazo-gui/src/native_metal/capture.rs",
+      "revision": "94db7e26aa440941b3fe17ba91479f9eac8f1b9a",
+      "sha256": "12c1705ef6c6e70f358ce41875522668564e1cd4ca622065acca2cb2eb8ff6eb"
+    },
+    {
+      "stage": "arm-metadata-r1",
+      "path": "crates/ingetrazo-gui/src/ai_bridge.rs",
+      "revision": "94db7e26aa440941b3fe17ba91479f9eac8f1b9a",
+      "sha256": "c0a5544360095c02893bd7c481ab68587d888a30b2f16d793676ab6529bbba12"
+    },
+    {
+      "stage": "arm-metadata-r1",
+      "path": "crates/ingetrazo-gui/src/app.rs",
+      "revision": "94db7e26aa440941b3fe17ba91479f9eac8f1b9a",
+      "sha256": "694e35457fc0e12036e880f66767986bf82338e996cc2328547f24e5aaa2b752"
+    },
+    {
+      "stage": "arm-metadata-r1",
+      "path": "crates/ingetrazo-gui/examples/native_metal_bridge_capture.rs",
+      "revision": "94db7e26aa440941b3fe17ba91479f9eac8f1b9a",
+      "sha256": "ed0fb92c271a0f11f1d1c592413fd7f00c86a256624d034fa767fbe93b3bfc4b"
+    },
+    {
+      "stage": "arm-metadata-r1",
+      "path": "crates/ingetrazo-metal/src/egui_painter.rs",
+      "revision": "94db7e26aa440941b3fe17ba91479f9eac8f1b9a",
+      "sha256": "71e2e5206069af766c69a50684d9cee8c3db7956989fd932ad46faaca1aa70c8"
+    },
+    {
+      "stage": "arm-metadata-r1",
+      "path": "crates/ingetrazo-formats/src/annotation_font.rs",
+      "revision": "94db7e26aa440941b3fe17ba91479f9eac8f1b9a",
+      "sha256": "95a2f6fc82b762a442d0bbe7d89acadb4e8d07e8d8e96c1fb190ac0a42ed60f5"
+    },
+    {
+      "stage": "arm-metadata-r1",
+      "path": "crates/ingetrazo-formats/src/paper_coretext_glyph.rs",
+      "revision": "94db7e26aa440941b3fe17ba91479f9eac8f1b9a",
+      "sha256": "4f04eaf4677029157362e3d4da13b3d9149c35cf553b61921cb9ef31ae5bb82a"
+    },
+    {
+      "stage": "arm-metadata-r1",
+      "path": "crates/ingetrazo-metal/Cargo.toml",
+      "revision": "94db7e26aa440941b3fe17ba91479f9eac8f1b9a",
+      "sha256": "71125a291d386a1394c5103676ed3b214a9fab19b3eeeb6bce87259f100e3e8e"
+    },
+    {
+      "stage": "arm-metadata-r2",
+      "path": "crates/ingetrazo-gui/src/native_metal.rs",
+      "revision": "fd0af07e0d94187a31ca26cbae88e97d27c48c2b",
+      "sha256": "6a87e720f9d821f3de6bad05fe8d53a2ee80f075573ed844f4f7610f087e77f1"
+    },
+    {
+      "stage": "arm-metadata-r2",
+      "path": "crates/ingetrazo-gui/src/native_metal/bridge_capture_probe.rs",
+      "revision": "fd0af07e0d94187a31ca26cbae88e97d27c48c2b",
+      "sha256": "43850137364e8b9a5120d0ebfc8d53d8993b96ad4e0b1e21c593a19d5e7ad075"
+    },
+    {
+      "stage": "arm-metadata-r2",
+      "path": "crates/ingetrazo-gui/src/native_metal/capture.rs",
+      "revision": "fd0af07e0d94187a31ca26cbae88e97d27c48c2b",
+      "sha256": "974f52c8905d0ee6b26c8e0e55cdf8a4ce126daa540a84e78942653d14aca7c5"
+    },
+    {
+      "stage": "arm-metadata-r2",
+      "path": "crates/ingetrazo-gui/src/ai_bridge.rs",
+      "revision": "fd0af07e0d94187a31ca26cbae88e97d27c48c2b",
+      "sha256": "c0a5544360095c02893bd7c481ab68587d888a30b2f16d793676ab6529bbba12"
+    },
+    {
+      "stage": "arm-metadata-r2",
+      "path": "crates/ingetrazo-gui/src/app.rs",
+      "revision": "fd0af07e0d94187a31ca26cbae88e97d27c48c2b",
+      "sha256": "694e35457fc0e12036e880f66767986bf82338e996cc2328547f24e5aaa2b752"
+    },
+    {
+      "stage": "arm-metadata-r2",
+      "path": "crates/ingetrazo-gui/examples/native_metal_bridge_capture.rs",
+      "revision": "fd0af07e0d94187a31ca26cbae88e97d27c48c2b",
+      "sha256": "ed0fb92c271a0f11f1d1c592413fd7f00c86a256624d034fa767fbe93b3bfc4b"
+    },
+    {
+      "stage": "arm-metadata-r2",
+      "path": "crates/ingetrazo-metal/src/egui_painter.rs",
+      "revision": "fd0af07e0d94187a31ca26cbae88e97d27c48c2b",
+      "sha256": "71e2e5206069af766c69a50684d9cee8c3db7956989fd932ad46faaca1aa70c8"
+    },
+    {
+      "stage": "arm-metadata-r2",
+      "path": "crates/ingetrazo-formats/src/annotation_font.rs",
+      "revision": "fd0af07e0d94187a31ca26cbae88e97d27c48c2b",
+      "sha256": "95a2f6fc82b762a442d0bbe7d89acadb4e8d07e8d8e96c1fb190ac0a42ed60f5"
+    },
+    {
+      "stage": "arm-metadata-r2",
+      "path": "crates/ingetrazo-formats/src/paper_coretext_glyph.rs",
+      "revision": "fd0af07e0d94187a31ca26cbae88e97d27c48c2b",
+      "sha256": "4f04eaf4677029157362e3d4da13b3d9149c35cf553b61921cb9ef31ae5bb82a"
+    },
+    {
+      "stage": "arm-metadata-r2",
+      "path": "crates/ingetrazo-metal/Cargo.toml",
+      "revision": "fd0af07e0d94187a31ca26cbae88e97d27c48c2b",
+      "sha256": "71125a291d386a1394c5103676ed3b214a9fab19b3eeeb6bce87259f100e3e8e"
+    },
+    {
+      "stage": "arm-metadata-r3",
+      "path": "crates/ingetrazo-gui/src/native_metal.rs",
+      "revision": "77a4547033e926164c5fbb61d79d313260b81405",
+      "sha256": "6a87e720f9d821f3de6bad05fe8d53a2ee80f075573ed844f4f7610f087e77f1"
+    },
+    {
+      "stage": "arm-metadata-r3",
+      "path": "crates/ingetrazo-gui/src/native_metal/bridge_capture_probe.rs",
+      "revision": "77a4547033e926164c5fbb61d79d313260b81405",
+      "sha256": "43850137364e8b9a5120d0ebfc8d53d8993b96ad4e0b1e21c593a19d5e7ad075"
+    },
+    {
+      "stage": "arm-metadata-r3",
+      "path": "crates/ingetrazo-gui/src/native_metal/capture.rs",
+      "revision": "77a4547033e926164c5fbb61d79d313260b81405",
+      "sha256": "d8691e8ac785f1fea83d98fbcc5bdf24af97dc5d807e3b8ea53ad50c24ca856a"
+    },
+    {
+      "stage": "arm-metadata-r3",
+      "path": "crates/ingetrazo-gui/src/ai_bridge.rs",
+      "revision": "77a4547033e926164c5fbb61d79d313260b81405",
+      "sha256": "c0a5544360095c02893bd7c481ab68587d888a30b2f16d793676ab6529bbba12"
+    },
+    {
+      "stage": "arm-metadata-r3",
+      "path": "crates/ingetrazo-gui/src/app.rs",
+      "revision": "77a4547033e926164c5fbb61d79d313260b81405",
+      "sha256": "694e35457fc0e12036e880f66767986bf82338e996cc2328547f24e5aaa2b752"
+    },
+    {
+      "stage": "arm-metadata-r3",
+      "path": "crates/ingetrazo-gui/examples/native_metal_bridge_capture.rs",
+      "revision": "77a4547033e926164c5fbb61d79d313260b81405",
+      "sha256": "ed0fb92c271a0f11f1d1c592413fd7f00c86a256624d034fa767fbe93b3bfc4b"
+    },
+    {
+      "stage": "arm-metadata-r3",
+      "path": "crates/ingetrazo-metal/src/egui_painter.rs",
+      "revision": "77a4547033e926164c5fbb61d79d313260b81405",
+      "sha256": "71e2e5206069af766c69a50684d9cee8c3db7956989fd932ad46faaca1aa70c8"
+    },
+    {
+      "stage": "arm-metadata-r3",
+      "path": "crates/ingetrazo-formats/src/annotation_font.rs",
+      "revision": "77a4547033e926164c5fbb61d79d313260b81405",
+      "sha256": "95a2f6fc82b762a442d0bbe7d89acadb4e8d07e8d8e96c1fb190ac0a42ed60f5"
+    },
+    {
+      "stage": "arm-metadata-r3",
+      "path": "crates/ingetrazo-formats/src/paper_coretext_glyph.rs",
+      "revision": "77a4547033e926164c5fbb61d79d313260b81405",
+      "sha256": "4f04eaf4677029157362e3d4da13b3d9149c35cf553b61921cb9ef31ae5bb82a"
+    },
+    {
+      "stage": "arm-metadata-r3",
+      "path": "crates/ingetrazo-metal/Cargo.toml",
+      "revision": "77a4547033e926164c5fbb61d79d313260b81405",
+      "sha256": "71125a291d386a1394c5103676ed3b214a9fab19b3eeeb6bce87259f100e3e8e"
+    },
+    {
+      "stage": "intel-metadata-r1",
+      "path": "crates/ingetrazo-gui/src/native_metal.rs",
+      "revision": "77a4547033e926164c5fbb61d79d313260b81405",
+      "sha256": "6a87e720f9d821f3de6bad05fe8d53a2ee80f075573ed844f4f7610f087e77f1"
+    },
+    {
+      "stage": "intel-metadata-r1",
+      "path": "crates/ingetrazo-gui/src/native_metal/bridge_capture_probe.rs",
+      "revision": "77a4547033e926164c5fbb61d79d313260b81405",
+      "sha256": "43850137364e8b9a5120d0ebfc8d53d8993b96ad4e0b1e21c593a19d5e7ad075"
+    },
+    {
+      "stage": "intel-metadata-r1",
+      "path": "crates/ingetrazo-gui/src/native_metal/capture.rs",
+      "revision": "77a4547033e926164c5fbb61d79d313260b81405",
+      "sha256": "d8691e8ac785f1fea83d98fbcc5bdf24af97dc5d807e3b8ea53ad50c24ca856a"
+    },
+    {
+      "stage": "intel-metadata-r1",
+      "path": "crates/ingetrazo-gui/src/ai_bridge.rs",
+      "revision": "77a4547033e926164c5fbb61d79d313260b81405",
+      "sha256": "c0a5544360095c02893bd7c481ab68587d888a30b2f16d793676ab6529bbba12"
+    },
+    {
+      "stage": "intel-metadata-r1",
+      "path": "crates/ingetrazo-gui/src/app.rs",
+      "revision": "77a4547033e926164c5fbb61d79d313260b81405",
+      "sha256": "694e35457fc0e12036e880f66767986bf82338e996cc2328547f24e5aaa2b752"
+    },
+    {
+      "stage": "intel-metadata-r1",
+      "path": "crates/ingetrazo-gui/examples/native_metal_bridge_capture.rs",
+      "revision": "77a4547033e926164c5fbb61d79d313260b81405",
+      "sha256": "ed0fb92c271a0f11f1d1c592413fd7f00c86a256624d034fa767fbe93b3bfc4b"
+    },
+    {
+      "stage": "intel-metadata-r1",
+      "path": "crates/ingetrazo-metal/src/egui_painter.rs",
+      "revision": "77a4547033e926164c5fbb61d79d313260b81405",
+      "sha256": "71e2e5206069af766c69a50684d9cee8c3db7956989fd932ad46faaca1aa70c8"
+    },
+    {
+      "stage": "intel-metadata-r1",
+      "path": "crates/ingetrazo-formats/src/annotation_font.rs",
+      "revision": "77a4547033e926164c5fbb61d79d313260b81405",
+      "sha256": "95a2f6fc82b762a442d0bbe7d89acadb4e8d07e8d8e96c1fb190ac0a42ed60f5"
+    },
+    {
+      "stage": "intel-metadata-r1",
+      "path": "crates/ingetrazo-formats/src/paper_coretext_glyph.rs",
+      "revision": "77a4547033e926164c5fbb61d79d313260b81405",
+      "sha256": "4f04eaf4677029157362e3d4da13b3d9149c35cf553b61921cb9ef31ae5bb82a"
+    },
+    {
+      "stage": "intel-metadata-r1",
+      "path": "crates/ingetrazo-metal/Cargo.toml",
+      "revision": "77a4547033e926164c5fbb61d79d313260b81405",
+      "sha256": "71125a291d386a1394c5103676ed3b214a9fab19b3eeeb6bce87259f100e3e8e"
+    }
+  ],
+  "stages": [
+    {
+      "name": "arm-metadata-r1",
+      "outcome": "FAIL",
+      "cause": "missing shared event trait",
+      "revision": "94db7e26aa440941b3fe17ba91479f9eac8f1b9a",
+      "revision_provenance": "Root orchestration command history, supplied after checks; logs do not embed revision"
+    },
+    {
+      "name": "arm-metadata-r2",
+      "outcome": "FAIL",
+      "cause": "undeclared objc2 dependency",
+      "revision": "fd0af07e0d94187a31ca26cbae88e97d27c48c2b",
+      "revision_provenance": "Root orchestration command history, supplied after checks; logs do not embed revision"
+    },
+    {
+      "name": "arm-metadata-r3",
+      "outcome": "PASS",
+      "seconds": 3.3,
+      "revision": "77a4547033e926164c5fbb61d79d313260b81405",
+      "revision_provenance": "Root orchestration command history, supplied after checks; logs do not embed revision"
+    },
+    {
+      "name": "intel-metadata-r1",
+      "outcome": "PASS",
+      "seconds": 3.27,
+      "revision": "77a4547033e926164c5fbb61d79d313260b81405",
+      "revision_provenance": "Root orchestration command history, supplied after checks; logs do not embed revision"
+    }
+  ],
+  "timing_provenance": "Root reported metadata invocation durations; retained logs are exact, no native execution inferred."
+}
