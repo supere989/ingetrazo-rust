@@ -1,0 +1,22 @@
+{
+  "head_sha": "9222bad37b3ae72bead49d3ed7c5379766827b9e",
+  "archive_sha256": "86abc0dd9d15fc0bb7d4d9de8ad0da8cc1129f55f55ac5fbc486a06d808b745e",
+  "independent_archive_and_all_member_hashes_verified": true,
+  "members": 224,
+  "raw_bytes": 102345541,
+  "semantic_consumers": 28,
+  "all_successful_stages": 174,
+  "dxf": {
+    "cases": 35,
+    "states": 245,
+    "actual_original_reopens": 35,
+    "negative_controls": 97
+  },
+  "actual_arm_library_tests_passed": 75,
+  "actual_intel_library_tests_passed": 75,
+  "literal_repair_lines_checked_against_retained_logs": true,
+  "new_builds": 0,
+  "new_test_runs": 0,
+  "source_recaptures": 0,
+  "scope": "Read-only authentication of terminal publication evidence. Known Mac rendering and release gates remain open."
+}
