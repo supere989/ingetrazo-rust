@@ -381,12 +381,7 @@ pub(super) fn paint_band(
         egui::Color32::from_rgb(41, 128, 214)
     };
     painter.rect_filled(r, 0., color.gamma_multiply(0.16));
-    painter.rect_stroke(
-        r,
-        0.,
-        egui::Stroke::new(1., color),
-        egui::StrokeKind::Inside,
-    );
+    painter.rect_stroke(r, 0., egui::Stroke::new(1., color));
 }
 
 pub(super) fn capture_group(

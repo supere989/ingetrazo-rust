@@ -3,8 +3,14 @@ use super::IngeTrazoApp;
 use glam::DVec2;
 use serde_json::{json, Value};
 use uuid::Uuid;
+#[path = "composer_annotation_handles.rs"]
+pub(super) mod handles;
+#[path = "composer_annotation_multi.rs"]
+pub(super) mod multi;
 #[path = "composer_annotation_preferences.rs"]
 mod preferences;
+#[path = "composer_annotation_runs.rs"]
+pub(super) mod runs;
 pub(super) const FAMILIES: [&str; 6] = [
     "cotas",
     "cotas_ang",
@@ -30,6 +36,8 @@ pub struct Owner {
 #[derive(Clone, Default)]
 pub(super) struct State {
     pub ignore_release: bool,
+    pub multi: multi::State,
+    pub runs: runs::State,
     pub hover: Option<DVec2>,
     pub armed: Option<usize>,
     pub points: Vec<DVec2>,
@@ -44,13 +52,15 @@ pub(super) struct State {
     pub last_cota: serde_json::Map<String, Value>,
     pub last_level: serde_json::Map<String, Value>,
     pub axis: &'static str,
+    pub linear_sep: Option<f64>,
 }
 #[derive(Clone)]
 pub(super) struct Grab {
     pub owner: Owner,
     pub press: DVec2,
     pub before: Value,
-    pub targets: super::pointer_transactions::Targets,
+    pub targets: Option<super::pointer_transactions::Targets>,
+    pub handle: Option<handles::Handle>,
     pub size: [f64; 2],
 }
 fn active(app: &IngeTrazoApp) -> Result<usize, String> {
@@ -170,6 +180,74 @@ fn patch(v: &mut Value, fields: &Value) -> Result<(), String> {
     admit(v)
 }
 impl IngeTrazoApp {
+    pub(super) fn reconcile_composer_annotation_runs(&mut self) {
+        if let Err(e) = runs::reconcile(self) {
+            self.status_message = e;
+        }
+        multi::revalidate(self);
+    }
+    pub(super) fn cancel_composer_annotation_run(&mut self) -> bool {
+        if !self.composer_state.annotation_authoring.runs.armed {
+            return false;
+        }
+        if let Err(e) = runs::cancel(self) {
+            self.status_message = e;
+        }
+        true
+    }
+    pub(super) fn retire_composer_specialized(&mut self) {
+        self.composer_state.annotation_authoring.runs = Default::default();
+        multi::clear(self);
+    }
+    pub fn composer_annotation_selection_set(&self) -> Vec<(usize, usize)> {
+        let mut owners = self
+            .composer_state
+            .annotation_authoring
+            .multi
+            .members
+            .iter()
+            .map(|o| (o.family, o.index))
+            .collect::<Vec<_>>();
+        if let Some((_, f, i)) = self.composer_annotation_selection() {
+            if !owners.contains(&(f, i)) {
+                owners.push((f, i));
+            }
+        }
+        owners.sort_unstable();
+        owners
+    }
+    pub fn composer_annotation_mode(&self) -> &'static str {
+        let state = &self.composer_state.annotation_authoring;
+        if state.runs.armed {
+            if state.runs.baseline {
+                "cota_base"
+            } else {
+                "cota_cadena"
+            }
+        } else {
+            match state.armed {
+                Some(0) => "cota",
+                Some(1) => "cota_ang",
+                Some(2) => "cota_rad",
+                Some(3) => "etiqueta",
+                Some(4) => "nivel",
+                Some(5) => "llamada",
+                _ => "select",
+            }
+        }
+    }
+    pub fn composer_specialized_pending(&self) -> Value {
+        let state = &self.composer_state.annotation_authoring;
+        let points = &state.points;
+        let mut value = json!({"start":points.first().map(|p|p.to_array()),"second":if state.armed==Some(0){points.get(1).map(|p|p.to_array())}else{None},"angular":if state.armed==Some(1){points.iter().map(|p|p.to_array()).collect::<Vec<_>>()}else{Vec::new()},"radial":if state.armed==Some(2){points.first().map(|p|p.to_array())}else{None}});
+        for (k, v) in runs::observation(self).as_object().unwrap() {
+            value[k] = v.clone();
+        }
+        value
+    }
+    pub fn activate_composer_dimension_run(&mut self, baseline: bool) -> Result<(), String> {
+        runs::activate(self, baseline)
+    }
     pub fn composer_annotation_selection(&self) -> Option<(Uuid, usize, usize)> {
         let owner = self.composer_state.annotation_authoring.selected?;
         let s = active(self).ok()?;
@@ -214,6 +292,7 @@ impl IngeTrazoApp {
         }
         self.finish_composer_edit();
         self.composer_state.annotation_authoring.coalesce = None;
+        multi::single(self, owner);
         self.composer_state.annotation_authoring.selected = owner;
         self.composer_state.annotation_authoring.draft = None;
         if owner.is_some() {
@@ -224,6 +303,10 @@ impl IngeTrazoApp {
         Ok(())
     }
     pub fn activate_composer_annotation(&mut self, family: usize) -> Result<(), String> {
+        if self.composer_state.annotation_authoring.runs.armed {
+            runs::finish(self)?;
+            self.composer_state.annotation_authoring.runs.armed = false;
+        }
         active(self)?;
         FAMILIES.get(family).ok_or("Unknown annotation family")?;
         if self
@@ -283,6 +366,16 @@ impl IngeTrazoApp {
         let mut candidate = before.clone();
         patch(&mut candidate, &fields)?;
         let unchanged = candidate == *before;
+        let actual_fields = Value::Object(
+            fields
+                .as_object()
+                .unwrap()
+                .iter()
+                .filter(|(k, _)| candidate.get(*k) != before.get(*k))
+                .map(|(k, _)| (k.clone(), candidate[k].clone()))
+                .collect(),
+        );
+        let peers = multi::edited_peers(self, owner, &actual_fields)?;
         let mut keys = fields
             .as_object()
             .unwrap()
@@ -322,19 +415,32 @@ impl IngeTrazoApp {
             .sheet_history
             .get(&sid)
             .map_or(0, |h| h.0.len());
+        let mut group_signature = vec![(owner, keys.clone())];
+        group_signature.extend(peers.iter().map(|(peer, _)| (*peer, keys.clone())));
+        group_signature.sort_by_key(|(o, _)| (o.family, o.index));
         let combine = self
             .composer_state
             .annotation_authoring
-            .coalesce
-            .as_ref()
-            .is_some_and(|(o, k, count, version)| {
-                *o == owner && *k == keys && *count == n && *version == self.scene.version
-            });
+            .multi
+            .edit_signature
+            == group_signature
+            && self
+                .composer_state
+                .annotation_authoring
+                .coalesce
+                .as_ref()
+                .is_some_and(|(o, k, count, version)| {
+                    *o == owner && *k == keys && *count == n && *version == self.scene.version
+                });
         if !combine {
             self.finish_composer_edit();
+            self.scene.sheets[s].ensure_annotation_ids()?;
             self.begin_composer_edit();
         }
         self.scene.sheets[s].native_document[FAMILIES[family]][index] = candidate;
+        for (peer, value) in peers {
+            self.scene.sheets[s].native_document[FAMILIES[peer.family]][peer.index] = value;
+        }
         if combine {
             self.scene.bump_version();
         } else {
@@ -347,10 +453,17 @@ impl IngeTrazoApp {
             .map_or(0, |h| h.0.len());
         self.composer_state.annotation_authoring.coalesce =
             Some((owner, keys, n, self.scene.version));
+        self.composer_state
+            .annotation_authoring
+            .multi
+            .edit_signature = group_signature;
         self.composer_state.annotation_authoring.draft = None;
         Ok(())
     }
     pub fn delete_composer_annotation(&mut self) -> Result<(), String> {
+        if multi::delete_selected(self)? {
+            return Ok(());
+        }
         let (sid, family, index) = self
             .composer_annotation_selection()
             .ok_or("No annotation selected")?;
@@ -361,16 +474,61 @@ impl IngeTrazoApp {
         };
         let s = active(self)?;
         self.finish_composer_edit();
+        self.scene.sheets[s].ensure_annotation_ids()?;
         self.begin_composer_edit();
         let list = self.scene.sheets[s].native_document[FAMILIES[family]]
             .as_array_mut()
             .ok_or("Invalid annotation list")?;
         list.remove(index);
+        self.scene.sheets[s].remove_annotation_id(family, index);
         self.composer_state.annotation_authoring.selected = None;
         self.composer_state.annotation_authoring.draft = None;
         self.composer_state.annotation_authoring.coalesce = None;
         self.finish_composer_edit();
         Ok(())
+    }
+    pub(crate) fn place_composer_linear_segment(
+        &mut self,
+        a: [f64; 2],
+        b: [f64; 2],
+        sep: f64,
+        axis: &'static str,
+        hits: [Option<super::frame_anchors::SnapHit>; 2],
+    ) -> Result<Owner, String> {
+        if !sep.is_finite() || sep.abs() > 1e6 {
+            return Err("Invalid run separation".into());
+        }
+        let state = &mut self.composer_state.annotation_authoring;
+        let old = (
+            state.armed,
+            std::mem::take(&mut state.points),
+            std::mem::take(&mut state.snap_hits),
+            state.axis,
+            state.linear_sep,
+        );
+        state.armed = Some(0);
+        state.axis = axis;
+        state.linear_sep = Some(sep);
+        state.snap_hits = hits.into_iter().collect();
+        let result = self
+            .place_composer_annotation(&[a, b, a], false)
+            .and_then(|placed| {
+                if placed {
+                    self.composer_state
+                        .annotation_authoring
+                        .selected
+                        .ok_or_else(|| "Run segment owner missing".into())
+                } else {
+                    Err("Run segment refused".into())
+                }
+            });
+        let state = &mut self.composer_state.annotation_authoring;
+        state.armed = old.0;
+        state.points = old.1;
+        state.snap_hits = old.2;
+        state.axis = old.3;
+        state.linear_sep = old.4;
+        result
     }
     pub fn place_composer_annotation(
         &mut self,
@@ -431,7 +589,13 @@ impl IngeTrazoApp {
         match family {
             0 => {
                 let d = p[1] - p[0];
-                if d.length() < 0.5 {
+                if d.length() < 0.5
+                    && self
+                        .composer_state
+                        .annotation_authoring
+                        .linear_sep
+                        .is_none()
+                {
                     return Ok(false);
                 }
                 v["offset_mm"] = json!(self
@@ -454,7 +618,11 @@ impl IngeTrazoApp {
                 v["axis"] = json!(self.composer_state.annotation_authoring.axis);
                 v["dx_mm"] = json!(d.x);
                 v["dy_mm"] = json!(d.y);
-                v["sep_mm"] = json!((p[2] - p[0]).dot(DVec2::new(-d.y, d.x) / d.length()));
+                v["sep_mm"] = json!(self
+                    .composer_state
+                    .annotation_authoring
+                    .linear_sep
+                    .unwrap_or_else(|| (p[2] - p[0]).dot(DVec2::new(-d.y, d.x) / d.length())));
                 v["scale_n"] = json!(scale);
             }
             1 => {
@@ -577,6 +745,7 @@ impl IngeTrazoApp {
                 .map_err(|_| "Annotation inventory allocation refused")?;
         }
         self.finish_composer_edit();
+        self.scene.sheets[s].ensure_annotation_ids()?;
         self.begin_composer_edit();
         if let Some((a, _)) = &anchors {
             let uid = v["anchor_uid"].clone();
@@ -593,6 +762,7 @@ impl IngeTrazoApp {
         } else {
             raw[FAMILIES[family]].as_array_mut().unwrap().push(v);
         }
+        self.scene.sheets[s].push_annotation_id(family);
         self.composer_state.annotation_authoring.selected = Some(Owner {
             sheet: self.scene.sheets[s].id,
             family,
@@ -812,18 +982,21 @@ pub(super) fn properties(app: &mut IngeTrazoApp, ui: &mut egui::Ui, s: usize) {
                             .selected_text(&text)
                             .show_ui(ui, |ui| {
                                 for option in options {
-                                    if ui
-                                        .selectable_value(
-                                            &mut text,
-                                            (*option).into(),
-                                            if option.is_empty() {
-                                                "Automatic"
-                                            } else {
-                                                option
-                                            },
-                                        )
-                                        .changed()
-                                    {
+                                    let option_response = ui.selectable_value(
+                                        &mut text,
+                                        (*option).into(),
+                                        if option.is_empty() {
+                                            "Automatic"
+                                        } else {
+                                            option
+                                        },
+                                    );
+                                    observe(
+                                        ui,
+                                        &format!("annotation-ui-choice-{key}-{option}"),
+                                        option_response.rect,
+                                    );
+                                    if option_response.changed() {
                                         changed = true;
                                     }
                                 }
@@ -835,7 +1008,9 @@ pub(super) fn properties(app: &mut IngeTrazoApp, ui: &mut egui::Ui, s: usize) {
                 observe(ui, &format!("annotation-ui-property-{key}"), rect);
             }
             if f == 0 {
-                reset = ui.button("Reset label position").clicked();
+                let r = ui.button("Reset label position");
+                observe(ui, "annotation-ui-reset-text", r.rect);
+                reset = r.clicked();
             }
             let r = ui.button(ingetrazo_core::i18n::tr("Delete"));
             observe(ui, "annotation-ui-delete", r.rect);
@@ -889,11 +1064,28 @@ pub(super) fn toolbar(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
     );
     observe(ui, "annotation-ui-select", select.rect);
     if select.clicked() {
+        if let Err(e) = runs::finish(app) {
+            app.status_message = e;
+        }
+        app.composer_state.annotation_authoring.runs.armed = false;
         app.composer_state.annotation_authoring.armed = None;
         app.composer_state.annotation_authoring.points.clear();
         app.composer_state.annotation_authoring.snap_hits.clear();
     }
     let menu = ui.menu_button("+ Annotation", |ui| {
+        for (baseline, id, label) in [
+            (false, "chain", "Chained dimensions"),
+            (true, "baseline", "Baseline dimensions"),
+        ] {
+            let r = ui.button(label);
+            observe(ui, &format!("annotation-ui-add-{id}"), r.rect);
+            if r.clicked() {
+                if let Err(e) = runs::activate(app, baseline) {
+                    app.status_message = e;
+                }
+                ui.close_menu();
+            }
+        }
         for (f, label) in LABELS.iter().enumerate() {
             let r = ui.button(ingetrazo_core::i18n::tr(label));
             observe(ui, &format!("annotation-ui-add-{f}"), r.rect);
@@ -910,6 +1102,7 @@ pub(super) fn toolbar(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
 
 #[derive(Clone)]
 struct Layout {
+    markers: Vec<DVec2>,
     value: Value,
     context: u64,
     language: String,
@@ -1207,7 +1400,11 @@ pub(super) fn paint(
             &context_fields,
             false,
         )?;
-        let mut bytes = raw_bytes + std::mem::size_of::<Layout>() + 128;
+        let markers = handles::markers(&local, f, source_size(app, s, f, &local)?)?;
+        let mut bytes = raw_bytes
+            + std::mem::size_of::<Layout>()
+            + 128
+            + markers.capacity() * std::mem::size_of::<DVec2>();
         let mut font_owners = Vec::new();
         let mut fonts = std::collections::HashSet::new();
         for d in &draws.draws {
@@ -1254,6 +1451,7 @@ pub(super) fn paint(
             )
             .ok_or("Annotation font metadata budget overflow")?;
         let layout = Layout {
+            markers,
             value: local,
             context,
             language,
@@ -1294,8 +1492,21 @@ pub(super) fn paint(
         zoom,
         base,
     )?;
-    if app.composer_state.annotation_authoring.selected == Some(owner) {
+    if multi::selected(app, owner) {
         super::render_selection_box(painter, rect);
+        for p in &app.composer_state.annotation_authoring.layouts.entries[&(f, index)].markers {
+            let p = base + egui::vec2(p.x as f32 * zoom, p.y as f32 * zoom);
+            painter.rect_filled(
+                egui::Rect::from_center_size(p, egui::vec2(5., 5.)),
+                0.,
+                egui::Color32::WHITE,
+            );
+            painter.rect_stroke(
+                egui::Rect::from_center_size(p, egui::vec2(5., 5.)),
+                0.,
+                egui::Stroke::new(1., egui::Color32::from_rgb(25, 105, 200)),
+            );
+        }
     }
     Ok(())
 }
@@ -1511,51 +1722,6 @@ fn hit(app: &IngeTrazoApp, owner: Owner, point: DVec2) -> bool {
     }
     false
 }
-fn special(v: &Value, f: usize, p: DVec2) -> bool {
-    let near = |q: DVec2| (p.x - q.x).abs() <= 3. && (p.y - q.y).abs() <= 3.;
-    match f {
-        0 => {
-            let d = DVec2::new(number(v, "dx_mm", 40.), number(v, "dy_mm", 0.));
-            let n = if d.length() > 1e-9 {
-                DVec2::new(-d.y, d.x) / d.length()
-            } else {
-                DVec2::new(0., -1.)
-            };
-            near(d) || near(d * 0.5 + n * number(v, "sep_mm", 0.))
-        }
-        1 => {
-            let a = number(v, "ay_mm", 0.).atan2(number(v, "ax_mm", 30.));
-            let b = number(v, "by_mm", -30.).atan2(number(v, "bx_mm", 0.));
-            let mut sweep = (b - a + std::f64::consts::PI).rem_euclid(std::f64::consts::TAU)
-                - std::f64::consts::PI;
-            if sweep <= -std::f64::consts::PI {
-                sweep = std::f64::consts::PI;
-            }
-            near(
-                DVec2::new((a + sweep / 2.).cos(), (a + sweep / 2.).sin())
-                    * number(v, "radius_mm", 15.),
-            )
-        }
-        2 => {
-            let a = number(v, "angle_deg", -30.).to_radians();
-            near(DVec2::new(a.cos(), a.sin()) * number(v, "radius_mm", 15.))
-        }
-        3 => {
-            near(DVec2::new(
-                number(v, "ax_mm", -20.),
-                number(v, "ay_mm", 15.),
-            )) || v.get("leaders").and_then(Value::as_array).is_some_and(|a| {
-                a.iter()
-                    .any(|v| near(DVec2::new(number(v, "ax_mm", 0.), number(v, "ay_mm", 0.))))
-            }) || near(DVec2::from_array(size(v, f)))
-        }
-        5 => {
-            near(DVec2::new(number(v, "bx_mm", 36.), number(v, "by_mm", -6.)))
-                || near(DVec2::from_array(size(v, f)))
-        }
-        _ => false,
-    }
-}
 fn motion(app: &mut IngeTrazoApp, p: DVec2) -> Result<(), String> {
     let Some(grab) = app.composer_state.annotation_authoring.grab.take() else {
         return Ok(());
@@ -1565,24 +1731,26 @@ fn motion(app: &mut IngeTrazoApp, p: DVec2) -> Result<(), String> {
         if app.scene.sheets[s].id != grab.owner.sheet {
             return Err("Annotation sheet changed during move".into());
         }
+        if handles::motion(app, &grab, p)? {
+            return Ok(());
+        }
         let d = p - grab.press;
-        let (x, y) = grab.targets.position(
-            number(&grab.before, "x_mm", 0.) + d.x,
-            number(&grab.before, "y_mm", 0.) + d.y,
-            grab.size[0],
-            grab.size[1],
-        );
+        let (x, y) = grab
+            .targets
+            .as_ref()
+            .ok_or("Missing retained body targets")?
+            .position(
+                number(&grab.before, "x_mm", 0.) + d.x,
+                number(&grab.before, "y_mm", 0.) + d.y,
+                grab.size[0],
+                grab.size[1],
+            );
         let dx = x - number(&grab.before, "x_mm", 0.);
         let dy = y - number(&grab.before, "y_mm", 0.);
         let mut fields = json!({"x_mm":x,"y_mm":y});
         if matches!(grab.owner.family, 3 | 4) {
             fields["ax_mm"] = json!(number(&grab.before, "ax_mm", 0.) - dx);
             fields["ay_mm"] = json!(number(&grab.before, "ay_mm", 0.) - dy);
-        }
-        if grab.owner.family == 0 && (dx != 0. || dy != 0.) {
-            fields["anchor_uid"] = json!("");
-            fields["a_world"] = Value::Null;
-            fields["b_world"] = Value::Null;
         }
         admit(&fields)?;
         let current = record(app, grab.owner).ok_or("Annotation no longer exists")?;
@@ -1594,6 +1762,7 @@ fn motion(app: &mut IngeTrazoApp, p: DVec2) -> Result<(), String> {
         if !changed {
             return Ok(());
         }
+        app.scene.sheets[s].ensure_annotation_ids()?;
         app.begin_composer_edit();
         let current =
             &mut app.scene.sheets[s].native_document[FAMILIES[grab.owner.family]][grab.owner.index];
@@ -1618,7 +1787,9 @@ fn motion(app: &mut IngeTrazoApp, p: DVec2) -> Result<(), String> {
                 .geometry_epoch
                 .wrapping_add(1);
         }
-        app.composer_state.annotation_authoring.selected = Some(grab.owner);
+        if !multi::selected(app, grab.owner) {
+            app.composer_state.annotation_authoring.selected = Some(grab.owner);
+        }
         app.composer_state.annotation_authoring.coalesce = None;
         Ok(())
     })();
@@ -1650,6 +1821,28 @@ pub(super) fn input(
     let mut owned = app.composer_state.annotation_authoring.armed.is_some()
         || app.composer_state.annotation_authoring.grab.is_some();
     for e in events {
+        if multi::consume_ctrl(app, &e) {
+            owned = true;
+            continue;
+        }
+        let event_point = match &e {
+            egui::Event::PointerMoved(p) | egui::Event::PointerButton { pos: p, .. } => {
+                Some(page(*p))
+            }
+            _ => None,
+        };
+        match multi::band_event(app, &e, event_point, order) {
+            Ok(true) => {
+                owned = true;
+                continue;
+            }
+            Err(error) => {
+                app.status_message = error;
+                owned = true;
+                continue;
+            }
+            _ => {}
+        }
         if matches!(
             &e,
             egui::Event::PointerButton {
@@ -1671,6 +1864,21 @@ pub(super) fn input(
                 && ui.ctx().layer_id_at(pos) == Some(response.layer_id) =>
             {
                 let mut p = page(pos);
+                if app.composer_state.annotation_authoring.runs.armed {
+                    let hit = app
+                        .nearest_composer_frame_snap(s, p.to_array(), 7. / f64::from(zoom))
+                        .unwrap_or(None);
+                    if let Some(hit) = &hit {
+                        p = DVec2::from_array(hit.page);
+                    }
+                    let axis = runs::hover_axis(app, p, modifiers.shift);
+                    if let Err(e) = runs::click(app, p, hit, axis, f64::from(zoom)) {
+                        app.status_message = e;
+                    }
+                    app.composer_state.annotation_authoring.ignore_release = true;
+                    owned = true;
+                    continue;
+                }
                 if let Some(f) = app.composer_state.annotation_authoring.armed {
                     owned = true;
                     let hit = if f <= 4
@@ -1787,17 +1995,28 @@ pub(super) fn input(
                         let Some(v) = record(app, owner) else {
                             continue;
                         };
+                        let local = p - DVec2::new(number(v, "x_mm", 0.), number(v, "y_mm", 0.));
+                        let handle = match handles::acquire(app, owner, local) {
+                            Ok(h) => h,
+                            Err(e) => {
+                                app.status_message = e;
+                                break;
+                            }
+                        };
                         if v.get("locked").and_then(Value::as_bool) == Some(true)
-                            || !hit(app, owner, p)
+                            || (!hit(app, owner, p)
+                                && !matches!(
+                                    handle,
+                                    Some(
+                                        handles::Handle::LabelWidth
+                                            | handles::Handle::LinearText
+                                            | handles::Handle::CalloutBubble
+                                    )
+                                ))
                         {
                             continue;
                         }
                         let before = v.clone();
-                        let local = p - DVec2::new(
-                            number(&before, "x_mm", 0.),
-                            number(&before, "y_mm", 0.),
-                        );
-                        let handle = special(&before, f, local);
                         let source_size = match source_size(app, s, f, &before) {
                             Ok(size) => size,
                             Err(e) => {
@@ -1805,37 +2024,66 @@ pub(super) fn input(
                                 break;
                             }
                         };
-                        if let Err(e) = app.composer_select_annotation(f, Some(index)) {
+                        match multi::select_for_press(
+                            app,
+                            owner,
+                            modifiers.ctrl,
+                            matches!(handle, Some(handles::Handle::LabelSpot(_))),
+                            handle.is_some(),
+                        ) {
+                            Ok(true) => {
+                                owned = true;
+                                break;
+                            }
+                            Err(e) => {
+                                app.status_message = e;
+                                break;
+                            }
+                            _ => {}
+                        }
+                        owned = true;
+                        let targets =
+                            if handle.is_none() || handle == Some(handles::Handle::CalloutBox) {
+                                match super::pointer_transactions::Targets::capture_raw(
+                                    &app.scene.sheets[s],
+                                    FAMILIES[f],
+                                    index,
+                                ) {
+                                    Ok(t) => Some(t),
+                                    Err(e) => {
+                                        app.status_message = e;
+                                        break;
+                                    }
+                                }
+                            } else {
+                                None
+                            };
+                        let mut grab = Grab {
+                            owner,
+                            press: p,
+                            size: source_size,
+                            before,
+                            targets,
+                            handle,
+                        };
+                        if let Err(e) = handles::press(app, &mut grab, modifiers.ctrl) {
                             app.status_message = e;
                             break;
                         }
-                        owned = true;
-                        if !handle {
-                            match super::pointer_transactions::Targets::capture_raw(
-                                &app.scene.sheets[s],
-                                FAMILIES[f],
-                                index,
-                            ) {
-                                Ok(targets) => {
-                                    app.composer_state.annotation_authoring.grab = Some(Grab {
-                                        owner,
-                                        press: p,
-                                        size: source_size,
-                                        before,
-                                        targets,
-                                    })
-                                }
-                                Err(e) => app.status_message = e,
+                        let body = grab.handle.is_none();
+                        app.composer_state.annotation_authoring.grab = Some(grab);
+                        if body {
+                            if let Err(e) = multi::capture_group(app, owner, p) {
+                                app.status_message = e;
                             }
-                        } else {
-                            app.status_message =
-                                "This annotation handle is not yet editable".into();
                         }
                         break;
                     }
                     if !owned {
+                        multi::clear(app);
                         app.composer_state.annotation_authoring.selected = None;
                         app.composer_state.annotation_authoring.draft = None;
+                        multi::begin_band(app, p, zoom);
                     }
                 }
             }
@@ -1844,6 +2092,9 @@ pub(super) fn input(
                 if app.composer_state.annotation_authoring.grab.is_some() {
                     owned = true;
                     if let Err(e) = motion(app, page(pos)) {
+                        app.status_message = e;
+                    }
+                    if let Err(e) = multi::motion_group(app, page(pos)) {
                         app.status_message = e;
                     }
                 }
@@ -1868,12 +2119,23 @@ pub(super) fn input(
                 }
                 if app.composer_state.annotation_authoring.grab.is_some() {
                     owned = true;
+                    if let Some(grab) = app.composer_state.annotation_authoring.grab.take() {
+                        if let Err(e) = handles::release(app, &grab) {
+                            app.status_message = e;
+                        }
+                    }
+                    multi::release(app);
                     app.finish_composer_edit();
                 }
             }
             egui::Event::PointerGone => {
                 app.composer_state.annotation_authoring.ignore_release = false;
                 if app.composer_state.annotation_authoring.grab.is_some() {
+                    if let Some(grab) = app.composer_state.annotation_authoring.grab.take() {
+                        if let Err(e) = handles::release(app, &grab) {
+                            app.status_message = e;
+                        }
+                    }
                     app.finish_composer_edit();
                     owned = true;
                 }
@@ -1881,6 +2143,7 @@ pub(super) fn input(
             _ => {}
         }
     }
+    multi::paint_band(app, ui.painter(), paper.min, zoom);
     owned
 }
 
@@ -2119,6 +2382,7 @@ mod layout_cache_tests {
         );
         let (font, font_bytes) = font_uses.into_iter().next().unwrap();
         let entry = |bytes| Layout {
+            markers: Vec::new(),
             value: value.clone(),
             context: 0,
             language: "en".into(),

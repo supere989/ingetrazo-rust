@@ -897,3 +897,13 @@ pub(crate) fn authoring_level_bounds(v: &Value, p: &mut Painter) -> Result<[f64;
     let y1 = (if circle { symbol / 2. } else { 0.5 }).max(ay);
     Ok([x0 - 0.5, y0 - 0.5, x1 - x0 + 1., y1 - y0 + 1.])
 }
+
+/// Cold controller measurement; shares physical label formatting and source metrics.
+pub(crate) fn authoring_linear_label(v:&Value)->Result<String,String>{let dx=n(v,"dx_mm",40.)?;let dy=n(v,"dy_mm",0.)?;length(v,match s(v,"axis","")?{"h"=>dx.abs(),"v"=>dy.abs(),_=>dx.hypot(dy)},None)}
+pub(crate) fn authoring_label_ink_width(sheet:&Sheet,v:&Value,p:&mut Painter,context:&Context<'_>)->Result<f64,String>{
+ let content=expanded(sheet,s(v,"text","Texto")?,context,"")?;let size=n(v,"size_pt",11.)?*25.4/72.;let mut widest=0_f64;
+ for line in content.split('\n'){widest=widest.max(p.measure_advance(&style(line,[0.,0.,1_000_000.,1_000_000.],size,b(v,"bold",false)?,false,false,Alignment::Left,[0.,0.,0.,1.]))?);}
+ Ok(2_f64.max(n(v,"w_mm",50.)?.min(widest+0.2)))
+}
+
+pub(crate) fn authoring_radial_label(v:&Value)->Result<String,String>{let r=n(v,"radius_mm",15.)?.abs();let diameter=s(v,"kind","radius")?=="diameter";length(v,if diameter{2.*r}else{r},Some(if diameter{"Ø"}else{"R"}))}
