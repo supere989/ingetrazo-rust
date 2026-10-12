@@ -104,7 +104,7 @@ fn scene(app: &IngeTrazoApp) -> Result<Value, String> {
             json!(false)
         };
         Ok(
-            json!({"name":g.name,"layer":g.layer,"billboard":billboard,"mesh":mesh_state(&g.mesh,m,assets)?,"children":g.children.iter().map(|c|group(c,m,assets)).collect::<Result<Vec<_>,_>>()?}),
+            json!({"name":g.name,"layer":g.layer,"local_matrix":if g.transform==DMat4::IDENTITY{None}else{Some(g.transform.to_cols_array())},"billboard":billboard,"mesh":mesh_state(&g.mesh,m,assets)?,"children":g.children.iter().map(|c|group(c,m,assets)).collect::<Result<Vec<_>,_>>()?}),
         )
     }
     let loose = app

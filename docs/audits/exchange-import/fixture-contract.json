@@ -75,6 +75,18 @@
       "sha256": "2fa474d5f3a9ad49317aeb52dafb4eb499f6d1d874117f4885286f9760a281a9",
       "bytes": 9963,
       "commit": "6be29fe437a7cd992d4e079f71720821b25216b9"
+    },
+    {
+      "path": "resources/textures/brick.png",
+      "sha256": "71036781abb039e653861f31fa72660b1c8013ea52064cc854c15cb831a80bda",
+      "bytes": 445,
+      "commit": "6be29fe437a7cd992d4e079f71720821b25216b9"
+    },
+    {
+      "path": "core/paths.py",
+      "sha256": "a669d5f0dd2c235ae372377dc669598bf9613b8c361c513d473df856cdd9ebae",
+      "bytes": 2973,
+      "commit": "6be29fe437a7cd992d4e079f71720821b25216b9"
     }
   ],
   "sources": [
@@ -85,8 +97,8 @@
     },
     {
       "path": "scripts/exchange_import_observations.py",
-      "sha256": "5980ecbcc5979d70bf4eaca8cb256d02de2a6f8177e081d722f0968e5be2a85b",
-      "bytes": 1554
+      "sha256": "426a61bbf1911314dcf4a17b0b33a69b7d74a0c9c6f368a7cc38be3a8e978fdd",
+      "bytes": 1635
     },
     {
       "path": "scripts/reference-nested-import.py",
@@ -105,7 +117,7 @@
     "datum Undo persistence; failed datum leak retained and native atomic correction explicit",
     "exact camera distance; lossless numericint/f64 only",
     "layer names finite schema; no full metadata/viewport pixel/generalformat claim",
-    "group observation is expanded world geometry and owner tree/billboard; authored local matrices, shared registry identity and locator persistence are not separately authenticated by this cohort"
+    "local group matrix is literal column-major16f64 or source null; native identity default reports null. Shared registry identity and locator persistence are not separately authenticated."
   ],
   "resource_identity": "actual encoded bytes SHA replaces locator only; UV/sw/sh/back/color/opacity/ownership literal"
 }
