@@ -15,6 +15,7 @@ fn main() {
 fn run() -> Result<(), String> {
     ingetrazo_metal::autoreleasepool(|_| {
         use glam::DVec3;
+        use objc2_metal::MTLDevice as _;
         use ingetrazo_core::{
             camera::{OrbitCamera, StandardView},
             scene::Scene,
