@@ -99,9 +99,17 @@ jobs:
         with:
           python-version: "3.13"
       - name: Native Metal actual Host TCP capture lifecycle
+        id: bridgecapture
         if: ${{ !cancelled() && steps.nativebuild.outcome == 'success' }}
         timeout-minutes: 3
         run: python3 scripts/replay-metal-bridge-capture.py target/debug/examples/native_metal_bridge_capture docs/audits/metal-combined-gui-ci/bridge-capture
+      - name: Retain Metal capture evidence immediately after the probe
+        if: ${{ !cancelled() && steps.bridgecapture.outcome != 'skipped' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: native-metal-bridge-capture-${{ matrix.runner }}
+          path: docs/audits/metal-combined-gui-ci/bridge-capture/
+          if-no-files-found: error
       - name: Native CoreText anisotropic capture face ownership guard
         if: ${{ !cancelled() && steps.nativebuild.outcome == 'success' && steps.nativefonttests.outcome == 'skipped' }}
         timeout-minutes: 5
@@ -241,6 +249,7 @@ jobs:
             docs/audits/metal-native-link-ci/
             docs/audits/paper-font-native-ci/
             docs/audits/metal-combined-gui-ci/
+            !docs/audits/metal-combined-gui-ci/bridge-capture/
             !docs/audits/metal-combined-gui-ci/frame-annotation-sync/source/
             !docs/audits/metal-combined-gui-ci/frame-annotation-sync/state/
             !docs/audits/metal-combined-gui-ci/frame-annotation-sync/config/
