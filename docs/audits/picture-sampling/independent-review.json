@@ -1,0 +1,12 @@
+{
+  "runtime_revision": "2fe45cda1d01548089d8c0ef3a3197daaa58c53d",
+  "archive_sha256": "2a70afa30730b6955d30996e5c80f7fa8375002162223882b159cbb78e51b863",
+  "authenticated_members": 112,
+  "raw_bytes": 1383344,
+  "git_bindings": 8,
+  "current_binaries_verified": 2,
+  "source_archive_verified": "360f5aeba21057e30348f57cee37c214e6760c71d7ed975e06ff062dac664191",
+  "accepted_scope": "Software strict8PNG/8JPEG/11PDF; affectedauthoringPASS.48payloadhashesmatchhardwarepairedreceipt andcomplete native reports equal.",
+  "limits": "Hardwarepayloadsstoredonce; independentpacket/receiptverification only, notsecondGPUrawcomparison. Reconstructedhardwareexit/duration/CDIdigest null. Initialpublishadapterfailure retained. Rasterresiduals strict; nativeMetal separate.",
+  "execution": "No build/replay/capture byreviewer."
+}
