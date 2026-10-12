@@ -146,3 +146,7 @@ mod tests {
         assert!(tris.len() >= 4);
     }
 }
+
+/// Original no-z-order earcut traversal for interchange formats which serialize
+/// triangle order. The ordinary mesh/render earcutr route remains unchanged.
+pub fn source_ordered_earcut(points:&[glam::DVec2],holes:&[usize])->Result<Vec<[usize;3]>,String>{crate::drafting_earcut::earcut(points,holes)}
