@@ -1,0 +1,267 @@
+{
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "consumer": "sheet_annotation_authoring SOURCE NATIVE",
+  "source": "original-annotations.json",
+  "native": "native-annotations.json",
+  "reader": "native-reopens.json",
+  "cases": [
+    {
+      "name": "cotas-lifecycle",
+      "family": "cotas",
+      "tool": "cota",
+      "creation_points": [
+        [
+          40,
+          40
+        ],
+        [
+          85,
+          45
+        ],
+        [
+          60,
+          60
+        ]
+      ],
+      "phases": [
+        "initial",
+        "armed",
+        "click-1",
+        "click-2",
+        "click-3",
+        "select-tool",
+        "property-one",
+        "property-two",
+        "property-noop",
+        "move-press",
+        "move-preview",
+        "move-release",
+        "undo-move",
+        "redo-move",
+        "delete",
+        "undo-delete",
+        "redo-delete",
+        "undo-delete-final",
+        "save"
+      ]
+    },
+    {
+      "name": "cotas_ang-lifecycle",
+      "family": "cotas_ang",
+      "tool": "cota_ang",
+      "creation_points": [
+        [
+          60,
+          60
+        ],
+        [
+          90,
+          60
+        ],
+        [
+          60,
+          90
+        ],
+        [
+          85,
+          85
+        ]
+      ],
+      "phases": [
+        "initial",
+        "armed",
+        "click-1",
+        "click-2",
+        "click-3",
+        "click-4",
+        "select-tool",
+        "property-one",
+        "property-two",
+        "property-noop",
+        "move-press",
+        "move-preview",
+        "move-release",
+        "undo-move",
+        "redo-move",
+        "delete",
+        "undo-delete",
+        "redo-delete",
+        "undo-delete-final",
+        "save"
+      ]
+    },
+    {
+      "name": "cotas_rad-lifecycle",
+      "family": "cotas_rad",
+      "tool": "cota_radio",
+      "creation_points": [
+        [
+          70,
+          70
+        ],
+        [
+          95,
+          80
+        ]
+      ],
+      "phases": [
+        "initial",
+        "armed",
+        "click-1",
+        "click-2",
+        "select-tool",
+        "property-one",
+        "property-two",
+        "property-noop",
+        "move-press",
+        "move-preview",
+        "move-release",
+        "undo-move",
+        "redo-move",
+        "delete",
+        "undo-delete",
+        "redo-delete",
+        "undo-delete-final",
+        "save"
+      ]
+    },
+    {
+      "name": "etiquetas-lifecycle",
+      "family": "etiquetas",
+      "tool": "etiqueta",
+      "creation_points": [
+        [
+          40,
+          40
+        ],
+        [
+          85,
+          65
+        ]
+      ],
+      "phases": [
+        "initial",
+        "armed",
+        "click-1",
+        "click-2",
+        "select-tool",
+        "property-one",
+        "property-two",
+        "property-noop",
+        "move-press",
+        "move-preview",
+        "move-release",
+        "undo-move",
+        "redo-move",
+        "delete",
+        "undo-delete",
+        "redo-delete",
+        "undo-delete-final",
+        "save"
+      ]
+    },
+    {
+      "name": "niveles-lifecycle",
+      "family": "niveles",
+      "tool": "nivel",
+      "creation_points": [
+        [
+          70,
+          70
+        ]
+      ],
+      "phases": [
+        "initial",
+        "armed",
+        "click-1",
+        "select-tool",
+        "property-one",
+        "property-two",
+        "property-noop",
+        "move-press",
+        "move-preview",
+        "move-release",
+        "undo-move",
+        "redo-move",
+        "delete",
+        "undo-delete",
+        "redo-delete",
+        "undo-delete-final",
+        "save"
+      ]
+    },
+    {
+      "name": "llamadas-lifecycle",
+      "family": "llamadas",
+      "tool": "llamada",
+      "creation_points": [
+        [
+          45,
+          45
+        ],
+        [
+          90,
+          75
+        ]
+      ],
+      "phases": [
+        "initial",
+        "armed",
+        "click-1",
+        "click-2",
+        "select-tool",
+        "property-one",
+        "property-two",
+        "property-noop",
+        "move-press",
+        "move-preview",
+        "move-release",
+        "undo-move",
+        "redo-move",
+        "delete",
+        "undo-delete",
+        "redo-delete",
+        "undo-delete-final",
+        "save"
+      ]
+    }
+  ],
+  "additional_cases": [
+    "cancel-degenerate",
+    "mixed-visibility-locked",
+    "remembered-style-frame",
+    "radial-diameter"
+  ],
+  "observation": {
+    "state": [
+      "case",
+      "phase",
+      "composition",
+      "selection:{family,index}|null",
+      "undo",
+      "redo",
+      "mode",
+      "pending:{start,second,angular,radial}",
+      "callback_errors"
+    ],
+    "actions": [
+      "toolbar Qt action via tool widget",
+      "QTest viewport press/move/release with effective_at mm",
+      "actual property widget signal",
+      "actual Delete/Escape keys",
+      "original Undo/Redo",
+      "original save and actual original reader"
+    ]
+  },
+  "boundaries": [
+    "Exclusive single selection; no multiselect claim",
+    "Body move hit admitted only after source shape.contains and excluding all specialized handles/text drag zones",
+    "Locked canvas click cannot acquire; explicit Items-list selection can edit/Delete",
+    "No chained dimensions or specialized handle actions",
+    "No model View anchor creation claim: original _finish_placement clears hit_a before passing it",
+    "No physical export recapture"
+  ],
+  "capture_gate": "Geometry and validation prereview full producer before single source capture",
+  "body_hit_admission": "Quantized effective viewport point must remain inside actual source shape and outside specialized handles",
+  "callback_errors": "Any actual Qt callback exception refuses final success; partial observations and stderr retained"
+}
