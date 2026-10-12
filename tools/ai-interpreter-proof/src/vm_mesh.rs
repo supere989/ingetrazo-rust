@@ -582,7 +582,7 @@ pub mod editable_mesh {
     impl rustpython_vm::types::Representable for Face {
         fn repr_str(zelf:&Py<Self>,vm:&VirtualMachine)->PyResult<String> {
             vm.host_budget_tick()?;
-            Ok(format!("Face({} verts, {} holes)",zelf.r#loop.read().len(),zelf.hole_loops.read().len()))
+            Ok(format!("Face({} verts, {} holes)",zelf.r#loop.read().borrow_vec().len(),zelf.hole_loops.read().borrow_vec().len()))
         }
     }
     #[pyclass(with(Representable))]
