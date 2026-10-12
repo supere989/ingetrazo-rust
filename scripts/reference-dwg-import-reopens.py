@@ -18,7 +18,7 @@ def observe(path):
  for v in s.image_planes:
   data=v.to_dict();p=Path(v.path);q=QImage(str(p));assert not q.isNull()
   q=q.convertToFormat(QImage.Format_RGBA8888);raw=bytes(q.constBits());pixels=b''.join(raw[y*q.bytesPerLine():y*q.bytesPerLine()+q.width()*4]for y in range(q.height()))
-  data['path']={'encoded_sha256':hashlib.sha256(p.read_bytes()).hexdigest(),'rgba_sha256':hashlib.sha256(pixels).hexdigest(),'size':[q.width(),q.height()]};row['image_planes'].append(data)
+  data['texture']['path']={'encoded_sha256':hashlib.sha256(p.read_bytes()).hexdigest(),'rgba_sha256':hashlib.sha256(pixels).hexdigest(),'size':[q.width(),q.height()]};row['image_planes'].append(data)
  return row
 rows=[]
 for c in json.loads((source/f'original-{D}.json').read_text())['cases']:
