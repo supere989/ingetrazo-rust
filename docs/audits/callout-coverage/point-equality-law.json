@@ -1,0 +1,40 @@
+{
+  "source_version": "Qt6.12.0",
+  "primary_sources": [
+    {
+      "url": "https://raw.githubusercontent.com/qt/qtbase/v6.12.0/src/corelib/tools/qpoint.h",
+      "retained": "qt/qpoint.h",
+      "sha256": "cff52b14135d6b5a5f10260632fd905bd3c86d789a99221348bbf38c7870fea6"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/qt/qtbase/v6.12.0/src/corelib/global/qnumeric.h",
+      "retained": "qt/qnumeric.h",
+      "sha256": "a0c5bb942fab69939c9ec020520a10f7c1014da72ddeb74a204cd1e1a0141a4b"
+    }
+  ],
+  "law": [
+    "QPointF comparesEqual delegates qFuzzyCompare(point,point)",
+    "Per-coordinate QtPrivate::fuzzyCompare uses qFuzzyIsNull(diff) when either coordinate is zero, otherwise relative qFuzzyCompare",
+    "QStroker qt_stroke_side admits line only when p1!=p2 and updates previous raw point only inside that admitted branch"
+  ],
+  "operative_witness": {
+    "path": "/tmp/ingetrazo-callout-outline-r1/original-callout-outline.json",
+    "sha256": "3f0bdfd9449cb001a13f722d4cb069f724e898ab5f7124e58aa9e956994717ed",
+    "full_mask_equivalent": true,
+    "source_contours": 37,
+    "native_contours": 37,
+    "source_only_directed_26_6_edges": 1,
+    "native_only_directed_26_6_edges": 4,
+    "native_extra_segment": [
+      [
+        28.499999999999993,
+        0.0
+      ],
+      [
+        28.5,
+        0.0
+      ]
+    ]
+  },
+  "scope": "Source QStroker dashed side admission only. No generic geometry/observer/checker tolerance, no pixel fitting, no original corpus recapture. Frozen actual replay required for pixel closure."
+}
