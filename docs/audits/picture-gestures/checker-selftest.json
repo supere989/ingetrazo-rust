@@ -32,5 +32,6 @@
     "cases": 21,
     "states": 167
   },
-  "checker_sha256": "f698d602b89b50bf0bf5e885031e109fcff3ce7f71b2be4e20e290759533131d"
+  "checker_sha256": "1e5275761627b1721f3ba8f38d4b91c4bb09c690316c42c8e918517a95ce7c4c",
+  "checker_commit": "f48c3fe70889d83d9b81395b277b1b051882ce07"
 }

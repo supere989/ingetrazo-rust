@@ -215,7 +215,7 @@
   "producers": {
     "scripts/reference-picture-gestures.py": "d768e047f19c975309f9e1e7e990b3e18a993eecef25f3fc0c75a1e60c21020f",
     "scripts/reference-picture-gesture-reopens.py": "b7dec1ab448c0b7dda7128c9caa3326beba58d90ed94d5faf4c6e1ab0c22acc1",
-    "scripts/check-picture-gestures.py": "f698d602b89b50bf0bf5e885031e109fcff3ce7f71b2be4e20e290759533131d",
+    "scripts/check-picture-gestures.py": "1e5275761627b1721f3ba8f38d4b91c4bb09c690316c42c8e918517a95ce7c4c",
     "scripts/replay-picture-gestures.py": "529656c85a751033252786230dd8e170f73594e8c48b868fd60f8f8c7698a236"
   },
   "source_hashes": {
@@ -230,5 +230,6 @@
     "changed_guide_cases": 3,
     "unchanged_cases": 18
   },
-  "scope": "Actual original Qt pointer/history/reader; no native runtime acceptance or multi-item/rendered parity."
+  "scope": "Actual original Qt pointer/history/reader; no native runtime acceptance or multi-item/rendered parity.",
+  "checker_commit": "f48c3fe70889d83d9b81395b277b1b051882ce07"
 }
