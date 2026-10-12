@@ -80,7 +80,7 @@ pub fn render_menu_bar(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
                     ui.close_menu();
                 }
                 if ui.button(tr("Image (PNG / JPG)…")).clicked() {
-                    app.show_open_dialog = true;
+                    app.begin_image_import_dialog();
                     ui.close_menu();
                 }
                 if ui.button(tr("Orthomosaic (GeoTIFF)…")).clicked() {
