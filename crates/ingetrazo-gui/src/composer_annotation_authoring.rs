@@ -2085,16 +2085,21 @@ mod layout_cache_tests {
         assert_eq!(cache.font_bytes, font_bytes);
         assert_eq!(cache.payload_bytes, 257 * 1024);
         assert_eq!(cache.entry_order.len(), 256);
-        // Byte-budget eviction retires many small payloads and then one large
-        // owner; the immutable font remains charged exactly once throughout.
-        cache.insert((3, 256), entry(31 * 1024 * 1024)).unwrap();
-        cache.insert((3, 257), entry(31 * 1024 * 1024)).unwrap();
-        cache.insert((3, 258), entry(31 * 1024 * 1024)).unwrap();
-        assert_eq!(cache.entries.len(), 2);
-        assert_eq!(cache.payload_bytes, 62 * 1024 * 1024);
-        assert_eq!(cache.fonts[&font], (2, font_bytes));
+        // Synthetic payload controls account for the actual platform font size.
+        // Use a separate ledger so an unusual font cannot change small-owner
+        // eviction expectations from the earlier dense retention check.
+        let payload = (32usize * 1024 * 1024).checked_sub(font_bytes).unwrap();
+        assert!(payload > 0);
+        let survivors = (LayoutCache::RETAINED_LIMIT - font_bytes) / payload;
+        let mut cache = LayoutCache::default();
+        for index in 0..=survivors {
+            cache.insert((3, index), entry(payload)).unwrap();
+        }
+        assert_eq!(cache.entries.len(), survivors);
+        assert_eq!(cache.payload_bytes, survivors * payload);
+        assert_eq!(cache.fonts[&font], (survivors, font_bytes));
         assert_eq!(cache.font_bytes, font_bytes);
-        let old = cache.entries[&(3, 258)].draws.clone();
+        let old = cache.entries[&(3, survivors)].draws.clone();
         let before = (
             cache.payload_bytes,
             cache.font_bytes,
@@ -2103,7 +2108,7 @@ mod layout_cache_tests {
         );
         let mut invalid = entry(1024);
         invalid.fonts[0].1 += 1;
-        assert!(cache.insert((3, 258), invalid).is_err());
+        assert!(cache.insert((3, survivors), invalid).is_err());
         assert_eq!(
             before,
             (
@@ -2115,11 +2120,13 @@ mod layout_cache_tests {
         );
         assert!(std::sync::Arc::ptr_eq(
             &old,
-            &cache.entries[&(3, 258)].draws
+            &cache.entries[&(3, survivors)].draws
         ));
-        cache.remove((3, 257));
+        for index in 1..survivors {
+            cache.remove((3, index));
+        }
         assert_eq!(cache.fonts[&font].0, 1);
-        cache.remove((3, 258));
+        cache.remove((3, survivors));
         assert!(cache.fonts.is_empty());
         assert_eq!((cache.payload_bytes, cache.font_bytes), (0, 0));
     }
