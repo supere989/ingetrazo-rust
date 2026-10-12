@@ -27,6 +27,7 @@ pub struct Owner {
 }
 #[derive(Clone, Default)]
 pub(super) struct State {
+    pub ignore_release: bool,
     pub hover: Option<DVec2>,
     pub armed: Option<usize>,
     pub points: Vec<DVec2>,
@@ -953,8 +954,11 @@ pub(super) fn paint(
         family: f,
         index,
     };
-    let value = app.scene.sheets[s].native_document.get(FAMILIES[f])
-        .and_then(Value::as_array).and_then(|rows|rows.get(index))
+    let value = app.scene.sheets[s]
+        .native_document
+        .get(FAMILIES[f])
+        .and_then(Value::as_array)
+        .and_then(|rows| rows.get(index))
         .ok_or("Annotation no longer exists")?;
     let x = value.get("x_mm").and_then(Value::as_f64).unwrap_or(0.);
     let y = value.get("y_mm").and_then(Value::as_f64).unwrap_or(0.);
@@ -1230,20 +1234,50 @@ fn size(v: &Value, f: usize) -> [f64; 2] {
         _ => [number(v, "w_mm", 30.), number(v, "h_mm", 20.)],
     }
 }
+// QPainterPathStroker's default SquareCap includes endpoint corner squares.
 fn distance(p: DVec2, a: DVec2, b: DVec2) -> f64 {
     let d = b - a;
-    let t = if d.length_squared() > 0. {
-        ((p - a).dot(d) / d.length_squared()).clamp(0., 1.)
-    } else {
-        0.
-    };
-    (p - a - d * t).length()
+    let l = d.length();
+    if l == 0. {
+        return (p - a).abs().max_element();
+    }
+    let u = d / l;
+    let t = (p - a).dot(u);
+    (p - a).perp_dot(u).abs().max((-t).max(t - l).max(0.))
 }
+
 fn hit(app: &IngeTrazoApp, owner: Owner, point: DVec2) -> bool {
     let Some(v) = record(app, owner) else {
         return false;
     };
     let p = point - DVec2::new(number(v, "x_mm", 0.), number(v, "y_mm", 0.));
+    if owner.family == 4 {
+        let sz = number(v, "size_mm", 2.5);
+        let symbol = (sz * 1.2).max(1.5);
+        let h = sz * 1.4;
+        let sign = if v.get("mirror").and_then(Value::as_bool) == Some(true) {
+            -1.
+        } else {
+            1.
+        };
+        let line = number(v, "line_mm", 14.);
+        let ax = number(v, "ax_mm", 0.);
+        let ay = number(v, "ay_mm", 0.);
+        let x0 = (-symbol / 2.).min(sign * (line + 0.5)).min(ax).min(0.) - 0.5;
+        let x1 = (symbol / 2.).max(sign * (line + 0.5)).max(ax).max(0.) + 0.5;
+        let circle = v.get("symbol").and_then(Value::as_str) == Some("circle");
+        let y0 = (if circle {
+            -symbol / 2. - h
+        } else {
+            -symbol - h
+        })
+        .min(ay)
+            - 0.5;
+        let y1 = (if circle { symbol / 2. } else { 0.5_f64 }).max(ay) + 0.5;
+        if p.x >= x0 && p.x <= x1 && p.y >= y0 && p.y <= y1 {
+            return true;
+        }
+    }
     let Some(layout) = app
         .composer_state
         .annotation_authoring
@@ -1326,7 +1360,7 @@ fn special(v: &Value, f: usize, p: DVec2) -> bool {
             } else {
                 DVec2::new(0., -1.)
             };
-            near(DVec2::ZERO) || near(d) || near(d * 0.5 + n * number(v, "sep_mm", 0.))
+            near(d) || near(d * 0.5 + n * number(v, "sep_mm", 0.))
         }
         1 => {
             let a = number(v, "ay_mm", 0.).atan2(number(v, "ax_mm", 30.));
@@ -1512,7 +1546,11 @@ pub(super) fn input(
                             .map(|p| p.to_array())
                             .collect::<Vec<_>>();
                         match app.place_composer_annotation(&pts, modifiers.ctrl) {
-                            Ok(_) => {}
+                            Ok(_) => {
+                                if matches!(f, 3 | 5) {
+                                    app.composer_state.annotation_authoring.ignore_release = true;
+                                }
+                            }
                             Err(e) => app.status_message = e,
                         }
                         app.composer_state.annotation_authoring.points.clear();
@@ -1597,6 +1635,10 @@ pub(super) fn input(
                         }
                         break;
                     }
+                    if !owned {
+                        app.composer_state.annotation_authoring.selected = None;
+                        app.composer_state.annotation_authoring.draft = None;
+                    }
                 }
             }
             egui::Event::PointerMoved(pos) => {
@@ -1613,6 +1655,10 @@ pub(super) fn input(
                 pressed: false,
                 ..
             } => {
+                if std::mem::take(&mut app.composer_state.annotation_authoring.ignore_release) {
+                    owned = true;
+                    continue;
+                }
                 if app.composer_state.annotation_authoring.armed == Some(4)
                     && app.composer_state.annotation_authoring.points.len() == 1
                 {
