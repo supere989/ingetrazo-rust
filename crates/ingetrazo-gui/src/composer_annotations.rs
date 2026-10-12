@@ -838,10 +838,9 @@ fn radial(o: &mut Output, v: &Value, p: &mut Painter, pdf: bool) -> Result<(), S
     )?;
     if pdf && !label.is_empty() {
         let text_style = style(&label, r, size, false, false, false, Alignment::Center, tcol);
-        if let Some(mut clip) = p.source_box_clip(&text_style, r[3], 0)? {
-            map_path(&mut clip, [0.,0.], deg);
-            for draw in &mut o.draws[first_text..] { draw.clip = Some(clip.clone()); }
-        }
+        let mut clip = p.source_box_clip(&text_style, r[3], 0)?;
+        if let Some(path) = &mut clip { map_path(path, [0.,0.], deg); }
+        for draw in &mut o.draws[first_text..] { draw.clip = clip.clone(); }
     }
     Ok(())
 }
