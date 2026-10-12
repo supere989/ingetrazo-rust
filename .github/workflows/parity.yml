@@ -684,7 +684,6 @@ jobs:
           python scripts/replay-geotiff-import.py target/debug/examples/geotiff_import_workflows docs/audits/geotiff-import-ci/replay > docs/audits/geotiff-import-ci/replay.log 2>&1
       - name: Frozen OBJ DXF App import strict winding diagnostic (OPEN)
         if: ${{ !cancelled() && steps.integratedconsumers.outputs.ready == 'true' }}
-        continue-on-error: true
         run: |
           mkdir -p docs/audits/unit-import-ci
           python scripts/replay-unit-import.py target/debug/examples/unit_import_workflows docs/audits/unit-import-ci/replay > docs/audits/unit-import-ci/replay.log 2>&1
