@@ -350,9 +350,10 @@ pub(super) fn properties(app: &mut IngeTrazoApp, ui: &mut egui::Ui, s: usize) {
         .show(ui.ctx(), |ui| {
             let selected = app.composer_picture_selection().map(|v| v.1);
             if let Ok(rows) = images(&app.scene.sheets[s]) {
+                let row_height=ui.text_style_height(&egui::TextStyle::Body);
                 egui::ScrollArea::vertical().max_height(160.).show_rows(
                     ui,
-                    ui.text_style_height(&egui::TextStyle::Body),
+                    row_height,
                     rows.len().min(100_000),
                     |ui, range| {
                         for i in range {
