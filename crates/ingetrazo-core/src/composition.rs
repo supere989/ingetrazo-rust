@@ -371,7 +371,32 @@ impl Default for Sheet {
     }
 }
 
+/// Cold physical export references, preserving original all_items category order.
+/// Raw legends stay in the immutable portable document; no broad editing enum change.
+#[derive(Clone,Copy)]
+pub enum PhysicalExportItem<'a> {Typed{index:usize,item:&'a SheetItem},Legend{index:usize,value:&'a serde_json::Value}}
 impl Sheet {
+    pub fn physical_export_items(&self)->Result<impl Iterator<Item=PhysicalExportItem<'_>>,String>{
+        const LIMIT:usize=100_000;
+        let legends=match self.native_document.get("leyendas"){None|Some(serde_json::Value::Null)=>&[][..],Some(v)=>v.as_array().map(Vec::as_slice).ok_or("Invalid physical legend inventory")?};
+        let count=self.items.len().checked_add(legends.len()).filter(|n|*n<=LIMIT).ok_or("Physical item inventory exceeds budget")?;
+        let mut ordered=Vec::new();ordered.try_reserve_exact(count).map_err(|_|"Physical item order allocation refused")?;
+        for index in self.visible_item_indices(){
+            let item=&self.items[index];let metadata=self.native_items.get(&item.id());
+            let z=if let SheetItem::Shape(v)=item{v.shape.z}else{metadata.and_then(|v|v.get("z")).and_then(|v|v.as_f64()).unwrap_or(0.)};
+            if !z.is_finite(){return Err("Invalid physical stacking order".into());}
+            let category=match item{SheetItem::ViewFrame(_)=>0,SheetItem::Text(_)=>1,SheetItem::GraphicScale(_)=>3,SheetItem::NorthArrow(_)=>4,SheetItem::Shape(_)=>6,SheetItem::TitleBlock(_)=>14};
+            ordered.push((z,category,index,PhysicalExportItem::Typed{index,item}));
+        }
+        for(index,value)in legends.iter().enumerate(){
+            let hidden=match value.get("hidden"){None=>false,Some(v)=>v.as_bool().ok_or("Invalid legend hidden flag")?};if hidden{continue;}
+            let z=match value.get("z"){None=>0.,Some(v)=>v.as_f64().ok_or("Invalid legend stacking order")?};if !z.is_finite(){return Err("Invalid legend stacking order".into());}
+            ordered.push((z,5,index,PhysicalExportItem::Legend{index,value}));
+        }
+        ordered.sort_unstable_by(|a,b|a.0.partial_cmp(&b.0).unwrap_or(std::cmp::Ordering::Equal).then_with(||a.1.cmp(&b.1)).then_with(||a.2.cmp(&b.2)));
+        Ok(ordered.into_iter().map(|v|v.3))
+    }
+
     pub fn effective_source_border(&self) -> SourcePaperBorder {
         self.source_border.clone().unwrap_or_else(|| SourcePaperBorder::from_native(&self.native_document["border"]))
     }

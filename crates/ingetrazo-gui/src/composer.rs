@@ -1398,7 +1398,8 @@ impl IngeTrazoApp {
             let fields=crate::composer_text_fields::Context{index:Some(*indices.get(&(sheet as *const _)).ok_or("Symbol sheet context lost")?),total:scene.sheets.len(),path:current_file,date:&date};
             crate::composer_symbols::draws(sheet,item,&mut text_resources.borrow_mut(),Some(&fields))
         };
-        let pages=ingetrazo_formats::sheet_pdf_shapes::prepare_all_with_context_symbols(sheets,&mut painter,&mut texts,&mut symbols)?;
+        let mut legends=|_:&Sheet,value:&serde_json::Value|crate::composer_legend::draws(value,&mut text_resources.borrow_mut()).map(|v|v.draws);
+        let pages=ingetrazo_formats::sheet_pdf_shapes::prepare_all_with_legends(sheets,&mut painter,&mut texts,&mut symbols,&mut legends)?;
         let has_view=sheets.iter().any(|s|s.items.iter().any(|item|matches!(item,SheetItem::ViewFrame(_))));
         if has_view || sheets.iter().any(|s|s.items.iter().any(|item|!matches!(item,SheetItem::Shape(_)))){ingetrazo_formats::sheet_pdf::save_original_qt_paper(path,&pages)?;}else{ingetrazo_formats::sheet_pdf::save(path,&pages)?;}Ok(pages.len())
     }

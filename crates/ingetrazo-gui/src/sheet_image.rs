@@ -15,7 +15,6 @@ pub fn unsupported(sheet: &Sheet) -> Vec<String> {
     let mut out = Vec::new();
     for key in [
         "images",
-        "leyendas",
         "cotas",
         "cotas_ang",
         "cotas_rad",
@@ -91,8 +90,21 @@ impl PainterCache {
             records.push(part);
             Ok(())
         };
-        for index in sheet.visible_item_indices() {
-            match &sheet.items[index] {
+        for exported in sheet.physical_export_items()? {
+            let (index,item)=match exported{
+                ingetrazo_core::composition::PhysicalExportItem::Typed{index,item}=>(index,item),
+                ingetrazo_core::composition::PhysicalExportItem::Legend{value,..}=>{
+                    let legend=crate::composer_legend::draws(value,&mut self.fonts)?;
+                    for(index,mut draw)in legend.draws.into_iter().enumerate(){
+                        if draw.text.is_some(){for part in self.text.physical_records(std::slice::from_ref(&draw),density)?{append(part)?;}}
+                        else{
+                            if legend.rectangles.binary_search(&index).is_ok(){let mut fill=draw.clone();fill.stroke=None;fill.stroke_options=None;for part in self.text.physical_rectangle(&fill,density)?{append(part)?;}draw.fill=None;}
+                            if draw.stroke.is_some(){for part in crate::sheet_image_paths::records(std::slice::from_ref(&draw),density,metrics.pixels())?{append(part)?;}}
+                        }
+                    }continue;
+                }
+            };
+            match item {
                 SheetItem::Shape(item) => append(crate::composer_cad::physical_shape(
                     ctx,
                     &item.shape,

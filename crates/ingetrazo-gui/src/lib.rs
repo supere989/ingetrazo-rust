@@ -215,3 +215,4 @@ mod vcb_input;
 
 mod composer_symbols;
 mod composer_view_captions;
+mod composer_legend;

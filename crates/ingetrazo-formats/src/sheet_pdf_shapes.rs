@@ -139,9 +139,16 @@ where F:FnMut(&Sheet,&ingetrazo_core::composition::ViewFrame)->Result<Vec<Draw>,
       T:FnMut(&Sheet,&ingetrazo_core::composition::TextItem)->Result<Vec<Draw>,String>,
       S:FnMut(&Sheet,&SheetItem)->Result<Vec<Draw>,String>
 {
+    prepare_with_legends(sheet,views,texts,symbols,&mut |_,_|Err("PDF legend painter remains unavailable".into()))
+}
+pub fn prepare_with_legends<F,T,S,L>(sheet:&Sheet,views:&mut F,texts:&mut T,symbols:&mut S,legends:&mut L)->Result<Page,String>
+where F:FnMut(&Sheet,&ingetrazo_core::composition::ViewFrame)->Result<Vec<Draw>,String>,
+      T:FnMut(&Sheet,&ingetrazo_core::composition::TextItem)->Result<Vec<Draw>,String>,
+      S:FnMut(&Sheet,&SheetItem)->Result<Vec<Draw>,String>,
+      L:FnMut(&Sheet,&serde_json::Value)->Result<Vec<Draw>,String>
+{
     for key in [
         "images",
-        "leyendas",
         "cotas",
         "cotas_ang",
         "cotas_rad",
@@ -172,8 +179,19 @@ where F:FnMut(&Sheet,&ingetrazo_core::composition::ViewFrame)->Result<Vec<Draw>,
     }
     let mut draws = Vec::new();
     let mut path_commands = 0usize;
-    for index in sheet.visible_item_indices() {
-        match &sheet.items[index] {
+    for exported in sheet.physical_export_items()? {
+        let item=match exported{
+            ingetrazo_core::composition::PhysicalExportItem::Typed{item,..}=>item,
+            ingetrazo_core::composition::PhysicalExportItem::Legend{value,..}=>{
+                for next in legends(sheet,value)?{
+                    if draws.len()==crate::sheet_pdf::MAX_DRAWS{return Err("PDF draw budget exceeded".into());}
+                    path_commands=path_commands.checked_add(draw_command_count(&next)?).ok_or("PDF command count overflow")?;
+                    if path_commands>crate::sheet_pdf::MAX_COMMANDS{return Err("PDF aggregate command budget exceeded".into());}
+                    draws.push(next);
+                }continue;
+            }
+        };
+        match item {
             SheetItem::Shape(item) => {
                 let offset = glam::DVec2::new(item.shape.x_mm, item.shape.y_mm);
                 if draws.len() == crate::sheet_pdf::MAX_DRAWS {
@@ -277,6 +295,14 @@ where F:FnMut(&Sheet,&ingetrazo_core::composition::ViewFrame)->Result<Vec<Draw>,
       T:FnMut(&Sheet,&ingetrazo_core::composition::TextItem)->Result<Vec<Draw>,String>,
       S:FnMut(&Sheet,&SheetItem)->Result<Vec<Draw>,String>
 {
+    prepare_all_with_legends(sheets,views,texts,symbols,&mut |_,_|Err("PDF legend painter remains unavailable".into()))
+}
+pub fn prepare_all_with_legends<F,T,S,L>(sheets:&[Sheet],views:&mut F,texts:&mut T,symbols:&mut S,legends:&mut L)->Result<Vec<Page>,String>
+where F:FnMut(&Sheet,&ingetrazo_core::composition::ViewFrame)->Result<Vec<Draw>,String>,
+      T:FnMut(&Sheet,&ingetrazo_core::composition::TextItem)->Result<Vec<Draw>,String>,
+      S:FnMut(&Sheet,&SheetItem)->Result<Vec<Draw>,String>,
+      L:FnMut(&Sheet,&serde_json::Value)->Result<Vec<Draw>,String>
+{
     if sheets.is_empty() || sheets.len() > 10_000 {
         return Err("PDF requires 1..10000 pages".into());
     }
@@ -284,7 +310,7 @@ where F:FnMut(&Sheet,&ingetrazo_core::composition::ViewFrame)->Result<Vec<Draw>,
     let mut draws = 0usize;
     let mut commands = 0usize;
     for sheet in sheets {
-        let page = prepare_with_context_symbols(sheet, views, texts,symbols)?;
+        let page = prepare_with_legends(sheet, views, texts,symbols,legends)?;
         draws = draws
             .checked_add(page.draws.len())
             .ok_or("PDF draw count overflow")?;
