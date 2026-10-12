@@ -85,7 +85,7 @@ old_vendor,old_sibling,old_which,old_platform=dwg_bridge._VENDOR_BIN,dwg_bridge.
 dwg_bridge._VENDOR_BIN=vendor;dwg_bridge._SIBLING_BIN=sibling;dwg_bridge.shutil.which=lambda name:str(system/name)if(system/name).exists()else None
 for p in [vendor,sibling,system]:(p/'dwg2dxf').write_bytes(b'fixture')
 for name in ['vendor','sibling','PATH','missing']:
- found=dwg_bridge.find_dwg2dxf();discovery.append({'name':name,'result':name if found else None})
+ found=dwg_bridge.find_dwg2dxf();expected={'vendor':vendor/'dwg2dxf','sibling':sibling/'dwg2dxf','PATH':system/'dwg2dxf','missing':None}[name];assert found==expected,(name,found,expected);discovery.append({'name':name,'result':name if found else None})
  if found:found.unlink()
 (vendor/'dwg2dxf.exe').write_bytes(b'MZ');dwg_bridge.sys.platform='win32';discovery.append({'name':'windows-exe','result':dwg_bridge.find_dwg2dxf().name});dwg_bridge.sys.platform='linux';discovery.append({'name':'linux-no-exe','result':dwg_bridge.find_dwg2dxf()})
 dwg_bridge._VENDOR_BIN, dwg_bridge._SIBLING_BIN,dwg_bridge.shutil.which,dwg_bridge.sys.platform=old_vendor,old_sibling,old_which,old_platform
@@ -95,7 +95,7 @@ for name,code in [('warning-output',"from pathlib import Path;import sys;Path(sy
  if name=='timeout':dwg_bridge._TIMEOUT=.05
  try:
   warnings=dwg_bridge._run([sys.executable,str(script),str(output)],output);converter_controls.append({'name':name,'outcome':'accepted','warnings':warnings,'output_hex':output.read_bytes().hex()})
- except dwg_bridge.DwgBridgeError as e:converter_controls.append({'name':name,'outcome':'timeout'if name=='timeout'else'no-output','diagnostic':str(e)})
+ except dwg_bridge.DwgBridgeError as e:converter_controls.append({'name':name,'outcome':'timeout'if name=='timeout'else'no-output','source_diagnostic':str(e),'deadline_seconds':.05 if name=='timeout'else 300})
  finally:dwg_bridge._TIMEOUT=old_timeout
 
 (root/'original-dwg.json').write_text(json.dumps({'source_pin':'6be29fe437a7cd992d4e079f71720821b25216b9','cases':cases,'states':states,'repairs':repairs,'discovery':discovery,'converter_controls':converter_controls,'temporary_cleanup':True,'callback_errors':callback_errors,'scope':'Actual MainWindow command with controlled file chooser provider; real Qt unit buttons; no GPU render claim.'},indent=2)+'\n')
