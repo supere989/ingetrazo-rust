@@ -246,6 +246,91 @@ fn admit_record(r: &Record, count: &mut usize, bytes: &mut usize) -> Result<(), 
         return Err("Invalid sheet record".into());
     }
     finite(v, 0, count, bytes)?;
+    if matches!(c, 7 | 8 | 9 | 10 | 12 | 13) {
+        super::annotation_authoring::admit(v)?;
+    }
+    if c == 5 {
+        super::legend_authoring::admitted(v)?;
+    }
+    for k in [
+        "locked",
+        "hidden",
+        "bold",
+        "italic",
+        "underline",
+        "annotations",
+        "section_marks",
+        "perspective",
+        "show_title",
+        "title_scale",
+        "profiles",
+        "hidden_lines",
+        "grid",
+        "fill",
+        "mirror",
+        "dot",
+        "centre_mark",
+        "arrow",
+        "border",
+    ] {
+        if v.get(k).is_some_and(|v| !v.is_boolean()) {
+            return Err(format!("Invalid sheet Boolean field {k}"));
+        }
+    }
+    for k in [
+        "text",
+        "path",
+        "shape",
+        "fit",
+        "color",
+        "text_color",
+        "text_bg",
+        "bg_color",
+        "border_color",
+        "text_pos",
+        "text_along",
+        "text_align",
+        "units",
+        "kind",
+        "title",
+        "number",
+        "sheet_ref",
+        "family",
+        "view_key",
+        "style",
+        "group_id",
+        "list_name",
+    ] {
+        if v.get(k).is_some_and(|v| !v.is_string()) {
+            return Err(format!("Invalid sheet string field {k}"));
+        }
+    }
+    if c == 2 {
+        for k in ["opacity", "radius_mm", "feather_mm", "border_mm"] {
+            if v.get(k)
+                .is_some_and(|v| !v.as_f64().is_some_and(|n| n.is_finite() && n.abs() <= 1e6))
+            {
+                return Err(format!("Invalid picture field {k}"));
+            }
+        }
+        if v.get("shape")
+            .is_some_and(|v| !matches!(v.as_str(), Some("rect" | "rounded" | "ellipse")))
+        {
+            return Err("Unsupported picture shape".into());
+        }
+        if v.get("fit")
+            .is_some_and(|v| !matches!(v.as_str(), Some("stretch" | "cover" | "contain")))
+        {
+            return Err("Unsupported picture fit".into());
+        }
+        if v.get("w_mm")
+            .is_some_and(|v| v.as_f64().unwrap_or(0.) <= 0.)
+            || v.get("h_mm")
+                .is_some_and(|v| v.as_f64().unwrap_or(0.) <= 0.)
+        {
+            return Err("Picture dimensions must be positive".into());
+        }
+    }
     for k in [
         "x_mm",
         "y_mm",

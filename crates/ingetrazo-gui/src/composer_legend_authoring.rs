@@ -33,7 +33,7 @@ fn rows(app: &IngeTrazoApp) -> Result<Value, String> {
     }
     Ok(Value::Array(rows))
 }
-fn admitted(value: &Value) -> Result<(), String> {
+pub(super) fn admitted(value: &Value) -> Result<(), String> {
     let o = value.as_object().ok_or("Invalid legend record")?;
     for (k, default) in [("x_mm", 20.), ("y_mm", 20.), ("w_mm", 55.), ("z", 0.)] {
         let n = o
