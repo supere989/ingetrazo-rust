@@ -317,12 +317,48 @@ fn rounded_callout(width: f64, height: f64) -> Vec<PathOp> {
     ]
 }
 
+// QPaintEngineEx::drawRoundedRect starts at the top edge; the nonextended
+// PDF engine consumes QPainterPath::addRoundedRect, starting at the left edge.
+// Dash phase makes these different source operations observable.
+fn raster_rounded_callout(width: f64, height: f64) -> Vec<PathOp> {
+    let rx = 1.5_f64.min(width / 2.);
+    let ry = 1.5_f64.min(height / 2.);
+    let k = 0.5522847498;
+    vec![
+        PathOp::Move([rx, 0.]),
+        PathOp::Line([width - rx, 0.]),
+        PathOp::Cubic([width - (1. - k) * rx, 0., width, (1. - k) * ry, width, ry]),
+        PathOp::Line([width, height - ry]),
+        PathOp::Cubic([
+            width,
+            height - (1. - k) * ry,
+            width - (1. - k) * rx,
+            height,
+            width - rx,
+            height,
+        ]),
+        PathOp::Line([rx, height]),
+        PathOp::Cubic([
+            (1. - k) * rx,
+            height,
+            0.,
+            height - (1. - k) * ry,
+            0.,
+            height - ry,
+        ]),
+        PathOp::Line([0., ry]),
+        PathOp::Cubic([0., (1. - k) * ry, (1. - k) * rx, 0., rx, 0.]),
+        PathOp::Close,
+    ]
+}
+
 pub(super) fn callout(
     out: &mut Output,
     sheet: &Sheet,
     value: &Value,
     painter: &mut Painter,
     context: &Context<'_>,
+    pdf: bool,
 ) -> Result<(), String> {
     let ink = color(s(value, "color", "#1e242c")?)?;
     let stroke = n(value, "stroke_mm", 0.3)?;
@@ -339,8 +375,10 @@ pub(super) fn callout(
     out.path(
         if circular {
             ellipse(width / 2., height / 2., width / 2., height / 2.)
-        } else {
+        } else if pdf {
             rounded_callout(width, height)
+        } else {
+            raster_rounded_callout(width, height)
         },
         None,
         Some((ink, stroke)),

@@ -429,7 +429,7 @@ pub(crate) fn draws(
         "cotas_rad" => radial(&mut out, v, p, pdf)?,
         "etiquetas" => label(&mut out, sheet, v, p, context)?,
         "niveles" => level(&mut out, v, p)?,
-        "llamadas" => callout(&mut out, sheet, v, p, context)?,
+        "llamadas" => callout(&mut out, sheet, v, p, context, pdf)?,
         _ => return Err("Unknown physical annotation family".into()),
     };
     out.finish()
