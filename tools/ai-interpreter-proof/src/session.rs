@@ -61,17 +61,17 @@ pub(crate) mod transcript {
             Ok(text.chars().count())
         }
         #[pymethod]
-        fn flush(&self) {}
+        fn flush(_zelf: &Py<Self>) {}
         #[pymethod]
-        fn isatty(&self) -> bool {
+        fn isatty(_zelf: &Py<Self>) -> bool {
             false
         }
         #[pymethod]
-        fn writable(&self) -> bool {
+        fn writable(_zelf: &Py<Self>) -> bool {
             true
         }
         #[pygetset]
-        fn encoding(&self) -> Option<String> {
+        fn encoding(_zelf: &Py<Self>) -> Option<String> {
             None
         }
     }
@@ -137,11 +137,14 @@ pub fn execute_captured(
             .as_object()
             .str(vm)
             .map_err(|_| "exception message refused")?;
-        if message.to_str().len() > 1024 * 1024 {
+        let message = message
+            .to_str()
+            .ok_or("Exception message contains unsupported non-UTF8 codepoints")?;
+        if message.len() > 1024 * 1024 {
             vm.host_budget_abort();
             return Err("Exception message admission refused".into());
         }
-        receipt.error = Some(format!("SnapshotImport: {}", message.to_str()));
+        receipt.error = Some(format!("SnapshotImport: {message}"));
         // Format the actual interpreter exception directly through the bounded stream.
         // No unbounded temporary traceback String and no console-log inference.
         let mut writer = rustpython_vm::py_io::PyWriter(stderr.clone().into(), vm);

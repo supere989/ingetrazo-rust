@@ -1033,6 +1033,7 @@ fn publish_groups(
         native.definition_member = group.baseline.definition_member;
         native.native_document = group.baseline.native_document.clone();
         native.native_baseline = group.baseline.native_baseline.clone();
+        native.history_id = group.baseline.history_id;
         let material = group
             .fields
             .get_item("material", vm)
@@ -1229,6 +1230,7 @@ fn import_groups(
                 // placement metadata, never clone the full nested native graph
                 // into every ancestor's baseline.
                 baseline: ingetrazo_core::groups::Group {
+                    history_id: g.history_id,
                     mesh_share: g.mesh_share,
                     component_definition: g.component_definition,
                     definition_member: g.definition_member,
