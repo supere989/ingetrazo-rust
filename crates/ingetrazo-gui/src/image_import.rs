@@ -15,7 +15,7 @@ pub struct State {
 }
 struct Asset {
     key: String,
-    bytes: Option<Vec<u8>>,
+    bytes: Vec<u8>,
 }
 impl State {
     pub fn owns_input(&self) -> bool {
@@ -24,11 +24,15 @@ impl State {
     pub fn retire(&mut self) {
         self.asset = None;
     }
-    pub fn pending_bytes(&self) -> usize {
+    /// Borrow the privately acquired input across document/history replacement.
+    pub fn prepared_bytes(&self, key: &str) -> Option<&[u8]> {
         self.asset
             .as_ref()
-            .and_then(|a| a.bytes.as_ref())
-            .map_or(0, Vec::len)
+            .filter(|a| a.key == key)
+            .map(|a| a.bytes.as_slice())
+    }
+    pub fn pending_bytes(&self) -> usize {
+        self.asset.as_ref().map_or(0, |a| a.bytes.len())
     }
 }
 fn prepare(path: &Path) -> Result<(String, f64, String, Vec<u8>), String> {
@@ -53,7 +57,7 @@ fn prepare(path: &Path) -> Result<(String, f64, String, Vec<u8>), String> {
             return Err("Image input grew beyond resource admission".into());
         }
         bytes
-            .try_reserve(n)
+            .try_reserve_exact(n)
             .map_err(|_| "Could not reserve image input")?;
         bytes.extend_from_slice(&block[..n]);
     }
@@ -81,35 +85,28 @@ fn prepare(path: &Path) -> Result<(String, f64, String, Vec<u8>), String> {
 }
 impl IngeTrazoApp {
     pub fn begin_image_import_dialog(&mut self) {
-        match crate::dialogs::pick_open_file(
+        if let Some(path) = crate::dialogs::pick_open_file(
             &ingetrazo_core::i18n::tr("Import image"),
             "*.png *.jpg *.jpeg *.bmp *.tif *.tiff *.webp|Images",
         ) {
-            Ok(Some(path)) => {
-                if let Err(error) = self.begin_image_import(&path) {
-                    self.image_import.error = Some(error);
-                }
+            if let Err(error) = self.begin_image_import(&path) {
+                self.image_import.error = Some(error);
             }
-            Ok(None) => {}
-            Err(error) => self.image_import.error = Some(error),
         }
     }
+
     pub fn begin_image_import(&mut self, path: &Path) -> Result<(), String> {
         if self.navigation_suspended() {
             return Err("Finish the active dialog first".into());
         }
         let (key, aspect, label, bytes) = prepare(path)?;
-        let stored = self.scene.embedded_textures.contains_key(&key);
         self.set_tool(ToolType::Image);
         self.active_tool = Box::new(ingetrazo_tools::ImageTool::loaded(
             key.clone(),
             aspect,
             label,
         ));
-        self.image_import.asset = Some(Asset {
-            key,
-            bytes: (!stored).then_some(bytes),
-        });
+        self.image_import.asset = Some(Asset { key, bytes });
         self.image_import.preparations += 1;
         self.image_import.byte_reads += 1;
         self.status_message=ingetrazo_core::i18n::tr("Click a corner and drag to size the image, or type a width and press Enter (Esc cancels)");
@@ -130,10 +127,10 @@ impl IngeTrazoApp {
         Some((text, point))
     }
     pub(crate) fn publish_image_tool_request(&mut self) -> Result<(), String> {
-        let Some(plane) = self.active_tool.take_image_creation() else {
+        let Some(plane) = self.active_tool.image_creation_request() else {
             return Ok(());
         };
-        let Some(asset) = self.image_import.asset.as_mut() else {
+        let Some(asset) = self.image_import.asset.as_ref() else {
             return Err("Imported image resource owner is missing".into());
         };
         if plane.path != asset.key {
@@ -151,10 +148,20 @@ impl IngeTrazoApp {
         self.undo_stack
             .try_reserve(1)
             .map_err(|_| "Could not reserve image history")?;
-        if let Some(bytes) = asset.bytes.take() {
-            self.add_prepared_image_plane(plane, bytes);
-        } else {
+        // All admission precedes consuming the immutable tool request/resource.
+        let plane = self
+            .active_tool
+            .take_image_creation()
+            .expect("admitted Image request");
+        let asset = self
+            .image_import
+            .asset
+            .take()
+            .expect("admitted Image owner");
+        if self.scene.embedded_textures.contains_key(&asset.key) {
             self.add_image_plane(plane);
+        } else {
+            self.add_prepared_image_plane(plane, asset.bytes);
         }
         self.image_import.committed += 1;
         self.bump_model_revision();

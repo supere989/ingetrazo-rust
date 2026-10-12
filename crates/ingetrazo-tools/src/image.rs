@@ -3,7 +3,6 @@ use crate::base::{ImagePlacementState, Tool, ToolContext, ToolType};
 use crate::shape_plane as q;
 use glam::{DVec3, Vec3};
 use ingetrazo_core::{image_plane::ImagePlane, scene::Scene};
-#[derive(Default)]
 pub struct ImageTool {
     path: Option<String>,
     aspect: f64,
@@ -14,6 +13,21 @@ pub struct ImageTool {
     free: bool,
     pending: Option<ImagePlane>,
     axes: ingetrazo_core::drawing_axes::DrawingAxes,
+}
+impl Default for ImageTool {
+    fn default() -> Self {
+        Self {
+            path: None,
+            aspect: 1.,
+            label: String::new(),
+            start: None,
+            hover: None,
+            plane: None,
+            free: false,
+            pending: None,
+            axes: Default::default(),
+        }
+    }
 }
 fn normalized(v: DVec3) -> DVec3 {
     let v = v.as_vec3();
@@ -80,7 +94,6 @@ impl ImageTool {
         image.aspect = self.aspect;
         image.name = self.label.clone();
         self.pending = Some(image);
-        self.reset();
     }
 }
 impl Tool for ImageTool {
@@ -137,10 +150,14 @@ impl Tool for ImageTool {
     fn drawing_plane(&self) -> Option<(DVec3, DVec3)> {
         self.plane
     }
+    fn image_creation_request(&self) -> Option<&ImagePlane> {
+        self.pending.as_ref()
+    }
     fn take_image_creation(&mut self) -> Option<ImagePlane> {
         self.pending.take()
     }
     fn finish_image_creation(&mut self) {
+        self.reset();
         self.path = None;
     }
     fn image_placement_state(&self) -> Option<ImagePlacementState<'_>> {

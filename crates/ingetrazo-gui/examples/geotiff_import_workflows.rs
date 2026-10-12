@@ -141,7 +141,7 @@ fn image_resource(
     let pixels = ingetrazo_render::source_texture_decode::decode(&bytes, Default::default())?;
     Ok((bytes, pixels))
 }
-fn scene(a: &IngeTrazoApp) -> Result<Value, String> {
+pub(crate) fn scene(a: &IngeTrazoApp) -> Result<Value, String> {
     let geometry = source_scene(a);
     let mut images = Vec::new();
     for image in &a.scene.image_planes {
@@ -186,10 +186,10 @@ fn scene(a: &IngeTrazoApp) -> Result<Value, String> {
         json!({"datum":datum,"images":images,"layers":layers,"geometry":{"active":geometry["active"],"loose":geometry["loose"],"groups":geometry["groups"]},"selection":selection,"units":geometry["units"]}),
     )
 }
-fn camera(a: &IngeTrazoApp) -> Value {
+pub(crate) fn camera(a: &IngeTrazoApp) -> Value {
     json!({"target":a.camera.target.to_array(),"distance":a.camera.distance,"yaw":a.camera.yaw,"pitch":a.camera.pitch,"projection":if a.camera.perspective{"perspective"}else{"parallel"},"fov":a.camera.fov_deg})
 }
-fn initial_camera(a: &mut IngeTrazoApp, v: &Value) -> Result<(), String> {
+pub(crate) fn initial_camera(a: &mut IngeTrazoApp, v: &Value) -> Result<(), String> {
     let coordinates = v["target"].as_array().ok_or("initial_camera target")?;
     if coordinates.len() != 3 {
         return Err("camera target count".into());

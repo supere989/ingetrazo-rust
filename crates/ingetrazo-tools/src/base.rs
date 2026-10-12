@@ -192,6 +192,7 @@ pub trait Tool: Send + Sync {
     fn visit_image_metadata_roots(&self,_visit:&mut dyn FnMut(&ingetrazo_core::image_plane::ImagePlane)){}
     /// Consume the source relative image command after an actual tool commit.
     fn take_image_frame_command(&mut self)->Option<ingetrazo_core::image_plane::ImageFrameCommand>{None}
+    fn image_creation_request(&self)->Option<&ingetrazo_core::image_plane::ImagePlane>{None}
     fn take_image_creation(&mut self)->Option<ingetrazo_core::image_plane::ImagePlane>{None}
     fn finish_image_creation(&mut self){}
     fn image_placement_state(&self)->Option<ImagePlacementState<'_>>{None}
