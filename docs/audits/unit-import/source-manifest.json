@@ -1,0 +1,413 @@
+{
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "capture_revision": "4d64e0d3a74f74b09e6ce2bcab4080267e29d064",
+  "archive": "source-records.zip",
+  "archive_sha256": "abd934d0ed81afed0917ad3baf5b7e6f9f761d1fea57bdd2080e0142d74ec92e",
+  "members": [
+    {
+      "path": "assets/3dface.dxf",
+      "size": 16119,
+      "sha256": "2e58fe4518fa9d36c4e4434e7bb709181e0a8c3c6eb73e77f45a934e58c078a8"
+    },
+    {
+      "path": "assets/color-root.mtl",
+      "size": 63,
+      "sha256": "11b7dca958ddd3efdc424daa9274dacbd088d9410f491e52ab706b6a9ffe3d5a"
+    },
+    {
+      "path": "assets/color-root.obj",
+      "size": 103,
+      "sha256": "4c0df439e5210b55e4520c840e0891ffdd00d25e2aa6ff528996c3d421b4587f"
+    },
+    {
+      "path": "assets/face-block.dxf",
+      "size": 16539,
+      "sha256": "c23bcb350074f729fe08a867ef4d67e22c00de5e081f3bf844b5878cdee83a4f"
+    },
+    {
+      "path": "assets/invalid.dxf",
+      "size": 18,
+      "sha256": "991b4ffa7a46e4a62684157b6dbbf4e9865780d09eb2c5c5cd40bb93e343a16d"
+    },
+    {
+      "path": "assets/invalid.obj",
+      "size": 35,
+      "sha256": "62a8236975b4369596b6f805fd349ed19ff5906eb65bfc6ada65fffd4a1f0d03"
+    },
+    {
+      "path": "assets/paint with spaces.png",
+      "size": 98,
+      "sha256": "4a5b34eb9bdb4c647e7609a80b1dfc1ac9ea7136ad181b799d50215efed071ca"
+    },
+    {
+      "path": "assets/shared-leaf.dxf",
+      "size": 16581,
+      "sha256": "04a21d667312faabfec476b4442af501f476538d20c3b7adeb4bd688df8c62fb"
+    },
+    {
+      "path": "assets/solid.dxf",
+      "size": 16119,
+      "sha256": "c2b442c77daa28ff06b8e9d6fac6a336e0d8cf8c523ffaf03c5f2956e8c6f98a"
+    },
+    {
+      "path": "assets/trace.dxf",
+      "size": 16119,
+      "sha256": "70e9edf60c37908b08fb2419cbad3112efc31d59c104c5890d67591ba8670a29"
+    },
+    {
+      "path": "assets/windows-options-leaf.mtl",
+      "size": 87,
+      "sha256": "681d77f91a626c317276f192848b9d2cc89c52a970c91012bea1a90b40ec632f"
+    },
+    {
+      "path": "assets/windows-options-leaf.obj",
+      "size": 121,
+      "sha256": "ae7844dee560e19feb3b95e376586b8abfc862d4a87f5ed58e59fc15c64041c9"
+    },
+    {
+      "path": "capture-tools/docs/audits/unit-import/fixture-contract.json",
+      "size": 3570,
+      "sha256": "800067a6da0e775f455882cf37536bcbea50aa65a06c5d3c71daf442a9c697aa"
+    },
+    {
+      "path": "capture-tools/scripts/exchange_import_observations.py",
+      "size": 1637,
+      "sha256": "48c12bffd82e9c431ce8784174112a78c7ab09de529fabc1e5f0f8445bf94142"
+    },
+    {
+      "path": "capture-tools/scripts/reference-nested-import.py",
+      "size": 4180,
+      "sha256": "1cd756cc1db3389e3922a5c34afe41af29b91061ce30bff77e945d7b346d629b"
+    },
+    {
+      "path": "capture-tools/scripts/reference-unit-import.py",
+      "size": 8811,
+      "sha256": "0225e46d25693af018ee947837a509db6f23b64b4701bdf3b373dadd460ad66f"
+    },
+    {
+      "path": "capture/capture.log",
+      "size": 5321,
+      "sha256": "ebc98d4dd019bb45e344e3581db35c73804fa6a817976e8b749b48013382189a"
+    },
+    {
+      "path": "capture/receipt.json",
+      "size": 295,
+      "sha256": "eda3e5e7e1c74123235596ae3ff334d18e39d3aad0a0214b9177d0982da4cc27"
+    },
+    {
+      "path": "completed-cases.json",
+      "size": 591251,
+      "sha256": "2b5cf612b5659993827f5193cc2fef21ad1e8fd8d954bb38f75bdc4176ed76fa"
+    },
+    {
+      "path": "dxf-3dface-input.igz",
+      "size": 3552,
+      "sha256": "761e1211e8935f86a05c0169f8fe8f6fb79e3883800c9e192de3f20c79a4fe4a"
+    },
+    {
+      "path": "dxf-3dface-saved.igz",
+      "size": 5217,
+      "sha256": "ad2121c8c4050dac46a5ab2cf54f808ab3a6f6782ff5d7b9d49dcddd968216d4"
+    },
+    {
+      "path": "dxf-block-leaf-input.igz",
+      "size": 3552,
+      "sha256": "5e1cfdf77f321a3e8c9f6dc77833006b6312bca6cca76d78572ba72c5b1439b5"
+    },
+    {
+      "path": "dxf-block-leaf-saved.igz",
+      "size": 5369,
+      "sha256": "2e95eda8dc6a68a92bceff69cae20c2e2b460b42a9a9c4e4cecabab4c77e4b90"
+    },
+    {
+      "path": "dxf-chooser-cancel-input.igz",
+      "size": 3552,
+      "sha256": "cb086bb2e39b327bb1f830be32c6f8321aa101a0b5d3e46c8abe47aeea048b7d"
+    },
+    {
+      "path": "dxf-face-block-input.igz",
+      "size": 3552,
+      "sha256": "cc19dd8ca11beaff521a86674aefa5e1797d418f2a9d189dfc58988e5fcbf7b3"
+    },
+    {
+      "path": "dxf-face-block-saved.igz",
+      "size": 5487,
+      "sha256": "6e0c8219b822eca0e4146569beb3204a20ae1a0545ed5bebfd0176b58adb5109"
+    },
+    {
+      "path": "dxf-invalid-input.igz",
+      "size": 3552,
+      "sha256": "33add545925f53ceb4e92f177fe44c14e686dc924274d0d91ab16bd6c11191a3"
+    },
+    {
+      "path": "dxf-solid-input.igz",
+      "size": 3552,
+      "sha256": "411ac329bbac0d6a1e2ee5311f4a0539b5e90c4d88bd6cec2c084aaa3f4bab46"
+    },
+    {
+      "path": "dxf-solid-saved.igz",
+      "size": 5217,
+      "sha256": "7c907248af4ec552672805fcf33fafd71c8b26f48f8e7561bc15d48012d9c928"
+    },
+    {
+      "path": "dxf-trace-input.igz",
+      "size": 3552,
+      "sha256": "71693b1e10aaa8d972766e14db2d37335a440da0e584c8e1dc320fac4f17efd7"
+    },
+    {
+      "path": "dxf-trace-saved.igz",
+      "size": 5217,
+      "sha256": "33b296bc1c14ceb66b113d28ad6d647dda6fcffcf5f1cd92dfdf8e738e94be72"
+    },
+    {
+      "path": "dxf-unit-cancel-input.igz",
+      "size": 3552,
+      "sha256": "9b64e45f6cbe079f31d9e44399d11860ed698edbaa75f8f387823cc7d2c6719e"
+    },
+    {
+      "path": "obj-chooser-cancel-input.igz",
+      "size": 3552,
+      "sha256": "06000237c974109d3ad68c6a7fae176d49069df47e3ab4b404a9b81e8665fd42"
+    },
+    {
+      "path": "obj-invalid-input.igz",
+      "size": 3552,
+      "sha256": "5800b90e436426fc2330553e090e7fd51aa98b31623db31bdd5c8007b4d3f7df"
+    },
+    {
+      "path": "obj-root-input.igz",
+      "size": 3552,
+      "sha256": "80bca9194a43f714c3303c50fa70a12bc1e2e12c901a398755816b5e39178f58"
+    },
+    {
+      "path": "obj-root-saved.igz",
+      "size": 4624,
+      "sha256": "d2da5440512ac42fc79d332f9a80bae7d3d7d573adde4cbce93e288be9dfa941"
+    },
+    {
+      "path": "obj-texture-leaf-input.igz",
+      "size": 3552,
+      "sha256": "989e1e8cd9485f6264f7e59aa57d0ada2b7e6cc5b9b11f2cf824905bb9475e4b"
+    },
+    {
+      "path": "obj-texture-leaf-saved.igz",
+      "size": 1206,
+      "sha256": "2a821caf1183f0f91cac6d7dd226710fd3b5366603ce292f9287b3af86956985"
+    },
+    {
+      "path": "obj-unit-cancel-input.igz",
+      "size": 3552,
+      "sha256": "f3c9f75b5363d6a90ba29f6c635499f5d07b4cdceda65d2cd536d29ac3b38d22"
+    },
+    {
+      "path": "original-unit-import.json",
+      "size": 594144,
+      "sha256": "1695c6e113c3ddf8a45764786d0bac50ea8bbf4c2e2cbd1b9e28b31cbcfd7853"
+    },
+    {
+      "path": "original-unit-import.partial.json",
+      "size": 590723,
+      "sha256": "3292f88579752b6ece98ab9e43c3d7b80e8d38b31b82892e92b78ecd06093d25"
+    }
+  ],
+  "sources": [
+    {
+      "path": "scripts/reference-unit-import.py",
+      "revision": "4d64e0d3a74f74b09e6ce2bcab4080267e29d064",
+      "sha256": "0225e46d25693af018ee947837a509db6f23b64b4701bdf3b373dadd460ad66f",
+      "retained_path": "capture-tools/scripts/reference-unit-import.py"
+    },
+    {
+      "path": "scripts/exchange_import_observations.py",
+      "revision": "4d64e0d3a74f74b09e6ce2bcab4080267e29d064",
+      "sha256": "48c12bffd82e9c431ce8784174112a78c7ab09de529fabc1e5f0f8445bf94142",
+      "retained_path": "capture-tools/scripts/exchange_import_observations.py"
+    },
+    {
+      "path": "scripts/reference-nested-import.py",
+      "revision": "4d64e0d3a74f74b09e6ce2bcab4080267e29d064",
+      "sha256": "1cd756cc1db3389e3922a5c34afe41af29b91061ce30bff77e945d7b346d629b",
+      "retained_path": "capture-tools/scripts/reference-nested-import.py"
+    },
+    {
+      "path": "docs/audits/unit-import/fixture-contract.json",
+      "revision": "4d64e0d3a74f74b09e6ce2bcab4080267e29d064",
+      "sha256": "800067a6da0e775f455882cf37536bcbea50aa65a06c5d3c71daf442a9c697aa",
+      "retained_path": "capture-tools/docs/audits/unit-import/fixture-contract.json"
+    }
+  ],
+  "original_sources": [
+    {
+      "path": "views/main_window.py",
+      "sha256": "ea02be3e439c80731d0f5b5fde3d92d9b3f62e8ad10cd44ad305c3261b7786fa",
+      "revision": "6be29fe437a7cd992d4e079f71720821b25216b9",
+      "verification": "post-capture pinned Git/current-byte authentication; not a preoperative check"
+    },
+    {
+      "path": "core/history.py",
+      "sha256": "2eb66a1d557099b51383988a7819145289fc4ce2c37fc7de3a92ed35b5830559",
+      "revision": "6be29fe437a7cd992d4e079f71720821b25216b9",
+      "verification": "post-capture pinned Git/current-byte authentication; not a preoperative check"
+    },
+    {
+      "path": "core/scene.py",
+      "sha256": "9dfcd32f1ff5b1445180eafd8df36eafb92fa08ed3597bb90eac09554899d2e0",
+      "revision": "6be29fe437a7cd992d4e079f71720821b25216b9",
+      "verification": "post-capture pinned Git/current-byte authentication; not a preoperative check"
+    },
+    {
+      "path": "core/group.py",
+      "sha256": "9ba6a20eca241cb4969a545a3784fcff25566166606d5447a18780747d4f11c5",
+      "revision": "6be29fe437a7cd992d4e079f71720821b25216b9",
+      "verification": "post-capture pinned Git/current-byte authentication; not a preoperative check"
+    },
+    {
+      "path": "formats/obj.py",
+      "sha256": "d34b025e2f312c68945705acedcdd69b987dfbd77e2e0ddc7d339dfecbc9a5b7",
+      "revision": "6be29fe437a7cd992d4e079f71720821b25216b9",
+      "verification": "post-capture pinned Git/current-byte authentication; not a preoperative check"
+    },
+    {
+      "path": "formats/dxf_in.py",
+      "sha256": "5a8a1728536de1936af2db8bdcc0c146db3a320f5cb256a3288a903b74f718a9",
+      "revision": "6be29fe437a7cd992d4e079f71720821b25216b9",
+      "verification": "post-capture pinned Git/current-byte authentication; not a preoperative check"
+    },
+    {
+      "path": "formats/igz.py",
+      "sha256": "f318d685830c49c2fede7fd5a238ac7a1469ee0b0226cf48cab3751e194a9576",
+      "revision": "6be29fe437a7cd992d4e079f71720821b25216b9",
+      "verification": "post-capture pinned Git/current-byte authentication; not a preoperative check"
+    },
+    {
+      "path": "core/camera.py",
+      "sha256": "cae35d8adfe33f3da22b85de74cc0779c0d2697fa8fa09d0112933d6d3e26a52",
+      "revision": "6be29fe437a7cd992d4e079f71720821b25216b9",
+      "verification": "post-capture pinned Git/current-byte authentication; not a preoperative check"
+    },
+    {
+      "path": "core/mesh.py",
+      "sha256": "5f2c1625e6dd717db029ba39a9de337e75beec06bd0df28a592a8a34875ca22c",
+      "revision": "6be29fe437a7cd992d4e079f71720821b25216b9",
+      "verification": "post-capture pinned Git/current-byte authentication; not a preoperative check"
+    },
+    {
+      "path": "core/topology.py",
+      "sha256": "f16d136706d0a7ce4f5c382c9318126e45639a38d969f13f0196f852df858c0e",
+      "revision": "6be29fe437a7cd992d4e079f71720821b25216b9",
+      "verification": "post-capture pinned Git/current-byte authentication; not a preoperative check"
+    },
+    {
+      "path": "formats/fuse.py",
+      "sha256": "60f77cdaf8c499b4f8c9ed86940e9a4b937ffae18831f0b56435e1b441f633ae",
+      "revision": "6be29fe437a7cd992d4e079f71720821b25216b9",
+      "verification": "post-capture pinned Git/current-byte authentication; not a preoperative check"
+    },
+    {
+      "path": "formats/dae.py",
+      "sha256": "9082599e1130b1d70af23cf3715a1566b18908f41fc0498d28b235baef7331dc",
+      "revision": "6be29fe437a7cd992d4e079f71720821b25216b9",
+      "verification": "post-capture pinned Git/current-byte authentication; not a preoperative check"
+    }
+  ],
+  "reused": [
+    {
+      "archive": "docs/audits/obj-mtl-import/source-records.zip",
+      "archive_sha256": "020f863980b2d6f8da64291f39d8a280c67d3a62ca4618648d08bb1205f71f8b",
+      "member": "color-root.obj",
+      "sha256": "4c0df439e5210b55e4520c840e0891ffdd00d25e2aa6ff528996c3d421b4587f",
+      "size": 103
+    },
+    {
+      "archive": "docs/audits/obj-mtl-import/source-records.zip",
+      "archive_sha256": "020f863980b2d6f8da64291f39d8a280c67d3a62ca4618648d08bb1205f71f8b",
+      "member": "color-root.mtl",
+      "sha256": "11b7dca958ddd3efdc424daa9274dacbd088d9410f491e52ab706b6a9ffe3d5a",
+      "size": 63
+    },
+    {
+      "archive": "docs/audits/obj-mtl-import/source-records.zip",
+      "archive_sha256": "020f863980b2d6f8da64291f39d8a280c67d3a62ca4618648d08bb1205f71f8b",
+      "member": "windows-options-leaf.obj",
+      "sha256": "ae7844dee560e19feb3b95e376586b8abfc862d4a87f5ed58e59fc15c64041c9",
+      "size": 121
+    },
+    {
+      "archive": "docs/audits/obj-mtl-import/source-records.zip",
+      "archive_sha256": "020f863980b2d6f8da64291f39d8a280c67d3a62ca4618648d08bb1205f71f8b",
+      "member": "windows-options-leaf.mtl",
+      "sha256": "681d77f91a626c317276f192848b9d2cc89c52a970c91012bea1a90b40ec632f",
+      "size": 87
+    },
+    {
+      "archive": "docs/audits/obj-mtl-import/source-records.zip",
+      "archive_sha256": "020f863980b2d6f8da64291f39d8a280c67d3a62ca4618648d08bb1205f71f8b",
+      "member": "paint with spaces.png",
+      "sha256": "4a5b34eb9bdb4c647e7609a80b1dfc1ac9ea7136ad181b799d50215efed071ca",
+      "size": 98
+    },
+    {
+      "archive": "docs/audits/dxf-blocks/source-records.zip",
+      "archive_sha256": "ece614918224b6c5e74607530315204ea1718aa89c96c0e59aa4a81862a6b7ce",
+      "member": "shared-leaf.dxf",
+      "sha256": "04a21d667312faabfec476b4442af501f476538d20c3b7adeb4bd688df8c62fb",
+      "size": 16581
+    }
+  ],
+  "dependencies": {
+    "ezdxf": "1.4.4",
+    "verification": "post-capture identity/current bytes matching frozen DXF dependency inventory",
+    "files": [
+      {
+        "path": "path/tools.py",
+        "sha256": "a5078589f0e605ab86dcfc6e610379114daf70447e1334e54189850486a00324",
+        "size": 33196
+      },
+      {
+        "path": "path/path.py",
+        "sha256": "94a69b57f0c08737d88a406621e915226f143e78716dbd13f89500ece6d92f01",
+        "size": 17717
+      },
+      {
+        "path": "path/converter.py",
+        "sha256": "ce3f02f7ec059aad4a72d856c969f8bdb3f26743a36108afcd29ebd5f7b0d8f2",
+        "size": 30333
+      },
+      {
+        "path": "math/_bezier4p.py",
+        "sha256": "23c5fe6a1a69192e2ab058ebf06f16eb6e8745175fb1561c52d618ac50aa5ba3",
+        "size": 11540
+      },
+      {
+        "path": "math/bulge.py",
+        "sha256": "af18f1f45744539bddbc48e14430129661c35688e4496847bab7e8682c1866dd",
+        "size": 5688
+      },
+      {
+        "path": "math/ellipse.py",
+        "sha256": "535685163b4e1e1fb4fc5833508d04c0857425d9a460240b7a5c484e794ffa08",
+        "size": 21124
+      },
+      {
+        "path": "math/_construct.py",
+        "sha256": "ddeed16265db86f2351e48ca7f3dd47b4ed73d737b66bf76e64230bcf9726b9c",
+        "size": 12115
+      },
+      {
+        "path": "acc/bezier4p.cpython-313-x86_64-linux-gnu.so",
+        "sha256": "e6de2e21d5337a1339f4bd230839cd7ba666958307ae7eebb25334aa90f55585",
+        "size": 1116624
+      }
+    ]
+  },
+  "cases": 13,
+  "states": 47,
+  "saved_readers": 7,
+  "capture_receipt": "capture/receipt.json",
+  "excluded_directory_roots": [
+    "/tmp/ingetrazo-unit-source-r1/cache",
+    "/tmp/ingetrazo-unit-source-r1/data",
+    "/tmp/ingetrazo-unit-source-r1/settings"
+  ],
+  "scope": "Original-source workflow proof only; native acceptance and GPU pixels are not claimed."
+}
