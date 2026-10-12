@@ -4,6 +4,7 @@
   "source_exact_authoring_states": 53,
   "explicit_native_correctness_gesture_states": 16,
   "reader_pairs": 4,
+  "deleted_original_reader": 1,
   "source_gesture_exceptions": 3,
   "negative_controls": [
     "missing-case",
@@ -24,13 +25,15 @@
     "reordered-reader",
     "false-ui",
     "false-atomic-refusal",
+    "false-delete-save",
     "false-warm-preview",
     "unreported-source-divergence",
     "native-inert-undo",
     "one-ulp-width",
     "opaque-sheet-loss",
-    "opaque-label-type-loss"
+    "opaque-label-type-loss",
+    "deleted-reader-resurrection"
   ],
   "scope": "Synthetic checker-only source/correctness-expectation input; no native/App/runtime acceptance.",
-  "checker_sha256": "3fba09c37ed3204eb14be624ef7ccb1e6c8e67db1a649d330f71d9a8be023a75"
+  "checker_sha256": "5f117ed2a20f9c46d37f784775064a9e16a0f5d802daf59ba213ee3e09edda43"
 }

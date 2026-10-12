@@ -12,8 +12,8 @@ The source geometry moves from (40, 40) to (63, 63), then width changes from 55 
 
 ## Save and metadata
 
-Four final saves have actual original-reader results for the complete known composition and layer records. A loaded legend input contains two declared unknown metadata leaves. The original reader tolerates and drops them; native preservation is checked separately in the actual native saved document. The native known-state projection may remove only these two declared keys.
+The native reader helper additionally requires the immediate loaded-delete save to reopen with the literal deleted-state composition and layers, rejecting resurrection of the original raw legend. Four final saves have actual original-reader results for the complete known composition and layer records. A loaded legend input contains two declared unknown metadata leaves. The original reader tolerates and drops them; native preservation is checked separately in the actual native saved document. The native known-state projection may remove only these two declared keys.
 
-The checker requires exact ordered case/state/reader inventories, strict scalar types, complete known dictionaries, actual UI and warm/refusal guards, and 24 rejecting controls. checker-selftest.json is a synthetic checker-only test, not native acceptance. Native runtime and consumer remain geometry-owned and unbuilt at this source freeze.
+The checker requires exact ordered case/state/reader inventories, strict scalar types, complete known dictionaries, actual UI and warm/refusal guards, and 26 rejecting controls. checker-selftest.json is a synthetic checker-only test, not native acceptance. Native runtime and consumer remain geometry-owned and unbuilt at this source freeze.
 
 Run replay-legend-authoring.py PREBUILT_BINARY FRESH_OUTPUT to authenticate the archive, run composer_legend_authoring SOURCE NATIVE, use the pinned original reader and apply the strict checker. Replay performs no build or new source capture. Physical PNG/PDF painters, multi-item manipulation and additional label/elevation snapping are outside this finite authoring contract.

@@ -78,8 +78,8 @@
   "producer_commit": "d90cfd7e9a757d3007e3c38a549db3cb14fdb86b",
   "producers": {
     "scripts/reference-legend-authoring.py": "3d1bcaf6ca7bf18a5cdf460b89bb14e7dbc81402d0aa4d4eb7822d1df1859c5a",
-    "scripts/reference-legend-authoring-reopens.py": "d7d20ac28b89220cd17b72964b276d4d2055d8a5b138dc27c3f665adb93a79c5",
-    "scripts/check-legend-authoring.py": "3fba09c37ed3204eb14be624ef7ccb1e6c8e67db1a649d330f71d9a8be023a75",
+    "scripts/reference-legend-authoring-reopens.py": "d0337e6fac986e0bec87d37fbcd0918a543fcc05d174c72e32980e57d31cc44c",
+    "scripts/check-legend-authoring.py": "5f117ed2a20f9c46d37f784775064a9e16a0f5d802daf59ba213ee3e09edda43",
     "scripts/replay-legend-authoring.py": "4aa3ea287f3a333569f121fecb3e301f38d2d611a5c0ea8aa6d72383595023d9"
   },
   "source_hashes": {
@@ -95,7 +95,8 @@
     "explicit_native_correctness_gesture_states": 16,
     "original_reader_pairs": 4,
     "source_gesture_exceptions": 3,
-    "rejected_controls": 24
+    "rejected_controls": 26,
+    "deleted_original_reader": 1
   },
   "scope": "Literal source authoring; gesture release failure retained with separate native reversible-history expectations. No native runtime acceptance or physical painter capture.",
   "captures": [
@@ -115,5 +116,11 @@
       "states": 16
     }
   ],
-  "correctness_difference": "Source geometry release raises on read-only h_mm and records no history; native writes persisted x/y/w only and owns reversible history explicitly."
+  "correctness_difference": "Source geometry release raises on read-only h_mm and records no history; native writes persisted x/y/w only and owns reversible history explicitly.",
+  "helper_commits": {
+    "scripts/reference-legend-authoring.py": "d90cfd7e9a757d3007e3c38a549db3cb14fdb86b",
+    "scripts/reference-legend-authoring-reopens.py": "ca6162a5b8e1bb0925d1f7fdbc1f508a92d0ec8b",
+    "scripts/check-legend-authoring.py": "ca6162a5b8e1bb0925d1f7fdbc1f508a92d0ec8b",
+    "scripts/replay-legend-authoring.py": "d90cfd7e9a757d3007e3c38a549db3cb14fdb86b"
+  }
 }
