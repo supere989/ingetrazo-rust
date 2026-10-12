@@ -8,7 +8,7 @@
     "76334370435f1ffe9cc4c0e93a05bc8c3abc13a2"
   ],
   "original_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
-  "archive_sha256": "eba44ea5c443063abecce2570fe218e4b5d90481e6b687d5cf0a346ba1c8b2f2",
+  "archive_sha256": "a2948b12e4a9614023fd90ced5867df8481b4fd1f889ced9d0a9ad2853d02c96",
   "members": {
     "authoring-replay.log": {
       "size": 971,
@@ -26,25 +26,13 @@
       "size": 1679,
       "sha256": "ac896af094a953e6cde8811ee474c18901c69b5321b005625d92bb8433b5619c"
     },
-    "authoring/native/aspect-selection-session/config/settings.json": {
-      "size": 631,
-      "sha256": "c02cbbf2652c721f324d34e95f1e7b391355ad60835bf56b6f8306f23e713bc8"
-    },
     "authoring/native/authoring-native.igz": {
       "size": 12095,
       "sha256": "e82c06c33f5306fb66bbb56a05ba7420de09aac57637061304583c45f1c89e0a"
     },
-    "authoring/native/authoring-session/config/settings.json": {
-      "size": 617,
-      "sha256": "fd8cfdf54366a9a26949ae951bc5c48b27b998aefe622305b4ce92d164fa7d91"
-    },
     "authoring/native/missing-fallback-native.igz": {
       "size": 1110,
       "sha256": "3021e3dbc322fa112d4b5c63a18eefdb84d9ee68106258627bd9c02387b0afce"
-    },
-    "authoring/native/missing-fallback-session/config/settings.json": {
-      "size": 631,
-      "sha256": "4f446b3044c9e5a70b79df0611ecb2da1d5d885645ef125ef1d2eca84ccbf0dd"
     },
     "authoring/native/native.json": {
       "size": 338960,
@@ -61,10 +49,6 @@
     "authoring/native/picker-calls.txt": {
       "size": 8,
       "sha256": "9fd7a1c489f60177b785e0e06205e71e3be2123dbc1286d19b24d79779ceed49"
-    },
-    "authoring/native/ui-session/config/settings.json": {
-      "size": 534,
-      "sha256": "e936be1bedad184ef336cbc52c862ca35ed4cfed1c0c82a610b585ef0ec23e4c"
     },
     "authoring/native/z-input-cajetin.igz": {
       "size": 5621,
@@ -226,25 +210,13 @@
       "size": 1679,
       "sha256": "ac896af094a953e6cde8811ee474c18901c69b5321b005625d92bb8433b5619c"
     },
-    "authoring2/native/aspect-selection-session/config/settings.json": {
-      "size": 633,
-      "sha256": "ffa8349dfecedef03655238b75324d5920edc69e2754d844d363b86271a769e0"
-    },
     "authoring2/native/authoring-native.igz": {
       "size": 12095,
       "sha256": "e82c06c33f5306fb66bbb56a05ba7420de09aac57637061304583c45f1c89e0a"
     },
-    "authoring2/native/authoring-session/config/settings.json": {
-      "size": 619,
-      "sha256": "3df28b20666a7b8f07c254a67174581ec8a557f384761ccd2572641ccb96799e"
-    },
     "authoring2/native/missing-fallback-native.igz": {
       "size": 1110,
       "sha256": "3021e3dbc322fa112d4b5c63a18eefdb84d9ee68106258627bd9c02387b0afce"
-    },
-    "authoring2/native/missing-fallback-session/config/settings.json": {
-      "size": 633,
-      "sha256": "27ef35675c83372f01b6a5187be7e4c395790cd6ac5a27e2840584505d86a650"
     },
     "authoring2/native/native-reopens.json": {
       "size": 12765,
@@ -265,38 +237,6 @@
     "authoring2/native/picker-calls.txt": {
       "size": 24,
       "sha256": "c16040f9f3694eb53cdddb917b85623297eff22429c94b64589010bab795dc9a"
-    },
-    "authoring2/native/ui-session/config/settings.json": {
-      "size": 535,
-      "sha256": "c43a7f6a9edbd3e847bc45c8094a573a747f2cf5d88c5d2019f9f928fdbe8280"
-    },
-    "authoring2/native/z-cajetin-session/config/settings.json": {
-      "size": 528,
-      "sha256": "0b3c8ffd00cd210f8a6f54106ff0a0c93947c50f737e6653dae9f98c860c3138"
-    },
-    "authoring2/native/z-cotas-session/config/settings.json": {
-      "size": 526,
-      "sha256": "fd0177757b97574741498ff2d46e6033a81c28cc0f673b63c268f42e6f974c78"
-    },
-    "authoring2/native/z-cotas_ang-session/config/settings.json": {
-      "size": 530,
-      "sha256": "c5493faaacb3dc2ff32d72b9997df1216ee03d30a819c3818fff4106683dd6b4"
-    },
-    "authoring2/native/z-cotas_rad-session/config/settings.json": {
-      "size": 530,
-      "sha256": "005a4c44289b2b305ad59690d213f6bb20180a4c2676a8ab407bce686472f354"
-    },
-    "authoring2/native/z-etiquetas-session/config/settings.json": {
-      "size": 530,
-      "sha256": "a722b65e9ca38cde2a1d9b0a24664cc5b5f0109865de820e6b16d2622ed943e2"
-    },
-    "authoring2/native/z-frames-session/config/settings.json": {
-      "size": 527,
-      "sha256": "e5e5fa0e0129a7ccdbba415198ed1c00a2029a070a243ea7641101d5ddc73eae"
-    },
-    "authoring2/native/z-images-session/config/settings.json": {
-      "size": 527,
-      "sha256": "ece924dddb011dff6de3817addc48451d09dd170c1e384cb208fdc04e48f8ef7"
     },
     "authoring2/native/z-input-cajetin.igz": {
       "size": 5644,
@@ -357,38 +297,6 @@
     "authoring2/native/z-input-texts.igz": {
       "size": 5645,
       "sha256": "787d6fe6cd67a9e9e664946c53998ef9d7c3373c812241cb985fce5317485d18"
-    },
-    "authoring2/native/z-leyendas-session/config/settings.json": {
-      "size": 529,
-      "sha256": "328a8c753d7a6010acf4f6e54c5aa0ae0b06694455d102f4b1185ea4371a3938"
-    },
-    "authoring2/native/z-llamadas-session/config/settings.json": {
-      "size": 529,
-      "sha256": "ea8df593d39b6308ad5a53762536cb813c997d66c9fea71820c456e7b50e7c36"
-    },
-    "authoring2/native/z-niveles-session/config/settings.json": {
-      "size": 528,
-      "sha256": "11282942fea7198df848a6f1cfda6ee7f7ea182f07513a11799b1f83022da011"
-    },
-    "authoring2/native/z-nortes-session/config/settings.json": {
-      "size": 527,
-      "sha256": "4bb69badeea6ec1dc2801b0e0ecbd0b6c5f67f2d37f8be0770078ff9dd0f3892"
-    },
-    "authoring2/native/z-perfiles-session/config/settings.json": {
-      "size": 529,
-      "sha256": "13c8786463f67c1fc5472b34ad744cc3318be3aa08116dff94eb4319c28d88ce"
-    },
-    "authoring2/native/z-scalebars-session/config/settings.json": {
-      "size": 530,
-      "sha256": "c59024e0e0661888987425a8698462e3c759783e40580baba394df79a11faf28"
-    },
-    "authoring2/native/z-shapes-session/config/settings.json": {
-      "size": 527,
-      "sha256": "906886c0674afd26bc9e288ab0c677c40f34112b04660b861e1909770196848c"
-    },
-    "authoring2/native/z-texts-session/config/settings.json": {
-      "size": 526,
-      "sha256": "4dad93c0ba9934bf312dc12f228db64ea15a184dee105f815aa8391ced1298cb"
     },
     "authoring2/reader.log": {
       "size": 20,
@@ -498,25 +406,13 @@
       "size": 1679,
       "sha256": "ac896af094a953e6cde8811ee474c18901c69b5321b005625d92bb8433b5619c"
     },
-    "authoring3/native/aspect-selection-session/config/settings.json": {
-      "size": 633,
-      "sha256": "92ff6eb4855701bbf723c2c9d235151b32c00f5dfcd68813e7dfd13927d49e42"
-    },
     "authoring3/native/authoring-native.igz": {
       "size": 12095,
       "sha256": "e82c06c33f5306fb66bbb56a05ba7420de09aac57637061304583c45f1c89e0a"
     },
-    "authoring3/native/authoring-session/config/settings.json": {
-      "size": 619,
-      "sha256": "fba554bb9825158c9e1bfed1506f6ca36ca63d3be267ff3e20b21a3382285847"
-    },
     "authoring3/native/missing-fallback-native.igz": {
       "size": 1110,
       "sha256": "3021e3dbc322fa112d4b5c63a18eefdb84d9ee68106258627bd9c02387b0afce"
-    },
-    "authoring3/native/missing-fallback-session/config/settings.json": {
-      "size": 633,
-      "sha256": "16766203c688b3af6bc9dcf92bb03645e2c0c31f71cc8a0cac64d6492b07409e"
     },
     "authoring3/native/native-reopens.json": {
       "size": 12765,
@@ -537,38 +433,6 @@
     "authoring3/native/picker-calls.txt": {
       "size": 24,
       "sha256": "c16040f9f3694eb53cdddb917b85623297eff22429c94b64589010bab795dc9a"
-    },
-    "authoring3/native/ui-session/config/settings.json": {
-      "size": 535,
-      "sha256": "bb6ff3cb3a284e32e385be40281c531f8c4d1077eb0050d73cadc53e270e1d9b"
-    },
-    "authoring3/native/z-cajetin-session/config/settings.json": {
-      "size": 528,
-      "sha256": "6c8dfc4200b921c88f59643a7d2e40a17b2137c26f3a947c491dab97eaf6e1fa"
-    },
-    "authoring3/native/z-cotas-session/config/settings.json": {
-      "size": 526,
-      "sha256": "79db71824a7ab86525a0039e8422334d073555064d5468299169dbcd8a57f6e5"
-    },
-    "authoring3/native/z-cotas_ang-session/config/settings.json": {
-      "size": 530,
-      "sha256": "10539e6d21603f94fd66a282cbf6be8e84cd38bd427ff5946df545cf5f2fa22a"
-    },
-    "authoring3/native/z-cotas_rad-session/config/settings.json": {
-      "size": 530,
-      "sha256": "836692e54d8199f84114182a9bbd78831b4cd8e9327fdfbeb8ea5f7375913161"
-    },
-    "authoring3/native/z-etiquetas-session/config/settings.json": {
-      "size": 530,
-      "sha256": "10e4e8cf878561ae84586cd398cd391c61524cc4aa895e2ae06ec609cf6ee782"
-    },
-    "authoring3/native/z-frames-session/config/settings.json": {
-      "size": 527,
-      "sha256": "05577184a497ff00b8216831ad4c15685e5538685252642d89fb5f8acb7be395"
-    },
-    "authoring3/native/z-images-session/config/settings.json": {
-      "size": 527,
-      "sha256": "a5103931d00f62c0a4bd937f6c4f0b997e547b9bba2b69eea50abbe48ef0ce23"
     },
     "authoring3/native/z-input-cajetin.igz": {
       "size": 5644,
@@ -629,38 +493,6 @@
     "authoring3/native/z-input-texts.igz": {
       "size": 5645,
       "sha256": "787d6fe6cd67a9e9e664946c53998ef9d7c3373c812241cb985fce5317485d18"
-    },
-    "authoring3/native/z-leyendas-session/config/settings.json": {
-      "size": 529,
-      "sha256": "9a371d148588986ce7a5cc9f8eb011b89331fd0c4c8dbdaee18017bc9b7a8752"
-    },
-    "authoring3/native/z-llamadas-session/config/settings.json": {
-      "size": 529,
-      "sha256": "07984108a031b70e2175b640809f85dc2dce71e3a89b2b28c506d59b7b11f70d"
-    },
-    "authoring3/native/z-niveles-session/config/settings.json": {
-      "size": 528,
-      "sha256": "afa7e0236f96034c9a0e1a56532ee6d928dda9a1d158112f388cff5041624516"
-    },
-    "authoring3/native/z-nortes-session/config/settings.json": {
-      "size": 527,
-      "sha256": "29eadb93a5d4d36cec38e48a219033c61fd5b1c23b5ad676b46956cba157fb2f"
-    },
-    "authoring3/native/z-perfiles-session/config/settings.json": {
-      "size": 529,
-      "sha256": "3e2a3a00d2a002982207a5aa3f0b3fadbc16be3fa4a5b14f912e7ba41ed4dffb"
-    },
-    "authoring3/native/z-scalebars-session/config/settings.json": {
-      "size": 530,
-      "sha256": "d49727a88d501501ec35fa70e1e1bcc12a7b989ac2f119097a05c0186fd96bd3"
-    },
-    "authoring3/native/z-shapes-session/config/settings.json": {
-      "size": 527,
-      "sha256": "2361179785898a38d33f68df4bce930b69807f5b5ba0a0a82e35d572c565610c"
-    },
-    "authoring3/native/z-texts-session/config/settings.json": {
-      "size": 526,
-      "sha256": "a987f2bcf6b673de718aa153d1dc8bf821cdbdf4a1a81860ff934c983281f9ac"
     },
     "authoring3/reader.log": {
       "size": 20,
@@ -770,25 +602,13 @@
       "size": 1679,
       "sha256": "ac896af094a953e6cde8811ee474c18901c69b5321b005625d92bb8433b5619c"
     },
-    "authoring4/native/aspect-selection-session/config/settings.json": {
-      "size": 633,
-      "sha256": "f063cce8a1146465f45cbfaa8d81a01d5a9b2ffdbad5b92d10b897ff3d13f67e"
-    },
     "authoring4/native/authoring-native.igz": {
       "size": 12095,
       "sha256": "e82c06c33f5306fb66bbb56a05ba7420de09aac57637061304583c45f1c89e0a"
     },
-    "authoring4/native/authoring-session/config/settings.json": {
-      "size": 619,
-      "sha256": "c62c9b3b20bede3a3f3eae2e3ab78903f99a77b40eadbe523af2170cd9e422e0"
-    },
     "authoring4/native/missing-fallback-native.igz": {
       "size": 1110,
       "sha256": "3021e3dbc322fa112d4b5c63a18eefdb84d9ee68106258627bd9c02387b0afce"
-    },
-    "authoring4/native/missing-fallback-session/config/settings.json": {
-      "size": 633,
-      "sha256": "4499ba5529e850d19318d3f50403f52e1e41e9cec1b45a244dabaa4e049cad71"
     },
     "authoring4/native/native-reopens.json": {
       "size": 12765,
@@ -809,38 +629,6 @@
     "authoring4/native/picker-calls.txt": {
       "size": 24,
       "sha256": "c16040f9f3694eb53cdddb917b85623297eff22429c94b64589010bab795dc9a"
-    },
-    "authoring4/native/ui-session/config/settings.json": {
-      "size": 535,
-      "sha256": "5b95065767212eec125576f87035eaa3e72e6cdfc32ff4e8b18772e6c39640f1"
-    },
-    "authoring4/native/z-cajetin-session/config/settings.json": {
-      "size": 528,
-      "sha256": "9d27d531a6ac2da0e727a297d6ed0834989eec625738e2508d39180c963fdf84"
-    },
-    "authoring4/native/z-cotas-session/config/settings.json": {
-      "size": 526,
-      "sha256": "4d4baa2332938e119f420647c1299fdff6fc51a5cf16a4be3de8f1ec6c40fd5e"
-    },
-    "authoring4/native/z-cotas_ang-session/config/settings.json": {
-      "size": 530,
-      "sha256": "6503f7ff33723e03f666f35323c8551633a8d3a504c92ae90c551a294af0924f"
-    },
-    "authoring4/native/z-cotas_rad-session/config/settings.json": {
-      "size": 530,
-      "sha256": "4ba5104227af94b0ac9cb4d5b96c221a651ecdfbb0c12577f3640e2aee4b63e6"
-    },
-    "authoring4/native/z-etiquetas-session/config/settings.json": {
-      "size": 530,
-      "sha256": "3e186ea0521ef031be0b47dd0e4bc10ba76cf958574f4678cb867cb822d6ec77"
-    },
-    "authoring4/native/z-frames-session/config/settings.json": {
-      "size": 527,
-      "sha256": "277d67bca1848d4f40801b34d15c3c6fff3b3e62467701682e8c798899593be6"
-    },
-    "authoring4/native/z-images-session/config/settings.json": {
-      "size": 527,
-      "sha256": "6ab7f0e649b2ed3205504f4cc3c251cd17225acfb178f5972f3c0d32f6306654"
     },
     "authoring4/native/z-input-cajetin.igz": {
       "size": 5644,
@@ -901,38 +689,6 @@
     "authoring4/native/z-input-texts.igz": {
       "size": 5645,
       "sha256": "787d6fe6cd67a9e9e664946c53998ef9d7c3373c812241cb985fce5317485d18"
-    },
-    "authoring4/native/z-leyendas-session/config/settings.json": {
-      "size": 529,
-      "sha256": "3300c4ee6a73eeef5d61f8b99eba8a4f1f1ddfc511fe66e3d1d0237805fbcf6e"
-    },
-    "authoring4/native/z-llamadas-session/config/settings.json": {
-      "size": 529,
-      "sha256": "b9d90d0bfc237ad3bcacc49f0ada4f5081a014a849664f22f7ba8ce77781db88"
-    },
-    "authoring4/native/z-niveles-session/config/settings.json": {
-      "size": 528,
-      "sha256": "a6b6504b94eb0995fc0ed2c7bb00b44fce642af8d8375e71527c97acead0c776"
-    },
-    "authoring4/native/z-nortes-session/config/settings.json": {
-      "size": 527,
-      "sha256": "354a90d1e82c7f2c0162bb8cc1fe5e26b49cea9e787588b0ba29cfa5200fd3ac"
-    },
-    "authoring4/native/z-perfiles-session/config/settings.json": {
-      "size": 529,
-      "sha256": "6a0345688e732028c32cf321e9019813ba2808ea76c6ac0c27f2d74a6e20f784"
-    },
-    "authoring4/native/z-scalebars-session/config/settings.json": {
-      "size": 530,
-      "sha256": "d48ca554ef62eb08c4aaf1400a215133641b3f5fee7de6668ac5638d68472ca9"
-    },
-    "authoring4/native/z-shapes-session/config/settings.json": {
-      "size": 527,
-      "sha256": "d5595ecb2c446c5bf1af700f283f2eb860763f86a357986e76c5949ee728baf1"
-    },
-    "authoring4/native/z-texts-session/config/settings.json": {
-      "size": 526,
-      "sha256": "d76e5bf47cb938eda22c7498f84b47d127cfde257be6a6b0cb8b02ebb415e4a8"
     },
     "authoring4/reader.log": {
       "size": 20,
@@ -2054,13 +1810,13 @@
       "path": "/tmp/ingetrazo-native-font-merge-target/debug/examples/sheet_picture_workflows",
       "sha256": "e9803c32998a1f549d9c398ad86e68f9b23e5a0ac71eb6df79175d0a5df85590",
       "size": 55006688,
-      "compiled_revision": "801fcd5426d711db8cd741fa41e13fd7fb2798fb"
+      "compiled_revision": "6efcc3035f3d83ba3296f9f64b61154d02819faa"
     }
   },
   "source_archive_sha256": "088bed7516672c72db29942eb8a475d7829bc225749a2c96a0d643750e8be5f1",
   "prior_picture_archive_sha256": "cc48c784d4cfed905110cd00d16d7238d91c7719150f0a7838374dadece732f1",
   "prior_output_pairs": 48,
-  "authentication": "All packaged bytes compared with terminal raw or compiled Git objects; three binaries hashed in place;48 current physical outputs byte-compared with prior authenticated actual RTX archive. No new execution/capture/purge.",
+  "authentication": "Root authenticated all final archive members, 44 compiled Git bindings and three binaries. Physical build revision corrected to the actual 6ef build receipt. Generated session settings omitted; all acceptance, source inputs and failures retained. No replay or source recapture.",
   "retained_candidate_archive_sha256": "41a22b467c886edc7b30c14867a1f66813cdfbcff25034ffa9a5df732980e3a2",
   "final_ui_results": {
     "authoring": {
@@ -2079,5 +1835,6 @@
     "joint_build_seconds": 6.1897,
     "fresh_source_captures": 0,
     "physical_export": "Unchanged binary/results; prior48byte-equality retained, no physical/DEM rerun."
-  }
+  },
+  "omitted_ephemeral_settings": 61
 }
