@@ -213,6 +213,22 @@ fn sized_font(matched: &crate::paper_font_resolver::Match, pixels: u32) -> Resul
 mod tests {
     use super::*;
     #[test]
+    fn anisotropic_capture_refusal_restores_actual_native_face() {
+        let mut cache=Cache::new(Limits{faces:4,retained_font_bytes:32*1024*1024}).unwrap();
+        let request=Request{family:"DejaVu Sans".into(),bold:false,italic:false,required_chars:vec![]};
+        let line=cache.shape(&request,"W",128).unwrap();
+        let run=&line.runs[0];let face=&run.font;let glyph=run.glyphs[0].id;
+        let base=face.rasterize(glyph,1.,[0,0]).unwrap();
+        let axes=face.rasterize_anisotropic(glyph,[2.,0.5],[0,0]).unwrap();
+        assert!(axes.width>base.width&&axes.height<base.height);
+        // This fails after the native transform is installed, before allocating
+        // its oversized bitmap; the shared face must remain usable afterward.
+        assert!(face.rasterize_anisotropic(glyph,[40.,40.],[0,0]).is_err());
+        let restored=face.rasterize(glyph,1.,[0,0]).unwrap();
+        assert_eq!((base.left,base.top,base.width,base.height),(restored.left,restored.top,restored.width,restored.height));
+        assert_eq!(base.coverage,restored.coverage);
+    }
+    #[test]
     fn extracted_face_uses_byte_owner_index_not_physical_collection_index() {
         let mut resolver = Resolver::new().unwrap();
         let mut matched = resolver.resolve(Request {
