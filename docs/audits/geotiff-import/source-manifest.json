@@ -1,0 +1,344 @@
+{
+  "original_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "source_revision": "ca93fdd08441b83392a8ebbaf74a80140231ef82",
+  "archive_sha256": "567e32dce3e01e5330dc244871383e14438c259e6b50d69b8f3677383fbbce7b",
+  "members": {
+    "LICENSE": {
+      "size": 35149,
+      "sha256": "3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986"
+    },
+    "bigtiff-be-planar16-decoded.rgba": {
+      "size": 1564,
+      "sha256": "d0c1fc302491892185c950efcbea0d0cef8cc36b7bc31d10194f7d159f9d1f3a"
+    },
+    "bigtiff-be-planar16.tif": {
+      "size": 3502,
+      "sha256": "48b3196c08085c329affbb494f7efac9d6f84a783e573d78c05739c99c8501b4"
+    },
+    "capture/invocation.json": {
+      "size": 646,
+      "sha256": "e1a9570473c4d726a1318abc04b2f8ec33b4e33209f87450689d4a4aefc86719"
+    },
+    "capture/result.json": {
+      "size": 706,
+      "sha256": "bb56c274cee38e40283ffad70a61a4f23d13ad77d427368f15545a333070b1b3"
+    },
+    "capture/stderr.log": {
+      "size": 294,
+      "sha256": "54b6044a45e875c5dce58e02d593b2792b9ef0ea4df9ac19514774b0a73e5cd1"
+    },
+    "capture/stdout.log": {
+      "size": 58,
+      "sha256": "b49fdd50a7256762943289b7d31f7210658dbe754cdb31924d0af713584f1def"
+    },
+    "chooser-cancel-input.igz": {
+      "size": 1510,
+      "sha256": "aff09d354759a1080e867b85925a4fbf75c529867d34dd0ad9c6933f57b12ad0"
+    },
+    "citation-utm-decoded.rgba": {
+      "size": 1564,
+      "sha256": "d0c1fc302491892185c950efcbea0d0cef8cc36b7bc31d10194f7d159f9d1f3a"
+    },
+    "citation-utm.tif": {
+      "size": 1982,
+      "sha256": "6d38e8687c36a9bab8aebc51eefcd56f1b1c91ccb5b701c9fcdd9f890f59196d"
+    },
+    "classic-planar8-decoded.rgba": {
+      "size": 1564,
+      "sha256": "595549c128b6ab2b5eedc60ec85c6152a05474045fc28e357cff9ca588d320c3"
+    },
+    "classic-planar8.tif": {
+      "size": 1828,
+      "sha256": "63b290c89542aa88bbb4ddee869ffea7072e24509f98ca26b203e8e9697e4140"
+    },
+    "decode-failure-datum-input.igz": {
+      "size": 1510,
+      "sha256": "65bf106bc6ad330078bd08934095f7645580c35a1d5f0d74cc84c2ac572f805e"
+    },
+    "decode-failure.tif": {
+      "size": 1732,
+      "sha256": "6ad37fa4be46c8d57bc55de17ca432c7fd9b397a0cc0ac304db478db796b9b15"
+    },
+    "existing-rotated-datum-cached.rgba": {
+      "size": 28000,
+      "sha256": "a979aebf86893c9be1b8abfe83be147b10c2c21cd8ef9a49ad3212f9d88cc3e4"
+    },
+    "existing-rotated-datum-input.igz": {
+      "size": 1754,
+      "sha256": "82303c30ff525cff80bdfb9fcff5373baebb61802009eaf84eebff44b9ff911f"
+    },
+    "existing-rotated-datum-saved.igz": {
+      "size": 8128,
+      "sha256": "ae7147c181a192499084accc53c4f90a2f262e9b5cdac3ccdace9305a2cea3be"
+    },
+    "existing-rotated-datum-stored.webp": {
+      "size": 7242,
+      "sha256": "50dd82744bc8a730ee1d8feb494ee16bb77543cf917a0b469a5add52d2116d0a"
+    },
+    "fresh-datum-cached.rgba": {
+      "size": 262144,
+      "sha256": "a15d71abe22fcdf2fc5f53c76f03e441b1aed84b88cfa548773060221a707213"
+    },
+    "fresh-datum-input.igz": {
+      "size": 1510,
+      "sha256": "78b4f2094302e94d911d89be1ebd28b9a88759b7c3989b5e0b05544c5693eae6"
+    },
+    "fresh-datum-saved.igz": {
+      "size": 19441,
+      "sha256": "dc5dd1b2ff044e587e187cb14715d3374a783123422014286658810eecae8178"
+    },
+    "fresh-datum-stored.webp": {
+      "size": 18318,
+      "sha256": "31dff3feb320c012e05f707366efa7a74e81a88840612eebe1db2f36c656df20"
+    },
+    "geographic-affine-point-decoded.rgba": {
+      "size": 1564,
+      "sha256": "d0c1fc302491892185c950efcbea0d0cef8cc36b7bc31d10194f7d159f9d1f3a"
+    },
+    "geographic-affine-point.tif": {
+      "size": 1982,
+      "sha256": "4320077c80d44dc2a99cd23782625f05ad99c90544c953cde0e0cfd960b50103"
+    },
+    "gui-reduced-cached.rgba": {
+      "size": 34884,
+      "sha256": "8408f4a8627c1b8a6298683f612e99c85a305dfde42c1ab97e0354587633a648"
+    },
+    "gui-reduced-input.igz": {
+      "size": 1510,
+      "sha256": "10122028eb9600a97505d054254c59e3a27be3a500ce5b72885cae5c23238e45"
+    },
+    "gui-reduced-saved.igz": {
+      "size": 7251,
+      "sha256": "2d0c0c8d25b8ba62c6c21b270705f939802badcf475988bd9cefd3d0bed8d1c7"
+    },
+    "gui-reduced-stored.webp": {
+      "size": 6126,
+      "sha256": "0006a6e61558f5544558a06ce1ad13ee006d19a2f96c2dfc2c1ab459428ecac0"
+    },
+    "gui-reduced.tif": {
+      "size": 472210,
+      "sha256": "1802e0dabb75e7b19d7b9f3a1e61b60feec251cb7a7b452521c379400dac737a"
+    },
+    "jpeg-rgb-decoded.rgba": {
+      "size": 4096,
+      "sha256": "96fccf0c904b4cd4eb63d88bcf820cb913eb7bf028cfcdba9ec0f3947564bfd2"
+    },
+    "jpeg-rgb.tif": {
+      "size": 2994,
+      "sha256": "dea14f8ddccec8307033ed5ab9df99ee88f49769bdc7a476ebb11c3798526bde"
+    },
+    "jpeg-tables-cmyk-decoded.rgba": {
+      "size": 262144,
+      "sha256": "7145110b5cd9723b513189cba8f68cc004ba09483823271663c4feffdd1d82e8"
+    },
+    "jpeg-tables-cmyk.tif": {
+      "size": 55730,
+      "sha256": "da0691be628f6763e3e91f30ed2102b5fa143b6835304d4107adf12bc3a017f2"
+    },
+    "nested-global-image-cached.rgba": {
+      "size": 28000,
+      "sha256": "a979aebf86893c9be1b8abfe83be147b10c2c21cd8ef9a49ad3212f9d88cc3e4"
+    },
+    "nested-global-image-input.igz": {
+      "size": 1754,
+      "sha256": "9cb13e019cf005d3b51ef4a89c919e40baa4e356a02446268738497a0f095ec9"
+    },
+    "nested-global-image-saved.igz": {
+      "size": 8129,
+      "sha256": "ea10e2ccf34d0a98c693338a38bc475e98531e2658cc08585f39f878faf5bbee"
+    },
+    "nested-global-image-stored.webp": {
+      "size": 7242,
+      "sha256": "50dd82744bc8a730ee1d8feb494ee16bb77543cf917a0b469a5add52d2116d0a"
+    },
+    "old-deflate-odd-carry-decoded.rgba": {
+      "size": 80,
+      "sha256": "0c8caffb50643ef5a45445efef07f7b0fd4d1b3e5a8d18c1de5a370cbe17463c"
+    },
+    "old-deflate-odd-carry.tif": {
+      "size": 1414,
+      "sha256": "1b73db9e9df2be2b3fac81c57c0e542b5e97be229c4cb414697e781e4aee79f7"
+    },
+    "original-geotiff.json": {
+      "size": 90117,
+      "sha256": "084e967e27cd55406eae7d0e6cddc62c2a1694259df383e30defc7f22f7c2df3"
+    },
+    "rgba16-be-predictor-decoded.rgba": {
+      "size": 1564,
+      "sha256": "d0c1fc302491892185c950efcbea0d0cef8cc36b7bc31d10194f7d159f9d1f3a"
+    },
+    "rgba16-be-predictor.tif": {
+      "size": 3502,
+      "sha256": "fd988e5f62b359fc8b086b5b10a3348ec266529251a16e581ceeb78c79476978"
+    },
+    "strip-deflate-predictor8-decoded.rgba": {
+      "size": 1564,
+      "sha256": "d0c1fc302491892185c950efcbea0d0cef8cc36b7bc31d10194f7d159f9d1f3a"
+    },
+    "strip-deflate-predictor8.tif": {
+      "size": 1748,
+      "sha256": "8389f4ae88fff92d08666c6e9e296d1bd5f9bb674b6a909f7c020312e38951da"
+    },
+    "strip-lzw-rgb8-decoded.rgba": {
+      "size": 1564,
+      "sha256": "595549c128b6ab2b5eedc60ec85c6152a05474045fc28e357cff9ca588d320c3"
+    },
+    "strip-lzw-rgb8.tif": {
+      "size": 1762,
+      "sha256": "f73c30332e4cc87653ebe1d4f0bce562d46a7bf3500b9770aa5b88cfe45906b6"
+    },
+    "strip-packbits-grayalpha8-decoded.rgba": {
+      "size": 1564,
+      "sha256": "3b5380c243d217fee7f6d0967c54eed4779e80c6a83e9f62f8d5f45262911148"
+    },
+    "strip-packbits-grayalpha8.tif": {
+      "size": 1082,
+      "sha256": "22ac50f9ebfe2f6ffb2050965ecd42ead1dbfcfac6469d1ecab258d66c3a6ec0"
+    },
+    "strip-raw-rgba8-decoded.rgba": {
+      "size": 1564,
+      "sha256": "d0c1fc302491892185c950efcbea0d0cef8cc36b7bc31d10194f7d159f9d1f3a"
+    },
+    "strip-raw-rgba8.tif": {
+      "size": 1874,
+      "sha256": "1d3088ada979f24add26966420273dc7f911745f44f2ea7eabc64045088a4934"
+    },
+    "tile-deflate-reduced-decoded.rgba": {
+      "size": 1800,
+      "sha256": "d44862e89c5058c66e648545007eb10d545f98fbf0266070adf3f3ae029c254d"
+    },
+    "tile-deflate-reduced.tif": {
+      "size": 25556,
+      "sha256": "356491f7de96cbacd7d180437415212490838c10600eccda10f4461c95cd2e39"
+    },
+    "tile-lzw-reduced-decoded.rgba": {
+      "size": 1800,
+      "sha256": "d44862e89c5058c66e648545007eb10d545f98fbf0266070adf3f3ae029c254d"
+    },
+    "tile-lzw-reduced.tif": {
+      "size": 32102,
+      "sha256": "340494536335f6ce9a969fe77233143ba74175e009ff8ad915a0aa20480b3218"
+    },
+    "tile-raw-partial-decoded.rgba": {
+      "size": 1564,
+      "sha256": "d0c1fc302491892185c950efcbea0d0cef8cc36b7bc31d10194f7d159f9d1f3a"
+    },
+    "tile-raw-partial.tif": {
+      "size": 4434,
+      "sha256": "045d33a1bc3bc0e480e0a12a878910f40e69782b3eba4fa21c689c4812497f35"
+    },
+    "whitezero16-decoded.rgba": {
+      "size": 1564,
+      "sha256": "7da0d6d59e68f5ee7e22a46e6e7e66e84b751f63fd91a360e72b81c47f13f3de"
+    },
+    "whitezero16.tif": {
+      "size": 1128,
+      "sha256": "44b2ccbc075abe3795d33129012d2a3c99a026e62ddcaea4b6b92018ecf73e2c"
+    }
+  },
+  "sources": [
+    {
+      "path": "scripts/reference-geotiff-import.py",
+      "commit": "ca93fdd08441b83392a8ebbaf74a80140231ef82",
+      "sha256": "7d2d45f974f15bc92b7714e5bcf465f6bca7480d558ac78d4a727c57575b46af",
+      "role": "actual original capture producer"
+    },
+    {
+      "path": "scripts/geotiff-import-contract.json",
+      "commit": "ca93fdd08441b83392a8ebbaf74a80140231ef82",
+      "sha256": "7f310626e8e8b074c7b439c1785bfbe840b7573f4dd3563dc9129026cef8e212",
+      "role": "reviewed finite source contract"
+    },
+    {
+      "path": "scripts/reference-nested-import.py",
+      "commit": "ca93fdd08441b83392a8ebbaf74a80140231ef82",
+      "sha256": "1cd756cc1db3389e3922a5c34afe41af29b91061ce30bff77e945d7b346d629b",
+      "role": "borrowed geometry observation only"
+    }
+  ],
+  "original_sources": [
+    {
+      "path": "georef/geotiff.py",
+      "commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+      "sha256": "34746bc4ffa3ab6fcaaeae9bb6659097ee60b64938ff17856f1a878e62767c00"
+    },
+    {
+      "path": "tests/geotiff_fixture.py",
+      "commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+      "sha256": "b37c0fc25c9247349c5c45ca7b26213c52c0e14cd6e6093f1e8349016ea6a8bf"
+    },
+    {
+      "path": "tests/test_geotiff.py",
+      "commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+      "sha256": "ce1f278bcd315e71ed002552eaf8c870841439e5472ce1d37d36e91256758fe4"
+    },
+    {
+      "path": "views/main_window.py",
+      "commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+      "sha256": "ea02be3e439c80731d0f5b5fde3d92d9b3f62e8ad10cd44ad305c3261b7786fa"
+    },
+    {
+      "path": "core/image_plane.py",
+      "commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+      "sha256": "8bc2f45f4a5898dbabeeb6b5add9fe74a8027780e2b97fc85a3c2e31925215e0"
+    },
+    {
+      "path": "core/history.py",
+      "commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+      "sha256": "2eb66a1d557099b51383988a7819145289fc4ce2c37fc7de3a92ed35b5830559"
+    },
+    {
+      "path": "core/texture.py",
+      "commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+      "sha256": "837c3f00c548df110dec5debfdb3759984d97bb652d6a0050d7e2ceb940407dc"
+    },
+    {
+      "path": "georef/datum.py",
+      "commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+      "sha256": "2fa474d5f3a9ad49317aeb52dafb4eb499f6d1d874117f4885286f9760a281a9"
+    },
+    {
+      "path": "formats/igz.py",
+      "commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+      "sha256": "f318d685830c49c2fede7fd5a238ac7a1469ee0b0226cf48cab3751e194a9576"
+    }
+  ],
+  "capture_sources": [
+    {
+      "path": "scripts/reference-geotiff-import.py",
+      "commit": "ca93fdd08441b83392a8ebbaf74a80140231ef82",
+      "sha256": "7d2d45f974f15bc92b7714e5bcf465f6bca7480d558ac78d4a727c57575b46af",
+      "role": "actual original capture producer"
+    },
+    {
+      "path": "scripts/geotiff-import-contract.json",
+      "commit": "ca93fdd08441b83392a8ebbaf74a80140231ef82",
+      "sha256": "7f310626e8e8b074c7b439c1785bfbe840b7573f4dd3563dc9129026cef8e212",
+      "role": "reviewed finite source contract"
+    }
+  ],
+  "cases": 6,
+  "states": 21,
+  "decoder_recipes": 16,
+  "stored_webp_resources": 4,
+  "source_capture_invocations": 1,
+  "capture_seconds": 0.8660846839775331,
+  "source_defects": [
+    {
+      "case": "decode-failure-datum",
+      "exception": {
+        "type": "zlib.error",
+        "message": "Error -3 while decompressing data: incorrect header check",
+        "traceback": "Traceback (most recent call last):\n  File \"/tmp/ingetrazo-next-integration/scripts/reference-geotiff-import.py\", line 112, in <module>\n    try:win._on_import_orthophoto()\n        ~~~~~~~~~~~~~~~~~~~~~~~~~^^\n  File \"/work/ingetrazo/views/main_window.py\", line 5437, in _on_import_orthophoto\n    rgba, factor = read_rgba(\n                   ~~~~~~~~~^\n        info, max_px=max_px,\n        ^^^^^^^^^^^^^^^^^^^^\n        progress=lambda fr: (cb(fr * 0.9, \"Decoding the orthomosaic\u2026\")\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n                             or True))\n                             ^^^^^^^^^\n  File \"/work/ingetrazo/georef/geotiff.py\", line 417, in read_rgba\n    rows = _decode_band(f, info, band_index)\n  File \"/work/ingetrazo/georef/geotiff.py\", line 482, in _decode_band\n    block = _decode_block(data, info, per_plane)\n  File \"/work/ingetrazo/georef/geotiff.py\", line 499, in _decode_block\n    data = zlib.decompress(data)\nzlib.error: Error -3 while decompressing data: incorrect header check\n"
+      },
+      "kind": "datum-published-before-failed-decode",
+      "datum": {
+        "lat": -15.557633434189505,
+        "lon": -74.9999463738447,
+        "alt": 0.0
+      },
+      "dialogs": []
+    }
+  ],
+  "scope": "Original App handler and decoder observations only; native acceptance pending. Controlled chooser/capability/cache inputs; no GL/GPU/network imagery claim. Decoder-only native budget is independent of original memory and WebP working peak."
+}
