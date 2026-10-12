@@ -23,6 +23,7 @@ use crate::app::IngeTrazoApp;
 #[path="composer_pointer.rs"] mod pointer_transactions;
 #[path="composer_picture_gestures.rs"] mod picture_gestures;
 #[path="composer_picture_authoring.rs"] mod picture_authoring;
+#[path="composer_legend_authoring.rs"] mod legend_authoring;
 
 /// Interactive state for the Sheet Composer view.
 #[derive(Debug, Clone)]
@@ -30,6 +31,7 @@ pub struct ComposerState {
     picture_grab:Option<picture_gestures::Grab>,
     picture_ctrl_toggle:bool,
     picture_authoring:picture_authoring::State,
+    legend_authoring:legend_authoring::State,
     pub pdf_export_error: Option<String>,
     pub text_tool:bool,
     pub(super) tool_switch_rects:[egui::Rect;8],
@@ -60,7 +62,7 @@ pub struct ComposerState {
 impl Default for ComposerState {
     fn default() -> Self {
         Self {
-            picture_grab:None,picture_ctrl_toggle:false,picture_authoring:Default::default(),pdf_export_error: None,text_tool:false,tool_switch_rects:[egui::Rect::NOTHING;8],inline_text:None,text_canvas:Default::default(),outer_border:Default::default(),paper_canvas:Default::default(),field_index_cache:None,field_index_computations:0,field_expansions:Default::default(),
+            picture_grab:None,picture_ctrl_toggle:false,picture_authoring:Default::default(),legend_authoring:Default::default(),pdf_export_error: None,text_tool:false,tool_switch_rects:[egui::Rect::NOTHING;8],inline_text:None,text_canvas:Default::default(),outer_border:Default::default(),paper_canvas:Default::default(),field_index_cache:None,field_index_computations:0,field_expansions:Default::default(),
             paper_text: Default::default(),
             shape_tool:None,shape_start:None,
             pan_offset: Vec2::ZERO,
@@ -103,8 +105,8 @@ impl ComposerState {
    #[cfg(test)]{self.edit_snapshots+=1;}
   }
  }
- pub fn arm_text(&mut self){self.text_tool=true;self.shape_tool=None;self.shape_start=None;}
- pub fn arm_shape(&mut self,kind:&str){self.text_tool=false;self.shape_tool=Some(kind.into());self.shape_start=None;}
+ pub fn arm_text(&mut self){self.legend_authoring.armed=false;self.legend_authoring.pending=None;self.text_tool=true;self.shape_tool=None;self.shape_start=None;}
+ pub fn arm_shape(&mut self,kind:&str){self.legend_authoring.armed=false;self.legend_authoring.pending=None;self.text_tool=false;self.shape_tool=Some(kind.into());self.shape_start=None;}
 }
 impl IngeTrazoApp {
  pub fn place_composer_shape(&mut self,kind:&str,start:glam::DVec2,end:glam::DVec2)->Result<uuid::Uuid,String>{
@@ -118,11 +120,11 @@ impl IngeTrazoApp {
   self.finish_composer_edit();self.begin_composer_edit();
   let id=uuid::Uuid::new_v4();let sheet=&mut self.scene.sheets[index];
   sheet.add_item(SheetItem::Shape(ingetrazo_core::composition::ShapeItem{id,shape}));
-  sheet.selected_item=Some(sheet.items.len()-1);self.finish_composer_edit();self.composer_state.inline_text=None;self.composer_state.shape_tool=None;self.composer_state.shape_start=None;Ok(id)
+  sheet.selected_item=Some(sheet.items.len()-1);self.composer_state.legend_authoring.selected=None;self.finish_composer_edit();self.composer_state.inline_text=None;self.composer_state.shape_tool=None;self.composer_state.shape_start=None;Ok(id)
  }
  pub fn enter_composer_sheet(&mut self,index:usize){
   let Some(id)=self.scene.sheets.get(index).map(|s|s.id)else{return;};
-  if self.composer_state.interaction_sheet!=Some(id){self.finish_composer_edit();self.composer_state.picture_authoring.clear();self.composer_state.shape_start=None;self.composer_state.interaction_sheet=Some(id);}
+  if self.composer_state.interaction_sheet!=Some(id){self.finish_composer_edit();self.composer_state.picture_authoring.clear();self.composer_state.legend_authoring=Default::default();self.composer_state.shape_start=None;self.composer_state.interaction_sheet=Some(id);}
  }
  pub fn begin_composer_edit(&mut self){
   if let Some(sheet)=self.scene.active_sheet_index.and_then(|i|self.scene.sheets.get(i)){
@@ -141,6 +143,7 @@ impl IngeTrazoApp {
   }else if let Some(object)=target.native_document.as_object_mut(){object.remove("border");}
  }
  pub fn finish_composer_edit(&mut self){
+  self.composer_state.legend_authoring.grab=None;
   self.composer_state.picture_grab=None;self.composer_state.picture_ctrl_toggle=false;
   self.composer_state.dragging_item_idx=None;self.composer_state.drag_start_pos=None;self.composer_state.drag_item_orig_pos=None;self.composer_state.drag_item_id=None;self.composer_state.drag_snap_targets=None;
   let Some(mut before)=self.composer_state.edit_before.take()else{return;};
@@ -153,19 +156,21 @@ impl IngeTrazoApp {
   self.scene.bump_version();
  }
 
- pub fn undo_composer_edit(&mut self){self.finish_composer_edit();self.composer_state.picture_authoring.history_boundary();
+ pub fn undo_composer_edit(&mut self){self.finish_composer_edit();self.composer_state.picture_authoring.history_boundary();self.composer_state.legend_authoring.coalesce=None;self.composer_state.legend_authoring.pending=None;self.composer_state.legend_authoring.title_draft=None;
   let Some(index)=self.scene.active_sheet_index.filter(|&i|i<self.scene.sheets.len())else{return;};let id=self.scene.sheets[index].id;
   let Some(history)=self.composer_state.sheet_history.get_mut(&id)else{return;};
-  if let Some(mut before)=history.0.pop(){Self::retain_direct_paper_properties(&mut before,&self.scene.sheets[index]);history.1.push(std::mem::replace(&mut self.scene.sheets[index],before));self.scene.bump_version();}self.revalidate_picture_selection();
+  if let Some(mut before)=history.0.pop(){Self::retain_direct_paper_properties(&mut before,&self.scene.sheets[index]);history.1.push(std::mem::replace(&mut self.scene.sheets[index],before));self.scene.bump_version();}self.revalidate_picture_selection();self.revalidate_legend_selection();
  }
- pub fn redo_composer_edit(&mut self){self.finish_composer_edit();self.composer_state.picture_authoring.history_boundary();
+ pub fn redo_composer_edit(&mut self){self.finish_composer_edit();self.composer_state.picture_authoring.history_boundary();self.composer_state.legend_authoring.coalesce=None;self.composer_state.legend_authoring.pending=None;self.composer_state.legend_authoring.title_draft=None;
   let Some(index)=self.scene.active_sheet_index.filter(|&i|i<self.scene.sheets.len())else{return;};let id=self.scene.sheets[index].id;
   let Some(history)=self.composer_state.sheet_history.get_mut(&id)else{return;};
-  if let Some(mut after)=history.1.pop(){Self::retain_direct_paper_properties(&mut after,&self.scene.sheets[index]);history.0.push(std::mem::replace(&mut self.scene.sheets[index],after));self.scene.bump_version();}self.revalidate_picture_selection();
+  if let Some(mut after)=history.1.pop(){Self::retain_direct_paper_properties(&mut after,&self.scene.sheets[index]);history.0.push(std::mem::replace(&mut self.scene.sheets[index],after));self.scene.bump_version();}self.revalidate_picture_selection();self.revalidate_legend_selection();
  }
  pub fn cancel_composer_edit(&mut self){
+  self.composer_state.legend_authoring.grab=None;
   self.composer_state.picture_grab=None;self.composer_state.picture_ctrl_toggle=false;
   self.composer_state.picture_authoring.history_boundary();
+  self.composer_state.legend_authoring.armed=false;self.composer_state.legend_authoring.pending=None;self.composer_state.legend_authoring.coalesce=None;
   self.composer_state.shape_start=None;self.composer_state.shape_tool=None;
   if let Some(mut before)=self.composer_state.edit_before.take(){
    if let Some(current)=self.scene.sheets.iter_mut().find(|s|s.id==before.id){
@@ -186,13 +191,14 @@ pub fn render_sheet_composer(app: &mut IngeTrazoApp, ui: &mut egui::Ui, sheet_id
         return;
     }
 
-    app.enter_composer_sheet(sheet_idx);
+    app.enter_composer_sheet(sheet_idx);app.revalidate_legend_selection();
     if ui.is_enabled()&&ui.input(|i|i.key_pressed(egui::Key::Escape)){
         // A normal item grab keeps its geometry until the real release.
         // Source Select Escape only drops selection; explicit edit/placement
         // cancellation retains the existing snapshot rollback law.
-        if app.composer_state.dragging_item_idx.is_some()||app.composer_state.picture_grab.is_some(){app.scene.sheets[sheet_idx].selected_item=None;app.composer_state.picture_authoring.selected=None;}
-        else {let select_mode=!app.composer_state.text_tool&&app.composer_state.shape_tool.is_none()&&app.composer_state.inline_text.is_none();app.cancel_composer_edit();if select_mode{app.scene.sheets[sheet_idx].selected_item=None;app.composer_state.picture_authoring.selected=None;}}
+        if app.composer_state.legend_authoring.armed{if app.composer_state.legend_authoring.pending.take().is_none(){app.composer_state.legend_authoring.armed=false;}}
+        else if app.composer_state.dragging_item_idx.is_some()||app.composer_state.picture_grab.is_some()||app.composer_state.legend_authoring.grab.is_some(){app.scene.sheets[sheet_idx].selected_item=None;app.composer_state.picture_authoring.selected=None;app.composer_state.legend_authoring.selected=None;}
+        else {let select_mode=!app.composer_state.text_tool&&app.composer_state.shape_tool.is_none()&&app.composer_state.inline_text.is_none();app.cancel_composer_edit();if select_mode{app.scene.sheets[sheet_idx].selected_item=None;app.composer_state.picture_authoring.selected=None;app.composer_state.legend_authoring.selected=None;}}
     }
 
     let (response_rect, response) = ui.allocate_exact_size(ui.available_size(), egui::Sense::click_and_drag());
@@ -289,10 +295,11 @@ pub fn render_sheet_composer(app: &mut IngeTrazoApp, ui: &mut egui::Ui, sheet_id
     app.native_composer.retain_items(&items);
     if app.composer_state.shape_tool.is_none()||app.composer_state.shape_start.is_none(){app.native_composer.clear_preview();}
     // Render Sheet Items
-    let item_order=app.scene.sheets[sheet_idx].physical_export_items().map(|v|v.into_iter().filter_map(|item|match item{ingetrazo_core::composition::PhysicalExportItem::Typed{index,..}=>Some((false,index)),ingetrazo_core::composition::PhysicalExportItem::Picture{index,..}=>Some((true,index)),_=>None}).collect::<Vec<_>>()).unwrap_or_else(|e|{app.status_message=e;Vec::new()});
+    let item_order=app.scene.sheets[sheet_idx].physical_export_items().map(|v|v.into_iter().filter_map(|item|match item{ingetrazo_core::composition::PhysicalExportItem::Typed{index,..}=>Some((0,index)),ingetrazo_core::composition::PhysicalExportItem::Picture{index,..}=>Some((1,index)),ingetrazo_core::composition::PhysicalExportItem::Legend{index,..}=>Some((2,index))}).collect::<Vec<_>>()).unwrap_or_else(|e|{app.status_message=e;Vec::new()});
     // The same mixed category order owns painting and pointer acquisition.
     for &(picture,idx) in &item_order {
-        if picture {if let Err(e)=picture_authoring::paint(app,&painter,sheet_idx,idx,zoom,paper_rect.min){app.status_message=e;}continue;}
+        if picture==2{if let Err(e)=legend_authoring::paint(app,&painter,sheet_idx,idx,zoom,paper_rect.min){app.status_message=e;}continue;}
+        if picture==1 {if let Err(e)=picture_authoring::paint(app,&painter,sheet_idx,idx,zoom,paper_rect.min){app.status_message=e;}continue;}
         let item=&items[idx];
         let is_selected = selected_item == Some(idx);
 
@@ -430,7 +437,7 @@ pub fn render_sheet_composer(app: &mut IngeTrazoApp, ui: &mut egui::Ui, sheet_id
     let mut export_view_dxf = false;
     let mut export_pdf = false;
     let mut export_image = false;
-    let mut add_picture=false;
+    let mut add_picture=false;let mut add_legend=false;
     let mut export_all_pdf = false;
 
     ui.allocate_new_ui(egui::UiBuilder::new().max_rect(toolbar_rect), |ui| {
@@ -482,6 +489,7 @@ pub fn render_sheet_composer(app: &mut IngeTrazoApp, ui: &mut egui::Ui, sheet_id
                 });
                 if std::env::var_os("INGETRAZO_PDF_UI_OBSERVE").is_some(){ui.ctx().data_mut(|d|d.insert_temp(egui::Id::new("pdf-ui-border-menu"),border_menu.response.rect));}
 
+                let legend_button=ui.button(tr("+ Legend"));add_legend|=legend_button.clicked();legend_authoring::observe(ui,"legend-ui-add",legend_button.rect);
                 let add_picture_button=ui.button(tr("+ Image"));add_picture|=add_picture_button.clicked();
                 if std::env::var_os("INGETRAZO_PDF_UI_OBSERVE").is_some(){ui.ctx().data_mut(|d|d.insert_temp(egui::Id::new("picture-ui-add"),add_picture_button.rect));}
                 // Add Items Menu
@@ -627,8 +635,9 @@ pub fn render_sheet_composer(app: &mut IngeTrazoApp, ui: &mut egui::Ui, sheet_id
         });
     });
 
+    if add_legend{if let Err(e)=app.activate_composer_legend(){app.status_message=e;}}
     if add_picture {let path=crate::dialogs::pick_open_file(&tr("Choose image…"),"Images (*.png *.jpg *.jpeg)");if let Err(e)=app.composer_add_picture(path.as_deref()){app.status_message=e;}}
-    if ui.is_enabled(){picture_authoring::properties(app,ui,sheet_idx);}
+    if ui.is_enabled(){picture_authoring::properties(app,ui,sheet_idx);legend_authoring::properties(app,ui,sheet_idx);if app.composer_legend_selection().is_some()&&!ui.ctx().wants_keyboard_input()&&ui.input(|i|i.key_pressed(egui::Key::Delete)){if let Err(e)=app.delete_composer_legend(){app.status_message=e;}}}
     if export_image {app.begin_sheet_image_export(sheet_idx);}
     if export_pdf || export_all_pdf {
         let title=if export_all_pdf{tr("Export all sheets (PDF)…")}else{tr("Export PDF…")};
@@ -677,6 +686,7 @@ pub fn render_sheet_composer(app: &mut IngeTrazoApp, ui: &mut egui::Ui, sheet_id
         app.scene.bump_version();
     }
 
+    if legend_authoring::placement(app,ui,paper_rect,toolbar_rect,&response,zoom){return;}
     if ui.is_enabled()&&text_authoring::render(app,ui,&painter,sheet_idx,paper_rect,toolbar_rect,&response,zoom){return;}
 
     // Shape placement stays transient until a second click or a completed drag.
@@ -700,7 +710,7 @@ pub fn render_sheet_composer(app: &mut IngeTrazoApp, ui: &mut egui::Ui, sheet_id
     // Original Qt item mouse grab is acquired at the press, before the
     // platform drag threshold. It uses the original press throughout.
     if ui.is_enabled(){pointer_transactions::input(app,ui,sheet_idx,&response,paper_rect,toolbar_rect,zoom,&item_order,space_down);}
-    if ui.is_enabled()&&app.composer_state.dragging_item_idx.is_none()&&app.composer_state.picture_grab.is_none()&&!pointer.any_down()&&!ui.ctx().wants_keyboard_input(){app.finish_composer_edit();}
+    if ui.is_enabled()&&app.composer_state.dragging_item_idx.is_none()&&app.composer_state.picture_grab.is_none()&&app.composer_state.legend_authoring.grab.is_none()&&!pointer.any_down()&&!ui.ctx().wants_keyboard_input(){app.finish_composer_edit();}
 }
 
 fn frame_scene<'a>(scene:&'a Scene,frame:&ViewFrame)->std::borrow::Cow<'a,Scene>{if let Some(name)=frame.view_key.strip_prefix("scene:"){if let Some(view)=scene.saved_views.iter().find(|view|view.name==name){let mut snapshot=scene.clone();let mut camera=scene.camera.clone();view.apply_scene(&mut snapshot,&mut camera);return std::borrow::Cow::Owned(snapshot);}}std::borrow::Cow::Borrowed(scene)}

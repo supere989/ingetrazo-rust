@@ -173,7 +173,11 @@ impl CanvasPainter {
  pub fn paint(&mut self,painter:&egui::Painter,sheet:&Sheet,item:&TextItem,text:&str,model:u64,scene:u64,zoom:f32,origin:Pos2,resources:&mut Painter)->Result<Rect,String>{self.paint_with_factory(painter,sheet,item,text,model,scene,zoom,origin,resources,None)}
  pub fn paint_with_factory(&mut self,painter:&egui::Painter,sheet:&Sheet,item:&TextItem,text:&str,model:u64,scene:u64,zoom:f32,origin:Pos2,resources:&mut Painter,factory:Option<&crate::composer_backend::Factory>)->Result<Rect,String>{
   if !zoom.is_finite()||zoom<=0.||!origin.x.is_finite()||!origin.y.is_finite(){return Err("Invalid canvas text transform".into());}
-  let draws=self.prepare(sheet,item,text,model,scene,resources)?;let count=draws.iter().map(|d|d.text.as_ref().map_or(usize::from(!d.path.is_empty()),|t|t.glyphs.len()+t.decorations.len())).sum::<usize>();if self.frame_ops.checked_add(count).is_none_or(|n|n>262144){return Err("Canvas glyph frame budget exceeded".into());}self.frame_textures.try_reserve(1).map_err(|_|"Canvas glyph lifetime allocation failed")?;
+  let draws=self.prepare(sheet,item,text,model,scene,resources)?;self.paint_prepared(painter,&draws,item,zoom,origin,factory)
+ }
+ pub(super) fn paint_prepared(&mut self,painter:&egui::Painter,draws:&Arc<Vec<Draw>>,item:&TextItem,zoom:f32,origin:Pos2,factory:Option<&crate::composer_backend::Factory>)->Result<Rect,String>{
+  if !zoom.is_finite()||zoom<=0.||!origin.x.is_finite()||!origin.y.is_finite(){return Err("Invalid canvas text transform".into());}
+  let count=draws.iter().map(|d|d.text.as_ref().map_or(usize::from(!d.path.is_empty()),|t|t.glyphs.len()+t.decorations.len())).sum::<usize>();if self.frame_ops.checked_add(count).is_none_or(|n|n>262144){return Err("Canvas glyph frame budget exceeded".into());}self.frame_textures.try_reserve(1).map_err(|_|"Canvas glyph lifetime allocation failed")?;
   let mut bounds=Rect::NOTHING;
   for draw in draws.iter(){if let Some(text)=&draw.text{if text.font.synthetic_bold_offset_px(text.bold)?>0. && !text.font.supports_synthetic_bold_rasterization(){return Err("Canvas synthetic-bold glyph raster remains unsupported".into());}}}
   // Publish one complete cached item only after all source paints/resources validate.

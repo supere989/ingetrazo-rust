@@ -20,6 +20,12 @@ fn locked(sheet: &Sheet, index: usize) -> bool {
 }
 impl Targets {
     pub(super) fn capture_picture(sheet: &Sheet, exclude: usize) -> Result<Self, String> {
+        Self::capture_raw(sheet, "images", exclude)
+    }
+    pub(super) fn capture_legend(sheet: &Sheet, exclude: usize) -> Result<Self, String> {
+        Self::capture_raw(sheet, "leyendas", exclude)
+    }
+    fn capture_raw(sheet: &Sheet, exclude_kind: &str, exclude: usize) -> Result<Self, String> {
         let (w, h) = sheet.dimensions_mm();
         let m = sheet.margin_mm;
         if [w, h, m].iter().any(|v| !v.is_finite())
@@ -125,7 +131,7 @@ impl Targets {
                 return Err("Item snap budget exceeded".into());
             }
             for (index, _) in images.iter().enumerate() {
-                if index != exclude {
+                if exclude_kind != "images" || index != exclude {
                     let r = super::picture_gestures::rect(sheet, index)?;
                     let z = images[index]
                         .get("z")
@@ -147,6 +153,9 @@ impl Targets {
                     return Err("Item snap budget exceeded".into());
                 }
                 for (index, v) in rows.iter().enumerate() {
+                    if key == exclude_kind && index == exclude {
+                        continue;
+                    }
                     let n = |k: &str, default: f64| -> Result<f64, String> {
                         v.get(k).map_or(Ok(default), |v| {
                             v.as_f64()
@@ -272,6 +281,7 @@ impl Targets {
 }
 fn clear(app: &mut IngeTrazoApp) {
     let s = &mut app.composer_state;
+    s.legend_authoring.grab = None;
     s.picture_grab = None;
     s.picture_ctrl_toggle = false;
     s.dragging_item_idx = None;
@@ -327,7 +337,7 @@ pub(super) fn input(
     paper: Rect,
     toolbar: Rect,
     zoom: f32,
-    order: &[(bool, usize)],
+    order: &[(u8, usize)],
     space: bool,
 ) {
     if !ui.is_enabled() || ui.ctx().output(|o| o.num_completed_passes) != 0 {
@@ -383,7 +393,8 @@ pub(super) fn input(
             )
         });
         if (app.composer_state.dragging_item_idx.is_some()
-            || app.composer_state.picture_grab.is_some())
+            || app.composer_state.picture_grab.is_some()
+            || app.composer_state.legend_authoring.grab.is_some())
             && !input.pointer.primary_down()
             && !release
             && !input
@@ -398,6 +409,7 @@ pub(super) fn input(
                 egui::Event::PointerGone => {
                     if app.composer_state.dragging_item_idx.is_some()
                         || app.composer_state.picture_grab.is_some()
+                        || app.composer_state.legend_authoring.grab.is_some()
                     {
                         app.finish_composer_edit();
                     }
@@ -418,7 +430,20 @@ pub(super) fn input(
                     }
                     let sheet = &app.scene.sheets[sheet_idx];
                     let hit = order.iter().rev().copied().find(|&(picture, index)| {
-                        let r = if picture {
+                        let r = if picture == 2 {
+                            if super::legend_authoring::locked(sheet, index) {
+                                return false;
+                            }
+                            let Ok(r) = super::legend_authoring::rect(sheet, index) else {
+                                return false;
+                            };
+                            ingetrazo_core::composition::RectMm::new(
+                                r.x - 0.5,
+                                r.y - 0.5,
+                                r.w + 3.5,
+                                r.h + 3.5,
+                            )
+                        } else if picture == 1 {
                             if super::picture_gestures::locked(sheet, index) {
                                 return false;
                             }
@@ -441,7 +466,17 @@ pub(super) fn input(
                         Rect::from_min_size(a, egui::vec2(r.w as f32 * zoom, r.h as f32 * zoom))
                             .contains(*pos)
                     });
-                    if let Some((true, index)) = hit {
+                    if let Some((2, index)) = hit {
+                        clear(app);
+                        if let Err(e) = super::legend_authoring::acquire(
+                            app, sheet_idx, index, *pos, paper, zoom,
+                        ) {
+                            app.status_message = e;
+                        }
+                        continue;
+                    }
+                    app.composer_state.legend_authoring.selected = None;
+                    if let Some((1, index)) = hit {
                         clear(app);
                         if modifiers.ctrl {
                             let selected = app
@@ -466,7 +501,8 @@ pub(super) fn input(
                     }
                     clear(app);
                     app.composer_state.picture_authoring.selected = None;
-                    if let Some((false, index)) = hit {
+                    app.composer_state.legend_authoring.selected = None;
+                    if let Some((0, index)) = hit {
                         app.scene.sheets[sheet_idx].selected_item = Some(index);
                         let sheet = &app.scene.sheets[sheet_idx];
                         let r = sheet.items[index].rect();
@@ -480,7 +516,14 @@ pub(super) fn input(
                     }
                 }
                 egui::Event::PointerMoved(pos) => {
-                    if app.composer_state.picture_grab.is_some() {
+                    if app.composer_state.legend_authoring.grab.is_some() {
+                        if let Err(e) =
+                            super::legend_authoring::motion(app, sheet_idx, *pos, paper, zoom)
+                        {
+                            app.status_message = e;
+                            app.finish_composer_edit();
+                        }
+                    } else if app.composer_state.picture_grab.is_some() {
                         if let Err(e) =
                             super::picture_gestures::motion(app, sheet_idx, *pos, paper, zoom)
                         {
@@ -497,6 +540,10 @@ pub(super) fn input(
                     pos,
                     ..
                 } => {
+                    if app.composer_state.legend_authoring.grab.is_some() {
+                        app.finish_composer_edit();
+                        continue;
+                    }
                     if app.composer_state.picture_ctrl_toggle {
                         app.composer_state.picture_ctrl_toggle = false;
                         continue;
@@ -514,6 +561,7 @@ pub(super) fn input(
                     {
                         app.scene.sheets[sheet_idx].selected_item = None;
                         app.composer_state.picture_authoring.selected = None;
+                        app.composer_state.legend_authoring.selected = None;
                     }
                     if let Some(index) = app.composer_state.dragging_item_idx {
                         if app.scene.sheets[sheet_idx]
@@ -540,6 +588,7 @@ pub(super) fn input(
                 } => {
                     app.scene.sheets[sheet_idx].selected_item = None;
                     app.composer_state.picture_authoring.selected = None;
+                    app.composer_state.legend_authoring.selected = None;
                 }
                 _ => {}
             }

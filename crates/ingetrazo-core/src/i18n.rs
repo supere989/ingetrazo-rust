@@ -69,6 +69,12 @@ pub fn current_language() -> String {
     }
 }
 
+/// Compare a retained language key without allocating on a warm UI frame.
+pub fn language_is_current(key:&str)->bool {
+    let language=ACTIVE_LANG.read().unwrap();
+    key==if language.is_empty(){"en"}else{language.as_str()}
+}
+
 /// Translate text into currently active language.
 /// If active language is English or string is missing, returns English source text.
 pub fn tr(text: &str) -> String {

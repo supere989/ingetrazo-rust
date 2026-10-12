@@ -180,6 +180,7 @@ impl IngeTrazoApp {
             index.map(|i| (self.scene.sheets[s].id, i));
         if index.is_some() {
             self.scene.sheets[s].selected_item = None;
+            self.composer_state.legend_authoring.selected = None;
         }
         Ok(())
     }
@@ -197,57 +198,7 @@ impl IngeTrazoApp {
         if old.len() >= 100_000 {
             return Err("Picture item limit exceeded".into());
         }
-        let mut max: Option<f64> = None;
-        // all_items includes hidden entities, across all original collections.
-        for (key, array) in sheet
-            .native_document
-            .as_object()
-            .into_iter()
-            .flat_map(|v| v.iter())
-        {
-            if matches!(
-                key.as_str(),
-                "images"
-                    | "perfiles"
-                    | "leyendas"
-                    | "cotas"
-                    | "cotas_ang"
-                    | "cotas_rad"
-                    | "etiquetas"
-                    | "niveles"
-                    | "llamadas"
-            ) {
-                if let Some(rows) = array.as_array() {
-                    for row in rows {
-                        let z = row
-                            .get("z")
-                            .map_or(Ok(0.), |v| v.as_f64().ok_or("Invalid stacking order"))?;
-                        if !z.is_finite() {
-                            return Err("Invalid stacking order".into());
-                        }
-                        max = Some(max.map_or(z, |m| m.max(z)));
-                    }
-                }
-            }
-        }
-        for item in &sheet.items {
-            let z = match item {
-                ingetrazo_core::composition::SheetItem::Shape(v) => v.shape.z,
-                _ => sheet
-                    .native_items
-                    .get(&item.id())
-                    .and_then(|v| v.get("z"))
-                    .map_or(Ok(0.), |v| v.as_f64().ok_or("Invalid stacking order"))?,
-            };
-            if !z.is_finite() {
-                return Err("Invalid stacking order".into());
-            }
-            max = Some(max.map_or(z, |m| m.max(z)));
-        }
-        let z = max.map_or(0., |m| m + 1.);
-        if !z.is_finite() {
-            return Err("Invalid stacking order".into());
-        }
+        let z = next_z(sheet)?;
         value["z"] = serde_json::json!(z);
         let index = old.len();
         let mut candidate = old.to_vec();
@@ -717,4 +668,59 @@ pub(super) fn paint(
         }
     }
     Ok(())
+}
+
+pub(super) fn next_z(sheet: &ingetrazo_core::composition::Sheet) -> Result<f64, String> {
+    let mut max: Option<f64> = None;
+    // all_items includes hidden entities, across all original collections.
+    for (key, array) in sheet
+        .native_document
+        .as_object()
+        .into_iter()
+        .flat_map(|v| v.iter())
+    {
+        if matches!(
+            key.as_str(),
+            "images"
+                | "perfiles"
+                | "leyendas"
+                | "cotas"
+                | "cotas_ang"
+                | "cotas_rad"
+                | "etiquetas"
+                | "niveles"
+                | "llamadas"
+        ) {
+            if let Some(rows) = array.as_array() {
+                for row in rows {
+                    let z = row
+                        .get("z")
+                        .map_or(Ok(0.), |v| v.as_f64().ok_or("Invalid stacking order"))?;
+                    if !z.is_finite() {
+                        return Err("Invalid stacking order".into());
+                    }
+                    max = Some(max.map_or(z, |m| m.max(z)));
+                }
+            }
+        }
+    }
+    for item in &sheet.items {
+        let z = match item {
+            ingetrazo_core::composition::SheetItem::Shape(v) => v.shape.z,
+            _ => sheet
+                .native_items
+                .get(&item.id())
+                .and_then(|v| v.get("z"))
+                .map_or(Ok(0.), |v| v.as_f64().ok_or("Invalid stacking order"))?,
+        };
+        if !z.is_finite() {
+            return Err("Invalid stacking order".into());
+        }
+        max = Some(max.map_or(z, |m| m.max(z)));
+    }
+    let z = max.map_or(0., |m| m + 1.);
+    if !z.is_finite() {
+        return Err("Invalid stacking order".into());
+    }
+    Ok(z)
 }
