@@ -104,6 +104,14 @@ try:
   elif name=='missing-resource-write-error':
    phase('missing',exports/(name+'-export.dae'));p=exports/(name+'-blocked.dae');p.mkdir();phase('write-error',p);assert states[-1]['outcome']=='failed'
   else:phase('export',exports/(name+'-export.dae'))
+  if name=='basename-collision':
+   import xml.etree.ElementTree as ET
+   ns={'c':'http://www.collada.org/2005/11/COLLADASchema'};xml=ET.parse(exports/(name+'-export.dae')).getroot()
+   assert len(xml.findall('c:library_images/c:image',ns))==1
+   groups=xml.findall('c:library_geometries/c:geometry/c:mesh/c:triangles',ns);assert len(groups)==1 and int(groups[0].get('count'))==4
+   assert len(xml.findall('.//c:lambert/c:diffuse/c:texture',ns))==1
+   assert hashlib.sha256((exports/'shared.png').read_bytes()).hexdigest()==hashlib.sha256((assets/'a/shared.png').read_bytes()).hexdigest()
+   assert len({hashlib.sha256((root/row['path']).read_bytes()).hexdigest() for row in post_load_textures})==2
   igz.save_scene(host.viewport.scene,root/case['saved']);active['phase']='teardown';host.hide();keepalive.append(host)
  assert not errors
  report=flush();(root/'original-dae-export.json').write_text(json.dumps(report,indent=2)+'\n');print(json.dumps({'cases':len(cases),'states':len(states),'exports':sum(len(c['exports'])for c in cases)}))
