@@ -253,13 +253,19 @@
     },
     {
       "path": "scripts/reference-image-import-reopens.py",
-      "commit": "ae7e61bf7ef7ea71a9d10a8211ba1afd5207c66d",
-      "sha256": "f47cbd90a89988662236d3d53a5df8725e777fb629cfdaabf4a37fc3c4b20bab"
+      "commit": "759e8302",
+      "sha256": "a2dc84b04745bbe49445e5c0bd42c1cc4af985b50b39abebf89c1e252841a069"
     },
     {
       "path": "docs/audits/image-import/fixture-contract.json",
       "commit": "ae7e61bf7ef7ea71a9d10a8211ba1afd5207c66d",
       "sha256": "ce226f6e41656ab8366224f23576655e8fcb04169ea8fff08c939ba0f79d7566"
+    },
+    {
+      "path": "crates/ingetrazo-gui/examples/image_import_material_observer.rs",
+      "commit": "759e8302",
+      "sha256": "f948292df24338b16372da4e9b817837c96c8d4fad6818a4f786c2d48e9b329f",
+      "role": "native actual material resource identity observer, geometry metadata preserved"
     }
   ],
   "capture_sources": [
@@ -361,6 +367,12 @@
       "path": "formats/igz.py",
       "commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
       "sha256": "f318d685830c49c2fede7fd5a238ac7a1469ee0b0226cf48cab3751e194a9576"
+    },
+    {
+      "path": "resources/components/ingeniero.png",
+      "commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+      "sha256": "be7b463c8b2eec4e7635b2f1efbc1705267ff39ada6a0e4935eebe2e13799e13",
+      "role": "unchanged startup component material resource embedded in captured input IGZ"
     }
   ],
   "cases": 8,
@@ -372,5 +384,14 @@
   "accepted_capture_invocations": 1,
   "accepted_capture_seconds": 1.6164940880262293,
   "source_defects": [],
-  "scope": "Actual unchanged source Image chooser/pointer/VCB/history/save/load; initial setup-only readonly property error retained separately. No native or framebuffer acceptance."
+  "scope": "Actual unchanged source Image chooser/pointer/VCB/history/save/load; initial setup-only readonly property error retained separately. No native or framebuffer acceptance.",
+  "prior_support_sources": [
+    {
+      "path": "scripts/reference-image-import-reopens.py",
+      "commit": "ae7e61bf7ef7ea71a9d10a8211ba1afd5207c66d",
+      "sha256": "f47cbd90a89988662236d3d53a5df8725e777fb629cfdaabf4a37fc3c4b20bab",
+      "retained_path": "docs/audits/image-import/historical/pre-material-reader.py"
+    }
+  ],
+  "supplemental_material_observation": "Current reader produces actual Qt decoded resource identity/payload for pinned startup asset and validates captured inputIGZ embedded bytes; frozen114 raw states and source archive unchanged. Prior reader retained separately."
 }
