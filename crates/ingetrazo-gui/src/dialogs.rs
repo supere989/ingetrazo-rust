@@ -48,6 +48,7 @@ pub fn pick_save_file(title: &str, default_name: &str, filter: &str) -> Option<P
 
 pub fn render_dialogs(app: &mut IngeTrazoApp, ctx: &egui::Context) {
     crate::import_units::render(app, ctx);
+    crate::dae_export::render(app,ctx);
     crate::survey_points::render(app,ctx);
     crate::survey_profile::render(app,ctx);
     app.render_material_editor(ctx);

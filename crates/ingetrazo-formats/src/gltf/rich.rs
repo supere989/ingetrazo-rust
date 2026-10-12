@@ -11,13 +11,13 @@ use std::{
     path::Path,
 };
 
-struct Primitive {
+pub(crate) struct Primitive {
     key: String,
-    info: Value,
-    positions: Vec<[f64; 3]>,
-    normals: Vec<[f64; 3]>,
-    uvs: Vec<[f64; 2]>,
-    indices: Vec<u32>,
+    pub(crate) info: Value,
+    pub(crate) positions: Vec<[f64; 3]>,
+    pub(crate) normals: Vec<[f64; 3]>,
+    pub(crate) uvs: Vec<[f64; 2]>,
+    pub(crate) indices: Vec<u32>,
     vertices: HashMap<[u64; 8], u32>,
 }
 fn truth(v: &Value) -> bool {
@@ -108,7 +108,7 @@ fn vertex_key(position: [f64; 3], normal: [f64; 3], uv: [f64; 2]) -> [u64; 8] {
         bit(uv[1], 6),
     ]
 }
-fn source_texture<'a>(scene: &'a Scene, texture: &Value) -> Option<(String, Cow<'a, [u8]>)> {
+pub(crate) fn source_texture<'a>(scene: &'a Scene, texture: &Value) -> Option<(String, Cow<'a, [u8]>)> {
     let path = texture
         .get("path")
         .and_then(Value::as_str)
@@ -131,6 +131,7 @@ fn add_mesh(
     world: Mat4,
     loose: bool,
     bulk: bool,
+    unindexed: bool,
     prims: &mut Vec<Primitive>,
     lookup: &mut HashMap<String, usize>,
 ) -> Result<(), GltfError> {
@@ -266,12 +267,12 @@ fn add_mesh(
                 let pp = yup(p);
                 let nn = yup(normal);
                 let vertex_key = vertex_key(pp, nn, uv.unwrap_or([0., 0.]));
-                let vertex = if let Some(&i) = prim.vertices.get(&vertex_key) {
+                let vertex = if let Some(&i) = prim.vertices.get(&vertex_key).filter(|_| !unindexed) {
                     i
                 } else {
                     let i = u32::try_from(prim.positions.len())
                         .map_err(|_| GltfError::Invalid("Too many glTF vertices".into()))?;
-                    prim.vertices.insert(vertex_key, i);
+                    if !unindexed { prim.vertices.insert(vertex_key, i); }
                     prim.positions.push(pp);
                     prim.normals.push(nn);
                     if let Some(uv) = uv {
@@ -313,7 +314,7 @@ fn collect(scene: &Scene, camera: Option<&super::figures::View>) -> Result<Colle
             bulk
         };
         if !skip_figures || !g.billboard {
-            add_mesh(scene, &g.mesh, world, false, own_bulk, prims, lookup)?;
+            add_mesh(scene, &g.mesh, world, false, own_bulk, false, prims, lookup)?;
         }
         // Source world_mesh merges descendants regardless child visibility.
         for child in &g.children {
@@ -328,6 +329,7 @@ fn collect(scene: &Scene, camera: Option<&super::figures::View>) -> Result<Colle
         &scene.mesh,
         Mat4::IDENTITY,
         true,
+        false,
         false,
         &mut prims,
         &mut lookup,
@@ -373,6 +375,7 @@ fn collect(scene: &Scene, camera: Option<&super::figures::View>) -> Result<Colle
                         scene,
                         &figure.mesh,
                         Mat4::IDENTITY,
+                        false,
                         false,
                         false,
                         prims,
@@ -824,4 +827,30 @@ pub(super) fn build(
     }
     buffer.align();
     Ok((document, buffer.data))
+}
+
+/// Same source front-paint/Qt placement law, with every triangle corner retained
+/// for DAE's independent six/five/six-decimal shared sources. Y-up output is
+/// converted by the DAE writer; no glTF combined vertex dedup is applied.
+pub(crate) fn collect_for_dae(scene: &Scene) -> Result<Vec<Primitive>, GltfError> {
+    collect_dae_view(scene,&scene.mesh,&scene.groups,&[])
+}
+pub(crate) fn collect_dae_view(scene:&Scene,loose:&Mesh,groups:&[Group],overrides:&[crate::dae::PlacementOverride<'_>])->Result<Vec<Primitive>,GltfError>{
+    fn group(scene:&Scene,g:&Group,parent:Mat4,bulk:bool,out:&mut Vec<Primitive>,lookup:&mut HashMap<String,usize>,overrides:&[crate::dae::PlacementOverride<'_>])->Result<(),GltfError>{
+        let replacement=overrides.iter().find(|o|o.id==g.id);
+        let local=if replacement.is_some(){Mat4::IDENTITY}else{Mat4::from_cols_array(&g.transform.to_cols_array().map(|v|v as f32))};
+        let world=parent*local;let mesh=replacement.map_or(&g.mesh,|o|o.mesh);let children=replacement.map_or(g.children.as_slice(),|o|o.children);
+        add_mesh(scene,mesh,world,false,bulk,true,out,lookup)?;
+        for child in children {group(scene,child,world,bulk,out,lookup,overrides)?;}
+        Ok(())
+    }
+    let mut out=Vec::new();let mut lookup=HashMap::new();
+    add_mesh(scene,loose,Mat4::IDENTITY,true,false,true,&mut out,&mut lookup)?;
+    for g in groups {
+        if !g.hidden && !g.billboard && visible(scene,g.layer.as_deref()) {
+            let replacement=overrides.iter().find(|o|o.id==g.id);let mesh=replacement.map_or(&g.mesh,|o|o.mesh);let children=replacement.map_or(g.children.as_slice(),|o|o.children);
+            group(scene,g,Mat4::IDENTITY,!children.is_empty()||mesh.edges.len()*2+mesh.faces.len()*4>=1024,&mut out,&mut lookup,overrides)?;
+        }
+    }
+    out.retain(|p|!p.indices.is_empty());Ok(out)
 }

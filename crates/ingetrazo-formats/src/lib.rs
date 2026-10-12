@@ -114,12 +114,7 @@ pub fn save_file(scene: &Scene, path: &Path) -> Result<(), FormatError> {
             export_glb(scene, &mut file)?;
             Ok(())
         }
-        "dae" => {
-            let mut file = std::fs::File::create(path)?;
-            let name = path.file_stem().and_then(|s| s.to_str()).unwrap_or("IngeTrazo Model");
-            export_dae(scene, &mut file, name)?;
-            Ok(())
-        }
+        "dae" => { dae::save_dae(scene,path,"IngeTrazo model") }
         "ifc" => {
             let name = path.file_stem().and_then(|s| s.to_str()).unwrap_or("IngeTrazo Project");
             ifc::save_ifc(scene, path, name)?;

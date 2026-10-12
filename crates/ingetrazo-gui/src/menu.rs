@@ -130,8 +130,7 @@ pub fn render_menu_bar(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
                     ui.close_menu();
                 }
                 if ui.button(tr("COLLADA (.dae)…")).clicked() {
-                    app.show_save_dialog = true;
-                    app.dialog_path_input = "model.dae".to_string();
+                    app.choose_dae_export();
                     ui.close_menu();
                 }
                 if ui.button(tr("STL (3D printing)…")).clicked() {

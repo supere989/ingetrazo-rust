@@ -19,7 +19,7 @@ pub enum GltfError {
 }
 
 mod figures;
-mod rich;
+pub(crate) mod rich;
 fn build_document(scene: &Scene) -> Result<(serde_json::Value, Vec<u8>), GltfError> {
     rich::build(scene, None)
 }

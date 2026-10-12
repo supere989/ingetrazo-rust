@@ -15,9 +15,13 @@ fn camera(a: &IngeTrazoApp) -> Value {
     json!({"target":a.camera.target.to_array(),"distance":a.camera.distance,"yaw":a.camera.yaw,"pitch":a.camera.pitch,"projection":if a.camera.perspective{"perspective"}else{"parallel"},"fov":a.camera.fov_deg})
 }
 fn scene(a: &IngeTrazoApp) -> Result<Value, String> {
+    scene_with_missing(a, false)
+}
+pub(crate) fn scene_with_missing(a: &IngeTrazoApp, allow_missing: bool) -> Result<Value, String> {
     fn walk(
         v: &mut Value,
         assets: &std::collections::HashMap<String, Vec<u8>>,
+        allow_missing: bool,
     ) -> Result<(), String> {
         match v {
             Value::Object(object) => {
@@ -25,16 +29,19 @@ fn scene(a: &IngeTrazoApp) -> Result<Value, String> {
                     if let Some(Value::String(path)) = texture.get("path") {
                         // OBJ uses an owned portable path key; resolve its actual
                         // admitted bytes, preserving every UV/style field.
-                        let bytes = assets
-                            .get(path)
-                            .ok_or_else(|| format!("Owned texture path missing: {path}"))?;
-                        let digest = format!("{:x}", Sha256::digest(bytes));
+                        let resource = if let Some(bytes) = assets.get(path) {
+                            json!({"encoded_sha256":format!("{:x}",Sha256::digest(bytes))})
+                        } else if allow_missing {
+                            match std::fs::read(path){Ok(bytes)=>json!({"encoded_sha256":format!("{:x}",Sha256::digest(bytes))}),Err(_)=>json!({"encoded_sha256":null,"missing":true})}
+                        } else {
+                            return Err(format!("Owned texture path missing: {path}"));
+                        };
                         texture.remove("path");
-                        texture.insert("resource".into(), json!({"encoded_sha256":digest}));
+                        texture.insert("resource".into(), resource);
                     }
                 }
                 for value in object.values_mut() {
-                    walk(value, assets)?;
+                    walk(value, assets, allow_missing)?;
                 }
                 if let Some(Value::Array(faces)) = object.get_mut("faces") {
                     faces.sort_by_cached_key(source_json::source_json_key);
@@ -42,7 +49,7 @@ fn scene(a: &IngeTrazoApp) -> Result<Value, String> {
             }
             Value::Array(values) => {
                 for value in values {
-                    walk(value, assets)?;
+                    walk(value, assets, allow_missing)?;
                 }
             }
             _ => {}
@@ -50,7 +57,7 @@ fn scene(a: &IngeTrazoApp) -> Result<Value, String> {
         Ok(())
     }
     let mut value = base::scene(a)?;
-    walk(&mut value, &a.scene.embedded_textures)?;
+    walk(&mut value, &a.scene.embedded_textures, allow_missing)?;
     Ok(value)
 }
 fn record(a: &IngeTrazoApp, name: &str, phase: &str) -> Result<Value, String> {
@@ -260,3 +267,5 @@ fn main() {
         std::process::exit(1)
     }
 }
+
+pub(crate) fn source_groups(a:&IngeTrazoApp)->Vec<ingetrazo_core::groups::Group>{base::source_groups(a)}

@@ -81,6 +81,7 @@ pub struct IngeTrazoApp {
     pub stl_import:crate::stl_import::State,
     pub exchange_import:crate::exchange_import::State,
     pub image_import:crate::image_import::State,
+    pub dae_export_error:Option<String>,
     pub base_map_requested_zoom:u8,
     pub base_map_requested_visible:bool,
     pub show_save_dialog: bool,
@@ -206,6 +207,7 @@ impl IngeTrazoApp {
             geotiff_import:Default::default(),
             stl_import:Default::default(),exchange_import:Default::default(),
             image_import:Default::default(),
+            dae_export_error:None,
             base_map_requested_zoom:16,
             base_map_requested_visible:true,
             show_save_dialog: false,
@@ -1022,7 +1024,7 @@ impl IngeTrazoApp {
     /// Backend-independent application UI and document lifecycle.
     pub fn update_ui(&mut self, ctx: &egui::Context) {
         crate::appearance_preferences::apply(&self.document_session.preferences,ctx);
-        let geotiff_owns_input=self.geotiff_import.owns_input()||self.image_import.owns_input();
+        let geotiff_owns_input=self.geotiff_import.owns_input()||self.image_import.owns_input()||self.dae_export_error.is_some();
         let exchange_owns_input=self.exchange_import.owns_input();self.poll_exchange_import();
         let stl_owns_input=self.stl_import.owns_input();
         self.poll_stl_import();
@@ -1031,7 +1033,7 @@ impl IngeTrazoApp {
         crate::sheet_image::dialog(self,ctx);
         let recent_warning_owns_input = self.document_session.recent_missing.is_some();
         let preferences_owns_input = self.show_preferences_dialog;
-        let import_owns_input=exchange_owns_input||self.exchange_import.owns_input()||stl_owns_input||self.stl_import.owns_input()||geotiff_owns_input||self.geotiff_import.owns_input()||self.image_import.owns_input()||self.document_session.unit_import.is_some()||self.document_session.survey_import.is_some();
+        let import_owns_input=exchange_owns_input||self.exchange_import.owns_input()||stl_owns_input||self.stl_import.owns_input()||geotiff_owns_input||self.geotiff_import.owns_input()||self.image_import.owns_input()||self.dae_export_error.is_some()||self.document_session.unit_import.is_some()||self.document_session.survey_import.is_some();
         self.sync_document_presentation();
         self.begin_document_frame(ctx);
         self.poll_ai_bridge();
