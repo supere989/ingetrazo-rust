@@ -25,11 +25,15 @@ def main():
     target=(source/name).resolve();assert target.is_relative_to(source);target.parent.mkdir(parents=True,exist_ok=True);target.write_bytes(data)
   for row in m['sources']:
    assert sha(repo/row['path'])==row['sha256'],row['path']
-  for row in m['capture_sources']:
-   assert sha(source/row['retained_member'])==row['sha256'],row['retained_member']
   for alias,row in m['identical_file_aliases'].items():
    retained=source/row['retained_member']
    assert retained.stat().st_size==row['size'] and sha(retained)==row['sha256'],alias
+  for row in m['capture_sources']:
+   name=row['retained_member']; alias=m['identical_file_aliases'].get(name)
+   retained=source/(alias['retained_member'] if alias else name)
+   if alias:
+    assert alias['sha256']==row['sha256'] and retained.stat().st_size==alias['size'],name
+   assert sha(retained)==row['sha256'],name
   report=json.loads((source/'original-exchange.json').read_text());assert report['source_pin']==pin
   assert len(report['cases'])==m['accepted_counts']['cases']==13 and len(report['states'])==m['accepted_counts']['states']==61
   assert sum(c['saved'] is not None for c in report['cases'])==m['accepted_counts']['saved_original_igz']==11
