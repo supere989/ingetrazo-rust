@@ -349,6 +349,12 @@ fn records_with_primitive(draws:&[Draw],density:f64,device:[u32;2],line_hint:boo
                     .segments
                     .last()
                     .is_some_and(|s| matches!(s,Segment::Line(p)if *p==path.start));
+                if !dash.is_empty() && cap == 0 && options.is_some_and(|o| o.join == 2)
+                    && path.segments.iter().any(|s| matches!(s, Segment::Cubic { .. }))
+                {
+                    outlines.extend(source_dashed_bevel(path, width, dash, density)?);
+                    continue;
+                }
                 let mut a = DVec2::from_array(path.start);
                 if closed && dash.is_empty() && path.segments.iter().any(|s|matches!(s,Segment::Cubic{..})) {
                     outlines.extend(crate::composer_cad::source_curve_stroke(path,width*0.5)?);continue;
@@ -435,4 +441,113 @@ fn records_with_primitive(draws:&[Draw],density:f64,device:[u32;2],line_hint:boo
         }
     }
     Ok(records)
+}
+
+// Qt6.12 QDashStroker::processCurrentSubpath: QSubpathFlatIterator uses
+// QBezier::toPolygon(0.5 / device scale), then carries position/offset across
+// every flattened edge. Flat caps and bevel joins are the callout's actual pen.
+fn source_dashed_bevel(
+    path: &PathContour,
+    width: f64,
+    dash: &[f64],
+    density: f64,
+) -> Result<Vec<PathContour>, String> {
+    if dash.len() != 2 || dash.iter().any(|d| !d.is_finite() || *d <= 0.) {
+        return Err("Unsupported curved physical dash inventory".into());
+    }
+    let points = ingetrazo_render::qt_gray::flatten_local_path(path, density * 0.5, 100_000)?;
+    let mut runs: Vec<Vec<DVec2>> = Vec::new();
+    let mut run = Vec::new();
+    let (mut idash, mut pos, mut offset, mut start) = (0usize, 0., 0., 0.);
+    let mut steps = 0usize;
+    for edge in points.windows(2) {
+        let a = DVec2::from_array(edge[0]);
+        let b = DVec2::from_array(edge[1]);
+        let length = (b - a).length();
+        let stop = start + length;
+        while pos < stop {
+            steps += 1;
+            if steps > 100_000 {
+                return Err("Physical curved dash budget exceeded".into());
+            }
+            let even = idash & 1 == 0;
+            let dpos = (pos + dash[idash]) - (offset + start);
+            let p = if dpos > length {
+                b
+            } else {
+                a + (b - a) * (dpos / length)
+            };
+            if even {
+                if run.is_empty() {
+                    run.try_reserve(2)
+                        .map_err(|_| "Physical dash allocation refused")?;
+                    run.push(a + (b - a) * ((pos - start) / length));
+                }
+                run.try_reserve(1)
+                    .map_err(|_| "Physical dash allocation refused")?;
+                run.push(p);
+            }
+            if dpos > length {
+                offset = dash[idash] - (dpos - length);
+                pos = stop;
+            } else {
+                pos = dpos + start;
+                if even && !run.is_empty() {
+                    runs.try_reserve(1).map_err(|_| "Physical dash allocation refused")?;
+                    runs.push(std::mem::take(&mut run));
+                }
+                idash = (idash + 1) % 2;
+                offset = 0.;
+            }
+        }
+        start = stop;
+    }
+    if !run.is_empty() {
+        runs.try_reserve(1).map_err(|_| "Physical dash allocation refused")?;
+        runs.push(run);
+    }
+    let mut out = Vec::new();
+    for run in runs {
+        let extra = run.len().checked_mul(2).ok_or("Physical dashed outline count overflow")?;
+        if out.len().checked_add(extra).is_none_or(|n| n > 250_000) {
+            return Err("Physical dashed outline budget exceeded".into());
+        }
+        out.try_reserve(extra).map_err(|_| "Physical dash outline allocation refused")?;
+        for edge in run.windows(2) {
+            if let Some(p) = stroke_line(edge[0], edge[1], width, 0)? {
+                out.push(p);
+            }
+        }
+        // The union of adjacent flat rectangles plus the outer bevel triangle
+        // is the QStroker bevel outline; all contours use one winding fill.
+        for p in run.windows(3) {
+            let a = p[1] - p[0];
+            let b = p[2] - p[1];
+            if a.length() == 0. || b.length() == 0. {
+                continue;
+            }
+            let cross = a.perp_dot(b);
+            if cross == 0. {
+                continue;
+            }
+            let sign = if cross > 0. { 1. } else { -1. };
+            let n = |d: DVec2| DVec2::new(d.y, -d.x) / d.length() * (width * 0.5 * sign);
+            let mut q = [p[1], p[1] + n(a), p[1] + n(b)];
+            if (q[1] - q[0]).perp_dot(q[2] - q[0]) < 0. {
+                q.swap(1, 2);
+            }
+            out.push(PathContour {
+                start: q[0].to_array(),
+                segments: vec![
+                    Segment::Line(q[1].to_array()),
+                    Segment::Line(q[2].to_array()),
+                    Segment::Line(q[0].to_array()),
+                ],
+            });
+        }
+        if out.len() > 250_000 {
+            return Err("Physical dashed outline budget exceeded".into());
+        }
+    }
+    Ok(out)
 }
