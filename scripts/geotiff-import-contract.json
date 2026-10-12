@@ -1,0 +1,40 @@
+{
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "native_cli": "geotiff_import SOURCE NATIVE",
+  "workflow_cases": [
+    "fresh-datum",
+    "existing-rotated-datum",
+    "gui-reduced",
+    "chooser-cancel",
+    "decode-failure-datum",
+    "nested-global-image"
+  ],
+  "decode_count": 16,
+  "observer_schema": {
+    "scene": [
+      "datum",
+      "images",
+      "layers",
+      "geometry",
+      "selection",
+      "units"
+    ],
+    "camera": [
+      "target",
+      "distance",
+      "yaw",
+      "pitch",
+      "projection",
+      "fov"
+    ]
+  },
+  "boundaries": [
+    "Actual MainWindow import with declared chooser/capability/cache fixtures",
+    "GUI max_texture_size controlled1024 in gui-reduced; clamp1024..8192",
+    "Original failure publishes datum before decode; native atomic refusal separate correction",
+    "Default original WEBP92 stored bytes separate from raw TIFF RGBA",
+    "Actual progress dialog disables Cancel; decoder API cancellation separate",
+    "Decoder memory admission separate from WebP picture/output/work; aggregate codec peak open",
+    "No GPU/render/network dataset claim"
+  ]
+}
