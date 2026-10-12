@@ -1,0 +1,861 @@
+{
+  "canonical_archive_sha256": "1a881256754e09f54646b68c92e28d89a3440e7edc1160c8ad69b51ca44924a2",
+  "canonical_members": 133,
+  "method": "Every raw/log/JSON duplicate compared byte-for-byte to canonical member; downloaded platform ZIPs decoded and every member compared before removal. Copied canonical ZIP/manifest digests verified. No active consumer, binary, target, source, worktree, config or unique failure removed.",
+  "files": [
+    {
+      "path": "/tmp/087-retained/087-arm.log",
+      "bytes": 47284,
+      "sha256": "f05304544f74163766c964567ac08c5328c2bf7bcd1a889fe65df315ea7e9592"
+    },
+    {
+      "path": "/tmp/087-retained/087-intel.log",
+      "bytes": 47966,
+      "sha256": "100f00c412a14c6b7c089a1d4090ba22e1016041e6542e80eecd62aa1854c4ce"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/arm/paper-font-native-ci/tests.log",
+      "bytes": 32163,
+      "sha256": "7b034b6230773209160c5636148c7c5a638c02a7a3b7a2548d69a2fde8e6a9bd"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/cross-arm/check.log",
+      "bytes": 23858,
+      "sha256": "09928bbe4f8c4b8aaea8ef26f9a104d081c074dcad158348923c4e9cd1f7433a"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/cross-arm/gui-examples.log",
+      "bytes": 75575,
+      "sha256": "d2b779568b3d3be34694ef0db1d031ea417aaac22bab78e41771de2a914c2753"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/cross-intel/check.log",
+      "bytes": 23859,
+      "sha256": "ebe28002ff78f25781beb60ed592b1cca24738bd76e3977e867c4b57a4bec894"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/cross-intel/gui-examples.log",
+      "bytes": 75575,
+      "sha256": "949739c4c5f4d3cc9d5681e7e7c373d5c3b17dce0b21115dbac957e66296145b"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/intel/paper-font-native-ci/tests.log",
+      "bytes": 32163,
+      "sha256": "82f30b812124930b2a02446367800344f7e0245c5366dce56ca8be4d2e7f04f3"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/metal-compute-consumer-macos-15/binary.sha256",
+      "bytes": 115,
+      "sha256": "3c4919b377ca36fb8e6269c7a9971360f25407f086331f4922984dde396c04a3"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/metal-compute-consumer-macos-15/build.log",
+      "bytes": 23774,
+      "sha256": "cca3320c6c9aa97dcf6a4c64a10bf7d3be3c8fa5cace531ec8ea254aed2c06a0"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/metal-compute-consumer-macos-15/execution.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/metal-compute-consumer-macos-15/frameworks.txt",
+      "bytes": 2190,
+      "sha256": "e11d32567317ccf27595f8294716b7cdf208b9c1bd8cbb9c86055fb26f64447c"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/metal-compute-consumer-macos-15/native/alpha-0.rgba",
+      "bytes": 16384,
+      "sha256": "081d832e8a3c7d824a89ffb5399e32db6cb4571141a4a65a8ab5da5ab769a42a"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/metal-compute-consumer-macos-15/native/alpha-1.rgba",
+      "bytes": 16384,
+      "sha256": "5122a685f9e60f40ff357f4965567fe4a06cfe9c88db5d1d5ec9751def3ca562"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/metal-compute-consumer-macos-15/native/alpha-127.rgba",
+      "bytes": 16384,
+      "sha256": "38fc8224c9332f838a4ef6e4fdc3a83902b5f71b5fc06706bb9c91a830567355"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/metal-compute-consumer-macos-15/native/alpha-128.rgba",
+      "bytes": 16384,
+      "sha256": "38fc8224c9332f838a4ef6e4fdc3a83902b5f71b5fc06706bb9c91a830567355"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/metal-compute-consumer-macos-15/native/alpha-254.rgba",
+      "bytes": 16384,
+      "sha256": "3d91e047b39b8a33002c66d7f0b407810d323d4f2b6493b5f8a4565ac95bd61c"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/metal-compute-consumer-macos-15/native/alpha-255.rgba",
+      "bytes": 16384,
+      "sha256": "2ef505cf0184482d8c20d94839098d4e23ce8d8ec0d3053d7c18f31ba1e504cf"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/metal-compute-consumer-macos-15/native/missing-final-ui.rgba",
+      "bytes": 16384,
+      "sha256": "d6b12b0e578095d128855ed2a01ed2a29583cd0a7f6be4078f942446de174657"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/metal-compute-consumer-macos-15/native/mixed-ui-cad.rgba",
+      "bytes": 16384,
+      "sha256": "baf63a069d505d7ebf3261c540e94d808969599559ca34e00f432ca1b910cb4c"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/metal-compute-consumer-macos-15/native/result.json",
+      "bytes": 491,
+      "sha256": "eb1b09f5bf4d649db7629c8afe5890a6394d64f9b31709759b07d236f8bbc557"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/metal-compute-consumer-macos-15/native/reversed-order.rgba",
+      "bytes": 16384,
+      "sha256": "419ab6f16e78245a4371cb552643fb96192c85d4aa9e3ecf9388a3a47df80ba1"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/metal-compute-consumer-macos-15/qt-alpha.log",
+      "bytes": 36,
+      "sha256": "d36157ef904350c50d628f39820fdb62464efea195f0e69cce4848e71d440f93"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/metal-compute-consumer-macos-15/qt-mixed.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/metal-compute-consumer-macos-15/reference/alpha/alpha-0.png",
+      "bytes": 203,
+      "sha256": "fd753eac314b3860f9aa9b3fd60674035f7c2bcc54052df43bb4fe18dd1b6cef"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/metal-compute-consumer-macos-15/reference/alpha/alpha-0.rgba",
+      "bytes": 16384,
+      "sha256": "081d832e8a3c7d824a89ffb5399e32db6cb4571141a4a65a8ab5da5ab769a42a"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/metal-compute-consumer-macos-15/reference/alpha/alpha-1.png",
+      "bytes": 227,
+      "sha256": "8772229c487f5626f53c768437aa589368c6d327b417b6d8549d8fbcbeb22ead"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/metal-compute-consumer-macos-15/reference/alpha/alpha-1.rgba",
+      "bytes": 16384,
+      "sha256": "5122a685f9e60f40ff357f4965567fe4a06cfe9c88db5d1d5ec9751def3ca562"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/metal-compute-consumer-macos-15/reference/alpha/alpha-127.png",
+      "bytes": 237,
+      "sha256": "c45521942a8a112a9a575012ae3911001dae0c6e36ef16d3a83cf90d6380681f"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/metal-compute-consumer-macos-15/reference/alpha/alpha-127.rgba",
+      "bytes": 16384,
+      "sha256": "38fc8224c9332f838a4ef6e4fdc3a83902b5f71b5fc06706bb9c91a830567355"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/metal-compute-consumer-macos-15/reference/alpha/alpha-128.png",
+      "bytes": 237,
+      "sha256": "c45521942a8a112a9a575012ae3911001dae0c6e36ef16d3a83cf90d6380681f"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/metal-compute-consumer-macos-15/reference/alpha/alpha-128.rgba",
+      "bytes": 16384,
+      "sha256": "38fc8224c9332f838a4ef6e4fdc3a83902b5f71b5fc06706bb9c91a830567355"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/metal-compute-consumer-macos-15/reference/alpha/alpha-254.png",
+      "bytes": 239,
+      "sha256": "7249408c6b04ca9beb4ebc45b5fbce3d5373fd02b5ce6afa06d0e2c7467fb4dc"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/metal-compute-consumer-macos-15/reference/alpha/alpha-254.rgba",
+      "bytes": 16384,
+      "sha256": "3d91e047b39b8a33002c66d7f0b407810d323d4f2b6493b5f8a4565ac95bd61c"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/metal-compute-consumer-macos-15/reference/alpha/alpha-255.png",
+      "bytes": 239,
+      "sha256": "f797a8178f78ce5590346fa2d6f3b8a51ea4070b0d3c37acdb675fdf2d35cb96"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/metal-compute-consumer-macos-15/reference/alpha/alpha-255.rgba",
+      "bytes": 16384,
+      "sha256": "2ef505cf0184482d8c20d94839098d4e23ce8d8ec0d3053d7c18f31ba1e504cf"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/metal-compute-consumer-macos-15/reference/alpha/reference.json",
+      "bytes": 1033,
+      "sha256": "af9f9702e0cefb65f975ed82e8764759889e2d05ee22b6567d7afa095d7e00bb"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/metal-compute-consumer-macos-15/reference/mixed/mixed-ui-cad.rgba",
+      "bytes": 16384,
+      "sha256": "baf63a069d505d7ebf3261c540e94d808969599559ca34e00f432ca1b910cb4c"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/metal-compute-consumer-macos-15/reference/mixed/source.json",
+      "bytes": 315,
+      "sha256": "3a947a54fe870ba639678ebb114b3d2a6b495b701bae0cd9b408930cfafda552"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/metal-compute-consumer-macos-15/revision.txt",
+      "bytes": 41,
+      "sha256": "41baaab91aaa35f7f9b2ce20d0f27901be811e9cd355893892321ba76cdb7210"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/metal-compute-consumer-macos-15/strict-check.json",
+      "bytes": 970,
+      "sha256": "9f91f859edb83aec66c0a5c39e4f4e6884bd7282080f3455bc8fac1e9ee0f1e6"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/metal-compute-consumer-macos-15/toolchain.txt",
+      "bytes": 192,
+      "sha256": "352d6857968e80a6357a926ac685b9b07f77c479aaafde33e73a53945e802909"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/metal-compute-consumer-macos-15-intel/binary.sha256",
+      "bytes": 115,
+      "sha256": "8df885e310f045f9f54813097916ce32b08b7b00ee1a3750672e5cb108c75cd1"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/metal-compute-consumer-macos-15-intel/build.log",
+      "bytes": 23774,
+      "sha256": "d72a4aa65d33713ad5c3bc983e421d5a55821355573e27a35ada497eb0b4784f"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/metal-compute-consumer-macos-15-intel/execution.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/metal-compute-consumer-macos-15-intel/frameworks.txt",
+      "bytes": 2065,
+      "sha256": "d422e338a8c69a2fd5b10c652e31e8aea3d99ad02e634b03bc56af7e2d4c1083"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/metal-compute-consumer-macos-15-intel/native/alpha-0.rgba",
+      "bytes": 16384,
+      "sha256": "081d832e8a3c7d824a89ffb5399e32db6cb4571141a4a65a8ab5da5ab769a42a"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/metal-compute-consumer-macos-15-intel/native/alpha-1.rgba",
+      "bytes": 16384,
+      "sha256": "5122a685f9e60f40ff357f4965567fe4a06cfe9c88db5d1d5ec9751def3ca562"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/metal-compute-consumer-macos-15-intel/native/alpha-127.rgba",
+      "bytes": 16384,
+      "sha256": "38fc8224c9332f838a4ef6e4fdc3a83902b5f71b5fc06706bb9c91a830567355"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/metal-compute-consumer-macos-15-intel/native/alpha-128.rgba",
+      "bytes": 16384,
+      "sha256": "38fc8224c9332f838a4ef6e4fdc3a83902b5f71b5fc06706bb9c91a830567355"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/metal-compute-consumer-macos-15-intel/native/alpha-254.rgba",
+      "bytes": 16384,
+      "sha256": "3d91e047b39b8a33002c66d7f0b407810d323d4f2b6493b5f8a4565ac95bd61c"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/metal-compute-consumer-macos-15-intel/native/alpha-255.rgba",
+      "bytes": 16384,
+      "sha256": "2ef505cf0184482d8c20d94839098d4e23ce8d8ec0d3053d7c18f31ba1e504cf"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/metal-compute-consumer-macos-15-intel/native/missing-final-ui.rgba",
+      "bytes": 16384,
+      "sha256": "d6b12b0e578095d128855ed2a01ed2a29583cd0a7f6be4078f942446de174657"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/metal-compute-consumer-macos-15-intel/native/mixed-ui-cad.rgba",
+      "bytes": 16384,
+      "sha256": "baf63a069d505d7ebf3261c540e94d808969599559ca34e00f432ca1b910cb4c"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/metal-compute-consumer-macos-15-intel/native/result.json",
+      "bytes": 491,
+      "sha256": "6ef0778f30abc492572f6463044dcad3471a213b9687d6ffa4d36684151766f7"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/metal-compute-consumer-macos-15-intel/native/reversed-order.rgba",
+      "bytes": 16384,
+      "sha256": "419ab6f16e78245a4371cb552643fb96192c85d4aa9e3ecf9388a3a47df80ba1"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/metal-compute-consumer-macos-15-intel/qt-alpha.log",
+      "bytes": 36,
+      "sha256": "d36157ef904350c50d628f39820fdb62464efea195f0e69cce4848e71d440f93"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/metal-compute-consumer-macos-15-intel/qt-mixed.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/metal-compute-consumer-macos-15-intel/reference/alpha/alpha-0.png",
+      "bytes": 203,
+      "sha256": "fd753eac314b3860f9aa9b3fd60674035f7c2bcc54052df43bb4fe18dd1b6cef"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/metal-compute-consumer-macos-15-intel/reference/alpha/alpha-0.rgba",
+      "bytes": 16384,
+      "sha256": "081d832e8a3c7d824a89ffb5399e32db6cb4571141a4a65a8ab5da5ab769a42a"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/metal-compute-consumer-macos-15-intel/reference/alpha/alpha-1.png",
+      "bytes": 227,
+      "sha256": "8772229c487f5626f53c768437aa589368c6d327b417b6d8549d8fbcbeb22ead"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/metal-compute-consumer-macos-15-intel/reference/alpha/alpha-1.rgba",
+      "bytes": 16384,
+      "sha256": "5122a685f9e60f40ff357f4965567fe4a06cfe9c88db5d1d5ec9751def3ca562"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/metal-compute-consumer-macos-15-intel/reference/alpha/alpha-127.png",
+      "bytes": 237,
+      "sha256": "c45521942a8a112a9a575012ae3911001dae0c6e36ef16d3a83cf90d6380681f"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/metal-compute-consumer-macos-15-intel/reference/alpha/alpha-127.rgba",
+      "bytes": 16384,
+      "sha256": "38fc8224c9332f838a4ef6e4fdc3a83902b5f71b5fc06706bb9c91a830567355"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/metal-compute-consumer-macos-15-intel/reference/alpha/alpha-128.png",
+      "bytes": 237,
+      "sha256": "c45521942a8a112a9a575012ae3911001dae0c6e36ef16d3a83cf90d6380681f"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/metal-compute-consumer-macos-15-intel/reference/alpha/alpha-128.rgba",
+      "bytes": 16384,
+      "sha256": "38fc8224c9332f838a4ef6e4fdc3a83902b5f71b5fc06706bb9c91a830567355"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/metal-compute-consumer-macos-15-intel/reference/alpha/alpha-254.png",
+      "bytes": 239,
+      "sha256": "7249408c6b04ca9beb4ebc45b5fbce3d5373fd02b5ce6afa06d0e2c7467fb4dc"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/metal-compute-consumer-macos-15-intel/reference/alpha/alpha-254.rgba",
+      "bytes": 16384,
+      "sha256": "3d91e047b39b8a33002c66d7f0b407810d323d4f2b6493b5f8a4565ac95bd61c"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/metal-compute-consumer-macos-15-intel/reference/alpha/alpha-255.png",
+      "bytes": 239,
+      "sha256": "f797a8178f78ce5590346fa2d6f3b8a51ea4070b0d3c37acdb675fdf2d35cb96"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/metal-compute-consumer-macos-15-intel/reference/alpha/alpha-255.rgba",
+      "bytes": 16384,
+      "sha256": "2ef505cf0184482d8c20d94839098d4e23ce8d8ec0d3053d7c18f31ba1e504cf"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/metal-compute-consumer-macos-15-intel/reference/alpha/reference.json",
+      "bytes": 1033,
+      "sha256": "af9f9702e0cefb65f975ed82e8764759889e2d05ee22b6567d7afa095d7e00bb"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/metal-compute-consumer-macos-15-intel/reference/mixed/mixed-ui-cad.rgba",
+      "bytes": 16384,
+      "sha256": "baf63a069d505d7ebf3261c540e94d808969599559ca34e00f432ca1b910cb4c"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/metal-compute-consumer-macos-15-intel/reference/mixed/source.json",
+      "bytes": 315,
+      "sha256": "3a947a54fe870ba639678ebb114b3d2a6b495b701bae0cd9b408930cfafda552"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/metal-compute-consumer-macos-15-intel/revision.txt",
+      "bytes": 41,
+      "sha256": "41baaab91aaa35f7f9b2ce20d0f27901be811e9cd355893892321ba76cdb7210"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/metal-compute-consumer-macos-15-intel/strict-check.json",
+      "bytes": 970,
+      "sha256": "9f91f859edb83aec66c0a5c39e4f4e6884bd7282080f3455bc8fac1e9ee0f1e6"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/metal-compute-consumer-macos-15-intel/toolchain.txt",
+      "bytes": 191,
+      "sha256": "b1184c1aecf3182548f3bbdd91e5043e464821b1dcbf6d5ca8246339bd0be84a"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/windows/build.log",
+      "bytes": 56279,
+      "sha256": "9fccb4be588914c64289a301aee1935b7adcc1a761510b9788daaca070b3fdaf"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/windows/recovery-check.json",
+      "bytes": 126,
+      "sha256": "124dfaa42372337d6ed6a1188ec77110200f086ec330947cd01a5d8768e0fe61"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/windows/recovery-check.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/windows/recovery-run.log",
+      "bytes": 61,
+      "sha256": "5150e5544f715f442282efaf055233c151f021d8f5f3a27fe8f3b6a7f083aa56"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/windows/self-check.log",
+      "bytes": 560,
+      "sha256": "05ac283238e28a6b08ea80aba920cea2376f07f19136b59e7624b4dab1231cee"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/windows/session-recovery/init-0.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/windows/session-recovery/init-0.stdout",
+      "bytes": 22,
+      "sha256": "a646a1e7a7b006c7e41f2ac46694b5c387dd4fbdfe1c3a673431e5a498f8a6f5"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/windows/session-recovery/original-after.igz",
+      "bytes": 2595,
+      "sha256": "ddc519bdcc8b3a40d3c18e15ae638eb147cf254e17d2a22f609787d8100d74dd"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/windows/session-recovery/original-before.igz",
+      "bytes": 2595,
+      "sha256": "ddc519bdcc8b3a40d3c18e15ae638eb147cf254e17d2a22f609787d8100d74dd"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/windows/session-recovery/recover-6.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/windows/session-recovery/recover-6.stdout",
+      "bytes": 1076,
+      "sha256": "d1a69f37425478048138dd4b07c6af7dfe43c219d80770890fd348fbfe6140a4"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/windows/session-recovery/recovered.igz",
+      "bytes": 2595,
+      "sha256": "8de878386b45967031237efcc6611f43a2c3c1a2281390dab67aac22c526e87b"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/windows/session-recovery/result.json",
+      "bytes": 3468,
+      "sha256": "4f98138b0c74890ae7917f7b3e76d88ded6661cdba62e330647b3f0c2e1493c1"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/windows/session-recovery/scan-0.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/windows/session-recovery/scan-0.stdout",
+      "bytes": 71,
+      "sha256": "5e8cf610fc17c4e1a04aa97363186ec948da37be36a5d9dc3dcff7b6360c4304"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/windows/session-recovery/scan-1.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/windows/session-recovery/scan-1.stdout",
+      "bytes": 71,
+      "sha256": "6e38e3244200137b3434d169894e25ca52beb01d0564d7fd39fe9d1d9f9fc56a"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/windows/session-recovery/scan-2.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/windows/session-recovery/scan-2.stdout",
+      "bytes": 71,
+      "sha256": "07acfa5663493ecd568f3cb7a951f7942617c4c97d9ff6e8fdcce7bc52a29b6a"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/windows/session-recovery/scan-3.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/windows/session-recovery/scan-3.stdout",
+      "bytes": 70,
+      "sha256": "e29c3eafbbb485c9b26595461bdfe29efc8670aa2cb6b2fdf5c2c616905257f3"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/windows/session-recovery/scan-4.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/windows/session-recovery/scan-4.stdout",
+      "bytes": 70,
+      "sha256": "b9166998568df74254a1e3c8b9ff785b5b5a05f44572fe6c3c20ec6408c80924"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/windows/session-recovery/scan-5.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/windows/session-recovery/scan-5.stdout",
+      "bytes": 214,
+      "sha256": "473c4c259c58f97a978aba5d2512eeb6576eee50d5d1cdbfc423b3cce3d1951b"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/windows/session-recovery/state/config/settings.json",
+      "bytes": 739,
+      "sha256": "cc7d4aea02ff626e31a7d4bfefab5c1c70e333d84771b6cc7856332efc2f867e"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/windows/session-recovery/state/data/autosave/discarded/retired-1791762678306-bdff9319-8e91-43a9-81f9-4f7a59d0de56.igz",
+      "bytes": 2595,
+      "sha256": "8de878386b45967031237efcc6611f43a2c3c1a2281390dab67aac22c526e87b"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/windows/session-recovery/state/data/autosave/discarded/retired-1791762678306-bdff9319-8e91-43a9-81f9-4f7a59d0de56.json",
+      "bytes": 423,
+      "sha256": "386b912bf4529b15d8a981d2b558dffbd6d96fef7602b37714ab42642b389e33"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/windows/session-recovery/state/original.igz",
+      "bytes": 2595,
+      "sha256": "ddc519bdcc8b3a40d3c18e15ae638eb147cf254e17d2a22f609787d8100d74dd"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/windows/session-recovery/state/recovered.igz",
+      "bytes": 2595,
+      "sha256": "8de878386b45967031237efcc6611f43a2c3c1a2281390dab67aac22c526e87b"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/windows/session-recovery/writer.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts/windows/version.log",
+      "bytes": 32,
+      "sha256": "1b2dd62f50384c39fd4e0df9b1067fa5bb89930b5b7e037c3cf2e30949765df9"
+    },
+    {
+      "path": "/tmp/087-retained/artifacts.json",
+      "bytes": 4387,
+      "sha256": "02298b2638bd05fbc2a0d8259459b570701e9afb83238e9f1e9d7a48215b9322"
+    },
+    {
+      "path": "/tmp/087-retained/full-jobs.json",
+      "bytes": 41613,
+      "sha256": "8000ddbdddc624ffe3077eb15176cb3de0ba872481fea14f6cfad26679bac3f7"
+    },
+    {
+      "path": "/tmp/087-retained/manifest.json",
+      "bytes": 25605,
+      "sha256": "db218ee1252fdefefe29cd78153d1e926f215be6d16b96e1c8c7232e622b1bfe"
+    },
+    {
+      "path": "/tmp/087-retained/observation.json",
+      "bytes": 16406,
+      "sha256": "f26227d4367e31aabc0134e05f198c38a544fa5b2468ad6b09882902c93c1be5"
+    },
+    {
+      "path": "/tmp/087-retained/ordered-artifacts.json",
+      "bytes": 1489,
+      "sha256": "a9d25f511afd094496eebbc4cde725295fcf6ddaab993ca62a448a908fcac387"
+    },
+    {
+      "path": "/tmp/087-retained/ordered-jobs.json",
+      "bytes": 6924,
+      "sha256": "b7e879d62fafa183e1f6f34536e40231d58f1f231f379af35b2f9913c79373ae"
+    },
+    {
+      "path": "/tmp/087-retained/records.zip",
+      "bytes": 383544,
+      "sha256": "1a881256754e09f54646b68c92e28d89a3440e7edc1160c8ad69b51ca44924a2"
+    },
+    {
+      "path": "/tmp/087-retained/selected-linux/document-axes-ci/result.json",
+      "bytes": 145827,
+      "sha256": "0e3bf483b04a3d32497219e2de0170f9138154bfa4a343b5a6328f44301ced3b"
+    },
+    {
+      "path": "/tmp/087-retained/selected-linux/document-axes-ci/stages.json",
+      "bytes": 27175,
+      "sha256": "8c374c7d15f34fe97ea946cd11bace8a102f5b85ecd03ffbd6648df3aa6e6514"
+    },
+    {
+      "path": "/tmp/087-retained/selected-linux/drawing-reference-render/runtime.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/tmp/087-retained/selected-linux/drawing-reference-render/state.json",
+      "bytes": 1069,
+      "sha256": "edcfb4db2d1f9805970f04abbb426ac37c8df6d0cd768486bd1925ef272ae93a"
+    },
+    {
+      "path": "/tmp/087-retained/selected-linux/grid-default-ci/fresh-gate.json",
+      "bytes": 1486,
+      "sha256": "fe323a1ce985dfdde5eec0a03a4cfe9d5c13910739d48272b6da1a31d4b361e9"
+    },
+    {
+      "path": "/tmp/087-retained/selected-linux/grid-default-ci/source-generation.json",
+      "bytes": 89765,
+      "sha256": "53410fa1ae983387b4b6bfeb7276bce5ce97164478a465b09b302b8caee5ef80"
+    },
+    {
+      "path": "/tmp/087-retained/selected-linux/grid-heldout-ci/fresh-gate.json",
+      "bytes": 1487,
+      "sha256": "1cb31b2fa19a66b1e96a07a89b89a9916c0e01f0f42a8a61b9bac8d8fa788c3a"
+    },
+    {
+      "path": "/tmp/087-retained/selected-linux/grid-heldout-ci/source-generation.json",
+      "bytes": 89773,
+      "sha256": "cedb2fba954c1e9d353ef0fff310c5665e66fa5ca33d24ca95116cbff56c4a9b"
+    },
+    {
+      "path": "/tmp/087-retained/selected-linux/range-receipt.json",
+      "bytes": 10010,
+      "sha256": "677406a0a63c3566c1dbf8977dd1d440bcf157a0f86bb7207ecf92cf8197eedb"
+    },
+    {
+      "path": "/tmp/087-retained/selected-linux/saved-vector-view-ci/fresh-gate.json",
+      "bytes": 1482,
+      "sha256": "f1bed8148ba4f7ed6a766949f8c8630dafa278b49d5d108cd4175d1520c69591"
+    },
+    {
+      "path": "/tmp/087-retained/selected-linux/saved-vector-view-ci/source-generation.json",
+      "bytes": 89768,
+      "sha256": "80912d16ce92a194424c2cb8146c8b1791efa2b160517483d4a8015bfbb7bd4c"
+    },
+    {
+      "path": "/tmp/087-retained/selected-linux/section-heldout-hatch-ci/fresh-gate.json",
+      "bytes": 1482,
+      "sha256": "fbf0a756aa27f52321520e2f56d09fb675d6fc565beb3c856ef08aa2b3060094"
+    },
+    {
+      "path": "/tmp/087-retained/selected-linux/section-heldout-hatch-ci/source-generation.json",
+      "bytes": 89771,
+      "sha256": "f01a5bf5a1117963dc404fca4c2314e2ea328805149ab3f1603c3634e3a14227"
+    },
+    {
+      "path": "/tmp/087-retained/selected-linux/section-solid-ci/fresh-gate.json",
+      "bytes": 1484,
+      "sha256": "5dc82af176a5f368cebdc8a43d269c71fc9b33ba42a1df7f5d39397c429daf39"
+    },
+    {
+      "path": "/tmp/087-retained/selected-linux/section-solid-ci/source-generation.json",
+      "bytes": 89767,
+      "sha256": "a3b469d6e0ab26e312f79ebb4d50ec42d3fd5831648b97e3da41cb0696263e39"
+    },
+    {
+      "path": "/tmp/087-retained/selected-linux/shift-inference-render/runtime.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/tmp/087-retained/selected-linux/shift-inference-render/state.json",
+      "bytes": 226,
+      "sha256": "9785347fab8e33d5a04c3c5e8188ac00319ff9129fa8b63bff3e1f2c0828ab2f"
+    },
+    {
+      "path": "/tmp/087-retained/selected-linux/vector-view-ci/fresh-gate.json",
+      "bytes": 1483,
+      "sha256": "65d3b5ef3bee6fdb667bf87c2853e39654cc0013a9ad3a24b9320f5457057df5"
+    },
+    {
+      "path": "/tmp/087-retained/selected-linux/vector-view-ci/source-generation.json",
+      "bytes": 89766,
+      "sha256": "f86265808552ae73b96f94cfc438ffaed77c856fd3b03bd5e20eb7e0f09fa1ec"
+    },
+    {
+      "path": "/tmp/087-retained/step-timings.json",
+      "bytes": 58436,
+      "sha256": "6e3ed3462d67f20538788b979fbfc174acf81ddf7fb68b8456461138881b26af"
+    },
+    {
+      "path": "/tmp/087-selected-linux/document-axes-ci/result.json",
+      "bytes": 145827,
+      "sha256": "0e3bf483b04a3d32497219e2de0170f9138154bfa4a343b5a6328f44301ced3b"
+    },
+    {
+      "path": "/tmp/087-selected-linux/document-axes-ci/stages.json",
+      "bytes": 27175,
+      "sha256": "8c374c7d15f34fe97ea946cd11bace8a102f5b85ecd03ffbd6648df3aa6e6514"
+    },
+    {
+      "path": "/tmp/087-selected-linux/drawing-reference-render/runtime.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/tmp/087-selected-linux/drawing-reference-render/state.json",
+      "bytes": 1069,
+      "sha256": "edcfb4db2d1f9805970f04abbb426ac37c8df6d0cd768486bd1925ef272ae93a"
+    },
+    {
+      "path": "/tmp/087-selected-linux/grid-default-ci/fresh-gate.json",
+      "bytes": 1486,
+      "sha256": "fe323a1ce985dfdde5eec0a03a4cfe9d5c13910739d48272b6da1a31d4b361e9"
+    },
+    {
+      "path": "/tmp/087-selected-linux/grid-default-ci/source-generation.json",
+      "bytes": 89765,
+      "sha256": "53410fa1ae983387b4b6bfeb7276bce5ce97164478a465b09b302b8caee5ef80"
+    },
+    {
+      "path": "/tmp/087-selected-linux/grid-heldout-ci/fresh-gate.json",
+      "bytes": 1487,
+      "sha256": "1cb31b2fa19a66b1e96a07a89b89a9916c0e01f0f42a8a61b9bac8d8fa788c3a"
+    },
+    {
+      "path": "/tmp/087-selected-linux/grid-heldout-ci/source-generation.json",
+      "bytes": 89773,
+      "sha256": "cedb2fba954c1e9d353ef0fff310c5665e66fa5ca33d24ca95116cbff56c4a9b"
+    },
+    {
+      "path": "/tmp/087-selected-linux/range-receipt.json",
+      "bytes": 10010,
+      "sha256": "677406a0a63c3566c1dbf8977dd1d440bcf157a0f86bb7207ecf92cf8197eedb"
+    },
+    {
+      "path": "/tmp/087-selected-linux/saved-vector-view-ci/fresh-gate.json",
+      "bytes": 1482,
+      "sha256": "f1bed8148ba4f7ed6a766949f8c8630dafa278b49d5d108cd4175d1520c69591"
+    },
+    {
+      "path": "/tmp/087-selected-linux/saved-vector-view-ci/source-generation.json",
+      "bytes": 89768,
+      "sha256": "80912d16ce92a194424c2cb8146c8b1791efa2b160517483d4a8015bfbb7bd4c"
+    },
+    {
+      "path": "/tmp/087-selected-linux/section-heldout-hatch-ci/fresh-gate.json",
+      "bytes": 1482,
+      "sha256": "fbf0a756aa27f52321520e2f56d09fb675d6fc565beb3c856ef08aa2b3060094"
+    },
+    {
+      "path": "/tmp/087-selected-linux/section-heldout-hatch-ci/source-generation.json",
+      "bytes": 89771,
+      "sha256": "f01a5bf5a1117963dc404fca4c2314e2ea328805149ab3f1603c3634e3a14227"
+    },
+    {
+      "path": "/tmp/087-selected-linux/section-solid-ci/fresh-gate.json",
+      "bytes": 1484,
+      "sha256": "5dc82af176a5f368cebdc8a43d269c71fc9b33ba42a1df7f5d39397c429daf39"
+    },
+    {
+      "path": "/tmp/087-selected-linux/section-solid-ci/source-generation.json",
+      "bytes": 89767,
+      "sha256": "a3b469d6e0ab26e312f79ebb4d50ec42d3fd5831648b97e3da41cb0696263e39"
+    },
+    {
+      "path": "/tmp/087-selected-linux/shift-inference-render/runtime.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/tmp/087-selected-linux/shift-inference-render/state.json",
+      "bytes": 226,
+      "sha256": "9785347fab8e33d5a04c3c5e8188ac00319ff9129fa8b63bff3e1f2c0828ab2f"
+    },
+    {
+      "path": "/tmp/087-selected-linux/vector-view-ci/fresh-gate.json",
+      "bytes": 1483,
+      "sha256": "65d3b5ef3bee6fdb667bf87c2853e39654cc0013a9ad3a24b9320f5457057df5"
+    },
+    {
+      "path": "/tmp/087-selected-linux/vector-view-ci/source-generation.json",
+      "bytes": 89766,
+      "sha256": "f86265808552ae73b96f94cfc438ffaed77c856fd3b03bd5e20eb7e0f09fa1ec"
+    },
+    {
+      "path": "/tmp/087-arm.zip",
+      "bytes": 5894,
+      "sha256": "aa3bfcd48e3be1748a29a72750d2833f8e8b316d63025aa214d5b254d71912d2"
+    },
+    {
+      "path": "/tmp/087-cross-arm.zip",
+      "bytes": 10450,
+      "sha256": "fea2e86aa44cfab9646be785168c8dad3ed675cc4475884cc0205419dc7e20da"
+    },
+    {
+      "path": "/tmp/087-cross-intel.zip",
+      "bytes": 10453,
+      "sha256": "404e8068266eff53349aae726232a57d07416db1e0b00c98e16d278c09c19ea8"
+    },
+    {
+      "path": "/tmp/087-intel.zip",
+      "bytes": 5904,
+      "sha256": "0c641cd27c122bfc240deb710f84b4a73a61bc66e54799c5c5211522145b7815"
+    },
+    {
+      "path": "/tmp/087-metal-compute-consumer-macos-15-intel.zip",
+      "bytes": 12197,
+      "sha256": "c38124fa375191b912488f76097a3feb95f3ac74218273ef49c2d662c3b2679e"
+    },
+    {
+      "path": "/tmp/087-metal-compute-consumer-macos-15.zip",
+      "bytes": 12218,
+      "sha256": "2cc1cda1a7e322f192cf99bf9713bfade15f9a58d8e3bbdeb60cacd96e1c9c35"
+    },
+    {
+      "path": "/tmp/087-windows.zip",
+      "bytes": 19541,
+      "sha256": "463bc163692f10baadc0978dad4f4f51f032c4837e1336779ec4efaf95458e83"
+    },
+    {
+      "path": "/tmp/087-arm.log",
+      "bytes": 47284,
+      "sha256": "f05304544f74163766c964567ac08c5328c2bf7bcd1a889fe65df315ea7e9592"
+    },
+    {
+      "path": "/tmp/087-intel.log",
+      "bytes": 47966,
+      "sha256": "100f00c412a14c6b7c089a1d4090ba22e1016041e6542e80eecd62aa1854c4ce"
+    },
+    {
+      "path": "/tmp/087-full-jobs.json",
+      "bytes": 41613,
+      "sha256": "8000ddbdddc624ffe3077eb15176cb3de0ba872481fea14f6cfad26679bac3f7"
+    },
+    {
+      "path": "/tmp/087-ordered-jobs.json",
+      "bytes": 6924,
+      "sha256": "b7e879d62fafa183e1f6f34536e40231d58f1f231f379af35b2f9913c79373ae"
+    },
+    {
+      "path": "/tmp/087-artifacts.json",
+      "bytes": 4387,
+      "sha256": "02298b2638bd05fbc2a0d8259459b570701e9afb83238e9f1e9d7a48215b9322"
+    },
+    {
+      "path": "/tmp/087-ordered-artifacts.json",
+      "bytes": 1489,
+      "sha256": "a9d25f511afd094496eebbc4cde725295fcf6ddaab993ca62a448a908fcac387"
+    },
+    {
+      "path": "/tmp/087-canonical-records.zip",
+      "bytes": 383544,
+      "sha256": "1a881256754e09f54646b68c92e28d89a3440e7edc1160c8ad69b51ca44924a2"
+    },
+    {
+      "path": "/tmp/087-canonical-manifest.json",
+      "bytes": 25605,
+      "sha256": "db218ee1252fdefefe29cd78153d1e926f215be6d16b96e1c8c7232e622b1bfe"
+    }
+  ],
+  "removed_files": 169,
+  "removed_bytes": 3660121,
+  "preserved": [
+    "canonical repo archive/manifests",
+    "reusable source worktrees/targets",
+    "private GPU bundle",
+    "unique failures outside authenticated duplicate set",
+    "reusable extraction/helper scripts"
+  ]
+}

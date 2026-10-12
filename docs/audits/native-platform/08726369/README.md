@@ -6,4 +6,4 @@ NEW ARM and Intel library-stage failures: dxf::tests::exact_source_curve_paths c
 
 Canonical133members/1883682rawbytes, archive SHA1a881256754e09f54646b68c92e28d89a3440e7edc1160c8ad69b51ca44924a2; every member size/hash verified. Linux21201223-byte artifact selectively ranged707174bytes/18selected receipts/log/state records, never whole-downloaded. Small platform artifacts decoded once; already downloaded Mac failure archives reused.
 
-Six source captures21.075s, provider binding4.608s; per-probe and whole-step records retained without throughput inference. Historical source replay remains disabled. Temporary duplicates remain pending authorized byte-verified cleanup; canonical archives/caches/worktrees/unique failures preserved.
+Six source captures21.075s, provider binding4.608s; per-probe and whole-step records retained without throughput inference. Historical source replay remains disabled. Authorized terminal duplicates were byte-verified and released (169files,3660121bytes), exact inventory in cleanup.json; canonical archives/caches/worktrees/unique failures preserved.
