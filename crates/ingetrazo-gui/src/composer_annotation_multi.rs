@@ -1,8 +1,7 @@
 //! Annotation selection cohorts. Preparation is gesture-local; idle paint only
 //! checks retained owner IDs, and a group drag shares one furniture inventory.
 use super::{
-    active, admit, defaults, number, patch, raw_bytes, record, source_size, IngeTrazoApp, Owner,
-    FAMILIES,
+    active, admit, defaults, number, patch, raw_bytes, record, IngeTrazoApp, Owner, FAMILIES,
 };
 use glam::DVec2;
 use serde_json::{json, Value};
@@ -404,6 +403,29 @@ pub(super) fn capture_group(
         return Err("Annotation group budget exceeded".into());
     }
     let s = active(app)?;
+    let sheet = &app.scene.sheets[s];
+    let indices = crate::composer_text_fields::source_indices(
+        &app.scene.sheets,
+        std::slice::from_ref(sheet),
+    )?;
+    let date = crate::composer_text_fields::today()?;
+    let context = crate::composer_text_fields::Context {
+        index: indices.get(&(sheet as *const _)).copied(),
+        total: app.scene.sheets.len(),
+        path: app.current_file.as_deref(),
+        date: &date,
+    };
+    let mut font_painter = app.composer_state.paper_text.borrow_mut();
+    let mut measure = |f: usize, v: &Value| -> Result<[f64; 2], String> {
+        Ok(crate::composer_annotations::authoring_size(
+            sheet,
+            FAMILIES[f],
+            v,
+            &mut font_painter,
+            &context,
+        )?
+        .unwrap_or_else(|| super::size(v, f)))
+    };
     let mut peers = Vec::new();
     peers
         .try_reserve_exact(members.len())
@@ -416,7 +438,7 @@ pub(super) fn capture_group(
             owner,
             at,
             current: at,
-            size: source_size(app, s, owner.family, v)?,
+            size: measure(owner.family, v)?,
         });
     }
     // All annotation sizes enter the same source ordering as typed furniture.
@@ -442,7 +464,7 @@ pub(super) fn capture_group(
                     peers[i].size
                 } else {
                     admit(v)?;
-                    source_size(app, s, f, v)?
+                    measure(f, v)?
                 };
                 extra.push((
                     number(v, "z", 0.),
@@ -476,6 +498,7 @@ pub(super) fn capture_group(
         AxisIndex::new(targets.x, &peers, 0, ranks.iter().map(|r| r[0]).collect()),
         AxisIndex::new(targets.y, &peers, 1, ranks.iter().map(|r| r[1]).collect()),
     ];
+    drop(font_painter);
     app.composer_state.annotation_authoring.multi.group = Some(Group {
         pressed,
         press,
