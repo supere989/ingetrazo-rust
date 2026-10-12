@@ -938,18 +938,7 @@ fn render_model_projection_with_ink(scene:&Scene,painter:&egui::Painter,frame_re
         }
     }
 
-    // Draw traced GeoPaths if present
-    for gp in &scene.geo_paths {
-        for (p0, p1) in gp.segments() {
-            let Some((p0,p1))=scene.section_segment(p0,p1)else{continue;};
-            if let (Some((s0, _)), Some((s1, _))) = (
-                project_point(p0, &view_proj, frame_rect),
-                project_point(p1, &view_proj, frame_rect),
-            ) {
-                painter.line_segment([s0, s1], Stroke::new(1.8, Color32::from_rgb(20, 100, 200)));
-            }
-        }
-    }
+
 }
 
 /// Renders classical CAD Title Block (Cajetín).
@@ -1421,6 +1410,7 @@ impl IngeTrazoApp {
     /// Prepare every page before opening the destination. Unsupported visible
     /// painters report an error rather than silently exporting incomplete sheets.
     pub fn export_composer_pdf(&mut self,sheet_idx:Option<usize>,path:&std::path::Path)->Result<usize,String>{
+        self.refresh_composer_frame_anchors()?;
         let sheets=match sheet_idx{Some(index)=>std::slice::from_ref(self.scene.sheets.get(index).ok_or("Sheet no longer exists")?),None=>self.scene.sheets.as_slice()};
         let scene=&self.scene;let camera=&self.camera;let compute=&mut self.composer_compute;let document=self.clipboard_document;let revision=self.model_revision;
         let text_resources=&self.composer_state.paper_text;
@@ -1431,7 +1421,10 @@ impl IngeTrazoApp {
             let date=crate::composer_text_fields::today()?;
             let index=*indices.get(&(sheet as *const _)).ok_or("View sheet context lost")?;
             let fields=crate::composer_text_fields::Context{index:Some(index),total:scene.sheets.len(),path:current_file,date:&date};
-            pdf::view_draws(scene,camera,compute,document,revision,sheet,frame,&mut text_resources.borrow_mut(),&fields).map(|v|v.draws)
+            pdf::view_draws(scene,camera,compute,document,revision,sheet,frame,&mut text_resources.borrow_mut(),&fields).map(|mut v|{
+                for i in v.source_points {v.draws[i].path[1]=ingetrazo_formats::sheet_pdf::PathOp::Close;}
+                v.draws
+            })
         };
         let mut texts=|sheet:&ingetrazo_core::composition::Sheet,item:&ingetrazo_core::composition::TextItem|{
             if item.text.contains('{'){

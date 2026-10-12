@@ -107,17 +107,15 @@ pub(crate) fn build(
             .view_key
             .strip_prefix("scene:")
             .and_then(|n| scene.saved_views.iter().find(|v| v.name == n));
-        compute
-            .original_qt_paper_drawing_for_view(
-                &ingetrazo_render::paper_scene::PaperSceneView::new(scene, saved),
-                p.camera(),
-                document,
-                revision,
-                &frame.view_key,
-                frame.profiles,
-                frame.hidden_lines,
-            )?
-            .source_bounds
+        compute.original_qt_source_bounds_for_view(
+            &ingetrazo_render::paper_scene::PaperSceneView::new(scene, saved),
+            p.camera(),
+            document,
+            revision,
+            &frame.view_key,
+            frame.profiles,
+            frame.hidden_lines,
+        )?
     } else {
         None
     };

@@ -327,7 +327,9 @@ fn motion(app: &mut IngeTrazoApp, sheet_idx: usize, pos: Pos2, zoom: f32) {
         return;
     }
     app.composer_state.snapshot_sheet(sheet);
+    let frame=matches!(app.scene.sheets[sheet_idx].items[index],SheetItem::ViewFrame(_));
     app.scene.sheets[sheet_idx].items[index].set_pos(target.0, target.1);
+    if frame {if let Err(e)=app.sync_composer_frame_anchors(){app.status_message=e;}}
 }
 pub(super) fn input(
     app: &mut IngeTrazoApp,

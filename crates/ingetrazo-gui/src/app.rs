@@ -410,6 +410,7 @@ impl IngeTrazoApp {
             return;
         }
         if !self.finish_contexts_for_document() { self.cancel_document_action(); return; }
+        if let Err(error)=self.refresh_composer_frame_anchors(){self.status_message=format!("Save failed: {error}");self.cancel_document_action();return;}
         self.sync_document_presentation();
         // Like the source camera_home update, synchronize before the write.
         // Saving must not copy every mesh just to substitute the camera.

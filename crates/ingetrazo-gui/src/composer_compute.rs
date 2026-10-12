@@ -217,6 +217,17 @@ impl ComposerCompute {
             view.saved,
         )
     }
+    /// Uncut world bounds depend on visible geometry, not ink/profile switches
+    /// or camera. Reuse any admitted source drawing for that geometry context.
+    pub(crate) fn original_qt_source_bounds_for_view(
+        &mut self, view:&ingetrazo_render::paper_scene::PaperSceneView<'_>,
+        camera:&OrbitCamera, document:uuid::Uuid, revision:u64, view_key:&str,
+        profiles:bool, hidden:bool,
+    )->Result<Option<(glam::DVec3,glam::DVec3)>,String>{
+        let state=view.saved.map(|v|serde_json::to_string(&(&v.hidden_layers,&v.hidden_objects,&v.section)).unwrap()).unwrap_or_default();
+        if let Some((_,drawing))=self.cache.iter().find(|(k,_)|k.policy==InkPolicy::OriginalQtPaperV1&&k.document==document&&k.revision==revision&&k.scene==view.scene.version&&k.view==view.scene.view_version&&k.view_key==view_key&&k.paper_state==state){return Ok(drawing.source_bounds);}
+        self.original_qt_paper_drawing_for_view(view,camera,document,revision,view_key,profiles,hidden).map(|d|d.source_bounds)
+    }
     fn segments_policy(
         &mut self,
         scene: &Scene,

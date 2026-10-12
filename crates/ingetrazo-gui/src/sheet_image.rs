@@ -249,6 +249,8 @@ impl PainterCache {
                             for part in self.text.physical_rectangle(draw, density)? {
                                 append(part.into())?;
                             }
+                        } else if draws.source_points.binary_search(&index).is_ok() {
+                            for part in crate::sheet_image_paths::source_point_records(draw,density,metrics.pixels())? {append(part.into())?;}
                         } else if draws.source_lines.binary_search(&index).is_ok() {
                             for part in crate::sheet_image_paths::source_line_records(
                                 draw,
@@ -568,6 +570,7 @@ impl crate::app::IngeTrazoApp {
     ) -> Option<Result<(Request, Plan), String>> {
         let request = self.sheet_image.pending.take()?;
         Some((|| {
+            self.refresh_composer_frame_anchors()?;
             let sheet = self
                 .scene
                 .sheets

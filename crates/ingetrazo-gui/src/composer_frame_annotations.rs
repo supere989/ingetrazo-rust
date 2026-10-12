@@ -314,6 +314,60 @@ fn chainage_step(length: f64, user: f64) -> f64 {
         length
     }
 }
+// Preserve source prefix addition and interpolation while visiting path segments
+// once per monotonic station stream. The tangent stream can move backwards once
+// near the end; binary search admits that transition without rescanning the path.
+struct StationPath {
+    points: Vec<DVec3>,
+    ends: Vec<f64>,
+    lengths: Vec<f64>,
+}
+impl StationPath {
+    fn new(points: Vec<DVec3>) -> Self {
+        let mut ends = Vec::with_capacity(points.len().saturating_sub(1));
+        let mut lengths = Vec::with_capacity(ends.capacity());
+        let mut total = 0.;
+        for pair in points.windows(2) {
+            let n = (pair[1].x - pair[0].x).hypot(pair[1].y - pair[0].y);
+            total += n;
+            ends.push(total);
+            lengths.push(n);
+        }
+        Self {
+            points,
+            ends,
+            lengths,
+        }
+    }
+    fn length(&self) -> f64 {
+        self.ends.last().copied().unwrap_or(0.)
+    }
+    fn point(&self, s: f64, cursor: &mut usize) -> (f64, f64) {
+        if s <= 0. {
+            return (self.points[0].x, self.points[0].y);
+        }
+        if *cursor > 0 && s <= self.ends[*cursor - 1] {
+            *cursor = self.ends.partition_point(|&end| end < s);
+        }
+        while *cursor < self.ends.len() && self.ends[*cursor] < s {
+            *cursor += 1;
+        }
+        if *cursor == self.ends.len() {
+            let p = self.points.last().unwrap();
+            return (p.x, p.y);
+        }
+        let acc = if *cursor == 0 {
+            0.
+        } else {
+            self.ends[*cursor - 1]
+        };
+        let len = self.lengths[*cursor];
+        let t = if len > 1e-12 { (s - acc) / len } else { 0. };
+        let a = self.points[*cursor];
+        let b = self.points[*cursor + 1];
+        (a.x + (b.x - a.x) * t, a.y + (b.y - a.y) * t)
+    }
+}
 fn chainages(
     out: &mut Plan,
     scene: &Scene,
@@ -323,14 +377,20 @@ fn chainages(
 ) -> Result<(), String> {
     let size = text_size(frame)?;
     for path in &scene.geo_paths {
-        let nodes = path.profile_points();
-        let length = nodes
-            .windows(2)
-            .map(|s| (s[1].x - s[0].x).hypot(s[1].y - s[0].y))
-            .sum::<f64>();
-        if nodes.len() < 2 || length <= 1e-9 {
+        if path.points.len() > MAX_PRIMITIVES {
+            return Err("Frame chainage vertex budget exceeded".into());
+        }
+        let nodes = StationPath::new(
+            path.profile_points()
+                .into_iter()
+                .map(source_point)
+                .collect(),
+        );
+        let length = nodes.length();
+        if nodes.points.len() < 2 || length <= 1e-9 {
             continue;
         }
+        let (mut station_cursor, mut tangent_cursor) = (0, 0);
         let step = chainage_step(length, frame.km_step_m);
         if !step.is_finite() || step <= 0. || length / step > MAX_PRIMITIVES as f64 {
             return Err("Frame chainage inventory exceeds budget".into());
@@ -345,12 +405,12 @@ fn chainages(
             stations.push(length);
         }
         for s in stations {
-            let (x, y) = ingetrazo_core::georef::point_at_station(&nodes, s);
+            let (x, y) = nodes.point(s, &mut station_cursor);
             let here = p.point(ground(source_point(DVec3::new(x, y, 0.)))?)?;
             let ahead = s + 0.5 <= length;
-            let (x, y) = ingetrazo_core::georef::point_at_station(
-                &nodes,
+            let (x, y) = nodes.point(
                 if ahead { s + 0.5 } else { (s - 0.5).max(0.) },
+                &mut tangent_cursor,
             );
             let q = p.point(ground(source_point(DVec3::new(x, y, 0.)))?)?;
             let (dx, dy) = if ahead {

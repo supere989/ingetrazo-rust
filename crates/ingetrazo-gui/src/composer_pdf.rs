@@ -13,7 +13,7 @@ fn rect(w: f64, h: f64) -> Vec<PathOp> {
         PathOp::Close,
     ]
 }
-pub(crate) struct ViewDraws {pub(crate) draws:Vec<Draw>,pub(crate) caption_start:usize,pub(crate) source_lines:Vec<usize>}
+pub(crate) struct ViewDraws {pub(crate) draws:Vec<Draw>,pub(crate) caption_start:usize,pub(crate) source_lines:Vec<usize>,pub(crate) source_points:Vec<usize>}
 pub(crate) fn view_draws(
     scene: &Scene,
     live: &OrbitCamera,
@@ -29,14 +29,6 @@ pub(crate) fn view_draws(
         return Err("PDF raster/perspective view painter remains unavailable; orthographic vectorial views are supported".into());
     }
     let metadata=sheet.native_items.get(&frame.id);
-    if frame.annotations
-        && (!scene.dimensions.is_empty()
-            || !scene.text_labels.is_empty()
-            || !scene.geo_paths.is_empty()
-            || (frame.section_marks && !scene.section_planes.is_empty()))
-    {
-        return Err("PDF model annotation painter remains unavailable".into());
-    }
     let values = [
         frame.rect.x,
         frame.rect.y,
@@ -60,35 +52,8 @@ pub(crate) fn view_draws(
         .view_key
         .strip_prefix("scene:")
         .and_then(|name| scene.saved_views.iter().find(|v| v.name == name));
-    let snapshot = scene;
     let paper_view = ingetrazo_render::paper_scene::PaperSceneView::new(scene, saved);
-    // Source SavedView.apply changes camera fields but inherits the live up
-    // vector. Applying to an empty layer slice avoids changing model visibility.
-    let mut base = live.clone();
-    if let Some(saved) = saved {
-        saved.apply(&mut base, &mut []);
-    }
-    let mut camera = super::frame_camera_with_base(snapshot, frame, &base);
-    // Original roll_camera is a no-op at zero degrees; preserve the source up
-    // vector instead of recomputing an equivalent f64 screen-up before Qt storage.
-    if frame.rot_deg == 0. {
-        let bound = frame
-            .view_key
-            .strip_prefix("scene:")
-            .is_some_and(|name| snapshot.saved_views.iter().any(|v| v.name == name));
-        camera.up = if matches!(frame.view_key.as_str(), "std:top" | "std:bottom") {
-            glam::DVec3::Y
-        } else if frame
-            .cam_pitch
-            .is_some_and(|p| p.abs() < 89.5_f64.to_radians())
-        {
-            glam::DVec3::Z
-        } else if bound {
-            base.up
-        } else {
-            live.up
-        };
-    }
+    let camera = crate::composer_frame_projection::camera(scene, live, frame);
     if camera.perspective || !camera.view_matrix().is_finite() {
         return Err("Invalid orthographic PDF frame camera".into());
     }
@@ -191,6 +156,12 @@ pub(crate) fn view_draws(
             flatten_transform: false,
         });
     }
+    let overlay=super::frame_annotations::build(scene,live,compute,document,revision,frame)?;
+    let overlay=crate::composer_annotations::frame_overlay_draws(&overlay,frame.rect.w,frame.rect.h,fonts)?;
+    let offset=draws.len();
+    let mut source_lines=overlay.source_lines.into_iter().map(|v|offset+v).collect::<Vec<_>>();
+    let source_points=overlay.source_points.into_iter().map(|v|offset+v).collect::<Vec<_>>();
+    draws.extend(overlay.draws.into_iter().map(|mut d|{d.origin_mm[0]+=frame.rect.x;d.origin_mm[1]+=frame.rect.y;d}));
     draws.extend(view_grid(frame, metadata)?);
     if frame.border {
         let width = metadata
@@ -223,9 +194,9 @@ pub(crate) fn view_draws(
     }
     let caption_start=draws.len();
     let captions=crate::composer_view_captions::draws(sheet,frame,fonts,fields)?;
-    let source_lines=captions.source_lines.into_iter().map(|v|v.checked_add(caption_start).ok_or("View line index overflow")).collect::<Result<Vec<_>,_>>()?;
+    source_lines.extend(captions.source_lines.into_iter().map(|v|v.checked_add(caption_start).ok_or("View line index overflow")).collect::<Result<Vec<_>,_>>()?);
     draws.extend(captions.draws);
-    Ok(ViewDraws{draws,caption_start,source_lines})
+    Ok(ViewDraws{draws,caption_start,source_lines,source_points})
 }
 
 /// Source _paint_cut_fills_mm: one even-odd compound path, filled below ink;
