@@ -82,6 +82,8 @@ fn click(
         .ok_or("Missing actual annotation control")?;
     let mut stable = false;
     for _ in 0..4 {
+        // A closed panel must not leave an old observation usable as a live widget.
+        ctx.data_mut(|d| d.remove_temp::<egui::Rect>(egui::Id::new(id)));
         frame(
             ctx,
             app,
