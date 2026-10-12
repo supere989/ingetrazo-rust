@@ -96,6 +96,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         let dirty_before = app.document_dirty();
         let before_query = json!({
             "groups":app.scene.groups,"mesh":app.scene.mesh,
+            "group_debug":format!("{:?}",app.scene.groups),
             "shares":app.scene.mesh_shares,"definitions":app.scene.component_definitions,
             "document":ingetrazo_formats::igz::scene_to_igz_document(&app.scene),
             "dirty":dirty_before,"history":history_before,
@@ -111,6 +112,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         assert_eq!((app.undo_stack.len(), app.redo_stack.len()), history_before);
         let after_query = json!({
             "groups":app.scene.groups,"mesh":app.scene.mesh,
+            "group_debug":format!("{:?}",app.scene.groups),
             "shares":app.scene.mesh_shares,"definitions":app.scene.component_definitions,
             "document":ingetrazo_formats::igz::scene_to_igz_document(&app.scene),
             "dirty":app.document_dirty(),"history":[app.undo_stack.len(),app.redo_stack.len()],
