@@ -364,7 +364,7 @@ fn run(source: &Path, out: &Path) -> Result<(), String> {
         }
         states.push(record(&a, name, "external-removed")?);
         if !c["edit_path"].as_array().unwrap().is_empty() {
-            a.end_component_edit();
+            a.finish_component_edit();
             states.push(record(&a, name, "finish")?);
         }
         let saved = c["saved"].as_str().ok_or("Saved filename")?;
