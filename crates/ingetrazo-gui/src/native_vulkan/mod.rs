@@ -1477,6 +1477,8 @@ impl App for crate::IngeTrazoApp {
     fn title() -> &'static str { "IngeTrazo (native Vulkan)" }
     fn new(system: &mut System, initial_file: Option<std::path::PathBuf>) -> Self {
         let mut app=Self::new();
+        let side = unsafe { system.vulkan_context.instance.get_physical_device_properties(system.vulkan_context.physical_device) }.limits.max_image_dimension2_d;
+        app.set_geotiff_device_ceiling(Some(side as usize));
         match system.enable_cad2d(){Ok(renderer)=>app.native_composer.factory=Some(renderer.factory().into()),Err(error)=>app.gpu_error(&error)}
         app.native_gpu_viewport_enabled=system.native_world;
         app.system_clipboard=arboard::Clipboard::new().ok();

@@ -154,6 +154,7 @@ pub struct Summary {
 }
 #[derive(Default)]
 pub struct State {
+    device_ceiling: Option<usize>,
     service: Option<Service>,
     pending: Option<(uuid::Uuid, u64)>,
     pub title: String,
@@ -218,8 +219,12 @@ impl IngeTrazoApp {
             }
         }
     }
+    /// Cold renderer capability publication; no device query on import/repaint.
+    pub fn set_geotiff_device_ceiling(&mut self, ceiling: Option<usize>) {
+        self.geotiff_import.device_ceiling = ceiling.filter(|&value| value > 0);
+    }
     pub fn begin_geotiff_import(&mut self, path: &Path) -> Result<(), String> {
-        self.begin_geotiff_import_with_ceiling(path, 8192)
+        self.begin_geotiff_import_with_ceiling(path, self.geotiff_import.device_ceiling.unwrap_or(8192))
     }
     /// Device capability intake, clamped exactly as original max_texture_size.
     pub fn begin_geotiff_import_with_ceiling(

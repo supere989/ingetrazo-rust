@@ -72,6 +72,10 @@ pub fn run_gui(initial_file: Option<PathBuf>) -> Result<(), eframe::Error> {
                 }
             }
             let mut app=IngeTrazoApp::new();
+            app.set_geotiff_device_ceiling(cc.gl.as_ref().and_then(|gl| {
+                let side = unsafe { gl.get_parameter_i32(eframe::glow::MAX_TEXTURE_SIZE) };
+                usize::try_from(side).ok().filter(|&value| value > 0)
+            }));
             app.system_clipboard=arboard::Clipboard::new().ok();
             app.attach_session_store(crate::session_state::SessionStore::user_default());
             if let Some(path)=initial_file {app.open_document(&path);}
