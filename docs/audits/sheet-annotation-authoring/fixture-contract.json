@@ -263,5 +263,6 @@
   ],
   "capture_gate": "Geometry and validation prereview full producer before single source capture",
   "body_hit_admission": "Quantized effective viewport point must remain inside actual source shape and outside specialized handles",
-  "callback_errors": "Any actual Qt callback exception refuses final success; partial observations and stderr retained"
+  "callback_errors": "All unexpected callbacks refuse success. Exact missing _single_selected AttributeError in _on_cota_rad_props at declared radial panel/property phases is retained as failed-original UI semantics, with literal per-phase counts.",
+  "radial_comparison": "First five lifecycle creation/select states compare literally; following13 states use separately specified native working text/coalescence/history expectations. Source records remain unchanged; final corrected reader differs only in radial text."
 }
