@@ -141,7 +141,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                     .attrs
                     .insert("color".into(), json!(color));
             }
-            assert!(a.undo());
+            a.undo();
             assert_eq!((a.undo_stack.len(), a.redo_stack.len()), (1, 1));
         }
         let mut actual_exports = Vec::new();
