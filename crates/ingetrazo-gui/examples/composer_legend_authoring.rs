@@ -71,7 +71,7 @@ fn click(
 ) -> Result<(), Error> {
     let rect = ctx
         .data(|d| d.get_temp::<egui::Rect>(egui::Id::new(id)))
-        .ok_or("Missing actual legend control")?;
+        .ok_or_else(|| format!("Missing actual legend control {id}"))?;
     let p = rect.center();
     frame(
         ctx,
@@ -82,7 +82,7 @@ fn click(
     );
     let live = ctx
         .data(|d| d.get_temp::<egui::Rect>(egui::Id::new(id)))
-        .ok_or("Legend control disappeared")?;
+        .ok_or_else(|| format!("Legend control {id} disappeared"))?;
     if live != rect {
         return Err("Legend control moved during hover".into());
     }
