@@ -199,7 +199,7 @@ fn partial(
         .document_session
         .unit_import
         .as_ref()
-        .map(|d| json!({"code":d.code,"kind":d.kind,"bytes":d.bytes.len(),"path":d.path}));
+        .map(|d| json!({"code":d.code,"kind":d.kind,"path":d.path}));
     let value = json!({"complete":false,"case":name,"stage":stage,"states":states,"status_message":a.status_message,"pending_unit_dialog":dialog,"scene":source_scene(a),"undo":a.undo_stack.len(),"redo":a.redo_stack.len()});
     std::fs::write(
         out.join("native-dwg.partial.json"),
