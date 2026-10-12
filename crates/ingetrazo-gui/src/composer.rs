@@ -438,7 +438,7 @@ pub fn render_sheet_composer(app: &mut IngeTrazoApp, ui: &mut egui::Ui, sheet_id
     let text_icon = app.icons.get(ui.ctx(), "text").cloned();
     let toolbar_rect = Rect::from_min_size(
         Pos2::new(response_rect.min.x + 20.0, response_rect.min.y + 16.0),
-        Vec2::new(580.0, icon_px + 18.0),
+        Vec2::new((response_rect.width() - 40.0).max(1.0), icon_px + 18.0),
     );
 
     let saved_view_names=app.scene.saved_views.iter().map(|v|v.name.clone()).collect::<Vec<_>>();
@@ -452,10 +452,10 @@ pub fn render_sheet_composer(app: &mut IngeTrazoApp, ui: &mut egui::Ui, sheet_id
     let mut add_picture=false;let mut add_legend=false;
     let mut export_all_pdf = false;
 
-    ui.allocate_new_ui(egui::UiBuilder::new().max_rect(toolbar_rect), |ui| {
+    let toolbar = ui.allocate_new_ui(egui::UiBuilder::new().max_rect(toolbar_rect), |ui| {
         egui::Frame::window(ui.style()).show(ui, |ui| {
             ui.spacing_mut().interact_size.y = icon_px + 4.0;
-            ui.horizontal(|ui| {
+            ui.horizontal_wrapped(|ui| {
                 ui.label(egui::RichText::new(tr("Composer:")).strong());
 
                 annotation_authoring::toolbar(app,ui);
@@ -647,6 +647,8 @@ pub fn render_sheet_composer(app: &mut IngeTrazoApp, ui: &mut egui::Ui, sheet_id
             });
         });
     });
+    // Wrapped controls own every rendered row; paper projection stays unchanged.
+    let toolbar_rect = toolbar.response.rect;
 
     if add_legend{if let Err(e)=app.activate_composer_legend(){app.status_message=e;}}
     if add_picture {let path=crate::dialogs::pick_open_file(&tr("Choose image…"),"Images (*.png *.jpg *.jpeg)");if let Err(e)=app.composer_add_picture(path.as_deref()){app.status_message=e;}}
