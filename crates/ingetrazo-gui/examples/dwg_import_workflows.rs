@@ -132,6 +132,13 @@ fn frame(a: &mut IngeTrazoApp, c: &egui::Context, events: Vec<egui::Event>) {
         egui::Pos2::ZERO,
         egui::vec2(1100., 800.),
     ));
+    let tick = c.data_mut(|d| {
+        let id = egui::Id::new("dwg-ui-clock");
+        let tick = d.get_temp::<u64>(id).unwrap_or(0) + 1;
+        d.insert_temp(id, tick);
+        tick
+    });
+    input.time = Some(tick as f64 * 0.1);
     input.events = events;
     let _ = c.run(input, |ctx| {
         a.document_session_ui(ctx);
@@ -139,7 +146,15 @@ fn frame(a: &mut IngeTrazoApp, c: &egui::Context, events: Vec<egui::Event>) {
     });
 }
 fn click(a: &mut IngeTrazoApp, c: &egui::Context, id: &str) -> Result<(), String> {
-    frame(a, c, vec![]);
+    // Modal/popup layout is measured on its first frame and positioned next frame.
+    // Warm the actual UI before reading its observed rectangle, then hover first.
+    for _ in 0..3 {
+        frame(a, c, vec![]);
+    }
+    let initial = c
+        .data(|d| d.get_temp::<egui::Rect>(egui::Id::new(id)))
+        .ok_or_else(|| format!("Missing actual unit UI {id}"))?;
+    frame(a, c, vec![egui::Event::PointerMoved(initial.center())]);
     let rect = c
         .data(|d| d.get_temp::<egui::Rect>(egui::Id::new(id)))
         .ok_or_else(|| format!("Missing actual unit UI {id}"))?;
@@ -291,6 +306,11 @@ fn run(source: &Path, out: &Path) -> Result<(), String> {
             } else {
                 click(&mut a, &ctx, "import-unit-combo")?;
                 click(&mut a, &ctx, "import-unit-option-m")?;
+                assert_eq!(
+                    a.document_session.unit_import.as_ref().unwrap().code,
+                    "m",
+                    "actual unit option click did not select metres"
+                );
                 click(&mut a, &ctx, "import-unit-accept")?;
             }
             assert!(
