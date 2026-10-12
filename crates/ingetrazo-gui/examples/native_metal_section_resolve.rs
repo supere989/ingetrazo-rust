@@ -203,7 +203,7 @@ fn run() -> Result<(), String> {
             let frame=prepare(&mut world,&mut adapter,&scene)?;
             let resolve_diagnostics=frame.source_resolve_diagnostic();
             let sample_observation=if reflected_mode {
-                let points=[[400,228],[328,300],[471,300],[400,371]];
+                let points=if name=="closed-iso" {[[297,329],[297,328],[298,303],[297,329]]}else{[[400,228],[328,300],[471,300],[400,371]]};
                 let diagnostic=frame.submit_sample_diagnostic(&metal,points)?;
                 let pixels=diagnostic.readback(std::time::Duration::from_secs(5))?;
                 let samples=diagnostic.sample_values()?;let depths=diagnostic.sample_depth_values()?;

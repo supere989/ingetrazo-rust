@@ -1,0 +1,48 @@
+name: Opt-in Intel Metal reflected sample diagnostic
+on:
+  workflow_dispatch:
+concurrency:
+  group: metal-reflected-diagnostic-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  diagnostic:
+    runs-on: macos-15-intel
+    timeout-minutes: 25
+    env:
+      CARGO_PROFILE_DEV_DEBUG: 0
+      CARGO_PROFILE_TEST_DEBUG: 0
+      CARGO_INCREMENTAL: 0
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@49a0bdc70d2e1b713ca9e2869b211fcce03d3c1c
+        with:
+          cache-workspace-crates: "false"
+          cache-on-failure: "true"
+      - name: Build the single opt-in native diagnostic consumer
+        id: build
+        run: |
+          mkdir -p reflected-sample-evidence
+          git rev-parse HEAD > reflected-sample-evidence/revision.txt
+          git ls-files crates/ingetrazo-metal/src crates/ingetrazo-gui/examples/native_metal_section_resolve.rs scripts/check-metal-reflected-samples.py scripts/check-metal-section-resolve.py scripts/check-metal-section-fill.py docs/audits/intel-metal-reflected-samples docs/audits/section-original-gl docs/audits/section-sample-observation/records.zip docs/audits/section-iso-samples/source.zip docs/audits/source-gl-depth-resolve/resolve.json | xargs shasum -a 256 > reflected-sample-evidence/source.sha256
+          cargo build --locked -p ingetrazo-gui --example native_metal_section_resolve -j2 > reflected-sample-evidence/build.log 2>&1
+          shasum -a 256 target/debug/examples/native_metal_section_resolve > reflected-sample-evidence/binary.sha256
+      - name: Execute real fixed-sample Metal raster and ordered GPU resolve
+        id: native
+        run: |
+          python3 - <<'PYTHON'
+          import subprocess
+          with open('reflected-sample-evidence/native.log','w') as log:
+              subprocess.run(['target/debug/examples/native_metal_section_resolve','reflected-sample-evidence/native','--reflected-diagnostic'],stdout=log,stderr=subprocess.STDOUT,timeout=150,check=True)
+          PYTHON
+      - name: Retain strict frozen source image and sample/depth verdict
+        if: ${{ !cancelled() && steps.native.outcome == 'success' }}
+        run: python3 scripts/check-metal-reflected-samples.py reflected-sample-evidence/native --output reflected-sample-evidence/comparison.json > reflected-sample-evidence/checker.log 2>&1
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: intel-reflected-sample-diagnostic
+          path: reflected-sample-evidence/
+          if-no-files-found: error
