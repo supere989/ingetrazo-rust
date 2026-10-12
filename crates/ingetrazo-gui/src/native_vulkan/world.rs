@@ -357,6 +357,15 @@ impl World {
   if let Err(error)=scene_result{self.abort_face_sweep(staged,fence,completed)?;return Err(error);}
   self.publish_face_sweep(staged,scene,completed);Ok(())
  }
+ /// Diagnostic-only readback of the accepted uploaded axes buffer; no regeneration.
+ pub(super) fn axis_transport_for_probe(&mut self,context:&VulkanContext)->Result<(Vec<u8>,serde_json::Value),String>{
+  if std::env::var_os("INGETRAZO_AXIS_TRANSPORT_PROBE").is_none(){return Err("Axis diagnostic not admitted".into());}
+  let axes=self.axes.as_ref().ok_or("Actual axes buffer absent")?;
+  let bytes=self.resources.readback_buffer(context,axes.buffer)?;
+  if bytes.len()!=3126*24{return Err("Axes GPU byte inventory differs".into());}
+  let flags=super::source_depth::unclipped_draw_flags(super::source_depth::draw_flags(self.clip_enabled,self.source_camera_matrix.is_some(),self.source_depth_dispatch.is_some()));
+  Ok((bytes,serde_json::json!({"matrix_convention":"column-major-f32-issued-push-constants","mvp":self.mvp,"mvp_bits":self.mvp.map(f32::to_bits),"source_camera_matrix":self.source_camera_matrix,"source_camera_bits":self.source_camera_matrix.map(|m|m.map(f32::to_bits)),"source_gl_camera":self.source_gl_camera,"negative_one_to_one_dynamic_depth":self.source_depth_dispatch.is_some(),"draw_flags":flags,"clip_plane":self.clip,"section_clip_enabled":false,"depth_test":true,"depth_write":false,"extent":self.target_extent_for_probe(),"vertex_count":3126,"stride":24,"position_offset":0,"color_offset":12})))
+ }
  pub fn target_extent_for_probe(&self)->Option<[u32;2]>{self.target.as_ref().map(|t|[t.extent.width,t.extent.height])}
  pub fn face_sweep_image_stats_for_probe(&self)->serde_json::Value { let base=self.textures.as_ref().unwrap().cache_stats();let preview=self.sweep.as_ref().map(|s|s.image_stats());serde_json::json!({"base_hashes":base.hashes,"base_decodes":base.decodes,"base_image_uploads":base.uploads,"preview":preview,"inactive_base":self.cached_base.is_some()}) }
  pub fn face_sweep_stats_for_probe(&self)->(u64,u64,super::textures::Stats){self.sweep.as_ref().map(|owner|owner.stats()).unwrap_or_default()}
@@ -393,7 +402,7 @@ impl World {
   let receivers=if self.billboard_key!=Some(key){Some(if receiver_enabled{packet.as_ref().or(self.billboard_packet.as_ref()).ok_or("Billboard base packet absent")?.textures(camera)?}else{Default::default()})}else{None};
   let sky_background=if style.show_sky {let snapshot=crate::navigation_ray::camera_snapshot(camera).ok_or("Sky camera admission")?;Some(ingetrazo_render::world_background::Background::prepare(camera.eye(),camera.target,snapshot.matrix,style.sky_color,style.ground_color)?)}else{None};
   let axis_key=axes::key(scene,camera);
-  let axis_candidate=if self.viewport_axes&&self.axes.as_ref().is_none_or(|a|a.key!=axis_key){let vertices=axes::vertices(scene,camera)?;Some(axes::Prepared{key:axis_key,buffer:self.resources.upload(context,bytemuck::cast_slice(&vertices),vk::BufferUsageFlags::VERTEX_BUFFER,false)?})}else{None};
+  let axis_candidate=if self.viewport_axes&&self.axes.as_ref().is_none_or(|a|a.key!=axis_key){let vertices=axes::vertices(scene,camera)?;Some(axes::Prepared{key:axis_key,buffer:self.resources.upload(context,bytemuck::cast_slice(&vertices),vk::BufferUsageFlags::VERTEX_BUFFER | if std::env::var_os("INGETRAZO_AXIS_TRANSPORT_PROBE").is_some(){vk::BufferUsageFlags::TRANSFER_SRC}else{vk::BufferUsageFlags::empty()},false)?})}else{None};
   let result=self.prepare_scene(context,scene,camera,style,fence,completed_serial,epoch,shadow_extra,receivers.as_ref());
   if let Some(candidate)=axis_candidate{if result.is_ok(){if let Some(old)=self.axes.replace(candidate){self.resources.retire(old.buffer)?;}}else{self.resources.retire(candidate.buffer)?;}}
   if result.is_ok(){self.sky.as_mut().unwrap().background=sky_background;if let Some(packet)=packet{self.billboard_builds+=1;self.billboard_packet=Some(packet);}self.billboard_key=Some(key);}

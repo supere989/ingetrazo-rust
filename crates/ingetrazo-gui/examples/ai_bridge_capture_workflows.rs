@@ -417,13 +417,29 @@ mod fixture {
                 original["source_pin"],
                 "6be29fe437a7cd992d4e079f71720821b25216b9"
             );
-            let cases = original["cases"].as_array().unwrap().clone();
-            let roster = cases.iter().map(|case| case["name"].as_str().unwrap()).collect::<Vec<_>>();
-            assert!(matches!(roster.as_slice(),
-                ["default-perspective", "clamped-and-portrait", "orthographic-live-depth",
-                 "committed-selected-overlays", "active-edit-context", "invalid-dimensions"]
-                | ["startup-billboard-context", "shared-texture-context"]),
-                "Only the two frozen capture rosters are admitted");
+            let mut cases = original["cases"].as_array().unwrap().clone();
+            let roster = cases
+                .iter()
+                .map(|case| case["name"].as_str().unwrap())
+                .collect::<Vec<_>>();
+            assert!(
+                matches!(
+                    roster.as_slice(),
+                    [
+                        "default-perspective",
+                        "clamped-and-portrait",
+                        "orthographic-live-depth",
+                        "committed-selected-overlays",
+                        "active-edit-context",
+                        "invalid-dimensions"
+                    ] | ["startup-billboard-context", "shared-texture-context"]
+                ),
+                "Only the two frozen capture rosters are admitted"
+            );
+            if std::env::var_os("INGETRAZO_AXIS_TRANSPORT_PROBE").is_some() {
+                assert_eq!(cases[0]["name"], "default-perspective");
+                cases.truncate(1);
+            }
             let mut f = Self {
                 app: IngeTrazoApp::new(),
                 source,
@@ -515,6 +531,12 @@ mod fixture {
                 if self.warm < 8 {
                     return Ok(());
                 }
+                if std::env::var_os("INGETRAZO_AXIS_TRANSPORT_PROBE").is_some() {
+                    if self.out.join("native-axis-transport.json").exists() {
+                        ctx.send_viewport_cmd(egui::ViewportCommand::Close);
+                    }
+                    return Ok(());
+                }
                 if self.commands.is_none() {
                     self.start(ctx)?;
                 }
@@ -550,6 +572,35 @@ mod fixture {
         }
         fn after_ui_gpu(&mut self, system: &mut System) {
             App::after_ui_gpu(&mut self.app, system);
+            if std::env::var_os("INGETRAZO_AXIS_TRANSPORT_PROBE").is_some()
+                && self.warm >= 8
+                && !self.out.join("native-axis-transport.json").exists()
+            {
+                let result = (|| {
+                    let before = observe(&self.app)?;
+                    let (bytes, mut report) = system.axis_transport_for_probe()?;
+                    let after = observe(&self.app)?;
+                    if before != after {
+                        return Err("Axis readback changed App state".into());
+                    }
+                    std::fs::write(self.out.join("native-axis-vbo.bin"), bytes)
+                        .map_err(|e| e.to_string())?;
+                    report["before"] = before;
+                    report["after"] = after;
+                    report["readonly"] = json!(true);
+                    std::fs::write(
+                        self.out.join("native-axis-transport.json"),
+                        serde_json::to_vec_pretty(&report).unwrap(),
+                    )
+                    .map_err(|e| e.to_string())?;
+                    Ok::<(), String>(())
+                })();
+                if let Err(error) = result {
+                    self.failed = Some(error.clone());
+                    self.report["error"] = json!(error);
+                    let _ = self.persist();
+                }
+            }
         }
         fn prepare_gpu(&mut self, system: &mut System, resize: bool) {
             App::prepare_gpu(&mut self.app, system, resize);
@@ -564,6 +615,12 @@ mod fixture {
         let source =
             PathBuf::from(std::env::args_os().nth(1).ok_or("SOURCE required")?).canonicalize()?;
         let out = PathBuf::from(std::env::args_os().nth(2).ok_or("OUTPUT required")?);
+        if let Some(flag) = std::env::args_os().nth(3) {
+            if flag != "--axis-transport-only" {
+                return Err("Unknown diagnostic argument".into());
+            }
+            std::env::set_var("INGETRAZO_AXIS_TRANSPORT_PROBE", "1");
+        }
         std::fs::create_dir_all(&out)?;
         for (key, folder) in [
             ("XDG_CONFIG_HOME", "config"),
@@ -576,7 +633,16 @@ mod fixture {
         std::env::set_var("INGETRAZO_CAPTURE_OUTPUT", &out);
         std::env::set_var("INGETRAZO_VULKAN_WORLD", "1");
         ingetrazo_gui::native_vulkan::run_app::<Fixture>(None)?;
-        if !out.join("native-ai-bridge-capture.json").is_file() {
+        if !out
+            .join(
+                if std::env::var_os("INGETRAZO_AXIS_TRANSPORT_PROBE").is_some() {
+                    "native-axis-transport.json"
+                } else {
+                    "native-ai-bridge-capture.json"
+                },
+            )
+            .is_file()
+        {
             return Err(
                 "Actual-host screenshot workflow incomplete; partial report retained".into(),
             );

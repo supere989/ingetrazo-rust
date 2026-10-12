@@ -451,6 +451,10 @@ impl System {
     pub fn hidden_ghost_observation_for_probe(&self)->serde_json::Value{serde_json::json!({"submitted_serial":self.draw_serial,"completed_present_serial":self.completed_present_serial_for_probe,"prepare_error":self.annotation_prepare_error,"world":self.world.as_ref().map(|w|w.hidden_ghost_observation_for_probe())})}
     pub fn billboard_observation_for_probe(&self)->serde_json::Value{serde_json::json!({"submitted_serial":self.draw_serial,"completed_present_serial":self.completed_present_serial_for_probe,"prepare_error":self.annotation_prepare_error,"world":self.world.as_ref().map(|w|w.billboard_stats_for_probe())})}
     pub fn solar_stats_for_probe(&self)->Option<(u64,u64,bool)>{self.world.as_ref().map(|world|world.shadow_stats_for_probe())}
+    pub fn axis_transport_for_probe(&mut self)->Result<(Vec<u8>,serde_json::Value),String>{
+        self.vulkan_context.wait_transfer(self.fence).map_err(|e|e.to_string())?;
+        self.world.as_mut().ok_or("Actual World absent")?.axis_transport_for_probe(&self.vulkan_context)
+    }
     pub fn submitted_frames_for_probe(&self)->u64{self.draw_serial}
 
     /// Engineering observation only: never reset/destroy these borrowed handles.

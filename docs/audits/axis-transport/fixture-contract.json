@@ -1,0 +1,22 @@
+{
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "scope": "Read-only transport diagnostic; zero screenshots; no pixel parity acceptance",
+  "case": "default-perspective",
+  "logical_viewport": [
+    800,
+    600
+  ],
+  "original_sources": [],
+  "support_sources": [
+    {
+      "path": "scripts/reference-ai-bridge-capture.py",
+      "sha256": "afe6924e6e8264ab88da2e18009b20ebc9a2f9656def3d0b38fbe73fb4276b8e"
+    },
+    {
+      "path": "scripts/exchange_import_observations.py",
+      "sha256": "48c12bffd82e9c431ce8784174112a78c7ab09de529fabc1e5f0f8445bf94142"
+    }
+  ],
+  "source_output": "source-axis-transport.json",
+  "native_output": "native-axis-transport.json"
+}
