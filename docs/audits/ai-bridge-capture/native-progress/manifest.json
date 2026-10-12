@@ -1,0 +1,245 @@
+{
+  "scope": "Partial actual Linux software Vulkan capture; strict eight images remain failures",
+  "runtime_revision": "d19bf4081f975e4b777c39eeaef81c376cf305f0",
+  "binary_sha256": "b81867b9ad65ef9508f72312680d31522b4b9e10e5e22640cd2d696ca475c633",
+  "archive_sha256": "91ba289f31b4b947d71c0693629820e6e62e83f430a7912cbffc86dd58455419",
+  "source_packet": "../source-manifest.json",
+  "members": [
+    {
+      "member": "r10/native-ai-bridge-capture.partial.json",
+      "origin": "/tmp/ingetrazo-ai-bridge-capture-native-r10/native-ai-bridge-capture.partial.json",
+      "size": 633583,
+      "sha256": "b95c7a0a647a60c795c953df8783fbdc937127008b823a696ab07151445ace12"
+    },
+    {
+      "member": "r10/default-perspective-0.png",
+      "origin": "/tmp/ingetrazo-ai-bridge-capture-native-r10/default-perspective-0.png",
+      "size": 43992,
+      "sha256": "bcece426a31123ada581701a3ff573bbbdaf6e94668723afb93de4d965abf3ed"
+    },
+    {
+      "member": "r10/default-perspective-0.rgba",
+      "origin": "/tmp/ingetrazo-ai-bridge-capture-native-r10/default-perspective-0.rgba",
+      "size": 3145728,
+      "sha256": "e29ea439507db17588ff2033954c86171d2730b3e1437587383a514112a5a700"
+    },
+    {
+      "member": "r10/clamped-and-portrait-0.png",
+      "origin": "/tmp/ingetrazo-ai-bridge-capture-native-r10/clamped-and-portrait-0.png",
+      "size": 3050,
+      "sha256": "108ad4d60e24e88f4e324f5b9cd7927b477c3f79a108a22d89028a43f1add3d3"
+    },
+    {
+      "member": "r10/clamped-and-portrait-0.rgba",
+      "origin": "/tmp/ingetrazo-ai-bridge-capture-native-r10/clamped-and-portrait-0.rgba",
+      "size": 16384,
+      "sha256": "c0e7cbaee0e6c27de6b94a1b9419e460e96291f533d1803a9f68d0bc63d21ca9"
+    },
+    {
+      "member": "r10/clamped-and-portrait-1.png",
+      "origin": "/tmp/ingetrazo-ai-bridge-capture-native-r10/clamped-and-portrait-1.png",
+      "size": 19488,
+      "sha256": "b4d55fe209e18fadf20b21faa7c8465aa59ec95eae7d0240fc28cc63c81c471f"
+    },
+    {
+      "member": "r10/clamped-and-portrait-1.rgba",
+      "origin": "/tmp/ingetrazo-ai-bridge-capture-native-r10/clamped-and-portrait-1.rgba",
+      "size": 1048576,
+      "sha256": "ff3113a707a7755cf323f42f4a06d97f5937aaf6bc431dd671517d25b7209254"
+    },
+    {
+      "member": "r10/clamped-and-portrait-2.png",
+      "origin": "/tmp/ingetrazo-ai-bridge-capture-native-r10/clamped-and-portrait-2.png",
+      "size": 6387,
+      "sha256": "cc21f5b308a0bbbe8267c68f51ec5e3d649f71a0374ba98c12a5a5839aedaf74"
+    },
+    {
+      "member": "r10/clamped-and-portrait-2.rgba",
+      "origin": "/tmp/ingetrazo-ai-bridge-capture-native-r10/clamped-and-portrait-2.rgba",
+      "size": 86400,
+      "sha256": "6e1be8d45fb6d2d35a85b74479d91bf6f4767e3856d445e524add1a538a1355a"
+    },
+    {
+      "member": "r10/orthographic-live-depth-0.png",
+      "origin": "/tmp/ingetrazo-ai-bridge-capture-native-r10/orthographic-live-depth-0.png",
+      "size": 34753,
+      "sha256": "8b1e1e0a7450f579575e9370c06df68d70d08c305531367dfb7e835813a10235"
+    },
+    {
+      "member": "r10/orthographic-live-depth-0.rgba",
+      "origin": "/tmp/ingetrazo-ai-bridge-capture-native-r10/orthographic-live-depth-0.rgba",
+      "size": 1228800,
+      "sha256": "50ba4be0d7c84f61e5499dedf37d691e9be50a9b99657b7c353699aad2f02c81"
+    },
+    {
+      "member": "r10/orthographic-live-depth-1.png",
+      "origin": "/tmp/ingetrazo-ai-bridge-capture-native-r10/orthographic-live-depth-1.png",
+      "size": 25338,
+      "sha256": "8f7d7717243dc8af4fd0213ef6281b09e5610905516134e1a9759c389a2dac60"
+    },
+    {
+      "member": "r10/orthographic-live-depth-1.rgba",
+      "origin": "/tmp/ingetrazo-ai-bridge-capture-native-r10/orthographic-live-depth-1.rgba",
+      "size": 819200,
+      "sha256": "2d2fd8d020076575d1db245b1c79f0b57eeb2f767961d8011d1b71b77f344f72"
+    },
+    {
+      "member": "r10/committed-selected-overlays-0.png",
+      "origin": "/tmp/ingetrazo-ai-bridge-capture-native-r10/committed-selected-overlays-0.png",
+      "size": 52428,
+      "sha256": "bc5143b283025fa784d37d94d1feaf8bf3ddae97f1e11bfaf3ec50752e3442ee"
+    },
+    {
+      "member": "r10/committed-selected-overlays-0.rgba",
+      "origin": "/tmp/ingetrazo-ai-bridge-capture-native-r10/committed-selected-overlays-0.rgba",
+      "size": 1920000,
+      "sha256": "c8730cc7d39d235b03d762aba6eb5c73071ba9154bb66d9822ae5ea0b1912709"
+    },
+    {
+      "member": "r10/active-edit-context-0.png",
+      "origin": "/tmp/ingetrazo-ai-bridge-capture-native-r10/active-edit-context-0.png",
+      "size": 33151,
+      "sha256": "7f121feaa2548679c1bdc0f418451901109f1dfde06176cd6ea76b4ec2924748"
+    },
+    {
+      "member": "r10/active-edit-context-0.rgba",
+      "origin": "/tmp/ingetrazo-ai-bridge-capture-native-r10/active-edit-context-0.rgba",
+      "size": 1228800,
+      "sha256": "473cf4a4f18decdbff1a5e63448c85cb6fc908231d11a41967257834a027ea57"
+    },
+    {
+      "member": "r10/native-ai-bridge-capture.json",
+      "origin": "/tmp/ingetrazo-ai-bridge-capture-native-r10/native-ai-bridge-capture.json",
+      "size": 633783,
+      "sha256": "ae5bb491b6da1b99e6989f4c3c0148a5af04fbf668a616f134f9e914095b5d24"
+    },
+    {
+      "member": "r10/checker.log",
+      "origin": "/tmp/ingetrazo-ai-bridge-capture-native-r10/checker.log",
+      "size": 1330,
+      "sha256": "1b1641b5bcc21cf1bdf95c0a147a7dee470bde25fbec065b7ada381d69404ee8"
+    },
+    {
+      "member": "r10/comparison.json",
+      "origin": "/tmp/ingetrazo-ai-bridge-capture-native-r10/comparison.json",
+      "size": 1680,
+      "sha256": "53d97fa048f656e3d2a2bf60d9b768cb031f0e9e3490c946cd9810f6c1f6f72f"
+    },
+    {
+      "member": "r10/independent-r9-r10-diagnostic.json",
+      "origin": "/tmp/ingetrazo-ai-bridge-capture-native-r10/independent-r9-r10-diagnostic.json",
+      "size": 4046,
+      "sha256": "5331a0e582cadd2d20ac3edd5052eeb45d93587927f0a26ae272bc493995adfb"
+    },
+    {
+      "member": "r10-attempt/xvfb.log",
+      "origin": "/tmp/ingetrazo-ai-bridge-capture-native-attempt-10/xvfb.log",
+      "size": 2868,
+      "sha256": "79f76d3feb971128222a296e2312dc34d25ca06e0d465bddf909dff5a09f2ef0"
+    },
+    {
+      "member": "r10-attempt/stdout",
+      "origin": "/tmp/ingetrazo-ai-bridge-capture-native-attempt-10/stdout",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "member": "r10-attempt/stderr",
+      "origin": "/tmp/ingetrazo-ai-bridge-capture-native-attempt-10/stderr",
+      "size": 2786,
+      "sha256": "fbb86d79c5b727a930ad62565d3db19238c4380ee919218b119cc46bb465972e"
+    },
+    {
+      "member": "r10-attempt/receipt.json",
+      "origin": "/tmp/ingetrazo-ai-bridge-capture-native-attempt-10/receipt.json",
+      "size": 257,
+      "sha256": "16761a992bf7eb9975af1b193936f48d6380f5b1774c4dfdf522b941fd5bbcbb"
+    },
+    {
+      "member": "build.log",
+      "origin": "/tmp/ingetrazo-context-default-color-build-r1.log",
+      "size": 27950,
+      "sha256": "bbb1c31a89b854dd1f1335315b49067ae4cb3698792255e88d4af352373f7664"
+    },
+    {
+      "member": "failed-icd-r7/receipt.json",
+      "origin": "/tmp/ingetrazo-ai-bridge-capture-native-attempt-7/receipt.json",
+      "size": 258,
+      "sha256": "ef2455bce2dea3886af45bfbcfb0ba29953b9aaf7caf41e6ccf6235a2e9e1b90"
+    },
+    {
+      "member": "failed-icd-r7/stderr",
+      "origin": "/tmp/ingetrazo-ai-bridge-capture-native-attempt-7/stderr",
+      "size": 40,
+      "sha256": "36d70d8238213b5e277a42850e45cd6bb11212fb28865800c2066c97b16ff615"
+    },
+    {
+      "member": "prior-r9/comparison.json",
+      "origin": "/tmp/ingetrazo-ai-bridge-capture-native-r9/comparison.json",
+      "size": 1680,
+      "sha256": "53d97fa048f656e3d2a2bf60d9b768cb031f0e9e3490c946cd9810f6c1f6f72f"
+    },
+    {
+      "member": "prior-r9/independent-context-pair-classification.json",
+      "origin": "/tmp/ingetrazo-ai-bridge-capture-native-r9/independent-context-pair-classification.json",
+      "size": 1547,
+      "sha256": "49383f64f328f9cbd32fc12037eb2e410ec1f17cd9b2229153b84ec9179fa125"
+    },
+    {
+      "member": "executed-code/crates/ingetrazo-gui/examples/ai_bridge_capture_workflows.rs",
+      "git_path": "crates/ingetrazo-gui/examples/ai_bridge_capture_workflows.rs",
+      "revision": "d19bf4081f975e4b777c39eeaef81c376cf305f0",
+      "size": 25068,
+      "sha256": "cf85642b99ab98251c5f5bd2b45f59785af1194f2e294dd65e94a9141e7e0d5f"
+    },
+    {
+      "member": "executed-code/crates/ingetrazo-gui/src/edit_context_view.rs",
+      "git_path": "crates/ingetrazo-gui/src/edit_context_view.rs",
+      "revision": "d19bf4081f975e4b777c39eeaef81c376cf305f0",
+      "size": 2443,
+      "sha256": "7504a46ed1b588afcb6863b9ecbcb13f186d7233ee80482079fbcf16776e88d4"
+    },
+    {
+      "member": "executed-code/crates/ingetrazo-gui/src/native_vulkan/world_context.rs",
+      "git_path": "crates/ingetrazo-gui/src/native_vulkan/world_context.rs",
+      "revision": "d19bf4081f975e4b777c39eeaef81c376cf305f0",
+      "size": 11419,
+      "sha256": "a251169565ada098ef626af53094c5fb405edecf145fdbdb8f5631653f49f387"
+    },
+    {
+      "member": "executed-code/crates/ingetrazo-gui/src/native_vulkan/world.rs",
+      "git_path": "crates/ingetrazo-gui/src/native_vulkan/world.rs",
+      "revision": "d19bf4081f975e4b777c39eeaef81c376cf305f0",
+      "size": 124222,
+      "sha256": "b4db50a6f3f5101e0ba487b811261240eeec3463775ff079b1ded2bc364f0c3c"
+    },
+    {
+      "member": "executed-code/crates/ingetrazo-gui/src/native_vulkan/textures.rs",
+      "git_path": "crates/ingetrazo-gui/src/native_vulkan/textures.rs",
+      "revision": "d19bf4081f975e4b777c39eeaef81c376cf305f0",
+      "size": 41755,
+      "sha256": "7302d4e0932a82d9065632984f0e03c0f36245adbe0895a8eb895c6f85ed0868"
+    },
+    {
+      "member": "executed-code/crates/ingetrazo-gui/src/native_vulkan/capture.rs",
+      "git_path": "crates/ingetrazo-gui/src/native_vulkan/capture.rs",
+      "revision": "d19bf4081f975e4b777c39eeaef81c376cf305f0",
+      "size": 21511,
+      "sha256": "06f182e3f01975f576c68d4dbd7b0243c7e0bbb030dd95c9d50eebb9641a015f"
+    },
+    {
+      "member": "executed-code/crates/ingetrazo-gui/src/native_vulkan/mod.rs",
+      "git_path": "crates/ingetrazo-gui/src/native_vulkan/mod.rs",
+      "revision": "d19bf4081f975e4b777c39eeaef81c376cf305f0",
+      "size": 102773,
+      "sha256": "060ccc68bdc2b91ca144416f900cfadc67e2b0b060e7670d3ba89f9214385c37"
+    },
+    {
+      "member": "executed-code/scripts/check-ai-bridge-capture.py",
+      "git_path": "scripts/check-ai-bridge-capture.py",
+      "revision": "d19bf4081f975e4b777c39eeaef81c376cf305f0",
+      "size": 6516,
+      "sha256": "0f9aa2db91dcc3c0df1ed9c30a0d096fe69fcbd2cc16cf2b9bb17008f2034afc"
+    }
+  ]
+}
