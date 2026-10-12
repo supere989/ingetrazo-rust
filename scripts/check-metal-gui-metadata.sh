@@ -28,6 +28,7 @@ INGETRAZO_RUST_METADATA_ONLY=1 cargo check --locked -p ingetrazo-gui --target "$
     --example sheet_image_workflows \
     --example sheet_picture_workflows \
     --example composer_picture_authoring \
+    --example composer_picture_gestures \
     --example native_metal_section_fill \
     --example native_metal_billboards \
     --example native_metal_document_annotations -j2
