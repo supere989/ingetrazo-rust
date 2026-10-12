@@ -313,7 +313,7 @@ fn drawing_points(app: &mut IngeTrazoApp, s: usize) -> Result<Vec<[f64; 2]>, Str
     }
     Ok(out)
 }
-fn collect_edges(
+pub(super) fn collect_edges(
     view: &ingetrazo_render::paper_scene::PaperSceneView<'_>,
     mesh: &ingetrazo_core::mesh::Mesh,
     transform: glam::DMat4,
@@ -344,7 +344,7 @@ fn collect_edges(
     }
     Ok(())
 }
-fn collect_groups(
+pub(super) fn collect_groups(
     view: &ingetrazo_render::paper_scene::PaperSceneView<'_>,
     groups: &[ingetrazo_core::groups::Group],
     parent: glam::DMat4,

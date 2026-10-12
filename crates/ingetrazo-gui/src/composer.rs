@@ -26,10 +26,12 @@ use crate::app::IngeTrazoApp;
 #[path="composer_legend_authoring.rs"] mod legend_authoring;
 #[path="composer_annotation_authoring.rs"] mod annotation_authoring;
 #[path="composer_annotation_canvas.rs"] mod annotation_canvas;
+#[path="composer_frame_anchors.rs"] mod frame_anchors;
 
 /// Interactive state for the Sheet Composer view.
 #[derive(Debug, Clone)]
 pub struct ComposerState {
+    frame_anchors: frame_anchors::Cache,
     picture_grab:Option<picture_gestures::Grab>,
     picture_ctrl_toggle:bool,
     picture_authoring:picture_authoring::State,
@@ -65,7 +67,7 @@ pub struct ComposerState {
 impl Default for ComposerState {
     fn default() -> Self {
         Self {
-            picture_grab:None,picture_ctrl_toggle:false,picture_authoring:Default::default(),legend_authoring:Default::default(),annotation_authoring:Default::default(),pdf_export_error: None,text_tool:false,tool_switch_rects:[egui::Rect::NOTHING;8],inline_text:None,text_canvas:Default::default(),outer_border:Default::default(),paper_canvas:Default::default(),field_index_cache:None,field_index_computations:0,field_expansions:Default::default(),
+            frame_anchors:Default::default(),picture_grab:None,picture_ctrl_toggle:false,picture_authoring:Default::default(),legend_authoring:Default::default(),annotation_authoring:Default::default(),pdf_export_error: None,text_tool:false,tool_switch_rects:[egui::Rect::NOTHING;8],inline_text:None,text_canvas:Default::default(),outer_border:Default::default(),paper_canvas:Default::default(),field_index_cache:None,field_index_computations:0,field_expansions:Default::default(),
             paper_text: Default::default(),
             shape_tool:None,shape_start:None,
             pan_offset: Vec2::ZERO,
@@ -127,7 +129,7 @@ impl IngeTrazoApp {
  }
  pub fn enter_composer_sheet(&mut self,index:usize){
   let Some(id)=self.scene.sheets.get(index).map(|s|s.id)else{return;};
-  if self.composer_state.interaction_sheet!=Some(id){self.finish_composer_edit();self.composer_state.picture_authoring.clear();self.composer_state.legend_authoring=Default::default();self.composer_state.annotation_authoring.selected=None;self.composer_state.annotation_authoring.ignore_release=false;self.composer_state.annotation_authoring.armed=None;self.composer_state.annotation_authoring.points.clear();self.composer_state.annotation_authoring.draft=None;self.composer_state.annotation_authoring.coalesce=None;self.composer_state.annotation_authoring.layouts=Default::default();self.composer_state.annotation_authoring.canvas.clear();self.composer_state.shape_start=None;self.composer_state.interaction_sheet=Some(id);}
+  if self.composer_state.interaction_sheet!=Some(id){self.finish_composer_edit();self.composer_state.picture_authoring.clear();self.composer_state.legend_authoring=Default::default();self.composer_state.annotation_authoring.selected=None;self.composer_state.annotation_authoring.ignore_release=false;self.composer_state.annotation_authoring.armed=None;self.composer_state.annotation_authoring.points.clear();self.composer_state.annotation_authoring.snap_hits.clear();self.composer_state.annotation_authoring.draft=None;self.composer_state.annotation_authoring.coalesce=None;self.composer_state.annotation_authoring.layouts=Default::default();self.composer_state.annotation_authoring.canvas.clear();self.composer_state.shape_start=None;self.composer_state.interaction_sheet=Some(id);}
  }
  pub fn begin_composer_edit(&mut self){
   if let Some(sheet)=self.scene.active_sheet_index.and_then(|i|self.scene.sheets.get(i)){
@@ -161,12 +163,12 @@ impl IngeTrazoApp {
   self.scene.bump_version();
  }
 
- pub fn undo_composer_edit(&mut self){self.finish_composer_edit();self.composer_state.picture_authoring.history_boundary();self.composer_state.annotation_authoring.coalesce=None;self.composer_state.annotation_authoring.points.clear();self.composer_state.annotation_authoring.draft=None;self.composer_state.legend_authoring.coalesce=None;self.composer_state.legend_authoring.pending=None;self.composer_state.legend_authoring.title_draft=None;
+ pub fn undo_composer_edit(&mut self){self.finish_composer_edit();self.composer_state.picture_authoring.history_boundary();self.composer_state.annotation_authoring.coalesce=None;self.composer_state.annotation_authoring.points.clear();self.composer_state.annotation_authoring.snap_hits.clear();self.composer_state.annotation_authoring.draft=None;self.composer_state.legend_authoring.coalesce=None;self.composer_state.legend_authoring.pending=None;self.composer_state.legend_authoring.title_draft=None;
   let Some(index)=self.scene.active_sheet_index.filter(|&i|i<self.scene.sheets.len())else{return;};let id=self.scene.sheets[index].id;
   let Some(history)=self.composer_state.sheet_history.get_mut(&id)else{return;};
   if let Some(mut before)=history.0.pop(){Self::retain_direct_paper_properties(&mut before,&self.scene.sheets[index]);history.1.push(std::mem::replace(&mut self.scene.sheets[index],before));self.scene.bump_version();}self.revalidate_picture_selection();self.revalidate_legend_selection();self.revalidate_annotation_selection();
  }
- pub fn redo_composer_edit(&mut self){self.finish_composer_edit();self.composer_state.picture_authoring.history_boundary();self.composer_state.annotation_authoring.coalesce=None;self.composer_state.annotation_authoring.points.clear();self.composer_state.annotation_authoring.draft=None;self.composer_state.legend_authoring.coalesce=None;self.composer_state.legend_authoring.pending=None;self.composer_state.legend_authoring.title_draft=None;
+ pub fn redo_composer_edit(&mut self){self.finish_composer_edit();self.composer_state.picture_authoring.history_boundary();self.composer_state.annotation_authoring.coalesce=None;self.composer_state.annotation_authoring.points.clear();self.composer_state.annotation_authoring.snap_hits.clear();self.composer_state.annotation_authoring.draft=None;self.composer_state.legend_authoring.coalesce=None;self.composer_state.legend_authoring.pending=None;self.composer_state.legend_authoring.title_draft=None;
   let Some(index)=self.scene.active_sheet_index.filter(|&i|i<self.scene.sheets.len())else{return;};let id=self.scene.sheets[index].id;
   let Some(history)=self.composer_state.sheet_history.get_mut(&id)else{return;};
   if let Some(mut after)=history.1.pop(){Self::retain_direct_paper_properties(&mut after,&self.scene.sheets[index]);history.0.push(std::mem::replace(&mut self.scene.sheets[index],after));self.scene.bump_version();}self.revalidate_picture_selection();self.revalidate_legend_selection();self.revalidate_annotation_selection();
@@ -177,7 +179,7 @@ impl IngeTrazoApp {
   self.composer_state.legend_authoring.grab=None;
   self.composer_state.picture_grab=None;self.composer_state.picture_ctrl_toggle=false;
   self.composer_state.picture_authoring.history_boundary();
-  self.composer_state.annotation_authoring.armed=None;self.composer_state.annotation_authoring.points.clear();self.composer_state.annotation_authoring.coalesce=None;self.composer_state.legend_authoring.armed=false;self.composer_state.legend_authoring.pending=None;self.composer_state.legend_authoring.coalesce=None;
+  self.composer_state.annotation_authoring.armed=None;self.composer_state.annotation_authoring.points.clear();self.composer_state.annotation_authoring.snap_hits.clear();self.composer_state.annotation_authoring.coalesce=None;self.composer_state.legend_authoring.armed=false;self.composer_state.legend_authoring.pending=None;self.composer_state.legend_authoring.coalesce=None;
   self.composer_state.shape_start=None;self.composer_state.shape_tool=None;
   if let Some(mut before)=self.composer_state.edit_before.take(){
    if let Some(current)=self.scene.sheets.iter_mut().find(|s|s.id==before.id){
@@ -199,6 +201,7 @@ pub fn render_sheet_composer(app: &mut IngeTrazoApp, ui: &mut egui::Ui, sheet_id
     }
 
     app.enter_composer_sheet(sheet_idx);app.revalidate_legend_selection();
+    if let Err(e)=app.refresh_composer_frame_anchors(){app.status_message=e;}
     if ui.is_enabled()&&ui.input(|i|i.key_pressed(egui::Key::Escape)){
         // A normal item grab keeps its geometry until the real release.
         // Source Select Escape only drops selection; explicit edit/placement

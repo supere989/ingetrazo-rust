@@ -38,6 +38,7 @@ pub(crate) fn camera(scene: &Scene, live: &OrbitCamera, frame: &ViewFrame) -> Or
     }
     camera
 }
+#[derive(Clone, Debug)]
 pub(crate) struct Projector {
     camera: OrbitCamera,
     basis: OriginalQtPaperBasis,

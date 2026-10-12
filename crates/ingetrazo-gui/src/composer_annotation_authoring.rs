@@ -33,6 +33,7 @@ pub(super) struct State {
     pub hover: Option<DVec2>,
     pub armed: Option<usize>,
     pub points: Vec<DVec2>,
+    pub snap_hits: Vec<Option<super::frame_anchors::SnapHit>>,
     pub selected: Option<Owner>,
     pub grab: Option<Grab>,
     pub coalesce: Option<(Owner, Vec<String>, usize, u64)>,
@@ -241,6 +242,7 @@ impl IngeTrazoApp {
         self.composer_state.legend_authoring.pending = None;
         self.composer_state.annotation_authoring.armed = Some(family);
         self.composer_state.annotation_authoring.points.clear();
+        self.composer_state.annotation_authoring.snap_hits.clear();
         self.composer_state.annotation_authoring.coalesce = None;
         Ok(())
     }
@@ -260,6 +262,7 @@ impl IngeTrazoApp {
             self.composer_state.annotation_authoring.armed = None;
         } else {
             self.composer_state.annotation_authoring.points.clear();
+            self.composer_state.annotation_authoring.snap_hits.clear();
         }
     }
     pub fn composer_annotation_preview_stats(&self) -> (u64, u64, usize) {
@@ -507,6 +510,42 @@ impl IngeTrazoApp {
             }
             _ => unreachable!(),
         }
+        let anchors = if family == 0 {
+            let hits = &self.composer_state.annotation_authoring.snap_hits;
+            match (
+                hits.first().and_then(Option::as_ref),
+                hits.get(1).and_then(Option::as_ref),
+            ) {
+                (Some(a), Some(b)) if a.frame == b.frame => Some((a.clone(), b.clone())),
+                _ => None,
+            }
+        } else {
+            None
+        };
+        if let Some((a, b)) = &anchors {
+            let frame = self.scene.sheets[s]
+                .items
+                .iter()
+                .find_map(|i| match i {
+                    ingetrazo_core::composition::SheetItem::ViewFrame(f) if f.id == a.frame => {
+                        Some(f)
+                    }
+                    _ => None,
+                })
+                .ok_or("Missing snapped frame")?;
+            let uid = self.scene.sheets[s]
+                .native_items
+                .get(&frame.id)
+                .and_then(|v| v.get("uid"))
+                .and_then(Value::as_str)
+                .filter(|s| !s.is_empty())
+                .map(str::to_owned)
+                .unwrap_or_else(|| Uuid::new_v4().simple().to_string());
+            v["anchor_uid"] = json!(uid);
+            v["a_world"] = json!(a.world.to_array());
+            v["b_world"] = json!(b.world.to_array());
+            v["scale_n"] = json!(frame.scale_n);
+        }
         v["z"] = json!(super::picture_authoring::next_z(&self.scene.sheets[s])?);
         admit(&v)?;
         let count = self.scene.sheets[s]
@@ -539,6 +578,14 @@ impl IngeTrazoApp {
         }
         self.finish_composer_edit();
         self.begin_composer_edit();
+        if let Some((a, _)) = &anchors {
+            let uid = v["anchor_uid"].clone();
+            let metadata = self.scene.sheets[s]
+                .native_items
+                .entry(a.frame)
+                .or_insert_with(|| json!({}));
+            metadata["uid"] = uid;
+        }
         let raw = &mut self.scene.sheets[s].native_document;
         if raw.get(FAMILIES[family]).is_none() {
             fresh.push(v);
@@ -557,6 +604,7 @@ impl IngeTrazoApp {
         self.composer_state.annotation_authoring.armed =
             if family <= 2 { Some(family) } else { None };
         self.composer_state.annotation_authoring.points.clear();
+        self.composer_state.annotation_authoring.snap_hits.clear();
         self.composer_state.annotation_authoring.axis = "";
         self.finish_composer_edit();
         Ok(true)
@@ -843,6 +891,7 @@ pub(super) fn toolbar(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
     if select.clicked() {
         app.composer_state.annotation_authoring.armed = None;
         app.composer_state.annotation_authoring.points.clear();
+        app.composer_state.annotation_authoring.snap_hits.clear();
     }
     let menu = ui.menu_button("+ Annotation", |ui| {
         for (f, label) in LABELS.iter().enumerate() {
@@ -1624,6 +1673,24 @@ pub(super) fn input(
                 let mut p = page(pos);
                 if let Some(f) = app.composer_state.annotation_authoring.armed {
                     owned = true;
+                    let hit = if f <= 4
+                        && !(f == 0 && app.composer_state.annotation_authoring.points.len() >= 2)
+                    {
+                        match app.nearest_composer_frame_snap(s, p.to_array(), 7. / f64::from(zoom))
+                        {
+                            Ok(hit) => hit,
+                            Err(e) => {
+                                app.status_message = e;
+                                None
+                            }
+                        }
+                    } else {
+                        None
+                    };
+                    if let Some(hit) = &hit {
+                        p = DVec2::from_array(hit.page);
+                    }
+
                     if f == 1
                         && modifiers.shift
                         && !app.composer_state.annotation_authoring.points.is_empty()
@@ -1658,6 +1725,7 @@ pub(super) fn input(
                         }
                     }
                     app.composer_state.annotation_authoring.points.push(p);
+                    app.composer_state.annotation_authoring.snap_hits.push(hit);
                     let required = [3, 4, 2, 2, 1, 2][f];
                     if app.composer_state.annotation_authoring.points.len() == required && f != 4 {
                         let pts = app
@@ -1676,6 +1744,7 @@ pub(super) fn input(
                             Err(e) => app.status_message = e,
                         }
                         app.composer_state.annotation_authoring.points.clear();
+                        app.composer_state.annotation_authoring.snap_hits.clear();
                     }
                 } else if app.composer_state.picture_grab.is_none()
                     && app.composer_state.dragging_item_idx.is_none()
