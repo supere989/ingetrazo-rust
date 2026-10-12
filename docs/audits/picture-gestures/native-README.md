@@ -8,7 +8,7 @@ The affected authoring replay also passes all 44 states, all 15 stacking categor
 
 ## Runtime and binary provenance
 
-Gesture and old-pointer results were compiled at febcf5b72b5fe9f34e0ddaa53388912355775cb3. The shared three-example build took 6.53 seconds. The authoring consumer was then compiled at d28b5edc25b220f69f64e6d5bbf200437781193c in 0.670 seconds. The production files are unchanged between those revisions; only the authoring example changed. Every binary has its own retained SHA-256, build receipt and compiled revision in native-manifest.json.
+Gesture and old-pointer results were compiled at febcf5b72b5fe9f34e0ddaa53388912355775cb3. The final shared three-example build took 6.148 seconds; the preceding build took 6.531 seconds. The authoring consumer was then compiled at d28b5edc25b220f69f64e6d5bbf200437781193c in 0.670 seconds. The production files are unchanged between those revisions; only the authoring example changed. Every binary has its own retained SHA-256, build receipt and compiled revision in native-manifest.json.
 
 The source archives are authenticated separately: picture-gestures/source-records.zip contains the literal 21-case oracle and retained guide-fixture correction; picture-authoring/source-records.zip contains the accepted authoring oracle. They are referenced by hash and are not copied into this native archive. Session settings, caches, binaries and worktrees are also excluded.
 
