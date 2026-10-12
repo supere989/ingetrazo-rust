@@ -16,6 +16,14 @@ pub struct Mesh {pub geometry:Arc<Geometry>,pub batches:Arc<[Batch]>,pub gates:A
 #[derive(Clone,Copy)]pub struct Limits {pub cells:usize,pub spans:usize,pub geometry_bytes:usize,pub glyphs:usize,pub glyph_bytes:usize}
 #[derive(Clone,Copy,PartialEq,Eq,Hash)]struct GlyphKey{font:ingetrazo_formats::paper_font::FontKey,pixels:u32,glyph:u32,density:u64,phase:[u8;2],lcd:bool}
 #[derive(Clone,Copy,PartialEq,Eq)]enum GlyphPlacement{Raster,OpenGl}
+pub(crate) struct PresentationText {
+    pub position: [f64; 2],
+    pub text: Arc<str>,
+    pub size_pt: f64,
+    pub bold: bool,
+    pub center: bool,
+    pub color: [u8; 4],
+}
 pub struct Cache {analytic_boundary:bool,alpha_union:bool,stencil_union:bool,glyph_order:VecDeque<GlyphKey>,glyphs:HashMap<GlyphKey,Arc<ingetrazo_formats::paper_text::RasterGlyph>>,glyph_bytes:usize,glyph_builds:u64,fonts:annotation_font::Cache,current:Option<(Arc<Plan>,u64,u64,[i32;4],GlyphPlacement,Arc<Mesh>)>,builds:u64,limits:Limits}
 impl Cache {
  pub fn new(fonts:annotation_font::Limits,limits:Limits)->Result<Self,String>{if limits.cells==0||limits.spans==0||limits.geometry_bytes==0||limits.glyphs==0||limits.glyph_bytes==0{return Err("Annotation geometry budget must be positive".into());}Ok(Self{analytic_boundary:true,alpha_union:std::env::var_os("INGETRAZO_ANNOTATION_ALPHA_UNION_PROBE").is_some(),stencil_union:false,glyph_order:VecDeque::new(),glyphs:HashMap::new(),glyph_bytes:0,glyph_builds:0,fonts:annotation_font::Cache::new(fonts)?,current:None,builds:0,limits})}
@@ -102,6 +110,188 @@ impl Cache {
   self.glyphs.insert(key,image.clone());self.glyph_order.push_back(key);
   self.glyph_bytes=remaining_bytes;self.glyph_builds+=1;Ok(image)
  }
+    /// Capture labels share the existing immutable font/glyph cache and physical writer.
+    pub(crate) fn prepare_presentation_text(
+        &mut self,
+        records: &[PresentationText],
+        density: f32,
+        font_dpi: f64,
+    ) -> Result<Arc<Mesh>, String> {
+        let density = f64::from(density);
+        if !density.is_finite()
+            || density <= 0.
+            || density > 40.
+            || !font_dpi.is_finite()
+            || font_dpi <= 0.
+        {
+            return Err("Capture text density refused".into());
+        }
+        let mut writer = Writer::new(density, self.limits);
+        for text in records {
+            self.write_text(
+                &mut writer,
+                &text.position,
+                &text.text,
+                text.size_pt,
+                text.bold,
+                text.center,
+                &text.color,
+                Gate::Always,
+                density,
+                font_dpi,
+                GlyphPlacement::OpenGl,
+            )?;
+        }
+        Ok(Arc::new(writer.finish()?))
+    }
+    fn write_text(
+        &mut self,
+        writer: &mut Writer,
+        position: &[f64; 2],
+        text: &str,
+        size_pt: f64,
+        bold: bool,
+        center: bool,
+        color: &[u8; 4],
+        gate: Gate,
+        density: f64,
+        font_dpi: f64,
+        placement: GlyphPlacement,
+    ) -> Result<(), String> {
+        let pixel_size = (size_pt * font_dpi / 72. + 0.5).floor();
+        if !pixel_size.is_finite() || !(1. ..=4096.).contains(&pixel_size) {
+            return Err("Annotation resolved point size outside admission".into());
+        }
+        let request = Request {
+            family: "Sans Serif".into(),
+            bold,
+            italic: false,
+            required_chars: vec![],
+        };
+        let line = self.fonts.shape(&request, text, pixel_size as u32)?;
+        let mut position = *position;
+        if center {
+            position[0] -= (line.advance_26_6 as f64 / 64. + 0.5).floor() / 2.;
+            position[1] +=
+                f64::from((line.ascent_26_6 + 63) / 64 - (line.descent_26_6 + 63) / 64) / 2.;
+        }
+        for run in &line.runs {
+            let mut advance = run.x_26_6;
+            for glyph in &run.glyphs {
+                let x = position[0] * density
+                    + (advance + i64::from(glyph.offset[0])) as f64 / 64. * density;
+                let y = position[1] * density + f64::from(glyph.offset[1]) / 64. * density;
+                let (x, y, phase) = match placement {
+                    GlyphPlacement::Raster => device_position(x, y)?,
+                    GlyphPlacement::OpenGl => opengl_device_position(
+                        position,
+                        [
+                            advance + i64::from(glyph.offset[0]),
+                            i64::from(glyph.offset[1]),
+                        ],
+                        density,
+                    )?,
+                };
+                let lcd = placement == GlyphPlacement::OpenGl;
+                let image = self.glyph(&run.font, glyph.id, density, phase, lcd)?;
+                let left = x
+                    .checked_add(i64::from(image.left))
+                    .ok_or("Annotation glyph position overflow")?;
+                let top = y
+                    .checked_sub(i64::from(image.top))
+                    .ok_or("Annotation glyph position overflow")?;
+                if lcd {
+                    let glyph_first = writer.indices.len() as u32;
+                    let glyph_ranges = writer.ranges.len();
+                    for row in 0..image.height {
+                        let mut col = 0;
+                        while col < image.width {
+                            let n = (row * image.width + col) * 3;
+                            let mask: [u8; 3] = image.coverage[n..n + 3].try_into().unwrap();
+                            let start = col;
+                            while col < image.width
+                                && image.coverage[(row * image.width + col) * 3
+                                    ..(row * image.width + col) * 3 + 3]
+                                    == mask
+                            {
+                                col += 1;
+                            }
+                            if mask == [0; 3] {
+                                continue;
+                            }
+                            writer.layer_with_composition(
+                                vec![Span {
+                                    x: i32::try_from(left + start as i64)
+                                        .map_err(|_| "LCD glyph x outside domain")?,
+                                    y: i32::try_from(top + row as i64)
+                                        .map_err(|_| "LCD glyph y outside domain")?,
+                                    len: u32::try_from(col - start)
+                                        .map_err(|_| "LCD glyph span length overflow")?,
+                                    coverage: 255,
+                                }],
+                                *color,
+                                gate,
+                                Composition::GlyphLcd(mask),
+                            )?;
+                        }
+                    }
+                    // RGB runs are disjoint within one glyph. Preserve one source layer
+                    // barrier per glyph, rather than introducing a barrier per color run.
+                    writer.ranges.truncate(glyph_ranges);
+                    if writer.indices.len() as u32 > glyph_first {
+                        writer.ranges.push(glyph_first..writer.indices.len() as u32);
+                    }
+                    advance = advance
+                        .checked_add(i64::from(glyph.advance[0]))
+                        .ok_or("Annotation text advance overflow")?;
+                    continue;
+                }
+                let mut spans = Vec::new();
+                for row in 0..image.height {
+                    let mut col = 0;
+                    while col < image.width {
+                        let coverage = image.coverage[row * image.width + col];
+                        let start = col;
+                        while col < image.width
+                            && image.coverage[row * image.width + col] == coverage
+                        {
+                            col += 1;
+                        }
+                        if coverage == 0 {
+                            continue;
+                        }
+                        if spans.len() >= self.limits.spans {
+                            return Err("Annotation glyph run admission exceeded".into());
+                        }
+                        spans
+                            .try_reserve(1)
+                            .map_err(|_| "Annotation glyph span allocation failed")?;
+                        spans.push(Span {
+                            x: i32::try_from(left + start as i64)
+                                .map_err(|_| "Annotation glyph x outside domain")?,
+                            y: i32::try_from(top + row as i64)
+                                .map_err(|_| "Annotation glyph y outside domain")?,
+                            len: u32::try_from(col - start)
+                                .map_err(|_| "Annotation glyph span length overflow")?,
+                            coverage,
+                        });
+                    }
+                }
+                writer.layer_with_composition(
+                    spans,
+                    *color,
+                    gate,
+                    Composition::GlyphRgba64Opaque,
+                )?;
+                advance = advance
+                    .checked_add(i64::from(glyph.advance[0]))
+                    .ok_or("Annotation text advance overflow")?;
+            }
+        }
+        Ok(())
+    }
+
+
  fn build(&mut self,plan:&Plan,density:f64,font_dpi:f64,clip:[i32;4],placement:GlyphPlacement)->Result<Mesh,String>{
   let mut writer=Writer::new(density,self.limits);
   for operation in &plan.operations {
@@ -159,54 +349,7 @@ impl Cache {
      }
     }
     Primitive::Text{position,text,size_pt,color}=>{
-     let pixel_size=(f64::from(*size_pt)*font_dpi/72.+0.5).floor();
-     if !pixel_size.is_finite()||!(1. ..=4096.).contains(&pixel_size){return Err("Annotation resolved point size outside admission".into());}
-     let request=Request{family:"Sans Serif".into(),bold:true,italic:false,required_chars:vec![]};
-     let line=self.fonts.shape(&request,text,pixel_size as u32)?;
-     for run in &line.runs {
-      let mut advance=run.x_26_6;
-      for glyph in &run.glyphs {
-       let x=position[0]*density+(advance+i64::from(glyph.offset[0]))as f64/64.*density;
-       let y=position[1]*density+f64::from(glyph.offset[1])/64.*density;
-       let (x,y,phase)=match placement{
-        GlyphPlacement::Raster=>device_position(x,y)?,
-        GlyphPlacement::OpenGl=>opengl_device_position(*position,[advance+i64::from(glyph.offset[0]),i64::from(glyph.offset[1])],density)?,
-       };
-       let lcd=placement==GlyphPlacement::OpenGl;
-       let image=self.glyph(&run.font,glyph.id,density,phase,lcd)?;
-       let left=x.checked_add(i64::from(image.left)).ok_or("Annotation glyph position overflow")?;
-       let top=y.checked_sub(i64::from(image.top)).ok_or("Annotation glyph position overflow")?;
-       if lcd{
-        let glyph_first=writer.indices.len()as u32;let glyph_ranges=writer.ranges.len();
-        for row in 0..image.height{
-         let mut col=0;
-         while col<image.width{
-          let n=(row*image.width+col)*3;let mask:[u8;3]=image.coverage[n..n+3].try_into().unwrap();let start=col;
-          while col<image.width&&image.coverage[(row*image.width+col)*3..(row*image.width+col)*3+3]==mask{col+=1;}
-          if mask==[0;3]{continue;}
-          writer.layer_with_composition(vec![Span{x:i32::try_from(left+start as i64).map_err(|_|"LCD glyph x outside domain")?,y:i32::try_from(top+row as i64).map_err(|_|"LCD glyph y outside domain")?,len:u32::try_from(col-start).map_err(|_|"LCD glyph span length overflow")?,coverage:255}],*color,operation.gate,Composition::GlyphLcd(mask))?;
-
-         }
-        }
-        // RGB runs are disjoint within one glyph. Preserve one source layer
-        // barrier per glyph, rather than introducing a barrier per color run.
-        writer.ranges.truncate(glyph_ranges);
-        if writer.indices.len()as u32>glyph_first{writer.ranges.push(glyph_first..writer.indices.len()as u32);}
-        advance=advance.checked_add(i64::from(glyph.advance[0])).ok_or("Annotation text advance overflow")?;
-        continue;
-       }
-       let mut spans=Vec::new();
-       for row in 0..image.height{
-        let mut col=0;
-        while col<image.width{let coverage=image.coverage[row*image.width+col];let start=col;while col<image.width&&image.coverage[row*image.width+col]==coverage{col+=1;}if coverage==0{continue;}
-         if spans.len()>=self.limits.spans{return Err("Annotation glyph run admission exceeded".into());}spans.try_reserve(1).map_err(|_|"Annotation glyph span allocation failed")?;
-         spans.push(Span{x:i32::try_from(left+start as i64).map_err(|_|"Annotation glyph x outside domain")?,y:i32::try_from(top+row as i64).map_err(|_|"Annotation glyph y outside domain")?,len:u32::try_from(col-start).map_err(|_|"Annotation glyph span length overflow")?,coverage});
-        }
-       }
-       writer.layer_with_composition(spans,*color,operation.gate,Composition::GlyphRgba64Opaque)?;
-       advance=advance.checked_add(i64::from(glyph.advance[0])).ok_or("Annotation text advance overflow")?;
-      }
-     }
+     self.write_text(&mut writer,position,text,f64::from(*size_pt),true,false,color,operation.gate,density,font_dpi,placement)?;
     }
    }
   }
