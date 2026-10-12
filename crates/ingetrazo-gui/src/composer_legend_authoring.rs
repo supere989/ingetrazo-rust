@@ -1,6 +1,6 @@
 //! Source-backed raw legend authoring; active-sheet transactions retain opaque fields.
 use super::IngeTrazoApp;
-use serde_json::{Value, json};
+use serde_json::{json, Value};
 #[derive(Clone, Default)]
 pub(super) struct State {
     pub(super) armed: bool,
@@ -130,7 +130,8 @@ impl IngeTrazoApp {
     pub fn activate_composer_legend(&mut self) -> Result<(), String> {
         active(self)?;
         self.finish_composer_edit();
-        self.composer_state.annotation_authoring.armed=None;self.composer_state.annotation_authoring.points.clear();
+        self.composer_state.annotation_authoring.armed = None;
+        self.composer_state.annotation_authoring.points.clear();
         self.composer_state.text_tool = false;
         self.composer_state.shape_tool = None;
         self.composer_state.shape_start = None;
@@ -173,20 +174,30 @@ impl IngeTrazoApp {
             .try_reserve(1)
             .map_err(|_| "Legend list allocation refused")?;
         candidate.push(value);
+        self.scene.sheets[s].ensure_furniture_ids()?;
+        self.scene.sheets[s].furniture_ids[1]
+            .try_reserve(1)
+            .map_err(|_| "Legend identity admission refused")?;
         self.finish_composer_edit();
         self.begin_composer_edit();
         let sheet = &mut self.scene.sheets[s];
         sheet.native_document["leyendas"] = Value::Array(candidate);
+        sheet.push_furniture_id(1);
         let id = sheet.id;
         sheet.selected_item = None;
         self.finish_composer_edit();
         self.composer_state.picture_authoring.selected = None;
-            self.composer_state.annotation_authoring.selected = None;
+        self.composer_state.annotation_authoring.selected = None;
         self.composer_state.legend_authoring.selected = Some((id, count));
         self.composer_state.legend_authoring.armed = false;
         Ok(count)
     }
     fn edit_legend(&mut self, key: &'static str, new: Value) -> Result<(), String> {
+        if self.composer_state.selection.cohort_mode
+            && super::selection::primary(self).is_some_and(|o| o.category == 5)
+        {
+            return super::selection::edit_primary(self, &json!({key:new}));
+        }
         let (sid, index) = self
             .composer_legend_selection()
             .ok_or("No selected legend")?;
@@ -252,7 +263,7 @@ impl IngeTrazoApp {
         // Explicit empty ownership prevents retained IGZ overlay from resurrecting imported records.
         self.finish_composer_edit();
         self.composer_state.legend_authoring.selected = None;
-            self.composer_state.annotation_authoring.selected = None;
+        self.composer_state.annotation_authoring.selected = None;
         self.composer_state.legend_authoring.coalesce = None;
         Ok(())
     }
@@ -522,11 +533,7 @@ pub(super) fn paint(
                     painter.rect_filled(bounds, 0., color(fill));
                 }
                 if let Some((c, w)) = draw.stroke {
-                    painter.rect_stroke(
-                        bounds,
-                        0.,
-                        egui::Stroke::new(w as f32 * zoom, color(c)),
-                    );
+                    painter.rect_stroke(bounds, 0., egui::Stroke::new(w as f32 * zoom, color(c)));
                 }
             }
         }

@@ -433,6 +433,11 @@ pub struct Sheet {
     /// portable documents and document equality deliberately do not include them.
     #[serde(skip)]
     pub annotation_ids: [Vec<Uuid>; 6],
+    /// Nonportable picture, legend and profile identity owners; history only.
+    #[serde(skip)]
+    pub furniture_ids: [Vec<Uuid>; 3],
+    #[serde(skip)]
+    pub edit_signature: Option<Vec<(Uuid, Vec<String>)>>,
     #[serde(default)]
     pub source_border: Option<SourcePaperBorder>,
     #[serde(default)]
@@ -558,6 +563,33 @@ impl Sheet {
                 if let Some(value) = by_id.remove(id) { ids.push(*id); rows.push(value); }
             }
         }
+    }
+    pub const FURNITURE_FAMILIES: [&'static str;3] = ["images","leyendas","perfiles"];
+    pub fn ensure_furniture_ids(&mut self)->Result<(),String> {
+        let mut lengths=[0;3]; let mut total=0usize;
+        for (f,key) in Self::FURNITURE_FAMILIES.iter().enumerate() {
+            lengths[f]=self.native_document.get(*key).and_then(serde_json::Value::as_array).map_or(0,Vec::len);
+            total=total.checked_add(lengths[f]).ok_or("Furniture identity overflow")?;
+            if total>100000 {return Err("Furniture identity budget exceeded".into());}
+        }
+        for(f,len)in lengths.into_iter().enumerate(){if self.furniture_ids[f].len()!=len {let mut ids=Vec::new();ids.try_reserve_exact(len).map_err(|_|"Furniture identity allocation refused")?;ids.extend((0..len).map(|_|Uuid::new_v4()));self.furniture_ids[f]=ids;}}
+        Ok(())
+    }
+    pub fn furniture_id(&self,f:usize,index:usize)->Option<Uuid>{self.furniture_ids.get(f)?.get(index).copied()}
+    pub fn furniture_index(&self,f:usize,id:Uuid)->Option<usize>{self.furniture_ids.get(f)?.iter().position(|&v|v==id)}
+    pub fn push_furniture_id(&mut self,f:usize)->Uuid{let id=Uuid::new_v4();self.furniture_ids[f].push(id);id}
+    pub fn remove_furniture_id(&mut self,f:usize,index:usize)->Option<Uuid>{let ids=self.furniture_ids.get_mut(f)?;(index<ids.len()).then(||ids.remove(index))}
+    pub fn retain_mixed_order(&mut self,current:&Self){
+        self.retain_annotation_order(current);
+        for(f,key)in Self::FURNITURE_FAMILIES.iter().enumerate(){
+            let Some(rows)=self.native_document.get_mut(*key).and_then(serde_json::Value::as_array_mut)else{continue};
+            let ids=&mut self.furniture_ids[f];
+            if ids.len()!=rows.len()||current.furniture_ids[f].is_empty(){continue;}
+            let previous=std::mem::take(ids);let mut values=previous.iter().copied().zip(std::mem::take(rows)).collect::<std::collections::HashMap<_,_>>();
+            for id in current.furniture_ids[f].iter().chain(previous.iter()){if let Some(v)=values.remove(id){ids.push(*id);rows.push(v);}}
+        }
+        let previous=std::mem::take(&mut self.items);let order=previous.iter().map(|i|i.id()).collect::<Vec<_>>();let mut values=previous.into_iter().map(|item|(item.id(),item)).collect::<std::collections::HashMap<_,_>>();
+        for id in current.items.iter().map(|i|i.id()).chain(order.into_iter()){if let Some(v)=values.remove(&id){self.items.push(v);}}
     }
     pub fn physical_export_items(&self)->Result<impl Iterator<Item=PhysicalExportItem<'_>>,String>{self.ordered_export_items(true)}
     /// Existing canvas categories only: raw annotation export must not add work to warm UI frames.
@@ -767,6 +799,8 @@ impl Sheet {
     pub fn new(name: impl Into<String>, paper_size: PaperSize, orientation: Orientation) -> Self {
         let mut sheet = Self {
             annotation_ids: Default::default(),
+            furniture_ids: Default::default(),
+            edit_signature: None,
             source_border: Some(SourcePaperBorder::default()),
             source_border_baseline: None,
             native_document: serde_json::Value::Null,

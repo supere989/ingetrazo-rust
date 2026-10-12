@@ -174,7 +174,7 @@ pub(super) fn motion(
     }
     Ok(())
 }
-fn drawing_points(app: &mut IngeTrazoApp, s: usize) -> Result<Vec<[f64; 2]>, String> {
+pub(super) fn drawing_points(app: &mut IngeTrazoApp, s: usize) -> Result<Vec<[f64; 2]>, String> {
     use ingetrazo_core::composition::SheetItem;
     use ingetrazo_render::{
         paper_scene::PaperSceneView,

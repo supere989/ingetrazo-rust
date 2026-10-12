@@ -12,6 +12,7 @@ const CATEGORIES: [usize; 6] = [7, 8, 9, 10, 12, 13];
 #[derive(Clone, Debug, Default)]
 pub(super) struct State {
     pub members: Vec<Owner>,
+    pub external: bool,
     membership: HashSet<Owner>,
     validated: Option<(Option<uuid::Uuid>, u64, Option<Owner>)>,
     pub ctrl_capture: bool,
@@ -119,6 +120,13 @@ impl AxisIndex {
     }
 }
 
+pub(super) fn external_members(app: &mut IngeTrazoApp, members: Vec<Owner>) {
+    let state = &mut app.composer_state.annotation_authoring.multi;
+    state.membership = members.iter().copied().collect();
+    state.members = members;
+    state.external = true;
+    state.validated = None;
+}
 pub(super) fn selected(app: &IngeTrazoApp, owner: Owner) -> bool {
     app.composer_state.annotation_authoring.selected == Some(owner)
         || app
@@ -185,7 +193,9 @@ pub(super) fn revalidate(app: &mut IngeTrazoApp) {
     }
     let mut members = std::mem::take(&mut app.composer_state.annotation_authoring.multi.members);
     members.retain(|&o| Some(o.sheet) == sheet && record(app, o).is_some());
-    if app.composer_state.annotation_authoring.selected.is_none() {
+    if app.composer_state.annotation_authoring.selected.is_none()
+        && !app.composer_state.annotation_authoring.multi.external
+    {
         // A different owner kind has taken selection, or a lifecycle boundary
         // explicitly cleared the primary owner. Do not resurrect stale members.
         members.clear();

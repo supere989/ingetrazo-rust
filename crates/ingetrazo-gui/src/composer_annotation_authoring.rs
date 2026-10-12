@@ -217,6 +217,56 @@ impl IngeTrazoApp {
         self.composer_state.annotation_authoring.draft = None;
         multi::clear_selection(self);
     }
+    pub(super) fn invalidate_sheet_annotation(&mut self, f: usize, index: usize) {
+        if let Some(v) = self
+            .composer_state
+            .annotation_authoring
+            .layouts
+            .entries
+            .get_mut(&(f, index))
+        {
+            v.version = u64::MAX;
+        }
+    }
+    pub(super) fn set_annotation_cohort(&mut self, members: Vec<Owner>, primary: Option<Owner>) {
+        multi::external_members(self, members);
+        self.composer_state.annotation_authoring.selected = primary;
+        self.composer_state.annotation_authoring.draft = None;
+    }
+    pub(super) fn sheet_annotation_bounds(&self, owner: Owner) -> Result<[f64; 4], String> {
+        handles::bounds(self, owner)
+    }
+    pub(super) fn sheet_annotation_size(&self, owner: Owner) -> Result<[f64; 2], String> {
+        let s = active(self)?;
+        source_size(
+            self,
+            s,
+            owner.family,
+            record(self, owner).ok_or("Annotation missing")?,
+        )
+    }
+    pub(super) fn sheet_annotation_probe(
+        &self,
+        owner: Owner,
+        p: DVec2,
+    ) -> Result<(bool, bool, bool), String> {
+        let v = record(self, owner).ok_or("Annotation missing")?;
+        let local = p - DVec2::new(number(v, "x_mm", 0.), number(v, "y_mm", 0.));
+        let h = handles::acquire(self, owner, local)?;
+        Ok((
+            hit(self, owner, p)
+                || matches!(
+                    h,
+                    Some(
+                        handles::Handle::LabelWidth
+                            | handles::Handle::LinearText
+                            | handles::Handle::CalloutBubble
+                    )
+                ),
+            h.is_some(),
+            matches!(h, Some(handles::Handle::LabelSpot(_))),
+        ))
+    }
     pub fn composer_annotation_selection_set(&self) -> Vec<(usize, usize)> {
         let mut owners = self
             .composer_state
@@ -370,6 +420,12 @@ impl IngeTrazoApp {
         self.composer_state.annotation_authoring.canvas.stats()
     }
     pub fn edit_composer_annotation(&mut self, fields: Value) -> Result<(), String> {
+        if self.composer_state.selection.cohort_mode
+            && super::selection::primary(self)
+                .is_some_and(|o| matches!(o.category, 7 | 8 | 9 | 10 | 12 | 13))
+        {
+            return super::selection::edit_primary(self, &fields);
+        }
         let (sid, family, index) = self
             .composer_annotation_selection()
             .ok_or("No annotation selected")?;
@@ -479,6 +535,9 @@ impl IngeTrazoApp {
         Ok(())
     }
     pub fn delete_composer_annotation(&mut self) -> Result<(), String> {
+        if self.composer_state.selection.cohort_mode && super::selection::delete_selected(self)? {
+            return Ok(());
+        }
         if multi::delete_selected(self)? {
             return Ok(());
         }
@@ -584,6 +643,7 @@ impl IngeTrazoApp {
         points: &[[f64; 2]],
         diameter: bool,
     ) -> Result<bool, String> {
+        super::selection::admit_add(self, 1)?;
         let s = active(self)?;
         let family = self
             .composer_state
@@ -1860,6 +1920,15 @@ pub(super) fn input(
         return app.composer_state.annotation_authoring.armed.is_some()
             || app.composer_state.annotation_authoring.grab.is_some();
     }
+    if app.composer_state.annotation_authoring.armed.is_none()
+        && app.composer_state.annotation_authoring.grab.is_none()
+        && (app.composer_state.text_tool
+            || app.composer_state.shape_tool.is_some()
+            || app.composer_state.inline_text.is_some()
+            || app.composer_state.legend_authoring.armed)
+    {
+        return false;
+    }
     let events = ui.input(|i| i.events.clone());
     let page = |p: egui::Pos2| {
         DVec2::new(
@@ -2075,22 +2144,24 @@ pub(super) fn input(
                                 break;
                             }
                         };
-                        match multi::select_for_press(
-                            app,
-                            owner,
-                            modifiers.ctrl,
-                            matches!(handle, Some(handles::Handle::LabelSpot(_))),
-                            handle.is_some(),
-                        ) {
-                            Ok(true) => {
-                                owned = true;
-                                break;
+                        if !app.composer_state.selection.cohort_mode {
+                            match multi::select_for_press(
+                                app,
+                                owner,
+                                modifiers.ctrl,
+                                matches!(handle, Some(handles::Handle::LabelSpot(_))),
+                                handle.is_some(),
+                            ) {
+                                Ok(true) => {
+                                    owned = true;
+                                    break;
+                                }
+                                Err(e) => {
+                                    app.status_message = e;
+                                    break;
+                                }
+                                _ => {}
                             }
-                            Err(e) => {
-                                app.status_message = e;
-                                break;
-                            }
-                            _ => {}
                         }
                         owned = true;
                         let targets =

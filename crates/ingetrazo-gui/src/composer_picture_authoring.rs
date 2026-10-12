@@ -207,9 +207,14 @@ impl IngeTrazoApp {
             .try_reserve(1)
             .map_err(|_| "Picture list allocation failed")?;
         candidate.push(value);
+        self.scene.sheets[s].ensure_furniture_ids()?;
+        self.scene.sheets[s].furniture_ids[0]
+            .try_reserve(1)
+            .map_err(|_| "Picture identity admission refused")?;
         self.finish_composer_edit();
         self.begin_composer_edit();
         self.scene.sheets[s].native_document["images"] = serde_json::Value::Array(candidate);
+        self.scene.sheets[s].push_furniture_id(0);
         self.finish_composer_edit();
         self.composer_state.picture_authoring.coalesce = None;
         Ok(Some(index))
@@ -224,6 +229,11 @@ impl IngeTrazoApp {
         self.picture_patch(&changes, false)
     }
     pub fn composer_edit_picture(&mut self, changes: &serde_json::Value) -> Result<(), String> {
+        if self.composer_state.selection.cohort_mode
+            && super::selection::primary(self).is_some_and(|o| o.category == 2)
+        {
+            return super::selection::edit_primary(self, changes);
+        }
         self.picture_patch(changes.as_object().ok_or("Invalid picture changes")?, true)
     }
     fn picture_patch(
