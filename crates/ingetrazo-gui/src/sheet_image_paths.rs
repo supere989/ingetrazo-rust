@@ -263,8 +263,9 @@ fn records_with_primitive(draws:&[Draw],density:f64,device:[u32;2],line_hint:boo
         let paths = paths(&draw.path)?;
         let bounds = clip_bounds(draw, density, origin)?;
         let masks=masks(draw,density,origin)?;
-        let color =
-            |rgba: [f32; 4]| EncodedRgba::from_bytes(rgba.map(|v| (v * 255.).round() as u8), 1.);
+        // QColor::setAlphaF retains16-bit channels. Keep that authored solid
+        // brush until QRgba64 premultiplication, then round to target bytes.
+        let color = |rgba: [f32; 4]| {let color=EncodedRgba(rgba);color.validate()?;Ok::<_,String>(color)};
         if let Some(fill) = draw.fill {
             let spans = clip(
                 ingetrazo_render::qt_gray::rasterize_transformed_paths(
