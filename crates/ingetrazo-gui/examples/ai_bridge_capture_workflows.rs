@@ -418,7 +418,12 @@ mod fixture {
                 "6be29fe437a7cd992d4e079f71720821b25216b9"
             );
             let cases = original["cases"].as_array().unwrap().clone();
-            assert_eq!(cases.len(), 6);
+            let roster = cases.iter().map(|case| case["name"].as_str().unwrap()).collect::<Vec<_>>();
+            assert!(matches!(roster.as_slice(),
+                ["default-perspective", "clamped-and-portrait", "orthographic-live-depth",
+                 "committed-selected-overlays", "active-edit-context", "invalid-dimensions"]
+                | ["startup-billboard-context", "shared-texture-context"]),
+                "Only the two frozen capture rosters are admitted");
             let mut f = Self {
                 app: IngeTrazoApp::new(),
                 source,
