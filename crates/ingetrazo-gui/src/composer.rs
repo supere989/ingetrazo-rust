@@ -284,10 +284,13 @@ pub fn render_sheet_composer(app: &mut IngeTrazoApp, ui: &mut egui::Ui, sheet_id
     app.native_composer.retain_items(&items);
     if app.composer_state.shape_tool.is_none()||app.composer_state.shape_start.is_none(){app.native_composer.clear_preview();}
     // Render Sheet Items
-    let typed_item_order=app.scene.sheets[sheet_idx].visible_item_indices();
     let item_order=app.scene.sheets[sheet_idx].physical_export_items().map(|v|v.into_iter().filter_map(|item|match item{ingetrazo_core::composition::PhysicalExportItem::Typed{index,..}=>Some((false,index)),ingetrazo_core::composition::PhysicalExportItem::Picture{index,..}=>Some((true,index)),_=>None}).collect::<Vec<_>>()).unwrap_or_else(|e|{app.status_message=e;Vec::new()});
+    // Pointer acquisition uses the typed subset of the same source paint order.
+    // Accumulate it here instead of sorting the sheet a second time every frame.
+    let mut typed_item_order=Vec::with_capacity(item_order.len());
     for (picture,idx) in item_order {
         if picture {if let Err(e)=picture_authoring::paint(app,&painter,sheet_idx,idx,zoom,paper_rect.min){app.status_message=e;}continue;}
+        typed_item_order.push(idx);
         let item=&items[idx];
         let is_selected = selected_item == Some(idx);
 
