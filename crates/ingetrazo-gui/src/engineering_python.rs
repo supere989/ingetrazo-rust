@@ -27,7 +27,7 @@ impl Engine {
         &mut self,
         scene: &ingetrazo_core::scene::Scene,
         revision: u64,
-        code: &str,
+        code: ingetrazo_ai_interpreter_proof::vm_mesh::CodeInput<'_>,
     ) -> Result<(bool, Option<NativePublication>, Option<GroupPublication>), String> {
         if self.revision.is_some_and(|r| r != revision) {
             return Err("Engineering Python scope needs external document/history synchronization; session retained".into());
@@ -43,7 +43,7 @@ impl Engine {
         let controller = self.controller.as_mut().unwrap();
         let before = controller.native_mesh_revision()?;
         self.receipt = None;
-        let changed = match controller.execute_receipt(code) {
+        let changed = match controller.execute_input_receipt(code) {
             Ok(receipt) => {
                 let changed = receipt.changed;
                 let execution_error = receipt.error.is_some();
@@ -319,6 +319,11 @@ impl crate::IngeTrazoApp {
         }
     }
     pub(crate) fn execute_engineering_python(&mut self, code: &str)
+        -> Result<ingetrazo_ai_interpreter_proof::vm_mesh::ExecutionReceipt, String>
+    {
+        self.execute_engineering_python_input(ingetrazo_ai_interpreter_proof::vm_mesh::CodeInput::Text(code))
+    }
+    pub(crate) fn execute_engineering_python_input(&mut self, code: ingetrazo_ai_interpreter_proof::vm_mesh::CodeInput<'_>)
         -> Result<ingetrazo_ai_interpreter_proof::vm_mesh::ExecutionReceipt, String>
     {
         if self.undo_stack.try_reserve(1).is_err() {

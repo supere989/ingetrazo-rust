@@ -191,10 +191,10 @@ impl IngeTrazoApp {
     }
     fn ai_bridge_run_python(&mut self, args: Option<&Value>) -> Result<Value, String> {
         let code = match args.filter(|v| truth(v)) {
-            None => "",
+            None => None,
             Some(Value::Object(args)) => {
                 if args.keys().any(|k| k != "code") { return Err("TypeError: run_python accepts only code".into()); }
-                match args.get("code") { None => "", Some(Value::String(code)) => code, _ => return Err("TypeError: code must be a string".into()) }
+                args.get("code")
             }
             Some(_) => return Err("TypeError: args must be an object".into()),
         };
@@ -205,7 +205,9 @@ impl IngeTrazoApp {
                 || self.active_tool.tool_type() != ingetrazo_tools::base::ToolType::Select
                 || self.navigation.mode.is_some()
             { return Err("Bridge Python while a modal, composer, navigation or transform tool is active is not supported".into()); }
-            let receipt = self.execute_engineering_python(code)?;
+            use ingetrazo_ai_interpreter_proof::vm_mesh::CodeInput;
+            let input=match code {None=>CodeInput::Text(""),Some(Value::String(source))=>CodeInput::Text(source),Some(value)=>CodeInput::Json(value)};
+            let receipt = self.execute_engineering_python_input(input)?;
             Ok(json!({"stdout":receipt.stdout,"stderr":receipt.stderr,"error":receipt.error,"changed":receipt.changed}))
         }
         #[cfg(not(feature="engineering-python"))]

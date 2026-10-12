@@ -13,7 +13,7 @@ mod graph;
 use graph::GraphState;
 #[path = "identity_registry.rs"]
 pub mod identity_registry;
-pub use crate::session::ExecutionReceipt;
+pub use crate::session::{CodeInput, ExecutionReceipt};
 // Drop removed arbitrary VM references only after releasing the membership lock.
 fn discard_tail(list: &rustpython_vm::builtins::PyListRef, keep: usize) {
     loop {
@@ -2425,8 +2425,11 @@ impl Controller {
         });
     }
     pub fn execute_receipt(&mut self, source: &str) -> Result<session::ExecutionReceipt, String> {
+        self.execute_input_receipt(CodeInput::Text(source))
+    }
+    pub fn execute_input_receipt(&mut self, source: CodeInput<'_>) -> Result<session::ExecutionReceipt, String> {
         self.capture_requested = true;
-        let result = self.execute(source);
+        let result = self.execute_input(source);
         self.capture_requested = false;
         match result {
             Ok(changed) => {
@@ -2439,6 +2442,9 @@ impl Controller {
         }
     }
     pub fn execute(&mut self, source: &str) -> Result<bool, String> {
+        self.execute_input(CodeInput::Text(source))
+    }
+    fn execute_input(&mut self, source: CodeInput<'_>) -> Result<bool, String> {
         self.last_execution = None;
         self.execution_rolled_back = false;
         if self.tainted || STAGED.with(|s| s.borrow().is_some()) {
@@ -2468,7 +2474,9 @@ impl Controller {
                     Ok((outcome, receipt)) => { self.last_execution = Some(receipt); outcome }
                     Err(error) => { vm.host_budget_abort(); Err(vm.new_runtime_error(error)) }
                 }
-            } else { session::execute(vm, &self.scope, source) };
+            } else {
+                match source { CodeInput::Text(source) => session::execute(vm, &self.scope, source), CodeInput::Json(_) => return Err("Plain execution requires source text".into()) }
+            };
             if self.panic_after_execution {
                 panic!("Engineering unwind after VM mutation");
             }

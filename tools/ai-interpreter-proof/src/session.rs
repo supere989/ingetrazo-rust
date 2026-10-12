@@ -21,6 +21,73 @@ pub fn execute(vm: &VirtualMachine, scope: &Scope, source: &str) -> PyResult<()>
     Ok(())
 }
 
+/// Borrow the code supplied by the actual protocol, without converting it to source text.
+#[derive(Clone, Copy)]
+pub enum CodeInput<'a> {
+    Text(&'a str),
+    Json(&'a serde_json::Value),
+}
+fn json_object(
+    vm: &VirtualMachine,
+    value: &serde_json::Value,
+) -> PyResult<rustpython_vm::PyObjectRef> {
+    vm.host_budget_tick()?;
+    Ok(match value {
+        serde_json::Value::Null => vm.ctx.none(),
+        serde_json::Value::Bool(value) => vm.ctx.new_bool(*value).into(),
+        serde_json::Value::String(value) => vm.ctx.new_str(value.clone()).into(),
+        serde_json::Value::Number(value) => {
+            if let Some(value) = value.as_i64() {
+                vm.ctx.new_int(value).into()
+            } else if let Some(value) = value.as_u64() {
+                vm.ctx.new_int(value).into()
+            } else {
+                vm.ctx
+                    .new_float(
+                        value
+                            .as_f64()
+                            .ok_or_else(|| vm.new_value_error("JSON code number refused"))?,
+                    )
+                    .into()
+            }
+        }
+        serde_json::Value::Array(values) => {
+            let mut objects = Vec::new();
+            objects
+                .try_reserve_exact(values.len())
+                .map_err(|_| vm.new_memory_error("JSON code argument admission refused"))?;
+            for value in values {
+                objects.push(json_object(vm, value)?);
+            }
+            vm.ctx.new_list(objects).into()
+        }
+        serde_json::Value::Object(values) => {
+            let dict = vm.ctx.new_dict();
+            for (key, value) in values {
+                dict.set_item(key, json_object(vm, value)?, vm)?;
+            }
+            dict.into()
+        }
+    })
+}
+fn execute_input(vm: &VirtualMachine, scope: &Scope, input: CodeInput<'_>) -> PyResult<()> {
+    match input {
+        CodeInput::Text(source) => execute(vm, scope, source),
+        CodeInput::Json(serde_json::Value::String(source)) => execute(vm, scope, source),
+        CodeInput::Json(value) => {
+            // Let the genuine builtin compiler reject the supplied object. No Python
+            // error text, traceback, or changed result is supplied by the bridge.
+            let compile = vm.builtins.get_attr("compile", vm)?;
+            let source = json_object(vm, value)?;
+            vm.invoke(
+                &compile,
+                (source, vm.ctx.new_str("<ai>"), vm.ctx.new_str("eval")),
+            )?;
+            Err(vm.new_runtime_error("Nonstring JSON code unexpectedly compiled"))
+        }
+    }
+}
+
 /// Actual transcript from one genuine VM execution, before native publication.
 #[derive(Default, Debug)]
 pub struct ExecutionReceipt {
@@ -107,7 +174,7 @@ impl Drop for Streams<'_> {
 pub fn execute_captured(
     vm: &VirtualMachine,
     scope: &Scope,
-    source: &str,
+    source: CodeInput<'_>,
 ) -> Result<(PyResult<()>, ExecutionReceipt), String> {
     use rustpython_vm::PyPayload;
     let streams = Streams {
@@ -129,7 +196,7 @@ pub fn execute_captured(
     vm.sys_module
         .set_attr("stderr", stderr.clone(), vm)
         .map_err(|_| "stderr capture admission refused")?;
-    let outcome = execute(vm, scope, source);
+    let outcome = execute_input(vm, scope, source);
     let mut receipt = ExecutionReceipt::default();
     if let Err(error) = &outcome {
         use rustpython_vm::AsObject;
