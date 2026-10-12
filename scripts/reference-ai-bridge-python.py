@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """Capture actual unchanged Qt-owned bridge sockets; no native expected outputs."""
-import argparse,copy,hashlib,json,os,socket,subprocess,sys,time
+import argparse,copy,hashlib,json,os,socket,subprocess,sys,time,traceback
 from pathlib import Path
 PIN="6be29fe437a7cd992d4e079f71720821b25216b9"
 ap=argparse.ArgumentParser();ap.add_argument('output',type=Path);args=ap.parse_args();out=args.output.resolve();assert not out.exists();out.mkdir(parents=True)
+for key,folder in [('XDG_CONFIG_HOME','config'),('XDG_DATA_HOME','data'),('XDG_CACHE_HOME','cache')]:os.environ[key]=str(out/folder)
 repo=Path(__file__).resolve().parents[1];original=(repo/'ingetrazo').resolve();assert subprocess.check_output(['git','-C',str(original),'rev-parse','HEAD'],text=True).strip()==PIN
 contract=json.loads((repo/'docs/audits/ai-bridge-python/fixture-contract.json').read_text())
 for row in contract['original_sources']:assert hashlib.sha256((original/row['path']).read_bytes()).hexdigest()==row['sha256'],row['path']
@@ -13,12 +14,12 @@ from views.main_window import MainWindow
 from plugins.ai_bridge import _Bridge
 app=QApplication.instance()or QApplication([]);host=MainWindow();vp=host.viewport
 bridge=_Bridge(vp);port=bridge.start();client=socket.create_connection(('127.0.0.1',port),timeout=3);client.setblocking(False)
-callback_errors=[];sys.excepthook=lambda typ,error,tb:callback_errors.append({'type':typ.__name__,'error':str(error)})
+callback_errors=[];sys.excepthook=lambda typ,error,tb:callback_errors.append({'type':typ.__name__,'error':str(error),'traceback':''.join(traceback.format_exception(typ,error,tb))})
 face="mesh.add_face([QVector3D(0,0,0),QVector3D(2,0,0),QVector3D(0,2,0)])"
-recipes=[('fragmented-and-ordered-requests',[{'id':'fragment','tool':'run_python','args':{'code':"counter=6; held=mesh"}},{'id':'next','tool':'run_python','args':{'code':'counter'}}]),('stdout-stderr-eval-persistent-scope',[{'id':'streams','tool':'run_python','args':{'code':"import sys; print('hello'); sys.stderr.write('warning\n')"}},{'id':'unicode-write','tool':'run_python','args':{'code':"print(sys.stdout.write('α🙂')); sys.stderr.flush()"}},{'id':'eval','tool':'run_python','args':{'code':'counter+1'}},{'id':'underscore','tool':'run_python','args':{'code':'_+1'}}]),('geometry-history',[{'id':'add','tool':'run_python','args':{'code':face}},{'id':'undo','tool':'undo'},{'id':'redo','tool':'redo'}]),('noop-preserves-redo',[{'id':'undo2','tool':'undo'},{'id':'inspect','tool':'run_python','args':{'code':"print(len(mesh.faces))"}},{'id':'redo2','tool':'redo'}]),('mutation-error-rollback',[{'id':'undo-before-error','tool':'undo'},{'id':'rollback','tool':'run_python','args':{'code':"survivor=23\n"+face+"\nraise ValueError('literal-failure')"}},{'id':'scope-after-error','tool':'run_python','args':{'code':"assert held is mesh; print(survivor)"}},{'id':'redo-after-error','tool':'redo'}]),('syntax-type-dispatch-errors',[{'id':'syntax','tool':'run_python','args':{'code':'def broken('}},{'id':'type','tool':'run_python','args':{'code':42}},{'id':'unknown','tool':'not_a_tool'},None])]
+recipes=[('fragmented-and-ordered-requests',[{'id':'fragment','tool':'run_python','args':{'code':"counter=6; held=mesh"}},{'id':'next','tool':'run_python','args':{'code':'counter'}}]),('stdout-stderr-eval-persistent-scope',[{'id':'streams','tool':'run_python','args':{'code':"import sys; print('hello'); sys.stderr.write('warning\\n')"}},{'id':'unicode-write','tool':'run_python','args':{'code':"print(sys.stdout.write('α🙂')); sys.stderr.flush()"}},{'id':'eval','tool':'run_python','args':{'code':'counter+1'}},{'id':'underscore','tool':'run_python','args':{'code':'_+1'}}]),('geometry-history',[{'id':'add','tool':'run_python','args':{'code':face}},{'id':'undo','tool':'undo'},{'id':'redo','tool':'redo'}]),('noop-preserves-redo',[{'id':'undo2','tool':'undo'},{'id':'inspect','tool':'run_python','args':{'code':"print(len(mesh.faces))"}},{'id':'redo2','tool':'redo'}]),('mutation-error-rollback',[{'id':'undo-before-error','tool':'undo'},{'id':'rollback','tool':'run_python','args':{'code':"survivor=23\n"+face+"\nraise ValueError('literal-failure')"}},{'id':'scope-after-error','tool':'run_python','args':{'code':"assert held is mesh; print(survivor)"}},{'id':'redo-after-error','tool':'redo'}]),('syntax-type-dispatch-errors',[{'id':'syntax','tool':'run_python','args':{'code':'def broken('}},{'id':'type','tool':'run_python','args':{'code':42}},{'id':'unknown','tool':'not_a_tool'},None])]
 report={'source_pin':PIN,'cases':[],'states':[],'callback_errors':callback_errors,'scope':'Actual loopback sockets and Qt queued UI dispatch; raw CPython traceback retained; no screenshot/pixel or native full Scene API claim'}
 def observe():
- return {'faces':[{'outer':[[v.x(),v.y(),v.z()]for v in f.vertices],'holes':[[[v.x(),v.y(),v.z()]for v in h]for h in f.holes],'attrs':copy.deepcopy(f.attrs)}for f in vp.scene.mesh.faces],'undo':len(vp.history.undo_stack),'redo':len(vp.history.redo_stack),'groups':len(vp.scene.groups),'layers':len(vp.scene.layers)}
+ return {'faces':[{'outer':[[v.x(),v.y(),v.z()]for v in f.vertices],'holes':[[[v.x(),v.y(),v.z()]for v in h]for h in f.holes],'attrs':copy.deepcopy(f.attrs)}for f in vp.scene.mesh.faces],'undo':len(vp.history.undo_stack),'redo':len(vp.history.redo_stack),'groups':len(vp.scene.groups),'layers':len(vp.scene.layers),'vertices':len(vp.scene.mesh.vertices),'edges':len(vp.scene.mesh.edges)}
 buffer=b''
 def reply():
  global buffer
@@ -37,8 +38,17 @@ try:
   if name=='fragmented-and-ordered-requests':
    data=b''.join((json.dumps(r)+'\n').encode()for r in requests);client.sendall(data[:7]);app.processEvents();client.sendall(data[7:])
   for index,request in enumerate(requests):
+   prior=copy.deepcopy(observe())
    if name!='fragmented-and-ordered-requests':client.sendall((json.dumps(request)+'\n').encode()if request is not None else b'{bad-json}\n')
-   response=reply();report['states'].append({'case':name,'index':index,'reply':response,'scene':observe()})
+   response=reply();after=observe()
+   ident=response.get('id')
+   if ident=='add':assert len(after['faces'])==len(prior['faces'])+1 and after['undo']==prior['undo']+1 and response['result']['changed']is True
+   if ident in {'undo','undo2','undo-before-error'}:assert len(after['faces'])==len(prior['faces'])-1 and after['undo']==prior['undo']-1 and after['redo']==prior['redo']+1 and response['result']['ok']is True
+   if ident in {'redo','redo2','redo-after-error'}:assert len(after['faces'])==len(prior['faces'])+1 and after['undo']==prior['undo']+1 and after['redo']==prior['redo']-1 and response['result']['ok']is True
+   if ident=='inspect':assert after==prior and prior['redo']>0 and response['result']['error']is None and response['result']['changed']is False
+   if ident=='rollback':assert after==prior and prior['redo']>0 and response['result']['changed']is False
+   if ident=='scope-after-error':assert after==prior and response['result']['error']is None and response['result']['stdout']=='23\n'
+   report['states'].append({'case':name,'index':index,'reply':response,'scene':observe()})
    (out/'original-ai-bridge.partial.json').write_text(json.dumps(report,indent=2,allow_nan=False)+'\n')
  assert callback_errors==[],callback_errors
  assert next(s for s in report['states'] if s['reply'].get('id')=='underscore')['reply']['result']['stdout']=='8\n'

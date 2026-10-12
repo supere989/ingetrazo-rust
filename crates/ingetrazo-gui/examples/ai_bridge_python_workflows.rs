@@ -42,7 +42,7 @@ fn receive(
 }
 fn observe(app: &IngeTrazoApp) -> Value {
     let faces: Vec<_> = app.scene.mesh.faces.iter().map(|face| json!({"outer":face.vertices.iter().map(|i|app.scene.mesh.vertices[*i].position.to_array()).collect::<Vec<_>>(),"holes":face.holes.iter().map(|h|h.iter().map(|i|app.scene.mesh.vertices[*i].position.to_array()).collect::<Vec<_>>()).collect::<Vec<_>>(),"attrs":face.attrs})).collect();
-    json!({"faces":faces,"undo":app.undo_stack.len(),"redo":app.redo_stack.len(),"groups":app.scene.groups.len(),"layers":app.scene.layers.len()})
+    json!({"faces":faces,"undo":app.undo_stack.len(),"redo":app.redo_stack.len(),"groups":app.scene.groups.len(),"layers":app.scene.layers.len(),"vertices":app.scene.mesh.vertices.len(),"edges":app.scene.mesh.edges.len()})
 }
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let source = PathBuf::from(std::env::args().nth(1).ok_or("SOURCE required")?).canonicalize()?;
