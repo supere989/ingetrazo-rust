@@ -63,7 +63,9 @@ impl IngeTrazoApp {
         self.scene.sheets[s].remove_item(index);
         self.finish_composer_edit();
         // Source unresolved anchors retain their UID/world/paper records unchanged.
-        self.refresh_composer_frame_anchors()?;
+        if let Err(error) = self.refresh_composer_frame_anchors() {
+            self.status_message = format!("Frame deleted; anchored refresh refused: {error}");
+        }
         Ok(())
     }
     pub fn select_composer_frame(&mut self, sheet: Uuid, frame: Uuid) -> Result<(), String> {
