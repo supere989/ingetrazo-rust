@@ -1,0 +1,19 @@
+{
+  "base": "cc7468fff36d029053bfdba217810a987947493f",
+  "command": [
+    "cargo",
+    "test",
+    "--locked",
+    "-p",
+    "ingetrazo-formats",
+    "--lib",
+    "dxf::tests::linework_layers_bulges_and_invalid_entities_are_transactional",
+    "--",
+    "--exact"
+  ],
+  "target": "/tmp/ingetrazo-native-font-merge-target",
+  "elapsed_seconds": 6.828154847957194,
+  "exit_code": 0,
+  "changed_file_sha256": "a2307c6b60fdabb9732b6697e1eb185ef717269bde3591e17685853b943e8779",
+  "production_runtime_changed": false
+}

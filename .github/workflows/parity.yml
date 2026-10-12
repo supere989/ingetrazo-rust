@@ -307,8 +307,10 @@ jobs:
           cargo run --locked -p ingetrazo-gui --example ai_bridge_query_acceptance -- docs/audits/ai-bridge-ci > docs/audits/ai-bridge-ci/native.json 2> docs/audits/ai-bridge-ci/build.log
           python scripts/check-ai-bridge-query.py docs/audits/ai-bridge-ci --require-full > docs/audits/ai-bridge-ci/comparison.json
       - name: Integrated document axes PushPull and nested Fillet workflows using retained source fixtures
+        id: integratedconsumers
         run: |
           cargo build --locked -p ingetrazo-core -p ingetrazo-gui -p ingetrazo-formats --example gltf_rich --example sheet_image_workflows --example sheet_symbols_workflows --example change_axes_fixture --example document_preservation_workflow --example pushpull_solid_workflows --example fillet_scoped --example pushpull_finite_workflows --example paste_save_workflow --example box_selection_fixture --example material_restamp_workflow --example material_tray_egui --example cursor_navigation_workflow --example annotation_delete_fixture --example zoom_extents_workflow --example annotation_move_fixture --example annotation_acquisition_fixture --example mesh_kernel_acceptance --example annotation_edit_style_fixture --example annotation_text_create_fixture --example mesh_finite_kernel_fixture --example annotation_hover_fixture --example dimension_anchor_acceptance_fixture --example context_document_lifecycle --example line_command_history_fixture --example shape_drafting_workflows --example freehand_workflows --example p07_inference_workflows --example perspective_guide_workflows --example p07_keyboard_workflows --example composer_pointer_workflows --example drawing_reference_render_fixture --example shift_inference_render_fixture
+          echo "ready=true" >> "$GITHUB_OUTPUT"
           python scripts/check-document-axes-integration.py target/debug/examples docs/audits/document-axes-ci
       - name: Pinned original and native legacy SKP primitive parity
         run: |
@@ -620,7 +622,7 @@ jobs:
       - name: Independent DXF curve and refusal boundaries
         run: python scripts/check-dxf-curves.py
       - name: Strict frozen physical sheet symbol exports
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && steps.integratedconsumers.outputs.ready == 'true' }}
         run: |
           mkdir -p docs/audits/sheet-symbols-ci
           python scripts/replay-sheet-symbols.py target/debug/examples/sheet_symbols_workflows docs/audits/sheet-symbols-ci/replay --software > docs/audits/sheet-symbols-ci/replay.log 2>&1

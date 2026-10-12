@@ -695,8 +695,13 @@ mod tests {
             .iter()
             .all(|e| e.layer.as_deref() == Some("SITE")));
         let before = scene.clone();
-        let invalid = source.replace("LWPOLYLINE", "INSERT");
-        assert!(import_dxf(&mut std::io::Cursor::new(invalid), &mut scene).is_err());
+        // INSERT is supported; malformed coordinates keep this a rejection
+        // transaction after the preceding valid LINE has been parsed.
+        let invalid = source.replace("20\n3\n", "20\nNaN\n");
+        assert!(matches!(
+            import_dxf(&mut std::io::Cursor::new(invalid), &mut scene),
+            Err(DxfError::Parse(message)) if message == "Invalid polyline field"
+        ));
         assert_eq!(scene, before);
         let circle = "0\nSECTION\n2\nENTITIES\n0\nCIRCLE\n10\n0\n20\n0\n40\n1\n0\nENDSEC\n0\nEOF\n";
         let mut scene = Scene::new();
