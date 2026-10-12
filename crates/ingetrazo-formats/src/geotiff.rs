@@ -1339,9 +1339,11 @@ fn jpeg_block(
             let p = &raw[(y * w as usize + x) * 4..][..4];
             let dest = &mut out[(y * info.tile_w + x) * samples..][..samples];
             if cmyk {
-                for c in 0..samples.min(4) {
-                    dest[c] = 255 - p[c];
-                }
+                // Qt's default JPEG handler inverts the libjpeg CMYK scanline
+                // (qjpeghandler.cpp338-340); original georef/geotiff.py reverses
+                // that QImage inversion again. TJPF_CMYK already is the resulting
+                // raw sample domain, including the fourth no-data/alpha sample.
+                dest[..samples.min(4)].copy_from_slice(&p[..samples.min(4)]);
             } else if samples >= 3 {
                 dest[..3].copy_from_slice(&p[..3]);
                 if samples == 4 {
