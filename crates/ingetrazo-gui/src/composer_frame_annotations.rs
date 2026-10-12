@@ -308,7 +308,7 @@ fn chainage_step(length: f64, user: f64) -> f64 {
         .unwrap_or(length);
     // Source nice-ticks rounds each tick to six decimal places.
     let second = (step * 1e6).round_ties_even() / 1e6;
-    if second > 0. && step <= length + 1e-6 {
+    if step <= length + 1e-6 {
         second
     } else {
         length
