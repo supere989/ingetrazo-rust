@@ -27,6 +27,10 @@ pub(super) struct Owner {
     canvas: ingetrazo_metal::compute_canvas::Pool,
     attachments: SheetReadbackPool,
     flight: Option<Flight>,
+    diagnostic: bool,
+    events: Vec<serde_json::Value>,
+    block_next_probe: bool,
+    release_gate: Option<Box<dyn FnOnce()>>,
 }
 struct Flight {
     pending: PendingCapture,
@@ -41,6 +45,10 @@ impl Default for Owner {
             canvas: Default::default(),
             attachments: Default::default(),
             flight: None,
+            diagnostic: false,
+            events: Vec::new(),
+            block_next_probe: false,
+            release_gate: None,
         }
     }
 }
@@ -54,6 +62,20 @@ fn remaining(pending: &PendingCapture) -> Result<Duration, String> {
         .ok_or_else(|| "Metal capture deadline expired".into())
 }
 impl Owner {
+    pub(super) fn enable_diagnostics(&mut self) {
+        self.diagnostic = true;
+    }
+    pub(super) fn diagnostics(&self) -> &[serde_json::Value] {
+        &self.events
+    }
+    pub(super) fn block_next_for_probe(&mut self) {
+        self.block_next_probe = true;
+    }
+    pub(super) fn release_gate_for_probe(&mut self) {
+        if let Some(release) = self.release_gate.take() {
+            release();
+        }
+    }
     fn overlays(
         &mut self,
         app: &crate::IngeTrazoApp,
@@ -246,6 +268,15 @@ pub(super) fn poll(state: &mut State) -> Result<(), String> {
         };
         // Unknown completion quarantines all command/resource owners and
         // poisons the shared backend BEFORE the serial bridge slot is freed.
+        if state.capture.diagnostic {
+            if let Some(event) = state.capture.events.last_mut() {
+                event["retirement"] = serde_json::json!(if submission.completed() {
+                    "Completed"
+                } else {
+                    "Quarantined"
+                });
+            }
+        }
         submission.retire();
         state
             .app
@@ -347,6 +378,10 @@ fn capture(
         viewport.prepare_capture(&state.app, (request.width, request.height), logical[1]);
     state.app.native_metal_world = Some(viewport);
     let frame = prepared?;
+    let live_extent = [live_depth.extent().0, live_depth.extent().1];
+    let live_samples = live_depth.sample_count();
+    let source_identity = format!("{:p}", Arc::as_ptr(&live_depth));
+    let target_identity = format!("{:p}", Arc::as_ptr(&frame));
     let (shapes, callback) = state.capture.overlays(
         &state.app,
         ctx,
@@ -421,12 +456,38 @@ fn capture(
         return Err("Metal capture cancelled before submission".into());
     }
     remaining(pending)?;
-    state.painter.submit_sheet_readback(
-        &metal,
-        paint,
-        request.width as usize,
-        request.height as usize,
-        &mut state.capture.canvas,
-        &mut state.capture.attachments,
-    )
+    let blocked = std::mem::take(&mut state.capture.block_next_probe);
+    let submission = if blocked {
+        state.painter.submit_diagnostic_with_pool(
+            &metal,
+            paint,
+            request.width as usize,
+            request.height as usize,
+            true,
+            &mut state.capture.canvas,
+        )?
+    } else {
+        state.painter.submit_sheet_readback(
+            &metal,
+            paint,
+            request.width as usize,
+            request.height as usize,
+            &mut state.capture.canvas,
+            &mut state.capture.attachments,
+        )?
+    };
+    if blocked {
+        state.capture.release_gate = submission
+            .probe_gate()
+            .map(|gate| Box::new(move || gate.setSignaledValue(1)) as Box<dyn FnOnce()>);
+    }
+    if state.capture.diagnostic && state.capture.events.len() < 16 {
+        state.capture.events.push(
+            serde_json::json!({"id":request.id,"requested":[request.width,request.height],
+            "logical":logical,"live_depth_extent":live_extent,"live_depth_samples":live_samples,
+            "source_frame":source_identity,"target_frame":target_identity,"blocked_gate":blocked,
+            "retirement":"Submitted"}),
+        );
+    }
+    Ok(submission)
 }

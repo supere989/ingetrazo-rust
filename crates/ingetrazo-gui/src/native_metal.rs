@@ -17,6 +17,7 @@ mod lifecycle_probe;
 pub(crate) mod world_viewport;
 mod distance_label;
 mod capture;
+mod bridge_capture_probe;
 mod world_app_probe;
 mod world_classic_probe;
 mod world_material_probe;
@@ -29,14 +30,18 @@ pub fn run_world_offscreen_probe(root:PathBuf)->Result<(),String>{world_app_prob
 pub fn run_document_probe(root: PathBuf, choice: &str) -> Result<(), Box<dyn std::error::Error>> {
     let probe = lifecycle_probe::Probe::new(root, choice)?;
     let initial = Some(probe.document.clone());
-    run_inner(initial, Some(probe), HostOptions::diagnostic())
+    run_inner(initial, Some(probe), HostOptions::diagnostic(), None)
 }
 pub fn run(initial_file: Option<PathBuf>) -> Result<(), Box<dyn std::error::Error>> {
-    run_inner(initial_file, None, HostOptions::diagnostic())
+    run_inner(initial_file, None, HostOptions::diagnostic(), None)
 }
 /// Production world and CAD callbacks use the same native Metal device.
 pub fn run_native(initial_file: Option<PathBuf>) -> Result<(), Box<dyn std::error::Error>> {
-    run_inner(initial_file, None, HostOptions { world: true, precise_cad: true })
+    run_inner(initial_file, None, HostOptions { world: true, precise_cad: true }, None)
+}
+pub fn run_bridge_capture_probe(source:PathBuf,output:PathBuf)->Result<(),Box<dyn std::error::Error>>{
+    let probe=bridge_capture_probe::Probe::new(source,output)?;
+    run_inner(Some(probe.input.clone()),None,HostOptions{world:true,precise_cad:true},Some(probe))
 }
 struct HostOptions { world: bool, precise_cad: bool }
 impl HostOptions {
@@ -50,7 +55,9 @@ impl HostOptions {
 fn run_inner(
     initial_file: Option<PathBuf>,
     probe: Option<lifecycle_probe::Probe>,
+    bridge_probe: Option<bridge_capture_probe::Probe>,
     options: HostOptions,
+    bridge_probe: Option<bridge_capture_probe::Probe>,
 ) -> Result<(), Box<dyn std::error::Error>> {
     let event = EventLoop::<()>::with_user_event().build()?;
     let ctx = egui::Context::default();
@@ -67,6 +74,7 @@ fn run_inner(
         repaint: Instant::now(),
         error: None,
         probe,
+        bridge_probe,
         options,
     };
     event.run_app(&mut host)?;
@@ -87,6 +95,7 @@ struct State {
     pending_textures: egui::TexturesDelta,
     world_submitted: bool,
     capture: capture::Owner,
+    first_world_submission: Option<u64>,
 }
 struct Host {
     state: Option<State>,
@@ -102,6 +111,10 @@ impl Host {
         let Some(state) = self.state.as_mut() else {
             return;
         };
+        if EguiPainter::capture_admission(state.gpu.metal()).is_err(){
+            state.app.ai_bridge_metal_capture_ready=false;
+            state.app.poll_ai_bridge();
+        }
         if let Err(e)=capture::poll(state){state.app.status_message=e;}
         if let Err(e) = state.gpu.poll() {
             state.app.status_message = format!("Native Metal painting paused: {e}");
@@ -228,6 +241,7 @@ impl Host {
                 if state.app.native_gpu_viewport_enabled && state.app.native_gpu_viewport_texture.is_some() && !state.world_submitted {
                     eprintln!("Graphics backend: native Metal; first GPU world frame submitted; document={:?}", state.app.current_file);
                     state.world_submitted=true;
+                    state.first_world_submission=Some(state.gpu.counters().0);
                 }
                 if let Some(probe) = self.probe.as_mut() {
                     probe.submitted(&state.app, state.gpu.counters().0);
@@ -298,6 +312,7 @@ impl ApplicationHandler for Host {
             if let Some(probe) = self.probe.as_mut() {
                 probe.setup(&mut app)?;
             }
+            if let Some(probe)=self.bridge_probe.as_mut(){probe.setup(&mut app)?;}
             crate::paper_raw_texture::install(&self.ctx);
             if let Some(probe) = self.probe.as_mut() { probe.setup_raw_swatch(&self.ctx)?; }
             let pointer_modifiers = crate::pointer_modifiers::install(&self.ctx);
@@ -312,7 +327,8 @@ impl ApplicationHandler for Host {
                 close_requested: false,
                 pending_textures: Default::default(),
                 world_submitted: false,
-                capture: Default::default(),
+                capture: {let mut owner=capture::Owner::default();if self.bridge_probe.is_some(){owner.enable_diagnostics();}owner},
+                first_world_submission: None,
             })
         })();
         match result {
@@ -387,6 +403,15 @@ impl ApplicationHandler for Host {
                 state.window.set_title(&state.app.status_message);
                 self.repaint = Instant::now() + Duration::from_millis(100);
             }
+            if EguiPainter::capture_admission(state.gpu.metal()).is_ok() && state.first_world_submission.is_some_and(|serial|state.gpu.was_displayed(serial)) {
+                state.app.ai_bridge_metal_capture_ready=true;
+            }
+            if let Some(probe)=self.bridge_probe.as_mut(){
+                match probe.tick(state,&self.ctx){
+                    Ok(true)=>ev.exit(),Ok(false)=>{},Err(e)=>{self.error=Some(e);ev.exit();}
+                }
+                self.repaint=self.repaint.min(Instant::now()+Duration::from_millis(8));
+            }
             if let Some(probe) = self.probe.as_mut() {
                 if let Err(e) = probe.tick(&state.app, &state.gpu, &state.window) {
                     self.error = Some(e);
@@ -405,6 +430,7 @@ impl ApplicationHandler for Host {
     }
     fn exiting(&mut self, _: &ActiveEventLoop) {
         if let Some(state) = self.state.take() {
+            if let Some(probe)=self.bridge_probe.as_mut(){if let Err(e)=probe.finish(){self.error=Some(e);}}
             if let Some(probe) = self.probe.as_mut() {
                 if let Err(e) = probe.finish(&state.app, &state.gpu, self.error.as_deref()) {
                     self.error = Some(e);
