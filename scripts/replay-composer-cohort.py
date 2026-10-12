@@ -48,7 +48,7 @@ def run_one(repo,binaries,out,kind,revision):
   assert [v["name"] for v in original["cases"]]==[v["name"] for v in observed["cases"]] and len(observed["cases"])==cases
   assert len(observed["states"])==count and [(v["case"],v["phase"]) for v in original["states"]]==[(v["case"],v["phase"]) for v in observed["states"]]
   assert len(load(native/"native-reopens.json"))==cases
-  comparison=load(out/"comparison.json");strict=comparison.get("ok") is True and result["commands"][-1]["returncode"]==0
+  comparison=load(out/"comparison.json");strict=(comparison.get("result")=="PASS" if kind=="mixed" else comparison.get("ok") is True) and result["commands"][-1]["returncode"]==0
   result["strict_result"]="pass" if strict else "fail"
   if kind=="clipboard":
    for key in ("order_parametric_source_law","literal_all_state_history","traversal_residual_classification"):assert comparison[key]["ok"] is True,(key,comparison.get(key))
