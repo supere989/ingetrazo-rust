@@ -62,6 +62,14 @@ def canonical_source(a,source,native):
     data=archive.read(entry['member'])
    assert hashlib.sha256(data).hexdigest()==entry['sha256']==resource['encoded_sha256'],('materialinputbytes',entry['case'])
  return result
+def state_rows(rows):
+ result=copy.deepcopy(rows)
+ for row in result:
+  value=row['camera']['distance'];assert type(value)in(int,float),'cameradistancenumbertype'
+  number=float(value);assert math.isfinite(number)and number>0,'cameradistancefinitepositive'
+  if type(value)is int:assert int(number)==value,'cameradistanceintegerrepresentation'
+  row['camera']['distance']=number
+ return result
 def metadata(a,b):
  assert a['source_pin']==b['source_pin']==PIN
  assert a['callback_errors']==[]
@@ -74,7 +82,7 @@ def metadata(a,b):
  assert len(expected)==len(a['states'])==114,'frozen114stateinventory'
  assert [(v['case'],v['phase'])for v in a['states']]==expected,'sourceinventory'
  exact([{k:c[k]for k in ['name','saved','phases','cache_reuse']}for c in a['cases']],b['cases'],'cases')
- exact(a['states'],b['states'],'states')
+ exact(state_rows(a['states']),state_rows(b['states']),'states')
  assert [v['name']for v in a['headers']]==HEADERS
  exact(a['headers'],b['headers'],'headers')
  assert [(v['case'],v['phase'])for v in a['dialogs']]==[('cancel-invalid-escape','invalid-header')],'sourceactualerrorinventory'
@@ -102,6 +110,8 @@ def negatives(a,b,readers):
  x=copy.deepcopy(b);x['cases'].reverse();probes.append(('caseorder',x))
  x=copy.deepcopy(b);x['states'][0]['scene']={'corrupt':True};probes.append(('geometry',x))
  x=copy.deepcopy(b);x['states'][0]['camera']['distance']+=1.;probes.append(('camera',x))
+ for value in [True,float('inf'),float('nan')]:
+  x=copy.deepcopy(b);x['states'][0]['camera']['distance']=value;probes.append(('distance-domain/'+repr(value),x))
  x=copy.deepcopy(b);x['states'][1]['tool']['armed']=not x['states'][1]['tool']['armed'];probes.append(('toolownership',x))
  x=copy.deepcopy(b);x['states'][1]['tool']['aspect']+=.125;probes.append(('toolaspect',x))
  placed=next(i for i,v in enumerate(b['states'])if v['scene']['images'])
@@ -125,6 +135,6 @@ try:
  bytes_check(s,n,a);result['decoded_bytes']=True
  readers=json.loads(file(n,'reopens-image-import.json').read_text());readers_check(readers);result['readers']=len(readers)
  for c in b['cases']:file(n,c['saved'])
- count=negatives(a,b,readers);result.update(ok=True,negative_controls=count,guards=GUARDS,scope='Literal App/model/transient tool/history/camera/resource bytes and actual original IGZ readers. Source error-message text diagnostic only; pinned original/input-bound material locator-to-resource identity supplement preserves all geometry metadata. Required operative native modal/refusal guards. No framebuffer/GPU/general-codec claim.')
+ count=negatives(a,b,readers);result.update(ok=True,negative_controls=count,guards=GUARDS,scope='Literal App/model/transient tool/history/resource bytes; camera.distance accepts only exact finite positive int/f64 numeric equality with lossless integer representation; all other types and values remain strict and actual original IGZ readers. Source error-message text diagnostic only; pinned original/input-bound material locator-to-resource identity supplement preserves all geometry metadata. Required operative native modal/refusal guards. No framebuffer/GPU/general-codec claim.')
 except Exception as e:result['error']=repr(e)
 report.parent.mkdir(parents=True,exist_ok=True);report.write_text(json.dumps(result,indent=2)+'\n');print(json.dumps(result));sys.exit(0 if result['ok']else 1)
