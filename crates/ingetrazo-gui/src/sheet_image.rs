@@ -399,6 +399,9 @@ impl crate::app::IngeTrazoApp {
         self.sheet_image.painters.text.take_physical_observation()
     }
 
+    pub fn sheet_picture_cache_stats(&self) -> (u64, u64) {
+        self.sheet_image.painters.picture_stats()
+    }
     pub fn begin_sheet_image_export(&mut self, sheet: usize) {
         self.sheet_image.chooser_refreshes += 1;
         self.composer_compute.invalidate();
