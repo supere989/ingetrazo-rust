@@ -30,25 +30,27 @@ dwg_bridge.dwg_to_dxf=observed_convert
 sys.excepthook=lambda t,e,tb:callback_errors.append({"type":t.__name__,"message":str(e),"traceback":"".join(traceback.format_exception(t,e,tb))})
 def observe(w,name,phase,outcome):
  states.append({'case':name,'phase':phase,'scene':shape(w.viewport.scene),'undo':len(w.viewport.history.undo_stack),'redo':len(w.viewport.history.redo_stack),'outcome':outcome,'camera':{'distance':w.viewport.camera.distance}})
+unit_timers=[]
 def choose_unit(cancel=False):
- completed=[False]
+ completed=[False];timer=QTimer();unit_timers.append(timer)
  def accept():
   d=app.activeModalWidget()
+  if not isinstance(d,QInputDialog):return
+  timer.stop()
   try:
-   assert isinstance(d,QInputDialog),'actual unit chooser missing'
    if cancel:d.reject()
    else:
     combo=d.findChild(QComboBox);assert combo is not None;combo.setCurrentIndex(2)
     box=d.findChild(QDialogButtonBox);assert box is not None;QTest.mouseClick(box.button(QDialogButtonBox.Ok),Qt.LeftButton)
   except BaseException:
-   sys.excepthook(*sys.exc_info())
-   if d is not None:d.reject()
+   sys.excepthook(*sys.exc_info());d.reject()
   finally:completed[0]=True
  def timeout():
   if completed[0]:return
+  timer.stop();callback_errors.append({'type':'FixtureTimeout','message':'unit chooser did not complete','traceback':''})
   d=app.activeModalWidget()
-  if isinstance(d,QInputDialog):callback_errors.append({'type':'FixtureTimeout','message':'unit chooser did not complete','traceback':''});d.reject()
- QTimer.singleShot(0,accept);QTimer.singleShot(3000,timeout)
+  if d is not None:d.reject()
+ timer.timeout.connect(accept);timer.start(10);QTimer.singleShot(5000,timeout)
 import views.main_window as main
 original_picker=main.file_dialogs.getOpenFileName
 for name,context,cancel in [('real-root','root',False),('real-nested','leaf',False),('unit-cancel','root',True),('chooser-cancel','root',False)]:
