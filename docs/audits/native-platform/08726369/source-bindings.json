@@ -1,0 +1,31 @@
+{
+  "head_sha": "087263698fea07b62b4d889f39571c4b9e57c62b",
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "files": [
+    {
+      "path": ".github/workflows/parity.yml",
+      "bytes": 53371,
+      "sha256": "86a1b9a1ed5361ca5cff6c88c9f1c957c7ae954882ed02d25c0ad7b511fa74db"
+    },
+    {
+      "path": ".github/workflows/metal-compute-consumer.yml",
+      "bytes": 4532,
+      "sha256": "bce24078146f16afab7cd9998386a03a0aa2b69c0a6954bfc517b009c452efb9"
+    },
+    {
+      "path": "scripts/check-document-axes-integration.py",
+      "bytes": 34861,
+      "sha256": "8fb7d2502f0caffc2a161ef6f3c91feca224ff8b7ae88764919b9245402324fe"
+    },
+    {
+      "path": "crates/ingetrazo-formats/src/dxf_curves.rs",
+      "bytes": 10456,
+      "sha256": "4c191063dc1f1de4d2b7c9e393fd1b36f82cc03aba2dc61f9d569d0c72f39c00"
+    },
+    {
+      "path": "crates/ingetrazo-formats/src/dxf.rs",
+      "bytes": 21326,
+      "sha256": "e7bd8ea828f7897d1a2ef16f03e2848aaf04055037be286f976e617be5808927"
+    }
+  ]
+}
