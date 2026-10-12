@@ -72,6 +72,7 @@ pub struct ComposerState {
 impl Default for ComposerState {
     fn default() -> Self {
         Self {
+            selection:Default::default(),
             frame_anchors:Default::default(),frame_overlays:Default::default(),picture_grab:None,picture_ctrl_toggle:false,picture_authoring:Default::default(),legend_authoring:Default::default(),annotation_authoring:Default::default(),pdf_export_error: None,text_tool:false,tool_switch_rects:[egui::Rect::NOTHING;8],inline_text:None,text_canvas:Default::default(),outer_border:Default::default(),paper_canvas:Default::default(),field_index_cache:None,field_index_computations:0,field_expansions:Default::default(),
             paper_text: Default::default(),
             shape_tool:None,shape_start:None,
