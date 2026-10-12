@@ -217,34 +217,59 @@ pub(super) fn outstanding(state: &State) -> bool {
     state.capture.flight.is_some()
 }
 pub(super) fn poll(state: &mut State) -> Result<(), String> {
-    if !state
-        .capture
-        .flight
-        .as_ref()
-        .is_some_and(|f| f.submission.completed())
-    {
-        return Ok(());
+    let retire = state.capture.flight.as_ref().is_some_and(|f| {
+        f.submission.completed()
+            || f.submission.failed()
+            || !f.pending.is_live(&state.app)
+            || Instant::now() >= f.pending.request().deadline
+    });
+    if retire {
+        let Flight {
+            pending,
+            mut submission,
+        } = state.capture.flight.take().unwrap();
+        let request = pending.request();
+        let id = request.id;
+        let result = if submission.completed()
+            && pending.is_live(&state.app)
+            && Instant::now() < request.deadline
+        {
+            submission
+                .wait_readback(Duration::ZERO)
+                .map(|rgba| CapturedRgba {
+                    width: request.width,
+                    height: request.height,
+                    rgba,
+                })
+        } else {
+            Err("Metal capture failed/cancelled/expired; submission retired or quarantined".into())
+        };
+        // Unknown completion quarantines all command/resource owners and
+        // poisons the shared backend BEFORE the serial bridge slot is freed.
+        submission.retire();
+        state
+            .app
+            .finish_ai_bridge_capture(pending, CaptureResult { id, result })?;
     }
-    let mut flight = state.capture.flight.take().unwrap();
-    let request = flight.pending.request();
-    let id = request.id;
-    let result = if flight.pending.is_live(&state.app) {
-        flight
-            .submission
-            .wait_readback(Duration::ZERO)
-            .map(|rgba| CapturedRgba {
-                width: request.width,
-                height: request.height,
-                rgba,
-            })
-    } else {
-        Err("Metal capture cancelled or expired after actual completion".into())
-    };
-    state
-        .app
-        .finish_ai_bridge_capture(flight.pending, CaptureResult { id, result })?;
+    // This path is intentionally ahead of can_prepare(): poisoned presentation
+    // cannot otherwise reach after_ui and would strand newly admitted jobs.
+    if let Err(error) =
+        ingetrazo_metal::egui_painter::EguiPainter::capture_admission(state.gpu.metal())
+    {
+        if let Some(pending) = state.app.ai_bridge_capture.take() {
+            let id = pending.request().id;
+            state.app.finish_ai_bridge_capture(
+                pending,
+                CaptureResult {
+                    id,
+                    result: Err(error),
+                },
+            )?;
+        }
+    }
     Ok(())
 }
+
 pub(super) fn after_ui(state: &mut State, ctx: &egui::Context) -> Result<(), String> {
     if state.capture.flight.is_some() {
         return Ok(());

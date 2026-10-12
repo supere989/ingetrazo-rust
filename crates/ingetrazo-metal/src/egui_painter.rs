@@ -917,6 +917,11 @@ impl EguiPainter {
     pub fn picture_stats(&self)->crate::paper_picture::Stats{self.pictures.stats}
     /// Same painter and callback admission, with an independently retained
     /// ordinary depth owner for source screenshot visibility queries.
+    pub fn capture_admission(metal:&NativeMetal)->Result<(),String>{
+        if metal.poisoned.load(std::sync::atomic::Ordering::Acquire){
+            Err("Metal capture backend quarantined; new capture refused".into())
+        }else{Ok(())}
+    }
     pub fn prepare_viewport_capture(
         &mut self, metal:&NativeMetal, primitives:&[egui::ClippedPrimitive],
         density:f32, source_depth:Arc<crate::world::Prepared>,
@@ -1414,6 +1419,11 @@ pub struct DiagnosticPaint {
     owner: ManuallyDrop<DiagnosticOwners>,
 }
 impl DiagnosticPaint {
+    pub fn failed(&self)->bool { self.owner.command.status()==MTLCommandBufferStatus::Error }
+    /// Completed owners release normally; an unacknowledged command is
+    /// quarantined by Drop, retaining all resources and poisoning admission.
+    /// Call this before acknowledging an abandoned deferred capture job.
+    pub fn retire(self) { drop(self); }
     pub fn completed(&self) -> bool {
         self.owner.command.status() == MTLCommandBufferStatus::Completed
     }
