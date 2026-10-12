@@ -1,0 +1,289 @@
+{
+  "scope": "Actual read-only source/native axis transport and raster-state diagnosis; zero reference images recaptured; no whole-image acceptance",
+  "archive_sha256": "ecca45b55abb47f19bdff5da148607e4856130ff831378bbf035611cce2a0885",
+  "members": {
+    "execution-wrapper.py": {
+      "size": 2235,
+      "sha256": "eccbdc74ddd9e907759323c5ecbc6fe6c8d2cc47c720db717e8c10aacb9883e9",
+      "origin": "/tmp/ingetrazo-axis-run.py"
+    },
+    "r1/build.log": {
+      "size": 27852,
+      "sha256": "4a5604ff4b004631feddb9304507886ed9e356f7d4d33c8ea39f85d30fbc4b59",
+      "origin": "/tmp/ingetrazo-axis-native-build-r1.log"
+    },
+    "r1/native-execution/receipt.json": {
+      "size": 449,
+      "sha256": "2b20935f3620ee3f4438b1c5d7a6828c3b40eb8616ec4ce7e1f74cb860aa9890",
+      "origin": "/tmp/ingetrazo-axis-native-attempt-1/receipt.json"
+    },
+    "r1/native-execution/stderr": {
+      "size": 1961,
+      "sha256": "e38405c14650820b9d7c89432cc8ca5afdf27c3db06128837db84b2d497aa021",
+      "origin": "/tmp/ingetrazo-axis-native-attempt-1/stderr"
+    },
+    "r1/native-execution/stdout": {
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "origin": "/tmp/ingetrazo-axis-native-attempt-1/stdout"
+    },
+    "r1/native-execution/xvfb.log": {
+      "size": 3000,
+      "sha256": "055a3d79d94804cbadfe2652b1a9534c6bde11ef89263a62772062d28d73d9d1",
+      "origin": "/tmp/ingetrazo-axis-native-attempt-1/xvfb.log"
+    },
+    "r1/native/axis-transport-comparison.json": {
+      "size": 892,
+      "sha256": "9d63e80734d007a1149eb1a600209095eaebb6e1fa46f6c580b199a51d7c60c4",
+      "origin": "/tmp/ingetrazo-axis-native-r1/axis-transport-comparison.json"
+    },
+    "r1/native/native-ai-bridge-capture.partial.json": {
+      "size": 2096,
+      "sha256": "8b1f32707ba8582fb8c6dfe36de11338946062f60fdefed17384aa21ed2b60bf",
+      "origin": "/tmp/ingetrazo-axis-native-r1/native-ai-bridge-capture.partial.json"
+    },
+    "r1/native/native-axis-transport.json": {
+      "size": 52334,
+      "sha256": "ec2a38408a7821b64f8bd2ca58d42b085f258788d5df979a798d5e627ae1d007",
+      "origin": "/tmp/ingetrazo-axis-native-r1/native-axis-transport.json"
+    },
+    "r1/native/native-axis-vbo.bin": {
+      "size": 75024,
+      "sha256": "a4f33da59304eeeb63de0231fc5670cb57acd50769819c46421f235c9de50223",
+      "origin": "/tmp/ingetrazo-axis-native-r1/native-axis-vbo.bin"
+    },
+    "r1/source-execution/receipt.json": {
+      "size": 509,
+      "sha256": "2aaffa14134a1e01b6ba9fcb782d2b5b81fe894bc43474668d7a3941a37be23a",
+      "origin": "/tmp/ingetrazo-axis-source-attempt-1/receipt.json"
+    },
+    "r1/source-execution/stderr": {
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "origin": "/tmp/ingetrazo-axis-source-attempt-1/stderr"
+    },
+    "r1/source-execution/stdout": {
+      "size": 71,
+      "sha256": "c0df62ea498ec238afad3f5f852fa81f6770869664df7482ecbcec8d04ec5984",
+      "origin": "/tmp/ingetrazo-axis-source-attempt-1/stdout"
+    },
+    "r1/source-execution/xvfb.log": {
+      "size": 3000,
+      "sha256": "055a3d79d94804cbadfe2652b1a9534c6bde11ef89263a62772062d28d73d9d1",
+      "origin": "/tmp/ingetrazo-axis-source-attempt-1/xvfb.log"
+    },
+    "r1/source/source-axis-transport.json": {
+      "size": 56882,
+      "sha256": "2517f38d2c897e7aad069a5a8be0492fbeec3ab9fb0d72eaca59d745c3c49818",
+      "origin": "/tmp/ingetrazo-axis-source-r1/source-axis-transport.json"
+    },
+    "r1/source/source-axis-vbo.bin": {
+      "size": 37512,
+      "sha256": "dbeec6e60323d503b158e0da5c82f211559d0d2f038d7635e65365185bd7d714",
+      "origin": "/tmp/ingetrazo-axis-source-r1/source-axis-vbo.bin"
+    },
+    "r2/build.log": {
+      "size": 27852,
+      "sha256": "97f53db375b3b50290003b1849f058f20992df07fee2f118855d81470caf707d",
+      "origin": "/tmp/ingetrazo-axis-native-build-r2.log"
+    },
+    "r2/native-execution/receipt.json": {
+      "size": 538,
+      "sha256": "d474fe105497e59f1ff1842fbb1d49abed66aed5b3ecb26e03b3c612269f1772",
+      "origin": "/tmp/ingetrazo-axis-native-attempt-2/receipt.json"
+    },
+    "r2/native-execution/stderr": {
+      "size": 1961,
+      "sha256": "49acb805ea1f952d5edb3d28ab26978128dbc8b4cef99c1015c2071ef40d3772",
+      "origin": "/tmp/ingetrazo-axis-native-attempt-2/stderr"
+    },
+    "r2/native-execution/stdout": {
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "origin": "/tmp/ingetrazo-axis-native-attempt-2/stdout"
+    },
+    "r2/native-execution/xvfb.log": {
+      "size": 3000,
+      "sha256": "055a3d79d94804cbadfe2652b1a9534c6bde11ef89263a62772062d28d73d9d1",
+      "origin": "/tmp/ingetrazo-axis-native-attempt-2/xvfb.log"
+    },
+    "r2/native/axis-transport-comparison.json": {
+      "size": 3120,
+      "sha256": "604b6194061f71c864de0535b35675c5e25f956f940971e102cf577df564c602",
+      "origin": "/tmp/ingetrazo-axis-native-r2/axis-transport-comparison.json"
+    },
+    "r2/native/native-ai-bridge-capture.partial.json": {
+      "size": 2096,
+      "sha256": "8b1f32707ba8582fb8c6dfe36de11338946062f60fdefed17384aa21ed2b60bf",
+      "origin": "/tmp/ingetrazo-axis-native-r2/native-ai-bridge-capture.partial.json"
+    },
+    "r2/native/native-axis-transport.json": {
+      "size": 52681,
+      "sha256": "e2c3418936297f527ebc9dd96546789dd5e1a5bafdc0c55f580d265796b24f3b",
+      "origin": "/tmp/ingetrazo-axis-native-r2/native-axis-transport.json"
+    },
+    "r2/native/native-axis-vbo.bin": {
+      "size": 75024,
+      "sha256": "a4f33da59304eeeb63de0231fc5670cb57acd50769819c46421f235c9de50223",
+      "origin": "/tmp/ingetrazo-axis-native-r2/native-axis-vbo.bin"
+    },
+    "r2/source-execution/receipt.json": {
+      "size": 597,
+      "sha256": "e677bfa295b097aed811016c02b8ba5548c217c671950ce3c2c3c10ab4d0bed9",
+      "origin": "/tmp/ingetrazo-axis-source-attempt-2/receipt.json"
+    },
+    "r2/source-execution/stderr": {
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "origin": "/tmp/ingetrazo-axis-source-attempt-2/stderr"
+    },
+    "r2/source-execution/stdout": {
+      "size": 71,
+      "sha256": "c0df62ea498ec238afad3f5f852fa81f6770869664df7482ecbcec8d04ec5984",
+      "origin": "/tmp/ingetrazo-axis-source-attempt-2/stdout"
+    },
+    "r2/source-execution/xvfb.log": {
+      "size": 3000,
+      "sha256": "055a3d79d94804cbadfe2652b1a9534c6bde11ef89263a62772062d28d73d9d1",
+      "origin": "/tmp/ingetrazo-axis-source-attempt-2/xvfb.log"
+    },
+    "r2/source/source-axis-transport.json": {
+      "size": 58940,
+      "sha256": "3b59f3f21c8cfab95062706c842262a7cf88b92e6723ccb229c312e35d81205b",
+      "origin": "/tmp/ingetrazo-axis-source-r2/source-axis-transport.json"
+    },
+    "r2/source/source-axis-vbo.bin": {
+      "size": 37512,
+      "sha256": "dbeec6e60323d503b158e0da5c82f211559d0d2f038d7635e65365185bd7d714",
+      "origin": "/tmp/ingetrazo-axis-source-r2/source-axis-vbo.bin"
+    }
+  },
+  "git_bindings": [
+    {
+      "stage": "r1",
+      "revision": "afebe262ef4132f2c143f6b40525ffe5763293c7",
+      "path": "crates/ingetrazo-gui/examples/ai_bridge_capture_workflows.rs",
+      "sha256": "6315b82d0d7e230121bc458e73eef62e609960a0aa89af3f6f75a498eb55d98e"
+    },
+    {
+      "stage": "r1",
+      "revision": "afebe262ef4132f2c143f6b40525ffe5763293c7",
+      "path": "crates/ingetrazo-gui/src/native_vulkan/world.rs",
+      "sha256": "25f7ccc67a4ad369013e863101ca4d3eff7262ab0172ad9142e4c36dbed1846a"
+    },
+    {
+      "stage": "r1",
+      "revision": "afebe262ef4132f2c143f6b40525ffe5763293c7",
+      "path": "crates/ingetrazo-gui/src/native_vulkan/mod.rs",
+      "sha256": "9521c5824dc8065f4b7af18e2edd564b18f3bdea18e3d1199c944772dad46a52"
+    },
+    {
+      "stage": "r1",
+      "revision": "afebe262ef4132f2c143f6b40525ffe5763293c7",
+      "path": "crates/ingetrazo-gui/src/native_vulkan/world_axes.rs",
+      "sha256": "0ee292c5471d4e0502431ef64855f27ea710c5eafcf889034ea2b2e119c9673b"
+    },
+    {
+      "stage": "r1",
+      "revision": "afebe262ef4132f2c143f6b40525ffe5763293c7",
+      "path": "crates/ingetrazo-gui/src/native_vulkan/source_depth.rs",
+      "sha256": "bc727ba6933a463aaac5f656a14f57a5755a3998bb71b2507d279b8fc6f94278"
+    },
+    {
+      "stage": "r1",
+      "revision": "afebe262ef4132f2c143f6b40525ffe5763293c7",
+      "path": "scripts/reference-axis-transport.py",
+      "sha256": "3b081b0902240b79bd63cb849d6165fec32710d6724d1691d1e0eeb24abe3dc9"
+    },
+    {
+      "stage": "r1",
+      "revision": "afebe262ef4132f2c143f6b40525ffe5763293c7",
+      "path": "scripts/compare-axis-transport.py",
+      "sha256": "d5505d3c9f75e37b8cd3b758192a0fe6174a9220450f287f7a8a8df8b9742895"
+    },
+    {
+      "stage": "r1",
+      "revision": "afebe262ef4132f2c143f6b40525ffe5763293c7",
+      "path": "docs/audits/axis-transport/fixture-contract.json",
+      "sha256": "fa0c9c7050dca8e60a0dcb64eef3e32c915ca63977a3c9249bebd47863959fe2"
+    },
+    {
+      "stage": "r2",
+      "revision": "4a3e2d7516a9323c87ab81759b14854714c82be0",
+      "path": "crates/ingetrazo-gui/examples/ai_bridge_capture_workflows.rs",
+      "sha256": "6315b82d0d7e230121bc458e73eef62e609960a0aa89af3f6f75a498eb55d98e"
+    },
+    {
+      "stage": "r2",
+      "revision": "4a3e2d7516a9323c87ab81759b14854714c82be0",
+      "path": "crates/ingetrazo-gui/src/native_vulkan/world.rs",
+      "sha256": "f7546f9085eb2c32c890f80034892850ee06e43869c93855edff3e5cb00be19f"
+    },
+    {
+      "stage": "r2",
+      "revision": "4a3e2d7516a9323c87ab81759b14854714c82be0",
+      "path": "crates/ingetrazo-gui/src/native_vulkan/mod.rs",
+      "sha256": "9521c5824dc8065f4b7af18e2edd564b18f3bdea18e3d1199c944772dad46a52"
+    },
+    {
+      "stage": "r2",
+      "revision": "4a3e2d7516a9323c87ab81759b14854714c82be0",
+      "path": "crates/ingetrazo-gui/src/native_vulkan/world_axes.rs",
+      "sha256": "0ee292c5471d4e0502431ef64855f27ea710c5eafcf889034ea2b2e119c9673b"
+    },
+    {
+      "stage": "r2",
+      "revision": "4a3e2d7516a9323c87ab81759b14854714c82be0",
+      "path": "crates/ingetrazo-gui/src/native_vulkan/source_depth.rs",
+      "sha256": "bc727ba6933a463aaac5f656a14f57a5755a3998bb71b2507d279b8fc6f94278"
+    },
+    {
+      "stage": "r2",
+      "revision": "4a3e2d7516a9323c87ab81759b14854714c82be0",
+      "path": "scripts/reference-axis-transport.py",
+      "sha256": "f9c0910f0da5074dbac1398b2d524fc929c09d8276764e4d643f1610cc19cf16"
+    },
+    {
+      "stage": "r2",
+      "revision": "4a3e2d7516a9323c87ab81759b14854714c82be0",
+      "path": "scripts/compare-axis-transport.py",
+      "sha256": "873929a6ab1e92c6323449153f48644d2f345369d9424b3341fe6464d0abd482"
+    },
+    {
+      "stage": "r2",
+      "revision": "4a3e2d7516a9323c87ab81759b14854714c82be0",
+      "path": "docs/audits/axis-transport/fixture-contract.json",
+      "sha256": "fa0c9c7050dca8e60a0dcb64eef3e32c915ca63977a3c9249bebd47863959fe2"
+    }
+  ],
+  "original_sources": [
+    {
+      "path": "views/viewport.py",
+      "sha256": "1fb62f55b8f559deb3676924ee69a9a444397faa28c49651111cea44e420c724"
+    },
+    {
+      "path": "core/axes.py",
+      "sha256": "63619fc6a1f3b5ddbb9729a80ca56425061b7f96a5ffc9aa27942c52955149ab"
+    },
+    {
+      "path": "core/scene.py",
+      "sha256": "9dfcd32f1ff5b1445180eafd8df36eafb92fa08ed3597bb90eac09554899d2e0"
+    },
+    {
+      "path": "core/history.py",
+      "sha256": "2eb66a1d557099b51383988a7819145289fc4ce2c37fc7de3a92ed35b5830559"
+    },
+    {
+      "path": "formats/igz.py",
+      "sha256": "f318d685830c49c2fede7fd5a238ac7a1469ee0b0226cf48cab3751e194a9576"
+    },
+    {
+      "path": "views/main_window.py",
+      "sha256": "ea02be3e439c80731d0f5b5fde3d92d9b3f62e8ad10cd44ad305c3261b7786fa"
+    }
+  ],
+  "exclusions": [
+    "Generated shader cache and Qt settings directories; no raw evidence purged"
+  ],
+  "cleanup_performed": false
+}
