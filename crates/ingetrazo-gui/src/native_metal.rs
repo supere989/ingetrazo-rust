@@ -16,6 +16,7 @@ use winit::{
 mod lifecycle_probe;
 pub(crate) mod world_viewport;
 mod distance_label;
+mod capture;
 mod world_app_probe;
 mod world_classic_probe;
 mod world_material_probe;
@@ -85,6 +86,7 @@ struct State {
     close_requested: bool,
     pending_textures: egui::TexturesDelta,
     world_submitted: bool,
+    capture: capture::Owner,
 }
 struct Host {
     state: Option<State>,
@@ -186,6 +188,7 @@ impl Host {
             if !state.gpu.can_prepare()? {
                 return Ok(false);
             }
+            capture::after_ui(state, &self.ctx)?;
             let primitives = self.ctx.tessellate(output.shapes, output.pixels_per_point);
             // A freed ID used by this frame must still upload before prepare.
             // Opaque callbacks conservatively retain their IDs until preparation.
@@ -308,6 +311,7 @@ impl ApplicationHandler for Host {
                 close_requested: false,
                 pending_textures: Default::default(),
                 world_submitted: false,
+                capture: Default::default(),
             })
         })();
         match result {
