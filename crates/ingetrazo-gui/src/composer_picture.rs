@@ -253,8 +253,9 @@ impl Cache {
                 }
                 let a = f64::from(width) / 2.;
                 let b = f64::from(height) / 2.;
-                let radius = (radius * f64::from(width) / rect[2]).max(0.).min(a).min(b);
-                let feather = feather * f64::from(width) / rect[2];
+                let px_per_mm = f64::from(width) / rect[2];
+                let radius = (radius * px_per_mm).max(0.).min(a).min(b);
+                let feather = feather * px_per_mm;
                 for y in 0..height {
                     for x in 0..width {
                         let dx = f64::from(x) + 0.5 - a;
