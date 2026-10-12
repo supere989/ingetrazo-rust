@@ -175,7 +175,14 @@ impl Survey {
         if h.count != vertices.len() {
             return Err("Survey UV owner count differs from source vertex array".into());
         }
-        let _ = (h.bytes, h.offset);
+        // Consume the complete member, including ZIP CRC verification, without
+        // allocating an unused UV array. Source unpack_mesh also reads this owner.
+        let consumed = std::io::copy(&mut uv, &mut std::io::sink())
+            .map_err(|e| format!("Survey UV payload: {e}"))?;
+        if consumed != h.bytes as u64 {
+            return Err("Survey UV payload size mismatch".into());
+        }
+        let _ = h.offset;
         Ok(Self {
             vertices,
             triangles,

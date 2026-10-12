@@ -32,7 +32,7 @@ pub struct State {
     held: Option<HeldPath>,
     sampler: Option<Sampler>,
     asset: Option<(AssetKey, Arc<Survey>)>,
-    last_version: Option<(uuid::Uuid, u64)>,
+    last_version: Option<(uuid::Uuid, u64, u64)>,
     pub limits: Limits,
     pub decode_count: u64,
     config_error: Option<String>,
@@ -342,7 +342,11 @@ impl IngeTrazoApp {
             self.survey_profile.summary = None;
             self.survey_profile.message =
                 Some(tr("Set a base map location first (Tray ▸ Base map)."));
-            self.survey_profile.last_version = Some((self.clipboard_document, self.scene.version));
+            self.survey_profile.last_version = Some((
+                self.clipboard_document,
+                self.scene.version,
+                self.model_revision,
+            ));
             return Ok(false);
         };
         let mut selected = self.scene.selection.iter().filter_map(|item| {
@@ -368,7 +372,11 @@ impl IngeTrazoApp {
             self.survey_profile.message = Some(tr(
                 "Trace a path with the Path tool (T), select it, then run Profile.",
             ));
-            self.survey_profile.last_version = Some((self.clipboard_document, self.scene.version));
+            self.survey_profile.last_version = Some((
+                self.clipboard_document,
+                self.scene.version,
+                self.model_revision,
+            ));
             return Ok(false);
         };
         if !visible_photo(&self.scene) {
@@ -457,7 +465,11 @@ impl IngeTrazoApp {
         self.survey_profile.chart = candidate_chart;
         self.survey_profile.summary = Some(summary);
         self.survey_profile.message = None;
-        self.survey_profile.last_version = Some((self.clipboard_document, self.scene.version));
+        self.survey_profile.last_version = Some((
+            self.clipboard_document,
+            self.scene.version,
+            self.model_revision,
+        ));
         if !reused {
             self.survey_profile.decode_count += 1;
         }
@@ -466,18 +478,31 @@ impl IngeTrazoApp {
     pub fn refresh_survey_profile(&mut self) {
         let state = &self.survey_profile;
         if !state.visible
-            || state.last_version == Some((self.clipboard_document, self.scene.version))
+            || state.last_version
+                == Some((
+                    self.clipboard_document,
+                    self.scene.version,
+                    self.model_revision,
+                ))
         {
             return;
         }
         let Some(id) = state.held.as_ref().map(|p| p.id) else {
-            self.survey_profile.last_version = Some((self.clipboard_document, self.scene.version));
+            self.survey_profile.last_version = Some((
+                self.clipboard_document,
+                self.scene.version,
+                self.model_revision,
+            ));
             return;
         };
         // Source leaves a detached held path/result intact, and re-profiles only
         // while the genuine acquired path is still in scene.geo_paths.
         let Some(path) = self.scene.geo_paths.iter().find(|p| p.history_id == id) else {
-            self.survey_profile.last_version = Some((self.clipboard_document, self.scene.version));
+            self.survey_profile.last_version = Some((
+                self.clipboard_document,
+                self.scene.version,
+                self.model_revision,
+            ));
             return;
         };
         let Some(sampler) = state.sampler.as_ref() else {
@@ -511,8 +536,11 @@ impl IngeTrazoApp {
                 self.survey_profile.profile = Some(profile);
                 self.survey_profile.chart = chart;
                 self.survey_profile.message = None;
-                self.survey_profile.last_version =
-                    Some((self.clipboard_document, self.scene.version));
+                self.survey_profile.last_version = Some((
+                    self.clipboard_document,
+                    self.scene.version,
+                    self.model_revision,
+                ));
             }
             Err(e) => self.status_message = e,
         }

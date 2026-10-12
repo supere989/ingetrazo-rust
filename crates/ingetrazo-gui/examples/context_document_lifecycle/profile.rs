@@ -82,6 +82,30 @@ pub fn run() {
             assert_eq!(app.undo_stack.len(), undo);
             assert_eq!(app.redo_stack.len(), redo);
             guards.push(json!({"guard":"hidden-photo-dem-open","unchanged":true}));
+            // History publication can replace a path with the same Scene.version.
+            // Its runtime owner survives, but the authoritative App epoch changes.
+            let old_version = app.scene.version;
+            app.save_undo_state();
+            app.scene.geo_paths[0].points[1].x += 2.;
+            assert!(app.compute_survey_profile().unwrap());
+            let changed = app.survey_profile.profile.clone().unwrap();
+            assert_ne!(changed.samples, accepted.samples);
+            app.undo();
+            assert_eq!(app.scene.version, old_version);
+            app.refresh_survey_profile();
+            assert_eq!(
+                app.survey_profile.profile.as_ref().unwrap().samples,
+                accepted.samples
+            );
+            app.redo();
+            assert_eq!(app.scene.version, old_version);
+            app.refresh_survey_profile();
+            assert_eq!(
+                app.survey_profile.profile.as_ref().unwrap().samples,
+                changed.samples
+            );
+            assert_eq!(app.survey_profile.decode_count, 1);
+            guards.push(json!({"guard":"equal-version-history-refresh","unchanged":true}));
         }
     }
     std::fs::write(out.join("native-profile.json"),serde_json::to_vec_pretty(&json!({"cases":original["cases"],"states":rows,"numpy":original["numpy"],"source_pin":original["source_pin"]})).unwrap()).unwrap();

@@ -23,7 +23,7 @@ for c in a['cases']:
 caches=json.loads((p/'profile-cache.json').read_text());assert [c['case']for c in caches]==expected
 for c in caches:assert c['decoded']==(0 if c['case']in['ambiguous','no-datum','no-path']else 1)
 assert json.loads((p/'dem-boundary.json').read_text())==dict(visible_photo_first=True,hidden_photo_selects_dem=True,network_not_started=True)
-assert json.loads((p/"profile-guards.json").read_text())==[dict(guard=n,unchanged=True)for n in ["budget-refusal","missing-malformed-resource","hidden-photo-dem-open"]]
+assert json.loads((p/"profile-guards.json").read_text())==[dict(guard=n,unchanged=True)for n in ["budget-refusal","missing-malformed-resource","hidden-photo-dem-open","equal-version-history-refresh"]]
 count=0
 for i,row in enumerate(b['states']):
  c=copy.deepcopy(b);c['states'][i]['undo']+=1
@@ -35,4 +35,4 @@ for i,row in enumerate(b['states']):
   try:strict(a,c)
   except AssertionError:count+=1
   else:raise AssertionError('chainage mutation accepted')
-print(json.dumps(dict(cases=9,states=18,samples=sum(len(s['profile']['samples'])for s in a['states']if s['profile']),actual_original_reopens=9,byte_exact_CSV=sum(c['csv']for c in a['cases']),negative_controls=count,cache_cases=9,atomic_guards=3,passed=True)))
+print(json.dumps(dict(cases=9,states=18,samples=sum(len(s['profile']['samples'])for s in a['states']if s['profile']),actual_original_reopens=9,byte_exact_CSV=sum(c['csv']for c in a['cases']),negative_controls=count,cache_cases=9,atomic_guards=4,passed=True)))
