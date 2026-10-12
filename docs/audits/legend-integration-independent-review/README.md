@@ -1,0 +1,5 @@
+Independent read-only review authenticated root canonical242entries plus182exactreferences:424files/237,269,249rawbytes, ZIPed9bb3f33ebddca11450e293b6e545f3ff8d257d15a95d75ca345a376bd31d5b. All29actualGitbindings verified. Also independently compared all424rawfiles by size/SHA before cleanup; no builds/replays/sourceacquisition.
+
+Joint compiled3a43b9e9 legend/caption/symbol/worker currentbytes match buildreceipt; original6e6 image binary was superseded, so only retained buildprovenance authenticates that historical binary. Current161b image binary matches image-control-only010069c9 receipt. Accepted outputs bind their own binary identities.
+
+Captions13PNG/13PDF exact with11controls; images11exact after stale unsupported-legend control correction, first failure retained. Symbols known2pixels/max1 and legends1bluepixel/max1 remain strictfailures (legend6PNG/7PDF,7readers/10controls). Profile evidence separately authenticated72e5c9e6. No P29/fullplatform promotion or numerical tolerance. Existing jointbuild/readiness-gated finalchecks preserve strict failure and skipped coverage.
