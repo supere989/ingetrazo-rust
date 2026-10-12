@@ -798,7 +798,15 @@ fn radial(o: &mut Output, v: &Value, p: &mut Painter, pdf: bool) -> Result<(), S
     // before number serialization. A local path plus a rounded cm matrix is
     // mathematically equivalent, but not the same physical PDF edge rounding.
     if pdf && ends == "arrow" {
-        for draw in &mut o.draws[first_arrow..] { draw.flatten_transform = true; }
+        for draw in &mut o.draws[first_arrow..] {
+            draw.flatten_transform = true;
+            draw.even_odd = true;
+            if let Some(PathOp::Move(first)) = draw.path.first().cloned() {
+                if matches!(draw.path.last(), Some(PathOp::Close)) {
+                    draw.path.insert(draw.path.len()-1, PathOp::Line(first));
+                }
+            }
+        }
     }
     let deg = readable(u, w);
     let anchor = if out {
