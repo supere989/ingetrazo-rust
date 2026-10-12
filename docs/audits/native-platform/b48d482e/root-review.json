@@ -1,0 +1,25 @@
+{
+  "source_commit": "6a93ac36",
+  "head_sha": "b48d482e5772494a38ab8cec4e6038053197a46d",
+  "archive_sha256": "61ab955909ccdedf38f61109808caa9161457b12992df1bed46b8ad62e190f5f",
+  "authenticated_entries": 556,
+  "authenticated_raw_bytes": 147978877,
+  "linux_steps_passed": 113,
+  "integrated_consumers": 30,
+  "integrated_stages_passed": 178,
+  "failed_steps": {
+    "Native Metal framework link (macos-15-intel)": [
+      "Strict native Metal physical sheet geometry and codec diagnostic",
+      "Native stencil section source scenes and exact pixel comparison",
+      "Observe actual Apple OpenGL multisample depth resolve",
+      "Native document dimensions depth and immutable frame ownership",
+      "Actual packaged CLI native Metal world startup"
+    ],
+    "Native Metal framework link (macos-15)": [
+      "Native stencil section source scenes and exact pixel comparison",
+      "Observe actual Apple OpenGL multisample depth resolve"
+    ]
+  },
+  "ordered_both_pass": true,
+  "scope": "Independent archive identity and terminal-result reconciliation. No builds, source recapture, GPU replay or duplicate CI polling."
+}
