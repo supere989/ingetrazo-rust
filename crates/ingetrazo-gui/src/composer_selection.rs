@@ -759,10 +759,14 @@ pub(crate) fn clear(app: &mut IngeTrazoApp) {
 pub(crate) fn is_selected(app: &IngeTrazoApp, o: Owner) -> bool {
     app.composer_state.selection.membership.contains(&o)
 }
-/// Dimension runs restore their complete annotation cohort after adding a segment.
-/// Publish it once through the shared controller so its next revalidation cannot
-/// replace surviving selections with the last-added item.
-pub(crate) fn reselect_annotations(app: &mut IngeTrazoApp) -> Result<(), String> {
+/// Cold selection admission precedes the segment's document/history publication.
+pub(crate) struct RunSelection {
+    members: Vec<Owner>,
+    membership: HashSet<Owner>,
+    display: HashMap<Owner, RectMm>,
+    primary: Option<Owner>,
+}
+pub(crate) fn prepare_run_selection(app: &mut IngeTrazoApp) -> Result<RunSelection, String> {
     let s = active(app)?;
     ensure(&mut app.scene.sheets[s])?;
     let sheet = &app.scene.sheets[s];
@@ -772,9 +776,40 @@ pub(crate) fn reselect_annotations(app: &mut IngeTrazoApp) -> Result<(), String>
             .then(|| owner_at(sheet, [7, 8, 9, 10, 12, 13][owner.family], owner.index))
             .flatten()
     };
-    let members = state.multi.members.iter().copied().filter_map(convert).collect();
-    let primary = state.selected.and_then(convert);
-    set(app, members, primary)
+    let capacity = state.multi.members.len().checked_add(2).ok_or("Selection size overflow")?;
+    let mut prepared = RunSelection {
+        members: Vec::new(), membership: HashSet::new(), display: HashMap::new(),
+        primary: state.selected.and_then(convert),
+    };
+    prepared.members.try_reserve(capacity).map_err(|_| "Run selection allocation refused")?;
+    prepared.membership.try_reserve(capacity).map_err(|_| "Run membership allocation refused")?;
+    prepared.display.try_reserve(capacity).map_err(|_| "Run display allocation refused")?;
+    for owner in state.multi.members.iter().chain(state.selected.as_slice()).copied().filter_map(convert) {
+        if prepared.membership.insert(owner) {
+            if prepared.members.len() + 1 >= LIMIT { return Err("Sheet cohort budget exceeded".into()); }
+            prepared.display.insert(owner, geometry(app, owner)?);
+            prepared.members.push(owner);
+        }
+    }
+    Ok(prepared)
+}
+/// The ordinary Add already admitted and selected its one new item. All other
+/// owners, display bounds and spare capacity were prepared before that command.
+pub(crate) fn publish_run_selection(app: &mut IngeTrazoApp, mut prepared: RunSelection) {
+    let state = &mut app.composer_state.selection;
+    let added = state.primary.expect("successful annotation Add selected its owner");
+    let bounds = state.display[&added];
+    if prepared.membership.insert(added) {
+        prepared.members.push(added);
+        prepared.display.insert(added, bounds);
+    }
+    state.members = prepared.members;
+    state.membership = prepared.membership;
+    state.display = prepared.display;
+    state.primary = prepared.primary.or(Some(added));
+    state.cohort_mode = true;
+    state.stamp = Some((added.sheet, app.scene.version));
+    mirror(app);
 }
 pub(crate) fn force_select(
     app: &mut IngeTrazoApp,

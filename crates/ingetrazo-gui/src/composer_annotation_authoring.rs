@@ -586,6 +586,7 @@ impl IngeTrazoApp {
         if !sep.is_finite() || sep.abs() > 1e6 {
             return Err("Invalid run separation".into());
         }
+        let prepared_selection = super::selection::prepare_run_selection(self)?;
         let state = &mut self.composer_state.annotation_authoring;
         // Source Add reselects surviving items, adds the new cota, and keeps
         // the panel's shown owner while that owner remains selected.
@@ -640,7 +641,7 @@ impl IngeTrazoApp {
                 // The document version changed on Add, so this refreshes the
                 // borrowed membership cache without a new history command.
                 multi::revalidate(self);
-                super::selection::reselect_annotations(self)?;
+                super::selection::publish_run_selection(self, prepared_selection);
                 Ok(owner)
             }
             Err(error) => {
