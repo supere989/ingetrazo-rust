@@ -244,7 +244,15 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         }
         // Fixture writer observes the same active mesh plus global source group
         // view; this test-only copy does not Finish or publish a user document.
-        let mut saved = a.scene.clone();
+        let root = a
+            .component_edit_stack
+            .first()
+            .map_or(&a.scene, |session| session.parked_scene());
+        // Preserve the original whole-document raw metadata, prototype registry
+        // and native baseline before overlaying the actual active-context view.
+        let mut saved = root.clone();
+        saved.mesh = a.scene.mesh.clone();
+        saved.embedded_textures = a.scene.embedded_textures.clone();
         saved.groups = observe::source_groups(&a);
         ingetrazo_formats::save_file(&saved, &out.join(case["saved"].as_str().ok_or("saved")?))?;
         let mut actual_case = case.clone();
