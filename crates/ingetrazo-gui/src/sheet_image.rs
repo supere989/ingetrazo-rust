@@ -5,16 +5,24 @@ use ingetrazo_formats::{paper_text_painter::Painter, sheet_image::Metrics};
 use ingetrazo_render::cad2d::{Batch, Geometry};
 use std::sync::Arc;
 pub type Records = (Arc<Geometry>, Arc<[Batch]>);
+pub(crate) enum Record {
+    Cad(Records),
+    Picture(Arc<ingetrazo_render::paper_picture::Callback>),
+}
+impl From<Records> for Record {
+    fn from(v: Records) -> Self {
+        Self::Cad(v)
+    }
+}
 pub struct Plan {
     pub metrics: Metrics,
-    pub(crate) records: Vec<Records>,
+    pub(crate) records: Vec<Record>,
 }
 /// Cold export preparation. Every visible unsupported painter is reported
 /// together, before native submission or opening a destination temporary file.
 pub fn unsupported(sheet: &Sheet) -> Vec<String> {
     let mut out = Vec::new();
     for key in [
-        "images",
         "cotas",
         "cotas_ang",
         "cotas_rad",
@@ -41,8 +49,14 @@ pub fn unsupported(sheet: &Sheet) -> Vec<String> {
 pub struct PainterCache {
     text: crate::composer::text_canvas::CanvasPainter,
     fonts: Painter,
+    pub(crate) pictures: crate::composer_picture::Cache,
 }
 impl PainterCache {
+    /// Cold picture decode/composite counters; immutable pixel owners stay private.
+    pub fn picture_stats(&self) -> (u64, u64) {
+        (self.pictures.decodes, self.pictures.builds)
+    }
+
     pub fn prepare(
         &mut self,
         ctx: &egui::Context,
@@ -56,9 +70,7 @@ impl PainterCache {
         ctx: &egui::Context,
         sheet: &Sheet,
         dpi: u16,
-        views: Option<
-            &std::collections::HashMap<uuid::Uuid, crate::composer::pdf::ViewDraws>,
-        >,
+        views: Option<&std::collections::HashMap<uuid::Uuid, crate::composer::pdf::ViewDraws>>,
         context: Option<&crate::composer_text_fields::Context<'_>>,
     ) -> Result<Plan, String> {
         let unsupported = unsupported(sheet);
@@ -73,17 +85,34 @@ impl PainterCache {
         let density = f64::from(dpi) / 25.4;
         let mut records = Vec::new();
         let mut bytes = 0u64;
-        let mut append = |part: Records| -> Result<(), String> {
-            let n = part
-                .0
-                .logical_bytes()
-                .checked_add(part.0.source_spans().map_or(0, |s| s.logical_bytes()))
-                .and_then(|n| n.checked_add((part.1.len() * std::mem::size_of::<Batch>()) as u64))
-                .ok_or("Sheet records size overflow")?;
+        let mut picture_owners = std::collections::HashSet::new();
+        let mut append = |part: Record| -> Result<(), String> {
+            let n = match &part {
+                Record::Cad((geometry, batches)) => geometry
+                    .logical_bytes()
+                    .checked_add(geometry.source_spans().map_or(0, |s| s.logical_bytes()))
+                    .and_then(|n| {
+                        n.checked_add((batches.len() * std::mem::size_of::<Batch>()) as u64)
+                    })
+                    .ok_or("Sheet records size overflow")?,
+                Record::Picture(callback) => {
+                    let snapshot = callback.snapshot()?;
+                    let sampling = &snapshot.sampling;
+                    let image = if picture_owners.insert(sampling.image.id()) {
+                        sampling.image.bytes()
+                    } else {
+                        0
+                    };
+                    sampling
+                        .bytes()
+                        .checked_add(image)
+                        .ok_or("Sheet picture owner charge overflow")? as u64
+                }
+            };
             bytes = bytes
                 .checked_add(n)
                 .filter(|&n| n <= 64 * 1024 * 1024)
-                .ok_or("Sheet image records exceed 64 MiB")?;
+                .ok_or("Sheet image records exceed64MiB")?;
             records
                 .try_reserve(1)
                 .map_err(|_| "Sheet records allocation failed")?;
@@ -91,64 +120,186 @@ impl PainterCache {
             Ok(())
         };
         for exported in sheet.physical_export_items()? {
-            let (index,item)=match exported{
-                ingetrazo_core::composition::PhysicalExportItem::Typed{index,item}=>(index,item),
-                ingetrazo_core::composition::PhysicalExportItem::Legend{value,..}=>{
-                    let legend=crate::composer_legend::draws(value,&mut self.fonts)?;
-                    for(index,mut draw)in legend.draws.into_iter().enumerate(){
-                        if draw.text.is_some(){for part in self.text.physical_records(std::slice::from_ref(&draw),density)?{append(part)?;}}
-                        else{
-                            if legend.rectangles.binary_search(&index).is_ok(){let mut fill=draw.clone();fill.stroke=None;fill.stroke_options=None;for part in self.text.physical_rectangle(&fill,density)?{append(part)?;}draw.fill=None;}
-                            if draw.stroke.is_some(){for part in crate::sheet_image_paths::records(std::slice::from_ref(&draw),density,metrics.pixels())?{append(part)?;}}
+            let (index, item) = match exported {
+                ingetrazo_core::composition::PhysicalExportItem::Typed { index, item } => {
+                    (index, item)
+                }
+                ingetrazo_core::composition::PhysicalExportItem::Picture { value, .. } => {
+                    let picture = self.pictures.draws(value)?;
+                    for (index, mut draw) in picture.draws.into_iter().enumerate() {
+                        if let Some(image) = draw.picture.take() {
+                            let sampling = ingetrazo_render::paper_picture::Sampling::new(
+                                &image,
+                                density,
+                                metrics.pixels(),
+                            )?;
+                            append(Record::Picture(
+                                ingetrazo_render::paper_picture::Callback::new(sampling),
+                            ))?;
+                            continue;
                         }
-                    }continue;
+                        if picture.rectangles.binary_search(&index).is_ok() {
+                            for part in self.text.physical_rectangle(&draw, density)? {
+                                append(part.into())?;
+                            }
+                            continue;
+                        }
+                        let parts = if picture.source_lines.binary_search(&index).is_ok() {
+                            crate::sheet_image_paths::source_line_records(
+                                &draw,
+                                density,
+                                metrics.pixels(),
+                            )?
+                        } else {
+                            crate::sheet_image_paths::records(
+                                std::slice::from_ref(&draw),
+                                density,
+                                metrics.pixels(),
+                            )?
+                        };
+                        for part in parts {
+                            append(part.into())?;
+                        }
+                    }
+                    continue;
+                }
+                ingetrazo_core::composition::PhysicalExportItem::Legend { value, .. } => {
+                    let legend = crate::composer_legend::draws(value, &mut self.fonts)?;
+                    for (index, mut draw) in legend.draws.into_iter().enumerate() {
+                        if draw.text.is_some() {
+                            for part in self
+                                .text
+                                .physical_records(std::slice::from_ref(&draw), density)?
+                            {
+                                append(part.into())?;
+                            }
+                        } else {
+                            if legend.rectangles.binary_search(&index).is_ok() {
+                                let mut fill = draw.clone();
+                                fill.stroke = None;
+                                fill.stroke_options = None;
+                                for part in self.text.physical_rectangle(&fill, density)? {
+                                    append(part.into())?;
+                                }
+                                draw.fill = None;
+                            }
+                            if draw.stroke.is_some() {
+                                for part in crate::sheet_image_paths::records(
+                                    std::slice::from_ref(&draw),
+                                    density,
+                                    metrics.pixels(),
+                                )? {
+                                    append(part.into())?;
+                                }
+                            }
+                        }
+                    }
+                    continue;
                 }
             };
             match item {
-                SheetItem::Shape(item) => append(crate::composer_cad::physical_shape(
-                    ctx,
-                    &item.shape,
-                    density,
-                    glam::DVec2::new(item.shape.x_mm, item.shape.y_mm),
-                )?)?,
+                SheetItem::Shape(item) => append(
+                    crate::composer_cad::physical_shape(
+                        ctx,
+                        &item.shape,
+                        density,
+                        glam::DVec2::new(item.shape.x_mm, item.shape.y_mm),
+                    )?
+                    .into(),
+                )?,
                 SheetItem::Text(item) => {
                     let draws =
                         crate::composer::pdf::text_draws(sheet, item, &mut self.fonts, context)?;
                     for part in self.text.physical_records(&draws, density)? {
-                        append(part)?;
+                        append(part.into())?;
                     }
                 }
                 SheetItem::ViewFrame(item) => {
                     let draws = views
                         .and_then(|v| v.get(&item.id))
                         .ok_or("Physical vector view requires live document context")?;
-                    for (index,draw) in draws.draws.iter().enumerate(){
-                        if draw.text.is_some(){for part in self.text.physical_records(std::slice::from_ref(draw),density)?{append(part)?;}}
-                        else if index>=draws.caption_start&&draw.fill.is_some()&&draw.stroke.is_none()&&crate::sheet_image_paths::axis_rectangle(&draw.path).is_some(){for part in self.text.physical_rectangle(draw,density)?{append(part)?;}}
-                        else if draws.source_lines.binary_search(&index).is_ok(){for part in crate::sheet_image_paths::source_line_records(draw,density,metrics.pixels())?{append(part)?;}}
-                        else{for part in crate::sheet_image_paths::records(std::slice::from_ref(draw),density,metrics.pixels())?{append(part)?;}}
+                    for (index, draw) in draws.draws.iter().enumerate() {
+                        if draw.text.is_some() {
+                            for part in self
+                                .text
+                                .physical_records(std::slice::from_ref(draw), density)?
+                            {
+                                append(part.into())?;
+                            }
+                        } else if index >= draws.caption_start
+                            && draw.fill.is_some()
+                            && draw.stroke.is_none()
+                            && crate::sheet_image_paths::axis_rectangle(&draw.path).is_some()
+                        {
+                            for part in self.text.physical_rectangle(draw, density)? {
+                                append(part.into())?;
+                            }
+                        } else if draws.source_lines.binary_search(&index).is_ok() {
+                            for part in crate::sheet_image_paths::source_line_records(
+                                draw,
+                                density,
+                                metrics.pixels(),
+                            )? {
+                                append(part.into())?;
+                            }
+                        } else {
+                            for part in crate::sheet_image_paths::records(
+                                std::slice::from_ref(draw),
+                                density,
+                                metrics.pixels(),
+                            )? {
+                                append(part.into())?;
+                            }
+                        }
                     }
                 }
-                SheetItem::TitleBlock(_) | SheetItem::NorthArrow(_) | SheetItem::GraphicScale(_) => {
-                    let draws=crate::composer_symbols::raster_draws(sheet,&sheet.items[index],&mut self.fonts,context,density)?;
+                SheetItem::TitleBlock(_)
+                | SheetItem::NorthArrow(_)
+                | SheetItem::GraphicScale(_) => {
+                    let draws = crate::composer_symbols::raster_draws(
+                        sheet,
+                        &sheet.items[index],
+                        &mut self.fonts,
+                        context,
+                        density,
+                    )?;
                     for mut draw in draws {
-                        if draw.text.is_some(){for part in self.text.physical_records(std::slice::from_ref(&draw),density)?{append(part)?;}}
-                        else {
+                        if draw.text.is_some() {
+                            for part in self
+                                .text
+                                .physical_records(std::slice::from_ref(&draw), density)?
+                            {
+                                append(part.into())?;
+                            }
+                        } else {
                             // Source graphic cells use QRasterPaintEngine::drawRects, whose fill
                             // uses the16.16 axis rectangle rasterizer instead of gray path mapping.
-                            if matches!(sheet.items[index],SheetItem::GraphicScale(_))&&draw.fill.is_some()&&crate::sheet_image_paths::axis_rectangle(&draw.path).is_some(){
-                                let mut fill=draw.clone();fill.stroke=None;fill.stroke_options=None;
-                                for part in self.text.physical_rectangle(&fill,density)?{append(part)?;}
-                                draw.fill=None;
+                            if matches!(sheet.items[index], SheetItem::GraphicScale(_))
+                                && draw.fill.is_some()
+                                && crate::sheet_image_paths::axis_rectangle(&draw.path).is_some()
+                            {
+                                let mut fill = draw.clone();
+                                fill.stroke = None;
+                                fill.stroke_options = None;
+                                for part in self.text.physical_rectangle(&fill, density)? {
+                                    append(part.into())?;
+                                }
+                                draw.fill = None;
                             }
-                            for part in crate::sheet_image_paths::records(std::slice::from_ref(&draw),density,metrics.pixels())?{append(part)?;}
+                            for part in crate::sheet_image_paths::records(
+                                std::slice::from_ref(&draw),
+                                density,
+                                metrics.pixels(),
+                            )? {
+                                append(part.into())?;
+                            }
                         }
                     }
                 }
             }
         }
         if sheet.effective_source_border().on {
-            append(crate::composer_border::physical_geometry(sheet, density)?)?;
+            append(crate::composer_border::physical_geometry(sheet, density)?.into())?;
         }
         Ok(Plan { metrics, records })
     }
@@ -176,16 +327,34 @@ impl PainterCache {
             ));
         }
         let date = crate::composer_text_fields::sample_calendar()?.display();
-        let indices=crate::composer_text_fields::source_indices(&scene.sheets,std::slice::from_ref(sheet))?;
-        let source_index=*indices.get(&(sheet as *const _)).ok_or("Image sheet field context lost")?;
-        let context = crate::composer_text_fields::Context {index:Some(source_index),total:scene.sheets.len(),path,date:&date};
+        let indices = crate::composer_text_fields::source_indices(
+            &scene.sheets,
+            std::slice::from_ref(sheet),
+        )?;
+        let source_index = *indices
+            .get(&(sheet as *const _))
+            .ok_or("Image sheet field context lost")?;
+        let context = crate::composer_text_fields::Context {
+            index: Some(source_index),
+            total: scene.sheets.len(),
+            path,
+            date: &date,
+        };
         let mut views = std::collections::HashMap::new();
         for i in sheet.visible_item_indices() {
             if let SheetItem::ViewFrame(frame) = &sheet.items[i] {
                 views.insert(
                     frame.id,
                     crate::composer::pdf::view_draws(
-                        scene, camera, compute, document, revision, sheet, frame, &mut self.fonts, &context,
+                        scene,
+                        camera,
+                        compute,
+                        document,
+                        revision,
+                        sheet,
+                        frame,
+                        &mut self.fonts,
+                        &context,
                     )?,
                 );
             }
@@ -223,16 +392,31 @@ pub struct State {
 }
 impl crate::app::IngeTrazoApp {
     /// Explicit diagnostic for one already-required physical export. Disabled by default.
-    pub fn begin_sheet_glyph_observation(&mut self)->Result<(),String>{self.sheet_image.painters.text.begin_physical_observation()}
-    pub fn take_sheet_glyph_observation(&mut self)->Result<serde_json::Value,String>{self.sheet_image.painters.text.take_physical_observation()}
+    pub fn begin_sheet_glyph_observation(&mut self) -> Result<(), String> {
+        self.sheet_image.painters.text.begin_physical_observation()
+    }
+    pub fn take_sheet_glyph_observation(&mut self) -> Result<serde_json::Value, String> {
+        self.sheet_image.painters.text.take_physical_observation()
+    }
 
     pub fn begin_sheet_image_export(&mut self, sheet: usize) {
         self.sheet_image.chooser_refreshes += 1;
         self.composer_compute.invalidate();
         // Like the source chooser, refresh the physical vector view cache before
         // path selection, including a canceled chooser. No scene copy or history.
-        let date=match crate::composer_text_fields::today(){Ok(v)=>v,Err(e)=>{self.sheet_image_result(Err(e));return;}};
-        let fields=crate::composer_text_fields::Context{index:Some(sheet),total:self.scene.sheets.len(),path:self.current_file.as_deref(),date:&date};
+        let date = match crate::composer_text_fields::today() {
+            Ok(v) => v,
+            Err(e) => {
+                self.sheet_image_result(Err(e));
+                return;
+            }
+        };
+        let fields = crate::composer_text_fields::Context {
+            index: Some(sheet),
+            total: self.scene.sheets.len(),
+            path: self.current_file.as_deref(),
+            date: &date,
+        };
         if let Some(sheet) = self.scene.sheets.get(sheet) {
             for i in sheet.visible_item_indices() {
                 if let SheetItem::ViewFrame(frame) = &sheet.items[i] {
@@ -495,6 +679,9 @@ impl MetalExporter {
             attachments: Default::default(),
         })
     }
+    pub fn picture_stats(&self) -> ingetrazo_metal::paper_picture::Stats {
+        self.painter.picture_stats()
+    }
     pub fn save(&mut self, plan: &Plan, path: &std::path::Path) -> Result<(), String> {
         let factory = ingetrazo_render::cad_callback::Factory::default();
         let pose = ingetrazo_render::cad2d::Pose {
@@ -504,8 +691,11 @@ impl MetalExporter {
         let handles = plan
             .records
             .iter()
-            .map(|(g, b)| factory.handle(g.clone(), b.clone(), pose))
-            .collect::<Result<Vec<_>, _>>()?;
+            .map(|record| match record {
+                Record::Cad((g, b)) => factory.handle(g.clone(), b.clone(), pose).map(Some),
+                Record::Picture(_) => Ok(None),
+            })
+            .collect::<Result<Vec<_>, String>>()?;
         let [width, height] = plan.metrics.pixels();
         let tile_width = 2048u32;
         let tile_height = 128u32;
@@ -537,13 +727,23 @@ impl MetalExporter {
                     primitives
                         .try_reserve_exact(handles.len())
                         .map_err(|_| "Paper callback allocation failed")?;
-                    for (handle, (geometry, batches)) in handles.iter().zip(&plan.records) {
-                        handle.update(geometry.clone(), batches.clone(), pose)?;
+                    for (handle, record) in handles.iter().zip(&plan.records) {
+                        let callback: Arc<dyn std::any::Any + Send + Sync> = match record {
+                            Record::Cad((geometry, batches)) => {
+                                let handle = handle.as_ref().ok_or("Paper CAD handle missing")?;
+                                handle.update(geometry.clone(), batches.clone(), pose)?;
+                                handle.clone()
+                            }
+                            Record::Picture(picture) => {
+                                picture.set_origin([x as i32, start as i32])?;
+                                picture.clone()
+                            }
+                        };
                         primitives.push(egui::ClippedPrimitive {
                             clip_rect: rect,
                             primitive: egui::epaint::Primitive::Callback(egui::PaintCallback {
                                 rect,
-                                callback: handle.clone(),
+                                callback,
                             }),
                         });
                     }

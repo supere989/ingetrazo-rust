@@ -110,6 +110,61 @@ impl Sampling {
             page,
         }))
     }
+    /// Identical96byte scalar ABI for Vulkan and Metal sampled commands.
+    pub fn native_push(&self, extent: [u32; 2], origin: [u32; 2]) -> Result<[i32; 24], String> {
+        if extent.contains(&0)
+            || extent.iter().any(|&v| v > 16384)
+            || origin.iter().any(|&v| v > 1_000_000)
+        {
+            return Err("Paper picture target/origin domain invalid".into());
+        }
+        let bounds = [
+            self.rect_fixed[0] >> 16,
+            self.rect_fixed[1] >> 16,
+            (self.rect_fixed[2] + 65535) >> 16,
+            (self.rect_fixed[3] + 65535) >> 16,
+        ];
+        if bounds.iter().any(|&v| v.abs() > 1_000_000)
+            || self.fy.len() > 1_000_000
+            || self.image.width() > 32767
+            || self.image.height() > 32767
+        {
+            return Err("Paper picture native sample inventory exceeds fast domain".into());
+        }
+        let middle = (i64::from(self.x[2]) - i64::from(self.x[1])).max(0);
+        let end = i64::from(self.fx[1])
+            .checked_add(i64::from(self.fdx) * middle)
+            .ok_or("Paper picture fixed step overflow")?;
+        if end < i64::from(i32::MIN) || end > i64::from(i32::MAX) {
+            return Err("Paper picture fixed step exceeds native range".into());
+        }
+        Ok([
+            extent[0] as i32,
+            extent[1] as i32,
+            origin[0] as i32,
+            origin[1] as i32,
+            bounds[0] as i32,
+            bounds[1] as i32,
+            bounds[2] as i32,
+            bounds[3] as i32,
+            (self.rect_fixed[0] & 65535) as i32,
+            (self.rect_fixed[1] & 65535) as i32,
+            (self.rect_fixed[2] & 65535) as i32,
+            (self.rect_fixed[3] & 65535) as i32,
+            self.x[0],
+            self.x[1],
+            self.x[2],
+            self.fdx,
+            self.fx[0],
+            self.fx[1],
+            self.fx[2],
+            self.top,
+            self.image.width() as i32,
+            self.image.height() as i32,
+            self.fy.len() as i32,
+            0,
+        ])
+    }
     pub fn bytes(&self) -> usize {
         self.fy.capacity() * 4 + std::mem::size_of::<Self>()
     }

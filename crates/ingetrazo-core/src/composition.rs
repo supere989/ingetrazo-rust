@@ -67,7 +67,8 @@ impl Default for Orientation {
 
 /// Standard scale denominators for 1:N drawings.
 pub const COMMON_SCALES: &[f64] = &[
-    0.1, 0.2, 0.5, 1.0, 2.0, 5.0, 10.0, 20.0, 25.0, 50.0, 100.0, 200.0, 250.0, 500.0, 1000.0, 2000.0,
+    0.1, 0.2, 0.5, 1.0, 2.0, 5.0, 10.0, 20.0, 25.0, 50.0, 100.0, 200.0, 250.0, 500.0, 1000.0,
+    2000.0,
 ];
 
 pub const RENDER_DPI: f64 = 300.0;
@@ -95,7 +96,10 @@ pub fn parse_scale(text: &str, default: f64) -> f64 {
     if s.contains(':') {
         let parts: Vec<&str> = s.split(':').collect();
         if parts.len() == 2 {
-            if let (Ok(a), Ok(b)) = (parts[0].trim().parse::<f64>(), parts[1].trim().parse::<f64>()) {
+            if let (Ok(a), Ok(b)) = (
+                parts[0].trim().parse::<f64>(),
+                parts[1].trim().parse::<f64>(),
+            ) {
                 if a > 0.0 && b > 0.0 {
                     return b / a;
                 }
@@ -141,13 +145,27 @@ impl RectMm {
 }
 
 /// Model-View Frame (MarcoVista): projects 3D model onto the sheet at exact scale.
-fn default_cut_fill()->String{"solid".into()}
-fn default_cut_color()->String{"#595e69".into()}
-fn default_cut_hatch()->f64{1.5}
-fn default_cut_pen()->f64{0.5}
-fn default_profile_pen()->f64{0.35}
-fn default_edge_pen()->f64{0.18}
-fn default_profiles()->bool{true}
+fn default_cut_fill() -> String {
+    "solid".into()
+}
+fn default_cut_color() -> String {
+    "#595e69".into()
+}
+fn default_cut_hatch() -> f64 {
+    1.5
+}
+fn default_cut_pen() -> f64 {
+    0.5
+}
+fn default_profile_pen() -> f64 {
+    0.35
+}
+fn default_edge_pen() -> f64 {
+    0.18
+}
+fn default_profiles() -> bool {
+    true
+}
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct ViewFrame {
     pub id: Uuid,
@@ -159,20 +177,34 @@ pub struct ViewFrame {
     pub title_text: String,
     pub border: bool,
     pub perspective: bool,
-    #[serde(default="default_cut_pen")] pub pen_cut_mm:f64,
-    #[serde(default="default_profile_pen")] pub pen_profile_mm:f64,
-    #[serde(default="default_edge_pen")] pub pen_edge_mm:f64,
-    #[serde(default="default_profiles")] pub profiles:bool,
-    #[serde(default)] pub paper_bg:bool,
-    #[serde(default)] pub hidden_lines:bool,
-    #[serde(default="default_cut_fill")] pub cut_fill:String,
-    #[serde(default="default_cut_color")] pub cut_fill_color:String,
-    #[serde(default="default_cut_hatch")] pub cut_hatch_mm:f64,
-    #[serde(default)] pub cam_target:Option<[f64;3]>,
-    #[serde(default)] pub cam_yaw:Option<f64>,
-    #[serde(default)] pub cam_pitch:Option<f64>,
-    #[serde(default)] pub cam_distance:Option<f64>,
-    #[serde(default)] pub cam_fov:Option<f64>,
+    #[serde(default = "default_cut_pen")]
+    pub pen_cut_mm: f64,
+    #[serde(default = "default_profile_pen")]
+    pub pen_profile_mm: f64,
+    #[serde(default = "default_edge_pen")]
+    pub pen_edge_mm: f64,
+    #[serde(default = "default_profiles")]
+    pub profiles: bool,
+    #[serde(default)]
+    pub paper_bg: bool,
+    #[serde(default)]
+    pub hidden_lines: bool,
+    #[serde(default = "default_cut_fill")]
+    pub cut_fill: String,
+    #[serde(default = "default_cut_color")]
+    pub cut_fill_color: String,
+    #[serde(default = "default_cut_hatch")]
+    pub cut_hatch_mm: f64,
+    #[serde(default)]
+    pub cam_target: Option<[f64; 3]>,
+    #[serde(default)]
+    pub cam_yaw: Option<f64>,
+    #[serde(default)]
+    pub cam_pitch: Option<f64>,
+    #[serde(default)]
+    pub cam_distance: Option<f64>,
+    #[serde(default)]
+    pub cam_fov: Option<f64>,
     pub rot_deg: f64,
     pub annotations: bool,
     pub section_marks: bool,
@@ -189,9 +221,21 @@ impl Default for ViewFrame {
             show_title: false,
             title_text: String::new(),
             border: false,
-            cut_fill:default_cut_fill(),cut_fill_color:default_cut_color(),cut_hatch_mm:1.5,
-            pen_cut_mm:0.5,pen_profile_mm:0.35,pen_edge_mm:0.18,profiles:true,hidden_lines:false,paper_bg:false,
-            perspective: false,cam_target:None,cam_yaw:None,cam_pitch:None,cam_distance:None,cam_fov:None,
+            cut_fill: default_cut_fill(),
+            cut_fill_color: default_cut_color(),
+            cut_hatch_mm: 1.5,
+            pen_cut_mm: 0.5,
+            pen_profile_mm: 0.35,
+            pen_edge_mm: 0.18,
+            profiles: true,
+            hidden_lines: false,
+            paper_bg: false,
+            perspective: false,
+            cam_target: None,
+            cam_yaw: None,
+            cam_pitch: None,
+            cam_distance: None,
+            cam_fov: None,
             rot_deg: 0.0,
             annotations: true,
             section_marks: true,
@@ -257,7 +301,10 @@ pub struct GraphicScaleItem {
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
-pub struct ShapeItem { pub id:Uuid, pub shape:crate::sheet_shape::SheetShape }
+pub struct ShapeItem {
+    pub id: Uuid,
+    pub shape: crate::sheet_shape::SheetShape,
+}
 
 /// Polymorphic item on the sheet page.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -273,15 +320,20 @@ pub enum SheetItem {
 impl SheetItem {
     pub fn id(&self) -> Uuid {
         match self {
-            Self::ViewFrame(item)=>item.id, Self::TitleBlock(item)=>item.id,
-            Self::Text(item)=>item.id, Self::NorthArrow(item)=>item.id,
-            Self::GraphicScale(item)=>item.id, Self::Shape(item)=>item.id,
+            Self::ViewFrame(item) => item.id,
+            Self::TitleBlock(item) => item.id,
+            Self::Text(item) => item.id,
+            Self::NorthArrow(item) => item.id,
+            Self::GraphicScale(item) => item.id,
+            Self::Shape(item) => item.id,
         }
     }
 
     pub fn rect(&self) -> RectMm {
         match self {
-            SheetItem::Shape(f) => RectMm::new(f.shape.x_mm,f.shape.y_mm,f.shape.w_mm,f.shape.h_mm),
+            SheetItem::Shape(f) => {
+                RectMm::new(f.shape.x_mm, f.shape.y_mm, f.shape.w_mm, f.shape.h_mm)
+            }
             SheetItem::ViewFrame(f) => f.rect,
             SheetItem::TitleBlock(b) => b.rect,
             SheetItem::Text(t) => RectMm::new(t.pos.0, t.pos.1, 40.0, 10.0),
@@ -292,7 +344,10 @@ impl SheetItem {
 
     pub fn set_pos(&mut self, x: f64, y: f64) {
         match self {
-            SheetItem::Shape(f) => {f.shape.x_mm=x;f.shape.y_mm=y;},
+            SheetItem::Shape(f) => {
+                f.shape.x_mm = x;
+                f.shape.y_mm = y;
+            }
             SheetItem::ViewFrame(f) => {
                 f.rect.x = x;
                 f.rect.y = y;
@@ -324,18 +379,40 @@ pub struct SourcePaperBorder {
     pub style: String,
 }
 impl Default for SourcePaperBorder {
-    fn default() -> Self { Self { on:false, mm:0.5, color:"#1e242c".into(), radius_mm:0., style:"single".into() } }
+    fn default() -> Self {
+        Self {
+            on: false,
+            mm: 0.5,
+            color: "#1e242c".into(),
+            radius_mm: 0.,
+            style: "single".into(),
+        }
+    }
 }
 impl SourcePaperBorder {
     /// Original from_dict ignores dormant archived properties.
     pub fn from_native(value: &serde_json::Value) -> Self {
-        let mut out=Self::default();
-        if value.get("on").and_then(serde_json::Value::as_bool).unwrap_or(false) {
-            out.on=true;
-            out.mm=value.get("mm").and_then(serde_json::Value::as_f64).unwrap_or(out.mm);
-            out.radius_mm=value.get("radius_mm").and_then(serde_json::Value::as_f64).unwrap_or(out.radius_mm);
-            if let Some(v)=value.get("color").and_then(serde_json::Value::as_str) {out.color=v.into();}
-            if let Some(v)=value.get("style").and_then(serde_json::Value::as_str) {out.style=v.into();}
+        let mut out = Self::default();
+        if value
+            .get("on")
+            .and_then(serde_json::Value::as_bool)
+            .unwrap_or(false)
+        {
+            out.on = true;
+            out.mm = value
+                .get("mm")
+                .and_then(serde_json::Value::as_f64)
+                .unwrap_or(out.mm);
+            out.radius_mm = value
+                .get("radius_mm")
+                .and_then(serde_json::Value::as_f64)
+                .unwrap_or(out.radius_mm);
+            if let Some(v) = value.get("color").and_then(serde_json::Value::as_str) {
+                out.color = v.into();
+            }
+            if let Some(v) = value.get("style").and_then(serde_json::Value::as_str) {
+                out.style = v.into();
+            }
         }
         out
     }
@@ -373,42 +450,156 @@ impl Default for Sheet {
 
 /// Cold physical export references, preserving original all_items category order.
 /// Raw legends stay in the immutable portable document; no broad editing enum change.
-#[derive(Clone,Copy)]
-pub enum PhysicalExportItem<'a> {Typed{index:usize,item:&'a SheetItem},Legend{index:usize,value:&'a serde_json::Value}}
+#[derive(Clone, Copy)]
+pub enum PhysicalExportItem<'a> {
+    Typed {
+        index: usize,
+        item: &'a SheetItem,
+    },
+    Legend {
+        index: usize,
+        value: &'a serde_json::Value,
+    },
+    Picture {
+        index: usize,
+        value: &'a serde_json::Value,
+    },
+}
 impl Sheet {
-    pub fn physical_export_items(&self)->Result<impl Iterator<Item=PhysicalExportItem<'_>>,String>{
-        const LIMIT:usize=100_000;
-        let legends=match self.native_document.get("leyendas"){None|Some(serde_json::Value::Null)=>&[][..],Some(v)=>v.as_array().map(Vec::as_slice).ok_or("Invalid physical legend inventory")?};
-        let count=self.items.len().checked_add(legends.len()).filter(|n|*n<=LIMIT).ok_or("Physical item inventory exceeds budget")?;
-        let mut ordered=Vec::new();ordered.try_reserve_exact(count).map_err(|_|"Physical item order allocation refused")?;
-        for (index,item) in self.items.iter().enumerate(){
-            let metadata=self.native_items.get(&item.id());
-            let hidden=match item{SheetItem::Shape(v)=>v.shape.hidden,_=>metadata.and_then(|v|v.get("hidden")).and_then(|v|v.as_bool()).unwrap_or(false)};
-            if hidden{continue;}
-            let z=if let SheetItem::Shape(v)=item{v.shape.z}else{metadata.and_then(|v|v.get("z")).and_then(|v|v.as_f64()).unwrap_or(0.)};
-            if !z.is_finite(){return Err("Invalid physical stacking order".into());}
-            let category=match item{SheetItem::ViewFrame(_)=>0,SheetItem::Text(_)=>1,SheetItem::GraphicScale(_)=>3,SheetItem::NorthArrow(_)=>4,SheetItem::Shape(_)=>6,SheetItem::TitleBlock(_)=>14};
-            ordered.push((z,category,index,PhysicalExportItem::Typed{index,item}));
+    pub fn physical_export_items(
+        &self,
+    ) -> Result<impl Iterator<Item = PhysicalExportItem<'_>>, String> {
+        const LIMIT: usize = 100_000;
+        let legends = match self.native_document.get("leyendas") {
+            None | Some(serde_json::Value::Null) => &[][..],
+            Some(v) => v
+                .as_array()
+                .map(Vec::as_slice)
+                .ok_or("Invalid physical legend inventory")?,
+        };
+        let pictures = match self.native_document.get("images") {
+            None | Some(serde_json::Value::Null) => &[][..],
+            Some(v) => v
+                .as_array()
+                .map(Vec::as_slice)
+                .ok_or("Invalid physical picture inventory")?,
+        };
+        let count = self
+            .items
+            .len()
+            .checked_add(legends.len())
+            .and_then(|n| n.checked_add(pictures.len()))
+            .filter(|n| *n <= LIMIT)
+            .ok_or("Physical item inventory exceeds budget")?;
+        let mut ordered = Vec::new();
+        ordered
+            .try_reserve_exact(count)
+            .map_err(|_| "Physical item order allocation refused")?;
+        for (index, item) in self.items.iter().enumerate() {
+            let metadata = self.native_items.get(&item.id());
+            let hidden = match item {
+                SheetItem::Shape(v) => v.shape.hidden,
+                _ => metadata
+                    .and_then(|v| v.get("hidden"))
+                    .and_then(|v| v.as_bool())
+                    .unwrap_or(false),
+            };
+            if hidden {
+                continue;
+            }
+            let z = if let SheetItem::Shape(v) = item {
+                v.shape.z
+            } else {
+                metadata
+                    .and_then(|v| v.get("z"))
+                    .and_then(|v| v.as_f64())
+                    .unwrap_or(0.)
+            };
+            if !z.is_finite() {
+                return Err("Invalid physical stacking order".into());
+            }
+            let category = match item {
+                SheetItem::ViewFrame(_) => 0,
+                SheetItem::Text(_) => 1,
+                SheetItem::GraphicScale(_) => 3,
+                SheetItem::NorthArrow(_) => 4,
+                SheetItem::Shape(_) => 6,
+                SheetItem::TitleBlock(_) => 14,
+            };
+            ordered.push((
+                z,
+                category,
+                index,
+                PhysicalExportItem::Typed { index, item },
+            ));
         }
-        for(index,value)in legends.iter().enumerate(){
-            let hidden=match value.get("hidden"){None=>false,Some(v)=>v.as_bool().ok_or("Invalid legend hidden flag")?};if hidden{continue;}
-            let z=match value.get("z"){None=>0.,Some(v)=>v.as_f64().ok_or("Invalid legend stacking order")?};if !z.is_finite(){return Err("Invalid legend stacking order".into());}
-            ordered.push((z,5,index,PhysicalExportItem::Legend{index,value}));
+        for (index, value) in legends.iter().enumerate() {
+            let hidden = match value.get("hidden") {
+                None => false,
+                Some(v) => v.as_bool().ok_or("Invalid legend hidden flag")?,
+            };
+            if hidden {
+                continue;
+            }
+            let z = match value.get("z") {
+                None => 0.,
+                Some(v) => v.as_f64().ok_or("Invalid legend stacking order")?,
+            };
+            if !z.is_finite() {
+                return Err("Invalid legend stacking order".into());
+            }
+            ordered.push((z, 5, index, PhysicalExportItem::Legend { index, value }));
         }
-        ordered.sort_unstable_by(|a,b|a.0.partial_cmp(&b.0).unwrap_or(std::cmp::Ordering::Equal).then_with(||a.1.cmp(&b.1)).then_with(||a.2.cmp(&b.2)));
-        Ok(ordered.into_iter().map(|v|v.3))
+        for (index, value) in pictures.iter().enumerate() {
+            let hidden = match value.get("hidden") {
+                None => false,
+                Some(v) => v.as_bool().ok_or("Invalid picture hidden flag")?,
+            };
+            if hidden {
+                continue;
+            }
+            let z = match value.get("z") {
+                None => 0.,
+                Some(v) => v.as_f64().ok_or("Invalid picture stacking order")?,
+            };
+            if !z.is_finite() {
+                return Err("Invalid picture stacking order".into());
+            }
+            ordered.push((z, 2, index, PhysicalExportItem::Picture { index, value }));
+        }
+        ordered.sort_unstable_by(|a, b| {
+            a.0.partial_cmp(&b.0)
+                .unwrap_or(std::cmp::Ordering::Equal)
+                .then_with(|| a.1.cmp(&b.1))
+                .then_with(|| a.2.cmp(&b.2))
+        });
+        Ok(ordered.into_iter().map(|v| v.3))
     }
 
     pub fn effective_source_border(&self) -> SourcePaperBorder {
-        self.source_border.clone().unwrap_or_else(|| SourcePaperBorder::from_native(&self.native_document["border"]))
+        self.source_border
+            .clone()
+            .unwrap_or_else(|| SourcePaperBorder::from_native(&self.native_document["border"]))
     }
     pub fn set_source_border(&mut self, border: SourcePaperBorder) -> Result<(), &'static str> {
-        if !border.mm.is_finite() || !border.radius_mm.is_finite() || border.mm < 0. || border.radius_mm < 0. {return Err("Invalid paper border dimensions");}
-        if !self.native_document.is_object() {self.native_document=serde_json::json!({});}
-        if !self.native_document["border"].is_object() {self.native_document["border"]=serde_json::json!({});}
-        let value=serde_json::to_value(&border).map_err(|_|"Invalid paper border")?;
-        for (key,value) in value.as_object().unwrap() {self.native_document["border"][key]=value.clone();}
-        self.source_border=Some(border);
+        if !border.mm.is_finite()
+            || !border.radius_mm.is_finite()
+            || border.mm < 0.
+            || border.radius_mm < 0.
+        {
+            return Err("Invalid paper border dimensions");
+        }
+        if !self.native_document.is_object() {
+            self.native_document = serde_json::json!({});
+        }
+        if !self.native_document["border"].is_object() {
+            self.native_document["border"] = serde_json::json!({});
+        }
+        let value = serde_json::to_value(&border).map_err(|_| "Invalid paper border")?;
+        for (key, value) in value.as_object().unwrap() {
+            self.native_document["border"][key] = value.clone();
+        }
+        self.source_border = Some(border);
         Ok(())
     }
 
@@ -423,13 +614,42 @@ impl Sheet {
         self.item_indices(false)
     }
     fn item_indices(&self, include_hidden: bool) -> Vec<usize> {
-        let metadata=|index:usize|self.native_items.get(&self.items[index].id());
-        let mut indices=(0..self.items.len()).filter(|&index|
-            include_hidden || match &self.items[index] {SheetItem::Shape(f)=>!f.shape.hidden,_=>!metadata(index).and_then(|value|value.get("hidden")).and_then(|value|value.as_bool()).unwrap_or(false)}
-        ).collect::<Vec<_>>();
-        let z=|index:usize|if let SheetItem::Shape(f)=&self.items[index] {f.shape.z} else {metadata(index).and_then(|value|value.get("z")).and_then(|value|value.as_f64()).unwrap_or(0.)};
-        let category=|index:usize|match &self.items[index] {SheetItem::ViewFrame(_)=>0,SheetItem::Text(_)=>1,SheetItem::GraphicScale(_)=>3,SheetItem::NorthArrow(_)=>4,SheetItem::TitleBlock(_)=>14,SheetItem::Shape(_)=>6};
-        indices.sort_by(|&a,&b|z(a).partial_cmp(&z(b)).unwrap_or(std::cmp::Ordering::Equal).then_with(||category(a).cmp(&category(b))));
+        let metadata = |index: usize| self.native_items.get(&self.items[index].id());
+        let mut indices = (0..self.items.len())
+            .filter(|&index| {
+                include_hidden
+                    || match &self.items[index] {
+                        SheetItem::Shape(f) => !f.shape.hidden,
+                        _ => !metadata(index)
+                            .and_then(|value| value.get("hidden"))
+                            .and_then(|value| value.as_bool())
+                            .unwrap_or(false),
+                    }
+            })
+            .collect::<Vec<_>>();
+        let z = |index: usize| {
+            if let SheetItem::Shape(f) = &self.items[index] {
+                f.shape.z
+            } else {
+                metadata(index)
+                    .and_then(|value| value.get("z"))
+                    .and_then(|value| value.as_f64())
+                    .unwrap_or(0.)
+            }
+        };
+        let category = |index: usize| match &self.items[index] {
+            SheetItem::ViewFrame(_) => 0,
+            SheetItem::Text(_) => 1,
+            SheetItem::GraphicScale(_) => 3,
+            SheetItem::NorthArrow(_) => 4,
+            SheetItem::TitleBlock(_) => 14,
+            SheetItem::Shape(_) => 6,
+        };
+        indices.sort_by(|&a, &b| {
+            z(a).partial_cmp(&z(b))
+                .unwrap_or(std::cmp::Ordering::Equal)
+                .then_with(|| category(a).cmp(&category(b)))
+        });
         indices
     }
 
@@ -456,16 +676,33 @@ impl Sheet {
         let frame_h = ph - 2.0 * sheet.margin_mm - 70.0;
         sheet.items.push(SheetItem::ViewFrame(ViewFrame {
             id: Uuid::new_v4(),
-            rect: RectMm::new(sheet.margin_mm + 10.0, sheet.margin_mm + 10.0, frame_w, frame_h),
+            rect: RectMm::new(
+                sheet.margin_mm + 10.0,
+                sheet.margin_mm + 10.0,
+                frame_w,
+                frame_h,
+            ),
             scale_n: 100.0,
             view_key: "std:top".to_string(),
             style: "technical".to_string(),
             show_title: true,
             title_text: "Top Plan (1:100)".to_string(),
             border: true,
-            cut_fill:default_cut_fill(),cut_fill_color:default_cut_color(),cut_hatch_mm:1.5,
-            pen_cut_mm:0.5,pen_profile_mm:0.35,pen_edge_mm:0.18,profiles:true,hidden_lines:false,paper_bg:false,
-            perspective: false,cam_target:None,cam_yaw:None,cam_pitch:None,cam_distance:None,cam_fov:None,
+            cut_fill: default_cut_fill(),
+            cut_fill_color: default_cut_color(),
+            cut_hatch_mm: 1.5,
+            pen_cut_mm: 0.5,
+            pen_profile_mm: 0.35,
+            pen_edge_mm: 0.18,
+            profiles: true,
+            hidden_lines: false,
+            paper_bg: false,
+            perspective: false,
+            cam_target: None,
+            cam_yaw: None,
+            cam_pitch: None,
+            cam_distance: None,
+            cam_fov: None,
             rot_deg: 0.0,
             annotations: true,
             section_marks: true,
@@ -475,7 +712,12 @@ impl Sheet {
         let tb_h = 50.0;
         sheet.items.push(SheetItem::TitleBlock(TitleBlock {
             id: Uuid::new_v4(),
-            rect: RectMm::new(pw - sheet.margin_mm - tb_w, ph - sheet.margin_mm - tb_h, tb_w, tb_h),
+            rect: RectMm::new(
+                pw - sheet.margin_mm - tb_w,
+                ph - sheet.margin_mm - tb_h,
+                tb_w,
+                tb_h,
+            ),
             project_name: "Active-iQ Architecture".to_string(),
             drawing_title: "General Plan".to_string(),
             author: "IngeTrazo Cad Engine".to_string(),
@@ -574,24 +816,46 @@ mod tests {
     }
 }
 
-#[cfg(test)] mod native_paint_order_tests {
- use super::*;
- #[test] fn equal_z_uses_original_all_items_category_order(){
-  let mut sheet=Sheet::new("Order",PaperSize::A4,Orientation::Portrait);sheet.items.clear();
-  sheet.items.push(SheetItem::NorthArrow(NorthArrowItem{id:Uuid::new_v4(),pos:(0.,0.),size_mm:10.,rot_deg:0.}));
-  sheet.items.push(SheetItem::GraphicScale(GraphicScaleItem{id:Uuid::new_v4(),pos:(0.,0.),scale_n:100.,length_mm:20.,divisions:4}));
-  sheet.items.push(SheetItem::ViewFrame(ViewFrame::default()));
-  assert_eq!(sheet.visible_item_indices(),vec![2,1,0]);
- }
- #[test] fn hidden_items_are_excluded_and_equal_z_keeps_document_order(){
-  let mut sheet=Sheet::new("Order",PaperSize::A4,Orientation::Portrait);sheet.items.clear();
-  for z in [2.,-1.,2.,0.] {
-   let item=SheetItem::ViewFrame(ViewFrame::default());
-   sheet.native_items.insert(item.id(),serde_json::json!({"z":z,"hidden":false}));sheet.items.push(item);
-  }
-  sheet.native_items.get_mut(&sheet.items[3].id()).unwrap()["hidden"]=serde_json::json!(true);
-  let before=sheet.clone();assert_eq!(sheet.visible_item_indices(),vec![1,0,2]);assert_eq!(sheet,before);
- }
+#[cfg(test)]
+mod native_paint_order_tests {
+    use super::*;
+    #[test]
+    fn equal_z_uses_original_all_items_category_order() {
+        let mut sheet = Sheet::new("Order", PaperSize::A4, Orientation::Portrait);
+        sheet.items.clear();
+        sheet.items.push(SheetItem::NorthArrow(NorthArrowItem {
+            id: Uuid::new_v4(),
+            pos: (0., 0.),
+            size_mm: 10.,
+            rot_deg: 0.,
+        }));
+        sheet.items.push(SheetItem::GraphicScale(GraphicScaleItem {
+            id: Uuid::new_v4(),
+            pos: (0., 0.),
+            scale_n: 100.,
+            length_mm: 20.,
+            divisions: 4,
+        }));
+        sheet.items.push(SheetItem::ViewFrame(ViewFrame::default()));
+        assert_eq!(sheet.visible_item_indices(), vec![2, 1, 0]);
+    }
+    #[test]
+    fn hidden_items_are_excluded_and_equal_z_keeps_document_order() {
+        let mut sheet = Sheet::new("Order", PaperSize::A4, Orientation::Portrait);
+        sheet.items.clear();
+        for z in [2., -1., 2., 0.] {
+            let item = SheetItem::ViewFrame(ViewFrame::default());
+            sheet
+                .native_items
+                .insert(item.id(), serde_json::json!({"z":z,"hidden":false}));
+            sheet.items.push(item);
+        }
+        sheet.native_items.get_mut(&sheet.items[3].id()).unwrap()["hidden"] =
+            serde_json::json!(true);
+        let before = sheet.clone();
+        assert_eq!(sheet.visible_item_indices(), vec![1, 0, 2]);
+        assert_eq!(sheet, before);
+    }
 }
 
 #[cfg(test)]
@@ -599,14 +863,21 @@ mod source_paper_border_tests {
     use super::*;
     #[test]
     fn disabled_runtime_properties_survive_recovery_and_refusal_is_atomic() {
-        let mut sheet=Sheet::default();
-        let mut border=sheet.effective_source_border();
-        border.color="#ffffff".into();border.radius_mm=3.;
+        let mut sheet = Sheet::default();
+        let mut border = sheet.effective_source_border();
+        border.color = "#ffffff".into();
+        border.radius_mm = 3.;
         sheet.set_source_border(border.clone()).unwrap();
-        let recovered:Sheet=serde_json::from_slice(&serde_json::to_vec(&sheet).unwrap()).unwrap();
-        assert_eq!(recovered.effective_source_border(),border);
-        let before=sheet.clone();border.mm=f64::NAN;
-        assert!(sheet.set_source_border(border).is_err());assert_eq!(sheet,before);
-        assert_eq!(SourcePaperBorder::from_native(&serde_json::json!({"on":false,"color":"#ffffff"})),SourcePaperBorder::default());
+        let recovered: Sheet =
+            serde_json::from_slice(&serde_json::to_vec(&sheet).unwrap()).unwrap();
+        assert_eq!(recovered.effective_source_border(), border);
+        let before = sheet.clone();
+        border.mm = f64::NAN;
+        assert!(sheet.set_source_border(border).is_err());
+        assert_eq!(sheet, before);
+        assert_eq!(
+            SourcePaperBorder::from_native(&serde_json::json!({"on":false,"color":"#ffffff"})),
+            SourcePaperBorder::default()
+        );
     }
 }

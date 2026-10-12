@@ -74,6 +74,10 @@ fn path(shape: &ShapePath, offset: glam::DVec2) -> Vec<PathOp> {
         }
     }
 }
+/// Shared literal Qt physical outline, without style or export side effects.
+pub fn source_outline(shape: &ShapePath) -> Vec<PathOp> {
+    path(shape, glam::DVec2::ZERO)
+}
 fn draw(command: &ShapePaint, offset: glam::DVec2) -> Result<Draw, String> {
     let origin_mm = offset.to_array();
     let offset = glam::DVec2::ZERO;
@@ -94,7 +98,9 @@ fn draw(command: &ShapePaint, offset: glam::DVec2) -> Result<Draw, String> {
             Ok::<_, String>(c)
         })
         .transpose()?;
-    Ok(Draw { rotation_deg:0.,
+    Ok(Draw {
+        picture: None,
+        rotation_deg: 0.,
         origin_mm,
         even_odd: true,
         path: path(&command.path, offset),
@@ -119,36 +125,84 @@ pub fn prepare_with_views<F>(sheet: &Sheet, views: &mut F) -> Result<Page, Strin
 where
     F: FnMut(&ingetrazo_core::composition::ViewFrame) -> Result<Vec<Draw>, String>,
 {
-    prepare_with_painters(sheet,views,&mut |_,_|Err("PDF painter for this sheet item remains unavailable".into()))
+    prepare_with_painters(sheet, views, &mut |_, _| {
+        Err("PDF painter for this sheet item remains unavailable".into())
+    })
 }
-pub fn prepare_with_painters<F,T>(sheet:&Sheet,views:&mut F,texts:&mut T)->Result<Page,String>
-where F:FnMut(&ingetrazo_core::composition::ViewFrame)->Result<Vec<Draw>,String>,
-      T:FnMut(&Sheet,&ingetrazo_core::composition::TextItem)->Result<Vec<Draw>,String>
+pub fn prepare_with_painters<F, T>(
+    sheet: &Sheet,
+    views: &mut F,
+    texts: &mut T,
+) -> Result<Page, String>
+where
+    F: FnMut(&ingetrazo_core::composition::ViewFrame) -> Result<Vec<Draw>, String>,
+    T: FnMut(&Sheet, &ingetrazo_core::composition::TextItem) -> Result<Vec<Draw>, String>,
 {
-    prepare_with_symbols(sheet,views,texts,&mut |_,_|Err("PDF symbol painter remains unavailable".into()))
+    prepare_with_symbols(sheet, views, texts, &mut |_, _| {
+        Err("PDF symbol painter remains unavailable".into())
+    })
 }
-pub fn prepare_with_symbols<F,T,S>(sheet:&Sheet,views:&mut F,texts:&mut T,symbols:&mut S)->Result<Page,String>
-where F:FnMut(&ingetrazo_core::composition::ViewFrame)->Result<Vec<Draw>,String>,
-      T:FnMut(&Sheet,&ingetrazo_core::composition::TextItem)->Result<Vec<Draw>,String>,
-      S:FnMut(&Sheet,&SheetItem)->Result<Vec<Draw>,String>
+pub fn prepare_with_symbols<F, T, S>(
+    sheet: &Sheet,
+    views: &mut F,
+    texts: &mut T,
+    symbols: &mut S,
+) -> Result<Page, String>
+where
+    F: FnMut(&ingetrazo_core::composition::ViewFrame) -> Result<Vec<Draw>, String>,
+    T: FnMut(&Sheet, &ingetrazo_core::composition::TextItem) -> Result<Vec<Draw>, String>,
+    S: FnMut(&Sheet, &SheetItem) -> Result<Vec<Draw>, String>,
 {
-    prepare_with_context_symbols(sheet,&mut |_,frame|views(frame),texts,symbols)
+    prepare_with_context_symbols(sheet, &mut |_, frame| views(frame), texts, symbols)
 }
-pub fn prepare_with_context_symbols<F,T,S>(sheet:&Sheet,views:&mut F,texts:&mut T,symbols:&mut S)->Result<Page,String>
-where F:FnMut(&Sheet,&ingetrazo_core::composition::ViewFrame)->Result<Vec<Draw>,String>,
-      T:FnMut(&Sheet,&ingetrazo_core::composition::TextItem)->Result<Vec<Draw>,String>,
-      S:FnMut(&Sheet,&SheetItem)->Result<Vec<Draw>,String>
+pub fn prepare_with_context_symbols<F, T, S>(
+    sheet: &Sheet,
+    views: &mut F,
+    texts: &mut T,
+    symbols: &mut S,
+) -> Result<Page, String>
+where
+    F: FnMut(&Sheet, &ingetrazo_core::composition::ViewFrame) -> Result<Vec<Draw>, String>,
+    T: FnMut(&Sheet, &ingetrazo_core::composition::TextItem) -> Result<Vec<Draw>, String>,
+    S: FnMut(&Sheet, &SheetItem) -> Result<Vec<Draw>, String>,
 {
-    prepare_with_legends(sheet,views,texts,symbols,&mut |_,_|Err("PDF legend painter remains unavailable".into()))
+    prepare_with_legends(sheet, views, texts, symbols, &mut |_, _| {
+        Err("PDF legend painter remains unavailable".into())
+    })
 }
-pub fn prepare_with_legends<F,T,S,L>(sheet:&Sheet,views:&mut F,texts:&mut T,symbols:&mut S,legends:&mut L)->Result<Page,String>
-where F:FnMut(&Sheet,&ingetrazo_core::composition::ViewFrame)->Result<Vec<Draw>,String>,
-      T:FnMut(&Sheet,&ingetrazo_core::composition::TextItem)->Result<Vec<Draw>,String>,
-      S:FnMut(&Sheet,&SheetItem)->Result<Vec<Draw>,String>,
-      L:FnMut(&Sheet,&serde_json::Value)->Result<Vec<Draw>,String>
+pub fn prepare_with_legends<F, T, S, L>(
+    sheet: &Sheet,
+    views: &mut F,
+    texts: &mut T,
+    symbols: &mut S,
+    legends: &mut L,
+) -> Result<Page, String>
+where
+    F: FnMut(&Sheet, &ingetrazo_core::composition::ViewFrame) -> Result<Vec<Draw>, String>,
+    T: FnMut(&Sheet, &ingetrazo_core::composition::TextItem) -> Result<Vec<Draw>, String>,
+    S: FnMut(&Sheet, &SheetItem) -> Result<Vec<Draw>, String>,
+    L: FnMut(&Sheet, &serde_json::Value) -> Result<Vec<Draw>, String>,
+{
+    prepare_with_pictures(sheet, views, texts, symbols, legends, &mut |_, _| {
+        Err("PDF picture painter remains unavailable".into())
+    })
+}
+pub fn prepare_with_pictures<F, T, S, L, P>(
+    sheet: &Sheet,
+    views: &mut F,
+    texts: &mut T,
+    symbols: &mut S,
+    legends: &mut L,
+    pictures: &mut P,
+) -> Result<Page, String>
+where
+    F: FnMut(&Sheet, &ingetrazo_core::composition::ViewFrame) -> Result<Vec<Draw>, String>,
+    T: FnMut(&Sheet, &ingetrazo_core::composition::TextItem) -> Result<Vec<Draw>, String>,
+    S: FnMut(&Sheet, &SheetItem) -> Result<Vec<Draw>, String>,
+    L: FnMut(&Sheet, &serde_json::Value) -> Result<Vec<Draw>, String>,
+    P: FnMut(&Sheet, &serde_json::Value) -> Result<Vec<Draw>, String>,
 {
     for key in [
-        "images",
         "cotas",
         "cotas_ang",
         "cotas_rad",
@@ -180,15 +234,37 @@ where F:FnMut(&Sheet,&ingetrazo_core::composition::ViewFrame)->Result<Vec<Draw>,
     let mut draws = Vec::new();
     let mut path_commands = 0usize;
     for exported in sheet.physical_export_items()? {
-        let item=match exported{
-            ingetrazo_core::composition::PhysicalExportItem::Typed{item,..}=>item,
-            ingetrazo_core::composition::PhysicalExportItem::Legend{value,..}=>{
-                for next in legends(sheet,value)?{
-                    if draws.len()==crate::sheet_pdf::MAX_DRAWS{return Err("PDF draw budget exceeded".into());}
-                    path_commands=path_commands.checked_add(draw_command_count(&next)?).ok_or("PDF command count overflow")?;
-                    if path_commands>crate::sheet_pdf::MAX_COMMANDS{return Err("PDF aggregate command budget exceeded".into());}
+        let item = match exported {
+            ingetrazo_core::composition::PhysicalExportItem::Typed { item, .. } => item,
+            ingetrazo_core::composition::PhysicalExportItem::Picture { value, .. } => {
+                for next in pictures(sheet, value)? {
+                    if draws.len() == crate::sheet_pdf::MAX_DRAWS {
+                        return Err("PDF draw budget exceeded".into());
+                    }
+                    path_commands = path_commands
+                        .checked_add(draw_command_count(&next)?)
+                        .ok_or("PDF command count overflow")?;
+                    if path_commands > crate::sheet_pdf::MAX_COMMANDS {
+                        return Err("PDF aggregate command budget exceeded".into());
+                    }
                     draws.push(next);
-                }continue;
+                }
+                continue;
+            }
+            ingetrazo_core::composition::PhysicalExportItem::Legend { value, .. } => {
+                for next in legends(sheet, value)? {
+                    if draws.len() == crate::sheet_pdf::MAX_DRAWS {
+                        return Err("PDF draw budget exceeded".into());
+                    }
+                    path_commands = path_commands
+                        .checked_add(draw_command_count(&next)?)
+                        .ok_or("PDF command count overflow")?;
+                    if path_commands > crate::sheet_pdf::MAX_COMMANDS {
+                        return Err("PDF aggregate command budget exceeded".into());
+                    }
+                    draws.push(next);
+                }
+                continue;
             }
         };
         match item {
@@ -209,7 +285,9 @@ where F:FnMut(&Sheet,&ingetrazo_core::composition::ViewFrame)->Result<Vec<Draw>,
                     path_commands = path_commands
                         .checked_add(next.path.len())
                         .and_then(|n| n.checked_add(next.clip.as_ref().map_or(0, Vec::len)))
-                        .and_then(|n| n.checked_add(next.clip_intersection.as_ref().map_or(0, Vec::len)))
+                        .and_then(|n| {
+                            n.checked_add(next.clip_intersection.as_ref().map_or(0, Vec::len))
+                        })
                         .ok_or("PDF command count overflow")?;
                     if path_commands > crate::sheet_pdf::MAX_COMMANDS {
                         return Err("PDF aggregate command budget exceeded".into());
@@ -218,14 +296,16 @@ where F:FnMut(&Sheet,&ingetrazo_core::composition::ViewFrame)->Result<Vec<Draw>,
                 }
             }
             SheetItem::ViewFrame(frame) => {
-                for next in views(sheet,frame)? {
+                for next in views(sheet, frame)? {
                     if draws.len() == crate::sheet_pdf::MAX_DRAWS {
                         return Err("PDF draw budget exceeded".into());
                     }
                     path_commands = path_commands
                         .checked_add(next.path.len())
                         .and_then(|n| n.checked_add(next.clip.as_ref().map_or(0, Vec::len)))
-                        .and_then(|n| n.checked_add(next.clip_intersection.as_ref().map_or(0, Vec::len)))
+                        .and_then(|n| {
+                            n.checked_add(next.clip_intersection.as_ref().map_or(0, Vec::len))
+                        })
                         .ok_or("PDF command count overflow")?;
                     if path_commands > crate::sheet_pdf::MAX_COMMANDS {
                         return Err("PDF aggregate command budget exceeded".into());
@@ -233,22 +313,34 @@ where F:FnMut(&Sheet,&ingetrazo_core::composition::ViewFrame)->Result<Vec<Draw>,
                     draws.push(next);
                 }
             }
-            SheetItem::Text(item)=>{
-                for next in texts(sheet,item)? {
-                    if draws.len()==crate::sheet_pdf::MAX_DRAWS {return Err("PDF draw budget exceeded".into());}
-                    path_commands=path_commands.checked_add(draw_command_count(&next)?).ok_or("PDF command count overflow")?;
-                    if path_commands>crate::sheet_pdf::MAX_COMMANDS {return Err("PDF aggregate command budget exceeded".into());}
+            SheetItem::Text(item) => {
+                for next in texts(sheet, item)? {
+                    if draws.len() == crate::sheet_pdf::MAX_DRAWS {
+                        return Err("PDF draw budget exceeded".into());
+                    }
+                    path_commands = path_commands
+                        .checked_add(draw_command_count(&next)?)
+                        .ok_or("PDF command count overflow")?;
+                    if path_commands > crate::sheet_pdf::MAX_COMMANDS {
+                        return Err("PDF aggregate command budget exceeded".into());
+                    }
                     draws.push(next);
                 }
             }
             item => {
-                for next in symbols(sheet,item)? {
-                    if draws.len()==crate::sheet_pdf::MAX_DRAWS {return Err("PDF draw budget exceeded".into());}
-                    path_commands=path_commands.checked_add(draw_command_count(&next)?).ok_or("PDF command count overflow")?;
-                    if path_commands>crate::sheet_pdf::MAX_COMMANDS {return Err("PDF aggregate command budget exceeded".into());}
+                for next in symbols(sheet, item)? {
+                    if draws.len() == crate::sheet_pdf::MAX_DRAWS {
+                        return Err("PDF draw budget exceeded".into());
+                    }
+                    path_commands = path_commands
+                        .checked_add(draw_command_count(&next)?)
+                        .ok_or("PDF command count overflow")?;
+                    if path_commands > crate::sheet_pdf::MAX_COMMANDS {
+                        return Err("PDF aggregate command budget exceeded".into());
+                    }
                     draws.push(next);
                 }
-            },
+            }
         }
     }
     let (w, h) = sheet.dimensions_mm();
@@ -275,33 +367,82 @@ pub fn prepare_all_with_views<F>(sheets: &[Sheet], views: &mut F) -> Result<Vec<
 where
     F: FnMut(&ingetrazo_core::composition::ViewFrame) -> Result<Vec<Draw>, String>,
 {
-    prepare_all_with_painters(sheets,views,&mut |_,_|Err("PDF painter for this sheet item remains unavailable".into()))
+    prepare_all_with_painters(sheets, views, &mut |_, _| {
+        Err("PDF painter for this sheet item remains unavailable".into())
+    })
 }
-pub fn prepare_all_with_painters<F,T>(sheets:&[Sheet],views:&mut F,texts:&mut T)->Result<Vec<Page>,String>
-where F:FnMut(&ingetrazo_core::composition::ViewFrame)->Result<Vec<Draw>,String>,
-      T:FnMut(&Sheet,&ingetrazo_core::composition::TextItem)->Result<Vec<Draw>,String>
+pub fn prepare_all_with_painters<F, T>(
+    sheets: &[Sheet],
+    views: &mut F,
+    texts: &mut T,
+) -> Result<Vec<Page>, String>
+where
+    F: FnMut(&ingetrazo_core::composition::ViewFrame) -> Result<Vec<Draw>, String>,
+    T: FnMut(&Sheet, &ingetrazo_core::composition::TextItem) -> Result<Vec<Draw>, String>,
 {
-    prepare_all_with_symbols(sheets,views,texts,&mut |_,_|Err("PDF symbol painter remains unavailable".into()))
+    prepare_all_with_symbols(sheets, views, texts, &mut |_, _| {
+        Err("PDF symbol painter remains unavailable".into())
+    })
 }
-pub fn prepare_all_with_symbols<F,T,S>(sheets:&[Sheet],views:&mut F,texts:&mut T,symbols:&mut S)->Result<Vec<Page>,String>
-where F:FnMut(&ingetrazo_core::composition::ViewFrame)->Result<Vec<Draw>,String>,
-      T:FnMut(&Sheet,&ingetrazo_core::composition::TextItem)->Result<Vec<Draw>,String>,
-      S:FnMut(&Sheet,&SheetItem)->Result<Vec<Draw>,String>
+pub fn prepare_all_with_symbols<F, T, S>(
+    sheets: &[Sheet],
+    views: &mut F,
+    texts: &mut T,
+    symbols: &mut S,
+) -> Result<Vec<Page>, String>
+where
+    F: FnMut(&ingetrazo_core::composition::ViewFrame) -> Result<Vec<Draw>, String>,
+    T: FnMut(&Sheet, &ingetrazo_core::composition::TextItem) -> Result<Vec<Draw>, String>,
+    S: FnMut(&Sheet, &SheetItem) -> Result<Vec<Draw>, String>,
 {
-    prepare_all_with_context_symbols(sheets,&mut |_,frame|views(frame),texts,symbols)
+    prepare_all_with_context_symbols(sheets, &mut |_, frame| views(frame), texts, symbols)
 }
-pub fn prepare_all_with_context_symbols<F,T,S>(sheets:&[Sheet],views:&mut F,texts:&mut T,symbols:&mut S)->Result<Vec<Page>,String>
-where F:FnMut(&Sheet,&ingetrazo_core::composition::ViewFrame)->Result<Vec<Draw>,String>,
-      T:FnMut(&Sheet,&ingetrazo_core::composition::TextItem)->Result<Vec<Draw>,String>,
-      S:FnMut(&Sheet,&SheetItem)->Result<Vec<Draw>,String>
+pub fn prepare_all_with_context_symbols<F, T, S>(
+    sheets: &[Sheet],
+    views: &mut F,
+    texts: &mut T,
+    symbols: &mut S,
+) -> Result<Vec<Page>, String>
+where
+    F: FnMut(&Sheet, &ingetrazo_core::composition::ViewFrame) -> Result<Vec<Draw>, String>,
+    T: FnMut(&Sheet, &ingetrazo_core::composition::TextItem) -> Result<Vec<Draw>, String>,
+    S: FnMut(&Sheet, &SheetItem) -> Result<Vec<Draw>, String>,
 {
-    prepare_all_with_legends(sheets,views,texts,symbols,&mut |_,_|Err("PDF legend painter remains unavailable".into()))
+    prepare_all_with_legends(sheets, views, texts, symbols, &mut |_, _| {
+        Err("PDF legend painter remains unavailable".into())
+    })
 }
-pub fn prepare_all_with_legends<F,T,S,L>(sheets:&[Sheet],views:&mut F,texts:&mut T,symbols:&mut S,legends:&mut L)->Result<Vec<Page>,String>
-where F:FnMut(&Sheet,&ingetrazo_core::composition::ViewFrame)->Result<Vec<Draw>,String>,
-      T:FnMut(&Sheet,&ingetrazo_core::composition::TextItem)->Result<Vec<Draw>,String>,
-      S:FnMut(&Sheet,&SheetItem)->Result<Vec<Draw>,String>,
-      L:FnMut(&Sheet,&serde_json::Value)->Result<Vec<Draw>,String>
+pub fn prepare_all_with_legends<F, T, S, L>(
+    sheets: &[Sheet],
+    views: &mut F,
+    texts: &mut T,
+    symbols: &mut S,
+    legends: &mut L,
+) -> Result<Vec<Page>, String>
+where
+    F: FnMut(&Sheet, &ingetrazo_core::composition::ViewFrame) -> Result<Vec<Draw>, String>,
+    T: FnMut(&Sheet, &ingetrazo_core::composition::TextItem) -> Result<Vec<Draw>, String>,
+    S: FnMut(&Sheet, &SheetItem) -> Result<Vec<Draw>, String>,
+    L: FnMut(&Sheet, &serde_json::Value) -> Result<Vec<Draw>, String>,
+{
+    prepare_all_with_pictures(sheets, views, texts, symbols, legends, &mut |_, _| {
+        Err("PDF picture painter remains unavailable".into())
+    })
+}
+pub fn prepare_all_with_pictures<F, T, S, L, P>(
+    sheets: &[Sheet],
+    views: &mut F,
+    texts: &mut T,
+    symbols: &mut S,
+    legends: &mut L,
+    pictures: &mut P,
+) -> Result<Vec<Page>, String>
+where
+    F: FnMut(&Sheet, &ingetrazo_core::composition::ViewFrame) -> Result<Vec<Draw>, String>,
+    T: FnMut(&Sheet, &ingetrazo_core::composition::TextItem) -> Result<Vec<Draw>, String>,
+    S: FnMut(&Sheet, &SheetItem) -> Result<Vec<Draw>, String>,
+    L: FnMut(&Sheet, &serde_json::Value) -> Result<Vec<Draw>, String>,
+    P: FnMut(&Sheet, &serde_json::Value) -> Result<Vec<Draw>, String>,
 {
     if sheets.is_empty() || sheets.len() > 10_000 {
         return Err("PDF requires 1..10000 pages".into());
@@ -310,7 +451,7 @@ where F:FnMut(&Sheet,&ingetrazo_core::composition::ViewFrame)->Result<Vec<Draw>,
     let mut draws = 0usize;
     let mut commands = 0usize;
     for sheet in sheets {
-        let page = prepare_with_legends(sheet, views, texts,symbols,legends)?;
+        let page = prepare_with_pictures(sheet, views, texts, symbols, legends, pictures)?;
         draws = draws
             .checked_add(page.draws.len())
             .ok_or("PDF draw count overflow")?;
@@ -318,7 +459,9 @@ where F:FnMut(&Sheet,&ingetrazo_core::composition::ViewFrame)->Result<Vec<Draw>,
             return Err("PDF atlas draw budget exceeded".into());
         }
         for draw in &page.draws {
-            commands = commands.checked_add(draw_command_count(draw)?).ok_or("PDF command count overflow")?;
+            commands = commands
+                .checked_add(draw_command_count(draw)?)
+                .ok_or("PDF command count overflow")?;
         }
         if commands > crate::sheet_pdf::MAX_COMMANDS {
             return Err("PDF atlas command budget exceeded".into());
@@ -328,12 +471,23 @@ where F:FnMut(&Sheet,&ingetrazo_core::composition::ViewFrame)->Result<Vec<Draw>,
     Ok(pages)
 }
 
-fn draw_command_count(draw:&Draw)->Result<usize,String>{
-    let mut count=draw.path.len().checked_add(draw.clip.as_ref().map_or(0,Vec::len))
-        .and_then(|n|n.checked_add(draw.clip_intersection.as_ref().map_or(0,Vec::len))).ok_or("PDF command count overflow")?;
-    if let Some(text)=&draw.text {
-        count=count.checked_add(text.glyphs.len().checked_mul(if text.bold {4}else{2}).ok_or("PDF glyph count overflow")?)
-            .and_then(|n|n.checked_add(text.decorations.len().checked_mul(2)?)).ok_or("PDF command count overflow")?;
+fn draw_command_count(draw: &Draw) -> Result<usize, String> {
+    let mut count = draw
+        .path
+        .len()
+        .checked_add(draw.clip.as_ref().map_or(0, Vec::len))
+        .and_then(|n| n.checked_add(draw.clip_intersection.as_ref().map_or(0, Vec::len)))
+        .ok_or("PDF command count overflow")?;
+    if let Some(text) = &draw.text {
+        count = count
+            .checked_add(
+                text.glyphs
+                    .len()
+                    .checked_mul(if text.bold { 4 } else { 2 })
+                    .ok_or("PDF glyph count overflow")?,
+            )
+            .and_then(|n| n.checked_add(text.decorations.len().checked_mul(2)?))
+            .ok_or("PDF command count overflow")?;
     }
     Ok(count)
 }

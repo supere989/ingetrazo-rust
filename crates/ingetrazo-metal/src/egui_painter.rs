@@ -175,7 +175,7 @@ impl AdmittedCallback {
   Ok(Arc::new(Self{token:Arc::new(NativeCallback{id}),owner,density,uploaded_bytes:uploaded_bytes+annotation.as_ref().map_or(0,|a|a.uploaded_bytes),prepared}))
  }
 }
-enum PaintOrder { Mesh(usize), Cad(Arc<crate::cad_callback_painter::Prepared>, egui::Rect), Compute(Arc<crate::cad_compute_painter::Prepared>,egui::Rect) }
+enum PaintOrder { Picture(Arc<crate::paper_picture::Prepared>,egui::Rect), Mesh(usize), Cad(Arc<crate::cad_callback_painter::Prepared>, egui::Rect), Compute(Arc<crate::cad_compute_painter::Prepared>,egui::Rect) }
 pub struct PreparedPaint {
     pipeline: Arc<Retained<ProtocolObject<dyn MTLRenderPipelineState>>>,
     mesh: Option<Arc<Mesh>>,
@@ -205,6 +205,9 @@ impl PreparedPaint {
                     prepared.encode(encoder,extent,self.density)?;
                 }
                 continue;
+            }
+            if let PaintOrder::Picture(prepared,clip)=order{
+                let [x,y,right,bottom]=clipped_scissor(*clip,self.density,extent)?;if right>x&&bottom>y{encoder.setScissorRect(MTLScissorRect{x,y,width:right-x,height:bottom-y});prepared.encode_inline(encoder,extent)?;}continue;
             }
             let PaintOrder::Mesh(index)=order else{unreachable!()};
             let draw=&self.draws[*index];
@@ -287,6 +290,7 @@ impl PreparedPaint {
         for order in &self.order{
             match order {
                 PaintOrder::Mesh(index)=>{if encoder.is_none(){encoder=Some(open(false)?);}if let Err(error)=self.encode_mesh(*index,encoder.as_ref().unwrap(),extent){encoder.take().unwrap().endEncoding();return Err(error);}},
+                PaintOrder::Picture(prepared,clip)=>{if let Some(e)=encoder.take(){e.endEncoding();}let c=clipped_scissor(*clip,self.density,extent)?;if c[2]>c[0]&&c[3]>c[1]{prepared.encode_compute(command,lease.integer_view(),c.map(|v|v as u32))?;}},
                 PaintOrder::Compute(prepared,clip)=>{
                     if let Some(e)=encoder.take(){e.endEncoding();}
                     let c=clipped_scissor(*clip,self.density,extent)?;
@@ -318,6 +322,7 @@ pub struct EguiPainter {
     pipeline: Arc<Retained<ProtocolObject<dyn MTLRenderPipelineState>>>,
     cad: crate::cad_callback_painter::Painter,
     compute: Option<crate::cad_compute_painter::Painter>,
+    pictures:crate::paper_picture::Painter,
     textures: HashMap<TextureId, Arc<Texture>>,
     world_texture: Option<(TextureId,Arc<WorldTexture>)>,
     admitted_callback:Option<Arc<AdmittedCallback>>,
@@ -365,6 +370,7 @@ impl EguiPainter {
                 pipeline: Arc::new(pipeline),
                 cad: crate::cad_callback_painter::Painter::default(),
                 compute:compute.then(crate::cad_compute_painter::Painter::default),
+                pictures:crate::paper_picture::Painter::default(),
                 textures: HashMap::new(),
                 world_texture: None,
                 admitted_callback:None,
@@ -884,6 +890,7 @@ impl EguiPainter {
             }
         }
     }
+    pub fn picture_stats(&self)->crate::paper_picture::Stats{self.pictures.stats}
     pub fn prepare(
         &mut self,
         metal: &NativeMetal,
@@ -907,6 +914,10 @@ impl EguiPainter {
         for primitive in primitives {
             let egui::epaint::Primitive::Mesh(mesh) = &primitive.primitive else {
                 let egui::epaint::Primitive::Callback(callback)=&primitive.primitive else{unreachable!()};
+                if let Some(picture)=callback.callback.downcast_ref::<ingetrazo_render::paper_picture::Callback>(){
+                    if density!=1.||!valid_clip(primitive.clip_rect)||!valid_clip(callback.rect){return Err("Metal physical picture density/clip invalid".into());}
+                    if let Some(prepared)=self.pictures.prepare(metal,picture.snapshot()?,self.compute.is_some())?{order.push(PaintOrder::Picture(prepared,primitive.clip_rect.intersect(callback.rect)));}continue;
+                }
                 if let Some(token)=callback.callback.downcast_ref::<NativeCallback>(){
                     let native=self.admitted_callback.as_ref().filter(|c|c.token.id==token.id).ok_or("Native callback owner not installed")?;
                     if !Arc::ptr_eq(&native.owner.poisoned,&metal.poisoned)||!Arc::ptr_eq(&native.owner.budget,&metal.budget)||native.density!=density||!valid_clip(primitive.clip_rect)||!valid_clip(callback.rect){return Err("Metal preadmitted callback context/density/clip mismatch".into())}
