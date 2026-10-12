@@ -1,0 +1,253 @@
+{
+  "original_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "source_revision": "4a5a6e9121f9460b8e02051ef77bb4676e2f5904",
+  "archive_sha256": "f11d2012b5c234940bf63a559cbd14fe7786daf5926f01d0af4a5e8aac8dbf2b",
+  "members": {
+    "LICENSE": {
+      "size": 35149,
+      "sha256": "3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986"
+    },
+    "active-edit-context-0.png": {
+      "size": 28804,
+      "sha256": "9f084d27e4ab85577dbe3479efac902023202d0e208c33c5b63087d39dd237eb"
+    },
+    "active-edit-context-0.rgba": {
+      "size": 1228800,
+      "sha256": "ebbba3579d4b05b5686082c60c4b5d7d61019cfc90af3cea14de5910b360e7b7"
+    },
+    "active-edit-context-input.igz": {
+      "size": 11336,
+      "sha256": "63ed501fe902f726c7fd59d15bd904832366dda929f1acbc8c956f3cf686b40d"
+    },
+    "capture-support/exchange_import_observations.py": {
+      "size": 1637,
+      "sha256": "48c12bffd82e9c431ce8784174112a78c7ab09de529fabc1e5f0f8445bf94142"
+    },
+    "capture-support/fixture-contract.json": {
+      "size": 5824,
+      "sha256": "f6878e176c4ee5a1159711118e01ba0b2df5e805b53d99891772d0ed40ca8e1b"
+    },
+    "capture-support/reference-ai-bridge-capture.py": {
+      "size": 10808,
+      "sha256": "afe6924e6e8264ab88da2e18009b20ebc9a2f9656def3d0b38fbe73fb4276b8e"
+    },
+    "capture/receipt.json": {
+      "size": 230,
+      "sha256": "40c63a9aebc9318bb7fd82d0a3fd5cd31d17f0e588483eb633480c215eb3c338"
+    },
+    "capture/stderr": {
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "capture/stdout": {
+      "size": 127,
+      "sha256": "a5f615a41a7cfe3f051756370acaa4f1ff644a0765cd7759c3d69bfa56285ca7"
+    },
+    "capture/xvfb.log": {
+      "size": 2868,
+      "sha256": "79f76d3feb971128222a296e2312dc34d25ca06e0d465bddf909dff5a09f2ef0"
+    },
+    "clamped-and-portrait-0.png": {
+      "size": 2027,
+      "sha256": "34a2780648722effd735d91c8dfeca5859732ec0ea8debbcbd6b6fa07a15c68d"
+    },
+    "clamped-and-portrait-0.rgba": {
+      "size": 16384,
+      "sha256": "5653fa009cbd0924f68284006ba6bfe3110c520d68d5aa7fb40856f3e25dc1e9"
+    },
+    "clamped-and-portrait-1.png": {
+      "size": 8101,
+      "sha256": "a0b695e884c45b107092885ece1b14b004ad4e7de7c085e3821d41b15804b05f"
+    },
+    "clamped-and-portrait-1.rgba": {
+      "size": 1048576,
+      "sha256": "d34a3f7a3a06149989ee1f097baf9ad68c74bc1eb6615b2e4d0b2369e486901f"
+    },
+    "clamped-and-portrait-2.png": {
+      "size": 3562,
+      "sha256": "88d855e9c821a2f5a47d78fecd8a16cb738875cefeafb20b2b458d0229f53c9f"
+    },
+    "clamped-and-portrait-2.rgba": {
+      "size": 86400,
+      "sha256": "e6f7be1514c45a5aa52ca9f0ff6c5fc5dd6a84761e573f991f73fac05845b026"
+    },
+    "clamped-and-portrait-input.igz": {
+      "size": 10071,
+      "sha256": "5d5c9672ccd63035d7d0745e35209daad4300e3e5284b3e4b73c16789f4006f0"
+    },
+    "committed-selected-overlays-0.png": {
+      "size": 36733,
+      "sha256": "d63ee7260f60aa3e06984f7aa32e40f6b93961bafdb6555fa39e378e99f55044"
+    },
+    "committed-selected-overlays-0.rgba": {
+      "size": 1920000,
+      "sha256": "95e191600f0a418628d9afd7cc3a2b91cef28515d07259009faff3c933b449c0"
+    },
+    "committed-selected-overlays-input.igz": {
+      "size": 11336,
+      "sha256": "18220aaea39855c700a2e9451bc6996cc466fdae7175deb023d7e7e26aad68e0"
+    },
+    "default-perspective-0.png": {
+      "size": 23505,
+      "sha256": "7357f34bc0143c91c7b36bca6f261021f68be7b8f75f8c23a4d4089937e55548"
+    },
+    "default-perspective-0.rgba": {
+      "size": 3145728,
+      "sha256": "2a8183eb7e389c7a4ba6ecb64d014adbc6e49f91bb6abd428f6bec13e2330687"
+    },
+    "default-perspective-input.igz": {
+      "size": 10071,
+      "sha256": "f93e7f410ded4141860a6c787e5b60ecb2716b090c6b17c2079fc13422688b77"
+    },
+    "invalid-dimensions-input.igz": {
+      "size": 10071,
+      "sha256": "c982e973610406cc133b3686c694846c446a101d03e4aa7569f5f66f06a03511"
+    },
+    "original-ai-bridge-capture.json": {
+      "size": 635356,
+      "sha256": "984abf0fbd8c2bffd2df923e682c9387539731540e43cbe3e4f192d5f513f5b0"
+    },
+    "original-ai-bridge-capture.partial.json": {
+      "size": 635356,
+      "sha256": "984abf0fbd8c2bffd2df923e682c9387539731540e43cbe3e4f192d5f513f5b0"
+    },
+    "orthographic-live-depth-0.png": {
+      "size": 20549,
+      "sha256": "6948ff60abb64e2568c9d7e7413508d21a02aae768557023fd67033eb2b2c423"
+    },
+    "orthographic-live-depth-0.rgba": {
+      "size": 1228800,
+      "sha256": "c3a7ff13f51da4600479260c6cd20ccc91476bf48b0cc8312d12fe7c6d55212f"
+    },
+    "orthographic-live-depth-1.png": {
+      "size": 18311,
+      "sha256": "6d277f7c7174ebd64cbd40c5d7f4c39a7201503340d2598e6de30425229aee42"
+    },
+    "orthographic-live-depth-1.rgba": {
+      "size": 819200,
+      "sha256": "9a2b19160cb72ba1395c4dedefa43ca67d9d6009d9396c7811ae13b76650e5c7"
+    },
+    "orthographic-live-depth-input.igz": {
+      "size": 11336,
+      "sha256": "36fc3d49a1d9245df942428179920ed333ebde58b5a9c169d725094977aece0a"
+    }
+  },
+  "sources": [
+    {
+      "path": "scripts/reference-ai-bridge-capture.py",
+      "git_commit": "4a5a6e9121f9460b8e02051ef77bb4676e2f5904",
+      "sha256": "afe6924e6e8264ab88da2e18009b20ebc9a2f9656def3d0b38fbe73fb4276b8e",
+      "retained_path": "capture-support/reference-ai-bridge-capture.py"
+    },
+    {
+      "path": "scripts/exchange_import_observations.py",
+      "git_commit": "4a5a6e9121f9460b8e02051ef77bb4676e2f5904",
+      "sha256": "48c12bffd82e9c431ce8784174112a78c7ab09de529fabc1e5f0f8445bf94142",
+      "retained_path": "capture-support/exchange_import_observations.py"
+    },
+    {
+      "path": "docs/audits/ai-bridge-capture/fixture-contract.json",
+      "git_commit": "4a5a6e9121f9460b8e02051ef77bb4676e2f5904",
+      "sha256": "f6878e176c4ee5a1159711118e01ba0b2df5e805b53d99891772d0ed40ca8e1b",
+      "retained_path": "capture-support/fixture-contract.json"
+    }
+  ],
+  "capture_sources": [
+    {
+      "path": "scripts/reference-ai-bridge-capture.py",
+      "git_commit": "4a5a6e9121f9460b8e02051ef77bb4676e2f5904",
+      "sha256": "afe6924e6e8264ab88da2e18009b20ebc9a2f9656def3d0b38fbe73fb4276b8e",
+      "retained_path": "capture-support/reference-ai-bridge-capture.py"
+    },
+    {
+      "path": "scripts/exchange_import_observations.py",
+      "git_commit": "4a5a6e9121f9460b8e02051ef77bb4676e2f5904",
+      "sha256": "48c12bffd82e9c431ce8784174112a78c7ab09de529fabc1e5f0f8445bf94142",
+      "retained_path": "capture-support/exchange_import_observations.py"
+    },
+    {
+      "path": "docs/audits/ai-bridge-capture/fixture-contract.json",
+      "git_commit": "4a5a6e9121f9460b8e02051ef77bb4676e2f5904",
+      "sha256": "f6878e176c4ee5a1159711118e01ba0b2df5e805b53d99891772d0ed40ca8e1b",
+      "retained_path": "capture-support/fixture-contract.json"
+    }
+  ],
+  "original_sources": [
+    {
+      "path": "plugins/ai_bridge.py",
+      "sha256": "01c4cdcaeee19840980018636378e29f090c02abb0263a3a2c71a091ed145aeb"
+    },
+    {
+      "path": "views/viewport.py",
+      "sha256": "1fb62f55b8f559deb3676924ee69a9a444397faa28c49651111cea44e420c724"
+    },
+    {
+      "path": "views/main_window.py",
+      "sha256": "ea02be3e439c80731d0f5b5fde3d92d9b3f62e8ad10cd44ad305c3261b7786fa"
+    },
+    {
+      "path": "core/scene.py",
+      "sha256": "9dfcd32f1ff5b1445180eafd8df36eafb92fa08ed3597bb90eac09554899d2e0"
+    },
+    {
+      "path": "core/mesh.py",
+      "sha256": "5f2c1625e6dd717db029ba39a9de337e75beec06bd0df28a592a8a34875ca22c"
+    },
+    {
+      "path": "core/group.py",
+      "sha256": "9ba6a20eca241cb4969a545a3784fcff25566166606d5447a18780747d4f11c5"
+    },
+    {
+      "path": "core/camera.py",
+      "sha256": "cae35d8adfe33f3da22b85de74cc0779c0d2697fa8fa09d0112933d6d3e26a52"
+    },
+    {
+      "path": "core/dimension.py",
+      "sha256": "2253da1bb8e186f786c8fcfb780d91ca48460926a1641f8c42913473109f2ce6"
+    },
+    {
+      "path": "core/textlabel.py",
+      "sha256": "7ef512a89a591baa3149ec71b6d5e733f2831783091fe800323a003d449424bf"
+    },
+    {
+      "path": "core/guide.py",
+      "sha256": "a95d0ec873c58c34bd14e23c5e34d56d14bc38cdcd0b0008678be7eb2966d4f6"
+    },
+    {
+      "path": "core/section.py",
+      "sha256": "ace64d908292afdf1e79263117a2c7e1a752ecf4f096aa6a106d4adef98a9826"
+    },
+    {
+      "path": "core/history.py",
+      "sha256": "2eb66a1d557099b51383988a7819145289fc4ce2c37fc7de3a92ed35b5830559"
+    },
+    {
+      "path": "georef/geopath.py",
+      "sha256": "bf164fb5c53c4e621f03d103c75416823a71892461b425aec1946cacce45c348"
+    },
+    {
+      "path": "georef/points.py",
+      "sha256": "e04c08759c30aa62e78557613cd81dd4e454eabf871fe3f78207a22d6c0b4c9a"
+    },
+    {
+      "path": "formats/igz.py",
+      "sha256": "f318d685830c49c2fede7fd5a238ac7a1469ee0b0226cf48cab3751e194a9576"
+    },
+    {
+      "path": "tools/select.py",
+      "sha256": "baa33a660666cbc78a25ca291e0b40a4b2bd88755393ebce08295e1de6327916"
+    }
+  ],
+  "cases": 6,
+  "replies": 10,
+  "images": 8,
+  "capture_receipt": "capture/receipt.json",
+  "capture_provenance": "One actual root capture. Support bytes independently matched executed root Git revision after capture; original/helper hashes are actual pre-Qt producer guards. Launcher details retained only as recorded, not reconstructed as exact argv.",
+  "exclusions": [
+    "source config/data/cache directories",
+    "OS/chrome framebuffer",
+    "new original save-reopen acceptance",
+    "native acceptance"
+  ],
+  "cleanup_performed": false
+}
