@@ -803,6 +803,7 @@ fn radial(o: &mut Output, v: &Value, p: &mut Painter, pdf: bool) -> Result<(), S
             draw.even_odd = true;
             if let Some(PathOp::Move(first)) = draw.path.first().cloned() {
                 if matches!(draw.path.last(), Some(PathOp::Close)) {
+                    draw.path.try_reserve(1).map_err(|_|"Radial PDF polygon closure allocation refused")?;
                     draw.path.insert(draw.path.len()-1, PathOp::Line(first));
                 }
             }
