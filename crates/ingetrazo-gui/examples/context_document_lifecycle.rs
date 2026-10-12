@@ -1,3 +1,5 @@
+#[path="context_document_lifecycle/dem_profile.rs"]
+mod dem_profile;
 #[path="context_document_lifecycle/profile.rs"]
 mod profile;
 #[path="context_document_lifecycle/survey.rs"]
@@ -141,6 +143,7 @@ mod obj_mtl;
 #[path="context_document_lifecycle/obj_fusion.rs"]
 mod obj_fusion;
 fn main() {
+    if std::env::args().any(|a|a=="--dem-profile"){dem_profile::run();return;}
     if std::env::args().any(|a|a=="--survey-profile"){profile::run();return;}
     if std::env::args().any(|a|a=="--survey-points"){survey::run();return;}
     if std::env::args().any(|a|a=="--obj-raw-fusion") {obj_fusion::run_raw();return;}

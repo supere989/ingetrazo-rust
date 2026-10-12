@@ -10,6 +10,8 @@ default = []
 engineering-python = ["dep:ingetrazo-ai-interpreter-proof"]
 
 [dependencies]
+ureq = { version = "=2.12.1", default-features = false, features = ["tls"] }
+url = "2.5"
 ingetrazo-ai-interpreter-proof = { path = "../../tools/ai-interpreter-proof", optional = true }
 
 ingetrazo-core = { path = "../ingetrazo-core" }

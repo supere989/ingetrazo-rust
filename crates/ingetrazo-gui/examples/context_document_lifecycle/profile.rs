@@ -72,12 +72,26 @@ pub fn run() {
             guards.push(json!({"guard":"missing-malformed-resource","unchanged":true}));
             let visible = app.scene.native_document["photo_mesh"]["visible"].clone();
             app.scene.native_document["photo_mesh"]["visible"] = json!(false);
-            assert!(app.compute_survey_profile().unwrap_err().contains("DEM"));
+            app.survey_profile.dem_source.url_template =
+                "http://127.0.0.1:9/{z}/{x}/{y}.png".into();
+            app.survey_profile.dem_cache_root = Some(out.join("photo-dem-offline"));
+            app.survey_profile.dem_deadline = std::time::Duration::from_millis(50);
+            assert!(app.compute_survey_profile().unwrap());
+            assert_eq!(app.survey_profile.sampler_name(), Some("DEMSampler"));
+            assert!(app
+                .survey_profile
+                .profile
+                .as_ref()
+                .unwrap()
+                .samples
+                .iter()
+                .all(|s| s.elevation.is_none()));
             app.scene.native_document["photo_mesh"]["visible"] = visible;
-            assert!(std::sync::Arc::ptr_eq(
-                &accepted,
-                app.survey_profile.profile.as_ref().unwrap()
-            ));
+            assert!(app.compute_survey_profile().unwrap());
+            assert_eq!(
+                accepted.samples,
+                app.survey_profile.profile.as_ref().unwrap().samples
+            );
             assert_eq!(app.scene, before);
             assert_eq!(app.undo_stack.len(), undo);
             assert_eq!(app.redo_stack.len(), redo);

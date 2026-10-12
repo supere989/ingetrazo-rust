@@ -16,6 +16,8 @@ mod geographic_import;
 pub mod import_units;
 pub mod survey_points;
 pub mod survey_profile;
+pub mod dem_tiles;
+pub mod dem_runtime;
 pub mod blender;
 pub mod composer;
 pub mod sheet_image;

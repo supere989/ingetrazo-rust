@@ -1,5 +1,9 @@
 //! Original PhotoMesh profile action and immutable cached deliverable owner.
 use crate::IngeTrazoApp;
+use crate::{
+    dem_runtime::{Cache as DemCache, Service as DemService},
+    dem_tiles::Source as DemSource,
+};
 use glam::DVec3;
 use ingetrazo_core::{
     georef::{GeoPath, Profile},
@@ -8,7 +12,11 @@ use ingetrazo_core::{
 };
 use ingetrazo_formats::photo_profile::{Limits, Survey};
 use sha2::{Digest, Sha256};
-use std::{path::Path, sync::Arc};
+use std::{
+    path::{Path, PathBuf},
+    sync::{Arc, Mutex},
+    time::Duration,
+};
 #[derive(Clone)]
 struct HeldPath {
     id: u64,
@@ -36,6 +44,14 @@ pub struct State {
     pub limits: Limits,
     pub decode_count: u64,
     config_error: Option<String>,
+    dem_service: Option<Arc<DemService>>,
+    dem: Option<Arc<Mutex<DemCache>>>,
+    dem_document: Option<uuid::Uuid>,
+    pub dem_source: DemSource,
+    pub dem_zoom: u8,
+    pub dem_cache_root: Option<PathBuf>,
+    pub dem_deadline: Duration,
+    dem_epoch: u64,
     chart: Option<Chart>,
     summary: Option<Summary>,
 }
@@ -60,6 +76,14 @@ impl Default for State {
             limits,
             decode_count: 0,
             config_error: error,
+            dem_service: None,
+            dem: None,
+            dem_document: None,
+            dem_source: DemSource::default(),
+            dem_zoom: 13,
+            dem_cache_root: None,
+            dem_deadline: Duration::from_secs(30),
+            dem_epoch: 0,
             chart: None,
             summary: None,
         }
@@ -84,11 +108,21 @@ fn budget(used: usize, limit: usize) -> Result<(), String> {
 }
 impl State {
     pub fn resident_bytes(&self) -> usize {
-        self.sampler
+        self.dem_service
             .as_ref()
-            .map(|s| s.survey.resident_bytes())
-            .or_else(|| self.asset.as_ref().map(|(_, s)| s.resident_bytes()))
+            .map(|s| s.resident_reservation())
             .unwrap_or(0)
+            + self
+                .dem
+                .as_ref()
+                .map(|c| c.lock().unwrap_or_else(|e| e.into_inner()).field_bytes())
+                .unwrap_or(0)
+            + self
+                .sampler
+                .as_ref()
+                .map(|s| s.survey.resident_bytes())
+                .or_else(|| self.asset.as_ref().map(|(_, s)| s.resident_bytes()))
+                .unwrap_or(0)
             + self
                 .held
                 .as_ref()
@@ -109,7 +143,11 @@ impl State {
         scene.geo_paths.iter().position(|p| p.history_id == id)
     }
     pub fn sampler_name(&self) -> Option<&'static str> {
-        self.sampler.as_ref().map(|_| "PhotoMeshSampler")
+        if self.dem.is_some() {
+            Some("DEMSampler")
+        } else {
+            self.sampler.as_ref().map(|_| "PhotoMeshSampler")
+        }
     }
     pub fn held_path_identity(&self) -> Option<u64> {
         self.held.as_ref().map(|p| p.id)
@@ -327,6 +365,98 @@ fn prepare_profile(
         complete,
     })
 }
+fn prepare_dem_profile(
+    path: &HeldPath,
+    cache: &Arc<Mutex<DemCache>>,
+    datum: &ingetrazo_core::georef::SceneDatum,
+    other: usize,
+    accounted: usize,
+    limit: usize,
+    cold: bool,
+) -> Result<Profile, String> {
+    if path.points.iter().any(|p| !p.is_finite()) {
+        return Err("Profile path is not finite".into());
+    }
+    let mut length = 0.;
+    for p in path.points.windows(2) {
+        length += (p[1].x - p[0].x).hypot(p[1].y - p[0].y);
+    }
+    if !length.is_finite() {
+        return Err("Profile chainage is not finite".into());
+    }
+    let spacing = (length / 256.).max(1.);
+    let n = if path.points.len() < 2 || length <= 1e-9 {
+        0
+    } else {
+        (length / spacing).ceil() as usize + 1
+    };
+    let mut samples = Vec::new();
+    let retained = other
+        .checked_sub(accounted)
+        .ok_or("DEM accounting mismatch")?;
+    budget(
+        checked(
+            retained,
+            bytes(
+                n,
+                std::mem::size_of::<ingetrazo_core::georef::ProfileSample>(),
+            )?,
+        )?,
+        limit,
+    )?;
+    samples
+        .try_reserve_exact(n)
+        .map_err(|_| "Could not reserve DEM profile")?;
+    let scratch = bytes(
+        n.saturating_sub(1),
+        2 * (4 * std::mem::size_of::<egui::epaint::Vertex>() + 6 * 4),
+    )?;
+    let fixed = checked(
+        checked(
+            retained,
+            bytes(
+                samples.capacity(),
+                std::mem::size_of::<ingetrazo_core::georef::ProfileSample>(),
+            )?,
+        )?,
+        scratch,
+    )?;
+    let available = limit
+        .checked_sub(fixed)
+        .ok_or("DEM profile scratch exceeds CPU budget")?;
+    let mut cache = cache.lock().unwrap_or_else(|e| e.into_inner());
+    if cold {
+        cache.begin_cold_action();
+    }
+    if n > 0 {
+        cache.ensure_area(datum, &path.points)?;
+    }
+    let mut cursor = StationCursor::new(&path.points);
+    let mut complete = true;
+    for i in 0..n {
+        let station = length.min(i as f64 * spacing);
+        let (x, y) = cursor.at(station);
+        let elevation = cache.sample(datum, DVec3::new(x, y, 0.), available, cold)?;
+        if elevation.is_none() {
+            complete = false;
+        }
+        if elevation.is_some_and(|z| !z.is_finite()) {
+            return Err("DEM elevation is not finite".into());
+        }
+        samples.push(ingetrazo_core::georef::ProfileSample {
+            station,
+            x,
+            y,
+            elevation,
+        });
+    }
+    budget(checked(fixed, cache.field_bytes())?, limit)?;
+    Ok(Profile {
+        samples,
+        length: if n == 0 { 0. } else { length },
+        complete,
+    })
+}
 #[derive(Clone, Copy)]
 struct Summary {
     min: Option<f64>,
@@ -372,6 +502,254 @@ fn prepared_chart(
 }
 
 impl IngeTrazoApp {
+    fn compute_dem_profile(&mut self, index: usize) -> Result<bool, String> {
+        let state = &mut self.survey_profile;
+        let datum = self.scene.geo_datum.as_ref().ok_or("DEM datum missing")?;
+        let limit = state.limits.bytes;
+        let new_service = state.dem_service.is_none();
+        let service = if let Some(service) = &state.dem_service {
+            service.clone()
+        } else {
+            let root = state.dem_cache_root.clone().unwrap_or_else(|| {
+                self.document_session
+                    .store
+                    .as_ref()
+                    .map(|s| s.data_dir.join("dem"))
+                    .unwrap_or_else(|| {
+                        crate::session_state::SessionStore::user_default()
+                            .data_dir
+                            .join("dem")
+                    })
+            });
+            let service = DemService::new(root, limit, state.dem_deadline)?;
+            budget(
+                checked(state.resident_bytes(), service.resident_reservation())?,
+                limit,
+            )?;
+            service
+        };
+        let reused = state.dem_document == Some(self.clipboard_document)
+            && state.dem.as_ref().is_some_and(|c| {
+                let c = c.lock().unwrap_or_else(|e| e.into_inner());
+                c.source.id == state.dem_source.id
+                    && c.source.encoding == state.dem_source.encoding
+                    && c.source.url_template == state.dem_source.url_template
+                    && c.zoom == state.dem_zoom
+            });
+        let cache = if reused {
+            state.dem.as_ref().unwrap().clone()
+        } else {
+            Arc::new(Mutex::new(DemCache::new(
+                service.clone(),
+                state.dem_source.clone(),
+                state.dem_zoom,
+            )?))
+        };
+        let other = checked(
+            state.resident_bytes(),
+            if new_service {
+                service.resident_reservation()
+            } else {
+                0
+            },
+        )?;
+        let candidate = held(&self.scene.geo_paths[index], other, limit)?;
+        let pathbytes = bytes(candidate.points.capacity(), std::mem::size_of::<DVec3>())?;
+        let accounted = if reused {
+            cache
+                .lock()
+                .unwrap_or_else(|e| e.into_inner())
+                .field_bytes()
+        } else {
+            0
+        };
+        let profile = Arc::new(prepare_dem_profile(
+            &candidate,
+            &cache,
+            datum,
+            checked(other, pathbytes)?,
+            accounted,
+            limit,
+            true,
+        )?);
+        let extra = cache
+            .lock()
+            .unwrap_or_else(|e| e.into_inner())
+            .field_bytes()
+            .saturating_sub(accounted);
+        let peak = checked(
+            checked(checked(other, pathbytes)?, extra)?,
+            bytes(
+                profile.samples.capacity(),
+                std::mem::size_of::<ingetrazo_core::georef::ProfileSample>(),
+            )?,
+        )?;
+        let chart = prepared_chart(state, profile.clone(), peak, limit)?;
+        // The owner changes only after complete profile/chart admission.
+        if !reused {
+            service.retire();
+        }
+        cache.lock().unwrap_or_else(|e| e.into_inner()).pump()?;
+        state.dem_epoch = cache.lock().unwrap_or_else(|e| e.into_inner()).epoch;
+        state.dem_service = Some(service);
+        state.dem = Some(cache);
+        state.dem_document = Some(self.clipboard_document);
+        state.sampler = None;
+        state.held = Some(candidate);
+        state.summary = Some(Summary::from(&profile));
+        state.profile = Some(profile);
+        state.chart = chart;
+        state.message = None;
+        state.last_version = Some((
+            self.clipboard_document,
+            self.scene.version,
+            self.model_revision,
+        ));
+        Ok(true)
+    }
+    fn refresh_dem_profile(&mut self, arrival: bool) {
+        let state = &self.survey_profile;
+        if state.dem_document != Some(self.clipboard_document) {
+            return;
+        }
+        let version = (
+            self.clipboard_document,
+            self.scene.version,
+            self.model_revision,
+        );
+        if !arrival && state.last_version == Some(version) {
+            return;
+        }
+        let (Some(cache), Some(held), Some(datum)) =
+            (&state.dem, &state.held, &self.scene.geo_datum)
+        else {
+            return;
+        };
+        let Some(live) = self
+            .scene
+            .geo_paths
+            .iter()
+            .find(|p| p.history_id == held.id)
+        else {
+            self.survey_profile.last_version = Some(version);
+            return;
+        };
+        let other = state.resident_bytes();
+        let limit = state.limits.bytes;
+        let result = crate::survey_profile::held(live, other, limit).and_then(|path| {
+            let pathbytes = bytes(path.points.capacity(), std::mem::size_of::<DVec3>())?;
+            let accounted = cache
+                .lock()
+                .unwrap_or_else(|e| e.into_inner())
+                .field_bytes();
+            let profile = Arc::new(prepare_dem_profile(
+                &path,
+                cache,
+                datum,
+                checked(other, pathbytes)?,
+                accounted,
+                limit,
+                false,
+            )?);
+            let peak = checked(
+                checked(other, pathbytes)?,
+                bytes(
+                    profile.samples.capacity(),
+                    std::mem::size_of::<ingetrazo_core::georef::ProfileSample>(),
+                )?,
+            )?;
+            let chart = prepared_chart(state, profile.clone(), peak, limit)?;
+            cache.lock().unwrap_or_else(|e| e.into_inner()).pump()?;
+            Ok((path, profile, chart))
+        });
+        self.survey_profile.last_version = Some(version);
+        match result {
+            Ok((path, profile, chart)) => {
+                self.survey_profile.held = Some(path);
+                self.survey_profile.summary = Some(Summary::from(&profile));
+                self.survey_profile.profile = Some(profile);
+                self.survey_profile.chart = chart;
+                self.survey_profile.message = None;
+            }
+            Err(e) => self.status_message = e,
+        }
+    }
+    pub fn poll_dem_profile(&mut self, ctx: &egui::Context) {
+        let Some(cache) = self.survey_profile.dem.clone() else {
+            return;
+        };
+        let limit = self.survey_profile.limits.bytes;
+        let resident = self.survey_profile.resident_bytes();
+        let mut c = cache.lock().unwrap_or_else(|e| e.into_inner());
+        c.service.set_wake(ctx);
+        let available = limit.saturating_sub(resident.saturating_sub(c.field_bytes()));
+        let result = c.poll_one(available);
+        if let Err(e) = c.pump() {
+            self.status_message = e;
+        }
+        // One completion per repaint bounds transient decoded ownership.
+        let pending = c.service.pending() > 0 || c.needs_pump();
+        drop(c);
+        if let Some(Ok(true)) = result {
+            self.refresh_dem_profile(true);
+        } else if let Some(Err(e)) = result {
+            self.status_message = e;
+        }
+        if pending {
+            ctx.request_repaint_after(Duration::from_millis(20));
+        }
+    }
+    fn export_dem_profile(&mut self, path: &Path) -> Result<bool, String> {
+        let state = &self.survey_profile;
+        let (Some(cache), Some(acquired), Some(datum)) =
+            (&state.dem, &state.held, &self.scene.geo_datum)
+        else {
+            return Ok(false);
+        };
+        let updated = self
+            .scene
+            .geo_paths
+            .iter()
+            .find(|p| p.history_id == acquired.id)
+            .map(|p| held(p, state.resident_bytes(), state.limits.bytes))
+            .transpose()?;
+        let target = updated.as_ref().unwrap_or(acquired);
+        let other = checked(
+            state.resident_bytes(),
+            updated
+                .as_ref()
+                .map(|p| p.points.capacity() * std::mem::size_of::<DVec3>())
+                .unwrap_or(0),
+        )?;
+        let accounted = cache
+            .lock()
+            .unwrap_or_else(|e| e.into_inner())
+            .field_bytes();
+        let profile = prepare_dem_profile(
+            target,
+            cache,
+            datum,
+            other,
+            accounted,
+            state.limits.bytes,
+            true,
+        )?;
+        cache.lock().unwrap_or_else(|e| e.into_inner()).pump()?;
+        std::fs::write(
+            path,
+            profile_csv(&profile, vertical_reference(&self.scene), Some(datum.alt)),
+        )
+        .map_err(|e| format!("Profile CSV: {e}"))?;
+        Ok(true)
+    }
+    pub fn dem_profile_observation(&self) -> serde_json::Value {
+        let Some(cache) = &self.survey_profile.dem else {
+            return serde_json::Value::Null;
+        };
+        let c = cache.lock().unwrap_or_else(|e| e.into_inner());
+        serde_json::json!({"provider_id":c.source.id,"arrived":c.arrived().iter().map(|t|serde_json::json!({"x":t.x,"y":t.y,"z":t.zoom})).collect::<Vec<_>>(),
+            "pending":c.service.pending(),"decoded":c.decoded_count,"requested":c.requested,"last_error":c.last_error})
+    }
     pub fn open_survey_profile(&mut self) {
         self.survey_profile.visible = true;
         if let Err(error) = self.compute_survey_profile() {
@@ -427,7 +805,7 @@ impl IngeTrazoApp {
             return Ok(false);
         };
         if !visible_photo(&self.scene) {
-            return Err("Global DEM profile sampling is not yet available; load a visible original photogrammetric survey".into());
+            return self.compute_dem_profile(index.unwrap());
         }
         let meta = photo_meta(&self.scene).unwrap();
         let member = meta
@@ -505,6 +883,8 @@ impl IngeTrazoApp {
         )?;
         let summary = Summary::from(&profile);
         // All allocation/math admissions precede publication of sampler/path/result.
+        self.survey_profile.dem = None;
+        self.survey_profile.dem_document = None;
         self.survey_profile.asset = Some((key, survey));
         self.survey_profile.sampler = Some(sampler);
         self.survey_profile.held = Some(candidate_path);
@@ -523,6 +903,10 @@ impl IngeTrazoApp {
         Ok(true)
     }
     pub fn refresh_survey_profile(&mut self) {
+        if self.survey_profile.dem.is_some() {
+            self.refresh_dem_profile(false);
+            return;
+        }
         let state = &self.survey_profile;
         if !state.visible
             || state.last_version
@@ -602,6 +986,9 @@ impl IngeTrazoApp {
         }
     }
     pub fn export_survey_profile(&mut self, path: &Path) -> Result<bool, String> {
+        if self.survey_profile.dem.is_some() {
+            return self.export_dem_profile(path);
+        }
         let (Some(held), Some(sampler)) = (&self.survey_profile.held, &self.survey_profile.sampler)
         else {
             return Ok(false);
@@ -750,6 +1137,7 @@ fn chart(
     })
 }
 pub fn render(app: &mut IngeTrazoApp, ctx: &egui::Context) {
+    app.poll_dem_profile(ctx);
     if !app.survey_profile.visible {
         return;
     }
