@@ -35,7 +35,7 @@ report={"source_pin":PIN,"cases":[],"states":[],"render_calls":[],"callback_erro
 def persist():
  (out/"original-ai-bridge-capture.partial.json").write_text(json.dumps(report,indent=2,allow_nan=False)+"\n")
 def textured_quad(path,name,x):
- mesh=Mesh();f=mesh.add_face([V(-1,0,0),V(1,0,0),V(1,0,2),V(-1,0,2)]);f.attrs["texture"]={"path":str(path),"sw":2.,"sh":2.}
+ mesh=Mesh();f=mesh.add_face([V(-1,0,0),V(-1,0,2),V(1,0,2),V(1,0,0)]);f.attrs["texture"]={"path":str(path),"sw":2.,"sh":2.}
  g=Group(mesh,name);g.xform=M();g.xform.translate(x,0.,0.);return g
 try:
  for name in ["startup-billboard-context","shared-texture-context"]:
@@ -52,6 +52,11 @@ try:
   # Reopen the actual authored input through the ordinary loader, retaining fresh-window figure only via that file.
   igz.load_into(v.scene,out/inputfile);host._current_path=out/"fixture-project.igz";host._saved_version=v.scene.version-1
   v.setFixedSize(800,600);host.show();c=v.camera;c.target=V(1,0,1);c.distance=12.;c.yaw=math.radians(45.);c.pitch=math.radians(25.);c.perspective=True;c.fov_deg=45.
+  shared=[g for g in v.scene.groups if g.name in ("Shared subject","Shared parked")]
+  if name=="shared-texture-context":
+   assert len(shared)==2
+   shared_path=shared[0].mesh.faces[0].attrs["texture"]["path"]
+   assert all(g.mesh.faces[0].attrs["texture"]["path"]==shared_path for g in shared),"Loader must retain shared texture identity"
   v.begin_group_edit(v.scene.groups[edit_index]);assert len(v.scene._edit_stack)==1
   v.notify_scene_changed();flush(v)
   assert (v.active_tool is None or isinstance(v.active_tool,SelectTool))and not isinstance(getattr(v,"_hover_entity",None),Edge)
@@ -77,10 +82,25 @@ try:
    for index,params in enumerate(requests):
     for action in actions[index]:
      if action["op"]=="camera_angles":
-      geometry=scene_state(v.scene);undo=len(v.history.undo_stack);v.camera.yaw=action["yaw"];v.camera.pitch=action["pitch"];assert scene_state(v.scene)==geometry and len(v.history.undo_stack)==undo
+      geometry=scene_state(v.scene);undo=len(v.history.undo_stack);redo=len(v.history.redo_stack);v.camera.yaw=action["yaw"];v.camera.pitch=action["pitch"];assert scene_state(v.scene)==geometry and len(v.history.undo_stack)==undo and len(v.history.redo_stack)==redo
      elif action["op"]=="finish_edit":v.end_one_group_edit();assert not v.scene._edit_stack
      else:raise AssertionError("Undeclared action")
-    v.notify_scene_changed();flush(v);before=copy.deepcopy(observation(host));request={"id":name+"-"+str(index),"tool":"screenshot","args":params};client.sendall((json.dumps(request)+"\n").encode());end=time.monotonic()+15
+    v.notify_scene_changed();flush(v)
+    if name=="shared-texture-context":
+     eye=v.camera.eye()
+     for g in shared:
+      face=g.mesh.faces[0];points=[vertex.position for vertex in face.loop];normal=face.normal()
+      if g.xform is not None:points=[g.xform.map(point)for point in points];normal=g.xform.mapVector(normal)
+      centre=sum(points,V())/len(points);assert V.dotProduct(normal,eye-centre)>0,"Actual textured front must face camera"
+     count=sum(count for (path,shade),start,count in v._tex_runs if path==shared_path)
+     for mesh,paint,groups,mirrored in getattr(v,"_frame_instanced",{}).values():
+      actual=[g for g in groups if g.name in ("Shared subject","Shared parked")]
+      if actual:
+       entries=[entry for (mesh_id,signature),entry in getattr(v,"_proto_draw",{}).items()if mesh_id==id(mesh)]
+       assert len(entries)==1,"Actual retained sampled prototype required"
+       count+=sum(count for (path,shade),start,count in entries[0]["tex_runs"]if path==shared_path)*len(actual)
+     assert count>=12 and getattr(v,"_tex_cache",{}).get(shared_path)is not None,"Both actual shared quads must reach sampled packets"
+    before=copy.deepcopy(observation(host));request={"id":name+"-"+str(index),"tool":"screenshot","args":params};client.sendall((json.dumps(request)+"\n").encode());end=time.monotonic()+15
     while b"\n"not in buffer:
      assert time.monotonic()<end,"Actual socket deadline";app.processEvents()
      try:chunk=client.recv(65536)

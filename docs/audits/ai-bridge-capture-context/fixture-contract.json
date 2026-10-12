@@ -105,7 +105,7 @@
     },
     {
       "path": "scripts/reference-ai-bridge-capture-context.py",
-      "sha256": "78b5b0ade96f00e8593770fca8fa1aa511ffc8ef388c777aa60cceb4d1300088"
+      "sha256": "0a83fc18a6a5cedd779bac59e23bf71226b8bf1e720e1dd07c38692356b999a9"
     },
     {
       "path": "scripts/check-ai-bridge-capture.py",
