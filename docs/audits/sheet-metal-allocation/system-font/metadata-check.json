@@ -1,0 +1,14 @@
+{
+  "base_revision": "0d7b844c882804b5dfa405cc5f80cf196066b9b4",
+  "check": "cargo check --locked --offline -p ingetrazo-formats --lib --example paper_system_font_probe --target aarch64-apple-darwin; sys link overrides and INGETRAZO_RUST_METADATA_ONLY=1",
+  "exit_code": 0,
+  "seconds": 5.53,
+  "source_sha256": {
+    "crates/ingetrazo-formats/src/paper_font_coretext.rs": "c048867cc6acb1c3055b532c425d2f7b0773c9216b19da05c544ee969b55066c",
+    "crates/ingetrazo-formats/examples/paper_system_font_probe.rs": "d628ad49540d83bd7ec7a1bc75511a0c796a83666c56746e5b295d86bc6c3e6b",
+    "scripts/replay-platform-sheet-text.py": "22bf8cae92b0cf56b46d4cf2e5d0729f3df17b4d362f34056efdda7c5b3f853f",
+    ".github/workflows/parity.yml": "a68f39d174710df2c1cacf2274f8ade1b2ec9ec66b4008acff843fbec7db4860"
+  },
+  "log_sha256": "cb3e60cf20eed499ad74db2faa182b86ef2063275087fee81205894c3bbcd302",
+  "scope": "Rust native-target metadata only; native SDK/link/font/render proof pending. Python AST checked without execution."
+}

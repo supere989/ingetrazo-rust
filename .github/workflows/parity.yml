@@ -91,7 +91,7 @@ jobs:
           if [[ "$GITHUB_REF" != refs/heads/review/metal-* ]]; then
             cargo check --locked -p ingetrazo-gui --all-targets > docs/audits/metal-combined-gui-ci/check.log 2>&1
           fi
-          cargo build --locked -p ingetrazo-cli -p ingetrazo-gui -p ingetrazo-metal -p ingetrazo-formats -p ingetrazo-render --bin ingetrazo --bin ingetrazo-render-worker --example gltf_rich --example sheet_image_workflows --example native_metal --example native_metal_document_probe --example session_recovery_process --example native_world_defaults --example native_metal_document_annotations --example native_metal_billboards --example native_metal_section_fill --example device_probe --example submission_probe --example cad2d_probe > docs/audits/metal-combined-gui-ci/build.log 2>&1
+          cargo build --locked -p ingetrazo-cli -p ingetrazo-gui -p ingetrazo-metal -p ingetrazo-formats -p ingetrazo-render --bin ingetrazo --bin ingetrazo-render-worker --example gltf_rich --example sheet_image_workflows --example paper_system_font_probe --example native_metal --example native_metal_document_probe --example session_recovery_process --example native_world_defaults --example native_metal_document_annotations --example native_metal_billboards --example native_metal_section_fill --example device_probe --example submission_probe --example cad2d_probe > docs/audits/metal-combined-gui-ci/build.log 2>&1
       - uses: actions/setup-python@v5
         if: ${{ !cancelled() && steps.nativebuild.outcome == 'success' }}
         with:
@@ -107,6 +107,9 @@ jobs:
       - name: Capture and compare original native macOS sheet text once
         if: ${{ !cancelled() && steps.nativebuild.outcome == 'success' && github.ref == 'refs/heads/review/metal-sheet-allocation' }}
         run: python3 scripts/check-platform-sheet-text.py target/debug/examples/sheet_image_workflows target/debug/ingetrazo-render-worker docs/audits/metal-combined-gui-ci/platform-sheet-text > docs/audits/metal-combined-gui-ci/platform-sheet-text.log 2>&1
+      - name: Replay frozen native macOS text and font identity
+        if: ${{ !cancelled() && steps.nativebuild.outcome == 'success' && github.ref == 'refs/heads/review/metal-system-font' }}
+        run: python3 scripts/replay-platform-sheet-text.py target/debug/examples/sheet_image_workflows target/debug/ingetrazo-render-worker target/debug/examples/paper_system_font_probe docs/audits/metal-combined-gui-ci/platform-sheet-text-replay > docs/audits/metal-combined-gui-ci/platform-sheet-text-replay.log 2>&1
       - name: Native default sky profile cache refusal and ownership
         if: ${{ !cancelled() && steps.nativebuild.outcome == 'success' }}
         run: target/debug/examples/native_world_defaults docs/audits/metal-combined-gui-ci/defaults
