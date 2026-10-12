@@ -283,6 +283,7 @@ fn parse_entity(
         "VIEWPORT",
         "XLINE",
         "RAY",
+        "SHAPE", // Original _entity_segments returns None; _bucket_one counts and skips it.
     ]
     .contains(&kind)
     {

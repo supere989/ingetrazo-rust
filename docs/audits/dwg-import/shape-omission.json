@@ -1,0 +1,11 @@
+{
+  "original_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "source_law": "formats/dxf_in.py:_entity_segments180-208 returns None for SHAPE; _bucket_one264-274 records skipped and returns without rejecting the drawing",
+  "native_change": "Explicit SHAPE omission joins the existing annotation/auxiliary omission list before numeric and OCS validation; unknown entity refusal remains",
+  "retained_input": "source-records.zip:real-converted.dxf",
+  "model_types": ["POINT", "LINE", "ARC", "CIRCLE", "TEXT", "TRACE", "INSERT", "SHAPE", "SOLID", "ATTDEF", "LWPOLYLINE", "DIMENSION"],
+  "raw_attachment_types": ["ATTRIB", "SEQEND"],
+  "block_types": ["LINE", "ATTDEF", "SOLID", "POINT"],
+  "inventory_result": "All other fixture entity types are already native-supported, deliberately omitted, or handled as block/attribute structure",
+  "scope": "Supported source drawing with omitted SHAPE; no SHAPE geometry support claim. No source recapture or native execution by owner."
+}
