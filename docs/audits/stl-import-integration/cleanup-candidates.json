@@ -1,0 +1,1033 @@
+{
+  "status": "candidates only; no owner purge",
+  "included_files": [
+    {
+      "path": "/tmp/ingetrazo-import-ui-integration-r2/build.log",
+      "member": "r2/build.log",
+      "size": 28339,
+      "sha256": "ca9aa63a3f3f8c463b69f3447de464ff955e2c6ba469f62d4bf6041b1cd7e837"
+    },
+    {
+      "path": "/tmp/ingetrazo-import-ui-integration-r2/result.json",
+      "member": "r2/result.json",
+      "size": 2124,
+      "sha256": "fd0c3dc6e641783d7deff92b564ebd4fd766effe8bc930688743ab8c699d1dd2"
+    },
+    {
+      "path": "/tmp/ingetrazo-import-ui-integration-r2/stl/default-cube-saved.igz",
+      "member": "r2/stl/default-cube-saved.igz",
+      "size": 7517,
+      "sha256": "4a8d5921ecf198fe4f540838f3741dd0784c6441dd81395b74ef009bdf147983"
+    },
+    {
+      "path": "/tmp/ingetrazo-import-ui-integration-r2/stl/flat-large-editable-saved.igz",
+      "member": "r2/stl/flat-large-editable-saved.igz",
+      "size": 6533,
+      "sha256": "c70631c19d8dddc370ba86a55791b982f483727d55433c9435305dc699ee0f0e"
+    },
+    {
+      "path": "/tmp/ingetrazo-import-ui-integration-r2/stl/large-nested-saved.igz",
+      "member": "r2/stl/large-nested-saved.igz",
+      "size": 397302,
+      "sha256": "69965d5d40ce48e8e60d927b57a7cc0f2e6b220445c700f50c20e77c25d258a1"
+    },
+    {
+      "path": "/tmp/ingetrazo-import-ui-integration-r2/stl/large-root-saved.igz",
+      "member": "r2/stl/large-root-saved.igz",
+      "size": 397028,
+      "sha256": "e7c7721317573db67a5354776f45e70271f7a691e27da7a2033cec9497244f90"
+    },
+    {
+      "path": "/tmp/ingetrazo-import-ui-integration-r2/stl/native-stl.partial.json",
+      "member": "r2/stl/native-stl.partial.json",
+      "size": 3043392,
+      "sha256": "893151a31d68960665f87b76ce1296d0b69893db26c79a2c8fff83fe023a9397"
+    },
+    {
+      "path": "/tmp/ingetrazo-import-ui-integration-r2/stl/none-cube-saved.igz",
+      "member": "r2/stl/none-cube-saved.igz",
+      "size": 7517,
+      "sha256": "88983d8fde0f6ce558b9aec9282b1f5c5c7375f3062fc0c809bd74f7dfa58a46"
+    },
+    {
+      "path": "/tmp/ingetrazo-import-ui-integration-r2/stl/small-nested-saved.igz",
+      "member": "r2/stl/small-nested-saved.igz",
+      "size": 10430,
+      "sha256": "8788476d03b2c0c4d80941ba8c045bd4144e38a0123a126d0b409c2d8aa38a2a"
+    },
+    {
+      "path": "/tmp/ingetrazo-import-ui-integration-r2/stl/tilted-all-saved.igz",
+      "member": "r2/stl/tilted-all-saved.igz",
+      "size": 4529,
+      "sha256": "8238f91fd869a88133de7bdb38671727f4882605de6e5735bbfd7343c9f636df"
+    },
+    {
+      "path": "/tmp/ingetrazo-import-ui-integration-r2/stl/tilted-principal-saved.igz",
+      "member": "r2/stl/tilted-principal-saved.igz",
+      "size": 4883,
+      "sha256": "d4937fa7d610f28d03be199744e8bdf9115c5abbe8b226cf0f185e5c6037358d"
+    },
+    {
+      "path": "/tmp/ingetrazo-import-ui-integration-r2/stl-bounded-abort.json",
+      "member": "r2/stl-bounded-abort.json",
+      "size": 431,
+      "sha256": "6d85d35f1ca27c6d78de5e19dbeb2b662e6d4c0331965b6253c7eb4286b1c7f9"
+    },
+    {
+      "path": "/tmp/ingetrazo-import-ui-integration-r2/stl-format.log",
+      "member": "r2/stl-format.log",
+      "size": 14610,
+      "sha256": "12a431ab9e3cf9853e6d2c925f02192e2a4b823bbc02af3e38c420b048dd6675"
+    },
+    {
+      "path": "/tmp/ingetrazo-import-ui-integration-r2/stl-native.log",
+      "member": "r2/stl-native.log",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r3/build.log",
+      "member": "r3/build.log",
+      "size": 27287,
+      "sha256": "683126b4d961a12137361f014ff3fa0a3c5193458443f21a63409ec08db400da"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r3/replay/result.json",
+      "member": "r3/replay/result.json",
+      "size": 127,
+      "sha256": "3ac388cf5afb4852823078619f45ba670c547b5e3bec72c5d09591c1d209a70b"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r3/replay-corrected/checker.log",
+      "member": "r3/replay-corrected/checker.log",
+      "size": 284,
+      "sha256": "7b5b4ff0bad37a9a9449d634f2ea737773a15bd118dd4aa46ab419b5f9b95c57"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r3/replay-corrected/comparison.json",
+      "member": "r3/replay-corrected/comparison.json",
+      "size": 300,
+      "sha256": "b9490a8e5f8f9149bd384330b261b78800d1b93c731e960cae24d54feb4820e1"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r3/replay-corrected/native/default-cube-saved.igz",
+      "member": "r3/replay-corrected/native/default-cube-saved.igz",
+      "size": 7517,
+      "sha256": "4a8d5921ecf198fe4f540838f3741dd0784c6441dd81395b74ef009bdf147983"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r3/replay-corrected/native/flat-large-editable-saved.igz",
+      "member": "r3/replay-corrected/native/flat-large-editable-saved.igz",
+      "size": 6533,
+      "sha256": "c70631c19d8dddc370ba86a55791b982f483727d55433c9435305dc699ee0f0e"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r3/replay-corrected/native/large-nested-saved.igz",
+      "member": "r3/replay-corrected/native/large-nested-saved.igz",
+      "size": 397302,
+      "sha256": "005e81c1d6f6a4a8c3f2dcc9f035e6f1d758e5f69f33a5d9e88bc2e3a166487e"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r3/replay-corrected/native/large-root-saved.igz",
+      "member": "r3/replay-corrected/native/large-root-saved.igz",
+      "size": 397028,
+      "sha256": "e1f29bfb80194f59017dce9c6b7092df5986d5f0379b295e92ee054cdd987a75"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r3/replay-corrected/native/native-stl.json",
+      "member": "r3/replay-corrected/native/native-stl.json",
+      "size": 3090801,
+      "sha256": "56f7897325babf94305da625889434d60a86e52137aade191d6c95d5e5f657fc"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r3/replay-corrected/native/native-stl.partial.json",
+      "member": "r3/replay-corrected/native/native-stl.partial.json",
+      "size": 3057468,
+      "sha256": "81c9b8f1dd2b98214020a6e3db905c7d661fca82dcda83e928a74659a05b7775"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r3/replay-corrected/native/none-cube-saved.igz",
+      "member": "r3/replay-corrected/native/none-cube-saved.igz",
+      "size": 7517,
+      "sha256": "88983d8fde0f6ce558b9aec9282b1f5c5c7375f3062fc0c809bd74f7dfa58a46"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r3/replay-corrected/native/phase-timings.jsonl",
+      "member": "r3/replay-corrected/native/phase-timings.jsonl",
+      "size": 26381,
+      "sha256": "6fafbc319e54012b87b8ff2063b0690f3fd251d78259cf5029e75e0af7245e20"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r3/replay-corrected/native/reopens-stl.json",
+      "member": "r3/replay-corrected/native/reopens-stl.json",
+      "size": 2646423,
+      "sha256": "00bfb32cb15e90761410269dcf0b83fedb85d674d4a9dea4469073d293922f57"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r3/replay-corrected/native/small-nested-saved.igz",
+      "member": "r3/replay-corrected/native/small-nested-saved.igz",
+      "size": 10430,
+      "sha256": "8788476d03b2c0c4d80941ba8c045bd4144e38a0123a126d0b409c2d8aa38a2a"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r3/replay-corrected/native/tilted-all-saved.igz",
+      "member": "r3/replay-corrected/native/tilted-all-saved.igz",
+      "size": 4529,
+      "sha256": "8238f91fd869a88133de7bdb38671727f4882605de6e5735bbfd7343c9f636df"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r3/replay-corrected/native/tilted-principal-saved.igz",
+      "member": "r3/replay-corrected/native/tilted-principal-saved.igz",
+      "size": 4883,
+      "sha256": "d4937fa7d610f28d03be199744e8bdf9115c5abbe8b226cf0f185e5c6037358d"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r3/replay-corrected/native.log",
+      "member": "r3/replay-corrected/native.log",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r3/replay-corrected/reader.log",
+      "member": "r3/replay-corrected/reader.log",
+      "size": 27,
+      "sha256": "47972b843dc76becd74317b12809926ceb3e5e7aebf08afbb9d478e22d954acc"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r3/replay-corrected/result.json",
+      "member": "r3/replay-corrected/result.json",
+      "size": 1489,
+      "sha256": "006ccc6949b30133aada05b570e9a1c54b498311b8873baef8454ee1a44b42cd"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r3/replay.log",
+      "member": "r3/replay.log",
+      "size": 117,
+      "sha256": "f5761712cb5e7a270000a82271d0ef2a1b96459575b1187450a43a122399cb8f"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r3/result.json",
+      "member": "r3/result.json",
+      "size": 695,
+      "sha256": "2dd02518f0e2710beb1d8c1bb58aae623820e8f27b334b66edd3f498b2cdcb68"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r4/build.log",
+      "member": "r4/build.log",
+      "size": 27287,
+      "sha256": "cced40667af57d76dde066708dfebaff3c0a116dee43ccde3b8c91308da9c76f"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r4/replay/checker.log",
+      "member": "r4/replay/checker.log",
+      "size": 284,
+      "sha256": "7b5b4ff0bad37a9a9449d634f2ea737773a15bd118dd4aa46ab419b5f9b95c57"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r4/replay/comparison.json",
+      "member": "r4/replay/comparison.json",
+      "size": 300,
+      "sha256": "b9490a8e5f8f9149bd384330b261b78800d1b93c731e960cae24d54feb4820e1"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r4/replay/native/default-cube-saved.igz",
+      "member": "r4/replay/native/default-cube-saved.igz",
+      "size": 7517,
+      "sha256": "4a8d5921ecf198fe4f540838f3741dd0784c6441dd81395b74ef009bdf147983"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r4/replay/native/flat-large-editable-saved.igz",
+      "member": "r4/replay/native/flat-large-editable-saved.igz",
+      "size": 6533,
+      "sha256": "c70631c19d8dddc370ba86a55791b982f483727d55433c9435305dc699ee0f0e"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r4/replay/native/large-nested-saved.igz",
+      "member": "r4/replay/native/large-nested-saved.igz",
+      "size": 397302,
+      "sha256": "23c0f52915df35fddd4b65a8dcc465f664320808244219ccdde5673e272bc218"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r4/replay/native/large-root-saved.igz",
+      "member": "r4/replay/native/large-root-saved.igz",
+      "size": 397028,
+      "sha256": "98c6b823b272644ee3c2719ed0074f2ff6e3553baff412c19772f65084d159a5"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r4/replay/native/native-stl.json",
+      "member": "r4/replay/native/native-stl.json",
+      "size": 3090801,
+      "sha256": "56f7897325babf94305da625889434d60a86e52137aade191d6c95d5e5f657fc"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r4/replay/native/native-stl.partial.json",
+      "member": "r4/replay/native/native-stl.partial.json",
+      "size": 3057468,
+      "sha256": "81c9b8f1dd2b98214020a6e3db905c7d661fca82dcda83e928a74659a05b7775"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r4/replay/native/none-cube-saved.igz",
+      "member": "r4/replay/native/none-cube-saved.igz",
+      "size": 7517,
+      "sha256": "88983d8fde0f6ce558b9aec9282b1f5c5c7375f3062fc0c809bd74f7dfa58a46"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r4/replay/native/phase-timings.jsonl",
+      "member": "r4/replay/native/phase-timings.jsonl",
+      "size": 26148,
+      "sha256": "6f61801c981da9bc6caf84becffb648d9aec417028503e272713e12a751b550f"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r4/replay/native/reopens-stl.json",
+      "member": "r4/replay/native/reopens-stl.json",
+      "size": 2646423,
+      "sha256": "00bfb32cb15e90761410269dcf0b83fedb85d674d4a9dea4469073d293922f57"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r4/replay/native/small-nested-saved.igz",
+      "member": "r4/replay/native/small-nested-saved.igz",
+      "size": 10430,
+      "sha256": "8788476d03b2c0c4d80941ba8c045bd4144e38a0123a126d0b409c2d8aa38a2a"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r4/replay/native/tilted-all-saved.igz",
+      "member": "r4/replay/native/tilted-all-saved.igz",
+      "size": 4529,
+      "sha256": "8238f91fd869a88133de7bdb38671727f4882605de6e5735bbfd7343c9f636df"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r4/replay/native/tilted-principal-saved.igz",
+      "member": "r4/replay/native/tilted-principal-saved.igz",
+      "size": 4883,
+      "sha256": "d4937fa7d610f28d03be199744e8bdf9115c5abbe8b226cf0f185e5c6037358d"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r4/replay/native.log",
+      "member": "r4/replay/native.log",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r4/replay/reader.log",
+      "member": "r4/replay/reader.log",
+      "size": 27,
+      "sha256": "47972b843dc76becd74317b12809926ceb3e5e7aebf08afbb9d478e22d954acc"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r4/replay/result.json",
+      "member": "r4/replay/result.json",
+      "size": 1416,
+      "sha256": "651f7740b53ecfbb2fc760522b1d9cd55c193d01867077c7f8adbbf2470496a1"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r4/replay.log",
+      "member": "r4/replay.log",
+      "size": 1192,
+      "sha256": "71172be866a52280ace3502917545bac09d27aa602d968a792cd40910e6b6a00"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r4/result.json",
+      "member": "r4/result.json",
+      "size": 695,
+      "sha256": "3ab664f0a150280a9922f28a4f5f1f0526a1c80dedac073cd63f3088b529587f"
+    }
+  ],
+  "excluded_files": [
+    {
+      "path": "/tmp/ingetrazo-import-ui-integration-r2/stl/picker/kdialog",
+      "size": 82357888,
+      "sha256": "f7b077e87c3bf56c64d3cf3c83c432d9c1795835758de0e87454a3c9a0f9d913",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-import-ui-integration-r2/stl/shared-config/settings.json",
+      "size": 1205,
+      "sha256": "87149e6fd527ad310da600e4d7bb7012095abc607c79338658f76db81117661a",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r3/replay-corrected/native/picker/kdialog",
+      "size": 82381960,
+      "sha256": "dc09430c38e6a43f5164e3fcf6439ac624063466ce7716fb320650f6864ca99c",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r3/replay-corrected/native/shared-config/settings.json",
+      "size": 1387,
+      "sha256": "7cc106a4a5a45451c76f3c9d334275c3a63c7cdd478a7e92e1248d3c905c0ba3",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r3/replay-corrected/source/LICENSE",
+      "size": 35149,
+      "sha256": "3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r3/replay-corrected/source/ascii.stl",
+      "size": 1397,
+      "sha256": "332adb3482b7c5202949a3b83fbb67b3b3966e7219dd7c4f2eca452f964edab7",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r3/replay-corrected/source/capture/invocation.json",
+      "size": 556,
+      "sha256": "dabcd274f145e9ec29827ea9233ceb0ac9722bea57a7e505d73d3ea5c01a61ee",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r3/replay-corrected/source/capture/result.json",
+      "size": 607,
+      "sha256": "de6d6fee9067a8df70fd29c7f10e8765cad11fba536486c4069e8560d8628da4",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r3/replay-corrected/source/capture/stderr.log",
+      "size": 3269,
+      "sha256": "ef878cd8539f1eee73293e9ef08bf9cd77f41d4bf370f8a5e5936a085470c038",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r3/replay-corrected/source/capture/stdout.log",
+      "size": 43,
+      "sha256": "31c67c05993e3bb63dd3fe0c45d5d499a8eb75e8da4d6dbc4954f85dfc083178",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r3/replay-corrected/source/capture-source/scripts/reference-nested-import.py",
+      "size": 4180,
+      "sha256": "1cd756cc1db3389e3922a5c34afe41af29b91061ce30bff77e945d7b346d629b",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r3/replay-corrected/source/capture-source/scripts/reference-stl-import.py",
+      "size": 9601,
+      "sha256": "b2738d950c8a2401c6d3fae700f14f2b013b439dff3ccfb6337dc0ec265a9c5e",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r3/replay-corrected/source/chooser-cancel-input.igz",
+      "size": 3552,
+      "sha256": "491fac56c3cdc59cc90a1a7bad2a25d40b0b1d8445034446903fe3afa679bd6e",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r3/replay-corrected/source/completed-cases.json",
+      "size": 3060997,
+      "sha256": "4513dc410fa0ca6b52d96656f6a0ecaf47088913bdf42e7433ec5cbf9b469f42",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r3/replay-corrected/source/cube.stl",
+      "size": 684,
+      "sha256": "859d674fd7c990c92ee666e23818dc60d75cf8ef666bd452b43b2cc2398c8324",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r3/replay-corrected/source/default-cube-input.igz",
+      "size": 3552,
+      "sha256": "75633b7fe10f721b3a2ac2ec399985a479b6280705aa28c07b67d57a0423484c",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r3/replay-corrected/source/default-cube-saved.igz",
+      "size": 7516,
+      "sha256": "6b1b7f47358442358be4f862694e561327ac62ed0776e5c724e5fa0b508c92e7",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r3/replay-corrected/source/degenerate.stl",
+      "size": 734,
+      "sha256": "f61de258aa81aa18213ac4f471e7d3df498dbd92bf43080ccc26246de6ace33a",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r3/replay-corrected/source/flat-large-editable-input.igz",
+      "size": 3552,
+      "sha256": "8b7f9539665e93a950e390e98bd2b726ab3bee3957f515fc216e35af80f6de0d",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r3/replay-corrected/source/flat-large-editable-saved.igz",
+      "size": 6532,
+      "sha256": "ca7368f4f0f21b73ebc04f1e34ea282bb421d9f6ba9c23cf492d6cb864349d2d",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r3/replay-corrected/source/grid.stl",
+      "size": 63084,
+      "sha256": "e19b27d7f6861eac69a6f61f9635b7f4a305e8877eb0662366bd147eb9b59c6b",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r3/replay-corrected/source/ignored-normal.stl",
+      "size": 684,
+      "sha256": "96684a82ad632b877996b5924323d1e8ed1eeeefb1338f329f5ba5265856b6ce",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r3/replay-corrected/source/large-nested-input.igz",
+      "size": 3552,
+      "sha256": "09d9c70f4b3ce4770c76643a52ce1f922e686f39f507f61b37e607a26037f733",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r3/replay-corrected/source/large-nested-saved.igz",
+      "size": 396807,
+      "sha256": "1b6cfdf9625669989f33eff55b45096248fbece4f2fa008da5231bd528fdff4a",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r3/replay-corrected/source/large-root-input.igz",
+      "size": 3552,
+      "sha256": "e37a881daa1014bacaf4559915b99dac1709926aa7e66da99f0340f4975cb49d",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r3/replay-corrected/source/large-root-saved.igz",
+      "size": 396535,
+      "sha256": "2dfeaddd88b862366efede4917d898f28610de04c5be3dda404bde0d6cd0293a",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r3/replay-corrected/source/large.stl",
+      "size": 20134,
+      "sha256": "9df566c9ef8a8ebd66e39c3c95872ef055141dc867822995d06ed11a3061aa23",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r3/replay-corrected/source/malformed.stl",
+      "size": 43,
+      "sha256": "02e7c50e290f6355abec66fa303e449b03b5d5ca136d8c6eea59f8cf6a903892",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r3/replay-corrected/source/none-cube-input.igz",
+      "size": 3552,
+      "sha256": "96f86442ab834a01831577c755d3eafe1da24cfe21fa8075b455a71497f9d168",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r3/replay-corrected/source/none-cube-saved.igz",
+      "size": 7516,
+      "sha256": "9d9a0cead6a12da9c57a6fcd9b567c06b2b91102580cc54da7168f4558649466",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r3/replay-corrected/source/nonfinite.stl",
+      "size": 134,
+      "sha256": "f15bf35b3e3b6349fb94d4fca092b1385a8be0697b29b5ed8d9d05e55d2c36db",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r3/replay-corrected/source/original-source/core/group.py",
+      "size": 37346,
+      "sha256": "9ba6a20eca241cb4969a545a3784fcff25566166606d5447a18780747d4f11c5",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r3/replay-corrected/source/original-source/core/history.py",
+      "size": 161511,
+      "sha256": "2eb66a1d557099b51383988a7819145289fc4ce2c37fc7de3a92ed35b5830559",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r3/replay-corrected/source/original-source/core/i18n.py",
+      "size": 3089,
+      "sha256": "827c103da11a2e1fd676ba53d32f18b2b11a606a7e51308ed07cb4b71cd61dba",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r3/replay-corrected/source/original-source/core/mesh.py",
+      "size": 74619,
+      "sha256": "5f2c1625e6dd717db029ba39a9de337e75beec06bd0df28a592a8a34875ca22c",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r3/replay-corrected/source/original-source/core/scene.py",
+      "size": 34219,
+      "sha256": "9dfcd32f1ff5b1445180eafd8df36eafb92fa08ed3597bb90eac09554899d2e0",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r3/replay-corrected/source/original-source/core/topology.py",
+      "size": 69455,
+      "sha256": "f16d136706d0a7ce4f5c382c9318126e45639a38d969f13f0196f852df858c0e",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r3/replay-corrected/source/original-source/formats/dae.py",
+      "size": 48406,
+      "sha256": "9082599e1130b1d70af23cf3715a1566b18908f41fc0498d28b235baef7331dc",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r3/replay-corrected/source/original-source/formats/fuse.py",
+      "size": 16553,
+      "sha256": "60f77cdaf8c499b4f8c9ed86940e9a4b937ffae18831f0b56435e1b441f633ae",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r3/replay-corrected/source/original-source/formats/igz.py",
+      "size": 41235,
+      "sha256": "f318d685830c49c2fede7fd5a238ac7a1469ee0b0226cf48cab3751e194a9576",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r3/replay-corrected/source/original-source/formats/stl.py",
+      "size": 11852,
+      "sha256": "07837af511f718194f85498aa13820363617ccbf7aa8da9bdb3575a1759ddd7a",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r3/replay-corrected/source/original-source/tests/test_stl_import.py",
+      "size": 9053,
+      "sha256": "579db3ad1b07bbe582898f90d0a9fd820874555de21339f7b7c7d274cc4b3111",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r3/replay-corrected/source/original-source/views/main_window.py",
+      "size": 286141,
+      "sha256": "ea02be3e439c80731d0f5b5fde3d92d9b3f62e8ad10cd44ad305c3261b7786fa",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r3/replay-corrected/source/original-source/views/viewport.py",
+      "size": 622724,
+      "sha256": "1fb62f55b8f559deb3676924ee69a9a444397faa28c49651111cea44e420c724",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r3/replay-corrected/source/original-stl.json",
+      "size": 3092735,
+      "sha256": "66bf9b5a858ce4a91a1e09fdad7806fea04a8212f4b8c1c1b8e0820cb4c91a17",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r3/replay-corrected/source/original-stl.partial.json",
+      "size": 3060727,
+      "sha256": "749f707641025fd36c9147b16910d0438b1970e800bcc7475093aea00ed08702",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r3/replay-corrected/source/parse-failure-input.igz",
+      "size": 3552,
+      "sha256": "5e622b9036807883df0b498843c1a8f783ec238d6e5185219e52cc2eb3b837a4",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r3/replay-corrected/source/settings/STLProof/STLProof.ini",
+      "size": 70,
+      "sha256": "b4ec3e5591940bda012b6977f5b91cf63ef31d80e253900f14cbeb495a620905",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r3/replay-corrected/source/small-nested-input.igz",
+      "size": 3552,
+      "sha256": "1079fbb8b80fddd8aac7bf799ff3dbc0cabc660975fe017ebc1f35bc4c8bda27",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r3/replay-corrected/source/small-nested-saved.igz",
+      "size": 9392,
+      "sha256": "d92329d69cbefb8e98140807548a453a3912f8420bed5d39b010cf3230be8dce",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r3/replay-corrected/source/solid-binary.stl",
+      "size": 684,
+      "sha256": "deb88f98d6b997ee53c85d93fced978cee3000cbdaee007a4daee9a022279243",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r3/replay-corrected/source/tilted-all-input.igz",
+      "size": 3552,
+      "sha256": "c71237debf9caa76d9ac7532e7a31aa548a149728b24691bb650ffa6a1822fe6",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r3/replay-corrected/source/tilted-all-saved.igz",
+      "size": 4528,
+      "sha256": "ef33fae9d3c939fc89c047f1e03831c7c44288bf84d36e2cb87218a09af63586",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r3/replay-corrected/source/tilted-principal-input.igz",
+      "size": 3552,
+      "sha256": "758fe1710d74770f5f85ff747d5fd57723aadc1d54e45947d0e9121f8048692c",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r3/replay-corrected/source/tilted-principal-saved.igz",
+      "size": 4882,
+      "sha256": "b503638c401f0667001fd95773b7c0d75d61cca0b4e27c43f8cb188747a42b20",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r3/replay-corrected/source/tilted.stl",
+      "size": 184,
+      "sha256": "dca90927819381236dc14c36351dadced8bba80279ea90e4484f3466873fc715",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r3/replay-corrected/source/trailing.stl",
+      "size": 700,
+      "sha256": "b1a2cb37f7b9c4fa8584be4a3fe0eb3430374860dbbfe9de27dabce722d73715",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r3/replay-corrected/source/unit-cancel-input.igz",
+      "size": 3552,
+      "sha256": "49d1e937d0feef8c1a861a236e86df95a520022ec5fc99e970f50e87b062e4eb",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r4/replay/native/picker/kdialog",
+      "size": 82381960,
+      "sha256": "7202b0c5ef4d55277f61d421ac9ca98a2e5460b4ec3f8bc2119e11b624b9456c",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r4/replay/native/shared-config/settings.json",
+      "size": 1287,
+      "sha256": "bf864afa1674dd3c1d5036603887c5fa59978d76126fd61c405bf5787bc638b7",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r4/replay/source/LICENSE",
+      "size": 35149,
+      "sha256": "3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r4/replay/source/ascii.stl",
+      "size": 1397,
+      "sha256": "332adb3482b7c5202949a3b83fbb67b3b3966e7219dd7c4f2eca452f964edab7",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r4/replay/source/capture/invocation.json",
+      "size": 556,
+      "sha256": "dabcd274f145e9ec29827ea9233ceb0ac9722bea57a7e505d73d3ea5c01a61ee",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r4/replay/source/capture/result.json",
+      "size": 607,
+      "sha256": "de6d6fee9067a8df70fd29c7f10e8765cad11fba536486c4069e8560d8628da4",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r4/replay/source/capture/stderr.log",
+      "size": 3269,
+      "sha256": "ef878cd8539f1eee73293e9ef08bf9cd77f41d4bf370f8a5e5936a085470c038",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r4/replay/source/capture/stdout.log",
+      "size": 43,
+      "sha256": "31c67c05993e3bb63dd3fe0c45d5d499a8eb75e8da4d6dbc4954f85dfc083178",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r4/replay/source/capture-source/scripts/reference-nested-import.py",
+      "size": 4180,
+      "sha256": "1cd756cc1db3389e3922a5c34afe41af29b91061ce30bff77e945d7b346d629b",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r4/replay/source/capture-source/scripts/reference-stl-import.py",
+      "size": 9601,
+      "sha256": "b2738d950c8a2401c6d3fae700f14f2b013b439dff3ccfb6337dc0ec265a9c5e",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r4/replay/source/chooser-cancel-input.igz",
+      "size": 3552,
+      "sha256": "491fac56c3cdc59cc90a1a7bad2a25d40b0b1d8445034446903fe3afa679bd6e",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r4/replay/source/completed-cases.json",
+      "size": 3060997,
+      "sha256": "4513dc410fa0ca6b52d96656f6a0ecaf47088913bdf42e7433ec5cbf9b469f42",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r4/replay/source/cube.stl",
+      "size": 684,
+      "sha256": "859d674fd7c990c92ee666e23818dc60d75cf8ef666bd452b43b2cc2398c8324",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r4/replay/source/default-cube-input.igz",
+      "size": 3552,
+      "sha256": "75633b7fe10f721b3a2ac2ec399985a479b6280705aa28c07b67d57a0423484c",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r4/replay/source/default-cube-saved.igz",
+      "size": 7516,
+      "sha256": "6b1b7f47358442358be4f862694e561327ac62ed0776e5c724e5fa0b508c92e7",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r4/replay/source/degenerate.stl",
+      "size": 734,
+      "sha256": "f61de258aa81aa18213ac4f471e7d3df498dbd92bf43080ccc26246de6ace33a",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r4/replay/source/flat-large-editable-input.igz",
+      "size": 3552,
+      "sha256": "8b7f9539665e93a950e390e98bd2b726ab3bee3957f515fc216e35af80f6de0d",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r4/replay/source/flat-large-editable-saved.igz",
+      "size": 6532,
+      "sha256": "ca7368f4f0f21b73ebc04f1e34ea282bb421d9f6ba9c23cf492d6cb864349d2d",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r4/replay/source/grid.stl",
+      "size": 63084,
+      "sha256": "e19b27d7f6861eac69a6f61f9635b7f4a305e8877eb0662366bd147eb9b59c6b",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r4/replay/source/ignored-normal.stl",
+      "size": 684,
+      "sha256": "96684a82ad632b877996b5924323d1e8ed1eeeefb1338f329f5ba5265856b6ce",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r4/replay/source/large-nested-input.igz",
+      "size": 3552,
+      "sha256": "09d9c70f4b3ce4770c76643a52ce1f922e686f39f507f61b37e607a26037f733",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r4/replay/source/large-nested-saved.igz",
+      "size": 396807,
+      "sha256": "1b6cfdf9625669989f33eff55b45096248fbece4f2fa008da5231bd528fdff4a",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r4/replay/source/large-root-input.igz",
+      "size": 3552,
+      "sha256": "e37a881daa1014bacaf4559915b99dac1709926aa7e66da99f0340f4975cb49d",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r4/replay/source/large-root-saved.igz",
+      "size": 396535,
+      "sha256": "2dfeaddd88b862366efede4917d898f28610de04c5be3dda404bde0d6cd0293a",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r4/replay/source/large.stl",
+      "size": 20134,
+      "sha256": "9df566c9ef8a8ebd66e39c3c95872ef055141dc867822995d06ed11a3061aa23",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r4/replay/source/malformed.stl",
+      "size": 43,
+      "sha256": "02e7c50e290f6355abec66fa303e449b03b5d5ca136d8c6eea59f8cf6a903892",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r4/replay/source/none-cube-input.igz",
+      "size": 3552,
+      "sha256": "96f86442ab834a01831577c755d3eafe1da24cfe21fa8075b455a71497f9d168",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r4/replay/source/none-cube-saved.igz",
+      "size": 7516,
+      "sha256": "9d9a0cead6a12da9c57a6fcd9b567c06b2b91102580cc54da7168f4558649466",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r4/replay/source/nonfinite.stl",
+      "size": 134,
+      "sha256": "f15bf35b3e3b6349fb94d4fca092b1385a8be0697b29b5ed8d9d05e55d2c36db",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r4/replay/source/original-source/core/group.py",
+      "size": 37346,
+      "sha256": "9ba6a20eca241cb4969a545a3784fcff25566166606d5447a18780747d4f11c5",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r4/replay/source/original-source/core/history.py",
+      "size": 161511,
+      "sha256": "2eb66a1d557099b51383988a7819145289fc4ce2c37fc7de3a92ed35b5830559",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r4/replay/source/original-source/core/i18n.py",
+      "size": 3089,
+      "sha256": "827c103da11a2e1fd676ba53d32f18b2b11a606a7e51308ed07cb4b71cd61dba",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r4/replay/source/original-source/core/mesh.py",
+      "size": 74619,
+      "sha256": "5f2c1625e6dd717db029ba39a9de337e75beec06bd0df28a592a8a34875ca22c",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r4/replay/source/original-source/core/scene.py",
+      "size": 34219,
+      "sha256": "9dfcd32f1ff5b1445180eafd8df36eafb92fa08ed3597bb90eac09554899d2e0",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r4/replay/source/original-source/core/topology.py",
+      "size": 69455,
+      "sha256": "f16d136706d0a7ce4f5c382c9318126e45639a38d969f13f0196f852df858c0e",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r4/replay/source/original-source/formats/dae.py",
+      "size": 48406,
+      "sha256": "9082599e1130b1d70af23cf3715a1566b18908f41fc0498d28b235baef7331dc",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r4/replay/source/original-source/formats/fuse.py",
+      "size": 16553,
+      "sha256": "60f77cdaf8c499b4f8c9ed86940e9a4b937ffae18831f0b56435e1b441f633ae",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r4/replay/source/original-source/formats/igz.py",
+      "size": 41235,
+      "sha256": "f318d685830c49c2fede7fd5a238ac7a1469ee0b0226cf48cab3751e194a9576",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r4/replay/source/original-source/formats/stl.py",
+      "size": 11852,
+      "sha256": "07837af511f718194f85498aa13820363617ccbf7aa8da9bdb3575a1759ddd7a",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r4/replay/source/original-source/tests/test_stl_import.py",
+      "size": 9053,
+      "sha256": "579db3ad1b07bbe582898f90d0a9fd820874555de21339f7b7c7d274cc4b3111",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r4/replay/source/original-source/views/main_window.py",
+      "size": 286141,
+      "sha256": "ea02be3e439c80731d0f5b5fde3d92d9b3f62e8ad10cd44ad305c3261b7786fa",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r4/replay/source/original-source/views/viewport.py",
+      "size": 622724,
+      "sha256": "1fb62f55b8f559deb3676924ee69a9a444397faa28c49651111cea44e420c724",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r4/replay/source/original-stl.json",
+      "size": 3092735,
+      "sha256": "66bf9b5a858ce4a91a1e09fdad7806fea04a8212f4b8c1c1b8e0820cb4c91a17",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r4/replay/source/original-stl.partial.json",
+      "size": 3060727,
+      "sha256": "749f707641025fd36c9147b16910d0438b1970e800bcc7475093aea00ed08702",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r4/replay/source/parse-failure-input.igz",
+      "size": 3552,
+      "sha256": "5e622b9036807883df0b498843c1a8f783ec238d6e5185219e52cc2eb3b837a4",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r4/replay/source/settings/STLProof/STLProof.ini",
+      "size": 70,
+      "sha256": "b4ec3e5591940bda012b6977f5b91cf63ef31d80e253900f14cbeb495a620905",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r4/replay/source/small-nested-input.igz",
+      "size": 3552,
+      "sha256": "1079fbb8b80fddd8aac7bf799ff3dbc0cabc660975fe017ebc1f35bc4c8bda27",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r4/replay/source/small-nested-saved.igz",
+      "size": 9392,
+      "sha256": "d92329d69cbefb8e98140807548a453a3912f8420bed5d39b010cf3230be8dce",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r4/replay/source/solid-binary.stl",
+      "size": 684,
+      "sha256": "deb88f98d6b997ee53c85d93fced978cee3000cbdaee007a4daee9a022279243",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r4/replay/source/tilted-all-input.igz",
+      "size": 3552,
+      "sha256": "c71237debf9caa76d9ac7532e7a31aa548a149728b24691bb650ffa6a1822fe6",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r4/replay/source/tilted-all-saved.igz",
+      "size": 4528,
+      "sha256": "ef33fae9d3c939fc89c047f1e03831c7c44288bf84d36e2cb87218a09af63586",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r4/replay/source/tilted-principal-input.igz",
+      "size": 3552,
+      "sha256": "758fe1710d74770f5f85ff747d5fd57723aadc1d54e45947d0e9121f8048692c",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r4/replay/source/tilted-principal-saved.igz",
+      "size": 4882,
+      "sha256": "b503638c401f0667001fd95773b7c0d75d61cca0b4e27c43f8cb188747a42b20",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r4/replay/source/tilted.stl",
+      "size": 184,
+      "sha256": "dca90927819381236dc14c36351dadced8bba80279ea90e4484f3466873fc715",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r4/replay/source/trailing.stl",
+      "size": 700,
+      "sha256": "b1a2cb37f7b9c4fa8584be4a3fe0eb3430374860dbbfe9de27dabce722d73715",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r4/replay/source/unit-cancel-input.igz",
+      "size": 3552,
+      "sha256": "49d1e937d0feef8c1a861a236e86df95a520022ec5fc99e970f50e87b062e4eb",
+      "reason": "source/state/cache/picker excluded; separate authentication required"
+    }
+  ],
+  "candidate_roots": [
+    "/tmp/ingetrazo-import-ui-integration-r2",
+    "/tmp/ingetrazo-stl-integration-r3",
+    "/tmp/ingetrazo-stl-integration-r4"
+  ],
+  "preserve": [
+    "worktrees",
+    "shared target",
+    "canonical source/proof",
+    "original Python"
+  ],
+  "rule": "Root authenticates included raw files against archive and source copies against canonical source. State/cache/picker excluded; no blanket purge of unmapped files."
+}

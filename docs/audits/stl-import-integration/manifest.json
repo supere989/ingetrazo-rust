@@ -1,0 +1,695 @@
+{
+  "archive_sha256": "98deac289271a6ab14bf50909fc116c8401e362357cfd2248adb560d5429d8ad",
+  "members": {
+    "cleanup-candidates.json": {
+      "size": 48291,
+      "sha256": "bf619f99caeb3d46fc600a18398db1a39140a9285e727c49d213d8885c7a10d8"
+    },
+    "final-receipt.json": {
+      "size": 21282,
+      "sha256": "c1b201701ae56fbe1af3d30ce26d4aa1ea7867bebab057a3d1168251aba3f0e0"
+    },
+    "git-sources/1cd756cc1db3389e3922a5c34afe41af29b91061ce30bff77e945d7b346d629b/scripts/reference-nested-import.py": {
+      "size": 4180,
+      "sha256": "1cd756cc1db3389e3922a5c34afe41af29b91061ce30bff77e945d7b346d629b"
+    },
+    "git-sources/28b54a885788eef8a9caeae4fb182e6bd83c982eeb5ede1d195b2b14bd5ec048/crates/ingetrazo-gui/src/stl_import.rs": {
+      "size": 11628,
+      "sha256": "28b54a885788eef8a9caeae4fb182e6bd83c982eeb5ede1d195b2b14bd5ec048"
+    },
+    "git-sources/36a6e430aad63245f417346d80479ce61a7e3e2bc7e564fdfc01c5c3c5ec5c4c/crates/ingetrazo-core/src/groups.rs": {
+      "size": 8580,
+      "sha256": "36a6e430aad63245f417346d80479ce61a7e3e2bc7e564fdfc01c5c3c5ec5c4c"
+    },
+    "git-sources/39824687a725c427f241fe91c30db618a07461f98cec22ea4606841e16a7f8e6/scripts/replay-stl-import.py": {
+      "size": 3179,
+      "sha256": "39824687a725c427f241fe91c30db618a07461f98cec22ea4606841e16a7f8e6"
+    },
+    "git-sources/40bbb4d8844e1ce7506e7c6682d52d2b8bcca5c8b26cb5b5c83037e1c95469ec/crates/ingetrazo-gui/examples/stl_import_workflows.rs": {
+      "size": 15476,
+      "sha256": "40bbb4d8844e1ce7506e7c6682d52d2b8bcca5c8b26cb5b5c83037e1c95469ec"
+    },
+    "git-sources/4aff9c19d16778357be4a3a4b3e99bfb1e71508b64612f31794ff9ada46eac77/crates/ingetrazo-gui/examples/stl_import_workflows.rs": {
+      "size": 18951,
+      "sha256": "4aff9c19d16778357be4a3a4b3e99bfb1e71508b64612f31794ff9ada46eac77"
+    },
+    "git-sources/4ea631a799beb785955585f20b726a1826509a4498d7533c0ba54aa1dfa17aa3/crates/ingetrazo-gui/src/import_units.rs": {
+      "size": 24709,
+      "sha256": "4ea631a799beb785955585f20b726a1826509a4498d7533c0ba54aa1dfa17aa3"
+    },
+    "git-sources/4ecb02fc3324937d0bf8be8aeb0e4e69a5f5517e68532afb2639bff8cced7ab9/crates/ingetrazo-core/src/heal.rs": {
+      "size": 24285,
+      "sha256": "4ecb02fc3324937d0bf8be8aeb0e4e69a5f5517e68532afb2639bff8cced7ab9"
+    },
+    "git-sources/653da607f67254da593d8497f8da704191f0cc860db3b46bba47d8d387583af1/crates/ingetrazo-gui/examples/stl_import_workflows.rs": {
+      "size": 19229,
+      "sha256": "653da607f67254da593d8497f8da704191f0cc860db3b46bba47d8d387583af1"
+    },
+    "git-sources/695acd2cc8ff66e75f2a96a61986b81ef68908200939d94218a8449854eb17ed/crates/ingetrazo-core/src/simplify.rs": {
+      "size": 23171,
+      "sha256": "695acd2cc8ff66e75f2a96a61986b81ef68908200939d94218a8449854eb17ed"
+    },
+    "git-sources/912d2f2241f2efe49d085664af7417583397d77254001a26b131004e644f416b/docs/audits/stl-import/source-manifest.json": {
+      "size": 11947,
+      "sha256": "912d2f2241f2efe49d085664af7417583397d77254001a26b131004e644f416b"
+    },
+    "git-sources/9d326375c6433462e6396be466d66316554f82ac7cc3aa36c2a58553a8764d96/crates/ingetrazo-gui/src/lib.rs": {
+      "size": 6277,
+      "sha256": "9d326375c6433462e6396be466d66316554f82ac7cc3aa36c2a58553a8764d96"
+    },
+    "git-sources/a333efd0a8146175cc1caf18e92f2f088ec96331e8e8a2db8d5e8aa0e0c3b774/crates/ingetrazo-gui/src/menu.rs": {
+      "size": 35939,
+      "sha256": "a333efd0a8146175cc1caf18e92f2f088ec96331e8e8a2db8d5e8aa0e0c3b774"
+    },
+    "git-sources/b2738d950c8a2401c6d3fae700f14f2b013b439dff3ccfb6337dc0ec265a9c5e/scripts/reference-stl-import.py": {
+      "size": 9601,
+      "sha256": "b2738d950c8a2401c6d3fae700f14f2b013b439dff3ccfb6337dc0ec265a9c5e"
+    },
+    "git-sources/bf09324a2fc65832d0ad4e9b74846e8bb14aa111378736be0b1421d082a80434/crates/ingetrazo-formats/src/stl.rs": {
+      "size": 16848,
+      "sha256": "bf09324a2fc65832d0ad4e9b74846e8bb14aa111378736be0b1421d082a80434"
+    },
+    "git-sources/c73a6b1a49b43c5660dd4a25dcc77476d73c2f7afefb5c27dd7001e5051f07be/crates/ingetrazo-core/src/planar.rs": {
+      "size": 31972,
+      "sha256": "c73a6b1a49b43c5660dd4a25dcc77476d73c2f7afefb5c27dd7001e5051f07be"
+    },
+    "git-sources/e4ea417692faf7713ecb066c1606c5125e22f9014cf9a9ea3aa7860fd29fbce0/crates/ingetrazo-core/src/mesh.rs": {
+      "size": 27957,
+      "sha256": "e4ea417692faf7713ecb066c1606c5125e22f9014cf9a9ea3aa7860fd29fbce0"
+    },
+    "git-sources/e7277a8e5c75b9b6768bcb664d6b14bdf6c4d84624df7a8a671d7259907177cb/crates/ingetrazo-gui/src/app.rs": {
+      "size": 98977,
+      "sha256": "e7277a8e5c75b9b6768bcb664d6b14bdf6c4d84624df7a8a671d7259907177cb"
+    },
+    "git-sources/eb5abab0ddaf53e2cdd1a5dbefabe3d8f73d2630479a04b4df60f883cf4c6b61/scripts/check-stl-import.py": {
+      "size": 3495,
+      "sha256": "eb5abab0ddaf53e2cdd1a5dbefabe3d8f73d2630479a04b4df60f883cf4c6b61"
+    },
+    "git-sources/f6ac0dfe4152e5e5187a33db9d2fdf755155e6069742511d9ff8c33c6b65a0cf/scripts/reference-stl-import-reopens.py": {
+      "size": 2051,
+      "sha256": "f6ac0dfe4152e5e5187a33db9d2fdf755155e6069742511d9ff8c33c6b65a0cf"
+    },
+    "git-sources/faf008d6a043d771dda3a95b3432a247ccc364f866eaea8126713162dd97b573/crates/ingetrazo-gui/src/stl_import.rs": {
+      "size": 10956,
+      "sha256": "faf008d6a043d771dda3a95b3432a247ccc364f866eaea8126713162dd97b573"
+    },
+    "r2/build.log": {
+      "size": 28339,
+      "sha256": "ca9aa63a3f3f8c463b69f3447de464ff955e2c6ba469f62d4bf6041b1cd7e837"
+    },
+    "r2/result.json": {
+      "size": 2124,
+      "sha256": "fd0c3dc6e641783d7deff92b564ebd4fd766effe8bc930688743ab8c699d1dd2"
+    },
+    "r2/stl-bounded-abort.json": {
+      "size": 431,
+      "sha256": "6d85d35f1ca27c6d78de5e19dbeb2b662e6d4c0331965b6253c7eb4286b1c7f9"
+    },
+    "r2/stl-format.log": {
+      "size": 14610,
+      "sha256": "12a431ab9e3cf9853e6d2c925f02192e2a4b823bbc02af3e38c420b048dd6675"
+    },
+    "r2/stl-native.log": {
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "r2/stl/default-cube-saved.igz": {
+      "size": 7517,
+      "sha256": "4a8d5921ecf198fe4f540838f3741dd0784c6441dd81395b74ef009bdf147983"
+    },
+    "r2/stl/flat-large-editable-saved.igz": {
+      "size": 6533,
+      "sha256": "c70631c19d8dddc370ba86a55791b982f483727d55433c9435305dc699ee0f0e"
+    },
+    "r2/stl/large-nested-saved.igz": {
+      "size": 397302,
+      "sha256": "69965d5d40ce48e8e60d927b57a7cc0f2e6b220445c700f50c20e77c25d258a1"
+    },
+    "r2/stl/large-root-saved.igz": {
+      "size": 397028,
+      "sha256": "e7c7721317573db67a5354776f45e70271f7a691e27da7a2033cec9497244f90"
+    },
+    "r2/stl/native-stl.partial.json": {
+      "size": 3043392,
+      "sha256": "893151a31d68960665f87b76ce1296d0b69893db26c79a2c8fff83fe023a9397"
+    },
+    "r2/stl/none-cube-saved.igz": {
+      "size": 7517,
+      "sha256": "88983d8fde0f6ce558b9aec9282b1f5c5c7375f3062fc0c809bd74f7dfa58a46"
+    },
+    "r2/stl/small-nested-saved.igz": {
+      "size": 10430,
+      "sha256": "8788476d03b2c0c4d80941ba8c045bd4144e38a0123a126d0b409c2d8aa38a2a"
+    },
+    "r2/stl/tilted-all-saved.igz": {
+      "size": 4529,
+      "sha256": "8238f91fd869a88133de7bdb38671727f4882605de6e5735bbfd7343c9f636df"
+    },
+    "r2/stl/tilted-principal-saved.igz": {
+      "size": 4883,
+      "sha256": "d4937fa7d610f28d03be199744e8bdf9115c5abbe8b226cf0f185e5c6037358d"
+    },
+    "r3/build.log": {
+      "size": 27287,
+      "sha256": "683126b4d961a12137361f014ff3fa0a3c5193458443f21a63409ec08db400da"
+    },
+    "r3/replay-corrected/checker.log": {
+      "size": 284,
+      "sha256": "7b5b4ff0bad37a9a9449d634f2ea737773a15bd118dd4aa46ab419b5f9b95c57"
+    },
+    "r3/replay-corrected/comparison.json": {
+      "size": 300,
+      "sha256": "b9490a8e5f8f9149bd384330b261b78800d1b93c731e960cae24d54feb4820e1"
+    },
+    "r3/replay-corrected/native.log": {
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "r3/replay-corrected/native/default-cube-saved.igz": {
+      "size": 7517,
+      "sha256": "4a8d5921ecf198fe4f540838f3741dd0784c6441dd81395b74ef009bdf147983"
+    },
+    "r3/replay-corrected/native/flat-large-editable-saved.igz": {
+      "size": 6533,
+      "sha256": "c70631c19d8dddc370ba86a55791b982f483727d55433c9435305dc699ee0f0e"
+    },
+    "r3/replay-corrected/native/large-nested-saved.igz": {
+      "size": 397302,
+      "sha256": "005e81c1d6f6a4a8c3f2dcc9f035e6f1d758e5f69f33a5d9e88bc2e3a166487e"
+    },
+    "r3/replay-corrected/native/large-root-saved.igz": {
+      "size": 397028,
+      "sha256": "e1f29bfb80194f59017dce9c6b7092df5986d5f0379b295e92ee054cdd987a75"
+    },
+    "r3/replay-corrected/native/native-stl.json": {
+      "size": 3090801,
+      "sha256": "56f7897325babf94305da625889434d60a86e52137aade191d6c95d5e5f657fc"
+    },
+    "r3/replay-corrected/native/native-stl.partial.json": {
+      "size": 3057468,
+      "sha256": "81c9b8f1dd2b98214020a6e3db905c7d661fca82dcda83e928a74659a05b7775"
+    },
+    "r3/replay-corrected/native/none-cube-saved.igz": {
+      "size": 7517,
+      "sha256": "88983d8fde0f6ce558b9aec9282b1f5c5c7375f3062fc0c809bd74f7dfa58a46"
+    },
+    "r3/replay-corrected/native/phase-timings.jsonl": {
+      "size": 26381,
+      "sha256": "6fafbc319e54012b87b8ff2063b0690f3fd251d78259cf5029e75e0af7245e20"
+    },
+    "r3/replay-corrected/native/reopens-stl.json": {
+      "size": 2646423,
+      "sha256": "00bfb32cb15e90761410269dcf0b83fedb85d674d4a9dea4469073d293922f57"
+    },
+    "r3/replay-corrected/native/small-nested-saved.igz": {
+      "size": 10430,
+      "sha256": "8788476d03b2c0c4d80941ba8c045bd4144e38a0123a126d0b409c2d8aa38a2a"
+    },
+    "r3/replay-corrected/native/tilted-all-saved.igz": {
+      "size": 4529,
+      "sha256": "8238f91fd869a88133de7bdb38671727f4882605de6e5735bbfd7343c9f636df"
+    },
+    "r3/replay-corrected/native/tilted-principal-saved.igz": {
+      "size": 4883,
+      "sha256": "d4937fa7d610f28d03be199744e8bdf9115c5abbe8b226cf0f185e5c6037358d"
+    },
+    "r3/replay-corrected/reader.log": {
+      "size": 27,
+      "sha256": "47972b843dc76becd74317b12809926ceb3e5e7aebf08afbb9d478e22d954acc"
+    },
+    "r3/replay-corrected/result.json": {
+      "size": 1489,
+      "sha256": "006ccc6949b30133aada05b570e9a1c54b498311b8873baef8454ee1a44b42cd"
+    },
+    "r3/replay.log": {
+      "size": 117,
+      "sha256": "f5761712cb5e7a270000a82271d0ef2a1b96459575b1187450a43a122399cb8f"
+    },
+    "r3/replay/result.json": {
+      "size": 127,
+      "sha256": "3ac388cf5afb4852823078619f45ba670c547b5e3bec72c5d09591c1d209a70b"
+    },
+    "r3/result.json": {
+      "size": 695,
+      "sha256": "2dd02518f0e2710beb1d8c1bb58aae623820e8f27b334b66edd3f498b2cdcb68"
+    },
+    "r4/build.log": {
+      "size": 27287,
+      "sha256": "cced40667af57d76dde066708dfebaff3c0a116dee43ccde3b8c91308da9c76f"
+    },
+    "r4/replay.log": {
+      "size": 1192,
+      "sha256": "71172be866a52280ace3502917545bac09d27aa602d968a792cd40910e6b6a00"
+    },
+    "r4/replay/checker.log": {
+      "size": 284,
+      "sha256": "7b5b4ff0bad37a9a9449d634f2ea737773a15bd118dd4aa46ab419b5f9b95c57"
+    },
+    "r4/replay/comparison.json": {
+      "size": 300,
+      "sha256": "b9490a8e5f8f9149bd384330b261b78800d1b93c731e960cae24d54feb4820e1"
+    },
+    "r4/replay/native.log": {
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "r4/replay/native/default-cube-saved.igz": {
+      "size": 7517,
+      "sha256": "4a8d5921ecf198fe4f540838f3741dd0784c6441dd81395b74ef009bdf147983"
+    },
+    "r4/replay/native/flat-large-editable-saved.igz": {
+      "size": 6533,
+      "sha256": "c70631c19d8dddc370ba86a55791b982f483727d55433c9435305dc699ee0f0e"
+    },
+    "r4/replay/native/large-nested-saved.igz": {
+      "size": 397302,
+      "sha256": "23c0f52915df35fddd4b65a8dcc465f664320808244219ccdde5673e272bc218"
+    },
+    "r4/replay/native/large-root-saved.igz": {
+      "size": 397028,
+      "sha256": "98c6b823b272644ee3c2719ed0074f2ff6e3553baff412c19772f65084d159a5"
+    },
+    "r4/replay/native/native-stl.json": {
+      "size": 3090801,
+      "sha256": "56f7897325babf94305da625889434d60a86e52137aade191d6c95d5e5f657fc"
+    },
+    "r4/replay/native/native-stl.partial.json": {
+      "size": 3057468,
+      "sha256": "81c9b8f1dd2b98214020a6e3db905c7d661fca82dcda83e928a74659a05b7775"
+    },
+    "r4/replay/native/none-cube-saved.igz": {
+      "size": 7517,
+      "sha256": "88983d8fde0f6ce558b9aec9282b1f5c5c7375f3062fc0c809bd74f7dfa58a46"
+    },
+    "r4/replay/native/phase-timings.jsonl": {
+      "size": 26148,
+      "sha256": "6f61801c981da9bc6caf84becffb648d9aec417028503e272713e12a751b550f"
+    },
+    "r4/replay/native/reopens-stl.json": {
+      "size": 2646423,
+      "sha256": "00bfb32cb15e90761410269dcf0b83fedb85d674d4a9dea4469073d293922f57"
+    },
+    "r4/replay/native/small-nested-saved.igz": {
+      "size": 10430,
+      "sha256": "8788476d03b2c0c4d80941ba8c045bd4144e38a0123a126d0b409c2d8aa38a2a"
+    },
+    "r4/replay/native/tilted-all-saved.igz": {
+      "size": 4529,
+      "sha256": "8238f91fd869a88133de7bdb38671727f4882605de6e5735bbfd7343c9f636df"
+    },
+    "r4/replay/native/tilted-principal-saved.igz": {
+      "size": 4883,
+      "sha256": "d4937fa7d610f28d03be199744e8bdf9115c5abbe8b226cf0f185e5c6037358d"
+    },
+    "r4/replay/reader.log": {
+      "size": 27,
+      "sha256": "47972b843dc76becd74317b12809926ceb3e5e7aebf08afbb9d478e22d954acc"
+    },
+    "r4/replay/result.json": {
+      "size": 1416,
+      "sha256": "651f7740b53ecfbb2fc760522b1d9cd55c193d01867077c7f8adbbf2470496a1"
+    },
+    "r4/result.json": {
+      "size": 695,
+      "sha256": "3ab664f0a150280a9922f28a4f5f1f0526a1c80dedac073cd63f3088b529587f"
+    }
+  },
+  "runtime_commit": "506ba2aca533176ab545e0fe5c8a2a06fc75e61c",
+  "binary_sha256": "7202b0c5ef4d55277f61d421ac9ca98a2e5460b4ec3f8bc2119e11b624b9456c",
+  "source_archive_sha256": "9bdc59e3239e6a215f5a32437a74025d9c96910448764f51385818ebd8cebdf5",
+  "git_bindings": [
+    {
+      "path": "crates/ingetrazo-formats/src/stl.rs",
+      "commit": "af9e26831dcca578ee5e04549fb1066a3243925c",
+      "size": 16848,
+      "sha256": "bf09324a2fc65832d0ad4e9b74846e8bb14aa111378736be0b1421d082a80434",
+      "member": "git-sources/bf09324a2fc65832d0ad4e9b74846e8bb14aa111378736be0b1421d082a80434/crates/ingetrazo-formats/src/stl.rs"
+    },
+    {
+      "path": "crates/ingetrazo-core/src/simplify.rs",
+      "commit": "af9e26831dcca578ee5e04549fb1066a3243925c",
+      "size": 23171,
+      "sha256": "695acd2cc8ff66e75f2a96a61986b81ef68908200939d94218a8449854eb17ed",
+      "member": "git-sources/695acd2cc8ff66e75f2a96a61986b81ef68908200939d94218a8449854eb17ed/crates/ingetrazo-core/src/simplify.rs"
+    },
+    {
+      "path": "crates/ingetrazo-core/src/planar.rs",
+      "commit": "af9e26831dcca578ee5e04549fb1066a3243925c",
+      "size": 31972,
+      "sha256": "c73a6b1a49b43c5660dd4a25dcc77476d73c2f7afefb5c27dd7001e5051f07be",
+      "member": "git-sources/c73a6b1a49b43c5660dd4a25dcc77476d73c2f7afefb5c27dd7001e5051f07be/crates/ingetrazo-core/src/planar.rs"
+    },
+    {
+      "path": "crates/ingetrazo-core/src/heal.rs",
+      "commit": "af9e26831dcca578ee5e04549fb1066a3243925c",
+      "size": 24285,
+      "sha256": "4ecb02fc3324937d0bf8be8aeb0e4e69a5f5517e68532afb2639bff8cced7ab9",
+      "member": "git-sources/4ecb02fc3324937d0bf8be8aeb0e4e69a5f5517e68532afb2639bff8cced7ab9/crates/ingetrazo-core/src/heal.rs"
+    },
+    {
+      "path": "crates/ingetrazo-core/src/mesh.rs",
+      "commit": "af9e26831dcca578ee5e04549fb1066a3243925c",
+      "size": 27957,
+      "sha256": "e4ea417692faf7713ecb066c1606c5125e22f9014cf9a9ea3aa7860fd29fbce0",
+      "member": "git-sources/e4ea417692faf7713ecb066c1606c5125e22f9014cf9a9ea3aa7860fd29fbce0/crates/ingetrazo-core/src/mesh.rs"
+    },
+    {
+      "path": "crates/ingetrazo-core/src/groups.rs",
+      "commit": "af9e26831dcca578ee5e04549fb1066a3243925c",
+      "size": 8580,
+      "sha256": "36a6e430aad63245f417346d80479ce61a7e3e2bc7e564fdfc01c5c3c5ec5c4c",
+      "member": "git-sources/36a6e430aad63245f417346d80479ce61a7e3e2bc7e564fdfc01c5c3c5ec5c4c/crates/ingetrazo-core/src/groups.rs"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/stl_import.rs",
+      "commit": "af9e26831dcca578ee5e04549fb1066a3243925c",
+      "size": 10956,
+      "sha256": "faf008d6a043d771dda3a95b3432a247ccc364f866eaea8126713162dd97b573",
+      "member": "git-sources/faf008d6a043d771dda3a95b3432a247ccc364f866eaea8126713162dd97b573/crates/ingetrazo-gui/src/stl_import.rs"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/app.rs",
+      "commit": "af9e26831dcca578ee5e04549fb1066a3243925c",
+      "size": 98977,
+      "sha256": "e7277a8e5c75b9b6768bcb664d6b14bdf6c4d84624df7a8a671d7259907177cb",
+      "member": "git-sources/e7277a8e5c75b9b6768bcb664d6b14bdf6c4d84624df7a8a671d7259907177cb/crates/ingetrazo-gui/src/app.rs"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/import_units.rs",
+      "commit": "af9e26831dcca578ee5e04549fb1066a3243925c",
+      "size": 24709,
+      "sha256": "4ea631a799beb785955585f20b726a1826509a4498d7533c0ba54aa1dfa17aa3",
+      "member": "git-sources/4ea631a799beb785955585f20b726a1826509a4498d7533c0ba54aa1dfa17aa3/crates/ingetrazo-gui/src/import_units.rs"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/lib.rs",
+      "commit": "af9e26831dcca578ee5e04549fb1066a3243925c",
+      "size": 6277,
+      "sha256": "9d326375c6433462e6396be466d66316554f82ac7cc3aa36c2a58553a8764d96",
+      "member": "git-sources/9d326375c6433462e6396be466d66316554f82ac7cc3aa36c2a58553a8764d96/crates/ingetrazo-gui/src/lib.rs"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/menu.rs",
+      "commit": "af9e26831dcca578ee5e04549fb1066a3243925c",
+      "size": 35939,
+      "sha256": "a333efd0a8146175cc1caf18e92f2f088ec96331e8e8a2db8d5e8aa0e0c3b774",
+      "member": "git-sources/a333efd0a8146175cc1caf18e92f2f088ec96331e8e8a2db8d5e8aa0e0c3b774/crates/ingetrazo-gui/src/menu.rs"
+    },
+    {
+      "path": "crates/ingetrazo-gui/examples/stl_import_workflows.rs",
+      "commit": "af9e26831dcca578ee5e04549fb1066a3243925c",
+      "size": 15476,
+      "sha256": "40bbb4d8844e1ce7506e7c6682d52d2b8bcca5c8b26cb5b5c83037e1c95469ec",
+      "member": "git-sources/40bbb4d8844e1ce7506e7c6682d52d2b8bcca5c8b26cb5b5c83037e1c95469ec/crates/ingetrazo-gui/examples/stl_import_workflows.rs"
+    },
+    {
+      "path": "scripts/check-stl-import.py",
+      "commit": "af9e26831dcca578ee5e04549fb1066a3243925c",
+      "size": 3495,
+      "sha256": "eb5abab0ddaf53e2cdd1a5dbefabe3d8f73d2630479a04b4df60f883cf4c6b61",
+      "member": "git-sources/eb5abab0ddaf53e2cdd1a5dbefabe3d8f73d2630479a04b4df60f883cf4c6b61/scripts/check-stl-import.py"
+    },
+    {
+      "path": "scripts/reference-stl-import-reopens.py",
+      "commit": "af9e26831dcca578ee5e04549fb1066a3243925c",
+      "size": 2051,
+      "sha256": "f6ac0dfe4152e5e5187a33db9d2fdf755155e6069742511d9ff8c33c6b65a0cf",
+      "member": "git-sources/f6ac0dfe4152e5e5187a33db9d2fdf755155e6069742511d9ff8c33c6b65a0cf/scripts/reference-stl-import-reopens.py"
+    },
+    {
+      "path": "scripts/reference-stl-import.py",
+      "commit": "af9e26831dcca578ee5e04549fb1066a3243925c",
+      "size": 9601,
+      "sha256": "b2738d950c8a2401c6d3fae700f14f2b013b439dff3ccfb6337dc0ec265a9c5e",
+      "member": "git-sources/b2738d950c8a2401c6d3fae700f14f2b013b439dff3ccfb6337dc0ec265a9c5e/scripts/reference-stl-import.py"
+    },
+    {
+      "path": "scripts/reference-nested-import.py",
+      "commit": "af9e26831dcca578ee5e04549fb1066a3243925c",
+      "size": 4180,
+      "sha256": "1cd756cc1db3389e3922a5c34afe41af29b91061ce30bff77e945d7b346d629b",
+      "member": "git-sources/1cd756cc1db3389e3922a5c34afe41af29b91061ce30bff77e945d7b346d629b/scripts/reference-nested-import.py"
+    },
+    {
+      "path": "crates/ingetrazo-formats/src/stl.rs",
+      "commit": "e29fcb9fa6bbb2289b1164b5df1b7a3c7400e866",
+      "size": 16848,
+      "sha256": "bf09324a2fc65832d0ad4e9b74846e8bb14aa111378736be0b1421d082a80434",
+      "member": "git-sources/bf09324a2fc65832d0ad4e9b74846e8bb14aa111378736be0b1421d082a80434/crates/ingetrazo-formats/src/stl.rs"
+    },
+    {
+      "path": "crates/ingetrazo-core/src/simplify.rs",
+      "commit": "e29fcb9fa6bbb2289b1164b5df1b7a3c7400e866",
+      "size": 23171,
+      "sha256": "695acd2cc8ff66e75f2a96a61986b81ef68908200939d94218a8449854eb17ed",
+      "member": "git-sources/695acd2cc8ff66e75f2a96a61986b81ef68908200939d94218a8449854eb17ed/crates/ingetrazo-core/src/simplify.rs"
+    },
+    {
+      "path": "crates/ingetrazo-core/src/planar.rs",
+      "commit": "e29fcb9fa6bbb2289b1164b5df1b7a3c7400e866",
+      "size": 31972,
+      "sha256": "c73a6b1a49b43c5660dd4a25dcc77476d73c2f7afefb5c27dd7001e5051f07be",
+      "member": "git-sources/c73a6b1a49b43c5660dd4a25dcc77476d73c2f7afefb5c27dd7001e5051f07be/crates/ingetrazo-core/src/planar.rs"
+    },
+    {
+      "path": "crates/ingetrazo-core/src/heal.rs",
+      "commit": "e29fcb9fa6bbb2289b1164b5df1b7a3c7400e866",
+      "size": 24285,
+      "sha256": "4ecb02fc3324937d0bf8be8aeb0e4e69a5f5517e68532afb2639bff8cced7ab9",
+      "member": "git-sources/4ecb02fc3324937d0bf8be8aeb0e4e69a5f5517e68532afb2639bff8cced7ab9/crates/ingetrazo-core/src/heal.rs"
+    },
+    {
+      "path": "crates/ingetrazo-core/src/mesh.rs",
+      "commit": "e29fcb9fa6bbb2289b1164b5df1b7a3c7400e866",
+      "size": 27957,
+      "sha256": "e4ea417692faf7713ecb066c1606c5125e22f9014cf9a9ea3aa7860fd29fbce0",
+      "member": "git-sources/e4ea417692faf7713ecb066c1606c5125e22f9014cf9a9ea3aa7860fd29fbce0/crates/ingetrazo-core/src/mesh.rs"
+    },
+    {
+      "path": "crates/ingetrazo-core/src/groups.rs",
+      "commit": "e29fcb9fa6bbb2289b1164b5df1b7a3c7400e866",
+      "size": 8580,
+      "sha256": "36a6e430aad63245f417346d80479ce61a7e3e2bc7e564fdfc01c5c3c5ec5c4c",
+      "member": "git-sources/36a6e430aad63245f417346d80479ce61a7e3e2bc7e564fdfc01c5c3c5ec5c4c/crates/ingetrazo-core/src/groups.rs"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/stl_import.rs",
+      "commit": "e29fcb9fa6bbb2289b1164b5df1b7a3c7400e866",
+      "size": 11628,
+      "sha256": "28b54a885788eef8a9caeae4fb182e6bd83c982eeb5ede1d195b2b14bd5ec048",
+      "member": "git-sources/28b54a885788eef8a9caeae4fb182e6bd83c982eeb5ede1d195b2b14bd5ec048/crates/ingetrazo-gui/src/stl_import.rs"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/app.rs",
+      "commit": "e29fcb9fa6bbb2289b1164b5df1b7a3c7400e866",
+      "size": 98977,
+      "sha256": "e7277a8e5c75b9b6768bcb664d6b14bdf6c4d84624df7a8a671d7259907177cb",
+      "member": "git-sources/e7277a8e5c75b9b6768bcb664d6b14bdf6c4d84624df7a8a671d7259907177cb/crates/ingetrazo-gui/src/app.rs"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/import_units.rs",
+      "commit": "e29fcb9fa6bbb2289b1164b5df1b7a3c7400e866",
+      "size": 24709,
+      "sha256": "4ea631a799beb785955585f20b726a1826509a4498d7533c0ba54aa1dfa17aa3",
+      "member": "git-sources/4ea631a799beb785955585f20b726a1826509a4498d7533c0ba54aa1dfa17aa3/crates/ingetrazo-gui/src/import_units.rs"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/lib.rs",
+      "commit": "e29fcb9fa6bbb2289b1164b5df1b7a3c7400e866",
+      "size": 6277,
+      "sha256": "9d326375c6433462e6396be466d66316554f82ac7cc3aa36c2a58553a8764d96",
+      "member": "git-sources/9d326375c6433462e6396be466d66316554f82ac7cc3aa36c2a58553a8764d96/crates/ingetrazo-gui/src/lib.rs"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/menu.rs",
+      "commit": "e29fcb9fa6bbb2289b1164b5df1b7a3c7400e866",
+      "size": 35939,
+      "sha256": "a333efd0a8146175cc1caf18e92f2f088ec96331e8e8a2db8d5e8aa0e0c3b774",
+      "member": "git-sources/a333efd0a8146175cc1caf18e92f2f088ec96331e8e8a2db8d5e8aa0e0c3b774/crates/ingetrazo-gui/src/menu.rs"
+    },
+    {
+      "path": "crates/ingetrazo-gui/examples/stl_import_workflows.rs",
+      "commit": "e29fcb9fa6bbb2289b1164b5df1b7a3c7400e866",
+      "size": 18951,
+      "sha256": "4aff9c19d16778357be4a3a4b3e99bfb1e71508b64612f31794ff9ada46eac77",
+      "member": "git-sources/4aff9c19d16778357be4a3a4b3e99bfb1e71508b64612f31794ff9ada46eac77/crates/ingetrazo-gui/examples/stl_import_workflows.rs"
+    },
+    {
+      "path": "scripts/check-stl-import.py",
+      "commit": "e29fcb9fa6bbb2289b1164b5df1b7a3c7400e866",
+      "size": 3495,
+      "sha256": "eb5abab0ddaf53e2cdd1a5dbefabe3d8f73d2630479a04b4df60f883cf4c6b61",
+      "member": "git-sources/eb5abab0ddaf53e2cdd1a5dbefabe3d8f73d2630479a04b4df60f883cf4c6b61/scripts/check-stl-import.py"
+    },
+    {
+      "path": "scripts/reference-stl-import-reopens.py",
+      "commit": "e29fcb9fa6bbb2289b1164b5df1b7a3c7400e866",
+      "size": 2051,
+      "sha256": "f6ac0dfe4152e5e5187a33db9d2fdf755155e6069742511d9ff8c33c6b65a0cf",
+      "member": "git-sources/f6ac0dfe4152e5e5187a33db9d2fdf755155e6069742511d9ff8c33c6b65a0cf/scripts/reference-stl-import-reopens.py"
+    },
+    {
+      "path": "scripts/replay-stl-import.py",
+      "commit": "e29fcb9fa6bbb2289b1164b5df1b7a3c7400e866",
+      "size": 3179,
+      "sha256": "39824687a725c427f241fe91c30db618a07461f98cec22ea4606841e16a7f8e6",
+      "member": "git-sources/39824687a725c427f241fe91c30db618a07461f98cec22ea4606841e16a7f8e6/scripts/replay-stl-import.py"
+    },
+    {
+      "path": "scripts/reference-stl-import.py",
+      "commit": "e29fcb9fa6bbb2289b1164b5df1b7a3c7400e866",
+      "size": 9601,
+      "sha256": "b2738d950c8a2401c6d3fae700f14f2b013b439dff3ccfb6337dc0ec265a9c5e",
+      "member": "git-sources/b2738d950c8a2401c6d3fae700f14f2b013b439dff3ccfb6337dc0ec265a9c5e/scripts/reference-stl-import.py"
+    },
+    {
+      "path": "scripts/reference-nested-import.py",
+      "commit": "e29fcb9fa6bbb2289b1164b5df1b7a3c7400e866",
+      "size": 4180,
+      "sha256": "1cd756cc1db3389e3922a5c34afe41af29b91061ce30bff77e945d7b346d629b",
+      "member": "git-sources/1cd756cc1db3389e3922a5c34afe41af29b91061ce30bff77e945d7b346d629b/scripts/reference-nested-import.py"
+    },
+    {
+      "path": "docs/audits/stl-import/source-manifest.json",
+      "commit": "e29fcb9fa6bbb2289b1164b5df1b7a3c7400e866",
+      "size": 11947,
+      "sha256": "912d2f2241f2efe49d085664af7417583397d77254001a26b131004e644f416b",
+      "member": "git-sources/912d2f2241f2efe49d085664af7417583397d77254001a26b131004e644f416b/docs/audits/stl-import/source-manifest.json"
+    },
+    {
+      "path": "crates/ingetrazo-formats/src/stl.rs",
+      "commit": "506ba2aca533176ab545e0fe5c8a2a06fc75e61c",
+      "size": 16848,
+      "sha256": "bf09324a2fc65832d0ad4e9b74846e8bb14aa111378736be0b1421d082a80434",
+      "member": "git-sources/bf09324a2fc65832d0ad4e9b74846e8bb14aa111378736be0b1421d082a80434/crates/ingetrazo-formats/src/stl.rs"
+    },
+    {
+      "path": "crates/ingetrazo-core/src/simplify.rs",
+      "commit": "506ba2aca533176ab545e0fe5c8a2a06fc75e61c",
+      "size": 23171,
+      "sha256": "695acd2cc8ff66e75f2a96a61986b81ef68908200939d94218a8449854eb17ed",
+      "member": "git-sources/695acd2cc8ff66e75f2a96a61986b81ef68908200939d94218a8449854eb17ed/crates/ingetrazo-core/src/simplify.rs"
+    },
+    {
+      "path": "crates/ingetrazo-core/src/planar.rs",
+      "commit": "506ba2aca533176ab545e0fe5c8a2a06fc75e61c",
+      "size": 31972,
+      "sha256": "c73a6b1a49b43c5660dd4a25dcc77476d73c2f7afefb5c27dd7001e5051f07be",
+      "member": "git-sources/c73a6b1a49b43c5660dd4a25dcc77476d73c2f7afefb5c27dd7001e5051f07be/crates/ingetrazo-core/src/planar.rs"
+    },
+    {
+      "path": "crates/ingetrazo-core/src/heal.rs",
+      "commit": "506ba2aca533176ab545e0fe5c8a2a06fc75e61c",
+      "size": 24285,
+      "sha256": "4ecb02fc3324937d0bf8be8aeb0e4e69a5f5517e68532afb2639bff8cced7ab9",
+      "member": "git-sources/4ecb02fc3324937d0bf8be8aeb0e4e69a5f5517e68532afb2639bff8cced7ab9/crates/ingetrazo-core/src/heal.rs"
+    },
+    {
+      "path": "crates/ingetrazo-core/src/mesh.rs",
+      "commit": "506ba2aca533176ab545e0fe5c8a2a06fc75e61c",
+      "size": 27957,
+      "sha256": "e4ea417692faf7713ecb066c1606c5125e22f9014cf9a9ea3aa7860fd29fbce0",
+      "member": "git-sources/e4ea417692faf7713ecb066c1606c5125e22f9014cf9a9ea3aa7860fd29fbce0/crates/ingetrazo-core/src/mesh.rs"
+    },
+    {
+      "path": "crates/ingetrazo-core/src/groups.rs",
+      "commit": "506ba2aca533176ab545e0fe5c8a2a06fc75e61c",
+      "size": 8580,
+      "sha256": "36a6e430aad63245f417346d80479ce61a7e3e2bc7e564fdfc01c5c3c5ec5c4c",
+      "member": "git-sources/36a6e430aad63245f417346d80479ce61a7e3e2bc7e564fdfc01c5c3c5ec5c4c/crates/ingetrazo-core/src/groups.rs"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/stl_import.rs",
+      "commit": "506ba2aca533176ab545e0fe5c8a2a06fc75e61c",
+      "size": 11628,
+      "sha256": "28b54a885788eef8a9caeae4fb182e6bd83c982eeb5ede1d195b2b14bd5ec048",
+      "member": "git-sources/28b54a885788eef8a9caeae4fb182e6bd83c982eeb5ede1d195b2b14bd5ec048/crates/ingetrazo-gui/src/stl_import.rs"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/app.rs",
+      "commit": "506ba2aca533176ab545e0fe5c8a2a06fc75e61c",
+      "size": 98977,
+      "sha256": "e7277a8e5c75b9b6768bcb664d6b14bdf6c4d84624df7a8a671d7259907177cb",
+      "member": "git-sources/e7277a8e5c75b9b6768bcb664d6b14bdf6c4d84624df7a8a671d7259907177cb/crates/ingetrazo-gui/src/app.rs"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/import_units.rs",
+      "commit": "506ba2aca533176ab545e0fe5c8a2a06fc75e61c",
+      "size": 24709,
+      "sha256": "4ea631a799beb785955585f20b726a1826509a4498d7533c0ba54aa1dfa17aa3",
+      "member": "git-sources/4ea631a799beb785955585f20b726a1826509a4498d7533c0ba54aa1dfa17aa3/crates/ingetrazo-gui/src/import_units.rs"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/lib.rs",
+      "commit": "506ba2aca533176ab545e0fe5c8a2a06fc75e61c",
+      "size": 6277,
+      "sha256": "9d326375c6433462e6396be466d66316554f82ac7cc3aa36c2a58553a8764d96",
+      "member": "git-sources/9d326375c6433462e6396be466d66316554f82ac7cc3aa36c2a58553a8764d96/crates/ingetrazo-gui/src/lib.rs"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/menu.rs",
+      "commit": "506ba2aca533176ab545e0fe5c8a2a06fc75e61c",
+      "size": 35939,
+      "sha256": "a333efd0a8146175cc1caf18e92f2f088ec96331e8e8a2db8d5e8aa0e0c3b774",
+      "member": "git-sources/a333efd0a8146175cc1caf18e92f2f088ec96331e8e8a2db8d5e8aa0e0c3b774/crates/ingetrazo-gui/src/menu.rs"
+    },
+    {
+      "path": "crates/ingetrazo-gui/examples/stl_import_workflows.rs",
+      "commit": "506ba2aca533176ab545e0fe5c8a2a06fc75e61c",
+      "size": 19229,
+      "sha256": "653da607f67254da593d8497f8da704191f0cc860db3b46bba47d8d387583af1",
+      "member": "git-sources/653da607f67254da593d8497f8da704191f0cc860db3b46bba47d8d387583af1/crates/ingetrazo-gui/examples/stl_import_workflows.rs"
+    },
+    {
+      "path": "scripts/check-stl-import.py",
+      "commit": "506ba2aca533176ab545e0fe5c8a2a06fc75e61c",
+      "size": 3495,
+      "sha256": "eb5abab0ddaf53e2cdd1a5dbefabe3d8f73d2630479a04b4df60f883cf4c6b61",
+      "member": "git-sources/eb5abab0ddaf53e2cdd1a5dbefabe3d8f73d2630479a04b4df60f883cf4c6b61/scripts/check-stl-import.py"
+    },
+    {
+      "path": "scripts/reference-stl-import-reopens.py",
+      "commit": "506ba2aca533176ab545e0fe5c8a2a06fc75e61c",
+      "size": 2051,
+      "sha256": "f6ac0dfe4152e5e5187a33db9d2fdf755155e6069742511d9ff8c33c6b65a0cf",
+      "member": "git-sources/f6ac0dfe4152e5e5187a33db9d2fdf755155e6069742511d9ff8c33c6b65a0cf/scripts/reference-stl-import-reopens.py"
+    },
+    {
+      "path": "scripts/replay-stl-import.py",
+      "commit": "506ba2aca533176ab545e0fe5c8a2a06fc75e61c",
+      "size": 3179,
+      "sha256": "39824687a725c427f241fe91c30db618a07461f98cec22ea4606841e16a7f8e6",
+      "member": "git-sources/39824687a725c427f241fe91c30db618a07461f98cec22ea4606841e16a7f8e6/scripts/replay-stl-import.py"
+    },
+    {
+      "path": "scripts/reference-stl-import.py",
+      "commit": "506ba2aca533176ab545e0fe5c8a2a06fc75e61c",
+      "size": 9601,
+      "sha256": "b2738d950c8a2401c6d3fae700f14f2b013b439dff3ccfb6337dc0ec265a9c5e",
+      "member": "git-sources/b2738d950c8a2401c6d3fae700f14f2b013b439dff3ccfb6337dc0ec265a9c5e/scripts/reference-stl-import.py"
+    },
+    {
+      "path": "scripts/reference-nested-import.py",
+      "commit": "506ba2aca533176ab545e0fe5c8a2a06fc75e61c",
+      "size": 4180,
+      "sha256": "1cd756cc1db3389e3922a5c34afe41af29b91061ce30bff77e945d7b346d629b",
+      "member": "git-sources/1cd756cc1db3389e3922a5c34afe41af29b91061ce30bff77e945d7b346d629b/scripts/reference-nested-import.py"
+    },
+    {
+      "path": "docs/audits/stl-import/source-manifest.json",
+      "commit": "506ba2aca533176ab545e0fe5c8a2a06fc75e61c",
+      "size": 11947,
+      "sha256": "912d2f2241f2efe49d085664af7417583397d77254001a26b131004e644f416b",
+      "member": "git-sources/912d2f2241f2efe49d085664af7417583397d77254001a26b131004e644f416b/docs/audits/stl-import/source-manifest.json"
+    }
+  ],
+  "counts": {
+    "ok": true,
+    "cases": 11,
+    "states": 38,
+    "decoder_controls": 8,
+    "readers": 8,
+    "negative_controls": 7,
+    "diagnostic_scope": "Camera values and parser error text diagnostic only; native unchanged-camera guard required. Full model/history/preferences and accepted private meshes strict."
+  }
+}
