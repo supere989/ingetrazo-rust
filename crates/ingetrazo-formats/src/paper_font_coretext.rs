@@ -48,6 +48,8 @@ unsafe extern "C" {
 #[link(name = "CoreText", kind = "framework")]
 unsafe extern "C" {
     fn CTFontCreateWithName(n: Ref, size: f64, matrix: Ref) -> Ref;
+    fn CTFontCreateUIFontForLanguage(kind: u32, size: f64, language: Ref) -> Ref;
+    fn CTFontCopyFontDescriptor(font: Ref) -> Ref;
     fn CTFontGetSymbolicTraits(f: Ref) -> u32;
     fn CTFontCopyCharacterSet(f: Ref) -> Ref;
     fn CTFontCopyDefaultCascadeListForLanguages(f: Ref, languages: Ref) -> Ref;
@@ -200,20 +202,48 @@ fn match_family(family: &str, request: &Request) -> Result<Option<Owned>, String
             (&kCFTypeDictionaryValueCallBacks as *const u8).cast(),
         ))?;
         let descriptor = Owned::new(CTFontDescriptorCreateWithAttributes(attributes.0))?;
-        let raw = CTFontDescriptorCreateMatchingFontDescriptors(descriptor.0, std::ptr::null());
-        if raw.is_null() {
+        let Some(matches) = matching_descriptors(descriptor.0)? else {
             return Ok(None);
-        }
-        let matches = Owned::new(raw)?;
-        let count = CFArrayGetCount(matches.0);
-        if !(0..=512).contains(&count) {
-            return Err("Native family descriptor budget exceeded".into());
-        }
+        };
+        select_descriptors(descriptor_refs(matches.0)?, Some(family), request)
+    }
+}
+fn matching_descriptors(descriptor: Ref) -> Result<Option<Owned>, String> {
+    let raw =
+        unsafe { CTFontDescriptorCreateMatchingFontDescriptors(descriptor, std::ptr::null()) };
+    if raw.is_null() {
+        return Ok(None);
+    }
+    let matches = Owned::new(raw)?;
+    let count = unsafe { CFArrayGetCount(matches.0) };
+    if !(0..=512).contains(&count) {
+        return Err("Native family descriptor budget exceeded".into());
+    }
+    Ok((count != 0).then_some(matches))
+}
+fn descriptor_refs(array: Ref) -> Result<Vec<Ref>, String> {
+    let count = unsafe { CFArrayGetCount(array) };
+    if !(0..=512).contains(&count) {
+        return Err("Native family descriptor budget exceeded".into());
+    }
+    let mut out = Vec::new();
+    out.try_reserve_exact(count as usize)
+        .map_err(|_| "Native descriptor registry allocation failed")?;
+    out.extend((0..count).map(|i| unsafe { CFArrayGetValueAtIndex(array, i) }));
+    Ok(out)
+}
+fn select_descriptors(
+    descriptors: Vec<Ref>,
+    family: Option<&str>,
+    request: &Request,
+) -> Result<Option<Owned>, String> {
+    unsafe {
         let mut slots: Vec<(i32, bool, String, Owned)> = Vec::new();
-        for i in 0..count {
-            let d = CFArrayGetValueAtIndex(matches.0, i);
-            if family_name(d)?.to_lowercase() != family.to_lowercase() {
-                continue;
+        for d in descriptors {
+            if let Some(family) = family {
+                if !family_name(d)?.eq_ignore_ascii_case(family) {
+                    continue;
+                }
             }
             let font = Owned::new(CTFontCreateWithFontDescriptor(d, 100., std::ptr::null()))?;
             let traits = Owned::new(CTFontCopyAttribute(font.0, kCTFontTraitsAttribute))?;
@@ -282,6 +312,63 @@ fn match_family(family: &str, request: &Request) -> Result<Option<Owned>, String
         }
     }
 }
+// Qt's default AnyStyle fallback is the system UI family. It registers variants
+// by the native UI design trait, then family, then the original descriptor. The
+// family is derived from CoreText; no private system font name is hardcoded.
+fn match_system(base: Ref, request: &Request) -> Result<Option<Owned>, String> {
+    unsafe {
+        let theme = Owned::new(CTFontCopyFontDescriptor(base))?;
+        let raw_traits = CTFontDescriptorCopyAttribute(theme.0, kCTFontTraitsAttribute);
+        if !raw_traits.is_null() {
+            let traits = Owned::new(raw_traits)?;
+            let key_name = b"NSCTFontUIFontDesignTrait";
+            let key = Owned::new(CFStringCreateWithBytes(
+                std::ptr::null(),
+                key_name.as_ptr(),
+                key_name.len() as isize,
+                UTF8,
+                0,
+            ))?;
+            let value = CFDictionaryGetValue(traits.0, key.0);
+            if !value.is_null() {
+                let design_traits = Owned::new(CFDictionaryCreate(
+                    std::ptr::null(),
+                    &key.0,
+                    &value,
+                    1,
+                    (&kCFTypeDictionaryKeyCallBacks as *const u8).cast(),
+                    (&kCFTypeDictionaryValueCallBacks as *const u8).cast(),
+                ))?;
+                let attributes = Owned::new(CFDictionaryCreate(
+                    std::ptr::null(),
+                    &kCTFontTraitsAttribute,
+                    &design_traits.0,
+                    1,
+                    (&kCFTypeDictionaryKeyCallBacks as *const u8).cast(),
+                    (&kCFTypeDictionaryValueCallBacks as *const u8).cast(),
+                ))?;
+                let descriptor = Owned::new(CTFontDescriptorCreateWithAttributes(attributes.0))?;
+                if let Some(matches) = matching_descriptors(descriptor.0)? {
+                    return select_descriptors(descriptor_refs(matches.0)?, None, request);
+                }
+            }
+        }
+        let family = Owned::new(CTFontCopyFamilyName(base))?;
+        let attributes = Owned::new(CFDictionaryCreate(
+            std::ptr::null(),
+            &kCTFontFamilyNameAttribute,
+            &family.0,
+            1,
+            (&kCFTypeDictionaryKeyCallBacks as *const u8).cast(),
+            (&kCFTypeDictionaryValueCallBacks as *const u8).cast(),
+        ))?;
+        let descriptor = Owned::new(CTFontDescriptorCreateWithAttributes(attributes.0))?;
+        if let Some(matches) = matching_descriptors(descriptor.0)? {
+            return select_descriptors(descriptor_refs(matches.0)?, None, request);
+        }
+        select_descriptors(vec![theme.0], None, request)
+    }
+}
 pub(super) fn match_font(
     request: &Request,
 ) -> Result<
@@ -293,12 +380,7 @@ pub(super) fn match_font(
     String,
 > {
     unsafe {
-        // Generic Qt sans family maps to the native system sans rather than a Linux family.
-        let family = if request.family == "Sans Serif" {
-            "Helvetica"
-        } else {
-            &request.family
-        };
+        let family = &request.family;
         let name = Owned::new(CFStringCreateWithBytes(
             std::ptr::null(),
             family.as_ptr(),
@@ -306,7 +388,6 @@ pub(super) fn match_font(
             UTF8,
             0,
         ))?;
-        let base = Owned::new(CTFontCreateWithName(name.0, 100., std::ptr::null()))?;
         let available = Owned::new(CTFontManagerCopyAvailableFontFamilyNames())?;
         let count = CFArrayGetCount(available.0);
         if !(0..=8192).contains(&count) {
@@ -316,10 +397,16 @@ pub(super) fn match_font(
             text(CFArrayGetValueAtIndex(available.0, i))
                 .is_ok_and(|n| n.eq_ignore_ascii_case(family))
         });
+        let base = if registered {
+            Owned::new(CTFontCreateWithName(name.0, 100., std::ptr::null()))?
+        } else {
+            // kCTFontUIFontSystem=2; size zero preserves the platform descriptor.
+            Owned::new(CTFontCreateUIFontForLanguage(2, 0., std::ptr::null()))?
+        };
         let mut selected = if registered {
             match_family(family, request)?
         } else {
-            None
+            match_system(base.0, request)?
         };
         if selected.is_none() {
             let languages = Owned::new(CFLocaleCopyPreferredLanguages())?;

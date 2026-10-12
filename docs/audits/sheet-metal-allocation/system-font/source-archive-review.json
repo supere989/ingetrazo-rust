@@ -1,0 +1,17 @@
+{
+  "first-arm-text": {
+    "archive_sha256": "55025b5dc5778f7b0ba419dcc7acf8886e2e90bc46ab1636189f16e1556e2bef",
+    "entries": 14,
+    "raw_bytes": 3973280
+  },
+  "first-intel-text": {
+    "archive_sha256": "67a887fe3404bfd589109d2fc0c5a86a8947fe4f8975720d39de226db508c61e",
+    "entries": 14,
+    "raw_bytes": 3973286
+  },
+  "terminal": {
+    "archive_sha256": "fbf53839565c5e58420eefe43e4ed93fd39dbcac4f036f5939f288639f279a9e",
+    "entries": 166,
+    "raw_bytes": 715722
+  }
+}
