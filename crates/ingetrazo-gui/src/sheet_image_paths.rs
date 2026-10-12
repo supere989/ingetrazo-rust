@@ -548,7 +548,7 @@ fn source_dashed_bevel(
         if out.len().checked_add(extra).is_none_or(|n| n > 250_000) {
             return Err("Physical dashed outline budget exceeded".into());
         }
-        out.try_reserve(extra).map_err(|_| "Physical dash outline allocation refused")?;
+        out.try_reserve(1).map_err(|_| "Physical dash outline allocation refused")?;
         // QStroker emits one forward/backward boundary per open dash.
         // Separate edge fills would quantize internal edges absent from it.
         let bound=extra.checked_mul(3).ok_or("Dash boundary size overflow")?;
@@ -556,6 +556,7 @@ fn source_dashed_bevel(
         let mut boundary=Vec::new();boundary.try_reserve(bound).map_err(|_|"Dash boundary allocation refused")?;
         let mut previous:Option<(DVec2,DVec2)>=None;
         for backward in [false,true]{
+            let mut first=true;
             for j in 0..run.len().saturating_sub(1){
                 let (a,b)=if backward{(run[run.len()-1-j],run[run.len()-2-j])}else{(run[j],run[j+1])};
                 let d=b-a;if d.x==0.&&d.y==0.{continue;}
@@ -567,7 +568,7 @@ fn source_dashed_bevel(
                 if let Some(prev)=previous{
                     let fuzzy=|x:f64,y:f64|(x-y).abs()*1e12<=x.abs().min(y.abs());
                     if !(fuzzy(prev.1.x,line.0.x)&&fuzzy(prev.1.y,line.0.y)){
-                        if j!=0{
+                        if !first{
                             let va=prev.1-prev.0;let vb=line.0-line.1;let c=prev.0-line.0;
                             let denom=va.y*vb.x-va.x*vb.y;
                             let bounded=if denom==0.||!denom.is_finite(){false}else{let na=(vb.y*c.x-vb.x*c.y)/denom;let nb=(va.x*c.y-va.y*c.x)/denom;(0. ..=1.).contains(&na)&&(0. ..=1.).contains(&nb)};
@@ -579,7 +580,7 @@ fn source_dashed_bevel(
                         boundary.push(line.0);
                     }
                 }else{boundary.push(line.0);}
-                boundary.push(line.1);previous=Some(line);
+                boundary.push(line.1);previous=Some(line);first=false;
             }
         }
         boundary_points+=boundary.len();
