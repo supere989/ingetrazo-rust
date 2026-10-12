@@ -240,6 +240,13 @@ for lane, package, mode, reader, checker in [
     run([sys.executable, repo/"scripts"/checker, folder], lane+"/acceptance.json", requires=[lane+"/runtime.log", lane+"/reopen.log"])
     dxf_results[lane] = folder/"acceptance.json"
 
+survey = out/"survey-points"
+survey_members = list(json.loads((repo/"docs/audits/survey-points/source-manifest.json").read_text())["members"])
+survey_source = archive("survey-points", "source-manifest.json", survey_members, survey, archive_name="source-records.zip")
+run([binaries/("context_document_lifecycle"+suffix), survey, "--survey-points"], "survey-points/runtime.log")
+run([sys.executable, repo/"scripts/reference-survey-reopens.py", survey], "survey-points/reopen.log", requires=["survey-points/runtime.log"])
+run([sys.executable, repo/"scripts/check-survey-points.py", survey], "survey-points/acceptance.json", requires=["survey-points/runtime.log", "survey-points/reopen.log"])
+
 nested_import = out/"nested-import"
 nested_cases = [context+"-"+asset for context in ["root", "container", "leaf"] for asset in ["ambiguous", "named", "parts", "header", "zero"]]
 ni = archive("nested-import", "source-manifest.json", ["original-nested-import.json", "ambiguous.obj", "named.obj", "parts.obj", "header.dxf", "zero.dxf"]+[case+ending for case in nested_cases for ending in ["-input.igz", "-original.igz"]], nested_import, archive_name="source-records.zip", stage_name="nested-import-source")
@@ -355,6 +362,7 @@ def summarize():
               "gltf_figures":json.loads((gltf_figures/"result.json").read_text()),
               "sheet_images":json.loads((sheet_images/"result.json").read_text()),
               "dxf_blocks":json.loads((dxf_blocks/"result.json").read_text()),
+              "survey_points":{"source_archive":survey_source,"acceptance":json.loads((survey/"acceptance.json").read_text())},
               "fresh_source_acquisitions":0,"result":"pass"}
     return result
 
