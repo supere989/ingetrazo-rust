@@ -30,8 +30,17 @@ def main():
                 b=z.read(name);assert len(b)==v['size'] and hashlib.sha256(b).hexdigest()==v['sha256'],name
                 assert not Path(name).is_absolute() and '..' not in Path(name).parts
                 p=(source/name).resolve();assert p.is_relative_to(source);p.parent.mkdir(parents=True,exist_ok=True);p.write_bytes(b)
+        for name,v in m['identical_file_aliases'].items():
+            assert v['retained_member'] in m['members'],name
+            retained=source/v['retained_member']
+            assert retained.stat().st_size==v['size'] and sha(retained)==v['sha256'],name
         for v in m['capture_sources']:
-            assert sha(source/v['retained_member'])==v['sha256'],v['retained_member']
+            name=v['retained_member']
+            if name not in m['members']:
+                alias=m['identical_file_aliases'][name]
+                assert alias['sha256']==v['sha256'],name
+                name=alias['retained_member']
+            assert sha(source/name)==v['sha256'],name
         identity=json.loads((source/'parser-identity.json').read_text())
         assert identity['pin']==m['parser_commit'] and identity['sources']==contract['parser_sources']
         frozen=json.loads((source/'original-skp.json').read_text())
