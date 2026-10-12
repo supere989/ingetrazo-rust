@@ -25,7 +25,7 @@ pub struct Painter {
 impl Painter {
     // qt_format_text(Qt6.12): line top=ceil(previous bottom+primary leading),
     // final height remains QFixed ascent+descent; natural width adds negative right bearing.
-    fn box_metrics(&mut self, style:&TextStyle<'_>)->Result<([f64;2],Vec<(f64,f64,f64,f64)>),String>{
+    fn box_metrics(&mut self, style:&TextStyle<'_>)->Result<([f64;2],Vec<(f64,f64,f64,f64)>,[f64;2]),String>{
         if !style.size_pt.is_finite()||style.size_pt<=0.||style.size_pt>10000.||!style.width_mm.is_finite()||style.width_mm<=0.||style.width_mm>1_000_000.{return Err("Invalid paper box measurement".into());}
         if self.resolver.is_none(){self.resolver=Some(Resolver::new()?);}
         let request=Request{family:style.family.into(),bold:style.bold,italic:style.italic,required_chars:vec![]};
@@ -41,7 +41,7 @@ impl Painter {
             baselines.try_reserve(line.line.runs.len()).map_err(|_|"Paper box metrics allocation refused")?;for _ in &line.line.runs{baselines.push((line.baseline_26_6 as f64/64.,baseline,line.x_26_6 as f64/64.,line.line.advance_26_6 as f64/64.));}
         }
         if paragraph.lines.is_empty(){height=(primary.ascent_26_6()+primary.descent_26_6())as f64/64.;}
-        Ok(([width*scale,height*scale],baselines))
+        Ok(([width*scale,height*scale],baselines,[width,height]))
     }
     /// QFontMetricsF.horizontalAdvance for physical source labels, without wrapping or ink bearings.
     pub fn measure_advance(&mut self, style:&TextStyle<'_>)->Result<f64,String>{
@@ -79,7 +79,7 @@ impl Painter {
     /// Finite source drawText rectangle; vertical alignment is 0=top,1=center,2=bottom.
     pub fn draw_box(&mut self,style:&TextStyle<'_>,height:f64,vertical:u8)->Result<Vec<Draw>,String>{
         if !height.is_finite()||height<=0.||height>1_000_000.||vertical>2{return Err("Invalid paper text rectangle".into());}
-        let(need,baselines)=self.box_metrics(style)?;let offset=match vertical{1=>(height-need[1])*0.5,2=>height-need[1],_=>0.};
+        let(need,baselines,_)=self.box_metrics(style)?;let offset=match vertical{1=>(height-need[1])*0.5,2=>height-need[1],_=>0.};
         let mut draws=self.draw(style)?;
         if draws.len()!=baselines.len(){return Err("Paper box run inventory mismatch".into());}
         for(d,(old,new,old_x,advance))in draws.iter_mut().zip(baselines){
@@ -96,6 +96,23 @@ impl Painter {
             let[x,y]=style.origin_mm;
             d.clip=if need[0]>style.width_mm||need[1]>height{Some(vec![PathOp::Move([x,y]),PathOp::Line([x+style.width_mm,y]),PathOp::Line([x+style.width_mm,y+height]),PathOp::Line([x,y+height]),PathOp::Close])}else{None};
         }Ok(draws)
+    }
+    /// Qt qt_format_text performs QRectF::contains in the unscaled 100px
+    /// layout coordinates. Testing scaled dimensions alone loses the rounding
+    /// at a baseline rectangle's bottom edge and can omit an actual PDF clip.
+    pub fn source_box_clip(&mut self, style: &TextStyle<'_>, height: f64, vertical: u8)
+        -> Result<Option<Vec<PathOp>>, String>
+    {
+        let (_, _, [width, text_height]) = self.box_metrics(style)?;
+        let scale = style.size_pt * 25.4 / 72. / 100. * 0.75;
+        let [x,y] = style.origin_mm;
+        let (rx,ry,rw,rh) = (x/scale,y/scale,style.width_mm/scale,height/scale);
+        let dx = match style.alignment { Alignment::Left=>0., Alignment::Center=>(rw-width)/2., Alignment::Right=>rw-width };
+        let dy = match vertical { 1=>(rh-text_height)/2., 2=>rh-text_height, _=>0. };
+        let contained = rx+dx>=rx && ry+dy>=ry
+            && rx+dx+width<=rx+rw && ry+dy+text_height<=ry+rh;
+        Ok((!contained).then(||vec![PathOp::Move([x,y]),PathOp::Line([x+style.width_mm,y]),
+            PathOp::Line([x+style.width_mm,y+height]),PathOp::Line([x,y+height]),PathOp::Close]))
     }
     /// Refresh is explicit; existing pages retain their immutable font resources.
     pub fn refresh_fonts(&mut self) -> Result<(), String> {
