@@ -59,15 +59,16 @@ impl crate::IngeTrazoApp {
         }
         let engineer_key = "textures/ingeniero.png";
         let person_key = "textures/person_billboard.png";
-        let (group, key, bytes, label) = match make(ENGINEER, engineer_key, 1.70, &tr("Engineer")) {
-            Ok(group) => (group, engineer_key, ENGINEER, "Engineer"),
-            Err(_) => (
-                make(PERSON, person_key, 1.75, &tr("Person"))?,
-                person_key,
-                PERSON,
-                "Person",
-            ),
-        };
+        let (mut group, key, bytes, label) =
+            match make(ENGINEER, engineer_key, 1.70, &tr("Engineer")) {
+                Ok(group) => (group, engineer_key, ENGINEER, "Engineer"),
+                Err(_) => (
+                    make(PERSON, person_key, 1.75, &tr("Person"))?,
+                    person_key,
+                    PERSON,
+                    "Person",
+                ),
+            };
         self.scene
             .groups
             .try_reserve(1)
@@ -81,7 +82,20 @@ impl crate::IngeTrazoApp {
             .try_reserve_exact(bytes.len())
             .map_err(|_| "Scale figure bytes admission refused")?;
         resource.extend_from_slice(bytes);
+        // Establish the actual owned mesh/UID before the clean baseline. The
+        // interpreter can borrow this identity without first-query hydration
+        // changing the persisted document. Only this four-vertex startup mesh
+        // is copied into the existing registry; no Scene/history clone.
+        self.scene
+            .mesh_shares
+            .try_reserve(1)
+            .map_err(|_| "Scale figure mesh owner admission refused")?;
+        let mesh_owner = uuid::Uuid::new_v4();
+        group.mesh_share = Some(mesh_owner);
+        group.native_document = json!({"uid":group.native_uid()});
+        let owned_mesh = group.mesh.clone();
         let group_id = group.id;
+        self.scene.mesh_shares.insert(mesh_owner, owned_mesh);
         self.scene.embedded_textures.insert(key.into(), resource);
         self.scene.groups.push(group);
         self.scene.bump_version();
@@ -119,6 +133,9 @@ impl crate::IngeTrazoApp {
             self.scene.groups[0].name = tr(owner.label);
         } else {
             let owner = self.startup_scale_figure.take().unwrap();
+            if let Some(mesh_owner) = self.scene.groups[0].mesh_share {
+                self.scene.mesh_shares.remove(&mesh_owner);
+            }
             self.scene.groups.clear();
             self.scene.embedded_textures.remove(&owner.texture);
             self.scene.bump_version();
