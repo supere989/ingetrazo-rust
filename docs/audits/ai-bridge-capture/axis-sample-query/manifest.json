@@ -1,0 +1,31 @@
+{
+  "scope": "Actual read-only source scene-FBO sample query; no image or source corpus recapture",
+  "original_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "archive_sha256": "c8bf8507731ab309b87f0d39729948297f6839874bde9fd48937950f5456a05b",
+  "members": {
+    "query-script.py": {
+      "size": 2092,
+      "sha256": "dfcecd192fbb0c4d30069f16480c261219fa6ee7aee4ccda0a7551cf20fcafbb"
+    },
+    "query.json": {
+      "size": 744,
+      "sha256": "90bbb0d32911d05151fdef2ee2ca1424a888f442c3f1f8b85cde83f6e7ef53d4"
+    },
+    "receipt.json": {
+      "size": 141,
+      "sha256": "2eeaffa7496a715418fab52e8007e82ba1cb50e101f170be5de0cfa73a8a281f"
+    },
+    "stderr": {
+      "size": 98,
+      "sha256": "7e4c898f0d57013c2db80ea77918eeefe6d5c7c6494a21bd5752fe0424c9c46c"
+    },
+    "stdout": {
+      "size": 744,
+      "sha256": "90bbb0d32911d05151fdef2ee2ca1424a888f442c3f1f8b85cde83f6e7ef53d4"
+    },
+    "xvfb.log": {
+      "size": 2868,
+      "sha256": "79f76d3feb971128222a296e2312dc34d25ca06e0d465bddf909dff5a09f2ef0"
+    }
+  }
+}
