@@ -21,6 +21,7 @@ def main():
     parser.add_argument("worker", type=Path)
     parser.add_argument("output", type=Path)
     parser.add_argument("--software", action="store_true")
+    parser.add_argument("--observe-text-placement", action="store_true", help="Record bounded glyph placement during the existing text export")
     parser.add_argument("--skip-text", action="store_true", help="Diagnostic geometry/codec scope; platform font parity remains open")
     args = parser.parse_args()
     repo = Path(__file__).resolve().parents[1]
@@ -69,7 +70,9 @@ def main():
             subprocess.run(command, cwd=repo, env=env, stdout=stdout, stderr=stderr, check=True, timeout=120)
 
     flags = ["--skip-text"] if args.skip_text else []
-    run([binary, out / "source", native, "--views", out / "views", "--worker", worker] + flags + (["--software"] if args.software else []), "runtime.log")
+    assert not (args.skip_text and args.observe_text_placement), "Text observation requires the text case"
+    runtime_flags = flags + (["--observe-text-placement"] if args.observe_text_placement else [])
+    run([binary, out / "source", native, "--views", out / "views", "--worker", worker] + runtime_flags + (["--software"] if args.software else []), "runtime.log")
     run([sys.executable, repo / "scripts/check-sheet-image-native.py", out / "source", native, out / "comparison.json", out / "views"] + flags, "checker.log")
     report = json.loads((out / "comparison.json").read_text())
     result = {"revision": subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=repo, text=True).strip(),
@@ -77,6 +80,11 @@ def main():
               "comparison": report, "fresh_source_captures": 0, "commands": commands,
               "software_requested": args.software, "platform": sys.platform,
               "result": "pass", "scope": "Actual native export of the frozen physical image cases. Geometry-only Mac diagnostics exclude text; no full painter, desktop chooser or representative performance claim."}
+    if args.observe_text_placement:
+        trace = native / "text-placement.json"
+        rows = json.loads(trace.read_text())
+        assert len(rows) == 29 and {r["draw"] for r in rows} == {0, 1}
+        result["glyph_observation"] = {"glyphs": len(rows), "sha256": digest(trace), "scope": "Actual production placement during the already required text image; image comparison unchanged"}
     (out / "result.json").write_text(json.dumps(result, indent=2) + "\n")
     print(json.dumps({k: v for k, v in result.items() if k != "commands"}))
 
