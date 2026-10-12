@@ -515,7 +515,10 @@ impl IngeTrazoApp {
         let state = &mut self.composer_state.annotation_authoring;
         // Source Add reselects surviving items, adds the new cota, and keeps
         // the panel's shown owner while that owner remains selected.
-        state.multi.members.try_reserve(2)
+        state
+            .multi
+            .members
+            .try_reserve(2)
             .map_err(|_| "Dimension run selection allocation refused")?;
         let shown = state.selected;
         let mut members = std::mem::take(&mut state.multi.members);
@@ -551,9 +554,13 @@ impl IngeTrazoApp {
         match result {
             Ok(owner) => {
                 if let Some(shown) = shown {
-                    if !members.contains(&shown) { members.push(shown); }
+                    if !members.contains(&shown) {
+                        members.push(shown);
+                    }
                 }
-                if !members.contains(&owner) { members.push(owner); }
+                if !members.contains(&owner) {
+                    members.push(owner);
+                }
                 state.selected = shown.or(Some(owner));
                 state.multi.members = members;
                 // The document version changed on Add, so this refreshes the
@@ -1996,6 +2003,7 @@ pub(super) fn input(
                     && app.composer_state.dragging_item_idx.is_none()
                     && app.composer_state.legend_authoring.grab.is_none()
                 {
+                    let mut foreign_hit = false;
                     for &(kind, index, f) in order.iter().rev() {
                         if kind != 3 {
                             let hit = if kind == 0 {
@@ -2021,6 +2029,7 @@ pub(super) fn input(
                                     })
                             };
                             if hit {
+                                foreign_hit = true;
                                 break;
                             }
                             continue;
@@ -2117,10 +2126,11 @@ pub(super) fn input(
                         }
                         break;
                     }
-                    if !owned {
-                        // Source rubber-band selection retains the current cohort
-                        // until release decides replace/add/toggle/removal.
+                    if !owned && !foreign_hit {
+                        // The empty-page band owns this press. The generic item
+                        // handler must not clear its retained primary selection.
                         multi::begin_band(app, p, zoom);
+                        owned = true;
                     }
                 }
             }

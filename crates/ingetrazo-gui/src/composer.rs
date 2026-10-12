@@ -210,7 +210,7 @@ pub fn render_sheet_composer(app: &mut IngeTrazoApp, ui: &mut egui::Ui, sheet_id
         // A normal item grab keeps its geometry until the real release.
         // Source Select Escape only drops selection; explicit edit/placement
         // cancellation retains the existing snapshot rollback law.
-        if app.cancel_composer_annotation_run(){}
+        if app.cancel_composer_annotation_run(){ui.input_mut(|input|{input.consume_key(egui::Modifiers::NONE,egui::Key::Escape);});}
         else if app.composer_state.annotation_authoring.armed.is_some(){app.cancel_composer_annotation_placement();}
         else if app.composer_state.legend_authoring.armed{if app.composer_state.legend_authoring.pending.take().is_none(){app.composer_state.legend_authoring.armed=false;}}
         else if app.composer_state.dragging_item_idx.is_some()||app.composer_state.picture_grab.is_some()||app.composer_state.legend_authoring.grab.is_some()||app.composer_state.annotation_authoring.grab.is_some(){app.scene.sheets[sheet_idx].selected_item=None;app.composer_state.picture_authoring.selected=None;app.composer_state.legend_authoring.selected=None;app.clear_composer_annotation_selection();}
