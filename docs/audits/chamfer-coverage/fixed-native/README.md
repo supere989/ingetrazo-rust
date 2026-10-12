@@ -1,0 +1,9 @@
+# Fixed chamfer and symbol acceptance
+
+At `ece85d98`, the shared solid-glyph clip correction produces an exact complete chamfer RGBA frame and 12 exact symbol PNGs, 12 exact PDF comparisons and nine rejected controls. The build passed in 7.252 seconds; actual llvmpipe chamfer execution took 1.844 seconds and symbol native execution took 10.308 seconds. The checker exit-zero receipt was transcribed afterward from actual root subprocess output; no checker timing is claimed. Executed binary digests `2055…` and `7ef5…` are authenticated.
+
+The two prior residual-site prefix colors now equal the source, supporting the targeted clip-policy correction under this finite fixture. Whole-prefix parity remains unproved: 631 pixels differ by at most one channel value. The earlier strict two-pixel failed diagnostic remains preserved in its separate immutable packet and is referenced by archive hash. Source parent and chamfer archives are referenced without duplication.
+
+Actual prepared Plan/span observer, shared glyph painter, renderer and coverage/color helper Git bytes are bound to the executed revision. Both inspected qdrawhelper reference copies are retained: `4de662…` and `d8c736…` are different local files, not conflicting runtime identities. The raster reference is `f52f54…`. These were inspected after execution and are local source references, not proof of which Qt object was linked.
+
+The archive retains full native records, PNG/PDF/RGBA outputs, comparisons, controls, logs and build/native/checker receipts. Generated state is excluded and nothing was purged. Acceptance is finite, source-font/platform bound; it does not establish private Qt span equivalence, whole-prefix parity, GPU portability or general performance/heap bounds. No captures, builds or native runs occurred during packaging.

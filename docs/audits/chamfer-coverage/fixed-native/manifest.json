@@ -1,0 +1,756 @@
+{
+  "archive": "records.zip",
+  "archive_sha256": "92e82e644d34ee89b94c3234022973b9a83befb23cdf7e3774aabdd1727515b8",
+  "members": [
+    {
+      "path": "chamfer-build-r2/build.log",
+      "size": 27285,
+      "sha256": "e544ddbd8cbed2f15927622d15f707c9f0039ebd0fea65393a9f9cbe645fc7e6"
+    },
+    {
+      "path": "chamfer-build-r2/receipt.json",
+      "size": 110,
+      "sha256": "9e087ef6148d96d21b68a4e222c59c9f310a0dfd834d920b15735684be3d8871"
+    },
+    {
+      "path": "chamfer-native-attempt-2/native.log",
+      "size": 501,
+      "sha256": "0318a0e41e413e04b57885f429717f239dbc7f3e34fc76b978fc16a1e401fbc7"
+    },
+    {
+      "path": "chamfer-native-attempt-2/receipt.json",
+      "size": 200,
+      "sha256": "79b25f7e492b690d459f9deb752515f7e99c834342dc57f33b5614a1b1edabf5"
+    },
+    {
+      "path": "chamfer-native-r2/native-chamfer.json",
+      "size": 3432241,
+      "sha256": "cdfc6850ac027ec520922f33e0dbb2253438884c68970f07210e67b2853988ca"
+    },
+    {
+      "path": "chamfer-native-r2/ordinary-before.png",
+      "size": 32277,
+      "sha256": "a1ea842ee51f59193810c8f7d666a4f7bcd83743bca97dcb446faad2e1a93fa5"
+    },
+    {
+      "path": "chamfer-native-r2/ordinary-before.rgba",
+      "size": 3867052,
+      "sha256": "a441bbf0002189a520902777d0cc6ef1750c66e1bf90c72b3c3dba3b3f64a945"
+    },
+    {
+      "path": "chamfer-native-r2/ordinary-observed.png",
+      "size": 32277,
+      "sha256": "a1ea842ee51f59193810c8f7d666a4f7bcd83743bca97dcb446faad2e1a93fa5"
+    },
+    {
+      "path": "chamfer-native-r2/ordinary-observed.rgba",
+      "size": 3867052,
+      "sha256": "a441bbf0002189a520902777d0cc6ef1750c66e1bf90c72b3c3dba3b3f64a945"
+    },
+    {
+      "path": "chamfer-native-r2/prefix.png",
+      "size": 30974,
+      "sha256": "5bda9487cc4df340d98666fa0fa85253347c4febe1cfb8e1e5fa689f6434875d"
+    },
+    {
+      "path": "chamfer-native-r2/prefix.rgba",
+      "size": 3867052,
+      "sha256": "e681cb5a5bf8e3701a2a6f2ddc31ee77d93c46291b8a4b7b935231f0d838c147"
+    },
+    {
+      "path": "local-qt-reference/qdrawhelper-6.12.cpp",
+      "size": 308745,
+      "sha256": "4de662a23b2fdf5e4f08f0c3804222b2d78d313437558509bf72ad184bb08631"
+    },
+    {
+      "path": "local-qt-reference/qpaintengine_raster-6.12.cpp",
+      "size": 156325,
+      "sha256": "f52f54817e5f94955f2064553076f0f65a721fc21650db02ba81ef09a1cc092b"
+    },
+    {
+      "path": "local-qt-reference/qt-span-qdrawhelper.cpp",
+      "size": 307520,
+      "sha256": "d8c736c1ea1f29344d3abf3db1b671a358df0a7be70b2c318fd250d0e21e93aa"
+    },
+    {
+      "path": "symbols-glyph-fix/checker-receipt.json",
+      "size": 480,
+      "sha256": "5858e2826d86962efacf2563b96bd61c2607e6b08df9f50cc0f35e1aa0764c0d"
+    },
+    {
+      "path": "symbols-glyph-fix/checker.log",
+      "size": 7474,
+      "sha256": "058880601e34b3d1e164d84250f8139c86f06a5ed1b15ca407dd356310acdbf2"
+    },
+    {
+      "path": "symbols-glyph-fix/comparison.json",
+      "size": 7473,
+      "sha256": "e13c45887cddea37c4a8a8e2e786e293c0527acbb254d42289fc9bc47859496e"
+    },
+    {
+      "path": "symbols-glyph-fix/native.log",
+      "size": 501,
+      "sha256": "0318a0e41e413e04b57885f429717f239dbc7f3e34fc76b978fc16a1e401fbc7"
+    },
+    {
+      "path": "symbols-glyph-fix/native/native.json",
+      "size": 2599,
+      "sha256": "6c4d66c701124f38791b554cb988548ed184399195cec4537638cfd41b566689"
+    },
+    {
+      "path": "symbols-glyph-fix/native/north-rotated.pdf",
+      "size": 19429,
+      "sha256": "ce7687ba8e5890d66a32c7f5777534b60eb73dbbb27f532b4a42ce8c00aaf15e"
+    },
+    {
+      "path": "symbols-glyph-fix/native/north-rotated.png",
+      "size": 9866,
+      "sha256": "9328417a66dd49f5f5cc5a34e82aef1528e8942515255d3eb11e038d9e618531"
+    },
+    {
+      "path": "symbols-glyph-fix/native/north-rotated.rgba",
+      "size": 3867052,
+      "sha256": "187ffca1997ffcf4f6cdfb3e6f2ae05d38836ea9d63cef9984effda3d830e4a1"
+    },
+    {
+      "path": "symbols-glyph-fix/native/north-zero.pdf",
+      "size": 19351,
+      "sha256": "3a4fab8519d06a2a1d31fbdbcb8dc1121201c0d48f4f46d0115bfe2b35b45b1d"
+    },
+    {
+      "path": "symbols-glyph-fix/native/north-zero.png",
+      "size": 9287,
+      "sha256": "6ca626a651d14ef40e4595679c6aba5e91ebbfaf5e193c887f65622ef8a4a0d3"
+    },
+    {
+      "path": "symbols-glyph-fix/native/north-zero.rgba",
+      "size": 3867052,
+      "sha256": "6e09dbc14284497a1b29be153bc68cfda2daac7ae506bd429153305a228ab3d4"
+    },
+    {
+      "path": "symbols-glyph-fix/native/refusal.png",
+      "size": 17,
+      "sha256": "bfc4668bda0fa79af37afecbd00615118d71004f462fd761e0ee581c279785c0"
+    },
+    {
+      "path": "symbols-glyph-fix/native/scale-default.pdf",
+      "size": 23927,
+      "sha256": "2b59e937dec9f27c8a23eaf78b1b23d57b4a46a8d6ef5cfb3100d5165aa63ea1"
+    },
+    {
+      "path": "symbols-glyph-fix/native/scale-default.png",
+      "size": 7799,
+      "sha256": "e64f627c57d77914c9ee3a979fd42c21ab76053a2042ae56c958c124cbd0a1ba"
+    },
+    {
+      "path": "symbols-glyph-fix/native/scale-default.rgba",
+      "size": 3867052,
+      "sha256": "623b55cec25fad4dfad4805e63d8038f956651a1e666b21e956f3438c0f185d8"
+    },
+    {
+      "path": "symbols-glyph-fix/native/scale-fractional.pdf",
+      "size": 23163,
+      "sha256": "6ddcf5997e08945e502374d301d9e0b05515223c23de6d685f67cb41686c9a89"
+    },
+    {
+      "path": "symbols-glyph-fix/native/scale-fractional.png",
+      "size": 7478,
+      "sha256": "a1eb390439114d5b1aa09ad2788d7a14cdc4544aa689f2c7f8332a3391ed865a"
+    },
+    {
+      "path": "symbols-glyph-fix/native/scale-fractional.rgba",
+      "size": 3867052,
+      "sha256": "33ce7167052850a2eab07e8ac8b8415125a25a32a601e59ebd4f69ed4f7d7224"
+    },
+    {
+      "path": "symbols-glyph-fix/native/symbols-hidden.pdf",
+      "size": 42799,
+      "sha256": "16ab4cc59c841449ec7b3f8ee490d9ba720490a1507fe8587e82a44b5a88c9a8"
+    },
+    {
+      "path": "symbols-glyph-fix/native/symbols-hidden.png",
+      "size": 11961,
+      "sha256": "3b1b3463cc67e177a102b160e68a7d2440d0b05136aa5f85f54ddb16d89bd48c"
+    },
+    {
+      "path": "symbols-glyph-fix/native/symbols-hidden.rgba",
+      "size": 3867052,
+      "sha256": "ec8e4adf67a997b1427fae011e6a10055a9f2088ba0552caa940981747b124e7"
+    },
+    {
+      "path": "symbols-glyph-fix/native/symbols-overlap.pdf",
+      "size": 57206,
+      "sha256": "848c96c74f3e84f744f0c793b037b696d92e030cf5f8927f8c7101c97fef51e1"
+    },
+    {
+      "path": "symbols-glyph-fix/native/symbols-overlap.png",
+      "size": 33146,
+      "sha256": "014c979a0c6026122c562e83af81c185346e0f630c75e7b1d244747e41f83880"
+    },
+    {
+      "path": "symbols-glyph-fix/native/symbols-overlap.rgba",
+      "size": 3867052,
+      "sha256": "3b7763034014c3a2a2973105c922e5adad5ec13d79293fb36c141f8a3587ee74"
+    },
+    {
+      "path": "symbols-glyph-fix/native/title-banded.pdf",
+      "size": 54421,
+      "sha256": "9288823601d5a3b0d4334f8c65de819981d3752071c12fc1e1570560261e4a54"
+    },
+    {
+      "path": "symbols-glyph-fix/native/title-banded.png",
+      "size": 31221,
+      "sha256": "4b620bcef75a73aa23a7bec5295e6812c9d509f2de306c290a044e19245390c6"
+    },
+    {
+      "path": "symbols-glyph-fix/native/title-banded.rgba",
+      "size": 3867052,
+      "sha256": "5f4c876d9a568ebabab9b3f89d8c8361cc4b02427acaaae9eac06223b8de7647"
+    },
+    {
+      "path": "symbols-glyph-fix/native/title-chamfer-double.pdf",
+      "size": 56031,
+      "sha256": "9e4c3a1ebac9ec2cdb6715bfe2857f18f957f5200c3f5ff7b063ec95ccc121d1"
+    },
+    {
+      "path": "symbols-glyph-fix/native/title-chamfer-double.png",
+      "size": 32277,
+      "sha256": "a1ea842ee51f59193810c8f7d666a4f7bcd83743bca97dcb446faad2e1a93fa5"
+    },
+    {
+      "path": "symbols-glyph-fix/native/title-chamfer-double.rgba",
+      "size": 3867052,
+      "sha256": "a441bbf0002189a520902777d0cc6ef1750c66e1bf90c72b3c3dba3b3f64a945"
+    },
+    {
+      "path": "symbols-glyph-fix/native/title-columns-wrap.pdf",
+      "size": 53288,
+      "sha256": "3c45d7b6ff99db6f440ea256cef195a370591c9f38588a751dfcfab7ce3e3cd8"
+    },
+    {
+      "path": "symbols-glyph-fix/native/title-columns-wrap.png",
+      "size": 39981,
+      "sha256": "6053e784b7eb2c181f25d847b6d47b85c02b15c4058df8a39ddccfed3ee42fda"
+    },
+    {
+      "path": "symbols-glyph-fix/native/title-columns-wrap.rgba",
+      "size": 3867052,
+      "sha256": "0f1eced16f2b656a35b8978cd280496c3992de46c40f4dfbe2583f43c5e05a7b"
+    },
+    {
+      "path": "symbols-glyph-fix/native/title-grid.pdf",
+      "size": 51751,
+      "sha256": "1d38c3856038fa0ee4f263d15c4d2a0a3bc026fe8b16524cda22bebc1ddb9f78"
+    },
+    {
+      "path": "symbols-glyph-fix/native/title-grid.png",
+      "size": 33146,
+      "sha256": "014c979a0c6026122c562e83af81c185346e0f630c75e7b1d244747e41f83880"
+    },
+    {
+      "path": "symbols-glyph-fix/native/title-grid.rgba",
+      "size": 3867052,
+      "sha256": "3b7763034014c3a2a2973105c922e5adad5ec13d79293fb36c141f8a3587ee74"
+    },
+    {
+      "path": "symbols-glyph-fix/native/title-minimal.pdf",
+      "size": 50318,
+      "sha256": "1b4396dd0467f27d24deebef2422de57f0d7ba49bf4e07cdb88727d6b56bb099"
+    },
+    {
+      "path": "symbols-glyph-fix/native/title-minimal.png",
+      "size": 25514,
+      "sha256": "5587e7f55f69d7aa458bbd3237e0d7aab1a24fcf16e6e9a986f9c6af80e61ad1"
+    },
+    {
+      "path": "symbols-glyph-fix/native/title-minimal.rgba",
+      "size": 3867052,
+      "sha256": "53c955efb277c81c7d747a2068722001743fcbdc2def748abce5516c0abc4e45"
+    },
+    {
+      "path": "symbols-glyph-fix/native/title-rounded.pdf",
+      "size": 56146,
+      "sha256": "190eb6538d4d2b027039b621f8b439bb4b74cecc9134d222b5add32c53cabf76"
+    },
+    {
+      "path": "symbols-glyph-fix/native/title-rounded.png",
+      "size": 34619,
+      "sha256": "f2c04a512958d71bf6d1dbf502039c35ca2cdd76f64d702de6f6c3cca914652f"
+    },
+    {
+      "path": "symbols-glyph-fix/native/title-rounded.rgba",
+      "size": 3867052,
+      "sha256": "a1cb289d95d00376588676a39beeb9e6b72c57c85a01a52cea29cb9d89d950a1"
+    },
+    {
+      "path": "symbols-glyph-fix/receipt.json",
+      "size": 200,
+      "sha256": "7f0b0681046cadc7a59b762168b46f3f41632f10b4fe57bc58613c7d778ff9af"
+    }
+  ],
+  "origins": [
+    {
+      "path": "chamfer-native-r2/native-chamfer.json",
+      "origin": "/tmp/ingetrazo-chamfer-native-r2/native-chamfer.json",
+      "size": 3432241,
+      "sha256": "cdfc6850ac027ec520922f33e0dbb2253438884c68970f07210e67b2853988ca"
+    },
+    {
+      "path": "chamfer-native-r2/ordinary-before.png",
+      "origin": "/tmp/ingetrazo-chamfer-native-r2/ordinary-before.png",
+      "size": 32277,
+      "sha256": "a1ea842ee51f59193810c8f7d666a4f7bcd83743bca97dcb446faad2e1a93fa5"
+    },
+    {
+      "path": "chamfer-native-r2/ordinary-before.rgba",
+      "origin": "/tmp/ingetrazo-chamfer-native-r2/ordinary-before.rgba",
+      "size": 3867052,
+      "sha256": "a441bbf0002189a520902777d0cc6ef1750c66e1bf90c72b3c3dba3b3f64a945"
+    },
+    {
+      "path": "chamfer-native-r2/ordinary-observed.png",
+      "origin": "/tmp/ingetrazo-chamfer-native-r2/ordinary-observed.png",
+      "size": 32277,
+      "sha256": "a1ea842ee51f59193810c8f7d666a4f7bcd83743bca97dcb446faad2e1a93fa5"
+    },
+    {
+      "path": "chamfer-native-r2/ordinary-observed.rgba",
+      "origin": "/tmp/ingetrazo-chamfer-native-r2/ordinary-observed.rgba",
+      "size": 3867052,
+      "sha256": "a441bbf0002189a520902777d0cc6ef1750c66e1bf90c72b3c3dba3b3f64a945"
+    },
+    {
+      "path": "chamfer-native-r2/prefix.png",
+      "origin": "/tmp/ingetrazo-chamfer-native-r2/prefix.png",
+      "size": 30974,
+      "sha256": "5bda9487cc4df340d98666fa0fa85253347c4febe1cfb8e1e5fa689f6434875d"
+    },
+    {
+      "path": "chamfer-native-r2/prefix.rgba",
+      "origin": "/tmp/ingetrazo-chamfer-native-r2/prefix.rgba",
+      "size": 3867052,
+      "sha256": "e681cb5a5bf8e3701a2a6f2ddc31ee77d93c46291b8a4b7b935231f0d838c147"
+    },
+    {
+      "path": "chamfer-native-attempt-2/native.log",
+      "origin": "/tmp/ingetrazo-chamfer-native-attempt-2/native.log",
+      "size": 501,
+      "sha256": "0318a0e41e413e04b57885f429717f239dbc7f3e34fc76b978fc16a1e401fbc7"
+    },
+    {
+      "path": "chamfer-native-attempt-2/receipt.json",
+      "origin": "/tmp/ingetrazo-chamfer-native-attempt-2/receipt.json",
+      "size": 200,
+      "sha256": "79b25f7e492b690d459f9deb752515f7e99c834342dc57f33b5614a1b1edabf5"
+    },
+    {
+      "path": "chamfer-build-r2/build.log",
+      "origin": "/tmp/ingetrazo-chamfer-build-r2/build.log",
+      "size": 27285,
+      "sha256": "e544ddbd8cbed2f15927622d15f707c9f0039ebd0fea65393a9f9cbe645fc7e6"
+    },
+    {
+      "path": "chamfer-build-r2/receipt.json",
+      "origin": "/tmp/ingetrazo-chamfer-build-r2/receipt.json",
+      "size": 110,
+      "sha256": "9e087ef6148d96d21b68a4e222c59c9f310a0dfd834d920b15735684be3d8871"
+    },
+    {
+      "path": "symbols-glyph-fix/checker-receipt.json",
+      "origin": "/tmp/ingetrazo-symbols-glyph-fix/checker-receipt.json",
+      "size": 480,
+      "sha256": "5858e2826d86962efacf2563b96bd61c2607e6b08df9f50cc0f35e1aa0764c0d"
+    },
+    {
+      "path": "symbols-glyph-fix/checker.log",
+      "origin": "/tmp/ingetrazo-symbols-glyph-fix/checker.log",
+      "size": 7474,
+      "sha256": "058880601e34b3d1e164d84250f8139c86f06a5ed1b15ca407dd356310acdbf2"
+    },
+    {
+      "path": "symbols-glyph-fix/comparison.json",
+      "origin": "/tmp/ingetrazo-symbols-glyph-fix/comparison.json",
+      "size": 7473,
+      "sha256": "e13c45887cddea37c4a8a8e2e786e293c0527acbb254d42289fc9bc47859496e"
+    },
+    {
+      "path": "symbols-glyph-fix/native/native.json",
+      "origin": "/tmp/ingetrazo-symbols-glyph-fix/native/native.json",
+      "size": 2599,
+      "sha256": "6c4d66c701124f38791b554cb988548ed184399195cec4537638cfd41b566689"
+    },
+    {
+      "path": "symbols-glyph-fix/native/north-rotated.pdf",
+      "origin": "/tmp/ingetrazo-symbols-glyph-fix/native/north-rotated.pdf",
+      "size": 19429,
+      "sha256": "ce7687ba8e5890d66a32c7f5777534b60eb73dbbb27f532b4a42ce8c00aaf15e"
+    },
+    {
+      "path": "symbols-glyph-fix/native/north-rotated.png",
+      "origin": "/tmp/ingetrazo-symbols-glyph-fix/native/north-rotated.png",
+      "size": 9866,
+      "sha256": "9328417a66dd49f5f5cc5a34e82aef1528e8942515255d3eb11e038d9e618531"
+    },
+    {
+      "path": "symbols-glyph-fix/native/north-rotated.rgba",
+      "origin": "/tmp/ingetrazo-symbols-glyph-fix/native/north-rotated.rgba",
+      "size": 3867052,
+      "sha256": "187ffca1997ffcf4f6cdfb3e6f2ae05d38836ea9d63cef9984effda3d830e4a1"
+    },
+    {
+      "path": "symbols-glyph-fix/native/north-zero.pdf",
+      "origin": "/tmp/ingetrazo-symbols-glyph-fix/native/north-zero.pdf",
+      "size": 19351,
+      "sha256": "3a4fab8519d06a2a1d31fbdbcb8dc1121201c0d48f4f46d0115bfe2b35b45b1d"
+    },
+    {
+      "path": "symbols-glyph-fix/native/north-zero.png",
+      "origin": "/tmp/ingetrazo-symbols-glyph-fix/native/north-zero.png",
+      "size": 9287,
+      "sha256": "6ca626a651d14ef40e4595679c6aba5e91ebbfaf5e193c887f65622ef8a4a0d3"
+    },
+    {
+      "path": "symbols-glyph-fix/native/north-zero.rgba",
+      "origin": "/tmp/ingetrazo-symbols-glyph-fix/native/north-zero.rgba",
+      "size": 3867052,
+      "sha256": "6e09dbc14284497a1b29be153bc68cfda2daac7ae506bd429153305a228ab3d4"
+    },
+    {
+      "path": "symbols-glyph-fix/native/refusal.png",
+      "origin": "/tmp/ingetrazo-symbols-glyph-fix/native/refusal.png",
+      "size": 17,
+      "sha256": "bfc4668bda0fa79af37afecbd00615118d71004f462fd761e0ee581c279785c0"
+    },
+    {
+      "path": "symbols-glyph-fix/native/scale-default.pdf",
+      "origin": "/tmp/ingetrazo-symbols-glyph-fix/native/scale-default.pdf",
+      "size": 23927,
+      "sha256": "2b59e937dec9f27c8a23eaf78b1b23d57b4a46a8d6ef5cfb3100d5165aa63ea1"
+    },
+    {
+      "path": "symbols-glyph-fix/native/scale-default.png",
+      "origin": "/tmp/ingetrazo-symbols-glyph-fix/native/scale-default.png",
+      "size": 7799,
+      "sha256": "e64f627c57d77914c9ee3a979fd42c21ab76053a2042ae56c958c124cbd0a1ba"
+    },
+    {
+      "path": "symbols-glyph-fix/native/scale-default.rgba",
+      "origin": "/tmp/ingetrazo-symbols-glyph-fix/native/scale-default.rgba",
+      "size": 3867052,
+      "sha256": "623b55cec25fad4dfad4805e63d8038f956651a1e666b21e956f3438c0f185d8"
+    },
+    {
+      "path": "symbols-glyph-fix/native/scale-fractional.pdf",
+      "origin": "/tmp/ingetrazo-symbols-glyph-fix/native/scale-fractional.pdf",
+      "size": 23163,
+      "sha256": "6ddcf5997e08945e502374d301d9e0b05515223c23de6d685f67cb41686c9a89"
+    },
+    {
+      "path": "symbols-glyph-fix/native/scale-fractional.png",
+      "origin": "/tmp/ingetrazo-symbols-glyph-fix/native/scale-fractional.png",
+      "size": 7478,
+      "sha256": "a1eb390439114d5b1aa09ad2788d7a14cdc4544aa689f2c7f8332a3391ed865a"
+    },
+    {
+      "path": "symbols-glyph-fix/native/scale-fractional.rgba",
+      "origin": "/tmp/ingetrazo-symbols-glyph-fix/native/scale-fractional.rgba",
+      "size": 3867052,
+      "sha256": "33ce7167052850a2eab07e8ac8b8415125a25a32a601e59ebd4f69ed4f7d7224"
+    },
+    {
+      "path": "symbols-glyph-fix/native/symbols-hidden.pdf",
+      "origin": "/tmp/ingetrazo-symbols-glyph-fix/native/symbols-hidden.pdf",
+      "size": 42799,
+      "sha256": "16ab4cc59c841449ec7b3f8ee490d9ba720490a1507fe8587e82a44b5a88c9a8"
+    },
+    {
+      "path": "symbols-glyph-fix/native/symbols-hidden.png",
+      "origin": "/tmp/ingetrazo-symbols-glyph-fix/native/symbols-hidden.png",
+      "size": 11961,
+      "sha256": "3b1b3463cc67e177a102b160e68a7d2440d0b05136aa5f85f54ddb16d89bd48c"
+    },
+    {
+      "path": "symbols-glyph-fix/native/symbols-hidden.rgba",
+      "origin": "/tmp/ingetrazo-symbols-glyph-fix/native/symbols-hidden.rgba",
+      "size": 3867052,
+      "sha256": "ec8e4adf67a997b1427fae011e6a10055a9f2088ba0552caa940981747b124e7"
+    },
+    {
+      "path": "symbols-glyph-fix/native/symbols-overlap.pdf",
+      "origin": "/tmp/ingetrazo-symbols-glyph-fix/native/symbols-overlap.pdf",
+      "size": 57206,
+      "sha256": "848c96c74f3e84f744f0c793b037b696d92e030cf5f8927f8c7101c97fef51e1"
+    },
+    {
+      "path": "symbols-glyph-fix/native/symbols-overlap.png",
+      "origin": "/tmp/ingetrazo-symbols-glyph-fix/native/symbols-overlap.png",
+      "size": 33146,
+      "sha256": "014c979a0c6026122c562e83af81c185346e0f630c75e7b1d244747e41f83880"
+    },
+    {
+      "path": "symbols-glyph-fix/native/symbols-overlap.rgba",
+      "origin": "/tmp/ingetrazo-symbols-glyph-fix/native/symbols-overlap.rgba",
+      "size": 3867052,
+      "sha256": "3b7763034014c3a2a2973105c922e5adad5ec13d79293fb36c141f8a3587ee74"
+    },
+    {
+      "path": "symbols-glyph-fix/native/title-banded.pdf",
+      "origin": "/tmp/ingetrazo-symbols-glyph-fix/native/title-banded.pdf",
+      "size": 54421,
+      "sha256": "9288823601d5a3b0d4334f8c65de819981d3752071c12fc1e1570560261e4a54"
+    },
+    {
+      "path": "symbols-glyph-fix/native/title-banded.png",
+      "origin": "/tmp/ingetrazo-symbols-glyph-fix/native/title-banded.png",
+      "size": 31221,
+      "sha256": "4b620bcef75a73aa23a7bec5295e6812c9d509f2de306c290a044e19245390c6"
+    },
+    {
+      "path": "symbols-glyph-fix/native/title-banded.rgba",
+      "origin": "/tmp/ingetrazo-symbols-glyph-fix/native/title-banded.rgba",
+      "size": 3867052,
+      "sha256": "5f4c876d9a568ebabab9b3f89d8c8361cc4b02427acaaae9eac06223b8de7647"
+    },
+    {
+      "path": "symbols-glyph-fix/native/title-chamfer-double.pdf",
+      "origin": "/tmp/ingetrazo-symbols-glyph-fix/native/title-chamfer-double.pdf",
+      "size": 56031,
+      "sha256": "9e4c3a1ebac9ec2cdb6715bfe2857f18f957f5200c3f5ff7b063ec95ccc121d1"
+    },
+    {
+      "path": "symbols-glyph-fix/native/title-chamfer-double.png",
+      "origin": "/tmp/ingetrazo-symbols-glyph-fix/native/title-chamfer-double.png",
+      "size": 32277,
+      "sha256": "a1ea842ee51f59193810c8f7d666a4f7bcd83743bca97dcb446faad2e1a93fa5"
+    },
+    {
+      "path": "symbols-glyph-fix/native/title-chamfer-double.rgba",
+      "origin": "/tmp/ingetrazo-symbols-glyph-fix/native/title-chamfer-double.rgba",
+      "size": 3867052,
+      "sha256": "a441bbf0002189a520902777d0cc6ef1750c66e1bf90c72b3c3dba3b3f64a945"
+    },
+    {
+      "path": "symbols-glyph-fix/native/title-columns-wrap.pdf",
+      "origin": "/tmp/ingetrazo-symbols-glyph-fix/native/title-columns-wrap.pdf",
+      "size": 53288,
+      "sha256": "3c45d7b6ff99db6f440ea256cef195a370591c9f38588a751dfcfab7ce3e3cd8"
+    },
+    {
+      "path": "symbols-glyph-fix/native/title-columns-wrap.png",
+      "origin": "/tmp/ingetrazo-symbols-glyph-fix/native/title-columns-wrap.png",
+      "size": 39981,
+      "sha256": "6053e784b7eb2c181f25d847b6d47b85c02b15c4058df8a39ddccfed3ee42fda"
+    },
+    {
+      "path": "symbols-glyph-fix/native/title-columns-wrap.rgba",
+      "origin": "/tmp/ingetrazo-symbols-glyph-fix/native/title-columns-wrap.rgba",
+      "size": 3867052,
+      "sha256": "0f1eced16f2b656a35b8978cd280496c3992de46c40f4dfbe2583f43c5e05a7b"
+    },
+    {
+      "path": "symbols-glyph-fix/native/title-grid.pdf",
+      "origin": "/tmp/ingetrazo-symbols-glyph-fix/native/title-grid.pdf",
+      "size": 51751,
+      "sha256": "1d38c3856038fa0ee4f263d15c4d2a0a3bc026fe8b16524cda22bebc1ddb9f78"
+    },
+    {
+      "path": "symbols-glyph-fix/native/title-grid.png",
+      "origin": "/tmp/ingetrazo-symbols-glyph-fix/native/title-grid.png",
+      "size": 33146,
+      "sha256": "014c979a0c6026122c562e83af81c185346e0f630c75e7b1d244747e41f83880"
+    },
+    {
+      "path": "symbols-glyph-fix/native/title-grid.rgba",
+      "origin": "/tmp/ingetrazo-symbols-glyph-fix/native/title-grid.rgba",
+      "size": 3867052,
+      "sha256": "3b7763034014c3a2a2973105c922e5adad5ec13d79293fb36c141f8a3587ee74"
+    },
+    {
+      "path": "symbols-glyph-fix/native/title-minimal.pdf",
+      "origin": "/tmp/ingetrazo-symbols-glyph-fix/native/title-minimal.pdf",
+      "size": 50318,
+      "sha256": "1b4396dd0467f27d24deebef2422de57f0d7ba49bf4e07cdb88727d6b56bb099"
+    },
+    {
+      "path": "symbols-glyph-fix/native/title-minimal.png",
+      "origin": "/tmp/ingetrazo-symbols-glyph-fix/native/title-minimal.png",
+      "size": 25514,
+      "sha256": "5587e7f55f69d7aa458bbd3237e0d7aab1a24fcf16e6e9a986f9c6af80e61ad1"
+    },
+    {
+      "path": "symbols-glyph-fix/native/title-minimal.rgba",
+      "origin": "/tmp/ingetrazo-symbols-glyph-fix/native/title-minimal.rgba",
+      "size": 3867052,
+      "sha256": "53c955efb277c81c7d747a2068722001743fcbdc2def748abce5516c0abc4e45"
+    },
+    {
+      "path": "symbols-glyph-fix/native/title-rounded.pdf",
+      "origin": "/tmp/ingetrazo-symbols-glyph-fix/native/title-rounded.pdf",
+      "size": 56146,
+      "sha256": "190eb6538d4d2b027039b621f8b439bb4b74cecc9134d222b5add32c53cabf76"
+    },
+    {
+      "path": "symbols-glyph-fix/native/title-rounded.png",
+      "origin": "/tmp/ingetrazo-symbols-glyph-fix/native/title-rounded.png",
+      "size": 34619,
+      "sha256": "f2c04a512958d71bf6d1dbf502039c35ca2cdd76f64d702de6f6c3cca914652f"
+    },
+    {
+      "path": "symbols-glyph-fix/native/title-rounded.rgba",
+      "origin": "/tmp/ingetrazo-symbols-glyph-fix/native/title-rounded.rgba",
+      "size": 3867052,
+      "sha256": "a1cb289d95d00376588676a39beeb9e6b72c57c85a01a52cea29cb9d89d950a1"
+    },
+    {
+      "path": "symbols-glyph-fix/native.log",
+      "origin": "/tmp/ingetrazo-symbols-glyph-fix/native.log",
+      "size": 501,
+      "sha256": "0318a0e41e413e04b57885f429717f239dbc7f3e34fc76b978fc16a1e401fbc7"
+    },
+    {
+      "path": "symbols-glyph-fix/receipt.json",
+      "origin": "/tmp/ingetrazo-symbols-glyph-fix/receipt.json",
+      "size": 200,
+      "sha256": "7f0b0681046cadc7a59b762168b46f3f41632f10b4fe57bc58613c7d778ff9af"
+    }
+  ],
+  "revision": "ece85d98c5f3b994b8686cb5489581c4d90274e1",
+  "git_bindings": [
+    {
+      "path": "crates/ingetrazo-gui/examples/chamfer_coverage.rs",
+      "revision": "ece85d98c5f3b994b8686cb5489581c4d90274e1",
+      "sha256": "17bb87579adfe269651a6d1748796449946f857d341419b2e4014b641f76e848"
+    },
+    {
+      "path": "crates/ingetrazo-gui/examples/sheet_symbols_workflows.rs",
+      "revision": "ece85d98c5f3b994b8686cb5489581c4d90274e1",
+      "sha256": "15059582a4bd811abef8c5a301798625fb299fd90e165f5cf36e851862fcf885"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/sheet_image.rs",
+      "revision": "ece85d98c5f3b994b8686cb5489581c4d90274e1",
+      "sha256": "fb5a227e2172e86622e733e861709756cbf84beca60ce9ce16de1f231302ef76"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/sheet_image_paths.rs",
+      "revision": "ece85d98c5f3b994b8686cb5489581c4d90274e1",
+      "sha256": "6015e079cea8816240cc81820a2b85f3384f6d3670d2e0844076d484fa6c88c8"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/composer.rs",
+      "revision": "ece85d98c5f3b994b8686cb5489581c4d90274e1",
+      "sha256": "65dffb7308c156ce42d52839e0e440c200c1ec45531ae15a323d196ad63a6db0"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/native_vulkan/sheet_image.rs",
+      "revision": "ece85d98c5f3b994b8686cb5489581c4d90274e1",
+      "sha256": "15294c1bae2f37415ad01fbd7c9f3224a24072311ef4d2fb726499f00e71d9c5"
+    },
+    {
+      "path": "crates/ingetrazo-formats/src/sheet_image.rs",
+      "revision": "ece85d98c5f3b994b8686cb5489581c4d90274e1",
+      "sha256": "21f5822e815fdfec1036df0371ea88d2eca3d84d5dacda48b77b18bceeb9760c"
+    },
+    {
+      "path": "crates/ingetrazo-render/src/cad2d.rs",
+      "revision": "ece85d98c5f3b994b8686cb5489581c4d90274e1",
+      "sha256": "fc03edfa65da6095f2b783aa562d1f682abe05daefadf33e27f9c7be155026f7"
+    },
+    {
+      "path": "crates/ingetrazo-render/src/qt_cosmetic.rs",
+      "revision": "ece85d98c5f3b994b8686cb5489581c4d90274e1",
+      "sha256": "e3dc6970764d5a9a0150523cfe51dbfecb015c264f2abeda564f51feb515b700"
+    },
+    {
+      "path": "crates/ingetrazo-render/src/qt_gl_image_line.rs",
+      "revision": "ece85d98c5f3b994b8686cb5489581c4d90274e1",
+      "sha256": "2606ae4aaa84750e4b0e3c61c0c2a37b6e010652e87c07abca6d92d6f9273047"
+    },
+    {
+      "path": "crates/ingetrazo-render/src/qt_gray.rs",
+      "revision": "ece85d98c5f3b994b8686cb5489581c4d90274e1",
+      "sha256": "a3cfdf5971a10b70c3988b1d5745f4dda91ac84dbded971643d12a36431268a9"
+    },
+    {
+      "path": "crates/ingetrazo-render/src/qt_line.rs",
+      "revision": "ece85d98c5f3b994b8686cb5489581c4d90274e1",
+      "sha256": "dd6290ea808e0a3a58bcaab0bdf64fe0c1818a320d37dcac9ad66b45da5b004f"
+    },
+    {
+      "path": "crates/ingetrazo-render/src/qt_selected_line.rs",
+      "revision": "ece85d98c5f3b994b8686cb5489581c4d90274e1",
+      "sha256": "157c2bc18894cc94c0891a33156315c23ee07a50edd7d6eeb4a12f0240e42a12"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/native_vulkan/cad2d.rs",
+      "revision": "ece85d98c5f3b994b8686cb5489581c4d90274e1",
+      "sha256": "3d4d273af7a5d16fd0bedd526ed5b24ce7bc794504331516ad229e5580ec0d91"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/native_vulkan/shaders/cad2d.frag",
+      "revision": "ece85d98c5f3b994b8686cb5489581c4d90274e1",
+      "sha256": "57528d0398047f15c809cb6d6c17641bdcf46ae77542279250abae99f62e0465"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/native_vulkan/shaders/cad2d.vert",
+      "revision": "ece85d98c5f3b994b8686cb5489581c4d90274e1",
+      "sha256": "6cba5de6ad6a64ab41b672e0ad3794ee34b0c5465d09576fced04d1a20acf5c3"
+    },
+    {
+      "path": "crates/ingetrazo-formats/src/paper_text_painter.rs",
+      "revision": "ece85d98c5f3b994b8686cb5489581c4d90274e1",
+      "sha256": "bd8eb0ec656011ee9ccdfd4d5d72bf32b993c26229b530e5ad045309a35101ab"
+    },
+    {
+      "path": "scripts/check-sheet-symbols.py",
+      "revision": "ece85d98c5f3b994b8686cb5489581c4d90274e1",
+      "sha256": "db425d0317d83bc34ba287d4f42e0e3b8eacd788208143f6534ef656b276b85e"
+    }
+  ],
+  "binaries": [
+    {
+      "name": "chamfer_coverage",
+      "sha256": "2055fac5a455686d2e962475824ecc31c5f5bdec5a78f425c672321fe09ba35f",
+      "revision": "ece85d98c5f3b994b8686cb5489581c4d90274e1"
+    },
+    {
+      "name": "sheet_symbols_workflows",
+      "sha256": "7ef51112f8e842760b80b4641e644e92903410fc3f21310d88dbc25d6aad51cb",
+      "revision": "ece85d98c5f3b994b8686cb5489581c4d90274e1"
+    }
+  ],
+  "local_qt_reference": [
+    {
+      "path": "/tmp/qdrawhelper-6.12.cpp",
+      "retained_member": "local-qt-reference/qdrawhelper-6.12.cpp",
+      "sha256": "4de662a23b2fdf5e4f08f0c3804222b2d78d313437558509bf72ad184bb08631",
+      "scope": "Local inspected reference bytes, not linked runtime provenance; inspected after execution"
+    },
+    {
+      "path": "/tmp/qt-span-source/qdrawhelper.cpp",
+      "retained_member": "local-qt-reference/qt-span-qdrawhelper.cpp",
+      "sha256": "d8c736c1ea1f29344d3abf3db1b671a358df0a7be70b2c318fd250d0e21e93aa",
+      "scope": "Local inspected reference bytes, not linked runtime provenance; inspected after execution"
+    },
+    {
+      "path": "/tmp/qpaintengine_raster-6.12.cpp",
+      "retained_member": "local-qt-reference/qpaintengine_raster-6.12.cpp",
+      "sha256": "f52f54817e5f94955f2064553076f0f65a721fc21650db02ba81ef09a1cc092b",
+      "scope": "Local inspected reference bytes, not linked runtime provenance; inspected after execution"
+    }
+  ],
+  "source_archives": {
+    "docs/audits/chamfer-coverage/source-records.zip": "377b0d6e00f4bd678b8987f67fd3706b0dc8f21f2bc37779d7ad89489748c1c7",
+    "docs/audits/sheet-symbols/source-records.zip": "4068e97cf6620160efc6b5c0f9ce07a89d5c10885160bc7d436d4a69da4173da"
+  },
+  "historical_failed_packet_sha256": "7227923e440a20ba34081047722db20d7da1cf30a909901739d0bd9c45641ae8",
+  "full_chamfer_rgba_exact": true,
+  "symbols_png_exact": 12,
+  "symbols_pdf_exact": 12,
+  "symbols_negative_controls": 9,
+  "whole_prefix_exact": false,
+  "prefix_residual_pixels": 631,
+  "prefix_max_channel_error": 1,
+  "checker_receipt_status": "Actual subprocess exit0 transcribed afterward from root output; no checker timing claim",
+  "cleanup_performed": false
+}
