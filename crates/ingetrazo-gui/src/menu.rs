@@ -62,11 +62,11 @@ pub fn render_menu_bar(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
                     ui.close_menu();
                 }
                 if ui.button(tr("COLLADA (.dae)…")).clicked() {
-                    app.show_open_dialog = true;
+                    app.choose_dae_import();
                     ui.close_menu();
                 }
                 if ui.button(tr("glTF/GLB (.glb)…")).clicked() {
-                    app.show_open_dialog = true;
+                    app.choose_glb_import();
                     ui.close_menu();
                 }
                 if ui.button(tr("Wavefront OBJ (.obj)…")).clicked() {
