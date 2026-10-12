@@ -542,43 +542,51 @@ fn source_dashed_bevel(
         runs.push(run);
     }
     let mut out = Vec::new();
+    let mut boundary_points=0usize;
     for run in runs {
         let extra = run.len().checked_mul(2).ok_or("Physical dashed outline count overflow")?;
         if out.len().checked_add(extra).is_none_or(|n| n > 250_000) {
             return Err("Physical dashed outline budget exceeded".into());
         }
         out.try_reserve(extra).map_err(|_| "Physical dash outline allocation refused")?;
-        for edge in run.windows(2) {
-            if let Some(p) = stroke_line(edge[0], edge[1], width, 0)? {
-                out.push(p);
+        // QStroker emits one forward/backward boundary per open dash.
+        // Separate edge fills would quantize internal edges absent from it.
+        let bound=extra.checked_mul(3).ok_or("Dash boundary size overflow")?;
+        if boundary_points.checked_add(bound).is_none_or(|n|n>250_000){return Err("Dash boundary budget exceeded".into());}
+        let mut boundary=Vec::new();boundary.try_reserve(bound).map_err(|_|"Dash boundary allocation refused")?;
+        let mut previous:Option<(DVec2,DVec2)>=None;
+        for backward in [false,true]{
+            for j in 0..run.len().saturating_sub(1){
+                let (a,b)=if backward{(run[run.len()-1-j],run[run.len()-2-j])}else{(run[j],run[j+1])};
+                let d=b-a;if d.x==0.&&d.y==0.{continue;}
+                // QLineF normalVector/setLength retains rooted cancellation.
+                // Reverse-side offsets are computed independently.
+                let tip=a+DVec2::new(d.y,-d.x);let n=tip-a;let length=n.x.hypot(n.y);
+                let tip=if length>0.{a+(width*0.5)*(n/length)}else{tip};let n=tip-a;
+                let line=(a+n,b+n);
+                if let Some(prev)=previous{
+                    let fuzzy=|x:f64,y:f64|(x-y).abs()*1e12<=x.abs().min(y.abs());
+                    if !(fuzzy(prev.1.x,line.0.x)&&fuzzy(prev.1.y,line.0.y)){
+                        if j!=0{
+                            let va=prev.1-prev.0;let vb=line.0-line.1;let c=prev.0-line.0;
+                            let denom=va.y*vb.x-va.x*vb.y;
+                            let bounded=if denom==0.||!denom.is_finite(){false}else{let na=(vb.y*c.x-vb.x*c.y)/denom;let nb=(va.x*c.y-va.y*c.x)/denom;(0. ..=1.).contains(&na)&&(0. ..=1.).contains(&nb)};
+                            let shortcut=line.0-prev.1;
+                            let angle=|v:DVec2|(-v.y).atan2(v.x).to_degrees().rem_euclid(360.);
+                            let turn=(angle(va)-angle(shortcut)).rem_euclid(360.);
+                            if bounded||(turn>90.&&!fuzzy(turn,90.)){boundary.push(a);}
+                        }
+                        boundary.push(line.0);
+                    }
+                }else{boundary.push(line.0);}
+                boundary.push(line.1);previous=Some(line);
             }
         }
-        // The union of adjacent flat rectangles plus the outer bevel triangle
-        // is the QStroker bevel outline; all contours use one winding fill.
-        for p in run.windows(3) {
-            let a = p[1] - p[0];
-            let b = p[2] - p[1];
-            if a.length() == 0. || b.length() == 0. {
-                continue;
-            }
-            let cross = a.perp_dot(b);
-            if cross == 0. {
-                continue;
-            }
-            let sign = if cross > 0. { 1. } else { -1. };
-            let n = |d: DVec2| DVec2::new(d.y, -d.x) / d.length() * (width * 0.5 * sign);
-            let mut q = [p[1], p[1] + n(a), p[1] + n(b)];
-            if (q[1] - q[0]).perp_dot(q[2] - q[0]) < 0. {
-                q.swap(1, 2);
-            }
-            out.push(PathContour {
-                start: q[0].to_array(),
-                segments: vec![
-                    Segment::Line(q[1].to_array()),
-                    Segment::Line(q[2].to_array()),
-                    Segment::Line(q[0].to_array()),
-                ],
-            });
+        boundary_points+=boundary.len();
+        if let Some(first)=boundary.first().copied(){
+            let mut segments=Vec::new();segments.try_reserve(boundary.len()).map_err(|_|"Dash boundary allocation refused")?;
+            segments.extend(boundary.iter().skip(1).map(|p|Segment::Line(p.to_array())));segments.push(Segment::Line(first.to_array()));
+            out.push(PathContour{start:first.to_array(),segments});
         }
         if out.len() > 250_000 {
             return Err("Physical dashed outline budget exceeded".into());
