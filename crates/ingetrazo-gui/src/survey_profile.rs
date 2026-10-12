@@ -178,6 +178,55 @@ fn held(path: &GeoPath, other: usize, limit: usize) -> Result<HeldPath, String> 
         closed: path.closed,
     })
 }
+// Queries are monotonic stations. Keep the same literal prefix additions and
+// interpolation law as core::point_at_station, without replaying old segments.
+struct StationCursor<'a> {
+    points: &'a [DVec3],
+    segment: usize,
+    prefix: f64,
+    length: Option<f64>,
+    advances: usize,
+}
+impl<'a> StationCursor<'a> {
+    fn new(points: &'a [DVec3]) -> Self {
+        Self {
+            points,
+            segment: 0,
+            prefix: 0.,
+            length: None,
+            advances: 0,
+        }
+    }
+    fn at(&mut self, station: f64) -> (f64, f64) {
+        let Some(first) = self.points.first() else {
+            return (0., 0.);
+        };
+        if station <= 0. {
+            return (first.x, first.y);
+        }
+        while self.segment + 1 < self.points.len() {
+            let a = self.points[self.segment];
+            let b = self.points[self.segment + 1];
+            let length = *self
+                .length
+                .get_or_insert_with(|| (b.x - a.x).hypot(b.y - a.y));
+            if self.prefix + length >= station {
+                let t = if length > 1e-12 {
+                    (station - self.prefix) / length
+                } else {
+                    0.
+                };
+                return (a.x + (b.x - a.x) * t, a.y + (b.y - a.y) * t);
+            }
+            self.prefix += length;
+            self.segment += 1;
+            self.length = None;
+            self.advances += 1;
+        }
+        let last = self.points.last().unwrap();
+        (last.x, last.y)
+    }
+}
 fn prepare_profile(
     path: &HeldPath,
     sampler: &Sampler,
@@ -246,9 +295,10 @@ fn prepare_profile(
     )?;
     budget(checked(checked(other, samplebytes)?, plot_scratch)?, limit)?;
     let mut complete = true;
+    let mut cursor = StationCursor::new(&path.points);
     for i in 0..n {
         let station = length.min(i as f64 * spacing);
-        let (x, y) = ingetrazo_core::georef::point_at_station(&path.points, station);
+        let (x, y) = cursor.at(station);
         // Original profile samples through QVector3D(x,y,0) before NumPy-f32 math.
         if !(x as f32).is_finite() || !(y as f32).is_finite() {
             return Err("Profile query exceeds the source survey coordinate representation".into());
@@ -781,6 +831,40 @@ pub fn render(app: &mut IngeTrazoApp, ctx: &egui::Context) {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn monotonic_station_cursor_retains_source_bits_and_advances_once() {
+        let points = [
+            DVec3::ZERO,
+            DVec3::ZERO,
+            DVec3::new(1e-13, 0., 3.),
+            DVec3::new(3., 4., 9.),
+            DVec3::new(-2., 4., 1.),
+        ];
+        let boundary = (points[3].x - points[2].x).hypot(points[3].y - points[2].y) + 1e-13;
+        let mut stations = vec![
+            0.,
+            1e-14,
+            1e-13,
+            boundary,
+            boundary,
+            boundary + 1e-12,
+            boundary + 5.,
+            boundary + 6.,
+        ];
+        stations.extend((0..1000).map(|i| i as f64 / 100.));
+        stations.sort_by(f64::total_cmp);
+        let mut cursor = StationCursor::new(&points);
+        for station in stations {
+            let expected = ingetrazo_core::georef::point_at_station(&points, station);
+            let actual = cursor.at(station);
+            assert_eq!(
+                (actual.0.to_bits(), actual.1.to_bits()),
+                (expected.0.to_bits(), expected.1.to_bits())
+            );
+        }
+        assert_eq!(cursor.advances, points.len() - 1);
+        assert_eq!(StationCursor::new(&[]).at(1.), (0., 0.));
+    }
     fn loaded() -> IngeTrazoApp {
         let bytes = include_bytes!("../../../docs/audits/survey-profile/source-records.zip");
         let mut archive = zip::ZipArchive::new(std::io::Cursor::new(bytes)).unwrap();
