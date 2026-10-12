@@ -1,0 +1,167 @@
+{
+  "build_head": "8bf68daaf57d23394de1e591dfc86fc212ed8b82",
+  "build_dirty_patch": "build-working-tree.patch",
+  "runtime_equivalent_commit": "298df887",
+  "archive_sha256": "0394bfccab5d72eb7144b380e6145a94a4085d5f70e790ff2103898b34459258",
+  "members": {
+    "build-working-tree.patch": {
+      "bytes": 747,
+      "sha256": "a7846926b67dfc28203095d36845ff8dce8efaf92ad407164c27dbae719b829c"
+    },
+    "build.json": {
+      "bytes": 1136,
+      "sha256": "e9090798b0f2f500c97bdd0612928f0ce7114caebc86fe588b452a2e17cae63e"
+    },
+    "build.log": {
+      "bytes": 22901,
+      "sha256": "e41127308611f4047e3d3bf0e66de75b13c06294b913a5f861029b6e49b956c2"
+    },
+    "pdf-ui-normal/all-click.png": {
+      "bytes": 23606,
+      "sha256": "fc7139276b1329673bf7c7e00e73711ece42e7576282e045eb2912be7aa5fbd5"
+    },
+    "pdf-ui-normal/all-dialog.png": {
+      "bytes": 8378,
+      "sha256": "c17204355e2c397bba240bdb06a4bc1f92562d21ab9dab21087277010e0dcf2e"
+    },
+    "pdf-ui-normal/all-typed-dialog.png": {
+      "bytes": 8762,
+      "sha256": "0528b04c019ea015e515274f050dae8906101807264795642d335579d30e9228"
+    },
+    "pdf-ui-normal/all.pdf": {
+      "bytes": 20320,
+      "sha256": "42ab225166d27f222c698e1e4302645d3a0e8af7bd16bb4f32b186d23673bb85"
+    },
+    "pdf-ui-normal/before.png": {
+      "bytes": 263,
+      "sha256": "f3bdcc59f1a08b8f599bc2d653ce1bdeaafc2bfdc23eaa6d15fe20b7bd6f5101"
+    },
+    "pdf-ui-normal/check.log": {
+      "bytes": 3034,
+      "sha256": "b4532796ca2692720dad289e4f66fa97ea4868f231981202e34dd76f6ffec972"
+    },
+    "pdf-ui-normal/current-click.png": {
+      "bytes": 24346,
+      "sha256": "47e2421d3c4000dcf765e921eaf10180150f14b073fefa4e7bb02c0101262066"
+    },
+    "pdf-ui-normal/current-dialog.png": {
+      "bytes": 8378,
+      "sha256": "22b87e78e3128002c7244ca752ca2fde9557605b85b9930e7efff31219b573b3"
+    },
+    "pdf-ui-normal/current-typed-dialog.png": {
+      "bytes": 8909,
+      "sha256": "106a18316b989fa7e6f6d255d5397b44728d7cd9658c6871a2265823807ad46f"
+    },
+    "pdf-ui-normal/current.pdf": {
+      "bytes": 800,
+      "sha256": "2546254239328a470e2eff73f144d0eec8f85e317f53e7f9cfc4f1c083e7e0e3"
+    },
+    "pdf-ui-normal/report.json": {
+      "bytes": 3988,
+      "sha256": "aa06b3e140e113c406b5b24591ac7599da27c34be1130c8735125b472d845645"
+    },
+    "pdf-ui-normal/result.json": {
+      "bytes": 70,
+      "sha256": "3af734a1448ad8febf97cbf5130b279a74ca06966cc7c1cf9259ab331978608a"
+    },
+    "pdf-ui-normal/runtime.log": {
+      "bytes": 723,
+      "sha256": "d05a87b96a8a5a725cc6188e6aaf768a03a5527ade81064e075873974757725d"
+    },
+    "pdf-ui-normal/state.json": {
+      "bytes": 987,
+      "sha256": "8fcad54b57499aca1af55c360fa5ff9c75def14520cb85c5f573568e7cb1bc62"
+    },
+    "pdf-ui-unsupported/all-click.png": {
+      "bytes": 38791,
+      "sha256": "3714387ac31b4022e79b39cd61c604794ebc02fc194bace576e571b6f4cf2ae1"
+    },
+    "pdf-ui-unsupported/all-dialog.png": {
+      "bytes": 8378,
+      "sha256": "c17204355e2c397bba240bdb06a4bc1f92562d21ab9dab21087277010e0dcf2e"
+    },
+    "pdf-ui-unsupported/all-error-dialog.png": {
+      "bytes": 38791,
+      "sha256": "3714387ac31b4022e79b39cd61c604794ebc02fc194bace576e571b6f4cf2ae1"
+    },
+    "pdf-ui-unsupported/all-overwrite-dialog.png": {
+      "bytes": 5717,
+      "sha256": "7622da8ef5c3a8531eebb2ac58ef22329723475c71e06882d3d5ddc87418ddde"
+    },
+    "pdf-ui-unsupported/all-typed-dialog.png": {
+      "bytes": 8762,
+      "sha256": "0528b04c019ea015e515274f050dae8906101807264795642d335579d30e9228"
+    },
+    "pdf-ui-unsupported/all.pdf": {
+      "bytes": 24,
+      "sha256": "80f030c233b951cbe3146dcc5dd95b31b20085a04b9d94831d90a7c42103a8e6"
+    },
+    "pdf-ui-unsupported/before.png": {
+      "bytes": 263,
+      "sha256": "f3bdcc59f1a08b8f599bc2d653ce1bdeaafc2bfdc23eaa6d15fe20b7bd6f5101"
+    },
+    "pdf-ui-unsupported/check.log": {
+      "bytes": 4347,
+      "sha256": "6fc68e84c7a8928f8b6de6b72995932dcb6bcf20ab60656dca78f93321457008"
+    },
+    "pdf-ui-unsupported/current-click.png": {
+      "bytes": 38791,
+      "sha256": "3714387ac31b4022e79b39cd61c604794ebc02fc194bace576e571b6f4cf2ae1"
+    },
+    "pdf-ui-unsupported/current-dialog.png": {
+      "bytes": 8378,
+      "sha256": "c17204355e2c397bba240bdb06a4bc1f92562d21ab9dab21087277010e0dcf2e"
+    },
+    "pdf-ui-unsupported/current-error-dialog.png": {
+      "bytes": 38791,
+      "sha256": "3714387ac31b4022e79b39cd61c604794ebc02fc194bace576e571b6f4cf2ae1"
+    },
+    "pdf-ui-unsupported/current-overwrite-dialog.png": {
+      "bytes": 6605,
+      "sha256": "d61300b3c06c4fffa8a09c73d2349a879ae880b32a6f09c231e3c67c29649795"
+    },
+    "pdf-ui-unsupported/current-typed-dialog.png": {
+      "bytes": 8909,
+      "sha256": "106a18316b989fa7e6f6d255d5397b44728d7cd9658c6871a2265823807ad46f"
+    },
+    "pdf-ui-unsupported/current.pdf": {
+      "bytes": 28,
+      "sha256": "1b0fc7adf3f67ddd421fc1d7b0235fc72b82d6bd0a50e39fe6603b60521b1a1f"
+    },
+    "pdf-ui-unsupported/error-dismissed.png": {
+      "bytes": 30108,
+      "sha256": "d9d79db406a8753eafe530cfccb7bb2e8d2d694cb112def3c5811e241371d7fe"
+    },
+    "pdf-ui-unsupported/report.json": {
+      "bytes": 5729,
+      "sha256": "2cad3b42569839e798c0be1895d78e174c5a123f5d0824c92583102b986c5cd2"
+    },
+    "pdf-ui-unsupported/result.json": {
+      "bytes": 75,
+      "sha256": "4c48556f16891d9d089a1287fafa90304223ccbdaf182b99c8ce05eab63a445a"
+    },
+    "pdf-ui-unsupported/runtime.log": {
+      "bytes": 723,
+      "sha256": "d05a87b96a8a5a725cc6188e6aaf768a03a5527ade81064e075873974757725d"
+    },
+    "pdf-ui-unsupported/state.json": {
+      "bytes": 1015,
+      "sha256": "70ba66ba288759d7fcdc8c3107b05191787c402c4f816701179b37bfc157f859"
+    }
+  },
+  "raw_bytes": 381573,
+  "git_bindings": [
+    {
+      "path": "scripts/check-composer-pdf-ui.py",
+      "sha256": "a766424e2f2f91cc6b51507c46a1c22e6c83d908aeb99968e7d407a0f8ac705a"
+    },
+    {
+      "path": "crates/ingetrazo-gui/examples/composer_pdf_ui_fixture.rs",
+      "sha256": "7a9ab050134ace410c305ed00a2ba214e2a1a72e4405dd74bafad627156078bb"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/composer.rs",
+      "sha256": "1e2dc7d86f8072da48719eadd8871fe19dd42b2d0bd4184c7ff2e5a3ae26b289"
+    }
+  ]
+}

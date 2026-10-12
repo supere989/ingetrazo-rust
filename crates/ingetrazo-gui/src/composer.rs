@@ -660,6 +660,11 @@ pub fn render_sheet_composer(app: &mut IngeTrazoApp, ui: &mut egui::Ui, sheet_id
     if add_legend{if let Err(e)=app.activate_composer_legend(){app.status_message=e;}}
     if add_picture {let path=crate::dialogs::pick_open_file(&tr("Choose image…"),"Images (*.png *.jpg *.jpeg)");if let Err(e)=app.composer_add_picture(path.as_deref()){app.status_message=e;}}
     if ui.is_enabled(){annotation_authoring::properties(app,ui,sheet_idx);if app.composer_annotation_selection().is_some()&&!ui.ctx().wants_keyboard_input()&&ui.input(|i|i.key_pressed(egui::Key::Delete)){if let Err(e)=app.delete_composer_annotation(){app.status_message=e;}}picture_authoring::properties(app,ui,sheet_idx);legend_authoring::properties(app,ui,sheet_idx);if app.composer_legend_selection().is_some()&&!ui.ctx().wants_keyboard_input()&&ui.input(|i|i.key_pressed(egui::Key::Delete)){if let Err(e)=app.delete_composer_legend(){app.status_message=e;}}}
+    if ui.is_enabled()&&!ui.ctx().wants_keyboard_input()&&app.composer_annotation_selection().is_none()&&app.composer_legend_selection().is_none()&&ui.input(|i|i.key_pressed(egui::Key::Delete)) {
+        let sheet=&app.scene.sheets[sheet_idx];
+        let selected=sheet.selected_item.and_then(|i|sheet.items.get(i)).and_then(|item|match item{SheetItem::ViewFrame(f)=>Some((sheet.id,f.id)),_=>None});
+        if let Some((sid,fid))=selected {ui.input_mut(|i|{i.consume_key(egui::Modifiers::NONE,egui::Key::Delete);});if let Err(e)=app.delete_composer_frame(sid,fid){app.status_message=e;}}
+    }
     if export_image {app.begin_sheet_image_export(sheet_idx);}
     if export_pdf || export_all_pdf {
         let title=if export_all_pdf{tr("Export all sheets (PDF)…")}else{tr("Export PDF…")};

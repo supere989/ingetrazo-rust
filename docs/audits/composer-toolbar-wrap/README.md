@@ -1,0 +1,7 @@
+The expanded composer toolbar placed the all-pages PDF button beyond the actual 1280-pixel window in publication `b5454a98`; its recorded center was x=1316 and no click reached the application. The production toolbar now wraps within the current canvas width and excludes its entire allocated rectangle from sheet input.
+
+The existing actual ash/X11/Zenity fixture now passes both modes. Normal mode opens current/all dialogs, saves and reopens one/nine PDF pages. Unsupported mode opens both dialogs, presents and dismisses the actual error, and preserves both existing destination files. The all-pages button is now at (106,75) on the second row. No timeout, click-coordinate, source expectation or tolerance was changed.
+
+One shared affected build took 10.779 seconds. The two isolated UI checks ran concurrently in 18.185 and 19.788 seconds. These are workflow timings, not renderer throughput measurements. No broad suite or source capture was repeated. Native Vulkan used the software driver on an owned X server; no GPU performance or full desktop parity claim.
+
+`records.zip` retains the logs, literal UI state/reports, screenshots, PDFs, binary hashes and build working-tree delta. The build used commit `8bf68daa` plus the recorded text-admission delta, subsequently committed in `298df887`. The new model annotation consumer compiled in this same build; its source parity replay is a separate pending workflow. The original failed CI attempt remains in [b545 evidence](../native-platform/b5454a98/README.md).

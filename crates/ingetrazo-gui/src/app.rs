@@ -1085,7 +1085,7 @@ impl IngeTrazoApp {
         if !ctx.wants_keyboard_input(){
             let events=ctx.input(|i|i.events.clone());for event in events{match event{egui::Event::Copy=>self.copy_selection(),egui::Event::Cut=>self.cut_selection(),egui::Event::Paste(_)=>self.paste_selection(),_=>{}}}
         }
-        if !ctx.wants_keyboard_input() && ctx.input(|i| i.key_pressed(egui::Key::Delete)) {
+        if !self.scene.active_sheet_index.is_some_and(|i|i<self.scene.sheets.len()) && !ctx.wants_keyboard_input() && ctx.input(|i| i.key_pressed(egui::Key::Delete)) {
             if !self.delete_picked_blender_light() { self.delete_selection_or_annotation_hover(); }
         }
         if ctx.input(|i| i.key_pressed(egui::Key::F3)) {
