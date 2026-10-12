@@ -11,3 +11,5 @@ The final shared build took 10.08 seconds. Native exchange execution took 8.980 
 The manifest binds each executed native/checker/reader stage to its Git revision and the final binary digest. The untracked root verification helper is retained as packaging-time bytes only; no unavailable historical Git binding is invented. No original source capture, native execution, build or checker rerun was performed during packaging.
 
 General format coverage, linked-resource/sharing guarantees, viewport/physical pixels and directed winding parity remain open. Disposable picker/session/state/config/cache/source extractions are excluded, and cleanup candidates are listed only. Nothing was purged.
+
+Existing affected loader checks also pass: thirteen DAE and one glTF library test. Separate loader-checks.zip/JSON retain exact logs and hashes; these checks do not change the strict App winding verdict.

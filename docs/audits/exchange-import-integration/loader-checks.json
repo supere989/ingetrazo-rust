@@ -1,0 +1,20 @@
+{
+  "revision": "3876b2552503b90194ac79d765e413c0a0c39456",
+  "runtime_revision": "5d400ab3f5591e677fb6c35e3432c9024d7060d7",
+  "dae_tests": 13,
+  "gltf_tests": 1,
+  "scope": "Existing affected loader library tests; no whole-workspace or GUI rerun",
+  "files": [
+    {
+      "path": "dae.log",
+      "bytes": 15877,
+      "sha256": "adf41fe170eccc610c7a6414cec5f2869b6e80788ea76a91f135bd2f53cff389"
+    },
+    {
+      "path": "gltf.log",
+      "bytes": 14448,
+      "sha256": "34a9e4963303fe62cc7b228eed201b4d984a68e55c430d91e4c7e0bad79afc47"
+    }
+  ],
+  "archive_sha256": "c330d8b1979448da6aa1a74261ef96c6c6eb15ae584947763484ffe4177424fe"
+}
