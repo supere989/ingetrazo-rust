@@ -1,5 +1,6 @@
 //! Actual DWG chooser -> satellite -> retained DXF unit/import owner.
-use crate::{i18n::tr, IngeTrazoApp};
+use crate::IngeTrazoApp;
+use ingetrazo_core::i18n::tr;
 use std::path::{Path, PathBuf};
 pub struct Report {
     pub warnings: String,

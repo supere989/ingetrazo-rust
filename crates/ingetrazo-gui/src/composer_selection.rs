@@ -85,6 +85,7 @@ struct Group {
     axes: [AxisIndex; 2],
     drawing: Vec<[f64; 2]>,
 }
+pub(super) fn has_capture(app: &IngeTrazoApp) -> bool { app.composer_state.selection.grab.is_some() }
 fn active(app: &IngeTrazoApp) -> Result<usize, String> {
     app.scene
         .active_sheet_index
