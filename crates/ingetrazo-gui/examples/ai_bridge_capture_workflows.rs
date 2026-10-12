@@ -140,6 +140,7 @@ mod fixture {
         report: Value,
         failed: Option<String>,
         resize_attempts: usize,
+        resize_pending: Option<(egui::Vec2, egui::Vec2, Instant)>,
     }
     impl Fixture {
         fn load_case(&mut self) -> Result<(), String> {
@@ -187,6 +188,7 @@ mod fixture {
             self.warm = 0;
             self.next = 0;
             self.resize_attempts = 0;
+            self.resize_pending = None;
             self.started = Instant::now();
             Ok(())
         }
@@ -369,9 +371,10 @@ mod fixture {
                 replies: None,
                 before: None,
                 next: 0,
-                report: json!({"source_pin":original["source_pin"],"cases":cases,"states":[],"controls":{}}),
+                report: json!({"source_pin":original["source_pin"],"cases":cases,"states":[],"controls":{},"calibration":[]}),
                 failed: None,
                 resize_attempts: 0,
+                resize_pending: None,
             };
             f.load_case().unwrap();
             f
@@ -401,12 +404,33 @@ mod fixture {
                         self.warm = 0;
                         return Ok(());
                     };
-                    ctx.send_viewport_cmd(egui::ViewportCommand::InnerSize(
-                        window.size() + egui::vec2(width - rect.width(), height - rect.height()),
-                    ));
+                    if let Some((requested, previous, when)) = self.resize_pending {
+                        if window.size() == previous {
+                            if when.elapsed() > Duration::from_secs(2) {
+                                return Err(format!("Actual window resize was not acknowledged: requested={requested:?}, observed={:?}, viewport={:?}", window.size(), rect.size()));
+                            }
+                            self.warm = 0;
+                            return Ok(());
+                        }
+                        self.report["calibration"].as_array_mut().unwrap().push(json!({"case":self.cases[self.case]["name"],"event":"actual-size-change","requested_inner":[requested.x,requested.y],"previous_inner":[previous.x,previous.y],"observed_inner":[window.width(),window.height()],"observed_viewport":[rect.width(),rect.height()]}));
+                        self.resize_pending = None;
+                    }
+                    let requested =
+                        window.size() + egui::vec2(width - rect.width(), height - rect.height());
+                    self.report["calibration"].as_array_mut().unwrap().push(json!({"case":self.cases[self.case]["name"],"event":"request","requested_inner":[requested.x,requested.y],"observed_inner":[window.width(),window.height()],"observed_viewport":[rect.width(),rect.height()],"wanted_viewport":[width,height]}));
+                    self.persist()?;
+                    self.resize_pending = Some((requested, window.size(), Instant::now()));
+                    ctx.send_viewport_cmd(egui::ViewportCommand::InnerSize(requested));
                     self.resize_attempts += 1;
                     self.warm = 0;
                     return Ok(());
+                }
+                if let Some((requested, previous, _)) = self.resize_pending.take() {
+                    let window = ctx
+                        .input(|i| i.viewport().inner_rect)
+                        .ok_or("Exact viewport lacks actual window metadata")?;
+                    self.report["calibration"].as_array_mut().unwrap().push(json!({"case":self.cases[self.case]["name"],"event":"exact-viewport","requested_inner":[requested.x,requested.y],"previous_inner":[previous.x,previous.y],"observed_inner":[window.width(),window.height()],"observed_viewport":[rect.width(),rect.height()]}));
+                    self.persist()?;
                 }
                 if ctx.pixels_per_point() != 1.0 {
                     return Err("Fixture requires actual DPR1".into());
