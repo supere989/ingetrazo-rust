@@ -12,6 +12,62 @@ use std::{
     path::Path,
     time::{Duration, Instant},
 };
+// The frozen observer orders complete records with Python json.dumps defaults,
+// not serde_json's compact Ryu notation. This key never alters observed values,
+// directed rings or paint. Debug float notation uses shortest round-trip digits;
+// Python's exponent spelling pads two digits and includes a positive sign.
+fn source_json_key(value: &Value) -> String {
+    match value {
+        Value::Array(values) => format!(
+            "[{}]",
+            values
+                .iter()
+                .map(source_json_key)
+                .collect::<Vec<_>>()
+                .join(", ")
+        ),
+        Value::Object(values) => {
+            let mut entries = values.iter().collect::<Vec<_>>();
+            entries.sort_by(|a, b| a.0.cmp(b.0));
+            format!(
+                "{{{}}}",
+                entries
+                    .into_iter()
+                    .map(|(key, value)| format!(
+                        "{}: {}",
+                        source_json_key(&Value::String(key.clone())),
+                        source_json_key(value)
+                    ))
+                    .collect::<Vec<_>>()
+                    .join(", ")
+            )
+        }
+        Value::String(value) => {
+            let encoded = serde_json::to_string(value).unwrap();
+            let mut out = String::new();
+            for ch in encoded.chars() {
+                if ch >= '\u{7f}' {
+                    for unit in ch.encode_utf16(&mut [0; 2]).iter() {
+                        out.push_str(&format!("\\u{unit:04x}"));
+                    }
+                } else {
+                    out.push(ch);
+                }
+            }
+            out
+        }
+        Value::Number(number) if number.is_f64() => {
+            let raw = format!("{:?}", number.as_f64().unwrap());
+            if let Some((mantissa, exponent)) = raw.split_once('e') {
+                let exponent = exponent.parse::<i32>().unwrap();
+                format!("{mantissa}e{exponent:+03}")
+            } else {
+                raw
+            }
+        }
+        _ => value.to_string(),
+    }
+}
 fn paint_recipe(mut value: Value, assets: &HashMap<String, Vec<u8>>) -> Result<Value, String> {
     if let Some(t) = value.get_mut("texture").and_then(Value::as_object_mut) {
         if let Some(Value::String(key)) = t.remove("embed") {
@@ -39,7 +95,11 @@ fn mesh(
     value["faces"]
         .as_array_mut()
         .unwrap()
-        .sort_by_key(Value::to_string);
+        .sort_by_key(source_json_key);
+    value["edges"]
+        .as_array_mut()
+        .unwrap()
+        .sort_by_key(source_json_key);
     Ok(value)
 }
 fn scene(app: &IngeTrazoApp) -> Result<Value, String> {
@@ -76,7 +136,16 @@ fn scene(app: &IngeTrazoApp) -> Result<Value, String> {
         } else {
             json!(false)
         };
-        let world = parent * g.transform;
+        // Reuse the production source-placement law used by dimension anchors.
+        // Stored source Qt matrices compose in float32 at each hierarchy level;
+        // non-Qt native matrices retain their own double-precision semantics.
+        let world = if parent == parent.as_mat4().as_dmat4()
+            && g.transform == g.transform.as_mat4().as_dmat4()
+        {
+            ingetrazo_core::change_axes::multiply(parent, g.transform)
+        } else {
+            parent * g.transform
+        };
         Ok(
             json!({"name":g.name,"layer":g.layer,"local_matrix":g.transform.to_cols_array(),"axes":g.axes_matrix().unwrap_or(DMat4::IDENTITY).to_cols_array(),"component":component,"billboard":billboard,"mesh_owner":owner,"local_mesh":mesh(&g.mesh,DMat4::IDENTITY,assets)?,"world_mesh":mesh(&g.mesh,world,assets)?,"children":g.children.iter().map(|c|group(c,world,owners,next,assets)).collect::<Result<Vec<_>,_>>()?}),
         )
