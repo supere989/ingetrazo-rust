@@ -362,3 +362,22 @@ mod tests {
         assert!(cache.resolve(request, 16).is_ok());
     }
 }
+
+#[cfg(all(test,target_os="macos"))]
+mod capture_tests {
+    use super::*;
+    #[test]
+    fn coretext_anisotropic_capture_keeps_native_face_immutable() {
+        let mut cache=Cache::new(Limits{faces:4,retained_font_bytes:32*1024*1024}).unwrap();
+        let line=cache.shape(&Request{family:"Sans Serif".into(),bold:false,italic:false,required_chars:vec![]},"W",128).unwrap();
+        let run=&line.runs[0];let face=&run.font;let glyph=run.glyphs[0].id;
+        assert!(face.native.is_some(),"Actual native CoreText owner required");
+        let before=face.rasterize(glyph,1.,[0,0]).unwrap();
+        let transformed=face.rasterize_anisotropic(glyph,[2.,0.5],[7,13]).unwrap();
+        assert!(transformed.width>before.width&&transformed.height<before.height);
+        assert!(face.rasterize_anisotropic(glyph,[32.,32.],[0,0]).is_err());
+        let after=face.rasterize(glyph,1.,[0,0]).unwrap();
+        assert_eq!((before.left,before.top,before.width,before.height),(after.left,after.top,after.width,after.height));
+        assert_eq!(before.coverage,after.coverage);
+    }
+}
