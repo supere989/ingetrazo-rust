@@ -390,8 +390,8 @@
       "sha256": "ac5f09303d54ad9ba6aab27da74d271cbab447d4e4b72ded88ff8ab55cf89c60"
     },
     "scripts/check-sheet-annotations.py": {
-      "commit": "a69c8d031bcc20a9d5750b8564dd58fcd8ba8f34",
-      "sha256": "beb6bcd8335d1eb2ff1b77306d788af1a10f513a3d9a653859c6325df411bde6"
+      "commit": "f6463f435570bc8176e31100c83c522e6d74b63b",
+      "sha256": "1287ab75bc334c816a7d66e43b70a3e035dd1668ed0e9550b290f824c21067d4"
     },
     "scripts/replay-sheet-annotations.py": {
       "commit": "a69c8d031bcc20a9d5750b8564dd58fcd8ba8f34",
@@ -405,12 +405,13 @@
     "PDF"
   ],
   "capture_returncode": 0,
-  "negative_controls": 21,
+  "negative_controls": 25,
   "scope": "Actual source physical exports; source-to-source checker harness is separately declared. Native result not yet executed. Post-export all-six-defaults opaque input overlay preserved known original-reader output; original dataclasses intentionally drop unknown keys.",
   "original_sources": {
     "views/composer.py": "aeb7676d7a7a1b2704c0f108f5d8ab7861836c74648838c545bcce454ac248af",
     "core/composition.py": "24aa8327d1c6a0b4afbaab0d153743f28c3deb557f44a66c467d5aed4dd65da9",
     "core/units.py": "5885b9f52b2394c21bb5421af482cf40c6273818fd70e2a85b5670c10914b1ea",
     "formats/igz.py": "f318d685830c49c2fede7fd5a238ac7a1469ee0b0226cf48cab3751e194a9576"
-  }
+  },
+  "prior_source_baseline_negative_controls": 21
 }

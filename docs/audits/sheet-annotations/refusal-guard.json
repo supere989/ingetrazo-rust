@@ -1,0 +1,14 @@
+{
+  "scope": "Guard-only dictionary fixtures; no pixel decode, source capture or native execution. Prior frozen source-only21-control baseline unchanged.",
+  "positive": true,
+  "rejected": [
+    "missing-roster",
+    "truncated",
+    "reordered",
+    "png_destination_preserved",
+    "pdf_destination_preserved",
+    "scene_preserved",
+    "numeric-true"
+  ],
+  "checker_sha256": "1287ab75bc334c816a7d66e43b70a3e035dd1668ed0e9550b290f824c21067d4"
+}
