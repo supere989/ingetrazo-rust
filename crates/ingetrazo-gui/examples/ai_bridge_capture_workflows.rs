@@ -462,6 +462,13 @@ mod fixture {
             PathBuf::from(std::env::args_os().nth(1).ok_or("SOURCE required")?).canonicalize()?;
         let out = PathBuf::from(std::env::args_os().nth(2).ok_or("OUTPUT required")?);
         std::fs::create_dir_all(&out)?;
+        for (key, folder) in [
+            ("XDG_CONFIG_HOME", "config"),
+            ("XDG_DATA_HOME", "data"),
+            ("XDG_CACHE_HOME", "cache"),
+        ] {
+            std::env::set_var(key, out.join(folder));
+        }
         std::env::set_var("INGETRAZO_CAPTURE_SOURCE", source);
         std::env::set_var("INGETRAZO_CAPTURE_OUTPUT", &out);
         std::env::set_var("INGETRAZO_VULKAN_WORLD", "1");
