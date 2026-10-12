@@ -52,7 +52,7 @@ impl Preview {
                 stroke_options: Some(StrokeOptions {
                     cap: 2,
                     join: 2,
-                    dash: vec![4., 2.],
+                    dash: vec![0.3 * 4., 0.3 * 2.],
                 }),
                 fill: None,
                 clip: None,
@@ -104,7 +104,7 @@ impl Preview {
                 value["visible"] = true.into();
                 value["opacity"] = 1.0.into();
                 value["z"] = 100000.0.into();
-                value["pen"] = serde_json::json!({"rgba":ink.map(|v|(v*255.).round()as u8),"width":width,"style":if options.dash.is_empty(){1}else{2},"cap":match options.cap{0=>0,1=>32,_=>16},"join":match options.join{0=>0,1=>128,_=>64},"cosmetic":false,"dash_pattern":options.dash,"dash_offset":0.});
+                value["pen"] = serde_json::json!({"rgba":ink.map(|v|(v*255.).round()as u8),"width":width,"style":if options.dash.is_empty(){1}else{2},"cap":match options.cap{0=>0,1=>32,_=>16},"join":match options.join{0=>0,1=>128,_=>64},"cosmetic":false,"dash_pattern":options.dash.iter().map(|v|v/width).collect::<Vec<_>>(),"dash_offset":0.});
                 value["brush_style"] = 0.into();
                 value["scene_transform"] = serde_json::json!([1., 0., 0., 0., 1., 0., 0., 0., 1.]);
             }

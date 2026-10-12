@@ -301,6 +301,12 @@ pub(super) fn click(
 pub(super) fn finish(app: &mut IngeTrazoApp) -> Result<(), String> {
     app.composer_state.annotation_authoring.run_preview.retire();
     reconcile(app)?;
+    finish_retained(app)
+}
+/// On sheet switch the source changes the current composition before finishing
+/// the retained run. Its first segment still belongs to the former sheet.
+pub(super) fn finish_retained(app: &mut IngeTrazoApp) -> Result<(), String> {
+    app.composer_state.annotation_authoring.run_preview.retire();
     let state = &app.composer_state.annotation_authoring.runs;
     if state.baseline || state.segments.len() < 2 || state.sep.is_none() {
         let armed = state.armed;
@@ -355,10 +361,28 @@ pub(super) fn finish(app: &mut IngeTrazoApp) -> Result<(), String> {
     let x = number(first_record, "x_mm", 0.);
     let y = number(first_record, "y_mm", 0.);
     let first_sep = number(first_record, "sep_mm", 0.);
-    let total_sep = if state.axis == "h" {
-        y + first_sep - a.0.y + out
-    } else if state.axis == "v" {
-        x + first_sep - a.0.x + out
+    let total_sep = if matches!(state.axis, "h" | "v") {
+        let (local_x, local_y) = match first_record.get("axis").and_then(serde_json::Value::as_str)
+        {
+            Some("h") => (0., first_sep),
+            Some("v") => (first_sep, 0.),
+            _ => {
+                let dx = number(first_record, "dx_mm", 0.);
+                let dy = number(first_record, "dy_mm", 0.);
+                let length = dx.hypot(dy);
+                let (nx, ny) = if length < 1e-9 {
+                    (0., -1.)
+                } else {
+                    (-dy / length, dx / length)
+                };
+                (nx * first_sep, ny * first_sep)
+            }
+        };
+        if state.axis == "h" {
+            y + local_y - a.0.y + out
+        } else {
+            x + local_x - a.0.x + out
+        }
     } else {
         let dx = number(first_record, "dx_mm", 0.);
         let dy = number(first_record, "dy_mm", 0.);

@@ -2601,3 +2601,23 @@ impl IngeTrazoApp { pub fn composer_run_preview_observation(&self)->Value {self.
 pub(super) fn canvas_z(app:&IngeTrazoApp,s:usize,k:u8,index:usize,family:usize)->f64{
  let sheet=&app.scene.sheets[s];let v=match k{1=>&sheet.native_document["images"][index],2=>&sheet.native_document["leyendas"][index],3=>&sheet.native_document[FAMILIES[family]][index],_=>{let item=&sheet.items[index];if let ingetrazo_core::composition::SheetItem::Shape(shape)=item{return shape.shape.z;}return sheet.native_items.get(&item.id()).and_then(|v|v["z"].as_f64()).unwrap_or(0.);}};v["z"].as_f64().unwrap_or(0.)
 }
+
+impl IngeTrazoApp {
+    /// Source sheet switching changes the destination before cancel_placement
+    /// finishes a retained run. Return the new owner for post-rebuild selection.
+    pub(super) fn finish_composer_run_on_sheet_switch(&mut self,index:usize)->Result<Option<Owner>,String>{
+        let Some(destination)=self.scene.sheets.get(index).map(|s|s.id)else{return Err("Missing run destination sheet".into());};
+        let run=&self.composer_state.annotation_authoring.runs;
+        if !run.armed || run.sheet.is_none() || run.sheet==Some(destination){return Ok(None);}
+        let old_index=self.scene.active_sheet_index;
+        let old_selected=self.composer_state.annotation_authoring.selected.take();
+        let old_multi=std::mem::take(&mut self.composer_state.annotation_authoring.multi);
+        let count=self.scene.sheets[index].native_document["cotas"].as_array().map_or(0,Vec::len);
+        self.scene.active_sheet_index=Some(index);
+        let result=runs::finish_retained(self);
+        self.scene.active_sheet_index=old_index;
+        if let Err(error)=result{self.composer_state.annotation_authoring.selected=old_selected;self.composer_state.annotation_authoring.multi=old_multi;return Err(error);}
+        let created=self.scene.sheets[index].native_document["cotas"].as_array().map_or(0,Vec::len)>count;
+        Ok(created.then_some(Owner{sheet:destination,family:0,index:count}))
+    }
+}
