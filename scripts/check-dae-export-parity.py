@@ -103,7 +103,8 @@ def scene_schema(scene):
   assert type(g['local_matrix'])is list and len(g['local_matrix'])==16 and all(type(v)is float and math.isfinite(v)for v in g['local_matrix'])
   assert type(g['children'])is list
   return mesh(g['mesh'])+sum(group(c)for c in g['children'])
- assert type(scene['groups'])is list and type(scene['layers'])is list and all(type(v)is str for v in scene['layers'])and type(scene['units'])is str
+ assert type(scene['groups'])is list and type(scene['layers'])is list and all(type(v)is str for v in scene['layers'])
+ assert type(scene['units'])is dict and type(scene['units'].get('length'))is str and type(scene['units'].get('precision'))is int,'reader unit object type'
  assert scene['datum']is None or type(scene['datum'])is dict
  faces+=sum(group(g)for g in scene['groups']);assert faces>0,'joint empty reader geometry'
 def reader_schema(value):
@@ -170,7 +171,7 @@ def main():
    try:compare(source,candidate,args.source,args.native,readers)
    except (AssertionError,KeyError,ValueError,TypeError):probes.append(name)
    else:raise AssertionError('negative escaped: '+name)
-  for name,mutation in [('joint-empty-reader-observations',lambda rows:[r.update(original={},native={},saved_original={},saved_native={})for r in rows]),('missing-reader-scene-key',lambda rows:[r['original']['scene'].pop('active')for r in rows])]:
+  for name,mutation in [('joint-empty-reader-observations',lambda rows:[r.update(original={},native={},saved_original={},saved_native={})for r in rows]),('missing-reader-scene-key',lambda rows:[r['original']['scene'].pop('active')for r in rows]),('reader-units-string',lambda rows:[r['original']['scene'].update(units='m')for r in rows]),('reader-units-bool-precision',lambda rows:[r['original']['scene']['units'].update(precision=True)for r in rows])]:
    wrong=copy.deepcopy(readers);mutation(wrong)
    try:compare(source,native,args.source,args.native,wrong)
    except (AssertionError,KeyError,ValueError,TypeError):probes.append(name)
