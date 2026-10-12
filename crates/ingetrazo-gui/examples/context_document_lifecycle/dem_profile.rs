@@ -35,6 +35,33 @@ fn control(base: &str, action: &str, value: &str, key: &str) {
         .call()
         .unwrap();
 }
+fn wait_requests(base: &str, spec: &Value, tiles: &Value) {
+    let deadline = Instant::now() + Duration::from_secs(18);
+    loop {
+        let events: Value = serde_json::from_reader(
+            ureq::get(&format!("{base}/__control?action=observe"))
+                .call()
+                .unwrap()
+                .into_reader(),
+        )
+        .unwrap();
+        let complete = tiles.as_array().unwrap().iter().all(|t| {
+            events
+                .as_array()
+                .unwrap()
+                .iter()
+                .any(|e| e["event"] == "requested" && e["path"] == path(spec, t))
+        });
+        if complete {
+            return;
+        }
+        assert!(
+            Instant::now() < deadline,
+            "DEM requests did not start before provider/control transition"
+        );
+        std::thread::sleep(Duration::from_millis(2));
+    }
+}
 fn poll(app: &mut IngeTrazoApp, ctx: &egui::Context, predicate: impl Fn(&Value) -> bool) {
     let deadline = Instant::now() + Duration::from_secs(18);
     loop {
@@ -214,6 +241,11 @@ pub fn run() {
                 }
             }
             record(&app, name, phase, &expected["csv"], &mut rows);
+            if phase == "initial"
+                && matches!(case["mode"].as_str(), Some("async" | "failure" | "switch"))
+            {
+                wait_requests(base, &case["provider"], &case["tiles"]);
+            }
             {
                 assert_eq!(app.scene, before);
                 assert_eq!((app.undo_stack.len(), app.redo_stack.len()), (undo, redo));
