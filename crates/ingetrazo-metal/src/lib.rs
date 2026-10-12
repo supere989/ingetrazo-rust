@@ -70,6 +70,10 @@ mod world_billboard;
 #[cfg(target_os="macos")]
 pub use objc2::rc::autoreleasepool;
 
+/// Native device protocol for callers of the public Metal device handle.
+#[cfg(target_os="macos")]
+pub use objc2_metal::MTLDevice;
+
 #[cfg(target_os="macos")]
 mod world_resolve;
 
