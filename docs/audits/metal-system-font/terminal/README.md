@@ -1,0 +1,7 @@
+# Native default system-font frozen replay
+
+Observed exact19d6275a5ca8cf042b9e23ab554885829bb2cc23 automatic scoped run38192263553 through terminal failure. No dispatch/retry/cancel, local build or source recapture. Linux/Windows/cross and library-test steps intentionally skipped; no ordered run admitted for this font-only path. Prior fullb48 has78librarytestsPASS perMac, not repeated here.
+
+Both actual Mac native combined builds, figure replay and10-case text-excluded geometry/codec diagnostic pass. Font probe chooses /System/Library/Fonts/SFNS.ttf; all seven required metadata tables plus exact ascent/descent match each first actual original Qt witness, warm same-owner/no-matching assertion passes. Wholeimage remains strictfailure164pixels/max151 perplatform, physicalheaders exact; previous2025/max225 decreases without tolerance or oracle modification. No font/raster parity closure.
+
+Manifest authenticates181records/679,924rawbytes, archive SHA2565325e6aa608d54176c5961c0dc20544535d0285558b66b78ba8bd7a52dcb5b4b. Retained native text PNG/protocol/font metadata, job/step results and runtime/build logs. Every replay source member was independently compared byte-for-byte to separately retained first-arm-text/first-intel-text archives under docs/audits/sheet-metal-allocation; fresh_source_images=0. Old section/CGL and Intel strict annotation/CLI gates remain unchanged. This is platform evidence, not an all-platform or complete P29 claim.
