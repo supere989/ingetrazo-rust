@@ -1,0 +1,25 @@
+{
+  "removed": [
+    {
+      "path": "/tmp/ingetrazo-import-ui-integration-r1/authoring/source",
+      "logical_bytes": 944036,
+      "reason": "authenticated canonical source ZIP already retained; extracted reusable fixture copy"
+    },
+    {
+      "path": "/tmp/ingetrazo-import-ui-integration-r1/specialized/source",
+      "logical_bytes": 1363421,
+      "reason": "authenticated canonical source ZIP already retained; extracted reusable fixture copy"
+    },
+    {
+      "path": "/tmp/ingetrazo-import-ui-integration-r2/authoring/source",
+      "logical_bytes": 944036,
+      "reason": "authenticated canonical source ZIP already retained; extracted reusable fixture copy"
+    },
+    {
+      "path": "/tmp/ingetrazo-import-ui-integration-r2/specialized/source",
+      "logical_bytes": 1363421,
+      "reason": "authenticated canonical source ZIP already retained; extracted reusable fixture copy"
+    }
+  ],
+  "canonical_native_outputs_retained": true
+}
