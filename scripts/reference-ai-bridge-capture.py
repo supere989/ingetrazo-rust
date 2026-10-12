@@ -15,7 +15,7 @@ from PySide6.QtCore import qVersion
 from PySide6.QtGui import QVector3D as V,QMatrix4x4 as M,QImage,QFontInfo
 from PySide6.QtWidgets import QApplication
 from core.scene import Scene
-from core.mesh import Mesh
+from core.mesh import Mesh,Edge
 from core.group import Group
 from core.dimension import Dimension
 from core.textlabel import TextLabel
@@ -26,6 +26,7 @@ from georef.points import GeoPoint
 from formats import igz
 from views.main_window import MainWindow
 from plugins.ai_bridge import _Bridge
+from tools.select import SelectTool
 from exchange_import_observations import scene_state
 app=QApplication.instance()or QApplication([]);errors=[]
 sys.excepthook=lambda typ,error,tb:errors.append({'type':typ.__name__,'error':str(error),'traceback':''.join(traceback.format_exception(typ,error,tb))})
@@ -77,12 +78,20 @@ try:
   if edit:v.begin_group_edit(v.scene.groups[0]);assert len(v.scene._edit_stack)>0
   if name=='committed-selected-overlays':v.scene.selection.add(v.scene.dimensions[0]);v.scene.selection.add(v.scene.text_labels[0])
   v.notify_scene_changed();flush(v)
+  assert v.active_tool is None or isinstance(v.active_tool,SelectTool),'Fixture requires actual Select startup mode'
+  assert not isinstance(getattr(v,'_hover_entity',None),Edge),'Hovered GL edge is outside finite fixture'
+  assert not getattr(v,'_preview_groups',None),'Moving-group GL preview is outside finite fixture'
+  if v.active_tool is not None:
+   assert not list(v.active_tool.rubber_band_lines()),'Tool GL preview is outside finite fixture'
+   preview=getattr(v.active_tool,'preview_faces',None)
+   assert not callable(preview)or not list(preview()),'Tool solid preview is outside finite fixture'
   assert v.context().isValid()and v._scene_fbo.isValid()and v.devicePixelRatioF()==1.,'Source GPU context/DPR guard'
   if overlays:assert getattr(v,'_depth_snap',None)is not None,'Operative retained live annotation depth required'
   case={'name':name,'input':inputfile,'requests':requests,'edit_path':[0]if edit else[],'initial_camera':{'target':[1.,0.,0.],'distance':12.,'yaw':math.radians(45.),'pitch':math.radians(30.),'perspective':not ortho,'fov':45.},'logical_viewport':[v.width(),v.height()],'selected_annotations':name=='committed-selected-overlays'};report['cases'].append(case)
   original_render=v.render_image
-  def observed_render(width,height=None,**kwargs):
-   previous=v._scene_fbo;size=v._fbo_size;depth=getattr(v,'_depth_snap',None);before=copy.deepcopy(observation(host))
+  def observed_render(width,height=None,_v=v,_host=host,_name=name,_original=original_render,**kwargs):
+   v=_v;host=_host;name=_name;original_render=_original
+   previous=v._scene_fbo;size=v._fbo_size;depth=getattr(v,'_depth_snap',None);before=copy.deepcopy(observation(host));tick=getattr(v,'_tick',0)
    v.makeCurrent()
    try:color=rgba(previous.toImage())
    finally:v.doneCurrent()
@@ -93,7 +102,7 @@ try:
    try:after_color=rgba(previous.toImage())
    finally:v.doneCurrent()
    assert observation(host)==before and after_color==color,'Capture changed live target/model/history/camera'
-   report['render_calls'].append({'case':name,'width':width,'height':height,'live_target_restored':True,'live_depth_retained':True,'ordinary_world_rgba_unchanged':True,'scene_readonly':True,'live_depth_size':list(depth[3:5])if depth is not None else None})
+   report['render_calls'].append({'case':name,'width':width,'height':height,'live_target_restored':True,'live_depth_retained':True,'ordinary_world_rgba_unchanged':True,'scene_readonly':True,'render_tick_before':tick,'render_tick_after':getattr(v,'_tick',0),'live_depth_size':list(depth[3:5])if depth is not None else None})
    return image
   v.render_image=observed_render
   bridge=_Bridge(v);port=bridge.start();client=socket.create_connection(('127.0.0.1',port),timeout=3);client.setblocking(False);buffer=b''

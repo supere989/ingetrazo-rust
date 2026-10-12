@@ -44,7 +44,7 @@
     ]
   },
   "path_scope": "Raw source reply path retained. Native response must be an actual existing encoded viewport PNG under its real temporary directory; file content/extent observations are independent, never copied from source. Encoded PNG compressor bytes are diagnostic; decoded RGBA is strict.",
-  "source_producer_sha256": "6d68639bffc8efd9393a657fbe8f2ca027ccafc7f51130d5cfb4188e122d3337",
+  "source_producer_sha256": "d52e098b3251a8666d4ee410fc8e33cfd6ab469ac48f967b8a3f8364e4566813",
   "observation_helper": {
     "path": "scripts/exchange_import_observations.py",
     "sha256": "48c12bffd82e9c431ce8784174112a78c7ab09de529fabc1e5f0f8445bf94142"
@@ -109,6 +109,10 @@
     {
       "path": "formats/igz.py",
       "sha256": "f318d685830c49c2fede7fd5a238ac7a1469ee0b0226cf48cab3751e194a9576"
+    },
+    {
+      "path": "tools/select.py",
+      "sha256": "baa33a660666cbc78a25ca291e0b40a4b2bd88755393ebce08295e1de6327916"
     }
   ],
   "not_claimed": [
@@ -118,5 +122,7 @@
     "hardware/Metal/platform-specific fonts",
     "representative performance"
   ],
-  "dimension_observer": "Pinned formats/igz.py355\u2013363 live a/b/offset/axis/layer/text fields, represented with explicit nullable optional fields; no invented Dimension.to_dict."
+  "dimension_observer": "Pinned formats/igz.py355\u2013363 live a/b/offset/axis/layer/text fields, represented with explicit nullable optional fields; no invented Dimension.to_dict.",
+  "interactive_scope": "Actual Select-or-None, no hovered GL edge, no moving-group/solid/depth-tested preview asserted. Broad interactive screenshot export quirks remain open, not normalized.",
+  "render_epoch_scope": "Only model Scene.version is immutable. Viewport._tick advances naturally during the genuine GPU render and is recorded diagnostically, never asserted invariant."
 }
