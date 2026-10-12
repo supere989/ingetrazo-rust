@@ -193,8 +193,22 @@ impl Targets {
                         category,
                         index,
                         ingetrazo_core::composition::RectMm::new(
-                            n("x_mm", if matches!(key,"cotas_ang"|"cotas_rad") { 0. } else { 20. })?,
-                            n("y_mm", if matches!(key,"cotas_ang"|"cotas_rad") { 0. } else { 20. })?,
+                            n(
+                                "x_mm",
+                                if matches!(key, "cotas_ang" | "cotas_rad") {
+                                    0.
+                                } else {
+                                    20.
+                                },
+                            )?,
+                            n(
+                                "y_mm",
+                                if matches!(key, "cotas_ang" | "cotas_rad") {
+                                    0.
+                                } else {
+                                    20.
+                                },
+                            )?,
                             w,
                             h,
                         ),
@@ -338,6 +352,25 @@ pub(super) fn input(
     for (pos, owned) in &mut press_ownership {
         *owned = ui.ctx().layer_id_at(*pos) == Some(response.layer_id);
     }
+    let mut release_ownership = ui.input(|i| {
+        i.events
+            .iter()
+            .filter_map(|e| match e {
+                egui::Event::PointerButton {
+                    pos,
+                    button: egui::PointerButton::Primary,
+                    pressed: false,
+                    ..
+                } => Some((*pos, false)),
+                _ => None,
+            })
+            .collect::<Vec<_>>()
+    });
+    for (pos, owned) in &mut release_ownership {
+        *owned = ui.ctx().layer_id_at(*pos) == Some(response.layer_id)
+            && response.rect.contains(*pos)
+            && !toolbar.contains(*pos);
+    }
     ui.input(|input| {
         let release = input.events.iter().any(|e| {
             matches!(
@@ -461,6 +494,7 @@ pub(super) fn input(
                 egui::Event::PointerButton {
                     button: egui::PointerButton::Primary,
                     pressed: false,
+                    pos,
                     ..
                 } => {
                     if app.composer_state.picture_ctrl_toggle {
@@ -472,7 +506,12 @@ pub(super) fn input(
                         continue;
                     }
                     let acquired = app.composer_state.dragging_item_idx.is_some();
-                    if !acquired && clicked {
+                    if !acquired
+                        && clicked
+                        && release_ownership
+                            .iter()
+                            .any(|(p, owned)| p == pos && *owned)
+                    {
                         app.scene.sheets[sheet_idx].selected_item = None;
                         app.composer_state.picture_authoring.selected = None;
                     }
