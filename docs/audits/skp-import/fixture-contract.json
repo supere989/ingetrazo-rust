@@ -1,0 +1,177 @@
+{
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "parser_pin": "291700bc213655a00461838de71e5f206311e619",
+  "case_names": [
+    "legacy-root",
+    "modern-layer-preserve",
+    "saved-scenes",
+    "shared-root",
+    "nested-root-ownership",
+    "leader-metadata",
+    "image-leaf",
+    "style-adopt",
+    "style-existing",
+    "material-collision",
+    "repeat-import",
+    "modern-empty",
+    "legacy-empty-warning",
+    "unreadable-warning",
+    "chooser-cancel"
+  ],
+  "expected_cases": 15,
+  "expected_states": 71,
+  "expected_readers": 12,
+  "fixtures": [
+    {
+      "file": "legacy-quad.skp",
+      "path": "docs/audits/skp-native-legacy/controls/legacy-v17-painted-quad.skp",
+      "sha256": "5e17bae8d48ab3206d9be9c073473be43f99720fc5a9c0c3a9d31196a0c06564",
+      "bytes": 6202
+    },
+    {
+      "file": "modern-hole.skp",
+      "path": "docs/audits/skp-native-vff/texture-controls/hole-paint-layer.skp",
+      "sha256": "b37fd8759c9286112148a3f7833d6b27ef3a6cabbf9ec48e5a103f5e198926a4",
+      "bytes": 10468
+    },
+    {
+      "file": "shared.skp",
+      "path": "docs/audits/skp-native-vff/texture-controls/shared-eight.skp",
+      "sha256": "4b77fc6a805bb4f9a29c2d14b6db234566fc58d98854710f5a281165e9438a12",
+      "bytes": 14503
+    },
+    {
+      "file": "nested.skp",
+      "path": "docs/audits/skp-native-vff/texture-controls/nested-proto-in-proto.skp",
+      "sha256": "a22003696e775007171fb6d55b0b6886f7324d41a493ca6771972b9ca8e0f24f",
+      "bytes": 14646
+    },
+    {
+      "file": "leader.skp",
+      "path": "docs/audits/skp-native-leader-text/unicode-leader.skp",
+      "sha256": "e8d3176eeff942008fec114511b66529b49e9146a05963ad87b863229fa4659b",
+      "bytes": 6584
+    },
+    {
+      "file": "image.skp",
+      "path": "docs/audits/skp-native-image-entities/cutout.skp",
+      "sha256": "980c8e0aa4d51ee02e88a2c3f73c119f9505442be8f5d9cd84ce8a5e90c1d322",
+      "bytes": 7616
+    },
+    {
+      "file": "styles.skp",
+      "path": "docs/audits/skp-style-integration/two-styles.skp",
+      "sha256": "c5887008930edcdd7e4a5e96203e2c10e16287cf381a22ade128ac0d9e5adf7d",
+      "bytes": 366784
+    },
+    {
+      "file": "legacy-empty.skp",
+      "path": "docs/audits/skp-native-legacy/single_material_v17.skp",
+      "sha256": "8a4619b39eaaa41725ef5dde415c61c116369fff4c190e88b8d63176b097e5a4",
+      "bytes": 5858
+    }
+  ],
+  "original_sources": [
+    {
+      "path": "formats/skp.py",
+      "sha256": "f45777d52adf5fd9ddd0e09cff0892548c81f2884903cef0d2e568c380d1bce8"
+    },
+    {
+      "path": "formats/skp_openskp.py",
+      "sha256": "d5eae79eb66772e6a11b5e603b45da6c2d2e8db468ced60812b120ddfbbd65aa"
+    },
+    {
+      "path": "formats/igz.py",
+      "sha256": "f318d685830c49c2fede7fd5a238ac7a1469ee0b0226cf48cab3751e194a9576"
+    },
+    {
+      "path": "views/main_window.py",
+      "sha256": "ea02be3e439c80731d0f5b5fde3d92d9b3f62e8ad10cd44ad305c3261b7786fa"
+    },
+    {
+      "path": "core/history.py",
+      "sha256": "2eb66a1d557099b51383988a7819145289fc4ce2c37fc7de3a92ed35b5830559"
+    },
+    {
+      "path": "core/scene.py",
+      "sha256": "9dfcd32f1ff5b1445180eafd8df36eafb92fa08ed3597bb90eac09554899d2e0"
+    },
+    {
+      "path": "core/group.py",
+      "sha256": "9ba6a20eca241cb4969a545a3784fcff25566166606d5447a18780747d4f11c5"
+    },
+    {
+      "path": "core/mesh.py",
+      "sha256": "5f2c1625e6dd717db029ba39a9de337e75beec06bd0df28a592a8a34875ca22c"
+    },
+    {
+      "path": "core/materials.py",
+      "sha256": "86558e6ab7e47788798c5f12bb3c21cb71cec4cd1f52476fd6c34f4fa91ccfd1"
+    },
+    {
+      "path": "core/layers.py",
+      "sha256": "21d31c9aa1b4bfe0c9437a1a7a83a8212b4d34f38ad3c2b1b3a6b1a7ee4c835b"
+    },
+    {
+      "path": "core/saved_views.py",
+      "sha256": "b5456a7b4199a1fbf0aa302cc04f3f59ea5cbbde2b486ed1a1ebf8d32e00e4e4"
+    },
+    {
+      "path": "core/dimension.py",
+      "sha256": "2253da1bb8e186f786c8fcfb780d91ca48460926a1641f8c42913473109f2ce6"
+    },
+    {
+      "path": "core/textlabel.py",
+      "sha256": "7ef512a89a591baa3149ec71b6d5e733f2831783091fe800323a003d449424bf"
+    },
+    {
+      "path": "core/texture.py",
+      "sha256": "837c3f00c548df110dec5debfdb3759984d97bb652d6a0050d7e2ceb940407dc"
+    },
+    {
+      "path": "core/paths.py",
+      "sha256": "a669d5f0dd2c235ae372377dc669598bf9613b8c361c513d473df856cdd9ebae"
+    },
+    {
+      "path": "formats/openskp_compat.py",
+      "sha256": "ffaca8a821f0553812f0ede9314f5d8194ced78ae83cebeda1e2dcb76b952cf6"
+    }
+  ],
+  "sources": [
+    {
+      "path": "scripts/reference-skp-import.py",
+      "sha256": "f1c0504abd1bc905bfcc966b078f35ad56cdbcdc8b1975959840d83bd8c2ea95"
+    },
+    {
+      "path": "scripts/skp_import_observations.py",
+      "sha256": "640a577df9fd21cf7f590f61737df26076ad53702b65af7ca30fe542952a06ac"
+    },
+    {
+      "path": "scripts/exchange_import_observations.py",
+      "sha256": "48c12bffd82e9c431ce8784174112a78c7ab09de529fabc1e5f0f8445bf94142"
+    },
+    {
+      "path": "scripts/reference-nested-import.py",
+      "sha256": "1cd756cc1db3389e3922a5c34afe41af29b91061ce30bff77e945d7b346d629b"
+    }
+  ],
+  "scope": "Actual App chooser-provider, original UI-thread relay/file-only parser, one SnapshotImport, root-owned groups/prototypes during nested edit, material collision/same-recipe reuse and material/back-style persistence through Undo, layer visibility, imported perspective/parallel views, hidden layer mapping, same-name preservation, dimension/leader metadata, axes/local matrices and relational mesh sharing, actual warning/cancel/history/save plus twelve original readers. Source absent local/axes matrix is identity VALUE only. No viewport/GPU pixel proof, general SKP era coverage, lossy unimplemented records or converter fallback. Existing source file-driven metadata, no invented units/options/camera fit. Engineering modern-empty bytes derive the frozen VFF prefix plus empty records and actual uniform PNG.",
+  "parser_sources": [
+    {
+      "path": "packages/python/src/openskp/__init__.py",
+      "sha256": "4c772ed759723d36fac5d30497ade26e644edac91cfa69d84be351614c3159f6"
+    },
+    {
+      "path": "packages/python/src/openskp/model.py",
+      "sha256": "897128d5e40e20529470ef233b21c378b7ce25f8dce215440c0d5004439530ed"
+    },
+    {
+      "path": "packages/python/src/openskp/_core.py",
+      "sha256": "a20e702622e768b3cda6e73d46fb9a72ff45739f2588de3c93cd6cf4f177c818"
+    },
+    {
+      "path": "packages/python/src/openskp/legacy.py",
+      "sha256": "15927b625be9f75d8081bc7ba37761fd1577dc166de2e812cb140acbd04c70bc"
+    }
+  ]
+}
