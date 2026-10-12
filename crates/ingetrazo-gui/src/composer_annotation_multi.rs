@@ -128,6 +128,13 @@ pub(super) fn selected(app: &IngeTrazoApp, owner: Owner) -> bool {
             .membership
             .contains(&owner)
 }
+/// Escape clears selection without retiring an accepted pointer capture.
+pub(super) fn clear_selection(app: &mut IngeTrazoApp) {
+    let state = &mut app.composer_state.annotation_authoring.multi;
+    state.members.clear();
+    state.membership.clear();
+    state.validated = None;
+}
 pub(super) fn clear(app: &mut IngeTrazoApp) {
     app.composer_state.annotation_authoring.multi = State::default();
 }

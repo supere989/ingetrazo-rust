@@ -208,6 +208,11 @@ impl IngeTrazoApp {
         self.composer_state.annotation_authoring.runs.armed = false;
         Ok(())
     }
+    pub(super) fn clear_composer_annotation_selection(&mut self) {
+        self.composer_state.annotation_authoring.selected = None;
+        self.composer_state.annotation_authoring.draft = None;
+        multi::clear_selection(self);
+    }
     pub fn composer_annotation_selection_set(&self) -> Vec<(usize, usize)> {
         let mut owners = self
             .composer_state
@@ -237,7 +242,7 @@ impl IngeTrazoApp {
             match state.armed {
                 Some(0) => "cota",
                 Some(1) => "cota_ang",
-                Some(2) => "cota_rad",
+                Some(2) => "cota_radio",
                 Some(3) => "etiqueta",
                 Some(4) => "nivel",
                 Some(5) => "llamada",
@@ -248,7 +253,7 @@ impl IngeTrazoApp {
     pub fn composer_specialized_pending(&self) -> Value {
         let state = &self.composer_state.annotation_authoring;
         let points = &state.points;
-        let mut value = json!({"start":points.first().map(|p|p.to_array()),"second":if state.armed==Some(0){points.get(1).map(|p|p.to_array())}else{None},"angular":if state.armed==Some(1){points.iter().map(|p|p.to_array()).collect::<Vec<_>>()}else{Vec::new()},"radial":if state.armed==Some(2){points.first().map(|p|p.to_array())}else{None}});
+        let mut value = json!({"start":if matches!(state.armed,Some(0|3|4|5)){points.first().map(|p|p.to_array())}else{None},"second":if state.armed==Some(0){points.get(1).map(|p|p.to_array())}else{None},"angular":if state.armed==Some(1){points.iter().map(|p|p.to_array()).collect::<Vec<_>>()}else{Vec::new()},"radial":if state.armed==Some(2){points.first().map(|p|p.to_array())}else{None}});
         for (k, v) in runs::observation(self).as_object().unwrap() {
             value[k] = v.clone();
         }
@@ -2089,9 +2094,8 @@ pub(super) fn input(
                         break;
                     }
                     if !owned {
-                        multi::clear(app);
-                        app.composer_state.annotation_authoring.selected = None;
-                        app.composer_state.annotation_authoring.draft = None;
+                        // Source rubber-band selection retains the current cohort
+                        // until release decides replace/add/toggle/removal.
                         multi::begin_band(app, p, zoom);
                     }
                 }
