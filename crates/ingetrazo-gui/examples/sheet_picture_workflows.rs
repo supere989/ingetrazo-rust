@@ -82,11 +82,7 @@ impl Renderer {
 // immutable bytes; Drop restores paths even when a native export returns an error.
 struct HiddenAssets(Vec<(std::path::PathBuf, std::path::PathBuf)>);
 impl HiddenAssets {
-    fn new(
-        images: &serde_json::Value,
-        source: &Path,
-        out: &Path,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
+    fn new(images: &serde_json::Value, source: &Path) -> Result<Self, Box<dyn std::error::Error>> {
         let mut held = Self(Vec::new());
         let mut unique = std::collections::HashSet::new();
         for value in images.as_array().ok_or("images")? {
@@ -98,7 +94,7 @@ impl HiddenAssets {
                 continue;
             }
             path.canonicalize()?.strip_prefix(source.canonicalize()?)?;
-            let backup = out.join(format!("held-asset-{}", held.0.len()));
+            let backup = path.with_file_name(format!(".ingetrazo-proof-held-{}", held.0.len()));
             if backup.exists() {
                 return Err("Asset hold destination already exists".into());
             }
@@ -173,8 +169,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         let jpg = out.join(format!("{name}.jpg"));
         let plan = prepare(&mut app, &ctx, &png)?;
         let cpu = app.sheet_picture_cache_stats();
-        let mut held =
-            HiddenAssets::new(&before.sheets[0].native_document["images"], &source, &out)?;
+        let mut held = HiddenAssets::new(&before.sheets[0].native_document["images"], &source)?;
         renderer.save(&plan, &png)?;
         let cold = renderer.counters();
         renderer.save(&plan, &jpg)?;
