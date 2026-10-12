@@ -1,0 +1,103 @@
+{
+  "runtime_commit": "9f389363c1ecebb458d3105737cb5eb0357619c2",
+  "original_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "full_run": 38243310509,
+  "ordered_run": 38243310512,
+  "archive_sha256": "076a2f4e19d243f25a6fb4f45499efa32743fa12baf9b0f18a9a24d295dccdfc",
+  "members": {
+    "11743769047/metal-combined-gui-ci/composer-specialized/comparison.json": {
+      "bytes": 703,
+      "sha256": "c4e7c58d3bfa915430d2aa7574e2fe9020774e996931187d9f0eec9cfc359723"
+    },
+    "11743769047/metal-combined-gui-ci/composer-specialized/result.json": {
+      "bytes": 2375,
+      "sha256": "170517c98eb05808022d6ee65e37ddfa47db444a480a0f82ee2faf338fbd63ba"
+    },
+    "11743769047/metal-combined-gui-ci/legend-authoring/native.stderr": {
+      "bytes": 39,
+      "sha256": "4010a7f2772d8fe12bd3f662b87982d734f13fec692a673abbcf7ad777c0447e"
+    },
+    "11743769047/metal-combined-gui-ci/legend-authoring/result.json": {
+      "bytes": 1315,
+      "sha256": "de8b0d364198d7384ebdddd6f32e945c82dfc7a95ef61045f82c9065290fa578"
+    },
+    "11744455169/metal-combined-gui-ci/composer-specialized/comparison.json": {
+      "bytes": 703,
+      "sha256": "c4e7c58d3bfa915430d2aa7574e2fe9020774e996931187d9f0eec9cfc359723"
+    },
+    "11744455169/metal-combined-gui-ci/composer-specialized/result.json": {
+      "bytes": 2374,
+      "sha256": "701c18d21149a9ad73068104a35bb7cdf88b1acf9ead909fd62ff5782a3a67a5"
+    },
+    "11744455169/metal-combined-gui-ci/legend-authoring/native.stderr": {
+      "bytes": 39,
+      "sha256": "4010a7f2772d8fe12bd3f662b87982d734f13fec692a673abbcf7ad777c0447e"
+    },
+    "11744455169/metal-combined-gui-ci/legend-authoring/result.json": {
+      "bytes": 1315,
+      "sha256": "6aa9e3cc60ad74605f0b15982c3eacb3496123ee938d2e1c044fb66956dfdbb1"
+    },
+    "artifact-inventories.json": {
+      "bytes": 351600,
+      "sha256": "4f06838b23d219935741bdf9bb127fe44a07832627594a8ab576da0c58d2d26e"
+    },
+    "artifacts.json": {
+      "bytes": 4392,
+      "sha256": "9e82425582c1311f0a3cda63d26630bb926af51feb4df5dc546bca3a3ff777e6"
+    },
+    "full-jobs.json": {
+      "bytes": 49509,
+      "sha256": "ca992eb958f037298ddede4a12e4e4226c563f609330713fa8365e41cf94a724"
+    },
+    "linux.log": {
+      "bytes": 362379,
+      "sha256": "8e24c63d790042db635e9b787835b7b8419f418b393061243c68af464a860f6d"
+    },
+    "ordered-jobs.json": {
+      "bytes": 6924,
+      "sha256": "2a9e3644fcfede1c7049b6c9b85060b270e4367758d94ca1f41213373e421aca"
+    },
+    "summary.json": {
+      "bytes": 1258,
+      "sha256": "aea3387feac68a9fc191fad9e26b01b889f10318f989c0ec0571c80d2135f051"
+    }
+  },
+  "git_bindings": [
+    {
+      "path": ".github/workflows/parity.yml",
+      "commit": "9f389363c1ecebb458d3105737cb5eb0357619c2",
+      "bytes": 67506,
+      "sha256": "8e2c2d3e9bbbd61c64c58d93763e3c3a9740233d98c1588718bbca48fab567fa"
+    },
+    {
+      "path": ".github/workflows/metal-compute-consumer.yml",
+      "commit": "9f389363c1ecebb458d3105737cb5eb0357619c2",
+      "bytes": 4532,
+      "sha256": "bce24078146f16afab7cd9998386a03a0aa2b69c0a6954bfc517b009c452efb9"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/composer.rs",
+      "commit": "9f389363c1ecebb458d3105737cb5eb0357619c2",
+      "bytes": 111576,
+      "sha256": "f263f80c354e58dda123c4dff55d4e174249f4d08eb7f5da3c28067552c1b090"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/composer_annotation_authoring.rs",
+      "commit": "9f389363c1ecebb458d3105737cb5eb0357619c2",
+      "bytes": 92823,
+      "sha256": "7ca30803a9bc63daa41a30e318ef3a5f3f29e86c7d5eb53aac1dda7c7eeb44e5"
+    },
+    {
+      "path": "scripts/check-composer-specialized.py",
+      "commit": "9f389363c1ecebb458d3105737cb5eb0357619c2",
+      "bytes": 5413,
+      "sha256": "6c8182001bcf9674344782abea33024055af6a91b909219e82f0313451db2a8f"
+    },
+    {
+      "path": "scripts/replay-composer-specialized.py",
+      "commit": "9f389363c1ecebb458d3105737cb5eb0357619c2",
+      "bytes": 3293,
+      "sha256": "c54e148d1be0e9c4e317e8ea1b99e7b963786d3e0feac9220c01d4ec485d48cf"
+    }
+  ]
+}
