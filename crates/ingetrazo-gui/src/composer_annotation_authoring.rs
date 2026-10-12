@@ -1528,6 +1528,7 @@ pub(super) fn paint(
             + std::mem::size_of::<Layout>()
             + 128
             + markers.capacity() * std::mem::size_of::<DVec2>();
+        bytes=bytes.checked_add(draws.rectangle_fills.capacity()*std::mem::size_of::<crate::composer_annotations::RectangleFill>()).ok_or("Annotation rectangle provenance budget overflow")?;
         let mut font_owners = Vec::new();
         let mut fonts = std::collections::HashSet::new();
         for d in &draws.draws {

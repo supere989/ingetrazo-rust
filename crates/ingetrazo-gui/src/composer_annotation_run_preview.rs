@@ -62,6 +62,7 @@ impl Preview {
             rectangles: vec![],
             source_lines: vec![],
             source_points: vec![],
+            rectangle_fills:vec![],
         }));
         self.preparations = self.preparations.wrapping_add(1);
     }

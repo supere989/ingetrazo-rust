@@ -197,6 +197,9 @@ fn prepare(
         }
         let parts = if draw.text.is_some() {
             fonts.physical_records(std::slice::from_ref(&draw), density)?
+        } else if let Ok(i)=draws.rectangle_fills.binary_search_by_key(&index,|r|r.index){
+            let r=&draws.rectangle_fills[i];
+            crate::sheet_image_paths::source_rectangle_records(&draw,r.a,r.b,r.ratio,density,device)?
         } else if draws.rectangles.binary_search(&index).is_ok() {
             fonts.physical_rectangle(&draw, density)?
         } else if draws.source_points.binary_search(&index).is_ok() {
@@ -336,6 +339,7 @@ mod tests {
             rectangles: vec![],
             source_lines: vec![0],
             source_points: vec![],
+            rectangle_fills:vec![],
         })
     }
     #[test]

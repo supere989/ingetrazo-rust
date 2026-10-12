@@ -253,6 +253,15 @@ pub(crate) fn source_point_records(draw:&Draw,density:f64,device:[u32;2])->Resul
     let bounds=clip_bounds(draw,density,origin)?;let spans=clip(spans,bounds);let spans=clip(spans,Some([0,0,device[0]as i32,device[1]as i32]));let spans=mask_clip(spans,&masks(draw,density,origin)?)?;
     if spans.is_empty(){return Ok(vec![]);}Ok(vec![crate::composer_border::physical_layers(vec![(spans,EncodedRgba::from_bytes(rgba.map(|v|(v*255.).round()as u8),1.)?)])?])
 }
+/// Explicit original drawRect fill provenance, including uniform rotation.
+pub(crate) fn source_rectangle_records(draw:&Draw,a:[f64;2],b:[f64;2],ratio:f64,density:f64,device:[u32;2])->Result<Vec<crate::sheet_image::Records>,String>{
+ if draw.stroke.is_some()||draw.text.is_some()||draw.rotation_deg!=0.{return Err("Invalid source rectangle fill admission".into());}
+ let color=EncodedRgba(draw.fill.ok_or("Source rectangle lacks brush")?);color.validate()?;
+ let origin=draw.origin_mm.map(|v|v*density);let map=|p:[f64;2]|[p[0]*density+origin[0],p[1]*density+origin[1]];
+ let spans=ingetrazo_render::qt_line::rasterize_rect_fill(map(a),map(b),ratio,[0,0,device[0]as i32,device[1]as i32],250_000,100_000)?;
+ let spans=clip(spans,clip_bounds(draw,density,origin)?);let spans=mask_clip(spans,&masks(draw,density,origin)?)?;
+ if spans.is_empty(){return Ok(vec![]);}Ok(vec![crate::composer_border::physical_layers(vec![(spans,color)])?])
+}
 fn records_with_primitive(draws:&[Draw],density:f64,device:[u32;2],line_hint:bool)->Result<Vec<crate::sheet_image::Records>,String>{
     let mut records = Vec::new();
     for draw in draws {

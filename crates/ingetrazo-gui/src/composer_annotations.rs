@@ -17,15 +17,18 @@ use symbols::{callout, label, level};
 mod frame_overlay;
 pub(crate) use frame_overlay::draws as frame_overlay_draws;
 const PI: f64 = std::f64::consts::PI;
+pub(crate) struct RectangleFill {pub index:usize,pub a:[f64;2],pub b:[f64;2],pub ratio:f64}
 pub(crate) struct Draws {
     pub draws: Vec<Draw>,
     pub rectangles: Vec<usize>,
+    pub rectangle_fills:Vec<RectangleFill>,
     pub source_lines: Vec<usize>,
     pub source_points: Vec<usize>,
 }
 struct Output {
     origin: [f64; 2],
     draws: Vec<Draw>,
+    rectangle_fills:Vec<RectangleFill>,
     rectangles: Vec<usize>,
     lines: Vec<usize>,
     points: Vec<usize>,
@@ -36,6 +39,7 @@ impl Output {
             origin,
             draws: vec![],
             rectangles: vec![],
+            rectangle_fills:vec![],
             lines: vec![],
             points: vec![],
         }
@@ -121,6 +125,7 @@ impl Output {
         Ok(Draws {
             draws: self.draws,
             rectangles: self.rectangles,
+            rectangle_fills:self.rectangle_fills,
             source_lines: self.lines,
             source_points: self.points,
         })
@@ -282,6 +287,10 @@ fn rotated_rectangle(
     } else {
         let mut path = rect(r);
         if !pdf {
+            // Actual drawRect retains RectangleHint under uniform rotation.
+            // Qt maps the original left/right midpoints then passes h/w.
+            let middle=(r[1]+(r[1]+r[3]))*0.5;
+            o.rectangle_fills.push(RectangleFill{index:o.draws.len(),a:map([r[0],middle],offset,angle),b:map([r[0]+r[2],middle],offset,angle),ratio:r[3]/r[2]});
             map_path(&mut path, offset, angle);
         }
         o.path(path, Some(ink), None, 2, 2, &[]);

@@ -183,6 +183,11 @@ impl PainterCache {
                     let annotation=crate::composer_annotations::draws(sheet,key,value,&mut self.fonts,fields,false)?;
                     for (index,mut draw) in annotation.draws.into_iter().enumerate(){
                         if draw.text.is_some(){for part in self.text.physical_records(std::slice::from_ref(&draw),density)?{append(part.into())?;}continue;}
+                        if let Ok(i)=annotation.rectangle_fills.binary_search_by_key(&index,|r|r.index){
+                            let r=&annotation.rectangle_fills[i];
+                            for part in crate::sheet_image_paths::source_rectangle_records(&draw,r.a,r.b,r.ratio,density,metrics.pixels())?{append(part.into())?;}
+                            continue;
+                        }
                         if annotation.rectangles.binary_search(&index).is_ok(){
                             let mut fill=draw.clone();fill.stroke=None;fill.stroke_options=None;
                             for part in self.text.physical_rectangle(&fill,density)?{append(part.into())?;}
