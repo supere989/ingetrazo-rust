@@ -531,7 +531,6 @@ pub(super) fn paint(
                         bounds,
                         0.,
                         egui::Stroke::new(w as f32 * zoom, color(c)),
-                        egui::StrokeKind::Middle,
                     );
                 }
             }
