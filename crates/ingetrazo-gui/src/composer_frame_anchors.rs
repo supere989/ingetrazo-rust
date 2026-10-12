@@ -8,7 +8,10 @@ use ingetrazo_core::{
     composition::{SheetItem, ViewFrame},
 };
 use serde_json::{json, Value};
-use std::{collections::HashMap, sync::Arc};
+use std::{
+    collections::{HashMap, HashSet},
+    sync::Arc,
+};
 use uuid::Uuid;
 #[derive(Clone, Debug)]
 pub struct SnapPair {
@@ -34,6 +37,11 @@ struct Entry {
 pub(super) struct Cache {
     stamp: Option<(Uuid, u64, u64, OrbitCamera)>,
     retained_bytes: usize,
+    document: Option<Uuid>,
+    initialized: HashSet<Uuid>,
+    pub(super) defer_rebuild: bool,
+    coalesce: Option<(Uuid, Uuid, &'static str, usize)>,
+    pending_edit: Option<(Uuid, Uuid, &'static str, usize, bool)>,
     entries: HashMap<Uuid, Entry>,
     pub stats: SyncStats,
 }
@@ -136,7 +144,73 @@ impl IngeTrazoApp {
                 _ => return Err(format!("Unsupported frame property {key}")),
             }
         }
-        let candidate: ViewFrame = serde_json::from_value(value).map_err(|e| e.to_string())?;
+        let mut candidate: ViewFrame = serde_json::from_value(value).map_err(|e| e.to_string())?;
+        // Actual source spin-box admission, limited to authored panel fields.
+        let keys = fields.as_object().unwrap();
+        if keys.contains_key("km_step_m") {
+            candidate.km_step_m = (candidate.km_step_m * 10.).round() / 10.;
+            candidate.km_step_m = candidate.km_step_m.clamp(0., 100000.);
+        }
+        if keys.contains_key("rot_deg") {
+            candidate.rot_deg = (candidate.rot_deg * 10.).round() / 10.;
+        }
+        if keys.contains_key("cam_fov") {
+            candidate.cam_fov = candidate.cam_fov.map(|n| n.round().clamp(10., 120.));
+        }
+        let view_changed = candidate.view_key != before.view_key;
+        if view_changed {
+            candidate.cam_target = None;
+            candidate.cam_yaw = None;
+            candidate.cam_pitch = None;
+            candidate.cam_distance = None;
+        }
+        let perspective_changed =
+            candidate.perspective != before.perspective || candidate.cam_fov != before.cam_fov;
+        let mut seeded = false;
+        if perspective_changed {
+            candidate.cam_fov = Some(candidate.cam_fov.unwrap_or(45.));
+            if candidate.perspective && candidate.cam_distance.is_none() {
+                let saved = candidate
+                    .view_key
+                    .strip_prefix("scene:")
+                    .and_then(|name| self.scene.saved_views.iter().find(|v| v.name == name));
+                let distance = if let Some(saved) = saved.filter(|v| v.distance != 0.) {
+                    saved.distance
+                } else {
+                    let diag = self
+                        .scene
+                        .bounds()
+                        .map_or(0., |(lo, hi)| (hi - lo).length());
+                    if diag <= 0. {
+                        30.
+                    } else {
+                        (diag / 2.)
+                            / (candidate.cam_fov.unwrap_or(45.).to_radians() / 2.)
+                                .tan()
+                                .max(1e-6)
+                            * 1.15
+                    }
+                };
+                candidate.cam_distance = Some((distance * 10000.).round() / 10000.);
+                seeded = true;
+            }
+        }
+        let rotation_changed = candidate.rot_deg != before.rot_deg;
+        let signature = if perspective_changed {
+            if seeded {
+                "perspective_seed"
+            } else {
+                "perspective"
+            }
+        } else if rotation_changed {
+            "rotation"
+        } else if view_changed {
+            "properties_camera_reset"
+        } else {
+            "properties"
+        };
+        let rebuild = perspective_changed || rotation_changed;
+
         Projector::new(&self.scene, &self.camera, &candidate)?;
         if !candidate.annot_text_mm.is_finite()
             || candidate.annot_text_mm <= 0.
@@ -155,10 +229,23 @@ impl IngeTrazoApp {
         if finish {
             self.finish_composer_edit();
         }
+        let history_len = self
+            .composer_state
+            .sheet_history
+            .get(&sheet)
+            .map_or(0, |h| h.0.len());
+        let merge = self.composer_state.frame_anchors.coalesce
+            == Some((sheet, frame, signature, history_len))
+            && history_len > 0;
         self.begin_composer_edit();
         self.scene.sheets[s].items[index] = SheetItem::ViewFrame(candidate);
-        if let Err(error) = self.sync_composer_frame_anchors() {
-            self.status_message = format!("Frame edited; anchored refresh refused: {error}");
+        self.composer_state.frame_anchors.defer_rebuild = !rebuild;
+        self.composer_state.frame_anchors.pending_edit =
+            Some((sheet, frame, signature, history_len, merge));
+        if rebuild {
+            if let Err(error) = self.sync_composer_frame_anchors() {
+                self.status_message = format!("Frame edited; anchored refresh refused: {error}");
+            }
         }
         if finish {
             self.finish_composer_edit();
@@ -369,6 +456,47 @@ impl IngeTrazoApp {
     pub fn composer_frame_anchor_stats(&self) -> SyncStats {
         self.composer_state.frame_anchors.stats.clone()
     }
+    pub(crate) fn ensure_composer_frame_anchors(&mut self) -> Result<SyncStats, String> {
+        if self.composer_state.frame_anchors.document != Some(self.clipboard_document) {
+            let c = &mut self.composer_state.frame_anchors;
+            c.document = Some(self.clipboard_document);
+            c.initialized.clear();
+            c.entries.clear();
+            c.retained_bytes = 0;
+            c.coalesce = None;
+        }
+        let Some(s) = self
+            .scene
+            .active_sheet_index
+            .filter(|&s| s < self.scene.sheets.len())
+        else {
+            return Ok(self.composer_frame_anchor_stats());
+        };
+        let id = self.scene.sheets[s].id;
+        if self.composer_state.frame_anchors.initialized.contains(&id) {
+            return Ok(self.composer_frame_anchor_stats());
+        }
+        self.sync_composer_frame_anchors()
+    }
+    pub(crate) fn composer_frame_rebuild_boundary(&mut self) {
+        if let Some((sheet, frame, signature, n, merge)) =
+            self.composer_state.frame_anchors.pending_edit.take()
+        {
+            if let Some(h) = self.composer_state.sheet_history.get_mut(&sheet) {
+                if merge && h.0.len() == n + 1 {
+                    h.0.pop();
+                }
+                self.composer_state.frame_anchors.coalesce =
+                    Some((sheet, frame, signature, h.0.len()));
+            }
+        }
+        if std::mem::take(&mut self.composer_state.frame_anchors.defer_rebuild) {
+            return;
+        }
+        if let Err(error) = self.sync_composer_frame_anchors() {
+            self.status_message = format!("Anchored refresh refused: {error}");
+        }
+    }
     pub fn refresh_composer_frame_anchors(&mut self) -> Result<SyncStats, String> {
         let stamp = (
             self.clipboard_document,
@@ -386,7 +514,13 @@ impl IngeTrazoApp {
     pub fn sync_composer_frame_anchors(&mut self) -> Result<SyncStats, String> {
         // Only anchored records are copied, never the document/model or whole sheet.
         let mut jobs = Vec::new();
-        for (s, sheet) in self.scene.sheets.iter().enumerate() {
+        for (s, sheet) in self
+            .scene
+            .sheets
+            .iter()
+            .enumerate()
+            .filter(|(s, _)| Some(*s) == self.scene.active_sheet_index)
+        {
             for key in ["cotas", "etiquetas", "niveles"] {
                 if let Some(rows) = sheet.native_document.get(key).and_then(Value::as_array) {
                     for (i, v) in rows.iter().enumerate() {
@@ -492,6 +626,16 @@ impl IngeTrazoApp {
                     .geometry_epoch
                     .wrapping_add(1);
             }
+        }
+        if let Some(s) = self
+            .scene
+            .active_sheet_index
+            .filter(|&s| s < self.scene.sheets.len())
+        {
+            self.composer_state
+                .frame_anchors
+                .initialized
+                .insert(self.scene.sheets[s].id);
         }
         Ok(self.composer_frame_anchor_stats())
     }

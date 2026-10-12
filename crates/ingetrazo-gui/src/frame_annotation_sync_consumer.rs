@@ -181,14 +181,13 @@ fn model_annotations(app: &IngeTrazoApp, doc: &Value) -> Value {
   let(_,_,value)=ingetrazo_render::annotations::dimension_geometry(ingetrazo_render::annotations::DimensionInput{a:a.as_vec3(),b:b.as_vec3(),offset:d.offset.as_vec3(),axis:d.axis.as_deref(),text:d.text_override.as_deref(),highlighted:false,hidden:false});
   json!({"a":a.to_array(),"b":b.to_array(),"offset":d.offset.to_array(),"axis":d.axis,"layer":d.layer,"text":d.text_override,"value":value,"anchor_a":d.anchor_a.is_some(),"anchor_b":d.anchor_b.is_some()})
  }).collect::<Vec<_>>();
-    json!({"dimensions":dimensions,"text_labels":doc["text_labels"],"geo_paths":doc["geo_paths"],"section_planes":doc["section_planes"],"dimension_style":doc["dimension_style"]})
+    json!({"dimensions":dimensions,"text_labels":doc["text_labels"],"geo_paths":if app.scene.geo_paths.is_empty(){json!([])}else{doc["geo_paths"].clone()},"section_planes":if app.scene.section_planes.is_empty(){json!([])}else{doc["section_planes"].clone()},"dimension_style":doc["dimension_style"]})
 }
 fn viewport_context(app: &IngeTrazoApp) -> Value {
     // Cold protocol observation only: no mesh, texture, tile pixels, or whole Scene copy.
     json!({"camera":app.camera,"layers":app.scene.layers,"section_planes":app.scene.section_planes,"show_section_cuts":app.scene.show_section_cuts,"show_section_planes":app.scene.show_section_planes,"show_section_fill":app.scene.show_section_fill,"display_style":app.scene.display_style,"shadows":app.scene.shadows,"geo_datum":app.scene.geo_datum,"geo_points":app.scene.geo_points,"geo_paths":app.scene.geo_paths})
 }
 fn observe(app: &mut IngeTrazoApp, name: &str, phase: &str) -> Result<Value, Error> {
-    app.refresh_composer_frame_anchors()?;
     let before_context = viewport_context(app);
     let sheet = app.scene.sheets[0].id;
     let frames = app.scene.sheets[0]
@@ -256,6 +255,8 @@ pub fn run(source: &Path, out: &Path) -> Result<(), Error> {
     let mut cases = Vec::new();
     let mut idle = true;
     let mut invalidated = true;
+    let mut cota_ingress = false;
+    let mut frame_move_ingress = false;
     for recipe in recipes {
         let name = recipe["name"].as_str().ok_or("Case name")?;
         let mut app = open(
@@ -289,14 +290,59 @@ pub fn run(source: &Path, out: &Path) -> Result<(), Error> {
                     let id = frame_id(&app, action["frame"].as_str().ok_or("Frame UID")?)?;
                     let sid = app.scene.sheets[0].id;
                     app.select_composer_frame(sid, id)?;
+                    let old = app.scene.sheets[0]
+                        .items
+                        .iter()
+                        .find_map(|i| match i {
+                            SheetItem::ViewFrame(f) if f.id == id => Some(f.rect),
+                            _ => None,
+                        })
+                        .ok_or("Missing selected frame")?;
+                    let history = app
+                        .composer_state
+                        .sheet_history
+                        .get(&sid)
+                        .map_or(0, |h| h.0.len());
                     for e in action["pointer_actions"]
                         .as_array()
                         .ok_or("Source effective body actions")?
                     {
                         pointer(&ctx, &mut app, &mut time, e)?;
                     }
+                    let now = app.scene.sheets[0]
+                        .items
+                        .iter()
+                        .find_map(|i| match i {
+                            SheetItem::ViewFrame(f) if f.id == id => Some(f.rect),
+                            _ => None,
+                        })
+                        .ok_or("Moved frame disappeared")?;
+                    if (now.x == old.x && now.y == old.y)
+                        || app
+                            .composer_state
+                            .sheet_history
+                            .get(&sid)
+                            .map_or(0, |h| h.0.len())
+                            != history + 1
+                    {
+                        return Err(
+                            "Actual frame gesture did not move/create one history step".into()
+                        );
+                    }
+                    frame_move_ingress = true;
                 }
                 "create_anchored_cota" => {
+                    let sid = app.scene.sheets[0].id;
+                    let count = app.scene.sheets[0]
+                        .native_document
+                        .get("cotas")
+                        .and_then(Value::as_array)
+                        .map_or(0, Vec::len);
+                    let history = app
+                        .composer_state
+                        .sheet_history
+                        .get(&sid)
+                        .map_or(0, |h| h.0.len());
                     click(&ctx, &mut app, &mut time, "annotation-ui-menu")?;
                     click(&ctx, &mut app, &mut time, "annotation-ui-add-0")?;
                     for e in action["pointer_actions"]
@@ -306,6 +352,28 @@ pub fn run(source: &Path, out: &Path) -> Result<(), Error> {
                         pointer(&ctx, &mut app, &mut time, e)?;
                     }
                     click(&ctx, &mut app, &mut time, "annotation-ui-select")?;
+                    let rows = app.scene.sheets[0].native_document["cotas"]
+                        .as_array()
+                        .ok_or("Missing created cota")?;
+                    if rows.len() != count + 1
+                        || app
+                            .composer_state
+                            .sheet_history
+                            .get(&sid)
+                            .map_or(0, |h| h.0.len())
+                            != history + 1
+                        || rows
+                            .last()
+                            .and_then(|v| v.get("anchor_uid"))
+                            .and_then(Value::as_str)
+                            .is_none_or(str::is_empty)
+                    {
+                        return Err(
+                            "Actual cota ingress did not create one anchored item/history step"
+                                .into(),
+                        );
+                    }
+                    cota_ingress = true;
                 }
                 "sheet_undo" => app.undo_composer_edit(),
                 "sheet_redo" => app.redo_composer_edit(),
@@ -339,7 +407,6 @@ pub fn run(source: &Path, out: &Path) -> Result<(), Error> {
                     app.scene.mesh.place_vertices(moves.into_iter());
                     app.scene.refresh_dimensions();
                     app.scene.version = app.scene.version.wrapping_add(1);
-                    app.sync_composer_frame_anchors()?;
                 }
                 "model_undo" | "model_redo" => {
                     let active = app.scene.active_sheet_index.take();
@@ -349,7 +416,6 @@ pub fn run(source: &Path, out: &Path) -> Result<(), Error> {
                         app.redo()
                     }
                     app.scene.active_sheet_index = active;
-                    app.sync_composer_frame_anchors()?;
                 }
                 "frame_delete" => {
                     let id = frame_id(&app, action["frame"].as_str().ok_or("Frame UID")?)?;
@@ -412,7 +478,7 @@ pub fn run(source: &Path, out: &Path) -> Result<(), Error> {
     std::fs::write(
         out.join("native-frame-annotations.json"),
         serde_json::to_vec_pretty(
-            &json!({"cases":cases,"states":states,"controls":{"idle_reused":idle,"changed_invalidated":invalidated,"actual_cota_ingress":true,"actual_frame_move":true},"scope":"Actual App/egui cota and frame body ingress; shared frame controller; App model history plus core admitted vertex placement (no OS model command claim). Only source-defined empty annotation inventories omitted in known composition observation; saved original-reader payload remains authoritative."}),
+            &json!({"cases":cases,"states":states,"controls":{"idle_reused":idle,"changed_invalidated":invalidated,"actual_cota_ingress":cota_ingress,"actual_frame_move":frame_move_ingress},"scope":"Actual App/egui cota and frame body ingress; shared frame controller; App model history plus core admitted vertex placement (no OS model command claim). Only source-defined empty annotation inventories omitted in known composition observation; saved original-reader payload remains authoritative."}),
         )?,
     )?;
     Ok(())

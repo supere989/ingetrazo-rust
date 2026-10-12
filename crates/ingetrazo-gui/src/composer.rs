@@ -162,18 +162,18 @@ impl IngeTrazoApp {
   let history=self.composer_state.sheet_history.entry(before.id).or_default();
   history.0.push(before);history.1.clear();
   // Original ComposerHistory is independent of General undo_steps and unlimited.
-  self.scene.bump_version();
+  self.scene.bump_version();self.composer_frame_rebuild_boundary();
  }
 
  pub fn undo_composer_edit(&mut self){self.finish_composer_edit();self.composer_state.picture_authoring.history_boundary();self.composer_state.annotation_authoring.coalesce=None;self.composer_state.annotation_authoring.points.clear();self.composer_state.annotation_authoring.snap_hits.clear();self.composer_state.annotation_authoring.draft=None;self.composer_state.legend_authoring.coalesce=None;self.composer_state.legend_authoring.pending=None;self.composer_state.legend_authoring.title_draft=None;
   let Some(index)=self.scene.active_sheet_index.filter(|&i|i<self.scene.sheets.len())else{return;};let id=self.scene.sheets[index].id;
   let Some(history)=self.composer_state.sheet_history.get_mut(&id)else{return;};
-  if let Some(mut before)=history.0.pop(){Self::retain_direct_paper_properties(&mut before,&self.scene.sheets[index]);history.1.push(std::mem::replace(&mut self.scene.sheets[index],before));self.scene.bump_version();}self.revalidate_picture_selection();self.revalidate_legend_selection();self.revalidate_annotation_selection();
+  if let Some(mut before)=history.0.pop(){Self::retain_direct_paper_properties(&mut before,&self.scene.sheets[index]);history.1.push(std::mem::replace(&mut self.scene.sheets[index],before));self.scene.bump_version();}self.revalidate_picture_selection();self.revalidate_legend_selection();self.revalidate_annotation_selection();self.composer_frame_rebuild_boundary();
  }
  pub fn redo_composer_edit(&mut self){self.finish_composer_edit();self.composer_state.picture_authoring.history_boundary();self.composer_state.annotation_authoring.coalesce=None;self.composer_state.annotation_authoring.points.clear();self.composer_state.annotation_authoring.snap_hits.clear();self.composer_state.annotation_authoring.draft=None;self.composer_state.legend_authoring.coalesce=None;self.composer_state.legend_authoring.pending=None;self.composer_state.legend_authoring.title_draft=None;
   let Some(index)=self.scene.active_sheet_index.filter(|&i|i<self.scene.sheets.len())else{return;};let id=self.scene.sheets[index].id;
   let Some(history)=self.composer_state.sheet_history.get_mut(&id)else{return;};
-  if let Some(mut after)=history.1.pop(){Self::retain_direct_paper_properties(&mut after,&self.scene.sheets[index]);history.0.push(std::mem::replace(&mut self.scene.sheets[index],after));self.scene.bump_version();}self.revalidate_picture_selection();self.revalidate_legend_selection();self.revalidate_annotation_selection();
+  if let Some(mut after)=history.1.pop(){Self::retain_direct_paper_properties(&mut after,&self.scene.sheets[index]);history.0.push(std::mem::replace(&mut self.scene.sheets[index],after));self.scene.bump_version();}self.revalidate_picture_selection();self.revalidate_legend_selection();self.revalidate_annotation_selection();self.composer_frame_rebuild_boundary();
  }
  pub fn cancel_composer_edit(&mut self){
   self.composer_state.annotation_authoring.ignore_release=false;
@@ -203,7 +203,7 @@ pub fn render_sheet_composer(app: &mut IngeTrazoApp, ui: &mut egui::Ui, sheet_id
     }
 
     app.enter_composer_sheet(sheet_idx);app.revalidate_legend_selection();
-    if let Err(e)=app.refresh_composer_frame_anchors(){app.status_message=e;}
+    if let Err(e)=app.ensure_composer_frame_anchors(){app.status_message=e;}
     if ui.is_enabled()&&ui.input(|i|i.key_pressed(egui::Key::Escape)){
         // A normal item grab keeps its geometry until the real release.
         // Source Select Escape only drops selection; explicit edit/placement
