@@ -1,0 +1,43 @@
+{
+  "revision": "e02ed2d57a2eb9baacb3c50bd4ca005c90946ac8",
+  "external_caller_passed": true,
+  "scope": "Exact public backend MTLDevice trait and capability call; metadata only, no linking/native execution",
+  "files": [
+    {
+      "path": "caller.log",
+      "bytes": 339,
+      "sha256": "8dc7b04959e8ad5003a0d46cea2e947b41f1d255896a7c5df8321fde93ce4be8"
+    },
+    {
+      "path": "caller.rs",
+      "bytes": 165,
+      "sha256": "5c1194e06d0bd37a056ee361627e98bc78bd5810a654229bbae06fea91edaf51"
+    },
+    {
+      "path": "cargo.jsonl",
+      "bytes": 150372,
+      "sha256": "6bd14b39e943bb645498e8cc3d02533b37bc36127bf723474cd15ba8abb8a858"
+    },
+    {
+      "path": "cargo.log",
+      "bytes": 157,
+      "sha256": "febd8b5eedf5d9ae820516107ff758f01324ed24ad38c571a67874afddfef216"
+    },
+    {
+      "path": "first-caller.log",
+      "bytes": 326,
+      "sha256": "b89b94acc6ba880782a944b41b81d441f9e86c2de54ca2083ab9d822896b72f3"
+    },
+    {
+      "path": "first-result.json",
+      "bytes": 761,
+      "sha256": "cd7c5183d2fbcedd08199adb68604091a5b2ff0f84b9a0d04a4fe83b0b141baa"
+    },
+    {
+      "path": "result.json",
+      "bytes": 841,
+      "sha256": "fa3ad742b67acb9d462afd37b7f3837d5e79f7e0a2b6d6f085df9f993f3374fe"
+    }
+  ],
+  "archive_sha256": "3e45b164ccd0338fab00cdbbaf7faf95e86a9f3fd85a3fc2262839b4c26965e2"
+}
