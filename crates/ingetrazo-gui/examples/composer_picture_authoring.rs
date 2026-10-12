@@ -29,7 +29,11 @@ fn open(source: &Path, input: &str, session: &Path) -> Result<IngeTrazoApp, Erro
     ));
     app.mark_document_clean();
     app.open_document(&source.join(input));
-    if app.document_session.confirm_unsaved || app.scene.sheets.len() != 1 {
+    if app.document_session.confirm_unsaved
+        || app.scene.sheets.len() != 1
+        || app.current_file.as_deref() != Some(source.join(input).as_path())
+        || !app.status_message.is_empty()
+    {
         return Err("Original authoring input was not opened".into());
     }
     app.enter_composer_sheet(0);
@@ -201,10 +205,7 @@ printf '%s\n' "$INGETRAZO_AUTHORING_PICKER_REPLY"
         "Cancel launched a second chooser"
     );
     std::env::set_var("INGETRAZO_AUTHORING_PICKER_REPLY", "assets/checker.png");
-    let count = composition(&app)["images"]
-        .as_array()
-        .ok_or("Image array")?
-        .len();
+    let count = composition(&app)["images"].as_array().map_or(0, Vec::len);
     click(&ctx, &mut app, &mut time, "picture-ui-add")?;
     assert_eq!(
         composition(&app)["images"].as_array().unwrap().len(),
@@ -287,7 +288,7 @@ fn z_controls(source: &Path, out: &Path) -> Result<Vec<Value>, Error> {
         let input = out.join(format!("z-input-{category}.igz"));
         std::fs::write(
             &input,
-            serde_json::to_vec(&json!({"igz_format":1,"scene":document}))?,
+            serde_json::to_vec(&json!({"igz_format":1,"app_version":"0.3.15","scene":document}))?,
         )?;
         let mut app = open(
             out,
