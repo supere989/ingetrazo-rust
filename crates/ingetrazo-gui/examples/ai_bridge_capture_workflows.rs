@@ -115,8 +115,16 @@ mod fixture {
                 v
             })
             .collect::<Vec<_>>();
+        let mut scene = exchange::scene(a)?;
+        let mut units = s.model_units().as_object().cloned().unwrap_or_default();
+        units.insert("length".into(), json!(ingetrazo_core::units::model_unit(s)));
+        units.insert(
+            "precision".into(),
+            json!(ingetrazo_core::units::model_precision(s)),
+        );
+        scene["units"] = Value::Object(units);
         Ok(
-            json!({"selection":selection,"scene":exchange::scene(a)?,"overlays":{"dimensions":dimensions,"text_labels":texts,"guides":guides,"section_planes":sections,"geo_paths":paths,"geo_points":points},"camera":{"target":c.target.to_array(),"distance":c.distance,"yaw":c.yaw,"pitch":c.pitch,"perspective":c.perspective,"fov":c.fov_deg,"aspect":c.aspect,"up":c.up.to_array(),"znear":c.znear,"zfar":c.zfar,"two_point":c.two_point},"undo":a.undo_stack.len(),"redo":a.redo_stack.len(),"edit_context":a.component_edit_stack.len(),"current_file":a.current_file,"dirty":a.document_dirty(),"scene_version":s.version}),
+            json!({"selection":selection,"scene":scene,"overlays":{"dimensions":dimensions,"text_labels":texts,"guides":guides,"section_planes":sections,"geo_paths":paths,"geo_points":points},"camera":{"target":c.target.to_array(),"distance":c.distance,"yaw":c.yaw,"pitch":c.pitch,"perspective":c.perspective,"fov":c.fov_deg,"aspect":c.aspect,"up":c.up.to_array(),"znear":c.znear,"zfar":c.zfar,"two_point":c.two_point},"undo":a.undo_stack.len(),"redo":a.redo_stack.len(),"edit_context":a.component_edit_stack.len(),"current_file":a.current_file,"dirty":a.document_dirty(),"scene_version":s.version}),
         )
     }
     struct Reply {
