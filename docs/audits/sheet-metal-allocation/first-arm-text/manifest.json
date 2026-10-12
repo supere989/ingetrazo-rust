@@ -1,0 +1,81 @@
+{
+  "head_sha": "5b21b5089b321c27995a0021649dab448e8dcf2f",
+  "run": 38191313674,
+  "job": 114624472638,
+  "artifact": 11721104900,
+  "artifact_zip_sha256": "2c5986315d36e6b8d0aabe5c054998684ba33176f1efccb8c994906da8e660fa",
+  "archive_sha256": "55025b5dc5778f7b0ba419dcc7acf8886e2e90bc46ab1636189f16e1556e2bef",
+  "entries": [
+    {
+      "path": "native/chosen-jpeg.jpg",
+      "bytes": 32747,
+      "sha256": "5f5f79bfabad49034910bdf29f095ded03d317711d4c2d8521406aa501ddcfc7"
+    },
+    {
+      "path": "native/chosen.png",
+      "bytes": 3843,
+      "sha256": "524acfe0e11e427e19108e75e9eac60712923e1529c4dcf543c72c5c5de78d9f"
+    },
+    {
+      "path": "native/lazy-failure.jpg",
+      "bytes": 17,
+      "sha256": "bfc4668bda0fa79af37afecbd00615118d71004f462fd761e0ee581c279785c0"
+    },
+    {
+      "path": "native/native.json",
+      "bytes": 2388,
+      "sha256": "40a9cccfd30ff2778ab4666522beae7ac535b45c59e87a32bf1dfc67e9980b58"
+    },
+    {
+      "path": "native/session/config/settings.json",
+      "bytes": 465,
+      "sha256": "a7bf7fdbef277353c157a41d2d67485351a8db19c830d5cf4b0374be3071f00c"
+    },
+    {
+      "path": "native/text.png",
+      "bytes": 9570,
+      "sha256": "d3530967acba77b873edb2faebb5bf478c4131171cb157e218b55a34c018dfb6"
+    },
+    {
+      "path": "native/text.rgba",
+      "bytes": 3867052,
+      "sha256": "0a0d70b4f7b005c90b5c46117974df3d7e9d6c1e8e409b1043c65aeadbb0df44"
+    },
+    {
+      "path": "native/upper.JPG",
+      "bytes": 38819,
+      "sha256": "4e599f16ad8c474c7d23c109c8eb9abf69346cff869407179640595ef85adedb"
+    },
+    {
+      "path": "result.json",
+      "bytes": 4721,
+      "sha256": "a1df458abecc9066caeba8708169b55d003287b5537a23fa717d6975b9c9efbf"
+    },
+    {
+      "path": "runtime.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "runtime.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "source/receipt.json",
+      "bytes": 3559,
+      "sha256": "edbe15520458024ebdb92fefee52b5ee647a09aa0d1d4f434fa32ff7e6318585"
+    },
+    {
+      "path": "source/source.json",
+      "bytes": 407,
+      "sha256": "857966e5f3bc9a1094d13ce1620a01dd6fd4984849c1dcc01e0d91101de6b0df"
+    },
+    {
+      "path": "source/text.png",
+      "bytes": 9692,
+      "sha256": "6a2184a34270c648cf139f6fefbb43d2a9504e96561dff529de984869820c82b"
+    }
+  ],
+  "scope": "First actual ARM native-platform original text witness and native strict failure; no recapture or runtime replay."
+}

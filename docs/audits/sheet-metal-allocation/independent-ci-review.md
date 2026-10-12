@@ -1,0 +1,9 @@
+# Independent scoped Metal sheet repair observation
+
+Observed automatic d24325d2433090f4f2fc19932c931cff222d02ad run38190725736 and corrected5b21b5089b321c27995a0021649dab448e8dcf2f run38191313674 only. Ordered runs38190725692/38191313675 were expected branch-excluded; no dispatch/retry/cancel or local GPU execution. Both initial jobs failed E0308 distinct world::Image/egui_painter::Image, so no first source text capture occurred at d243. That compile failure is preserved. Corrected canonical owner aliases share one ledger/destructor; actual native builds passed.
+
+At corrected head both native Mac figure replay and10-case text-excluded physical sheet geometry/codec diagnostic passed. Intel previous paper heap-query-zero refusal is closed by actual execution. Both78-test native format libraries passed. Runs remain failure due retained section/CGL, Intel annotation/CLI sample-policy gates and new strict text mismatch.
+
+First actual ARM and Intel original text observations are preserved separately in first-arm-text and first-intel-text. Each archive has14members, original PNG/source JSON/receipt with17 imported files authenticated to pinned Python6be29fe4, actual Qt6.12.0 .AppleSystemUIFont metrics/table hashes, native PNG/protocol and strict comparison. Both report2025differingpixels/max225, physicalheaders exact. This is first platform evidence, not font parity closure; retain it for any future fix rather than recapturing. Native binary hashes and automatic head/job/artifact bindings are included. Terminal archive166members retains initial/accepted logs and results; every ZIP member size/digest verified independently.
+
+Static review initially missed the distinct owner-type compile seam; actual compiler exposed it before GPU execution. Final alias correction was separately reviewed and root ARM metadata-checked before corrected native CI. No P29 promotion, broad rerun or original Linux corpus capture is claimed.
