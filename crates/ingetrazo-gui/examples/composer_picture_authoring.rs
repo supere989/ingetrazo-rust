@@ -117,6 +117,13 @@ fn click(
         .data(|d| d.get_temp::<egui::Rect>(egui::Id::new(id)))
         .ok_or_else(|| format!("Missing actual egui control: {id}"))?;
     let p = rect.center();
+    let trace = |phase: &str, app: &IngeTrazoApp| {
+        if std::env::var_os("INGETRAZO_AUTHORING_CLICK_TRACE").is_some() {
+            let live = ctx.data(|d| d.get_temp::<egui::Rect>(egui::Id::new(id)));
+            eprintln!("{}", json!({"control":id,"phase":phase,"point":[p.x,p.y],"stored_rect":format!("{rect:?}"),"live_rect":format!("{live:?}"),"layer":format!("{:?}",ctx.layer_id_at(p)),"selection":app.composer_picture_selection().map(|v|v.1),"images":composition(app)["images"],"status":app.status_message}));
+        }
+    };
+    trace("before", app);
     frame(
         ctx,
         app,
@@ -131,6 +138,7 @@ fn click(
             },
         ],
     );
+    trace("pressed", app);
     frame(
         ctx,
         app,
@@ -142,6 +150,7 @@ fn click(
             modifiers: Default::default(),
         }],
     );
+    trace("released", app);
     Ok(())
 }
 #[cfg(unix)]
