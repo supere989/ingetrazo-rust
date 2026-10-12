@@ -1,0 +1,21 @@
+{
+  "scope": "Actual Metal host lifecycle probe; no source pixel parity claim",
+  "revision": "8bc5a5809cc87562e2050389fcd51d29cdb9f6af",
+  "manifest_sha256": "95ab0d1a306ceaccd82ee3d4766a3616a27219e3eabfa6e5ab97e66459c978b0",
+  "steps": [
+    {
+      "name": "actual-host-tcp",
+      "returncode": 1,
+      "seconds": 0.0012865090393461287,
+      "timeout_seconds": 75
+    }
+  ],
+  "source_directory": "/tmp/ingetrazo-metal-capture-source-u64pc713",
+  "archive_sha256": "f11d2012b5c234940bf63a559cbd14fe7786daf5926f01d0af4a5e8aac8dbf2b",
+  "authenticated_members": 32,
+  "binary_sha256": "68d5dd3517b8fb324b5fbdc365add3c821380e173a951f6632d4b2d6ecb04fd4",
+  "ok": false,
+  "error": "Native probe failed: 1",
+  "control_scope": "Intentional /bin/false runner-authentication/refusal control; no native Metal execution",
+  "helper_sha256": "a9577ee4fafde72f378afcc6ea8748888eeda5ecab429167dd97d14f8f62134b"
+}
