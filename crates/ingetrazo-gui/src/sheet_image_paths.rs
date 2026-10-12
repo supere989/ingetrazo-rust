@@ -486,9 +486,98 @@ fn records_with_primitive(draws:&[Draw],density:f64,device:[u32;2],line_hint:boo
 // every flattened edge. Flat caps and bevel joins are the callout's actual pen.
 // Qt6.12 QPointF equality uses QtPrivate::fuzzyCompare per coordinate,
 // including its zero-safe qFuzzyIsNull branch. Only source QStroker admission.
-fn source_qpoint_equal(a:DVec2,b:DVec2)->bool{
- let equal=|a:f64,b:f64|if a==0.||b==0.{(a-b).abs()<=1e-12}else{(a-b).abs()*1e12<=a.abs().min(b.abs())};
- equal(a.x,b.x)&&equal(a.y,b.y)
+fn source_qpoint_equal(a: DVec2, b: DVec2) -> bool {
+    let equal = |a: f64, b: f64| {
+        if a == 0. || b == 0. {
+            (a - b).abs() <= 1e-12
+        } else {
+            (a - b).abs() * 1e12 <= a.abs().min(b.abs())
+        }
+    };
+    equal(a.x, b.x) && equal(a.y, b.y)
+}
+fn source_bevel_boundary(
+    run: &[DVec2],
+    width: f64,
+    point_limit: usize,
+) -> Result<Vec<DVec2>, String> {
+    if run.is_empty() {
+        return Ok(Vec::new());
+    }
+    let bound = run
+        .len()
+        .checked_mul(6)
+        .filter(|&n| n <= point_limit)
+        .ok_or("Dash boundary budget exceeded")?;
+    let mut boundary = Vec::new();
+    boundary
+        .try_reserve(bound)
+        .map_err(|_| "Dash boundary allocation refused")?;
+    let mut previous: Option<(DVec2, DVec2)> = None;
+    for backward in [false, true] {
+        let mut first = true;
+        let mut raw = if backward {
+            *run.last().unwrap()
+        } else {
+            run[0]
+        };
+        for j in 0..run.len().saturating_sub(1) {
+            let b = if backward {
+                run[run.len() - 2 - j]
+            } else {
+                run[j + 1]
+            };
+            let a = raw;
+            if source_qpoint_equal(a, b) {
+                continue;
+            }
+            let d = b - a;
+            // QLineF normalVector/setLength retains rooted cancellation.
+            // Reverse-side offsets are computed independently.
+            let tip = a + DVec2::new(d.y, -d.x);
+            let n = tip - a;
+            let length = n.x.hypot(n.y);
+            let tip = if length > 0. {
+                a + (width * 0.5) * (n / length)
+            } else {
+                tip
+            };
+            let n = tip - a;
+            let line = (a + n, b + n);
+            if let Some(prev) = previous {
+                let fuzzy = |x: f64, y: f64| (x - y).abs() * 1e12 <= x.abs().min(y.abs());
+                if !(fuzzy(prev.1.x, line.0.x) && fuzzy(prev.1.y, line.0.y)) {
+                    if !first {
+                        let va = prev.1 - prev.0;
+                        let vb = line.0 - line.1;
+                        let c = prev.0 - line.0;
+                        let denom = va.y * vb.x - va.x * vb.y;
+                        let bounded = if denom == 0. || !denom.is_finite() {
+                            false
+                        } else {
+                            let na = (vb.y * c.x - vb.x * c.y) / denom;
+                            let nb = (va.x * c.y - va.y * c.x) / denom;
+                            (0. ..=1.).contains(&na) && (0. ..=1.).contains(&nb)
+                        };
+                        let shortcut = line.0 - prev.1;
+                        let angle = |v: DVec2| (-v.y).atan2(v.x).to_degrees().rem_euclid(360.);
+                        let turn = (angle(va) - angle(shortcut)).rem_euclid(360.);
+                        if bounded || (turn > 90. && !fuzzy(turn, 90.)) {
+                            boundary.push(a);
+                        }
+                    }
+                    boundary.push(line.0);
+                }
+            } else {
+                boundary.push(line.0);
+            }
+            boundary.push(line.1);
+            previous = Some(line);
+            first = false;
+            raw = b;
+        }
+    }
+    Ok(boundary)
 }
 fn source_dashed_bevel(
     path: &PathContour,
@@ -565,38 +654,7 @@ fn source_dashed_bevel(
         // Separate edge fills would quantize internal edges absent from it.
         let bound=extra.checked_mul(3).ok_or("Dash boundary size overflow")?;
         if boundary_points.checked_add(bound).is_none_or(|n|n>250_000){return Err("Dash boundary budget exceeded".into());}
-        let mut boundary=Vec::new();boundary.try_reserve(bound).map_err(|_|"Dash boundary allocation refused")?;
-        let mut previous:Option<(DVec2,DVec2)>=None;
-        for backward in [false,true]{
-            let mut first=true;
-            let mut raw=if backward{*run.last().unwrap()}else{run[0]};
-            for j in 0..run.len().saturating_sub(1){
-                let b=if backward{run[run.len()-2-j]}else{run[j+1]};let a=raw;
-                if source_qpoint_equal(a,b){continue;}
-                let d=b-a;
-                // QLineF normalVector/setLength retains rooted cancellation.
-                // Reverse-side offsets are computed independently.
-                let tip=a+DVec2::new(d.y,-d.x);let n=tip-a;let length=n.x.hypot(n.y);
-                let tip=if length>0.{a+(width*0.5)*(n/length)}else{tip};let n=tip-a;
-                let line=(a+n,b+n);
-                if let Some(prev)=previous{
-                    let fuzzy=|x:f64,y:f64|(x-y).abs()*1e12<=x.abs().min(y.abs());
-                    if !(fuzzy(prev.1.x,line.0.x)&&fuzzy(prev.1.y,line.0.y)){
-                        if !first{
-                            let va=prev.1-prev.0;let vb=line.0-line.1;let c=prev.0-line.0;
-                            let denom=va.y*vb.x-va.x*vb.y;
-                            let bounded=if denom==0.||!denom.is_finite(){false}else{let na=(vb.y*c.x-vb.x*c.y)/denom;let nb=(va.x*c.y-va.y*c.x)/denom;(0. ..=1.).contains(&na)&&(0. ..=1.).contains(&nb)};
-                            let shortcut=line.0-prev.1;
-                            let angle=|v:DVec2|(-v.y).atan2(v.x).to_degrees().rem_euclid(360.);
-                            let turn=(angle(va)-angle(shortcut)).rem_euclid(360.);
-                            if bounded||(turn>90.&&!fuzzy(turn,90.)){boundary.push(a);}
-                        }
-                        boundary.push(line.0);
-                    }
-                }else{boundary.push(line.0);}
-                boundary.push(line.1);previous=Some(line);first=false;raw=b;
-            }
-        }
+        let boundary=source_bevel_boundary(&run,width,bound)?;
         boundary_points+=boundary.len();
         if let Some(first)=boundary.first().copied(){
             let mut segments=Vec::new();segments.try_reserve(boundary.len()).map_err(|_|"Dash boundary allocation refused")?;
@@ -611,23 +669,29 @@ fn source_dashed_bevel(
 }
 
 #[cfg(test)]
-mod source_dash_point_tests{
- use super::*;
- fn outline_points(path:&PathContour)->Vec<[f64;2]>{
-  let mut points=vec![path.start];for segment in &path.segments{match segment{Segment::Line(p)=>points.push(*p),_=>panic!("dash outline must be linear")}}points
- }
- #[test]
- fn source_dash_point_equality_retains_previous_endpoint(){
-  assert!(source_qpoint_equal(DVec2::ZERO,DVec2::new(1e-13,0.)));
-  assert!(!source_qpoint_equal(DVec2::ZERO,DVec2::new(1e-11,0.)));
-  let a=[28.499999999999993,0.];let end=[29.5,1.];
-  let baseline=PathContour{start:a,segments:vec![Segment::Line(end)]};
-  let tiny=PathContour{start:a,segments:vec![Segment::Line([28.5,0.]),Segment::Line(end)]};
-  let real=PathContour{start:a,segments:vec![Segment::Line([28.50001,0.]),Segment::Line(end)]};
-  let paint=|path:&PathContour|source_dashed_bevel(path,0.3,&[1000.,1000.],100./25.4).unwrap().iter().map(outline_points).collect::<Vec<_>>();
-  let baseline=paint(&baseline);let tiny=paint(&tiny);let real=paint(&real);
-  assert_eq!(&baseline[0][..2],&tiny[0][..2],"ignored source-equal point must not replace previous raw endpoint on the forward side");
-  assert_ne!(baseline[0][0],real[0][0],"a genuine edge retains its separate offset boundary");
-  assert!(tiny[0].len()<real[0].len(),"source-equal edges must not create extra joins");
- }
+mod source_dash_point_tests {
+    use super::*;
+    #[test]
+    fn source_dash_point_equality_retains_previous_endpoint() {
+        assert!(source_qpoint_equal(DVec2::ZERO, DVec2::new(1e-13, 0.)));
+        assert!(!source_qpoint_equal(DVec2::ZERO, DVec2::new(1e-11, 0.)));
+        let a = DVec2::new(28.499999999999993, 0.);
+        let end = DVec2::new(29.5, 1.);
+        let baseline = source_bevel_boundary(&[a, end], 0.3, 100).unwrap();
+        let tiny = source_bevel_boundary(&[a, DVec2::new(28.5, 0.), end], 0.3, 100).unwrap();
+        let real = source_bevel_boundary(&[a, DVec2::new(28.50001, 0.), end], 0.3, 100).unwrap();
+        assert_eq!(
+            &baseline[..2],
+            &tiny[..2],
+            "ignored source-equal point must not replace previous raw endpoint on the forward side"
+        );
+        assert_ne!(
+            baseline[0], real[0],
+            "a genuine edge retains its separate offset boundary"
+        );
+        assert!(
+            tiny.len() < real.len(),
+            "source-equal edges must not create extra joins"
+        );
+    }
 }
