@@ -103,6 +103,102 @@ def validate(source, native, original_readers, native_readers):
         except AssertionError as e: reader_diffs.append({"case":expected["case"],"difference":repr(e.args)})
     return {"ok":not diffs and not reader_diffs,"state_mismatches":diffs,"reader_mismatches":reader_diffs,"selection_order_differences":order,"identity_pairs":{c:dict(v.forward) for c,v in comparators.items()}}
 
+FAMILIES=["frames","texts","images","scalebars","nortes","leyendas","shapes","cotas","cotas_ang","cotas_rad","etiquetas","perfiles","niveles","llamadas","cajetin"]
+def snapshot(comp,owner):
+    family=owner["family"];assert family in FAMILIES
+    row=comp[family] if family=="cajetin" else comp[family][owner["index"]]
+    return {"category":FAMILIES.index(family),"record":copy.deepcopy(row)}
+def ordered_items(comp):
+    for family in FAMILIES:
+        if family=="cajetin":
+            if comp.get(family) is not None: yield comp[family]
+        else: yield from comp.get(family,[])
+def source_law(source,native,readers):
+    # This validates the literal source transition conditional on the actual
+    # native selection/clipboard sequence. It never converts strict FAIL to PASS.
+    diffs=[];checked=0;serial=0;seen=set()
+    def fresh():
+        nonlocal serial
+        serial+=1
+        token=f"{serial:032x}"
+        while token in seen: serial+=1;token=f"{serial:032x}"
+        return token
+    for case in source["cases"]:
+        states=[v for v in native["states"] if v["case"]==case["name"]]
+        before=states[0]
+        for action,after in zip(case["actions"],states):
+            seen.update(old_ids(before))
+            if action["op"]!="clipboard": before=after;continue
+            try:
+                expected=copy.deepcopy(before);key=action["key"];comp=expected["composition"];clip=expected["clipboard"];index=before["sheet_index"]
+                selected=before["selection_order"]
+                # Actual acquisition order, not recorded Qt order or sorted z.
+                if key in ("C","X") and selected:
+                    clip=[snapshot(before["composition"],o) for o in selected]
+                    expected["clipboard"]=clip;expected["clipboard_from"]=index
+                    text=[r["record"]["text"] for r in clip if r["category"] in (1,10) and r["record"].get("text")]
+                    if text: expected["system_text"]="\n".join(text)
+                    if key=="X":
+                        for family in FAMILIES:
+                            indices={o["index"] for o in selected if o["family"]==family}
+                            if not indices: continue
+                            if family=="cajetin": comp.pop(family,None)
+                            else:
+                                comp[family]=[r for i,r in enumerate(comp[family]) if i not in indices]
+                                if not comp[family] and family!="frames": comp.pop(family)
+                        expected["selection"]=[];expected["selection_order"]=[];expected["panel_owner"]=None
+                        expected["undo"]+=1;expected["redo"]=0
+                elif key=="V" and clip:
+                    step=5. if before["clipboard_from"]==index else 0.
+                    z=max((r.get("z",0.) for r in ordered_items(comp)),default=-1.)+1.
+                    here={r.get("uid","") for r in comp.get("frames",[]) if r.get("uid")};frames={};groups={};pasted=[];owners=[]
+                    for entry in clip:
+                        row=copy.deepcopy(entry["record"]);cat=entry["category"];family=FAMILIES[cat]
+                        if cat!=14: row["x_mm"]+=step;row["y_mm"]+=step
+                        row["locked"]=False
+                        if row.get("group_id"): groups.setdefault(row["group_id"],fresh());row["group_id"]=groups[row["group_id"]]
+                        if cat==0:
+                            old=row.get("uid","");row["uid"]=fresh()
+                            if old: frames[old]=row["uid"]
+                        elif cat in (8,9,10,12,13): row["uid"]=""
+                        row["z"]=z;z+=1.;pasted.append((family,row))
+                    for family,row in pasted:
+                        ref=row.get("frame_uid","")
+                        if ref in frames: row["frame_uid"]=frames[ref]
+                        elif ref and ref not in here: row["frame_uid"]=""
+                        ref=row.get("anchor_uid","")
+                        if ref:
+                            row["anchor_uid"]=frames.get(ref,"")
+                            if not row["anchor_uid"]:
+                                row["a_world"]=None
+                                if "b_world" in row: row["b_world"]=None
+                        if family=="cajetin": comp[family]=row;i=0
+                        else: i=len(comp.setdefault(family,[]));comp[family].append(row)
+                        if not row.get("hidden",False): owners.append({"family":family,"index":i})
+                    # Qt selectedItems has no promised iteration order. Membership
+                    # stays exact; native order is separately retained by strict gate.
+                    assert sorted(after["selection_order"],key=lambda o:(o["family"],o["index"]))==sorted(owners,key=lambda o:(o["family"],o["index"])),"pasted selection membership"
+                    assert after["panel_owner"] is None if not owners else after["panel_owner"] in owners,"pasted shown owner"
+                    expected["selection"]=sorted(owners,key=lambda o:(o["family"],o["index"]))
+                    expected["selection_order"]=after["selection_order"];expected["panel_owner"]=after["panel_owner"]
+                    expected["undo"]+=1;expected["redo"]=0
+                    for entry,(_,row) in zip(clip,pasted):
+                        if entry["category"]!=14:
+                            entry["record"]["x_mm"]=row["x_mm"];entry["record"]["y_mm"]=row["y_mm"]
+                    expected["clipboard_from"]=index
+                expected["all_compositions"][index]=comp
+                expected["phase"]=after["phase"]
+                Comparator(seen).equal(expected,after,"source-law")
+                checked+=1
+            except (AssertionError,KeyError,TypeError,ValueError,IndexError) as e:
+                diffs.append({"case":case["name"],"phase":after["phase"],"difference":repr(e.args)})
+            before=after
+        try:
+            final=states[-1]["all_compositions"];reader=next(r for r in readers if r["case"]==case["name"])
+            Comparator(old_ids(final)).equal(final,reader["compositions"],"native-original-reader")
+        except (AssertionError,KeyError,TypeError,ValueError,IndexError) as e: diffs.append({"case":case["name"],"phase":"reader","difference":repr(e.args)})
+    return {"ok":not diffs,"checked_clipboard_transitions":checked,"original_reader_pairs":len(readers),"mismatches":diffs,"scope":"Order-parametric literal source Copy/Cut/Paste laws driven by actual native selectedItems-equivalent order. Whole models, z, UID/group relations, offsets, clipboard and document preservation checked. Paste membership exact; unspecified selectedItems iteration/shown-member choice is reported by separate strict gate. Not exact captured output parity, Undo/Redo laws are outside this report."}
+
 def rejects(source,native,original,readers):
     controls=[]
     def attempt(name,mutate,reader=False):
@@ -157,6 +253,7 @@ def main():
         source=load(a.source/"original-clipboard.json");native=load(a.native/"native-clipboard.json")
         original=load(a.source/"original-reopens.json");readers=load(a.native/"native-reopens.json")
         result=validate(source,native,original,readers)
+        result["order_parametric_source_law"]=source_law(source,native,readers)
         result.update(cases=6,states=68,original_reader_pairs=6,scope="Strict ordered source states and models; fresh UID/group spelling only is bijective. z/clipboard/selection order remain strict. Native session-reset persistence is not native window-close proof.",source_noops=["locked-hidden-copy: force_select acquires none; Copy/Paste are no-ops", "text-copy-cut-history: Cut after history-cleared selection is a no-op"],operative_cut="cross-sheet-bindings Text+Cota",source_callback_errors=len(source["callback_errors"]))
         if result["ok"]: result["rejected_controls"]=rejects(source,native,original,readers)
     except Exception as e: result["error"]=repr(e)
