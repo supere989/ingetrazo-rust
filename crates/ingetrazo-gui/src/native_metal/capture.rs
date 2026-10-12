@@ -1,6 +1,6 @@
 //! Deferred capture on the live Metal host, including owned GPU overlays.
 use super::State;
-use objc2_metal::MTLSharedEvent;
+use ingetrazo_metal::MTLSharedEvent;
 use crate::{
     ai_bridge_capture::{CaptureResult, CapturedRgba, PendingCapture},
     annotation_overlay_geometry::{Cache, Composition, Limits},

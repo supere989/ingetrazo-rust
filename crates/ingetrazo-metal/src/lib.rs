@@ -75,3 +75,6 @@ mod world_resolve;
 
 #[cfg(target_os="macos")]
 pub mod paper_picture;
+
+#[cfg(target_os = "macos")]
+pub use objc2_metal::MTLSharedEvent;
