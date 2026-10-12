@@ -48,8 +48,8 @@ def main():
                 assert result.returncode==0,result.stderr
                 original=Scene();dxf_in.load_dxf(original,source);rust=Scene();igz.load_into(rust,out)
                 assert helpers.edge_segments(original)==helpers.edge_segments(rust),(kind,"placed block geometry")
-                assert len(original.grp)==len(rust.grp)==1
-                assert original.grp[0].is_component and rust.grp[0].is_component
+                assert len(original.groups)==len(rust.groups)==1
+                assert original.groups[0].is_component() and rust.groups[0].is_component()
                 rows.append({"case":kind,"exact_placed_block_geometry":True,"component_placement":True})
             else:
                 assert result.returncode==0,result.stderr

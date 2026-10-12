@@ -107,9 +107,6 @@ jobs:
       - name: Capture and compare original native macOS sheet text once
         if: ${{ !cancelled() && steps.nativebuild.outcome == 'success' && github.ref == 'refs/heads/review/metal-sheet-allocation' }}
         run: python3 scripts/check-platform-sheet-text.py target/debug/examples/sheet_image_workflows target/debug/ingetrazo-render-worker docs/audits/metal-combined-gui-ci/platform-sheet-text > docs/audits/metal-combined-gui-ci/platform-sheet-text.log 2>&1
-      - name: Replay frozen native macOS text and font identity
-        if: ${{ !cancelled() && steps.nativebuild.outcome == 'success' && github.ref == 'refs/heads/review/metal-system-font' }}
-        run: python3 scripts/replay-platform-sheet-text.py target/debug/examples/sheet_image_workflows target/debug/ingetrazo-render-worker target/debug/examples/paper_system_font_probe docs/audits/metal-combined-gui-ci/platform-sheet-text-replay > docs/audits/metal-combined-gui-ci/platform-sheet-text-replay.log 2>&1
       - name: Native default sky profile cache refusal and ownership
         if: ${{ !cancelled() && steps.nativebuild.outcome == 'success' }}
         run: target/debug/examples/native_world_defaults docs/audits/metal-combined-gui-ci/defaults
@@ -192,6 +189,9 @@ jobs:
           assert 'different_pixels=' in s
           assert 'Metal shader compile:' not in s
           PY
+      - name: Replay frozen native macOS text and font identity
+        if: ${{ !cancelled() && steps.nativebuild.outcome == 'success' }}
+        run: python3 scripts/replay-platform-sheet-text.py target/debug/examples/sheet_image_workflows target/debug/ingetrazo-render-worker target/debug/examples/paper_system_font_probe docs/audits/metal-combined-gui-ci/platform-sheet-text-replay > docs/audits/metal-combined-gui-ci/platform-sheet-text-replay.log 2>&1
       - name: Retain native linking evidence
         if: always()
         uses: actions/upload-artifact@v4
@@ -308,7 +308,7 @@ jobs:
           python scripts/check-ai-bridge-query.py docs/audits/ai-bridge-ci --require-full > docs/audits/ai-bridge-ci/comparison.json
       - name: Integrated document axes PushPull and nested Fillet workflows using retained source fixtures
         run: |
-          cargo build --locked -p ingetrazo-core -p ingetrazo-gui -p ingetrazo-formats --example gltf_rich --example sheet_image_workflows --example change_axes_fixture --example document_preservation_workflow --example pushpull_solid_workflows --example fillet_scoped --example pushpull_finite_workflows --example paste_save_workflow --example box_selection_fixture --example material_restamp_workflow --example material_tray_egui --example cursor_navigation_workflow --example annotation_delete_fixture --example zoom_extents_workflow --example annotation_move_fixture --example annotation_acquisition_fixture --example mesh_kernel_acceptance --example annotation_edit_style_fixture --example annotation_text_create_fixture --example mesh_finite_kernel_fixture --example annotation_hover_fixture --example dimension_anchor_acceptance_fixture --example context_document_lifecycle --example line_command_history_fixture --example shape_drafting_workflows --example freehand_workflows --example p07_inference_workflows --example perspective_guide_workflows --example p07_keyboard_workflows --example composer_pointer_workflows --example drawing_reference_render_fixture --example shift_inference_render_fixture
+          cargo build --locked -p ingetrazo-core -p ingetrazo-gui -p ingetrazo-formats --example gltf_rich --example sheet_image_workflows --example sheet_symbols_workflows --example change_axes_fixture --example document_preservation_workflow --example pushpull_solid_workflows --example fillet_scoped --example pushpull_finite_workflows --example paste_save_workflow --example box_selection_fixture --example material_restamp_workflow --example material_tray_egui --example cursor_navigation_workflow --example annotation_delete_fixture --example zoom_extents_workflow --example annotation_move_fixture --example annotation_acquisition_fixture --example mesh_kernel_acceptance --example annotation_edit_style_fixture --example annotation_text_create_fixture --example mesh_finite_kernel_fixture --example annotation_hover_fixture --example dimension_anchor_acceptance_fixture --example context_document_lifecycle --example line_command_history_fixture --example shape_drafting_workflows --example freehand_workflows --example p07_inference_workflows --example perspective_guide_workflows --example p07_keyboard_workflows --example composer_pointer_workflows --example drawing_reference_render_fixture --example shift_inference_render_fixture
           python scripts/check-document-axes-integration.py target/debug/examples docs/audits/document-axes-ci
       - name: Pinned original and native legacy SKP primitive parity
         run: |
@@ -619,6 +619,11 @@ jobs:
         run: python scripts/audit-exchange-imports.py
       - name: Independent DXF curve and refusal boundaries
         run: python scripts/check-dxf-curves.py
+      - name: Strict frozen physical sheet symbol exports
+        if: ${{ !cancelled() }}
+        run: |
+          mkdir -p docs/audits/sheet-symbols-ci
+          python scripts/replay-sheet-symbols.py target/debug/examples/sheet_symbols_workflows docs/audits/sheet-symbols-ci/replay --software > docs/audits/sheet-symbols-ci/replay.log 2>&1
       - name: Retain semantic evidence even on failure
         if: always()
         uses: actions/upload-artifact@v4
@@ -696,6 +701,7 @@ jobs:
             docs/audits/shift-inference-render/*.png
             docs/audits/shift-inference-render/runtime.log
             docs/audits/shift-inference-render/state.json
+            docs/audits/sheet-symbols-ci/
             docs/audits/native-stencil-ci/comparison.json
             docs/audits/native-stencil-ci/provenance.json
             docs/audits/native-stencil-ci/*/*.png

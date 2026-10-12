@@ -243,6 +243,7 @@ for lane, package, mode, reader, checker in [
 survey = out/"survey-points"
 survey_members = list(json.loads((repo/"docs/audits/survey-points/source-manifest.json").read_text())["members"])
 survey_source = archive("survey-points", "source-manifest.json", survey_members, survey, archive_name="source-records.zip")
+survey_failure = archive("survey-points", "manifest.json", ["native/first-native-survey.json", "native/first-native-survey-context.json"], survey, stage_name="survey-points-retained-failure")
 run([binaries/("context_document_lifecycle"+suffix), survey, "--survey-points"], "survey-points/runtime.log")
 run([sys.executable, repo/"scripts/reference-survey-reopens.py", survey], "survey-points/reopen.log", requires=["survey-points/runtime.log"])
 run([sys.executable, repo/"scripts/check-survey-points.py", survey], "survey-points/acceptance.json", requires=["survey-points/runtime.log", "survey-points/reopen.log"])
@@ -362,7 +363,7 @@ def summarize():
               "gltf_figures":json.loads((gltf_figures/"result.json").read_text()),
               "sheet_images":json.loads((sheet_images/"result.json").read_text()),
               "dxf_blocks":json.loads((dxf_blocks/"result.json").read_text()),
-              "survey_points":{"source_archive":survey_source,"acceptance":json.loads((survey/"acceptance.json").read_text())},
+              "survey_points":{"source_archive":survey_source,"retained_failure_archive":survey_failure,"acceptance":json.loads((survey/"acceptance.json").read_text())},
               "fresh_source_acquisitions":0,"result":"pass"}
     return result
 
