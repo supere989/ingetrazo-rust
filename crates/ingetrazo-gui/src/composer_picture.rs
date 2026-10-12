@@ -221,8 +221,10 @@ impl Cache {
                     let dh = sh * k;
                     dst = [(dst[2] - dw) / 2., (dst[3] - dh) / 2., dw, dh];
                 }
-                let mx = src[2] / dst[2];
-                let my = src[3] / dst[3];
+                let mx = 1. / (dst[2] / src[2]);
+                let my = 1. / (dst[3] / src[3]);
+                let tx = src[0] - dst[0] * mx;
+                let ty = src[1] - dst[1] * my;
                 let fdx = (mx * 65536.) as i64;
                 let rounded = |v: f64| {
                     if v >= 0. {
@@ -236,24 +238,17 @@ impl Cache {
                 let top = rounded(dst[1]).clamp(0, i64::from(height));
                 let bottom = rounded(dst[1] + dst[3]).clamp(0, i64::from(height));
                 for y in top..bottom {
-                    let fy = (((y as f64 + 0.5 - dst[1]) * my + src[1]) * 65536.) as i64 - 32768;
-                    let start =
-                        (((left as f64 + 0.5 - dst[0]) * mx + src[0]) * 65536.) as i64 - 32768;
+                    let fy = (((y as f64 + 0.5) * my + ty) * 65536.) as i64 - 32768;
+                    let start = (((left as f64 + 0.5) * mx + tx) * 65536.) as i64 - 32768;
                     for x in left..right {
-                        let p = ingetrazo_render::paper_picture::sample(
+                        let p = composite_sample64(
                             &source,
                             start + (x - left) * fdx,
                             fy,
+                            x - left < ((right - left) / 4) * 4,
                         );
                         let i = (y as usize * width as usize + x as usize) * 4;
-                        rgba[i + 3] = p[3];
-                        if p[3] != 0 {
-                            for c in 0..3 {
-                                rgba[i + c] = ((u32::from(p[c]) * 255 + u32::from(p[3]) / 2)
-                                    / u32::from(p[3]))
-                                .min(255) as u8;
-                            }
-                        }
+                        rgba[i..i + 4].copy_from_slice(&p);
                     }
                 }
                 let a = f64::from(width) / 2.;
@@ -420,4 +415,77 @@ impl Cache {
             source_lines,
         })
     }
+}
+
+/// QImage ARGB32 selects Qt's generic64 texture route. This cold composite
+/// boundary is distinct from the RGB32 sheet sampler's byte interpolation.
+fn composite_sample64(image: &Pixels, fx: i64, fy: i64, vector_store: bool) -> [u8; 4] {
+    let pixel = |x: i64, y: i64| {
+        let x = x.clamp(0, i64::from(image.width()) - 1) as usize;
+        let y = y.clamp(0, i64::from(image.height()) - 1) as usize;
+        let p = &image.rgba()[(y * image.width() as usize + x) * 4..][..4];
+        let a = u64::from(p[3]) * 257;
+        std::array::from_fn::<u64, 4, _>(|c| {
+            if c == 3 {
+                a
+            } else {
+                let v = u64::from(p[c]) * 257 * a;
+                (v + (v >> 16) + 32768) >> 16
+            }
+        })
+    };
+    let x = fx >> 16;
+    let y = fy >> 16;
+    let dx = (fx & 65535) as u64;
+    let dy = (fy & 65535) as u64;
+    let tl = pixel(x, y);
+    let tr = pixel(x + 1, y);
+    let bl = pixel(x, y + 1);
+    let br = pixel(x + 1, y + 1);
+    let blend = |a: u64, b: u64, t: u64| {
+        if t == 0 {
+            a
+        } else {
+            (a * (65536 - t) >> 16) + (b * t >> 16)
+        }
+    };
+    let p = std::array::from_fn::<u64, 4, _>(|c| {
+        blend(blend(tl[c], bl[c], dy), blend(tr[c], br[c], dy), dx)
+    });
+    let byte = |v: u64| {
+        let v = v + 128;
+        ((v - (v >> 8)) >> 8).min(255) as u8
+    };
+    if p[3] == 0 {
+        return [0; 4];
+    }
+    if vector_store && p[3] != 65535 {
+        // Literal Qt SSE4 store: reciprocal estimate + one Newton step,
+        // then encoded-channel conversion rounds to nearest/even.
+        #[cfg(target_arch = "x86_64")]
+        let inv = unsafe {
+            use std::arch::x86_64::*;
+            let a = _mm_set_ss(p[3] as f32);
+            let r = _mm_rcp_ss(a);
+            _mm_cvtss_f32(_mm_mul_ss(
+                _mm_sub_ss(_mm_add_ss(r, r), _mm_mul_ss(r, _mm_mul_ss(r, a))),
+                _mm_set_ss(255.),
+            ))
+        };
+        #[cfg(not(target_arch = "x86_64"))]
+        let inv = 255. / p[3] as f32;
+        return [
+            (p[0] as f32 * inv).round_ties_even().clamp(0., 255.) as u8,
+            (p[1] as f32 * inv).round_ties_even().clamp(0., 255.) as u8,
+            (p[2] as f32 * inv).round_ties_even().clamp(0., 255.) as u8,
+            byte(p[3]),
+        ];
+    }
+    let fa = (0xffff00008000u64 + p[3] / 2) / p[3];
+    [
+        byte((p[0] * fa + 0x80000000) >> 32),
+        byte((p[1] * fa + 0x80000000) >> 32),
+        byte((p[2] * fa + 0x80000000) >> 32),
+        byte(p[3]),
+    ]
 }
