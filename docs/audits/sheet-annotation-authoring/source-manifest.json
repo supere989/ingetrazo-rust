@@ -1,0 +1,173 @@
+{
+  "original_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "archive_sha256": "c2180a1367da9502c5980d05fa14fb8cb48c89a7107be5a198441d3ec0de2ef3",
+  "members": {
+    "cancel-degenerate-input.igz": {
+      "size": 507,
+      "sha256": "9bc6dc94d5adaa474c8c9252f8d7f7d4dad234bf126ad5a2628393198798a958"
+    },
+    "cancel-degenerate-original.igz": {
+      "size": 507,
+      "sha256": "9bc6dc94d5adaa474c8c9252f8d7f7d4dad234bf126ad5a2628393198798a958"
+    },
+    "cotas-lifecycle-input.igz": {
+      "size": 1076,
+      "sha256": "dfc827077fca003bb33f5c3c25e3717ddbc09398a5682053da6fff43318cc398"
+    },
+    "cotas-lifecycle-original.igz": {
+      "size": 2040,
+      "sha256": "f31797c677592dc189f48f8cd095631258b5fd8553ac111d7b7b84d1216b1dbf"
+    },
+    "cotas_ang-lifecycle-input.igz": {
+      "size": 1080,
+      "sha256": "219055e2501adc9b696c919a58552d60a9fee36d86ead83b2ddb0dfd89ed38e7"
+    },
+    "cotas_ang-lifecycle-original.igz": {
+      "size": 1791,
+      "sha256": "c671bcc341d28c023c3f5e6ab96ee811d66aab57959c778c7d1456b79b030b66"
+    },
+    "cotas_rad-lifecycle-input.igz": {
+      "size": 1080,
+      "sha256": "e854d20691f0fda178edb16a48df752e5bdbf817cff83f8869f70e2c38065cb7"
+    },
+    "cotas_rad-lifecycle-original.igz": {
+      "size": 1884,
+      "sha256": "48140b3f8d8d67e95784c1d456371f36fc4024b942a1a4f9145269a42f68be62"
+    },
+    "etiquetas-lifecycle-input.igz": {
+      "size": 1080,
+      "sha256": "73a4b488cb3d40e5684e656c3ccdec8fc370873f27296291f520979295344966"
+    },
+    "etiquetas-lifecycle-original.igz": {
+      "size": 1879,
+      "sha256": "5b46a117c1b297b8c1eab263f6002f5c4773d551cfdae2ed6415d269e052fc6b"
+    },
+    "failures/assembly-reader-environment.json": {
+      "size": 334,
+      "sha256": "9cd3506af7ac5a967532ea3f0f5bcdd762d201c97d6c0a22b4cb527c9bf8c79c"
+    },
+    "failures/first-capture.log": {
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "failures/first-capture.partial.json": {
+      "size": 324670,
+      "sha256": "76c44ed8cd7382a6de0b42ac477c5763d3adc47bd7093f2647e7f46dbeec2ead"
+    },
+    "failures/first-capture.stderr": {
+      "size": 6909,
+      "sha256": "8086938ac5dd03ef193ddd509dbd81e9024552c3c05895d72e090c8f7cb5014c"
+    },
+    "failures/weak-label-original.igz": {
+      "size": 1838,
+      "sha256": "9ad9f914fb133f63feadbe0a77b8599c7e5acbab6468cf17ee835f5ec7c52f9f"
+    },
+    "llamadas-lifecycle-input.igz": {
+      "size": 1079,
+      "sha256": "629a339daeb4cc17063a90c2980b55b4d213ca8360b98322acd38a17f039207d"
+    },
+    "llamadas-lifecycle-original.igz": {
+      "size": 1713,
+      "sha256": "b9191d81452e439bc1d2436cee3da1b88fb3c9bf52a96e33d16d80bb61e9cc5b"
+    },
+    "missing-only/callback-errors.json": {
+      "size": 4363,
+      "sha256": "61a5be3f498f316ab19d68c346e18fee30658bded3ccbf2c6e21f7d53bec3a7f"
+    },
+    "missing-only/capture.log": {
+      "size": 46,
+      "sha256": "ff110fa73b9de712eee7d681e917d3a1772e96502fc18733ed116616b8c48216"
+    },
+    "missing-only/capture.stderr": {
+      "size": 2889,
+      "sha256": "6d5017047d8790496fe0de7b601c1cc96c8e61b3338326f088b38dfbae25fc77"
+    },
+    "missing-only/original-annotations.json": {
+      "size": 132078,
+      "sha256": "a357f1459b302619c09724c9ca2e7b4a64fa62cffa4a6ea9a57433df6c52c4e9"
+    },
+    "missing-only/original-reopens.json": {
+      "size": 7215,
+      "sha256": "59b751d1e5cb07df152cdd9866020bd1121490c0457141e5be13dd05164e9fe8"
+    },
+    "mixed-visibility-locked-input.igz": {
+      "size": 6395,
+      "sha256": "940e71af1f417791f09c0b292b212974c314d687eb230f52f3bb09ff78a4afcc"
+    },
+    "mixed-visibility-locked-original.igz": {
+      "size": 5003,
+      "sha256": "586e11c777a7c3d99d939628c2bc94fb8e2159fe98c6a46e23f7583cfab3f77e"
+    },
+    "niveles-lifecycle-input.igz": {
+      "size": 1078,
+      "sha256": "106dfd2102265bd8065849e6472146800a13f1f47a2c0bbf40547e21987040fa"
+    },
+    "niveles-lifecycle-original.igz": {
+      "size": 1756,
+      "sha256": "28f34c6d27d63e6126c9afd823756e1d260ee416b646fbb8dfefea06b966d8c5"
+    },
+    "original-annotations.json": {
+      "size": 395915,
+      "sha256": "1053eaaf23500963789bbaf60a05e5f841b605ed7e98466f5cd038cf90516275"
+    },
+    "original-radial-ui-failure-events.json": {
+      "size": 1409,
+      "sha256": "b1457e398c9a3f002f9d8c96047e657d13038ade26fcb0b436bb9a5b784660a8"
+    },
+    "original-reopens.json": {
+      "size": 18889,
+      "sha256": "733d8a663897bd659c72863146d48009c9f4796250a89b6f971fd8c381b35368"
+    },
+    "radial-diameter-input.igz": {
+      "size": 501,
+      "sha256": "4ab788025a4124deec9f8b2013c7bff4c7b152bb26f0497809048f04d1f0bd95"
+    },
+    "radial-diameter-original.igz": {
+      "size": 1306,
+      "sha256": "0109f4677f09294604b293b713da215fe6ef4fb31ffe7216dbd183c8283b2733"
+    },
+    "remembered-style-frame-input.igz": {
+      "size": 3877,
+      "sha256": "5b7101431e39c267022f330a73c3d65f03e9b2f37a82cdd0d520232a61f361c9"
+    },
+    "remembered-style-frame-original.igz": {
+      "size": 5467,
+      "sha256": "07111ec2f4ce1a9fff207c664f17595e6fc203c923213e7d9850d695c357375c"
+    },
+    "source-assembly.json": {
+      "size": 6382,
+      "sha256": "ed906557d57c62e8875ab33a332116222675b4f1b25f8373b2280f6f8d530a45"
+    }
+  },
+  "cases": 10,
+  "states": 174,
+  "original_reader_pairs": 10,
+  "git_bindings": [
+    {
+      "commit": "bfa42437a8f69332ea1cdf0dc3be94346a99d895",
+      "path": "scripts/reference-sheet-annotation-authoring.py",
+      "sha256": "73f3609f5ecaee9b1a8e82272057de6ae335a21ce16f0f452edb63068043ed71"
+    },
+    {
+      "commit": "bfa42437a8f69332ea1cdf0dc3be94346a99d895",
+      "path": "docs/audits/sheet-annotation-authoring/fixture-contract.json",
+      "sha256": "d4f348c6bfe8d43200f5988c203f237ed3f991d25c39469f272c7999e6a8b55e"
+    },
+    {
+      "commit": "68030ad2240a8d62214dd1b6babd870cb96e6ba0",
+      "path": "scripts/reference-sheet-annotation-authoring.py",
+      "sha256": "dcce0776b54dfb2581916cb8c789863d7c6a9cb15d338696d5581e3ca7a6c9b9"
+    },
+    {
+      "commit": "68030ad2240a8d62214dd1b6babd870cb96e6ba0",
+      "path": "docs/audits/sheet-annotation-authoring/fixture-contract.json",
+      "sha256": "d4f348c6bfe8d43200f5988c203f237ed3f991d25c39469f272c7999e6a8b55e"
+    }
+  ],
+  "original_sources": {
+    "views/composer.py": "aeb7676d7a7a1b2704c0f108f5d8ab7861836c74648838c545bcce454ac248af",
+    "core/composition.py": "24aa8327d1c6a0b4afbaab0d153743f28c3deb557f44a66c467d5aed4dd65da9",
+    "formats/igz.py": "f318d685830c49c2fede7fd5a238ac7a1469ee0b0226cf48cab3751e194a9576"
+  },
+  "scope": "Actual original authoring observations with retained fixture failures and exact original radial UI exception; native corrected properties require separate controls. Specialized handles/chains/physical pixels not captured."
+}
