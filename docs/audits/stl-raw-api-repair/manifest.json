@@ -75,11 +75,6 @@
       "sha256": "b07ece826316b6867416e496294a649847ec79451a1d20cc3dc564c5ec432f53"
     },
     {
-      "path": "app/stl/native/picker/kdialog",
-      "bytes": 82506272,
-      "sha256": "9fc4e2be1d8a5220037c0fc488524856bea2dcea4c66bafa0bd786b530c5232a"
-    },
-    {
       "path": "app/stl/native/reopens-stl.json",
       "bytes": 2646423,
       "sha256": "00bfb32cb15e90761410269dcf0b83fedb85d674d4a9dea4469073d293922f57"
@@ -146,7 +141,14 @@
     }
   ],
   "archive": {
-    "bytes": 22099150,
-    "sha256": "7b27c59f253308fc475fabd3de05f1c5f24097284853a226167be3e39e09b99b"
-  }
+    "bytes": 340543,
+    "sha256": "97bb88767d00fe21d426ffe9ab42f1a6ae06b3977f7a4a9f2c50ba1d992f8a5f"
+  },
+  "disposable_binary_aliases": [
+    {
+      "path": "app/stl/native/picker/kdialog",
+      "bytes": 82506272,
+      "sha256": "9fc4e2be1d8a5220037c0fc488524856bea2dcea4c66bafa0bd786b530c5232a"
+    }
+  ]
 }
