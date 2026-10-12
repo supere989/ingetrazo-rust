@@ -2,8 +2,8 @@
 # Rust metadata only: use native macOS CI for SDK, C ABI, linking, MSL and GPU proof.
 # These five native dependencies have checked-in Rust declarations. Cargo links
 # overrides suppress only their native C build scripts; no executable is produced.
-# ring is pulled in by DEM HTTPS. Its native crypto still builds and executes in
-# the normal macOS jobs; this Linux diagnostic checks Rust metadata only.
+# ring is pulled in by DEM HTTPS. Native macOS jobs still build and link its
+# crypto implementation; this Linux diagnostic checks Rust metadata only.
 set -euo pipefail
 target="${1:-aarch64-apple-darwin}"
 case "$target" in
