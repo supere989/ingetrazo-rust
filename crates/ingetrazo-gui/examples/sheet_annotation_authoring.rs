@@ -345,9 +345,11 @@ fn action(
 }
 fn main() -> Result<(), Error> {
     let args: Vec<_> = std::env::args_os().collect();
-    if args.len() != 3 {
-        return Err("sheet_annotation_authoring SOURCE NATIVE".into());
+    if args.len() != 3 && (args.len() != 5 || args[3] != "--case") {
+        return Err("sheet_annotation_authoring SOURCE NATIVE [--case NAME]".into());
     }
+    // A named case is diagnostic only and cannot emit a complete acceptance report.
+    let only_case = args.get(4).and_then(|s| s.to_str());
     let source = Path::new(&args[1]).canonicalize()?;
     let out = Path::new(&args[2]);
     std::fs::create_dir_all(out)?;
@@ -362,8 +364,12 @@ fn main() -> Result<(), Error> {
     let mut cases = Vec::new();
     let mut failures = Vec::new();
     let mut controls = Vec::new();
+    let mut diagnostics = Vec::new();
     for row in report["cases"].as_array().ok_or("Source cases")? {
         let name = row["name"].as_str().ok_or("Case name")?;
+        if only_case.is_some_and(|selected| selected != name) {
+            continue;
+        }
         let mut phase = "open".to_string();
         let result = (|| -> Result<(), Error> {
             let mut app = open(
@@ -378,6 +384,16 @@ fn main() -> Result<(), Error> {
             }
             for a in row["actions"].as_array().ok_or("Actions")? {
                 phase = a["phase"].as_str().ok_or("Action phase")?.into();
+                if only_case.is_some() && a.get("effective_at").is_some() {
+                    let p = pixel(&ctx, &a["effective_at"])?;
+                    let properties = egui::LayerId::new(egui::Order::Middle, egui::Id::new("annotation-properties"));
+                    diagnostics.push(json!({
+                        "case":name,"phase":phase,"op":a["op"],"effective_at":a["effective_at"],
+                        "paper_transform":ctx.data(|d| d.get_temp::<[f32;3]>(egui::Id::new("pdf-ui-paper-transform"))),
+                        "screen_point":[p.x,p.y],"layer_at_point":format!("{:?}",ctx.layer_id_at(p)),
+                        "properties_layer":format!("{properties:?}"),"properties_owns_point":ctx.layer_id_at(p)==Some(properties)
+                    }));
+                }
                 action(&ctx, &mut app, &mut time, a)?;
                 states.push(state(&app, name, &phase));
             }
@@ -469,7 +485,10 @@ fn main() -> Result<(), Error> {
             serde_json::to_vec_pretty(&json!({"cases":cases,"states":states,"failures":failures}))?,
         )?;
     }
-    let payload = json!({"cases":cases,"states":states,"controls":controls,"failures":failures,"actual_egui":true,"unknown_metadata":true,"callback_scope":"Native producer payloads; no hardware pixel acceptance"});
+    if only_case.is_some() && cases.is_empty() && failures.is_empty() {
+        return Err("Unknown named diagnostic case".into());
+    }
+    let payload = json!({"diagnostic_case":only_case,"pointer_diagnostics":diagnostics,"cases":cases,"states":states,"controls":controls,"failures":failures,"actual_egui":true,"unknown_metadata":true,"callback_scope":"Native producer payloads; no hardware pixel acceptance"});
     std::fs::write(
         out.join("native-annotations.partial.json"),
         serde_json::to_vec_pretty(&payload)?,
@@ -482,7 +501,7 @@ fn main() -> Result<(), Error> {
         .into());
     }
     std::fs::write(
-        out.join("native-annotations.json"),
+        out.join(if only_case.is_some() { "native-annotations.diagnostic.json" } else { "native-annotations.json" }),
         serde_json::to_vec_pretty(&payload)?,
     )?;
     Ok(())
