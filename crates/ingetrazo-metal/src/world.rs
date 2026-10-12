@@ -42,10 +42,12 @@ impl Owner {
         Ok(())
     }
 }
-struct Image {
-    raw: ManuallyDrop<Retained<ProtocolObject<dyn MTLTexture>>>,
-    budget: Arc<Mutex<MemoryBudget>>,
-    handle: u64,
+/// Shared ledger-backed texture owner used by world and egui render targets.
+/// Each allocation has one owner/drop path even when Arc leases are retained.
+pub(crate) struct Image {
+    pub(crate) raw: ManuallyDrop<Retained<ProtocolObject<dyn MTLTexture>>>,
+    pub(crate) budget: Arc<Mutex<MemoryBudget>>,
+    pub(crate) handle: u64,
 }
 impl Drop for Image {
     fn drop(&mut self) {

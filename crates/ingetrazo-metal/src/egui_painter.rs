@@ -1,15 +1,14 @@
 //! Direct native Metal generic egui painter. Precise authored CAD uses a separate
 //! pipeline; this generic Color32 path cannot recover its lost input precision.
-use crate::{Buffer, NativeMetal};
+use crate::{world::Image, Buffer, NativeMetal};
 use egui::{ClippedPrimitive, TextureFilter, TextureId, TextureOptions, TextureWrapMode};
-use ingetrazo_core::gpu_memory::MemoryBudget;
 use objc2::{rc::Retained, runtime::ProtocolObject};
 use objc2_foundation::NSString;
 use objc2_metal::*;
 use std::{
     collections::HashMap,
     mem::ManuallyDrop,
-    sync::{Arc, Mutex},
+    sync::Arc,
 };
 
 #[derive(Debug, Clone, Copy)]
@@ -34,19 +33,6 @@ impl CompressedFormat {
         match self {
             Self::Bc1Rgba => 8,
             Self::Astc4x4Ldr => 16,
-        }
-    }
-}
-struct Image {
-    raw: ManuallyDrop<Retained<ProtocolObject<dyn MTLTexture>>>,
-    budget: Arc<Mutex<MemoryBudget>>,
-    handle: u64,
-}
-impl Drop for Image {
-    fn drop(&mut self) {
-        unsafe { ManuallyDrop::drop(&mut self.raw) };
-        if let Ok(mut b) = self.budget.lock() {
-            let _ = b.freed(self.handle);
         }
     }
 }
