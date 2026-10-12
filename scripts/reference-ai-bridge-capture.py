@@ -87,7 +87,7 @@ try:
    assert not callable(preview)or not list(preview()),'Tool solid preview is outside finite fixture'
   assert v.context().isValid()and v._scene_fbo.isValid()and v.devicePixelRatioF()==1.,'Source GPU context/DPR guard'
   if overlays:assert getattr(v,'_depth_snap',None)is not None,'Operative retained live annotation depth required'
-  case={'name':name,'input':inputfile,'requests':requests,'edit_path':[0]if edit else[],'initial_camera':{'target':[1.,0.,0.],'distance':12.,'yaw':math.radians(45.),'pitch':math.radians(30.),'perspective':not ortho,'fov':45.},'logical_viewport':[v.width(),v.height()],'selected_annotations':name=='committed-selected-overlays'};report['cases'].append(case)
+  case={'name':name,'input':inputfile,'initial_file':'fixture-project.igz','initial_dirty':True,'requests':requests,'edit_path':[0]if edit else[],'initial_camera':{'target':[1.,0.,0.],'distance':12.,'yaw':math.radians(45.),'pitch':math.radians(30.),'perspective':not ortho,'fov':45.},'logical_viewport':[v.width(),v.height()],'selected_annotations':name=='committed-selected-overlays'};report['cases'].append(case)
   original_render=v.render_image
   def observed_render(width,height=None,_v=v,_host=host,_name=name,_original=original_render,**kwargs):
    v=_v;host=_host;name=_name;original_render=_original
