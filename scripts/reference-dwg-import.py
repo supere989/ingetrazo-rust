@@ -27,9 +27,13 @@ original_convert=dwg_bridge.dwg_to_dxf
 def observed_convert(path):
  result=original_convert(path);temps.append(result);shutil.copyfile(result,root/'real-converted.dxf');return result
 dwg_bridge.dwg_to_dxf=observed_convert
-sys.excepthook=lambda t,e,tb:callback_errors.append({"type":t.__name__,"message":str(e),"traceback":"".join(traceback.format_exception(t,e,tb))})
+def report_exception(t,e,tb):
+ callback_errors.append({"type":t.__name__,"message":str(e),"traceback":"".join(traceback.format_exception(t,e,tb))})
+ (root/'callback-errors.json').write_text(json.dumps(callback_errors,indent=2)+'\n')
+sys.excepthook=report_exception
 def observe(w,name,phase,outcome):
  states.append({'case':name,'phase':phase,'scene':shape(w.viewport.scene),'undo':len(w.viewport.history.undo_stack),'redo':len(w.viewport.history.redo_stack),'outcome':outcome,'camera':{'distance':w.viewport.camera.distance}})
+ (root/'original-dwg.partial.json').write_text(json.dumps({'cases':cases,'states':states,'callback_errors':callback_errors},indent=2)+'\n')
 unit_timers=[]
 def choose_unit(cancel=False):
  completed=[False];timed_out=[False];timer=QTimer();unit_timers.append(timer)
@@ -69,7 +73,9 @@ for name,context,cancel in [('real-root','root',False),('real-nested','leaf',Fal
   saved=name+'-original.igz';igz.save_scene(w.viewport.scene,root/saved)
  if cancel or name=='chooser-cancel':assert shape(w.viewport.scene)==before and (len(w.viewport.history.undo_stack),len(w.viewport.history.redo_stack))==before_history,'cancel mutated model/history'
  cases.append({'name':name,'input':name+'-input.igz','dwg':'entities-2d.dwg','context':context,'unit':'m','cancel':cancel,'saved':saved,'phases':[x['phase']for x in states if x['case']==name]})
- w.close();app.processEvents()
+ (root/'completed-cases.json').write_text(json.dumps({'cases':cases,'states':states},indent=2)+'\n')
+ # Fixture teardown must not invoke the unrelated unsaved-document CloseEvent.
+ w.hide();w.deleteLater();app.processEvents()
 main.file_dialogs.getOpenFileName=original_picker
 repairs=[]
 raws={'null':b'0\nSECTION\n2\nBLOCKS\n0\nENDBLK\n5\n0\n0\nENDSEC\n0\nEOF',
