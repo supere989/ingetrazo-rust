@@ -24,7 +24,9 @@ pub(super) struct Candidate {
 impl Candidate {
     /// Scene publication retains both packed storage and typed field leases until
     /// the fresh native receipt is installed. This does not mutate the VM owner.
-    pub(super) fn into_mesh_receipt(mut self) -> Result<(ingetrazo_core::mesh::Mesh, Lease), String> {
+    pub(super) fn into_mesh_receipt(
+        mut self,
+    ) -> Result<(ingetrazo_core::mesh::Mesh, Lease), String> {
         self.charge.merge(self.field_charge)?;
         Ok((self.mesh, self.charge))
     }
@@ -393,6 +395,26 @@ pub(super) fn prepare(
             id,
         ));
     }
+    // Packed rows bypass Mesh::add_vertex. Prepare the native derived lookup
+    // before publication: Mesh semantic equality includes that cache, and a
+    // read-only import must not replace a coherent cache with an empty one.
+    // This is separate from the genuine Python registry retained in `keys`.
+    let index_bytes = out
+        .vertices
+        .len()
+        .checked_mul(160)
+        .ok_or("Packed native index extent overflow")?;
+    field_charge.merge(budget.reserve(Kind::Preparation, index_bytes)?)?;
+    let mut index_positions = Vec::new();
+    index_positions
+        .try_reserve_exact(out.vertices.len())
+        .map_err(|_| "Packed native index coordinates refused")?;
+    index_positions.extend(out.vertices.iter().map(|vertex| vertex.position));
+    let index = ingetrazo_core::mesh::Mesh::prepare_spatial_index(&index_positions)
+        .map_err(str::to_owned)?;
+    out.install_prepared_spatial_index(index)
+        .map_err(str::to_owned)?;
+    drop(index_positions);
     let native = mesh.owner.read();
     if native.mesh().faces.iter().any(|face| face.interior) {
         return Err("Native painted Face closure admission pending".into());
