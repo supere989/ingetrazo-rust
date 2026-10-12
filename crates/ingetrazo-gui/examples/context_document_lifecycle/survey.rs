@@ -95,7 +95,12 @@ pub fn run() {
         record(&app, name, "clear-empty", &mut rows);
         app.undo();
         record(&app, name, "restore", &mut rows);
-        app.finish_component_edit();
+        while !app.component_edit_stack.is_empty() {
+            let camera = app.camera.clone();
+            app.finish_component_edit();
+            assert_eq!(app.camera.target, camera.target);
+            assert_eq!(app.camera.distance, camera.distance);
+        }
         record(&app, name, "finish", &mut rows);
         app.save_to_path(&root.join(format!("{name}-native.igz")));
         app.undo();
@@ -120,7 +125,12 @@ pub fn run() {
     record(&app, n, "undo", &mut rows);
     app.redo();
     record(&app, n, "redo", &mut rows);
-    app.finish_component_edit();
+    while !app.component_edit_stack.is_empty() {
+        let camera = app.camera.clone();
+        app.finish_component_edit();
+        assert_eq!(app.camera.target, camera.target);
+        assert_eq!(app.camera.distance, camera.distance);
+    }
     record(&app, n, "finish", &mut rows);
     app.save_to_path(&root.join("ancestor-history-native.igz"));
     app.undo();
@@ -150,5 +160,26 @@ pub fn run() {
     assert_eq!(app.scene.native_document, attrs);
     app.undo();
     assert_eq!(app.scene.mesh, mesh);
-    std::fs::write(root.join("survey-guards.json"),serde_json::to_vec_pretty(&json!({"nonfinite_refusal_atomic":true,"native_f64_geometry_untouched":true,"unknown_document_untouched":true})).unwrap()).unwrap();
+    // Source context exit never touches camera; retain later live navigation.
+    let mut camera_app = load(&root, "fresh");
+    enter(&mut camera_app);
+    import(&mut camera_app, &root, "comma.csv");
+    camera_app.camera.target = glam::DVec3::new(11., 12., 13.);
+    camera_app.camera.distance = 37.;
+    while !camera_app.component_edit_stack.is_empty() {
+        camera_app.finish_component_edit();
+        assert_eq!(camera_app.camera.target, glam::DVec3::new(11., 12., 13.));
+        assert_eq!(camera_app.camera.distance, 37.);
+    }
+    // Native Cancel retains its separate pre-entry camera rollback contract.
+    let mut cancel_app = load(&root, "fresh");
+    let original_camera = cancel_app.camera.clone();
+    enter(&mut cancel_app);
+    import(&mut cancel_app, &root, "comma.csv");
+    while !cancel_app.component_edit_stack.is_empty() {
+        cancel_app.cancel_component_edit();
+    }
+    assert_eq!(cancel_app.camera.target, original_camera.target);
+    assert_eq!(cancel_app.camera.distance, original_camera.distance);
+    std::fs::write(root.join("survey-guards.json"),serde_json::to_vec_pretty(&json!({"nonfinite_refusal_atomic":true,"native_f64_geometry_untouched":true,"unknown_document_untouched":true,"live_camera_after_import_survives_finish":true,"native_cancel_keeps_prior_camera_contract":true})).unwrap()).unwrap();
 }

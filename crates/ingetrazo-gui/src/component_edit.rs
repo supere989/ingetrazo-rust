@@ -7,6 +7,7 @@ pub struct ComponentEditSession {
     pub(crate) original_scene: Scene,
     pub(crate) cancel_scene: Scene,
     original_camera: OrbitCamera,
+    survey_camera_live: bool,
     pub(crate) original_undo: Vec<Scene>,
     pub(crate) original_redo: Vec<Scene>,
     pub(crate) group_id: uuid::Uuid,
@@ -30,9 +31,11 @@ impl ComponentEditSession {
     pub fn parked_scene(&self)->&Scene {&self.original_scene}
     pub fn edited_group_id(&self)->uuid::Uuid {self.group_id}
     pub(crate) fn note_source_mesh_import(&mut self) {self.source_import_mesh=true;}
+    /// Survey fitting is global camera presentation, outside AddGeoPoints history.
+    pub(crate) fn note_survey_camera(&mut self){self.survey_camera_live=true;}
     fn finish_copy(&self) -> Self {
         Self {
-            original_scene:self.original_scene.clone(),cancel_scene:Scene::new(),original_camera:self.original_camera.clone(),
+            original_scene:self.original_scene.clone(),cancel_scene:Scene::new(),original_camera:self.original_camera.clone(),survey_camera_live:self.survey_camera_live,
             original_undo:Vec::new(),original_redo:Vec::new(),group_id:self.group_id,fold_history:self.fold_history,
             private_container_mesh:self.private_container_mesh,container_bake:self.container_bake,container_axes:self.container_axes,
             leaf_share_back:self.leaf_share_back,source_import_mesh:self.source_import_mesh,mesh_baseline:self.mesh_baseline.clone(),groups_baseline:self.groups_baseline.clone(),
@@ -556,7 +559,7 @@ impl IngeTrazoApp {
         let mut world_children=group.children.clone();
         for child in &mut world_children {child.transform=world_frame*child.transform;}
         let mut session=ComponentEditSession{
-            original_scene:self.scene.clone(),cancel_scene:self.scene.clone(),original_camera:self.camera.clone(),
+            original_scene:self.scene.clone(),cancel_scene:self.scene.clone(),original_camera:self.camera.clone(),survey_camera_live:false,
             original_undo:self.undo_stack.clone(),original_redo:self.redo_stack.clone(),
             group_id:group.id,
             fold_history:group.children.is_empty() && (group.transform!=glam::DMat4::IDENTITY || group.component_definition.is_some() || group.native_document.get("xform").is_some_and(|v|v.is_array())),
@@ -616,7 +619,8 @@ impl IngeTrazoApp {
         // retype window before deciding whether its global command survives.
         self.active_tool.note_history_revision(self.model_revision,false);
         let preserve_global_preview=self.active_tool.preserves_global_preview_on_context_exit();
-        let camera=self.component_edit_stack.last().unwrap().original_camera.clone();
+        let session=self.component_edit_stack.last().unwrap();
+        let camera=if session.survey_camera_live {self.camera.clone()}else{session.original_camera.clone()};
         if !preserve_global_preview {self.set_tool(ToolType::Select);}else{self.active_tool.detach_context_preview();}
         publish_finish(plan,&mut self.scene,&mut self.component_edit_stack,&mut self.undo_stack,&mut self.redo_stack);
         self.bump_model_revision();

@@ -126,6 +126,9 @@ impl IngeTrazoApp {
             self.scene.geo_datum = Some(datum);
         }
         self.scene.geo_points.extend(points);
+        for session in &mut self.component_edit_stack {
+            session.note_survey_camera();
+        }
         self.camera = camera.clone();
         self.scene.camera = camera;
         self.scene.bump_version();

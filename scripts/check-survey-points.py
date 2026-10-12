@@ -17,7 +17,7 @@ strict(a,b)
 c=json.loads((p/'original-survey-context.json').read_text());d=json.loads((p/'native-survey-context.json').read_text());assert [s['phase']for s in c['states']]==['before','import','enter','undo','redo','finish','finish-undo','finish-redo'];strict(c,d)
 r=json.loads((p/'survey-reopens.json').read_text());assert [x['case']for x in r]==['fresh','existing','nested','ancestor-history']
 for row in r:strict(row['original'],row['native'])
-g=json.loads((p/'survey-guards.json').read_text());assert g==dict(nonfinite_refusal_atomic=True,native_f64_geometry_untouched=True,unknown_document_untouched=True)
+g=json.loads((p/'survey-guards.json').read_text());assert g==dict(nonfinite_refusal_atomic=True,native_f64_geometry_untouched=True,unknown_document_untouched=True,live_camera_after_import_survives_finish=True,native_cancel_keeps_prior_camera_contract=True)
 count=0
 for original,candidate in [(a,b),(c,d)]:
  for i,row in enumerate(candidate['states']):
@@ -30,4 +30,9 @@ for original,candidate in [(a,b),(c,d)]:
    try:strict(original,changed)
    except AssertionError:count+=1
    else:raise AssertionError('point mutation accepted')
-print(json.dumps(dict(states=54,actual_original_reopens=4,negative_controls=count,guards=3,passed=True)))
+for original,filename in [(a,'first-native-survey.json'),(c,'first-native-survey-context.json')]:
+ candidate=json.loads((p/filename).read_text())
+ try:strict(original,candidate)
+ except AssertionError:pass
+ else:raise AssertionError('retained initial Finish failure accepted')
+print(json.dumps(dict(retained_failures_rejected=2,states=54,actual_original_reopens=4,negative_controls=count,guards=5,passed=True)))
