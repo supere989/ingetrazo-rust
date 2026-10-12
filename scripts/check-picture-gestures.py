@@ -6,8 +6,7 @@ from pathlib import Path
 def equal(a,b,path='$'):
  assert type(a)is type(b),(path,'type',type(a).__name__,type(b).__name__)
  if isinstance(a,dict):
-  extra={'vendor_gesture_sheet'}if path=='$.composition'else {'vendor_gesture_picture'}if path=='$.composition.images.0'else set()
-  assert set(a)<=set(b)and set(b)-set(a)<=extra,(path,'keys',list(a),list(b))
+  assert a.keys()==b.keys(),(path,'keys',list(a),list(b))
   for k in a:equal(a[k],b[k],path+'.'+k)
  elif isinstance(a,list):
   assert len(a)==len(b),(path,'length',len(a),len(b))
