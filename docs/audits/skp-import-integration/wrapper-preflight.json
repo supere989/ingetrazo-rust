@@ -1,0 +1,25 @@
+{
+  "revision": "722842d2ba59cee42c229f2338682f0ba8759432",
+  "argv": [
+    "python3",
+    "/tmp/ingetrazo-next-integration/scripts/replay-skp-import.py",
+    "/tmp/ingetrazo-absent-prebuilt-skp",
+    "/tmp/ingetrazo-skp-wrapper-preflight"
+  ],
+  "returncode": 1,
+  "expected_refusal": "Prebuilt executable required",
+  "startup_authentication_passed": true,
+  "source_captures": 0,
+  "native_replays": 0,
+  "reader_executions": 0,
+  "scripts": {
+    "replay-skp-import.py": "f10cf9516bbe6123982693ef4eb4024e465cd0a4fd538fbb84e47c4e0e4af1ff",
+    "reference-skp-import-reopens.py": "e51e5563731a9f18423393f75f80b935761ee2570e4b0ceab1d102df5ecf74bb"
+  },
+  "result": {
+    "ok": false,
+    "fresh_source_captures": 0,
+    "steps": [],
+    "error": "AssertionError('Prebuilt executable required')"
+  }
+}
