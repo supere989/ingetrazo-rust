@@ -112,7 +112,9 @@ impl IngeTrazoApp {
         }
         self.begin_composer_edit();
         self.scene.sheets[s].items[index] = SheetItem::ViewFrame(candidate);
-        self.sync_composer_frame_anchors()?;
+        if let Err(error) = self.sync_composer_frame_anchors() {
+            self.status_message = format!("Frame edited; anchored refresh refused: {error}");
+        }
         if finish {
             self.finish_composer_edit();
         }
