@@ -427,8 +427,12 @@ impl SourcePaperBorder {
 }
 
 /// Master Sheet container (Composición).
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Sheet {
+    /// Runtime identities for raw annotations. History snapshots retain these;
+    /// portable documents and document equality deliberately do not include them.
+    #[serde(skip)]
+    pub annotation_ids: [Vec<Uuid>; 6],
     #[serde(default)]
     pub source_border: Option<SourcePaperBorder>,
     #[serde(default)]
@@ -448,6 +452,24 @@ pub struct Sheet {
     pub margin_mm: f64,
     pub items: Vec<SheetItem>,
     pub selected_item: Option<usize>,
+}
+
+impl PartialEq for Sheet {
+    fn eq(&self, other: &Self) -> bool {
+        self.source_border == other.source_border
+            && self.source_border_baseline == other.source_border_baseline
+            && self.native_document == other.native_document
+            && self.native_baseline == other.native_baseline
+            && self.native_items == other.native_items
+            && self.native_item_baselines == other.native_item_baselines
+            && self.id == other.id
+            && self.name == other.name
+            && self.paper_size == other.paper_size
+            && self.orientation == other.orientation
+            && self.margin_mm == other.margin_mm
+            && self.items == other.items
+            && self.selected_item == other.selected_item
+    }
 }
 
 impl Default for Sheet {
@@ -475,6 +497,67 @@ pub enum PhysicalExportItem<'a> {
     Annotation { key:&'static str,index:usize,value:&'a serde_json::Value },
 }
 impl Sheet {
+    pub const ANNOTATION_FAMILIES: [&'static str; 6] = [
+        "cotas", "cotas_ang", "cotas_rad", "etiquetas", "niveles", "llamadas",
+    ];
+
+    /// Called at document admission, before a mutation's history snapshot.
+    /// Owned insertion/removal must update IDs explicitly. Unexpected inventory
+    /// replacement invalidates that family's identities instead of aliasing a
+    /// former owner at the same index.
+    pub fn ensure_annotation_ids(&mut self) -> Result<(), String> {
+        let mut lengths = [0; 6];
+        let mut total = 0usize;
+        for (f, key) in Self::ANNOTATION_FAMILIES.iter().enumerate() {
+            lengths[f] = self.native_document.get(*key).and_then(|v| v.as_array()).map_or(0, Vec::len);
+            total = total.checked_add(lengths[f]).ok_or("Annotation identity budget overflow")?;
+            if total > 100_000 { return Err("Annotation identity budget exceeded".into()); }
+        }
+        for (f, len) in lengths.into_iter().enumerate() {
+            if self.annotation_ids[f].len() != len {
+                let mut ids = Vec::new();
+                ids.try_reserve_exact(len).map_err(|_| "Annotation identity allocation refused")?;
+                ids.extend((0..len).map(|_| Uuid::new_v4()));
+                self.annotation_ids[f] = ids;
+            }
+        }
+        Ok(())
+    }
+    pub fn annotation_id(&self, family: usize, index: usize) -> Option<Uuid> {
+        self.annotation_ids.get(family)?.get(index).copied()
+    }
+    pub fn annotation_index(&self, family: usize, id: Uuid) -> Option<usize> {
+        self.annotation_ids.get(family)?.iter().position(|&candidate| candidate == id)
+    }
+    pub fn push_annotation_id(&mut self, family: usize) -> Uuid {
+        let id = Uuid::new_v4();
+        self.annotation_ids[family].push(id);
+        id
+    }
+    pub fn remove_annotation_id(&mut self, family: usize, index: usize) -> Option<Uuid> {
+        let ids = self.annotation_ids.get_mut(family)?;
+        (index < ids.len()).then(|| ids.remove(index))
+    }
+
+    /// Original item history mutates surviving objects in place. Restoring a
+    /// deleted object appends it; an older field edit must preserve that new
+    /// inventory order. Reorder the target snapshot by stable identity, keeping
+    /// survivors in their current order and appending restored objects in the
+    /// command's recorded restoration order.
+    pub fn retain_annotation_order(&mut self, current: &Self) {
+        for (f, key) in Self::ANNOTATION_FAMILIES.iter().enumerate() {
+            let Some(rows) = self.native_document.get_mut(*key).and_then(|v| v.as_array_mut()) else { continue; };
+            let ids = &mut self.annotation_ids[f];
+            if ids.len() != rows.len() || current.annotation_ids[f].is_empty() { continue; }
+            let current_len = current.native_document.get(*key).and_then(|v| v.as_array()).map_or(0, Vec::len);
+            if current.annotation_ids[f].len() != current_len { continue; }
+            let previous = std::mem::take(ids);
+            let mut by_id = previous.iter().copied().zip(std::mem::take(rows)).collect::<std::collections::HashMap<_, _>>();
+            for id in current.annotation_ids[f].iter().chain(previous.iter()) {
+                if let Some(value) = by_id.remove(id) { ids.push(*id); rows.push(value); }
+            }
+        }
+    }
     pub fn physical_export_items(&self)->Result<impl Iterator<Item=PhysicalExportItem<'_>>,String>{self.ordered_export_items(true)}
     /// Existing canvas categories only: raw annotation export must not add work to warm UI frames.
     pub fn physical_canvas_items(&self)->Result<impl Iterator<Item=PhysicalExportItem<'_>>,String>{self.ordered_export_items(false)}
@@ -682,6 +765,7 @@ impl Sheet {
 
     pub fn new(name: impl Into<String>, paper_size: PaperSize, orientation: Orientation) -> Self {
         let mut sheet = Self {
+            annotation_ids: Default::default(),
             source_border: Some(SourcePaperBorder::default()),
             source_border_baseline: None,
             native_document: serde_json::Value::Null,

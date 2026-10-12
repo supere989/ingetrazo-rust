@@ -26,6 +26,22 @@ impl Targets {
         Self::capture_raw(sheet, "leyendas", exclude)
     }
     pub(super) fn capture_raw(sheet: &Sheet, exclude_kind: &str, exclude: usize) -> Result<Self, String> {
+        Self::capture_excluding_raw(sheet, |kind, index| kind == exclude_kind && index == exclude)
+    }
+    pub(super) fn capture_excluding_raw(
+        sheet: &Sheet, exclude: impl Fn(&str, usize) -> bool,
+    ) -> Result<Self, String> {
+        Self::capture_with_extra_raw(sheet, exclude, &[], |_, _, _, _| {})
+    }
+    /// Keep source stacking order while consumers retain endpoint ranks for
+    /// geometry that moves during a gesture. Extra font-derived rows are cold
+    /// preparation only and participate in the same sort as every other item.
+    pub(super) fn capture_with_extra_raw(
+        sheet: &Sheet,
+        exclude: impl Fn(&str, usize) -> bool,
+        extra: &[(f64, usize, usize, ingetrazo_core::composition::RectMm)],
+        mut on_item: impl FnMut(usize, usize, usize, usize),
+    ) -> Result<Self, String> {
         let (w, h) = sheet.dimensions_mm();
         let m = sheet.margin_mm;
         if [w, h, m].iter().any(|v| !v.is_finite())
@@ -131,7 +147,7 @@ impl Targets {
                 return Err("Item snap budget exceeded".into());
             }
             for (index, _) in images.iter().enumerate() {
-                if exclude_kind != "images" || index != exclude {
+                if !exclude("images", index) {
                     let r = super::picture_gestures::rect(sheet, index)?;
                     let z = images[index]
                         .get("z")
@@ -153,7 +169,7 @@ impl Targets {
                     return Err("Item snap budget exceeded".into());
                 }
                 for (index, v) in rows.iter().enumerate() {
-                    if key == exclude_kind && index == exclude {
+                    if exclude(key, index) {
                         continue;
                     }
                     let n = |k: &str, default: f64| -> Result<f64, String> {
@@ -225,6 +241,10 @@ impl Targets {
                 }
             }
         }
+        if ordered.len().saturating_add(extra.len()) > 100_000 {
+            return Err("Item snap budget exceeded".into());
+        }
+        ordered.extend_from_slice(extra);
         if ordered.iter().any(|(z, _, _, r)| {
             !z.is_finite() || [r.x, r.y, r.w, r.h].iter().any(|v| !v.is_finite())
         }) {
@@ -235,7 +255,8 @@ impl Targets {
             .map_err(|_| "Snap target allocation failed")?;
         y.try_reserve(ordered.len() * 2)
             .map_err(|_| "Snap target allocation failed")?;
-        for (_, _, _, r) in ordered.into_iter().rev() {
+        for (_, category, index, r) in ordered.into_iter().rev() {
+            on_item(category, index, x.len(), y.len());
             x.extend([r.x, r.x + r.w]);
             y.extend([r.y, r.y + r.h]);
         }
