@@ -53,6 +53,7 @@ def main():
                     report["xvfb_diagnostics"] = diagnostics.read()
                     report["xvfb_returncode"] = server.returncode
     except Exception as error:
+        report["passed"] = False
         report["error"] = f"{type(error).__name__}: {error}"
     finally:
         Path("docs/audits/native-clipboard-semantic-evidence.json").write_text(json.dumps(report, indent=2) + "\n")
