@@ -395,9 +395,12 @@ mod fixture {
                     if self.resize_attempts > 20 {
                         return Err("Actual logical viewport calibration refused".into());
                     }
-                    let window = ctx
-                        .input(|i| i.viewport().inner_rect)
-                        .ok_or("No actual inner window")?;
+                    let Some(window) = ctx.input(|i| i.viewport().inner_rect) else {
+                        // First host frame may precede actual window metadata.
+                        // Retain the bounded case deadline and repaint; never fabricate it.
+                        self.warm = 0;
+                        return Ok(());
+                    };
                     ctx.send_viewport_cmd(egui::ViewportCommand::InnerSize(
                         window.size() + egui::vec2(width - rect.width(), height - rect.height()),
                     ));
