@@ -1,0 +1,394 @@
+{
+  "scope": "Only explicitly inventoried terminal generated testing-state directories and byte-authenticated extracted source copies removed. Native IGZ/JSON, logs/build/results/failures, source worktrees/Python and Cargo targets preserved. Canonical records.zip unchanged.",
+  "canonical_source_archive_sha256": "c2180a1367da9502c5980d05fa14fb8cb48c89a7107be5a198441d3ec0de2ef3",
+  "canonical_source_members": 34,
+  "roots": [
+    "/tmp/ingetrazo-sheet-authoring-integration",
+    "/tmp/ingetrazo-sheet-authoring-integration-r2",
+    "/tmp/ingetrazo-sheet-authoring-integration-r3",
+    "/tmp/ingetrazo-sheet-authoring-integration-r4",
+    "/tmp/ingetrazo-sheet-authoring-integration-r5",
+    "/tmp/ingetrazo-sheet-authoring-integration-r6",
+    "/tmp/ingetrazo-sheet-authoring-integration-r7",
+    "/tmp/ingetrazo-sheet-authoring-blank-diagnostic"
+  ],
+  "removed": [
+    {
+      "path": "/tmp/ingetrazo-sheet-authoring-integration-r3/replay/source",
+      "kind": "Byte-authenticated duplicate frozen source",
+      "files": 34,
+      "logical_bytes": 944036,
+      "relative_files": [
+        "cancel-degenerate-input.igz",
+        "cancel-degenerate-original.igz",
+        "cotas-lifecycle-input.igz",
+        "cotas-lifecycle-original.igz",
+        "cotas_ang-lifecycle-input.igz",
+        "cotas_ang-lifecycle-original.igz",
+        "cotas_rad-lifecycle-input.igz",
+        "cotas_rad-lifecycle-original.igz",
+        "etiquetas-lifecycle-input.igz",
+        "etiquetas-lifecycle-original.igz",
+        "failures/assembly-reader-environment.json",
+        "failures/first-capture.log",
+        "failures/first-capture.partial.json",
+        "failures/first-capture.stderr",
+        "failures/weak-label-original.igz",
+        "llamadas-lifecycle-input.igz",
+        "llamadas-lifecycle-original.igz",
+        "missing-only/callback-errors.json",
+        "missing-only/capture.log",
+        "missing-only/capture.stderr",
+        "missing-only/original-annotations.json",
+        "missing-only/original-reopens.json",
+        "mixed-visibility-locked-input.igz",
+        "mixed-visibility-locked-original.igz",
+        "niveles-lifecycle-input.igz",
+        "niveles-lifecycle-original.igz",
+        "original-annotations.json",
+        "original-radial-ui-failure-events.json",
+        "original-reopens.json",
+        "radial-diameter-input.igz",
+        "radial-diameter-original.igz",
+        "remembered-style-frame-input.igz",
+        "remembered-style-frame-original.igz",
+        "source-assembly.json"
+      ],
+      "roster_sha256": "1b7be99121225f80b19d3e9a6bc1e4048e2fb1e9cb6682ef33abca1a352e3246"
+    },
+    {
+      "path": "/tmp/ingetrazo-sheet-authoring-integration-r3/replay/native/cotas-lifecycle-session",
+      "kind": "Authorized terminal generated testing state",
+      "files": 1,
+      "logical_bytes": 531,
+      "relative_files": [
+        "config/settings.json"
+      ],
+      "roster_sha256": "6940dbe0ed13a5ca1dd735ff873c08f41ebe9ef37f6b441a1b8ea12cb9174af9"
+    },
+    {
+      "path": "/tmp/ingetrazo-sheet-authoring-integration-r3/replay/native/cotas_ang-lifecycle-session",
+      "kind": "Authorized terminal generated testing state",
+      "files": 1,
+      "logical_bytes": 535,
+      "relative_files": [
+        "config/settings.json"
+      ],
+      "roster_sha256": "faeb7440b2b1900101084d845bb66cc844c34d7e6a5e5d88fe51b3408428531b"
+    },
+    {
+      "path": "/tmp/ingetrazo-sheet-authoring-integration-r3/replay/native/cotas_rad-lifecycle-session",
+      "kind": "Authorized terminal generated testing state",
+      "files": 1,
+      "logical_bytes": 535,
+      "relative_files": [
+        "config/settings.json"
+      ],
+      "roster_sha256": "dea07e20df18cb8fe96ed7fc468e412d477b834cbf37bab24ea1ce76b2c1fde3"
+    },
+    {
+      "path": "/tmp/ingetrazo-sheet-authoring-integration-r3/replay/native/etiquetas-lifecycle-session",
+      "kind": "Authorized terminal generated testing state",
+      "files": 1,
+      "logical_bytes": 535,
+      "relative_files": [
+        "config/settings.json"
+      ],
+      "roster_sha256": "3063ea706b9a0b787be8e94f9f8acd4ea6c7f200ee8851edba7f4066736d6d3b"
+    },
+    {
+      "path": "/tmp/ingetrazo-sheet-authoring-integration-r3/replay/native/niveles-lifecycle-session",
+      "kind": "Authorized terminal generated testing state",
+      "files": 1,
+      "logical_bytes": 533,
+      "relative_files": [
+        "config/settings.json"
+      ],
+      "roster_sha256": "51acbfd66cecc0ab849b533c88fc69cadf68b32cfd00f97940138668663b551c"
+    },
+    {
+      "path": "/tmp/ingetrazo-sheet-authoring-integration-r3/replay/native/llamadas-lifecycle-session",
+      "kind": "Authorized terminal generated testing state",
+      "files": 1,
+      "logical_bytes": 534,
+      "relative_files": [
+        "config/settings.json"
+      ],
+      "roster_sha256": "e1218154b07829aadd6ec5d9548819f91b00ad7948fa290b5d4f1da9635ab1c7"
+    },
+    {
+      "path": "/tmp/ingetrazo-sheet-authoring-integration-r3/replay/native/cancel-degenerate-session",
+      "kind": "Authorized terminal generated testing state",
+      "files": 1,
+      "logical_bytes": 533,
+      "relative_files": [
+        "config/settings.json"
+      ],
+      "roster_sha256": "e84c3a02667229e89ded13b20e807a49998255accad64702002d0883dfeda0f8"
+    },
+    {
+      "path": "/tmp/ingetrazo-sheet-authoring-integration-r3/replay/native/mixed-visibility-locked-session",
+      "kind": "Authorized terminal generated testing state",
+      "files": 1,
+      "logical_bytes": 539,
+      "relative_files": [
+        "config/settings.json"
+      ],
+      "roster_sha256": "c4e501918acac130aeff8c1bb1ca104282c3bee85a74035f8e6ad1a629c8f734"
+    },
+    {
+      "path": "/tmp/ingetrazo-sheet-authoring-integration-r3/replay/native/remembered-style-frame-session",
+      "kind": "Authorized terminal generated testing state",
+      "files": 1,
+      "logical_bytes": 538,
+      "relative_files": [
+        "config/settings.json"
+      ],
+      "roster_sha256": "a7965c57476dc6a9c861cc8a8f9eab6dad8bf067a0bb5d4631a5ccf99e1670d6"
+    },
+    {
+      "path": "/tmp/ingetrazo-sheet-authoring-integration-r3/replay/native/radial-diameter-session",
+      "kind": "Authorized terminal generated testing state",
+      "files": 1,
+      "logical_bytes": 531,
+      "relative_files": [
+        "config/settings.json"
+      ],
+      "roster_sha256": "d728d8a7a67c35483388a83d6c9a826dd5c53640b6f1430c0b93ccf703b142f4"
+    },
+    {
+      "path": "/tmp/ingetrazo-sheet-authoring-integration-r4/replay/source",
+      "kind": "Byte-authenticated duplicate frozen source",
+      "files": 34,
+      "logical_bytes": 944036,
+      "relative_files": [
+        "cancel-degenerate-input.igz",
+        "cancel-degenerate-original.igz",
+        "cotas-lifecycle-input.igz",
+        "cotas-lifecycle-original.igz",
+        "cotas_ang-lifecycle-input.igz",
+        "cotas_ang-lifecycle-original.igz",
+        "cotas_rad-lifecycle-input.igz",
+        "cotas_rad-lifecycle-original.igz",
+        "etiquetas-lifecycle-input.igz",
+        "etiquetas-lifecycle-original.igz",
+        "failures/assembly-reader-environment.json",
+        "failures/first-capture.log",
+        "failures/first-capture.partial.json",
+        "failures/first-capture.stderr",
+        "failures/weak-label-original.igz",
+        "llamadas-lifecycle-input.igz",
+        "llamadas-lifecycle-original.igz",
+        "missing-only/callback-errors.json",
+        "missing-only/capture.log",
+        "missing-only/capture.stderr",
+        "missing-only/original-annotations.json",
+        "missing-only/original-reopens.json",
+        "mixed-visibility-locked-input.igz",
+        "mixed-visibility-locked-original.igz",
+        "niveles-lifecycle-input.igz",
+        "niveles-lifecycle-original.igz",
+        "original-annotations.json",
+        "original-radial-ui-failure-events.json",
+        "original-reopens.json",
+        "radial-diameter-input.igz",
+        "radial-diameter-original.igz",
+        "remembered-style-frame-input.igz",
+        "remembered-style-frame-original.igz",
+        "source-assembly.json"
+      ],
+      "roster_sha256": "1b7be99121225f80b19d3e9a6bc1e4048e2fb1e9cb6682ef33abca1a352e3246"
+    },
+    {
+      "path": "/tmp/ingetrazo-sheet-authoring-integration-r4/replay/native/cotas-lifecycle-session",
+      "kind": "Authorized terminal generated testing state",
+      "files": 1,
+      "logical_bytes": 727,
+      "relative_files": [
+        "config/settings.json"
+      ],
+      "roster_sha256": "4a3a188b7e9a7e4380fa0a61099a5092ebb445bea49fcbabfc7ac81eb2a591a9"
+    },
+    {
+      "path": "/tmp/ingetrazo-sheet-authoring-integration-r4/replay/native/cotas_ang-lifecycle-session",
+      "kind": "Authorized terminal generated testing state",
+      "files": 1,
+      "logical_bytes": 739,
+      "relative_files": [
+        "config/settings.json"
+      ],
+      "roster_sha256": "d8437a0e97380a3d2d87dfca2daf43bbf3c6f82f0b827d03449628028868c221"
+    },
+    {
+      "path": "/tmp/ingetrazo-sheet-authoring-integration-r4/replay/native/cotas_rad-lifecycle-session",
+      "kind": "Authorized terminal generated testing state",
+      "files": 1,
+      "logical_bytes": 739,
+      "relative_files": [
+        "config/settings.json"
+      ],
+      "roster_sha256": "7fa8880962f81c2c3b698009a338170b0d3537c4b00bb16eb2f4f08490227b63"
+    },
+    {
+      "path": "/tmp/ingetrazo-sheet-authoring-integration-r4/replay/native/etiquetas-lifecycle-session",
+      "kind": "Authorized terminal generated testing state",
+      "files": 1,
+      "logical_bytes": 739,
+      "relative_files": [
+        "config/settings.json"
+      ],
+      "roster_sha256": "54bf1abbd68a610cb7b954229594f7046aad7d9898aed508c8d99d7af2681527"
+    },
+    {
+      "path": "/tmp/ingetrazo-sheet-authoring-integration-r4/replay/native/niveles-lifecycle-session",
+      "kind": "Authorized terminal generated testing state",
+      "files": 1,
+      "logical_bytes": 733,
+      "relative_files": [
+        "config/settings.json"
+      ],
+      "roster_sha256": "02db91dc7729ad2c4fb069505739c45828ed9cce8b3920d713b29b2d76b59f04"
+    },
+    {
+      "path": "/tmp/ingetrazo-sheet-authoring-integration-r4/replay/native/llamadas-lifecycle-session",
+      "kind": "Authorized terminal generated testing state",
+      "files": 1,
+      "logical_bytes": 631,
+      "relative_files": [
+        "config/settings.json"
+      ],
+      "roster_sha256": "b2c5bcdba742d01ab153d6ad17837af0a2b6c52939cdcd52c95ae28854e4d68d"
+    },
+    {
+      "path": "/tmp/ingetrazo-sheet-authoring-integration-r4/replay/native/cancel-degenerate-session",
+      "kind": "Authorized terminal generated testing state",
+      "files": 1,
+      "logical_bytes": 629,
+      "relative_files": [
+        "config/settings.json"
+      ],
+      "roster_sha256": "05d2320ce654d21c557c60e66278f2bcd3597ab8d1482f94d2908040c02e436b"
+    },
+    {
+      "path": "/tmp/ingetrazo-sheet-authoring-integration-r4/replay/native/mixed-visibility-locked-session",
+      "kind": "Authorized terminal generated testing state",
+      "files": 1,
+      "logical_bytes": 751,
+      "relative_files": [
+        "config/settings.json"
+      ],
+      "roster_sha256": "7c187b48379b797e58edc6a133308634a02fcfe12587f8dfb000a7c47cf08c66"
+    },
+    {
+      "path": "/tmp/ingetrazo-sheet-authoring-integration-r4/replay/native/remembered-style-frame-session",
+      "kind": "Authorized terminal generated testing state",
+      "files": 1,
+      "logical_bytes": 748,
+      "relative_files": [
+        "config/settings.json"
+      ],
+      "roster_sha256": "424296b9a152ef86462d54f1cebda9485aceb64999af6a0cea3e154cd3262d54"
+    },
+    {
+      "path": "/tmp/ingetrazo-sheet-authoring-integration-r4/replay/native/radial-diameter-session",
+      "kind": "Authorized terminal generated testing state",
+      "files": 1,
+      "logical_bytes": 727,
+      "relative_files": [
+        "config/settings.json"
+      ],
+      "roster_sha256": "e1528082f6dd013e4be4371110079b29e2bc2e82393cb6007d95cdadfc14dfce"
+    },
+    {
+      "path": "/tmp/ingetrazo-sheet-authoring-integration-r6/replay/source",
+      "kind": "Byte-authenticated duplicate frozen source",
+      "files": 34,
+      "logical_bytes": 944036,
+      "relative_files": [
+        "cancel-degenerate-input.igz",
+        "cancel-degenerate-original.igz",
+        "cotas-lifecycle-input.igz",
+        "cotas-lifecycle-original.igz",
+        "cotas_ang-lifecycle-input.igz",
+        "cotas_ang-lifecycle-original.igz",
+        "cotas_rad-lifecycle-input.igz",
+        "cotas_rad-lifecycle-original.igz",
+        "etiquetas-lifecycle-input.igz",
+        "etiquetas-lifecycle-original.igz",
+        "failures/assembly-reader-environment.json",
+        "failures/first-capture.log",
+        "failures/first-capture.partial.json",
+        "failures/first-capture.stderr",
+        "failures/weak-label-original.igz",
+        "llamadas-lifecycle-input.igz",
+        "llamadas-lifecycle-original.igz",
+        "missing-only/callback-errors.json",
+        "missing-only/capture.log",
+        "missing-only/capture.stderr",
+        "missing-only/original-annotations.json",
+        "missing-only/original-reopens.json",
+        "mixed-visibility-locked-input.igz",
+        "mixed-visibility-locked-original.igz",
+        "niveles-lifecycle-input.igz",
+        "niveles-lifecycle-original.igz",
+        "original-annotations.json",
+        "original-radial-ui-failure-events.json",
+        "original-reopens.json",
+        "radial-diameter-input.igz",
+        "radial-diameter-original.igz",
+        "remembered-style-frame-input.igz",
+        "remembered-style-frame-original.igz",
+        "source-assembly.json"
+      ],
+      "roster_sha256": "1b7be99121225f80b19d3e9a6bc1e4048e2fb1e9cb6682ef33abca1a352e3246"
+    },
+    {
+      "path": "/tmp/ingetrazo-sheet-authoring-integration-r7/replay/source",
+      "kind": "Byte-authenticated duplicate frozen source",
+      "files": 34,
+      "logical_bytes": 944036,
+      "relative_files": [
+        "cancel-degenerate-input.igz",
+        "cancel-degenerate-original.igz",
+        "cotas-lifecycle-input.igz",
+        "cotas-lifecycle-original.igz",
+        "cotas_ang-lifecycle-input.igz",
+        "cotas_ang-lifecycle-original.igz",
+        "cotas_rad-lifecycle-input.igz",
+        "cotas_rad-lifecycle-original.igz",
+        "etiquetas-lifecycle-input.igz",
+        "etiquetas-lifecycle-original.igz",
+        "failures/assembly-reader-environment.json",
+        "failures/first-capture.log",
+        "failures/first-capture.partial.json",
+        "failures/first-capture.stderr",
+        "failures/weak-label-original.igz",
+        "llamadas-lifecycle-input.igz",
+        "llamadas-lifecycle-original.igz",
+        "missing-only/callback-errors.json",
+        "missing-only/capture.log",
+        "missing-only/capture.stderr",
+        "missing-only/original-annotations.json",
+        "missing-only/original-reopens.json",
+        "mixed-visibility-locked-input.igz",
+        "mixed-visibility-locked-original.igz",
+        "niveles-lifecycle-input.igz",
+        "niveles-lifecycle-original.igz",
+        "original-annotations.json",
+        "original-radial-ui-failure-events.json",
+        "original-reopens.json",
+        "radial-diameter-input.igz",
+        "radial-diameter-original.igz",
+        "remembered-style-frame-input.igz",
+        "remembered-style-frame-original.igz",
+        "source-assembly.json"
+      ],
+      "roster_sha256": "1b7be99121225f80b19d3e9a6bc1e4048e2fb1e9cb6682ef33abca1a352e3246"
+    }
+  ],
+  "retained_unverifiable": [],
+  "removed_directories": 24,
+  "removed_files": 156,
+  "removed_logical_bytes": 3788651,
+  "protected_retained_files": 123
+}
