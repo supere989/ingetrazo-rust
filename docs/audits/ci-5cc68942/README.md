@@ -1,0 +1,12 @@
+# Terminal CI 5cc68942
+
+Run 38294921503, exact head `5cc68942e06342eb13585b95ebec5b43666b2639`, completed **FAIL**. Six artifact ZIPs are retained unchanged with GitHub API size/SHA-256 bindings; three terminal API records, full nested inventories and selected literal reports are included. No source capture, native run, retry or dispatch was performed for this packet.
+
+- Native Metal framework link (macos-15) (114963586434): failure. Failed steps: Strict frozen picture drawing on native Metal; Strict frozen six-family sheet annotations on native Metal; Frozen six-family annotation authoring and original-reader comparison; Frozen frame annotation synchronization and original-reader comparison; Native stencil section source scenes and exact pixel comparison; Observe actual Apple OpenGL multisample depth resolve; Replay frozen native macOS text and font identity.
+- Native Metal compile (aarch64-apple-darwin) (114963586540): success. Failed steps: none.
+- Native Windows compile and isolated recovery (114963586624): success. Failed steps: none.
+- Native Metal framework link (macos-15-intel) (114963586855): failure. Failed steps: Strict frozen picture drawing on native Metal; Strict frozen six-family sheet annotations on native Metal; Frozen six-family annotation authoring and original-reader comparison; Frozen frame annotation synchronization and original-reader comparison; Native stencil section source scenes and exact pixel comparison; Observe actual Apple OpenGL multisample depth resolve; Native document dimensions depth and immutable frame ownership; Actual packaged CLI native Metal world startup; Replay frozen native macOS text and font identity.
+- compilation-and-tests (114963586897): failure. Failed steps: Frozen OBJ DXF App import strict winding diagnostic (OPEN); Frozen DAE GLB App import strict winding diagnostic (OPEN); Strict frozen physical sheet legend snapshots; Strict frozen physical sheet pictures; Strict frozen six-family physical sheet annotations.
+- Native Metal compile (x86_64-apple-darwin) (114963587012): success. Failed steps: none.
+
+Linux Unit and Exchange strict winding failures remain failures. Linux frozen legends and pictures still fail at this earlier head, alongside annotations. Later repair evidence is not retroactively attributed to this run. Mac physical/font/authoring/frame/depth failures and Intel document/startup failures remain explicit. Windows and both cross-metadata jobs pass; they do not establish runtime platform parity.

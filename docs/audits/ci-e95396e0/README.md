@@ -1,0 +1,12 @@
+# Terminal CI e95396e0
+
+Run 38297360334, exact head `e95396e04c735c8c0c33a4e4a07896264e0fde6d`, completed **FAIL**. Six artifact ZIPs are retained unchanged with GitHub API size/SHA-256 bindings; three terminal API records, full nested inventories and selected literal reports are included. No source capture, native run, retry or dispatch was performed for this packet.
+
+- compilation-and-tests (114973532622): failure. Failed steps: Frozen OBJ DXF App import strict winding diagnostic (OPEN); Frozen DAE GLB App import strict winding diagnostic (OPEN); Strict frozen six-family physical sheet annotations.
+- Native Metal framework link (macos-15-intel) (114973532883): failure. Failed steps: Strict frozen picture drawing on native Metal; Strict frozen six-family sheet annotations on native Metal; Frozen six-family annotation authoring and original-reader comparison; Frozen frame annotation synchronization and original-reader comparison; Native stencil section source scenes and exact pixel comparison; Observe actual Apple OpenGL multisample depth resolve; Native document dimensions depth and immutable frame ownership; Actual packaged CLI native Metal world startup; Replay frozen native macOS text and font identity.
+- Native Windows compile and isolated recovery (114973532893): success. Failed steps: none.
+- Native Metal compile (aarch64-apple-darwin) (114973533048): success. Failed steps: none.
+- Native Metal framework link (macos-15) (114973533088): failure. Failed steps: Strict frozen picture drawing on native Metal; Strict frozen six-family sheet annotations on native Metal; Frozen six-family annotation authoring and original-reader comparison; Frozen frame annotation synchronization and original-reader comparison; Native stencil section source scenes and exact pixel comparison; Observe actual Apple OpenGL multisample depth resolve; Replay frozen native macOS text and font identity.
+- Native Metal compile (x86_64-apple-darwin) (114973533193): success. Failed steps: none.
+
+Linux Unit and Exchange strict winding failures remain failures. Linux frozen legends and pictures pass at this head; annotations remain strict FAIL. This is actual CI confirmation of the earlier glyph/rectangle closure, and excludes later dashed/DAE writer work. Mac physical/font/authoring/frame/depth failures and Intel document/startup failures remain explicit. Windows and both cross-metadata jobs pass; they do not establish runtime platform parity.

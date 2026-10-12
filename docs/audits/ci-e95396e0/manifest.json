@@ -1,0 +1,176 @@
+{
+  "run_id": 38297360334,
+  "head_sha": "e95396e04c735c8c0c33a4e4a07896264e0fde6d",
+  "archive_sha256": "faee5d2b91018dc9daa287da02a7a1854e33bd6b08b8c52742fc92222db97943",
+  "members": [
+    {
+      "path": "11769204743.zip",
+      "size": 53245955,
+      "sha256": "7da02559215cb589efaebd90ee98502d15a6e243516d58139b0a6227f434b4b2"
+    },
+    {
+      "path": "11769220997.zip",
+      "size": 21135,
+      "sha256": "e2bc71c589eae7d49b06abde2288497dbcf4180e2c410a310956169514df6486"
+    },
+    {
+      "path": "11769810551.zip",
+      "size": 12824,
+      "sha256": "04c849d85f2f1396ac7572c96b0cfe586c4a51f08f76727d50c1a3040f8c8058"
+    },
+    {
+      "path": "11770011445.zip",
+      "size": 4178552,
+      "sha256": "d7b0f6677e3962723e7331f56b17d1decd7a57d8b592047e61da5c9d8bc63269"
+    },
+    {
+      "path": "11770092116.zip",
+      "size": 3789268,
+      "sha256": "b0eb0c0e5319bafe12d8ab3dd6271f9a11c7070f9b64a163c18845832be5e335"
+    },
+    {
+      "path": "11770160148.zip",
+      "size": 12667,
+      "sha256": "6947281f8bf4e12b6242a4770cef1b956a54f5a296e4f425fad293db919ef287"
+    },
+    {
+      "path": "artifacts.json",
+      "size": 4393,
+      "sha256": "60210dcd249cf8978d655990bc1656985d2d4c5296e4d8b08df49fb7c4a5dcdc"
+    },
+    {
+      "path": "jobs.json",
+      "size": 51707,
+      "sha256": "3876669b947370b7ef24eecb1d62388faea008dd0746856c7c28adc67f8b8696"
+    },
+    {
+      "path": "run.json",
+      "size": 12722,
+      "sha256": "bdd0ff4f5a34f85db06dbc935cba55cd8dd4a2b0321a5aa49aafe4aabcd4f24e"
+    },
+    {
+      "path": "nested-inventory.json",
+      "size": 1576554,
+      "sha256": "0c45e628bcc545771052ec9ebf388f69546a5738364745d36adf273da6507525"
+    },
+    {
+      "path": "terminal-summary.json",
+      "size": 152742,
+      "sha256": "d97eb7ff87b3ce9955fe61cec990bd8b9476ae169a855286e77bc01bb1828971"
+    }
+  ],
+  "artifacts": [
+    {
+      "id": 11770160148,
+      "name": "native-metal-compile-x86_64-apple-darwin",
+      "size": 12667,
+      "sha256": "6947281f8bf4e12b6242a4770cef1b956a54f5a296e4f425fad293db919ef287",
+      "api_digest": "sha256:6947281f8bf4e12b6242a4770cef1b956a54f5a296e4f425fad293db919ef287",
+      "members": 2
+    },
+    {
+      "id": 11770092116,
+      "name": "native-metal-link-macos-15-intel",
+      "size": 3789268,
+      "sha256": "b0eb0c0e5319bafe12d8ab3dd6271f9a11c7070f9b64a163c18845832be5e335",
+      "api_digest": "sha256:b0eb0c0e5319bafe12d8ab3dd6271f9a11c7070f9b64a163c18845832be5e335",
+      "members": 1066
+    },
+    {
+      "id": 11770011445,
+      "name": "native-metal-link-macos-15",
+      "size": 4178552,
+      "sha256": "d7b0f6677e3962723e7331f56b17d1decd7a57d8b592047e61da5c9d8bc63269",
+      "api_digest": "sha256:d7b0f6677e3962723e7331f56b17d1decd7a57d8b592047e61da5c9d8bc63269",
+      "members": 1074
+    },
+    {
+      "id": 11769810551,
+      "name": "native-metal-compile-aarch64-apple-darwin",
+      "size": 12824,
+      "sha256": "04c849d85f2f1396ac7572c96b0cfe586c4a51f08f76727d50c1a3040f8c8058",
+      "api_digest": "sha256:04c849d85f2f1396ac7572c96b0cfe586c4a51f08f76727d50c1a3040f8c8058",
+      "members": 2
+    },
+    {
+      "id": 11769220997,
+      "name": "native-windows-process",
+      "size": 21135,
+      "sha256": "e2bc71c589eae7d49b06abde2288497dbcf4180e2c410a310956169514df6486",
+      "api_digest": "sha256:e2bc71c589eae7d49b06abde2288497dbcf4180e2c410a310956169514df6486",
+      "members": 32
+    },
+    {
+      "id": 11769204743,
+      "name": "semantic-parity-evidence",
+      "size": 53245955,
+      "sha256": "7da02559215cb589efaebd90ee98502d15a6e243516d58139b0a6227f434b4b2",
+      "api_digest": "sha256:7da02559215cb589efaebd90ee98502d15a6e243516d58139b0a6227f434b4b2",
+      "members": 6063
+    }
+  ],
+  "nested_members": 8239,
+  "scope": "Terminal API records and unchanged API-digest authenticated artifacts; no rerun or platform parity promotion.",
+  "git_bindings": [
+    {
+      "revision": "e95396e04c735c8c0c33a4e4a07896264e0fde6d",
+      "path": ".github/workflows/parity.yml",
+      "size": 76157,
+      "sha256": "0126643e1bd7cd9d3b3e3af243fff24f8272839407eb4f2aa76a97b9e7116187"
+    },
+    {
+      "revision": "e95396e04c735c8c0c33a4e4a07896264e0fde6d",
+      "path": "crates/ingetrazo-gui/src/composer_text_canvas.rs",
+      "size": 36873,
+      "sha256": "f8a8c3fec937819252f9b0de77da8630b087299ef01fe3d2b3b81353480e55fd"
+    },
+    {
+      "revision": "e95396e04c735c8c0c33a4e4a07896264e0fde6d",
+      "path": "crates/ingetrazo-gui/src/sheet_image_paths.rs",
+      "size": 29822,
+      "sha256": "2fbeec889af36663956c6f12d7235f5936e75341c547d07bbe8cbbbbb0807bbe"
+    },
+    {
+      "revision": "e95396e04c735c8c0c33a4e4a07896264e0fde6d",
+      "path": "crates/ingetrazo-render/src/qt_line.rs",
+      "size": 11416,
+      "sha256": "653b6c48e52fe9a8ebaa9635fd0a966c52234a3fcc4a46ff2421802942e00127"
+    },
+    {
+      "revision": "e95396e04c735c8c0c33a4e4a07896264e0fde6d",
+      "path": "scripts/check-sheet-annotations.py",
+      "size": 9260,
+      "sha256": "291f9dca047a5180a06a30385fb5aa3666ca490906e11568187d1e83374b5cde"
+    },
+    {
+      "revision": "e95396e04c735c8c0c33a4e4a07896264e0fde6d",
+      "path": "scripts/replay-sheet-annotations.py",
+      "size": 3123,
+      "sha256": "6f7ee9cfc825597494b0616ce29f2d4c9f0a9d0aca92e4cdb575d7233213b07b"
+    },
+    {
+      "revision": "e95396e04c735c8c0c33a4e4a07896264e0fde6d",
+      "path": "scripts/check-sheet-pictures.py",
+      "size": 8752,
+      "sha256": "705ed88d2c7ea5699ec5961b15e3de0c0943c9174d1e9cad6d20a034339c0e8f"
+    },
+    {
+      "revision": "e95396e04c735c8c0c33a4e4a07896264e0fde6d",
+      "path": "scripts/check-sheet-legends.py",
+      "size": 5745,
+      "sha256": "6a2180e5c763674010e460b9b946ae44b26c6650d9c882373ea29e0c89ef787f"
+    },
+    {
+      "revision": "e95396e04c735c8c0c33a4e4a07896264e0fde6d",
+      "path": "scripts/replay-unit-import.py",
+      "size": 4391,
+      "sha256": "5af626c1e0c66dc4c5e6f08a0c8359116540f41697ac02e7ddd6ec808ad324ca"
+    },
+    {
+      "revision": "e95396e04c735c8c0c33a4e4a07896264e0fde6d",
+      "path": "scripts/replay-exchange-import.py",
+      "size": 4289,
+      "sha256": "bbf8b5f6a4d46e0c2867c2d8f6f37ddfa0bfcdad619f0562aca489c7c24a17ec"
+    }
+  ]
+}
