@@ -531,6 +531,8 @@ impl System {
 
         // Generate UI
         let mut raw_input = self.egui_winit.take_egui_input(&window);
+        // egui-winit requires the host to publish actual window viewport metadata.
+        egui_winit::update_viewport_info(raw_input.viewports.entry(ViewportId::ROOT).or_default(), &self.egui_ctx, &window, false);
         if let Ok(mut timeline)=self.pointer_modifiers.lock(){timeline.begin_frame();}
         if self.close_requested { raw_input.viewports.entry(ViewportId::ROOT).or_default().events.push(egui::ViewportEvent::Close); }
 
