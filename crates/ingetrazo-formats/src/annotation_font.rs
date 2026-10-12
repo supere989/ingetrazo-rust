@@ -49,6 +49,14 @@ impl Face {
         #[cfg(target_os="macos")] if let Some(native)=&self.native {return native.raster(glyph,density,phase,0.,0.);}
         self.font.rasterize_glyph(glyph, density, phase, 0.)
     }
+    /// Target-space capture glyph mask using the existing immutable sized face.
+    pub fn rasterize_anisotropic(&self,glyph:u32,scale:[f64;2],phase:[u8;2])->Result<RasterGlyph,String>{
+        #[cfg(target_os="macos")] if let Some(native)=&self.native {
+            if scale[0]==scale[1] {return native.raster(glyph,scale[0],phase,0.,0.);}
+            return Err("Native CoreText anisotropic capture glyphs are not yet supported".into());
+        }
+        self.font.rasterize_anisotropic_glyph(glyph,scale,phase)
+    }
     pub fn rasterize_lcd(&self,glyph:u32,density:f64,phase:[u8;2])->Result<crate::paper_text::RasterLcdGlyph,String>{
         #[cfg(target_os="macos")] if let Some(native)=&self.native {return native.raster_lcd(glyph,density,phase,0.,0.);}
         self.font.rasterize_lcd_glyph(glyph,density,phase,0.)

@@ -412,16 +412,25 @@ impl PaperFont {
     }
     pub fn rasterize_rotated_glyph(&self,glyph:u32,scale:f64,phase:[u8;2],italic_shear:f64,angle:f64)->Result<RasterGlyph,String>{
         if !scale.is_finite()||scale<=0.||scale>40.||phase.iter().any(|&p|p>=64)||!italic_shear.is_finite()||italic_shear.abs()>1.||!angle.is_finite(){return Err("Canvas glyph transform outside domain".into());}
+        let (sin,cos)=angle.to_radians().sin_cos();
+        self.rasterize_matrix_glyph(glyph,[scale*cos,scale*(sin+cos*italic_shear),-scale*sin,scale*(cos-sin*italic_shear)],phase,scale!=1.)
+    }
+    /// Axis-scaled physical grayscale mask; layout metrics remain logical.
+    /// Phase is measured in final device pixels and the native face is restored on every exit.
+    pub fn rasterize_anisotropic_glyph(&self,glyph:u32,scale:[f64;2],phase:[u8;2])->Result<RasterGlyph,String>{
+        if scale.iter().any(|v|!v.is_finite()||*v<=0.||*v>40.)||phase.iter().any(|&v|v>=64){return Err("Canvas glyph transform outside domain".into());}
+        self.rasterize_matrix_glyph(glyph,[scale[0],0.,0.,scale[1]],phase,scale!=[1.,1.])
+    }
+    fn rasterize_matrix_glyph(&self,glyph:u32,transform:[f64;4],phase:[u8;2],unhinted:bool)->Result<RasterGlyph,String>{
         unsafe{
             let geometry=self.data.as_ref().geometry.as_ref().ok_or("Canvas glyph requires native font geometry")?;
             let face=geometry.face.raw();if glyph>=(*face).num_glyphs as u32{return Err("Canvas glyph index outside font".into());}
-            let (sin,cos)=angle.to_radians().sin_cos();
-            let mut matrix=ft::FT_Matrix{xx:(scale*cos*65536.)as _,xy:(scale*(sin+cos*italic_shear)*65536.)as _,yx:(-scale*sin*65536.)as _,yy:(scale*(cos-sin*italic_shear)*65536.)as _};
+            let mut matrix=ft::FT_Matrix{xx:(transform[0]*65536.)as _,xy:(transform[1]*65536.)as _,yx:(transform[2]*65536.)as _,yy:(transform[3]*65536.)as _};
             let mut delta=ft::FT_Vector{x:phase[0]as _,y:-(phase[1]as ft::FT_Pos)};
             ft::FT_Set_Transform(face,&mut matrix,&mut delta);let _restore=RestoreFaceTransform(face);
             // Qt 6.12 loadGlyphFor disables hinting for scaled nonrotation glyphs.
             // Keep the pixel100 layout/face size; only this device raster load is unhinted.
-            let flags=geometry.flags|ft::FT_LOAD_NO_BITMAP|if scale!=1. {ft::FT_LOAD_NO_HINTING}else{0};
+            let flags=geometry.flags|ft::FT_LOAD_NO_BITMAP|if unhinted {ft::FT_LOAD_NO_HINTING}else{0};
             if ft::FT_Load_Glyph(face,glyph,flags)!=0||(*face).glyph.is_null(){return Err("Canvas glyph load failed".into());}
             let slot=(*face).glyph;
             if (*slot).format!=ft::FT_GLYPH_FORMAT_OUTLINE{return Err("Canvas glyph outline format unavailable".into());}
