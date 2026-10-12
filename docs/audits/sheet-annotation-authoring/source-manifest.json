@@ -176,8 +176,8 @@
       "sha256": "3f714f9a0869d4477c5a45455d775d54587d35642a1e239f83d97adc7080e73c"
     },
     "scripts/reference-sheet-annotation-authoring-reopens.py": {
-      "commit": "9235fcdecad8cc2b47fcf4c13d13d7117c66c96a",
-      "sha256": "6e4f515f146d088a33ef17914af3b47a4b0044a0717a5ba06d57edd9557116c7"
+      "commit": "1fd435a6ef26d93ea43a048ea90510faabbdc41d",
+      "sha256": "aaf5ca6a9d0af1896150f9492ec5a79e024a992afbbcc118976bff79214ea1a8"
     }
   },
   "acceptance_scope": {
