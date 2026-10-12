@@ -274,6 +274,20 @@ def traversal_residuals(source,native,original_readers,native_readers):
         except (AssertionError,KeyError,TypeError,ValueError,IndexError) as e:mismatches.append({"case":case["name"],"phase":"reader","difference":repr(e.args)})
     return {"ok":not mismatches,"states":68,"original_reader_pairs":6,"mismatches":mismatches,"scope":"Finite unique-kind clipboard traversal classifier. Every other model/type/array/history/member field remains literal; clipboard permutation, validated per-creation z mapping, highest-pasted-z shown owner and actual copied-text sequence are the only allowed residuals, with stable fresh identity bijections. Strict captured output parity remains independently failed."}
 
+def classifier_negatives(source,native,original,readers):
+    probes=[]
+    press=next(i for i,v in enumerate(native["states"]) if v["case"]=="text-copy-cut-history" and v["phase"].endswith("-press"))
+    undo=next(i for i,v in enumerate(native["states"]) if v["case"]=="text-copy-cut-history" and v["phase"]=="paste-undo")
+    for name,index,row,key,value in [("non-key-model",press,0,"x_mm",999.),("original-z",0,0,"z",99.),("original-z-bool",0,0,"z",False),("non-key-pasted-z",undo,1,"z",999.)]:
+        bad=copy.deepcopy(native)
+        bad["states"][index]["composition"]["texts"][row][key]=value
+        bad["states"][index]["all_compositions"][0]["texts"][row][key]=value
+        try: rejected=not traversal_residuals(source,bad,original,readers)["ok"]
+        except (AssertionError,KeyError,TypeError,ValueError,IndexError): rejected=True
+        assert rejected,("classifier negative accepted",name)
+        probes.append(name)
+    return probes
+
 def rejects(source,native,original,readers):
     controls=[]
     def attempt(name,mutate,reader=False):
@@ -333,6 +347,8 @@ def main():
         result["literal_all_state_history"]={"ok":not history_diffs,"states":68,"mismatches":history_diffs}
         try: result["traversal_residual_classification"]=traversal_residuals(source,native,original,readers)
         except Exception as e: result["traversal_residual_classification"]={"ok":False,"error":repr(e)}
+        if result["traversal_residual_classification"]["ok"]:
+            result["traversal_residual_classification"]["rejected_controls"]=classifier_negatives(source,native,original,readers)
         result.update(cases=6,states=68,original_reader_pairs=6,scope="Strict ordered source states and models; fresh UID/group spelling only is bijective. z/clipboard/selection order remain strict. Native session-reset persistence is not native window-close proof.",source_noops=["locked-hidden-copy: force_select acquires none; Copy/Paste are no-ops", "text-copy-cut-history: Cut after history-cleared selection is a no-op"],operative_cut="cross-sheet-bindings Text+Cota",source_callback_errors=len(source["callback_errors"]))
         if result["ok"]: result["rejected_controls"]=rejects(source,native,original,readers)
     except Exception as e: result["error"]=repr(e)
