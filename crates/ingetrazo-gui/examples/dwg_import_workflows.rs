@@ -397,6 +397,7 @@ fn run(source: &Path, out: &Path) -> Result<(), String> {
     let mut guarded = IngeTrazoApp::new();
     guarded.open_document(&source.join(input["cases"][0]["input"].as_str().ok_or("guard input")?));
     let before = source_scene(&guarded);
+    let entire_before = guarded.scene.clone();
     let history = (guarded.undo_stack.len(), guarded.redo_stack.len());
     let empty = out.join("empty-bundle");
     std::fs::create_dir_all(&empty).map_err(|e| e.to_string())?;
@@ -405,6 +406,7 @@ fn run(source: &Path, out: &Path) -> Result<(), String> {
         .begin_dwg_import_from_root(&source.join("entities-2d.dwg"), &empty)
         .is_err());
     assert_eq!(source_scene(&guarded), before);
+    assert_eq!(guarded.scene, entire_before);
     assert_eq!(
         (guarded.undo_stack.len(), guarded.redo_stack.len()),
         history

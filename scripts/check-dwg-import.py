@@ -21,8 +21,12 @@ def file(root,name):
 s=Path(sys.argv[1]).resolve();n=Path(sys.argv[2]).resolve();report=Path(sys.argv[3]);r={'ok':False}
 try:
  a=json.loads((s/f'original-{D}.json').read_text());b=json.loads((n/f'native-{D}.json').read_text())
- names=[c['name']for c in a['cases']];assert names and len(names)==len(set(names))
+ names=[c['name']for c in a['cases']];assert names==['real-root','real-nested','unit-cancel','chooser-cancel']
+ assert [v['name']for v in a['repairs']]==['null','duplicate-seed','control-crlf-tail']
+ assert [v['name']for v in a['discovery']]==['vendor','sibling','PATH','missing','windows-exe','linux-no-exe']
+ assert [v['name']for v in a['converter_controls']]==['warning-output','no-output','timeout']
  inventory=[(c['name'],p)for c in a['cases']for p in c['phases']]
+ assert inventory==[(name,phase)for name in names for phase in (['before','import','undo','redo']if name.startswith('real-')else['before','import'])]
  assert inventory==[(v['case'],v['phase'])for v in a['states']]
  diagnostics={'camera':[], 'converter':[]}
  def semantic(v):
