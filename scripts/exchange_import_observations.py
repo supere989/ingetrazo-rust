@@ -23,5 +23,5 @@ def mesh_state(mesh,m=None):
 def scene_state(s):
  def group(g,parent):
   matrix=parent*(g.xform if g.xform is not None else M())
-  return {'name':g.name,'layer':g.layer,'local_matrix':[float(x)for x in g.xform.data()]if g.xform is not None else None,'billboard':getattr(g,'billboard',None),'mesh':mesh_state(g.mesh,matrix),'children':[group(c,matrix)for c in g.children]}
+  return {'name':g.name,'layer':g.layer,'local_matrix':[float(x)for x in (g.xform if g.xform is not None else M()).data()],'billboard':getattr(g,'billboard',None),'mesh':mesh_state(g.mesh,matrix),'children':[group(c,matrix)for c in g.children]}
  return {'active':mesh_state(s.mesh),'loose':mesh_state(s.loose_mesh),'groups':[group(g,M())for g in s.groups],'layers':[l.name for l in s.layers],'units':s.units,'datum':s.georef.to_dict()if s.georef is not None else None}

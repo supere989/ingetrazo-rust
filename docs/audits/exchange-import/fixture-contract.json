@@ -97,8 +97,8 @@
     },
     {
       "path": "scripts/exchange_import_observations.py",
-      "sha256": "426a61bbf1911314dcf4a17b0b33a69b7d74a0c9c6f368a7cc38be3a8e978fdd",
-      "bytes": 1635
+      "sha256": "48c12bffd82e9c431ce8784174112a78c7ab09de529fabc1e5f0f8445bf94142",
+      "bytes": 1637
     },
     {
       "path": "scripts/reference-nested-import.py",
@@ -117,7 +117,7 @@
     "datum Undo persistence; failed datum leak retained and native atomic correction explicit",
     "exact camera distance; lossless numericint/f64 only",
     "layer names finite schema; no full metadata/viewport pixel/generalformat claim",
-    "local group matrix is literal column-major16f64 or source null; native identity default reports null. Shared registry identity and locator persistence are not separately authenticated."
+    "local group matrix VALUE is always literal column-major16f64; source absent xform and native default mean identity. Optional-field presence is not claimed; meaningful matrix values are strict."
   ],
   "resource_identity": "actual encoded bytes SHA replaces locator only; UV/sw/sh/back/color/opacity/ownership literal"
 }
