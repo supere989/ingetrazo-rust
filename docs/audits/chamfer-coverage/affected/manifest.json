@@ -1395,5 +1395,116 @@
     "annotations": "FAIL12PNG12JPEG18PDF20readers25controls; exact baseline hashes unchanged",
     "pictures": "FAIL10PNG11JPEG11PDF; exact baseline hashes unchanged",
     "wiring": "PASS"
-  }
+  },
+  "git_bindings": [
+    {
+      "workstream": "captions",
+      "revision": "ece85d98c5f3b994b8686cb5489581c4d90274e1",
+      "path": "crates/ingetrazo-gui/examples/view_frame_caption_workflows.rs",
+      "sha256": "850b43f9ac56160d5d48a828d6308dd6d11778f0ddcdfb0f1d62390fd0ad6bb3"
+    },
+    {
+      "workstream": "captions",
+      "revision": "ece85d98c5f3b994b8686cb5489581c4d90274e1",
+      "path": "crates/ingetrazo-gui/src/composer_text_canvas.rs",
+      "sha256": "b450a54b391dad55dddb73e118fc14995edbaa68d79d3bbfb649c007b130ca79"
+    },
+    {
+      "workstream": "captions",
+      "revision": "ece85d98c5f3b994b8686cb5489581c4d90274e1",
+      "path": "scripts/check-view-frame-captions.py",
+      "sha256": "70c562609660d8de31915704bc32259103d3bc60ae9bac2535be64d0dbaeb058"
+    },
+    {
+      "workstream": "captions",
+      "revision": "ece85d98c5f3b994b8686cb5489581c4d90274e1",
+      "path": "scripts/replay-view-frame-captions.py",
+      "sha256": "ba31de119ee28101e2e301f697433517cd0c86f75e49a4525a65c93a59ba2074"
+    },
+    {
+      "workstream": "legends",
+      "revision": "ece85d98c5f3b994b8686cb5489581c4d90274e1",
+      "path": "crates/ingetrazo-gui/examples/sheet_legend_workflows.rs",
+      "sha256": "59bdc9045dc5d1b25a84f71c5fc0eed0fe265c88b66a97db13ba98af04782240"
+    },
+    {
+      "workstream": "legends",
+      "revision": "ece85d98c5f3b994b8686cb5489581c4d90274e1",
+      "path": "crates/ingetrazo-gui/src/composer_text_canvas.rs",
+      "sha256": "b450a54b391dad55dddb73e118fc14995edbaa68d79d3bbfb649c007b130ca79"
+    },
+    {
+      "workstream": "legends",
+      "revision": "ece85d98c5f3b994b8686cb5489581c4d90274e1",
+      "path": "scripts/check-sheet-legends.py",
+      "sha256": "6a2180e5c763674010e460b9b946ae44b26c6650d9c882373ea29e0c89ef787f"
+    },
+    {
+      "workstream": "legends",
+      "revision": "ece85d98c5f3b994b8686cb5489581c4d90274e1",
+      "path": "scripts/replay-sheet-legends.py",
+      "sha256": "32f9c58fbf636fac412b7340a5c46f5f46a0479eae87ab9a74a4271715b75004"
+    },
+    {
+      "workstream": "annotations",
+      "revision": "ece85d98c5f3b994b8686cb5489581c4d90274e1",
+      "path": "crates/ingetrazo-gui/examples/sheet_annotation_workflows.rs",
+      "sha256": "f6c3eaf7e3518af5a4925d29d732df9789cd5a33d4f2e62841147189ea896821"
+    },
+    {
+      "workstream": "annotations",
+      "revision": "ece85d98c5f3b994b8686cb5489581c4d90274e1",
+      "path": "crates/ingetrazo-gui/src/composer_text_canvas.rs",
+      "sha256": "b450a54b391dad55dddb73e118fc14995edbaa68d79d3bbfb649c007b130ca79"
+    },
+    {
+      "workstream": "annotations",
+      "revision": "ece85d98c5f3b994b8686cb5489581c4d90274e1",
+      "path": "scripts/check-sheet-annotations.py",
+      "sha256": "291f9dca047a5180a06a30385fb5aa3666ca490906e11568187d1e83374b5cde"
+    },
+    {
+      "workstream": "annotations",
+      "revision": "ece85d98c5f3b994b8686cb5489581c4d90274e1",
+      "path": "scripts/reference-sheet-annotation-reopens.py",
+      "sha256": "ac5f09303d54ad9ba6aab27da74d271cbab447d4e4b72ded88ff8ab55cf89c60"
+    },
+    {
+      "workstream": "annotations",
+      "revision": "ece85d98c5f3b994b8686cb5489581c4d90274e1",
+      "path": "scripts/replay-sheet-annotations.py",
+      "sha256": "6f7ee9cfc825597494b0616ce29f2d4c9f0a9d0aca92e4cdb575d7233213b07b"
+    },
+    {
+      "workstream": "pictures",
+      "revision": "24acb0341218f116ddcb7245ad1bca96545b77fb",
+      "path": "crates/ingetrazo-gui/examples/sheet_picture_workflows.rs",
+      "sha256": "0669503925b6abe1036a318dfdee6cedb2ae27500895431fb973f102663326a8"
+    },
+    {
+      "workstream": "pictures",
+      "revision": "24acb0341218f116ddcb7245ad1bca96545b77fb",
+      "path": "crates/ingetrazo-gui/src/composer_text_canvas.rs",
+      "sha256": "f8a8c3fec937819252f9b0de77da8630b087299ef01fe3d2b3b81353480e55fd"
+    },
+    {
+      "workstream": "pictures",
+      "revision": "24acb0341218f116ddcb7245ad1bca96545b77fb",
+      "path": "scripts/check-sheet-pictures.py",
+      "sha256": "705ed88d2c7ea5699ec5961b15e3de0c0943c9174d1e9cad6d20a034339c0e8f"
+    },
+    {
+      "workstream": "pictures",
+      "revision": "24acb0341218f116ddcb7245ad1bca96545b77fb",
+      "path": "scripts/replay-sheet-pictures.py",
+      "sha256": "fb665b2a3f98cd96e79e44931f3dcfc7449fcba43eb5231202c3b83a3013f0f3"
+    },
+    {
+      "workstream": "wiring-test",
+      "revision": "24acb0341218f116ddcb7245ad1bca96545b77fb",
+      "path": "crates/ingetrazo-gui/src/composer_text_canvas.rs",
+      "sha256": "f8a8c3fec937819252f9b0de77da8630b087299ef01fe3d2b3b81353480e55fd",
+      "basis": "Root invocation after integration of test commit24ac; revision transcribed from actual execution context"
+    }
+  ]
 }
