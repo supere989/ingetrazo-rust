@@ -1,0 +1,3 @@
+The integrated GUI unit run passed 340 tests, failed 19 and ignored one. All 19 failures used implicit blank/group-zero inputs after the source-backed constructor gained its real startup figure. The reviewed test-only helper removes only the owned startup UUID and resources; production New and constructor behavior remain unchanged, and no assertions were weakened.
+
+The rebuilt affected-test executable ran exactly those 19 names: 19 passed, 341 filtered out, 0.05 seconds. The other 340 tests were not replayed. This is combined evidence from two runs, not a claim of one final full-suite run. Original default-figure workflow acceptance remains separately recorded. Raw failed and corrected reports are retained.

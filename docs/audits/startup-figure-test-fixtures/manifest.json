@@ -1,0 +1,27 @@
+{
+  "before_runtime_revision": "f828687000bee3757f852cd53c3a0c42c8d057f8",
+  "after_source_revision": "5b472bc599943d3ebef3ab5a5115bbff50f3088e",
+  "after_note": "Built with reviewed fixture edits uncommitted; exact unchanged source then committed. No claim that HEAD at execution already contained them.",
+  "after_test_binary_sha256": "3b2e7c5d646db0fa538079479ab6637d8e6b0d0fd4a6674e442db775f90bf221",
+  "archive_sha256": "a097e42c77773dd936c56b0c75f10b4df94f0329024bdb8ce4cbaaed3419a0f5",
+  "members": [
+    {
+      "member": "before.log",
+      "origin": "/tmp/ingetrazo-gui-integrated-tests-r1.log",
+      "sha256": "075817d4d79bf9ea7cea7c7a0773bdb4d90c96436f694e29f8d9e5abed8686df",
+      "size": 72799
+    },
+    {
+      "member": "affected-after.log",
+      "origin": "/tmp/ingetrazo-gui-fixture-tests-r2.log",
+      "sha256": "1c56f55832b215ac0e67e342da2d8f4f57652441f4145395e6745213c3eeb6fd",
+      "size": 2064
+    },
+    {
+      "member": "failed-tests.json",
+      "origin": "/tmp/ingetrazo-gui-failed-tests-r1.json",
+      "sha256": "bd017950ecb383145b46d499f9212e568dafb14992c3ab45b063b7db6402df02",
+      "size": 1776
+    }
+  ]
+}
