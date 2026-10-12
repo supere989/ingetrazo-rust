@@ -116,6 +116,10 @@ pub(crate) fn collect(
     _ctx: &egui::Context,
     logical_size: [f32; 2],
 ) -> Result<Presentation, String> {
+    collect_borrowed(app,logical_size)
+}
+/// Same borrowed overlay producer for native live hosts; no Context allocation.
+pub(crate) fn collect_borrowed(app:&crate::IngeTrazoApp,logical_size:[f32;2])->Result<Presentation,String>{
     if !logical_size.iter().all(|v| v.is_finite() && *v > 0.) {
         return Err("Capture logical extent refused".into());
     }

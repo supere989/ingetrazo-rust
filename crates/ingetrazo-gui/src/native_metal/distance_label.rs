@@ -21,14 +21,14 @@ struct ToolKey {
 struct DocumentKey {hover:Option<ingetrazo_tools::base::AnnotationEditTarget>,revision:u64,scene_version:u64,view:u64,selected:Option<usize>,matrix:[[f32;4];4],rect:[f32;4],density:f32,style:serde_json::Value,units:serde_json::Value,bypass:bool,distance:Option<(f64,[f64;3])>,typed:String}
 #[derive(PartialEq)]enum Key {Tool(ToolKey),Document(DocumentKey)}
 pub(crate) struct Candidate {
-    ready: Option<Arc<(Key, Arc<ingetrazo_metal::egui_painter::AdmittedCallback>)>>,
+    ready: Option<Arc<(Key, Arc<ingetrazo_metal::egui_painter::AdmittedCallback>,Arc<[egui::Shape]>)>>,
 }
 impl Candidate {
     pub(crate) fn document_owner(&self)->Option<Arc<ingetrazo_metal::egui_painter::AdmittedCallback>>{
         self.ready.as_ref().and_then(|ready|matches!(&ready.0,Key::Document(_)).then(||ready.1.clone()))
     }
     pub fn shape(&self, rect: egui::Rect) -> Option<egui::Shape> {
-        self.ready.as_ref().map(|ready| shape(rect, ready.1.clone()))
+        self.ready.as_ref().map(|ready|{let mut shapes=ready.2.to_vec();shapes.push(shape(rect,ready.1.clone()));egui::Shape::Vec(shapes)})
     }
 }
 pub(crate) struct Labels {
@@ -36,7 +36,7 @@ pub(crate) struct Labels {
     factory: Factory,
     native_builds: u64,
     uploaded_bytes: u64,
-    current: Option<Arc<(Key, Arc<ingetrazo_metal::egui_painter::AdmittedCallback>)>>,
+    current: Option<Arc<(Key, Arc<ingetrazo_metal::egui_painter::AdmittedCallback>,Arc<[egui::Shape]>)>>,
 }
 impl Labels {
     pub fn new() -> Result<Self, String> {
@@ -184,7 +184,7 @@ impl Labels {
         self.native_builds += 1;
         self.uploaded_bytes += handle.uploaded_bytes();
         Ok(Candidate {
-            ready: Some(Arc::new((key, handle))),
+            ready: Some(Arc::new((key, handle,Arc::from([])))),
         })
     }
     fn prepare_document(&mut self,app:&crate::IngeTrazoApp,rect:egui::Rect,density:f32,metal:Arc<ingetrazo_metal::NativeMetal>)->Result<Candidate,String>{
@@ -200,13 +200,17 @@ impl Labels {
         if let Some(ready)=&self.current{if ready.0==key{return Ok(Candidate{ready:Some(ready.clone())});}}
         let inverse=camera.inverse().ok_or("Metal document annotation inverse admission")?;
         let matrix=std::array::from_fn(|i|camera.matrix[i/4][i%4]);
+        let mut presentation=crate::capture_presentation::collect_borrowed(app,[rect.width(),rect.height()])?;
+        for item in &mut presentation.shapes{item.shape.translate(rect.min.to_vec2());}
+        for item in &mut presentation.text{item.position[0]+=f64::from(rect.min.x);item.position[1]+=f64::from(rect.min.y);}
+        let shapes:Arc<[egui::Shape]>=presentation.shapes.into_iter().map(|item|item.shape).collect::<Vec<_>>().into();
         let plan=Arc::new(crate::annotation_plan::build_plan(app,rect,&matrix,&mut self.cache,true)?);
         if plan.operations.is_empty(){return Ok(Candidate{ready:None});}
         let extent=crate::viewport_extent::scene_extent([f64::from(rect.width()),f64::from(rect.height())],f64::from(density))?;
         let mut queries=Vec::new();queries.try_reserve_exact(plan.queries.len().max(1)).map_err(|_|"Metal annotation CPU query admission")?;
         for &point in &plan.queries{let mut q=ingetrazo_render::annotation_query::prepare_query(&matrix,point,camera.eye,camera.forward,extent)?;if bypass{q.active=0;}queries.push(q);}
         let clip=[(rect.min.x*density).floor()as i32,(rect.min.y*density).floor()as i32,(rect.max.x*density).ceil()as i32,(rect.max.y*density).ceil()as i32];
-        let mesh=self.cache.prepare_widget_clipped(plan,density,96.,clip)?;
+        let mesh=self.cache.prepare_widget_with_presentation(plan,&presentation.text,density,96.,clip)?;
         if mesh.batches.is_empty(){return Ok(Candidate{ready:None});}
         let mut draws=Vec::new();let mut glyphs=Vec::new();draws.try_reserve_exact(mesh.gates.len()).map_err(|_|"Metal annotation draw admission")?;glyphs.try_reserve_exact(mesh.gates.len()).map_err(|_|"Metal annotation glyph admission")?;
         for draw in mesh.gates.iter(){
@@ -223,7 +227,7 @@ impl Labels {
         let visibility=Visibility::prepare(&metal,&queries,&draws,params,self.current.as_ref().and_then(|ready|ready.1.annotation_visibility()))?;
         let producer=self.factory.glyph_handle(mesh.geometry.clone(),mesh.batches.clone(),Pose::default(),glyphs.into())?;
         let handle=ingetrazo_metal::egui_painter::AdmittedCallback::prepare_annotation(metal,producer.snapshot()?,density,self.current.as_ref().map(|ready|ready.1.as_ref()),Some(visibility))?;
-        self.native_builds+=1;self.uploaded_bytes+=handle.uploaded_bytes();Ok(Candidate{ready:Some(Arc::new((key,handle)))})
+        self.native_builds+=1;self.uploaded_bytes+=handle.uploaded_bytes();Ok(Candidate{ready:Some(Arc::new((key,handle,shapes)))})
     }
     /// Cold engineering control: replace only the font preparation cache with a
     /// real too-small font admission. Accepted native owners stay untouched.

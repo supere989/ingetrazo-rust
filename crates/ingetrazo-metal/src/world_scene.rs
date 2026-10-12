@@ -957,7 +957,8 @@ impl crate::world::World {
     }
 
     /// Host-owned overlay admission. The callback must be the privately prepared
-    /// complete document annotation candidate, retained through World publication.
+    /// complete document annotation/presentation candidate, including point-guide
+    /// and geographic foreground shapes/text, retained through World publication.
     /// Standalone entrypoints deliberately provide no such owner.
     pub fn prepare_scene_preview_with_annotations(
         &mut self,
@@ -984,7 +985,7 @@ impl crate::world::World {
         {
             return Err("Metal Scene adapter needs shadow/image/leader annotation passes".into());
         }
-        if scene.terrain.is_some()||!scene.geo_points.is_empty()||!scene.geo_paths.is_empty(){
+        if scene.terrain.is_some()||((!scene.geo_points.is_empty()||!scene.geo_paths.is_empty())&&annotations.is_none()){
             return Err("Metal Scene adapter needs geographic/terrain passes".into());
         }
         let preview_selection=preview.is_some_and(|p|scene.selection.iter().all(|item|matches!(item,ingetrazo_core::scene::SelectionItem::Face(id) if *id==p.face)));
@@ -993,7 +994,7 @@ impl crate::world::World {
             ingetrazo_core::scene::SelectionItem::TextLabel(index)=>*index<scene.text_labels.len(),
             _=>false,
         });
-        if (!scene.selection.is_empty() && !preview_selection && !annotation_selection) || !scene.guides.is_empty(){
+        if (!scene.selection.is_empty() && !preview_selection && !annotation_selection) || scene.guides.iter().any(|g|annotations.is_none() || !matches!(g.kind,ingetrazo_core::guides::GuideType::Point(_))){
             return Err("Metal Scene adapter needs selection/guide overlays".into());
         }
         use crate::world_policy::{Mode, Policy};

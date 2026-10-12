@@ -53,15 +53,18 @@ impl Cache {
   self.prepare_clipped(plan,density,font_dpi,[-1_000_000,-1_000_000,1_000_001,1_000_001])
  }
  pub fn prepare_clipped(&mut self,plan:Arc<Plan>,density:f32,font_dpi:f64,clip:[i32;4])->Result<Arc<Mesh>,String>{
-  self.prepare_for_target(plan,density,font_dpi,clip,GlyphPlacement::Raster)
+  self.prepare_for_target(plan,density,font_dpi,clip,GlyphPlacement::Raster,&[])
  }
  pub(crate) fn prepare_widget_clipped(&mut self,plan:Arc<Plan>,density:f32,font_dpi:f64,clip:[i32;4])->Result<Arc<Mesh>,String>{
-  self.prepare_for_target(plan,density,font_dpi,clip,GlyphPlacement::OpenGl)
+  self.prepare_for_target(plan,density,font_dpi,clip,GlyphPlacement::OpenGl,&[])
  }
- fn prepare_for_target(&mut self,plan:Arc<Plan>,density:f32,font_dpi:f64,clip:[i32;4],placement:GlyphPlacement)->Result<Arc<Mesh>,String>{
+ pub(crate) fn prepare_widget_with_presentation(&mut self,plan:Arc<Plan>,records:&[PresentationText],density:f32,font_dpi:f64,clip:[i32;4])->Result<Arc<Mesh>,String>{
+  self.prepare_for_target(plan,density,font_dpi,clip,GlyphPlacement::OpenGl,records)
+ }
+ fn prepare_for_target(&mut self,plan:Arc<Plan>,density:f32,font_dpi:f64,clip:[i32;4],placement:GlyphPlacement,records:&[PresentationText])->Result<Arc<Mesh>,String>{
   let density=f64::from(density);
   if !density.is_finite()||density<=0.||density>40.||!font_dpi.is_finite()||font_dpi<=0.{return Err("Annotation physical/font density outside admission".into());}
-  if let Some((old,d,dpi,old_clip,old_placement,mesh))=&self.current{if Arc::ptr_eq(old,&plan)&&*d==density.to_bits()&&*dpi==font_dpi.to_bits()&&*old_clip==clip&&*old_placement==placement{return Ok(mesh.clone());}}
+  if records.is_empty(){if let Some((old,d,dpi,old_clip,old_placement,mesh))=&self.current{if Arc::ptr_eq(old,&plan)&&*d==density.to_bits()&&*dpi==font_dpi.to_bits()&&*old_clip==clip&&*old_placement==placement{return Ok(mesh.clone());}}}
   if plan.queries.len()>u32::MAX as usize||plan.queries.iter().flatten().any(|v|!v.is_finite()){
    return Err("Annotation plan query admission exceeded".into());
   }
@@ -70,8 +73,8 @@ impl Cache {
    Gate::Always=>{},Gate::Point(a) if a<count=>{},Gate::Both(a,b) if a<count&&b<count=>{},
    _=>return Err("Annotation plan references absent query".into()),
   }}
-  let mesh=Arc::new(self.build(&plan,density,font_dpi,clip,placement)?);
-  self.current=Some((plan,density.to_bits(),font_dpi.to_bits(),clip,placement,mesh.clone()));self.builds+=1;Ok(mesh)
+  let mesh=Arc::new(self.build(&plan,density,font_dpi,clip,placement,records)?);
+  if records.is_empty(){self.current=Some((plan,density.to_bits(),font_dpi.to_bits(),clip,placement,mesh.clone()));}self.builds+=1;Ok(mesh)
  }
  fn glyph(&mut self,face:&ingetrazo_formats::annotation_font::Face,glyph:u32,density:f64,phase:[u8;2],lcd:bool)->Result<Arc<ingetrazo_formats::paper_text::RasterGlyph>,String>{
   let key=GlyphKey{font:face.key(),pixels:face.pixels(),glyph,density:density.to_bits(),phase,lcd};
@@ -326,7 +329,7 @@ impl Cache {
         // Query ownership is retained separately; target renderpass clips final pixels.
         Ok(Arc::new(writer.finish()?))
     }
- fn build(&mut self,plan:&Plan,density:f64,font_dpi:f64,clip:[i32;4],placement:GlyphPlacement)->Result<Mesh,String>{
+ fn build(&mut self,plan:&Plan,density:f64,font_dpi:f64,clip:[i32;4],placement:GlyphPlacement,records:&[PresentationText])->Result<Mesh,String>{
   let mut writer=Writer::new(density,self.limits);
   for operation in &plan.operations {
    match &operation.primitive {
@@ -387,6 +390,7 @@ impl Cache {
     }
    }
   }
+  for text in records{self.write_text(&mut writer,&text.position,&text.text,text.size_pt,text.bold,text.center,&text.color,Gate::Always,density,font_dpi,placement)?;}
   writer.finish()
  }
 }
