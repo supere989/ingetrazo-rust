@@ -132,10 +132,22 @@ impl Tool for ImageTool {
             }
         } else {
             self.start = Some(p);
-            if let Some((point, normal, _)) =
-                ingetrazo_core::screen_pick::hover_face(scene, &ctx.ray)
-            {
-                self.plane = Some((q::q(point), q::q(normal)));
+            if let Some(hit) = ingetrazo_core::screen_pick::hover_face_placement(scene, &ctx.ray) {
+                // Source face_plane_world stores the face centroid, not the
+                // ray intersection. Placed components accumulate mapped Qt points.
+                let point = if hit.group_path.is_empty() {
+                    q::q(hit.mesh.face_centroid(hit.face))
+                } else {
+                    let vertices = &hit.mesh.faces[hit.face].vertices;
+                    let mut sum = DVec3::ZERO;
+                    for &vertex in vertices {
+                        sum = q::add(sum, ingetrazo_core::change_axes::map(
+                            hit.world, hit.mesh.vertices[vertex].position));
+                    }
+                    let count = vertices.len() as f32;
+                    (sum.as_vec3() / count).as_dvec3()
+                };
+                self.plane = Some((point, q::q(hit.normal)));
             }
         }
     }

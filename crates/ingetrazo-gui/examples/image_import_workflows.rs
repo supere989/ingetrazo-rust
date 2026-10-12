@@ -304,6 +304,7 @@ fn run(source: &Path, out: &Path) -> Result<(), String> {
         a.system_clipboard = None;
         let input = source.join(c["input"].as_str().ok_or("Initial IGZ")?);
         a.open_document(&input);
+        retained::initial_camera(&mut a, &c["initial_camera"])?;
         for index in c["edit_path"].as_array().ok_or("Edit path")? {
             a.scene.clear_selection();
             a.scene.select(SelectionItem::Group(
@@ -311,7 +312,6 @@ fn run(source: &Path, out: &Path) -> Result<(), String> {
             ));
             a.begin_component_edit();
         }
-        retained::initial_camera(&mut a, &c["initial_camera"])?;
         let mut ui = Ui::new();
         ui.layout(&mut a, 800., 600.)?;
         states.push(record(&a, name, "before")?);
