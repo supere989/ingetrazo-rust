@@ -22,7 +22,7 @@ The native DEM Profile fallback now passes five controlled-HTTP workflows, thirt
 
 ## Current workstreams
 
-The source-continuous dashed callout boundary improves the strict annotation corpus to 15/20 PNG, 17/20 JPEG and 18/20 PDF with 20 original readers and 25 rejecting controls. Only six existing callout PNG/JPEG comparisons improve; all other hashes and controls remain unchanged. Seven PNG pixels remain across five cases, and strict parity stays OPEN. [Dashed stroke evidence](audits/dashed-callout-stroke/README.md).
+Physical six-family annotations now match all 20 PNGs and all 20 JPEGs, with 20 original-reader pairs and 25 rejecting controls. The continuous source stroke boundary and Qt QPointF admission close the final seven PNG pixels; a controlled callout witness also matches the complete frame, raw local boundaries and directed 26.6 edges exactly. The first two failed replays remain retained. Strict P29 parity stays OPEN: 18/20 PDFs are exact, with one pixel/max1 in `cotas_rad-default` and 1,089 pixels/max2 in `radial-fit`. Software Vulkan only; the original corpus/checker is unchanged. [Fixed dashed stroke proof](audits/dashed-callout-stroke/README.md).
 
 Repeated physical-export source extractions and temporary settings are now purged after exact authentication: 38 directories, 960 files and 15,004,735 logical bytes. Canonical/raw results and shared build resources remain retained. [Cleanup receipt](audits/physical-export-cleanup/cleanup-receipt.json).
 
