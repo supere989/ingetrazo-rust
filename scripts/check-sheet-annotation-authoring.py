@@ -75,6 +75,29 @@ def verify_states(s,n):
   expected,corrected=expected_state(source);equal(expected,{k:native[k]for k in KEYS},source['case']+'.'+source['phase']);counts['native_corrected_radial'if corrected else'literal_source']+=1
  return counts
 
+def mismatch_diagnostics(s,n,source_folder,native_folder):
+ result={'scope':'Diagnostic only; identical strict expected_state/equal comparisons, no tolerance or verdict change.','state_mismatches':[],'reader_mismatches':[]}
+ source_rows={(r['case'],r['phase']):r for r in s.get('states',[])};native_rows={(r['case'],r['phase']):r for r in n.get('states',[])}
+ for pair in PAIRS:
+  source=source_rows.get(pair);native=native_rows.get(pair)
+  if source is None or native is None:result['state_mismatches'].append({'case':pair[0],'phase':pair[1],'error':'Missing source or native row'});continue
+  corrected=False
+  try:
+   expected,corrected=expected_state(source);equal(expected,{k:native[k]for k in KEYS},pair[0]+'.'+pair[1])
+  except (AssertionError,KeyError,IndexError,TypeError,ValueError)as error:result['state_mismatches'].append({'case':pair[0],'phase':pair[1],'comparison_scope':'native_corrected_radial'if corrected else'literal_source','error':repr(error)})
+ for filename,expected in [('native-reopens.json',None),('native-delete-reopens.json',None)]:
+  path=native_folder/filename
+  if not path.is_file():result['reader_mismatches'].append({'file':filename,'available':False});continue
+  try:
+   actual=json.loads(path.read_text());reference=expected_readers(json.loads((source_folder/'original-reopens.json').read_text()))if filename=='native-reopens.json'else expected_delete_readers(s)
+   reference_by={r['case']:r for r in reference};actual_by={r['case']:r for r in actual}
+   if [r['case']for r in reference]!=[r['case']for r in actual]:result['reader_mismatches'].append({'file':filename,'error':'Ordered reader case inventory mismatch'})
+   for case,row in reference_by.items():
+    try:equal(row,actual_by[case],filename+'.'+case)
+    except (AssertionError,KeyError,IndexError,TypeError,ValueError)as error:result['reader_mismatches'].append({'file':filename,'case':case,'error':repr(error)})
+  except (AssertionError,KeyError,IndexError,TypeError,ValueError,OSError)as error:result['reader_mismatches'].append({'file':filename,'error':repr(error)})
+ result['state_mismatch_count']=len(result['state_mismatches']);result['reader_mismatch_count']=len(result['reader_mismatches']);return result
+
 def main():
  p=argparse.ArgumentParser();p.add_argument('source',type=Path);p.add_argument('native',type=Path);p.add_argument('comparison',type=Path);a=p.parse_args();s=json.loads((a.source/'original-annotations.json').read_text());n=json.loads((a.native/'native-annotations.json').read_text());report={'result':'pending','scope':'161 literal source states plus13 explicitly specified native radial-property correctness states; original radial UI remains broken and records unchanged. No handle/chained/multiselect/physical pixel claim.'};a.comparison.parent.mkdir(parents=True,exist_ok=True)
  def write():a.comparison.write_text(json.dumps(report,indent=2)+'\n')
@@ -110,6 +133,7 @@ def main():
    candidate=copy.deepcopy(doc);candidate['scene']['compositions'][0].pop('vendor_annotation_sheet');reject('lost-raw-sheet',lambda:raw_guard(candidate,paths))
    candidate=copy.deepcopy(doc);candidate['scene']['compositions'][0]['cotas_rad'][0]['vendor_annotation']['opaque'][0]=True;reject('raw-bool-int-alias',lambda:raw_guard(candidate,paths))
   report.update(result='pass',cases=len(NAMES),negative_controls=negatives)
- except (AssertionError,KeyError,IndexError,TypeError,ValueError,OSError)as error:report.update(result='fail',error=repr(error));write();print(json.dumps(report));return 1
+ except (AssertionError,KeyError,IndexError,TypeError,ValueError,OSError)as error:
+  report.update(result='fail',error=repr(error),diagnostics=mismatch_diagnostics(s,n,a.source,a.native));write();print(json.dumps(report));return 1
  write();print(json.dumps(report));return 0
 if __name__=='__main__':raise SystemExit(main())
