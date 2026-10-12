@@ -135,7 +135,25 @@ impl IngeTrazoApp {
  }
  pub fn enter_composer_sheet(&mut self,index:usize){
   let Some(id)=self.scene.sheets.get(index).map(|s|s.id)else{return;};
-  if self.composer_state.interaction_sheet!=Some(id){self.finish_composer_edit();self.composer_state.selection=Default::default();self.retire_composer_specialized(true);self.composer_state.picture_authoring.clear();self.composer_state.legend_authoring=Default::default();self.composer_state.annotation_authoring.selected=None;self.composer_state.annotation_authoring.ignore_release=false;self.composer_state.annotation_authoring.armed=None;self.composer_state.annotation_authoring.points.clear();self.composer_state.annotation_authoring.snap_hits.clear();self.composer_state.annotation_authoring.draft=None;self.composer_state.annotation_authoring.coalesce=None;self.composer_state.annotation_authoring.layouts=Default::default();self.composer_state.annotation_authoring.canvas.clear();self.composer_state.shape_start=None;self.composer_state.interaction_sheet=Some(id);}
+  if self.composer_state.interaction_sheet==Some(id){return;}
+  self.finish_composer_edit();
+  // Original _on_comp_switched publishes destination and a fresh history
+  // before _rebuild_canvas finishes the retained chain into that destination.
+  let old_active=self.scene.active_sheet_index;
+  let old_selection=std::mem::take(&mut self.composer_state.selection);
+  let old_history=self.composer_state.sheet_history.remove(&id);
+  self.scene.active_sheet_index=Some(index);
+  let total=match self.finish_composer_run_on_sheet_switch(index){
+   Ok(owner)=>owner,
+   Err(error)=>{
+    self.scene.active_sheet_index=old_active;self.composer_state.selection=old_selection;
+    self.composer_state.sheet_history.remove(&id);
+    if let Some(history)=old_history{self.composer_state.sheet_history.insert(id,history);}
+    self.status_message=error;return;
+   }
+  };
+  self.retire_composer_specialized(true);self.composer_state.picture_authoring.clear();self.composer_state.legend_authoring=Default::default();self.composer_state.annotation_authoring.selected=None;self.composer_state.annotation_authoring.ignore_release=false;self.composer_state.annotation_authoring.armed=None;self.composer_state.annotation_authoring.points.clear();self.composer_state.annotation_authoring.snap_hits.clear();self.composer_state.annotation_authoring.draft=None;self.composer_state.annotation_authoring.coalesce=None;self.composer_state.annotation_authoring.layouts=Default::default();self.composer_state.annotation_authoring.canvas.clear();self.composer_state.shape_start=None;self.composer_state.interaction_sheet=Some(id);
+  if let Some(owner)=total{if let Err(error)=self.composer_select_annotation(owner.family,Some(owner.index)){self.status_message=error;}}
  }
  pub fn begin_composer_edit(&mut self){
   if let Some(sheet)=self.scene.active_sheet_index.and_then(|i|self.scene.sheets.get(i)){
