@@ -159,6 +159,15 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         app.open_document(&source.join(row["scene"].as_str().ok_or("scene")?));
         assert!(!app.document_session.confirm_unsaved);
         assert_eq!(app.scene.sheets.len(), 1);
+        for picture in app.scene.sheets[0].native_document["images"]
+            .as_array_mut()
+            .ok_or("images")?
+        {
+            picture["vendor_probe"] =
+                serde_json::json!({"opaque":"preserve","nested":[1,false,null]});
+            // The original has no operative image rotation field; preserve metadata.
+            picture["rotation_deg"] = serde_json::json!(17.);
+        }
         let before = app.scene.clone();
         let png = out.join(format!("{name}.png"));
         let jpg = out.join(format!("{name}.jpg"));
