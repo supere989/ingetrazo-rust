@@ -92,8 +92,8 @@
   "sources": [
     {
       "path": "scripts/reference-exchange-import.py",
-      "sha256": "71235a808ccd8e1c136f302396569218d4057c159da59332338a7b2c672d1b34",
-      "bytes": 13781
+      "sha256": "7420704279b689b3ec43f586821202266134fac7f1ccd0bf35663689f075b5c0",
+      "bytes": 13902
     },
     {
       "path": "scripts/exchange_import_observations.py",
@@ -117,7 +117,9 @@
     "datum Undo persistence; failed datum leak retained and native atomic correction explicit",
     "exact camera distance; lossless numericint/f64 only",
     "layer names finite schema; no full metadata/viewport pixel/generalformat claim",
-    "local group matrix VALUE is always literal column-major16f64; source absent xform and native default mean identity. Optional-field presence is not claimed; meaningful matrix values are strict."
+    "local group matrix VALUE is always literal column-major16f64; source absent xform and native default mean identity. Optional-field presence is not claimed; meaningful matrix values are strict.",
+    "Source History.execute records last_error and swallows the failed command; MainWindow incorrectly continues Imported status/title without error popup. Native actual error modal is a declared correction."
   ],
-  "resource_identity": "actual encoded bytes SHA replaces locator only; UV/sw/sh/back/color/opacity/ownership literal"
+  "resource_identity": "actual encoded bytes SHA replaces locator only; UV/sw/sh/back/color/opacity/ownership literal",
+  "missing_only_capture_command": "QT_QPA_PLATFORM=offscreen /tmp/ingetrazo-parity-python/bin/python scripts/reference-exchange-import.py NEW_OUTPUT dae-failure-datum"
 }

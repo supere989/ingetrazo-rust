@@ -77,7 +77,7 @@ def gltf(name,extent=1,textured=False,binary=True,title=None):
   raw=json.dumps(doc,separators=(',',':')).encode();raw+=b' '*((-len(raw))%4);body=struct.pack('<I4s',len(raw),b'JSON')+raw+struct.pack('<I4s',len(data),b'BIN\0')+data;(folder/name).write_bytes(b'glTF'+struct.pack('<II',2,12+len(body))+body)
  else:doc['buffers'][0]['uri']='data:application/octet-stream;base64,'+base64.b64encode(data).decode();(folder/name).write_text(json.dumps(doc))
 gltf('named.glb',title='界'*70);gltf('textured.glb',textured=True);gltf('scaled.gltf',extent=1000,title='')
-cases=[];states=[];errors=[];messages=[];timers=[];parses=[]
+cases=[];states=[];errors=[];failure_observations=[];parses=[]
 def exception(t,e,tb):errors.append({'type':t.__name__,'message':str(e),'traceback':''.join(traceback.format_exception(t,e,tb))});(root/'callback-errors.json').write_text(json.dumps(errors,indent=2))
 sys.excepthook=exception
 original_dae=dae.load_dae;original_glb=glb.load_glb
@@ -90,7 +90,10 @@ oldpicker=main.file_dialogs.getOpenFileName
 recipes=[('dae-z-root','dae','cube-z.dae','root','accepted'),('dae-y-inch-leaf','dae','cube-y.dae','leaf','accepted'),('dae-400','dae','count-400.dae','root','accepted'),('dae-401-leaf','dae','count-401.dae','leaf','accepted'),('dae-datum','dae','datum.dae','root','accepted'),('dae-existing-datum','dae','datum.dae','root','accepted'),('dae-combined-leaf','dae','combined.dae','leaf','accepted'),('dae-mixed-textures','dae','mixed-textures.dae','root','accepted'),('glb-named','glb','named.glb','root','accepted'),('glb-textured-leaf','glb','textured.glb','leaf','accepted'),('gltf-scale','glb','scaled.gltf','root','accepted'),('chooser-cancel','dae','cube-z.dae','root','cancel'),('dae-failure-datum','dae','failed-datum.dae','root','failed')]
 def observe(w,name,phase,outcome):
  states.append({'case':name,'phase':phase,'scene':scene_state(w.viewport.scene),'undo':len(w.viewport.history.undo_stack),'redo':len(w.viewport.history.redo_stack),'depth':len(w.viewport.scene._edit_stack),'outcome':outcome,'camera':{'distance':w.viewport.camera.distance}});(root/'original-exchange.partial.json').write_text(json.dumps({'cases':cases,'states':states,'callback_errors':errors},indent=2))
+case_filter=sys.argv[2]if len(sys.argv)>2 else None
+assert case_filter is None or case_filter in[c[0]for c in recipes]
 for name,kind,file,context,outcome in recipes:
+ if case_filter is not None and name!=case_filter:continue
  w=MainWindow();w.show();app.processEvents();seed(w.viewport.scene)
  if name=='dae-existing-datum':w.viewport.scene.georef=SceneDatum(lat=10,lon=20,alt=7,north=12)
  igz.save_scene(w.viewport.scene,root/(name+'-input.igz'))
@@ -100,18 +103,6 @@ for name,kind,file,context,outcome in recipes:
   w.viewport.history.execute(SnapshotImport(lambda scene:scene.mesh.add_edge(V(20,1,0),V(21,1,0))))
  before=scene_state(w.viewport.scene);history=(len(w.viewport.history.undo_stack),len(w.viewport.history.redo_stack));camera=w.viewport.camera.distance;count=len(parses);observe(w,name,'before','idle')
  main.file_dialogs.getOpenFileName=lambda *a,**k:('','')if outcome=='cancel'else(str(folder/file),kind)
- if outcome=='failed':
-  timer=QTimer();deadline_timer=QTimer();deadline_timer.setSingleShot(True);timers.extend([timer,deadline_timer]);complete=[False]
-  def dismiss():
-   box=app.activeModalWidget()
-   if not isinstance(box,QMessageBox):return
-   try:messages.append(box.text());QTest.mouseClick(box.button(QMessageBox.Ok),Qt.LeftButton)
-   except BaseException:exception(*sys.exc_info())
-   finally:box.reject();complete[0]=True;timer.stop();deadline_timer.stop()
-  timer.timeout.connect(dismiss);timer.start(10)
-  def deadline(complete=complete):
-   if not complete[0]:errors.append({'type':'FixtureTimeout','message':'Error dialog did not complete','traceback':''})
-  deadline_timer.timeout.connect(deadline);deadline_timer.start(5000)
  (w._on_import_dae if kind=='dae'else w._on_import_glb)();app.processEvents();observe(w,name,'import',outcome)
  assert w.viewport.camera.distance==camera,'import changed camera'
  saved=None
@@ -132,7 +123,11 @@ for name,kind,file,context,outcome in recipes:
   saved=name+'-saved.igz';igz.save_scene(w.viewport.scene,root/saved)
  elif outcome=='cancel':assert scene_state(w.viewport.scene)==before and history==(len(w.viewport.history.undo_stack),len(w.viewport.history.redo_stack)) and len(parses)==count
  else:
-  assert messages and history==(len(w.viewport.history.undo_stack),len(w.viewport.history.redo_stack));after=scene_state(w.viewport.scene);assert after['datum']is not None and before['datum']is None,'source adopted-datum fault not witnessed';after['datum']=None;assert after==before
+  last_error=w.viewport.history.last_error
+  assert last_error=='SnapshotImport: No geometry found in the COLLADA file',last_error
+  failure_observations.append({'case':name,'last_error':last_error,'status':w.statusBar().currentMessage(),'title':w.windowTitle(),'import_name':str(w._import_name),'source_ui_fault':'History.execute swallows failure; MainWindow continues Imported status/title without critical dialog','native_correction':'atomic refusal and actual error UI'})
+  (root/'source-failure-observation.json').write_text(json.dumps(failure_observations,indent=2)+'\n')
+  assert history==(len(w.viewport.history.undo_stack),len(w.viewport.history.redo_stack));after=scene_state(w.viewport.scene);assert after['datum']is not None and before['datum']is None,'source adopted-datum fault not witnessed';after['datum']=None;assert after==before
  cases.append({'name':name,'kind':kind,'file':'assets/'+file,'input':name+'-input.igz','context':context,'outcome':outcome,'saved':saved,'phases':[s['phase']for s in states if s['case']==name]});(root/'completed-cases.json').write_text(json.dumps({'cases':cases,'states':states},indent=2));w.hide();w.deleteLater();app.processEvents()
 main.file_dialogs.getOpenFileName=oldpicker;dae.load_dae=original_dae;glb.load_glb=original_glb;assert not errors,errors
-(root/'original-exchange.json').write_text(json.dumps({'source_pin':'6be29fe437a7cd992d4e079f71720821b25216b9','cases':cases,'states':states,'callback_errors':errors,'error_messages_diagnostic':messages,'source_faults':{'dae-failure-datum':'datum adoption survives geometry failure; native atomic refusal declared separately'},'scope':'Actual App command/chooser-provider/history/save. No unit/options dialog or camera fit. Asset unit/up-axis, rooted reference groups, FACEME, combined nested owners. Source failure datum leakage retained; native correction is explicit. No viewport pixels or broader format/version coverage.'},indent=2)+'\n');print(json.dumps({'cases':len(cases),'states':len(states)}))
+(root/'original-exchange.json').write_text(json.dumps({'source_pin':'6be29fe437a7cd992d4e079f71720821b25216b9','cases':cases,'states':states,'callback_errors':errors,'failure_observations_diagnostic':failure_observations,'capture_case_filter':case_filter,'source_faults':{'dae-failure-datum':'datum adoption survives geometry failure; swallowed error allows source Imported status/title; native atomic refusal and error UI separately declared'},'scope':'Actual App command/chooser-provider/history/save. No unit/options dialog or camera fit. Asset unit/up-axis, rooted reference groups, FACEME, combined nested owners. Source failure datum leakage retained; native correction is explicit. No viewport pixels or broader format/version coverage.'},indent=2)+'\n');print(json.dumps({'cases':len(cases),'states':len(states)}))
