@@ -18,6 +18,9 @@ pub(crate) struct Cache {
     sources: HashMap<[u8; 32], Arc<Pixels>>,
     composites: HashMap<Key, Arc<Pixels>>,
     live: HashMap<u64, Weak<Pixels>>,
+    pub prepare_calls: u64,
+    pub source_reads: u64,
+    pub encoded_read_bytes: u64,
     pub decodes: u64,
     pub builds: u64,
 }
@@ -66,7 +69,25 @@ impl Cache {
         self.live.insert(value.id(), Arc::downgrade(value));
         Ok(())
     }
+    pub(crate) fn admit_preview(&mut self, bytes: usize) -> Result<(), String> {
+        self.admit(bytes)
+    }
     pub(crate) fn prepare(&mut self, value: &serde_json::Value) -> Result<Option<Picture>, String> {
+        self.prepare_inner(value, None)
+    }
+    pub(crate) fn prepare_preview(
+        &mut self,
+        value: &serde_json::Value,
+        source: Option<Arc<Pixels>>,
+    ) -> Result<Option<Picture>, String> {
+        self.prepare_inner(value, Some(source))
+    }
+    fn prepare_inner(
+        &mut self,
+        value: &serde_json::Value,
+        retained: Option<Option<Arc<Pixels>>>,
+    ) -> Result<Option<Picture>, String> {
+        self.prepare_calls += 1;
         if !value.is_object() {
             return Err("Invalid picture record".into());
         }
@@ -92,45 +113,65 @@ impl Cache {
         let radius = number(value, "radius_mm", 4.)?;
         let feather = number(value, "feather_mm", 0.)?;
         let opacity = number(value, "opacity", 1.)?;
-        let data = match std::fs::metadata(Path::new(path)) {
-            Err(e)
-                if matches!(
-                    e.kind(),
-                    std::io::ErrorKind::NotFound | std::io::ErrorKind::NotADirectory
-                ) =>
-            {
-                return Ok(None)
-            }
-            Err(e) => return Err(e.to_string()),
-            Ok(v) => {
-                if !v.is_file() {
-                    return Ok(None);
+        if matches!(retained, Some(None)) {
+            return Ok(None);
+        }
+        let data = if retained.is_some() {
+            Vec::new()
+        } else {
+            match std::fs::metadata(Path::new(path)) {
+                Err(e)
+                    if matches!(
+                        e.kind(),
+                        std::io::ErrorKind::NotFound | std::io::ErrorKind::NotADirectory
+                    ) =>
+                {
+                    return Ok(None)
                 }
-                if v.len() > 16 * 1024 * 1024 {
-                    return Err("Paper picture encoded byte budget exceeded".into());
+                Err(e) => return Err(e.to_string()),
+                Ok(v) => {
+                    if !v.is_file() {
+                        return Ok(None);
+                    }
+                    if v.len() > 16 * 1024 * 1024 {
+                        return Err("Paper picture encoded byte budget exceeded".into());
+                    }
+                    // Metadata is only an early refusal: the file can grow before reading.
+                    // Reserve and admit the bounded owner before any source bytes arrive.
+                    const LIMIT: usize = 16 * 1024 * 1024;
+                    self.admit(LIMIT + 1)?;
+                    let mut data = Vec::new();
+                    data.try_reserve_exact(LIMIT + 1)
+                        .map_err(|_| "Paper encoded picture allocation failed")?;
+                    self.admit(data.capacity())?;
+                    use std::io::Read;
+                    std::fs::File::open(path)
+                        .map_err(|e| e.to_string())?
+                        .take((LIMIT + 1) as u64)
+                        .read_to_end(&mut data)
+                        .map_err(|e| e.to_string())?;
+                    self.source_reads += 1;
+                    self.encoded_read_bytes =
+                        self.encoded_read_bytes.saturating_add(data.len() as u64);
+                    if data.len() > LIMIT {
+                        return Err("Paper picture encoded byte budget exceeded".into());
+                    }
+                    data
                 }
-                // Metadata is only an early refusal: the file can grow before reading.
-                // Reserve and admit the bounded owner before any source bytes arrive.
-                const LIMIT: usize = 16 * 1024 * 1024;
-                self.admit(LIMIT + 1)?;
-                let mut data = Vec::new();
-                data.try_reserve_exact(LIMIT + 1)
-                    .map_err(|_| "Paper encoded picture allocation failed")?;
-                self.admit(data.capacity())?;
-                use std::io::Read;
-                std::fs::File::open(path)
-                    .map_err(|e| e.to_string())?
-                    .take((LIMIT + 1) as u64)
-                    .read_to_end(&mut data)
-                    .map_err(|e| e.to_string())?;
-                if data.len() > LIMIT {
-                    return Err("Paper picture encoded byte budget exceeded".into());
-                }
-                data
             }
         };
-        let content = *blake3::hash(&data).as_bytes();
-        let source = if let Some(hit) = self.sources.get(&content) {
+        let retained = retained.flatten();
+        let content = if let Some(p) = &retained {
+            let mut key = [0u8; 32];
+            key[..8].copy_from_slice(&p.id().to_le_bytes());
+            key[31] = 1;
+            key
+        } else {
+            *blake3::hash(&data).as_bytes()
+        };
+        let source = if let Some(source) = retained {
+            source
+        } else if let Some(hit) = self.sources.get(&content) {
             hit.clone()
         } else {
             if self.sources.len() >= 24 {
@@ -158,8 +199,13 @@ impl Cache {
         let image = if shape == "rect" && feather <= 0. && opacity >= 1. && fit == "stretch" {
             source
         } else {
+            // Composite identity follows immutable decoded ownership for both
+            // export and retained-path composer preview, without hashing pixels.
+            let mut pixel_key = [0u8; 32];
+            pixel_key[..8].copy_from_slice(&source.id().to_le_bytes());
+            pixel_key[31] = 1;
             let key = Key {
-                content,
+                content: pixel_key,
                 shape: shape.into(),
                 fit: fit.into(),
                 values: [
