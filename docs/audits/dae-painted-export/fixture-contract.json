@@ -1,0 +1,137 @@
+{
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "cases": [
+    {
+      "name": "colors-default-hole",
+      "coverage": "front paint/default cream/holes; independent backside and opacity retained in IGZ but omitted by actual source DAE"
+    },
+    {
+      "name": "textures-affine-planar",
+      "coverage": "shared encoded image, affine and planar rotation/scale UV, first-seen material/name grouping"
+    },
+    {
+      "name": "nested-shared-reflected",
+      "coverage": "nested transforms, prototype placements/reflection, hidden top versus hidden child source law, flattened directed triangles"
+    },
+    {
+      "name": "datum-names-collisions",
+      "coverage": "datum, Unicode/project XML escaping, sanitized registry names and collision suffixes, same texture basename first-seen behavior"
+    },
+    {
+      "name": "chooser-cancel-suffix",
+      "coverage": "actual MainWindow export chooser Cancel, wrong suffix replaced, existing destination, current IGZ/dirty/Scene/history unchanged"
+    },
+    {
+      "name": "missing-resource-write-error",
+      "coverage": "source best-effort missing image sidecar output and actual export error; native document/destination refusal separately declared"
+    }
+  ],
+  "source_ingress": "MainWindow._on_export_dae \u2192 _export \u2192 formats.dae.save_dae, actual Qt chooser controlled fixture return",
+  "native_ingress": "Actual App dedicated export chooser/controller and save/export action; no format-helper-only acceptance",
+  "observations": [
+    "source XML semantic sources/indices/material symbols and effects/textureUV bindings",
+    "sidecar exact encoded bytes and resource relative names",
+    "literal directed geometry/normal/UV inventory",
+    "actual original DAE reader records, reader nondeterministic ring order preserved and diagnosed",
+    "saved IGZ/rawbackpaint and unknown metadata preservation",
+    "current_file/dirty/camera/editcontext/model and composer history before/after success/cancel/error",
+    "created/modified rawUTC timestamps and independently validated timebounds, no arbitrarymetadata deletion",
+    "opacity-distinct materialkeys/group/nameorder even though effectalpha omitted",
+    "samebasename firstseen source permaterialkey and exactsidecaridentity",
+    "camera-facing topfigure omission without suppliedface_me"
+  ],
+  "source_limits": [
+    "one world-space flattened geometry; no exported XML hierarchy/instance sharing claim",
+    "front attrs only; no separate backpaint output",
+    "opacity/finish collected but not serialized by DAE diffuse",
+    "texture copy is best effort; missing sidecar behavior literal",
+    "no camera-facing figure export without source camera route"
+  ],
+  "capture_policy": "One bounded actual original capture only after independent producer/checker review; root owns capture/build; unchanged Python",
+  "original_sources": [
+    {
+      "path": "formats/dae.py",
+      "sha256": "9082599e1130b1d70af23cf3715a1566b18908f41fc0498d28b235baef7331dc"
+    },
+    {
+      "path": "formats/meshexport.py",
+      "sha256": "edc9d9d76b5b2812c58dfdaa82d6be53fc2203a98e43b2f9ce344145301dc3bb"
+    },
+    {
+      "path": "formats/igz.py",
+      "sha256": "f318d685830c49c2fede7fd5a238ac7a1469ee0b0226cf48cab3751e194a9576"
+    },
+    {
+      "path": "views/main_window.py",
+      "sha256": "ea02be3e439c80731d0f5b5fde3d92d9b3f62e8ad10cd44ad305c3261b7786fa"
+    },
+    {
+      "path": "core/group.py",
+      "sha256": "9ba6a20eca241cb4969a545a3784fcff25566166606d5447a18780747d4f11c5"
+    },
+    {
+      "path": "core/mesh.py",
+      "sha256": "5f2c1625e6dd717db029ba39a9de337e75beec06bd0df28a592a8a34875ca22c"
+    },
+    {
+      "path": "core/texture.py",
+      "sha256": "837c3f00c548df110dec5debfdb3759984d97bb652d6a0050d7e2ceb940407dc"
+    },
+    {
+      "path": "core/triangulate.py",
+      "sha256": "1d4b83eb9f3b0c7ec8a7ad591f27182991fb54d9d33e5d0ba47f3233bd9c16ef"
+    },
+    {
+      "path": "core/history.py",
+      "sha256": "2eb66a1d557099b51383988a7819145289fc4ce2c37fc7de3a92ed35b5830559"
+    },
+    {
+      "path": "core/scene.py",
+      "sha256": "9dfcd32f1ff5b1445180eafd8df36eafb92fa08ed3597bb90eac09554899d2e0"
+    },
+    {
+      "path": "core/camera.py",
+      "sha256": "cae35d8adfe33f3da22b85de74cc0779c0d2697fa8fa09d0112933d6d3e26a52"
+    }
+  ],
+  "phases": {
+    "colors-default-hole": [
+      "before",
+      "export"
+    ],
+    "textures-affine-planar": [
+      "before",
+      "export"
+    ],
+    "nested-shared-reflected": [
+      "before",
+      "export"
+    ],
+    "datum-names-collisions": [
+      "before",
+      "export"
+    ],
+    "chooser-cancel-suffix": [
+      "before",
+      "cancel",
+      "suffix"
+    ],
+    "missing-resource-write-error": [
+      "before",
+      "missing",
+      "write-error"
+    ]
+  },
+  "native_controls": [
+    "actual_chooser",
+    "export_scene_readonly",
+    "document_identity_preserved",
+    "history_preserved",
+    "cancel_noop",
+    "atomic_xml_failure",
+    "resource_sidecars_owned",
+    "opaque_face_preserved"
+  ],
+  "expected_states": 14,
+  "expected_exports": 6
+}
