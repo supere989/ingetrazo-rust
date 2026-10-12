@@ -2,14 +2,14 @@
 use ingetrazo_formats::sheet_image::Format;
 use std::path::Path;
 #[cfg(any(target_os = "linux", target_os = "windows"))]
-struct Renderer {
+pub(crate) struct Renderer {
     exporter: Option<ingetrazo_gui::native_vulkan::sheet_image::Exporter>,
     budget: std::sync::Arc<ingetrazo_gui::native_vulkan::budget::VulkanBudget>,
     context: ingetrazo_gui::native_vulkan::VulkanContext,
 }
 #[cfg(any(target_os = "linux", target_os = "windows"))]
 impl Renderer {
-    fn new(software: bool) -> Result<Self, Box<dyn std::error::Error>> {
+    pub(crate) fn new(software: bool) -> Result<Self, Box<dyn std::error::Error>> {
         use ingetrazo_gui::native_vulkan::{
             budget::VulkanBudget, headless::DeviceRequest, sheet_image::Exporter, VulkanContext,
         };
@@ -30,13 +30,13 @@ impl Renderer {
             budget,
         })
     }
-    fn save(&mut self, plan: &ingetrazo_gui::sheet_image::Plan, path: &Path) -> Result<(), String> {
+    pub(crate) fn save(&mut self, plan: &ingetrazo_gui::sheet_image::Plan, path: &Path) -> Result<(), String> {
         self.exporter
             .as_mut()
             .unwrap()
             .save(&self.context, plan, path)
     }
-    fn cleanup(&mut self) -> Result<(), String> {
+    pub(crate) fn cleanup(&mut self) -> Result<(), String> {
         self.exporter.take();
         if self.budget.ledger.lock().unwrap().total_committed() != 0 {
             return Err("Paper GPU ledger did not drain".into());
@@ -45,18 +45,18 @@ impl Renderer {
     }
 }
 #[cfg(target_os = "macos")]
-struct Renderer(ingetrazo_gui::sheet_image::MetalExporter);
+pub(crate) struct Renderer(ingetrazo_gui::sheet_image::MetalExporter);
 #[cfg(target_os = "macos")]
 impl Renderer {
-    fn new(_: bool) -> Result<Self, Box<dyn std::error::Error>> {
+    pub(crate) fn new(_: bool) -> Result<Self, Box<dyn std::error::Error>> {
         Ok(Self(ingetrazo_gui::sheet_image::MetalExporter::new(
             std::sync::Arc::new(ingetrazo_metal::NativeMetal::new()?),
         )?))
     }
-    fn save(&mut self, plan: &ingetrazo_gui::sheet_image::Plan, path: &Path) -> Result<(), String> {
+    pub(crate) fn save(&mut self, plan: &ingetrazo_gui::sheet_image::Plan, path: &Path) -> Result<(), String> {
         self.0.save(plan, path)
     }
-    fn cleanup(&mut self) -> Result<(), String> {
+    pub(crate) fn cleanup(&mut self) -> Result<(), String> {
         Ok(())
     }
 }
