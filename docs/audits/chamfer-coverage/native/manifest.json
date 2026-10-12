@@ -1,0 +1,221 @@
+{
+  "archive": "records.zip",
+  "archive_sha256": "7227923e440a20ba34081047722db20d7da1cf30a909901739d0bd9c45641ae8",
+  "members": [
+    {
+      "path": "chamfer-build-r1/build.log",
+      "size": 27285,
+      "sha256": "9dad6eab2e6387ad8cea3fca69e4815f08005391c9f4c259b69d0153c16c6f73"
+    },
+    {
+      "path": "chamfer-build-r1/receipt.json",
+      "size": 156,
+      "sha256": "3b109cba369a6b52a49ecff6c5fc52a6d988c8e2ef20c1dead16d7cb261425c3"
+    },
+    {
+      "path": "chamfer-native-attempt-1/native.log",
+      "size": 501,
+      "sha256": "0318a0e41e413e04b57885f429717f239dbc7f3e34fc76b978fc16a1e401fbc7"
+    },
+    {
+      "path": "chamfer-native-attempt-1/receipt.json",
+      "size": 227,
+      "sha256": "61c52441d706bbb6a63a0ed0b2aa41e31447329c06bb90c8d65c379b5dc75fe8"
+    },
+    {
+      "path": "chamfer-native-r1/native-chamfer.json",
+      "size": 3432540,
+      "sha256": "38de299a24e7593e1b9c23f261741694e41acd16afe693b8a328b03e44c198a1"
+    },
+    {
+      "path": "chamfer-native-r1/ordinary-before.png",
+      "size": 32261,
+      "sha256": "f656a1a1921b9648579cfb4f35137404daef79815029d7f20aadee40c290d71d"
+    },
+    {
+      "path": "chamfer-native-r1/ordinary-before.rgba",
+      "size": 3867052,
+      "sha256": "5516145a38309a955943ff87dc95a8f32659461fe6c26bdf6c8e79986395375d"
+    },
+    {
+      "path": "chamfer-native-r1/ordinary-observed.png",
+      "size": 32261,
+      "sha256": "f656a1a1921b9648579cfb4f35137404daef79815029d7f20aadee40c290d71d"
+    },
+    {
+      "path": "chamfer-native-r1/ordinary-observed.rgba",
+      "size": 3867052,
+      "sha256": "5516145a38309a955943ff87dc95a8f32659461fe6c26bdf6c8e79986395375d"
+    },
+    {
+      "path": "chamfer-native-r1/prefix.png",
+      "size": 30978,
+      "sha256": "5fe3fe231407eae43c0879e7027e6dbc8d4f98fb170a778eeea3ccae710db98d"
+    },
+    {
+      "path": "chamfer-native-r1/prefix.rgba",
+      "size": 3867052,
+      "sha256": "8d8d0e15037859a3f1ad4cca57044963f86c91b8830818e9c740abe8e866363f"
+    }
+  ],
+  "origins": [
+    {
+      "path": "chamfer-native-r1/ordinary-before.png",
+      "origin": "/tmp/ingetrazo-chamfer-native-r1/ordinary-before.png",
+      "size": 32261,
+      "sha256": "f656a1a1921b9648579cfb4f35137404daef79815029d7f20aadee40c290d71d"
+    },
+    {
+      "path": "chamfer-native-r1/ordinary-before.rgba",
+      "origin": "/tmp/ingetrazo-chamfer-native-r1/ordinary-before.rgba",
+      "size": 3867052,
+      "sha256": "5516145a38309a955943ff87dc95a8f32659461fe6c26bdf6c8e79986395375d"
+    },
+    {
+      "path": "chamfer-native-r1/prefix.png",
+      "origin": "/tmp/ingetrazo-chamfer-native-r1/prefix.png",
+      "size": 30978,
+      "sha256": "5fe3fe231407eae43c0879e7027e6dbc8d4f98fb170a778eeea3ccae710db98d"
+    },
+    {
+      "path": "chamfer-native-r1/prefix.rgba",
+      "origin": "/tmp/ingetrazo-chamfer-native-r1/prefix.rgba",
+      "size": 3867052,
+      "sha256": "8d8d0e15037859a3f1ad4cca57044963f86c91b8830818e9c740abe8e866363f"
+    },
+    {
+      "path": "chamfer-native-r1/ordinary-observed.png",
+      "origin": "/tmp/ingetrazo-chamfer-native-r1/ordinary-observed.png",
+      "size": 32261,
+      "sha256": "f656a1a1921b9648579cfb4f35137404daef79815029d7f20aadee40c290d71d"
+    },
+    {
+      "path": "chamfer-native-r1/ordinary-observed.rgba",
+      "origin": "/tmp/ingetrazo-chamfer-native-r1/ordinary-observed.rgba",
+      "size": 3867052,
+      "sha256": "5516145a38309a955943ff87dc95a8f32659461fe6c26bdf6c8e79986395375d"
+    },
+    {
+      "path": "chamfer-native-r1/native-chamfer.json",
+      "origin": "/tmp/ingetrazo-chamfer-native-r1/native-chamfer.json",
+      "size": 3432540,
+      "sha256": "38de299a24e7593e1b9c23f261741694e41acd16afe693b8a328b03e44c198a1"
+    },
+    {
+      "path": "chamfer-native-attempt-1/native.log",
+      "origin": "/tmp/ingetrazo-chamfer-native-attempt-1/native.log",
+      "size": 501,
+      "sha256": "0318a0e41e413e04b57885f429717f239dbc7f3e34fc76b978fc16a1e401fbc7"
+    },
+    {
+      "path": "chamfer-native-attempt-1/receipt.json",
+      "origin": "/tmp/ingetrazo-chamfer-native-attempt-1/receipt.json",
+      "size": 227,
+      "sha256": "61c52441d706bbb6a63a0ed0b2aa41e31447329c06bb90c8d65c379b5dc75fe8"
+    },
+    {
+      "path": "chamfer-build-r1/build.log",
+      "origin": "/tmp/ingetrazo-chamfer-build-r1/build.log",
+      "size": 27285,
+      "sha256": "9dad6eab2e6387ad8cea3fca69e4815f08005391c9f4c259b69d0153c16c6f73"
+    },
+    {
+      "path": "chamfer-build-r1/receipt.json",
+      "origin": "/tmp/ingetrazo-chamfer-build-r1/receipt.json",
+      "size": 156,
+      "sha256": "3b109cba369a6b52a49ecff6c5fc52a6d988c8e2ef20c1dead16d7cb261425c3"
+    }
+  ],
+  "git_bindings": [
+    {
+      "path": "crates/ingetrazo-gui/examples/chamfer_coverage.rs",
+      "revision": "adfe53179e20134b5471fb8b78157f989310d2ad",
+      "sha256": "17bb87579adfe269651a6d1748796449946f857d341419b2e4014b641f76e848"
+    },
+    {
+      "path": "crates/ingetrazo-gui/examples/sheet_symbols_workflows.rs",
+      "revision": "adfe53179e20134b5471fb8b78157f989310d2ad",
+      "sha256": "15059582a4bd811abef8c5a301798625fb299fd90e165f5cf36e851862fcf885"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/sheet_image.rs",
+      "revision": "adfe53179e20134b5471fb8b78157f989310d2ad",
+      "sha256": "fb5a227e2172e86622e733e861709756cbf84beca60ce9ce16de1f231302ef76"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/sheet_image_paths.rs",
+      "revision": "adfe53179e20134b5471fb8b78157f989310d2ad",
+      "sha256": "6015e079cea8816240cc81820a2b85f3384f6d3670d2e0844076d484fa6c88c8"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/composer.rs",
+      "revision": "adfe53179e20134b5471fb8b78157f989310d2ad",
+      "sha256": "65dffb7308c156ce42d52839e0e440c200c1ec45531ae15a323d196ad63a6db0"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/native_vulkan/sheet_image.rs",
+      "revision": "adfe53179e20134b5471fb8b78157f989310d2ad",
+      "sha256": "15294c1bae2f37415ad01fbd7c9f3224a24072311ef4d2fb726499f00e71d9c5"
+    },
+    {
+      "path": "crates/ingetrazo-formats/src/sheet_image.rs",
+      "revision": "adfe53179e20134b5471fb8b78157f989310d2ad",
+      "sha256": "21f5822e815fdfec1036df0371ea88d2eca3d84d5dacda48b77b18bceeb9760c"
+    },
+    {
+      "path": "crates/ingetrazo-render/src/cad2d.rs",
+      "revision": "adfe53179e20134b5471fb8b78157f989310d2ad",
+      "sha256": "fc03edfa65da6095f2b783aa562d1f682abe05daefadf33e27f9c7be155026f7"
+    },
+    {
+      "path": "crates/ingetrazo-render/src/qt_cosmetic.rs",
+      "revision": "adfe53179e20134b5471fb8b78157f989310d2ad",
+      "sha256": "e3dc6970764d5a9a0150523cfe51dbfecb015c264f2abeda564f51feb515b700"
+    },
+    {
+      "path": "crates/ingetrazo-render/src/qt_gl_image_line.rs",
+      "revision": "adfe53179e20134b5471fb8b78157f989310d2ad",
+      "sha256": "2606ae4aaa84750e4b0e3c61c0c2a37b6e010652e87c07abca6d92d6f9273047"
+    },
+    {
+      "path": "crates/ingetrazo-render/src/qt_gray.rs",
+      "revision": "adfe53179e20134b5471fb8b78157f989310d2ad",
+      "sha256": "a3cfdf5971a10b70c3988b1d5745f4dda91ac84dbded971643d12a36431268a9"
+    },
+    {
+      "path": "crates/ingetrazo-render/src/qt_line.rs",
+      "revision": "adfe53179e20134b5471fb8b78157f989310d2ad",
+      "sha256": "dd6290ea808e0a3a58bcaab0bdf64fe0c1818a320d37dcac9ad66b45da5b004f"
+    },
+    {
+      "path": "crates/ingetrazo-render/src/qt_selected_line.rs",
+      "revision": "adfe53179e20134b5471fb8b78157f989310d2ad",
+      "sha256": "157c2bc18894cc94c0891a33156315c23ee07a50edd7d6eeb4a12f0240e42a12"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/native_vulkan/cad2d.rs",
+      "revision": "adfe53179e20134b5471fb8b78157f989310d2ad",
+      "sha256": "3d4d273af7a5d16fd0bedd526ed5b24ce7bc794504331516ad229e5580ec0d91"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/native_vulkan/shaders/cad2d.frag",
+      "revision": "adfe53179e20134b5471fb8b78157f989310d2ad",
+      "sha256": "57528d0398047f15c809cb6d6c17641bdcf46ae77542279250abae99f62e0465"
+    },
+    {
+      "path": "crates/ingetrazo-gui/src/native_vulkan/shaders/cad2d.vert",
+      "revision": "adfe53179e20134b5471fb8b78157f989310d2ad",
+      "sha256": "6cba5de6ad6a64ab41b672e0ad3794ee34b0c5465d09576fced04d1a20acf5c3"
+    }
+  ],
+  "revision": "adfe53179e20134b5471fb8b78157f989310d2ad",
+  "binary_sha256": "a4778ad272d20ff25c8a01152b2505b337eee845aa6961181065dc762d0c242a",
+  "source_archive_sha256": "377b0d6e00f4bd678b8987f67fd3706b0dc8f21f2bc37779d7ad89489748c1c7",
+  "strict_full_frame_pass": false,
+  "prefix_ordering_accepted": false,
+  "classification": "Heavy local path, pose, color, full-batch ownership and two public mask coverages match; prefix materially differs before heavy. Text clip policy is a supported hypothesis, not causal closure.",
+  "excluded_roots": [
+    "/tmp/ingetrazo-chamfer-native-r1/state"
+  ],
+  "cleanup_performed": false
+}
