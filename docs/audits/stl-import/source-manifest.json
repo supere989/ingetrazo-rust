@@ -222,6 +222,38 @@
   },
   "sources": [
     {
+      "path": "scripts/reference-stl-import.py",
+      "sha256": "b2738d950c8a2401c6d3fae700f14f2b013b439dff3ccfb6337dc0ec265a9c5e"
+    },
+    {
+      "path": "scripts/reference-nested-import.py",
+      "sha256": "1cd756cc1db3389e3922a5c34afe41af29b91061ce30bff77e945d7b346d629b"
+    }
+  ],
+  "capture_sources": [
+    {
+      "path": "scripts/reference-stl-import.py",
+      "commit": "2d9bced9f94265498fe39091a48700ff5ffc1d5f",
+      "sha256": "b2738d950c8a2401c6d3fae700f14f2b013b439dff3ccfb6337dc0ec265a9c5e",
+      "role": "actual original STL producer and generated fixture recipes"
+    },
+    {
+      "path": "scripts/reference-nested-import.py",
+      "commit": "2d9bced9f94265498fe39091a48700ff5ffc1d5f",
+      "sha256": "1cd756cc1db3389e3922a5c34afe41af29b91061ce30bff77e945d7b346d629b",
+      "role": "actual nested scene seed and canonical geometry observations"
+    }
+  ],
+  "cases": 11,
+  "states": 38,
+  "decoder_recipes": 8,
+  "saved_cases": 8,
+  "source_capture_invocations": 1,
+  "capture_seconds": 2.166604454978369,
+  "source_defects": [],
+  "scope": "Original App STL handler, controlled chooser/failure-message provider, real Qt option buttons, mesh-only threaded parse and history/save. Offscreen; no GPU/display-cache performance claim. Camera and process-specific error diagnostics are separate from exact geometry/history/preferences. Native finite encoded/triangle admission is stricter than original and not a whole-process peak bound.",
+  "original_sources": [
+    {
       "path": "formats/stl.py",
       "commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
       "sha256": "07837af511f718194f85498aa13820363617ccbf7aa8da9bdb3575a1759ddd7a"
@@ -286,27 +318,5 @@
       "commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
       "sha256": "579db3ad1b07bbe582898f90d0a9fd820874555de21339f7b7c7d274cc4b3111"
     }
-  ],
-  "capture_sources": [
-    {
-      "path": "scripts/reference-stl-import.py",
-      "commit": "2d9bced9f94265498fe39091a48700ff5ffc1d5f",
-      "sha256": "b2738d950c8a2401c6d3fae700f14f2b013b439dff3ccfb6337dc0ec265a9c5e",
-      "role": "actual original STL producer and generated fixture recipes"
-    },
-    {
-      "path": "scripts/reference-nested-import.py",
-      "commit": "2d9bced9f94265498fe39091a48700ff5ffc1d5f",
-      "sha256": "1cd756cc1db3389e3922a5c34afe41af29b91061ce30bff77e945d7b346d629b",
-      "role": "actual nested scene seed and canonical geometry observations"
-    }
-  ],
-  "cases": 11,
-  "states": 38,
-  "decoder_recipes": 8,
-  "saved_cases": 8,
-  "source_capture_invocations": 1,
-  "capture_seconds": 2.166604454978369,
-  "source_defects": [],
-  "scope": "Original App STL handler, controlled chooser/failure-message provider, real Qt option buttons, mesh-only threaded parse and history/save. Offscreen; no GPU/display-cache performance claim. Camera and process-specific error diagnostics are separate from exact geometry/history/preferences. Native finite encoded/triangle admission is stricter than original and not a whole-process peak bound."
+  ]
 }
