@@ -1,0 +1,25 @@
+{
+  "case": "llamadas-default",
+  "producer": {
+    "path": "scripts/reference-callout-outline.py",
+    "sha256": "9eb4f1eaad06ffea23ec3c23b9a70919026cf1f5e430d4d3fa89ba8851ea52ea",
+    "argv": [
+      "EXISTING_SOURCE_DIAGNOSTIC",
+      "OUTPUT"
+    ]
+  },
+  "scope": "No original corpus recapture. Alternative public Qt stroker witness requires whole mask equivalence to alreadycaptured actual drawRoundedRect. Failure remains non-equivalent diagnostic; no substitution/parity claim. Root sole executor.",
+  "source_pipeline": [
+    "QPaintEngineEx::drawRoundedRect local17-point program",
+    "QSubpathFlatIterator/QBezier::addToPolygon threshold.5/density anddepth9",
+    "ActualQPainterPathStroker receives same local linepath/penpattern/cap/join",
+    "ActualQPainter drawPath fills returned boundary under captured originalmatrix/hints"
+  ],
+  "native_observation": "Existing diagnostic-only trace retains actual immutable local outlines passed into gray rasterizer; ordinary tracing disabled path unchanged.",
+  "controls": [
+    "Auth frozen actualsource maskSHA",
+    "Exact fullRGBA equality determines whether alternate outline is usable",
+    "Original Qtpin/version required",
+    "No numeric/pixel constants fitted to residual"
+  ]
+}

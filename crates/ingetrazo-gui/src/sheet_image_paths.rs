@@ -463,7 +463,10 @@ fn records_with_primitive(draws:&[Draw],density:f64,device:[u32;2],line_hint:boo
             outlines.retain(|path|match outline_visible(path,density,origin,bounds,device){Ok(visible)=>visible,Err(e)=>{refusal=Some(e);false}});
             if let Some(error)=refusal{return Err(error);}
             let spans=ingetrazo_render::qt_gray::rasterize_transformed_paths(&outlines,density,origin,250_000,100_000)?;
-            let observation=start_observation(draw,&spans,density,origin,bounds,&masks);
+            let mut observation=start_observation(draw,&spans,density,origin,bounds,&masks);
+            if let Some(row)=observation.as_mut(){
+                row["actual_local_outlines"]=serde_json::json!(outlines.iter().map(|p|serde_json::json!({"start":p.start,"segments":p.segments.iter().map(|s|match s{Segment::Line(p)=>serde_json::json!(["line",p]),Segment::Cubic{control1,control2,to}=>serde_json::json!(["cubic",control1,control2,to])}).collect::<Vec<_>>()})).collect::<Vec<_>>());
+            }
             let spans=mask_clip(clip(spans,bounds),&masks)?;
             if !spans.is_empty() {
                 // Diagnostic snapshots observe these exact published runs;
