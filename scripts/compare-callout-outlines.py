@@ -29,10 +29,14 @@ def edges(contours):
    else:counter[(a,b)]+=1
  return counter,zeros
 sa,sz=edges(original);na,nz=edges(actual)
+def raw_point(point):
+ assert all(type(v)in(int,float)and math.isfinite(v)for v in point)
+ return tuple((type(v).__name__,float(v).hex())for v in point)
+raw_original=[[raw_point(p)for p in c]for c in original];raw_actual=[[raw_point(p)for p in c]for c in actual]
 rows=[]
 for i,(a,b)in enumerate(zip(original,actual)):
- mismatch=[{'index':j,'source':x,'native':y,'source_fixed':fixed(x),'native_fixed':fixed(y)}for j,(x,y)in enumerate(zip(a,b))if x!=y]
- if a!=b:rows.append({'contour':i,'source_points':len(a),'native_points':len(b),'raw_different':len(mismatch),'fixed_different':sum(fixed(x)!=fixed(y)for x,y in zip(a,b)),'examples':mismatch[:8]})
+ mismatch=[{'index':j,'source':x,'native':y,'source_fixed':fixed(x),'native_fixed':fixed(y)}for j,(x,y)in enumerate(zip(a,b))if raw_point(x)!=raw_point(y)]
+ if [raw_point(p)for p in a]!=[raw_point(p)for p in b]:rows.append({'contour':i,'source_points':len(a),'native_points':len(b),'raw_different':len(mismatch),'fixed_different':sum(fixed(x)!=fixed(y)for x,y in zip(a,b)),'examples':mismatch[:8]})
 def missing(counter):return[{'edge':edge,'count':count}for edge,count in list(counter.items())[:24]]
-result={'case':'llamadas-default','source_contours':len(original),'native_contours':len(actual),'raw_boundary_equal':original==actual,'directed_26_6_edges_equal':sa==na,'source_zero_fixed_edges':sz,'native_zero_fixed_edges':nz,'source_only_edge_count':sum((sa-na).values()),'native_only_edge_count':sum((na-sa).values()),'source_only_examples':missing(sa-na),'native_only_examples':missing(na-sa),'changed_contours':rows,'scope':'Exact raw local boundary and actual-affine26.6 directed edges. Zeroedges reported separately, no geometry/winding normalization, pixel fitting or tolerance. Full mask equality is required before using alternate Qt witness.'}
+result={'case':'llamadas-default','source_contours':len(original),'native_contours':len(actual),'raw_boundary_equal':raw_original==raw_actual,'directed_26_6_edges_equal':sa==na,'source_zero_fixed_edges':sz,'native_zero_fixed_edges':nz,'source_only_edge_count':sum((sa-na).values()),'native_only_edge_count':sum((na-sa).values()),'source_only_examples':missing(sa-na),'native_only_examples':missing(na-sa),'changed_contours':rows,'scope':'Exact raw local boundary and actual-affine26.6 directed edges. Zeroedges reported separately, no geometry/winding normalization, pixel fitting or tolerance. Full mask equality is required before using alternate Qt witness.'}
 out.parent.mkdir(parents=True,exist_ok=True);out.write_text(json.dumps(result,indent=2)+'\n');print(json.dumps({k:v for k,v in result.items()if not k.endswith('examples')and k!='changed_contours'}))
