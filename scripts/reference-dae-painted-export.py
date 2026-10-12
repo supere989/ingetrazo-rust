@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Actual unchanged MainWindow DAE export; finite declared fixture publication."""
-import os,sys,json,hashlib,subprocess,traceback,shutil,time
+import os,sys,json,hashlib,subprocess,traceback,shutil,time,copy
 from pathlib import Path
 PIN='6be29fe437a7cd992d4e079f71720821b25216b9'
 repo=Path(__file__).resolve().parents[1];root=Path(sys.argv[1]).resolve();root.mkdir(parents=True,exist_ok=True)
@@ -21,6 +21,7 @@ from core.mesh import Mesh
 from core.group import Group
 from core.materials import Material
 from core.layers import Layer
+from core.history import SetFaceColorCommand
 from formats import igz
 from georef.datum import SceneDatum
 import exchange_import_observations as observe
@@ -53,7 +54,7 @@ def texture(t):
  t['resource']={'encoded_sha256':hashlib.sha256(path.read_bytes()).hexdigest()} if path.is_file() else {'encoded_sha256':None,'missing':True}
  return t
 observe.texture=texture
-cases=[];states=[];errors=[];dialogs=[];time_bounds=[];exports=root/'exports';exports.mkdir();active={'case':None,'phase':'initial'}
+cases=[];states=[];errors=[];dialogs=[];time_bounds=[];keepalive=[];exports=root/'exports';exports.mkdir();active={'case':None,'phase':'initial'}
 def error(typ,e,tb):
  row={**active,'type':typ.__name__,'message':str(e),'traceback':''.join(traceback.format_exception(typ,e,tb))};errors.append(row);print(row['traceback'],file=sys.stderr)
 sys.excepthook=error
@@ -71,9 +72,14 @@ try:
  for name,s in recipes:
   active.update(case=name,phase='input');inputfile=name+'-input.igz';igz.save_scene(s,root/inputfile)
   host=MainWindow();igz.load_into(host.viewport.scene,root/inputfile);host._current_path=root/'fixture-project.igz';host._saved_version=host.viewport.scene.version-1
-  case={'name':name,'input':inputfile,'phases':[],'exports':[],'saved':name+'-saved.igz','initial_file':'fixture-project.igz','initial_dirty':True};cases.append(case)
+  edit_path=[0] if name=='nested-shared-reflected' else []
+  if edit_path:host.viewport.begin_group_edit(host.viewport.scene.groups[0]);assert len(host.viewport.scene._edit_stack)>0
+  history_seed=name=='colors-default-hole'
+  if history_seed:
+   f=host.viewport.scene.mesh.faces[0];host.viewport.history.execute(SetFaceColorCommand([f],(.15,.25,.35)));host.viewport.history.execute(SetFaceColorCommand([f],(.45,.55,.65)));host.viewport.history.undo();assert len(host.viewport.history.undo_stack)==len(host.viewport.history.redo_stack)==1
+  case={'name':name,'input':inputfile,'phases':[],'exports':[],'saved':name+'-saved.igz','initial_file':'fixture-project.igz','initial_dirty':True,'edit_path':edit_path,'history_seed':history_seed};cases.append(case)
   def phase(label,chosen=None):
-   active['phase']=label;before=observe.scene_state(host.viewport.scene);epoch=host.viewport.scene.version;history=(len(host.viewport.history.undo_stack),len(host.viewport.history.redo_stack));current=host._current_path;dirty=host._is_dirty();cam=dict(vars(host.viewport.camera));cam['target']=list(host.viewport.camera.target.toTuple());cam['up']=list(host.viewport.camera.up.toTuple());n=len(dialogs)
+   active['phase']=label;before=copy.deepcopy(observe.scene_state(host.viewport.scene));epoch=host.viewport.scene.version;history=(len(host.viewport.history.undo_stack),len(host.viewport.history.redo_stack));current=host._current_path;dirty=host._is_dirty();cam=dict(vars(host.viewport.camera));cam['target']=list(host.viewport.camera.target.toTuple());cam['up']=list(host.viewport.camera.up.toTuple());n=len(dialogs)
    if label=='before':outcome='ok'
    else:
     main.file_dialogs.getSaveFileName=lambda *args:(str(chosen) if chosen else '', '')
@@ -88,7 +94,7 @@ try:
   elif name=='missing-resource-write-error':
    phase('missing',exports/(name+'-export.dae'));p=exports/(name+'-blocked.dae');p.mkdir();phase('write-error',p);assert states[-1]['outcome']=='failed'
   else:phase('export',exports/(name+'-export.dae'))
-  igz.save_scene(host.viewport.scene,root/case['saved']);active['phase']='teardown';host.hide();host.deleteLater();app.processEvents()
+  igz.save_scene(host.viewport.scene,root/case['saved']);active['phase']='teardown';host.hide();keepalive.append(host)
  assert not errors
  report=flush();(root/'original-dae-export.json').write_text(json.dumps(report,indent=2)+'\n');print(json.dumps({'cases':len(cases),'states':len(states),'exports':sum(len(c['exports'])for c in cases)}))
 finally:main.file_dialogs.getSaveFileName=old_picker;QMessageBox.critical=old_critical

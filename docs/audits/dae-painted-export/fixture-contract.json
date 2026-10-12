@@ -133,5 +133,10 @@
     "opaque_face_preserved"
   ],
   "expected_states": 14,
-  "expected_exports": 6
+  "expected_exports": 6,
+  "fixture_controls": {
+    "nested-shared-reflected": "Actual viewport.begin_group_edit on first root before observations, depth>0; export preserves stack",
+    "colors-default-hole": "Two actual SetFaceColorCommands then Undo: priorUndo1+Redo1; exporter must preserve both",
+    "teardown": "Hidden MainWindows retained alive until producer completion; no deleteLater timer lifetime mutation"
+  }
 }
