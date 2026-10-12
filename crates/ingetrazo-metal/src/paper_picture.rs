@@ -103,16 +103,14 @@ impl Painter {
                 Pipeline::Compute(p)
             } else {
                 let descriptor = MTLRenderPipelineDescriptor::new();
-                descriptor.setVertexFunction(Some(
-                    &library
-                        .newFunctionWithName(&NSString::from_str("pp_vertex"))
-                        .ok_or("Paper picture vertex missing")?,
-                ));
-                descriptor.setFragmentFunction(Some(
-                    &library
-                        .newFunctionWithName(&NSString::from_str("pp_fragment"))
-                        .ok_or("Paper picture fragment missing")?,
-                ));
+                let vertex = library
+                    .newFunctionWithName(&NSString::from_str("pp_vertex"))
+                    .ok_or("Paper picture vertex missing")?;
+                let fragment = library
+                    .newFunctionWithName(&NSString::from_str("pp_fragment"))
+                    .ok_or("Paper picture fragment missing")?;
+                descriptor.setVertexFunction(Some(&vertex));
+                descriptor.setFragmentFunction(Some(&fragment));
                 let color = unsafe { descriptor.colorAttachments().objectAtIndexedSubscript(0) };
                 color.setPixelFormat(MTLPixelFormat::BGRA8Unorm);
                 color.setBlendingEnabled(false);
@@ -223,8 +221,10 @@ impl Prepared {
                 std::mem::size_of_val(&push),
                 2,
             );
+            // The shader generates one full-screen triangle from vertex_id;
+            // both fragment buffers and the push constants are bound above.
+            encoder.drawPrimitives_vertexStart_vertexCount(MTLPrimitiveType::Triangle, 0, 3);
         }
-        encoder.drawPrimitives_vertexStart_vertexCount(MTLPrimitiveType::Triangle, 0, 3);
         Ok(())
     }
     pub fn encode_compute(
