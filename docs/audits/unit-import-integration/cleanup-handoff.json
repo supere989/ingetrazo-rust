@@ -1,0 +1,374 @@
+{
+  "action": "Review-only cleanup handoff; no deletion performed",
+  "canonical_authentication": [
+    {
+      "path": "docs/audits/unit-import/source-manifest.json",
+      "sha256": "5eb3f6973b9ab1e0bb12699799630362a3dee0a816e87a3a6ba29e6f548aba92",
+      "archive": "docs/audits/unit-import/source-records.zip",
+      "archive_sha256": "abd934d0ed81afed0917ad3baf5b7e6f9f761d1fea57bdd2080e0142d74ec92e",
+      "members": 41
+    },
+    {
+      "path": "docs/audits/unit-import-integration/manifest.json",
+      "sha256": "349c42bd34eff4b1b2883882d96c74cb5db62c94aba0f8afc084d8d5596a81dd",
+      "archive": "docs/audits/unit-import-integration/records.zip",
+      "archive_sha256": "b76c88dca41805e6f6cc642f4f2f8844a9c9ceaee3db602ee2e330dd488f44c2",
+      "members": 45
+    }
+  ],
+  "directory_roots": [
+    {
+      "root": "/tmp/ingetrazo-unit-source-r1/cache",
+      "files": [
+        {
+          "path": "/tmp/ingetrazo-unit-source-r1/cache/ezdxf/font_manager_cache.json",
+          "size": 8570,
+          "sha256": "213edeb18b42ad38059269d5044850085831a07efe2966bbb030e4c32a8189fb",
+          "classification": "Generated temporary settings/cache or fixture picker; excluded from canonical source/native packet"
+        }
+      ],
+      "file_count": 1,
+      "logical_bytes": 8570
+    },
+    {
+      "root": "/tmp/ingetrazo-unit-source-r1/data",
+      "files": [],
+      "file_count": 0,
+      "logical_bytes": 0
+    },
+    {
+      "root": "/tmp/ingetrazo-unit-source-r1/settings",
+      "files": [
+        {
+          "path": "/tmp/ingetrazo-unit-source-r1/settings/UnitImportProof/UnitImportProof.ini",
+          "size": 58,
+          "sha256": "cc068d7c8c98142e6133c04284a7a3e629b206b76011b2cad7f6a0f07e3cc231",
+          "classification": "Generated temporary settings/cache or fixture picker; excluded from canonical source/native packet"
+        }
+      ],
+      "file_count": 1,
+      "logical_bytes": 58
+    },
+    {
+      "root": "/tmp/ingetrazo-unit-native-r1/native/picker",
+      "files": [
+        {
+          "path": "/tmp/ingetrazo-unit-native-r1/native/picker/kdialog",
+          "size": 83110624,
+          "sha256": "388ff1b7da3f6ac9c90d19d2443e7b32e9ccbf6f2777cf85ba77ce0978ff1197",
+          "classification": "Generated temporary settings/cache or fixture picker; excluded from canonical source/native packet"
+        }
+      ],
+      "file_count": 1,
+      "logical_bytes": 83110624
+    },
+    {
+      "root": "/tmp/ingetrazo-unit-native-r1/native/shared-config",
+      "files": [
+        {
+          "path": "/tmp/ingetrazo-unit-native-r1/native/shared-config/settings.json",
+          "size": 1118,
+          "sha256": "295ffe13a95565b5346b7785c530445b6eb4c4cc3e5d901655d3fe9f7446574a",
+          "classification": "Generated temporary settings/cache or fixture picker; excluded from canonical source/native packet"
+        }
+      ],
+      "file_count": 1,
+      "logical_bytes": 1118
+    },
+    {
+      "root": "/tmp/ingetrazo-unit-native-r2/native/picker",
+      "files": [
+        {
+          "path": "/tmp/ingetrazo-unit-native-r2/native/picker/kdialog",
+          "size": 64681136,
+          "sha256": "42c2a28ceb472f0c6458e937486abb712ee26d905743d50d487ce9a2cfdfd865",
+          "classification": "Generated temporary settings/cache or fixture picker; excluded from canonical source/native packet"
+        }
+      ],
+      "file_count": 1,
+      "logical_bytes": 64681136
+    },
+    {
+      "root": "/tmp/ingetrazo-unit-native-r2/native/shared-config",
+      "files": [
+        {
+          "path": "/tmp/ingetrazo-unit-native-r2/native/shared-config/settings.json",
+          "size": 1118,
+          "sha256": "311ac8fb18fb565d3d0a8d74a02f18323149d03fb855f6ee31cae143168a92d4",
+          "classification": "Generated temporary settings/cache or fixture picker; excluded from canonical source/native packet"
+        }
+      ],
+      "file_count": 1,
+      "logical_bytes": 1118
+    },
+    {
+      "root": "/tmp/ingetrazo-unit-wrapper-preflight/source",
+      "files": [
+        {
+          "path": "/tmp/ingetrazo-unit-wrapper-preflight/source/assets/3dface.dxf",
+          "size": 16119,
+          "sha256": "2e58fe4518fa9d36c4e4434e7bb709181e0a8c3c6eb73e77f45a934e58c078a8",
+          "canonical_member": "assets/3dface.dxf"
+        },
+        {
+          "path": "/tmp/ingetrazo-unit-wrapper-preflight/source/assets/color-root.mtl",
+          "size": 63,
+          "sha256": "11b7dca958ddd3efdc424daa9274dacbd088d9410f491e52ab706b6a9ffe3d5a",
+          "canonical_member": "assets/color-root.mtl"
+        },
+        {
+          "path": "/tmp/ingetrazo-unit-wrapper-preflight/source/assets/color-root.obj",
+          "size": 103,
+          "sha256": "4c0df439e5210b55e4520c840e0891ffdd00d25e2aa6ff528996c3d421b4587f",
+          "canonical_member": "assets/color-root.obj"
+        },
+        {
+          "path": "/tmp/ingetrazo-unit-wrapper-preflight/source/assets/face-block.dxf",
+          "size": 16539,
+          "sha256": "c23bcb350074f729fe08a867ef4d67e22c00de5e081f3bf844b5878cdee83a4f",
+          "canonical_member": "assets/face-block.dxf"
+        },
+        {
+          "path": "/tmp/ingetrazo-unit-wrapper-preflight/source/assets/invalid.dxf",
+          "size": 18,
+          "sha256": "991b4ffa7a46e4a62684157b6dbbf4e9865780d09eb2c5c5cd40bb93e343a16d",
+          "canonical_member": "assets/invalid.dxf"
+        },
+        {
+          "path": "/tmp/ingetrazo-unit-wrapper-preflight/source/assets/invalid.obj",
+          "size": 35,
+          "sha256": "62a8236975b4369596b6f805fd349ed19ff5906eb65bfc6ada65fffd4a1f0d03",
+          "canonical_member": "assets/invalid.obj"
+        },
+        {
+          "path": "/tmp/ingetrazo-unit-wrapper-preflight/source/assets/paint with spaces.png",
+          "size": 98,
+          "sha256": "4a5b34eb9bdb4c647e7609a80b1dfc1ac9ea7136ad181b799d50215efed071ca",
+          "canonical_member": "assets/paint with spaces.png"
+        },
+        {
+          "path": "/tmp/ingetrazo-unit-wrapper-preflight/source/assets/shared-leaf.dxf",
+          "size": 16581,
+          "sha256": "04a21d667312faabfec476b4442af501f476538d20c3b7adeb4bd688df8c62fb",
+          "canonical_member": "assets/shared-leaf.dxf"
+        },
+        {
+          "path": "/tmp/ingetrazo-unit-wrapper-preflight/source/assets/solid.dxf",
+          "size": 16119,
+          "sha256": "c2b442c77daa28ff06b8e9d6fac6a336e0d8cf8c523ffaf03c5f2956e8c6f98a",
+          "canonical_member": "assets/solid.dxf"
+        },
+        {
+          "path": "/tmp/ingetrazo-unit-wrapper-preflight/source/assets/trace.dxf",
+          "size": 16119,
+          "sha256": "70e9edf60c37908b08fb2419cbad3112efc31d59c104c5890d67591ba8670a29",
+          "canonical_member": "assets/trace.dxf"
+        },
+        {
+          "path": "/tmp/ingetrazo-unit-wrapper-preflight/source/assets/windows-options-leaf.mtl",
+          "size": 87,
+          "sha256": "681d77f91a626c317276f192848b9d2cc89c52a970c91012bea1a90b40ec632f",
+          "canonical_member": "assets/windows-options-leaf.mtl"
+        },
+        {
+          "path": "/tmp/ingetrazo-unit-wrapper-preflight/source/assets/windows-options-leaf.obj",
+          "size": 121,
+          "sha256": "ae7844dee560e19feb3b95e376586b8abfc862d4a87f5ed58e59fc15c64041c9",
+          "canonical_member": "assets/windows-options-leaf.obj"
+        },
+        {
+          "path": "/tmp/ingetrazo-unit-wrapper-preflight/source/capture/capture.log",
+          "size": 5321,
+          "sha256": "ebc98d4dd019bb45e344e3581db35c73804fa6a817976e8b749b48013382189a",
+          "canonical_member": "capture/capture.log"
+        },
+        {
+          "path": "/tmp/ingetrazo-unit-wrapper-preflight/source/capture/receipt.json",
+          "size": 295,
+          "sha256": "eda3e5e7e1c74123235596ae3ff334d18e39d3aad0a0214b9177d0982da4cc27",
+          "canonical_member": "capture/receipt.json"
+        },
+        {
+          "path": "/tmp/ingetrazo-unit-wrapper-preflight/source/capture-tools/docs/audits/unit-import/fixture-contract.json",
+          "size": 3570,
+          "sha256": "800067a6da0e775f455882cf37536bcbea50aa65a06c5d3c71daf442a9c697aa",
+          "canonical_member": "capture-tools/docs/audits/unit-import/fixture-contract.json"
+        },
+        {
+          "path": "/tmp/ingetrazo-unit-wrapper-preflight/source/capture-tools/scripts/exchange_import_observations.py",
+          "size": 1637,
+          "sha256": "48c12bffd82e9c431ce8784174112a78c7ab09de529fabc1e5f0f8445bf94142",
+          "canonical_member": "capture-tools/scripts/exchange_import_observations.py"
+        },
+        {
+          "path": "/tmp/ingetrazo-unit-wrapper-preflight/source/capture-tools/scripts/reference-nested-import.py",
+          "size": 4180,
+          "sha256": "1cd756cc1db3389e3922a5c34afe41af29b91061ce30bff77e945d7b346d629b",
+          "canonical_member": "capture-tools/scripts/reference-nested-import.py"
+        },
+        {
+          "path": "/tmp/ingetrazo-unit-wrapper-preflight/source/capture-tools/scripts/reference-unit-import.py",
+          "size": 8811,
+          "sha256": "0225e46d25693af018ee947837a509db6f23b64b4701bdf3b373dadd460ad66f",
+          "canonical_member": "capture-tools/scripts/reference-unit-import.py"
+        },
+        {
+          "path": "/tmp/ingetrazo-unit-wrapper-preflight/source/completed-cases.json",
+          "size": 591251,
+          "sha256": "2b5cf612b5659993827f5193cc2fef21ad1e8fd8d954bb38f75bdc4176ed76fa",
+          "canonical_member": "completed-cases.json"
+        },
+        {
+          "path": "/tmp/ingetrazo-unit-wrapper-preflight/source/dxf-3dface-input.igz",
+          "size": 3552,
+          "sha256": "761e1211e8935f86a05c0169f8fe8f6fb79e3883800c9e192de3f20c79a4fe4a",
+          "canonical_member": "dxf-3dface-input.igz"
+        },
+        {
+          "path": "/tmp/ingetrazo-unit-wrapper-preflight/source/dxf-3dface-saved.igz",
+          "size": 5217,
+          "sha256": "ad2121c8c4050dac46a5ab2cf54f808ab3a6f6782ff5d7b9d49dcddd968216d4",
+          "canonical_member": "dxf-3dface-saved.igz"
+        },
+        {
+          "path": "/tmp/ingetrazo-unit-wrapper-preflight/source/dxf-block-leaf-input.igz",
+          "size": 3552,
+          "sha256": "5e1cfdf77f321a3e8c9f6dc77833006b6312bca6cca76d78572ba72c5b1439b5",
+          "canonical_member": "dxf-block-leaf-input.igz"
+        },
+        {
+          "path": "/tmp/ingetrazo-unit-wrapper-preflight/source/dxf-block-leaf-saved.igz",
+          "size": 5369,
+          "sha256": "2e95eda8dc6a68a92bceff69cae20c2e2b460b42a9a9c4e4cecabab4c77e4b90",
+          "canonical_member": "dxf-block-leaf-saved.igz"
+        },
+        {
+          "path": "/tmp/ingetrazo-unit-wrapper-preflight/source/dxf-chooser-cancel-input.igz",
+          "size": 3552,
+          "sha256": "cb086bb2e39b327bb1f830be32c6f8321aa101a0b5d3e46c8abe47aeea048b7d",
+          "canonical_member": "dxf-chooser-cancel-input.igz"
+        },
+        {
+          "path": "/tmp/ingetrazo-unit-wrapper-preflight/source/dxf-face-block-input.igz",
+          "size": 3552,
+          "sha256": "cc19dd8ca11beaff521a86674aefa5e1797d418f2a9d189dfc58988e5fcbf7b3",
+          "canonical_member": "dxf-face-block-input.igz"
+        },
+        {
+          "path": "/tmp/ingetrazo-unit-wrapper-preflight/source/dxf-face-block-saved.igz",
+          "size": 5487,
+          "sha256": "6e0c8219b822eca0e4146569beb3204a20ae1a0545ed5bebfd0176b58adb5109",
+          "canonical_member": "dxf-face-block-saved.igz"
+        },
+        {
+          "path": "/tmp/ingetrazo-unit-wrapper-preflight/source/dxf-invalid-input.igz",
+          "size": 3552,
+          "sha256": "33add545925f53ceb4e92f177fe44c14e686dc924274d0d91ab16bd6c11191a3",
+          "canonical_member": "dxf-invalid-input.igz"
+        },
+        {
+          "path": "/tmp/ingetrazo-unit-wrapper-preflight/source/dxf-solid-input.igz",
+          "size": 3552,
+          "sha256": "411ac329bbac0d6a1e2ee5311f4a0539b5e90c4d88bd6cec2c084aaa3f4bab46",
+          "canonical_member": "dxf-solid-input.igz"
+        },
+        {
+          "path": "/tmp/ingetrazo-unit-wrapper-preflight/source/dxf-solid-saved.igz",
+          "size": 5217,
+          "sha256": "7c907248af4ec552672805fcf33fafd71c8b26f48f8e7561bc15d48012d9c928",
+          "canonical_member": "dxf-solid-saved.igz"
+        },
+        {
+          "path": "/tmp/ingetrazo-unit-wrapper-preflight/source/dxf-trace-input.igz",
+          "size": 3552,
+          "sha256": "71693b1e10aaa8d972766e14db2d37335a440da0e584c8e1dc320fac4f17efd7",
+          "canonical_member": "dxf-trace-input.igz"
+        },
+        {
+          "path": "/tmp/ingetrazo-unit-wrapper-preflight/source/dxf-trace-saved.igz",
+          "size": 5217,
+          "sha256": "33b296bc1c14ceb66b113d28ad6d647dda6fcffcf5f1cd92dfdf8e738e94be72",
+          "canonical_member": "dxf-trace-saved.igz"
+        },
+        {
+          "path": "/tmp/ingetrazo-unit-wrapper-preflight/source/dxf-unit-cancel-input.igz",
+          "size": 3552,
+          "sha256": "9b64e45f6cbe079f31d9e44399d11860ed698edbaa75f8f387823cc7d2c6719e",
+          "canonical_member": "dxf-unit-cancel-input.igz"
+        },
+        {
+          "path": "/tmp/ingetrazo-unit-wrapper-preflight/source/obj-chooser-cancel-input.igz",
+          "size": 3552,
+          "sha256": "06000237c974109d3ad68c6a7fae176d49069df47e3ab4b404a9b81e8665fd42",
+          "canonical_member": "obj-chooser-cancel-input.igz"
+        },
+        {
+          "path": "/tmp/ingetrazo-unit-wrapper-preflight/source/obj-invalid-input.igz",
+          "size": 3552,
+          "sha256": "5800b90e436426fc2330553e090e7fd51aa98b31623db31bdd5c8007b4d3f7df",
+          "canonical_member": "obj-invalid-input.igz"
+        },
+        {
+          "path": "/tmp/ingetrazo-unit-wrapper-preflight/source/obj-root-input.igz",
+          "size": 3552,
+          "sha256": "80bca9194a43f714c3303c50fa70a12bc1e2e12c901a398755816b5e39178f58",
+          "canonical_member": "obj-root-input.igz"
+        },
+        {
+          "path": "/tmp/ingetrazo-unit-wrapper-preflight/source/obj-root-saved.igz",
+          "size": 4624,
+          "sha256": "d2da5440512ac42fc79d332f9a80bae7d3d7d573adde4cbce93e288be9dfa941",
+          "canonical_member": "obj-root-saved.igz"
+        },
+        {
+          "path": "/tmp/ingetrazo-unit-wrapper-preflight/source/obj-texture-leaf-input.igz",
+          "size": 3552,
+          "sha256": "989e1e8cd9485f6264f7e59aa57d0ada2b7e6cc5b9b11f2cf824905bb9475e4b",
+          "canonical_member": "obj-texture-leaf-input.igz"
+        },
+        {
+          "path": "/tmp/ingetrazo-unit-wrapper-preflight/source/obj-texture-leaf-saved.igz",
+          "size": 1206,
+          "sha256": "2a821caf1183f0f91cac6d7dd226710fd3b5366603ce292f9287b3af86956985",
+          "canonical_member": "obj-texture-leaf-saved.igz"
+        },
+        {
+          "path": "/tmp/ingetrazo-unit-wrapper-preflight/source/obj-unit-cancel-input.igz",
+          "size": 3552,
+          "sha256": "f3c9f75b5363d6a90ba29f6c635499f5d07b4cdceda65d2cd536d29ac3b38d22",
+          "canonical_member": "obj-unit-cancel-input.igz"
+        },
+        {
+          "path": "/tmp/ingetrazo-unit-wrapper-preflight/source/original-unit-import.json",
+          "size": 594144,
+          "sha256": "1695c6e113c3ddf8a45764786d0bac50ea8bbf4c2e2cbd1b9e28b31cbcfd7853",
+          "canonical_member": "original-unit-import.json"
+        },
+        {
+          "path": "/tmp/ingetrazo-unit-wrapper-preflight/source/original-unit-import.partial.json",
+          "size": 590723,
+          "sha256": "3292f88579752b6ece98ab9e43c3d7b80e8d38b31b82892e92b78ecd06093d25",
+          "canonical_member": "original-unit-import.partial.json"
+        }
+      ],
+      "file_count": 41,
+      "logical_bytes": 1960447
+    }
+  ],
+  "directories": 8,
+  "files": 47,
+  "logical_bytes": 149763071,
+  "removed": 0,
+  "unknown_paths_admitted": 0,
+  "protected": [
+    "/tmp/ingetrazo-unit-source-r1/assets",
+    "/tmp/ingetrazo-unit-source-r1/*.igz",
+    "/tmp/ingetrazo-unit-native-r1/native/*.igz",
+    "/tmp/ingetrazo-unit-native-r2/native/*.igz",
+    "all raw JSON reports, diagnostics, receipts and logs",
+    "all Git worktrees",
+    "/work/ingetrazo",
+    "/tmp/ingetrazo-native-font-merge-target",
+    "canonical audit archives"
+  ]
+}
