@@ -84,7 +84,6 @@ impl IngeTrazoApp {
     pub(super) fn revalidate_legend_selection(&mut self) {
         if self.composer_legend_selection().is_none() {
             self.composer_state.legend_authoring.selected = None;
-            self.composer_state.annotation_authoring.selected = None;
         }
     }
     pub fn composer_legend_selection(&self) -> Option<(uuid::Uuid, usize)> {
