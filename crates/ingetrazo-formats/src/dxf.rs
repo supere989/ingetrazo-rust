@@ -145,6 +145,26 @@ impl DxfPlan {
         }
         Ok(())
     }
+    fn build_source_mesh(entities: &[DxfEntity]) -> Result<ingetrazo_core::mesh::Mesh, DxfError> {
+        let mut mesh = ingetrazo_core::mesh::Mesh::new();
+        let mut next_curve = Some(0);
+        // Original _build_mesh publishes linework first, then face loops.
+        // Invalid faces are skipped individually; stitch is a nicety and
+        // does not abort already-admitted source geometry.
+        for entity in entities.iter().filter(|e| !e.face) {
+            Self::emit_entity(entity, &mut mesh, &mut next_curve, true)?;
+        }
+        let mut seed = Vec::new();
+        for entity in entities.iter().filter(|e| e.face) {
+            if Self::emit_entity(entity, &mut mesh, &mut next_curve, true).is_ok() {
+                seed.extend_from_slice(&entity.points);
+            }
+        }
+        if !mesh.faces.is_empty() {
+            let _ = crate::obj::stitch_dxf_import(&mut mesh, 0, &seed);
+        }
+        Ok(mesh)
+    }
     fn emit_legacy(self, scene: &mut Scene) -> Result<(), DxfError> {
         let mut curves = std::collections::BTreeMap::<String, Option<usize>>::new();
         for entity in &self.entities {
@@ -198,10 +218,7 @@ impl DxfPlan {
                         .push(ingetrazo_core::layers::Layer::new(&layer));
                 }
             }
-            let mut next_curve = Some(0);
-            for entity in &entities {
-                Self::emit_entity(entity, &mut group.mesh, &mut next_curve, true)?;
-            }
+            group.mesh = Self::build_source_mesh(&entities)?;
             crate::obj::source_group_kind(&mut group, false);
             scene.groups.push(group);
         }
@@ -631,6 +648,25 @@ fn legacy_polyline(
 
 #[cfg(test)]
 mod tests {
+    #[test]
+    fn source_face_stitch_keeps_general_loader_policy() {
+        let mut text=String::from("0\nSECTION\n2\nENTITIES\n");
+        for triangle in [ [[0.,0.],[2.,0.],[2.,2.]], [[0.,0.],[2.,2.],[0.,2.]] ] {
+            text.push_str("0\n3DFACE\n8\nFaces\n");
+            for (i,p) in triangle.iter().chain(triangle.last()).enumerate() {
+                text.push_str(&format!("{}\n{}\n{}\n{}\n{}\n0\n",10+i,p[0],20+i,p[1],30+i));
+            }
+        }
+        text.push_str("0\nENDSEC\n0\nEOF\n");
+        let mut general=Scene::new();
+        import_dxf(&mut std::io::Cursor::new(text.as_bytes()),&mut general).unwrap();
+        assert_eq!(general.groups[0].mesh.faces.len(),2);
+        let mut source=Scene::new();
+        parse_dxf_with_units(&mut std::io::Cursor::new(text.as_bytes()),1.).unwrap().emit_source(&mut source,"faces").unwrap();
+        assert_eq!(source.groups[0].mesh.faces.len(),1);
+        assert_eq!(source.groups[0].mesh.faces[0].vertices.len(),4);
+    }
+
     #[test]
     fn oversized_spline_degree_preserves_document() {
         let input="0\nSECTION\n2\nENTITIES\n0\nSPLINE\n71\n1e308\n10\n0\n20\n0\n10\n1\n20\n1\n10\n2\n20\n0\n10\n3\n20\n1\n0\nENDSEC\n0\nEOF\n";

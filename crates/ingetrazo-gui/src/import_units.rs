@@ -191,6 +191,15 @@ fn dxf_suggestion(bytes: &[u8]) -> Result<Option<&'static str>, String> {
     Ok(chosen.and_then(|f| OBJ_CODES.into_iter().find(|code| factor(code) == Some(f))))
 }
 impl IngeTrazoApp {
+    pub fn choose_obj_import(&mut self) { self.choose_unit_import("obj"); }
+    pub fn choose_dxf_import(&mut self) { self.choose_unit_import("dxf"); }
+    fn choose_unit_import(&mut self, kind: &str) {
+        let title = ingetrazo_core::i18n::tr(if kind == "obj" { "Import OBJ" } else { "Import DXF" });
+        let filter = if kind == "obj" { "*.obj|OBJ" } else { "*.dxf|DXF" };
+        if let Some(path) = crate::dialogs::pick_open_file(&title, filter) {
+            if let Err(error) = self.begin_unit_import(&path) { self.status_message = error; }
+        }
+    }
     pub fn begin_unit_import(&mut self, path: &Path) -> Result<(), String> {
         let kind = path
             .extension()
@@ -200,7 +209,17 @@ impl IngeTrazoApp {
         if !["obj", "dxf"].contains(&kind.as_str()) {
             return Err("Unit confirmation supports OBJ and DXF".into());
         }
-        let bytes = std::fs::read(path).map_err(|e| e.to_string())?;
+        // File-owned immutable confirmation bytes, bounded before allocation.
+        // Parsing still consumes this same buffer exactly once after acceptance.
+        const MAX_BYTES: u64 = 512 * 1024 * 1024;
+        let mut file=std::fs::File::open(path).map_err(|e|e.to_string())?;
+        let size=file.metadata().map_err(|e|e.to_string())?.len();
+        if size>MAX_BYTES { return Err("Import file exceeds 512 MiB admission".into()); }
+        let mut bytes=Vec::new();
+        bytes.try_reserve_exact(size as usize).map_err(|_|"Import buffer allocation refused")?;
+        use std::io::Read;
+        file.by_ref().take(MAX_BYTES+1).read_to_end(&mut bytes).map_err(|e|e.to_string())?;
+        if bytes.len() as u64>MAX_BYTES { return Err("Import file exceeds 512 MiB admission".into()); }
         self.begin_unit_import_bytes(path, &kind, bytes)
     }
     pub(crate) fn begin_unit_import_bytes(&mut self, path: &Path, kind: &str, bytes: Vec<u8>) -> Result<(), String> {
@@ -310,7 +329,7 @@ impl IngeTrazoApp {
             }
             self.bump_model_revision();
         }
-        if confirmed.path.extension().and_then(|e|e.to_str()).is_some_and(|e|e.eq_ignore_ascii_case("dwg")){self.zoom_extents();}
+        if confirmed.kind == "dxf" { self.zoom_extents(); }
         self.status_message = format!("Imported {}", confirmed.path.display());
         Ok(())
     }

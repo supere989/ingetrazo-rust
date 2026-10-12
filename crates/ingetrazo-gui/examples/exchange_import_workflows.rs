@@ -92,7 +92,7 @@ pub(crate) fn source_groups(app: &IngeTrazoApp) -> Vec<Group> {
     }
     groups
 }
-fn scene(app: &IngeTrazoApp) -> Result<Value, String> {
+pub(crate) fn scene(app: &IngeTrazoApp) -> Result<Value, String> {
     fn group(
         g: &Group,
         parent: DMat4,

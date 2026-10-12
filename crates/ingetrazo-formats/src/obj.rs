@@ -15,6 +15,8 @@ mod obj_geometry;
 
 pub(crate) fn obj_source_soften(mesh:&mut ingetrazo_core::mesh::Mesh){obj_geometry::soften(mesh,true);}
 
+pub(crate) fn stitch_dxf_import(mesh:&mut ingetrazo_core::mesh::Mesh,first_new:usize,seed:&[DVec3])->Result<(),String>{obj_geometry::stitch(mesh,first_new,seed)}
+
 /// Shared original editable-import cleanup; file parsers prepare only their own geometry.
 pub(crate) fn stitch_source_import(mesh:&mut ingetrazo_core::mesh::Mesh,first_new:usize,seed:&[DVec3])->Result<(),String>{obj_geometry::editable(mesh,first_new,seed)}
 

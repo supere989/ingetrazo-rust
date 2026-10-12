@@ -500,7 +500,7 @@ pub(super) fn parse(p: &[Pair], scale: f64, source_points: bool) -> Result<DxfPl
                             }
                         }
                     }
-                    let mesh = build(&rows)?;
+                    let mesh = if source_points { DxfPlan::build_source_mesh(&rows)? } else { build(&rows)? };
                     if !mesh.edges.is_empty() || !mesh.faces.is_empty() {
                         prototypes.push(Prototype { name, mesh });
                     }

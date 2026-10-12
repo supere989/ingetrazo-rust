@@ -1,0 +1,78 @@
+{
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "case_names": [
+    "obj-root",
+    "obj-texture-leaf",
+    "dxf-block-leaf",
+    "dxf-3dface",
+    "dxf-solid",
+    "dxf-trace",
+    "dxf-face-block",
+    "obj-unit-cancel",
+    "dxf-unit-cancel",
+    "obj-chooser-cancel",
+    "dxf-chooser-cancel",
+    "obj-invalid",
+    "dxf-invalid"
+  ],
+  "expected_cases": 13,
+  "expected_states": 47,
+  "expected_readers": 7,
+  "sources": [
+    {
+      "path": "scripts/reference-unit-import.py",
+      "sha256": "0225e46d25693af018ee947837a509db6f23b64b4701bdf3b373dadd460ad66f"
+    },
+    {
+      "path": "scripts/exchange_import_observations.py",
+      "sha256": "48c12bffd82e9c431ce8784174112a78c7ab09de529fabc1e5f0f8445bf94142"
+    },
+    {
+      "path": "scripts/reference-nested-import.py",
+      "sha256": "1cd756cc1db3389e3922a5c34afe41af29b91061ce30bff77e945d7b346d629b"
+    }
+  ],
+  "original_sources": [
+    {
+      "path": "views/main_window.py",
+      "sha256": "ea02be3e439c80731d0f5b5fde3d92d9b3f62e8ad10cd44ad305c3261b7786fa"
+    },
+    {
+      "path": "core/history.py",
+      "sha256": "2eb66a1d557099b51383988a7819145289fc4ce2c37fc7de3a92ed35b5830559"
+    },
+    {
+      "path": "core/scene.py",
+      "sha256": "9dfcd32f1ff5b1445180eafd8df36eafb92fa08ed3597bb90eac09554899d2e0"
+    },
+    {
+      "path": "core/group.py",
+      "sha256": "9ba6a20eca241cb4969a545a3784fcff25566166606d5447a18780747d4f11c5"
+    },
+    {
+      "path": "formats/obj.py",
+      "sha256": "d34b025e2f312c68945705acedcdd69b987dfbd77e2e0ddc7d339dfecbc9a5b7"
+    },
+    {
+      "path": "formats/dxf_in.py",
+      "sha256": "5a8a1728536de1936af2db8bdcc0c146db3a320f5cb256a3288a903b74f718a9"
+    },
+    {
+      "path": "formats/igz.py",
+      "sha256": "f318d685830c49c2fede7fd5a238ac7a1469ee0b0226cf48cab3751e194a9576"
+    },
+    {
+      "path": "core/camera.py",
+      "sha256": "cae35d8adfe33f3da22b85de74cc0779c0d2697fa8fa09d0112933d6d3e26a52"
+    },
+    {
+      "path": "core/mesh.py",
+      "sha256": "5f2c1625e6dd717db029ba39a9de337e75beec06bd0df28a592a8a34875ca22c"
+    },
+    {
+      "path": "core/topology.py",
+      "sha256": "f16d136706d0a7ce4f5c382c9318126e45639a38d969f13f0196f852df858c0e"
+    }
+  ],
+  "scope": "Missing actual MainWindow chooser and Qt unit buttons, source synchronous SnapshotImport ownership/history, DXF fit and three face cleanup families and BLOCK definition cleanup. Existing OBJ MTL/fusion and DXF block files reused unchanged; no accepted parser corpus recapture. Resource identity uses actual encoded bytes; all directed rings, matrices, coordinates and camera values literal strict. Only lossless camera.distance int/f64 representation equivalence. Source failures swallowed by History.last_error are retained; native refusal reports status and must preserve document/history. No GPU/desktop/wholeheap/performance claim, no full-P22 promotion; allocation-dependent open winding, generic unknown DXF refusal, linked normalization and native snapshot copying remain open. Preferences are observed per-state and shared across fresh native Apps; unit dialog presence and named failure status are operative. Native file confirmation admits at most512MiB encoded bytes; this is a safety boundary, not source-memory equivalence. Common scene observer proves directed geometry, hierarchy, local matrices, edge flags, face material/resource fields, layer names and datum. Layer hidden/locked metadata and raw sharing registries are not re-proven; prior nested-import ownership/reference proofs remain part of the unchanged evidence map."
+}

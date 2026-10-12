@@ -755,6 +755,18 @@ fn collapse_stations(mesh: &mut Mesh) -> Result<(), String> {
     Ok(())
 }
 pub(super) fn editable(mesh: &mut Mesh, first_new: usize, seed: &[DVec3]) -> Result<(), String> {
+    editable_policy(mesh, first_new, seed, true)
+}
+/// DXF run_stitch stops before OBJ outward orientation and smoothing.
+pub(super) fn stitch(mesh: &mut Mesh, first_new: usize, seed: &[DVec3]) -> Result<(), String> {
+    editable_policy(mesh, first_new, seed, false)
+}
+fn editable_policy(
+    mesh: &mut Mesh,
+    first_new: usize,
+    seed: &[DVec3],
+    obj_finish: bool,
+) -> Result<(), String> {
     ingetrazo_core::planar::validate_mesh(mesh)?;
     // Dedupe original cycles before connectivity repair, retaining authored paint.
     let mut seen = HashMap::<Vec<(usize, usize)>, usize>::new();
@@ -898,6 +910,9 @@ pub(super) fn editable(mesh: &mut Mesh, first_new: usize, seed: &[DVec3]) -> Res
         .chain(merged)
         .collect();
     rebuild_edges(mesh, &removed_edges);
+    if !obj_finish {
+        return Ok(());
+    }
     let flat = mesh.faces.is_empty() || {
         let n = face_normal(mesh, 0);
         let origin = mesh.vertices[mesh.faces[0].vertices[0]].position;
