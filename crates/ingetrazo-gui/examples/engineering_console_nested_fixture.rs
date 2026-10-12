@@ -28,6 +28,9 @@ fn state(app: &IngeTrazoApp, name: &serde_json::Value) -> serde_json::Value {
 fn main() {
     let args: Vec<String> = std::env::args().collect();
     let mut app = IngeTrazoApp::new();
+    // This frozen recipe seeds core.Scene(), not MainWindow/new-document defaults.
+    app.scene = ingetrazo_core::scene::Scene::new();
+    app.mark_document_clean();
     app.scene = ingetrazo_formats::igz::load_igz(std::path::Path::new(&args[1])).unwrap();
     app.engineering_python_enabled = true;
     let recipes: serde_json::Value = serde_json::from_str(include_str!(

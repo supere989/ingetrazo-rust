@@ -1,6 +1,9 @@
 use ingetrazo_gui::IngeTrazoApp;
 fn main() {
     let mut app = IngeTrazoApp::new();
+    // This frozen recipe seeds core.Scene(), not MainWindow/new-document defaults.
+    app.scene = ingetrazo_core::scene::Scene::new();
+    app.mark_document_clean();
     app.engineering_python_enabled = true;
     let mut em = ingetrazo_core::mesh::Mesh::new();
     let ids = [glam::DVec3::ZERO, glam::DVec3::X, glam::DVec3::Y]

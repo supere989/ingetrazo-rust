@@ -3,6 +3,9 @@ fn observe(app: &ingetrazo_gui::IngeTrazoApp, name: &str) -> serde_json::Value {
 }
 fn main() {
     let mut app = ingetrazo_gui::IngeTrazoApp::new();
+    // This frozen recipe seeds core.Scene(), not MainWindow/new-document defaults.
+    app.scene = ingetrazo_core::scene::Scene::new();
+    app.mark_document_clean();
     let ids = [glam::DVec3::ZERO, glam::DVec3::X, glam::DVec3::Y]
         .into_iter()
         .map(|p| app.scene.mesh.add_vertex(p))
