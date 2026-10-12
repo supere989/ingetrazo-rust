@@ -23,7 +23,7 @@ archive_dependencies = {}
 pin = "6be29fe437a7cd992d4e079f71720821b25216b9"
 assert subprocess.check_output(["git", "-C", str(repo/"ingetrazo"), "rev-parse", "HEAD"], text=True).strip() == pin
 suffix = ".exe" if os.name == "nt" else ""
-consumers = ["change_axes_fixture", "document_preservation_workflow", "pushpull_solid_workflows", "fillet_scoped", "pushpull_finite_workflows", "paste_save_workflow", "box_selection_fixture", "material_restamp_workflow", "material_tray_egui", "cursor_navigation_workflow", "annotation_delete_fixture", "zoom_extents_workflow", "annotation_move_fixture", "annotation_acquisition_fixture", "mesh_kernel_acceptance", "annotation_edit_style_fixture", "annotation_text_create_fixture", "mesh_finite_kernel_fixture", "annotation_hover_fixture", "dimension_anchor_acceptance_fixture", "context_document_lifecycle", "line_command_history_fixture", "shape_drafting_workflows", "freehand_workflows", "p07_inference_workflows", "perspective_guide_workflows", "p07_keyboard_workflows", "composer_pointer_workflows"]
+consumers = ["change_axes_fixture", "document_preservation_workflow", "pushpull_solid_workflows", "fillet_scoped", "pushpull_finite_workflows", "paste_save_workflow", "box_selection_fixture", "material_restamp_workflow", "material_tray_egui", "cursor_navigation_workflow", "annotation_delete_fixture", "zoom_extents_workflow", "annotation_move_fixture", "annotation_acquisition_fixture", "mesh_kernel_acceptance", "annotation_edit_style_fixture", "annotation_text_create_fixture", "mesh_finite_kernel_fixture", "annotation_hover_fixture", "dimension_anchor_acceptance_fixture", "context_document_lifecycle", "line_command_history_fixture", "shape_drafting_workflows", "freehand_workflows", "p07_inference_workflows", "perspective_guide_workflows", "p07_keyboard_workflows", "composer_pointer_workflows", "gltf_rich"]
 identities = {name: stages.stage("binary:"+name, [], lambda name=name: hashlib.sha256((binaries/(name+suffix)).read_bytes()).hexdigest()) for name in consumers}
 env = dict(os.environ, QT_QPA_PLATFORM="offscreen", INGETRAZO_STATE_DIR=str(out/"state"),
            XDG_CONFIG_HOME=str(out/"config"), XDG_DATA_HOME=str(out/"data"), XDG_CACHE_HOME=str(out/"cache"))
@@ -298,6 +298,10 @@ run([binaries/(consumers[27]+suffix), composer_pointer/"source.json", composer_p
 run([sys.executable, repo/"scripts/check-composer-pointer.py", composer_pointer/"source.json", composer_pointer/"native.json", composer_pointer/"acceptance.json"], "composer-pointer/checker.log", requires=["composer-pointer/runtime.log"])
 
 
+
+gltf_figures = out/"gltf-figures"
+run([sys.executable, repo/"scripts/replay-gltf-figures.py", binaries/("gltf_rich"+suffix), gltf_figures], "gltf-figures-replay.json", requires=["binary:gltf_rich"])
+
 def summarize():
     rows = json.loads((doc/"native.json").read_text())["rows"]
     assert [(x["fixture"],x["phase"]) for x in rows] == [(f,p) for f in ["retained","nested-leaves"] for p in ["edited","undo","redo"]]
@@ -343,6 +347,7 @@ def summarize():
               "freehand_workflows":json.loads((freehand/"acceptance.json").read_text()),
               "composer_pointer":json.loads((composer_pointer/"acceptance.json").read_text()),
               "dxf_source_archives":dxf_archives,"dxf":{lane:json.loads(path.read_text()) for lane,path in dxf_results.items()},
+              "gltf_figures":json.loads((gltf_figures/"result.json").read_text()),
               "fresh_source_acquisitions":0,"result":"pass"}
     return result
 
