@@ -34,7 +34,9 @@ try:
   for row in v['states']:diagnostics['camera'].append(row.pop('camera'))
   for row in v.get('converter_controls',[]):
    for key in ['source_diagnostic','native_diagnostic']:
-    if key in row:diagnostics['converter'].append(row.pop(key))
+    if key in row:
+     text=row.pop(key);diagnostics['converter'].append(text)
+     if row['name']!='timeout':row['diagnostic']=text
   return v
  expected=semantic(a);observed=semantic(b);exact(expected,observed)
  payloads=0
@@ -55,6 +57,6 @@ try:
   try:exact(expected,semantic(c))
   except AssertionError:pass
   else:raise AssertionError('negative accepted')
- r.update(diagnostic_scope='camera fit and process-specific argv diagnostics excluded; all model/control fields strict',ok=True,cases=len(names),states=len(inventory),readers=len(readers),payloads=payloads,negative_controls=4)
+ r.update(diagnostic_scope='camera fit and timeout argv diagnostics excluded; stable converter errors and all model/control fields strict',ok=True,cases=len(names),states=len(inventory),readers=len(readers),payloads=payloads,negative_controls=4)
 except Exception as e:r['error']=repr(e)
 report.parent.mkdir(parents=True,exist_ok=True);report.write_text(json.dumps(r,indent=2)+'\n');print(json.dumps(r));sys.exit(0 if r['ok']else 1)
