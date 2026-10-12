@@ -404,6 +404,41 @@ fn sheet_item_model(item: &ingetrazo_core::composition::SheetItem) -> (uuid::Uui
     }
 }
 
+/// Current portable record of one paper item, including preserved unknown fields.
+/// Clipboard and other cold item operations share the actual document writer policy.
+pub fn paper_item_record(sheet: &ingetrazo_core::composition::Sheet, item: &ingetrazo_core::composition::SheetItem) -> (&'static str, serde_json::Value) {
+    let (id,key,current)=sheet_item_model(item);
+    let empty=serde_json::Value::Null;
+    let original=sheet.native_items.get(&id).unwrap_or(&empty);
+    let baseline=sheet.native_item_baselines.get(&id).unwrap_or(&empty);
+    let mut value=overlay(original,baseline,current.clone());
+    if key=="cajetin" {
+        if let Some(rows)=original.get("campos").and_then(|v| v.as_array()) {
+            let mut rows=rows.clone();
+            for (label,field) in [("PROYECTO","proyecto"),("AUTOR","autor"),("FECHA","fecha"),("ESCALA","escala"),("LÁMINA","lamina"),("TÍTULO","drawing_title")] {
+                if baseline.get(field)!=current.get(field) {
+                    if let Some(row)=rows.iter_mut().find(|r| r.get(0).and_then(|v| v.as_str()).map(|s|s.trim().to_uppercase()==label).unwrap_or(false)) {
+                        row[1]=current[field].clone();
+                    } else { rows.push(serde_json::json!([label,current[field]])); }
+                }
+            }
+            value["campos"]=serde_json::json!(rows);
+        } else {
+            value["campos"]=serde_json::json!([
+                ["PROYECTO",current["proyecto"]],["AUTOR",current["autor"]],
+                ["FECHA",current["fecha"]],["ESCALA",current["escala"]],
+                ["LÁMINA",current["lamina"]],["TÍTULO",current["drawing_title"]]
+            ]);
+        }
+    }
+    (key,value)
+}
+
+/// Typed-field baseline for a newly owned paper item. No unrelated sheet data is copied.
+pub fn paper_item_baseline(item: &ingetrazo_core::composition::SheetItem) -> serde_json::Value {
+    sheet_item_model(item).2
+}
+
 fn sheet_model(sheet: &ingetrazo_core::composition::Sheet) -> serde_json::Value {
     use ingetrazo_core::composition::Orientation;
     let mut model = serde_json::json!({
@@ -412,31 +447,9 @@ fn sheet_model(sheet: &ingetrazo_core::composition::Sheet) -> serde_json::Value 
         "frames":[],"texts":[],"nortes":[],"scalebars":[],"shapes":[],"cajetin":null
     });
     for item in &sheet.items {
-        let (id,key,current)=sheet_item_model(item);
-        let empty=serde_json::Value::Null;
-        let original=sheet.native_items.get(&id).unwrap_or(&empty);
-        let baseline=sheet.native_item_baselines.get(&id).unwrap_or(&empty);
-        let mut value=overlay(original,baseline,current.clone());
-        if key=="cajetin" {
-            if let Some(rows)=original.get("campos").and_then(|v| v.as_array()) {
-                let mut rows=rows.clone();
-                for (label,field) in [("PROYECTO","proyecto"),("AUTOR","autor"),("FECHA","fecha"),("ESCALA","escala"),("LÁMINA","lamina"),("TÍTULO","drawing_title")] {
-                    if baseline.get(field)!=current.get(field) {
-                        if let Some(row)=rows.iter_mut().find(|r| r.get(0).and_then(|v| v.as_str()).map(|s|s.trim().to_uppercase()==label).unwrap_or(false)) {
-                            row[1]=current[field].clone();
-                        } else { rows.push(serde_json::json!([label,current[field]])); }
-                    }
-                }
-                value["campos"]=serde_json::json!(rows);
-            } else {
-                value["campos"]=serde_json::json!([
-                    ["PROYECTO",current["proyecto"]],["AUTOR",current["autor"]],
-                    ["FECHA",current["fecha"]],["ESCALA",current["escala"]],
-                    ["LÁMINA",current["lamina"]],["TÍTULO",current["drawing_title"]]
-                ]);
-            }
-            model[key]=value;
-        } else { model[key].as_array_mut().unwrap().push(value); }
+        let (key,value)=paper_item_record(sheet,item);
+        if key=="cajetin" { model[key]=value; }
+        else { model[key].as_array_mut().unwrap().push(value); }
     }
     model
 }
