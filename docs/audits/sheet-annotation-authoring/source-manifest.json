@@ -172,8 +172,8 @@
   "scope": "Actual original authoring observations with retained fixture failures and exact original radial UI exception; native corrected properties require separate controls. Specialized handles/chains/physical pixels not captured.",
   "acceptance_helpers": {
     "scripts/check-sheet-annotation-authoring.py": {
-      "commit": "9235fcdecad8cc2b47fcf4c13d13d7117c66c96a",
-      "sha256": "3f714f9a0869d4477c5a45455d775d54587d35642a1e239f83d97adc7080e73c"
+      "commit": "fba6ae8fa2b9f3c521842fa868639e9cff69083b",
+      "sha256": "be98639a2545d732717394fa97b1bdafcc450add9f10bb3b30ab7617e3e08fd0"
     },
     "scripts/reference-sheet-annotation-authoring-reopens.py": {
       "commit": "1fd435a6ef26d93ea43a048ea90510faabbdc41d",

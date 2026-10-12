@@ -1,0 +1,32 @@
+{
+  "scope": "Diagnostic-only dictionary guard; no native or source execution",
+  "baseline": {
+    "scope": "Diagnostic only; identical strict expected_state/equal comparisons, no tolerance or verdict change.",
+    "state_mismatches": [],
+    "reader_mismatches": [],
+    "state_mismatch_count": 0,
+    "reader_mismatch_count": 0
+  },
+  "two_corrupted_states": {
+    "scope": "Diagnostic only; identical strict expected_state/equal comparisons, no tolerance or verdict change.",
+    "state_mismatches": [
+      {
+        "case": "cotas-lifecycle",
+        "phase": "initial",
+        "comparison_scope": "literal_source",
+        "error": "AssertionError(('cotas-lifecycle.initial.undo', 'type', 'int', 'bool'))"
+      },
+      {
+        "case": "cotas-lifecycle",
+        "phase": "move-preview",
+        "comparison_scope": "literal_source",
+        "error": "AssertionError(('cotas-lifecycle.move-preview.mode', 'select', 'wrong'))"
+      }
+    ],
+    "reader_mismatches": [],
+    "state_mismatch_count": 2,
+    "reader_mismatch_count": 0
+  },
+  "strict_rejection": true,
+  "checker_sha256": "be98639a2545d732717394fa97b1bdafcc450add9f10bb3b30ab7617e3e08fd0"
+}
