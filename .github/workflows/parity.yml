@@ -102,7 +102,8 @@ jobs:
       - name: Strict native Metal physical sheet geometry and codec diagnostic
         if: ${{ !cancelled() && steps.nativebuild.outcome == 'success' }}
         run: |
-          python3 -m pip install PySide6_Essentials==6.12.0 numpy==2.5.3
+          python3 -m pip install PySide6==6.12.0 numpy==2.5.3
+          python3 -c "from PySide6.QtPdf import QPdfDocument; from PySide6.QtGui import QImage"
           python3 scripts/replay-sheet-images.py target/debug/examples/sheet_image_workflows target/debug/ingetrazo-render-worker docs/audits/metal-combined-gui-ci/sheet-images --skip-text > docs/audits/metal-combined-gui-ci/sheet-images-replay.log 2>&1
       - name: Strict frozen picture drawing on native Metal
         if: ${{ !cancelled() && steps.nativebuild.outcome == 'success' }}
