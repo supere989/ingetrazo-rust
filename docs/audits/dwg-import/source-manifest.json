@@ -190,36 +190,6 @@
       "commit": "3c083c263c1b3fa838bcaee7c3e9645948ae075a",
       "sha256": "593980d2772698c5577fdde87df575cdf0140af28205c76d83694fa4e73a6436",
       "role": "approved fixture scope"
-    },
-    {
-      "path": "scripts/reference-dwg-import.py",
-      "commit": "5102e8530c66daa29054c2df628aaaf3c2a95324",
-      "sha256": "ea0207237c88e5fde7d65166a9a686654a5ad36d7f6e58d2de42f80b55cd8eac",
-      "role": "first failed setup producer"
-    },
-    {
-      "path": "scripts/reference-dwg-import.py",
-      "commit": "f6235ba6952b0cf01a7a14ced42eb2588beb53dc",
-      "sha256": "b9ae84f45f7df20467ee014c97305c3c8fbf5f2e5334922daca378eac3f35e81",
-      "role": "second failed setup producer"
-    },
-    {
-      "path": "ingetrazo/formats/dwg_bridge.py",
-      "commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
-      "sha256": "1429b1c0cc404489cc3e234cfd2be3394c0a20c0ea78c3896d5a26ddc30be22f",
-      "role": "unchanged actual original product"
-    },
-    {
-      "path": "ingetrazo/formats/dxf_in.py",
-      "commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
-      "sha256": "5a8a1728536de1936af2db8bdcc0c146db3a320f5cb256a3288a903b74f718a9",
-      "role": "unchanged actual original product"
-    },
-    {
-      "path": "ingetrazo/views/main_window.py",
-      "commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
-      "sha256": "ea02be3e439c80731d0f5b5fde3d92d9b3f62e8ad10cd44ad305c3261b7786fa",
-      "role": "unchanged actual original product"
     }
   ],
   "cases": 4,
@@ -233,5 +203,45 @@
     "path": "ingetrazo/vendor/libredwg/bin/dwg2dxf",
     "sha256": "90bbecbffdca0673538b30a9cca0492931d5ec640ccd3f06e525059b1a4a64b7"
   },
-  "scope": "Four actual original MainWindow workflows; controlled chooser provider and actual Qt unit UI, no desktop/GPU claim. First two failed setups retained. First attempt stdout/stderr were tool-returned and not saved as exact raw logs; no success inferred. No other DWG version claim."
+  "scope": "Four actual original MainWindow workflows; controlled chooser provider and actual Qt unit UI, no desktop/GPU claim. First two failed setups retained. First attempt stdout/stderr were tool-returned and not saved as exact raw logs; no success inferred. No other DWG version claim.",
+  "capture_sources": [
+    {
+      "path": "scripts/reference-dwg-import.py",
+      "commit": "3c083c263c1b3fa838bcaee7c3e9645948ae075a",
+      "sha256": "f0040ce9e1d6e971645dfc74c4007008202b976d387dd2b7f4c191a5662f7d70",
+      "role": "actual accepted capture producer"
+    },
+    {
+      "path": "scripts/reference-dwg-import.py",
+      "commit": "5102e8530c66daa29054c2df628aaaf3c2a95324",
+      "sha256": "ea0207237c88e5fde7d65166a9a686654a5ad36d7f6e58d2de42f80b55cd8eac",
+      "role": "first failed setup producer"
+    },
+    {
+      "path": "scripts/reference-dwg-import.py",
+      "commit": "f6235ba6952b0cf01a7a14ced42eb2588beb53dc",
+      "sha256": "b9ae84f45f7df20467ee014c97305c3c8fbf5f2e5334922daca378eac3f35e81",
+      "role": "second failed setup producer"
+    }
+  ],
+  "original_sources": [
+    {
+      "path": "formats/dwg_bridge.py",
+      "commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+      "sha256": "1429b1c0cc404489cc3e234cfd2be3394c0a20c0ea78c3896d5a26ddc30be22f",
+      "role": "unchanged actual original product"
+    },
+    {
+      "path": "formats/dxf_in.py",
+      "commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+      "sha256": "5a8a1728536de1936af2db8bdcc0c146db3a320f5cb256a3288a903b74f718a9",
+      "role": "unchanged actual original product"
+    },
+    {
+      "path": "views/main_window.py",
+      "commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+      "sha256": "ea02be3e439c80731d0f5b5fde3d92d9b3f62e8ad10cd44ad305c3261b7786fa",
+      "role": "unchanged actual original product"
+    }
+  ]
 }
