@@ -13,6 +13,10 @@ def main():
     out.mkdir(parents=True);source=out/'source';native=out/'native';source.mkdir();native.mkdir()
     manifest=json.loads((folder/'manifest.json').read_text());archive=folder/'source-records.zip'
     assert digest(archive)==manifest['archive_sha256']
+    assert len(manifest['sources'])==5
+    for binding in manifest['sources']:
+        path=(repo/binding['path']).resolve();path.relative_to(repo)
+        assert digest(path)==binding['sha256'],('Frozen source contract/helper drift',binding['path'])
     pin=subprocess.check_output(['git','-C',str(repo/'ingetrazo'),'rev-parse','HEAD'],text=True).strip();assert pin==manifest['original_commit']
     with zipfile.ZipFile(archive)as z:
         assert len(z.namelist())==len(manifest['members'])and set(z.namelist())==set(record['path']for record in manifest['members'])
