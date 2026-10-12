@@ -53,7 +53,7 @@ impl Face {
     pub fn rasterize_anisotropic(&self,glyph:u32,scale:[f64;2],phase:[u8;2])->Result<RasterGlyph,String>{
         #[cfg(target_os="macos")] if let Some(native)=&self.native {
             if scale[0]==scale[1] {return native.raster(glyph,scale[0],phase,0.,0.);}
-            return Err("Native CoreText anisotropic capture glyphs are not yet supported".into());
+            return native.raster_anisotropic(glyph,scale,phase);
         }
         self.font.rasterize_anisotropic_glyph(glyph,scale,phase)
     }

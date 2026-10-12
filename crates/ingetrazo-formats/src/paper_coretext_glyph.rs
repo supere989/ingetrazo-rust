@@ -501,10 +501,25 @@ impl NativeFont {
         let image=self.raster_coverage(id,scale,phase,shear,bold_offset,false,angle)?;
         Ok(crate::paper_text::RasterGlyph{left:image.left,top:image.top,width:image.width,height:image.height,coverage:image.coverage})
     }
+    /// Capture device transform, using the retained native font and an owned
+    /// temporary bitmap context. No font/face transform or size is mutated.
+    pub(crate) fn raster_anisotropic(&self,id:u32,scale:[f64;2],phase:[u8;2])
+        ->Result<crate::paper_text::RasterGlyph,String>{
+        let image=self.raster_coverage_axes(id,scale,phase,0.,0.,false,0.)?;
+        Ok(crate::paper_text::RasterGlyph{left:image.left,top:image.top,
+            width:image.width,height:image.height,coverage:image.coverage})
+    }
     fn raster_coverage(
         &self,id:u32,scale:f64,phase:[u8;2],shear:f64,bold_offset:f64,lcd:bool,angle:f64,
     )->Result<crate::paper_text::RasterLcdGlyph,String>{
-        if !angle.is_finite() || !scale.is_finite()
+        self.raster_coverage_axes(id,[scale;2],phase,shear,bold_offset,lcd,angle)
+    }
+    fn raster_coverage_axes(
+        &self,id:u32,axes:[f64;2],phase:[u8;2],shear:f64,bold_offset:f64,lcd:bool,angle:f64,
+    )->Result<crate::paper_text::RasterLcdGlyph,String>{
+        let [scale,scale_y]=axes;
+        if axes.iter().any(|v|!v.is_finite()||*v<=0.||*v>32.)
+            || !angle.is_finite() || !scale.is_finite()
             || scale <= 0.
             || scale > 32.
             || phase.iter().any(|p| *p >= 64)
@@ -534,9 +549,9 @@ impl NativeFont {
         }
         let expressions = [
             rect.origin.x * scale,
-            (-rect.origin.y - rect.size.height) * scale,
+            (-rect.origin.y - rect.size.height) * scale_y,
             (rect.size.width + rect.size.height * shear) * scale,
-            rect.size.height * scale,
+            rect.size.height * scale_y,
             bold_offset * scale,
         ];
         if expressions
@@ -548,14 +563,14 @@ impl NativeFont {
         // QCoreTextFontEngine alphaMapBoundingBox: QFixed metrics, x-1,width+3,y-1,height+2.
         let fixed = |x: f64| ((x * 64.) as i32) as f64 / 64.;
         let mut x = fixed(fixed(rect.origin.x) * scale) - 1.;
-        let mut y = fixed((-fixed(rect.origin.y) - fixed(rect.size.height)) * scale) - 1.;
+        let mut y = fixed((-fixed(rect.origin.y) - fixed(rect.size.height)) * scale_y) - 1.;
         let mut w = raster_width(rect.size.width, rect.size.height, shear, scale);
-        let mut h = fixed(fixed(rect.size.height) * scale) + 2.;
+        let mut h = fixed(fixed(rect.size.height) * scale_y) + 2.;
         let(sin,cos)=angle.to_radians().sin_cos();
         if angle!=0.{
             let mut bounds=[f64::INFINITY,f64::INFINITY,f64::NEG_INFINITY,f64::NEG_INFINITY];
             for xx in [fixed(rect.origin.x),fixed(rect.origin.x+rect.size.width)]{for yy in [-fixed(rect.origin.y),-fixed(rect.origin.y+rect.size.height)]{
-                let xx=xx-yy*shear;let q=[scale*(xx*cos-yy*sin),scale*(xx*sin+yy*cos)];for i in 0..2{bounds[i]=bounds[i].min(q[i]);bounds[i+2]=bounds[i+2].max(q[i]);}
+                let xx=xx-yy*shear;let q=[scale*(xx*cos-yy*sin),scale_y*(xx*sin+yy*cos)];for i in 0..2{bounds[i]=bounds[i].min(q[i]);bounds[i+2]=bounds[i+2].max(q[i]);}
             }}
             x=fixed(bounds[0])-1.;y=fixed(bounds[1])-1.;w=fixed(bounds[2]-bounds[0])+3.;h=fixed(bounds[3]-bounds[1])+2.;
         }
@@ -605,9 +620,9 @@ impl NativeFont {
                 ctx,
                 Matrix {
                     a: scale*cos,
-                    b: -scale*sin,
+                    b: -scale_y*sin,
                     c: scale*(sin+cos*shear),
-                    d: scale*(cos-sin*shear),
+                    d: scale_y*(cos-sin*shear),
                     tx: 0.,
                     ty: 0.,
                 },
