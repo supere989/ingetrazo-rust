@@ -2,7 +2,7 @@
   "schema": 1,
   "runtime_revision": "2d77d06cb6fb427fe5af9bd4959096e909ef6520",
   "original_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
-  "archive_sha256": "a1311d61c3303ac55783634002cf904b053bcfc197a19f4acf1343356a59f658",
+  "archive_sha256": "aeaecfb5a9766487a7ff9f590b740e45e697def5d73f903a013b967f83c2fc75",
   "members": {
     "r1/build.log": {
       "sha256": "e7dec66cc174b1a1db13a9bf51d37932acd9504692d7b7ada66823e808db5c3c",
@@ -428,6 +428,18 @@
       "sha256": "be54667f1fa1a4845cf542c9c6a0924f779142a62ff4a9e2ec0d2ea5eae2c8c3",
       "size": 733,
       "producer_path": "/tmp/ingetrazo-image-stl-integration-r6/result.json"
+    },
+    "supplement/comparison-final-scope.json": {
+      "size": 1064,
+      "sha256": "34cd4a76ab54b11a14e7dc8b734f5d7683ebe29cb3760e0a323dad46e122cb50"
+    },
+    "supplement/check-image-import.py": {
+      "size": 9562,
+      "sha256": "5886eee63bad221e874f104e6b6fc2763331931807c434535d5abf169d3856e1"
+    },
+    "supplement/scope-invocation.json": {
+      "size": 519,
+      "sha256": "f1cbf0ab219155825d3d13d55ba0523609f5be22a270b5cbf723ee9e95c793bb"
     }
   },
   "identical_file_aliases": {
@@ -1099,5 +1111,12 @@
     "scope": "Literal App/model/transient tool/history/resource bytes; camera.distance accepts only exact finite positive int/f64 numeric equality with lossless integer representation; all other types and values remain strict and actual original IGZ readers. Source error-message text diagnostic only; pinned original/input-bound material locator-to-resource identity supplement preserves all geometry metadata. Required operative native modal/refusal guards. No framebuffer/GPU/general-codec claim."
   },
   "fresh_source_captures": 0,
-  "cleanup_performed": false
+  "cleanup_performed": false,
+  "scope_supplement": {
+    "verifier_revision": "d1abcd34",
+    "comparison_member": "supplement/comparison-final-scope.json",
+    "raw_source_unchanged": true,
+    "native_replays": 0,
+    "source_captures": 0
+  }
 }
