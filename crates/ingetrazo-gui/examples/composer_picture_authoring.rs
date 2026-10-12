@@ -248,6 +248,7 @@ printf '%s\n' "$INGETRAZO_AUTHORING_PICKER_REPLY"
         warm,
         "Unchanged preview repeated preparation, file reads or upload"
     );
+    let warm_after = app.composer_picture_preview_stats();
     let before = state(&app, "ui", "refusal");
     for invalid in [
         json!({"w_mm":0.}),
@@ -259,7 +260,7 @@ printf '%s\n' "$INGETRAZO_AUTHORING_PICKER_REPLY"
         assert_eq!(state(&app, "ui", "refusal"), before);
     }
     Ok(
-        json!({"actual_egui_add":true,"actual_egui_border":true,"actual_egui_replace":true,"cancel_no_second_chooser":true,"cancel_unchanged":true,"replace_geometry_preserved":true,"warm_scene_and_decode_composite_unchanged":true,"warm_io_and_upload_unchanged":true,"warm_counters_before":warm,"warm_counters_after":app.composer_picture_preview_stats(),"invalid_edits_preserve_history":true,"scope":"Actual App egui controls with owned external-picker response; no physical desktop chooser or raster pixel acceptance"}),
+        json!({"actual_egui_add":true,"actual_egui_border":true,"actual_egui_replace":true,"cancel_no_second_chooser":true,"cancel_unchanged":true,"replace_geometry_preserved":true,"warm_scene_and_decode_composite_unchanged":true,"warm_io_and_upload_unchanged":true,"warm_counters_before":warm,"warm_counters_after":warm_after,"invalid_edits_preserve_history":true,"scope":"Actual App egui controls with owned external-picker response; no physical desktop chooser or raster pixel acceptance"}),
     )
 }
 #[cfg(not(unix))]
