@@ -1,0 +1,2157 @@
+{
+  "canonical_archive_authenticated": true,
+  "shared_cargo_target_preserved": true,
+  "raw_native_and_failure_records_preserved": true,
+  "source_accepted_preserved": true,
+  "physical_reclaimed_claim": false,
+  "removed": [
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/image/data",
+      "logical_bytes": 378287,
+      "files": [
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/image/data/IngeTrazo/textures/embedded/c9aa332dbb00581d-ingeniero.png",
+          "bytes": 372245,
+          "sha256": "be7b463c8b2eec4e7635b2f1efbc1705267ff39ada6a0e4935eebe2e13799e13"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/image/data/IngeTrazo/textures/embedded/8bfb120c9fc470e5-scan.png",
+          "bytes": 1253,
+          "sha256": "3eb523a44de80c971b7f0f16729abf6ed31e3eb1e0477d52f87c7542e397c94d"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/image/data/IngeTrazo/textures/embedded/398880792416ea15-scan-exif.jpg",
+          "bytes": 861,
+          "sha256": "fad2e5c3a9850c3f2258d51f4c2855274403afb6d80acadcccdf163f9d14987d"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/image/data/IngeTrazo/textures/embedded/5094681a615970a1-scan.webp",
+          "bytes": 270,
+          "sha256": "a245c4f5347453a9907e1e9baf238317feee4aeb2f0ce14cbfaf288c4aec6e5a"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/image/data/IngeTrazo/textures/embedded/5094681a615970a1-renamed.webp",
+          "bytes": 270,
+          "sha256": "a245c4f5347453a9907e1e9baf238317feee4aeb2f0ce14cbfaf288c4aec6e5a"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/image/data/IngeTrazo/textures/embedded/d5c68fb78657fc3c-scan.bmp",
+          "bytes": 918,
+          "sha256": "7578a1d90a6bf3601fe99d4c88ca4cb892e1c6bcb5df40b68af8abdae6659f78"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/image/data/IngeTrazo/textures/embedded/73188750f8b2924b-scan16.tif",
+          "bytes": 2470,
+          "sha256": "df6b54004176a0e53e85cb36780042cfd40871fe6a50565fd924c886d4c226f0"
+        }
+      ]
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/image/native/picker",
+      "logical_bytes": 83280544,
+      "files": [
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/image/native/picker/kdialog",
+          "bytes": 83280544,
+          "sha256": "86a47120e0669f5c34dc42aadc9e19d05a84c2a7d545a7bb0604ef4ab4cc1e65"
+        }
+      ]
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/image/source",
+      "logical_bytes": 8016399,
+      "files": [
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/LICENSE",
+          "bytes": 35149,
+          "sha256": "3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/bmp-free-aspect-input.igz",
+          "bytes": 373089,
+          "sha256": "dc9acc6ad6c56be613a639426eefdff10d6dfedf49481852bdba3f4b8a321b08"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/bmp-free-aspect-saved.igz",
+          "bytes": 374256,
+          "sha256": "bd85b741bf8b61ff150fb661dd621eda14715daa5513cb159672c5a164ca5bc7"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/cancel-invalid-escape-input.igz",
+          "bytes": 373089,
+          "sha256": "8194cd0edcbfd5f9658dc8c617c67b20a973675ff58d34962b485d74f9a73311"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/cancel-invalid-escape-saved.igz",
+          "bytes": 374590,
+          "sha256": "5921a149af846a732fc9a44ebdb3b484b65784877f6c42bcbc5f2664c59ab7af"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/completed-cases.json",
+          "bytes": 895843,
+          "sha256": "cacbac5515e7ee0bceb2550f6e552b41da2b1175526de8dd361415c2ca09ab52"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/jpeg-exif-pair-input.igz",
+          "bytes": 373085,
+          "sha256": "dbc6c0eae03c937d9926422db5d00bab4054997dbda04085d30a5a75e4858445"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/jpeg-exif-pair-saved.igz",
+          "bytes": 374230,
+          "sha256": "841c234fab6367fca33d82ce424efc0da24462bfec2afa3326c100118b253688"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/nested-width-cm-input.igz",
+          "bytes": 1366,
+          "sha256": "39a201b9ba28d35ffa5e9c4adf939176ea5683a739f1b30f89bcfe6151916cfc"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/nested-width-cm-saved.igz",
+          "bytes": 2048,
+          "sha256": "42b2c370debdb4c5da26f86b2ef4f8f23055275d4fa03feb9bdef448b3a54c8f"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/oblique-face-width-input.igz",
+          "bytes": 373157,
+          "sha256": "5c88b1d0e2a403b0e57dec00a9eed198c4c705dd148103e2ff47f7da1e234b61"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/oblique-face-width-saved.igz",
+          "bytes": 374673,
+          "sha256": "c76901ab19896f1f713be5f8b2e5f2cfd33602e4701b5cfc63a9335db128fe53"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/original-image-import.json",
+          "bytes": 899350,
+          "sha256": "d37471e29895a2d8c3adea3e9577afc6f6a293056a4b910118db60c906725b78"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/original-image-import.partial.json",
+          "bytes": 875078,
+          "sha256": "cea0d9fbab89376f29ab95b26b5f31110606005c0ef19dc7e17301affbfadf12"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/png-drag-transparency-input.igz",
+          "bytes": 373089,
+          "sha256": "f57a8d35de945541bebd34613c3c57a85a93eec4c44758d71b69bf32303e5a71"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/png-drag-transparency-saved.igz",
+          "bytes": 374592,
+          "sha256": "e06cf75b648eeea9cbafe21140fdeb01d2459e62542d799f5f5a5662610edcc5"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/tiff16-orientation-input.igz",
+          "bytes": 373089,
+          "sha256": "c82023cc72a2a4244e1ceeffd8c42809bf3d90d23410556d08e0f7c86bf93690"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/tiff16-orientation-saved.igz",
+          "bytes": 375817,
+          "sha256": "0330b014c1cd9ad2f914a993e939f9b7b7c2594f8b658973c55b75166290e68a"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/webp-reuse-names-input.igz",
+          "bytes": 373088,
+          "sha256": "e2a15ebdc0cf048557f3430baffb61d4843d3fdff8ab02a58b07d63a2c117f1c"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/webp-reuse-names-saved.igz",
+          "bytes": 374055,
+          "sha256": "44ffe24a52ea2630b5fc06fe6eb99b4e6b6e209cc7a32931a989be1c789b4cf2"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/assets/base.jpg",
+          "bytes": 825,
+          "sha256": "71147f4b90f87c14679d2cec406cbb07b99a95074e58d49f5321261d30fe7339"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/assets/base.jpg.rgba",
+          "bytes": 1152,
+          "sha256": "e1532b4c932127cbb8dde264028a54a47069898eabce3e1ed5ef406c467c323a"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/assets/invalid.png",
+          "bytes": 21,
+          "sha256": "b2d9765207ea5c5c6f953990f7eaacbbd45584a4b81162a4562f50fbf78eda2d"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/assets/scan-exif.jpg",
+          "bytes": 861,
+          "sha256": "fad2e5c3a9850c3f2258d51f4c2855274403afb6d80acadcccdf163f9d14987d"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/assets/scan-exif.jpg.rgba",
+          "bytes": 1152,
+          "sha256": "e1532b4c932127cbb8dde264028a54a47069898eabce3e1ed5ef406c467c323a"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/assets/scan.bmp",
+          "bytes": 918,
+          "sha256": "7578a1d90a6bf3601fe99d4c88ca4cb892e1c6bcb5df40b68af8abdae6659f78"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/assets/scan.bmp.rgba",
+          "bytes": 1152,
+          "sha256": "a0c4f27060176e3b323ee72fd8535e14766fea6cd49e255ce8e970a0833d7a2d"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/assets/scan.png",
+          "bytes": 1253,
+          "sha256": "3eb523a44de80c971b7f0f16729abf6ed31e3eb1e0477d52f87c7542e397c94d"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/assets/scan.png.rgba",
+          "bytes": 1152,
+          "sha256": "02de754fe22b81eb713108b9f7686661e51fda16c3dc178f47a36c3f5ddb6879"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/assets/scan.webp",
+          "bytes": 270,
+          "sha256": "a245c4f5347453a9907e1e9baf238317feee4aeb2f0ce14cbfaf288c4aec6e5a"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/assets/scan.webp.rgba",
+          "bytes": 1152,
+          "sha256": "ee951acac0e61e129920adbd835651a3fac16d0cdfa6f66a00fcda7366001b4d"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/assets/scan16.tif",
+          "bytes": 2470,
+          "sha256": "df6b54004176a0e53e85cb36780042cfd40871fe6a50565fd924c886d4c226f0"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/assets/scan16.tif.rgba",
+          "bytes": 1152,
+          "sha256": "7ffec69abf0ed9751627d371411424d86c9a39bc6025befd29eabebaac7aeeb0"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/first-failure/original-image-import.partial.json",
+          "bytes": 3476,
+          "sha256": "18b0557c4b4dd833485a59b7b04f6dc04faf5a839d09b7efc9002e1104524c51"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/first-failure/assets/base.jpg",
+          "bytes": 825,
+          "sha256": "71147f4b90f87c14679d2cec406cbb07b99a95074e58d49f5321261d30fe7339"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/first-failure/assets/base.jpg.rgba",
+          "bytes": 1152,
+          "sha256": "e1532b4c932127cbb8dde264028a54a47069898eabce3e1ed5ef406c467c323a"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/first-failure/assets/invalid.png",
+          "bytes": 21,
+          "sha256": "b2d9765207ea5c5c6f953990f7eaacbbd45584a4b81162a4562f50fbf78eda2d"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/first-failure/assets/scan-exif.jpg",
+          "bytes": 861,
+          "sha256": "fad2e5c3a9850c3f2258d51f4c2855274403afb6d80acadcccdf163f9d14987d"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/first-failure/assets/scan-exif.jpg.rgba",
+          "bytes": 1152,
+          "sha256": "e1532b4c932127cbb8dde264028a54a47069898eabce3e1ed5ef406c467c323a"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/first-failure/assets/scan.bmp",
+          "bytes": 918,
+          "sha256": "7578a1d90a6bf3601fe99d4c88ca4cb892e1c6bcb5df40b68af8abdae6659f78"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/first-failure/assets/scan.bmp.rgba",
+          "bytes": 1152,
+          "sha256": "a0c4f27060176e3b323ee72fd8535e14766fea6cd49e255ce8e970a0833d7a2d"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/first-failure/assets/scan.png",
+          "bytes": 1253,
+          "sha256": "3eb523a44de80c971b7f0f16729abf6ed31e3eb1e0477d52f87c7542e397c94d"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/first-failure/assets/scan.png.rgba",
+          "bytes": 1152,
+          "sha256": "02de754fe22b81eb713108b9f7686661e51fda16c3dc178f47a36c3f5ddb6879"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/first-failure/assets/scan.webp",
+          "bytes": 270,
+          "sha256": "a245c4f5347453a9907e1e9baf238317feee4aeb2f0ce14cbfaf288c4aec6e5a"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/first-failure/assets/scan.webp.rgba",
+          "bytes": 1152,
+          "sha256": "ee951acac0e61e129920adbd835651a3fac16d0cdfa6f66a00fcda7366001b4d"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/first-failure/assets/scan16.tif",
+          "bytes": 2470,
+          "sha256": "df6b54004176a0e53e85cb36780042cfd40871fe6a50565fd924c886d4c226f0"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/first-failure/assets/scan16.tif.rgba",
+          "bytes": 1152,
+          "sha256": "7ffec69abf0ed9751627d371411424d86c9a39bc6025befd29eabebaac7aeeb0"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/capture/attempt-1/invocation.json",
+          "bytes": 685,
+          "sha256": "f0cf59fb1c65441c91c0b09ba27f059cc427d0a6647725cbec4a894f2c9d0dc3"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/capture/attempt-1/result.json",
+          "bytes": 737,
+          "sha256": "e49066e4928fdacce3047f36c6588cf55238242ac3dec0c2bafae99894a3fe29"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/capture/attempt-1/stderr.log",
+          "bytes": 179,
+          "sha256": "9814167eefd10764b814ebe0fc1b8190481d594a81b611da7d75a9433efe6267"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/capture/attempt-1/stdout.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/capture/attempt-2/invocation.json",
+          "bytes": 642,
+          "sha256": "11795d38df2d88e3c9c859c957d74d8ebcc55da0f9ee81c2735f92df30f01247"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/capture/attempt-2/result.json",
+          "bytes": 694,
+          "sha256": "2b96d81895b31956383c22190e29d0d8db69f7be90f44fa446171f0895c3e679"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/capture/attempt-2/stderr.log",
+          "bytes": 3802,
+          "sha256": "f6702550d9adfdf54301c36f617ac8b5e247fc5af04576d9048fde1f0e3d24ae"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/capture/attempt-2/stdout.log",
+          "bytes": 42,
+          "sha256": "68f5b5c7ec6967dd367cf429673b88e82500eaca56dfe35a952506657d0ae09e"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/capture-source/scripts/reference-image-import.py",
+          "bytes": 15166,
+          "sha256": "a5dc9c8f8b794947544efe26477bc82e81d22b241f55b678128305b19c12b5af"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/capture-source/scripts/reference-nested-import.py",
+          "bytes": 4180,
+          "sha256": "1cd756cc1db3389e3922a5c34afe41af29b91061ce30bff77e945d7b346d629b"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/capture-source/docs/audits/image-import/fixture-contract.json",
+          "bytes": 1819,
+          "sha256": "ce226f6e41656ab8366224f23576655e8fcb04169ea8fff08c939ba0f79d7566"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/image/source/capture-source/docs/audits/image-import/historical/failed-producer.py",
+          "bytes": 15184,
+          "sha256": "d9dec9af5813f51f18fdcce8f94fa539c78f7ee6eccdefeff6a70119049ffc3e"
+        }
+      ]
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/stl/native/picker",
+      "logical_bytes": 83008080,
+      "files": [
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/stl/native/picker/kdialog",
+          "bytes": 83008080,
+          "sha256": "039ea9fcdb94ebb7637b3136595d47911657edd03de8bb7fcb4791f582019f11"
+        }
+      ]
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source",
+      "logical_bytes": 11645379,
+      "files": [
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/LICENSE",
+          "bytes": 35149,
+          "sha256": "3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/ascii.stl",
+          "bytes": 1397,
+          "sha256": "332adb3482b7c5202949a3b83fbb67b3b3966e7219dd7c4f2eca452f964edab7"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/chooser-cancel-input.igz",
+          "bytes": 3552,
+          "sha256": "491fac56c3cdc59cc90a1a7bad2a25d40b0b1d8445034446903fe3afa679bd6e"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/completed-cases.json",
+          "bytes": 3060997,
+          "sha256": "4513dc410fa0ca6b52d96656f6a0ecaf47088913bdf42e7433ec5cbf9b469f42"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/cube.stl",
+          "bytes": 684,
+          "sha256": "859d674fd7c990c92ee666e23818dc60d75cf8ef666bd452b43b2cc2398c8324"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/default-cube-input.igz",
+          "bytes": 3552,
+          "sha256": "75633b7fe10f721b3a2ac2ec399985a479b6280705aa28c07b67d57a0423484c"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/default-cube-saved.igz",
+          "bytes": 7516,
+          "sha256": "6b1b7f47358442358be4f862694e561327ac62ed0776e5c724e5fa0b508c92e7"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/degenerate.stl",
+          "bytes": 734,
+          "sha256": "f61de258aa81aa18213ac4f471e7d3df498dbd92bf43080ccc26246de6ace33a"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/flat-large-editable-input.igz",
+          "bytes": 3552,
+          "sha256": "8b7f9539665e93a950e390e98bd2b726ab3bee3957f515fc216e35af80f6de0d"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/flat-large-editable-saved.igz",
+          "bytes": 6532,
+          "sha256": "ca7368f4f0f21b73ebc04f1e34ea282bb421d9f6ba9c23cf492d6cb864349d2d"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/grid.stl",
+          "bytes": 63084,
+          "sha256": "e19b27d7f6861eac69a6f61f9635b7f4a305e8877eb0662366bd147eb9b59c6b"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/ignored-normal.stl",
+          "bytes": 684,
+          "sha256": "96684a82ad632b877996b5924323d1e8ed1eeeefb1338f329f5ba5265856b6ce"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/large-nested-input.igz",
+          "bytes": 3552,
+          "sha256": "09d9c70f4b3ce4770c76643a52ce1f922e686f39f507f61b37e607a26037f733"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/large-nested-saved.igz",
+          "bytes": 396807,
+          "sha256": "1b6cfdf9625669989f33eff55b45096248fbece4f2fa008da5231bd528fdff4a"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/large-root-input.igz",
+          "bytes": 3552,
+          "sha256": "e37a881daa1014bacaf4559915b99dac1709926aa7e66da99f0340f4975cb49d"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/large-root-saved.igz",
+          "bytes": 396535,
+          "sha256": "2dfeaddd88b862366efede4917d898f28610de04c5be3dda404bde0d6cd0293a"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/large.stl",
+          "bytes": 20134,
+          "sha256": "9df566c9ef8a8ebd66e39c3c95872ef055141dc867822995d06ed11a3061aa23"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/malformed.stl",
+          "bytes": 43,
+          "sha256": "02e7c50e290f6355abec66fa303e449b03b5d5ca136d8c6eea59f8cf6a903892"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/none-cube-input.igz",
+          "bytes": 3552,
+          "sha256": "96f86442ab834a01831577c755d3eafe1da24cfe21fa8075b455a71497f9d168"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/none-cube-saved.igz",
+          "bytes": 7516,
+          "sha256": "9d9a0cead6a12da9c57a6fcd9b567c06b2b91102580cc54da7168f4558649466"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/nonfinite.stl",
+          "bytes": 134,
+          "sha256": "f15bf35b3e3b6349fb94d4fca092b1385a8be0697b29b5ed8d9d05e55d2c36db"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/original-stl.json",
+          "bytes": 3092735,
+          "sha256": "66bf9b5a858ce4a91a1e09fdad7806fea04a8212f4b8c1c1b8e0820cb4c91a17"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/original-stl.partial.json",
+          "bytes": 3060727,
+          "sha256": "749f707641025fd36c9147b16910d0438b1970e800bcc7475093aea00ed08702"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/parse-failure-input.igz",
+          "bytes": 3552,
+          "sha256": "5e622b9036807883df0b498843c1a8f783ec238d6e5185219e52cc2eb3b837a4"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/small-nested-input.igz",
+          "bytes": 3552,
+          "sha256": "1079fbb8b80fddd8aac7bf799ff3dbc0cabc660975fe017ebc1f35bc4c8bda27"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/small-nested-saved.igz",
+          "bytes": 9392,
+          "sha256": "d92329d69cbefb8e98140807548a453a3912f8420bed5d39b010cf3230be8dce"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/solid-binary.stl",
+          "bytes": 684,
+          "sha256": "deb88f98d6b997ee53c85d93fced978cee3000cbdaee007a4daee9a022279243"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/tilted-all-input.igz",
+          "bytes": 3552,
+          "sha256": "c71237debf9caa76d9ac7532e7a31aa548a149728b24691bb650ffa6a1822fe6"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/tilted-all-saved.igz",
+          "bytes": 4528,
+          "sha256": "ef33fae9d3c939fc89c047f1e03831c7c44288bf84d36e2cb87218a09af63586"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/tilted-principal-input.igz",
+          "bytes": 3552,
+          "sha256": "758fe1710d74770f5f85ff747d5fd57723aadc1d54e45947d0e9121f8048692c"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/tilted-principal-saved.igz",
+          "bytes": 4882,
+          "sha256": "b503638c401f0667001fd95773b7c0d75d61cca0b4e27c43f8cb188747a42b20"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/tilted.stl",
+          "bytes": 184,
+          "sha256": "dca90927819381236dc14c36351dadced8bba80279ea90e4484f3466873fc715"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/trailing.stl",
+          "bytes": 700,
+          "sha256": "b1a2cb37f7b9c4fa8584be4a3fe0eb3430374860dbbfe9de27dabce722d73715"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/unit-cancel-input.igz",
+          "bytes": 3552,
+          "sha256": "49d1e937d0feef8c1a861a236e86df95a520022ec5fc99e970f50e87b062e4eb"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/capture/invocation.json",
+          "bytes": 556,
+          "sha256": "dabcd274f145e9ec29827ea9233ceb0ac9722bea57a7e505d73d3ea5c01a61ee"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/capture/result.json",
+          "bytes": 607,
+          "sha256": "de6d6fee9067a8df70fd29c7f10e8765cad11fba536486c4069e8560d8628da4"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/capture/stderr.log",
+          "bytes": 3269,
+          "sha256": "ef878cd8539f1eee73293e9ef08bf9cd77f41d4bf370f8a5e5936a085470c038"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/capture/stdout.log",
+          "bytes": 43,
+          "sha256": "31c67c05993e3bb63dd3fe0c45d5d499a8eb75e8da4d6dbc4954f85dfc083178"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/settings/STLProof/STLProof.ini",
+          "bytes": 70,
+          "sha256": "b4ec3e5591940bda012b6977f5b91cf63ef31d80e253900f14cbeb495a620905"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/original-source/core/group.py",
+          "bytes": 37346,
+          "sha256": "9ba6a20eca241cb4969a545a3784fcff25566166606d5447a18780747d4f11c5"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/original-source/core/history.py",
+          "bytes": 161511,
+          "sha256": "2eb66a1d557099b51383988a7819145289fc4ce2c37fc7de3a92ed35b5830559"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/original-source/core/i18n.py",
+          "bytes": 3089,
+          "sha256": "827c103da11a2e1fd676ba53d32f18b2b11a606a7e51308ed07cb4b71cd61dba"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/original-source/core/mesh.py",
+          "bytes": 74619,
+          "sha256": "5f2c1625e6dd717db029ba39a9de337e75beec06bd0df28a592a8a34875ca22c"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/original-source/core/scene.py",
+          "bytes": 34219,
+          "sha256": "9dfcd32f1ff5b1445180eafd8df36eafb92fa08ed3597bb90eac09554899d2e0"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/original-source/core/topology.py",
+          "bytes": 69455,
+          "sha256": "f16d136706d0a7ce4f5c382c9318126e45639a38d969f13f0196f852df858c0e"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/original-source/formats/dae.py",
+          "bytes": 48406,
+          "sha256": "9082599e1130b1d70af23cf3715a1566b18908f41fc0498d28b235baef7331dc"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/original-source/formats/fuse.py",
+          "bytes": 16553,
+          "sha256": "60f77cdaf8c499b4f8c9ed86940e9a4b937ffae18831f0b56435e1b441f633ae"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/original-source/formats/igz.py",
+          "bytes": 41235,
+          "sha256": "f318d685830c49c2fede7fd5a238ac7a1469ee0b0226cf48cab3751e194a9576"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/original-source/formats/stl.py",
+          "bytes": 11852,
+          "sha256": "07837af511f718194f85498aa13820363617ccbf7aa8da9bdb3575a1759ddd7a"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/original-source/tests/test_stl_import.py",
+          "bytes": 9053,
+          "sha256": "579db3ad1b07bbe582898f90d0a9fd820874555de21339f7b7c7d274cc4b3111"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/original-source/views/main_window.py",
+          "bytes": 286141,
+          "sha256": "ea02be3e439c80731d0f5b5fde3d92d9b3f62e8ad10cd44ad305c3261b7786fa"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/original-source/views/viewport.py",
+          "bytes": 622724,
+          "sha256": "1fb62f55b8f559deb3676924ee69a9a444397faa28c49651111cea44e420c724"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/capture-source/scripts/reference-nested-import.py",
+          "bytes": 4180,
+          "sha256": "1cd756cc1db3389e3922a5c34afe41af29b91061ce30bff77e945d7b346d629b"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r1/stl/source/capture-source/scripts/reference-stl-import.py",
+          "bytes": 9601,
+          "sha256": "b2738d950c8a2401c6d3fae700f14f2b013b439dff3ccfb6337dc0ec265a9c5e"
+        }
+      ]
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/image/data",
+      "logical_bytes": 378287,
+      "files": [
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/image/data/IngeTrazo/textures/embedded/c9aa332dbb00581d-ingeniero.png",
+          "bytes": 372245,
+          "sha256": "be7b463c8b2eec4e7635b2f1efbc1705267ff39ada6a0e4935eebe2e13799e13"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/image/data/IngeTrazo/textures/embedded/8bfb120c9fc470e5-scan.png",
+          "bytes": 1253,
+          "sha256": "3eb523a44de80c971b7f0f16729abf6ed31e3eb1e0477d52f87c7542e397c94d"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/image/data/IngeTrazo/textures/embedded/398880792416ea15-scan-exif.jpg",
+          "bytes": 861,
+          "sha256": "fad2e5c3a9850c3f2258d51f4c2855274403afb6d80acadcccdf163f9d14987d"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/image/data/IngeTrazo/textures/embedded/5094681a615970a1-scan.webp",
+          "bytes": 270,
+          "sha256": "a245c4f5347453a9907e1e9baf238317feee4aeb2f0ce14cbfaf288c4aec6e5a"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/image/data/IngeTrazo/textures/embedded/5094681a615970a1-renamed.webp",
+          "bytes": 270,
+          "sha256": "a245c4f5347453a9907e1e9baf238317feee4aeb2f0ce14cbfaf288c4aec6e5a"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/image/data/IngeTrazo/textures/embedded/d5c68fb78657fc3c-scan.bmp",
+          "bytes": 918,
+          "sha256": "7578a1d90a6bf3601fe99d4c88ca4cb892e1c6bcb5df40b68af8abdae6659f78"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/image/data/IngeTrazo/textures/embedded/73188750f8b2924b-scan16.tif",
+          "bytes": 2470,
+          "sha256": "df6b54004176a0e53e85cb36780042cfd40871fe6a50565fd924c886d4c226f0"
+        }
+      ]
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/image/native/picker",
+      "logical_bytes": 83280544,
+      "files": [
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/image/native/picker/kdialog",
+          "bytes": 83280544,
+          "sha256": "86a47120e0669f5c34dc42aadc9e19d05a84c2a7d545a7bb0604ef4ab4cc1e65"
+        }
+      ]
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/image/source",
+      "logical_bytes": 8016399,
+      "files": [
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/LICENSE",
+          "bytes": 35149,
+          "sha256": "3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/bmp-free-aspect-input.igz",
+          "bytes": 373089,
+          "sha256": "dc9acc6ad6c56be613a639426eefdff10d6dfedf49481852bdba3f4b8a321b08"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/bmp-free-aspect-saved.igz",
+          "bytes": 374256,
+          "sha256": "bd85b741bf8b61ff150fb661dd621eda14715daa5513cb159672c5a164ca5bc7"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/cancel-invalid-escape-input.igz",
+          "bytes": 373089,
+          "sha256": "8194cd0edcbfd5f9658dc8c617c67b20a973675ff58d34962b485d74f9a73311"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/cancel-invalid-escape-saved.igz",
+          "bytes": 374590,
+          "sha256": "5921a149af846a732fc9a44ebdb3b484b65784877f6c42bcbc5f2664c59ab7af"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/completed-cases.json",
+          "bytes": 895843,
+          "sha256": "cacbac5515e7ee0bceb2550f6e552b41da2b1175526de8dd361415c2ca09ab52"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/jpeg-exif-pair-input.igz",
+          "bytes": 373085,
+          "sha256": "dbc6c0eae03c937d9926422db5d00bab4054997dbda04085d30a5a75e4858445"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/jpeg-exif-pair-saved.igz",
+          "bytes": 374230,
+          "sha256": "841c234fab6367fca33d82ce424efc0da24462bfec2afa3326c100118b253688"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/nested-width-cm-input.igz",
+          "bytes": 1366,
+          "sha256": "39a201b9ba28d35ffa5e9c4adf939176ea5683a739f1b30f89bcfe6151916cfc"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/nested-width-cm-saved.igz",
+          "bytes": 2048,
+          "sha256": "42b2c370debdb4c5da26f86b2ef4f8f23055275d4fa03feb9bdef448b3a54c8f"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/oblique-face-width-input.igz",
+          "bytes": 373157,
+          "sha256": "5c88b1d0e2a403b0e57dec00a9eed198c4c705dd148103e2ff47f7da1e234b61"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/oblique-face-width-saved.igz",
+          "bytes": 374673,
+          "sha256": "c76901ab19896f1f713be5f8b2e5f2cfd33602e4701b5cfc63a9335db128fe53"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/original-image-import.json",
+          "bytes": 899350,
+          "sha256": "d37471e29895a2d8c3adea3e9577afc6f6a293056a4b910118db60c906725b78"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/original-image-import.partial.json",
+          "bytes": 875078,
+          "sha256": "cea0d9fbab89376f29ab95b26b5f31110606005c0ef19dc7e17301affbfadf12"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/png-drag-transparency-input.igz",
+          "bytes": 373089,
+          "sha256": "f57a8d35de945541bebd34613c3c57a85a93eec4c44758d71b69bf32303e5a71"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/png-drag-transparency-saved.igz",
+          "bytes": 374592,
+          "sha256": "e06cf75b648eeea9cbafe21140fdeb01d2459e62542d799f5f5a5662610edcc5"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/tiff16-orientation-input.igz",
+          "bytes": 373089,
+          "sha256": "c82023cc72a2a4244e1ceeffd8c42809bf3d90d23410556d08e0f7c86bf93690"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/tiff16-orientation-saved.igz",
+          "bytes": 375817,
+          "sha256": "0330b014c1cd9ad2f914a993e939f9b7b7c2594f8b658973c55b75166290e68a"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/webp-reuse-names-input.igz",
+          "bytes": 373088,
+          "sha256": "e2a15ebdc0cf048557f3430baffb61d4843d3fdff8ab02a58b07d63a2c117f1c"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/webp-reuse-names-saved.igz",
+          "bytes": 374055,
+          "sha256": "44ffe24a52ea2630b5fc06fe6eb99b4e6b6e209cc7a32931a989be1c789b4cf2"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/assets/base.jpg",
+          "bytes": 825,
+          "sha256": "71147f4b90f87c14679d2cec406cbb07b99a95074e58d49f5321261d30fe7339"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/assets/base.jpg.rgba",
+          "bytes": 1152,
+          "sha256": "e1532b4c932127cbb8dde264028a54a47069898eabce3e1ed5ef406c467c323a"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/assets/invalid.png",
+          "bytes": 21,
+          "sha256": "b2d9765207ea5c5c6f953990f7eaacbbd45584a4b81162a4562f50fbf78eda2d"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/assets/scan-exif.jpg",
+          "bytes": 861,
+          "sha256": "fad2e5c3a9850c3f2258d51f4c2855274403afb6d80acadcccdf163f9d14987d"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/assets/scan-exif.jpg.rgba",
+          "bytes": 1152,
+          "sha256": "e1532b4c932127cbb8dde264028a54a47069898eabce3e1ed5ef406c467c323a"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/assets/scan.bmp",
+          "bytes": 918,
+          "sha256": "7578a1d90a6bf3601fe99d4c88ca4cb892e1c6bcb5df40b68af8abdae6659f78"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/assets/scan.bmp.rgba",
+          "bytes": 1152,
+          "sha256": "a0c4f27060176e3b323ee72fd8535e14766fea6cd49e255ce8e970a0833d7a2d"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/assets/scan.png",
+          "bytes": 1253,
+          "sha256": "3eb523a44de80c971b7f0f16729abf6ed31e3eb1e0477d52f87c7542e397c94d"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/assets/scan.png.rgba",
+          "bytes": 1152,
+          "sha256": "02de754fe22b81eb713108b9f7686661e51fda16c3dc178f47a36c3f5ddb6879"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/assets/scan.webp",
+          "bytes": 270,
+          "sha256": "a245c4f5347453a9907e1e9baf238317feee4aeb2f0ce14cbfaf288c4aec6e5a"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/assets/scan.webp.rgba",
+          "bytes": 1152,
+          "sha256": "ee951acac0e61e129920adbd835651a3fac16d0cdfa6f66a00fcda7366001b4d"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/assets/scan16.tif",
+          "bytes": 2470,
+          "sha256": "df6b54004176a0e53e85cb36780042cfd40871fe6a50565fd924c886d4c226f0"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/assets/scan16.tif.rgba",
+          "bytes": 1152,
+          "sha256": "7ffec69abf0ed9751627d371411424d86c9a39bc6025befd29eabebaac7aeeb0"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/first-failure/original-image-import.partial.json",
+          "bytes": 3476,
+          "sha256": "18b0557c4b4dd833485a59b7b04f6dc04faf5a839d09b7efc9002e1104524c51"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/first-failure/assets/base.jpg",
+          "bytes": 825,
+          "sha256": "71147f4b90f87c14679d2cec406cbb07b99a95074e58d49f5321261d30fe7339"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/first-failure/assets/base.jpg.rgba",
+          "bytes": 1152,
+          "sha256": "e1532b4c932127cbb8dde264028a54a47069898eabce3e1ed5ef406c467c323a"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/first-failure/assets/invalid.png",
+          "bytes": 21,
+          "sha256": "b2d9765207ea5c5c6f953990f7eaacbbd45584a4b81162a4562f50fbf78eda2d"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/first-failure/assets/scan-exif.jpg",
+          "bytes": 861,
+          "sha256": "fad2e5c3a9850c3f2258d51f4c2855274403afb6d80acadcccdf163f9d14987d"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/first-failure/assets/scan-exif.jpg.rgba",
+          "bytes": 1152,
+          "sha256": "e1532b4c932127cbb8dde264028a54a47069898eabce3e1ed5ef406c467c323a"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/first-failure/assets/scan.bmp",
+          "bytes": 918,
+          "sha256": "7578a1d90a6bf3601fe99d4c88ca4cb892e1c6bcb5df40b68af8abdae6659f78"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/first-failure/assets/scan.bmp.rgba",
+          "bytes": 1152,
+          "sha256": "a0c4f27060176e3b323ee72fd8535e14766fea6cd49e255ce8e970a0833d7a2d"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/first-failure/assets/scan.png",
+          "bytes": 1253,
+          "sha256": "3eb523a44de80c971b7f0f16729abf6ed31e3eb1e0477d52f87c7542e397c94d"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/first-failure/assets/scan.png.rgba",
+          "bytes": 1152,
+          "sha256": "02de754fe22b81eb713108b9f7686661e51fda16c3dc178f47a36c3f5ddb6879"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/first-failure/assets/scan.webp",
+          "bytes": 270,
+          "sha256": "a245c4f5347453a9907e1e9baf238317feee4aeb2f0ce14cbfaf288c4aec6e5a"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/first-failure/assets/scan.webp.rgba",
+          "bytes": 1152,
+          "sha256": "ee951acac0e61e129920adbd835651a3fac16d0cdfa6f66a00fcda7366001b4d"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/first-failure/assets/scan16.tif",
+          "bytes": 2470,
+          "sha256": "df6b54004176a0e53e85cb36780042cfd40871fe6a50565fd924c886d4c226f0"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/first-failure/assets/scan16.tif.rgba",
+          "bytes": 1152,
+          "sha256": "7ffec69abf0ed9751627d371411424d86c9a39bc6025befd29eabebaac7aeeb0"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/capture/attempt-1/invocation.json",
+          "bytes": 685,
+          "sha256": "f0cf59fb1c65441c91c0b09ba27f059cc427d0a6647725cbec4a894f2c9d0dc3"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/capture/attempt-1/result.json",
+          "bytes": 737,
+          "sha256": "e49066e4928fdacce3047f36c6588cf55238242ac3dec0c2bafae99894a3fe29"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/capture/attempt-1/stderr.log",
+          "bytes": 179,
+          "sha256": "9814167eefd10764b814ebe0fc1b8190481d594a81b611da7d75a9433efe6267"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/capture/attempt-1/stdout.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/capture/attempt-2/invocation.json",
+          "bytes": 642,
+          "sha256": "11795d38df2d88e3c9c859c957d74d8ebcc55da0f9ee81c2735f92df30f01247"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/capture/attempt-2/result.json",
+          "bytes": 694,
+          "sha256": "2b96d81895b31956383c22190e29d0d8db69f7be90f44fa446171f0895c3e679"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/capture/attempt-2/stderr.log",
+          "bytes": 3802,
+          "sha256": "f6702550d9adfdf54301c36f617ac8b5e247fc5af04576d9048fde1f0e3d24ae"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/capture/attempt-2/stdout.log",
+          "bytes": 42,
+          "sha256": "68f5b5c7ec6967dd367cf429673b88e82500eaca56dfe35a952506657d0ae09e"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/capture-source/scripts/reference-image-import.py",
+          "bytes": 15166,
+          "sha256": "a5dc9c8f8b794947544efe26477bc82e81d22b241f55b678128305b19c12b5af"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/capture-source/scripts/reference-nested-import.py",
+          "bytes": 4180,
+          "sha256": "1cd756cc1db3389e3922a5c34afe41af29b91061ce30bff77e945d7b346d629b"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/capture-source/docs/audits/image-import/fixture-contract.json",
+          "bytes": 1819,
+          "sha256": "ce226f6e41656ab8366224f23576655e8fcb04169ea8fff08c939ba0f79d7566"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/image/source/capture-source/docs/audits/image-import/historical/failed-producer.py",
+          "bytes": 15184,
+          "sha256": "d9dec9af5813f51f18fdcce8f94fa539c78f7ee6eccdefeff6a70119049ffc3e"
+        }
+      ]
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/stl/native/picker",
+      "logical_bytes": 83008096,
+      "files": [
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/stl/native/picker/kdialog",
+          "bytes": 83008096,
+          "sha256": "c61e898b194abc22406971c917d02390b933e5be7e2bc9ab19d43ccaf52f1ae6"
+        }
+      ]
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source",
+      "logical_bytes": 11645379,
+      "files": [
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/LICENSE",
+          "bytes": 35149,
+          "sha256": "3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/ascii.stl",
+          "bytes": 1397,
+          "sha256": "332adb3482b7c5202949a3b83fbb67b3b3966e7219dd7c4f2eca452f964edab7"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/chooser-cancel-input.igz",
+          "bytes": 3552,
+          "sha256": "491fac56c3cdc59cc90a1a7bad2a25d40b0b1d8445034446903fe3afa679bd6e"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/completed-cases.json",
+          "bytes": 3060997,
+          "sha256": "4513dc410fa0ca6b52d96656f6a0ecaf47088913bdf42e7433ec5cbf9b469f42"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/cube.stl",
+          "bytes": 684,
+          "sha256": "859d674fd7c990c92ee666e23818dc60d75cf8ef666bd452b43b2cc2398c8324"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/default-cube-input.igz",
+          "bytes": 3552,
+          "sha256": "75633b7fe10f721b3a2ac2ec399985a479b6280705aa28c07b67d57a0423484c"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/default-cube-saved.igz",
+          "bytes": 7516,
+          "sha256": "6b1b7f47358442358be4f862694e561327ac62ed0776e5c724e5fa0b508c92e7"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/degenerate.stl",
+          "bytes": 734,
+          "sha256": "f61de258aa81aa18213ac4f471e7d3df498dbd92bf43080ccc26246de6ace33a"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/flat-large-editable-input.igz",
+          "bytes": 3552,
+          "sha256": "8b7f9539665e93a950e390e98bd2b726ab3bee3957f515fc216e35af80f6de0d"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/flat-large-editable-saved.igz",
+          "bytes": 6532,
+          "sha256": "ca7368f4f0f21b73ebc04f1e34ea282bb421d9f6ba9c23cf492d6cb864349d2d"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/grid.stl",
+          "bytes": 63084,
+          "sha256": "e19b27d7f6861eac69a6f61f9635b7f4a305e8877eb0662366bd147eb9b59c6b"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/ignored-normal.stl",
+          "bytes": 684,
+          "sha256": "96684a82ad632b877996b5924323d1e8ed1eeeefb1338f329f5ba5265856b6ce"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/large-nested-input.igz",
+          "bytes": 3552,
+          "sha256": "09d9c70f4b3ce4770c76643a52ce1f922e686f39f507f61b37e607a26037f733"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/large-nested-saved.igz",
+          "bytes": 396807,
+          "sha256": "1b6cfdf9625669989f33eff55b45096248fbece4f2fa008da5231bd528fdff4a"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/large-root-input.igz",
+          "bytes": 3552,
+          "sha256": "e37a881daa1014bacaf4559915b99dac1709926aa7e66da99f0340f4975cb49d"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/large-root-saved.igz",
+          "bytes": 396535,
+          "sha256": "2dfeaddd88b862366efede4917d898f28610de04c5be3dda404bde0d6cd0293a"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/large.stl",
+          "bytes": 20134,
+          "sha256": "9df566c9ef8a8ebd66e39c3c95872ef055141dc867822995d06ed11a3061aa23"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/malformed.stl",
+          "bytes": 43,
+          "sha256": "02e7c50e290f6355abec66fa303e449b03b5d5ca136d8c6eea59f8cf6a903892"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/none-cube-input.igz",
+          "bytes": 3552,
+          "sha256": "96f86442ab834a01831577c755d3eafe1da24cfe21fa8075b455a71497f9d168"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/none-cube-saved.igz",
+          "bytes": 7516,
+          "sha256": "9d9a0cead6a12da9c57a6fcd9b567c06b2b91102580cc54da7168f4558649466"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/nonfinite.stl",
+          "bytes": 134,
+          "sha256": "f15bf35b3e3b6349fb94d4fca092b1385a8be0697b29b5ed8d9d05e55d2c36db"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/original-stl.json",
+          "bytes": 3092735,
+          "sha256": "66bf9b5a858ce4a91a1e09fdad7806fea04a8212f4b8c1c1b8e0820cb4c91a17"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/original-stl.partial.json",
+          "bytes": 3060727,
+          "sha256": "749f707641025fd36c9147b16910d0438b1970e800bcc7475093aea00ed08702"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/parse-failure-input.igz",
+          "bytes": 3552,
+          "sha256": "5e622b9036807883df0b498843c1a8f783ec238d6e5185219e52cc2eb3b837a4"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/small-nested-input.igz",
+          "bytes": 3552,
+          "sha256": "1079fbb8b80fddd8aac7bf799ff3dbc0cabc660975fe017ebc1f35bc4c8bda27"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/small-nested-saved.igz",
+          "bytes": 9392,
+          "sha256": "d92329d69cbefb8e98140807548a453a3912f8420bed5d39b010cf3230be8dce"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/solid-binary.stl",
+          "bytes": 684,
+          "sha256": "deb88f98d6b997ee53c85d93fced978cee3000cbdaee007a4daee9a022279243"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/tilted-all-input.igz",
+          "bytes": 3552,
+          "sha256": "c71237debf9caa76d9ac7532e7a31aa548a149728b24691bb650ffa6a1822fe6"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/tilted-all-saved.igz",
+          "bytes": 4528,
+          "sha256": "ef33fae9d3c939fc89c047f1e03831c7c44288bf84d36e2cb87218a09af63586"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/tilted-principal-input.igz",
+          "bytes": 3552,
+          "sha256": "758fe1710d74770f5f85ff747d5fd57723aadc1d54e45947d0e9121f8048692c"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/tilted-principal-saved.igz",
+          "bytes": 4882,
+          "sha256": "b503638c401f0667001fd95773b7c0d75d61cca0b4e27c43f8cb188747a42b20"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/tilted.stl",
+          "bytes": 184,
+          "sha256": "dca90927819381236dc14c36351dadced8bba80279ea90e4484f3466873fc715"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/trailing.stl",
+          "bytes": 700,
+          "sha256": "b1a2cb37f7b9c4fa8584be4a3fe0eb3430374860dbbfe9de27dabce722d73715"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/unit-cancel-input.igz",
+          "bytes": 3552,
+          "sha256": "49d1e937d0feef8c1a861a236e86df95a520022ec5fc99e970f50e87b062e4eb"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/capture/invocation.json",
+          "bytes": 556,
+          "sha256": "dabcd274f145e9ec29827ea9233ceb0ac9722bea57a7e505d73d3ea5c01a61ee"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/capture/result.json",
+          "bytes": 607,
+          "sha256": "de6d6fee9067a8df70fd29c7f10e8765cad11fba536486c4069e8560d8628da4"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/capture/stderr.log",
+          "bytes": 3269,
+          "sha256": "ef878cd8539f1eee73293e9ef08bf9cd77f41d4bf370f8a5e5936a085470c038"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/capture/stdout.log",
+          "bytes": 43,
+          "sha256": "31c67c05993e3bb63dd3fe0c45d5d499a8eb75e8da4d6dbc4954f85dfc083178"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/settings/STLProof/STLProof.ini",
+          "bytes": 70,
+          "sha256": "b4ec3e5591940bda012b6977f5b91cf63ef31d80e253900f14cbeb495a620905"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/original-source/core/group.py",
+          "bytes": 37346,
+          "sha256": "9ba6a20eca241cb4969a545a3784fcff25566166606d5447a18780747d4f11c5"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/original-source/core/history.py",
+          "bytes": 161511,
+          "sha256": "2eb66a1d557099b51383988a7819145289fc4ce2c37fc7de3a92ed35b5830559"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/original-source/core/i18n.py",
+          "bytes": 3089,
+          "sha256": "827c103da11a2e1fd676ba53d32f18b2b11a606a7e51308ed07cb4b71cd61dba"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/original-source/core/mesh.py",
+          "bytes": 74619,
+          "sha256": "5f2c1625e6dd717db029ba39a9de337e75beec06bd0df28a592a8a34875ca22c"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/original-source/core/scene.py",
+          "bytes": 34219,
+          "sha256": "9dfcd32f1ff5b1445180eafd8df36eafb92fa08ed3597bb90eac09554899d2e0"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/original-source/core/topology.py",
+          "bytes": 69455,
+          "sha256": "f16d136706d0a7ce4f5c382c9318126e45639a38d969f13f0196f852df858c0e"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/original-source/formats/dae.py",
+          "bytes": 48406,
+          "sha256": "9082599e1130b1d70af23cf3715a1566b18908f41fc0498d28b235baef7331dc"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/original-source/formats/fuse.py",
+          "bytes": 16553,
+          "sha256": "60f77cdaf8c499b4f8c9ed86940e9a4b937ffae18831f0b56435e1b441f633ae"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/original-source/formats/igz.py",
+          "bytes": 41235,
+          "sha256": "f318d685830c49c2fede7fd5a238ac7a1469ee0b0226cf48cab3751e194a9576"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/original-source/formats/stl.py",
+          "bytes": 11852,
+          "sha256": "07837af511f718194f85498aa13820363617ccbf7aa8da9bdb3575a1759ddd7a"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/original-source/tests/test_stl_import.py",
+          "bytes": 9053,
+          "sha256": "579db3ad1b07bbe582898f90d0a9fd820874555de21339f7b7c7d274cc4b3111"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/original-source/views/main_window.py",
+          "bytes": 286141,
+          "sha256": "ea02be3e439c80731d0f5b5fde3d92d9b3f62e8ad10cd44ad305c3261b7786fa"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/original-source/views/viewport.py",
+          "bytes": 622724,
+          "sha256": "1fb62f55b8f559deb3676924ee69a9a444397faa28c49651111cea44e420c724"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/capture-source/scripts/reference-nested-import.py",
+          "bytes": 4180,
+          "sha256": "1cd756cc1db3389e3922a5c34afe41af29b91061ce30bff77e945d7b346d629b"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r2/stl/source/capture-source/scripts/reference-stl-import.py",
+          "bytes": 9601,
+          "sha256": "b2738d950c8a2401c6d3fae700f14f2b013b439dff3ccfb6337dc0ec265a9c5e"
+        }
+      ]
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/image/data",
+      "logical_bytes": 378287,
+      "files": [
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/image/data/IngeTrazo/textures/embedded/c9aa332dbb00581d-ingeniero.png",
+          "bytes": 372245,
+          "sha256": "be7b463c8b2eec4e7635b2f1efbc1705267ff39ada6a0e4935eebe2e13799e13"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/image/data/IngeTrazo/textures/embedded/8bfb120c9fc470e5-scan.png",
+          "bytes": 1253,
+          "sha256": "3eb523a44de80c971b7f0f16729abf6ed31e3eb1e0477d52f87c7542e397c94d"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/image/data/IngeTrazo/textures/embedded/398880792416ea15-scan-exif.jpg",
+          "bytes": 861,
+          "sha256": "fad2e5c3a9850c3f2258d51f4c2855274403afb6d80acadcccdf163f9d14987d"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/image/data/IngeTrazo/textures/embedded/5094681a615970a1-scan.webp",
+          "bytes": 270,
+          "sha256": "a245c4f5347453a9907e1e9baf238317feee4aeb2f0ce14cbfaf288c4aec6e5a"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/image/data/IngeTrazo/textures/embedded/5094681a615970a1-renamed.webp",
+          "bytes": 270,
+          "sha256": "a245c4f5347453a9907e1e9baf238317feee4aeb2f0ce14cbfaf288c4aec6e5a"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/image/data/IngeTrazo/textures/embedded/d5c68fb78657fc3c-scan.bmp",
+          "bytes": 918,
+          "sha256": "7578a1d90a6bf3601fe99d4c88ca4cb892e1c6bcb5df40b68af8abdae6659f78"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/image/data/IngeTrazo/textures/embedded/73188750f8b2924b-scan16.tif",
+          "bytes": 2470,
+          "sha256": "df6b54004176a0e53e85cb36780042cfd40871fe6a50565fd924c886d4c226f0"
+        }
+      ]
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/image/native/picker",
+      "logical_bytes": 83280544,
+      "files": [
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/image/native/picker/kdialog",
+          "bytes": 83280544,
+          "sha256": "86a47120e0669f5c34dc42aadc9e19d05a84c2a7d545a7bb0604ef4ab4cc1e65"
+        }
+      ]
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/image/source",
+      "logical_bytes": 8016399,
+      "files": [
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/LICENSE",
+          "bytes": 35149,
+          "sha256": "3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/bmp-free-aspect-input.igz",
+          "bytes": 373089,
+          "sha256": "dc9acc6ad6c56be613a639426eefdff10d6dfedf49481852bdba3f4b8a321b08"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/bmp-free-aspect-saved.igz",
+          "bytes": 374256,
+          "sha256": "bd85b741bf8b61ff150fb661dd621eda14715daa5513cb159672c5a164ca5bc7"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/cancel-invalid-escape-input.igz",
+          "bytes": 373089,
+          "sha256": "8194cd0edcbfd5f9658dc8c617c67b20a973675ff58d34962b485d74f9a73311"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/cancel-invalid-escape-saved.igz",
+          "bytes": 374590,
+          "sha256": "5921a149af846a732fc9a44ebdb3b484b65784877f6c42bcbc5f2664c59ab7af"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/completed-cases.json",
+          "bytes": 895843,
+          "sha256": "cacbac5515e7ee0bceb2550f6e552b41da2b1175526de8dd361415c2ca09ab52"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/jpeg-exif-pair-input.igz",
+          "bytes": 373085,
+          "sha256": "dbc6c0eae03c937d9926422db5d00bab4054997dbda04085d30a5a75e4858445"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/jpeg-exif-pair-saved.igz",
+          "bytes": 374230,
+          "sha256": "841c234fab6367fca33d82ce424efc0da24462bfec2afa3326c100118b253688"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/nested-width-cm-input.igz",
+          "bytes": 1366,
+          "sha256": "39a201b9ba28d35ffa5e9c4adf939176ea5683a739f1b30f89bcfe6151916cfc"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/nested-width-cm-saved.igz",
+          "bytes": 2048,
+          "sha256": "42b2c370debdb4c5da26f86b2ef4f8f23055275d4fa03feb9bdef448b3a54c8f"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/oblique-face-width-input.igz",
+          "bytes": 373157,
+          "sha256": "5c88b1d0e2a403b0e57dec00a9eed198c4c705dd148103e2ff47f7da1e234b61"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/oblique-face-width-saved.igz",
+          "bytes": 374673,
+          "sha256": "c76901ab19896f1f713be5f8b2e5f2cfd33602e4701b5cfc63a9335db128fe53"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/original-image-import.json",
+          "bytes": 899350,
+          "sha256": "d37471e29895a2d8c3adea3e9577afc6f6a293056a4b910118db60c906725b78"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/original-image-import.partial.json",
+          "bytes": 875078,
+          "sha256": "cea0d9fbab89376f29ab95b26b5f31110606005c0ef19dc7e17301affbfadf12"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/png-drag-transparency-input.igz",
+          "bytes": 373089,
+          "sha256": "f57a8d35de945541bebd34613c3c57a85a93eec4c44758d71b69bf32303e5a71"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/png-drag-transparency-saved.igz",
+          "bytes": 374592,
+          "sha256": "e06cf75b648eeea9cbafe21140fdeb01d2459e62542d799f5f5a5662610edcc5"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/tiff16-orientation-input.igz",
+          "bytes": 373089,
+          "sha256": "c82023cc72a2a4244e1ceeffd8c42809bf3d90d23410556d08e0f7c86bf93690"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/tiff16-orientation-saved.igz",
+          "bytes": 375817,
+          "sha256": "0330b014c1cd9ad2f914a993e939f9b7b7c2594f8b658973c55b75166290e68a"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/webp-reuse-names-input.igz",
+          "bytes": 373088,
+          "sha256": "e2a15ebdc0cf048557f3430baffb61d4843d3fdff8ab02a58b07d63a2c117f1c"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/webp-reuse-names-saved.igz",
+          "bytes": 374055,
+          "sha256": "44ffe24a52ea2630b5fc06fe6eb99b4e6b6e209cc7a32931a989be1c789b4cf2"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/assets/base.jpg",
+          "bytes": 825,
+          "sha256": "71147f4b90f87c14679d2cec406cbb07b99a95074e58d49f5321261d30fe7339"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/assets/base.jpg.rgba",
+          "bytes": 1152,
+          "sha256": "e1532b4c932127cbb8dde264028a54a47069898eabce3e1ed5ef406c467c323a"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/assets/invalid.png",
+          "bytes": 21,
+          "sha256": "b2d9765207ea5c5c6f953990f7eaacbbd45584a4b81162a4562f50fbf78eda2d"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/assets/scan-exif.jpg",
+          "bytes": 861,
+          "sha256": "fad2e5c3a9850c3f2258d51f4c2855274403afb6d80acadcccdf163f9d14987d"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/assets/scan-exif.jpg.rgba",
+          "bytes": 1152,
+          "sha256": "e1532b4c932127cbb8dde264028a54a47069898eabce3e1ed5ef406c467c323a"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/assets/scan.bmp",
+          "bytes": 918,
+          "sha256": "7578a1d90a6bf3601fe99d4c88ca4cb892e1c6bcb5df40b68af8abdae6659f78"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/assets/scan.bmp.rgba",
+          "bytes": 1152,
+          "sha256": "a0c4f27060176e3b323ee72fd8535e14766fea6cd49e255ce8e970a0833d7a2d"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/assets/scan.png",
+          "bytes": 1253,
+          "sha256": "3eb523a44de80c971b7f0f16729abf6ed31e3eb1e0477d52f87c7542e397c94d"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/assets/scan.png.rgba",
+          "bytes": 1152,
+          "sha256": "02de754fe22b81eb713108b9f7686661e51fda16c3dc178f47a36c3f5ddb6879"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/assets/scan.webp",
+          "bytes": 270,
+          "sha256": "a245c4f5347453a9907e1e9baf238317feee4aeb2f0ce14cbfaf288c4aec6e5a"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/assets/scan.webp.rgba",
+          "bytes": 1152,
+          "sha256": "ee951acac0e61e129920adbd835651a3fac16d0cdfa6f66a00fcda7366001b4d"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/assets/scan16.tif",
+          "bytes": 2470,
+          "sha256": "df6b54004176a0e53e85cb36780042cfd40871fe6a50565fd924c886d4c226f0"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/assets/scan16.tif.rgba",
+          "bytes": 1152,
+          "sha256": "7ffec69abf0ed9751627d371411424d86c9a39bc6025befd29eabebaac7aeeb0"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/first-failure/original-image-import.partial.json",
+          "bytes": 3476,
+          "sha256": "18b0557c4b4dd833485a59b7b04f6dc04faf5a839d09b7efc9002e1104524c51"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/first-failure/assets/base.jpg",
+          "bytes": 825,
+          "sha256": "71147f4b90f87c14679d2cec406cbb07b99a95074e58d49f5321261d30fe7339"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/first-failure/assets/base.jpg.rgba",
+          "bytes": 1152,
+          "sha256": "e1532b4c932127cbb8dde264028a54a47069898eabce3e1ed5ef406c467c323a"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/first-failure/assets/invalid.png",
+          "bytes": 21,
+          "sha256": "b2d9765207ea5c5c6f953990f7eaacbbd45584a4b81162a4562f50fbf78eda2d"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/first-failure/assets/scan-exif.jpg",
+          "bytes": 861,
+          "sha256": "fad2e5c3a9850c3f2258d51f4c2855274403afb6d80acadcccdf163f9d14987d"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/first-failure/assets/scan-exif.jpg.rgba",
+          "bytes": 1152,
+          "sha256": "e1532b4c932127cbb8dde264028a54a47069898eabce3e1ed5ef406c467c323a"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/first-failure/assets/scan.bmp",
+          "bytes": 918,
+          "sha256": "7578a1d90a6bf3601fe99d4c88ca4cb892e1c6bcb5df40b68af8abdae6659f78"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/first-failure/assets/scan.bmp.rgba",
+          "bytes": 1152,
+          "sha256": "a0c4f27060176e3b323ee72fd8535e14766fea6cd49e255ce8e970a0833d7a2d"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/first-failure/assets/scan.png",
+          "bytes": 1253,
+          "sha256": "3eb523a44de80c971b7f0f16729abf6ed31e3eb1e0477d52f87c7542e397c94d"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/first-failure/assets/scan.png.rgba",
+          "bytes": 1152,
+          "sha256": "02de754fe22b81eb713108b9f7686661e51fda16c3dc178f47a36c3f5ddb6879"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/first-failure/assets/scan.webp",
+          "bytes": 270,
+          "sha256": "a245c4f5347453a9907e1e9baf238317feee4aeb2f0ce14cbfaf288c4aec6e5a"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/first-failure/assets/scan.webp.rgba",
+          "bytes": 1152,
+          "sha256": "ee951acac0e61e129920adbd835651a3fac16d0cdfa6f66a00fcda7366001b4d"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/first-failure/assets/scan16.tif",
+          "bytes": 2470,
+          "sha256": "df6b54004176a0e53e85cb36780042cfd40871fe6a50565fd924c886d4c226f0"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/first-failure/assets/scan16.tif.rgba",
+          "bytes": 1152,
+          "sha256": "7ffec69abf0ed9751627d371411424d86c9a39bc6025befd29eabebaac7aeeb0"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/capture/attempt-1/invocation.json",
+          "bytes": 685,
+          "sha256": "f0cf59fb1c65441c91c0b09ba27f059cc427d0a6647725cbec4a894f2c9d0dc3"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/capture/attempt-1/result.json",
+          "bytes": 737,
+          "sha256": "e49066e4928fdacce3047f36c6588cf55238242ac3dec0c2bafae99894a3fe29"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/capture/attempt-1/stderr.log",
+          "bytes": 179,
+          "sha256": "9814167eefd10764b814ebe0fc1b8190481d594a81b611da7d75a9433efe6267"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/capture/attempt-1/stdout.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/capture/attempt-2/invocation.json",
+          "bytes": 642,
+          "sha256": "11795d38df2d88e3c9c859c957d74d8ebcc55da0f9ee81c2735f92df30f01247"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/capture/attempt-2/result.json",
+          "bytes": 694,
+          "sha256": "2b96d81895b31956383c22190e29d0d8db69f7be90f44fa446171f0895c3e679"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/capture/attempt-2/stderr.log",
+          "bytes": 3802,
+          "sha256": "f6702550d9adfdf54301c36f617ac8b5e247fc5af04576d9048fde1f0e3d24ae"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/capture/attempt-2/stdout.log",
+          "bytes": 42,
+          "sha256": "68f5b5c7ec6967dd367cf429673b88e82500eaca56dfe35a952506657d0ae09e"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/capture-source/scripts/reference-image-import.py",
+          "bytes": 15166,
+          "sha256": "a5dc9c8f8b794947544efe26477bc82e81d22b241f55b678128305b19c12b5af"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/capture-source/scripts/reference-nested-import.py",
+          "bytes": 4180,
+          "sha256": "1cd756cc1db3389e3922a5c34afe41af29b91061ce30bff77e945d7b346d629b"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/capture-source/docs/audits/image-import/fixture-contract.json",
+          "bytes": 1819,
+          "sha256": "ce226f6e41656ab8366224f23576655e8fcb04169ea8fff08c939ba0f79d7566"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/image/source/capture-source/docs/audits/image-import/historical/failed-producer.py",
+          "bytes": 15184,
+          "sha256": "d9dec9af5813f51f18fdcce8f94fa539c78f7ee6eccdefeff6a70119049ffc3e"
+        }
+      ]
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/stl/native/picker",
+      "logical_bytes": 83021032,
+      "files": [
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/stl/native/picker/kdialog",
+          "bytes": 83021032,
+          "sha256": "a01b773c2483e48ab94f854d9e545b118f8bba93dae952b45b1401dece5afb3d"
+        }
+      ]
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source",
+      "logical_bytes": 11645379,
+      "files": [
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/LICENSE",
+          "bytes": 35149,
+          "sha256": "3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/ascii.stl",
+          "bytes": 1397,
+          "sha256": "332adb3482b7c5202949a3b83fbb67b3b3966e7219dd7c4f2eca452f964edab7"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/chooser-cancel-input.igz",
+          "bytes": 3552,
+          "sha256": "491fac56c3cdc59cc90a1a7bad2a25d40b0b1d8445034446903fe3afa679bd6e"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/completed-cases.json",
+          "bytes": 3060997,
+          "sha256": "4513dc410fa0ca6b52d96656f6a0ecaf47088913bdf42e7433ec5cbf9b469f42"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/cube.stl",
+          "bytes": 684,
+          "sha256": "859d674fd7c990c92ee666e23818dc60d75cf8ef666bd452b43b2cc2398c8324"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/default-cube-input.igz",
+          "bytes": 3552,
+          "sha256": "75633b7fe10f721b3a2ac2ec399985a479b6280705aa28c07b67d57a0423484c"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/default-cube-saved.igz",
+          "bytes": 7516,
+          "sha256": "6b1b7f47358442358be4f862694e561327ac62ed0776e5c724e5fa0b508c92e7"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/degenerate.stl",
+          "bytes": 734,
+          "sha256": "f61de258aa81aa18213ac4f471e7d3df498dbd92bf43080ccc26246de6ace33a"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/flat-large-editable-input.igz",
+          "bytes": 3552,
+          "sha256": "8b7f9539665e93a950e390e98bd2b726ab3bee3957f515fc216e35af80f6de0d"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/flat-large-editable-saved.igz",
+          "bytes": 6532,
+          "sha256": "ca7368f4f0f21b73ebc04f1e34ea282bb421d9f6ba9c23cf492d6cb864349d2d"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/grid.stl",
+          "bytes": 63084,
+          "sha256": "e19b27d7f6861eac69a6f61f9635b7f4a305e8877eb0662366bd147eb9b59c6b"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/ignored-normal.stl",
+          "bytes": 684,
+          "sha256": "96684a82ad632b877996b5924323d1e8ed1eeeefb1338f329f5ba5265856b6ce"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/large-nested-input.igz",
+          "bytes": 3552,
+          "sha256": "09d9c70f4b3ce4770c76643a52ce1f922e686f39f507f61b37e607a26037f733"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/large-nested-saved.igz",
+          "bytes": 396807,
+          "sha256": "1b6cfdf9625669989f33eff55b45096248fbece4f2fa008da5231bd528fdff4a"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/large-root-input.igz",
+          "bytes": 3552,
+          "sha256": "e37a881daa1014bacaf4559915b99dac1709926aa7e66da99f0340f4975cb49d"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/large-root-saved.igz",
+          "bytes": 396535,
+          "sha256": "2dfeaddd88b862366efede4917d898f28610de04c5be3dda404bde0d6cd0293a"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/large.stl",
+          "bytes": 20134,
+          "sha256": "9df566c9ef8a8ebd66e39c3c95872ef055141dc867822995d06ed11a3061aa23"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/malformed.stl",
+          "bytes": 43,
+          "sha256": "02e7c50e290f6355abec66fa303e449b03b5d5ca136d8c6eea59f8cf6a903892"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/none-cube-input.igz",
+          "bytes": 3552,
+          "sha256": "96f86442ab834a01831577c755d3eafe1da24cfe21fa8075b455a71497f9d168"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/none-cube-saved.igz",
+          "bytes": 7516,
+          "sha256": "9d9a0cead6a12da9c57a6fcd9b567c06b2b91102580cc54da7168f4558649466"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/nonfinite.stl",
+          "bytes": 134,
+          "sha256": "f15bf35b3e3b6349fb94d4fca092b1385a8be0697b29b5ed8d9d05e55d2c36db"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/original-stl.json",
+          "bytes": 3092735,
+          "sha256": "66bf9b5a858ce4a91a1e09fdad7806fea04a8212f4b8c1c1b8e0820cb4c91a17"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/original-stl.partial.json",
+          "bytes": 3060727,
+          "sha256": "749f707641025fd36c9147b16910d0438b1970e800bcc7475093aea00ed08702"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/parse-failure-input.igz",
+          "bytes": 3552,
+          "sha256": "5e622b9036807883df0b498843c1a8f783ec238d6e5185219e52cc2eb3b837a4"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/small-nested-input.igz",
+          "bytes": 3552,
+          "sha256": "1079fbb8b80fddd8aac7bf799ff3dbc0cabc660975fe017ebc1f35bc4c8bda27"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/small-nested-saved.igz",
+          "bytes": 9392,
+          "sha256": "d92329d69cbefb8e98140807548a453a3912f8420bed5d39b010cf3230be8dce"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/solid-binary.stl",
+          "bytes": 684,
+          "sha256": "deb88f98d6b997ee53c85d93fced978cee3000cbdaee007a4daee9a022279243"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/tilted-all-input.igz",
+          "bytes": 3552,
+          "sha256": "c71237debf9caa76d9ac7532e7a31aa548a149728b24691bb650ffa6a1822fe6"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/tilted-all-saved.igz",
+          "bytes": 4528,
+          "sha256": "ef33fae9d3c939fc89c047f1e03831c7c44288bf84d36e2cb87218a09af63586"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/tilted-principal-input.igz",
+          "bytes": 3552,
+          "sha256": "758fe1710d74770f5f85ff747d5fd57723aadc1d54e45947d0e9121f8048692c"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/tilted-principal-saved.igz",
+          "bytes": 4882,
+          "sha256": "b503638c401f0667001fd95773b7c0d75d61cca0b4e27c43f8cb188747a42b20"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/tilted.stl",
+          "bytes": 184,
+          "sha256": "dca90927819381236dc14c36351dadced8bba80279ea90e4484f3466873fc715"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/trailing.stl",
+          "bytes": 700,
+          "sha256": "b1a2cb37f7b9c4fa8584be4a3fe0eb3430374860dbbfe9de27dabce722d73715"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/unit-cancel-input.igz",
+          "bytes": 3552,
+          "sha256": "49d1e937d0feef8c1a861a236e86df95a520022ec5fc99e970f50e87b062e4eb"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/capture/invocation.json",
+          "bytes": 556,
+          "sha256": "dabcd274f145e9ec29827ea9233ceb0ac9722bea57a7e505d73d3ea5c01a61ee"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/capture/result.json",
+          "bytes": 607,
+          "sha256": "de6d6fee9067a8df70fd29c7f10e8765cad11fba536486c4069e8560d8628da4"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/capture/stderr.log",
+          "bytes": 3269,
+          "sha256": "ef878cd8539f1eee73293e9ef08bf9cd77f41d4bf370f8a5e5936a085470c038"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/capture/stdout.log",
+          "bytes": 43,
+          "sha256": "31c67c05993e3bb63dd3fe0c45d5d499a8eb75e8da4d6dbc4954f85dfc083178"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/settings/STLProof/STLProof.ini",
+          "bytes": 70,
+          "sha256": "b4ec3e5591940bda012b6977f5b91cf63ef31d80e253900f14cbeb495a620905"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/original-source/core/group.py",
+          "bytes": 37346,
+          "sha256": "9ba6a20eca241cb4969a545a3784fcff25566166606d5447a18780747d4f11c5"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/original-source/core/history.py",
+          "bytes": 161511,
+          "sha256": "2eb66a1d557099b51383988a7819145289fc4ce2c37fc7de3a92ed35b5830559"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/original-source/core/i18n.py",
+          "bytes": 3089,
+          "sha256": "827c103da11a2e1fd676ba53d32f18b2b11a606a7e51308ed07cb4b71cd61dba"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/original-source/core/mesh.py",
+          "bytes": 74619,
+          "sha256": "5f2c1625e6dd717db029ba39a9de337e75beec06bd0df28a592a8a34875ca22c"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/original-source/core/scene.py",
+          "bytes": 34219,
+          "sha256": "9dfcd32f1ff5b1445180eafd8df36eafb92fa08ed3597bb90eac09554899d2e0"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/original-source/core/topology.py",
+          "bytes": 69455,
+          "sha256": "f16d136706d0a7ce4f5c382c9318126e45639a38d969f13f0196f852df858c0e"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/original-source/formats/dae.py",
+          "bytes": 48406,
+          "sha256": "9082599e1130b1d70af23cf3715a1566b18908f41fc0498d28b235baef7331dc"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/original-source/formats/fuse.py",
+          "bytes": 16553,
+          "sha256": "60f77cdaf8c499b4f8c9ed86940e9a4b937ffae18831f0b56435e1b441f633ae"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/original-source/formats/igz.py",
+          "bytes": 41235,
+          "sha256": "f318d685830c49c2fede7fd5a238ac7a1469ee0b0226cf48cab3751e194a9576"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/original-source/formats/stl.py",
+          "bytes": 11852,
+          "sha256": "07837af511f718194f85498aa13820363617ccbf7aa8da9bdb3575a1759ddd7a"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/original-source/tests/test_stl_import.py",
+          "bytes": 9053,
+          "sha256": "579db3ad1b07bbe582898f90d0a9fd820874555de21339f7b7c7d274cc4b3111"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/original-source/views/main_window.py",
+          "bytes": 286141,
+          "sha256": "ea02be3e439c80731d0f5b5fde3d92d9b3f62e8ad10cd44ad305c3261b7786fa"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/original-source/views/viewport.py",
+          "bytes": 622724,
+          "sha256": "1fb62f55b8f559deb3676924ee69a9a444397faa28c49651111cea44e420c724"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/capture-source/scripts/reference-nested-import.py",
+          "bytes": 4180,
+          "sha256": "1cd756cc1db3389e3922a5c34afe41af29b91061ce30bff77e945d7b346d629b"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-integration-r3/stl/source/capture-source/scripts/reference-stl-import.py",
+          "bytes": 9601,
+          "sha256": "b2738d950c8a2401c6d3fae700f14f2b013b439dff3ccfb6337dc0ec265a9c5e"
+        }
+      ]
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-replay-r1/native/picker",
+      "logical_bytes": 82854352,
+      "files": [
+        {
+          "path": "/tmp/ingetrazo-exchange-replay-r1/native/picker/kdialog",
+          "bytes": 82854352,
+          "sha256": "1a0069e6edc85653d835885c1a85549ee1c5047bf84c67ca77a91c705c83e3f3"
+        }
+      ]
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-replay-r1/native/state",
+      "logical_bytes": 3985,
+      "files": [
+        {
+          "path": "/tmp/ingetrazo-exchange-replay-r1/native/state/dae-combined-leaf/config/settings.json",
+          "bytes": 513,
+          "sha256": "e7dd80ee6dff95c28bed4483c8406c70f59c122462f5f32883aff7e1214cfc55"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-replay-r1/native/state/dae-existing-datum/config/settings.json",
+          "bytes": 591,
+          "sha256": "92c4f5387518dbeb211346548bf9ab14e7a545eaf074dcda5e067334a9a25985"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-replay-r1/native/state/dae-datum/config/settings.json",
+          "bytes": 573,
+          "sha256": "acfc7cc9ba1d2c64449fe0216bad09e15f6728ab281010df586ad31f5963bc55"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-replay-r1/native/state/dae-401-leaf/config/settings.json",
+          "bytes": 579,
+          "sha256": "023653ea54ba4b36503a7475b56c45beebb01ec4777298515aefb60ba5ce43ad"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-replay-r1/native/state/dae-400/config/settings.json",
+          "bytes": 569,
+          "sha256": "4788bad36b5e48037edcf6888e575d7e6e8e67ca244be64da86bcfb8cc854ff5"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-replay-r1/native/state/dae-y-inch-leaf/config/settings.json",
+          "bytes": 585,
+          "sha256": "4b488ea15f80cb057c1f0cf51a8635cb7b971c70747f3507ed5d51268a6f14ea"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-replay-r1/native/state/dae-z-root/config/settings.json",
+          "bytes": 575,
+          "sha256": "92f7dae75d1ac463c7d01a89507a2c51edb8e9a85967a4f2a3a995a45e625bc8"
+        }
+      ]
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-replay-r2/native/picker",
+      "logical_bytes": 82854400,
+      "files": [
+        {
+          "path": "/tmp/ingetrazo-exchange-replay-r2/native/picker/kdialog",
+          "bytes": 82854400,
+          "sha256": "b18f4e0633da9e4fbc8af7c5a70c9262fc301d529924323c02906a99cc3dd802"
+        }
+      ]
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-replay-r2/native/state",
+      "logical_bytes": 7918,
+      "files": [
+        {
+          "path": "/tmp/ingetrazo-exchange-replay-r2/native/state/context-retired/config/settings.json",
+          "bytes": 506,
+          "sha256": "681dca5070096c9d7521f46a8d37d81fe6321c6f246200c1ea6393e9349171a3"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-replay-r2/native/state/dae-failure-datum/config/settings.json",
+          "bytes": 513,
+          "sha256": "7105acd0e0e44b76d48078f94faafe3e9fa9e2f316627b094cea927f538f1b4b"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-replay-r2/native/state/chooser-cancel/config/settings.json",
+          "bytes": 510,
+          "sha256": "0063b02ee573de2721f463b421a83119e37e6cf8cb09336e7e0e1be294decc1d"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-replay-r2/native/state/gltf-scale/config/settings.json",
+          "bytes": 575,
+          "sha256": "8e715c9d4d40491e91b2e081ac5cd0971cf5f58985d33153249b025253569017"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-replay-r2/native/state/glb-textured-leaf/config/settings.json",
+          "bytes": 589,
+          "sha256": "91ea35e84f6e83532f74a53c3e95a5a96cb921dec72955eba7038cda5b40f9c8"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-replay-r2/native/state/glb-named/config/settings.json",
+          "bytes": 573,
+          "sha256": "ecf3c3bd0d9ab1712549a6d27656997d5294b8259899098a343c40b2c3808739"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-replay-r2/native/state/dae-mixed-textures/config/settings.json",
+          "bytes": 591,
+          "sha256": "70a14620c4a5b59017fcf97a2bdd48fee81e54e0055da60ba8fedfb194fc4d3e"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-replay-r2/native/state/dae-combined-leaf/config/settings.json",
+          "bytes": 589,
+          "sha256": "e8dfc6884459c170fb25bb3a1dfd5cb4bbe3a312da001f3d48c5e760a26b904f"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-replay-r2/native/state/dae-existing-datum/config/settings.json",
+          "bytes": 591,
+          "sha256": "75c9620070145441b0eed2c4244d4926ab0cfb6909137d709fd44ae66100112d"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-replay-r2/native/state/dae-datum/config/settings.json",
+          "bytes": 573,
+          "sha256": "ab5838dae2240988ee9493255d5606bf42f2ab2bd21f01958baff0b381098704"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-replay-r2/native/state/dae-401-leaf/config/settings.json",
+          "bytes": 579,
+          "sha256": "bcc09ff2da1a926d223e84c41fb81ba81734497ca978099df953bdd01b35e0b2"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-replay-r2/native/state/dae-400/config/settings.json",
+          "bytes": 569,
+          "sha256": "a604ca75d168455b1aafe1aed605e6df02c65cefdc11f74936993b8e7aa8b360"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-replay-r2/native/state/dae-y-inch-leaf/config/settings.json",
+          "bytes": 585,
+          "sha256": "2c26c58c39d8a10366a259348412ac536f8b0f454bd0563c4cb05844a821a66e"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-replay-r2/native/state/dae-z-root/config/settings.json",
+          "bytes": 575,
+          "sha256": "8bfcda9f7b20f8c0804547d4995a68e14d25e56046b304551b976c0b3c163ebc"
+        }
+      ]
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-replay-r3/native/picker",
+      "logical_bytes": 82863232,
+      "files": [
+        {
+          "path": "/tmp/ingetrazo-exchange-replay-r3/native/picker/kdialog",
+          "bytes": 82863232,
+          "sha256": "8f16b9f373e2c1747914b3122e2398518c7871ac1ce4108807f9feec225b01bd"
+        }
+      ]
+    },
+    {
+      "path": "/tmp/ingetrazo-exchange-replay-r3/native/state",
+      "logical_bytes": 7918,
+      "files": [
+        {
+          "path": "/tmp/ingetrazo-exchange-replay-r3/native/state/context-retired/config/settings.json",
+          "bytes": 506,
+          "sha256": "681dca5070096c9d7521f46a8d37d81fe6321c6f246200c1ea6393e9349171a3"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-replay-r3/native/state/dae-failure-datum/config/settings.json",
+          "bytes": 513,
+          "sha256": "7105acd0e0e44b76d48078f94faafe3e9fa9e2f316627b094cea927f538f1b4b"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-replay-r3/native/state/chooser-cancel/config/settings.json",
+          "bytes": 510,
+          "sha256": "0063b02ee573de2721f463b421a83119e37e6cf8cb09336e7e0e1be294decc1d"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-replay-r3/native/state/gltf-scale/config/settings.json",
+          "bytes": 575,
+          "sha256": "bcafac8a594234f78ddc5c57e037a750d0514b8f8297560c2ae70445dfab9116"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-replay-r3/native/state/glb-textured-leaf/config/settings.json",
+          "bytes": 589,
+          "sha256": "292d8c1b08937317baf655eafe17f19f6fb5d0f92b971925e739ef4ee14e4a4f"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-replay-r3/native/state/glb-named/config/settings.json",
+          "bytes": 573,
+          "sha256": "1a8ddf2764ec461ba8b5a6fafffc4ec0ffc23e6a4a803b0b4fc720d9db291149"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-replay-r3/native/state/dae-mixed-textures/config/settings.json",
+          "bytes": 591,
+          "sha256": "15d6bd837c06cbb70b87c47669d8b5c1ba9b2f90083557c68ef96b99e957da23"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-replay-r3/native/state/dae-combined-leaf/config/settings.json",
+          "bytes": 589,
+          "sha256": "d51ad18197ddb21188282e2d4ee40941c94ece3a4bbaf9e58efa4fe5efc37e96"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-replay-r3/native/state/dae-existing-datum/config/settings.json",
+          "bytes": 591,
+          "sha256": "3a3f1b6ad2d7d9d7d7a1b0a692117b31f933c61239fdd14fff7bdb67b4448edf"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-replay-r3/native/state/dae-datum/config/settings.json",
+          "bytes": 573,
+          "sha256": "2266d2158a0610dc5b1661ca25ad75498a01c431e8f03edd9436781573c2b063"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-replay-r3/native/state/dae-401-leaf/config/settings.json",
+          "bytes": 579,
+          "sha256": "f7b19a85b8d1b0cdc6dc6da16b80476101f9aef1ad8a0910e5be9920df50f8f7"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-replay-r3/native/state/dae-400/config/settings.json",
+          "bytes": 569,
+          "sha256": "ab2b1f7acd5db9e2151372114a019cf06389bc85d31e7dbca02b760429a0e2b4"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-replay-r3/native/state/dae-y-inch-leaf/config/settings.json",
+          "bytes": 585,
+          "sha256": "f731c0842199895bab15fbb9e1b0aaef002ea1f321f9c3bc6a71ef7d3b1c745a"
+        },
+        {
+          "path": "/tmp/ingetrazo-exchange-replay-r3/native/state/dae-z-root/config/settings.json",
+          "bytes": 575,
+          "sha256": "8f1e4e65646398086a4b897d750a296e4e325862d405b396f196f16fef799963"
+        }
+      ]
+    }
+  ],
+  "kept": [],
+  "logical_bytes": 807590840
+}

@@ -13,3 +13,5 @@ The manifest binds each executed native/checker/reader stage to its Git revision
 General format coverage, linked-resource/sharing guarantees, viewport/physical pixels and directed winding parity remain open. Disposable picker/session/state/config/cache/source extractions are excluded, and cleanup candidates are listed only. Nothing was purged.
 
 Existing affected loader checks also pass: thirteen DAE and one glTF library test. Separate loader-checks.zip/JSON retain exact logs and hashes; these checks do not change the strict App winding verdict.
+
+After archive authentication, root purged21 disposable picker/state/cache/data/extraction directories (807,590,840 logical bytes). cleanup.json retains file hashes and exact paths. This is not a physical disk-reclamation claim: some picker files were hardlinks. Raw native failures, canonical ZIPs, accepted source and shared Cargo target remain.
