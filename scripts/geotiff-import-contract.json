@@ -36,5 +36,17 @@
     "Actual progress dialog disables Cancel; decoder API cancellation separate",
     "Decoder memory admission separate from WebP picture/output/work; aggregate codec peak open",
     "No GPU/render/network dataset claim"
-  ]
+  ],
+  "source_exception_allowlist": {
+    "case": "decode-failure-datum",
+    "operation": "MainWindow._on_import_orthophoto",
+    "type": "zlib.error",
+    "required_traceback": "read_rgba",
+    "outcome": "source-decoder-exception",
+    "scope": "literal original failure; native atomic rejection separate"
+  },
+  "nested_edit_path": [
+    0
+  ],
+  "default_outcome": "ok"
 }

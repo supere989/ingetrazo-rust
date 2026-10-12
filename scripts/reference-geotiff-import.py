@@ -108,15 +108,20 @@ for name in ['fresh-datum','existing-rotated-datum','gui-reduced','chooser-cance
  def dismiss():
   widget=app.activeModalWidget()
   if isinstance(widget,QMessageBox):dialogs.append({'case':name,'text':widget.text()});QTest.keyClick(widget,Qt.Key_Return)
- timer=QTimer();timer.timeout.connect(dismiss);timer.start(10);win._on_import_orthophoto();timer.stop();phases=['before']
+ timer=QTimer();timer.timeout.connect(dismiss);timer.start(10);source_exception=None
+ try:win._on_import_orthophoto()
+ except zlib.error as exc:
+  assert name=='decode-failure-datum';source_exception={'type':'zlib.error','message':str(exc),'traceback':traceback.format_exc()};assert 'read_rgba' in source_exception['traceback']
+ finally:timer.stop()
+ phases=['before']
  if name=='chooser-cancel':assert len(s.image_planes)==before and len(vp.history.undo_stack)==undo;record('cancel');phases.append('cancel');saved=None
- elif name=='decode-failure-datum':assert len(s.image_planes)==before and len(vp.history.undo_stack)==undo and s.georef is not None;record('failed','decoder-error');phases.append('failed');defects.append({'case':name,'kind':'datum-published-before-failed-decode','datum':s.georef.to_dict(),'dialogs':[d for d in dialogs if d['case']==name]});saved=None
+ elif name=='decode-failure-datum':assert len(s.image_planes)==before and len(vp.history.undo_stack)==undo and s.georef is not None;assert source_exception is not None;record('failed','source-decoder-exception');phases.append('failed');defects.append({'case':name,'exception':source_exception,'kind':'datum-published-before-failed-decode','datum':s.georef.to_dict(),'dialogs':[d for d in dialogs if d['case']==name]});saved=None
  else:
   assert len(s.image_planes)==before+1 and len(vp.history.undo_stack)==undo+1;record('import');phases.append('import');plane=s.image_planes[-1];encoded=name+'-stored.webp';shutil.copyfile(plane.path,out/encoded);cached,size=qrgba(QImage(str(plane.path)));f=name+'-cached.rgba';(out/f).write_bytes(cached);resources.append({'case':name,'file':encoded,'size':size,'rgba':f})
   assert vp.history.undo();record('undo');phases.append('undo');assert vp.history.redo();record('redo');phases.append('redo')
   if name=='nested-global-image':vp.end_group_edit();record('finish');phases.append('finish')
   saved=name+'-saved.igz';igz.save_scene(s,out/saved);loaded=Scene();igz.load_into(loaded,out/saved);assert observe(loaded)['images']==observe(s)['images']
- cases.append({'name':name,'input':initial,'tiff':tiff,'context':'leaf'if name=='nested-global-image'else'root','device_ceiling':ceiling,'initial_camera':initial_camera,'saved':saved,'phases':phases,'scope':'native-correction'if name=='decode-failure-datum'else'literal'})
- win._saved_version=s.version;win.close();app.processEvents();assert not errors,errors
+ cases.append({'name':name,'input':initial,'tiff':tiff,'context':'container'if name=='nested-global-image'else'root','edit_path':[0]if name=='nested-global-image'else[],'device_ceiling':ceiling,'initial_camera':initial_camera,'saved':saved,'phases':phases,'scope':'native-correction'if name=='decode-failure-datum'else'literal'})
+ win.hide();win.deleteLater();app.processEvents();assert not errors,errors
 payload={'source_pin':PIN,'cases':cases,'states':states,'decodes':decodes,'resources':resources,'source_defects':defects,'dialogs':dialogs,'decoder_controls':decoder_controls,'actual_source_action':'MainWindow._on_import_orthophoto','controlled_fixture_inputs':['chooser return value','device max_texture_size','initial model/datum','isolated texture cache'],'decode_cancel_scope':'API-only; actual progress dialog has no Cancel'}
 (out/'original-geotiff.json').write_text(json.dumps(payload,indent=2,allow_nan=False)+'\n');print(json.dumps({'cases':len(cases),'states':len(states),'decodes':len(decodes),'resources':len(resources)}))
