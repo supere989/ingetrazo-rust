@@ -21,11 +21,14 @@ use crate::app::IngeTrazoApp;
 #[path="composer_text_canvas.rs"] pub(crate) mod text_canvas;
 #[path="composer_text_authoring.rs"] mod text_authoring;
 #[path="composer_pointer.rs"] mod pointer_transactions;
+#[path="composer_picture_gestures.rs"] mod picture_gestures;
 #[path="composer_picture_authoring.rs"] mod picture_authoring;
 
 /// Interactive state for the Sheet Composer view.
 #[derive(Debug, Clone)]
 pub struct ComposerState {
+    picture_grab:Option<picture_gestures::Grab>,
+    picture_ctrl_toggle:bool,
     picture_authoring:picture_authoring::State,
     pub pdf_export_error: Option<String>,
     pub text_tool:bool,
@@ -57,7 +60,7 @@ pub struct ComposerState {
 impl Default for ComposerState {
     fn default() -> Self {
         Self {
-            picture_authoring:Default::default(),pdf_export_error: None,text_tool:false,tool_switch_rects:[egui::Rect::NOTHING;8],inline_text:None,text_canvas:Default::default(),outer_border:Default::default(),paper_canvas:Default::default(),field_index_cache:None,field_index_computations:0,field_expansions:Default::default(),
+            picture_grab:None,picture_ctrl_toggle:false,picture_authoring:Default::default(),pdf_export_error: None,text_tool:false,tool_switch_rects:[egui::Rect::NOTHING;8],inline_text:None,text_canvas:Default::default(),outer_border:Default::default(),paper_canvas:Default::default(),field_index_cache:None,field_index_computations:0,field_expansions:Default::default(),
             paper_text: Default::default(),
             shape_tool:None,shape_start:None,
             pan_offset: Vec2::ZERO,
@@ -138,6 +141,7 @@ impl IngeTrazoApp {
   }else if let Some(object)=target.native_document.as_object_mut(){object.remove("border");}
  }
  pub fn finish_composer_edit(&mut self){
+  self.composer_state.picture_grab=None;self.composer_state.picture_ctrl_toggle=false;
   self.composer_state.dragging_item_idx=None;self.composer_state.drag_start_pos=None;self.composer_state.drag_item_orig_pos=None;self.composer_state.drag_item_id=None;self.composer_state.drag_snap_targets=None;
   let Some(mut before)=self.composer_state.edit_before.take()else{return;};
   let Some(current)=self.scene.sheets.iter().find(|s|s.id==before.id)else{return;};
@@ -160,6 +164,7 @@ impl IngeTrazoApp {
   if let Some(mut after)=history.1.pop(){Self::retain_direct_paper_properties(&mut after,&self.scene.sheets[index]);history.0.push(std::mem::replace(&mut self.scene.sheets[index],after));self.scene.bump_version();}self.revalidate_picture_selection();
  }
  pub fn cancel_composer_edit(&mut self){
+  self.composer_state.picture_grab=None;self.composer_state.picture_ctrl_toggle=false;
   self.composer_state.picture_authoring.history_boundary();
   self.composer_state.shape_start=None;self.composer_state.shape_tool=None;
   if let Some(mut before)=self.composer_state.edit_before.take(){
@@ -186,7 +191,7 @@ pub fn render_sheet_composer(app: &mut IngeTrazoApp, ui: &mut egui::Ui, sheet_id
         // A normal item grab keeps its geometry until the real release.
         // Source Select Escape only drops selection; explicit edit/placement
         // cancellation retains the existing snapshot rollback law.
-        if app.composer_state.dragging_item_idx.is_some(){app.scene.sheets[sheet_idx].selected_item=None;}
+        if app.composer_state.dragging_item_idx.is_some()||app.composer_state.picture_grab.is_some(){app.scene.sheets[sheet_idx].selected_item=None;app.composer_state.picture_authoring.selected=None;}
         else {let select_mode=!app.composer_state.text_tool&&app.composer_state.shape_tool.is_none()&&app.composer_state.inline_text.is_none();app.cancel_composer_edit();if select_mode{app.scene.sheets[sheet_idx].selected_item=None;app.composer_state.picture_authoring.selected=None;}}
     }
 
@@ -285,12 +290,9 @@ pub fn render_sheet_composer(app: &mut IngeTrazoApp, ui: &mut egui::Ui, sheet_id
     if app.composer_state.shape_tool.is_none()||app.composer_state.shape_start.is_none(){app.native_composer.clear_preview();}
     // Render Sheet Items
     let item_order=app.scene.sheets[sheet_idx].physical_export_items().map(|v|v.into_iter().filter_map(|item|match item{ingetrazo_core::composition::PhysicalExportItem::Typed{index,..}=>Some((false,index)),ingetrazo_core::composition::PhysicalExportItem::Picture{index,..}=>Some((true,index)),_=>None}).collect::<Vec<_>>()).unwrap_or_else(|e|{app.status_message=e;Vec::new()});
-    // Pointer acquisition uses the typed subset of the same source paint order.
-    // Accumulate it here instead of sorting the sheet a second time every frame.
-    let mut typed_item_order=Vec::with_capacity(item_order.len());
-    for (picture,idx) in item_order {
+    // The same mixed category order owns painting and pointer acquisition.
+    for &(picture,idx) in &item_order {
         if picture {if let Err(e)=picture_authoring::paint(app,&painter,sheet_idx,idx,zoom,paper_rect.min){app.status_message=e;}continue;}
-        typed_item_order.push(idx);
         let item=&items[idx];
         let is_selected = selected_item == Some(idx);
 
@@ -697,8 +699,8 @@ pub fn render_sheet_composer(app: &mut IngeTrazoApp, ui: &mut egui::Ui, sheet_id
     }
     // Original Qt item mouse grab is acquired at the press, before the
     // platform drag threshold. It uses the original press throughout.
-    if ui.is_enabled(){pointer_transactions::input(app,ui,sheet_idx,&response,paper_rect,toolbar_rect,zoom,&typed_item_order,space_down);}
-    if ui.is_enabled()&&app.composer_state.dragging_item_idx.is_none()&&!pointer.any_down()&&!ui.ctx().wants_keyboard_input(){app.finish_composer_edit();}
+    if ui.is_enabled(){pointer_transactions::input(app,ui,sheet_idx,&response,paper_rect,toolbar_rect,zoom,&item_order,space_down);}
+    if ui.is_enabled()&&app.composer_state.dragging_item_idx.is_none()&&app.composer_state.picture_grab.is_none()&&!pointer.any_down()&&!ui.ctx().wants_keyboard_input(){app.finish_composer_edit();}
 }
 
 fn frame_scene<'a>(scene:&'a Scene,frame:&ViewFrame)->std::borrow::Cow<'a,Scene>{if let Some(name)=frame.view_key.strip_prefix("scene:"){if let Some(view)=scene.saved_views.iter().find(|view|view.name==name){let mut snapshot=scene.clone();let mut camera=scene.camera.clone();view.apply_scene(&mut snapshot,&mut camera);return std::borrow::Cow::Owned(snapshot);}}std::borrow::Cow::Borrowed(scene)}

@@ -40,6 +40,31 @@ impl State {
         self.sources.clear();
     }
 }
+fn pixel_same(a: &serde_json::Value, b: &serde_json::Value) -> bool {
+    let plain = |v: &serde_json::Value| {
+        v.get("shape").and_then(|v| v.as_str()).unwrap_or("rect") == "rect"
+            && v.get("feather_mm").and_then(|v| v.as_f64()).unwrap_or(0.) <= 0.
+            && v.get("opacity").and_then(|v| v.as_f64()).unwrap_or(1.) >= 1.
+            && v.get("fit").and_then(|v| v.as_str()).unwrap_or("stretch") == "stretch"
+    };
+    if a.get("path") != b.get("path") {
+        return false;
+    }
+    if plain(a) && plain(b) {
+        return true;
+    }
+    [
+        "shape",
+        "fit",
+        "radius_mm",
+        "feather_mm",
+        "opacity",
+        "w_mm",
+        "h_mm",
+    ]
+    .iter()
+    .all(|key| a.get(*key) == b.get(*key))
+}
 fn images(sheet: &ingetrazo_core::composition::Sheet) -> Result<&[serde_json::Value], String> {
     match sheet.native_document.get("images") {
         None | Some(serde_json::Value::Null) => Ok(&[]),
@@ -350,7 +375,7 @@ pub(super) fn properties(app: &mut IngeTrazoApp, ui: &mut egui::Ui, s: usize) {
         .show(ui.ctx(), |ui| {
             let selected = app.composer_picture_selection().map(|v| v.1);
             if let Ok(rows) = images(&app.scene.sheets[s]) {
-                let row_height=ui.text_style_height(&egui::TextStyle::Body);
+                let row_height = ui.text_style_height(&egui::TextStyle::Body);
                 egui::ScrollArea::vertical().max_height(160.).show_rows(
                     ui,
                     row_height,
@@ -533,7 +558,10 @@ pub(super) fn paint(
         state.sources.clear();
         state.sheet = Some(app.scene.sheets[s].id);
     }
-    let cold = state.seen.get(&index) != Some(value);
+    let cold = state
+        .seen
+        .get(&index)
+        .is_none_or(|old| !pixel_same(old, value));
     if cold {
         state.cold_previews += 1;
         let prior_texture_bytes = state.previews.values().try_fold(0usize, |n, p| {
@@ -667,7 +695,26 @@ pub(super) fn paint(
         crate::composer::paint_sheet_shape(painter, &model, zoom, origin)?;
     }
     if state.selected == Some((app.scene.sheets[s].id, index)) {
-        painter.rect_stroke(r, 0., egui::Stroke::new(1., egui::Color32::LIGHT_BLUE));
+        painter.rect_stroke(
+            r,
+            0.,
+            egui::Stroke::new(0.35 * zoom, egui::Color32::from_rgb(58, 110, 165)),
+        );
+        if !super::picture_gestures::locked(&app.scene.sheets[s], index) {
+            let handle =
+                egui::Rect::from_center_size(r.right_bottom(), egui::vec2(3. * zoom, 3. * zoom));
+            painter.rect_filled(handle, 0., egui::Color32::from_rgb(58, 110, 165));
+            painter.rect_stroke(
+                handle,
+                0.,
+                egui::Stroke::new(0.3 * zoom, egui::Color32::WHITE),
+            );
+            if std::env::var_os("INGETRAZO_PDF_UI_OBSERVE").is_some() {
+                painter
+                    .ctx()
+                    .data_mut(|d| d.insert_temp(egui::Id::new("picture-ui-handle"), handle));
+            }
+        }
     }
     Ok(())
 }
