@@ -2,7 +2,7 @@
   "scope": "Partial actual Linux software Vulkan capture; strict eight images remain failures",
   "runtime_revision": "d19bf4081f975e4b777c39eeaef81c376cf305f0",
   "binary_sha256": "b81867b9ad65ef9508f72312680d31522b4b9e10e5e22640cd2d696ca475c633",
-  "archive_sha256": "91ba289f31b4b947d71c0693629820e6e62e83f430a7912cbffc86dd58455419",
+  "archive_sha256": "0e85b451741bed11938e1decfed26f681c10eb2ed665d49744f749866bf4398d",
   "source_packet": "../source-manifest.json",
   "members": [
     {
@@ -240,6 +240,97 @@
       "revision": "d19bf4081f975e4b777c39eeaef81c376cf305f0",
       "size": 6516,
       "sha256": "0f9aa2db91dcc3c0df1ed9c30a0d096fe69fcbd2cc16cf2b9bb17008f2034afc"
+    },
+    {
+      "member": "executed-code/crates/ingetrazo-gui/src/ai_bridge_capture.rs",
+      "git_path": "crates/ingetrazo-gui/src/ai_bridge_capture.rs",
+      "revision": "d19bf4081f975e4b777c39eeaef81c376cf305f0",
+      "size": 11626,
+      "sha256": "e08cbfe0fa56c6c081539191f4922b033783346801dcd375f8d4b2a03784bebb"
+    },
+    {
+      "member": "executed-code/crates/ingetrazo-gui/src/native_vulkan/shaders/world.frag",
+      "git_path": "crates/ingetrazo-gui/src/native_vulkan/shaders/world.frag",
+      "revision": "d19bf4081f975e4b777c39eeaef81c376cf305f0",
+      "size": 1106,
+      "sha256": "e755f0d4cfffaca0ca186f7981e81c74c0f5e278e4dea3ee052608c85ff0bcd2"
+    },
+    {
+      "member": "executed-code/crates/ingetrazo-gui/src/native_vulkan/shaders/world.frag.spv",
+      "git_path": "crates/ingetrazo-gui/src/native_vulkan/shaders/world.frag.spv",
+      "revision": "d19bf4081f975e4b777c39eeaef81c376cf305f0",
+      "size": 4712,
+      "sha256": "71aac13fd9d5da5be4700042b4fc04266e553b4f5f6b581b2b69a8cc00009f33"
+    },
+    {
+      "member": "executed-code/crates/ingetrazo-gui/src/native_vulkan/shaders/texture.frag",
+      "git_path": "crates/ingetrazo-gui/src/native_vulkan/shaders/texture.frag",
+      "revision": "d19bf4081f975e4b777c39eeaef81c376cf305f0",
+      "size": 1120,
+      "sha256": "8ca05bd4ff78fc1f74250e8e33907d02e64525276e8dd38a529c3d2e7f777715"
+    },
+    {
+      "member": "executed-code/crates/ingetrazo-gui/src/native_vulkan/shaders/texture.frag.spv",
+      "git_path": "crates/ingetrazo-gui/src/native_vulkan/shaders/texture.frag.spv",
+      "revision": "d19bf4081f975e4b777c39eeaef81c376cf305f0",
+      "size": 4660,
+      "sha256": "e67d35e85bfecca11f77088c8ad75e92dc74cf476a629ab0a3804995229830c4"
+    },
+    {
+      "member": "executed-code/crates/ingetrazo-gui/src/native_vulkan/shaders/texture_shadow.frag",
+      "git_path": "crates/ingetrazo-gui/src/native_vulkan/shaders/texture_shadow.frag",
+      "revision": "d19bf4081f975e4b777c39eeaef81c376cf305f0",
+      "size": 3867,
+      "sha256": "7f7d3207ce701cc2c893f2216c36326f4c180d47e84db36a3702a3d34cfd59df"
+    },
+    {
+      "member": "executed-code/crates/ingetrazo-gui/src/native_vulkan/shaders/texture_shadow.frag.spv",
+      "git_path": "crates/ingetrazo-gui/src/native_vulkan/shaders/texture_shadow.frag.spv",
+      "revision": "d19bf4081f975e4b777c39eeaef81c376cf305f0",
+      "size": 10556,
+      "sha256": "d07cced594b39567e74aed45cedc2d96394f2dcde0475875f19b1a5e15d6fdac"
+    },
+    {
+      "member": "executed-code/crates/ingetrazo-gui/src/native_vulkan/shaders/texture_shadow_terminate.frag",
+      "git_path": "crates/ingetrazo-gui/src/native_vulkan/shaders/texture_shadow_terminate.frag",
+      "revision": "d19bf4081f975e4b777c39eeaef81c376cf305f0",
+      "size": 3952,
+      "sha256": "84dca5671a0c279fbcd4c536dc581607fa58b16eb67c5a6a0ed6122b1947e4be"
+    },
+    {
+      "member": "executed-code/crates/ingetrazo-gui/src/native_vulkan/shaders/texture_shadow_terminate.frag.spv",
+      "git_path": "crates/ingetrazo-gui/src/native_vulkan/shaders/texture_shadow_terminate.frag.spv",
+      "revision": "d19bf4081f975e4b777c39eeaef81c376cf305f0",
+      "size": 10624,
+      "sha256": "0c6e551e8e4a2359ddf6c24ef0a8853dc1505cb336fdb5453ab75f32c29e81f1"
+    },
+    {
+      "member": "executed-code/crates/ingetrazo-gui/src/native_vulkan/shaders/texture_average.frag",
+      "git_path": "crates/ingetrazo-gui/src/native_vulkan/shaders/texture_average.frag",
+      "revision": "d19bf4081f975e4b777c39eeaef81c376cf305f0",
+      "size": 771,
+      "sha256": "773e759fdbf0f7d394a2278d948b0fba1919cc52dcd2efc23e7ac4190aaf9f33"
+    },
+    {
+      "member": "executed-code/crates/ingetrazo-gui/src/native_vulkan/shaders/texture_average.frag.spv",
+      "git_path": "crates/ingetrazo-gui/src/native_vulkan/shaders/texture_average.frag.spv",
+      "revision": "d19bf4081f975e4b777c39eeaef81c376cf305f0",
+      "size": 2640,
+      "sha256": "3f2af4346ed626e4afaccd0b6a09b4cb1c4b7528e2d09f982cf69f358a4a567d"
+    },
+    {
+      "member": "executed-code/crates/ingetrazo-gui/src/native_vulkan/shaders/texture_average_shadow.frag",
+      "git_path": "crates/ingetrazo-gui/src/native_vulkan/shaders/texture_average_shadow.frag",
+      "revision": "d19bf4081f975e4b777c39eeaef81c376cf305f0",
+      "size": 3518,
+      "sha256": "6d5213e4ef8a717b340fbfb21752598a18c2a991fccf3be66e4d6714ca0b6b64"
+    },
+    {
+      "member": "executed-code/crates/ingetrazo-gui/src/native_vulkan/shaders/texture_average_shadow.frag.spv",
+      "git_path": "crates/ingetrazo-gui/src/native_vulkan/shaders/texture_average_shadow.frag.spv",
+      "revision": "d19bf4081f975e4b777c39eeaef81c376cf305f0",
+      "size": 8696,
+      "sha256": "483d0e4db32c5d771383400aaf9520b342633b0c24218f623aa9bb98254537c4"
     }
   ]
 }
