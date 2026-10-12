@@ -20,10 +20,10 @@
   ],
   "frozen_inputs": "Reuse canonical document-annotation and native section/CGL source fixtures; exact member inventory pending consumer review",
   "remaining_draft_work": [
-    "native consumer and per-sample depth readback",
-    "cold compatibility guard between resolve prototype/native-reference configurations",
-    "review fill/stencil and billboard screen-phase orientation",
-    "original source pixel comparator and rejecting controls"
+    "independent static review and compiler checking by root",
+    "source frozen per-sample/selected-depth comparison and asymmetric/winding/UV gates",
+    "explicit budget/foreign-owner refusal controls",
+    "document-annotation consumer integration without production admission"
   ],
   "prohibited": [
     "production policy waiver",
@@ -31,5 +31,11 @@
     "CPU rendering fallback",
     "wgpu/MoltenVK/backend wrapper",
     "new source capture before existing corpus inspected"
-  ]
+  ],
+  "consumer": {
+    "command": "native_metal_section_resolve OUTPUT --reflected-diagnostic",
+    "scope": "Reuse unchanged ten native recipes and frozen original section source comparator; no source recapture",
+    "outputs": "Original native reference and reflected candidate rawRGBA; sample JSON per case with 16 RGBA float-bit values and 16 depth float-bit values at retained four source diagnostic pixels; warm/cache receipts",
+    "acceptance": "Actual Metal strict source image comparison remains external and mandatory; no success inferred from mathematical pattern eligibility"
+  }
 }

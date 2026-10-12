@@ -231,7 +231,7 @@ impl World {
     }
     /// Opt-in fixed-pattern experiment; the ordinary source admission stays unchanged.
     pub fn enable_reflected_sample_diagnostic(&mut self,metal:&NativeMetal)->Result<(),String>{
-        if !self.targets.is_empty()||self.pipeline.is_some()||self.resolve_prototype.is_some(){return Err("Reflected diagnostic requires cold World".into());}
+        if !self.targets.is_empty()||self.pipeline.is_some()||self.resolve_prototype.is_some()||self.source_tile.is_some()||self.diagnostic_native_resolve{return Err("Reflected diagnostic requires cold World".into());}
         self.validate_context_owner(metal)?;
         if self.samples.max(1)!=4{return Err("Reflected diagnostic requires four configured samples".into());}
         let pipeline=super::world_resolve::Pipeline::reflected(metal)?;
@@ -1469,7 +1469,7 @@ impl Prepared {
         } else {
             "World explicit Always/no-write negative diagnostic"
         })));
-        self.encode_inner(&command, depth_enabled, front_probe, false)?;
+        self.encode_inner(&command, depth_enabled, front_probe, points.is_some())?;
         let blit = command
             .blitCommandEncoder()
             .ok_or("World diagnostic blit unavailable")?;
@@ -1479,15 +1479,15 @@ impl Prepared {
         blit.endEncoding();
         let sample_owner=if let Some(mut points)=points {
             if self.reflected_diagnostic {for point in &mut points {point[1]=h-1-point[1];}}
-            let source="#include <metal_stdlib>\nusing namespace metal; kernel void observe(texture2d_ms<float,access::read> image [[texture(0)]], constant uint2* points [[buffer(0)]], device float4* output [[buffer(1)]], uint id [[thread_position_in_grid]]) { if(id<16) output[id]=image.read(points[id/4],id%4); }";
+            let source="#include <metal_stdlib>\nusing namespace metal; kernel void observe(texture2d_ms<float,access::read> image [[texture(0)]], depth2d_ms<float,access::read> depth [[texture(1)]], constant uint2* points [[buffer(0)]], device float4* output [[buffer(1)]], device float* depths [[buffer(2)]], uint id [[thread_position_in_grid]]) { if(id<16) { output[id]=image.read(points[id/4],id%4); depths[id]=depth.read(points[id/4],id%4); } }";
             let options=MTLCompileOptions::new();options.setFastMathEnabled(false);
             let library=metal.device.newLibraryWithSource_options_error(&NSString::from_str(source),Some(&options)).map_err(|e|format!("Sample observation shader: {e:?}"))?;
             let function=library.newFunctionWithName(&NSString::from_str("observe")).ok_or("Sample observation function unavailable")?;
             let pipeline=metal.device.newComputePipelineStateWithFunction_error(&function).map_err(|e|format!("Sample observation pipeline: {e:?}"))?;
-            let output=metal.buffer(16*16,true)?;
+            let output=metal.buffer(16*16+16*4,true)?;
             let encoder=command.computeCommandEncoder().ok_or("Sample observation encoder unavailable")?;
             encoder.setComputePipelineState(&pipeline);
-            unsafe {encoder.setTexture_atIndex(Some(&self.target.multisample.as_ref().unwrap().raw),0);encoder.setBytes_length_atIndex(std::ptr::NonNull::from(&points).cast(),std::mem::size_of_val(&points),0);encoder.setBuffer_offset_atIndex(Some(&output.raw),0,1);}
+            unsafe {encoder.setTexture_atIndex(Some(&self.target.multisample.as_ref().unwrap().raw),0);encoder.setBytes_length_atIndex(std::ptr::NonNull::from(&points).cast(),std::mem::size_of_val(&points),0);encoder.setBuffer_offset_atIndex(Some(&output.raw),0,1);encoder.setBuffer_offset_atIndex(Some(&output.raw),256,2);encoder.setTexture_atIndex(Some(&self.target.depth.raw),1);}
             encoder.dispatchThreads_threadsPerThreadgroup(MTLSize{width:16,height:1,depth:1},MTLSize{width:16,height:1,depth:1});encoder.endEncoding();Some((output,pipeline))
         }else{None};
         command.commit();
@@ -1522,6 +1522,11 @@ impl Diagnostic {
         if self.command.status()!=MTLCommandBufferStatus::Completed{return Err("Sample completion not acknowledged".into());}
         let (buffer,_)=self.sample_owner.as_ref().ok_or("No sample observation submitted")?;
         Ok(unsafe {std::ptr::read(buffer.raw.contents().as_ptr().cast::<[[f32;4];16]>())})
+    }
+    pub fn sample_depth_values(&self)->Result<[f32;16],String>{
+        if self.command.status()!=MTLCommandBufferStatus::Completed{return Err("Depth sample completion not acknowledged".into());}
+        let (buffer,_)=self.sample_owner.as_ref().ok_or("No sample observation submitted")?;
+        Ok(unsafe{std::ptr::read(buffer.raw.contents().as_ptr().cast::<u8>().add(256).cast::<[f32;16]>())})
     }
     pub fn readback(&self, timeout: std::time::Duration) -> Result<Vec<u8>, String> {
         if timeout > std::time::Duration::from_secs(5) {

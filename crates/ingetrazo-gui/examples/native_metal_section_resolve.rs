@@ -28,9 +28,14 @@ fn run() -> Result<(), String> {
         use ingetrazo_render::StyleConfig;
         let out = std::path::PathBuf::from(std::env::args().nth(1).ok_or("Output required")?);
         std::fs::create_dir_all(&out).map_err(|e| e.to_string())?;
+        let reflected_mode=std::env::args().any(|a|a=="--reflected-diagnostic");
         let production_mode=std::env::args().any(|a|a=="--production");
         let metal = NativeMetal::new()?;
         let sample_diagnostics = ingetrazo_metal::annotation::sample_diagnostics(&metal);
+        if reflected_mode {
+            ingetrazo_metal::annotation::reflected_sample_diagnostic_policy(&metal)?;
+            if ingetrazo_metal::annotation::source_sample_policy(&metal,4).is_ok(){return Err("Diagnostic must not waive eligible production policy".into());}
+        }
         let mut rows = vec![];
         for name in [
             "closed",
@@ -186,13 +191,30 @@ fn run() -> Result<(), String> {
             let reference_diagnostics=frame.programmed_sample_positions();
             drop(frame);
             drop(world);
-            let mut world=World::default();if !production_mode{world.use_native_resolve_reference()?;}world.set_sample_count(&metal,4)?;if !production_mode{world.enable_source_resolve_prototype(&metal)?;}
+            let mut world=World::default();
+            let mut adapter=Adapter::default();
+            if !production_mode && !reflected_mode {world.use_native_resolve_reference()?;}
+            world.set_sample_count(&metal,4)?;
+            if reflected_mode {
+                world.enable_reflected_sample_diagnostic(&metal)?;world.enable_sample_observation()?;
+                if world.set_sample_count(&metal,1).is_ok(){return Err("Reflected mode admitted incompatible sample count".into());}
+            }
+            else if !production_mode {world.enable_source_resolve_prototype(&metal)?;}
             let frame=prepare(&mut world,&mut adapter,&scene)?;
             let resolve_diagnostics=frame.source_resolve_diagnostic();
-            let bytes=frame.submit_diagnostic(&metal)?.readback(std::time::Duration::from_secs(5))?;
+            let sample_observation=if reflected_mode {
+                let points=[[400,228],[328,300],[471,300],[400,371]];
+                let diagnostic=frame.submit_sample_diagnostic(&metal,points)?;
+                let pixels=diagnostic.readback(std::time::Duration::from_secs(5))?;
+                let samples=diagnostic.sample_values()?;let depths=diagnostic.sample_depth_values()?;
+                std::fs::write(out.join(format!("{name}-samples.json")),serde_json::to_vec_pretty(&serde_json::json!({"points_top_origin":points,"sample_rgba_bits":samples.map(|p|p.map(f32::to_bits)),"sample_depth_bits":depths.map(f32::to_bits),"selected_source_sample":0,"transport":diagnostic.resource_observation()})).map_err(|e|e.to_string())?).map_err(|e|e.to_string())?;
+                Some(pixels)
+            }else{None};
+            let bytes=if let Some(pixels)=sample_observation {pixels}else{frame.submit_diagnostic(&metal)?.readback(std::time::Duration::from_secs(5))?};
             std::fs::write(out.join(format!("{name}-candidate.rgba")),&bytes).map_err(|e|e.to_string())?;
             let changed_pixels=reference.chunks_exact(4).zip(bytes.chunks_exact(4)).filter(|(a,b)|a!=b).count();
             drop(frame);
+            if reflected_mode && world.enable_reflected_sample_diagnostic(&metal).is_ok(){return Err("Warm reflected mode replacement admitted".into());}
             let before = world.stats;
             let mut repeated = None;
             for iteration in 0..3 {
@@ -220,7 +242,7 @@ fn run() -> Result<(), String> {
                 return Err(format!("Warm allocation changed: {name}"));
             }
             let mut production_toggle=serde_json::Value::Null;
-            if name=="closed"{
+            if name=="closed" && !reflected_mode{
                 let mut production=World::default();let mut production_adapter=Adapter::default();
                 production.set_sample_count(&metal,4)?;
                 let held=prepare(&mut production,&mut production_adapter,&scene)?;
@@ -265,7 +287,7 @@ fn run() -> Result<(), String> {
             drop(adapter);
             drop(world);
         }
-        std::fs::write(out.join("report.json"),serde_json::to_vec_pretty(&serde_json::json!({"production_mode":production_mode,"cases":rows,"sample_diagnostics":sample_diagnostics,"scope":"Diagnostic source-ordered resolve prototype against untouched native reference; ten retained recipes, warm reuse, no release acceptance"})).map_err(|e|e.to_string())?).map_err(|e|e.to_string())?;
+        std::fs::write(out.join("report.json"),serde_json::to_vec_pretty(&serde_json::json!({"production_mode":production_mode,"reflected_diagnostic":reflected_mode,"cases":rows,"sample_diagnostics":sample_diagnostics,"scope":"Diagnostic source-ordered resolve prototype against untouched native reference; ten retained recipes, warm reuse, no release acceptance"})).map_err(|e|e.to_string())?).map_err(|e|e.to_string())?;
         Ok(())
     })
 }
