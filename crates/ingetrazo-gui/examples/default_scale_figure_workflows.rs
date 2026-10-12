@@ -94,6 +94,13 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         app.engineering_python_enabled = true;
         let history_before = (app.undo_stack.len(), app.redo_stack.len());
         let dirty_before = app.document_dirty();
+        let before_query = json!({
+            "groups":app.scene.groups,"mesh":app.scene.mesh,
+            "shares":app.scene.mesh_shares,"definitions":app.scene.component_definitions,
+            "document":ingetrazo_formats::igz::scene_to_igz_document(&app.scene),
+            "dirty":dirty_before,"history":history_before,
+            "model_revision":app.model_revision,"scene_version":app.scene.version,
+        });
         let log_start = app.console_logs.len();
         app.run_script("print([(g.component, g.is_component()) for g in groups])");
         let query_logs = app.console_logs[log_start..].to_vec();
@@ -102,6 +109,19 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             "Actual component query refused: {query_logs:?}"
         );
         assert_eq!((app.undo_stack.len(), app.redo_stack.len()), history_before);
+        let after_query = json!({
+            "groups":app.scene.groups,"mesh":app.scene.mesh,
+            "shares":app.scene.mesh_shares,"definitions":app.scene.component_definitions,
+            "document":ingetrazo_formats::igz::scene_to_igz_document(&app.scene),
+            "dirty":app.document_dirty(),"history":[app.undo_stack.len(),app.redo_stack.len()],
+            "model_revision":app.model_revision,"scene_version":app.scene.version,
+        });
+        std::fs::write(
+            out.join(format!("{name}-query-diagnostic.json")),
+            serde_json::to_vec_pretty(
+                &json!({"before":before_query,"after":after_query,"logs":query_logs}),
+            )?,
+        )?;
         assert_eq!(
             app.document_dirty(),
             dirty_before,
