@@ -24,6 +24,9 @@ pub(crate) struct Candidate {
     ready: Option<Arc<(Key, Arc<ingetrazo_metal::egui_painter::AdmittedCallback>)>>,
 }
 impl Candidate {
+    pub(crate) fn document_owner(&self)->Option<Arc<ingetrazo_metal::egui_painter::AdmittedCallback>>{
+        self.ready.as_ref().and_then(|ready|matches!(&ready.0,Key::Document(_)).then(||ready.1.clone()))
+    }
     pub fn shape(&self, rect: egui::Rect) -> Option<egui::Shape> {
         self.ready.as_ref().map(|ready| shape(rect, ready.1.clone()))
     }
@@ -242,6 +245,12 @@ impl Labels {
     }
     pub fn stats(&self) -> (u64, u64) {
         (self.native_builds, self.uploaded_bytes)
+    }
+    pub(crate) fn document_owner(&self,app:&crate::IngeTrazoApp)->Option<Arc<ingetrazo_metal::egui_painter::AdmittedCallback>>{
+        self.current.as_ref().and_then(|ready|match &ready.0{
+            Key::Document(key) if key.revision==app.native_geometry_revision && key.scene_version==app.scene.version && key.view==app.scene.view_version=>Some(ready.1.clone()),
+            _=>None,
+        })
     }
     pub fn admitted(&self) -> Option<Arc<ingetrazo_metal::egui_painter::AdmittedCallback>> {
         self.current.as_ref().map(|ready| ready.1.clone())

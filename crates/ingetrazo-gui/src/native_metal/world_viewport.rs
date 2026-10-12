@@ -18,6 +18,7 @@ pub(crate) struct Viewport {
     unsupported: Option<(ingetrazo_render::scene_revision::Revisions, u16, String)>,
 }
 impl Viewport {
+    pub(crate) fn document_annotation_owner_for_probe(&self,app:&IngeTrazoApp)->bool{self.labels.as_ref().and_then(|labels|labels.document_owner(app)).is_some()}
     pub(crate) fn label_owner(&self)->Option<Arc<ingetrazo_metal::egui_painter::AdmittedCallback>>{self.labels.as_ref().and_then(|l|l.admitted())}
     pub(crate) fn label_stats(&self)->(u64,u64){self.labels.as_ref().map(|l|l.stats()).unwrap_or((0,0))}
     pub(crate) fn probe_font_budget(&mut self,refuse:bool)->Result<(),String>{self.labels.as_mut().ok_or("No prepared label owner")?.probe_font_budget(refuse)}
@@ -49,7 +50,8 @@ impl Viewport {
         let live_frame = self.frame.take();
         let live_unsupported = self.unsupported.take();
         let live_reason = self.last_route_reason.take();
-        let result = self.prepare(app, extent, logical_height)
+        let annotation_owner=self.labels.as_ref().and_then(|labels|labels.document_owner(app));
+        let result = self.prepare(app, extent, logical_height,annotation_owner.as_deref())
             .and_then(|accepted| {
                 if accepted {
                     self.frame.take().ok_or_else(|| "Metal capture prepared no owned target".into())
@@ -86,7 +88,7 @@ impl Viewport {
             self.last_route_reason=reason;
         }
     }
-    fn prepare(&mut self, app: &IngeTrazoApp, extent: (u32, u32),logical_height:f32) -> Result<bool, String> {
+    fn prepare(&mut self, app: &IngeTrazoApp, extent: (u32, u32),logical_height:f32,annotations:Option<&ingetrazo_metal::egui_painter::AdmittedCallback>) -> Result<bool, String> {
         let RenderRevisions {
             static_domains,
             poses,
@@ -99,7 +101,7 @@ impl Viewport {
             | ((app.style.show_grid as u16) << 3)
             | ((!app.scene.selection.is_empty() as u16) << 4)
             | ((app.scene.show_section_cuts as u16) << 5)
-            | ((app.style.visual_style as u16) << 6) | ((preview.is_some() as u16)<<10) | ((app.style.show_soft_edges as u16)<<11) | ((app.style.back_edges_hidden as u16)<<12);
+            | ((app.style.visual_style as u16) << 6) | ((preview.is_some() as u16)<<10) | ((app.style.show_soft_edges as u16)<<11) | ((app.style.back_edges_hidden as u16)<<12) | ((annotations.is_some() as u16)<<13);
         if let Some((revision, previous, reason)) = &self.unsupported {
             if *revision == static_domains && *previous == capability {
                 return Err(reason.clone());
@@ -114,7 +116,7 @@ impl Viewport {
         let source_camera=crate::navigation_ray::camera_snapshot(&app.camera)
             .ok_or("Metal source camera arithmetic admission")?;
         let camera=source_camera.matrix;
-        match self.world.prepare_scene_preview(
+        match self.world.prepare_scene_preview_with_annotations(
             &self.metal,
             &mut self.adapter,
             &app.scene,
@@ -126,6 +128,7 @@ impl Viewport {
             extent,
             preview,
             Some(glam::DVec3::from_array(source_camera.eye.map(f64::from))),
+            annotations,
         ) {
             Ok(Some(frame)) => {
                 self.unsupported = None;
@@ -136,7 +139,8 @@ impl Viewport {
             Err(error) => {
                 if ingetrazo_metal::world_scene::unsupported_stage(&error) {
                     self.unsupported = Some((static_domains, capability, error.clone()));
-                    self.frame = None;
+                    // Retain the accepted target while compatibility rendering is selected.
+                    // A rejected candidate must not retire its paired annotation owner.
                 }
                 Err(error)
             }
@@ -153,12 +157,13 @@ pub(crate) fn route(app: &mut IngeTrazoApp, rect: egui::Rect, density: f32) -> O
         viewport.labels.as_mut().unwrap().prepare(app,rect,density,viewport.metal.clone())
     })();
     let candidate=match candidate{Ok(c)=>c,Err(error)=>{viewport.record_route_reason(Some(error.clone()));app.native_metal_world=Some(viewport);return Some(error)}};
+    let annotation_owner=candidate.document_owner();
     let result = crate::viewport_extent::scene_extent(
         [rect.width() as f64, rect.height() as f64],
         density as f64,
     )
     .map_err(|e| e.to_string())
-    .and_then(|[w, h]| viewport.prepare(app, (w, h),rect.height()));
+    .and_then(|[w, h]| viewport.prepare(app, (w, h),rect.height(),annotation_owner.as_deref()));
     let reason = match result {
         Ok(true) => {
             app.native_gpu_viewport_enabled = true;

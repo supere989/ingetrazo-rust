@@ -953,13 +953,34 @@ impl crate::world::World {
         preview: Option<ingetrazo_render::face_sweep::Input>,
         source_eye: Option<glam::DVec3>,
     ) -> Result<Option<Arc<crate::world::Prepared>>, String> {
+        self.prepare_scene_preview_with_annotations(metal,adapter,scene,revisions,pose_revision,camera,style,camera_matrix,extent,preview,source_eye,None)
+    }
+
+    /// Host-owned overlay admission. The callback must be the privately prepared
+    /// complete document annotation candidate, retained through World publication.
+    /// Standalone entrypoints deliberately provide no such owner.
+    pub fn prepare_scene_preview_with_annotations(
+        &mut self,
+        metal: &crate::NativeMetal,
+        adapter: &mut Adapter,
+        scene: &Scene,
+        revisions: Revisions,
+        pose_revision: Option<u64>,
+        camera: &OrbitCamera,
+        style: &StyleConfig,
+        camera_matrix: [[f32; 4]; 4],
+        extent: (u32, u32),
+        preview: Option<ingetrazo_render::face_sweep::Input>,
+        source_eye: Option<glam::DVec3>,
+        annotations: Option<&crate::egui_painter::AdmittedCallback>,
+    ) -> Result<Option<Arc<crate::world::Prepared>>, String> {
         self.validate_context_owner(metal)?;
         if (style.show_edges && (style.show_soft_edges||style.back_edges_hidden)) || style.show_grid {
             return Err("Metal Scene adapter needs soft/back-edge/grid passes".into());
         }
         if scene.shadows.enabled
             || !scene.image_planes.is_empty()
-            || !scene.text_labels.is_empty()
+            || (!scene.text_labels.is_empty() && annotations.is_none())
         {
             return Err("Metal Scene adapter needs shadow/image/leader annotation passes".into());
         }
@@ -967,7 +988,12 @@ impl crate::world::World {
             return Err("Metal Scene adapter needs geographic/terrain passes".into());
         }
         let preview_selection=preview.is_some_and(|p|scene.selection.iter().all(|item|matches!(item,ingetrazo_core::scene::SelectionItem::Face(id) if *id==p.face)));
-        if (!scene.selection.is_empty() && !preview_selection) || !scene.guides.is_empty(){
+        let annotation_selection=annotations.is_some() && scene.selection.iter().all(|item|match item{
+            ingetrazo_core::scene::SelectionItem::Dimension(index)=>*index<scene.dimensions.len(),
+            ingetrazo_core::scene::SelectionItem::TextLabel(index)=>*index<scene.text_labels.len(),
+            _=>false,
+        });
+        if (!scene.selection.is_empty() && !preview_selection && !annotation_selection) || !scene.guides.is_empty(){
             return Err("Metal Scene adapter needs selection/guide overlays".into());
         }
         use crate::world_policy::{Mode, Policy};

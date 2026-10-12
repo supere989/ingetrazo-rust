@@ -36,7 +36,25 @@ pub(crate) fn run(input:PathBuf,output:PathBuf)->Result<(),String>{
  app.scene=scene;app.camera.target=DVec3::ZERO;app.camera.distance=5.;app.camera.yaw=0.;app.camera.pitch=std::f64::consts::FRAC_PI_2;app.camera.perspective=false;app.bump_model_revision();let depth_off=capture(&mut app,&mut painter,true)?;
  app.scene.dimensions.push(ingetrazo_core::dimensions::Dimension::new(DVec3::new(-1.,0.,0.),DVec3::new(1.,0.,0.),DVec3::new(0.,0.2,0.)));app.bump_model_revision();let hidden=capture(&mut app,&mut painter,true)?;assert_eq!(hidden,depth_off,"Occluded dimension leaked native pixels");
  app.scene.dimensions[0].start.z=2.;app.scene.dimensions[0].end.z=2.;app.bump_model_revision();let visible=capture(&mut app,&mut painter,true)?;assert_ne!(visible,depth_off,"In-front dimension did not draw");
+ // Actual complete document owner admits leader labels and annotation-only
+ // selection. Unsupported geometry selection still refuses, without publishing
+ // the candidate or discarding the paired accepted target/callback.
+ app.scene.text_labels.push(ingetrazo_core::textlabel::TextLabel::new(DVec3::new(0.,0.,2.),DVec3::new(0.5,0.5,0.),"Owned leader"));
+ app.scene.selection.insert(ingetrazo_core::scene::SelectionItem::Dimension(0));
+ app.scene.selection.insert(ingetrazo_core::scene::SelectionItem::TextLabel(0));
+ app.bump_model_revision();let annotated=capture(&mut app,&mut painter,true)?;
+ assert!(app.native_metal_world.as_ref().unwrap().document_annotation_owner_for_probe(&app));
+ let accepted=app.native_metal_world.as_ref().unwrap().frame.as_ref().unwrap().clone();
+ let accepted_callback=app.native_metal_world.as_ref().unwrap().label_owner().unwrap();
+ app.scene.selection.insert(ingetrazo_core::scene::SelectionItem::Face(0));
+ let selection_error=world_viewport::route(&mut app,rect,1.).ok_or("Geometry selection unexpectedly admitted")?;
+ assert!(selection_error.contains("selection/guide overlays"));
+ assert!(Arc::ptr_eq(&accepted,app.native_metal_world.as_ref().unwrap().frame.as_ref().unwrap()));
+ assert!(Arc::ptr_eq(&accepted_callback,&app.native_metal_world.as_ref().unwrap().label_owner().unwrap()));
+ assert!(!app.native_gpu_viewport_enabled,"Unsupported selection must choose compatibility rendering");
+ assert!(!annotated.is_empty());
+ drop(accepted);drop(accepted_callback);
  for(name,bytes)in[("pergola",full),("dimensions-off",off),("section-off",uncut),("depth-off",depth_off),("depth-hidden",hidden),("depth-visible",visible)]{std::fs::write(output.join(format!("{name}.rgba")),bytes).map_err(|e|e.to_string())?;}
  drop(painter);drop(app);let b=metal.budget.lock().map_err(|_|"Budget poisoned")?;let committed=b.heaps.iter().map(|h|h.committed).sum::<u64>();let reserved=b.heaps.iter().map(|h|h.reserved).sum::<u64>();assert_eq!((committed,reserved),(0,0));
- std::fs::write(output.join("report.json"),serde_json::to_vec_pretty(&serde_json::json!({"passed":true,"extent":[800,600],"samples":4,"dimensions":4,"active_section":false,"inactive_section_toggle_exact":true,"font_refusal":font_error,"gpu_refusal":gpu_error,"warm_extra_annotation_uploads":0,"warm_extra_world_uploads":0,"depth_hidden_exact":true,"depth_visible_contrast":true,"ledger_committed":committed,"ledger_reserved":reserved})).map_err(|e|e.to_string())?).map_err(|e|e.to_string())?;Ok(())
+ std::fs::write(output.join("report.json"),serde_json::to_vec_pretty(&serde_json::json!({"passed":true,"extent":[800,600],"samples":4,"dimensions":4,"active_section":false,"inactive_section_toggle_exact":true,"font_refusal":font_error,"gpu_refusal":gpu_error,"warm_extra_annotation_uploads":0,"warm_extra_world_uploads":0,"depth_hidden_exact":true,"depth_visible_contrast":true,"leader_and_annotation_selection_actual_owner":true,"geometry_selection_refusal_atomic":selection_error,"ledger_committed":committed,"ledger_reserved":reserved})).map_err(|e|e.to_string())?).map_err(|e|e.to_string())?;Ok(())
 }

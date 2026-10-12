@@ -115,6 +115,9 @@ impl Probe {
             if !app.ai_bridge_metal_capture_ready {
                 return Ok(false);
             }
+            if !app.native_metal_world.as_ref().is_some_and(|viewport|viewport.document_annotation_owner_for_probe(app)){
+                return Err("Actual host document annotation candidate absent".into());
+            }
             let baseline = observation(app);
             // Actual production protocol with a declared shorter UI deadline for
             // the owned blocked-submission negative control. Shipping default
@@ -308,7 +311,7 @@ impl Probe {
                 let report = json!({"scope":"Actual native Metal host/TCP finite capture probe; no source pixel acceptance inferred",
                     "port":self.port,"fixture_ui_timeout_seconds":5,"rows":self.rows,"before":self.baseline,"after":after,"backend_events":events,
                     "controls":{"actual_host":true,"actual_tcp":true,"readonly_model_history_camera":readonly,"worker_joined":true,"bridge_stopped":true,"blocked_deadline_quarantine":timeout,"poisoned_backend_quick_refusal":poison,"retained_live_depth_owner":live_depth},
-                    "all_positive_requests_successful":true});
+                    "all_positive_requests_successful":true,"document_annotation_coverage":{"actual_host_callback":app.native_metal_world.as_ref().is_some_and(|v|v.document_annotation_owner_for_probe(app)),"dimensions":app.scene.dimensions.len(),"text_labels":app.scene.text_labels.len(),"annotation_only_selection":app.scene.selection.iter().all(|s|matches!(s,ingetrazo_core::scene::SelectionItem::Dimension(_)|ingetrazo_core::scene::SelectionItem::TextLabel(_)))}});
                 std::fs::write(
                     self.output.join("report.json"),
                     serde_json::to_vec_pretty(&report).unwrap(),
