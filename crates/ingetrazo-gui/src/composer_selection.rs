@@ -759,6 +759,23 @@ pub(crate) fn clear(app: &mut IngeTrazoApp) {
 pub(crate) fn is_selected(app: &IngeTrazoApp, o: Owner) -> bool {
     app.composer_state.selection.membership.contains(&o)
 }
+/// Dimension runs restore their complete annotation cohort after adding a segment.
+/// Publish it once through the shared controller so its next revalidation cannot
+/// replace surviving selections with the last-added item.
+pub(crate) fn reselect_annotations(app: &mut IngeTrazoApp) -> Result<(), String> {
+    let s = active(app)?;
+    ensure(&mut app.scene.sheets[s])?;
+    let sheet = &app.scene.sheets[s];
+    let state = &app.composer_state.annotation_authoring;
+    let convert = |owner: super::annotation_authoring::Owner| {
+        (owner.sheet == sheet.id)
+            .then(|| owner_at(sheet, [7, 8, 9, 10, 12, 13][owner.family], owner.index))
+            .flatten()
+    };
+    let members = state.multi.members.iter().copied().filter_map(convert).collect();
+    let primary = state.selected.and_then(convert);
+    set(app, members, primary)
+}
 pub(crate) fn force_select(
     app: &mut IngeTrazoApp,
     c: u8,

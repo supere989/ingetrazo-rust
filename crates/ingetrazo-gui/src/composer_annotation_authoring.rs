@@ -640,6 +640,7 @@ impl IngeTrazoApp {
                 // The document version changed on Add, so this refreshes the
                 // borrowed membership cache without a new history command.
                 multi::revalidate(self);
+                super::selection::reselect_annotations(self)?;
                 Ok(owner)
             }
             Err(error) => {
