@@ -267,10 +267,22 @@ impl Cache {
                     let dh = sh * k;
                     dst = [(dst[2] - dw) / 2., (dst[3] - dh) / 2., dw, dh];
                 }
-                let mx = 1. / (dst[2] / src[2]);
-                let my = 1. / (dst[3] / src[3]);
-                let tx = src[0] - dst[0] * mx;
-                let ty = src[1] - dst[1] * my;
+                let sx = dst[2] / src[2];
+                let sy = dst[3] / src[3];
+                let mx = 1. / sx;
+                let my = 1. / sy;
+                // QSpanData::setupMatrix translates source coordinates by one
+                // 16.16 unit before inverting the image transform. Preserve the
+                // transform operation order; the unscaled blit omits this bias.
+                let (tx, ty) = if dst[2] != src[2] || dst[3] != src[3] {
+                    let delta = 1. / 65536.;
+                    (
+                        -((delta * sx) + ((-src[0] * sx) + dst[0])) * mx,
+                        -((delta * sy) + ((-src[1] * sy) + dst[1])) * my,
+                    )
+                } else {
+                    (src[0] - dst[0], src[1] - dst[1])
+                };
                 let fdx = (mx * 65536.) as i64;
                 let rounded = |v: f64| {
                     if v >= 0. {
