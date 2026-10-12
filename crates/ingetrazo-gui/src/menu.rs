@@ -102,7 +102,7 @@ pub fn render_menu_bar(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
                     ui.close_menu();
                 }
                 if ui.button(tr("Survey points CSV (UTM)…")).clicked() {
-                    app.show_open_dialog = true;
+                    if let Some(path)=crate::dialogs::pick_open_file(&tr("Import survey points CSV"),"*.csv *.txt|Survey points") {if let Err(error)=app.begin_survey_import(&path){app.status_message=error;}}
                     ui.close_menu();
                 }
                 if ui.button(tr("Photogrammetric mesh (WebODM)…")).clicked() {

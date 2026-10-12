@@ -268,27 +268,32 @@ pub fn parse_points_csv(text: &str) -> Result<Vec<SurveyPointRow>, String> {
             continue;
         }
 
-        let cells: Vec<&str> = if line.contains(';') {
-            line.split(';').map(|s| s.trim()).collect()
-        } else if line.contains(',') {
-            line.split(',').map(|s| s.trim()).collect()
-        } else {
-            line.split_whitespace().collect()
-        };
+        // The original parses each physical line with csv.reader, accepting
+        // escaped quotes and delimiters inside descriptions, not a split(',').
+        let cells: Vec<String> = if let Some(delimiter) = if line.contains(';') {Some(';')} else if line.contains(',') {Some(',')} else {None} {
+            let mut cells=Vec::new();let mut field=String::new();let mut quoted=false;let mut begin=true;let mut chars=line.chars().peekable();
+            while let Some(c)=chars.next(){
+                if quoted {if c=='"' {if chars.peek()==Some(&'"'){chars.next();field.push('"');}else{quoted=false;}}else{field.push(c);}}
+                else if c==delimiter {cells.push(field.trim().to_owned());field.clear();begin=true;}
+                else if c=='"'&&begin {quoted=true;begin=false;}
+                else {field.push(c);begin=false;}
+            }
+            cells.push(field.trim().to_owned());cells
+        } else {line.split_whitespace().map(str::to_owned).collect()};
 
         if cells.len() < 4 {
             continue;
         }
 
-        let north = match parse_coord(cells[1]) {
+        let north = match parse_coord(&cells[1]) {
             Ok(v) => v,
             Err(_) => continue, // likely header row
         };
-        let east = match parse_coord(cells[2]) {
+        let east = match parse_coord(&cells[2]) {
             Ok(v) => v,
             Err(_) => continue,
         };
-        let z = match parse_coord(cells[3]) {
+        let z = match parse_coord(&cells[3]) {
             Ok(v) => v,
             Err(_) => continue,
         };

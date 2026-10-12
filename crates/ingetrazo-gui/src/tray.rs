@@ -510,15 +510,15 @@ fn render_terrain_panel(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
     if let Some(terrain)=&app.scene.terrain{let mut visible=terrain.visible;if ui.checkbox(&mut visible,tr("Show terrain")).changed(){app.set_terrain_visibility(visible);}}
     ui.separator();
 
-    ui.label(format!("• {}: 0", tr("Survey points loaded")));
+    ui.label(app.survey_point_count());
     ui.horizontal(|ui| {
         if ui.button(tr("Import Survey CSV (UTM)…")).clicked() {
             if let Some(path) = pick_open_file(&tr("Import survey points CSV"), "*.csv *.txt|Survey points") {
-                app.status_message = format!("Imported survey points from {}", path.display());
+                if let Err(error)=app.begin_survey_import(&path){app.status_message=error;}
             }
         }
         if ui.button(tr("Clear")).clicked() {
-            app.status_message = tr("Cleared survey points");
+            if let Err(error)=app.clear_survey_points(){app.status_message=error;}
         }
     });
 

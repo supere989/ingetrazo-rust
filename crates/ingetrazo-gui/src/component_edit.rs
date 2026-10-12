@@ -78,7 +78,7 @@ fn prepare_finish(finishing_scene: &Scene, stack: &[ComponentEditSession], undo:
                 if entry.history_context==target {
                     *entry=match component_candidate(session,entry) {Ok((mut scene,_))=>{
                         scene.selection=session.original_scene.selection.clone();scene.selection_order=session.original_scene.selection_order.clone();
-                        scene.history_annotation_delete=entry.history_annotation_delete;scene.history_annotation_move=entry.history_annotation_move;scene.history_annotation_edit=entry.history_annotation_edit;scene.history_annotation_create=entry.history_annotation_create;
+                        scene.history_survey=entry.history_survey;scene.history_annotation_delete=entry.history_annotation_delete;scene.history_annotation_move=entry.history_annotation_move;scene.history_annotation_edit=entry.history_annotation_edit;scene.history_annotation_create=entry.history_annotation_create;
                         if entry.history_annotation_delete||entry.history_annotation_move||entry.history_annotation_edit{scene.clear_selection();}
                         scene.version=session.original_scene.version;scene.view_version=session.original_scene.view_version;scene.history_shareback=entry.history_shareback;scene.history_axes=entry.history_axes.clone();scene.history_bim=entry.history_bim.clone();scene.history_material=entry.history_material.clone();scene.history_views.0=entry.history_views.0.clone();scene.history_group_visibility=entry.history_group_visibility.clone();scene.history_terrain=entry.history_terrain.clone();scene.history_layers=entry.history_layers.clone();scene.history_images=entry.history_images.clone();scene
                     },Err(error)=>return Err(error)};
@@ -418,9 +418,14 @@ impl IngeTrazoApp {
             }
         }
         crate::document_presentation::preserve(&self.scene,&mut replacement);
+        let survey=next.history_survey;
         let annotation_create=next.history_annotation_create;
         let annotation_delete=next.history_annotation_delete||next.history_annotation_move||next.history_annotation_edit;
-        let mut previous=session.original_scene.clone();previous.history_shareback=next.history_shareback;previous.history_annotation_delete=next.history_annotation_delete;previous.history_annotation_move=next.history_annotation_move;previous.history_annotation_edit=next.history_annotation_edit;previous.history_annotation_create=annotation_create;
+        let mut previous=session.original_scene.clone();previous.history_survey=survey;previous.history_shareback=next.history_shareback;previous.history_annotation_delete=next.history_annotation_delete;previous.history_annotation_move=next.history_annotation_move;previous.history_annotation_edit=next.history_annotation_edit;previous.history_annotation_create=annotation_create;
+        if survey {
+            previous.geo_points=self.scene.geo_points.clone();previous.geo_datum=self.scene.geo_datum.clone();
+            self.scene.geo_points=replacement.geo_points.clone();self.scene.geo_datum=replacement.geo_datum.clone();replacement.history_survey=false;
+        }
         if annotation_create.is_some() {
             previous.text_labels=self.scene.text_labels.clone();
             crate::annotation_editor::preserve_creation_label_selection(&self.scene, &mut previous);
@@ -449,6 +454,7 @@ impl IngeTrazoApp {
         // with the obsolete pre-entry stacks. Exclude only this session's own
         // descendant commands from its cancellation checkpoint.
         for session in self.component_edit_stack.iter_mut().skip(index) {
+            if survey {for scene in [&mut session.original_scene,&mut session.cancel_scene] {scene.geo_points=self.scene.geo_points.clone();scene.geo_datum=self.scene.geo_datum.clone();}}
             if annotation_delete || annotation_create.is_some() {
                 for scene in [&mut session.original_scene,&mut session.cancel_scene] {
                     scene.guides=self.scene.guides.clone();scene.dimensions=self.scene.dimensions.clone();scene.text_labels=self.scene.text_labels.clone();

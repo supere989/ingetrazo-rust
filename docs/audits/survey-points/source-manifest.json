@@ -1,0 +1,75 @@
+{
+  "source_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "archive_sha256": "097bd2538c2126ff3885d750d43c097a72f42d93e31e10b1407712d19f271814",
+  "members": {
+    "comma.csv": {
+      "bytes": 75,
+      "sha256": "a1b68f63a78abd2d710e5d875cecf949e07738d48f0fc4265c759e7b27e03246"
+    },
+    "semicolon.csv": {
+      "bytes": 91,
+      "sha256": "a955a6cabb856ef597939dec2def558be9cc760fb52efdbafd4b50a76c24ef15"
+    },
+    "bad.csv": {
+      "bytes": 23,
+      "sha256": "eef734f944fa7ded43e8fb0e8c521fe1078c830093d428c01955df0c3271cc8f"
+    },
+    "fresh-input.igz": {
+      "bytes": 2441,
+      "sha256": "d6ca4123c5b07a2204fd7b596e6511b1c986dec6cc3090b1b57faca062e8915d"
+    },
+    "fresh-original.igz": {
+      "bytes": 3298,
+      "sha256": "646f545b8ed4a2d5d200936cb2f00aff9ea275eee10662d6bf6cbd024f19c394"
+    },
+    "existing-input.igz": {
+      "bytes": 2578,
+      "sha256": "481c50a3a740afa820ae07e005c2f9d3adc2e2637744f8792cac4fed02acac56"
+    },
+    "existing-original.igz": {
+      "bytes": 3264,
+      "sha256": "8baeae8f819d37039683fbd4b206f420abc19f78f7212a882cc4470566d9b8ed"
+    },
+    "nested-input.igz": {
+      "bytes": 2441,
+      "sha256": "67042ca9285df22bcec17e8a2b9fb0b32cadbe4d866c380b4997c96762b8e666"
+    },
+    "nested-original.igz": {
+      "bytes": 3567,
+      "sha256": "91d8875e16e3858dc02c75c1753b2fa9ac33353398d5dc9559c34335f25a9331"
+    },
+    "original-survey.json": {
+      "bytes": 38171,
+      "sha256": "9d0e47916cc7cadb9c879b5d168a81c703d0e529c23f76926f10bdda2bb3104e"
+    },
+    "ancestor-history-original.igz": {
+      "bytes": 3229,
+      "sha256": "0acbfa8164ebf45cda8e523874a62936b414f83b531b8e65ae1ba2fd54ab0dd7"
+    },
+    "original-survey-context.json": {
+      "bytes": 5988,
+      "sha256": "69a80d326b76b95914c0c345a1836cc2280e608d716dce5c89354451680365ea"
+    },
+    "logs/ingetrazo-survey-source.log": {
+      "bytes": 199,
+      "sha256": "518ccbc621b1e373042783550af8bea57da12efc6dbeba8a09d99f3d0ece6e01"
+    },
+    "logs/ingetrazo-survey-context-source.log": {
+      "bytes": 95,
+      "sha256": "d094da0f7fdfab1d77638a1fc23b01ecffe313f696d8d1432a36a75feac490db"
+    }
+  },
+  "capture_helpers": {
+    "scripts/reference-survey-points.py": "7ac4d5e68c580cb6912239ad3b36d6752001070230dcfe6cc6ccdc28a977ea7c",
+    "scripts/reference-survey-context-history.py": "8282b264d8612f18d628298906fa840f16d5820db6f80a5718e75d75a47345de"
+  },
+  "actual_source": "SurveyPointsPanel import/clear with actual History and Viewport nested transitions; only file/modal answers substituted",
+  "states": 54,
+  "reader_cases": [
+    "fresh",
+    "existing",
+    "nested",
+    "ancestor-history"
+  ],
+  "no_gpu_claim": true
+}

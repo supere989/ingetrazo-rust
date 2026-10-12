@@ -15,12 +15,13 @@ pub struct DocumentSession {
     pub recent_missing:Option<PathBuf>,
     pub preferences_draft:Option<crate::preferences_editor::Draft>,
     pub unit_import:Option<crate::import_units::Dialog>,
+    pub survey_import:Option<crate::survey_points::Dialog>,
     pub(crate) recent_menu:crate::recent_files::MenuCache,
     pub recovery:Vec<RecoveryRecord>,pub show_recovery:bool,pub recovered_slot:Option<PathBuf>,
 }
 impl Default for DocumentSession {fn default()->Self {Self{store:None,preferences:Preferences::default(),clean:None,
     autosaved:None,last_autosave:Instant::now(),pending:None,confirm_unsaved:false,close_allowed:false,open_dialog_revision:None,
-    recent_missing:None,preferences_draft:None,unit_import:None,recent_menu:Default::default(),recovery:vec![],show_recovery:false,recovered_slot:None}}}
+    recent_missing:None,preferences_draft:None,unit_import:None,survey_import:None,recent_menu:Default::default(),recovery:vec![],show_recovery:false,recovered_slot:None}}}
 fn same_model(a:&Scene,b:&Scene)->bool {
     a.show_hidden_objects==b.show_hidden_objects && a.show_hidden_geometry==b.show_hidden_geometry &&
     a.image_planes==b.image_planes &&

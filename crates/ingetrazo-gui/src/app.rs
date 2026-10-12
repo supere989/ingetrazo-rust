@@ -542,7 +542,7 @@ impl IngeTrazoApp {
                 };
             }
             if prev.history_annotation_create.is_some() { crate::annotation_editor::preserve_creation_selection(&self.scene, &mut prev); }
-            let mut inverse=crate::history_terrain::inverse_snapshot(&mut self.scene);inverse.history_annotation_create=prev.history_annotation_create.take();inverse.history_annotation_edit=prev.history_annotation_edit;prev.history_annotation_edit=false;inverse.history_annotation_move=prev.history_annotation_move;prev.history_annotation_move=false;inverse.history_annotation_delete=prev.history_annotation_delete;prev.history_annotation_delete=false;inverse.history_views.0=crate::history_views::restore(&self.scene,&mut prev);inverse.history_group_visibility=crate::history_visibility::restore(&self.scene,&mut prev,&mut self.visibility_owners);self.apply_context_visibility();inverse.history_layers.0=crate::history_layers::restore(&self.scene,&mut prev);crate::history_terrain::restore(&mut self.scene,&mut prev,&mut inverse);inverse.history_images.0=crate::image_plane_actions::restore(&self.scene,&mut prev);self.redo_stack.push(inverse);
+            let mut inverse=crate::history_terrain::inverse_snapshot(&mut self.scene);inverse.history_survey=prev.history_survey;prev.history_survey=false;inverse.history_annotation_create=prev.history_annotation_create.take();inverse.history_annotation_edit=prev.history_annotation_edit;prev.history_annotation_edit=false;inverse.history_annotation_move=prev.history_annotation_move;prev.history_annotation_move=false;inverse.history_annotation_delete=prev.history_annotation_delete;prev.history_annotation_delete=false;inverse.history_views.0=crate::history_views::restore(&self.scene,&mut prev);inverse.history_group_visibility=crate::history_visibility::restore(&self.scene,&mut prev,&mut self.visibility_owners);self.apply_context_visibility();inverse.history_layers.0=crate::history_layers::restore(&self.scene,&mut prev);crate::history_terrain::restore(&mut self.scene,&mut prev,&mut inverse);inverse.history_images.0=crate::image_plane_actions::restore(&self.scene,&mut prev);self.redo_stack.push(inverse);
             // Model history cannot replace later independent composer edits.
             prev.camera=self.camera.clone();
             prev.sheets=self.scene.sheets.clone();prev.active_sheet_index=self.scene.active_sheet_index;
@@ -596,7 +596,7 @@ impl IngeTrazoApp {
                 };
             }
             if next.history_annotation_create.is_some() { crate::annotation_editor::preserve_creation_selection(&self.scene, &mut next); }
-            let mut inverse=crate::history_terrain::inverse_snapshot(&mut self.scene);inverse.history_annotation_create=next.history_annotation_create.take();inverse.history_annotation_edit=next.history_annotation_edit;next.history_annotation_edit=false;inverse.history_annotation_move=next.history_annotation_move;next.history_annotation_move=false;inverse.history_annotation_delete=next.history_annotation_delete;next.history_annotation_delete=false;inverse.history_views.0=crate::history_views::restore(&self.scene,&mut next);inverse.history_group_visibility=crate::history_visibility::restore(&self.scene,&mut next,&mut self.visibility_owners);self.apply_context_visibility();inverse.history_layers.0=crate::history_layers::restore(&self.scene,&mut next);crate::history_terrain::restore(&mut self.scene,&mut next,&mut inverse);inverse.history_images.0=crate::image_plane_actions::restore(&self.scene,&mut next);self.undo_stack.push(inverse);
+            let mut inverse=crate::history_terrain::inverse_snapshot(&mut self.scene);inverse.history_survey=next.history_survey;next.history_survey=false;inverse.history_annotation_create=next.history_annotation_create.take();inverse.history_annotation_edit=next.history_annotation_edit;next.history_annotation_edit=false;inverse.history_annotation_move=next.history_annotation_move;next.history_annotation_move=false;inverse.history_annotation_delete=next.history_annotation_delete;next.history_annotation_delete=false;inverse.history_views.0=crate::history_views::restore(&self.scene,&mut next);inverse.history_group_visibility=crate::history_visibility::restore(&self.scene,&mut next,&mut self.visibility_owners);self.apply_context_visibility();inverse.history_layers.0=crate::history_layers::restore(&self.scene,&mut next);crate::history_terrain::restore(&mut self.scene,&mut next,&mut inverse);inverse.history_images.0=crate::image_plane_actions::restore(&self.scene,&mut next);self.undo_stack.push(inverse);
             next.camera=self.camera.clone();
             next.sheets=self.scene.sheets.clone();next.active_sheet_index=self.scene.active_sheet_index;
             next.tile_layer=self.scene.tile_layer.take();
@@ -1012,7 +1012,7 @@ impl IngeTrazoApp {
         crate::sheet_image::dialog(self,ctx);
         let recent_warning_owns_input = self.document_session.recent_missing.is_some();
         let preferences_owns_input = self.show_preferences_dialog;
-        let import_owns_input=self.document_session.unit_import.is_some();
+        let import_owns_input=self.document_session.unit_import.is_some()||self.document_session.survey_import.is_some();
         self.sync_document_presentation();
         self.begin_document_frame(ctx);
         self.poll_ai_bridge();
@@ -1045,7 +1045,7 @@ impl IngeTrazoApp {
         self.blender_state.poll_events(ctx);
         self.tick_blender_follow(ctx);
 
-        if !image_owns_input&&self.sheet_image.dialog.is_none()&&!import_owns_input&&self.document_session.unit_import.is_none()&&!preferences_owns_input&&!self.show_preferences_dialog&&!recent_warning_owns_input&&self.document_session.recent_missing.is_none()&&self.annotation_editor.is_none()&&self.text3d_dialog.is_none()&&!self.show_material_edit_dialog {
+        if !image_owns_input&&self.sheet_image.dialog.is_none()&&!import_owns_input&&self.document_session.unit_import.is_none()&&self.document_session.survey_import.is_none()&&!preferences_owns_input&&!self.show_preferences_dialog&&!recent_warning_owns_input&&self.document_session.recent_missing.is_none()&&self.annotation_editor.is_none()&&self.text3d_dialog.is_none()&&!self.show_material_edit_dialog {
         crate::vcb_input::route(self,ctx);
         // A complete Ctrl chord can arrive in one frame; the final modifier
         // snapshot is then released. Use the key event's captured modifiers.
@@ -1119,21 +1119,21 @@ impl IngeTrazoApp {
 
         // 1. Menu Bar Panel
         egui::TopBottomPanel::top("menu_bar").show(ctx, |ui| {
-            ui.set_enabled(!image_owns_input&&self.sheet_image.dialog.is_none()&&!import_owns_input&&self.document_session.unit_import.is_none()&&!preferences_owns_input&&!self.show_preferences_dialog&&!recent_warning_owns_input&&self.document_session.recent_missing.is_none()&&self.annotation_editor.is_none()&&self.text3d_dialog.is_none()&&!self.show_material_edit_dialog);
+            ui.set_enabled(!image_owns_input&&self.sheet_image.dialog.is_none()&&!import_owns_input&&self.document_session.unit_import.is_none()&&self.document_session.survey_import.is_none()&&!preferences_owns_input&&!self.show_preferences_dialog&&!recent_warning_owns_input&&self.document_session.recent_missing.is_none()&&self.annotation_editor.is_none()&&self.text3d_dialog.is_none()&&!self.show_material_edit_dialog);
             render_menu_bar(self, ui);
         });
 
         // 2. Toolbar Panel
         if self.show_toolbar {
             egui::TopBottomPanel::top("toolbar").show(ctx, |ui| {
-                ui.set_enabled(!image_owns_input&&self.sheet_image.dialog.is_none()&&!import_owns_input&&self.document_session.unit_import.is_none()&&!preferences_owns_input&&!self.show_preferences_dialog&&!recent_warning_owns_input&&self.document_session.recent_missing.is_none()&&self.annotation_editor.is_none()&&self.text3d_dialog.is_none()&&!self.show_material_edit_dialog);
+                ui.set_enabled(!image_owns_input&&self.sheet_image.dialog.is_none()&&!import_owns_input&&self.document_session.unit_import.is_none()&&self.document_session.survey_import.is_none()&&!preferences_owns_input&&!self.show_preferences_dialog&&!recent_warning_owns_input&&self.document_session.recent_missing.is_none()&&self.annotation_editor.is_none()&&self.text3d_dialog.is_none()&&!self.show_material_edit_dialog);
             render_top_toolbar(self, ui);
             });
         }
 
         // 3. Status Bar Panel
         egui::TopBottomPanel::bottom("status_bar").show(ctx, |ui| {
-            ui.set_enabled(!image_owns_input&&self.sheet_image.dialog.is_none()&&!import_owns_input&&self.document_session.unit_import.is_none()&&!preferences_owns_input&&!self.show_preferences_dialog&&!recent_warning_owns_input&&self.document_session.recent_missing.is_none()&&self.annotation_editor.is_none()&&self.text3d_dialog.is_none()&&!self.show_material_edit_dialog);
+            ui.set_enabled(!image_owns_input&&self.sheet_image.dialog.is_none()&&!import_owns_input&&self.document_session.unit_import.is_none()&&self.document_session.survey_import.is_none()&&!preferences_owns_input&&!self.show_preferences_dialog&&!recent_warning_owns_input&&self.document_session.recent_missing.is_none()&&self.annotation_editor.is_none()&&self.text3d_dialog.is_none()&&!self.show_material_edit_dialog);
             render_status_bar(self, ui);
         });
 
@@ -1142,7 +1142,7 @@ impl IngeTrazoApp {
             .exact_width(crate::appearance_preferences::current_toolbar_size(ctx)+20.0)
             .resizable(false)
             .show(ctx, |ui| {
-                ui.set_enabled(!image_owns_input&&self.sheet_image.dialog.is_none()&&!import_owns_input&&self.document_session.unit_import.is_none()&&!preferences_owns_input&&!self.show_preferences_dialog&&!recent_warning_owns_input&&self.document_session.recent_missing.is_none()&&self.annotation_editor.is_none()&&self.text3d_dialog.is_none()&&!self.show_material_edit_dialog);
+                ui.set_enabled(!image_owns_input&&self.sheet_image.dialog.is_none()&&!import_owns_input&&self.document_session.unit_import.is_none()&&self.document_session.survey_import.is_none()&&!preferences_owns_input&&!self.show_preferences_dialog&&!recent_warning_owns_input&&self.document_session.recent_missing.is_none()&&self.annotation_editor.is_none()&&self.text3d_dialog.is_none()&&!self.show_material_edit_dialog);
             render_left_cad_palette(self, ui);
             });
 
@@ -1153,14 +1153,14 @@ impl IngeTrazoApp {
                 .min_width(200.0)
                 .max_width(400.0)
                 .show(ctx, |ui| {
-                    ui.set_enabled(!image_owns_input&&self.sheet_image.dialog.is_none()&&!import_owns_input&&self.document_session.unit_import.is_none()&&!preferences_owns_input&&!self.show_preferences_dialog&&!recent_warning_owns_input&&self.document_session.recent_missing.is_none()&&self.annotation_editor.is_none()&&self.text3d_dialog.is_none()&&!self.show_material_edit_dialog);
+                    ui.set_enabled(!image_owns_input&&self.sheet_image.dialog.is_none()&&!import_owns_input&&self.document_session.unit_import.is_none()&&self.document_session.survey_import.is_none()&&!preferences_owns_input&&!self.show_preferences_dialog&&!recent_warning_owns_input&&self.document_session.recent_missing.is_none()&&self.annotation_editor.is_none()&&self.text3d_dialog.is_none()&&!self.show_material_edit_dialog);
             render_side_tray(self, ui);
                 });
         }
 
         // 6. Central 3D Viewport or 2D Sheet Composer Canvas
         egui::CentralPanel::default().show(ctx, |ui| {
-            ui.set_enabled(!image_owns_input&&self.sheet_image.dialog.is_none()&&!import_owns_input&&self.document_session.unit_import.is_none()&&!preferences_owns_input&&!self.show_preferences_dialog&&!recent_warning_owns_input&&self.document_session.recent_missing.is_none()&&self.annotation_editor.is_none()&&self.text3d_dialog.is_none()&&!self.show_material_edit_dialog);
+            ui.set_enabled(!image_owns_input&&self.sheet_image.dialog.is_none()&&!import_owns_input&&self.document_session.unit_import.is_none()&&self.document_session.survey_import.is_none()&&!preferences_owns_input&&!self.show_preferences_dialog&&!recent_warning_owns_input&&self.document_session.recent_missing.is_none()&&self.annotation_editor.is_none()&&self.text3d_dialog.is_none()&&!self.show_material_edit_dialog);
             if let Some(sheet_idx) = self.scene.active_sheet_index {
                 crate::composer::render_sheet_composer(self, ui, sheet_idx);
             } else {
