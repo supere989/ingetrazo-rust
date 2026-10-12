@@ -1,0 +1,49 @@
+{
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "source": {
+    "path": "views/composer.py",
+    "sha256": "aeb7676d7a7a1b2704c0f108f5d8ab7861836c74648838c545bcce454ac248af",
+    "references": [
+      "1348-1370: cota background uses QBrush(_with_opacity) then drawRect",
+      "1821-1829: radial background uses same QColor helper",
+      "1842-1848: _with_opacity calls QColor.setAlphaF"
+    ]
+  },
+  "native_reused_policy": {
+    "path": "crates/ingetrazo-render/src/cad2d.rs",
+    "sha256": "fc03edfa65da6095f2b783aa562d1f682abe05daefadf33e27f9c7be155026f7",
+    "references": [
+      "EncodedRgba::qt_premultiplied8: authored channels quantized65535, QRgba64 premultiplication, div257 afterpremultiply"
+    ],
+    "qt_primary_source": "https://github.com/qt/qtbase/blob/v6.12.0/src/gui/painting/qrgba64.h"
+  },
+  "retained_observation": {
+    "case": "cotas-positions",
+    "affected_bounds_xy": [
+      502,
+      311,
+      555,
+      354
+    ],
+    "uniform_background_source_rgb": [
+      244,
+      233,
+      216
+    ],
+    "uniform_background_before_fix_rgb": [
+      243,
+      232,
+      216
+    ],
+    "background_hex": "#ead6b8",
+    "authored_alpha": 0.55
+  },
+  "change": "Remove early eight-bit straight RGBA conversion from physical path color admission. Preserve authored16-bit brush alpha through existing premultiplication.",
+  "conditions": [
+    "Validated solid encodedRGBA; unchanged coverage/geometry/GPU sourceOver",
+    "Opaque byte-authored colors remain unchanged",
+    "Source point primitive retains existing independent alpha policy",
+    "PDF serialization unchanged"
+  ],
+  "status": "source-backed proposal; actual affected replay required, no new source capture"
+}
