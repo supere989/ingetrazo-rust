@@ -19,6 +19,7 @@ def inventories(src,got):
  assert [r['case']for r in src['images']]==NAMES
  assert [r['case']for r in got['images']]==NAMES
  assert got['atomic_refusal']is True
+ assert got['typed_title_owner']is True
  assert [r['text']for r in src['advance_observations']['rows']]==['A','B','AB','A\nB','A\rB','A\tB','A\u2028B','A\u2029B','A\u009cB']
  assert [r['text']for r in got['advance_observations']]==[r['text']for r in src['advance_observations']['rows']]
  for a,b in zip(src['advance_observations']['rows'],got['advance_observations']):
@@ -55,6 +56,7 @@ for name,mutate in [
  ('wrong-dpi-type',lambda a,b:b['images'][0].update(dpi='100')),
  ('numeric-nonmutating',lambda a,b:b['images'][0].update(nonmutating=1)),
  ('jointly-truncated-advance',lambda a,b:(a['advance_observations']['rows'].pop(),b['advance_observations'].pop())),
+ ('false-typed-title-owner',lambda a,b:b.update(typed_title_owner=False)),
  ('false-atomic',lambda a,b:b.update(atomic_refusal=False))]:
  a=copy.deepcopy(src);b=copy.deepcopy(got);mutate(a,b)
  try:inventories(a,b)

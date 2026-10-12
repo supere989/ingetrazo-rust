@@ -306,12 +306,7 @@ pub(crate) fn draws(
         {
             return Err("Unsupported view caption style/alignment/position".into());
         }
-        let title = expand(
-            sheet,
-            frame,
-            string(raw, "title_text", &frame.title_text)?,
-            ctx,
-        )?;
+        let title = expand(sheet, frame, &frame.title_text, ctx)?;
         let title = if title.is_empty() {
             view_name(frame)
         } else {

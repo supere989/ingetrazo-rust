@@ -108,6 +108,21 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         assert_eq!(app.scene.sheets.len(), 1);
         app.camera = serde_json::from_value(row["camera"].clone())?;
         app.scene.camera = app.camera.clone();
+        // The operative title editor changes the typed field without rewriting
+        // its imported native header. Export must use the typed authored owner.
+        if name == "title-layout-left" {
+            let id = app.scene.sheets[0]
+                .items
+                .iter()
+                .find(|v| matches!(v, ingetrazo_core::composition::SheetItem::ViewFrame(_)))
+                .ok_or("typed title frame")?
+                .id();
+            app.scene.sheets[0]
+                .native_items
+                .get_mut(&id)
+                .ok_or("typed title header")?["title_text"] =
+                serde_json::json!("deliberately stale imported title");
+        }
         let before = app.scene.clone();
         let path = out.join(row["image"]["file"].as_str().ok_or("image")?);
         let dpi = row["dpi"].as_u64().ok_or("dpi")? as u16;
@@ -153,7 +168,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     std::fs::write(
         out.join("native.json"),
         serde_json::to_vec_pretty(
-            &serde_json::json!({"images":records,"atomic_refusal":true,"advance_observations":advance_records}),
+            &serde_json::json!({"images":records,"atomic_refusal":true,"advance_observations":advance_records,"typed_title_owner":true}),
         )?,
     )?;
     Ok(())
