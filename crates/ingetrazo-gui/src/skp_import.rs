@@ -188,6 +188,14 @@ impl IngeTrazoApp {
         candidate.bind_dimensions();
         if parked {
             self.publish_root_import_policy(candidate, None, true)?;
+            // Source SnapshotImport runs inside the active Qt edit lifecycle
+            // even though SKP placements append at document root. Retain that
+            // policy for subsequent share-back of pre-existing edits; the
+            // existing finish guard still requires float32-authored frame and
+            // points, preserving native f64 placement/edit semantics.
+            if let Some(session) = self.component_edit_stack.last_mut() {
+                session.note_source_mesh_import();
+            }
         } else {
             self.undo_stack
                 .try_reserve(1)

@@ -95,11 +95,11 @@ fn mesh(
     value["faces"]
         .as_array_mut()
         .unwrap()
-        .sort_by_key(source_json_key);
+        .sort_by_cached_key(source_json_key);
     value["edges"]
         .as_array_mut()
         .unwrap()
-        .sort_by_key(source_json_key);
+        .sort_by_cached_key(source_json_key);
     Ok(value)
 }
 fn scene(app: &IngeTrazoApp) -> Result<Value, String> {
@@ -233,12 +233,25 @@ fn wait(app: &mut IngeTrazoApp, ctx: &egui::Context) -> Result<(), String> {
     }
     Ok(())
 }
-fn run(source: &Path, out: &Path) -> Result<(), String> {
+fn run(source: &Path, out: &Path, selected: Option<Vec<String>>) -> Result<(), String> {
     std::fs::create_dir_all(out).map_err(|e| e.to_string())?;
     let input: Value = serde_json::from_slice(
         &std::fs::read(source.join("original-skp.json")).map_err(|e| e.to_string())?,
     )
     .map_err(|e| e.to_string())?;
+    if let Some(names) = &selected {
+        let actual = input["cases"]
+            .as_array()
+            .ok_or("cases")?
+            .iter()
+            .filter_map(|c| c["name"].as_str())
+            .filter(|name| names.iter().any(|n| n == name))
+            .map(str::to_owned)
+            .collect::<Vec<_>>();
+        if names.is_empty() || *names != actual {
+            return Err("--cases must be an exact ordered source case subset".into());
+        }
+    }
     let picker = out.join("picker");
     std::fs::create_dir_all(&picker).map_err(|e| e.to_string())?;
     std::fs::hard_link(
@@ -259,6 +272,12 @@ fn run(source: &Path, out: &Path) -> Result<(), String> {
     let mut parses = 0;
     for case in input["cases"].as_array().ok_or("cases")? {
         let name = case["name"].as_str().ok_or("name")?;
+        if selected
+            .as_ref()
+            .is_some_and(|names| !names.iter().any(|n| n == name))
+        {
+            continue;
+        }
         let outcome = case["outcome"].as_str().ok_or("outcome")?;
         let ctx = egui::Context::default();
         let mut app = IngeTrazoApp::new();
@@ -443,7 +462,7 @@ fn run(source: &Path, out: &Path) -> Result<(), String> {
         return Err("stale context published".into());
     }
     std::env::set_var("PATH", old);
-    std::fs::write(out.join("native-skp.json"),serde_json::to_vec_pretty(&json!({"source_pin":input["source_pin"],"cases":cases,"states":states,"parses":parses,"context_retired_parses":1,"controls":{"actual_chooser":true,"file_worker":true,"parse_once":true,"camera_unchanged":true,"atomic_refusal":true,"idle_readonly":true,"context_retired":true,"registry_undo":true}})).unwrap()).map_err(|e|e.to_string())?;
+    std::fs::write(out.join("native-skp.json"),serde_json::to_vec_pretty(&json!({"source_pin":input["source_pin"],"case_filter":selected,"control_scope":"Only selected cases are executed; a subset report is not a full acceptance packet.","cases":cases,"states":states,"parses":parses,"context_retired_parses":1,"controls":{"actual_chooser":true,"file_worker":true,"parse_once":true,"camera_unchanged":true,"atomic_refusal":true,"idle_readonly":true,"context_retired":true,"registry_undo":true}})).unwrap()).map_err(|e|e.to_string())?;
     Ok(())
 }
 fn main() {
@@ -459,11 +478,23 @@ fn main() {
         return;
     }
     let args = std::env::args_os().collect::<Vec<_>>();
-    if args.len() != 3 {
-        eprintln!("usage: skp_import_workflows SOURCE OUTPUT");
+    let selected = if args.len() == 3 {
+        None
+    } else if args.len() == 5 && args[3] == "--cases" {
+        Some(
+            args[4]
+                .to_str()
+                .ok_or("case names must be UTF8")
+                .unwrap()
+                .split(',')
+                .map(str::to_owned)
+                .collect(),
+        )
+    } else {
+        eprintln!("usage: skp_import_workflows SOURCE OUTPUT [--cases ordered,case,names]");
         std::process::exit(2);
-    }
-    if let Err(e) = run(Path::new(&args[1]), Path::new(&args[2])) {
+    };
+    if let Err(e) = run(Path::new(&args[1]), Path::new(&args[2]), selected) {
         eprintln!("{e}");
         std::process::exit(1);
     }
