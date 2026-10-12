@@ -165,6 +165,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     // macOS geometry/codec diagnostic: Linux Sans Serif is not a Mac font oracle.
     // Default acceptance still requires every image, including text.
     let skip_text = args.iter().any(|v| v == "--skip-text");
+    let observe_text = args.iter().any(|v| v == "--observe-text-placement");
     let source = Path::new(&args[0]);
     let out = Path::new(&args[1]);
     std::fs::create_dir_all(out)?;
@@ -208,9 +209,12 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             app.begin_sheet_image_export(0);
             app.choose_sheet_image_path(0, Some(&path), Format::from_path(&path).unwrap());
             app.choose_sheet_image_resolution(0, path.clone(), Some(dpi))?;
+            let observe=observe_text&&row["case"]=="text";
+            if observe{app.begin_sheet_glyph_observation()?;}
             let (request, plan) = app
                 .prepare_sheet_image_request(&ctx)
                 .ok_or("Missing App export request")??;
+            if observe{std::fs::write(out.join("text-placement.json"),serde_json::to_vec_pretty(&app.take_sheet_glyph_observation()?)?)?;}
             renderer.save(&plan, &request.path)?;
             let decoded = image::open(&path)?.to_rgba8();
             std::fs::write(

@@ -191,7 +191,7 @@ jobs:
           PY
       - name: Replay frozen native macOS text and font identity
         if: ${{ !cancelled() && steps.nativebuild.outcome == 'success' }}
-        run: python3 scripts/replay-platform-sheet-text.py target/debug/examples/sheet_image_workflows target/debug/ingetrazo-render-worker target/debug/examples/paper_system_font_probe docs/audits/metal-combined-gui-ci/platform-sheet-text-replay > docs/audits/metal-combined-gui-ci/platform-sheet-text-replay.log 2>&1
+        run: python3 scripts/replay-platform-sheet-text.py target/debug/examples/sheet_image_workflows target/debug/ingetrazo-render-worker target/debug/examples/paper_system_font_probe docs/audits/metal-combined-gui-ci/platform-sheet-text-replay --observe-placement > docs/audits/metal-combined-gui-ci/platform-sheet-text-replay.log 2>&1
       - name: Retain native linking evidence
         if: always()
         uses: actions/upload-artifact@v4

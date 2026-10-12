@@ -1,0 +1,15 @@
+{
+  "base": "93af57597bcf1b8e09cc774bc82a0358ccda9154",
+  "independent_review": "accepted after structured diagnostic failure retention",
+  "files": {
+    "crates/ingetrazo-gui/src/composer_text_canvas.rs": "c356a87d54137ecf69e8b5ef0af2ce19aee23ee53130011431bb9b301b435784",
+    "crates/ingetrazo-gui/src/sheet_image.rs": "08363365e70126380b0b6c73faa9ddfaef5231feda274fc2451e32f84173a322",
+    "crates/ingetrazo-gui/examples/sheet_image_workflows.rs": "43f74d6107cd2b7e037524c9cf07712c958887afdcf84e88a6088006765c9985",
+    "scripts/observe-platform-text-layout.py": "ef2ed6470a01db303077fa955fe21e25c66e07928b2b4d330d1ed7d4713ea606",
+    "scripts/replay-platform-sheet-text.py": "889a40e343a4c7aead060f51435b4cb164e91e39af46179427a4f4b9e7c0c08e",
+    ".github/workflows/parity.yml": "252c4b64fc8f6bfcb06c9ecae2836b24f1b383800871079d0ca7c074c3da694b"
+  },
+  "native_build": "pending joint build",
+  "mac_observation": "pending native CI",
+  "source_images_added": 0
+}

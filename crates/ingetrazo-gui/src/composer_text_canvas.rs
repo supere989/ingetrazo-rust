@@ -10,12 +10,21 @@ use ingetrazo_formats::{paper_font::{FontKey,CachedFont},paper_text_painter::Pai
 #[path="composer_text_ordered.rs"] mod ordered;
 #[derive(Clone)]struct Tile{factory_identity:Option<(u8,usize)>,ordered:Option<ordered::Ordered>,draws:Weak<Vec<Draw>>,density:u64,phase:[u64;2],offset:[i64;2],size:[usize;2],texture:Option<TextureHandle>,bytes:usize}
 #[derive(Clone)]struct Sample{x:i64,y:i64,image:GlyphImage,clip:[i64;4]}
+/// Explicit cold-export diagnostic; contains no font bytes or glyph coverage.
+#[derive(Clone,serde::Serialize)]
+struct PhysicalGlyphObservation {
+ draw:usize,glyph_index:usize,glyph:u32,font_owner:uuid::Uuid,font_face:u32,
+ origin_mm:[f64;2],scale_mm:f64,density:f64,rotation_deg:f64,
+ position_px:[f64;2],position_bits:[u64;2],device_px:[f64;2],device_bits:[u64;2],
+ device_26_6:[i64;2],phase_count:u8,raster_origin:[f64;2],phase:[u8;2],
+}
 #[derive(Clone,Default)]pub(crate) struct CanvasPainter {
  context:Option<(u64,u64,uuid::Uuid)>,layouts:HashMap<uuid::Uuid,Layout>,layout_bytes:usize,layout_order:VecDeque<uuid::Uuid>,font_refs:HashMap<FontKey,(usize,usize)>,font_bytes:usize,
  glyphs:HashMap<GlyphKey,GlyphImage>,order:VecDeque<GlyphKey>,glyph_bytes:usize,
  tiles:HashMap<uuid::Uuid,Tile>,tile_order:VecDeque<uuid::Uuid>,tile_bytes:usize,pub tile_builds:u64,
  // Explicit fixture opt-in; no runtime retention or warm-path capture.
  sample_observation:Option<Vec<Sample>>,
+ physical_observation:Option<Vec<PhysicalGlyphObservation>>,
  ordered_builds:u64,ordered_items:usize,ordered_parts:usize,ordered_bytes:usize,
  frame_ops:usize,frame_textures:Vec<TextureHandle>,pub layout_builds:u64,pub raster_builds:u64,
 }
@@ -24,9 +33,21 @@ impl CanvasPainter {
  /// Physical export reuses source glyph coverage and decoration producers;
  /// positions stay double until the existing QFixed/raster cache boundary.
  pub(crate) fn physical_records(&mut self,draws:&[Draw],density:f64)->Result<Vec<(Arc<ingetrazo_render::cad2d::Geometry>,Arc<[ingetrazo_render::cad2d::Batch]>)>,String>{
+  if self.physical_observation.is_some(){self.physical_records_impl::<true>(draws,density)}else{self.physical_records_impl::<false>(draws,density)}
+ }
+ pub(crate) fn begin_physical_observation(&mut self)->Result<(),String>{
+  if self.physical_observation.is_some(){return Err("Physical glyph observation already active".into());}
+  let mut rows=Vec::new();rows.try_reserve_exact(2048).map_err(|_|"Physical glyph observation allocation refused")?;
+  self.physical_observation=Some(rows);Ok(())
+ }
+ pub(crate) fn take_physical_observation(&mut self)->Result<serde_json::Value,String>{
+  let rows=self.physical_observation.take().ok_or("Physical glyph observation was not enabled")?;
+  serde_json::to_value(rows).map_err(|e|e.to_string())
+ }
+ fn physical_records_impl<const OBSERVE:bool>(&mut self,draws:&[Draw],density:f64)->Result<Vec<(Arc<ingetrazo_render::cad2d::Geometry>,Arc<[ingetrazo_render::cad2d::Batch]>)>,String>{
   if !density.is_finite()||density<=0.{return Err("Invalid physical text density".into());}
   let mut samples=Vec::new();let mut extent=None;let mut working=0;
-  for draw in draws{
+  for (draw_index,draw) in draws.iter().enumerate(){
    let pos=draw.origin_mm.map(|v|v*density);
    let rgba=draw.fill.unwrap_or([0.,0.,0.,1.]);
    let color=Color32::from_rgba_unmultiplied((rgba[0]*255.).round()as u8,(rgba[1]*255.).round()as u8,(rgba[2]*255.).round()as u8,(rgba[3]*255.).round()as u8);
@@ -48,10 +69,19 @@ impl CanvasPainter {
    };
    let scale=text.scale_mm*density;let(sin,cos)=text.rotation_deg.to_radians().sin_cos();
    if text.rotation_deg!=0.&&!text.decorations.is_empty(){return Err("Rotated physical text decorations unavailable".into());}
-   for glyph in &text.glyphs{
+   for (glyph_index,glyph) in text.glyphs.iter().enumerate(){
     let x=pos[0]+(glyph.position_px[0]*cos-glyph.position_px[1]*sin)*scale;let y=pos[1]+(glyph.position_px[0]*sin+glyph.position_px[1]*cos)*scale;
     let count=text.font.raster_phase_count(glyph.glyph,scale,text.bold,text.italic)?;
     let(fx,fy,phase)=device_position_with_count((x*64.)as i64,(y*64.)as i64,count);
+    if OBSERVE {
+     let rows=self.physical_observation.as_mut().ok_or("Physical observation owner lost")?;
+     if rows.len()==2048{return Err("Physical glyph observation exceeds 2048 glyphs".into());}
+     let key=text.font.key();
+     rows.push(PhysicalGlyphObservation{draw:draw_index,glyph_index,glyph:glyph.glyph,font_owner:key.identity,font_face:key.face_index,
+      origin_mm:draw.origin_mm,scale_mm:text.scale_mm,density,rotation_deg:text.rotation_deg,
+      position_px:glyph.position_px,position_bits:glyph.position_px.map(f64::to_bits),device_px:[x,y],device_bits:[x.to_bits(),y.to_bits()],
+      device_26_6:[(x*64.)as i64,(y*64.)as i64],phase_count:count,raster_origin:[fx,fy],phase});
+    }
     let image=self.rotated_image(&text.font,glyph.glyph,scale,phase,text.bold,text.italic,color,text.rotation_deg)?;
     let sample=Sample{x:fx as i64+i64::from(image.left),y:fy as i64-i64::from(image.top),image,clip};
     include_sample(&mut samples,&mut extent,&mut working,Self::physical_clip_sample(sample,&masks)?)?;

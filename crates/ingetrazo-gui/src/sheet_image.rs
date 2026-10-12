@@ -211,6 +211,10 @@ pub struct State {
     pub(crate) painters: PainterCache,
 }
 impl crate::app::IngeTrazoApp {
+    /// Explicit diagnostic for one already-required physical export. Disabled by default.
+    pub fn begin_sheet_glyph_observation(&mut self)->Result<(),String>{self.sheet_image.painters.text.begin_physical_observation()}
+    pub fn take_sheet_glyph_observation(&mut self)->Result<serde_json::Value,String>{self.sheet_image.painters.text.take_physical_observation()}
+
     pub fn begin_sheet_image_export(&mut self, sheet: usize) {
         self.sheet_image.chooser_refreshes += 1;
         self.composer_compute.invalidate();

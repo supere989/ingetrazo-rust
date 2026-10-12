@@ -1,0 +1,11 @@
+# Bounded native text placement observation
+
+The retained actual Mac text image still differs at 164 pixels after the font-family repair. Its font metadata already matches. This diagnostic is folded into the next required frozen native replay; it adds no source image, additional native render, separate CI dispatch or production rendering correction.
+
+Explicit `--observe-text-placement` enables at most 2,048 scalar glyph records during the existing actual App physical export. Records retain ordered glyph IDs, process-local font owner and face, source glyph positions, origin/scale/density, literal device coordinates and f64 bits, actual device 26.6 coordinates, cached raster phase count, selected phase and raster origin. The existing raster call is unchanged. Normal exports select a const-generic path with per-glyph observation compiled out; no diagnostic allocation occurs unless enabled. Records contain no font bytes or glyph coverage.
+
+The source observer calls pinned original `paint_text_mm` with a Python argument recorder and then uses public QTextLayout to shape each explicit line at y=0. The [Linux API check](source-linux.json) observed the two lines and 29 glyphs with zero images; [log](source-api-check.log). This checks collector API wiring only. It does not establish Mac layout or pixel parity.
+
+Source private QPainter device offsets, whole-paragraph vertical placement and font-engine cached phase count cannot be read through this observer. The comparison therefore reports glyph IDs and relative horizontal positions, alongside raw native positions/phases for diagnosis. These are not assertions of private source device-phase parity. Frozen whole-image comparison remains exact and unchanged. Missing or malformed observations retain a structured error and the final replay result instead of aborting before evidence publication.
+
+Independent review accepted bounded capture, the default path, original-call/public-layout scope and readiness linkage; its missing-inventory correction is included. Python syntax and the Linux source API check pass. The Rust observer is awaiting the combined affected-consumer build; actual Mac observations are pending that batch's native CI.

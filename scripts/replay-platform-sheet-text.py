@@ -22,6 +22,7 @@ def main():
     parser.add_argument("worker", type=Path)
     parser.add_argument("font_probe", type=Path)
     parser.add_argument("output", type=Path)
+    parser.add_argument("--observe-placement", action="store_true", help="Collect one bounded zero-image source layout and actual native placement diagnostic")
     args = parser.parse_args()
     assert sys.platform == "darwin", "Native platform replay requires macOS"
     repo = Path(__file__).resolve().parents[1]
@@ -76,9 +77,13 @@ def main():
     else:
         result["font_identity_exact"] = False
         (out / "font.stdout").write_bytes(probe.stdout)
+    if args.observe_placement:
+        with (out / "layout.log").open("w") as stdout, (out / "layout.stderr").open("w") as stderr:
+            layout = subprocess.run([sys.executable, str(repo / "scripts/observe-platform-text-layout.py"), str(out / "source-layout.json")], cwd=repo, env=env, stdout=stdout, stderr=stderr, timeout=60)
+        result["layout_observer_returncode"] = layout.returncode
     native = out / "native"
     with (out / "runtime.log").open("w") as stdout, (out / "runtime.stderr").open("w") as stderr:
-        run = subprocess.run([str(binaries["consumer"]), str(source), str(native), "--worker", str(binaries["worker"])], cwd=repo, env=env, stdout=stdout, stderr=stderr, timeout=120)
+        run = subprocess.run([str(binaries["consumer"]), str(source), str(native), "--worker", str(binaries["worker"])] + (["--observe-text-placement"] if args.observe_placement else []), cwd=repo, env=env, stdout=stdout, stderr=stderr, timeout=120)
     result["runtime_returncode"] = run.returncode
     if run.returncode == 0:
         spec = importlib.util.spec_from_file_location("sheet_image_check", repo / "scripts/check-sheet-image-native.py")
@@ -97,7 +102,44 @@ def main():
         result.update(different_pixels=sum(a[i:i+3] != b[i:i+3] for i in range(0, len(a), 3)),
                       max_channel_error=max((abs(x-y) for x, y in zip(a,b)), default=0),
                       physical_headers_exact=check.physical(source / "text.png") == check.physical(native / "text.png"), native_rgb_sha256=digest(b))
-    result["passed"] = result["font_identity_exact"] and run.returncode == 0 and result.get("different_pixels") == 0 and result.get("physical_headers_exact")
+    if args.observe_placement:
+        diagnostic = {"valid": False, "scope": "Diagnostic shaping comparison only. Source private device QFixed positions, whole-paragraph vertical placement and cache phase count are not observed. Frozen whole-image acceptance is unchanged."}
+        if run.returncode == 0 and result["layout_observer_returncode"] == 0:
+            try:
+                layout = json.loads((out / "source-layout.json").read_text())
+                placements = json.loads((native / "text-placement.json").read_text())
+                texts = ["IngeTrazo", "Physical sheet 1:100"]
+                assert layout["paint_call"]["text"] == "\n".join(texts) and layout["fresh_images"] == 0
+                assert [line["text"] for line in layout["lines"]] == texts, "Source line inventory changed"
+                assert set(layout["font_tables"]) == {"head", "hhea", "maxp", "OS/2", "name", "cmap", "hmtx"}
+                assert layout["font_tables"] == {name: receipt["font"]["tables"][name] for name in layout["font_tables"]}
+                assert 0 < len(placements) <= 2048
+                assert [r["draw"] for r in placements] == sorted(r["draw"] for r in placements), "Native run order changed"
+                lines = []
+                for index, line in enumerate(layout["lines"]):
+                    assert len(line["runs"]) == 1, "Frozen recipe needs one source font run per explicit line"
+                    source_run = line["runs"][0]
+                    rows = [r for r in placements if r["draw"] == index]
+                    source_positions = source_run["positions"]
+                    assert len(rows) == len(source_run["glyphs"]) == len(source_positions) > 0, "Per-line glyph inventory changed"
+                    assert [r["glyph_index"] for r in rows] == list(range(len(rows))), "Native glyph order changed"
+                    ids = [r["glyph"] for r in rows]
+                    relative_x = [r["position_px"][0] - rows[0]["position_px"][0] for r in rows]
+                    source_relative_x = [r[0] - source_positions[0][0] for r in source_positions]
+                    lines.append({"line": index, "glyph_ids_equal": ids == source_run["glyphs"],
+                                  "relative_x_equal": relative_x == source_relative_x,
+                                  "source_relative_x": source_relative_x, "native_relative_x": relative_x,
+                                  "native_phase_counts": sorted({r["phase_count"] for r in rows}),
+                                  "native_baselines": sorted({r["position_px"][1] for r in rows})})
+                assert {r["draw"] for r in placements} == set(range(len(layout["lines"])))
+                diagnostic.update(valid=True, lines=lines)
+            except (AssertionError, KeyError, TypeError, ValueError, IndexError, OSError) as error:
+                diagnostic["error"] = f"{type(error).__name__}: {error}"
+        else:
+            diagnostic["error"] = "Source observer or native consumer failed; inspect retained logs"
+        result["placement_observation_valid"] = diagnostic["valid"]
+        (out / "placement-comparison.json").write_text(json.dumps(diagnostic, indent=2) + "\n")
+    result["passed"] = result["font_identity_exact"] and run.returncode == 0 and result.get("different_pixels") == 0 and result.get("physical_headers_exact") and (not args.observe_placement or result["placement_observation_valid"])
     (out / "result.json").write_text(json.dumps(result, indent=2) + "\n")
     print(json.dumps(result))
     raise SystemExit(0 if result["passed"] else 1)
