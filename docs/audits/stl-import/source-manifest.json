@@ -1,0 +1,312 @@
+{
+  "original_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "source_revision": "2d9bced9f94265498fe39091a48700ff5ffc1d5f",
+  "archive_sha256": "9bdc59e3239e6a215f5a32437a74025d9c96910448764f51385818ebd8cebdf5",
+  "members": {
+    "LICENSE": {
+      "size": 35149,
+      "sha256": "3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986"
+    },
+    "ascii.stl": {
+      "size": 1397,
+      "sha256": "332adb3482b7c5202949a3b83fbb67b3b3966e7219dd7c4f2eca452f964edab7"
+    },
+    "capture-source/scripts/reference-nested-import.py": {
+      "size": 4180,
+      "sha256": "1cd756cc1db3389e3922a5c34afe41af29b91061ce30bff77e945d7b346d629b"
+    },
+    "capture-source/scripts/reference-stl-import.py": {
+      "size": 9601,
+      "sha256": "b2738d950c8a2401c6d3fae700f14f2b013b439dff3ccfb6337dc0ec265a9c5e"
+    },
+    "capture/invocation.json": {
+      "size": 556,
+      "sha256": "dabcd274f145e9ec29827ea9233ceb0ac9722bea57a7e505d73d3ea5c01a61ee"
+    },
+    "capture/result.json": {
+      "size": 607,
+      "sha256": "de6d6fee9067a8df70fd29c7f10e8765cad11fba536486c4069e8560d8628da4"
+    },
+    "capture/stderr.log": {
+      "size": 3269,
+      "sha256": "ef878cd8539f1eee73293e9ef08bf9cd77f41d4bf370f8a5e5936a085470c038"
+    },
+    "capture/stdout.log": {
+      "size": 43,
+      "sha256": "31c67c05993e3bb63dd3fe0c45d5d499a8eb75e8da4d6dbc4954f85dfc083178"
+    },
+    "chooser-cancel-input.igz": {
+      "size": 3552,
+      "sha256": "491fac56c3cdc59cc90a1a7bad2a25d40b0b1d8445034446903fe3afa679bd6e"
+    },
+    "completed-cases.json": {
+      "size": 3060997,
+      "sha256": "4513dc410fa0ca6b52d96656f6a0ecaf47088913bdf42e7433ec5cbf9b469f42"
+    },
+    "cube.stl": {
+      "size": 684,
+      "sha256": "859d674fd7c990c92ee666e23818dc60d75cf8ef666bd452b43b2cc2398c8324"
+    },
+    "default-cube-input.igz": {
+      "size": 3552,
+      "sha256": "75633b7fe10f721b3a2ac2ec399985a479b6280705aa28c07b67d57a0423484c"
+    },
+    "default-cube-saved.igz": {
+      "size": 7516,
+      "sha256": "6b1b7f47358442358be4f862694e561327ac62ed0776e5c724e5fa0b508c92e7"
+    },
+    "degenerate.stl": {
+      "size": 734,
+      "sha256": "f61de258aa81aa18213ac4f471e7d3df498dbd92bf43080ccc26246de6ace33a"
+    },
+    "flat-large-editable-input.igz": {
+      "size": 3552,
+      "sha256": "8b7f9539665e93a950e390e98bd2b726ab3bee3957f515fc216e35af80f6de0d"
+    },
+    "flat-large-editable-saved.igz": {
+      "size": 6532,
+      "sha256": "ca7368f4f0f21b73ebc04f1e34ea282bb421d9f6ba9c23cf492d6cb864349d2d"
+    },
+    "grid.stl": {
+      "size": 63084,
+      "sha256": "e19b27d7f6861eac69a6f61f9635b7f4a305e8877eb0662366bd147eb9b59c6b"
+    },
+    "ignored-normal.stl": {
+      "size": 684,
+      "sha256": "96684a82ad632b877996b5924323d1e8ed1eeeefb1338f329f5ba5265856b6ce"
+    },
+    "large-nested-input.igz": {
+      "size": 3552,
+      "sha256": "09d9c70f4b3ce4770c76643a52ce1f922e686f39f507f61b37e607a26037f733"
+    },
+    "large-nested-saved.igz": {
+      "size": 396807,
+      "sha256": "1b6cfdf9625669989f33eff55b45096248fbece4f2fa008da5231bd528fdff4a"
+    },
+    "large-root-input.igz": {
+      "size": 3552,
+      "sha256": "e37a881daa1014bacaf4559915b99dac1709926aa7e66da99f0340f4975cb49d"
+    },
+    "large-root-saved.igz": {
+      "size": 396535,
+      "sha256": "2dfeaddd88b862366efede4917d898f28610de04c5be3dda404bde0d6cd0293a"
+    },
+    "large.stl": {
+      "size": 20134,
+      "sha256": "9df566c9ef8a8ebd66e39c3c95872ef055141dc867822995d06ed11a3061aa23"
+    },
+    "malformed.stl": {
+      "size": 43,
+      "sha256": "02e7c50e290f6355abec66fa303e449b03b5d5ca136d8c6eea59f8cf6a903892"
+    },
+    "none-cube-input.igz": {
+      "size": 3552,
+      "sha256": "96f86442ab834a01831577c755d3eafe1da24cfe21fa8075b455a71497f9d168"
+    },
+    "none-cube-saved.igz": {
+      "size": 7516,
+      "sha256": "9d9a0cead6a12da9c57a6fcd9b567c06b2b91102580cc54da7168f4558649466"
+    },
+    "nonfinite.stl": {
+      "size": 134,
+      "sha256": "f15bf35b3e3b6349fb94d4fca092b1385a8be0697b29b5ed8d9d05e55d2c36db"
+    },
+    "original-source/core/group.py": {
+      "size": 37346,
+      "sha256": "9ba6a20eca241cb4969a545a3784fcff25566166606d5447a18780747d4f11c5"
+    },
+    "original-source/core/history.py": {
+      "size": 161511,
+      "sha256": "2eb66a1d557099b51383988a7819145289fc4ce2c37fc7de3a92ed35b5830559"
+    },
+    "original-source/core/i18n.py": {
+      "size": 3089,
+      "sha256": "827c103da11a2e1fd676ba53d32f18b2b11a606a7e51308ed07cb4b71cd61dba"
+    },
+    "original-source/core/mesh.py": {
+      "size": 74619,
+      "sha256": "5f2c1625e6dd717db029ba39a9de337e75beec06bd0df28a592a8a34875ca22c"
+    },
+    "original-source/core/scene.py": {
+      "size": 34219,
+      "sha256": "9dfcd32f1ff5b1445180eafd8df36eafb92fa08ed3597bb90eac09554899d2e0"
+    },
+    "original-source/core/topology.py": {
+      "size": 69455,
+      "sha256": "f16d136706d0a7ce4f5c382c9318126e45639a38d969f13f0196f852df858c0e"
+    },
+    "original-source/formats/dae.py": {
+      "size": 48406,
+      "sha256": "9082599e1130b1d70af23cf3715a1566b18908f41fc0498d28b235baef7331dc"
+    },
+    "original-source/formats/fuse.py": {
+      "size": 16553,
+      "sha256": "60f77cdaf8c499b4f8c9ed86940e9a4b937ffae18831f0b56435e1b441f633ae"
+    },
+    "original-source/formats/igz.py": {
+      "size": 41235,
+      "sha256": "f318d685830c49c2fede7fd5a238ac7a1469ee0b0226cf48cab3751e194a9576"
+    },
+    "original-source/formats/stl.py": {
+      "size": 11852,
+      "sha256": "07837af511f718194f85498aa13820363617ccbf7aa8da9bdb3575a1759ddd7a"
+    },
+    "original-source/tests/test_stl_import.py": {
+      "size": 9053,
+      "sha256": "579db3ad1b07bbe582898f90d0a9fd820874555de21339f7b7c7d274cc4b3111"
+    },
+    "original-source/views/main_window.py": {
+      "size": 286141,
+      "sha256": "ea02be3e439c80731d0f5b5fde3d92d9b3f62e8ad10cd44ad305c3261b7786fa"
+    },
+    "original-source/views/viewport.py": {
+      "size": 622724,
+      "sha256": "1fb62f55b8f559deb3676924ee69a9a444397faa28c49651111cea44e420c724"
+    },
+    "original-stl.json": {
+      "size": 3092735,
+      "sha256": "66bf9b5a858ce4a91a1e09fdad7806fea04a8212f4b8c1c1b8e0820cb4c91a17"
+    },
+    "original-stl.partial.json": {
+      "size": 3060727,
+      "sha256": "749f707641025fd36c9147b16910d0438b1970e800bcc7475093aea00ed08702"
+    },
+    "parse-failure-input.igz": {
+      "size": 3552,
+      "sha256": "5e622b9036807883df0b498843c1a8f783ec238d6e5185219e52cc2eb3b837a4"
+    },
+    "settings/STLProof/STLProof.ini": {
+      "size": 70,
+      "sha256": "b4ec3e5591940bda012b6977f5b91cf63ef31d80e253900f14cbeb495a620905"
+    },
+    "small-nested-input.igz": {
+      "size": 3552,
+      "sha256": "1079fbb8b80fddd8aac7bf799ff3dbc0cabc660975fe017ebc1f35bc4c8bda27"
+    },
+    "small-nested-saved.igz": {
+      "size": 9392,
+      "sha256": "d92329d69cbefb8e98140807548a453a3912f8420bed5d39b010cf3230be8dce"
+    },
+    "solid-binary.stl": {
+      "size": 684,
+      "sha256": "deb88f98d6b997ee53c85d93fced978cee3000cbdaee007a4daee9a022279243"
+    },
+    "tilted-all-input.igz": {
+      "size": 3552,
+      "sha256": "c71237debf9caa76d9ac7532e7a31aa548a149728b24691bb650ffa6a1822fe6"
+    },
+    "tilted-all-saved.igz": {
+      "size": 4528,
+      "sha256": "ef33fae9d3c939fc89c047f1e03831c7c44288bf84d36e2cb87218a09af63586"
+    },
+    "tilted-principal-input.igz": {
+      "size": 3552,
+      "sha256": "758fe1710d74770f5f85ff747d5fd57723aadc1d54e45947d0e9121f8048692c"
+    },
+    "tilted-principal-saved.igz": {
+      "size": 4882,
+      "sha256": "b503638c401f0667001fd95773b7c0d75d61cca0b4e27c43f8cb188747a42b20"
+    },
+    "tilted.stl": {
+      "size": 184,
+      "sha256": "dca90927819381236dc14c36351dadced8bba80279ea90e4484f3466873fc715"
+    },
+    "trailing.stl": {
+      "size": 700,
+      "sha256": "b1a2cb37f7b9c4fa8584be4a3fe0eb3430374860dbbfe9de27dabce722d73715"
+    },
+    "unit-cancel-input.igz": {
+      "size": 3552,
+      "sha256": "49d1e937d0feef8c1a861a236e86df95a520022ec5fc99e970f50e87b062e4eb"
+    }
+  },
+  "sources": [
+    {
+      "path": "formats/stl.py",
+      "commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+      "sha256": "07837af511f718194f85498aa13820363617ccbf7aa8da9bdb3575a1759ddd7a"
+    },
+    {
+      "path": "formats/fuse.py",
+      "commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+      "sha256": "60f77cdaf8c499b4f8c9ed86940e9a4b937ffae18831f0b56435e1b441f633ae"
+    },
+    {
+      "path": "formats/dae.py",
+      "commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+      "sha256": "9082599e1130b1d70af23cf3715a1566b18908f41fc0498d28b235baef7331dc"
+    },
+    {
+      "path": "core/mesh.py",
+      "commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+      "sha256": "5f2c1625e6dd717db029ba39a9de337e75beec06bd0df28a592a8a34875ca22c"
+    },
+    {
+      "path": "core/topology.py",
+      "commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+      "sha256": "f16d136706d0a7ce4f5c382c9318126e45639a38d969f13f0196f852df858c0e"
+    },
+    {
+      "path": "core/history.py",
+      "commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+      "sha256": "2eb66a1d557099b51383988a7819145289fc4ce2c37fc7de3a92ed35b5830559"
+    },
+    {
+      "path": "core/group.py",
+      "commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+      "sha256": "9ba6a20eca241cb4969a545a3784fcff25566166606d5447a18780747d4f11c5"
+    },
+    {
+      "path": "core/scene.py",
+      "commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+      "sha256": "9dfcd32f1ff5b1445180eafd8df36eafb92fa08ed3597bb90eac09554899d2e0"
+    },
+    {
+      "path": "core/i18n.py",
+      "commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+      "sha256": "827c103da11a2e1fd676ba53d32f18b2b11a606a7e51308ed07cb4b71cd61dba"
+    },
+    {
+      "path": "formats/igz.py",
+      "commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+      "sha256": "f318d685830c49c2fede7fd5a238ac7a1469ee0b0226cf48cab3751e194a9576"
+    },
+    {
+      "path": "views/main_window.py",
+      "commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+      "sha256": "ea02be3e439c80731d0f5b5fde3d92d9b3f62e8ad10cd44ad305c3261b7786fa"
+    },
+    {
+      "path": "views/viewport.py",
+      "commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+      "sha256": "1fb62f55b8f559deb3676924ee69a9a444397faa28c49651111cea44e420c724"
+    },
+    {
+      "path": "tests/test_stl_import.py",
+      "commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+      "sha256": "579db3ad1b07bbe582898f90d0a9fd820874555de21339f7b7c7d274cc4b3111"
+    }
+  ],
+  "capture_sources": [
+    {
+      "path": "scripts/reference-stl-import.py",
+      "commit": "2d9bced9f94265498fe39091a48700ff5ffc1d5f",
+      "sha256": "b2738d950c8a2401c6d3fae700f14f2b013b439dff3ccfb6337dc0ec265a9c5e",
+      "role": "actual original STL producer and generated fixture recipes"
+    },
+    {
+      "path": "scripts/reference-nested-import.py",
+      "commit": "2d9bced9f94265498fe39091a48700ff5ffc1d5f",
+      "sha256": "1cd756cc1db3389e3922a5c34afe41af29b91061ce30bff77e945d7b346d629b",
+      "role": "actual nested scene seed and canonical geometry observations"
+    }
+  ],
+  "cases": 11,
+  "states": 38,
+  "decoder_recipes": 8,
+  "saved_cases": 8,
+  "source_capture_invocations": 1,
+  "capture_seconds": 2.166604454978369,
+  "source_defects": [],
+  "scope": "Original App STL handler, controlled chooser/failure-message provider, real Qt option buttons, mesh-only threaded parse and history/save. Offscreen; no GPU/display-cache performance claim. Camera and process-specific error diagnostics are separate from exact geometry/history/preferences. Native finite encoded/triangle admission is stricter than original and not a whole-process peak bound."
+}
