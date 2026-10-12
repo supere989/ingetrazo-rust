@@ -13,7 +13,7 @@ pub struct CaptureStamp {
     pub model_revision: u64,
     pub scene_version: u64,
     pub edit_context: Vec<uuid::Uuid>,
-    pub camera_bits: [u64; 9],
+    pub camera_bits: [u64; 15],
     pub logical_size_bits: [u32; 2],
 }
 impl CaptureStamp {
@@ -50,9 +50,15 @@ impl CaptureStamp {
                 c.distance.to_bits(),
                 c.yaw.to_bits(),
                 c.pitch.to_bits(),
+                c.up.x.to_bits(),
+                c.up.y.to_bits(),
+                c.up.z.to_bits(),
                 c.fov_deg.to_bits(),
                 c.aspect.to_bits(),
+                c.znear.to_bits(),
+                c.zfar.to_bits(),
                 u64::from(c.perspective),
+                u64::from(c.two_point),
             ],
         })
     }
@@ -78,9 +84,15 @@ impl CaptureStamp {
                     c.distance.to_bits(),
                     c.yaw.to_bits(),
                     c.pitch.to_bits(),
+                    c.up.x.to_bits(),
+                    c.up.y.to_bits(),
+                    c.up.z.to_bits(),
                     c.fov_deg.to_bits(),
                     c.aspect.to_bits(),
+                    c.znear.to_bits(),
+                    c.zfar.to_bits(),
                     u64::from(c.perspective),
+                    u64::from(c.two_point),
                 ]
             }
     }
