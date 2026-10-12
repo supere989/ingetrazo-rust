@@ -16,8 +16,8 @@ def exact(a,b,path='$'):
  elif isinstance(a,float):assert math.isfinite(a)and math.isfinite(b)and a==b and (a!=0 or math.copysign(1,a)==math.copysign(1,b)),path+': number'
  else:assert a==b,path+': value'
 def scene(v):
- assert type(v)is dict and set(v)=={'faces','undo','redo','groups','layers'}
- for k in ['undo','redo','groups','layers']:assert type(v[k])is int and v[k]>=0
+ assert type(v)is dict and set(v)=={'faces','undo','redo','groups','layers','vertices','edges'}
+ for k in ['undo','redo','groups','layers','vertices','edges']:assert type(v[k])is int and v[k]>=0
  assert type(v['faces'])is list
  def point(p):assert type(p)is list and len(p)==3 and all(type(x)is float and math.isfinite(x)for x in p)
  for f in v['faces']:
