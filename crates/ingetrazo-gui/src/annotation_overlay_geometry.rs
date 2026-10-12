@@ -298,8 +298,7 @@ impl Cache {
 
 
 
-    pub(crate) fn prepare_capture(&mut self, plan:&Plan, records:&[PresentationText], scale:[f32;2], font_dpi:f64, _clip:[i32;4])->Result<Arc<Mesh>,String>{
-        let scale=scale.map(f64::from);
+    pub(crate) fn prepare_capture(&mut self, plan:&Plan, records:&[PresentationText], scale:[f64;2], font_dpi:f64, _clip:[i32;4])->Result<Arc<Mesh>,String>{
         if scale.iter().any(|v|!v.is_finite()||*v<=0.||*v>40.){return Err("Capture annotation scale outside admission".into());}
         let mut writer=Writer::new(1.,self.limits);
         let map=|p:[f64;2]|[p[0]*scale[0],p[1]*scale[1]];

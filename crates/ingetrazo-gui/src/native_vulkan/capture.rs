@@ -122,10 +122,13 @@ impl System {
             width: request.width,
             height: request.height,
         };
-        let scale = [
-            request.width as f32 / logical[0],
-            request.height as f32 / logical[1],
+        // QPainter scales in qreal: retain the requested/logical ratio in f64
+        // through physical path and glyph rasterization, before GPU vertex conversion.
+        let raster_scale = [
+            f64::from(request.width) / f64::from(logical[0]),
+            f64::from(request.height) / f64::from(logical[1]),
         ];
+        let scale = raster_scale.map(|v| v as f32);
         let output_rect = Rect::from_min_size(
             Pos2::ZERO,
             egui::vec2(request.width as f32, request.height as f32),
@@ -180,7 +183,7 @@ impl System {
                 )?,
             };
             if !presentation.text.is_empty() {
-                let mesh = owner.presentation_text(&presentation.text,scale)?;
+                let mesh = owner.presentation_text(&presentation.text,raster_scale)?;
                 styled_text = Some(factory.annotation_handle(
                     mesh.geometry.clone(),
                     mesh.batches.clone(),
@@ -192,7 +195,7 @@ impl System {
                 )?);
             }
             let prepared = owner
-                .prepare_presentation(app, &factory, logical_rect, 1., scale)
+                .prepare_presentation(app, &factory, logical_rect, 1., raster_scale)
                 .map(|p| {
                     p.map(|p| {
                         (
