@@ -1,0 +1,1375 @@
+{
+  "archive": "records.zip",
+  "archive_sha256": "089a5c69559e02a4922831af244eef91b19fd1c33e29e511422be4a18dcf6129",
+  "members": [
+    {
+      "path": "/tmp/ingetrazo-dae-export-build-r1/build.log",
+      "member": "ingetrazo-dae-export-build-r1/build.log",
+      "size": 34002,
+      "sha256": "f0df21ad06556b739f91f33fa3196238157cf4ca57b6d789a73897f77f821243"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-build-r1/receipt.json",
+      "member": "ingetrazo-dae-export-build-r1/receipt.json",
+      "size": 239,
+      "sha256": "675a065c2ea6c88ea468c0b1c071f38459c3bb544c04db8de08f137b0acc94b4"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-build-r2/build.log",
+      "member": "ingetrazo-dae-export-build-r2/build.log",
+      "size": 34723,
+      "sha256": "9b4f51569d76ad715f6e66b90d2694bc910d8b8bb71e6b2d5abf450cebe46bb8"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-build-r2/receipt.json",
+      "member": "ingetrazo-dae-export-build-r2/receipt.json",
+      "size": 113,
+      "sha256": "7ab97b92f1af3fb9d120b1940c43003ad518a9632e995056994198de91810e25"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-build-r3/build.log",
+      "member": "ingetrazo-dae-export-build-r3/build.log",
+      "size": 34723,
+      "sha256": "9b8dd4cf54310846a46f53e5911e72bb5d54b0e9ddd57d3d60a2a2b67dc11635"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-build-r3/receipt.json",
+      "member": "ingetrazo-dae-export-build-r3/receipt.json",
+      "size": 113,
+      "sha256": "7d162bad696ed533bc247b5b32d818a70b66ebb38f9ebe8eeb8fe5c803e2baef"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-callout-build-r4/build.log",
+      "member": "ingetrazo-dae-callout-build-r4/build.log",
+      "size": 35442,
+      "sha256": "21112366867da61063e70a69d38acfd2ec0ac1ed53e1b8f388410ea7a2f50e02"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-callout-build-r4/receipt.json",
+      "member": "ingetrazo-dae-callout-build-r4/receipt.json",
+      "size": 291,
+      "sha256": "b9f164791cc1202cdffee830cea731fb4074e9b4355448b4b369f3a6035ea3ea"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-attempt-1/native.log",
+      "member": "ingetrazo-dae-export-native-attempt-1/native.log",
+      "size": 18,
+      "sha256": "ca88460cacd5e22c31a3ed8769225b973be0fb11c657e8983e14943bd5533c8d"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-attempt-1/reader.log",
+      "member": "ingetrazo-dae-export-native-attempt-1/reader.log",
+      "size": 1327,
+      "sha256": "f6c4e3536e34f13c7adbb7a595b8cbcca79460538b2c02e98d618623cf923106"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-attempt-1/receipt.json",
+      "member": "ingetrazo-dae-export-native-attempt-1/receipt.json",
+      "size": 275,
+      "sha256": "20815e94b3c50e81509f6a57569a7f61619c3eead2f3b2480cdfd9304ad8667e"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-attempt-1/validation-receipt.json",
+      "member": "ingetrazo-dae-export-native-attempt-1/validation-receipt.json",
+      "size": 324,
+      "sha256": "9aac2e1ff55369345ccd89d65707e5e2cd6b4b5eb5a5b49c6e84d2925a4e1bb5"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-attempt-1/xml-only-diagnostic.json",
+      "member": "ingetrazo-dae-export-native-attempt-1/xml-only-diagnostic.json",
+      "size": 1242,
+      "sha256": "10834bca16b90d84edf8d7e030011d0eece66853fe9e9d8a8648cb12e3ed206f"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-attempt-2/all-reader-differences.json",
+      "member": "ingetrazo-dae-export-native-attempt-2/all-reader-differences.json",
+      "size": 9285,
+      "sha256": "cf92fefc459aca84c33b8be990918ad46b13e1765bd266d693b52dd5120960a6"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-attempt-2/all-state-differences.json",
+      "member": "ingetrazo-dae-export-native-attempt-2/all-state-differences.json",
+      "size": 2089,
+      "sha256": "8e39ab3f9689749153e3ee70226d169926db883be46a036ab5bacb955835fd09"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-attempt-2/checker.log",
+      "member": "ingetrazo-dae-export-native-attempt-2/checker.log",
+      "size": 347,
+      "sha256": "f92760cb7eca04022853b7ce7194441052945bcb2f1be3b1aa3ef4e0fe6ed6ca"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-attempt-2/comparison.json",
+      "member": "ingetrazo-dae-export-native-attempt-2/comparison.json",
+      "size": 357,
+      "sha256": "6d3f0c1235a60c165416c08f1d5124cf45ad74c5941d4e91d17e19b1e45e53ab"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-attempt-2/native.log",
+      "member": "ingetrazo-dae-export-native-attempt-2/native.log",
+      "size": 18,
+      "sha256": "ca88460cacd5e22c31a3ed8769225b973be0fb11c657e8983e14943bd5533c8d"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-attempt-2/reader.log",
+      "member": "ingetrazo-dae-export-native-attempt-2/reader.log",
+      "size": 89,
+      "sha256": "343db67d4a27a834a129e9c775980544b9a345793a56f6ecdb3e8b8d856150c7"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-attempt-2/readers-only-diagnostic.json",
+      "member": "ingetrazo-dae-export-native-attempt-2/readers-only-diagnostic.json",
+      "size": 888,
+      "sha256": "2040de3b8a05495e68cf276d45acfd27eee1b1fde2fb2a484d826a00546bcfc4"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-attempt-2/receipt.json",
+      "member": "ingetrazo-dae-export-native-attempt-2/receipt.json",
+      "size": 392,
+      "sha256": "a1fe4f55c57d806af3b5ae4dce0b3f3a2291ce9c8a395b4817a7c4b0a97f360d"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-attempt-2/validation-receipt.json",
+      "member": "ingetrazo-dae-export-native-attempt-2/validation-receipt.json",
+      "size": 723,
+      "sha256": "7d80ba697fbbcdf817ace3eb1b0d8165e138700d517c66d6aa0decb066aa5b34"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-attempt-2/xml-only-diagnostic.json",
+      "member": "ingetrazo-dae-export-native-attempt-2/xml-only-diagnostic.json",
+      "size": 1059,
+      "sha256": "daa1a666e8d371e93f979e9ffdea972e0d7e251bc49f5af1c4ff1c03f0d6a141"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r1/0271c0cc18ab9aaf-leaves.png",
+      "member": "ingetrazo-dae-export-native-r1/0271c0cc18ab9aaf-leaves.png",
+      "size": 115,
+      "sha256": "096cc670991a11fa69eb4395da1a34cc291c3485828415b9aa4f4e719c9cd810"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r1/0271c0cc18ab9aaf-shared.png",
+      "member": "ingetrazo-dae-export-native-r1/0271c0cc18ab9aaf-shared.png",
+      "size": 115,
+      "sha256": "096cc670991a11fa69eb4395da1a34cc291c3485828415b9aa4f4e719c9cd810"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r1/187bc5384c7ffb9f-opaque.jpg",
+      "member": "ingetrazo-dae-export-native-r1/187bc5384c7ffb9f-opaque.jpg",
+      "size": 633,
+      "sha256": "fad5575bdc0469823f34348dacae8ef30a29969f820301822fcbe01fd32fc609"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r1/187bc5384c7ffb9f-shared.png",
+      "member": "ingetrazo-dae-export-native-r1/187bc5384c7ffb9f-shared.png",
+      "size": 633,
+      "sha256": "fad5575bdc0469823f34348dacae8ef30a29969f820301822fcbe01fd32fc609"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r1/basename-collision-opaque-control.dae",
+      "member": "ingetrazo-dae-export-native-r1/basename-collision-opaque-control.dae",
+      "size": 3144,
+      "sha256": "34eb903760234ded5e415612d40a808598f3bd1543774d2eefe30f7d90ed10f7"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r1/basename-collision-saved.igz",
+      "member": "ingetrazo-dae-export-native-r1/basename-collision-saved.igz",
+      "size": 2408,
+      "sha256": "69b44879a047715839eb9cb83d2579415c454f11cfc28c24de21e2a3f37526a4"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r1/chooser-cancel-suffix-opaque-control.dae",
+      "member": "ingetrazo-dae-export-native-r1/chooser-cancel-suffix-opaque-control.dae",
+      "size": 2190,
+      "sha256": "77c802b9a177a3024e74379677c541584817802d5b74cb7a3b5e63aef91f1c65"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r1/chooser-cancel-suffix-saved.igz",
+      "member": "ingetrazo-dae-export-native-r1/chooser-cancel-suffix-saved.igz",
+      "size": 1380,
+      "sha256": "57435b4196aebe781e7d58b5186de3b4df83324632b2de540ef6ce0596a5818d"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r1/colors-default-hole-opaque-control.dae",
+      "member": "ingetrazo-dae-export-native-r1/colors-default-hole-opaque-control.dae",
+      "size": 4283,
+      "sha256": "0e1eead281d7991b3f03b8908053626c42976238f0483dcb67dcddd291d19425"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r1/colors-default-hole-saved.igz",
+      "member": "ingetrazo-dae-export-native-r1/colors-default-hole-saved.igz",
+      "size": 5648,
+      "sha256": "61a10b28464fd1cc58b8d7e34ac12b9d9df8670e200fa1f7025b02e7d3a97428"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r1/datum-names-collisions-opaque-control.dae",
+      "member": "ingetrazo-dae-export-native-r1/datum-names-collisions-opaque-control.dae",
+      "size": 5525,
+      "sha256": "e540637717f775c1f1e7f4573a0d04154db2a0471ebfcb50c49af0773ee4f91f"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r1/datum-names-collisions-saved.igz",
+      "member": "ingetrazo-dae-export-native-r1/datum-names-collisions-saved.igz",
+      "size": 1579,
+      "sha256": "80161ec77ca6a0409bc3cb4bf843f6da341660a2f6c60379db1b6bb838d9b631"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r1/exports/0271c0cc18ab9aaf-leaves.png",
+      "member": "ingetrazo-dae-export-native-r1/exports/0271c0cc18ab9aaf-leaves.png",
+      "size": 115,
+      "sha256": "096cc670991a11fa69eb4395da1a34cc291c3485828415b9aa4f4e719c9cd810"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r1/exports/0271c0cc18ab9aaf-shared.png",
+      "member": "ingetrazo-dae-export-native-r1/exports/0271c0cc18ab9aaf-shared.png",
+      "size": 115,
+      "sha256": "096cc670991a11fa69eb4395da1a34cc291c3485828415b9aa4f4e719c9cd810"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r1/exports/187bc5384c7ffb9f-opaque.jpg",
+      "member": "ingetrazo-dae-export-native-r1/exports/187bc5384c7ffb9f-opaque.jpg",
+      "size": 633,
+      "sha256": "fad5575bdc0469823f34348dacae8ef30a29969f820301822fcbe01fd32fc609"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r1/exports/187bc5384c7ffb9f-shared.png",
+      "member": "ingetrazo-dae-export-native-r1/exports/187bc5384c7ffb9f-shared.png",
+      "size": 633,
+      "sha256": "fad5575bdc0469823f34348dacae8ef30a29969f820301822fcbe01fd32fc609"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r1/exports/basename-collision-export.dae",
+      "member": "ingetrazo-dae-export-native-r1/exports/basename-collision-export.dae",
+      "size": 3144,
+      "sha256": "34eb903760234ded5e415612d40a808598f3bd1543774d2eefe30f7d90ed10f7"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r1/exports/chooser-cancel-suffix-coerced.dae",
+      "member": "ingetrazo-dae-export-native-r1/exports/chooser-cancel-suffix-coerced.dae",
+      "size": 2190,
+      "sha256": "77c802b9a177a3024e74379677c541584817802d5b74cb7a3b5e63aef91f1c65"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r1/exports/colors-default-hole-export.dae",
+      "member": "ingetrazo-dae-export-native-r1/exports/colors-default-hole-export.dae",
+      "size": 4283,
+      "sha256": "0e1eead281d7991b3f03b8908053626c42976238f0483dcb67dcddd291d19425"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r1/exports/datum-names-collisions-export.dae",
+      "member": "ingetrazo-dae-export-native-r1/exports/datum-names-collisions-export.dae",
+      "size": 5525,
+      "sha256": "e540637717f775c1f1e7f4573a0d04154db2a0471ebfcb50c49af0773ee4f91f"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r1/exports/missing-resource-write-error-export.dae",
+      "member": "ingetrazo-dae-export-native-r1/exports/missing-resource-write-error-export.dae",
+      "size": 2916,
+      "sha256": "178b32a2724f42855f536b8e7a07e8ce27e8838b3aed19607734356794efdf02"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r1/exports/nested-shared-reflected-export.dae",
+      "member": "ingetrazo-dae-export-native-r1/exports/nested-shared-reflected-export.dae",
+      "size": 3684,
+      "sha256": "53c6ab463b2e868d25018d22cf4f000cc440e4429877be80c581bcb6514c1670"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r1/exports/shared.png",
+      "member": "ingetrazo-dae-export-native-r1/exports/shared.png",
+      "size": 115,
+      "sha256": "096cc670991a11fa69eb4395da1a34cc291c3485828415b9aa4f4e719c9cd810"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r1/exports/textures-affine-planar-export.dae",
+      "member": "ingetrazo-dae-export-native-r1/exports/textures-affine-planar-export.dae",
+      "size": 3160,
+      "sha256": "4028af9833754c4cf4a90f5132b165e5025d38f4ad04912f7402b21b354976ee"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r1/missing-resource-write-error-opaque-control.dae",
+      "member": "ingetrazo-dae-export-native-r1/missing-resource-write-error-opaque-control.dae",
+      "size": 2916,
+      "sha256": "b5838af39cce0720ba714bbde606067c9f7716f31b451d7309bd87a84766ab19"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r1/missing-resource-write-error-saved.igz",
+      "member": "ingetrazo-dae-export-native-r1/missing-resource-write-error-saved.igz",
+      "size": 1454,
+      "sha256": "97a915606fae1ec86702aaf235b08fe32516afaffb251d2532f8696d89a2b2c1"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r1/modal-retry.dae",
+      "member": "ingetrazo-dae-export-native-r1/modal-retry.dae",
+      "size": 2916,
+      "sha256": "b5838af39cce0720ba714bbde606067c9f7716f31b451d7309bd87a84766ab19"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r1/native-dae-export.json",
+      "member": "ingetrazo-dae-export-native-r1/native-dae-export.json",
+      "size": 222504,
+      "sha256": "0ae3e9557ded769ce1a94cc28f11cc686a44651b06a167755e980e256bdc6a18"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r1/native-dae-reopens.partial.json",
+      "member": "ingetrazo-dae-export-native-r1/native-dae-reopens.partial.json",
+      "size": 140534,
+      "sha256": "9d9e4a7f340531fa2cfbe6748d0557e8da978a9f87fe250d73a6826d31c6d254"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r1/nested-shared-reflected-opaque-control.dae",
+      "member": "ingetrazo-dae-export-native-r1/nested-shared-reflected-opaque-control.dae",
+      "size": 3684,
+      "sha256": "53c6ab463b2e868d25018d22cf4f000cc440e4429877be80c581bcb6514c1670"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r1/nested-shared-reflected-saved.igz",
+      "member": "ingetrazo-dae-export-native-r1/nested-shared-reflected-saved.igz",
+      "size": 2074,
+      "sha256": "eba83aa03fca848b8501ffeb54ffeacdd86d746d5156a301dce1d7403748b52e"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r1/picker-invocations.log",
+      "member": "ingetrazo-dae-export-native-r1/picker-invocations.log",
+      "size": 72,
+      "sha256": "6c519ba400afe08df25f2f3b8f147ec39bf6282623f164b0591cc8d69414d93c"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r1/shared.png",
+      "member": "ingetrazo-dae-export-native-r1/shared.png",
+      "size": 115,
+      "sha256": "096cc670991a11fa69eb4395da1a34cc291c3485828415b9aa4f4e719c9cd810"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r1/textures-affine-planar-opaque-control.dae",
+      "member": "ingetrazo-dae-export-native-r1/textures-affine-planar-opaque-control.dae",
+      "size": 3160,
+      "sha256": "4028af9833754c4cf4a90f5132b165e5025d38f4ad04912f7402b21b354976ee"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r1/textures-affine-planar-saved.igz",
+      "member": "ingetrazo-dae-export-native-r1/textures-affine-planar-saved.igz",
+      "size": 805,
+      "sha256": "447de1e7cc13af5f66e535742c895de9fb2f43a2b6e3a19b7242be156ed9f34d"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r2/0271c0cc18ab9aaf-leaves.png",
+      "member": "ingetrazo-dae-export-native-r2/0271c0cc18ab9aaf-leaves.png",
+      "size": 115,
+      "sha256": "096cc670991a11fa69eb4395da1a34cc291c3485828415b9aa4f4e719c9cd810"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r2/0271c0cc18ab9aaf-shared.png",
+      "member": "ingetrazo-dae-export-native-r2/0271c0cc18ab9aaf-shared.png",
+      "size": 115,
+      "sha256": "096cc670991a11fa69eb4395da1a34cc291c3485828415b9aa4f4e719c9cd810"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r2/187bc5384c7ffb9f-opaque.jpg",
+      "member": "ingetrazo-dae-export-native-r2/187bc5384c7ffb9f-opaque.jpg",
+      "size": 633,
+      "sha256": "fad5575bdc0469823f34348dacae8ef30a29969f820301822fcbe01fd32fc609"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r2/187bc5384c7ffb9f-shared.png",
+      "member": "ingetrazo-dae-export-native-r2/187bc5384c7ffb9f-shared.png",
+      "size": 633,
+      "sha256": "fad5575bdc0469823f34348dacae8ef30a29969f820301822fcbe01fd32fc609"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r2/basename-collision-opaque-control.dae",
+      "member": "ingetrazo-dae-export-native-r2/basename-collision-opaque-control.dae",
+      "size": 3144,
+      "sha256": "dd3932cf30cabf0084c8ac9864e4194af2401539a2ae016f8e9c06888cc5e7f1"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r2/basename-collision-saved.igz",
+      "member": "ingetrazo-dae-export-native-r2/basename-collision-saved.igz",
+      "size": 2412,
+      "sha256": "4008475a2ff2741cd3febc002054b958bc6ed23422a0bcecc2a7af3186651677"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r2/chooser-cancel-suffix-opaque-control.dae",
+      "member": "ingetrazo-dae-export-native-r2/chooser-cancel-suffix-opaque-control.dae",
+      "size": 2190,
+      "sha256": "b2542958022e13082ea64db2c71f4f371489f13248f32f9a585f4f4c5739746f"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r2/chooser-cancel-suffix-saved.igz",
+      "member": "ingetrazo-dae-export-native-r2/chooser-cancel-suffix-saved.igz",
+      "size": 1380,
+      "sha256": "57435b4196aebe781e7d58b5186de3b4df83324632b2de540ef6ce0596a5818d"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r2/colors-default-hole-opaque-control.dae",
+      "member": "ingetrazo-dae-export-native-r2/colors-default-hole-opaque-control.dae",
+      "size": 4283,
+      "sha256": "fa68abdd62d93a36becfb6195a544909ce04eb0daf4d11e10ba6f1b12b0863a2"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r2/colors-default-hole-saved.igz",
+      "member": "ingetrazo-dae-export-native-r2/colors-default-hole-saved.igz",
+      "size": 5648,
+      "sha256": "d4438ec135f5ba547743ff0a41e6c3284c62c9ce2b202cb1b5686a8e1ae6ccbb"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r2/datum-names-collisions-opaque-control.dae",
+      "member": "ingetrazo-dae-export-native-r2/datum-names-collisions-opaque-control.dae",
+      "size": 5525,
+      "sha256": "6ed6e4fd6710c924b6444948712afa853a58ac00e2fd798a08d5f8771e60d0bd"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r2/datum-names-collisions-saved.igz",
+      "member": "ingetrazo-dae-export-native-r2/datum-names-collisions-saved.igz",
+      "size": 1579,
+      "sha256": "80161ec77ca6a0409bc3cb4bf843f6da341660a2f6c60379db1b6bb838d9b631"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r2/exports/0271c0cc18ab9aaf-leaves.png",
+      "member": "ingetrazo-dae-export-native-r2/exports/0271c0cc18ab9aaf-leaves.png",
+      "size": 115,
+      "sha256": "096cc670991a11fa69eb4395da1a34cc291c3485828415b9aa4f4e719c9cd810"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r2/exports/0271c0cc18ab9aaf-shared.png",
+      "member": "ingetrazo-dae-export-native-r2/exports/0271c0cc18ab9aaf-shared.png",
+      "size": 115,
+      "sha256": "096cc670991a11fa69eb4395da1a34cc291c3485828415b9aa4f4e719c9cd810"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r2/exports/187bc5384c7ffb9f-opaque.jpg",
+      "member": "ingetrazo-dae-export-native-r2/exports/187bc5384c7ffb9f-opaque.jpg",
+      "size": 633,
+      "sha256": "fad5575bdc0469823f34348dacae8ef30a29969f820301822fcbe01fd32fc609"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r2/exports/187bc5384c7ffb9f-shared.png",
+      "member": "ingetrazo-dae-export-native-r2/exports/187bc5384c7ffb9f-shared.png",
+      "size": 633,
+      "sha256": "fad5575bdc0469823f34348dacae8ef30a29969f820301822fcbe01fd32fc609"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r2/exports/basename-collision-export.dae",
+      "member": "ingetrazo-dae-export-native-r2/exports/basename-collision-export.dae",
+      "size": 3144,
+      "sha256": "dd3932cf30cabf0084c8ac9864e4194af2401539a2ae016f8e9c06888cc5e7f1"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r2/exports/chooser-cancel-suffix-coerced.dae",
+      "member": "ingetrazo-dae-export-native-r2/exports/chooser-cancel-suffix-coerced.dae",
+      "size": 2190,
+      "sha256": "b2542958022e13082ea64db2c71f4f371489f13248f32f9a585f4f4c5739746f"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r2/exports/colors-default-hole-export.dae",
+      "member": "ingetrazo-dae-export-native-r2/exports/colors-default-hole-export.dae",
+      "size": 4283,
+      "sha256": "fa68abdd62d93a36becfb6195a544909ce04eb0daf4d11e10ba6f1b12b0863a2"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r2/exports/datum-names-collisions-export.dae",
+      "member": "ingetrazo-dae-export-native-r2/exports/datum-names-collisions-export.dae",
+      "size": 5525,
+      "sha256": "6ed6e4fd6710c924b6444948712afa853a58ac00e2fd798a08d5f8771e60d0bd"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r2/exports/missing-resource-write-error-export.dae",
+      "member": "ingetrazo-dae-export-native-r2/exports/missing-resource-write-error-export.dae",
+      "size": 2916,
+      "sha256": "3986c7453dc5605663de35cab26a93a93e34feedf3fbd197427a9bab4f642199"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r2/exports/nested-shared-reflected-export.dae",
+      "member": "ingetrazo-dae-export-native-r2/exports/nested-shared-reflected-export.dae",
+      "size": 3684,
+      "sha256": "e841089d6036e02a8b4abf3f8ff1e041c477e57f1ba7243b08bee7f55fcd3711"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r2/exports/shared.png",
+      "member": "ingetrazo-dae-export-native-r2/exports/shared.png",
+      "size": 115,
+      "sha256": "096cc670991a11fa69eb4395da1a34cc291c3485828415b9aa4f4e719c9cd810"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r2/exports/textures-affine-planar-export.dae",
+      "member": "ingetrazo-dae-export-native-r2/exports/textures-affine-planar-export.dae",
+      "size": 3160,
+      "sha256": "159df8ad33db52370f6d49f5d559f2e9722e9cc670ca5a2cf03008766bba5b41"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r2/missing-resource-write-error-opaque-control.dae",
+      "member": "ingetrazo-dae-export-native-r2/missing-resource-write-error-opaque-control.dae",
+      "size": 2916,
+      "sha256": "3986c7453dc5605663de35cab26a93a93e34feedf3fbd197427a9bab4f642199"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r2/missing-resource-write-error-saved.igz",
+      "member": "ingetrazo-dae-export-native-r2/missing-resource-write-error-saved.igz",
+      "size": 1454,
+      "sha256": "97a915606fae1ec86702aaf235b08fe32516afaffb251d2532f8696d89a2b2c1"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r2/modal-retry.dae",
+      "member": "ingetrazo-dae-export-native-r2/modal-retry.dae",
+      "size": 2916,
+      "sha256": "3986c7453dc5605663de35cab26a93a93e34feedf3fbd197427a9bab4f642199"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r2/native-dae-export.json",
+      "member": "ingetrazo-dae-export-native-r2/native-dae-export.json",
+      "size": 222506,
+      "sha256": "c22526d4633b028ab31ef5e7eabd6c82b9045bf8955444be51e92e9b3f12a7f9"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r2/native-dae-reopens.json",
+      "member": "ingetrazo-dae-export-native-r2/native-dae-reopens.json",
+      "size": 385220,
+      "sha256": "777524fee41687aad29c4220d2ffedd7dbbdb9cd184f31d7d3acfb35e2299392"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r2/native-dae-reopens.partial.json",
+      "member": "ingetrazo-dae-export-native-r2/native-dae-reopens.partial.json",
+      "size": 385220,
+      "sha256": "777524fee41687aad29c4220d2ffedd7dbbdb9cd184f31d7d3acfb35e2299392"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r2/nested-shared-reflected-opaque-control.dae",
+      "member": "ingetrazo-dae-export-native-r2/nested-shared-reflected-opaque-control.dae",
+      "size": 3684,
+      "sha256": "e841089d6036e02a8b4abf3f8ff1e041c477e57f1ba7243b08bee7f55fcd3711"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r2/nested-shared-reflected-saved.igz",
+      "member": "ingetrazo-dae-export-native-r2/nested-shared-reflected-saved.igz",
+      "size": 1691,
+      "sha256": "762a911cb76ee82d8d5e1faadc9b026a1180de1c314eca3efa17997e01a11195"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r2/picker-invocations.log",
+      "member": "ingetrazo-dae-export-native-r2/picker-invocations.log",
+      "size": 72,
+      "sha256": "6c519ba400afe08df25f2f3b8f147ec39bf6282623f164b0591cc8d69414d93c"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r2/shared.png",
+      "member": "ingetrazo-dae-export-native-r2/shared.png",
+      "size": 115,
+      "sha256": "096cc670991a11fa69eb4395da1a34cc291c3485828415b9aa4f4e719c9cd810"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r2/textures-affine-planar-opaque-control.dae",
+      "member": "ingetrazo-dae-export-native-r2/textures-affine-planar-opaque-control.dae",
+      "size": 3160,
+      "sha256": "159df8ad33db52370f6d49f5d559f2e9722e9cc670ca5a2cf03008766bba5b41"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r2/textures-affine-planar-saved.igz",
+      "member": "ingetrazo-dae-export-native-r2/textures-affine-planar-saved.igz",
+      "size": 805,
+      "sha256": "447de1e7cc13af5f66e535742c895de9fb2f43a2b6e3a19b7242be156ed9f34d"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-callout-build-r5/build.log",
+      "member": "ingetrazo-dae-callout-build-r5/build.log",
+      "size": 35061,
+      "sha256": "98dc3edb62109fd667f554cf513722b80badf12c1bd02152a881bb57d753956a"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-callout-build-r5/receipt.json",
+      "member": "ingetrazo-dae-callout-build-r5/receipt.json",
+      "size": 717,
+      "sha256": "03a46d8c159cf06215748f012c70c187120c8329093521f7d7535ce782733b2d"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-callout-build-r5/test.log",
+      "member": "ingetrazo-dae-callout-build-r5/test.log",
+      "size": 26356,
+      "sha256": "ca675339975b1b35594d1a196bfa54b4dd7a6035c064d907d7f328dd1ffc1203"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r3/0271c0cc18ab9aaf-leaves.png",
+      "member": "ingetrazo-dae-export-native-r3/0271c0cc18ab9aaf-leaves.png",
+      "size": 115,
+      "sha256": "096cc670991a11fa69eb4395da1a34cc291c3485828415b9aa4f4e719c9cd810"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r3/0271c0cc18ab9aaf-shared.png",
+      "member": "ingetrazo-dae-export-native-r3/0271c0cc18ab9aaf-shared.png",
+      "size": 115,
+      "sha256": "096cc670991a11fa69eb4395da1a34cc291c3485828415b9aa4f4e719c9cd810"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r3/187bc5384c7ffb9f-opaque.jpg",
+      "member": "ingetrazo-dae-export-native-r3/187bc5384c7ffb9f-opaque.jpg",
+      "size": 633,
+      "sha256": "fad5575bdc0469823f34348dacae8ef30a29969f820301822fcbe01fd32fc609"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r3/187bc5384c7ffb9f-shared.png",
+      "member": "ingetrazo-dae-export-native-r3/187bc5384c7ffb9f-shared.png",
+      "size": 633,
+      "sha256": "fad5575bdc0469823f34348dacae8ef30a29969f820301822fcbe01fd32fc609"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r3/basename-collision-opaque-control.dae",
+      "member": "ingetrazo-dae-export-native-r3/basename-collision-opaque-control.dae",
+      "size": 3144,
+      "sha256": "586a8971b850935cdd769f8a56862b379f45331cccdf449fbf0297a4cfad8e8c"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r3/basename-collision-saved.igz",
+      "member": "ingetrazo-dae-export-native-r3/basename-collision-saved.igz",
+      "size": 2407,
+      "sha256": "23291d41437a55bc264e8918e103a8b2ac3180c8440a404ed726b5849386420c"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r3/chooser-cancel-suffix-opaque-control.dae",
+      "member": "ingetrazo-dae-export-native-r3/chooser-cancel-suffix-opaque-control.dae",
+      "size": 2190,
+      "sha256": "42689d1d13daba9a8c0745b706641de25529350c05b746c0222cd3aeae9e0168"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r3/chooser-cancel-suffix-saved.igz",
+      "member": "ingetrazo-dae-export-native-r3/chooser-cancel-suffix-saved.igz",
+      "size": 1380,
+      "sha256": "57435b4196aebe781e7d58b5186de3b4df83324632b2de540ef6ce0596a5818d"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r3/colors-default-hole-opaque-control.dae",
+      "member": "ingetrazo-dae-export-native-r3/colors-default-hole-opaque-control.dae",
+      "size": 4283,
+      "sha256": "c931620a65a5d52b859465902bc7164841849301fb23780dd4900198a05f9397"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r3/colors-default-hole-saved.igz",
+      "member": "ingetrazo-dae-export-native-r3/colors-default-hole-saved.igz",
+      "size": 5648,
+      "sha256": "98ee0f020ae15dd580250e29caa1f79a2b4f9c80b378fac391e10e0f8287427c"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r3/datum-names-collisions-opaque-control.dae",
+      "member": "ingetrazo-dae-export-native-r3/datum-names-collisions-opaque-control.dae",
+      "size": 5525,
+      "sha256": "40bf79be493452c1e0fab7b83a94bbf6883ad384dadd435552fca6090ff649a4"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r3/datum-names-collisions-saved.igz",
+      "member": "ingetrazo-dae-export-native-r3/datum-names-collisions-saved.igz",
+      "size": 1579,
+      "sha256": "80161ec77ca6a0409bc3cb4bf843f6da341660a2f6c60379db1b6bb838d9b631"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r3/exports/0271c0cc18ab9aaf-leaves.png",
+      "member": "ingetrazo-dae-export-native-r3/exports/0271c0cc18ab9aaf-leaves.png",
+      "size": 115,
+      "sha256": "096cc670991a11fa69eb4395da1a34cc291c3485828415b9aa4f4e719c9cd810"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r3/exports/0271c0cc18ab9aaf-shared.png",
+      "member": "ingetrazo-dae-export-native-r3/exports/0271c0cc18ab9aaf-shared.png",
+      "size": 115,
+      "sha256": "096cc670991a11fa69eb4395da1a34cc291c3485828415b9aa4f4e719c9cd810"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r3/exports/187bc5384c7ffb9f-opaque.jpg",
+      "member": "ingetrazo-dae-export-native-r3/exports/187bc5384c7ffb9f-opaque.jpg",
+      "size": 633,
+      "sha256": "fad5575bdc0469823f34348dacae8ef30a29969f820301822fcbe01fd32fc609"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r3/exports/187bc5384c7ffb9f-shared.png",
+      "member": "ingetrazo-dae-export-native-r3/exports/187bc5384c7ffb9f-shared.png",
+      "size": 633,
+      "sha256": "fad5575bdc0469823f34348dacae8ef30a29969f820301822fcbe01fd32fc609"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r3/exports/basename-collision-export.dae",
+      "member": "ingetrazo-dae-export-native-r3/exports/basename-collision-export.dae",
+      "size": 3144,
+      "sha256": "586a8971b850935cdd769f8a56862b379f45331cccdf449fbf0297a4cfad8e8c"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r3/exports/chooser-cancel-suffix-coerced.dae",
+      "member": "ingetrazo-dae-export-native-r3/exports/chooser-cancel-suffix-coerced.dae",
+      "size": 2190,
+      "sha256": "42689d1d13daba9a8c0745b706641de25529350c05b746c0222cd3aeae9e0168"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r3/exports/colors-default-hole-export.dae",
+      "member": "ingetrazo-dae-export-native-r3/exports/colors-default-hole-export.dae",
+      "size": 4283,
+      "sha256": "c931620a65a5d52b859465902bc7164841849301fb23780dd4900198a05f9397"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r3/exports/datum-names-collisions-export.dae",
+      "member": "ingetrazo-dae-export-native-r3/exports/datum-names-collisions-export.dae",
+      "size": 5525,
+      "sha256": "40bf79be493452c1e0fab7b83a94bbf6883ad384dadd435552fca6090ff649a4"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r3/exports/missing-resource-write-error-export.dae",
+      "member": "ingetrazo-dae-export-native-r3/exports/missing-resource-write-error-export.dae",
+      "size": 2916,
+      "sha256": "9d23a3ddee7edcc4fd23ccdac705015e47bd7bfc586b78a4260c75ce619fcbe4"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r3/exports/nested-shared-reflected-export.dae",
+      "member": "ingetrazo-dae-export-native-r3/exports/nested-shared-reflected-export.dae",
+      "size": 3684,
+      "sha256": "62f75038660ecefe59cdc83380b3f2bb5c068c2c369a3ffb4b09fc5d4a3ff86a"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r3/exports/shared.png",
+      "member": "ingetrazo-dae-export-native-r3/exports/shared.png",
+      "size": 115,
+      "sha256": "096cc670991a11fa69eb4395da1a34cc291c3485828415b9aa4f4e719c9cd810"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r3/exports/textures-affine-planar-export.dae",
+      "member": "ingetrazo-dae-export-native-r3/exports/textures-affine-planar-export.dae",
+      "size": 3160,
+      "sha256": "d8f2edbd6fbed6a0a6897615a2045d09189e7051469c17fadb1f3ab661ee362b"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r3/missing-resource-write-error-opaque-control.dae",
+      "member": "ingetrazo-dae-export-native-r3/missing-resource-write-error-opaque-control.dae",
+      "size": 2916,
+      "sha256": "ddc95c2d2421611df3565b31e36b62bafd236a8361f9c71fa464c73161d864d4"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r3/missing-resource-write-error-saved.igz",
+      "member": "ingetrazo-dae-export-native-r3/missing-resource-write-error-saved.igz",
+      "size": 1454,
+      "sha256": "97a915606fae1ec86702aaf235b08fe32516afaffb251d2532f8696d89a2b2c1"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r3/modal-retry.dae",
+      "member": "ingetrazo-dae-export-native-r3/modal-retry.dae",
+      "size": 2916,
+      "sha256": "ddc95c2d2421611df3565b31e36b62bafd236a8361f9c71fa464c73161d864d4"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r3/native-dae-export.json",
+      "member": "ingetrazo-dae-export-native-r3/native-dae-export.json",
+      "size": 223415,
+      "sha256": "6f2d4cdbd6d6e6d8ec8931871830f0a0e98eab9cddca1acedd23d24a60514dd7"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r3/native-dae-reopens.json",
+      "member": "ingetrazo-dae-export-native-r3/native-dae-reopens.json",
+      "size": 385170,
+      "sha256": "40db61e8a03b9e3ede2ca39fa409ecd87664516b8bc99633b61fc8da58c27214"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r3/native-dae-reopens.partial.json",
+      "member": "ingetrazo-dae-export-native-r3/native-dae-reopens.partial.json",
+      "size": 385170,
+      "sha256": "40db61e8a03b9e3ede2ca39fa409ecd87664516b8bc99633b61fc8da58c27214"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r3/nested-shared-reflected-opaque-control.dae",
+      "member": "ingetrazo-dae-export-native-r3/nested-shared-reflected-opaque-control.dae",
+      "size": 3684,
+      "sha256": "62f75038660ecefe59cdc83380b3f2bb5c068c2c369a3ffb4b09fc5d4a3ff86a"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r3/nested-shared-reflected-saved.igz",
+      "member": "ingetrazo-dae-export-native-r3/nested-shared-reflected-saved.igz",
+      "size": 1691,
+      "sha256": "762a911cb76ee82d8d5e1faadc9b026a1180de1c314eca3efa17997e01a11195"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r3/picker-invocations.log",
+      "member": "ingetrazo-dae-export-native-r3/picker-invocations.log",
+      "size": 72,
+      "sha256": "6c519ba400afe08df25f2f3b8f147ec39bf6282623f164b0591cc8d69414d93c"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r3/shared.png",
+      "member": "ingetrazo-dae-export-native-r3/shared.png",
+      "size": 115,
+      "sha256": "096cc670991a11fa69eb4395da1a34cc291c3485828415b9aa4f4e719c9cd810"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r3/textures-affine-planar-opaque-control.dae",
+      "member": "ingetrazo-dae-export-native-r3/textures-affine-planar-opaque-control.dae",
+      "size": 3160,
+      "sha256": "d8f2edbd6fbed6a0a6897615a2045d09189e7051469c17fadb1f3ab661ee362b"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-r3/textures-affine-planar-saved.igz",
+      "member": "ingetrazo-dae-export-native-r3/textures-affine-planar-saved.igz",
+      "size": 805,
+      "sha256": "447de1e7cc13af5f66e535742c895de9fb2f43a2b6e3a19b7242be156ed9f34d"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-attempt-3/checker-receipt.json",
+      "member": "ingetrazo-dae-export-native-attempt-3/checker-receipt.json",
+      "size": 485,
+      "sha256": "0824eb73f839966e5d7f1675c165ba0ee25edd5d5b6a35d95d1d45b0e9d52cc9"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-attempt-3/checker.log",
+      "member": "ingetrazo-dae-export-native-attempt-3/checker.log",
+      "size": 387,
+      "sha256": "d191ac83b943744f7f5ec475f6666023edefdb26ed055d2cd8ec19d396b1b9f6"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-attempt-3/comparison.json",
+      "member": "ingetrazo-dae-export-native-attempt-3/comparison.json",
+      "size": 397,
+      "sha256": "dbd2384c8cc4ebf8034efeebe541fa7e567938121526bed2be2f09ce58624892"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-attempt-3/finite-diagnostic.json",
+      "member": "ingetrazo-dae-export-native-attempt-3/finite-diagnostic.json",
+      "size": 633,
+      "sha256": "b4badd393c6d884bb71fc045447ed45fff3c5e55542a223f2d55f4ea3e266634"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-attempt-3/native.log",
+      "member": "ingetrazo-dae-export-native-attempt-3/native.log",
+      "size": 18,
+      "sha256": "ca88460cacd5e22c31a3ed8769225b973be0fb11c657e8983e14943bd5533c8d"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-attempt-3/reader-receipt.json",
+      "member": "ingetrazo-dae-export-native-attempt-3/reader-receipt.json",
+      "size": 279,
+      "sha256": "aaf2dc6c47f15cb96e9b31db56cc460a0caf53d60f0761fdc765b4a77022a2bb"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-attempt-3/reader.log",
+      "member": "ingetrazo-dae-export-native-attempt-3/reader.log",
+      "size": 89,
+      "sha256": "343db67d4a27a834a129e9c775980544b9a345793a56f6ecdb3e8b8d856150c7"
+    },
+    {
+      "path": "/tmp/ingetrazo-dae-export-native-attempt-3/receipt.json",
+      "member": "ingetrazo-dae-export-native-attempt-3/receipt.json",
+      "size": 389,
+      "sha256": "fb3be98c93ba2f9a5f69e3baf869eb27f578cbba3f786d91e68e1cdd9b8a2cdb"
+    }
+  ],
+  "git_bindings": [
+    {
+      "revision": "28749203305c55c40678a411fc7065c8b630cb2e",
+      "path": "crates/ingetrazo-formats/src/dae.rs",
+      "sha256": "f1a0d4df603dd98aada5b5bfb0807f58ec711fe86399f7940a65cf993083787d"
+    },
+    {
+      "revision": "28749203305c55c40678a411fc7065c8b630cb2e",
+      "path": "crates/ingetrazo-formats/src/gltf/rich.rs",
+      "sha256": "84f4f68818ba3807c16d2c72af94bb5108c688b89777db44bbe590cd8953cadf"
+    },
+    {
+      "revision": "28749203305c55c40678a411fc7065c8b630cb2e",
+      "path": "crates/ingetrazo-core/src/triangulate.rs",
+      "sha256": "3a5dc1b2c7e81a8d68dddb06780f47b942e1f40829da082f63b0d58889456d46"
+    },
+    {
+      "revision": "28749203305c55c40678a411fc7065c8b630cb2e",
+      "path": "crates/ingetrazo-core/src/drafting_earcut.rs",
+      "sha256": "1e7bb8827ae103f3b785eeb1a586c4b9c0679bc1dfb63ee72cf3eb40977701b5"
+    },
+    {
+      "revision": "28749203305c55c40678a411fc7065c8b630cb2e",
+      "path": "crates/ingetrazo-gui/src/dae_export.rs",
+      "sha256": "8294e5e64e2745318c022764590feacb877e9ff36eaa0a4325b2dc26105179f3"
+    },
+    {
+      "revision": "28749203305c55c40678a411fc7065c8b630cb2e",
+      "path": "crates/ingetrazo-gui/src/navigation.rs",
+      "sha256": "be577673b903bd8fcb126373de5f822dc72c4dbbeae0b822e99de0f92959b388"
+    },
+    {
+      "revision": "28749203305c55c40678a411fc7065c8b630cb2e",
+      "path": "crates/ingetrazo-gui/src/menu.rs",
+      "sha256": "fc51e726fafcb5235b7ea28edf7ece5d31979d007ec66da06d5fb37eb408f388"
+    },
+    {
+      "revision": "28749203305c55c40678a411fc7065c8b630cb2e",
+      "path": "crates/ingetrazo-gui/src/app.rs",
+      "sha256": "0478530483cb82560da65e41c6312b9c27b5c131b57cc2465389a6fdf8bd827d"
+    },
+    {
+      "revision": "28749203305c55c40678a411fc7065c8b630cb2e",
+      "path": "crates/ingetrazo-gui/src/component_edit.rs",
+      "sha256": "713e6b7125e1c8d94697bc6f5d59ce1caf6d0bd671c1e49b6aa895795089d255"
+    },
+    {
+      "revision": "28749203305c55c40678a411fc7065c8b630cb2e",
+      "path": "crates/ingetrazo-gui/examples/dae_painted_export.rs",
+      "sha256": "693ea190d08ec324baec9be049df54848208cbd26ebdca260c15868df696fd76"
+    },
+    {
+      "revision": "28749203305c55c40678a411fc7065c8b630cb2e",
+      "path": "crates/ingetrazo-gui/examples/unit_import_workflows.rs",
+      "sha256": "dbacbbbce0077fabde146c39913f2a4364062f06eb31401278916f3ce643d534"
+    },
+    {
+      "revision": "28749203305c55c40678a411fc7065c8b630cb2e",
+      "path": "scripts/check-dae-export-parity.py",
+      "sha256": "a630eec3b58a5ab0b8cdfaee7b14ed49c6ebcaa78750afad3e24925e88ca36d7"
+    },
+    {
+      "revision": "28749203305c55c40678a411fc7065c8b630cb2e",
+      "path": "scripts/reopen-dae-export.py",
+      "sha256": "b72ec59c664bf5e750a97bc327c0327a52823b67bbdc536a09dd5ab248508428"
+    },
+    {
+      "revision": "28749203305c55c40678a411fc7065c8b630cb2e",
+      "path": "scripts/exchange_import_observations.py",
+      "sha256": "48c12bffd82e9c431ce8784174112a78c7ab09de529fabc1e5f0f8445bf94142"
+    },
+    {
+      "revision": "3150ac389cddd11c68e4e69cecf47efe4bb0856c",
+      "path": "crates/ingetrazo-formats/src/dae.rs",
+      "sha256": "f1a0d4df603dd98aada5b5bfb0807f58ec711fe86399f7940a65cf993083787d"
+    },
+    {
+      "revision": "3150ac389cddd11c68e4e69cecf47efe4bb0856c",
+      "path": "crates/ingetrazo-formats/src/gltf/rich.rs",
+      "sha256": "e39280c6021e8a91f442a1368df8dcfd26f224ce40fba2d13706aa41ba93e337"
+    },
+    {
+      "revision": "3150ac389cddd11c68e4e69cecf47efe4bb0856c",
+      "path": "crates/ingetrazo-core/src/triangulate.rs",
+      "sha256": "b9082635449094f74f569751d9419b0c3b9c96281af87c7186ec1e52557f79b2"
+    },
+    {
+      "revision": "3150ac389cddd11c68e4e69cecf47efe4bb0856c",
+      "path": "crates/ingetrazo-core/src/drafting_earcut.rs",
+      "sha256": "1e7bb8827ae103f3b785eeb1a586c4b9c0679bc1dfb63ee72cf3eb40977701b5"
+    },
+    {
+      "revision": "3150ac389cddd11c68e4e69cecf47efe4bb0856c",
+      "path": "crates/ingetrazo-gui/src/dae_export.rs",
+      "sha256": "81a00600f95dfb74c435fdcf934e35c5fb40d671d19787b57f834f75aefb4edf"
+    },
+    {
+      "revision": "3150ac389cddd11c68e4e69cecf47efe4bb0856c",
+      "path": "crates/ingetrazo-gui/src/navigation.rs",
+      "sha256": "0403665ad7aabdd6b439a3d05f2adeab8e0ffed1966a008c099612ecb166897c"
+    },
+    {
+      "revision": "3150ac389cddd11c68e4e69cecf47efe4bb0856c",
+      "path": "crates/ingetrazo-gui/src/menu.rs",
+      "sha256": "fc51e726fafcb5235b7ea28edf7ece5d31979d007ec66da06d5fb37eb408f388"
+    },
+    {
+      "revision": "3150ac389cddd11c68e4e69cecf47efe4bb0856c",
+      "path": "crates/ingetrazo-gui/src/app.rs",
+      "sha256": "0478530483cb82560da65e41c6312b9c27b5c131b57cc2465389a6fdf8bd827d"
+    },
+    {
+      "revision": "3150ac389cddd11c68e4e69cecf47efe4bb0856c",
+      "path": "crates/ingetrazo-gui/src/component_edit.rs",
+      "sha256": "713e6b7125e1c8d94697bc6f5d59ce1caf6d0bd671c1e49b6aa895795089d255"
+    },
+    {
+      "revision": "3150ac389cddd11c68e4e69cecf47efe4bb0856c",
+      "path": "crates/ingetrazo-gui/examples/dae_painted_export.rs",
+      "sha256": "b0aad1565b88ad9e2911d92644ba7cf93c2837aaefe1b4ac11fe53e7b8b00fae"
+    },
+    {
+      "revision": "3150ac389cddd11c68e4e69cecf47efe4bb0856c",
+      "path": "crates/ingetrazo-gui/examples/unit_import_workflows.rs",
+      "sha256": "dbacbbbce0077fabde146c39913f2a4364062f06eb31401278916f3ce643d534"
+    },
+    {
+      "revision": "3150ac389cddd11c68e4e69cecf47efe4bb0856c",
+      "path": "scripts/check-dae-export-parity.py",
+      "sha256": "4dc49963e39bb1e963541ff46edd03a58c419cc6859a577c503d1e526faa4f71"
+    },
+    {
+      "revision": "3150ac389cddd11c68e4e69cecf47efe4bb0856c",
+      "path": "scripts/reopen-dae-export.py",
+      "sha256": "b72ec59c664bf5e750a97bc327c0327a52823b67bbdc536a09dd5ab248508428"
+    },
+    {
+      "revision": "3150ac389cddd11c68e4e69cecf47efe4bb0856c",
+      "path": "scripts/exchange_import_observations.py",
+      "sha256": "48c12bffd82e9c431ce8784174112a78c7ab09de529fabc1e5f0f8445bf94142"
+    },
+    {
+      "revision": "4c7c06e2eec69914d49c75e23ae38b52021262f1",
+      "path": "crates/ingetrazo-formats/src/dae.rs",
+      "sha256": "f1a0d4df603dd98aada5b5bfb0807f58ec711fe86399f7940a65cf993083787d"
+    },
+    {
+      "revision": "4c7c06e2eec69914d49c75e23ae38b52021262f1",
+      "path": "crates/ingetrazo-formats/src/gltf/rich.rs",
+      "sha256": "84f4f68818ba3807c16d2c72af94bb5108c688b89777db44bbe590cd8953cadf"
+    },
+    {
+      "revision": "4c7c06e2eec69914d49c75e23ae38b52021262f1",
+      "path": "crates/ingetrazo-core/src/triangulate.rs",
+      "sha256": "3a5dc1b2c7e81a8d68dddb06780f47b942e1f40829da082f63b0d58889456d46"
+    },
+    {
+      "revision": "4c7c06e2eec69914d49c75e23ae38b52021262f1",
+      "path": "crates/ingetrazo-core/src/drafting_earcut.rs",
+      "sha256": "1e7bb8827ae103f3b785eeb1a586c4b9c0679bc1dfb63ee72cf3eb40977701b5"
+    },
+    {
+      "revision": "4c7c06e2eec69914d49c75e23ae38b52021262f1",
+      "path": "crates/ingetrazo-gui/src/dae_export.rs",
+      "sha256": "8294e5e64e2745318c022764590feacb877e9ff36eaa0a4325b2dc26105179f3"
+    },
+    {
+      "revision": "4c7c06e2eec69914d49c75e23ae38b52021262f1",
+      "path": "crates/ingetrazo-gui/src/navigation.rs",
+      "sha256": "be577673b903bd8fcb126373de5f822dc72c4dbbeae0b822e99de0f92959b388"
+    },
+    {
+      "revision": "4c7c06e2eec69914d49c75e23ae38b52021262f1",
+      "path": "crates/ingetrazo-gui/src/menu.rs",
+      "sha256": "fc51e726fafcb5235b7ea28edf7ece5d31979d007ec66da06d5fb37eb408f388"
+    },
+    {
+      "revision": "4c7c06e2eec69914d49c75e23ae38b52021262f1",
+      "path": "crates/ingetrazo-gui/src/app.rs",
+      "sha256": "0478530483cb82560da65e41c6312b9c27b5c131b57cc2465389a6fdf8bd827d"
+    },
+    {
+      "revision": "4c7c06e2eec69914d49c75e23ae38b52021262f1",
+      "path": "crates/ingetrazo-gui/src/component_edit.rs",
+      "sha256": "713e6b7125e1c8d94697bc6f5d59ce1caf6d0bd671c1e49b6aa895795089d255"
+    },
+    {
+      "revision": "4c7c06e2eec69914d49c75e23ae38b52021262f1",
+      "path": "crates/ingetrazo-gui/examples/dae_painted_export.rs",
+      "sha256": "65508d6ac34c2ce3ee6ee364317e1c1da7e82dfabb51d98c96e1aebac166c397"
+    },
+    {
+      "revision": "4c7c06e2eec69914d49c75e23ae38b52021262f1",
+      "path": "crates/ingetrazo-gui/examples/unit_import_workflows.rs",
+      "sha256": "dbacbbbce0077fabde146c39913f2a4364062f06eb31401278916f3ce643d534"
+    },
+    {
+      "revision": "4c7c06e2eec69914d49c75e23ae38b52021262f1",
+      "path": "scripts/check-dae-export-parity.py",
+      "sha256": "a630eec3b58a5ab0b8cdfaee7b14ed49c6ebcaa78750afad3e24925e88ca36d7"
+    },
+    {
+      "revision": "4c7c06e2eec69914d49c75e23ae38b52021262f1",
+      "path": "scripts/reopen-dae-export.py",
+      "sha256": "b72ec59c664bf5e750a97bc327c0327a52823b67bbdc536a09dd5ab248508428"
+    },
+    {
+      "revision": "4c7c06e2eec69914d49c75e23ae38b52021262f1",
+      "path": "scripts/exchange_import_observations.py",
+      "sha256": "48c12bffd82e9c431ce8784174112a78c7ab09de529fabc1e5f0f8445bf94142"
+    },
+    {
+      "revision": "bd83948f259715101c6402d3eb70f8640fa60fb8",
+      "path": "crates/ingetrazo-formats/src/dae.rs",
+      "sha256": "f1a0d4df603dd98aada5b5bfb0807f58ec711fe86399f7940a65cf993083787d"
+    },
+    {
+      "revision": "bd83948f259715101c6402d3eb70f8640fa60fb8",
+      "path": "crates/ingetrazo-formats/src/gltf/rich.rs",
+      "sha256": "e39280c6021e8a91f442a1368df8dcfd26f224ce40fba2d13706aa41ba93e337"
+    },
+    {
+      "revision": "bd83948f259715101c6402d3eb70f8640fa60fb8",
+      "path": "crates/ingetrazo-core/src/triangulate.rs",
+      "sha256": "b9082635449094f74f569751d9419b0c3b9c96281af87c7186ec1e52557f79b2"
+    },
+    {
+      "revision": "bd83948f259715101c6402d3eb70f8640fa60fb8",
+      "path": "crates/ingetrazo-core/src/drafting_earcut.rs",
+      "sha256": "1e7bb8827ae103f3b785eeb1a586c4b9c0679bc1dfb63ee72cf3eb40977701b5"
+    },
+    {
+      "revision": "bd83948f259715101c6402d3eb70f8640fa60fb8",
+      "path": "crates/ingetrazo-gui/src/dae_export.rs",
+      "sha256": "81a00600f95dfb74c435fdcf934e35c5fb40d671d19787b57f834f75aefb4edf"
+    },
+    {
+      "revision": "bd83948f259715101c6402d3eb70f8640fa60fb8",
+      "path": "crates/ingetrazo-gui/src/navigation.rs",
+      "sha256": "0403665ad7aabdd6b439a3d05f2adeab8e0ffed1966a008c099612ecb166897c"
+    },
+    {
+      "revision": "bd83948f259715101c6402d3eb70f8640fa60fb8",
+      "path": "crates/ingetrazo-gui/src/menu.rs",
+      "sha256": "fc51e726fafcb5235b7ea28edf7ece5d31979d007ec66da06d5fb37eb408f388"
+    },
+    {
+      "revision": "bd83948f259715101c6402d3eb70f8640fa60fb8",
+      "path": "crates/ingetrazo-gui/src/app.rs",
+      "sha256": "0478530483cb82560da65e41c6312b9c27b5c131b57cc2465389a6fdf8bd827d"
+    },
+    {
+      "revision": "bd83948f259715101c6402d3eb70f8640fa60fb8",
+      "path": "crates/ingetrazo-gui/src/component_edit.rs",
+      "sha256": "713e6b7125e1c8d94697bc6f5d59ce1caf6d0bd671c1e49b6aa895795089d255"
+    },
+    {
+      "revision": "bd83948f259715101c6402d3eb70f8640fa60fb8",
+      "path": "crates/ingetrazo-gui/examples/dae_painted_export.rs",
+      "sha256": "39d41b7e3e0c64744a1b3df8f6c623273ef7814f13e8ee42d66860dbf0729e66"
+    },
+    {
+      "revision": "bd83948f259715101c6402d3eb70f8640fa60fb8",
+      "path": "crates/ingetrazo-gui/examples/unit_import_workflows.rs",
+      "sha256": "dbacbbbce0077fabde146c39913f2a4364062f06eb31401278916f3ce643d534"
+    },
+    {
+      "revision": "bd83948f259715101c6402d3eb70f8640fa60fb8",
+      "path": "scripts/check-dae-export-parity.py",
+      "sha256": "4dc49963e39bb1e963541ff46edd03a58c419cc6859a577c503d1e526faa4f71"
+    },
+    {
+      "revision": "bd83948f259715101c6402d3eb70f8640fa60fb8",
+      "path": "scripts/reopen-dae-export.py",
+      "sha256": "b72ec59c664bf5e750a97bc327c0327a52823b67bbdc536a09dd5ab248508428"
+    },
+    {
+      "revision": "bd83948f259715101c6402d3eb70f8640fa60fb8",
+      "path": "scripts/exchange_import_observations.py",
+      "sha256": "48c12bffd82e9c431ce8784174112a78c7ab09de529fabc1e5f0f8445bf94142"
+    },
+    {
+      "revision": "ee6536ff5a45bc5030c0243d851dd660344fb8ce",
+      "path": "crates/ingetrazo-formats/src/dae.rs",
+      "sha256": "f1a0d4df603dd98aada5b5bfb0807f58ec711fe86399f7940a65cf993083787d"
+    },
+    {
+      "revision": "ee6536ff5a45bc5030c0243d851dd660344fb8ce",
+      "path": "crates/ingetrazo-formats/src/gltf/rich.rs",
+      "sha256": "e39280c6021e8a91f442a1368df8dcfd26f224ce40fba2d13706aa41ba93e337"
+    },
+    {
+      "revision": "ee6536ff5a45bc5030c0243d851dd660344fb8ce",
+      "path": "crates/ingetrazo-core/src/triangulate.rs",
+      "sha256": "b9082635449094f74f569751d9419b0c3b9c96281af87c7186ec1e52557f79b2"
+    },
+    {
+      "revision": "ee6536ff5a45bc5030c0243d851dd660344fb8ce",
+      "path": "crates/ingetrazo-core/src/drafting_earcut.rs",
+      "sha256": "1e7bb8827ae103f3b785eeb1a586c4b9c0679bc1dfb63ee72cf3eb40977701b5"
+    },
+    {
+      "revision": "ee6536ff5a45bc5030c0243d851dd660344fb8ce",
+      "path": "crates/ingetrazo-gui/src/dae_export.rs",
+      "sha256": "8294e5e64e2745318c022764590feacb877e9ff36eaa0a4325b2dc26105179f3"
+    },
+    {
+      "revision": "ee6536ff5a45bc5030c0243d851dd660344fb8ce",
+      "path": "crates/ingetrazo-gui/src/navigation.rs",
+      "sha256": "be577673b903bd8fcb126373de5f822dc72c4dbbeae0b822e99de0f92959b388"
+    },
+    {
+      "revision": "ee6536ff5a45bc5030c0243d851dd660344fb8ce",
+      "path": "crates/ingetrazo-gui/src/menu.rs",
+      "sha256": "fc51e726fafcb5235b7ea28edf7ece5d31979d007ec66da06d5fb37eb408f388"
+    },
+    {
+      "revision": "ee6536ff5a45bc5030c0243d851dd660344fb8ce",
+      "path": "crates/ingetrazo-gui/src/app.rs",
+      "sha256": "0478530483cb82560da65e41c6312b9c27b5c131b57cc2465389a6fdf8bd827d"
+    },
+    {
+      "revision": "ee6536ff5a45bc5030c0243d851dd660344fb8ce",
+      "path": "crates/ingetrazo-gui/src/component_edit.rs",
+      "sha256": "713e6b7125e1c8d94697bc6f5d59ce1caf6d0bd671c1e49b6aa895795089d255"
+    },
+    {
+      "revision": "ee6536ff5a45bc5030c0243d851dd660344fb8ce",
+      "path": "crates/ingetrazo-gui/examples/dae_painted_export.rs",
+      "sha256": "a08caab5e219d3f43b68165672e15164abaa99739264953291728939d6e070b1"
+    },
+    {
+      "revision": "ee6536ff5a45bc5030c0243d851dd660344fb8ce",
+      "path": "crates/ingetrazo-gui/examples/unit_import_workflows.rs",
+      "sha256": "dbacbbbce0077fabde146c39913f2a4364062f06eb31401278916f3ce643d534"
+    },
+    {
+      "revision": "ee6536ff5a45bc5030c0243d851dd660344fb8ce",
+      "path": "scripts/check-dae-export-parity.py",
+      "sha256": "4dc49963e39bb1e963541ff46edd03a58c419cc6859a577c503d1e526faa4f71"
+    },
+    {
+      "revision": "ee6536ff5a45bc5030c0243d851dd660344fb8ce",
+      "path": "scripts/reopen-dae-export.py",
+      "sha256": "b72ec59c664bf5e750a97bc327c0327a52823b67bbdc536a09dd5ab248508428"
+    },
+    {
+      "revision": "ee6536ff5a45bc5030c0243d851dd660344fb8ce",
+      "path": "scripts/exchange_import_observations.py",
+      "sha256": "48c12bffd82e9c431ce8784174112a78c7ab09de529fabc1e5f0f8445bf94142"
+    },
+    {
+      "revision": "f754d90f983aead1cf2ce75f6848ea324e15c90f",
+      "path": "crates/ingetrazo-formats/src/dae.rs",
+      "sha256": "f1a0d4df603dd98aada5b5bfb0807f58ec711fe86399f7940a65cf993083787d"
+    },
+    {
+      "revision": "f754d90f983aead1cf2ce75f6848ea324e15c90f",
+      "path": "crates/ingetrazo-formats/src/gltf/rich.rs",
+      "sha256": "e39280c6021e8a91f442a1368df8dcfd26f224ce40fba2d13706aa41ba93e337"
+    },
+    {
+      "revision": "f754d90f983aead1cf2ce75f6848ea324e15c90f",
+      "path": "crates/ingetrazo-core/src/triangulate.rs",
+      "sha256": "b9082635449094f74f569751d9419b0c3b9c96281af87c7186ec1e52557f79b2"
+    },
+    {
+      "revision": "f754d90f983aead1cf2ce75f6848ea324e15c90f",
+      "path": "crates/ingetrazo-core/src/drafting_earcut.rs",
+      "sha256": "1e7bb8827ae103f3b785eeb1a586c4b9c0679bc1dfb63ee72cf3eb40977701b5"
+    },
+    {
+      "revision": "f754d90f983aead1cf2ce75f6848ea324e15c90f",
+      "path": "crates/ingetrazo-gui/src/dae_export.rs",
+      "sha256": "8294e5e64e2745318c022764590feacb877e9ff36eaa0a4325b2dc26105179f3"
+    },
+    {
+      "revision": "f754d90f983aead1cf2ce75f6848ea324e15c90f",
+      "path": "crates/ingetrazo-gui/src/navigation.rs",
+      "sha256": "be577673b903bd8fcb126373de5f822dc72c4dbbeae0b822e99de0f92959b388"
+    },
+    {
+      "revision": "f754d90f983aead1cf2ce75f6848ea324e15c90f",
+      "path": "crates/ingetrazo-gui/src/menu.rs",
+      "sha256": "fc51e726fafcb5235b7ea28edf7ece5d31979d007ec66da06d5fb37eb408f388"
+    },
+    {
+      "revision": "f754d90f983aead1cf2ce75f6848ea324e15c90f",
+      "path": "crates/ingetrazo-gui/src/app.rs",
+      "sha256": "0478530483cb82560da65e41c6312b9c27b5c131b57cc2465389a6fdf8bd827d"
+    },
+    {
+      "revision": "f754d90f983aead1cf2ce75f6848ea324e15c90f",
+      "path": "crates/ingetrazo-gui/src/component_edit.rs",
+      "sha256": "713e6b7125e1c8d94697bc6f5d59ce1caf6d0bd671c1e49b6aa895795089d255"
+    },
+    {
+      "revision": "f754d90f983aead1cf2ce75f6848ea324e15c90f",
+      "path": "crates/ingetrazo-gui/examples/dae_painted_export.rs",
+      "sha256": "a08caab5e219d3f43b68165672e15164abaa99739264953291728939d6e070b1"
+    },
+    {
+      "revision": "f754d90f983aead1cf2ce75f6848ea324e15c90f",
+      "path": "crates/ingetrazo-gui/examples/unit_import_workflows.rs",
+      "sha256": "dbacbbbce0077fabde146c39913f2a4364062f06eb31401278916f3ce643d534"
+    },
+    {
+      "revision": "f754d90f983aead1cf2ce75f6848ea324e15c90f",
+      "path": "scripts/check-dae-export-parity.py",
+      "sha256": "a630eec3b58a5ab0b8cdfaee7b14ed49c6ebcaa78750afad3e24925e88ca36d7"
+    },
+    {
+      "revision": "f754d90f983aead1cf2ce75f6848ea324e15c90f",
+      "path": "scripts/reopen-dae-export.py",
+      "sha256": "b72ec59c664bf5e750a97bc327c0327a52823b67bbdc536a09dd5ab248508428"
+    },
+    {
+      "revision": "f754d90f983aead1cf2ce75f6848ea324e15c90f",
+      "path": "scripts/exchange_import_observations.py",
+      "sha256": "48c12bffd82e9c431ce8784174112a78c7ab09de529fabc1e5f0f8445bf94142"
+    },
+    {
+      "revision": "6d06f22f276b5d2c57c90d8966ce256e04f2a6ff",
+      "path": "scripts/check-dae-export-parity.py",
+      "sha256": "c238f8874063b6682b14518c90c361032e702ffaffedea0f6a38e94ad6439b4b",
+      "scope": "Actual final acceptance helper after reader schema repair; distinct from compiled runtime"
+    },
+    {
+      "revision": "6d06f22f276b5d2c57c90d8966ce256e04f2a6ff",
+      "path": "scripts/reopen-dae-export.py",
+      "sha256": "b72ec59c664bf5e750a97bc327c0327a52823b67bbdc536a09dd5ab248508428",
+      "scope": "Actual final acceptance helper after reader schema repair; distinct from compiled runtime"
+    }
+  ],
+  "executed_receipts": [
+    {
+      "revision": "bd83948f259715101c6402d3eb70f8640fa60fb8",
+      "seconds": 9.339624366024509,
+      "returncode": 101,
+      "examples": [
+        "dae_painted_export",
+        "gltf_rich",
+        "unit_import_workflows",
+        "exchange_import_workflows"
+      ]
+    },
+    {
+      "revision": "3150ac389cddd11c68e4e69cecf47efe4bb0856c",
+      "seconds": 0.7812176530133002,
+      "returncode": 0
+    },
+    {
+      "revision": "ee6536ff5a45bc5030c0243d851dd660344fb8ce",
+      "seconds": 7.0406888970173895,
+      "returncode": 0
+    },
+    {
+      "revision": "28749203305c55c40678a411fc7065c8b630cb2e",
+      "argv": [
+        "/home/dev/.cargo/bin/cargo",
+        "build",
+        "-p",
+        "ingetrazo-gui",
+        "--example",
+        "dae_painted_export",
+        "--example",
+        "callout_coverage"
+      ],
+      "seconds": 13.228747080022004,
+      "returncode": 0
+    },
+    {
+      "revision": "f754d90f983aead1cf2ce75f6848ea324e15c90f",
+      "compiled_runtime_revision": "ee6536ff5a45bc5030c0243d851dd660344fb8ce",
+      "binary_sha256": "8a3be07dc0ebfb7d165547092c5aa9060e793907582093c9f7a1eed6bd697b20",
+      "seconds": 0.3061877189902589,
+      "returncode": 0
+    },
+    {
+      "revision": "28749203305c55c40678a411fc7065c8b630cb2e",
+      "argv": [
+        "/tmp/ingetrazo-native-font-merge-target/debug/examples/dae_painted_export",
+        "/tmp/ingetrazo-dae-export-source-accepted",
+        "/tmp/ingetrazo-dae-export-native-r2"
+      ],
+      "seconds": 0.303776120999828,
+      "returncode": 0,
+      "executable_sha256": "98066b504b7c4e42c58d27bf34f9e1f299b16a129b9860ac0ea01d6f8a6b4b9b"
+    },
+    {
+      "revision": "4c7c06e2eec69914d49c75e23ae38b52021262f1",
+      "argv": [
+        "/tmp/ingetrazo-native-font-merge-target/debug/examples/dae_painted_export",
+        "/tmp/ingetrazo-dae-export-source-accepted",
+        "/tmp/ingetrazo-dae-export-native-r3"
+      ],
+      "seconds": 0.2743614820064977,
+      "returncode": 0,
+      "binary_sha256": "9890d85395ab238b6f34a836cca4510aa7a184595a3f263bbe9e9c6735f70fbc"
+    }
+  ],
+  "source_archive": "docs/audits/dae-painted-export/source-records.zip",
+  "source_archive_sha256": "3153b4b43ca17bba8e3f02606820e7fd30f7309e580fa3a94ec0ca58b9987174",
+  "source_manifest_sha256": "d1fac5e93a4a950b7a9bcfd9b65d7f71dd8d1aae1b7dc75afce9dbe0f195d191",
+  "source_captures_added": 0,
+  "strict_reader_verdict": "OPEN",
+  "cleanup_performed": false,
+  "excluded_files": [
+    "/tmp/ingetrazo-dae-export-native-r1/picker/kdialog",
+    "/tmp/ingetrazo-dae-export-native-r2/picker/kdialog"
+  ],
+  "final_binary": {
+    "path": "/tmp/ingetrazo-native-font-merge-target/debug/examples/dae_painted_export",
+    "sha256": "9890d85395ab238b6f34a836cca4510aa7a184595a3f263bbe9e9c6735f70fbc",
+    "compiled_revision": "4c7c06e2eec69914d49c75e23ae38b52021262f1"
+  },
+  "finite_acceptance": {
+    "app_states": 16,
+    "ordered_xml_sidecars": 7,
+    "saved_original_igz_pairs": 7,
+    "strict_full_checker_pass": false,
+    "rejected_control_suite_accepted": false
+  }
+}

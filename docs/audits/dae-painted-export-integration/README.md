@@ -1,0 +1,15 @@
+# Painted DAE export integration
+
+The final native run preserves all 16 App observations across seven cohorts. All seven ordered DAE XML inventories and encoded texture sidecars match the unchanged original exporter. All seven saved IGZ documents reopen through the original reader with exact model observations, including back paint and opaque data.
+
+The full strict checker still fails. Independent original DAE loads produce merged-ring ordering/direction differences, and the affine-texture cohort also has small UV-solve rounding differences. These records remain unmodified; no sorting, tolerance or reader equivalence rule was added. The negative-control suite is not claimed accepted after a failed baseline.
+
+The implemented source scope is one flattened world geometry with front material groups, normals, UVs, nested/shared/reflected placement results, visible root objects, Unicode material naming, first-seen texture basename collision behavior and geolocation. Separate back-face material serialization, XML instance hierarchy and opacity rendering are outside the original exporter scope. The App route uses the original default project name. Actual chooser callbacks, cancel, suffix coercion, error modal input ownership, retry, document identity, dirty state, active edit context and nonempty Undo/Redo history are exercised. No physical File-menu click, GPU or broad performance claim is made.
+
+The archive retains the initial consumer compiler failure; R1 original-reader prototype failure and hole triangulation discrepancy; R2 unit-observer/schema failures and complete diagnostics; and R3 final finite exact observations with the strict DAE reader failure. The DAE-only triangulation adapter follows pinned source earcut order without changing ordinary glTF triangulation. Saved-document fixture snapshots preserve parked root prototype ownership without publishing Finish or changing history.
+
+Final compiled runtime is `4c7c06e2eec69914d49c75e23ae38b52021262f1`; the final helper binding is separately recorded at `6d06f22f`. The final native executable digest is `9890d85395ab238b6f34a836cca4510aa7a184595a3f263bbe9e9c6735f70fbc`. Shared build time was 7.685 seconds; native execution was 0.274 seconds. Reader completion is execution success, not strict parity acceptance. Receipts retain each observed timing and failure independently.
+
+The source archive is referenced once from [the frozen source packet](../dae-painted-export/source-README.md). Its six original cohorts and one missing-only basename supplement were not recaptured. Picker executables and disposable state are excluded; no cleanup was performed.
+
+The pinned loader calls `run_stitch` at `formats/dae.py:1157`. `core/history.py:2494` passes a coplanar component set to `Mesh.dissolve_coplanar_region`; `core/mesh.py:1399` converts that set to a list before choosing a normal and assembling the boundary. Object-identity iteration is therefore part of the observed loader ordering limitation. Exact exported directed triangles, material/UV arrays and sidecars remain independently validated; this explanation does not close the strict reader gate.
