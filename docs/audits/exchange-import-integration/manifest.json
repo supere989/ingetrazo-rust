@@ -662,6 +662,16 @@
           "path": "scripts/reference-exchange-import-reopens.py",
           "commit": "1d5b3d372552db40300fe6e9a5fcf0d77786abae",
           "sha256": "73bd270e78cded1d7e11b38889f49857d98e932fb4a42ef907594eee2a98a480"
+        },
+        {
+          "path": "crates/ingetrazo-core/src/scene.rs",
+          "commit": "1d5b3d372552db40300fe6e9a5fcf0d77786abae",
+          "sha256": "f8ba93b6400e623aeb5913935490ae484ac9c9abe3b3dda58d5f4264cd5e6bb7"
+        },
+        {
+          "path": "crates/ingetrazo-gui/src/component_edit.rs",
+          "commit": "1d5b3d372552db40300fe6e9a5fcf0d77786abae",
+          "sha256": "d173e892c217352f17ac6546f81911be3708573f6d025234f5388291cc4988e1"
         }
       ],
       "binary_sha256": "1a0069e6edc85653d835885c1a85549ee1c5047bf84c67ca77a91c705c83e3f3"
@@ -745,6 +755,16 @@
           "path": "scripts/reference-exchange-import-reopens.py",
           "commit": "736c3f3866484fa22f38527b0655c460dfcdb24e",
           "sha256": "73bd270e78cded1d7e11b38889f49857d98e932fb4a42ef907594eee2a98a480"
+        },
+        {
+          "path": "crates/ingetrazo-core/src/scene.rs",
+          "commit": "736c3f3866484fa22f38527b0655c460dfcdb24e",
+          "sha256": "f8ba93b6400e623aeb5913935490ae484ac9c9abe3b3dda58d5f4264cd5e6bb7"
+        },
+        {
+          "path": "crates/ingetrazo-gui/src/component_edit.rs",
+          "commit": "736c3f3866484fa22f38527b0655c460dfcdb24e",
+          "sha256": "e41f687f59b34972d23f27f13c2a8c5b2429a6c34bfae567c7ce09da845cff0b"
         }
       ],
       "binary_sha256": "b18f4e0633da9e4fbc8af7c5a70c9262fc301d529924323c02906a99cc3dd802"
@@ -828,6 +848,16 @@
           "path": "scripts/reference-exchange-import-reopens.py",
           "commit": "5d400ab3f5591e677fb6c35e3432c9024d7060d7",
           "sha256": "73bd270e78cded1d7e11b38889f49857d98e932fb4a42ef907594eee2a98a480"
+        },
+        {
+          "path": "crates/ingetrazo-core/src/scene.rs",
+          "commit": "5d400ab3f5591e677fb6c35e3432c9024d7060d7",
+          "sha256": "f8ba93b6400e623aeb5913935490ae484ac9c9abe3b3dda58d5f4264cd5e6bb7"
+        },
+        {
+          "path": "crates/ingetrazo-gui/src/component_edit.rs",
+          "commit": "5d400ab3f5591e677fb6c35e3432c9024d7060d7",
+          "sha256": "f09bdc9d526b495895ce8f76a2a581532518b143b6bf76630ce2e3e65b9bf884"
         }
       ],
       "binary_sha256": "8f16b9f373e2c1747914b3122e2398518c7871ac1ce4108807f9feec225b01bd"
