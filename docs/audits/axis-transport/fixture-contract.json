@@ -6,7 +6,32 @@
     800,
     600
   ],
-  "original_sources": [],
+  "original_sources": [
+    {
+      "path": "views/viewport.py",
+      "sha256": "1fb62f55b8f559deb3676924ee69a9a444397faa28c49651111cea44e420c724"
+    },
+    {
+      "path": "core/axes.py",
+      "sha256": "63619fc6a1f3b5ddbb9729a80ca56425061b7f96a5ffc9aa27942c52955149ab"
+    },
+    {
+      "path": "core/scene.py",
+      "sha256": "9dfcd32f1ff5b1445180eafd8df36eafb92fa08ed3597bb90eac09554899d2e0"
+    },
+    {
+      "path": "core/history.py",
+      "sha256": "2eb66a1d557099b51383988a7819145289fc4ce2c37fc7de3a92ed35b5830559"
+    },
+    {
+      "path": "formats/igz.py",
+      "sha256": "f318d685830c49c2fede7fd5a238ac7a1469ee0b0226cf48cab3751e194a9576"
+    },
+    {
+      "path": "views/main_window.py",
+      "sha256": "ea02be3e439c80731d0f5b5fde3d92d9b3f62e8ad10cd44ad305c3261b7786fa"
+    }
+  ],
   "support_sources": [
     {
       "path": "scripts/reference-ai-bridge-capture.py",

@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
 """Compare retained actual axes transport. Diagnostic, never pixel acceptance."""
-import argparse,json,struct
+import argparse,json,struct,hashlib
 from pathlib import Path
 p=argparse.ArgumentParser();p.add_argument('source',type=Path);p.add_argument('native',type=Path);a=p.parse_args()
 s=json.loads((a.source/'source-axis-transport.json').read_text());n=json.loads((a.native/'native-axis-transport.json').read_text())
 sb=(a.source/'source-axis-vbo.bin').read_bytes();nb=(a.native/'native-axis-vbo.bin').read_bytes()
 assert len(sb)==3126*12 and len(nb)==3126*24
+assert s["vbo"]["size"]==len(sb) and s["vbo"]["sha256"]==hashlib.sha256(sb).hexdigest()
+assert n["vertex_count"]==3126 and n["stride"]==24 and n["position_offset"]==0 and n["color_offset"]==12
 rows=s['draws'];assert len(rows)==3 and n['readonly'] is True and n['before']==n['after']
 position_differences=[];color_differences=[]
 for i in range(3126):
