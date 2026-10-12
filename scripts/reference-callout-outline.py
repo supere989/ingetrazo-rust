@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Alternate Qt public stroker outline; equivalence to actual paint is mandatory."""
-import hashlib,json,os,subprocess,sys
+import hashlib,json,math,os,subprocess,sys
 from pathlib import Path
 source=Path(sys.argv[1]).resolve();out=Path(sys.argv[2]).resolve();out.mkdir(parents=True,exist_ok=True)
 repo=Path(__file__).resolve().parents[1];pin="6be29fe437a7cd992d4e079f71720821b25216b9"
@@ -12,6 +12,9 @@ from PySide6.QtWidgets import QApplication
 app=QApplication([]);assert qVersion()=='6.12.0'
 record=json.loads((source/'original-callout-coverage.json').read_text());assert record['source_pin']==pin and record['case']=='llamadas-default'
 st=record['stages'][0];assert not st['has_clip'] and not st['view_transform_enabled']
+assert st['size_mode']==Qt.AbsoluteSize.value and st['device']['pixel_ratio']==1
+assert all(math.isfinite(v) for v in st['world_transform']) and st['world_transform'][2]==st['world_transform'][5]==0 and st['world_transform'][8]==1
+assert all(math.isfinite(v) for v in st['rect']+st['radii']) and all(v>0 for v in st['rect'][2:]+st['radii'])
 assert st['opacity']==1 and st['composition']==0 and st['pen']['rgba'][3]==255
 scale=st['world_transform'][0];assert scale>0 and st['world_transform'][4]==scale and st['world_transform'][1]==st['world_transform'][3]==0
 x,y,w,h=st['rect'];rx=min(st['radii'][0],w/2);ry=min(st['radii'][1],h/2);k=.5522847498
@@ -40,7 +43,7 @@ path.closeSubpath()
 stroker=QPainterPathStroker();stroker.setWidth(st['pen']['width']);stroker.setCapStyle(Qt.PenCapStyle(st['pen']['cap']));stroker.setJoinStyle(Qt.PenJoinStyle(st['pen']['join']));stroker.setMiterLimit(st['pen']['miter']);stroker.setDashPattern(st['pen']['dash_pattern']);stroker.setDashOffset(st['pen']['dash_offset'])
 outline=stroker.createStroke(path)
 size=st['transparent']['size'];image=QImage(*size,QImage.Format_ARGB32_Premultiplied);image.fill(QColor(0,0,0,0));image.setDotsPerMeterX(st['device']['dpm'][0]);image.setDotsPerMeterY(st['device']['dpm'][1]);image.setDevicePixelRatio(st['device']['pixel_ratio'])
-paint=QPainter(image);paint.setRenderHints(paint.renderHints(),False);paint.setRenderHints(QPainter.RenderHint(st['hints']));paint.setWorldTransform(QTransform(*st['world_transform']));paint.setPen(Qt.NoPen);paint.setBrush(QColor(*st['pen']['rgba']));paint.drawPath(outline);paint.end()
+paint=QPainter(image);paint.setRenderHints(paint.renderHints(),False);paint.setRenderHints(QPainter.RenderHint(st['hints']));paint.setWorldTransform(QTransform(*st['world_transform']));paint.setPen(Qt.NoPen);paint.setBrush(QColor(*st['pen']['rgba']));t=paint.combinedTransform();assert [t.m11(),t.m12(),t.m13(),t.m21(),t.m22(),t.m23(),t.m31(),t.m32(),t.m33()]==st['combined_transform'] and paint.renderHints().value==st['hints'];paint.drawPath(outline);paint.end()
 def raw(image):
  image=image.convertToFormat(QImage.Format_RGBA8888);data=bytes(image.constBits());return b''.join(data[j*image.bytesPerLine():j*image.bytesPerLine()+image.width()*4]for j in range(image.height()))
 actual=(source/st['transparent']['rgba']).read_bytes();assert hashlib.sha256(actual).hexdigest()==st['transparent']['rgba_sha256']

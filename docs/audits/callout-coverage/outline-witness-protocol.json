@@ -2,7 +2,7 @@
   "case": "llamadas-default",
   "producer": {
     "path": "scripts/reference-callout-outline.py",
-    "sha256": "9eb4f1eaad06ffea23ec3c23b9a70919026cf1f5e430d4d3fa89ba8851ea52ea",
+    "sha256": "dc84d18186353c8705b14a2ce996c44f56d0b089034f85ad3cdb4aba7ffd04cf",
     "argv": [
       "EXISTING_SOURCE_DIAGNOSTIC",
       "OUTPUT"
@@ -20,6 +20,7 @@
     "Auth frozen actualsource maskSHA",
     "Exact fullRGBA equality determines whether alternate outline is usable",
     "Original Qtpin/version required",
-    "No numeric/pixel constants fitted to residual"
+    "No numeric/pixel constants fitted to residual",
+    "Explicit absolute radii, finite positive geometry, DPR1 affine matrix, actual reconstructed combinedTransform/renderHints equality"
   ]
 }
