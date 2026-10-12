@@ -1,0 +1,1584 @@
+{
+  "schema": 1,
+  "archive_sha256": "c93afc0be092ea3442890365aa1039c86ba4527794f2d8a92b69eed34a793122",
+  "members": {
+    "first-native/all-field-differences.json": {
+      "sha256": "db734240ccc92af2600e3f6ddf572021b9cd293c95a10f446631089fb0d0ca1c",
+      "size": 54347640,
+      "producer_path": "/tmp/ingetrazo-skp-native-r1/all-field-differences.json"
+    },
+    "first-native/binary.sha256": {
+      "sha256": "0b2958a14ed15747d419bdf414d3edc1846df2ecd6f7b89dd057afa9429a8644",
+      "size": 64,
+      "producer_path": "/tmp/ingetrazo-skp-native-r1/binary.sha256"
+    },
+    "first-native/checker.log": {
+      "sha256": "aa77c77938eee4ff9b76aac052262eb070ea5b22a221da6bfe1691f3a39c30b2",
+      "size": 78,
+      "producer_path": "/tmp/ingetrazo-skp-native-r1/checker.log"
+    },
+    "first-native/comparison.json": {
+      "sha256": "6ba248cbe7c7c283559c6bf3dbd186e9b450aff4a8457e2739d9bc7d9f2be7af",
+      "size": 84,
+      "producer_path": "/tmp/ingetrazo-skp-native-r1/comparison.json"
+    },
+    "first-native/full-diagnostic.json": {
+      "sha256": "1189ce8d60935285642bce60dc8b7d90aa9980c7a8e2cc859f4bf4648f68067f",
+      "size": 45202141,
+      "producer_path": "/tmp/ingetrazo-skp-native-r1/full-diagnostic.json"
+    },
+    "first-native/independent-full-residual-inventory.json": {
+      "sha256": "98e1ecc97e04140274c92a556aefa518fbb9e38ad70d2c51fe32af361249f2f3",
+      "size": 36730,
+      "producer_path": "/tmp/ingetrazo-skp-native-r1/independent-full-residual-inventory.json"
+    },
+    "first-native/independent-style-directed-objects.json": {
+      "sha256": "02248951f0905a7c6b4c1c79dab39abfa1496c6d0f14a5cfe4b7a9b36c66d92d",
+      "size": 35051,
+      "producer_path": "/tmp/ingetrazo-skp-native-r1/independent-style-directed-objects.json"
+    },
+    "first-native/native/image-leaf-saved.igz": {
+      "sha256": "447be6ace5445ec9e74a4e8479c496a7bb85584b83c47e3a43e51cb62f4d6886",
+      "size": 1785,
+      "producer_path": "/tmp/ingetrazo-skp-native-r1/native/image-leaf-saved.igz"
+    },
+    "first-native/native/leader-metadata-saved.igz": {
+      "sha256": "9e2d2c15bb0302bb166ea5c9e45b71defa6be9ec71e1fa87db8e34f404753d3d",
+      "size": 6268,
+      "producer_path": "/tmp/ingetrazo-skp-native-r1/native/leader-metadata-saved.igz"
+    },
+    "first-native/native/legacy-root-saved.igz": {
+      "sha256": "3cd6f51549fa7e6b881c6386d650633808c550ec0aa47a0a9a5f084f48d17248",
+      "size": 5863,
+      "producer_path": "/tmp/ingetrazo-skp-native-r1/native/legacy-root-saved.igz"
+    },
+    "first-native/native/material-collision-saved.igz": {
+      "sha256": "ed16aa500b124c0287846ae2bc0e3aae848bfaf70f30b35441cd193d5825af44",
+      "size": 8886,
+      "producer_path": "/tmp/ingetrazo-skp-native-r1/native/material-collision-saved.igz"
+    },
+    "first-native/native/modern-empty-saved.igz": {
+      "sha256": "ae1b89ba3883d7defe4bc26a2ffa79bf40042554fe8f0e0b7d2f37cf73bda64e",
+      "size": 4679,
+      "producer_path": "/tmp/ingetrazo-skp-native-r1/native/modern-empty-saved.igz"
+    },
+    "first-native/native/modern-layer-preserve-saved.igz": {
+      "sha256": "f0b82a3e785eb70d2cfc6d11ee569b5f8242855d4ce31cb1feac8d8562a461f9",
+      "size": 8713,
+      "producer_path": "/tmp/ingetrazo-skp-native-r1/native/modern-layer-preserve-saved.igz"
+    },
+    "first-native/native/native-skp.json": {
+      "sha256": "305ffe708eff96eab0a30149568f1de1345545216038aa17bcd34a4e58880312",
+      "size": 165516160,
+      "producer_path": "/tmp/ingetrazo-skp-native-r1/native/native-skp.json"
+    },
+    "first-native/native/native-skp.partial.json": {
+      "sha256": "de271580bfbe567b490afb303259d94a5aa0f0e6540c79bfc073a69fe5de069b",
+      "size": 165515831,
+      "producer_path": "/tmp/ingetrazo-skp-native-r1/native/native-skp.partial.json"
+    },
+    "first-native/native/nested-root-ownership-saved.igz": {
+      "sha256": "05cbd0f4e07874c473671c3bd63e992ee2b346f5ebb6b9cc6c230855e64e3801",
+      "size": 116018,
+      "producer_path": "/tmp/ingetrazo-skp-native-r1/native/nested-root-ownership-saved.igz"
+    },
+    "first-native/native/reopens-skp.json": {
+      "sha256": "def7813145e863ed0b573e7f33f5ad52069c837f4c6b364a2e3cd9bb0ded59e2",
+      "size": 100583764,
+      "producer_path": "/tmp/ingetrazo-skp-native-r1/native/reopens-skp.json"
+    },
+    "first-native/native/repeat-import-saved.igz": {
+      "sha256": "a6e995cb35a1c29fd862cfe887221dc9a003541e4fccb8b59ef056f8ffabeaff",
+      "size": 13166,
+      "producer_path": "/tmp/ingetrazo-skp-native-r1/native/repeat-import-saved.igz"
+    },
+    "first-native/native/saved-scenes-saved.igz": {
+      "sha256": "cc6a04283c885d57c673d91644838856defb9e2fed0c43aba9b66bc4f52f5e62",
+      "size": 9412,
+      "producer_path": "/tmp/ingetrazo-skp-native-r1/native/saved-scenes-saved.igz"
+    },
+    "first-native/native/shared-root-saved.igz": {
+      "sha256": "a54a7206101d9394aa9c763b634187f455bad963e61f0f2bdd0dff00986c3834",
+      "size": 108372,
+      "producer_path": "/tmp/ingetrazo-skp-native-r1/native/shared-root-saved.igz"
+    },
+    "first-native/native/style-adopt-saved.igz": {
+      "sha256": "d1c546a9f82e7b7ae8597d51010470420474ced8fe61d7403e0167ca8987dc69",
+      "size": 6814347,
+      "producer_path": "/tmp/ingetrazo-skp-native-r1/native/style-adopt-saved.igz"
+    },
+    "first-native/native/style-existing-saved.igz": {
+      "sha256": "39ff1e6c94465dabe68ab687ef95ccdada871dd7a8642298095e0c77d30055f0",
+      "size": 6813571,
+      "producer_path": "/tmp/ingetrazo-skp-native-r1/native/style-existing-saved.igz"
+    },
+    "first-native/native.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0,
+      "producer_path": "/tmp/ingetrazo-skp-native-r1/native.log"
+    },
+    "first-native/reader.log": {
+      "sha256": "8f667c81225db32151ab33ef2c6901d2247b901cac84d1783dd6fbfdb53cd0db",
+      "size": 25,
+      "producer_path": "/tmp/ingetrazo-skp-native-r1/reader.log"
+    },
+    "first-native/receipt.json": {
+      "sha256": "c321426e271c1f1ea0a7f7f6e992e3f59ccd559e10c586d66d767e4e9440c7ec",
+      "size": 1016,
+      "producer_path": "/tmp/ingetrazo-skp-native-r1/receipt.json"
+    },
+    "first-native/style-directed-face-diagnostic.json": {
+      "sha256": "c4048957be9fbe918615d73d814294b8d50c4ff15a3d39ef33a01edb9021453f",
+      "size": 32509,
+      "producer_path": "/tmp/ingetrazo-skp-native-r1/style-directed-face-diagnostic.json"
+    },
+    "first-build/build.log": {
+      "sha256": "f657c8c4219c2d3d88e2a944648eefda5962a507f2fdfd206e0b5565d0693900",
+      "size": 29080,
+      "producer_path": "/tmp/ingetrazo-skp-build-r2/build.log"
+    },
+    "first-build/receipt.json": {
+      "sha256": "0b536934e9e010bf7353ce96f91cace08c15f0141c3c4f2f114f5c554d0dcae7",
+      "size": 393,
+      "producer_path": "/tmp/ingetrazo-skp-build-r2/receipt.json"
+    },
+    "affected-imports/image/checker.log": {
+      "sha256": "4e7afd6a27b32f587a21542e565880243d42162454b2fccea691ab3295c7b4be",
+      "size": 1000,
+      "producer_path": "/tmp/ingetrazo-skp-affected-imports-r1/image/checker.log"
+    },
+    "affected-imports/image/comparison.json": {
+      "sha256": "34cd4a76ab54b11a14e7dc8b734f5d7683ebe29cb3760e0a323dad46e122cb50",
+      "size": 1064,
+      "producer_path": "/tmp/ingetrazo-skp-affected-imports-r1/image/comparison.json"
+    },
+    "affected-imports/image/native/native-image-import.json": {
+      "sha256": "5f72513cdb8ff91ae0e05eb761959c28184b707d042fea7fdc64612342996a1b",
+      "size": 909249,
+      "producer_path": "/tmp/ingetrazo-skp-affected-imports-r1/image/native/native-image-import.json"
+    },
+    "affected-imports/image/native/reopens-image-import.json": {
+      "sha256": "98ca649e457740fa27149efab6f384381fc75bffda18d72ebaebfe7c63e7dd7e",
+      "size": 98003,
+      "producer_path": "/tmp/ingetrazo-skp-affected-imports-r1/image/native/reopens-image-import.json"
+    },
+    "affected-imports/image/native.log": {
+      "sha256": "25ed3934d0a0db6fbbc56aa6853e165c7c1509bd4689404581f634935f29b617",
+      "size": 37,
+      "producer_path": "/tmp/ingetrazo-skp-affected-imports-r1/image/native.log"
+    },
+    "affected-imports/image/reader.log": {
+      "sha256": "47972b843dc76becd74317b12809926ceb3e5e7aebf08afbb9d478e22d954acc",
+      "size": 27,
+      "producer_path": "/tmp/ingetrazo-skp-affected-imports-r1/image/reader.log"
+    },
+    "affected-imports/image/result.json": {
+      "sha256": "eec6f98e5bd61369610a86f3cc6c15cd2b94ca7924b4a95ea8d7fa3fb988cf1c",
+      "size": 1450,
+      "producer_path": "/tmp/ingetrazo-skp-affected-imports-r1/image/result.json"
+    },
+    "affected-imports/image.log": {
+      "sha256": "be8fb9dd3464c18ffeebf67ee0982498f9a05b2da5518d4f6dff1e6d40a60a7f",
+      "size": 1226,
+      "producer_path": "/tmp/ingetrazo-skp-affected-imports-r1/image.log"
+    },
+    "affected-imports/receipt.json": {
+      "sha256": "12d9460a3b279854e851746608572a7f4821a95ef8bd5a8d7fe99c8cffadc049",
+      "size": 782,
+      "producer_path": "/tmp/ingetrazo-skp-affected-imports-r1/receipt.json"
+    },
+    "affected-imports/stl/checker.log": {
+      "sha256": "7b5b4ff0bad37a9a9449d634f2ea737773a15bd118dd4aa46ab419b5f9b95c57",
+      "size": 284,
+      "producer_path": "/tmp/ingetrazo-skp-affected-imports-r1/stl/checker.log"
+    },
+    "affected-imports/stl/comparison.json": {
+      "sha256": "b9490a8e5f8f9149bd384330b261b78800d1b93c731e960cae24d54feb4820e1",
+      "size": 300,
+      "producer_path": "/tmp/ingetrazo-skp-affected-imports-r1/stl/comparison.json"
+    },
+    "affected-imports/stl/native/native-stl.json": {
+      "sha256": "56f7897325babf94305da625889434d60a86e52137aade191d6c95d5e5f657fc",
+      "size": 3090801,
+      "producer_path": "/tmp/ingetrazo-skp-affected-imports-r1/stl/native/native-stl.json"
+    },
+    "affected-imports/stl/native/reopens-stl.json": {
+      "sha256": "00bfb32cb15e90761410269dcf0b83fedb85d674d4a9dea4469073d293922f57",
+      "size": 2646423,
+      "producer_path": "/tmp/ingetrazo-skp-affected-imports-r1/stl/native/reopens-stl.json"
+    },
+    "affected-imports/stl/result.json": {
+      "sha256": "6e684a33eeee6b9f8753ca08208fd6a648802799d025429b7691550f4df88dc6",
+      "size": 1433,
+      "producer_path": "/tmp/ingetrazo-skp-affected-imports-r1/stl/result.json"
+    },
+    "affected-imports/stl.log": {
+      "sha256": "56e2df073019db2001ca395d6ab367b640f84faac88178735ca676c2d0cabd5b",
+      "size": 1209,
+      "producer_path": "/tmp/ingetrazo-skp-affected-imports-r1/stl.log"
+    },
+    "loader-checks/receipt-actual.json": {
+      "sha256": "e46d89cd7c2fb06605b74b2e149730f006f54e5483256f542ffc330538d0b06b",
+      "size": 269,
+      "producer_path": "/tmp/ingetrazo-skp-loader-checks/receipt-actual.json"
+    },
+    "loader-checks/receipt.json": {
+      "sha256": "35072d30d7b2076283de153c3492f5654ea75efe7ad966c34487467f08eb773a",
+      "size": 255,
+      "producer_path": "/tmp/ingetrazo-skp-loader-checks/receipt.json"
+    },
+    "loader-checks/skp-actual.log": {
+      "sha256": "3d050c7728d5d08ecc472582a047857c21e80537c0297a74cdef9ec1fefc589a",
+      "size": 14828,
+      "producer_path": "/tmp/ingetrazo-skp-loader-checks/skp-actual.log"
+    },
+    "loader-checks/skp.log": {
+      "sha256": "ca371dda643e8a6d8b1dbac63f42718f6333b92b93a5d3488d3fb0b5018bc58f",
+      "size": 14544,
+      "producer_path": "/tmp/ingetrazo-skp-loader-checks/skp.log"
+    },
+    "provenance/packaging-time-root-helper.py": {
+      "sha256": "85b9644d892428353b55a9762fb156ced6de75726e6f7a248419f9ebc56bb6ea",
+      "size": 1288,
+      "producer_path": "/tmp/ingetrazo-run-skp-batch.py",
+      "binding_scope": "Packaging-time bytes only; no invented historical Git binding"
+    },
+    "second-native/all-field-differences.json": {
+      "sha256": "04fbe0a07237a6f58834f41fdf919a0bcf3619723c00bcde34f112a11d1df094",
+      "size": 8313,
+      "producer_path": "/tmp/ingetrazo-skp-native-r2/all-field-differences.json"
+    },
+    "second-native/binary.sha256": {
+      "sha256": "c92d7caced0e4ef494223d78d94e752747401f24da34dc2f33402e1bb36104ec",
+      "size": 64,
+      "producer_path": "/tmp/ingetrazo-skp-native-r2/binary.sha256"
+    },
+    "second-native/checker.log": {
+      "sha256": "38d9cc7f84177128977c16e1c4be3826db86858872a4e5fb7c8f59ad0f679182",
+      "size": 134,
+      "producer_path": "/tmp/ingetrazo-skp-native-r2/checker.log"
+    },
+    "second-native/comparison.json": {
+      "sha256": "13f91b891d9b52993c03a0f9faf54c0b8afe82a93f5e22c479a0558b42e6cb33",
+      "size": 140,
+      "producer_path": "/tmp/ingetrazo-skp-native-r2/comparison.json"
+    },
+    "second-native/full-diagnostic.json": {
+      "sha256": "fefd3766156221a0d0ee51bbe6c77282f354ec7b737e09035e7e836b097db559",
+      "size": 6859,
+      "producer_path": "/tmp/ingetrazo-skp-native-r2/full-diagnostic.json"
+    },
+    "second-native/native/image-leaf-saved.igz": {
+      "sha256": "338cd3cfb4aac9e508a4199ed63136495f89b1a9e4a7d4ca984985fc4bb7afe7",
+      "size": 1788,
+      "producer_path": "/tmp/ingetrazo-skp-native-r2/native/image-leaf-saved.igz"
+    },
+    "second-native/native/leader-metadata-saved.igz": {
+      "sha256": "c38f7f114e71f3a9c5735f0813993d72e65e87a88a43f4b0f20be0498f3c08a4",
+      "size": 6268,
+      "producer_path": "/tmp/ingetrazo-skp-native-r2/native/leader-metadata-saved.igz"
+    },
+    "second-native/native/legacy-root-saved.igz": {
+      "sha256": "1adf02483be712a1a005dfd08c7a4c947d778dd1df34a9d30c79f488fe8e091d",
+      "size": 5863,
+      "producer_path": "/tmp/ingetrazo-skp-native-r2/native/legacy-root-saved.igz"
+    },
+    "second-native/native/material-collision-saved.igz": {
+      "sha256": "b446e7f3bef2ea2e4bad763fa3077e503e1b78145a53bc106e781846b3e201c3",
+      "size": 8886,
+      "producer_path": "/tmp/ingetrazo-skp-native-r2/native/material-collision-saved.igz"
+    },
+    "second-native/native/modern-layer-preserve-saved.igz": {
+      "sha256": "c500e55495c285733b1dd9122d45f9692a28db6aca5cb757df648bc063d23d2f",
+      "size": 8713,
+      "producer_path": "/tmp/ingetrazo-skp-native-r2/native/modern-layer-preserve-saved.igz"
+    },
+    "second-native/native/native-skp.json": {
+      "sha256": "90f76a7faf0c8c23f8ba933131679be72c91639f462b8ec8244a9a36434e8d09",
+      "size": 169132941,
+      "producer_path": "/tmp/ingetrazo-skp-native-r2/native/native-skp.json"
+    },
+    "second-native/native/native-skp.partial.json": {
+      "sha256": "1b8fd60ce88b2c9c8e4424359a800acb9f90b4b32a54926b83998277bd84b5e8",
+      "size": 169132612,
+      "producer_path": "/tmp/ingetrazo-skp-native-r2/native/native-skp.partial.json"
+    },
+    "second-native/native/nested-root-ownership-saved.igz": {
+      "sha256": "f7258f03037ff3bdf17457db7642f675ca7dc558f6b7b0d7b472b45396017be1",
+      "size": 117293,
+      "producer_path": "/tmp/ingetrazo-skp-native-r2/native/nested-root-ownership-saved.igz"
+    },
+    "second-native/native/reopens-skp.json": {
+      "sha256": "57113180826938506f576857f8e334373d1f79dc3a53c8c0abef949130d44e3a",
+      "size": 100586584,
+      "producer_path": "/tmp/ingetrazo-skp-native-r2/native/reopens-skp.json"
+    },
+    "second-native/native/repeat-import-saved.igz": {
+      "sha256": "5caca1e8cdb875101e6cff998fbfc1526136a1f37d414ed7517eced81ec8ff3f",
+      "size": 13166,
+      "producer_path": "/tmp/ingetrazo-skp-native-r2/native/repeat-import-saved.igz"
+    },
+    "second-native/native/saved-scenes-saved.igz": {
+      "sha256": "79d8116103341614122006a07c34ee705bed0aede03c8544ec6a5b3ac0f05198",
+      "size": 9412,
+      "producer_path": "/tmp/ingetrazo-skp-native-r2/native/saved-scenes-saved.igz"
+    },
+    "second-native/native/shared-root-saved.igz": {
+      "sha256": "645ac758550d7c103d1fd3c7cc88aee43e5dbcd4d991b46b94d6e07476fa89fe",
+      "size": 108372,
+      "producer_path": "/tmp/ingetrazo-skp-native-r2/native/shared-root-saved.igz"
+    },
+    "second-native/native/style-adopt-saved.igz": {
+      "sha256": "c0fa9b6ff211124ccc66497743ebdee193bbb817a9eeb696f1d1a84208ad9df3",
+      "size": 6814347,
+      "producer_path": "/tmp/ingetrazo-skp-native-r2/native/style-adopt-saved.igz"
+    },
+    "second-native/native/style-existing-saved.igz": {
+      "sha256": "3fc7d9461fe3559b4d42a372ebda6cc74b5516bb5f3ad18e42e59aea78218e32",
+      "size": 6813571,
+      "producer_path": "/tmp/ingetrazo-skp-native-r2/native/style-existing-saved.igz"
+    },
+    "second-native/receipt.json": {
+      "sha256": "e0ee8e0587f0c0719c28391ad83c7bb4e80fcd313b1d2e75af033678c1595594",
+      "size": 1017,
+      "producer_path": "/tmp/ingetrazo-skp-native-r2/receipt.json"
+    },
+    "second-build/build.log": {
+      "sha256": "a591b4bafdef1874de3a25b01a545c8920b0e63fcd1a3609b2e6d6d77029f6f3",
+      "size": 27879,
+      "producer_path": "/tmp/ingetrazo-skp-build-r3/build.log"
+    },
+    "second-build/receipt.json": {
+      "sha256": "6cc6d8adecb7ca4d417a49bcae869fde6370f14ee40fd0de27aa9a0b3c108402",
+      "size": 267,
+      "producer_path": "/tmp/ingetrazo-skp-build-r3/receipt.json"
+    },
+    "nested-third-native/native/native-skp.json": {
+      "sha256": "faab34887a046b4779ac8915a357566869a39fee43caec4aabad0ed38389b037",
+      "size": 18249611,
+      "producer_path": "/tmp/ingetrazo-skp-native-r3/native/native-skp.json"
+    },
+    "nested-third-native/native/native-skp.partial.json": {
+      "sha256": "3d814c9f263e93589a8b259540455361105cb35b7891d095ee3ac87e576917b9",
+      "size": 18249200,
+      "producer_path": "/tmp/ingetrazo-skp-native-r3/native/native-skp.partial.json"
+    },
+    "nested-third-native/native/nested-root-ownership-saved.igz": {
+      "sha256": "fb077f8311310c8167b8b682b4fb959234887b6443e6c29883a1ae30bde608b2",
+      "size": 117293,
+      "producer_path": "/tmp/ingetrazo-skp-native-r3/native/nested-root-ownership-saved.igz"
+    },
+    "nested-third-native/receipt.json": {
+      "sha256": "5bc4a0a5842fb16d8d309556f92ed6a07a29c43128ab968b0f844ae9dc35b10e",
+      "size": 454,
+      "producer_path": "/tmp/ingetrazo-skp-native-r3/receipt.json"
+    },
+    "third-build/build.log": {
+      "sha256": "f22476af1ca601ccf0df4b6ff79ae51e2b2a8f54b1688b7a96e922280b5ad450",
+      "size": 27879,
+      "producer_path": "/tmp/ingetrazo-skp-build-r4/build.log"
+    },
+    "third-build/receipt.json": {
+      "sha256": "9248ce7434aa4fc28a8b0fd383b69e0dcde9cc9aeec34675e587efba31f65c38",
+      "size": 266,
+      "producer_path": "/tmp/ingetrazo-skp-build-r4/receipt.json"
+    },
+    "combined-reader-checker-timeout/checker-timeout.json": {
+      "sha256": "e021ea8c36ba35c0277cb239bb331d7d1c316abe9c84c389a9508bd6700c3c45",
+      "size": 636,
+      "producer_path": "/tmp/ingetrazo-skp-native-accepted/checker-timeout.json"
+    },
+    "combined-reader-checker-timeout/native-skp.json": {
+      "sha256": "f6668a47422580bec3d36b9708a87e634ab71de9062030fcd8f810734de58982",
+      "size": 169133415,
+      "producer_path": "/tmp/ingetrazo-skp-native-accepted/native-skp.json"
+    },
+    "combined-reader-checker-timeout/receipt.json": {
+      "sha256": "c9eccda838bb2e7bb7de34e911b851151907e760f743b9b03280b33cc0714f1e",
+      "size": 293,
+      "producer_path": "/tmp/ingetrazo-skp-native-accepted/receipt.json"
+    },
+    "combined-reader-checker-timeout/reopens-skp.json": {
+      "sha256": "c23ce9e5f393d1a7307dec23864e285a675230f574f52068ab0ac72953e417c6",
+      "size": 100586644,
+      "producer_path": "/tmp/ingetrazo-skp-native-accepted/reopens-skp.json"
+    },
+    "final-checker/comparison-efficient.json": {
+      "sha256": "86a9909c66265261068ee31319a389031c0cb364915c0629049db1458e3ec7b1",
+      "size": 559,
+      "producer_path": "/tmp/ingetrazo-skp-native-accepted/comparison-efficient.json"
+    },
+    "final-checker/checker-efficient-receipt.json": {
+      "sha256": "d6a89e8ecbae6c8ed624850592a281f5cc749d996aa53f7722ae65899a4f22d8",
+      "size": 494,
+      "producer_path": "/tmp/ingetrazo-skp-native-accepted/checker-efficient-receipt.json"
+    },
+    "final-checker/checker-efficient.log": {
+      "sha256": "6b1040f4b470e7b578505b05cbcf2540d13635148f1768445dc154ba57404619",
+      "size": 441,
+      "producer_path": "/tmp/ingetrazo-skp-native-accepted/checker-efficient.log"
+    },
+    "final-checker/independent-root-fields.json": {
+      "sha256": "bf636d6de17a1eecce18510db6945622b3a6277a5dd858b56e7974b1455be250",
+      "size": 299,
+      "producer_path": "/tmp/ingetrazo-skp-native-accepted/independent-root-fields.json"
+    }
+  },
+  "identical_file_aliases": {
+    "affected-imports/stl/native.log": {
+      "retained_member": "first-native/native.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0,
+      "producer_path": "/tmp/ingetrazo-skp-affected-imports-r1/stl/native.log"
+    },
+    "affected-imports/stl/reader.log": {
+      "retained_member": "affected-imports/image/reader.log",
+      "sha256": "47972b843dc76becd74317b12809926ceb3e5e7aebf08afbb9d478e22d954acc",
+      "size": 27,
+      "producer_path": "/tmp/ingetrazo-skp-affected-imports-r1/stl/reader.log"
+    },
+    "second-native/native/modern-empty-saved.igz": {
+      "retained_member": "first-native/native/modern-empty-saved.igz",
+      "sha256": "ae1b89ba3883d7defe4bc26a2ffa79bf40042554fe8f0e0b7d2f37cf73bda64e",
+      "size": 4679,
+      "producer_path": "/tmp/ingetrazo-skp-native-r2/native/modern-empty-saved.igz"
+    },
+    "second-native/native.log": {
+      "retained_member": "first-native/native.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0,
+      "producer_path": "/tmp/ingetrazo-skp-native-r2/native.log"
+    },
+    "second-native/reader.log": {
+      "retained_member": "first-native/reader.log",
+      "sha256": "8f667c81225db32151ab33ef2c6901d2247b901cac84d1783dd6fbfdb53cd0db",
+      "size": 25,
+      "producer_path": "/tmp/ingetrazo-skp-native-r2/reader.log"
+    },
+    "nested-third-native/native.log": {
+      "retained_member": "first-native/native.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0,
+      "producer_path": "/tmp/ingetrazo-skp-native-r3/native.log"
+    },
+    "combined-reader-checker-timeout/checker.log": {
+      "retained_member": "first-native/native.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0,
+      "producer_path": "/tmp/ingetrazo-skp-native-accepted/checker.log"
+    },
+    "combined-reader-checker-timeout/image-leaf-saved.igz": {
+      "retained_member": "second-native/native/image-leaf-saved.igz",
+      "sha256": "338cd3cfb4aac9e508a4199ed63136495f89b1a9e4a7d4ca984985fc4bb7afe7",
+      "size": 1788,
+      "producer_path": "/tmp/ingetrazo-skp-native-accepted/image-leaf-saved.igz"
+    },
+    "combined-reader-checker-timeout/leader-metadata-saved.igz": {
+      "retained_member": "second-native/native/leader-metadata-saved.igz",
+      "sha256": "c38f7f114e71f3a9c5735f0813993d72e65e87a88a43f4b0f20be0498f3c08a4",
+      "size": 6268,
+      "producer_path": "/tmp/ingetrazo-skp-native-accepted/leader-metadata-saved.igz"
+    },
+    "combined-reader-checker-timeout/legacy-root-saved.igz": {
+      "retained_member": "second-native/native/legacy-root-saved.igz",
+      "sha256": "1adf02483be712a1a005dfd08c7a4c947d778dd1df34a9d30c79f488fe8e091d",
+      "size": 5863,
+      "producer_path": "/tmp/ingetrazo-skp-native-accepted/legacy-root-saved.igz"
+    },
+    "combined-reader-checker-timeout/material-collision-saved.igz": {
+      "retained_member": "second-native/native/material-collision-saved.igz",
+      "sha256": "b446e7f3bef2ea2e4bad763fa3077e503e1b78145a53bc106e781846b3e201c3",
+      "size": 8886,
+      "producer_path": "/tmp/ingetrazo-skp-native-accepted/material-collision-saved.igz"
+    },
+    "combined-reader-checker-timeout/modern-empty-saved.igz": {
+      "retained_member": "first-native/native/modern-empty-saved.igz",
+      "sha256": "ae1b89ba3883d7defe4bc26a2ffa79bf40042554fe8f0e0b7d2f37cf73bda64e",
+      "size": 4679,
+      "producer_path": "/tmp/ingetrazo-skp-native-accepted/modern-empty-saved.igz"
+    },
+    "combined-reader-checker-timeout/modern-layer-preserve-saved.igz": {
+      "retained_member": "second-native/native/modern-layer-preserve-saved.igz",
+      "sha256": "c500e55495c285733b1dd9122d45f9692a28db6aca5cb757df648bc063d23d2f",
+      "size": 8713,
+      "producer_path": "/tmp/ingetrazo-skp-native-accepted/modern-layer-preserve-saved.igz"
+    },
+    "combined-reader-checker-timeout/nested-root-ownership-saved.igz": {
+      "retained_member": "nested-third-native/native/nested-root-ownership-saved.igz",
+      "sha256": "fb077f8311310c8167b8b682b4fb959234887b6443e6c29883a1ae30bde608b2",
+      "size": 117293,
+      "producer_path": "/tmp/ingetrazo-skp-native-accepted/nested-root-ownership-saved.igz"
+    },
+    "combined-reader-checker-timeout/reader.log": {
+      "retained_member": "first-native/reader.log",
+      "sha256": "8f667c81225db32151ab33ef2c6901d2247b901cac84d1783dd6fbfdb53cd0db",
+      "size": 25,
+      "producer_path": "/tmp/ingetrazo-skp-native-accepted/reader.log"
+    },
+    "combined-reader-checker-timeout/repeat-import-saved.igz": {
+      "retained_member": "second-native/native/repeat-import-saved.igz",
+      "sha256": "5caca1e8cdb875101e6cff998fbfc1526136a1f37d414ed7517eced81ec8ff3f",
+      "size": 13166,
+      "producer_path": "/tmp/ingetrazo-skp-native-accepted/repeat-import-saved.igz"
+    },
+    "combined-reader-checker-timeout/saved-scenes-saved.igz": {
+      "retained_member": "second-native/native/saved-scenes-saved.igz",
+      "sha256": "79d8116103341614122006a07c34ee705bed0aede03c8544ec6a5b3ac0f05198",
+      "size": 9412,
+      "producer_path": "/tmp/ingetrazo-skp-native-accepted/saved-scenes-saved.igz"
+    },
+    "combined-reader-checker-timeout/shared-root-saved.igz": {
+      "retained_member": "second-native/native/shared-root-saved.igz",
+      "sha256": "645ac758550d7c103d1fd3c7cc88aee43e5dbcd4d991b46b94d6e07476fa89fe",
+      "size": 108372,
+      "producer_path": "/tmp/ingetrazo-skp-native-accepted/shared-root-saved.igz"
+    },
+    "combined-reader-checker-timeout/style-adopt-saved.igz": {
+      "retained_member": "second-native/native/style-adopt-saved.igz",
+      "sha256": "c0fa9b6ff211124ccc66497743ebdee193bbb817a9eeb696f1d1a84208ad9df3",
+      "size": 6814347,
+      "producer_path": "/tmp/ingetrazo-skp-native-accepted/style-adopt-saved.igz"
+    },
+    "combined-reader-checker-timeout/style-existing-saved.igz": {
+      "retained_member": "second-native/native/style-existing-saved.igz",
+      "sha256": "3fc7d9461fe3559b4d42a372ebda6cc74b5516bb5f3ad18e42e59aea78218e32",
+      "size": 6813571,
+      "producer_path": "/tmp/ingetrazo-skp-native-accepted/style-existing-saved.igz"
+    }
+  },
+  "source_archive": "docs/audits/skp-import/source-records.zip",
+  "source_archive_sha256": "4697b89a91958b4d43475b192442cf31f68e4973ad1df51a2d7b54f84829378b",
+  "source_manifest_sha256": "ec2e16d50b5e1c2bc81e0a188ddc814fb026bb767deed6d73571fa0ef96cff41",
+  "original_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "parser_commit": "291700bc213655a00461838de71e5f206311e619",
+  "executed_stages": [
+    {
+      "revision": "b0980223a0b0f3acde12f13cffd3d8edb6332f7c",
+      "git_bindings": [
+        {
+          "path": "crates/ingetrazo-formats/src/skp/mod.rs",
+          "commit": "b0980223a0b0f3acde12f13cffd3d8edb6332f7c",
+          "sha256": "356cd925b3f7bc7177c633266c5b5f52d0c2bd93bfe6f8ae5ebb7126e529c6bc"
+        },
+        {
+          "path": "crates/ingetrazo-formats/src/skp/app_import.rs",
+          "commit": "b0980223a0b0f3acde12f13cffd3d8edb6332f7c",
+          "sha256": "890676a89f22c1ca52e333cccda695b730529be0f6b144b19ab65aab19c2ba7b"
+        },
+        {
+          "path": "crates/ingetrazo-formats/src/skp/reader.rs",
+          "commit": "b0980223a0b0f3acde12f13cffd3d8edb6332f7c",
+          "sha256": "bdd295ebfe83061b08eb33029bddc45d746054ed27639a658b3be1ad2063fa65"
+        },
+        {
+          "path": "crates/ingetrazo-formats/src/skp/placements.rs",
+          "commit": "b0980223a0b0f3acde12f13cffd3d8edb6332f7c",
+          "sha256": "787346ba0335d4cce6c5604ec913281e03f61f6bccf87d99a6b7f34fecc007e7"
+        },
+        {
+          "path": "crates/ingetrazo-formats/src/skp/textures.rs",
+          "commit": "b0980223a0b0f3acde12f13cffd3d8edb6332f7c",
+          "sha256": "40411c3fe1b3e82f651bc3d9854b3e412062c6068ec0d87b5a0bf98fd07670a3"
+        },
+        {
+          "path": "crates/ingetrazo-formats/src/skp/legacy.rs",
+          "commit": "b0980223a0b0f3acde12f13cffd3d8edb6332f7c",
+          "sha256": "b92891d3bc004ed6289abcf6627cdeb66c489339a37a183c6602941d9ae87fb2"
+        },
+        {
+          "path": "crates/ingetrazo-formats/src/skp/reader/scenes.rs",
+          "commit": "b0980223a0b0f3acde12f13cffd3d8edb6332f7c",
+          "sha256": "20ff52b77c6fdf2e40479db6f808b828108267b246009f500456c811b6dd76f7"
+        },
+        {
+          "path": "crates/ingetrazo-formats/src/skp/reader/annotations.rs",
+          "commit": "b0980223a0b0f3acde12f13cffd3d8edb6332f7c",
+          "sha256": "54a0c7e825153f53de136e5365ddeeb2d2b174e6e9ccbc2ec7539f00cb59a70e"
+        },
+        {
+          "path": "crates/ingetrazo-formats/src/skp/legacy/records.rs",
+          "commit": "b0980223a0b0f3acde12f13cffd3d8edb6332f7c",
+          "sha256": "268ff652309a2485e046906b629a7325811372e6ac244704837360cf7c39447f"
+        },
+        {
+          "path": "crates/ingetrazo-gui/examples/skp_import_workflows.rs",
+          "commit": "b0980223a0b0f3acde12f13cffd3d8edb6332f7c",
+          "sha256": "ad5b02c40c5d5a8e94f1dc686940f8049b969489d8f5ef294c1df8f044a87cca"
+        },
+        {
+          "path": "crates/ingetrazo-gui/src/skp_import.rs",
+          "commit": "b0980223a0b0f3acde12f13cffd3d8edb6332f7c",
+          "sha256": "1bffea34fd3fa24a655a9a0918038ff4f37363183729439745363b51d381dcd6"
+        },
+        {
+          "path": "crates/ingetrazo-gui/src/component_edit.rs",
+          "commit": "b0980223a0b0f3acde12f13cffd3d8edb6332f7c",
+          "sha256": "713e6b7125e1c8d94697bc6f5d59ce1caf6d0bd671c1e49b6aa895795089d255"
+        },
+        {
+          "path": "crates/ingetrazo-gui/src/app.rs",
+          "commit": "b0980223a0b0f3acde12f13cffd3d8edb6332f7c",
+          "sha256": "0d3a7f030ea7c1d6acbc0ed07d3bafbc70e80d2c865869aeed5bbe492fc29d4c"
+        },
+        {
+          "path": "crates/ingetrazo-gui/src/lib.rs",
+          "commit": "b0980223a0b0f3acde12f13cffd3d8edb6332f7c",
+          "sha256": "40256819553c084cb92250366c89ec961b5b784c362d886790c189ab16193820"
+        },
+        {
+          "path": "crates/ingetrazo-gui/src/menu.rs",
+          "commit": "b0980223a0b0f3acde12f13cffd3d8edb6332f7c",
+          "sha256": "ad2921a1618961cb6c0854a655da4319964088127118c49117cb175eaa664096"
+        },
+        {
+          "path": "crates/ingetrazo-core/src/scene.rs",
+          "commit": "b0980223a0b0f3acde12f13cffd3d8edb6332f7c",
+          "sha256": "e21256efb9b10c63b5573432b4b04764d68ce9ed38bb2d74ab22d1b34f96f537"
+        },
+        {
+          "path": "crates/ingetrazo-core/src/groups.rs",
+          "commit": "b0980223a0b0f3acde12f13cffd3d8edb6332f7c",
+          "sha256": "36a6e430aad63245f417346d80479ce61a7e3e2bc7e564fdfc01c5c3c5ec5c4c"
+        },
+        {
+          "path": "crates/ingetrazo-core/src/mesh.rs",
+          "commit": "b0980223a0b0f3acde12f13cffd3d8edb6332f7c",
+          "sha256": "e4ea417692faf7713ecb066c1606c5125e22f9014cf9a9ea3aa7860fd29fbce0"
+        },
+        {
+          "path": "crates/ingetrazo-core/src/change_axes.rs",
+          "commit": "b0980223a0b0f3acde12f13cffd3d8edb6332f7c",
+          "sha256": "bbe0dba983e0a5eb8f08eab24aaa10156728e4881b80046d6a35181deac0ee40"
+        },
+        {
+          "path": "scripts/check-skp-import.py",
+          "commit": "b0980223a0b0f3acde12f13cffd3d8edb6332f7c",
+          "sha256": "a25916aa6622535773e20402492e8fda7fa8b1f333ec379eeb33c85b06bc7e56"
+        },
+        {
+          "path": "scripts/reference-skp-import-reopens.py",
+          "commit": "b0980223a0b0f3acde12f13cffd3d8edb6332f7c",
+          "sha256": "e16cae887a988a5128574153249d3e7eeda9887d49da824aa5d42c388f7ec469"
+        },
+        {
+          "path": "scripts/skp_import_observations.py",
+          "commit": "b0980223a0b0f3acde12f13cffd3d8edb6332f7c",
+          "sha256": "640a577df9fd21cf7f590f61737df26076ad53702b65af7ca30fe542952a06ac"
+        },
+        {
+          "path": "scripts/exchange_import_observations.py",
+          "commit": "b0980223a0b0f3acde12f13cffd3d8edb6332f7c",
+          "sha256": "48c12bffd82e9c431ce8784174112a78c7ab09de529fabc1e5f0f8445bf94142"
+        }
+      ]
+    },
+    {
+      "revision": "ee6187929332c416af569a541b2e258a90601d2b",
+      "git_bindings": [
+        {
+          "path": "crates/ingetrazo-formats/src/skp/mod.rs",
+          "commit": "ee6187929332c416af569a541b2e258a90601d2b",
+          "sha256": "356cd925b3f7bc7177c633266c5b5f52d0c2bd93bfe6f8ae5ebb7126e529c6bc"
+        },
+        {
+          "path": "crates/ingetrazo-formats/src/skp/app_import.rs",
+          "commit": "ee6187929332c416af569a541b2e258a90601d2b",
+          "sha256": "890676a89f22c1ca52e333cccda695b730529be0f6b144b19ab65aab19c2ba7b"
+        },
+        {
+          "path": "crates/ingetrazo-formats/src/skp/reader.rs",
+          "commit": "ee6187929332c416af569a541b2e258a90601d2b",
+          "sha256": "bdd295ebfe83061b08eb33029bddc45d746054ed27639a658b3be1ad2063fa65"
+        },
+        {
+          "path": "crates/ingetrazo-formats/src/skp/placements.rs",
+          "commit": "ee6187929332c416af569a541b2e258a90601d2b",
+          "sha256": "787346ba0335d4cce6c5604ec913281e03f61f6bccf87d99a6b7f34fecc007e7"
+        },
+        {
+          "path": "crates/ingetrazo-formats/src/skp/textures.rs",
+          "commit": "ee6187929332c416af569a541b2e258a90601d2b",
+          "sha256": "40411c3fe1b3e82f651bc3d9854b3e412062c6068ec0d87b5a0bf98fd07670a3"
+        },
+        {
+          "path": "crates/ingetrazo-formats/src/skp/legacy.rs",
+          "commit": "ee6187929332c416af569a541b2e258a90601d2b",
+          "sha256": "b92891d3bc004ed6289abcf6627cdeb66c489339a37a183c6602941d9ae87fb2"
+        },
+        {
+          "path": "crates/ingetrazo-formats/src/skp/reader/scenes.rs",
+          "commit": "ee6187929332c416af569a541b2e258a90601d2b",
+          "sha256": "20ff52b77c6fdf2e40479db6f808b828108267b246009f500456c811b6dd76f7"
+        },
+        {
+          "path": "crates/ingetrazo-formats/src/skp/reader/annotations.rs",
+          "commit": "ee6187929332c416af569a541b2e258a90601d2b",
+          "sha256": "54a0c7e825153f53de136e5365ddeeb2d2b174e6e9ccbc2ec7539f00cb59a70e"
+        },
+        {
+          "path": "crates/ingetrazo-formats/src/skp/legacy/records.rs",
+          "commit": "ee6187929332c416af569a541b2e258a90601d2b",
+          "sha256": "268ff652309a2485e046906b629a7325811372e6ac244704837360cf7c39447f"
+        },
+        {
+          "path": "crates/ingetrazo-gui/examples/skp_import_workflows.rs",
+          "commit": "ee6187929332c416af569a541b2e258a90601d2b",
+          "sha256": "60962a19c2f12e387cf0d4dfa9bb2f0d7ac663d8780afdd2ff45955a38e30c92"
+        },
+        {
+          "path": "crates/ingetrazo-gui/src/skp_import.rs",
+          "commit": "ee6187929332c416af569a541b2e258a90601d2b",
+          "sha256": "1bffea34fd3fa24a655a9a0918038ff4f37363183729439745363b51d381dcd6"
+        },
+        {
+          "path": "crates/ingetrazo-gui/src/component_edit.rs",
+          "commit": "ee6187929332c416af569a541b2e258a90601d2b",
+          "sha256": "713e6b7125e1c8d94697bc6f5d59ce1caf6d0bd671c1e49b6aa895795089d255"
+        },
+        {
+          "path": "crates/ingetrazo-gui/src/app.rs",
+          "commit": "ee6187929332c416af569a541b2e258a90601d2b",
+          "sha256": "0d3a7f030ea7c1d6acbc0ed07d3bafbc70e80d2c865869aeed5bbe492fc29d4c"
+        },
+        {
+          "path": "crates/ingetrazo-gui/src/lib.rs",
+          "commit": "ee6187929332c416af569a541b2e258a90601d2b",
+          "sha256": "40256819553c084cb92250366c89ec961b5b784c362d886790c189ab16193820"
+        },
+        {
+          "path": "crates/ingetrazo-gui/src/menu.rs",
+          "commit": "ee6187929332c416af569a541b2e258a90601d2b",
+          "sha256": "ad2921a1618961cb6c0854a655da4319964088127118c49117cb175eaa664096"
+        },
+        {
+          "path": "crates/ingetrazo-core/src/scene.rs",
+          "commit": "ee6187929332c416af569a541b2e258a90601d2b",
+          "sha256": "e21256efb9b10c63b5573432b4b04764d68ce9ed38bb2d74ab22d1b34f96f537"
+        },
+        {
+          "path": "crates/ingetrazo-core/src/groups.rs",
+          "commit": "ee6187929332c416af569a541b2e258a90601d2b",
+          "sha256": "36a6e430aad63245f417346d80479ce61a7e3e2bc7e564fdfc01c5c3c5ec5c4c"
+        },
+        {
+          "path": "crates/ingetrazo-core/src/mesh.rs",
+          "commit": "ee6187929332c416af569a541b2e258a90601d2b",
+          "sha256": "e4ea417692faf7713ecb066c1606c5125e22f9014cf9a9ea3aa7860fd29fbce0"
+        },
+        {
+          "path": "crates/ingetrazo-core/src/change_axes.rs",
+          "commit": "ee6187929332c416af569a541b2e258a90601d2b",
+          "sha256": "bbe0dba983e0a5eb8f08eab24aaa10156728e4881b80046d6a35181deac0ee40"
+        },
+        {
+          "path": "scripts/check-skp-import.py",
+          "commit": "ee6187929332c416af569a541b2e258a90601d2b",
+          "sha256": "a25916aa6622535773e20402492e8fda7fa8b1f333ec379eeb33c85b06bc7e56"
+        },
+        {
+          "path": "scripts/reference-skp-import-reopens.py",
+          "commit": "ee6187929332c416af569a541b2e258a90601d2b",
+          "sha256": "e16cae887a988a5128574153249d3e7eeda9887d49da824aa5d42c388f7ec469"
+        },
+        {
+          "path": "scripts/skp_import_observations.py",
+          "commit": "ee6187929332c416af569a541b2e258a90601d2b",
+          "sha256": "640a577df9fd21cf7f590f61737df26076ad53702b65af7ca30fe542952a06ac"
+        },
+        {
+          "path": "scripts/exchange_import_observations.py",
+          "commit": "ee6187929332c416af569a541b2e258a90601d2b",
+          "sha256": "48c12bffd82e9c431ce8784174112a78c7ab09de529fabc1e5f0f8445bf94142"
+        }
+      ]
+    },
+    {
+      "revision": "c356b1029b6072b7d2387e98a9047b362508acee",
+      "git_bindings": [
+        {
+          "path": "crates/ingetrazo-formats/src/skp/mod.rs",
+          "commit": "c356b1029b6072b7d2387e98a9047b362508acee",
+          "sha256": "356cd925b3f7bc7177c633266c5b5f52d0c2bd93bfe6f8ae5ebb7126e529c6bc"
+        },
+        {
+          "path": "crates/ingetrazo-formats/src/skp/app_import.rs",
+          "commit": "c356b1029b6072b7d2387e98a9047b362508acee",
+          "sha256": "890676a89f22c1ca52e333cccda695b730529be0f6b144b19ab65aab19c2ba7b"
+        },
+        {
+          "path": "crates/ingetrazo-formats/src/skp/reader.rs",
+          "commit": "c356b1029b6072b7d2387e98a9047b362508acee",
+          "sha256": "bdd295ebfe83061b08eb33029bddc45d746054ed27639a658b3be1ad2063fa65"
+        },
+        {
+          "path": "crates/ingetrazo-formats/src/skp/placements.rs",
+          "commit": "c356b1029b6072b7d2387e98a9047b362508acee",
+          "sha256": "787346ba0335d4cce6c5604ec913281e03f61f6bccf87d99a6b7f34fecc007e7"
+        },
+        {
+          "path": "crates/ingetrazo-formats/src/skp/textures.rs",
+          "commit": "c356b1029b6072b7d2387e98a9047b362508acee",
+          "sha256": "40411c3fe1b3e82f651bc3d9854b3e412062c6068ec0d87b5a0bf98fd07670a3"
+        },
+        {
+          "path": "crates/ingetrazo-formats/src/skp/legacy.rs",
+          "commit": "c356b1029b6072b7d2387e98a9047b362508acee",
+          "sha256": "b92891d3bc004ed6289abcf6627cdeb66c489339a37a183c6602941d9ae87fb2"
+        },
+        {
+          "path": "crates/ingetrazo-formats/src/skp/reader/scenes.rs",
+          "commit": "c356b1029b6072b7d2387e98a9047b362508acee",
+          "sha256": "20ff52b77c6fdf2e40479db6f808b828108267b246009f500456c811b6dd76f7"
+        },
+        {
+          "path": "crates/ingetrazo-formats/src/skp/reader/annotations.rs",
+          "commit": "c356b1029b6072b7d2387e98a9047b362508acee",
+          "sha256": "54a0c7e825153f53de136e5365ddeeb2d2b174e6e9ccbc2ec7539f00cb59a70e"
+        },
+        {
+          "path": "crates/ingetrazo-formats/src/skp/legacy/records.rs",
+          "commit": "c356b1029b6072b7d2387e98a9047b362508acee",
+          "sha256": "268ff652309a2485e046906b629a7325811372e6ac244704837360cf7c39447f"
+        },
+        {
+          "path": "crates/ingetrazo-gui/examples/skp_import_workflows.rs",
+          "commit": "c356b1029b6072b7d2387e98a9047b362508acee",
+          "sha256": "9f518970c3775cce057a2fa36330fc88f08adab47cd41c0c760fce7d81d9c153"
+        },
+        {
+          "path": "crates/ingetrazo-gui/src/skp_import.rs",
+          "commit": "c356b1029b6072b7d2387e98a9047b362508acee",
+          "sha256": "a5a4f9c4ce1db7be73710443b55a35f8b671a564b86e503d7b9388bbb34f5a0e"
+        },
+        {
+          "path": "crates/ingetrazo-gui/src/component_edit.rs",
+          "commit": "c356b1029b6072b7d2387e98a9047b362508acee",
+          "sha256": "713e6b7125e1c8d94697bc6f5d59ce1caf6d0bd671c1e49b6aa895795089d255"
+        },
+        {
+          "path": "crates/ingetrazo-gui/src/app.rs",
+          "commit": "c356b1029b6072b7d2387e98a9047b362508acee",
+          "sha256": "0d3a7f030ea7c1d6acbc0ed07d3bafbc70e80d2c865869aeed5bbe492fc29d4c"
+        },
+        {
+          "path": "crates/ingetrazo-gui/src/lib.rs",
+          "commit": "c356b1029b6072b7d2387e98a9047b362508acee",
+          "sha256": "40256819553c084cb92250366c89ec961b5b784c362d886790c189ab16193820"
+        },
+        {
+          "path": "crates/ingetrazo-gui/src/menu.rs",
+          "commit": "c356b1029b6072b7d2387e98a9047b362508acee",
+          "sha256": "ad2921a1618961cb6c0854a655da4319964088127118c49117cb175eaa664096"
+        },
+        {
+          "path": "crates/ingetrazo-core/src/scene.rs",
+          "commit": "c356b1029b6072b7d2387e98a9047b362508acee",
+          "sha256": "e21256efb9b10c63b5573432b4b04764d68ce9ed38bb2d74ab22d1b34f96f537"
+        },
+        {
+          "path": "crates/ingetrazo-core/src/groups.rs",
+          "commit": "c356b1029b6072b7d2387e98a9047b362508acee",
+          "sha256": "36a6e430aad63245f417346d80479ce61a7e3e2bc7e564fdfc01c5c3c5ec5c4c"
+        },
+        {
+          "path": "crates/ingetrazo-core/src/mesh.rs",
+          "commit": "c356b1029b6072b7d2387e98a9047b362508acee",
+          "sha256": "e4ea417692faf7713ecb066c1606c5125e22f9014cf9a9ea3aa7860fd29fbce0"
+        },
+        {
+          "path": "crates/ingetrazo-core/src/change_axes.rs",
+          "commit": "c356b1029b6072b7d2387e98a9047b362508acee",
+          "sha256": "bbe0dba983e0a5eb8f08eab24aaa10156728e4881b80046d6a35181deac0ee40"
+        },
+        {
+          "path": "scripts/check-skp-import.py",
+          "commit": "c356b1029b6072b7d2387e98a9047b362508acee",
+          "sha256": "a25916aa6622535773e20402492e8fda7fa8b1f333ec379eeb33c85b06bc7e56"
+        },
+        {
+          "path": "scripts/reference-skp-import-reopens.py",
+          "commit": "c356b1029b6072b7d2387e98a9047b362508acee",
+          "sha256": "e16cae887a988a5128574153249d3e7eeda9887d49da824aa5d42c388f7ec469"
+        },
+        {
+          "path": "scripts/skp_import_observations.py",
+          "commit": "c356b1029b6072b7d2387e98a9047b362508acee",
+          "sha256": "640a577df9fd21cf7f590f61737df26076ad53702b65af7ca30fe542952a06ac"
+        },
+        {
+          "path": "scripts/exchange_import_observations.py",
+          "commit": "c356b1029b6072b7d2387e98a9047b362508acee",
+          "sha256": "48c12bffd82e9c431ce8784174112a78c7ab09de529fabc1e5f0f8445bf94142"
+        }
+      ]
+    },
+    {
+      "role": "checker-only final",
+      "revision": "f11e5b11cb3163d78a027f564c2d09189eb8e22c",
+      "git_bindings": [
+        {
+          "path": "scripts/check-skp-import.py",
+          "commit": "f11e5b11cb3163d78a027f564c2d09189eb8e22c",
+          "sha256": "3103717c273c772d34b46b34a93edb8226c989b684cc3338a04a161767092233"
+        }
+      ]
+    },
+    {
+      "role": "actual five loader checks and mistaken zero-test filter",
+      "revision": "aaf36b39e634feae7213463b48f90b04873d773b",
+      "git_bindings": [
+        {
+          "path": "crates/ingetrazo-formats/src/skp/mod.rs",
+          "commit": "aaf36b39e634feae7213463b48f90b04873d773b",
+          "sha256": "356cd925b3f7bc7177c633266c5b5f52d0c2bd93bfe6f8ae5ebb7126e529c6bc"
+        },
+        {
+          "path": "crates/ingetrazo-formats/src/skp/app_import.rs",
+          "commit": "aaf36b39e634feae7213463b48f90b04873d773b",
+          "sha256": "890676a89f22c1ca52e333cccda695b730529be0f6b144b19ab65aab19c2ba7b"
+        },
+        {
+          "path": "crates/ingetrazo-formats/src/skp/reader.rs",
+          "commit": "aaf36b39e634feae7213463b48f90b04873d773b",
+          "sha256": "bdd295ebfe83061b08eb33029bddc45d746054ed27639a658b3be1ad2063fa65"
+        },
+        {
+          "path": "crates/ingetrazo-formats/src/skp/placements.rs",
+          "commit": "aaf36b39e634feae7213463b48f90b04873d773b",
+          "sha256": "787346ba0335d4cce6c5604ec913281e03f61f6bccf87d99a6b7f34fecc007e7"
+        },
+        {
+          "path": "crates/ingetrazo-formats/src/skp/textures.rs",
+          "commit": "aaf36b39e634feae7213463b48f90b04873d773b",
+          "sha256": "40411c3fe1b3e82f651bc3d9854b3e412062c6068ec0d87b5a0bf98fd07670a3"
+        },
+        {
+          "path": "crates/ingetrazo-formats/src/skp/legacy.rs",
+          "commit": "aaf36b39e634feae7213463b48f90b04873d773b",
+          "sha256": "b92891d3bc004ed6289abcf6627cdeb66c489339a37a183c6602941d9ae87fb2"
+        },
+        {
+          "path": "crates/ingetrazo-formats/src/skp/reader/scenes.rs",
+          "commit": "aaf36b39e634feae7213463b48f90b04873d773b",
+          "sha256": "20ff52b77c6fdf2e40479db6f808b828108267b246009f500456c811b6dd76f7"
+        },
+        {
+          "path": "crates/ingetrazo-formats/src/skp/reader/annotations.rs",
+          "commit": "aaf36b39e634feae7213463b48f90b04873d773b",
+          "sha256": "54a0c7e825153f53de136e5365ddeeb2d2b174e6e9ccbc2ec7539f00cb59a70e"
+        },
+        {
+          "path": "crates/ingetrazo-formats/src/skp/legacy/records.rs",
+          "commit": "aaf36b39e634feae7213463b48f90b04873d773b",
+          "sha256": "268ff652309a2485e046906b629a7325811372e6ac244704837360cf7c39447f"
+        }
+      ]
+    }
+  ],
+  "accepted_state_provenance": [
+    {
+      "case": "legacy-root",
+      "phase": "before",
+      "runtime": "ee6187929332c416af569a541b2e258a90601d2b",
+      "serialized_sha256": "04aa3aecac498572ec7bde15e869a1c7f6f214178b6791870d63aec14c7d1fdd"
+    },
+    {
+      "case": "legacy-root",
+      "phase": "import",
+      "runtime": "ee6187929332c416af569a541b2e258a90601d2b",
+      "serialized_sha256": "694a057bca99e00e1041fafae6c337acc5b5f480b431dc3d327d16c53af3b7d9"
+    },
+    {
+      "case": "legacy-root",
+      "phase": "undo",
+      "runtime": "ee6187929332c416af569a541b2e258a90601d2b",
+      "serialized_sha256": "730c2056efc98822d16726a596e1392d719c2899d5de35da061506c040878b82"
+    },
+    {
+      "case": "legacy-root",
+      "phase": "redo",
+      "runtime": "ee6187929332c416af569a541b2e258a90601d2b",
+      "serialized_sha256": "5cfd11fe55b1c4636ca968e73c458393927ddc791b1362c5733e9446f5dfa129"
+    },
+    {
+      "case": "legacy-root",
+      "phase": "finish",
+      "runtime": "ee6187929332c416af569a541b2e258a90601d2b",
+      "serialized_sha256": "9ed578ffcb0fed17570a0ea9d7b672bfa6704b83539f4544baf5171bf3c71c93"
+    },
+    {
+      "case": "modern-layer-preserve",
+      "phase": "before",
+      "runtime": "ee6187929332c416af569a541b2e258a90601d2b",
+      "serialized_sha256": "b33e5d94779e9312f86d637b0acaa000f8ef1781fe929016f5119519386427cc"
+    },
+    {
+      "case": "modern-layer-preserve",
+      "phase": "import",
+      "runtime": "ee6187929332c416af569a541b2e258a90601d2b",
+      "serialized_sha256": "28a9fd872b76d85596770ee2061c8de5db79f5b86067e5a9eebeea20acd0dadf"
+    },
+    {
+      "case": "modern-layer-preserve",
+      "phase": "undo",
+      "runtime": "ee6187929332c416af569a541b2e258a90601d2b",
+      "serialized_sha256": "cb5b88be33e4665c390ec59da9e64f2b2b6f6b9ce83c6b9bf58b74dee7440b84"
+    },
+    {
+      "case": "modern-layer-preserve",
+      "phase": "redo",
+      "runtime": "ee6187929332c416af569a541b2e258a90601d2b",
+      "serialized_sha256": "a321486649518afb5b47d3814deb7d92b9b2a800ce16f95e78a1575f64587360"
+    },
+    {
+      "case": "modern-layer-preserve",
+      "phase": "finish",
+      "runtime": "ee6187929332c416af569a541b2e258a90601d2b",
+      "serialized_sha256": "bed0154e8336e023461592886a9c14b00f3c263cbd93bfc8b1055c176c1a13a1"
+    },
+    {
+      "case": "saved-scenes",
+      "phase": "before",
+      "runtime": "ee6187929332c416af569a541b2e258a90601d2b",
+      "serialized_sha256": "b7b6378d4780534668c1c747962d151d68f34c6222d1fd97cca1fa0fce3101a2"
+    },
+    {
+      "case": "saved-scenes",
+      "phase": "import",
+      "runtime": "ee6187929332c416af569a541b2e258a90601d2b",
+      "serialized_sha256": "d974e5815b2c7380df27ed1244b81ed01eaa4545b939cd774e0aa346fe65b044"
+    },
+    {
+      "case": "saved-scenes",
+      "phase": "undo",
+      "runtime": "ee6187929332c416af569a541b2e258a90601d2b",
+      "serialized_sha256": "69022dcbc38b79f914e808adf642b7547b7dbe414b01c71727a133b2be8b0c27"
+    },
+    {
+      "case": "saved-scenes",
+      "phase": "redo",
+      "runtime": "ee6187929332c416af569a541b2e258a90601d2b",
+      "serialized_sha256": "6a971e53f070d0a41d3d5bb59444ee215931792660abb47cc9530a2fa1f8e1d3"
+    },
+    {
+      "case": "saved-scenes",
+      "phase": "finish",
+      "runtime": "ee6187929332c416af569a541b2e258a90601d2b",
+      "serialized_sha256": "e213f0a5f684baed44ff7a83188d4136feabd2bca82b321badff2f8d63e50315"
+    },
+    {
+      "case": "shared-root",
+      "phase": "before",
+      "runtime": "ee6187929332c416af569a541b2e258a90601d2b",
+      "serialized_sha256": "4a9a4dd81cd5f9cd3f7f630e29496ae85f9c4d6e918e52e57b97335707e6c91f"
+    },
+    {
+      "case": "shared-root",
+      "phase": "import",
+      "runtime": "ee6187929332c416af569a541b2e258a90601d2b",
+      "serialized_sha256": "10536ee736fa7f16673b9a9eb4e9b3f8fe8fc8c298ebc7ae8c99a512304b897c"
+    },
+    {
+      "case": "shared-root",
+      "phase": "undo",
+      "runtime": "ee6187929332c416af569a541b2e258a90601d2b",
+      "serialized_sha256": "fcd7b11ea0ce7ddf7b2be141efb9247d13b124cfbd29380fc9c04f868bbb8660"
+    },
+    {
+      "case": "shared-root",
+      "phase": "redo",
+      "runtime": "ee6187929332c416af569a541b2e258a90601d2b",
+      "serialized_sha256": "84e05475405927a79f942b7b52383e916b1377634ec54d183218c0afb9e956ad"
+    },
+    {
+      "case": "shared-root",
+      "phase": "finish",
+      "runtime": "ee6187929332c416af569a541b2e258a90601d2b",
+      "serialized_sha256": "e3c30747e803367dcd46dc9baaf3f180b0ec71753d15215e56972da153f177c5"
+    },
+    {
+      "case": "nested-root-ownership",
+      "phase": "before",
+      "runtime": "c356b1029b6072b7d2387e98a9047b362508acee",
+      "serialized_sha256": "81c21ac8a04973cbb4bd06ffcc5b05679e862a2804790fe2ccda456054f4b2e0"
+    },
+    {
+      "case": "nested-root-ownership",
+      "phase": "import",
+      "runtime": "c356b1029b6072b7d2387e98a9047b362508acee",
+      "serialized_sha256": "92be05e257701438d5f981c200201f39cf5f5da903b4673348d90be0af75c10e"
+    },
+    {
+      "case": "nested-root-ownership",
+      "phase": "undo",
+      "runtime": "c356b1029b6072b7d2387e98a9047b362508acee",
+      "serialized_sha256": "7632f42169f98d723e31b954958e8be0bd5889c5de6c8d4153ab8faaa9ce2567"
+    },
+    {
+      "case": "nested-root-ownership",
+      "phase": "redo",
+      "runtime": "c356b1029b6072b7d2387e98a9047b362508acee",
+      "serialized_sha256": "f91c82a12732cb2c1cad0992577cce8662f8cc14300cf9763bf83bc9a7ddac7e"
+    },
+    {
+      "case": "nested-root-ownership",
+      "phase": "finish",
+      "runtime": "c356b1029b6072b7d2387e98a9047b362508acee",
+      "serialized_sha256": "be9f0bb6582bcefad96e2d496b54438158d06baf75810c9b5ccff3a1de8d6b05"
+    },
+    {
+      "case": "nested-root-ownership",
+      "phase": "finish-undo",
+      "runtime": "c356b1029b6072b7d2387e98a9047b362508acee",
+      "serialized_sha256": "86ed1588e846648a2581d023b36149f9feb18d4b17911dc991c245b403d6fff5"
+    },
+    {
+      "case": "nested-root-ownership",
+      "phase": "finish-redo",
+      "runtime": "c356b1029b6072b7d2387e98a9047b362508acee",
+      "serialized_sha256": "59791ad69b3594afdc63dd94b4814e46085075dd05336b5a88bc1a4c9ff752d7"
+    },
+    {
+      "case": "leader-metadata",
+      "phase": "before",
+      "runtime": "ee6187929332c416af569a541b2e258a90601d2b",
+      "serialized_sha256": "89404908557f9888ed5efc5fa080a7539aa3703e6ec27a475747a6c96f087857"
+    },
+    {
+      "case": "leader-metadata",
+      "phase": "import",
+      "runtime": "ee6187929332c416af569a541b2e258a90601d2b",
+      "serialized_sha256": "9ae1eb9042c72fa04565fc9d0792f6d621b538197692d3f056192e490dc32844"
+    },
+    {
+      "case": "leader-metadata",
+      "phase": "undo",
+      "runtime": "ee6187929332c416af569a541b2e258a90601d2b",
+      "serialized_sha256": "4eeab129055b6f485655c266644c78a75aa8a0dc862331f834d0ba6b57985378"
+    },
+    {
+      "case": "leader-metadata",
+      "phase": "redo",
+      "runtime": "ee6187929332c416af569a541b2e258a90601d2b",
+      "serialized_sha256": "ea86013c8a2e2217fd4c871fb7519bedc288581d40968e3a3da3d3121013bb04"
+    },
+    {
+      "case": "leader-metadata",
+      "phase": "finish",
+      "runtime": "ee6187929332c416af569a541b2e258a90601d2b",
+      "serialized_sha256": "a691b7c088d6a3aee528b02a138c603ab7b7627aaf5a00b9d1c3973bfec3725b"
+    },
+    {
+      "case": "image-leaf",
+      "phase": "before",
+      "runtime": "ee6187929332c416af569a541b2e258a90601d2b",
+      "serialized_sha256": "dc9eaf234b33bd3fac54a1626a3a57557a77b3b1746e33c4adc36864c1d800de"
+    },
+    {
+      "case": "image-leaf",
+      "phase": "import",
+      "runtime": "ee6187929332c416af569a541b2e258a90601d2b",
+      "serialized_sha256": "3f9f32e70a8d158c34776c631b21baf4e1b3beac31f2ad3c4d6bd7b4ac230c05"
+    },
+    {
+      "case": "image-leaf",
+      "phase": "undo",
+      "runtime": "ee6187929332c416af569a541b2e258a90601d2b",
+      "serialized_sha256": "019d899b6ccc25c1104b0cc815badb5a913ccffd63895eaa383c904fc66a9e79"
+    },
+    {
+      "case": "image-leaf",
+      "phase": "redo",
+      "runtime": "ee6187929332c416af569a541b2e258a90601d2b",
+      "serialized_sha256": "a2daf50d498a300f579af79b74b3898117e61303350d47ec6ee4355bf54bbab1"
+    },
+    {
+      "case": "image-leaf",
+      "phase": "finish",
+      "runtime": "ee6187929332c416af569a541b2e258a90601d2b",
+      "serialized_sha256": "874aff8a944ceeff2dd2578d4e0226d70d3efad799fa47b5be0be52053df2f2c"
+    },
+    {
+      "case": "style-adopt",
+      "phase": "before",
+      "runtime": "ee6187929332c416af569a541b2e258a90601d2b",
+      "serialized_sha256": "3f62a6e907a9def6d978de7bd69d4e1713ab9160d2d98fdc84b9a49a19a99c60"
+    },
+    {
+      "case": "style-adopt",
+      "phase": "import",
+      "runtime": "ee6187929332c416af569a541b2e258a90601d2b",
+      "serialized_sha256": "cf85b85af0ece9e0335f5cbec6605af2a79237f9431a1a52e3ac582ee04c9e86"
+    },
+    {
+      "case": "style-adopt",
+      "phase": "undo",
+      "runtime": "ee6187929332c416af569a541b2e258a90601d2b",
+      "serialized_sha256": "5a636acdb8b88bde99a4d7af252b47adfef8f606f031a26bbf7a928bfb905c39"
+    },
+    {
+      "case": "style-adopt",
+      "phase": "redo",
+      "runtime": "ee6187929332c416af569a541b2e258a90601d2b",
+      "serialized_sha256": "96f629616703f96f80d9c4c6d904e2d6a3bcf16d1413ddf4878a4637ad5dc0d0"
+    },
+    {
+      "case": "style-adopt",
+      "phase": "finish",
+      "runtime": "ee6187929332c416af569a541b2e258a90601d2b",
+      "serialized_sha256": "e7d9177b3bedf4eaa579d3089375e323716eda49b8ac4feeabb2a62edca2e64b"
+    },
+    {
+      "case": "style-existing",
+      "phase": "before",
+      "runtime": "ee6187929332c416af569a541b2e258a90601d2b",
+      "serialized_sha256": "e3f2c2ef7f92f6ea228dc30e071332f7cd758744f1fd5f1d44bc3e680857d392"
+    },
+    {
+      "case": "style-existing",
+      "phase": "import",
+      "runtime": "ee6187929332c416af569a541b2e258a90601d2b",
+      "serialized_sha256": "aa0f19428e31116aabb462f8ca63e3a69b7da30c63f8ffe79d9aad32ba41ef32"
+    },
+    {
+      "case": "style-existing",
+      "phase": "undo",
+      "runtime": "ee6187929332c416af569a541b2e258a90601d2b",
+      "serialized_sha256": "4ad90b0a623875b0ddda99ee48b4aff97f73830c44073602ac23e44a54f934b8"
+    },
+    {
+      "case": "style-existing",
+      "phase": "redo",
+      "runtime": "ee6187929332c416af569a541b2e258a90601d2b",
+      "serialized_sha256": "3c066686c9870259107c9f875e33bfbcf27003197b7fc35924b6941028850833"
+    },
+    {
+      "case": "style-existing",
+      "phase": "finish",
+      "runtime": "ee6187929332c416af569a541b2e258a90601d2b",
+      "serialized_sha256": "ddef36f8ce306f89b637f3746522314fb57bbf834333c059668a11d6d0c1dd0b"
+    },
+    {
+      "case": "material-collision",
+      "phase": "before",
+      "runtime": "ee6187929332c416af569a541b2e258a90601d2b",
+      "serialized_sha256": "d058a629ce919a081f3258c6ef859dd579dd42f27e9285805e213d296fc24317"
+    },
+    {
+      "case": "material-collision",
+      "phase": "import",
+      "runtime": "ee6187929332c416af569a541b2e258a90601d2b",
+      "serialized_sha256": "ddad0da49cfae53af677288bd8c0dce37a379a4d10f512990afbf145b5a67167"
+    },
+    {
+      "case": "material-collision",
+      "phase": "undo",
+      "runtime": "ee6187929332c416af569a541b2e258a90601d2b",
+      "serialized_sha256": "5b1c40bedcc6f54848cd9150bebfd2b6399562b89bf1c7c0fe4828fef8bc6f5a"
+    },
+    {
+      "case": "material-collision",
+      "phase": "redo",
+      "runtime": "ee6187929332c416af569a541b2e258a90601d2b",
+      "serialized_sha256": "d52cba9673ebc648ab2c61c207b344a0ae4e2c9a2570d9060391623f6b028832"
+    },
+    {
+      "case": "material-collision",
+      "phase": "finish",
+      "runtime": "ee6187929332c416af569a541b2e258a90601d2b",
+      "serialized_sha256": "b374426ce121d061e1458506269cc4af048791b7a78a1c87965016e86df0cd0c"
+    },
+    {
+      "case": "repeat-import",
+      "phase": "before",
+      "runtime": "ee6187929332c416af569a541b2e258a90601d2b",
+      "serialized_sha256": "8c39955d4513b7122d5a35f32f5a736cb66d94b7f0d798f99c22e2e6444be92a"
+    },
+    {
+      "case": "repeat-import",
+      "phase": "import",
+      "runtime": "ee6187929332c416af569a541b2e258a90601d2b",
+      "serialized_sha256": "a42056cefc7e0189cbc45b043575c55c4471c0cf22f85504961a8576b7032206"
+    },
+    {
+      "case": "repeat-import",
+      "phase": "undo",
+      "runtime": "ee6187929332c416af569a541b2e258a90601d2b",
+      "serialized_sha256": "c86bca79142f626911acb3d1360b847907728e76d4c34d8816617f2c175b5e0a"
+    },
+    {
+      "case": "repeat-import",
+      "phase": "redo",
+      "runtime": "ee6187929332c416af569a541b2e258a90601d2b",
+      "serialized_sha256": "ef3fdbfdf0e60cae293de41f4947f0d78bd2fb37a952fad3f37131ac7be31929"
+    },
+    {
+      "case": "repeat-import",
+      "phase": "repeat",
+      "runtime": "ee6187929332c416af569a541b2e258a90601d2b",
+      "serialized_sha256": "11accbf7750af65a23a019e4c0317b29eed1511972e431726f72c384afd29dcf"
+    },
+    {
+      "case": "repeat-import",
+      "phase": "repeat-undo",
+      "runtime": "ee6187929332c416af569a541b2e258a90601d2b",
+      "serialized_sha256": "dfe7d152db6790762a017889c0f56f7697ceff3d05eaefa2bb3d78841cab09b8"
+    },
+    {
+      "case": "repeat-import",
+      "phase": "repeat-redo",
+      "runtime": "ee6187929332c416af569a541b2e258a90601d2b",
+      "serialized_sha256": "8420d78278505f960c8e446fa2786670ee32432a5dbce812a13f1c5a121e8110"
+    },
+    {
+      "case": "repeat-import",
+      "phase": "finish",
+      "runtime": "ee6187929332c416af569a541b2e258a90601d2b",
+      "serialized_sha256": "74610febde90b06a7512198e8888f3ba99f879f466a1df63dce852d136bacd4d"
+    },
+    {
+      "case": "modern-empty",
+      "phase": "before",
+      "runtime": "ee6187929332c416af569a541b2e258a90601d2b",
+      "serialized_sha256": "4d9308cc198d5c3ea100df14241bfb57028e37fd35f37a5e3ce975abf4dbdb73"
+    },
+    {
+      "case": "modern-empty",
+      "phase": "import",
+      "runtime": "ee6187929332c416af569a541b2e258a90601d2b",
+      "serialized_sha256": "0f738858688b5f21aacc83c0756af078230d91de68944326ba6ecc1f6cea8e40"
+    },
+    {
+      "case": "modern-empty",
+      "phase": "undo",
+      "runtime": "ee6187929332c416af569a541b2e258a90601d2b",
+      "serialized_sha256": "eeb20c14146780f33c5759c13526ab18930c3b17308f6530c88a572c78a1c834"
+    },
+    {
+      "case": "modern-empty",
+      "phase": "redo",
+      "runtime": "ee6187929332c416af569a541b2e258a90601d2b",
+      "serialized_sha256": "25bec6f65c8962c73a7a84a1d669ae0340cadd6d2db5ebb862086593a34975df"
+    },
+    {
+      "case": "modern-empty",
+      "phase": "finish",
+      "runtime": "ee6187929332c416af569a541b2e258a90601d2b",
+      "serialized_sha256": "61c9fa23cc96fdae5c1eb7a924c2860a7c470280d2bb3a5298e8e71e1c62da48"
+    },
+    {
+      "case": "legacy-empty-warning",
+      "phase": "before",
+      "runtime": "ee6187929332c416af569a541b2e258a90601d2b",
+      "serialized_sha256": "860176df948ac8f4f44332236e7fa2a83a2e323ed3d05c64d4984723afbb6cd3"
+    },
+    {
+      "case": "legacy-empty-warning",
+      "phase": "import",
+      "runtime": "ee6187929332c416af569a541b2e258a90601d2b",
+      "serialized_sha256": "4685a5562f8a04f64b31bddfc0db78ce52057734329944921bb9d703e8b691ee"
+    },
+    {
+      "case": "unreadable-warning",
+      "phase": "before",
+      "runtime": "ee6187929332c416af569a541b2e258a90601d2b",
+      "serialized_sha256": "3e96dd6d928e744d78c451c109279f962dd7ec1a1b999c4d9fcc97340b28029b"
+    },
+    {
+      "case": "unreadable-warning",
+      "phase": "import",
+      "runtime": "ee6187929332c416af569a541b2e258a90601d2b",
+      "serialized_sha256": "b9d17bd93e690e8518427aa62ffee073123479195110d2acc4259d1d47693cde"
+    },
+    {
+      "case": "chooser-cancel",
+      "phase": "before",
+      "runtime": "ee6187929332c416af569a541b2e258a90601d2b",
+      "serialized_sha256": "9dee0785a64e762a2f2cb152e090f7746fc0434990347b662070d5301acad24a"
+    },
+    {
+      "case": "chooser-cancel",
+      "phase": "import",
+      "runtime": "ee6187929332c416af569a541b2e258a90601d2b",
+      "serialized_sha256": "dea8bce37686a72132e560717ba58f24c4f6a33ed3df0f4e3a56db8746f91a65"
+    }
+  ],
+  "accepted_save_provenance": [
+    {
+      "case": "legacy-root",
+      "file": "legacy-root-saved.igz",
+      "sha256": "1adf02483be712a1a005dfd08c7a4c947d778dd1df34a9d30c79f488fe8e091d",
+      "producer_path": "/tmp/ingetrazo-skp-native-r2/native/legacy-root-saved.igz"
+    },
+    {
+      "case": "modern-layer-preserve",
+      "file": "modern-layer-preserve-saved.igz",
+      "sha256": "c500e55495c285733b1dd9122d45f9692a28db6aca5cb757df648bc063d23d2f",
+      "producer_path": "/tmp/ingetrazo-skp-native-r2/native/modern-layer-preserve-saved.igz"
+    },
+    {
+      "case": "saved-scenes",
+      "file": "saved-scenes-saved.igz",
+      "sha256": "79d8116103341614122006a07c34ee705bed0aede03c8544ec6a5b3ac0f05198",
+      "producer_path": "/tmp/ingetrazo-skp-native-r2/native/saved-scenes-saved.igz"
+    },
+    {
+      "case": "shared-root",
+      "file": "shared-root-saved.igz",
+      "sha256": "645ac758550d7c103d1fd3c7cc88aee43e5dbcd4d991b46b94d6e07476fa89fe",
+      "producer_path": "/tmp/ingetrazo-skp-native-r2/native/shared-root-saved.igz"
+    },
+    {
+      "case": "nested-root-ownership",
+      "file": "nested-root-ownership-saved.igz",
+      "sha256": "fb077f8311310c8167b8b682b4fb959234887b6443e6c29883a1ae30bde608b2",
+      "producer_path": "/tmp/ingetrazo-skp-native-r3/native/nested-root-ownership-saved.igz"
+    },
+    {
+      "case": "leader-metadata",
+      "file": "leader-metadata-saved.igz",
+      "sha256": "c38f7f114e71f3a9c5735f0813993d72e65e87a88a43f4b0f20be0498f3c08a4",
+      "producer_path": "/tmp/ingetrazo-skp-native-r2/native/leader-metadata-saved.igz"
+    },
+    {
+      "case": "image-leaf",
+      "file": "image-leaf-saved.igz",
+      "sha256": "338cd3cfb4aac9e508a4199ed63136495f89b1a9e4a7d4ca984985fc4bb7afe7",
+      "producer_path": "/tmp/ingetrazo-skp-native-r2/native/image-leaf-saved.igz"
+    },
+    {
+      "case": "style-adopt",
+      "file": "style-adopt-saved.igz",
+      "sha256": "c0fa9b6ff211124ccc66497743ebdee193bbb817a9eeb696f1d1a84208ad9df3",
+      "producer_path": "/tmp/ingetrazo-skp-native-r2/native/style-adopt-saved.igz"
+    },
+    {
+      "case": "style-existing",
+      "file": "style-existing-saved.igz",
+      "sha256": "3fc7d9461fe3559b4d42a372ebda6cc74b5516bb5f3ad18e42e59aea78218e32",
+      "producer_path": "/tmp/ingetrazo-skp-native-r2/native/style-existing-saved.igz"
+    },
+    {
+      "case": "material-collision",
+      "file": "material-collision-saved.igz",
+      "sha256": "b446e7f3bef2ea2e4bad763fa3077e503e1b78145a53bc106e781846b3e201c3",
+      "producer_path": "/tmp/ingetrazo-skp-native-r2/native/material-collision-saved.igz"
+    },
+    {
+      "case": "repeat-import",
+      "file": "repeat-import-saved.igz",
+      "sha256": "5caca1e8cdb875101e6cff998fbfc1526136a1f37d414ed7517eced81ec8ff3f",
+      "producer_path": "/tmp/ingetrazo-skp-native-r2/native/repeat-import-saved.igz"
+    },
+    {
+      "case": "modern-empty",
+      "file": "modern-empty-saved.igz",
+      "sha256": "ae1b89ba3883d7defe4bc26a2ffa79bf40042554fe8f0e0b7d2f37cf73bda64e",
+      "producer_path": "/tmp/ingetrazo-skp-native-r2/native/modern-empty-saved.igz"
+    }
+  ],
+  "whole_latest_binary_corpus_run": false,
+  "native_execution_scope": {
+    "base_revision": "ee6187929332c416af569a541b2e258a90601d2b",
+    "base_states": 64,
+    "base_cases": 14,
+    "replacement_revision": "c356b1029b6072b7d2387e98a9047b362508acee",
+    "replacement_states": 7,
+    "replacement_cases": 1,
+    "replacement_binary_sha256": "3f5b71de33ffb0fac2b2285e1b304b7784dbdb8d6882c5bff41c081f1654211e",
+    "base_binary_sha256": "b3aa0a61592008afb76ae021b09bba0867fce005183c4b261ebe7aaab9995fb2"
+  },
+  "reader_scope": {
+    "revision": "c356b1029b6072b7d2387e98a9047b362508acee",
+    "pairs": 12,
+    "seconds": 5.022353326028679,
+    "full_reader_rerun": true
+  },
+  "final_checker": {
+    "argv": [
+      "python3",
+      "scripts/check-skp-import.py",
+      "/tmp/ingetrazo-skp-source-accepted",
+      "/tmp/ingetrazo-skp-native-accepted",
+      "/tmp/ingetrazo-skp-native-accepted/comparison-efficient.json"
+    ],
+    "revision": "f11e5b11cb3163d78a027f564c2d09189eb8e22c",
+    "checker_sha256": "3103717c273c772d34b46b34a93edb8226c989b684cc3338a04a161767092233",
+    "returncode": 0,
+    "seconds": 4.17182533396408,
+    "max_child_rss_kib": 698932,
+    "source_captures": 0,
+    "native_replays": 0
+  },
+  "acceptance": {
+    "passed": true,
+    "cases": 15,
+    "states": 71,
+    "original_readers": 12,
+    "operative_guards": 8,
+    "negative_controls": [
+      "actual_chooser",
+      "file_worker",
+      "parse_once",
+      "camera_unchanged",
+      "atomic_refusal",
+      "idle_readonly",
+      "context_retired",
+      "registry_undo",
+      "coordinate",
+      "history",
+      "reader",
+      "inventory",
+      "parse",
+      "camera",
+      "camera-bool",
+      "camera-inf",
+      "context-parse",
+      "axes",
+      "owner",
+      "material",
+      "back",
+      "layers",
+      "view",
+      "dimension",
+      "text"
+    ]
+  },
+  "first_failure": {
+    "native_completed": true,
+    "reader_completed": true,
+    "checker_returncode": 1,
+    "binary_sha256": "af13c76564add2129759f9300ec7b3f4425eda1f7d09e099cdb17c091599c6b6"
+  },
+  "second_failure": {
+    "matching_states": 69,
+    "total_states": 71,
+    "matching_readers": 11,
+    "total_readers": 12,
+    "strict_leaf_differences": 36,
+    "scope": "12Finish+12FinishRedo+12nestedreader"
+  },
+  "timeout": {
+    "observed_exception": "subprocess.TimeoutExpired",
+    "argv": [
+      "python3",
+      "scripts/check-skp-import.py",
+      "/tmp/ingetrazo-skp-source-accepted",
+      "/tmp/ingetrazo-skp-native-accepted",
+      "/tmp/ingetrazo-skp-native-accepted/comparison.json"
+    ],
+    "timeout_seconds": 150,
+    "outer_returncode": 1,
+    "checker_acceptance": false,
+    "revision": "c356b1029b6072b7d2387e98a9047b362508acee",
+    "observed_process_at_136_seconds": {
+      "cpu_seconds": 136,
+      "rss_kib": 5911940
+    },
+    "note": "Root observed terminal timeout; reader receipt remains separate. No synthetic checker return code or completed controls claimed."
+  },
+  "helper_provenance": "Retained root helper bytes are packaging-time only; no invented historical Git binding",
+  "fresh_source_captures": 0,
+  "new_native_executions": 0,
+  "cleanup_performed": false
+}

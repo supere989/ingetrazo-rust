@@ -1,0 +1,664 @@
+{
+  "removed": 0,
+  "excluded": [
+    {
+      "path": "/tmp/ingetrazo-skp-native-r1/native/picker/kdialog",
+      "size": 83157976
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-native-r1/native/state/chooser-cancel/config/settings.json",
+      "size": 505
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-native-r1/native/state/context-retired/config/settings.json",
+      "size": 502
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-native-r1/native/state/image-leaf/config/settings.json",
+      "size": 565
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-native-r1/native/state/leader-metadata/config/settings.json",
+      "size": 575
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-native-r1/native/state/legacy-empty-warning/config/settings.json",
+      "size": 511
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-native-r1/native/state/legacy-root/config/settings.json",
+      "size": 567
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-native-r1/native/state/material-collision/config/settings.json",
+      "size": 581
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-native-r1/native/state/modern-empty/config/settings.json",
+      "size": 569
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-native-r1/native/state/modern-layer-preserve/config/settings.json",
+      "size": 587
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-native-r1/native/state/nested-root-ownership/config/settings.json",
+      "size": 587
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-native-r1/native/state/repeat-import/config/settings.json",
+      "size": 571
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-native-r1/native/state/saved-scenes/config/settings.json",
+      "size": 569
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-native-r1/native/state/shared-root/config/settings.json",
+      "size": 567
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-native-r1/native/state/style-adopt/config/settings.json",
+      "size": 567
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-native-r1/native/state/style-existing/config/settings.json",
+      "size": 573
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-native-r1/native/state/unreadable-warning/config/settings.json",
+      "size": 509
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/image/data/IngeTrazo/textures/embedded/398880792416ea15-scan-exif.jpg",
+      "size": 861
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/image/data/IngeTrazo/textures/embedded/5094681a615970a1-renamed.webp",
+      "size": 270
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/image/data/IngeTrazo/textures/embedded/5094681a615970a1-scan.webp",
+      "size": 270
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/image/data/IngeTrazo/textures/embedded/73188750f8b2924b-scan16.tif",
+      "size": 2470
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/image/data/IngeTrazo/textures/embedded/8bfb120c9fc470e5-scan.png",
+      "size": 1253
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/image/data/IngeTrazo/textures/embedded/c9aa332dbb00581d-ingeniero.png",
+      "size": 372245
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/image/data/IngeTrazo/textures/embedded/d5c68fb78657fc3c-scan.bmp",
+      "size": 918
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/image/native/picker/kdialog",
+      "size": 83506208
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/image/source/LICENSE",
+      "size": 35149
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/image/source/assets/base.jpg",
+      "size": 825
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/image/source/assets/base.jpg.rgba",
+      "size": 1152
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/image/source/assets/invalid.png",
+      "size": 21
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/image/source/assets/scan-exif.jpg",
+      "size": 861
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/image/source/assets/scan-exif.jpg.rgba",
+      "size": 1152
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/image/source/assets/scan.bmp",
+      "size": 918
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/image/source/assets/scan.bmp.rgba",
+      "size": 1152
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/image/source/assets/scan.png",
+      "size": 1253
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/image/source/assets/scan.png.rgba",
+      "size": 1152
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/image/source/assets/scan.webp",
+      "size": 270
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/image/source/assets/scan.webp.rgba",
+      "size": 1152
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/image/source/assets/scan16.tif",
+      "size": 2470
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/image/source/assets/scan16.tif.rgba",
+      "size": 1152
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/image/source/bmp-free-aspect-input.igz",
+      "size": 373089
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/image/source/bmp-free-aspect-saved.igz",
+      "size": 374256
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/image/source/cancel-invalid-escape-input.igz",
+      "size": 373089
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/image/source/cancel-invalid-escape-saved.igz",
+      "size": 374590
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/image/source/capture/attempt-1/invocation.json",
+      "size": 685
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/image/source/capture/attempt-1/result.json",
+      "size": 737
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/image/source/capture/attempt-1/stderr.log",
+      "size": 179
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/image/source/capture/attempt-1/stdout.log",
+      "size": 0
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/image/source/capture/attempt-2/invocation.json",
+      "size": 642
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/image/source/capture/attempt-2/result.json",
+      "size": 694
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/image/source/capture/attempt-2/stderr.log",
+      "size": 3802
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/image/source/capture/attempt-2/stdout.log",
+      "size": 42
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/image/source/capture-source/docs/audits/image-import/fixture-contract.json",
+      "size": 1819
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/image/source/capture-source/docs/audits/image-import/historical/failed-producer.py",
+      "size": 15184
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/image/source/capture-source/scripts/reference-image-import.py",
+      "size": 15166
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/image/source/capture-source/scripts/reference-nested-import.py",
+      "size": 4180
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/image/source/completed-cases.json",
+      "size": 895843
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/image/source/first-failure/assets/base.jpg",
+      "size": 825
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/image/source/first-failure/assets/base.jpg.rgba",
+      "size": 1152
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/image/source/first-failure/assets/invalid.png",
+      "size": 21
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/image/source/first-failure/assets/scan-exif.jpg",
+      "size": 861
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/image/source/first-failure/assets/scan-exif.jpg.rgba",
+      "size": 1152
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/image/source/first-failure/assets/scan.bmp",
+      "size": 918
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/image/source/first-failure/assets/scan.bmp.rgba",
+      "size": 1152
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/image/source/first-failure/assets/scan.png",
+      "size": 1253
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/image/source/first-failure/assets/scan.png.rgba",
+      "size": 1152
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/image/source/first-failure/assets/scan.webp",
+      "size": 270
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/image/source/first-failure/assets/scan.webp.rgba",
+      "size": 1152
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/image/source/first-failure/assets/scan16.tif",
+      "size": 2470
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/image/source/first-failure/assets/scan16.tif.rgba",
+      "size": 1152
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/image/source/first-failure/original-image-import.partial.json",
+      "size": 3476
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/image/source/jpeg-exif-pair-input.igz",
+      "size": 373085
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/image/source/jpeg-exif-pair-saved.igz",
+      "size": 374230
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/image/source/nested-width-cm-input.igz",
+      "size": 1366
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/image/source/nested-width-cm-saved.igz",
+      "size": 2048
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/image/source/oblique-face-width-input.igz",
+      "size": 373157
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/image/source/oblique-face-width-saved.igz",
+      "size": 374673
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/image/source/original-image-import.json",
+      "size": 899350
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/image/source/original-image-import.partial.json",
+      "size": 875078
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/image/source/png-drag-transparency-input.igz",
+      "size": 373089
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/image/source/png-drag-transparency-saved.igz",
+      "size": 374592
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/image/source/tiff16-orientation-input.igz",
+      "size": 373089
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/image/source/tiff16-orientation-saved.igz",
+      "size": 375817
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/image/source/webp-reuse-names-input.igz",
+      "size": 373088
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/image/source/webp-reuse-names-saved.igz",
+      "size": 374055
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/stl/native/picker/kdialog",
+      "size": 83256976
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/stl/source/LICENSE",
+      "size": 35149
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/stl/source/ascii.stl",
+      "size": 1397
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/stl/source/capture/invocation.json",
+      "size": 556
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/stl/source/capture/result.json",
+      "size": 607
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/stl/source/capture/stderr.log",
+      "size": 3269
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/stl/source/capture/stdout.log",
+      "size": 43
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/stl/source/capture-source/scripts/reference-nested-import.py",
+      "size": 4180
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/stl/source/capture-source/scripts/reference-stl-import.py",
+      "size": 9601
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/stl/source/chooser-cancel-input.igz",
+      "size": 3552
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/stl/source/completed-cases.json",
+      "size": 3060997
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/stl/source/cube.stl",
+      "size": 684
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/stl/source/default-cube-input.igz",
+      "size": 3552
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/stl/source/default-cube-saved.igz",
+      "size": 7516
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/stl/source/degenerate.stl",
+      "size": 734
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/stl/source/flat-large-editable-input.igz",
+      "size": 3552
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/stl/source/flat-large-editable-saved.igz",
+      "size": 6532
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/stl/source/grid.stl",
+      "size": 63084
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/stl/source/ignored-normal.stl",
+      "size": 684
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/stl/source/large-nested-input.igz",
+      "size": 3552
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/stl/source/large-nested-saved.igz",
+      "size": 396807
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/stl/source/large-root-input.igz",
+      "size": 3552
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/stl/source/large-root-saved.igz",
+      "size": 396535
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/stl/source/large.stl",
+      "size": 20134
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/stl/source/malformed.stl",
+      "size": 43
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/stl/source/none-cube-input.igz",
+      "size": 3552
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/stl/source/none-cube-saved.igz",
+      "size": 7516
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/stl/source/nonfinite.stl",
+      "size": 134
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/stl/source/original-source/core/group.py",
+      "size": 37346
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/stl/source/original-source/core/history.py",
+      "size": 161511
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/stl/source/original-source/core/i18n.py",
+      "size": 3089
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/stl/source/original-source/core/mesh.py",
+      "size": 74619
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/stl/source/original-source/core/scene.py",
+      "size": 34219
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/stl/source/original-source/core/topology.py",
+      "size": 69455
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/stl/source/original-source/formats/dae.py",
+      "size": 48406
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/stl/source/original-source/formats/fuse.py",
+      "size": 16553
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/stl/source/original-source/formats/igz.py",
+      "size": 41235
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/stl/source/original-source/formats/stl.py",
+      "size": 11852
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/stl/source/original-source/tests/test_stl_import.py",
+      "size": 9053
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/stl/source/original-source/views/main_window.py",
+      "size": 286141
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/stl/source/original-source/views/viewport.py",
+      "size": 622724
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/stl/source/original-stl.json",
+      "size": 3092735
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/stl/source/original-stl.partial.json",
+      "size": 3060727
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/stl/source/parse-failure-input.igz",
+      "size": 3552
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/stl/source/settings/STLProof/STLProof.ini",
+      "size": 70
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/stl/source/small-nested-input.igz",
+      "size": 3552
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/stl/source/small-nested-saved.igz",
+      "size": 9392
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/stl/source/solid-binary.stl",
+      "size": 684
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/stl/source/tilted-all-input.igz",
+      "size": 3552
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/stl/source/tilted-all-saved.igz",
+      "size": 4528
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/stl/source/tilted-principal-input.igz",
+      "size": 3552
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/stl/source/tilted-principal-saved.igz",
+      "size": 4882
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/stl/source/tilted.stl",
+      "size": 184
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/stl/source/trailing.stl",
+      "size": 700
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-affected-imports-r1/stl/source/unit-cancel-input.igz",
+      "size": 3552
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-native-r2/native/picker/kdialog",
+      "size": 83195320
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-native-r2/native/state/chooser-cancel/config/settings.json",
+      "size": 505
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-native-r2/native/state/context-retired/config/settings.json",
+      "size": 502
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-native-r2/native/state/image-leaf/config/settings.json",
+      "size": 565
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-native-r2/native/state/leader-metadata/config/settings.json",
+      "size": 575
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-native-r2/native/state/legacy-empty-warning/config/settings.json",
+      "size": 511
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-native-r2/native/state/legacy-root/config/settings.json",
+      "size": 567
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-native-r2/native/state/material-collision/config/settings.json",
+      "size": 581
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-native-r2/native/state/modern-empty/config/settings.json",
+      "size": 569
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-native-r2/native/state/modern-layer-preserve/config/settings.json",
+      "size": 587
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-native-r2/native/state/nested-root-ownership/config/settings.json",
+      "size": 587
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-native-r2/native/state/repeat-import/config/settings.json",
+      "size": 571
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-native-r2/native/state/saved-scenes/config/settings.json",
+      "size": 569
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-native-r2/native/state/shared-root/config/settings.json",
+      "size": 567
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-native-r2/native/state/style-adopt/config/settings.json",
+      "size": 567
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-native-r2/native/state/style-existing/config/settings.json",
+      "size": 573
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-native-r2/native/state/unreadable-warning/config/settings.json",
+      "size": 509
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-native-r3/native/picker/kdialog",
+      "size": 83234352
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-native-r3/native/state/context-retired/config/settings.json",
+      "size": 502
+    },
+    {
+      "path": "/tmp/ingetrazo-skp-native-r3/native/state/nested-root-ownership/config/settings.json",
+      "size": 587
+    }
+  ],
+  "authenticated_duplicate_paths": [
+    "/tmp/ingetrazo-skp-affected-imports-r1/stl/native.log",
+    "/tmp/ingetrazo-skp-affected-imports-r1/stl/reader.log",
+    "/tmp/ingetrazo-skp-native-r2/native/modern-empty-saved.igz",
+    "/tmp/ingetrazo-skp-native-r2/native.log",
+    "/tmp/ingetrazo-skp-native-r2/reader.log",
+    "/tmp/ingetrazo-skp-native-r3/native.log",
+    "/tmp/ingetrazo-skp-native-accepted/checker.log",
+    "/tmp/ingetrazo-skp-native-accepted/image-leaf-saved.igz",
+    "/tmp/ingetrazo-skp-native-accepted/leader-metadata-saved.igz",
+    "/tmp/ingetrazo-skp-native-accepted/legacy-root-saved.igz",
+    "/tmp/ingetrazo-skp-native-accepted/material-collision-saved.igz",
+    "/tmp/ingetrazo-skp-native-accepted/modern-empty-saved.igz",
+    "/tmp/ingetrazo-skp-native-accepted/modern-layer-preserve-saved.igz",
+    "/tmp/ingetrazo-skp-native-accepted/nested-root-ownership-saved.igz",
+    "/tmp/ingetrazo-skp-native-accepted/reader.log",
+    "/tmp/ingetrazo-skp-native-accepted/repeat-import-saved.igz",
+    "/tmp/ingetrazo-skp-native-accepted/saved-scenes-saved.igz",
+    "/tmp/ingetrazo-skp-native-accepted/shared-root-saved.igz",
+    "/tmp/ingetrazo-skp-native-accepted/style-adopt-saved.igz",
+    "/tmp/ingetrazo-skp-native-accepted/style-existing-saved.igz"
+  ],
+  "requires_root_authentication_before_purge": true
+}
