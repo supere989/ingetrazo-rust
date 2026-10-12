@@ -359,7 +359,7 @@ fn capture(
         Pos2::ZERO,
         egui::vec2(request.width as f32, request.height as f32),
     );
-    let transaction = (|| {
+    let transaction: Result<_, String> = (|| {
         state
             .painter
             .install_world_texture(&metal, super::world_viewport::TEXTURE, frame)?;
