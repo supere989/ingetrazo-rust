@@ -47,7 +47,7 @@ def pixel_difference(src,dst):
 def require_same_pixels(src,dst):
  result=pixel_difference(src,dst);assert result['changed_pixels']==0,('Strict primitive pixel mismatch',result);return result
 def main():
- p=argparse.ArgumentParser();p.add_argument('source',type=Path);p.add_argument('native',type=Path);p.add_argument('comparison',type=Path);a=p.parse_args();s=json.loads((a.source/'original-run-previews.json').read_text());n=json.loads((a.native/'native-run-previews.json').read_text());readers=json.loads((a.native/'native-reopens.json').read_text());report={'ok':False,'state_mismatches':[],'pixels':[]}
+ p=argparse.ArgumentParser();p.add_argument('source',type=Path);p.add_argument('native',type=Path);p.add_argument('comparison',type=Path);a=p.parse_args();s=json.loads((a.source/'original-run-previews.json').read_text());n=json.loads((a.native/'native-run-previews.json').read_text());readers=json.loads((a.native/'native-reopens.json').read_text());report={'ok':False,'semantic_ok':False,'strict_pixels_ok':False,'state_mismatches':[],'pixels':[]}
  try:
   for i,(x,y)in enumerate(zip(s['states'],n['states'])):
    try:equal(x['state'],y['state']);equal(x['preview']['elements'],y['preview']['elements'])
@@ -55,7 +55,7 @@ def main():
   for x,y in zip(s['states'],n['states']):
    src=pixels(a.source/x['paint']['file']);dst=pixels(a.native/y['paint']['file']);row=dict(case=x['case'],phase=x['phase'],**pixel_difference(src,dst));report['pixels'].append(row)
   verify(s,n,readers)
-  assert all(r['changed_pixels']==0 for r in report['pixels']),'Strict primitive pixel mismatch'
+  report['strict_pixels_ok']=all(r['changed_pixels']==0 for r in report['pixels'])
   mutations=[('missing-state',lambda d:d['states'].pop()),('extra-state',lambda d:d['states'].append(copy.deepcopy(d['states'][-1]))),('phase-order',lambda d:d['states'].reverse()),('history-bool',lambda d:d['states'][0]['state'].__setitem__('undo',False)),('history',lambda d:d['states'][0]['state'].__setitem__('undo',1)),('pending-axis',lambda d:d['states'][0]['state']['pending'].__setitem__('run_axis','h')),('path-point',lambda d:d['states'][4]['preview']['elements'][1].__setitem__('x',999.)),('preview-presence',lambda d:d['states'][0]['preview'].__setitem__('exists',True)),('no-actual-paint',lambda d:d.__setitem__('actual_app_paint',False)),('no-submission',lambda d:d['states'][4]['paint'].__setitem__('submitted_callbacks',0)),('selection',lambda d:d['states'][0]['state']['selection'].append(0)),('observer',lambda d:d['states'][0].__setitem__('observer_readonly',False))]
   for flag in ['actual_pointer_ingress','hover_readonly','idle_reused']:mutations.append((flag,lambda d,k=flag:d['controls'][0].__setitem__(k,False)))
   rejected=[]
@@ -76,7 +76,10 @@ def main():
   try:require_same_pixels(changed,pixels(a.source/s['states'][4]['paint']['file']))
   except AssertionError:rejected.append('one-pixel')
   else:raise AssertionError('Pixel negative did not reject')
-  report.update(ok=True,cases=5,states=106,original_reader_pairs=5,rejected_controls=rejected,scope='Actual source item paint versus actual App submitted CPU preview coverage. Viewport grabs retained separately; no GPU/full UI pixel claim.')
+  report.update(semantic_ok=True,cases=5,states=106,original_reader_pairs=5,rejected_controls=rejected,scope='Exact actual App state/path/style/pose and saved-file readers are separate from strict source item-paint versus submitted CPU coverage pixels. Viewport grabs retained separately; no GPU/full UI pixel claim.')
+  report['pixel_exact_states']=sum(r['changed_pixels']==0 for r in report['pixels']);report['pixel_residual_states']=sum(r['changed_pixels']>0 for r in report['pixels'])
+  assert report['strict_pixels_ok'],'Strict primitive pixel mismatch; semantic acceptance is separately reported'
+  report['ok']=True
  except Exception as e:report['error']=repr(e);a.comparison.write_text(json.dumps(report,indent=2)+'\n');raise
  a.comparison.write_text(json.dumps(report,indent=2)+'\n');print(json.dumps(report))
 if __name__=='__main__':main()
