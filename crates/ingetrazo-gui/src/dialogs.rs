@@ -16,74 +16,34 @@ use ingetrazo_core::i18n::tr;
 use ingetrazo_tools::base::ToolType;
 use crate::app::IngeTrazoApp;
 
+// A completed picker owns the user's answer, including Cancel. Try another
+// backend only when the first program could not be launched.
+fn picker_result(tool: &str, args: &[&str]) -> Result<Option<PathBuf>, std::io::Error> {
+    let output = std::process::Command::new(tool).args(args).output()?;
+    if !output.status.success() {
+        return Ok(None);
+    }
+    let value = String::from_utf8_lossy(&output.stdout).trim().to_owned();
+    Ok((!value.is_empty()).then(|| PathBuf::from(value)))
+}
+
 /// Launch native desktop file picker for opening a file.
 pub fn pick_open_file(title: &str, filter: &str) -> Option<PathBuf> {
-    if let Ok(output) = std::process::Command::new("kdialog")
-        .arg("--title")
-        .arg(title)
-        .arg("--getopenfilename")
-        .arg(".")
-        .arg(filter)
-        .output()
-    {
-        if output.status.success() {
-            let s = String::from_utf8_lossy(&output.stdout).trim().to_string();
-            if !s.is_empty() {
-                return Some(PathBuf::from(s));
-            }
-        }
-    }
-    if let Ok(output) = std::process::Command::new("zenity")
-        .arg("--file-selection")
-        .arg("--title")
-        .arg(title)
-        .output()
-    {
-        if output.status.success() {
-            let s = String::from_utf8_lossy(&output.stdout).trim().to_string();
-            if !s.is_empty() {
-                return Some(PathBuf::from(s));
-            }
-        }
-    }
-    None
+    picker_result("kdialog", &["--title", title, "--getopenfilename", ".", filter])
+        .or_else(|_| picker_result("zenity", &["--file-selection", "--title", title]))
+        .ok()
+        .flatten()
 }
 
 /// Launch native desktop file picker for saving a file.
 pub fn pick_save_file(title: &str, default_name: &str, filter: &str) -> Option<PathBuf> {
-    if let Ok(output) = std::process::Command::new("kdialog")
-        .arg("--title")
-        .arg(title)
-        .arg("--getsavefilename")
-        .arg(default_name)
-        .arg(filter)
-        .output()
-    {
-        if output.status.success() {
-            let s = String::from_utf8_lossy(&output.stdout).trim().to_string();
-            if !s.is_empty() {
-                return Some(PathBuf::from(s));
-            }
-        }
-    }
-    if let Ok(output) = std::process::Command::new("zenity")
-        .arg("--file-selection")
-        .arg("--save")
-        .arg("--confirm-overwrite")
-        .arg("--filename")
-        .arg(default_name)
-        .arg("--title")
-        .arg(title)
-        .output()
-    {
-        if output.status.success() {
-            let s = String::from_utf8_lossy(&output.stdout).trim().to_string();
-            if !s.is_empty() {
-                return Some(PathBuf::from(s));
-            }
-        }
-    }
-    None
+    picker_result("kdialog", &["--title", title, "--getsavefilename", default_name, filter])
+        .or_else(|_| picker_result("zenity", &[
+            "--file-selection", "--save", "--confirm-overwrite", "--filename",
+            default_name, "--title", title,
+        ]))
+        .ok()
+        .flatten()
 }
 
 pub fn render_dialogs(app: &mut IngeTrazoApp, ctx: &egui::Context) {
