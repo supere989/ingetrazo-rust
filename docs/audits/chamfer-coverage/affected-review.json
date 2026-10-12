@@ -1,0 +1,73 @@
+{
+  "scope": "Independent retained-report comparison only; no native/source/checker execution. Every case/format comparison dictionary including source/native pixel hashes and residual metrics equals named canonical baseline. Strict residuals remain failures.",
+  "reviews": [
+    {
+      "workflow": "captions",
+      "prior_packet": "docs/audits/dem-picture-integration/regressions-records.zip",
+      "prior_packet_sha256": "81eb34dd8c0db40bd7eed1bd62241ff239e5649d7111baaf8cbc5ca1bcd1efcc",
+      "prior_comparison_member": "captions/comparison.json",
+      "prior_comparison_sha256": "ec816111b86472d698ae70302ab32d766753deb9ca347c25f924360d3d21341f",
+      "current_comparison_path": "/tmp/ingetrazo-glyph-affected-replays/captions/comparison.json",
+      "current_comparison_sha256": "ec816111b86472d698ae70302ab32d766753deb9ca347c25f924360d3d21341f",
+      "all_case_format_metrics_and_source_native_hashes_identical": true,
+      "case_count": 13,
+      "current_result": null,
+      "exact_counts": {
+        "exact_images": 13,
+        "exact_pdfs": 13
+      }
+    },
+    {
+      "workflow": "legends",
+      "prior_packet": "docs/audits/sheet-legends/records.zip",
+      "prior_packet_sha256": "b32a7201c37a78010a955e46426b81d470fec0264b5bf5dbae5e0701237b7e0b",
+      "prior_comparison_member": "software-comparison.json",
+      "prior_comparison_sha256": "f7f5c3268888a6a2ebd1a064df0a73f72e30539e1296690e86f5dad1501a3856",
+      "current_comparison_path": "/tmp/ingetrazo-glyph-affected-replays/legends/comparison.json",
+      "current_comparison_sha256": "f7f5c3268888a6a2ebd1a064df0a73f72e30539e1296690e86f5dad1501a3856",
+      "all_case_format_metrics_and_source_native_hashes_identical": true,
+      "case_count": 7,
+      "current_result": null,
+      "exact_counts": {
+        "exact_images": 6,
+        "exact_pdfs": 7
+      }
+    },
+    {
+      "workflow": "annotations",
+      "prior_packet": "docs/audits/sheet-annotations-integration/records.zip",
+      "prior_packet_sha256": "7dbdc88399fb8191f09920d10f921c0d20fdf6e2ad46ece82d4a93fa3862f7cd",
+      "prior_comparison_member": "integration-r4/replay/comparison.json",
+      "prior_comparison_sha256": "6360cc10785fcb19783598958035f3c659ea02e71d10a6abbeb021784d0d122a",
+      "current_comparison_path": "/tmp/ingetrazo-glyph-affected-replays/annotations/comparison.json",
+      "current_comparison_sha256": "6360cc10785fcb19783598958035f3c659ea02e71d10a6abbeb021784d0d122a",
+      "all_case_format_metrics_and_source_native_hashes_identical": true,
+      "case_count": 20,
+      "current_result": "fail",
+      "exact_counts": {
+        "exact_png": 12,
+        "exact_jpeg": 12,
+        "exact_pdf": 18
+      }
+    },
+    {
+      "workflow": "pictures",
+      "prior_packet": "docs/audits/legend-sampling-integration/records.zip",
+      "prior_packet_sha256": "5fb651b0f143e77e2df3d3111d7ad09997d48566ab019a950428962499bec90a",
+      "prior_comparison_member": "pictures/comparison.json",
+      "prior_comparison_sha256": "57e184af65c77ead24d8cdc3cb6e38c14d2729c275fcbd8713078d015e5a361c",
+      "current_comparison_path": "/tmp/ingetrazo-glyph-affected-replays/pictures/comparison.json",
+      "current_comparison_sha256": "57e184af65c77ead24d8cdc3cb6e38c14d2729c275fcbd8713078d015e5a361c",
+      "all_case_format_metrics_and_source_native_hashes_identical": true,
+      "case_count": 11,
+      "current_result": "fail",
+      "exact_counts": {
+        "exact_png": 10,
+        "exact_jpg": 11,
+        "exact_pdf": 11
+      }
+    }
+  ],
+  "accepted_regression_classification": "No changed output comparison in the four affected workflows. Captions remain exact; legends/annotations/pictures retain their literal baseline strict residuals.",
+  "wiring_test": "3790d399, root integrated24ac; execution belongs to root /tmp/ingetrazo-glyph-wiring-check, not this reviewer"
+}
