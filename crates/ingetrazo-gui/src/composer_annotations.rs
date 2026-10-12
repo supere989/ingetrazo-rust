@@ -785,6 +785,7 @@ fn radial(o: &mut Output, v: &Value, p: &mut Painter, pdf: bool) -> Result<(), S
     if diameter {
         tips.push((a, if out { [u, w] } else { [-u, -w] }));
     }
+    let first_arrow = o.draws.len();
     for (tip, heading) in tips {
         let a = if ends == "arrow" {
             heading[1].atan2(heading[0]) + PI
@@ -792,6 +793,12 @@ fn radial(o: &mut Output, v: &Value, p: &mut Painter, pdf: bool) -> Result<(), S
             w.atan2(u)
         };
         arrows(o, ends, &[(tip, a)], stroke, ink, 1);
+    }
+    // Qt PDF drawPolygon maps the arrow vertices through the painter matrix
+    // before number serialization. A local path plus a rounded cm matrix is
+    // mathematically equivalent, but not the same physical PDF edge rounding.
+    if pdf && ends == "arrow" {
+        for draw in &mut o.draws[first_arrow..] { draw.flatten_transform = true; }
     }
     let deg = readable(u, w);
     let anchor = if out {
