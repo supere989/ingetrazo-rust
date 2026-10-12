@@ -1,0 +1,7 @@
+# Actual native bridge progress
+
+The final recorded R3 executes the same frozen six source cohorts and 20 replies through actual native UI polling and TCP. All 20 typed App states now match after adding the genuine startup figure and Face representation. Seven operative ingress/resource guards pass in native execution. The strict checker still fails at reply 13 stderr: genuine CPython and RustPython traceback output differs. Its rejecting-control suite is **not accepted** on this failed baseline. Exception syntax/type diagnostics remain open; no rewriting or tolerance was introduced.
+
+R3 executed runtime `6c313d0903ff11349453a1a49051c279b426115e`, binary SHA256 `83834d862297cd66b69a2636e4a0298a52aa41bbbcab38d8c80ce9015a6357d6`, native elapsed 1.0466 seconds. The affected bundle compiled in 27.736 seconds. R2's missing startup-group state failure and the new Face list-API compile failure remain retained. R3 reused the [original bridge source packet](../source-README.md); no corpus recapture occurred.
+
+This packet retains actual outputs, comparisons, stdout/stderr and receipts, plus executed runtime/helper Git bytes. It establishes finite progress only. Read-only startup component-query dirty-state failures belong to the separate default-figure workflow and are still under repair. Optional engineering-python and the actual default-off authorization checkbox are required; general Python/API/provider/screenshot parity remains open.

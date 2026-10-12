@@ -1,0 +1,161 @@
+{
+  "scope": "Partial actual socket/UI bridge progress, not full parity",
+  "archive_sha256": "da259a7b307831552f95c97e033d260d4a71f4e1774d5d5c9fba213d3841e801",
+  "members": [
+    {
+      "path": "native-r3/comparison.json",
+      "origin": "/tmp/ingetrazo-ai-bridge-native-r3/comparison.json",
+      "size": 318,
+      "sha256": "0fda23dc684615afd901d0dbb29c09302d49a217e34935a1e335fdb51c9d1e31"
+    },
+    {
+      "path": "native-r3/native-ai-bridge-python.json",
+      "origin": "/tmp/ingetrazo-ai-bridge-native-r3/native-ai-bridge-python.json",
+      "size": 15833,
+      "sha256": "67cfbe4f3f6a1b6e21a15e29ca3e07204557a07cb8ed4cabfc4b6fe299fe09d7"
+    },
+    {
+      "path": "native-r3/native-ai-bridge.partial.json",
+      "origin": "/tmp/ingetrazo-ai-bridge-native-r3/native-ai-bridge.partial.json",
+      "size": 15097,
+      "sha256": "9b515d5fe8a4b9f4caa764ef367907168d5aaa20d5ddc19fa8ef37d7185f776b"
+    },
+    {
+      "path": "attempt-r3/receipt.json",
+      "origin": "/tmp/ingetrazo-ai-bridge-native-r3-attempt/receipt.json",
+      "size": 248,
+      "sha256": "067f31101b1e3b867c7f9ef945fa019cb47aadce5ef3282a70533a912426dce1"
+    },
+    {
+      "path": "attempt-r3/stderr",
+      "origin": "/tmp/ingetrazo-ai-bridge-native-r3-attempt/stderr",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "attempt-r3/stdout",
+      "origin": "/tmp/ingetrazo-ai-bridge-native-r3-attempt/stdout",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "native-r2/native-ai-bridge-python.json",
+      "origin": "/tmp/ingetrazo-ai-bridge-native-r2/native-ai-bridge-python.json",
+      "size": 15856,
+      "sha256": "12cbbd065e589234c092fe429c705dcb41cfa8575c170f913c04d66cea838d41"
+    },
+    {
+      "path": "native-r2/native-ai-bridge.partial.json",
+      "origin": "/tmp/ingetrazo-ai-bridge-native-r2/native-ai-bridge.partial.json",
+      "size": 15120,
+      "sha256": "e599437dacc1b9f3c7c8518f5624a0608f8b851704fbbf2622f60a1ca47693b8"
+    },
+    {
+      "path": "attempt-r2/all-state-differences.json",
+      "origin": "/tmp/ingetrazo-ai-bridge-native-attempt-2/all-state-differences.json",
+      "size": 3268,
+      "sha256": "4264e214306789b82975045cd0cfbe58d6bc29b798e0af25c6e386eac2cc3529"
+    },
+    {
+      "path": "attempt-r2/checker-receipt.json",
+      "origin": "/tmp/ingetrazo-ai-bridge-native-attempt-2/checker-receipt.json",
+      "size": 340,
+      "sha256": "b31eb309d6ad623363fd7d8a5c5fcdbb8d5542194b981ed07b154dd786806e95"
+    },
+    {
+      "path": "attempt-r2/checker.log",
+      "origin": "/tmp/ingetrazo-ai-bridge-native-attempt-2/checker.log",
+      "size": 297,
+      "sha256": "24546ba2e7ce03403a96f85a95b4ee681bb415097b743d87873359e1f9099b41"
+    },
+    {
+      "path": "attempt-r2/comparison.json",
+      "origin": "/tmp/ingetrazo-ai-bridge-native-attempt-2/comparison.json",
+      "size": 309,
+      "sha256": "16614b296d7ac17b723d43f628c7cd21de1aad768bc67aef58dcdcf4e3f0c4b0"
+    },
+    {
+      "path": "attempt-r2/native.log",
+      "origin": "/tmp/ingetrazo-ai-bridge-native-attempt-2/native.log",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "attempt-r2/receipt.json",
+      "origin": "/tmp/ingetrazo-ai-bridge-native-attempt-2/receipt.json",
+      "size": 464,
+      "sha256": "55c198d3e19d87bd390b5eef92a5ecffccadf8acf1755959d9793a10164d1812"
+    },
+    {
+      "path": "build-failed/receipt.json",
+      "origin": "/tmp/ingetrazo-default-bridge-build-r1/receipt.json",
+      "size": 114,
+      "sha256": "845f658f5b528a8a85d8b364d8412a7514b0bfa72bf8608ed883d4a3826075a0"
+    },
+    {
+      "path": "build-failed/stderr",
+      "origin": "/tmp/ingetrazo-default-bridge-build-r1/stderr",
+      "size": 71279,
+      "sha256": "9952a9cc15f0ebcaf7bea7ca6a9d050e02e9d0209a4c24d32367fd36a586a325"
+    },
+    {
+      "path": "build-failed/stdout",
+      "origin": "/tmp/ingetrazo-default-bridge-build-r1/stdout",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "build-fixed/receipt.json",
+      "origin": "/tmp/ingetrazo-default-bridge-build-r2/receipt.json",
+      "size": 111,
+      "sha256": "0d72616bcccdf898daedc873b431b6abd7376f7cf9e2bcd89bd0928fb1d79aaa"
+    },
+    {
+      "path": "build-fixed/stderr",
+      "origin": "/tmp/ingetrazo-default-bridge-build-r2/stderr",
+      "size": 95728,
+      "sha256": "ad294ad1d1e51ce7932df93a8b427949da52f66801e8271702b2e36ed8f4d566"
+    },
+    {
+      "path": "build-fixed/stdout",
+      "origin": "/tmp/ingetrazo-default-bridge-build-r2/stdout",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "executed-code/crates/ingetrazo-gui/examples/ai_bridge_python_workflows.rs",
+      "revision": "6c313d0903ff11349453a1a49051c279b426115e",
+      "git_path": "crates/ingetrazo-gui/examples/ai_bridge_python_workflows.rs",
+      "size": 9654,
+      "sha256": "e2f5ceea7f0dc59bdacce0d134673c653772b72ea9b01a2f4ae03e3a3adeba96"
+    },
+    {
+      "path": "executed-code/scripts/check-ai-bridge-python.py",
+      "revision": "6c313d0903ff11349453a1a49051c279b426115e",
+      "git_path": "scripts/check-ai-bridge-python.py",
+      "size": 5609,
+      "sha256": "555cb96e5aef0b662247be4c772ab92e88beba38cf4918ae33a2957ed9310b70"
+    },
+    {
+      "path": "executed-code/crates/ingetrazo-gui/src/ai_bridge.rs",
+      "revision": "6c313d0903ff11349453a1a49051c279b426115e",
+      "git_path": "crates/ingetrazo-gui/src/ai_bridge.rs",
+      "size": 13552,
+      "sha256": "7e6d90b6d804b0fa876e3b15bfc3319bc6906266cd92476cdf5a68d5143c3de8"
+    },
+    {
+      "path": "executed-code/crates/ingetrazo-gui/src/engineering_python.rs",
+      "revision": "6c313d0903ff11349453a1a49051c279b426115e",
+      "git_path": "crates/ingetrazo-gui/src/engineering_python.rs",
+      "size": 41709,
+      "sha256": "0ba6b89d2b838d0cd1178898d14f974465f27eeec6c469ca5c8cbe656cd1becf"
+    },
+    {
+      "path": "executed-code/tools/ai-interpreter-proof/src/session.rs",
+      "revision": "6c313d0903ff11349453a1a49051c279b426115e",
+      "git_path": "tools/ai-interpreter-proof/src/session.rs",
+      "size": 8731,
+      "sha256": "561bf496673c43deef95d9b9e428229f1aaa4b5d0b0ee2444c1b749545063bf7"
+    }
+  ]
+}
