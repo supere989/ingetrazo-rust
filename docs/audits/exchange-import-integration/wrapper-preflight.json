@@ -1,0 +1,7 @@
+{
+  "passed": false,
+  "fresh_source_captures": 0,
+  "strict_winding_exemptions": 0,
+  "steps": [],
+  "error": "AssertionError('Prebuilt executable required')"
+}

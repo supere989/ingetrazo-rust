@@ -15,3 +15,5 @@ General format coverage, linked-resource/sharing guarantees, viewport/physical p
 Existing affected loader checks also pass: thirteen DAE and one glTF library test. Separate loader-checks.zip/JSON retain exact logs and hashes; these checks do not change the strict App winding verdict.
 
 After archive authentication, root purged21 disposable picker/state/cache/data/extraction directories (807,590,840 logical bytes). cleanup.json retains file hashes and exact paths. This is not a physical disk-reclamation claim: some picker files were hardlinks. Raw native failures, canonical ZIPs, accepted source and shared Cargo target remain.
+
+The full frozen DAE/GLB App cohort is now wired as a separate strict CI stage using the existing shared consumer build. Metadata-only preflight authenticated the source archive, members, pinned support, retained helper aliases and 13-case/61-state/11-save roster, then stopped at an intentionally absent binary with no replay steps. [Preflight](wrapper-preflight.json). Reader checkout is portable and pinned. No new CI execution or strict pass is claimed; the retained directed-winding gap remains open.
