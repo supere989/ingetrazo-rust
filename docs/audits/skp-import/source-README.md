@@ -1,0 +1,11 @@
+# Frozen original SKP App import observations
+
+The assembled source cohort contains fifteen cases, 71 states and twelve saved original IGZ documents. It is a split capture, not a fictitious successful whole-corpus invocation. The unchanged original Python pin and pinned OpenSKP parser, fixture inputs and producer/observer support files authenticate in the manifest. This packet establishes original observations only, with no native acceptance claim.
+
+The first capture at `3b77f949` took 6.778 seconds and failed after seven completed cohorts. Their 37 accepted states are unchanged. Its raw partial also preserves the next cohort's initial state (38 total raw states). A queued original tray callback touched a deleted QScrollBar and the producer's exception gate refused success; the exact callback errors, partial report and receipt remain archived. This is a retained fixture/window-lifetime boundary, not a manufactured successful SKP import or a general parser failure.
+
+The missing-only capture at `b0980223` took 32.317 seconds and passed for the remaining eight cohorts/34 states after retaining fixture windows. Its records are appended in the original ordered roster. Both attempts' generated asset copies are byte-identical, and every accepted input/save/parser identity payload is authenticated against the relevant retained raw producer copy. No completed first cohort was recaptured. The accepted report explicitly records whole_capture_pass=false.
+
+Coverage is finite: legacy/modern retained engineering fixtures, source unit/matrix/group ownership and sharing relations, nested import history, material/layer and style retention, saved cameras, dimensions/leader/image records, repeat import, source-admitted modern empty and warning/chooser-Cancel paths. Directed rings and meaningful matrices remain literal. Broad proprietary versions, real-user-file compatibility, viewport/GPU pixels, real OS chooser automation and general memory/performance claims are outside this source packet.
+
+Both historical producers/contracts and all raw failures are retained; canonical extraction filenames are physically present. Historical duplicate bytes use explicit aliases. Disposable settings/state/config/cache/xdg are excluded, but no raw path has been removed. Root authentication is required before cleanup.
