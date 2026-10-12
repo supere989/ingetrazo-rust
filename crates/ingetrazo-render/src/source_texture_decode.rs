@@ -30,7 +30,7 @@ pub fn decode(bytes: &[u8], limits: Limits) -> Result<Decoded, String> {
     if format == image::ImageFormat::WebP {
         return decode_webp(bytes, limits);
     }
-    if !matches!(format, image::ImageFormat::Jpeg | image::ImageFormat::Png) {
+    if !matches!(format, image::ImageFormat::Jpeg | image::ImageFormat::Png | image::ImageFormat::Bmp | image::ImageFormat::Tiff) {
         return Err("source image format unsupported".into());
     }
     if format == image::ImageFormat::Jpeg {
@@ -84,9 +84,9 @@ pub fn decode(bytes: &[u8], limits: Limits) -> Result<Decoded, String> {
     let output = (w as u64)
         .checked_mul(h as u64)
         .and_then(|n| n.checked_mul(16))
-        .ok_or("source PNG work overflow")?;
+        .ok_or("source bitmap work overflow")?;
     if output > limits.decoded_work_bytes || w == 0 || h == 0 {
-        return Err("source PNG decoded work admission".into());
+        return Err("source bitmap decoded work admission".into());
     }
     let rgba = image::DynamicImage::from_decoder(decoder)
         .map_err(|e| e.to_string())?

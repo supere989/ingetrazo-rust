@@ -277,7 +277,7 @@ impl TextureCache {
 /// pixels. No external image conversion process or per-frame image wrapper.
 pub fn decode_png_jpeg(encoded: &[u8], max_decoded_bytes: u64) -> Result<DecodedTexture, String> {
     let format = image::guess_format(encoded).map_err(|e| format!("Texture format: {e}"))?;
-    if format == image::ImageFormat::WebP {
+    if matches!(format, image::ImageFormat::WebP | image::ImageFormat::Bmp | image::ImageFormat::Tiff) {
         let decoded = ingetrazo_render::source_texture_decode::decode(encoded,
             ingetrazo_render::source_texture_decode::Limits {
                 encoded_bytes: encoded.len(), decoded_work_bytes: max_decoded_bytes,
