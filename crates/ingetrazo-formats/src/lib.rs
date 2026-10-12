@@ -248,3 +248,5 @@ pub mod sheet_image;
 
 mod sheet_jpeg;
 
+
+pub mod photo_profile;

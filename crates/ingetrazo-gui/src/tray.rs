@@ -523,6 +523,7 @@ fn render_terrain_panel(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
     });
 
     ui.separator();
+    if ui.button(tr("Terrain profile of selection")).clicked(){app.open_survey_profile();}
     ui.strong(tr("Topography Tools:"));
 
     ui.horizontal(|ui| {

@@ -344,8 +344,14 @@ pub enum SurfaceFillMode {
     Draped,
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+fn fresh_path_identity()->u64{
+    static NEXT:std::sync::atomic::AtomicU64=std::sync::atomic::AtomicU64::new(1);
+    NEXT.fetch_update(std::sync::atomic::Ordering::Relaxed,std::sync::atomic::Ordering::Relaxed,|n|n.checked_add(1)).expect("GeoPath history identities exhausted")
+}
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct GeoPath {
+    #[serde(skip,default="fresh_path_identity")]
+    pub history_id:u64,
     #[serde(default)]
     pub native_document: serde_json::Value,
     #[serde(default)]
@@ -358,9 +364,16 @@ pub struct GeoPath {
     pub surface_tris: Option<Vec<(DVec3, DVec3, DVec3)>>,
 }
 
+impl PartialEq for GeoPath {
+ fn eq(&self,other:&Self)->bool{
+  let Self{history_id:_,native_document,native_baseline,points,closed,name,surface,surface_tris}=self;
+  native_document==&other.native_document&&native_baseline==&other.native_baseline&&points==&other.points&&closed==&other.closed&&name==&other.name&&surface==&other.surface&&surface_tris==&other.surface_tris
+ }
+}
 impl GeoPath {
     pub fn new(points: Vec<DVec3>, closed: bool, name: impl Into<String>) -> Self {
         Self {
+            history_id:fresh_path_identity(),
             native_document: serde_json::Value::Null,
             native_baseline: serde_json::Value::Null,
             points,
@@ -1174,3 +1187,8 @@ impl TerrainHistory {
  pub fn refresh_visibility(&mut self,id:uuid::Uuid,visible:bool){if let Some(TerrainOwnership::Owned{after:Some(t)})=&mut self.0{if t.object.history_id==id{t.visible=visible;}}}
 }
 impl PartialEq for TerrainHistory {fn eq(&self,other:&Self)->bool{match(&self.0,&other.0){(None,Some(TerrainOwnership::Unowned))|(Some(TerrainOwnership::Unowned),None)=>true,(a,b)=>a==b}}}
+
+#[cfg(test)]mod path_identity_tests{
+ use super::*;
+ #[test]fn path_identity_is_runtime_only_and_clone_preserves_owner(){let a=GeoPath::new(vec![DVec3::ZERO,DVec3::X],false,"path");let b=a.clone();assert_eq!(a.history_id,b.history_id);let c=GeoPath::new(a.points.clone(),a.closed,a.name.clone());assert_ne!(a.history_id,c.history_id);assert_eq!(a,c);let value=serde_json::to_value(&a).unwrap();assert!(value.get("history_id").is_none());let d:GeoPath=serde_json::from_value(value).unwrap();assert_ne!(a.history_id,d.history_id);assert_eq!(a,d);}
+}

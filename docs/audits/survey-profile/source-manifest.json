@@ -1,0 +1,121 @@
+{
+  "source_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "numpy": "2.5.3",
+  "archive_sha256": "7c4f14124c362ce88bce803b8484a59c05893ccab6d5cca2f84449ef8fc6e093",
+  "members": {
+    "long-sloped-input.igz": {
+      "bytes": 1247,
+      "sha256": "e7b2bb29437d4fd5e069b851eadc642df567c282085428f906fd5f8cf25c9cfa"
+    },
+    "long-sloped-original.csv": {
+      "bytes": 7952,
+      "sha256": "0c6c8cd5e4411c3c0b9226034dbc93ea6b239211bdadfb7ef79273e2dbd5159b"
+    },
+    "long-sloped-original.igz": {
+      "bytes": 1247,
+      "sha256": "e7b2bb29437d4fd5e069b851eadc642df567c282085428f906fd5f8cf25c9cfa"
+    },
+    "closed-selected-input.igz": {
+      "bytes": 1278,
+      "sha256": "b4a5bd8011b737b9229e025897c943d10b9898544ca3257052cfc8a0d047674c"
+    },
+    "closed-selected-original.csv": {
+      "bytes": 758,
+      "sha256": "f3318373e6a99755cbd61bc84cb52ea28d66f60211dce388fb922e0965e35f5d"
+    },
+    "closed-selected-original.igz": {
+      "bytes": 1278,
+      "sha256": "b4a5bd8011b737b9229e025897c943d10b9898544ca3257052cfc8a0d047674c"
+    },
+    "highest-gaps-input.igz": {
+      "bytes": 1272,
+      "sha256": "d45bc7c746a90a9f643795fe07f46fc5f626ebf6d20c52ae9391252b9498b082"
+    },
+    "highest-gaps-original.csv": {
+      "bytes": 713,
+      "sha256": "5fdc472b868faeb3f9aa50c4ff62fb0aba47aad9da98c67546f094148990b975"
+    },
+    "highest-gaps-original.igz": {
+      "bytes": 1272,
+      "sha256": "d45bc7c746a90a9f643795fe07f46fc5f626ebf6d20c52ae9391252b9498b082"
+    },
+    "dem-boundary.json": {
+      "bytes": 92,
+      "sha256": "27366810ffa7f18d376c40031711d2a86079c5d2e71a40b0fa4575538990f49d"
+    },
+    "hidden-survey-layer-input.igz": {
+      "bytes": 1272,
+      "sha256": "3fd527eb7119d9f7312dfe591436266af4820d0d7abb1e02d853fd1eb7cdbf38"
+    },
+    "hidden-survey-layer-original.csv": {
+      "bytes": 382,
+      "sha256": "34c6e2d64e3a148ffb25eb2b91f9d6351dc1397cedbd596489bbd0eebff649c5"
+    },
+    "hidden-survey-layer-original.igz": {
+      "bytes": 1272,
+      "sha256": "3fd527eb7119d9f7312dfe591436266af4820d0d7abb1e02d853fd1eb7cdbf38"
+    },
+    "ambiguous-input.igz": {
+      "bytes": 1261,
+      "sha256": "aa4b329a72547b3aeb383b78814b8ebf2cc3914df1e2d9bd0c6557a895dae2a3"
+    },
+    "ambiguous-original.igz": {
+      "bytes": 1261,
+      "sha256": "aa4b329a72547b3aeb383b78814b8ebf2cc3914df1e2d9bd0c6557a895dae2a3"
+    },
+    "no-datum-input.igz": {
+      "bytes": 1193,
+      "sha256": "3ca38b0df739d351f11d9794ade907fca8d234e364d80b2c9f8e89c750fa044c"
+    },
+    "no-datum-original.igz": {
+      "bytes": 1193,
+      "sha256": "3ca38b0df739d351f11d9794ade907fca8d234e364d80b2c9f8e89c750fa044c"
+    },
+    "empty-survey-input.igz": {
+      "bytes": 779,
+      "sha256": "fb544aeeda72291aca55db0d0a45961c017d8035ebc4ed1348e243654e3a6791"
+    },
+    "empty-survey-original.csv": {
+      "bytes": 338,
+      "sha256": "81db3611aa627173141724c782b26ea45202d80a49e5649c79ccf34a112f2de5"
+    },
+    "empty-survey-original.igz": {
+      "bytes": 779,
+      "sha256": "fb544aeeda72291aca55db0d0a45961c017d8035ebc4ed1348e243654e3a6791"
+    },
+    "no-path-input.igz": {
+      "bytes": 1180,
+      "sha256": "2c26d4820c5187e6774f5a7fbcdb5c32403c26502b7b7d7953372cf8a8842321"
+    },
+    "no-path-original.igz": {
+      "bytes": 1180,
+      "sha256": "2c26d4820c5187e6774f5a7fbcdb5c32403c26502b7b7d7953372cf8a8842321"
+    },
+    "zero-span-input.igz": {
+      "bytes": 1238,
+      "sha256": "ddd74bcdc6fa3342ed34ad231091d514a3b5432c6f646a961c62948e47dd52e2"
+    },
+    "zero-span-original.csv": {
+      "bytes": 152,
+      "sha256": "f14e7e7f400854c60a66d1d030c3d862eda491391bd9574da4710ac0c699707f"
+    },
+    "zero-span-original.igz": {
+      "bytes": 1238,
+      "sha256": "ddd74bcdc6fa3342ed34ad231091d514a3b5432c6f646a961c62948e47dd52e2"
+    },
+    "original-profile.json": {
+      "bytes": 138937,
+      "sha256": "2a1df6a37dd1d580881c1e836b6481081c124e9a25eb2a54ce4a7b41e5ce5cf3"
+    },
+    "logs/source.log": {
+      "bytes": 545,
+      "sha256": "b972607127b51418829fd8b24bd9ab5666662a8fbfabcd42ca6a05afe7aa7c4c"
+    }
+  },
+  "capture_helper_sha256": "12513797cf1488a7ce18e178207df9e9f75b018eef536e84ea8dca6d0f1bd06a",
+  "cases": 9,
+  "states": 18,
+  "actual_source": "clicked ProfileDock controls, actual PhotoMeshSampler and profile CSV handler",
+  "DEM_boundary": "actual DEMSampler selected only; no fetcher instantiated/network",
+  "no_GPU_claim": true
+}

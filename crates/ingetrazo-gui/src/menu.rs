@@ -691,7 +691,7 @@ pub fn render_menu_bar(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
             ui.separator();
 
             if ui.button(tr("Terrain profile of selection")).clicked() {
-                app.status_message = tr("Generated terrain profile of selection");
+                app.open_survey_profile();
                 ui.close_menu();
             }
 
@@ -774,8 +774,7 @@ pub fn render_menu_bar(app: &mut IngeTrazoApp, ui: &mut egui::Ui) {
             });
 
             if ui.button(tr("Terrain profile")).clicked() {
-                app.show_tray = true;
-                app.active_tray_tab = crate::app::TrayTab::Terrain;
+                app.survey_profile.visible=!app.survey_profile.visible;
                 ui.close_menu();
             }
 
