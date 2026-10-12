@@ -155,7 +155,7 @@ pub(super) fn arc(r: [f64; 4], start: f64, sweep: f64) -> Result<Vec<PathOp>, St
             return Err("Annotation arc subdivision exceeded bound".into());
         }
         let j = 3 * (3 - i.rem_euclid(4)) as usize;
-        let mut c = if step > 0. {
+        let mut c = if step > 0 {
             [points[j + 3], points[j + 2], points[j + 1], points[j]]
         } else {
             [points[j], points[j + 1], points[j + 2], points[j + 3]]
