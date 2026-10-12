@@ -74,6 +74,9 @@ fn prepare_finish(finishing_scene: &Scene, stack: &[ComponentEditSession], undo:
         let mut lifted_undo=undo.to_vec();let mut lifted_redo=redo.to_vec();
         for entry in lifted_undo.iter_mut().chain(lifted_redo.iter_mut()){
             if let Some(marker)=entry.history_file_import.as_ref().filter(|m|m.context==target){
+                // Source reshare folds this active-mesh import with the other
+                // local commands, while its already-appended ROOT group stays.
+                if fold && changed{continue;}
                 let mut local=finishing_scene.clone();local.mesh=marker.mesh.clone();
                 let (restored,_)=component_candidate(session,&local)?;
                 if let Some(group)=restored.groups.iter().find(|g|g.id==session.group_id){
@@ -150,8 +153,8 @@ fn publish_finish(plan: FinishPlan, scene: &mut Scene, stack: &mut Vec<Component
         if fold && changed {
             // Sharing leaves fold only commands targeting this edit mesh.
             // Prior document commands retain their global positions.
-            undo.retain(|entry|!entry.history_context.starts_with(&target));
-            redo.retain(|entry|!entry.history_context.starts_with(&target));
+            undo.retain(|entry|!entry.history_context.starts_with(&target)&&!entry.history_file_import.as_ref().is_some_and(|m|m.context==target));
+            redo.retain(|entry|!entry.history_context.starts_with(&target)&&!entry.history_file_import.as_ref().is_some_and(|m|m.context==target));
             if changed {undo.push(folded_snapshot.unwrap());redo.clear();}
         }
 

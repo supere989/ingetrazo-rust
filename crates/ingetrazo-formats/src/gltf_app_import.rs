@@ -134,8 +134,9 @@ pub(super) fn finish(
             let e2 = raw_points[2] - raw_points[0];
             let a = DMat3::from_cols(e1, e2, e1.cross(e2)).transpose();
             if a.determinant().abs() > 1e-18 {
-                let gu = a.inverse() * DVec3::new(uv[1].x - uv[0].x, uv[2].x - uv[0].x, 0.);
-                let gv = a.inverse() * DVec3::new(uv[1].y - uv[0].y, uv[2].y - uv[0].y, 0.);
+                let rows = [e1.to_array(), e2.to_array(), e1.cross(e2).to_array()];
+                let gu = solve3(rows, [uv[1].x - uv[0].x, uv[2].x - uv[0].x, 0.])?;
+                let gv = solve3(rows, [uv[1].y - uv[0].y, uv[2].y - uv[0].y, 0.])?;
                 attrs.insert("texture".into(),serde_json::json!({"embed":texture["embed"],"uvw":[gu.x,gu.y,gu.z,uv[0].x-gu.dot(raw_points[0]),gv.x,gv.y,gv.z,uv[0].y-gv.dot(raw_points[0])],"sw":if gu.length()>1e-9{1./gu.length()}else{1.},"sh":if gv.length()>1e-9{1./gv.length()}else{1.}}));
                 attrs.insert("back".into(), true.into());
             }
@@ -144,10 +145,11 @@ pub(super) fn finish(
             attrs.insert("back".into(), true.into());
         }
         if m.and_then(|m| m.get("alphaMode")).and_then(Value::as_str) == Some("BLEND") {
-            attrs.insert(
-                "opacity".into(),
-                serde_json::json!(if rgba[3] == 1. { 0.999 } else { rgba[3] }),
-            );
+            if rgba[3] < 0.999 {
+                attrs.insert("opacity".into(), serde_json::json!(rgba[3]));
+            } else if !face.attrs.contains_key("texture") {
+                attrs.insert("opacity".into(), serde_json::json!(0.999));
+            }
         }
     }
     if prepared.edges.len() <= 500000 {
@@ -215,4 +217,43 @@ fn image_alpha(bytes: &[u8]) -> bool {
     reader
         .into_decoder()
         .is_ok_and(|d| d.color_type().has_alpha())
+}
+
+// Original np.linalg.solve uses a partial-pivot LU solve, not inverse*rhs.
+// Preserve division/update ordering, particularly signed zeros on negative pivots.
+fn solve3(mut a: [[f64; 3]; 3], mut b: [f64; 3]) -> Result<DVec3, GltfError> {
+    for k in 0..3 {
+        let mut pivot = k;
+        for i in k + 1..3 {
+            if a[i][k].abs() > a[pivot][k].abs() {
+                pivot = i;
+            }
+        }
+        if a[pivot][k] == 0. {
+            return Err(invalid("Singular source glTF UV plane"));
+        }
+        a.swap(k, pivot);
+        b.swap(k, pivot);
+        for i in k + 1..3 {
+            a[i][k] /= a[k][k];
+            for j in k + 1..3 {
+                a[i][j] -= a[i][k] * a[k][j];
+            }
+        }
+    }
+    for k in 0..3 {
+        for i in k + 1..3 {
+            b[i] -= a[i][k] * b[k];
+        }
+    }
+    for k in (0..3).rev() {
+        b[k] /= a[k][k];
+        for i in 0..k {
+            b[i] -= a[i][k] * b[k];
+        }
+    }
+    if b.iter().any(|n| !n.is_finite()) {
+        return Err(invalid("Nonfinite source glTF UV solution"));
+    }
+    Ok(DVec3::from_array(b))
 }

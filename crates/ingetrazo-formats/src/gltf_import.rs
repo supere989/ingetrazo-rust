@@ -278,7 +278,17 @@ fn walk(
                 .map(|p| {
                     let p =
                         world.transform_point3(DVec3::new(p[0] as f64, p[1] as f64, p[2] as f64));
-                    DVec3::new(p.x, -p.z, p.y)
+                    if source.is_some() {
+                        // Pinned NumPy zup matrix product, including zero
+                        // additions; explicit negation alone changes -0 bits.
+                        DVec3::new(
+                            p.x + 0. * p.y + 0. * p.z,
+                            0. * p.x + 0. * p.y - p.z,
+                            0. * p.x + p.y + 0. * p.z,
+                        )
+                    } else {
+                        DVec3::new(p.x, -p.z, p.y)
+                    }
                 })
                 .collect::<Vec<_>>();
             if positions.iter().any(|p| !p.is_finite()) {
