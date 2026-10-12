@@ -280,7 +280,7 @@ jobs:
       - name: Check native Metal library and device probe
         run: |
           mkdir -p docs/audits/metal-cross-ci
-          cargo check --locked -p ingetrazo-metal --all-targets --target ${{ matrix.target }} > docs/audits/metal-cross-ci/check.log 2>&1
+          cargo check --locked -p ingetrazo-metal --all-targets --target ${{ matrix.target }} --config 'target.${{ matrix.target }}.webpsys.rustc-link-lib=["static=webpsys"]' > docs/audits/metal-cross-ci/check.log 2>&1
           scripts/check-metal-gui-metadata.sh ${{ matrix.target }} > docs/audits/metal-cross-ci/gui-examples.log 2>&1
       - name: Retain compile evidence
         if: always()

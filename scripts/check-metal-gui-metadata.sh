@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Rust metadata only: use native macOS CI for SDK, C ABI, linking, MSL and GPU proof.
-# These five native dependencies have checked-in Rust declarations. Cargo links
+# These six native dependencies have checked-in Rust declarations. Cargo links
 # overrides suppress only their native C build scripts; no executable is produced.
 # ring is pulled in by DEM HTTPS. Native macOS jobs still build and link its
 # crypto implementation; this Linux diagnostic checks Rust metadata only.
@@ -19,6 +19,7 @@ fi
 # metadata override must supply the same declarations without invoking CMake.
 turbojpeg_bindings=$(cargo metadata --locked --format-version=1 | python3 -c 'import json,sys; from pathlib import Path; p=[p for p in json.load(sys.stdin)["packages"] if p["name"]=="turbojpeg-sys" and p["version"]=="1.2.0"]; assert len(p)==1; root=Path(p[0]["manifest_path"]).parent; assert (root/"bindings.rs").is_file(); print(root)')
 INGETRAZO_RUST_METADATA_ONLY=1 cargo check --locked -p ingetrazo-gui --target "$target" \
+    --config "target.$target.webpsys.rustc-link-lib=[\"static=webpsys\"]" \
     --config "target.$target.z.rustc-link-lib=[\"z\"]" \
     --config "target.$target.freetype.rustc-link-lib=[\"freetype\"]" \
     --config "target.$target.harfbuzz.rustc-link-lib=[\"harfbuzz\"]" \
