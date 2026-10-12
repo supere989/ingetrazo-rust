@@ -254,6 +254,8 @@ def main():
         original=load(a.source/"original-reopens.json");readers=load(a.native/"native-reopens.json")
         result=validate(source,native,original,readers)
         result["order_parametric_source_law"]=source_law(source,native,readers)
+        history_diffs=[{"case":e["case"],"phase":e["phase"],"source":{"undo":e["undo"],"redo":e["redo"]},"native":{"undo":n["undo"],"redo":n["redo"]}} for e,n in zip(source["states"],native["states"]) if e["undo"]!=n["undo"] or e["redo"]!=n["redo"]]
+        result["literal_all_state_history"]={"ok":not history_diffs,"states":68,"mismatches":history_diffs}
         result.update(cases=6,states=68,original_reader_pairs=6,scope="Strict ordered source states and models; fresh UID/group spelling only is bijective. z/clipboard/selection order remain strict. Native session-reset persistence is not native window-close proof.",source_noops=["locked-hidden-copy: force_select acquires none; Copy/Paste are no-ops", "text-copy-cut-history: Cut after history-cleared selection is a no-op"],operative_cut="cross-sheet-bindings Text+Cota",source_callback_errors=len(source["callback_errors"]))
         if result["ok"]: result["rejected_controls"]=rejects(source,native,original,readers)
     except Exception as e: result["error"]=repr(e)
