@@ -1579,6 +1579,8 @@ impl App for crate::IngeTrazoApp {
 }
 
 fn prepare_app_world(app:&crate::IngeTrazoApp,world:&mut world::World,context:&VulkanContext,fence:vk::Fence,serial:u64)->Result<(),String>{
+ // Source ordinary model viewport owns axes; standalone/paper World callers default off.
+ world.set_viewport_axes(app.scene.active_sheet_index.is_none());
  let sun=crate::solar_controls::scene_direction(app).unwrap_or(None);
  let sweep=world.prepare_face_sweep(context,&app.scene,&app.camera,&app.style,app.active_tool.face_sweep_preview(),app.model_revision,fence,serial)?;
  let result=if sun.is_some()||world.has_shadow_owner(){
