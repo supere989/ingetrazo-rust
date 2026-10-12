@@ -1,0 +1,1170 @@
+{
+  "scope": "Finite default figure acceptance; no complete P31/P32 promotion",
+  "runtime_revision": "029dcef31ee77814880b5ddd20313ffe722fe49c",
+  "binary_sha256": "150c8227615e527f15e8a550dfb977361221c403173b657571d6418a080497dd",
+  "archive_sha256": "a9d45c4648ef079e6b96de34904a01a5680a3cf7ce156e54ea265f28f66889fe",
+  "members": [
+    {
+      "origin": "/tmp/ingetrazo-default-figure-native-r1/assets/be7b463c8b2eec4e7635b2f1efbc1705267ff39ada6a0e4935eebe2e13799e13.png",
+      "member": "ingetrazo-default-figure-native-r1/assets/be7b463c8b2eec4e7635b2f1efbc1705267ff39ada6a0e4935eebe2e13799e13.png",
+      "size": 372245,
+      "sha256": "be7b463c8b2eec4e7635b2f1efbc1705267ff39ada6a0e4935eebe2e13799e13"
+    },
+    {
+      "origin": "/tmp/ingetrazo-default-figure-native-r1/assets/be7b463c8b2eec4e7635b2f1efbc1705267ff39ada6a0e4935eebe2e13799e13.rgba",
+      "member": "ingetrazo-default-figure-native-r1/assets/be7b463c8b2eec4e7635b2f1efbc1705267ff39ada6a0e4935eebe2e13799e13.rgba",
+      "size": 2046000,
+      "sha256": "076c0bcacdf99c2c8305f18fc9955f9369d9cf683a11b1def63ea8ecb6f1e792"
+    },
+    {
+      "origin": "/tmp/ingetrazo-default-figure-native-r3/default-query-diagnostic.json",
+      "member": "ingetrazo-default-figure-native-r3/default-query-diagnostic.json",
+      "size": 28518,
+      "sha256": "7acda1f1905c90202267c0caeb613e3d85bea3041a69bdd3ff6972ea510cb0b9"
+    },
+    {
+      "origin": "/tmp/ingetrazo-default-figure-native-r4/bool-false-query-diagnostic.json",
+      "member": "ingetrazo-default-figure-native-r4/bool-false-query-diagnostic.json",
+      "size": 32729,
+      "sha256": "ddee85acf7f1cc5d53ab3452319ff4d875c3bb388fc8b6c52c4354592ac15d8f"
+    },
+    {
+      "origin": "/tmp/ingetrazo-default-figure-native-r4/bool-false-saved.igz",
+      "member": "ingetrazo-default-figure-native-r4/bool-false-saved.igz",
+      "size": 373222,
+      "sha256": "31a2573929aeca2a105be378d515baa505a543b5d93f593bf337ad7380df384a"
+    },
+    {
+      "origin": "/tmp/ingetrazo-default-figure-native-r4/comparison-default-figure.json",
+      "member": "ingetrazo-default-figure-native-r4/comparison-default-figure.json",
+      "size": 124,
+      "sha256": "b08435d7c3887f72f8eb1278da4d6e9a7cd1b0eb4fbe13c3d38909dce1626e12"
+    },
+    {
+      "origin": "/tmp/ingetrazo-default-figure-native-r4/default-query-diagnostic.json",
+      "member": "ingetrazo-default-figure-native-r4/default-query-diagnostic.json",
+      "size": 32719,
+      "sha256": "7c067a0f6ca6ba84a52bc12b87397ed7d7c992e633ec3c53c5c5bb8596ad1c4d"
+    },
+    {
+      "origin": "/tmp/ingetrazo-default-figure-native-r4/default-saved.igz",
+      "member": "ingetrazo-default-figure-native-r4/default-saved.igz",
+      "size": 373220,
+      "sha256": "c642e3e152c49953ebef7e3a1b78109a282226445a4fb38b3b8d0696f3b3346e"
+    },
+    {
+      "origin": "/tmp/ingetrazo-default-figure-native-r4/disabled-string-query-diagnostic.json",
+      "member": "ingetrazo-default-figure-native-r4/disabled-string-query-diagnostic.json",
+      "size": 9992,
+      "sha256": "ff71ea20bffef91fb019f244793b7d588f429a37d378faad46f174a930a3cc54"
+    },
+    {
+      "origin": "/tmp/ingetrazo-default-figure-native-r4/disabled-string-saved.igz",
+      "member": "ingetrazo-default-figure-native-r4/disabled-string-saved.igz",
+      "size": 4273,
+      "sha256": "5ca0c6c2358c6ef015c4de04dda92d48aee43cf9c831f86873810da1f203855e"
+    },
+    {
+      "origin": "/tmp/ingetrazo-default-figure-native-r4/native-default-figure.json",
+      "member": "ingetrazo-default-figure-native-r4/native-default-figure.json",
+      "size": 8332,
+      "sha256": "8fdc8c0fc5c780f2bc9274424dcfa53442e3320f54373a4aa4bc150d2c7675f6"
+    },
+    {
+      "origin": "/tmp/ingetrazo-default-figure-native-r4/reopens-default-figure.json",
+      "member": "ingetrazo-default-figure-native-r4/reopens-default-figure.json",
+      "size": 6952,
+      "sha256": "0968515c1bae24a7fc3b1996b9fc1414e1d12bb1e608259d05b08d3f8675cad2"
+    },
+    {
+      "origin": "/tmp/ingetrazo-default-figure-native-r5/bool-false-query-diagnostic.json",
+      "member": "ingetrazo-default-figure-native-r5/bool-false-query-diagnostic.json",
+      "size": 31817,
+      "sha256": "e6bb0a7ef7bf16b5a6f552d10c5e4ad07bee55ffd19afd7edfa0d7058335b073"
+    },
+    {
+      "origin": "/tmp/ingetrazo-default-figure-native-r5/bool-false-saved.igz",
+      "member": "ingetrazo-default-figure-native-r5/bool-false-saved.igz",
+      "size": 373180,
+      "sha256": "01ab378e4c76d05a003e99b409d8d7856898ec9aa24fecb6d41b95b3b3e42c3e"
+    },
+    {
+      "origin": "/tmp/ingetrazo-default-figure-native-r5/comparison-default-figure.json",
+      "member": "ingetrazo-default-figure-native-r5/comparison-default-figure.json",
+      "size": 137,
+      "sha256": "cdc6e0db509eb49b433644d7c114e8a3cd988b7c34f1e1fa35500d777aea8c04"
+    },
+    {
+      "origin": "/tmp/ingetrazo-default-figure-native-r5/default-query-diagnostic.json",
+      "member": "ingetrazo-default-figure-native-r5/default-query-diagnostic.json",
+      "size": 31807,
+      "sha256": "11c1e8728204ac95efb470575856015f605fcbc012ae1f9e4b8e8ba5f99bb0f4"
+    },
+    {
+      "origin": "/tmp/ingetrazo-default-figure-native-r5/default-saved.igz",
+      "member": "ingetrazo-default-figure-native-r5/default-saved.igz",
+      "size": 373180,
+      "sha256": "9075736172e3b9702116097771a1460271a2271f40ff7222053e9bfa09feda95"
+    },
+    {
+      "origin": "/tmp/ingetrazo-default-figure-native-r5/disabled-string-query-diagnostic.json",
+      "member": "ingetrazo-default-figure-native-r5/disabled-string-query-diagnostic.json",
+      "size": 9992,
+      "sha256": "c701c01471cd394b2fccb8edf4f12f27bfa9a7c2427e0108a7ce90df64d8b1b5"
+    },
+    {
+      "origin": "/tmp/ingetrazo-default-figure-native-r5/disabled-string-saved.igz",
+      "member": "ingetrazo-default-figure-native-r5/disabled-string-saved.igz",
+      "size": 4273,
+      "sha256": "dc4379f0a1a738c9309266693bb7e4e6b1f179baf1d586d676b01732bb8da2c5"
+    },
+    {
+      "origin": "/tmp/ingetrazo-default-figure-native-r5/native-default-figure.json",
+      "member": "ingetrazo-default-figure-native-r5/native-default-figure.json",
+      "size": 8330,
+      "sha256": "c8c4ebc26cca89cc3f735d7e8d88c1e0dbd14197e0b2eebe3966b78ff0584138"
+    },
+    {
+      "origin": "/tmp/ingetrazo-default-figure-native-r5/reopens-default-figure.json",
+      "member": "ingetrazo-default-figure-native-r5/reopens-default-figure.json",
+      "size": 6950,
+      "sha256": "b15df636803ce93b3d83e737068a9bfbd60311502826a0c34cb5a938aea59230"
+    },
+    {
+      "origin": "/tmp/ingetrazo-default-figure-native-r1-attempt/receipt.json",
+      "member": "ingetrazo-default-figure-native-r1-attempt/receipt.json",
+      "size": 257,
+      "sha256": "634022a1efa5d8be9ed584d68370f54a98ef4dc9a4be712a3905c19487fb7b93"
+    },
+    {
+      "origin": "/tmp/ingetrazo-default-figure-native-r1-attempt/stderr",
+      "member": "ingetrazo-default-figure-native-r1-attempt/stderr",
+      "size": 293,
+      "sha256": "a6a3e9b24230d14ab14ef1cba88c56a0f313d1fecc093f8e64c1f8676d95c4bb"
+    },
+    {
+      "origin": "/tmp/ingetrazo-default-figure-native-r1-attempt/stdout",
+      "member": "ingetrazo-default-figure-native-r1-attempt/stdout",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "origin": "/tmp/ingetrazo-default-figure-native-r2-attempt/receipt.json",
+      "member": "ingetrazo-default-figure-native-r2-attempt/receipt.json",
+      "size": 201,
+      "sha256": "e3e86c99079e1e56f797899193c626883438c58eb59062ef5714085bf7917dd1"
+    },
+    {
+      "origin": "/tmp/ingetrazo-default-figure-native-r2-attempt/stderr",
+      "member": "ingetrazo-default-figure-native-r2-attempt/stderr",
+      "size": 293,
+      "sha256": "a150b6007edd975e7d78be3800d08f43821deda3f104d313b459a7003f387342"
+    },
+    {
+      "origin": "/tmp/ingetrazo-default-figure-native-r3-attempt/receipt.json",
+      "member": "ingetrazo-default-figure-native-r3-attempt/receipt.json",
+      "size": 201,
+      "sha256": "d30480affd04ff1faf903af0f057d6d30399e8367a6854179ccd3d485bbdac12"
+    },
+    {
+      "origin": "/tmp/ingetrazo-default-figure-native-r3-attempt/stderr",
+      "member": "ingetrazo-default-figure-native-r3-attempt/stderr",
+      "size": 293,
+      "sha256": "59c3e89fcf09f79eb3590672876dbce4cabf961ffc3ffa042635c7c52d5f4936"
+    },
+    {
+      "origin": "/tmp/ingetrazo-default-figure-native-r5-attempt/checker.receipt.json",
+      "member": "ingetrazo-default-figure-native-r5-attempt/checker.receipt.json",
+      "size": 315,
+      "sha256": "839a60476d6c7c48ab80352cf338cdb17da92a9ec2181b9678be0f74671fa9f2"
+    },
+    {
+      "origin": "/tmp/ingetrazo-default-figure-native-r5-attempt/checker.stdout",
+      "member": "ingetrazo-default-figure-native-r5-attempt/checker.stdout",
+      "size": 125,
+      "sha256": "03d102a5c028414e8bd855f23e92b91fd42106784658ba10593b3598332132bb"
+    },
+    {
+      "origin": "/tmp/ingetrazo-default-figure-native-r5-attempt/native.receipt.json",
+      "member": "ingetrazo-default-figure-native-r5-attempt/native.receipt.json",
+      "size": 402,
+      "sha256": "ee55b75331188f97f6b2f7b5de1a8d1e937077b020ff0554c6d120033c295749"
+    },
+    {
+      "origin": "/tmp/ingetrazo-default-figure-native-r5-attempt/reader.receipt.json",
+      "member": "ingetrazo-default-figure-native-r5-attempt/reader.receipt.json",
+      "size": 359,
+      "sha256": "32a0c9eba2a9f281087d80217a2b212d608a947eb35f1b68506057953ee1a2a6"
+    },
+    {
+      "origin": "/tmp/ingetrazo-default-figure-reader-attempt-2/checker.stdout",
+      "member": "ingetrazo-default-figure-reader-attempt-2/checker.stdout",
+      "size": 112,
+      "sha256": "2b179add13b2affb36e0aa42eb5ac801a7cd467b8413be9ccec658325147b63b"
+    },
+    {
+      "origin": "/tmp/ingetrazo-default-figure-reader-attempt-2/receipt.json",
+      "member": "ingetrazo-default-figure-reader-attempt-2/receipt.json",
+      "size": 55,
+      "sha256": "00089ba52ab8277305f69f0b5fbde10878b321668f8d55d95ce8fc2236e45a79"
+    },
+    {
+      "origin": "/tmp/ingetrazo-bridge-console-regression-r2/groups-checker.log",
+      "member": "ingetrazo-bridge-console-regression-r2/groups-checker.log",
+      "size": 49,
+      "sha256": "02f8271790d41ddcc1d5a32c7c0724a6a3ffbc86598dd31d1a4753994e7cc2a5"
+    },
+    {
+      "origin": "/tmp/ingetrazo-bridge-console-regression-r2/groups.json",
+      "member": "ingetrazo-bridge-console-regression-r2/groups.json",
+      "size": 9028,
+      "sha256": "8de12fd1531205af3a666367903b1879e7d2ac4b24a1289739e024634b23e106"
+    },
+    {
+      "origin": "/tmp/ingetrazo-bridge-console-regression-r2/nested-checker.log",
+      "member": "ingetrazo-bridge-console-regression-r2/nested-checker.log",
+      "size": 76,
+      "sha256": "8c8e8676c792a923f76af94a2a4f45d3962febe9595c26a959fbdcb5180f9b9d"
+    },
+    {
+      "origin": "/tmp/ingetrazo-bridge-console-regression-r2/nested-reopen-receipt.json",
+      "member": "ingetrazo-bridge-console-regression-r2/nested-reopen-receipt.json",
+      "size": 355,
+      "sha256": "d42d9082935d203fee00d82178438455d757fa90f0a5272eaa3c88a28e937c3a"
+    },
+    {
+      "origin": "/tmp/ingetrazo-bridge-console-regression-r2/nested-reopen.json",
+      "member": "ingetrazo-bridge-console-regression-r2/nested-reopen.json",
+      "size": 10764,
+      "sha256": "e06da1421f0bbffe105ff5ff2304a1c87056ac898dceec37acf4a4011ea396ba"
+    },
+    {
+      "origin": "/tmp/ingetrazo-bridge-console-regression-r2/nested.igz",
+      "member": "ingetrazo-bridge-console-regression-r2/nested.igz",
+      "size": 8711,
+      "sha256": "e14ed76d42fa1fea48fa4979b2e5381c36d57c443e12bd6575cf1067b206556b"
+    },
+    {
+      "origin": "/tmp/ingetrazo-bridge-console-regression-r2/nested.json",
+      "member": "ingetrazo-bridge-console-regression-r2/nested.json",
+      "size": 30468,
+      "sha256": "dbbd501573caedfab06fb96ce7598bc8a9bb2c0d748502cce576f6506ee9c53c"
+    },
+    {
+      "origin": "/tmp/ingetrazo-bridge-console-regression-r2/receipt.json",
+      "member": "ingetrazo-bridge-console-regression-r2/receipt.json",
+      "size": 1631,
+      "sha256": "f36062bc6c44d183407de3a5ef2242444a73ec7b462704b380149cd95b93a682"
+    },
+    {
+      "origin": "/tmp/ingetrazo-default-figure-native-r6/bool-false-query-diagnostic.json",
+      "member": "ingetrazo-default-figure-native-r6/bool-false-query-diagnostic.json",
+      "size": 31817,
+      "sha256": "17f5c623112f2e63026784a6d9fd9a2f3d93147fe49cb66b60126ea20688c718"
+    },
+    {
+      "origin": "/tmp/ingetrazo-default-figure-native-r6/bool-false-saved.igz",
+      "member": "ingetrazo-default-figure-native-r6/bool-false-saved.igz",
+      "size": 373180,
+      "sha256": "682560a7abac266b84cc50c682fc5a73b8e8da82abb259033abdf4abc5a4ab1d"
+    },
+    {
+      "origin": "/tmp/ingetrazo-default-figure-native-r6/comparison-default-figure.json",
+      "member": "ingetrazo-default-figure-native-r6/comparison-default-figure.json",
+      "size": 394,
+      "sha256": "3580ae4c24966e3b60998c10698b664c392631462410e211d31372dd33114c63"
+    },
+    {
+      "origin": "/tmp/ingetrazo-default-figure-native-r6/default-query-diagnostic.json",
+      "member": "ingetrazo-default-figure-native-r6/default-query-diagnostic.json",
+      "size": 31807,
+      "sha256": "6d5833b7d0ffaca4355c641fa7f18e2b02895abc70cd2dc64575e96032755993"
+    },
+    {
+      "origin": "/tmp/ingetrazo-default-figure-native-r6/default-saved.igz",
+      "member": "ingetrazo-default-figure-native-r6/default-saved.igz",
+      "size": 373180,
+      "sha256": "97a50792f616c74d2653741b3c90c7804dae3fd0403fa7a5f88f6e34ab5f1de2"
+    },
+    {
+      "origin": "/tmp/ingetrazo-default-figure-native-r6/disabled-string-query-diagnostic.json",
+      "member": "ingetrazo-default-figure-native-r6/disabled-string-query-diagnostic.json",
+      "size": 9992,
+      "sha256": "594b43ade72a8e7bdae302579936a6af419790f801aceafebec21bbc914b0359"
+    },
+    {
+      "origin": "/tmp/ingetrazo-default-figure-native-r6/disabled-string-saved.igz",
+      "member": "ingetrazo-default-figure-native-r6/disabled-string-saved.igz",
+      "size": 4273,
+      "sha256": "0032448f62c03d54e0342e3bc545742f859a468f4fd4c7101cbd00dde34547af"
+    },
+    {
+      "origin": "/tmp/ingetrazo-default-figure-native-r6/native-default-figure.json",
+      "member": "ingetrazo-default-figure-native-r6/native-default-figure.json",
+      "size": 8980,
+      "sha256": "9243f358250ae3de54cbc976e8f2f6179052c408d33f53d3ceaac1abb19cea08"
+    },
+    {
+      "origin": "/tmp/ingetrazo-default-figure-reader-attempt-3/checker.receipt.json",
+      "member": "ingetrazo-default-figure-reader-attempt-3/checker.receipt.json",
+      "size": 258,
+      "sha256": "13094646e6de4800a1081d2fbd3c137498e530277fe9e714d72941264d6e3d7a"
+    },
+    {
+      "origin": "/tmp/ingetrazo-default-figure-reader-attempt-3/checker.stdout",
+      "member": "ingetrazo-default-figure-reader-attempt-3/checker.stdout",
+      "size": 324,
+      "sha256": "25475718489af4d3e4f5ddf89707f695a5b2e6a3005408d940a964683685ef44"
+    },
+    {
+      "origin": "/tmp/ingetrazo-default-figure-reader-attempt-3/reader.receipt.json",
+      "member": "ingetrazo-default-figure-reader-attempt-3/reader.receipt.json",
+      "size": 301,
+      "sha256": "ce5c9bc5b90862ea3052e59b251f8db037f5eae2f408bf6f3e97dd8a9523ec8e"
+    },
+    {
+      "origin": "/tmp/ingetrazo-default-bridge-build-r1/receipt.json",
+      "member": "ingetrazo-default-bridge-build-r1/receipt.json",
+      "size": 114,
+      "sha256": "845f658f5b528a8a85d8b364d8412a7514b0bfa72bf8608ed883d4a3826075a0"
+    },
+    {
+      "origin": "/tmp/ingetrazo-default-bridge-build-r1/stderr",
+      "member": "ingetrazo-default-bridge-build-r1/stderr",
+      "size": 71279,
+      "sha256": "9952a9cc15f0ebcaf7bea7ca6a9d050e02e9d0209a4c24d32367fd36a586a325"
+    },
+    {
+      "origin": "/tmp/ingetrazo-default-bridge-build-r2/receipt.json",
+      "member": "ingetrazo-default-bridge-build-r2/receipt.json",
+      "size": 111,
+      "sha256": "0d72616bcccdf898daedc873b431b6abd7376f7cf9e2bcd89bd0928fb1d79aaa"
+    },
+    {
+      "origin": "/tmp/ingetrazo-default-bridge-build-r2/stderr",
+      "member": "ingetrazo-default-bridge-build-r2/stderr",
+      "size": 95728,
+      "sha256": "ad294ad1d1e51ce7932df93a8b427949da52f66801e8271702b2e36ed8f4d566"
+    },
+    {
+      "origin": "/tmp/ingetrazo-default-bridge-build-r3/receipt.json",
+      "member": "ingetrazo-default-bridge-build-r3/receipt.json",
+      "size": 112,
+      "sha256": "aa55bdc85e77ca8bf398f49371398c73f602a61fcae6808d35ee90c6decedcf8"
+    },
+    {
+      "origin": "/tmp/ingetrazo-default-bridge-build-r3/stderr",
+      "member": "ingetrazo-default-bridge-build-r3/stderr",
+      "size": 95728,
+      "sha256": "9710511284858b5b1ff9919d98a408ec225bf39e97d7f4cfda4d8fb4842795fa"
+    },
+    {
+      "origin": "/tmp/ingetrazo-default-diagnostic-build-r1/receipt.json",
+      "member": "ingetrazo-default-diagnostic-build-r1/receipt.json",
+      "size": 111,
+      "sha256": "004eb1c975bccacb34e846c0256454c0d363d37cb62dd7bc78299ef5a274ade6"
+    },
+    {
+      "origin": "/tmp/ingetrazo-default-diagnostic-build-r1/stderr",
+      "member": "ingetrazo-default-diagnostic-build-r1/stderr",
+      "size": 95728,
+      "sha256": "c1a8ad38d3df4e72712a459bb9625f0578ce195507c0a3ebd50a75b8cf7501af"
+    },
+    {
+      "origin": "/tmp/ingetrazo-capture-default-build-r4/receipt.json",
+      "member": "ingetrazo-capture-default-build-r4/receipt.json",
+      "size": 111,
+      "sha256": "d1de67e54ea93a4e8252917c494431d7a284cbd01d1369bc3b43b84fb81bcdb1"
+    },
+    {
+      "origin": "/tmp/ingetrazo-capture-default-build-r4/stderr",
+      "member": "ingetrazo-capture-default-build-r4/stderr",
+      "size": 96233,
+      "sha256": "478719d3179ec0b9a340bcda78e8f89b9fd6752967fb1c858a738809e410e918"
+    },
+    {
+      "origin": "/tmp/ingetrazo-capture-default-native-attempt-2/default_scale_figure_workflows.receipt.json",
+      "member": "final-native/receipt.json",
+      "size": 254,
+      "sha256": "9571c01a379534925067eb1676e8dbd9e42b362c92702f736330c620045e0885"
+    }
+  ],
+  "identical_file_aliases": [
+    {
+      "origin": "/tmp/ingetrazo-default-figure-native-r2/assets/be7b463c8b2eec4e7635b2f1efbc1705267ff39ada6a0e4935eebe2e13799e13.png",
+      "member": "ingetrazo-default-figure-native-r2/assets/be7b463c8b2eec4e7635b2f1efbc1705267ff39ada6a0e4935eebe2e13799e13.png",
+      "size": 372245,
+      "sha256": "be7b463c8b2eec4e7635b2f1efbc1705267ff39ada6a0e4935eebe2e13799e13",
+      "retained_member": "ingetrazo-default-figure-native-r1/assets/be7b463c8b2eec4e7635b2f1efbc1705267ff39ada6a0e4935eebe2e13799e13.png"
+    },
+    {
+      "origin": "/tmp/ingetrazo-default-figure-native-r2/assets/be7b463c8b2eec4e7635b2f1efbc1705267ff39ada6a0e4935eebe2e13799e13.rgba",
+      "member": "ingetrazo-default-figure-native-r2/assets/be7b463c8b2eec4e7635b2f1efbc1705267ff39ada6a0e4935eebe2e13799e13.rgba",
+      "size": 2046000,
+      "sha256": "076c0bcacdf99c2c8305f18fc9955f9369d9cf683a11b1def63ea8ecb6f1e792",
+      "retained_member": "ingetrazo-default-figure-native-r1/assets/be7b463c8b2eec4e7635b2f1efbc1705267ff39ada6a0e4935eebe2e13799e13.rgba"
+    },
+    {
+      "origin": "/tmp/ingetrazo-default-figure-native-r3/assets/be7b463c8b2eec4e7635b2f1efbc1705267ff39ada6a0e4935eebe2e13799e13.png",
+      "member": "ingetrazo-default-figure-native-r3/assets/be7b463c8b2eec4e7635b2f1efbc1705267ff39ada6a0e4935eebe2e13799e13.png",
+      "size": 372245,
+      "sha256": "be7b463c8b2eec4e7635b2f1efbc1705267ff39ada6a0e4935eebe2e13799e13",
+      "retained_member": "ingetrazo-default-figure-native-r1/assets/be7b463c8b2eec4e7635b2f1efbc1705267ff39ada6a0e4935eebe2e13799e13.png"
+    },
+    {
+      "origin": "/tmp/ingetrazo-default-figure-native-r3/assets/be7b463c8b2eec4e7635b2f1efbc1705267ff39ada6a0e4935eebe2e13799e13.rgba",
+      "member": "ingetrazo-default-figure-native-r3/assets/be7b463c8b2eec4e7635b2f1efbc1705267ff39ada6a0e4935eebe2e13799e13.rgba",
+      "size": 2046000,
+      "sha256": "076c0bcacdf99c2c8305f18fc9955f9369d9cf683a11b1def63ea8ecb6f1e792",
+      "retained_member": "ingetrazo-default-figure-native-r1/assets/be7b463c8b2eec4e7635b2f1efbc1705267ff39ada6a0e4935eebe2e13799e13.rgba"
+    },
+    {
+      "origin": "/tmp/ingetrazo-default-figure-native-r4/assets/be7b463c8b2eec4e7635b2f1efbc1705267ff39ada6a0e4935eebe2e13799e13.png",
+      "member": "ingetrazo-default-figure-native-r4/assets/be7b463c8b2eec4e7635b2f1efbc1705267ff39ada6a0e4935eebe2e13799e13.png",
+      "size": 372245,
+      "sha256": "be7b463c8b2eec4e7635b2f1efbc1705267ff39ada6a0e4935eebe2e13799e13",
+      "retained_member": "ingetrazo-default-figure-native-r1/assets/be7b463c8b2eec4e7635b2f1efbc1705267ff39ada6a0e4935eebe2e13799e13.png"
+    },
+    {
+      "origin": "/tmp/ingetrazo-default-figure-native-r4/assets/be7b463c8b2eec4e7635b2f1efbc1705267ff39ada6a0e4935eebe2e13799e13.rgba",
+      "member": "ingetrazo-default-figure-native-r4/assets/be7b463c8b2eec4e7635b2f1efbc1705267ff39ada6a0e4935eebe2e13799e13.rgba",
+      "size": 2046000,
+      "sha256": "076c0bcacdf99c2c8305f18fc9955f9369d9cf683a11b1def63ea8ecb6f1e792",
+      "retained_member": "ingetrazo-default-figure-native-r1/assets/be7b463c8b2eec4e7635b2f1efbc1705267ff39ada6a0e4935eebe2e13799e13.rgba"
+    },
+    {
+      "origin": "/tmp/ingetrazo-default-figure-native-r5/assets/be7b463c8b2eec4e7635b2f1efbc1705267ff39ada6a0e4935eebe2e13799e13.png",
+      "member": "ingetrazo-default-figure-native-r5/assets/be7b463c8b2eec4e7635b2f1efbc1705267ff39ada6a0e4935eebe2e13799e13.png",
+      "size": 372245,
+      "sha256": "be7b463c8b2eec4e7635b2f1efbc1705267ff39ada6a0e4935eebe2e13799e13",
+      "retained_member": "ingetrazo-default-figure-native-r1/assets/be7b463c8b2eec4e7635b2f1efbc1705267ff39ada6a0e4935eebe2e13799e13.png"
+    },
+    {
+      "origin": "/tmp/ingetrazo-default-figure-native-r5/assets/be7b463c8b2eec4e7635b2f1efbc1705267ff39ada6a0e4935eebe2e13799e13.rgba",
+      "member": "ingetrazo-default-figure-native-r5/assets/be7b463c8b2eec4e7635b2f1efbc1705267ff39ada6a0e4935eebe2e13799e13.rgba",
+      "size": 2046000,
+      "sha256": "076c0bcacdf99c2c8305f18fc9955f9369d9cf683a11b1def63ea8ecb6f1e792",
+      "retained_member": "ingetrazo-default-figure-native-r1/assets/be7b463c8b2eec4e7635b2f1efbc1705267ff39ada6a0e4935eebe2e13799e13.rgba"
+    },
+    {
+      "origin": "/tmp/ingetrazo-default-figure-native-r2-attempt/stdout",
+      "member": "ingetrazo-default-figure-native-r2-attempt/stdout",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "retained_member": "ingetrazo-default-figure-native-r1-attempt/stdout"
+    },
+    {
+      "origin": "/tmp/ingetrazo-default-figure-native-r3-attempt/stdout",
+      "member": "ingetrazo-default-figure-native-r3-attempt/stdout",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "retained_member": "ingetrazo-default-figure-native-r1-attempt/stdout"
+    },
+    {
+      "origin": "/tmp/ingetrazo-default-figure-native-r5-attempt/checker.stderr",
+      "member": "ingetrazo-default-figure-native-r5-attempt/checker.stderr",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "retained_member": "ingetrazo-default-figure-native-r1-attempt/stdout"
+    },
+    {
+      "origin": "/tmp/ingetrazo-default-figure-native-r5-attempt/native.stderr",
+      "member": "ingetrazo-default-figure-native-r5-attempt/native.stderr",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "retained_member": "ingetrazo-default-figure-native-r1-attempt/stdout"
+    },
+    {
+      "origin": "/tmp/ingetrazo-default-figure-native-r5-attempt/native.stdout",
+      "member": "ingetrazo-default-figure-native-r5-attempt/native.stdout",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "retained_member": "ingetrazo-default-figure-native-r1-attempt/stdout"
+    },
+    {
+      "origin": "/tmp/ingetrazo-default-figure-native-r5-attempt/reader.stderr",
+      "member": "ingetrazo-default-figure-native-r5-attempt/reader.stderr",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "retained_member": "ingetrazo-default-figure-native-r1-attempt/stdout"
+    },
+    {
+      "origin": "/tmp/ingetrazo-default-figure-native-r5-attempt/reader.stdout",
+      "member": "ingetrazo-default-figure-native-r5-attempt/reader.stdout",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "retained_member": "ingetrazo-default-figure-native-r1-attempt/stdout"
+    },
+    {
+      "origin": "/tmp/ingetrazo-default-figure-reader-attempt-2/checker.stderr",
+      "member": "ingetrazo-default-figure-reader-attempt-2/checker.stderr",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "retained_member": "ingetrazo-default-figure-native-r1-attempt/stdout"
+    },
+    {
+      "origin": "/tmp/ingetrazo-default-figure-reader-attempt-2/stderr",
+      "member": "ingetrazo-default-figure-reader-attempt-2/stderr",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "retained_member": "ingetrazo-default-figure-native-r1-attempt/stdout"
+    },
+    {
+      "origin": "/tmp/ingetrazo-default-figure-reader-attempt-2/stdout",
+      "member": "ingetrazo-default-figure-reader-attempt-2/stdout",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "retained_member": "ingetrazo-default-figure-native-r1-attempt/stdout"
+    },
+    {
+      "origin": "/tmp/ingetrazo-bridge-console-regression-r2/groups-checker.stderr",
+      "member": "ingetrazo-bridge-console-regression-r2/groups-checker.stderr",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "retained_member": "ingetrazo-default-figure-native-r1-attempt/stdout"
+    },
+    {
+      "origin": "/tmp/ingetrazo-bridge-console-regression-r2/groups.stderr",
+      "member": "ingetrazo-bridge-console-regression-r2/groups.stderr",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "retained_member": "ingetrazo-default-figure-native-r1-attempt/stdout"
+    },
+    {
+      "origin": "/tmp/ingetrazo-bridge-console-regression-r2/nested-checker.stderr",
+      "member": "ingetrazo-bridge-console-regression-r2/nested-checker.stderr",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "retained_member": "ingetrazo-default-figure-native-r1-attempt/stdout"
+    },
+    {
+      "origin": "/tmp/ingetrazo-bridge-console-regression-r2/nested-reopen.stderr",
+      "member": "ingetrazo-bridge-console-regression-r2/nested-reopen.stderr",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "retained_member": "ingetrazo-default-figure-native-r1-attempt/stdout"
+    },
+    {
+      "origin": "/tmp/ingetrazo-bridge-console-regression-r2/nested.stderr",
+      "member": "ingetrazo-bridge-console-regression-r2/nested.stderr",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "retained_member": "ingetrazo-default-figure-native-r1-attempt/stdout"
+    },
+    {
+      "origin": "/tmp/ingetrazo-default-figure-native-r6/assets/be7b463c8b2eec4e7635b2f1efbc1705267ff39ada6a0e4935eebe2e13799e13.png",
+      "member": "ingetrazo-default-figure-native-r6/assets/be7b463c8b2eec4e7635b2f1efbc1705267ff39ada6a0e4935eebe2e13799e13.png",
+      "size": 372245,
+      "sha256": "be7b463c8b2eec4e7635b2f1efbc1705267ff39ada6a0e4935eebe2e13799e13",
+      "retained_member": "ingetrazo-default-figure-native-r1/assets/be7b463c8b2eec4e7635b2f1efbc1705267ff39ada6a0e4935eebe2e13799e13.png"
+    },
+    {
+      "origin": "/tmp/ingetrazo-default-figure-native-r6/assets/be7b463c8b2eec4e7635b2f1efbc1705267ff39ada6a0e4935eebe2e13799e13.rgba",
+      "member": "ingetrazo-default-figure-native-r6/assets/be7b463c8b2eec4e7635b2f1efbc1705267ff39ada6a0e4935eebe2e13799e13.rgba",
+      "size": 2046000,
+      "sha256": "076c0bcacdf99c2c8305f18fc9955f9369d9cf683a11b1def63ea8ecb6f1e792",
+      "retained_member": "ingetrazo-default-figure-native-r1/assets/be7b463c8b2eec4e7635b2f1efbc1705267ff39ada6a0e4935eebe2e13799e13.rgba"
+    },
+    {
+      "origin": "/tmp/ingetrazo-default-figure-native-r6/reopens-default-figure.json",
+      "member": "ingetrazo-default-figure-native-r6/reopens-default-figure.json",
+      "size": 6950,
+      "sha256": "b15df636803ce93b3d83e737068a9bfbd60311502826a0c34cb5a938aea59230",
+      "retained_member": "ingetrazo-default-figure-native-r5/reopens-default-figure.json"
+    },
+    {
+      "origin": "/tmp/ingetrazo-default-figure-reader-attempt-3/checker.stderr",
+      "member": "ingetrazo-default-figure-reader-attempt-3/checker.stderr",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "retained_member": "ingetrazo-default-figure-native-r1-attempt/stdout"
+    },
+    {
+      "origin": "/tmp/ingetrazo-default-figure-reader-attempt-3/reader.stderr",
+      "member": "ingetrazo-default-figure-reader-attempt-3/reader.stderr",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "retained_member": "ingetrazo-default-figure-native-r1-attempt/stdout"
+    },
+    {
+      "origin": "/tmp/ingetrazo-default-figure-reader-attempt-3/reader.stdout",
+      "member": "ingetrazo-default-figure-reader-attempt-3/reader.stdout",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "retained_member": "ingetrazo-default-figure-native-r1-attempt/stdout"
+    },
+    {
+      "origin": "/tmp/ingetrazo-default-bridge-build-r1/stdout",
+      "member": "ingetrazo-default-bridge-build-r1/stdout",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "retained_member": "ingetrazo-default-figure-native-r1-attempt/stdout"
+    },
+    {
+      "origin": "/tmp/ingetrazo-default-bridge-build-r2/stdout",
+      "member": "ingetrazo-default-bridge-build-r2/stdout",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "retained_member": "ingetrazo-default-figure-native-r1-attempt/stdout"
+    },
+    {
+      "origin": "/tmp/ingetrazo-default-bridge-build-r3/stdout",
+      "member": "ingetrazo-default-bridge-build-r3/stdout",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "retained_member": "ingetrazo-default-figure-native-r1-attempt/stdout"
+    },
+    {
+      "origin": "/tmp/ingetrazo-default-diagnostic-build-r1/stdout",
+      "member": "ingetrazo-default-diagnostic-build-r1/stdout",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "retained_member": "ingetrazo-default-figure-native-r1-attempt/stdout"
+    },
+    {
+      "origin": "/tmp/ingetrazo-capture-default-build-r4/stdout",
+      "member": "ingetrazo-capture-default-build-r4/stdout",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "retained_member": "ingetrazo-default-figure-native-r1-attempt/stdout"
+    },
+    {
+      "origin": "/tmp/ingetrazo-capture-default-native-attempt-2/default_scale_figure_workflows.stdout",
+      "member": "final-native/default_scale_figure_workflows.stdout",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "retained_member": "ingetrazo-default-figure-native-r1-attempt/stdout"
+    },
+    {
+      "origin": "/tmp/ingetrazo-capture-default-native-attempt-2/default_scale_figure_workflows.stderr",
+      "member": "final-native/default_scale_figure_workflows.stderr",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "retained_member": "ingetrazo-default-figure-native-r1-attempt/stdout"
+    }
+  ],
+  "git_bindings": [
+    {
+      "revision": "029dcef31ee77814880b5ddd20313ffe722fe49c",
+      "path": "crates/ingetrazo-gui/src/default_scale_figure.rs",
+      "sha256": "a042ce919cee226dcc9f57fac24ae9ab00775fe065387cca08a16b82fda26f13"
+    },
+    {
+      "revision": "029dcef31ee77814880b5ddd20313ffe722fe49c",
+      "path": "crates/ingetrazo-gui/src/app.rs",
+      "sha256": "941d2167d18fb6e683c75cd81fc8060886c1cdba46d39c19385b1763da19c057"
+    },
+    {
+      "revision": "029dcef31ee77814880b5ddd20313ffe722fe49c",
+      "path": "crates/ingetrazo-gui/src/document_session.rs",
+      "sha256": "25179f52ca68ba795c094e5df2259dda774f8fe57128bb48200ecbd967157afb"
+    },
+    {
+      "revision": "029dcef31ee77814880b5ddd20313ffe722fe49c",
+      "path": "crates/ingetrazo-gui/src/session_state.rs",
+      "sha256": "147a5a885da9dcd4bb42c84d656627f90e3859cdc63af35b66333636341bfdde"
+    },
+    {
+      "revision": "029dcef31ee77814880b5ddd20313ffe722fe49c",
+      "path": "crates/ingetrazo-gui/src/engineering_python.rs",
+      "sha256": "0ba6b89d2b838d0cd1178898d14f974465f27eeec6c469ca5c8cbe656cd1becf"
+    },
+    {
+      "revision": "029dcef31ee77814880b5ddd20313ffe722fe49c",
+      "path": "crates/ingetrazo-core/src/groups.rs",
+      "sha256": "36a6e430aad63245f417346d80479ce61a7e3e2bc7e564fdfc01c5c3c5ec5c4c"
+    },
+    {
+      "revision": "029dcef31ee77814880b5ddd20313ffe722fe49c",
+      "path": "crates/ingetrazo-core/src/mesh.rs",
+      "sha256": "e4ea417692faf7713ecb066c1606c5125e22f9014cf9a9ea3aa7860fd29fbce0"
+    },
+    {
+      "revision": "029dcef31ee77814880b5ddd20313ffe722fe49c",
+      "path": "crates/ingetrazo-formats/src/igz.rs",
+      "sha256": "697dd56f77d069b49933997a2f90a7f4b84c26a27b4da3a5ce2f3a15b0abf868"
+    },
+    {
+      "revision": "029dcef31ee77814880b5ddd20313ffe722fe49c",
+      "path": "tools/ai-interpreter-proof/src/vm_scene.rs",
+      "sha256": "bfbd90f66d70bb3e2a8e1060e46b4a81553f41afe6737abaabc525301b57976e"
+    },
+    {
+      "revision": "029dcef31ee77814880b5ddd20313ffe722fe49c",
+      "path": "tools/ai-interpreter-proof/src/vm_mesh.rs",
+      "sha256": "4b2fd413e3c91f0d97f5be282680a7cb24d7072894804d6c8feb70645dff985d"
+    },
+    {
+      "revision": "029dcef31ee77814880b5ddd20313ffe722fe49c",
+      "path": "tools/ai-interpreter-proof/src/vm_packed.rs",
+      "sha256": "013516028d87ad13299957c508ed667f79570e381828ad06ae55615df3818c23"
+    },
+    {
+      "revision": "029dcef31ee77814880b5ddd20313ffe722fe49c",
+      "path": "tools/ai-interpreter-proof/src/vm_hydrate.rs",
+      "sha256": "bd258bd39281ea65411ec5857b99765a41d963750efdcda73f14d5cc990e9826"
+    },
+    {
+      "revision": "029dcef31ee77814880b5ddd20313ffe722fe49c",
+      "path": "crates/ingetrazo-gui/examples/default_scale_figure_workflows.rs",
+      "sha256": "593e14d66e433fdc2545e21539f9faea51e15c4137001721ecdf31c0dce56a50"
+    },
+    {
+      "revision": "029dcef31ee77814880b5ddd20313ffe722fe49c",
+      "path": "crates/ingetrazo-gui/examples/engineering_console_groups_fixture.rs",
+      "sha256": "1a4c41701783e6d2e6c9ce4262aabd3e1e23f4e6161a7f3ac2ccc8645350cea3"
+    },
+    {
+      "revision": "029dcef31ee77814880b5ddd20313ffe722fe49c",
+      "path": "crates/ingetrazo-gui/examples/engineering_console_nested_fixture.rs",
+      "sha256": "b5cc176e65b2ae75ef55c439949dd34f3a27dedb81744554eb46ad3181c3ddf9"
+    },
+    {
+      "revision": "029dcef31ee77814880b5ddd20313ffe722fe49c",
+      "path": "scripts/check-default-scale-figure.py",
+      "sha256": "1c8b70e202719e14e55d38e81476b8c869812f411a64fc8812ecdf12cbfa1e0b"
+    },
+    {
+      "revision": "029dcef31ee77814880b5ddd20313ffe722fe49c",
+      "path": "scripts/reference-default-scale-figure-reopens.py",
+      "sha256": "6afc2d79c52168ec7914bf1aeb70b543b09017425e2c37aa0ff5961f61aa35d0"
+    },
+    {
+      "revision": "4a5a6e9121f9460b8e02051ef77bb4676e2f5904",
+      "path": "crates/ingetrazo-gui/src/default_scale_figure.rs",
+      "sha256": "a042ce919cee226dcc9f57fac24ae9ab00775fe065387cca08a16b82fda26f13"
+    },
+    {
+      "revision": "4a5a6e9121f9460b8e02051ef77bb4676e2f5904",
+      "path": "crates/ingetrazo-gui/src/app.rs",
+      "sha256": "530ff7ad908c86dce4658cb9e4b6b79b363c197cc9adb0ef0302fd919848b312"
+    },
+    {
+      "revision": "4a5a6e9121f9460b8e02051ef77bb4676e2f5904",
+      "path": "crates/ingetrazo-gui/src/document_session.rs",
+      "sha256": "25179f52ca68ba795c094e5df2259dda774f8fe57128bb48200ecbd967157afb"
+    },
+    {
+      "revision": "4a5a6e9121f9460b8e02051ef77bb4676e2f5904",
+      "path": "crates/ingetrazo-gui/src/session_state.rs",
+      "sha256": "147a5a885da9dcd4bb42c84d656627f90e3859cdc63af35b66333636341bfdde"
+    },
+    {
+      "revision": "4a5a6e9121f9460b8e02051ef77bb4676e2f5904",
+      "path": "crates/ingetrazo-gui/src/engineering_python.rs",
+      "sha256": "0ba6b89d2b838d0cd1178898d14f974465f27eeec6c469ca5c8cbe656cd1becf"
+    },
+    {
+      "revision": "4a5a6e9121f9460b8e02051ef77bb4676e2f5904",
+      "path": "crates/ingetrazo-core/src/groups.rs",
+      "sha256": "36a6e430aad63245f417346d80479ce61a7e3e2bc7e564fdfc01c5c3c5ec5c4c"
+    },
+    {
+      "revision": "4a5a6e9121f9460b8e02051ef77bb4676e2f5904",
+      "path": "crates/ingetrazo-core/src/mesh.rs",
+      "sha256": "e4ea417692faf7713ecb066c1606c5125e22f9014cf9a9ea3aa7860fd29fbce0"
+    },
+    {
+      "revision": "4a5a6e9121f9460b8e02051ef77bb4676e2f5904",
+      "path": "crates/ingetrazo-formats/src/igz.rs",
+      "sha256": "137633011f801e87bbeea5ca8ccde615f4228e3d2de950a2ca72ea02ba3b0e05"
+    },
+    {
+      "revision": "4a5a6e9121f9460b8e02051ef77bb4676e2f5904",
+      "path": "tools/ai-interpreter-proof/src/vm_scene.rs",
+      "sha256": "bfbd90f66d70bb3e2a8e1060e46b4a81553f41afe6737abaabc525301b57976e"
+    },
+    {
+      "revision": "4a5a6e9121f9460b8e02051ef77bb4676e2f5904",
+      "path": "tools/ai-interpreter-proof/src/vm_mesh.rs",
+      "sha256": "4b2fd413e3c91f0d97f5be282680a7cb24d7072894804d6c8feb70645dff985d"
+    },
+    {
+      "revision": "4a5a6e9121f9460b8e02051ef77bb4676e2f5904",
+      "path": "tools/ai-interpreter-proof/src/vm_packed.rs",
+      "sha256": "de05df6dd3b548a72e38d59559b9209f9f1ad0f8c4143c0ea4b110ef74242d12"
+    },
+    {
+      "revision": "4a5a6e9121f9460b8e02051ef77bb4676e2f5904",
+      "path": "tools/ai-interpreter-proof/src/vm_hydrate.rs",
+      "sha256": "bd258bd39281ea65411ec5857b99765a41d963750efdcda73f14d5cc990e9826"
+    },
+    {
+      "revision": "4a5a6e9121f9460b8e02051ef77bb4676e2f5904",
+      "path": "crates/ingetrazo-gui/examples/default_scale_figure_workflows.rs",
+      "sha256": "5d221e910c473cf75195f29dd06d3885e7dc364a8ea3d511a4191e3ef677f26d"
+    },
+    {
+      "revision": "4a5a6e9121f9460b8e02051ef77bb4676e2f5904",
+      "path": "crates/ingetrazo-gui/examples/engineering_console_groups_fixture.rs",
+      "sha256": "1a4c41701783e6d2e6c9ce4262aabd3e1e23f4e6161a7f3ac2ccc8645350cea3"
+    },
+    {
+      "revision": "4a5a6e9121f9460b8e02051ef77bb4676e2f5904",
+      "path": "crates/ingetrazo-gui/examples/engineering_console_nested_fixture.rs",
+      "sha256": "b5cc176e65b2ae75ef55c439949dd34f3a27dedb81744554eb46ad3181c3ddf9"
+    },
+    {
+      "revision": "4a5a6e9121f9460b8e02051ef77bb4676e2f5904",
+      "path": "scripts/check-default-scale-figure.py",
+      "sha256": "286e7de88e8dc442d1a5c34049070f8d1bfbcdd4839866a6fcf845dea9a0594e"
+    },
+    {
+      "revision": "4a5a6e9121f9460b8e02051ef77bb4676e2f5904",
+      "path": "scripts/reference-default-scale-figure-reopens.py",
+      "sha256": "6afc2d79c52168ec7914bf1aeb70b543b09017425e2c37aa0ff5961f61aa35d0"
+    },
+    {
+      "revision": "6c313d0903ff11349453a1a49051c279b426115e",
+      "path": "crates/ingetrazo-gui/src/default_scale_figure.rs",
+      "sha256": "ef43b61e0540d3d8bcf1b2e17ffbf76ea364bfc1cef0ed4cc290b9a7557443d6"
+    },
+    {
+      "revision": "6c313d0903ff11349453a1a49051c279b426115e",
+      "path": "crates/ingetrazo-gui/src/app.rs",
+      "sha256": "530ff7ad908c86dce4658cb9e4b6b79b363c197cc9adb0ef0302fd919848b312"
+    },
+    {
+      "revision": "6c313d0903ff11349453a1a49051c279b426115e",
+      "path": "crates/ingetrazo-gui/src/document_session.rs",
+      "sha256": "25179f52ca68ba795c094e5df2259dda774f8fe57128bb48200ecbd967157afb"
+    },
+    {
+      "revision": "6c313d0903ff11349453a1a49051c279b426115e",
+      "path": "crates/ingetrazo-gui/src/session_state.rs",
+      "sha256": "147a5a885da9dcd4bb42c84d656627f90e3859cdc63af35b66333636341bfdde"
+    },
+    {
+      "revision": "6c313d0903ff11349453a1a49051c279b426115e",
+      "path": "crates/ingetrazo-gui/src/engineering_python.rs",
+      "sha256": "0ba6b89d2b838d0cd1178898d14f974465f27eeec6c469ca5c8cbe656cd1becf"
+    },
+    {
+      "revision": "6c313d0903ff11349453a1a49051c279b426115e",
+      "path": "crates/ingetrazo-core/src/groups.rs",
+      "sha256": "36a6e430aad63245f417346d80479ce61a7e3e2bc7e564fdfc01c5c3c5ec5c4c"
+    },
+    {
+      "revision": "6c313d0903ff11349453a1a49051c279b426115e",
+      "path": "crates/ingetrazo-core/src/mesh.rs",
+      "sha256": "e4ea417692faf7713ecb066c1606c5125e22f9014cf9a9ea3aa7860fd29fbce0"
+    },
+    {
+      "revision": "6c313d0903ff11349453a1a49051c279b426115e",
+      "path": "crates/ingetrazo-formats/src/igz.rs",
+      "sha256": "137633011f801e87bbeea5ca8ccde615f4228e3d2de950a2ca72ea02ba3b0e05"
+    },
+    {
+      "revision": "6c313d0903ff11349453a1a49051c279b426115e",
+      "path": "tools/ai-interpreter-proof/src/vm_scene.rs",
+      "sha256": "bfbd90f66d70bb3e2a8e1060e46b4a81553f41afe6737abaabc525301b57976e"
+    },
+    {
+      "revision": "6c313d0903ff11349453a1a49051c279b426115e",
+      "path": "tools/ai-interpreter-proof/src/vm_mesh.rs",
+      "sha256": "4b2fd413e3c91f0d97f5be282680a7cb24d7072894804d6c8feb70645dff985d"
+    },
+    {
+      "revision": "6c313d0903ff11349453a1a49051c279b426115e",
+      "path": "tools/ai-interpreter-proof/src/vm_packed.rs",
+      "sha256": "de05df6dd3b548a72e38d59559b9209f9f1ad0f8c4143c0ea4b110ef74242d12"
+    },
+    {
+      "revision": "6c313d0903ff11349453a1a49051c279b426115e",
+      "path": "tools/ai-interpreter-proof/src/vm_hydrate.rs",
+      "sha256": "bd258bd39281ea65411ec5857b99765a41d963750efdcda73f14d5cc990e9826"
+    },
+    {
+      "revision": "6c313d0903ff11349453a1a49051c279b426115e",
+      "path": "crates/ingetrazo-gui/examples/default_scale_figure_workflows.rs",
+      "sha256": "5d221e910c473cf75195f29dd06d3885e7dc364a8ea3d511a4191e3ef677f26d"
+    },
+    {
+      "revision": "6c313d0903ff11349453a1a49051c279b426115e",
+      "path": "crates/ingetrazo-gui/examples/engineering_console_groups_fixture.rs",
+      "sha256": "1a4c41701783e6d2e6c9ce4262aabd3e1e23f4e6161a7f3ac2ccc8645350cea3"
+    },
+    {
+      "revision": "6c313d0903ff11349453a1a49051c279b426115e",
+      "path": "crates/ingetrazo-gui/examples/engineering_console_nested_fixture.rs",
+      "sha256": "b5cc176e65b2ae75ef55c439949dd34f3a27dedb81744554eb46ad3181c3ddf9"
+    },
+    {
+      "revision": "72a44355da5618abb1e99255880151b5e7325510",
+      "path": "crates/ingetrazo-gui/src/default_scale_figure.rs",
+      "sha256": "a042ce919cee226dcc9f57fac24ae9ab00775fe065387cca08a16b82fda26f13"
+    },
+    {
+      "revision": "72a44355da5618abb1e99255880151b5e7325510",
+      "path": "crates/ingetrazo-gui/src/app.rs",
+      "sha256": "530ff7ad908c86dce4658cb9e4b6b79b363c197cc9adb0ef0302fd919848b312"
+    },
+    {
+      "revision": "72a44355da5618abb1e99255880151b5e7325510",
+      "path": "crates/ingetrazo-gui/src/document_session.rs",
+      "sha256": "25179f52ca68ba795c094e5df2259dda774f8fe57128bb48200ecbd967157afb"
+    },
+    {
+      "revision": "72a44355da5618abb1e99255880151b5e7325510",
+      "path": "crates/ingetrazo-gui/src/session_state.rs",
+      "sha256": "147a5a885da9dcd4bb42c84d656627f90e3859cdc63af35b66333636341bfdde"
+    },
+    {
+      "revision": "72a44355da5618abb1e99255880151b5e7325510",
+      "path": "crates/ingetrazo-gui/src/engineering_python.rs",
+      "sha256": "0ba6b89d2b838d0cd1178898d14f974465f27eeec6c469ca5c8cbe656cd1becf"
+    },
+    {
+      "revision": "72a44355da5618abb1e99255880151b5e7325510",
+      "path": "crates/ingetrazo-core/src/groups.rs",
+      "sha256": "36a6e430aad63245f417346d80479ce61a7e3e2bc7e564fdfc01c5c3c5ec5c4c"
+    },
+    {
+      "revision": "72a44355da5618abb1e99255880151b5e7325510",
+      "path": "crates/ingetrazo-core/src/mesh.rs",
+      "sha256": "e4ea417692faf7713ecb066c1606c5125e22f9014cf9a9ea3aa7860fd29fbce0"
+    },
+    {
+      "revision": "72a44355da5618abb1e99255880151b5e7325510",
+      "path": "crates/ingetrazo-formats/src/igz.rs",
+      "sha256": "137633011f801e87bbeea5ca8ccde615f4228e3d2de950a2ca72ea02ba3b0e05"
+    },
+    {
+      "revision": "72a44355da5618abb1e99255880151b5e7325510",
+      "path": "tools/ai-interpreter-proof/src/vm_scene.rs",
+      "sha256": "bfbd90f66d70bb3e2a8e1060e46b4a81553f41afe6737abaabc525301b57976e"
+    },
+    {
+      "revision": "72a44355da5618abb1e99255880151b5e7325510",
+      "path": "tools/ai-interpreter-proof/src/vm_mesh.rs",
+      "sha256": "4b2fd413e3c91f0d97f5be282680a7cb24d7072894804d6c8feb70645dff985d"
+    },
+    {
+      "revision": "72a44355da5618abb1e99255880151b5e7325510",
+      "path": "tools/ai-interpreter-proof/src/vm_packed.rs",
+      "sha256": "de05df6dd3b548a72e38d59559b9209f9f1ad0f8c4143c0ea4b110ef74242d12"
+    },
+    {
+      "revision": "72a44355da5618abb1e99255880151b5e7325510",
+      "path": "tools/ai-interpreter-proof/src/vm_hydrate.rs",
+      "sha256": "bd258bd39281ea65411ec5857b99765a41d963750efdcda73f14d5cc990e9826"
+    },
+    {
+      "revision": "72a44355da5618abb1e99255880151b5e7325510",
+      "path": "crates/ingetrazo-gui/examples/default_scale_figure_workflows.rs",
+      "sha256": "64e5d555b894f85f27c017be8468f875ec9f4254acee0af746710c1d9e2edcb3"
+    },
+    {
+      "revision": "72a44355da5618abb1e99255880151b5e7325510",
+      "path": "crates/ingetrazo-gui/examples/engineering_console_groups_fixture.rs",
+      "sha256": "1a4c41701783e6d2e6c9ce4262aabd3e1e23f4e6161a7f3ac2ccc8645350cea3"
+    },
+    {
+      "revision": "72a44355da5618abb1e99255880151b5e7325510",
+      "path": "crates/ingetrazo-gui/examples/engineering_console_nested_fixture.rs",
+      "sha256": "b5cc176e65b2ae75ef55c439949dd34f3a27dedb81744554eb46ad3181c3ddf9"
+    },
+    {
+      "revision": "72a44355da5618abb1e99255880151b5e7325510",
+      "path": "scripts/check-default-scale-figure.py",
+      "sha256": "1c8b70e202719e14e55d38e81476b8c869812f411a64fc8812ecdf12cbfa1e0b"
+    },
+    {
+      "revision": "72a44355da5618abb1e99255880151b5e7325510",
+      "path": "scripts/reference-default-scale-figure-reopens.py",
+      "sha256": "6afc2d79c52168ec7914bf1aeb70b543b09017425e2c37aa0ff5961f61aa35d0"
+    },
+    {
+      "revision": "89e30c1ff4449a94ce7db339e5fb8026d55688ee",
+      "path": "crates/ingetrazo-gui/src/default_scale_figure.rs",
+      "sha256": "a042ce919cee226dcc9f57fac24ae9ab00775fe065387cca08a16b82fda26f13"
+    },
+    {
+      "revision": "89e30c1ff4449a94ce7db339e5fb8026d55688ee",
+      "path": "crates/ingetrazo-gui/src/app.rs",
+      "sha256": "941d2167d18fb6e683c75cd81fc8060886c1cdba46d39c19385b1763da19c057"
+    },
+    {
+      "revision": "89e30c1ff4449a94ce7db339e5fb8026d55688ee",
+      "path": "crates/ingetrazo-gui/src/document_session.rs",
+      "sha256": "25179f52ca68ba795c094e5df2259dda774f8fe57128bb48200ecbd967157afb"
+    },
+    {
+      "revision": "89e30c1ff4449a94ce7db339e5fb8026d55688ee",
+      "path": "crates/ingetrazo-gui/src/session_state.rs",
+      "sha256": "147a5a885da9dcd4bb42c84d656627f90e3859cdc63af35b66333636341bfdde"
+    },
+    {
+      "revision": "89e30c1ff4449a94ce7db339e5fb8026d55688ee",
+      "path": "crates/ingetrazo-gui/src/engineering_python.rs",
+      "sha256": "0ba6b89d2b838d0cd1178898d14f974465f27eeec6c469ca5c8cbe656cd1becf"
+    },
+    {
+      "revision": "89e30c1ff4449a94ce7db339e5fb8026d55688ee",
+      "path": "crates/ingetrazo-core/src/groups.rs",
+      "sha256": "36a6e430aad63245f417346d80479ce61a7e3e2bc7e564fdfc01c5c3c5ec5c4c"
+    },
+    {
+      "revision": "89e30c1ff4449a94ce7db339e5fb8026d55688ee",
+      "path": "crates/ingetrazo-core/src/mesh.rs",
+      "sha256": "e4ea417692faf7713ecb066c1606c5125e22f9014cf9a9ea3aa7860fd29fbce0"
+    },
+    {
+      "revision": "89e30c1ff4449a94ce7db339e5fb8026d55688ee",
+      "path": "crates/ingetrazo-formats/src/igz.rs",
+      "sha256": "697dd56f77d069b49933997a2f90a7f4b84c26a27b4da3a5ce2f3a15b0abf868"
+    },
+    {
+      "revision": "89e30c1ff4449a94ce7db339e5fb8026d55688ee",
+      "path": "tools/ai-interpreter-proof/src/vm_scene.rs",
+      "sha256": "bfbd90f66d70bb3e2a8e1060e46b4a81553f41afe6737abaabc525301b57976e"
+    },
+    {
+      "revision": "89e30c1ff4449a94ce7db339e5fb8026d55688ee",
+      "path": "tools/ai-interpreter-proof/src/vm_mesh.rs",
+      "sha256": "4b2fd413e3c91f0d97f5be282680a7cb24d7072894804d6c8feb70645dff985d"
+    },
+    {
+      "revision": "89e30c1ff4449a94ce7db339e5fb8026d55688ee",
+      "path": "tools/ai-interpreter-proof/src/vm_packed.rs",
+      "sha256": "013516028d87ad13299957c508ed667f79570e381828ad06ae55615df3818c23"
+    },
+    {
+      "revision": "89e30c1ff4449a94ce7db339e5fb8026d55688ee",
+      "path": "tools/ai-interpreter-proof/src/vm_hydrate.rs",
+      "sha256": "bd258bd39281ea65411ec5857b99765a41d963750efdcda73f14d5cc990e9826"
+    },
+    {
+      "revision": "89e30c1ff4449a94ce7db339e5fb8026d55688ee",
+      "path": "crates/ingetrazo-gui/examples/default_scale_figure_workflows.rs",
+      "sha256": "f0f47be66719e31868ca902e6e8d59ac633fcfae17e7872bad3a917278bba1e5"
+    },
+    {
+      "revision": "89e30c1ff4449a94ce7db339e5fb8026d55688ee",
+      "path": "crates/ingetrazo-gui/examples/engineering_console_groups_fixture.rs",
+      "sha256": "1a4c41701783e6d2e6c9ce4262aabd3e1e23f4e6161a7f3ac2ccc8645350cea3"
+    },
+    {
+      "revision": "89e30c1ff4449a94ce7db339e5fb8026d55688ee",
+      "path": "crates/ingetrazo-gui/examples/engineering_console_nested_fixture.rs",
+      "sha256": "b5cc176e65b2ae75ef55c439949dd34f3a27dedb81744554eb46ad3181c3ddf9"
+    },
+    {
+      "revision": "89e30c1ff4449a94ce7db339e5fb8026d55688ee",
+      "path": "scripts/check-default-scale-figure.py",
+      "sha256": "1c8b70e202719e14e55d38e81476b8c869812f411a64fc8812ecdf12cbfa1e0b"
+    },
+    {
+      "revision": "89e30c1ff4449a94ce7db339e5fb8026d55688ee",
+      "path": "scripts/reference-default-scale-figure-reopens.py",
+      "sha256": "6afc2d79c52168ec7914bf1aeb70b543b09017425e2c37aa0ff5961f61aa35d0"
+    },
+    {
+      "revision": "c3587eb43dab529d0445af54038925a31c971048",
+      "path": "crates/ingetrazo-gui/src/default_scale_figure.rs",
+      "sha256": "ef43b61e0540d3d8bcf1b2e17ffbf76ea364bfc1cef0ed4cc290b9a7557443d6"
+    },
+    {
+      "revision": "c3587eb43dab529d0445af54038925a31c971048",
+      "path": "crates/ingetrazo-gui/src/app.rs",
+      "sha256": "530ff7ad908c86dce4658cb9e4b6b79b363c197cc9adb0ef0302fd919848b312"
+    },
+    {
+      "revision": "c3587eb43dab529d0445af54038925a31c971048",
+      "path": "crates/ingetrazo-gui/src/document_session.rs",
+      "sha256": "25179f52ca68ba795c094e5df2259dda774f8fe57128bb48200ecbd967157afb"
+    },
+    {
+      "revision": "c3587eb43dab529d0445af54038925a31c971048",
+      "path": "crates/ingetrazo-gui/src/session_state.rs",
+      "sha256": "147a5a885da9dcd4bb42c84d656627f90e3859cdc63af35b66333636341bfdde"
+    },
+    {
+      "revision": "c3587eb43dab529d0445af54038925a31c971048",
+      "path": "crates/ingetrazo-gui/src/engineering_python.rs",
+      "sha256": "0ba6b89d2b838d0cd1178898d14f974465f27eeec6c469ca5c8cbe656cd1becf"
+    },
+    {
+      "revision": "c3587eb43dab529d0445af54038925a31c971048",
+      "path": "crates/ingetrazo-core/src/groups.rs",
+      "sha256": "36a6e430aad63245f417346d80479ce61a7e3e2bc7e564fdfc01c5c3c5ec5c4c"
+    },
+    {
+      "revision": "c3587eb43dab529d0445af54038925a31c971048",
+      "path": "crates/ingetrazo-core/src/mesh.rs",
+      "sha256": "e4ea417692faf7713ecb066c1606c5125e22f9014cf9a9ea3aa7860fd29fbce0"
+    },
+    {
+      "revision": "c3587eb43dab529d0445af54038925a31c971048",
+      "path": "crates/ingetrazo-formats/src/igz.rs",
+      "sha256": "137633011f801e87bbeea5ca8ccde615f4228e3d2de950a2ca72ea02ba3b0e05"
+    },
+    {
+      "revision": "c3587eb43dab529d0445af54038925a31c971048",
+      "path": "tools/ai-interpreter-proof/src/vm_scene.rs",
+      "sha256": "bfbd90f66d70bb3e2a8e1060e46b4a81553f41afe6737abaabc525301b57976e"
+    },
+    {
+      "revision": "c3587eb43dab529d0445af54038925a31c971048",
+      "path": "tools/ai-interpreter-proof/src/vm_mesh.rs",
+      "sha256": "e21a62969933052a2ab54fecb0e4ef50f7f26c2220730800e23235f833736a4f"
+    },
+    {
+      "revision": "c3587eb43dab529d0445af54038925a31c971048",
+      "path": "tools/ai-interpreter-proof/src/vm_packed.rs",
+      "sha256": "de05df6dd3b548a72e38d59559b9209f9f1ad0f8c4143c0ea4b110ef74242d12"
+    },
+    {
+      "revision": "c3587eb43dab529d0445af54038925a31c971048",
+      "path": "tools/ai-interpreter-proof/src/vm_hydrate.rs",
+      "sha256": "bd258bd39281ea65411ec5857b99765a41d963750efdcda73f14d5cc990e9826"
+    },
+    {
+      "revision": "c3587eb43dab529d0445af54038925a31c971048",
+      "path": "crates/ingetrazo-gui/examples/default_scale_figure_workflows.rs",
+      "sha256": "5d221e910c473cf75195f29dd06d3885e7dc364a8ea3d511a4191e3ef677f26d"
+    },
+    {
+      "revision": "c3587eb43dab529d0445af54038925a31c971048",
+      "path": "crates/ingetrazo-gui/examples/engineering_console_groups_fixture.rs",
+      "sha256": "1a4c41701783e6d2e6c9ce4262aabd3e1e23f4e6161a7f3ac2ccc8645350cea3"
+    },
+    {
+      "revision": "c3587eb43dab529d0445af54038925a31c971048",
+      "path": "crates/ingetrazo-gui/examples/engineering_console_nested_fixture.rs",
+      "sha256": "b5cc176e65b2ae75ef55c439949dd34f3a27dedb81744554eb46ad3181c3ddf9"
+    }
+  ],
+  "source_archive_sha256": "79189e245cb4ab1d188ffb5de9120ab39b97ed0a039de7d1b6c7695ddeb27cfe",
+  "source_manifest_sha256": "08db237d536f907e05b4d34e5a59933f20fd95aea47da800b3e087b8b91c57a6",
+  "acceptance": {
+    "cases": 3,
+    "original_reader_pairs": 3,
+    "negative_controls": 14,
+    "native_seconds": 0.7195367030217312,
+    "reader_seconds": 0.16863337298855186,
+    "checker_seconds": 0.023320660984609276
+  },
+  "excluded": [
+    "/tmp/ingetrazo-default-figure-native-r1/settings/default/config/settings.json",
+    "/tmp/ingetrazo-default-figure-native-r2/settings/default/config/settings.json",
+    "/tmp/ingetrazo-default-figure-native-r3/settings/default/config/settings.json",
+    "/tmp/ingetrazo-default-figure-native-r4/reader-resources/assets/be7b463c8b2eec4e7635b2f1efbc1705267ff39ada6a0e4935eebe2e13799e13.png",
+    "/tmp/ingetrazo-default-figure-native-r4/reader-resources/assets/be7b463c8b2eec4e7635b2f1efbc1705267ff39ada6a0e4935eebe2e13799e13.rgba",
+    "/tmp/ingetrazo-default-figure-native-r4/settings/bool-false/config/settings.json",
+    "/tmp/ingetrazo-default-figure-native-r4/settings/default/config/settings.json",
+    "/tmp/ingetrazo-default-figure-native-r4/settings/disabled-string/config/settings.json",
+    "/tmp/ingetrazo-default-figure-native-r4/settings/edited/config/settings.json",
+    "/tmp/ingetrazo-default-figure-native-r4/settings/loaded/config/settings.json",
+    "/tmp/ingetrazo-default-figure-native-r4/settings/new/config/settings.json",
+    "/tmp/ingetrazo-default-figure-native-r5/reader-resources/assets/be7b463c8b2eec4e7635b2f1efbc1705267ff39ada6a0e4935eebe2e13799e13.png",
+    "/tmp/ingetrazo-default-figure-native-r5/reader-resources/assets/be7b463c8b2eec4e7635b2f1efbc1705267ff39ada6a0e4935eebe2e13799e13.rgba",
+    "/tmp/ingetrazo-default-figure-native-r5/settings/bool-false/config/settings.json",
+    "/tmp/ingetrazo-default-figure-native-r5/settings/default/config/settings.json",
+    "/tmp/ingetrazo-default-figure-native-r5/settings/disabled-string/config/settings.json",
+    "/tmp/ingetrazo-default-figure-native-r5/settings/edited/config/settings.json",
+    "/tmp/ingetrazo-default-figure-native-r5/settings/loaded/config/settings.json",
+    "/tmp/ingetrazo-default-figure-native-r5/settings/new/config/settings.json"
+  ],
+  "no_purge": true
+}
