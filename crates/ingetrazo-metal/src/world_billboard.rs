@@ -44,9 +44,12 @@ impl Key {
 }
 impl Prepared {
  pub fn validate_owner(&self,metal:&NativeMetal)->Result<(),String>{self.owner.validate(metal)}
+ pub(crate) fn validate_raster_mode(&self,reflected:bool,depth24:bool)->Result<(),String>{
+  if self.reflected!=reflected||self.depth24!=depth24{return Err("Cached billboard raster/depth diagnostic mode mismatch".into());}Ok(())
+ }
  pub fn retained_bytes(&self)->usize{std::mem::size_of::<Self>()+self.buffers.capacity()*std::mem::size_of::<BufferOwner>()+self.draws.capacity()*std::mem::size_of::<Draw>()+self.assets.capacity()*std::mem::size_of::<(String,Arc<Asset>)>()+self.assets.iter().map(|a|a.0.capacity()).sum::<usize>()}
  pub fn prepare(metal:&NativeMetal,scene:&Scene,packet:&Packet,camera:&OrbitCamera,eye:glam::Vec3,key:Key,previous:Option<&Self>,reuse_images:bool,world_assets:&[Arc<Asset>],reflected:bool,depth24:bool)->Result<Self,String>{
-  if let Some(previous)=previous{previous.validate_owner(metal)?;if previous.reflected!=reflected||previous.depth24!=depth24{return Err("Billboard diagnostic orientation owner mismatch".into());}}
+  if let Some(previous)=previous{previous.validate_owner(metal)?;previous.validate_raster_mode(reflected,depth24)?;}
   let mut out=Self{reflected,depth24,owner:super::world::Owner::new(metal),pipeline:None,buffers:Vec::new(),draws:Vec::new(),assets:Vec::new(),uploads:0,texture_uploads:0,bytes:0};
   if !key.enabled||packet.runs.is_empty(){
    // Hiding a receiver retires its geometry, while its immutable image cache

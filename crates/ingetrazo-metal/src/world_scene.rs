@@ -954,6 +954,11 @@ impl crate::world::World {
         source_eye: Option<glam::DVec3>,
     ) -> Result<Option<Arc<crate::world::Prepared>>, String> {
         self.validate_context_owner(metal)?;
+        // Adapter caches may outlive a World. Refuse a different diagnostic mode
+        // before either the unchanged-key fast path or candidate preparation.
+        if let Some((_,cached))=&adapter.billboards {
+            cached.validate_raster_mode(self.reflected_diagnostic,self.depth24_diagnostic)?;
+        }
         if (style.show_edges && (style.show_soft_edges||style.back_edges_hidden)) || style.show_grid {
             return Err("Metal Scene adapter needs soft/back-edge/grid passes".into());
         }

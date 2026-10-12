@@ -43,7 +43,7 @@
     "admission": "requires cold reflected World and actual isDepth24Stencil8PixelFormatSupported; refuses unsupported",
     "source_law": "Actual original GL_DEPTH24_STENCIL8 versus prior native Depth32Float_Stencil8, no fitted offset/quantization",
     "consumer": "native_metal_section_resolve OUTPUT --reflected-diagnostic --depth24-diagnostic",
-    "ownership": "Immutable World format selected before pipelines/targets/adapter; all world/material/stencil/billboard/contour attachment formats agree; warm format mutation refused",
+    "ownership": "Immutable World format selected before pipelines/targets/adapter; all world/material/stencil/billboard/contour attachment formats agree; warm format mutation refused; caller-owned Adapter cached billboard mode is validated before all preparation/unchanged-key paths, with actual cross-World refusal control",
     "budget": "Existing native allocation-size admission retained; Depth24 packed pixel estimate4bytes, no extra image/pass",
     "verdict": "Strict full source pixels and raw sample/depth bits unchanged; no production admission"
   }

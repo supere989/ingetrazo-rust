@@ -257,10 +257,13 @@ fn run() -> Result<(), String> {
                 if refusal.is_none(){return Err("Pinned-target budget refusal did not occur".into());}
                 let retained=held.submit_diagnostic(&metal)?.readback(std::time::Duration::from_secs(5))?;
                 if retained!=bytes{return Err("Held diagnostic frame changed after refused target allocation".into());}
+                let mut unreflected=World::default();unreflected.set_sample_count(&metal,4)?;
+                let rejected=prepare(&mut unreflected,&mut adapter,&scene).err();
+                if !rejected.as_ref().is_some_and(|e|e=="Cached billboard raster/depth diagnostic mode mismatch"){return Err("Cross-World billboard mode cache was not refused".into());}
                 let foreign=NativeMetal::new()?;
                 if world.set_sample_count(&foreign,4).is_ok(){return Err("Foreign diagnostic context admitted".into());}
                 if world.enable_source_resolve_prototype(&metal).is_ok(){return Err("Warm resolve mode replacement admitted".into());}
-                diagnostic_controls=serde_json::json!({"budget_refusal":refusal,"held_pixels_preserved":true,"foreign_owner_rejected":true,"warm_mode_rejected":true});
+                diagnostic_controls=serde_json::json!({"budget_refusal":refusal,"held_pixels_preserved":true,"foreign_owner_rejected":true,"warm_mode_rejected":true,"cached_mode_rejected":true});
             }
             let mut production_toggle=serde_json::Value::Null;
             if name=="closed" && !reflected_mode{

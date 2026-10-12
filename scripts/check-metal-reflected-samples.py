@@ -51,7 +51,7 @@ def main():
   report=json.loads((a.native/'report.json').read_text());assert report['reflected_diagnostic'] is True and report['production_mode'] is False
   assert report['sample_diagnostics']['strict_nvidia_reference_policy']['admitted'] is False
   defaults=report['sample_diagnostics']['default_positions_top_origin'];source=report['sample_diagnostics']['source_positions_top_origin'];assert all(d[0]==s[0]and 1-d[1]==s[1]for d,s in zip(defaults,source)) and len(defaults)==len(source)==4
-  control=report['cases'][0]['diagnostic_controls'];assert control['held_pixels_preserved'] is True and control['foreign_owner_rejected'] is True and control['warm_mode_rejected'] is True and type(control['budget_refusal'])is str and control['budget_refusal']
+  control=report['cases'][0]['diagnostic_controls'];assert control['held_pixels_preserved'] is True and control['foreign_owner_rejected'] is True and control['warm_mode_rejected'] is True and control['cached_mode_rejected'] is True and type(control['budget_refusal'])is str and control['budget_refusal']
   result['images']=strict.validate(a.native,ROOT/'docs/audits/section-original-gl')
   with zipfile.ZipFile(ROOT/'docs/audits/section-sample-observation/records.zip')as z:closed=json.loads(z.read('mesa/report.json'))
   with zipfile.ZipFile(ROOT/'docs/audits/section-iso-samples/source.zip')as z:iso=json.loads(z.read('report.json'))
