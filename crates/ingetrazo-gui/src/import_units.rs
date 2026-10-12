@@ -201,6 +201,9 @@ impl IngeTrazoApp {
             return Err("Unit confirmation supports OBJ and DXF".into());
         }
         let bytes = std::fs::read(path).map_err(|e| e.to_string())?;
+        self.begin_unit_import_bytes(path, &kind, bytes)
+    }
+    pub(crate) fn begin_unit_import_bytes(&mut self, path: &Path, kind: &str, bytes: Vec<u8>) -> Result<(), String> {
         let code = if kind == "obj" {
             let guessed = obj_suggestion(&bytes);
             if guessed == "m" {
@@ -216,7 +219,7 @@ impl IngeTrazoApp {
         .into();
         self.document_session.unit_import = Some(Dialog {
             path: path.into(),
-            kind,
+            kind: kind.into(),
             code,
             bytes,
         });
@@ -307,6 +310,7 @@ impl IngeTrazoApp {
             }
             self.bump_model_revision();
         }
+        if confirmed.path.extension().and_then(|e|e.to_str()).is_some_and(|e|e.eq_ignore_ascii_case("dwg")){self.zoom_extents();}
         self.status_message = format!("Imported {}", confirmed.path.display());
         Ok(())
     }
@@ -450,7 +454,7 @@ pub fn render(app: &mut IngeTrazoApp, ctx: &egui::Context) {
         ui.heading(format!("Import {}", d.kind.to_uppercase()));
         ui.label(d.path.display().to_string());
         ui.label("What unit is this model in?");
-        egui::ComboBox::from_id_salt("import-unit-choice")
+        let choice=egui::ComboBox::from_id_salt("import-unit-choice")
             .selected_text(unit_label(&d.code))
             .show_ui(ui, |ui| {
                 for code in if d.kind == "obj" {
@@ -458,12 +462,15 @@ pub fn render(app: &mut IngeTrazoApp, ctx: &egui::Context) {
                 } else {
                     DXF_CODES
                 } {
-                    ui.selectable_value(&mut d.code, code.into(), unit_label(code));
+                    let response=ui.selectable_value(&mut d.code, code.into(), unit_label(code));
+                    if std::env::var_os("INGETRAZO_PDF_UI_OBSERVE").is_some(){ctx.data_mut(|data|data.insert_temp(egui::Id::new(format!("import-unit-option-{code}")),response.rect));}
                 }
             });
+        if std::env::var_os("INGETRAZO_PDF_UI_OBSERVE").is_some(){ctx.data_mut(|data|data.insert_temp(egui::Id::new("import-unit-combo"),choice.response.rect));}
         ui.horizontal(|ui| {
-            accept = ui.button("Import").clicked();
-            cancel = ui.button("Cancel").clicked();
+            let import=ui.button("Import");let dismiss=ui.button("Cancel");
+            if std::env::var_os("INGETRAZO_PDF_UI_OBSERVE").is_some(){ctx.data_mut(|data|{data.insert_temp(egui::Id::new("import-unit-accept"),import.rect);data.insert_temp(egui::Id::new("import-unit-cancel"),dismiss.rect);});}
+            accept=import.clicked();cancel=dismiss.clicked();
         });
     });
     if cancel || modal.should_close() {

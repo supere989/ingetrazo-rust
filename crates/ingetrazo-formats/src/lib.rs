@@ -253,3 +253,5 @@ mod sheet_jpeg;
 pub mod photo_profile;
 
 pub mod dem_profile;
+
+pub mod dwg;

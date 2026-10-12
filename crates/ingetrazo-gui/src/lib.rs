@@ -223,3 +223,5 @@ mod composer_frame_projection;
 pub mod frame_annotation_sync_consumer;
 
 mod composer_picture;
+
+mod dwg_import;
