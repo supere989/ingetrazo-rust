@@ -101,73 +101,83 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     ));
     app.set_language("en");
     let mut records = Vec::new();
+    let mut failures = Vec::new();
     for row in reference["images"]
         .as_array()
         .ok_or("Missing annotation cases")?
     {
         let name = row["case"].as_str().ok_or("case")?;
-        let sheet = row["sheet_index"].as_u64().ok_or("sheet_index")? as usize;
-        let dpi: u16 = row["dpi"].as_u64().ok_or("dpi")?.try_into()?;
-        app.mark_document_clean();
-        app.open_document(&source.join(row["scene"].as_str().ok_or("scene")?));
-        assert!(!app.document_session.confirm_unsaved);
-        assert_eq!(app.scene.sheets.len(), sheet + 1);
-        // The unchanged source fixture supplies the same document field context.
-        app.current_file = Some("fixture-project.igz".into());
-        let before = app.scene.clone();
-        let png = out.join(row["image"]["file"].as_str().ok_or("png")?);
-        let jpeg = out.join(row["jpeg"].as_str().ok_or("jpeg")?);
-        let pdf = out.join(row["pdf"].as_str().ok_or("pdf")?);
-        let plan = prepare(&mut app, &context, sheet, &png, dpi)?;
-        renderer.save(&plan, &png)?;
-        renderer.save(&plan, &jpeg)?;
-        // The prepared plan owns all geometry and glyph resources. Reuse it after
-        // detaching authored sheets; this is a plan-lifetime proof, not a GPU upload budget.
-        let held = std::mem::take(&mut app.scene.sheets);
-        let warm = out.join(format!("{name}-warm.png"));
-        let warm_result = renderer.save(&plan, &warm);
-        app.scene.sheets = held;
-        warm_result?;
-        assert_eq!(
-            std::fs::read(&png)?,
-            std::fs::read(&warm)?,
-            "Prepared annotation plan changed after author detachment"
-        );
-        app.export_composer_pdf(Some(sheet), &pdf)?;
-        assert_eq!(
-            app.scene, before,
-            "Annotation export mutated authored document"
-        );
-        let saved = out.join(format!("{name}.igz"));
-        app.save_to_path(&saved);
-        assert!(saved.exists());
-        let reopened = ingetrazo_formats::igz::load_igz(&saved)?;
-        assert_eq!(reopened.sheets.len(), before.sheets.len());
-        for (actual, expected) in reopened.sheets.iter().zip(&before.sheets) {
-            for family in FAMILIES {
+        let result = (|| -> Result<serde_json::Value, Box<dyn std::error::Error>> {
+            let sheet = row["sheet_index"].as_u64().ok_or("sheet_index")? as usize;
+            let dpi: u16 = row["dpi"].as_u64().ok_or("dpi")?.try_into()?;
+            app.mark_document_clean();
+            app.open_document(&source.join(row["scene"].as_str().ok_or("scene")?));
+            assert!(!app.document_session.confirm_unsaved);
+            assert_eq!(app.scene.sheets.len(), sheet + 1);
+            // The unchanged source fixture supplies the same document field context.
+            app.current_file = Some("fixture-project.igz".into());
+            let before = app.scene.clone();
+            let png = out.join(row["image"]["file"].as_str().ok_or("png")?);
+            let jpeg = out.join(row["jpeg"].as_str().ok_or("jpeg")?);
+            let pdf = out.join(row["pdf"].as_str().ok_or("pdf")?);
+            let plan = prepare(&mut app, &context, sheet, &png, dpi)?;
+            renderer.save(&plan, &png)?;
+            renderer.save(&plan, &jpeg)?;
+            // The prepared plan owns all geometry and glyph resources. Reuse it after
+            // detaching authored sheets; this is a plan-lifetime proof, not a GPU upload budget.
+            let held = std::mem::take(&mut app.scene.sheets);
+            let warm = out.join(format!("{name}-warm.png"));
+            let warm_result = renderer.save(&plan, &warm);
+            app.scene.sheets = held;
+            warm_result?;
+            assert_eq!(
+                std::fs::read(&png)?,
+                std::fs::read(&warm)?,
+                "Prepared annotation plan changed after author detachment"
+            );
+            app.export_composer_pdf(Some(sheet), &pdf)?;
+            assert_eq!(
+                app.scene, before,
+                "Annotation export mutated authored document"
+            );
+            let saved = out.join(format!("{name}.igz"));
+            app.save_to_path(&saved);
+            assert!(saved.exists());
+            let reopened = ingetrazo_formats::igz::load_igz(&saved)?;
+            assert_eq!(reopened.sheets.len(), before.sheets.len());
+            for (actual, expected) in reopened.sheets.iter().zip(&before.sheets) {
+                for family in FAMILIES {
+                    assert_eq!(
+                        actual.native_document.get(family),
+                        expected.native_document.get(family),
+                        "Opaque annotation ownership: {family}"
+                    );
+                }
                 assert_eq!(
-                    actual.native_document.get(family),
-                    expected.native_document.get(family),
-                    "Opaque annotation ownership: {family}"
+                    actual.native_document.get("vendor_annotations"),
+                    expected.native_document.get("vendor_annotations")
                 );
             }
-            assert_eq!(
-                actual.native_document.get("vendor_annotations"),
-                expected.native_document.get("vendor_annotations")
-            );
+            let dimensions = image::image_dimensions(&png)?;
+            Ok(serde_json::json!({
+                "case":name,"sheet_index":sheet,"dpi":dpi,
+                "file":row["image"]["file"],"pixels":[dimensions.0,dimensions.1],
+                "jpeg":row["jpeg"],"pdf":row["pdf"],
+                "portable":saved.file_name().unwrap().to_string_lossy(),
+                "nonmutating":true,"snapshot_owner":true,"warm_reused":true,
+                "warm_scope":"Same prepared plan after authored sheets detached; identical PNG bytes"
+            }))
+        })();
+        match result {
+            Ok(record) => records.push(record),
+            Err(error) => {
+                eprintln!("Annotation case {name} failed: {error}");
+                failures.push(serde_json::json!({"case":name,"error":error.to_string()}));
+            }
         }
-        let dimensions = image::image_dimensions(&png)?;
-        records.push(serde_json::json!({
-            "case":name,"sheet_index":sheet,"dpi":dpi,
-            "file":row["image"]["file"],"pixels":[dimensions.0,dimensions.1],
-            "jpeg":row["jpeg"],"pdf":row["pdf"],
-            "portable":saved.file_name().unwrap().to_string_lossy(),
-            "nonmutating":true,"snapshot_owner":true,"warm_reused":true,
-            "warm_scope":"Same prepared plan after authored sheets detached; identical PNG bytes"
-        }));
         std::fs::write(
             out.join("native.partial.json"),
-            serde_json::to_vec_pretty(&serde_json::json!({"images":records}))?,
+            serde_json::to_vec_pretty(&serde_json::json!({"images":records,"failures":failures}))?,
         )?;
     }
     app.mark_document_clean();
@@ -198,6 +208,13 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         refusals.push(serde_json::json!({"family":family,"png_destination_preserved":true,"pdf_destination_preserved":true,"scene_preserved":true}));
     }
     renderer.cleanup()?;
+    if !failures.is_empty() {
+        return Err(format!(
+            "{} annotation cases failed; see native.partial.json",
+            failures.len()
+        )
+        .into());
+    }
     std::fs::write(
         out.join("native.json"),
         serde_json::to_vec_pretty(&serde_json::json!({
