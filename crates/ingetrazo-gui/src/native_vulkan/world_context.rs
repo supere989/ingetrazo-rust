@@ -24,7 +24,7 @@ pub(super) struct Packet {
     pub edge_count: u32,
     pub fade: f32,
     pub runs: Vec<Run>,
-    pub camera: [u64; 9],
+    pub camera: [u64; 15],
     pub billboards: ingetrazo_render::billboards::Packet,
 }
 pub(super) fn key(app: &crate::IngeTrazoApp) -> Key {
@@ -298,7 +298,7 @@ pub(super) fn collect(
     ))
 }
 
-pub(super) fn camera_key(camera: &ingetrazo_core::camera::OrbitCamera) -> [u64; 9] {
+pub(super) fn camera_key(camera: &ingetrazo_core::camera::OrbitCamera) -> [u64; 15] {
     [
         camera.target.x.to_bits(),
         camera.target.y.to_bits(),
@@ -309,5 +309,11 @@ pub(super) fn camera_key(camera: &ingetrazo_core::camera::OrbitCamera) -> [u64; 
         camera.fov_deg.to_bits(),
         camera.aspect.to_bits(),
         u64::from(camera.perspective),
+        camera.up.x.to_bits(),
+        camera.up.y.to_bits(),
+        camera.up.z.to_bits(),
+        camera.znear.to_bits(),
+        camera.zfar.to_bits(),
+        u64::from(camera.two_point),
     ]
 }

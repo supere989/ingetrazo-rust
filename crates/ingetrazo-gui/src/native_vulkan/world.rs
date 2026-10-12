@@ -382,6 +382,9 @@ impl World {
   self.set_scene_extra(context,scene,camera,style,fence,completed_serial,epoch,&[])
  }
  fn set_scene_extra(&mut self,context:&VulkanContext,scene:&ingetrazo_core::scene::Scene,camera:&ingetrazo_core::camera::OrbitCamera,style:&ingetrazo_render::style::StyleConfig,fence:vk::Fence,completed_serial:u64,epoch:u64,shadow_extra:&[&ingetrazo_render::buffer::TextureBuffers])->Result<(),String>{
+  // Context can be the first cold owner of a shared asset. Reuse only completed
+  // immutable images before ordinary receiver admission; geometry stays separate.
+  if let Some(owner)=&self.context_textures{self.textures.as_mut().unwrap().share_completed_images(context,owner)?;}
   let previous=(self.source_camera_matrix,self.source_gl_camera,self.mvp,self.clip,self.clip_enabled,self.eye,self.width_factor,self.edge_color,self.background,self.style_mode,self.style_front,self.style_back,self.show_edges);
   let key=billboards::key(scene,camera,epoch)?;
   let packet=if self.billboard_key.is_none_or(|old|old.0!=key.0){Some(billboards::Packet::build(scene)?)}else{None};
