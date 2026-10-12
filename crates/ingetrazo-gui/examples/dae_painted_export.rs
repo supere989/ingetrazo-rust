@@ -9,8 +9,13 @@ fn camera(a: &IngeTrazoApp) -> Value {
     json!({"target":a.camera.target.to_array(),"distance":a.camera.distance,"yaw":a.camera.yaw,"pitch":a.camera.pitch,"projection":if a.camera.perspective{"perspective"}else{"parallel"},"fov":a.camera.fov_deg})
 }
 fn state(a: &IngeTrazoApp, name: &str, phase: &str, outcome: &str) -> Result<Value, String> {
+    let mut scene = observe::scene_with_missing(a, true)?;
+    let mut units = a.scene.model_units().as_object().cloned().unwrap_or_default();
+    units.insert("length".into(), json!(ingetrazo_core::units::model_unit(&a.scene)));
+    units.insert("precision".into(), json!(ingetrazo_core::units::model_precision(&a.scene)));
+    scene["units"] = Value::Object(units);
     Ok(
-        json!({"case":name,"phase":phase,"scene":observe::scene_with_missing(a,true)?,"current_file":a.current_file.as_ref().and_then(|p|p.file_name()).unwrap_or_default().to_string_lossy(),"dirty":a.document_dirty(),"camera":camera(a),"edit_context":a.component_edit_stack.len(),"undo":a.undo_stack.len(),"redo":a.redo_stack.len(),"composer_history":null,"outcome":outcome}),
+        json!({"case":name,"phase":phase,"scene":scene,"current_file":a.current_file.as_ref().and_then(|p|p.file_name()).unwrap_or_default().to_string_lossy(),"dirty":a.document_dirty(),"camera":camera(a),"edit_context":a.component_edit_stack.len(),"undo":a.undo_stack.len(),"redo":a.redo_stack.len(),"composer_history":null,"outcome":outcome}),
     )
 }
 fn unix_time() -> f64 {
