@@ -11,3 +11,5 @@ QT_QPA_PLATFORM=xcb /tmp/ingetrazo-parity-python/bin/python scripts/reference-ai
 ```
 
 Root supplies the same reviewed Xvfb/OpenGL environment as the existing capture and a bounded outer deadline. Native uses the existing prebuilt `ai_bridge_capture_workflows SOURCE OUTPUT` executable. Check with `check-ai-bridge-capture-context.py SOURCE NATIVE COMPARISON.json`. Preserve all failure receipts and partial data; do not recapture the original six cases.
+
+The canonical `source-records.zip` retains the successful original capture at `b59feab472f7c58243def0afbc82f854864f0ac7`: two cases, six replies and six PNG/RGBA images in 1.867761 seconds. The exact receipt/stdout/stderr/Xvfb log, executed producer/helpers/contract, authored IGZ files and original brick bytes are retained. `source-manifest.json` authenticates every member, all four recorded pre-capture Git bindings and twenty pinned original files. It excludes config/data/cache; no files have been purged. This packet records original source behavior only and makes no native pixel-parity claim. Do not rerun the producer to verify the archive.

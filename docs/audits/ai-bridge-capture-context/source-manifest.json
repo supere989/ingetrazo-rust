@@ -1,0 +1,258 @@
+{
+  "original_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "source_revision": "b59feab472f7c58243def0afbc82f854864f0ac7",
+  "archive_sha256": "081497ebe1743ef8eefd9bc1efe2c4a21327bffa2b4145eb8942e37e1188fdd6",
+  "members": {
+    "LICENSE": {
+      "size": 35149,
+      "sha256": "3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986"
+    },
+    "brick.png": {
+      "size": 445,
+      "sha256": "71036781abb039e653861f31fa72660b1c8013ea52064cc854c15cb831a80bda"
+    },
+    "capture-support/exchange_import_observations.py": {
+      "size": 1637,
+      "sha256": "48c12bffd82e9c431ce8784174112a78c7ab09de529fabc1e5f0f8445bf94142"
+    },
+    "capture-support/fixture-contract.json": {
+      "size": 4324,
+      "sha256": "aca49baa0067b662a6156adab0e36a6d977b90a74f9a05462aefae1302fe7598"
+    },
+    "capture-support/reference-ai-bridge-capture-context.py": {
+      "size": 10085,
+      "sha256": "0a83fc18a6a5cedd779bac59e23bf71226b8bf1e720e1dd07c38692356b999a9"
+    },
+    "capture-support/reference-ai-bridge-capture.py": {
+      "size": 10808,
+      "sha256": "afe6924e6e8264ab88da2e18009b20ebc9a2f9656def3d0b38fbe73fb4276b8e"
+    },
+    "capture/receipt.json": {
+      "size": 671,
+      "sha256": "d705bf91bd81ea79636abd279b11903aca2aa90eb90b9967d98dd0de180f53a6"
+    },
+    "capture/stderr": {
+      "size": 294,
+      "sha256": "4f32da043912a4214bee35be25661212b5e2d1085e026ac2cd736f96dfe5b61f"
+    },
+    "capture/stdout": {
+      "size": 98,
+      "sha256": "e7b9c15d7e48f7925761c2360d38c07491b73c1fb36fdaa2d0b8dcd1adb1a4e1"
+    },
+    "capture/xvfb.log": {
+      "size": 2868,
+      "sha256": "79f76d3feb971128222a296e2312dc34d25ca06e0d465bddf909dff5a09f2ef0"
+    },
+    "original-ai-bridge-capture.json": {
+      "size": 241956,
+      "sha256": "501ab6089361e87508dca56a5fb287f5d4056d57d4e91e9949fadeeb4b17d1d2"
+    },
+    "original-ai-bridge-capture.partial.json": {
+      "size": 241956,
+      "sha256": "501ab6089361e87508dca56a5fb287f5d4056d57d4e91e9949fadeeb4b17d1d2"
+    },
+    "shared-texture-context-0.png": {
+      "size": 28026,
+      "sha256": "da577e37c6b964f4f4edf90947d56f6daa9b2eea9684f83be4c9fcc83fd59e66"
+    },
+    "shared-texture-context-0.rgba": {
+      "size": 1228800,
+      "sha256": "1f6d90742ad842ed880a801a112a3e56749fb64db89b3b4a1634f1a0c0954f93"
+    },
+    "shared-texture-context-1.png": {
+      "size": 27005,
+      "sha256": "0532b54596371fee69bdeee0a5106af122cef74626a08cd86051c7758a42f4ab"
+    },
+    "shared-texture-context-1.rgba": {
+      "size": 1228800,
+      "sha256": "5210dfc72ced282fd40bea3d7a551a687ef4ccc6bdfa358086af75c981697db9"
+    },
+    "shared-texture-context-2.png": {
+      "size": 30378,
+      "sha256": "92845c68185eedc23f71d9b6c64b8b960d01c6e45a924012a3648ad935c26c34"
+    },
+    "shared-texture-context-2.rgba": {
+      "size": 1228800,
+      "sha256": "a25e8d1f9aaf5bfe405d9c661d50fc57570e530ddde5b91b4ef5ed537505f658"
+    },
+    "shared-texture-context-input.igz": {
+      "size": 373812,
+      "sha256": "3e4751536de0d79187bd47e06f027f2136dc5f59d6be837931709343242243fa"
+    },
+    "startup-billboard-context-0.png": {
+      "size": 13737,
+      "sha256": "3705c527f37af48ac8b8acb962399c1845ec3414c707c7196502018f3f21d1a8"
+    },
+    "startup-billboard-context-0.rgba": {
+      "size": 1228800,
+      "sha256": "c3310437270565e7a2e81a7b3f7d239da143851036632bf291fbb84b800505f1"
+    },
+    "startup-billboard-context-1.png": {
+      "size": 11364,
+      "sha256": "432829d4f4f274cf2767bfa7264d11871a22fc5c8622269ba9b93efb7063c86e"
+    },
+    "startup-billboard-context-1.rgba": {
+      "size": 1228800,
+      "sha256": "baa0e87c2521234f6fd498cd88a56b0361ea011abfc677d1f935bddabfc6b49e"
+    },
+    "startup-billboard-context-2.png": {
+      "size": 12556,
+      "sha256": "927bdcf1a1c7036cf1f24564d0d87462292374df2eb93c358c7e55f19683fac2"
+    },
+    "startup-billboard-context-2.rgba": {
+      "size": 1228800,
+      "sha256": "8737911170ff1ad1ada36a5e238f7c64087417b3c4ccc5da3326b9317c3c23e4"
+    },
+    "startup-billboard-context-input.igz": {
+      "size": 373250,
+      "sha256": "a3a7d142bd329d2db7754686436646e150156828c3810dc8314d4d1fc3f1dfd5"
+    }
+  },
+  "sources": [
+    {
+      "path": "scripts/reference-ai-bridge-capture-context.py",
+      "git_commit": "b59feab472f7c58243def0afbc82f854864f0ac7",
+      "sha256": "0a83fc18a6a5cedd779bac59e23bf71226b8bf1e720e1dd07c38692356b999a9",
+      "retained_path": "capture-support/reference-ai-bridge-capture-context.py"
+    },
+    {
+      "path": "docs/audits/ai-bridge-capture-context/fixture-contract.json",
+      "git_commit": "b59feab472f7c58243def0afbc82f854864f0ac7",
+      "sha256": "aca49baa0067b662a6156adab0e36a6d977b90a74f9a05462aefae1302fe7598",
+      "retained_path": "capture-support/fixture-contract.json"
+    },
+    {
+      "path": "scripts/reference-ai-bridge-capture.py",
+      "git_commit": "b59feab472f7c58243def0afbc82f854864f0ac7",
+      "sha256": "afe6924e6e8264ab88da2e18009b20ebc9a2f9656def3d0b38fbe73fb4276b8e",
+      "retained_path": "capture-support/reference-ai-bridge-capture.py"
+    },
+    {
+      "path": "scripts/exchange_import_observations.py",
+      "git_commit": "b59feab472f7c58243def0afbc82f854864f0ac7",
+      "sha256": "48c12bffd82e9c431ce8784174112a78c7ab09de529fabc1e5f0f8445bf94142",
+      "retained_path": "capture-support/exchange_import_observations.py"
+    }
+  ],
+  "capture_sources": [
+    {
+      "path": "scripts/reference-ai-bridge-capture-context.py",
+      "git_commit": "b59feab472f7c58243def0afbc82f854864f0ac7",
+      "sha256": "0a83fc18a6a5cedd779bac59e23bf71226b8bf1e720e1dd07c38692356b999a9",
+      "retained_path": "capture-support/reference-ai-bridge-capture-context.py"
+    },
+    {
+      "path": "docs/audits/ai-bridge-capture-context/fixture-contract.json",
+      "git_commit": "b59feab472f7c58243def0afbc82f854864f0ac7",
+      "sha256": "aca49baa0067b662a6156adab0e36a6d977b90a74f9a05462aefae1302fe7598",
+      "retained_path": "capture-support/fixture-contract.json"
+    },
+    {
+      "path": "scripts/reference-ai-bridge-capture.py",
+      "git_commit": "b59feab472f7c58243def0afbc82f854864f0ac7",
+      "sha256": "afe6924e6e8264ab88da2e18009b20ebc9a2f9656def3d0b38fbe73fb4276b8e",
+      "retained_path": "capture-support/reference-ai-bridge-capture.py"
+    },
+    {
+      "path": "scripts/exchange_import_observations.py",
+      "git_commit": "b59feab472f7c58243def0afbc82f854864f0ac7",
+      "sha256": "48c12bffd82e9c431ce8784174112a78c7ab09de529fabc1e5f0f8445bf94142",
+      "retained_path": "capture-support/exchange_import_observations.py"
+    }
+  ],
+  "original_sources": [
+    {
+      "path": "plugins/ai_bridge.py",
+      "sha256": "01c4cdcaeee19840980018636378e29f090c02abb0263a3a2c71a091ed145aeb"
+    },
+    {
+      "path": "views/viewport.py",
+      "sha256": "1fb62f55b8f559deb3676924ee69a9a444397faa28c49651111cea44e420c724"
+    },
+    {
+      "path": "views/main_window.py",
+      "sha256": "ea02be3e439c80731d0f5b5fde3d92d9b3f62e8ad10cd44ad305c3261b7786fa"
+    },
+    {
+      "path": "core/scene.py",
+      "sha256": "9dfcd32f1ff5b1445180eafd8df36eafb92fa08ed3597bb90eac09554899d2e0"
+    },
+    {
+      "path": "core/mesh.py",
+      "sha256": "5f2c1625e6dd717db029ba39a9de337e75beec06bd0df28a592a8a34875ca22c"
+    },
+    {
+      "path": "core/group.py",
+      "sha256": "9ba6a20eca241cb4969a545a3784fcff25566166606d5447a18780747d4f11c5"
+    },
+    {
+      "path": "core/camera.py",
+      "sha256": "cae35d8adfe33f3da22b85de74cc0779c0d2697fa8fa09d0112933d6d3e26a52"
+    },
+    {
+      "path": "core/dimension.py",
+      "sha256": "2253da1bb8e186f786c8fcfb780d91ca48460926a1641f8c42913473109f2ce6"
+    },
+    {
+      "path": "core/textlabel.py",
+      "sha256": "7ef512a89a591baa3149ec71b6d5e733f2831783091fe800323a003d449424bf"
+    },
+    {
+      "path": "core/guide.py",
+      "sha256": "a95d0ec873c58c34bd14e23c5e34d56d14bc38cdcd0b0008678be7eb2966d4f6"
+    },
+    {
+      "path": "core/section.py",
+      "sha256": "ace64d908292afdf1e79263117a2c7e1a752ecf4f096aa6a106d4adef98a9826"
+    },
+    {
+      "path": "core/history.py",
+      "sha256": "2eb66a1d557099b51383988a7819145289fc4ce2c37fc7de3a92ed35b5830559"
+    },
+    {
+      "path": "georef/geopath.py",
+      "sha256": "bf164fb5c53c4e621f03d103c75416823a71892461b425aec1946cacce45c348"
+    },
+    {
+      "path": "georef/points.py",
+      "sha256": "e04c08759c30aa62e78557613cd81dd4e454eabf871fe3f78207a22d6c0b4c9a"
+    },
+    {
+      "path": "formats/igz.py",
+      "sha256": "f318d685830c49c2fede7fd5a238ac7a1469ee0b0226cf48cab3751e194a9576"
+    },
+    {
+      "path": "tools/select.py",
+      "sha256": "baa33a660666cbc78a25ca291e0b40a4b2bd88755393ebce08295e1de6327916"
+    },
+    {
+      "path": "resources/components/ingeniero.png",
+      "sha256": "be7b463c8b2eec4e7635b2f1efbc1705267ff39ada6a0e4935eebe2e13799e13"
+    },
+    {
+      "path": "resources/textures/brick.png",
+      "sha256": "71036781abb039e653861f31fa72660b1c8013ea52064cc854c15cb831a80bda"
+    },
+    {
+      "path": "resources/shaders/basic.frag",
+      "sha256": "dbc25d2462913ed1dca727e50af194b2fd81534a20ed91e225e14e66f9c93112"
+    },
+    {
+      "path": "core/paths.py",
+      "sha256": "a669d5f0dd2c235ae372377dc669598bf9613b8c361c513d473df856cdd9ebae"
+    }
+  ],
+  "cases": 2,
+  "replies": 6,
+  "images": 6,
+  "capture_receipt": "capture/receipt.json",
+  "capture_provenance": "One actual missing-only original GPU/TCP capture; 1.8677613369654864 seconds, exit0. Four pre-capture receipt hashes independently matched executed Git revision. Original/source helper guards were operative before Qt. The frozen six-case corpus was not rerun or changed.",
+  "exclusions": [
+    "source config/data/cache directories",
+    "OS/chrome framebuffer",
+    "native acceptance",
+    "new save/reopen acceptance",
+    "image-sharing allocation benchmark"
+  ],
+  "cleanup_performed": false
+}
