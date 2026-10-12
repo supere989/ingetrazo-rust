@@ -1,0 +1,115 @@
+{
+  "archive": "source-records.zip",
+  "archive_sha256": "46d5606f24327b2ec195f86ab97681c14116fae8ba908768604a1a0923dbb452",
+  "members": [
+    {
+      "path": "original-ai-bridge-python.json",
+      "size": 15793,
+      "sha256": "082baef974c55e790d404aa5e16cc242e1521140f488072ca43b1a20159c427b",
+      "origin": "/tmp/ingetrazo-ai-bridge-source-r1/original-ai-bridge-python.json"
+    },
+    {
+      "path": "original-ai-bridge.partial.json",
+      "size": 15793,
+      "sha256": "082baef974c55e790d404aa5e16cc242e1521140f488072ca43b1a20159c427b",
+      "origin": "/tmp/ingetrazo-ai-bridge-source-r1/original-ai-bridge.partial.json"
+    },
+    {
+      "path": "capture/capture.log",
+      "size": 1706,
+      "sha256": "9a3751b090bb122e1ea51b79b0ca3dfcddf894d8f45da8290f7d1c2253e96e8b",
+      "origin": "/tmp/ingetrazo-ai-bridge-source-attempt-1/capture.log"
+    },
+    {
+      "path": "capture/receipt.json",
+      "size": 1303,
+      "sha256": "abee197e90d13e312c473a2a599fc0ba04be21956e1a0b22b242df4b8ad5ef3f",
+      "origin": "/tmp/ingetrazo-ai-bridge-source-attempt-1/receipt.json"
+    },
+    {
+      "path": "helpers/scripts/reference-ai-bridge-python.py",
+      "size": 6586,
+      "sha256": "639f5b84d5790af9b5870ae2bd3c07f4dba1ec8a0e7cd0667a169019d5d680ee",
+      "origin": "git:5b5c842ab2f88cd128fd94456db82df6df08a1a7:scripts/reference-ai-bridge-python.py"
+    },
+    {
+      "path": "helpers/docs/audits/ai-bridge-python/fixture-contract.json",
+      "size": 3422,
+      "sha256": "ea1bcc6306cce6cec033b4544e858611184c9abd4490a039b77ee01b01b13556",
+      "origin": "git:5b5c842ab2f88cd128fd94456db82df6df08a1a7:docs/audits/ai-bridge-python/fixture-contract.json"
+    }
+  ],
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "capture_revision": "5b5c842ab2f88cd128fd94456db82df6df08a1a7",
+  "capture_receipt": "capture/receipt.json",
+  "sources": [
+    {
+      "path": "scripts/reference-ai-bridge-python.py",
+      "revision": "5b5c842ab2f88cd128fd94456db82df6df08a1a7",
+      "sha256": "639f5b84d5790af9b5870ae2bd3c07f4dba1ec8a0e7cd0667a169019d5d680ee",
+      "retained_member": "helpers/scripts/reference-ai-bridge-python.py",
+      "verification": "Actual before-capture receipt"
+    },
+    {
+      "path": "docs/audits/ai-bridge-python/fixture-contract.json",
+      "revision": "5b5c842ab2f88cd128fd94456db82df6df08a1a7",
+      "sha256": "ea1bcc6306cce6cec033b4544e858611184c9abd4490a039b77ee01b01b13556",
+      "retained_member": "helpers/docs/audits/ai-bridge-python/fixture-contract.json",
+      "verification": "Actual before-capture receipt"
+    }
+  ],
+  "original_sources": [
+    {
+      "path": "plugins/ai_bridge.py",
+      "revision": "6be29fe437a7cd992d4e079f71720821b25216b9",
+      "sha256": "01c4cdcaeee19840980018636378e29f090c02abb0263a3a2c71a091ed145aeb",
+      "verification": "Actual before-capture receipt"
+    },
+    {
+      "path": "core/ai.py",
+      "revision": "6be29fe437a7cd992d4e079f71720821b25216b9",
+      "sha256": "6208a5c3e7773d27f028b9d7460f317693bab107705d6efdcd598ef048a82678",
+      "verification": "Actual before-capture receipt"
+    },
+    {
+      "path": "core/history.py",
+      "revision": "6be29fe437a7cd992d4e079f71720821b25216b9",
+      "sha256": "2eb66a1d557099b51383988a7819145289fc4ce2c37fc7de3a92ed35b5830559",
+      "verification": "Actual before-capture receipt"
+    },
+    {
+      "path": "core/mesh.py",
+      "revision": "6be29fe437a7cd992d4e079f71720821b25216b9",
+      "sha256": "5f2c1625e6dd717db029ba39a9de337e75beec06bd0df28a592a8a34875ca22c",
+      "verification": "Actual before-capture receipt"
+    },
+    {
+      "path": "views/main_window.py",
+      "revision": "6be29fe437a7cd992d4e079f71720821b25216b9",
+      "sha256": "ea02be3e439c80731d0f5b5fde3d92d9b3f62e8ad10cd44ad305c3261b7786fa",
+      "verification": "Actual before-capture receipt"
+    },
+    {
+      "path": "views/viewport.py",
+      "revision": "6be29fe437a7cd992d4e079f71720821b25216b9",
+      "sha256": "1fb62f55b8f559deb3676924ee69a9a444397faa28c49651111cea44e420c724",
+      "verification": "Actual before-capture receipt"
+    },
+    {
+      "path": "tests/test_ai_bridge.py",
+      "revision": "6be29fe437a7cd992d4e079f71720821b25216b9",
+      "sha256": "2eb255f45c242dba53fb062abd2c2c232afc8cfade15116bc79765fd1eff4902",
+      "verification": "Actual before-capture receipt"
+    }
+  ],
+  "cases": 6,
+  "states": 20,
+  "source_captures": 1,
+  "callback_errors": [],
+  "excluded_roots": [
+    "/tmp/ingetrazo-ai-bridge-source-r1/config",
+    "/tmp/ingetrazo-ai-bridge-source-r1/data",
+    "/tmp/ingetrazo-ai-bridge-source-r1/cache"
+  ],
+  "cleanup_performed": false
+}
