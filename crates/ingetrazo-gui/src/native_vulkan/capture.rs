@@ -106,7 +106,7 @@ impl System {
         if !request.stamp.matches(app) {
             return Err("Capture context changed before rendering".into());
         }
-        if app.composer_state.active_sheet_index.is_some() {
+        if app.scene.active_sheet_index.is_some() {
             return Err("Viewport capture requires model viewport".into());
         }
         if self.world.is_none() || !self.world_presented {
