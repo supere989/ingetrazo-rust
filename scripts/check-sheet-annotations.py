@@ -2,7 +2,7 @@
 """Strict six-family physical PNG/JPEG/PDF and original-reader acceptance."""
 import argparse,copy,hashlib,json,math,os,tempfile,zipfile
 from pathlib import Path
-import numpy as np
+import numpy
 os.environ.setdefault('QT_QPA_PLATFORM','offscreen')
 from PySide6.QtWidgets import QApplication
 from PySide6.QtGui import QImage,QPainter,QColor
@@ -38,8 +38,8 @@ def rgb(path):
  image=QImage(str(path));assert not image.isNull(),str(path);image=image.convertToFormat(QImage.Format_RGB888);data=bytes(image.constBits());return[image.width(),image.height()],b''.join(data[y*image.bytesPerLine():y*image.bytesPerLine()+image.width()*3]for y in range(image.height()))
 def difference(a,b):
  sa,aa=a;sb,bb=b;assert sa==sb,('image-size',sa,sb);assert len(aa)==len(bb)==sa[0]*sa[1]*3
- source=np.frombuffer(aa,dtype=np.uint8).reshape(-1,3);native=np.frombuffer(bb,dtype=np.uint8).reshape(-1,3)
- return dict(size=sa,different_pixels=int(np.count_nonzero(np.any(source!=native,axis=1))),max_channel_error=int(np.abs(source.astype(np.int16)-native.astype(np.int16)).max(initial=0)),source_rgb_sha256=hashlib.sha256(aa).hexdigest(),native_rgb_sha256=hashlib.sha256(bb).hexdigest())
+ source=numpy.frombuffer(aa,dtype=numpy.uint8).reshape(-1,3);native=numpy.frombuffer(bb,dtype=numpy.uint8).reshape(-1,3)
+ return dict(size=sa,different_pixels=int(numpy.count_nonzero(numpy.any(source!=native,axis=1))),max_channel_error=int(numpy.abs(source.astype(numpy.int16)-native.astype(numpy.int16)).max(initial=0)),source_rgb_sha256=hashlib.sha256(aa).hexdigest(),native_rgb_sha256=hashlib.sha256(bb).hexdigest())
 def pdf(path,dpi):
  doc=QPdfDocument();assert doc.load(str(path))==QPdfDocument.Error.None_,str(path);assert doc.pageCount()==1;points=doc.pagePointSize(0);image=doc.render(0,QSize(round(points.width()*dpi/72),round(points.height()*dpi/72)));assert not image.isNull();opaque=QImage(image.size(),QImage.Format_RGB32);opaque.fill(0xffffffff);p=QPainter(opaque);p.drawImage(0,0,image);p.end();opaque=opaque.convertToFormat(QImage.Format_RGB888);data=bytes(opaque.constBits());pixels=b''.join(data[y*opaque.bytesPerLine():y*opaque.bytesPerLine()+opaque.width()*3]for y in range(opaque.height()));return([opaque.width(),opaque.height()],pixels),[points.width(),points.height()]
 def guard(doc,expected):
