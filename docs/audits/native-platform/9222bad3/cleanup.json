@@ -1,0 +1,106 @@
+{
+  "canonical_archive_sha256": "86abc0dd9d15fc0bb7d4d9de8ad0da8cc1129f55f55ac5fbc486a06d808b745e",
+  "canonical_members": 224,
+  "method": "Every raw/log/JSON duplicate compared byte-for-byte to canonical member; downloaded platform ZIPs decoded and every member compared before removal. Copied canonical ZIP/manifest digests verified. No active consumer, binary, target, source, worktree, config or unique failure removed.",
+  "removed_files": 260,
+  "removed_bytes": 107999551,
+  "preserved": [
+    "canonical repo archive/manifests",
+    "reusable source worktrees/targets",
+    "private GPU bundle",
+    "unique failures outside authenticated duplicate set",
+    "reusable extraction/helper scripts"
+  ],
+  "removed_groups": [
+    {
+      "path": "/tmp/9222-retained",
+      "files": 226,
+      "bytes": 104032289,
+      "verification": "Canonical manifest paths plus byte-equal archive/manifest"
+    },
+    {
+      "path": "/tmp/9222-selected-linux",
+      "files": 19,
+      "bytes": 731666,
+      "verification": "Canonical selected-linux/ member mapping"
+    }
+  ],
+  "individual_files": [
+    {
+      "path": "/tmp/9222-arm.zip",
+      "bytes": 843385,
+      "sha256": "919a430e625bfdc706ae136755dc0e325da66fd3655bf22f7e894c3bf7055604"
+    },
+    {
+      "path": "/tmp/9222-cross-arm.zip",
+      "bytes": 10471,
+      "sha256": "ca4f3d41d79ece85fd5b085f131e72ffb6ddecb4a9cc64b6347d2bfa8ed882b7"
+    },
+    {
+      "path": "/tmp/9222-cross-intel.zip",
+      "bytes": 10468,
+      "sha256": "4aeb0fbe028828686ba480e2ac14cb822b1ce312c9ffe1507a5c44a6b4736afd"
+    },
+    {
+      "path": "/tmp/9222-intel.zip",
+      "bytes": 454687,
+      "sha256": "58ee23c178375d71fafc2c645140162d907a4e3451ae25e96a9fd6c26b4d0812"
+    },
+    {
+      "path": "/tmp/9222-metal-compute-consumer-macos-15-intel.zip",
+      "bytes": 12197,
+      "sha256": "8e8318e7892e2dc53d9683e53fb8a0e35b5e58c34286c6a68aafef49df6bdf9c"
+    },
+    {
+      "path": "/tmp/9222-metal-compute-consumer-macos-15.zip",
+      "bytes": 12210,
+      "sha256": "178fdea9317f3e91efc2d7dedb4afc181b72958965f2f1cb3351584984a146db"
+    },
+    {
+      "path": "/tmp/9222-windows.zip",
+      "bytes": 19547,
+      "sha256": "45f33519ffa43415f2c7c23a526027e386528a5a15890fb9f0147a8b4d481644"
+    },
+    {
+      "path": "/tmp/9222-arm.log",
+      "bytes": 63395,
+      "sha256": "14eb2e7704b9030aedb6438ca9b5b1bf3a05703164cb17fce4d2a2b48e3930c1"
+    },
+    {
+      "path": "/tmp/9222-intel.log",
+      "bytes": 68071,
+      "sha256": "4fd4a97acbc2e68bb073da8c7b37834f8ddebabc40cc53d6629f73c5ac45e80d"
+    },
+    {
+      "path": "/tmp/9222-full-jobs.json",
+      "bytes": 41613,
+      "sha256": "a05681ea697d7fc9fc0be555784efe715a7d88b27784639e8c47035e55dec57e"
+    },
+    {
+      "path": "/tmp/9222-ordered-jobs.json",
+      "bytes": 6924,
+      "sha256": "589768ca1a54a7ae2e07050eae08692ce8958ec0cb7173fc8d0af96fa5de99e0"
+    },
+    {
+      "path": "/tmp/9222-artifacts.json",
+      "bytes": 4391,
+      "sha256": "72c12d0a44adb27f8fbf0d357d810c5821ff655d7c0b247d81d432ab34e6a3c8"
+    },
+    {
+      "path": "/tmp/9222-ordered-artifacts.json",
+      "bytes": 1489,
+      "sha256": "c62ac8d5e3b9b9fdb6627e32f61ff78e9695df33d4d4421936cb1b7d9dee7ac4"
+    },
+    {
+      "path": "/tmp/9222-canonical-records.zip",
+      "bytes": 1642676,
+      "sha256": "86abc0dd9d15fc0bb7d4d9de8ad0da8cc1129f55f55ac5fbc486a06d808b745e"
+    },
+    {
+      "path": "/tmp/9222-canonical-manifest.json",
+      "bytes": 44072,
+      "sha256": "b1019a4c54eba089dba3bd3b48c22f141d6137ad4beaa2c46e327162c230de97"
+    }
+  ],
+  "full_deletion_inventory_sha256": "5eb5c192e6cc7e1615f5ce9a0f3e7651b86e42683584018fdef542fc475ac5d3"
+}

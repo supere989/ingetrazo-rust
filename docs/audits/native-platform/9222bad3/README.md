@@ -6,4 +6,4 @@ ACTUAL ARM and Intel repaired library tests:75PASS/0FAIL each, including exact_s
 
 Canonical224members/102345541rawbytes, ZIP SHA86abc0dd9d15fc0bb7d4d9de8ad0da8cc1129f55f55ac5fbc486a06d808b745e, every member hash/size verified. Linux23291385-byte artifact selectively range-read716506bytes/18records, no completeLinuxZIP/sourcecorpus download. Small platform artifacts decoded once.
 
-Six source captures39.018s, provider binding6.831s; per-probe and whole-step timings retained without throughput inference. Historical replay remains disabled. Terminal temporary duplicates remain pending authorized byte-verification cleanup; canonical/source/worktrees/targets/caches preserved.
+Six source captures39.018s, provider binding6.831s; per-probe and whole-step timings retained without throughput inference. Historical replay remains disabled. Authorized terminal duplicates were byte-verified and released (260files,107999551bytes; compact exact path/group receipt in cleanup.json); canonical/source/worktrees/targets/caches preserved.
