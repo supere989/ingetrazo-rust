@@ -246,16 +246,7 @@ impl IngeTrazoApp {
             .as_array_mut()
             .unwrap()
             .remove(i);
-        if self.scene.sheets[s].native_document["leyendas"]
-            .as_array()
-            .is_some_and(Vec::is_empty)
-        {
-            self.scene.sheets[s]
-                .native_document
-                .as_object_mut()
-                .unwrap()
-                .remove("leyendas");
-        }
+        // Explicit empty ownership prevents retained IGZ overlay from resurrecting imported records.
         self.finish_composer_edit();
         self.composer_state.legend_authoring.selected = None;
         self.composer_state.legend_authoring.coalesce = None;

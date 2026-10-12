@@ -113,7 +113,33 @@ fn composition(app: &IngeTrazoApp) -> Value {
             o.remove("vendor_legend");
         }
     }
+    // Composicion.to_dict omits its empty known list; raw save retains [] as the deletion owner.
+    if v.get("leyendas")
+        .and_then(Value::as_array)
+        .is_some_and(Vec::is_empty)
+    {
+        v.as_object_mut().unwrap().remove("leyendas");
+    }
     v
+}
+// Literal Python Layer.to_dict known-model observation, independent of retained raw IGZ flags.
+fn source_layers(app: &IngeTrazoApp) -> Value {
+    Value::Array(
+        app.scene
+            .layers
+            .iter()
+            .map(|l| {
+                let mut v = json!({"name":l.name});
+                if !l.visible {
+                    v["visible"] = json!(false);
+                }
+                if l.locked {
+                    v["locked"] = json!(true);
+                }
+                v
+            })
+            .collect(),
+    )
 }
 fn state(app: &IngeTrazoApp, case: &str, phase: &str) -> Value {
     let sheet = &app.scene.sheets[0];
@@ -122,7 +148,7 @@ fn state(app: &IngeTrazoApp, case: &str, phase: &str) -> Value {
     let heights = app
         .composer_legend_heights()
         .expect("Runtime legend geometry");
-    json!({"case":case,"phase":phase,"composition":v,"layers":ingetrazo_formats::igz::scene_to_igz_document(&app.scene)["layers"],"selection":app.composer_legend_selection().map(|v|v.1),"undo":h.map_or(0,|h|h.0.len()),"redo":h.map_or(0,|h|h.1.len()),"mode":if app.composer_legend_armed(){"leyenda"}else{"select"},"pending":app.composer_legend_pending(),"heights":heights})
+    json!({"case":case,"phase":phase,"composition":v,"layers":source_layers(app),"selection":app.composer_legend_selection().map(|v|v.1),"undo":h.map_or(0,|h|h.0.len()),"redo":h.map_or(0,|h|h.1.len()),"mode":if app.composer_legend_armed(){"leyenda"}else{"select"},"pending":app.composer_legend_pending(),"heights":heights})
 }
 fn raw_guards(app: &IngeTrazoApp, guard: &Value) -> Result<(), Error> {
     let doc = json!({"scene":ingetrazo_formats::igz::scene_to_igz_document(&app.scene)});
@@ -256,6 +282,21 @@ fn main() -> Result<(), Error> {
                 }
                 "delete" => {
                     click(&ctx, &mut app, &mut time, "legend-ui-delete")?;
+                    if name == "loaded-locked" {
+                        let file = out.join("loaded-delete-native.igz");
+                        app.save_to_path(&file);
+                        let reopened = ingetrazo_formats::igz::load_igz(&file)?;
+                        if reopened.sheets.len() != 1
+                            || reopened.sheets[0]
+                                .native_document
+                                .get("leyendas")
+                                .and_then(Value::as_array)
+                                .is_none_or(|a| !a.is_empty())
+                        {
+                            return Err("Saved deletion resurrected imported legend".into());
+                        }
+                        controls["delete_save_empty"] = json!(true);
+                    }
                 }
                 "undo" => app.undo_composer_edit(),
                 "redo" => app.redo_composer_edit(),
