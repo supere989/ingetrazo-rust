@@ -183,11 +183,13 @@ fn model_annotations(app: &IngeTrazoApp, doc: &Value) -> Value {
  }).collect::<Vec<_>>();
     json!({"dimensions":dimensions,"text_labels":doc["text_labels"],"geo_paths":doc["geo_paths"],"section_planes":doc["section_planes"],"dimension_style":doc["dimension_style"]})
 }
+fn viewport_context(app: &IngeTrazoApp) -> Value {
+    // Cold protocol observation only: no mesh, texture, tile pixels, or whole Scene copy.
+    json!({"camera":app.camera,"layers":app.scene.layers,"section_planes":app.scene.section_planes,"show_section_cuts":app.scene.show_section_cuts,"show_section_planes":app.scene.show_section_planes,"show_section_fill":app.scene.show_section_fill,"display_style":app.scene.display_style,"shadows":app.scene.shadows,"geo_datum":app.scene.geo_datum,"geo_points":app.scene.geo_points,"geo_paths":app.scene.geo_paths})
+}
 fn observe(app: &mut IngeTrazoApp, name: &str, phase: &str) -> Result<Value, Error> {
     app.refresh_composer_frame_anchors()?;
-    let before_camera = app.camera.clone();
-    let before_layers = app.scene.layers.clone();
-    let before_sections = app.scene.section_planes.clone();
+    let before_context = viewport_context(app);
     let sheet = app.scene.sheets[0].id;
     let frames = app.scene.sheets[0]
         .items
@@ -216,10 +218,7 @@ fn observe(app: &mut IngeTrazoApp, name: &str, phase: &str) -> Result<Value, Err
         let pairs = app.composer_frame_snap_pairs(sheet, id)?;
         snaps.insert(uid,json!({"page":pairs.iter().map(|p|p.page).collect::<Vec<_>>(),"world":pairs.iter().map(|p|p.world.to_array()).collect::<Vec<_>>()}));
     }
-    if app.camera != before_camera
-        || app.scene.layers != before_layers
-        || app.scene.section_planes != before_sections
-    {
+    if viewport_context(app) != before_context {
         return Err("Frame operation leaked live viewport state".into());
     }
     let doc = ingetrazo_formats::igz::scene_to_igz_document(&app.scene);
@@ -413,7 +412,7 @@ pub fn run(source: &Path, out: &Path) -> Result<(), Error> {
     std::fs::write(
         out.join("native-frame-annotations.json"),
         serde_json::to_vec_pretty(
-            &json!({"cases":cases,"states":states,"controls":{"idle_reused":idle,"changed_invalidated":invalidated,"actual_cota_ingress":true,"actual_frame_move":true}}),
+            &json!({"cases":cases,"states":states,"controls":{"idle_reused":idle,"changed_invalidated":invalidated,"actual_cota_ingress":true,"actual_frame_move":true},"scope":"Actual App/egui cota and frame body ingress; shared frame controller; App model history plus core admitted vertex placement (no OS model command claim). Only source-defined empty annotation inventories omitted in known composition observation; saved original-reader payload remains authoritative."}),
         )?,
     )?;
     Ok(())
