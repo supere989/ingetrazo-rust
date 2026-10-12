@@ -175,6 +175,7 @@ impl Geometry {
  /// Derived from every vertex and palette, never a caller flag.
  pub fn is_opaque(&self,batches:&[Batch])->bool{self.opaque_coverage&&self.premultiplied_palette.as_ref().map_or_else(||batches.iter().all(|b|b.color.0[3]==1.),|colors|colors.len()==batches.len()&&colors.iter().all(|c|c.bytes()[3]==255))}
  pub fn id(&self)->u64{self.id}pub fn vertices(&self)->&[Vertex]{&self.vertices}pub fn indices(&self)->&[u32]{&self.indices}
+ pub fn bounds(&self)->[[f32;2];2]{self.bounds}
  pub fn logical_bytes(&self)->u64{self.vertices.len()as u64*std::mem::size_of::<Vertex>()as u64+self.indices.len()as u64*4}
  pub fn validate_batches(&self,batches:&[Batch])->Result<(),String>{if self.premultiplied_palette.as_ref().is_some_and(|colors|colors.len()!=batches.len()){return Err("CAD2D exact palette batch count mismatch".into());}for (batch_index,b) in batches.iter().enumerate(){b.color.validate()?;if b.first%3!=0||b.count%3!=0||b.first.checked_add(b.count).is_none_or(|end|end as usize>self.indices.len()){return Err("CAD2D batch index bounds invalid".into());}
  if self.annotation_layers.as_ref().is_some_and(|layers|layers.overlaps_direct(b.first,b.count)){

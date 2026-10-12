@@ -292,6 +292,11 @@ fn records_with_primitive(draws:&[Draw],density:f64,device:[u32;2],line_hint:boo
                         Some(device),
                         100_000,
                     )?
+                } else if path.segments.iter().any(|s|matches!(s,Segment::Cubic{..})) {
+                    let pattern=dash.iter().map(|v|v/width).collect::<Vec<_>>();
+                    ingetrazo_render::qt_cosmetic::rasterize_custom_path_device(
+                        &transformed(path,density,origin),closed,raster_width,cap!=0,&pattern,Some(device),100_000,
+                    )?
                 } else {
                     let mut spans = Vec::new();
                     let pattern = dash.iter().map(|v| v / width).collect::<Vec<_>>();

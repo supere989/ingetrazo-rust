@@ -86,6 +86,16 @@ pub fn rasterize_custom_line_device(a:[f64;2],b:[f64;2],width:f64,draw_caps:bool
  let mut writer=Writer{spans:Vec::new(),limit,work:0,opacity:if width==0.{256}else{(width*256.)as i64},dash:true,pattern_offset:0,custom_pattern:Some([cumulative(false),cumulative(true)]),device};
  writer.line(a,b,draw_caps,draw_caps)?;Ok(writer.spans)
 }
+/// Custom cosmetic path: one writer carries dash phase through every source
+/// segment and cubic subdivision. Independent drawLine behavior is unchanged.
+pub fn rasterize_custom_path_device(path:&PathContour,closed:bool,width:f64,draw_caps:bool,pen_pattern:&[f64],device:Option<[u32;2]>,limit:usize)->Result<Vec<Span>,String>{
+ if !width.is_finite()||!(0. ..=1.).contains(&width)||limit==0||path.segments.len()>limit||pen_pattern.is_empty()||pen_pattern.len()>1024||pen_pattern.len()%2!=0||pen_pattern.iter().any(|v|!v.is_finite()||*v<=0.){return Err("Invalid source custom cosmetic path".into());}
+ let cumulative=|reverse:bool|{let mut total=0i64;(0..pen_pattern.len()).map(|i|{let i=if reverse{pen_pattern.len()-1-i}else{i};total+=((pen_pattern[i]*64.)as i64).clamp(1,65536);total}).collect::<Vec<_>>()};
+ let mut writer=Writer{spans:Vec::new(),limit,work:0,opacity:if width==0.{256}else{(width*256.)as i64},dash:true,pattern_offset:0,custom_pattern:Some([cumulative(false),cumulative(true)]),device};
+ let mut current=path.start;
+ for(i,segment)in path.segments.iter().enumerate(){let begin=draw_caps&&!closed&&i==0;let end=draw_caps&&!closed&&i+1==path.segments.len();match segment{Segment::Line(to)=>{writer.line(current,*to,begin,end)?;current=*to;},Segment::Cubic{control1,control2,to}=>{writer.cubic([current,*control1,*control2,*to],6,begin,end)?;current=*to;}}}
+ Ok(writer.spans)
+}
 /// Continuous source cosmetic DashLine path; device [4,2] pattern carries across
 /// segments and source cubic subdivisions. Existing independent-line API resets.
 pub fn rasterize_dashed_path(path:&PathContour,closed:bool,width:f64,limit:usize)->Result<Vec<Span>,String>{
