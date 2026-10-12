@@ -1,0 +1,424 @@
+{
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "qt_version": "6.12.0",
+  "archive": "source-records.zip",
+  "archive_sha256": "3153b4b43ca17bba8e3f02606820e7fd30f7309e580fa3a94ec0ca58b9987174",
+  "members": [
+    {
+      "path": "assembly-provenance.json",
+      "size": 8900,
+      "sha256": "d315b25eb9f145a4993600669c5e5d005080809d382b26df7f8a7c36ee216dc8"
+    },
+    {
+      "path": "assets/a/shared.png",
+      "size": 115,
+      "sha256": "096cc670991a11fa69eb4395da1a34cc291c3485828415b9aa4f4e719c9cd810"
+    },
+    {
+      "path": "assets/b/shared.png",
+      "size": 633,
+      "sha256": "fad5575bdc0469823f34348dacae8ef30a29969f820301822fcbe01fd32fc609"
+    },
+    {
+      "path": "assets/leaves.png",
+      "size": 115,
+      "sha256": "096cc670991a11fa69eb4395da1a34cc291c3485828415b9aa4f4e719c9cd810"
+    },
+    {
+      "path": "assets/opaque.jpg",
+      "size": 633,
+      "sha256": "fad5575bdc0469823f34348dacae8ef30a29969f820301822fcbe01fd32fc609"
+    },
+    {
+      "path": "basename-collision-input.igz",
+      "size": 1583,
+      "sha256": "7f8d3d703fc40a8c890087a964f8695e97285cd23740604cbceac4c11272c88a"
+    },
+    {
+      "path": "basename-collision-saved.igz",
+      "size": 1583,
+      "sha256": "7f8d3d703fc40a8c890087a964f8695e97285cd23740604cbceac4c11272c88a"
+    },
+    {
+      "path": "chooser-cancel-suffix-input.igz",
+      "size": 1379,
+      "sha256": "d997e03976a603c02fbf6438f0241a47e94a2af390ac4201c40bf412503a72ec"
+    },
+    {
+      "path": "chooser-cancel-suffix-saved.igz",
+      "size": 1379,
+      "sha256": "d997e03976a603c02fbf6438f0241a47e94a2af390ac4201c40bf412503a72ec"
+    },
+    {
+      "path": "colors-default-hole-input.igz",
+      "size": 5570,
+      "sha256": "8d9af514ec60b56d236e3b8bee4d35ebb98438d96493f124cf0b3a65cf2ea701"
+    },
+    {
+      "path": "colors-default-hole-saved.igz",
+      "size": 5647,
+      "sha256": "cbdabaae4e1ca218cc80209e07646f7912398c9576140eaed2a285c46682f29c"
+    },
+    {
+      "path": "datum-names-collisions-input.igz",
+      "size": 1756,
+      "sha256": "01f249c9dc022ba020be58924d99965e43bc2a87b1b43d4f71706a222cd3aca6"
+    },
+    {
+      "path": "datum-names-collisions-saved.igz",
+      "size": 1756,
+      "sha256": "01f249c9dc022ba020be58924d99965e43bc2a87b1b43d4f71706a222cd3aca6"
+    },
+    {
+      "path": "exports/0271c0cc18ab9aaf-leaves.png",
+      "size": 115,
+      "sha256": "096cc670991a11fa69eb4395da1a34cc291c3485828415b9aa4f4e719c9cd810"
+    },
+    {
+      "path": "exports/0271c0cc18ab9aaf-shared.png",
+      "size": 115,
+      "sha256": "096cc670991a11fa69eb4395da1a34cc291c3485828415b9aa4f4e719c9cd810"
+    },
+    {
+      "path": "exports/187bc5384c7ffb9f-opaque.jpg",
+      "size": 633,
+      "sha256": "fad5575bdc0469823f34348dacae8ef30a29969f820301822fcbe01fd32fc609"
+    },
+    {
+      "path": "exports/187bc5384c7ffb9f-shared.png",
+      "size": 633,
+      "sha256": "fad5575bdc0469823f34348dacae8ef30a29969f820301822fcbe01fd32fc609"
+    },
+    {
+      "path": "exports/basename-collision-export.dae",
+      "size": 3164,
+      "sha256": "d88308fad6db0210c12a83f6141599cbc5223889b14ee71585f133a38c34c4a3"
+    },
+    {
+      "path": "exports/chooser-cancel-suffix-coerced.dae",
+      "size": 2207,
+      "sha256": "74448ba4157862f085af2ae3d67a4ee1f3f320e960892db6b91b3b472caf2dc8"
+    },
+    {
+      "path": "exports/colors-default-hole-export.dae",
+      "size": 4318,
+      "sha256": "fb7bfca4521d033ac84beac9046e0ce3a908c927a310679fdc5efd5cb0c1365d"
+    },
+    {
+      "path": "exports/datum-names-collisions-export.dae",
+      "size": 5571,
+      "sha256": "3ca6d6153065ec03c0cb5808a9adc811cdcc2a96228f132630efcab846cb6b4b"
+    },
+    {
+      "path": "exports/missing-resource-write-error-export.dae",
+      "size": 2936,
+      "sha256": "694670c973f6d2b40dba8d990903d3fad1d996a1cc7970d2c731011d82cf9039"
+    },
+    {
+      "path": "exports/nested-shared-reflected-export.dae",
+      "size": 3710,
+      "sha256": "7cd33442c76b0de1336e5e5dc68158b6eed100d39bfb74cba8f87adf06ac78d9"
+    },
+    {
+      "path": "exports/shared.png",
+      "size": 115,
+      "sha256": "096cc670991a11fa69eb4395da1a34cc291c3485828415b9aa4f4e719c9cd810"
+    },
+    {
+      "path": "exports/textures-affine-planar-export.dae",
+      "size": 3180,
+      "sha256": "c5d78bcffa7fee4b2c3a5444b2830a42a5fbf9b81b5177b41ad4a2a8bcc4ab94"
+    },
+    {
+      "path": "historical/capture-1/capture.log",
+      "size": 335,
+      "sha256": "79eb00a4eb6aae0939eaa68a895dc90d9a7d65498249344ce025037c2d55465f"
+    },
+    {
+      "path": "historical/capture-1/helpers/docs/audits/dae-painted-export/fixture-contract.json",
+      "size": 5488,
+      "sha256": "2130d2a9d08f244dc717dfe5ebb2543ae0cf2f2ddc8de9e573e0c736b7f3fe61"
+    },
+    {
+      "path": "historical/capture-1/helpers/scripts/exchange_import_observations.py",
+      "size": 1637,
+      "sha256": "48c12bffd82e9c431ce8784174112a78c7ab09de529fabc1e5f0f8445bf94142"
+    },
+    {
+      "path": "historical/capture-1/helpers/scripts/reference-dae-painted-export.py",
+      "size": 9678,
+      "sha256": "593353ce43f8011ddd49b19e83c6ef19bf527f116394457ca28caa618d6276c6"
+    },
+    {
+      "path": "historical/capture-1/original-dae-export.json",
+      "size": 200697,
+      "sha256": "99294787b6dfd1b58bdf0cb941a5d06b2dc3b6d70457ba95d933273fb26593d3"
+    },
+    {
+      "path": "historical/capture-1/original-dae-export.partial.json",
+      "size": 200697,
+      "sha256": "99294787b6dfd1b58bdf0cb941a5d06b2dc3b6d70457ba95d933273fb26593d3"
+    },
+    {
+      "path": "historical/capture-1/receipt.json",
+      "size": 496,
+      "sha256": "aa706749581e771ec71b3bf9e9b1f1f0b98cb51cea39629a839df59445e84131"
+    },
+    {
+      "path": "historical/capture-2/capture.log",
+      "size": 89,
+      "sha256": "35ccc1b8ccae9e8510ce63e0eee8a425451a537fab31f98f8bb219b913705c9c"
+    },
+    {
+      "path": "historical/capture-2/helpers/docs/audits/dae-painted-export/fixture-contract.json",
+      "size": 5888,
+      "sha256": "95767beb67ac81f1a47a4587eddab29c212a2d659e66c50fe5ceae2544386fd3"
+    },
+    {
+      "path": "historical/capture-2/helpers/scripts/exchange_import_observations.py",
+      "size": 1637,
+      "sha256": "48c12bffd82e9c431ce8784174112a78c7ab09de529fabc1e5f0f8445bf94142"
+    },
+    {
+      "path": "historical/capture-2/helpers/scripts/reference-dae-painted-export.py",
+      "size": 11139,
+      "sha256": "e6ab9d087e10783a9b48999d9221bab9b1b656508613cc65aaf6581a30c77f54"
+    },
+    {
+      "path": "historical/capture-2/original-dae-export.json",
+      "size": 23969,
+      "sha256": "0858b1d0965e8878758b07f0da62f8096a76403c8fb9c60c975f7e4011cfb712"
+    },
+    {
+      "path": "historical/capture-2/original-dae-export.partial.json",
+      "size": 23969,
+      "sha256": "0858b1d0965e8878758b07f0da62f8096a76403c8fb9c60c975f7e4011cfb712"
+    },
+    {
+      "path": "historical/capture-2/receipt.json",
+      "size": 583,
+      "sha256": "38a320578be1e5fad91472938b2e41fad06f3884cbaddaccb5be626e6005b908"
+    },
+    {
+      "path": "missing-resource-write-error-input.igz",
+      "size": 1453,
+      "sha256": "63be1258bc82b26d6bdc932ba97c8ca39bbe6b5865301a28f877d5ec82e82493"
+    },
+    {
+      "path": "missing-resource-write-error-saved.igz",
+      "size": 1453,
+      "sha256": "63be1258bc82b26d6bdc932ba97c8ca39bbe6b5865301a28f877d5ec82e82493"
+    },
+    {
+      "path": "nested-shared-reflected-input.igz",
+      "size": 1875,
+      "sha256": "afb734a0561075750bd05c21cbd43b095e9c42efe0c81e5aec053e7cc9b338e5"
+    },
+    {
+      "path": "nested-shared-reflected-saved.igz",
+      "size": 1911,
+      "sha256": "0a67afdef32356721ae5699547cba8c875617d66d4e369776f58914905c82ef2"
+    },
+    {
+      "path": "original-dae-export.json",
+      "size": 224401,
+      "sha256": "f324df9c7d9c636be6e2c8c62bd5af23d77dc58b3a21e9a4f1766f37c244f312"
+    },
+    {
+      "path": "textures-affine-planar-input.igz",
+      "size": 812,
+      "sha256": "63841391ab460ab8a0496f039e1f909b48144873a4ba15f2ebab1aa63405d36a"
+    },
+    {
+      "path": "textures-affine-planar-saved.igz",
+      "size": 812,
+      "sha256": "63841391ab460ab8a0496f039e1f909b48144873a4ba15f2ebab1aa63405d36a"
+    }
+  ],
+  "capture_sources": [
+    {
+      "path": "scripts/reference-dae-painted-export.py",
+      "revision": "f2a72d50e1712466315cf01283aa0839a397199d",
+      "sha256": "593353ce43f8011ddd49b19e83c6ef19bf527f116394457ca28caa618d6276c6",
+      "retained_member": "historical/capture-1/helpers/scripts/reference-dae-painted-export.py",
+      "verification": "Actual root pre-capture receipt hash"
+    },
+    {
+      "path": "docs/audits/dae-painted-export/fixture-contract.json",
+      "revision": "f2a72d50e1712466315cf01283aa0839a397199d",
+      "sha256": "2130d2a9d08f244dc717dfe5ebb2543ae0cf2f2ddc8de9e573e0c736b7f3fe61",
+      "retained_member": "historical/capture-1/helpers/docs/audits/dae-painted-export/fixture-contract.json",
+      "verification": "Actual root pre-capture receipt hash"
+    },
+    {
+      "path": "scripts/exchange_import_observations.py",
+      "revision": "f2a72d50e1712466315cf01283aa0839a397199d",
+      "sha256": "48c12bffd82e9c431ce8784174112a78c7ab09de529fabc1e5f0f8445bf94142",
+      "retained_member": "historical/capture-1/helpers/scripts/exchange_import_observations.py",
+      "verification": "Actual root pre-capture receipt hash"
+    },
+    {
+      "path": "scripts/reference-dae-painted-export.py",
+      "revision": "35a9807ee216b097b1d805deec241a32da149a01",
+      "sha256": "e6ab9d087e10783a9b48999d9221bab9b1b656508613cc65aaf6581a30c77f54",
+      "retained_member": "historical/capture-2/helpers/scripts/reference-dae-painted-export.py",
+      "verification": "Actual root pre-capture receipt hash"
+    },
+    {
+      "path": "docs/audits/dae-painted-export/fixture-contract.json",
+      "revision": "35a9807ee216b097b1d805deec241a32da149a01",
+      "sha256": "95767beb67ac81f1a47a4587eddab29c212a2d659e66c50fe5ceae2544386fd3",
+      "retained_member": "historical/capture-2/helpers/docs/audits/dae-painted-export/fixture-contract.json",
+      "verification": "Actual root pre-capture receipt hash"
+    },
+    {
+      "path": "scripts/exchange_import_observations.py",
+      "revision": "35a9807ee216b097b1d805deec241a32da149a01",
+      "sha256": "48c12bffd82e9c431ce8784174112a78c7ab09de529fabc1e5f0f8445bf94142",
+      "retained_member": "historical/capture-2/helpers/scripts/exchange_import_observations.py",
+      "verification": "Actual root pre-capture receipt hash"
+    }
+  ],
+  "current_capture_helper_revision": "35a9807ee216b097b1d805deec241a32da149a01",
+  "capture_receipts": [
+    {
+      "revision": "f2a72d50e1712466315cf01283aa0839a397199d",
+      "hashes_before": {
+        "scripts/reference-dae-painted-export.py": "593353ce43f8011ddd49b19e83c6ef19bf527f116394457ca28caa618d6276c6",
+        "docs/audits/dae-painted-export/fixture-contract.json": "2130d2a9d08f244dc717dfe5ebb2543ae0cf2f2ddc8de9e573e0c736b7f3fe61",
+        "scripts/exchange_import_observations.py": "48c12bffd82e9c431ce8784174112a78c7ab09de529fabc1e5f0f8445bf94142"
+      },
+      "seconds": 0.9658642070135102,
+      "returncode": 0
+    },
+    {
+      "revision": "35a9807ee216b097b1d805deec241a32da149a01",
+      "hashes_before": {
+        "scripts/reference-dae-painted-export.py": "e6ab9d087e10783a9b48999d9221bab9b1b656508613cc65aaf6581a30c77f54",
+        "docs/audits/dae-painted-export/fixture-contract.json": "95767beb67ac81f1a47a4587eddab29c212a2d659e66c50fe5ceae2544386fd3",
+        "scripts/exchange_import_observations.py": "48c12bffd82e9c431ce8784174112a78c7ab09de529fabc1e5f0f8445bf94142"
+      },
+      "seconds": 0.4151996329892427,
+      "returncode": 0,
+      "scope": "Missing-only basename-collision case; original six captures not repeated"
+    }
+  ],
+  "original_sources": [
+    {
+      "path": "formats/dae.py",
+      "revision": "6be29fe437a7cd992d4e079f71720821b25216b9",
+      "sha256": "9082599e1130b1d70af23cf3715a1566b18908f41fc0498d28b235baef7331dc",
+      "verification": "Producer pre-capture hash assertion"
+    },
+    {
+      "path": "formats/meshexport.py",
+      "revision": "6be29fe437a7cd992d4e079f71720821b25216b9",
+      "sha256": "edc9d9d76b5b2812c58dfdaa82d6be53fc2203a98e43b2f9ce344145301dc3bb",
+      "verification": "Producer pre-capture hash assertion"
+    },
+    {
+      "path": "formats/igz.py",
+      "revision": "6be29fe437a7cd992d4e079f71720821b25216b9",
+      "sha256": "f318d685830c49c2fede7fd5a238ac7a1469ee0b0226cf48cab3751e194a9576",
+      "verification": "Producer pre-capture hash assertion"
+    },
+    {
+      "path": "views/main_window.py",
+      "revision": "6be29fe437a7cd992d4e079f71720821b25216b9",
+      "sha256": "ea02be3e439c80731d0f5b5fde3d92d9b3f62e8ad10cd44ad305c3261b7786fa",
+      "verification": "Producer pre-capture hash assertion"
+    },
+    {
+      "path": "core/group.py",
+      "revision": "6be29fe437a7cd992d4e079f71720821b25216b9",
+      "sha256": "9ba6a20eca241cb4969a545a3784fcff25566166606d5447a18780747d4f11c5",
+      "verification": "Producer pre-capture hash assertion"
+    },
+    {
+      "path": "core/mesh.py",
+      "revision": "6be29fe437a7cd992d4e079f71720821b25216b9",
+      "sha256": "5f2c1625e6dd717db029ba39a9de337e75beec06bd0df28a592a8a34875ca22c",
+      "verification": "Producer pre-capture hash assertion"
+    },
+    {
+      "path": "core/texture.py",
+      "revision": "6be29fe437a7cd992d4e079f71720821b25216b9",
+      "sha256": "837c3f00c548df110dec5debfdb3759984d97bb652d6a0050d7e2ceb940407dc",
+      "verification": "Producer pre-capture hash assertion"
+    },
+    {
+      "path": "core/triangulate.py",
+      "revision": "6be29fe437a7cd992d4e079f71720821b25216b9",
+      "sha256": "1d4b83eb9f3b0c7ec8a7ad591f27182991fb54d9d33e5d0ba47f3233bd9c16ef",
+      "verification": "Producer pre-capture hash assertion"
+    },
+    {
+      "path": "core/history.py",
+      "revision": "6be29fe437a7cd992d4e079f71720821b25216b9",
+      "sha256": "2eb66a1d557099b51383988a7819145289fc4ce2c37fc7de3a92ed35b5830559",
+      "verification": "Producer pre-capture hash assertion"
+    },
+    {
+      "path": "core/scene.py",
+      "revision": "6be29fe437a7cd992d4e079f71720821b25216b9",
+      "sha256": "9dfcd32f1ff5b1445180eafd8df36eafb92fa08ed3597bb90eac09554899d2e0",
+      "verification": "Producer pre-capture hash assertion"
+    },
+    {
+      "path": "core/camera.py",
+      "revision": "6be29fe437a7cd992d4e079f71720821b25216b9",
+      "sha256": "cae35d8adfe33f3da22b85de74cc0779c0d2697fa8fa09d0112933d6d3e26a52",
+      "verification": "Producer pre-capture hash assertion"
+    },
+    {
+      "path": "core/materials.py",
+      "revision": "6be29fe437a7cd992d4e079f71720821b25216b9",
+      "sha256": "86558e6ab7e47788798c5f12bb3c21cb71cec4cd1f52476fd6c34f4fa91ccfd1",
+      "verification": "Post-capture pinned Git/current bytes; not a preoperative claim"
+    },
+    {
+      "path": "core/layers.py",
+      "revision": "6be29fe437a7cd992d4e079f71720821b25216b9",
+      "sha256": "21d31c9aa1b4bfe0c9437a1a7a83a8212b4d34f38ad3c2b1b3a6b1a7ee4c835b",
+      "verification": "Post-capture pinned Git/current bytes; not a preoperative claim"
+    },
+    {
+      "path": "core/finish.py",
+      "revision": "6be29fe437a7cd992d4e079f71720821b25216b9",
+      "sha256": "6f48643ac5bb2850ea44bc5418e0639f7ec1f6b1c4126ad406e353c087ae3646",
+      "verification": "Post-capture pinned Git/current bytes; not a preoperative claim"
+    }
+  ],
+  "reused_assets": [
+    {
+      "path": "docs/audits/gltf-rich/original/leaves.png",
+      "sha256": "096cc670991a11fa69eb4395da1a34cc291c3485828415b9aa4f4e719c9cd810",
+      "size": 115,
+      "parent_provenance_sha256": "d83cdc4977c1ddc1cf21f39cd5cc356832caf363271b9e3738ed70bf15be0c76"
+    },
+    {
+      "path": "docs/audits/gltf-rich/original/opaque.jpg",
+      "sha256": "fad5575bdc0469823f34348dacae8ef30a29969f820301822fcbe01fd32fc609",
+      "size": 633,
+      "parent_provenance_sha256": "d83cdc4977c1ddc1cf21f39cd5cc356832caf363271b9e3738ed70bf15be0c76"
+    }
+  ],
+  "cases": 7,
+  "states": 16,
+  "exports": 7,
+  "saved_documents": 7,
+  "source_captures": 2,
+  "whole_original_recaptures": 0,
+  "assembly_verification": "First6cases14states literallyequal capture1; seventhcase2states literallyequal missing-onlycapture2; sharedassetbytes equal",
+  "excluded_roots": [
+    "/tmp/ingetrazo-dae-export-source-r1/settings",
+    "/tmp/ingetrazo-dae-export-source-r1/xdg-config",
+    "/tmp/ingetrazo-dae-export-source-r1/xdg-data",
+    "/tmp/ingetrazo-dae-export-source-r1/xdg-cache",
+    "/tmp/ingetrazo-dae-export-source-r2/settings",
+    "/tmp/ingetrazo-dae-export-source-r2/xdg-config",
+    "/tmp/ingetrazo-dae-export-source-r2/xdg-data",
+    "/tmp/ingetrazo-dae-export-source-r2/xdg-cache"
+  ],
+  "cleanup_performed": false
+}
