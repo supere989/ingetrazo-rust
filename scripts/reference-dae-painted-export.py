@@ -49,6 +49,13 @@ for i,(color,path) in enumerate([((.2,.3,.4),assets/'a/shared.png'),((.6,.2,.1),
 face(s.mesh,8,{'color':(.2,.3,.4),'mat':'same name'});face(s.mesh,12,{'color':(.6,.2,.1),'mat':'same name'});recipes.append(('datum-names-collisions',s))
 s=Scene();face(s.mesh,attrs={'color':(.1,.2,.3)});recipes.append(('chooser-cancel-suffix',s))
 s=Scene();face(s.mesh,attrs={'texture':{'path':str(assets/'absent.png'),'sw':1.,'sh':1.}});recipes.append(('missing-resource-write-error',s))
+s=Scene()
+for i,dirname in enumerate(['a','b']):face(s.mesh,4*i,{'texture':{'path':str(assets/dirname/'shared.png'),'sw':1.,'sh':1.},'mat':'Mármol & stone'})
+recipes.append(('basename-collision',s))
+only=set()
+if '--only' in sys.argv:
+ only=set(sys.argv[sys.argv.index('--only')+1].split(','));assert only<={name for name,_ in recipes},'unknown case'
+recipes=[(name,s)for name,s in recipes if not only or name in only]
 def texture(t):
  t=dict(t);path=Path(t.pop('path'))
  t['resource']={'encoded_sha256':hashlib.sha256(path.read_bytes()).hexdigest()} if path.is_file() else {'encoded_sha256':None,'missing':True}
@@ -74,10 +81,13 @@ try:
   host=MainWindow();igz.load_into(host.viewport.scene,root/inputfile);host._current_path=root/'fixture-project.igz';host._saved_version=host.viewport.scene.version-1
   edit_path=[0] if name=='nested-shared-reflected' else []
   if edit_path:host.viewport.begin_group_edit(host.viewport.scene.groups[0]);assert len(host.viewport.scene._edit_stack)>0
+  post_load_textures=[{'face':i,'path':'assets/'+dirname+'/shared.png'} for i,dirname in enumerate(['a','b'])] if name=='basename-collision' else []
+  for row in post_load_textures:host.viewport.scene.mesh.faces[row['face']].attrs['texture']['path']=str(root/row['path'])
   history_seed=name=='colors-default-hole'
   if history_seed:
    f=host.viewport.scene.mesh.faces[0];host.viewport.history.execute(SetFaceColorCommand([f],(.15,.25,.35)));host.viewport.history.execute(SetFaceColorCommand([f],(.45,.55,.65)));host.viewport.history.undo();assert len(host.viewport.history.undo_stack)==len(host.viewport.history.redo_stack)==1
   case={'name':name,'input':inputfile,'phases':[],'exports':[],'saved':name+'-saved.igz','initial_file':'fixture-project.igz','initial_dirty':True,'edit_path':edit_path,'history_seed':history_seed};cases.append(case)
+  if post_load_textures:case['post_load_textures']=post_load_textures
   def phase(label,chosen=None):
    active['phase']=label;before=copy.deepcopy(observe.scene_state(host.viewport.scene));epoch=host.viewport.scene.version;history=(len(host.viewport.history.undo_stack),len(host.viewport.history.redo_stack));current=host._current_path;dirty=host._is_dirty();cam=dict(vars(host.viewport.camera));cam['target']=list(host.viewport.camera.target.toTuple());cam['up']=list(host.viewport.camera.up.toTuple());n=len(dialogs)
    if label=='before':outcome='ok'

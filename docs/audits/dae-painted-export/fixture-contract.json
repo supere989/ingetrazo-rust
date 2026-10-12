@@ -24,6 +24,10 @@
     {
       "name": "missing-resource-write-error",
       "coverage": "source best-effort missing image sidecar output and actual export error; native document/destination refusal separately declared"
+    },
+    {
+      "name": "basename-collision",
+      "coverage": "Missing-only supplement: after actual original IGZ load, declared fixture publication rebinds two face texture.path values to different encoded files with the same shared.png basename; actual App export must group/material/sidecar firstseen literally"
     }
   ],
   "source_ingress": "MainWindow._on_export_dae \u2192 _export \u2192 formats.dae.save_dae, actual Qt chooser controlled fixture return",
@@ -47,7 +51,7 @@
     "texture copy is best effort; missing sidecar behavior literal",
     "no camera-facing figure export without source camera route"
   ],
-  "capture_policy": "One bounded actual original capture only after independent producer/checker review; root owns capture/build; unchanged Python",
+  "capture_policy": "Original six14states6exports remain immutable; sole missing-only basename-collision supplement after independent review. No full recapture.",
   "original_sources": [
     {
       "path": "formats/dae.py",
@@ -120,6 +124,10 @@
       "before",
       "missing",
       "write-error"
+    ],
+    "basename-collision": [
+      "before",
+      "export"
     ]
   },
   "native_controls": [
@@ -132,8 +140,8 @@
     "resource_sidecars_owned",
     "opaque_face_preserved"
   ],
-  "expected_states": 14,
-  "expected_exports": 6,
+  "expected_states": 16,
+  "expected_exports": 7,
   "fixture_controls": {
     "nested-shared-reflected": "Actual viewport.begin_group_edit on first root before observations, depth>0; export preserves stack",
     "colors-default-hole": "Two actual SetFaceColorCommands then Undo: priorUndo1+Redo1; exporter must preserve both",
