@@ -98,3 +98,7 @@ required-features = ["engineering-python"]
 
 [dev-dependencies]
 zip.workspace = true
+
+[[example]]
+name = "ai_bridge_python_workflows"
+required-features = ["engineering-python"]
