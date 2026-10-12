@@ -1,6 +1,6 @@
 # Native DEM Profile runtime contract
 
-Prereview candidate; no Rust execution yet. Original corpus is the authenticated five-case / thirty-state source-records.zip, pin 6be29fe. Production remains AWS Terrarium zoom13/max15. Native controls use separate runtime-provider.json and owned loopback HTTP; acceptance never contacts AWS.
+Finite acceptance recorded at compiled root c8cf3a04: five cases, thirty states, twenty-one literal CSVs, five actual original-reader pairs and ninety-one rejecting controls. Original corpus is the authenticated five-case / thirty-state source-records.zip, pin 6be29fe. Production remains AWS Terrarium zoom13/max15. Native controls use separate runtime-provider.json and owned loopback HTTP; acceptance never contacts AWS.
 
 Profile chooses visible PhotoMesh first, otherwise DEM. Selection becomes the held path; arrivals update that held path independently of current selection and document/history revisions. CSV samples the held path afresh. DEM heights are absolute: datum altitude is not added. Viewport vertical-reference comments remain independent of sampler choice.
 
@@ -14,4 +14,4 @@ ureq2.12.1 validates HTTPS; gzip disabled. Redirects reject HTTPS downgrade. Tot
 
 Replay: run-dem-profile.py BINARY SOURCE; reference-dem-profile-reopens.py SOURCE NATIVE; check-dem-profile.py SOURCE NATIVE COMPARISON. Native context_document_lifecycle SOURCE --dem-profile. Original reader pairs use native IGZ plus native disk cache and explicit reopened selection; final switch uses external new-provider API state.
 
-Guards cover read-only document/history, retained accepted owners/charges on CPU refusal, warm reuse, retired-source response isolation, corrupt refetch and off-path arrivals. Focused loopback body-stall/cache overwrite/LRU test included. All numerical/runtime results await the single reviewed root build. Reuse nine frozen PhotoMesh inputs once; its hidden-photo guard now uses operative DEM with an explicitly offline provider.
+Guards cover read-only document/history, retained accepted owners/charges on CPU refusal, warm reuse, retired-source response isolation, corrupt refetch and off-path arrivals. Focused loopback body-stall/cache overwrite/LRU test included. The single root build and controlled replay passed; bounded body deadline/cache LRU focused test passed. Acceptance is limited to the frozen loopback workflows, not live AWS, arbitrary network/DNS timing, or whole-platform performance. Reuse nine frozen PhotoMesh inputs once; its hidden-photo guard now uses operative DEM with an explicitly offline provider.
