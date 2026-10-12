@@ -262,7 +262,7 @@
       "sha256": "ce226f6e41656ab8366224f23576655e8fcb04169ea8fff08c939ba0f79d7566"
     },
     {
-      "path": "crates/ingetrazo-gui/examples/image_import_material_observer.rs",
+      "path": "crates/ingetrazo-gui/examples/support/image_import_material_observer.rs",
       "commit": "759e8302",
       "sha256": "f948292df24338b16372da4e9b817837c96c8d4fad6818a4f786c2d48e9b329f",
       "role": "native actual material resource identity observer, geometry metadata preserved"

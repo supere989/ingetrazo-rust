@@ -2,6 +2,8 @@
 #[allow(dead_code)]
 #[path = "geotiff_import_workflows.rs"]
 mod retained;
+#[path = "support/image_import_material_observer.rs"]
+mod material_observer;
 use glam::DVec3;
 use ingetrazo_core::{scene::SelectionItem, screen_pick::PixelViewport};
 use ingetrazo_gui::IngeTrazoApp;
@@ -36,8 +38,10 @@ fn tool(a: &IngeTrazoApp) -> Result<Value, String> {
     )
 }
 fn record(a: &IngeTrazoApp, name: &str, phase: &str) -> Result<Value, String> {
+    let mut scene = retained::scene(a)?;
+    material_observer::normalize(a, &mut scene["geometry"])?;
     Ok(
-        json!({"case":name,"phase":phase,"scene":retained::scene(a)?,"tool":tool(a)?,"undo":a.undo_stack.len(),"redo":a.redo_stack.len(),"camera":retained::camera(a)}),
+        json!({"case":name,"phase":phase,"scene":scene,"tool":tool(a)?,"undo":a.undo_stack.len(),"redo":a.redo_stack.len(),"camera":retained::camera(a)}),
     )
 }
 struct Ui {
