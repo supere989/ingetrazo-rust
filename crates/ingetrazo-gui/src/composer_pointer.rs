@@ -25,7 +25,7 @@ impl Targets {
     pub(super) fn capture_legend(sheet: &Sheet, exclude: usize) -> Result<Self, String> {
         Self::capture_raw(sheet, "leyendas", exclude)
     }
-    fn capture_raw(sheet: &Sheet, exclude_kind: &str, exclude: usize) -> Result<Self, String> {
+    pub(super) fn capture_raw(sheet: &Sheet, exclude_kind: &str, exclude: usize) -> Result<Self, String> {
         let (w, h) = sheet.dimensions_mm();
         let m = sheet.margin_mm;
         if [w, h, m].iter().any(|v| !v.is_finite())
@@ -476,6 +476,7 @@ pub(super) fn input(
                         continue;
                     }
                     app.composer_state.legend_authoring.selected = None;
+                    app.composer_state.annotation_authoring.selected = None;
                     if let Some((1, index)) = hit {
                         clear(app);
                         if modifiers.ctrl {
@@ -502,6 +503,7 @@ pub(super) fn input(
                     clear(app);
                     app.composer_state.picture_authoring.selected = None;
                     app.composer_state.legend_authoring.selected = None;
+                    app.composer_state.annotation_authoring.selected = None;
                     if let Some((0, index)) = hit {
                         app.scene.sheets[sheet_idx].selected_item = Some(index);
                         let sheet = &app.scene.sheets[sheet_idx];
@@ -562,6 +564,7 @@ pub(super) fn input(
                         app.scene.sheets[sheet_idx].selected_item = None;
                         app.composer_state.picture_authoring.selected = None;
                         app.composer_state.legend_authoring.selected = None;
+                    app.composer_state.annotation_authoring.selected = None;
                     }
                     if let Some(index) = app.composer_state.dragging_item_idx {
                         if app.scene.sheets[sheet_idx]
@@ -589,6 +592,7 @@ pub(super) fn input(
                     app.scene.sheets[sheet_idx].selected_item = None;
                     app.composer_state.picture_authoring.selected = None;
                     app.composer_state.legend_authoring.selected = None;
+                    app.composer_state.annotation_authoring.selected = None;
                 }
                 _ => {}
             }

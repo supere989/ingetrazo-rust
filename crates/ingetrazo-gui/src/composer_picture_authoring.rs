@@ -181,6 +181,7 @@ impl IngeTrazoApp {
         if index.is_some() {
             self.scene.sheets[s].selected_item = None;
             self.composer_state.legend_authoring.selected = None;
+            self.composer_state.annotation_authoring.selected = None;
         }
         Ok(())
     }

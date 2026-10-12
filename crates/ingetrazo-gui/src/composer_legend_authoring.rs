@@ -84,6 +84,7 @@ impl IngeTrazoApp {
     pub(super) fn revalidate_legend_selection(&mut self) {
         if self.composer_legend_selection().is_none() {
             self.composer_state.legend_authoring.selected = None;
+            self.composer_state.annotation_authoring.selected = None;
         }
     }
     pub fn composer_legend_selection(&self) -> Option<(uuid::Uuid, usize)> {
@@ -123,12 +124,14 @@ impl IngeTrazoApp {
         if index.is_some() {
             self.scene.sheets[s].selected_item = None;
             self.composer_state.picture_authoring.selected = None;
+            self.composer_state.annotation_authoring.selected = None;
         }
         Ok(())
     }
     pub fn activate_composer_legend(&mut self) -> Result<(), String> {
         active(self)?;
         self.finish_composer_edit();
+        self.composer_state.annotation_authoring.armed=None;self.composer_state.annotation_authoring.points.clear();
         self.composer_state.text_tool = false;
         self.composer_state.shape_tool = None;
         self.composer_state.shape_start = None;
@@ -179,6 +182,7 @@ impl IngeTrazoApp {
         sheet.selected_item = None;
         self.finish_composer_edit();
         self.composer_state.picture_authoring.selected = None;
+            self.composer_state.annotation_authoring.selected = None;
         self.composer_state.legend_authoring.selected = Some((id, count));
         self.composer_state.legend_authoring.armed = false;
         Ok(count)
@@ -249,6 +253,7 @@ impl IngeTrazoApp {
         // Explicit empty ownership prevents retained IGZ overlay from resurrecting imported records.
         self.finish_composer_edit();
         self.composer_state.legend_authoring.selected = None;
+            self.composer_state.annotation_authoring.selected = None;
         self.composer_state.legend_authoring.coalesce = None;
         Ok(())
     }
