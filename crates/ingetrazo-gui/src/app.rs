@@ -79,6 +79,7 @@ pub struct IngeTrazoApp {
     pub survey_profile:crate::survey_profile::State,
     pub geotiff_import:crate::geotiff_import::State,
     pub stl_import:crate::stl_import::State,
+    pub exchange_import:crate::exchange_import::State,
     pub image_import:crate::image_import::State,
     pub base_map_requested_zoom:u8,
     pub base_map_requested_visible:bool,
@@ -203,7 +204,7 @@ impl IngeTrazoApp {
             show_geographic_import_dialog: false,
             survey_profile:Default::default(),
             geotiff_import:Default::default(),
-            stl_import:Default::default(),
+            stl_import:Default::default(),exchange_import:Default::default(),
             image_import:Default::default(),
             base_map_requested_zoom:16,
             base_map_requested_visible:true,
@@ -1020,6 +1021,7 @@ impl IngeTrazoApp {
     pub fn update_ui(&mut self, ctx: &egui::Context) {
         crate::appearance_preferences::apply(&self.document_session.preferences,ctx);
         let geotiff_owns_input=self.geotiff_import.owns_input()||self.image_import.owns_input();
+        let exchange_owns_input=self.exchange_import.owns_input();self.poll_exchange_import();
         let stl_owns_input=self.stl_import.owns_input();
         self.poll_stl_import();
         self.poll_geotiff_import();
@@ -1027,7 +1029,7 @@ impl IngeTrazoApp {
         crate::sheet_image::dialog(self,ctx);
         let recent_warning_owns_input = self.document_session.recent_missing.is_some();
         let preferences_owns_input = self.show_preferences_dialog;
-        let import_owns_input=stl_owns_input||self.stl_import.owns_input()||geotiff_owns_input||self.geotiff_import.owns_input()||self.image_import.owns_input()||self.document_session.unit_import.is_some()||self.document_session.survey_import.is_some();
+        let import_owns_input=exchange_owns_input||self.exchange_import.owns_input()||stl_owns_input||self.stl_import.owns_input()||geotiff_owns_input||self.geotiff_import.owns_input()||self.image_import.owns_input()||self.document_session.unit_import.is_some()||self.document_session.survey_import.is_some();
         self.sync_document_presentation();
         self.begin_document_frame(ctx);
         self.poll_ai_bridge();
@@ -1039,7 +1041,7 @@ impl IngeTrazoApp {
         let title = if let Some(path) = &self.current_file {
             let filename = path.file_name().unwrap_or_default().to_string_lossy();
             format!("IngeTrazo — {filename}")
-        } else {
+        } else if let Some((document,name))=self.exchange_import.label.as_ref().filter(|(document,_)|*document==self.clipboard_document){let _=document;format!("IngeTrazo — {name}")} else {
             "IngeTrazo 0.3.15".to_string()
         };
         // Sending a viewport command itself requests another frame. Emit only
@@ -1192,7 +1194,7 @@ impl IngeTrazoApp {
         });
 
         crate::geotiff_import::render(self,ctx);
-        crate::stl_import::render(self,ctx);
+        crate::stl_import::render(self,ctx);crate::exchange_import::render(self,ctx);
         crate::image_import::render(self,ctx);
         // 7. Modal Dialogs
         render_dialogs(self, ctx);

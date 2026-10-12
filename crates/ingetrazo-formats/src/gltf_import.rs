@@ -9,7 +9,21 @@ fn invalid(message: impl Into<String>) -> GltfError {
 }
 
 pub fn load_gltf(path: &Path) -> Result<Scene, GltfError> {
-    let parsed = ::gltf::Gltf::open(path).map_err(|e| invalid(e.to_string()))?;
+    load_gltf_policy(path, None)
+}
+pub fn parse_gltf_import(path: &Path) -> Result<crate::FileImportPlan, GltfError> {
+    let source = app_policy::read_source_json(path)?;
+    let scene = load_gltf_policy(path, Some(&source))?;
+    Ok(crate::FileImportPlan::from_file_scene(scene))
+}
+fn load_gltf_policy(path: &Path, source: Option<&app_policy::Input>) -> Result<Scene, GltfError> {
+    let mut parsed = if let Some(source) = source {
+        ::gltf::Gltf::from_slice(&source.bytes)
+    } else {
+        ::gltf::Gltf::open(path)
+    }
+    .map_err(|e| invalid(e.to_string()))?;
+    let source = source.map(|i| &i.json);
     for extension in parsed.document.extensions_required() {
         if ![
             "KHR_texture_transform",
@@ -21,7 +35,7 @@ pub fn load_gltf(path: &Path) -> Result<Scene, GltfError> {
             return Err(invalid(format!("Required glTF extension {extension} is unsupported; use an uncompressed static export")));
         }
     }
-    let buffers = ::gltf::import_buffers(&parsed.document, path.parent(), parsed.blob.clone())
+    let buffers = ::gltf::import_buffers(&parsed.document, path.parent(), parsed.blob.take())
         .map_err(|e| invalid(e.to_string()))?;
     // Check source ranges before the library's iterator slices them.
     for view in parsed.document.views() {
@@ -116,6 +130,7 @@ pub fn load_gltf(path: &Path) -> Result<Scene, GltfError> {
     }
     let mut mesh = Mesh::new();
     let mut path_nodes = HashSet::new();
+    let mut source_faces = std::collections::HashMap::new();
     let roots = parsed
         .document
         .scenes()
@@ -131,6 +146,8 @@ pub fn load_gltf(path: &Path) -> Result<Scene, GltfError> {
                 &mut mesh,
                 &mut path_nodes,
                 0,
+                source,
+                &mut source_faces,
             )?;
         }
     } else {
@@ -143,42 +160,50 @@ pub fn load_gltf(path: &Path) -> Result<Scene, GltfError> {
                 &mut mesh,
                 &mut path_nodes,
                 0,
+                source,
+                &mut source_faces,
             )?;
         }
     }
-    let bounds = mesh.vertices.iter().fold(
-        (DVec3::splat(f64::INFINITY), DVec3::splat(f64::NEG_INFINITY)),
-        |(lo, hi), v| (lo.min(v.position), hi.max(v.position)),
-    );
-    let dimension = (bounds.1 - bounds.0).max_element();
-    let scale = [1., 0.0254, 0.01, 0.001]
-        .into_iter()
-        .find(|s| {
-            let d = dimension * s;
-            d >= 0.2 && d <= 40.
-        })
-        .unwrap_or(1.);
-    if scale != 1. {
-        for vertex in &mut mesh.vertices {
-            vertex.position *= scale;
-        }
-        for face in &mut mesh.faces {
-            if let Some(values) = face
-                .attrs
-                .get_mut("texture")
-                .and_then(|v| v.get_mut("uvw"))
-                .and_then(|v| v.as_array_mut())
-            {
-                for index in [0, 1, 2, 4, 5, 6] {
-                    values[index] = serde_json::json!(values[index].as_f64().unwrap() / scale);
+    if source.is_none() {
+        let bounds = mesh.vertices.iter().fold(
+            (DVec3::splat(f64::INFINITY), DVec3::splat(f64::NEG_INFINITY)),
+            |(lo, hi), v| (lo.min(v.position), hi.max(v.position)),
+        );
+        let dimension = (bounds.1 - bounds.0).max_element();
+        let scale = [1., 0.0254, 0.01, 0.001]
+            .into_iter()
+            .find(|s| {
+                let d = dimension * s;
+                d >= 0.2 && d <= 40.
+            })
+            .unwrap_or(1.);
+        if scale != 1. {
+            for vertex in &mut mesh.vertices {
+                vertex.position *= scale;
+            }
+            for face in &mut mesh.faces {
+                if let Some(values) = face
+                    .attrs
+                    .get_mut("texture")
+                    .and_then(|v| v.get_mut("uvw"))
+                    .and_then(|v| v.as_array_mut())
+                {
+                    for index in [0, 1, 2, 4, 5, 6] {
+                        values[index] = serde_json::json!(values[index].as_f64().unwrap() / scale);
+                    }
                 }
             }
+            mesh.rebuild_spatial_index();
         }
-        mesh.rebuild_spatial_index();
     }
-    for edge in &mut mesh.edges {
-        if edge.faces.len() > 1 {
-            edge.soft = true;
+    if let Some(source) = source {
+        app_policy::finish(&mut mesh, &source_faces, source, &scene.embedded_textures)?;
+    } else {
+        for edge in &mut mesh.edges {
+            if edge.faces.len() > 1 {
+                edge.soft = true;
+            }
         }
     }
     let title = parsed
@@ -194,6 +219,11 @@ pub fn load_gltf(path: &Path) -> Result<Scene, GltfError> {
                 .and_then(|t| t.as_str())
                 .map(str::to_owned)
         });
+    let title = if source.is_some() {
+        title.filter(|s| !s.is_empty())
+    } else {
+        title
+    };
     let name = title
         .as_deref()
         .or_else(|| path.file_stem().and_then(|s| s.to_str()))
@@ -214,6 +244,8 @@ fn walk(
     mesh: &mut Mesh,
     stack: &mut HashSet<usize>,
     depth: usize,
+    source: Option<&serde_json::Value>,
+    source_faces: &mut std::collections::HashMap<usize, app_policy::SourceFace>,
 ) -> Result<(), GltfError> {
     if depth > 64 || !stack.insert(node.index()) {
         return Err(invalid("Recursive or excessively nested glTF nodes"));
@@ -222,12 +254,17 @@ fn walk(
         .transform()
         .matrix()
         .map(|column| column.map(f64::from));
-    let world = parent * DMat4::from_cols_array_2d(&matrix);
+    let world = parent
+        * if let Some(source) = source {
+            app_policy::node_matrix(source, node.index())?
+        } else {
+            DMat4::from_cols_array_2d(&matrix)
+        };
     if !world.is_finite() {
         return Err(invalid("Nonfinite glTF node transform"));
     }
-    if let Some(source) = node.mesh() {
-        for primitive in source.primitives() {
+    if let Some(node_mesh) = node.mesh() {
+        for primitive in node_mesh.primitives() {
             if primitive.mode() != ::gltf::mesh::Mode::Triangles {
                 return Err(invalid(
                     "Only glTF triangle primitives are currently supported",
@@ -274,9 +311,23 @@ fn walk(
                     )
                 })
                 .map(|data| {
-                    data.into_f32()
-                        .map(|p| DVec2::new(p[0] as f64, p[1] as f64))
-                        .collect::<Vec<_>>()
+                    if source.is_some() {
+                        match data {
+                            ::gltf::mesh::util::ReadTexCoords::U8(values) => values
+                                .map(|p| DVec2::new(p[0] as f64 / 255., p[1] as f64 / 255.))
+                                .collect(),
+                            ::gltf::mesh::util::ReadTexCoords::U16(values) => values
+                                .map(|p| DVec2::new(p[0] as f64 / 65535., p[1] as f64 / 65535.))
+                                .collect(),
+                            ::gltf::mesh::util::ReadTexCoords::F32(values) => values
+                                .map(|p| DVec2::new(p[0] as f64, p[1] as f64))
+                                .collect(),
+                        }
+                    } else {
+                        data.into_f32()
+                            .map(|p| DVec2::new(p[0] as f64, p[1] as f64))
+                            .collect::<Vec<_>>()
+                    }
                 });
             if uv.as_ref().map_or(false, |values| {
                 values.len() != positions.len() || values.iter().any(|v| !v.is_finite())
@@ -292,14 +343,31 @@ fn walk(
                 if triangle.iter().any(|i| *i >= positions.len()) {
                     return Err(invalid("glTF index outside position array"));
                 }
-                if world.determinant() < 0. {
+                if source.is_none() && world.determinant() < 0. {
                     triangle.swap(1, 2);
                 }
                 let points = triangle.map(|i| positions[i]);
-                let ids = points.map(|p| mesh.add_vertex(p));
+                let ids = points.map(|p| {
+                    if source.is_some() {
+                        let id = mesh.vertices.len();
+                        mesh.vertices.push(ingetrazo_core::mesh::MeshVertex::new(p));
+                        id
+                    } else {
+                        mesh.add_vertex(p)
+                    }
+                });
                 let Some(face) = mesh.add_face(ids.to_vec(), vec![]) else {
                     return Err(invalid("Degenerate glTF triangle"));
                 };
+                if source.is_some() {
+                    source_faces.insert(
+                        face,
+                        app_policy::SourceFace {
+                            material: material.index(),
+                            uv: None,
+                        },
+                    );
+                }
                 let attrs = &mut mesh.faces[face].attrs;
                 attrs.insert(
                     "color".into(),
@@ -314,7 +382,9 @@ fn walk(
                 );
                 if let (Some(info), Some(uv)) = (texture.as_ref(), uv.as_ref()) {
                     let mut uv = triangle.map(|i| uv[i]);
-                    if let Some(transform) = info.texture_transform() {
+                    if let Some(source) = source {
+                        app_policy::transform_uv(source, material.index(), &mut uv)?;
+                    } else if let Some(transform) = info.texture_transform() {
                         let offset = DVec2::from_array(transform.offset().map(f64::from));
                         let scale = DVec2::from_array(transform.scale().map(f64::from));
                         let rotation = transform.rotation() as f64;
@@ -325,6 +395,9 @@ fn walk(
                                 p.x * rotation.sin() + p.y * rotation.cos(),
                             ) + offset;
                         }
+                    }
+                    if source.is_some() {
+                        source_faces.get_mut(&face).unwrap().uv = Some(uv);
                     }
                     let e1 = points[1] - points[0];
                     let e2 = points[2] - points[0];
@@ -346,7 +419,17 @@ fn walk(
         }
     }
     for child in node.children() {
-        walk(child, world, buffers, images, mesh, stack, depth + 1)?;
+        walk(
+            child,
+            world,
+            buffers,
+            images,
+            mesh,
+            stack,
+            depth + 1,
+            source,
+            source_faces,
+        )?;
     }
     stack.remove(&node.index());
     Ok(())
@@ -401,3 +484,6 @@ mod tests {
         std::fs::remove_dir_all(directory).unwrap();
     }
 }
+
+#[path = "gltf_app_import.rs"]
+mod app_policy;

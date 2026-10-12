@@ -7,6 +7,7 @@
 //! - STL (.stl): Stereolithography 3D print format
 
 mod exchange;
+pub use exchange::FileImportPlan;
 pub mod skp;
 pub use skp::{load_skp,SkpError};
 pub mod dae;
@@ -23,7 +24,7 @@ pub mod obj;
 pub mod stl;
 
 pub use dae::export_dae;
-pub use dae_import::{load_dae,DaeError};
+pub use dae_import::{load_dae,parse_dae_import,DaeError};
 pub use dxf::{export_dxf, import_dxf, DxfError};
 pub use gltf_import::load_gltf;
 pub use gltf::{export_glb, export_gltf, GltfError, GLTF_MAGIC};

@@ -306,17 +306,25 @@ fn image_path(image: Node<'_, '_>, base: &std::path::Path) -> Result<std::path::
     let mut bytes = Vec::with_capacity(input.len());
     let mut i = 0;
     while i < input.len() {
-        if input[i] == b'%' && i + 2 < input.len() && input[i + 1..i + 3].iter().all(u8::is_ascii_hexdigit) {
+        if input[i] == b'%'
+            && i + 2 < input.len()
+            && input[i + 1..i + 3].iter().all(u8::is_ascii_hexdigit)
+        {
             if let Ok(hex) = std::str::from_utf8(&input[i + 1..i + 3]) {
                 if let Ok(byte) = u8::from_str_radix(hex, 16) {
-                    bytes.push(byte); i += 3; continue;
+                    bytes.push(byte);
+                    i += 3;
+                    continue;
                 }
             }
         }
-        bytes.push(input[i]); i += 1;
+        bytes.push(input[i]);
+        i += 1;
     }
     let decoded = String::from_utf8_lossy(&bytes);
-    if decoded.contains('\0') { return Err(invalid("image URI contains NUL")); }
+    if decoded.contains('\0') {
+        return Err(invalid("image URI contains NUL"));
+    }
     Ok(base.join(decoded.as_ref()))
 }
 #[cfg(test)]
@@ -441,13 +449,22 @@ struct MaterialResources {
     files: HashMap<std::path::PathBuf, DaeMaterial>,
     assets: HashMap<String, Vec<u8>>,
     used: std::collections::HashSet<String>,
+    cutout: HashMap<String, bool>,
 }
 impl MaterialResources {
     fn image(&mut self, image: Node<'_, '_>, base: Option<&std::path::Path>) -> DaeMaterial {
-        let reference = child(image, "init_from").and_then(|n| n.text()).unwrap_or("").trim();
-        if let Some(found) = self.images.get(reference) { return found.clone(); }
+        let reference = child(image, "init_from")
+            .and_then(|n| n.text())
+            .unwrap_or("")
+            .trim();
+        if let Some(found) = self.images.get(reference) {
+            return found.clone();
+        }
         let mut material = DaeMaterial::default();
-        if let Some(path) = base.and_then(|base| image_path(image, base).ok()).and_then(|p| p.canonicalize().ok()) {
+        if let Some(path) = base
+            .and_then(|base| image_path(image, base).ok())
+            .and_then(|p| p.canonicalize().ok())
+        {
             if let Some(cached) = self.files.get(&path) {
                 material = cached.clone();
             } else {
@@ -460,7 +477,9 @@ impl MaterialResources {
                 self.files.insert(path, material.clone());
             }
         }
-        if material.color.is_none() { material.color = source_color::missing_image_color(reference); }
+        if material.color.is_none() {
+            material.color = source_color::missing_image_color(reference);
+        }
         self.images.insert(reference.to_owned(), material.clone());
         material
     }
@@ -472,19 +491,45 @@ fn material_colors<'a, 'i>(
     resources: &mut MaterialResources,
 ) -> Result<HashMap<String, DaeMaterial>> {
     let mut colors = HashMap::new();
-    for binding in instance.descendants().filter(|n| n.is_element() && n.tag_name().name() == "instance_material") {
+    for binding in instance
+        .descendants()
+        .filter(|n| n.is_element() && n.tag_name().name() == "instance_material")
+    {
         // Optional paint never makes otherwise valid geometry disappear.
-        let Some(symbol) = binding.attribute("symbol") else { continue; };
-        let Some(material) = binding.attribute("target").and_then(|s| ids.get(s.trim_start_matches('#'))) else { continue; };
-        let Some(effect) = child(*material, "instance_effect").and_then(|n| n.attribute("url")).and_then(|s| ids.get(s.trim_start_matches('#'))) else { continue; };
+        let Some(symbol) = binding.attribute("symbol") else {
+            continue;
+        };
+        let Some(material) = binding
+            .attribute("target")
+            .and_then(|s| ids.get(s.trim_start_matches('#')))
+        else {
+            continue;
+        };
+        let Some(effect) = child(*material, "instance_effect")
+            .and_then(|n| n.attribute("url"))
+            .and_then(|s| ids.get(s.trim_start_matches('#')))
+        else {
+            continue;
+        };
         // Source precedence is shader kind, then document order within that kind.
         'shader: for kind in ["lambert", "phong", "blinn", "constant"] {
-            for shader in effect.descendants().filter(|n| n.is_element() && n.tag_name().name() == kind) {
-                let Some(diffuse) = child(shader, "diffuse") else { continue; };
+            for shader in effect
+                .descendants()
+                .filter(|n| n.is_element() && n.tag_name().name() == kind)
+            {
+                let Some(diffuse) = child(shader, "diffuse") else {
+                    continue;
+                };
                 if let Some(color) = child(diffuse, "color") {
                     let values = numbers(color)?;
                     if values.len() >= 3 {
-                        colors.insert(symbol.to_owned(), DaeMaterial { color: Some([values[0], values[1], values[2]]), image: None });
+                        colors.insert(
+                            symbol.to_owned(),
+                            DaeMaterial {
+                                color: Some([values[0], values[1], values[2]]),
+                                image: None,
+                            },
+                        );
                         break 'shader;
                     }
                 }
@@ -622,8 +667,23 @@ pub fn load_dae(path: &std::path::Path) -> Result<ingetrazo_core::scene::Scene> 
         &xml,
         Some(path.parent().unwrap_or_else(|| std::path::Path::new("."))),
     )?;
+    finish_dae_scene(path, &xml, scene)
+}
+fn finish_dae_scene(
+    path: &std::path::Path,
+    xml: &str,
+    scene: ingetrazo_core::scene::Scene,
+) -> Result<ingetrazo_core::scene::Scene> {
+    finish_dae_scene_policy(path, xml, scene, false)
+}
+fn finish_dae_scene_policy(
+    path: &std::path::Path,
+    xml: &str,
+    mut scene: ingetrazo_core::scene::Scene,
+    force_reference: bool,
+) -> Result<ingetrazo_core::scene::Scene> {
     let count: usize = scene.groups.iter().map(|g| g.mesh.faces.len()).sum();
-    if count <= 400 {
+    if count <= 400 && !force_reference {
         let mut mesh = ingetrazo_core::mesh::Mesh::new();
         for group in &scene.groups {
             for face in &group.mesh.faces {
@@ -741,7 +801,8 @@ pub fn load_dae(path: &std::path::Path) -> Result<ingetrazo_core::scene::Scene> 
         for (id, mesh) in fused_definitions {
             scene.component_definitions.insert(
                 id,
-                ingetrazo_core::components::ComponentDefinition {mesh_share:None,
+                ingetrazo_core::components::ComponentDefinition {
+                    mesh_share: None,
                     mesh,
                     children: vec![],
                 },
@@ -757,6 +818,13 @@ pub(crate) fn scene_from_xml(xml: &str) -> Result<ingetrazo_core::scene::Scene> 
 pub(crate) fn scene_from_xml_at(
     xml: &str,
     base: Option<&std::path::Path>,
+) -> Result<ingetrazo_core::scene::Scene> {
+    scene_from_xml_policy(xml, base, false)
+}
+fn scene_from_xml_policy(
+    xml: &str,
+    base: Option<&std::path::Path>,
+    source_policy: bool,
 ) -> Result<ingetrazo_core::scene::Scene> {
     use glam::{DMat4, DVec4};
     use ingetrazo_core::{groups::Group, mesh::Mesh, scene::Scene};
@@ -819,18 +887,31 @@ pub(crate) fn scene_from_xml_at(
         name: &str,
         colors: &HashMap<String, DaeMaterial>,
         used: &mut std::collections::HashSet<String>,
+        basis: DMat4,
+        source_policy: bool,
     ) -> Result<Group> {
         let mut mesh = Mesh::new();
+        let point = |p: DVec3| {
+            if !source_policy {
+                return world.transform_point3(p);
+            }
+            let p = ingetrazo_core::change_axes::map(world, p.as_vec3().as_dvec3());
+            let unit = basis.x_axis.truncate().abs().max_element();
+            let p = if basis.y_axis.z != 0. {
+                DVec3::new(p.x * unit, -p.z * unit, p.y * unit)
+            } else if basis.x_axis.y != 0. {
+                DVec3::new(p.y * unit, p.x * unit, p.z * unit)
+            } else {
+                p * unit
+            };
+            p.as_vec3().as_dvec3()
+        };
         for polygon in geometry(node)? {
-            let points: Vec<_> = polygon
-                .points
-                .iter()
-                .map(|p| world.transform_point3(*p))
-                .collect();
+            let points: Vec<_> = polygon.points.iter().map(|p| point(*p)).collect();
             let vertices: Vec<_> = polygon
                 .points
                 .into_iter()
-                .map(|p| mesh.add_vertex(world.transform_point3(p)))
+                .map(|p| mesh.add_vertex(point(p)))
                 .collect();
             // The original COLLADA loader keeps authored loop order after
             // transforms, including reflections; open sheets have no outward side.
@@ -852,7 +933,9 @@ pub(crate) fn scene_from_xml_at(
                 }
                 if let (Some(image), Some(uv)) = (&material.image, &polygon.uv) {
                     let map = affine_uv(&points, uv)?;
-                    if !used.contains(image) { used.insert(image.clone()); }
+                    if !used.contains(image) {
+                        used.insert(image.clone());
+                    }
                     let gu = DVec3::new(map[0], map[1], map[2]).length();
                     let gv = DVec3::new(map[4], map[5], map[6]).length();
                     mesh.faces[id].attrs.insert("texture".into(),serde_json::json!({"embed":image,"uvw":map,"sw":if gu>1e-9{1./gu}else{1.},"sh":if gv>1e-9{1./gv}else{1.}}));
@@ -902,19 +985,36 @@ pub(crate) fn scene_from_xml_at(
         basis: DMat4,
         instances: &mut Vec<ReferenceInstance>,
         resources: &mut MaterialResources,
+        source_policy: bool,
     ) -> Result<()> {
         if stack.len() >= 64 || stack.contains(&node.id()) {
             return Err(invalid("cyclic or excessive node hierarchy"));
         }
         stack.push(node.id());
-        let world = parent * transform(node)?;
+        let subtree_start = scene.groups.len();
+        let world = if source_policy {
+            (parent.as_mat4() * transform(node)?.as_mat4()).as_dmat4()
+        } else {
+            parent * transform(node)?
+        };
         let name = node
             .attribute("name")
             .or(node.attribute("id"))
             .unwrap_or("COLLADA part");
         for el in node.children().filter(|n| n.is_element()) {
             match el.tag_name().name() {
-                "node" => walk(el, world, ids, stack, scene, base, basis, instances, resources)?,
+                "node" => walk(
+                    el,
+                    world,
+                    ids,
+                    stack,
+                    scene,
+                    base,
+                    basis,
+                    instances,
+                    resources,
+                    source_policy,
+                )?,
                 "instance_node" => {
                     let target = el
                         .attribute("url")
@@ -922,7 +1022,18 @@ pub(crate) fn scene_from_xml_at(
                         .and_then(|s| ids.get(&s[1..]))
                         .ok_or_else(|| invalid("unresolved instance_node"))?;
                     let start = scene.groups.len();
-                    walk(*target, world, ids, stack, scene, base, basis, instances, resources)?;
+                    walk(
+                        *target,
+                        world,
+                        ids,
+                        stack,
+                        scene,
+                        base,
+                        basis,
+                        instances,
+                        resources,
+                        source_policy,
+                    )?;
                     instances.push(ReferenceInstance {
                         start,
                         end: scene.groups.len(),
@@ -932,7 +1043,11 @@ pub(crate) fn scene_from_xml_at(
                             .or(el.attribute("id"))
                             .unwrap_or(name)
                             .to_owned(),
-                        placement: world * basis.inverse(),
+                        placement: if source_policy {
+                            basis * world * basis.inverse()
+                        } else {
+                            world * basis.inverse()
+                        },
                     });
                 }
                 "instance_geometry" => {
@@ -944,7 +1059,15 @@ pub(crate) fn scene_from_xml_at(
                     let mesh =
                         child(*target, "mesh").ok_or_else(|| invalid("geometry has no mesh"))?;
                     let colors = material_colors(el, ids, base, resources)?;
-                    let group = mesh_group(mesh, world, name, &colors, &mut resources.used)?;
+                    let group = mesh_group(
+                        mesh,
+                        world,
+                        name,
+                        &colors,
+                        &mut resources.used,
+                        basis,
+                        source_policy,
+                    )?;
                     if !group.mesh.faces.is_empty() {
                         scene.groups.push(group);
                     }
@@ -953,6 +1076,22 @@ pub(crate) fn scene_from_xml_at(
                     return Err(invalid("controller geometry assembly is not implemented"))
                 }
                 _ => {}
+            }
+        }
+        if source_policy {
+            let indices: Vec<_> = (subtree_start..scene.groups.len())
+                .filter(|&i| !scene.groups[i].billboard)
+                .collect();
+            if !indices.is_empty() {
+                let refs: Vec<_> = indices.iter().map(|&i| &scene.groups[i]).collect();
+                let mut combined = Group::with_mesh(name, app_import::combine(&refs)?);
+                if app_import::faceme(&combined, &resources.assets, &mut resources.cutout) {
+                    combined.billboard = true;
+                    for &i in indices.iter().rev() {
+                        scene.groups.remove(i);
+                    }
+                    scene.groups.push(combined);
+                }
             }
         }
         stack.pop();
@@ -975,12 +1114,18 @@ pub(crate) fn scene_from_xml_at(
             if let Some(mesh) = child(geometry_node, "mesh") {
                 let group = mesh_group(
                     mesh,
-                    world,
+                    if source_policy {
+                        DMat4::IDENTITY
+                    } else {
+                        world
+                    },
                     geometry_node
                         .attribute("name")
                         .unwrap_or("COLLADA geometry"),
                     &HashMap::new(),
                     &mut resources.used,
+                    world,
+                    source_policy,
                 )?;
                 if !group.mesh.faces.is_empty() {
                     scene.groups.push(group);
@@ -991,7 +1136,11 @@ pub(crate) fn scene_from_xml_at(
         for node in nodes {
             walk(
                 node,
-                world,
+                if source_policy {
+                    DMat4::IDENTITY
+                } else {
+                    world
+                },
                 &ids,
                 &mut vec![],
                 &mut scene,
@@ -999,19 +1148,24 @@ pub(crate) fn scene_from_xml_at(
                 world,
                 &mut instances,
                 &mut resources,
+                source_policy,
             )?;
         }
     }
     if scene.groups.is_empty() {
         return Err(invalid("no geometry"));
     }
-    if scene
-        .groups
-        .iter()
-        .map(|g| g.mesh.faces.len())
-        .sum::<usize>()
-        > 400
-        && !instances.is_empty()
+    if (if source_policy {
+        app_import::authored_count(xml)? > 400
+    } else {
+        scene
+            .groups
+            .iter()
+            .map(|g| g.mesh.faces.len())
+            .sum::<usize>()
+            > 400
+    }) && !instances.is_empty()
+        && !(source_policy && scene.groups.iter().any(|g| g.billboard))
     {
         let groups = std::mem::take(&mut scene.groups);
         let mut prototypes: HashMap<roxmltree::NodeId, (uuid::Uuid, Mesh)> = HashMap::new();
@@ -1034,7 +1188,11 @@ pub(crate) fn scene_from_xml_at(
                     let mut local = Scene::default();
                     walk(
                         target,
-                        world,
+                        if source_policy {
+                            DMat4::IDENTITY
+                        } else {
+                            world
+                        },
                         &ids,
                         &mut vec![],
                         &mut local,
@@ -1042,6 +1200,7 @@ pub(crate) fn scene_from_xml_at(
                         world,
                         &mut vec![],
                         &mut resources,
+                        source_policy,
                     )?;
                     let mesh = combine_meshes(&local.groups)?;
                     prototypes.insert(instance.key, (uuid::Uuid::new_v4(), mesh));
@@ -1060,7 +1219,8 @@ pub(crate) fn scene_from_xml_at(
         for (_, (id, mesh)) in prototypes {
             scene.component_definitions.insert(
                 id,
-                ingetrazo_core::components::ComponentDefinition {mesh_share:None,
+                ingetrazo_core::components::ComponentDefinition {
+                    mesh_share: None,
                     mesh,
                     children: vec![],
                 },
@@ -1069,7 +1229,9 @@ pub(crate) fn scene_from_xml_at(
     }
     // Representative colors need decoded bytes only while importing. Keep
     // document ownership only for resources actually referenced by geometry.
-    resources.assets.retain(|key, _| resources.used.contains(key));
+    resources
+        .assets
+        .retain(|key, _| resources.used.contains(key));
     scene.embedded_textures = resources.assets;
     scene.bump_version();
     Ok(scene)
@@ -1158,7 +1320,8 @@ mod tests {
             serde_json::json!([0.2, 0.4, 0.8])
         );
         assert_eq!(scene.groups[0].mesh.faces[0].attrs["back"], true);
-        let missing = scene_from_xml(&xml.replace("target=\"#blue\"", "target=\"#missing\"")).unwrap();
+        let missing =
+            scene_from_xml(&xml.replace("target=\"#blue\"", "target=\"#missing\"")).unwrap();
         assert!(missing.groups[0].mesh.faces[0].attrs.is_empty());
     }
     #[test]
@@ -1415,3 +1578,7 @@ mod reference_threshold_tests {
         std::fs::remove_dir_all(dir).unwrap();
     }
 }
+
+#[path = "dae_app_import.rs"]
+mod app_import;
+pub use app_import::parse_dae_import;

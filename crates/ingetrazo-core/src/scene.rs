@@ -36,6 +36,9 @@ pub enum SelectionItem {
     ImagePlane(usize),
 }
 
+/// Runtime-only second owner of a file import while editing a component.
+#[derive(Debug, Clone, PartialEq)]
+pub struct FileImportHistory { pub context:Vec<uuid::Uuid>, pub mesh:crate::mesh::Mesh }
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Scene {
     /// Runtime BIM activation. Draw plans allocate identities at commit; never persisted.
@@ -59,6 +62,7 @@ pub struct Scene {
     /// placement ID identifies an active nested edit view. Never persisted.
     #[serde(skip)]
     pub history_context: Vec<uuid::Uuid>,
+    #[serde(skip)] pub history_file_import:Option<FileImportHistory>,
     /// Command-specific prototype restore target, carried only by history snapshots.
     #[serde(skip)] pub history_annotation_delete:bool,
     #[serde(skip)] pub history_annotation_move:bool,
@@ -157,7 +161,7 @@ impl Scene {
             image_planes:Default::default(),image_objects:Default::default(),history_images:Default::default(),
             dimension_frame:glam::DMat4::IDENTITY,
             drawing_frame:None,
-            history_context:vec![],
+            history_context:vec![],history_file_import:None,
             display_style:Default::default(),shadows:Default::default(),history_annotation_delete:false,history_annotation_move:false,history_annotation_edit:false,history_survey:false,history_annotation_create:None,dimension_style_override:None,model_units_override:None,history_shareback:None,history_axes:None,history_bim:None,history_material:None,history_python:None,history_views:Default::default(),history_group_visibility:None,history_terrain:Default::default(),history_layers:Default::default(),
             component_definitions: HashMap::new(),
             mesh_shares: HashMap::new(),

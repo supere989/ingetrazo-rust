@@ -72,6 +72,19 @@ fn prepare_finish(finishing_scene: &Scene, stack: &[ComponentEditSession], undo:
             scene.history_material=material;
             Some(scene)},Err(error)=>return Err(error)}}else{None};
         let mut lifted_undo=undo.to_vec();let mut lifted_redo=redo.to_vec();
+        for entry in lifted_undo.iter_mut().chain(lifted_redo.iter_mut()){
+            if let Some(marker)=entry.history_file_import.as_ref().filter(|m|m.context==target){
+                let mut local=finishing_scene.clone();local.mesh=marker.mesh.clone();
+                let (restored,_)=component_candidate(session,&local)?;
+                if let Some(group)=restored.groups.iter().find(|g|g.id==session.group_id){
+                    if let Some(old)=entry.groups.iter_mut().find(|g|g.id==session.group_id){*old=group.clone();}
+                    if let Some(id)=group.mesh_share{if let Some(mesh)=restored.mesh_shares.get(&id){entry.mesh_shares.insert(id,mesh.clone());}}
+                    if let Some(id)=group.component_definition{if let Some(def)=restored.component_definitions.get(&id){entry.component_definitions.insert(id,def.clone());}}
+                }
+                entry.history_file_import=None;
+            }
+        }
+
         if let Some(before)=lifted_undo.last_mut(){if before.history_images.0.is_none(){before.history_images.0=Some(ingetrazo_core::image_plane::ImageDelta::between(&before.image_planes,&finishing_scene.image_planes));}}
         if let Some(before)=lifted_undo.last_mut(){if before.history_terrain.0.is_none(){before.history_terrain.0=Some(ingetrazo_core::georef::TerrainHistory::seal(&before.terrain,&finishing_scene.terrain));}}
         if let Some(before)=lifted_undo.last_mut(){if before.history_layers.0.is_none(){before.history_layers.0=Some(ingetrazo_core::layers::LayerDelta::between(&before.layers,&finishing_scene.layers));}}
@@ -421,10 +434,15 @@ impl IngeTrazoApp {
             }
         }
         crate::document_presentation::preserve(&self.scene,&mut replacement);
+        let file_mesh=next.history_file_import.as_ref().filter(|h|h.context==self.scene.history_context).map(|h|h.mesh.clone());
         let survey=next.history_survey;
         let annotation_create=next.history_annotation_create;
         let annotation_delete=next.history_annotation_delete||next.history_annotation_move||next.history_annotation_edit;
         let mut previous=session.original_scene.clone();previous.history_survey=survey;previous.history_shareback=next.history_shareback;previous.history_annotation_delete=next.history_annotation_delete;previous.history_annotation_move=next.history_annotation_move;previous.history_annotation_edit=next.history_annotation_edit;previous.history_annotation_create=annotation_create;
+        if let Some(mesh)=file_mesh{
+            previous.history_file_import=Some(ingetrazo_core::scene::FileImportHistory{context:self.scene.history_context.clone(),mesh:std::mem::replace(&mut self.scene.mesh,mesh)});
+            replacement.history_file_import=None;
+        }
         if survey {
             previous.geo_points=self.scene.geo_points.clone();previous.geo_datum=self.scene.geo_datum.clone();
             self.scene.geo_points=replacement.geo_points.clone();self.scene.geo_datum=replacement.geo_datum.clone();replacement.history_survey=false;

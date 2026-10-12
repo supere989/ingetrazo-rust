@@ -314,9 +314,11 @@ impl IngeTrazoApp {
         self.status_message = format!("Imported {}", confirmed.path.display());
         Ok(())
     }
-    pub(crate) fn publish_root_import(
+    pub(crate) fn publish_root_import(&mut self,candidate:ingetrazo_core::scene::Scene)->Result<(),String>{self.publish_root_import_with_mesh(candidate,None)}
+    pub(crate) fn publish_root_import_with_mesh(
         &mut self,
         candidate: ingetrazo_core::scene::Scene,
+        active_mesh:Option<ingetrazo_core::mesh::Mesh>,
     ) -> Result<(), String> {
         // Imported groups are document-global in the original; active Scene.groups
         // is only the native local child view. Prepare every checkpoint first.
@@ -328,6 +330,9 @@ impl IngeTrazoApp {
         let new_shares = candidate.mesh_shares.iter().filter(|(id,_)| !root.original_scene.mesh_shares.contains_key(*id)).map(|(id,mesh)| (*id,mesh.clone())).collect::<Vec<_>>();
         let new_definitions = candidate.component_definitions.iter().filter(|(id,_)| !root.original_scene.component_definitions.contains_key(*id)).map(|(id,definition)| (*id,definition.clone())).collect::<Vec<_>>();
         let mut before = root.original_scene.clone();
+        if active_mesh.is_some(){before.history_file_import=Some(ingetrazo_core::scene::FileImportHistory{context:self.scene.history_context.clone(),mesh:self.scene.mesh.clone()});}
+        // Original SnapshotImport does not own adoption of geographic datum.
+        before.geo_datum=candidate.geo_datum.clone();
         before.layers = self.scene.layers.clone();
         before.embedded_textures = self.scene.embedded_textures.clone();
         before.history_layers.0 = Some(ingetrazo_core::layers::LayerDelta::between(
@@ -426,6 +431,8 @@ impl IngeTrazoApp {
             session.original_undo = checkpoint.undo;
             session.original_redo.clear();
         }
+        self.scene.geo_datum=self.component_edit_stack[0].original_scene.geo_datum.clone();
+        if let Some(mesh)=active_mesh{self.scene.mesh=mesh;if let Some(session)=self.component_edit_stack.last_mut(){session.note_source_mesh_import();}}
         self.scene.layers = live_layers;
         self.scene.embedded_textures = live_assets;
         self.scene.mesh_shares.extend(new_shares);

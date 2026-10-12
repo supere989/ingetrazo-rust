@@ -115,3 +115,29 @@ mod tests {
         assert!(triangles(&scene).is_empty());
     }
 }
+
+/// Geometry/resources belonging only to one parsed input file. No live document,
+/// presentation, selection or history is copied into a worker owner.
+pub struct FileImportPlan {
+    pub mesh: Mesh,
+    pub groups: Vec<Group>,
+    pub assets: std::collections::HashMap<String,Vec<u8>>,
+    pub definitions: std::collections::HashMap<uuid::Uuid,ingetrazo_core::components::ComponentDefinition>,
+    pub shares: std::collections::HashMap<uuid::Uuid,Mesh>,
+    pub datum: Option<ingetrazo_core::georef::SceneDatum>,
+}
+impl FileImportPlan {
+    pub(crate) fn from_file_scene(mut scene:Scene)->Self{Self{mesh:std::mem::take(&mut scene.mesh),groups:std::mem::take(&mut scene.groups),assets:std::mem::take(&mut scene.embedded_textures),definitions:std::mem::take(&mut scene.component_definitions),shares:std::mem::take(&mut scene.mesh_shares),datum:scene.geo_datum.take()}}
+    pub fn edits_active_mesh(&self)->bool{!self.mesh.faces.is_empty()}
+    pub fn appends_root_groups(&self)->bool{!self.groups.is_empty()}
+    pub fn emit_active_mesh(&self,target:&mut Mesh)->Result<(),String>{
+        if self.mesh.faces.is_empty(){return Ok(());}
+        let first=target.faces.len();let mut seed=Vec::new();seed.try_reserve(self.mesh.vertices.len()).map_err(|_|"Import seed allocation refused")?;
+        seed.extend(self.mesh.vertices.iter().map(|v|v.position));
+        for face in &self.mesh.faces{
+            let rings=std::iter::once(&face.vertices).chain(face.holes.iter()).map(|ring|ring.iter().map(|&i|target.add_vertex(self.mesh.vertices[i].position)).collect::<Vec<_>>()).collect::<Vec<_>>();
+            let index=target.add_face(rings[0].clone(),rings[1..].to_vec()).ok_or("Invalid imported face")?;target.faces[index].attrs=face.attrs.clone();target.faces[index].layer=face.layer.clone();
+        }
+        crate::obj::stitch_source_import(target,first,&seed)
+    }
+}

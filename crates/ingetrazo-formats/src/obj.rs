@@ -13,6 +13,11 @@ mod source_material;
 #[path = "obj_geometry.rs"]
 mod obj_geometry;
 
+pub(crate) fn obj_source_soften(mesh:&mut ingetrazo_core::mesh::Mesh){obj_geometry::soften(mesh,true);}
+
+/// Shared original editable-import cleanup; file parsers prepare only their own geometry.
+pub(crate) fn stitch_source_import(mesh:&mut ingetrazo_core::mesh::Mesh,first_new:usize,seed:&[DVec3])->Result<(),String>{obj_geometry::editable(mesh,first_new,seed)}
+
 #[derive(thiserror::Error, Debug)]
 pub enum ObjError {
     #[error("I/O error: {0}")]
