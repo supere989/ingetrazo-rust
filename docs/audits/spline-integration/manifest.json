@@ -1,0 +1,1116 @@
+{
+  "runtime_commit": "c0c7a9f39d2dd0087a212d098ff331a080fc27e0",
+  "crates_tree": "fe575ff04e8f53b4638c3e57ca9455b98717a9d7",
+  "source_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "archive": "records.zip",
+  "archive_sha256": "d793cdef24ea4f7199bd374e6a77e7a3dde3a1c9c76d117839ce8f881b03dca8",
+  "entries": [
+    {
+      "path": "combined-build.log",
+      "bytes": 21245,
+      "sha256": "68b469432f916e75b59848ae405bc942917b1dec5186945093a427964658b2f8"
+    },
+    {
+      "path": "dxf-curves/arc-half-native.igz",
+      "bytes": 9653,
+      "sha256": "f0cd30b1a164e79028f3a387111ec09712555bd589cd380c7f89a5217ccd2ab9"
+    },
+    {
+      "path": "dxf-curves/arc-ocs-native.igz",
+      "bytes": 9707,
+      "sha256": "f92226123356dcf0536d5e138f9923a182919fc82fc5be362d028e0ac30128aa"
+    },
+    {
+      "path": "dxf-curves/arc-wrap-native.igz",
+      "bytes": 6297,
+      "sha256": "796dba12918cc29a11702c6e9a0a38e5215a43a2de702f96793de85a38b3f913"
+    },
+    {
+      "path": "dxf-curves/check.log",
+      "bytes": 123,
+      "sha256": "6da01c6b84a6960307319c7dd8882301ff4239c87f286e9f7bf7c85fd6766eff"
+    },
+    {
+      "path": "dxf-curves/circle-large-native.igz",
+      "bytes": 76908,
+      "sha256": "59f2c836e1dbb9878f0a41448810077ec1a3f4e811811f5985e4b34ddbbccdc1"
+    },
+    {
+      "path": "dxf-curves/circle-native.igz",
+      "bytes": 12964,
+      "sha256": "705c5480f7f68f28876df7b2be7bd6be8aca4175f1e655a394e727a96c9f5b32"
+    },
+    {
+      "path": "dxf-curves/ellipse-full-native.igz",
+      "bytes": 18834,
+      "sha256": "084305064452e98b0ae4ce44a51381d6ebdb2660701cc49200a5a73c06ac17fd"
+    },
+    {
+      "path": "dxf-curves/ellipse-partial-native.igz",
+      "bytes": 10290,
+      "sha256": "27821b323b147bfe6cb54cf58ba0dd2cc15ec151f0a1da50dd9b56fa7c3cc377"
+    },
+    {
+      "path": "dxf-curves/ellipse-tilted-native.igz",
+      "bytes": 16518,
+      "sha256": "47755c027c8955c8ac9594f91e53640d9e085569f6aa6c9516e3267f3a40e1d0"
+    },
+    {
+      "path": "dxf-curves/legacy-bulge-ocs-native.igz",
+      "bytes": 11984,
+      "sha256": "eccda46ea8a3caa42fdcd1ddee9414751c66e344f6a626db202dfbe0b561c10a"
+    },
+    {
+      "path": "dxf-curves/lw-negative-closed-native.igz",
+      "bytes": 10774,
+      "sha256": "864ed7f56a0d275a4dcccff0d3fed4194477917d0aa9bfa969ca8e13d9dd37de"
+    },
+    {
+      "path": "dxf-curves/lw-positive-native.igz",
+      "bytes": 8788,
+      "sha256": "e8fcd159664c4fb41e92281a04472a26d88db39824a5c3a1907894ebef5432a1"
+    },
+    {
+      "path": "dxf-curves/lw-small-bulge-native.igz",
+      "bytes": 4464,
+      "sha256": "eaad9037a4e9b80447f99f579f0ab1e3a4d4729f12b883743a619f5164b86a08"
+    },
+    {
+      "path": "dxf-curves/malformed.dxf",
+      "bytes": 15896,
+      "sha256": "59ba32eb161f4a042b7288956023ace2c6bb1cb28f66e8d74298879ef30be5f7"
+    },
+    {
+      "path": "dxf-curves/native-dxf-curves.json",
+      "bytes": 1596442,
+      "sha256": "965a230893f8f827131697067c5f4d1bd93a97bb74dab69bd64022866c6f8c1c"
+    },
+    {
+      "path": "dxf-curves/native-dxf-guards.json",
+      "bytes": 173,
+      "sha256": "89b49795723ba45284deb4df57e8b8215d0ff1f7499fdefc74bef312c67cd6ac"
+    },
+    {
+      "path": "dxf-curves/reopen.log",
+      "bytes": 32,
+      "sha256": "154dad2e32dd166d6a6160d2d2a08a0af79030366d83ea23deea066ae33bfca3"
+    },
+    {
+      "path": "dxf-curves/reopens-dxf-curves.json",
+      "bytes": 1140600,
+      "sha256": "4065eedff0c2fd1d2a17db0751ea0c42b3e6233e03133d5b5459f0a24a3c4527"
+    },
+    {
+      "path": "dxf-curves/runtime.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "dxf-curves/settings-arc-half/config/settings.json",
+      "bytes": 607,
+      "sha256": "3b2150e1a2509dbe00b5d6f9d387ace26c7eb3e3276646e9583f56c826b0fa71"
+    },
+    {
+      "path": "dxf-curves/settings-arc-ocs/config/settings.json",
+      "bytes": 605,
+      "sha256": "f3406a607e04e72302a0944b8f11d0a6ed41cd8d23b7e1065085291cd73b8e12"
+    },
+    {
+      "path": "dxf-curves/settings-arc-wrap/config/settings.json",
+      "bytes": 607,
+      "sha256": "b3d53a5105916b89ac0cf8288149c302d3368263ebac26303e0af8c252aabcba"
+    },
+    {
+      "path": "dxf-curves/settings-circle/config/settings.json",
+      "bytes": 603,
+      "sha256": "45cbc08f7a5c6394b2dc12f0c4d050242feb0704ea1c311f3dcd3b44c71dd5dc"
+    },
+    {
+      "path": "dxf-curves/settings-circle-large/config/settings.json",
+      "bytes": 615,
+      "sha256": "a124daeb98cff71fadc453f77034d8ceafe2bd94a60be01fd9789948435675e6"
+    },
+    {
+      "path": "dxf-curves/settings-ellipse-full/config/settings.json",
+      "bytes": 615,
+      "sha256": "9a5da495d29255eba3943818a50bad6bdf5866a3aacee2f5349d8c48a22da7eb"
+    },
+    {
+      "path": "dxf-curves/settings-ellipse-partial/config/settings.json",
+      "bytes": 621,
+      "sha256": "9dbd9315af3320c9413fd26bf8fa2b8a056090d6c954368c90ab6f14d35140fd"
+    },
+    {
+      "path": "dxf-curves/settings-ellipse-tilted/config/settings.json",
+      "bytes": 619,
+      "sha256": "91c6809a5547114737a3c9a454955ab9b869b9edaca71d12bfbd3ac45350699e"
+    },
+    {
+      "path": "dxf-curves/settings-guards/config/settings.json",
+      "bytes": 534,
+      "sha256": "50354156537fcee49f6d95d689cdecc1214531ee5504ecdb3666d19a784d93d9"
+    },
+    {
+      "path": "dxf-curves/settings-legacy-bulge-ocs/config/settings.json",
+      "bytes": 623,
+      "sha256": "c9e562726b9013613251625c9a1ce5d26837006cc2d17c26a6f0296fc99021d1"
+    },
+    {
+      "path": "dxf-curves/settings-lw-negative-closed/config/settings.json",
+      "bytes": 627,
+      "sha256": "c3f9e18d483a6a66bbeb573e18df8f74708f86ff59d8d35c7fcbd45ae8910f3c"
+    },
+    {
+      "path": "dxf-curves/settings-lw-positive/config/settings.json",
+      "bytes": 613,
+      "sha256": "002344006da292f5608602232d0ee4e8dcf0b60bdc959c641e423306233404cb"
+    },
+    {
+      "path": "dxf-curves/settings-lw-small-bulge/config/settings.json",
+      "bytes": 619,
+      "sha256": "59eb2d9c812b53928d4040f7cfc3c261c9626057543ecdcbc221f049b47c604d"
+    },
+    {
+      "path": "dxf-entities/2d-closed-native.igz",
+      "bytes": 4620,
+      "sha256": "651c7633b95931076e5d247ce239b6b5efa607e2e128de9db62d1195a36b8fee"
+    },
+    {
+      "path": "dxf-entities/2d-elevation-native.igz",
+      "bytes": 4416,
+      "sha256": "9416cfb0a806fc2a08622070253b6fef293ca5f947ef67dcff3c0b5ac1fea465"
+    },
+    {
+      "path": "dxf-entities/2d-open-native.igz",
+      "bytes": 4416,
+      "sha256": "f7d8cceb4252c2bf33a19aec51874e027664766cfa440428a986d86a544dcba4"
+    },
+    {
+      "path": "dxf-entities/3d-closed-native.igz",
+      "bytes": 4620,
+      "sha256": "a0d8d85ad78d23beb17230a886de6473128b141815eb0f2be13eaa60a555647a"
+    },
+    {
+      "path": "dxf-entities/3d-open-native.igz",
+      "bytes": 4416,
+      "sha256": "b2f28a8ad50599ccd3cec3a784185637a1ceceb9424baea2d1cf56db8ff6d58d"
+    },
+    {
+      "path": "dxf-entities/check.log",
+      "bytes": 121,
+      "sha256": "4bfa9006a7f6afa161705e8ade2095fc6a25c21dc4cc3f1f44219db4781949ba"
+    },
+    {
+      "path": "dxf-entities/leaf-3d-native.igz",
+      "bytes": 4894,
+      "sha256": "04974772f32f47140aa89ca3bac0466bfa4c0da4f5172304ed4f03c114d01c05"
+    },
+    {
+      "path": "dxf-entities/malformed.dxf",
+      "bytes": 15896,
+      "sha256": "59ba32eb161f4a042b7288956023ace2c6bb1cb28f66e8d74298879ef30be5f7"
+    },
+    {
+      "path": "dxf-entities/native-dxf-entities.json",
+      "bytes": 428431,
+      "sha256": "22e20e901b8e7e590533bb1d7f9ace1e398819f4f93c8ccdf8ae4fb34a5bc1d0"
+    },
+    {
+      "path": "dxf-entities/native-dxf-guards.json",
+      "bytes": 173,
+      "sha256": "89b49795723ba45284deb4df57e8b8215d0ff1f7499fdefc74bef312c67cd6ac"
+    },
+    {
+      "path": "dxf-entities/ocs-negative-native.igz",
+      "bytes": 4630,
+      "sha256": "c8b85959b0adc61056d2ac3264708601951bb33f213ebe9425db900c4472250e"
+    },
+    {
+      "path": "dxf-entities/ocs-oblique-native.igz",
+      "bytes": 4599,
+      "sha256": "00467e39b6ab86089bcafbe3e6238f6aaef92d18473dec7ff31b01b9f5c253b3"
+    },
+    {
+      "path": "dxf-entities/reopen.log",
+      "bytes": 31,
+      "sha256": "da86a87a94e59e2cafdc81a62146beb0b1849f1877acc89a6238a498db8795dc"
+    },
+    {
+      "path": "dxf-entities/reopens-dxf-entities.json",
+      "bytes": 218547,
+      "sha256": "e45cfa9925e7ca00e26f4b2aca67be9faddefbea5d23e9f31f484d2d9a3348e9"
+    },
+    {
+      "path": "dxf-entities/runtime.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "dxf-entities/settings-2d-closed/config/settings.json",
+      "bytes": 613,
+      "sha256": "e5f86bc0783214458555966b6805e390ce7885bee473446a00fa68b71932796e"
+    },
+    {
+      "path": "dxf-entities/settings-2d-elevation/config/settings.json",
+      "bytes": 619,
+      "sha256": "1168db922e2bc3decd85cddbd3d28e602e2e9e2f8640bbdb5dc4cfc9597c0d41"
+    },
+    {
+      "path": "dxf-entities/settings-2d-open/config/settings.json",
+      "bytes": 609,
+      "sha256": "422b4135f38671189d22e4366eb4e69f110a388ee0be950e3addb1dfb5aa276c"
+    },
+    {
+      "path": "dxf-entities/settings-3d-closed/config/settings.json",
+      "bytes": 613,
+      "sha256": "380a94484eb1a232575dc8ade11bdcfe963e3bf5d8742194aa530fe4d6eb9a66"
+    },
+    {
+      "path": "dxf-entities/settings-3d-open/config/settings.json",
+      "bytes": 609,
+      "sha256": "b58b4bb1fc0acf9fa256f1a873c2dae57d28d0fe4166de94dacc440246e835ba"
+    },
+    {
+      "path": "dxf-entities/settings-guards/config/settings.json",
+      "bytes": 536,
+      "sha256": "4e6a1ec02e305002b7fe528abab2008c8422c7e6a59fd0c760070c753c659322"
+    },
+    {
+      "path": "dxf-entities/settings-leaf-3d/config/settings.json",
+      "bytes": 609,
+      "sha256": "8cfcefffb0839b7be212e891355732f7e44291bb093d902811c0e7bc7afb8bd0"
+    },
+    {
+      "path": "dxf-entities/settings-ocs-negative/config/settings.json",
+      "bytes": 619,
+      "sha256": "c576b9c2c556064f0892340f2d9a2e84a0a7ad56a6e3b49c594f08d0a9c058a7"
+    },
+    {
+      "path": "dxf-entities/settings-ocs-oblique/config/settings.json",
+      "bytes": 617,
+      "sha256": "8c2c00b8c69c3f7ed0d438c3afef948798a62d7f69308d25cc650f750d7cf9c6"
+    },
+    {
+      "path": "dxf-splines/check.log",
+      "bytes": 124,
+      "sha256": "c53e258a5201384d2813050728876487315c0e66311a834d946bfd186b3d0f53"
+    },
+    {
+      "path": "dxf-splines/closed-flag-open-path-native.igz",
+      "bytes": 10253,
+      "sha256": "d12af617920ed890efa8c78dd3e6475113dcfbf532104bb7283f59e42545dd9f"
+    },
+    {
+      "path": "dxf-splines/cubic-single-native.igz",
+      "bytes": 10253,
+      "sha256": "f9d7241f3d82e30c3876bc98704a9576733dbd9e245e2732284e4b7bc8be88a7"
+    },
+    {
+      "path": "dxf-splines/cubic-spans-native.igz",
+      "bytes": 20921,
+      "sha256": "2887f3e2d2d8b6e43730c063299df0ade9776d39fad70493be8eed8169ae2795"
+    },
+    {
+      "path": "dxf-splines/fit-natural-native.igz",
+      "bytes": 17759,
+      "sha256": "5ee1b7cbcc11883888f05bac333e25478bc15e1fdb8fc81c5d215d8f263497e6"
+    },
+    {
+      "path": "dxf-splines/fit-tangents-native.igz",
+      "bytes": 20543,
+      "sha256": "d62247a5f1cb1e4e7617b376a0ef9ce9dacee84e89a3a2228f2997fd2f90515e"
+    },
+    {
+      "path": "dxf-splines/invalid-weights-with-line-native.igz",
+      "bytes": 4217,
+      "sha256": "13b76f440b1fd201d167e0fd156543d9843da47ec514c137f596740216747b61"
+    },
+    {
+      "path": "dxf-splines/knots-rounded-native.igz",
+      "bytes": 21019,
+      "sha256": "23cdf9c827a4721197bc80a60b4004aff56597d32f46aaa7722b4e59ba19d15a"
+    },
+    {
+      "path": "dxf-splines/knots-shifted-native.igz",
+      "bytes": 10253,
+      "sha256": "4bd821f29a3dc8abbc86224e28fdb6395a44d273e876db8100a73f393bd3ba30"
+    },
+    {
+      "path": "dxf-splines/malformed.dxf",
+      "bytes": 15896,
+      "sha256": "59ba32eb161f4a042b7288956023ace2c6bb1cb28f66e8d74298879ef30be5f7"
+    },
+    {
+      "path": "dxf-splines/missing-knots-native.igz",
+      "bytes": 10253,
+      "sha256": "4eb48ae07548f8d1a967592110f7d1b4512b0e4060db0383e1a5343d6f7f12a0"
+    },
+    {
+      "path": "dxf-splines/native-dxf-guards.json",
+      "bytes": 173,
+      "sha256": "89b49795723ba45284deb4df57e8b8215d0ff1f7499fdefc74bef312c67cd6ac"
+    },
+    {
+      "path": "dxf-splines/native-dxf-splines.json",
+      "bytes": 5114826,
+      "sha256": "b2ffa57ebbcb4bdf746a8ac4e801d78b719bf7486ea1e1a030f815cbce0212bc"
+    },
+    {
+      "path": "dxf-splines/native-spline-errors.json",
+      "bytes": 53,
+      "sha256": "c54a4fff63d2a041926e7654fe8f48b1ccea37238f493c72ab3f899d43814ed2"
+    },
+    {
+      "path": "dxf-splines/periodic-native.igz",
+      "bytes": 146581,
+      "sha256": "5b194f42a13d14627a2a3453df869ff525ba582d48a16d106347667b1024f235"
+    },
+    {
+      "path": "dxf-splines/periodic-rational-native.igz",
+      "bytes": 146904,
+      "sha256": "f81eb80c469b012a30fbc0fd8babedd454c419170504e856cc0628e3a458c9a1"
+    },
+    {
+      "path": "dxf-splines/quadratic-native.igz",
+      "bytes": 85307,
+      "sha256": "7d99ff6479ef48df90e1739d5a499ed7ac7998152a8767a97510bfd01ca8ea3e"
+    },
+    {
+      "path": "dxf-splines/quartic-native.igz",
+      "bytes": 125687,
+      "sha256": "85d3bd02529c3088bb2a9e150e69081ce27b9e6702b6c5fdcd6f1f583e2837fd"
+    },
+    {
+      "path": "dxf-splines/rational-cubic-native.igz",
+      "bytes": 65423,
+      "sha256": "0f2084579bf90db6c75b8a936d5dc7c28fe8db811849dcac31c618c116b6459c"
+    },
+    {
+      "path": "dxf-splines/rational-quadratic-native.igz",
+      "bytes": 40899,
+      "sha256": "6668839e818b8169d836010f69b3548aa54896df5910a3aa628d16bb8a971ab8"
+    },
+    {
+      "path": "dxf-splines/reopen.log",
+      "bytes": 32,
+      "sha256": "a5e1e162626aa4e3aba5a5edca86b1c05c67dbab076a21835caf987d54b50895"
+    },
+    {
+      "path": "dxf-splines/reopens-dxf-splines.json",
+      "bytes": 4143117,
+      "sha256": "c24d566401c315ce53ba653f0e17483f6936ac5fb03d216fdc512b5d935fbe5a"
+    },
+    {
+      "path": "dxf-splines/runtime.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "dxf-splines/settings-closed-flag-open-path/config/settings.json",
+      "bytes": 635,
+      "sha256": "fe915b3f0c019fb43dd9b22a148d0164730a2bf284de67362d77754865d61d84"
+    },
+    {
+      "path": "dxf-splines/settings-cubic-single/config/settings.json",
+      "bytes": 617,
+      "sha256": "9cd46e04f0df3a8c1ce5b7e545ea67f8f3d99c83715490addacefe52d958ef2a"
+    },
+    {
+      "path": "dxf-splines/settings-cubic-spans/config/settings.json",
+      "bytes": 615,
+      "sha256": "9a07c25d77dfa91ead69c6b21f635937c99f69decd688cedcbaf3d65b44433cc"
+    },
+    {
+      "path": "dxf-splines/settings-fit-natural/config/settings.json",
+      "bytes": 615,
+      "sha256": "840a984dccf1dba5b556c2d24df2b92d01e77fadb35734afe76d7ba012572274"
+    },
+    {
+      "path": "dxf-splines/settings-fit-tangents/config/settings.json",
+      "bytes": 617,
+      "sha256": "36d03fd66cb55854805d819bfa43c2464f80721d75fdd3fd37f8bc31afacc82d"
+    },
+    {
+      "path": "dxf-splines/settings-guards/config/settings.json",
+      "bytes": 535,
+      "sha256": "20e474c461c9a883b64f9c1f6883a7331ddfc0e38106e2e5c07ce2234af522c4"
+    },
+    {
+      "path": "dxf-splines/settings-invalid-weights-with-line/config/settings.json",
+      "bytes": 643,
+      "sha256": "60c09257feebba68c455c6babbcfca0e719d412fa787dd79b7eb93ebf9e6003a"
+    },
+    {
+      "path": "dxf-splines/settings-knots-rounded/config/settings.json",
+      "bytes": 619,
+      "sha256": "706aec9d22f000b2bb1376a56429384db1cb07c579bb3769212c826a6f734f32"
+    },
+    {
+      "path": "dxf-splines/settings-knots-shifted/config/settings.json",
+      "bytes": 619,
+      "sha256": "bf99a763cbe3d824f464fc082782dab4ee10f8e1b1c0ce3bd1b75fcc99ccd182"
+    },
+    {
+      "path": "dxf-splines/settings-missing-knots/config/settings.json",
+      "bytes": 619,
+      "sha256": "b51985e21b542d19d92ea368fd3b2b6b7b94154617493fb422d229010e287433"
+    },
+    {
+      "path": "dxf-splines/settings-periodic/config/settings.json",
+      "bytes": 609,
+      "sha256": "322f05582c26e9ea34487de4f9b3be6de8bee421215113ada8aef7d26ece70d8"
+    },
+    {
+      "path": "dxf-splines/settings-periodic-rational/config/settings.json",
+      "bytes": 627,
+      "sha256": "fba9cdec837e8f014eaf011cf05ac7b0e6dc153511fcccee36e32a4b8c22c589"
+    },
+    {
+      "path": "dxf-splines/settings-quadratic/config/settings.json",
+      "bytes": 611,
+      "sha256": "e4aaffa2e8f44af1624a8dfd52dcd669a7a51cd68810029e4f19a5496c1b297f"
+    },
+    {
+      "path": "dxf-splines/settings-quartic/config/settings.json",
+      "bytes": 607,
+      "sha256": "50084505c0db0e4a5271dce234ba7cf68467afdc865be187b662aba46d96cd4e"
+    },
+    {
+      "path": "dxf-splines/settings-rational-cubic/config/settings.json",
+      "bytes": 621,
+      "sha256": "09bb08c9346347c592f574e9be5c3642a7a1159488aec989c56fbd8bb77a5b3a"
+    },
+    {
+      "path": "dxf-splines/settings-rational-quadratic/config/settings.json",
+      "bytes": 629,
+      "sha256": "a628144465f1d8a15f7c09799b9f9f84bc5209c46e9eeeecd06ede3020cbc055"
+    },
+    {
+      "path": "receipt.json",
+      "bytes": 3711,
+      "sha256": "d8592e0c3204682614326b9ec8debe4cd8862eec25bbe5e37e6300df5db93804"
+    },
+    {
+      "path": "run.py",
+      "bytes": 3648,
+      "sha256": "d133194a5cfbf225a5dc368ffd08dfb6a8fe94834b4fe6d0b5a625165c712f6f"
+    }
+  ],
+  "reused_source_archives": {
+    "dxf-legacy-polylines": "21a7482725fe5f5605aafa8adf469b2ceaeda676ea74bba2f6e27a6ab282ac35",
+    "dxf-curves": "d49936e1ebbda3af21f053f1d939cd5abd1cfa339ae83705ac49e701cfdd3d73",
+    "dxf-splines": "096a99d6ffcb5a8f47c13077e5b38e0adb1cf18731ff91ba2140dd262e50fa2f"
+  },
+  "source_members_retained_in_original_archives": [
+    {
+      "path": "dxf-curves/2d-open-input.igz",
+      "bytes": 3552,
+      "sha256": "52003d496290656f79ef289568d3056598015ebad014f944b4f2eba11227e853"
+    },
+    {
+      "path": "dxf-curves/2d-open.dxf",
+      "bytes": 15896,
+      "sha256": "af409cce414de370c5c77cb80ae450adc3f0dc265fcf75eb8ae019e80e8497c0"
+    },
+    {
+      "path": "dxf-curves/arc-half-input.igz",
+      "bytes": 3552,
+      "sha256": "e7d76c18e792e70f457aba8d8e7863fda561631b14509f816239dd2c5a0d3021"
+    },
+    {
+      "path": "dxf-curves/arc-half-original.igz",
+      "bytes": 9393,
+      "sha256": "d03fa26a9326bf5130d01cf2b115498ad293057bc973488058eb17d0bed93144"
+    },
+    {
+      "path": "dxf-curves/arc-half.dxf",
+      "bytes": 15523,
+      "sha256": "387f2b8a0e3ba3524f612373d7b078cfa4600db1c8d06a1abbfd0729533f18fc"
+    },
+    {
+      "path": "dxf-curves/arc-ocs-input.igz",
+      "bytes": 3552,
+      "sha256": "1b15caa1f402b65be4bdfe10e6c9091a9cc0a622ea07b0362fcd2ae129471ef2"
+    },
+    {
+      "path": "dxf-curves/arc-ocs-original.igz",
+      "bytes": 9447,
+      "sha256": "6e43b2e54399a43a3148bf15cd714297571642cbef2e4cf87972bb4d3c0dda7c"
+    },
+    {
+      "path": "dxf-curves/arc-ocs.dxf",
+      "bytes": 15548,
+      "sha256": "41023778f9756095e55fbc46b8f43ebbfe8119e667677a8479918b7cf6c04f00"
+    },
+    {
+      "path": "dxf-curves/arc-wrap-input.igz",
+      "bytes": 3552,
+      "sha256": "ac7985475e83fb8a33a6f23d4f374a014a8b2d88af6ebe64d3876d6062d26721"
+    },
+    {
+      "path": "dxf-curves/arc-wrap-original.igz",
+      "bytes": 6037,
+      "sha256": "3cf38197051a565862f88be6eebb8f023ef006274998f4a5a3e9be30e8a14656"
+    },
+    {
+      "path": "dxf-curves/arc-wrap.dxf",
+      "bytes": 15524,
+      "sha256": "276276a6188c898298a7f0a2b17b2de170faa62cc0697532e6127643a43c6495"
+    },
+    {
+      "path": "dxf-curves/attempts/initial-curve-observer/source.log",
+      "bytes": 2676,
+      "sha256": "c475a6bacfa011e03993b6123d4a2e6013dee62684a3f252d383b86b084a0804"
+    },
+    {
+      "path": "dxf-curves/circle-input.igz",
+      "bytes": 3552,
+      "sha256": "57fd174a6b7ae816e97704126169769ac06b0c952074c662343eaf8f972e9478"
+    },
+    {
+      "path": "dxf-curves/circle-large-input.igz",
+      "bytes": 3552,
+      "sha256": "03be838ffc0a68088543c1a1800dbd01b477382b0e3f8dbe1671a89c1e90fbd3"
+    },
+    {
+      "path": "dxf-curves/circle-large-original.igz",
+      "bytes": 76648,
+      "sha256": "9974a112ba73120ac426caee9fd3099eed6396a380b23687d0b5b721ed5c7ebb"
+    },
+    {
+      "path": "dxf-curves/circle-large.dxf",
+      "bytes": 15498,
+      "sha256": "de1270d1fc074bd67f7d3af29873cadc4eacc7c3ec18a1c56c8f22b6a58289d4"
+    },
+    {
+      "path": "dxf-curves/circle-original.igz",
+      "bytes": 12704,
+      "sha256": "e0804eb44365c082c0a52ca1a1e6514ba8eaa8b0c892302fde328f4848d1c607"
+    },
+    {
+      "path": "dxf-curves/circle.dxf",
+      "bytes": 15496,
+      "sha256": "601eb7a7ec78a1072634b90d00f81b6e0eff0b2aae46b98531a35208dcf17248"
+    },
+    {
+      "path": "dxf-curves/ellipse-full-input.igz",
+      "bytes": 3552,
+      "sha256": "2c149c661d6da821292c2d646aeb57b671ed5d3a79787146e5246649fbf5dfba"
+    },
+    {
+      "path": "dxf-curves/ellipse-full-original.igz",
+      "bytes": 18574,
+      "sha256": "792633c9c0a8341a93ef2d4343d7c0e1352beadf9835ee32aa6fac52fc30e719"
+    },
+    {
+      "path": "dxf-curves/ellipse-full.dxf",
+      "bytes": 15552,
+      "sha256": "69706674e8fd24380687f00f523e4ddde66dd21f76a1643cf1bd76128018d8d6"
+    },
+    {
+      "path": "dxf-curves/ellipse-partial-input.igz",
+      "bytes": 3552,
+      "sha256": "69d32fb59c268e3b4c37e871dff41de37106cd7beb3b55281634f7dfef1f900b"
+    },
+    {
+      "path": "dxf-curves/ellipse-partial-original.igz",
+      "bytes": 10030,
+      "sha256": "fcd1fae6e05aff7eb0b27e5edbefe6948f55f2644ee77c1fd7ab35dc42f61ed3"
+    },
+    {
+      "path": "dxf-curves/ellipse-partial.dxf",
+      "bytes": 15538,
+      "sha256": "1856463b76b4c21b419738b49c4d91b537cc75a3060fb92e990202fabca0e87a"
+    },
+    {
+      "path": "dxf-curves/ellipse-tilted-input.igz",
+      "bytes": 3552,
+      "sha256": "e6981d0ef2d4ff0722d3cc5a9bcb36218bfe396771333c0ba31a9d26b10c8ba1"
+    },
+    {
+      "path": "dxf-curves/ellipse-tilted-original.igz",
+      "bytes": 16258,
+      "sha256": "db6acb91f3052a227d23f40f22b002a20cc5ccc0ccb2ace82275d078ed801587"
+    },
+    {
+      "path": "dxf-curves/ellipse-tilted.dxf",
+      "bytes": 15577,
+      "sha256": "1a5514c076cd89a81c341809bfa276fc801dcb53401fa1c699934025acdcd25e"
+    },
+    {
+      "path": "dxf-curves/legacy-bulge-ocs-input.igz",
+      "bytes": 3552,
+      "sha256": "d31665d3e2152361fb49c47dd7178d6dce0b02e9d578d97ff6964684f48084ac"
+    },
+    {
+      "path": "dxf-curves/legacy-bulge-ocs-original.igz",
+      "bytes": 11749,
+      "sha256": "3733b7436b204b3ff3434408d5f58923b84c39b76689e547a2815aa0325d17fc"
+    },
+    {
+      "path": "dxf-curves/legacy-bulge-ocs.dxf",
+      "bytes": 15938,
+      "sha256": "ba0cc890d5153a20bbec54492c434867b513c2c9744382bb7a08a24ed194a017"
+    },
+    {
+      "path": "dxf-curves/lw-negative-closed-input.igz",
+      "bytes": 3552,
+      "sha256": "bb410389eea6a077e19eacd057f432a9dd9bee445b3d3dc0e4c5305600eb91de"
+    },
+    {
+      "path": "dxf-curves/lw-negative-closed-original.igz",
+      "bytes": 10539,
+      "sha256": "70634b0b3dc41da24f843593073fca4729dc1efe59ff2ce2e641427db7a4a694"
+    },
+    {
+      "path": "dxf-curves/lw-negative-closed.dxf",
+      "bytes": 15548,
+      "sha256": "d8e30b46ec9d8192b12920365a8ce2b766312fe0edbd4848174e61370daab597"
+    },
+    {
+      "path": "dxf-curves/lw-positive-input.igz",
+      "bytes": 3552,
+      "sha256": "196763be303fe026fee1200a3a23783c59cbc9919672bd5eaf41020ece131f11"
+    },
+    {
+      "path": "dxf-curves/lw-positive-original.igz",
+      "bytes": 8528,
+      "sha256": "d9dd645cd445d3d02e42636fe9af33ecb36c9990dd7d219f8cabc22c11e718fe"
+    },
+    {
+      "path": "dxf-curves/lw-positive.dxf",
+      "bytes": 15547,
+      "sha256": "0213abbb5c14fea778af3ba8c24e8ae9c9e5cced405162d640bd9c6113ef80e1"
+    },
+    {
+      "path": "dxf-curves/lw-small-bulge-input.igz",
+      "bytes": 3552,
+      "sha256": "2096d0934b3c8de1e447e3b9cdc4f13d91cfcef08bfdb5590559dcb2eb11d1ed"
+    },
+    {
+      "path": "dxf-curves/lw-small-bulge-original.igz",
+      "bytes": 4206,
+      "sha256": "e94f467cf8f6eb1dbb0bb98ff29fce0a64dd50b92bebf2d0f6d81121c5d190d8"
+    },
+    {
+      "path": "dxf-curves/lw-small-bulge.dxf",
+      "bytes": 15549,
+      "sha256": "62eaf11972266a5920ae13cc3f86d86c17aa496e8cc6c95b452836d0f5acac1b"
+    },
+    {
+      "path": "dxf-curves/original-dxf-curves.json",
+      "bytes": 1596443,
+      "sha256": "432a0af65b1d47aa94726d181703f56aba4d95e0e98d4bebb380ebea0c2516f2"
+    },
+    {
+      "path": "dxf-curves/original-dxf-paths.json",
+      "bytes": 54278,
+      "sha256": "49fe8709fde05e75e56776197a3503b2c36f895c5e800080688f87b86fd9f651"
+    },
+    {
+      "path": "dxf-curves/source.log",
+      "bytes": 685,
+      "sha256": "a7a6bb9aae6915042d4d8b79675b3434f73bf67ae82c58de8f306c6663c1c171"
+    },
+    {
+      "path": "dxf-entities/2d-closed-input.igz",
+      "bytes": 3552,
+      "sha256": "6916767b8d56690fc7604c5300844db8cc98e98ff89fc2ae8b066a318cacd85a"
+    },
+    {
+      "path": "dxf-entities/2d-closed-original.igz",
+      "bytes": 4360,
+      "sha256": "f3c3fb1b766034996331302c1065c05000ee989b3e6a6e160f534a14536e4a8b"
+    },
+    {
+      "path": "dxf-entities/2d-closed.dxf",
+      "bytes": 15896,
+      "sha256": "4ad9085d0221868572e9b41a2d7f70fbffda758120349bb2259281346b129b9e"
+    },
+    {
+      "path": "dxf-entities/2d-elevation-input.igz",
+      "bytes": 3552,
+      "sha256": "9f6e2820f68f05276dbfe531ab4c92fa486639167c11d902e923c1b662c9409f"
+    },
+    {
+      "path": "dxf-entities/2d-elevation-original.igz",
+      "bytes": 4156,
+      "sha256": "c7ab262b071884db5eba4d2574db22bc85e8608a9c6603e1340bb1fb3263949c"
+    },
+    {
+      "path": "dxf-entities/2d-elevation.dxf",
+      "bytes": 15896,
+      "sha256": "a48b836930f679aadb4748bf252f5e8829d1de612a3f2a770d4851535a61a9b0"
+    },
+    {
+      "path": "dxf-entities/2d-open-input.igz",
+      "bytes": 3552,
+      "sha256": "52003d496290656f79ef289568d3056598015ebad014f944b4f2eba11227e853"
+    },
+    {
+      "path": "dxf-entities/2d-open-original.igz",
+      "bytes": 4156,
+      "sha256": "1a8bcf8e37a3fbf32c6619083d426179188b03682e37eaf77ae5cff3afb2ddae"
+    },
+    {
+      "path": "dxf-entities/2d-open.dxf",
+      "bytes": 15896,
+      "sha256": "af409cce414de370c5c77cb80ae450adc3f0dc265fcf75eb8ae019e80e8497c0"
+    },
+    {
+      "path": "dxf-entities/3d-closed-input.igz",
+      "bytes": 3552,
+      "sha256": "67363d1e1db4d793120b3873cd60d5fbcb860cc6ac159d35da50dc61c0093c64"
+    },
+    {
+      "path": "dxf-entities/3d-closed-original.igz",
+      "bytes": 4360,
+      "sha256": "2bc69ba81e2e40b59a963e4b39ac2c23c92b0df53a5d496d937e53c58c120789"
+    },
+    {
+      "path": "dxf-entities/3d-closed.dxf",
+      "bytes": 15923,
+      "sha256": "da9b697b3689e0bc497668860c06efc457d00d93bfcaf53072ef809f603281ed"
+    },
+    {
+      "path": "dxf-entities/3d-open-input.igz",
+      "bytes": 3552,
+      "sha256": "655634736d4292bf3d06deca2690e94bcc6bacaa15741da7202b4e6ba61f5c18"
+    },
+    {
+      "path": "dxf-entities/3d-open-original.igz",
+      "bytes": 4156,
+      "sha256": "b4b083e5ccd261eb1096190091d9fa0c40aa647fd0c1514443fc1ea101e59448"
+    },
+    {
+      "path": "dxf-entities/3d-open.dxf",
+      "bytes": 15923,
+      "sha256": "5b25a8136d98b7dd2112882fee0780b99b00230a8540ef980420209495e6f6d0"
+    },
+    {
+      "path": "dxf-entities/leaf-3d-input.igz",
+      "bytes": 3552,
+      "sha256": "893ec1e294f453e8d44c9388d0f506f1e677230cc8013c46c0cdf5fe3ed648fd"
+    },
+    {
+      "path": "dxf-entities/leaf-3d-original.igz",
+      "bytes": 4632,
+      "sha256": "fdff8d10eb2a3e0bf2cd0ea921fb3edb8e41aedde340b77c13733f7c3daca506"
+    },
+    {
+      "path": "dxf-entities/leaf-3d.dxf",
+      "bytes": 15923,
+      "sha256": "afa6672cbae02d8206abe8dfb8648da5da338eab471d2da22d1a57dda45a5037"
+    },
+    {
+      "path": "dxf-entities/ocs-negative-input.igz",
+      "bytes": 3552,
+      "sha256": "42b065e2e9a7b5d605f1df6d6c3b62429a475188301e1758b1ab02dc09965a1c"
+    },
+    {
+      "path": "dxf-entities/ocs-negative-original.igz",
+      "bytes": 4370,
+      "sha256": "3d97f97a2372925513d3aef4e57a0f0914d4468aaf3a784b254f2c2fb4631ab7"
+    },
+    {
+      "path": "dxf-entities/ocs-negative.dxf",
+      "bytes": 15921,
+      "sha256": "9e3c35b935872ae6b947312dbdb0407b0627ebef95c55f1229ef49378273009e"
+    },
+    {
+      "path": "dxf-entities/ocs-oblique-input.igz",
+      "bytes": 3552,
+      "sha256": "172b733badd12edb9ab6f768fbc9eeac113494a368a37da696e9184628cf3ba7"
+    },
+    {
+      "path": "dxf-entities/ocs-oblique-original.igz",
+      "bytes": 4339,
+      "sha256": "73d987ec49fb1c0f489bab089412966e5e77c6ebd6b15383997eb5bea9d76f1c"
+    },
+    {
+      "path": "dxf-entities/ocs-oblique.dxf",
+      "bytes": 15920,
+      "sha256": "b3b13c677b28be5d2674f7070562be14e886bd3e66afa6eeb0f32c6ddc8f5e74"
+    },
+    {
+      "path": "dxf-entities/original-dxf-entities.json",
+      "bytes": 428432,
+      "sha256": "ae49994c2866df6359531652aa66b0c503e5b94981b1ad0113ff98721340b657"
+    },
+    {
+      "path": "dxf-entities/source.log",
+      "bytes": 470,
+      "sha256": "bf1ee01bf2782609e6034b666dacde922c8454bda90e5f3af28e21f9784d203a"
+    },
+    {
+      "path": "dxf-splines/2d-open-input.igz",
+      "bytes": 3552,
+      "sha256": "52003d496290656f79ef289568d3056598015ebad014f944b4f2eba11227e853"
+    },
+    {
+      "path": "dxf-splines/2d-open.dxf",
+      "bytes": 15896,
+      "sha256": "af409cce414de370c5c77cb80ae450adc3f0dc265fcf75eb8ae019e80e8497c0"
+    },
+    {
+      "path": "dxf-splines/attempts/initial-source-capture.zip",
+      "bytes": 169634,
+      "sha256": "07d76ba8e7512408ff86e9f87b316db888b4a536503fe554e8ab60edb92fa674"
+    },
+    {
+      "path": "dxf-splines/attempts/second-source-capture.zip",
+      "bytes": 169647,
+      "sha256": "7d21c64c8a5cef855822b6382c3c195cc8736906080d1636b54340af689d8952"
+    },
+    {
+      "path": "dxf-splines/closed-flag-open-path-input.igz",
+      "bytes": 3552,
+      "sha256": "f7f0c37286907d4fdafd70ac9939285ca9376c5fabb645bbf55677b0e9ef5b6e"
+    },
+    {
+      "path": "dxf-splines/closed-flag-open-path-original.igz",
+      "bytes": 10016,
+      "sha256": "f7c78a8e398da38ea700a35baebb1b80c1d3184641bfda6feea367bc74436ba9"
+    },
+    {
+      "path": "dxf-splines/closed-flag-open-path.dxf",
+      "bytes": 15659,
+      "sha256": "185657b280d3d0ed13cfa8b848105d376b0382b379c55e0419e65c203748ff0f"
+    },
+    {
+      "path": "dxf-splines/cubic-single-input.igz",
+      "bytes": 3552,
+      "sha256": "75a453d0b5d2528e77c99359366af33daff9e7d40a5fff87cff9b64eacbc62dd"
+    },
+    {
+      "path": "dxf-splines/cubic-single-original.igz",
+      "bytes": 9993,
+      "sha256": "08bc339fd06e25ebba4a2a15e437d6e8dcddfb368df4872af50f4fdc350d45f2"
+    },
+    {
+      "path": "dxf-splines/cubic-single.dxf",
+      "bytes": 15659,
+      "sha256": "0792933b8a94b68586d3b13bca2b22cbaf21a27adcaf8e95bf3df7cb2af3b8ef"
+    },
+    {
+      "path": "dxf-splines/cubic-spans-input.igz",
+      "bytes": 3552,
+      "sha256": "0a1389d4fd51c0696442946407a2d39a76b9069de6fffb1c847e8ea65afb3378"
+    },
+    {
+      "path": "dxf-splines/cubic-spans-original.igz",
+      "bytes": 20661,
+      "sha256": "71d5514035d193827b0aa6a77c3b4d8ce0da3fd6cc41137eb14d5bde0db43591"
+    },
+    {
+      "path": "dxf-splines/cubic-spans.dxf",
+      "bytes": 15757,
+      "sha256": "34f9ede76bf190598e14b41e49034d6348757a19091d161bf471022dba5769f6"
+    },
+    {
+      "path": "dxf-splines/fit-natural-input.igz",
+      "bytes": 3552,
+      "sha256": "77d177cd196c218675c95b453e28f979df9b4614ad914f4875c5167925d6d12f"
+    },
+    {
+      "path": "dxf-splines/fit-natural-original.igz",
+      "bytes": 17543,
+      "sha256": "7882df10268b4ed5c549870eb06c9f888770818b1a2147b4419c56e21f02effe"
+    },
+    {
+      "path": "dxf-splines/fit-natural.dxf",
+      "bytes": 15619,
+      "sha256": "42699ed9654271f79e5fd451ce12f6a640e28de8494bd564c807107c5ba4a836"
+    },
+    {
+      "path": "dxf-splines/fit-tangents-input.igz",
+      "bytes": 3552,
+      "sha256": "56e9bcea9b216e9c4cacc6e3ccd52c6048e19768db9fb3374094b6d182964148"
+    },
+    {
+      "path": "dxf-splines/fit-tangents-original.igz",
+      "bytes": 20336,
+      "sha256": "ff8c65a10acf9e5599356a8c44248538b2aece6441fb5c8a75c3e275f31b52f3"
+    },
+    {
+      "path": "dxf-splines/fit-tangents.dxf",
+      "bytes": 15668,
+      "sha256": "0f2e1f6c5185b1fb6a51a4aa4943e108c2695024b11ff2f50f5bb3145e476999"
+    },
+    {
+      "path": "dxf-splines/invalid-only.dxf",
+      "bytes": 15527,
+      "sha256": "cea2e6ea44c77a097f5c9c834781b1199f2190751163fa52be0416ff3708616b"
+    },
+    {
+      "path": "dxf-splines/invalid-weights-with-line-input.igz",
+      "bytes": 3552,
+      "sha256": "153ce24a8548d8ce457927cadbe1b472c239a36c1fa0b8cebf73e7980675e447"
+    },
+    {
+      "path": "dxf-splines/invalid-weights-with-line-original.igz",
+      "bytes": 3957,
+      "sha256": "5712b36cdfb1d839faf39bf0e596d63f6bdeadce88037c747693e8e11722e73a"
+    },
+    {
+      "path": "dxf-splines/invalid-weights-with-line.dxf",
+      "bytes": 15780,
+      "sha256": "88cf887f0e553ce34dbd97e85b1f49dae1277cc78109808af0ce1599cea63abd"
+    },
+    {
+      "path": "dxf-splines/knots-rounded-input.igz",
+      "bytes": 3552,
+      "sha256": "0f68a3893e5390b7e5225612196650732e0df4a94b5b589677d82e0b84a639a6"
+    },
+    {
+      "path": "dxf-splines/knots-rounded-original.igz",
+      "bytes": 20759,
+      "sha256": "8fb2624af56eeeb0507f268a78a434be08469d82c5169f11ae0f41d05f3b161d"
+    },
+    {
+      "path": "dxf-splines/knots-rounded.dxf",
+      "bytes": 15779,
+      "sha256": "1dd01c4c9d61ea1ef94df9ff8ec16f807290eed61e023a47e9a77f246d02188d"
+    },
+    {
+      "path": "dxf-splines/knots-shifted-input.igz",
+      "bytes": 3552,
+      "sha256": "6ee20dceb686e91ab917c29d40f1700fcf4a02165ebe9b540df010f5090f365a"
+    },
+    {
+      "path": "dxf-splines/knots-shifted-original.igz",
+      "bytes": 10016,
+      "sha256": "a3a577ea9921967e81ae36f3cd169478abfeee631a04919ae9bfc476dbc1ed99"
+    },
+    {
+      "path": "dxf-splines/knots-shifted.dxf",
+      "bytes": 15659,
+      "sha256": "44ee7f71017b602eb87472fe95cc4c1ac33c70e7bcd7eae784b05288fa282a30"
+    },
+    {
+      "path": "dxf-splines/missing-knots-input.igz",
+      "bytes": 3552,
+      "sha256": "f7f5cb95607a9175cad0fa911559a9c5aaf4d816bce6fa41f8be671f2c84a11d"
+    },
+    {
+      "path": "dxf-splines/missing-knots-original.igz",
+      "bytes": 10016,
+      "sha256": "f5ba178b67f6ad0ed83923745694e58215f440628d80b91f9c81875d4d7b155b"
+    },
+    {
+      "path": "dxf-splines/missing-knots.dxf",
+      "bytes": 15595,
+      "sha256": "cabf2a189b72b9c1f6c25829563e16f9096cedf4faca9a55c1db9658fefa6bc8"
+    },
+    {
+      "path": "dxf-splines/original-dxf-spline-paths.json",
+      "bytes": 539967,
+      "sha256": "1fadee30849ce74af30644f5210844a78f290326d249adbe7a476de91e80c56e"
+    },
+    {
+      "path": "dxf-splines/original-dxf-splines.json",
+      "bytes": 5114827,
+      "sha256": "ff7759da049268be8b0d9dde2c599875d7517fd4e9bd215e4d3b29e3e07204ce"
+    },
+    {
+      "path": "dxf-splines/original-spline-errors.json",
+      "bytes": 54,
+      "sha256": "92634c81aad089e672b33b1d25564a8593dd5aacf7d146716c2bc33179193314"
+    },
+    {
+      "path": "dxf-splines/periodic-input.igz",
+      "bytes": 3552,
+      "sha256": "13d12cf4ca4255eb8ded15db87dafd0dda7f75670d63ccc68d67d5084b0c2326"
+    },
+    {
+      "path": "dxf-splines/periodic-original.igz",
+      "bytes": 146321,
+      "sha256": "e9d25af01c5bdf9b0f389009ca68849b7faf77c2bd72838a5965efee50bd17f0"
+    },
+    {
+      "path": "dxf-splines/periodic-rational-input.igz",
+      "bytes": 3552,
+      "sha256": "afe943df95e4e02729c38bf07ca7f25cea7db3678f1753301576f56ce0bac092"
+    },
+    {
+      "path": "dxf-splines/periodic-rational-original.igz",
+      "bytes": 146642,
+      "sha256": "cdb21713ab0fe8cd5f6ac74d2896db67c8fbeabeb3db295df2cdd727abad1e68"
+    },
+    {
+      "path": "dxf-splines/periodic-rational.dxf",
+      "bytes": 15856,
+      "sha256": "c105a1eff9232a14d59f498cd7006237309d6656541bbd8f89684b9499f0605b"
+    },
+    {
+      "path": "dxf-splines/periodic.dxf",
+      "bytes": 15791,
+      "sha256": "87d5257d6a710df40d40e6098ceb7ee1ef95b1b7bc70beb68c51789ddde0bbed"
+    },
+    {
+      "path": "dxf-splines/quadratic-input.igz",
+      "bytes": 3552,
+      "sha256": "aaba4394251ed673fa8e960b99d034d48418f2899a1aab61a78950f580255b24"
+    },
+    {
+      "path": "dxf-splines/quadratic-original.igz",
+      "bytes": 85047,
+      "sha256": "db5339db31dde34a7a6c920af1e4647a65781afd65963f5bd629fd0693a11127"
+    },
+    {
+      "path": "dxf-splines/quadratic.dxf",
+      "bytes": 15683,
+      "sha256": "e97b55849b3e15406dd94bd55d2b34503d1783a0dfb2e7368afe7dd6de2c302a"
+    },
+    {
+      "path": "dxf-splines/quartic-input.igz",
+      "bytes": 3552,
+      "sha256": "6ecdcfff123229cc64b2c8532b52cd8c44bf06c7a6fc2b46f52e7eaafec09a34"
+    },
+    {
+      "path": "dxf-splines/quartic-original.igz",
+      "bytes": 125427,
+      "sha256": "23e76466194b6c0d4689b3a3c16a0c9409837618680369c6b97491b4281f6163"
+    },
+    {
+      "path": "dxf-splines/quartic.dxf",
+      "bytes": 15765,
+      "sha256": "31d42c857a5bde0267b8d0a6454808bf57eeded4726184de3cfcb72ac1843262"
+    },
+    {
+      "path": "dxf-splines/rational-cubic-input.igz",
+      "bytes": 3552,
+      "sha256": "7aaaa559a04d66cc9fcfd29f98819bdafa4896ab9e80e026da628ab49fea419d"
+    },
+    {
+      "path": "dxf-splines/rational-cubic-original.igz",
+      "bytes": 65163,
+      "sha256": "0accaa77f40e5dec8612026761dc338dbd1f54c1ca9ef283674f5f361326eafa"
+    },
+    {
+      "path": "dxf-splines/rational-cubic.dxf",
+      "bytes": 15691,
+      "sha256": "825b48df580ee065fdb2829ebdb0936e92f11f1260c61c6443c5175f6ad37025"
+    },
+    {
+      "path": "dxf-splines/rational-quadratic-input.igz",
+      "bytes": 3552,
+      "sha256": "b005cb56ae1314f2913f1ff3a2c20e0906cf404276bf8f2fe1ad584c06b32c8c"
+    },
+    {
+      "path": "dxf-splines/rational-quadratic-original.igz",
+      "bytes": 40639,
+      "sha256": "b9b7b6bfcc4e63c525e4b7e1c2babcc4b9155697b9fd55baafb8db56a96c67cc"
+    },
+    {
+      "path": "dxf-splines/rational-quadratic.dxf",
+      "bytes": 15657,
+      "sha256": "14d024bab93a085240073e9f8412b58fb0b824187bad0e3142ad05cc99f88dd9"
+    },
+    {
+      "path": "dxf-splines/source.log",
+      "bytes": 2060,
+      "sha256": "0af86ce8afa667182eb181d356ff271d6ce8ac8478f2dee7c0f3d5274c94bdfb"
+    }
+  ]
+}

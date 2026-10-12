@@ -1,0 +1,149 @@
+{
+  "runtime_commit": "c0c7a9f39d2dd0087a212d098ff331a080fc27e0",
+  "fresh_source_captures": 0,
+  "broad_local_runs": 0,
+  "stages": [
+    {
+      "name": "combined-build",
+      "argv": [
+        "cargo",
+        "build",
+        "--locked",
+        "--offline",
+        "-p",
+        "ingetrazo-gui",
+        "--example",
+        "context_document_lifecycle"
+      ],
+      "seconds": 8.577349916973617,
+      "exit_code": 0
+    },
+    {
+      "name": "dxf-entities/runtime",
+      "argv": [
+        "/tmp/ingetrazo-native-font-merge-target/debug/examples/context_document_lifecycle",
+        "/tmp/ingetrazo-spline-integration/dxf-entities",
+        "--dxf-entities"
+      ],
+      "seconds": 0.5145382070331834,
+      "exit_code": 0
+    },
+    {
+      "name": "dxf-entities/reopen",
+      "argv": [
+        "/tmp/ingetrazo-parity-python/bin/python",
+        "/tmp/ingetrazo-next-integration/scripts/reference-dxf-entities-reopens.py",
+        "/tmp/ingetrazo-spline-integration/dxf-entities"
+      ],
+      "seconds": 0.1651514449622482,
+      "exit_code": 0
+    },
+    {
+      "name": "dxf-entities/check",
+      "argv": [
+        "python3",
+        "/tmp/ingetrazo-next-integration/scripts/check-dxf-entities.py",
+        "/tmp/ingetrazo-spline-integration/dxf-entities"
+      ],
+      "seconds": 0.11373244196875021,
+      "exit_code": 0
+    },
+    {
+      "name": "dxf-curves/runtime",
+      "argv": [
+        "/tmp/ingetrazo-native-font-merge-target/debug/examples/context_document_lifecycle",
+        "/tmp/ingetrazo-spline-integration/dxf-curves",
+        "--dxf-curves"
+      ],
+      "seconds": 0.7648079709615558,
+      "exit_code": 0
+    },
+    {
+      "name": "dxf-curves/reopen",
+      "argv": [
+        "/tmp/ingetrazo-parity-python/bin/python",
+        "/tmp/ingetrazo-next-integration/scripts/reference-dxf-curves-reopens.py",
+        "/tmp/ingetrazo-spline-integration/dxf-curves"
+      ],
+      "seconds": 0.2151190770091489,
+      "exit_code": 0
+    },
+    {
+      "name": "dxf-curves/check",
+      "argv": [
+        "python3",
+        "/tmp/ingetrazo-next-integration/scripts/check-dxf-source-curves.py",
+        "/tmp/ingetrazo-spline-integration/dxf-curves"
+      ],
+      "seconds": 0.8649530409602448,
+      "exit_code": 0
+    },
+    {
+      "name": "dxf-splines/runtime",
+      "argv": [
+        "/tmp/ingetrazo-native-font-merge-target/debug/examples/context_document_lifecycle",
+        "/tmp/ingetrazo-spline-integration/dxf-splines",
+        "--dxf-splines"
+      ],
+      "seconds": 1.0150949569651857,
+      "exit_code": 0
+    },
+    {
+      "name": "dxf-splines/reopen",
+      "argv": [
+        "/tmp/ingetrazo-parity-python/bin/python",
+        "/tmp/ingetrazo-next-integration/scripts/reference-dxf-splines-reopens.py",
+        "/tmp/ingetrazo-spline-integration/dxf-splines"
+      ],
+      "seconds": 0.2649348310078494,
+      "exit_code": 0
+    },
+    {
+      "name": "dxf-splines/check",
+      "argv": [
+        "python3",
+        "/tmp/ingetrazo-next-integration/scripts/check-dxf-source-splines.py",
+        "/tmp/ingetrazo-spline-integration/dxf-splines"
+      ],
+      "seconds": 3.6194557959679514,
+      "exit_code": 0
+    }
+  ],
+  "archives": {
+    "dxf-legacy-polylines": "21a7482725fe5f5605aafa8adf469b2ceaeda676ea74bba2f6e27a6ab282ac35",
+    "dxf-curves": "d49936e1ebbda3af21f053f1d939cd5abd1cfa339ae83705ac49e701cfdd3d73",
+    "dxf-splines": "096a99d6ffcb5a8f47c13077e5b38e0adb1cf18731ff91ba2140dd262e50fa2f"
+  },
+  "binaries": {
+    "context_document_lifecycle": "4795f07877398b9c34bb7f3ae77ea1b9cb9f1e13b0ca9fb1b6396332cc3522af"
+  },
+  "result": "pass",
+  "semantic_seconds": 7.537787766836118,
+  "crates_tree": "fe575ff04e8f53b4638c3e57ca9455b98717a9d7",
+  "acceptance": {
+    "dxf-entities": {
+      "cases": 8,
+      "states": 56,
+      "actual_original_reopens": 8,
+      "negative_controls": 16,
+      "ownership_guards": 3,
+      "passed": true
+    },
+    "dxf-curves": {
+      "cases": 12,
+      "states": 84,
+      "actual_original_reopens": 12,
+      "negative_controls": 36,
+      "ownership_guards": 3,
+      "passed": true
+    },
+    "dxf-splines": {
+      "cases": 15,
+      "states": 105,
+      "actual_original_reopens": 15,
+      "negative_controls": 45,
+      "ownership_guards": 3,
+      "passed": true
+    }
+  }
+}
