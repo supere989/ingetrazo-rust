@@ -3,9 +3,10 @@
 import argparse,copy,datetime,hashlib,json,math,xml.etree.ElementTree as ET
 from pathlib import Path
 PIN='6be29fe437a7cd992d4e079f71720821b25216b9'
-CASES=['colors-default-hole','textures-affine-planar','nested-shared-reflected','datum-names-collisions','chooser-cancel-suffix','missing-resource-write-error']
+CASES=['colors-default-hole','textures-affine-planar','nested-shared-reflected','datum-names-collisions','chooser-cancel-suffix','missing-resource-write-error','basename-collision']
 NS='{http://www.collada.org/2005/11/COLLADASchema}'
 PHASES={name:['before','export']for name in CASES[:4]}
+PHASES['basename-collision']=['before','export']
 PHASES.update({'chooser-cancel-suffix':['before','cancel','suffix'],'missing-resource-write-error':['before','missing','write-error']})
 CONTROLS=['actual_chooser','export_scene_readonly','document_identity_preserved','history_preserved','cancel_noop','atomic_xml_failure','resource_sidecars_owned','opaque_face_preserved']
 def digest(data):return hashlib.sha256(data).hexdigest()
@@ -83,20 +84,20 @@ def compare(source,native,source_dir,native_dir,reopens):
  exact(source['cases'],native['cases'],'cases')
  for case in source['cases']:
   assert case['phases']==PHASES[case['name']]
-  phase='export'if case['name']in CASES[:4]else ('suffix'if case['name']=='chooser-cancel-suffix'else'missing')
+  phase='export'if PHASES[case['name']]==['before','export']else ('suffix'if case['name']=='chooser-cancel-suffix'else'missing')
   file='exports/'+case['name']+('-coerced.dae'if phase=='suffix'else'-export.dae')
   assert case['exports']==[{'phase':phase,'file':file}]
   assert case['saved']==case['name']+'-saved.igz'and case['input']==case['name']+'-input.igz'
   assert case['initial_file']=='fixture-project.igz'and case['initial_dirty']is True
  expected=[(c['name'],p)for c in source['cases']for p in c['phases']]
- assert len(expected)==14 and [(s['case'],s['phase'])for s in source['states']]==[(s['case'],s['phase'])for s in native['states']]==expected
+ assert len(expected)==16 and [(s['case'],s['phase'])for s in source['states']]==[(s['case'],s['phase'])for s in native['states']]==expected
  exact(source['states'],native['states'],'states')
  rows=[]
  for case in source['cases']:
   for export in case['exports']:
    a,ta=decode_xml(safe(source_dir,export['file']));b,tb=decode_xml(safe(native_dir,export['file']));exact(a,b,'XML '+case['name'])
    rows.append({'case':case['name'],'phase':export['phase'],'file':export['file'],'triangles':a['triangles'],'source_timestamps':ta,'native_timestamps':tb,'sidecars':a['sidecars']})
- assert len(rows)==6 and sum(r['triangles']for r in rows)>0,'empty joint output'
+ assert len(rows)==7 and sum(r['triangles']for r in rows)>0,'empty joint output'
  assert len(reopens)==len(rows)
  assert [(r['case'],r['phase'])for r in reopens]==[(r['case'],r['phase'])for r in rows]
  for row in reopens:
@@ -131,6 +132,13 @@ def main():
    file=safe(args.native,case['exports'][0]['file']);baseline,_=decode_xml(file);root=ET.parse(file).getroot()
    probes_for_case=[]
    arrays=list(root.iter(NS+'float_array'))
+   color=next(root.iter(NS+'color'),None)
+   if color is not None:
+    wrong=copy.deepcopy(root);c=next(wrong.iter(NS+'color'));parts=c.text.split();parts[0]=str(float(parts[0])+0.1);c.text=' '.join(parts);probes_for_case.append(('changed-diffuse-color',wrong))
+   for semantic,label in [('NORMAL','changed-normal-source'),('TEXCOORD','changed-UV-source')]:
+    inp=next((i for i in root.iter(NS+'input')if i.get('semantic')==semantic),None)
+    if inp is not None:
+     wrong=copy.deepcopy(root);sid=inp.get('source')[1:];array=next(e for e in wrong.iter(NS+'source')if e.get('id')==sid).find(NS+'float_array');parts=array.text.split();parts[0]=str(float(parts[0])+0.125);array.text=' '.join(parts);probes_for_case.append((label,wrong))
    if arrays:
     wrong=copy.deepcopy(root);array=next(wrong.iter(NS+'float_array'));parts=array.text.split();parts[0]='nan';array.text=' '.join(parts);probes_for_case.append(('nonfinite-XML-source',wrong))
    tri=next(root.iter(NS+'triangles'),None)
@@ -147,7 +155,7 @@ def main():
     try:changed,_=decode_xml(file,tree);exact(baseline,changed,'mutated XML')
     except (AssertionError,KeyError,ValueError,TypeError):probes.append(label)
     else:raise AssertionError('negative escaped: '+label)
-  report.update(result='pass',cases=6,states=len(source['states']),reader_pairs=len(readers),negative_controls=probes)
+  report.update(result='pass',cases=7,states=len(source['states']),reader_pairs=len(readers),negative_controls=probes)
  except Exception as e:report['error']=repr(e)
  args.comparison.parent.mkdir(parents=True,exist_ok=True);args.comparison.write_text(json.dumps(report,indent=2)+'\n');print(json.dumps(report));return 0 if report['result']=='pass'else 1
 if __name__=='__main__':raise SystemExit(main())
