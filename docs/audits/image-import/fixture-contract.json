@@ -1,0 +1,38 @@
+{
+  "original_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "case_names": [
+    "png-drag-transparency",
+    "nested-width-cm",
+    "jpeg-exif-pair",
+    "webp-reuse-names",
+    "bmp-free-aspect",
+    "tiff16-orientation",
+    "cancel-invalid-escape",
+    "oblique-face-width"
+  ],
+  "actual_entry": "MainWindow._on_import_image with controlled chooser; unchanged viewport Qt pointer/key handling",
+  "input_scope": [
+    "declared model/camera/viewport",
+    "small deterministic PNG/WebP/BMP/JPEG EXIF/TIFF16 inputs",
+    "isolated texture cache",
+    "original chooser filename"
+  ],
+  "observations": {
+    "states": "case/phase/full scene/tool/undo/redo/camera",
+    "tool": "name/armed/aspect/resource/start/hover/work_plane/free_aspect/preview_lines/value_label",
+    "resource": "original encoded SHA256 and actual Qt decoded RGBA SHA256/size",
+    "headers": "actual image_aspect and allocation-limit restoration; decoded bytes retained"
+  },
+  "boundaries": [
+    "one actual Add per completed placement",
+    "Undo/Redo actual original History",
+    "global image Add during nested mesh edit",
+    "Escape clears corners/workplane/free while retaining armed resource/hover; retry commits",
+    "same bytes/name cached path reuse; renamed filename distinct",
+    "external chooser removed while oblique placement armed; cached save/reopen independence",
+    "header failure actual QMessageBox dismissed by Qt test; no progress-cancel claim",
+    "EXIF header aspect and non-autotransformed Qt pixels literal"
+  ],
+  "acceptance": "strict literal models/resources/transient tool/history/camera and eight actual original reader pairs; no framebuffer/presentation/general format claim",
+  "capture": "one root-controlled capture after independent geometry review; no native-authored expected outputs"
+}
