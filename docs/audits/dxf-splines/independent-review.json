@@ -1,0 +1,40 @@
+{
+  "spline_chain": [
+    "8cc1ac31",
+    "7fff975c",
+    "d092f585"
+  ],
+  "portable_chain": [
+    "5c4d0cf9",
+    "c0fe6fb7"
+  ],
+  "wiring_commit": "c0c7a9f39d2dd0087a212d098ff331a080fc27e0",
+  "method": "Read-only source/runtime/checker/dependency-feature review; canonical members/Git/current binary authentication and direct archived comparison. No builds/tests/checker/process replay/source capture.",
+  "authenticated": {
+    "spline_proof_members": 43,
+    "spline_proof_raw_bytes": 13554502,
+    "spline_proof_sha256": "3d2cb1294975ca1c9577a754d1c30c150c4e5dcce324be1b41287378e01e4224",
+    "spline_source_members": 54,
+    "spline_source_raw_bytes": 7052598,
+    "spline_git_files": 10,
+    "spline_gui_binary_sha256": "7e94ff1e50399456a6c80880fddc595b5ed081eff34e52d771e3abe6c0bfc996",
+    "literal_states": 105,
+    "actual_reader_pairs": 15,
+    "reviewed_mutations": 45,
+    "portable_proof_members": 6,
+    "portable_raw_bytes": 76618,
+    "portable_sha256": "af3c38f73679173ed2d734001a64db7882b7eed738bd55a3feeff442b42506f6",
+    "portable_git_files": 5,
+    "portable_test_binary_sha256": "dc1e987bc33b4a6feee565d95d862c6c72edd4036bf8b530014852a5f3edca5c"
+  },
+  "disposition": "Accepted bounded spline and portable DXF correction; no blocking defect after degree guard correction.",
+  "review": [
+    "Source chooses control points before fits, knots determine periodic/closed geometry, fit path is cubic natural/chord or normalized tangent. Candidate preserves that law and uses shared cubic path flattener.",
+    "Degree admission now precedes order+1, eliminating definite oversized-degree overflow. Source-invalid constructions skip entity; safety/nonfinite refusals and source revision-on-failure distinction remain explicit.",
+    "Small fit factorization is separate from RHS solves with retained pivots/L; observed pinned NumPy/OpenBLAS FMA/reciprocal ordering is explicit. Large compact-banded branch is a literal dependency port, not independently exercised by this corpus.",
+    "Pinned libm0.2.16 direct sin/cos/tan/atan/atan2/hypot replacements are local to DXF curves and retain surrounding arithmetic order. default-features=false plus force-soft-floats disables arch and unstable-intrinsics even under Cargo feature unification; no host trig dispatch or fitted coordinate correction.",
+    "The spline GUI proof/current binary is7fff before portable delta; five new focused tests bind final portable code separately. Planned integrated context replay remains root-owned.",
+    "Third authenticated DXF tuple uses existing context consumer/build; runtime/archive/binary, reader/runtime and checker/runtime+reader dependencies propagate failure and summary retains actual results."
+  ],
+  "boundaries": "Corrected Apple execution remains pending;087 actualARM/Intel endpoint failure retained. No universal transcendental/all-driver equivalence, all-SPLINE/INSERT/face-fusion, GPU/OS or totalheap claim. P22 remains Implemented."
+}
