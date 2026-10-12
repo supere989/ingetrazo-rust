@@ -224,8 +224,12 @@ fn add_mesh(
             }
         }
         let (u, v) = uv_axes(normal, texture.map_or(0., |t| num(t, "rot", 0.)));
-        let triangles=if unindexed {dae_triangles(mesh,id,&points,normal,&map)?}else{mesh.triangulate_face(id)};
-        for (a,b,c) in triangles {
+        let triangles = if unindexed {
+            dae_triangles(mesh, id, &points, normal, &map)?
+        } else {
+            mesh.triangulate_face(id)
+        };
+        for (a, b, c) in triangles {
             // The source does not flip a reflected exported ring. Its normal
             // is recomputed from the transformed face, unlike viewport instancing.
             for local in [a, b, c] {
@@ -834,40 +838,154 @@ pub(super) fn build(
 /// for DAE's independent six/five/six-decimal shared sources. Y-up output is
 /// converted by the DAE writer; no glTF combined vertex dedup is applied.
 pub(crate) fn collect_for_dae(scene: &Scene) -> Result<Vec<Primitive>, GltfError> {
-    collect_dae_view(scene,&scene.mesh,&scene.groups,&[])
+    collect_dae_view(scene, &scene.mesh, &scene.groups, &[])
 }
-pub(crate) fn collect_dae_view(scene:&Scene,loose:&Mesh,groups:&[Group],overrides:&[crate::dae::PlacementOverride<'_>])->Result<Vec<Primitive>,GltfError>{
-    fn group(scene:&Scene,g:&Group,parent:Mat4,bulk:bool,out:&mut Vec<Primitive>,lookup:&mut HashMap<String,usize>,overrides:&[crate::dae::PlacementOverride<'_>])->Result<(),GltfError>{
-        let replacement=overrides.iter().find(|o|o.id==g.id);
-        let local=if replacement.is_some(){Mat4::IDENTITY}else{Mat4::from_cols_array(&g.transform.to_cols_array().map(|v|v as f32))};
-        let world=parent*local;let mesh=replacement.map_or(&g.mesh,|o|o.mesh);let children=replacement.map_or(g.children.as_slice(),|o|o.children);
-        add_mesh(scene,mesh,world,false,bulk,true,out,lookup)?;
-        for child in children {group(scene,child,world,bulk,out,lookup,overrides)?;}
+pub(crate) fn collect_dae_view(
+    scene: &Scene,
+    loose: &Mesh,
+    groups: &[Group],
+    overrides: &[crate::dae::PlacementOverride<'_>],
+) -> Result<Vec<Primitive>, GltfError> {
+    fn group(
+        scene: &Scene,
+        g: &Group,
+        parent: Mat4,
+        bulk: bool,
+        out: &mut Vec<Primitive>,
+        lookup: &mut HashMap<String, usize>,
+        overrides: &[crate::dae::PlacementOverride<'_>],
+    ) -> Result<(), GltfError> {
+        let replacement = overrides.iter().find(|o| o.id == g.id);
+        let local = if replacement.is_some() {
+            Mat4::IDENTITY
+        } else {
+            Mat4::from_cols_array(&g.transform.to_cols_array().map(|v| v as f32))
+        };
+        let world = parent * local;
+        let mesh = replacement.map_or(&g.mesh, |o| o.mesh);
+        let children = replacement.map_or(g.children.as_slice(), |o| o.children);
+        add_mesh(scene, mesh, world, false, bulk, true, out, lookup)?;
+        for child in children {
+            group(scene, child, world, bulk, out, lookup, overrides)?;
+        }
         Ok(())
     }
-    let mut out=Vec::new();let mut lookup=HashMap::new();
-    add_mesh(scene,loose,Mat4::IDENTITY,true,false,true,&mut out,&mut lookup)?;
+    let mut out = Vec::new();
+    let mut lookup = HashMap::new();
+    add_mesh(
+        scene,
+        loose,
+        Mat4::IDENTITY,
+        true,
+        false,
+        true,
+        &mut out,
+        &mut lookup,
+    )?;
     for g in groups {
-        if !g.hidden && !g.billboard && visible(scene,g.layer.as_deref()) {
-            let replacement=overrides.iter().find(|o|o.id==g.id);let mesh=replacement.map_or(&g.mesh,|o|o.mesh);let children=replacement.map_or(g.children.as_slice(),|o|o.children);
-            group(scene,g,Mat4::IDENTITY,!children.is_empty()||mesh.edges.len()*2+mesh.faces.len()*4>=1024,&mut out,&mut lookup,overrides)?;
+        if !g.hidden && !g.billboard && visible(scene, g.layer.as_deref()) {
+            let replacement = overrides.iter().find(|o| o.id == g.id);
+            let mesh = replacement.map_or(&g.mesh, |o| o.mesh);
+            let children = replacement.map_or(g.children.as_slice(), |o| o.children);
+            group(
+                scene,
+                g,
+                Mat4::IDENTITY,
+                !children.is_empty() || mesh.edges.len() * 2 + mesh.faces.len() * 4 >= 1024,
+                &mut out,
+                &mut lookup,
+                overrides,
+            )?;
         }
     }
-    out.retain(|p|!p.indices.is_empty());Ok(out)
+    out.retain(|p| !p.indices.is_empty());
+    Ok(out)
 }
 
 /// Source QVector3D plane_axes/proj followed by the already retained literal
 /// Python earcut traversal. Return local corners so shared mapping/UV admission
 /// remains the same; triangulation is selected in transformed world space.
-fn dae_triangles(mesh:&Mesh,id:usize,outer:&[DVec3],normal:DVec3,map:&impl Fn(DVec3)->DVec3)->Result<Vec<(DVec3,DVec3,DVec3)>,GltfError>{
-    fn dot(a:Vec3,b:Vec3)->f32{a.x*b.x+a.y*b.y+a.z*b.z}
-    fn length(v:Vec3)->f32{let scale=v.abs().max_element();if scale==0.{0.}else{let x=v.x/scale;let y=v.y/scale;let z=v.z/scale;scale*(x*x+y*y+z*z).sqrt()}}
-    fn normalized(v:Vec3)->Vec3{let len=length(v);if (len-1.).abs()<=1e-5{v}else if len.abs()<=1e-5{Vec3::ZERO}else{Vec3::new(v.x/len,v.y/len,v.z/len)}}
-    let n=normalized(normal.as_vec3());let mut u=Vec3::X-n*dot(Vec3::X,n);if length(u)<0.1{u=Vec3::Y-n*dot(Vec3::Y,n);}u=normalized(u);let v=normalized(Vec3::new(n.y*u.z-n.z*u.y,n.z*u.x-n.x*u.z,n.x*u.y-n.y*u.x));
-    let origin=outer[0].as_vec3();let project=|p:DVec3|{let p=p.as_vec3()-origin;glam::DVec2::new(dot(p,u)as f64,dot(p,v)as f64)};
-    let face=&mesh.faces[id];let mut local=face.vertices.iter().map(|&i|mesh.vertices[i].position).collect::<Vec<_>>();let mut projected=outer.iter().copied().map(project).collect::<Vec<_>>();let mut holes=Vec::new();
-    for hole in &face.holes{if hole.len()>=3{holes.push(local.len());for &i in hole{let p=mesh.vertices[i].position;local.push(p);projected.push(project(map(p)));}}}
-    if holes.is_empty()&&ingetrazo_core::triangulate::is_convex(&projected.iter().map(|p|(p.x,p.y)).collect::<Vec<_>>()) {return Ok((1..local.len()-1).map(|i|(local[0],local[i],local[i+1])).collect());}
-    let indices=ingetrazo_core::triangulate::source_ordered_earcut(&projected,&holes).map_err(GltfError::Invalid)?;
-    Ok(indices.into_iter().map(|[a,b,c]|(local[a],local[b],local[c])).collect())
+fn dae_triangles(
+    mesh: &Mesh,
+    id: usize,
+    outer: &[DVec3],
+    normal: DVec3,
+    map: &impl Fn(DVec3) -> DVec3,
+) -> Result<Vec<(DVec3, DVec3, DVec3)>, GltfError> {
+    if outer.len() < 3 {
+        return Ok(Vec::new());
+    }
+    fn dot(a: Vec3, b: Vec3) -> f32 {
+        a.x * b.x + a.y * b.y + a.z * b.z
+    }
+    fn length(v: Vec3) -> f32 {
+        let scale = v.abs().max_element();
+        if scale == 0. {
+            0.
+        } else {
+            let x = v.x / scale;
+            let y = v.y / scale;
+            let z = v.z / scale;
+            scale * (x * x + y * y + z * z).sqrt()
+        }
+    }
+    fn normalized(v: Vec3) -> Vec3 {
+        let len = length(v);
+        if (len - 1.).abs() <= 1e-5 {
+            v
+        } else if len.abs() <= 1e-5 {
+            Vec3::ZERO
+        } else {
+            Vec3::new(v.x / len, v.y / len, v.z / len)
+        }
+    }
+    let n = normalized(normal.as_vec3());
+    let mut u = Vec3::X - n * dot(Vec3::X, n);
+    if length(u) < 0.1 {
+        u = Vec3::Y - n * dot(Vec3::Y, n);
+    }
+    u = normalized(u);
+    let v = normalized(Vec3::new(
+        n.y * u.z - n.z * u.y,
+        n.z * u.x - n.x * u.z,
+        n.x * u.y - n.y * u.x,
+    ));
+    let origin = outer[0].as_vec3();
+    let project = |p: DVec3| {
+        let p = p.as_vec3() - origin;
+        glam::DVec2::new(dot(p, u) as f64, dot(p, v) as f64)
+    };
+    let face = &mesh.faces[id];
+    let mut local = face
+        .vertices
+        .iter()
+        .map(|&i| mesh.vertices[i].position)
+        .collect::<Vec<_>>();
+    let mut projected = outer.iter().copied().map(project).collect::<Vec<_>>();
+    let mut holes = Vec::new();
+    for hole in &face.holes {
+        if hole.len() >= 3 {
+            holes.push(local.len());
+            for &i in hole {
+                let p = mesh.vertices[i].position;
+                local.push(p);
+                projected.push(project(map(p)));
+            }
+        }
+    }
+    if holes.is_empty()
+        && ingetrazo_core::triangulate::is_convex(
+            &projected.iter().map(|p| (p.x, p.y)).collect::<Vec<_>>(),
+        )
+    {
+        return Ok((1..local.len() - 1)
+            .map(|i| (local[0], local[i], local[i + 1]))
+            .collect());
+    }
+    let indices = ingetrazo_core::triangulate::source_ordered_earcut(&projected, &holes)
+        .map_err(GltfError::Invalid)?;
+    Ok(indices
+        .into_iter()
+        .map(|[a, b, c]| (local[a], local[b], local[c]))
+        .collect())
 }
