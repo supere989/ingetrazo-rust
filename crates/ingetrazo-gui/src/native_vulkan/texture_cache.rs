@@ -1,5 +1,5 @@
 //! Cold-only immutable asset admission and fence-retired sampled images.
-//! PNG/JPEG are currently supported; original Qt additional formats remain open.
+//! PNG/JPEG/static WebP are supported; other Qt formats remain open.
 use super::{
     resources::{Resources, TextureImage},
     VulkanContext,
@@ -277,6 +277,19 @@ impl TextureCache {
 /// pixels. No external image conversion process or per-frame image wrapper.
 pub fn decode_png_jpeg(encoded: &[u8], max_decoded_bytes: u64) -> Result<DecodedTexture, String> {
     let format = image::guess_format(encoded).map_err(|e| format!("Texture format: {e}"))?;
+    if format == image::ImageFormat::WebP {
+        let decoded = ingetrazo_render::source_texture_decode::decode(encoded,
+            ingetrazo_render::source_texture_decode::Limits {
+                encoded_bytes: encoded.len(), decoded_work_bytes: max_decoded_bytes,
+                ..Default::default()
+            })?;
+        let hard_cutout = decoded.alpha
+            && source_cutout_coverage(&decoded.rgba, decoded.width, decoded.height)? < 0.6;
+        return Ok(DecodedTexture {
+            extent: vk::Extent2D { width: decoded.width, height: decoded.height },
+            rgba: decoded.rgba, hard_cutout,
+        });
+    }
     if !matches!(format, image::ImageFormat::Png | image::ImageFormat::Jpeg) {
         return Err(format!("Native source texture decoder does not yet support {format:?}; original Qt format parity remains open"));
     }

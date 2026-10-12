@@ -27,6 +27,9 @@ pub fn decode(bytes: &[u8], limits: Limits) -> Result<Decoded, String> {
         return Err("source image encoded admission".into());
     }
     let format = image::guess_format(bytes).map_err(|e| e.to_string())?;
+    if format == image::ImageFormat::WebP {
+        return decode_webp(bytes, limits);
+    }
     if !matches!(format, image::ImageFormat::Jpeg | image::ImageFormat::Png) {
         return Err("source image format unsupported".into());
     }
@@ -93,6 +96,68 @@ pub fn decode(bytes: &[u8], limits: Limits) -> Result<Decoded, String> {
         width: w,
         height: h,
         alpha,
+        rgba,
+    })
+}
+/// Static WebP shares the pinned Qt codec's straight RGBA decode. The supplied
+/// buffer is the final output owner; no intermediate image or conversion copy.
+fn decode_webp(bytes: &[u8], limits: Limits) -> Result<Decoded, String> {
+    use libwebp_sys as ffi;
+    let mut features = std::mem::MaybeUninit::<ffi::WebPBitstreamFeatures>::uninit();
+    let status = unsafe {
+        ffi::WebPGetFeaturesInternal(
+            bytes.as_ptr(),
+            bytes.len(),
+            features.as_mut_ptr(),
+            ffi::WEBP_DECODER_ABI_VERSION as i32,
+        )
+    };
+    if status != ffi::VP8StatusCode::VP8_STATUS_OK {
+        return Err(format!("source WebP header: {status:?}"));
+    }
+    let features = unsafe { features.assume_init() };
+    if features.has_animation != 0 {
+        return Err("source animated WebP composition is not implemented".into());
+    }
+    if features.width <= 0 || features.height <= 0 {
+        return Err("source WebP invalid dimensions".into());
+    }
+    let (width, height) = (features.width as u32, features.height as u32);
+    // Conservatively admit output plus the codec's lossless/lossy scratch domain
+    // before either is allocated. Callers control this budget independently of
+    // the GPU allocation; this is not a claim about maximum device capacity.
+    let pixels = u64::from(width)
+        .checked_mul(u64::from(height))
+        .ok_or("source WebP dimensions overflow")?;
+    let work = pixels
+        .checked_mul(64)
+        .and_then(|n| n.checked_add(1024 * 1024))
+        .ok_or("source WebP work overflow")?;
+    if work > limits.decoded_work_bytes {
+        return Err("source WebP decoded work admission".into());
+    }
+    let len = pixels
+        .checked_mul(4)
+        .and_then(|n| usize::try_from(n).ok())
+        .ok_or("source WebP output overflow")?;
+    let stride = width
+        .checked_mul(4)
+        .and_then(|n| i32::try_from(n).ok())
+        .ok_or("source WebP row overflow")?;
+    let mut rgba = Vec::new();
+    rgba.try_reserve_exact(len)
+        .map_err(|_| "source WebP output allocation")?;
+    rgba.resize(len, 0);
+    let decoded = unsafe {
+        ffi::WebPDecodeRGBAInto(bytes.as_ptr(), bytes.len(), rgba.as_mut_ptr(), len, stride)
+    };
+    if decoded.is_null() {
+        return Err("source WebP pixel decoding failed".into());
+    }
+    Ok(Decoded {
+        width,
+        height,
+        alpha: features.has_alpha != 0,
         rgba,
     })
 }

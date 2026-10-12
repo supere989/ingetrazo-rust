@@ -31,7 +31,8 @@ approx = "0.5"
 uuid = { version = "1.10", features = ["v4", "serde"] }
 bytemuck = { version = "1.19", features = ["derive"] }
 blake3 = "1.8"
-image = { version = "0.25", default-features = false, features = ["png", "jpeg"] }
+libwebp-sys = { version = "=0.14.4", default-features = false, features = ["std", "parallel"] }
+image = { version = "0.25", default-features = false, features = ["png", "jpeg", "webp"] }
 egui = "0.30"
 eframe = { version = "0.30", default-features = false, features = ["default_fonts", "glow", "wayland", "x11"] }
 
@@ -42,3 +43,7 @@ freetype-sys = { path = "vendor/freetype-sys" }
 
 zune-jpeg = { path = "vendor/zune-jpeg" }
 harfbuzz-sys = { path = "vendor/harfbuzz-sys" }
+
+# Keep cold image import usable in development without optimizing the whole GUI.
+[profile.dev.package.libwebp-sys]
+opt-level = 3

@@ -17,5 +17,6 @@ serde_json.workspace = true
 memmap2 = "=0.9.11"
 
 image.workspace = true
+libwebp-sys.workspace = true
 zune-jpeg = "=0.5.15"
 zune-core = "=0.5.3"
