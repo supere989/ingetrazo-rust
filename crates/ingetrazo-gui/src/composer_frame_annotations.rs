@@ -105,9 +105,11 @@ impl Plan {
         &mut self,
         at: [f64; 2],
         angle: f64,
-        text: impl Into<Arc<str>>,
+        text: impl AsRef<str>,
         size: f64,
     ) -> Result<(), String> {
+        let text=text.as_ref();
+        if self.text_bytes.checked_add(text.len()).is_none_or(|n|n>MAX_TEXT_BYTES){return Err("Frame annotation text budget exceeded".into());}
         self.push(Primitive::Text {
             at,
             angle,
