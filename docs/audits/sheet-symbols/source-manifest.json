@@ -1,0 +1,202 @@
+{
+  "source_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "archive": "source-records.zip",
+  "archive_sha256": "4068e97cf6620160efc6b5c0f9ce07a89d5c10885160bc7d436d4a69da4173da",
+  "entries": [
+    {
+      "path": "capture.log",
+      "bytes": 588,
+      "sha256": "c14c1e2ef2cc637c4c2522efd3e4d2c845fc26fc26c5038f2fb528dd19563721"
+    },
+    {
+      "path": "north-rotated.igz",
+      "bytes": 805,
+      "sha256": "2f99bb31ea2260e8a6400a5423c2d1a1c923d71b56c01f377989d0b755eeb2c7"
+    },
+    {
+      "path": "north-rotated.pdf",
+      "bytes": 8949,
+      "sha256": "e9295353b00552452b0bdb1365b1820146a971d0c8d83b90806cd9fbef9f8236"
+    },
+    {
+      "path": "north-rotated.png",
+      "bytes": 10116,
+      "sha256": "1c1f70657f0342649e431e0ced8b9eedbf6b1af862ee16eb6670bf47336251b1"
+    },
+    {
+      "path": "north-zero.igz",
+      "bytes": 801,
+      "sha256": "fb3ba7124ae45381f628ef471b0e2883e58980a3c3597b1edc37c42db7dca906"
+    },
+    {
+      "path": "north-zero.pdf",
+      "bytes": 8923,
+      "sha256": "acfac1f64d15e9d4d9266e4566f3d15a1a2245c8c7b574e5f74c92ecc8249c77"
+    },
+    {
+      "path": "north-zero.png",
+      "bytes": 9508,
+      "sha256": "ac4ea5d10539903fbc2b968b7a38efd240f5f2d3f03c3ef4c1db5e8f37efea9d"
+    },
+    {
+      "path": "scale-default.igz",
+      "bytes": 805,
+      "sha256": "eeda21746aa52ae04f51e7fd5a6706c4fe6cc2e75a45d9cc77bf86e328336c67"
+    },
+    {
+      "path": "scale-default.pdf",
+      "bytes": 10515,
+      "sha256": "c44865b1c3a11deed48316b266893f881b73eded1fc8e846efbbc49a97c2d64a"
+    },
+    {
+      "path": "scale-default.png",
+      "bytes": 7926,
+      "sha256": "6840177ce3be3d11e83a99b8454defc41bc868f75fa5c5ef8c04e900b7164d0d"
+    },
+    {
+      "path": "scale-fractional.igz",
+      "bytes": 808,
+      "sha256": "5f6872c07a67104ec82a2e48e75ea0e76569cd028d2d01d8c1309b506958bec1"
+    },
+    {
+      "path": "scale-fractional.pdf",
+      "bytes": 10400,
+      "sha256": "d7a8891007b59730cb262f0b73b38cd6de4e353cf89c61b9223199374c22e847"
+    },
+    {
+      "path": "scale-fractional.png",
+      "bytes": 7582,
+      "sha256": "b08fef369dcdf6dc4bb4320b844179bae27ecaa68e83f7cf15b76c6edd4de4b8"
+    },
+    {
+      "path": "source-receipt.json",
+      "bytes": 341,
+      "sha256": "687aeab74b1c95ed46c9eedeef034d4638c1ad1e205e04e39841acb41394d951"
+    },
+    {
+      "path": "source.json",
+      "bytes": 4229,
+      "sha256": "41007e68b8a06c85fdeec7e23593dad33a2fd764add7dc684a615b1bbce4b14a"
+    },
+    {
+      "path": "symbols-hidden.igz",
+      "bytes": 2369,
+      "sha256": "b517f7a64b7fc2aeabb386339fb15eaef066b36219a715b0ef1fff1f45f66867"
+    },
+    {
+      "path": "symbols-hidden.pdf",
+      "bytes": 16313,
+      "sha256": "57f5c97e5c9a03d2a01a5b9c389c9e5de0bbf48f8a68b6b54334fd71ea57220b"
+    },
+    {
+      "path": "symbols-hidden.png",
+      "bytes": 12356,
+      "sha256": "46a7850d3d169b0dd01eb97cca4f9b0ad4e99277b8edf8715f8cea70d6b148ad"
+    },
+    {
+      "path": "symbols-overlap.igz",
+      "bytes": 2371,
+      "sha256": "9ddc0c8433b69122359750b9cb1d1a691a075803972d07281a5085503af573d5"
+    },
+    {
+      "path": "symbols-overlap.pdf",
+      "bytes": 19667,
+      "sha256": "560cc144ce011a7ee004fcc86eee922cce4a78eb10f97a1d1d25d0ffecb39777"
+    },
+    {
+      "path": "symbols-overlap.png",
+      "bytes": 34487,
+      "sha256": "f782aeb053d22dac432499a8e02872beeab32da3b1e50b35235e74cdab5768da"
+    },
+    {
+      "path": "title-banded.igz",
+      "bytes": 1771,
+      "sha256": "bef668359196c23998dbf7ffeab7aead7a730cd085c230fb382e8b88abe3e0af"
+    },
+    {
+      "path": "title-banded.pdf",
+      "bytes": 20169,
+      "sha256": "7c0f01362f081eaccb4141d7a154ad115c7771a13f73af76a537d55068c898cd"
+    },
+    {
+      "path": "title-banded.png",
+      "bytes": 31996,
+      "sha256": "b25570377f6979b70a7b672c86a77fd272d9b229f9eeb1ed9d097686d963db40"
+    },
+    {
+      "path": "title-chamfer-double.igz",
+      "bytes": 1779,
+      "sha256": "2baa4a9e44549a29f1697f69272cf4b9b3c4cbf352e6b474c8a4d91e7d695344"
+    },
+    {
+      "path": "title-chamfer-double.pdf",
+      "bytes": 20286,
+      "sha256": "ec6391f5df2556c6f115f47c5d252f645767c02450df07f9b0ab97534d7625d5"
+    },
+    {
+      "path": "title-chamfer-double.png",
+      "bytes": 33142,
+      "sha256": "7bcfe673134a0acbf181c3b7ec915d357f196443d4723311e6de085cab08ecab"
+    },
+    {
+      "path": "title-columns-wrap.igz",
+      "bytes": 1769,
+      "sha256": "55dee9a3e38b71723b3c40214585e308de9096fa9fb7d621d7a6c283f6d1ae44"
+    },
+    {
+      "path": "title-columns-wrap.pdf",
+      "bytes": 18991,
+      "sha256": "46b0dec3eb79538b8c392ebfdac5df850a0f27386b7389b335b53635d761872c"
+    },
+    {
+      "path": "title-columns-wrap.png",
+      "bytes": 40943,
+      "sha256": "4e50b7c5a0dbe4579357ca8bbbd29cde250cea63287bf490165588b7cf1b40c3"
+    },
+    {
+      "path": "title-grid.igz",
+      "bytes": 1760,
+      "sha256": "27e96c159b6f452ade930bb0ab16e25e03507cc84470cdd7ed4883538ceae288"
+    },
+    {
+      "path": "title-grid.pdf",
+      "bytes": 18898,
+      "sha256": "a4b7d6ce884f3b2eff0d60525fe7e86bbab14abbf451775f1e1db4eaecc91e14"
+    },
+    {
+      "path": "title-grid.png",
+      "bytes": 34487,
+      "sha256": "f782aeb053d22dac432499a8e02872beeab32da3b1e50b35235e74cdab5768da"
+    },
+    {
+      "path": "title-minimal.igz",
+      "bytes": 1766,
+      "sha256": "eca107c1b83ced59c1dd3b8c4605e6eb0d01c2b5a87c4ef6ff0b5791bdca14ea"
+    },
+    {
+      "path": "title-minimal.pdf",
+      "bytes": 18816,
+      "sha256": "a1a2e4f18f67491f3b8026dbe3341e6f3f445e00907e0663ce6ff9f8b7fb26d7"
+    },
+    {
+      "path": "title-minimal.png",
+      "bytes": 26021,
+      "sha256": "f1342edc7d7c584a84b6a7d253838a0ce8a5b304e30c87f2cabb547e4d4d8a59"
+    },
+    {
+      "path": "title-rounded.igz",
+      "bytes": 1771,
+      "sha256": "7e2d829a0340afc3f2ab838b9ed18426f62c5503c42d757c148fb940b84c37ab"
+    },
+    {
+      "path": "title-rounded.pdf",
+      "bytes": 19091,
+      "sha256": "d1715c720e4e2b0b519a5ba6def3d63b48a9fb5cc96fd9634bd2713d64c8aa24"
+    },
+    {
+      "path": "title-rounded.png",
+      "bytes": 36109,
+      "sha256": "366447352679e586175489347bf48bca0e950ca381083d85baa2888b2b66ef8e"
+    }
+  ]
+}
