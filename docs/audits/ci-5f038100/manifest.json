@@ -1,0 +1,72 @@
+{
+  "head": "5f03810019f86514f02efca800192c6a7f0ba797",
+  "original_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "archive_sha256": "a69ee599b5c3e015661376a03bd309a475bd3dd091d2deedbaafc398ddafe276",
+  "members": {
+    "downloaded/full-artifacts.json": {
+      "size": 4393,
+      "sha256": "358f8ee359146b2acde3fbe49501f96a069777be5fc129fa685df41d159b4c0c"
+    },
+    "downloaded/full-jobs.json": {
+      "size": 50683,
+      "sha256": "75af0266d5f5923369a3f81907d87b6abd45777227a62b89df996bf84e0aaf74"
+    },
+    "downloaded/full-native-metal-compile-aarch64-apple-darwin.zip": {
+      "size": 12786,
+      "sha256": "efcee07f716cc4158a482f1fabfe74bfa87542f016cc145046496bf269228817"
+    },
+    "downloaded/full-native-metal-compile-x86_64-apple-darwin.zip": {
+      "size": 12651,
+      "sha256": "561784b657ece9eb5988ebc293527ee3aa5cf1921d226780d251a323931be065"
+    },
+    "downloaded/full-native-metal-link-macos-15-intel.zip": {
+      "size": 3789402,
+      "sha256": "2bdbe5011eebb824c9ff69aca203b65c60823be952d4634560141b9a4a0c86d8"
+    },
+    "downloaded/full-native-metal-link-macos-15.zip": {
+      "size": 4178708,
+      "sha256": "4b71c2118e4616b9e1462fdbbaa3316d980d4bee17de9616f0491dd850ceefc4"
+    },
+    "downloaded/full-native-windows-process.zip": {
+      "size": 21093,
+      "sha256": "c3dfc3d6e6f858662f5433a88a20e8ef0cc0168299388dd7a2b084bfd6a82449"
+    },
+    "downloaded/full-run.json": {
+      "size": 12732,
+      "sha256": "c9b26bb5c0584701aed18fd0f4dcfb7487278c841ec1796938d3813b0ac9f35b"
+    },
+    "downloaded/full-semantic-parity-evidence.zip": {
+      "size": 31050353,
+      "sha256": "da3c0ba485eea3a7ca1f04c35a8fcd089bb124a6bba675a95f77647c3a233427"
+    },
+    "downloaded/ordered-artifacts.json": {
+      "size": 1489,
+      "sha256": "50f0fbfb7130cb834b802e5042d8e04a7cc9fc272a8edd5cc468b2dc138ce924"
+    },
+    "downloaded/ordered-jobs.json": {
+      "size": 6924,
+      "sha256": "362a75c641b9471164a938a26dc1dc1ee9e24348bda024f3d3d2e474c39b8376"
+    },
+    "downloaded/ordered-metal-compute-consumer-macos-15-intel.zip": {
+      "size": 12435,
+      "sha256": "1f19db57fd3d5b65d9db865ada37b399478b3ce4fd422afdb3d0f8ef550192ff"
+    },
+    "downloaded/ordered-metal-compute-consumer-macos-15.zip": {
+      "size": 12445,
+      "sha256": "3ce48709c9e9e90d6649496a9c0f56226a7facb6fc7bdab57108dc8fb3dac015"
+    },
+    "downloaded/ordered-run.json": {
+      "size": 12765,
+      "sha256": "13453b2f8bb13b7d7ead67418e5f85c9d3ee1c0c067c066cf7b10dd17b0c50c4"
+    },
+    "artifact-inventories.json": {
+      "size": 1526733,
+      "sha256": "659d1ab46bcec4e564e44ba4408ed1cbed2ea21508d27db9b675342b511103ed"
+    },
+    "terminal.json": {
+      "size": 76354,
+      "sha256": "ae8179c897382246716312e09fdefec85d762996868a3e3e977fe538cc6b3954"
+    }
+  },
+  "scope": "Terminal automatic CI evidence only; no dispatch, retry, builds, source capture or comparator execution"
+}
