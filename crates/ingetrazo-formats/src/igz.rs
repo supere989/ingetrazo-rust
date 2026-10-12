@@ -282,6 +282,28 @@ fn group_to_json(g: &Group, protos: &mut Vec<serde_json::Value>, shared: &mut st
     // retain the identities assigned on load, rather than regenerate on reopen.
     if obj.get("name").and_then(|v|v.as_str()).is_none_or(str::is_empty) { obj["name"] = model["name"].clone(); }
     if obj.get("uid").and_then(|v|v.as_str()).is_none_or(str::is_empty) { obj["uid"] = model["uid"].clone(); }
+    // Source classic groups own baked world-coordinate meshes. A native mesh
+    // sharing token is a storage owner, not a placement or user component.
+    // Fresh classic groups therefore serialize inline, without inventing an
+    // identity xform/component=false (which changes Group.is_component and
+    // the constructor's latent component=True on the original reader).
+    // Imported payloads retain their existing baseline/representation below.
+    if g.native_baseline.is_null()
+        && g.component_definition.is_none()
+        && g.children.is_empty()
+        && g.transform == glam::DMat4::IDENTITY
+        && g.native_document.get("xform").is_none_or(|v| v.is_null())
+    {
+        let fields = obj.as_object_mut().unwrap();
+        fields.remove("proto");
+        fields.remove("xform");
+        if g.native_document.get("component").is_none() {
+            fields.remove("component");
+        }
+        fields.remove("_component_definition");
+        fields.remove("_mesh_share");
+        return obj;
+    }
     // Rust meshes are independent copies. Editing an imported instance makes a
     // new definition; never mutate a retained prototype used by other instances.
     let geometry_changed = ["edges", "faces"].iter()
