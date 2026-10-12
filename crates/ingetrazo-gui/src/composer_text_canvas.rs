@@ -84,7 +84,7 @@ impl CanvasPainter {
     }
     let image=self.rotated_image(&text.font,glyph.glyph,scale,phase,text.bold,text.italic,color,text.rotation_deg)?;
     let sample=Sample{x:fx as i64+i64::from(image.left),y:fy as i64-i64::from(image.top),image,clip};
-    include_sample(&mut samples,&mut extent,&mut working,Self::physical_clip_sample(sample,&masks)?)?;
+    include_sample(&mut samples,&mut extent,&mut working,Self::physical_clip_glyph(sample,&masks)?)?;
    }
    for decoration in &text.decorations{let[x0,y0,x1,_]=decoration.line_px;let half=decoration.width_px*scale*0.5;let rect=[pos[0]+x0*scale,pos[1]+y0*scale-half,pos[0]+x1*scale,pos[1]+y0*scale+half];let sample=if decoration.width_px*scale<=1.{thin_line_sample([rect[0],pos[1]+y0*scale,rect[2]],decoration.width_px*scale,rgba,clip)?}else{rectangle_sample(rect,rgba,clip)?};if let Some(sample)=sample{include_sample(&mut samples,&mut extent,&mut working,Self::physical_clip_sample(sample,&masks)?)?;}}
   }
@@ -93,13 +93,25 @@ impl CanvasPainter {
   Ok(ordered.records())
  }
 
- fn physical_clip_sample(mut sample:Sample,masks:&[Vec<ingetrazo_render::qt_gray::Span>])->Result<Sample,String>{
+ // Qt 6.12 solid A8 alphamapBlit clips glyphs by span presence, not
+ // fractional clip coverage (qdrawhelper.cpp qt_alphamapblit_argb32).
+ // Physical glyphs here are grayscale coverage, solid color, SourceOver,
+ // full painter opacity. Decorations and other samples retain AA clipping.
+ fn physical_clip_glyph(sample:Sample,masks:&[Vec<ingetrazo_render::qt_gray::Span>])->Result<Sample,String>{
+  if masks.len()<=1{return Self::physical_clip_sample_mode::<true>(sample,masks);}
+  // Qt intersects clip coverages before alphamapBlit checks span presence.
+  let mut combined=masks[0].clone();
+  for mask in &masks[1..]{combined=ingetrazo_render::qt_gray::intersect_spans(&combined,mask,100_000)?;}
+  Self::physical_clip_sample_mode::<true>(sample,std::slice::from_ref(&combined))
+ }
+ fn physical_clip_sample(sample:Sample,masks:&[Vec<ingetrazo_render::qt_gray::Span>])->Result<Sample,String>{Self::physical_clip_sample_mode::<false>(sample,masks)}
+ fn physical_clip_sample_mode<const GLYPH:bool>(mut sample:Sample,masks:&[Vec<ingetrazo_render::qt_gray::Span>])->Result<Sample,String>{
   if masks.is_empty(){return Ok(sample);}
   let mut pixels=Vec::new();pixels.try_reserve_exact(sample.image.bytes).map_err(|_|"Physical glyph clipping allocation refused")?;pixels.extend_from_slice(&sample.image.pixels);
   for mask in masks{
    for y in 0..sample.image.height {let gy=sample.y+y as i64;let start=mask.partition_point(|s|i64::from(s.y)<gy);let end=mask.partition_point(|s|i64::from(s.y)<=gy);let row=&mask[start..end];
     for x in 0..sample.image.width {let gx=sample.x+x as i64;let i=row.partition_point(|s|i64::from(s.x)+i64::from(s.len)<=gx);let coverage=row.get(i).filter(|s|i64::from(s.x)<=gx&&gx<i64::from(s.x)+i64::from(s.len)).map_or(0,|s|s.coverage);
-     let at=(y*sample.image.width+x)*4;for v in &mut pixels[at..at+4]{let n=u32::from(*v)*u32::from(coverage);*v=((n+(n>>8)+128)>>8)as u8;}
+     let at=(y*sample.image.width+x)*4;if GLYPH{if coverage==0{pixels[at..at+4].fill(0);}}else{for v in &mut pixels[at..at+4]{let n=u32::from(*v)*u32::from(coverage);*v=((n+(n>>8)+128)>>8)as u8;}}
     }
    }
   }
