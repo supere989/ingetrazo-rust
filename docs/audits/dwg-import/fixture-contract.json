@@ -1,0 +1,35 @@
+{
+  "original_pin": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "cases": [
+    "real-root",
+    "real-nested",
+    "unit-cancel",
+    "chooser-cancel"
+  ],
+  "actual_source": "MainWindow._on_import_dwg/_import_dwg_path/_import_dxf_path with controlled file dialog answer; real Qt unit choice/buttons; original history",
+  "input": "LibreDWG entities-2d.dwg at ee49c38f085407a1e0215c1f527f560ea24f0588; source version R2000 only",
+  "repairs": [
+    "null",
+    "duplicate-seed",
+    "control-crlf-tail"
+  ],
+  "discovery": [
+    "vendor",
+    "sibling",
+    "PATH",
+    "missing",
+    "windows-exe",
+    "linux-no-exe"
+  ],
+  "converter_controls": [
+    "warning-output",
+    "no-output",
+    "timeout"
+  ],
+  "native_guards": [
+    "actual_ingress",
+    "atomic_failure",
+    "temporary_cleanup"
+  ],
+  "limits": "No broader DWG version/desktop chooser/GPU claim. Bridge repair exact Latin-1 bytes; existing native DXF parser admission remains authoritative."
+}
