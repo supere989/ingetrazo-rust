@@ -83,5 +83,170 @@
   "states": 105,
   "original_readers": 8,
   "capture_attempts": 3,
-  "scope": "Selection traversal order diagnostic; exact geometry and history remain strict."
+  "scope": "Selection traversal order diagnostic; exact geometry and history remain strict.",
+  "sources": [
+    {
+      "path": "scripts/reference-composer-mixed.py",
+      "commit": "fb2e174c55099e5b2763c0bc8eb2045ead14bc6f",
+      "sha256": "722c804d00856fa540418383961978cb530db5c1661b525e0dae3c210f5dfae3",
+      "role": "final frozen producer; exact earlier executed versions were uncommitted and not retained"
+    },
+    {
+      "path": "scripts/reference-composer-mixed-reopens.py",
+      "commit": "fb2e174c55099e5b2763c0bc8eb2045ead14bc6f",
+      "sha256": "918efd701a54346554fab02463314cecbef52ad9471a6f86676c8dbbb8881e8c",
+      "role": "post-capture native original-reader helper"
+    },
+    {
+      "path": "scripts/check-composer-mixed.py",
+      "commit": "fb2e174c55099e5b2763c0bc8eb2045ead14bc6f",
+      "sha256": "14f87d290138e3b1dc9907113c72e1d68598fa3cdf6c5f4d18b47d1371df443d",
+      "role": "post-capture strict checker"
+    },
+    {
+      "path": "docs/audits/composer-mixed-selection/fixture-contract.json",
+      "commit": "fb2e174c55099e5b2763c0bc8eb2045ead14bc6f",
+      "sha256": "0298f44ec50e5273e2d5acc6af28dde1edb916d90e8c83a79566eb3690c103ff",
+      "role": "final frozen fixture contract"
+    }
+  ],
+  "capture_revision_binding": {
+    "original_python_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+    "producer_capture_git_commit": null,
+    "producer_capture_sha256": null,
+    "limitation": "All three producer executions used uncommitted edits. Exact executed producer bytes were not snapshotted. fb2e174c authenticates final frozen tooling only; it is not claimed as the executed capture revision. Output provenance and byte bindings remain independently retained."
+  },
+  "retained_attempts": [
+    {
+      "attempt": "r1",
+      "raw_path": "/tmp/ingetrazo-composer-mixed-source-proof",
+      "files": {},
+      "producer_revision": null,
+      "scope": "Retained byte bindings; raw files are outside canonical source archive. r1 stopped before Qt and left no files."
+    },
+    {
+      "attempt": "r2",
+      "raw_path": "/tmp/ingetrazo-composer-mixed-source-proof-r2",
+      "files": {
+        "all-kinds-box-input.igz": {
+          "size": 12590,
+          "sha256": "ee85db62356447aa5f961b9480d498c628aafb3902751fd38ed106852ba0fb28"
+        },
+        "all-kinds-box-original.igz": {
+          "size": 12590,
+          "sha256": "ee85db62356447aa5f961b9480d498c628aafb3902751fd38ed106852ba0fb28"
+        },
+        "callback-errors.json": {
+          "size": 3518,
+          "sha256": "328cd2e7cb2a8cdaee1362776da200ad2ac2159dcb657fbabea3aca873ddc2b6"
+        },
+        "fixture.png": {
+          "size": 100,
+          "sha256": "c968eca4fcd6db211bd26814897242ab7f599f55ceae330787bb0d12c0e0ad95"
+        },
+        "mixed-ctrl-move-input.igz": {
+          "size": 7468,
+          "sha256": "269bd324ee733967d1832b4b91b77e357543e3071b1c8ee5cf4b23f37d7bdf61"
+        },
+        "mixed-ctrl-move-original.igz": {
+          "size": 7521,
+          "sha256": "dd58fa7947fb37e4c72249924ff9beab168ae07117a080fb676eba3e19dbb322"
+        },
+        "mixed-delete-history-input.igz": {
+          "size": 7473,
+          "sha256": "a001f7ca88a5446822b31845909d50713752ec1ca58bcfaa8d43bf0eb7ec441b"
+        },
+        "original-mixed.partial.json": {
+          "size": 960686,
+          "sha256": "28d4d06f7f26025ac81cf49a3da20270986ca89bc7917f2374134cd54faf5d03"
+        },
+        "same-kind-properties-input.igz": {
+          "size": 7473,
+          "sha256": "2bcc46ab07b628a09739715053a82811140f6ec5db943ba3f648343b243fd23a"
+        },
+        "same-kind-properties-original.igz": {
+          "size": 7485,
+          "sha256": "5bd29fa6857fc1cd0f78ac2b52f7ae7c7c843c764e15e3429c33c564b5b2147b"
+        }
+      },
+      "producer_revision": null,
+      "scope": "Retained actual output/partial failure bytes; producer revision is unverified."
+    },
+    {
+      "attempt": "r3",
+      "raw_path": "/tmp/ingetrazo-composer-mixed-source-proof-r3",
+      "files": {
+        "bound-frame-followers-input.igz": {
+          "size": 7629,
+          "sha256": "2259edb2e78484efd4905430e03bfca9d2ccb2d07cf216bef0e19e4157afb2cb"
+        },
+        "bound-frame-followers-original.igz": {
+          "size": 7668,
+          "sha256": "1a4773216ad47a02e135ab4e7f3f10e9ca071c829ef9612b32c6415d79381788"
+        },
+        "completed-cases.json": {
+          "size": 983423,
+          "sha256": "87656a500731246bf055cf54803e5c6ab4430a7d777bfb772e7325595df11ff2"
+        },
+        "fixture.png": {
+          "size": 100,
+          "sha256": "c968eca4fcd6db211bd26814897242ab7f599f55ceae330787bb0d12c0e0ad95"
+        },
+        "group-id-and-alt-stack-input.igz": {
+          "size": 8094,
+          "sha256": "ac727050e6d477b614713ff772160cdb3a713754f09d7806b1aab039ec8f8740"
+        },
+        "group-id-and-alt-stack-original.igz": {
+          "size": 8094,
+          "sha256": "ac727050e6d477b614713ff772160cdb3a713754f09d7806b1aab039ec8f8740"
+        },
+        "locked-hidden-list-input.igz": {
+          "size": 7469,
+          "sha256": "f8f78db3e657ad50a2ca71a8bf5d4fba819f941449f3dd1d6c869a8c63d3cb9b"
+        },
+        "locked-hidden-list-original.igz": {
+          "size": 7470,
+          "sha256": "a24bb9cc24313fe06196130f896de1c762a9f43905c4891ab73818196f4adc47"
+        },
+        "mixed-delete-history-input.igz": {
+          "size": 7763,
+          "sha256": "f8d714d3f92987b0922e15c5c7a22d9fdd442ab92800a6388eedda455eea1ba9"
+        },
+        "mixed-delete-history-original.igz": {
+          "size": 7473,
+          "sha256": "a001f7ca88a5446822b31845909d50713752ec1ca58bcfaa8d43bf0eb7ec441b"
+        },
+        "original-mixed.json": {
+          "size": 939977,
+          "sha256": "19f4db112a0dcba9cdca7f442772d31b0a3ab419736b5efc42ff8c12e41025b5"
+        },
+        "original-mixed.partial.json": {
+          "size": 936569,
+          "sha256": "310c4a9fa755481bbb5584f49567a7bf68ffbbd54aeedd148b1a5e94c47fc1c2"
+        },
+        "original-reopens.json": {
+          "size": 41378,
+          "sha256": "4368f5dc6c763701d862bdc4006c646203923212156f82287193d6ef528cf3a6"
+        },
+        "same-kind-properties-input.igz": {
+          "size": 7473,
+          "sha256": "2bcc46ab07b628a09739715053a82811140f6ec5db943ba3f648343b243fd23a"
+        },
+        "same-kind-properties-original.igz": {
+          "size": 7485,
+          "sha256": "5bd29fa6857fc1cd0f78ac2b52f7ae7c7c843c764e15e3429c33c564b5b2147b"
+        },
+        "sheet-switch-history-input.igz": {
+          "size": 9351,
+          "sha256": "60016b4f8f9a4704c7519772f4cb17504d28336973470d5ff1d56af7cad8ca58"
+        },
+        "sheet-switch-history-original.igz": {
+          "size": 9364,
+          "sha256": "1334bc750c9b018bbb92bdc1aedd0a5572a1c07a0879b28afda41103eb2a9313"
+        }
+      },
+      "producer_revision": null,
+      "scope": "Retained actual output/partial failure bytes; producer revision is unverified."
+    }
+  ]
 }
