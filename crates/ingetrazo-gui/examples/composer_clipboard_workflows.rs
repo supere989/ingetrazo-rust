@@ -73,7 +73,39 @@ fn pixel(ctx: &egui::Context, at: &Value) -> Result<egui::Pos2, Error> {
 }
 
 fn compositions(app: &IngeTrazoApp) -> Value {
-    ingetrazo_formats::igz::scene_to_igz_document(&app.scene)["compositions"].clone()
+    let mut rows =
+        ingetrazo_formats::igz::scene_to_igz_document(&app.scene)["compositions"].clone();
+    // Literal Composicion.to_dict observation: optional empty lists and absent
+    // title are omitted. The saved IGZ remains unmodified and is reopened by Python.
+    for comp in rows.as_array_mut().unwrap() {
+        let fields = comp.as_object_mut().unwrap();
+        for key in [
+            "texts",
+            "images",
+            "scalebars",
+            "nortes",
+            "leyendas",
+            "shapes",
+            "cotas",
+            "cotas_ang",
+            "cotas_rad",
+            "etiquetas",
+            "perfiles",
+            "niveles",
+            "llamadas",
+        ] {
+            if fields
+                .get(key)
+                .is_some_and(|v| v.as_array().is_some_and(Vec::is_empty))
+            {
+                fields.remove(key);
+            }
+        }
+        if fields.get("cajetin").is_some_and(Value::is_null) {
+            fields.remove("cajetin");
+        }
+    }
+    rows
 }
 fn state(ctx: &egui::Context, app: &IngeTrazoApp, name: &str, phase: &str) -> Value {
     let index = app.scene.active_sheet_index.unwrap();
