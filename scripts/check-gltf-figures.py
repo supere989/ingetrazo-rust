@@ -48,7 +48,10 @@ def main():
   try:rich.validate(row['original'],row['native'])
   except AssertionError:asset_failures.append(name)
  assert set(asset_failures)=={'bitmap-perspective','figure-only','mixed-first-material'}
- assert decoded(source/'collapse.glb')['nodes']==[]
+ collapse=decoded(source/'collapse.glb')
+ assert len(collapse['nodes'])==1 and collapse['nodes'][0]['name']=='Figure 1'
+ assert len(collapse['primitives'])==1 and len(collapse['primitives'][0]['triangles'])==2
+ assert all(len({tuple(v[1]) for v in t})==2 for t in collapse['primitives'][0]['triangles'])
  refusal=json.loads((native/'collapse-refusal.json').read_text());assert refusal['refused'] and refusal['writer_unchanged'] and refusal['scene_unchanged']
  worker_frames=0
  if '--worker' in sys.argv:
