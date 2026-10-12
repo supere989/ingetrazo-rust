@@ -1,0 +1,51 @@
+{
+  "archive_authenticated": "04c27bd1ff59c3c5259dc4ab4574f5c3139e9fd1ad1fd958c35281a9c8ad6458",
+  "removed": [
+    {
+      "path": "/tmp/ingetrazo-geotiff-integration-r2/native/state",
+      "files": 6,
+      "logical_bytes": 3382
+    },
+    {
+      "path": "/tmp/ingetrazo-geotiff-integration-r2/native/picker",
+      "files": 1,
+      "logical_bytes": 50610088
+    },
+    {
+      "path": "/tmp/ingetrazo-geotiff-integration-r3/replay/source",
+      "files": 58,
+      "logical_bytes": 1475109
+    },
+    {
+      "path": "/tmp/ingetrazo-geotiff-integration-r3/replay/data",
+      "files": 3,
+      "logical_bytes": 31686
+    },
+    {
+      "path": "/tmp/ingetrazo-geotiff-integration-r3/replay/native/state",
+      "files": 6,
+      "logical_bytes": 3488
+    },
+    {
+      "path": "/tmp/ingetrazo-geotiff-integration-r3/replay/native/picker",
+      "files": 1,
+      "logical_bytes": 50609760
+    },
+    {
+      "path": "/tmp/ingetrazo-geotiff-source-proof-r1/cache",
+      "files": 8,
+      "logical_bytes": 77856
+    },
+    {
+      "path": "/tmp/ingetrazo-geotiff-source-proof-r1/config",
+      "files": 1,
+      "logical_bytes": 26
+    },
+    {
+      "path": "/tmp/ingetrazo-geotiff-source-proof-r1/data",
+      "files": 0,
+      "logical_bytes": 0
+    }
+  ],
+  "note": "Disposable replay/source/session/cache/picker copies only. Logical byte totals can include hardlinks and are not physical reclaimed space. Retained native results, failures, saves, source archive and shared Cargo target remain."
+}

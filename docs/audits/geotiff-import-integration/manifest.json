@@ -1,0 +1,419 @@
+{
+  "runtime_revision": "0149e9d0",
+  "runtime_full_revision": "0149e9d061a1e49b0bd40af057ffeff23e6aa5af",
+  "original_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "source_archive": "../geotiff-import/source-records.zip",
+  "source_archive_sha256": "567e32dce3e01e5330dc244871383e14438c259e6b50d69b8f3677383fbbce7b",
+  "archive_sha256": "04c27bd1ff59c3c5259dc4ab4574f5c3139e9fd1ad1fd958c35281a9c8ad6458",
+  "archive_bytes": 718008,
+  "members": {
+    "r1/build-result.json": {
+      "size": 475,
+      "sha256": "87c24c7997bc27742a42f2ec37d5bc217d21ffa1b4681abea563b6c974ffbb84"
+    },
+    "r1/build.log": {
+      "size": 13556,
+      "sha256": "4b60743254b7c88b5194aad2dd775a44ed84d89113d1ccf5262c8ad9758cd26c"
+    },
+    "r2/build-result.json": {
+      "size": 250,
+      "sha256": "566429f2e5ef041dd09b76d7fbae30bf5b42db95b6003cbd91ba91c9ee8ecee8"
+    },
+    "r2/build.log": {
+      "size": 26811,
+      "sha256": "d8c15826c0756baa008420aca9bf1828884013f0ba30adf0626621dc5ec99024"
+    },
+    "r2/comparison.json": {
+      "size": 437,
+      "sha256": "96bd1cb6f4c328736896a811543b7da9c944cc050f898e1df3f298574d35639b"
+    },
+    "r2/diagnostic-diff.json": {
+      "size": 5345,
+      "sha256": "90cf8772cc987db9fbbce2c51342a49037655c813b2cfd2c71952ce85f0ffdf9"
+    },
+    "r2/focused-checks.json": {
+      "size": 590,
+      "sha256": "b888b286daf5b82b40e753f16607ea5f1546ad8293ae211883a8696558abed72"
+    },
+    "r2/geotiff-admission.log": {
+      "size": 14493,
+      "sha256": "d69ce168c84344712e9d17eb479dadbb3de282310a1217f939f3271a259a25b6"
+    },
+    "r2/native/bigtiff-be-planar16-decoded.rgba": {
+      "size": 1564,
+      "sha256": "d0c1fc302491892185c950efcbea0d0cef8cc36b7bc31d10194f7d159f9d1f3a"
+    },
+    "r2/native/citation-utm-decoded.rgba": {
+      "size": 1564,
+      "sha256": "d0c1fc302491892185c950efcbea0d0cef8cc36b7bc31d10194f7d159f9d1f3a"
+    },
+    "r2/native/classic-planar8-decoded.rgba": {
+      "size": 1564,
+      "sha256": "595549c128b6ab2b5eedc60ec85c6152a05474045fc28e357cff9ca588d320c3"
+    },
+    "r2/native/existing-rotated-datum-cached.rgba": {
+      "size": 28000,
+      "sha256": "a979aebf86893c9be1b8abfe83be147b10c2c21cd8ef9a49ad3212f9d88cc3e4"
+    },
+    "r2/native/existing-rotated-datum-saved.igz": {
+      "size": 8129,
+      "sha256": "207e4a19044bbe684439066e723e2f2d7d60b6a328e9f39ed23bd93e35d3eb18"
+    },
+    "r2/native/existing-rotated-datum-stored.webp": {
+      "size": 7242,
+      "sha256": "50dd82744bc8a730ee1d8feb494ee16bb77543cf917a0b469a5add52d2116d0a"
+    },
+    "r2/native/fresh-datum-cached.rgba": {
+      "size": 262144,
+      "sha256": "4c2072de37e24ba40ef4e28926b0dd25e3ad0f33749877a0d2127aa96f31c340"
+    },
+    "r2/native/fresh-datum-saved.igz": {
+      "size": 1766,
+      "sha256": "77d916229d3f7641a86c4f383b26472e8b3060fd3a3d1dbb82d04893ca468365"
+    },
+    "r2/native/fresh-datum-stored.webp": {
+      "size": 530,
+      "sha256": "8a4514b06bcfa35d7862d9d571dcc80789ed645f7ffa51172f641d8e83ca814c"
+    },
+    "r2/native/geographic-affine-point-decoded.rgba": {
+      "size": 1564,
+      "sha256": "d0c1fc302491892185c950efcbea0d0cef8cc36b7bc31d10194f7d159f9d1f3a"
+    },
+    "r2/native/guards-geotiff.json": {
+      "size": 141,
+      "sha256": "69e3b5709efda981a60963f335b91c608fe4b2bec158652de2ec2e1c4c82d79b"
+    },
+    "r2/native/gui-reduced-cached.rgba": {
+      "size": 34884,
+      "sha256": "8408f4a8627c1b8a6298683f612e99c85a305dfde42c1ab97e0354587633a648"
+    },
+    "r2/native/gui-reduced-saved.igz": {
+      "size": 7367,
+      "sha256": "51113af1442c05a4e8228aa578b8ee66a2bd955e1df3b714445e7d54e31556dd"
+    },
+    "r2/native/gui-reduced-stored.webp": {
+      "size": 6126,
+      "sha256": "0006a6e61558f5544558a06ce1ad13ee006d19a2f96c2dfc2c1ab459428ecac0"
+    },
+    "r2/native/jpeg-rgb-decoded.rgba": {
+      "size": 4096,
+      "sha256": "96fccf0c904b4cd4eb63d88bcf820cb913eb7bf028cfcdba9ec0f3947564bfd2"
+    },
+    "r2/native/jpeg-tables-cmyk-decoded.rgba": {
+      "size": 262144,
+      "sha256": "9062b20228a6f8f36f585f214b49a7a9bcffb8013cfdad0ac738245743fc5454"
+    },
+    "r2/native/native-decode-stats.json": {
+      "size": 3603,
+      "sha256": "5353544dac57e8197ceaad903ffe869b3cd010f2c888acb3ad196197039d1483"
+    },
+    "r2/native/native-geotiff.json": {
+      "size": 90005,
+      "sha256": "262babbc5ac92554c4c41cda1f35e020901ddc0599af939ba1b564bbd3c0f579"
+    },
+    "r2/native/native-geotiff.partial.json": {
+      "size": 79933,
+      "sha256": "0219f0ac4ae66895c06837d7ebe25c1d45d01d755767bd0fd47ceb81ad3339ee"
+    },
+    "r2/native/nested-global-image-cached.rgba": {
+      "size": 28000,
+      "sha256": "a979aebf86893c9be1b8abfe83be147b10c2c21cd8ef9a49ad3212f9d88cc3e4"
+    },
+    "r2/native/nested-global-image-saved.igz": {
+      "size": 8128,
+      "sha256": "22558e04071e1149e2d033a648b74d2f4795eec8640d29cea39913200d21e55d"
+    },
+    "r2/native/nested-global-image-stored.webp": {
+      "size": 7242,
+      "sha256": "50dd82744bc8a730ee1d8feb494ee16bb77543cf917a0b469a5add52d2116d0a"
+    },
+    "r2/native/old-deflate-odd-carry-decoded.rgba": {
+      "size": 80,
+      "sha256": "0c8caffb50643ef5a45445efef07f7b0fd4d1b3e5a8d18c1de5a370cbe17463c"
+    },
+    "r2/native/reopens-geotiff.json": {
+      "size": 24196,
+      "sha256": "4114b24679a080cfa0aefd9ec3b077b997515880419af01175cf3a97fe7f2358"
+    },
+    "r2/native/rgba16-be-predictor-decoded.rgba": {
+      "size": 1564,
+      "sha256": "d0c1fc302491892185c950efcbea0d0cef8cc36b7bc31d10194f7d159f9d1f3a"
+    },
+    "r2/native/strip-deflate-predictor8-decoded.rgba": {
+      "size": 1564,
+      "sha256": "d0c1fc302491892185c950efcbea0d0cef8cc36b7bc31d10194f7d159f9d1f3a"
+    },
+    "r2/native/strip-lzw-rgb8-decoded.rgba": {
+      "size": 1564,
+      "sha256": "595549c128b6ab2b5eedc60ec85c6152a05474045fc28e357cff9ca588d320c3"
+    },
+    "r2/native/strip-packbits-grayalpha8-decoded.rgba": {
+      "size": 1564,
+      "sha256": "3b5380c243d217fee7f6d0967c54eed4779e80c6a83e9f62f8d5f45262911148"
+    },
+    "r2/native/strip-raw-rgba8-decoded.rgba": {
+      "size": 1564,
+      "sha256": "d0c1fc302491892185c950efcbea0d0cef8cc36b7bc31d10194f7d159f9d1f3a"
+    },
+    "r2/native/tile-deflate-reduced-decoded.rgba": {
+      "size": 1800,
+      "sha256": "d44862e89c5058c66e648545007eb10d545f98fbf0266070adf3f3ae029c254d"
+    },
+    "r2/native/tile-lzw-reduced-decoded.rgba": {
+      "size": 1800,
+      "sha256": "d44862e89c5058c66e648545007eb10d545f98fbf0266070adf3f3ae029c254d"
+    },
+    "r2/native/tile-raw-partial-decoded.rgba": {
+      "size": 1564,
+      "sha256": "d0c1fc302491892185c950efcbea0d0cef8cc36b7bc31d10194f7d159f9d1f3a"
+    },
+    "r2/native/whitezero16-decoded.rgba": {
+      "size": 1564,
+      "sha256": "7da0d6d59e68f5ee7e22a46e6e7e66e84b751f63fd91a360e72b81c47f13f3de"
+    },
+    "r2/native-clipboard-semantic-evidence.json": {
+      "size": 31673,
+      "sha256": "dfe086392591df9536cf9a43458b3bfe0f3384b44605e83301af72eebac0483a"
+    },
+    "r2/native-clipboard.log": {
+      "size": 31673,
+      "sha256": "dfe086392591df9536cf9a43458b3bfe0f3384b44605e83301af72eebac0483a"
+    },
+    "r2/native-result.json": {
+      "size": 504,
+      "sha256": "d573614da2dd73005c896ffb907e21f83ca0bbafc9d20271cc029b22f422ad98"
+    },
+    "r2/native.log": {
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "r2/reader-result.json": {
+      "size": 299,
+      "sha256": "69f11885fe3f94df1f2d5258dee0d0d115b65411031fd17a1f774894882a82ef"
+    },
+    "r2/reader.log": {
+      "size": 27,
+      "sha256": "78d49dc1b16b8c4a0fa53fc356a5b2d0aece9f1e637b758089398c88768132f0"
+    },
+    "r3/build.log": {
+      "size": 26811,
+      "sha256": "e6a268b079318ac5bf79cbb1ae46d231094cb08f2517b2f06f8c475e0712af74"
+    },
+    "r3/replay/checker.log": {
+      "size": 411,
+      "sha256": "d46d7529dcb267d6a6345427e1634e3986ecc02d4c2fe66b4d0050d7a19b8255"
+    },
+    "r3/replay/comparison.json": {
+      "size": 439,
+      "sha256": "74e81d667c85375dca43c1181d9b255bee726b9ba1e2c67a8660f4b3c0911bb5"
+    },
+    "r3/replay/native/bigtiff-be-planar16-decoded.rgba": {
+      "size": 1564,
+      "sha256": "d0c1fc302491892185c950efcbea0d0cef8cc36b7bc31d10194f7d159f9d1f3a"
+    },
+    "r3/replay/native/citation-utm-decoded.rgba": {
+      "size": 1564,
+      "sha256": "d0c1fc302491892185c950efcbea0d0cef8cc36b7bc31d10194f7d159f9d1f3a"
+    },
+    "r3/replay/native/classic-planar8-decoded.rgba": {
+      "size": 1564,
+      "sha256": "595549c128b6ab2b5eedc60ec85c6152a05474045fc28e357cff9ca588d320c3"
+    },
+    "r3/replay/native/existing-rotated-datum-cached.rgba": {
+      "size": 28000,
+      "sha256": "a979aebf86893c9be1b8abfe83be147b10c2c21cd8ef9a49ad3212f9d88cc3e4"
+    },
+    "r3/replay/native/existing-rotated-datum-saved.igz": {
+      "size": 8129,
+      "sha256": "207e4a19044bbe684439066e723e2f2d7d60b6a328e9f39ed23bd93e35d3eb18"
+    },
+    "r3/replay/native/existing-rotated-datum-stored.webp": {
+      "size": 7242,
+      "sha256": "50dd82744bc8a730ee1d8feb494ee16bb77543cf917a0b469a5add52d2116d0a"
+    },
+    "r3/replay/native/fresh-datum-cached.rgba": {
+      "size": 262144,
+      "sha256": "a15d71abe22fcdf2fc5f53c76f03e441b1aed84b88cfa548773060221a707213"
+    },
+    "r3/replay/native/fresh-datum-saved.igz": {
+      "size": 19553,
+      "sha256": "6af1fbbc44b4665330575294bb0a0ecb7d39ed08ee0c2dbc721ce0e2b2058610"
+    },
+    "r3/replay/native/fresh-datum-stored.webp": {
+      "size": 18318,
+      "sha256": "31dff3feb320c012e05f707366efa7a74e81a88840612eebe1db2f36c656df20"
+    },
+    "r3/replay/native/geographic-affine-point-decoded.rgba": {
+      "size": 1564,
+      "sha256": "d0c1fc302491892185c950efcbea0d0cef8cc36b7bc31d10194f7d159f9d1f3a"
+    },
+    "r3/replay/native/guards-geotiff.json": {
+      "size": 141,
+      "sha256": "69e3b5709efda981a60963f335b91c608fe4b2bec158652de2ec2e1c4c82d79b"
+    },
+    "r3/replay/native/gui-reduced-cached.rgba": {
+      "size": 34884,
+      "sha256": "8408f4a8627c1b8a6298683f612e99c85a305dfde42c1ab97e0354587633a648"
+    },
+    "r3/replay/native/gui-reduced-saved.igz": {
+      "size": 7367,
+      "sha256": "51113af1442c05a4e8228aa578b8ee66a2bd955e1df3b714445e7d54e31556dd"
+    },
+    "r3/replay/native/gui-reduced-stored.webp": {
+      "size": 6126,
+      "sha256": "0006a6e61558f5544558a06ce1ad13ee006d19a2f96c2dfc2c1ab459428ecac0"
+    },
+    "r3/replay/native/jpeg-rgb-decoded.rgba": {
+      "size": 4096,
+      "sha256": "96fccf0c904b4cd4eb63d88bcf820cb913eb7bf028cfcdba9ec0f3947564bfd2"
+    },
+    "r3/replay/native/jpeg-tables-cmyk-decoded.rgba": {
+      "size": 262144,
+      "sha256": "7145110b5cd9723b513189cba8f68cc004ba09483823271663c4feffdd1d82e8"
+    },
+    "r3/replay/native/native-decode-stats.json": {
+      "size": 3603,
+      "sha256": "6e9f1bd2a503d44e094f6402a9b3c41c7d28b3dedbe83f401ee8f1d6015bf1d2"
+    },
+    "r3/replay/native/native-geotiff.json": {
+      "size": 90005,
+      "sha256": "fb5f3d129eec24359c9e444bf7583365cb2026bba6f5e8142f4d0d4c37c61b36"
+    },
+    "r3/replay/native/native-geotiff.partial.json": {
+      "size": 79933,
+      "sha256": "55691bde7c14503addd4a46ea10ba9d2c345993bc4f8a6530ebd41d85adb9120"
+    },
+    "r3/replay/native/nested-global-image-cached.rgba": {
+      "size": 28000,
+      "sha256": "a979aebf86893c9be1b8abfe83be147b10c2c21cd8ef9a49ad3212f9d88cc3e4"
+    },
+    "r3/replay/native/nested-global-image-saved.igz": {
+      "size": 8128,
+      "sha256": "22558e04071e1149e2d033a648b74d2f4795eec8640d29cea39913200d21e55d"
+    },
+    "r3/replay/native/nested-global-image-stored.webp": {
+      "size": 7242,
+      "sha256": "50dd82744bc8a730ee1d8feb494ee16bb77543cf917a0b469a5add52d2116d0a"
+    },
+    "r3/replay/native/old-deflate-odd-carry-decoded.rgba": {
+      "size": 80,
+      "sha256": "0c8caffb50643ef5a45445efef07f7b0fd4d1b3e5a8d18c1de5a370cbe17463c"
+    },
+    "r3/replay/native/reopens-geotiff.json": {
+      "size": 24196,
+      "sha256": "8df7222bd2e02719107ab2effb31ca2e3c7a9b4b5f711ede889e9df82fa2d1be"
+    },
+    "r3/replay/native/rgba16-be-predictor-decoded.rgba": {
+      "size": 1564,
+      "sha256": "d0c1fc302491892185c950efcbea0d0cef8cc36b7bc31d10194f7d159f9d1f3a"
+    },
+    "r3/replay/native/strip-deflate-predictor8-decoded.rgba": {
+      "size": 1564,
+      "sha256": "d0c1fc302491892185c950efcbea0d0cef8cc36b7bc31d10194f7d159f9d1f3a"
+    },
+    "r3/replay/native/strip-lzw-rgb8-decoded.rgba": {
+      "size": 1564,
+      "sha256": "595549c128b6ab2b5eedc60ec85c6152a05474045fc28e357cff9ca588d320c3"
+    },
+    "r3/replay/native/strip-packbits-grayalpha8-decoded.rgba": {
+      "size": 1564,
+      "sha256": "3b5380c243d217fee7f6d0967c54eed4779e80c6a83e9f62f8d5f45262911148"
+    },
+    "r3/replay/native/strip-raw-rgba8-decoded.rgba": {
+      "size": 1564,
+      "sha256": "d0c1fc302491892185c950efcbea0d0cef8cc36b7bc31d10194f7d159f9d1f3a"
+    },
+    "r3/replay/native/tile-deflate-reduced-decoded.rgba": {
+      "size": 1800,
+      "sha256": "d44862e89c5058c66e648545007eb10d545f98fbf0266070adf3f3ae029c254d"
+    },
+    "r3/replay/native/tile-lzw-reduced-decoded.rgba": {
+      "size": 1800,
+      "sha256": "d44862e89c5058c66e648545007eb10d545f98fbf0266070adf3f3ae029c254d"
+    },
+    "r3/replay/native/tile-raw-partial-decoded.rgba": {
+      "size": 1564,
+      "sha256": "d0c1fc302491892185c950efcbea0d0cef8cc36b7bc31d10194f7d159f9d1f3a"
+    },
+    "r3/replay/native/whitezero16-decoded.rgba": {
+      "size": 1564,
+      "sha256": "7da0d6d59e68f5ee7e22a46e6e7e66e84b751f63fd91a360e72b81c47f13f3de"
+    },
+    "r3/replay/native.log": {
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "r3/replay/reader.log": {
+      "size": 27,
+      "sha256": "78d49dc1b16b8c4a0fa53fc356a5b2d0aece9f1e637b758089398c88768132f0"
+    },
+    "r3/replay/result.json": {
+      "size": 1460,
+      "sha256": "684def9e9efac886aa8c0979ec39b7e1a12f00e40c5b507a9a368ae3affca01b"
+    },
+    "r3/replay.log": {
+      "size": 1236,
+      "sha256": "56860c69cd43ecb15d84d8a8b131cf4547cb598332d8c4102b698dc786c0068c"
+    },
+    "r3/result.json": {
+      "size": 710,
+      "sha256": "c12acb7538fbb194099ccb8fe32b2b900547efe2f06ca0230c8a6864c5eb9fcb"
+    },
+    "webp-unit/result.json": {
+      "size": 199,
+      "sha256": "ebe6931ca287094750680552edb20d4347f145bc39923e5bd05bdf9c654528ac"
+    },
+    "webp-unit/test.log": {
+      "size": 14226,
+      "sha256": "651d2bbec4226bbbc90a9ba6277c1843d00b1d4fccb8103e9ea2c3e607d64d8f"
+    },
+    "webp-metadata/aarch64-apple-darwin-gui.log": {
+      "size": 28771,
+      "sha256": "0b46463e8e3bbbab2ae6c64933769c04e3b0f1da15298e3f15ad30eccf67ce22"
+    },
+    "webp-metadata/aarch64-apple-darwin-metal.log": {
+      "size": 4368,
+      "sha256": "2abb963a5eb99ff0403c648150c577f581c7318d64ef90f3f61f98195c49a3dd"
+    },
+    "webp-metadata/result.json": {
+      "size": 1469,
+      "sha256": "6f02b2115868d25bca8e5f2ec42b5debe307554ad2fef4b77483bef9d7442c82"
+    },
+    "webp-metadata/x86_64-apple-darwin-gui.log": {
+      "size": 28382,
+      "sha256": "9671084ad40d99ff4f952fa303767fc36c0f6fdee0da6fa14e5fcba138aa2112"
+    },
+    "webp-metadata/x86_64-apple-darwin-metal.log": {
+      "size": 5509,
+      "sha256": "b52f1aed11c56b9733bf1a7c88515e53238a2b3f0242eeff42db373adba43397"
+    }
+  },
+  "excluded_directories": [
+    "cache",
+    "config",
+    "data",
+    "picker",
+    "reader-config",
+    "source",
+    "state"
+  ],
+  "source_captures": 1,
+  "native_invocations": 2,
+  "build_invocations": 3,
+  "accepted_comparison": {
+    "ok": true,
+    "strict_all_source_states": false,
+    "scope": "20 literal successful/cancel states and one separately accepted native atomic correction; original leaked datum and uncaught zlib error retained",
+    "cases": 6,
+    "states": 21,
+    "literal_states": 20,
+    "native_correction_states": 1,
+    "native_correction_ok": true,
+    "decodes": 16,
+    "stored_resources": 4,
+    "payloads": 24,
+    "reader_pairs": 4,
+    "negative_controls": 8
+  },
+  "boundary": "Finite operational, literal byte and document evidence; one explicit source-failure atomicity correction. No broad platform, GPU, orthomosaic-scale or aggregate WebP memory acceptance."
+}
