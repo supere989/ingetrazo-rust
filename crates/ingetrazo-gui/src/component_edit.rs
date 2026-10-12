@@ -559,7 +559,7 @@ impl IngeTrazoApp {
         let mut world_children=group.children.clone();
         for child in &mut world_children {child.transform=world_frame*child.transform;}
         let mut session=ComponentEditSession{
-            original_scene:self.scene.clone(),cancel_scene:self.scene.clone(),original_camera:self.camera.clone(),survey_camera_live:false,
+            original_scene:self.scene.clone(),cancel_scene:self.scene.clone(),original_camera:self.camera.clone(),survey_camera_live:self.component_edit_stack.last().is_some_and(|session|session.survey_camera_live),
             original_undo:self.undo_stack.clone(),original_redo:self.redo_stack.clone(),
             group_id:group.id,
             fold_history:group.children.is_empty() && (group.transform!=glam::DMat4::IDENTITY || group.component_definition.is_some() || group.native_document.get("xform").is_some_and(|v|v.is_array())),

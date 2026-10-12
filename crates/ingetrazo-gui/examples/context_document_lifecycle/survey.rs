@@ -171,6 +171,20 @@ pub fn run() {
         assert_eq!(camera_app.camera.target, glam::DVec3::new(11., 12., 13.));
         assert_eq!(camera_app.camera.distance, 37.);
     }
+    // A child entered after the fit inherits the parent's live-camera owner.
+    let mut child_app = load(&root, "fresh");
+    child_app.scene.select(SelectionItem::Group(0));
+    child_app.begin_component_edit();
+    import(&mut child_app, &root, "comma.csv");
+    child_app.scene.select(SelectionItem::Group(0));
+    child_app.begin_component_edit();
+    child_app.camera.target = glam::DVec3::new(14., 15., 16.);
+    child_app.camera.distance = 41.;
+    while !child_app.component_edit_stack.is_empty() {
+        child_app.finish_component_edit();
+        assert_eq!(child_app.camera.target, glam::DVec3::new(14., 15., 16.));
+        assert_eq!(child_app.camera.distance, 41.);
+    }
     // Native Cancel retains its separate pre-entry camera rollback contract.
     let mut cancel_app = load(&root, "fresh");
     let original_camera = cancel_app.camera.clone();
@@ -181,5 +195,5 @@ pub fn run() {
     }
     assert_eq!(cancel_app.camera.target, original_camera.target);
     assert_eq!(cancel_app.camera.distance, original_camera.distance);
-    std::fs::write(root.join("survey-guards.json"),serde_json::to_vec_pretty(&json!({"nonfinite_refusal_atomic":true,"native_f64_geometry_untouched":true,"unknown_document_untouched":true,"live_camera_after_import_survives_finish":true,"native_cancel_keeps_prior_camera_contract":true})).unwrap()).unwrap();
+    std::fs::write(root.join("survey-guards.json"),serde_json::to_vec_pretty(&json!({"nonfinite_refusal_atomic":true,"native_f64_geometry_untouched":true,"unknown_document_untouched":true,"live_camera_after_import_survives_finish":true,"native_cancel_keeps_prior_camera_contract":true,"later_child_entry_inherits_live_survey_camera":true})).unwrap()).unwrap();
 }
