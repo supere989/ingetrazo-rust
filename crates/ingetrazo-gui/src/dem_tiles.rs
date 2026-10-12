@@ -104,6 +104,10 @@ impl Transport {
         if max_encoded_bytes == 0 || decoded_reservation_bytes / 17 == 0 {
             return Err("DEM transport response admission is empty".into());
         }
+        let mut pending = HashSet::new();
+        pending
+            .try_reserve(274)
+            .map_err(|_| "DEM pending index admission refused")?;
         let (tx, rx) = mpsc::sync_channel::<Job>(257);
         let (ready_tx, ready_rx) = mpsc::sync_channel(8);
         let rx = Arc::new(Mutex::new(rx));
@@ -154,7 +158,7 @@ impl Transport {
             generation,
             workers,
             wake,
-            pending: HashSet::new(),
+            pending,
             deadline,
             max_encoded_bytes,
             encoded_reservation_bytes,
@@ -196,9 +200,9 @@ impl Transport {
             return Ok(false);
         }
         source.validate()?;
-        self.pending
-            .try_reserve(1)
-            .map_err(|_| "DEM pending index allocation refused")?;
+        if self.pending.len() >= 274 {
+            return Err("DEM request queue admission refused".into());
+        }
         let job = Job {
             tile,
             generation: self.generation(),
@@ -533,7 +537,10 @@ impl DiskCache {
         let mut data = Vec::new();
         let mut scratch = [0u8; 8192];
         loop {
-            let read = file.read(&mut scratch).map_err(|e| e.to_string())?;
+            let read = match file.read(&mut scratch) {
+                Ok(n) => n,
+                Err(_) => return Ok(None),
+            };
             if read == 0 {
                 break;
             }

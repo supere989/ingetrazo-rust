@@ -47,6 +47,7 @@ pub struct State {
     dem_service: Option<Arc<DemService>>,
     dem: Option<Arc<Mutex<DemCache>>>,
     dem_document: Option<uuid::Uuid>,
+    dem_datum: Option<ingetrazo_core::georef::SceneDatum>,
     pub dem_source: DemSource,
     pub dem_zoom: u8,
     pub dem_cache_root: Option<PathBuf>,
@@ -79,6 +80,7 @@ impl Default for State {
             dem_service: None,
             dem: None,
             dem_document: None,
+            dem_datum: None,
             dem_source: DemSource::default(),
             dem_zoom: 13,
             dem_cache_root: None,
@@ -536,15 +538,22 @@ impl IngeTrazoApp {
                     && c.source.url_template == state.dem_source.url_template
                     && c.zoom == state.dem_zoom
             });
-        let cache = if reused {
-            state.dem.as_ref().unwrap().clone()
+        let metadata_available = limit
+            .checked_sub(state.resident_bytes())
+            .ok_or("Retained DEM owner exceeds CPU budget")?;
+        let mut candidate_cache = if reused {
+            state
+                .dem
+                .as_ref()
+                .unwrap()
+                .lock()
+                .unwrap_or_else(|e| e.into_inner())
+                .fork(metadata_available)?
         } else {
-            Arc::new(Mutex::new(DemCache::new(
-                service.clone(),
-                state.dem_source.clone(),
-                state.dem_zoom,
-            )?))
+            DemCache::new(service.clone(), state.dem_source.clone(), state.dem_zoom)?
         };
+        candidate_cache.reserve_publication_queues()?;
+        let cache = Arc::new(Mutex::new(candidate_cache));
         let other = checked(
             state.resident_bytes(),
             if new_service {
@@ -559,7 +568,7 @@ impl IngeTrazoApp {
             cache
                 .lock()
                 .unwrap_or_else(|e| e.into_inner())
-                .field_bytes()
+                .field_data_bytes()
         } else {
             0
         };
@@ -584,12 +593,20 @@ impl IngeTrazoApp {
                 std::mem::size_of::<ingetrazo_core::georef::ProfileSample>(),
             )?,
         )?;
+        cache
+            .lock()
+            .unwrap_or_else(|e| e.into_inner())
+            .admit_transport()?;
         let chart = prepared_chart(state, profile.clone(), peak, limit)?;
-        // The owner changes only after complete profile/chart admission.
+        // Both metadata/pixel admissions and the worker owner precede retirement.
         if !reused {
             service.retire();
         }
-        cache.lock().unwrap_or_else(|e| e.into_inner()).pump()?;
+        cache
+            .lock()
+            .unwrap_or_else(|e| e.into_inner())
+            .enqueue_prepared();
+        state.dem_datum = Some(datum.clone());
         state.dem_epoch = cache.lock().unwrap_or_else(|e| e.into_inner()).epoch;
         state.dem_service = Some(service);
         state.dem = Some(cache);
@@ -609,7 +626,7 @@ impl IngeTrazoApp {
     }
     fn refresh_dem_profile(&mut self, arrival: bool) {
         let state = &self.survey_profile;
-        if state.dem_document != Some(self.clipboard_document) {
+        if state.dem_document != Some(self.clipboard_document) || (!arrival && !state.visible) {
             return;
         }
         let version = (
@@ -620,23 +637,48 @@ impl IngeTrazoApp {
         if !arrival && state.last_version == Some(version) {
             return;
         }
-        let (Some(cache), Some(held), Some(datum)) =
-            (&state.dem, &state.held, &self.scene.geo_datum)
+        let (Some(cache), Some(held), Some(datum)) = (&state.dem, &state.held, &state.dem_datum)
         else {
             return;
         };
-        let Some(live) = self
+        let live = self
             .scene
             .geo_paths
             .iter()
-            .find(|p| p.history_id == held.id)
-        else {
+            .find(|p| p.history_id == held.id);
+        if live.is_none() && !arrival {
             self.survey_profile.last_version = Some(version);
             return;
-        };
+        }
         let other = state.resident_bytes();
         let limit = state.limits.bytes;
-        let result = crate::survey_profile::held(live, other, limit).and_then(|path| {
+        let result = if let Some(live) = live {
+            crate::survey_profile::held(live, other, limit)
+        } else {
+            let mut points = Vec::new();
+            let needed = bytes(held.points.len(), std::mem::size_of::<DVec3>());
+            needed
+                .and_then(|n| budget(checked(other, n)?, limit))
+                .and_then(|_| {
+                    points
+                        .try_reserve_exact(held.points.len())
+                        .map_err(|_| "Detached DEM path allocation refused")?;
+                    budget(
+                        checked(
+                            other,
+                            bytes(points.capacity(), std::mem::size_of::<DVec3>())?,
+                        )?,
+                        limit,
+                    )?;
+                    points.extend_from_slice(&held.points);
+                    Ok(HeldPath {
+                        id: held.id,
+                        points,
+                        closed: held.closed,
+                    })
+                })
+        }
+        .and_then(|path| {
             let pathbytes = bytes(path.points.capacity(), std::mem::size_of::<DVec3>())?;
             let accounted = cache
                 .lock()
@@ -702,7 +744,7 @@ impl IngeTrazoApp {
     fn export_dem_profile(&mut self, path: &Path) -> Result<bool, String> {
         let state = &self.survey_profile;
         let (Some(cache), Some(acquired), Some(datum)) =
-            (&state.dem, &state.held, &self.scene.geo_datum)
+            (&state.dem, &state.held, &state.dem_datum)
         else {
             return Ok(false);
         };
@@ -721,25 +763,48 @@ impl IngeTrazoApp {
                 .map(|p| p.points.capacity() * std::mem::size_of::<DVec3>())
                 .unwrap_or(0),
         )?;
-        let accounted = cache
+        let available = state
+            .limits
+            .bytes
+            .checked_sub(other)
+            .ok_or("DEM CSV metadata exceeds CPU budget")?;
+        let candidate = Arc::new(Mutex::new(
+            cache
+                .lock()
+                .unwrap_or_else(|e| e.into_inner())
+                .fork(available)?,
+        ));
+        let accounted = candidate
             .lock()
             .unwrap_or_else(|e| e.into_inner())
-            .field_bytes();
+            .field_data_bytes();
         let profile = prepare_dem_profile(
             target,
-            cache,
+            &candidate,
             datum,
             other,
             accounted,
             state.limits.bytes,
             true,
         )?;
-        cache.lock().unwrap_or_else(|e| e.into_inner()).pump()?;
+        candidate
+            .lock()
+            .unwrap_or_else(|e| e.into_inner())
+            .admit_transport()?;
         std::fs::write(
             path,
-            profile_csv(&profile, vertical_reference(&self.scene), Some(datum.alt)),
+            profile_csv(
+                &profile,
+                vertical_reference(&self.scene),
+                self.scene.geo_datum.as_ref().map(|d| d.alt),
+            ),
         )
         .map_err(|e| format!("Profile CSV: {e}"))?;
+        candidate
+            .lock()
+            .unwrap_or_else(|e| e.into_inner())
+            .enqueue_prepared();
+        self.survey_profile.dem = Some(candidate);
         Ok(true)
     }
     pub fn dem_profile_observation(&self) -> serde_json::Value {

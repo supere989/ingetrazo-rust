@@ -130,6 +130,7 @@ impl Field {
 
 /// Original ensure_area's x-major/y-minor tile roster, represented by one
 /// checked cursor rather than an eagerly allocated potentially huge Vec.
+#[derive(Clone)]
 pub struct Area {
     x: i32,
     y: i32,
@@ -199,7 +200,9 @@ impl Area {
             remaining: count,
         })
     }
-    pub fn key(&self)->[i32;5]{[self.x0,self.y0,self.x1,self.y1,i32::from(self.zoom)]}
+    pub fn key(&self) -> [i32; 5] {
+        [self.x0, self.y0, self.x1, self.y1, i32::from(self.zoom)]
+    }
     pub fn remaining(&self) -> u64 {
         self.remaining
     }

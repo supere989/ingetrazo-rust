@@ -45,7 +45,7 @@ try:
  rows=[]
  for c in data["cases"]:
   name=c["name"]
-  rows.append(dict(case=name,original=state(source/c["saved"],c,source/"disk"/name),
+  rows.append(dict(case=name,original=state(source/c["saved"],c,source/"disk-cache"/name),
                    native=state(out/(name+"-native.igz"),c,out/"native-disk"/name)))
  (out/"native-reopens.json").write_text(json.dumps(rows,indent=2)+"\n")
  print(json.dumps(dict(reader_pairs=len(rows))))

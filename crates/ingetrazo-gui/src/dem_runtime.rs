@@ -122,6 +122,73 @@ impl Cache {
             requested: 0,
         })
     }
+    // Explicit actions stage only metadata; immutable decoded pixels remain shared.
+    pub fn fork(&self, available: usize) -> Result<Self, String> {
+        let estimate = self
+            .fields
+            .len()
+            .checked_add(self.wanted.len() * 2)
+            .and_then(|n| n.checked_mul(256))
+            .ok_or("DEM metadata overflow")?;
+        if estimate > available {
+            return Err("DEM staged metadata exceeds CPU budget".into());
+        }
+        let mut c = Self::new(self.service.clone(), self.source.clone(), self.zoom)?;
+        c.fields
+            .try_reserve(self.fields.len())
+            .map_err(|_| "DEM staged field index refused")?;
+        c.fields
+            .extend(self.fields.iter().map(|(t, f)| (*t, f.clone())));
+        c.field_bytes = self.field_bytes;
+        c.epoch = self.epoch;
+        c.decoded_count = self.decoded_count;
+        c.area = self.area.clone();
+        c.area_key = self.area_key;
+        c.generation = self.generation;
+        c.wanted
+            .try_reserve(self.wanted.len())
+            .map_err(|_| "DEM staged queue refused")?;
+        c.wanted.extend(self.wanted.iter().copied());
+        c.wanted_set
+            .try_reserve(self.wanted_set.len())
+            .map_err(|_| "DEM staged queue index refused")?;
+        c.wanted_set.extend(self.wanted_set.iter().copied());
+        c.last_error = self.last_error.clone();
+        c.requested = self.requested;
+        c.reserve_publication_queues()?;
+        if c.field_bytes().saturating_sub(c.field_data_bytes()) > available {
+            return Err("DEM staged capacities exceed CPU budget".into());
+        }
+        Ok(c)
+    }
+    pub fn field_data_bytes(&self) -> usize {
+        self.field_bytes
+    }
+    pub fn reserve_publication_queues(&mut self) -> Result<(), String> {
+        self.wanted
+            .try_reserve(257 - self.wanted.len())
+            .map_err(|_| "DEM publication queue admission refused")?;
+        self.wanted_set
+            .try_reserve(257 - self.wanted_set.len())
+            .map_err(|_| "DEM publication index admission refused")?;
+        self.cold_misses
+            .try_reserve(257)
+            .map_err(|_| "DEM cold index admission refused")?;
+        Ok(())
+    }
+    // All bounded buffers/worker ownership were admitted before this commit.
+    // A transport refusal is recorded as a gap, never a partial Profile refusal.
+    pub fn enqueue_prepared(&mut self) {
+        if let Err(e) = self.pump() {
+            self.last_error = Some(e);
+        }
+    }
+    pub fn admit_transport(&self) -> Result<(), String> {
+        if self.needs_pump() {
+            let _ = self.service.pool()?;
+        }
+        Ok(())
+    }
     pub fn field_bytes(&self) -> usize {
         self.field_bytes
             + self.fields.capacity() * 96
