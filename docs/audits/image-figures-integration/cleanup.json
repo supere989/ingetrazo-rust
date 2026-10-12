@@ -1,0 +1,6 @@
+{
+  "files": 204,
+  "bytes": 52148809,
+  "archive_sha256": "a222ecb770d4f280c7cc9134717a71e8ea8b7c9a422588c6e20e577897434b41",
+  "action": "Authenticated then purged only terminal integration replay duplicates; canonical evidence, original sources, targets and owner failures preserved."
+}
