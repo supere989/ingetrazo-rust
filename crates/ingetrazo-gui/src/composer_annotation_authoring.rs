@@ -513,6 +513,12 @@ impl IngeTrazoApp {
             return Err("Invalid run separation".into());
         }
         let state = &mut self.composer_state.annotation_authoring;
+        // Source Add reselects surviving items, adds the new cota, and keeps
+        // the panel's shown owner while that owner remains selected.
+        state.multi.members.try_reserve(2)
+            .map_err(|_| "Dimension run selection allocation refused")?;
+        let shown = state.selected;
+        let mut members = std::mem::take(&mut state.multi.members);
         let old = (
             state.armed,
             std::mem::take(&mut state.points),
@@ -542,7 +548,25 @@ impl IngeTrazoApp {
         state.snap_hits = old.2;
         state.axis = old.3;
         state.linear_sep = old.4;
-        result
+        match result {
+            Ok(owner) => {
+                if let Some(shown) = shown {
+                    if !members.contains(&shown) { members.push(shown); }
+                }
+                if !members.contains(&owner) { members.push(owner); }
+                state.selected = shown.or(Some(owner));
+                state.multi.members = members;
+                // The document version changed on Add, so this refreshes the
+                // borrowed membership cache without a new history command.
+                multi::revalidate(self);
+                Ok(owner)
+            }
+            Err(error) => {
+                state.selected = shown;
+                state.multi.members = members;
+                Err(error)
+            }
+        }
     }
     pub fn place_composer_annotation(
         &mut self,
