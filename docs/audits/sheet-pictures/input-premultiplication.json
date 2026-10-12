@@ -1,0 +1,184 @@
+{
+  "qt_version": "6.12.0",
+  "source_asset": "resources/components/person_billboard.png",
+  "source_asset_sha256": "ff8bb7835734149c0b6f71ec6fb5c607583ba2b8940be42c458ce3c6eaa0b49d",
+  "source_urls": [
+    "https://raw.githubusercontent.com/qt/qtbase/6.12/src/gui/painting/qdrawhelper_sse4.cpp",
+    "https://raw.githubusercontent.com/qt/qtbase/6.12/src/gui/painting/qrgba64.h"
+  ],
+  "source_input_format": "ARGB32",
+  "source_asset_dimensions": [
+    434,
+    1497
+  ],
+  "confirmed_four_pixel_probe": {
+    "indices": [
+      2790,
+      2814,
+      4085,
+      4122
+    ],
+    "rgba": [
+      [
+        58,
+        44,
+        36,
+        1
+      ],
+      [
+        58,
+        45,
+        37,
+        7
+      ],
+      [
+        57,
+        44,
+        36,
+        14
+      ],
+      [
+        59,
+        45,
+        37,
+        17
+      ]
+    ],
+    "actual": [
+      [
+        58,
+        44,
+        36,
+        257
+      ],
+      [
+        409,
+        317,
+        261,
+        1799
+      ],
+      [
+        804,
+        620,
+        507,
+        3598
+      ],
+      [
+        1010,
+        770,
+        633,
+        4369
+      ]
+    ],
+    "scalar": [
+      [
+        58,
+        44,
+        36,
+        257
+      ],
+      [
+        409,
+        317,
+        261,
+        1799
+      ],
+      [
+        804,
+        621,
+        508,
+        3598
+      ],
+      [
+        1011,
+        771,
+        634,
+        4369
+      ]
+    ],
+    "simd_exact": true,
+    "scalar_exact": false
+  },
+  "discarded_route_probes": [
+    {
+      "probe": "3px scaled draw into RGBA64_PM",
+      "actual": [
+        [
+          114,
+          87,
+          72,
+          512
+        ],
+        [
+          605,
+          467,
+          382,
+          2697
+        ],
+        [
+          973,
+          743,
+          610,
+          4238
+        ]
+      ],
+      "modeled_group_tail": [
+        [
+          116,
+          88,
+          73,
+          513
+        ],
+        [
+          605,
+          467,
+          383,
+          2697
+        ],
+        [
+          976,
+          745,
+          612,
+          4239
+        ]
+      ],
+      "exact": false
+    },
+    {
+      "probe": "6px untransformed draw into RGBA64_PM",
+      "actual_last2": [
+        [
+          804,
+          620,
+          507,
+          3598
+        ],
+        [
+          1010,
+          770,
+          633,
+          4369
+        ]
+      ],
+      "modeled_scalar_tail": [
+        [
+          804,
+          621,
+          508,
+          3598
+        ],
+        [
+          1011,
+          771,
+          634,
+          4369
+        ]
+      ],
+      "exact": false
+    }
+  ],
+  "placement_law": "Transformed generic64 fetcher converts two source neighbors per output; full four-input groups use SIMD, odd final output pair uses scalar. Existing person composites have width434, therefore no input scalar tail. Output four-pixel store grouping is unchanged.",
+  "scope": "Confirmed source input premultiplication correction. Diagnostic alternate RGBA64_PM routes are retained but do not establish transformed ARGB32 composite placement. Remaining nine alpha-mask bytes and complete PDF/JPEG equality are unproven until affected replay.",
+  "rust_builds": 0,
+  "corpus_rerenders": 0
+}

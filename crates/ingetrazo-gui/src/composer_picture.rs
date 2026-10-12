@@ -246,6 +246,13 @@ impl Cache {
                             start + (x - left) * fdx,
                             fy,
                             x - left < ((right - left) / 4) * 4,
+                            // Qt fetches two source neighbors per output pixel.
+                            // SIMD input conversion consumes four fetched pixels;
+                            // an odd final output pair is the scalar epilogue.
+                            (x - left < ((right - left) / 2) * 2).then(|| {
+                                let first = start + ((x - left) / 2 * 2) * fdx;
+                                [first, first + fdx]
+                            }),
                         );
                         let i = (y as usize * width as usize + x as usize) * 4;
                         rgba[i..i + 4].copy_from_slice(&p);
@@ -418,22 +425,59 @@ impl Cache {
     }
 }
 
+/// Source SSE4 input conversion uses high-word multiply/fixup in complete
+/// four-pixel groups. Its scalar epilogue uses QRgba64 rounded multiplication.
+fn premultiplied_input64(p: &[u8], vector: bool, opaque_group: bool) -> [u64; 4] {
+    let a = u64::from(p[3]) * 257;
+    std::array::from_fn(|c| {
+        if c == 3 {
+            return a;
+        }
+        let color = u64::from(p[c]) * 257;
+        if vector {
+            if opaque_group {
+                color
+            } else {
+                let high = (color * a) >> 16;
+                high + (high >> 15)
+            }
+        } else {
+            let product = color * a;
+            (product + (product >> 16) + 32768) >> 16
+        }
+    })
+}
 /// QImage ARGB32 selects Qt's generic64 texture route. This cold composite
 /// boundary is distinct from the RGB32 sheet sampler's byte interpolation.
-fn composite_sample64(image: &Pixels, fx: i64, fy: i64, vector_store: bool) -> [u8; 4] {
-    let pixel = |x: i64, y: i64| {
+fn composite_sample64(
+    image: &Pixels,
+    fx: i64,
+    fy: i64,
+    vector_store: bool,
+    input_group: Option<[i64; 2]>,
+) -> [u8; 4] {
+    let source_pixel = |x: i64, y: i64| {
         let x = x.clamp(0, i64::from(image.width()) - 1) as usize;
         let y = y.clamp(0, i64::from(image.height()) - 1) as usize;
-        let p = &image.rgba()[(y * image.width() as usize + x) * 4..][..4];
-        let a = u64::from(p[3]) * 257;
-        std::array::from_fn::<u64, 4, _>(|c| {
-            if c == 3 {
-                a
-            } else {
-                let v = u64::from(p[c]) * 257 * a;
-                (v + (v >> 16) + 32768) >> 16
-            }
+        &image.rgba()[(y * image.width() as usize + x) * 4..][..4]
+    };
+    let y = fy >> 16;
+    let opaque_group = |row: i64| {
+        input_group.is_some_and(|positions| {
+            positions.iter().all(|fx| {
+                let x = fx >> 16;
+                source_pixel(x, row)[3] == 255 && source_pixel(x + 1, row)[3] == 255
+            })
         })
+    };
+    let top_opaque = opaque_group(y);
+    let bottom_opaque = opaque_group(y + 1);
+    let pixel = |x: i64, row: i64| {
+        premultiplied_input64(
+            source_pixel(x, row),
+            input_group.is_some(),
+            if row == y { top_opaque } else { bottom_opaque },
+        )
     };
     let x = fx >> 16;
     let y = fy >> 16;
@@ -489,4 +533,41 @@ fn composite_sample64(image: &Pixels, fx: i64, fy: i64, vector_store: bool) -> [
         byte((p[2] * fa + 0x80000000) >> 32),
         byte(p[3]),
     ]
+}
+
+#[cfg(test)]
+mod alpha_input_tests {
+    use super::premultiplied_input64;
+    #[test]
+    fn qt_argb32_input_vector_and_scalar_epilogue() {
+        // Actual Qt6.12 ARGB32->RGBA64_PM QPainter observation on four
+        // retained person.png pixels, independent of the source formulas.
+        let pixels = [
+            [58, 44, 36, 1],
+            [58, 45, 37, 7],
+            [57, 44, 36, 14],
+            [59, 45, 37, 17],
+        ];
+        let expected = [
+            [58, 44, 36, 257],
+            [409, 317, 261, 1799],
+            [804, 620, 507, 3598],
+            [1010, 770, 633, 4369],
+        ];
+        for (p, out) in pixels.iter().zip(expected) {
+            assert_eq!(premultiplied_input64(p, true, false), out);
+        }
+        assert_eq!(
+            premultiplied_input64(&pixels[2], false, false),
+            [804, 621, 508, 3598]
+        );
+        assert_eq!(
+            premultiplied_input64(&[100, 100, 100, 255], true, true),
+            [25700, 25700, 25700, 65535]
+        );
+        assert_eq!(
+            premultiplied_input64(&[100, 100, 100, 255], true, false),
+            [25699, 25699, 25699, 65535]
+        );
+    }
 }
