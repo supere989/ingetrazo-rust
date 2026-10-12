@@ -215,6 +215,7 @@ impl PendingCapture {
 }
 fn dimension(value: &Value) -> Result<u32, String> {
     let number = match value {
+        Value::Null => return Err("TypeError: int() argument must be a string, a bytes-like object or a real number, not 'NoneType'".into()),
         Value::Bool(v) => {
             if *v {
                 1.
@@ -272,8 +273,13 @@ pub fn dimensions(args: Option<&Value>) -> Result<(u32, u32), String> {
     let fields = args
         .as_object()
         .ok_or("Screenshot args must be an object")?;
-    if fields.keys().any(|k| k != "width" && k != "height") {
-        return Err("Screenshot accepts only width and height".into());
+    if let Some(keyword) = fields
+        .keys()
+        .find(|k| k.as_str() != "width" && k.as_str() != "height")
+    {
+        return Err(format!(
+            "TypeError: _Bridge._tool_screenshot() got an unexpected keyword argument '{keyword}'"
+        ));
     }
     Ok((
         fields
@@ -309,7 +315,10 @@ mod tests {
             (64, 64)
         );
         assert!(dimensions(Some(&json!({"width":"1.2"}))).is_err());
-        assert!(dimensions(Some(&json!({"height":null}))).is_err());
-        assert!(dimensions(Some(&json!({"unexpected":1}))).is_err());
+        assert_eq!(dimensions(Some(&json!({"height":null}))).unwrap_err(), "TypeError: int() argument must be a string, a bytes-like object or a real number, not 'NoneType'");
+        assert_eq!(
+            dimensions(Some(&json!({"unexpected":1}))).unwrap_err(),
+            "TypeError: _Bridge._tool_screenshot() got an unexpected keyword argument 'unexpected'"
+        );
     }
 }
