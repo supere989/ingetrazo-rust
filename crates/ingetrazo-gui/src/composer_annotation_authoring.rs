@@ -11,6 +11,8 @@ pub(super) mod multi;
 mod preferences;
 #[path = "composer_annotation_runs.rs"]
 pub(super) mod runs;
+#[path = "composer_annotation_run_preview.rs"]
+mod run_preview;
 pub(super) const FAMILIES: [&str; 6] = [
     "cotas",
     "cotas_ang",
@@ -38,6 +40,7 @@ pub(super) struct State {
     pub ignore_release: bool,
     pub multi: multi::State,
     pub runs: runs::State,
+    pub run_preview: run_preview::Preview,
     pub hover: Option<DVec2>,
     pub armed: Option<usize>,
     pub points: Vec<DVec2>,
@@ -196,6 +199,7 @@ impl IngeTrazoApp {
         true
     }
     pub(super) fn retire_composer_specialized(&mut self, keep_mode: bool) {
+        self.composer_state.annotation_authoring.run_preview.retire();
         let state = &mut self.composer_state.annotation_authoring.runs;
         let mode = (state.armed && keep_mode, state.baseline);
         *state = Default::default();
@@ -2136,6 +2140,12 @@ pub(super) fn input(
             }
             egui::Event::PointerMoved(pos) => {
                 app.composer_state.annotation_authoring.hover = Some(page(pos));
+                if app.composer_state.annotation_authoring.runs.armed {
+                    let mut p = page(pos);
+                    if let Ok(Some(hit))=app.nearest_composer_frame_snap(s,p.to_array(),7./f64::from(zoom)){p=DVec2::from_array(hit.page);}
+                    runs::hover_axis(app, p, ui.input(|i|i.modifiers.shift));
+                    run_preview::update(app, p);
+                }
                 if app.composer_state.annotation_authoring.grab.is_some() {
                     owned = true;
                     if let Err(e) = motion(app, page(pos)) {
@@ -2510,4 +2520,13 @@ mod layout_cache_tests {
         assert!(cache.fonts.is_empty());
         assert_eq!((cache.payload_bytes, cache.font_bytes), (0, 0));
     }
+}
+
+pub(super) fn paint_run_preview(app:&mut IngeTrazoApp,painter:&egui::Painter,zoom:f32,paper:egui::Pos2)->Result<(),String>{
+    app.composer_state.annotation_authoring.run_preview.paint(painter,app.native_composer.factory.as_ref(),&mut app.composer_state.text_canvas,zoom,paper)
+}
+impl IngeTrazoApp { pub fn composer_run_preview_observation(&self)->Value {self.composer_state.annotation_authoring.run_preview.observation()} }
+
+pub(super) fn canvas_z(app:&IngeTrazoApp,s:usize,k:u8,index:usize,family:usize)->f64{
+ let sheet=&app.scene.sheets[s];let v=match k{1=>&sheet.native_document["images"][index],2=>&sheet.native_document["leyendas"][index],3=>&sheet.native_document[FAMILIES[family]][index],_=>{let item=&sheet.items[index];if let ingetrazo_core::composition::SheetItem::Shape(shape)=item{return shape.shape.z;}return sheet.native_items.get(&item.id()).and_then(|v|v["z"].as_f64()).unwrap_or(0.);}};v["z"].as_f64().unwrap_or(0.)
 }

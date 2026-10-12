@@ -4,6 +4,8 @@ use ingetrazo_gui::app::IngeTrazoApp;
 use serde_json::{json, Value};
 use std::path::Path;
 type Error = Box<dyn std::error::Error>;
+#[path = "support/composer_run_previews.rs"]
+mod run_previews;
 fn open(source: &Path, file: &str, session: &Path) -> Result<IngeTrazoApp, Error> {
     let mut app = IngeTrazoApp::new();
     app.system_clipboard = None;
@@ -36,9 +38,9 @@ fn frame(
     time: &mut f64,
     events: Vec<egui::Event>,
     mods: egui::Modifiers,
-) {
+) -> egui::FullOutput {
     *time += 0.1;
-    let _ = ctx.run(
+    ctx.run(
         egui::RawInput {
             screen_rect: Some(egui::Rect::from_min_size(
                 egui::Pos2::ZERO,
@@ -50,7 +52,7 @@ fn frame(
             ..Default::default()
         },
         |ctx| app.update_ui(ctx),
-    );
+    )
 }
 fn pixel(ctx: &egui::Context, at: &Value) -> Result<egui::Pos2, Error> {
     let transform = ctx
@@ -315,6 +317,9 @@ fn action(
 }
 fn main() -> Result<(), Error> {
     let args = std::env::args_os().collect::<Vec<_>>();
+    if args.len() == 4 && args[3] == "--run-previews" {
+        return run_previews::run(Path::new(&args[1]), Path::new(&args[2]));
+    }
     if args.len() != 3 && (args.len() != 5 || args[3] != "--case") {
         return Err("composer_specialized_workflows SOURCE OUTPUT [--case NAME]".into());
     }

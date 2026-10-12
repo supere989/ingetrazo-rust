@@ -62,7 +62,7 @@ fn reserve(state: &mut State) -> Result<(), String> {
         .try_reserve(1)
         .map_err(|_| "Dimension run identity allocation refused".to_string())
 }
-fn separation(a: DVec2, b: DVec2, p: DVec2, axis: &str) -> f64 {
+pub(super) fn separation(a: DVec2, b: DVec2, p: DVec2, axis: &str) -> f64 {
     if axis == "h" {
         return p.y - a.y;
     }
@@ -77,7 +77,7 @@ fn separation(a: DVec2, b: DVec2, p: DVec2, axis: &str) -> f64 {
     }
     (p.x - a.x) * (-dy / length) + (p.y - a.y) * (dx / length)
 }
-fn segment_sep(state: &State, a: DVec2, b: DVec2) -> f64 {
+pub(super) fn segment_sep(state: &State, a: DVec2, b: DVec2) -> f64 {
     let p1 = state.points[0].0;
     let p2 = state.points[1].0;
     let sep = state.sep.unwrap_or(0.);
@@ -119,6 +119,7 @@ pub(super) fn activate(app: &mut IngeTrazoApp, baseline: bool) -> Result<(), Str
     Ok(())
 }
 pub(super) fn reconcile(app: &mut IngeTrazoApp) -> Result<(), String> {
+    app.composer_state.annotation_authoring.run_preview.retire();
     let active_id = app
         .scene
         .active_sheet_index
@@ -282,11 +283,23 @@ pub(super) fn click(
     app.composer_state.annotation_authoring.runs = state;
     match result {
         Ok(true) => finish(app),
-        Ok(false) => Ok(()),
+        Ok(false) => {
+            if app
+                .composer_state
+                .annotation_authoring
+                .runs
+                .segments
+                .is_empty()
+            {
+                super::run_preview::update(app, p);
+            }
+            Ok(())
+        }
         Err(e) => Err(e),
     }
 }
 pub(super) fn finish(app: &mut IngeTrazoApp) -> Result<(), String> {
+    app.composer_state.annotation_authoring.run_preview.retire();
     reconcile(app)?;
     let state = &app.composer_state.annotation_authoring.runs;
     if state.baseline || state.segments.len() < 2 || state.sep.is_none() {

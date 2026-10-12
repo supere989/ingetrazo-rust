@@ -314,7 +314,9 @@ pub fn render_sheet_composer(app: &mut IngeTrazoApp, ui: &mut egui::Ui, sheet_id
     // Render Sheet Items
     let item_order=annotation_authoring::canvas_order(app,sheet_idx).unwrap_or_else(|e|{app.status_message=e;Default::default()});
     // The same mixed category order owns painting and pointer acquisition.
+    let mut run_preview_painted=false;
     for &(picture,idx,family) in item_order.iter() {
+        if !run_preview_painted && annotation_authoring::canvas_z(app,sheet_idx,picture,idx,family)>100000.{if let Err(e)=annotation_authoring::paint_run_preview(app,&painter,zoom,paper_rect.min){app.status_message=e;}run_preview_painted=true;}
         if picture==3{if let Err(e)=annotation_authoring::paint(app,&painter,sheet_idx,family,idx,zoom,paper_rect.min){app.status_message=e;}continue;}
         if picture==2{if let Err(e)=legend_authoring::paint(app,&painter,sheet_idx,idx,zoom,paper_rect.min){app.status_message=e;}continue;}
         if picture==1 {if let Err(e)=picture_authoring::paint(app,&painter,sheet_idx,idx,zoom,paper_rect.min){app.status_message=e;}continue;}
@@ -435,6 +437,8 @@ pub fn render_sheet_composer(app: &mut IngeTrazoApp, ui: &mut egui::Ui, sheet_id
             }
         }
     }
+
+    if !run_preview_painted {if let Err(e)=annotation_authoring::paint_run_preview(app,&painter,zoom,paper_rect.min){app.status_message=e;}}
 
     // Original _SheetBorderCanvasItem z=1e6: above every document item.
     match app.composer_state.outer_border.paint(&painter,app.native_composer.factory.as_ref(),&app.scene.sheets[sheet_idx],zoom,paper_rect.min){Ok(true)=>{},Ok(false)=>app.status_message="Native source sheet border provider unavailable".into(),Err(error)=>app.status_message=error}

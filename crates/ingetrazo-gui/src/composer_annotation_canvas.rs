@@ -46,6 +46,7 @@ impl Cache {
         self.items.clear();
         self.bytes = 0;
     }
+    pub(super) fn geometry_ids(&self)->Vec<u64>{self.items.values().flat_map(|e|e.parts.iter().map(|p|p.geometry.id())).collect()}
     pub(super) fn stats(&self) -> (u64, u64, usize) {
         (self.builds, self.paints, self.bytes)
     }

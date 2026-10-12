@@ -1,0 +1,93 @@
+{
+  "original_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "cases": [
+    {
+      "name": "fresh-chain",
+      "baseline": false,
+      "seeded": false
+    },
+    {
+      "name": "fresh-baseline",
+      "baseline": true,
+      "seeded": false
+    },
+    {
+      "name": "seeded-chain",
+      "baseline": false,
+      "seeded": true
+    },
+    {
+      "name": "seeded-baseline",
+      "baseline": true,
+      "seeded": true
+    },
+    {
+      "name": "run-lifecycle",
+      "baseline": false,
+      "seeded": false
+    }
+  ],
+  "source_report": "original-run-previews.json",
+  "native_report": "native-run-previews.json",
+  "scope": "Actual Qt/egui pointer and modifier lifecycle plus strict source preview item-paint primitive pixels; no full UI/GPU framebuffer claim.",
+  "preview_law": {
+    "class_name": "QGraphicsPathItem",
+    "z": 100000,
+    "color": [
+      58,
+      110,
+      165,
+      255
+    ],
+    "width_mm": 0.3,
+    "style": "DashLine",
+    "cap": "SquareCap",
+    "join": "BevelJoin",
+    "total": "No prospective total preview. Total is authored only at finish for a chain with at least two segments.",
+    "forced_offset": "Before separation is committed, source uses aligned segment normal even when measurement axis is forced.",
+    "modifier": "Shift-only key events are inert for runs because _ortho_anchor ignores chain points; actual Shift-bearing mouse moves update the remembered measurement axis."
+  },
+  "observer": {
+    "path": "Actual retained _preview.path elements and actual _preview.paint delegation with original scene transform; no reconstructed source expected paths or graphics visibility mutation.",
+    "pose": {
+      "page_mm": [
+        297.0,
+        210.0
+      ],
+      "density": 2.0,
+      "device_pixels": [
+        594,
+        420
+      ],
+      "dpr": 1.0,
+      "background": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "clip_mm": [
+        0.0,
+        0.0,
+        297.0,
+        210.0
+      ]
+    },
+    "viewport": "Actual view.viewport().grab image retained separately from strict primitive comparison.",
+    "immutability": "Actual item-paint observer preserves composition, pending state, histories, selection, panel owner and source local epoch. Epoch is a readonly diagnostic bound within each runtime, not a cross-runtime version identity.",
+    "native": "Full App input and production preview paint callback. Capture actual submitted CAD callback spans/palette/pose from FullOutput, with declared density/integer device origin; do not call a standalone preview builder to substitute for actual paint."
+  },
+  "boundaries": [
+    "hover before first point",
+    "one-point rubber band",
+    "offset hover before and after H/V modifier changes",
+    "fixed separation chain jog and baseline stack",
+    "seeded run hover before first new click",
+    "zero-length/repeated last point",
+    "explicit absence of prospective total before finish",
+    "short run and total after finish",
+    "Escape, tool, sheet and history/rebuild retirement/revival",
+    "same hover and idle repaint cache reuse without document/UUID/history changes"
+  ],
+  "capture_gate": "One actual original capture only after full producer/observer prereview. Existing 220 run states are reused, not recaptured."
+}
