@@ -1,0 +1,58 @@
+{
+  "precondition": "root authenticated every source/integration ZIP member SHA and size before cleanup",
+  "removed": [
+    {
+      "path": "/tmp/ingetrazo-import-ui-integration-r2/stl/picker",
+      "files": 1,
+      "logical_bytes": 82357888
+    },
+    {
+      "path": "/tmp/ingetrazo-import-ui-integration-r2/stl/shared-config",
+      "files": 1,
+      "logical_bytes": 1205
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r3/replay-corrected/native/picker",
+      "files": 1,
+      "logical_bytes": 82381960
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r3/replay-corrected/native/shared-config",
+      "files": 1,
+      "logical_bytes": 1387
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r4/replay/native/picker",
+      "files": 1,
+      "logical_bytes": 82381960
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r4/replay/native/shared-config",
+      "files": 1,
+      "logical_bytes": 1287
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r3/replay-corrected/source",
+      "files": 54,
+      "logical_bytes": 11645379
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-integration-r4/replay/source",
+      "files": 54,
+      "logical_bytes": 11645379
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-source-proof-r1/xdg-data",
+      "files": 0,
+      "logical_bytes": 0
+    },
+    {
+      "path": "/tmp/ingetrazo-stl-source-proof-r1/settings",
+      "files": 1,
+      "logical_bytes": 70
+    }
+  ],
+  "canonical_native_outputs_retained": true,
+  "shared_cargo_target_retained": true,
+  "space_claim": "Logical bytes include hardlinked native picker binaries, not physical reclaimed bytes."
+}
