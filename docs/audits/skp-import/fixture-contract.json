@@ -140,7 +140,7 @@
   "sources": [
     {
       "path": "scripts/reference-skp-import.py",
-      "sha256": "f1c0504abd1bc905bfcc966b078f35ad56cdbcdc8b1975959840d83bd8c2ea95"
+      "sha256": "ba83f9a33dd82dce24c1bc0a0b18c7aa4372b45252af9500fd0093f634ade215"
     },
     {
       "path": "scripts/skp_import_observations.py",

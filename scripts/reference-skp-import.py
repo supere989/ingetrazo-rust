@@ -36,7 +36,7 @@ app=QApplication([]);app.setOrganizationName('SkpImportProof');app.setApplicatio
 QSettings.setDefaultFormat(QSettings.IniFormat);QSettings.setPath(QSettings.IniFormat,QSettings.UserScope,str(root/'settings'))
 seedtree=ast.parse(Path('scripts/reference-nested-import.py').read_text())
 exec(compile(ast.Module(body=[n for n in seedtree.body if isinstance(n,ast.FunctionDef)and n.name=='seed'],type_ignores=[]),'retained-source-seed','exec'))
-assets=root/'assets';assets.mkdir();asset_rows=[]
+assets=root/'assets';assets.mkdir(exist_ok=True);asset_rows=[]
 for row in contract['fixtures']:
  src=Path(row['path']);raw=src.read_bytes();assert hashlib.sha256(raw).hexdigest()==row['sha256']
  (assets/row['file']).write_bytes(raw);asset_rows.append(row)
@@ -51,7 +51,7 @@ with zipfile.ZipFile(buf,'w',zipfile.ZIP_DEFLATED)as z:
   if name!='model.dat' and not name.startswith('materials/') and name!='meta/model_thumbnail.png':z.writestr(name,archive.read(name))
  z.writestr('model.dat',bytes.fromhex('F401')+struct.pack('<I',6)+bytes.fromhex('F601')+struct.pack('<I',0))
  z.writestr('meta/model_thumbnail.png',(assets/'empty-thumbnail.png').read_bytes())
-(assets/'modern-empty.skp').write_bytes(base[:offset]+buf.getvalue())
+if not(assets/'modern-empty.skp').exists():(assets/'modern-empty.skp').write_bytes(base[:offset]+buf.getvalue())
 (assets/'unreadable.skp').write_bytes(b'not a SketchUp file\x00\xff')
 # Saved cameras use the actual pinned _parse_pages TLV grammar. Preserve the
 # geometry/input bytes and add named perspective/parallel/duplicate pages only.
@@ -64,7 +64,7 @@ pages=tlv('0702',tlv('606D',tlv('616D',page('Existing view',(10,20,30),(1,2,3),(
 viewbuf=io.BytesIO()
 with zipfile.ZipFile(viewbuf,'w',zipfile.ZIP_DEFLATED)as z:
  for name in archive.namelist():z.writestr(name,tlv('F401',model[6:]+pages)if name=='model.dat'else archive.read(name))
-(assets/'modern-scenes.skp').write_bytes(base[:offset]+viewbuf.getvalue())
+if not(assets/'modern-scenes.skp').exists():(assets/'modern-scenes.skp').write_bytes(base[:offset]+viewbuf.getvalue())
 
 recipes=[
  ('legacy-root','legacy-quad.skp','root','accepted'),
@@ -83,10 +83,16 @@ recipes=[
  ('unreadable-warning','unreadable.skp','root','unreadable'),
  ('chooser-cancel','legacy-quad.skp','root','cancel')]
 assert [r[0]for r in recipes]==contract['case_names']
-cases=[];states=[];errors=[];dialogs=[];parses=[]
+selected=None
+if len(sys.argv)>2:
+ assert len(sys.argv)==4 and sys.argv[2]=='--cases','usage: OUTPUT [--cases ordered,case,names]'
+ selected=sys.argv[3].split(',')
+ assert selected and selected==[name for name,*_ in recipes if name in selected], 'exact ordered subset required'
+cases=[];states=[];errors=[];dialogs=[];parses=[];retained_windows=[]
 def exception(t,e,tb):
  errors.append({'type':t.__name__,'message':str(e),'traceback':''.join(traceback.format_exception(t,e,tb))})
  (root/'callback-errors.json').write_text(json.dumps(errors,indent=2))
+ traceback.print_exception(t,e,tb,file=sys.stderr)
 sys.excepthook=exception
 original=skp.parse_skp
 def tracked(*a,**kw):parses.append(str(a[0]));return original(*a,**kw)
@@ -98,6 +104,7 @@ def observe(w,name,phase,outcome):
  (root/'original-skp.partial.json').write_text(json.dumps({'cases':cases,'states':states,'callback_errors':errors},indent=2))
 
 for name,file,context,outcome in recipes:
+ if selected is not None and name not in selected:continue
  w=MainWindow();w.show();app.processEvents();seed(w.viewport.scene)
  w.viewport.scene.saved_views.append(from_lookat('Existing view',[3,4,5],[0,0,0],[0,0,1]))
  if name=='modern-layer-preserve':
@@ -163,8 +170,8 @@ for name,file,context,outcome in recipes:
   assert scene_state(w.viewport.scene)==before and history==(len(w.viewport.history.undo_stack),len(w.viewport.history.redo_stack)),'failed/cancel import changed model/history'
   assert len(parses)==count+(outcome=='unreadable' and file!='unreadable.skp') and len(seen)==(outcome=='unreadable')
  cases.append({'name':name,'file':'assets/'+file,'input':name+'-input.igz','context':context,'outcome':outcome,'saved':saved,'phases':[s['phase']for s in states if s['case']==name],'parses':len(parses)-count})
- (root/'completed-cases.json').write_text(json.dumps({'cases':cases,'states':states},indent=2));w.hide();w.deleteLater();app.processEvents()
+ (root/'completed-cases.json').write_text(json.dumps({'cases':cases,'states':states},indent=2));w.hide();retained_windows.append(w);app.processEvents()
 main.file_dialogs.getOpenFileName=oldpicker;skp.parse_skp=original
 assert not errors,errors
-(root/'original-skp.json').write_text(json.dumps({'source_pin':PIN,'cases':cases,'states':states,'dialogs_diagnostic':dialogs,'callback_errors':errors,'scope':contract['scope'],'parses':len(parses)},indent=2)+'\n')
+(root/'original-skp.json').write_text(json.dumps({'source_pin':PIN,'cases':cases,'states':states,'dialogs_diagnostic':dialogs,'callback_errors':errors,'scope':contract['scope'],'parses':len(parses),'capture_case_filter':selected},indent=2)+'\n')
 print(json.dumps({'cases':len(cases),'states':len(states),'parses':len(parses)}))
