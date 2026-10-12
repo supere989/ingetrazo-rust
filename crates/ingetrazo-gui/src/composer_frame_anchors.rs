@@ -174,10 +174,8 @@ impl IngeTrazoApp {
                 let distance = if let Some(saved) = saved.filter(|v| v.distance != 0.) {
                     saved.distance
                 } else {
-                    let diag = self
-                        .scene
-                        .bounds()
-                        .map_or(0., |(lo, hi)| (hi - lo).length());
+                    let diag =
+                        super::frame_bounds(&self.scene).map_or(0., |(lo, hi)| (hi - lo).length());
                     if diag <= 0. {
                         30.
                     } else {

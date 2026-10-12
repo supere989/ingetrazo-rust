@@ -121,7 +121,6 @@ fn click(
     Ok(())
 }
 
-use glam::DVec3;
 use ingetrazo_core::composition::SheetItem;
 fn frame_id(app: &IngeTrazoApp, uid: &str) -> Result<uuid::Uuid, Error> {
     let s = &app.scene.sheets[0];
