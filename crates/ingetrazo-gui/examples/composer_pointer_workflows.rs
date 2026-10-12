@@ -196,7 +196,7 @@ fn main() {
                     },
                 ],
             );
-            let outside_paper_acquired = a.composer_state.dragging_item_idx == Some(0)
+            let outside_paper_acquired = (a.composer_state.dragging_item_idx == Some(0) || a.composer_has_sheet_capture())
                 && a.scene.sheets[0].selected_item == Some(0);
             let moved = point(&ctx, &json!([-6., 53.]));
             frame(&ctx, &mut a, 3.4, vec![egui::Event::PointerMoved(moved)]);
@@ -331,7 +331,7 @@ fn main() {
                     a.update_ui(ctx);
                 },
             );
-            let lost_capture_finished = a.composer_state.dragging_item_idx.is_none()
+            let lost_capture_finished = !a.composer_has_sheet_capture() && a.composer_state.dragging_item_idx.is_none()
                 && a.composer_state.edit_before.is_none()
                 && a.scene.sheets[0].items[0].rect() == loss_position
                 && a.composer_state.sheet_history[&a.scene.sheets[0].id]

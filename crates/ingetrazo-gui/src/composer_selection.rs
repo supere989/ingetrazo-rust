@@ -1480,6 +1480,15 @@ pub(super) fn input(
     let mut owned = app.composer_state.selection.ctrl
         || app.composer_state.selection.band.is_some()
         || app.composer_state.selection.grab.is_some();
+    // A foreground input owner may consume release after egui updates the
+    // physical button state. Retire that capture before accepting another one.
+    let explicit_end = events.iter().any(|e| matches!(e,
+        egui::Event::PointerButton { button: egui::PointerButton::Primary, pressed: false, .. }
+        | egui::Event::PointerGone));
+    if app.composer_state.selection.grab.is_some()
+        && !ui.input(|i| i.pointer.primary_down()) && !explicit_end {
+        if let Err(e) = finish_grab(app) { app.status_message = e; }
+    }
     for event in events {
         if app.composer_state.selection.ctrl {
             match event {
@@ -1507,7 +1516,7 @@ pub(super) fn input(
                 pressed: true,
                 modifiers,
             } if enabled
-                && paper.contains(pos)
+                && response.rect.contains(pos)
                 && !toolbar.contains(pos)
                 && ui.ctx().layer_id_at(pos) == Some(response.layer_id) =>
             {
@@ -1570,6 +1579,7 @@ pub(super) fn input(
                         capture(app, o, p)?;
                         return Ok(true);
                     }
+                    if !paper.contains(pos) { return Ok(false); }
                     app.composer_state.selection.band = Some(Band {
                         start: p,
                         current: p,
@@ -1921,6 +1931,7 @@ impl IngeTrazoApp {
             self.composer_state.selection.updates,
         )
     }
+    pub fn composer_has_sheet_capture(&self) -> bool { has_capture(self) }
     pub fn composer_sheet_pointer_for_control(&mut self, point: [f64; 2]) -> Result<(), String> {
         motion(self, DVec2::from_array(point))
     }
