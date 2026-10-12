@@ -149,7 +149,7 @@ fn run(source: &Path, out: &Path) -> Result<(), String> {
                 a.finish_component_edit();
             }
             states.push(record(&a, name, "finish")?);
-            a.save_document(&out.join(case["saved"].as_str().ok_or("saved")?));
+            a.save_to_path(&out.join(case["saved"].as_str().ok_or("saved")?));
             if !out.join(case["saved"].as_str().unwrap()).exists() {
                 return Err("actual saved document missing".into());
             }
