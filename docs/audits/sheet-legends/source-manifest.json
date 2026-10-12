@@ -1,0 +1,95 @@
+{
+  "archive_sha256": "487648f12afa9f9b73d0bbcf459d56486ceeb843ed3fac8e5110206f84db6cd0",
+  "members": {
+    "legend-empty-en.igz": {
+      "size": 830,
+      "sha256": "71cd38c63ec58e155271e4a8c527cd650041c141e7944dd870911413c7e0353c"
+    },
+    "legend-empty-en.pdf": {
+      "size": 16125,
+      "sha256": "b1a6393280f9eed9c89b05250cf1fe381e3966527760d67fcf01159378669989"
+    },
+    "legend-empty-en.png": {
+      "size": 7744,
+      "sha256": "b56dd5394830ca5fd9814cec45f5889b0cbbc96643f88c55c26ee2e213c1fcef"
+    },
+    "legend-empty-es.igz": {
+      "size": 830,
+      "sha256": "385537ac62a6e948ae6354ef27616ff01051a2992e1c48926091fcf80b474572"
+    },
+    "legend-empty-es.pdf": {
+      "size": 15950,
+      "sha256": "b49f5416af2c876a20fb2052fe4b0fb72ed46663ef4f48db9c6a42d513e78ca5"
+    },
+    "legend-empty-es.png": {
+      "size": 7732,
+      "sha256": "269d8bd48f69aa0a416d5425a004207910a7a9152bef126ea56ab86571223673"
+    },
+    "legend-hidden.igz": {
+      "size": 884,
+      "sha256": "862f01d1dbd2d9b761f89587ad20e7c80a67ef6ecc7154405981ce67d56e2a74"
+    },
+    "legend-hidden.pdf": {
+      "size": 3036,
+      "sha256": "9521e1e025f5ad42200cc93b0cc7a27fd9a74eed89c97e4129befd2c832ed941"
+    },
+    "legend-hidden.png": {
+      "size": 5514,
+      "sha256": "07ca78232d11261d2749291af8aee97cbc383fdce8772bf010b9d792b1eceb00"
+    },
+    "legend-high-z.igz": {
+      "size": 2524,
+      "sha256": "2e1dd8e008143a90e3631683bc17c7d717ed03c707521789d2f4432b2c2cb658"
+    },
+    "legend-high-z.pdf": {
+      "size": 17655,
+      "sha256": "eef17110375461ac9e332401abb66e64dcf2e604ce7e435671f3221f0434db3f"
+    },
+    "legend-high-z.png": {
+      "size": 10793,
+      "sha256": "3b3bc38545a86257eab204507397e8b317bb9a172e069cbdbd352c00c01a8698"
+    },
+    "legend-rows.igz": {
+      "size": 907,
+      "sha256": "7343b49e7e9c6774ade54add24ff23099a0ef6bbf46fb29fef4ed7195dac6206"
+    },
+    "legend-rows.pdf": {
+      "size": 16417,
+      "sha256": "da33e7e9c6e0487e7f40a17986a35f9ba274b4cd9ca84455f7dd4a1fe5dac5fe"
+    },
+    "legend-rows.png": {
+      "size": 8654,
+      "sha256": "ce8c4fd925d50ca931cfe91151145f18c76e36da24e426ff4a19df845d780f07"
+    },
+    "legend-same-z.igz": {
+      "size": 2524,
+      "sha256": "a00065b91477fe823ea2f12fe552aaa2809bc2284bbc8d1eaad717dbb6d496c2"
+    },
+    "legend-same-z.pdf": {
+      "size": 17648,
+      "sha256": "c1c4b4695c0f1ea060548a3f19dd99fc472c60003642f77084e931465119a9bf"
+    },
+    "legend-same-z.png": {
+      "size": 10294,
+      "sha256": "0313520394e7f9e0bec46a76625e1cb80453647d35bed6d4b41382d4e4eac785"
+    },
+    "legend-wrapped.igz": {
+      "size": 969,
+      "sha256": "7219c063f200debc9ecd7af5a78b19b3808f0f7b77aec3cb682efd27b36425f2"
+    },
+    "legend-wrapped.pdf": {
+      "size": 17970,
+      "sha256": "99a5d3f373afc22084b0f6662d633b2f942c4d576ad070fc6212b0b1c002ec59"
+    },
+    "legend-wrapped.png": {
+      "size": 11765,
+      "sha256": "6bac0c0caaea3497244490e7c102aa8cf5e70ed08b1a64602697f479ab73b650"
+    },
+    "source.json": {
+      "size": 3456,
+      "sha256": "3e1cd07f833651a595b80e2e1dcd11c232bb0a0da1c9de3eedc2df35d3491e23"
+    }
+  },
+  "original_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "scope": "Seven actual original physical legend PNG/PDF and portable IGZ snapshots; first four reused after helper failure, remaining three captured once."
+}
