@@ -2490,6 +2490,24 @@ fn source_size(app: &IngeTrazoApp, s: usize, f: usize, v: &Value) -> Result<[f64
 mod layout_cache_tests {
     use super::*;
     #[test]
+    fn invalid_retained_run_bounds_refuse_before_document_and_history_change() {
+        let mut app = IngeTrazoApp::new();
+        app.scene.sheets.push(ingetrazo_core::composition::Sheet::default());
+        app.scene.active_sheet_index = Some(0);
+        app.place_composer_linear_segment([10., 10.], [30., 10.], 5., "aligned", [None, None]).unwrap();
+        // A retained owner can become invalid after selection. The next Add must
+        // reject its cohort before it publishes a second segment or undo record.
+        app.scene.sheets[0].native_document["cotas"][0]["x_mm"] = json!(2e6);
+        let before = serde_json::to_value(&app.scene).unwrap();
+        let history = (app.undo_stack.len(), app.redo_stack.len());
+        let selected = app.composer_annotation_selection_set();
+        let error = app.place_composer_linear_segment([30., 10.], [50., 10.], 5., "aligned", [None, None]).unwrap_err();
+        assert_eq!(error, "Invalid selected dimensions");
+        assert_eq!(serde_json::to_value(&app.scene).unwrap(), before);
+        assert_eq!((app.undo_stack.len(), app.redo_stack.len()), history);
+        assert_eq!(app.composer_annotation_selection_set(), selected);
+    }
+    #[test]
     fn dense_same_font_annotations_keep_warm_owners_and_unique_font_accounting() {
         let sheet = ingetrazo_core::composition::Sheet::default();
         let context = crate::composer_text_fields::Context {

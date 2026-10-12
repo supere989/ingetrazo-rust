@@ -777,6 +777,7 @@ pub(crate) fn prepare_run_selection(app: &mut IngeTrazoApp) -> Result<RunSelecti
             .flatten()
     };
     let capacity = state.multi.members.len().checked_add(2).ok_or("Selection size overflow")?;
+    if capacity > LIMIT + 1 { return Err("Sheet cohort budget exceeded".into()); }
     let mut prepared = RunSelection {
         members: Vec::new(), membership: HashSet::new(), display: HashMap::new(),
         primary: state.selected.and_then(convert),
