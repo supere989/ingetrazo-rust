@@ -55,12 +55,19 @@ fn capture(
             .source_spans()
             .ok_or("Actual preview callback lacks source spans")?;
         let translation = spans.translation(s.pose, 1.)?;
-        let colors = s
-            .geometry
-            .premultiplied_palette()
-            .ok_or("Actual callback lacks exact palette")?;
-        assert_eq!(colors.len(), 1);
-        let color = colors[0].bytes();
+        // The submitted packet supports exact byte palettes and straight encoded
+        // batch uniforms. The latter uses the production Qt brush conversion.
+        s.geometry.validate_batches(&s.batches)?;
+        assert_eq!(s.batches.len(), 1);
+        let color = if let Some(colors) = s.geometry.premultiplied_palette() {
+            assert_eq!(colors.len(), 1);
+            colors[0].bytes()
+        } else {
+            s.batches[0]
+                .color
+                .qt_premultiplied8()?
+                .map(|v| (v * 255.).round() as u8)
+        };
         for span in spans.rows() {
             let y = span.y + translation[1] - transform[1] as i32;
             if !(0..420).contains(&y) {
