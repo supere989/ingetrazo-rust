@@ -1,0 +1,457 @@
+{
+  "original_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "scope": "Retained source evidence only; no new execution or native matching of pointer order",
+  "retained_source": {
+    "report_sha256": "e66ad94d36cdc00e97d7587d21b6989e2259a8e4161ed8dddce9acd51379aabb",
+    "cases": [
+      "dae-z-root",
+      "dae-datum"
+    ],
+    "same_before_observation": true,
+    "same_authored_geometry_material_nodes_after_removing_asset": true,
+    "geometry_sha256": "3ddba841953a053678bf9723b186948cdbf6a1043d7c2a9168fb2b0a6b3de023",
+    "cube_file_sha256": "663b404803a5ee3ff5930c44a99bf48779b5e4bcb5bb006228e28c6ceabba2c6",
+    "datum_file_sha256": "34281750d9af55cf440ce89773274c38c0d9767264df1fde2a63d0cfc637688d"
+  },
+  "different_directed_rings": [
+    {
+      "vertices": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          1.0
+        ]
+      ],
+      "first": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0
+        ],
+        [
+          0.0,
+          1.0,
+          1.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "second": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          1.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "vertices": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "first": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0
+        ],
+        [
+          1.0,
+          0.0,
+          1.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "second": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          1.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "vertices": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "first": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          1.0,
+          1.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "second": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ]
+    },
+    {
+      "vertices": [
+        [
+          0.0,
+          0.0,
+          1.0
+        ],
+        [
+          0.0,
+          1.0,
+          1.0
+        ],
+        [
+          1.0,
+          0.0,
+          1.0
+        ],
+        [
+          1.0,
+          1.0,
+          1.0
+        ]
+      ],
+      "first": [
+        [
+          0.0,
+          0.0,
+          1.0
+        ],
+        [
+          0.0,
+          1.0,
+          1.0
+        ],
+        [
+          1.0,
+          1.0,
+          1.0
+        ],
+        [
+          1.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "second": [
+        [
+          0.0,
+          0.0,
+          1.0
+        ],
+        [
+          1.0,
+          0.0,
+          1.0
+        ],
+        [
+          1.0,
+          1.0,
+          1.0
+        ],
+        [
+          0.0,
+          1.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "vertices": [
+        [
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          1.0
+        ],
+        [
+          1.0,
+          1.0,
+          0.0
+        ],
+        [
+          1.0,
+          1.0,
+          1.0
+        ]
+      ],
+      "first": [
+        [
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          1.0
+        ],
+        [
+          1.0,
+          1.0,
+          1.0
+        ],
+        [
+          1.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "second": [
+        [
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          1.0,
+          1.0,
+          0.0
+        ],
+        [
+          1.0,
+          1.0,
+          1.0
+        ],
+        [
+          0.0,
+          1.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "vertices": [
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          1.0
+        ],
+        [
+          1.0,
+          1.0,
+          0.0
+        ],
+        [
+          1.0,
+          1.0,
+          1.0
+        ]
+      ],
+      "first": [
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0,
+          1.0
+        ],
+        [
+          1.0,
+          1.0,
+          1.0
+        ],
+        [
+          1.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "second": [
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          1.0,
+          0.0
+        ],
+        [
+          1.0,
+          1.0,
+          1.0
+        ],
+        [
+          1.0,
+          0.0,
+          1.0
+        ]
+      ]
+    }
+  ],
+  "source_law": [
+    {
+      "path": "core/mesh.py",
+      "lines": [
+        1399,
+        1447
+      ],
+      "meaning": "dissolve copies face set into list and adds undirected traced loop without normal alignment",
+      "sha256": "5f2c1625e6dd717db029ba39a9de337e75beec06bd0df28a592a8a34875ca22c"
+    },
+    {
+      "path": "core/mesh.py",
+      "lines": [
+        1635,
+        1662
+      ],
+      "meaning": "frozensets of Vertex objects, tuple(next(iter(edges))) picks arbitrary pointer/object hash orientation",
+      "sha256": "5f2c1625e6dd717db029ba39a9de337e75beec06bd0df28a592a8a34875ca22c"
+    },
+    {
+      "path": "core/orient.py",
+      "lines": [
+        478,
+        479
+      ],
+      "meaning": "whole mesh free seed wire prevents orientation flips",
+      "sha256": "115ab0f1aeeed51b40ef32153826c7e6e6997b4db2e612eb42c0719d056bcaa6"
+    }
+  ],
+  "native_policy": "Retained scoped OBJ cleanup aligns traced outer to authored face normal; does not fit captured source pointer identities",
+  "strict_status": "OPEN: exact directed winding checker remains unchanged; no orientation-tolerant parity claim"
+}
