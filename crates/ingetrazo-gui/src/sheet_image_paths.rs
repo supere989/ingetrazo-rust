@@ -188,11 +188,35 @@ fn fast_color(rgba: [f32; 4], opacity: u32) -> Result<PremultipliedRgba8, String
     });
     PremultipliedRgba8::new(output)
 }
+/// Cull only a complete, already-stroked outline whose conservative control hull
+/// cannot touch the global page intersected with the literal rectangular clip.
+/// Full stroke/cap/join geometry is already present; one device pixel adds AA fringe.
+fn outline_visible(path:&PathContour,density:f64,origin:[f64;2],bounds:Option<[i32;4]>,device:[u32;2])->Result<bool,String>{
+    let mut min=[f64::INFINITY;2];let mut max=[f64::NEG_INFINITY;2];
+    let mut include=|p:[f64;2]|->Result<(),String>{
+        if p.iter().any(|v|!v.is_finite()||v.abs()>1_000_000.){return Err("Gray raster input outside finite bounded coordinates".into());}
+        let q=[p[0]*density+origin[0],p[1]*density+origin[1]];
+        if q.iter().any(|v|!v.is_finite()||v.abs()>1_000_000.){return Err("Gray raster input outside finite bounded coordinates".into());}
+        for axis in 0..2{min[axis]=min[axis].min(q[axis]);max[axis]=max[axis].max(q[axis]);}Ok(())
+    };
+    include(path.start)?;for segment in &path.segments{match segment{Segment::Line(to)=>include(*to)?,Segment::Cubic{control1,control2,to}=>{include(*control1)?;include(*control2)?;include(*to)?;}}}
+    let b=bounds.unwrap_or([0,0,device[0]as i32,device[1]as i32]);
+    let clip=[b[0].max(0)as f64,b[1].max(0)as f64,b[2].min(device[0]as i32)as f64,b[3].min(device[1]as i32)as f64];
+    Ok(clip[0]<clip[2]&&clip[1]<clip[3]&&max[0]>=clip[0]-1.&&min[0]<=clip[2]+1.&&max[1]>=clip[1]-1.&&min[1]<=clip[3]+1.)
+}
 pub(crate) fn records(
     draws: &[Draw],
     density: f64,
     device: [u32; 2],
 ) -> Result<Vec<crate::sheet_image::Records>, String> {
+    records_with_primitive(draws,density,device,false)
+}
+/// Only callers holding literal source drawLine provenance may select LinesHint.
+pub(crate) fn source_line_records(draw:&Draw,density:f64,device:[u32;2])->Result<Vec<crate::sheet_image::Records>,String>{
+    if !matches!(draw.path.as_slice(),[PathOp::Move(a),PathOp::Line(b)]if a!=b)||draw.stroke.is_none()||!draw.stroke_options.as_ref().is_some_and(|v|v.cap==2&&v.dash.is_empty()){return Err("Invalid source drawLine primitive admission".into());}
+    records_with_primitive(std::slice::from_ref(draw),density,device,true)
+}
+fn records_with_primitive(draws:&[Draw],density:f64,device:[u32;2],line_hint:bool)->Result<Vec<crate::sheet_image::Records>,String>{
     let mut records = Vec::new();
     for draw in draws {
         if draw.rotation_deg!=0. || draw.text.is_some() || draw.even_odd {
@@ -290,6 +314,17 @@ pub(crate) fn records(
             }
             continue;
         }
+        // QRasterPaintEngine::stroke(LinesHint): a wide, solid SquareCap pen
+        // uses QRasterizer::rasterizeLine directly (16.16 area ×255), not Gray paths.
+        // Physical source rules/dividers are literal two-point drawLine primitives.
+        if line_hint&&cap==2&&dash.is_empty()&&paths.iter().all(|p|matches!(p.segments.as_slice(),[Segment::Line(to)]if *to!=p.start)){
+            let mut clip=bounds.unwrap_or([0,0,device[0]as i32,device[1]as i32]);
+            clip[0]=clip[0].max(0);clip[1]=clip[1].max(0);clip[2]=clip[2].min(device[0]as i32);clip[3]=clip[3].min(device[1]as i32);
+            if clip[0]<clip[2]&&clip[1]<clip[3]{for path in &paths{let Segment::Line(to)=path.segments[0]else{unreachable!()};let map=|p:[f64;2]|[p[0]*density+origin[0],p[1]*density+origin[1]];
+                let spans=ingetrazo_render::qt_line::rasterize(map(path.start),map(to),width*density,clip,250_000,100_000)?;
+                let spans=mask_clip(spans,&masks)?;if !spans.is_empty(){records.push(crate::composer_border::physical_layers(vec![(spans,color(rgba)?)])?);}
+            }}continue;
+        }
         // QPaintEngineEx::drawLines emits at most16 source lines into one stroked
         // winding path, so touching antialiased caps combine before SourceOver.
         for batch in paths.chunks(16) {
@@ -364,6 +399,11 @@ pub(crate) fn records(
                     a = b;
                 }
             }
+            // Preserve drawLines batching and local flatten arithmetic for every
+            // intersecting contour. Only complete offscreen stroked outlines disappear.
+            let mut refusal=None;
+            outlines.retain(|path|match outline_visible(path,density,origin,bounds,device){Ok(visible)=>visible,Err(e)=>{refusal=Some(e);false}});
+            if let Some(error)=refusal{return Err(error);}
             let spans = clip(
                 ingetrazo_render::qt_gray::rasterize_transformed_paths(
                     &outlines, density, origin, 250_000, 100_000,

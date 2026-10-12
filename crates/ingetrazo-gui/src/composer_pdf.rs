@@ -13,29 +13,22 @@ fn rect(w: f64, h: f64) -> Vec<PathOp> {
         PathOp::Close,
     ]
 }
+pub(crate) struct ViewDraws {pub(crate) draws:Vec<Draw>,pub(crate) caption_start:usize,pub(crate) source_lines:Vec<usize>}
 pub(crate) fn view_draws(
     scene: &Scene,
     live: &OrbitCamera,
     compute: &mut ComposerCompute,
     document: uuid::Uuid,
     revision: u64,
+    sheet: &ingetrazo_core::composition::Sheet,
     frame: &ViewFrame,
-) -> Result<Vec<Draw>, String> {
+    fonts: &mut ingetrazo_formats::paper_text_painter::Painter,
+    fields: &crate::composer_text_fields::Context<'_>,
+) -> Result<ViewDraws, String> {
     if frame.style != "vectorial" || frame.perspective {
         return Err("PDF raster/perspective view painter remains unavailable; orthographic vectorial views are supported".into());
     }
-    let metadata = scene
-        .sheets
-        .iter()
-        .find_map(|s| s.native_items.get(&frame.id));
-    if frame.show_title
-        || metadata
-            .and_then(|v| v.get("show_scale"))
-            .and_then(|v| v.as_bool())
-            == Some(true)
-    {
-        return Err("PDF view title/scale text painter remains unavailable".into());
-    }
+    let metadata=sheet.native_items.get(&frame.id);
     if frame.annotations
         && (!scene.dimensions.is_empty()
             || !scene.text_labels.is_empty()
@@ -109,9 +102,6 @@ pub(crate) fn view_draws(
         frame.hidden_lines,
     )?;
     let ink = &drawing.segments;
-    if ink.is_empty() {
-        return Err("PDF empty view placeholder text painter remains unavailable".into());
-    }
     let basis = ingetrazo_render::vector_hlr::OriginalQtPaperBasis::from_camera(&camera);
     let right = basis.right;
     let up = basis.up;
@@ -165,6 +155,7 @@ pub(crate) fn view_draws(
         text: None,
         flatten_transform: false,
     }];
+    if ink.is_empty(){draws.extend(crate::composer_view_captions::placeholder(frame,fonts)?);}
     if let Some(fill) = section_fill(frame, &drawing.section_loops, &point)? {
         draws.push(fill);
     }
@@ -230,7 +221,11 @@ pub(crate) fn view_draws(
             flatten_transform: false,
         });
     }
-    Ok(draws)
+    let caption_start=draws.len();
+    let captions=crate::composer_view_captions::draws(sheet,frame,fonts,fields)?;
+    let source_lines=captions.source_lines.into_iter().map(|v|v.checked_add(caption_start).ok_or("View line index overflow")).collect::<Result<Vec<_>,_>>()?;
+    draws.extend(captions.draws);
+    Ok(ViewDraws{draws,caption_start,source_lines})
 }
 
 /// Source _paint_cut_fills_mm: one even-odd compound path, filled below ink;

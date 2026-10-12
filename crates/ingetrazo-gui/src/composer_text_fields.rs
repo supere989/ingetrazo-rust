@@ -3,7 +3,7 @@
 use ingetrazo_core::composition::{Sheet, SheetItem, TextItem};
 use std::path::Path;
 /// Python's default :g is six significant digits, unlike the drafting scale display's four decimals.
-fn source_scale(n: f64) -> String {
+pub(crate) fn source_scale(n: f64) -> String {
     if n <= 0. {
         return String::new();
     }
@@ -409,6 +409,9 @@ pub(crate) fn expand(
     item: &TextItem,
     context: &Context<'_>,
 ) -> Result<String, String> {
+    expand_bound(sheet, item, context, None)
+}
+pub(crate) fn expand_bound(sheet: &Sheet, item: &TextItem, context: &Context<'_>, frame: Option<&ingetrazo_core::composition::ViewFrame>) -> Result<String,String> {
     const LIMIT: usize = ingetrazo_formats::paper_text_layout::MAX_LINE_BYTES;
     if item.text.len() > LIMIT {
         return Err("Dynamic paper Text input exceeds byte budget".into());
@@ -460,6 +463,7 @@ pub(crate) fn expand(
             main = Some(frame);
         }
     }
+    if let Some(frame) = frame { main = Some(frame); }
     let scene = main
         .into_iter()
         .chain(frames())

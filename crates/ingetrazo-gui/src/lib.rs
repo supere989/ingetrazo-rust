@@ -213,3 +213,4 @@ pub use annotation_plan::annotation_plan_for_probe;
 mod vcb_input;
 
 mod composer_symbols;
+mod composer_view_captions;

@@ -58,7 +58,7 @@ impl PainterCache {
         sheet: &Sheet,
         dpi: u16,
         views: Option<
-            &std::collections::HashMap<uuid::Uuid, Vec<ingetrazo_formats::sheet_pdf::Draw>>,
+            &std::collections::HashMap<uuid::Uuid, crate::composer::pdf::ViewDraws>,
         >,
         context: Option<&crate::composer_text_fields::Context<'_>>,
     ) -> Result<Plan, String> {
@@ -110,9 +110,11 @@ impl PainterCache {
                     let draws = views
                         .and_then(|v| v.get(&item.id))
                         .ok_or("Physical vector view requires live document context")?;
-                    for part in crate::sheet_image_paths::records(draws, density, metrics.pixels())?
-                    {
-                        append(part)?;
+                    for (index,draw) in draws.draws.iter().enumerate(){
+                        if draw.text.is_some(){for part in self.text.physical_records(std::slice::from_ref(draw),density)?{append(part)?;}}
+                        else if index>=draws.caption_start&&draw.fill.is_some()&&draw.stroke.is_none()&&crate::sheet_image_paths::axis_rectangle(&draw.path).is_some(){for part in self.text.physical_rectangle(draw,density)?{append(part)?;}}
+                        else if draws.source_lines.binary_search(&index).is_ok(){for part in crate::sheet_image_paths::source_line_records(draw,density,metrics.pixels())?{append(part)?;}}
+                        else{for part in crate::sheet_image_paths::records(std::slice::from_ref(draw),density,metrics.pixels())?{append(part)?;}}
                     }
                 }
                 SheetItem::TitleBlock(_) | SheetItem::NorthArrow(_) | SheetItem::GraphicScale(_) => {
@@ -161,24 +163,21 @@ impl PainterCache {
                 unsupported.join(", ")
             ));
         }
+        let date = crate::composer_text_fields::sample_calendar()?.display();
+        let indices=crate::composer_text_fields::source_indices(&scene.sheets,std::slice::from_ref(sheet))?;
+        let source_index=*indices.get(&(sheet as *const _)).ok_or("Image sheet field context lost")?;
+        let context = crate::composer_text_fields::Context {index:Some(source_index),total:scene.sheets.len(),path,date:&date};
         let mut views = std::collections::HashMap::new();
         for i in sheet.visible_item_indices() {
             if let SheetItem::ViewFrame(frame) = &sheet.items[i] {
                 views.insert(
                     frame.id,
                     crate::composer::pdf::view_draws(
-                        scene, camera, compute, document, revision, frame,
+                        scene, camera, compute, document, revision, sheet, frame, &mut self.fonts, &context,
                     )?,
                 );
             }
         }
-        let date = crate::composer_text_fields::sample_calendar()?.display();
-        let context = crate::composer_text_fields::Context {
-            index: Some(index),
-            total: scene.sheets.len(),
-            path,
-            date: &date,
-        };
         self.prepare_with_views(ctx, sheet, dpi, Some(&views), Some(&context))
     }
 }
@@ -220,6 +219,8 @@ impl crate::app::IngeTrazoApp {
         self.composer_compute.invalidate();
         // Like the source chooser, refresh the physical vector view cache before
         // path selection, including a canceled chooser. No scene copy or history.
+        let date=match crate::composer_text_fields::today(){Ok(v)=>v,Err(e)=>{self.sheet_image_result(Err(e));return;}};
+        let fields=crate::composer_text_fields::Context{index:Some(sheet),total:self.scene.sheets.len(),path:self.current_file.as_deref(),date:&date};
         if let Some(sheet) = self.scene.sheets.get(sheet) {
             for i in sheet.visible_item_indices() {
                 if let SheetItem::ViewFrame(frame) = &sheet.items[i] {
@@ -229,7 +230,10 @@ impl crate::app::IngeTrazoApp {
                         &mut self.composer_compute,
                         self.clipboard_document,
                         self.model_revision,
+                        sheet,
                         frame,
+                        &mut self.sheet_image.painters.fonts,
+                        &fields,
                     ) {
                         self.sheet_image_result(Err(error));
                         return;

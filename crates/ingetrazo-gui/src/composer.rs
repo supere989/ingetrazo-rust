@@ -1375,13 +1375,16 @@ impl IngeTrazoApp {
     pub fn export_composer_pdf(&mut self,sheet_idx:Option<usize>,path:&std::path::Path)->Result<usize,String>{
         let sheets=match sheet_idx{Some(index)=>std::slice::from_ref(self.scene.sheets.get(index).ok_or("Sheet no longer exists")?),None=>self.scene.sheets.as_slice()};
         let scene=&self.scene;let camera=&self.camera;let compute=&mut self.composer_compute;let document=self.clipboard_document;let revision=self.model_revision;
-        let mut painter=|frame:&ViewFrame|pdf::view_draws(scene,camera,compute,document,revision,frame);
         let text_resources=&self.composer_state.paper_text;
-        if sheets.is_empty() || sheets.len()>10_000 {return Err("PDF requires 1..10000 pages".into());}
-        let needs_fields=sheets.iter().any(|s|s.items.iter().any(|v|matches!(v,SheetItem::Text(t) if t.text.contains('{'))));
-        // Source caller selects the first dataclass-equal sheet; reference identity remains unambiguous for this export.
-        let indices=if needs_fields{crate::composer_text_fields::source_indices(&scene.sheets,sheets)?}else{std::collections::HashMap::new()};
         let current_file=self.current_file.as_deref();
+        if sheets.is_empty() || sheets.len()>10_000 {return Err("PDF requires 1..10000 pages".into());}
+        let indices=crate::composer_text_fields::source_indices(&scene.sheets,sheets)?;
+        let mut painter=|sheet:&Sheet,frame:&ViewFrame|{
+            let date=crate::composer_text_fields::today()?;
+            let index=*indices.get(&(sheet as *const _)).ok_or("View sheet context lost")?;
+            let fields=crate::composer_text_fields::Context{index:Some(index),total:scene.sheets.len(),path:current_file,date:&date};
+            pdf::view_draws(scene,camera,compute,document,revision,sheet,frame,&mut text_resources.borrow_mut(),&fields).map(|v|v.draws)
+        };
         let mut texts=|sheet:&ingetrazo_core::composition::Sheet,item:&ingetrazo_core::composition::TextItem|{
             if item.text.contains('{'){
                 // Source field_values samples the native local date for each Text expansion.
@@ -1392,10 +1395,10 @@ impl IngeTrazoApp {
         };
         let mut symbols=|sheet:&Sheet,item:&SheetItem|{
             let date=crate::composer_text_fields::today()?;
-            let fields=crate::composer_text_fields::Context{index:Some(scene.sheets.iter().position(|s|std::ptr::eq(s,sheet)).ok_or("Symbol sheet context lost")?),total:scene.sheets.len(),path:current_file,date:&date};
+            let fields=crate::composer_text_fields::Context{index:Some(*indices.get(&(sheet as *const _)).ok_or("Symbol sheet context lost")?),total:scene.sheets.len(),path:current_file,date:&date};
             crate::composer_symbols::draws(sheet,item,&mut text_resources.borrow_mut(),Some(&fields))
         };
-        let pages=ingetrazo_formats::sheet_pdf_shapes::prepare_all_with_symbols(sheets,&mut painter,&mut texts,&mut symbols)?;
+        let pages=ingetrazo_formats::sheet_pdf_shapes::prepare_all_with_context_symbols(sheets,&mut painter,&mut texts,&mut symbols)?;
         let has_view=sheets.iter().any(|s|s.items.iter().any(|item|matches!(item,SheetItem::ViewFrame(_))));
         if has_view || sheets.iter().any(|s|s.items.iter().any(|item|!matches!(item,SheetItem::Shape(_)))){ingetrazo_formats::sheet_pdf::save_original_qt_paper(path,&pages)?;}else{ingetrazo_formats::sheet_pdf::save(path,&pages)?;}Ok(pages.len())
     }

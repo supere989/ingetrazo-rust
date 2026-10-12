@@ -132,6 +132,13 @@ where F:FnMut(&ingetrazo_core::composition::ViewFrame)->Result<Vec<Draw>,String>
       T:FnMut(&Sheet,&ingetrazo_core::composition::TextItem)->Result<Vec<Draw>,String>,
       S:FnMut(&Sheet,&SheetItem)->Result<Vec<Draw>,String>
 {
+    prepare_with_context_symbols(sheet,&mut |_,frame|views(frame),texts,symbols)
+}
+pub fn prepare_with_context_symbols<F,T,S>(sheet:&Sheet,views:&mut F,texts:&mut T,symbols:&mut S)->Result<Page,String>
+where F:FnMut(&Sheet,&ingetrazo_core::composition::ViewFrame)->Result<Vec<Draw>,String>,
+      T:FnMut(&Sheet,&ingetrazo_core::composition::TextItem)->Result<Vec<Draw>,String>,
+      S:FnMut(&Sheet,&SheetItem)->Result<Vec<Draw>,String>
+{
     for key in [
         "images",
         "leyendas",
@@ -193,7 +200,7 @@ where F:FnMut(&ingetrazo_core::composition::ViewFrame)->Result<Vec<Draw>,String>
                 }
             }
             SheetItem::ViewFrame(frame) => {
-                for next in views(frame)? {
+                for next in views(sheet,frame)? {
                     if draws.len() == crate::sheet_pdf::MAX_DRAWS {
                         return Err("PDF draw budget exceeded".into());
                     }
@@ -263,6 +270,13 @@ where F:FnMut(&ingetrazo_core::composition::ViewFrame)->Result<Vec<Draw>,String>
       T:FnMut(&Sheet,&ingetrazo_core::composition::TextItem)->Result<Vec<Draw>,String>,
       S:FnMut(&Sheet,&SheetItem)->Result<Vec<Draw>,String>
 {
+    prepare_all_with_context_symbols(sheets,&mut |_,frame|views(frame),texts,symbols)
+}
+pub fn prepare_all_with_context_symbols<F,T,S>(sheets:&[Sheet],views:&mut F,texts:&mut T,symbols:&mut S)->Result<Vec<Page>,String>
+where F:FnMut(&Sheet,&ingetrazo_core::composition::ViewFrame)->Result<Vec<Draw>,String>,
+      T:FnMut(&Sheet,&ingetrazo_core::composition::TextItem)->Result<Vec<Draw>,String>,
+      S:FnMut(&Sheet,&SheetItem)->Result<Vec<Draw>,String>
+{
     if sheets.is_empty() || sheets.len() > 10_000 {
         return Err("PDF requires 1..10000 pages".into());
     }
@@ -270,7 +284,7 @@ where F:FnMut(&ingetrazo_core::composition::ViewFrame)->Result<Vec<Draw>,String>
     let mut draws = 0usize;
     let mut commands = 0usize;
     for sheet in sheets {
-        let page = prepare_with_symbols(sheet, views, texts,symbols)?;
+        let page = prepare_with_context_symbols(sheet, views, texts,symbols)?;
         draws = draws
             .checked_add(page.draws.len())
             .ok_or("PDF draw count overflow")?;

@@ -43,11 +43,33 @@ impl Painter {
         if paragraph.lines.is_empty(){height=(primary.ascent_26_6()+primary.descent_26_6())as f64/64.;}
         Ok(([width*scale,height*scale],baselines))
     }
+    /// QFontMetricsF.horizontalAdvance for physical source labels, without wrapping or ink bearings.
+    pub fn measure_advance(&mut self, style:&TextStyle<'_>)->Result<f64,String>{
+        if !style.size_pt.is_finite()||style.size_pt<=0.||style.size_pt>10000.{return Err("Invalid paper advance measurement".into());}
+        if self.resolver.is_none(){self.resolver=Some(Resolver::new()?);}
+        let request=Request{family:style.family.into(),bold:style.bold,italic:style.italic,required_chars:vec![]};
+        let scale=style.size_pt*25.4/72./100.*0.75;
+        // QFontMetricsF uses QTextEngine::width over the whole string, not paragraph max width.
+        // Line/paragraph separators break shaping but contribute zero; default QTextOption tab stops are80px.
+        let text=style.text.split('\u{009c}').next().unwrap_or("");
+        if text.len()>crate::paper_text_layout::MAX_LINE_BYTES{return Err("Paper advance input exceeds byte budget".into());}
+        let mut advance=0_i64;let mut begin=0;
+        let resolver=self.resolver.as_mut().unwrap();
+        for(at,ch)in text.char_indices().chain(std::iter::once((text.len(),'\0'))){
+            if matches!(ch,'\n'|'\r'|'\u{2028}'|'\u{2029}'|'\t'|'\0'){
+                let line=crate::paper_text_layout::shape_line(resolver,&request,&text[begin..at])?;
+                advance=advance.checked_add(line.advance_26_6).ok_or("Paper advance overflow")?;
+                if ch=='\t'{advance=advance.checked_div(80*64).and_then(|n|n.checked_add(1)).and_then(|n|n.checked_mul(80*64)).ok_or("Paper tab advance overflow")?;}
+                begin=at+ch.len_utf8();
+            }
+        }
+        Ok(advance as f64/64.*scale)
+    }
     pub fn measure_box(&mut self,style:&TextStyle<'_>)->Result<[f64;2],String>{self.box_metrics(style).map(|v|v.0)}
-    /// Finite source drawText rectangle; vertical alignment is 0=top,1=center.
+    /// Finite source drawText rectangle; vertical alignment is 0=top,1=center,2=bottom.
     pub fn draw_box(&mut self,style:&TextStyle<'_>,height:f64,vertical:u8)->Result<Vec<Draw>,String>{
-        if !height.is_finite()||height<=0.||height>1_000_000.||vertical>1{return Err("Invalid paper text rectangle".into());}
-        let(need,baselines)=self.box_metrics(style)?;let offset=if vertical==1{(height-need[1])*0.5}else{0.};
+        if !height.is_finite()||height<=0.||height>1_000_000.||vertical>2{return Err("Invalid paper text rectangle".into());}
+        let(need,baselines)=self.box_metrics(style)?;let offset=match vertical{1=>(height-need[1])*0.5,2=>height-need[1],_=>0.};
         let mut draws=self.draw(style)?;
         if draws.len()!=baselines.len(){return Err("Paper box run inventory mismatch".into());}
         for(d,(old,new,old_x,advance))in draws.iter_mut().zip(baselines){
