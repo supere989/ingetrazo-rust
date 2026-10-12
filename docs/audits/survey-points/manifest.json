@@ -1,0 +1,153 @@
+{
+  "source_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "owner_chain": [
+    "940d0190",
+    "0b9b6d50",
+    "216c360d",
+    "1443a066"
+  ],
+  "runtime_commit": "325e93126d5524c542811dca7d28bddd196a648f",
+  "observed_root_head": "79eb918d8abd8e80ca33e155b75e6b0a5a16363c",
+  "binary": {
+    "path": "/tmp/ingetrazo-native-font-merge-target/debug/examples/context_document_lifecycle",
+    "sha256": "be45895492d32c13dc423cd4e6b8de01a005d79be691cd5e067dd7a3f8bcb18f"
+  },
+  "source_bindings": {
+    "crates/ingetrazo-core/src/georef.rs": "a32ef80d2542152e729e0dbeb2b5638c0eafed2205fb7dae9a0629abd06ecbfe",
+    "crates/ingetrazo-core/src/scene.rs": "1aa49058c4f5ea78bf9a8e4172016467e36377ade0d2a3d2715fab67dae16890",
+    "crates/ingetrazo-gui/src/survey_points.rs": "71a9b7fb81f00fcf155195ffd0b63407d38dc5fc1eed09c7a3e7a14299f12212",
+    "crates/ingetrazo-gui/src/component_edit.rs": "e7c37d7d95fa3192fc60d9ff1e32168a59a26bf1f25f27b3c8be3064501a8a0b",
+    "crates/ingetrazo-gui/src/app.rs": "af4f03a952fdae5ed1da401fe28db9f508b66ad6774f81a5dfdf050a37515d1f",
+    "crates/ingetrazo-gui/src/document_session.rs": "fba37a1bfd5406ebc5421ba25a5184ae4a076fe18f8913d3c2bcc5b618a9970d",
+    "crates/ingetrazo-gui/src/dialogs.rs": "fe375c9f77eace4328f7d10b1c2866324edb5dc40dbaa5064621974a468e6785",
+    "crates/ingetrazo-gui/src/navigation.rs": "ef4588931a898dbc5824a6d61a0ad7fa7a470c9f7745a3a0fdcf6706d7d3da4e",
+    "crates/ingetrazo-gui/src/tray.rs": "20a661dd63dc3a0a2d2f1939340dcd136ec4c1c13107621eff640f547ba99592",
+    "crates/ingetrazo-gui/src/menu.rs": "17ac7184c3cefc7afc68c70248028408f106e62a9e7d42d054a7667688200dea",
+    "crates/ingetrazo-gui/src/lib.rs": "995984f7453770f9f2b6582dcf64fee2795484ddf98325b1d57338e04deec464",
+    "crates/ingetrazo-gui/examples/context_document_lifecycle.rs": "1936cb70360b968698b787eb84eacb9bb545e9c291ed3c610616ad55a74cd763",
+    "crates/ingetrazo-gui/examples/context_document_lifecycle/survey.rs": "271ba53be7b026bf91e431e4c70770f2a7762ca26d8c8a7c4b04f3313b55eef9",
+    "scripts/check-survey-points.py": "209a08b9aadc57565a55ff8dae1349e8b3f3bde5f4f9608413afe420ee4a2f78",
+    "scripts/reference-survey-reopens.py": "cfa1924367fe88b8737c12af434f359e0daa2d00f7d76d15002e90c3aaab4a03"
+  },
+  "archive_sha256": "1d0f7a5fb5eb72f8bddca057d931a1d79ee049540e03305704923480a51e5b07",
+  "members": {
+    "logs/ingetrazo-survey-check.log": {
+      "bytes": 933,
+      "sha256": "8fe3a4ace0a0d1738be7ca3e39b892c530d829e1721ae5e8e7a5af4ccf679ed1"
+    },
+    "logs/ingetrazo-survey-context-source.log": {
+      "bytes": 95,
+      "sha256": "d094da0f7fdfab1d77638a1fc23b01ecffe313f696d8d1432a36a75feac490db"
+    },
+    "logs/ingetrazo-survey-final-check.log": {
+      "bytes": 132,
+      "sha256": "d7be6f77535e4b63cd9062a733e2e611a4f7f456977ea1e65c1ad3cb1ba6ec3d"
+    },
+    "logs/ingetrazo-survey-final-native.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "logs/ingetrazo-survey-final-reopens.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "logs/ingetrazo-survey-native.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "logs/ingetrazo-survey-reopens.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "logs/ingetrazo-survey-source.log": {
+      "bytes": 199,
+      "sha256": "518ccbc621b1e373042783550af8bea57da12efc6dbeba8a09d99f3d0ece6e01"
+    },
+    "native/ancestor-history-native.igz": {
+      "bytes": 3525,
+      "sha256": "7850b62ec0f430945fc9b56b6166f8044a4345546e98dbbbb55a91769421b374"
+    },
+    "native/existing-native.igz": {
+      "bytes": 3533,
+      "sha256": "2d8dcedb83a5e78ebf6439f98b72479d93c5d04163095cab62a6f8937608352a"
+    },
+    "native/first-diffs.json": {
+      "bytes": 1040,
+      "sha256": "91aca369cc6b861f3490dd5c986db96dff8d3737aefd91edffc9a6e811a3f0df"
+    },
+    "native/first-ingetrazo-survey-check.log": {
+      "bytes": 933,
+      "sha256": "8fe3a4ace0a0d1738be7ca3e39b892c530d829e1721ae5e8e7a5af4ccf679ed1"
+    },
+    "native/first-ingetrazo-survey-native.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "native/first-ingetrazo-survey-reopens.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "native/first-native-survey-context.json": {
+      "bytes": 5987,
+      "sha256": "d45962b45e72a0e5b09d01cec67abcca6bc550412832f10b3e8c3b7967f29171"
+    },
+    "native/first-native-survey.json": {
+      "bytes": 38041,
+      "sha256": "98f34eee9bc002a57db2821a197ddfca4c1b5eeb61a7224d4da5e265e10c87f3"
+    },
+    "native/first-survey-reopens.json": {
+      "bytes": 26198,
+      "sha256": "eadfcd9c11a2f75d0f0c88f1b7a9f8c2410bdeb3de3ccae03025fb9d538c7816"
+    },
+    "native/fresh-native.igz": {
+      "bytes": 3594,
+      "sha256": "8c5b006ac8d42dbb487353cd6b43832c1fdf83c69817fd0f0acba5f44d0da7e8"
+    },
+    "native/native-survey-context.json": {
+      "bytes": 5987,
+      "sha256": "d30811a357710036229f714981f4a6e2dbef77771bfda5b090c3803b47e7f781"
+    },
+    "native/native-survey.json": {
+      "bytes": 38170,
+      "sha256": "51992cd346aa81ac961f9233b2f276abc46e3c0aa517121a2f385f04ff6706e2"
+    },
+    "native/nested-native.igz": {
+      "bytes": 3864,
+      "sha256": "5a2a1546ba534a3d5f471502f1a1d2d616e3c77ec1a1c07f1512798e1c7ea5e1"
+    },
+    "native/nonfinite.csv": {
+      "bytes": 14,
+      "sha256": "ce7a0ff91b2e32b2585ba1c04fd8bb04b4d74d40cc227c33284d6b26a9b00b83"
+    },
+    "native/survey-guards.json": {
+      "bytes": 279,
+      "sha256": "2ebfec2a7749a30726b3266acd51074173013debb4a397bbdbb0ee2e27e322d3"
+    },
+    "native/survey-reopens.json": {
+      "bytes": 26198,
+      "sha256": "eadfcd9c11a2f75d0f0c88f1b7a9f8c2410bdeb3de3ccae03025fb9d538c7816"
+    }
+  },
+  "acceptance": {
+    "retained_failures_rejected": 2,
+    "states": 54,
+    "actual_original_reopens": 4,
+    "negative_controls": 83,
+    "guards": 6,
+    "passed": true
+  },
+  "build_seconds": {
+    "joint_first": 14.141,
+    "final_context_relink": 6.531
+  },
+  "modal_test": "survey_points::tests::actual_survey_modal_cancel_and_accept_owns_input passed by root before camera-only correction; not redundantly rerun",
+  "first_failure": {
+    "runtime_commit": "0bca07634d46b4e229c6cf24c8ee9af97ec31008",
+    "binary_sha256": "3629ebf8cd779e2952dad840bde61d04144dd6aad403340ce786fff6c11783b6",
+    "cause": "consumer single-level vs source all-level exit; nested Finish restored old camera despite global survey fit",
+    "retained_candidate_members": [
+      "native/first-native-survey.json",
+      "native/first-native-survey-context.json"
+    ]
+  }
+}
