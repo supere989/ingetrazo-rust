@@ -11,3 +11,5 @@ The consumer reports complete candidate/reference RGBA, per-sample RGBA and dept
 Production document annotations, valid Apple CGL selected-depth semantics, full text/UV/overlay orientation and packaged startup remain separate acceptance gates. Eligibility mathematics and successful diagnostic execution alone cannot release production admission. Root owns all compilation, native execution and publication.
 
 A read-only GitHub API inventory confirmed default branch `main` and 18 available workflows; the new reflected diagnostic was absent. Its narrowly scoped review-branch push trigger permits discovery/execution without adding the diagnostic to default main. No push or dispatch was performed.
+
+Root metadata preflight: Intel-target Metal library/all targets pass. GUI consumer cross-check is blocked by Linux C compiler macOS flags in libz-sys; actual macOS CI remains required. Initial missing original fixture mount and both attempts are retained in metadata-preflight.zip. No native execution or acceptance is inferred.

@@ -1,0 +1,27 @@
+{
+  "runtime_revision": "268b5afe6604bc41351e59d7cc0cd9afe8d4c627",
+  "target": "x86_64-apple-darwin",
+  "metal_all_targets": "passed",
+  "gui_consumer": "environment_refused",
+  "consumer_reason": "Linux cc cannot compile macOS libz-sys: -arch and -mmacosx-version-min unsupported",
+  "first_attempt": "missing original gitlink fixtures; logged and linked unchanged pinned source",
+  "source_captures": 0,
+  "native_executions": 0,
+  "files": [
+    {
+      "path": "check.log",
+      "bytes": 4290,
+      "sha256": "530966ce9ea77064afcd86061d637df8bc686823c88b095ffd083e61d30e82ac"
+    },
+    {
+      "path": "consumer-check.log",
+      "bytes": 100585,
+      "sha256": "3fc7d4367f85ec5d0c41c165407fe0f1753d5142bbed533da45aab3c9e813c21"
+    },
+    {
+      "path": "missing-source.log",
+      "bytes": 2973,
+      "sha256": "772d7f277d94da60451c017d45ce867e0ce596fcc13a8b619b21625f9795bd49"
+    }
+  ]
+}
