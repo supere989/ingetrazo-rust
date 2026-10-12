@@ -1,6 +1,6 @@
 {
   "original_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
-  "archive_sha256": "60c7b80fe8f67dd77c5e60a60b27b0fad30be38d78fec62594ae5ad6fa84d5e8",
+  "archive_sha256": "c3a5a0f36df94fdf1da12df10a5d81cca7a14b30902d915ab575d2e39b870374",
   "members": {
     "assets/checker.png": {
       "size": 431,
@@ -138,6 +138,14 @@
       "size": 1653,
       "sha256": "6a291d35cb931b9522770f00b1c91554a51001b5dd58f0768176e3b6b0797a99"
     },
+    "opaque-guards.json": {
+      "size": 470,
+      "sha256": "a8e61623b7e056d35d72bd2fdcf6d203d1f226a805ad123888363dc038e58d68"
+    },
+    "opaque-original-reader-control.json": {
+      "size": 233,
+      "sha256": "8def04cb8f054b9aa4b704d826973eb5c49c323e82645bbdb61f5ef9e0fc0f94"
+    },
     "original-gestures.json": {
       "size": 234349,
       "sha256": "444ec367cbaac4999a4325cfa3c7959c7e4ede951ab7978d3dfe0397d34da87f"
@@ -195,20 +203,20 @@
       "sha256": "f5d4bc6ece87edee88a109719313dd19d436a1da6af1a223c1ff421871c72c4f"
     },
     "unselected-drag-input.igz": {
-      "size": 1094,
-      "sha256": "01ee483577cc972e354c1529fbc6ac2968a5ea310a3f2e074f69b1b668c45846"
+      "size": 1401,
+      "sha256": "3f7a7f6d70914a9fffdd85f9c8c3013532da53e779e1ba3aae34c487dcdfd33f"
     },
     "unselected-drag-original.igz": {
       "size": 1094,
       "sha256": "de0245eee35bab0e5dfb76fdcd707dcc20d77e1c2a6ae9428e5660c1c7af22a1"
     }
   },
-  "producer_commit": "1763f59cf19ca50fcd6c42ba7d7044c8bc5401c6",
+  "producer_commit": "eff5b5482ba0e30f1a000043cfe4eb76aa98e95f",
   "producers": {
-    "scripts/reference-picture-gestures.py": "cd5e2e4c3d1d37aa5eb307639865ec765522988d6f3bffd4e57e18c7c9c524fc",
+    "scripts/reference-picture-gestures.py": "d768e047f19c975309f9e1e7e990b3e18a993eecef25f3fc0c75a1e60c21020f",
     "scripts/reference-picture-gesture-reopens.py": "b7dec1ab448c0b7dda7128c9caa3326beba58d90ed94d5faf4c6e1ab0c22acc1",
-    "scripts/check-picture-gestures.py": "505cb414eab517ce587f075fd0cc5e39ac37ba69017425db17533a5312b88126",
-    "scripts/replay-picture-gestures.py": "5efcc49dc71ec03f35228345e5a2f7fc6c1de8e9f22425eb915e5660f8893366"
+    "scripts/check-picture-gestures.py": "f698d602b89b50bf0bf5e885031e109fcff3ce7f71b2be4e20e290759533131d",
+    "scripts/replay-picture-gestures.py": "529656c85a751033252786230dd8e170f73594e8c48b868fd60f8f8c7698a236"
   },
   "source_hashes": {
     "views/composer.py": "aeb7676d7a7a1b2704c0f108f5d8ab7861836c74648838c545bcce454ac248af",

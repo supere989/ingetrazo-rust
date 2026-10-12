@@ -3,7 +3,7 @@
   "cases": 21,
   "states": 167,
   "original_reader_pairs": 21,
-  "rejected_controls": 16,
+  "rejected_controls": 18,
   "negative_names": [
     "missing-state",
     "extra-state",
@@ -20,8 +20,17 @@
     "reader-width",
     "wrong-case",
     "synthetic-input",
-    "raw-loss"
+    "raw-loss",
+    "raw-sheet-key-loss",
+    "raw-picture-type-loss"
   ],
-  "scope": "Checker-only source-to-source synthetic input proves16 rejecting mutations; NOT native/App/GPU acceptance.",
-  "checker_sha256": "505cb414eab517ce587f075fd0cc5e39ac37ba69017425db17533a5312b88126"
+  "scope": "Synthetic source-to-source checker selftest ONLY;18 rejected mutations and baseline-failure receipt, not native acceptance.",
+  "baseline_failure_diagnostic": {
+    "pass_": false,
+    "stage": "baseline",
+    "error": "AssertionError()",
+    "cases": 21,
+    "states": 167
+  },
+  "checker_sha256": "f698d602b89b50bf0bf5e885031e109fcff3ce7f71b2be4e20e290759533131d"
 }
