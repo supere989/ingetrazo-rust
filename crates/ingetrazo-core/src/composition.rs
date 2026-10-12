@@ -503,8 +503,9 @@ impl Sheet {
 
     /// Called at document admission, before a mutation's history snapshot.
     /// Owned insertion/removal must update IDs explicitly. Unexpected inventory
-    /// replacement invalidates that family's identities instead of aliasing a
-    /// former owner at the same index.
+    /// length change invalidates that family's identities instead of aliasing a
+    /// former owner at the same index. Callers replacing a complete raw inventory
+    /// must clear its IDs even when its length is unchanged.
     pub fn ensure_annotation_ids(&mut self) -> Result<(), String> {
         let mut lengths = [0; 6];
         let mut total = 0usize;

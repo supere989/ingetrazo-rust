@@ -10,7 +10,7 @@ use std::collections::{BTreeMap, HashMap, HashSet};
 
 const MAX_MEMBERS: usize = 10_000;
 const CATEGORIES: [usize; 6] = [7, 8, 9, 10, 12, 13];
-#[derive(Clone, Default)]
+#[derive(Clone, Debug, Default)]
 pub(super) struct State {
     pub members: Vec<Owner>,
     membership: HashSet<Owner>,
@@ -20,20 +20,20 @@ pub(super) struct State {
     group: Option<Group>,
     pub edit_signature: Vec<(Owner, Vec<String>)>,
 }
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 struct Band {
     start: DVec2,
     current: DVec2,
     zoom: f64,
 }
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 struct Peer {
     owner: Owner,
     at: DVec2,
     current: DVec2,
     size: [f64; 2],
 }
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 struct Group {
     pressed: Owner,
     press: DVec2,
@@ -59,7 +59,7 @@ impl Ord for Coordinate {
         self.0.total_cmp(&other.0)
     }
 }
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 struct AxisIndex {
     points: BTreeMap<(Coordinate, usize), Option<Owner>>,
     ranks: Vec<usize>,
@@ -652,7 +652,68 @@ pub(super) fn delete_selected(app: &mut IngeTrazoApp) -> Result<bool, String> {
     app.finish_composer_edit();
     Ok(true)
 }
+#[derive(Default)]
+pub(in crate::composer) struct HistorySelection {
+    sheet: Option<uuid::Uuid>,
+    primary: Option<(usize, uuid::Uuid)>,
+    members: Vec<(usize, uuid::Uuid)>,
+}
 impl IngeTrazoApp {
+    pub(in crate::composer) fn composer_annotation_history_selection(&self) -> HistorySelection {
+        let Ok(s) = active(self) else {
+            return HistorySelection::default();
+        };
+        let sheet = &self.scene.sheets[s];
+        let state = &self.composer_state.annotation_authoring;
+        let id = |owner: Owner| {
+            (owner.sheet == sheet.id)
+                .then(|| sheet.annotation_id(owner.family, owner.index))
+                .flatten()
+                .map(|id| (owner.family, id))
+        };
+        HistorySelection {
+            sheet: Some(sheet.id),
+            primary: state.selected.and_then(id),
+            members: state.multi.members.iter().copied().filter_map(id).collect(),
+        }
+    }
+    pub(in crate::composer) fn restore_composer_annotation_history_selection(
+        &mut self,
+        selected: HistorySelection,
+    ) {
+        let Ok(s) = active(self) else {
+            clear(self);
+            return;
+        };
+        let sheet = &self.scene.sheets[s];
+        let mut indices = HashMap::new();
+        if selected.sheet == Some(sheet.id) {
+            for (family, ids) in sheet.annotation_ids.iter().enumerate() {
+                for (index, &id) in ids.iter().enumerate() {
+                    indices.insert(
+                        (family, id),
+                        Owner {
+                            sheet: sheet.id,
+                            family,
+                            index,
+                        },
+                    );
+                }
+            }
+        }
+        let primary = selected.primary.and_then(|id| indices.get(&id).copied());
+        let members = selected
+            .members
+            .iter()
+            .filter_map(|id| indices.get(id).copied())
+            .collect::<Vec<_>>();
+        clear(self);
+        let state = &mut self.composer_state.annotation_authoring;
+        state.selected = primary;
+        state.multi.membership = members.iter().copied().collect();
+        state.multi.members = members;
+        state.draft = None;
+    }
     pub fn composer_annotation_selections(&self) -> Vec<(usize, usize)> {
         let mut out = self
             .composer_state
