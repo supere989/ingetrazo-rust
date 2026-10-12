@@ -224,7 +224,9 @@ fn write_collected(
 /// Source-compatible best-effort texture sidecar copying. Decode/resource work is
 /// cold export only. Embedded IGZ bytes are borrowed until each write completes.
 pub fn save_dae(scene: &Scene, path: &Path, project_name: &str) -> Result<(), FormatError> {
-    save_dae_view(scene, &scene.mesh, &scene.groups, &[], path, project_name)
+    let prims = crate::gltf::rich::collect_for_dae(scene)
+        .map_err(|e| std::io::Error::other(e.to_string()))?;
+    save_collected(scene, path, project_name, &prims)
 }
 pub fn save_dae_view(
     scene: &Scene,
@@ -236,8 +238,16 @@ pub fn save_dae_view(
 ) -> Result<(), FormatError> {
     let prims = crate::gltf::rich::collect_dae_view(scene, loose, groups, overrides)
         .map_err(|e| std::io::Error::other(e.to_string()))?;
+    save_collected(scene, path, project_name, &prims)
+}
+fn save_collected(
+    scene: &Scene,
+    path: &Path,
+    project_name: &str,
+    prims: &[crate::gltf::rich::Primitive],
+) -> Result<(), FormatError> {
     let mut xml = Vec::new();
-    write_collected(scene, &mut xml, project_name, &prims)?;
+    write_collected(scene, &mut xml, project_name, prims)?;
     // Native correction: a failed XML write cannot truncate an existing export
     // or publish texture sidecars. Missing/copy-error sidecars remain source best effort.
     let temporary = path.with_file_name(format!(
@@ -259,7 +269,7 @@ pub fn save_dae_view(
         let _ = std::fs::remove_file(&temporary);
         return Err(error.into());
     }
-    for p in &prims {
+    for p in prims {
         if let (Some(map), Some(tex)) = (p.info["map"].as_str(), p.info.get("texture")) {
             if let Some((_, bytes)) = crate::gltf::rich::source_texture(scene, tex) {
                 let destination = path.with_file_name(map);
@@ -303,4 +313,51 @@ fn utc_now() -> String {
         remainder / 60 % 60,
         remainder % 60
     )
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use glam::{DMat4, DVec3};
+
+    #[test]
+    fn general_reflection_policy_does_not_change_app_source_export() {
+        let mut scene = Scene::new();
+        let mut mesh = Mesh::new();
+        let outer = [[0., 0.], [4., 0.], [4., 4.], [0., 4.]]
+            .map(|[x, y]| mesh.add_vertex(DVec3::new(x, y, 0.)));
+        let hole = [[1., 1.], [1., 3.], [3., 3.], [3., 1.]]
+            .map(|[x, y]| mesh.add_vertex(DVec3::new(x, y, 0.)));
+        mesh.add_face(outer.to_vec(), vec![hole.to_vec()]).unwrap();
+        let mut child = Group::with_mesh("reflected", mesh);
+        child.transform = DMat4::from_scale(DVec3::new(-1., 1., 1.));
+        let mut parent = Group::new("parent");
+        parent.transform = DMat4::from_translation(DVec3::new(10., 20., 30.));
+        parent.children.push(child);
+        scene.groups.push(parent);
+        let general = crate::gltf::rich::collect_for_dae(&scene).unwrap();
+        let source =
+            crate::gltf::rich::collect_dae_view(&scene, &scene.mesh, &scene.groups, &[]).unwrap();
+        assert_eq!(general.len(), source.len());
+        assert!(!general.is_empty());
+        for (general, source) in general.iter().zip(&source) {
+            assert_eq!(general.info, source.info);
+            assert_eq!(general.indices.len(), source.indices.len());
+            assert!(!general.indices.is_empty());
+            for (g, s) in general
+                .indices
+                .chunks_exact(3)
+                .zip(source.indices.chunks_exact(3))
+            {
+                let gpoints = [g[0], g[1], g[2]]
+                    .map(|i| DVec3::from(source_z(general.positions[i as usize])));
+                let spoints =
+                    [s[0], s[1], s[2]].map(|i| DVec3::from(source_z(source.positions[i as usize])));
+                assert_eq!(gpoints, [spoints[0], spoints[2], spoints[1]]);
+                assert!((gpoints[1] - gpoints[0]).cross(gpoints[2] - gpoints[0]).z > 0.);
+                assert_eq!(source_z(general.normals[g[0] as usize]), [0., 0., 1.]);
+                assert_eq!(source_z(source.normals[s[0] as usize]), [0., 0., -1.]);
+            }
+        }
+    }
 }

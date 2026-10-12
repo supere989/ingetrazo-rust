@@ -132,9 +132,11 @@ fn add_mesh(
     loose: bool,
     bulk: bool,
     unindexed: bool,
+    correct_reflection: bool,
     prims: &mut Vec<Primitive>,
     lookup: &mut HashMap<String, usize>,
 ) -> Result<(), GltfError> {
+    let reflected = correct_reflection && world.determinant() < 0.;
     let world64 = world.as_dmat4();
     let inverse = world64.inverse().as_mat4().as_dmat4();
     let map = |p: DVec3| {
@@ -230,9 +232,9 @@ fn add_mesh(
             mesh.triangulate_face(id)
         };
         for (a, b, c) in triangles {
-            // The source does not flip a reflected exported ring. Its normal
-            // is recomputed from the transformed face, unlike viewport instancing.
-            for local in [a, b, c] {
+            // The App source policy retains reflected rings. General conversion
+            // retains exchange.rs's determinant-based corner/normal correction.
+            for local in if reflected { [a, c, b] } else { [a, b, c] } {
                 let p = map(local);
                 if !p.is_finite() || !normal.is_finite() {
                     return Err(GltfError::Invalid("Nonfinite exported geometry".into()));
@@ -270,7 +272,7 @@ fn add_mesh(
                     return Err(GltfError::Invalid("Nonfinite texture coordinates".into()));
                 }
                 let pp = yup(p);
-                let nn = yup(normal);
+                let nn = yup(if reflected { -normal } else { normal });
                 let vertex_key = (!unindexed).then(||vertex_key(pp,nn,uv.unwrap_or([0.,0.])));
                 let vertex = if let Some(&i) = vertex_key.as_ref().and_then(|key|prim.vertices.get(key)) {
                     i
@@ -319,7 +321,7 @@ fn collect(scene: &Scene, camera: Option<&super::figures::View>) -> Result<Colle
             bulk
         };
         if !skip_figures || !g.billboard {
-            add_mesh(scene, &g.mesh, world, false, own_bulk, false, prims, lookup)?;
+            add_mesh(scene, &g.mesh, world, false, own_bulk, false, false, prims, lookup)?;
         }
         // Source world_mesh merges descendants regardless child visibility.
         for child in &g.children {
@@ -334,6 +336,7 @@ fn collect(scene: &Scene, camera: Option<&super::figures::View>) -> Result<Colle
         &scene.mesh,
         Mat4::IDENTITY,
         true,
+        false,
         false,
         false,
         &mut prims,
@@ -380,6 +383,7 @@ fn collect(scene: &Scene, camera: Option<&super::figures::View>) -> Result<Colle
                         scene,
                         &figure.mesh,
                         Mat4::IDENTITY,
+                        false,
                         false,
                         false,
                         false,
@@ -834,17 +838,27 @@ pub(super) fn build(
     Ok((document, buffer.data))
 }
 
-/// Same source front-paint/Qt placement law, with every triangle corner retained
+/// General conversion retains the legacy reflected-winding correction,
+/// alongside source front paint and every triangle corner retained
 /// for DAE's independent six/five/six-decimal shared sources. Y-up output is
 /// converted by the DAE writer; no glTF combined vertex dedup is applied.
 pub(crate) fn collect_for_dae(scene: &Scene) -> Result<Vec<Primitive>, GltfError> {
-    collect_dae_view(scene, &scene.mesh, &scene.groups, &[])
+    collect_dae_view_policy(scene, &scene.mesh, &scene.groups, &[], true)
 }
 pub(crate) fn collect_dae_view(
     scene: &Scene,
     loose: &Mesh,
     groups: &[Group],
     overrides: &[crate::dae::PlacementOverride<'_>],
+) -> Result<Vec<Primitive>, GltfError> {
+    collect_dae_view_policy(scene, loose, groups, overrides, false)
+}
+fn collect_dae_view_policy(
+    scene: &Scene,
+    loose: &Mesh,
+    groups: &[Group],
+    overrides: &[crate::dae::PlacementOverride<'_>],
+    correct_reflection: bool,
 ) -> Result<Vec<Primitive>, GltfError> {
     fn group(
         scene: &Scene,
@@ -854,6 +868,7 @@ pub(crate) fn collect_dae_view(
         out: &mut Vec<Primitive>,
         lookup: &mut HashMap<String, usize>,
         overrides: &[crate::dae::PlacementOverride<'_>],
+        correct_reflection: bool,
     ) -> Result<(), GltfError> {
         let replacement = overrides.iter().find(|o| o.id == g.id);
         let local = if replacement.is_some() {
@@ -864,9 +879,28 @@ pub(crate) fn collect_dae_view(
         let world = parent * local;
         let mesh = replacement.map_or(&g.mesh, |o| o.mesh);
         let children = replacement.map_or(g.children.as_slice(), |o| o.children);
-        add_mesh(scene, mesh, world, false, bulk, true, out, lookup)?;
+        add_mesh(
+            scene,
+            mesh,
+            world,
+            false,
+            bulk,
+            true,
+            correct_reflection,
+            out,
+            lookup,
+        )?;
         for child in children {
-            group(scene, child, world, bulk, out, lookup, overrides)?;
+            group(
+                scene,
+                child,
+                world,
+                bulk,
+                out,
+                lookup,
+                overrides,
+                correct_reflection,
+            )?;
         }
         Ok(())
     }
@@ -879,6 +913,7 @@ pub(crate) fn collect_dae_view(
         true,
         false,
         true,
+        correct_reflection,
         &mut out,
         &mut lookup,
     )?;
@@ -895,6 +930,7 @@ pub(crate) fn collect_dae_view(
                 &mut out,
                 &mut lookup,
                 overrides,
+                correct_reflection,
             )?;
         }
     }
