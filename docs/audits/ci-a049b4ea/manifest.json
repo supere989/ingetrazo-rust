@@ -1,6 +1,6 @@
 {
   "revision": "a049b4ead76e2101d1795dd2f6a21c0a1a45fc65",
-  "archive_sha256": "d0bc2a29a7a5abb63ac4d0f6b4a1e4d709fb76b67d728d29cb19ae83bba0771c",
+  "archive_sha256": "ce9f50a4730950ff1928e7b660359e9394859f61fb8db97821c30b2d37b2e55e",
   "members": {
     "api/full-artifacts.json": {
       "size": 4390,
@@ -10,6 +10,10 @@
       "size": 50064,
       "sha256": "5a4588145e8681346d6b9049c7083b21787143d80d9d81a561fcf944be94b698"
     },
+    "api/full-jobs-terminal.json": {
+      "size": 50303,
+      "sha256": "795bceb0053a68369494701b496d1fb2c616bd95ea0ed717c61fa5577c0c7c3e"
+    },
     "api/full-jobs.json": {
       "size": 49505,
       "sha256": "1ea112c14d962a2f7bce8a4e90dccde899565436aefbb478843aa00fec00ef86"
@@ -17,6 +21,10 @@
     "api/full-run-later-snapshot.json": {
       "size": 12713,
       "sha256": "b1e26a2dff78052ce2e69fec0f7979feac82e0912146233a3b27424c6e02c96b"
+    },
+    "api/full-run-terminal.json": {
+      "size": 12716,
+      "sha256": "777e46780d4f690c9f4ebe3c30a87eb6515ac6274e5575212c154048c458eeba"
     },
     "api/full-run.json": {
       "size": 12713,
@@ -71,8 +79,8 @@
       "sha256": "9c2e52375f469fc79fcde689fdf4a6cc9e7bb7c765ce03cc276a77fa2acf6443"
     },
     "observation.json": {
-      "size": 49114,
-      "sha256": "b1f7cfcd4ef35b5ad9256aceb18c5c8969b64bacce4d6f468555164bbfc53788"
+      "size": 49276,
+      "sha256": "ac6d2299f4f5faf1cfd4b09cfc865520bebbd96fd05cb300b58169c81db28bae"
     },
     "workflows/metal-compute-consumer.yml": {
       "size": 4532,
@@ -10086,13 +10094,199 @@
     }
   },
   "observation": {
-    "observed_at_utc": "2026-10-12T14:02:15.167506+00:00",
+    "observed_at_utc": "2026-10-12T14:03:58.587472+00:00",
     "revision": "a049b4ead76e2101d1795dd2f6a21c0a1a45fc65",
-    "full_run_status": "in_progress",
-    "full_run_conclusion": null,
+    "full_run_status": "completed",
+    "full_run_conclusion": "failure",
     "ordered_run_status": "completed",
     "ordered_run_conclusion": "success",
     "jobs": [
+      {
+        "run": "ordered",
+        "id": 114839148973,
+        "name": "Actual ordered UI and CAD compute (macos-15)",
+        "status": "completed",
+        "conclusion": "success",
+        "steps": [
+          {
+            "number": 1,
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 2,
+            "name": "Run actions/checkout@v4",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 3,
+            "name": "Run dtolnay/rust-toolchain@stable",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 4,
+            "name": "Reuse compiled Cargo dependencies",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 5,
+            "name": "Run actions/setup-python@v5",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 6,
+            "name": "Install pinned diagnostic Qt reference",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 7,
+            "name": "Generate fresh actual QPainter references",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 8,
+            "name": "Build native compute consumer with source provenance",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 9,
+            "name": "Execute actual GPU consumer and strict seven-image controls",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 10,
+            "name": "Retain complete native evidence on every verdict",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 18,
+            "name": "Post Run actions/setup-python@v5",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 19,
+            "name": "Post Reuse compiled Cargo dependencies",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 20,
+            "name": "Post Run actions/checkout@v4",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 21,
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success"
+          }
+        ]
+      },
+      {
+        "run": "ordered",
+        "id": 114839149385,
+        "name": "Actual ordered UI and CAD compute (macos-15-intel)",
+        "status": "completed",
+        "conclusion": "success",
+        "steps": [
+          {
+            "number": 1,
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 2,
+            "name": "Run actions/checkout@v4",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 3,
+            "name": "Run dtolnay/rust-toolchain@stable",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 4,
+            "name": "Reuse compiled Cargo dependencies",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 5,
+            "name": "Run actions/setup-python@v5",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 6,
+            "name": "Install pinned diagnostic Qt reference",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 7,
+            "name": "Generate fresh actual QPainter references",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 8,
+            "name": "Build native compute consumer with source provenance",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 9,
+            "name": "Execute actual GPU consumer and strict seven-image controls",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 10,
+            "name": "Retain complete native evidence on every verdict",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 18,
+            "name": "Post Run actions/setup-python@v5",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 19,
+            "name": "Post Reuse compiled Cargo dependencies",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 20,
+            "name": "Post Run actions/checkout@v4",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 21,
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success"
+          }
+        ]
+      },
       {
         "run": "full",
         "id": 114839148558,
@@ -10994,8 +11188,8 @@
         "run": "full",
         "id": 114839149000,
         "name": "Native Metal framework link (macos-15-intel)",
-        "status": "in_progress",
-        "conclusion": null,
+        "status": "completed",
+        "conclusion": "failure",
         "steps": [
           {
             "number": 1,
@@ -11222,14 +11416,20 @@
           {
             "number": 71,
             "name": "Post Reuse compiled Cargo dependencies",
-            "status": "in_progress",
-            "conclusion": null
+            "status": "completed",
+            "conclusion": "success"
           },
           {
             "number": 72,
             "name": "Post Run actions/checkout@v4",
-            "status": "pending",
-            "conclusion": null
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "number": 73,
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success"
           }
         ]
       },
@@ -11550,192 +11750,6 @@
             "conclusion": "success"
           }
         ]
-      },
-      {
-        "run": "ordered",
-        "id": 114839148973,
-        "name": "Actual ordered UI and CAD compute (macos-15)",
-        "status": "completed",
-        "conclusion": "success",
-        "steps": [
-          {
-            "number": 1,
-            "name": "Set up job",
-            "status": "completed",
-            "conclusion": "success"
-          },
-          {
-            "number": 2,
-            "name": "Run actions/checkout@v4",
-            "status": "completed",
-            "conclusion": "success"
-          },
-          {
-            "number": 3,
-            "name": "Run dtolnay/rust-toolchain@stable",
-            "status": "completed",
-            "conclusion": "success"
-          },
-          {
-            "number": 4,
-            "name": "Reuse compiled Cargo dependencies",
-            "status": "completed",
-            "conclusion": "success"
-          },
-          {
-            "number": 5,
-            "name": "Run actions/setup-python@v5",
-            "status": "completed",
-            "conclusion": "success"
-          },
-          {
-            "number": 6,
-            "name": "Install pinned diagnostic Qt reference",
-            "status": "completed",
-            "conclusion": "success"
-          },
-          {
-            "number": 7,
-            "name": "Generate fresh actual QPainter references",
-            "status": "completed",
-            "conclusion": "success"
-          },
-          {
-            "number": 8,
-            "name": "Build native compute consumer with source provenance",
-            "status": "completed",
-            "conclusion": "success"
-          },
-          {
-            "number": 9,
-            "name": "Execute actual GPU consumer and strict seven-image controls",
-            "status": "completed",
-            "conclusion": "success"
-          },
-          {
-            "number": 10,
-            "name": "Retain complete native evidence on every verdict",
-            "status": "completed",
-            "conclusion": "success"
-          },
-          {
-            "number": 18,
-            "name": "Post Run actions/setup-python@v5",
-            "status": "completed",
-            "conclusion": "success"
-          },
-          {
-            "number": 19,
-            "name": "Post Reuse compiled Cargo dependencies",
-            "status": "completed",
-            "conclusion": "success"
-          },
-          {
-            "number": 20,
-            "name": "Post Run actions/checkout@v4",
-            "status": "completed",
-            "conclusion": "success"
-          },
-          {
-            "number": 21,
-            "name": "Complete job",
-            "status": "completed",
-            "conclusion": "success"
-          }
-        ]
-      },
-      {
-        "run": "ordered",
-        "id": 114839149385,
-        "name": "Actual ordered UI and CAD compute (macos-15-intel)",
-        "status": "completed",
-        "conclusion": "success",
-        "steps": [
-          {
-            "number": 1,
-            "name": "Set up job",
-            "status": "completed",
-            "conclusion": "success"
-          },
-          {
-            "number": 2,
-            "name": "Run actions/checkout@v4",
-            "status": "completed",
-            "conclusion": "success"
-          },
-          {
-            "number": 3,
-            "name": "Run dtolnay/rust-toolchain@stable",
-            "status": "completed",
-            "conclusion": "success"
-          },
-          {
-            "number": 4,
-            "name": "Reuse compiled Cargo dependencies",
-            "status": "completed",
-            "conclusion": "success"
-          },
-          {
-            "number": 5,
-            "name": "Run actions/setup-python@v5",
-            "status": "completed",
-            "conclusion": "success"
-          },
-          {
-            "number": 6,
-            "name": "Install pinned diagnostic Qt reference",
-            "status": "completed",
-            "conclusion": "success"
-          },
-          {
-            "number": 7,
-            "name": "Generate fresh actual QPainter references",
-            "status": "completed",
-            "conclusion": "success"
-          },
-          {
-            "number": 8,
-            "name": "Build native compute consumer with source provenance",
-            "status": "completed",
-            "conclusion": "success"
-          },
-          {
-            "number": 9,
-            "name": "Execute actual GPU consumer and strict seven-image controls",
-            "status": "completed",
-            "conclusion": "success"
-          },
-          {
-            "number": 10,
-            "name": "Retain complete native evidence on every verdict",
-            "status": "completed",
-            "conclusion": "success"
-          },
-          {
-            "number": 18,
-            "name": "Post Run actions/setup-python@v5",
-            "status": "completed",
-            "conclusion": "success"
-          },
-          {
-            "number": 19,
-            "name": "Post Reuse compiled Cargo dependencies",
-            "status": "completed",
-            "conclusion": "success"
-          },
-          {
-            "number": 20,
-            "name": "Post Run actions/checkout@v4",
-            "status": "completed",
-            "conclusion": "success"
-          },
-          {
-            "number": 21,
-            "name": "Complete job",
-            "status": "completed",
-            "conclusion": "success"
-          }
-        ]
       }
     ],
     "artifact_reports_are_not_independent_stage_proof": true,
@@ -11752,5 +11766,6 @@
       "commit": "a049b4ead76e2101d1795dd2f6a21c0a1a45fc65",
       "sha256": "bce24078146f16afab7cd9998386a03a0aa2b69c0a6954bfc517b009c452efb9"
     }
-  ]
+  ],
+  "prior_in_progress_archive_sha256": "d0bc2a29a7a5abb63ac4d0f6b4a1e4d709fb76b67d728d29cb19ae83bba0771c"
 }
