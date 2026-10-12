@@ -146,6 +146,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         let disabled = receive(&mut app, &ctx, &mut tick, &rx)?;
         assert_eq!(disabled["ok"], false);
         assert_eq!(app.scene, before);
+        assert_eq!((app.undo_stack.len(), app.redo_stack.len()), (undo, redo));
         #[cfg(feature = "engineering-python")]
         {
             app.engineering_python_enabled = true;
@@ -156,6 +157,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         let modal = receive(&mut app, &ctx, &mut tick, &rx)?;
         assert_eq!(modal["ok"], false);
         assert_eq!(app.scene, before);
+        assert_eq!((app.undo_stack.len(), app.redo_stack.len()), (undo, redo));
         app.show_save_dialog = false;
         report["controls"] = json!({"actual_socket":true,"actual_ui_poll":true,"caught_overflow_atomic":true,"disabled_refused":true,"modal_refused":true,"worker_joined":false});
         report["control_replies"] = json!({"overflow":overflow,"disabled":disabled,"modal":modal});
