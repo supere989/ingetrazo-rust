@@ -124,6 +124,9 @@ fn click(
         }
     };
     trace("before", app);
+    frame(ctx, app, time, vec![egui::Event::PointerMoved(p)]);
+    trace("hovered", app);
+    assert_eq!(ctx.data(|d| d.get_temp::<egui::Rect>(egui::Id::new(id))), Some(rect), "Control moved during hover");
     frame(
         ctx,
         app,
