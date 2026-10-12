@@ -1,0 +1,13 @@
+The frozen corpus contains 20 actual original ComposerWindow exports for the six physical sheet annotation families: linear, angular and radial dimensions, labels, elevations and callouts. Each case includes PNG and JPEG at 100 dpi, PDF from the original application export, an IGZ input and an actual original-reader composition. The original source remains pinned to `6be29fe437a7cd992d4e079f71720821b25216b9`.
+
+The cases cover defaults, distinct painter branches, wrapping and typography, all eight dimension units, geometry-derived readable text rotation, field expansion, bound versus main frame context, overlap ordering and hidden items. Field frames are metadata-only fixtures. Stored unresolved anchor data is preserved; this corpus does not prove model-view anchor synchronization or annotation authoring UI.
+
+Font metrics and delegated drawLine/drawPath observations accompany the exports. The observer delegates unchanged Qt methods; it does not replace painting or construct expected pixels. The source uses Linux Qt 6.12 with DejaVu Sans, whose existing font file is authenticated. A bounded Qt rounded-rectangle element observation is retained separately.
+
+After export, the all-six-defaults input received seven declared vendor leaves. An actual original-reader check proved its known composition unchanged. The original dataclasses drop these unknown fields; native preservation must therefore be checked independently against the saved raw IGZ. No pixel export was repeated for this overlay.
+
+The strict checker verifies the exact ordered 20-case inventory, decoded PNG/JPEG pixels, QtPdf-rendered pixels and physical page size, all original-reader composition fields and the seven saved raw leaves. Its 21 rejection controls were exercised on an explicitly declared source-to-source baseline. This verifies the harness, not native rendering, cache reuse or refusal behavior. Native flags require independent actual consumer assertions.
+
+Run `scripts/replay-sheet-annotations.py PREBUILT_BINARY FRESH_OUTPUT` with the pinned Qt-enabled Python. It authenticates and extracts every archive member, runs `sheet_annotation_workflows SOURCE NATIVE`, invokes the original reader and then the strict checker. Backend selection defaults to native; `--software` is an explicit option. No source capture or Rust build occurs during replay.
+
+The archive contains the single completed source capture, its logs, partial progress snapshot, font/operator observations, original readers and separately identified checker baseline. Physical PNG/PDF parity remains a strict native acceptance gate, and this source package makes no native acceptance claim.

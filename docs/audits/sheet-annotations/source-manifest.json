@@ -1,0 +1,416 @@
+{
+  "original_commit": "6be29fe437a7cd992d4e079f71720821b25216b9",
+  "producer_commit": "a69c8d031bcc20a9d5750b8564dd58fcd8ba8f34",
+  "archive_sha256": "6bd1016cfd82f10ff194730faf4904252bfc688562662153418b827f5ccf3be8",
+  "members": {
+    "all-six-defaults.igz": {
+      "size": 6362,
+      "sha256": "a40fc7e48fb6777e04ed9857839f6901bc14d960276e5ea9476ba2c6735ce6e6"
+    },
+    "all-six-defaults.jpg": {
+      "size": 36821,
+      "sha256": "6daebac12beafa7ef93b892d8e20c5f02ff7f4ed2026132261c21ecc45d3ee4b"
+    },
+    "all-six-defaults.pdf": {
+      "size": 17960,
+      "sha256": "30b7b7daebfdb28f55430d89b91261bd733c472a05c18ea3bd1e115a62bb534e"
+    },
+    "all-six-defaults.png": {
+      "size": 16013,
+      "sha256": "15d1cc067f84278207cdedef82a99441177d124e66f4dd07f12d5622faf207b6"
+    },
+    "all-six-hidden.igz": {
+      "size": 5623,
+      "sha256": "c701eb845762acae758e55d1f37b7cfa8075f2738b3e779c85b6ea154d0ee66e"
+    },
+    "all-six-hidden.jpg": {
+      "size": 27381,
+      "sha256": "ebefdf05ca2c1bd38515776e56969d5520501769debaa23675b8b618be95607a"
+    },
+    "all-six-hidden.pdf": {
+      "size": 3036,
+      "sha256": "8d4b3048215710d84e51018a57e4b86996ba1a09e070d92e6cf7b52cefa830ff"
+    },
+    "all-six-hidden.png": {
+      "size": 4759,
+      "sha256": "0b16082558841417a8417dce9b0a84d3000c06d065a73c189653ec14df1e2cf5"
+    },
+    "angular-sweep.igz": {
+      "size": 3894,
+      "sha256": "b8903f8867332667e170c7cee63e8e26ffcca493b378a48e01b129fa620607bb"
+    },
+    "angular-sweep.jpg": {
+      "size": 37024,
+      "sha256": "c15671d639e31b4111a58a6794da78264bfb9a879bf820e5a11563d737a93d9c"
+    },
+    "angular-sweep.pdf": {
+      "size": 11335,
+      "sha256": "f282667bc5e07fabb9b6b85f1460350aa4aaff98fe74dafe2d7a4fc4564b0e36"
+    },
+    "angular-sweep.png": {
+      "size": 16459,
+      "sha256": "5104e8aa42dbea7d3d96101d3e22e67332edc4c1612ab50e25e642f6fa3a360a"
+    },
+    "callouts-leaders.igz": {
+      "size": 3990,
+      "sha256": "5401dfb081e4ac571a1a13b89ddef37add5aea9357196bf114d00c8897510560"
+    },
+    "callouts-leaders.jpg": {
+      "size": 47883,
+      "sha256": "7e07ec8beba4f6452ff6d340998b7b338cb2ff8e0fab5b0716779501d311e8c2"
+    },
+    "callouts-leaders.pdf": {
+      "size": 17950,
+      "sha256": "ce4780a14e79c82c84c0153dd0305d8d8d792530919789c2619647cf2f105c8a"
+    },
+    "callouts-leaders.png": {
+      "size": 29409,
+      "sha256": "42739380bdec8385a498468fe0260152c8f89a8b594e2dadd9d0bda836f52529"
+    },
+    "capture.log": {
+      "size": 99,
+      "sha256": "ec9bffc84129b0093ede1a7cab40bef7dec3c0a938ee0c7c4045386336e3c938"
+    },
+    "capture.stderr": {
+      "size": 2720,
+      "sha256": "eaab5260c2c63c96158659a3e874f79ca8ed16e2cb59585d405e228afe9ea8be"
+    },
+    "cotas-default.igz": {
+      "size": 1452,
+      "sha256": "de8bace767eaff17bba7f151106604417e743da791d83087b4b6157b4f0f9201"
+    },
+    "cotas-default.jpg": {
+      "size": 28406,
+      "sha256": "625a01d9b8d11e7de45fa9e9f49e9c8375727febd48e2d48726475a5fe0eee7f"
+    },
+    "cotas-default.pdf": {
+      "size": 9232,
+      "sha256": "6df95587366e3b47dc2b11e32c24bd528f267b7fc00fb79e535863fbc5b1b248"
+    },
+    "cotas-default.png": {
+      "size": 5572,
+      "sha256": "12fd363b06b81d0dd8d1ad19234b54cffaf509eef682ca63cfd4e9f9536e1a97"
+    },
+    "cotas-placement.igz": {
+      "size": 6095,
+      "sha256": "2ce1776bb3107689d02d2fdbbcf99de19e817e7850f29ccdea80f0cdb30612b1"
+    },
+    "cotas-placement.jpg": {
+      "size": 33257,
+      "sha256": "4964041bd9aa91e8ef314070b6ced8b7648785f139bae38a1b7e3a878d38f3c9"
+    },
+    "cotas-placement.pdf": {
+      "size": 11335,
+      "sha256": "f1a2e39ed335dd713b2a5de34ae8a21fd5a27b1020ff4144a7481f5f23ee777b"
+    },
+    "cotas-placement.png": {
+      "size": 10901,
+      "sha256": "34247b57fa000e29b1b837ec42c1b7d45328af10a44d79ad084b0373ba6fd1c9"
+    },
+    "cotas-positions.igz": {
+      "size": 6120,
+      "sha256": "1c2c20fc81ad389e35bef65a53306f84eb63c8cc1dbbb24432d73177764c0743"
+    },
+    "cotas-positions.jpg": {
+      "size": 37795,
+      "sha256": "b794c972f73b9b3757820ba073752aa5209a02b2bd2f3610b1078469f286b49a"
+    },
+    "cotas-positions.pdf": {
+      "size": 11411,
+      "sha256": "da99cf7e85742c55c68923766efd4ce040f0f7634985a43113168850b75aacfb"
+    },
+    "cotas-positions.png": {
+      "size": 15948,
+      "sha256": "958c6544ef0acd9d9898f78650db0683ee694353c4c062128f5165d1f15b36b0"
+    },
+    "cotas-units-scale.igz": {
+      "size": 8932,
+      "sha256": "a40cfd60000bde3619201edc7e6de55b9fbc61ca4c4c32f819c876476be0aace"
+    },
+    "cotas-units-scale.jpg": {
+      "size": 42179,
+      "sha256": "600de1c8ca4bf6afbf3125db41246b05eef524e8107ffd0fa15edeb1370123f6"
+    },
+    "cotas-units-scale.pdf": {
+      "size": 12346,
+      "sha256": "cd20f274fe08baa2907b8f958e71625d92004bb0e21d5db94fb43f8712f4f635"
+    },
+    "cotas-units-scale.png": {
+      "size": 18348,
+      "sha256": "fe2bc1aeb1a45f1b5c0bbe8dd09b9c58f4804275c3aaac2ca79dd31b99213a3a"
+    },
+    "cotas_ang-default.igz": {
+      "size": 1206,
+      "sha256": "5ebb2f516fc41b6391b2a85d5d4dd0bcfa27e831f5f9577f50dc1218ac7641b4"
+    },
+    "cotas_ang-default.jpg": {
+      "size": 28984,
+      "sha256": "b5dacf5a20abbb15236e97de5871312dc61389ad3e98f721f12053da5521558b"
+    },
+    "cotas_ang-default.pdf": {
+      "size": 9353,
+      "sha256": "24a9ea65dffc6a1eb771539000c0178bdbe28777192a248b5f75c3210c4bae3f"
+    },
+    "cotas_ang-default.png": {
+      "size": 6503,
+      "sha256": "57f78ba50eac102368769e757b522788ea3a065326b443830117827faf1e70df"
+    },
+    "cotas_rad-default.igz": {
+      "size": 1283,
+      "sha256": "c5e3406919e2b2b68a6b1afc1cdffdc06617eb5cf6311a8e7422d69301b3fe61"
+    },
+    "cotas_rad-default.jpg": {
+      "size": 28731,
+      "sha256": "c5811f0e04b374f88b783bc951152db469917a0d99275edb422195b5570ef1f9"
+    },
+    "cotas_rad-default.pdf": {
+      "size": 9674,
+      "sha256": "e631e7240dc0bff0aaa00f7ae6e25e0f9932ca811b7cfa0b5a807115344bc317"
+    },
+    "cotas_rad-default.png": {
+      "size": 7091,
+      "sha256": "e51b439f9a64eb7c1f15c5cb306ed8fcd667a2c1ef80283c1fe5dbc04520a8f4"
+    },
+    "etiquetas-default.igz": {
+      "size": 1261,
+      "sha256": "03736052fb8e3b63c799ee756996934579e644e1abf82920f51442557a83562d"
+    },
+    "etiquetas-default.jpg": {
+      "size": 28489,
+      "sha256": "6cc2541e8480518807f9a22b3c18ec4c1977c944612f460584e8dd511b03cd77"
+    },
+    "etiquetas-default.pdf": {
+      "size": 9448,
+      "sha256": "0d4fb0234979b0d65b6712d360bdd0829f6aea01fe9bbbde3aeeab3015828897"
+    },
+    "etiquetas-default.png": {
+      "size": 6677,
+      "sha256": "6234b6809ca66947bc33ff2c9337efcef221108d0dd6eec6292c63f619166cf0"
+    },
+    "field-context.igz": {
+      "size": 5566,
+      "sha256": "a6a9beb33afb38a1c43e5291ffbfca317b400a6581c5fb22b5f6b5ebf8ee6c6a"
+    },
+    "field-context.jpg": {
+      "size": 35257,
+      "sha256": "00423a6a1e87f9e4e57661bea2023040694e23156ca54912ae3857a04b3c0c83"
+    },
+    "field-context.pdf": {
+      "size": 17821,
+      "sha256": "54a9a9598f2e29a9140d04d93b0929b09629eec8e31e7c24aad7ee3eba225bcc"
+    },
+    "field-context.png": {
+      "size": 15472,
+      "sha256": "11702f7e77446c2d816a119c2166db6abd85497b2903798937353c227d6f8e37"
+    },
+    "font-file-provenance.json": {
+      "size": 215,
+      "sha256": "28f318e42e228acad2ec14768c43ff539028a6222df440a20bd502bd85011c86"
+    },
+    "harness/scope.json": {
+      "size": 178,
+      "sha256": "8b9059cf594ffe6729dc2f458b6df1e84ffcaf016f0710bbd1b1a7d848059545"
+    },
+    "harness/source-baseline-checker.log": {
+      "size": 17219,
+      "sha256": "b86e449a31307c844c3fd20dc6973fcae96adf9e41997ec6376619ff2256a781"
+    },
+    "harness/source-baseline-checker.stderr": {
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "harness/source-baseline-comparison.json": {
+      "size": 23289,
+      "sha256": "4dd34ce13e993445d8ad0d3233536c13e34ae3b77826e5a9652f93985b8f65f2"
+    },
+    "labels-leaders.igz": {
+      "size": 4351,
+      "sha256": "efbc9264c1b93cbb971ad156c9d214ae317951321337c0e5148380b19fe7955f"
+    },
+    "labels-leaders.jpg": {
+      "size": 33715,
+      "sha256": "55c12f10be58fe2b3e12f548287c39dc3353be45f6797b917ab73692f9eb7beb"
+    },
+    "labels-leaders.pdf": {
+      "size": 10970,
+      "sha256": "6098f76aa73486c6c807539270688c3cbc072e69bd172cf5a2bc450aa24f4770"
+    },
+    "labels-leaders.png": {
+      "size": 14238,
+      "sha256": "4f1e29869afffa47681ae843d1b93944af8ee8ba8cf7d84a8b4c09d813b7d70c"
+    },
+    "labels-wrapped.igz": {
+      "size": 2768,
+      "sha256": "8cf3433041be95fb2d085e395ef61ebf1cc857e11b10380eead8ab4f06924b64"
+    },
+    "labels-wrapped.jpg": {
+      "size": 38017,
+      "sha256": "9964db74716f524b3e10113d6860683078b4b2c2d16159744b0e1c0c947b85ee"
+    },
+    "labels-wrapped.pdf": {
+      "size": 18276,
+      "sha256": "e6fa3aa7f0b1bd0c6b871eb61558e0e1fdd7569e9ba07c9c5cf2bd55d1e342dd"
+    },
+    "labels-wrapped.png": {
+      "size": 19804,
+      "sha256": "dbb870b32dfef32414ce5b0d0b58fc08f8a299ccef96c9c591c69ee1b22293c1"
+    },
+    "levels-symbols.igz": {
+      "size": 4482,
+      "sha256": "09ece07b38d039127cffc418ce7669a8adf73b4c8d30acf4960eae78c67dc0ef"
+    },
+    "levels-symbols.jpg": {
+      "size": 33410,
+      "sha256": "d18b468c90819c22280381286bc732f2251524bb1ccf3626bcb36e7ad2260703"
+    },
+    "levels-symbols.pdf": {
+      "size": 11933,
+      "sha256": "3803a7e0048f12c427643e8543bceedadd06debc9b02515c916069fcccb73582"
+    },
+    "levels-symbols.png": {
+      "size": 12561,
+      "sha256": "1a85c3f5bb90baf8d005ade5cb32114178f3c7b32a307ac74f5f126c32d54d7b"
+    },
+    "llamadas-default.igz": {
+      "size": 1114,
+      "sha256": "6861ee6452d5d7345535ac067e93915f784618503306a354f35acead1a93b3fc"
+    },
+    "llamadas-default.jpg": {
+      "size": 30629,
+      "sha256": "bb065ebb3f745b139aec7f14da3b31e55ce55248c36c352b35e1b5bf5a963388"
+    },
+    "llamadas-default.pdf": {
+      "size": 15733,
+      "sha256": "da36fdc1fbf592e9a28647a3a62436a7f9d9abe93f997fdf037ed65522279f87"
+    },
+    "llamadas-default.png": {
+      "size": 8446,
+      "sha256": "a5562ff49759eb811b3a44b3e6124fe8ea0f98d41ba19aeb83145abcde898d97"
+    },
+    "mixed-high-z.igz": {
+      "size": 5629,
+      "sha256": "afc1c6e0d9992991819420374cb31178014396896f1ca6a779697a80ac4ee551"
+    },
+    "mixed-high-z.jpg": {
+      "size": 40169,
+      "sha256": "e2a07cac241f9593e5f8593b3d65e553ed5b562c8b263538fbc67edbd95b569c"
+    },
+    "mixed-high-z.pdf": {
+      "size": 17713,
+      "sha256": "d87c5b493c29bfe807b32e65c791afdf6ab7aa1bc4923084955d12b88c972293"
+    },
+    "mixed-high-z.png": {
+      "size": 15552,
+      "sha256": "d3572fee9df6920220258657df82e3efe6caef40ae2d1d8098090ce102bfbb61"
+    },
+    "mixed-same-z.igz": {
+      "size": 5628,
+      "sha256": "c9ae2cbd02f0b9049cbe6b2eff575de991dfd648167f5ff3a5bb32bd48ca8657"
+    },
+    "mixed-same-z.jpg": {
+      "size": 40172,
+      "sha256": "a34ee6687e8102f9a7fd082ac212756e0aad0d08e4db66209772c61f0ba1dc1f"
+    },
+    "mixed-same-z.pdf": {
+      "size": 17810,
+      "sha256": "837810df9da37317c198d5a274f8769437a768a7a5dafe753e72ae7dc73bf4c3"
+    },
+    "mixed-same-z.png": {
+      "size": 15542,
+      "sha256": "376468e932eb58381be086beaf3d2d1d292adc937b62f37f8e24578405fd76bd"
+    },
+    "niveles-default.igz": {
+      "size": 1177,
+      "sha256": "1adad00195a4389260eaabf0c8b59143df2b70647a41c89f411c9990f8f664f0"
+    },
+    "niveles-default.jpg": {
+      "size": 28012,
+      "sha256": "e5abe3264c7202c3e1df9705e9e2a46aa1e0f5a71cecd473b8b8fe99caf19634"
+    },
+    "niveles-default.pdf": {
+      "size": 9330,
+      "sha256": "8a956076d1d0cbf3b66850e788c158ed17e1ca5c1a63f27a9b31954b9dd32200"
+    },
+    "niveles-default.png": {
+      "size": 5785,
+      "sha256": "da397bfd094ed618ee48404ebb9deaea6d9411fc3dea24369829f9f49953fbed"
+    },
+    "observations/qt-rounded-rect-elements.json": {
+      "size": 982,
+      "sha256": "e55b9917330945b84af3f830e0b91e60fb3cb4c7fc2a003f96fe82d81663b81a"
+    },
+    "opaque-guards.json": {
+      "size": 1363,
+      "sha256": "cbe5a0ec1f78513a383ba03a2ca779887f905bc8379aef31b315e5e1eb3762fc"
+    },
+    "opaque-original-reader-control.json": {
+      "size": 195,
+      "sha256": "475e8681e6ae71bc0147d8c75c2a9bdf0253ff995912c981a7c83bf41f80a20c"
+    },
+    "operator-observations.json": {
+      "size": 352342,
+      "sha256": "c9fba722698a4b88488d92e23156442b23b2ec03ac93ae9777bcdc8bd86e4532"
+    },
+    "original-reopens.json": {
+      "size": 74853,
+      "sha256": "861faa6f86fe4c2b6faf08c8ee3894795c6d43edf84f1bfa6132f11c0a082c39"
+    },
+    "radial-fit.igz": {
+      "size": 5032,
+      "sha256": "f2e68a55713184eaeb34626062606f26cfe3f841bc5d0dac879e65051285f73d"
+    },
+    "radial-fit.jpg": {
+      "size": 35057,
+      "sha256": "2d90906f5013e8e9f08ec615983d4c0fd354d751ec639d7241caf39b251d493c"
+    },
+    "radial-fit.pdf": {
+      "size": 12129,
+      "sha256": "809d593c6de4774064bcd01764d6079d2b887f2cd965bc17db40a8ab409f8b97"
+    },
+    "radial-fit.png": {
+      "size": 17448,
+      "sha256": "e0d641d315b52d0b944e7f38ed2ddfc9c6d579cc739fb41a4a52fc02ffe9faeb"
+    },
+    "source.json": {
+      "size": 136673,
+      "sha256": "9fd346ee9ad403bc277760680103e969734bd9ecf8f5a07b3589b933a1ccf09e"
+    },
+    "source.partial.json": {
+      "size": 136126,
+      "sha256": "4a69b27e0bd30b520eb3c9162e5c82329348724d530c1e6a06f82ffe0026f786"
+    }
+  },
+  "sources": {
+    "scripts/reference-sheet-annotations.py": {
+      "commit": "a69c8d031bcc20a9d5750b8564dd58fcd8ba8f34",
+      "sha256": "36ad179ed8026acfd59818d595628639d97a83e0d6dd07729b13f07d2dbfc256"
+    },
+    "scripts/reference-sheet-annotation-reopens.py": {
+      "commit": "a69c8d031bcc20a9d5750b8564dd58fcd8ba8f34",
+      "sha256": "ac5f09303d54ad9ba6aab27da74d271cbab447d4e4b72ded88ff8ab55cf89c60"
+    },
+    "scripts/check-sheet-annotations.py": {
+      "commit": "a69c8d031bcc20a9d5750b8564dd58fcd8ba8f34",
+      "sha256": "beb6bcd8335d1eb2ff1b77306d788af1a10f513a3d9a653859c6325df411bde6"
+    },
+    "scripts/replay-sheet-annotations.py": {
+      "commit": "a69c8d031bcc20a9d5750b8564dd58fcd8ba8f34",
+      "sha256": "6f7ee9cfc825597494b0616ce29f2d4c9f0a9d0aca92e4cdb575d7233213b07b"
+    }
+  },
+  "cases": 20,
+  "actual_export_formats": [
+    "PNG",
+    "JPEG",
+    "PDF"
+  ],
+  "capture_returncode": 0,
+  "negative_controls": 21,
+  "scope": "Actual source physical exports; source-to-source checker harness is separately declared. Native result not yet executed. Post-export all-six-defaults opaque input overlay preserved known original-reader output; original dataclasses intentionally drop unknown keys.",
+  "original_sources": {
+    "views/composer.py": "aeb7676d7a7a1b2704c0f108f5d8ab7861836c74648838c545bcce454ac248af",
+    "core/composition.py": "24aa8327d1c6a0b4afbaab0d153743f28c3deb557f44a66c467d5aed4dd65da9",
+    "core/units.py": "5885b9f52b2394c21bb5421af482cf40c6273818fd70e2a85b5670c10914b1ea",
+    "formats/igz.py": "f318d685830c49c2fede7fd5a238ac7a1469ee0b0226cf48cab3751e194a9576"
+  }
+}
