@@ -1,0 +1,922 @@
+{
+  "source_commit": "83ebfe4a84b16688416d9a6096d2cc6210db0573",
+  "archive_sha256": "fd67eb9e13556bbbeafe7db220d1a0c0bcd68eab3566a1e609915f15b4f56edd",
+  "members": {
+    "jobs-final.json": {
+      "bytes": 44075,
+      "sha256": "f7b7710c78ddfbfa3bc8e8af70457321aac147ab75683bab5e9661a00e3cf913"
+    },
+    "linux.log": {
+      "bytes": 629871,
+      "sha256": "cc14780ae5a62323c181d3798fe3d1ad5c6d947d1219ccd6f1864ed7ace95cba"
+    },
+    "artifacts.json": {
+      "bytes": 4391,
+      "sha256": "406bd1e69c4ddf1ed7012512c90a9525ffebc550c89229ca7bcb2077d724e4a2"
+    },
+    "arm/paper-font-native-ci/font-resource.log": {
+      "bytes": 22513,
+      "sha256": "d0ba946e5f25475fa957c5dd325fdc52041bfdfea8f6a3f9dff0c027d8f296cc"
+    },
+    "arm/paper-font-native-ci/tests.log": {
+      "bytes": 29786,
+      "sha256": "2b62bc6271602b196788b4f22068e2c097e51fc7300cb37f3d597431e70938a6"
+    },
+    "arm/metal-combined-gui-ci/apple-gl-depth-resolve.json": {
+      "bytes": 37,
+      "sha256": "574706717f33363bcf4886d8f94a41986321935bf687f55afb9457e21e56b908"
+    },
+    "arm/metal-combined-gui-ci/apple-gl-depth-resolve.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "arm/metal-combined-gui-ci/billboards/report.json": {
+      "bytes": 499,
+      "sha256": "d9a39b8da54b807644a2e8325f8a7cf7e758d58eb1e594d069d5cd5f94275a87"
+    },
+    "arm/metal-combined-gui-ci/build.log": {
+      "bytes": 76107,
+      "sha256": "ac771e5972d13a327addf6c08667036e5b33127ae0b743a2eafdfa17e6280ea4"
+    },
+    "arm/metal-combined-gui-ci/check.log": {
+      "bytes": 82716,
+      "sha256": "8b705ff957f5547b9f30d9227153368465a3117f6512493ce847072021fe53a7"
+    },
+    "arm/metal-combined-gui-ci/defaults/report.json": {
+      "bytes": 616,
+      "sha256": "b5921b36d5e043b8b7ddc6850145cfb09876875d9079a8f98ac34ae2fc361878"
+    },
+    "arm/metal-combined-gui-ci/document-annotations/report.json": {
+      "bytes": 480,
+      "sha256": "c996f97ad367a945ca79e2b71bec4a4f43463bfc942bf88df6b09773c3f222c1"
+    },
+    "arm/metal-combined-gui-ci/document-annotations/sample-diagnostics.json": {
+      "bytes": 700,
+      "sha256": "6a9474a16266168825609cf3cc1254b31b38ec2898b6c91cf60ff767a7b25f93"
+    },
+    "arm/metal-combined-gui-ci/gltf-figures/affine-nested-rich.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "arm/metal-combined-gui-ci/gltf-figures/affine-nested-rich.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "arm/metal-combined-gui-ci/gltf-figures/bitmap-no-texture-camera.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "arm/metal-combined-gui-ci/gltf-figures/bitmap-no-texture-camera.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "arm/metal-combined-gui-ci/gltf-figures/bitmap-no-texture-ordinary.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "arm/metal-combined-gui-ci/gltf-figures/bitmap-perspective-camera.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "arm/metal-combined-gui-ci/gltf-figures/bitmap-no-texture-ordinary.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "arm/metal-combined-gui-ci/gltf-figures/bitmap-perspective-camera.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "arm/metal-combined-gui-ci/gltf-figures/bitmap-perspective-ordinary.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "arm/metal-combined-gui-ci/gltf-figures/bitmap-perspective-ordinary.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "arm/metal-combined-gui-ci/gltf-figures/default-rich.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "arm/metal-combined-gui-ci/gltf-figures/default-rich.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "arm/metal-combined-gui-ci/gltf-figures/empty-rich.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "arm/metal-combined-gui-ci/gltf-figures/figure-only-camera.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "arm/metal-combined-gui-ci/gltf-figures/empty-rich.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "arm/metal-combined-gui-ci/gltf-figures/figure-only-camera.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "arm/metal-combined-gui-ci/gltf-figures/figure-only-ordinary.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "arm/metal-combined-gui-ci/gltf-figures/figure-only-ordinary.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "arm/metal-combined-gui-ci/gltf-figures/figures-check.json": {
+      "bytes": 154,
+      "sha256": "a53832f751788014f18836bd567cdc6e484424ef822b6b686eb9d42b93d93126"
+    },
+    "arm/metal-combined-gui-ci/gltf-figures/figures-check.json.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "arm/metal-combined-gui-ci/gltf-figures/hidden-top-camera.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "arm/metal-combined-gui-ci/gltf-figures/hidden-top-ordinary.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "arm/metal-combined-gui-ci/gltf-figures/hidden-top-camera.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "arm/metal-combined-gui-ci/gltf-figures/hidden-top-ordinary.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "arm/metal-combined-gui-ci/gltf-figures/identity-orphan-camera.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "arm/metal-combined-gui-ci/gltf-figures/hole-rich.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "arm/metal-combined-gui-ci/gltf-figures/hole-rich.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "arm/metal-combined-gui-ci/gltf-figures/identity-orphan-camera.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "arm/metal-combined-gui-ci/gltf-figures/identity-orphan-ordinary.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "arm/metal-combined-gui-ci/gltf-figures/identity-orphan-ordinary.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "arm/metal-combined-gui-ci/gltf-figures/mesh-perspective-camera.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "arm/metal-combined-gui-ci/gltf-figures/mesh-perspective-camera.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "arm/metal-combined-gui-ci/gltf-figures/mesh-perspective-ordinary.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "arm/metal-combined-gui-ci/gltf-figures/mesh-perspective-ordinary.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "arm/metal-combined-gui-ci/gltf-figures/mixed-first-material-camera.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "arm/metal-combined-gui-ci/gltf-figures/mixed-first-material-camera.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "arm/metal-combined-gui-ci/gltf-figures/mixed-first-material-ordinary.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "arm/metal-combined-gui-ci/gltf-figures/mixed-first-material-ordinary.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "arm/metal-combined-gui-ci/gltf-figures/native/collapse-refusal.json": {
+      "bytes": 130,
+      "sha256": "534f144987fc573f51c113f6300f191216e4cd9c48158fa9b11c12281e097cfa"
+    },
+    "arm/metal-combined-gui-ci/gltf-figures/native/collapse-refusal.json.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "arm/metal-combined-gui-ci/gltf-figures/native/initial-decoded-failure.json": {
+      "bytes": 82218,
+      "sha256": "925f22c1fdba62d764ffe2d9a707f182a927862d5fa8622daba5d7eac464aa62"
+    },
+    "arm/metal-combined-gui-ci/gltf-figures/native/path-only-candidate-failure.json": {
+      "bytes": 82372,
+      "sha256": "1f3e88bf3550b243b92360829d229f17345e61e726eefcd5b2f72d159dbc68dc"
+    },
+    "arm/metal-combined-gui-ci/gltf-figures/nested-hidden-child-camera.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "arm/metal-combined-gui-ci/gltf-figures/nested-hidden-child-camera.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "arm/metal-combined-gui-ci/gltf-figures/nested-hidden-child-ordinary.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "arm/metal-combined-gui-ci/gltf-figures/nested-hidden-child-ordinary.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "arm/metal-combined-gui-ci/gltf-figures/nested-reflected-rich.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "arm/metal-combined-gui-ci/gltf-figures/nested-reflected-rich.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "arm/metal-combined-gui-ci/gltf-figures/pbr-colors-rich.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "arm/metal-combined-gui-ci/gltf-figures/pbr-colors-rich.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "arm/metal-combined-gui-ci/gltf-figures/result.json": {
+      "bytes": 12205,
+      "sha256": "d50eb1b2656fe692d47d1fd9a23ca2221513f8372cda35defc5bd7b75923cfbe"
+    },
+    "arm/metal-combined-gui-ci/gltf-figures/rich-check.log": {
+      "bytes": 102,
+      "sha256": "2c4a55ce0af15822d9abaa2a9d4cffa0bc0a59d1632c4c27717a42e6bd271105"
+    },
+    "arm/metal-combined-gui-ci/gltf-figures/rich-check.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "arm/metal-combined-gui-ci/gltf-figures/slanted-rich.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "arm/metal-combined-gui-ci/gltf-figures/slanted-rich.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "arm/metal-combined-gui-ci/gltf-figures/source/bitmap-no-texture.camera.json": {
+      "bytes": 121,
+      "sha256": "cb0a4a686b175e1e93deb552703278b85475d9a8140a8842bcf2765775e035f6"
+    },
+    "arm/metal-combined-gui-ci/gltf-figures/source/bitmap-perspective.camera.json": {
+      "bytes": 120,
+      "sha256": "5b768981c6f74f8087f07ed7f8223b022cf3c2c69f941eca2816cdf6204bee0c"
+    },
+    "arm/metal-combined-gui-ci/gltf-figures/source/cases.json": {
+      "bytes": 4839,
+      "sha256": "5c88dbfac9a117ca4c85990e4a2550f3bfe0cbe885dc421c3c8f5db37e9ad3d8"
+    },
+    "arm/metal-combined-gui-ci/gltf-figures/source/collapse.camera.json": {
+      "bytes": 79,
+      "sha256": "643735b8f62eec09c7280a5db915894ad86d860a633a3c0f674745a1087e973d"
+    },
+    "arm/metal-combined-gui-ci/gltf-figures/source/figure-only.camera.json": {
+      "bytes": 121,
+      "sha256": "cb0a4a686b175e1e93deb552703278b85475d9a8140a8842bcf2765775e035f6"
+    },
+    "arm/metal-combined-gui-ci/gltf-figures/source/hidden-top.camera.json": {
+      "bytes": 120,
+      "sha256": "5b768981c6f74f8087f07ed7f8223b022cf3c2c69f941eca2816cdf6204bee0c"
+    },
+    "arm/metal-combined-gui-ci/gltf-figures/source/identity-orphan.camera.json": {
+      "bytes": 120,
+      "sha256": "5b768981c6f74f8087f07ed7f8223b022cf3c2c69f941eca2816cdf6204bee0c"
+    },
+    "arm/metal-combined-gui-ci/gltf-figures/source/mesh-perspective.camera.json": {
+      "bytes": 120,
+      "sha256": "5b768981c6f74f8087f07ed7f8223b022cf3c2c69f941eca2816cdf6204bee0c"
+    },
+    "arm/metal-combined-gui-ci/gltf-figures/source/mixed-first-material.camera.json": {
+      "bytes": 120,
+      "sha256": "5b768981c6f74f8087f07ed7f8223b022cf3c2c69f941eca2816cdf6204bee0c"
+    },
+    "arm/metal-combined-gui-ci/gltf-figures/source/nested-hidden-child.camera.json": {
+      "bytes": 121,
+      "sha256": "cb0a4a686b175e1e93deb552703278b85475d9a8140a8842bcf2765775e035f6"
+    },
+    "arm/metal-combined-gui-ci/gltf-figures/textures-alpha-rich.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "arm/metal-combined-gui-ci/gltf-figures/textures-alpha-rich.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "arm/metal-combined-gui-ci/gltf-figures/visibility-rich.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "arm/metal-combined-gui-ci/gltf-figures/visibility-rich.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "arm/metal-combined-gui-ci/gltf-figures-replay.log": {
+      "bytes": 721,
+      "sha256": "9058446c96a67394a44354b7b34d496aed49e428ce103e5e801e8af1f1b77372"
+    },
+    "arm/metal-combined-gui-ci/launcher/result.json": {
+      "bytes": 444,
+      "sha256": "4255991b33f2c733e1af5d1c2159753ce3f8872d85aae1a2665994915e105b77"
+    },
+    "arm/metal-combined-gui-ci/launcher/runtime.log": {
+      "bytes": 836,
+      "sha256": "663bdfaa519ac7fae1463c1b063e8f946412e9064f5874d9ed942324a586c2c7"
+    },
+    "arm/metal-combined-gui-ci/launcher/session/config/settings.json": {
+      "bytes": 538,
+      "sha256": "50447b28c8af8d9c55060389a910c910cd4bdbcc43a8d3bd0dc54c28c02a0791"
+    },
+    "arm/metal-combined-gui-ci/platform-sheet-text-replay/font.json": {
+      "bytes": 1083,
+      "sha256": "cae001f28f5d9713c1066c57445071b754da014b0a3afc396bea19a934730a33"
+    },
+    "arm/metal-combined-gui-ci/platform-sheet-text-replay/font.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "arm/metal-combined-gui-ci/platform-sheet-text-replay/layout.log": {
+      "bytes": 46,
+      "sha256": "a8ac9c025154de80e12d08536274ab2acea0491d8c4f7eb7d8728542dce23326"
+    },
+    "arm/metal-combined-gui-ci/platform-sheet-text-replay/layout.stderr": {
+      "bytes": 149,
+      "sha256": "13a3712b1762da5d25735440f851aedf9bd80dd79710e4de44159af44f6fe368"
+    },
+    "arm/metal-combined-gui-ci/platform-sheet-text-replay/native/native.json": {
+      "bytes": 2388,
+      "sha256": "40a9cccfd30ff2778ab4666522beae7ac535b45c59e87a32bf1dfc67e9980b58"
+    },
+    "arm/metal-combined-gui-ci/platform-sheet-text-replay/native/session/config/settings.json": {
+      "bytes": 465,
+      "sha256": "a7bf7fdbef277353c157a41d2d67485351a8db19c830d5cf4b0374be3071f00c"
+    },
+    "arm/metal-combined-gui-ci/platform-sheet-text-replay/native/text-placement.json": {
+      "bytes": 21853,
+      "sha256": "1fddd556da6c06ace2972ad6da3045b361fc0d49f799a1bc80aa8bc2cf005afe"
+    },
+    "arm/metal-combined-gui-ci/platform-sheet-text-replay/placement-comparison.json": {
+      "bytes": 1863,
+      "sha256": "b220a84013d64cd9c45d29ce71351b289c99b4278005f5771b7b4d47b4b247d5"
+    },
+    "arm/metal-combined-gui-ci/platform-sheet-text-replay/result.json": {
+      "bytes": 993,
+      "sha256": "5afa89edca197d7ae686e6c379b955981c8ed2008107877a59da413db10e2bad"
+    },
+    "arm/metal-combined-gui-ci/platform-sheet-text-replay/runtime.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "arm/metal-combined-gui-ci/platform-sheet-text-replay/runtime.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "arm/metal-combined-gui-ci/platform-sheet-text-replay/source/receipt.json": {
+      "bytes": 3559,
+      "sha256": "edbe15520458024ebdb92fefee52b5ee647a09aa0d1d4f434fa32ff7e6318585"
+    },
+    "arm/metal-combined-gui-ci/platform-sheet-text-replay/source/source.json": {
+      "bytes": 407,
+      "sha256": "857966e5f3bc9a1094d13ce1620a01dd6fd4984849c1dcc01e0d91101de6b0df"
+    },
+    "arm/metal-combined-gui-ci/platform-sheet-text-replay/source-layout.json": {
+      "bytes": 8500,
+      "sha256": "ef1c549cfe02c3e25a5091e44fcd17b3648f3d1b43869a5668885f128740590e"
+    },
+    "arm/metal-combined-gui-ci/platform-sheet-text-replay.log": {
+      "bytes": 943,
+      "sha256": "11dd163ec05751c8abbaf9336bbc88522720b376abc1c9fc1903e364a90aa0c1"
+    },
+    "arm/metal-combined-gui-ci/section-fill/comparison.json": {
+      "bytes": 3041,
+      "sha256": "df0f40018af3fcd896802a5cbf5815089e2d1c6e2395c8a7dcf99da81efaacf4"
+    },
+    "arm/metal-combined-gui-ci/section-fill/report.json": {
+      "bytes": 11056,
+      "sha256": "f8b222fca1b62bb9d50162497fc44d355be0cd32e62794acca761b8f693b47dc"
+    },
+    "arm/metal-combined-gui-ci/sheet-images/checker.log": {
+      "bytes": 3126,
+      "sha256": "87efca61bb41bf7d8cea7032676dd6ede953b4dbcbb294cba59a1ba07ee15601"
+    },
+    "arm/metal-combined-gui-ci/sheet-images/checker.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "arm/metal-combined-gui-ci/sheet-images/comparison.json": {
+      "bytes": 3902,
+      "sha256": "3cc0cfb9cf0299a38d312738cc8f08fb2bb9660183b5e8c724a539b6bd044fe3"
+    },
+    "arm/metal-combined-gui-ci/sheet-images/native/native.json": {
+      "bytes": 5100,
+      "sha256": "9fccf6563d252211943e1438f681687249300530585df3fc0a5dbe9126684423"
+    },
+    "arm/metal-combined-gui-ci/sheet-images/native/session/config/settings.json": {
+      "bytes": 973,
+      "sha256": "997b9d97c9f5face16346192253f347dbe2774cbfeb87cc7368a1beeafb940c1"
+    },
+    "arm/metal-combined-gui-ci/sheet-images/result.json": {
+      "bytes": 6265,
+      "sha256": "9c7a3e804364510d5c5833b13a6b33a9eadbfe65bf91171a1e2f281a666160c3"
+    },
+    "arm/metal-combined-gui-ci/sheet-images/runtime.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "arm/metal-combined-gui-ci/sheet-images/runtime.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "arm/metal-combined-gui-ci/sheet-images/source/capture.log": {
+      "bytes": 53,
+      "sha256": "092a07b530f92a59d98637037c99b662460dc6eca8ab59f9215f772d0b18cddb"
+    },
+    "arm/metal-combined-gui-ci/sheet-images/source/source.json": {
+      "bytes": 8829,
+      "sha256": "c365180873a2f3c9df6ee55121dfd327b9d2d249b215590a70c42f2807332b52"
+    },
+    "arm/metal-combined-gui-ci/sheet-images/views/capture.log": {
+      "bytes": 287,
+      "sha256": "1f5be4ae69f49b3f1a8ea45a71980963d5071f4ca8f3126a3d093ed2ca047be0"
+    },
+    "arm/metal-combined-gui-ci/sheet-images/views/source-receipt.json": {
+      "bytes": 308,
+      "sha256": "62dc3460e7b482f42bf1e70b0b0bdb8042b5494b43a7a26311ac83ff1ad2135a"
+    },
+    "arm/metal-combined-gui-ci/sheet-images/views/source.json": {
+      "bytes": 4153,
+      "sha256": "d9c4d15e61b7862b366db0397871e4fb888419ed4c8147647f0d25a46405d0b2"
+    },
+    "arm/metal-combined-gui-ci/sheet-images-replay.log": {
+      "bytes": 3914,
+      "sha256": "8f7b0aa53cadbf290b87b2fab35a520cdd0d14d38b6f57995fd037fc721e9e9e"
+    },
+    "intel/paper-font-native-ci/font-resource.log": {
+      "bytes": 22514,
+      "sha256": "222fe71cc28fe55bc11b64bd7f546c343d367a48d75f3a6cca99ce7c0af6b917"
+    },
+    "intel/paper-font-native-ci/tests.log": {
+      "bytes": 29786,
+      "sha256": "db6f128c2a0a95ff47bb68630cfaa20e37f0fe339e3704d9c256a483342fc05b"
+    },
+    "intel/metal-combined-gui-ci/apple-gl-depth-resolve.json": {
+      "bytes": 37,
+      "sha256": "574706717f33363bcf4886d8f94a41986321935bf687f55afb9457e21e56b908"
+    },
+    "intel/metal-combined-gui-ci/apple-gl-depth-resolve.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "intel/metal-combined-gui-ci/billboards/report.json": {
+      "bytes": 499,
+      "sha256": "d9a39b8da54b807644a2e8325f8a7cf7e758d58eb1e594d069d5cd5f94275a87"
+    },
+    "intel/metal-combined-gui-ci/build.log": {
+      "bytes": 76107,
+      "sha256": "1153ac42545482522e4b73e4fda04f3dd575acaab45ac3a00096066166d046da"
+    },
+    "intel/metal-combined-gui-ci/check.log": {
+      "bytes": 82716,
+      "sha256": "7315bfbc2f8e48681c6740f39050e888ba8f3cac91b17514900a7e378504b440"
+    },
+    "intel/metal-combined-gui-ci/defaults/report.json": {
+      "bytes": 616,
+      "sha256": "b5921b36d5e043b8b7ddc6850145cfb09876875d9079a8f98ac34ae2fc361878"
+    },
+    "intel/metal-combined-gui-ci/document-annotations/sample-diagnostics.json": {
+      "bytes": 748,
+      "sha256": "d5713339c7bb1dd31bce7273b97f534cce40594da140a67f4099d5fdf0bdee47"
+    },
+    "intel/metal-combined-gui-ci/gltf-figures/affine-nested-rich.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "intel/metal-combined-gui-ci/gltf-figures/affine-nested-rich.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "intel/metal-combined-gui-ci/gltf-figures/bitmap-no-texture-camera.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "intel/metal-combined-gui-ci/gltf-figures/bitmap-no-texture-camera.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "intel/metal-combined-gui-ci/gltf-figures/bitmap-no-texture-ordinary.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "intel/metal-combined-gui-ci/gltf-figures/bitmap-no-texture-ordinary.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "intel/metal-combined-gui-ci/gltf-figures/bitmap-perspective-camera.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "intel/metal-combined-gui-ci/gltf-figures/bitmap-perspective-camera.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "intel/metal-combined-gui-ci/gltf-figures/bitmap-perspective-ordinary.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "intel/metal-combined-gui-ci/gltf-figures/bitmap-perspective-ordinary.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "intel/metal-combined-gui-ci/gltf-figures/default-rich.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "intel/metal-combined-gui-ci/gltf-figures/default-rich.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "intel/metal-combined-gui-ci/gltf-figures/empty-rich.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "intel/metal-combined-gui-ci/gltf-figures/empty-rich.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "intel/metal-combined-gui-ci/gltf-figures/figure-only-camera.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "intel/metal-combined-gui-ci/gltf-figures/figure-only-camera.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "intel/metal-combined-gui-ci/gltf-figures/figure-only-ordinary.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "intel/metal-combined-gui-ci/gltf-figures/figure-only-ordinary.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "intel/metal-combined-gui-ci/gltf-figures/figures-check.json": {
+      "bytes": 154,
+      "sha256": "a53832f751788014f18836bd567cdc6e484424ef822b6b686eb9d42b93d93126"
+    },
+    "intel/metal-combined-gui-ci/gltf-figures/figures-check.json.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "intel/metal-combined-gui-ci/gltf-figures/hidden-top-camera.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "intel/metal-combined-gui-ci/gltf-figures/hidden-top-camera.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "intel/metal-combined-gui-ci/gltf-figures/hidden-top-ordinary.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "intel/metal-combined-gui-ci/gltf-figures/hidden-top-ordinary.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "intel/metal-combined-gui-ci/gltf-figures/hole-rich.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "intel/metal-combined-gui-ci/gltf-figures/hole-rich.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "intel/metal-combined-gui-ci/gltf-figures/identity-orphan-camera.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "intel/metal-combined-gui-ci/gltf-figures/identity-orphan-camera.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "intel/metal-combined-gui-ci/gltf-figures/identity-orphan-ordinary.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "intel/metal-combined-gui-ci/gltf-figures/mesh-perspective-camera.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "intel/metal-combined-gui-ci/gltf-figures/identity-orphan-ordinary.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "intel/metal-combined-gui-ci/gltf-figures/mesh-perspective-camera.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "intel/metal-combined-gui-ci/gltf-figures/mesh-perspective-ordinary.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "intel/metal-combined-gui-ci/gltf-figures/mesh-perspective-ordinary.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "intel/metal-combined-gui-ci/gltf-figures/mixed-first-material-camera.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "intel/metal-combined-gui-ci/gltf-figures/mixed-first-material-camera.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "intel/metal-combined-gui-ci/gltf-figures/mixed-first-material-ordinary.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "intel/metal-combined-gui-ci/gltf-figures/mixed-first-material-ordinary.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "intel/metal-combined-gui-ci/gltf-figures/native/collapse-refusal.json": {
+      "bytes": 130,
+      "sha256": "534f144987fc573f51c113f6300f191216e4cd9c48158fa9b11c12281e097cfa"
+    },
+    "intel/metal-combined-gui-ci/gltf-figures/native/collapse-refusal.json.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "intel/metal-combined-gui-ci/gltf-figures/native/initial-decoded-failure.json": {
+      "bytes": 82218,
+      "sha256": "925f22c1fdba62d764ffe2d9a707f182a927862d5fa8622daba5d7eac464aa62"
+    },
+    "intel/metal-combined-gui-ci/gltf-figures/native/path-only-candidate-failure.json": {
+      "bytes": 82372,
+      "sha256": "1f3e88bf3550b243b92360829d229f17345e61e726eefcd5b2f72d159dbc68dc"
+    },
+    "intel/metal-combined-gui-ci/gltf-figures/nested-hidden-child-camera.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "intel/metal-combined-gui-ci/gltf-figures/nested-hidden-child-camera.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "intel/metal-combined-gui-ci/gltf-figures/nested-hidden-child-ordinary.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "intel/metal-combined-gui-ci/gltf-figures/nested-hidden-child-ordinary.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "intel/metal-combined-gui-ci/gltf-figures/nested-reflected-rich.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "intel/metal-combined-gui-ci/gltf-figures/nested-reflected-rich.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "intel/metal-combined-gui-ci/gltf-figures/pbr-colors-rich.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "intel/metal-combined-gui-ci/gltf-figures/pbr-colors-rich.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "intel/metal-combined-gui-ci/gltf-figures/result.json": {
+      "bytes": 12205,
+      "sha256": "065c24161822879587170d3d903d259b5c4ae1cc7208015b2ac5675e277ebfc2"
+    },
+    "intel/metal-combined-gui-ci/gltf-figures/rich-check.log": {
+      "bytes": 102,
+      "sha256": "2c4a55ce0af15822d9abaa2a9d4cffa0bc0a59d1632c4c27717a42e6bd271105"
+    },
+    "intel/metal-combined-gui-ci/gltf-figures/rich-check.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "intel/metal-combined-gui-ci/gltf-figures/slanted-rich.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "intel/metal-combined-gui-ci/gltf-figures/slanted-rich.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "intel/metal-combined-gui-ci/gltf-figures/source/bitmap-no-texture.camera.json": {
+      "bytes": 121,
+      "sha256": "cb0a4a686b175e1e93deb552703278b85475d9a8140a8842bcf2765775e035f6"
+    },
+    "intel/metal-combined-gui-ci/gltf-figures/source/bitmap-perspective.camera.json": {
+      "bytes": 120,
+      "sha256": "5b768981c6f74f8087f07ed7f8223b022cf3c2c69f941eca2816cdf6204bee0c"
+    },
+    "intel/metal-combined-gui-ci/gltf-figures/source/cases.json": {
+      "bytes": 4839,
+      "sha256": "5c88dbfac9a117ca4c85990e4a2550f3bfe0cbe885dc421c3c8f5db37e9ad3d8"
+    },
+    "intel/metal-combined-gui-ci/gltf-figures/source/collapse.camera.json": {
+      "bytes": 79,
+      "sha256": "643735b8f62eec09c7280a5db915894ad86d860a633a3c0f674745a1087e973d"
+    },
+    "intel/metal-combined-gui-ci/gltf-figures/source/figure-only.camera.json": {
+      "bytes": 121,
+      "sha256": "cb0a4a686b175e1e93deb552703278b85475d9a8140a8842bcf2765775e035f6"
+    },
+    "intel/metal-combined-gui-ci/gltf-figures/source/hidden-top.camera.json": {
+      "bytes": 120,
+      "sha256": "5b768981c6f74f8087f07ed7f8223b022cf3c2c69f941eca2816cdf6204bee0c"
+    },
+    "intel/metal-combined-gui-ci/gltf-figures/source/identity-orphan.camera.json": {
+      "bytes": 120,
+      "sha256": "5b768981c6f74f8087f07ed7f8223b022cf3c2c69f941eca2816cdf6204bee0c"
+    },
+    "intel/metal-combined-gui-ci/gltf-figures/source/mesh-perspective.camera.json": {
+      "bytes": 120,
+      "sha256": "5b768981c6f74f8087f07ed7f8223b022cf3c2c69f941eca2816cdf6204bee0c"
+    },
+    "intel/metal-combined-gui-ci/gltf-figures/source/mixed-first-material.camera.json": {
+      "bytes": 120,
+      "sha256": "5b768981c6f74f8087f07ed7f8223b022cf3c2c69f941eca2816cdf6204bee0c"
+    },
+    "intel/metal-combined-gui-ci/gltf-figures/source/nested-hidden-child.camera.json": {
+      "bytes": 121,
+      "sha256": "cb0a4a686b175e1e93deb552703278b85475d9a8140a8842bcf2765775e035f6"
+    },
+    "intel/metal-combined-gui-ci/gltf-figures/textures-alpha-rich.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "intel/metal-combined-gui-ci/gltf-figures/visibility-rich.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "intel/metal-combined-gui-ci/gltf-figures/textures-alpha-rich.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "intel/metal-combined-gui-ci/gltf-figures/visibility-rich.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "intel/metal-combined-gui-ci/gltf-figures-replay.log": {
+      "bytes": 721,
+      "sha256": "274f3d450bcf3c58d81a6e5ff3bada07930d16a546abc8cdc7c9663aea5172cc"
+    },
+    "intel/metal-combined-gui-ci/launcher/runtime.log": {
+      "bytes": 770,
+      "sha256": "df3d7fb00781a0912e5ab2a1eaa4f6dd45f63b7950adb472e08753d5eca436db"
+    },
+    "intel/metal-combined-gui-ci/launcher/session/config/settings.json": {
+      "bytes": 538,
+      "sha256": "50447b28c8af8d9c55060389a910c910cd4bdbcc43a8d3bd0dc54c28c02a0791"
+    },
+    "intel/metal-combined-gui-ci/platform-sheet-text-replay/font.json": {
+      "bytes": 1083,
+      "sha256": "cae001f28f5d9713c1066c57445071b754da014b0a3afc396bea19a934730a33"
+    },
+    "intel/metal-combined-gui-ci/platform-sheet-text-replay/font.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "intel/metal-combined-gui-ci/platform-sheet-text-replay/layout.log": {
+      "bytes": 46,
+      "sha256": "a8ac9c025154de80e12d08536274ab2acea0491d8c4f7eb7d8728542dce23326"
+    },
+    "intel/metal-combined-gui-ci/platform-sheet-text-replay/layout.stderr": {
+      "bytes": 149,
+      "sha256": "2d679a6db499e5fdb028b73e4c096ece0cbf860abdfc7b621d35e6dbc6b28102"
+    },
+    "intel/metal-combined-gui-ci/platform-sheet-text-replay/native/native.json": {
+      "bytes": 2388,
+      "sha256": "40a9cccfd30ff2778ab4666522beae7ac535b45c59e87a32bf1dfc67e9980b58"
+    },
+    "intel/metal-combined-gui-ci/platform-sheet-text-replay/native/session/config/settings.json": {
+      "bytes": 465,
+      "sha256": "a7bf7fdbef277353c157a41d2d67485351a8db19c830d5cf4b0374be3071f00c"
+    },
+    "intel/metal-combined-gui-ci/platform-sheet-text-replay/native/text-placement.json": {
+      "bytes": 21853,
+      "sha256": "881c820230ebe19923df366f0a21e7de520b99e405932965bbe0ce38659d8dec"
+    },
+    "intel/metal-combined-gui-ci/platform-sheet-text-replay/placement-comparison.json": {
+      "bytes": 1863,
+      "sha256": "b220a84013d64cd9c45d29ce71351b289c99b4278005f5771b7b4d47b4b247d5"
+    },
+    "intel/metal-combined-gui-ci/platform-sheet-text-replay/result.json": {
+      "bytes": 994,
+      "sha256": "af26b7a96eb75019d8a5d5c1da4737f175a434f89b2da54bcb9845a9993ed9a2"
+    },
+    "intel/metal-combined-gui-ci/platform-sheet-text-replay/runtime.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "intel/metal-combined-gui-ci/platform-sheet-text-replay/runtime.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "intel/metal-combined-gui-ci/platform-sheet-text-replay/source/receipt.json": {
+      "bytes": 3562,
+      "sha256": "bf7b0f176d41ee91c3025ac8132b7a03b214d9d12cefb7f88bdf575d6f69a792"
+    },
+    "intel/metal-combined-gui-ci/platform-sheet-text-replay/source/source.json": {
+      "bytes": 407,
+      "sha256": "857966e5f3bc9a1094d13ce1620a01dd6fd4984849c1dcc01e0d91101de6b0df"
+    },
+    "intel/metal-combined-gui-ci/platform-sheet-text-replay/source-layout.json": {
+      "bytes": 8501,
+      "sha256": "f7126b02e9c5087b8dcf0abb26c1c2b261cf342a2cb0ec1dbe1b25d49c21810a"
+    },
+    "intel/metal-combined-gui-ci/platform-sheet-text-replay.log": {
+      "bytes": 944,
+      "sha256": "7cea5b3a851b06576386771ec943008eedd0e1c3135f9692a5b849ed6a2c21ee"
+    },
+    "intel/metal-combined-gui-ci/section-fill/comparison.json": {
+      "bytes": 3059,
+      "sha256": "731bcaafa433b29b1be9d001a053fc5b29b51e93c6f925a6302deed9407e0357"
+    },
+    "intel/metal-combined-gui-ci/section-fill/report.json": {
+      "bytes": 8902,
+      "sha256": "bd0d10373c729c5af7e0ccdf54758f8dab87ff96bebec77c9551a54018fecdc6"
+    },
+    "intel/metal-combined-gui-ci/sheet-images/checker.log": {
+      "bytes": 3126,
+      "sha256": "87efca61bb41bf7d8cea7032676dd6ede953b4dbcbb294cba59a1ba07ee15601"
+    },
+    "intel/metal-combined-gui-ci/sheet-images/checker.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "intel/metal-combined-gui-ci/sheet-images/comparison.json": {
+      "bytes": 3902,
+      "sha256": "3cc0cfb9cf0299a38d312738cc8f08fb2bb9660183b5e8c724a539b6bd044fe3"
+    },
+    "intel/metal-combined-gui-ci/sheet-images/native/native.json": {
+      "bytes": 5100,
+      "sha256": "9fccf6563d252211943e1438f681687249300530585df3fc0a5dbe9126684423"
+    },
+    "intel/metal-combined-gui-ci/sheet-images/native/session/config/settings.json": {
+      "bytes": 973,
+      "sha256": "997b9d97c9f5face16346192253f347dbe2774cbfeb87cc7368a1beeafb940c1"
+    },
+    "intel/metal-combined-gui-ci/sheet-images/result.json": {
+      "bytes": 6265,
+      "sha256": "f7a563f787a7326fbcf02779ab94188d4fb840458d2dde5515983e7f6a0f7e3c"
+    },
+    "intel/metal-combined-gui-ci/sheet-images/runtime.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "intel/metal-combined-gui-ci/sheet-images/runtime.log.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "intel/metal-combined-gui-ci/sheet-images/source/capture.log": {
+      "bytes": 53,
+      "sha256": "092a07b530f92a59d98637037c99b662460dc6eca8ab59f9215f772d0b18cddb"
+    },
+    "intel/metal-combined-gui-ci/sheet-images/source/source.json": {
+      "bytes": 8829,
+      "sha256": "c365180873a2f3c9df6ee55121dfd327b9d2d249b215590a70c42f2807332b52"
+    },
+    "intel/metal-combined-gui-ci/sheet-images/views/capture.log": {
+      "bytes": 287,
+      "sha256": "1f5be4ae69f49b3f1a8ea45a71980963d5071f4ca8f3126a3d093ed2ca047be0"
+    },
+    "intel/metal-combined-gui-ci/sheet-images/views/source-receipt.json": {
+      "bytes": 308,
+      "sha256": "62dc3460e7b482f42bf1e70b0b0bdb8042b5494b43a7a26311ac83ff1ad2135a"
+    },
+    "intel/metal-combined-gui-ci/sheet-images/views/source.json": {
+      "bytes": 4153,
+      "sha256": "d9c4d15e61b7862b366db0397871e4fb888419ed4c8147647f0d25a46405d0b2"
+    },
+    "intel/metal-combined-gui-ci/sheet-images-replay.log": {
+      "bytes": 3914,
+      "sha256": "d13b497e64359d00535f813d552c247513aabcb365647cf22ed64af9298a3859"
+    }
+  }
+}
