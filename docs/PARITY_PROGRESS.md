@@ -22,6 +22,8 @@ The native DEM Profile fallback now passes five controlled-HTTP workflows, thirt
 
 ## Current workstreams
 
+The source-continuous dashed callout boundary improves the strict annotation corpus to 15/20 PNG, 17/20 JPEG and 18/20 PDF with 20 original readers and 25 rejecting controls. Only six existing callout PNG/JPEG comparisons improve; all other hashes and controls remain unchanged. Seven PNG pixels remain across five cases, and strict parity stays OPEN. [Dashed stroke evidence](audits/dashed-callout-stroke/README.md).
+
 Repeated physical-export source extractions and temporary settings are now purged after exact authentication: 38 directories, 960 files and 15,004,735 logical bytes. Canonical/raw results and shared build resources remain retained. [Cleanup receipt](audits/physical-export-cleanup/cleanup-receipt.json).
 
 The shared physical annotation painter now preserves QColor alpha precision and explicit uniformly rotated rectangle-fill provenance. Cotas-position and radial-fit PNG/JPEG outputs match the frozen original; strict totals improve to 14/20 PNG, 14/20 JPEG and 18/20 PDF with 20 original readers and 25 rejecting controls. All other annotation hashes and four passing export corpora remain unchanged. Two canvas-cache tests pass; the earlier zero-test filter and corrected run are retained. Full annotation rendering remains OPEN. [Rotated fill acceptance](audits/rotated-annotation-fill/README.md), [partial alpha evidence](audits/path-brush-precision-integration/README.md).
