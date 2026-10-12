@@ -207,9 +207,16 @@ pub struct ViewFrame {
     pub cam_fov: Option<f64>,
     pub rot_deg: f64,
     pub annotations: bool,
+    #[serde(default="default_annot_text_mm")]
+    pub annot_text_mm:f64,
+    #[serde(default)]
+    pub km_marks:bool,
+    #[serde(default)]
+    pub km_step_m:f64,
     pub section_marks: bool,
 }
 
+fn default_annot_text_mm()->f64 {2.8}
 impl Default for ViewFrame {
     fn default() -> Self {
         Self {
@@ -238,6 +245,7 @@ impl Default for ViewFrame {
             cam_fov: None,
             rot_deg: 0.0,
             annotations: true,
+            annot_text_mm:2.8,km_marks:false,km_step_m:0.,
             section_marks: true,
         }
     }
@@ -724,6 +732,7 @@ impl Sheet {
             cam_fov: None,
             rot_deg: 0.0,
             annotations: true,
+            annot_text_mm:2.8,km_marks:false,km_step_m:0.,
             section_marks: true,
         }));
 

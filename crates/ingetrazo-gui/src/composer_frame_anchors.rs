@@ -25,6 +25,7 @@ pub struct SyncStats {
 struct Entry {
     document: Uuid,
     revision: u64,
+    version: u64,
     frame: ViewFrame,
     camera: OrbitCamera,
     pairs: Arc<[SnapPair]>,
@@ -43,6 +44,80 @@ pub(super) struct SnapHit {
     pub page: [f64; 2],
 }
 impl IngeTrazoApp {
+    /// Shared View panel controller. Unknown frame metadata is left untouched.
+    pub fn edit_composer_frame(
+        &mut self,
+        sheet: Uuid,
+        frame: Uuid,
+        fields: Value,
+    ) -> Result<bool, String> {
+        self.apply_composer_frame_fields(sheet, frame, fields, true)
+    }
+    pub(super) fn apply_composer_frame_fields(
+        &mut self,
+        sheet: Uuid,
+        frame: Uuid,
+        fields: Value,
+        finish: bool,
+    ) -> Result<bool, String> {
+        let s = self
+            .scene
+            .sheets
+            .iter()
+            .position(|s| s.id == sheet)
+            .ok_or("Missing frame sheet")?;
+        let index = self.scene.sheets[s]
+            .items
+            .iter()
+            .position(|i| matches!(i,SheetItem::ViewFrame(f) if f.id==frame))
+            .ok_or("Missing frame")?;
+        let SheetItem::ViewFrame(before) = &self.scene.sheets[s].items[index] else {
+            unreachable!()
+        };
+        let mut value = serde_json::to_value(before).map_err(|e| e.to_string())?;
+        for (key, v) in fields.as_object().ok_or("Frame fields must be an object")? {
+            match key.as_str() {
+                "x_mm" => value["rect"]["x"] = v.clone(),
+                "y_mm" => value["rect"]["y"] = v.clone(),
+                "w_mm" => value["rect"]["w"] = v.clone(),
+                "h_mm" => value["rect"]["h"] = v.clone(),
+                "scale_n" | "view_key" | "style" | "show_title" | "title_text" | "border"
+                | "perspective" | "profiles" | "hidden_lines" | "paper_bg" | "rot_deg"
+                | "annotations" | "annot_text_mm" | "section_marks" | "km_marks" | "km_step_m"
+                | "cam_fov" | "cam_target" | "cam_yaw" | "cam_pitch" | "cam_distance"
+                | "cut_fill" | "cut_fill_color" | "cut_hatch_mm" | "pen_cut_mm"
+                | "pen_profile_mm" | "pen_edge_mm" => {
+                    value[key] = v.clone();
+                }
+                _ => return Err(format!("Unsupported frame property {key}")),
+            }
+        }
+        let candidate: ViewFrame = serde_json::from_value(value).map_err(|e| e.to_string())?;
+        Projector::new(&self.scene, &self.camera, &candidate)?;
+        if !candidate.annot_text_mm.is_finite()
+            || candidate.annot_text_mm <= 0.
+            || candidate.annot_text_mm > 1000.
+            || !candidate.km_step_m.is_finite()
+            || candidate.km_step_m < 0.
+            || candidate.km_step_m > 1e6
+        {
+            return Err("Invalid frame annotation settings".into());
+        }
+        if &candidate == before {
+            return Ok(false);
+        }
+        self.enter_composer_sheet(s);
+        if finish {
+            self.finish_composer_edit();
+        }
+        self.begin_composer_edit();
+        self.scene.sheets[s].items[index] = SheetItem::ViewFrame(candidate);
+        self.sync_composer_frame_anchors()?;
+        if finish {
+            self.finish_composer_edit();
+        }
+        Ok(true)
+    }
     pub(super) fn nearest_composer_frame_snap(
         &mut self,
         s: usize,
@@ -112,6 +187,7 @@ impl IngeTrazoApp {
         if let Some(e) = self.composer_state.frame_anchors.entries.get(&frame) {
             if e.document == self.clipboard_document
                 && e.revision == self.model_revision
+                && e.version == self.scene.version
                 && e.frame == f
                 && e.camera == *projector.camera()
             {
@@ -234,6 +310,7 @@ impl IngeTrazoApp {
             Entry {
                 document: self.clipboard_document,
                 revision: self.model_revision,
+                version: self.scene.version,
                 frame: f,
                 camera: projector.camera().clone(),
                 pairs: pairs.clone(),
@@ -289,41 +366,51 @@ impl IngeTrazoApp {
         for (s, key, i, original) in jobs {
             let derived = (|| -> Result<Value, String> {
                 let mut candidate = original.clone();
-                if let Some(uid) = original.get("anchor_uid").and_then(Value::as_str) {
-                    if let Some((frame, projector, pairs)) =
-                        self.anchor_frame(s, uid, true, &mut contexts)?
-                    {
-                        if let Some(a) = world(&original, "a_world") {
-                            let a = reattach(a, &projector, &pairs, frame.scale_n)?;
-                            let ap = projector.page_point(a)?;
-                            match key {
-                                "cotas" => {
-                                    if let Some(b) = world(&original, "b_world") {
-                                        let b = reattach(b, &projector, &pairs, frame.scale_n)?;
-                                        let bp = projector.page_point(b)?;
-                                        candidate["a_world"] = json!(a.to_array());
-                                        candidate["b_world"] = json!(b.to_array());
-                                        candidate["x_mm"] = json!(ap[0]);
-                                        candidate["y_mm"] = json!(ap[1]);
-                                        candidate["dx_mm"] = json!(bp[0] - ap[0]);
-                                        candidate["dy_mm"] = json!(bp[1] - ap[1]);
-                                        candidate["scale_n"] = json!(frame.scale_n);
+                let primary = (|| -> Result<(), String> {
+                    if let Some(uid) = original.get("anchor_uid").and_then(Value::as_str) {
+                        if let Some((frame, projector, pairs)) =
+                            self.anchor_frame(s, uid, true, &mut contexts)?
+                        {
+                            if let Some(a) = world(&original, "a_world") {
+                                let a = reattach(a, &projector, &pairs, frame.scale_n)?;
+                                let ap = projector.page_point(a)?;
+                                match key {
+                                    "cotas" => {
+                                        if let Some(b) = world(&original, "b_world") {
+                                            let b = reattach(b, &projector, &pairs, frame.scale_n)?;
+                                            let bp = projector.page_point(b)?;
+                                            candidate["a_world"] = json!(a.to_array());
+                                            candidate["b_world"] = json!(b.to_array());
+                                            candidate["x_mm"] = json!(ap[0]);
+                                            candidate["y_mm"] = json!(ap[1]);
+                                            candidate["dx_mm"] = json!(bp[0] - ap[0]);
+                                            candidate["dy_mm"] = json!(bp[1] - ap[1]);
+                                            candidate["scale_n"] = json!(frame.scale_n);
+                                        }
                                     }
+                                    "etiquetas" => {
+                                        candidate["a_world"] = json!(a.to_array());
+                                        candidate["ax_mm"] =
+                                            json!(ap[0] - number(&original, "x_mm"));
+                                        candidate["ay_mm"] =
+                                            json!(ap[1] - number(&original, "y_mm"));
+                                    }
+                                    "niveles" => {
+                                        candidate["a_world"] = json!(a.to_array());
+                                        candidate["x_mm"] =
+                                            json!(ap[0] - number(&original, "ax_mm"));
+                                        candidate["y_mm"] =
+                                            json!(ap[1] - number(&original, "ay_mm"));
+                                    }
+                                    _ => {}
                                 }
-                                "etiquetas" => {
-                                    candidate["a_world"] = json!(a.to_array());
-                                    candidate["ax_mm"] = json!(ap[0] - number(&original, "x_mm"));
-                                    candidate["ay_mm"] = json!(ap[1] - number(&original, "y_mm"));
-                                }
-                                "niveles" => {
-                                    candidate["a_world"] = json!(a.to_array());
-                                    candidate["x_mm"] = json!(ap[0] - number(&original, "ax_mm"));
-                                    candidate["y_mm"] = json!(ap[1] - number(&original, "ay_mm"));
-                                }
-                                _ => {}
                             }
                         }
                     }
+                    Ok(())
+                })();
+                if primary.is_err() {
+                    candidate = original.clone();
                 }
                 if key == "etiquetas" {
                     if let Some(ls) = candidate.get("leaders").and_then(Value::as_array) {
@@ -333,10 +420,10 @@ impl IngeTrazoApp {
                                 l.get("anchor_uid").and_then(Value::as_str),
                                 world(l, "a_world"),
                             ) {
-                                if let Some((_, p, _)) =
-                                    self.anchor_frame(s, uid, false, &mut contexts)?
+                                if let Ok(Some((_, p, _))) =
+                                    self.anchor_frame(s, uid, false, &mut contexts)
                                 {
-                                    let q = p.page_point(w)?;
+                                    let Ok(q) = p.page_point(w) else { continue };
                                     l["ax_mm"] = json!(q[0] - number(&original, "x_mm"));
                                     l["ay_mm"] = json!(q[1] - number(&original, "y_mm"));
                                 }
@@ -429,4 +516,16 @@ fn reattach(w: DVec3, p: &Projector, pairs: &[SnapPair], scale: f64) -> Result<D
         }
     }
     Ok(found.unwrap_or(w))
+}
+
+pub(super) fn fields(frame: &ViewFrame) -> Value {
+    let mut value = serde_json::to_value(frame).expect("finite admitted frame");
+    let map = value.as_object_mut().unwrap();
+    map.remove("id");
+    map.remove("rect");
+    map.insert("x_mm".into(), json!(frame.rect.x));
+    map.insert("y_mm".into(), json!(frame.rect.y));
+    map.insert("w_mm".into(), json!(frame.rect.w));
+    map.insert("h_mm".into(), json!(frame.rect.h));
+    value
 }

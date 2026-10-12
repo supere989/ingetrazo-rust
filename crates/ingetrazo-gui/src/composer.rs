@@ -448,6 +448,7 @@ pub fn render_sheet_composer(app: &mut IngeTrazoApp, ui: &mut egui::Ui, sheet_id
     let saved_view_names=app.scene.saved_views.iter().map(|v|v.name.clone()).collect::<Vec<_>>();
     let geo_north = app.scene.geo_datum.as_ref().map(|d| d.north).unwrap_or(0.0);
     let mut bump_needed = false;
+    let mut frame_changes=Vec::new();
     let mut direct_paper_changed = false;
     let mut fit_page_needed = false;
     let mut export_view_dxf = false;
@@ -590,14 +591,17 @@ pub fn render_sheet_composer(app: &mut IngeTrazoApp, ui: &mut egui::Ui, sheet_id
                         changed |=ui.add(egui::DragValue::new(&mut frame.rot_deg).speed(1.).suffix("°")).changed();
                         changed |=ui.checkbox(&mut frame.border,tr("Border")).changed();
                         changed |=ui.checkbox(&mut frame.show_title,tr("Title")).changed();
+                        changed |=ui.checkbox(&mut frame.annotations,tr("Annotations")).changed();
+                        changed |=ui.add(egui::DragValue::new(&mut frame.annot_text_mm).range(0.1..=100.).suffix(" mm text")).changed();
+                        changed |=ui.checkbox(&mut frame.section_marks,tr("Section marks")).changed();
+                        changed |=ui.checkbox(&mut frame.km_marks,tr("Chainage")).changed();
+                        changed |=ui.add(egui::DragValue::new(&mut frame.km_step_m).range(0.0..=1e6).suffix(" m interval")).changed();
                         let title=ui.text_edit_singleline(&mut frame.title_text);
                         changed |=title.changed();
                         #[cfg(test)]
                         ui.ctx().data_mut(|d|d.insert_temp(egui::Id::new("composer-test-title"),title.rect));
                         if changed {
-                            app.composer_state.snapshot_sheet(sheet);
-                            sheet.items[index]=SheetItem::ViewFrame(frame);
-                            bump_needed=true;
+                            frame_changes.push((frame.id,frame_anchors::fields(&frame)));
                         }
                     });
                     #[cfg(test)]
@@ -619,9 +623,7 @@ pub fn render_sheet_composer(app: &mut IngeTrazoApp, ui: &mut egui::Ui, sheet_id
                             ui.horizontal(|ui|{ui.label(tr(label));changed |=ui.add(egui::DragValue::new(value).speed(0.01).range(0.05..=5.).suffix(" mm")).changed();});
                         }
                         if changed {
-                            app.composer_state.snapshot_sheet(sheet);
-                            sheet.items[index]=SheetItem::ViewFrame(frame);
-                            bump_needed=true;
+                            frame_changes.push((frame.id,frame_anchors::fields(&frame)));
                         }
                     });
                 }
@@ -654,6 +656,7 @@ pub fn render_sheet_composer(app: &mut IngeTrazoApp, ui: &mut egui::Ui, sheet_id
     // Wrapped controls own every rendered row; paper projection stays unchanged.
     let toolbar_rect = toolbar.response.rect;
 
+    for (frame,fields) in frame_changes {let sid=app.scene.sheets[sheet_idx].id;if let Err(e)=app.apply_composer_frame_fields(sid,frame,fields,false){app.status_message=e;}}
     if add_legend{if let Err(e)=app.activate_composer_legend(){app.status_message=e;}}
     if add_picture {let path=crate::dialogs::pick_open_file(&tr("Choose image…"),"Images (*.png *.jpg *.jpeg)");if let Err(e)=app.composer_add_picture(path.as_deref()){app.status_message=e;}}
     if ui.is_enabled(){annotation_authoring::properties(app,ui,sheet_idx);if app.composer_annotation_selection().is_some()&&!ui.ctx().wants_keyboard_input()&&ui.input(|i|i.key_pressed(egui::Key::Delete)){if let Err(e)=app.delete_composer_annotation(){app.status_message=e;}}picture_authoring::properties(app,ui,sheet_idx);legend_authoring::properties(app,ui,sheet_idx);if app.composer_legend_selection().is_some()&&!ui.ctx().wants_keyboard_input()&&ui.input(|i|i.key_pressed(egui::Key::Delete)){if let Err(e)=app.delete_composer_legend(){app.status_message=e;}}}

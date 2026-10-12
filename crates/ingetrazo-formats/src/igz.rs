@@ -380,6 +380,7 @@ fn sheet_item_model(item: &ingetrazo_core::composition::SheetItem) -> (uuid::Uui
             "scale_n":f.scale_n,"view_key":f.view_key,"style":match f.style.as_str() {"technical"=>"vectorial","wireframe"=>"lineas",s=>s},
             "show_title":f.show_title,"title_text":f.title_text,"border":f.border,
             "perspective":f.perspective,"rot_deg":f.rot_deg,"annotations":f.annotations,
+            "annot_text_mm":f.annot_text_mm,"km_marks":f.km_marks,"km_step_m":f.km_step_m,
             "paper_bg":f.paper_bg,"cut_fill":f.cut_fill,"cut_fill_color":f.cut_fill_color,"cut_hatch_mm":f.cut_hatch_mm,
             "pen_cut_mm":f.pen_cut_mm,"pen_profile_mm":f.pen_profile_mm,"pen_edge_mm":f.pen_edge_mm,"profiles":f.profiles,"hidden_lines":f.hidden_lines,
             "cam_target":f.cam_target,"cam_yaw":f.cam_yaw,"cam_pitch":f.cam_pitch,"cam_distance":f.cam_distance,"cam_fov":f.cam_fov,
@@ -551,6 +552,7 @@ fn read_sheet(raw: &serde_json::Value) -> ingetrazo_core::composition::Sheet {
                     f.paper_bg=flag(v,"paper_bg",false);
                     f.cut_fill=txt(v,"cut_fill","solid");f.cut_fill_color=txt(v,"cut_fill_color","#595e69");f.cut_hatch_mm=num(v,"cut_hatch_mm",1.5);
                     f.pen_cut_mm=num(v,"pen_cut_mm",0.5);f.pen_profile_mm=num(v,"pen_profile_mm",0.35);f.pen_edge_mm=num(v,"pen_edge_mm",0.18);f.profiles=flag(v,"profiles",true);f.hidden_lines=flag(v,"hidden_lines",false);
+                    f.annot_text_mm=num(v,"annot_text_mm",2.8);f.km_marks=flag(v,"km_marks",false);f.km_step_m=num(v,"km_step_m",0.);
                     f.annotations=flag(v,"annotations",false);f.section_marks=flag(v,"section_marks",false);
                     SheetItem::ViewFrame(f)
                 },
