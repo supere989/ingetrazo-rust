@@ -187,6 +187,7 @@ impl IngeTrazoApp {
                 if request["tool"].as_str()==Some("screenshot") {
                     let wire_id=request.get("id").cloned().unwrap_or(Value::Null);
                     let admission=(|| {
+                        if !cfg!(any(target_os="linux",target_os="windows")) { return Err("Native viewport capture is not yet supported on this backend".to_owned()); }
                         if self.ai_bridge_capture.is_some() { return Err("A viewport capture is already owned".to_owned()); }
                         let id=self.ai_bridge_capture_serial.checked_add(1).ok_or("Viewport capture identity exhausted")?;
                         let pending=crate::ai_bridge_capture::PendingCapture::begin(self,id,wire_id.clone(),request.get("args"),context)?;
