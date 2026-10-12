@@ -179,7 +179,7 @@ fn model_annotations(app: &IngeTrazoApp, doc: &Value) -> Value {
     let dimensions=app.scene.dimensions.iter().map(|d|{
   let(a,b)=app.scene.dimension_points(d);
   let(_,_,value)=ingetrazo_render::annotations::dimension_geometry(ingetrazo_render::annotations::DimensionInput{a:a.as_vec3(),b:b.as_vec3(),offset:d.offset.as_vec3(),axis:d.axis.as_deref(),text:d.text_override.as_deref(),highlighted:false,hidden:false});
-  json!({"a":a.to_array(),"b":b.to_array(),"offset":d.offset.to_array(),"axis":d.axis,"layer":d.layer,"text":d.text_override.as_deref().unwrap_or(""),"value":value,"anchor_a":d.anchor_a.is_some(),"anchor_b":d.anchor_b.is_some()})
+  json!({"a":a.to_array(),"b":b.to_array(),"offset":d.offset.to_array(),"axis":d.axis,"layer":d.layer,"text":d.text_override,"value":value,"anchor_a":d.anchor_a.is_some(),"anchor_b":d.anchor_b.is_some()})
  }).collect::<Vec<_>>();
     json!({"dimensions":dimensions,"text_labels":doc["text_labels"],"geo_paths":doc["geo_paths"],"section_planes":doc["section_planes"],"dimension_style":doc["dimension_style"]})
 }
